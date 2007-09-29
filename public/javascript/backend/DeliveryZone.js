@@ -466,7 +466,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         }.bind(this));
         
         $A(this.nodes.observedElements).each(function(element) {
-            Event.observe(element, 'change', function(e) { this.save() }.bind(this));
+            Event.observe(element, 'change', function(e) { this.save(e) }.bind(this));
         }.bind(this));
 		
 		
@@ -539,11 +539,23 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         form.show();
     }, 
     
-    save: function() {
+    save: function(e) {
         this.saving = true;
         
+        var indicator = null;
+        
+		if (e)
+        {
+			var el = Event.element(e);
+			if (el.hasClassName('checkbox'))
+			{
+				el.hide();
+			}
+			indicator = el.parentNode.down('.progressIndicator');
+		}
+        
         Backend.DeliveryZone.prototype.treeBrowser.setItemText(Backend.DeliveryZone.prototype.activeZone, this.nodes.name.value)
-        var request = new LiveCart.AjaxRequest(this.nodes.form);
+        var request = new LiveCart.AjaxRequest(this.nodes.form, indicator, function() { if (el) { el.show(); }});
     
         this.saving = false;
     },
@@ -937,12 +949,12 @@ Backend.DeliveryZone.ShippingService.prototype =
 		}
 		
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-        var action = this.service.ID 
+        this.nodes.form.action = this.service.ID 
             ? Backend.DeliveryZone.ShippingService.prototype.Links.update
             : Backend.DeliveryZone.ShippingService.prototype.Links.create;
             
         new LiveCart.AjaxRequest(
-            action + '?' + Form.serialize(this.nodes.form),
+            this.nodes.form,
             false,
             function(response) 
             { 

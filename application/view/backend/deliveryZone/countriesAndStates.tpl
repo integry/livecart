@@ -4,22 +4,26 @@
     <label>{t _name}</label>
     <fieldset class="error">
 		{textfield name="name" class="observed countriesAndStates_name"}
+		<span class="progressIndicator" style="display: none;"></span>
 		<span class="errorText hidden"> </span>
     </fieldset>
     
     
-    <fieldset class="checkbox error">
-        {checkbox name="isEnabled" id="countriesAndStates_isEnabled_`$zoneID`" class="checkbox observed"} 
+    <fieldset class="checkbox error">        
+		{checkbox name="isEnabled" id="countriesAndStates_isEnabled_`$zoneID`" class="checkbox observed"} 
+		<span class="progressIndicator" style="display: none;"></span>
         <label class="checkbox" for="countriesAndStates_isEnabled_{$zoneID}">{t _is_enabled}</label>
     </fieldset>
     
     <fieldset class="checkbox error">
         {checkbox name="isFreeShipping" id="countriesAndStates_isFreeShipping_`$zoneID`" class="checkbox observed"} 
+		<span class="progressIndicator" style="display: none;"></span>
         <label class="checkbox" for="countriesAndStates_isFreeShipping_{$zoneID}">{t _is_free_shipping}</label>
     </fieldset>
     
     <fieldset class="checkbox error">
         {checkbox name="isRealTimeDisabled" id="countriesAndStates_isRealTimeDisabled_`$zoneID`" class="checkbox observed"} 
+		<span class="progressIndicator" style="display: none;"></span>
         <label class="checkbox" for="countriesAndStates_isRealTimeDisabled_{$zoneID}">{t _is_real_time_disabled}</label>
     </fieldset>
     

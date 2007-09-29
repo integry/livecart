@@ -1,3 +1,12 @@
+fieldset.checkbox .progressIndicator
+{
+	float: left;
+	height: auto;
+	width: auto;
+	margin-right: 7px;
+	padding: 11px 15px 11px 0pt;
+}
+
 .shippingService_add
 {
     background-image: url(../../image/silk/lorry_add.png);

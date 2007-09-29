@@ -101,7 +101,7 @@ class ShippingServiceController extends StoreManagementController
      */
     public function update()
     {
-        $shippingService = ShippingService::getInstanceByID((int)$this->request->get('serviceID'));
+        $shippingService = ShippingService::getInstanceByID((int)$this->request->get('serviceID'), ShippingService::LOAD_DATA);
         return $this->save($shippingService);
     }
     

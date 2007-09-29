@@ -54,7 +54,7 @@
 
 <fieldset class="error">
     <label for="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_perKgCharge">{t _per_kg_charge}</label>
-	<input type="text" name="rate__perKgCharge" value="{$rate.perKgCharg|default:0}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_perKgCharge" class="shippingService_perKgCharge shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} />
+	<input type="text" name="rate__perKgCharge" value="{$rate.perKgCharge|default:0}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_perKgCharge" class="shippingService_perKgCharge shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} />
 	<br />
     <span class="errorText hidden"> </span>
 </fieldset>
