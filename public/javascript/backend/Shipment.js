@@ -634,6 +634,8 @@ Backend.Shipment.prototype =
 			{                  
                ActiveList.prototype.highlight(this.nodes.root.down('fieldset'));
            
+               this.nodes.root.down('form').className = 'shipmentStatus_' + select.value;
+           
                if(3 == select.value)
                {
                    var newList = $(this.nodes.root.up('ul').id + '_shipped');
@@ -651,7 +653,8 @@ Backend.Shipment.prototype =
                    document.getElementsByClassName("orderShipmentsItem_count", this.nodes.root).each(function(countInput)
                    {
                       countInput.hide(); 
-                      countInput.up('.orderShipmentsItem_info_count').appendChild(document.createTextNode(countInput.value));
+                      countInput.up('.orderShipmentsItem_info_count').down('.itemCountText').update(countInput.value);
+//                      countInput.up('.orderShipmentsItem_info_count').appendChild(document.createTextNode(countInput.value));
                    });
         
                    $("order" + this.nodes.form.elements.namedItem('orderID').value + "_shippedShipments").show();

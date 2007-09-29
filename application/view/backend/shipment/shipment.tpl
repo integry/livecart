@@ -3,7 +3,7 @@
     <legend>{t _shipment} #{$shipment.ID}</legend>
 {/if}
 
-    <form>
+    <form class="shipmentStatus_{$shipment.status}">
         {include file="backend/shipment/shipmentControls.tpl" status=$shipment.status notShippable=$notShippable}
 
         <table class="orderShipmentsItem_info shipmentTableHeading" style="font-size: smaller; color: #888;">

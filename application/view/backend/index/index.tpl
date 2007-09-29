@@ -51,7 +51,7 @@
     <form>
         <p>
             <label>{t _low_stock}:</label>
-            <label>{$inventoryCount.lowStock}:</label>        
+            <label>{$inventoryCount.lowStock}</label>        
         </p>
     
         <p>

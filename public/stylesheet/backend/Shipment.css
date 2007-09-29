@@ -1,8 +1,3 @@
-.orderShipments
-{
-   padding-bottom: 3em;
-}
-
 .tabOrderProductsContent .activeList li
 {
     width: auto;
@@ -69,6 +64,7 @@ li.orderShipment
 {
     margin: 0;
     padding: 0;
+    border: 0;
 }
 
 .orderShipments li
@@ -164,6 +160,16 @@ li.orderShipment
 {
     width: 50px;
     text-align: right;
+}
+
+.itemCountText
+{
+    display: none;    
+}
+
+.shipmentStatus_3 .itemCountText
+{
+    display: block !important;
 }
 
 /* Shipped */

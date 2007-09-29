@@ -21,7 +21,7 @@
             <div class="orderShipmentsItem_info_count">
                 <span class="progressIndicator" style="display: none;"></span>
                 <input name="count_{$item.ID}" value="{$item.count}" id="orderShipmentsItem_count_{$item.ID}" class="orderShipmentsItem_count" style="{if $item.Shipment.status == 3 || $shipment.status == 3}display: none;{/if}" {denied role='order.update'}readonly="readonly"{/denied}  />
-                {if $item.Shipment.status == 3 || $shipment.status == 3}{$item.count}{/if}
+                <span class="itemCountText">{$item.count}</span>
             </div>
         </td>
         <td class="orderShipmentsItem_info_total_td ">
