@@ -1,4 +1,4 @@
-<fieldset class="container" {denied role='order.update'}style="display: none"{/denied} {if $order.isShipped}style="display: none"{/if}> 
+<fieldset class="container" {denied role='order.update'}style="display: none"{/denied}> 
     <ul class="menu" id="orderShipments_menu_{$orderID}"> 
         <li class="order_addProduct" id="order{$orderID}_addProduct_li">
            <span {denied role='order.update'}style="display: none"{/denied}>
