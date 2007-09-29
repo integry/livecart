@@ -105,7 +105,7 @@ class CustomerOrderController extends StoreManagementController
 	        $orderArray['BillingAddress'] = $order->user->get()->defaultBillingAddress->get()->userAddress->get()->toArray();
 	        $orderArray['ShippingAddress'] = $order->user->get()->defaultShippingAddress->get()->userAddress->get()->toArray();
         }
-
+        
 	    $response->set('order', $orderArray);
 	    $response->set('form', $this->createOrderForm($orderArray));
 
@@ -147,10 +147,10 @@ class CustomerOrderController extends StoreManagementController
 
 	    $shipableShipmentsCount = 0;
         $hideShipped = 0;
-        $downloadableShipment = $order->getDownloadShipment();
+        
+        $hasDownloadable = false;
 	    foreach($order->getShipments() as $shipment)
 	    {
-	        if($shipment === $downloadableShipment) continue;
 	        if($shipment->isShipped()) continue;
 	        
             if($shipment->status->get() != Shipment::STATUS_SHIPPED && $shipment->isShippable()) 
@@ -640,6 +640,7 @@ class CustomerOrderController extends StoreManagementController
 
 	    foreach($order->getShipments() as $shipment)
 	    {
+	        echo $shipment->getID() . "<br />";
 	        if(count($shipment->getItems()) == 0)
 	        {
 	            $shipment->delete();

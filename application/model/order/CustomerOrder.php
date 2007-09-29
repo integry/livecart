@@ -15,12 +15,12 @@ ClassLoader::import("application.model.delivery.ShipmentDeliveryRate");
  */
 class CustomerOrder extends ActiveRecordModel
 {
-	public $orderedItems = array();
-	
-	//public $shipments = new ARSet();	
-	
-	private $removedItems = array();
-	
+    public $orderedItems = array();
+    
+    //public $shipments = new ARSet();  
+    
+    private $removedItems = array();
+    
     private $taxes = array();
     
     /**
@@ -35,38 +35,38 @@ class CustomerOrder extends ActiveRecordModel
     const STATUS_RETURNED = 4;        
                 
     /**
-	 * Define database schema used by this active record instance
-	 *
-	 * @param string $className Schema name
-	 */
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
-		
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("userID", "User", "ID", "User", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("shippingAddressID", "shippingAddress", "ID", 'UserAddress', ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("billingAddressID", "billingAddress", "ID", 'UserAddress', ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("currencyID", "currency", "ID", 'Currency', ARChar::instance(3)));
+     * Define database schema used by this active record instance
+     *
+     * @param string $className Schema name
+     */
+    public static function defineSchema($className = __CLASS__)
+    {
+        $schema = self::getSchemaInstance($className);
+        $schema->setName($className);
+        
+        $schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
+        $schema->registerField(new ARForeignKeyField("userID", "User", "ID", "User", ARInteger::instance()));
+        $schema->registerField(new ARForeignKeyField("shippingAddressID", "shippingAddress", "ID", 'UserAddress', ARInteger::instance()));
+        $schema->registerField(new ARForeignKeyField("billingAddressID", "billingAddress", "ID", 'UserAddress', ARInteger::instance()));
+        $schema->registerField(new ARForeignKeyField("currencyID", "currency", "ID", 'Currency', ARChar::instance(3)));
 
-		$schema->registerField(new ARField("dateCreated", ARDateTime::instance()));
-		$schema->registerField(new ARField("dateCompleted", ARDateTime::instance()));
-		$schema->registerField(new ARField("totalAmount", ARFloat::instance()));
-		$schema->registerField(new ARField("capturedAmount", ARFloat::instance()));
-		$schema->registerField(new ARField("isFinalized", ARBool::instance()));
-		$schema->registerField(new ARField("isPaid", ARBool::instance()));
-		$schema->registerField(new ARField("isCancelled", ARBool::instance()));
-		$schema->registerField(new ARField("status", ARInteger::instance()));
-		$schema->registerField(new ARField("shipping", ARText::instance()));
-	}
-		
-	/*####################  Static method implementations ####################*/		
-		
-	public static function getNewInstance(User $user)	
-	{
+        $schema->registerField(new ARField("dateCreated", ARDateTime::instance()));
+        $schema->registerField(new ARField("dateCompleted", ARDateTime::instance()));
+        $schema->registerField(new ARField("totalAmount", ARFloat::instance()));
+        $schema->registerField(new ARField("capturedAmount", ARFloat::instance()));
+        $schema->registerField(new ARField("isFinalized", ARBool::instance()));
+        $schema->registerField(new ARField("isPaid", ARBool::instance()));
+        $schema->registerField(new ARField("isCancelled", ARBool::instance()));
+        $schema->registerField(new ARField("status", ARInteger::instance()));
+        $schema->registerField(new ARField("shipping", ARText::instance()));
+    }
+        
+    /*####################  Static method implementations ####################*/        
+        
+    public static function getNewInstance(User $user)   
+    {
         $instance = parent::getNewInstance(__CLASS__);
-		$instance->user->set($user);     
+        $instance->user->set($user);     
         
         return $instance;   
     }
@@ -84,33 +84,33 @@ class CustomerOrder extends ActiveRecordModel
         return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
     }
      
-	/*####################  Value retrieval and manipulation ####################*/		 
-	    
+    /*####################  Value retrieval and manipulation ####################*/      
+        
     public function loadItems()
     {
         if (!$this->isExistingRecord())
         {
-			return false;
-		}
-		
-		$this->orderedItems = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category', 'DefaultImage' => 'ProductImage'))->getData();
-        $this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter(), self::LOAD_REFERENCES)->getData();
+            return false;
+        }
+        
+        $this->orderedItems = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category', 'DefaultImage' => 'ProductImage'))->getData();
+        $this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter(), self::LOAD_REFERENCES);
         
         if (!$this->shipments)
         {
-			$this->shipments = unserialize($this->shipping->get());
-		}
-	}
-	
-	public function loadAddresses()
-	{
+            $this->shipments = unserialize($this->shipping->get());
+        }
+    }
+    
+    public function loadAddresses()
+    {
         if ($this->billingAddress->get())
         {
             $this->billingAddress->get()->load();               
         }
 
-		if ($this->shippingAddress->get())
-		{
+        if ($this->shippingAddress->get())
+        {
             $this->shippingAddress->get()->load(); 
         }
     }
@@ -120,22 +120,22 @@ class CustomerOrder extends ActiveRecordModel
         $this->loadItems();
         $this->loadAddresses();
         $this->getShipments();
-		
+        
         if($this->billingAddress->get())
         {
             $this->billingAddress->get()->load(self::LOAD_REFERENCES);
         }
         
-		if($this->shippingAddress->get())
-		{
-		   $this->shippingAddress->get()->load(self::LOAD_REFERENCES);
-		}
+        if($this->shippingAddress->get())
+        {
+           $this->shippingAddress->get()->load(self::LOAD_REFERENCES);
+        }
     }
 
     /**
-     *	Add a product to shopping basket
+     *  Add a product to shopping basket
      */
-	public function addProduct(Product $product, $count)
+    public function addProduct(Product $product, $count)
     {
         if (0 >= $count)
         {
@@ -148,8 +148,8 @@ class CustomerOrder extends ActiveRecordModel
                 throw new ApplicationException('Product is not available (' . $product->getID() . ')');
             }
                         
-			$count = $this->validateCount($product, $count);			
-			$this->orderedItems[] = OrderedItem::getNewInstance($this, $product, $count);
+            $count = $this->validateCount($product, $count);            
+            $this->orderedItems[] = OrderedItem::getNewInstance($this, $product, $count);
         }
         
         $this->resetShipments();
@@ -158,37 +158,37 @@ class CustomerOrder extends ActiveRecordModel
     public function updateCount(OrderedItem $item, $count)
     {
         $item->count->set($this->validateCount($item->product->get(), $count));
-	}
+    }
     
     private function validateCount(Product $product, $count)
     {
         if (round($count) != $count && !$product->isFractionalUnit->get())
         {
-			$count = round($count);
-		}
-		
+            $count = round($count);
+        }
+        
         if (0 >= $count)
         {
             $count = 0;
-        }	
-		
-		return $count;		
-	}
-    
-	/**
-     *	Add a product to wish list
-     */
-	public function addToWishList(Product $product)
-    {
-        $item = OrderedItem::getNewInstance($this, $product, 1);
-        $item->isSavedForLater->set(true);
-		$this->orderedItems[] = $item;
+        }   
+        
+        return $count;      
     }
     
     /**
-     *	Remove a product (all product items) from shopping basket or wish list
+     *  Add a product to wish list
      */
-	public function removeProduct(Product $product)
+    public function addToWishList(Product $product)
+    {
+        $item = OrderedItem::getNewInstance($this, $product, 1);
+        $item->isSavedForLater->set(true);
+        $this->orderedItems[] = $item;
+    }
+    
+    /**
+     *  Remove a product (all product items) from shopping basket or wish list
+     */
+    public function removeProduct(Product $product)
     {
         $id = $product->getID();
         
@@ -202,9 +202,9 @@ class CustomerOrder extends ActiveRecordModel
     }
 
     /**
-     *	Remove an item from shopping basket or wish list
+     *  Remove an item from shopping basket or wish list
      */
-	public function removeItem(OrderedItem $orderedItem)
+    public function removeItem(OrderedItem $orderedItem)
     {
         foreach ($this->orderedItems as $key => $item)
         {
@@ -236,14 +236,7 @@ class CustomerOrder extends ActiveRecordModel
                     }
                 }
                 
-                if($this->shipments instanceof ARSet)
-                {
-                    $this->shipments->remove($key);
-                }
-                else
-                {
-                    unset($this->shipments[$key]);
-                }
+                $this->shipments->remove($key);
                 
                 $this->resetShipments(); 
                 break;
@@ -252,9 +245,9 @@ class CustomerOrder extends ActiveRecordModel
     }
     
     /**
-     *	Move an item to a different order
+     *  Move an item to a different order
      */
-	public function moveItem(OrderedItem $orderedItem, CustomerOrder $order)
+    public function moveItem(OrderedItem $orderedItem, CustomerOrder $order)
     {
         foreach ($this->orderedItems as $key => $item)
         {
@@ -264,15 +257,15 @@ class CustomerOrder extends ActiveRecordModel
                 $order->addItem($item);
                 
                 $this->resetShipments();
-				$order->resetShipments(); 
+                $order->resetShipments(); 
             }
         } 
     }
     
     /**
-     *	Add new ordered item
+     *  Add new ordered item
      */
-	public function addItem(OrderedItem $orderedItem)
+    public function addItem(OrderedItem $orderedItem)
     {
         $orderedItem->customerOrder->set($this);
         $this->orderedItems[] = $orderedItem;
@@ -284,7 +277,7 @@ class CustomerOrder extends ActiveRecordModel
      *  1) fix current product prices and total (so the total doesn't change if product prices change)
      *  2) save created shipments
      *
-     *	@return CustomerOrder New order instance containing wishlist items
+     *  @return CustomerOrder New order instance containing wishlist items
      */
     public function finalize(Currency $currency, $reserveProducts = null)
     {
@@ -293,7 +286,7 @@ class CustomerOrder extends ActiveRecordModel
         $this->currency->set($currency);
 
         $this->loadAll();
-		foreach ($this->getShipments() as $shipment)
+        foreach ($this->getShipments() as $shipment)
         {
             $shipment->amountCurrencyID->set($currency);
             $shipment->order->set($this);
@@ -318,15 +311,15 @@ class CustomerOrder extends ActiveRecordModel
             $item->save();
         }
 
-		if (!$this->shippingAddress->get() && $this->user->get()->defaultShippingAddress->get())
+        if (!$this->shippingAddress->get() && $this->user->get()->defaultShippingAddress->get())
         {
-			$this->shippingAddress->set($this->user->get()->defaultShippingAddress->get()->userAddress->get());
-		}
+            $this->shippingAddress->set($this->user->get()->defaultShippingAddress->get()->userAddress->get());
+        }
         
         if (!$this->billingAddress->get() && $this->user->get()->defaultBillingAddress->get())
         {
-			$this->billingAddress->set($this->user->get()->defaultBillingAddress->get()->userAddress->get());
-		}
+            $this->billingAddress->set($this->user->get()->defaultBillingAddress->get()->userAddress->get());
+        }
 
         // clone billing/shipping addresses
         if ($this->shippingAddress->get())
@@ -353,11 +346,11 @@ class CustomerOrder extends ActiveRecordModel
                 
         $this->isFinalized->set(true);
         $this->dateCompleted->set(new ARSerializableDateTime());
-		$this->save();
+        $this->save();
 
         self::commit();
         
-    	return $wishList;
+        return $wishList;
     }
     
     public function addCapturedAmount($amount)
@@ -370,32 +363,32 @@ class CustomerOrder extends ActiveRecordModel
      */
     public function mergeItems()
     {
-		$byProduct = array();
-		
-		foreach ($this->orderedItems as $item)
-		{
-			$byProduct[$item->product->get()->getID()][(int)$item->isSavedForLater->get()][] = $item;
-		}
-				
-		foreach ($byProduct as $productID => $itemsByStatus)
-		{
-			foreach ($itemsByStatus as $status => $items)
-			{
-				if (count($items) > 1)
-				{
-					$mainItem = array_shift($items);
-					$count = $mainItem->count->get();
-					
-					foreach ($items as $item)
-					{
-						$count += $item->count->get();
-						$this->removeItem($item);
-					}
-					
-					$mainItem->count->set($count);
-				}
-			}
-		}
+        $byProduct = array();
+        
+        foreach ($this->orderedItems as $item)
+        {
+            $byProduct[$item->product->get()->getID()][(int)$item->isSavedForLater->get()][] = $item;
+        }
+                
+        foreach ($byProduct as $productID => $itemsByStatus)
+        {
+            foreach ($itemsByStatus as $status => $items)
+            {
+                if (count($items) > 1)
+                {
+                    $mainItem = array_shift($items);
+                    $count = $mainItem->count->get();
+                    
+                    foreach ($items as $item)
+                    {
+                        $count += $item->count->get();
+                        $this->removeItem($item);
+                    }
+                    
+                    $mainItem->count->set($count);
+                }
+            }
+        }
     }
     
     /*####################  Saving ####################*/    
@@ -404,17 +397,17 @@ class CustomerOrder extends ActiveRecordModel
     {
         if (!$this->orderedItems)
         {
-         	$this->loadItems();
-		}
-		
-		// remove zero-count items
+            $this->loadItems();
+        }
+        
+        // remove zero-count items
         foreach ($this->orderedItems as $item)
         {
             if (!$item->count->get())
             {
                 $this->removeItem($item);
-			}
-		}
+            }
+        }
 
         $isModified = false;
 
@@ -448,8 +441,8 @@ class CustomerOrder extends ActiveRecordModel
             
             foreach ($this->orderedItems as $item)
             {
-				if ($item->isModified())
-				{       
+                if ($item->isModified())
+                {       
                     if (!$this->isExistingRecord())
                     {
                         parent::save();
@@ -463,9 +456,9 @@ class CustomerOrder extends ActiveRecordModel
                 
                 $item->markAsLoaded();
             }                            
-		} 
-		
-		// If shipment is modified
+        } 
+        
+        // If shipment is modified
         if($this->isFinalized->get())
         {
             $count = 0;
@@ -478,10 +471,10 @@ class CustomerOrder extends ActiveRecordModel
                 }
             }
         }
-		
+        
         
         if ($isModified)
-		{ 
+        { 
             if (!$this->currency->get())
             {
                 $this->currency->set(self::getApplication()->getDefaultCurrency());
@@ -491,11 +484,11 @@ class CustomerOrder extends ActiveRecordModel
             $this->resetShipments();        
 
             $this->totalAmount->set($this->calculateTotal($this->currency->get()));
-		}
-		
-		if ($this->isModified() || $isModified)
-		{
-	        $this->shipping->set(serialize($this->shipments));            
+        }
+        
+        if ($this->isModified() || $isModified)
+        {
+            $this->shipping->set(serialize($this->shipments));            
         }
 
         if (!$this->isFinalized->get() && !$this->orderedItems && !$allowEmpty)
@@ -523,19 +516,34 @@ class CustomerOrder extends ActiveRecordModel
         }
         
         $filter->addModifier('status', $this->status->get());
-        ActiveRecord::updateRecordSet('Shipment', $filter);      
+        
+        ActiveRecord::updateRecordSet('Shipment', $filter); 
     }
     
     public function updateStatusFromShipments($creatingNewRecord = false)
     {
+        $status = $this->calculateStatusFromShipmensts($creatingNewRecord);
+        
+        if($this->status->get() != $status)
+        {
+            $this->status->set($status);
+        }
+    }
+    
+    public function calculateStatusFromShipmensts($creatingNewRecord = false)
+    {
         $lowestStatus = $creatingNewRecord ? Shipment::STATUS_NEW : 100;
         $isNew = true;
-        $downloadableShipment = $this->getDownloadShipment();
         $countShipments = 0;
+        $haveShipped = false;
         foreach($this->getShipments() as $shipment)
         {
-            if($shipment === $downloadableShipment) continue;
-            if($shipment->isShipped()) continue;
+            if(!$shipment->isShippable() && count($shipment->getItems()) > 0) continue;
+            if($shipment->isShipped()) 
+            {
+                $haveShipped = true;
+                continue;
+            }
             
             $countShipments++;
 
@@ -552,35 +560,42 @@ class CustomerOrder extends ActiveRecordModel
             }   
         }
 
+        if($countShipments > 0 && $haveShipped)
+        {
+            $lowestStatus = Shipment::STATUS_PROCESSING;
+        }    
+            
         if($countShipments > 0)
         {
             $newOrderStatus = (!$isNew && $lowestStatus == Shipment::STATUS_NEW) ? Shipment::STATUS_PROCESSING : $lowestStatus;
             if($newOrderStatus != $this->status->get())
             {
-                $this->status->set($newOrderStatus);    
+                return $newOrderStatus;  
             }
         }
+        
+        return $this->status->get();
     }
     
-	public function getSubTotal(Currency $currency)
-	{
+    public function getSubTotal(Currency $currency)
+    {
         $subTotal = 0;
         foreach ($this->orderedItems as $item)
         {
             if (!$item->isSavedForLater->get())
             {
-				$subTotal += $item->getSubTotal($currency);				
-			}
+                $subTotal += $item->getSubTotal($currency);             
+            }
         }
         
-        return $subTotal;	
-	}    
-	
-	/**
-	 *	Get total amount for order, including shipping costs
-	 */
-	public function getTotal(Currency $currency)
-	{
+        return $subTotal;   
+    }    
+    
+    /**
+     *  Get total amount for order, including shipping costs
+     */
+    public function getTotal(Currency $currency)
+    {
         if ($this->isFinalized->get()) 
         { 
             return $currency->convertAmount($this->currency->get(), $this->totalAmount->get());
@@ -590,24 +605,24 @@ class CustomerOrder extends ActiveRecordModel
             return $this->calculateTotal($currency);
         }
     }
-		
-	public function calculateTotal(Currency $currency)
-	{
+        
+    public function calculateTotal(Currency $currency)
+    {
         $total = 0;
         $id = $currency->getID();        
 
-		if ($this->shipments instanceof ARSet && !$this->shipments->size())
-		{
-			$this->shipments = null;
-		}
+        if ($this->shipments instanceof ARSet && !$this->shipments->size())
+        {
+            $this->shipments = null;
+        }
         
-		if ($this->shipments)
-		{
-    		$this->taxes[$id] = array();
-    		$zone = $this->getDeliveryZone();
+        if ($this->shipments)
+        {
+            $this->taxes[$id] = array();
+            $zone = $this->getDeliveryZone();
             foreach ($this->shipments as $shipment)
-    		{
-    		    if($shipment->getShippingService())
+            {
+                if($shipment->getShippingService())
                 {
                     $shipmentRates = $zone->getShippingRates($shipment);
                     $shipment->setAvailableRates($shipmentRates);
@@ -616,13 +631,13 @@ class CustomerOrder extends ActiveRecordModel
                 
                 $total += $shipment->getSubTotal($currency);
                 
-	            if ($rate = $shipment->getSelectedRate())
-	            {
-	                $amount = $rate->getCostAmount();
-	                $curr = Currency::getInstanceById($rate->getCostCurrency());
-	                
-	                $total += $currency->convertAmount($curr, $amount);
-	            }
+                if ($rate = $shipment->getSelectedRate())
+                {
+                    $amount = $rate->getCostAmount();
+                    $curr = Currency::getInstanceById($rate->getCostCurrency());
+                    
+                    $total += $currency->convertAmount($curr, $amount);
+                }
                 
                 foreach ($shipment->getTaxes() as $tax)
                 {
@@ -635,43 +650,43 @@ class CustomerOrder extends ActiveRecordModel
                     $this->taxes[$id][$taxId] += $tax->getAmountByCurrency($currency);
                 }
             }
-		}
-		else
-		{
+        }
+        else
+        {
             foreach ($this->getShoppingCartItems() as $item)
             {
-				$total += $item->getSubTotal($currency);
+                $total += $item->getSubTotal($currency);
             }
         }        
         
-	    return round($total, 2);
+        return round($total, 2);
     }
-		
-	public function isProcessing()
-	{
+        
+    public function isProcessing()
+    {
         return $this->status->get() == self::STATUS_PROCESSING; 
     }
 
-	public function isAwaitingShipment()
-	{
+    public function isAwaitingShipment()
+    {
         return $this->status->get() == self::STATUS_AWAITING; 
     }
 
-	public function isShipped()
-	{
+    public function isShipped()
+    {
         return $this->status->get() == self::STATUS_SHIPPED; 
     }
     
-	public function isReturned()
-	{
+    public function isReturned()
+    {
         return $this->status->get() == self::STATUS_RETURNED; 
-    }    	
+    }       
     
-	/**
-	 * No shipping is required for orders consisting of downloadable items only
-	 */
+    /**
+     * No shipping is required for orders consisting of downloadable items only
+     */
     public function isShippingRequired()
-	{
+    {
         foreach ($this->getShoppingCartItems() as $item)
         {
             if (!$item->product->get()->isDownloadable())
@@ -682,15 +697,15 @@ class CustomerOrder extends ActiveRecordModel
         
         return false;
     }
-	
-	public function isShippingSelected()
-	{
-        $selected = count($this->shipments);
+    
+    public function isShippingSelected()
+    {
+        $selected = $this->shipments ? $this->shipments->size() : 0;
         
         if (!$this->shipments)
         {
-			return false;
-		}
+            return false;
+        }
         
         foreach ($this->shipments as $shipment)
         {
@@ -703,11 +718,11 @@ class CustomerOrder extends ActiveRecordModel
         return $selected;
     }    
 
-	/**
-	 *	Determines if the order matches defined requirements/constraints (min/max total, etc.)
-	 */
-	public function isOrderable()
-	{
+    /**
+     *  Determines if the order matches defined requirements/constraints (min/max total, etc.)
+     */
+    public function isOrderable()
+    {
         ClassLoader::import('application.model.order.OrderException');
         
         $app = $this->getApplication();
@@ -750,22 +765,22 @@ class CustomerOrder extends ActiveRecordModel
                 
         return true;
     }
-	
-	/**
-	 *	Merge two orders into one
-	 */
-	public function merge(CustomerOrder $order)
-	{
-		foreach ($order->getOrderedItems() as $item)
-		{
-			$order->moveItem($item, $this);
-		}
-		
-		$this->mergeItems();
-	}
-	
-	public function changeCurrency(Currency $currency)
-	{
+    
+    /**
+     *  Merge two orders into one
+     */
+    public function merge(CustomerOrder $order)
+    {
+        foreach ($order->getOrderedItems() as $item)
+        {
+            $order->moveItem($item, $this);
+        }
+        
+        $this->mergeItems();
+    }
+    
+    public function changeCurrency(Currency $currency)
+    {
         $this->currency->set($currency);
         foreach ($this->getOrderedItems() as $item)
         {
@@ -775,35 +790,35 @@ class CustomerOrder extends ActiveRecordModel
         }
         
         $this->save();
-    }	
-	
+    }   
+    
     public function getPaidAmount()
     {
-        ClassLoader::import('application.model.order.Transaction');		
+        ClassLoader::import('application.model.order.Transaction');     
         $filter = new ARSelectFilter(new InCond(new ARFieldHandle('Transaction', 'type'), array(Transaction::TYPE_AUTH, Transaction::TYPE_SALE)));
-		$filter->mergeCondition(new NotEqualsCond(new ARFieldHandle('Transaction', 'isVoided'), true));
-		
-		$transactions = $this->getTransactions($filter);
-		$paid = 0;
-		foreach ($transactions as $transaction)
-		{
-			$paid += $transaction->amount->get();
-		}
-		
-		return $paid;
-	}	
-	
-	/*####################  Data array transformation ####################*/
-	
-	/**
-	 *	Creates an array representation of the shopping cart
-	 */
-	public function toArray($options = array())
-	{
+        $filter->mergeCondition(new NotEqualsCond(new ARFieldHandle('Transaction', 'isVoided'), true));
+        
+        $transactions = $this->getTransactions($filter);
+        $paid = 0;
+        foreach ($transactions as $transaction)
+        {
+            $paid += $transaction->amount->get();
+        }
+        
+        return $paid;
+    }   
+    
+    /*####################  Data array transformation ####################*/
+    
+    /**
+     *  Creates an array representation of the shopping cart
+     */
+    public function toArray($options = array())
+    {
         if (is_array($this->orderedItems))
-		{
-			foreach ($this->orderedItems as $item)
-			{                
+        {
+            foreach ($this->orderedItems as $item)
+            {                
                 if (!$item->product->get()->isPricingLoaded())
                 {
                     if (!isset($products))
@@ -820,55 +835,55 @@ class CustomerOrder extends ActiveRecordModel
             }
         }
 
-		$array = parent::toArray();
-		
-		$array['cartItems']	= array();
-		$array['wishListItems']	= array();
+        $array = parent::toArray();
+        
+        $array['cartItems'] = array();
+        $array['wishListItems'] = array();
             
-		if (is_array($this->orderedItems))
-		{
-			foreach ($this->orderedItems as $item)
-			{
-				if ($item->isSavedForLater->get())
-				{
+        if (is_array($this->orderedItems))
+        {
+            foreach ($this->orderedItems as $item)
+            {
+                if ($item->isSavedForLater->get())
+                {
                     $array['wishListItems'][] = $item->toArray();
-				}
-				else
-				{
-					$array['cartItems'][] = $item->toArray();
-				}
-			}
-		}			
-	
-		$array['basketCount'] = $this->getShoppingCartItemCount();
-		$array['wishListCount'] = $this->getWishListItemCount();
-		
-		// shipments
-		$array['shipments'] = array();
-		if ($this->shipments)
-		{
-	        foreach ($this->shipments as $shipment)
-			{
-	            $array['shipments'][] = $shipment->toArray();
-	        }
-		}
-		
-		// total for all currencies
-		$total = array();
-		$currencies = self::getApplication()->getCurrencySet();
+                }
+                else
+                {
+                    $array['cartItems'][] = $item->toArray();
+                }
+            }
+        }           
+    
+        $array['basketCount'] = $this->getShoppingCartItemCount();
+        $array['wishListCount'] = $this->getWishListItemCount();
+        
+        // shipments
+        $array['shipments'] = array();
+        if ($this->shipments)
+        {
+            foreach ($this->shipments as $shipment)
+            {
+                $array['shipments'][] = $shipment->toArray();
+            }
+        }
+        
+        // total for all currencies
+        $total = array();
+        $currencies = self::getApplication()->getCurrencySet();
 
-		if (is_array($currencies))
-		{
-	        foreach ($currencies as $id => $currency)
-	        {
+        if (is_array($currencies))
+        {
+            foreach ($currencies as $id => $currency)
+            {
                 $total[$id] = $this->getTotal($currency);
-	        }
-		}
-		
-		// taxes
-		$array['taxes'] = array();
-		foreach ($this->taxes as $currencyId => $taxes)
-		{
+            }
+        }
+        
+        // taxes
+        $array['taxes'] = array();
+        foreach ($this->taxes as $currencyId => $taxes)
+        {
             $array['taxes'][$currencyId] = array();
             $currency = Currency::getInstanceById($currencyId);
             
@@ -878,17 +893,17 @@ class CustomerOrder extends ActiveRecordModel
                 $array['taxes'][$currencyId][$taxId]['formattedAmount'] = $currency->getFormattedPrice($amount);
             }
         }
-        			
-		$array['total'] = $total;
-		
-		$array['formattedTotal'] = array();
-		if (is_array($array['total']))
-		{
-	        foreach ($array['total'] as $id => $amount)
-			{
-	            $array['formattedTotal'][$id] = $currencies[$id]->getFormattedPrice($amount);   
-	        }
-		}
+                    
+        $array['total'] = $total;
+        
+        $array['formattedTotal'] = array();
+        if (is_array($array['total']))
+        {
+            foreach ($array['total'] as $id => $amount)
+            {
+                $array['formattedTotal'][$id] = $currencies[$id]->getFormattedPrice($amount);   
+            }
+        }
         
         // order type
         $array['isShippingRequired'] = (int)$this->isShippingRequired();
@@ -899,24 +914,24 @@ class CustomerOrder extends ActiveRecordModel
         $array['isAwaitingShipment'] = (int)$this->isAwaitingShipment();
         $array['isProcessing'] = (int)$this->isProcessing();
 
-		// payments
-		if (isset($options['payments']))
-		{
-			$currency = $this->currency->get();
-			$array['amountPaid'] = $this->getPaidAmount();
-			
-			$array['amountNotCaptured'] = $array['amountPaid'] - $array['capturedAmount'];
-			if ($array['amountNotCaptured'] < 0)
-			{
-				$array['amountNotCaptured'] = 0;	
-			}
-			
-			$array['amountDue'] = $array['total'][$currency->getID()] - $array['amountPaid'];
-			if ($array['amountDue'] < 0)
-			{
-				$array['amountDue'] = 0;	
-			}
-				
+        // payments
+        if (isset($options['payments']))
+        {
+            $currency = $this->currency->get();
+            $array['amountPaid'] = $this->getPaidAmount();
+            
+            $array['amountNotCaptured'] = $array['amountPaid'] - $array['capturedAmount'];
+            if ($array['amountNotCaptured'] < 0)
+            {
+                $array['amountNotCaptured'] = 0;    
+            }
+            
+            $array['amountDue'] = $array['total'][$currency->getID()] - $array['amountPaid'];
+            if ($array['amountDue'] < 0)
+            {
+                $array['amountDue'] = 0;    
+            }
+                
             // items subtotal 
             $array['itemSubtotal'] = 0; 
             foreach ($this->getOrderedItems() as $item) 
@@ -932,12 +947,12 @@ class CustomerOrder extends ActiveRecordModel
             } 
             
             $array['subtotalBeforeTaxes'] = $array['itemSubtotal'] + $array['shippingSubtotal'];
-                		
-			foreach (array('amountPaid', 'amountNotCaptured', 'amountDue', 'itemSubtotal', 'shippingSubtotal', 'subtotalBeforeTaxes', 'totalAmount') as $key)
-			{
-				$array['formatted_' . $key] = $currency->getFormattedPrice($array[$key]);
-			}
-		}
+                        
+            foreach (array('amountPaid', 'amountNotCaptured', 'amountDue', 'itemSubtotal', 'shippingSubtotal', 'subtotalBeforeTaxes', 'totalAmount') as $key)
+            {
+                $array['formatted_' . $key] = $currency->getFormattedPrice($array[$key]);
+            }
+        }
 
         if (!$array['isFinalized'])
         {
@@ -956,89 +971,89 @@ class CustomerOrder extends ActiveRecordModel
 
         $this->setArrayData($array);
 
-		return $array;
-	}	
-	
-	/*####################  Get related objects ####################*/
+        return $array;
+    }   
+    
+    /*####################  Get related objects ####################*/
     
     public function getShoppingCartItems()
     {
-		$items = array();
+        $items = array();
 
         foreach ($this->orderedItems as $item)
-		{
-			if (!$item->isSavedForLater->get())
-			{
-				$items[] = $item;
-			}
-		}        
-		
-		return $items;
+        {
+            if (!$item->isSavedForLater->get())
+            {
+                $items[] = $item;
+            }
+        }        
+        
+        return $items;
     }
     
     public function getWishListItems()
     {
-		$items = array();
+        $items = array();
         foreach ($this->orderedItems as $item)
-		{
-			if ($item->isSavedForLater->get())
-			{
-				$items[] = $item;
-			}
-		}        
-		
-		return $items;
+        {
+            if ($item->isSavedForLater->get())
+            {
+                $items[] = $item;
+            }
+        }        
+        
+        return $items;
     }
     
-	public function getOrderedItems()
-	{
-		return $this->orderedItems;
-	}
+    public function getOrderedItems()
+    {
+        return $this->orderedItems;
+    }
     
     public function getShoppingCartItemCount()
-	{
-		$count = 0;
+    {
+        $count = 0;
 
-		foreach ($this->getShoppingCartItems() as $item)
-		{
-        	$count += $item->count->get();
-		}
-		
-		return $count;
-	}    
+        foreach ($this->getShoppingCartItems() as $item)
+        {
+            $count += $item->count->get();
+        }
+        
+        return $count;
+    }    
     
     public function getWishListItemCount()
-	{
-		return count($this->getWishListItems());
-	}    
+    {
+        return count($this->getWishListItems());
+    }    
 
-	public function getItemsByProduct(Product $product)
-	{
-		$items = array();
+    public function getItemsByProduct(Product $product)
+    {
+        $items = array();
         foreach ($this->orderedItems as $item)
-		{
-			if ($item->product->get()->getID() == $product->getID())
-			{
-				$items[] = $item;
-			}
-		}        
-		
-		return $items;		
-	}
+        {
+            if ($item->product->get()->getID() == $product->getID())
+            {
+                $items[] = $item;
+            }
+        }        
+        
+        return $items;      
+    }
 
     /**
      *  Return OrderedItem instance by ID
      */
-	public function getItemByID($id)
-	{
+    public function getItemByID($id)
+    {
         foreach ($this->orderedItems as $item)
-		{
-			if ($item->getID() == $id)
-			{
-				return $item;
-			}
-		}			
-	}
+        {
+            if ($item->getID() == $id)
+            {
+                return $item;
+            }
+        }           
+    }
 
     /**
      *  Loads ordered item/product info from database
@@ -1049,24 +1064,24 @@ class CustomerOrder extends ActiveRecordModel
         
         foreach ($this->orderedItems as $item)
         {
-			$productIDs[] = $item->product->get()->getID();
-		}
-		
-		$products = ActiveRecordModel::getInstanceArray('Product', $productIDs);
-		
+            $productIDs[] = $item->product->get()->getID();
+        }
+        
+        $products = ActiveRecordModel::getInstanceArray('Product', $productIDs);
+        
         foreach ($this->orderedItems as $item)
         {
-			$id = $item->product->get()->getID();
-			
-			if (isset($products[$id]))
-			{
-				$item->product->set($products[$id]);
-			}
-			else
-			{
-				$this->removeProduct($item->product->get());
-			}
-		}		
+            $id = $item->product->get()->getID();
+            
+            if (isset($products[$id]))
+            {
+                $item->product->set($products[$id]);
+            }
+            else
+            {
+                $this->removeProduct($item->product->get());
+            }
+        }       
     }
     
     /**
@@ -1090,7 +1105,7 @@ class CustomerOrder extends ActiveRecordModel
             }
             
             /*
-			// get downloadable items
+            // get downloadable items
             foreach ($this->getShoppingCartItems() as $item)
             {
                 if ($item->product->get()->isDownloadable())
@@ -1157,9 +1172,9 @@ class CustomerOrder extends ActiveRecordModel
 
         return $this->shipments;
     }
-	
-	public function getDeliveryZone()
-	{
+    
+    public function getDeliveryZone()
+    {
         ClassLoader::import("application.model.delivery.DeliveryZone");
         
         if ($this->isShippingRequired() && $this->shippingAddress->get())
@@ -1180,14 +1195,14 @@ class CustomerOrder extends ActiveRecordModel
         ClassLoader::import('application.model.order.Transaction');
         if (is_null($filter))
         {
-			$filter = new ARSelectFilter();			
-		}
+            $filter = new ARSelectFilter();         
+        }
         $filter->setOrder(new ARFieldHandle('Transaction', 'ID'), 'ASC');
         return $this->getRelatedRecordSet('Transaction', $filter);
     }
     
-	public function getNotes()
-	{
+    public function getNotes()
+    {
         $f = new ARSelectFilter();
         $f->setOrder(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
         return $this->getRelatedRecordSet('OrderNote', $f, OrderNote::LOAD_REFERENCES);
@@ -1203,18 +1218,18 @@ class CustomerOrder extends ActiveRecordModel
     
     public function getDownloadShipment()
     {
- 	    foreach($this->getShipments() as $shipment)
- 	    {
- 	        if(!$shipment->isShippable()) return $shipment;
- 	    }
- 	    
- 	    $shipment = Shipment::getNewInstance($this);
-	    $shipment->amountCurrency->set($this->currency->get());
-   		$shipment->save();
-   		        
+        foreach($this->getShipments() as $shipment)
+        {
+            if(!$shipment->isShippable()) return $shipment;
+        }
+        
+        $shipment = Shipment::getNewInstance($this);
+        $shipment->amountCurrency->set($this->currency->get());
+        $shipment->save(true);
+
         $this->shipments->add($shipment);
-   	
-   		return $shipment;
+    
+        return $shipment;
     }
     
     public function countShippableShipments()
@@ -1231,9 +1246,9 @@ class CustomerOrder extends ActiveRecordModel
         
         return $shippableCount;
     } 
-	
-	public function serialize()
-	{
+    
+    public function serialize()
+    {
         return parent::serialize(array('userID'), array('orderedItems', 'shipments'));        
     }
     
@@ -1260,19 +1275,19 @@ class CustomerOrder extends ActiveRecordModel
         ProductPrice::loadPricesForRecordSet($set);
     }
     
-	protected function __get($name)
-	{
-		switch ($name)
-	  	{
-		    case 'shipments':
-		    	$this->shipments = new ARSet();
-				return $this->shipments;
-		    break;
-		    
-			default:
-		    break;
-		}
-	}    
+    protected function __get($name)
+    {
+        switch ($name)
+        {
+            case 'shipments':
+                $this->shipments = new ARSet();
+                return $this->shipments;
+            break;
+            
+            default:
+            break;
+        }
+    }    
 }
-	
+    
 ?>

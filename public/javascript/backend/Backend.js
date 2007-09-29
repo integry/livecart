@@ -1285,7 +1285,7 @@ Backend.SelectPopup.prototype = {
                 {
                     window.selectPopupWindow.close();
                 }
-            }); 
+            }, false); 
 			
             Backend.SelectPopup.prototype.popup.focus();
             

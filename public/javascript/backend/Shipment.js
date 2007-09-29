@@ -230,9 +230,9 @@ Backend.Shipment.prototype =
         var migrations = {}
         migrations[this.STATUS_NEW]                     = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED,this.STATUS_DELETE]
         migrations[this.STATUS_PROCESSING]              = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED,this.STATUS_DELETE]
-        migrations[this.STATUS_AWAITING]                = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED,this.STATUS_DELETE]
+        migrations[this.STATUS_AWAITING]                = [this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED,this.STATUS_DELETE]
         migrations[this.STATUS_SHIPPED]                 = [this.STATUS_SHIPPED,this.STATUS_RETURNED]
-        migrations[this.STATUS_RETURNED]                = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_RETURNED,this.STATUS_SHIPPED,this.STATUS_DELETE]
+        migrations[this.STATUS_RETURNED]                = [this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_RETURNED,this.STATUS_SHIPPED,this.STATUS_DELETE]
         migrations[this.STATUS_DELETE]                  = [];
 		
         $A(this.nodes.status.options).each(function(option) {
@@ -770,37 +770,43 @@ Backend.Shipment.prototype =
        {
             var orderStatus = $("order_" + orderID + "_status");
             var orderForm = $("orderInfo_" + orderID + "_form");
-            var statuses = $$("#tabOrderProducts_" + orderID + "Content .shippableShipments select[name=status]");
 			
-			if(statuses.size() == 0)
-			{
-				statuses = $$("#tabOrderProducts_" + orderID + "Content .shippedShipments select[name=status]");
-            }
+			var shippableStatuses = $$("#tabOrderProducts_" + orderID + "Content .shippableShipments select[name=status]");
+			var shippedStatuses = $$("#tabOrderProducts_" + orderID + "Content .shippedShipments select[name=status]");
+			
+            var statuses = shippableStatuses.concat(shippedStatuses);
 			
 			if(orderStatus)
 			{
-	            var lowestStatus = 100;
-	            var isNew = true;
-	            statuses.each(function(statusElement)
-	            {
-	                if(statusElement.value < lowestStatus)
-	                {
-	                    lowestStatus = statusElement.value;
+				if(shippableStatuses.size() && shippedStatuses.size() && newOrderStatus != orderStatus.value)
+                {
+                    orderStatus.value = Backend.Shipment.prototype.STATUS_PROCESSING;
+                }
+				else
+				{
+		            var lowestStatus = 100;
+		            var isNew = true;
+		            statuses.each(function(statusElement)
+		            {
+		                if(statusElement.value < lowestStatus)
+		                {
+		                    lowestStatus = statusElement.value;
+		                }
+		
+		                if(statusElement.value > Backend.Shipment.prototype.STATUS_NEW)
+		                {
+		                    isNew = false
+		                }
+		            });
+		            
+		            var newOrderStatus = (!isNew && lowestStatus == Backend.Shipment.prototype.STATUS_NEW) ? Backend.Shipment.prototype.STATUS_PROCESSING : lowestStatus;
+		            if(newOrderStatus != orderStatus.value)
+		            {
+		                orderStatus.value = newOrderStatus;
 	                }
-	
-	                if(statusElement.value > Backend.Shipment.prototype.STATUS_NEW)
-	                {
-	                    isNew = false
-	                }
-	            });
-	            
-	            var newOrderStatus = (!isNew && lowestStatus == Backend.Shipment.prototype.STATUS_NEW) ? Backend.Shipment.prototype.STATUS_PROCESSING : lowestStatus;
-	            if(newOrderStatus != orderStatus.value)
-	            {
-	                orderStatus.value = newOrderStatus;
-	            }
+				}
 			}
-       }.bind(this), 100);
+       }.bind(this), 200);
 	},
 	
     recalculateTotal: function()

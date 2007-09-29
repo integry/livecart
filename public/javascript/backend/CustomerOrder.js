@@ -526,10 +526,10 @@ Backend.CustomerOrder.Editor.prototype =
 		
 		var migrations = {}
 		migrations[this.STATUS_NEW]         = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED]
-        migrations[this.STATUS_PROCESSING]  = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED]
-        migrations[this.STATUS_AWAITING]    = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED]
+        migrations[this.STATUS_PROCESSING]  = [this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED]
+        migrations[this.STATUS_AWAITING]    = [this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED]
         migrations[this.STATUS_SHIPPED]     = [this.STATUS_SHIPPED,this.STATUS_RETURNED]
-        migrations[this.STATUS_RETURNED]    = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_RETURNED,this.STATUS_SHIPPED]
+        migrations[this.STATUS_RETURNED]    = [this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_RETURNED,this.STATUS_SHIPPED]
         
 		$A(this.nodes.status.options).each(function(option) {
 			if(migrations[statusValue].include(parseInt(option.value)))

@@ -300,7 +300,7 @@ class Shipment extends ActiveRecordModel
     
     /*####################  Saving ####################*/
     	
-    public function save()
+    public function save($downloadable = false)
     {
         $this->removeDeletedItems();
         
@@ -321,6 +321,7 @@ class Shipment extends ActiveRecordModel
         // set shipping data
         $rate = $this->getSelectedRate();
 //        var_dump($rate);
+
         
         if ($rate)
         {        
@@ -338,7 +339,7 @@ class Shipment extends ActiveRecordModel
         
             
         // Update order status if to reflect it's shipments statuses
-        if ($this->isShippable() && $this->order->get()->isFinalized->get())
+        if (!$downloadable && $this->isShippable() && $this->order->get()->isFinalized->get())
         {
             $this->order->get()->updateStatusFromShipments(!$this->isExistingRecord());
         }
