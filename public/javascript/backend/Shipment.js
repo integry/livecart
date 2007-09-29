@@ -349,10 +349,10 @@ Backend.Shipment.prototype =
     {
         if(response.status == 'success')
         {		
-            var shipmentItems = $$("#tabOrderProducts_" + this.id + "Content .shippableShipments .orderShipment");
+            var shipmentItems = $$("#tabOrderProducts_" + this.orderID + "Content .shippableShipments .orderShipment");
             if(shipmentItems.length >= 1)
             {
-                var firstShipment = ActiveList.prototype.getInstance(shipmentItems.first());
+                var firstShipment = ActiveList.prototype.getInstance(shipmentItems.first().down('ul'));
                 Element.addClassName(firstShipment.ul, 'activeList_add_sort');
                 firstShipment.createSortable();
             }
@@ -365,7 +365,7 @@ Backend.Shipment.prototype =
             var inputOrderID = '<input type="hidden" name="orderID" value="' + this.orderID + '" />';
             var inputServiceID = '<input type="hidden" name="shippingServiceID" value="' + response.shipment.ShippingService.ID + '" />';
 			
-            var ul = '<ul id="orderShipmentsItems_list_' + this.orderID + '_' + response.shipment.ID + '" class="activeList_add_sort activeList_add_delete orderShipment activeList_accept_orderShipmentsItem"></ul>'
+			var ul = '<ul id="orderShipmentsItems_list_' + this.orderID + '_' + response.shipment.ID + '" class="activeList_add_sort activeList_add_delete orderShipmentsItem activeList_accept_orderShipmentsItem activeList"></ul>'
             var li = this.shipmentsActiveList.addRecord(response.shipment.ID, '<fieldset class="shipmentContainer">' + legend + '<form>' + inputID + inputOrderID + inputServiceID + controls + ul + stats + '</form></fieldset>');
 
             var newShipmentActiveList = ActiveList.prototype.getInstance($('orderShipmentsItems_list_' + this.orderID + '_' + response.shipment.ID), Backend.OrderedItem.activeListCallbacks);
@@ -416,11 +416,15 @@ Backend.Shipment.prototype =
 			
             this.shipmentsActiveList.highlight(li);
 			
-            if(window.selectPopupWindow)
-            {
-                Backend.SelectPopup.prototype.popup.location.reload();
-				Backend.SelectPopup.prototype.popup.outerHeight = Backend.Shipment.prototype.getPopupHeight();
-            }
+			try
+			{
+	            if(window.selectPopupWindow)
+	            {
+	                Backend.SelectPopup.prototype.popup.location.reload();
+					Backend.SelectPopup.prototype.popup.outerHeight = Backend.Shipment.prototype.getPopupHeight();
+	            }
+			}
+			catch(e) { }
 			
 			Backend.Shipment.prototype.toggleControls(this.orderID);
             Backend.Shipment.prototype.updateOrderStatus(this.orderID);
@@ -622,7 +626,7 @@ Backend.Shipment.prototype =
 								
 		        if(shipments.size() == 1)
 		        {
-		            var firstItemsList = ActiveList.prototype.getInstance(shipments.first());
+		            var firstItemsList = ActiveList.prototype.getInstance(shipments.first().down('ul'));
 		            Element.removeClassName(firstItemsList.ul, 'activeList_add_sort');
 		            firstItemsList.destroySortable();
 		        }            
@@ -992,8 +996,6 @@ Backend.Shipment.prototype =
 									
 									shipment.addNewProductToShipment(this.objectID, orderID, this.popup.document);
 				                }.bind(this), true);
-								
-								window.selectPopupWindow
 							}
                         }
 						

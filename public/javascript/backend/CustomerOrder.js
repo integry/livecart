@@ -499,25 +499,8 @@ Backend.CustomerOrder.Editor.prototype =
         this.bindEvents();
         
 		this.toggleStatuses();
-		this.toggleNewProductAndShipmentLinks();
 		
         Form.State.backup(this.nodes.form);
-	},
-
-    toggleNewProductAndShipmentLinks: function()
-	{
-        // Hide "Add new shipmkent" and "Add new product" links too
-		if($("orderShipments_menu_" + this.id))
-		{
-	        if(parseInt(this.nodes.status.value) == this.STATUS_SHIPPED && $("orderShipments_menu_" + this.id))
-	        {
-	            Element.hide("orderShipments_menu_" + this.id);
-	        }
-			else
-			{
-	            Element.show("orderShipments_menu_" + this.id);
-		  }
-		}
 	},
 
     toggleStatuses: function()
@@ -792,7 +775,6 @@ Backend.CustomerOrder.Editor.prototype =
 		}
             
         this.toggleStatuses();
-        this.toggleNewProductAndShipmentLinks();
 	},
     
     removeEmptyShipmentsFromHTML: function()
@@ -806,6 +788,14 @@ Backend.CustomerOrder.Editor.prototype =
                  Element.remove(shipemnt);
              }
         });
+		
+        var shipments = $$("#tabOrderProducts_" + this.id + "Content .shippableShipments .orderShipment");
+        if(shipments.size() == 1)
+        {
+            var firstItemsList = ActiveList.prototype.getInstance(shipments.first().down('ul'));
+            Element.removeClassName(firstItemsList.ul, 'activeList_add_sort');
+            firstItemsList.destroySortable();
+        } 
 		
         Backend.CustomerOrder.Editor.prototype.getInstance(this.id, false).toggleStatuses();
         Backend.Shipment.prototype.updateOrderStatus(this.id);

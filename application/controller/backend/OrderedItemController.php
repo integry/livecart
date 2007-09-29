@@ -154,6 +154,7 @@ class OrderedItemController extends StoreManagementController
 		$response->set("categoryList", $categoryList->toArray($this->application->getDefaultLanguageCode()));
 		
         $order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);
+        $downloadable = $order->getDownloadShipment();
         $order->loadItems();
         $shipments = $order->getShipments();
         
@@ -168,7 +169,7 @@ class OrderedItemController extends StoreManagementController
         foreach($shipments as $key => $shipment)
         {
             // one shipment is reserved for downloadable items
-            if(!$shipment->isShippable() || (!$downloadableGroup && !$key && !count($shipment->getItems())))
+            if($shipment === $downloadable || $shipment->isShipped())
             {
                 continue;
             }

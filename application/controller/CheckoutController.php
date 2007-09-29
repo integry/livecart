@@ -301,8 +301,8 @@ class CheckoutController extends FrontendController
             return new ActionRedirectResponse('checkout', 'pay');
         }
         
-        $shipments = $this->order->getShipments();
-
+        $shipments = $this->order->getShipments();          
+            
         $form = $this->buildShippingForm($shipments);
         $zone = $this->order->getDeliveryZone();
         
@@ -371,7 +371,7 @@ class CheckoutController extends FrontendController
         foreach ($shipments as $key => $shipment)
         {
 			if ($shipment->isShippable())
-			{
+			{			    
                 $rates = $shipment->getAvailableRates();
     			
     			$selectedRateId = $this->request->get('shipping_' . $key);

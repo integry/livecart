@@ -1,5 +1,6 @@
 {includeJs file="library/livecart.js"}
 {includeJs file="library/ActiveGrid.js"}
+{includeJs file="library/form/ActiveForm.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
 {includeJs file="library/TabControl.js"}
@@ -74,25 +75,47 @@
 	</div>
 	<div id="sectionContainer" class="sectionContainer maxHeight  h--50"> </div>
 
-<form id="availableShipments" style="display: none;">
+<form id="availableShipments">
     <h2>{t _select_shippment}</h2>
     {foreach name="shipments" item="shipment" from=$shipments}
-        {if $checked}
-        <script type="text/javascript">
-            Element.show("availableShipments");
-        </script>
-        {/if}
-        
         <fieldset class="error">
             <input name="shipment" type="radio" value="{$shipment.ID}" id="shipment{$shipment.ID}" class="checkbox" {if !$checked}checked="checked"{/if}>
             <label for="shipment{$shipment.ID}" class="checkbox"><b>{t _shipment} #{$shipment.ID}</b> ({$shipment.ShippingService.name_lang} - {$shipment.formatted_totalAmount})</label>
-            {assign var="checked" value="true"}
         </fieldset>
+        
     {/foreach}
 </form>
 
 {literal}
 <script type="text/javascript">
+    if(window.opener)
+    {
+        var checked = false;
+        $("availableShipments").getElementsBySelector("fieldset").each(function(fieldset)
+        {
+            var radio = fieldset.down("input[type=radio]");
+            var shipmentID = radio.id.replace(/shipment(\d+)/, "$1");
+            var orderID = window.opener.Backend.CustomerOrder.Editor.prototype.CurrentId;
+    
+            if(!window.opener.$$("#tabOrderProducts_" + orderID + "Content .shippableShipments #orderShipmentsItems_list_" + orderID + "_" + shipmentID).size())
+            {
+                Element.remove(fieldset);
+                return;
+            }
+            
+            if(!checked)
+            {
+                radio.checked = true;
+            }
+        });
+        
+        if($("availableShipments").getElementsBySelector("fieldset").size() <= 1)
+        {
+            checked = true;
+            $("availableShipments").hide();
+        }
+    }
+    
     Backend.Category.links = {};
     Backend.Category.links.categoryRecursiveAutoloading = '{/literal}{link controller=backend.category action=xmlRecursivePath}{literal}';
 	Backend.Category.links.countTabsItems = '{/literal}{link controller=backend.category action=countTabsItems id=_id_}{literal}';

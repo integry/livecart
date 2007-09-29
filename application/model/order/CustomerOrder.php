@@ -95,8 +95,8 @@ class CustomerOrder extends ActiveRecordModel
         
         $this->orderedItems = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category', 'DefaultImage' => 'ProductImage'))->getData();
         $this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter(), self::LOAD_REFERENCES);
-        
-        if (!$this->shipments)
+       
+        if (!$this->shipments->size())
         {
             $this->shipments = unserialize($this->shipping->get());
         }
@@ -471,7 +471,7 @@ class CustomerOrder extends ActiveRecordModel
                 }
             }
         }
-        
+    
         
         if ($isModified)
         { 
@@ -487,7 +487,7 @@ class CustomerOrder extends ActiveRecordModel
         }
         
         if ($this->isModified() || $isModified)
-        {
+        {            
             $this->shipping->set(serialize($this->shipments));            
         }
 
@@ -1166,6 +1166,7 @@ class CustomerOrder extends ActiveRecordModel
                     $this->shipments->unshift($downloadable);
                 }                                  
             }                
+            
             
             $this->shipping->set(serialize($this->shipments));               
         }

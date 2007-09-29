@@ -16,6 +16,7 @@ ul.activeList, .activeListGroup
 {
     list-style: none;
     position: relative;
+	min-height: 20px;
 }
 
 .activeList li, .activeListGroup li
