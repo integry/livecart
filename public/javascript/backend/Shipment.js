@@ -426,7 +426,6 @@ Backend.Shipment.prototype =
 			}
 			catch(e) { }
 			
-			Backend.Shipment.prototype.toggleControls(this.orderID);
             Backend.Shipment.prototype.updateOrderStatus(this.orderID);
 			
 			Backend.Shipment.prototype.getInstance(li);
@@ -674,8 +673,6 @@ Backend.Shipment.prototype =
                    {
                       countInput.show(); 
                    });
-
-                   Backend.Shipment.prototype.toggleControls(orderID);
                }
                    
                select.lastValue = select.value;
@@ -872,47 +869,6 @@ Backend.Shipment.prototype =
     {
         return  parseFloat(this.nodes.root.down(".shipment_shippingAmount").down('.price').innerHTML);
     },
-    
-    /**
-     *  Do not display shipment status controls for orders that have only one shipment
-     */ 
-    toggleControls: function(orderID) 
-    {
-	    var shippableControls = document.getElementsByClassName("orderShipment_controls", $("order" + orderID + "_shippableShipments"));
-        var shippedControls = document.getElementsByClassName("orderShipment_controls", $("order" + orderID + "_shippedShipments"));
-		var allControls = $A(shippableControls.concat(shippedControls));
-       
-	    var size = shippableControls.size();
-		var shippedSize = shippedControls.size();
-		
-            
-        if(shippedSize > 0)
-        {
-            shippableControls.invoke("show");
-        }
-		else
-		{
-	        shippableControls.each(function(otherControls)
-	        {
-				if(otherControls.down("select[name=status]").value == -1)
-				{
-					size--;
-				}
-				
-				console.info(size);
-				
-	            if(size <= 1) 
-				{
-					shippableControls.invoke("hide");
-					throw $break;
-				}
-		        else 
-				{
-					otherControls.show();
-				}
-	        }.bind(this));
-        }
-    },
 	
 	getPopupHeight: function()
 	{
@@ -926,8 +882,6 @@ Backend.Shipment.prototype =
 	{
         orderID = parseInt(orderID);
 		downloadableShipmentID = parseInt(downloadableShipmentID);
-		
-        Backend.Shipment.prototype.toggleControls(orderID);
 		
 	    window.onbeforeunload = function() 
 	    { 	        
@@ -1034,8 +988,6 @@ Backend.Shipment.prototype =
             menu.hide(null, "orderShipments_new_" + orderID + "_controls");
             Backend.Shipment.prototype.getInstance("orderShipments_new_" + orderID + "_form").save(); ; 
         }.bind(this)); 
-	
-//        Backend.Shipment.prototype.toggleControls(orderID);
 	}
 }
 
