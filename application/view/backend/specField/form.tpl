@@ -145,6 +145,7 @@
                 <p class="specField_values_controls">
                     <a href="#add" class="specField_add_field">{t _SpecField_add_values}</a>
                     <span class="specField_mergeValuesControls controls" style="display: none">
+                        <span class="progressIndicator" style="display: none;"></span>
                         <input type="button" class="submit specField_mergeValuesSubmit" value="{tn _specField_merge_values}" />
                         {t _or}
                         <a href="#" class="cancel specField_mergeValuesCancel">{t _cancel}</a>

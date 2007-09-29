@@ -15,7 +15,7 @@
                 </td>
                 <td class="orderShipmentsItem_info_price_td">
                     <div class="orderShipmentsItem_info_price">
-                        {t _price}
+                        {t _item_price}
                     </div>
                 </td>
                 <td class="orderShipmentsItem_info_count_td">

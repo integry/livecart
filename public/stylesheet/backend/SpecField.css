@@ -96,7 +96,7 @@
     width: auto;
 }
 
-.specField_mergeValuesLink
+.specField_mergeValuesLink, .specField_mergeValuesCancelLink
 {
     display: block;
     float: left;

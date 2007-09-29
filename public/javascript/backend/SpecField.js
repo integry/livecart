@@ -59,7 +59,7 @@ Backend.SpecField.prototype = {
     TYPE_TEXT_DATE: 6,
 
 	cssPrefix: "specField_",
-
+	
     callbacks: {
         beforeEdit:     function(li) {
             Backend.SpecField.prototype.hideNewSpecFieldAction(this.getRecordId(li, 3));
@@ -120,7 +120,7 @@ Backend.SpecField.prototype = {
 	 */
 	initialize: function(specFieldJson, hash)
 	{
-	    this.specField = !hash ? eval("(" + specFieldJson + ")" ) : specFieldJson;
+        this.specField = !hash ? eval("(" + specFieldJson + ")" ) : specFieldJson;
 	    this.cloneForm('specField_item_blank');
 
 	    this.id                    = this.specField.ID;
@@ -173,6 +173,12 @@ Backend.SpecField.prototype = {
 		this.fieldsList.touch(true);
 		
         this.bindDefaultFields();
+        this.nodes.type.value = 3;
+        this.typeWasChangedAction();
+        
+        $('specField_step_lev1_specField_step_main_' + this.categoryID + '_new').show();
+        $('specField_step_lev1_specField_step_values_' + this.categoryID + '_new').hide();
+                
 		Backend.SpecField.prototype.countNewValues++;
         
         Form.restore(this.nodes.form, ['type']);
@@ -645,7 +651,7 @@ Backend.SpecField.prototype = {
 	 */
 	addValueFieldAction: function()
 	{
-		this.addField(null, "new" + Backend.SpecField.prototype.countNewValues, true);
+		this.addField(null, "new" + Backend.SpecField.prototype.countNewValues, false);
         this.bindDefaultFields();
 		Backend.SpecField.prototype.countNewValues++;
 	},
@@ -885,6 +891,7 @@ Backend.SpecField.prototype = {
         Event.observe(input, "input", function(e) { self.mainValueFieldChangedAction(e) }, false);
         Event.observe(input, "input", function(e) {
             if(!this.up('li').next() && this.value != '') self.addValueFieldAction();
+            this.focus();
         });
 
 		// now insert all translation fields
@@ -1144,7 +1151,9 @@ Backend.SpecField.prototype = {
     createNewAction: function(categoryID)
     {
 		var form = new ActiveForm.Slide("specField_menu_" + categoryID);
-		form.show("addSpecField", this.cssPrefix + "item_new_"+categoryID+"_form", ['type']);
+		var fieldFormId = this.cssPrefix + "item_new_"+categoryID+"_form";
+				
+		form.show("addSpecField", fieldFormId, ['type']);
     },
     
     toggleValuesMerging: function()
@@ -1168,7 +1177,12 @@ Backend.SpecField.prototype = {
         {
             this.nodes.mergeValuesControls.hide();
             this.nodes.valuesAddFieldLink.show();
-            this.nodes.stepValues.down('.languageForm').show();
+            
+            if (this.DATATYPE_TEXT == this.specField.dataType)
+            {
+                this.nodes.stepValues.down('.languageForm').show();
+            }
+            
             this.nodes.mergeValuesCancelLink.hide();
             this.nodes.mergeValuesLink.show();
             this.nodes.controls.show();
@@ -1210,7 +1224,7 @@ Backend.SpecField.prototype = {
         
         new LiveCart.AjaxRequest(
             Backend.SpecField.prototype.links.mergeValues + "?" + mergeIntoValue + mergedString,
-            false,
+            this.nodes.mergeValuesSubmit.parentNode.down('.progressIndicator'),
             function(reply)
             {
                 this.handleMergeValuesResponse(eval("(" + reply.responseText + ")"));               
@@ -1223,7 +1237,8 @@ Backend.SpecField.prototype = {
         if('success' == response.status)
         {
             var self = this;
-            $H(this.mergedValues).each(function(mergedValue) {
+            $H(this.mergedValues).each(function(mergedValue) 
+            {
                 if(Element.hasClassName(mergedValue.value, self.cssPrefix + "valueMergedWinner"))
                 {
                     Element.removeClassName(mergedValue.value, self.cssPrefix + "valueMergedWinner");

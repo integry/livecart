@@ -91,9 +91,9 @@ class SpecFieldController extends StoreManagementController
             return new JSONResponse(array(
 	                'errors' => array('ID' => $this->translate('_error_record_id_is_not_valid')), 
 	                'ID' => (int)$this->request->get('ID')
-                ),
+                )/*,
                 'failure', 
-                $this->translate('_could_not_save_attribute')
+                $this->translate('_could_not_save_attribute') */
             );
         }
         
@@ -204,7 +204,7 @@ class SpecFieldController extends StoreManagementController
         }
         else
         {
-            return new JSONResponse(array('errors' => $this->translateArray($errors)), 'failure', $this->translate('_could_not_save_attribute'));
+            return new JSONResponse(array('errors' => $this->translateArray($errors))/*, 'failure', $this->translate('_could_not_save_attribute')*/);
         }
     }
     
