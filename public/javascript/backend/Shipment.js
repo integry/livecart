@@ -229,7 +229,7 @@ Backend.Shipment.prototype =
         
         var migrations = {}
         migrations[this.STATUS_NEW]                     = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED,this.STATUS_DELETE]
-        migrations[this.STATUS_PROCESSING]              = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED,this.STATUS_DELETE]
+        migrations[this.STATUS_PROCESSING]              = [this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED,this.STATUS_DELETE]
         migrations[this.STATUS_AWAITING]                = [this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED,this.STATUS_DELETE]
         migrations[this.STATUS_SHIPPED]                 = [this.STATUS_SHIPPED,this.STATUS_RETURNED]
         migrations[this.STATUS_RETURNED]                = [this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_RETURNED,this.STATUS_SHIPPED,this.STATUS_DELETE]
@@ -779,33 +779,23 @@ Backend.Shipment.prototype =
 			
 			if(orderStatus)
 			{
-				if(shippableStatuses.size() && shippedStatuses.size() && newOrderStatus != orderStatus.value)
-                {
-                    orderStatus.value = Backend.Shipment.prototype.STATUS_PROCESSING;
+	            var lowestStatus = null;
+	            statuses.each(function(statusElement)
+	            {
+					if(lowestStatus === null)
+					{
+						lowestStatus = statusElement.value;
+					}
+					else if(lowestStatus != statusElement.value)
+					{
+						lowestStatus = Backend.Shipment.prototype.STATUS_PROCESSING
+					}
+	            });
+	            
+	            if(lowestStatus !== null && lowestStatus != orderStatus.value)
+	            {
+	                orderStatus.value = lowestStatus;
                 }
-				else
-				{
-		            var lowestStatus = 100;
-		            var isNew = true;
-		            statuses.each(function(statusElement)
-		            {
-		                if(statusElement.value < lowestStatus)
-		                {
-		                    lowestStatus = statusElement.value;
-		                }
-		
-		                if(statusElement.value > Backend.Shipment.prototype.STATUS_NEW)
-		                {
-		                    isNew = false
-		                }
-		            });
-		            
-		            var newOrderStatus = (!isNew && lowestStatus == Backend.Shipment.prototype.STATUS_NEW) ? Backend.Shipment.prototype.STATUS_PROCESSING : lowestStatus;
-		            if(newOrderStatus != orderStatus.value)
-		            {
-		                orderStatus.value = newOrderStatus;
-	                }
-				}
 			}
        }.bind(this), 200);
 	},

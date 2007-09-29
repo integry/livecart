@@ -152,6 +152,7 @@ class CustomerOrderController extends StoreManagementController
 	    foreach($order->getShipments() as $shipment)
 	    {
 	        if($shipment->isShipped()) continue;
+            if(!$shipment->isShippable() && count($shipment->getItems()) > 0) continue;
 	        
             if($shipment->status->get() != Shipment::STATUS_SHIPPED && $shipment->isShippable()) 
             {

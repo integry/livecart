@@ -532,46 +532,27 @@ class CustomerOrder extends ActiveRecordModel
     
     public function calculateStatusFromShipmensts($creatingNewRecord = false)
     {
-        $lowestStatus = $creatingNewRecord ? Shipment::STATUS_NEW : 100;
+        $lowestStatus = null;
         $isNew = true;
         $countShipments = 0;
         $haveShipped = false;
         foreach($this->getShipments() as $shipment)
         {
             if(!$shipment->isShippable() && count($shipment->getItems()) > 0) continue;
-            if($shipment->isShipped()) 
+            
+            if(is_null($lowestStatus))
             {
-                $haveShipped = true;
-                continue;
+                $lowestStatus = $shipment->status->get();
             }
-            
-            $countShipments++;
-
-            $shipmentStatus = $shipment->status->get();
-            
-            if($shipmentStatus < $lowestStatus)
+            else if($lowestStatus != $shipment->status->get())
             {
-                $lowestStatus = $shipmentStatus;
+                $lowestStatus = Shipment::STATUS_PROCESSING;
             }
-            
-            if($shipmentStatus > Shipment::STATUS_NEW)
-            {
-                $isNew = false;
-            }   
         }
-
-        if($countShipments > 0 && $haveShipped)
+        
+        if(!is_null($lowestStatus) && $lowestStatus != $this->status->get())
         {
-            $lowestStatus = Shipment::STATUS_PROCESSING;
-        }    
-            
-        if($countShipments > 0)
-        {
-            $newOrderStatus = (!$isNew && $lowestStatus == Shipment::STATUS_NEW) ? Shipment::STATUS_PROCESSING : $lowestStatus;
-            if($newOrderStatus != $this->status->get())
-            {
-                return $newOrderStatus;  
-            }
+            return $lowestStatus;  
         }
         
         return $this->status->get();
