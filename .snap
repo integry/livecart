@@ -145,7 +145,7 @@ revision = tip
 [tree22.paths]
 default = ssh://mercurial@dev.integry.net/library/unittest
 
-; Just testing
+; Just testing ... more
 
 [tree999]
 root = .
