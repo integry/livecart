@@ -1,3 +1,10 @@
+[tree1]
+root = .
+revision = tip
+
+[tree1.paths]
+default = ssh://mercurial@dev.integry.net/livecart
+
 [tree2]
 root = framework
 revision = tip
@@ -144,12 +151,3 @@ revision = tip
 
 [tree22.paths]
 default = ssh://mercurial@dev.integry.net/library/unittest
-
-; Just testing ... more
-
-[tree999]
-root = .
-revision = tip
-
-[tree999.paths]
-default = ssh://mercurial@dev.integry.net/livecart
