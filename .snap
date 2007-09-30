@@ -145,11 +145,11 @@ revision = tip
 [tree22.paths]
 default = ssh://mercurial@dev.integry.net/library/unittest
 
-; The main tree should be processed last as it would trigger the completion of update process
+; Just testing
 
-[tree1]
+[tree999]
 root = .
 revision = tip
 
-[tree1.paths]
+[tree999.paths]
 default = ssh://mercurial@dev.integry.net/livecart
