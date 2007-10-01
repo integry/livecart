@@ -472,13 +472,28 @@ class ProductController extends StoreManagementController
         
         if ($ids)
         {
-            $response->set('together', ActiveRecord::getRecordSetArray('Product', new ARSelectFilter(new INCond(new ARFieldHandle('Product', 'ID'), $ids)), array('DefaultImage' => 'ProductImage')));
+            $products = ActiveRecord::getRecordSetArray('Product', new ARSelectFilter(new INCond(new ARFieldHandle('Product', 'ID'), $ids)), array('DefaultImage' => 'ProductImage'));
+            foreach ($products as &$prod)
+            {
+                $prod['count'] = $cnt[$prod['ID']];
+            }
+            usort($products, array($this, 'togetherStatsSort'));
+            $response->set('together', $products);
         }        
 
         $response->set('product', $product->toArray());
-        $response->set('togetherCnt', $cnt);
         $response->set('purchaseStats', $purchaseStats);
         return $response;        
+    }
+
+    private function togetherStatsSort($a, $b)
+    {
+        if ($a['count'] == $b['count'])
+        {
+            return 0;
+        }
+        
+        return ($a['count'] > $b['count']) ? -1 : 1;
     }
 
 	protected function getAvailableColumns(Category $category)
