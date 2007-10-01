@@ -727,3 +727,75 @@ CategoryTabControl.prototype = {
 		$('tabId').url = url;
 	}
 }
+
+
+Backend.Category.PopupSelector = Class.create();
+Backend.Category.PopupSelector.prototype = 
+{
+    Instances: {},
+    
+    id: 0,
+    
+    element: null,
+    
+    initialize: function(type, id, element)
+    {
+        this.id = id;
+        this.element = element;
+    },
+    
+    getInstance: function(type, id, element)
+    {
+        if (!this.Instances[type])
+        {
+            this.Instances[type] = {};
+        }
+
+        if (!this.Instances[type][id])
+        {
+            this.Instances[type][id] = new Backend.Category.PopupSelector(type, id, element);
+        }
+
+        var self = this.Instances[type][id];
+        var w = window.open('/livecart/backend.category/popup', 'selectCategory', 'width=260, height=450');
+        
+        Event.observe(w, 'load', 
+            function()
+            {
+                Event.observe(w.document.getElementById('select'), 'click', function()
+                    {
+                        var tree = w.Backend.Category.treeBrowser;
+                        
+                        self.element.update('');
+                        
+                        var parentId = tree.getSelectedItemId();
+                        do
+                        {       
+                            var item = document.createElement('a');
+                            item.innerHTML = tree.getItemText(parentId);
+                            parentId = tree.getParentId(parentId);
+                            
+                            item.href = '#select';
+
+                            self.element.insertBefore(item, self.element.firstChild);                            
+
+                            if (parentId)
+                            {
+                                var sep = document.createElement('span');
+                                sep.innerHTML = ' &gt; ';
+                                self.element.insertBefore(sep, self.element.firstChild);
+                            }
+
+                        }
+                        while(parentId != 0);
+
+                        console.log(self);
+                        console.log(this.element);
+                        w.close();
+                    });
+            }
+        );
+        
+        return self;
+    }
+}

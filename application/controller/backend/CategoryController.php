@@ -210,6 +210,16 @@ class CategoryController extends StoreManagementController
 	    return $xmlResponse;
 	}
 	
+	public function popup()
+	{
+		$categoryList = Category::getRootNode()->getDirectChildNodes();
+		$categoryList->unshift(Category::getRootNode());
+		
+		$response = new ActionResponse();
+		$response->set('categoryList', $categoryList->toArray());
+		return $response;
+    }
+	
 	public function reindex()
 	{
 		ActiveTreeNode::reindex("Category");

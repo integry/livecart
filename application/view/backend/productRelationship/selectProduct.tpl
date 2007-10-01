@@ -27,7 +27,7 @@
         <ul class="menu">
             <li class="done">
                 <a class="menu" href="#" onclick="window.close(); return false;">
-                    Done adding related products
+                    {t _done_adding}
                 </a>
             </li>
         </ul>

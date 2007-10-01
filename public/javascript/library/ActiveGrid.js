@@ -521,7 +521,7 @@ ActiveGrid.MassActionHandler.prototype =
         this.form = this.actionSelector.form;
         this.button = this.form.down('.submit');
 
-        this.actionSelector.onchange = this.actionSelectorChange.bind(this);
+        Event.observe(this.actionSelector, 'change', this.actionSelectorChange.bind(this));
         Event.observe(this.actionSelector.form, 'submit', this.submit.bind(this));
             
         this.grid = activeGrid;

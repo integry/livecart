@@ -1,6 +1,9 @@
 _products_and_categories=Products and Categories
 _loading_product=Loading product...
 
+# Category selection popup
+_select_category=Select category
+
 # Product tabs
 _done_editing_product=Done editing product
 _product_page=Product page
@@ -93,7 +96,6 @@ _product_file_max_size=Max file size: [_1]
 
 # Product relationship
 _product_relationship_group_title=Title
-
 
 # index
 _products=Products

@@ -77,11 +77,8 @@
 <body>
 <script type="text/javascript">
 {literal}
-
-    /** Initialize all of our objects now. */
     window.historyStorage.init();
     window.dhtmlHistory.create();
-
 {/literal}
 </script>
 

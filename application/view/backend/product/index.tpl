@@ -29,10 +29,11 @@
 	    <input type="hidden" name="isInverse" value="" />
 	    
         {t _with_selected}: 
-        <select name="act" class="select">
+        <select name="act" class="select" onchange="Backend.Product.massActionChanged(this);">
     
             <option value="enable_isEnabled">{t _enable}</option>
             <option value="disable_isEnabled">{t _disable}</option>
+            <option value="move">{t _move_to_category}</option>
             <option value="delete">{t _delete}</option>
                 
             <option value="manufacturer">{t _set_manufacter}</option>
@@ -66,6 +67,11 @@
         <span class="bulkValues" style="display: none;">
         	<span class="addRelated">
 	            {t _enter_sku}: {textfield class="text number" id="massForm_related_`$categoryID`" name="related" autocomplete="controller=backend.product field=sku"}
+        	</span>
+        	<span class="move">
+                <fieldset class="container" style="display: inline; position: relative; top: 10px;">
+                    <span class="path" style="float: left; max-width: 300px; background-color: yellow; display: block; padding: 5px; overflow-x: auto; white-space: nowrap;"></span> <a style="float: left;" href="#select" onclick="Backend.Category.PopupSelector.prototype.getInstance('move', {$categoryID}, this.parentNode.down('.path')); return false;">(change)</a>
+                </fieldset>
         	</span>
             {textfield id="massForm_inc_price_`$categoryID`" class="text number" name="inc_price"}
             {textfield id="massForm_inc_stock_`$categoryID`" class="text number" name="inc_stock"}

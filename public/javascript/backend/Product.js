@@ -275,6 +275,14 @@ Backend.Product =
         $('productManagerContainer').down('.sectionContainer').innerHTML = '';
 
         TabControl.prototype.__instances__ = {};
+    },
+    
+    massActionChanged: function(element)
+    {
+        if ('move' == element.value)
+        {
+            
+        }
     }
 }
 
