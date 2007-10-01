@@ -3,6 +3,13 @@
     width: 90px;
 }
 
+.singleInput .activeList_icons
+{
+    display: block;
+    float: left;
+    padding-top: 8px;
+}
+
 .activeList_icons_container
 {
     width: 16px;

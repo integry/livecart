@@ -25,17 +25,26 @@ Backend.Settings.prototype =
 					this.iconUrls = new Object();	
 				}
 				
-				this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
-				this.setItemImage(itemId, '../../../image/indicator.gif');
+				if (!this.iconUrls[itemId])
+				{
+                    this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
+                    var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
+                    img.originalSrc = img.src;
+    				img.src = 'image/indicator.gif';                    
+                }
 			}
 		
 		this.treeBrowser.hideFeedback = 
-			function()
+			function(itemId)
 			{
-				for (var itemId in this.iconUrls)
-				{
-					this.setItemImage(itemId, this.iconUrls[itemId]);	
-				}				
+                console.log(itemId);
+                if (null != this.iconUrls[itemId])
+                {
+        			this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
+                    var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
+                    img.src = img.originalSrc;
+                    this.iconUrls[itemId] = null;                            
+                }
 			}
 		
     	this.insertTreeBranch(categories, 0);    
@@ -64,12 +73,12 @@ Backend.Settings.prototype =
         Backend.Breadcrumb.display(id);
 		this.treeBrowser.showFeedback(id);
 		var url = this.urls['edit'].replace('_id_', id);
-		var upd = new LiveCart.AjaxRequest(url, 'settingsIndicator', this.displayCategory.bind(this));
+		var upd = new LiveCart.AjaxRequest(url, 'settingsIndicator', function(response) { this.displayCategory(response, id); }.bind(this));
 	},
 	
-	displayCategory: function(response)
+	displayCategory: function(response, id)
 	{
-        this.treeBrowser.hideFeedback();	
+        this.treeBrowser.hideFeedback(id);	
 
 		if (!response.responseText)
 		{

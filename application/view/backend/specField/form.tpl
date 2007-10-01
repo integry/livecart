@@ -134,7 +134,7 @@
     		<div class="specField_values">
                 <p>
         			<ul class="{allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed}">
-        				<li class="dom_template specField_form_values_value specField_update" id="specField_form_values_" style="display: block;">
+        				<li class="dom_template specField_form_values_value singleInput specField_update" id="specField_form_values_" style="display: block;">
                             <input type="checkbox" value="1" class="specField_mergeCheckbox checkbox" style="display: none;"  {denied role="category.update"}disabled="disabled"{/denied} />
                             <input type="text" class="specField_update specField_valueName" {denied role="category.update"}readonly="readonly"{/denied} />
                     		<span class="errorText hidden"> </span>

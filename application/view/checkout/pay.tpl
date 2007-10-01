@@ -87,8 +87,9 @@
     {else}
     	{form action="controller=checkout action=payCreditCard" handle=$ccForm method="POST"}
             {error for="creditCardError"}
-    	    	<div class="errorMsg ccPayment">
-    	    		{$msg}
+    	    	<div class="clear"></div>
+    	    	<div class="errorMsg ccPayment" style="padding-top: 10px;">
+    	    		<p>{$msg}</p>
     	    	</div>
     	    	<div class="clear"></div>
     	    {/error}    
