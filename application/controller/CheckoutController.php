@@ -433,6 +433,13 @@ class CheckoutController extends FrontendController
             $response->set('ccTypes', $this->application->getCardTypes($ccHandler));
 		}
 		
+		// other payment methods
+		$external = $this->application->getPaymentHandlerList(true);
+        $response->set('otherMethods', $external);
+
+        // auto redirect to external payment page if only one handler is enabled
+        
+		
         return $response;                        
     }
 
@@ -587,17 +594,46 @@ class CheckoutController extends FrontendController
 	 */
     public function notify()
 	{
-        $order = CustomerOrder::getInstanceById($this->request->get('custom'), CustomerOrder::LOAD_DATA);
+        $handler = $this->application->getPaymentHandler($this->request->get('id'), $this->getTransaction());
+        $orderId = $handler->getOrderIdFromRequest($this->request->toArray());
+        
+        $order = CustomerOrder::getInstanceById($orderId, CustomerOrder::LOAD_DATA);
         $order->loadAll();
         $this->order = $order;
 
-        $handler = $this->application->getPaymentHandler($this->request->get('id'), $this->getTransaction());
-
         $result = $handler->notify($this->request->toArray());
+         
+//        var_dump($result);
             
         if ($result instanceof TransactionResult)
         {
             $this->registerPayment($result, $handler);
+        }
+        else
+        {
+            // set error message for credit card form
+            $validator = $this->buildCreditCardValidator();
+            $validator->triggerError('creditCardError', $result->getMessage());
+            $validator->saveState();
+            
+            return new ActionRedirectResponse('checkout', 'pay');
+        }
+        
+        // determine if the notification URL is called by payment gateway or the customer himself
+        // this shouldn't usually happen though as the payment notifications should be sent by gateway
+        if ($order->user->get() == $this->user)
+        {
+            $this->request->set('id', $this->order->getID());
+            return $this->completeExternal();
+        }
+        
+        // some payment gateways (2Checkout, for example) require to return HTML response  
+        // to be displayed after the payment. In this case we're doing meta-redirect to get back to our site.
+        else if ($handler->isHtmlResponse())
+        {
+            $response = new ActionResponse('order', $order->toArray());
+            $response->set('returnUrl', $handler->getReturnUrlFromRequest($this->request->toArray()));
+            return $response;
         }
     }
 	
@@ -612,8 +648,8 @@ class CheckoutController extends FrontendController
         {
             throw new ApplicationException('Invalid order');
         }
-        
-        $this->session->set('completedOrderID', $order->getID());        
+
+        $this->session->set('completedOrderID', $order->getID());
         return new ActionRedirectResponse('checkout', 'completed');
     }
 	

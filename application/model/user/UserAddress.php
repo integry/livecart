@@ -56,6 +56,11 @@ class UserAddress extends ActiveRecordModel
 	{
         $array['countryName'] = self::getApplication()->getLocale()->info()->getCountryName($array['countryID']);
         $array['fullName'] = $array['firstName'] . ' ' . $array['lastName'];
+        if (isset($array['State']))
+        {
+            $array['stateName'] = $array['State']['name'];
+        }        
+        
         return $array;
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 include_once(dirname(__file__) . '/../abstract/ExternalPayment.php');
+include_once(dirname(__file__) . '/../method/library/paypal/PaypalCommon.php');
 
 class PaypalWebsitePaymentsStandard extends ExternalPayment
 {
@@ -109,12 +110,27 @@ class PaypalWebsitePaymentsStandard extends ExternalPayment
         return $result;
     }
     
+    public function getOrderIdFromRequest($requestArray)
+    {
+        return $requestArray['custom'];
+    }    
+    
+    public function getReturnUrlFromRequest($requestArray)
+    {
+        return $requestArray['return'];
+    }    
+    
+    public function isHtmlResponse()
+    {
+        return false;
+    }
+        
     public function getValidCurrency($currentCurrencyCode)
     {
         return PaypalCommon::getValidCurrency($currentCurrencyCode);
     }    
     
-    public static function isVoidable()
+    public function isVoidable()
     {
         return false;
     }

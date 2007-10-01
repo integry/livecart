@@ -736,6 +736,22 @@ class LiveCart extends Application
         return $inst;
     }
 
+	/**
+	 * Returns an array of available payment (non-credit card and non-express payment) handlers
+	 */
+	public function getPaymentHandlerList($enabledOnly = false)
+	{
+		ClassLoader::import('library.payment.PaymentMethodManager');		
+		if (!$enabledOnly)
+		{
+            return PaymentMethodManager::getRegularPaymentHandlerList();
+        }
+        else
+        {
+            return is_array($this->config->get('PAYMENT_HANDLERS')) ? array_keys($this->config->get('PAYMENT_HANDLERS')) : array();
+        }
+	}
+
     public function getCardTypes(CreditCardPayment $handler)
     {
 		$key = get_class($handler) . '_cardTypes';

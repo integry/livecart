@@ -27,7 +27,8 @@ class TwoCheckout extends ExternalPayment
         $params['pay_method'] = 'CC';                
 
         $params['return_url'] = $this->siteUrl;
-        
+        $params['complete_url'] = $this->returnUrl;
+                        
         // customer information
         $params['card_holder_name'] = $this->details->getName();
         $params['street_address'] = $this->details->address->get();
@@ -39,7 +40,7 @@ class TwoCheckout extends ExternalPayment
         $params['phone'] = $this->details->phone->get();
          
         // test transaction?
-        if ($this->getConfigValue('TEST'))
+        if ($this->getConfigValue('test'))
         {
             $params['demo'] = 'Y';
         }
@@ -58,13 +59,11 @@ class TwoCheckout extends ExternalPayment
         // check for secret word
         if ($secretWord = $this->getConfigValue('secretWord'))
         {
-            $expected = $secretWord . $requestArray['order_number'] . $requestArray['total'];
-            if ($requestArray['key'] != md5($expected))
+            $orderNum = 'Y' == $requestArray['demo'] ? 1 : $requestArray['order_number'];
+            $expected = $secretWord . $requestArray['sid'] . $orderNum . $requestArray['total'];
+            if ($requestArray['key'] != strtoupper(md5($expected)))
             {
-                $result = new TransactionError();
-                $result->setMessage('Invalid 2Checkout secret word');
-                $result->setRawResponse($requestArray);
-                return $result;
+                return new TransactionError('Invalid 2Checkout secret word', $requestArray);
             }
         }
         
@@ -78,6 +77,21 @@ class TwoCheckout extends ExternalPayment
         return $result;
     }
     
+    public function getOrderIdFromRequest($requestArray)
+    {
+        return $requestArray['merchant_order_id'];
+    }
+    
+    public function getReturnUrlFromRequest($requestArray)
+    {
+        return $requestArray['complete_url'];
+    }
+    
+    public function isHtmlResponse()
+    {
+        return true;
+    }
+    
     public function get2CoCurrency()
     {
         return $this->getValidCurrency($this->getConfigValue('currency'));
@@ -89,7 +103,7 @@ class TwoCheckout extends ExternalPayment
         return in_array($currentCurrencyCode, array('AUD', 'CAD', 'CHF', 'DKK', 'EUR', 'GBP', 'HKD', 'JPY', 'NOK', 'NZD', 'SEK', 'USD')) ? $currentCurrencyCode : 'USD';
     }
     
-    public static function isVoidable()
+    public function isVoidable()
     {
         return false;
     }

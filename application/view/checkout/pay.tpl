@@ -19,74 +19,96 @@
 		</div>
     </div>
 		   	
-    <h2>{t _pay_securely}</h2>
+    {if 'CC_ENABLE'|config}
+        <h2>{t _pay_securely}</h2>
+            
+    	<div style="font-size: 90%; width: 600px; margin-left: auto; margin-right: auto; border: 1px solid yellow; padding: 5px; background-color: #FFFCDA; margin-top: 15px; margin-bottom: 15px;">
+    		Please do not enter real credit card numbers. You can enter any number in the credit card number field. This is not a real transaction. Enter <strong>000</strong> for CVV to test for failed transactions. 
+    	</div>	       
+            
+    	{form action="controller=checkout action=payCreditCard" handle=$ccForm method="POST"}
         
-	<div style="font-size: 90%; width: 600px; margin-left: auto; margin-right: auto; border: 1px solid yellow; padding: 5px; background-color: #FFFCDA; margin-top: 15px; margin-bottom: 15px;">
-		Please do not enter real credit card numbers. You can enter any number in the credit card number field. This is not a real transaction. Enter <strong>000</strong> for CVV to test for failed transactions. 
-	</div>	       
-        
-	{form action="controller=checkout action=payCreditCard" handle=$ccForm method="POST"}
+    	    <div style="float: left; width: 500px;">
+    	    
+            {error for="creditCardError"}
+    	    	<div class="errorMsg ccPayment">
+    	    		{$msg}
+    	    	</div>
+    	    {/error}
     
-	    <div style="float: left; width: 500px;">
-	    
-        {error for="creditCardError"}
-	    	<div class="errorMsg ccPayment">
-	    		{$msg}
-	    	</div>
-	    {/error}
-
-	    <p>
-			<label for="ccNum">{t _cc_name}:</label>
-            <label>{$order.BillingAddress.fullName}</label>
-        </p>
-
-	    <p>
-            {err for="ccNum"}
-                {{label {t _cc_number}:}}
-	            {textfield class="text" autoComplete="off"}
-            {/err}
-        </p>
+    	    <p>
+    			<label for="ccNum">{t _cc_name}:</label>
+                <label>{$order.BillingAddress.fullName}</label>
+            </p>
+    
+    	    <p>
+                {err for="ccNum"}
+                    {{label {t _cc_number}:}}
+    	            {textfield class="text" autoComplete="off"}
+                {/err}
+            </p>
+            
+            {if $ccTypes}
+            <p>
+                <label for="ccType">{t _cc_type}:</label>
+                {selectfield name="ccType" id="ccType" options=$ccTypes}
+            </p>
+            {/if}
         
-        {if $ccTypes}
-        <p>
-            <label for="ccType">{t _cc_type}:</label>
-            {selectfield name="ccType" id="ccType" options=$ccTypes}
-        </p>
+            <p>
+                <label for="ccExpiryMonth">{t _card_exp}:</label>
+                <fieldset class="error">
+    	            {selectfield name="ccExpiryMonth" id="ccExpiryMonth" options=$months}
+    	            /
+    	            {selectfield name="ccExpiryYear" id="ccExpiryYear" options=$years}
+    				<div class="errorText hidden{error for="ccExpiryYear"} visible{/error}">{error for="ccExpiryYear"}{$msg}{/error}</div>
+    			</fieldset>
+            </p>
+        
+            <p>
+                {err for="ccCVV"}
+                    {{label {t _cvv_descr}:}}
+    	            {textfield maxlength="4" class="text" id="ccCVV"}
+    				<a class="cvv" href="{link controller=checkout action=cvv}" onclick="Element.show($('cvvHelp')); return false;">{t _what_is_cvv}</a>
+                {/err}
+            </p>
+            
+            <input type="submit" class="submit" value="{tn _complete_now}" />
+            
+            </div>
+    
+            <div id="cvvHelp" style="float: left; width: 350px; padding: 5px; margin-left: 20px; display: none;">
+        		{include file="checkout/cvvHelp.tpl"}    	
+            </div>
+    
+        {/form}    
+        
+        <div class="clear"></div>
+    {else}
+    	{form action="controller=checkout action=payCreditCard" handle=$ccForm method="POST"}
+            {error for="creditCardError"}
+    	    	<div class="errorMsg ccPayment">
+    	    		{$msg}
+    	    	</div>
+    	    	<div class="clear"></div>
+    	    {/error}    
+    	{/form}
+    {/if}
+
+    {if $otherMethods}
+        {if 'CC_ENABLE'|config}
+            <h2>{t Other payment methods}</h2>
+        {else}
+            <h2>{t Select a payment method}</h2>
         {/if}
-    
-        <p>
-            <label for="ccExpiryMonth">{t _card_exp}:</label>
-            <fieldset class="error">
-	            {selectfield name="ccExpiryMonth" id="ccExpiryMonth" options=$months}
-	            /
-	            {selectfield name="ccExpiryYear" id="ccExpiryYear" options=$years}
-				<div class="errorText hidden{error for="ccExpiryYear"} visible{/error}">{error for="ccExpiryYear"}{$msg}{/error}</div>
-			</fieldset>
-        </p>
-    
-        <p>
-            {err for="ccCVV"}
-                {{label {t _cvv_descr}:}}
-	            {textfield maxlength="4" class="text" id="ccCVV"}
-				<a class="cvv" href="{link controller=checkout action=cvv}" onclick="Element.show($('cvvHelp')); return false;">{t _what_is_cvv}</a>
-            {/err}
-        </p>
         
-        <input type="submit" class="submit" value="{tn _complete_now}" />
-        
+        <div id="otherMethods">
+            {foreach from=$otherMethods item=method}
+                <a href="{link controller=checkout action=redirect id=$method}"><img src="image/payment/{$method}.gif" /></a>
+            {/foreach}
         </div>
-
-        <div id="cvvHelp" style="float: left; width: 350px; padding: 5px; margin-left: 20px; display: none;">
-    		{include file="checkout/cvvHelp.tpl"}    	
-        </div>
-
-    {/form}
+    {/if}
     
-    
-    <div class="clear"></div> 
-
-    {* <h2>Other payment methods</h2> *}
-
     <h2>{t _order_overview}</h2>
     
     {include file="checkout/orderOverview.tpl"}

@@ -794,8 +794,9 @@ legend
 	color: #30A0F9;
 	padding-left: 10px;
 	padding-right: 10px;
-	background-color: #F0F9FF;
-	top: -22px;
+	background-color: #fff;
+	border: 1px solid #ddd;
+/*	top: -22px; */
 }
 
 label
@@ -943,8 +944,7 @@ label, input, select, form .other, textarea, .disabledTextarea
 
 select
 {
-    padding-right: 0 !important;
-    padding-left: 0 !important;
+    padding: 0 !important;
 }
 
 a.cancel, a.menu

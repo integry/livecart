@@ -1250,6 +1250,21 @@ a.cvv
     padding-bottom: 2em;
 }
 
+#otherMethods img
+{
+    vertical-align: middle;
+}
+
+#otherMethods a
+{
+    margin-right: 2em;
+}
+
+.checkoutPay h2
+{
+    margin-bottom: 24px;
+}
+
 /*************************** 
 	User account
 ***************************/

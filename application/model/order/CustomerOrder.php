@@ -106,12 +106,12 @@ class CustomerOrder extends ActiveRecordModel
     {
         if ($this->billingAddress->get())
         {
-            $this->billingAddress->get()->load();               
+            $this->billingAddress->get()->load(self::LOAD_REFERENCES);               
         }
 
         if ($this->shippingAddress->get())
         {
-            $this->shippingAddress->get()->load(); 
+            $this->shippingAddress->get()->load(self::LOAD_REFERENCES); 
         }
     }
     
@@ -120,16 +120,6 @@ class CustomerOrder extends ActiveRecordModel
         $this->loadItems();
         $this->loadAddresses();
         $this->getShipments();
-        
-        if($this->billingAddress->get())
-        {
-            $this->billingAddress->get()->load(self::LOAD_REFERENCES);
-        }
-        
-        if($this->shippingAddress->get())
-        {
-           $this->shippingAddress->get()->load(self::LOAD_REFERENCES);
-        }
     }
 
     /**

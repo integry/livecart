@@ -14,6 +14,17 @@ abstract class ExternalPayment extends TransactionPayment
 	 */
 	abstract public function notify($requestArray);
 	
+	/**
+	 *	Extract order ID from payment gateway response data
+	 */
+	abstract public function getOrderIdFromRequest($requestArray);
+
+	/**
+	 *	Determine if HTML output is required as post-notification response
+	 *  @return bool
+	 */
+	abstract public function isHtmlResponse();
+
 	public function setNotifyUrl($url)
 	{
         $this->notifyUrl = $url;

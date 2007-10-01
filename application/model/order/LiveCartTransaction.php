@@ -26,7 +26,7 @@ class LiveCartTransaction extends TransactionDetails
                 $this->$field->set($address->$addressField->get());
             }
         
-            $this->state->set($this->getStateValue($address));    
+            $this->state->set($this->getStateValue($address));
             $this->address->set($address->address1->get() . ' ' . $address->address2->get());    
         }
         
@@ -71,6 +71,11 @@ class LiveCartTransaction extends TransactionDetails
     {
         if ($state = $address->state->get())
         {
+            if (!$state->isLoaded())
+            {
+                $state->load();
+            }
+            
             if ($state->code->get())
             {
                 return $state->code->get();
