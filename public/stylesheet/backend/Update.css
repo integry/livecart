@@ -1,0 +1,27 @@
+#versionCompare
+{
+    border: 1px solid #BFB;
+    background-color: #EFE;
+    margin: 1em;
+}
+
+#versionCompare td
+{
+    padding: 10px;
+    font-size: larger;
+}
+
+#versionCompare .version
+{
+    font-weight: bold;
+}
+
+#versionCompare .upToDate
+{
+    color: green;
+}
+
+#versionCompare .outdated
+{
+    color: red;
+}

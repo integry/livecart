@@ -23,6 +23,9 @@ cd $BUILD
 # get version
 VERSION=`head .version`
 
+# copy version file to update server (update.livecart.com)
+cp .version /home/livecart/public_html/update/.version
+
 # commit changes
 hg addremove
 hg commit -m "$VERSION:"$'\n'"$LOG"

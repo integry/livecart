@@ -65,6 +65,11 @@
                 	<Controller>backend.language</Controller>
                 	<Action>index</Action>
                 </Menu>
+                <Menu>
+                	<Title>_menu_update</Title>	
+                	<Controller>backend.update</Controller>
+                	<Action>index</Action>
+                </Menu>
             </Items>
         </Menu>
         <Menu>

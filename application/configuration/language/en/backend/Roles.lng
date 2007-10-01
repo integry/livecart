@@ -68,6 +68,7 @@ _role_specification_create=Create
 _role_specification_remove=Remove
 _role_specification_sort=Sort
 _role_specification_update=Update
+_role_update=Update LiveCart
 _role_taxes=Taxes
 _role_taxes_misc=View
 _role_taxes_create=Create
