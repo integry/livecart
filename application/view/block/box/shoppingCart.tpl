@@ -1,6 +1,6 @@
 <div id="smallCart">
 
-	<div style="float: left;">
+	<div id="accountLink">
 		<a href="{link controller=user action=index}">{t _your_account}</a>&nbsp;
 		{if $user.ID > 0}	
 			<div class="logout"><a href="{link controller=user action=logout}">{t _sign_out}</a></div>

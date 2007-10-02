@@ -1,4 +1,4 @@
-<table class="subCategories" style="float: left;">
+<table class="subCategories">
 {foreach from=$subCategories item="sub" name="subcats"}   
     <tr>
         <td class="subCatImage">

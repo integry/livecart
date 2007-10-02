@@ -22,13 +22,11 @@
     {if 'CC_ENABLE'|config}
         <h2>{t _pay_securely}</h2>
             
-    	<div style="font-size: 90%; width: 600px; margin-left: auto; margin-right: auto; border: 1px solid yellow; padding: 5px; background-color: #FFFCDA; margin-top: 15px; margin-bottom: 15px;">
-    		Please do not enter real credit card numbers. You can enter any number in the credit card number field. This is not a real transaction. Enter <strong>000</strong> for CVV to test for failed transactions. 
-    	</div>	       
+    	{include file="checkout/testHandler.tpl"}
             
     	{form action="controller=checkout action=payCreditCard" handle=$ccForm method="POST"}
         
-    	    <div style="float: left; width: 500px;">
+    	    <div id="ccForm">
     	    
             {error for="creditCardError"}
     	    	<div class="errorMsg ccPayment">
@@ -77,7 +75,7 @@
             
             </div>
     
-            <div id="cvvHelp" style="float: left; width: 350px; padding: 5px; margin-left: 20px; display: none;">
+            <div id="cvvHelp" style="display: none;">
         		{include file="checkout/cvvHelp.tpl"}    	
             </div>
     
@@ -85,10 +83,10 @@
         
         <div class="clear"></div>
     {else}
-    	{form action="controller=checkout action=payCreditCard" handle=$ccForm method="POST"}
+    	{form action="controller=checkout action=payCreditCard" handle=$ccForm method="POST" id="paymentError"}
             {error for="creditCardError"}
     	    	<div class="clear"></div>
-    	    	<div class="errorMsg ccPayment" style="padding-top: 10px;">
+    	    	<div class="errorMsg ccPayment">
     	    		<p>{$msg}</p>
     	    	</div>
     	    	<div class="clear"></div>
@@ -143,14 +141,14 @@
     <div id="overviewAddresses">
     
         {if $order.ShippingAddress}
-		<div style="width: 50%; float: left;">
+		<div class="addressContainer">
             <h3>{t _will_ship_to}:</h3>
             {fun name="address" address=$order.ShippingAddress}
             <a href="{link controller=checkout action=selectAddress}">{t _change}</a>
         </div>    
         {/if}
         
-        <div style="width: 50%; float: left;">
+        <div class="addressContainer">
             <h3>{t _will_bill_to}:</h3>
             {fun name="address" address=$order.BillingAddress}
             <a href="{link controller=checkout action=selectAddress}">{t _change}</a>

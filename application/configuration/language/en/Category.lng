@@ -7,11 +7,12 @@ PRICE_DESC=Price: High to Low
 NEWEST_ARRIVALS=Newest Arrivals
 RATING=Customer Rating
 
-_our_price=Our Price
-
 _found_cats=Found categories
 _not_found=<span class='notFoundMain'>No products were found.</span> Please try different keywords for your search query.
 _featured_products=Featured Products
 
 _showing_products=Showing [_1] to [_2] of [_3] found products
 _sort_by=Sort by
+
+_narrow_by_cat=Narrow results by category
+_more_subcats=more...

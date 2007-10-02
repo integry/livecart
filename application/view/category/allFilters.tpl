@@ -3,7 +3,7 @@
 <fieldset class="allFilters">
 	
 	{if 'brand' == $showAll}
-		<legend>By Brand</legend>		
+		<legend>{t _by_brand}</legend>		
 	{else}
 		<legend>{$allFilters.name_lang}</legend>
 	{/if}
@@ -11,7 +11,7 @@
 	{foreach from=$allFilters.filters item=filter name="filters"}
 
 		{if $smarty.foreach.filters.iteration % $perColumn == 1}
-			<div style="float: left; width: 30%" class="filterGroup">
+			<div class="filterGroup">
 				<ul>
 		{/if}
 			

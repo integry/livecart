@@ -17,7 +17,7 @@
 
 <div class="orderDetails">
 
-   <div class="orderMenu" style="float: left; width: 200px;">
+   <div class="orderMenu">
    
        <ul>
            <li><a href="{link controller=user action=viewOrder id=$order.ID}" class="viewOrder">{t _view_details}</a></li>
@@ -42,7 +42,7 @@
    
    </div>
 
-   <div style="margin-left: 220px;">
+   <div class="orderContent">
     
         <ul>
         {foreach from=$order.cartItems item="item"}

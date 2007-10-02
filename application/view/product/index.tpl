@@ -10,7 +10,7 @@
 {* include file="layout/frontend/leftSide.tpl" *}
 {* include file="layout/frontend/rightSide.tpl" *}
 
-<div id="content" style="margin-left: 0;">
+<div id="content" class="left">
     
     <div class="returnToCategory">
         {assign var="lastBreadcrumb" value=$breadCrumb|@end}
@@ -21,12 +21,12 @@
     <h1>{$product.name_lang}</h1>
     <div class="clear"></div>
     
-	<div id="imageContainer" style="float: left; text-align: center;">
+	<div id="imageContainer">
 		<div id="largeImage" class="{if !$product.DefaultImage.paths.3}missingImage{/if} {if $images|@count > 1}multipleImages{/if}">
 			{if $product.DefaultImage.paths.3}
-				{img src=$product.DefaultImage.paths.3 alt=$product.DefaultImage.name_lang|escape id="mainImage" style="margin: 20px;"}
+				{img src=$product.DefaultImage.paths.3 alt=$product.DefaultImage.name_lang|escape id="mainImage"}
 			{else}
-				{img src="image/missing_large.jpg" alt=$product.DefaultImage.name_lang|escape id="mainImage" style="margin: 20px;"}
+				{img src="image/missing_large.jpg" alt=$product.DefaultImage.name_lang|escape id="mainImage"}
 			{/if}
 		</div>
         {if $images|@count > 1}
@@ -38,7 +38,7 @@
 		{/if}
 	</div>
     
-    <div id="mainInfo" style="clear: right;">
+    <div id="mainInfo">
 
     	{if $product.listAttributes}
     		<div class="specSummary">
@@ -74,7 +74,7 @@
 			<tr>
 				<td colspan="2" class="cartLinks">
 					{form action="controller=order action=addToCart id=`$product.ID`" handle=$cartForm}
-						{t _quantity}: {selectfield name="count" style="width: auto;" options=$quantity}
+						{t _quantity}: {selectfield name="count" options=$quantity}
 						<input type="submit" class="submit" value="{tn _add_to_cart}" />							
     					{hidden name="return" value=$catRoute}
 					{/form}

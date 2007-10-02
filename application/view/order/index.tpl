@@ -15,9 +15,11 @@
 	
 	<div class="clear"></div>
 	
-	<p id="cartStats" style="display: none;">
+	{*
+    <p id="cartStats">
 		{maketext text=_item_count params=$cart.basketCount}
 	</p>
+	*}
 	
 	{if !$cart.cartItems && !$cart.wishListItems}
 		{t _empty_basket}. <a href="{link route=$return}">{t _continue_shopping}</a>.

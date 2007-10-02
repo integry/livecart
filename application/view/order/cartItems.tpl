@@ -1,5 +1,5 @@
-{form action="controller=order action=update" method="POST" handle=$form}
-<h2 style="margin: 0;">{t _cart_items}</h2>
+{form action="controller=order action=update" method="POST" handle=$form id="cartItems"}
+<h2>{t _cart_items}</h2>
 <table id="cart">
 	<thead>
 		<tr>
@@ -24,9 +24,8 @@
                 {/if}
             </td>
 			
-			<td class="cartName">
-				
-				<div style="float: left;">
+			<td class="cartName">				
+				<div>
 					<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
 					<small>({$item.Product.Category.name_lang})</small>
 				</div>
@@ -55,7 +54,7 @@
 			<td class="cartQuant"></td>
 		</tr>
 		<tr>
-			<td colspan="5" style="text-align: right;">
+			<td colspan="5">
 				<h2></h2>
                 <a href="{link route=$return}" class="continueShopping">{t _continue_shopping}</a>
 				{if $order.isOrderable}
@@ -69,7 +68,7 @@
 {/form}
 
 {if $expressMethods && $order.isOrderable}
-    <div id="expressCheckoutMethods" style="padding: 20px; text-align: right;">
+    <div id="expressCheckoutMethods">
         {foreach from=$expressMethods item=method}
             <a href="{link controller=checkout action=express id=$method}"><img src="image/payment/{$method}.gif" /></a>
         {/foreach}

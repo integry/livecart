@@ -45,7 +45,7 @@
                 {maketext text=_showing_products params=$offsetStart,$offsetEnd,$count}
             </div>
             
-            <div style="float: right;">
+            <div class="sortOptions">
                 {if $sortOptions}
                     {t _sort_by}
                     {form handle=$sortForm action="self" method="get"}
@@ -54,7 +54,7 @@
                 {/if}
                 &nbsp;
             </div>  
-            <div style="clear: both;"></div>
+            <div class="clear"></div>
         </div>
         </fieldset>
         

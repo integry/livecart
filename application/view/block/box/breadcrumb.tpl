@@ -3,7 +3,7 @@
     	<div id="breadCrumbCaption">
             {t _you_are_here}:
         </div>
-        <ul style="float: left;">			
+        <ul>
     	{foreach from=$breadCrumb item="item" name="breadCrumb"}		
     		<li class="{if $smarty.foreach.breadCrumb.first}first {/if}{if $smarty.foreach.breadCrumb.last}last{/if}">
     			{if !$smarty.foreach.breadCrumb.last}

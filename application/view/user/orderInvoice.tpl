@@ -35,23 +35,23 @@
 
     <div id="invoice">
     
-        <div style="text-align: center; border-bottom: 1px solid black; position: relative; margin-top: 20px;">
+        <div id="invoiceHeader">
         
-            {img src="image/promo/logo_small.jpg" style="position: absolute; left: 0; top: 0;"}
+            {img src="image/promo/logo_small.jpg" id="invoiceLogo"}
             
-            <h1 style="padding-top: 20px;">{t _invoice} #{$order.ID}</h1>
+            <h1>{t _invoice} #{$order.ID}</h1>
             <div id="invoiceDate">{$order.formatted_dateCompleted.date_long}</div>
         
         </div>
     
         <div id="invoiceContacts">
         
-            <div style="width: 50%; float: left;">
+            <div class="addressContainer">
                 <h2>{t _buyer}</h2>
                 {fun name="address" address=$order.BillingAddress}
             </div>
 
-            <div style="width: 50%; float: left;">
+            <div class="addressContainer">
                 <h2>{t _seller}</h2>
                 <p>
                     Seller's contact information goes here

@@ -269,9 +269,18 @@ tr.even
 /*****************************
 	Quick search
 *****************************/
+#searchContainer
+{
+    border-top: 1px solid #CCCCCC; 
+    border-bottom: 1px solid #DDDDDD; 
+    background: #F7F7F7; 
+    margin-bottom: 10px;
+}
+
 .quickSearch
 {
 	padding-left: 30px; 
+	float: left;
 }
 
 .quickSearch input, .quickSearch select
@@ -421,6 +430,11 @@ tr.even
 	padding-right: 20px;
 }
 
+#accountLink
+{
+    float: left;
+} 
+
 .logout
 {
 	margin-top: 0.5em;
@@ -559,12 +573,14 @@ tr.separator div
     margin-top: 10px;
     margin-left: 20px;
     width: 45%;
+    float: left;
 }
 
 .subCategories td.details
 {
     padding-left: 30px;
     vertical-align: middle;
+    height: 140px;
 }
 
 .subCategories td.details .count
@@ -573,10 +589,25 @@ tr.separator div
     font-size: smaller;
 }
 
+.narrowByCat .subCategories
+{
+    float: none;
+}
+
+.narrowByCat .subCategories td.details
+{
+    height: auto;
+}
+
 ul.subSubCats
 {
     margin: 6px;   
     margin-top: 12px;
+}
+
+li.moreSubCats
+{
+    font-size: smaller;
 }
 
 /*****************************
@@ -615,6 +646,12 @@ ul.subSubCats
     background-position: 6px center;
     padding-left: 28px;    
     margin-left: 5px;
+}
+
+.allFilters .filterGroup
+{
+    float: left; 
+    width: 30%;
 }
 
 .foundCategories
@@ -680,6 +717,11 @@ ul.subSubCats
     float: left; 
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.resultStats .sortOptions
+{
+    float: right;
 }
 
 #productSort
@@ -752,9 +794,28 @@ ul.productList a.addToCart
     background-position: center left;    
 }
 
+ul.productList .pricingInfo
+{
+    float: left;
+}
+
+ul.productList .orderingControls
+{
+    float: right;
+}
+
 .shortDescr
 {
 	font-size: 90%;
+}
+
+.productSeparator
+{
+    border-bottom: 1px solid #EEEEEE; 
+    margin-top: 15px; 
+    margin-bottom: -7px; 
+    margin-left: 110px; 
+    margin-right: auto;
 }
 
 /*****************************
@@ -791,6 +852,11 @@ ul.productList a.addToCart
     max-width: 400px;
     margin-top: -50px;
     z-index: 10;
+}
+
+#mainInfo
+{
+    clear: right;
 }
 
 #mainInfo table
@@ -882,6 +948,13 @@ ul.attributeList.singleValue li
 #imageContainer
 {
 	width: 450px;
+	float: left; 
+    text-align: center;
+}
+
+#mainImage
+{
+    margin: 20px;
 }
 
 #largeImage.multipleImages
@@ -913,6 +986,11 @@ ul.attributeList.singleValue li
 	text-align: center;
 	padding-top: 0px;
 	vertical-align: middle;
+}
+
+.cartLinks select
+{
+    width: auto;
 }
 
 .cartLinks .submit
@@ -953,6 +1031,11 @@ div.checkout a
 /*****************************
 	Shopping cart
 *****************************/
+#cartItems h2
+{
+    margin: 0;
+}
+
 #cartStats
 {
  	padding-top: 10px;
@@ -1069,6 +1152,12 @@ div.checkout a
 	text-align: center;
 }
 
+#expressCheckoutMethods
+{
+    padding: 20px; 
+    text-align: right;
+}
+
 /*****************************
 	Checkout
 ***************************/
@@ -1155,6 +1244,11 @@ div.checkout a
 
 /* Shipping method */
 
+#shippingSelect
+{
+    margin-top: 1.5em;
+}
+
 .shipment
 {
     width: 70%;    
@@ -1198,6 +1292,12 @@ div.checkout a
 }
 
 /* Payments */
+#ccForm
+{
+    float: left; 
+    width: 500px;
+}
+
 #ccExpiryMonth, #ccExpiryYear, #ccType
 {
     width: auto;   
@@ -1244,10 +1344,27 @@ a.cvv
     margin-left: 22px;
 }
 
+.orderOverviewControls
+{
+    width: 70%; 
+    text-align: right;
+}
+
+.orderOverviewControls a
+{
+    margin-bottom: -25px;
+}
+
 #overviewAddresses
 {
     padding-top: 2em;
     padding-bottom: 2em;
+}
+
+.addressContainer
+{
+    width: 50%; 
+    float: left;
 }
 
 #otherMethods img
@@ -1265,9 +1382,46 @@ a.cvv
     margin-bottom: 24px;
 }
 
+#cvvHelp
+{
+    float: left; 
+    width: 350px; 
+    padding: 5px; 
+    margin-left: 20px; 
+}
+
+#cvvExample
+{
+    vertical-align: top; 
+    float: left;
+}
+
+#testHandlerWarning
+{
+    font-size: 90%; 
+    width: 600px; 
+    margin-left: auto; 
+    margin-right: auto; 
+    border: 1px solid yellow; 
+    padding: 5px; 
+    background-color: #FFFCDA; 
+    margin-top: 15px; 
+    margin-bottom: 15px;
+}
+
+#paymentError .errorMsg
+{
+    padding-top: 10px;
+}
+
 /*************************** 
 	User account
 ***************************/
+.userLogin .failed
+{
+    margin: 0;
+}
+
 ul#userMenu
 {   
     padding: 0;
@@ -1385,6 +1539,17 @@ div.addressControl
 .orderMenu
 {
     padding-left: 10px;
+}
+
+.orderDetails .orderMenu
+{
+    float: left; 
+    width: 200px;
+}
+
+.orderDetails .orderContent
+{
+    margin-left: 220px;
 }
 
 .orderMenu ul
@@ -1523,6 +1688,26 @@ ul.notes li.responder_1 .noteText
 /*************************** 
 	Invoices
 ***************************/
+#invoiceHeader
+{
+    text-align: center; 
+    border-bottom: 1px solid black; 
+    position: relative; 
+    margin-top: 20px;
+}
+
+#invoiceLogo
+{
+    position: absolute; 
+    left: 0; 
+    top: 0;
+}
+
+#invoice h1
+{
+    padding-top: 20px;
+}
+
 #invoiceContacts h2
 {
     border: none;

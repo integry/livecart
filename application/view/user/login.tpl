@@ -14,7 +14,7 @@
 	
 	<p>
         {if $failed}           
-            <div class="errorMsg" style="margin: 0;">
+            <div class="errorMsg failed">
                 {t _login_failed}
             </div>                
         {else}

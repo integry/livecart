@@ -19,7 +19,7 @@
 		</div>
 	{/if}
 	
-	<div style="margin-top: 1.5em;"></div>
+	<div id="shippingSelect">
     
     {form action="controller=checkout action=doSelectShippingMethod" method="POST" handle=$form}
         {foreach from=$shipments key="key" item="shipment"}
@@ -36,6 +36,8 @@
     <input type="submit" class="submit" value="{tn _continue}" />
     
     {/form}
+
+    </div>
 
 </div>
 

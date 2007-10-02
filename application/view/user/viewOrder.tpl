@@ -123,13 +123,13 @@
         <div id="overviewAddresses">
         
             {if $order.ShippingAddress}
-            <div style="width: 50%; float: left;">
+            <div class="addressContainer">
                 <h3>{t _is_shipped_to}:</h3>
                 {fun name="address" address=$order.ShippingAddress}
             </div>    
             {/if}
             
-            <div style="width: 50%; float: left;">
+            <div class="addressContainer">
                 <h3>{t _is_billed_to}:</h3>
                 {fun name="address" address=$order.BillingAddress}
             </div>    

@@ -1,6 +1,6 @@
-<div style="border-top: 1px solid #CCCCCC; border-bottom: 1px solid #DDDDDD; background: #F7F7F7; margin-bottom: 10px;"> 
+<div id="searchContainer"> 
 	{capture assign="searchUrl"}{categoryUrl data=$category}{/capture}
-    {form action="controller=category" class="quickSearch" handle=$form style="float: left;"}            
+    {form action="controller=category" class="quickSearch" handle=$form}
         {selectfield name="id" options=$categories}
         {textfield class="text searchQuery" name="q"}	    
         <input type="submit" class="submit" value="Search" />

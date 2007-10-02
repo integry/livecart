@@ -44,21 +44,17 @@
         </div>
 
         <div class="order">
-            <div style="float: left;">
+            <div class="pricingInfo">
 			   {t _our_price}: <span class="price">{$product.formattedPrice.$currency}</span>
             </div>
-            <div style="float: right;"> 
+            <div class="orderingControls">
 				{if $product.isAvailable}
 				<a href="{link controller=order action=addToCart id=$product.ID returnPath=true}" class="addToCart">{t _add_to_cart}</a>
                 : 
 				{/if}
 				<a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}" class="addToWishList">{t _add_to_wishlist}</a>	
 			</div>				                
-        
-			<div style="float: right;">
-			{* 1/10 *}
-			</div>  
-		
+        		
 		</div>      
 		        
     </div>
