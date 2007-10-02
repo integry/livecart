@@ -15,6 +15,8 @@ ActiveRecord::$creolePath = ClassLoader::getRealPath("library");
 abstract class ActiveRecordModel extends ActiveRecord
 {	
  	private static $application;
+ 	
+ 	private static $plugins = array();
 
 	public static function setApplicationInstance(LiveCart $application)
 	{
@@ -65,6 +67,13 @@ abstract class ActiveRecordModel extends ActiveRecord
 		}	
 	}
 	
+	public function save($force = null)
+	{
+		$res = parent::save($force);
+		$this->executePlugins($this, 'save');
+		return $res;
+	}
+	
 	protected static function transformArray($array, ARSchema $schema)
 	{
 		foreach ($schema->getFieldsByType('ARDateTime') as $name => $field)
@@ -85,6 +94,46 @@ abstract class ActiveRecordModel extends ActiveRecord
 		}	
 		
 		return parent::transformArray($array, $schema);
+	}
+	
+	private function executePlugins(&$object, $action, $className = null)
+	{
+		// in case the even is array transformation, the classname will be passed in as a separate variable
+		if (!$className)
+		{
+			$className = get_class($object);
+		}
+				
+		// get plugins
+		$path = 'plugin.model.' . $className . '.' . $action;
+		if (!isset(self::$plugins[$className][$action]))
+		{
+			self::$plugins[$className][$action] = array();
+			$dir = ClassLoader::getRealPath($path);
+			if (!is_dir($dir))
+			{
+				return false;
+			}
+			
+			foreach (new DirectoryIterator($dir) as $plugin)
+			{
+				if ($plugin->isFile())
+				{
+					self::$plugins[$className][$action][] = basename($plugin->getFileName(), '.php');
+				}
+			}
+		}
+		
+		if (isset(self::$plugins[$className][$action]) && !self::$plugins[$className][$action])
+		{
+			return false;
+		}
+		
+		foreach (self::$plugins[$className][$action] as $plugin)
+		{
+			ClassLoader::import($path . '.' . $plugin);
+			new $plugin($object, self::$application);
+		}
 	}
 }
 
