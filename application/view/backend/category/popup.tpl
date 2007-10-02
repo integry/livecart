@@ -11,14 +11,25 @@
 
 {include file="layout/backend/meta.tpl"}
 
+{literal}
+<style>
+	body
+	{
+		background-image: none;
+	}
+</style>
+{/literal}
+
 <div id="popupCategoryContainer" class="treeContainer">
 	
+    <div style="font-weight: bold; padding: 5px; font-size: larger;">{t _select_category}:</div>
+    
     <div id="categoryBrowser" class="treeBrowser"> </div>
     
-    <fieldset class="controls">
-        <input type="button" class="submit" id="select" value="{tn _select_category}" />
+    <fieldset class="controls" style="margin-top: 0.2em;">
+        <input type="button" class="submit" id="select" value="{tn _move_products}" />
         {t _or}
-        <a href="#cancel" onclick="window.close(); return false;" class="cancel">{t _cancel}</a>
+        <a href="#cancel" id="cancel" class="cancel">{t _cancel}</a>
     </fieldset>
            
 </div>
@@ -27,8 +38,9 @@
 <script type="text/javascript">
     Backend.Category.links = {};
     Backend.Category.links.categoryRecursiveAutoloading = '{/literal}{link controller=backend.category action=xmlRecursivePath}{literal}';
-	Backend.Category.links.countTabsItems = '{/literal}{link controller=backend.category action=countTabsItems id=_id_}{literal}';
     Backend.Category.links.categoryAutoloading = '{/literal}{link controller=backend.category action=xmlBranch}{literal}';	    
+
+	Backend.Category.PopupSelector.prototype.confirmationMsg = '{/literal}{t _confirm_move|escape}{literal}';
         
 	Backend.Category.init();    
 	

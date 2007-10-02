@@ -732,32 +732,20 @@ CategoryTabControl.prototype = {
 Backend.Category.PopupSelector = Class.create();
 Backend.Category.PopupSelector.prototype = 
 {
-    Instances: {},
-    
-    id: 0,
-    
     element: null,
     
-    initialize: function(type, id, element)
+    initialize: function(element)
     {
-        this.id = id;
         this.element = element;
-    },
-    
-    getInstance: function(type, id, element)
-    {
-        if (!this.Instances[type])
-        {
-            this.Instances[type] = {};
-        }
 
-        if (!this.Instances[type][id])
-        {
-            this.Instances[type][id] = new Backend.Category.PopupSelector(type, id, element);
-        }
-
-        var self = this.Instances[type][id];
+        var self = this;
         var w = window.open('/livecart/backend.category/popup', 'selectCategory', 'width=260, height=450');
+        
+        // close the popup automatically if closing/reloading page
+		Event.observe(window, 'unload', function()
+		{
+			w.close();
+		});
         
         Event.observe(w, 'load', 
             function()
@@ -766,36 +754,47 @@ Backend.Category.PopupSelector.prototype =
                     {
                         var tree = w.Backend.Category.treeBrowser;
                         
-                        self.element.update('');
+                        self.element.down('input').value = tree.getSelectedItemId();
+                        
+                        var name = '';
                         
                         var parentId = tree.getSelectedItemId();
                         do
                         {       
-                            var item = document.createElement('a');
-                            item.innerHTML = tree.getItemText(parentId);
+                            name = tree.getItemText(parentId) + name;;
+
                             parentId = tree.getParentId(parentId);
                             
-                            item.href = '#select';
-
-                            self.element.insertBefore(item, self.element.firstChild);                            
-
                             if (parentId)
                             {
-                                var sep = document.createElement('span');
-                                sep.innerHTML = ' &gt; ';
-                                self.element.insertBefore(sep, self.element.firstChild);
+                                name = ' > ' + name;
                             }
-
                         }
                         while(parentId != 0);
 
-                        console.log(self);
-                        console.log(this.element);
-                        w.close();
+						if (!w.confirm(w.Backend.Category.PopupSelector.prototype.confirmationMsg + "\n\n" + name))
+						{
+							return false;
+						}						
+						
+						self.element.up('form').down('input.submit').click();
+
+                    	var select = self.element.up('form').down('.select');
+						select.value = 'enable_isEnabled';
+                    	w.close();
+
+                    });
+                    
+            	Event.observe(w.document.getElementById('cancel'), 'click', function(e)
+                    {
+                    	var select = self.element.up('form').down('.select');
+						select.value = 'enable_isEnabled';
+                    	w.close();
+						                    	
+                    	Event.stop(e);
                     });
             }
         );
         
-        return self;
     }
 }

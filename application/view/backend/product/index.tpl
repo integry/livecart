@@ -68,10 +68,8 @@
         	<span class="addRelated">
 	            {t _enter_sku}: {textfield class="text number" id="massForm_related_`$categoryID`" name="related" autocomplete="controller=backend.product field=sku"}
         	</span>
-        	<span class="move">
-                <fieldset class="container" style="display: inline; position: relative; top: 10px;">
-                    <span class="path" style="float: left; max-width: 300px; background-color: yellow; display: block; padding: 5px; overflow-x: auto; white-space: nowrap;"></span> <a style="float: left;" href="#select" onclick="Backend.Category.PopupSelector.prototype.getInstance('move', {$categoryID}, this.parentNode.down('.path')); return false;">(change)</a>
-                </fieldset>
+        	<span class="move">                
+                <input type="hidden" name="categoryID" />
         	</span>
             {textfield id="massForm_inc_price_`$categoryID`" class="text number" name="inc_price"}
             {textfield id="massForm_inc_stock_`$categoryID`" class="text number" name="inc_stock"}

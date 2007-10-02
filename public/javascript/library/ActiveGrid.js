@@ -519,10 +519,11 @@ ActiveGrid.MassActionHandler.prototype =
         this.actionSelector = handlerMenu.getElementsByTagName('select')[0];
         this.valueEntryContainer = document.getElementsByClassName('bulkValues', handlerMenu)[0];
         this.form = this.actionSelector.form;
+        this.form.handler = this;
         this.button = this.form.down('.submit');
 
         Event.observe(this.actionSelector, 'change', this.actionSelectorChange.bind(this));
-        Event.observe(this.actionSelector.form, 'submit', this.submit.bind(this));
+        Event.observe(this.actionSelector.form, 'submit', this.submit.bindAsEventListener(this));
             
         this.grid = activeGrid;
         this.params = params;
@@ -560,9 +561,14 @@ ActiveGrid.MassActionHandler.prototype =
 		}
     },
     
-    submit: function()
+    submit: function(e)
     {
-        if ('delete' == this.actionSelector.value)
+        if (e)
+        {
+			Event.stop(e);
+		}		
+        
+		if ('delete' == this.actionSelector.value)
         {
 			if (!confirm(this.deleteConfirmMessage))
 			{

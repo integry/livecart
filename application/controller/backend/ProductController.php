@@ -149,7 +149,7 @@ class ProductController extends StoreManagementController
     {        
 		$filter = new ARSelectFilter();
 		
-        $category = Category::getInstanceByID($this->request->get('id'), Category::LOAD_DATA);
+        $category = Category::getInstanceById($this->request->get('id'), Category::LOAD_DATA);
         $cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
 		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
 		
@@ -161,11 +161,27 @@ class ProductController extends StoreManagementController
 		
         $grid = new ActiveGrid($this->application, $filter, 'Product');
         $filter->setLimit(0);
-        					
-		$products = ActiveRecordModel::getRecordSet('Product', $filter, Product::LOAD_REFERENCES);
 		
         $act = $this->request->get('act');
 		$field = array_pop(explode('_', $act, 2));
+		
+		if ('move' == $act)
+		{
+			$cat = Category::getInstanceById($this->request->get('categoryID'), Category::LOAD_DATA);
+			$update = new ARUpdateFilter();
+			$update->setCondition($filter->getCondition());
+			$update->addModifier('Product.categoryID', $cat->getID());
+			$update->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
+			
+			ActiveRecord::beginTransaction();
+			ActiveRecord::updateRecordSet('Product', $update, Product::LOAD_REFERENCES);
+			Category::recalculateProductsCount();
+			ActiveRecord::commit();
+			
+			return new JSONResponse(array('act' => $this->request->get('act')), 'success', $this->translate('_move_succeeded'));			
+		}
+		
+		$products = ActiveRecordModel::getRecordSet('Product', $filter, Product::LOAD_REFERENCES);
 		
 		if ('manufacturer' == $act)
 		{

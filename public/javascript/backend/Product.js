@@ -281,7 +281,7 @@ Backend.Product =
     {
         if ('move' == element.value)
         {
-            
+            new Backend.Category.PopupSelector(element.up('form').down('.move'));
         }
     }
 }
