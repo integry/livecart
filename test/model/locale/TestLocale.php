@@ -3,6 +3,10 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.p
 
 ClassLoader::import('library.locale.Locale');
 
+/**
+ * @author Integry Systems
+ * @package test.model.locale 
+ */
 class TestLocale extends UnitTestCase  
 {
   	/*

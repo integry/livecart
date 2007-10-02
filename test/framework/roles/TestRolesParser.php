@@ -2,6 +2,10 @@
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 ClassLoader::import('framework.roles.RolesParser');
 
+/**
+ * @author Integry Systems
+ * @package test.framework.roles
+ */ 
 class TestRolesParser extends UnitTestCase 
 {
     public function __construct()

@@ -6,6 +6,11 @@ include_once('simpletest/reporter.php');
 
 include_once('../TransactionDetails.php');
 
+/**
+ *
+ * @package library.payment.test
+ * @author Integry Systems 
+ */
 class PaymentTest extends UnitTest
 {
 	public function __construct($name = null)

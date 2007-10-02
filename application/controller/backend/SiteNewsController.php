@@ -4,7 +4,9 @@ ClassLoader::import('application.controller.backend.abstract.StoreManagementCont
 ClassLoader::import('application.model.sitenews.NewsPost');
 
 /**
- *  @role news
+ * @package application.controller.backend
+ * @author Integry Systems
+ * @role news
  */
 class SiteNewsController extends StoreManagementController
 {

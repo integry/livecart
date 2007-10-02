@@ -2,6 +2,11 @@
 
 include_once(dirname(__file__) . '/../abstract/ExternalPayment.php');
 
+/**
+ *
+ * @package library.payment.method
+ * @author Integry Systems 
+ */
 class TwoCheckout extends ExternalPayment
 {
     public function getUrl()

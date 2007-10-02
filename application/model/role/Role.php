@@ -8,6 +8,7 @@ ClassLoader::import("application.framework.role.*");
  * For the time being the roles are only used for the backend area.
  *
  * @package application.model.roles
+ * @author Integry Systems <http://integry.com>
  */
 class Role extends ActiveRecordModel 
 {

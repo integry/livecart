@@ -1,5 +1,10 @@
 <?php
 
+/**
+ *
+ * @package application.model.system
+ * @author Integry Systems <http://integry.com>
+ */
 class Installer
 {
 	public function checkRequirements(LiveCart $application)

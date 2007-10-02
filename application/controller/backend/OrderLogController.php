@@ -6,7 +6,7 @@ ClassLoader::import("application.model.order.*");
  * Manage order notes (communication with customer)
  *
  * @package application.controller.backend
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  *
  * @role order
  */

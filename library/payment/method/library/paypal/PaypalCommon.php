@@ -2,6 +2,11 @@
 
 include_once('phppaypalpro/paypal_base.php');
 
+/**
+ *
+ * @package library.payment.method.library
+ * @author Integry Systems 
+ */
 class PaypalCommon
 {
 	/**

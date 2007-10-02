@@ -1,5 +1,11 @@
 <?php
 
+/**
+ *
+ * @package test
+ * @author Integry Systems 
+ */
+
 error_reporting(E_ALL);
 	
 if (!defined('TEST_INITIALIZED'))

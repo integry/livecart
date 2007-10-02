@@ -9,7 +9,7 @@ ClassLoader::import("application.model.tax.Tax");
 /**
  *
  * @package application.controller.backend
- *
+ * @author	Integry Systems
  * @role taxes
  */
 class TaxController extends StoreManagementController

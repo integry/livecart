@@ -4,6 +4,11 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.p
 ClassLoader::import("application.model.delivery.DeliveryZone");
 ClassLoader::import("application.model.delivery.DeliveryZoneAddressMask");
 
+/**
+ *
+ * @package test.model.delivery
+ * @author Integry Systems 
+ */
 class TestDeliveryZoneAddressMask extends UnitTest
 {
     /**

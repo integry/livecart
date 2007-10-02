@@ -3,7 +3,9 @@
 ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
 
 /**
- *  @role update
+ * @package application.controller.backend
+ * @author Integry Systems
+ * @role update
  */
 class UpdateController extends StoreManagementController
 {

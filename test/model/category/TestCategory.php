@@ -3,6 +3,11 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.p
 
 ClassLoader::import("application.model.category.Category");
 
+/**
+ *
+ * @package test.model.category
+ * @author Integry Systems 
+ */
 class TestCategory extends UnitTest
 {
 	/**

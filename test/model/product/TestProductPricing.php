@@ -5,11 +5,8 @@ ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.product.ProductPricing");
 
 /**
- *	Test Product and Product Specification model for the following scenarios:
- *	
- *	  * Create a new product and assign specification attributes
- *	  * Load a product from a database, read and modify specification attributes
- *  
+ *  @author Integry Systems
+ *  @package test.model.product
  */
 class TestProductPricing extends UnitTest
 {

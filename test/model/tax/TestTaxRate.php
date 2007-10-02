@@ -5,6 +5,10 @@ ClassLoader::import("application.model.delivery.DeliveryZone");
 ClassLoader::import("application.model.tax.Tax");
 ClassLoader::import("application.model.tax.TaxRate");
 
+/**
+ * @author Integry Systems
+ * @package test.model.tax
+ */ 
 class TestTaxRate extends UnitTest
 {
     /**

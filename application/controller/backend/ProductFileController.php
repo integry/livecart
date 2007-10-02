@@ -8,6 +8,7 @@ ClassLoader::import("application.model.product.Product");
  * Controller for handling product based actions performed by store administrators
  *
  * @package application.controller.backend
+ * @author Integry Systems
  * @role product
  */
 class ProductFileController extends StoreManagementController 

@@ -3,6 +3,10 @@
 ClassLoader::import('application.model.order.CustomerOrder');
 ClassLoader::import('application.model.Currency');
 
+/**
+ * @author Integry Systems
+ * @package application.controller
+ */	
 class OrderController extends FrontendController
 {   
     /**

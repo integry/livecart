@@ -4,7 +4,7 @@
  * Form field error message block
  *
  * @package application.helper.smarty.form
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 function smarty_block_error($params, $content, $smarty, &$repeat) {
 	$smarty->assign("msg", "");

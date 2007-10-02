@@ -8,7 +8,7 @@ ClassLoader::import("library.*");
  * Filter group controller
  *
  * @package application.controller.backend
- * @author Sergej Andrejev <sandrejev@gmail.com>
+ * @author	Integry Systems
  *
  * @role filter
  */

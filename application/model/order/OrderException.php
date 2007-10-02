@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * 
+ *
+ * @package application.model.order
+ * @author Integry Systems <http://integry.com> 
+ */
 class OrderException extends ApplicationException
 {
     const MIN_QUANT = 1;

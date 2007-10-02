@@ -7,9 +7,9 @@ ClassLoader::import('application.model.template.Template');
  * Template modification
  *
  * @package application.controller.backend
- * @author Integry Systems <info@livecart.com>
+ * @author Integry Systems
  * 
- * @ro le template
+ * @role template
  */
 class TemplateController extends StoreManagementController
 {

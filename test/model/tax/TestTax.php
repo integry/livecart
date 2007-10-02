@@ -3,6 +3,10 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.p
 
 ClassLoader::import("application.model.tax.Tax");
 
+/**
+ * @author Integry Systems
+ * @package test.model.tax
+ */ 
 class TestTax extends UnitTest
 {
     /**

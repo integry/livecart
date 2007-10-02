@@ -6,6 +6,11 @@ ClassLoader::import("application.model.category.SpecField");
 ClassLoader::import("application.model.category.SpecFieldValue");
 ClassLoader::import("application.model.product.Product");
 
+/**
+ *
+ * @package test.model.category
+ * @author Integry Systems 
+ */
 class testSpecFieldValue extends UnitTest
 {
 	/**

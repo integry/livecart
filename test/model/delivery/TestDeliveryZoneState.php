@@ -6,6 +6,11 @@ ClassLoader::import("application.model.delivery.DeliveryZone");
 ClassLoader::import("application.model.delivery.DeliveryZoneCountry");
 ClassLoader::import("application.model.delivery.DeliveryZoneState");
 
+/**
+ *
+ * @package test.model.delivery
+ * @author Integry Systems 
+ */
 class TestDeliveryZoneState extends UnitTest
 {
     /**

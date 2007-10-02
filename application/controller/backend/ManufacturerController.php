@@ -4,8 +4,9 @@ ClassLoader::import("application.controller.backend.abstract.StoreManagementCont
 ClassLoader::import("application.model.product.Manufacturer");
 
 /**
- * Enter description here...
- *
+ * 
+ * @package application.controller.backend
+ * @author Integry Systems
  * @role product
  */
 class ManufacturerController extends StoreManagementController

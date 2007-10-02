@@ -7,6 +7,8 @@ ClassLoader::import('library.swiftmailer.Swift');
  *
  *  Should always be used for unit testing to avoid any real messages to be sent
  *
+ * @author Integry Systems
+ * @package test.mock
  */
 class Swift_Connection_Fake extends Swift_ConnectionBase
 {

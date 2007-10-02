@@ -2,6 +2,11 @@
 
 include_once('TransactionValueMapper.php');
 
+/**
+ *
+ * @package library.payment
+ * @author Integry Systems 
+ */
 class TransactionDetails
 {
 	protected $data = array(

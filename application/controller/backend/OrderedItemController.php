@@ -11,7 +11,7 @@ ClassLoader::import("framework.request.validator.Form");
  * ...
  *
  * @package application.controller.backend
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  *
  * @role order
  */

@@ -11,6 +11,7 @@ ClassLoader::import("framework.request.validator.Form");
  * Controller for handling product based actions performed by store administrators
  *
  * @package application.controller.backend
+ * @author Integry Systems
  * @role order
  */
 class ShipmentController extends StoreManagementController 

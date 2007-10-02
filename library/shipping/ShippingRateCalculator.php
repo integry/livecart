@@ -4,6 +4,11 @@ include_once('ShippingRateSet.php');
 include_once('ShippingRateError.php');
 include_once('ShippingRateResult.php');
 
+/**
+ *
+ * @package library.shipping
+ * @author Integry Systems 
+ */
 abstract class ShippingRateCalculator
 {
     protected $destCountry;   

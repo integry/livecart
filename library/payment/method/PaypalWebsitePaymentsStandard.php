@@ -3,6 +3,11 @@
 include_once(dirname(__file__) . '/../abstract/ExternalPayment.php');
 include_once(dirname(__file__) . '/../method/library/paypal/PaypalCommon.php');
 
+/**
+ *
+ * @package library.payment.method
+ * @author Integry Systems 
+ */
 class PaypalWebsitePaymentsStandard extends ExternalPayment
 {
     public function getUrl()

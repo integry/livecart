@@ -1,5 +1,10 @@
 <?php
 
+/**
+ *
+ * @package library.payment
+ * @author Integry Systems 
+ */
 class TransactionError
 {
 	protected $message;

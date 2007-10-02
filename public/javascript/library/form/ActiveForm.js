@@ -4,7 +4,7 @@
  * It's main feature is to show/hide the new form and the link to this form. It allso show/hide
  * the progress indicator for new forms and generates valid handle from title
  *
- * @author Sergej Andrejev <sandrejev@gmail.com>
+ * @author   Integry Systems
  */
 ActiveForm = Class.create();
 ActiveForm.prototype = {

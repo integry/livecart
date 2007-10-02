@@ -7,7 +7,7 @@
  * </code>
  *
  * @package application.helper.smarty.form
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  *
  * @todo Include javascript validator source
  */

@@ -9,6 +9,7 @@ ClassLoader::import("application.model.user.*");
 /**
  *
  * @package application.controller.backend
+ * @author Integry Systems
  * @role user
  */
 class UserController extends StoreManagementController

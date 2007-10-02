@@ -11,6 +11,11 @@ ClassLoader::import("application.model.delivery.State");
 ClassLoader::import("application.model.tax.Tax");
 ClassLoader::import("application.model.tax.TaxRate");
 
+/**
+ *
+ * @package test.model.delivery
+ * @author Integry Systems 
+ */
 class TestDeliveryZone extends UnitTest
 {    
     public function __construct()

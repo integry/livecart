@@ -6,6 +6,7 @@ ClassLoader::import('application.model.staticpage.StaticPage');
 /**
  * Displays static pages
  *
+ * @author Integry Systems
  * @package application.controller
  */
 class StaticPageController extends FrontendController 

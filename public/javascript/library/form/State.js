@@ -18,8 +18,7 @@
  * Be aware as the backup does not store all form elemens (only values), so if you dinamically removed form field
  * after backup was done there is no way to restore.
  *
- * @version 1.0
- * @author Sergej Andrejev
+ * @author   Integry Systems
  *
  */
 if (Form == undefined)

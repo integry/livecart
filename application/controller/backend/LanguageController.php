@@ -10,7 +10,7 @@ ClassLoader::import("library.*");
  * Handles adding languages, modifying language definitions (translations), activating and deactivating languages
  *
  * @package application.controller.backend
- * @author Rinalds Uzkalns <rinalds@integry.net>
+ * @author Integry Systems
  * @role language
  */
 class LanguageController extends StoreManagementController

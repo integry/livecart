@@ -16,6 +16,7 @@ ClassLoader::import("framework.request.Router");
  * @return string Smarty function resut (formatted link)
  * 
  * @package application.helper.smarty
+ * @author Integry Systems
  */
 function smarty_function_link($params, LiveCartSmarty $smarty)
 {

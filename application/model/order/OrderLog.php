@@ -1,10 +1,16 @@
 <?php
+
 ClassLoader::import("application.model.Currency");
 ClassLoader::import("application.model.user.User");
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.order.OrderedItem");
 ClassLoader::import("application.model.order.Shipment");
 
+/**
+ *
+ * @package application.model.order
+ * @author Integry Systems <http://integry.com> 
+ */
 class OrderLog extends ActiveRecordModel
 {     
 	   const TYPE_ORDER = 0;

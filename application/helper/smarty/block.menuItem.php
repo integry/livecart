@@ -22,7 +22,7 @@
  * </code>
  *
  * @package application.helper.smarty
- * @author Rinalds Uzkalns <rinalds@integry.net>
+ * @author Integry Systems
  */
 function smarty_block_menuItem($params, $content, LiveCartSmarty $smarty, &$repeat) 
 {

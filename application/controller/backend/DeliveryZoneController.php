@@ -11,7 +11,7 @@ ClassLoader::import("framework.request.validator.Form");
  * Application settings management
  *
  * @package application.controller.backend
- *
+ * @author Integry Systems
  * @role delivery
  */
 class DeliveryZoneController extends StoreManagementController

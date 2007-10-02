@@ -12,6 +12,7 @@ ClassLoader::import("application.helper.ActiveGrid");
  * Controller for handling product based actions performed by store administrators
  *
  * @package application.controller.backend
+ * @author Integry Systems 
  * @role product
  */
 class ProductController extends StoreManagementController 

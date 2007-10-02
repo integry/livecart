@@ -2,6 +2,11 @@
 
 include_once(dirname(__file__) . '/ShippingResultInterface.php');
 
+/**
+ *
+ * @package library.shipping
+ * @author Integry Systems 
+ */
 class ShippingRateSet implements ShippingResultInterface, IteratorAggregate
 {
     protected $rates = array();

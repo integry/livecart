@@ -6,7 +6,7 @@ ClassLoader::import("application.controller.backend.abstract.StoreManagementCont
  * Handles dynamic interface customizations
  *
  * @package application.controller.backend
- * @author Rinalds Uzkalns <rinalds@integry.net>
+ * @author Integry Systems
  * 
  * @role customize
  */

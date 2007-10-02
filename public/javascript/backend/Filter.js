@@ -37,7 +37,7 @@
  * </code>
  *
  * @version 1.0
- * @author Sergej Andrejev
+ * @author   Integry Systems
  */
 if (Backend == undefined)
 {

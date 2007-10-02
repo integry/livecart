@@ -22,7 +22,7 @@
  *
  * @return string Menu HTML code
  * @package application.helper.smarty
- * @author Rinalds Uzkalns <rinalds@integry.net>
+ * @author Integry Systems
  */
 function smarty_block_pageMenu($params, $content, LiveCartSmarty $smarty, &$repeat) 
 {	

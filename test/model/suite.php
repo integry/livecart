@@ -1,6 +1,12 @@
 <?php
+
+/**
+ * @author Integry Systems
+ * @package test.model
+ */ 
+
 require_once dirname(__FILE__) . '\..\Initialize.php';
-/* lala */
+
 define('TEST_SUITE', true);
 class Suite extends UTGroupTest
 {

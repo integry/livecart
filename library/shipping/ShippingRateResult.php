@@ -2,6 +2,11 @@
 
 include_once('ShippingResultInterface.php');
 
+/**
+ *
+ * @package library.shipping
+ * @author Integry Systems 
+ */
 class ShippingRateResult implements ShippingResultInterface
 {
     protected $serviceID;

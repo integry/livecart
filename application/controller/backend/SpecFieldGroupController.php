@@ -7,7 +7,7 @@ ClassLoader::import("library.*");
  * Category specification group controller
  *
  * @package application.controller.backend
- * @author Sergej Andrejev <sergej@gmail.net>
+ * @author	Integry Systems
  * @role category
  */
 class SpecFieldGroupController extends StoreManagementController

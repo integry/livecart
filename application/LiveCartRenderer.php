@@ -3,6 +3,12 @@
 ClassLoader::import('framework.renderer.SmartyRenderer');
 ClassLoader::import('application.LiveCartSmarty');
 
+/**
+ *  Implements LiveCart-specific view renderer logic
+ *
+ *  @package application
+ *  @author Integry Systems
+ */
 class LiveCartRenderer extends SmartyRenderer
 {    	
     /**

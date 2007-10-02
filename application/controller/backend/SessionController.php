@@ -7,7 +7,7 @@ ClassLoader::import('application.model.user.SessionUser');
  * Product Category controller
  *
  * @package application.controller.backend
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  *
  */
 class SessionController extends StoreManagementController

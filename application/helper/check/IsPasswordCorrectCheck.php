@@ -2,6 +2,10 @@
 
 ClassLoader::import("framework.request.validator.check.Check");
 
+/**
+ * @package application.helper.check
+ * @author Integry Systems
+ */
 class IsPasswordCorrectCheck extends Check
 {
 	private $user;

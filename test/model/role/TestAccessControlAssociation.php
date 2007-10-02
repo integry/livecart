@@ -5,6 +5,10 @@ ClassLoader::import("application.model.role.Role");
 ClassLoader::import("application.model.role.AccessControlAssociation");
 ClassLoader::import("application.model.user.UserGroup");
 
+/**
+ *  @author Integry Systems
+ *  @package test.model.role
+ */
 class TestAccessControlAssociation extends UnitTest
 {
     /**

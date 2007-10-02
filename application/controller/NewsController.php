@@ -2,6 +2,12 @@
 
 ClassLoader::import('application.model.sitenews.NewsPost');
 
+/**
+ * Site news controller
+ *
+ * @author Integry Systems
+ * @package application.controller
+ */	
 class NewsController extends FrontendController
 {
 	public function view()

@@ -12,7 +12,7 @@ ClassLoader::import("application.model.filter.*");
  * The category tree is based on a modified preordered tree traversal model (http://www.sitepoint.com/article/hierarchical-data-database/2)
  *
  * @package application.model.category
- * @author Integry Systems <http://integry.com>  
+ * @author Integry Systems
  * @todo Update product counts when category is moved
  */
 class Category extends ActiveTreeNode implements MultilingualObjectInterface

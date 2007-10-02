@@ -14,7 +14,7 @@ ClassLoader::import("library.locale.LCiTranslator");
  * backend
  *
  * @package application.controller
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 abstract class BaseController extends Controller implements LCiTranslator
 {

@@ -13,7 +13,7 @@
  * </code>
  *
  * @package application.helper
- * @author Rinalds Uzkalns <rinalds@integry.net>
+ * @author Integry Systems
  */
 class HtmlElement
 {

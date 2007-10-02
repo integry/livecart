@@ -9,6 +9,7 @@ ClassLoader::import("framework.request.validator.RequestValidator");
 
 /**
  * @package application.controller.backend
+ * @author Integry Systems 
  * @role order
  */
 class CustomerOrderController extends StoreManagementController

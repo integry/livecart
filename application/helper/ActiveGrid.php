@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @package application.helper
+ * @author Integry Systems
+ */
 class ActiveGrid
 {    
     const SORT_HANDLE =   0;

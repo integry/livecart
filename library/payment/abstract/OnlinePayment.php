@@ -2,6 +2,11 @@
 
 include_once(dirname(__file__) . '/../TransactionPayment.php');
 
+/**
+ *
+ * @package library.payment.abstract
+ * @author Integry Systems 
+ */
 abstract class OnlinePayment extends TransactionPayment
 {
 	/**

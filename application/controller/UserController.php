@@ -7,6 +7,9 @@ ClassLoader::import('application.model.user.*');
 
 /**
  *  Handles user account related logic
+ *
+ *  @author Integry Systems
+ *  @package application.controller
  */
 class UserController extends FrontendController
 {

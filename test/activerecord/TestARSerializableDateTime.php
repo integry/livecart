@@ -3,6 +3,10 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../Initialize.php'
 
 ClassLoader::import("library.activerecord.ARSerializableDateTime");
 
+/**
+ * @author Integry Systems
+ * @package test.activerecord
+ */ 
 class TestARSerializableDateTime extends UnitTestCase 
 {
 

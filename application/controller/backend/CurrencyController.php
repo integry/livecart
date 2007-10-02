@@ -7,7 +7,7 @@ ClassLoader::import("application.model.Currency");
 /**
  *
  * @package application.controller.backend
- * @author Rinalds Uzkalns <rinalds@integry.net>
+ * @author Integry Systems
  *
  * @role currency
  */

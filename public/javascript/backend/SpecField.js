@@ -37,7 +37,7 @@
  *     Backend.SpecField.prototype.countNewValues = 0;
  * </code>
  *
- * @author Sergej Andrejev
+ * @author   Integry Systems
  * @namespace Backend.SpecField
  */
 if (Backend == undefined)
@@ -49,21 +49,21 @@ Backend.SpecField = Class.create();
 Backend.SpecField.prototype = {
     DATATYPE_TEXT: 1,
     DATATYPE_NUMBERS: 2,
-    
+
     TYPE_NUMBERS_SELECTOR: 1,
     TYPE_NUMBERS_SIMPLE: 2,
-        
+
     TYPE_TEXT_SIMPLE: 3,
     TYPE_TEXT_ADVANCED: 4,
     TYPE_TEXT_SELECTOR: 5,
     TYPE_TEXT_DATE: 6,
 
 	cssPrefix: "specField_",
-	
+
     callbacks: {
         beforeEdit:     function(li) {
             Backend.SpecField.prototype.hideNewSpecFieldAction(this.getRecordId(li, 3));
-            
+
             if(this.isContainerEmpty(li, 'edit')) return Backend.SpecField.prototype.links.editField + this.getRecordId(li)
             else this.toggleContainer(li, 'edit');
         },
@@ -80,22 +80,22 @@ Backend.SpecField.prototype = {
         },
         afterDelete:    function(li, response)
         {
-            try 
-            { 
-                response = eval('(' + response + ')'); 
-            } 
-            catch(e) 
-            { 
-                return false; 
+            try
+            {
+                response = eval('(' + response + ')');
             }
-			 
-            if(response.status == 'success') 
+            catch(e)
+            {
+                return false;
+            }
+
+            if(response.status == 'success')
 			{
                 CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li, 3));
-				
+
 				return true;
             }
-			
+
 			return false;
         },
         beforeSort:     function(li, order) {
@@ -103,8 +103,8 @@ Backend.SpecField.prototype = {
         },
         afterSort:     function(li, order) {    }
     },
-    
-    isNumber: function(type) 
+
+    isNumber: function(type)
     {
           return type == Backend.SpecField.prototype.TYPE_NUMBERS_SELECTOR || type == Backend.SpecField.prototype.TYPE_NUMBERS_SIMPLE;
     },
@@ -131,7 +131,7 @@ Backend.SpecField.prototype = {
 		this.values                = this.specField.values;
 		this.name                  = this.specField.name_lang;
 		this.backupName            = this.name;
-        
+
 		this.valuePrefix           = this.specField.valuePrefix ? this.specField.valuePrefix : '';
 		this.valueSuffix           = this.specField.valueSuffix ? this.specField.valueSuffix : '';
 
@@ -142,7 +142,7 @@ Backend.SpecField.prototype = {
 		this.isRequired            = this.specField.isRequired == 1 ? true : false;
 		this.isDisplayed           = this.specField.isDisplayed == 1 ? true : false;
 		this.isDisplayedInList     = this.specField.isDisplayedInList == 1 ? true : false;
-        
+
 		this.loadLanguagesAction();
 		this.findUsedNodes();
 
@@ -163,24 +163,24 @@ Backend.SpecField.prototype = {
 		var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ? ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID).getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
         $A(this.fieldsList.ul.getElementsByTagName('li')).each(function(li)
         {
-           if(!Element.hasClassName(li, 'dom_template'))  
+           if(!Element.hasClassName(li, 'dom_template'))
 		   {
                this.deleteValueFieldAction(li);
-           }   
+           }
         }.bind(this));
-        
+
 		this.addField(null, "new" + Backend.SpecField.prototype.countNewValues, false);
 		this.fieldsList.touch(true);
-		
+
         this.bindDefaultFields();
         this.nodes.type.value = 3;
         this.typeWasChangedAction();
-        
+
         $('specField_step_lev1_specField_step_main_' + this.categoryID + '_new').show();
         $('specField_step_lev1_specField_step_values_' + this.categoryID + '_new').hide();
-                
+
 		Backend.SpecField.prototype.countNewValues++;
-        
+
         Form.restore(this.nodes.form, ['type']);
 	},
 
@@ -194,15 +194,15 @@ Backend.SpecField.prototype = {
 	 * @access private
 	 */
 	cloneForm: function(prototypeId)
-	{ 
+	{
         var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ?  ActiveList.prototype.getInstance(this.specField.rootId).getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
 
 	    var blankForm = $(prototypeId);
-        var copiedForm = blankForm.cloneNode(true);    
+        var copiedForm = blankForm.cloneNode(true);
         Element.removeClassName(copiedForm, 'dom_template');
         copiedForm.id = false;
         root.appendChild(copiedForm);
-        
+
         new Backend.LanguageForm(copiedForm);
 	},
 
@@ -227,19 +227,19 @@ Backend.SpecField.prototype = {
 		this.nodes.type.options[this.nodes.type.hiddenIndex]  = new Option('hidden option', -2);
 		this.nodes.type.hiddenOption                          = this.nodes.type.options[this.nodes.type.hiddenIndex];
 		this.nodes.type.hiddenOption.style.display            = "none";
-		
+
 		this.nodes.stateLinks 			= document.getElementsByClassName(this.cssPrefix + "change_state", this.nodes.parent);
 		this.nodes.stepTranslations 	= document.getElementsByClassName(this.cssPrefix + "step_translations", this.nodes.parent)[0];
 		this.nodes.stepMain 			= document.getElementsByClassName(this.cssPrefix + "step_main", this.nodes.parent)[0];
 		this.nodes.stepValues       	= document.getElementsByClassName(this.cssPrefix + "step_values", this.nodes.parent)[0];
-        
+
         this.nodes.mergeValuesLink        = this.nodes.stepValues.down("."  + this.cssPrefix + "mergeValuesLink");
         this.nodes.mergeValuesCancelLink  = this.nodes.stepValues.down("."  + this.cssPrefix + "mergeValuesCancelLink");
         this.nodes.mergeValuesControls    = this.nodes.stepValues.down("."  + this.cssPrefix + "mergeValuesControls");
         this.nodes.mergeValuesSubmit      = this.nodes.stepValues.down("."  + this.cssPrefix + "mergeValuesSubmit");
         this.nodes.mergeValuesCancel      = this.nodes.stepValues.down("."  + this.cssPrefix + "mergeValuesCancel");
-        
-        
+
+
 		this.nodes.stepLevOne 			= document.getElementsByClassName(this.cssPrefix + "step_lev1", this.nodes.parent);
 
 		for(var i = 0; i < this.nodes.stepLevOne.length; i++)
@@ -248,35 +248,35 @@ Backend.SpecField.prototype = {
 		}
 
         var self = this;
-        this.nodes.labels = {};  
+        this.nodes.labels = {};
         $A(['description', 'handle', 'type', 'name', 'valuePrefix', 'valueSuffix', 'advancedText', 'multipleSelector', 'isRequired', 'isDisplayed', 'isDisplayedInList']).each(function(field)
         {
             this.nodes.labels[field] = document.getElementsByClassName(self.cssPrefix + "form_" + field + "_label", this.nodes.parent)[0];
-        }.bind(this));   
+        }.bind(this));
 
 		this.nodes.mainTitle 			= document.getElementsByClassName(this.cssPrefix + "title", this.nodes.parent)[0];
 		this.nodes.id 					= document.getElementsByClassName(this.cssPrefix + "form_id", this.nodes.parent)[0];
-		this.nodes.categoryID 			= document.getElementsByClassName(this.cssPrefix + "form_categoryID", this.nodes.parent)[0]; 
+		this.nodes.categoryID 			= document.getElementsByClassName(this.cssPrefix + "form_categoryID", this.nodes.parent)[0];
 		this.nodes.description 			= document.getElementsByClassName(this.cssPrefix + "form_description", this.nodes.parent)[0];
-		
+
         this.nodes.multipleSelector 	= document.getElementsByClassName(this.cssPrefix + "form_multipleSelector", this.nodes.parent)[0];
 		this.nodes.isRequired          	= document.getElementsByClassName(this.cssPrefix + "form_isRequired", this.nodes.parent)[0];
 		this.nodes.isDisplayed          = document.getElementsByClassName(this.cssPrefix + "form_isDisplayed", this.nodes.parent)[0];
 		this.nodes.isDisplayedInList    = document.getElementsByClassName(this.cssPrefix + "form_isDisplayedInList", this.nodes.parent)[0];
-		
+
         this.nodes.handle 				= document.getElementsByClassName(this.cssPrefix + "form_handle", this.nodes.parent)[0];
 		this.nodes.name 				= document.getElementsByClassName(this.cssPrefix + "form_name", this.nodes.parent)[0];
-                
+
 		this.nodes.valuePrefix          = document.getElementsByClassName(this.cssPrefix + "form_valuePrefix", this.nodes.parent)[0];
 		this.nodes.valueSuffix          = document.getElementsByClassName(this.cssPrefix + "form_valueSuffix", this.nodes.parent)[0];
-        
+
 		this.nodes.valuesDefaultGroup 	= document.getElementsByClassName(this.cssPrefix + "form_values_group", this.nodes.parent)[0];
         this.nodes.advancedText         = document.getElementsByClassName(this.cssPrefix + 'form_advancedText', this.nodes.parent)[0];
-        
+
 		this.nodes.controls 	        = this.nodes.parent.down("." + this.cssPrefix + "controls");
 		this.nodes.cancel 	            = this.nodes.controls.down("." + this.cssPrefix + "cancel");
 		this.nodes.save 	            = this.nodes.controls.down("." + this.cssPrefix + "save");
-        
+
         this.nodes.cancelLink          = $("specField_item_new_" + this.categoryID + "_cancel");
 
 		this.nodes.translationsLinks 	= document.getElementsByClassName(this.cssPrefix + "form_values_translations_language_links", this.nodes.parent)[0];
@@ -286,7 +286,7 @@ Backend.SpecField.prototype = {
 
 		var ul = this.nodes.valuesDefaultGroup.getElementsByTagName('ul')[0];
 		ul.id = this.cssPrefix + "form_" + this.id + '_values_' + this.languageCodes[0];
-        
+
         this.nodes.specFieldValuesTemplate = document.getElementsByClassName(this.cssPrefix + "form_values_value", this.nodes.valuesDefaultGroup)[0];
         this.nodes.specFieldValuesUl       = this.nodes.valuesDefaultGroup.getElementsByTagName('ul')[0];
 	},
@@ -326,18 +326,18 @@ Backend.SpecField.prototype = {
         Event.observe(this.nodes.cancel, "click", function(e) { Event.stop(e); self.cancelAction() } );
         if(this.id.match('new')) Event.observe(this.nodes.cancelLink, "click", function(e) { Event.stop(e); self.cancelAction() } );
         Event.observe(this.nodes.save, "click", function(e) { self.saveAction(e) } );
-        
+
         Event.observe(this.nodes.mergeValuesLink, 'click', function(e) { Event.stop(e); self.toggleValuesMerging(); });
         Event.observe(this.nodes.mergeValuesCancelLink, 'click', function(e) { Event.stop(e); self.toggleValuesMerging(); });
         Event.observe(this.nodes.mergeValuesSubmit, 'click', function(e) { Event.stop(e); self.mergeValues(); });
         Event.observe(this.nodes.mergeValuesCancel, 'click', function(e) { Event.stop(e); self.toggleValuesMerging(); });
-        
+
 		// Also some actions must be executed on load. Be aware of the order in which those actions are called
 		this.loadSpecFieldAction();
 		this.loadValueFieldsAction();
 		this.bindTranslationValues();
 		this.typeWasChangedAction();
-		
+
         if(!this.id.match(/new$/))
         {
             new Insertion.After(this.nodes.type.up('fieldset'), '<span class="specField_form_type_static">' + this.nodes.type.fullText + '</span>')
@@ -364,13 +364,13 @@ Backend.SpecField.prototype = {
 	 *
 	 */
 	typeWasChangedAction: function()
-	{        
+	{
         this.type = this.nodes.type.value;
-		
+
 		this.nodes.type.selectedOption = this.nodes.type.options[this.nodes.type.selectedIndex];
 		this.nodes.type.selectedGroup  = this.nodes.type.selectedOption.up("optgroup");
         this.nodes.type.realIndex      = this.nodes.type.selectedIndex;
-		
+
 		if(this.nodes.type.selectedGroup)
 		{
 		    this.nodes.type.fullText = this.nodes.type.selectedGroup.label + " " + this.nodes.type.selectedOption.text.toLowerCase();
@@ -382,7 +382,7 @@ Backend.SpecField.prototype = {
 		this.nodes.type.hiddenOption.value = this.nodes.type.selectedOption.value;
 		this.nodes.type.hiddenOption.text = this.nodes.type.fullText;
 		this.nodes.type.selectedIndex = this.nodes.type.hiddenIndex;
-		
+
 		// if selected type is a selector type then show selector options fields (aka step 2)
 		if(this.selectorValueTypes.indexOf(this.type) === -1)
 		{
@@ -394,16 +394,16 @@ Backend.SpecField.prototype = {
             this.nodes.tabsContainer.style.visibility = 'visible';
             Element.show(this.nodes.multipleSelector.up());
 		}
-		
+
 		var prefixLabel = this.nodes.parent.down('.specField_form_valuePrefix_label')
         var suffixLabel = this.nodes.parent.down('.specField_form_valueSuffix_label')
-		
-		
+
+
         if(this.isNumber(this.type))
 		{
 			this.nodes.stepValues.down(".languageForm").hide();
 			document.getElementsByClassName("sufixAndPrefix", this.nodes.parent).invoke("show");
-			
+
 		    this.nodes.valuesDefaultGroup.down('ul').childElements().each(function(li)
 			{
 				if(li.hasClassName("dom_template")) return;
@@ -415,13 +415,13 @@ Backend.SpecField.prototype = {
             this.nodes.stepValues.down(".languageForm").show();
             document.getElementsByClassName("sufixAndPrefix", this.nodes.parent).invoke("hide");
 		}
-		
+
         this.nodes.advancedText.style.display = this.type == Backend.SpecField.prototype.TYPE_TEXT_SIMPLE ? 'block' : 'none';
 	},
 
 
     bindOneValue: function(li)
-    {        
+    {
         var self = this;
 	    var input = li.getElementsByTagName("input")[0];
         if(input.type == 'text')
@@ -431,7 +431,7 @@ Backend.SpecField.prototype = {
             Event.observe(input, "keydown", function(e) {
                 if(!this.up('li').next() && this.value != '') self.addValueFieldAction();
             });
-        }   
+        }
     },
 
 	/**
@@ -448,7 +448,7 @@ Backend.SpecField.prototype = {
 	        beforeSort: function(li, order)
 	        {
                 if(self.mergingMode) self.colorMergedValues();
-                
+
 	            return self.links.sortValues + '?target=' + this.ul.id + '&' + order;
 	        },
 	        afterSort: function(li, response){    },
@@ -458,14 +458,14 @@ Backend.SpecField.prototype = {
                 {
 	                var emptyFilters = true;
                     var inputValues = li.getElementsByTagName("input");
-                    for(var i = 0; i < inputValues.length; i++) 
+                    for(var i = 0; i < inputValues.length; i++)
                     {
                         if(!Element.hasClassName('dom_template', inputValues[i]) && inputValues[i].style.display != 'none' && inputValues[i].value != '')
                         {
                             emptyFilters =  false;
                         }
                     }
-                    
+
                     if(emptyFilters || confirm(self.messages.removeFieldQuestion))
                     {
                         self.deleteValueFieldAction(li);
@@ -476,10 +476,10 @@ Backend.SpecField.prototype = {
                     return Backend.SpecField.prototype.links.deleteValue + this.getRecordId(li);
                 }
 	        },
-	        afterDelete: function(li, response){ 
-                response = eval('(' + response + ')'); 
-				
-				self.deleteValueFieldAction(li) 
+	        afterDelete: function(li, response){
+                response = eval('(' + response + ')');
+
+				self.deleteValueFieldAction(li)
 			}
 	    }, this.msg.activeListMessages);
 	},
@@ -515,37 +515,37 @@ Backend.SpecField.prototype = {
 		if(this.id) this.nodes.id.value = this.id;
 		if(this.categoryID) this.nodes.categoryID.value = this.categoryID;
 		if(this.handle) this.nodes.handle.value = this.handle;
-        this.nodes.handle.id = this.cssPrefix + this.categoryID + "_" + this.id + "_handle"; 
+        this.nodes.handle.id = this.cssPrefix + this.categoryID + "_" + this.id + "_handle";
 
 		this.nodes.name.value = this.specField.name_lang ? this.specField.name_lang : '';
-        this.nodes.valuePrefix.value = this.specField.valuePrefix_lang ? this.specField.valuePrefix_lang : '';        
+        this.nodes.valuePrefix.value = this.specField.valuePrefix_lang ? this.specField.valuePrefix_lang : '';
         this.nodes.valueSuffix.value = this.specField.valueSuffix_lang ? this.specField.valueSuffix_lang : '';
-        
-        this.nodes.name.id = this.cssPrefix + this.categoryID + "_" + this.id + "_name_" + this.languageCodes[0]; 
-        this.nodes.valuePrefix.id = this.cssPrefix + this.categoryID + "_" + this.id + "_valuePrefix_" + this.languageCodes[0]; 
-        this.nodes.valueSuffix.id = this.cssPrefix + this.categoryID + "_" + this.id + "_valueSuffix_" + this.languageCodes[0]; 
+
+        this.nodes.name.id = this.cssPrefix + this.categoryID + "_" + this.id + "_name_" + this.languageCodes[0];
+        this.nodes.valuePrefix.id = this.cssPrefix + this.categoryID + "_" + this.id + "_valuePrefix_" + this.languageCodes[0];
+        this.nodes.valueSuffix.id = this.cssPrefix + this.categoryID + "_" + this.id + "_valueSuffix_" + this.languageCodes[0];
 
 		this.nodes.name.name = "name_" + this.languageCodes[0];
 		this.nodes.valuePrefix.name = "valuePrefix_" + this.languageCodes[0];
 		this.nodes.valueSuffix.name = "valueSuffix_" + this.languageCodes[0];
-                   
+
 		this.nodes.multipleSelector.checked = this.isMultiValue;
 		this.nodes.isRequired.checked = this.isRequired;
 		this.nodes.isDisplayed.checked = this.isDisplayed;
 		this.nodes.isDisplayedInList.checked = this.isDisplayedInList;
-        
-        this.nodes.multipleSelector.id     = this.cssPrefix + this.categoryID + "_" + this.id + "_multipleSelector"; 
-        this.nodes.isRequired.id           = this.cssPrefix + this.categoryID + "_" + this.id + "_isRequired"; 
-        this.nodes.isDisplayed.id          = this.cssPrefix + this.categoryID + "_" + this.id + "_isDisplayed"; 
-        this.nodes.isDisplayedInList.id    = this.cssPrefix + this.categoryID + "_" + this.id + "_isDisplayedInList"; 
-                
-        $A(['name', 'valuePrefix', 'valueSuffix', 'handle', 
-            'multipleSelector', 'isRequired',  'isDisplayed', 
+
+        this.nodes.multipleSelector.id     = this.cssPrefix + this.categoryID + "_" + this.id + "_multipleSelector";
+        this.nodes.isRequired.id           = this.cssPrefix + this.categoryID + "_" + this.id + "_isRequired";
+        this.nodes.isDisplayed.id          = this.cssPrefix + this.categoryID + "_" + this.id + "_isDisplayed";
+        this.nodes.isDisplayedInList.id    = this.cssPrefix + this.categoryID + "_" + this.id + "_isDisplayedInList";
+
+        $A(['name', 'valuePrefix', 'valueSuffix', 'handle',
+            'multipleSelector', 'isRequired',  'isDisplayed',
             'isDisplayedInList', 'type', 'description', 'advancedText']).each(function(fieldName)
         {
-            this.nodes.labels[fieldName].onclick = function() { 
+            this.nodes.labels[fieldName].onclick = function() {
                 var input = this.nodes[fieldName];
-                
+
                 if(input.down('input'))
                 {
                     input = input.down('input');
@@ -558,12 +558,12 @@ Backend.SpecField.prototype = {
                 {
                     input = input.down('textarea');
                 }
-                
+
                 if('checkbox' == input.type) input.checked = !input.checked;
                 else input.focus();
             }.bind(this);
         }.bind(this));
-        
+
         if(this.type == Backend.SpecField.prototype.TYPE_TEXT_ADVANCED)
         {
             this.nodes.type.value = Backend.SpecField.prototype.TYPE_TEXT_SIMPLE;
@@ -574,7 +574,7 @@ Backend.SpecField.prototype = {
             this.nodes.type.value = this.type;
             this.nodes.advancedText.checked = false;
         }
-        
+
 		if(!this.id.match(/new$/))
 		{
 		    this.nodes.type.up('fieldset').style.display = 'none';
@@ -583,18 +583,18 @@ Backend.SpecField.prototype = {
 
 		if(this.specField.description_lang) this.nodes.description.value = this.specField.description_lang;
 		this.nodes.description.name = "description_" + this.languageCodes[0];
-        
-        this.nodes.description.id = this.cssPrefix + this.categoryID + "_" + this.id + "_description_" + this.languageCodes[0]; 
+
+        this.nodes.description.id = this.cssPrefix + this.categoryID + "_" + this.id + "_description_" + this.languageCodes[0];
         var fields = ['name', 'valuePrefix', 'valueSuffix', 'description'];
 		for(var i = 1; i < this.languageCodes.length; i++)
-		{          
-    		for(var j = 0; j < fields.length; j++) 
+		{
+    		for(var j = 0; j < fields.length; j++)
             {
                 var field = this.nodes.form.elements.namedItem(fields[j] + '_' + this.languageCodes[i]);
                 var label = field.up('.languageFormContainer').down('.translation_' + fields[j] + '_label');
                 field.id = this.cssPrefix + this.categoryID + "_" + this.id + "_" + fields[j] + "_" + this.languageCodes[i];
                 label.forID = field.id;
-                
+
                 if(this.specField[fields[j] + '_' + this.languageCodes[i]]) field.value = this.specField[fields[j] + '_' + this.languageCodes[i]];
                 Event.observe(label, "click", function(e) { $(this.forID).focus(); });
            }
@@ -669,7 +669,7 @@ Backend.SpecField.prototype = {
 	deleteValueFieldAction: function(li)
 	{
         var activeList = this.fieldsList;
-        
+
 		var splitedHref = li.id.split("_");
         var id = splitedHref.last();
 		var isNew = id ? true : false;
@@ -679,7 +679,7 @@ Backend.SpecField.prototype = {
 		{
             CategoryTabControl.prototype.resetTabItemsCount(this.categoryID);
         }
-		
+
 		for(var i = 1; i < this.languageCodes.length; i++)
 		{
 			var translatedValue = $(this.cssPrefix + "form_values_" + this.languageCodes[i] + "_" + id);
@@ -721,7 +721,7 @@ Backend.SpecField.prototype = {
 		var currentStep = this.cssPrefix + e.target.hash.substring(1);
         this.showState(currentStep);
 	},
-    
+
     showState: function(currentStep)
     {
 		for(var i = 0; i < this.nodes.stepLevOne.length; i++)
@@ -786,7 +786,7 @@ Backend.SpecField.prototype = {
 		{
             $(this.cssPrefix + "form_values_" +  this.languageCodes[i] + "_" + id).getElementsByTagName("label")[0].innerHTML = e.target.value;
 		}
-		
+
         if(this.isNumber(this.type))
 		{
 		    NumericFilter(e.target);
@@ -873,7 +873,7 @@ Backend.SpecField.prototype = {
 	{
         var self = this;
 		if(!value) value = {};
-		
+
 		var values_template = this.nodes.specFieldValuesTemplate;
 		var ul = this.nodes.specFieldValuesUl;
 
@@ -885,9 +885,9 @@ Backend.SpecField.prototype = {
 		var input = li.down("input." + this.cssPrefix + "valueName");
 		input.name = "values[" + id + "]["+this.languageCodes[0]+"]";
 		input.value = value.value_lang ? value.value_lang : '' ;
-        
+
         input.id = this.cssPrefix + "field_" + id + "_value_" + this.languageCodes[0];
-        
+
         Event.observe(input, "input", function(e) { self.mainValueFieldChangedAction(e) }, false);
         Event.observe(input, "input", function(e) {
             if(!this.up('li').next() && this.value != '') self.addValueFieldAction();
@@ -899,12 +899,12 @@ Backend.SpecField.prototype = {
 		for(var i = 1; i < this.languageCodes.length; i++)
 		{
 			var translationsUl = nodeValues.down('.languageFormContainer_' + this.languageCodes[i]).down('ul');
-            
+
 			var newValueTranslation = translationsUl.down('.dom_template').cloneNode(true);
 			Element.removeClassName(newValueTranslation, "dom_template");
 			newValueTranslation.id = newValueTranslation.id + this.languageCodes[i] + "_" + id;
 			translationsUl.appendChild(newValueTranslation);
-            
+
 
 
 			var inputTranslation = newValueTranslation.getElementsByTagName("input")[0];
@@ -917,7 +917,7 @@ Backend.SpecField.prototype = {
             translationLabel['for'] = inputTranslation.id;
             translationLabel.onclick = function() { $(this['for']).focus(); }
 		}
-		
+
         this.bindOneValue(li);
 	},
 
@@ -956,7 +956,7 @@ Backend.SpecField.prototype = {
         {
             this.hideNewSpecFieldAction(this.categoryID);
         }
-        
+
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
     },
 
@@ -975,10 +975,10 @@ Backend.SpecField.prototype = {
 		}
 
 		Event.stop(e);
-        
+
         this.saveSpecField();
     },
-    
+
     /**
      * This action is executed when saving specification field. THis method will be executed before ajax request to the server is sent
      */
@@ -992,14 +992,14 @@ Backend.SpecField.prototype = {
 		catch (e)
 		{
 		}
-        
+
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-        
+
         this.nodes.form.action = this.id.match(/new/) ? Backend.SpecField.prototype.links.create : Backend.SpecField.prototype.links.update;
         new LiveCart.AjaxRequest(
             this.nodes.form,
             false,
-            function(param) 
+            function(param)
             {
                 this.afterSaveAction(param.responseText)
             }.bind(this)
@@ -1015,64 +1015,64 @@ Backend.SpecField.prototype = {
     {
 		var self = this;
         var jsonResponse = eval("("+jsonResponseString+")");
-        
+
         if(jsonResponse.status == 'success')
-        {       
+        {
             // reset product forms
             Backend.Product.resetEditors();
-            
+
             if(this.nodes.parent.tagName.toLowerCase() == 'li')
             {
                 ActiveForm.prototype.updateNewFields('specField_update', $H(jsonResponse.newIDs), this.nodes.parent);
                 Form.backup(this.nodes.form);
                 this.backupName = this.nodes.name.value;
-                
+
                 var activeList = ActiveList.prototype.getInstance(this.nodes.parent.parentNode);
-				
-				this.nodes.specFieldValuesUl.childElements().each(function(li) 
+
+				this.nodes.specFieldValuesUl.childElements().each(function(li)
 				{
 				    if(li.id.match(/new/))
 					{
 						this.deleteValueFieldAction(li)
 					}
 				}.bind(this))
-				
+
                 activeList.toggleContainer(this.nodes.parent, 'edit', 'yellow');
             }
             else
             {
                 var tempElement = document.createElement('div');
                 $(tempElement).update('<span class="specField_title">' + this.nodes.name.value + '</span>');
-                                
+
                 var activeRecord = ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID + '_');
-             
+
                 var liElement = activeRecord.addRecord(jsonResponse.id, tempElement);
-                
+
                 this.hideNewSpecFieldAction(this.categoryID);
     		    this.recreate(this.specField, true);
-                
+
                 activeRecord.touch();
             }
-            
+
             CategoryTabControl.prototype.resetTabItemsCount(this.categoryID);
-            
+
             // Reload filters (uncomment when API is frozen)
-            
+
             try { // try to remove filter container
-                var tc = Backend.Category.tabControl;    
-                
+                var tc = Backend.Category.tabControl;
+
                 var tabContent = $(tc.getContainerId('tabFilters', tc.treeBrowser.getSelectedItemId()));
                 $A(tabContent.getElementsByTagName("ul")).each(function(ul) {
                     try{ ActiveList.prototype.destroy(ul); } catch(e){ }
                 });
-                
+
                 Element.remove(tabContent);
-            } catch (e){ 
+            } catch (e){
             }
         }
-        else if(jsonResponse.errors) 
+        else if(jsonResponse.errors)
         {
-            var firstError; for(firstError in jsonResponse.errors) break;               
+            var firstError; for(firstError in jsonResponse.errors) break;
             this.showState('specField_step_' + (firstError.match(/^values/) ? 'values' : 'main'));
             ActiveForm.prototype.setErrorMessages(this.nodes.form, jsonResponse.errors);
         }
@@ -1152,17 +1152,17 @@ Backend.SpecField.prototype = {
     {
 		var form = new ActiveForm.Slide("specField_menu_" + categoryID);
 		var fieldFormId = this.cssPrefix + "item_new_"+categoryID+"_form";
-				
+
 		form.show("addSpecField", fieldFormId, ['type']);
     },
-    
+
     toggleValuesMerging: function()
     {
         var self = this;
         var valuesUl = this.nodes.specFieldValuesUl;
-        
+
         this.mergingMode = !this.mergingMode;
-        
+
         this.mergedValues = {};
         if(this.mergingMode)
         {
@@ -1177,40 +1177,40 @@ Backend.SpecField.prototype = {
         {
             this.nodes.mergeValuesControls.hide();
             this.nodes.valuesAddFieldLink.show();
-            
+
             if (this.DATATYPE_TEXT == this.specField.dataType)
             {
                 this.nodes.stepValues.down('.languageForm').show();
             }
-            
+
             this.nodes.mergeValuesCancelLink.hide();
             this.nodes.mergeValuesLink.show();
             this.nodes.controls.show();
             this.colorMergedValues();
         }
-        
-        $A(valuesUl.getElementsByTagName('li')).each(function(li) 
-        { 
-            var checkbox = li.down("." + self.cssPrefix + "mergeCheckbox"); 
+
+        $A(valuesUl.getElementsByTagName('li')).each(function(li)
+        {
+            var checkbox = li.down("." + self.cssPrefix + "mergeCheckbox");
 
             if(self.mergingMode) checkbox.show();
             else checkbox.hide();
-            
+
             if(!self.mergingCheckboxesBinded)
             {
                 checkbox.li = li;
-                Event.observe(checkbox, 'click', function(e) { 
+                Event.observe(checkbox, 'click', function(e) {
                     if(true == this.checked) self.addToMergedValues(this.li);
                     else self.removeToMergedValues(this.li);
-                    
+
                     self.colorMergedValues();
-                });   
+                });
             }
         });
-        
+
         this.mergingCheckboxesBinded = true;
     },
-    
+
     mergeValues: function()
     {
         var mergedString = "";
@@ -1221,23 +1221,23 @@ Backend.SpecField.prototype = {
             }
             mergedString += ("&mergedValues[]=" + mergedValue.key);
         }.bind(this));
-        
+
         new LiveCart.AjaxRequest(
             Backend.SpecField.prototype.links.mergeValues + "?" + mergeIntoValue + mergedString,
             this.nodes.mergeValuesSubmit.parentNode.down('.progressIndicator'),
             function(reply)
             {
-                this.handleMergeValuesResponse(eval("(" + reply.responseText + ")"));               
+                this.handleMergeValuesResponse(eval("(" + reply.responseText + ")"));
             }.bind(this)
         );
     },
-    
+
     handleMergeValuesResponse: function(response)
     {
         if('success' == response.status)
         {
             var self = this;
-            $H(this.mergedValues).each(function(mergedValue) 
+            $H(this.mergedValues).each(function(mergedValue)
             {
                 if(Element.hasClassName(mergedValue.value, self.cssPrefix + "valueMergedWinner"))
                 {
@@ -1249,7 +1249,7 @@ Backend.SpecField.prototype = {
                 {
                     self.deleteValueFieldAction(mergedValue.value);
                 }
-                
+
                 delete self.mergedValues[mergedValue.key];
             });
         }
@@ -1258,38 +1258,38 @@ Backend.SpecField.prototype = {
             alert('Failed to merge values. Not implemented!')
         }
     },
-    
+
     addToMergedValues: function(li)
     {
         this.mergedValues[this.fieldsList.getRecordId(li)] = li;
     },
-    
+
     removeToMergedValues: function(li)
     {
         delete this.mergedValues[this.fieldsList.getRecordId(li)];
     },
-    
+
     colorMergedValues: function()
     {
         var self = this;
         var winner = true;
         var valuesUl = this.nodes.specFieldValuesUl;
-        $A(valuesUl.getElementsByTagName('li')).each(function(li) 
-        { 
+        $A(valuesUl.getElementsByTagName('li')).each(function(li)
+        {
             Element.removeClassName(li, self.cssPrefix + "valueMergedWinner");
             Element.removeClassName(li, self.cssPrefix + "valueMergedLooser");
-            
-            if(self.mergedValues[self.fieldsList.getRecordId(li)]) 
+
+            if(self.mergedValues[self.fieldsList.getRecordId(li)])
             {
-                if(!winner) 
+                if(!winner)
                 {
                     Element.addClassName(li, self.cssPrefix + "valueMergedLooser");
                 }
-                else 
+                else
                 {
                     Element.addClassName(li, self.cssPrefix + "valueMergedWinner");
                 }
-                
+
                 winner = false;
             }
             else
@@ -1304,19 +1304,19 @@ Backend.SpecField.prototype = {
 
 
 /**
- * Backend.SpecFieldGroup manages specification field groups 
- * 
- * To create group you should pass parent element (HTMLLiElement if you this group is allready in ActiveList or HTMLDivElement if it's a new group) if it is 
- * 
- * @author Sergej Andrejev
+ * Backend.SpecFieldGroup manages specification field groups
+ *
+ * To create group you should pass parent element (HTMLLiElement if you this group is allready in ActiveList or HTMLDivElement if it's a new group) if it is
+ *
+ * @author   Integry Systems
  * @namespace Backend.SpecField
  */
 Backend.SpecFieldGroup = Class.create();
 Backend.SpecFieldGroup.prototype = {
      cssPrefix: 'specField_',
-     
+
      callbacks: {
-        beforeEdit:     function(li) 
+        beforeEdit:     function(li)
         {
             if(!Backend.SpecFieldGroup.prototype.isGroupTranslated(li))
             {
@@ -1331,17 +1331,17 @@ Backend.SpecFieldGroup.prototype = {
                 else
                 {
                      Backend.SpecFieldGroup.prototype.hideGroupTranslations(li);
-                }   
+                }
             }
         },
-        afterEdit:      function(li, response) { 
+        afterEdit:      function(li, response) {
 			var response = eval("(" + response + ")");
             li.down('.' + Backend.SpecFieldGroup.prototype.cssPrefix + 'group_title').hide();
-            
+
 			// Wait a little before opening the group
 			setTimeout(function(li, response) {
 				new Backend.SpecFieldGroup(li, response);
-                Backend.SpecFieldGroup.prototype.displayGroupTranslations(li);  
+                Backend.SpecFieldGroup.prototype.displayGroupTranslations(li);
 			}.bind(this, li, response), 50);
         },
         beforeDelete:   function(li) {
@@ -1350,14 +1350,14 @@ Backend.SpecFieldGroup.prototype = {
         },
         afterDelete:    function(li, response)
         {
-            response = eval('(' + response + ')'); 
-			 
+            response = eval('(' + response + ')');
+
             if(response.status == 'success') {
                 CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li, 2));
-				
+
 				return true;
             }
-			
+
 			return false;
         },
         beforeSort:     function(li, order) {
@@ -1365,10 +1365,10 @@ Backend.SpecFieldGroup.prototype = {
         },
         afterSort:     function(li, order) { }
      },
-     
+
      /**
       * Consturctor
-      * 
+      *
       * @param HTMLElement parent Parent node
       * @param Object group Evaluated group data
       */
@@ -1377,13 +1377,13 @@ Backend.SpecFieldGroup.prototype = {
          this.group = group;
          this.findNodes(parent);
          this.generateGroupTranslations();
-         this.bindEvents(); 
+         this.bindEvents();
          Form.backup(this.nodes.form);
      },
-     
+
      /**
       * Find all nodes used by this object
-      * 
+      *
       * @param HTMLElement parent Parent node
       */
      findNodes: function(parent)
@@ -1392,7 +1392,7 @@ Backend.SpecFieldGroup.prototype = {
 
         this.nodes.parent              = parent;
         this.nodes.form                = document.getElementsByClassName(this.cssPrefix + 'group_form', this.nodes.template)[0].down('form').cloneNode(true);
-        this.nodes.mainTitle           = document.getElementsByClassName(this.cssPrefix + 'group_title', this.nodes.parent)[0];        
+        this.nodes.mainTitle           = document.getElementsByClassName(this.cssPrefix + 'group_title', this.nodes.parent)[0];
 
         try
         {
@@ -1402,9 +1402,9 @@ Backend.SpecFieldGroup.prototype = {
         {
             this.nodes.parent.appendChild(this.nodes.form);
         }
-        
+
         new Backend.LanguageForm(this.nodes.form);
-        
+
         this.nodes.template            = $('specField_group_blank');
         this.nodes.translations        = document.getElementsByClassName(this.cssPrefix + 'group_translations', this.nodes.form)[0];
         this.nodes.controls            = document.getElementsByClassName(this.cssPrefix + 'group_controls', this.nodes.form)[0];
@@ -1414,11 +1414,11 @@ Backend.SpecFieldGroup.prototype = {
         this.nodes.save                = document.getElementsByClassName(this.cssPrefix + 'save', this.nodes.controls)[0];
         this.nodes.cancel              = document.getElementsByClassName(this.cssPrefix + 'cancel', this.nodes.controls)[0];
         this.nodes.topCancel           = $(this.cssPrefix + 'group_new_' + this.group.Category.ID + '_cancel')
-        
+
         this.nodes.labels = {};
         this.nodes.labels.name       = document.getElementsByClassName(this.cssPrefix + "group_name_label", this.nodes.translations)[0];
      },
-     
+
      bindEvents: function()
      {
          var self = this;
@@ -1427,10 +1427,10 @@ Backend.SpecFieldGroup.prototype = {
 		 Event.observe(self.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel() });
 		 Event.observe(self.nodes.topCancel, 'click', function(e) { Event.stop(e); self.cancel() });
      },
-     
+
     /**
      * Genereate HTML code from group object
-     * 
+     *
      * @param HTMLElement parent Parent element
      * @param integer id Group Id
      */
@@ -1443,20 +1443,20 @@ Backend.SpecFieldGroup.prototype = {
         {
             this.nodes.name = '';
         }
-        
+
         this.nodes.name.name += "_" + Backend.SpecField.prototype.languageCodes[0];
         if(this.group.name_lang) this.nodes.name.value = this.group.name_lang;
-        
+
         this.nodes.labels.name.onclick = function() { self.nodes.name.focus() }
-        
+
         this.nodes.categoryID.value = this.group.Category.ID;
-        
+
         $H(Backend.SpecField.prototype.languages).each(function(language) {
             if(language.key == Backend.SpecField.prototype.languageCodes[0]) return;
-                       
+
             var elements = self.nodes.form.elements;
             var translationInput = elements.namedItem("name_" + language.key);
-            var translationLabel = translationInput.up('fieldset').down("label"); 
+            var translationLabel = translationInput.up('fieldset').down("label");
             if(self.group['name_' + language.key]) translationInput.value = self.group['name_' + language.key];
 
             translationInput.id = self.cssPrefix + "group_name_" + self.group.ID + "_" + language.key;
@@ -1464,7 +1464,7 @@ Backend.SpecFieldGroup.prototype = {
             Element.observe(translationLabel, 'click', function() { this.forID.focus(); });
         });
     },
-    
+
     /**
      * Run this code before saving group in database
      */
@@ -1479,81 +1479,81 @@ Backend.SpecFieldGroup.prototype = {
 		}
 
         var self = this;
-        
+
         this.nodes.form.action = (this.group.ID ? Backend.SpecField.prototype.links.updateGroup : Backend.SpecField.prototype.links.createGroup) +  '/' + (this.group.ID ? this.group.ID : '');
         new LiveCart.AjaxRequest(
             this.nodes.form,
             false,
-            function(response) 
-            { 
-                self.afterSave(eval("(" + response.responseText + ")")); 
+            function(response)
+            {
+                self.afterSave(eval("(" + response.responseText + ")"));
             }
         );
     },
-    
+
     /**
      * Run this code after trying to save group in database
-     * 
+     *
      * @param Object response Evaluated server response
      */
     afterSave: function(response)
     {
 		if(response.status == 'success')
-        {            
+        {
     		if(this.group.ID)
             {
                 var al = ActiveList.prototype.getInstance(this.cssPrefix + 'groups_list_' + this.group.Category.ID);
-                
+
 				al.highlight(this.nodes.parent, 'yellow');
 				al.toggleProgress(this.nodes.parent);
-				
+
 				Form.backup(this.nodes.form);
                 Backend.SpecFieldGroup.prototype.hideGroupTranslations(this.nodes.parent);
     		}
     		else
-    		{                
+    		{
                 var title = document.createElement('span');
                 Element.addClassName(title, this.cssPrefix + 'group_title');
                 title.appendChild(document.createTextNode(this.nodes.name.value));
-                
+
                 var titleDiv = document.createElement('div');
                 titleDiv.appendChild(title);
-                
+
                 var ul = document.createElement('ul');
                 ul.id = this.cssPrefix + "items_list_" + this.group.Category.ID + "_" + response.id;
-                Element.addClassName(ul, 'specFieldList'); 
-                Element.addClassName(ul, 'activeList_add_sort'); 
-                Element.addClassName(ul, 'activeList_add_edit'); 
-                Element.addClassName(ul, 'activeList_add_delete'); 
-                Element.addClassName(ul, 'activeList_accept_specFieldList'); 
-                Element.addClassName(ul, 'activeList'); 
-                
+                Element.addClassName(ul, 'specFieldList');
+                Element.addClassName(ul, 'activeList_add_sort');
+                Element.addClassName(ul, 'activeList_add_edit');
+                Element.addClassName(ul, 'activeList_add_delete');
+                Element.addClassName(ul, 'activeList_accept_specFieldList');
+                Element.addClassName(ul, 'activeList');
+
                 titleDiv.appendChild(ul);
-                
+
                 $(this.cssPrefix + "group_new_" + this.group.Category.ID + "_show").style.display = 'inline';
-                
+
                 var groupsList = ActiveList.prototype.getInstance(this.cssPrefix + "groups_list_" + this.group.Category.ID);
                 groupsList.addRecord(response.id, titleDiv);
-                
+
                 var newGroupFieldsList = ActiveList.prototype.getInstance(ul, Backend.SpecField.prototype.callbacks, Backend.SpecField.prototype.msg.activeListMessages);
                 ActiveList.prototype.recreateVisibleLists();
-				
+
 				groupsList.touch(true);
-                
+
                 Form.restore(this.nodes.form);
-                
+
 	            var form = new ActiveForm.Slide("specField_menu_" + this.group.Category.ID);
 	            form.hide("addSpecFieldGroup", this.cssPrefix + "group_new_" + this.group.Category.ID + "_form");
     		}
-            
+
             ActiveForm.prototype.resetErrorMessages(this.nodes.form);
         }
-        else if(response.errors) 
+        else if(response.errors)
         {
             ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors);
         }
     },
-    
+
     /**
      * This code is executed when you hit on cancel button
      */
@@ -1563,7 +1563,7 @@ Backend.SpecFieldGroup.prototype = {
 		{
             Form.restore(this.nodes.form);
         }
-        
+
         if(!this.group || !this.group.ID)
         {
 	        var form = new ActiveForm.Slide("specField_menu_" + this.group.Category.ID);
@@ -1573,14 +1573,14 @@ Backend.SpecFieldGroup.prototype = {
         {
             Backend.SpecFieldGroup.prototype.hideGroupTranslations(this.nodes.parent);
         }
-        
+
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
     },
-    
-    
+
+
     /**
      * Remove display none from group translations
-     * 
+     *
      * @param HTMLElement parent
      */
     displayGroupTranslations: function(root)
@@ -1590,11 +1590,11 @@ Backend.SpecFieldGroup.prototype = {
 
         root.down('input.specField_group_name_label').focus();
     },
-    
-    
+
+
     /**
      * Hide group group translations and show group title
-     * 
+     *
      * @param HTMLElement parent
      */
     hideGroupTranslations: function(root)
@@ -1603,10 +1603,10 @@ Backend.SpecFieldGroup.prototype = {
         root.down('.specField_group_title').show();
         root.down('form').hide();
     },
-    
+
     /**
      * Check if form elements for translating this group are created or not
-     * 
+     *
      * @param HTMLElement parent
      * @return boolean
      */
@@ -1616,15 +1616,12 @@ Backend.SpecFieldGroup.prototype = {
     },
 
     /**
-     * This method unfolds "Create new Spec Field group" form. 
+     * This method unfolds "Create new Spec Field group" form.
      */
     createNewAction: function(categoryID)
     {
         var form = new ActiveForm.Slide("specField_menu_" + categoryID);
         form.show("addSpecFieldGroup", this.cssPrefix + "group_new_" + categoryID + "_form");
-            
+
     }
 }
-
-
-

@@ -8,6 +8,7 @@
  * @return string
  *
  * @package application.helper.smarty
+ * @author Integry Systems  
  */
 function smarty_prefilter_templateLocator($tplSource, $smarty)
 {

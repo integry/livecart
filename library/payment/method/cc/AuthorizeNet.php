@@ -1,6 +1,11 @@
 <?php
 include_once(dirname(__file__).'/../../abstract/CreditCardPayment.php');
 
+/**
+ *
+ * @package library.payment.method.cc
+ * @author Integry Systems 
+ */
 class AuthorizeNet extends CreditCardPayment
 {
     private $fields = array();

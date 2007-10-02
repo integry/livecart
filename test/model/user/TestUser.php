@@ -4,6 +4,10 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.p
 ClassLoader::import("application.model.user.UserGroup");
 ClassLoader::import("application.model.user.User");
 
+/**
+ * @author Integry Systems
+ * @package test.model.user
+ */ 
 class TestUser extends UnitTest
 {
     /**

@@ -2,6 +2,11 @@
 
 include_once(dirname(__file__) . '/../ShippingRateCalculator.php');
 
+/**
+ *
+ * @package library.shipping.method
+ * @author Integry Systems 
+ */
 class UspsShipping extends ShippingRateCalculator
 {
     private $service;

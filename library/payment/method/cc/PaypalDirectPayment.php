@@ -3,6 +3,11 @@
 include_once(dirname(__file__) . '/../../abstract/CreditCardPayment.php');
 include_once(dirname(__file__) . '/../../method/library/paypal/PaypalCommon.php');
 
+/**
+ *
+ * @package library.payment.method.cc
+ * @author Integry Systems 
+ */
 class PaypalDirectPayment extends CreditCardPayment
 {
 	public function isCreditable()

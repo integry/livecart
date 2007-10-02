@@ -3,6 +3,11 @@
 include_once(dirname(__file__) . '/../../abstract/ExpressPayment.php');
 include_once(dirname(__file__) . '/../../method/library/paypal/PaypalCommon.php');
 
+/**
+ *
+ * @package library.payment.method.express
+ * @author Integry Systems 
+ */
 class PaypalExpressCheckout extends ExpressPayment
 {
 	protected $data;

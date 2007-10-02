@@ -11,7 +11,7 @@ ClassLoader::import('framework.request.validator.filter.*');
  * Application settings management
  *
  * @package application.controller.backend
- *
+ * @author Integry Systems
  * @role settings
  */
 class SettingsController extends StoreManagementController

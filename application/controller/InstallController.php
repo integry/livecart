@@ -3,7 +3,13 @@
 ClassLoader::import('application.model.system.Installer');
 ClassLoader::import("framework.request.validator.Form");
 ClassLoader::import("framework.request.validator.RequestValidator");
-		
+
+/**
+ * LiveCart installer
+ *
+ * @author Integry Systems
+ * @package application.controller
+ */	
 class InstallController extends FrontendController
 {
     public function init()

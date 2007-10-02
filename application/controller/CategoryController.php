@@ -10,6 +10,7 @@ ClassLoader::import('application.model.product.ProductCount');
 /**
  * Index controller for frontend
  *
+ * @author Integry Systems
  * @package application.controller
  */
 class CategoryController extends FrontendController

@@ -5,7 +5,9 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.p
 ClassLoader::import("application.model.staticpage.StaticPage");
 
 /**
- *	Test StaticPage model
+ * Test StaticPage model
+ * @author Integry Systems
+ * @package test.model.staticpage
  */ 
 class TestStaticPage extends UnitTest
 {  

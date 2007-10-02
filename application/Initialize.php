@@ -2,6 +2,8 @@
 
 /**
  *  Initialize framework, load main classes
+ *  @package application
+ *  @author Integry Systems
  */ 
 
 require_once(dirname(dirname(__file__)) . DIRECTORY_SEPARATOR . 'framework' . DIRECTORY_SEPARATOR . 'ClassLoader.php');

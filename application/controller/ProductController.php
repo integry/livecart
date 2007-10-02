@@ -6,7 +6,7 @@ ClassLoader::import('application.controller.CategoryController');
 
 /**
  * 
- *
+ * @author Integry Systems
  * @package application.controller
  */
 class ProductController extends FrontendController

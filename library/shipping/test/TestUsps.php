@@ -5,6 +5,11 @@ include_once(dirname(__file__) . '/../../payment/test/unittest/UTStandalone.php'
 include_once('ShippingTest.php');
 include_once(dirname(__file__) . '/../method/UspsShipping.php');
 
+/**
+ *
+ * @package library.shipping.test
+ * @author Integry Systems 
+ */
 class TestUsps extends ShippingTest
 {
     function testDomesticRates()

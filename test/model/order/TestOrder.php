@@ -9,9 +9,11 @@ ClassLoader::import("application.model.user.*");
 ClassLoader::import("application.model.Currency");
 ClassLoader::import("library.payment.*");
 
-
 /**
- *	Test Order model for the following scenarios:
+ *	Test Order model 
+ *
+ *  @author Integry Systems
+ *  @package test.model.order 
  */ 
 class TestOrder extends UnitTestCase
 {  

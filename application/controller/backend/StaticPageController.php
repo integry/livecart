@@ -7,7 +7,7 @@ ClassLoader::import("application.model.staticpage.StaticPage");
  * Static page management
  *
  * @package application.controller.backend
- *
+ * @author	Integry Systems
  * @role page
  */
 class StaticPageController extends StoreManagementController

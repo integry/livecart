@@ -8,7 +8,7 @@ ClassLoader::import("library.*");
  * ...
  *
  * @package application.controller.backend
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  *
  * @role filter
  */

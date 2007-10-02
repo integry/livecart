@@ -5,8 +5,9 @@ ClassLoader::import('application.model.system.Language');
 
 /**
  * Language model test
- * @author Rinalds Uzkalns
- * @package application.test.model.locale 
+ *
+ * @author Integry Systems
+ * @package test.model.locale 
  */
 class TestLanguage extends UnitTest
 {	  

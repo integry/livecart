@@ -5,6 +5,7 @@
  * Also has static functions for creating js array of Tigra menu
  *
  * @package application.helper
+ * @author Integry Systems
  */
 class MenuLoader {
 

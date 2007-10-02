@@ -1,5 +1,12 @@
 <?php
+
 ClassLoader::import("library.I18Nv2.Country");
+
+/**
+ *
+ * @package application.model.order
+ * @author Integry Systems <http://integry.com> 
+ */
 class OrderHistory
 {
     private $oldOrder;

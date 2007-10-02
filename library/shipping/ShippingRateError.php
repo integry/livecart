@@ -2,6 +2,11 @@
 
 include_once('ShippingResultInterface.php');
 
+/**
+ *
+ * @package library.shipping
+ * @author Integry Systems 
+ */
 class ShippingRateError implements ShippingResultInterface
 {
     protected $rawResponse;

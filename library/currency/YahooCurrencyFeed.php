@@ -1,5 +1,10 @@
 <?php
 
+/**
+ *
+ * @package library.currency
+ * @author Integry Systems 
+ */
 class YahooCurrencyFeed extends CurrencyRateFeed
 {
 	public static function getName()

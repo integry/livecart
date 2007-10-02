@@ -7,8 +7,7 @@ ClassLoader::import("library.*");
  * Category specification field ("extra field") controller
  *
  * @package application.controller.backend
- * @author Saulius Rupainis <saulius@integry.net>
- * @author Sergej Andrejev <sandrejev@gmail.com>
+ * @author Integry Systems
  * @role category
  */
 class SpecFieldController extends StoreManagementController

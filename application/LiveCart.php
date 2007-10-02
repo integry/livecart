@@ -5,6 +5,9 @@ ClassLoader::import('framework.response.ActionResponse');
 
 /**
  *  Implements LiveCart-specific application flow logic
+ *
+ *  @package application
+ *  @author Integry Systems
  */
 class LiveCart extends Application
 {

@@ -1,4 +1,10 @@
 <?php
+
+/**
+ *
+ * @package library.text
+ * @author Integry Systems 
+ */
 class Password {
     const ALL = 0;
     const ALPHANUMERIC = 1;

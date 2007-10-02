@@ -10,6 +10,7 @@ ClassLoader::import('application.helper.CreateHandleString');
  * @return string
  *
  * @package application.helper.smarty
+ * @author Integry Systems 
  */
 function smarty_function_newsUrl($params, LiveCartSmarty $smarty)
 {		

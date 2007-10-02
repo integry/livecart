@@ -7,7 +7,7 @@ ClassLoader::import("application.model.category.Category");
  * Product Category controller
  *
  * @package application.controller.backend
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  *
  * @role product
  */

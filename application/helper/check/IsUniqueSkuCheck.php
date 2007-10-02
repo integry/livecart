@@ -6,6 +6,7 @@ ClassLoader::import("framework.request.validator.check.Check");
  * Checks if product SKU is unique
  *
  * @package application.helper.check
+ * @author Integry Systems 
  */
 class IsUniqueSkuCheck extends Check
 {

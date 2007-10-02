@@ -1,5 +1,11 @@
 <?php
 
+/**
+ *  Allows to plug in controller response post-processors
+ *
+ *  @package application
+ *  @author Integry Systems
+ */
 abstract class ControllerPlugin
 {
 	private $mustStop;	

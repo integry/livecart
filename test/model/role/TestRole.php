@@ -3,6 +3,10 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.p
 
 ClassLoader::import("application.model.role.Role");
 
+/**
+ *  @author Integry Systems
+ *  @package test.model.role
+ */
 class TestRole extends UnitTest
 {
     public function __construct()

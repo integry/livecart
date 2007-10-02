@@ -4,6 +4,11 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.p
 ClassLoader::import("application.model.delivery.ShippingService");
 ClassLoader::import("application.model.delivery.ShippingRate");
 
+/**
+ *
+ * @package test.model.delivery
+ * @author Integry Systems 
+ */
 class TestShippingService extends UnitTest
 {
     /**

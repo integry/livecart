@@ -1,11 +1,8 @@
 <?php
 /**
- * Display a tip block
- *
+ * 
  * @package application.helper.smarty.form
- * @author Rinalds Uzkalns <rinalds@integry.net>
- *
- * @package application.helper.smarty.form
+ * @author Integry Systems
  */
 function smarty_function_metricsfield($params, LiveCartSmarty $smarty)
 {

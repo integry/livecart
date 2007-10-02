@@ -2,6 +2,10 @@
 
 ClassLoader::import("application.controller.FrontendController");
 
+/**
+ * @author Integry Systems
+ * @package application.controller
+ */
 class ErrController extends FrontendController
 {
 	public function index()

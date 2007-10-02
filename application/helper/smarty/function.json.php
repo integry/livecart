@@ -8,7 +8,7 @@
  * @return string
  *
  * @package application.helper.smarty
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 function smarty_function_json($params, LiveCartSmarty $smarty)
 {

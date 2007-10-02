@@ -6,7 +6,7 @@ ClassLoader::import('application.model.ObjectImage');
  * Category image (icon)
  * 
  * @package application.model.category
- * @author Integry Systems <http://integry.com>   
+ * @author Integry Systems 
  */
 class CategoryImage extends ObjectImage
 {

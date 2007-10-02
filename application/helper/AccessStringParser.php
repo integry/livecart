@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * @package application.helper
+ * @author Integry Systems
+ */
 class AccessStringParser
 {
 	public static function run($accessString)

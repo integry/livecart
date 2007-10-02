@@ -4,6 +4,11 @@ include_once('unittest/UTStandalone.php');
 include_once('PaymentTest.php');
 include_once(dirname(__file__) . '/../method/cc/AuthorizeNet.php');
 
+/**
+ *
+ * @package library.payment.test
+ * @author Integry Systems 
+ */
 class TestAuthorizeNet extends PaymentTest
 {
 	private function getPaymentHandler()

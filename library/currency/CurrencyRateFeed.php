@@ -1,5 +1,10 @@
 <?php
 
+/**
+ *
+ * @package library.currency
+ * @author Integry Systems 
+ */
 abstract class CurrencyRateFeed
 {
 	/**

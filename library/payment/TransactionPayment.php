@@ -5,6 +5,11 @@ include_once('TransactionResult.php');
 include_once('TransactionError.php');
 include_once('TransactionDetails.php');
 
+/**
+ *
+ * @package library.payment
+ * @author Integry Systems 
+ */
 abstract class TransactionPayment
 {		
 	protected $details;

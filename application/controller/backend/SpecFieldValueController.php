@@ -7,7 +7,7 @@ ClassLoader::import("library.*");
  * Category specification field value controller
  *
  * @package application.controller.backend
- * @author Sergej Andrejev <sandrejev@gmail.com>
+ * @author	Integry Systems
  * @role category
  */
 class SpecFieldValueController extends StoreManagementController

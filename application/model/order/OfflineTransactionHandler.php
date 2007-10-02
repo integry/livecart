@@ -3,6 +3,12 @@
 ClassLoader::import('library.payment.TransactionPayment');
 ClassLoader::import('library.payment.TransactionResult');
 
+/**
+ * 
+ *    
+ * @package application.model.order
+ * @author Integry Systems <http://integry.com>   
+ */
 class OfflineTransactionHandler extends TransactionPayment
 {
 	public function isVoidable()

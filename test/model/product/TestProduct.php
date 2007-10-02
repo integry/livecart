@@ -11,6 +11,8 @@ ClassLoader::import("application.model.product.*");
  *	  * Create a new product and assign specification attributes
  *	  * Load a product from a database, read and modify specification attributes
  *  
+ *  @author Integry Systems
+ *  @package test.model.product
  */
 class TestProduct extends UnitTest 
 {

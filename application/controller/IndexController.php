@@ -6,6 +6,7 @@ ClassLoader::import('application.model.sitenews.NewsPost');
 /**
  * Index controller for frontend
  *
+ * @author Integry Systems
  * @package application.controller
  */
 class IndexController extends FrontendController 

@@ -2,6 +2,12 @@
 
 ClassLoader::import("framework.request.validator.check.Check");
 
+/**
+ * Checks if entered passwords match
+ *
+ * @package application.helper.check
+ * @author Integry Systems 
+ */
 class PasswordMatchCheck extends Check
 {
 	private $request;

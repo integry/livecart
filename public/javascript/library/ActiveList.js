@@ -51,8 +51,7 @@
  * order - Serialized order
  * response - Ajax response text
  *
- * @version 1.2
- * @author Sergej Andrejev, Rinalds Uzkalns
+ * @author   Integry Systems
  *
  */
 if (LiveCart == undefined)

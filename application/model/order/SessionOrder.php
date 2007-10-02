@@ -3,6 +3,11 @@
 ClassLoader::import('application.model.user.SessionUser');
 ClassLoader::import('application.model.order.CustomerOrder');
 
+/**
+ *
+ * @package application.model.order
+ * @author Integry Systems <http://integry.com> 
+ */
 class SessionOrder
 {
 	/**

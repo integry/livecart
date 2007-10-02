@@ -4,8 +4,7 @@
  *
  * @todo Caps lock support
  *
- * @version 1.1
- * @author Sergej Andrejev, Rinalds Uzkalns
+ * @author   Integry Systems
  *
  */
 var KeyboardEvent = Class.create();

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ *
+ * @package application.model.system
+ * @author Integry Systems <http://integry.com>
+ */
 class ActiveRecordGroup
 {
 	public static function mergeGroupsWithFields($className, $groups, $fields)

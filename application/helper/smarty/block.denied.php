@@ -3,7 +3,7 @@
  * Display a tip block
  *
  * @package application.helper.smarty
- * @author Rinalds Uzkalns <rinalds@integry.net>
+ * @author Integry Systems
  *
  * @package application.helper.smarty
  */

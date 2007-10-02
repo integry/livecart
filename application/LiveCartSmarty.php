@@ -2,6 +2,12 @@
 
 ClassLoader::import('library.smarty.libs.Smarty');
 
+/**
+ *  Extends Smarty with LiveCart-specific logic
+ *
+ *  @package application
+ *  @author Integry Systems
+ */
 class LiveCartSmarty extends Smarty
 {
     private $application;

@@ -7,6 +7,9 @@
  *  template file. The goal is to avoid the default view file modifications as it can make updates more difficult
  *  (accidently overwritten customizations, etc.), also there would be no need to make the original templates 
  *  directory writable to enable template modification from admin interface.
+ *
+ *  @package application.helper.smarty
+ *  @author Integry Systems  
  */
 
 function smarty_resource_custom_source($tpl_name, &$tpl_source, LiveCartSmarty $smarty_obj)

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ *
+ * @package library.shipping
+ * @author Integry Systems 
+ */
 class ShippingMethodManager
 {
 	public static function getHandlerList()

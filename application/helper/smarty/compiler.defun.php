@@ -3,6 +3,7 @@
 /**
  * create code for a function call
  *
+ * @author Integry Systems
  * @package application.helper.smarty
  */
 function smarty_compiler_fun($tag_args, &$compiler) {

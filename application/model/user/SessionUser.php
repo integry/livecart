@@ -2,6 +2,12 @@
 
 ClassLoader::import('application.model.user.User');
 
+/**
+ * User session handler (set user as logged in / logout)
+ *
+ * @package application.model.user
+ * @author Integry Systems <http://integry.com>
+ */
 class SessionUser
 {
 	/**

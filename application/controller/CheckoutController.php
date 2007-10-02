@@ -53,7 +53,8 @@ ClassLoader::import('application.model.order.SessionOrder');
  *  
  *  9. Show the order confirmation page
  *  
- *  
+ * @author Integry Systems
+ * @package application.controller
  */
 class CheckoutController extends FrontendController
 {

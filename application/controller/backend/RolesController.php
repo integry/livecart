@@ -9,7 +9,7 @@ ClassLoader::import("framework.request.validator.Form");
  * Application settings management
  *
  * @package application.controller.backend
- *
+ * @author Integry Systems
  * @role userGroup
  */
 class RolesController extends StoreManagementController

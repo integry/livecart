@@ -4,6 +4,10 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.p
 ClassLoader::import("application.model.product.*");
 ClassLoader::import("application.model.category.Category");
 
+/**
+ *  @author Integry Systems
+ *  @package test.model.product
+ */
 class TestProductFile extends UnitTest
 {
     /**

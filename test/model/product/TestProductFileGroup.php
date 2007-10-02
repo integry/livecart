@@ -5,6 +5,10 @@ ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.product.ProductFileGroup");
 ClassLoader::import("application.model.category.Category");
 
+/**
+ *  @author Integry Systems
+ *  @package test.model.product
+ */
 class TestProductFileGroup extends UnitTest
 {
     /**
