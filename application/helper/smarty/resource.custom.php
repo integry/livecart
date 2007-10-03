@@ -12,15 +12,15 @@
  *  @author Integry Systems  
  */
 
-function smarty_resource_custom_source($tpl_name, &$tpl_source, LiveCartSmarty $smarty_obj)
+function smarty_resource_custom_source($tpl_name, &$tpl_source, LiveCartSmarty $smarty)
 {
-    $paths = custom_get_paths($tpl_name, $smarty_obj);
+    $paths = custom_get_paths($tpl_name, $smarty);
 
     foreach ($paths as $path)
     {
         if (file_exists($path))
         {
-            $tpl_source = file_get_contents($path);
+            $tpl_source = $smarty->processPlugins(file_get_contents($path), $tpl_name);
 			return true;
         } 
     }
