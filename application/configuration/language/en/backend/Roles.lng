@@ -74,6 +74,7 @@ _role_taxes_misc=View
 _role_taxes_create=Create
 _role_taxes_remove=Remove
 _role_taxes_update=Update
+_role_template=Edit templates
 _role_user=User Accounts
 _role_user_misc=View
 _role_user_create=Create

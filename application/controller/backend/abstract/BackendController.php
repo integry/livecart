@@ -26,12 +26,12 @@ abstract class BackendController extends BaseController
             ClassLoader::import('application.controller.backend.UnsupportedBrowserException');
             throw new UnsupportedBrowserException();
         }
-        
+
         if (!$this->user->hasAccess('backend') && !($this instanceof SessionController))
         {
-            SessionUser::destroy();
-            header('Location: ' . $this->router->createUrl(array('controller' => 'backend.session', 'action' => 'index')));
-            exit;
+//            SessionUser::destroy();
+//            header('Location: ' . $this->router->createUrl(array('controller' => 'backend.session', 'action' => 'index')));
+//            exit;
         }
     }
     

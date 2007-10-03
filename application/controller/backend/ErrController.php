@@ -7,7 +7,6 @@ ClassLoader::import("application.controller.backend.abstract.BackendController")
  *
  * @package application.controller.backend
  * @author Integry Systems
- * @role delivery
  */
 class ErrController extends BackendController 
 {

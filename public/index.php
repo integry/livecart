@@ -38,8 +38,8 @@
     	    {
     	        $route = 'err/redirect/' . $e->getStatusCode();
     	    }
-    	    
-    	    $app->getRouter()->setRequestedRoute($route);
+
+            $app->getRouter()->setRequestedRoute($route);
     		runApp($app);
     	}
     	catch (UnsupportedBrowserException $e)
