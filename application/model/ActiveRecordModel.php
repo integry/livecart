@@ -67,13 +67,19 @@ abstract class ActiveRecordModel extends ActiveRecord
 		}	
 	}
 	
-	public function save($force = null)
+	protected function insert()
 	{
-		$res = parent::save($force);
-		$this->executePlugins($this, 'save');
+		$res = parent::insert();
+		$this->executePlugins($this, 'insert');
 		return $res;
 	}
 	
+	protected function update()
+	{
+		$this->executePlugins($this, 'update');
+		return parent::update();
+	}
+
 	protected static function transformArray($array, ARSchema $schema)
 	{
 		foreach ($schema->getFieldsByType('ARDateTime') as $name => $field)
@@ -93,7 +99,11 @@ abstract class ActiveRecordModel extends ActiveRecord
 			$array['formatted_' . $name] = $locale->getFormattedTime($time);
 		}	
 		
-		return parent::transformArray($array, $schema);
+		$data = parent::transformArray($array, $schema);
+		
+		self::executePlugins($data, 'array', $schema->getName());
+		
+		return $data;
 	}
 	
 	private function executePlugins(&$object, $action, $className = null)
@@ -103,14 +113,15 @@ abstract class ActiveRecordModel extends ActiveRecord
 		{
 			$className = get_class($object);
 		}
-				
+
 		// get plugins
 		$path = 'plugin.model.' . $className . '.' . $action;
 		if (!isset(self::$plugins[$className][$action]))
 		{
 			self::$plugins[$className][$action] = array();
 			$dir = ClassLoader::getRealPath($path);
-			if (!is_dir($dir))
+
+            if (!is_dir($dir))
 			{
 				return false;
 			}
@@ -128,6 +139,11 @@ abstract class ActiveRecordModel extends ActiveRecord
 		{
 			return false;
 		}
+		
+		if (!class_exists('ModelPlugin'))
+		{
+            ClassLoader::import('application.model.ModelPlugin');
+        }
 		
 		foreach (self::$plugins[$className][$action] as $plugin)
 		{

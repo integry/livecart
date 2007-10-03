@@ -14,9 +14,9 @@ abstract class ModelPlugin
 	
 	public abstract function process();
 	
-	public function __construct(ActiveRecord $object, LiveCart $application)
+	public function __construct(&$object, LiveCart $application)
 	{
-		$this->object = $object;	
+		$this->object =& $object;	
 		$this->application = $application;
 		$this->process();
 	}

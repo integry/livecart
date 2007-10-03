@@ -18,7 +18,8 @@
 
 img.image 
 {
-    cursor: pointer;
+    cursor: -moz-zoom-in;
+    vertical-align: middle;
 }
 
 .activeList_editContainer .container legend 
