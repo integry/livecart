@@ -5,7 +5,7 @@ _filter_group_was_successfully_removed=Filter was successfully removed
 _could_not_remove_filter_group=Could not remove filter
 
 _add_new_filter=Add new filter
-_category_has_no_attr=No filterable attributes have yet been created for this category
+_category_has_no_attr=No filterable attributes have been created for this category yet
 _delete_field=Delete field
 _remove_filter_question=Are you sure you want to remove this filter?
 _FilterGroup_remove_question=Are you sure you want to remove this filter?

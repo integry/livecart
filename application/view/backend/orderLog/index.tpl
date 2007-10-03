@@ -99,5 +99,7 @@
             {/if}
         </table>
     </li>
+{foreachelse}
+	<div class="noRecords"><div>{t _no_changes}</div></div>
 {/foreach}
 </ul>

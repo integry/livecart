@@ -1,3 +1,5 @@
+_cancel_new=Cancel
+
 # Confirmations
 _category_image_was_successfully_removed=Category image was successfully removed
 _could_not_remove_category_image=Could not remove category image
@@ -16,7 +18,7 @@ _edit_image=Edit image details
 
 _image_title=Enter image title
 _image_file=Select image file
-_upload=Upload
+_upload=Add image
 _save=Save
 
 _err_not_uploaded=Please select a file

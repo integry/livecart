@@ -253,7 +253,7 @@ class User extends ActiveRecordModel
 			return $this->getID() > 0;	
 		}
 
-		if($this->isAnonymous())
+		if ($this->isAnonymous())
 		{
 		    return false;
 		}
@@ -268,6 +268,34 @@ class User extends ActiveRecordModel
 			
 			return $this->userGroup->get()->hasAccess($roleName);
 		}
+	}
+
+	/**
+	 * Determine if the user is allowed to access the admin backend (has at least one permission)
+	 * 
+	 * @return boolean
+	 */
+	public function hasBackendAccess()
+	{
+		if ($this->isAnonymous())
+		{
+		    return false;
+		}
+		else
+		{	
+			if (!$this->userGroup->get())
+			{
+				return false;
+			}
+			else
+			{
+				$this->userGroup->get()->load();
+			}
+			
+			$this->userGroup->get()->loadRoles();
+			
+			return count($this->userGroup->get()->getAppliedRoles()) > 0;
+		}		
 	}
 
 	/**

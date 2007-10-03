@@ -11,8 +11,6 @@ ClassLoader::import("application.helper.getDateFromString");
  *
  * @package application.controller.backend
  * @author Integry Systems <http://integry.com>
- *
- * @role backend
  */
 class IndexController extends StoreManagementController
 {

@@ -346,7 +346,11 @@ Backend.Category = {
 
 	reorderCategory: function(targetId, parentId, siblingNodeId)
 	{
-		if(!parentId) parentId = 1;
+		if (!parentId) 
+		{
+			return false;
+		}
+		
         new LiveCart.AjaxRequest(Backend.Category.getUrlForNodeReorder(targetId, parentId, Backend.Category.treeBrowser._reorderDirection));
 	
         return true;

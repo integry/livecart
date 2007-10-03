@@ -46,7 +46,8 @@ fieldset.specification .numeric
 .multiValueSelect div.other label
 {
   	width: auto;
-  	margin-right: 10px;        
+  	margin-right: 10px;       
+	line-height: 1.8em; 
 }
 
 .multiValueSelect div.other input, input.other

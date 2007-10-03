@@ -14,7 +14,7 @@ _edit_image=Edit image details
 
 _image_title=Enter image title
 _image_file=Select image file
-_upload=Upload
+_upload=Add image
 _save=Save
 
 _err_not_uploaded=Please select a file

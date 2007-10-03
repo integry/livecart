@@ -7,7 +7,6 @@ _set_all_permissions=Set all permissions
 ###############################
 # Roles
 ###############################
-_role_backend=<strong>Backend Access</strong>
 _role_category=Categories
 _role_category_misc=View
 _role_category_create=Create
