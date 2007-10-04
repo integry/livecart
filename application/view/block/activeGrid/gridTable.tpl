@@ -153,7 +153,7 @@
 {literal}
 <script type="text/javascript">
     if(!window.activeGrids) window.activeGrids = {};
-    {/literal};
+{/literal};
  	
  	window.activeGrids['{$prefix}_{$id}'] = new ActiveGrid($('{$prefix}_{$id}'), '{$url}{$filters}', {$totalCount}, $("{$prefix}LoadIndicator_{$id}"), {$rowCount});
     

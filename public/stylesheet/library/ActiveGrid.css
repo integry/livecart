@@ -327,6 +327,11 @@
     width: 150px;
 }
 
+.activeGridMass input.submit
+{
+    margin-top: 2px;
+}
+
 .activeGridItemsCount
 {
     position: absolute;

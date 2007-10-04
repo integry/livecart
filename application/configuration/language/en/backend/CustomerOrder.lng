@@ -92,7 +92,7 @@ _set_processing=Processing
 _set_awaiting_shipment=Awaiting shipment
 _set_shipped=Shipped
 _set_returned=Returned
-_process=Process
+_process=Save
 
 # Order summary
 _overview=Overview
