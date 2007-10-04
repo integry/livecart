@@ -888,10 +888,11 @@ input.radio, input.checkbox, input.submit, input.button, input.reset
 {
     width: auto;
 }
-input.submit, input.reset {
-	text-transform: uppercase;
+input.submit, input.reset 
+{
 	font-size: 10px;
-	padding: 4px;
+	padding: 3px;
+	font-weight: bold;
 }
 input.submit {
 	background-color: #008cff;

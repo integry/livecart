@@ -779,7 +779,8 @@ class LiveCart extends Application
 	 */
 	public function getEnabledRealTimeShippingServices()
 	{
-		return array_flip($this->config->get('SHIPPING_HANDLERS'));
+		$handlers = $this->config->get('SHIPPING_HANDLERS');
+		return is_array($handlers) ? array_flip($handlers) : array();
 	}
 
 	/**
