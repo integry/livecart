@@ -63,6 +63,7 @@ Product.isSeparateShipment=Separate shipment required
 Product.isFreeShipping=Free shipping available
 Product.isBackOrderable=Available for backordering
 Product.shippingWeight=Shipping weight
+Product.isFractionalUnit=Is fractional unit
 
 Manufacturer.name=Manufacturer
 ProductPrice.price=Price

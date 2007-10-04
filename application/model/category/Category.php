@@ -150,6 +150,16 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$productCount = ($this->rgt->get() - $this->lft->get() - 1) / 2;
 		return $productCount;
 	}
+	
+	public function moveTo(Category $parentNode, Category $beforeNode = null)
+	{
+        self::beginTransaction();
+        $result = parent::moveTo($parentNode, $beforeNode);
+        self::recalculateProductsCount();
+        self::commit();
+        
+        return $result;
+    }
 
 	/*####################  Saving ####################*/
 	
@@ -701,13 +711,51 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
         ClassLoader::import("application.model.product.Product");
         
         self::beginTransaction();     
+
+        $fields = array('totalProductCount', 'activeProductCount', 'availableProductCount');
+
+        // reset counts to 0
+        $sql = 'UPDATE Category SET ';
+        foreach ($fields as $field)
+        {
+            $sql .= $field . '=0' . ('availableProductCount' != $field ? ',' : '');
+        }
+
+        self::getDBConnection()->executeUpdate($sql);
+
         // category product counts
         $sql = 'UPDATE Category SET totalProductCount = (SELECT COUNT(*) FROM Product WHERE categoryID = Category.ID),
                                     activeProductCount = (SELECT COUNT(*) FROM Product WHERE categoryID = Category.ID AND Product.isEnabled = 1),
                                     availableProductCount = (SELECT COUNT(*) FROM Product WHERE categoryID = Category.ID AND Product.isEnabled = 1 AND (stockCount > 0 OR type = ' . Product::TYPE_DOWNLOADABLE .  '))';
         self::getDBConnection()->executeUpdate($sql);
        
-        self::updateProductCount(Category::getInstanceByID(Category::ROOT_ID, Category::LOAD_DATA));
+        //self::updateProductCount(Category::getInstanceByID(Category::ROOT_ID, Category::LOAD_DATA));
+        
+        // add subcategory counts to parent categories
+        // @todo - rewrite so this wouldn't use temporary tables - possible?
+        $sql = 'CREATE TEMPORARY TABLE CategoryCount 
+                    SELECT ID';
+		        
+        foreach ($fields as $field)
+        {
+            $sql .= ', (SELECT SUM(' . $field . ')
+			FROM Category AS cat 
+			WHERE cat.lft >= Category.lft
+				AND cat.rgt <= Category.rgt) AS ' . $field;
+        }
+        
+        $sql .= ' FROM Category';
+        
+        self::getDBConnection()->executeUpdate($sql);
+        
+        $sql = 'UPDATE Category LEFT JOIN CategoryCount ON Category.ID=CategoryCount.ID SET ';
+        foreach ($fields as $field)
+        {
+            $sql .= 'Category.' . $field . '=CategoryCount.' . $field . ('availableProductCount' != $field ? ',' : '');
+        }
+
+        self::getDBConnection()->executeUpdate($sql);
+        
         self::commit();
     }
     

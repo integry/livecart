@@ -206,7 +206,7 @@ Backend.ObjectImage.prototype =
         if (this.container.hasClassName('prodImageList'))
         {
             var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
-            tabControl.setCounter('tabProductImages', this.container.getElementsByTagName('li').length);
+            tabControl.setCounter('tabProductImages', this.container.getElementsByTagName('li').length - 2);
         }
         else
         {

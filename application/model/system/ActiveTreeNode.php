@@ -389,8 +389,6 @@ class ActiveTreeNode extends ActiveRecordModel
     }
 
     /**
-     * @todo Implementation
-     *
      * @param ActiveTreeNode $parentNode
      * @param ActiveTreeNode $beforeNode=null If specified place node before this node, if not specified place last in parent nodes childs list
      * @return bool

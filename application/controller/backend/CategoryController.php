@@ -149,7 +149,7 @@ class CategoryController extends StoreManagementController
 		}
 		catch(Exception $e)
 	    {
-			return new JSONResponse(false, 'failure', $this->translate('_unable_to_reorder_categories_tree'));
+            return new JSONResponse(false, 'failure', $this->translate('_unable_to_reorder_categories_tree'));
 		}
 		
 		return new JSONResponse($status);

@@ -1188,20 +1188,26 @@ class CustomerOrder extends ActiveRecordModel
         }
     }    
     
-    public function getDownloadShipment()
+    public function getDownloadShipment($createNew = true)
     {
         foreach($this->getShipments() as $shipment)
         {
-            if(!$shipment->isShippable()) return $shipment;
+            if (!$shipment->isShippable()) 
+            {
+                return $shipment;
+            }
         }
         
-        $shipment = Shipment::getNewInstance($this);
-        $shipment->amountCurrency->set($this->currency->get());
-        $shipment->save(true);
-
-        $this->shipments->add($shipment);
+        if ($createNew)
+        {
+            $shipment = Shipment::getNewInstance($this);
+            $shipment->amountCurrency->set($this->currency->get());
+            $shipment->save(true);
     
-        return $shipment;
+            $this->shipments->add($shipment);
+        
+            return $shipment;            
+        }
     }
     
     public function countShippableShipments()

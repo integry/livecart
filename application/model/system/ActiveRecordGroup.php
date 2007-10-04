@@ -19,7 +19,6 @@ class ActiveRecordGroup
                 $shiftGroup = false;
 	            while($group = array_shift($groups))
 	            {
-	               // echo "{$group['position']} < {$field[$className]['position']}<br />";
 	                if($group['position'] < $field[$className]['position']) 
 	                {
 	                    $shiftGroup = true;

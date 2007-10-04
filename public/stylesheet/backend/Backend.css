@@ -38,6 +38,7 @@ a, a:visited
 h1
 {
 	margin-bottom: 3px;
+	font-size: 1.5em;
 }
 
 /***************************
@@ -1334,7 +1335,7 @@ ul.languageFormTabs li.active
 .dragAndDropRow
 {
     background-color: darkblue;
-    color: white;
+    color: white !important;
 }
 
 /**************************

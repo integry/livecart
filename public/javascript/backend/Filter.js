@@ -316,7 +316,7 @@ Backend.Filter.prototype = {
         var self = this;
 
         Event.observe(this.nodes.name, "keyup", function(e) { self.generateTitleAction(e) });
-        Event.observe(this.nodes.addFilterLink, "click", function(e) { Event.stop(e); self.addFilterFieldAction() });
+        Event.observe(this.nodes.addFilterLink, "click", function(e) { Event.stop(e); self.addFilterFieldAction(true); });
         
         Event.observe(this.nodes.specFieldID, "change", function(e) { Event.stop(e); self.specFieldIDWasChangedAction() });        
         Event.observe(this.nodes.specFieldID, "change", function(e) { Event.stop(e); self.generateTitleFromSpecField() });
@@ -607,14 +607,15 @@ Backend.Filter.prototype = {
      *
      * @access private
      */
-    addFilterFieldAction: function()
+    addFilterFieldAction: function(touch)
     {
-        var li = this.addFilter(null, "new" + Backend.Filter.prototype.countNewFilters, true);
+        var li = this.addFilter(null, "new" + Backend.Filter.prototype.countNewFilters, true, touch);
         this.changeFiltersCount(this.filtersCount+1);
         this.filtersList.touch();
         this.bindDefaultFields();
         
         Backend.Filter.prototype.countNewFilters++;
+        return li;
     },
 
 
@@ -730,13 +731,13 @@ Backend.Filter.prototype = {
      * @access private
      *
      */
-    addFilter: function(value, id, generateTitle)
+    addFilter: function(value, id, generateTitle, touch)
     {        
         var self = this;
         if(!value) value = {}
         if(!this.filtersList) this.bindDefaultFields();
         
-        var li = this.filtersList.addRecord(id, this.nodes.filterTemplate);
+        var li = this.filtersList.addRecord(id, this.nodes.filterTemplate, touch);
         Element.removeClassName(li, 'dom_template');
         Element.addClassName(li, this.cssPrefix + "default_filter_li");
         var nameValue = value.name_lang ? value.name_lang : '';
@@ -748,7 +749,7 @@ Backend.Filter.prototype = {
         input.value = nameValue;
         Event.observe(input, "keyup", function(e) { self.mainValueFieldChangedAction(e) }, false);
         Event.observe(input, "keyup", function(e) {
-                if(!this.up('li').next() && this.value != '') self.addFilterFieldAction();
+                if(!this.up('li').next() && this.value != '') self.addFilterFieldAction(false);
             });
         var label = filter_name_paragraph.down("label"); 
         input.id = this.cssPrefix + "filter_filter_" + id + "_name";
@@ -771,6 +772,12 @@ Backend.Filter.prototype = {
                 rangeEndInput.name = "filters[" + id + "][rangeEnd]";
                 rangeEndInput.value = (value.rangeEnd) ? value.rangeEnd : '' ;
                                 
+                Event.observe(rangeStartInput, "focus", function(e) { this.hasFocus = true; });
+                Event.observe(rangeEndInput, "focus", function(e) { this.hasFocus = true; });
+
+                Event.observe(rangeStartInput, "blur", function(e) { self.switchRangeValues(rangeStartInput, rangeEndInput, e); });
+                Event.observe(rangeEndInput, "blur", function(e) { self.switchRangeValues(rangeStartInput, rangeEndInput, e); });
+                                
                 Event.observe(rangeStartInput, "keyup", function(e) { self.rangeChangedAction(e) });
                 Event.observe(rangeEndInput, "keyup", function(e) { self.rangeChangedAction(e) });      
             }
@@ -778,7 +785,7 @@ Backend.Filter.prototype = {
             {
                 part = "date_range";
                 
-                // Date range.
+                // Date range
                 var rangeDateStart = paragraph.down("input");
                 var rangeDateEnd = rangeDateStart.next("input");                
                 
@@ -811,6 +818,9 @@ Backend.Filter.prototype = {
                 rangeDateEnd.value    = rangeDateEndReal.value ;
                 rangeDateStart.value = rangeDateStartReal.value ? Date.parseDate(rangeDateStartReal.value, "%y-%m-%d").print(self.dateFormat) : '';
                 rangeDateEnd.value = rangeDateEnd.value ? Date.parseDate(rangeDateEnd.value, "%y-%m-%d").print(self.dateFormat) : '';
+                  
+                Event.observe(rangeDateStart, 'change', function() {if (!this.value) rangeDateStartReal.value = ''});
+                Event.observe(rangeDateEnd, 'change', function() {if (!this.value) rangeDateEndReal.value = ''});
                                                      
                 Event.observe(rangeDateStartButton, "mousedown", function(e){
                     if(!self.filterCalendars[rangeDateStart.id]) 
@@ -875,10 +885,21 @@ Backend.Filter.prototype = {
             translationLabel['for'] = inputTranslation.id;
             translationLabel.onclick = function() { $(this['for']).focus(); }
 		}
-        
+
         return li;
     },
 
+    switchRangeValues: function(start, end, e)
+    {        
+        Event.element(e).hasFocus = false;
+        if ((false == start.hasFocus) && (false == end.hasFocus))
+        {
+            if (parseInt(end.value) < parseInt(start.value))
+            {
+                [start.value, end.value] = [end.value, start.value];
+            }
+        }
+    },
 
     /**
      * This method is called when user click on cancel link. It resets all fields to its defaults and closes form

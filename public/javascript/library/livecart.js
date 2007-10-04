@@ -130,7 +130,7 @@ LiveCart.AjaxRequest.prototype = {
 
             try
 			{
-	            if(window.selectPopupWindow)
+	            if(window.selectPopupWindow && window.selectPopupWindow.document)
 				{
 					var win = window.selectPopupWindow;
 					
@@ -218,7 +218,7 @@ LiveCart.AjaxRequest.prototype = {
 		
 		try
 		{
-			if(window.selectPopupWindow)
+			if(window.selectPopupWindow && window.selectPopupWindow.document)
 			{
 				var win = window.selectPopupWindow;
 				

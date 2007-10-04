@@ -54,7 +54,7 @@ class OrderNoteController extends StoreManagementController
         }
         else
         {
-            echo 'invalid';
+            return new RawResponse('invalid');
         }
     }
     

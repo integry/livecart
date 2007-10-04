@@ -614,7 +614,6 @@ class CustomerOrderController extends StoreManagementController
 	        {
 	            $address->stateName->set($this->request->get('stateName'));
                 $address->state->set(null);
-                echo get_class($address->state->get());
 	        }
 
 	        $address->postalCode->set($this->request->get('postalCode'));
@@ -642,7 +641,6 @@ class CustomerOrderController extends StoreManagementController
 
 	    foreach($order->getShipments() as $shipment)
 	    {
-	        echo $shipment->getID() . "<br />";
 	        if(count($shipment->getItems()) == 0)
 	        {
 	            $shipment->delete();

@@ -155,3 +155,8 @@ li.addProduct
 .cell_hiddenType, #column_hiddenType, #column_hiddenType_label {
     display: none;
 }
+
+.activeGridcolumn_hiddenType
+{
+    display: none;
+}

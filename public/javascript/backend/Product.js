@@ -283,6 +283,21 @@ Backend.Product =
         {
             new Backend.Category.PopupSelector(element.up('form').down('.move'));
         }
+    },
+    
+    reloadGrid: function(categoryID)
+    {
+        var table = $('products_' + categoryID);
+
+        if (!table && Backend.Product.productTabCopies[categoryID])
+        {
+            table = Backend.Product.productTabCopies[categoryID].getElementsByTagName('table')[0];
+        }
+
+        if (table)
+        {
+            table.gridInstance.reloadGrid();
+        }        
     }
 }
 
@@ -325,17 +340,7 @@ Backend.Product.saveHandler.prototype =
                 for (var k = 0; k <= path.length; k++)
                 {
                     var category = path[k] ? path[k].ID : 1;
-                    var table = $('products_' + category);
-
-                    if (!table && Backend.Product.productTabCopies[categoryID])
-                    {
-                        table = Backend.Product.productTabCopies[categoryID].getElementsByTagName('table')[0];
-                    }
-
-                    if (table)
-                    {
-                        table.gridInstance.reloadGrid();
-                    }
+                    Backend.Product.reloadGrid(category);
                 }
             }
 
@@ -670,15 +675,11 @@ Backend.Product.Editor.prototype =
                 }
             }
 
+            console.log(this.path);
             for (var k = 0; k <= this.path.length; k++)
             {
                 var category = this.path[k] ? this.path[k].ID : 1;
-                var table = $('products_' + category);
-
-                if (table)
-                {
-                    table.gridInstance.reloadGrid();
-                }
+                Backend.Product.reloadGrid(category);
             }
 
             this.resetPricingTab();

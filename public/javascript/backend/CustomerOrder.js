@@ -158,16 +158,7 @@ Backend.CustomerOrder.prototype =
 	activateGroup: function(id)
 	{
         Backend.Breadcrumb.display(id);
-		
-        if(id == 8)
-        {
-            $("tabOrderProducts").hide();
-        }
-        else
-        {
-            $("tabOrderProducts").show();
-        }
-        
+		        
         if(/*Backend.CustomerOrder.prototype.activeGroup && */Backend.CustomerOrder.prototype.activeGroup != id)
         {           
             // Remove empty shippments
@@ -642,6 +633,7 @@ Backend.CustomerOrder.Editor.prototype =
 		if(Backend.UserGroup.prototype.treeBrowser)
 		{
             var currentUser = Backend.User.Editor.prototype.getInstance(Backend.User.Editor.prototype.CurrentId, false)
+
 	        Backend.Breadcrumb.display(
 	            Backend.UserGroup.prototype.activeGroup, 
 				[
@@ -651,7 +643,7 @@ Backend.CustomerOrder.Editor.prototype =
 					   Backend.hideContainer(); 
 					   setTimeout(function()
 					   { 
-					       Backend.Breadcrumb.display(
+                           Backend.Breadcrumb.display(
 							   Backend.UserGroup.prototype.activeGroup,
 							   this.nodes.form.elements.namedItem('email').value
 						   );

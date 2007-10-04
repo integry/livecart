@@ -557,6 +557,11 @@ class ProductController extends StoreManagementController
 		}		
         */
 
+        unset($availableColumns['Product.voteSum']);
+        unset($availableColumns['Product.voteCount']);
+        unset($availableColumns['Product.rating']);
+        unset($availableColumns['Product.salesRank']);
+                        
 		return $availableColumns;
 	}
 	

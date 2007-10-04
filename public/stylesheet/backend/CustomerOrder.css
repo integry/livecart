@@ -155,8 +155,31 @@
 ************************/
 #orderManagerContainer.unfinalized #tabOrderPayments,
 #orderManagerContainer.unfinalized #tabOrderCommunication,
+#orderManagerContainer.unfinalized #tabOrderLog,
 #orderManagerContainer.unfinalized .order_status,
-#orderManagerContainer.unfinalized .order_info .menu
+#orderManagerContainer.unfinalized .menu,
+#orderManagerContainer.unfinalized .tabOrderProductsContent .orderShipment_report,
+#orderManagerContainer.unfinalized .tabOrderProductsContent h2,
+#orderManagerContainer.unfinalized .tabOrderProductsContent .shipmentContainer legend,
+#orderManagerContainer.unfinalized .tabOrderProductsContent .orderShipment_info,
+#orderManagerContainer.unfinalized .tabOrderProductsContent .orderShipment_controls,
+#orderManagerContainer.unfinalized .tabOrderProductsContent .orderShipmentsItem_count
 {
     display: none;
+}
+
+#orderManagerContainer.unfinalized .tabOrderProductsContent .itemCountText
+{
+    display: block;
+}
+
+#orderManagerContainer.unfinalized .tabOrderProductsContent .orderShipmentsItem_info_count
+{
+    text-align: center;
+}
+
+#orderManagerContainer.unfinalized .tabOrderProductsContent ul.orderShipmentsItem
+{
+    list-style-type: none;
+    margin-top: 7px;
 }

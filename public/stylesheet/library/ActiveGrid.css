@@ -173,9 +173,14 @@
     display: none;
 }
 
-.activeGrid th:hover .sortPreview
+.activeGrid th:hover .sortPreview, .activeGrid th.sorted .sortImg
 {
     display: block;
+}
+
+.activeGrid th.sorted .sortPreview
+{
+    display: none;
 }
 
 /***********************

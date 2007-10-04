@@ -56,3 +56,8 @@ li.activeList_delete_inProgress
 {
     background-color: #FFE0E0 ! important;
 }
+
+li.activeList_edit_inProgress
+{
+    cursor: auto;
+}

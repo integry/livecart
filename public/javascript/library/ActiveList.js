@@ -322,6 +322,7 @@ ActiveList.prototype = {
 		else 
 		{
 			this.toggleContainerOff(container, highlight);
+		    Element.removeClassName(li, actionClassName);
 		}
     },
     
@@ -331,7 +332,7 @@ ActiveList.prototype = {
      * @param HTMLElementDiv container Reference to the container
      */
     toggleContainerOn: function(container, highlight)
-    {       
+    {             
         container = $(container);
         ActiveList.prototype.collapseAll();
         
@@ -359,6 +360,8 @@ ActiveList.prototype = {
             container.style.display = 'block';
             if(highlight) this.highlight(container.up('li'), highlight);
         }
+        
+		Element.addClassName(container.up('li'), this.cssPrefix  + this.getContainerAction(container) + '_inProgress');
     },
 
     /**
@@ -390,6 +393,17 @@ ActiveList.prototype = {
         {
             container.style.display = 'none';
             if(highlight) this.highlight(container.up('li'), highlight);
+        }
+
+		Element.removeClassName(container.up('li'), this.cssPrefix  + this.getContainerAction(container) + '_inProgress');
+    },
+    
+    getContainerAction: function(container)
+    {
+        var matches = container.className.match(/activeList_(\w+)Container/);
+        if (matches)
+        {
+            return matches[1];
         }
     },
     
@@ -738,19 +752,16 @@ ActiveList.prototype = {
         {
             this._currentLi = li;
             
-			if(action == 'delete')
-			{
-                Element.addClassName(li, this.cssPrefix  + action + '_inProgress');
-			}
-			
+            Element.addClassName(li, this.cssPrefix  + action + '_inProgress');
+        
             var url = this.callbacks[('before-'+action).camelize()].call(this, li);
 
             if(!url) 
 			{
-                Element.removeClassName(li, this.cssPrefix  + action + '_inProgress');
+                //Element.removeClassName(li, this.cssPrefix  + action + '_inProgress');
 				return false;
             }
-    
+
             // display feedback
             this.onProgress(li);
 
@@ -758,8 +769,6 @@ ActiveList.prototype = {
             new LiveCart.AjaxRequest(
                 url,
                 false,
-                // the object context mystically dissapears when onComplete function is called,
-                // so the only way I could make it work is this
                 function(param)
                 {
                     this.callUserCallback(action, param, li);
@@ -836,8 +845,9 @@ ActiveList.prototype = {
             this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
         }
 		
-        Element.removeClassName(li, this.cssPrefix  + action + '_inProgress');
-		
+
+        //Element.removeClassName(li, this.cssPrefix  + action + '_inProgress');
+
         this.offProgress(li);
     },
 

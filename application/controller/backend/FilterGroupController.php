@@ -111,7 +111,7 @@ class FilterGroupController extends StoreManagementController
         }
         else
         {
-            return new JSONResponse(array('errors' => $this->translateArray($errors)), 'failure', $this->translate('_could_not_save_filter_group'));
+            return new JSONResponse(array('errors' => $this->translateArray($errors)));
         }
     }
 

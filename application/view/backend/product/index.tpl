@@ -125,9 +125,30 @@
                             'onComplete':
                                 function()
                                 {
-                                    Backend.Product.resetEditors();                                    
+                                    Backend.Product.resetEditors();
+                                    
+                                    var parentId = {/literal}{$categoryID}{literal};
+                                    var massForm = $('productMass_' + parentId).down('form');
+                                    parentId = Backend.Category.treeBrowser.getParentId(parentId);
+                                                                        
+                                    do
+                                    {       
+                                        Backend.Product.reloadGrid(parentId);
+                                        parentId = Backend.Category.treeBrowser.getParentId(parentId);
+                                    }
+                                    while(parentId != 0);    
+                                    
+                                    // reload grid of target category if products were moved
+                                    var movedCat = massForm.elements.namedItem('categoryID');
+                                    console.log(movedCat, movedCat.value);
+                                    if (movedCat.value)
+                                    {
+                                        Backend.Product.reloadGrid(movedCat.value);
+                                    }
+                                     
+                                    movedCat.value = null;                               
                                 }
-                        }                        
+                        }
 {/literal}
                         );
     massHandler.deleteConfirmMessage = '{t _delete_conf|addslashes}' ;

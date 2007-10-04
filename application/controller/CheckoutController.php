@@ -608,8 +608,6 @@ class CheckoutController extends FrontendController
         $this->order = $order;
 
         $result = $handler->notify($this->request->toArray());
-         
-//        var_dump($result);
             
         if ($result instanceof TransactionResult)
         {

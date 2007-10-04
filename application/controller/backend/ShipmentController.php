@@ -78,15 +78,23 @@ class ShipmentController extends StoreManagementController
 	    $response->set('shipments', $shipmentsArray);
 	    $response->set('subtotalAmount', $subtotalAmount);
 	    $response->set('shippingAmount', $shippingAmount);	    
-	    $response->set('downloadableShipment', $order->getDownloadShipment()->toArray());
+	    
+        $downloadable = $order->getDownloadShipment($order->isFinalized->get());
+        if ($downloadable)
+        {
+            $response->set('downloadableShipment', $downloadable->toArray());
+        }
+        
 	    $response->set('taxAmount', $taxAmount);
 	    $response->set('totalAmount', $totalAmount);
         $response->set('shipableShipmentsCount', $shipableShipmentsCount);
 	    $response->set('statuses', $statuses + array(-1 => $this->translate('_delete')));
-	    unset($statuses[3]);
+	    
+        unset($statuses[3]);
 	    $response->set('statusesWithoutShipped', $statuses);
 	    $response->set('newShipmentForm', $form);
-	    return $response;
+	    
+        return $response;
 	}
 	
 	public function changeService()

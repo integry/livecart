@@ -13,7 +13,7 @@
 function smarty_prefilter_templateLocator($tplSource, $smarty)
 {
 	$file = $smarty->_current_file;
-var_dump($smarty);		
+
 	$paths = array(					
 				'custom:',
 				ClassLoader::getRealPath('application.view.'),

@@ -265,7 +265,6 @@ class Shipment extends ActiveRecordModel
         $this->taxAmount->set($taxes);
        
         // shipping rate
-//        var_dump($this->getSelectedRate());
         if ($rate = $this->getSelectedRate())
         {
             $this->shippingAmount->set($rate->getAmountByCurrency($currency));            
@@ -320,8 +319,6 @@ class Shipment extends ActiveRecordModel
 
         // set shipping data
         $rate = $this->getSelectedRate();
-//        var_dump($rate);
-
         
         if ($rate)
         {        
