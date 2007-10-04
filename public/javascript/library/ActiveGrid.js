@@ -54,7 +54,8 @@ ActiveGrid.prototype =
 		this.dataUrl = dataUrl;
 		this.setLoadIndicator(loadIndicator);
 		this.filters = {};
-
+		this.selectedRows = {};	
+		
 		if (!rowCount)
 		{
 			rowCount = this.rowCount;
@@ -90,7 +91,7 @@ ActiveGrid.prototype =
 		  	rows[k].onclick = this.selectRow.bindAsEventListener(this);
 		  	rows[k].onmouseover = this.highlightRow.bindAsEventListener(this);
 		  	rows[k].onmouseout = this.removeRowHighlight.bindAsEventListener(this);
-		}		
+		}	
 	},
 	
 	getRows: function(data)
@@ -176,6 +177,7 @@ ActiveGrid.prototype =
                 this.ricoGrid.options.requestParameters[i++] = 'filters[' + k.substr(7, 1000) + ']' + '=' + this.filters[k];
             }
         }
+        
         this.ricoGrid.buffer.clear();
         this.ricoGrid.resetContents();
         this.ricoGrid.requestContentRefresh(0, true);    

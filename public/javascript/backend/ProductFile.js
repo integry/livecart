@@ -470,7 +470,7 @@ Backend.ProductFile.Group.Callbacks =
 		
         if(!response.error) {
             var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
-            tabControl.setCounter('tabProductFiles', tabControl.getCounter('tabProductFiles') - li.getElementsByTagName('li').length);
+            tabControl.setCounter('tabProductFiles', tabControl.getCounter('tabProductFiles') - li.getElementsByTagName('li').length + 2);
             return true;
 		}
 

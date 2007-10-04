@@ -93,7 +93,7 @@ Backend.RelatedProduct.Group.Callbacks =
 			 
         if(!response.error) {
             var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
-            tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') - li.getElementsByTagName('li').length);
+            tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') - li.getElementsByTagName('li').length + 2);
         
 		    return true;
 		}

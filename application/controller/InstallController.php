@@ -251,6 +251,14 @@ class InstallController extends FrontendController
         $page->isInformationBox->set(true);
         $page->save();
 
+		// create an example site news post
+        ClassLoader::import('application.model.sitenews.NewsPost');		
+		$news = ActiveRecordModel::getNewInstance('NewsPost');
+		$news->setValueByLang('title', $language->getID(), 'Our store is open');
+		$news->setValueByLang('text', $language->getID(), 'Powered by LiveCart software we have gone live!');
+		$news->setValueByLang('moreText', $language->getID(), 'Do not forget to delete this post when you actually go live :)');
+		$news->save();
+
         return new ActionRedirectResponse('install', 'finish');
     }
     
