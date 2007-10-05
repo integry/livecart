@@ -345,6 +345,11 @@
     text-align: right; 
 }
 
+.activeGridItemsCount .notFound
+{
+    font-weight: bold;
+}
+
 .activeGridColumnsRoot
 {
     left: -250px; 

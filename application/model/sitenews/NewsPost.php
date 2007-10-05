@@ -23,6 +23,12 @@ class NewsPost extends MultilingualObject
 		$schema->registerField(new ARField("text", ARArray::instance()));
 		$schema->registerField(new ARField("moreText", ARArray::instance()));
 	}
+	
+	protected function insert()
+	{
+	  	$this->setLastPosition();	  			
+		return parent::insert();
+	}	
 }
 
 ?>

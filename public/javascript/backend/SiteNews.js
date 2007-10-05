@@ -91,13 +91,18 @@ Backend.SiteNews.PostEntry.prototype =
 	
 	list: null,
 	
-	initialize: function(container, template, data, highlight)
+	initialize: function(container, template, data, highlight, isNew)
 	{
 		this.data = data;
 		
         this.list = ActiveList.prototype.getInstance('newsList');
 
         this.node = this.list.addRecord(data.ID, template.innerHTML, highlight);
+		
+        if (isNew)
+		{
+            this.node.parentNode.insertBefore(this.node, this.node.parentNode.firstChild);
+        }
 		
 		this.updateHtml();
 		
@@ -157,6 +162,9 @@ Backend.SiteNews.PostEntry.prototype =
 		    align:          "BR",
 		    singleClick:    true
 		});
+
+		form.elements.namedItem('text').id = 'tinyMce_text_' + this.data.ID;
+		form.elements.namedItem('moreText').id = 'tinyMce_moreText_' + this.data.ID;
 
 		tinyMCE.idCounter = 0;
 		ActiveForm.prototype.initTinyMceFields(this.node.down('div.formContainer'));
@@ -228,7 +236,7 @@ Backend.SiteNews.PostEntry.prototype =
         }
         
         this.node.down('.newsTitle').innerHTML = this.data.title;
-		this.node.down('.newsDate').innerHTML = this.data.time;
+		this.node.down('.newsDate').innerHTML = this.data.formatted_time.date_long;
 		this.node.down('.newsText').innerHTML = this.data.text;	
         this.node.down('.checkbox').checked = (this.data.isEnabled == true);
 		this.node.id = 'newsEntry_' + this.data.ID;
@@ -254,8 +262,10 @@ Backend.SiteNews.Add.prototype =
 	
 	onComplete: function(originalRequest)
 	{
-		new Backend.SiteNews.PostEntry($('newsList'), $('newsList_template'), originalRequest.responseData);
+		new Backend.SiteNews.PostEntry($('newsList'), $('newsList_template'), originalRequest.responseData, true, true);
 		Backend.SiteNews.prototype.hideAddForm();
-		Form.State.restore($("newsForm"));
+		$("newsForm").reset();
+		ActiveForm.prototype.resetTinyMceFields($("newsForm"));
+		//Form.State.restore($("newsForm"));
 	}
 }

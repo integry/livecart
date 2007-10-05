@@ -92,7 +92,7 @@ class ProductFileGroupController extends StoreManagementController
 		ClassLoader::import("framework.request.validator.RequestValidator");
 		$validator = new RequestValidator("productFileGroupValidator", $this->request);
 
-		$validator->addCheck('name_' . $this->application->getDefaultLanguageCode(), new IsNotEmptyCheck('_err_group_name_is_empty'));
+		$validator->addCheck('name_' . $this->application->getDefaultLanguageCode(), new IsNotEmptyCheck($this->translate('_err_group_name_is_empty')));
 
 		return $validator;
     }

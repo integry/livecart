@@ -277,6 +277,7 @@ ActiveGrid.prototype =
 	showFetchIndicator: function()
 	{
 		this.loadIndicator.style.display = '';	
+		this.loadIndicator.parentNode.up('div').down('.notFound').hide();
 	},
 
 	hideFetchIndicator: function()

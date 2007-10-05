@@ -24,6 +24,11 @@ li.productFileGroup_item {
     margin-bottom: 1em;   
 }
 
+li.productFileGroup_item legend
+{
+    display: none;
+}
+
 li.productFileGroup_item li {
  	margin-top: 0.5em;
 }

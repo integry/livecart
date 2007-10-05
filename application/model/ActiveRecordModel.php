@@ -67,6 +67,19 @@ abstract class ActiveRecordModel extends ActiveRecord
 		}	
 	}
 	
+	protected function setLastPosition()
+	{
+        // get max position
+	  	$f = new ARSelectFilter();
+	  	$f->setOrder(new ARFieldHandle(get_class($this), 'position'), 'DESC');
+	  	$f->setLimit(1);
+	  	$rec = ActiveRecord::getRecordSetArray(get_class($this), $f);
+		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
+
+		// default new language state
+		$this->position->set($position);
+    }
+	
 	protected function insert()
 	{
 		$res = parent::insert();

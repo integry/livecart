@@ -19,7 +19,7 @@
 img.image 
 {
     cursor: -moz-zoom-in;
-    vertical-align: middle;
+    vertical-align: top;
 }
 
 .activeList_editContainer .container legend 
@@ -32,9 +32,7 @@ img.image
     display: block;
 }
 
-
 .main, .supplemental
 {
     font-weight: bold;
 }
-

@@ -13,7 +13,7 @@ class SiteNewsController extends StoreManagementController
 	public function index()
 	{
 		$f = new ARSelectFilter();
-		$f->setOrder(new ARFieldHandle('NewsPost', 'position'), 'ASC');
+		$f->setOrder(new ARFieldHandle('NewsPost', 'position'), 'DESC');
 		$response = new ActionResponse('newsList', ActiveRecordModel::getRecordSetArray('NewsPost', $f));
 		$response->set('form', $this->buildForm());
 		return $response;
@@ -83,6 +83,7 @@ class SiteNewsController extends StoreManagementController
 	public function saveOrder()
 	{
 	  	$order = array_reverse($this->request->get('newsList'));
+
 		foreach ($order as $key => $value)
 		{
 			$update = new ARUpdateFilter();

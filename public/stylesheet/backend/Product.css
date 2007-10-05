@@ -52,7 +52,7 @@ fieldset.specification .numeric
 
 .multiValueSelect div.other input, input.other
 {
-  	width: 400px;
+  	width: 200px;
 }
 
 .productForm.intangible .shipping, .productForm.intangible .inventory

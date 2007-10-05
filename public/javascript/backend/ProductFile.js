@@ -547,12 +547,12 @@ Backend.ProductFile.Group.Model.prototype = {
                     responseHash['responseText'] = response.responseText;
                 }
                 
-                self.afterSave(responseHash, onSaveResponse);
+                self.afterSave(responseHash, onSaveResponse, form);
             }
         );
     },
     
-    afterSave: function(response, onSaveResponse)
+    afterSave: function(response, onSaveResponse, form)
     {
         switch(response.status)
         {
@@ -679,6 +679,7 @@ Backend.ProductFile.Group.Controller.prototype = {
                 this.model.store('ID', false);
                 
                 this.hideNewForm();
+                this.view.nodes.root.down('form').reset();
             }
             else
             {

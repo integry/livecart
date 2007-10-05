@@ -8,18 +8,16 @@
     
     		<fieldset class="productFileGroup_main">
         		<label class="productFileGroup_name_label">{t _product_file_group_title}</label>
-                <div class="error">
+                <fieldset class="error">
             		<input type="text" name="name" class="productFileGroup_name" {denied role="product.update"}readonly="readonly"{/denied} />
             		<span class="errorText hidden"> </span>
-                </div>
+                </fieldset>
     		</fieldset>
             
         	<!-- STEP 3 -->
         	{language}
-                <fieldset class="error">
-            		<label>{t _product_file_group_title}:</label>
-            		<input type="text" value="" id="name_{$lang.ID}" name="name_{$lang.ID}"/>
-            	</fieldset>
+        		<label>{t _product_file_group_title}:</label>
+        		<input type="text" value="" id="name_{$lang.ID}" name="name_{$lang.ID}"/>
 		    {/language}
     
         <fieldset class="productFileGroup_controls controls">
