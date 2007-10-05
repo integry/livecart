@@ -9,7 +9,7 @@ ClassLoader::import("application.model.category.Category");
  * @package application.controller.backend
  * @author Integry Systems
  *
- * @role product
+ * @role category
  */
 class CategoryController extends StoreManagementController
 {

@@ -24,7 +24,15 @@ class RolesController extends StoreManagementController
         
         $roles = array();
         $parentID = 0;
-        foreach(Role::getRecordSet(new ARSelectFilter()) as $role)
+        
+        // sort roles by their appearance in backend menu
+        $filter = new ARSelectFilter();
+        foreach (array('product', 'category', 'order', 'user', 'filter') as $roleName)
+        {
+            $filter->setOrder(new ARExpressionHandle('(Role.name LIKE "' . $roleName . '%")'), 'DESC');
+        }        
+        
+        foreach(Role::getRecordSet($filter) as $role)
         {
             $roleArray = $role->toArray();
             

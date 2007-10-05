@@ -35,7 +35,8 @@ Backend.Category = {
 		// check for bookmark
 		if (window.location.hash.length == 0)
         {
-            window.location.hash = '#cat_1#tabProducts__';
+            window.location.hash = $('tabProducts') ?  '#cat_1#tabProducts__' : '#cat_1#tabMainDetails__';
+
 			Backend.Breadcrumb.display(1);
         }
 
@@ -92,28 +93,40 @@ Backend.Category = {
     {
         if($("categoryBrowserActions"))
         {
-            Event.observe($("createNewCategoryLink"), "click", function(e) {
-                Event.stop(e);
-                Backend.Category.createNewBranch(); 
-            }.bind(this));
+            if ($('createNewCategoryLink'))
+            {
+                Event.observe($("createNewCategoryLink"), "click", function(e) {
+                    Event.stop(e);
+                    Backend.Category.createNewBranch(); 
+                }.bind(this));                
+            }
             
-            Event.observe($("removeCategoryLink"), "click", function(e) {
-                Event.stop(e);
-                if (confirm(Backend.Category.messages._confirm_category_remove)) 
-                {
-                    Backend.Category.removeBranch(); 
-                }
-            }.bind(this));
+            if ($("removeCategoryLink"))
+            {
+                Event.observe($("removeCategoryLink"), "click", function(e) {
+                    Event.stop(e);
+                    if (confirm(Backend.Category.messages._confirm_category_remove)) 
+                    {
+                        Backend.Category.removeBranch(); 
+                    }
+                }.bind(this));                
+            }
             
-            Event.observe($("moveCategoryUp"), "click", function(e) {
-                Event.stop(e);
-                this.moveCategory(Backend.Category.activeCategoryId, 'up_strict');
-            }.bind(this));
+            if ($("moveCategoryUp"))
+            {
+                Event.observe($("moveCategoryUp"), "click", function(e) {
+                    Event.stop(e);
+                    this.moveCategory(Backend.Category.activeCategoryId, 'up_strict');
+                }.bind(this));                
+            }
             
-            Event.observe($("moveCategoryDown"), "click", function(e) {
-                Event.stop(e);
-                this.moveCategory(Backend.Category.activeCategoryId, 'down_strict');
-            }.bind(this));
+            if ($("moveCategoryDown"))
+            {
+                Event.observe($("moveCategoryDown"), "click", function(e) {
+                    Event.stop(e);
+                    this.moveCategory(Backend.Category.activeCategoryId, 'down_strict');
+                }.bind(this));                
+            }
         }
     },
 
@@ -149,7 +162,7 @@ Backend.Category = {
     showControls: function()
     {
         // popup window
-		if (!$("removeCategoryLink"))
+		if (!$("categoryBrowserActions"))
         {
 			return false;
 		}
@@ -158,26 +171,39 @@ Backend.Category = {
         
         if(categoryId == '1') 
         {
-            $("removeCategoryLink").parentNode.hide();
-            $("moveCategoryUp").parentNode.hide();
-            $("moveCategoryDown").parentNode.hide();
+            if ($("removeCategoryLink"))
+            {
+                $("removeCategoryLink").parentNode.hide();
+            }
+            
+            if ($("moveCategoryUp"))
+            {
+                $("moveCategoryUp").parentNode.hide();
+                $("moveCategoryDown").parentNode.hide();
+            }
         }
         else
         {
-            $("removeCategoryLink").parentNode.show();
+            if ($("removeCategoryLink"))
+            {
+                $("removeCategoryLink").parentNode.show();
+            }
             
-            parentId = Backend.Category.treeBrowser.getParentId(categoryId)
-            categoryIndex = Backend.Category.treeBrowser.getIndexById(categoryId)
-			if(parentId)
-			{
-	            nextCategoryId = Backend.Category.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) + 1)
-	
-	            if(nextCategoryId) $("moveCategoryDown").parentNode.show();
-	            else $("moveCategoryDown").parentNode.hide();
-	            
-	            if(categoryIndex > 0) $("moveCategoryUp").parentNode.show();
-	            else $("moveCategoryUp").parentNode.hide();
-			}
+            if ($("moveCategoryUp"))
+            {
+                parentId = Backend.Category.treeBrowser.getParentId(categoryId)
+                categoryIndex = Backend.Category.treeBrowser.getIndexById(categoryId)
+    			if(parentId)
+    			{
+    	            nextCategoryId = Backend.Category.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) + 1)
+    	
+    	            if(nextCategoryId) $("moveCategoryDown").parentNode.show();
+    	            else $("moveCategoryDown").parentNode.hide();
+    	            
+    	            if(categoryIndex > 0) $("moveCategoryUp").parentNode.show();
+    	            else $("moveCategoryUp").parentNode.hide();
+    			}
+    		}
         }  
     },
 
@@ -711,7 +737,10 @@ CategoryTabControl.prototype = {
     setTabItemsCount: function(categoryID)
     {
         $H(CategoryTabControl.prototype.tabItemsCounts[categoryID]).each(function(tab) {
-            $(tab.key).getElementsByTagName('span')[0].firstChild.nodeValue = ' (' + tab.value + ')';
+            if ($(tab.key))
+            {
+                $(tab.key).getElementsByTagName('span')[0].firstChild.nodeValue = ' (' + tab.value + ')';
+            }            
         });
     },
     

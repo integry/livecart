@@ -56,29 +56,40 @@
     
     {allowed role="category.create,category.remove,category.sort"}
 	    {t _with_selected_category}:
+
+    	<ul id="categoryBrowserActions" class="verticalMenu">
+    
+    		{allowed role="category.create"}
+        		<li class="addTreeNode">
+                    <a href="#" id="createNewCategoryLink">
+            	        {t _create_subcategory}
+                    </a>
+                </li>
+            {/allowed}
+    
+    		{allowed role="category.sort"}
+        		<li class="moveUpTreeNode">
+                    <a href="#" id="moveCategoryUp">
+                        {t _move_category_up}
+                    </a>
+                </li>
+        		<li class="moveDownTreeNode">
+                    <a href="#" id="moveCategoryDown">
+                        {t _move_category_down}
+                    </a>
+                </li>
+            {/allowed}
+    		
+    		{allowed role="category.remove"}
+                <li class="removeTreeNode">
+                    <a href="#" id="removeCategoryLink">
+                        {t _remove_category}
+                    </a>
+                </li>
+            {/allowed}
+    	</ul>
+    	
     {/allowed}
-	<ul id="categoryBrowserActions" class="verticalMenu">
-		<li class="addTreeNode" {denied role="category.create"}style="display: none"{/denied}>
-            <a href="#" id="createNewCategoryLink">
-    	        {t _create_subcategory}
-            </a>
-        </li>
-		<li class="moveUpTreeNode" {denied role="category.sort"}style="display: none"{/denied}>
-            <a href="#" id="moveCategoryUp">
-                {t _move_category_up}
-            </a>
-        </li>
-		<li class="moveDownTreeNode" {denied role="category.sort"}style="display: none"{/denied}>
-            <a href="#" id="moveCategoryDown">
-                {t _move_category_down}
-            </a>
-        </li>
-		<li class="removeTreeNode" {denied role="category.remove"}style="display: none"{/denied}>
-            <a href="#" id="removeCategoryLink">
-                {t _remove_category}
-            </a>
-        </li>
-	</ul>
 
     <div id="confirmations">
         <div id="redZone">
@@ -128,11 +139,13 @@
         <div id="tabContainer" class="tabContainer">
     		<ul id="tabList" class="tabList tabs">
     
-    			<li id="tabProducts" class="tab active">
+    			{allowed role="product"}
+                <li id="tabProducts" class="tab active">
     				<a href="{link controller=backend.product action=index id=_id_}">{t _products}</a>
     				<span> </span>
     				<span class="tabHelp">products</span>
     			</li>
+    			{/allowed}
     
     			<li id="tabMainDetails" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
     				<a href="{link controller=backend.category action=form id=_id_}">{t _category_details}</a>
@@ -146,7 +159,7 @@
     				<span class="tabHelp">cat.attr</span>
     			</li>
     			
-    			<li id="tabFilters" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
+    			<li id="tabFilters" class="tab inactive" {denied role="filter"}style="display: none"{/denied}>
     				<a href="{link controller=backend.filterGroup action=index id=_id_}">{t _filters}</a>
     				<span> </span>
     				<span class="tabHelp">cat.filters</span>

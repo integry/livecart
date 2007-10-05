@@ -147,7 +147,8 @@ class Role extends ActiveRecordModel
 	        $roleNames = array_merge($roleNames, $parserRoleNames);
 	    }
 	    
-	    self::addNewRolesNames(array_keys($roleNames), true);
+	    // @todo: change to true when the issue with deleting existing roles is clearly identified and fixed
+        self::addNewRolesNames(array_keys($roleNames), false);
 	}
 }
 

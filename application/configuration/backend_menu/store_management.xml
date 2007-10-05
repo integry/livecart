@@ -8,7 +8,7 @@
         	<Title>_menu_products</Title>		
         	<Controller>backend.category</Controller>
         	<Action>index</Action>	
-        	<Role>product</Role>	
+        	<Role>category,product</Role>	
         </Menu>
         <Menu>
         	<Title>_menu_orders</Title>		
@@ -38,7 +38,7 @@
         </Menu>
         <Menu>
         	<Title>_menu_settings</Title>	
-        	<Role>settings,delivery,currency,language,delivery</Role>
+        	<Role>settings,delivery,currency,language,delivery,taxes,update</Role>
             <Items>
                 <Menu>
                 	<Title>_menu_configuration</Title>	
@@ -49,40 +49,47 @@
                 	<Title>_menu_delivery_zones</Title>	
                 	<Controller>backend.deliveryZone</Controller>
                 	<Action>index</Action>
+                	<Role>delivery</Role>
                 </Menu>
                 <Menu>
                 	<Title>_menu_tax</Title>	
                 	<Controller>backend.tax</Controller>
                 	<Action>index</Action>
+                	<Role>taxes</Role>
                 </Menu>
                 <Menu>
                 	<Title>_menu_currencies</Title>	
                 	<Controller>backend.currency</Controller>
                 	<Action>index</Action>
+                	<Role>currency</Role>
                 </Menu>
                 <Menu>
                 	<Title>_menu_languages</Title>	
                 	<Controller>backend.language</Controller>
                 	<Action>index</Action>
+                	<Role>language</Role>
                 </Menu>
                 <Menu>
                 	<Title>_menu_update</Title>	
                 	<Controller>backend.update</Controller>
                 	<Action>index</Action>
+                	<Role>update</Role>
                 </Menu>
             </Items>
         </Menu>
         <Menu>
         	<Title>_menu_customize</Title>		
-        	<Role>customize</Role>
+        	<Role>customize,template</Role>
         	<Items>
         		<Menu>
         			<Title>_menu_customization_mode</Title>
         			<Controller>backend.customize</Controller>
+                	<Role>customize</Role>
         		</Menu>
         		<Menu>
         			<Title>_menu_edit_templates</Title>
         			<Controller>backend.template</Controller>
+                	<Role>template</Role>
         		</Menu>
         	</Items>
         </Menu>
