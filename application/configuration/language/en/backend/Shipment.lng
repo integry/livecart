@@ -12,12 +12,10 @@ _shipping_service_was_successfuly_changed=Shipping service was successfully chan
 
 _status=Status
 _shipping_status_new=New
-_shipping_status_pending=Pending
-_shipping_status_awaiting=Awaiting
+_shipping_status_pending=Processing
+_shipping_status_awaiting=Awaiting Shipment
 _shipping_status_returned=Returned
 _shipping_status_shipped=Shipped
-_shipping_status_confirmed_as_delivered=Delivered
-_shipping_status_confirmed_as_lost=Lost
 
 _add_new_shipment=Add new shipment
 _cancel_adding_new_shipment=Cancel adding new shipment
@@ -51,7 +49,7 @@ _total_price=Total
 
 _are_you_sure_you_want_to_change_shipment_status_to_returned=Are you sure you want to change shipment status to returned?
 _are_you_sure_you_want_to_change_shipment_status_to_awaiting=Are you sure you want to change shipment status to awaiting?
-_are_you_sure_you_want_to_change_shipment_status_to_pending=Are you sure you want to change shipment status to pending?
+_are_you_sure_you_want_to_change_shipment_status_to_pending=Are you sure you want to change shipment status to processing?
 _are_you_sure_you_want_to_change_shipment_status_to_new=Are you sure you want to change shipment status to new?
 _are_you_sure_you_want_to_change_shipment_status_to_shipped=Are you sure you want to change shipment status to shipped?
 _you_wont_be_able_to_revert_status_from_shipped=You won't be able to revert status after changing it to shipped. Do you realy want to proceed?

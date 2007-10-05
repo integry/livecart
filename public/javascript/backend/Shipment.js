@@ -234,7 +234,7 @@ Backend.Shipment.prototype =
         migrations[this.STATUS_SHIPPED]                 = [this.STATUS_SHIPPED,this.STATUS_RETURNED]
         migrations[this.STATUS_RETURNED]                = [this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_RETURNED,this.STATUS_SHIPPED,this.STATUS_DELETE]
         migrations[this.STATUS_DELETE]                  = [];
-		
+				
         $A(this.nodes.status.options).each(function(option) {
             if(migrations[statusValue].include(parseInt(option.value)))
             {

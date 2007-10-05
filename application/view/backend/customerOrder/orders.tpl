@@ -51,14 +51,16 @@
 	    
         {t _with_selected}:
         <select name="act" class="select">
-            <optgroup label="{t _order_status}">
-                <option value="setNew">{t _set_new}</option>
-                <option value="setProcessing">{t _set_processing}</option>
-                <option value="setAwaitingShipment">{t _set_awaiting_shipment}</option>
-                <option value="setShipped">{t _set_shipped}</option>
-                <option value="setReturned">{t _set_returned}</option>
-            </optgroup>
-            <option value="setCancel">{t _cancel}</option>
+            {if $orderGroupID != 9}
+                <optgroup label="{t _order_status}" class="massStatus">
+                    <option value="setNew">{t _set_new}</option>
+                    <option value="setProcessing">{t _set_processing}</option>
+                    <option value="setAwaitingShipment">{t _set_awaiting_shipment}</option>
+                    <option value="setShipped">{t _set_shipped}</option>
+                    <option value="setReturned">{t _set_returned}</option>
+                </optgroup>
+                <option value="setCancel" class="massCancel">{t _cancel}</option>
+            {/if}
             <option value="delete">{t _delete}</option>
         </select>
         

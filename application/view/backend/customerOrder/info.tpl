@@ -64,7 +64,7 @@
     </ul>
     <div class="clear"></div>
 
-    {form handle=$form action="controller=backend.customerOrder action=update" id="orderInfo_`$order.ID`_form" onsubmit="Backend.CustomerOrder.Editor.prototype.getInstance(`$order.ID`, false).submitForm(); return false;" method="post" role="order.update"}
+    {form handle=$form class="orderStatus" action="controller=backend.customerOrder action=update" id="orderInfo_`$order.ID`_form" onsubmit="Backend.CustomerOrder.Editor.prototype.getInstance(`$order.ID`, false).submitForm(); return false;" method="post" role="order.update"}
         {hidden name="ID"}
         {hidden name="isCancelled"}
         <fieldset class="error" style="text-align: center;">

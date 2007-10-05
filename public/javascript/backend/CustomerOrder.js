@@ -514,7 +514,7 @@ Backend.CustomerOrder.Editor.prototype =
 		        {
 		            $A(select.options).each(function(shipmentOption)
 		            {
-		                if(shipmentOption.value == option.value && shipmentOption.style.display == 'none')
+                        if(shipmentOption.value == option.value && shipmentOption.style.display == 'none')
 		                {
                             Element.hide(option);
 		                    throw $break;

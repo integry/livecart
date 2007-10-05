@@ -11,9 +11,9 @@
             <dt>{t _status}:</dt>
             <dd>
                 {if $shipment.status == 0}{t _new}
-                {elseif $shipment.status == 1}{t _pending}
-                {elseif $shipment.status == 2}{t _awaiting}
-                {elseif $shipment.status == 3}{t _shipped}{/if}
+                {elseif $shipment.status == 1}{t _shipment_pending}
+                {elseif $shipment.status == 2}{t _shipment_awaiting}
+                {elseif $shipment.status == 3}{t _shipment_shipped}{/if}
                 &nbsp;
             </dd>
         </dl>

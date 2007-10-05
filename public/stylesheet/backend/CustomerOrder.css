@@ -145,7 +145,10 @@
 #orderManagerContainer.cancelled .order_shippingAddress ul.menu,
 #orderManagerContainer.cancelled .tabOrderProductsContent ul.menu,
 #orderManagerContainer.cancelled .tabOrderProductsContent .activeList_icons,
-#orderManagerContainer.cancelled .tabOrderPaymentsContent ul.menu
+#orderManagerContainer.cancelled .tabOrderPaymentsContent ul.menu,
+#orderManagerContainer.cancelled .orderStatus, 
+#orderManagerContainer.cancelled .orderShipment_status,
+#orderManagerContainer.cancelled .captureMenu
 {
     display: none;
 }

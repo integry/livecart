@@ -121,9 +121,11 @@ class ShipmentController extends StoreManagementController
         
 		$shipment->setRateId($this->request->get('serviceID'));
 		
+        $shipment->recalculateAmounts();
 	    $shipment->save(ActiveRecord::PERFORM_UPDATE);
 
-	    $shippingService = ShippingService::getInstanceByID($this->request->get('serviceID'), ShippingService::LOAD_DATA);
+	    /*
+        $shippingService = ShippingService::getInstanceByID($this->request->get('serviceID'), ShippingService::LOAD_DATA);
 	    
         $shipment->setAvailableRates($shipment->order->get()->getDeliveryZone()->getShippingRates($shipment));
         $shipment->setRateId($shippingService->getID());
@@ -132,6 +134,7 @@ class ShipmentController extends StoreManagementController
         $shipment->recalculateAmounts();
 	    
 	    $shipment->save();
+	    */
 	    
 	    $history->saveLog();
 	    
