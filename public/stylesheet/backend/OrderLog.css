@@ -4,6 +4,11 @@
     padding-right: 1em;
 }
 
+.logEntryDate
+{
+	font-size: smaller;
+}
+
 .logHistory .logEntryTotalAmount
 {
     height: 2em;
@@ -42,14 +47,12 @@
 
 .logHistory .logEntryAction
 {
-    font-size: 150%;
+    font-size: 130%;
     font-weight: bold;
 }
 
 .logEntryValueFrom, .logEntryValueTo 
 {
-    font-size: 120%;
-    font-weight: bold;
     color: #999
 }
 
@@ -81,7 +84,7 @@
 
 dl
 {
-     border-bottom: 2px solid;
+     border-bottom: 1px dotted #ccc;
      position: relative;
 }
 
@@ -89,7 +92,6 @@ dt
 {
     float: left;
     font-weight: bold;
-    font-size: 120%;
 }
 
 dd

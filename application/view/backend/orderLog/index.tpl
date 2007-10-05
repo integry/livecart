@@ -25,8 +25,15 @@
             <tr>
                 <td class="logEntryAction">
                     {if $log.type == $TYPE_ORDER}
-                        {if $log.action == $ACTION_STATUSCHANGE}{t _order_status_changed}
-                        {elseif $log.action == $ACTION_CANCELEDCHANGE}{t _order_cancelled_changed}{/if}
+                        {if $log.action == $ACTION_STATUSCHANGE}
+							{t _order_status_changed}
+                        {elseif $log.action == $ACTION_CANCELEDCHANGE}
+							{if $log.newValue.isCancelled}
+								Order cancelled
+							{else}
+								Order activated
+							{/if}
+						{/if}
                     {elseif $log.type == $TYPE_SHIPMENT}
                         {if $log.action == $ACTION_ADD}{t _new_shipment_added}
                         {elseif $log.action == $ACTION_REMOVE}{t _shipment_removed}
@@ -50,14 +57,21 @@
                     <div class="logEntryUser"><a href="{backendUserUrl user=$log.User}">{$log.User.fullName}</a></div>
                 </td>
             </tr>
-            <tr>
+            
+			{if $log.action != $ACTION_CANCELEDCHANGE}
+			<tr>
                 <td colspan="2">
                     <table class="logEntryDiff">
-                        <tr>
+                        
+						{if $log.oldValue && $log.newValue}
+						<tr>
                             <td class="logEntryValueFrom">{t _from}:</td>
                             <td class="logEntryValueTo">{t _to}:</td>
                         </tr>
+                        {/if}
+                        
                         <tr>
+							{if $log.oldValue}
                             <td>
                                 {if $log.type == $TYPE_ORDER}
                                     {include file="backend/orderLog/order.tpl" order=$log.oldValue otherOrder=$log.newValue log=$log}
@@ -69,7 +83,10 @@
                                     {include file="backend/orderLog/address.tpl" address=$log.oldValue otherAddress=$log.newValue log=$log} 
                                 {/if}
                             </td>
-                            <td>
+                            {/if}
+                            
+							{if $log.newValue}
+							<td>
                                 {if $log.type == $TYPE_ORDER}
                                     {include file="backend/orderLog/order.tpl" order=$log.newValue otherOrder=$log.oldValue log=$log}
                                 {elseif $log.type == $TYPE_SHIPMENT}
@@ -80,11 +97,14 @@
                                     {include file="backend/orderLog/address.tpl" address=$log.newValue otherAddress=$log.oldValue log=$log}  
                                 {/if}
                             </td>
+                            {/if}
                         </tr>
                     </table>
                 </td>
                 <td></td>
             </tr>
+            {/if}
+            
             {if $log.oldTotal != $log.newTotal}
             <tr>
                 <td>&nbsp;</td>

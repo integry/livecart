@@ -56,6 +56,7 @@ _true=True
 _item_id=Item ID
 _product_name=Product
 _sku=SKU
+_price=Price
 _quantity=Quantity
 _shipment=Shipment
 
@@ -72,3 +73,6 @@ _provider_name=Provider
 _shipment_price=Price
 _taxes_price=Taxes
 _no_shipping_service_selected=No shipping service selected
+
+_new=New
+_awaiting_shipment=Awaiting shipment
