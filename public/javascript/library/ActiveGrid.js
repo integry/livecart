@@ -1,4 +1,8 @@
 /**
+ *	@author Integry Systems
+ */
+
+/**
  *	Requires rico.js
  *
  */

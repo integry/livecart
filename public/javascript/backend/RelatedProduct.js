@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+ 
 if(!Backend) Backend = {};
 if(!Backend.Product) Backend.Product = {};
 Backend.RelatedProduct = {

@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+ 
 Backend.DeliveryZone = Class.create();
 Backend.DeliveryZone.prototype = 
 {

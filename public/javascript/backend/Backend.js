@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+ 
 function rescape(str) 
 { 
     return srt.replace(/([\/()[\]{}|*+-.,^$?\\])/g, "\\$1"); 

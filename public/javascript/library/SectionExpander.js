@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+ 
 var SectionExpander = Class.create();
 
 SectionExpander.prototype = 

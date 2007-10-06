@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+ 
 Backend.Payment = 
 {
     init: function(container)

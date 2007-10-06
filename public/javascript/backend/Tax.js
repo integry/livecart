@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+ 
 Backend.Tax = Class.create();
 Backend.Tax.prototype = 
 {

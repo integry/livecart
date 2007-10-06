@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+
 var TranslationMenuEvent = Class.create();
 TranslationMenuEvent.prototype = 
 {  

@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+ 
 function validateForm(form)
 {
 	Element.saveTinyMceFields(form);

@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+ 
 Backend.Roles = Class.create();
 Backend.Roles.prototype = 
 {

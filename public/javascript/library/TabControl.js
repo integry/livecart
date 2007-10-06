@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+ 
 Event.fire = function(element, event) 
 {
    Event.observers.each(function(observer) 

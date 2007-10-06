@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+ 
 Backend.User = {};
 
 Backend.UserGroup = Class.create();

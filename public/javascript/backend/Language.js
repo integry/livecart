@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+ 
 Backend.LanguageIndex = Class.create();
 Backend.LanguageIndex.prototype = 
 {		

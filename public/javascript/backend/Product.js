@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+ 
 Backend.Product =
 {
 	productTabCopies: new Array(),

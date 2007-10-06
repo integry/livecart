@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+ 
 Backend.Settings = Class.create();
 
 Backend.Settings.prototype = 

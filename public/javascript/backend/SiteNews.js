@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+ 
 Backend.SiteNews = Class.create();
 Backend.SiteNews.prototype = 
 {

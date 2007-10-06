@@ -1,5 +1,6 @@
 /**
  *  Template editor
+ *	@author Integry Systems
  */
 Backend.Template = Class.create();
 Backend.Template.prototype = 

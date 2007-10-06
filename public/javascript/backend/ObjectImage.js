@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+ 
 Backend.ObjectImage = Class.create();
 
 Backend.ObjectImage.prototype = 

@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+ 
 TimeTrack = Class.create();
 TimeTrack.prototype = 
 {

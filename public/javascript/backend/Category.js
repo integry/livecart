@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+ 
 if (Backend == undefined)
 {
 	var Backend = {}

@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+ 
 var LiveCart = {
     ajaxUpdaterInstance: null
 }

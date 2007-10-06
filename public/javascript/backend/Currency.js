@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+ 
 Backend.Currency = Class.create();
 Backend.Currency.prototype = 
 {

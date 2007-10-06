@@ -1,3 +1,7 @@
+/**
+ *	@author Integry Systems
+ */
+ 
 Backend.StaticPage = Class.create();
 
 Backend.StaticPage.prototype = 

@@ -20,11 +20,19 @@ rm -rf $BUILD
 mv $TMP $BUILD
 cd $BUILD
 
+# prepend copyright messages to source files
+find -name '*.php' | xargs grep -l Integry | ./build/copyrightPhp.sh
+find -name '*.js' | xargs grep -l Integry | ./build/copyrightJs.sh
+
 # get version
 VERSION=`head .version`
 
 # copy version file to update server (update.livecart.com)
 cp .version /home/livecart/public_html/update/.version
+
+# remove non-distributed files
+rm -rf build
+rm -rf doc
 
 # commit changes
 hg addremove
@@ -36,10 +44,9 @@ rm -rf $TMP
 cp -rf $BUILD $TMP
 cd $TMP
 
+# remove Mercurial files
 rm -rf .hg*
 rm -rf .snap
-rm -rf build.sh
-rm -rf doc
 
 mkdir cache
 mkdir storage

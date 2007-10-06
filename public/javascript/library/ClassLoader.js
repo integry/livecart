@@ -1,4 +1,8 @@
 /**
+ *	@author Integry Systems
+ */
+ 
+/**
  * This function converst a file path into a valid variable name
  *
  * @example http://livecart/public/javascript/library/include.js => http_livecart_public_javascript_library_include_js
