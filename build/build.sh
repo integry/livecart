@@ -1,3 +1,5 @@
+set -e
+
 #!/bin/bash
 MAIN=/home/mercurial/repo/livecart
 BUILD=/home/mercurial/repo/build
@@ -21,8 +23,8 @@ mv $TMP $BUILD
 cd $BUILD
 
 # prepend copyright messages to source files
-find -name '*.php' | xargs grep -l Integry | ./build/copyrightPhp.sh
-find -name '*.js' | xargs grep -l Integry | ./build/copyrightJs.sh
+find -name '*.php' | xargs grep -l Integry | xargs --max-args=1 ./build/copyrightPhp.sh
+find -name '*.js' | xargs grep -l Integry | xargs --max-args=1 ./build/copyrightJs.sh
 
 # get version
 VERSION=`head .version`
@@ -33,6 +35,7 @@ cp .version /home/livecart/public_html/update/.version
 # remove non-distributed files
 rm -rf build
 rm -rf doc
+rm -rf storage/configuration/database.php
 
 # commit changes
 hg addremove
