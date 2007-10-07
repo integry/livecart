@@ -160,6 +160,7 @@ MIN_TOTAL=Minimum order total
 MAX_TOTAL=Maximum order total (0 - no limit)
 MIN_QUANT=Minimum quantity of products per order
 MAX_QUANT=Maximum quantity of products per order (0 - no limit)
+ENABLE_WISHLISTS=Enable wishlists
 
 _shipping=Shipping Methods
 _store_loc_add=Store Location Address

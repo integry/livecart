@@ -29,7 +29,7 @@
 		{include file="order/cartItems.tpl"}
     {/if}
 	
-	{if $cart.wishListItems}		
+	{if $cart.wishListItems && 'ENABLE_WISHLISTS'|config}
 		{include file="order/wishList.tpl"}
 	{/if}
 	

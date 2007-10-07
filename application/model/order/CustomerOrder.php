@@ -160,7 +160,11 @@ class CustomerOrder extends ActiveRecordModel
         if (0 >= $count)
         {
             $count = 0;
-        }   
+        }
+		else if ($product->minimumQuantity->get() > $count)
+		{
+			$count = $product->minimumQuantity->get();
+		}   
         
         return $count;      
     }

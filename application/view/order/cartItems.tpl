@@ -12,7 +12,9 @@
 	{foreach from=$cart.cartItems item="item" name="cart"}
 		<tr {zebra loop="cart"}>
 			<td class="cartControl">
-				<a href="{link controller=order action=moveToWishList id=$item.ID query="return=`$return`"}">{t _move_to_wishlist}</a>
+				{if 'ENABLE_WISHLISTS'|config}
+					<a href="{link controller=order action=moveToWishList id=$item.ID query="return=`$return`"}">{t _move_to_wishlist}</a>
+				{/if}
 				<a href="{link controller=order action=delete id=$item.ID query="return=`$return`"}">{t _remove}</a>
 			</td>
 			

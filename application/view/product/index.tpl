@@ -80,20 +80,28 @@
 					{/form}
 				</td>
 			</tr>
+
+			{if 'ENABLE_WISHLISTS'|config}
 			<tr>
 				<td colspan="2" class="cartLinks addToWishList">
 					<a href="{link controller=order action=addToWishList id=$product.ID query="return=`$catRoute`"}">{t _add_to_wishlist}</a>			
 				</td>
 			</tr>
+			{/if}
 
+			{if $product.Manufacturer.name}
 			<tr>
 				<td class="param">{t _manufacturer}:</td>
 				<td class="value"><a href="{categoryUrl data=$product.Category addFilter=$manufacturerFilter}">{$product.Manufacturer.name}</a></td>
 			</tr>
+			{/if}
+			
+			{if $product.sku}
 			<tr>
 				<td class="param">{t _sku}:</td>
 				<td class="value">{$product.sku}</td>
 			</tr>
+			{/if}
 
 			{if $product.stockCount && 'PRODUCT_DISPLAY_STOCK'|config}
 			<tr>

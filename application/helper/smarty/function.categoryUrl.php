@@ -23,7 +23,11 @@ function createCategoryUrl($params, LiveCart $application)
 	
 	// get full category path
 	$parts = array();
-	$parts[] = createHandleString($category['name_lang']);
+	
+	if (isset($category['name_lang']))
+	{
+		$parts[] = createHandleString($category['name_lang']);
+	}
 	
     if (!isset($category['parent']))
 	{

@@ -1,7 +1,10 @@
 _information=Information
 _categories=Categories
 
+# Breadcrumb
 _you_are_here=You are here
+_my_session=My Shopping Session
+_my_basket=My Shopping Basket
 
 # Filters
 _show_all=Show All
