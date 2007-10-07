@@ -373,7 +373,8 @@ ActiveGridFilter.prototype =
         this.element.onfocus = this.filterFocus.bindAsEventListener(this);
         this.element.onblur = this.filterBlur.bindAsEventListener(this);        
         this.element.onchange = this.setFilterValue.bindAsEventListener(this);  
-        
+        this.element.onkeyup = this.checkExit.bindAsEventListener(this);
+		        
         this.element.filter = this;
         
    		Element.addClassName(this.element, 'activeGrid_filter_blur');          
@@ -416,6 +417,18 @@ ActiveGridFilter.prototype =
     		Element.addClassName(this.element, 'activeGrid_filter_blur');
 			Element.removeClassName(this.element, 'activeGrid_filter_select');
 		    Element.removeClassName(this.element.up('th'), 'activeGrid_filter_select');
+		}
+	},
+	
+	/**
+	 *  Clear filter value on ESC key
+	 */
+	checkExit: function(e)
+	{
+		if (27 == e.keyCode)
+		{
+			this.element.value = '';
+			this.element.blur();
 		}
 	},
 	

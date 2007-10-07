@@ -39,35 +39,35 @@
                                 <ul onclick="$('filter_{$column}_{$id}').filter.initFilter(event);">
                                     <li class="rangeFilterReset" symbol="">
                                         <span class="sign">&nbsp;</span>
-                                        Show All
+                                        {t _grid_show_all}
                                     </li>
                                     <li symbol="=">
                                         <span class="sign">=</span>
-                                        Equals
+                                        {t _grid_equals}
                                     </li>
                                     <li symbol="<>">
                                         <span class="sign">&ne;</span>
-                                        Does Not Equal
+                                        {t _grid_not_equal}
                                     </li>
                                     <li symbol=">">
                                         <span class="sign">&gt;</span>
-                                        Greater Than
+                                        {t _grid_greater}
                                     </li>
                                     <li symbol="<">
                                         <span class="sign">&lt;</span>
-                                        Less Than
+                                        {t _grid_less}
                                     </li>
                                     <li symbol=">=">
                                         <span class="sign">&ge;</span>
-                                        Greater Than or Equal To
+                                        {t _grid_greater_or_equal}
                                     </li>
                                     <li symbol="<=">
                                         <span class="sign">&le;</span>
-                                        Less Than or Equal To
+                                        {t _grid_less_or_equal}
                                     </li>
                                     <li symbol="><">
                                         <span class="sign">&gt;&lt;</span>
-                                        Range
+                                        {t _grid_range}
                                     </li>
                                 </ul>
                             

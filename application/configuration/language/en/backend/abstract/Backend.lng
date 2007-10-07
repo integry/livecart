@@ -24,6 +24,14 @@ _no=No
 # ActiveGrid
 _change_columns=Change columns
 _with_selected=With selected
+_grid_show_all=Show All
+_grid_equals=Equals
+_grid_not_equal=Does Not Equal
+_grid_greater=Greater Than
+_grid_less=Less Than
+_grid_greater_or_equal=Greater Than or Equal To
+_grid_less_or_equal=Less Than or Equal To
+_grid_range=Range
 
 # Language forms
 _langform_translate=Translate
