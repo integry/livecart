@@ -501,17 +501,33 @@ class CustomerOrder extends ActiveRecordModel
 
     public function updateShipmentStatuses()
     {
-        $filter = new ARUpdateFilter();
+        $filter = new ARSelectFilter();
         $filter->setCondition(new EqualsCond(new ARFieldHandle('Shipment', 'orderID'), $this->getID()));
         
         if(!$this->isReturned())
         {
-            $filter->setCondition(new NotEqualsCond(new ARFieldHandle('Shipment', 'status'), self::STATUS_SHIPPED));
+            $filter->mergeCondition(new NotEqualsCond(new ARFieldHandle('Shipment', 'status'), self::STATUS_SHIPPED));
         }
         
-        $filter->addModifier('status', $this->status->get());
+        // get shipments for which the status will be changed
+		$shipments = ActiveRecordModel::getRecordSet('Shipment', $filter, Shipment::LOAD_REFERENCES);
+		foreach ($shipments as $key => $shipment)
+		{
+			if ($shipment->status->get() == $this->status->get())
+			{
+				$shipments->remove($key);
+			}
+		
+			$shipment->status->set($this->status->get());
+		}
+
+		$update = new ARUpdateFilter();
+		$update->setCondition($filter->getCondition());
+		$update->addModifier('Shipment.status', $this->status->get());
+		
+		ActiveRecordModel::updateRecordSet('Shipment', $update);
         
-        ActiveRecord::updateRecordSet('Shipment', $filter); 
+        return $shipments;
     }
     
     public function updateStatusFromShipments($creatingNewRecord = false)
@@ -839,7 +855,10 @@ class CustomerOrder extends ActiveRecordModel
         {
             foreach ($this->shipments as $shipment)
             {
-                $array['shipments'][] = $shipment->toArray();
+                if (count($shipment->getItems()))
+                {
+					$array['shipments'][] = $shipment->toArray();
+				}
             }
         }
         
@@ -901,7 +920,7 @@ class CustomerOrder extends ActiveRecordModel
                 $array['amountNotCaptured'] = 0;    
             }
             
-            $array['amountDue'] = $array['total'][$currency->getID()] - $array['amountPaid'];
+            $array['amountDue'] = $array['totalAmount'] - $array['amountPaid'];
             if ($array['amountDue'] < 0)
             {
                 $array['amountDue'] = 0;    

@@ -41,7 +41,6 @@ Backend.Settings.prototype =
 		this.treeBrowser.hideFeedback = 
 			function(itemId)
 			{
-                console.log(itemId);
                 if (null != this.iconUrls[itemId])
                 {
         			this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);

@@ -1,3 +1,3 @@
 ------------------------
-{$config.STORE_NAME}
+{'STORE_NAME'|config}
 {link url=true}

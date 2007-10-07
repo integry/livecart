@@ -87,7 +87,27 @@ class Email
     {
         if (!file_exists($templateFile))
         {
-            $templateFile = ClassLoader::getRealPath('application.view.email.' . $templateFile) . '.tpl';
+            $locale = $this->application->getLocale()->getLocaleCode();
+            
+			// find the email template file
+			$paths = array(
+					
+							'storage.customize.view.email.' . $locale . '.' . $templateFile,
+							'application.view.email.' . $locale . '.' . $templateFile,
+							'storage.customize.view.email.en.' . $templateFile,
+							'application.view.email.en.' . $templateFile,
+							
+						);
+			
+			foreach ($paths as $path)
+			{
+				$templateFile = ClassLoader::getRealPath($path) . '.tpl';
+				
+				if (file_exists($templateFile))
+				{
+					break;
+				}
+			}
             
             if (!file_exists($templateFile))
             {
@@ -114,7 +134,7 @@ class Email
     {
         if ($this->template)
         {        
-            $smarty = new Smarty();
+            $smarty = $this->application->getRenderer()->getSmartyInstance();
             $smarty->compile_dir = ClassLoader::getRealPath('cache.templates_c');
             $smarty->template_dir = ClassLoader::getRealPath('application.view');
     
@@ -122,8 +142,6 @@ class Email
             {
                 $smarty->assign($key, $value);
             }
-
-            $smarty->assign('config', self::getApplication()->getConfig()->toArray());
             
             $html = $smarty->fetch($this->template);
             

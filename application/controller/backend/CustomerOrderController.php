@@ -249,6 +249,16 @@ class CustomerOrderController extends StoreManagementController
 	    $order->save();
 	    $history->saveLog();
 
+		if ($order->isCancelled->get() && $this->config->get('EMAIL_ORDER_CANCELLATION'))
+		{
+			$order->user->get()->load();
+			$email = new Email($this->application);
+	        $email->setUser($order->user->get());
+	        $email->setTemplate('order.cancel');
+	        $email->set('order', $order->toArray(array('payments' => true)));
+	        $email->send();				
+		}
+
 	    return new JSONResponse(array(
 		        'isCanceled' => $order->isCancelled->get(),
 		        'linkValue' => $this->translate($order->isCancelled->get() ? '_accept_order' : '_cancel_order'),
@@ -534,7 +544,8 @@ class CustomerOrderController extends StoreManagementController
     public function update()
     {
         $order = CustomerOrder::getInstanceByID((int)$this->request->get('ID'), true);
-	    $history = new OrderHistory($order, $this->user);
+	    $order->loadAll();
+		$history = new OrderHistory($order, $this->user);
 
 	    $oldStatus = $order->status->get();
 	    
@@ -543,9 +554,20 @@ class CustomerOrderController extends StoreManagementController
 	    $isCancelled = (int)$this->request->get('isCancelled') ? true : false;
 		$order->isCancelled->set($isCancelled);
 	    
-		$order->updateShipmentStatuses();
+		$shipments = $order->updateShipmentStatuses();
         $response = $this->save($order);
         $history->saveLog();
+
+		if ($this->config->get('EMAIL_STATUS_UPDATE'))
+        {
+			$order->user->get()->load();
+			$email = new Email($this->application);
+	        $email->setUser($order->user->get());
+	        $email->setTemplate('order.status');
+	        $email->set('order', $order->toArray(array('payments' => true)));
+	        $email->set('shipments', $shipments->toArray());
+	        $email->send();			
+		}		
 
         return $response;
     }

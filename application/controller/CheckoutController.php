@@ -680,7 +680,30 @@ class CheckoutController extends FrontendController
     {
         $this->order->isPaid->set(true);
         $newOrder = $this->order->finalize(Currency::getValidInstanceById($this->getRequestCurrency()));
+
+		$orderArray = $this->order->toArray(array('payments' => true));
+	
+        // send order confirmation email
+		if ($this->config->get('EMAIL_NEW_ORDER'))
+        {
+			$email = new Email($this->application);
+	        $email->setUser($this->user);
+	        $email->setTemplate('order.new');
+	        $email->set('order', $orderArray);
+	        $email->send();			
+		}
 		            
+        // notify store admin
+		if ($this->config->get('NOTIFY_NEW_ORDER'))
+        {
+			$email = new Email($this->application);
+			$email->setTo($this->config->get('NOTIFICATION_EMAIL'), $this->config->get('STORE_NAME'));
+	        $email->setTemplate('notify.order');
+	        $email->set('order', $orderArray);
+	        $email->set('user', $this->user->toArray());
+	        $email->send();			
+		}
+
         $this->session->set('completedOrderID', $this->order->getID());          
         
         $transaction = Transaction::getNewInstance($this->order, $result);

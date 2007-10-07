@@ -375,6 +375,19 @@ class UserController extends FrontendController
         $note->isAdmin->set(false);
         $note->save();
         
+		if ($this->config->get('NOTIFY_NEW_NOTE'))
+        {
+			$order->user->get()->load();
+
+			$email = new Email($this->application);
+			$email->setTo($this->config->get('NOTIFICATION_EMAIL'), $this->config->get('STORE_NAME'));
+	        $email->setTemplate('notify.message');
+	        $email->set('order', $order->toArray(array('payments' => true)));
+	        $email->set('message', $note->toArray());
+	        $email->set('user', $this->user->toArray());
+	        $email->send();	
+		}             
+        
         return new ActionRedirectResponse('user', 'viewOrder', array('id' => $order->getID()));
     }
     
@@ -421,7 +434,6 @@ class UserController extends FrontendController
 		}
 		
 		$user = $this->createUser($this->request->get('password'));
-        SessionUser::setUser($user);
 		
 		if ($this->request->isValueSet('return'))
 		{
@@ -625,9 +637,6 @@ class UserController extends FrontendController
         $this->order->shippingAddress->set($shippingAddress->userAddress->get());
         $this->order->user->set($user);
         SessionOrder::save($this->order);
-        
-        // login
-        SessionUser::setUser($user);
 
         ActiveRecordModel::commit();
 
@@ -912,6 +921,17 @@ class UserController extends FrontendController
 		}
 		
 		$user->save();
+	
+        SessionUser::setUser($user);
+		
+        // send welcome email with user account details
+        if ($this->config->get('EMAIL_NEW_USER'))
+        {
+			$email = new Email($this->application);
+	        $email->setUser($user);
+	        $email->setTemplate('user.new');
+	        $email->send();			
+		}	
 		
 		return $user;			
 	}

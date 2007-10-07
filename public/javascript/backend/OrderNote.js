@@ -56,6 +56,11 @@ Backend.OrderNote.AddResponse.prototype =
         
         var cont = this.form.up('div.tabPageContainer');
         
+        if (cont.down('.noRecords'))
+        {
+			cont.down('.noRecords').hide();
+		}
+        
         var ul = cont.down('ul.notes');
         ul.innerHTML += originalRequest.responseText;
         new Effect.Highlight(ul.lastChild, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});

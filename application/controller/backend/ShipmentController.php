@@ -174,7 +174,20 @@ class ShipmentController extends StoreManagementController
 	    $shipment->save();
 	    
 	    $history->saveLog();
-	    
+
+		if ($this->config->get('EMAIL_STATUS_UPDATE'))
+        {
+			$user = $shipment->order->get()->user->get();
+			$user->load();
+
+			$email = new Email($this->application);
+	        $email->setUser($user);
+	        $email->setTemplate('order.status');
+	        $email->set('order', $shipment->order->get()->toArray(array('payments' => true)));
+	        $email->set('shipments', array($shipment->toArray()));
+	        $email->send();			
+		}
+		
 	    return new JSONResponse(false, 'success');
 	}
 	

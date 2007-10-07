@@ -45,10 +45,24 @@ class OrderNoteController extends StoreManagementController
     {
         if ($this->buildOrderNoteValidator()->isValid())
         {
-            $note = OrderNote::getNewInstance(CustomerOrder::getInstanceById($this->request->get('id')), $this->user);
+            $order = CustomerOrder::getInstanceById($this->request->get('id'), CustomerOrder::LOAD_DATA);
+            
+			$note = OrderNote::getNewInstance($order, $this->user);
             $note->isAdmin->set(true);
             $note->text->set($this->request->get('comment'));
             $note->save();
+            
+			if ($this->config->get('EMAIL_ORDERNOTE'))
+	        {
+				$order->user->get()->load();
+	
+				$email = new Email($this->application);
+		        $email->setUser($order->user->get());
+		        $email->setTemplate('order.message');
+		        $email->set('order', $order->toArray(array('payments' => true)));
+		        $email->set('message', $note->toArray());
+		        $email->send();			
+			}            
             
             return new ActionRedirectResponse('backend.orderNote', 'view', array('id' => $note->getID()));
         }
