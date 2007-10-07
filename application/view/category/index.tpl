@@ -21,9 +21,7 @@
 
 	{if $categoryNarrow}
     	{include file="category/narrowByCategory.tpl"}
-	{/if}
-
-    {if !$searchQuery && $subCategories}
+    {elseif !$searchQuery && $subCategories}
     	{include file="category/subcategoriesColumns.tpl"}
     {/if}
 
@@ -46,7 +44,7 @@
             </div>
             
             <div class="sortOptions">
-                {if $sortOptions}
+                {if $sortOptions && ($sortOptions|@count > 1)}
                     {t _sort_by}
                     {form handle=$sortForm action="self" method="get"}
                     {selectfield id="productSort" name="sort" options=$sortOptions onchange="this.form.submit();"}

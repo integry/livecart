@@ -13,6 +13,8 @@ class ProductFilter
 
 	private $selectFilter = null;
 
+	private $productFilter;
+
 	private $filters = array();
 	
 	private $includeSubcategories = false;
@@ -20,6 +22,7 @@ class ProductFilter
 	public function __construct(Category $category, ARSelectFilter $filter)
 	{
 		$this->category = $category;
+		$this->productFilter = $filter;
 		$this->selectFilter = $this->category->getProductFilter($filter);
 //		$this->selectFilter->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), true));
 	}
@@ -101,6 +104,7 @@ class ProductFilter
 	public function includeSubcategories()
 	{
         $this->includeSubcategories = true;
+		$this->selectFilter = $this->category->getProductsFilter($this);
     }
     
     public function isSubcategories()

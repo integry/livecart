@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import("application.controller.FrontendController");
+ClassLoader::import("application.controller.CategoryController");
 ClassLoader::import('application.model.sitenews.NewsPost');
 
 /**
@@ -9,7 +9,7 @@ ClassLoader::import('application.model.sitenews.NewsPost');
  * @author Integry Systems
  * @package application.controller
  */
-class IndexController extends FrontendController 
+class IndexController extends CategoryController 
 {
 	public function index() 
 	{
@@ -17,9 +17,8 @@ class IndexController extends FrontendController
 		
 		$this->request->set('id', Category::ROOT_ID);
 		$this->request->set('cathandle', '.');
-		
-        $controller = new CategoryController($this->application);		
-		$response = $controller->index();
+		        
+		$response = parent::index();
 		
 		// load site news
         $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
@@ -28,7 +27,7 @@ class IndexController extends FrontendController
 		$news = ActiveRecordModel::getRecordSetArray('NewsPost', $f);
 		$response->set('news', $news);
 		$response->set('isNewsArchive', count($news) > $this->config->get('NUM_NEWS_INDEX'));
-		
+				
 		return $response;
 	}
 

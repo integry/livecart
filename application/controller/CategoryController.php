@@ -22,6 +22,8 @@ class CategoryController extends FrontendController
   	protected $category;
   	
 	protected $categoryID = 1;
+	
+	protected $hasProducts = false;
 	  
 	public function init()
   	{
@@ -94,14 +96,21 @@ class CategoryController extends FrontendController
 		foreach ($this->filters as $filter)
 		{
 			$productFilter->applyFilter($filter);  
-		    if ($filter instanceof SearchFilter)
+		    
+			if ($filter instanceof SearchFilter)
 		    {
 				$productFilter->includeSubcategories();	
-                $searchQuery = $filter->getKeywords();			
+                $searchQuery = $filter->getKeywords();
 			}
 		}
 
+		if ($this->category->isRoot() || $this->filters)
+	    {
+			$productFilter->includeSubcategories();
+		}
+
         $products = $this->getProductsArray($productFilter);
+        $this->hasProducts = count($products) > 0;
 
 		// pagination
         $count = new ProductCount($this->productFilter, $this->application);
@@ -127,7 +136,7 @@ class CategoryController extends FrontendController
 		$subCategories = $this->category->getSubCategoryArray(Category::LOAD_REFERENCES);
 		
 		$categoryNarrow = array();
-		if (!empty($searchQuery) && $products)
+		if ((!empty($searchQuery) || $this->category->isRoot() || $this->filters) && $products)
 		{
 			$categoryNarrow = $this->getSubCategoriesBySearchQuery($selectFilter, $subCategories);
 		}
@@ -145,6 +154,13 @@ class CategoryController extends FrontendController
 			$subCatFeatured = $this->getSubCatFeaturedProducts();
 		}
 		
+		// if there were no products found, include subcategories in filter counts
+		if (!$products)
+		{
+			$selectFilter->removeCondition(new EqualsCond(new ARFieldHandle('Product', 'categoryID'), $this->category->getID()));
+			$this->productFilter->includeSubcategories();
+		}
+
 		// load filter data
 		$this->getFilterCounts();
 		
@@ -174,6 +190,12 @@ class CategoryController extends FrontendController
             return new RedirectResponse(createCategoryUrl(array('data' => $foundCategories->get(0)->toArray()), $this->application));
         }
         
+        $filterArray = array();
+        foreach ($this->filters as $filter)
+        {
+			$filterArray[] = $filter->toArray();
+		}
+        
 		$response = new ActionResponse();
 		$response->set('id', $this->categoryID);
 		$response->set('url', $paginationUrl);
@@ -193,6 +215,7 @@ class CategoryController extends FrontendController
 		$response->set('subCatFeatured', $subCatFeatured);
 		$response->set('allFilters', $filters);
 		$response->set('showAll', $showAll);
+		$response->set('appliedFilters', $filterArray);
 
 		if (isset($searchQuery))
         {
@@ -369,11 +392,11 @@ class CategoryController extends FrontendController
 
 			foreach ($count as $cat)
 			{
-				if (empty($index[$cat['ID']]))
+				if (!isset($index[$cat['ID']]))
 				{
                     continue;
                 }
-                
+
                 $data = $subCategories[$index[$cat['ID']]];
 				$data['searchCount'] = $cat['cnt'];
 				$categoryNarrow[] = $data;
@@ -467,17 +490,41 @@ class CategoryController extends FrontendController
 			$response->set('allManufacturers', $this->router->setUrlQueryParam($url, 'showAll', 'brand'));		  	
 		}
         
-        if (count($manFilters) > 1)
+		// index page filters
+		if ($this->category->isRoot())
+		{
+			if (!$this->config->get('INDEX_MAN_FILTERS'))
+			{
+				$manFilters = array();
+			}
+
+			if (!$this->config->get('INDEX_PRICE_FILTERS'))
+			{
+				$this->priceFilters = array();
+			}
+		}		
+		// categories without own products
+		else if (!$this->hasProducts)
+		{
+			if (!$this->config->get('DISPLAY_CAT_MAN_FILTERS'))
+			{
+				$manFilters = array();
+			}
+
+			if (!$this->config->get('DISPLAY_CAT_PRICE_FILTERS'))
+			{
+				$this->priceFilters = array();
+			}			
+		}
+
+        if ($this->config->get('ENABLE_MAN_FILTERS') && (count($manFilters) > 1))
         {
     	 	$response->set('manGroup', array('filters' => $manFilters));
         }
         
-        // filter by prices
-        $priceFilters = $this->priceFilters;
-        
-        if (count($priceFilters) > 1)
+        if ($this->config->get('ENABLE_PRICE_FILTERS') && (count($this->priceFilters) > 1))
         {
-    	 	$response->set('priceGroup', array('filters' => $priceFilters));
+    	 	$response->set('priceGroup', array('filters' => $this->priceFilters));
         }
 
 		$filterArray = array();
@@ -547,7 +594,7 @@ class CategoryController extends FrontendController
 		}
 		
 		$manFilters = array();
-        
+
 		// check for filter counts only if the manufacturer filter hasn't been applied already
 		if (!$isManufacturerFiltered)
 		{

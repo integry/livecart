@@ -15,8 +15,11 @@ _display=Display
 
 _homepage=Home Page
 NUM_NEWS_INDEX=Number of news entries to display
+INDEX_MAN_FILTERS=Display manufacturer filters
+INDEX_PRICE_FILTERS=Display price filters
 
-_general=General
+_general=Category Pages
+_category_pages=Category Pages
 NUM_PRODUCTS_PER_CAT=Number of products per category page
 NUM_PRODUCTS_PER_SEARCH=Number of products per search page
 SORT_ORDER=Default product sort order
@@ -31,6 +34,12 @@ NEWEST_ARRIVALS=Newest Arrivals
 RATING=Customer Rating
 DISPLAY_NUM_CAT=Display the number of products per category
 DISPLAY_NUM_FILTER=Display the number of products per filter
+
+_category_filters=Category Page Filters
+ENABLE_MAN_FILTERS=Enable manufacturer filters
+ENABLE_PRICE_FILTERS=Enable price filters
+DISPLAY_CAT_MAN_FILTERS=Display sub-category manufacturer filters for categories without own products
+DISPLAY_CAT_PRICE_FILTERS=Display sub-category price filters for categories without own products
 DISPLAY_IMAGE_IN_LIST=Display product thumbnail image in product list
 
 _products=Products

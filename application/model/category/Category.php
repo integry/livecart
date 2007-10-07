@@ -161,6 +161,11 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
         return $result;
     }
 
+	public function isRoot()
+	{
+		return self::ROOT_ID == $this->getID();
+	}
+
 	/*####################  Saving ####################*/
 	
     /**

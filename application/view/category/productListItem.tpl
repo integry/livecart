@@ -50,7 +50,7 @@
             <div class="orderingControls">
 				{if $product.isAvailable}
 				<a href="{link controller=order action=addToCart id=$product.ID returnPath=true}" class="addToCart">{t _add_to_cart}</a>
-                : 
+                <span class="sep">:</span> 
 				{/if}
 				<a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}" class="addToWishList">{t _add_to_wishlist}</a>	
 			</div>				                
