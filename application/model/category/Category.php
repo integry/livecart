@@ -549,7 +549,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	{
 		if (!$this->specFieldArrayCache)
 		{
-			$this->specFieldArrayCache = $this->getSpecificationFieldArray(false);	
+			$this->specFieldArrayCache = $this->getSpecificationFieldArray(true);
 		}
 		
 		$categories = array();
@@ -570,7 +570,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$filter->setOrder(new ARFieldHandle("SpecField", "categoryID"));
 		$filter->setOrder(new ARFieldHandle("FilterGroup", "position"));
 
-		$cond = new INCond(new ARFieldHandle("FilterGroup", "specFieldID"), implode(', ', $ids));
+		$cond = new INCond(new ARFieldHandle("FilterGroup", "specFieldID"), $ids);
 
 		$filter->setCondition($cond);
 
@@ -642,7 +642,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return SpecField::getRecordSet($this->getSpecificationFilter($includeParentFields), true);
 	}
 
-	public function getSpecificationFieldArray($includeParentFields = false, $loadReferencedRecords = false)
+	public function getSpecificationFieldArray($includeParentFields = true, $loadReferencedRecords = false)
 	{
 		ClassLoader::import("application.model.category.SpecField");
         return ActiveRecordModel::getRecordSetArray('SpecField', $this->getSpecificationFilter($includeParentFields), array('SpecFieldGroup'));
