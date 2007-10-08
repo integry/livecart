@@ -51,7 +51,7 @@ Backend.hideContainer = function()
 **************************************************/
 Backend.setHelpContext = function(context)
 {
-    $('help').href = 'http://doc.livecart.com/en/' + context;
+    $('help').href = 'http://doc.livecart.com/help/' + context;
 }
 
 /*************************************************

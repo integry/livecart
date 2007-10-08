@@ -150,25 +150,25 @@
     			<li id="tabMainDetails" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
     				<a href="{link controller=backend.category action=form id=_id_}">{t _category_details}</a>
     				<span> </span>
-    				<span class="tabHelp">cat.details</span>
+    				<span class="tabHelp">categories.details</span>
     			</li>
     			
     			<li id="tabFields" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
     				<a href="{link controller=backend.specField action=index id=_id_}">{t _attributes}</a>
     				<span> </span>
-    				<span class="tabHelp">cat.attr</span>
+    				<span class="tabHelp">categories.attributes</span>
     			</li>
     			
     			<li id="tabFilters" class="tab inactive" {denied role="filter"}style="display: none"{/denied}>
     				<a href="{link controller=backend.filterGroup action=index id=_id_}">{t _filters}</a>
     				<span> </span>
-    				<span class="tabHelp">cat.filters</span>
+    				<span class="tabHelp">categories.filters</span>
     			</li>
     			
     			<li id="tabImages" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
     				<a href="{link controller=backend.categoryImage action=index id=_id_}">{t _images}</a>
     				<span> </span>
-    				<span class="tabHelp">cat.images</span>
+    				<span class="tabHelp">categories.images</span>
     			</li>
     		</ul>
     	</div>

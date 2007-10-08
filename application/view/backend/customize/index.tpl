@@ -1,4 +1,4 @@
-{pageTitle}{t _live_customization}{/pageTitle}
+{pageTitle help="customize"}{t _live_customization}{/pageTitle}
 {includeCss file=backend/Customize.css}
 
 {include file="layout/backend/header.tpl"}

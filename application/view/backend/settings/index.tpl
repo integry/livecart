@@ -7,7 +7,7 @@
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 {includeCss file="backend/Settings.css"}
 
-{pageTitle help="config"}{t _livecart_settings}{/pageTitle}
+{pageTitle help="settings.configuration"}{t _livecart_settings}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
 <div id="settingsContainer" class="maxHeight h--50">

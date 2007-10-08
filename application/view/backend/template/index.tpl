@@ -11,7 +11,7 @@
 {includeCss file="backend/Template.css"}
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 
-{pageTitle help="template"}{t _edit_templates}{/pageTitle}
+{pageTitle help="customize.templates"}{t _edit_templates}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
 <div id="templatePageContainer">

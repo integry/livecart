@@ -12,7 +12,7 @@
 {includeCss file="library/ActiveList.css"}
 {includeCss file="backend/Currency.css"}
 
-{pageTitle}{t _currencies}{/pageTitle}
+{pageTitle help="settings.currencies"}{t _currencies}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
 <div id="confirmations"></div>

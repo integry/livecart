@@ -10,7 +10,7 @@
 {includeCss file="library/ActiveList.css"}
 {includeCss file="library/TabControl.css"}
 
-{pageTitle}{t _taxes}{/pageTitle}
+{pageTitle help="settings.taxes"}{t _taxes}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
 <script type="text/javascript">

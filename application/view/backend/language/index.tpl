@@ -5,7 +5,7 @@
 {includeJs file="backend/Language.js"}
 {includeCss file="library/ActiveList.css"}
 {includeCss file="backend/Language.css"}
-{pageTitle help="language"}{t _admin_languages}{/pageTitle}
+{pageTitle help="settings.languages"}{t _admin_languages}{/pageTitle}
 
 {include file="layout/backend/header.tpl"}
 

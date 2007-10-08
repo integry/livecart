@@ -7,7 +7,7 @@
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 {includeCss file="backend/StaticPage.css"}
 
-{pageTitle help="pages"}{t _static_pages}{/pageTitle}
+{pageTitle help="content.pages"}{t _static_pages}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
 <div id="staticPageContainer">

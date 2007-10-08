@@ -13,7 +13,7 @@
 {includeJs file="library/dhtmlCalendar/calendar-setup.js"}
 {includeCss file="library/dhtmlCalendar/calendar-win2k-cold-2.css"}
 
-{pageTitle help="sitenews"}{t _site_news}{/pageTitle}
+{pageTitle help="content.site"}{t _site_news}{/pageTitle}
 
 {include file="layout/backend/header.tpl"}
 

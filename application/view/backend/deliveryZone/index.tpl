@@ -12,7 +12,7 @@
 {includeCss file="library/ActiveList.css"}
 {includeCss file="backend/DeliveryZone.css"}
 
-{pageTitle help="deliveryZone"}{t _livecart_delivery_zones}{/pageTitle}
+{pageTitle help="settings.delivery"}{t _livecart_delivery_zones}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
 <script type="text/javascript">
@@ -36,17 +36,14 @@
     		<ul class="tabList tabs">
     			<li id="tabDeliveryZoneCountry" class="tab active">
     				<a href="{link controller=backend.deliveryZone action=countriesAndStates}?id=_id_">{t _countries_and_states}</a>
-    				<span class="tabHelp">deliveryZone.countriesAndStates</span>
     			</li>
     			
     			<li id="tabDeliveryZoneShipping" class="tab inactive">
     				<a href="{link controller=backend.shippingService action=index}?id=_id_">{t _shipping_rates}</a>
-    				<span class="tabHelp">deliveryZone.shippingRates</span>
     			</li>
     			
     			<li id="tabDeliveryZoneTaxes" class="tab inactive">
     				<a href="{link controller=backend.taxRate action=index}?id=_id_">{t _tax_rates}</a>
-    				<span class="tabHelp">deliveryZone.taxRates</span>
     			</li>
 			</ul>
     	</div>

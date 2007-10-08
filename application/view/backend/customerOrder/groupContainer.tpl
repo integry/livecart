@@ -6,7 +6,7 @@
 		<ul class="tabList tabs">
 			<li id="tabOrders" class="tab inactive">
 				<a href="{link controller=backend.customerOrder action=orders}?id=_id_">{t _orders}</a>
-				<span class="tabHelp">customerOrder.orders</span>
+				<span class="tabHelp">orders</span>
 			</li>
 		</ul>
 	</div>
