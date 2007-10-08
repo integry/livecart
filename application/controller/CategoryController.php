@@ -117,36 +117,37 @@ class CategoryController extends FrontendController
 		$totalCount = $count->getCategoryProductCount($productFilter);
 		$offsetEnd = min($totalCount, $offsetEnd);
         $this->totalCount = $totalCount;
-				
+
 		$urlParams = array('controller' => 'category', 'action' => 'index', 
 						   'id' => $this->request->get('id'),
 						   'cathandle' => $this->request->get('cathandle'),
 						   'page' => '_000_',
 						   );
+
 		if ($this->request->get('filters'))
 		{
 			$urlParams['filters'] = $this->request->get('filters');
 		}
-		
+
 		$paginationUrl = $this->router->createURL($urlParams);
-		
+
 		$filterChainHandle = $this->setUpBreadCrumbAndReturnFilterChainHandle($currentPage);					
-					        
+
 		// narrow by subcategories
 		$subCategories = $this->category->getSubCategoryArray(Category::LOAD_REFERENCES);
-		
+
 		$categoryNarrow = array();
 		if ((!empty($searchQuery) || $this->category->isRoot() || $this->filters) && $products)
 		{
 			$categoryNarrow = $this->getSubCategoriesBySearchQuery($selectFilter, $subCategories);
 		}
-		
+
 		// get subcategory-subcategories
 		if ($subCategories)
 		{
             $this->getSubSubCategories($subCategories);
         }
-        
+
         // get subcategory featured products
         $subCatFeatured = array();
 		if ($subCategories && !$products)
@@ -380,6 +381,12 @@ class CategoryController extends FrontendController
 			$filter->resetOrder();
 			$filter->setOrder(new ARExpressionHandle('cnt'), 'DESC');
 			$filter->setGrouping(new ARExpressionHandle('ID'));
+
+            foreach ($this->filters as $f)
+    		{
+    			$f->defineJoin($filter);
+    		}
+
 			$query->setFilter($filter);
 			$query->addField($case->toString(), null, 'ID');
 			$query->addField('COUNT(*)', null, 'cnt');
