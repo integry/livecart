@@ -178,7 +178,21 @@ Backend.Settings.Editor.prototype =
                     Event.observe(el, 'change', change);
                     change(el);
                 }
-            }
+            },
+            
+        'EMAIL_METHOD':
+        	function()
+        	{
+				var change = 
+					function()
+					{
+						var display = ($('EMAIL_METHOD').value == 'SMTP');
+						[$('setting_SMTP_SERVER'), $('setting_SMTP_PORT'), $('setting_SMTP_USERNAME'), $('setting_SMTP_PASSWORD')].each(function(element) { if (display) { element.show(); } else {element.hide();} });
+					}
+			
+				$('SMTP_PASSWORD').type = 'password';
+				Event.observe($('EMAIL_METHOD'), 'change', change);
+			}
     },
     
     initialize: function(container)

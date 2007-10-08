@@ -193,6 +193,15 @@ EMAIL_ORDER_CANCELLATION=order is cancelled
 EMAIL_ORDERNOTE=a new message is added to order
 MAIN_EMAIL=Store e-mail address (all outgoing messages will be sent from this address)
 
+_email_delivery=E-mail Delivery Method
+EMAIL_METHOD=E-mail delivery type
+MAIL_NATIVE=PHP native mail() function
+SMTP=SMTP
+SMTP_SERVER=SMTP server
+SMTP_PORT=SMTP port
+SMTP_USERNAME=SMTP username
+SMTP_PASSWORD=SMTP password
+
 _payment=Payment Methods
 _cc_opts=Credit Card Options
 _express_payment=Express Checkout Methods

@@ -37,14 +37,32 @@ class Email
     public function __construct(LiveCart $application)
     {                
         $this->application = $application;
-        
-        $this->connection = new Swift_Connection_NativeMail();
-//      self::$connection = new Swift_Connection_SMTP(ini_get('SMTP'));
+        $config = $this->application->getConfig();
+		        
+        if ('SMTP' == $config->get('EMAIL_METHOD'))
+        {
+			$server = $config->get('SMTP_SERVER');
+			if (!$server)
+			{
+				$server = ini_get('SMTP');
+			}
+			
+			$this->connection = new Swift_Connection_SMTP($server, $config->get('SMTP_PORT'));
+			
+			if ($config->get('SMTP_USERNAME'))
+			{
+				$this->connection->setUsername($config->get('SMTP_USERNAME'));
+				$this->connection->setPassword($config->get('SMTP_PASSWORD'));
+			}			
+		}
+		else
+		{
+			$this->connection = new Swift_Connection_NativeMail();
+		}
         
         $this->swiftInstance = new Swift($this->connection);
         $this->recipients = new Swift_RecipientList();
         
-        $config = $this->application->getConfig();
         $this->setFrom($config->get('MAIN_EMAIL'), $config->get('STORE_NAME'));
     }
     
