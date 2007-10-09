@@ -1,3 +1,5 @@
+Options -Indexes
+
 RewriteEngine on
 
 RewriteRule ^$ public/index.php [L]
