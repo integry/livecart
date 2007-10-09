@@ -1,18 +1,13 @@
 RewriteEngine on
 
-# @todo remove >>
 RewriteRule ^$ public/index.php [L]
-
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^public/upload/(.*)$ http://demo.livecart.com/upload/$1 [R,L]
-# << end remove
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
 # if no rule matched the url, we redirect to our front web controller
 #RewriteRule ^(.*)\/$ %{REQUEST_URI} [R]
-RewriteRule ^(.*)(\/|\b)$ public/index.php?route=$1 [QSA,L]
+RewriteRule ^(.*)$ public/index.php?route=$1 [QSA,L]
 
 # big crash from our front web controller
 ErrorDocument 500 "<h2>Application error</h2>Application failed to start properly"
