@@ -9,13 +9,13 @@
     <div class="clear"></div>
 
     <p>
-        <label for="order_{$order.ID}_amount">{t _order_id}</label>
+        <label>{t _order_id}</label>
         <label>{$order.ID}</label>
     </p>
 
     {if $order.User}
     <p>
-        <label for="order_{$order.ID}_user">{t _user}</label>
+        <label>{t _user}</label>
         <label>
             <a href="{backendUserUrl user=$order.User}">
                 {$order.User.fullName}
@@ -25,7 +25,7 @@
     {/if}
 
     <p>
-        <label for="order_{$order.ID}_amount">{t _amount}</label>
+        <label>{t _amount}</label>
         <label>
             {*
             {$order.Currency.pricePrefix}<span class="order_capturedAmount">{$order.capturedAmount|default:0}</span>{$order.Currency.priceSuffix}
@@ -33,7 +33,7 @@
             /
             *}
             
-            {$order.Currency.pricePrefix}<span class="order_totalAmount">{$order.totalAmount|default:0}</span>{$order.Currency.priceSuffix}
+            {$order.Currency.pricePrefix}<span class="order_totalAmount">{$order.totalAmount|default:0|string_format:"%.2f"}</span>{$order.Currency.priceSuffix}
         </label>
     </p>
 

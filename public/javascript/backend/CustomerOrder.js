@@ -966,25 +966,14 @@ Backend.CustomerOrder.Address.prototype =
         {
             var address = Backend.CustomerOrder.Editor.prototype.existingUserAddresses[this.nodes.form.elements.namedItem('existingUserAddress').value];
     
-            this.nodes.form.elements.namedItem('firstName').value = address.UserAddress.address1;
-            this.nodes.form.elements.namedItem('lastName').value = address.UserAddress.firstName;
-            this.nodes.form.elements.namedItem('countryID').value = address.UserAddress.countryID;
-            
-            if(address.UserAddress.stateID)
+            ['firstName', 'lastName', 'countryID', 'stateID', 'stateName', 'city', 'address1', 'address2', 'postalCode', 'phone'].each(function(field)
             {
-                this.nodes.form.elements.namedItem('stateID').value = address.UserAddress.stateID;
-            }
-            else
-            {
-                this.nodes.form.elements.namedItem('stateName').value = address.UserAddress.stateName;
-            }
-            
-            this.nodes.form.elements.namedItem('city').value = address.UserAddress.city;
-            this.nodes.form.elements.namedItem('address1').value = address.UserAddress.address1;
-            this.nodes.form.elements.namedItem('address2').value = address.UserAddress.address2;
-            this.nodes.form.elements.namedItem('postalCode').value = address.UserAddress.postalCode;
-            this.nodes.form.elements.namedItem('phone').value = address.UserAddress.phone;
-            
+                if (address.UserAddress[field])
+                {
+                    this.nodes.form.elements.namedItem(field).value = address.UserAddress[field];
+                }
+            }.bind(this));
+    
             this.stateSwitcher.updateStates(null, function(){ this.nodes.form.elements.namedItem('stateID').value = address.UserAddress.stateID; }.bind(this));
         }
     },
@@ -1049,7 +1038,7 @@ Backend.CustomerOrder.Address.prototype =
             this.nodes.form.down('.addressAddress1').innerHTML = this.nodes.form.elements.namedItem('address1').value
             this.nodes.form.down('.addressAddress2').innerHTML = this.nodes.form.elements.namedItem('address2').value
             this.nodes.form.down('.addressPostalCode').innerHTML = this.nodes.form.elements.namedItem('postalCode').value
-            this.nodes.form.down('.addressPhone').innerHTML = this.nodes.form.elements.namedItem('address2').value
+            this.nodes.form.down('.addressPhone').innerHTML = this.nodes.form.elements.namedItem('phone').value
 			
             this.hideForm();
 

@@ -796,7 +796,8 @@ Backend.User.Add.prototype =
         this.nodes = {};
         this.nodes.parent = $("newUserForm_" + this.groupID);
         this.nodes.form = this.nodes.parent.down("form");
-		this.nodes.cancel = this.nodes.form.down('a.cancel');
+		this.nodes.cancel = this.nodes.parent.down('a.cancel');
+		this.nodes.cancel2 = this.nodes.form.down('a.cancel');
 		this.nodes.submit = this.nodes.form.down('input.submit');
 
         this.nodes.password = this.nodes.form.down('.user_password');
@@ -832,6 +833,7 @@ Backend.User.Add.prototype =
     bindEvents: function(args)
     {
 		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancelForm()}.bind(this));
+		Event.observe(this.nodes.cancel2, 'click', function(e) { Event.stop(e); this.cancelForm()}.bind(this));
 		Event.observe(this.nodes.submit, 'click', function(e) { Event.stop(e); this.submitForm()}.bind(this));
         Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); this.cancelForm();}.bind(this));
 		Event.observe(this.nodes.sameAddress, "click", function(e) { Backend.User.Editor.prototype.showShippingAddress.apply(this) }.bind(this));

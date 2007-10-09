@@ -53,6 +53,11 @@
     margin-bottom: 1em;
 }
 
+.activeGridcolumn_CustomerOrder_ID2
+{
+    display: none;
+}
+
 /******************
     overview
 ******************/
@@ -66,6 +71,17 @@
     font-size: 120%;
     text-align: center; 
     margin-top: 20px; 
+    display: none;
+}
+
+.cancelled .order_acceptanceStatus
+{
+    display: block;
+}
+
+.order_status fieldset
+{
+    margin-top: 1em;
 }
 
 .order_acceptanceStatusValue

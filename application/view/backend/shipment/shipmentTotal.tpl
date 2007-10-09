@@ -14,7 +14,7 @@
             <div class="orderShipmentsItem_info_total">
                 <span class="orderShipment_info_subtotal shipment_amount">
                     <span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
-                    <span class="price">{$shipment.amount|default:0}</span>
+                    <span class="price">{$shipment.amount|default:0|string_format:"%.2f"}</span>
                     <span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
                 </span>
             </div>
@@ -31,7 +31,7 @@
             <div class="orderShipmentsItem_info_tax">
                 <span class="orderShipment_info_subtotal shipment_taxAmount">
                     <span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
-                    <span class="price">{$shipment.taxAmount|default:0}</span>
+                    <span class="price">{$shipment.taxAmount|default:0|string_format:"%.2f"}</span>
                     <span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
                 </span>
             </div>
@@ -63,7 +63,7 @@
             <div class="orderShipmentsItem_info_total">
                 <span class="orderShipment_info_shippingAmount shipment_shippingAmount">
                     <span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
-                    <span class="price">{$shipment.shippingAmount|default:0}</span>
+                    <span class="price">{$shipment.shippingAmount|default:0|string_format:"%.2f"}</span>
                     <span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
                 </span>
             </div>
@@ -80,7 +80,7 @@
             <div class="orderShipmentsItem_info_total orderShipment_totalSum">
                 <span class="orderShipment_info_total shipment_total">
                     <span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
-                    <span class="price">{math equation="x + y + z" x=$shipment.shippingAmount|default:0 y=$shipment.amount|default:0 z=$shipment.taxAmount|default:0}</span>
+                    <span class="price">{math equation="x + y + z" x=$shipment.shippingAmount|default:0 y=$shipment.amount|default:0 z=$shipment.taxAmount|default:0|string_format:"%.2f"}</span>
                     <span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
                 </span>
             </div>

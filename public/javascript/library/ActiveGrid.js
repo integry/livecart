@@ -278,6 +278,11 @@ ActiveGrid.prototype =
 		this.filters[key] = value;
     },
 
+    getFilterValue: function(key)
+    {
+        return this.filters[key];
+    },
+
 	showFetchIndicator: function()
 	{
 		this.loadIndicator.style.display = '';	
@@ -427,22 +432,32 @@ ActiveGridFilter.prototype =
 	{
 		if (27 == e.keyCode)
 		{
-			this.element.value = '';
+            this.element.value = '';
+            
+            if (this.activeGridInstance.getFilterValue(this.getFilterName()))
+            {
+                this.setFilterValue();
+			    this.filterBlur();
+            }
+            
 			this.element.blur();
 		}
 	},
 	
 	setFilterValue: function()
 	{        
-		var filterName = this.element.id;
-        filterName = filterName.substr(0, filterName.indexOf('_', 7));  
-        this.setFilterValueManualy(filterName, this.element.value);
+        this.setFilterValueManualy(this.getFilterName(), this.element.value);
     },
 	
 	setFilterValueManualy: function(filterName, value)
 	{
         this.activeGridInstance.setFilterValue(filterName, value);
 		this.activeGridInstance.reloadGrid();        
+    },
+    
+    getFilterName: function()
+    {
+        return this.element.id.substr(0, this.element.id.indexOf('_', 7));
     },
     
     initFilter: function(e)

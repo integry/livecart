@@ -11,10 +11,17 @@
 		</li>
 	</ul>  
     
-    <fieldset id="newUserForm_{$userGroupID}" style="display: none;" class="addForm treeManagerContainer newUserForm">
-    	<legend>{t _add_new_user}</legend>
-        {include file="backend/user/info.tpl" someUser=$newUser}
-    </fieldset>
+    <div id="newUserForm_{$userGroupID}" style="display: none;">
+    	<ul class="menu" style="margin-left: 270px;">
+            <li class="done">   
+                <a class="cancel" href="#">{t _cancel}</a>
+            </li>
+        </ul>
+        <fieldset  class="addForm treeManagerContainer newUserForm">
+            <legend>{t _add_new_user}</legend>
+            {include file="backend/user/info.tpl" someUser=$newUser}
+        </fieldset>
+    </div>
     
     <script type="text/javascript">
         $("fromUsersPage").appendChild($("newUserForm_{$userGroupID}"))

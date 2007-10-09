@@ -5,7 +5,7 @@ _new_order_has_been_successfully_created=New order has been successfully created
 _order_information_has_been_successfully_updated=Order information has been successfully updated
 _order_address_information_has_been_successfully_updated=Order address information has been successfully updated
 _order_status_has_been_successfully_changed=Order status has been successfully changed
-_order_is_canceled=Order is canceled
+_order_is_canceled=Order is cancelled
 _order_is_accepted=Order is accepted
 _order_address_was_successfully_updated=Order address was successfully updated
 _empty_shipments_were_removed=Empty shipments were removed
@@ -26,7 +26,7 @@ _all_users=All users
 _default_user_group=Default user group
 
 _accepted=accepted
-_canceled=canceled
+_canceled=cancelled
 
 _accept_order=Accept order
 _cancel_order=Cancel order
@@ -69,10 +69,12 @@ CustomerOrder.isPaid=Paid
 CustomerOrder.isCanceled=Cancelled
 CustomerOrder.dateCreated=Created
 CustomerOrder.dateCompleted=Completed
+CustomerOrder.isCancelled=Is cancelled
 ShippingAddress.countryID=Country
 ShippingAddress.city=City
 ShippingAddress.address1=Address
-ShippingAddress.postalCode=Postal
+ShippingAddress.postalCode=Postal code
+User.ID=User ID
 User.email=E-mail
 User.firstName=First name
 User.lastName=Last name
@@ -109,7 +111,7 @@ _livecart_users=Please select an user account
 _select_customer=Please select a customer account
 _cancel_editing_order_info=Done editing order
 _user_info=User info
-_is_canceled=Is canceled
+_is_canceled=Is cancelled
 _order_id=Order ID
 _is_finalized=Is finalized
 
@@ -117,7 +119,7 @@ _edit=Edit
 _view=View
 
 _are_you_sure_you_want_to_delete_this_order=Are you sure you want to delete this order?
-_are_you_sure_you_want_to_update_order_status=Are you sure you want to update order's status?
+_are_you_sure_you_want_to_update_order_status=Are you sure you want to update order status?
 
 _applied=Applied
 _cancelled=Cancelled

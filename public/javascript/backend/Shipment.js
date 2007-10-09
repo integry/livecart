@@ -115,11 +115,11 @@ Backend.OrderedItem = {
             reportValues['totalAmount'] += (parseFloat(shipmentReport.down('.shipment_total').down('.price').innerHTML) || 0);
         });
         
-        report.down('.orderShipment_report_subtotal').down('.price').innerHTML = Math.round(reportValues['subtotalAmount'] * 100) / 100;
-        report.down('.orderShipment_report_shippingAmount').down('.price').innerHTML = Math.round(reportValues['shippingAmount'] * 100) / 100;
-        report.down('.orderShipment_report_tax').down('.price').innerHTML = Math.round(reportValues['taxAmount'] * 100) / 100;
+        report.down('.orderShipment_report_subtotal').down('.price').innerHTML = Backend.Shipment.prototype.formatAmount(reportValues['subtotalAmount']);
+        report.down('.orderShipment_report_shippingAmount').down('.price').innerHTML = Backend.Shipment.prototype.formatAmount(reportValues['shippingAmount']);
+        report.down('.orderShipment_report_tax').down('.price').innerHTML = Backend.Shipment.prototype.formatAmount(reportValues['taxAmount']);
 		
-		var totalAmount = Math.round(reportValues['totalAmount'] * 100) / 100;
+		var totalAmount = Backend.Shipment.prototype.formatAmount(reportValues['totalAmount']);
         report.down('.orderShipment_report_total').down('.price').innerHTML = totalAmount;
 		
 		$("tabOrderInfo_" + id + "Content").down('.order_totalAmount').innerHTML = totalAmount;
@@ -134,7 +134,7 @@ Backend.OrderedItem = {
        var total = input.up('tr').down('.orderShipmentsItem_info_total').down('.price');
        
        // Recalculate item cost
-       total.innerHTML = Math.round(parseFloat(input.value) * parseFloat(price.innerHTML) * 100) / 100;
+       total.innerHTML = Backend.Shipment.prototype.formatAmount(parseFloat(input.value) * parseFloat(price.innerHTML));
    },
     
    changeProductCount: function(input, orderID, itemID, shipmentID)
@@ -495,7 +495,7 @@ Backend.Shipment.prototype =
                    
                    var priceTotal = li.down('.item_subtotal');
                    priceTotal.down('.pricePrefix').innerHTML = response.item.Shipment.prefix;
-                   priceTotal.down('.price').innerHTML = Math.round(response.item.price * response.item.count * 100) / 100;
+                   priceTotal.down('.price').innerHTML = Backend.Shipment.prototype.formatAmount(response.item.price * response.item.count);
                    priceTotal.down('.priceSuffix').innerHTML = response.item.Shipment.suffix;
                    
                    var countInput = li.down('.orderShipmentsItem_count');
@@ -570,15 +570,15 @@ Backend.Shipment.prototype =
                       
                        this.nodes.form.elements.namedItem('shippingServiceID').value = response.shipment.ShippingService.ID;
                        $("orderShipment_change_usps_" + this.nodes.form.elements.namedItem('ID').value).innerHTML = response.shipment.ShippingService.name_lang;
-                    
+                        
                        this.setAmount(response.shipment.amount);
                        this.setShippingAmount(response.shipment.shippingAmount);
                        this.setTaxAmount(response.shipment.taxAmount);
                        this.setTotal(response.shipment.total);
-                                           
+                                                                   
                        uspsLink.show();
                        usps.hide();   
-   
+
                        this.toggleStatuses();
                        ActiveList.prototype.highlight(this.nodes.root.down('fieldset'));
 					   
@@ -815,7 +815,7 @@ Backend.Shipment.prototype =
         {
             subtotal += parseFloat(itemSubtotal.down('.price').innerHTML);  
         });
-        this.nodes.root.down(".shipment_amount").down('price').innerHTML = Math.round(subtotal * 100) / 100;
+        this.nodes.root.down(".shipment_amount").down('price').innerHTML = this.formatAmount(subtotal);
         
         
         // Recalculate total
@@ -829,7 +829,7 @@ Backend.Shipment.prototype =
     
     setTotal: function(total)
     {
-        this.nodes.root.down(".shipment_total").down('.price').innerHTML = Math.round(total * 100) / 100;
+        this.nodes.root.down(".shipment_total").down('.price').innerHTML = this.formatAmount(total);
     },
     
     getTotal: function()
@@ -839,7 +839,7 @@ Backend.Shipment.prototype =
     
     setAmount: function(amount)
     {
-        this.nodes.root.down(".shipment_amount").down('.price').innerHTML = Math.round(amount * 100) / 100;
+        this.nodes.root.down(".shipment_amount").down('.price').innerHTML = this.formatAmount(amount);
     },
     
     getAmount: function()
@@ -849,7 +849,7 @@ Backend.Shipment.prototype =
     
     setTaxAmount: function(tax)
     {
-        this.nodes.root.down(".shipment_taxAmount").down('.price').innerHTML = Math.round(tax * 100) / 100;
+        this.nodes.root.down(".shipment_taxAmount").down('.price').innerHTML = this.formatAmount(tax);
     },
     
     getTaxAmount: function()
@@ -859,7 +859,23 @@ Backend.Shipment.prototype =
     
     setShippingAmount: function(shippingAmount)
     {
-        this.nodes.root.down(".shipment_shippingAmount").down('.price').innerHTML = Math.round(shippingAmount * 100) / 100;
+        this.nodes.root.down(".shipment_shippingAmount").down('.price').innerHTML = this.formatAmount(shippingAmount);
+    },
+    
+    formatAmount: function(amount)
+    {
+    	var i = parseFloat(amount);
+    	if(isNaN(i)) { i = 0.00; }
+    	var minus = '';
+    	if(i < 0) { minus = '-'; }
+    	i = Math.abs(i);
+    	i = parseInt((i + .005) * 100);
+    	i = i / 100;
+    	s = new String(i);
+    	if(s.indexOf('.') < 0) { s += '.00'; }
+    	if(s.indexOf('.') == (s.length - 2)) { s += '0'; }
+    	s = minus + s;
+    	return s;
     },
     
     getShippingAmount: function()

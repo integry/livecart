@@ -332,6 +332,12 @@ class CheckoutController extends FrontendController
             {
                 $form->set('shipping_' . $key, $shipment->getSelectedRate()->getServiceID());                
             }
+            
+            if (!$shipment->isShippable())
+            {
+                $download = $shipment;
+                $downloadIndex = $key;
+            }
         }
 
 		SessionOrder::save($this->order);
@@ -350,10 +356,19 @@ class CheckoutController extends FrontendController
 
         $response = new ActionResponse();
 
-        $response->set('shipments', $shipments->toArray());
+        $shipmentArray = $shipments->toArray();
+        
+        if (isset($download))
+        {
+            $response->set('download', $download->toArray());
+            unset($shipmentArray[$downloadIndex]);
+        }
+
+        $response->set('shipments', $shipmentArray);
         $response->set('rates', $rateArray);
 		$response->set('currency', $this->getRequestCurrency()); 
         $response->set('form', $form);
+                
         return $response;
     }
     
@@ -767,7 +782,7 @@ class CheckoutController extends FrontendController
             {
                 if (!$shipment->getSelectedRate() && $shipment->isShippable())
                 {
-					return new ActionRedirectResponse('checkout', 'shipping');
+                    return new ActionRedirectResponse('checkout', 'shipping');
                 }
             }
         }

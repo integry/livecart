@@ -31,7 +31,7 @@
             <td class="orderShipment_report_description">{t _subtotal_price}</td> 
             <td class="orderShipment_report_subtotal orderShipment_report_value"> 
                 <span class="pricePrefix">{$order.Currency.pricePrefix}</span> 
-                <span class="price">{$subtotalAmount}</span> 
+                <span class="price">{$subtotalAmount|string_format:"%.2f"}</span> 
                 <span class="priceSuffix">{$order.Currency.priceSuffix}</span> 
             </td> 
         </tr> 
@@ -39,7 +39,7 @@
             <td class="orderShipment_report_description">{t _shipping_price}</td>
             <td class="orderShipment_report_shippingAmount orderShipment_report_value"> 
                 <span class="pricePrefix">{$order.Currency.pricePrefix}</span>
-                <span class="price">{$shippingAmount}</span> 
+                <span class="price">{$shippingAmount|string_format:"%.2f"}</span> 
                 <span class="priceSuffix">{$order.Currency.priceSuffix}</span> 
             </td> 
         </tr> 
@@ -47,14 +47,14 @@
             <td class="orderShipment_report_description">{t _taxes}</td> 
             <td class="orderShipment_report_tax orderShipment_report_value">
                 <span class="pricePrefix">{$order.Currency.pricePrefix}</span> 
-                <span class="price">{$taxAmount}</span> <span class="priceSuffix">{$order.Currency.priceSuffix}</span>
+                <span class="price">{$taxAmount|string_format:"%.2f"}</span> <span class="priceSuffix">{$order.Currency.priceSuffix}</span>
             </td> 
         </tr> 
         <tr class="orderShipment_report_total"> 
             <td class="orderShipment_report_description">{t _total_price}</td>
             <td class="orderShipment_report_total orderShipment_report_value"> 
                 <span class="pricePrefix">{$order.Currency.pricePrefix}</span>
-                <span class="price">{$totalAmount}</span> 
+                <span class="price">{$totalAmount|string_format:"%.2f"}</span> 
                 <span class="priceSuffix">{$order.Currency.priceSuffix}</span> 
             </td> 
         </tr> 

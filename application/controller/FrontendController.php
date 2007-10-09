@@ -51,19 +51,19 @@ abstract class FrontendController extends BaseController
     }
 	
 	protected function addBreadCrumb($title, $url)
-	{		
+	{
 		$this->breadCrumb[] = array('title' => $title, 'url' => $url);
-	}	
+	}
 
 	protected function boxInformationMenuBlock()
-	{	 	
+	{
 		ClassLoader::import('application.model.staticpage.StaticPage');
         $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('StaticPage', 'isInformationBox'), true));
 		$f->setOrder(new ARFieldHandle('StaticPage', 'position'));
-		
-        $response = new BlockResponse();        
-		$response->set('pages', ActiveRecordModel::getRecordSet('StaticPage', $f)->toArray()); 
-		return $response; 	
+
+        $response = new BlockResponse();
+		$response->set('pages', ActiveRecordModel::getRecordSet('StaticPage', $f)->toArray());
+		return $response;
 	}
 
 	protected function boxShoppingCartBlock()
@@ -83,16 +83,21 @@ abstract class FrontendController extends BaseController
 		$returnRoute = $this->router->createUrlFromRoute($returnRoute);		
 		$returnRoute = $this->router->setUrlQueryParam($returnRoute, 'currency', '_curr_');
 
+        $current = $this->getRequestCurrency();
         $currencies = $this->application->getCurrencySet();        
         $currencyArray = array();
         foreach ($currencies as $currency)
         {
-            $currencyArray[$currency->getID()] = $currency->toArray();
-            $currencyArray[$currency->getID()]['url'] = str_replace('_curr_', $currency->getID(), $returnRoute);            
+            if ($currency->getID() != $current)
+            {
+                $currencyArray[$currency->getID()] = $currency->toArray();
+                $currencyArray[$currency->getID()]['url'] = str_replace('_curr_', $currency->getID(), $returnRoute);
+            }
         }
         
         $response = new BlockResponse();			  	        
-        $response->set('currencies', $currencyArray);        
+        $response->set('currencies', $currencyArray);
+        $response->set('current', $current);
         return $response;	  	
 	}
 
@@ -108,11 +113,14 @@ abstract class FrontendController extends BaseController
     	  	$returnRoute = substr($returnRoute, 3);
     	}
         
+        $response = new BlockResponse();
+        
         foreach ($languages as $key => $lang)
         {
             if ($lang['ID'] == $current)
             {
                 unset($languages[$key]);
+                $response->set('current', $lang);
             }   
             else
             {
@@ -126,7 +134,6 @@ abstract class FrontendController extends BaseController
             }
         }
 
-        $response = new BlockResponse();
         $response->set('languages', $languages);
         return $response;
 	}

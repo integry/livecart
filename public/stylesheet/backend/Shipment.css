@@ -138,12 +138,12 @@ li.orderShipment
 .orderShipmentsItem_info_price_td { width: 80px; text-align: center;}
 .orderShipmentsItem_info_price { width: 80px; text-align: center;  }
 
-.orderShipmentsItem_info_total_td { width: 80px; text-align: center; white-space: nowrap; }
+.orderShipmentsItem_info_total_td { width: 80px; text-align: right; white-space: nowrap; }
 .orderShipmentsItem_info_total { width: 80px; }
 
 .orderShipmentsItem_info_report_td { text-align: right; }
 
-.orderShipmentsItem_info_tax_td { width: 80px; text-align: center; white-space: nowrap;}
+.orderShipmentsItem_info_tax_td { width: 80px; text-align: right; white-space: nowrap;}
 .orderShipmentsItem_info_tax { width: 80px; }
 
 .orderShipmentsItem_info_count_td { width: 70px; }
@@ -200,7 +200,7 @@ li.orderShipment
 .orderShipmentsItem .activeList_icons
 {
     vertical-align: top;
-    padding-top: 10px;
+    padding-top: 10px !important;
     padding-right: 0px;
     display: inline;
     position: absolute;

@@ -1,4 +1,4 @@
-{if !$enabledTaxes}
+{if !$enabledTaxes && !$taxRates}
     <div class="noRecords"><div>{t _no_taxes} <a href="{link controller=backend.tax}" class="menu">{t _add_tax}</a></div></div>
 {else}
     {* upper menu *}

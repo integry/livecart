@@ -78,16 +78,9 @@ class ProductCount
 	
 	public function getCategoryProductCount()
 	{
-		if (!$this->productFilter->getFilterCount())	
-		{
-			return $this->productFilter->getCategory()->getActiveProductCount();
-		}
-		else
-		{
-			$filter = $this->productFilter->getSelectFilter();
-			$filter->joinTable('Category', 'Product', 'ID', 'categoryID');
-			return ActiveRecordModel::getRecordCount('Product', $filter);
-		}
+		$filter = $this->productFilter->getSelectFilter();
+		$filter->joinTable('Category', 'Product', 'ID', 'categoryID');
+		return ActiveRecordModel::getRecordCount('Product', $filter);
 	}
 	
 	public function getCountByPrices()

@@ -102,7 +102,8 @@ class ShipmentController extends StoreManagementController
         $shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->get('id'), true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
         $shipment->loadItems();
         $order = $shipment->order->get();
-        $zone = $shipment->order->get()->getDeliveryZone();        
+        $shipment->order->get()->loadAll();
+        $zone = $shipment->order->get()->getDeliveryZone(); 
         $shipmentRates = $zone->getShippingRates($shipment);
         
         $shipment->setAvailableRates($shipmentRates);
@@ -199,6 +200,7 @@ class ShipmentController extends StoreManagementController
             $shipment->order->get()->loadAll();
             
             $zone = $shipment->order->get()->getDeliveryZone();
+
             $shipmentRates = $zone->getShippingRates($shipment);
             $shipment->setAvailableRates($shipmentRates);
             
