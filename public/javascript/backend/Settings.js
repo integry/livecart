@@ -190,6 +190,8 @@ Backend.Settings.Editor.prototype =
 						[$('setting_SMTP_SERVER'), $('setting_SMTP_PORT'), $('setting_SMTP_USERNAME'), $('setting_SMTP_PASSWORD')].each(function(element) { if (display) { element.show(); } else {element.hide();} });
 					}
 			
+				change();
+			
 				$('SMTP_PASSWORD').type = 'password';
 				Event.observe($('EMAIL_METHOD'), 'change', change);
 			}

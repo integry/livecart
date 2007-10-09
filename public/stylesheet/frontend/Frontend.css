@@ -358,7 +358,7 @@ tr.even
     margin-bottom: 7px;
     
     padding-left: 20px;
-    background-image:url(../../image/silk/bullet_arrow_left.png);
+    background-image:url(../../image/silk/gif/bullet_arrow_left.gif);
     background-repeat: no-repeat;
     background-position: center left;
 }
@@ -1446,7 +1446,7 @@ ul#userMenu
     border-top: 1px solid #DDDDDD;
     padding-top: 10px;
     background-position: bottom left;
-    background-image: url(../../image/silk/package.png);
+    background-image: url(../../image/silk/gif/package.gif);
 }
 
 #userMenu li#addressMenu
@@ -1580,19 +1580,19 @@ div.orderStatus
 a.invoice, a.viewOrder, a.messages
 {
 	padding-left: 22px;
-	background-image: url(../../image/silk/printer.png);
+	background-image: url(../../image/silk/gif/printer.gif);
 	background-position: left center;
 	background-repeat: no-repeat;   
 }
 
 a.viewOrder
 {
-	background-image: url(../../image/silk/page_white_text.png);    
+	background-image: url(../../image/silk/gif/page_white_text.gif);    
 }
 
 a.messages
 {
-	background-image: url(../../image/silk/email.png);   
+	background-image: url(../../image/silk/gif/email.gif);   
 	color: red;
 }
 
@@ -1814,7 +1814,7 @@ form p
     vertical-align: middle;
     margin-left: 10px;
     padding-left: 20px;
-    background: url(../../image/silk/error.png) no-repeat left center;
+    background: url(../../image/silk/gif/error.gif) no-repeat left center;
     visibility: hidden;
     white-space: nowrap;
 }
@@ -1851,7 +1851,7 @@ legend
 label
 {
     float: left;
-    width: 12em;
+    width: 156px;
     cursor: pointer;
     padding-right: 6px;
     margin-top: 0;
@@ -1860,12 +1860,7 @@ label
 
 p.required label
 {
-    background-image: url(../../image/silk/bullet_black.png);
-    background-repeat: no-repeat;
-    background-position: center left;
-    margin-left: -22px;
-    padding-left: 22px;
-    width: 12em;
+	font-weight: bold;
 }
 
 p.radio, p.checkbox
