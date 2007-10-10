@@ -167,6 +167,10 @@ class PaypalDirectPayment extends CreditCardPayment
 	
 	public function getHandler($api)
 	{
+		$sandbox = substr($this->getConfigValue('username'), 0, 8) == 'sandbox_' ? 'sandbox.' : ''; 
+
+		PayPalBase::$isLive = !$sandbox;
+
 		return PaypalCommon::getHandler($this, $api);
 	}
 }

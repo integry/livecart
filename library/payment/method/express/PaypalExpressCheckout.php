@@ -13,16 +13,17 @@ class PaypalExpressCheckout extends ExpressPayment
 	protected $data;
 	
     public function getInitUrl($returnUrl, $cancelUrl, $sale = true)
-	{
-        $paypal = $this->getHandler('SetExpressCheckout');
+	{        		
+		$sandbox = substr($this->getConfigValue('username'), 0, 8) == 'sandbox_' ? 'sandbox.' : ''; 
+		
+		$paypal = $this->getHandler('SetExpressCheckout');
         $paypal->setParams($this->details->amount->get(), $returnUrl, $cancelUrl, $sale ? 'Sale' : 'Order');
         $paypal->execute();
 
         $this->checkErrors($paypal);
 
     	$response = $paypal->getAPIResponse();
-        $sandbox = substr($this->getConfigValue('username'), 0, 8) == 'sandbox_' ? 'sandbox.' : '';        
-        return 'Location: https://www.' . $sandbox . 'paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $response->Token;
+        return 'https://www.' . $sandbox . 'paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $response->Token;
     }
     
     public function setData($data)
@@ -221,6 +222,10 @@ class PaypalExpressCheckout extends ExpressPayment
 	
 	public function getHandler($api)
 	{
+		$sandbox = substr($this->getConfigValue('username'), 0, 8) == 'sandbox_' ? 'sandbox.' : ''; 
+
+		PayPalBase::$isLive = !$sandbox;
+		
 		return PaypalCommon::getHandler($this, $api);
 	}
 }

@@ -120,7 +120,9 @@ class CheckoutController extends FrontendController
         $returnUrl = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'expressReturn', 'id' => $class)));
         $cancelUrl = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'order')));
                 
-        return new RedirectResponse($handler->getInitUrl($returnUrl, $cancelUrl, !$handler->getConfigValue('AUTHONLY')));
+        $url = $handler->getInitUrl($returnUrl, $cancelUrl, !$handler->getConfigValue('AUTHONLY'));
+                
+        return new RedirectResponse($url);
     }
     
     public function expressReturn()
