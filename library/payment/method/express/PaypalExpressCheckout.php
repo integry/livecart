@@ -41,11 +41,12 @@ class PaypalExpressCheckout extends ExpressPayment
 
         $response = $paypal->getAPIResponse();
         $info = $response->GetExpressCheckoutDetailsResponseDetails->PayerInfo;
+
         $valueMap = array(
         
         		'firstName' => $info->PayerName->FirstName,
         		'lastName' => $info->PayerName->LastName,
-        		'companyName' => $info->PayerBusiness,
+        		'companyName' => isset($info->PayerBusiness) ? $info->PayerBusiness : '',
         		
         		'address' => $info->Address->Street1 . ($info->Address->Street2 ? ', ' . $info->Address->Street2 : ''),
         		'city' => $info->Address->CityName,

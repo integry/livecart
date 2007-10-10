@@ -16,7 +16,7 @@
 
     <div id="userContent">
     
-    <fieldset class="container" style=" float: left;">
+    <fieldset class="container" style="float: left;">
 
         {if $notes}    	
             <h2>{t _unread_msg}</h2>    
@@ -52,6 +52,8 @@
         {/if}
     
     </fieldset>
+
+    <div class="clear"></div>
     
     </div>
     
