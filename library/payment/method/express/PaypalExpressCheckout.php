@@ -14,7 +14,7 @@ class PaypalExpressCheckout extends ExpressPayment
 	
     public function getInitUrl($returnUrl, $cancelUrl, $sale = true)
 	{        		
-		$sandbox = substr($this->getConfigValue('username'), 0, 8) == 'sandbox_' ? 'sandbox.' : ''; 
+		$sandbox = $this->getConfigValue('sandbox') ? 'sandbox.' : '';
 		
 		$paypal = $this->getHandler('SetExpressCheckout');
         $paypal->setParams($this->details->amount->get(), $returnUrl, $cancelUrl, $sale ? 'Sale' : 'Order');
@@ -222,9 +222,7 @@ class PaypalExpressCheckout extends ExpressPayment
 	
 	public function getHandler($api)
 	{
-		$sandbox = substr($this->getConfigValue('username'), 0, 8) == 'sandbox_' ? 'sandbox.' : ''; 
-
-		PayPalBase::$isLive = !$sandbox;
+		PayPalBase::$isLive = !$this->getConfigValue('sandbox');
 		
 		return PaypalCommon::getHandler($this, $api);
 	}

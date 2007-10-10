@@ -94,17 +94,24 @@ class CustomerOrderController extends StoreManagementController
         {
             $order->user->get()->loadAddresses();
 
-            $shippingStates = State::getStatesByCountry($order->user->get()->defaultShippingAddress->get()->userAddress->get()->countryID->get());
+            if ($order->user->get()->defaultShippingAddress->get())
+            {
+                $shippingStates = State::getStatesByCountry($order->user->get()->defaultShippingAddress->get()->userAddress->get()->countryID->get());                
+	           $orderArray['ShippingAddress'] = $order->user->get()->defaultShippingAddress->get()->userAddress->get()->toArray();
+            }
+
             $shippingStates[''] = '';
 
-            $billingStates = State::getStatesByCountry($order->user->get()->defaultBillingAddress->get()->userAddress->get()->countryID->get());
+            if ($order->user->get()->defaultBillingAddress->get())
+            {
+                $billingStates = State::getStatesByCountry($order->user->get()->defaultBillingAddress->get()->userAddress->get()->countryID->get());
+	           $orderArray['BillingAddress'] = $order->user->get()->defaultBillingAddress->get()->userAddress->get()->toArray();                
+            }
+            
             $billingStates[''] = '';
 
 	        $response->set('shippingStates',  $shippingStates);
 	        $response->set('billingStates',  $billingStates);
-
-	        $orderArray['BillingAddress'] = $order->user->get()->defaultBillingAddress->get()->userAddress->get()->toArray();
-	        $orderArray['ShippingAddress'] = $order->user->get()->defaultShippingAddress->get()->userAddress->get()->toArray();
         }
         
 	    $response->set('order', $orderArray);
