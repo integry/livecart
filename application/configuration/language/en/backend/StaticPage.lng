@@ -9,9 +9,9 @@ _static_pages=Static Pages
 
 _add_new=Add new page
 _show_template_code=Show template code
-_move_up=Move selected up
-_move_down=Move selected down
-_remove=Remove selected page 
+_move_up=Move up
+_move_down=Move down
+_remove=Remove
 
 # Edit page
 

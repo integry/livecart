@@ -4,6 +4,11 @@
 	padding-left: 0;
 }
 
+.containerTableStyle, #pageBrowser
+{
+    height: 250px;
+}
+
 #pageBrowser .containerTableStyle table
 {
     margin-left: -5px !important; 

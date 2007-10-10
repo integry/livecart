@@ -18,9 +18,6 @@
 
 {includeCss file="backend/Backend.css"}
 
-{includeJs file="backend/CustomerOrder.js"}
-{includeCss file="backend/CustomerOrder.css"}
-
 {includeJs file="backend/Shipment.js"}
 {includeCss file="backend/Shipment.css"}
 
@@ -34,6 +31,9 @@
 {includeCss file="backend/OrderNote.css"}
 
 {includeCss file="backend/OrderLog.css"}
+
+{includeJs file="backend/CustomerOrder.js"}
+{includeCss file="backend/CustomerOrder.css"}
 
 {pageTitle help="order"}{t _livecart_orders}{/pageTitle}
 {include file="layout/backend/header.tpl"}

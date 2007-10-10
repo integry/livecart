@@ -52,7 +52,7 @@ _group_info=Group details
 _default_user_group=Customers
 _all_users=All users
 _add_group=Add user group
-_delete_group=Delete user group
+_delete_group=Delete
 
 _err_email_empty=E-mail field is empty
 _err_invalid_email=Invalid e-mail

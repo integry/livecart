@@ -1,3 +1,8 @@
+.containerTableStyle
+{
+    height: 250px;
+}
+
 #loadingUser
 {
 	position: absolute; 
