@@ -18,10 +18,10 @@
     }
     {/literal}
 	lng.setFormUrl('{link controller=backend.language action=addForm}');
-	lng.setStatusUrl("{link controller=backend.language action=setEnabled}/");
+	lng.setStatusUrl("{link controller=backend.language action=setEnabled}");
 	lng.setEditUrl("{link controller=backend.language action=edit}");
-	lng.setSortUrl("{link controller=backend.language action=saveorder}/");
-	lng.setDeleteUrl("{link controller=backend.language action=delete}/");
+	lng.setSortUrl("{link controller=backend.language action=saveorder}");
+	lng.setDeleteUrl("{link controller=backend.language action=delete}");
 	lng.setDelConfirmMsg('{t _confirm_delete}');
     
 </script>

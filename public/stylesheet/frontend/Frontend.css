@@ -1181,6 +1181,7 @@ div.checkout a
     text-align: center;
     padding-top: 1em;
     float: right;    
+	height: 3em;
 }
 
 #checkoutProgress a
@@ -1199,8 +1200,8 @@ div.checkout a
 .shippingSelected,
 .addressSelected
 {
-    border: 3px solid lightgreen !important;            
-    background-color: #FFFCAC !important;
+    border: 3px solid lightblue !important;            
+    background-color: #f8f8f8 !important;
 }
 
 /* current step */
@@ -1210,7 +1211,7 @@ div.checkout a
 .progressShipping #progressShipping        
 {
     border: 3px solid lightblue !important;
-    background-color: yellow !important;
+    background-color: #FFFCBB !important;
 }
 
 .progressOrder

@@ -16,16 +16,16 @@
 
     <div id="userContent">
     
-    <fieldset class="container">
+    <fieldset class="container" style=" float: left;">
 
         {if $notes}    	
             <h2>{t _unread_msg}</h2>    
-           <ul class="notes">
-        	   {foreach from=$notes item=note}
+            <ul class="notes">
+        	    {foreach from=$notes item=note}
         	       <a href="{link controller=user action=viewOrder id=`$note.orderID`}#msg">{t _order} #{$note.orderID}</a>
                    {include file="user/orderNote.tpl" note=$note}
-        	   {/foreach}
-    	   </ul>
+        	    {/foreach}
+    	    </ul>
     	{/if}
     
         {if $files}

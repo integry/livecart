@@ -255,19 +255,14 @@ class UserController extends StoreManagementController
 			{
 			    $user = User::getNewInstance($email, $password, $group);
 			}
-			
-			$user->lastName->set($lastName);
-			$user->firstName->set($firstName);
-			
+						
 			if(!empty($password))
 			{
 			    $user->setPassword($password);
 			}
 			
-			$user->companyName->set($companyName);
-			$user->email->set($email);
-			$user->userGroup->set($group);
-			
+			$user->loadRequestData($this->request);
+
 			$user->save();
 			
 			$this->saveAddresses($user);

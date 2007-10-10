@@ -20,12 +20,12 @@ function smarty_function_img($params, LiveCartSmarty $smarty)
         }
     }
     
-    $content = "\n<img ";
+    $content = "<img ";
     foreach($params as $name => $value)
     {
         $content .= $name . '="' . $value . '" ';
     }
-    $content .= "/>\n";
+    $content .= "/>";
     
     return $content;
 }

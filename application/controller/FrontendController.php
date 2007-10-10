@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import("application.controller.BaseController");
+ClassLoader::import("application.model.Currency");
 
 /**
  * Base class for all front-end related controllers
