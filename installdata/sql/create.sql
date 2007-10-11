@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2007-09-16 23:19                                #
+# Created on:            2007-10-12 02:53                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -642,7 +642,7 @@ CREATE TABLE DeliveryZone (
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE DeliveryZoneCountry (
-    ID INTEGER UNSIGNED NOT NULL,
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     deliveryZoneID INTEGER UNSIGNED COMMENT 'ID of the referenced DeliveryZone',
     countryCode CHAR(2) NOT NULL COMMENT '2-letter country code',
     CONSTRAINT PK_DeliveryZoneCountry PRIMARY KEY (ID)
@@ -698,7 +698,6 @@ CREATE TABLE DeliveryZoneAddressMask (
 
 CREATE TABLE Tax (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    isEnabled BOOL NOT NULL COMMENT 'Determines whether the particular Tax is enabled',
     name MEDIUMTEXT COMMENT 'Tax name (translatable). For example, "VAT"',
     position INTEGER UNSIGNED DEFAULT 0,
     CONSTRAINT PK_Tax PRIMARY KEY (ID)
@@ -752,7 +751,7 @@ CREATE TABLE ProductFileGroup (
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE ShippingService (
-    ID INTEGER UNSIGNED NOT NULL,
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     deliveryZoneID INTEGER UNSIGNED COMMENT 'ID of the referenced DeliveryZone',
     name MEDIUMTEXT COMMENT 'Service name (translatable). For example, "Next Day Delivery"',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other ShippingServices',
@@ -899,10 +898,10 @@ ALTER TABLE OrderedItem ADD CONSTRAINT Shipment_OrderedItem
     FOREIGN KEY (shipmentID) REFERENCES Shipment (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE User ADD CONSTRAINT ShippingAddress_User 
-    FOREIGN KEY (defaultShippingAddressID) REFERENCES ShippingAddress (ID) ON DELETE SET NULL;
+    FOREIGN KEY (defaultShippingAddressID) REFERENCES ShippingAddress (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE User ADD CONSTRAINT BillingAddress_User 
-    FOREIGN KEY (defaultBillingAddressID) REFERENCES BillingAddress (ID) ON DELETE SET NULL;
+    FOREIGN KEY (defaultBillingAddressID) REFERENCES BillingAddress (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE User ADD CONSTRAINT UserGroup_User 
     FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID) ON DELETE SET NULL ON UPDATE CASCADE;
@@ -941,7 +940,7 @@ ALTER TABLE ProductFile ADD CONSTRAINT Product_ProductFile
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductFile ADD CONSTRAINT ProductFileGroup_ProductFile 
-    FOREIGN KEY (productFileGroupID) REFERENCES ProductFileGroup (ID) ON DELETE CASCADE;
+    FOREIGN KEY (productFileGroupID) REFERENCES ProductFileGroup (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Discount ADD CONSTRAINT Product_Discount 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -983,10 +982,10 @@ ALTER TABLE UserAddress ADD CONSTRAINT State_UserAddress
     FOREIGN KEY (stateID) REFERENCES State (ID) ON DELETE SET NULL;
 
 ALTER TABLE BillingAddress ADD CONSTRAINT User_BillingAddress 
-    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
+    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE BillingAddress ADD CONSTRAINT UserAddress_BillingAddress 
-    FOREIGN KEY (userAddressID) REFERENCES UserAddress (ID) ON DELETE CASCADE;
+    FOREIGN KEY (userAddressID) REFERENCES UserAddress (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Transaction ADD CONSTRAINT CustomerOrder_Transaction 
     FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE;
@@ -1004,10 +1003,10 @@ ALTER TABLE Shipment ADD CONSTRAINT ShippingService_Shipment
     FOREIGN KEY (shippingServiceID) REFERENCES ShippingService (ID) ON DELETE SET NULL;
 
 ALTER TABLE ShippingAddress ADD CONSTRAINT User_ShippingAddress 
-    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
+    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ShippingAddress ADD CONSTRAINT UserAddress_ShippingAddress 
-    FOREIGN KEY (userAddressID) REFERENCES UserAddress (ID) ON DELETE CASCADE;
+    FOREIGN KEY (userAddressID) REFERENCES UserAddress (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE OrderNote ADD CONSTRAINT CustomerOrder_OrderNote 
     FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1043,7 +1042,7 @@ ALTER TABLE ShippingRate ADD CONSTRAINT ShippingService_ShippingRate
     FOREIGN KEY (shippingServiceID) REFERENCES ShippingService (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductFileGroup ADD CONSTRAINT Product_ProductFileGroup 
-    FOREIGN KEY (productID) REFERENCES Product (ID);
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ShippingService ADD CONSTRAINT DeliveryZone_ShippingService 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
