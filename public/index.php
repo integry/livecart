@@ -24,9 +24,27 @@
 	
 	function runApp(LiveCart $app)
 	{
-        try
+        static $attempts = 0;
+        
+		// check if we're not getting into an endless loop
+		if (++$attempts > 5)
+		{
+			try 
+			{
+				$app->run();
+			}
+			catch (Exception $e)
+			{
+    			echo "<br/><strong>" . get_class($e) . " ERROR:</strong> " . $e->getMessage()."\n\n";			
+    			echo "<br /><strong>FILE TRACE:</strong><br />\n\n";
+    			echo ApplicationException::getFileTrace($e->getTrace());
+    			exit;
+			}			
+		}		
+
+		try
     	{
-    		$app->run();
+			$app->run();
     	}
     	catch (HTTPStatusException $e)
     	{

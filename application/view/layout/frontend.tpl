@@ -17,7 +17,7 @@
                 {$lastBreadcrumb.title}
             {/if}
         {/if}
-        - LiveCart Demo
+        - {'STORE_NAME'|config}
     </title>
 	<base href="{baseUrl}"></base>
 	{liveCustomization}    

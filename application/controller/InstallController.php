@@ -105,6 +105,9 @@ class InstallController extends FrontendController
             // create root category
             Installer::loadDatabaseDump(file_get_contents(ClassLoader::getRealPath('installdata.sql') . '/initialData.sql'));
 		            
+		    // load US states
+            Installer::loadDatabaseDump(file_get_contents(ClassLoader::getRealPath('installdata.sql.state') . '/US.sql'));
+		            
             ActiveRecord::commit();
         	
 			return new ActionRedirectResponse('install', 'admin');
@@ -255,8 +258,9 @@ class InstallController extends FrontendController
         ClassLoader::import('application.model.sitenews.NewsPost');		
 		$news = ActiveRecordModel::getNewInstance('NewsPost');
 		$news->setValueByLang('title', $language->getID(), 'Our store is open');
-		$news->setValueByLang('text', $language->getID(), 'Powered by LiveCart software we have gone live!');
+		$news->setValueByLang('text', $language->getID(), 'Powered by LiveCart software, we have gone live! Of course, we will have to go to <a href="backend">the backend area</a> and add some categories and products first...');
 		$news->setValueByLang('moreText', $language->getID(), 'Do not forget to delete this post when you actually go live :)');
+		$news->isEnabled->set(true);
 		$news->save();
 
         return new ActionRedirectResponse('install', 'finish');
