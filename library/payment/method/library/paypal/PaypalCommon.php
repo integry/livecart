@@ -133,7 +133,7 @@ class PaypalCommon
 			
 				$result->gatewayTransactionID->set($details->TransactionID);
 				$result->amount->set($details->GrossAmount);
-				$result->currency->set($details->GrossAmount->currencyID);
+				$result->currency->set($response->Currency);
 
 				$result->rawResponse->set($response);
                 $result->setTransactionType(TransactionResult::TYPE_CAPTURE);

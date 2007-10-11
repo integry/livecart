@@ -15,6 +15,7 @@ class TestPaypalDirectPayment extends PaymentTest
 	private function getPaymentHandler()
 	{
 		$payment = new PaypalDirectPayment($this->details);
+		$payment->setConfigValue('sandbox', '1');
 		$payment->setConfigValue('username', 'sandbox_api1.integry.net');
 		$payment->setConfigValue('password', '9AURF7SPQCEYCDXV');
 		$payment->setConfigValue('signature', 'AeQ618dBMNS1kVFZwUIitcve-k.dAT5pnzBekoPUhcIj1J5p65ZAR8Pu');
