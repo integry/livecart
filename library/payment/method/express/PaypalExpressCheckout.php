@@ -188,7 +188,7 @@ class PaypalExpressCheckout extends ExpressPayment
                 $result = new TransactionResult();
 
 				$result->gatewayTransactionID->set($response->TransactionID);
-				$result->amount->set($response->GrossAmount->_);
+				$result->amount->set($response->GrossAmount);
 				$result->currency->set($response->GrossAmount->currencyID);
 								
 				$result->rawResponse->set($response);

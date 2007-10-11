@@ -126,7 +126,7 @@ class PaypalDirectPayment extends CreditCardPayment
 			{
 				$result = new TransactionResult();
 				$result->gatewayTransactionID->set($response->TransactionID);
-				$result->amount->set($response->Amount->_);
+				$result->amount->set($response->Amount);
 				$result->currency->set($response->Amount->currencyID);
 				
 				$avs = PaypalCommon::getAVSbyCode($response->AVSCode);
