@@ -161,8 +161,9 @@ function smarty_block_form(&$params, $content, $smarty, &$repeat)
 	        $params['method'] = strtolower($params['method']);
 	    }
 	
-	    $formAttributes ="";
-		foreach ($params as $param => $value)
+	    $formAttributes = "";
+		unset($params['readonly']);
+        foreach ($params as $param => $value)
 		{
 			$formAttributes .= $param . '="' . $value . '" ';
 		}

@@ -19,7 +19,7 @@
         {/if}
         - LiveCart Demo
     </title>
-	<base href="{baseUrl}" />
+	<base href="{baseUrl}"></base>
 	{liveCustomization}    
 	
 	<!-- Css includes -->

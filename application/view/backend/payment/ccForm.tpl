@@ -85,7 +85,6 @@
 </p>
 
 <fieldset class="controls">
-    <label></label>
     <span class="progressIndicator" style="display: none;"></span>
     <input type="submit" class="submit" value="{tn _process}" />
     {t _or} <a href="#cancel" onclick="window.close(); return false;" class="cancel">{t _cancel}</a>

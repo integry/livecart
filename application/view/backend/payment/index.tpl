@@ -29,7 +29,6 @@
                 </p>        
         
                 <fieldset class="controls" style="margin-right: 40px;">
-                    <label></label>
                     <span class="progressIndicator" style="display: none;"></span>
                     <input type="submit" class="submit" value="{tn _add_payment}" />
                     {t _or} <a class="cancel offlinePaymentCancel" href="#">{t _cancel}</a>

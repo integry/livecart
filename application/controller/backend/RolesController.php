@@ -36,6 +36,11 @@ class RolesController extends StoreManagementController
         {
             $roleArray = $role->toArray();
             
+            if ('login' == $roleArray['name'])
+            {
+                continue;
+            }
+            
             $roleArray['indent'] = strpos($roleArray['name'], '.') ? 1 : 0;
             if($roleArray['indent'] > 0)
             {
@@ -136,8 +141,7 @@ class RolesController extends StoreManagementController
 	
 	private function createRolesFormValidator(UserGroup $userGroup)
 	{	
-		$validator = new RequestValidator('roles_' . $userGroup->getID(), $this->request);
-		return $validator;
+		return new RequestValidator('roles_' . $userGroup->getID(), $this->request);
 	}	
 
 }

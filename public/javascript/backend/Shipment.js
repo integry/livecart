@@ -865,7 +865,7 @@ Backend.Shipment.prototype =
     formatAmount: function(amount)
     {
     	var i = parseFloat(amount);
-    	if(isNaN(i)) { i = 0.00; }
+    	if(isNaN(i)) { return '0.00'; }
     	var minus = '';
     	if(i < 0) { minus = '-'; }
     	i = Math.abs(i);
