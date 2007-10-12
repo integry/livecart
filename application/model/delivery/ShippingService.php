@@ -202,5 +202,15 @@ class ShippingService extends MultilingualObject
         
         return ShipmentDeliveryRate::getNewInstance($this, $maxRate);
     }	
+    
+    public function save()
+    {
+		if ($this->deliveryZone->get() && (0 == $this->deliveryZone->get()->getID()))
+		{
+			$this->deliveryZone->set(null);
+		}
+		
+		return parent::save();
+	}
 }
 ?>

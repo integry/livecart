@@ -248,7 +248,8 @@ class InstallController extends FrontendController
 		$service = ShippingService::getNewInstance(DeliveryZone::getDefaultZoneInstance(), 'Default Service', ShippingService::SUBTOTAL_BASED);
         $service->save();
      
-     	$rate = ShippingRate::getNewInstance($service, 0, 10000000);
+     	$rate = ShippingRate::getNewInstance($service, 0, 100000);
+     	$rate->flatCharge->set(10);
      	$rate->save();
      
         // create a couple of blank static pages
