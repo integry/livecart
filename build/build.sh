@@ -36,6 +36,8 @@ cp .version /home/livecart/public_html/update/.version
 rm -rf build
 rm -rf doc
 rm -rf storage/configuration/database.php
+rm -rf library/payment/test/simpletest
+rm -rf library/payment/test/unittest
 
 # commit changes
 hg addremove
@@ -52,15 +54,17 @@ rm -rf .hg*
 rm -rf .snap
 
 mkdir cache
+rm -rf storage
 mkdir storage
 mkdir public/cache
+mkdir public/upload
 
 # create package files
-TAR=$PACKAGE/$VERSION.tar
+TAR=$PACKAGE/livecart-$VERSION.tar
 rm -rf $TAR.gz
-tar cf $TAR *
+tar cf $TAR .
 gzip -9 $TAR
 
-ZIP=$PACKAGE/$VERSION.zip
+ZIP=$PACKAGE/livecart-$VERSION.zip
 rm -rf $ZIP
-zip -rq $ZIP *
+zip -rq $ZIP .
