@@ -241,8 +241,6 @@ class UserController extends StoreManagementController
 		    {
 		        return new JSONResponse(false, 'failure', $this->translate('_err_this_email_is_already_being_used_by_other_user'));
 		    }
-		    
-			$user->loadRequestData($this->request);
 			
 		    if($groupID = (int)$this->request->get('UserGroup'))
 		    {
@@ -257,11 +255,13 @@ class UserController extends StoreManagementController
 			{
 			    $user = User::getNewInstance($email, $password, $group);
 			}
-			else if ($group)
-			{
+		
+            $user->loadRequestData($this->request);
+            if ($group)
+            {
                 $user->userGroup->set($group);
-            }
-						
+            }        
+        				
 			if(!empty($password))
 			{
 			    $user->setPassword($password);
