@@ -240,6 +240,17 @@ class InstallController extends FrontendController
         $root->setValueByLang('name', $language->getID(), 'LiveCart');
         $root->save();
      
+     	// create a default shipping service
+        ClassLoader::import('application.model.delivery.DeliveryZone');
+        ClassLoader::import('application.model.delivery.ShippingService');
+        ClassLoader::import('application.model.delivery.ShippingRate');
+        
+		$service = ShippingService::getNewInstance(DeliveryZone::getDefaultZoneInstance(), 'Default Service', ShippingService::SUBTOTAL_BASED);
+        $service->save();
+     
+     	$rate = ShippingRate::getNewInstance($service, 0, 10000000);
+     	$rate->save();
+     
         // create a couple of blank static pages
         ClassLoader::import('application.model.staticpage.StaticPage');
         $page = StaticPage::getNewInstance();
@@ -258,7 +269,7 @@ class InstallController extends FrontendController
         ClassLoader::import('application.model.sitenews.NewsPost');		
 		$news = ActiveRecordModel::getNewInstance('NewsPost');
 		$news->setValueByLang('title', $language->getID(), 'Our store is open');
-		$news->setValueByLang('text', $language->getID(), 'Powered by LiveCart software, we have gone live! Of course, we will have to go to <a href="backend">the backend area</a> and add some categories and products first...');
+		$news->setValueByLang('text', $language->getID(), 'Powered by LiveCart software, we have gone live! Of course, we will have to go to <a href="../backend">the backend area</a> and add some categories and products first...');
 		$news->setValueByLang('moreText', $language->getID(), 'Do not forget to delete this post when you actually go live :)');
 		$news->isEnabled->set(true);
 		$news->save();

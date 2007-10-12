@@ -24,8 +24,8 @@
 {literal}
 <script type="text/jscript">
 
-    Backend.DeliveryZone.TaxRate.prototype.Messages.weightBasedRates = '{/literal}_weight_based_rates{literal}';
-    Backend.DeliveryZone.TaxRate.prototype.Messages.subtotalBasedRates = '{/literal}_subtotal_based_rates{literal}';
+    Backend.DeliveryZone.TaxRate.prototype.Messages.weightBasedRates = '{/literal}{t _weight_based_rates}{literal}';
+    Backend.DeliveryZone.TaxRate.prototype.Messages.subtotalBasedRates = '{/literal}{t _subtotal_based_rates}{literal}';
 
     Event.observe($("shippingService_new_{/literal}{$deliveryZone.ID}{literal}_show"), "click", function(e) 
     {

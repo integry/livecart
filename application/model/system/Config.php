@@ -93,6 +93,11 @@ class Config
 
 	public function set($key, $value)
 	{
+		if (is_numeric($value))
+		{
+			$value = (float)$value;
+		}
+	
 		$this->values[$key] = $value;
 		
 		if ($this->autoSave)
@@ -152,7 +157,7 @@ class Config
                         $value['value'] = array($this->application->getDefaultLanguageCode() => substr($value['value'], 1)); 
                     }
                     
-                    $this->values[$key] = $value['value'];
+                    $this->set($key, $value['value']);
 				}	
 			}
 		}

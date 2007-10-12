@@ -15,7 +15,7 @@ $stat = new Stat(true);
 
 // check writability of temporary directories
 $writeFail = array();
-foreach (array('cache', 'storage') as $dir)
+foreach (array('cache', 'storage', 'public.cache', 'public.upload') as $dir)
 {
 	$file = ClassLoader::getRealPath($dir) . '/.writeTest';
 	if (!file_exists($file))
@@ -24,6 +24,12 @@ foreach (array('cache', 'storage') as $dir)
 		{
 			$writeFail[] = $file;
 		}
+	}
+	
+	// do not check the public directories if cache and storage are OK
+	if (('storage' == $dir) && !$writeFail)
+	{
+		break;
 	}
 }
 
