@@ -1,4 +1,4 @@
-{form id="roles_form_`$userGroup.ID`" handle=$form action="controller=backend.roles action=update id=`$userGroup.ID`" onsubmit="Backend.Roles.prototype.getInstance('roles_form_`$userGroup.ID`').save(event);" method="post" role="userGroup.update"}
+{form id="roles_form_`$userGroup.ID`" handle=$form action="controller=backend.roles action=update id=`$userGroup.ID`" onsubmit="Backend.Roles.prototype.getInstance('roles_form_`$userGroup.ID`').save(event);" method="post" role="userGroup.permissions"}
     
     <fieldset class="error">
         {checkbox name="setAllPermissions" class="checkbox setAllPermissions" id="roles_setAllPermissions_`$userGroup.ID`"}
@@ -22,7 +22,7 @@
     Backend.Roles.prototype.Links.xmlBranch  = '{link controller=backend.roles action=xmlBranch}';
     var roles = Backend.Roles.prototype.getInstance('roles_form_{$userGroup.ID}', {json array=$roles}, {json array=$activeRolesIDs});
 
-{denied role="userGroup.update"}{literal}
+{denied role="userGroup.permissions"}{literal}
     $A($("{/literal}userGroupsRolesTree_{$userGroup.ID}{literal}").getElementsByTagName('img')).each(function(img)
     {
         img.onclick = function() { return false; };

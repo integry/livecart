@@ -91,7 +91,7 @@ class RolesController extends StoreManagementController
 	/**
 	 * Saves changes to current group roles
 	 * 
-	 * @role update
+	 * @role permissions
 	 */
     public function update()
     {

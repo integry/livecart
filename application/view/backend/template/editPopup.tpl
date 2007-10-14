@@ -28,8 +28,8 @@
 	
 	<fieldset class="controls">
 		{hidden name="file" id="file"}
-		
-		<div style="float: left;">
+				
+		<div style="float: left;{denied role="template.save"} display: none;{/denied}">
 			<span class="progressIndicator" style="display: none;"></span>
 			<input type="submit" class="submit" value="{tn _save_template}" /> 
 			{t _or} 
@@ -51,6 +51,7 @@
 	</fieldset>
 	
 {/form}
+
 
 {literal}
 	<script type="text/javascript">

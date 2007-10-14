@@ -51,6 +51,9 @@ class TemplateController extends StoreManagementController
 	   return $this->edit();
     }
 	
+	/**
+	 * @role save
+	 */
 	public function save()
 	{
 		$code = $this->request->get('code');
