@@ -75,9 +75,7 @@ abstract class CreditCardPayment extends OnlinePayment
 	
 	public function toArray()
 	{
-		$ret = array();
-		$ret['type'] = 'CC';		
-		return $ret;
+		return array('type' => 'CC');
 	}
 	
 	/**

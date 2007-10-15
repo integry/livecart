@@ -152,17 +152,17 @@ div.confirmationMsg div
 {
 	margin-left: 190px;
 	padding: 10px;
-	padding-top: 0px;
+	padding-top: 0;
 }
 
 #content.left
 {
-	margin-left: 0px;
+	margin-left: 0;
 }
 
 #content.right
 {
-	margin-right: 0px;
+	margin-right: 0;
 }
 
 /*****************************
@@ -172,7 +172,7 @@ div.confirmationMsg div
 {
 /*    border-top: 1px solid #CCCCCC;   */
     padding-top: 6px;
-  	padding-bottom: 0px;    
+  	padding-bottom: 0;    
 }
 
 #storeName
@@ -302,7 +302,7 @@ tr.even
 .quickSearch select
 {
     width: auto;
-    padding-left: 0px;
+    padding-left: 0;
 }
 
 /*****************************
@@ -310,8 +310,8 @@ tr.even
 *****************************/
 .categories ul
 {
-    margin-left: 0px; 
-    padding-left: 0px;   
+    margin-left: 0; 
+    padding-left: 0;   
 }
 
 .categories .content
@@ -342,14 +342,14 @@ tr.even
 {
     list-style-type: disc;   
     margin-top: 8px;
-    margin-left: 0px;
+    margin-left: 0;
     padding-left: 12px;
 }
 
 .current ul, .subSubCats
 {
-    margin-left: 0px !important;    
-    padding-left: 0px !important;
+    margin-left: 0 !important;    
+    padding-left: 0 !important;
 }
 
 .current ul li, .subSubCats li
@@ -701,7 +701,7 @@ li.moreSubCats
 .resultStats
 {
     padding: 10px; 
-    padding-top: 0px;
+    padding-top: 0;
     padding-bottom: 5px; 
     margin-bottom: 15px; 
     border-bottom: 1px solid #CCCCCC;    
@@ -825,7 +825,7 @@ ul.productList .orderingControls
 .returnToCategory
 {
 	padding: 10px; 
-	padding-left: 0px;
+	padding-left: 0;
 }
 
 .returnToCategory a
@@ -835,7 +835,7 @@ ul.productList .orderingControls
     background-position: center left;
     padding-left: 22px;    
     list-style-type: none;
-    margin-left: 0px;	
+    margin-left: 0;	
 }
 
 .specSummary
@@ -927,7 +927,7 @@ ul.attributeList li
     background-position: center left;
     padding-left: 22px;    
     list-style-type: none;
-    margin-left: 0px;
+    margin-left: 0;
 }
 
 ul.attributeList.singleValue li
@@ -980,7 +980,7 @@ ul.attributeList.singleValue li
 .cartLinks
 {
 	text-align: center;
-	padding-top: 0px;
+	padding-top: 0;
 	vertical-align: middle;
 }
 
@@ -1552,15 +1552,15 @@ div.addressControl
 {
     list-style-type: none;
     margin: 5px;
-    margin-left: 0px;
-    padding-left: 0px;
+    margin-left: 0;
+    padding-left: 0;
 }
 
 .orderMenu li
 {
     padding: 4px;   
-    margin-left: 0px;
-    padding-left: 0px;
+    margin-left: 0;
+    padding-left: 0;
 }
 
 .orderMenu .orderTotal
@@ -1630,7 +1630,7 @@ ul.notes
 {
     list-style-type: none;   
     margin-top: 15px;
-    padding-left: 0px;
+    padding-left: 0;
 }
 
 ul.notes li
@@ -1889,13 +1889,12 @@ label.cancel
     float: none;
     position: relative;
     top: -6px;
-    padding-left: 0px;
+    padding-left: 0;
 }
 
 select
 {
-	padding-left: 0px;
-	padding-right: 0px;
+	padding: 0;
 }
 
 option
@@ -1975,8 +1974,8 @@ a.cancel
 
 fieldset.error, div.error, fieldset.container
 {
-	padding: 0px;
-	margin: 0px;
+	padding: 0;
+	margin: 0;
 	position: static; 
 	border: 0;
 	background-color: inherit;
@@ -1991,7 +1990,7 @@ fieldset.error, div.error, fieldset.container
 	float: left; 
 	width: auto;
 	margin-bottom: 4px;
-	margin-top: 0px;
+	margin-top: 0;
 	padding: 3px;
 	color: white;
 }
