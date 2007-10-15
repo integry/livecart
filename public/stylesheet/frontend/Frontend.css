@@ -430,15 +430,11 @@ tr.even
 	padding-right: 20px;
 }
 
-#accountLink
-{
-    float: left;
-} 
-
 .logout
 {
 	margin-top: 0.5em;
 	font-size: smaller;
+	text-align: left;
 }
 
 /*****************************
@@ -1017,7 +1013,6 @@ td.addToWishList
 {
     display: block;
     font-size: smaller;
-    float: left;
 }
 
 /*****************************
