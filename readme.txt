@@ -1,0 +1,1 @@
+LiveCart installation guide: http://doc.livecart.com/help/installation

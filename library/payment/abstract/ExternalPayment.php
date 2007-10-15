@@ -1,13 +1,13 @@
 <?php
 
-include_once(dirname(__file__) . '/../TransactionPayment.php');
+include_once(dirname(__file__) . '/OnlinePayment.php');
 
 /**
  *
  * @package library.payment.abstract
  * @author Integry Systems 
  */
-abstract class ExternalPayment extends TransactionPayment
+abstract class ExternalPayment extends OnlinePayment
 {
     /**
 	 *	Return payment page URL
@@ -29,6 +29,16 @@ abstract class ExternalPayment extends TransactionPayment
 	 *  @return bool
 	 */
 	abstract public function isHtmlResponse();
+
+	public function isMultiCapture()
+	{
+        return false;
+    }
+
+	public function isCapturedVoidable()
+	{
+        return false;
+    }
 
 	public function setNotifyUrl($url)
 	{
