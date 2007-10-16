@@ -57,6 +57,11 @@ fieldset.checkbox .progressIndicator
     margin: 10px;
 }
 
+.addNewTaxRate
+{
+    background-image: url(../../image/silk/add.png);
+}
+
 .taxRate_taxRatesList .activeList_editContainer 
 {
      padding: 10px;
@@ -137,6 +142,12 @@ fieldset.checkbox .progressIndicator
 .rangeTypeStatic
 {
     padding: 5px 0pt 12px 0pt ! important;
+}
+
+.tabDeliveryZoneCountryContent ul.activeList
+{
+	min-height: 0;
+	margin-top: 7px;
 }
 
 .countriesAndStates_exampleMask

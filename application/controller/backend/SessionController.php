@@ -14,7 +14,9 @@ class SessionController extends StoreManagementController
 {
 	public function index()
 	{
-		return new ActionResponse();
+		$response = new ActionResponse();
+		$response->setHeader('NeedLogin', 1);
+		return $response;
 	}
 
     /**

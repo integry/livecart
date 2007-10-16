@@ -5,7 +5,7 @@
     <fieldset class="container" {if $taxRatesArray|@count}{denied role='delivery.update'}style="display: none;"{/denied}{/if}>
     	<ul class="menu" id="taxRate_menu_{$deliveryZone.ID}">
     	    <li class="addNewTaxRate"><a href="#new_taxRate" id="taxRate_new_{$deliveryZone.ID}_show">{t _add_new_tax_rate}</a></li>
-    	    <li class="addNewTaxRateCancel" style="display: none"><a href="#cencel_taxRate" id="taxRate_new_{$deliveryZone.ID}_cancel">{t _cancel_adding_new_tax_rate}</a></li>
+    	    <li class="addNewTaxRateCancel done" style="display: none"><a href="#cancel_taxRate" id="taxRate_new_{$deliveryZone.ID}_cancel">{t _cancel_adding_new_tax_rate}</a></li>
     	</ul>
     </fieldset>
     

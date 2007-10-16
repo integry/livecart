@@ -322,7 +322,7 @@ ActiveList.prototype = {
 		else 
 		{
 			this.toggleContainerOff(container, highlight);
-		    Element.removeClassName(li, actionClassName);
+		    Element.removeClassName(li, action + '_inProgress');
 		}
     },
     
@@ -758,7 +758,7 @@ ActiveList.prototype = {
 
             if(!url) 
 			{
-                //Element.removeClassName(li, this.cssPrefix  + action + '_inProgress');
+                Element.removeClassName(li, this.cssPrefix  + action + '_inProgress');
 				return false;
             }
 

@@ -1,8 +1,11 @@
 /**
  *	@author Integry Systems
  */
- 
-Backend.User = {};
+
+if (!Backend.User)
+{
+	Backend.User = {};
+}
 
 Backend.UserGroup = Class.create();
 Backend.UserGroup.prototype =

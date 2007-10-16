@@ -2,7 +2,7 @@
 <fieldset class="container" {denied role='delivery.update'}style="display: none;"{/denied}>
 	<ul class="menu" id="shippingService_menu_{$deliveryZone.ID}">
 	    <li class="shippingService_add"><a href="#new_service" id="shippingService_new_{$deliveryZone.ID}_show">{t _add_new_shipping_service}</a></li>
-	    <li class="done shippingService_addCancel" style="display: none"><a href="#cencel_service" id="shippingService_new_{$deliveryZone.ID}_cancel">{t _cancel_adding_new_service}</a></li>
+	    <li class="done shippingService_addCancel" style="display: none"><a href="#cancel_service" id="shippingService_new_{$deliveryZone.ID}_cancel">{t _cancel_adding_new_service}</a></li>
 	</ul>
 </fieldset>
 

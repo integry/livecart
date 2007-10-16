@@ -124,7 +124,7 @@ Customize.prototype = {
 		document.getElementById('transDialogContent').style.display = 'none';
 		document.getElementById('transDialogIndicator').style.display = 'block';
 
-		new Ajax.Updater('transDialogContent', url, {onComplete: this.displayDialogContent.bind(this)});
+		new LiveCart.AjaxRequest(url, null, this.displayDialogContent.bind(this));
 		
 		this.bfx = this.cancelTransDialog.bind(this);
 		
@@ -136,10 +136,21 @@ Customize.prototype = {
 	 	e.stopPropagation();
 	},
 
-	displayDialogContent: function()
+	displayDialogContent: function(originalRequest)
 	{
-		document.getElementById('transDialogContent').style.display = 'block';
-		document.getElementById('transDialogIndicator').style.display = 'none';
+		window.req = originalRequest;
+
+		$('transDialogIndicator').hide();
+			
+		if (originalRequest.getResponseHeader('NeedLogin'))
+		{
+			$('transDialogContent').update('');
+			$('transDialogContent').hide();
+			return false;
+		}
+	
+		$('transDialogContent').update(originalRequest.responseText);
+		$('transDialogContent').show();
 		Event.observe($('trans'), 'mousedown', this.handleTransFieldClick.bindAsEventListener(this), true);
 	},
 
@@ -192,7 +203,12 @@ Customize.prototype = {
 	  	{
 			this.previewTranslations(this.currentId, this.initialValue);		    
 		}
-		document.getElementById('translationDialog').style.display = 'none'; 
+		
+		if ($('translationDialog'))
+		{
+			$('translationDialog').hide();
+		}
+
 		return false;
 	},
 	
