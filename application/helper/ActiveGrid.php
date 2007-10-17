@@ -71,7 +71,7 @@ class ActiveGrid
             
             $handle = $this->getFieldHandle($field, self::FILTER_HANDLE);
              
-            if (!is_array($handle))
+            if (!is_array($handle) && !is_null($handle))
             {
                 $fieldInst = $this->getFieldInstance($field);
                 
@@ -114,7 +114,7 @@ class ActiveGrid
             }
             
             // language field filter
-            else
+            else if (is_array($handle))
             {
                 $cond = null;
                 foreach ($handle as $h)

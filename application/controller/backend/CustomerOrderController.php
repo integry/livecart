@@ -287,8 +287,11 @@ class CustomerOrderController extends StoreManagementController
 		$this->request->set('filters', $filters);
         $grid = new ActiveGrid($this->application, $filter, 'CustomerOrder');
         $filter->setLimit(0);
+        
+        $typeCond = $this->getTypeCondition($this->request->get('id'));
+        $this->applyFullNameFilter($typeCond);
 
-		$filter->mergeCondition($this->getTypeCondition($this->request->get('id')));
+		$filter->mergeCondition($typeCond);
 
 		$orders = CustomerOrder::getRecordSet($filter, CustomerOrder::LOAD_REFERENCES);
 
@@ -369,29 +372,7 @@ class CustomerOrderController extends StoreManagementController
 		list ($foo, $id) = explode('_', $this->request->get('id'));
 		$cond = $this->getTypeCondition($id);
 
-	    if($filters = $this->request->get('filters'))
-	    {
-	        if(isset($filters['User.fullName']))
-	        {
-	            $nameParts = explode(' ', $filters['User.fullName']);
-	            unset($filters['User.fullName']);
-	            $this->request->set('filters', $filters);
-
-	            if(count($nameParts) == 1)
-	            {
-	                $nameParts[1] = $nameParts[0];
-	            }
-
-	            $firstNameCond = new LikeCond(new ARFieldHandle('User', "firstName"), '%' . $nameParts[0] . '%');
-	            $firstNameCond->addOR(new LikeCond(new ARFieldHandle('User', "lastName"), '%' . $nameParts[1] . '%'));
-
-                $lastNameCond = new LikeCond(new ARFieldHandle('User', "firstName"), '%' . $nameParts[0] . '%');
-                $lastNameCond->addOR(new LikeCond(new ARFieldHandle('User', "lastName"), '%' . $nameParts[1] . '%'));
-
-                $cond->addAND($firstNameCond);
-                $cond->addAND($lastNameCond);
-	         }
-	    }
+        $this->applyFullNameFilter($cond);
 
         if($this->request->get('sort_col') == 'User.fullName')
         {
@@ -490,6 +471,33 @@ class CustomerOrderController extends StoreManagementController
 	    	'data' => $data
     	));
 	}
+
+    private function applyFullNameFilter(Condition $cond)
+    {
+	    if ($filters = $this->request->get('filters'))
+	    {
+	        if (isset($filters['User.fullName']))
+	        {
+	            $nameParts = explode(' ', $filters['User.fullName']);
+	            unset($filters['User.fullName']);
+	            $this->request->set('filters', $filters);
+
+	            if(count($nameParts) == 1)
+	            {
+	                $nameParts[1] = $nameParts[0];
+	            }
+
+	            $firstNameCond = new LikeCond(new ARFieldHandle('User', "firstName"), '%' . $nameParts[0] . '%');
+	            $firstNameCond->addOR(new LikeCond(new ARFieldHandle('User', "lastName"), '%' . $nameParts[1] . '%'));
+
+                $lastNameCond = new LikeCond(new ARFieldHandle('User', "firstName"), '%' . $nameParts[0] . '%');
+                $lastNameCond->addOR(new LikeCond(new ARFieldHandle('User', "lastName"), '%' . $nameParts[1] . '%'));
+
+                $cond->addAND($firstNameCond);
+                $cond->addAND($lastNameCond);
+	         }
+	    }        
+    }
 
 	private function getTypeCondition($type)
 	{
