@@ -69,7 +69,7 @@ class ShipmentController extends StoreManagementController
             }
 	    }
 	    
-        $totalAmount = $subtotalAmount + $shippingAmount;
+        $totalAmount = $subtotalAmount + $shippingAmount + $taxAmount;
 	    
 	    $response = new ActionResponse();
 	    $response->set('orderID', $this->request->get('id'));

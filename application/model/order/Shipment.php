@@ -373,6 +373,15 @@ class Shipment extends ActiveRecordModel
     
     protected function insert()
     {   
+        // the shipment objects are often restored from serialized state, so we must mark all fields as modified
+        foreach ($this->data as $field)
+        {
+            if (!$field->isNull())
+            {
+                $field->setAsModified();
+            }
+        }        
+        
         // Save updated order status
         if ($this->order->get()->isFinalized->get())
         {
@@ -383,6 +392,8 @@ class Shipment extends ActiveRecordModel
         {
             $this->status->set(self::STATUS_NEW);
         }
+        
+        //var_dump($this->amount); exit;
         
         return parent::insert();
     }
