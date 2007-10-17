@@ -22,7 +22,8 @@ function smarty_function_link($params, LiveCartSmarty $smarty)
 {
 	$router = $smarty->getApplication()->getRouter();
 	
-	if (isset($params['url']))
+	// should full URL be generated?
+    if (isset($params['url']))
 	{
 		unset($params['url']);
 		$fullUrl = true;
@@ -32,6 +33,17 @@ function smarty_function_link($params, LiveCartSmarty $smarty)
 		$fullUrl = false;		
 	}
 	
+	// replace & with &amp;
+	if (isset($params['nohtml']))
+	{
+        unset($params['nohtml']);
+        $router->setVariableSeparator('&');
+    }
+    else
+    {
+        $router->setVariableSeparator('&amp;');
+    }
+
 	try
 	{
 		if (isset($params['route']))

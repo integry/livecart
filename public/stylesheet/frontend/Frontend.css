@@ -1196,7 +1196,7 @@ div.checkout a
 .shippingSelected,
 .addressSelected
 {
-    border: 3px solid lightblue !important;            
+    border: 3px solid #ADD8E6 !important;            
     background-color: #f8f8f8 !important;
 }
 
@@ -1206,7 +1206,7 @@ div.checkout a
 .progressAddress #progressAddress,
 .progressShipping #progressShipping        
 {
-    border: 3px solid lightblue !important;
+    border: 3px solid #ADD8E6 !important;
     background-color: #FFFCBB !important;
 }
 
