@@ -151,3 +151,10 @@ revision = tip
 
 [tree22.paths]
 default = ssh://mercurial@dev.integry.net/library/unittest
+
+[tree23]
+root = library/pclzip
+revision = tip
+
+[tree23.paths]
+default = ssh://mercurial@dev.integry.net/vendor/pclzip

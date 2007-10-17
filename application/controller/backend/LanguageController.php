@@ -17,6 +17,97 @@ class LanguageController extends StoreManagementController
 {	
 	const langFileExt = 'lng';
 
+    public function export()
+    {
+		// preload current locale
+		$this->locale;
+		
+		$tempDir = ClassLoader::getRealPath('cache.tmp.' . rand(1, 10000000));
+		
+        $locale = Locale::getInstance($this->request->get('id'));
+
+		$fileDir = ClassLoader::getRealPath('application.configuration.language.en');
+		$files = $locale->translationManager()->getDefinitionFiles($fileDir);
+		
+		// prepare language files
+		$translated = array();
+		foreach ($files as $file)
+		{
+			$relPath = substr($file, strlen($fileDir) + 1);
+
+			// get language default definitions
+			$default = $locale->translationManager()->getFileDefs($relPath, true);
+			if (!is_array($default))
+			{
+				$default = array();
+			}
+			
+			// get translated definitions
+			$transl = $locale->translationManager()->getCacheDefs($relPath, true);
+			
+            $transl = array_merge($default, $transl);
+            
+            $values = array();
+            foreach($transl as $key => $value)
+            {
+                $values[] = $key . '=' . $value;
+            }
+            
+            $path = $tempDir . '/' . $locale->getLocaleCode() . '/' . $relPath;
+
+            if ($values)
+            {
+                if (!is_dir(dirname($path)))
+                {
+                    mkdir(dirname($path), null, true);
+                }
+
+                file_put_contents($path, implode("\n", $values));
+            }
+		}
+		
+		// put the files in zip archive
+		require_once(ClassLoader::getRealPath('library.pclzip') . '/pclzip.lib.php');
+		
+		if (!is_dir($tempDir))
+		{
+            return new ActionRedirectResponse('backend.language', 'edit', array('id' => $locale->getLocaleCode()));
+        }
+		
+		chdir($tempDir);
+        $zip = $tempDir . '/temp.zip';
+		$archive = new PclZip($zip);
+		$archive->add($locale->getLocaleCode());
+		
+		$file = ObjectFile::getNewInstance('ObjectFile', $zip, 'LiveCart-' . $locale->getLocaleCode() . '.zip');
+		$response = new ObjectFileResponse($file);
+		
+		// remove the temp directory
+		$this->delTree($tempDir);
+		
+		return $response;		
+    }
+
+    private function delTree($path) 
+    {
+        if (is_dir($path)) 
+        {
+            $entries = scandir($path);
+            foreach ($entries as $entry) 
+            {
+                if ($entry != '.' && $entry != '..') 
+                {
+                    $this->delTree($path . DIRECTORY_SEPARATOR . $entry);
+                }
+            }            
+            rmdir($path);
+        } 
+        else 
+        {
+            unlink($path);
+        }
+    }
+
 	/**
 	 * Gets definitions from project files and updates them in database.
 	 * @role update
@@ -46,10 +137,6 @@ class LanguageController extends StoreManagementController
 		// get all English configuration files
 		$enLocale = Locale::getInstance('en');
 		$files = array();
-//		foreach ($this->locale->getDefinitionFileDir() as $dir)
-//		{
-//			
-//		}
 		$fileDir = ClassLoader::getRealPath('application.configuration.language.en');
 		$files = $enLocale->translationManager()->getDefinitionFiles($fileDir);
 

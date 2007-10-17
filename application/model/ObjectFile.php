@@ -11,7 +11,7 @@ class ObjectFileException extends ApplicationException { }
  * @package application.model
  * @author Integry Systems <http://integry.com>   
  */
-abstract class ObjectFile extends MultilingualObject
+class ObjectFile extends MultilingualObject
 {    		
 	private $sourceFilePath = false;
 	private $newFileUploaded = false;
@@ -80,7 +80,17 @@ abstract class ObjectFile extends MultilingualObject
 
 	public function getPath()
 	{
-	    if(!$this->isExistingRecord()) throw new ObjectFileException('Instance has no existing database record');
+	    if(!$this->isExistingRecord()) 
+        {
+            if ($this->sourceFilePath)
+            {
+                return $this->sourceFilePath;
+            }
+            else
+            {
+                throw new ObjectFileException('Instance has no existing database record');
+            }
+        }
 	    
 	    return ClassLoader::getRealPath('storage.' . strtolower(get_class($this))) . DIRECTORY_SEPARATOR . $this->getID();
     }

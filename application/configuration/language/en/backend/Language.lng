@@ -52,6 +52,8 @@ _save=Save translations
 
 _editing_translations=Editing Translations
 
+_export=Export Language Files
+
 # live translation
 
 _live_translate=Translate

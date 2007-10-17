@@ -81,6 +81,11 @@ label.radio {
 }
 
 /* edit */
+.langExport
+{
+    background-image: url(../../image/silk/compress.png);    
+}
+
 div.tip
 {
     margin-bottom: 20px;
