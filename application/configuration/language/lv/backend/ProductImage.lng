@@ -1,0 +1,16 @@
+_cancel_new=Atlikt
+_add_new=Pievienot jaunu attēlu
+_delete_confirm=Tiešām dzēst šo attēlu
+_main_image=Galvenais Attēls
+_supplemental_images=Papildus Attēli
+_no_images=Šim produktam vēl nav pievienots neviens attēls
+_max_file_size=Tikai JPEG, GIF un PNG faili. Maksimālais izmērs: [_1]
+_edit_image=Rediģēt attēlu
+_image_title=Ievadiet nosaukumu
+_image_file=Izvēlieties failu
+_upload=Pievienot attēlu
+_save=Saglabāt
+_err_not_uploaded=Lūdzu izvēlieties failu
+_err_not_image=Šis fails nav attēls
+_err_resize=Nevar samazināt attēlu
+_err_too_large=Fails ir pārāk liels

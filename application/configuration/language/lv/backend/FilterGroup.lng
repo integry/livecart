@@ -1,0 +1,15 @@
+_filter_group_was_successfully_saved=Filtrs veiksmīgi saglabāts
+_could_not_save_filter_group=Nevar saglabāt filtru
+_filter_group_was_successfully_removed=Filtrs veiksmīgi izdzēsts
+_could_not_remove_filter_group=Nevar izdzēst filtru
+_add_new_filter=Pievienot jaunu filtru
+_category_has_no_attr=Šai kategorijai vēl nav izveidoti filtrējami atribūti
+_delete_field=Izdzēst
+_remove_filter_question=Tiešām dzēst šo filtru?
+_FilterGroup_remove_question=Tiešām dzēst šo filtru?
+_cancel_adding_new_filter=Atcelt
+_error_name_empty=Filtra nosaukums ir tukšs
+_error_filter_value_is_not_a_number=Filtra vērtībai jābūt skaitlim
+_error_spec_field_is_not_selected=Atribūts nav izvēlēts
+_error_illegal_date=Nepareizs datums
+_error_filter_name_empty=Filtra nosaukums ir tukšs

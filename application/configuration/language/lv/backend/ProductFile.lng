@@ -1,0 +1,13 @@
+_add_new_file=Pievienot jaunu failu
+_add_new_group=Pievienot jaunu grupu
+_cancel_adding_new_file=Atlikt faila pievienošanu
+_cancel_adding_file_group=Atlikt grupas pievienošanu
+_are_you_sure_you_want_to_delete=Tiešām dzēst šo failu?
+_are_you_sure_you_want_to_delete_group=Tiešām dzēst šo grupu?
+_product_file_group_title=Nosaukums
+_add_new_file_group=Rediģēt failu grupu
+_err_file_title_is_empty=Faila nosaukums nav ievadīts
+_err_allow_download_days_should_be_a_number=Dienu skaitam jābūt skaitlim
+_err_allow_download_days_is_empty=Dienu skaits nav ievadīts
+_err_file_could_not_be_uploaded_to_the_server=Faila augšupielāde nav izdevusies
+_err_fileName_should_not_be_empty=Faila vārds nav ievadīts

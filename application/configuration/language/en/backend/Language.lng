@@ -1,22 +1,16 @@
 # Confirmations
-_language_status_has_been_changed_to_enabled=Language status has been changed to enabled
-_language_status_has_been_changed_to_disabled=Language status has been changed to disabled
 _new_language_was_successfully_added=New language was successfully added
-_language_has_been_successfully_removed=Language has been successfully removed
 _translations_were_successfully_saved=Translations were saved successfuly
 
 # index
 _languages=Languages	
 
-_index_tip=Move mouse cursor over language list to edit translations or remove language
 _add_language=Add new language
 _add_lang_button=Add
 _or=or
 _cancel=Cancel
 
 _admin_languages=Manage Languages
-
-_update_from_files=Update language translations from files
 
 _language_definitons=Language translations
 
@@ -32,9 +26,6 @@ _currentLanguage=Current language
 _selectLanguage=Select language
 _default_language=Default language
 
-_help_index=help on managing languages
-_help_index_title=Manage Languages
-
 # edit
 
 _tip_live_trans=Tip: You can also edit translations <a href='[_1]'>directly from the user interface</a>.
@@ -49,8 +40,6 @@ _all_files=Search all files
 _no_translations_found=No translations found
 _found_many=More than 50 translations were found
 _save=Save translations
-
-_editing_translations=Editing Translations
 
 _export=Export Language Files
 
