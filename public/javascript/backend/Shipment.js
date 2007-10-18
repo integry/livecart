@@ -743,7 +743,6 @@ Backend.Shipment.prototype =
         
 	        if(
 	            !proceed
-	            || (3 == select.value && !confirm(Backend.Shipment.Messages.youWontBeAableToRevertStatusFromShipped))
 	            || ("-1" == select.value && !confirm(Backend.Shipment.Messages.youWontBeAbleToUndelete))
 	        ) {
 	            select.value = select.lastValue;

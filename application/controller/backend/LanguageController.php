@@ -149,8 +149,13 @@ class LanguageController extends StoreManagementController
 			
 			// get default English definitions (to get all definition keys)
 			$keys = $enLocale->translationManager()->getFileDefs($file);
+            
+            $enDefs[$relPath] = $keys;
 
-			$enDefs[$relPath] = $keys;
+			foreach ($enDefs[$relPath] as &$value)
+			{
+                $value = htmlspecialchars($value);
+            }
 
 		  	foreach ($keys as $key => $value)
 		  	{

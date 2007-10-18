@@ -4,6 +4,7 @@
   	padding: 0;
 }
 
+/* 100% height layout start >> */
 html, body
 {
 	height: 100%; 
@@ -14,22 +15,23 @@ div#container
 	position: relative; /* needed for footer positioning*/
 	
 	height: auto !important; /* real browsers */
-	height: 100%; /* IE6: treaded as min-height*/
+	height: 100%; /* IE6: treated as min-height*/
 
 	min-height: 100%; /* real browsers */
 }
 
 div#footer 
 {
-	position:absolute;
-	width:100%;
-	bottom:0; /* stick to bottom */
+	position: absolute;
+	width: 100%;
+	bottom: 0; /* stick to bottom */
 }
 
 div#content
 {
     padding-bottom: 120px;
 }
+/* << 100% height layout end */
 
 body, h4
 {

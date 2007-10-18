@@ -1,0 +1,15 @@
+FEATURED=Izceltie produkti
+SALES_RANK=Visvairāk pārdotie
+PRODUCT_NAME_ASC=Produkta nosaukums: A-Z
+PRODUCT_NAME_DESC=Produkta nosaukums: Z-A
+PRICE_ASC=Cena: no zemākās uz augstāko
+PRICE_DESC=Cena: no augstākās uz zemāko
+NEWEST_ARRIVALS=Jaunumi
+RATING=Novērtējums
+_found_cats=Atrastas kategorijas
+_not_found=<span class='notFoundMain'>Netika atrasts neviens produkts.</span> Lūdzu mēģiniet meklēt pēc citiem atslēgvārdiem.
+_featured_products=Izceltie produkti
+_showing_products=[_1] līdz [_2] no [_3] atrastajiem produktiem
+_sort_by=Kārtot pēc
+_narrow_by_cat=Skatīt rezultātus pēc kategorijām
+_more_subcats=vairāk...

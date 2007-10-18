@@ -1,0 +1,14 @@
+_a_relationship_between_products_was_successfully_created=Sasaiste starp produktiem izveidota veiksmīgi
+_could_not_create_product_relationship=Šis produkts jau ir saistīts
+_relationship_was_successfully_removed=Sasaiste starp produktiem veiksmīgi dzēsta
+_select_product=Pievienot saistīto produktu
+_add_new_group=Izveidot jaunu grupu
+_done_adding=Beigt pievienot produktus
+_cancel_adding_new_related_product=Atlikt
+_cancel_adding_new_group=Atlikt
+_are_you_sure_you_want_to_delete_this_group=Tiešām dzēst šo saistīto produktu grupu?
+_are_you_sure_you_want_to_delete_this_relation=Tiešām dzēst šo produktu sasaisti?
+_product_relationship_group_title=Nosaukums
+_err_circular=Nevar izveidot sasaisti produktam pašam ar sevi
+_err_multiple=Šis produkts jau ir saistīts
+_msg_added=Sasaiste starp produktiem izveidota veiksmīgi

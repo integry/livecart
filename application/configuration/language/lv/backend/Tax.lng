@@ -1,0 +1,10 @@
+_tax_entry_was_successfully_saved=Nodoklis veiksmīgi saglabāts
+_could_not_save_tax_entry=Nevar saglabāt nodokli
+_add_new_tax=Izveidot jaunu nodokli
+_cancel_adding_new_tax=Atlikt nodokļa izveidi
+_cancel_adding_new_tax_rate=Atlikt nodokļa likmes izveidi
+_name=Nosaukums
+_manage=Administrēt
+_taxes=Nodokļi
+_error_the_name_should_not_be_empty=Nosaukums nav ievadīts
+_are_you_sure_you_want_to_remove_ths_tax=Tiešām dzēst šo nodokli? Tas var būt izmantojams kādā no piegādes zonām.
