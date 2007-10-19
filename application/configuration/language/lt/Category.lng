@@ -1,0 +1,15 @@
+FEATURED=Ypatingi
+SALES_RANK=Labiausiai perkami
+PRODUCT_NAME_ASC=Pagal pavadinimą: A-Z
+PRODUCT_NAME_DESC=Pagal pavadinimą: Z-Ą
+PRICE_ASC=Kainą didėjančia tvarka
+PRICE_DESC=Kainą mažėjančia tvarka
+NEWEST_ARRIVALS=Naujausios prekės
+RATING=Vartotojų vertinimai
+_found_cats=Rasta kategorijų
+_not_found=<span class='notFoundMain'>Nerasta produktų.</span> Pabandykite naują paieškos užklausą.
+_featured_products=Ypatingi produktai
+_showing_products=Rodomi nuo [_1] iki [_2] iš [_3] produktų
+_sort_by=Rūšiuoti pagal
+_narrow_by_cat=Siaurinti paiešką
+_more_subcats=daugiau...

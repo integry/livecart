@@ -1,0 +1,16 @@
+_cancel_new=Atšaukti
+_add_new=Pridėti naują paveikslėlį
+_delete_confirm=Tikrai ištrinti šį paveikslėlį?
+_main_image=Pagrindinis paveikslėlis
+_supplemental_images=Papildomi paveikslėliai
+_no_images=Produktas dar neturi jokių paveikslėlių.
+_max_file_size=Leidžiami paveikslėlių formatai: JPEG, GIF ir PNG. Maksimalus dydis: [_1]
+_edit_image=Redaguoti paveikslėlį
+_image_title=Įvestkite paveikslėlio pavadinimą
+_image_file=Pasirinkite paveikslėlį
+_upload=Pridėti paveikslėlį
+_save=Išsaugoti
+_err_not_uploaded=Pasirinkite rinkmeną
+_err_not_image=Klaidingas paveikslėlio formatas
+_err_resize=Klaida keičiant paveikslėlio dydį
+_err_too_large=Paveikslėlis per didelis

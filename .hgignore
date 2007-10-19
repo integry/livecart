@@ -12,3 +12,4 @@ storage/configuration/settings.php
 storage/configuration/database.php
 Thumbs.db
 update.bat
+simple update.bat

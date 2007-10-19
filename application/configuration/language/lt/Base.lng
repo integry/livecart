@@ -1,0 +1,16 @@
+_live_translate=Išversti
+_err_numeric=Tik skaitinės reikšmės
+_err_specfield_required=Neužpildytas laukelis
+_err_negative=Reikšmė negali būti neigiama
+_this_week=Šią savaitę
+_last_week=Praeitą savaitę
+_this_month=Šį mėnesį
+_last_month=Praeitą mėnesį
+_this_year=Šiais metais
+_last_year=Praėjusiais metais
+_status_new=Naujas
+_status_processing=Vykdomas
+_status_awaiting=Laukia siuntimo
+_status_shipped=Išsiųstas
+_status_canceled=Atšauktas
+_status_returned=Grąžintas

@@ -1,0 +1,13 @@
+_ordered_item_was_successfully_moved=Produktas perkeltas į kitą siuntinį
+_this_shipping_service_has_no_available_rates=Šis servisas nėra prieinamas vartotojo sričiai ir užsakymo kainai
+_ordered_item_quantity_was_updated=Produkto kiekis atnaujintas
+_error_updating_item_quantity=Klaida keičiant produkto kiekį
+_item_has_been_successfuly_saved=Produktas sėkmingai idėtas į užsakymą
+_item_was_successfully_removed_from_shipment=Produktas iš siuntinio ištrintas
+_error_removing_item_from_shipment=Klaida trinant produktą iš siuntinio
+_downloadable_item_already_exists_in_this_order=Ši rinkmena jau yra užsakyme
+_select_product=Pridėti produktų
+_done_adding_products=Baigti produktų pridėjimą
+_select_shippment=Pasirinkite siuntinį:
+_shipping_service_is_not_selected=Nepasirinktas gabenimo servisas
+_shipment=Siuntimas

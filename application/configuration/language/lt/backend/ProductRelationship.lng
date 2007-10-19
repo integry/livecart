@@ -1,0 +1,14 @@
+_a_relationship_between_products_was_successfully_created=Produktų sąsaja sėkmingai sukurta
+_could_not_create_product_relationship=Šis produktas jau priskirtas kaip susijęs
+_relationship_was_successfully_removed=Sąsaja panaikinta
+_select_product=Pridėti susijusių produktų
+_add_new_group=Pridėti naują grupę
+_done_adding=Baigti pridėjimą
+_cancel_adding_new_related_product=Atšaukti
+_cancel_adding_new_group=Atšaukti
+_are_you_sure_you_want_to_delete_this_group=Tikrai ištrinti šią sąsajos grupę?
+_are_you_sure_you_want_to_delete_this_relation=Tikrai ištrinti šią sąsają?
+_product_relationship_group_title=Pavadinimas
+_err_circular=Negalima tam pačiam produktui priskirti sąsajos
+_err_multiple=Šis produktas jau yra susietas
+_msg_added=Susiję produktai sėkmingai pridėti

@@ -1,0 +1,16 @@
+_filter_group_was_successfully_saved=Filtras sėkmingai išsaugotas
+_could_not_save_filter_group=Filtras neišsaugotas
+_filter_group_was_successfully_removed=Filtras ištrintas
+_could_not_remove_filter_group=Filtras neištrintas
+_add_new_filter=Sukurti naują filtrą
+_category_has_no_attr=Nesukurta jokių filtram tinkamų atributų.
+_delete_field=Ištrinti laukelį
+_remove_filter_question=Ištrinti filtrą?
+_FilterGroup_remove_question=Ištrinti filtrą?
+_cancel_adding_new_filter=Atšaukti
+_error_name_empty=Įveskite filtro pavadinimą
+_error_filter_value_is_not_a_number=Reikšmė turi būti skaitinė
+_error_spec_field_is_not_selected=Nepasirinktas specifikacijos laukelis
+_error_illegal_date=Netinkama data
+_error_filter_name_empty=Filtro pavadinimas tuščias
+_error_filter_handle_invalid=Netinkama rankenėlė

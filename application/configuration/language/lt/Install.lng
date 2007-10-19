@@ -1,0 +1,10 @@
+_writePermissionsFix=<strong>Patartina:</strong> naudojantis FTP klientu pakeisti <i>access permissions</i>  (chmod) šioms kategorijoms į 777 (<i>full write access</i>). Jei kategorija neegzistuoja, sukurkite naują.
+checkPHPVersion=PHP versija
+checkPHPVersion_error=<a href="http://php.net" target="_blank">PHP</a> varsija turi būti nesenesnė kaip 5.2
+checkMySQL=Duomenų bazės palaikymas
+checkMySQL_error=<a href="http://php.net/mysqli" target="_blank">mysqli</a> išplėtimas turi būti instaliuotas su PHP
+checkGD=Paveikslėlių manipuliavimo palikymas
+checkGD_error=<a href="http://php.net/gd" target="_blank">GD</a> išplėtimas turi būti instaliuotas su PHP
+checkSession=PHP sesijos konfiguravimas
+checkSession_error=PHP sesijos nėra išsaugomos. Patikrinkite ar <a href="http://php.net/manual/en/ref.session.php#ini.session.save-path">session.save_path</a> yra sukonfiguruotas teisingai.
+checkWritePermissions=Katalogo rašymo teisės

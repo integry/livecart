@@ -1,0 +1,10 @@
+_tax_entry_was_successfully_saved=Mokęsčių įrašas išsaugotas
+_could_not_save_tax_entry=Klaida išsaugant mokęsčius
+_add_new_tax=Pridėti naują mokęstį
+_cancel_adding_new_tax=Atšaukti
+_cancel_adding_new_tax_rate=Atšaukti
+_name=Pavadinimas
+_manage=Valdyti
+_taxes=Mokęsčiai
+_error_the_name_should_not_be_empty=Įveskite pavadinimą
+_are_you_sure_you_want_to_remove_ths_tax=Ar tikrai norite ištrinti mokęstį? Jis gali būti naudojamas pristatymo srityje.
