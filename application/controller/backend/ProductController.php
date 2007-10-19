@@ -69,7 +69,6 @@ class ProductController extends StoreManagementController
         new ActiveGrid($this->application, $filter);
         					
         $recordCount = true;
-
 		$productArray = ActiveRecordModel::getRecordSetArray('Product', $filter, array('Category', 'Manufacturer'), $recordCount);
         
 		$displayedColumns = $this->getDisplayedColumns($category);

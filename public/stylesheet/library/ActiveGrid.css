@@ -26,6 +26,7 @@
 .activeGrid td
 {
     overflow: hidden;
+    vertical-align: middle;
 }
 
 .activeGrid_viewport

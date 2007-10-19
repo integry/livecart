@@ -387,7 +387,9 @@ class CustomerOrderController extends StoreManagementController
 	    $filter->setCondition($cond);
 
 	    new ActiveGrid($this->application, $filter);
-	    $orders = CustomerOrder::getRecordSet($filter, true)->toArray();
+
+        $recordCount = true;
+	    $orders = ActiveRecordModel::getRecordSetArray('CustomerOrder', $filter, true, $recordCount);
 
 		$displayedColumns = $this->getDisplayedColumns();
 
@@ -467,7 +469,7 @@ class CustomerOrderController extends StoreManagementController
 
     	return new JSONResponse(array(
 	    	'columns' => array_keys($displayedColumns),
-	    	'totalCount' => count($orders),
+	    	'totalCount' => $recordCount,
 	    	'data' => $data
     	));
 	}
