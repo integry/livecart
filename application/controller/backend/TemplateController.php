@@ -2,6 +2,7 @@
 
 ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
 ClassLoader::import('application.model.template.Template');
+ClassLoader::import('application.model.template.EmailTemplate');
 
 /**
  * Template modification
@@ -46,10 +47,31 @@ class TemplateController extends StoreManagementController
 		return $response;		       
     }
 	
+	public function editEmail()
+	{
+		$template = new EmailTemplate($this->request->get('file'));  	
+		
+		$response = new ActionResponse();	  	
+	  	$response->set('fileName', $template->getFileName());
+	  	$response->set('form', $this->getEmailTemplateForm($template));
+	  	$response->set('code', base64_encode($template->getCode()));
+		return $response;		       
+    }
+	
 	public function editPopup()
 	{
 	   return $this->edit();
     }
+
+	public function email()
+	{        
+		$files = Template::getTree();
+		$files = $files['email']['subs']['en']['subs'];
+		
+        $response = new ActionResponse();
+		$response->set('categories', json_encode($files));        
+        return $response;
+	}	
 	
 	/**
 	 * @role save
@@ -79,6 +101,15 @@ class TemplateController extends StoreManagementController
     }
 	
 	private function getTemplateForm(Template $template)
+	{
+		ClassLoader::import("framework.request.validator.Form");
+		$form = new Form(new RequestValidator('template', $this->request));
+        $form->setData($template->toArray());
+		$form->set('code', '');
+		return $form;
+	}
+
+	private function getEmailTemplateForm(EmailTemplate $template)
 	{
 		ClassLoader::import("framework.request.validator.Form");
 		$form = new Form(new RequestValidator('template', $this->request));

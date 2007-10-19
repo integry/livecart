@@ -91,6 +91,12 @@
         			<Controller>backend.template</Controller>
                 	<Role>template</Role>
         		</Menu>
+        		<Menu>
+        			<Title>_menu_email_templates</Title>
+        			<Controller>backend.template</Controller>
+        			<Action>email</Action>
+                	<Role>template</Role>
+        		</Menu>
         	</Items>
         </Menu>
     </Items>

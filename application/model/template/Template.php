@@ -15,9 +15,9 @@
  */
 class Template
 {
-	private $code;
+	protected $code;
 	
-	private $file;
+	protected $file;
 	
 	public function __construct($fileName)
 	{
