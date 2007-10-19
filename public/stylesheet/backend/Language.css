@@ -86,6 +86,22 @@ label.radio {
     background-image: url(../../image/silk/compress.png);    
 }
 
+#langPath
+{
+    margin-bottom: 1.4em;
+}
+
+#langPath div
+{
+    padding-left: 0;
+    padding-bottom: 3px;
+    font-size: larger;
+    border-bottom:1px solid #CCCCCC;
+    font-weight: bold;
+    float: left;
+    width: 300px;
+}
+
 div.tip
 {
     margin-bottom: 20px;

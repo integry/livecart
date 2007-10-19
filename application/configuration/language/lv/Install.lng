@@ -1,0 +1,10 @@
+checkWritePermissions=Direktoriju rakstīšanas pieejas tiesības
+_writePermissionsFix=<strong>Risinājums:</strong> izmantojot FTP vai SSH klientu, nomainiet pieejas tiesības šīm direktorijām uz 777 (chmod komanda).
+checkPHPVersion=PHP versija
+checkPHPVersion_error=<a href="http://php.net" target="_blank">PHP</a> versijai jābūt vismaz 5.2
+checkMySQL=Datubāzes atbalsts
+checkMySQL_error=<a href="http://php.net/mysqli" target="_blank">mysqli</a> PHP bibliotēkai jābūt instalētai
+checkGD=Attēlu apstrādes atbalsts
+checkGD_error=<a href="http://php.net/gd" target="_blank">GD</a> PHP bibliotēkai jābūt instalētai
+checkSession=PHP sesiju konfigurācija
+checkSession_error=PHP sesijas netiek saglabātas pareizi. Lūdzu pārliecinieties, ka <a href="http://php.net/manual/en/ref.session.php#ini.session.save-path"><em>session.save_path</em></a>PHP konfigurācijas vērtība ir iestatīta pareizi.

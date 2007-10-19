@@ -1,0 +1,11 @@
+_cart_items=Iepirkuma Grozs - pirkt tagad
+_wish_list_items=Vēlmju saraksts - pirkt vēlāk
+_move_to_wishlist=Pārvietot uz vēlmju sarakstu
+_move_to_cart=Pārvietot uz grozu
+_remove=Izņemt
+_continue_shopping=Turpināt iepirkšanos
+_proceed_checkout=Pabeigt pirkumu
+_update=Atjaunot
+_empty_basket=Jūsu pirkumu grozs ir tukšs
+_your_basket=Jūsu Pirkumu Grozs
+_item_count=Jūsu pirkumu grozā [quantf,_1,ir,ir,nav] [quant,_1,produkts,produkti,neviens produkts]

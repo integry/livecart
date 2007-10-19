@@ -141,8 +141,15 @@ abstract class FrontendController extends BaseController
 	
 	protected function boxBreadCrumbBlock()
 	{
-		array_unshift($this->breadCrumb, array('title' => $this->config->get('STORE_NAME'), 
-											   'url' => $this->router->createUrl(array('controller' => 'index', 'action' => 'index'))));
+		$home = array('controller' => 'index', 'action' => 'index');
+		if ($this->locale->getLocaleCode() != $this->application->getDefaultLanguageCode())
+		{
+            $home['requestLanguage'] = $this->locale->getLocaleCode();
+        }
+        
+        array_unshift($this->breadCrumb, array('title' => $this->config->get('STORE_NAME'), 
+											   'url' => $this->router->createUrl($home)));
+											   
 		$response = new BlockResponse();
 		$response->set('breadCrumb', $this->breadCrumb);
 		return $response;

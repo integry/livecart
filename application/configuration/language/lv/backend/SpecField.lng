@@ -16,3 +16,5 @@ _error_value_is_not_a_number=Vērtībai jābūt skaitlim
 _error_name_empty=Nosaukums nav ievadīts
 _error_record_id_is_not_valid=Ieraksts ar šādu ID neeksistē
 _error_you_should_provide_default_group_name=Grupas nosaukums nav ievadīts
+_error_handle_exists=Šāds adreses identifikators jau eksistē šajā kategorijā
+_error_handle_empty=Adreses identifikators satur nepareizus simbolus

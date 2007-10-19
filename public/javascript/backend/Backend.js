@@ -301,9 +301,12 @@ Backend.Breadcrumb =
     
     display: function(id, additional) 
     {
-        Backend.Breadcrumb.pageTitle = $("pageTitle");
+        if (!Backend.Breadcrumb.pageTitle)
+        {
+            Backend.Breadcrumb.pageTitle = $("pageTitle");
+        }
+
         Backend.Breadcrumb.template = $("breadcrumb_template");
-        
         Backend.Breadcrumb.createPath(id, additional);
     },
     

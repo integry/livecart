@@ -134,11 +134,10 @@ class Currency extends ActiveRecordModel
 	
 	/*####################  Data array transformation ####################*/		
 	
-	public function toArray()
+	public static function transformArray($array, ARSchema $schema)
 	{
-	  	$array = parent::toArray();
-		$array['name'] = self::getApplication()->getLocale()->info()->getCurrencyName($this->getId());	  	
-		
+		$array = parent::transformArray($array, $schema);
+		$array['name'] = self::getApplication()->getLocale()->info()->getCurrencyName($array['ID']);
 		return $array;
 	}	
 

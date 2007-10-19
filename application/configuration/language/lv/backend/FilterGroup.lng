@@ -13,3 +13,4 @@ _error_filter_value_is_not_a_number=Filtra vērtībai jābūt skaitlim
 _error_spec_field_is_not_selected=Atribūts nav izvēlēts
 _error_illegal_date=Nepareizs datums
 _error_filter_name_empty=Filtra nosaukums ir tukšs
+_error_filter_handle_invalid=Adreses identifikators nav pareizs

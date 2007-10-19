@@ -50,9 +50,9 @@
 	    
         {t _with_selected}:
         <select name="act" class="select">
-            <option value="enable_isEnabled">Enable</option>
-            <option value="disable_isEnabled">Disable</option>
-            <option value="delete">Delete</option>
+            <option value="enable_isEnabled">{t _enable}</option>
+            <option value="disable_isEnabled">{t _disable}</option>
+            <option value="delete">{t _delete}</option>
         </select>
         
         <span class="bulkValues" style="display: none;">

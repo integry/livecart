@@ -13,9 +13,9 @@
         <div class="resultStats">
             {if $orders}        
                 {if $count > $perPage}
-                    {maketext text="Displaying [_1] to [_2] of [_3] found orders." params=$from,$to,$count}
+                    {maketext text=_displaying_orders params=$from,$to,$count}
                 {else}
-                    {maketext text="[quant,_1,order,orders] found" params=$count}
+                    {maketext text=_orders_found params=$count}
                 {/if}            
             {else}
                 {t _no_orders_found}

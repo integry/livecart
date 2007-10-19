@@ -246,13 +246,26 @@ Backend.LangEdit.prototype =
         
         this.treeBrowser.closeAllItems();
         
+        Backend.Breadcrumb.setTree(this.treeBrowser);
+        //Backend.Breadcrumb.pageTitle = $('translationFile');
+        
         // set up filter control
         $('show-all').onclick = this.search.bindAsEventListener(this);
         $('show-defined').onclick = this.search.bindAsEventListener(this);
         $('show-undefined').onclick = this.search.bindAsEventListener(this);
         
+        $('filter').onchange = this.search.bindAsEventListener(this);
         $('filter').onkeyup = this.search.bindAsEventListener(this);
+        $('filter').onpaste = this.search.bindAsEventListener(this);
+        
         $('allFiles').onclick = this.search.bindAsEventListener(this);
+                        
+        $('clearFilter').onclick = 
+            function(e)
+            {
+                $('filter').value = '';
+                this.search(e);
+            }.bind(this);
                         
         // set up form
 		var form = $('editLang');		
@@ -339,9 +352,12 @@ Backend.LangEdit.prototype =
 	{
         if (!this.treeBrowser.hasChildren(id))
 		{
+            $('allFiles').checked = false;
             this.treeBrowser.showFeedback(id);
 			$('translations').innerHTML = '';
             this.displayFile(id);
+            
+            Backend.Breadcrumb.display(id);
 		}
 	},	
 	
@@ -355,13 +371,26 @@ Backend.LangEdit.prototype =
     {
         Element.hide($('langNotFound'));
         Element.hide($('foundMany'));
-                
-        if ($('allFiles').checked && $('filter').value)
+         
+        if ($('filter').value)
         {
+            $('clearFilter').show();
+        }
+        else
+        {
+            $('clearFilter').hide();            
+        }
+                
+        if ($('allFiles').checked/* && $('filter').value*/)
+        {
+            $('allFilesTitle').show();
+            $('pageTitle').hide();
             this.showAll(e);
         }
         else
         {
+            $('allFilesTitle').hide();
+            $('pageTitle').show();
             this.showSelected(e);
         }
         
@@ -382,7 +411,7 @@ Backend.LangEdit.prototype =
             {
                 if ($('translations').getElementsByTagName('input').length > 50)
                 {
-            Element.show($('foundMany'));
+                    Element.show($('foundMany'));
                     return false;
                 }
 
@@ -440,7 +469,7 @@ Backend.LangEdit.prototype =
                 template = transTemplate;
     			template = template.replace(/_file_/g, file);
     			template = template.replace(/_key_/g, key);
-    			template = template.replace(/_english_/g, english[key]);
+    			template = template.replace(/___english___/g, english[key]);
     			edit += template;                
             }
         }

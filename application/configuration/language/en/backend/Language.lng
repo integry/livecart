@@ -19,9 +19,6 @@ _set_as_default=Set as default
 _inactive=inactive
 _confirm_delete=Are you sure you wish to delete this language?
 
-_statistic_languages=Statistics: [quant,_1,language,languages,no languages]
-_statistic_languages_full=Statistics: [quant,_1,language,languages,no languages], active [quant,_2,language,languages,no languages]
-
 _currentLanguage=Current language
 _selectLanguage=Select language
 _default_language=Default language
@@ -42,6 +39,7 @@ _found_many=More than 50 translations were found
 _save=Save translations
 
 _export=Export Language Files
+_all_files_title=All Files
 
 # live translation
 

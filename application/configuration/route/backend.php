@@ -31,6 +31,7 @@ $routes = array(
                     array(":producthandle.:id", array('controller' => 'product', 'action' => 'index'), array("producthandle" => $handle, "id" => "[0-9]+")), 
 
 					// default rules
+                    array("", array("controller" => "index", "action" => "index"), array()),               
                     array(":controller", array("action" => "index"), array()),               
                     array(":controller/:id", array("action" => "index"), array("id" => "-?[0-9]+")),				
                     array(":controller/:action", array(), array()),			

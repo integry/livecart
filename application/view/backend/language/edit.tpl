@@ -35,7 +35,7 @@
 			<label class="lang-key">_key_</label>
 			<fieldset class="container lang-translation">
 				<input id="_file_#_key_" type="text" value="" {denied role="language.status"}readonly="readonly"{/denied}><br />
-				<span>_english_</span>
+				<span>___english___</span>
 			</fieldset>
 		</div>
 	</div>
@@ -87,11 +87,11 @@
 
             			<br />
             			<br />
-
+            			
             			<label>{t _search_trans}:</label>
 
             			<fieldset class="container">
-                            <input type="text" id="filter" />
+                            <input type="text" id="filter" /> <img src="image/silk/cross.png" id="clearFilter" style="vertical-align: middle; cursor: pointer; display: none;" />
 
                             <input type="checkbox" class="checkbox" id="allFiles" />
                             <label for="allFiles">{t _all_files}</label>
@@ -104,7 +104,12 @@
             	</form>
             </fieldset>
 
-            <br /><br />
+            <br />
+
+            <fieldset class="container" id="langPath">
+                <div id="pageTitle"></div>
+                <div id="allFilesTitle" style="display: none;">{t _all_files_title}</div>
+            </fieldset>
 
             <div id="translations"></div>
 
