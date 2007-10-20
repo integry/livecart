@@ -1,19 +1,19 @@
 Options -Indexes
 
-RewriteEngine on
-
-RewriteRule ^$ public/index.php [L]
-
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-
-# if no rule matched the url, we redirect to our front web controller
-#RewriteRule ^(.*)\/$ %{REQUEST_URI} [R]
-RewriteRule ^(.*)$ public/index.php?route=$1 [QSA,L]
+<IfModule mod_rewrite.c>
+	RewriteEngine on
+	
+	RewriteRule ^$ public/index.php [L]
+	
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	
+	# if no rule matched the url, we redirect to our front web controller
+	RewriteRule ^(.*)$ public/index.php?route=$1 [QSA,L]
+</IfModule>
 
 # big crash from our front web controller
 ErrorDocument 500 "<h2>Application error</h2>Application failed to start properly"
-
 
 # Cache stylesheets and javascript
 # Add "LoadModule expires_module modules/mod_expires.so" to your httpd.conf to be able to use expires mode
@@ -50,5 +50,3 @@ ErrorDocument 500 "<h2>Application error</h2>Application failed to start properl
 
 #Disable Apache caching
 FileETag none
-
-

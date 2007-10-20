@@ -73,7 +73,7 @@ class LiveCart extends Application
      *    * SQL query logger is turned on (/cache/activerecord.log) 
      *    * JavaScript and CSS stylesheet files are unbundled (slower to download, but allows debugging)
      *
-     *  The development mode can be turned on by creating a file named "dev" in the /cache directory.
+     *  The development mode can be turned on by creating a file or directory named "dev" in the /cache directory.
      *  It can be turned off by simply deleting the "dev" file.
 	 */
     private $isDevMode;
@@ -131,6 +131,12 @@ class LiveCart extends Application
 
 		$compileDir = $this->isCustomizationMode() ? 'cache.templates_c.customize' : 'cache.templates_c';
         SmartyRenderer::setCompileDir(ClassLoader::getRealPath($compileDir));
+        
+        // mod_rewrite disabled?
+        if ($this->request->get('noRewrite'))
+        {
+			$this->router->setBaseDir($_SERVER['baseDir'], $_SERVER['virtualBaseDir']);
+		}
 	}
 	
     public function setDevMode($devMode = true)
