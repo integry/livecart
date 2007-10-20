@@ -7,13 +7,13 @@
 	{foreach from=$categoryNarrow item="sub" name="subcats"}   
         <tr>
             <td class="subCatImage">
-                <a href="{categoryUrl data=$sub filters=$appliedFilters query="q=`$searchQuery`"}">
+                <a href="{categoryUrl data=$sub filters=$appliedFilters}">
                     {img src=$sub.DefaultImage.paths.1 alt=$sub.name_lang|escape }            
                 </a>
             </td>
             <td class="details">
                 <div class="subCatName">
-                    <a href="{categoryUrl data=$sub filters=$appliedFilters query="q=`$searchQuery`"}">{$sub.name_lang}</a> 
+                    <a href="{categoryUrl data=$sub filters=$appliedFilters}">{$sub.name_lang}</a> 
                     <span class="count">({$sub.searchCount})</span>
                 </div>
                 <div class="subCatDescr">

@@ -111,7 +111,7 @@ class CategoryController extends FrontendController
 
         $products = $this->getProductsArray($productFilter);
         $this->hasProducts = count($products) > 0;
-
+		
 		// pagination
         $count = new ProductCount($this->productFilter, $this->application);
 		$totalCount = $count->getCategoryProductCount($productFilter);
@@ -123,15 +123,15 @@ class CategoryController extends FrontendController
 						   'cathandle' => $this->request->get('cathandle'),
 						   'page' => '_000_',
 						   );
-
-		if ($this->request->get('filters'))
+		
+		$filterChainHandle = $this->setUpBreadCrumbAndReturnFilterChainHandle($currentPage);
+		
+		if ($filterChainHandle)
 		{
-			$urlParams['filters'] = $this->request->get('filters');
+			$urlParams['filters'] = $filterChainHandle;
 		}
 
 		$paginationUrl = $this->router->createURL($urlParams);
-
-		$filterChainHandle = $this->setUpBreadCrumbAndReturnFilterChainHandle($currentPage);					
 
 		// narrow by subcategories
 		$subCategories = $this->category->getSubCategoryArray(Category::LOAD_REFERENCES);
