@@ -1,9 +1,37 @@
-<h1>{$fileName}</h1>
+<h1>{$fileName|@substr:9}</h1>
 
-{form handle=$form action="controller=backend.template action=save" method="POST" id="templateForm"}
+{form handle=$form action="controller=backend.template action=saveEmail" method="POST" id="templateForm"}
 
-    {textfield name="subject" id="subject"}
-	{textarea name="body" id="body"}
+    {if !$template.isFragment}
+	<p>
+		<label class="wide">{t _subject}:</label>
+		{textfield name="subject" id="subject" class="text wide"}	
+	</p>
+	{/if}
+	
+    <p>
+		{if !$template.isFragment}
+			<label class="wide">{t _body}:</label>
+		{/if}
+		{textarea name="body" id="body" class="body"}
+	</p>
+	
+	{language}
+    	{if !$template.isFragment}
+		    <p>
+				<label class="wide">{t _subject}:</label>
+				{textfield name="subject_`$lang.ID`" class="text wide"}	
+			</p>
+		{/if}
+		
+	    <p>
+    		{if !$template.isFragment}
+				<label class="wide">{t _body}:</label>
+			{/if}
+			{textarea name="body_`$lang.ID`" id="body_`$lang.ID`" class="body"}
+		</p>
+	{/language}
+	
 	{hidden name="file" id="file"}
     	
 	<fieldset class="controls" {denied role="template.save"}style="display: none;"{/denied}>
@@ -16,7 +44,7 @@
 
 {literal}
 <script type="text/javascript">
-	$('code').value = {/literal}decode64("{$code}");{literal};
+	$('body').value = {/literal}decode64("{$template.bodyEncoded}");{literal};
 	editAreaLoader.baseURL = "{/literal}{baseUrl}javascript/library/editarea/{literal}";
 </script>
 {/literal}

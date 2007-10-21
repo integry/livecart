@@ -21,6 +21,9 @@ class Template
 	
 	public function __construct($fileName)
 	{
+		// do not allow to leave view template directory by prefixing ../
+		$fileName = preg_replace('/^[\\\.\/]+/', '', $fileName);
+
 		$path = self::getRealFilePath($fileName);
 		if (file_exists($path))
 		{
@@ -109,14 +112,22 @@ class Template
 	
 	private function checkForChanges()
 	{
-        $l = str_replace("\r\n", "\n", file_get_contents(self::getCustomizedFilePath($this->file)));
-        $r = str_replace("\r\n", "\n", file_get_contents(self::getOriginalFilePath($this->file)));
+        $l = str_replace("\r\n", "\n", $this->getContent(self::getCustomizedFilePath($this->file)));
+        $r = str_replace("\r\n", "\n", $this->getContent(self::getOriginalFilePath($this->file)));
         
         if ($l == $r)
         {
             $this->restoreOriginal();
         }
     }
+	
+	private function getContent($file)
+	{
+		if (file_exists($file))
+		{
+			return file_get_contents($file);
+		}
+	}
 	
 	public function save()
 	{

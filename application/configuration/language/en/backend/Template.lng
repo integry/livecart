@@ -3,6 +3,11 @@ _edit_template=Edit Template File
 _please_select=Please select a template file to edit
 _save_template=Save Template
 
+# E-mail templates
+_edit_email_templates=Edit E-mail Templates
+_subject=Message Subject
+_body=Message Body
+
 # Confirmations
 _template_has_been_successfully_updated=Template saved successfuly
 _could_not_update_template=Template could not be saved

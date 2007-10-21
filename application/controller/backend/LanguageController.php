@@ -191,8 +191,8 @@ class LanguageController extends StoreManagementController
 		
 		$response = new ActionResponse();
 		$response->set("id", $editLocaleName);
-		$response->set("translations", json_encode($translated));
-		$response->set("english", json_encode($enDefs));
+		$response->set("translations", @json_encode($translated));
+		$response->set("english", @json_encode($enDefs));
 		$response->set("edit_language", $editLocale->info()->getLanguageName($editLocaleName));
 					
 		return $response;

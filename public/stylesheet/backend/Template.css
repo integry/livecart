@@ -15,6 +15,17 @@
     width: 900px;
 }
 
+#templateContent textarea.body
+{
+    height: 350px;
+    width: 900px;
+}
+
+#templateContent .languageForm
+{
+    margin-top: 2em;	
+}
+
 #templateForm .yellowMessage, #templateForm .redMessage
 {
 	width: auto !important; 

@@ -73,6 +73,11 @@ Backend.Template.prototype =
 			{
 				editAreaLoader.delete_instance("code");
 			}
+
+			if ($('body'))
+			{
+				editAreaLoader.delete_instance("body");
+			}
 		}
 	},	
 	
@@ -80,7 +85,15 @@ Backend.Template.prototype =
 	{
 		this.treeBrowser.hideFeedback();
 		Event.observe($('cancel'), 'click', this.cancel.bindAsEventListener(this));
-		new Backend.TemplateHandler($('templateForm'));
+		
+		if ($('code'))
+		{
+			new Backend.TemplateHandler($('templateForm'));
+		}
+		else
+		{
+			new Backend.EmailTemplateHandler($('templateForm'));
+		}		
 	},
 
     cancel: function()
@@ -128,6 +141,74 @@ Backend.TemplateHandler.prototype =
 		{
             opener.location.reload();	            
         }
+	}
+}
+
+/**
+ *  E-mail template editor form handler
+ */
+Backend.EmailTemplateHandler = Class.create();
+Backend.EmailTemplateHandler.prototype = 
+{
+	form: null,
+	
+	initialize: function(form)
+	{
+		this.form = form;
+		this.form.onsubmit = this.submit.bindAsEventListener(this);
+
+		editAreaLoader.init({
+			id : "body",		// textarea id
+			syntax: "html",			// syntax to be uses for highgliting
+			start_highlight: true,		// to display with highlight mode on start-up
+			allow_toggle: false,
+			allow_resize: true
+			}
+		);
+
+		// set cursor at the first line
+		editAreaLoader.setSelectionRange('body', 0, 0);		
+
+		// initialize editors for other languages
+		var langs = $('templateContent').down('.languageFormTabs').getElementsByTagName('li');
+		for (k = 0; k < langs.length; k++)
+		{
+			Event.observe(langs[k], 'click',
+				function(e)
+				{
+					var lang = this.className.match(/Tabs_([a-z]{2})/)[1];
+					var textarea = $('templateContent').down('.languageFormContent').down('.languageFormContainer_' + lang).down('textarea');
+
+					editAreaLoader.init({
+						id : textarea.id,		// textarea id
+						syntax: "html",			// syntax to be uses for highgliting
+						start_highlight: true,		// to display with highlight mode on start-up
+						allow_toggle: false,
+						allow_resize: true
+						}
+					);		
+
+				}
+			);
+		}
+	},
+	
+	submit: function()
+	{
+        $('body').value = editAreaLoader.getValue('body');
+
+		var langs = $('templateContent').down('.languageFormContent').getElementsByTagName('textarea');
+		for (k = 0; k < langs.length; k++)
+		{
+			langs[k].value = editAreaLoader.getValue(langs[k].id);
+		}
+	
+		new LiveCart.AjaxRequest(this.form, null, this.saveComplete.bind(this));
+		return false;
+	},
+	
+	saveComplete: function(originalRequest)
+	{
 	}
 }
 

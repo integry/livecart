@@ -10,7 +10,7 @@
 	
     <title>
         {if $PAGE_TITLE}
-            {$PAGE_TITLE}
+            {$PAGE_TITLE|@strip_tags}
         {else}
             {if $breadCrumb}
                 {assign var="lastBreadcrumb" value=$breadCrumb|@end}
