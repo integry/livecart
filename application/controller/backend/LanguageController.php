@@ -435,9 +435,7 @@ class LanguageController extends StoreManagementController
 			}
 		}		
 				
-		$url = $this->router->createUrlFromRoute($returnRoute);
-			
-		return new RedirectResponse($url);			
+		return new RedirectResponse($this->router->createUrlFromRoute($returnRoute));
 	}
 
 	/**

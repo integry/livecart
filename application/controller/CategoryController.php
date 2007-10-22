@@ -469,7 +469,7 @@ class CategoryController extends FrontendController
 		$maxCriteria = $this->config->get('MAX_FILTER_CRITERIA_COUNT'); 
 		$showAll = $this->request->get('showAll');
 		
-		$url = $this->router->createUrlFromRoute($this->router->getRequestedRoute());
+		$url = $this->router->createUrlFromRoute($this->router->getRequestedRoute(), true);
 		$url = $this->router->addQueryParams($url);
 		foreach ($filterGroups as $key => $grp)
 		{

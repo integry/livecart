@@ -48,7 +48,7 @@ function smarty_function_link($params, LiveCartSmarty $smarty)
 	{
 		if (isset($params['route']))
 		{
-			$result = $router->createUrlFromRoute($params['route']);
+			$result = $router->createUrlFromRoute($params['route'], true);
 		}
 		else
 		{			

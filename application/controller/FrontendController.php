@@ -81,7 +81,7 @@ abstract class FrontendController extends BaseController
 	protected function boxSwitchCurrencyBlock()
 	{
         $returnRoute = $this->router->getRequestedRoute();
-		$returnRoute = $this->router->createUrlFromRoute($returnRoute);		
+		$returnRoute = $this->router->createUrlFromRoute($returnRoute, true);
 		$returnRoute = $this->router->setUrlQueryParam($returnRoute, 'currency', '_curr_');
 
         $current = $this->getRequestCurrency();
@@ -131,7 +131,7 @@ abstract class FrontendController extends BaseController
                     $returnRoute = '';
                 }
 
-                $languages[$key]['url'] = $this->router->createUrlFromRoute($lang['ID'] . '/' . $returnRoute);
+                $languages[$key]['url'] = $this->router->createUrlFromRoute($lang['ID'] . '/' . $returnRoute, true);
             }
         }
 
