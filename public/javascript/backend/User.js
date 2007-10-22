@@ -225,7 +225,7 @@ Backend.UserGroup.prototype =
 		
 		if ($("userGroups_delete"))
 		{
-			if(id <= 0)
+			if(id <= 1)
 			{
 				$("userGroups_delete").parentNode.hide();
 			}
