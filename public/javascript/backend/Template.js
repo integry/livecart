@@ -77,6 +77,15 @@ Backend.Template.prototype =
 			if ($('body'))
 			{
 				editAreaLoader.delete_instance("body");
+				
+        		var langs = $('templateContent').down('.languageFormContent').getElementsByTagName('textarea');
+        		for (k = 0; k < langs.length; k++)
+        		{
+                    if ($('frame_' + langs[k].id))
+                    {
+                        editAreaLoader.delete_instance(langs[k].id);
+                    }
+        		}				
 			}
 		}
 	},	

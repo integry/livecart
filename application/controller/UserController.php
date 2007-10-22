@@ -530,7 +530,7 @@ class UserController extends FrontendController
             $email->send();
         }
         
-        return new ActionRedirectResponse('user', 'remindComplete', array('query' => array('email' => $this->request->get('email'))));
+        return new ActionRedirectResponse('user', 'remindComplete', array('query' => 'email=' . $this->request->get('email')));
     }
 	
 	public function remindComplete()
