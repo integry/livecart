@@ -19,17 +19,17 @@ class UserController extends FrontendController
  
     private function addAccountBreadcrumb()
     {
-        $this->addBreadCrumb($this->translate('_your_account'), $this->router->createUrl(array('controller' => 'user')));
+        $this->addBreadCrumb($this->translate('_your_account'), $this->router->createUrl(array('controller' => 'user'), true));
     }
 
     private function addAddressBreadcrumb()
     {
-        $this->addBreadCrumb($this->translate('_manage_addresses'), $this->router->createUrl(array('controller' => 'user', 'action' => 'addresses')));
+        $this->addBreadCrumb($this->translate('_manage_addresses'), $this->router->createUrl(array('controller' => 'user', 'action' => 'addresses'), true));
     }
     
     private function addFilesBreadcrumb()
     {
-		$this->addBreadCrumb($this->translate('_your_files'), $this->router->createUrl(array('controller' => 'user', 'action' => 'files')));    
+		$this->addBreadCrumb($this->translate('_your_files'), $this->router->createUrl(array('controller' => 'user', 'action' => 'files'), true));    
     }
     
     /**
@@ -330,7 +330,7 @@ class UserController extends FrontendController
             $order->loadAll();  
 
     		$this->addAccountBreadcrumb();
-    		$this->addBreadCrumb($this->translate('_your_orders'), $this->router->createUrl(array('controller' => 'user', 'action' => 'orders')));
+    		$this->addBreadCrumb($this->translate('_your_orders'), $this->router->createUrl(array('controller' => 'user', 'action' => 'orders'), true));
     		$this->addBreadCrumb($order->getID(), '');
 
             // mark all notes as read
@@ -1136,7 +1136,7 @@ class UserController extends FrontendController
     	$validator->addCheck('email', new IsValidEmailCheck($this->translate('_err_invalid_email')));    
     	
         $emailErr = $this->translate($uniqueError);
-        $emailErr = str_replace('%1', $this->router->createUrl(array('controller' => 'user', 'action' => 'login', 'query' => array('email' => $this->request->get('email')))), $emailErr);
+        $emailErr = str_replace('%1', $this->router->createUrl(array('controller' => 'user', 'action' => 'login', 'query' => array('email' => $this->request->get('email'))), true), $emailErr);
         $validator->addCheck('email', new IsUniqueEmailCheck($emailErr));    
 	}    
 	

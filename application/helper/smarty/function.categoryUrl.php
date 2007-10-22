@@ -107,7 +107,7 @@ function createCategoryUrl($params, LiveCart $application)
 	  	$urlParams['filters'] = implode(',', $filters);
 	}
 
-	$url = $application->getRouter()->createUrl($urlParams);    
+	$url = $application->getRouter()->createUrl($urlParams, true);    
 	
 	// remove empty search query parameter
 	return preg_replace('/[\?&]q=$/', '', $url);

@@ -65,7 +65,7 @@ class CheckoutController extends FrontendController
     public function init()
     {
         parent::init();  
-        $this->addBreadCrumb($this->translate('_checkout'), $this->router->createUrl(array('controller' => 'order', 'action' => 'index')));         
+        $this->addBreadCrumb($this->translate('_checkout'), $this->router->createUrl(array('controller' => 'order', 'action' => 'index'), true));
         
         $action = $this->request->getActionName();
                 
@@ -74,21 +74,21 @@ class CheckoutController extends FrontendController
             return false;
         }       
 
-        $this->addBreadCrumb($this->translate('_select_addresses'), $this->router->createUrl(array('controller' => 'checkout', 'action' => 'selectAddress')));         		
+        $this->addBreadCrumb($this->translate('_select_addresses'), $this->router->createUrl(array('controller' => 'checkout', 'action' => 'selectAddress'), true));
 		
     	if ('selectAddress' == $action)
     	{
 			return false;	
 		}
                 
-        $this->addBreadCrumb($this->translate('_shipping'), $this->router->createUrl(array('controller' => 'checkout', 'action' => 'shipping')));         		
+        $this->addBreadCrumb($this->translate('_shipping'), $this->router->createUrl(array('controller' => 'checkout', 'action' => 'shipping'), true));
 		
     	if ('shipping' == $action)
     	{
 			return false;	
 		}
 
-        $this->addBreadCrumb($this->translate('_pay'), $this->router->createUrl(array('controller' => 'checkout', 'action' => 'pay')));		
+        $this->addBreadCrumb($this->translate('_pay'), $this->router->createUrl(array('controller' => 'checkout', 'action' => 'pay'), true));		
     }
     
     /**
@@ -117,8 +117,8 @@ class CheckoutController extends FrontendController
 
         $handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
         
-        $returnUrl = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'expressReturn', 'id' => $class)));
-        $cancelUrl = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'order')));
+        $returnUrl = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'expressReturn', 'id' => $class), true));
+        $cancelUrl = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'order'), true));
                 
         $url = $handler->getInitUrl($returnUrl, $cancelUrl, !$handler->getConfigValue('AUTHONLY'));
                 
@@ -682,7 +682,7 @@ class CheckoutController extends FrontendController
         $order = CustomerOrder::getInstanceByID((int)$this->session->get('completedOrderID'), CustomerOrder::LOAD_DATA);
         $response = new ActionResponse();
         $response->set('order', $order->toArray());    
-        $response->set('url', $this->router->createUrl(array('controller' => 'user', 'action' => 'viewOrder', 'id' => $this->session->get('completedOrderID'))));
+        $response->set('url', $this->router->createUrl(array('controller' => 'user', 'action' => 'viewOrder', 'id' => $this->session->get('completedOrderID')), true));
         return $response;        
     }
     

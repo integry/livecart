@@ -33,7 +33,7 @@ function smarty_function_activeGrid($params, LiveCartSmarty $smarty)
         $smarty->assign('filters', "?$filtersString");
     }
     
-    $smarty->assign('url', $smarty->getApplication()->getRouter()->createUrl(array('controller' => $params['controller'], 'action' => $params['action'])));
+    $smarty->assign('url', $smarty->getApplication()->getRouter()->createUrl(array('controller' => $params['controller'], 'action' => $params['action']), true));
     
 	return $smarty->display('block/activeGrid/gridTable.tpl');
 }

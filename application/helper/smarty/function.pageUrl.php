@@ -22,7 +22,7 @@ function smarty_function_pageUrl($params, LiveCartSmarty $smarty)
 					   'handle' => $params['data']['handle'], 
                        );
 
-	return $smarty->getApplication()->getRouter()->createUrl($urlParams);
+	return $smarty->getApplication()->getRouter()->createUrl($urlParams, true);
 }
 
 ?>

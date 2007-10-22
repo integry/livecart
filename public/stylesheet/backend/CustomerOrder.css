@@ -181,7 +181,7 @@
 #orderManagerContainer.unfinalized #tabOrderCommunication,
 #orderManagerContainer.unfinalized #tabOrderLog,
 #orderManagerContainer.unfinalized .order_status,
-#orderManagerContainer.unfinalized .menu,
+#orderManagerContainer.unfinalized .sectionContainer .menu,
 #orderManagerContainer.unfinalized .tabOrderProductsContent .orderShipment_report,
 #orderManagerContainer.unfinalized .tabOrderProductsContent h2,
 #orderManagerContainer.unfinalized .tabOrderProductsContent .shipmentContainer legend,

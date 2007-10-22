@@ -148,7 +148,7 @@ abstract class FrontendController extends BaseController
         }
         
         array_unshift($this->breadCrumb, array('title' => $this->config->get('STORE_NAME'), 
-											   'url' => $this->router->createUrl($home)));
+											   'url' => $this->router->createUrl($home, true)));
 											   
 		$response = new BlockResponse();
 		$response->set('breadCrumb', $this->breadCrumb);

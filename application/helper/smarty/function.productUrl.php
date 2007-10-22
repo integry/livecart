@@ -22,7 +22,7 @@ function smarty_function_productUrl($params, LiveCartSmarty $smarty)
 					   'producthandle' => $handle, 
 					   'id' => $product['ID']);
 					   
-	$url = $smarty->getApplication()->getRouter()->createUrl($urlParams);	
+	$url = $smarty->getApplication()->getRouter()->createUrl($urlParams, true);	
 
     if (!empty($params['filterChainHandle']))
     {

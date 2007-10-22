@@ -15,7 +15,7 @@ function smarty_function_backendUserUrl($params, LiveCartSmarty $smarty)
 	$urlParams = array('controller' => 'backend.userGroup', 
 					   'action' => 'index' );
 					   
-	return $smarty->getApplication()->getRouter()->createUrl($urlParams) . '#user_' . (isset($params['user']) ? $params['user']['ID'] : '');
+	return $smarty->getApplication()->getRouter()->createUrl($urlParams, true) . '#user_' . (isset($params['user']) ? $params['user']['ID'] : '');
 }
 
 ?>

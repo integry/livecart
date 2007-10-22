@@ -15,7 +15,7 @@ function smarty_function_backendOrderUrl($params, LiveCartSmarty $smarty)
 	$urlParams = array('controller' => 'backend.customerOrder', 
 					   'action' => 'index' );
 					   
-	$url = $smarty->getApplication()->getRouter()->createUrl($urlParams) . '#order_' . (isset($params['order']) ? $params['order']['ID'] . '#tabOrderInfo__' : '');
+	$url = $smarty->getApplication()->getRouter()->createUrl($urlParams, true) . '#order_' . (isset($params['order']) ? $params['order']['ID'] . '#tabOrderInfo__' : '');
 	
 	if (isset($params['url']))
 	{

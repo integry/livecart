@@ -17,7 +17,7 @@ function smarty_function_backendProductUrl($params, LiveCartSmarty $smarty)
 	$urlParams = array('controller' => 'backend.category', 
 					   'action' => 'index' );
 					   
-	return $smarty->getApplication()->getRouter()->createUrl($urlParams) . '#product_' . $product['ID'];
+	return $smarty->getApplication()->getRouter()->createUrl($urlParams, true) . '#product_' . $product['ID'];
 }
 
 ?>

@@ -52,7 +52,7 @@ function smarty_function_link($params, LiveCartSmarty $smarty)
 		}
 		else
 		{			
-			$result = $router->createURL($params);			
+			$result = $router->createURL($params, true);			
 		}
 	}
 	catch(RouterException $e)

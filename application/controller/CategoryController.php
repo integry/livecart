@@ -131,7 +131,7 @@ class CategoryController extends FrontendController
 			$urlParams['filters'] = $filterChainHandle;
 		}
 
-		$paginationUrl = $this->router->createURL($urlParams);
+		$paginationUrl = $this->router->createURL($urlParams, true);
 
 		// narrow by subcategories
 		$subCategories = $this->category->getSubCategoryArray(Category::LOAD_REFERENCES);

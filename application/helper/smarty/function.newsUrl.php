@@ -21,7 +21,7 @@ function smarty_function_newsUrl($params, LiveCartSmarty $smarty)
 					   'handle' => createHandleString($news['title_lang']), 
 					   'id' => $news['ID']);
 					   
-	return $smarty->getApplication()->getRouter()->createUrl($urlParams);	
+	return $smarty->getApplication()->getRouter()->createUrl($urlParams, true);	
 }
 
 ?>

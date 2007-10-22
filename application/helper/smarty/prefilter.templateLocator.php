@@ -30,7 +30,7 @@ function smarty_prefilter_templateLocator($tplSource, $smarty)
 	
 	$file = str_replace('\\', '/', $file);
 		
-	$editUrl = $smarty->getApplication()->getRouter()->createUrl(array('controller' => 'backend.template', 'action' => 'editPopup', 'query' => array('file' => $file)));
+	$editUrl = $smarty->getApplication()->getRouter()->createUrl(array('controller' => 'backend.template', 'action' => 'editPopup', 'query' => array('file' => $file)), true);
 	
 	return '<div class="templateLocator"><span class="templateName"><a onclick="window.open(\'' . $editUrl . '\', \'template\', \'width=800,height=600,scrollbars=yes,resizable=yes\'); return false;" href="#">' . $file . '</a></span>' . $tplSource . '</div>';					
 }

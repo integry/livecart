@@ -73,7 +73,7 @@ function smarty_block_form(&$params, $content, $smarty, &$repeat)
 	    
 	    	try
 	    	{
-	    		$actionURL = $smarty->getApplication()->getRouter()->createURL($URLVars);
+	    		$actionURL = $smarty->getApplication()->getRouter()->createURL($URLVars, true);
 	    	}
 	    	catch (RouterException $e)
 	    	{

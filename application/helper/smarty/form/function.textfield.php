@@ -57,7 +57,7 @@ function smarty_function_textfield($params, LiveCartSmarty $smarty)
 		 
 		$url = $smarty->getApplication()->getRouter()->createURL(array('controller' => $acparams['controller'], 
 													  'action' => 'autoComplete', 
-													  'query' => 'field=' . $acparams['field']));
+													  'query' => 'field=' . $acparams['field']), true);
 		  
 		$content .= '<span id="autocomplete_indicator_' . $params['id'] . '" class="progressIndicator" style="display: none;"></span>';
 		$content .= '<div id="autocomplete_' . $params['id'] . '" class="autocomplete"></div>';
