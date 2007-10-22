@@ -14,3 +14,5 @@ _status_awaiting=Laukia siuntimo
 _status_shipped=Išsiųstas
 _status_canceled=Atšauktas
 _status_returned=Grąžintas
+_last_hours=[quantf,_1,Last hour,Last %d hours]
+_last_days=[quantf,_1,Last 1 day,Last %d days]

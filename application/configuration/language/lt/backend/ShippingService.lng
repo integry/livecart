@@ -21,7 +21,6 @@ _shipping_service_contains_no_rates=Siuntimo servisas neturi jokių tarifų
 _error_range_start_should_be_a_float_value=Intervalo pradžia turi būti skaitinė išraiška
 _error_range_end_should_be_a_float_value=Intervalo pabaiga turi būti skaitinė išraiška
 _error_flat_charge_should_be_a_float_value=Vienkartinis mokęstis turi būti skaitinė išraiška
-
 _error_per_item_charge_should_be_a_float_value=Mokęstis už kiekvieną produkto vienetą turi būti skaitinė išraiška
 _error_per_kg_charge_should_be_a_float_value=Mokęstis už kiekvieną produkto kg turi būti skaitinė išraiška
 _error_subtotal_percent_charge_should_be_a_float_value=Tarpinės sumos procentinis mokęstis turi būti skaitinė reikšmė

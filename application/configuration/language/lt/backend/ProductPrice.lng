@@ -6,6 +6,6 @@ _items_in_stock=Kiekis
 _pricing=Kainos
 _shipping_weight=Siuntimo svoris
 _minimum_order_quantity=Minimalus užsakymo kiekis
-_shipping_surcharge=Gabenimo priemoka
+_shipping_surcharge=Pristatymo priemoka
 _requires_separate_shipment=Reikalauti atskiro siuntimo
 _allow_back_ordering=Leisti užsakyti pasibaigusias prekes

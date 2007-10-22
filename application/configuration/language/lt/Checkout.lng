@@ -9,7 +9,7 @@ _select_shipping_address=Pasirinkite pristatymo adresą
 _select_billing_address=Pasirinkite apmokėjimo adresą
 _select_shipping=Pasirinkite pristatymo būdą
 _err_select_shipping=Pasirinkite pristatymo būdą šiam siuntiniui
-_info_multi_shipments=Vienas ar daugiau jūsų užsakytų produktų reikalauja atskiro siuntimo.
+_info_multi_shipments=Vienas ar daugiau Jūsų užsakytų produktų reikalauja atskiro siuntimo.
 _pay=Apmokėjimas
 _total=Viso
 _pay_securely=Apmokėti kreditine kortele
@@ -31,6 +31,6 @@ _err_select_cc_expiry_year=Iveskite galiojimo laiką
 _err_enter_cc_cvv=Įveskite 3 ar 4-ių simbolių kodą
 _err_processing_cc=Autorizacija nesėkminga. Prašau įsitikinti, kad kortelės duomenys teisingi.
 _cvv=CVV kodas
-_cvv_description=Card Verification Value (CVV) kodas yra skirtas papildomai koretlės apsaugai. Šis kodas yra ant jūsų kortelės ir dažniausiai susideda iš 3 ar 4-ių skaitmenų.
+_cvv_description=Card Verification Value (CVV) kodas yra skirtas papildomai kortelės apsaugai. Šis kodas yra ant Jūsų kortelės ir dažniausiai susideda iš 3 ar 4-ių skaitmenų.
 _order_completed=Užsakymas užbaigtas
-_completed_paid=Jūsų mokėjimas gautas.Užsakymo būseną galite matyti <a href="%url">savo saskaitoje</a>.
+_completed_paid=Jūsų mokėjimas gautas. Užsakymo būseną galite matyti <a href="%url">savo sąskaitoje</a>.
