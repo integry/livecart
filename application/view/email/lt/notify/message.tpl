@@ -1,0 +1,11 @@
+Naujo užsakymo pranešimas iš {'STORE_NAME'|config}
+Vartotojas parašė naują žinutę susijusią su užsakymu #{$order.ID}
+
+--------------------------------------------------
+{$message.text}
+--------------------------------------------------
+
+Jūs galite pridėti atsakymą iš Užsakymų valdymo dalies:
+{backendOrderUrl order=$order url=true}#tabOrderCommunication__
+
+{include file="email/en/signature.tpl"}
