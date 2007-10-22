@@ -1,4 +1,4 @@
- | <a href="#" onClick="showLangMenu(true);return false;">{t _change_language}</a>
+ | <a href="#" onClick="{literal}if (showLangMenu) { showLangMenu(true); }; return false;"{/literal}>{t _change_language}</a>
 
 <div id="langMenuContainer">
 	<div id="langMenuIndicator" class="menuLoadIndicator"></div>

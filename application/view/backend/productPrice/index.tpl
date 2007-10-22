@@ -8,7 +8,7 @@
 
 	<fieldset class="controls">
 		<span class="progressIndicator" style="display: none;"></span>
-        <input type="submit" name="save" class="submit" value="Save">
+        <input type="submit" name="save" class="submit" value="{t _save}">
         {t _or}
         <a class="cancel" href="#">{t _cancel}</a>
 	</fieldset>

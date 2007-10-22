@@ -1,7 +1,7 @@
 <div class="productForm {if 1 == $product.type}intangible{/if}">
     <fieldset class="container">
 		<ul class="menu">
-	        <li class="done"><a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct({$product.Category.ID}); return false;">Cancel adding new product</a></li>
+	        <li class="done"><a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct({$product.Category.ID}); return false;">{t _cancel_add_product}</a></li>
 	    </ul>
 	</fieldset>
         
@@ -36,7 +36,7 @@
     		</p>	
     	
     		<span class="progressIndicator" style="display: none;"></span>
-            <input type="submit" name="save" class="submit" value="Save"> {t _or} <a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct({$product.Category.ID}); return false;">{t _cancel}</a>
+            <input type="submit" name="save" class="submit" value="{t _save}"> {t _or} <a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct({$product.Category.ID}); return false;">{t _cancel}</a>
     	</fieldset>
     	
     {/form}

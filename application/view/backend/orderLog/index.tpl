@@ -29,9 +29,9 @@
 							{t _order_status_changed}
                         {elseif $log.action == $ACTION_CANCELEDCHANGE}
 							{if $log.newValue.isCancelled}
-								Order cancelled
+								{t _order_cancelled}
 							{else}
-								Order activated
+								{t _order_activated}
 							{/if}
 						{/if}
                     {elseif $log.type == $TYPE_SHIPMENT}

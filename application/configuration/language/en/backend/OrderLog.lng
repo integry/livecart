@@ -17,6 +17,8 @@ _state_name=State
 
 _order_status_changed=Order status changed
 _order_cancelled_changed=Order canceled/activated
+_order_activated=Order activated
+_order_cancelled=Order cancelled
 _new_shipment_added=New shipment added
 _shipment_removed=Shipment removed
 _shipment_status_changed=Shipment status changed

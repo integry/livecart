@@ -53,7 +53,7 @@
                     </select>
                 
                     <span class="progressIndicator" style="display: none;"></span>
-                    <input type="submit" value="Save" class="button submit"  id="orderShipment_USPS_{$shipment.ID}_submit" />
+                    <input type="submit" value="{t _save}" class="button submit"  id="orderShipment_USPS_{$shipment.ID}_submit" />
                     or
                     <a class="cancel" href="#cancel"  id="orderShipment_USPS_{$shipment.ID}_cancel" >Cancel</a>
                 </span>

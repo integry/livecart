@@ -39,5 +39,13 @@ _is_enabled=Enabled
 _is_free_shipping=Free shipping
 _is_real_time_disabled=Real time shipping disabled
 
+Africa=Africa
+Asia=Asia
+Europe=Europe
+North America=North America
+South America=South America
+Oceania=Oceania
+European Union=European Union
+
 #errors
 _error_mask_is_empty=Mask is empty

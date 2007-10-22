@@ -45,6 +45,7 @@ li.productRelationshipGroup_item li {
 {
     float: left;
     width: 50px;
+    padding-top: 4px;
 }
 
 .productRelationship_list li

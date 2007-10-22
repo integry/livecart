@@ -32,16 +32,16 @@
 
 	<legend>{t _add_news}</legend>
 
-	{form action="controller=backend.siteNews action=add" method="POST" onsubmit="new Backend.SiteNews.Add(this); return false;" handle=$form id="newsForm"}
+	{form action="controller=backend.siteNews action=add" method="POST" onsubmit="new Backend.SiteNews.Add(this); return false;" handle=$form id="newsForm" class="enabled"}
 		<input type="hidden" name="id" />
 
 		<p>
-			<label class="wide">{t _date}</label>
+			<label>{t _date}</label>
 			{calendar name="time" id="time"}		
 		</p>
 		<p>
 			{{err for="title"}}
-				<label class="wide">{t _title}:</label>
+				<label>{t _title}:</label>
 				{textfield class="text"}
 			{/err}	
 		</p>
@@ -52,7 +52,7 @@
 			{/err}
 		</p>
 		<p>
-			<label class="wide">{t _more_text}:</label>
+			<label class="wide" style="margin-top: 1em;">{t _more_text}:</label>
 			{textarea name="moreText" class="tinyMCE"}
 		</p>
 	

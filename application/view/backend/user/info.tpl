@@ -81,7 +81,7 @@
     
     <fieldset class="controls">
 		<span class="progressIndicator" style="display: none;"></span>
-    	<input type="submit" name="save" class="submit" value="Save" id="user_{$someUser.UserGroup.ID}_{$someUser.ID}_submit"> 
+    	<input type="submit" name="save" class="submit" value="{t _save}" id="user_{$someUser.UserGroup.ID}_{$someUser.ID}_submit"> 
         {t _or} 
         <a class="cancel" href="#">{t _cancel}</a>
     </fieldset>

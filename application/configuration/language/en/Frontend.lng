@@ -34,6 +34,7 @@ _shipping=Shipping
 _order_total=Order total
 _price=Price
 _quantity=Quantity
+_product=Product
 
 # Checkout
 _checkout=Checkout

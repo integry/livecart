@@ -48,6 +48,11 @@ h1
   	color: #AAAAAA;
 }
 
+.enabled, .enabled *
+{
+    color: #000;
+}
+
 .menuFieldSet {
   	display: inline;
   	width: auto;

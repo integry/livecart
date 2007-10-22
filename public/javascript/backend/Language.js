@@ -522,7 +522,7 @@ Backend.LangEdit.prototype =
 						key = new KeyboardEvent(e); 
 						if (key.getKey() == key.KEY_DOWN)
 						{
-							this.handler.replaceInputWithTextarea(this);
+							this.handler.replaceInputWithTextarea(this, true);
 						} 
 						else if (key.getKey() == key.KEY_ENTER)
 						{
@@ -534,13 +534,13 @@ Backend.LangEdit.prototype =
                 
             if (value.indexOf("\n") > -1)
 			{
-			  	var textarea = this.replaceInputWithTextarea(input);
+			  	var textarea = this.replaceInputWithTextarea(input, false);
 			  	textarea.value = value;
 			}                
         }
 	},
 	
-	replaceInputWithTextarea: function(element)
+	replaceInputWithTextarea: function(element, focus)
 	{
 		var textarea = document.createElement('textarea');  	
 		element.parentNode.replaceChild(textarea, element);
@@ -551,7 +551,10 @@ Backend.LangEdit.prototype =
 		textarea.key = element.key;
 		textarea.onchange = element.onchange;
                 		
-		textarea.focus();								  	
+		if (focus)
+		{
+            textarea.focus();
+        }
 		
 		return textarea;
 	}	

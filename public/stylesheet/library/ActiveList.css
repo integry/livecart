@@ -1,6 +1,7 @@
 .activeList_icons
 {
     width: 90px;
+    vertical-align: middle;
 }
 
 .singleInput .activeList_icons
@@ -41,6 +42,11 @@ li.activeList_even, li.activeList_odd
     overflow: hidden;
     background-color: #FAFAFA;
     border: 2px solid #EEEEEE;
+}
+
+.activeList label
+{
+    white-space: normal;    
 }
 
 ul.activeListGroup > li

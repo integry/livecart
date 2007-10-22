@@ -317,6 +317,11 @@
 	text-align: left;
 }
 
+.activeGridColumnsList label
+{
+    width: 190px;
+}
+
 .activeGridControls
 {
 	position: relative !important;

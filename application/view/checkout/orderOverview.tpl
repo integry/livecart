@@ -1,13 +1,13 @@
 <div class="orderOverviewControls">
-    <a href="{link controller=order}">Any changes needed?</a>
+    <a href="{link controller=order}">{t _any_changes}</a>
 </div>
 <table class="table shipment" id="payItems">            
     <thead>
         <tr>
-            <th class="productName">Product</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Subtotal</th>
+            <th class="productName">{t _product}</th>
+            <th>{t _price}</th>
+            <th>{t _quantity}</th>
+            <th>{t _subtotal}</th>
         </tr>                            
     </thead>
     <tbody>

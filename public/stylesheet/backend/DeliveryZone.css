@@ -77,7 +77,8 @@ fieldset.checkbox .progressIndicator
 {
     width: 20em;
     text-align: center;
-    margin: 0 9em 2em;
+    margin: 0 6.8em 2em;
+    float: right;
 }
 
 .countriesAndStates_regionsAndUnions div

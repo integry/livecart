@@ -1,1 +1,1 @@
-Please select a page to edit or create a new page.
+{t _please_select_page}
