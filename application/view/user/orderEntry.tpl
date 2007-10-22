@@ -1,5 +1,5 @@
 <h3>
-    <a href="{link controller=user action=viewOrder id=$order.ID}">{$order.formatted_dateCompleted.date_long}</a>    
+    <a href="{link controller=user action=viewOrder id=$order.ID}">{$order.formatted_dateCompleted.date_long}</a>
 </h3>
 
 {if $order.unreadMessageCount}

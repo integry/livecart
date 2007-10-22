@@ -1,5 +1,5 @@
 _awaiting=Gaida sūtījumu
-_awaiting_payment=Gaida sūtījumu
+_awaiting_payment=Gaidām maksājumu par
 _processing=Tiek apstrādāts
 _login=Pieslēgties
 _your_pass=Jūsu parole
@@ -56,7 +56,7 @@ _download_recent=Lejupielādējiet nesen nopirktos failus
 _recent_orders=Nesenie pirkumi
 _no_orders_placed=Jūs vēl neesat veicis nevienu pasūtījumu
 _change_pass=Mainīt Paroli
-_current_pass=Tagadējā Parole
+_current_pass=Tagadējā parole
 _enter_new_pass=Ievadiet jauno paroli
 _reenter_new_pass=Ievadiet jauno paroli vēlreiz
 _complete_pass_change=Mainīt Paroli

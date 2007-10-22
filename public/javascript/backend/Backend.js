@@ -1327,3 +1327,14 @@ Backend.SelectPopup.prototype = {
         this.onObjectSelect.call(this, objectID, downloadable);
     }
 }
+
+/********************************************************************
+ * Router / Url manipulator
+ ********************************************************************/
+Backend.Router = 
+{
+    setUrlQueryParam: function(url, key, value)
+    {
+        return url + (url.match(/\?/) ? '&' : '?') + key + '=' + value;
+    }
+}

@@ -4,3 +4,6 @@ _please_select=Lūdzu izvēlieties šablonu, kuru redaģēt
 _save_template=Saglabāt šablonu
 _template_has_been_successfully_updated=Šablons veiksmīgi saglabāts
 _could_not_update_template=Nevar saglabāt šablonu
+_edit_email_templates=Tulkot E-pasta Šablonus
+_subject=Tēma
+_body=Teksts

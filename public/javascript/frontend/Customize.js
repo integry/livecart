@@ -26,7 +26,7 @@ TranslationMenuEvent.prototype =
 Customize = Class.create();
 Customize.prototype = {		
   
-	controllerUrl: false,
+	actionUrl: false,
 	
 	currentElement: false,
 	
@@ -39,9 +39,9 @@ Customize.prototype = {
 	  
 	},
 	
-	setControllerUrl: function(url)
+	setActionUrl: function(url)
 	{
-		this.controllerUrl = url;  
+		this.actionUrl = url;  
 	},
 
 	initLang: function()
@@ -107,7 +107,10 @@ Customize.prototype = {
 		file = element.className.split(' ')[2];
 		file = file.substr(6, file.length);
 	
-		url = this.controllerUrl + '/translationDialog?id=' + id + '&file=' + file;
+		url = this.actionUrl;
+        url = Backend.Router.setUrlQueryParam(url, 'id', id);
+		url = Backend.Router.setUrlQueryParam(url, 'file', file);
+//        url = this.actionUrl + '?id=' + id + '&file=' + file;
 
 		dialog = document.getElementById('transDialogBox');
 
