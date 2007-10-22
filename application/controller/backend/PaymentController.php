@@ -103,6 +103,12 @@ class PaymentController extends StoreManagementController
         $transaction->user->set($this->user);        
         $transaction->save();
         
+        if ($order->totalAmount->get() <= $order->capturedAmount->get())
+        {
+            $order->isPaid->set(true);
+            $order->save();
+        }
+        
         $this->request->set('id', $transaction->getID());
         
         return $this->getTransactionUpdateResponse();
@@ -213,6 +219,12 @@ class PaymentController extends StoreManagementController
             $transaction->setHandler($handler);
             $transaction->comment->set($this->request->get('comment'));
             $transaction->save();
+            
+            if ($order->totalAmount->get() <= $order->capturedAmount->get())
+            {
+                $order->isPaid->set(true);
+                $order->save();
+            }
             
             $this->request->set('id', $transaction->getID());
             return $this->getTransactionUpdateResponse();
