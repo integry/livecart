@@ -33,13 +33,68 @@ class UpdateController extends StoreManagementController
         list($headers, $version) = explode("\n\n", $res);
         
         // get current version
-        $current = file_get_contents(ClassLoader::getRealPath('.') . '/.version');
-        
-        $response = new ActionResponse('current', $current);
+        $response = new ActionResponse('current', $this->getCurrentVersion());
         $response->set('newest', $version);
         $response->set('needUpdate', version_compare($current, $version, '<'));
         return $response;
 	}	
+	
+	/**
+	 *  Handles LiveCart update process
+	 */
+    public function update()
+	{
+        $dir = ClassLoader::getRealPath('update') . '/' . $this->getCurrentVersion();
+        if (!is_dir($dir))
+        {
+            return new RawResponse('Update directory not found');
+        }
+        
+        $progress = array();
+        $errors = array();
+                
+        // load SQL dump file
+        $sql = $dir '/update.sql';
+        if (file_exists($sql))
+        {
+            try
+            {
+                Installer::loadDatabaseDump(file_get_contents($sql));
+                $progress['sql'] = true;
+            }
+            catch (Exception $e)
+            {
+                $errors['sql'] = $e->getMessage();
+            }
+        }
+        
+        // execute custom update code
+        $code = $dir . '/update.php';
+        if (file_exists($code))
+        {
+            ob_start();
+            if (!include $code)
+            {
+                $errors['code'] = ob_get_contents();
+            }
+            else
+            {
+                $progress['code'] = true;
+            }
+            
+            ob_end_clean();
+        }
+        
+        $response = new ActionResponse();
+        $response->set('progress', $progress);
+        $response->set('errors', $errors);
+        return $response;
+    }
+    
+    private function getCurrentVersion()
+    {
+        return file_get_contents(ClassLoader::getRealPath('.') . '/.version');
+    }
 }
 
 ?>
