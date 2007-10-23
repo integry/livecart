@@ -1,10 +1,14 @@
+#!/bin/bash
+
 set -e
 
-#!/bin/bash
 MAIN=/home/mercurial/repo/livecart
 BUILD=/home/mercurial/repo/build
 TMP=/tmp/build
 PACKAGE=/var/db/livecart
+
+MAIN=/var/www/livecart
+BUILD=/var/www/build
 
 # get last log message
 cd $MAIN
@@ -30,16 +34,21 @@ find -name '*.js' | xargs grep -l Integry | xargs --max-args=1 ./build/copyright
 VERSION=`head .version`
 
 # copy version file to update server (update.livecart.com)
-cp .version /home/livecart/public_html/update/.version
+# cp .version /home/livecart/public_html/update/.version
 
 # remove non-distributed files
-rm -rf build
-rm -rf doc
+rm -rf build cache doc update
 rm -rf storage/configuration/database.php
 rm -rf library/payment/test/simpletest
 rm -rf library/payment/test/unittest
 
 # commit changes
+hg add
+
+# get changed and removed files
+hg status | grep "^[AM]" | cut -c 3- | grep -v "^\.hg" | grep -v "^\.snap" > $MAIN/update/$VERSION/changed
+hg status | grep "^[!]" | cut -c 3- > $MAIN/update/$VERSION/deleted
+
 hg addremove
 hg commit -m "$VERSION:"$'\n'"$LOG"
 hg tag $VERSION
@@ -52,9 +61,6 @@ cd $TMP
 # remove Mercurial files
 rm -rf .hg*
 rm -rf .snap
-
-# create update package
-
 
 mkdir cache
 rm -rf storage
@@ -71,3 +77,31 @@ gzip -9 $TAR
 ZIP=$PACKAGE/livecart-$VERSION.zip
 rm -rf $ZIP
 zip -rq $ZIP .
+
+# copy changed files for update
+rm -rf /tmp/update
+mkdir /tmp/update
+cat $MAIN/update/$VERSION/changed | xargs cp --parents -f --target-directory=/tmp/update
+
+# prepare update package
+mkdir /tmp/update/update
+cp -r $MAIN/update/$VERSION /tmp/update/update/$VERSION
+
+cd $MAIN/update
+cp readme.txt /tmp/update/update/$VERSION
+
+# create update package files
+cd /tmp/update
+FROMVERSION=`head /tmp/update/update/$VERSION/from.version`
+TAR=$PACKAGE/livecart-update-$FROMVERSION-to-$VERSION.tar
+rm -rf $TAR.gz
+tar cf $TAR .
+gzip -9 $TAR
+
+ZIP=$PACKAGE/livecart-update-$FROMVERSION-to-$VERSION.tar
+rm -rf $ZIP
+zip -rq $ZIP .
+
+rm -rf /tmp/update
+
+echo 'Build process completed successfuly'

@@ -6,27 +6,15 @@ It is strongly advised to MAKE FULL BACKUPS of both your files and database befo
 
 II.  Applying the update
 
-When you have downloaded the update package, please upload its contents to your LiveCart installation directory.
+1) Unpack the archive with update files.
 
-There are two ways for installing the update - automated (requires SSH access) and manual (if SSH is not available).
+!IMPORTANT! First, please make sure that you have the right update package. Please compare the from.version file from the update package with the .version file in your LiveCart installation directory. Version numbers in these files must match.
 
-a. Automated installation:
-
-1) When the files have been uploaded, connect to your site using SSH and go into the /updates/version directory
-
-2) Execute the following command:
-
-chmod 0755 update.sh && ./update.sh
-
-If the update is successful, you will see a confirmation message. If there was a problem, an error message will be displayed.
-
-b. Manual installation
-
-1) !IMPORTANT! First, please make sure that you have the right update package. Please compare the from.version file from the update package with the .version file in your LiveCart installation directory. Version numbers in these files must match.
-
-2) Copy the /files directory from the update package over the existing files. Allow to overwrite files when prompted.
+2) Upload the unpacked files to your LiveCart installation directory. Allow to overwrite files when prompted.
 
 3) From your web browser open the following URL: http://yourstore.com/backend.update/update
+
+If the update was successful, you should receive a confirmation message.
 
 If you encounter any problems when updating your LiveCart installation please contact the support team (http://support.turn-k.net).
 
