@@ -34,3 +34,5 @@ _cvv=CVV kodas
 _cvv_description=Card Verification Value (CVV) kodas yra skirtas papildomai kortelės apsaugai. Šis kodas yra ant Jūsų kortelės ir dažniausiai susideda iš 3 ar 4-ių skaitmenų.
 _order_completed=Užsakymas užbaigtas
 _completed_paid=Jūsų mokėjimas gautas. Užsakymo būseną galite matyti <a href="%url">savo sąskaitoje</a>.
+_any_changes=Reikalingi pakeitimai?
+_completed_not_paid=...čia įdėkite neprijungto apmokėjimo instrukcijas...
