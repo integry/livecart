@@ -98,7 +98,7 @@ rm -rf $TAR.gz
 tar cf $TAR .
 gzip -9 $TAR
 
-ZIP=$PACKAGE/livecart-update-$FROMVERSION-to-$VERSION.tar
+ZIP=$PACKAGE/livecart-update-$FROMVERSION-to-$VERSION.zip
 rm -rf $ZIP
 zip -rq $ZIP .
 

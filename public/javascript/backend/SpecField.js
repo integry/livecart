@@ -401,7 +401,11 @@ Backend.SpecField.prototype = {
 
         if(this.isNumber(this.type))
 		{
-			this.nodes.stepValues.down(".languageForm").hide();
+			if (this.nodes.stepValues.down(".languageForm"))
+			{
+				this.nodes.stepValues.down(".languageForm").hide();
+			}
+
 			document.getElementsByClassName("sufixAndPrefix", this.nodes.parent).invoke("show");
 
 		    this.nodes.valuesDefaultGroup.down('ul').childElements().each(function(li)
@@ -412,7 +416,11 @@ Backend.SpecField.prototype = {
         }
 		else
 		{
-            this.nodes.stepValues.down(".languageForm").show();
+			if (this.nodes.stepValues.down(".languageForm"))
+			{
+            	this.nodes.stepValues.down(".languageForm").show();
+			}
+
             document.getElementsByClassName("sufixAndPrefix", this.nodes.parent).invoke("hide");
 		}
 
@@ -1171,17 +1179,24 @@ Backend.SpecField.prototype = {
             this.nodes.controls.hide();
             this.nodes.mergeValuesCancelLink.show();
             this.nodes.mergeValuesLink.hide();
-            this.nodes.stepValues.down('.languageForm').hide();
+
+            if (this.nodes.stepValues.down('.languageForm'))
+            {
+				this.nodes.stepValues.down('.languageForm').hide();
+            }
         }
         else
         {
             this.nodes.mergeValuesControls.hide();
             this.nodes.valuesAddFieldLink.show();
 
-            if (this.DATATYPE_TEXT == this.specField.dataType)
+            if (this.nodes.stepValues.down('.languageForm'))
             {
-                this.nodes.stepValues.down('.languageForm').show();
-            }
+				if (this.DATATYPE_TEXT == this.specField.dataType)
+				{
+					this.nodes.stepValues.down('.languageForm').show();
+				}
+			}
 
             this.nodes.mergeValuesCancelLink.hide();
             this.nodes.mergeValuesLink.show();
