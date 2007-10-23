@@ -54,7 +54,7 @@ class UpdateController extends StoreManagementController
         $errors = array();
                 
         // load SQL dump file
-        $sql = $dir '/update.sql';
+        $sql = $dir . '/update.sql';
         if (file_exists($sql))
         {
             try
@@ -69,7 +69,7 @@ class UpdateController extends StoreManagementController
         }
         
         // execute custom update code
-        $code = $dir . '/update.php';
+        $code = $dir . '/custom.php';
         if (file_exists($code))
         {
             ob_start();

@@ -53,6 +53,9 @@ cd $TMP
 rm -rf .hg*
 rm -rf .snap
 
+# create update package
+
+
 mkdir cache
 rm -rf storage
 mkdir storage
