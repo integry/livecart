@@ -1,9 +1,9 @@
 #!/bin/bash
-cat ./build/copyright.php $1 > $1.copy
-rm $1
-mv $1.copy $1
+cat $1/build/copyright.php $2 > $2.copy
+rm -f $2
+mv $2.copy $2
 
 # remove redundant PHP open/close tags
-cat $1 | grep -v '?><?php' > $1.copy
-rm $1
-mv $1.copy $1
+cat $2 | grep -v '?><?php' > $2.copy
+rm -f $2
+mv $2.copy $2

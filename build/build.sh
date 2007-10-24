@@ -27,8 +27,8 @@ mv $TMP $BUILD
 cd $BUILD
 
 # prepend copyright messages to source files
-find -name '*.php' | xargs grep -l Integry | xargs --max-args=1 ./build/copyrightPhp.sh
-find -name '*.js' | xargs grep -l Integry | xargs --max-args=1 ./build/copyrightJs.sh
+find -name '*.php' | xargs grep -l Integry | xargs --max-args=1 $MAIN/build/copyrightPhp.sh $MAIN
+find -name '*.js' | xargs grep -l Integry | xargs --max-args=1 $MAIN/build/copyrightJs.sh $MAIN
 
 # get version
 VERSION=`head .version`

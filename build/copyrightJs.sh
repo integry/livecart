@@ -1,4 +1,4 @@
 #!/bin/bash
-cat ./build/copyright.js $1 > $1.copy
-rm $1
-mv $1.copy $1
+cat $1/build/copyright.js $2 > $2.copy
+rm $2
+mv $2.copy $2
