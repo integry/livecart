@@ -194,6 +194,7 @@
 	 * URL assigment for internal javascript requests
 	 */
     Backend.Category.links = {literal}{}{/literal};
+	Backend.Category.links.popup  = '{link controller=backend.category action=popup}';
 	Backend.Category.links.create  = '{link controller=backend.category action=create id=_id_}';
 	Backend.Category.links.remove  = '{link controller=backend.category action=remove id=_id_}';
 	Backend.Category.links.countTabsItems = '{link controller=backend.category action=countTabsItems id=_id_}';

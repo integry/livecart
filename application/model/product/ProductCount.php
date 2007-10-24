@@ -91,8 +91,16 @@ class ProductCount
         $config = $this->application->getConfig();
         while ($config->isValueSet('PRICE_FILTER_NAME_' . ++$k))
         {
-            $filters[$k] = array($config->get('PRICE_FILTER_FROM_' . $k), $config->get('PRICE_FILTER_TO_' . $k));
+            if ($config->get('PRICE_FILTER_NAME_' . $k) && !is_array($config->get('PRICE_FILTER_NAME_' . $k)))
+            {
+                $filters[$k] = array($config->get('PRICE_FILTER_FROM_' . $k), $config->get('PRICE_FILTER_TO_' . $k));
+            }
         }          
+        
+        if (!$filters)
+        {
+            return false;
+        }
         
 		// get product counts
         $selectFilter = $this->productFilter->getSelectFilter();		

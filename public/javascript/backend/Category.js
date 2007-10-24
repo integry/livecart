@@ -770,13 +770,13 @@ Backend.Category.PopupSelector = Class.create();
 Backend.Category.PopupSelector.prototype = 
 {
     element: null,
-    
+
     initialize: function(element)
     {
         this.element = element;
 
         var self = this;
-        var w = window.open('/livecart/backend.category/popup', 'selectCategory', 'width=260, height=450');
+        var w = window.open(Backend.Category.links.popup, 'selectCategory', 'width=260, height=450');
         
         // close the popup automatically if closing/reloading page
 		Event.observe(window, 'unload', function()
