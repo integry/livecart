@@ -1,7 +1,6 @@
 <?php
 
 include_once(dirname(__file__) . '/../abstract/ExternalPayment.php');
-include_once(dirname(__file__) . '/../method/library/paypal/PaypalCommon.php');
 
 /**
  *
@@ -132,8 +131,14 @@ class PaypalWebsitePaymentsStandard extends ExternalPayment
         
     public function getValidCurrency($currentCurrencyCode)
     {
-        return PaypalCommon::getValidCurrency($currentCurrencyCode);
-    }    
+        $currentCurrencyCode = strtoupper($currentCurrencyCode);
+        return in_array($currentCurrencyCode, self::getSupportedCurrencies()) ? $currentCurrencyCode : 'USD';
+    }	
+    
+    public static function getSupportedCurrencies()
+    {
+        return array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD', 'NZD', 'CHF', 'HKD', 'SGD', 'SEK', 'DKK', 'PLN', 'NOK', 'HUF', 'CZK');
+    } 
     
     public function isVoidable()
     {
