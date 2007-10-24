@@ -66,7 +66,7 @@ class ProductController extends StoreManagementController
 
         $filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
 		
-        new ActiveGrid($this->application, $filter);
+        new ActiveGrid($this->application, $filter, 'Product');
         					
         $recordCount = true;
 		$productArray = ActiveRecordModel::getRecordSetArray('Product', $filter, array('Category', 'Manufacturer'), $recordCount);

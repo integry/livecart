@@ -386,7 +386,7 @@ class CustomerOrderController extends StoreManagementController
 
 	    $filter->setCondition($cond);
 
-	    new ActiveGrid($this->application, $filter);
+	    new ActiveGrid($this->application, $filter, 'CustomerOrder');
 
         $recordCount = true;
 	    $orders = ActiveRecordModel::getRecordSetArray('CustomerOrder', $filter, true, $recordCount);

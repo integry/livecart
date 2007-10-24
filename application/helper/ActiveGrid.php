@@ -59,6 +59,10 @@ class ActiveGrid
                 $filter->setOrder($handle, $request->get('sort_dir'));
             }				
 		}
+		else if ($modelClass)
+		{
+            $filter->setOrder(new ARFieldHandle($modelClass, 'ID'), 'DESC');
+        }
         
 		// apply filters
 		$filters = $request->get('filters', array());
@@ -135,7 +139,7 @@ class ActiveGrid
         }       	  
 		
 		// apply IDs to filter
-		if ($modelClass)
+		if ($request->get('selectedIDs') || $request->get('isInverse'))
 		{
 			$selectedIDs = json_decode($request->get('selectedIDs'));
 			if ($selectedIDs)

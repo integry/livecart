@@ -3,6 +3,7 @@ LiveCart 1.0.1 change log (24.10.2007.)
 Frontend Fixes:
 
 * Fixed the problem with only the first search results page working (search query was dropped when going to subsequent result pages)
+* Price filters without a name were still displayed in frontend
 * Resolved XHTML and CSS validation issues
 * Fixed Opera quirks
 * Removed dependency for PHP's SOAP extension for the Paypal Website Payments Standard module
@@ -14,12 +15,14 @@ Backend fixes:
 * Fixed a bug that prevented mass actions to be applied for orders when the filter list was filtered by customer name
 * Fixed a bug that caused shipment subtotal to be displayed as 0.00 for new orders until any changes were made to that shipment
 * Fixed some minor data grid interface issues
+* Data grid default sort order changed to display the newest records (orders, products, users) first
 * Attributes tab was not functioning correctly in case only one language was installed
 * Live translation didn't work when other currency than main was active
 * Do not allow to remove Administrators user group
-* Public access to application directories is forbidden (applies when the application code is placed in publicly accessible directory)
+* Category selection popup window for moving products didn't open correctly in some cases
 * Order wasn't marked as paid after adding payment manually from backend area
 * Also fixed several backend interface quirks and inconsistencies
+* Public access to application directories is forbidden (applies when the application code is placed in publicly accessible directory)
 
 Additions:
 
