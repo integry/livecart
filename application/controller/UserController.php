@@ -751,7 +751,7 @@ class UserController extends FrontendController
         {
             $address = ShippingAddress::getUserAddress($this->request->get('id'), $this->user);
         }
-        catch (zzzARNotFoundException $e)
+        catch (ARNotFoundException $e)
         {
             return new ActionRedirectResponse('user', 'index');   
         }
