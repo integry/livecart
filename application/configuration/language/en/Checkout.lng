@@ -47,6 +47,9 @@ _err_enter_cc_cvv=Please enter the 3 or 4 digit code after card # on back of car
 
 _err_processing_cc=Unfortunately we could not process your credit card. Please make sure that you have entered the card details correctly.
 
+_other_methods=Other payment methods
+_select_payment_method=Select a payment method
+
 _any_changes=Any changes needed?
 
 ######################## 

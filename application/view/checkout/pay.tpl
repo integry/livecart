@@ -96,9 +96,9 @@
 
     {if $otherMethods}
         {if 'CC_ENABLE'|config}
-            <h2>{t Other payment methods}</h2>
+            <h2>{t _other_methods}</h2>
         {else}
-            <h2>{t Select a payment method}</h2>
+            <h2>{t _select_payment_method}</h2>
         {/if}
         
         <div id="otherMethods">

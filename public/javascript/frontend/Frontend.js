@@ -42,7 +42,11 @@ Product.ImageSwitcher.prototype =
 	switchImage: function()
 	{
 		$('mainImage').src = this.imageData[3];
-		$('imageDescr').innerHTML = this.imageDescr;
+		
+        if ($('imageDescr'))
+        {
+            $('imageDescr').innerHTML = this.imageDescr;
+        }
 	}
 }
 
