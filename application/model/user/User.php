@@ -309,6 +309,16 @@ class User extends ActiveRecordModel
 
 	/*####################  Saving ####################*/	
 
+    public function loadRequestData(Request $request)
+    {
+        if (!$request->get('password'))
+        {
+            $request->remove('password');
+        }
+        
+        return parent::loadRequestData($request);
+    }
+
 	/**
 	 * Save user in the database
 	 */

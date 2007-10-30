@@ -52,6 +52,8 @@ class CurrencyController extends StoreManagementController
 			unset($currencies[$currency->getID()]);  
 		}
 
+        unset($currencies[$this->application->getDefaultCurrencyCode()]);
+
 		$response = new ActionResponse();
 		$response->set('currencies', $currencies);
 		return $response;

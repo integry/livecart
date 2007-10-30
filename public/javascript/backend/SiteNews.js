@@ -240,7 +240,12 @@ Backend.SiteNews.PostEntry.prototype =
         }
         
         this.node.down('.newsTitle').innerHTML = this.data.title;
-		this.node.down('.newsDate').innerHTML = this.data.formatted_time.date_long;
+		
+        if (this.data.formatted_time)
+        {
+            this.node.down('.newsDate').innerHTML = this.data.formatted_time.date_long;
+        }
+
 		this.node.down('.newsText').innerHTML = this.data.text;	
         this.node.down('.checkbox').checked = (this.data.isEnabled == true);
 		this.node.id = 'newsEntry_' + this.data.ID;

@@ -27,7 +27,7 @@
         <td class="orderShipmentsItem_info_total_td ">
             <div class="orderShipmentsItem_info_total item_subtotal">
                 <span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
-                <span class="price">{math equation="x * y" x=$item.price|default:0 y=$item.count|default:0|string_format:"%.2f"}</span>
+                <span class="price">{math assign=price equation="x * y" x=$item.price|default:0 y=$item.count|default:0}{$price|string_format:"%.2f"}</span>
                 <span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
             </div> 
         </td>

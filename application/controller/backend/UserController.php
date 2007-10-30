@@ -257,6 +257,7 @@ class UserController extends StoreManagementController
 			}
 		
             $user->loadRequestData($this->request);
+            
             if ($group)
             {
                 $user->userGroup->set($group);

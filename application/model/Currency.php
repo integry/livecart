@@ -103,7 +103,7 @@ class Currency extends ActiveRecordModel
         }        
         else
         {
-            $price = $dollars;
+            $price = $dollars . '.00';
         }
         
         if (!$this->isLoaded())

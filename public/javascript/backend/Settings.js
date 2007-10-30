@@ -166,16 +166,38 @@ Backend.Settings.Editor.prototype =
                         }
                         else
                         {
+                            // at least one option must always be selected
+                            if (this.values)
+                            {
+                                var isSelected = false;
+                                for (k = 0; k < this.values.length; k++)
+                                {
+                                    if ($('ALLOWED_SORT_ORDER[' + this.values[k].value + ']').checked)
+                                    {
+                                        isSelected = true;
+                                        break;
+                                    }
+                                }
+                                
+                                if (!isSelected)
+                                {
+                                    el.checked = true;
+                                    return;
+                                }                                
+                            }
+                            
                             Element.hide(el.param);                            
                         }
                     }
+                    
+                this.values = values;
                     
                 for (k = 0; k < values.length; k++)
                 {
                     var el = $('ALLOWED_SORT_ORDER[' + values[k].value + ']');
                     el.param = values[k];
                     
-                    Event.observe(el, 'change', change);
+                    Event.observe(el, 'change', change.bind(this));
                     change(el);
                 }
             },

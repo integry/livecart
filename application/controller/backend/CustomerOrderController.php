@@ -236,7 +236,7 @@ class CustomerOrderController extends StoreManagementController
         $response->set("displayedColumns", $displayedColumns);
         $response->set("availableColumns", $availableColumns);
 		$response->set("offset", $this->request->get('offset'));
-		$response->set("filters", ((int)$this->request->get('userID') ? array('User.ID' => $this->request->get('userID')) : false));
+		$response->set("filters", ((int)$this->request->get('userID') ? array('filter_User.ID' => $this->request->get('userID')) : false));
 		if ($this->request->get('userID'))
 		{
 			$response->set('userID', $this->request->get('userID'));

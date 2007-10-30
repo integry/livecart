@@ -29,7 +29,11 @@ Backend.StaticPage.prototype =
 					this.iconUrls = new Object();	
 				}
 				
-				this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
+				if (!this.iconUrls[itemId])
+				{
+                    this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
+                }
+
 				this.setItemImage(itemId, '../../../image/indicator.gif');
 			}
 		

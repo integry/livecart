@@ -125,7 +125,7 @@
 <div class="activeGridColumns" >
 	<ul class="menu">
         <li class="export">
-            <a href="#" onclick="window.location.href='{link controller=$controller action=export}?' + window.activeGrids['{$prefix}_{$id}'].ricoGrid.getQueryString(); return false;">{t _grid_export}</a>
+            <a href="#" onclick="window.location.href='{link controller=$controller action=export}?' + window.activeGrids['{$prefix}_{$id}'].ricoGrid.getQueryString(); console.log(window.activeGrids['{$prefix}_{$id}'].ricoGrid.getQueryString()); return false;">{t _grid_export}</a>
         </li>
         <li class="selectColumns">
     	   <a href="#" onclick="Element.show($('{$prefix}ColumnMenu_{$id}')); return false;">{t _columns}</a>
@@ -162,7 +162,7 @@
     if(!window.activeGrids) window.activeGrids = {};
 {/literal};
  	
- 	window.activeGrids['{$prefix}_{$id}'] = new ActiveGrid($('{$prefix}_{$id}'), '{$url}{$filters}', {$totalCount}, $("{$prefix}LoadIndicator_{$id}"), {$rowCount});
+ 	window.activeGrids['{$prefix}_{$id}'] = new ActiveGrid($('{$prefix}_{$id}'), '{$url}', {$totalCount}, $("{$prefix}LoadIndicator_{$id}"), {$rowCount}, {json array=$filters});
     
 	{foreach from=$displayedColumns item=index key=column name="columns"}
 		{if !$smarty.foreach.columns.first}

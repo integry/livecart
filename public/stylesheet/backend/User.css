@@ -118,8 +118,9 @@ li.addUser
   display: inline;
 }
 
-.sameAddress label{
-    width: 90%;
+.sameAddress label
+{
+    width: auto;
 }
 
 fieldset.showPassword

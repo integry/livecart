@@ -564,13 +564,6 @@ Backend.User.Editor.prototype =
         Backend.User.Editor.prototype.showShippingAddress.apply(this);
 		
         Form.State.backup(this.nodes.form, false, false);
-
-		this.findUsedNodes();
-		this.bindEvents();
-
-		Backend.User.Editor.prototype.showShippingAddress.apply(this);
-
-		Form.State.backup(this.nodes.form);
 	},
 
 	findUsedNodes: function()
@@ -592,7 +585,7 @@ Backend.User.Editor.prototype =
 
     bindEvents: function(args)
     {
-		var self = this;
+        var self = this;
 		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
         Event.observe(this.nodes.sameAddress, "click", function(e) {
             Backend.User.Editor.prototype.showShippingAddress.apply(this);
@@ -603,7 +596,8 @@ Backend.User.Editor.prototype =
 	    );
         Event.observe(this.nodes.generatePassword, "click", function(e) {
 		    Event.stop(e);
-	 	    Backend.User.Add.prototype.generatePassword.apply(this)
+	 	    console.log(Backend.User.Add.prototype.generatePassword.apply);
+            Backend.User.Add.prototype.generatePassword.apply(this)
 	    }.bind(this));
 
 

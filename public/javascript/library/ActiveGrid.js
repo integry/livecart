@@ -51,7 +51,7 @@ ActiveGrid.prototype =
 	
 	rowCount: 15,
   	
-	initialize: function(tableInstance, dataUrl, totalCount, loadIndicator, rowCount)
+	initialize: function(tableInstance, dataUrl, totalCount, loadIndicator, rowCount, filters)
   	{
 		this.tableInstance = tableInstance;
 		this.tableInstance.gridInstance = this;
@@ -64,6 +64,11 @@ ActiveGrid.prototype =
 		{
 			rowCount = this.rowCount;
 		}
+
+        if (filters)
+        {
+            this.filters = filters;
+        }
 
 		this.ricoGrid = new Rico.LiveGrid(this.tableInstance.id, rowCount, totalCount, dataUrl, 
 								{
@@ -87,6 +92,7 @@ ActiveGrid.prototype =
 				
 		this.onScroll(this.ricoGrid, 0);
 		
+        this.setRequestParameters();
 		this.ricoGrid.init();
 		
 		var rows = this.tableInstance.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
@@ -169,7 +175,7 @@ ActiveGrid.prototype =
 		this._markSelectedRows();		
 	},
 	
-	reloadGrid: function()
+	setRequestParameters: function()
 	{
     	this.ricoGrid.options.requestParameters = [];
         var i = 0;
@@ -180,7 +186,12 @@ ActiveGrid.prototype =
             {
                 this.ricoGrid.options.requestParameters[i++] = 'filters[' + k.substr(7, 1000) + ']' + '=' + this.filters[k];
             }
-        }
+        }        
+    },
+    
+    reloadGrid: function()
+	{        
+        this.setRequestParameters();
         
         this.ricoGrid.buffer.clear();
         this.ricoGrid.resetContents();
@@ -275,7 +286,7 @@ ActiveGrid.prototype =
 
     setFilterValue: function(key, value)
     {
-		this.filters[key] = value;
+        this.filters[key] = value;
     },
 
     getFilterValue: function(key)
