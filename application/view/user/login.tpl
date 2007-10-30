@@ -23,7 +23,7 @@
         {/if}
     </p>
 	
-	{capture assign="return"}{link controller=user}{/capture}
+	{capture assign="return"}user/login{/capture}
 	{include file="user/loginForm.tpl"}
 		
 	<h2>{t _new_cust}</h2>

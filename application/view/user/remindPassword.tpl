@@ -22,7 +22,7 @@
             <input type="submit" class="submit" value="{tn _continue}" />        
            	<label class="cancel">
                 {t _or}    
-                <a class="cancel" href="{link route=$return}">{t _cancel}</a>
+                <a class="cancel" href="{link route=$return controller=user}">{t _cancel}</a>
             </label>
         </p>
         
