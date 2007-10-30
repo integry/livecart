@@ -350,7 +350,7 @@ class CustomerOrderController extends StoreManagementController
 		return new ActionRedirectResponse('backend.customerOrder', 'orders', array('id' => $this->request->get('id')));
 	}
 
-	public function lists()
+	public function lists($displayedColumns = null)
 	{
 	    $filter = new ARSelectFilter();
 
@@ -391,7 +391,10 @@ class CustomerOrderController extends StoreManagementController
         $recordCount = true;
 	    $orders = ActiveRecordModel::getRecordSetArray('CustomerOrder', $filter, true, $recordCount);
 
-		$displayedColumns = $this->getDisplayedColumns();
+		if (!$displayedColumns)
+		{
+            $displayedColumns = $this->getDisplayedColumns();
+        }
 
     	$data = array();
 		foreach ($orders as $order)
@@ -465,14 +468,41 @@ class CustomerOrderController extends StoreManagementController
             $data[] = $record;
         }
 
-
-
     	return new JSONResponse(array(
 	    	'columns' => array_keys($displayedColumns),
 	    	'totalCount' => $recordCount,
 	    	'data' => $data
     	));
 	}
+
+    public function export()
+    {        
+		@set_time_limit(0);
+
+        // init file download
+        header('Content-Disposition: attachment; filename="exported.csv"');        
+        $out = fopen('php://output', 'w');
+
+        $displayedColumns = $this->getDisplayedColumns();        
+        unset($displayedColumns['CustomerOrder.ID2']);
+        
+		$data = $this->lists($displayedColumns)->getValue();
+		
+        // header row
+        foreach ($data['columns'] as $column)
+        {
+            $header[] = $this->translate($column);
+        }
+        fputcsv($out, $header);
+        
+        // columns
+        foreach ($data['data'] as $row)
+        {
+            fputcsv($out, $row);
+        }
+        
+        exit;
+    }
 
     private function applyFullNameFilter(Condition $cond)
     {

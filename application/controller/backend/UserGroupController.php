@@ -124,6 +124,32 @@ class UserGroupController extends StoreManagementController
     	return new JSONResponse($return);	  	  	
 	}
 	
+    public function export()
+    {        
+		@set_time_limit(0);
+
+        // init file download
+        header('Content-Disposition: attachment; filename="exported.csv"');        
+        $out = fopen('php://output', 'w');
+        
+		$data = $this->lists()->getValue();
+		
+        // header row
+        foreach ($data['columns'] as $column)
+        {
+            $header[] = $this->translate($column);
+        }
+        fputcsv($out, $header);
+        
+        // columns
+        foreach ($data['data'] as $row)
+        {
+            fputcsv($out, $row);
+        }
+        
+        exit;
+    }	
+	
 	public function users()
 	{
 	    $id = (int)$this->request->get("id");

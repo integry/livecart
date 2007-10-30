@@ -280,12 +280,20 @@
 	text-align: right;
 }
 
-.activeGridColumns a
+.activeGridColumns ul.menu
+{
+    border: 0;
+}
+
+.activeGridColumns li.export
+{
+	background-image: url('../../image/silk/table_save.png');	
+}
+
+.activeGridColumns li.selectColumns
 {
 	background-image: url('../../image/silk/table_add.png');	
-	padding-left: 22px;
-	background-repeat: no-repeat;
-	top: 5px;
+	margin-right: 0;
 }
 
 .activeGridColumnsSelect

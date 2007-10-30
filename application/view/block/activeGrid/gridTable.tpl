@@ -123,7 +123,14 @@
 </div>
 
 <div class="activeGridColumns" >
-	<a href="#" onclick="Element.show($('{$prefix}ColumnMenu_{$id}')); return false;">{t _columns}</a>
+	<ul class="menu">
+        <li class="export">
+            <a href="#" onclick="window.location.href='{link controller=$controller action=export}?' + window.activeGrids['{$prefix}_{$id}'].ricoGrid.getQueryString(); return false;">{t _grid_export}</a>
+        </li>
+        <li class="selectColumns">
+    	   <a href="#" onclick="Element.show($('{$prefix}ColumnMenu_{$id}')); return false;">{t _columns}</a>
+    	</li>
+    </ul>
 </div>
 
 <div id="{$prefix}ColumnMenu_{$id}" class="activeGridColumnsRoot" style="display: none; position: relative;">

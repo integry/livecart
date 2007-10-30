@@ -53,7 +53,7 @@ class ProductController extends StoreManagementController
 		return new ActionRedirectResponse('backend.product', 'index', array('id' => $this->request->get('id')));
 	}
 	
-	public function lists()
+	public function lists($dataOnly = false, $displayedColumns = null)
 	{
 		$id = substr($this->request->get("id"), 9);
 		$category = Category::getInstanceByID($id, Category::LOAD_DATA);
@@ -71,7 +71,10 @@ class ProductController extends StoreManagementController
         $recordCount = true;
 		$productArray = ActiveRecordModel::getRecordSetArray('Product', $filter, array('Category', 'Manufacturer'), $recordCount);
         
-		$displayedColumns = $this->getDisplayedColumns($category);
+		if (!$displayedColumns)
+		{
+            $displayedColumns = $this->getDisplayedColumns($category);
+        }
 		
         // load specification data
         foreach ($displayedColumns as $column => $type)
@@ -134,6 +137,11 @@ class ProductController extends StoreManagementController
             $data[] = $record;
         }
     	
+    	if ($dataOnly)
+    	{
+            return $data;
+        }
+    	
     	$return = array();
     	$return['columns'] = array_keys($displayedColumns);
     	$return['totalCount'] = $recordCount;
@@ -141,6 +149,36 @@ class ProductController extends StoreManagementController
     	
     	return new JSONResponse($return);	  	  	
 	}
+
+    public function export()
+    {        
+		@set_time_limit(0);
+		
+        // get category instance
+        $id = substr($this->request->get("id"), 9);
+		$category = Category::getInstanceByID($id, Category::LOAD_DATA);
+
+        // init file download
+        header('Content-Disposition: attachment; filename="exported.csv"');        
+        $out = fopen('php://output', 'w');
+        
+        // header row
+        $columns = $this->getDisplayedColumns($category);
+        unset($columns['hiddenType']);
+        foreach ($columns as $column => $type)
+        {
+            $header[] = $this->translate($column);
+        }
+        fputcsv($out, $header);
+        
+        // columns
+        foreach ($this->lists(true, $columns) as $row)
+        {
+            fputcsv($out, $row);
+        }
+        
+        exit;
+    }
 
 	/**
 	 * @role mass

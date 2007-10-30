@@ -60,6 +60,7 @@ _order_log=Change History
 _order_report=Report
 
 # Grid columns
+CustomerOrder.ID=ID
 CustomerOrder.ID2=Order ID
 CustomerOrder.status=Status
 CustomerOrder.totalAmount=Order total

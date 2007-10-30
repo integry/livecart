@@ -32,6 +32,7 @@ _grid_less=Less Than
 _grid_greater_or_equal=Greater Than or Equal To
 _grid_less_or_equal=Less Than or Equal To
 _grid_range=Range
+_grid_export=Export data
 
 # Language forms
 _langform_translate=Translate

@@ -44,6 +44,7 @@ _enter_sku=Enter product SKU
 _listing_products=Listing products $from - $to of $count
 _no_products_found=No products found
 
+Product.ID=ID
 Product.name=Name
 Product.sku=SKU
 Product.stockCount=In stock
