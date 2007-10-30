@@ -89,7 +89,7 @@ ActiveForm.prototype = {
     {
         if (focusField)
         {
-            alert(errorMessage);
+//            alert(errorMessage);
             Element.focus(formElement);
         }
 

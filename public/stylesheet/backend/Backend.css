@@ -732,17 +732,16 @@ fieldset.error, div.error, fieldset.container
 	position: static;
 	border: 0;
 	background-color: transparent;
-	/* @todo: let's see how this works for IE */
 	background: none;
 }
 
-.errorText /* , fieldset.error div */
+.errorText
 {
 	background-color: red;
 	float: left;
 	width: auto;
 	margin-bottom: 4px;
-	margin-top: 0px;
+	margin-top: -3px;
 	padding: 3px;
 	color: white;
 }
@@ -802,7 +801,6 @@ legend
 	padding-right: 10px;
 	background-color: #fff;
 	border: 1px solid #ddd;
-/*	top: -22px; */
 }
 
 label
@@ -1133,7 +1131,6 @@ fieldset.group p
 ***************************/
 .expandingSection
 {
-/*	background-color: #e0e0e0; */
 	margin-bottom: 5px;
 	padding: 0;
 	border: 0;
@@ -1322,7 +1319,6 @@ ul.languageFormTabs li.active
 .containerTableStyle
 {
     height: 360px;
-/*    width: 250px; */
     overflow: auto;
     padding-top: 5px;
 }
@@ -1355,7 +1351,6 @@ label.acronym a
 {
     border-bottom: 1px dotted black;
     cursor: help;
-/*    margin-right: 5px; /* IE */
     color: black !important;
     position: relative;
 }
@@ -1369,7 +1364,6 @@ label.acronym a div
 
 label.acronym a:hover
 {
-/*    display: inline; */
     text-decoration: none;
 }
 
