@@ -58,13 +58,3 @@
 	<br />
     <span class="errorText hidden"> </span>
 </fieldset>
-
-
-<fieldset class="error controls shippingService_rate_controls">
-    <span class="progressIndicator" style="display: none;"></span>
-    <input type="button" class="shippingService_rate_save button submit" value="{if $rate.ID > 0}{t _save}{else}{t _add}{/if}" />
-    {*
-    {t _or}
-    <a href="#cancel" class="shippingService_rate_cancel cancel">{t _cancel}</a>
-    *}
-</fieldset>

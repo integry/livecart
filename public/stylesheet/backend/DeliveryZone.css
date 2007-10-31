@@ -57,6 +57,12 @@ fieldset.checkbox .progressIndicator
     margin: 10px;
 }
 
+.hiding .noAwailableTaxes
+{
+    display: none !important;
+    color: red;
+}
+
 .addNewTaxRate
 {
     background-image: url(../../image/silk/add.png);
@@ -89,6 +95,11 @@ fieldset.checkbox .progressIndicator
 #zone_-1
 {
     font-weight: bold;
+}
+
+ul.menu li.addNewRate
+{
+    padding-left: 0;
 }
 
 /* Weight range */

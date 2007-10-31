@@ -1035,6 +1035,12 @@ Backend.UnitConventer.prototype =
         
     getInstance: function(root)
     {
+        if (!$(root))
+        {
+            console.log(root);
+            return false;
+        }
+        
         if(!Backend.UnitConventer.prototype.Instances[$(root).id])
         {
             Backend.UnitConventer.prototype.Instances[$(root).id] = new Backend.UnitConventer(root);

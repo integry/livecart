@@ -227,7 +227,12 @@ Backend.Category = {
 
 		if(Backend.Product) Backend.Product.Editor.prototype.showCategoriesContainer();
 
-		Backend.Category.tabControl.switchCategory(categoryId, Backend.Category.activeCategoryId);
+        if (Backend.Category.activeCategoryId == categoryId)
+        {
+            return false;
+        }
+		
+        Backend.Category.tabControl.switchCategory(categoryId, Backend.Category.activeCategoryId);
 		Backend.Category.activeCategoryId = categoryId;
 
 		// set ID for the current tree node element

@@ -304,7 +304,17 @@ ActiveForm.Slide.prototype = {
 	        {
 	            Effect.Fade(form, {duration: 0.2});
 	            Effect.BlindUp(form, {duration: 0.3});
-	            setTimeout(function() { form.style.display = 'none'; }, 300);
+	            setTimeout(
+                    function() 
+                    { 
+                        form.style.display = 'none'; 
+
+            			if (onCompleteCallback)
+            			{
+            				onCompleteCallback();
+            			}
+
+                    }, 300);
 	        }
 
 			this.ul.childElements().each(function(element) 
@@ -318,11 +328,6 @@ ActiveForm.Slide.prototype = {
 	                Element.hide(element);
 				}
 			});
-
-			if (onCompleteCallback)
-			{
-				onCompleteCallback();
-			}
 
 		}.bind(this, className, form, ignoreFields, onCompleteCallback), 10);
     }

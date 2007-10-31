@@ -18,8 +18,6 @@ Backend.DeliveryZone.prototype =
 		Backend.DeliveryZone.prototype.treeBrowser = new dhtmlXTreeObject("deliveryZoneBrowser","","", false);
 		Backend.Breadcrumb.setTree(Backend.DeliveryZone.prototype.treeBrowser);
 		
-		Backend.DeliveryZone.prototype.treeBrowser.setOnClickHandler(this.activateZone);
-		
 		Backend.DeliveryZone.prototype.treeBrowser.def_img_x = 'auto';
 		Backend.DeliveryZone.prototype.treeBrowser.def_img_y = 'auto';
 				
@@ -295,8 +293,6 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 
         this.findNodes(root);
         this.bindEvents();
-		
-		Backend.DeliveryZone.prototype.treeBrowser.setItemText(Backend.DeliveryZone.prototype.activeZone, this.nodes.name.value)        
         
 		// I did't found out if sorting the fields realy matters, but they are slowing things down for sure
 //        this.sortSelect(this.nodes.inactiveCountries);
@@ -775,6 +771,8 @@ Backend.DeliveryZone.ShippingService.prototype =
                     Backend.DeliveryZone.ShippingService.prototype.getInstance(newServiceForm).hideNewForm();
                 }
 
+                Backend.DeliveryZone.ShippingService.prototype.getInstance(li.down('form'));
+
                 this.toggleContainer(li, 'edit');
             }
         },
@@ -823,19 +821,22 @@ Backend.DeliveryZone.ShippingService.prototype =
     getInstance: function(rootNode, service)
     {
         var rootId = $(rootNode).id;
-        if(!Backend.DeliveryZone.ShippingService.prototype.instances[rootId])
+        if (!Backend.DeliveryZone.ShippingService.prototype.instances[rootId])
         {
             Backend.DeliveryZone.ShippingService.prototype.instances[rootId] = new Backend.DeliveryZone.ShippingService(rootId, service);
         }
         
-        return Backend.DeliveryZone.ShippingService.prototype.instances[rootId];
+        var instance = Backend.DeliveryZone.ShippingService.prototype.instances[rootId];
+        instance.rangeTypeChanged();
+        
+        return instance;
     },
     
     findUsedNodes: function(root)
     {
         this.nodes = {};
         
-        this.nodes.root = $(root);
+        this.nodes.root = $(root); 
         this.nodes.form = this.nodes.root;
 
         this.nodes.controls = this.nodes.root.down('.' + this.prefix + 'controls');
@@ -847,8 +848,6 @@ Backend.DeliveryZone.ShippingService.prototype =
         this.nodes.servicesList = $$('.' + this.prefix + 'servicesList_' + this.deliveryZoneId)[0];
         this.nodes.ratesList = $(this.prefix + 'ratesList_' + this.deliveryZoneId + '_' + (this.service.ID ? this.service.ID : ''));
         this.nodes.ratesNewForm = $(this.prefix + 'new_rate_' + this.deliveryZoneId + '_' + (this.service.ID ? this.service.ID : '') + '_form');
-        
-        
         
         if(!this.service.ID)
         {
@@ -895,17 +894,17 @@ Backend.DeliveryZone.ShippingService.prototype =
         
         if(radio.value == 0) 
         {
-            document.getElementsByClassName(this.prefix + "subtotalRange").each(function(fieldset) { fieldset.style.display = 'none'; });
-            document.getElementsByClassName(this.prefix + "subtotalPercentCharge").each(function(fieldset) { fieldset.up('fieldset').style.display = 'none'; });
-            document.getElementsByClassName(this.prefix + "perKgCharge").each(function(fieldset) { fieldset.up('fieldset').style.display = 'block'; });
-            document.getElementsByClassName(this.prefix + "weightRange").each(function(fieldset) { fieldset.style.display = 'block'; });
+            document.getElementsByClassName(this.prefix + "subtotalRange", this.nodes.root).each(function(fieldset) { fieldset.style.display = 'none'; });
+            document.getElementsByClassName(this.prefix + "subtotalPercentCharge", this.nodes.root).each(function(fieldset) { fieldset.up('fieldset').style.display = 'none'; });
+            document.getElementsByClassName(this.prefix + "perKgCharge", this.nodes.root).each(function(fieldset) { fieldset.up('fieldset').style.display = 'block'; });
+            document.getElementsByClassName(this.prefix + "weightRange", this.nodes.root).each(function(fieldset) { fieldset.style.display = 'block'; });
         }
         else
         {
-            document.getElementsByClassName(this.prefix + "subtotalRange").each(function(fieldset) { fieldset.style.display = 'block'; });
-            document.getElementsByClassName(this.prefix + "subtotalPercentCharge").each(function(fieldset) { fieldset.up('fieldset').style.display = 'block'; });
-            document.getElementsByClassName(this.prefix + "perKgCharge").each(function(fieldset) { fieldset.up('fieldset').style.display = 'none'; });
-            document.getElementsByClassName(this.prefix + "weightRange").each(function(fieldset) { fieldset.style.display = 'none'; });
+            document.getElementsByClassName(this.prefix + "subtotalRange", this.nodes.root).each(function(fieldset) { fieldset.style.display = 'block'; });
+            document.getElementsByClassName(this.prefix + "subtotalPercentCharge", this.nodes.root).each(function(fieldset) { fieldset.up('fieldset').style.display = 'block'; });
+            document.getElementsByClassName(this.prefix + "perKgCharge", this.nodes.root).each(function(fieldset) { fieldset.up('fieldset').style.display = 'none'; });
+            document.getElementsByClassName(this.prefix + "weightRange", this.nodes.root).each(function(fieldset) { fieldset.style.display = 'none'; });
         }
     },
     
@@ -913,6 +912,9 @@ Backend.DeliveryZone.ShippingService.prototype =
     {
 		var menu = new ActiveForm.Slide(this.nodes.menu);
 		menu.show("shippingService_add", this.nodes.menuForm);
+		
+        var newForm = Backend.DeliveryZone.ShippingRate.prototype.getInstance(this.nodes.ratesNewForm, Backend.DeliveryZone.ShippingRate.prototype.newRate);
+        newForm.showNewForm(true);		
     },
     
     hideNewForm: function()
@@ -959,7 +961,7 @@ Backend.DeliveryZone.ShippingService.prototype =
             
         new LiveCart.AjaxRequest(
             this.nodes.form,
-            false,
+            null,
             function(response) 
             { 
                 var response = eval("(" + response.responseText + ")");
@@ -1102,7 +1104,6 @@ Backend.DeliveryZone.ShippingRate.prototype =
         
         if(this.rate.ID)
         {
-            this.nodes.controls.hide();
             this.nodes.weightRangeStart.name = 'rate_' + this.rate.ID + '_weightRangeStart';
             this.nodes.weightRangeEnd.name = 'rate_' + this.rate.ID + '_weightRangeEnd';
             this.nodes.subtotalRangeStart.name = 'rate_' + this.rate.ID + '_subtotalRangeStart';
@@ -1111,10 +1112,6 @@ Backend.DeliveryZone.ShippingRate.prototype =
             this.nodes.perItemCharge.name = 'rate_' + this.rate.ID + '_perItemCharge';
             this.nodes.subtotalPercentCharge.name = 'rate_' + this.rate.ID + '_subtotalPercentCharge';
             this.nodes.perKgCharge.name = 'rate_' + this.rate.ID + '_perKgCharge';
-        }
-        else
-        {
-            this.nodes.controls.show();
         }
     },
         
@@ -1135,10 +1132,6 @@ Backend.DeliveryZone.ShippingRate.prototype =
         
         this.nodes.root = $(root);
 
-        this.nodes.controls = this.nodes.root.down('.' + this.prefix +     'rate_controls');
-        this.nodes.save     = this.nodes.controls.down('.' + this.prefix + 'rate_save');
-        // this.nodes.cancel   = this.nodes.controls.down('.' + this.prefix + 'rate_cancel');
-        
         if(!this.rate.ID)
         {
             this.nodes.menuCancelLink   = $(this.prefix + "new_rate_" + this.deliveryZoneId + '_' + this.rate.ShippingService.ID + "_cancel");
@@ -1181,7 +1174,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
 	           }.bind(this), false)
 	       }.bind(this)); 
 		
-           Event.observe(this.nodes.save, 'click', function(e) { Event.stop(e); this.save(e); }.bind(this));
+//           Event.observe(this.nodes.save, 'click', function(e) { Event.stop(e); this.save(e); }.bind(this));
 //           Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancel();}.bind(this));
            Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
        }
@@ -1189,7 +1182,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
        Event.observe(this.switchMetricsEnd.nodes.switchUnits, 'click', function(e) { this.switchMetricsStart.switchUnitTypes(); }.bind(this));
     },
     
-    showNewForm: function()
+    showNewForm: function(noHighLight)
     {
             var rate = {
                 'weightRangeStart': this.nodes.weightRangeStart.value,
@@ -1204,7 +1197,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
                 'ID': 'new' + Backend.DeliveryZone.ShippingRate.prototype.newRateLastId
             };
 			
-			this.afterAdd({validation: 'success'}, rate);
+			this.afterAdd({validation: 'success'}, rate, noHighLight);
     },
     
     hideNewForm: function()
@@ -1213,7 +1206,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
         manu.hide("addNewRate", this.nodes.menuForm);
     },
   
-    afterAdd: function(response, rate)
+    afterAdd: function(response, rate, noHighLight)
     {
         if(response.validation == 'success')
         {
@@ -1264,7 +1257,10 @@ Backend.DeliveryZone.ShippingRate.prototype =
 			
             Backend.DeliveryZone.ShippingRate.prototype.newRateLastId++;
 			
-			this.ratesActiveList.highlight(li);
+			if (!noHighLight)
+			{
+                this.ratesActiveList.highlight(li);
+            }
         }
         else
         {
@@ -1294,7 +1290,10 @@ Backend.DeliveryZone.ShippingRate.prototype =
 			
             Element.remove(this.nodes.root);
 			
-            service.down('.ratesCount').innerHTML = rates.getElementsByTagName('li').length;
+            if (service)
+            {
+                service.down('.ratesCount').innerHTML = rates.getElementsByTagName('li').length;
+            }
         }
     }
 }
@@ -1489,7 +1488,14 @@ Backend.DeliveryZone.TaxRate.prototype =
     hideNewForm: function()
     {
         var menu = new ActiveForm.Slide(this.nodes.menu);
-        menu.hide("addNewTaxRate", this.nodes.menuForm);
+
+        this.nodes.menuForm.addClassName('hiding'); 
+        menu.hide("addNewTaxRate", this.nodes.menuForm, null, 
+                    function() 
+                    {
+                        this.nodes.menuForm.removeClassName('hiding'); 
+                    }.bind(this)
+                 );
         
         Form.State.restore(this.nodes.form);
     },
@@ -1503,7 +1509,7 @@ Backend.DeliveryZone.TaxRate.prototype =
             
         new LiveCart.AjaxRequest(
             action + '?' + Form.serialize(this.nodes.form),
-            false,
+            this.nodes.form.down('.controls').down('.progressIndicator'),
             function(response) 
             { 
                 var response = eval("(" + response.responseText + ")");
