@@ -57,7 +57,7 @@ class OrderedItem extends ActiveRecordModel
     public function getPrice(Currency $currency)
     {
 		$itemCurrency = $this->priceCurrencyID->get() ? Currency::getInstanceById($this->priceCurrencyID->get()) : $currency;
-		
+if (!$this->product->get())	print_r($this->toArray());
 		$price = $this->price->get() ? $this->price->get() : $this->product->get()->getPrice($currency->getID());
 		
 		return $itemCurrency->convertAmount($currency, $price);

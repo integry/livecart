@@ -594,7 +594,13 @@ class Shipment extends ActiveRecordModel
             $this->items = array();
             foreach ($this->itemIds as $id)    
             {                
-                $this->items[] = ActiveRecordModel::getInstanceById('OrderedItem', $id);
+                try
+                {
+                    $this->items[] = ActiveRecordModel::getInstanceById('OrderedItem', $id, ActiveRecordModel::LOAD_DATA);
+                }
+                catch (ARNotFoundException $e)
+                {                    
+                }
             }
             
             $this->itemIds = array();

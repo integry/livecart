@@ -14,7 +14,7 @@ _process=Process Payment
 
 _comment=Comment
 _err_enter_amount=Please enter transaction amount
-_err_amount_negative=Amount cannot be negative
+_err_amount_not_positive=Amount must be larger than 0
 _err_enter_cc_num=Please enter credit card number
 _err_select_cc_expiry_month=Select card expiration year
 _err_select_cc_expiry_year=Select card expiration month

@@ -169,10 +169,12 @@ Backend.LanguageIndex.prototype =
 	
 	setEnabled: function(node) 
 	{
-		p = node.up('li');
+		var p = node.up('li');
         
 		langId = p.id.substr(p.id.length - 2, 2);
 		url = this.statusUrl + langId + "?status=" + (node.checked - 1 + 1);
+        
+        p.down('.checkbox').hide();
         
 		new LiveCart.AjaxRequest(url, p.down('.progressIndicator'), this.updateItem.bind(this));
 	},
