@@ -1,3 +1,4 @@
 # Confirmations
 _relationship_group_was_successfully_saved=Relationship group was successfully saved
 _could_not_save_relationship_group=Could not save relationship group
+_err_relationship_name_is_empty=Please enter group name

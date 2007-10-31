@@ -39,7 +39,7 @@ _enable_back_ordering=Enable back-ordering
 _requires_separate_shippment=Require separate shipment
 _do_not_require_separate_shippment=Do not require separate shipment
 
-_enter_sku=Enter product SKU
+_enter_sku=Please enter product SKU
 
 _listing_products=Listing products $from - $to of $count
 _no_products_found=No products found
@@ -131,7 +131,7 @@ _err_price_invalid=Price is invalid
 _err_weight_not_numeric=Weight is not numeric value
 _err_quantity_not_numeric=Quantity is not numeric value
 _err_quantity_negative=Quantity can not be negative
-_err_price_empty=Price empty
+_err_price_empty=Please enter price
 _err_price_negative=Price can not be negative
 _err_surcharge_not_numeric=Sucharge amount must be a numeric value
 _err_specfield_multivaluerequired=At least one option must be selected

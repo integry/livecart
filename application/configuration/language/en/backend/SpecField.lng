@@ -16,8 +16,8 @@ _cancel_adding_new_group=Cancel adding new attribute group
 
 # errors
 _error_handle_exists=Such handle already exists in current category
-_error_handle_empty=Handle empty
-_error_handle_empty=Handle contains invalid symbols
+_error_handle_empty=Please enter handle
+_error_handle_invalid=Please enter valid handle
 _error_value_empty=You are required to fill this field
 _error_value_is_not_a_number=Field value should be a valid number
 _error_name_empty=Name empty

@@ -8,9 +8,9 @@ _are_you_sure_you_want_to_delete_group=Are you sure you want to delete this grou
 _product_file_group_title=Title
 _add_new_file_group=Edit file group
 
-_err_file_title_is_empty=File title is empty
+_err_file_title_is_empty=Please enter file title
 _err_allow_download_days_should_be_a_number=Number of days should be of numeric type
-_err_allow_download_days_is_empty=Number of days to download is empty
+_err_allow_download_days_is_empty=Please anter number of days to download
 _err_file_could_not_be_uploaded_to_the_server=File could not be uploaded to the server
-_err_fileName_should_not_be_empty=File name is empty
+_err_fileName_should_not_be_empty=Please enter file name
 _err_file_could_not_be_uploaded_to_the_server=File could not be uploaded to the server
