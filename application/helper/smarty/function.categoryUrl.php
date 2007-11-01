@@ -119,6 +119,7 @@ function filterHandle($filter)
 	{
         $filter = $filter->toArray();
     }
+    
     return (isset($filter['FilterGroup']) ? $filter['FilterGroup']['SpecField']['handle'] . '.' : '') . $filter['handle'] . '-' . $filter['ID'];	  
 }
 

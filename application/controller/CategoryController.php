@@ -142,6 +142,19 @@ class CategoryController extends FrontendController
 			$categoryNarrow = $this->getSubCategoriesBySearchQuery($selectFilter, $subCategories);
 		}
 
+        // if all the results come from one category, redirect to this category
+        if ((count($categoryNarrow) == 1) && (count($this->filters) == 1))
+        {	
+            while (count($categoryNarrow) == 1)
+            {
+                $this->category = Category::getInstanceByID($categoryNarrow[0]['ID'], Category::LOAD_DATA);
+    		    $subCategories = $this->category->getSubCategoryArray(Category::LOAD_REFERENCES);
+                $categoryNarrow = $this->getSubCategoriesBySearchQuery($selectFilter, $subCategories);
+            }
+            
+            return new RedirectResponse(createCategoryUrl(array('data' => $this->category->toArray(), 'filters' => $this->filters), $this->application));           
+        }
+
 		// get subcategory-subcategories
 		if ($subCategories)
 		{
