@@ -24,12 +24,15 @@ function smarty_function_compiledJs($params, LiveCartSmarty $smarty)
         $compiledFileTimestamp = 0;
         if(!is_file($compiledFilePath) || filemtime($compiledFilePath) < $includedJavascriptTimestamp)
         {
-            if(!is_dir(ClassLoader::getRealPath('public.cache.javascript'))) mkdir(ClassLoader::getRealPath('public.cache.javascript'), 0777, true);
+            if(!is_dir(ClassLoader::getRealPath('public.cache.javascript'))) 
+            {
+                mkdir(ClassLoader::getRealPath('public.cache.javascript'), 0777, true);
+            }
             
             // compile
             $compiledFileContent = "";
             $compiledFilesList = array();
-            foreach($includedJavascriptFiles as $jsFile)
+            foreach($includedJavascriptFiles as $jsFile => $fileName)
             {
                 $compiledFileContent .= "\n\n\n/***************************************************\n";
                 $compiledFileContent .= " * " . str_replace($baseDir, '', $jsFile) . "\n";
@@ -54,10 +57,10 @@ function smarty_function_compiledJs($params, LiveCartSmarty $smarty)
     {
         $includeString = "";
         $publicPath = ClassLoader::getRealPath('public.');
-        foreach($includedJavascriptFiles as $jsFile)
+        foreach($includedJavascriptFiles as $path => $jsFile)
         {
             $urlPath = str_replace('\\', '/', str_replace($publicPath, '', $jsFile));
-            $includeString .= '<script src="' .$urlPath . '?' . filemtime($jsFile) . '" type="text/javascript"></script>' . "\n";
+            $includeString .= '<script src="' .$urlPath . '?' . filemtime($path) . '" type="text/javascript"></script>' . "\n";
         }
         
         return $includeString;

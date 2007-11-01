@@ -99,7 +99,7 @@ class ProductCount
         
         if (!$filters)
         {
-            return false;
+            return array();
         }
         
 		// get product counts
