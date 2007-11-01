@@ -243,7 +243,7 @@ Backend.ProductFile.Controller.prototype = {
             var activeList = ActiveList.prototype.getInstance(this.view.prefix + "list_" + this.model.get('Product.ID', '') + "_" + this.model.get('ProductFileGroup.ID', ''));
             activeList.toggleContainer(this.view.nodes.root.up('li'), 'edit');
             
-            this.nodes.fileHeader.innerHTML = this.nodes.title.value
+            this.view.nodes.fileHeader.innerHTML = this.model.get('title');
         }
     },
     

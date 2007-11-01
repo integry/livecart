@@ -93,6 +93,8 @@ Backend.Product =
             }
 
         this.reInitAddForm();
+        
+        ActiveForm.prototype.resetErrorMessages(container.down('form'));
 	},
 
     reInitAddForm: function()
@@ -851,4 +853,30 @@ Backend.Product.GridFormatter =
 
 		return value;
 	}
+}
+
+/**
+ *  Validate multiple-select option attribute values (at least one option must be selected)
+ */
+function SpecFieldIsValueSelectedCheck(element, params)
+{
+    var inputs = element.parentNode.down('.multiValueSelect').getElementsByTagName('input');
+    
+    for (k = 0; k < inputs.length; k++)
+    {
+        if ('checkbox' == inputs[k].type)
+        {
+            if (inputs[k].checked)
+            {
+                return true;
+            }
+        }
+        else if ('text' == inputs[k].type)
+        {
+            if (inputs[k].value)
+            {
+                return true;
+            }            
+        }
+    }    
 }

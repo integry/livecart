@@ -7,10 +7,10 @@
     
     		<fieldset class="productRelationshipGroup_main">
         		<label class="productRelationshipGroup_name_label">{t _product_relationship_group_title}</label>
-                <div class="error">
+                <fieldset class="error">
             		<input type="text" name="name" class="productRelationshipGroup_name" {denied role="product.update"}readonly="readonly"{/denied} />
             		<span class="errorText hidden"> </span>
-                </div>
+                </fieldset>
     		</fieldset>
             
         	<!-- STEP 3 -->

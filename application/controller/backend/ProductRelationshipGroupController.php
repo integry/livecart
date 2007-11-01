@@ -72,7 +72,7 @@ class ProductRelationshipGroupController extends StoreManagementController
 		ClassLoader::import("framework.request.validator.RequestValidator");
 		$validator = new RequestValidator("productRelationshipGroupValidator", $this->request);
 
-		$validator->addCheck('name_' . $this->application->getDefaultLanguageCode(), new IsNotEmptyCheck('_err_relationship_name_is_empty'));
+		$validator->addCheck('name_' . $this->application->getDefaultLanguageCode(), new IsNotEmptyCheck($this->translate('_err_relationship_name_is_empty')));
 
 		return $validator;
     }
@@ -96,7 +96,7 @@ class ProductRelationshipGroupController extends StoreManagementController
 		}
 		else
 		{
-			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_could_not_save_relationship_group'));
+			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure');
 		}
     }
 }
