@@ -111,6 +111,7 @@ _user=User
 _livecart_users=Please select an user account
 _select_customer=Please select a customer account
 _cancel_editing_order_info=Done editing order
+_cancel_creating=Cancel creating new order
 _user_info=User info
 _is_canceled=Is cancelled
 _order_id=Order ID

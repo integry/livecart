@@ -10,7 +10,7 @@
 		<li class="catImageAdd">
 			<a href="#" id="catImgMenu_{$ownerId}_add" class="pageMenu">{t _add_new}</a>
 		</li>
-        <li class="catImageAddCancel" style="display: none">
+        <li class="catImageAddCancel done" style="display: none">
             <a href="#" id="catImgMenu_{$ownerId}_cancel" class="pageMenu">{t _cancel_new}</a>
         </li>   
 	</ul>
@@ -46,7 +46,7 @@
 			{err for="image"}
                 {{label {t _image_file}: }}
 				{filefield} 
-                <div class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</div>
+                <span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
             {/err}            
 		</p>
 			

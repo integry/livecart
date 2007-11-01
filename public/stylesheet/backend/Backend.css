@@ -680,7 +680,9 @@ ul.menu.popup
 {
     border: 0;
     padding: 0;
-    margin-bottom: 3px;
+    margin-bottom: 5px;
+    margin-top: -3px;
+    text-align: center;
 }
 
 /***************************

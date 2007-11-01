@@ -1,4 +1,4 @@
-.orderNoteMenu li
+.orderNoteMenu li.addResponse
 {
     background-image: url(../../image/silk/note_add.png);    
 }

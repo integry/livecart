@@ -14,7 +14,7 @@
     <div id="newUserForm_{$userGroupID}" style="display: none;">
     	<ul class="menu" style="margin-left: 270px;">
             <li class="done">   
-                <a class="cancel" href="#">{t _cancel}</a>
+                <a class="cancel" href="#">{t _cancel_adding_new_user}</a>
             </li>
         </ul>
         <fieldset  class="addForm treeManagerContainer newUserForm">

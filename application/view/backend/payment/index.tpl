@@ -3,7 +3,7 @@
 
     <ul class="menu paymentMenu" {denied role='order.update'}style="display: none;"{/denied}>
     	<li class="offlinePayment"><a href="#addOfflinePayment" class="addOfflinePayment">{t _add_offline_payment}</a></li>
-    	<li class="offlinePaymentCancel" style="display: none;"><a href="#cancelOfflinePayment" class="cancelOfflinePayment">{t _cancel_offline_payment}</a></li>
+    	<li class="offlinePaymentCancel done" style="display: none;"><a href="#cancelOfflinePayment" class="cancelOfflinePayment">{t _cancel_offline_payment}</a></li>
     	
     	<li class="ccPayment"><a onclick="window.open('{link controller=backend.payment action=ccForm id=$order.ID}', 'creditCard', 'directories=no, height=440, width=540, resizable=yes, scrollbars=no, toolbar=no'); return false;" href="#" class="addCreditCardPayment">{t _add_credit_card_payment}</a></li>
     </ul>

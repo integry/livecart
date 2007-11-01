@@ -23,7 +23,7 @@
 
     <ul class="menu" id="newsMenu">
     	<li class="addNews"><a href="#add" id="addNewsLink">{t _add_news}</a></li>
-    	<li class="addNewsCancel" style="display: none;"><a href="#cancel" id="addNewsCancelLink">{t _cancel_adding_news}</a></li>
+    	<li class="addNewsCancel done" style="display: none;"><a href="#cancel" id="addNewsCancelLink">{t _cancel_adding_news}</a></li>
     </ul>
 
 {/allowed}

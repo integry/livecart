@@ -3,7 +3,7 @@
 
     <ul class="menu orderNoteMenu" style="margin: 0; {denied role='order.update'}display: none;{/denied}">    	
     	<li class="addResponse"><a href="#addResponse" class="addResponse" >{t _add_response}</a></li>
-        <li class="addResponseCancel" style="display: none"><a href="#cancelResponse" class="addResponseCancel" >{t _cancel_response}</a></li>
+        <li class="addResponseCancel done" style="display: none"><a href="#cancelResponse" class="addResponseCancel" >{t _cancel_response}</a></li>
     </ul>
     
     <div class="clear"></div>

@@ -8,7 +8,7 @@
 <fieldset class="container" {denied role="product.update"}style="display: none"{/denied}>
 	<ul class="menu" id="prodImgMenu_{$ownerId}">
 		<li class="prodImageAdd"><a href="#" id="prodImageAdd_{$ownerId}_add" class="pageMenu">{t _add_new}</a></li>	
-        <li class="prodImageAddCancel" style="display: none;"><a href="#" id="prodImageAdd_{$ownerId}_cancel">{t _cancel_new}</a></li>   
+        <li class="prodImageAddCancel done" style="display: none;"><a href="#" id="prodImageAdd_{$ownerId}_cancel">{t _cancel_new}</a></li>   
 	</ul>
 </fieldset>
 
@@ -42,7 +42,7 @@
 			<label for="image">{t _image_file}</label>
 			<fieldset class="error">
 				{filefield name="image" id="image"}
-				<div class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</div>
+				<span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
 				<div class="errorText" style="display: none;"></div>
 			</fieldset>
 		</p>

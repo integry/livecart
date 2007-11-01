@@ -1,4 +1,4 @@
-#newsMenu li
+#newsMenu li.addNews
 {
     background-image: url(../../image/silk/newspaper_add.png);    
 }

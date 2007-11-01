@@ -28,7 +28,7 @@
         <ul class="menu popup">
             <li class="done">
                 <a href="#" onclick="window.close(); return false;">
-                    {t _cancel}
+                    {t _cancel_creating}
                 </a>
             </li>
         </ul>
