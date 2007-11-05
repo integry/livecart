@@ -1,6 +1,8 @@
 <div class="productFile_form"  style="display: none;">
     <form action="{link controller=backend.productFile action=update}" method="post" target="productFileUploadIFrame_" enctype="multipart/form-data" {denied role="product.update"}class="formReadonly"{/denied}>
-    	<!-- STEP 1 -->
+    	<fieldset>
+            <legend>{t _add_file_title}</legend>
+        <!-- STEP 1 -->
 
 		<input type="hidden" name="ID" class="hidden productFile_ID" />
 		<input type="hidden" name="productID" class="hidden productFile_productID" />
@@ -60,6 +62,8 @@
                     <textarea type="text" name="description_{$lang.ID}" class="tinyMCE productFile_description" {denied role="product.update"}readonly="readonly"{/denied} ></textarea>
                 </fieldset>
 		    {/language}
+    
+        </fieldset>
     
         <fieldset class="productFile_controls controls">
         	<span class="progressIndicator" style="display: none;"></span>

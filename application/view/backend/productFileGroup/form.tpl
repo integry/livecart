@@ -1,5 +1,5 @@
 <fieldset class="addForm productFileGroup_form"  style="display: none;">
-    <legend>{t _add_new_file_group}</legend>
+    <legend>{t _add_new_file_group_title}</legend>
     <form action="{link controller=backend.productFileGroup action=save}" method="post" {denied role="product.update"}class="formReadonly"{/denied}>
     	<!-- STEP 1 -->
     	

@@ -11,7 +11,7 @@
     <div class="slideForm addOffline" style="display: none;">
         <fieldset class="addForm addOfflinePayment">
         
-            <legend>{t _add_offline_payment}</legend>
+            <legend>{t _add_offline_payment|capitalize}</legend>
         
             {form action="controller=backend.payment action=addOffline id=`$order.ID`" method="POST" handle=$offlinePaymentForm onsubmit="Backend.Payment.submitOfflinePaymentForm(event);"}
             

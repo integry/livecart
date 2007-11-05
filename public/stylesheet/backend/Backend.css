@@ -1430,7 +1430,7 @@ label.acronym a:hover div
  **************************/
 a.external
 {
-  	background-image: url(../../image/silk/link_go.png) !important;
+  	background-image: url(../../image/backend/icon/exLink.gif) !important;
   	background-repeat: no-repeat;
 	background-position: right center;
 	padding-right: 22px;

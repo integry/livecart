@@ -11,7 +11,7 @@
     <div class="addResponseForm" style="display: none;">
         <fieldset class="addForm">
         
-            <legend>{t _add_response}</legend>
+            <legend>{t _add_response|capitalize}</legend>
         
             {form action="controller=backend.orderNote action=add id=`$order.ID`" method="POST" handle=$form onsubmit="Backend.OrderNote.submitForm(event);" role="order.update"}
             

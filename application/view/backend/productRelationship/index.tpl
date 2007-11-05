@@ -104,7 +104,11 @@
             }
         );
       
-        Backend.RelatedProduct.Group.Controller.prototype.getInstance($("productRelationshipGroup_new_{/literal}{$productID}{literal}_form").down('form')).hideNewForm();
+	var inst = Backend.RelatedProduct.Group.Controller.prototype.getInstance($("productRelationshipGroup_new_{/literal}{$productID}{literal}_form").down('form'));
+	if (inst)
+	{
+	    inst.hideNewForm();
+	}
     });
     
     {/literal}    

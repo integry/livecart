@@ -17,14 +17,14 @@ _remove=Remove
 
 # Edit page
 
-_template_code=Template code
+_template_code=Template Code
 _code_explain=Use the following code to create custom links to this page in your template files
 
 _add_new_title=Add New Page
 
-_title=Page Title
-_handle=URL Handle (slug)
-_text=Page Text
+_title=Page title
+_handle=URL handle (slug)
+_text=Page text
 
 _inf_menu=Display in <em>Information</em> menu
 

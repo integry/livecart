@@ -3,7 +3,7 @@
 {else}
     {* upper menu *}
     <fieldset class="container" {if $taxRatesArray|@count}{denied role='delivery.update'}style="display: none;"{/denied}{/if}>
-    	<ul class="menu" id="taxRate_menu_{$deliveryZone.ID}">
+        <ul class="menu" id="taxRate_menu_{$deliveryZone.ID}">
     	    <li class="addNewTaxRate"><a href="#new_taxRate" id="taxRate_new_{$deliveryZone.ID}_show">{t _add_new_tax_rate}</a></li>
     	    <li class="addNewTaxRateCancel done" style="display: none"><a href="#cancel_taxRate" id="taxRate_new_{$deliveryZone.ID}_cancel">{t _cancel_adding_new_tax_rate}</a></li>
     	</ul>
@@ -11,6 +11,7 @@
     
     {* new form *}
     <fieldset id="taxRate_new_taxRate_{$deliveryZone.ID}_form" style="display: none;">
+    	<legend>{t _add_new_tax_rate|capitalize}</legend>        
         {include file="backend/taxRate/rate.tpl" taxRate=$newTaxRate}
     </fieldset>
     

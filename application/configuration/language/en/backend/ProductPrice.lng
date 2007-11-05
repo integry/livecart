@@ -5,10 +5,10 @@ _product_prices_could_not_be_updated=Product prices could not be updated
 _inventory=Inventory
 _items_in_stock=Items in stock
 _pricing=Pricing
-_shipping_weight=Shipping Weight
+_shipping_weight=Shipping weight
 
-_minimum_order_quantity=Minimum Order Quantity
-_shipping_surcharge=Shipping Surcharge
+_minimum_order_quantity=Minimum order quantity
+_shipping_surcharge=Shipping surcharge
 _requires_separate_shipment=Requires separate shipment
 _qualifies_for_free_shipping=Qualifies for free shipping
 _allow_back_ordering=Allow back-ordering

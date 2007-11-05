@@ -8,7 +8,7 @@
 
 {* new form *}
 <fieldset class="addForm" id="shippingService_new_service_{$deliveryZone.ID}_form" style="display: none;">
-	<legend>{t _add_new_shipping_service}</legend>
+	<legend>{t _add_new_shipping_service|capitalize}</legend>
     {include file="backend/shippingService/service.tpl" service=$newService}
 </fieldset>
 

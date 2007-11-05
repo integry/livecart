@@ -30,7 +30,7 @@
 
 <fieldset id="addNews" class="slideForm addForm" style="display: none;">
 
-	<legend>{t _add_news}</legend>
+	<legend>{t _add_news|capitalize}</legend>
 
 	{form action="controller=backend.siteNews action=add" method="POST" onsubmit="new Backend.SiteNews.Add(this); return false;" handle=$form id="newsForm" class="enabled"}
 		<input type="hidden" name="id" />

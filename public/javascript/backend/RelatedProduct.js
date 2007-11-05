@@ -112,7 +112,8 @@ Backend.RelatedProduct.Group.Callbacks =
     
     beforeEdit:     function(li) 
     {
-        if(!Backend.RelatedProduct.Group.Controller.prototype.getInstance(li.down('.productRelationshipGroup_form')))
+        console.log(li);
+	if(!Backend.RelatedProduct.Group.Controller.prototype.getInstance(li.down('.productRelationshipGroup_form')))
         {
             return Backend.RelatedProduct.Group.Links.edit + "/" + this.getRecordId(li);
         }

@@ -2,7 +2,8 @@
     <form action="{link controller=backend.productRelationshipGroup action=save}" method="post" {denied role="product.update"}class="formReadonly"{/denied}>
     	<!-- STEP 1 -->
     	<fieldset>
-    		<input type="hidden" name="ID" class="hidden productRelationshipGroup_ID" />
+    		<legend>{t _add_group_title}</legend>
+                <input type="hidden" name="ID" class="hidden productRelationshipGroup_ID" />
     		<input type="hidden" name="productID" class="hidden productRelationshipGroup_productID" />
     
     		<fieldset class="productRelationshipGroup_main">

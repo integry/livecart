@@ -11,7 +11,7 @@ class UpdateController extends StoreManagementController
 {
 	public function index()
 	{
-		// get the newest version
+	// get the newest version
         $f = fsockopen('update.livecart.com', '80', $err);
         if ($err)
         {
@@ -31,9 +31,10 @@ class UpdateController extends StoreManagementController
         
         $res = str_replace("\r", '', $res);
         list($headers, $version) = explode("\n\n", $res);
-        
+	$current = $this->getCurrentVersion();
+
         // get current version
-        $response = new ActionResponse('current', $this->getCurrentVersion());
+        $response = new ActionResponse('current', $current);
         $response->set('newest', $version);
         $response->set('needUpdate', version_compare($current, $version, '<'));
         return $response;

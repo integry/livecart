@@ -94,7 +94,7 @@
                             <input type="text" id="filter" /> <img src="image/silk/cross.png" id="clearFilter" style="vertical-align: middle; cursor: pointer; display: none;" />
 
                             <input type="checkbox" class="checkbox" id="allFiles" />
-                            <label for="allFiles">{t _all_files}</label>
+                            <label for="allFiles" class="checkbox">{t _all_files}</label>
 
                         </fieldset>
 

@@ -37,7 +37,7 @@
 		</fieldset>
 
         <fieldset class="addForm" id="filter_item_new_{$categoryID}_form" style="display: none;" class="filter_item_new">
-            <legend>{t _add_new_filter}</legend>
+            <legend>{t _add_new_filter|capitalize}</legend>
 			<script type="text/javascript">
                 var newFilterForm = new Backend.Filter({json array=$blankFilter}, true);
                 newFilterForm.addFilter(null, "new" + Backend.Filter.prototype.countNewFilters, true);

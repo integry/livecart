@@ -55,15 +55,15 @@
             <a href="#generate" class="user_password_generate">{t _generate_password}</a>
             <fieldset class="error showPassword">
                 <input type="checkbox" id="user_{$someUser.UserGroup.ID}_{$someUser.ID}_password_show" class="checkbox user_password_show"/>
-                <label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_password_show">{t _show_password}</label>
+                <label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_password_show" class="checkbox">{t _show_password}</label>
             </fieldset >
             <div class="errorText" style="display: none" ></span>
     	</fieldset>
     </p>
         
     <p class="sameAddress">
-        {checkbox name="sameAddresses"  id="user_`$someUser.UserGroup.ID`_`$someUser.ID`_sameAddresses" class="checkbox"}
-        <label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_sameAddresses">{t _same_billing_and_shipping_addresses?}</label>       
+        {checkbox name="sameAddresses" id="user_`$someUser.UserGroup.ID`_`$someUser.ID`_sameAddresses" class="checkbox"}
+        <label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_sameAddresses" class="checkbox">{t _same_billing_and_shipping_addresses?}</label>       
     </p>
     
     <br class="clear" />

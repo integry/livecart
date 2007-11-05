@@ -89,7 +89,7 @@ _STATUS_AWAITING=Awaiting Shipment
 # Mass actions
 _nothing_selected=Please select at least one order first
 _with_selected=With selected
-_order_status=Order status
+_order_status=Order Status
 _set_new=New
 _set_processing=Processing
 _set_awaiting_shipment=Awaiting shipment

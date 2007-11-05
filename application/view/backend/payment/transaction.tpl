@@ -65,11 +65,14 @@
 
                 <span class="confirmation" style="display: none">{t _void_conf}</span>
                 
-        		<p>
+        		<fieldset>
+                        <legend>{t _void}</legend>
+                                <p>
 					{t _void_reason}:
 				</p>
 				<textarea name="comment"></textarea>
-
+                        </fieldset>
+                        
         		<fieldset class="controls">
 					<span class="progressIndicator" style="display: none;"></span>
 					<input type="submit" class="submit" value="{tn _void_button}" />
@@ -81,7 +84,10 @@
 
         {if $transaction.isCapturable}
         <div class="transactionForm captureForm" style="display: none;">
-        	{form action="controller=backend.payment action=capture id=`$transaction.ID`" method="POST" onsubmit="Backend.Payment.captureTransaction(`$transaction.ID`, this, event);" handle=$capture}
+                {form action="controller=backend.payment action=capture id=`$transaction.ID`" method="POST" onsubmit="Backend.Payment.captureTransaction(`$transaction.ID`, this, event);" handle=$capture}
+
+        	<fieldset>
+                <legend>{t _capture}</legend>
 
                 <span class="confirmation" style="display: none">{t _capture_conf}</span>
                 
@@ -104,12 +110,13 @@
                 {else}
                     <input type="checkbox" name="complete" id="complete" value="ON" checked="checked" style="display: none;" />
                 {/if}
-
-        		<fieldset class="controls">
-					<span class="progressIndicator" style="display: none;"></span>
-					<input type="submit" class="submit" value="{tn _process_capture}" />
-	        		{t _or} <a class="menu" href="#" onclick="Backend.Payment.hideCaptureForm({$transaction.ID}, event);">{t _cancel}</a>
-	        	</fieldset>
+                </fieldset>
+	
+		<fieldset class="controls">
+				<span class="progressIndicator" style="display: none;"></span>
+				<input type="submit" class="submit" value="{tn _process_capture}" />
+			{t _or} <a class="menu" href="#" onclick="Backend.Payment.hideCaptureForm({$transaction.ID}, event);">{t _cancel}</a>
+		</fieldset>
 	        	
         	{/form}
         </div>

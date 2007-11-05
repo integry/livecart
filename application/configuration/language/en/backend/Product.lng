@@ -89,7 +89,7 @@ _sku_code=SKU (code)
 _generate_sku=Generate SKU automatically
 _short_description=Short description
 _long_description=Long description
-_product_type=Product Type
+_product_type=Product type
 _website_address=Website address
 _manufacturer=Manufacturer
 _keywords=Keywords
@@ -100,13 +100,13 @@ _allow_fractional_quantities=Allow fractional quantities
 
 _pricing=Pricing
 _shipping=Shipping
-_shipping_weight=Shipping Weight
+_shipping_weight=Shipping weight
 _other=Other
 _enter_other=Enter Other >>
 
 
-_minimum_order_quantity=Minimum Order Quantity
-_shipping_surcharge=Shipping Surcharge
+_minimum_order_quantity=Minimum order quantity
+_shipping_surcharge=Shipping surcharge
 _requires_separate_shipment=Requires separate shipment
 _qualifies_for_free_shipping=Qualifies for free shipping
 _allow_back_ordering=Allow back-ordering
@@ -152,9 +152,9 @@ _hint_surcharge=Define additional shipping charges for this particular product
 
 # Info tab
 _date_created=Date created
-_purchase_stats=Number of items purchased
+_purchase_stats=Number Of Items Purchased
 _no_purchases=This product has never been purchased yet
-_together_with=Purchased together with
+_together_with=Purchased Together With
 
 _last_1_h=Last hour
 _last_3_h=Last 3 hours

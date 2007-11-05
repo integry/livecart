@@ -26,6 +26,7 @@
 	background-image: url(../../image/silk/stop.png);
 	background-position: center left;
 	background-repeat: no-repeat;
+	float: left;
 }
 
 .customizeControl.on

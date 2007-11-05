@@ -41,7 +41,7 @@
 	<input type="hidden" name="imageId" value="" />
 		
 	<fieldset class="addForm">	
-		<legend>{t _add_new}</legend>
+		<legend>{t _add_new_title}</legend>
 		<p class="required">
 			{err for="image"}
                 {{label {t _image_file}: }}
