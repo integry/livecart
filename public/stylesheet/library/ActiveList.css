@@ -17,7 +17,6 @@
     height: 16px;
     margin: 2px;
     cursor: pointer;
-    cursor: hand;
 }
 
 ul.activeList, .activeListGroup
@@ -63,7 +62,7 @@ li.activeList_delete_inProgress
     background-color: #FFE0E0 ! important;
 }
 
-li.activeList_edit_inProgress
+li.activeList_edit_inProgress, li.activeList_remove_sort
 {
     cursor: auto;
 }

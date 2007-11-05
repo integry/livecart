@@ -18,7 +18,7 @@
             </li>
         </ul>
         <fieldset  class="addForm treeManagerContainer newUserForm">
-            <legend>{t _add_new_user}</legend>
+            <legend>{t _add_new_user|capitalize}</legend>
             {include file="backend/user/info.tpl" someUser=$newUser}
         </fieldset>
     </div>

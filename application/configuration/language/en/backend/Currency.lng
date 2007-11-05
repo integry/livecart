@@ -12,8 +12,8 @@ _options=Options
 
 # index
 
-_add_currency=Add currency
-_add_curr_button=Add currency
+_add_currency=Add new currency
+_add_curr_button=Add
 _no_currencies=There are no currencies added yet. You must add at least one currency.
 
 _inactive=Inactive
