@@ -125,6 +125,11 @@ LiveCart.AjaxRequest.prototype = {
     {
 		this.hideIndicator();
 		
+		if ('text/javascript' == response.getResponseHeader('Content-type'))
+		{
+            response.responseData = response.responseText.evalJSON();
+        }
+
 		if ('text/javascript' == response.getResponseHeader('Content-type') && $('confirmations'))
 		{
             var confirmations = $('confirmations');
@@ -152,9 +157,7 @@ LiveCart.AjaxRequest.prototype = {
 				
 			}
             try
-            {
-                response.responseData = response.responseText.evalJSON();
-                
+            {               
                 // Show confirmation
                 if(response.responseData.status)
                 {

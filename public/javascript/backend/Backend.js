@@ -586,7 +586,11 @@ Backend.NavMenu.prototype =
                     ul.parentNode.removeChild(ul);
                 }
             
-                navCont.appendChild(menuItem);
+                // do not show empty menus
+                if (menuItem.getElementsByTagName('ul').length || mItem['url'])
+                {
+                    navCont.appendChild(menuItem);
+                }
             }
         }
     },

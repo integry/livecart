@@ -5,6 +5,7 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../../test/Init
 ActiveRecord::setDSN('mysql://root@server/import');
 
 require_once dirname(__FILE__) . '/../driver/OsCommerceImport.php';
+require_once dirname(__FILE__) . '/../LiveCartImporter.php';
 
 class TestOsCommerceImport extends UnitTest
 {
@@ -15,6 +16,7 @@ class TestOsCommerceImport extends UnitTest
         parent::__construct();
         
         $this->instance = new OsCommerceImport('mysql://root@server/oscommerce');
+        $this->importer = new LiveCartImporter($this->instance);
     }
     
     public function getUsedSchemas()

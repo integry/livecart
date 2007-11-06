@@ -1,0 +1,4 @@
+<Menu>
+	<Title>_menu_import</Title>
+	<Controller>backend.databaseImport</Controller>
+</Menu>

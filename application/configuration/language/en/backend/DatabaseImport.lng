@@ -1,0 +1,32 @@
+_import_database=Import Database
+_import_description=The database import tool allows to convert an existing database of other shopping cart program into LiveCart.
+_import_warning=<span>Note:</span> it is highly recommended that the database is imported into an <strong>empty</strong> LiveCart database!
+_begin_import=Begin Database Import
+
+# Import form
+_shopping_cart=Shopping cart
+_database_type=Database type
+_database_server=Database server
+_database_name=Database name
+_database_user=Database username
+_database_pass=Database password
+_file_path=Cart file directory
+_enclose_transaction=Enclose import in a single transaction
+_import=Import
+
+# Form errors
+_err_no_cart_selected=Please select a shopping cart program
+_err_no_db_type=Please select the database type
+_err_no_database_server=Please enter database server name
+_err_no_database_name=Please enter database name
+_err_no_database_username=Please enter database user name
+_invalid_database=This is not a valid [_1] database
+_invalid_path=This is not a valid [_1] directory
+
+# Importable data
+Language=Languages
+Currency=Currencies
+Category=Categories
+Product=Products
+User=Users
+CustomerOrder=Orders

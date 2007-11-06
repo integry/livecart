@@ -1,0 +1,39 @@
+.importWarning
+{
+    margin-top: 5px;
+    margin-bottom: 1em;
+}
+
+.importWarning span
+{
+    color: red;
+    text-transform: uppercase;
+}
+
+#import
+{
+    width: 600px;
+    float: left;
+}
+
+#importProgress
+{
+    margin-left: 600px;
+    padding-left: 2em;
+}
+
+#importProgress li
+{
+    list-style-type: none;
+    margin-bottom: 1em;
+    background-image: url(../../image/silk/bullet_yellow.png);
+    background-position: center left;
+    background-repeat: no-repeat;
+    padding-left: 22px;    
+}
+
+#importProgress h2
+{
+    font-size: 1.2em;
+    font-weight: normal;
+}

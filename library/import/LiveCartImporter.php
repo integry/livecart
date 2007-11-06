@@ -1,5 +1,7 @@
 <?php
 
+ClassLoader::import('application.model.system.Language');
+
 class LiveCartImporter
 {
     private $driver;
@@ -14,16 +16,9 @@ class LiveCartImporter
      */
     public function getItemTypes()
     {
-        $allTypes = array(        
-                'language',
-                'currency',
-                'category',
-                'product',                
-            );
-            
         $supportedTypes = array();
         
-        foreach ($allTypes as $type)
+        foreach ($this->getRecordTypes() as $type)
         {
             if (call_user_func_array(array($this->db, 'is' . $type), array()))
             {
@@ -32,12 +27,27 @@ class LiveCartImporter
         }
     }
     
+    public function reset()
+    {
+        @unlink($this->getTypeFile());
+        @unlink($this->getProgressFile());
+        @unlink($this->getCountFile());
+        @unlink($this->getOffsetsFile());
+    }
+    
     /**
      *  Get current data type
      */
     public function getCurrentType()
     {
-        // read from txt file
+        $file = $this->getTypeFile();
+        
+        if (!file_exists($file))
+        {
+            $this->setNextType();
+        }
+        
+        return include $file;
     }
 
     /**
@@ -45,7 +55,9 @@ class LiveCartImporter
      */
     public function getCurrentRecordCount()
     {
+        $this->getCurrentType();
         
+        return include $this->getCountFile();
     }
 
     /**
@@ -53,16 +65,15 @@ class LiveCartImporter
      */
     public function getCurrentProgress()
     {
+        $file = $this->getProgressFile();
         
+        if (!file_exists($file))
+        {
+            $this->setProgress(0);
+        }
+        
+        return include $file;
     }    
-
-    /**
-     *  Get ID of the last imported record
-     */
-    public function getCurrentId()
-    {
-        
-    }
     
     /**
      *  Processes data import - one type of data at a time
@@ -73,6 +84,9 @@ class LiveCartImporter
     {
         $type = $this->getCurrentType();
         
+        $offsets = $this->getIdOffsets();
+        $offset = $offsets[$type];
+        
         for ($k = 0; $k <= self::MAX_RECORDS; $k++)
         {
             $id = $this->getCurrentId();
@@ -82,13 +96,124 @@ class LiveCartImporter
             }
             
             $record = call_user_func_array(array($this->driver, 'getNext' . $type), array($id));
+            
+            // import completed?
             if (null == $record)
             {
+                $this->setNextType();
                 return false;
             }
             
-            $record->save();
+            // apply ID offset
+            if (is_numeric($record->getID()))
+            {
+                $record->setID($record->getID() + $offset);
+            }
+            
+            try
+            {
+                $record->save();
+            }
+            catch (ARException $e)
+            {
+                
+            }
+            
+            $this->setProgress($this->getCurrentProgress() + 1);
         }
+    }
+    
+    private function getIdOffsets()
+    {
+        $file = $this->getOffsetsFile();
+        
+        if (!file_exists($file))
+        {
+            $offsets = array();
+            
+            $types = $this->getRecordTypes();        
+            unset($types[array_search('Language', $types)]);
+            
+            foreach ($types as $type)
+            {
+                $f = new ARSelectFilter();
+                $f->setOrder(new ARFieldHandle($type, 'ID'), 'DESC');
+                $f->setLimit(1);
+                $record = array_shift(ActiveRecordModel::getRecordSetArray($type, $f));
+                $offsets[$type] = $record['ID'] + 1;
+            }            
+        
+            file_put_contents($file, '<?php return ' . var_export($offsets, true) . '; ?>');
+        }
+        
+        return include $file;
+    }
+    
+    public function getRecordTypes()
+    {
+        return array(        
+                'Language',
+                'Currency',
+                'Category',
+                'Product',
+                'User',
+                'CustomerOrder',
+            );
+    }
+    
+    private function setNextType()
+    {
+        @unlink($this->getProgressFile());
+        
+        $file = $this->getTypeFile();
+        $types = $this->getItemTypes();
+        
+        if (!file_exists($file))
+        {
+            $typeIndex = -1;
+        }
+        else
+        {
+            $typeIndex = array_search(include $file, $types);
+        }
+        
+        $typeIndex++;
+        
+        $type = isset($types[$typeIndex]) ? $types[$typeIndex] : null;
+        
+        // get total record count of this type
+        if (!is_null($type))
+        {
+            $count = $this->driver->getTotalRecordCount($type);
+            file_put_contents($this->getCountFile(), '<?php return ' . var_export($count, true) . '; ?>');
+        }
+        
+        file_put_contents($file, '<?php return ' . var_export($type, true) . '; ?>');
+    }
+    
+    private function setProgress($progress)
+    {
+        file_put_contents($this->getProgressFile(), '<?php return ' . var_export($progress, true) . '; ?>');
+    }
+    
+    private function getOffsetsFile()
+    {
+        return ClassLoader::getRealPath('cache') . '/currentIdOffsets.php';
+    }
+
+    private function getTypeFile()
+    {
+        return ClassLoader::getRealPath('cache') . '/currentImportType.php';
+    }
+
+    private function getProgressFile()
+    {
+        return ClassLoader::getRealPath('cache') . '/currentImportType.php';
+    }
+
+    private function getCountFile()
+    {
+        return ClassLoader::getRealPath('cache') . '/currentImportCount.php';
     }
 }
 

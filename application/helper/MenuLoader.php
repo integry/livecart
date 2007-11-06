@@ -143,7 +143,6 @@ class MenuLoader {
 
   	private static function createFromDir(&$father_menu, $path)
   	{
-
 		$iter = new DirectoryIterator($path);
 	  	$files = array();
 	  	foreach ($iter as $value)
