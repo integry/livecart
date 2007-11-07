@@ -1,14 +1,22 @@
 <?php
 
 ClassLoader::import('application.model.system.Language');
+ClassLoader::import('application.model.Currency');
+ClassLoader::import('application.model.category.Category');
+ClassLoader::import('application.model.product.Product');
+ClassLoader::import('application.model.order.CustomerOrder');
+ClassLoader::import('application.model.user.User');
 
 class LiveCartImporter
 {
+    const MAX_RECORDS = 1;
+    
     private $driver;
     
-    public function __construct(LiveCartImport $driver)
+    public function __construct(LiveCartImportDriver $driver)
     {
         $this->driver = $driver;
+        $this->reset();
     }
     
     /**
@@ -20,11 +28,13 @@ class LiveCartImporter
         
         foreach ($this->getRecordTypes() as $type)
         {
-            if (call_user_func_array(array($this->db, 'is' . $type), array()))
+            if (call_user_func_array(array($this->driver, 'is' . $type), array()))
             {
-                $supportedTypes[$type] = true;
+                $supportedTypes[] = $type;
             }
         }
+        
+        return $supportedTypes;
     }
     
     public function reset()
@@ -84,16 +94,20 @@ class LiveCartImporter
     {
         $type = $this->getCurrentType();
         
-        $offsets = $this->getIdOffsets();
-        $offset = $offsets[$type];
-        
-        for ($k = 0; $k <= self::MAX_RECORDS; $k++)
+        // import completed
+        if (is_null($type))
         {
-            $id = $this->getCurrentId();
-            if (null == $id)
-            {
-                break;
-            }
+            return null;
+        }
+        
+        $total = $this->getCurrentRecordCount();
+        
+        $offsets = $this->getIdOffsets();
+        $offset = isset($offsets[$type]) ? $offsets[$type] : null;
+        
+        for ($k = 1; $k <= self::MAX_RECORDS; $k++)
+        {
+            $id = $this->getCurrentProgress();
             
             $record = call_user_func_array(array($this->driver, 'getNext' . $type), array($id));
             
@@ -101,7 +115,7 @@ class LiveCartImporter
             if (null == $record)
             {
                 $this->setNextType();
-                return false;
+                break;
             }
             
             // apply ID offset
@@ -112,7 +126,7 @@ class LiveCartImporter
             
             try
             {
-                $record->save();
+                //$record->save();
             }
             catch (ARException $e)
             {
@@ -121,6 +135,8 @@ class LiveCartImporter
             
             $this->setProgress($this->getCurrentProgress() + 1);
         }
+        
+        return array('type' => $type, 'progress' => $this->getCurrentProgress(), 'total' => $total);
     }
     
     private function getIdOffsets()
@@ -208,7 +224,7 @@ class LiveCartImporter
 
     private function getProgressFile()
     {
-        return ClassLoader::getRealPath('cache') . '/currentImportType.php';
+        return ClassLoader::getRealPath('cache') . '/currentImportProgress.php';
     }
 
     private function getCountFile()

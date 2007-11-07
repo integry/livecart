@@ -24,6 +24,9 @@ class DatabaseImportController extends StoreManagementController
 	
 	public function import()
 	{
+        //ignore_user_abort(true);
+		set_time_limit(0);
+                
         $validator = $this->getValidator();
         if (!$validator->isValid())
         {
@@ -63,12 +66,33 @@ class DatabaseImportController extends StoreManagementController
             return new JSONResponse(array('errors' => $validator->getErrorList()));
 		}
 		
-		@set_time_limit(0);		
 		$importer = new LiveCartImporter($driver);
 		
-		// get importable data
-		$types = $importer->getItemTypes();
+		header('Content-type: text/javascript');
 		
+		// get importable data types
+		$this->flushResponse(array('types' => $importer->getItemTypes()));
+		
+		// process import
+		while (true)
+		{
+            $result = $importer->process();
+            
+            $this->flushResponse($result);
+            
+            if (is_null($result))
+            {
+                break;
+            }
+        }
+            	
+		exit;
+    }
+    
+    private function flushResponse($data)
+    {
+        echo '|' . base64_encode(json_encode($data));
+		flush();
     }
 	
 	private function getDrivers()

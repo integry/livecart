@@ -81,15 +81,22 @@
 {/form}
 </div>
 
-<div id="importProgress">
+<div id="importProgress" style="display: none;">
+
+    <div id="completeMessage" class="yellowMessage stick" style="display: none;">
+        <div>{t _import_completed}</div>
+    </div>
+
     <fieldset>
-        <legend><span class="progressIndicator"></span> Importing</legend>
+        <legend>Importing</legend>
         <ul>
             {foreach from=$recordTypes item=type}
-                <li id="progress_{$type}">
+                <li id="progress_{$type}" style="display: none;">
                     <h2>{translate text=$type}</h2>
-                    <div class="progressBar">
+                    <div class="progressBarIndicator"></div>
+                    <div class="progressBar" style="display: none;">
                         <span class="progressCount"></span>
+                        <span class="progressSeparator"> / </span>
                         <span class="progressTotal"></span>
                     </div>
                 </li>

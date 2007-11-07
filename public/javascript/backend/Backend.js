@@ -960,8 +960,8 @@ Backend.SaveConfirmationMessage.prototype =
         this.innerElement.focus();
         Backend.SaveConfirmationMessage.prototype.timers[this.element.id].effectHighlight = new Effect.Highlight(this.innerElement, { duration: 0.4 });
        
-        // do not hide error messages
-        if (!this.element.hasClassName('redMessage') && !this.element.hasClassName('bugMessage'))
+        // do not hide error or permanent confirmation messages
+        if (!this.element.hasClassName('redMessage') && !this.element.hasClassName('bugMessage') && !this.element.hasClassName('stick'))
         {
             Backend.SaveConfirmationMessage.prototype.timers[this.element.id].hideTimeout = setTimeout(function() { this.hide() }.bind(this), 4000);   
         }

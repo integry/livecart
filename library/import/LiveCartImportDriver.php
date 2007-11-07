@@ -58,6 +58,16 @@ abstract class LiveCartImportDriver
         return false;        
     }
     
+    public function isUser()
+    {
+        return false;        
+    }
+
+    public function isCustomerOrder()
+    {
+        return false;        
+    }
+
     public function isAttribute()
     {
         return false;        
@@ -73,7 +83,7 @@ abstract class LiveCartImportDriver
         $tableMap = $this->getTableMap();
         if (isset($tableMap[$type]))
         {
-            return array_shift(array_shift($this->db->getDataBySQL('SELECT COUNT(*) FROM `' . $table . '`')));
+            return array_shift(array_shift($this->getDataBySQL('SELECT COUNT(*) FROM `' . $tableMap[$type] . '`')));
         }
     }
     

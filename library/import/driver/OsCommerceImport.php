@@ -5,7 +5,9 @@ require_once dirname(__file__) . '/../LiveCartImportDriver.php';
 class OsCommerceImport extends LiveCartImportDriver
 {
     private $languageMap = null;
-    
+    private $currencyMap = null;
+    private $configMap = null;
+            
     public function getName()
     {
         return 'osCommerce';
@@ -30,18 +32,24 @@ class OsCommerceImport extends LiveCartImportDriver
         return true;
     }
     
-    public function isLanguages()
+    public function isLanguage()
     {
         return true;
     }
     
+    public function isCurrency()
+    {
+        return true;
+    }
+
     public function getTableMap()
     {
         return array(
                 'Category' => 'categories',
+                'Currency' => 'currencies',
+                'CustomerOrder' => 'orders',
                 'Language' => 'languages',
                 'Manufacturer' => 'manufacturers',
-                'CustomerOrder' => 'orders',
                 'Product' => 'products_attributes',
                 'User' => 'customers',
             );
@@ -62,8 +70,56 @@ class OsCommerceImport extends LiveCartImportDriver
         $data = array_shift($this->languageMap);
         $lang = ActiveRecordModel::getNewInstance('Language');
         $lang->setID($data['code']);
-
+        $lang->isEnabled->set(true);
+        
         return $lang;
+    }
+
+    public function getNextCurrency($id = null)
+    {
+        if (is_null($this->currencyMap))
+        {
+            $this->currencyMap = $this->getDataBySQL('SELECT * FROM currencies');
+        }
+        
+        if (empty($this->currencyMap))
+        {
+            return null;
+        }
+        
+        $data = array_shift($this->currencyMap);
+        $curr = ActiveRecordModel::getNewInstance('Currency');
+        $curr->setID($data['code']);
+        $curr->pricePrefix->set($data['symbol_left']);
+        $curr->priceSuffix->set($data['symbol_right']);
+        $curr->rate->set($data['value']);
+        $curr->lastUpdated->set($data['last_updated']);
+        
+        $curr->isEnabled->set(true);
+        if ($this->getConfigValue('DEFAULT_CURRENCY') == $curr->getID())
+        {
+            $curr->isDefault->set(true);
+        }
+        
+        return $curr;
+    }
+    
+    protected function getConfigValue($key)
+    {
+        if (empty($this->configMap))
+        {
+            $config = $this->getDataBySQL('SELECT * FROM configuration');
+
+            foreach ($config as $row)
+            {
+                $this->configMap[$row['configuration_key']] = $row['configuration_value'];
+            }            
+        }
+        
+        if (isset($this->configMap[$key]))
+        {
+            return $this->configMap[$key];
+        }
     }
 }
 
