@@ -8,6 +8,8 @@ class OsCommerceImport extends LiveCartImportDriver
 
     private $configMap = null;
 
+    private $categoryMap = null;
+
     public function getName()
     {
         return 'osCommerce';
@@ -48,6 +50,11 @@ class OsCommerceImport extends LiveCartImportDriver
 	}
 
 	public function isUser()
+	{
+		return true;
+	}
+
+	public function isCategory()
 	{
 		return true;
 	}
@@ -137,42 +144,92 @@ class OsCommerceImport extends LiveCartImportDriver
 
 	public function getNextCategory()
 	{
-		if (!$this->categoryMap)
+		if (is_null($this->categoryMap))
 		{
-			foreach ($this->languages as $id => $code)
+			$join = $langs = array();
+            foreach ($this->languages as $id => $code)
 			{
-				$join[] = 'LEFT JOIN categories_description AS category_' . $code . ' ON categories_description.categories_id=categories.categories_id AND categories_description.language_id=' . $id;
+				$join[] = 'LEFT JOIN categories_description AS category_' . $code . ' ON category_' . $code . '.categories_id=categories.categories_id AND category_' . $code . '.language_id=' . $id;
+				$langs[] = 'category_' . $code . '.categories_name AS name_' . $code;
 			}
 
 			// get all categories
-			foreach ($this->db->getDataBySQL('SELECT * FROM categories ' . implode(' ', $join) . ' ORDER BY sort_order ASC') as $category)
+			foreach ($this->getDataBySQL('SELECT *,' . implode(', ', $langs) . ' FROM categories ' . implode(' ', $join) . ' ORDER BY sort_order ASC') as $category)
 			{
 				$this->categoryMap[$category['categories_id']] = $category;
 			}
+			
+			// get level for each category
+			foreach ($this->categoryMap as $id => &$category)
+			{
+                $level = 0;
+                while ($id != 0 && ($level < 100))
+                {
+                    if (isset($this->categoryMap[$id]['parent_id']))
+                    {
+                        $id = $this->categoryMap[$id]['parent_id'];
+                        $level++;
+                    }
+                    
+                    // parent category does not exist, so remove the category
+                    else if ($this->categoryMap[$id]['parent_id'] != 0)
+                    {
+                        unset($this->categoryMap[$id]);
+                        $level = 101;
+                    }
+                }
+                
+                // circular reference
+                if ($level >= 100)
+                {
+                    unset($this->categoryMap[$category['categories_id']]);
+                }
+                else
+                {
+                    $category['level'] = $level;
+                }
+            }
+            
+            usort($this->categoryMap, array($this, 'sortCategories'));
 		}
-
-		$this->categoryMap = $this->db->getDataBySQL('SELECT * FROM categories ORDER BY sort_order ASC');
 
 		// root level categories first
-		if ($data = $this->loadRecord('SELECT * FROM categories WHERE parent_id = 0'))
+		if ($data = array_shift($this->categoryMap))
 		{
-			$rec = Category::getNewInstance(Category::getRootNode());
+			$parentNode = 0 == $data['parent_id'] ? Category::getRootNode(Category::LOAD_DATA) : Category::getInstanceById($this->getRealId('Category', $data['parent_id']), Category::LOAD_DATA);
+            $rec = Category::getNewInstance($parentNode);
 		}
-		else if ($data = $this->loadRecord('SELECT * FROM categories WHERE parent_id > 0'))
+		else
 		{
-			$parent = $this->getRealId('Category', $data['parent_id']);
-			$rec = Category::getNewInstance(Category::getInstanceById($parent));
-		}
+            return null;
+        }
 
-		$rec = User::getNewInstance($data['customers_email_address']);
-		$rec->setID($data['customers_id']);
-		$rec->password->set($data['customers_password']);
-		$rec->firstName->set($data['customers_firstname']);
-		$rec->lastName->set($data['customers_lastname']);
-		$rec->isEnabled->set(true);
+        $rec->setID($data['categories_id']);
+
+        foreach ($this->languages as $code)
+        {
+            $rec->setValueByLang('name', $code, $data['name_' . $code]);
+        }
 
 		return $rec;
 	}
+
+    private function sortCategories($a, $b)
+    {
+        if ($a['level'] == $b['level'])
+        {
+            if ($a['sort_order'] == $b['sort_order'])
+            {
+                return 0;
+            }
+            else
+            {
+                return $a['sort_order'] > $b['sort_order'] ? 1 : -1;
+            }            
+        }
+        
+        return $a['level'] > $b['level'] ? 1 : -1;
+    }
 
     protected function getConfigValue($key)
     {

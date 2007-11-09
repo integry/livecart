@@ -24,8 +24,7 @@ abstract class LiveCartImportDriver
 
 	protected $db;
     protected $path;
-
-    protected $languages = array();
+    protected $importer;
 
 	private $recordMap = array();
 	private $recordMapOffsets = array();
@@ -37,6 +36,11 @@ abstract class LiveCartImportDriver
     }
 
     public abstract function getTableMap();
+
+    public function setImporter(LiveCartImporter $importer)
+    {
+        $this->importer = $importer;
+    }
 
 	public function isAttribute()
 	{
@@ -132,6 +136,11 @@ abstract class LiveCartImportDriver
         return true;
     }
 
+    public function getRealId($type, $id)
+    {
+        return $this->importer->getRealId($type, $id);
+    }
+
 	protected function loadRecord($sql)
 	{
 		if (empty($this->recordMap[$sql]))
@@ -153,10 +162,12 @@ abstract class LiveCartImportDriver
     protected function getDataBySQL($sql)
     {
 		$resultSet = $this->db->executeQuery($sql);
+        $dataArray = array();
         while ($resultSet->next())
 		{
 			$dataArray[] = $resultSet->getRow();
 		}
+
 		return $dataArray;
     }
 

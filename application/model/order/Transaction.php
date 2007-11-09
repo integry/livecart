@@ -338,7 +338,7 @@ class Transaction extends ActiveRecordModel
     
 	/*####################  Saving ####################*/        
         
-    public function save()
+    public function save($forceOperation = null)
     {
         if (!$this->currency->get())
         {
@@ -346,7 +346,7 @@ class Transaction extends ActiveRecordModel
             $this->amount->set($this->realAmount->get());
         }
         
-        return parent::save();
+        return parent::save($forceOperation);
     }
     
     protected function insert()

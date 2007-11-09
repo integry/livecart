@@ -513,7 +513,7 @@ class ActiveTreeNode extends ActiveRecordModel
      * 
      * @throws Exception If failed to commit the transaction
      */
-    public function save()
+    public function save($forceOperation = null)
     {
         if (!$this->isExistingRecord())
         {
@@ -569,7 +569,7 @@ class ActiveTreeNode extends ActiveRecordModel
             }
         }
         
-        return parent::save();
+        return parent::save($forceOperation);
     }
     
     /**

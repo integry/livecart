@@ -570,7 +570,7 @@ class Product extends MultilingualObject
 	/**
 	 *  @todo move the SKU checking to insert() - otherwise seems to break some tests for now
 	 */
-    public function save()
+    public function save($forceOperation = null)
 	{
 		ActiveRecordModel::beginTransaction();
 
@@ -579,7 +579,7 @@ class Product extends MultilingualObject
 			$this->manufacturer->get()->save();
 		}
 		
-		parent::save();
+		parent::save($forceOperation);
 				
 		$this->getSpecification()->save();
 		$this->getPricingHandler()->save();

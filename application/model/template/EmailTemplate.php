@@ -63,7 +63,7 @@ class EmailTemplate extends Template
 			$this->code = $this->subject . "\n" . $this->body;
 		}
 		
-		return parent::save();
+		return parent::save($forceOperation);
 	}
 
 	/**

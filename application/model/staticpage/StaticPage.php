@@ -64,7 +64,7 @@ class StaticPage extends MultilingualObject
 		return ClassLoader::getRealPath('cache.staticpage') . '/' . $this->getID() . '.php';
 	}
 	
-	public function save()
+	public function save($forceOperation = null)
 	{
 		$this->loadFile();
 		
@@ -73,7 +73,7 @@ class StaticPage extends MultilingualObject
             $this->handle->set(createHandleString($this->getValueByLang('title')));
 		}
 	
-		parent::save();
+		parent::save($forceOperation);
 		
 		$this->saveFile();
 	}

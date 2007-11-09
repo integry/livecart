@@ -128,8 +128,7 @@ class ProductSpecification
 	}
 
 	public function save()
-	{
-		
+	{		
 		foreach ($this->removedAttributes as $attribute)
 		{
 		  	$attribute->delete();

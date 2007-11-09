@@ -102,9 +102,9 @@ if (!$this->product->get())	print_r($this->toArray());
         return parent::insert();
     }
     
-    public function save()
+    public function save($forceOperation = null)
     {
-        $ret = parent::save();        
+        $ret = parent::save($forceOperation);        
         
         // adjust inventory
         $this->product->get()->save();

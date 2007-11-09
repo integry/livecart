@@ -28,9 +28,9 @@ class BillingAddress extends UserAddressType
         return parent::getUserAddress(__class__, $id, $user);
     }
     
-    public function save()
+    public function save($forceOperation = null)
     {
-        parent::save();
+        parent::save($forceOperation);
         
         $user = $this->user->get();
         $user->load();     

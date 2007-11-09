@@ -65,11 +65,6 @@ class SpecificationItem extends Specification
 		
 		if($value !== $this->specFieldValue->get()) $this->specFieldValue->set($value);
 	}
-	
-	public function save()
-	{
-		parent::save();
-	}
 
 	public function toArray()
 	{

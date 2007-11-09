@@ -13,10 +13,13 @@ class LiveCartImporter
     const MAX_RECORDS = 1;
 
     private $driver;
+    
+    private $offsets;
 
     public function __construct(LiveCartImportDriver $driver)
     {
         $this->driver = $driver;
+        $this->driver->setImporter($this);
         $this->reset();
     }
 
@@ -127,17 +130,34 @@ class LiveCartImporter
 
             try
             {
-                $record->save();
+                $record->save(ActiveRecord::PERFORM_INSERT);
             }
-            catch (ARException $e)
+            catch (SQLException $e)
             {
-
+                print_r("\r\n", $e->getMessage());
             }
 
             $this->setProgress($this->getCurrentProgress() + 1);
         }
 
         return array('type' => $type, 'progress' => $this->getCurrentProgress(), 'total' => $total);
+    }
+
+    public function getRealId($type, $id)
+    {
+        if (!$this->offsets)
+        {
+            $this->offsets = include $this->getOffsetsFile();
+        }
+        
+        if (isset($this->offsets[$type]))
+        {
+            return $this->offsets[$type] + $id;
+        }
+        else
+        {
+            return $id;
+        }
     }
 
     private function getIdOffsets()
