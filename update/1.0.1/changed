@@ -92,6 +92,7 @@ application/view/user/orderEntry.tpl
 application/view/user/orders.tpl
 framework/Application.php
 framework/request/Router.php
+installdata/sql/create.sql
 library/I18Nv2/Currency/lv.php
 library/activerecord/ARValueMapper.php
 library/activerecord/ActiveRecord.php

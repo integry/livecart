@@ -26,6 +26,7 @@ _invalid_path=This is not a valid [_1] directory
 # Importable data
 Language=Languages
 Currency=Currencies
+Manufacturer=Manufacturers
 Category=Categories
 Product=Products
 User=Users
