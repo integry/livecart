@@ -9,6 +9,8 @@ class OsCommerceImport extends LiveCartImportDriver
     private $configMap = null;
 
     private $categoryMap = null;
+    
+    private $productSql;
 
     public function getName()
     {
@@ -59,6 +61,16 @@ class OsCommerceImport extends LiveCartImportDriver
 		return true;
 	}
 
+	public function isProduct()
+	{
+		return true;
+	}
+
+	public function isCustomerOrder()
+	{
+		return true;
+	}
+
     public function getTableMap()
     {
         return array(
@@ -67,7 +79,7 @@ class OsCommerceImport extends LiveCartImportDriver
                 'CustomerOrder' => 'orders',
                 'Language' => 'languages',
                 'Manufacturer' => 'manufacturers',
-                'Product' => 'products_attributes',
+                'Product' => 'products',
                 'User' => 'customers',
             );
     }
@@ -213,6 +225,144 @@ class OsCommerceImport extends LiveCartImportDriver
 
 		return $rec;
 	}
+	
+	public function getNextProduct()
+	{
+        if (!$this->productSql)
+        {
+            foreach ($this->languages as $id => $code)
+    		{
+    			$join[] = 'LEFT JOIN products_description AS product_' . $code . ' ON product_' . $code . '.products_id=products.products_id AND product_' . $code . '.language_id=' . $id;
+    			$langs[] = 'product_' . $code . '.products_name AS name_' . $code . ', ' . 'product_' . $code . '.products_description AS descr_' . $code;
+    		}
+    
+            $this->productSql = 'SELECT *,' . implode(', ', $langs) . ' FROM products ' . implode(' ', $join) . ' LEFT JOIN products_to_categories ON products.products_id=products_to_categories.products_id';            
+        }
+
+		if (!$data = $this->loadRecord($this->productSql))
+		{
+			return null;
+		}        
+		
+		$rec = Product::getNewInstance(Category::getInstanceById($this->getRealId('Category', $data['categories_id']), Category::LOAD_DATA));
+
+        $rec->setID($data['products_id']);
+
+        foreach ($this->languages as $code)
+        {
+            $rec->setValueByLang('name', $code, $data['name_' . $code]);
+            $rec->setValueByLang('longDescription', $code, $data['descr_' . $code]);
+
+            // use the first line or paragraph of the long description as the short description
+            $short = array_shift(preg_split("/\n|\<br/", $data['descr_' . $code]));
+            $rec->setValueByLang('shortDescription', $code, $short);
+        }
+        
+        if ($data['manufacturers_id'])
+        {
+            $rec->manufacturer->set(Manufacturer::getInstanceById($this->getRealId('Manufacturer', $data['manufacturers_id']), Manufacturer::LOAD_DATA));
+        }
+		
+		$rec->sku->set($data['products_model']);
+		$rec->isEnabled->set((int)(1 == $data['products_status']));
+		$rec->shippingWeight->set($data['products_weight']);
+		$rec->stockCount->set($data['products_quantity']);
+		$rec->dateCreated->set($data['products_date_added']);
+        		
+        $rec->setPrice($this->getConfigValue('DEFAULT_CURRENCY'), $data['products_price']);
+        		
+		return $rec;
+    }
+
+    public function getNextCustomerOrder()
+    {
+        $data = $this->loadRecord('SELECT * FROM orders LEFT JOIN orders_total ON (orders.orders_id=orders_total.orders_id AND class="ot_shipping")');
+
+        if (!isset($data['orders_id']))
+		{
+            return null;
+		}
+		
+		$order = CustomerOrder::getNewInstance(User::getInstanceById($this->getRealId('User', $data['customers_id']), User::LOAD_DATA));
+		$order->currency->set(Currency::getInstanceById($data['currency'], Currency::LOAD_DATA));
+		$order->dateCompleted->set($data['date_purchased']);
+		
+		// products
+		$tax = 0;
+        foreach ($this->getDataBySql('SELECT * FROM orders_products WHERE orders_id=' . $data['orders_id']) as $prod)
+		{
+            $product = Product::getInstanceById($this->getRealId('Product', $prod['products_id']), Product::LOAD_DATA);
+            $order->addProduct($product, $prod['products_quantity']);
+            
+            $item = array_shift($order->getItemsByProduct($product));
+            $item->price->set($prod['products_price']);            
+            $tax += $prod['products_tax'];
+        }
+		
+		// addresses
+        $order->shippingAddress->set($this->getUserAddress($data, 'delivery_'));
+		$order->billingAddress->set($this->getUserAddress($data, 'billing_'));		
+
+        // assume that all orders are paid and shipped
+        $order->status->set(CustomerOrder::STATUS_SHIPPED);	
+        $order->isPaid->set(true);
+        
+        $data['taxAmount'] = $tax;
+        $order->rawData = $data;        
+        
+        return $order;
+    }
+
+    private function getUserAddress($data, $prefix)
+    {
+        $address = UserAddress::getNewInstance();
+        $map = array(
+                'company' => 'companyName',
+                'street_address' => 'address1',
+                'city' => 'city',
+                'postcode' => 'postalCode',
+                'state' => 'stateName',
+               );
+
+        foreach ($map as $osc => $lc)
+        {
+            $address->$lc->set($data[$prefix . $osc]);
+        }
+
+        $names = explode(' ', $data[$prefix . 'name'], 2);
+        $address->firstName->set(array_shift($names));
+        $address->lastName->set(array_shift($names));
+        
+        $country = array_search($data[$prefix . 'country'], Locale::getInstance('en')->info()->getAllCountries());
+        if (!$country)
+        {
+            $country = 'US';
+        }
+        
+        $address->countryID->set($country);
+    }
+
+    public function saveCustomerOrder(CustomerOrder $order)
+    {
+        $order->save();
+        
+        $shipment = $order->getShipments()->get(0);
+        $shipment->shippingAmount->set($order->rawData['value']);
+        $shipment->save();
+
+        if ($order->rawData['taxAmount'] > 0)
+        {
+            $tax = ActiveRecordModel::getNewInstance('ShipmentTax');
+            $tax->shipment->set($shipment);
+            $tax->amount->set($order->rawData['taxAmount']);
+            $tax->save();
+            
+            $shipment->addFixedTax($tax);
+            $shipment->save();
+        }
+                        
+        return parent::saveCustomerOrder($order);
+    }
 
     private function sortCategories($a, $b)
     {

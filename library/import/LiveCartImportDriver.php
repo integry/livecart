@@ -143,7 +143,7 @@ abstract class LiveCartImportDriver
 
 	protected function loadRecord($sql)
 	{
-		if (empty($this->recordMap[$sql]))
+        if (empty($this->recordMap[$sql]))
 		{
 			$this->recordMapOffset[$sql] = isset($this->recordMapOffset[$sql]) ? $this->recordMapOffset[$sql] + self::MAP_SIZE : 0;
 			$this->recordMap[$sql] = $this->getDataBySQL($sql . ' LIMIT ' . $this->recordMapOffset[$sql] . ',' . self::MAP_SIZE);
@@ -175,6 +175,26 @@ abstract class LiveCartImportDriver
     {
         $this->languages[] = $lang;
     }
+    
+    public function saveCustomerOrder(CustomerOrder $order)
+    {
+        $order->isFinalized->set(true);
+        $order->save();
+        
+        if ($order->shippingAddress->get())
+        {
+            $order->shippingAddress->get()->save();
+        }
+
+        if ($order->billingAddress->get())
+        {
+            $order->billingAddress->get()->save();
+        }
+
+        $order->totalAmount->set($order->calculateTotal($order->currency->get()));
+
+        return $order->save();
+    }    
 }
 
 ?>

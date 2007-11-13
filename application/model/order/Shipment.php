@@ -23,6 +23,8 @@ class Shipment extends ActiveRecordModel
 	
 	protected $selectedRateId; 
 
+    protected $fixedTaxes = array();
+
     const STATUS_NEW = 0;
     const STATUS_PROCESSING = 1;
     const STATUS_AWAITING = 2;
@@ -201,6 +203,12 @@ class Shipment extends ActiveRecordModel
         
         return $subTotal;    
     }	 
+
+    public function getTotal()
+    {
+        $this->recalculateAmounts();
+        return $this->amount->get() + $this->shippingAmount->get() + $this->taxAmount->get();
+    }
     
     public function isProcessing()
     {
@@ -236,7 +244,14 @@ class Shipment extends ActiveRecordModel
     {
         foreach ($this->getTaxes() as $tax)
         {
-            $amount = $tax->taxRate->get()->applyTax($amount);
+            if ($tax->taxRate->get())
+            {
+                $amount = $tax->taxRate->get()->applyTax($amount);
+            }
+            else
+            {
+                $amount += $tax->amount->get();
+            }
         }        
         
         return $amount;
@@ -262,6 +277,7 @@ class Shipment extends ActiveRecordModel
             $tax->recalculateAmount(false);
             $taxes += $tax->getAmountByCurrency($currency);   
         }
+        
         $this->taxAmount->set($taxes);
        
         // shipping rate
@@ -269,6 +285,20 @@ class Shipment extends ActiveRecordModel
         {
             $this->shippingAmount->set($rate->getAmountByCurrency($currency));            
         }
+    }
+
+    public function addFixedTax(ShipmentTax $tax)
+    {
+        $tax->shipment->set($this);
+        
+        if ($this->taxes)
+        {
+            $this->taxes->unshift($tax);
+        }
+        else
+        {
+            $this->fixedTaxes[] = $tax;
+        }        
     }
 
     private function removeDeletedItems()
@@ -429,7 +459,7 @@ class Shipment extends ActiveRecordModel
         $array['subTotal'] = $subTotal;
                
         // total amount
-        $array['totalAmount'] = $this->amount->get() + $this->shippingAmount->get() + $this->taxAmount->get();
+        $array['totalAmount'] = $this->getTotal();
         $array['formatted_totalAmount'] = $this->order->get()->currency->get()->getFormattedPrice($array['totalAmount']);
         
         // formatted subtotal
@@ -516,17 +546,18 @@ class Shipment extends ActiveRecordModel
         
         if (!$this->taxes)
         {
+            $this->load();
+                
             if ($this->isLoaded())
             {
                 $this->taxes = $this->getRelatedRecordSet('ShipmentTax', new ARSelectFilter(), array('Tax', 'TaxRate'));
+                foreach ($this->fixedTaxes as $tax)
+                {
+                    $this->taxes->unshift($tax);
+                }
             }
             else
-            {                
-                if (!$this->isLoaded())
-                {
-                    $this->load();
-                }
-                
+            {                              
                 $zone = $this->order->get()->getDeliveryZone();
                 
                 $rates = $zone->getTaxRates(DeliveryZone::ENABLED_TAXES);

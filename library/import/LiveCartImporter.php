@@ -130,11 +130,19 @@ class LiveCartImporter
 
             try
             {
-                $record->save(ActiveRecord::PERFORM_INSERT);
+                // call custom save routine if defined
+                if (method_exists($this->driver, 'save' . $type))
+                {
+                    call_user_func_array(array($this->driver, 'save' . $type), array($record));
+                }
+                else
+                {
+                    $record->save(ActiveRecord::PERFORM_INSERT);
+                }
             }
             catch (SQLException $e)
             {
-                print_r("\r\n", $e->getMessage());
+                //print_r("\r\n", $e->getMessage());
             }
 
             $this->setProgress($this->getCurrentProgress() + 1);

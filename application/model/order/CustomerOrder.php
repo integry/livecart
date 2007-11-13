@@ -453,9 +453,10 @@ class CustomerOrder extends ActiveRecordModel
         } 
         
         // If shipment is modified
-        if($this->isFinalized->get())
+        if ($this->isFinalized->get())
         {
             $count = 0;
+
             foreach($this->shipments as $shipment)
             {
                 if($shipment->isModified()) 
@@ -465,7 +466,6 @@ class CustomerOrder extends ActiveRecordModel
                 }
             }
         }
-    
         
         if ($isModified)
         { 
@@ -606,7 +606,7 @@ class CustomerOrder extends ActiveRecordModel
         {
             $this->shipments = null;
         }
-        
+            
         if ($this->shipments)
         {
             $this->taxes[$id] = array();
@@ -620,19 +620,11 @@ class CustomerOrder extends ActiveRecordModel
                     $shipment->setRateId($shipment->getShippingService()->getID());
                 }
                 
-                $total += $shipment->getSubTotal($currency);
-                
-                if ($rate = $shipment->getSelectedRate())
-                {
-                    $amount = $rate->getCostAmount();
-                    $curr = Currency::getInstanceById($rate->getCostCurrency());
+                $total += $shipment->getTotal($currency);                
                     
-                    $total += $currency->convertAmount($curr, $amount);
-                }
-                
                 foreach ($shipment->getTaxes() as $tax)
                 {
-                    $taxId = $tax->taxRate->get()->tax->get()->getID();
+                    $taxId = $tax->taxRate->get() ? $tax->taxRate->get()->tax->get()->getID() : 0;
                     if (!isset($this->taxes[$id][$taxId]))
                     {
                         $this->taxes[$id][$taxId] = 0;    

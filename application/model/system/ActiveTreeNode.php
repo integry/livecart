@@ -513,63 +513,63 @@ class ActiveTreeNode extends ActiveRecordModel
      * 
      * @throws Exception If failed to commit the transaction
      */
-    public function save($forceOperation = null)
+    protected function insert()
     {
-        if (!$this->isExistingRecord())
+        ActiveRecordModel::beginTransaction();
+        try
         {
-            ActiveRecordModel::beginTransaction();
-            try
+            $className = get_class($this);
+            
+            // Inserting new node
+            $parentNode = $this->getField(self::PARENT_NODE_FIELD_NAME)->get();
+            if ($parentNode)
             {
-                $className = get_class($this);
-                
-                // Inserting new node
-                $parentNode = $this->getField(self::PARENT_NODE_FIELD_NAME)->get();
-                if($parentNode)
+                if (!$parentNode->isLoaded()) 
                 {
-                    if(!$parentNode->isLoaded()) $parentNode->load();
-                }
-                else
-                {
-                    $parentNode = $this;
-                }
-                
-                $parentRightValue = $parentNode->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
-                $nodeLeftValue = $parentRightValue;
-                $nodeRightValue = $nodeLeftValue + 1;
-
-                $tableName = self::getSchemaInstance(get_class($this))->getName();
-                $db = self::getDBConnection();
-
-                $updates[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." + 2 WHERE ".self::RIGHT_NODE_FIELD_NAME." >= $parentRightValue";
-                $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." + 2 WHERE ".self::LEFT_NODE_FIELD_NAME." >= $parentRightValue";
-
-                foreach($updates as $update)
-                {
-                    self::getLogger()->logQuery($update);
-                    $db->executeUpdate($update);
-                }
-                
-                $this->getField(self::RIGHT_NODE_FIELD_NAME)->set($nodeRightValue);
-                $this->getField(self::LEFT_NODE_FIELD_NAME)->set($nodeLeftValue);
-
-                ActiveRecordModel::commit();
-                
-                foreach(ActiveRecord::retrieveFromPool(get_class($this)) as $instance)
-                {
-                    if($instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) >= $parentRightValue)
-                        $instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, $instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) + 2);
-                    if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) >= $parentRightValue)
-                        $instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, $instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) + 2);
+                    $parentNode->load();
                 }
             }
-            catch (Exception $e)
+            else
             {
-                ActiveRecordModel::rollback();
-                throw $e;
+                $parentNode = $this;
+            }
+            
+            $parentRightValue = $parentNode->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
+            $nodeLeftValue = $parentRightValue;
+            $nodeRightValue = $nodeLeftValue + 1;
+
+            $tableName = self::getSchemaInstance(get_class($this))->getName();
+            $db = self::getDBConnection();
+
+            $updates[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." + 2 WHERE ".self::RIGHT_NODE_FIELD_NAME." >= $parentRightValue";
+            $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." + 2 WHERE ".self::LEFT_NODE_FIELD_NAME." >= $parentRightValue";
+
+            foreach($updates as $update)
+            {
+                self::getLogger()->logQuery($update);
+                $db->executeUpdate($update);
+            }
+            
+            $this->getField(self::RIGHT_NODE_FIELD_NAME)->set($nodeRightValue);
+            $this->getField(self::LEFT_NODE_FIELD_NAME)->set($nodeLeftValue);
+
+            ActiveRecordModel::commit();
+            
+            foreach(ActiveRecord::retrieveFromPool(get_class($this)) as $instance)
+            {
+                if($instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) >= $parentRightValue)
+                    $instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, $instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) + 2);
+                if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) >= $parentRightValue)
+                    $instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, $instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) + 2);
             }
         }
-        
-        return parent::save($forceOperation);
+        catch (Exception $e)
+        {
+            ActiveRecordModel::rollback();
+            throw $e;
+        }
+    
+        return parent::insert();
     }
     
     /**
