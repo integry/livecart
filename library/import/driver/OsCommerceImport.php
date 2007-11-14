@@ -9,7 +9,7 @@ class OsCommerceImport extends LiveCartImportDriver
     private $configMap = null;
 
     private $categoryMap = null;
-    
+
     private $productSql;
 
     public function getName()
@@ -170,7 +170,7 @@ class OsCommerceImport extends LiveCartImportDriver
 			{
 				$this->categoryMap[$category['categories_id']] = $category;
 			}
-			
+
 			// get level for each category
 			foreach ($this->categoryMap as $id => &$category)
 			{
@@ -182,7 +182,7 @@ class OsCommerceImport extends LiveCartImportDriver
                         $id = $this->categoryMap[$id]['parent_id'];
                         $level++;
                     }
-                    
+
                     // parent category does not exist, so remove the category
                     else if ($this->categoryMap[$id]['parent_id'] != 0)
                     {
@@ -190,7 +190,7 @@ class OsCommerceImport extends LiveCartImportDriver
                         $level = 101;
                     }
                 }
-                
+
                 // circular reference
                 if ($level >= 100)
                 {
@@ -201,7 +201,7 @@ class OsCommerceImport extends LiveCartImportDriver
                     $category['level'] = $level;
                 }
             }
-            
+
             usort($this->categoryMap, array($this, 'sortCategories'));
 		}
 
@@ -225,7 +225,7 @@ class OsCommerceImport extends LiveCartImportDriver
 
 		return $rec;
 	}
-	
+
 	public function getNextProduct()
 	{
         if (!$this->productSql)
@@ -235,15 +235,15 @@ class OsCommerceImport extends LiveCartImportDriver
     			$join[] = 'LEFT JOIN products_description AS product_' . $code . ' ON product_' . $code . '.products_id=products.products_id AND product_' . $code . '.language_id=' . $id;
     			$langs[] = 'product_' . $code . '.products_name AS name_' . $code . ', ' . 'product_' . $code . '.products_description AS descr_' . $code;
     		}
-    
-            $this->productSql = 'SELECT *,' . implode(', ', $langs) . ' FROM products ' . implode(' ', $join) . ' LEFT JOIN products_to_categories ON products.products_id=products_to_categories.products_id';            
+
+            $this->productSql = 'SELECT *,' . implode(', ', $langs) . ' FROM products ' . implode(' ', $join) . ' LEFT JOIN products_to_categories ON products.products_id=products_to_categories.products_id';
         }
 
 		if (!$data = $this->loadRecord($this->productSql))
 		{
 			return null;
-		}        
-		
+		}
+
 		$rec = Product::getNewInstance(Category::getInstanceById($this->getRealId('Category', $data['categories_id']), Category::LOAD_DATA));
 
         $rec->setID($data['products_id']);
@@ -257,59 +257,57 @@ class OsCommerceImport extends LiveCartImportDriver
             $short = array_shift(preg_split("/\n|\<br/", $data['descr_' . $code]));
             $rec->setValueByLang('shortDescription', $code, $short);
         }
-        
+
         if ($data['manufacturers_id'])
         {
             $rec->manufacturer->set(Manufacturer::getInstanceById($this->getRealId('Manufacturer', $data['manufacturers_id']), Manufacturer::LOAD_DATA));
         }
-		
+
 		$rec->sku->set($data['products_model']);
 		$rec->isEnabled->set((int)(1 == $data['products_status']));
 		$rec->shippingWeight->set($data['products_weight']);
 		$rec->stockCount->set($data['products_quantity']);
 		$rec->dateCreated->set($data['products_date_added']);
-        		
+
         $rec->setPrice($this->getConfigValue('DEFAULT_CURRENCY'), $data['products_price']);
-        		
+
 		return $rec;
     }
 
     public function getNextCustomerOrder()
     {
-        $data = $this->loadRecord('SELECT * FROM orders LEFT JOIN orders_total ON (orders.orders_id=orders_total.orders_id AND class="ot_shipping")');
-
-        if (!isset($data['orders_id']))
+		if (!$data = $this->loadRecord('SELECT *, orders.orders_id AS id, orders_total.value FROM orders LEFT JOIN orders_total ON (orders.orders_id=orders_total.orders_id AND class="ot_shipping")'))
 		{
             return null;
 		}
-		
+//print_r($data);
 		$order = CustomerOrder::getNewInstance(User::getInstanceById($this->getRealId('User', $data['customers_id']), User::LOAD_DATA));
 		$order->currency->set(Currency::getInstanceById($data['currency'], Currency::LOAD_DATA));
 		$order->dateCompleted->set($data['date_purchased']);
-		
+
 		// products
 		$tax = 0;
-        foreach ($this->getDataBySql('SELECT * FROM orders_products WHERE orders_id=' . $data['orders_id']) as $prod)
+        foreach ($this->getDataBySql('SELECT * FROM orders_products WHERE orders_id=' . $data['id']) as $prod)
 		{
             $product = Product::getInstanceById($this->getRealId('Product', $prod['products_id']), Product::LOAD_DATA);
             $order->addProduct($product, $prod['products_quantity']);
-            
+
             $item = array_shift($order->getItemsByProduct($product));
-            $item->price->set($prod['products_price']);            
+            $item->price->set($prod['products_price']);
             $tax += $prod['products_tax'];
         }
-		
+
 		// addresses
         $order->shippingAddress->set($this->getUserAddress($data, 'delivery_'));
-		$order->billingAddress->set($this->getUserAddress($data, 'billing_'));		
+		$order->billingAddress->set($this->getUserAddress($data, 'billing_'));
 
         // assume that all orders are paid and shipped
-        $order->status->set(CustomerOrder::STATUS_SHIPPED);	
+        $order->status->set(CustomerOrder::STATUS_SHIPPED);
         $order->isPaid->set(true);
-        
+
         $data['taxAmount'] = $tax;
-        $order->rawData = $data;        
-        
+        $order->rawData = $data;
+
         return $order;
     }
 
@@ -332,20 +330,20 @@ class OsCommerceImport extends LiveCartImportDriver
         $names = explode(' ', $data[$prefix . 'name'], 2);
         $address->firstName->set(array_shift($names));
         $address->lastName->set(array_shift($names));
-        
+
         $country = array_search($data[$prefix . 'country'], Locale::getInstance('en')->info()->getAllCountries());
         if (!$country)
         {
             $country = 'US';
         }
-        
+
         $address->countryID->set($country);
     }
 
     public function saveCustomerOrder(CustomerOrder $order)
     {
         $order->save();
-        
+
         $shipment = $order->getShipments()->get(0);
         $shipment->shippingAmount->set($order->rawData['value']);
         $shipment->save();
@@ -356,11 +354,11 @@ class OsCommerceImport extends LiveCartImportDriver
             $tax->shipment->set($shipment);
             $tax->amount->set($order->rawData['taxAmount']);
             $tax->save();
-            
+
             $shipment->addFixedTax($tax);
             $shipment->save();
         }
-                        
+
         return parent::saveCustomerOrder($order);
     }
 
@@ -375,9 +373,9 @@ class OsCommerceImport extends LiveCartImportDriver
             else
             {
                 return $a['sort_order'] > $b['sort_order'] ? 1 : -1;
-            }            
+            }
         }
-        
+
         return $a['level'] > $b['level'] ? 1 : -1;
     }
 

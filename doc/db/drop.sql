@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database drop script                            #
-# Created on:            2007-10-12 02:53                                #
+# Created on:            2007-11-13 20:09                                #
 # ---------------------------------------------------------------------- #
 
 

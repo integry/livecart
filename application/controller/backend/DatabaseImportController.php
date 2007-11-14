@@ -91,9 +91,9 @@ ActiveRecord::rollback();
 
     private function flushResponse($data)
     {
-        echo '|' . base64_encode(json_encode($data));
+		//print_r($data);
+		echo '|' . base64_encode(json_encode($data));
 		flush();
-		//sleep(1);
     }
 
 	private function getDrivers()

@@ -10,10 +10,10 @@ ClassLoader::import('application.model.user.User');
 
 class LiveCartImporter
 {
-    const MAX_RECORDS = 1;
+    const MAX_RECORDS = 5;
 
     private $driver;
-    
+
     private $offsets;
 
     public function __construct(LiveCartImportDriver $driver)
@@ -157,7 +157,7 @@ class LiveCartImporter
         {
             $this->offsets = include $this->getOffsetsFile();
         }
-        
+
         if (isset($this->offsets[$type]))
         {
             return $this->offsets[$type] + $id;

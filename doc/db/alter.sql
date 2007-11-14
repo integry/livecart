@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-05-21 13:19                                #
+# Created on:            2007-11-13 20:12                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -111,6 +111,8 @@ ALTER TABLE Transaction DROP FOREIGN KEY CustomerOrder_Transaction;
 
 ALTER TABLE Transaction DROP FOREIGN KEY Transaction_Transaction;
 
+ALTER TABLE Transaction DROP FOREIGN KEY User_Transaction;
+
 ALTER TABLE Shipment DROP FOREIGN KEY CustomerOrder_Shipment;
 
 ALTER TABLE Shipment DROP FOREIGN KEY ShippingService_Shipment;
@@ -145,16 +147,25 @@ ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
 
 ALTER TABLE ShippingService DROP FOREIGN KEY DeliveryZone_ShippingService;
 
+ALTER TABLE ShipmentTax DROP FOREIGN KEY TaxRate_ShipmentTax;
+
+ALTER TABLE ShipmentTax DROP FOREIGN KEY Shipment_ShipmentTax;
+
+ALTER TABLE OrderLog DROP FOREIGN KEY User_OrderLog;
+
+ALTER TABLE OrderLog DROP FOREIGN KEY CustomerOrder_OrderLog;
+
+ALTER TABLE DeliveryZoneRealTimeService DROP FOREIGN KEY DeliveryZone_DeliveryZoneRealTimeService;
+
+ALTER TABLE ExpressCheckout DROP FOREIGN KEY UserAddress_ExpressCheckout;
+
+ALTER TABLE ExpressCheckout DROP FOREIGN KEY CustomerOrder_ExpressCheckout;
+
 # ---------------------------------------------------------------------- #
-# Modify table "AccessControlAssociation"                                #
+# Modify table "ShipmentTax"                                             #
 # ---------------------------------------------------------------------- #
 
-ALTER TABLE AccessControlAssociation DROP PRIMARY KEY;
-
-ALTER TABLE AccessControlAssociation MODIFY ID INTEGER NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE AccessControlAssociation ADD CONSTRAINT PK_AccessControlAssociation 
-    PRIMARY KEY (ID);
+ALTER TABLE ShipmentTax MODIFY taxRateID INTEGER UNSIGNED COMMENT 'ID of the TaxRate that is being applied to the shipment';
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
@@ -203,19 +214,19 @@ ALTER TABLE CustomerOrder ADD CONSTRAINT UserAddress_CustomerOrder_Shipping
     FOREIGN KEY (shippingAddressID) REFERENCES UserAddress (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE OrderedItem ADD CONSTRAINT Product_OrderedItem 
-    FOREIGN KEY (productID) REFERENCES Product (ID);
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE OrderedItem ADD CONSTRAINT CustomerOrder_OrderedItem 
-    FOREIGN KEY (customerOrderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE;
+    FOREIGN KEY (customerOrderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE OrderedItem ADD CONSTRAINT Shipment_OrderedItem 
-    FOREIGN KEY (shipmentID) REFERENCES Shipment (ID) ON DELETE SET NULL;
+    FOREIGN KEY (shipmentID) REFERENCES Shipment (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE User ADD CONSTRAINT ShippingAddress_User 
-    FOREIGN KEY (defaultShippingAddressID) REFERENCES ShippingAddress (ID) ON DELETE SET NULL;
+    FOREIGN KEY (defaultShippingAddressID) REFERENCES ShippingAddress (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE User ADD CONSTRAINT BillingAddress_User 
-    FOREIGN KEY (defaultBillingAddressID) REFERENCES BillingAddress (ID) ON DELETE SET NULL;
+    FOREIGN KEY (defaultBillingAddressID) REFERENCES BillingAddress (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE User ADD CONSTRAINT UserGroup_User 
     FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID) ON DELETE SET NULL ON UPDATE CASCADE;
@@ -254,7 +265,7 @@ ALTER TABLE ProductFile ADD CONSTRAINT Product_ProductFile
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductFile ADD CONSTRAINT ProductFileGroup_ProductFile 
-    FOREIGN KEY (productFileGroupID) REFERENCES ProductFileGroup (ID) ON DELETE CASCADE;
+    FOREIGN KEY (productFileGroupID) REFERENCES ProductFileGroup (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Discount ADD CONSTRAINT Product_Discount 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -296,10 +307,10 @@ ALTER TABLE UserAddress ADD CONSTRAINT State_UserAddress
     FOREIGN KEY (stateID) REFERENCES State (ID) ON DELETE SET NULL;
 
 ALTER TABLE BillingAddress ADD CONSTRAINT User_BillingAddress 
-    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
+    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE BillingAddress ADD CONSTRAINT UserAddress_BillingAddress 
-    FOREIGN KEY (userAddressID) REFERENCES UserAddress (ID) ON DELETE CASCADE;
+    FOREIGN KEY (userAddressID) REFERENCES UserAddress (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Transaction ADD CONSTRAINT CustomerOrder_Transaction 
     FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE;
@@ -307,53 +318,77 @@ ALTER TABLE Transaction ADD CONSTRAINT CustomerOrder_Transaction
 ALTER TABLE Transaction ADD CONSTRAINT Transaction_Transaction 
     FOREIGN KEY (parentTransactionID) REFERENCES Transaction (ID) ON DELETE CASCADE;
 
+ALTER TABLE Transaction ADD CONSTRAINT User_Transaction 
+    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE SET NULL ON UPDATE SET NULL;
+
 ALTER TABLE Shipment ADD CONSTRAINT CustomerOrder_Shipment 
-    FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE;
+    FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Shipment ADD CONSTRAINT ShippingService_Shipment 
     FOREIGN KEY (shippingServiceID) REFERENCES ShippingService (ID) ON DELETE SET NULL;
 
 ALTER TABLE ShippingAddress ADD CONSTRAINT User_ShippingAddress 
-    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
+    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ShippingAddress ADD CONSTRAINT UserAddress_ShippingAddress 
-    FOREIGN KEY (userAddressID) REFERENCES UserAddress (ID) ON DELETE CASCADE;
+    FOREIGN KEY (userAddressID) REFERENCES UserAddress (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE OrderNote ADD CONSTRAINT CustomerOrder_OrderNote 
-    FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE;
+    FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE OrderNote ADD CONSTRAINT User_OrderNote 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
 
 ALTER TABLE DeliveryZoneCountry ADD CONSTRAINT DeliveryZone_DeliveryZoneCountry 
-    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
+    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE DeliveryZoneState ADD CONSTRAINT DeliveryZone_DeliveryZoneState 
-    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
+    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE DeliveryZoneState ADD CONSTRAINT State_DeliveryZoneState 
-    FOREIGN KEY (stateID) REFERENCES State (ID) ON DELETE CASCADE;
+    FOREIGN KEY (stateID) REFERENCES State (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE DeliveryZoneCityMask ADD CONSTRAINT DeliveryZone_DeliveryZoneCityMask 
-    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID);
+    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE DeliveryZoneZipMask ADD CONSTRAINT DeliveryZone_DeliveryZoneZipMask 
-    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
+    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE DeliveryZoneAddressMask ADD CONSTRAINT DeliveryZone_DeliveryZoneAddressMask 
-    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
+    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE TaxRate ADD CONSTRAINT Tax_TaxRate 
     FOREIGN KEY (taxID) REFERENCES Tax (ID) ON DELETE CASCADE;
 
 ALTER TABLE TaxRate ADD CONSTRAINT DeliveryZone_TaxRate 
-    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
+    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ShippingRate ADD CONSTRAINT ShippingService_ShippingRate 
-    FOREIGN KEY (shippingServiceID) REFERENCES ShippingService (ID) ON DELETE CASCADE;
+    FOREIGN KEY (shippingServiceID) REFERENCES ShippingService (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductFileGroup ADD CONSTRAINT Product_ProductFileGroup 
-    FOREIGN KEY (productID) REFERENCES Product (ID);
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ShippingService ADD CONSTRAINT DeliveryZone_ShippingService 
+    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ShipmentTax ADD CONSTRAINT TaxRate_ShipmentTax 
+    FOREIGN KEY (taxRateID) REFERENCES TaxRate (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ShipmentTax ADD CONSTRAINT Shipment_ShipmentTax 
+    FOREIGN KEY (shipmentID) REFERENCES Shipment (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE OrderLog ADD CONSTRAINT User_OrderLog 
+    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE OrderLog ADD CONSTRAINT CustomerOrder_OrderLog 
+    FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE DeliveryZoneRealTimeService ADD CONSTRAINT DeliveryZone_DeliveryZoneRealTimeService 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
+
+ALTER TABLE ExpressCheckout ADD CONSTRAINT UserAddress_ExpressCheckout 
+    FOREIGN KEY (addressID) REFERENCES UserAddress (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ExpressCheckout ADD CONSTRAINT CustomerOrder_ExpressCheckout 
+    FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;

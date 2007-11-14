@@ -80,7 +80,7 @@ Backend.DatabaseImport.prototype =
         var li = $('progress_' + response.type);
         li.down('.progressBar').show();
         li.down('.progressTotal').update(response.total);
-
+//console.log(response.progress);
         if (response.progress > 0)
         {
             li.down('.progressCount').update(response.progress);
@@ -91,6 +91,8 @@ Backend.DatabaseImport.prototype =
         {
             li.removeClassName('inProgress');
             li.addClassName('completed');
+			li.down('.progressCount').update(response.total);
+			li.down('.progressBarIndicator').hide();
 
             // find next record type
             for (var k = 0; k < this.types.length; k++)
