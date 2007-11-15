@@ -53,7 +53,7 @@ class TestAuthorizeNet extends PaymentTest
 		$this->assertTrue($result instanceof TransactionResult);
 
 		$this->details->gatewayTransactionID->set($result->gatewayTransactionID->get());		
-        		
+				
 		$capture = $this->getPaymentHandler();
 		$result = $capture->capture();
 		
@@ -69,7 +69,7 @@ class TestAuthorizeNet extends PaymentTest
 		
 		$this->details->amount->set($this->details->amount->get() * 2);		
 		$this->details->gatewayTransactionID->set($result->gatewayTransactionID->get());		
-        		
+				
 		$capture = $this->getPaymentHandler();
 		$result = $capture->capture();
 		
@@ -79,7 +79,7 @@ class TestAuthorizeNet extends PaymentTest
 	/**
 	 *  Authorize.net doesn't allow the capture amount to exceed authorized amount
 	 */
-    function testAuthorizationWith5PercentHigherCaptureAmount()
+	function testAuthorizationWith5PercentHigherCaptureAmount()
 	{		
 		$payment = $this->getPaymentHandler();
 		
@@ -103,14 +103,14 @@ class TestAuthorizeNet extends PaymentTest
 		$this->assertTrue($result instanceof TransactionResult);
 		
 		$this->details->amount->set(round($this->details->amount->get() * 0.7, 2));		
-        $this->details->gatewayTransactionID->set($result->gatewayTransactionID->get());		
+		$this->details->gatewayTransactionID->set($result->gatewayTransactionID->get());		
 		
 		$capture = $this->getPaymentHandler();
 		$result = $capture->capture();
 		
 		$this->assertTrue($result instanceof TransactionResult);
 	}
-    
+	
 	/**
 	 *  Authorize.net only allows one capture per authorization
 	 */
@@ -138,7 +138,7 @@ class TestAuthorizeNet extends PaymentTest
 		$result = $capture->capture();
 
 		$this->assertTrue($result instanceof TransactionError);
-	}    	
+	}		
 
 	function testVoidAuthorizedTransaction()
 	{
@@ -151,8 +151,8 @@ class TestAuthorizeNet extends PaymentTest
 		$result = $void->void();
 
 		$this->assertTrue($result instanceof TransactionResult);
-    }	
-    
+	}	
+	
 	function testVoidCapturedTransaction()
 	{
 		$payment = $this->getPaymentHandler();
@@ -164,7 +164,7 @@ class TestAuthorizeNet extends PaymentTest
 		$result = $void->void();
 
 		$this->assertTrue($result instanceof TransactionResult);		
-	}    
+	}	
 
 	function testVoidHalfCapturedTransaction()
 	{

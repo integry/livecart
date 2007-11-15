@@ -20,21 +20,21 @@ abstract class FrontendController extends BaseController
 	
 	public function __construct(LiveCart $application)
 	{
-        parent::__construct($application);
+		parent::__construct($application);
 
 		unset($this->order);
-        
-        // variables to append automatically to all URLs
-        foreach (array('currency', 'sort') as $key)
-        {
-            if ($this->request->isValueSet($key))
-            {
-                $this->router->addAutoAppendQueryVariable($key, $this->request->get($key));
-            }    
-        }
-    }
-    
-    public function init()
+		
+		// variables to append automatically to all URLs
+		foreach (array('currency', 'sort') as $key)
+		{
+			if ($this->request->isValueSet($key))
+			{
+				$this->router->addAutoAppendQueryVariable($key, $this->request->get($key));
+			}	
+		}
+	}
+	
+	public function init()
 	{
 	  	$this->setLayout('frontend');
 	  	$this->addBlock('CATEGORY_BOX', 'boxCategory', 'block/box/category');
@@ -47,9 +47,9 @@ abstract class FrontendController extends BaseController
 	}
 	
 	protected function getRequestCurrency()
-    {
-        return Currency::getValidInstanceById($this->request->get('currency', $this->application->getDefaultCurrencyCode()))->getID();
-    }
+	{
+		return Currency::getValidInstanceById($this->request->get('currency', $this->application->getDefaultCurrencyCode()))->getID();
+	}
 	
 	protected function addBreadCrumb($title, $url)
 	{
@@ -59,10 +59,10 @@ abstract class FrontendController extends BaseController
 	protected function boxInformationMenuBlock()
 	{
 		ClassLoader::import('application.model.staticpage.StaticPage');
-        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('StaticPage', 'isInformationBox'), true));
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('StaticPage', 'isInformationBox'), true));
 		$f->setOrder(new ARFieldHandle('StaticPage', 'position'));
 
-        $response = new BlockResponse();
+		$response = new BlockResponse();
 		$response->set('pages', ActiveRecordModel::getRecordSet('StaticPage', $f)->toArray());
 		return $response;
 	}
@@ -80,63 +80,63 @@ abstract class FrontendController extends BaseController
 
 	protected function boxSwitchCurrencyBlock()
 	{
-        $returnRoute = $this->router->getRequestedRoute();
+		$returnRoute = $this->router->getRequestedRoute();
 		$returnRoute = $this->router->createUrlFromRoute($returnRoute, true);
 		$returnRoute = $this->router->setUrlQueryParam($returnRoute, 'currency', '_curr_');
 
-        $current = $this->getRequestCurrency();
-        $currencies = $this->application->getCurrencySet();        
-        $currencyArray = array();
-        foreach ($currencies as $currency)
-        {
-            if ($currency->getID() != $current)
-            {
-                $currencyArray[$currency->getID()] = $currency->toArray();
-                $currencyArray[$currency->getID()]['url'] = str_replace('_curr_', $currency->getID(), $returnRoute);
-            }
-        }
-        
-        $response = new BlockResponse();			  	        
-        $response->set('currencies', $currencyArray);
-        $response->set('current', $current);
-        return $response;	  	
+		$current = $this->getRequestCurrency();
+		$currencies = $this->application->getCurrencySet();		
+		$currencyArray = array();
+		foreach ($currencies as $currency)
+		{
+			if ($currency->getID() != $current)
+			{
+				$currencyArray[$currency->getID()] = $currency->toArray();
+				$currencyArray[$currency->getID()]['url'] = str_replace('_curr_', $currency->getID(), $returnRoute);
+			}
+		}
+		
+		$response = new BlockResponse();			  			
+		$response->set('currencies', $currencyArray);
+		$response->set('current', $current);
+		return $response;	  	
 	}
 
 	protected function boxLanguageSelectBlock()
 	{
-        $languages = $this->application->getLanguageSetArray(true, false);
-        $current = $this->application->getLocaleCode();
-        
-        $returnRoute = $this->router->getRequestedRoute();
-        
-    	if ('/' == substr($returnRoute, 2, 1))
-    	{
-    	  	$returnRoute = substr($returnRoute, 3);
-    	}
-        
-        $response = new BlockResponse();
-        
-        foreach ($languages as $key => $lang)
-        {
-            if ($lang['ID'] == $current)
-            {
-                unset($languages[$key]);
-                $response->set('current', $lang);
-            }   
-            else
-            {
-                // changing language from the index page
-                if (strlen($returnRoute) == 2)
-                {
-                    $returnRoute = '';
-                }
+		$languages = $this->application->getLanguageSetArray(true, false);
+		$current = $this->application->getLocaleCode();
+		
+		$returnRoute = $this->router->getRequestedRoute();
+		
+		if ('/' == substr($returnRoute, 2, 1))
+		{
+		  	$returnRoute = substr($returnRoute, 3);
+		}
+		
+		$response = new BlockResponse();
+		
+		foreach ($languages as $key => $lang)
+		{
+			if ($lang['ID'] == $current)
+			{
+				unset($languages[$key]);
+				$response->set('current', $lang);
+			}   
+			else
+			{
+				// changing language from the index page
+				if (strlen($returnRoute) == 2)
+				{
+					$returnRoute = '';
+				}
 
-                $languages[$key]['url'] = $this->router->createUrlFromRoute($lang['ID'] . '/' . $returnRoute, true);
-            }
-        }
+				$languages[$key]['url'] = $this->router->createUrlFromRoute($lang['ID'] . '/' . $returnRoute, true);
+			}
+		}
 
-        $response->set('languages', $languages);
-        return $response;
+		$response->set('languages', $languages);
+		return $response;
 	}
 	
 	protected function boxBreadCrumbBlock()
@@ -144,10 +144,10 @@ abstract class FrontendController extends BaseController
 		$home = array('controller' => 'index', 'action' => 'index');
 		if ($this->locale->getLocaleCode() != $this->application->getDefaultLanguageCode())
 		{
-            $home['requestLanguage'] = $this->locale->getLocaleCode();
-        }
-        
-        array_unshift($this->breadCrumb, array('title' => $this->config->get('STORE_NAME'), 
+			$home['requestLanguage'] = $this->locale->getLocaleCode();
+		}
+		
+		array_unshift($this->breadCrumb, array('title' => $this->config->get('STORE_NAME'), 
 											   'url' => $this->router->createUrl($home, true)));
 											   
 		$response = new BlockResponse();
@@ -213,13 +213,13 @@ abstract class FrontendController extends BaseController
 			$options[$cat['ID']] = $cat['name_lang'];
 		}
 		
-		ClassLoader::import("framework.request.validator.Form");        
-        $form = new Form(new RequestValidator("productSearch", $this->request));
-        $form->enableClientSideValidation(false);
-        $form->set('id', $this->categoryID);
-        $form->set('q', $this->request->get('q'));
-        
-        $response = new BlockResponse();		
+		ClassLoader::import("framework.request.validator.Form");		
+		$form = new Form(new RequestValidator("productSearch", $this->request));
+		$form->enableClientSideValidation(false);
+		$form->set('id', $this->categoryID);
+		$form->set('q', $this->request->get('q'));
+		
+		$response = new BlockResponse();		
 		$response->set('categories', $options);
 		$response->set('form', $form);
 		return $response;			
@@ -256,7 +256,7 @@ abstract class FrontendController extends BaseController
 		{
 		  	if ($topCategoryId == $cat['ID'])
 		  	{
-			    $current =& $cat;
+				$current =& $cat;
 			}
 		}		  
 
@@ -269,7 +269,7 @@ abstract class FrontendController extends BaseController
 			{
 			  	if ($node['ID'] != $this->categoryID)
 			  	{
-					$current['subCategories'] = array(0 => &$node);			    
+					$current['subCategories'] = array(0 => &$node);				
 				  	$current =& $node;
 				}
 				else
@@ -279,7 +279,7 @@ abstract class FrontendController extends BaseController
 					{
 					  	if ($sib['ID'] == $this->categoryID)
 					  	{
-						    $current =& $sib;
+							$current =& $sib;
 						}
 					}
 					
@@ -316,9 +316,9 @@ abstract class FrontendController extends BaseController
 		  	$categoryFilters = $parentFilterIds;
 			foreach ($this->filters as $filter)
 		  	{
-			    if (!($filter instanceof SpecificationFilterInterface) || 
-                    $filter->getSpecField()->category->get()->getID() == $category['ID'])
-			    {
+				if (!($filter instanceof SpecificationFilterInterface) || 
+					$filter->getSpecField()->category->get()->getID() == $category['ID'])
+				{
 					$categoryFilters[$filter->getID()] = true;
 				}
 
@@ -344,21 +344,21 @@ abstract class FrontendController extends BaseController
 		
 		switch ($name)
 	  	{
-		    case 'order':
-		    	ClassLoader::import('application.model.order.SessionOrder');
+			case 'order':
+				ClassLoader::import('application.model.order.SessionOrder');
 				$this->order = SessionOrder::getOrder();
 				
-        		// check if order currency matches the request currency
-        		if ($this->order->currency->get() != $this->getRequestCurrency())
-        		{
-                    $this->order->changeCurrency(Currency::getInstanceByID($this->getRequestCurrency()));
-                }
+				// check if order currency matches the request currency
+				if ($this->order->currency->get() != $this->getRequestCurrency())
+				{
+					$this->order->changeCurrency(Currency::getInstanceByID($this->getRequestCurrency()));
+				}
 				
 				return $this->order;
-		    break;
-		    
+			break;
+			
 			default:
-		    break;
+			break;
 		}
 	}
 }

@@ -76,39 +76,39 @@
 	curr = new Backend.Currency();
 	curr.setFormUrl('{/literal}{link controller=backend.currency action=addForm}{literal}');
 	curr.setStatusUrl('{/literal}{link controller=backend.currency action=setEnabled}{literal}/');
-    
-    var messages = 
-    { 
-        _activeList_edit:    {/literal}'{t _activeList_edit|addslashes}'{literal},
-        _activeList_delete:  {/literal}'{t _activeList_delete|addslashes}'{literal}
-    }
-    
-    function initCurrencyList()
-    {	
+	
+	var messages = 
+	{ 
+		_activeList_edit:	{/literal}'{t _activeList_edit|addslashes}'{literal},
+		_activeList_delete:  {/literal}'{t _activeList_delete|addslashes}'{literal}
+	}
+	
+	function initCurrencyList()
+	{	
 		curr.showNoCurrencyMessage();
 		ActiveList.prototype.getInstance('currencyList', {
-	         beforeEdit:     function(li) 
-             { 
-                 if (!this.isContainerEmpty(li, 'edit'))
-                 {
-                     this.toggleContainer(li, 'edit');
-                     return;
-                 }                    
-                 
-                 return '{/literal}{link controller=backend.currency action=edit}{literal}?id=' + this.getRecordId(li); 
-             },
-	         beforeSort:     function(li, order) 
+			 beforeEdit:	 function(li) 
+			 { 
+				 if (!this.isContainerEmpty(li, 'edit'))
+				 {
+					 this.toggleContainer(li, 'edit');
+					 return;
+				 }					
+				 
+				 return '{/literal}{link controller=backend.currency action=edit}{literal}?id=' + this.getRecordId(li); 
+			 },
+			 beforeSort:	 function(li, order) 
 			 { 
 				 return '{/literal}{link controller=backend.currency action=saveorder}{literal}?draggedId=' + this.getRecordId(li) + '&' + order 
 			   },
-	         beforeDelete:   function(li)
-	         {
-	             if(confirm('{/literal}{tn _confirm_delete}{literal}')) return '{/literal}{link controller=backend.currency action=delete}{literal}?id=' + this.getRecordId(li)
-	         },
-	         afterEdit:      function(li, response) { document.getElementsByClassName('currEdit', li)[0].innerHTML = response; },
-	         afterSort:      function(li, response) { curr.resetRatesContainer(); },
-	         afterDelete:    function(li, response)  { curr.resetRatesContainer(); }
-	     }, messages);
+			 beforeDelete:   function(li)
+			 {
+				 if(confirm('{/literal}{tn _confirm_delete}{literal}')) return '{/literal}{link controller=backend.currency action=delete}{literal}?id=' + this.getRecordId(li)
+			 },
+			 afterEdit:	  function(li, response) { document.getElementsByClassName('currEdit', li)[0].innerHTML = response; },
+			 afterSort:	  function(li, response) { curr.resetRatesContainer(); },
+			 afterDelete:	function(li, response)  { curr.resetRatesContainer(); }
+		 }, messages);
 	}	
 	
 	curr.renderList({/literal}{$currencies}{literal});

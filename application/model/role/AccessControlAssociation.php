@@ -28,7 +28,7 @@ class AccessControlAssociation extends ActiveRecordModel
 	 * @return AccessControlAssociation
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
-	{		    
+	{			
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
 	
@@ -43,7 +43,7 @@ class AccessControlAssociation extends ActiveRecordModel
 	{
 	  	$instance = ActiveRecord::getNewInstance(__CLASS__);
 	  	$instance->userGroup->set($userGroup);
-        $instance->role->set($role);
+		$instance->role->set($role);
 	  	
 	  	return $instance;
 	}
@@ -73,9 +73,9 @@ class AccessControlAssociation extends ActiveRecordModel
 	 */
 	public static function getRecordSetByRole(Role $role, ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
-	    $filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "roleID"), $role->getID()));
-	    
-	    return self::getRecordSet($filter, $loadReferencedRecords = false);
+		$filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "roleID"), $role->getID()));
+		
+		return self::getRecordSet($filter, $loadReferencedRecords = false);
 	}
 	
 	/**
@@ -89,27 +89,27 @@ class AccessControlAssociation extends ActiveRecordModel
 	 */
 	public static function getRecordSetByUserGroup(UserGroup $userGroup, ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
-	    $filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "userGroupID"), $userGroup->getID()));
-	    
-	    return self::getRecordSet($filter, $loadReferencedRecords);
+		$filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "userGroupID"), $userGroup->getID()));
+		
+		return self::getRecordSet($filter, $loadReferencedRecords);
 	}
 	
-    
-    /**
-     * Load groups to roles associations as array from database using specified group
-     *
-     * @param UserGroup $userGroup User group
-     * @param ARSelectFilter $filter
-     * @param bool $loadReferencedRecords
-     *
-     * @return Array
-     */
-    public static function getRecordSetArrayByUserGroup(UserGroup $userGroup, ARSelectFilter $filter, $loadReferencedRecords = false)
-    {
-        $filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "userGroupID"), $userGroup->getID()));
-        
-        return self::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
-    }
+	
+	/**
+	 * Load groups to roles associations as array from database using specified group
+	 *
+	 * @param UserGroup $userGroup User group
+	 * @param ARSelectFilter $filter
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return Array
+	 */
+	public static function getRecordSetArrayByUserGroup(UserGroup $userGroup, ARSelectFilter $filter, $loadReferencedRecords = false)
+	{
+		$filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "userGroupID"), $userGroup->getID()));
+		
+		return self::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
+	}
 }
 
 ?>

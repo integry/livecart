@@ -14,14 +14,14 @@
 {include file="layout/backend/header.tpl"}
 
 <script type="text/javascript">
-    Backend.Tax.prototype.Links.update = "{link controller=backend.tax action=update}";
-    Backend.Tax.prototype.Links.create = "{link controller=backend.tax action=create}";
-    Backend.Tax.prototype.Links.edit = "{link controller=backend.tax action=edit}";
-    Backend.Tax.prototype.Links.remove = "{link controller=backend.tax action=delete}";
-    Backend.Tax.prototype.Links.sort = "{link controller=backend.tax action=sort}";
-    Backend.Tax.prototype.Messages.enabled = "{t _enabled}";
-    Backend.Tax.prototype.Messages.disabled = "{t _disabled}";
-    Backend.Tax.prototype.Messages.confirmRemove = "{t _are_you_sure_you_want_to_remove_ths_tax}";
+	Backend.Tax.prototype.Links.update = "{link controller=backend.tax action=update}";
+	Backend.Tax.prototype.Links.create = "{link controller=backend.tax action=create}";
+	Backend.Tax.prototype.Links.edit = "{link controller=backend.tax action=edit}";
+	Backend.Tax.prototype.Links.remove = "{link controller=backend.tax action=delete}";
+	Backend.Tax.prototype.Links.sort = "{link controller=backend.tax action=sort}";
+	Backend.Tax.prototype.Messages.enabled = "{t _enabled}";
+	Backend.Tax.prototype.Messages.disabled = "{t _disabled}";
+	Backend.Tax.prototype.Messages.confirmRemove = "{t _are_you_sure_you_want_to_remove_ths_tax}";
 </script>
 
 <div id="confirmations"></div>

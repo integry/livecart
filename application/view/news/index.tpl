@@ -14,7 +14,7 @@
 	<ul class="news">
 		{foreach from=$news item=entry}
 			<li class="newsEntry">
-                {include file="news/newsEntry.tpl" entry=$entry}
+				{include file="news/newsEntry.tpl" entry=$entry}
 			</li>
 		{/foreach}	
 	</ul>

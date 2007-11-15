@@ -2,7 +2,7 @@
 
 ClassLoader::import("application.controller.FrontendController");
 ClassLoader::import('application.model.staticpage.StaticPage');
-        
+		
 /**
  * Displays static pages
  *
@@ -15,8 +15,8 @@ class StaticPageController extends FrontendController
 	{
 		$page = StaticPage::getInstanceByHandle($this->request->get('handle'));
 		
-        $response = new ActionResponse();
-        $response->set('page', $page->toArray());		
+		$response = new ActionResponse();
+		$response->set('page', $page->toArray());		
 		return $response;
 	}
 }

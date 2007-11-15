@@ -24,26 +24,26 @@ class UserGroupController extends StoreManagementController
 		$userGroups[] = array('ID' => -1, 'name' => $this->translate('_default_user_group'), 'rootID' => -2);
 		foreach(UserGroup::getRecordSet(new ARSelectFilter())->toArray() as $group) 
 		{
-		    $userGroups[] = array('ID' => $group['ID'], 'name' => $group['name'], 'rootID' => -2);
+			$userGroups[] = array('ID' => $group['ID'], 'name' => $group['name'], 'rootID' => -2);
 		}
-		    
+			
 		$response = new ActionResponse();
 		$response->set('userGroups', $userGroups);
 		return $response;
 	}
-    
-    public function edit()
-    {
-	    $group = UserGroup::getInstanceByID((int)$this->request->get('id'), true);
-	    $form = $this->createUserGroupForm($group);
+	
+	public function edit()
+	{
+		$group = UserGroup::getInstanceByID((int)$this->request->get('id'), true);
+		$form = $this->createUserGroupForm($group);
 
 		$response = new ActionResponse();
 		$response->set('userGroup', $group->toArray());
-	    $response->set('userGroupForm', $form);
-	    
-	    return $response;
-    }
-    
+		$response->set('userGroupForm', $form);
+		
+		return $response;
+	}
+	
 	public function changeColumns()
 	{		
 		$columns = array_keys($this->request->get('col', array()));
@@ -53,57 +53,57 @@ class UserGroupController extends StoreManagementController
 
 	public function lists()
 	{
-	    $id = (int)substr($this->request->get('id'), 6);
-	    if($id > 0)
-	    {
-	        $showAllGroups = false;
-	        $userGroup = UserGroup::getInstanceByID($id, ActiveRecord::LOAD_DATA);
-	    }
-	    else if($id == -1)
-	    {
-	        $showAllGroups = false;
-	        $userGroup = null;
-	    }
-	    else if($id == -2)
-	    {
-	        $showAllGroups = true;
-	        $userGroup = null;
-	    }
-	    else
-	    {
-	        return;
-	    }
+		$id = (int)substr($this->request->get('id'), 6);
+		if($id > 0)
+		{
+			$showAllGroups = false;
+			$userGroup = UserGroup::getInstanceByID($id, ActiveRecord::LOAD_DATA);
+		}
+		else if($id == -1)
+		{
+			$showAllGroups = false;
+			$userGroup = null;
+		}
+		else if($id == -2)
+		{
+			$showAllGroups = true;
+			$userGroup = null;
+		}
+		else
+		{
+			return;
+		}
 
-	    $filter = new ARSelectFilter();
-	    new ActiveGrid($this->application, $filter, 'User');
-	    if($showAllGroups)
-	    {
-	        $usersArray = User::getRecordSet($filter, array('UserGroup'))->toArray();
-	    }
-	    else
-	    {
-	        $usersArray = User::getRecordSetByGroup($userGroup, $filter, array('UserGroup'))->toArray();
-	    }
-	    
+		$filter = new ARSelectFilter();
+		new ActiveGrid($this->application, $filter, 'User');
+		if($showAllGroups)
+		{
+			$usersArray = User::getRecordSet($filter, array('UserGroup'))->toArray();
+		}
+		else
+		{
+			$usersArray = User::getRecordSetByGroup($userGroup, $filter, array('UserGroup'))->toArray();
+		}
+		
 		$displayedColumns = $this->getDisplayedColumns($userGroup);
 
-    	$data = array();
+		$data = array();
 		foreach ($usersArray as $user)
-    	{
-            $record = array();
-            foreach ($displayedColumns as $column => $type)
-            {
-                list($class, $field) = explode('.', $column, 2);
-                
-                if ('User' == $class)
-                {
-					$value = isset($user[$field]) ? $user[$field] : '';
-                }
+		{
+			$record = array();
+			foreach ($displayedColumns as $column => $type)
+			{
+				list($class, $field) = explode('.', $column, 2);
 				
-                if ('UserGroup' == $class)
-                {
+				if ('User' == $class)
+				{
+					$value = isset($user[$field]) ? $user[$field] : '';
+				}
+				
+				if ('UserGroup' == $class)
+				{
 					$value = isset($user['UserGroup'][$field]) ? $user['UserGroup'][$field] : '';
-                }
+				}
 				
 				if ('bool' == $type)
 				{
@@ -111,68 +111,68 @@ class UserGroupController extends StoreManagementController
 				}
 				
 				$record[] = $value;
-            }
-            
-            $data[] = $record;
-        }
-    	
-    	$return = array();
-    	$return['columns'] = array_keys($displayedColumns);
-    	$return['totalCount'] = count($usersArray);
-    	$return['data'] = $data;
-    	
-    	return new JSONResponse($return);	  	  	
+			}
+			
+			$data[] = $record;
+		}
+		
+		$return = array();
+		$return['columns'] = array_keys($displayedColumns);
+		$return['totalCount'] = count($usersArray);
+		$return['data'] = $data;
+		
+		return new JSONResponse($return);	  	  	
 	}
 	
-    public function export()
-    {        
+	public function export()
+	{		
 		@set_time_limit(0);
 
-        // init file download
-        header('Content-Disposition: attachment; filename="exported.csv"');        
-        $out = fopen('php://output', 'w');
-        
+		// init file download
+		header('Content-Disposition: attachment; filename="exported.csv"');		
+		$out = fopen('php://output', 'w');
+		
 		$data = $this->lists()->getValue();
 		
-        // header row
-        foreach ($data['columns'] as $column)
-        {
-            $header[] = $this->translate($column);
-        }
-        fputcsv($out, $header);
-        
-        // columns
-        foreach ($data['data'] as $row)
-        {
-            fputcsv($out, $row);
-        }
-        
-        exit;
-    }	
+		// header row
+		foreach ($data['columns'] as $column)
+		{
+			$header[] = $this->translate($column);
+		}
+		fputcsv($out, $header);
+		
+		// columns
+		foreach ($data['data'] as $row)
+		{
+			fputcsv($out, $row);
+		}
+		
+		exit;
+	}	
 	
 	public function users()
 	{
-	    $id = (int)$this->request->get("id");
-	    if($id > 0)
-	    {
-	        $showAllGroups = false;
-	        $userGroup = UserGroup::getInstanceByID($id, ActiveRecord::LOAD_DATA);
-	    }
-	    else if($id == -1)
-	    {
-	        $showAllGroups = false;
-	        $userGroup = null;
-	    }
-	    else if($id == -2)
-	    {
-	        $showAllGroups = true;
-	        $userGroup = null;
-	    }
-	    else
-	    {
-	        return;
-	    }
-	        
+		$id = (int)$this->request->get("id");
+		if($id > 0)
+		{
+			$showAllGroups = false;
+			$userGroup = UserGroup::getInstanceByID($id, ActiveRecord::LOAD_DATA);
+		}
+		else if($id == -1)
+		{
+			$showAllGroups = false;
+			$userGroup = null;
+		}
+		else if($id == -2)
+		{
+			$showAllGroups = true;
+			$userGroup = null;
+		}
+		else
+		{
+			return;
+		}
+			
 		$availableColumns = $this->getAvailableColumns();
 		$displayedColumns = $this->getDisplayedColumns();
 		
@@ -184,24 +184,24 @@ class UserGroupController extends StoreManagementController
 		$response = new ActionResponse();
 		
 		$availableUserGroups = array('' => $this->translate('_default_user_group'));
-        foreach(UserGroup::getRecordSet(new ARSelectFilter()) as $group)
-        {
-            $availableUserGroups[$group->getID()] = $group->name->get();
-        }
-          
-        $form = UserController::createUserForm($this, null);
-        
-        $form->setData(array_merge($form->getData(), array('UserGroup' => $id, 'ID' => 0, 'isEnabled' => 1)));
-        
-        
-	    $response->set('newUser', array('UserGroup' => array('ID' => $id), 'ID' => 0, 'isEnabled' => 1));
-	    $response->set('availableUserGroups', $availableUserGroups);
-	    $response->set('form', $form);
-        $response->set('countries', $this->application->getEnabledCountries());
-	    
-        $response->set("massForm", $this->getMassForm());
-        $response->set("displayedColumns", $displayedColumns);
-        $response->set("availableColumns", $availableColumns);
+		foreach(UserGroup::getRecordSet(new ARSelectFilter()) as $group)
+		{
+			$availableUserGroups[$group->getID()] = $group->name->get();
+		}
+		  
+		$form = UserController::createUserForm($this, null);
+		
+		$form->setData(array_merge($form->getData(), array('UserGroup' => $id, 'ID' => 0, 'isEnabled' => 1)));
+		
+		
+		$response->set('newUser', array('UserGroup' => array('ID' => $id), 'ID' => 0, 'isEnabled' => 1));
+		$response->set('availableUserGroups', $availableUserGroups);
+		$response->set('form', $form);
+		$response->set('countries', $this->application->getEnabledCountries());
+		
+		$response->set("massForm", $this->getMassForm());
+		$response->set("displayedColumns", $displayedColumns);
+		$response->set("availableColumns", $availableColumns);
 		$response->set("userGroupID", $id);
 		$response->set("offset", $this->request->get('offset'));
 		$response->set("totalCount", '0');
@@ -212,44 +212,44 @@ class UserGroupController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-    public function save()
-    {
-        $name = $this->request->get('name');
-        $description = $this->request->get('description');
-        
-        if($id = (int)$this->request->get('id'))
-        {
-            $group = UserGroup::getInstanceByID($id);
-        }
-        else
-        {
-            $group = UserGroup::getNewInstance($name, $description);
-        }
-        
-        $validator = $this->createUserGroupFormValidator($group);
-        if($validator->isValid())
-        {            
-            $group->name->set($name);
-            $group->description->set($description);
-            
-	        $group->save();
-	        
-	        return new JSONResponse(array('group' => $group->toArray()), 'success', $this->translate('_user_group_successfully_saved'));
-        }
-        else
-        {
-            return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_could_not_save_user_group'));
-        }
-    }
+	public function save()
+	{
+		$name = $this->request->get('name');
+		$description = $this->request->get('description');
+		
+		if($id = (int)$this->request->get('id'))
+		{
+			$group = UserGroup::getInstanceByID($id);
+		}
+		else
+		{
+			$group = UserGroup::getNewInstance($name, $description);
+		}
+		
+		$validator = $this->createUserGroupFormValidator($group);
+		if($validator->isValid())
+		{			
+			$group->name->set($name);
+			$group->description->set($description);
+			
+			$group->save();
+			
+			return new JSONResponse(array('group' => $group->toArray()), 'success', $this->translate('_user_group_successfully_saved'));
+		}
+		else
+		{
+			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_could_not_save_user_group'));
+		}
+	}
 
 	/**
 	 * @role create
 	 */
 	public function create()
 	{
-	    $userGroup = UserGroup::getNewInstance($this->translate('_new_user_group'));
-	    $userGroup->save();
-	    
+		$userGroup = UserGroup::getNewInstance($this->translate('_new_user_group'));
+		$userGroup->save();
+		
 		return new JSONResponse($userGroup->toArray(), 'success', $this->translate('_new_user_group_successfully_created'));
 	}
 	
@@ -270,10 +270,10 @@ class UserGroupController extends StoreManagementController
 	 */
 	private function createUserGroupForm(UserGroup $group)
 	{
-	    $form = new Form($this->createUserGroupFormValidator($group)); 
-        $form->setData($group->toArray());
-	    
-	    return $form;
+		$form = new Form($this->createUserGroupFormValidator($group)); 
+		$form->setData($group->toArray());
+		
+		return $form;
 	}
 	
 	/**
@@ -333,9 +333,9 @@ class UserGroupController extends StoreManagementController
 			
 			if ($field->getName() == 'password' || !$type)
 			{
-			    continue;
+				continue;
 			}		
-            
+			
 			$availableColumns['User.' . $field->getName()] = $type;
 		}		
 		
@@ -353,12 +353,12 @@ class UserGroupController extends StoreManagementController
 		return $availableColumns;
 	}
 	
-    protected function getMassForm()
-    {
+	protected function getMassForm()
+	{
 		$validator = new RequestValidator("UsersFilterFormValidator", $this->request);		
 		
-        return new Form($validator);                
-    }
+		return new Form($validator);				
+	}
 
 }
 ?>

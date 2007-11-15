@@ -3,19 +3,19 @@
 {else}
 	<h1>{$page.title_lang}</h1>
 	<ul class="menu" id="staticPageMenu">
-        <li id="codeMenu" class="viewTreeNode">
-            <a href="#" class="menu" onclick="pageHandler.showTemplateCode(); return false;">{t _show_template_code}</a>
-        </li>
-    </ul>
+		<li id="codeMenu" class="viewTreeNode">
+			<a href="#" class="menu" onclick="pageHandler.showTemplateCode(); return false;">{t _show_template_code}</a>
+		</li>
+	</ul>
 {/if}
 
 <fieldset id="templateCode" style="display: none;">
-    <legend>{t _template_code}</legend>
-    {t _code_explain}:
-    <br /><br />
-    {literal}
-        &lt;a href="<strong>{pageUrl id={/literal}{$page.ID}{literal}}</strong>"&gt;<strong>{pageName id={/literal}{$page.ID}{literal}}</strong>&lt;/a&gt;
-    {/literal}
+	<legend>{t _template_code}</legend>
+	{t _code_explain}:
+	<br /><br />
+	{literal}
+		&lt;a href="<strong>{pageUrl id={/literal}{$page.ID}{literal}}</strong>"&gt;<strong>{pageName id={/literal}{$page.ID}{literal}}</strong>&lt;/a&gt;
+	{/literal}
 </fieldset>
 
 {form action="controller=backend.staticPage action=save" handle=$form onsubmit="pageHandler.save(this); return false;" method="post" role="page.update(edit),page.create(add)"}
@@ -37,7 +37,7 @@
 	<fieldset class="isInformationBox error">
 		{checkbox name="isInformationBox" class="checkbox" id="isInformationBox_`$page.ID`"}
 		<label for="isInformationBox_{$page.ID}" class="checkbox">{t _inf_menu}</label>
-    </fieldset>
+	</fieldset>
 
 	<p>
 		<label for="handle" class="wide">{t _handle}:</label>
@@ -57,7 +57,7 @@
 		</fieldset>
 	</p>
 
-    {language}
+	{language}
 		<p>
 			<label for="title_{$lang.ID}" class="wide">{t _title}:</label>
 			<fieldset class="error">
@@ -75,16 +75,16 @@
 				</div>			
 			</fieldset>
 		</p>
-    {/language}
+	{/language}
 
 </fieldset>
 
 <input type="hidden" name="id" value="{$page.ID}" />
 <fieldset class="controls">
-    <span class="progressIndicator" id="saveIndicator" style="display: none;"></span>
-    <input type="submit" value="{tn _save}" class="submit" /> 
-    {t _or} 
-    <a class="cancel" id="cancel" onclick="return false;" href="#">{t _cancel}</a>
+	<span class="progressIndicator" id="saveIndicator" style="display: none;"></span>
+	<input type="submit" value="{tn _save}" class="submit" /> 
+	{t _or} 
+	<a class="cancel" id="cancel" onclick="return false;" href="#">{t _cancel}</a>
 </fieldset>
 
 {/form}

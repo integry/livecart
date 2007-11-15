@@ -23,8 +23,8 @@ function smarty_function_translate($params, LiveCartSmarty $smarty)
 		$file = '__file_'.base64_encode($file);
 		$translation = '<span class="transMode __trans_' . $params['text'].' '. $file .'">'.$translation.'</span>';
 	}
-    
-//    return '<span style="color: red; font-weight: bold; display: none;">' . $translation . '</span>';
+	
+//	return '<span style="color: red; font-weight: bold; display: none;">' . $translation . '</span>';
 	return $translation;
 }
 

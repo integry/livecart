@@ -26,7 +26,7 @@ class ImageManipulator
 	  	
 	  	if ($imagePath)
 	  	{
-		    $this->setImage($imagePath);
+			$this->setImage($imagePath);
 		}
 	}
 	

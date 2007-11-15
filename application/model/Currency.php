@@ -42,26 +42,26 @@ class Currency extends ActiveRecordModel
 	 *
 	 *  @return Currency
 	 */
-    public static function getValidInstanceById($id, $loadData = true)
+	public static function getValidInstanceById($id, $loadData = true)
 	{
-        try
-        {
-            $instance = ActiveRecordModel::getInstanceById(__CLASS__, $id, $loadData);    
-        }
-        catch (ARNotFoundException $e)
-        {
-            $instance = null;
-        }
-        
-        if (!$instance || !$instance->isEnabled->get())
-        {
-            $instance = self::getApplication()->getDefaultCurrency();    
-        }
-        
-        return $instance;
+		try
+		{
+			$instance = ActiveRecordModel::getInstanceById(__CLASS__, $id, $loadData);	
+		}
+		catch (ARNotFoundException $e)
+		{
+			$instance = null;
+		}
+		
+		if (!$instance || !$instance->isEnabled->get())
+		{
+			$instance = self::getApplication()->getDefaultCurrency();	
+		}
+		
+		return $instance;
 	}
 
-    /*####################  Value retrieval and manipulation ####################*/		
+	/*####################  Value retrieval and manipulation ####################*/		
 
 	public function setAsDefault($default = true)
 	{
@@ -75,62 +75,62 @@ class Currency extends ActiveRecordModel
 	
 	public function getFormattedPrice($price)
 	{
-        $price = round($price, 2);
-        
-        $parts = explode('.', $price);                
-        
-        $dollars = $parts[0];
-        
-        if (!isset($parts[1]))
-        {
-            $parts[1] = 0;
-        }
-        
-        if ($parts[1] > 0)
-        {
-            $cents = $parts[1];
-            if (strlen($cents) == 1)
-            {
-                $cents = $cents . '0';
-            }
-            
-            if (strlen($cents) > 2)
-            {
-                $cents = substr($cents, 0, 2);
-            }
-            
-            $price = $dollars . '.' . $cents;            
-        }        
-        else
-        {
-            $price = $dollars . '.00';
-        }
-        
-        if (!$this->isLoaded())
-        {
-            $this->load();
-        }
-        
-        return $this->pricePrefix->get() . $price . $this->priceSuffix->get();
-    }
+		$price = round($price, 2);
+		
+		$parts = explode('.', $price);				
+		
+		$dollars = $parts[0];
+		
+		if (!isset($parts[1]))
+		{
+			$parts[1] = 0;
+		}
+		
+		if ($parts[1] > 0)
+		{
+			$cents = $parts[1];
+			if (strlen($cents) == 1)
+			{
+				$cents = $cents . '0';
+			}
+			
+			if (strlen($cents) > 2)
+			{
+				$cents = substr($cents, 0, 2);
+			}
+			
+			$price = $dollars . '.' . $cents;			
+		}		
+		else
+		{
+			$price = $dollars . '.00';
+		}
+		
+		if (!$this->isLoaded())
+		{
+			$this->load();
+		}
+		
+		return $this->pricePrefix->get() . $price . $this->priceSuffix->get();
+	}
 	
 	public function convertAmountFromDefaultCurrency($amount)
 	{
-	    $rate = $this->rate->get();
-        return $amount / (empty($rate) ? 1 : $rate);   
-    }
-    
+		$rate = $this->rate->get();
+		return $amount / (empty($rate) ? 1 : $rate);   
+	}
+	
 	public function convertAmountToDefaultCurrency($amount)
 	{
-	    $rate = $this->rate->get();
-        return $amount * (empty($rate) ? 1 : $rate);        
-    }
+		$rate = $this->rate->get();
+		return $amount * (empty($rate) ? 1 : $rate);		
+	}
 
-    public function convertAmount(Currency $currency, $amount)
+	public function convertAmount(Currency $currency, $amount)
 	{
-        $amount = $currency->convertAmountToDefaultCurrency($amount);
-        return $this->convertAmountFromDefaultCurrency($amount);        
-    }
+		$amount = $currency->convertAmountToDefaultCurrency($amount);
+		return $this->convertAmountFromDefaultCurrency($amount);		
+	}
 	
 	/*####################  Data array transformation ####################*/		
 	
@@ -162,37 +162,37 @@ class Currency extends ActiveRecordModel
 	
 	public function save($forceOperation = 0)
 	{
-        // do not allow 0 rates
-        if (!$this->rate->get())
-        {
-            $this->rate->set(1);
-        }
-        
-//        file_put_contents(ClassLoader::getRealPath('installdata.currency.test') . '.php', var_export($this->priceSuffix->get(), true));
-        
-        return parent::save($forceOperation);
-    }
-    
-    protected function insert()
+		// do not allow 0 rates
+		if (!$this->rate->get())
+		{
+			$this->rate->set(1);
+		}
+		
+//		file_put_contents(ClassLoader::getRealPath('installdata.currency.test') . '.php', var_export($this->priceSuffix->get(), true));
+		
+		return parent::save($forceOperation);
+	}
+	
+	protected function insert()
 	{
 	  	// check currency symbol
 	  	if (!$this->pricePrefix->get() && !$this->priceSuffix->get())
 	  	{
-            $prefixes = include ClassLoader::getRealPath('installdata.currency.signs') . '.php';
-            if (isset($prefixes[$this->getID()]))
-            {
-                $signs = $prefixes[$this->getID()];
-                
-                $this->pricePrefix->set($signs[0]);
-                    
-                if (isset($signs[1]))
-                {
-                    $this->priceSuffix->set($signs[1]);
-                }
-            }
-        }
-          
-        // check if default currency exists
+			$prefixes = include ClassLoader::getRealPath('installdata.currency.signs') . '.php';
+			if (isset($prefixes[$this->getID()]))
+			{
+				$signs = $prefixes[$this->getID()];
+				
+				$this->pricePrefix->set($signs[0]);
+					
+				if (isset($signs[1]))
+				{
+					$this->priceSuffix->set($signs[1]);
+				}
+			}
+		}
+		  
+		// check if default currency exists
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle('Currency', 'isDefault'), 1));
 		

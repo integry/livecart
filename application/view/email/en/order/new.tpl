@@ -10,7 +10,7 @@ If you have any questions regarding this order, you can send us a message from t
 
 We remind that the following items have been ordered:
 ------------------------------------------------------------
-Item                           Price     Qty      Subtotal
+Item						   Price	 Qty	  Subtotal
 ------------------------------------------------------------
 {foreach from=$order.shipments item=shipment}
 {foreach from=$shipment.items item=item}
@@ -18,27 +18,27 @@ Item                           Price     Qty      Subtotal
 {/foreach}
 {/foreach}
 ------------------------------------------------------------
-                                        Subtotal: {$order.formatted_itemSubtotal}
+										Subtotal: {$order.formatted_itemSubtotal}
 {if $order.shippingSubtotal}
-                                        Shipping: {$order.formatted_shippingSubtotal}
+										Shipping: {$order.formatted_shippingSubtotal}
 {/if}
 {if $order.taxes|@count > 1}
-                           ---------------------------------
-                           Subtotal before taxes: {$order.formatted_subtotalBeforeTaxes}
+						   ---------------------------------
+						   Subtotal before taxes: {$order.formatted_subtotalBeforeTaxes}
 {foreach from=$order.taxes[$order.Currency.ID] item=tax}
-                                {$tax.name_lang}: {$tax.formattedAmount}
+								{$tax.name_lang}: {$tax.formattedAmount}
 {/foreach}
 {/if}
-                           ---------------------------------
-                                     Grand total: {$order.formatted_totalAmount}
+						   ---------------------------------
+									 Grand total: {$order.formatted_totalAmount}
 
-                                     Amount paid: {$order.formatted_amountPaid}
-                                      Amount due: {$order.formatted_amountDue}
+									 Amount paid: {$order.formatted_amountPaid}
+									  Amount due: {$order.formatted_amountDue}
 
 {* Function to generate address output (address template) *}
 {defun name="address"}
 {if $address}
-{$address.fullName}                
+{$address.fullName}				
 {if $address.companyName}
 {$address.companyName}
 

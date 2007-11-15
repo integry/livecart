@@ -30,7 +30,7 @@ class PaymentMethodManager
 		{
 			if ($method->isFile() && substr($method->getFileName(), 0, 1) != '.')
 			{
-                $ret[] = basename($method->getFileName(), '.php');
+				$ret[] = basename($method->getFileName(), '.php');
 			}
 		}
 		

@@ -82,7 +82,7 @@ class ProductSpecification
 	  	
 		if (!$field->isSelector())
 	  	{
-		    throw new Exception('Cannot remove a value from non selector type specification field');
+			throw new Exception('Cannot remove a value from non selector type specification field');
 		}
 		
 		if (!isset($this->attributes[$field->getID()]))
@@ -146,68 +146,68 @@ class ProductSpecification
 		$arr = array();
 		foreach ($this->attributes as $id => $attribute)
 		{
-            $arr[$id] = $attribute->toArray();		 	
+			$arr[$id] = $attribute->toArray();		 	
 		}
 
-        uasort($arr, array($this, 'sortAttributeArray'));
-						        
+		uasort($arr, array($this, 'sortAttributeArray'));
+								
 		return $arr;
 	}
 	
 	private function sortAttributeArray($a, $b)
 	{
-        if (!isset($a['SpecField']['SpecFieldGroup']['position']))
-        {
+		if (!isset($a['SpecField']['SpecFieldGroup']['position']))
+		{
 			$a['SpecField']['SpecFieldGroup']['position'] = -1;	
 		}
 		
-        if (!isset($b['SpecField']['SpecFieldGroup']['position']))
-        {
+		if (!isset($b['SpecField']['SpecFieldGroup']['position']))
+		{
 			$b['SpecField']['SpecFieldGroup']['position'] = -1;	
 		}
 
 		if (($a['SpecField']['SpecFieldGroup']['position'] == $b['SpecField']['SpecFieldGroup']['position']))
-        {
+		{
 			return ($a['SpecField']['position'] < $b['SpecField']['position']) ? -1 : 1;
-        }
-        
-        return ($a['SpecField']['SpecFieldGroup']['position'] < $b['SpecField']['SpecFieldGroup']['position']) ? -1 : 1;
-    }
+		}
+		
+		return ($a['SpecField']['SpecFieldGroup']['position'] < $b['SpecField']['SpecFieldGroup']['position']) ? -1 : 1;
+	}
 
-    public static function loadSpecificationForProductArray(&$productArray)
-	{        
-        $array = array(&$productArray);
-        self::loadSpecificationForRecordSetArray($array, true);
-        
-        $groupIds = array();
-        foreach ($productArray['attributes'] as $attr)
-        {
-            $groupIds[$attr['SpecField']['specFieldGroupID'] != '' ? $attr['SpecField']['specFieldGroupID'] : 'NULL'] = true;
-        }
-        
-        $f = new ARSelectFilter(new INCond(new ARFieldHandle('SpecFieldGroup', 'ID'), array_keys($groupIds)));
-        $indexedGroups = array();
-        $res = ActiveRecordModel::getRecordSetArray('SpecFieldGroup', $f);
-        foreach ($res as $group)
-        {
-            $indexedGroups[$group['ID']] = $group;
-        }
-        
-        foreach ($productArray['attributes'] as &$attr)
-        {
-            if ($attr['SpecField']['specFieldGroupID'])
-            {
+	public static function loadSpecificationForProductArray(&$productArray)
+	{		
+		$array = array(&$productArray);
+		self::loadSpecificationForRecordSetArray($array, true);
+		
+		$groupIds = array();
+		foreach ($productArray['attributes'] as $attr)
+		{
+			$groupIds[$attr['SpecField']['specFieldGroupID'] != '' ? $attr['SpecField']['specFieldGroupID'] : 'NULL'] = true;
+		}
+		
+		$f = new ARSelectFilter(new INCond(new ARFieldHandle('SpecFieldGroup', 'ID'), array_keys($groupIds)));
+		$indexedGroups = array();
+		$res = ActiveRecordModel::getRecordSetArray('SpecFieldGroup', $f);
+		foreach ($res as $group)
+		{
+			$indexedGroups[$group['ID']] = $group;
+		}
+		
+		foreach ($productArray['attributes'] as &$attr)
+		{
+			if ($attr['SpecField']['specFieldGroupID'])
+			{
 				$attr['SpecField']['SpecFieldGroup'] = $indexedGroups[$attr['SpecField']['specFieldGroupID']];				
 			}
-        }
-    }
+		}
+	}
 	
-    /**
+	/**
 	 * Load product specification data for a whole array of products at once
-     */
-    public static function loadSpecificationForRecordSetArray(&$productArray, $fullSpecification = false)
+	 */
+	public static function loadSpecificationForRecordSetArray(&$productArray, $fullSpecification = false)
 	{
-        $ids = array();
+		$ids = array();
 		foreach ($productArray as $key => $product)
 	  	{
 			$ids[$product['ID']] = $key;
@@ -215,44 +215,44 @@ class ProductSpecification
 		
 		$specificationArray = self::fetchSpecificationData(array_flip($ids), $fullSpecification);
 
-        $specFieldSchema = ActiveRecordModel::getSchemaInstance('SpecField');
-        $specStringSchema = ActiveRecordModel::getSchemaInstance('SpecificationStringValue');
-        $specFieldColumns = array_keys($specFieldSchema->getFieldList());
+		$specFieldSchema = ActiveRecordModel::getSchemaInstance('SpecField');
+		$specStringSchema = ActiveRecordModel::getSchemaInstance('SpecificationStringValue');
+		$specFieldColumns = array_keys($specFieldSchema->getFieldList());
 
 		foreach ($specificationArray as &$spec)
 		{
-		    if ($spec['isMultiValue'])
-		    {
-                $value['value'] = $spec['value'];
-                $value = MultiLingualObject::transformArray($value, $specStringSchema);
-                
-                if (isset($productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']]))
-                {
-                    $sp =& $productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']];
-                    $sp['valueIDs'][] = $spec['specFieldValueID'];
-                    $sp['values'][] = $value;
-                    continue;
-                }
-            }
-            
+			if ($spec['isMultiValue'])
+			{
+				$value['value'] = $spec['value'];
+				$value = MultiLingualObject::transformArray($value, $specStringSchema);
+				
+				if (isset($productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']]))
+				{
+					$sp =& $productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']];
+					$sp['valueIDs'][] = $spec['specFieldValueID'];
+					$sp['values'][] = $value;
+					continue;
+				}
+			}
+			
 			foreach ($specFieldColumns as $key)
 			{
-                $spec['SpecField'][$key] = $spec[$key];
-                unset($spec[$key]);
-            }
-            
-            // transform for presentation
+				$spec['SpecField'][$key] = $spec[$key];
+				unset($spec[$key]);
+			}
+			
+			// transform for presentation
 			$spec['SpecField'] = MultiLingualObject::transformArray($spec['SpecField'], $specFieldSchema);
 
-            if ($spec['SpecField']['isMultiValue'])
-            {
-                $spec['valueIDs'] = array($spec['specFieldValueID']);
-                $spec['values'] = array($value);                
-            }
-            else
-            {
-                $spec = MultiLingualObject::transformArray($spec, $specStringSchema);
-            }
+			if ($spec['SpecField']['isMultiValue'])
+			{
+				$spec['valueIDs'] = array($spec['specFieldValueID']);
+				$spec['values'] = array($value);				
+			}
+			else
+			{
+				$spec = MultiLingualObject::transformArray($spec, $specStringSchema);
+			}
 
 			// append to product array
 			$productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']] = $spec;		
@@ -275,18 +275,18 @@ class ProductSpecification
 		WHERE 
 			productID IN (' . implode(', ', $productIDs) . ')' . ($fullSpecification ? '' : ' AND SpecField.isDisplayedInList = 1');
 
-	    $query = '
+		$query = '
 		SELECT SpecificationDateValue.*, NULL AS specFieldValueID, NULL AS specFieldValuePosition, SpecFieldGroup.position AS SpecFieldGroupPosition, SpecField.* as valueID FROM SpecificationDateValue ' . $cond . '
-	    UNION
+		UNION
 		SELECT SpecificationStringValue.*, NULL, NULL AS specFieldValuePosition, SpecFieldGroup.position, SpecField.* as valueID FROM SpecificationStringValue ' . $cond . '
-	    UNION
+		UNION
 		SELECT SpecificationNumericValue.*, NULL, NULL AS specFieldValuePosition, SpecFieldGroup.position, SpecField.* as valueID FROM SpecificationNumericValue ' . $cond . '
-	    UNION
+		UNION
 		SELECT SpecificationItem.productID, SpecificationItem.specFieldID, SpecFieldValue.value, SpecFieldValue.ID, SpecFieldValue.position, SpecFieldGroup.position, SpecField.*
 				 FROM SpecificationItem
 				 	LEFT JOIN SpecFieldValue ON SpecificationItem.specFieldValueID =  SpecFieldValue.ID
 				 ' . str_replace('ON specFieldID', 'ON SpecificationItem.specFieldID', $cond) . 
-                 ' ORDER BY productID, SpecFieldGroupPosition, position, specFieldValuePosition';
+				 ' ORDER BY productID, SpecFieldGroupPosition, position, specFieldValuePosition';
 		
 		$specificationArray = ActiveRecordModel::getDataBySQL($query);
 		
@@ -301,9 +301,9 @@ class ProductSpecification
 			}
 			
 			if ((SpecField::DATATYPE_TEXT == $spec['dataType'] && SpecField::TYPE_TEXT_DATE != $spec['type'])
-                || (SpecField::TYPE_NUMBERS_SELECTOR == $spec['type']))
+				|| (SpecField::TYPE_NUMBERS_SELECTOR == $spec['type']))
 			{
-                $spec['value'] = unserialize($spec['value']);
+				$spec['value'] = unserialize($spec['value']);
 			}		
 		}
 		
@@ -322,7 +322,7 @@ class ProductSpecification
 		  	$specFieldIds[$value['specFieldID']] = $value['specFieldID'];
 		  	if ($value['valueID'])
 		  	{
-		  		$selectors[$value['specFieldID']][$value['valueID']] = $value;	    
+		  		$selectors[$value['specFieldID']][$value['valueID']] = $value;		
 			}
 			else
 			{

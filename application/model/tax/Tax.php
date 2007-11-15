@@ -18,7 +18,7 @@ class Tax extends MultilingualObject
 		
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARField("name", ARArray::instance()));
-        $schema->registerField(new ARField("position", ARInteger::instance(2)));
+		$schema->registerField(new ARField("position", ARInteger::instance(2)));
 	}
 
 	/**
@@ -31,7 +31,7 @@ class Tax extends MultilingualObject
 	 * @return Tax
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
-	{		    
+	{			
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
 	
@@ -45,7 +45,7 @@ class Tax extends MultilingualObject
 	{
 	  	$instance = ActiveRecord::getNewInstance(__CLASS__);
 	  	$instance->setValueByLang('name', null, $defaultLanguageName);
-        
+		
 	  	return $instance;
 	}
 
@@ -59,7 +59,7 @@ class Tax extends MultilingualObject
 	 */
 	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
-        $filter->setOrder(new ARFieldHandle(__CLASS__, 'position'), ARSelectFilter::ORDER_ASC);
+		$filter->setOrder(new ARFieldHandle(__CLASS__, 'position'), ARSelectFilter::ORDER_ASC);
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 	
@@ -74,22 +74,22 @@ class Tax extends MultilingualObject
 	 */
 	public static function getTaxes(DeliveryZone $notUsedInThisZone = null, $loadReferencedRecords = false)
 	{
-	    $filter = new ARSelectFilter();
-	    $rates = TaxRate::getRecordSetByDeliveryZone($notUsedInThisZone, true);
+		$filter = new ARSelectFilter();
+		$rates = TaxRate::getRecordSetByDeliveryZone($notUsedInThisZone, true);
 
-        if($rates->getTotalRecordCount() > 0)
-        {
-            $zoneRatesIDs = array();
-            foreach($rates as $rate)
-            {
-                $taxIDs[] = $rate->tax->get()->getID();
-            }
-            
-            $notInCond = new NotINCond(new ARFieldHandle(__CLASS__, "ID"), $taxIDs);
-            $filter->setCondition($notInCond);
-        }	
-        
-	    return self::getRecordSet($filter, $loadReferencedRecords);
+		if($rates->getTotalRecordCount() > 0)
+		{
+			$zoneRatesIDs = array();
+			foreach($rates as $rate)
+			{
+				$taxIDs[] = $rate->tax->get()->getID();
+			}
+			
+			$notInCond = new NotINCond(new ARFieldHandle(__CLASS__, "ID"), $taxIDs);
+			$filter->setCondition($notInCond);
+		}	
+		
+		return self::getRecordSet($filter, $loadReferencedRecords);
 	}
 
 	/**
@@ -101,7 +101,7 @@ class Tax extends MultilingualObject
 	 */
 	public static function getAllTaxes($loadReferencedRecords = false)
 	{
-	    return self::getRecordSet(new ARSelectFilter(), $loadReferencedRecords);
+		return self::getRecordSet(new ARSelectFilter(), $loadReferencedRecords);
 	}
 }
 

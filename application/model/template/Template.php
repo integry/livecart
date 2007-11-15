@@ -33,8 +33,8 @@ class Template
 		$this->file = $fileName;
 	}
 
-    public static function getTree($dir = null)
-    {
+	public static function getTree($dir = null)
+	{
 	  	if (!$dir)
 	  	{
 			$dir = ClassLoader::getRealPath('application.view.');
@@ -49,26 +49,26 @@ class Template
 		{
 			if (!$file->isDot())
 			{
-                $id = substr($file->getPathName(), $rootLn);
-                
-                if ($file->isDir())
-    			{
-                    $dir = self::getTree($file->getPathName());
-                    if ($dir)
-                    {
-                        $res[$file->getFileName()]['id'] = $id;
-                        $res[$file->getFileName()]['subs'] = $dir;
-                    }
-                }
-                elseif (substr($file->getFileName(), -4) == '.tpl')
-                {
-                    $res[$file->getFileName()]['id'] = $id;
-                }                
-            }
+				$id = substr($file->getPathName(), $rootLn);
+				
+				if ($file->isDir())
+				{
+					$dir = self::getTree($file->getPathName());
+					if ($dir)
+					{
+						$res[$file->getFileName()]['id'] = $id;
+						$res[$file->getFileName()]['subs'] = $dir;
+					}
+				}
+				elseif (substr($file->getFileName(), -4) == '.tpl')
+				{
+					$res[$file->getFileName()]['id'] = $id;
+				}				
+			}
 		}
 		
-		return $res;        
-    }
+		return $res;		
+	}
 
 	public static function getRealFilePath($fileName)
 	{
@@ -96,8 +96,8 @@ class Template
 	}
 
 	public function setCode($code)
-	{        
-        $this->code = $code;
+	{		
+		$this->code = $code;
 	}	
 	
 	public function getCode()
@@ -112,14 +112,14 @@ class Template
 	
 	private function checkForChanges()
 	{
-        $l = str_replace("\r\n", "\n", $this->getContent(self::getCustomizedFilePath($this->file)));
-        $r = str_replace("\r\n", "\n", $this->getContent(self::getOriginalFilePath($this->file)));
-        
-        if ($l == $r)
-        {
-            $this->restoreOriginal();
-        }
-    }
+		$l = str_replace("\r\n", "\n", $this->getContent(self::getCustomizedFilePath($this->file)));
+		$r = str_replace("\r\n", "\n", $this->getContent(self::getOriginalFilePath($this->file)));
+		
+		if ($l == $r)
+		{
+			$this->restoreOriginal();
+		}
+	}
 	
 	private function getContent($file)
 	{
@@ -158,14 +158,14 @@ class Template
 		$cacheDir = ClassLoader::getRealPath('cache.templates_c.customize');
 		if (is_dir($cacheDir))
 		{
-            foreach (new DirectoryIterator($cacheDir) as $file)
-            {
-                if (!$file->isDot())
-                {
-                    unlink($file->getPathname());
-                }
-            }
-        }
+			foreach (new DirectoryIterator($cacheDir) as $file)
+			{
+				if (!$file->isDot())
+				{
+					unlink($file->getPathname());
+				}
+			}
+		}
 		
 		return unlink($path);
 	}

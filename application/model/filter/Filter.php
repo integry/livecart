@@ -19,9 +19,9 @@ ClassLoader::import('application.helper.CreateHandleString');
  */
 class Filter extends MultilingualObject implements SpecificationFilterInterface
 {
-    /**
-     * Define Filter schema
-     */
+	/**
+	 * Define Filter schema
+	 */
 	public static function defineSchema()
 	{
 		$schema = self::getSchemaInstance(__CLASS__);
@@ -72,7 +72,7 @@ class Filter extends MultilingualObject implements SpecificationFilterInterface
 	 */
 	public static function getRecordSetArray(ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
-	    return parent::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
+		return parent::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
 	/**
@@ -146,12 +146,12 @@ class Filter extends MultilingualObject implements SpecificationFilterInterface
 	}
 
 	/**
-     *	Adds JOIN definition to ARSelectFilter to retrieve product attribute value for the particular SpecField
-     *	
-     *	@param	ARSelectFilter	$filter	Filter instance
-     */
+	 *	Adds JOIN definition to ARSelectFilter to retrieve product attribute value for the particular SpecField
+	 *	
+	 *	@param	ARSelectFilter	$filter	Filter instance
+	 */
 	public function defineJoin(ARSelectFilter $filter)
-    {
+	{
 	  	$field = $this->filterGroup->get()->specField->get();
 		$table = $this->getJoinAlias();
 		$filter->joinTable($field->getValueTableName(), 'Product', 'productID AND ' . $table . '.SpecFieldID = ' . $field->getID(), 'ID', $table);				  	  	
@@ -180,7 +180,7 @@ class Filter extends MultilingualObject implements SpecificationFilterInterface
 	 */
 	public static function deleteByID($id)
 	{
-	    parent::deleteByID(__CLASS__, (int)$id);
+		parent::deleteByID(__CLASS__, (int)$id);
 	}
 	
 	/*####################  Data array transformation ####################*/	

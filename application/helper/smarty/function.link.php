@@ -23,7 +23,7 @@ function smarty_function_link($params, LiveCartSmarty $smarty)
 	$router = $smarty->getApplication()->getRouter();
 	
 	// should full URL be generated?
-    if (isset($params['url']))
+	if (isset($params['url']))
 	{
 		unset($params['url']);
 		$fullUrl = true;
@@ -36,13 +36,13 @@ function smarty_function_link($params, LiveCartSmarty $smarty)
 	// replace & with &amp;
 	if (isset($params['nohtml']))
 	{
-        unset($params['nohtml']);
-        $router->setVariableSeparator('&');
-    }
-    else
-    {
-        $router->setVariableSeparator('&amp;');
-    }
+		unset($params['nohtml']);
+		$router->setVariableSeparator('&');
+	}
+	else
+	{
+		$router->setVariableSeparator('&amp;');
+	}
 
 	try
 	{
@@ -53,12 +53,12 @@ function smarty_function_link($params, LiveCartSmarty $smarty)
 		else
 		{			
 			unset($params['route']);
-            $result = $router->createURL($params, true);			
+			$result = $router->createURL($params, true);			
 		}
 	}
 	catch(RouterException $e)
 	{
-        return "INVALID_LINK";
+		return "INVALID_LINK";
 	}
 
 	if ($fullUrl)

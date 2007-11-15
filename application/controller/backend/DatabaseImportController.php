@@ -24,46 +24,46 @@ class DatabaseImportController extends StoreManagementController
 
 	public function import()
 	{
-        //ignore_user_abort(true);
+		//ignore_user_abort(true);
 		set_time_limit(0);
 
-        $validator = $this->getValidator();
-        if (!$validator->isValid())
-        {
-            return new JSONResponse(array('errors' => $validator->getErrorList()));
-        }
+		$validator = $this->getValidator();
+		if (!$validator->isValid())
+		{
+			return new JSONResponse(array('errors' => $validator->getErrorList()));
+		}
 
 		$dsn = $this->request->get('dbType') . '://' .
-			       $this->request->get('dbUser') .
+				   $this->request->get('dbUser') .
 				   		($this->request->get('dbPass') ? ':' . $this->request->get('dbPass') : '') .
 				   			'@' . $this->request->get('dbServer') .
 				   				'/' . $this->request->get('dbName');
 
-        try
+		try
 		{
-            $cart = $this->request->get('cart');
-            ClassLoader::import('library.import.driver.' . $cart);
-            $driver = new $cart($dsn, $this->request->get('filePath'));
-        }
+			$cart = $this->request->get('cart');
+			ClassLoader::import('library.import.driver.' . $cart);
+			$driver = new $cart($dsn, $this->request->get('filePath'));
+		}
 		catch (SQLException $e)
 		{
-            $validator->triggerError('dbServer', $e->getNativeError());
-            $validator->saveState();
-            return new JSONResponse(array('errors' => $validator->getErrorList()));
+			$validator->triggerError('dbServer', $e->getNativeError());
+			$validator->saveState();
+			return new JSONResponse(array('errors' => $validator->getErrorList()));
 		}
 
-        if (!$driver->isDatabaseValid())
-        {
-            $validator->triggerError('dbName', $this->maketext('_invalid_database', $driver->getName()));
-            $validator->saveState();
-            return new JSONResponse(array('errors' => $validator->getErrorList()));
+		if (!$driver->isDatabaseValid())
+		{
+			$validator->triggerError('dbName', $this->maketext('_invalid_database', $driver->getName()));
+			$validator->saveState();
+			return new JSONResponse(array('errors' => $validator->getErrorList()));
 		}
 
-        if (!$driver->isPathValid())
-        {
-            $validator->triggerError('filePath', $this->maketext('_invalid_path', $driver->getName()));
-            $validator->saveState();
-            return new JSONResponse(array('errors' => $validator->getErrorList()));
+		if (!$driver->isPathValid())
+		{
+			$validator->triggerError('filePath', $this->maketext('_invalid_path', $driver->getName()));
+			$validator->saveState();
+			return new JSONResponse(array('errors' => $validator->getErrorList()));
 		}
 
 		$importer = new LiveCartImporter($driver);
@@ -76,42 +76,42 @@ ActiveRecord::beginTransaction();
 		// process import
 		while (true)
 		{
-            $result = $importer->process();
+			$result = $importer->process();
 
-            $this->flushResponse($result);
+			$this->flushResponse($result);
 
-            if (is_null($result))
-            {
-                break;
-            }
-        }
+			if (is_null($result))
+			{
+				break;
+			}
+		}
 ActiveRecord::rollback();
 		exit;
-    }
+	}
 
-    private function flushResponse($data)
-    {
+	private function flushResponse($data)
+	{
 		//print_r($data);
 		echo '|' . base64_encode(json_encode($data));
 		flush();
-    }
+	}
 
 	private function getDrivers()
 	{
-        $drivers = array();
+		$drivers = array();
 
-        foreach (new DirectoryIterator(ClassLoader::getRealPath('library.import.driver')) as $file)
-        {
-            if (!$file->isDot())
-            {
-                include_once $file->getPathname();
-                $className = basename($file->getFileName(), '.php');
-                $drivers[$className] = call_user_func(array($className, 'getName'));
-            }
-        }
+		foreach (new DirectoryIterator(ClassLoader::getRealPath('library.import.driver')) as $file)
+		{
+			if (!$file->isDot())
+			{
+				include_once $file->getPathname();
+				$className = basename($file->getFileName(), '.php');
+				$drivers[$className] = call_user_func(array($className, 'getName'));
+			}
+		}
 
-        return $drivers;
-    }
+		return $drivers;
+	}
 
 	private function getForm()
 	{

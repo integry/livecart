@@ -32,12 +32,12 @@ class ProductRelationship extends ActiveRecord
 	 */
 	public static function getInstance(Product $product, Product $relatedProduct, $loadRecordData = false, $loadReferencedRecords = false)
 	{
-	    $recordID = array(
+		$recordID = array(
 			'productID' => $product->getID(),
-	    	'relatedProductID' => $relatedProduct->getID()
-	    );
-	    
-	    return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
+			'relatedProductID' => $relatedProduct->getID()
+		);
+		
+		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
 	}
 	
 	/**
@@ -52,17 +52,17 @@ class ProductRelationship extends ActiveRecord
 	{
 		if(null == $product || null == $related || $product === $related || $product->getID() == $related->getID())
 		{
-		    require_once('ProductRelationshipException.php');
+			require_once('ProductRelationshipException.php');
 			throw new ProductRelationshipException('Expected two different products when creating a relationship');
 		}
 		
-	    $relationship = parent::getNewInstance(__CLASS__);
+		$relationship = parent::getNewInstance(__CLASS__);
 		
 		$relationship->product->set($product);
 		$relationship->relatedProduct->set($related);
 		if(!is_null($group))
 		{
-		    $relationship->productRelationshipGroup->set($group);
+			$relationship->productRelationshipGroup->set($group);
 		}
 		
 		return $relationship;
@@ -93,22 +93,22 @@ class ProductRelationship extends ActiveRecord
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
 	{
-	    return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
+		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
 	
 	/*####################  Value retrieval and manipulation ####################*/		
 	
 	public static function hasRelationship(Product $product, Product $relatedToProduct)
 	{
-	    $recordID = array(
+		$recordID = array(
 			'productID' => $product->getID(), 
 			'relatedProductID' => $relatedToProduct->getID()
-	    );
-	    	    
-	    if(self::retrieveFromPool(__CLASS__, $recordID)) return true;
-	    if(self::objectExists(__CLASS__, $recordID)) return true;
-	    
-	    return false;
+		);
+				
+		if(self::retrieveFromPool(__CLASS__, $recordID)) return true;
+		if(self::objectExists(__CLASS__, $recordID)) return true;
+		
+		return false;
 	}
 	
 	/*####################  Saving ####################*/		
@@ -125,7 +125,7 @@ class ProductRelationship extends ActiveRecord
 		return parent::insert();
 	}		
 
-	/*####################  Get related objects ####################*/    	
+	/*####################  Get related objects ####################*/		
 	
 	/**
 	 * Get product relationships
@@ -135,7 +135,7 @@ class ProductRelationship extends ActiveRecord
 	 */
 	public static function getRelationships(Product $product, $loadReferencedRecords = array('RelatedProduct' => 'Product'))
 	{
-	    return self::getRecordSet(self::getRelatedProductsSetFilter($product), $loadReferencedRecords);
+		return self::getRecordSet(self::getRelatedProductsSetFilter($product), $loadReferencedRecords);
 	}
 	
 	/**
@@ -146,12 +146,12 @@ class ProductRelationship extends ActiveRecord
 	 */
 	public static function getRelationshipsArray(Product $product, $loadReferencedRecords = array('RelatedProduct' => 'Product'))
 	{
-	    return parent::getRecordSetArray(__CLASS__, self::getRelatedProductsSetFilter($product), $loadReferencedRecords);
+		return parent::getRecordSetArray(__CLASS__, self::getRelatedProductsSetFilter($product), $loadReferencedRecords);
 	}
 	
 	private static function getRelatedProductsSetFilter(Product $product)
 	{
-	    $filter = new ARSelectFilter();
+		$filter = new ARSelectFilter();
 
 		$filter->joinTable('ProductRelationshipGroup', 'ProductRelationship', 'ID', 'productRelationshipGroupID');		
 		$filter->setOrder(new ARFieldHandle("ProductRelationshipGroup", "position"), 'ASC');			

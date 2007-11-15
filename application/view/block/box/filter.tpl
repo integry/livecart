@@ -23,15 +23,15 @@
 
 	<div class="content">
 		
-        {if $manGroup}		
+		{if $manGroup}		
 			<div class="filterGroup">
 				<h4>{t _by_brand}</h4>
 				<ul>
 					{foreach from=$manGroup.filters item="filter"}
 						<li> 
 							<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a> 
-        					{if 'DISPLAY_NUM_FILTER'|config}
-							     <span class="count">({$filter.count})</span>
+							{if 'DISPLAY_NUM_FILTER'|config}
+								 <span class="count">({$filter.count})</span>
 							{/if}							 
 						</li>
 					{/foreach}	
@@ -50,8 +50,8 @@
 					{foreach from=$priceGroup.filters item="filter"}
 						<li> 
 							<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a> 
-        					{if 'DISPLAY_NUM_FILTER'|config}
-							    <span class="count">({$filter.count})</span>
+							{if 'DISPLAY_NUM_FILTER'|config}
+								<span class="count">({$filter.count})</span>
 							{/if}
 						</li>
 					{/foreach}									
@@ -66,8 +66,8 @@
 					{foreach from=$group.filters item="filter"}
 						<li> 
 							<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a> 
-        					{if 'DISPLAY_NUM_FILTER'|config}
-							     <span class="count">({$filter.count})</span>
+							{if 'DISPLAY_NUM_FILTER'|config}
+								 <span class="count">({$filter.count})</span>
 							{/if}
 						</li>
 					{/foreach}				

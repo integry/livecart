@@ -16,9 +16,9 @@ ClassLoader::import("application.model.product.*");
  */
 class TestProduct extends UnitTest 
 {
-    /**
-     * @var Product
-     */
+	/**
+	 * @var Product
+	 */
 	private $product = null;
 	/**
 	 * @var Category
@@ -32,17 +32,17 @@ class TestProduct extends UnitTest
 	
 	public function getUsedSchemas()
 	{
-	    return array(
+		return array(
 			'Category', 
 			'Product', 
 			'ProductRelationship',
 			'ProductRelationshipGroup', 
 			'ProductFile', 
 			'ProductFileGroup'
-	    );
+		);
 	}
 	
-    public function setUp()
+	public function setUp()
 	{
 		parent::setUp();
 		
@@ -62,103 +62,103 @@ class TestProduct extends UnitTest
 	/**
 	 *  Disabled product, with 0 stock - the numbers shouldn't change
 	 */
-    public function testCategoryCountsWhenDisabledProductWithNoStockIsAdded()
+	public function testCategoryCountsWhenDisabledProductWithNoStockIsAdded()
 	{
-        $secondCategory = Category::getNewInstance($this->productCategory);
-        $secondCategory->save();
-        
-        $product = Product::getNewInstance($secondCategory);
-        $product->isEnabled->set(0);
-        $product->stockCount->set(0);     
-        $product->save();
-        
-        ActiveRecordModel::removeFromPool($secondCategory);
-        $sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
-        $this->assertEqual((int)$secondCategory->totalProductCount->get() + 1, (int)$sameCategory->totalProductCount->get());
-        $this->assertEqual((int)$secondCategory->activeProductCount->get(), (int)$sameCategory->activeProductCount->get());
-        $this->assertEqual((int)$secondCategory->availableProductCount->get(), (int)$sameCategory->availableProductCount->get());
-    }
+		$secondCategory = Category::getNewInstance($this->productCategory);
+		$secondCategory->save();
+		
+		$product = Product::getNewInstance($secondCategory);
+		$product->isEnabled->set(0);
+		$product->stockCount->set(0);	 
+		$product->save();
+		
+		ActiveRecordModel::removeFromPool($secondCategory);
+		$sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
+		$this->assertEqual((int)$secondCategory->totalProductCount->get() + 1, (int)$sameCategory->totalProductCount->get());
+		$this->assertEqual((int)$secondCategory->activeProductCount->get(), (int)$sameCategory->activeProductCount->get());
+		$this->assertEqual((int)$secondCategory->availableProductCount->get(), (int)$sameCategory->availableProductCount->get());
+	}
 	
 	/**
 	 *  Disabled product, with some stock - the numbers shouldn't change again
 	 */
-    public function testCategoryCountsWhenDisabledProductWithSomeStockIsAdded()
+	public function testCategoryCountsWhenDisabledProductWithSomeStockIsAdded()
 	{
-        $secondCategory = Category::getNewInstance($this->productCategory);
-        $secondCategory->save();
-        
-        $product = Product::getNewInstance($secondCategory);
-        $product->isEnabled->set(0);
-        $product->stockCount->set(5);        
-        $product->save();
-        
-        ActiveRecordModel::removeFromPool($secondCategory);
-        $sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
-        $this->assertEqual((int)$secondCategory->activeProductCount->get(), (int)$sameCategory->activeProductCount->get());
-        $this->assertEqual((int)$secondCategory->availableProductCount->get(), (int)$sameCategory->availableProductCount->get());
+		$secondCategory = Category::getNewInstance($this->productCategory);
+		$secondCategory->save();
+		
+		$product = Product::getNewInstance($secondCategory);
+		$product->isEnabled->set(0);
+		$product->stockCount->set(5);		
+		$product->save();
+		
+		ActiveRecordModel::removeFromPool($secondCategory);
+		$sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
+		$this->assertEqual((int)$secondCategory->activeProductCount->get(), (int)$sameCategory->activeProductCount->get());
+		$this->assertEqual((int)$secondCategory->availableProductCount->get(), (int)$sameCategory->availableProductCount->get());
 
-        // enable the product, so available and enabled product counts should INCREASE by one
-        $product->isEnabled->set(1);        
-        $product->save();
-        ActiveRecordModel::removeFromPool($sameCategory);
-        $sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
-        $this->assertEqual((int)$secondCategory->availableProductCount->get() + 1, (int)$sameCategory->availableProductCount->get());
-        $this->assertEqual((int)$secondCategory->activeProductCount->get() + 1, (int)$sameCategory->activeProductCount->get());
-        
-        // disable the product, so available and enabled product counts should DECREASE by one
-        $product->isEnabled->set(0);        
-        $product->save();
-        ActiveRecordModel::removeFromPool($sameCategory);
-        $sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
-        $this->assertEqual((int)$secondCategory->availableProductCount->get(), (int)$sameCategory->availableProductCount->get());
-        $this->assertEqual((int)$secondCategory->activeProductCount->get(), (int)$sameCategory->activeProductCount->get());        
-    }	
+		// enable the product, so available and enabled product counts should INCREASE by one
+		$product->isEnabled->set(1);		
+		$product->save();
+		ActiveRecordModel::removeFromPool($sameCategory);
+		$sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
+		$this->assertEqual((int)$secondCategory->availableProductCount->get() + 1, (int)$sameCategory->availableProductCount->get());
+		$this->assertEqual((int)$secondCategory->activeProductCount->get() + 1, (int)$sameCategory->activeProductCount->get());
+		
+		// disable the product, so available and enabled product counts should DECREASE by one
+		$product->isEnabled->set(0);		
+		$product->save();
+		ActiveRecordModel::removeFromPool($sameCategory);
+		$sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
+		$this->assertEqual((int)$secondCategory->availableProductCount->get(), (int)$sameCategory->availableProductCount->get());
+		$this->assertEqual((int)$secondCategory->activeProductCount->get(), (int)$sameCategory->activeProductCount->get());		
+	}	
 	
 	/**
 	 *  Enabled product, with some stock - the numbers should increase by one
 	 */
-    public function testCategoryCountsWhenEnabledProductWithSomeStockIsAdded()
+	public function testCategoryCountsWhenEnabledProductWithSomeStockIsAdded()
 	{
-        $secondCategory = Category::getNewInstance($this->productCategory);
-        $secondCategory->save();
-        
-        $product = Product::getNewInstance($secondCategory);
-        $product->isEnabled->set(1);
-        $product->stockCount->set(5);        
-        $product->save();
-        
-        ActiveRecordModel::removeFromPool($secondCategory);
-        $sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
-        $this->assertEqual((int)$secondCategory->activeProductCount->get() + 1, (int)$sameCategory->activeProductCount->get());
-        $this->assertEqual((int)$secondCategory->availableProductCount->get() + 1, (int)$sameCategory->availableProductCount->get());
-    }	
+		$secondCategory = Category::getNewInstance($this->productCategory);
+		$secondCategory->save();
+		
+		$product = Product::getNewInstance($secondCategory);
+		$product->isEnabled->set(1);
+		$product->stockCount->set(5);		
+		$product->save();
+		
+		ActiveRecordModel::removeFromPool($secondCategory);
+		$sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
+		$this->assertEqual((int)$secondCategory->activeProductCount->get() + 1, (int)$sameCategory->activeProductCount->get());
+		$this->assertEqual((int)$secondCategory->availableProductCount->get() + 1, (int)$sameCategory->availableProductCount->get());
+	}	
 
 	/**
 	 *  Enabled product, with some stock - the numbers should increase by one
 	 */
-    public function testCategoryCountsWhenEnabledProductWithNoStockIsAdded()
+	public function testCategoryCountsWhenEnabledProductWithNoStockIsAdded()
 	{
-        $secondCategory = Category::getNewInstance($this->productCategory);
-        $secondCategory->save();
-        
-        $product = Product::getNewInstance($secondCategory);
-        $product->isEnabled->set(1);
-        $product->stockCount->set(0);        
-        $product->save();
-        
-        ActiveRecordModel::removeFromPool($secondCategory);
-        $sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
-        $this->assertEqual((int)$secondCategory->activeProductCount->get() + 1, (int)$sameCategory->activeProductCount->get());
-        $this->assertEqual((int)$secondCategory->availableProductCount->get(), (int)$sameCategory->availableProductCount->get());
-        
-        // now add some stock, so available product count should increase by one
-        $product->stockCount->set(5);        
-        $product->save();
-        ActiveRecordModel::removeFromPool($sameCategory);
-        $sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
-        $this->assertEqual((int)$secondCategory->availableProductCount->get() + 1, (int)$sameCategory->availableProductCount->get());
-    }
-    
+		$secondCategory = Category::getNewInstance($this->productCategory);
+		$secondCategory->save();
+		
+		$product = Product::getNewInstance($secondCategory);
+		$product->isEnabled->set(1);
+		$product->stockCount->set(0);		
+		$product->save();
+		
+		ActiveRecordModel::removeFromPool($secondCategory);
+		$sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
+		$this->assertEqual((int)$secondCategory->activeProductCount->get() + 1, (int)$sameCategory->activeProductCount->get());
+		$this->assertEqual((int)$secondCategory->availableProductCount->get(), (int)$sameCategory->availableProductCount->get());
+		
+		// now add some stock, so available product count should increase by one
+		$product->stockCount->set(5);		
+		$product->save();
+		ActiveRecordModel::removeFromPool($sameCategory);
+		$sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
+		$this->assertEqual((int)$secondCategory->availableProductCount->get() + 1, (int)$sameCategory->availableProductCount->get());
+	}
+	
 	public function testSimpleValues()
 	{
 		// create some simple value attributes
@@ -323,7 +323,7 @@ class TestProduct extends UnitTest
 	
 	public function testLoadSpecification()
 	{	
-	    ActiveRecord::removeFromPool($this->product);
+		ActiveRecord::removeFromPool($this->product);
 
 		$this->product = Product::getInstanceByID($this->product->getID(), true);
 		$this->product->loadSpecification();
@@ -365,250 +365,250 @@ class TestProduct extends UnitTest
 
 	public function testAddRelatedProducts()
 	{
-	    $otherProducts = array();
-	    foreach(range(1, 2) as $i)
-	    {
+		$otherProducts = array();
+		foreach(range(1, 2) as $i)
+		{
 			$otherProducts[$i] = Product::getNewInstance($this->productCategory);
 			$otherProducts[$i]->save();
 			
-		    $this->product->addRelatedProduct($otherProducts[$i]);	
-	    }
+			$this->product->addRelatedProduct($otherProducts[$i]);	
+		}
 	
-	    $this->assertEqual(2, $this->product->getRelatedProducts()->getTotalRecordCount());
-	    foreach($this->product->getRelatedProducts() as $relatedProduct)
-	    {
-	        $this->assertIsA($relatedProduct, 'Product');
-	    }
-	    
-	    $this->product->reload();
-	    
-	    // All relationships will be lost unless product is saved
-	    $this->assertEqual(0, $this->product->getRelatedProducts()->getTotalRecordCount());
-	    
-	    foreach($otherProducts as $otherProduct) $this->product->addRelatedProduct($otherProduct);
-	    $this->product->save();
-	    
-	    // reload
-	    $this->product->reload();
-	    
-	    // all related products should be here
-	    $this->assertEqual(2, $this->product->getRelatedProducts()->getTotalRecordCount());
+		$this->assertEqual(2, $this->product->getRelatedProducts()->getTotalRecordCount());
+		foreach($this->product->getRelatedProducts() as $relatedProduct)
+		{
+			$this->assertIsA($relatedProduct, 'Product');
+		}
+		
+		$this->product->reload();
+		
+		// All relationships will be lost unless product is saved
+		$this->assertEqual(0, $this->product->getRelatedProducts()->getTotalRecordCount());
+		
+		foreach($otherProducts as $otherProduct) $this->product->addRelatedProduct($otherProduct);
+		$this->product->save();
+		
+		// reload
+		$this->product->reload();
+		
+		// all related products should be here
+		$this->assertEqual(2, $this->product->getRelatedProducts()->getTotalRecordCount());
 	}
 	
 	public function testGetRelationships()
 	{
-	    $otherProducts = array();
-	    foreach(range(1, 2) as $i)
-	    {
+		$otherProducts = array();
+		foreach(range(1, 2) as $i)
+		{
 			$otherProducts[$i] = Product::getNewInstance($this->productCategory);
 			$otherProducts[$i]->save();
 			
-		    $this->product->addRelatedProduct($otherProducts[$i]);	
-	    }
-	    
-	    $this->product->save();
-	    
-	    $this->product->reload();
-	    
-	    $i = 1;
-	    $this->assertEqual(2, $this->product->getRelationships()->getTotalRecordCount());
-	    foreach($this->product->getRelationships() as $relationship)
-	    {
-	        $this->assertIsA($relationship, 'ProductRelationship');
-	        $this->assertTrue($relationship->relatedProduct->get() === $otherProducts[$i]);
-	        
-	        $i++;
-	    }
+			$this->product->addRelatedProduct($otherProducts[$i]);	
+		}
+		
+		$this->product->save();
+		
+		$this->product->reload();
+		
+		$i = 1;
+		$this->assertEqual(2, $this->product->getRelationships()->getTotalRecordCount());
+		foreach($this->product->getRelationships() as $relationship)
+		{
+			$this->assertIsA($relationship, 'ProductRelationship');
+			$this->assertTrue($relationship->relatedProduct->get() === $otherProducts[$i]);
+			
+			$i++;
+		}
 	}
 	
 	public function testGetRelatedProducts()
 	{
-	    $otherProducts = array();
-	    foreach(range(1, 5) as $i)
-	    {
+		$otherProducts = array();
+		foreach(range(1, 5) as $i)
+		{
 			$otherProducts[$i] = Product::getNewInstance($this->productCategory);
 			$otherProducts[$i]->setValueByLang("name", "en", "Test");
 			$otherProducts[$i]->save();
 			
-		    $this->product->addRelatedProduct($otherProducts[$i]);	
-	    }
-	    
-	    $i = 1;
-	    $this->assertEqual(5, $this->product->getRelatedProducts()->getTotalRecordCount());
-	    foreach($this->product->getRelatedProducts() as $relatedProduct)
-	    {
-	        $this->assertIsA($relatedProduct, 'Product');
-	        $this->assertTrue($relatedProduct === $otherProducts[$i]);
-	        	        
-	        $i++;
-	    }
-	    
-	    // Save and reload
-	    $this->product->save();
-	    ActiveRecord::removeClassFromPool('Product');
-	    $this->product->load();
-	    
-	    $i = 1;
-	    $this->assertEqual(5, $this->product->getRelatedProducts()->getTotalRecordCount());
-	    foreach($this->product->getRelatedProducts() as $relatedProduct)
-	    {
-	        $this->assertIsA($relatedProduct, 'Product');
-	        $this->assertTrue($relatedProduct === $otherProducts[$i]);
-	        
-	        $relatedProductName = $relatedProduct->name->get();
-	        $this->assertEqual($relatedProductName['en'], 'Test');
-	        
-	        $i++;
-	    }
+			$this->product->addRelatedProduct($otherProducts[$i]);	
+		}
+		
+		$i = 1;
+		$this->assertEqual(5, $this->product->getRelatedProducts()->getTotalRecordCount());
+		foreach($this->product->getRelatedProducts() as $relatedProduct)
+		{
+			$this->assertIsA($relatedProduct, 'Product');
+			$this->assertTrue($relatedProduct === $otherProducts[$i]);
+						
+			$i++;
+		}
+		
+		// Save and reload
+		$this->product->save();
+		ActiveRecord::removeClassFromPool('Product');
+		$this->product->load();
+		
+		$i = 1;
+		$this->assertEqual(5, $this->product->getRelatedProducts()->getTotalRecordCount());
+		foreach($this->product->getRelatedProducts() as $relatedProduct)
+		{
+			$this->assertIsA($relatedProduct, 'Product');
+			$this->assertTrue($relatedProduct === $otherProducts[$i]);
+			
+			$relatedProductName = $relatedProduct->name->get();
+			$this->assertEqual($relatedProductName['en'], 'Test');
+			
+			$i++;
+		}
 	}
 	
 	public function testRemoveRelationship()
 	{
-	    $otherProducts = array();
-	    foreach(range(1, 2) as $i)
-	    {
+		$otherProducts = array();
+		foreach(range(1, 2) as $i)
+		{
 			$otherProducts[$i] = Product::getNewInstance($this->productCategory);
 			$otherProducts[$i]->save();
-		    $this->product->addRelatedProduct($otherProducts[$i]);			
-	    }
-	    $this->product->save();
-	    
-	    foreach($this->product->getRelatedProducts() as $relatedProduct)
-	    {
-	        $this->product->removeFromRelatedProducts($relatedProduct);
-	    }
-	    $this->assertEqual(0, $this->product->getRelatedProducts()->getTotalRecordCount());
-	    
-	    // reload
-	    $this->product->reload();
-	    
-	    // Relationships are not removed from database unless the product is saved
-	    $this->assertEqual(2, $this->product->getRelatedProducts()->getTotalRecordCount());
-	    
-	    $this->product->save();
-	    
-	    // Now they are removed
-	    foreach($this->product->getRelatedProducts() as $relatedProduct)
-	    {
-	        $this->product->removeFromRelatedProducts($relatedProduct);
-	    }
-	    $this->assertEqual(0, $this->product->getRelatedProducts()->getTotalRecordCount());
+			$this->product->addRelatedProduct($otherProducts[$i]);			
+		}
+		$this->product->save();
+		
+		foreach($this->product->getRelatedProducts() as $relatedProduct)
+		{
+			$this->product->removeFromRelatedProducts($relatedProduct);
+		}
+		$this->assertEqual(0, $this->product->getRelatedProducts()->getTotalRecordCount());
+		
+		// reload
+		$this->product->reload();
+		
+		// Relationships are not removed from database unless the product is saved
+		$this->assertEqual(2, $this->product->getRelatedProducts()->getTotalRecordCount());
+		
+		$this->product->save();
+		
+		// Now they are removed
+		foreach($this->product->getRelatedProducts() as $relatedProduct)
+		{
+			$this->product->removeFromRelatedProducts($relatedProduct);
+		}
+		$this->assertEqual(0, $this->product->getRelatedProducts()->getTotalRecordCount());
 	}
 	
 
 	public function testIsRelatedTo()
 	{
-	    $notRelatedProduct = Product::getNewInstance($this->productCategory);
-	    $notRelatedProduct->save();
-	    
+		$notRelatedProduct = Product::getNewInstance($this->productCategory);
+		$notRelatedProduct->save();
+		
 		$relatedProduct = Product::getNewInstance($this->productCategory);
 		$relatedProduct->save();
-	    
+		
 		$this->product->addRelatedProduct($relatedProduct);	
-	    $this->product->save();
-	    
-	    $this->assertFalse($notRelatedProduct->isRelatedTo($this->product));
-	    $this->assertTrue($relatedProduct->isRelatedTo($this->product));
-	    
-	    // isRelatedTo provide one direction testing is related to means that 
+		$this->product->save();
+		
+		$this->assertFalse($notRelatedProduct->isRelatedTo($this->product));
+		$this->assertTrue($relatedProduct->isRelatedTo($this->product));
+		
+		// isRelatedTo provide one direction testing is related to means that 
 		// this product is in that product's related products list
-	    $this->assertFalse($this->product->isRelatedTo($relatedProduct));
+		$this->assertFalse($this->product->isRelatedTo($relatedProduct));
 	}
 
 	public function testGetRelationshipGroups()
 	{
-	    $this->assertEqual($this->product->getRelationshipGroups()->getTotalRecordCount(), 0);
+		$this->assertEqual($this->product->getRelationshipGroups()->getTotalRecordCount(), 0);
 	   
 		$relationship = ProductRelationshipGroup::getNewInstance($this->product);
-	    $this->assertEqual($this->product->getRelationshipGroups()->getTotalRecordCount(), 0);
-	    
+		$this->assertEqual($this->product->getRelationshipGroups()->getTotalRecordCount(), 0);
+		
 		$relationship->save();
-	    $this->assertEqual($this->product->getRelationshipGroups()->getTotalRecordCount(), 1);
+		$this->assertEqual($this->product->getRelationshipGroups()->getTotalRecordCount(), 1);
 	}
 	
 	public function testGetFileGroups()
 	{
-	    $this->assertEqual($this->product->getFileGroups()->getTotalRecordCount(), 0);
+		$this->assertEqual($this->product->getFileGroups()->getTotalRecordCount(), 0);
 	   
 		$fileGroup = ProductFileGroup::getNewInstance($this->product);
-	    $this->assertEqual($this->product->getFileGroups()->getTotalRecordCount(), 0);
-	    
+		$this->assertEqual($this->product->getFileGroups()->getTotalRecordCount(), 0);
+		
 		$fileGroup->save();
-	    $this->assertEqual($this->product->getFileGroups()->getTotalRecordCount(), 1);
+		$this->assertEqual($this->product->getFileGroups()->getTotalRecordCount(), 1);
 	}
 
 	public function testGetFiles()
 	{
-	    $productFiles = array();
-	    $productFilesO = array();
-	    foreach(range(1, 2) as $i)
-	    {
-		    file_put_contents($productFiles[$i] = md5($i), 'All Your Base Are Belong To Us');
-		    $productFilesO[$i] = ProductFile::getNewInstance($this->product, $productFiles[$i], 'test_file.txt');
-		    $productFilesO[$i]->save();
-	    }
-	    	    
-	    $this->assertEqual($this->product->getFiles()->getTotalRecordCount(), 2);
-        
-	    foreach($productFilesO as $file) 
-	    {
-	       $file->delete();
-	    }
+		$productFiles = array();
+		$productFilesO = array();
+		foreach(range(1, 2) as $i)
+		{
+			file_put_contents($productFiles[$i] = md5($i), 'All Your Base Are Belong To Us');
+			$productFilesO[$i] = ProductFile::getNewInstance($this->product, $productFiles[$i], 'test_file.txt');
+			$productFilesO[$i]->save();
+		}
+				
+		$this->assertEqual($this->product->getFiles()->getTotalRecordCount(), 2);
+		
+		foreach($productFilesO as $file) 
+		{
+		   $file->delete();
+		}
 	}
 	
 	public function testMergeGroupsWithFIlters()
 	{
-	    // create groups
-	    $productGroup = array();
-	    foreach(range(1, 3) as $i)
-	    {
-		    $productGroup[$i] = ProductFileGroup::getNewInstance($this->product);
-		    $productGroup[$i]->save();
-	    }	
-	    
-	    // create files
-        $productFile = array();
-        $productFiles = array();
-	    foreach(range(1, 2) as $i)
-	    {
-		    file_put_contents($productFiles[$i] = md5($i), "file $i");
-		    $productFile[$i] = ProductFile::getNewInstance($this->product, $productFiles[$i], "test_file_$i.txt");
-		    $productFile[$i]->save();
-	    }
-	    
-	    $productFile[1]->productFileGroup->set($productGroup[2]);
-	    $productFile[1]->save();
-	    
-	    $this->assertEqual($this->product->getFileGroups()->getTotalRecordCount(), 3);
-	    $this->assertEqual($this->product->getFiles()->getTotalRecordCount(), 2);
-	    
-	    $filesMergedWithGroups = $this->product->getFilesMergedWithGroupsArray();
-	    
-	    $this->assertEqual(count($filesMergedWithGroups), 4);
-	    
-	    // Check files without group    
-	    $this->assertTrue(isset($filesMergedWithGroups[1]['ID']));
-	    $this->assertEqual($filesMergedWithGroups[1]['ID'], $productFile[2]->getID());
-	    $this->assertFalse(isset($filesMergedWithGroups[1]['ProductFileGroup']['ID']));
-	    
-	    // Check first group
-	    $this->assertFalse(isset($filesMergedWithGroups[2]['ID']));
-	    $this->assertTrue(isset($filesMergedWithGroups[2]['ProductFileGroup']['ID']));
-	    $this->assertEqual($filesMergedWithGroups[2]['ProductFileGroup']['ID'], $productGroup[1]->getID());
-	    
-	    // Check second group
-	    $this->assertTrue(isset($filesMergedWithGroups[3]['ID']));
-	    $this->assertEqual($filesMergedWithGroups[3]['ID'], $productFile[1]->getID());
-	    $this->assertTrue(isset($filesMergedWithGroups[3]['ProductFileGroup']['ID']));
-	    $this->assertEqual($filesMergedWithGroups[3]['ProductFileGroup']['ID'], $productGroup[2]->getID());
-	    
-	    // Check second group
-	    $this->assertFalse(isset($filesMergedWithGroups[4]['ID']));
-	    $this->assertTrue(isset($filesMergedWithGroups[4]['ProductFileGroup']['ID']));
-	    $this->assertEqual($filesMergedWithGroups[4]['ProductFileGroup']['ID'], $productGroup[3]->getID());
-	    
-	    foreach($productFiles as $fileName) unlink($fileName);
-	    foreach($productFile as $file) $file->delete();
+		// create groups
+		$productGroup = array();
+		foreach(range(1, 3) as $i)
+		{
+			$productGroup[$i] = ProductFileGroup::getNewInstance($this->product);
+			$productGroup[$i]->save();
+		}	
+		
+		// create files
+		$productFile = array();
+		$productFiles = array();
+		foreach(range(1, 2) as $i)
+		{
+			file_put_contents($productFiles[$i] = md5($i), "file $i");
+			$productFile[$i] = ProductFile::getNewInstance($this->product, $productFiles[$i], "test_file_$i.txt");
+			$productFile[$i]->save();
+		}
+		
+		$productFile[1]->productFileGroup->set($productGroup[2]);
+		$productFile[1]->save();
+		
+		$this->assertEqual($this->product->getFileGroups()->getTotalRecordCount(), 3);
+		$this->assertEqual($this->product->getFiles()->getTotalRecordCount(), 2);
+		
+		$filesMergedWithGroups = $this->product->getFilesMergedWithGroupsArray();
+		
+		$this->assertEqual(count($filesMergedWithGroups), 4);
+		
+		// Check files without group	
+		$this->assertTrue(isset($filesMergedWithGroups[1]['ID']));
+		$this->assertEqual($filesMergedWithGroups[1]['ID'], $productFile[2]->getID());
+		$this->assertFalse(isset($filesMergedWithGroups[1]['ProductFileGroup']['ID']));
+		
+		// Check first group
+		$this->assertFalse(isset($filesMergedWithGroups[2]['ID']));
+		$this->assertTrue(isset($filesMergedWithGroups[2]['ProductFileGroup']['ID']));
+		$this->assertEqual($filesMergedWithGroups[2]['ProductFileGroup']['ID'], $productGroup[1]->getID());
+		
+		// Check second group
+		$this->assertTrue(isset($filesMergedWithGroups[3]['ID']));
+		$this->assertEqual($filesMergedWithGroups[3]['ID'], $productFile[1]->getID());
+		$this->assertTrue(isset($filesMergedWithGroups[3]['ProductFileGroup']['ID']));
+		$this->assertEqual($filesMergedWithGroups[3]['ProductFileGroup']['ID'], $productGroup[2]->getID());
+		
+		// Check second group
+		$this->assertFalse(isset($filesMergedWithGroups[4]['ID']));
+		$this->assertTrue(isset($filesMergedWithGroups[4]['ProductFileGroup']['ID']));
+		$this->assertEqual($filesMergedWithGroups[4]['ProductFileGroup']['ID'], $productGroup[3]->getID());
+		
+		foreach($productFiles as $fileName) unlink($fileName);
+		foreach($productFile as $file) $file->delete();
 	}
 }
 

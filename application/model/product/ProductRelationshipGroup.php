@@ -12,8 +12,8 @@ ClassLoader::import("application.model.product.ProductParametersGroup");
 class ProductRelationshipGroup extends ProductParametersGroup 
 {
 	private static $nextPosition = false;
-    
-    public static function defineSchema($className = __CLASS__)
+	
+	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = parent::defineSchema($className);
 		$schema->setName("ProductRelationshipGroup");
@@ -45,7 +45,7 @@ class ProductRelationshipGroup extends ProductParametersGroup
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
 	{
-	    return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
+		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
 	}
 	
 	/**
@@ -68,26 +68,26 @@ class ProductRelationshipGroup extends ProductParametersGroup
 	 */
 	public static function getProductGroups(Product $product)
 	{
-	    return self::getRecordSet(self::getProductGroupsFilter($product), !ActiveRecord::LOAD_REFERENCES);
+		return self::getRecordSet(self::getProductGroupsFilter($product), !ActiveRecord::LOAD_REFERENCES);
 	}
 	
 	public static function getProductGroupArray(Product $product)
 	{
-	    return parent::getRecordSetArray(__CLASS__, self::getProductGroupsFilter($product), !ActiveRecord::LOAD_REFERENCES);
+		return parent::getRecordSetArray(__CLASS__, self::getProductGroupsFilter($product), !ActiveRecord::LOAD_REFERENCES);
 	}
 
 	private static function getProductGroupsFilter(Product $product)
 	{
-	    $filter = new ARSelectFilter();
+		$filter = new ARSelectFilter();
 		$filter->setOrder(new ARFieldHandle("ProductRelationshipGroup", "position"), 'ASC');
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("ProductRelationshipGroup", "productID"), $product->getID()));
 		
 		return $filter;
-	}    
+	}	
 
 	public static function mergeGroupsWithFields($groups, $fields)
 	{
-	    return parent::mergeGroupsWithFields(__CLASS__, $groups, $fields);
+		return parent::mergeGroupsWithFields(__CLASS__, $groups, $fields);
 	}
 }
 

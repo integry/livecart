@@ -17,14 +17,14 @@ class LanguageController extends StoreManagementController
 {	
 	const langFileExt = 'lng';
 
-    public function export()
-    {
+	public function export()
+	{
 		// preload current locale
 		$this->locale;
 		
 		$tempDir = ClassLoader::getRealPath('cache.tmp.' . rand(1, 10000000));
 		
-        $locale = Locale::getInstance($this->request->get('id'));
+		$locale = Locale::getInstance($this->request->get('id'));
 
 		$fileDir = ClassLoader::getRealPath('application.configuration.language.en');
 		$files = $locale->translationManager()->getDefinitionFiles($fileDir);
@@ -45,25 +45,25 @@ class LanguageController extends StoreManagementController
 			// get translated definitions
 			$transl = $locale->translationManager()->getCacheDefs($relPath, true);
 			
-            $transl = array_merge($default, $transl);
-            
-            $values = array();
-            foreach($transl as $key => $value)
-            {
-                $values[] = $key . '=' . $value;
-            }
-            
-            $path = $tempDir . '/' . $locale->getLocaleCode() . '/' . $relPath;
+			$transl = array_merge($default, $transl);
+			
+			$values = array();
+			foreach($transl as $key => $value)
+			{
+				$values[] = $key . '=' . $value;
+			}
+			
+			$path = $tempDir . '/' . $locale->getLocaleCode() . '/' . $relPath;
 
-            if ($values)
-            {
-                if (!is_dir(dirname($path)))
-                {
-                    mkdir(dirname($path), null, true);
-                }
+			if ($values)
+			{
+				if (!is_dir(dirname($path)))
+				{
+					mkdir(dirname($path), null, true);
+				}
 
-                file_put_contents($path, implode("\n", $values));
-            }
+				file_put_contents($path, implode("\n", $values));
+			}
 		}
 		
 		// put the files in zip archive
@@ -71,11 +71,11 @@ class LanguageController extends StoreManagementController
 		
 		if (!is_dir($tempDir))
 		{
-            return new ActionRedirectResponse('backend.language', 'edit', array('id' => $locale->getLocaleCode()));
-        }
+			return new ActionRedirectResponse('backend.language', 'edit', array('id' => $locale->getLocaleCode()));
+		}
 		
 		chdir($tempDir);
-        $zip = $tempDir . '/temp.zip';
+		$zip = $tempDir . '/temp.zip';
 		$archive = new PclZip($zip);
 		$archive->add($locale->getLocaleCode());
 		
@@ -86,27 +86,27 @@ class LanguageController extends StoreManagementController
 		$this->delTree($tempDir);
 		
 		return $response;		
-    }
+	}
 
-    private function delTree($path) 
-    {
-        if (is_dir($path)) 
-        {
-            $entries = scandir($path);
-            foreach ($entries as $entry) 
-            {
-                if ($entry != '.' && $entry != '..') 
-                {
-                    $this->delTree($path . DIRECTORY_SEPARATOR . $entry);
-                }
-            }            
-            rmdir($path);
-        } 
-        else 
-        {
-            unlink($path);
-        }
-    }
+	private function delTree($path) 
+	{
+		if (is_dir($path)) 
+		{
+			$entries = scandir($path);
+			foreach ($entries as $entry) 
+			{
+				if ($entry != '.' && $entry != '..') 
+				{
+					$this->delTree($path . DIRECTORY_SEPARATOR . $entry);
+				}
+			}			
+			rmdir($path);
+		} 
+		else 
+		{
+			unlink($path);
+		}
+	}
 
 	/**
 	 * Gets definitions from project files and updates them in database.
@@ -149,17 +149,17 @@ class LanguageController extends StoreManagementController
 			
 			// get default English definitions (to get all definition keys)
 			$keys = $enLocale->translationManager()->getFileDefs($file);
-            
-            $enDefs[$relPath] = $keys;
+			
+			$enDefs[$relPath] = $keys;
 
 			foreach ($enDefs[$relPath] as &$value)
 			{
-                $value = htmlspecialchars($value);
-            }
+				$value = htmlspecialchars($value);
+			}
 
 		  	foreach ($keys as $key => $value)
 		  	{
-			    $keys[$key] = '';
+				$keys[$key] = '';
 			}
 				  		  			
 			// get language default definitions
@@ -180,14 +180,14 @@ class LanguageController extends StoreManagementController
 		
 		if (!$this->config->get('SHOW_BACKEND_LANG_FILES'))
 		{
-            foreach ($enDefs as $key => $value)
-            {
-                if (substr($key, 0, 7) == 'backend' || 'Install.lng' == $key)
-                {
-                    unset($enDefs[$key]);                    
-                }
-            }
-        }
+			foreach ($enDefs as $key => $value)
+			{
+				if (substr($key, 0, 7) == 'backend' || 'Install.lng' == $key)
+				{
+					unset($enDefs[$key]);					
+				}
+			}
+		}
 		
 		$response = new ActionResponse();
 		$response->set("id", $editLocaleName);
@@ -198,20 +198,20 @@ class LanguageController extends StoreManagementController
 		return $response;
 	}
 
-    private function sortTranslations($a, $b)
-    {
-        $dirA = substr($a, 0, strrpos($a, '/'));
-        $dirB = substr($b, 0, strrpos($b, '/'));
-        
-        if ($dirA == $dirB)
-        {
-            return $a > $b ? -1 : 1;   
-        }
-        else
-        {
-            return $dirA > $dirB ? -1 : 1;               
-        }        
-    }
+	private function sortTranslations($a, $b)
+	{
+		$dirA = substr($a, 0, strrpos($a, '/'));
+		$dirB = substr($b, 0, strrpos($b, '/'));
+		
+		if ($dirA == $dirB)
+		{
+			return $a > $b ? -1 : 1;   
+		}
+		else
+		{
+			return $dirA > $dirB ? -1 : 1;			   
+		}		
+	}
 
 	/**
 	 * Saves translations

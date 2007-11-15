@@ -5,21 +5,21 @@
 {include file="layout/backend/header.tpl"}
 
 <table id="versionCompare">
-    <tr>
-        <td>{t _newest}:</td>
-        <td class="version">{$newest}</td>
-    </tr>
-    <tr>
-        <td>{t _current}:</td>
-        <td class="version {if $needUpdate}outdated{else}upToDate{/if}">{$current}</td>
-    </tr>
+	<tr>
+		<td>{t _newest}:</td>
+		<td class="version">{$newest}</td>
+	</tr>
+	<tr>
+		<td>{t _current}:</td>
+		<td class="version {if $needUpdate}outdated{else}upToDate{/if}">{$current}</td>
+	</tr>
 </table>
 
 <p>
 {if $needUpdate}
-    {t _newer_available}.
+	{t _newer_available}.
 {else}
-    {t _up_to_date}
+	{t _up_to_date}
 {/if}
 </p>
 

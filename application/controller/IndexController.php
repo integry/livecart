@@ -13,15 +13,15 @@ class IndexController extends CategoryController
 {
 	public function index() 
 	{
-        ClassLoader::import('application.controller.CategoryController');
+		ClassLoader::import('application.controller.CategoryController');
 		
 		$this->request->set('id', Category::ROOT_ID);
 		$this->request->set('cathandle', '.');
-		        
+				
 		$response = parent::index();
 		
 		// load site news
-        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
 		$f->setOrder(new ARFieldHandle('NewsPost', 'position'), 'DESC');
 		$f->setLimit($this->config->get('NUM_NEWS_INDEX') + 1);
 		$news = ActiveRecordModel::getRecordSetArray('NewsPost', $f);

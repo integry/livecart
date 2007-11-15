@@ -12,11 +12,11 @@ ClassLoader::import('library.image.ImageManipulator');
  */
 abstract class ObjectImageController extends StoreManagementController
 {
-    abstract protected function getModelClass();
-    abstract protected function getOwnerClass();
-    abstract protected function getForeignKeyName();
-	    
-    public function index()
+	abstract protected function getModelClass();
+	abstract protected function getOwnerClass();
+	abstract protected function getForeignKeyName();
+		
+	public function index()
 	{
 		$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), (int)$this->request->get('id'));
 		$filter = new ARSelectFilter();
@@ -31,7 +31,7 @@ abstract class ObjectImageController extends StoreManagementController
 		$response->set('ownerId', $owner->getID());
 		$response->set('images', json_encode($imageArray));
 		return $response;		  
-	}    
+	}	
 	
 	public function upload()
 	{	
@@ -169,29 +169,29 @@ abstract class ObjectImageController extends StoreManagementController
 			
 		foreach ($order as $key => $value)
 		{
-            $update = new ARUpdateFilter();
+			$update = new ARUpdateFilter();
 			$update->setCondition(new EqualsCond(new ARFieldHandle($this->getModelClass(), 'ID'), $value));
 			$update->addModifier('position', $key);
 			ActiveRecord::updateRecordSet($this->getModelClass(), $update);  	
 		}
 
-        // set owners main image
-        if (isset($order[0]))
-        {
-            $owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), $ownerId);
-            $owner->defaultImage->set(ActiveRecordModel::getInstanceByID($this->getModelClass(), $order[0]));
-            $owner->save();            
-        }
+		// set owners main image
+		if (isset($order[0]))
+		{
+			$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), $ownerId);
+			$owner->defaultImage->set(ActiveRecordModel::getInstanceByID($this->getModelClass(), $order[0]));
+			$owner->save();			
+		}
 
 		$resp = new RawResponse();
 	  	$resp->setContent($this->request->get('draggedId'));
 		return $resp;		  	
 	}				
 	
-    private function filterOrder($item)
-    {
-        return trim($item);
-    }
+	private function filterOrder($item)
+	{
+		return trim($item);
+	}
 	
 	/**
 	 * Builds an image upload form validator

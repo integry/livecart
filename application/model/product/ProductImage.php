@@ -27,73 +27,73 @@ class ProductImage extends ObjectImage
 	
 	/*####################  Value retrieval and manipulation ####################*/		
 	
-    public function getPath($size = 0)
+	public function getPath($size = 0)
 	{
 		if (!$this->isLoaded)
 		{
-            $this->load(array('Product'));    
-        }   
-        
+			$this->load(array('Product'));	
+		}   
+		
 		return self::getImagePath($this->getID(), $this->product->get()->getID(), $size);
 	}
 	
 	public static function getImageSizes()
 	{
-        $config = self::getApplication()->getConfig();
-     
-        $sizes = array();
-        $k = 0;
-        while ($config->isValueSet('IMG_P_W_' . ++$k))
-        {
-            $sizes[$k] = array($config->get('IMG_P_W_' . $k), $config->get('IMG_P_H_' . $k));
-        }
+		$config = self::getApplication()->getConfig();
+	 
+		$sizes = array();
+		$k = 0;
+		while ($config->isValueSet('IMG_P_W_' . ++$k))
+		{
+			$sizes[$k] = array($config->get('IMG_P_W_' . $k), $config->get('IMG_P_H_' . $k));
+		}
 
-        return $sizes;
-    }
+		return $sizes;
+	}
 	
 	protected static function getImagePath($imageID, $productID, $size)
 	{
-        return 'upload/productimage/' . $productID. '-' . $imageID . '-' . $size . '.jpg';
-    }
+		return 'upload/productimage/' . $productID. '-' . $imageID . '-' . $size . '.jpg';
+	}
 				
 	/*####################  Saving ####################*/		
 	
 	public static function deleteByID($id)
 	{
-        parent::deleteByID(__CLASS__, $id, 'productID');
-    }
+		parent::deleteByID(__CLASS__, $id, 'productID');
+	}
 	
-    protected function insert()
-    {
-        return parent::insert('productID');
-    }
+	protected function insert()
+	{
+		return parent::insert('productID');
+	}
 
 	/*####################  Data array transformation ####################*/	
 
 	public static function transformArray($array, ARSchema $schema)
 	{
 		$array = parent::transformArray($array, $schema);
-        
-        $array['paths'] = array();
+		
+		$array['paths'] = array();
 		foreach (self::getImageSizes() as $key => $value)
 	  	{
 			$productID = isset($array['Product']['ID']) ? $array['Product']['ID'] : (isset($array['productID']) ? $array['productID'] : false);
 			
 			if (!$productID)
 			{
-                break;
-            }
+				break;
+			}
 			
-            $array['paths'][$key] = self::getImagePath($array['ID'], $productID, $key);
+			$array['paths'][$key] = self::getImagePath($array['ID'], $productID, $key);
 		}
 
 		return $array;	  	
 	}	
 	
-	/*####################  Get related objects ####################*/    	
+	/*####################  Get related objects ####################*/		
 
-    public function getOwner()
-    {
+	public function getOwner()
+	{
 		return $this->product->get();
 	}		
 }

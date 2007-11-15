@@ -14,7 +14,7 @@ Ja radušies kādi jautājumi par pasūtījumu, lūdzu sūtiet e-pastu vai izman
 Jaunais statuss: {if $shipment.status == 2}gaida sūtījumu{elseif $shipment.status == 3}nosūtīts{elseif $shipment.status == 4}atgriezts{else}tiek apstrādāts{/if}
 
 ------------------------------------------------------------
-Produkts                       Cena      Skaits    Summa
+Produkts					   Cena	  Skaits	Summa
 ------------------------------------------------------------
 {foreach from=$shipment.items item=item}
 {$item.Product.name_lang|truncate:29:"...":"true"|@str_pad:31}{$item.formattedPrice|truncate:9:"..."|@str_pad:10}{$item.count|truncate:8:"..."|@str_pad:9}{$item.formattedSubTotal}

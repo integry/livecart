@@ -19,7 +19,7 @@ function smarty_function_filefield($params, $smarty)
 	// Check permissions
 	if($formParams['readonly'])
 	{	
-        $params['disabled'] = 'disabled';
+		$params['disabled'] = 'disabled';
 	}
 	
 	$content = '<input type="file"';

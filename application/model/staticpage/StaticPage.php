@@ -37,7 +37,7 @@ class StaticPage extends MultilingualObject
 	 * @return StaticPage
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
-	{		    
+	{			
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
 	
@@ -70,7 +70,7 @@ class StaticPage extends MultilingualObject
 		
 		if (!$this->handle->get())
 		{
-            $this->handle->set(createHandleString($this->getValueByLang('title')));
+			$this->handle->set(createHandleString($this->getValueByLang('title')));
 		}
 	
 		parent::save($forceOperation);
@@ -90,18 +90,18 @@ class StaticPage extends MultilingualObject
 		
 		if (!$this->isLoaded())
 		{
-            $this->loadFile();
-    		$lang = self::getApplication()->getLocaleCode();
-    		
-    		$array['title_lang'] = $this->getValueByLang('title', $lang);
-    		$array['text_lang'] = $this->getValueByLang('text', $lang);            
-        }
+			$this->loadFile();
+			$lang = self::getApplication()->getLocaleCode();
+			
+			$array['title_lang'] = $this->getValueByLang('title', $lang);
+			$array['text_lang'] = $this->getValueByLang('text', $lang);			
+		}
 
-        // when the instance is not loaded
-        if (!$array['handle'])
-        {
-            $array['handle'] = $this->handle->get();
-        }
+		// when the instance is not loaded
+		if (!$array['handle'])
+		{
+			$array['handle'] = $this->handle->get();
+		}
 
 		return $array;
 	}
@@ -133,8 +133,8 @@ class StaticPage extends MultilingualObject
 			mkdir($dir, 0777, true);
 		}
 		
-		file_put_contents($this->getFileName(), '<?php $pageData = ' . var_export($fileData, true) . '; ?>');       
-    }
+		file_put_contents($this->getFileName(), '<?php $pageData = ' . var_export($fileData, true) . '; ?>');	   
+	}
 	
 	private function loadFile()
 	{
@@ -142,19 +142,19 @@ class StaticPage extends MultilingualObject
 		{
 			if (!file_exists($this->getFileName()))
 			{
-                $this->load();
-                $this->saveFile();       
-            }
-            
-            include $this->getFileName();
+				$this->load();
+				$this->saveFile();	   
+			}
+			
+			include $this->getFileName();
 			$this->title->set($pageData['title']);
 
 			if (!$this->handle->get())
 			{
-                $this->handle->set($pageData['handle']);
-            }
+				$this->handle->set($pageData['handle']);
+			}
 
-            $this->isFileLoaded = true;
+			$this->isFileLoaded = true;
 		}		
 	}	
 }

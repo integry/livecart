@@ -34,10 +34,10 @@ class ProductFile extends ObjectFile
 	 */
 	public static function getNewInstance(Product $product, $filePath, $fileName)
 	{
-	    $productFileInstance = parent::getNewInstance(__CLASS__, $filePath, $fileName);
-	    $productFileInstance->product->set($product);
-	    
-	    return $productFileInstance;
+		$productFileInstance = parent::getNewInstance(__CLASS__, $filePath, $fileName);
+		$productFileInstance->product->set($product);
+		
+		return $productFileInstance;
 	}
 
 	/**
@@ -51,7 +51,7 @@ class ProductFile extends ObjectFile
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
 	{
-	    return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
+		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
 	
 	/**
@@ -64,7 +64,7 @@ class ProductFile extends ObjectFile
 	 */
 	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
-	    return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
+		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 		
 	/**
@@ -75,19 +75,19 @@ class ProductFile extends ObjectFile
 	 */
 	public static function getFilesByProduct(Product $product)
 	{
-	    return self::getRecordSet(self::getFilesByProductFilter($product));
+		return self::getRecordSet(self::getFilesByProductFilter($product));
 	}
 	
 	private static function getFilesByProductFilter(Product $product)
 	{
-	    $filter = new ARSelectFilter();	
+		$filter = new ARSelectFilter();	
 		$filter->joinTable('ProductFileGroup', 'ProductFile', 'ID', 'productFileGroupID');	
 		
 		$filter->setOrder(new ARFieldHandle("ProductFileGroup", "position"), ARSelectFilter::ORDER_ASC);		
-	    $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), $product->getID()));
-	    $filter->setOrder(new ARFieldHandle(__CLASS__, 'position'), ARSelectFilter::ORDER_ASC);
-	    
-	    return $filter;
+		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), $product->getID()));
+		$filter->setOrder(new ARFieldHandle(__CLASS__, 'position'), ARSelectFilter::ORDER_ASC);
+		
+		return $filter;
 	}
 }
 

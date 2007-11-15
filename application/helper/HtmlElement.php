@@ -39,7 +39,7 @@ class HtmlElement
 	 */
 	public function __construct($tag)
   	{
-		$this->tag = $tag;	    
+		$this->tag = $tag;		
 	}
 	
 	/**
@@ -52,7 +52,7 @@ class HtmlElement
 	{
 	  	if (!$value)
 	  	{
-		    unset($this->attributes[$attribute]);
+			unset($this->attributes[$attribute]);
 		}
 		
 		$this->attributes[$attribute] = $value;

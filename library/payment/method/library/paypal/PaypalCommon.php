@@ -94,35 +94,35 @@ class PaypalCommon
 		}		
 	}
 	
-    public function getValidCurrency($currentCurrencyCode)
-    {
-        $currentCurrencyCode = strtoupper($currentCurrencyCode);
-        return in_array($currentCurrencyCode, self::getSupportedCurrencies()) ? $currentCurrencyCode : 'USD';
-    }	
-    
-    public static function getSupportedCurrencies()
-    {
-        return array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD', 'NZD', 'CHF', 'HKD', 'SGD', 'SEK', 'DKK', 'PLN', 'NOK', 'HUF', 'CZK');
-    }
-    
+	public function getValidCurrency($currentCurrencyCode)
+	{
+		$currentCurrencyCode = strtoupper($currentCurrencyCode);
+		return in_array($currentCurrencyCode, self::getSupportedCurrencies()) ? $currentCurrencyCode : 'USD';
+	}	
+	
+	public static function getSupportedCurrencies()
+	{
+		return array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD', 'NZD', 'CHF', 'HKD', 'SGD', 'SEK', 'DKK', 'PLN', 'NOK', 'HUF', 'CZK');
+	}
+	
 	/**
 	 *  DoCapture implementation for all PayPal payment classes
 	 */
-    public function processCapture(TransactionPayment $handler)
+	public function processCapture(TransactionPayment $handler)
 	{
 		$details = $handler->getDetails();
 		$paypal = $handler->getHandler('DoCapture');
 		
-        $paypal->setParams($details->gatewayTransactionID->get(), $details->amount->get(), $details->currency->get(), $details->isCompleted->get() ? 'Complete' : 'NotComplete', '', $details->invoiceID->get());
+		$paypal->setParams($details->gatewayTransactionID->get(), $details->amount->get(), $details->currency->get(), $details->isCompleted->get() ? 'Complete' : 'NotComplete', '', $details->invoiceID->get());
 		
 		$paypal->execute();
 		
 		if ($paypal->success())
 		{
-		    $response = $paypal->getAPIResponse();
+			$response = $paypal->getAPIResponse();
 
-		    if (isset($response->Errors))
-		    {
+			if (isset($response->Errors))
+			{
 				return new TransactionError($response->Errors->LongMessage, $response);
 			}
 			else
@@ -136,14 +136,14 @@ class PaypalCommon
 				$result->currency->set($response->Currency);
 
 				$result->rawResponse->set($response);
-                $result->setTransactionType(TransactionResult::TYPE_CAPTURE);
+				$result->setTransactionType(TransactionResult::TYPE_CAPTURE);
 
 				return $result;
 			}
 		}
 		else
 		{
-		    return $paypal->getAPIException();
+			return $paypal->getAPIException();
 		}			
 	}
 
@@ -161,10 +161,10 @@ class PaypalCommon
 		
 		if ($paypal->success())
 		{
-		    $response = $paypal->getAPIResponse();
+			$response = $paypal->getAPIResponse();
 
-		    if (isset($response->Errors))
-		    {
+			if (isset($response->Errors))
+			{
 				return new TransactionError($response->Errors->LongMessage, $response);
 			}
 			else
@@ -172,20 +172,20 @@ class PaypalCommon
 				$result = new TransactionResult();
 
 				$result->rawResponse->set($response);
-                $result->setTransactionType(TransactionResult::TYPE_VOID);
+				$result->setTransactionType(TransactionResult::TYPE_VOID);
 
 				return $result;
 			}
 		}
 		else
 		{
-		    return $paypal->getAPIException();
+			return $paypal->getAPIException();
 		}		
 	}	
 	
-    public function getHandler(TransactionPayment $handler, $api)
-    {
-	    set_time_limit(0);
+	public function getHandler(TransactionPayment $handler, $api)
+	{
+		set_time_limit(0);
 		
 		$username = $handler->getConfigValue('username');		
 		$password = $handler->getConfigValue('password');
@@ -195,7 +195,7 @@ class PaypalCommon
 		$wpp->prepare($username, $password, $signature);		
 		
 		return $wpp->selectOperation($api);
-    }
+	}
 }
 
 ?>

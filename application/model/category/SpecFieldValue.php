@@ -13,12 +13,12 @@ ClassLoader::import("application.model.system.MultilingualObject");
  */
 class SpecFieldValue extends MultilingualObject
 {
-    private $mergedFields = array();    
-    
+	private $mergedFields = array();	
+	
 	/**
-     * Define SpecFieldValue schema in database
-     */
-    public static function defineSchema()
+	 * Define SpecFieldValue schema in database
+	 */
+	public static function defineSchema()
 	{
 		$schema = self::getSchemaInstance(__CLASS__);
 		$schema->setName("SpecFieldValue");
@@ -40,9 +40,9 @@ class SpecFieldValue extends MultilingualObject
 	 */
 	public static function getNewInstance(SpecField $field)
 	{
-	    if (!in_array($field->type->get(), array(SpecField::TYPE_NUMBERS_SELECTOR, SpecField::TYPE_TEXT_SELECTOR)))
-	    {
-	    	throw new Exception('Cannot create a SpecFieldValue for non-selector field!');
+		if (!in_array($field->type->get(), array(SpecField::TYPE_NUMBERS_SELECTOR, SpecField::TYPE_TEXT_SELECTOR)))
+		{
+			throw new Exception('Cannot create a SpecFieldValue for non-selector field!');
 		}
 		
 		$instance = parent::getNewInstance(__CLASS__);
@@ -61,7 +61,7 @@ class SpecFieldValue extends MultilingualObject
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
 	{
-	    return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
+		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
 	}
 	
 	/**
@@ -72,11 +72,11 @@ class SpecFieldValue extends MultilingualObject
 	 */
 	public static function getRecordSet($specFieldId)
 	{
-        $filter = new ARSelectFilter();
+		$filter = new ARSelectFilter();
 		$filter->setOrder(new ARFieldHandle(__CLASS__, "position"));
-        $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'specFieldID'), $specFieldId));
+		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'specFieldID'), $specFieldId));
 
-        return parent::getRecordSet(__CLASS__, $filter, false);
+		return parent::getRecordSet(__CLASS__, $filter, false);
 	}
 
 	/**
@@ -87,15 +87,15 @@ class SpecFieldValue extends MultilingualObject
 	 */
 	public static function getRecordSetArray($specFieldId)
 	{
-        $filter = new ARSelectFilter();
+		$filter = new ARSelectFilter();
 		$filter->setOrder(new ARFieldHandle(__CLASS__, "position"));
-        $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'specFieldID'), $specFieldId));
+		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'specFieldID'), $specFieldId));
 
-        return parent::getRecordSetArray(__CLASS__, $filter, false);
+		return parent::getRecordSetArray(__CLASS__, $filter, false);
 	}
 
 	public static function restoreInstance(SpecField $field, $valueId, $value)
-	{	    
+	{		
 		$instance = self::getNewInstance($field);
 		$instance->setID($valueId);
 		$instance->value->set(unserialize($value));
@@ -113,20 +113,20 @@ class SpecFieldValue extends MultilingualObject
 
 	public function mergeWith(SpecFieldValue $specFieldValue)
 	{
-	    if(!$specFieldValue->isExistingRecord()) 
+		if(!$specFieldValue->isExistingRecord()) 
 		{
 			throw new ApplicationException('SpecFieldValue should be an existing record');			
 		}
 
-	    if ($this === $specFieldValue) 
+		if ($this === $specFieldValue) 
 		{
 			return;
 		}
-	    
-	    if (!in_array($specFieldValue, $this->mergedFields))
-	    {
-	        $this->mergedFields[] = $specFieldValue;
-	    }
+		
+		if (!in_array($specFieldValue, $this->mergedFields))
+		{
+			$this->mergedFields[] = $specFieldValue;
+		}
 	}	
 	
 	/*####################  Saving ####################*/	
@@ -138,13 +138,13 @@ class SpecFieldValue extends MultilingualObject
 	 */
 	public static function deleteById($id)
 	{
-	    parent::deleteByID(__CLASS__, (int)$id);
+		parent::deleteByID(__CLASS__, (int)$id);
 	}
 
 	public function save($forceOperation = false)
 	{
-	    parent::save($forceOperation);
-	    $this->mergeFields();
+		parent::save($forceOperation);
+		$this->mergeFields();
 	}
 
 	protected function insert()
@@ -192,45 +192,45 @@ class SpecFieldValue extends MultilingualObject
 	 */
 	private function mergeFields()
 	{
-	    if(empty($this->mergedFields)) return true;
-	    
-        $db = ActiveRecord::getDBConnection();
-	    $specificationItemSchema = self::getSchemaInstance('SpecificationItem');
-	    $foreignKeys = $specificationItemSchema->getForeignKeyList();
-	    $specFieldReferenceFieldName = '';
-        foreach($foreignKeys as $foreignKey)
-        {
-            if($foreignKey->getForeignClassName() == __CLASS__)
-            {
-	            $specFieldReferenceFieldName = $foreignKey->getName();
-	            break;
-            }
-        }
-        
-        $thisSchema = self::getSchemaInstance(__CLASS__);
-        $primaryKeyList = $thisSchema->getPrimaryKeyList();
-	    $promaryKey = array_shift($primaryKeyList);
-	    
-        $mergedFieldsIDs = array();
-	    foreach($this->mergedFields as $mergedField) $mergedFieldsIDs[] = $mergedField->getID();
-	    $inAllItemsExceptThisCondition = new INCond(new ARFieldHandle(__CLASS__, $promaryKey->getName()), $mergedFieldsIDs);
-	    
-        $mergedFieldsIDs[] = $this->getID();
-	    $inAllItemsCondition = new INCond(new ARFieldHandle('SpecificationItem', $specFieldReferenceFieldName),$mergedFieldsIDs);
-	    
-	    // Create filters
-	    $mergedSpecificationItemsFilter = new ARSelectFilter();
-	    $mergedSpecificationItemsFilter->setCondition($inAllItemsCondition);    
+		if(empty($this->mergedFields)) return true;
+		
+		$db = ActiveRecord::getDBConnection();
+		$specificationItemSchema = self::getSchemaInstance('SpecificationItem');
+		$foreignKeys = $specificationItemSchema->getForeignKeyList();
+		$specFieldReferenceFieldName = '';
+		foreach($foreignKeys as $foreignKey)
+		{
+			if($foreignKey->getForeignClassName() == __CLASS__)
+			{
+				$specFieldReferenceFieldName = $foreignKey->getName();
+				break;
+			}
+		}
+		
+		$thisSchema = self::getSchemaInstance(__CLASS__);
+		$primaryKeyList = $thisSchema->getPrimaryKeyList();
+		$promaryKey = array_shift($primaryKeyList);
+		
+		$mergedFieldsIDs = array();
+		foreach($this->mergedFields as $mergedField) $mergedFieldsIDs[] = $mergedField->getID();
+		$inAllItemsExceptThisCondition = new INCond(new ARFieldHandle(__CLASS__, $promaryKey->getName()), $mergedFieldsIDs);
+		
+		$mergedFieldsIDs[] = $this->getID();
+		$inAllItemsCondition = new INCond(new ARFieldHandle('SpecificationItem', $specFieldReferenceFieldName),$mergedFieldsIDs);
+		
+		// Create filters
+		$mergedSpecificationItemsFilter = new ARSelectFilter();
+		$mergedSpecificationItemsFilter->setCondition($inAllItemsCondition);	
 
-	    // Using IGNORE I'm ignoring duplicate primary keys. Those rows that violate the uniqueness of the primary key are simply not saved
-        // Then later I just delete these records and the merge is complete. 
-        $sql = "UPDATE IGNORE SpecificationItem SET specFieldValueID = " . $this->getID() . " " . $mergedSpecificationItemsFilter->createString();
-        self::getLogger()->logQuery($sql);
-        $db->executeUpdate($sql);
-    
-        $mergedSpecFieldValuesDeleteFilter = new ARDeleteFilter();
-        $mergedSpecFieldValuesDeleteFilter->setCondition($inAllItemsExceptThisCondition);
-	    ActiveRecord::deleteRecordSet('SpecFieldValue', $mergedSpecFieldValuesDeleteFilter);
+		// Using IGNORE I'm ignoring duplicate primary keys. Those rows that violate the uniqueness of the primary key are simply not saved
+		// Then later I just delete these records and the merge is complete. 
+		$sql = "UPDATE IGNORE SpecificationItem SET specFieldValueID = " . $this->getID() . " " . $mergedSpecificationItemsFilter->createString();
+		self::getLogger()->logQuery($sql);
+		$db->executeUpdate($sql);
+	
+		$mergedSpecFieldValuesDeleteFilter = new ARDeleteFilter();
+		$mergedSpecFieldValuesDeleteFilter->setCondition($inAllItemsExceptThisCondition);
+		ActiveRecord::deleteRecordSet('SpecFieldValue', $mergedSpecFieldValuesDeleteFilter);
 	}
 }
 ?>

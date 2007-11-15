@@ -19,28 +19,28 @@ ClassLoader::import('application.model.template.Template');
  */
 class EmailTemplate extends Template
 {
-    protected $language;
+	protected $language;
 
 	protected $subject;
 
 	protected $body;
 
-    public function getSubject()
-    {
-        return array_shift(explode("\n", $this->code, 2));
-    }
+	public function getSubject()
+	{
+		return array_shift(explode("\n", $this->code, 2));
+	}
 
-    public function getBody()
-    {
-        if ($this->isFragment())
-        {
+	public function getBody()
+	{
+		if ($this->isFragment())
+		{
 			return $this->code;
 		}
 		else
 		{
 			return array_pop(explode("\n", $this->code, 2));
 		}
-    }
+	}
 
 	public function setSubject($subj)
 	{
@@ -99,20 +99,20 @@ class EmailTemplate extends Template
 		return new EmailTemplate($this->getLangTemplatePath($lang));
 	}
 
-    public function getLangTemplatePath($lang)
-    {
+	public function getLangTemplatePath($lang)
+	{
 		return 'email/' . $lang . '/' . substr($this->file, 9);
 	}
 	
 	public function toArray()
-    {
-        $ret = parent::toArray();
-        $ret['subject'] = $this->getSubject();
-        $ret['body'] = $this->isFragment() ? $this->code : $this->getBody();
-        $ret['bodyEncoded'] = base64_encode($ret['body']);
-        $ret['isFragment'] = $this->isFragment();
-        return $ret;
-    }
+	{
+		$ret = parent::toArray();
+		$ret['subject'] = $this->getSubject();
+		$ret['body'] = $this->isFragment() ? $this->code : $this->getBody();
+		$ret['bodyEncoded'] = base64_encode($ret['body']);
+		$ret['isFragment'] = $this->isFragment();
+		return $ret;
+	}
 }
 
 ?>

@@ -8,7 +8,7 @@ Jei turite klausimų susijusių su šiuo užsakymu, galite siųsti mums laišką
 
 Prekės, kurias užsisakėte:
 ------------------------------------------------------------
-Prekė                      Kaina     Kiekis     Tarpinė suma
+Prekė					  Kaina	 Kiekis	 Tarpinė suma
 ------------------------------------------------------------
 {foreach from=$order.shipments item=shipment}
 {foreach from=$shipment.items item=item}

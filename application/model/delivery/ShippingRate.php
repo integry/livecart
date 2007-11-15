@@ -12,10 +12,10 @@ ClassLoader::import("application.model.delivery.*");
  * Shipping rate is being calculated as follows:
  *
  * weight based rates:
- *     rate = flatCharge + (itemCount * perItemCharge) + (shipmentWeight * perKgCharge)
+ *	 rate = flatCharge + (itemCount * perItemCharge) + (shipmentWeight * perKgCharge)
  *
  * subtotal based rates:
- *     rate = flatCharge + (itemCount * perItemCharge) + (shipmentSubtotal * subtotalPercentCharge)
+ *	 rate = flatCharge + (itemCount * perItemCharge) + (shipmentSubtotal * subtotalPercentCharge)
  *
  * @package application.model.delivery
  * @author Integry Systems <http://integry.com> 
@@ -53,7 +53,7 @@ class ShippingRate extends MultilingualObject
 	 * @return ShippingRate
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
-	{		    
+	{			
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
 	
@@ -101,7 +101,7 @@ class ShippingRate extends MultilingualObject
 	 */
 	public static function getRecordSetByService(ShippingService $service, $loadReferencedRecords = false)
 	{
- 	    $filter = new ARSelectFilter();
+ 		$filter = new ARSelectFilter();
 
 		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "shippingServiceID"), $service->getID()));
 		
@@ -112,38 +112,38 @@ class ShippingRate extends MultilingualObject
 	
 	public function setRangeStart($rangeStart)
 	{
-	    return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeStart->set($rangeStart) : $this->subtotalRangeStart->set($rangeStart);
+		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeStart->set($rangeStart) : $this->subtotalRangeStart->set($rangeStart);
 	}
 	
 	public function setRangeEnd($rangeEnd)
 	{
-	    return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeEnd->set($rangeEnd) : $this->subtotalRangeEnd->set($rangeEnd);
+		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeEnd->set($rangeEnd) : $this->subtotalRangeEnd->set($rangeEnd);
 	}
 	
 	public function getRangeStart()
 	{
-	    return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeStart->get() : $this->subtotalRangeStart->get();
+		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeStart->get() : $this->subtotalRangeStart->get();
 	}
 	
 	public function getRangeEnd()
 	{
-	    return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeEnd->get() : $this->subtotalRangeEnd->get();
+		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeEnd->get() : $this->subtotalRangeEnd->get();
 	}
 	
 	public function getRangeType()
 	{
-	    if(!$this->isLoaded() && $this->isExistingRecord())
-	    {
-	        $this->load();
-	    }
-	    
-	    $service = $this->shippingService->get();
-	    if(!$service->isLoaded()) 
-	    {
-	        $service->load();
-	    }
-	    
-	    return $service->rangeType->get();
+		if(!$this->isLoaded() && $this->isExistingRecord())
+		{
+			$this->load();
+		}
+		
+		$service = $this->shippingService->get();
+		if(!$service->isLoaded()) 
+		{
+			$service->load();
+		}
+		
+		return $service->rangeType->get();
 	}	
 }
 

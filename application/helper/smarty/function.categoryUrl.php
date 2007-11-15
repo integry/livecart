@@ -14,7 +14,7 @@ ClassLoader::import('application.helper.CreateHandleString');
  */
 function smarty_function_categoryUrl($params, LiveCartSmarty $smarty)
 {		
-    return createCategoryUrl($params, $smarty->getApplication());
+	return createCategoryUrl($params, $smarty->getApplication());
 }
 
 function createCategoryUrl($params, LiveCart $application)
@@ -29,23 +29,23 @@ function createCategoryUrl($params, LiveCart $application)
 		$parts[] = createHandleString($category['name_lang']);
 	}
 	
-    if (!isset($category['parent']))
+	if (!isset($category['parent']))
 	{
-        $category['parent'] = 0;    
-    }
+		$category['parent'] = 0;	
+	}
 	
-    $current = $category['parent'];	
+	$current = $category['parent'];	
 	
-    while ($current > 1)
+	while ($current > 1)
 	{
 	  	$cat = Category::getInstanceByID($current, true);
 	  	$parts[] = createHandleString($cat->getValueByLang('name', $application->getLocaleCode()));
 	  	$current = $cat->parentNode->get()->getID();
 	}
 	
-    $parts = array_reverse($parts);	
+	$parts = array_reverse($parts);	
 	
-    $handle = implode('-', $parts);
+	$handle = implode('-', $parts);
 	
 	$filters = array();
 
@@ -54,8 +54,8 @@ function createCategoryUrl($params, LiveCart $application)
 	{
 	  	foreach ($params['filters'] as $key => $filter)
 	  	{
-		    if ($filter['ID'] == $params['removeFilter']['ID'])
-		    {
+			if ($filter['ID'] == $params['removeFilter']['ID'])
+			{
 				unset($params['filters'][$key]);
 			}
 		}
@@ -90,24 +90,24 @@ function createCategoryUrl($params, LiveCart $application)
 					   'action' => 'index', 
 					   'cathandle' => $handle, 
 					   'id' => $category['ID'],
-                       );
+					   );
 	
 	if (!empty($params['query']))
 	{
-        $urlParams['query'] = $params['query'];    
-    }    				  
-                       
+		$urlParams['query'] = $params['query'];	
+	}					  
+					   
 	if (!empty($params['page']))
 	{
-        $urlParams['page'] = $params['page'];    
-    }    				  
+		$urlParams['page'] = $params['page'];	
+	}					  
 
 	if ($filters)
 	{
 	  	$urlParams['filters'] = implode(',', $filters);
 	}
 
-	$url = $application->getRouter()->createUrl($urlParams, true);    
+	$url = $application->getRouter()->createUrl($urlParams, true);	
 	
 	// remove empty search query parameter
 	return preg_replace('/[\?&]q=$/', '', $url);
@@ -117,10 +117,10 @@ function filterHandle($filter)
 {
 	if (is_object($filter))
 	{
-        $filter = $filter->toArray();
-    }
-    
-    return (isset($filter['FilterGroup']) ? $filter['FilterGroup']['SpecField']['handle'] . '.' : '') . $filter['handle'] . '-' . $filter['ID'];	  
+		$filter = $filter->toArray();
+	}
+	
+	return (isset($filter['FilterGroup']) ? $filter['FilterGroup']['SpecField']['handle'] . '.' : '') . $filter['handle'] . '-' . $filter['ID'];	  
 }
 
 ?>

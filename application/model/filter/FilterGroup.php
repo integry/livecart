@@ -12,9 +12,9 @@ ClassLoader::import("application.model.system.MultilingualObject");
  */
 class FilterGroup extends MultilingualObject
 {
-    /**
-     * Define FilterGroup database schema
-     */
+	/**
+	 * Define FilterGroup database schema
+	 */
 	public static function defineSchema()
 	{
 		$schema = self::getSchemaInstance(__CLASS__);
@@ -62,7 +62,7 @@ class FilterGroup extends MultilingualObject
 	 */
 	public static function deletebyID($id)
 	{
-	    return parent::deleteByID(__CLASS__, $id);
+		return parent::deleteByID(__CLASS__, $id);
 	}
 	
 	/**
@@ -73,7 +73,7 @@ class FilterGroup extends MultilingualObject
 	 */
 	public static function getRecordSetArray(ARSelectFilter $filter)
 	{
-	    return parent::getRecordSetArray(__CLASS__, $filter);
+		return parent::getRecordSetArray(__CLASS__, $filter);
 	}
 
 	/**
@@ -84,7 +84,7 @@ class FilterGroup extends MultilingualObject
 	 */
 	public static function getRecordSet(ARSelectFilter $filter)
 	{
-	    return parent::getRecordSet(__CLASS__, $filter);
+		return parent::getRecordSet(__CLASS__, $filter);
 	}
 	
 	/*####################  Value retrieval and manipulation ####################*/	
@@ -108,7 +108,7 @@ class FilterGroup extends MultilingualObject
 	 */
 	public static function exists($id)
 	{
-	    return ActiveRecord::objectExists(__CLASS__, (int)$id);
+		return ActiveRecord::objectExists(__CLASS__, (int)$id);
 	}
 
 	/*####################  Saving ####################*/	
@@ -120,58 +120,58 @@ class FilterGroup extends MultilingualObject
 	 * @param int $specFieldType 
 	 * @param array $languages
 	 */
-    public function saveFilters($filters, $specFieldType, $languageCodes) 
-    {
-        $position = 1;
-        $filtersCount = count($filters);
-        $i = 0;
-            
-        $newIDs = array();
-        foreach ($filters as $key => $value)
-        {
-            // Ignore last new empty filter
-            $i++;
-            if($filtersCount == $i && $value['name'][$languageCodes[0]] == '' && preg_match("/new/", $key)) continue;
-            
-            if(preg_match('/^new/', $key))
-            {
-                $filter = Filter::getNewInstance($this);
-            }
-            else
-            {
-                $filter = Filter::getInstanceByID((int)$key);
-            }
+	public function saveFilters($filters, $specFieldType, $languageCodes) 
+	{
+		$position = 1;
+		$filtersCount = count($filters);
+		$i = 0;
+			
+		$newIDs = array();
+		foreach ($filters as $key => $value)
+		{
+			// Ignore last new empty filter
+			$i++;
+			if($filtersCount == $i && $value['name'][$languageCodes[0]] == '' && preg_match("/new/", $key)) continue;
+			
+			if(preg_match('/^new/', $key))
+			{
+				$filter = Filter::getNewInstance($this);
+			}
+			else
+			{
+				$filter = Filter::getInstanceByID((int)$key);
+			}
 
-            $filter->setLanguageField('name', $value['name'], $languageCodes);
-            
-            if($specFieldType == SpecField::TYPE_TEXT_DATE)
-            {
-                $filter->rangeDateStart->set($value['rangeDateStart']);
-                $filter->rangeDateEnd->set($value['rangeDateEnd']);
-                $filter->rangeStart->setNull();
-                $filter->rangeEnd->setNull();
-            }
-            else
-            {
-                $filter->rangeDateStart->setNull();
-                $filter->rangeDateEnd->setNull();
-                $filter->rangeStart->set($value['rangeStart']);
-                $filter->rangeEnd->set($value['rangeEnd']);
-            }
-            
-            $filter->filterGroup->set($this);
-            $filter->position->set($position++);
-            $filter->save();
-            
-            if(preg_match('/^new/', $key))
-            {
-                $newIDs[$filter->getID()] = $key;
-            }
-                
-        }
-        
-        return $newIDs;
-    }
+			$filter->setLanguageField('name', $value['name'], $languageCodes);
+			
+			if($specFieldType == SpecField::TYPE_TEXT_DATE)
+			{
+				$filter->rangeDateStart->set($value['rangeDateStart']);
+				$filter->rangeDateEnd->set($value['rangeDateEnd']);
+				$filter->rangeStart->setNull();
+				$filter->rangeEnd->setNull();
+			}
+			else
+			{
+				$filter->rangeDateStart->setNull();
+				$filter->rangeDateEnd->setNull();
+				$filter->rangeStart->set($value['rangeStart']);
+				$filter->rangeEnd->set($value['rangeEnd']);
+			}
+			
+			$filter->filterGroup->set($this);
+			$filter->position->set($position++);
+			$filter->save();
+			
+			if(preg_match('/^new/', $key))
+			{
+				$newIDs[$filter->getID()] = $key;
+			}
+				
+		}
+		
+		return $newIDs;
+	}
 
 	protected function insert()
 	{

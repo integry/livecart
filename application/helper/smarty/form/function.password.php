@@ -25,7 +25,7 @@ function smarty_function_password($params, $smarty)
 	// Check permissions
 	if($formParams['readonly'])
 	{	
-        $params['disabled'] = 'disabled';
+		$params['disabled'] = 'disabled';
 	}
 	
 	if (isset($params['value']))

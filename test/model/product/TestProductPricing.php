@@ -10,38 +10,38 @@ ClassLoader::import("application.model.product.ProductPricing");
  */
 class TestProductPricing extends UnitTest
 {
-    /**
-     * Root category
-     *
-     * @var Category
-     */
-    private $category;
-    
-    /**
-     * Some product
-     * 
-     * @var Product
-     */
-    private $product;
+	/**
+	 * Root category
+	 *
+	 * @var Category
+	 */
+	private $category;
+	
+	/**
+	 * Some product
+	 * 
+	 * @var Product
+	 */
+	private $product;
 
-    public function __construct()
+	public function __construct()
 	{
-	    parent::__construct('Product pricings');
+		parent::__construct('Product pricings');
 
-	    // Get root category
-	    $this->category = Category::getInstanceByID(Category::ROOT_ID);
+		// Get root category
+		$this->category = Category::getInstanceByID(Category::ROOT_ID);
 	}
 	
 	public function getUsedSchemas()
 	{
-	    return array(
-	        'Product'
-	    );
+		return array(
+			'Product'
+		);
 	}
-    
-    public function setUp()
+	
+	public function setUp()
 	{
-	    parent::setUp();
+		parent::setUp();
 		
    		// create a product without attributes
 		$this->product = Product::getNewInstance($this->category, 'test');
@@ -51,62 +51,62 @@ class TestProductPricing extends UnitTest
 	}
 	
 	public function testSave()
-	{        
-	    // Create new prices
-	    $prices = array();
+	{		
+		// Create new prices
+		$prices = array();
 		foreach(Store::getInstance()->getCurrencyArray() as $currency) $this->product->setPrice($currency, $prices[$currency] = (rand(1, 1000) + rand(1, 100) / 100));
-        $this->product->save();       
-        
-        // reload product
-        $this->product->reload();
-        
-        
-        // Load pricing and check if prices are stored in database
-        $this->product->loadSpecification();
-        $pricing = $this->product->getPricingHandler();
-        $this->assertEqual($pricing->toArray(ProductPricing::CALCULATED), $prices);
+		$this->product->save();	   
+		
+		// reload product
+		$this->product->reload();
+		
+		
+		// Load pricing and check if prices are stored in database
+		$this->product->loadSpecification();
+		$pricing = $this->product->getPricingHandler();
+		$this->assertEqual($pricing->toArray(ProductPricing::CALCULATED), $prices);
    	}
    	
    	public function testEdit()
    	{
-	    $prices = array();
-        $pricing = $this->product->getPricingHandler();
-        
-        // Create new prices
+		$prices = array();
+		$pricing = $this->product->getPricingHandler();
+		
+		// Create new prices
 		foreach(Store::getInstance()->getCurrencyArray() as $currency) $this->product->setPrice($currency, $prices[$currency] = (rand(1, 1000) + rand(1, 100) / 100));
 		$this->product->save();
 
-        // Reload product
-        $this->product->reload();
+		// Reload product
+		$this->product->reload();
   
-        // Edit prices
-        $this->product->loadSpecification();
+		// Edit prices
+		$this->product->loadSpecification();
 		foreach(Store::getInstance()->getCurrencyArray() as $currency) $this->product->setPrice($currency, $prices[$currency] = (rand(1, 1000) + rand(1, 100) / 100));
 		$this->product->save();
 		
 		// Prices should change (also note that to make prices change you should reload specifications too)
-	    $this->product->loadSpecification();
-        $pricing = $this->product->getPricingHandler();
+		$this->product->loadSpecification();
+		$pricing = $this->product->getPricingHandler();
 		$this->assertEqual($pricing->toArray(ProductPricing::CALCULATED), $prices);
    	}
    	
    	
    	public function testCalculatePrices()
-   	{        
-        // Create new prices
+   	{		
+		// Create new prices
 		$this->product->setPrice(Store::getInstance()->getDefaultCurrencyCode(), $defaultPrice = 1);
 		$this->product->save();
   		
 		// Just check that prices for other currencies are generated
-	    $this->product->loadSpecification();
-        $pricing = $this->product->getPricingHandler();
-        
-        $prices = $pricing->toArray(ProductPricing::BOTH);
-        foreach(Store::getInstance()->getCurrencyArray(!Store::INCLUDE_DEFAULT) as $currencyCode)
-        {
-            $this->assertTrue(isset($prices[ProductPricing::CALCULATED][$currencyCode]) && $prices[ProductPricing::CALCULATED][$currencyCode] > 0);
-            $this->assertFalse(isset($prices[ProductPricing::DEFINED][$currencyCode]));
-        }
+		$this->product->loadSpecification();
+		$pricing = $this->product->getPricingHandler();
+		
+		$prices = $pricing->toArray(ProductPricing::BOTH);
+		foreach(Store::getInstance()->getCurrencyArray(!Store::INCLUDE_DEFAULT) as $currencyCode)
+		{
+			$this->assertTrue(isset($prices[ProductPricing::CALCULATED][$currencyCode]) && $prices[ProductPricing::CALCULATED][$currencyCode] > 0);
+			$this->assertFalse(isset($prices[ProductPricing::DEFINED][$currencyCode]));
+		}
    	}
 }
 

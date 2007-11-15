@@ -24,12 +24,12 @@ function smarty_function_productUrl($params, LiveCartSmarty $smarty)
 					   
 	$url = $smarty->getApplication()->getRouter()->createUrl($urlParams, true);	
 
-    if (!empty($params['filterChainHandle']))
-    {
-        $url = $smarty->getApplication()->getRouter()->setUrlQueryParam($url, 'filters', $params['filterChainHandle']);
-    }
-    
-    return $url;
+	if (!empty($params['filterChainHandle']))
+	{
+		$url = $smarty->getApplication()->getRouter()->setUrlQueryParam($url, 'filters', $params['filterChainHandle']);
+	}
+	
+	return $url;
 }
 
 ?>

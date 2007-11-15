@@ -19,25 +19,25 @@ class SessionController extends StoreManagementController
 		return $response;
 	}
 
-    /**
-     *  Process actual login
-     */
-    public function doLogin()
-    {
-        $user = User::getInstanceByLogin($this->request->get('email'), $this->request->get('password'));
-        if (!$user)
-        {
-            return new ActionRedirectResponse('backend.session', 'index', array('query' => 'failed=true'));
-        }
+	/**
+	 *  Process actual login
+	 */
+	public function doLogin()
+	{
+		$user = User::getInstanceByLogin($this->request->get('email'), $this->request->get('password'));
+		if (!$user)
+		{
+			return new ActionRedirectResponse('backend.session', 'index', array('query' => 'failed=true'));
+		}
 
-        // login
-        SessionUser::setUser($user);
-                		        
-        return new ActionRedirectResponse('backend.index', 'index');
-    }
-    
+		// login
+		SessionUser::setUser($user);
+								
+		return new ActionRedirectResponse('backend.index', 'index');
+	}
+	
 	public function logout()
-    {
+	{
 		SessionUser::destroy();
 		return new ActionRedirectResponse('backend.session', 'index');
 	}

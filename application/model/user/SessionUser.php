@@ -15,30 +15,30 @@ class SessionUser
 
 	 * @return User
 	 */
-    public static function getUser()
-    {
-        $session = new Session();
-        
+	public static function getUser()
+	{
+		$session = new Session();
+		
 		$id = $session->get('User');
-    
-        if (!$id)
-        {
-            return self::getAnonymousUser();
-        }
-        else
-        {
+	
+		if (!$id)
+		{
+			return self::getAnonymousUser();
+		}
+		else
+		{
 			try
 			{
-                return User::getInstanceById($id);                
-            }
-            catch (ARNotFoundException $e)
-            {
-                $session->unsetValue('User');
-                return self::getAnonymousUser();
-            }
+				return User::getInstanceById($id);				
+			}
+			catch (ARNotFoundException $e)
+			{
+				$session->unsetValue('User');
+				return self::getAnonymousUser();
+			}
 		}
-    }
-    
+	}
+	
 	public static function setUser(User $user)
 	{
 		$session = new Session();
@@ -57,13 +57,13 @@ class SessionUser
 
 	 * @return User
 	 */
-    private function getAnonymousUser()
-    {
-        $instance = ActiveRecordModel::getNewInstance('User'); 
+	private function getAnonymousUser()
+	{
+		$instance = ActiveRecordModel::getNewInstance('User'); 
 		$instance->setID(User::ANONYMOUS_USER_ID);   
 
-        return $instance;
-    }    
+		return $instance;
+	}	
 }
 
 ?>

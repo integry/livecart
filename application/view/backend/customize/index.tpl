@@ -19,8 +19,8 @@
 			{t _live_locate}
 		</div>
 
-        <a href="{link}" target="_blank" id="goToFrontend">{tn _go_frontend}</a>
-        <div class="clear"></div>
+		<a href="{link}" target="_blank" id="goToFrontend">{tn _go_frontend}</a>
+		<div class="clear"></div>
 
 	</li>
 
@@ -38,8 +38,8 @@
 			{t _live_trans}
 		</div>
 
-        <a href="{link}" target="_blank" id="goToFrontend">{tn _go_frontend}</a>
-        <div class="clear"></div>
+		<a href="{link}" target="_blank" id="goToFrontend">{tn _go_frontend}</a>
+		<div class="clear"></div>
 
 	</li>
 

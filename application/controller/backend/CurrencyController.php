@@ -13,7 +13,7 @@ ClassLoader::import("application.model.Currency");
  */
 class CurrencyController extends StoreManagementController
 {
-    /**
+	/**
 	 * List all system currencies
 	 * @return ActionResponse
 	 */
@@ -52,7 +52,7 @@ class CurrencyController extends StoreManagementController
 			unset($currencies[$currency->getID()]);  
 		}
 
-        unset($currencies[$this->application->getDefaultCurrencyCode()]);
+		unset($currencies[$this->application->getDefaultCurrencyCode()]);
 
 		$response = new ActionResponse();
 		$response->set('currencies', $currencies);
@@ -157,38 +157,38 @@ class CurrencyController extends StoreManagementController
 		}
 		catch (Exception $exc)
 		{			  	
-            return new JSONResponse(false, 'failure');
+			return new JSONResponse(false, 'failure');
 		}
 	}
 
-    public function edit()
-    {
-        $currency = Currency::getInstanceByID($this->request->get('id'), Currency::LOAD_DATA);
-        
+	public function edit()
+	{
+		$currency = Currency::getInstanceByID($this->request->get('id'), Currency::LOAD_DATA);
+		
 		ClassLoader::import("framework.request.validator.Form");
 		ClassLoader::import("framework.request.validator.RequestValidator");
 
 		$form = new Form(new RequestValidator("currency", $this->request));
 		$form->setData($currency->toArray());
-        
-        $response = new ActionResponse();
-        $response->set('form', $form);
-        $response->set('id', $this->request->get('id'));
-        return $response;          
-    }
-    
-    /**
-     * @role update
-     */
-    public function save()
-    {
-        $currency = Currency::getInstanceByID($this->request->get('id'), Currency::LOAD_DATA);
-        $currency->pricePrefix->set($this->request->get('pricePrefix'));
-        $currency->priceSuffix->set($this->request->get('priceSuffix'));
-        $currency->save();        
+		
+		$response = new ActionResponse();
+		$response->set('form', $form);
+		$response->set('id', $this->request->get('id'));
+		return $response;		  
+	}
+	
+	/**
+	 * @role update
+	 */
+	public function save()
+	{
+		$currency = Currency::getInstanceByID($this->request->get('id'), Currency::LOAD_DATA);
+		$currency->pricePrefix->set($this->request->get('pricePrefix'));
+		$currency->priceSuffix->set($this->request->get('priceSuffix'));
+		$currency->save();		
 
-        return new JSONResponse(false, 'success');
-    }
+		return new JSONResponse(false, 'success');
+	}
 
 	/**
 	 * Currency rates form

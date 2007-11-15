@@ -67,14 +67,14 @@ class Language extends ActiveRecordModel
 
 	public function save($forceOperation = 0)
 	{
-        self::deleteCache();
+		self::deleteCache();
 		
 		return parent::save($forceOperation);
 	}
 	
 	public static function deleteById($id)
 	{
-        self::deleteCache();
+		self::deleteCache();
 
 		// make sure the language record exists
 		$inst = ActiveRecord::getInstanceById('Language', $id, true);
@@ -93,8 +93,8 @@ class Language extends ActiveRecordModel
 	
 	public static function deleteCache()
 	{
-		@unlink(ClassLoader::getRealPath('cache') . '/languages.php');        
-    }
+		@unlink(ClassLoader::getRealPath('cache') . '/languages.php');		
+	}
 	
 	protected function insert()
 	{
@@ -118,7 +118,7 @@ class Language extends ActiveRecordModel
 	  	$array = parent::toArray();
 	  	
 	  	$info = self::getApplication()->getLocale()->info();
-        $array['name'] = $info->getLanguageName($array['ID']);
+		$array['name'] = $info->getLanguageName($array['ID']);
 	  	$array['originalName'] = $info->getOriginalLanguageName($array['ID']);
 	  	
 		if (file_exists(ClassLoader::getRealPath('public.image.localeflag') . '/' . $array['ID'] . '.png'))

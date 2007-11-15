@@ -13,92 +13,92 @@ ClassLoader::import("application.model.product.Product");
  */
 class ProductRelationshipGroupController extends StoreManagementController 
 {
-    /**
-     * @role update
-     */
-    public function create()
-    {
-	    $product = Product::getInstanceByID((int)$this->request->get('productID'));
-	    $relationshipGroup = ProductRelationshipGroup::getNewInstance($product);
-	    
-	    return $this->save($relationshipGroup);
-    }
-    
-    /**
-     * @role update
-     */
-    public function update()
-    {
-        $relationshipGroup = ProductRelationshipGroup::getInstanceByID((int)$this->request->get('ID'));
-        
-        return $this->save($relationshipGroup);
-    }
-    
-    /**
-     * @role update
-     */
+	/**
+	 * @role update
+	 */
+	public function create()
+	{
+		$product = Product::getInstanceByID((int)$this->request->get('productID'));
+		$relationshipGroup = ProductRelationshipGroup::getNewInstance($product);
+		
+		return $this->save($relationshipGroup);
+	}
+	
+	/**
+	 * @role update
+	 */
+	public function update()
+	{
+		$relationshipGroup = ProductRelationshipGroup::getInstanceByID((int)$this->request->get('ID'));
+		
+		return $this->save($relationshipGroup);
+	}
+	
+	/**
+	 * @role update
+	 */
 	public function delete()
 	{
-	    ProductRelationshipGroup::getInstanceByID((int)$this->request->get('id'))->delete();
-	    
-        return new JSONResponse(false, 'success');   
+		ProductRelationshipGroup::getInstanceByID((int)$this->request->get('id'))->delete();
+		
+		return new JSONResponse(false, 'success');   
 	}
 
-    /**
-     * @role update
-     */
-    public function sort()
-    {
-        foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
-        {
-            if(empty($key)) continue;
-            $relationship = ProductRelationshipGroup::getInstanceByID((int)$key); 
-            $relationship->position->set((int)$position);
-            $relationship->save();
-        }
-        
-        return new JSONResponse(false, 'success');   
-    }
+	/**
+	 * @role update
+	 */
+	public function sort()
+	{
+		foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
+		{
+			if(empty($key)) continue;
+			$relationship = ProductRelationshipGroup::getInstanceByID((int)$key); 
+			$relationship->position->set((int)$position);
+			$relationship->save();
+		}
+		
+		return new JSONResponse(false, 'success');   
+	}
 
-    public function edit()
-    {
-        $group = ProductRelationshipGroup::getInstanceByID((int)$this->request->get('id'), true);
-        
-        return new JSONResponse($group->toArray());
-    }
+	public function edit()
+	{
+		$group = ProductRelationshipGroup::getInstanceByID((int)$this->request->get('id'), true);
+		
+		return new JSONResponse($group->toArray());
+	}
 
-    private function buildValidator()
-    {
+	private function buildValidator()
+	{
 		ClassLoader::import("framework.request.validator.RequestValidator");
 		$validator = new RequestValidator("productRelationshipGroupValidator", $this->request);
 
 		$validator->addCheck('name_' . $this->application->getDefaultLanguageCode(), new IsNotEmptyCheck($this->translate('_err_relationship_name_is_empty')));
 
 		return $validator;
-    }
+	}
 
-    private function save(ProductRelationshipGroup $relationshipGroup)
-    {
-        $validator = $this->buildValidator();
+	private function save(ProductRelationshipGroup $relationshipGroup)
+	{
+		$validator = $this->buildValidator();
 		if ($validator->isValid())
 		{
-		    foreach ($this->application->getLanguageArray(true) as $lang)
-    		{
-    			if ($this->request->isValueSet('name_' . $lang))
-    			{
-    			    $relationshipGroup->setValueByLang('name', $lang, $this->request->get('name_' . $lang));
-    			}
-    		}
-    		
-    		$relationshipGroup->save();
-    		
-            return new JSONResponse(array('ID' => $relationshipGroup->getID()), 'success');
+			foreach ($this->application->getLanguageArray(true) as $lang)
+			{
+				if ($this->request->isValueSet('name_' . $lang))
+				{
+					$relationshipGroup->setValueByLang('name', $lang, $this->request->get('name_' . $lang));
+				}
+			}
+			
+			$relationshipGroup->save();
+			
+			return new JSONResponse(array('ID' => $relationshipGroup->getID()), 'success');
 		}
 		else
 		{
 			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure');
 		}
-    }
+	}
 }
 
 ?>

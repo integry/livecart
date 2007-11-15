@@ -21,7 +21,7 @@ class SettingsController extends StoreManagementController
 	 */
 	public function index()
 	{
-        $response = new ActionResponse();
+		$response = new ActionResponse();
 		$response->set('categories', json_encode($this->config->getTree()));
 		return $response;
 	}
@@ -33,7 +33,7 @@ class SettingsController extends StoreManagementController
 	{
 		$this->config->updateSettings();
 		
-        $defLang = $this->application->getDefaultLanguageCode();
+		$defLang = $this->application->getDefaultLanguageCode();
 		$languages = $this->application->getLanguageArray(LiveCart::INCLUDE_DEFAULT);
 			
 		$sectionId = $this->request->get('id');						
@@ -45,24 +45,24 @@ class SettingsController extends StoreManagementController
 		
 		if (!$values)
 		{
-            return new RawResponse();
-        }
+			return new RawResponse();
+		}
 		
 		foreach ($values as $key => $value)
 		{
-    		if ($this->config->isMultiLingual($key) && 'string' == $value['type'])
-    		{
-                foreach ($languages as $lang)
-                {
-                    $form->set($key . ($lang != $defLang ? '_' . $lang : ''), $this->config->getValueByLang($key, $lang));    
-                }                
+			if ($this->config->isMultiLingual($key) && 'string' == $value['type'])
+			{
+				foreach ($languages as $lang)
+				{
+					$form->set($key . ($lang != $defLang ? '_' . $lang : ''), $this->config->getValueByLang($key, $lang));	
+				}				
 
-                $multiLingualValues[$key] = true;
-            }
-            else
-            {
-                $form->set($key, $this->config->get($key));	
-    		}
+				$multiLingualValues[$key] = true;
+			}
+			else
+			{
+				$form->set($key, $this->config->get($key));	
+			}
 		}
 				
 		$response = new ActionResponse();
@@ -91,23 +91,23 @@ class SettingsController extends StoreManagementController
 		else
 		{
 			$languages = $this->application->getLanguageArray();
-            $defLang = $this->application->getDefaultLanguageCode();
-                    
-            $this->config->setAutoSave(false);
+			$defLang = $this->application->getDefaultLanguageCode();
+					
+			$this->config->setAutoSave(false);
 			foreach ($values as $key => $value)
 			{
 				if ($this->config->isMultiLingual($key) && 'string' == $value['type'])
 				{
-                    $this->config->setValueByLang($key, $defLang, $this->request->get($key));
-                    foreach ($languages as $lang)
-                    {
-                        $this->config->setValueByLang($key, $lang, $this->request->get($key . '_' . $lang));
-                    }
-                }
-                else
-                {
-                    $this->config->set($key, $this->request->get($key, 'bool' == $value['type'] ? 0 : ''));		                    
-                }
+					$this->config->setValueByLang($key, $defLang, $this->request->get($key));
+					foreach ($languages as $lang)
+					{
+						$this->config->setValueByLang($key, $lang, $this->request->get($key . '_' . $lang));
+					}
+				}
+				else
+				{
+					$this->config->set($key, $this->request->get($key, 'bool' == $value['type'] ? 0 : ''));							
+				}
 			}  	
 			
 			$this->config->save();
@@ -120,22 +120,22 @@ class SettingsController extends StoreManagementController
 	private function getValidationRules(&$values)
 	{
 		// look for validation rules
-        $validation = array();
-        foreach ($values as $key => $value)
-        {
-            if (substr($key, 0, 9) == 'validate_')
-            {
-                // add quotes, so that json_decode wouldn't return NULLs
-                $value = str_replace(array('<', '>'), array('{', '}'), $value['value']);
-                $value = preg_replace('/[a-zA-Z0-9_]{1,}/', '"\\0"', $value);
-                
-                $validation[substr($key, 9)] = json_decode('{' . $value . '}', true);
-                unset($values[$key]);
-            }
-        }
-        
-        return $validation;        
-    }
+		$validation = array();
+		foreach ($values as $key => $value)
+		{
+			if (substr($key, 0, 9) == 'validate_')
+			{
+				// add quotes, so that json_decode wouldn't return NULLs
+				$value = str_replace(array('<', '>'), array('{', '}'), $value['value']);
+				$value = preg_replace('/[a-zA-Z0-9_]{1,}/', '"\\0"', $value);
+				
+				$validation[substr($key, 9)] = json_decode('{' . $value . '}', true);
+				unset($values[$key]);
+			}
+		}
+		
+		return $validation;		
+	}
 	
 	private function getForm($settings, $validation)
 	{
@@ -144,19 +144,19 @@ class SettingsController extends StoreManagementController
 		// set multi-select values
 		foreach ($settings as $key => $value)
 		{
-            if ('multi' == $value['extra'])
-            {
-                $values = $this->config->get($value['title']);
+			if ('multi' == $value['extra'])
+			{
+				$values = $this->config->get($value['title']);
 
-                if (is_array($values))
-                {
-                    foreach ($values as $key => $val)
-                    {
-                        $form->set($value['title'] . '[' . $key . ']', 1);                    
-                    }
-                }
-            }   
-        }
+				if (is_array($values))
+				{
+					foreach ($values as $key => $val)
+					{
+						$form->set($value['title'] . '[' . $key . ']', 1);					
+					}
+				}
+			}   
+		}
 
 		return $form;
 	}
@@ -176,20 +176,20 @@ class SettingsController extends StoreManagementController
 			if ('num' == $value['type'])
 			{
 				$val->addFilter($key, new RegexFilter('\.'));
-            }
+			}
 		}
 		
 		// apply custom validation rules
-        foreach ($validation as $field => $validators)
+		foreach ($validation as $field => $validators)
 		{
-            foreach ($validators as $validator => $constraint)
-            {
-                foreach ($constraint as $c => $error)
-                {
-                    $val->addCheck($field, new $validator($this->translate($error), $c));
-                }
-            }
-        }
+			foreach ($validators as $validator => $constraint)
+			{
+				foreach ($constraint as $c => $error)
+				{
+					$val->addCheck($field, new $validator($this->translate($error), $c));
+				}
+			}
+		}
 		
 		return $val;	  
 	}

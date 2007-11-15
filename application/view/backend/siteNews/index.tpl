@@ -21,10 +21,10 @@
 
 {allowed role="news.create"}
 
-    <ul class="menu" id="newsMenu">
-    	<li class="addNews"><a href="#add" id="addNewsLink">{t _add_news}</a></li>
-    	<li class="addNewsCancel done" style="display: none;"><a href="#cancel" id="addNewsCancelLink">{t _cancel_adding_news}</a></li>
-    </ul>
+	<ul class="menu" id="newsMenu">
+		<li class="addNews"><a href="#add" id="addNewsLink">{t _add_news}</a></li>
+		<li class="addNewsCancel done" style="display: none;"><a href="#cancel" id="addNewsCancelLink">{t _cancel_adding_news}</a></li>
+	</ul>
 
 {/allowed}
 
@@ -97,12 +97,12 @@
 	<div>
 		<div class="newsListContainer">
 			
-            <span class="newsCheckBox"{denied role="news.status"} style="display: none;"{/denied}>
+			<span class="newsCheckBox"{denied role="news.status"} style="display: none;"{/denied}>
 				<input type="checkbox" class="checkbox" name="isEnabled" onclick="this.up('li').handler.setEnabled(this);" />
 				<span class="progressIndicator" style="float: left; padding: 0; display: none;"></span>
 			</span>	
-            
-		    <span class="progressIndicator" style="display: none; "></span>
+			
+			<span class="progressIndicator" style="display: none; "></span>
 		
 			<span class="newsData">
 				<span class="newsTitle"></span> 
@@ -121,7 +121,7 @@
 </ul>
 
 <script type="text/javascript">
-    Form.State.backup($("newsForm"));
+	Form.State.backup($("newsForm"));
 	new Backend.SiteNews({json array=$newsList}, $('newsList'), $('newsList_template'));
 </script>
 

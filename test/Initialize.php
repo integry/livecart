@@ -19,8 +19,8 @@ if (!defined('TEST_INITIALIZED'))
 	include_once('application/Initialize.php');
 
 	$arPath = realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'activerecord' . DIRECTORY_SEPARATOR . 'ActiveRecord.php');
-    include_once($arPath);
-    ActiveRecord::setDSN('mysql://root@server/livecart_pre');
+	include_once($arPath);
+	ActiveRecord::setDSN('mysql://root@server/livecart_pre');
 	
 	// set unittest and simpletest library root directory
 	$libDir = dirname(__FILE__) . '/_library/';

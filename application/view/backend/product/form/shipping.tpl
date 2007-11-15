@@ -5,7 +5,7 @@
 		<label for="product_shippingWeight_{$cat}_{$product.ID}">{t _shipping_weight}:</label>
 		<fieldset class="error" >				
 		
-            {metricsfield name="shippingWeight"}
+			{metricsfield name="shippingWeight"}
 
 			<div class="errorText hidden"></div>
 		</fieldset>
@@ -34,6 +34,6 @@
 	</p>
 	<p class="checkbox">			
 		{checkbox name="isBackOrderable" class="checkbox" id="product_isBackOrderable_`$cat`_`$product.ID`"}
-        <label for="product_isBackOrderable_{$cat}_{$product.ID}">{t _allow_back_ordering}</label>
+		<label for="product_isBackOrderable_{$cat}_{$product.ID}">{t _allow_back_ordering}</label>
 	</p>
 </fieldset>

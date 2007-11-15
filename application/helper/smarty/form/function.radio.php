@@ -24,7 +24,7 @@ function smarty_function_radio($params, $smarty)
 	// Check permissions
 	if($formParams['readonly'])
 	{
-        $params['disabled'] = 'disabled';
+		$params['disabled'] = 'disabled';
 	}
 	
 	// get checked state
@@ -41,7 +41,7 @@ function smarty_function_radio($params, $smarty)
 	}
 
 	$output .= "/>";
-    	
+		
 	return $output;
 }
 

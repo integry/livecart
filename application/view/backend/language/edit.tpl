@@ -22,11 +22,11 @@
 <div style="display: none;">
 	<div id="fileTemplate">
 
-	    <h1>_name_</h1>
+		<h1>_name_</h1>
 
-	    <div>
-	        _edit_
-	    </div>
+		<div>
+			_edit_
+		</div>
 
 	</div>
 
@@ -51,15 +51,15 @@
 	<div class="treeContainer">
 		<div id="langBrowser" class="treeBrowser"></div>
 		
-    	<ul class="verticalMenu">
-    		<li class="langExport">
-                <a href="{link controller=backend.language action=export id=$id}">
-        	        {t _export}
-                </a>
-            </li>
-    	</ul>		
+		<ul class="verticalMenu">
+			<li class="langExport">
+				<a href="{link controller=backend.language action=export id=$id}">
+					{t _export}
+				</a>
+			</li>
+		</ul>		
 		
-        <div id="confirmations"></div>
+		<div id="confirmations"></div>
 	</div>
 
 	<div class="treeManagerContainer">
@@ -68,63 +68,63 @@
 
 		<div id="langContent">
 
-            <fieldset>
-            	<legend>{t _translation_filter}</legend>
-            	<form id="navLang" onsubmit="return false;">
+			<fieldset>
+				<legend>{t _translation_filter}</legend>
+				<form id="navLang" onsubmit="return false;">
 
-            			<label>{t _show_words}:</label>
+						<label>{t _show_words}:</label>
 
-            			<input type="hidden" name="langFileSel" value='{$langFileSel|escape:"quotes"}' />
+						<input type="hidden" name="langFileSel" value='{$langFileSel|escape:"quotes"}' />
 
-            			<input type="radio" class="radio" name="show" value="all" id="show-all" />
-            			<label class="radio" for="show-all">{t _all}</label>
+						<input type="radio" class="radio" name="show" value="all" id="show-all" />
+						<label class="radio" for="show-all">{t _all}</label>
 
-            			<input type="radio" class="radio" name="show" value="notDefined" id="show-undefined" />
-            			<label class="radio" for="show-undefined">{t _not_defined}</label>
+						<input type="radio" class="radio" name="show" value="notDefined" id="show-undefined" />
+						<label class="radio" for="show-undefined">{t _not_defined}</label>
 
-            			<input type="radio" class="radio" name="show" value="defined" id="show-defined" />
-            			<label class="radio" for="show-defined">{t _defined}</label>
+						<input type="radio" class="radio" name="show" value="defined" id="show-defined" />
+						<label class="radio" for="show-defined">{t _defined}</label>
 
-            			<br />
-            			<br />
-            			
-            			<label>{t _search_trans}:</label>
+						<br />
+						<br />
+						
+						<label>{t _search_trans}:</label>
 
-            			<fieldset class="container">
-                            <input type="text" id="filter" /> <img src="image/silk/cross.png" id="clearFilter" style="vertical-align: middle; cursor: pointer; display: none;" />
+						<fieldset class="container">
+							<input type="text" id="filter" /> <img src="image/silk/cross.png" id="clearFilter" style="vertical-align: middle; cursor: pointer; display: none;" />
 
-                            <input type="checkbox" class="checkbox" id="allFiles" />
-                            <label for="allFiles" class="checkbox">{t _all_files}</label>
+							<input type="checkbox" class="checkbox" id="allFiles" />
+							<label for="allFiles" class="checkbox">{t _all_files}</label>
 
-                        </fieldset>
+						</fieldset>
 
-            			<div id="langNotFound" style="display: none;">{t _no_translations_found}</div>
-            			<div id="foundMany" style="display: none;">{t _found_many}</div>
+						<div id="langNotFound" style="display: none;">{t _no_translations_found}</div>
+						<div id="foundMany" style="display: none;">{t _found_many}</div>
 
-            	</form>
-            </fieldset>
+				</form>
+			</fieldset>
 
-            <br />
+			<br />
 
-            <fieldset class="container" id="langPath">
-                <div id="pageTitle"></div>
-                <div id="allFilesTitle" style="display: none;">{t _all_files_title}</div>
-            </fieldset>
+			<fieldset class="container" id="langPath">
+				<div id="pageTitle"></div>
+				<div id="allFilesTitle" style="display: none;">{t _all_files_title}</div>
+			</fieldset>
 
-            <div id="translations"></div>
+			<div id="translations"></div>
 
 
-            <form id="editLang" method="post" action="{link controller=backend.language action=save id=$id}" onSubmit="langPassDisplaySettings(this); $('saveProgress').style.display = 'inline';">
+			<form id="editLang" method="post" action="{link controller=backend.language action=save id=$id}" onSubmit="langPassDisplaySettings(this); $('saveProgress').style.display = 'inline';">
 
-                <fieldset class="controls" {denied role='language.update'}style="display: none"{/denied}>
-                	<input type="hidden" name="translations" />
-            		<span class="progressIndicator" id="saveProgress" style="display: none;"></span>
-                    <input type="submit" class="submit" value="{t _save}">
-                    {t _or}
-                    <a href="#" onClick="window.location.reload(); return false;" class="cancel">{t _cancel}</a>
-                </fieldset>
+				<fieldset class="controls" {denied role='language.update'}style="display: none"{/denied}>
+					<input type="hidden" name="translations" />
+					<span class="progressIndicator" id="saveProgress" style="display: none;"></span>
+					<input type="submit" class="submit" value="{t _save}">
+					{t _or}
+					<a href="#" onClick="window.location.reload(); return false;" class="cancel">{t _cancel}</a>
+				</fieldset>
 
-            </form>
+			</form>
 
 		</div>
 	</div>

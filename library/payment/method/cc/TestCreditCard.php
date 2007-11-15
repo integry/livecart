@@ -21,26 +21,26 @@ class TestCreditCard extends CreditCardPayment
 	
 	public function isVoidable()
 	{
-        return true;
+		return true;
 	}
 	
 	public function isMultiCapture()
 	{
-        return true;
-    }
+		return true;
+	}
 
 	public function isCapturedVoidable()
 	{
-        return true;
-    }	
+		return true;
+	}	
 	
 	/**
 	 *	All currencies supported, except LTL
 	 */
-    public function getValidCurrency($currentCurrencyCode)
-    {
-        return 'LTL' != $currentCurrencyCode ? $currentCurrencyCode : 'USD';
-    }
+	public function getValidCurrency($currentCurrencyCode)
+	{
+		return 'LTL' != $currentCurrencyCode ? $currentCurrencyCode : 'USD';
+	}
 
 	/**
 	 *	Reserve funds on customers credit card
@@ -122,10 +122,10 @@ class TestCreditCard extends CreditCardPayment
 	{		
 		if ($this->getCardCode() == '000')
 		{
-            return new TransactionError($this->details, '');    
-        }
-        
-        $result = new TransactionResult();
+			return new TransactionError($this->details, '');	
+		}
+		
+		$result = new TransactionResult();
 		$result->gatewayTransactionID->set('TESTCC' . rand(1, 10000000));
 		$result->amount->set($this->details->amount->get());
 		$result->currency->set($this->details->currency->get());

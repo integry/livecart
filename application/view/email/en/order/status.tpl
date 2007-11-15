@@ -14,7 +14,7 @@ If you have any questions regarding this order, you can send us an email message
 New status: {if $shipment.status == 2}awaiting shipment{elseif $shipment.status == 3}shipped{elseif $shipment.status == 4}returned{else}processing{/if}
 
 ------------------------------------------------------------
-Item                           Price     Qty      Subtotal
+Item						   Price	 Qty	  Subtotal
 ------------------------------------------------------------
 {foreach from=$shipment.items item=item}
 {$item.Product.name_lang|truncate:29:"...":"true"|@str_pad:31}{$item.formattedPrice|truncate:9:"..."|@str_pad:10}{$item.count|truncate:8:"..."|@str_pad:9}{$item.formattedSubTotal}

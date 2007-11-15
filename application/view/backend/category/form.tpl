@@ -37,12 +37,12 @@
 		{/language}
 
 	</fieldset>		
-    
-    <fieldset class="controls">
+	
+	<fieldset class="controls">
 		<span class="progressIndicator" style="display: none;"></span>
-        <input type="submit" class="submit" id="submit" value="{tn _save}"/> or
+		<input type="submit" class="submit" id="submit" value="{tn _save}"/> or
 		<a href="#" class="cancel" onClick="$('categoryForm_{$categoryId}').reset(); return false;">{t _cancel}</a>
-        <div class="clear"></div>
-    </fieldset>
+		<div class="clear"></div>
+	</fieldset>
 
 {/form}

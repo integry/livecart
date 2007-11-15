@@ -16,8 +16,8 @@ class ProductPricing
 	const CALCULATED = 'calculated';
 	const DEFINED = 'defined';
 	const BOTH = 'both';
-    
-    private $product;
+	
+	private $product;
 
 	private $prices = array();
 
@@ -30,12 +30,12 @@ class ProductPricing
 		$this->product = $product;
 		$this->application = $application;
 
-        if (is_null($prices))
+		if (is_null($prices))
 		{
-            $prices = $product->getRelatedRecordSet("ProductPrice", new ARSelectFilter());    
-        }
+			$prices = $product->getRelatedRecordSet("ProductPrice", new ARSelectFilter());	
+		}
 
-        if ($prices instanceof ARSet)
+		if ($prices instanceof ARSet)
 		{
 			foreach ($prices as $price)
 			{				
@@ -50,12 +50,12 @@ class ProductPricing
 				$this->prices[$id]->price->set($price);
 				$this->prices[$id]->resetModifiedStatus();
 			}
-		}            
+		}			
 	}
 
 	public function setPrice(ProductPrice $price)
 	{
-        $this->prices[$price->currency->get()->getID()] = $price;
+		$this->prices[$price->currency->get()->getID()] = $price;
 	}
 
 	/**
@@ -107,10 +107,10 @@ class ProductPricing
 	}
 
 	public function save()
-	{	    
-        foreach ($this->prices as $price)
+	{		
+		foreach ($this->prices as $price)
 		{
-		    $price->save();
+			$price->save();
 		}
 		foreach ($this->removedPrices as $price)
 		{
@@ -127,11 +127,11 @@ class ProductPricing
 	public function toArray($part = null)
 	{
 		if(!in_array($part, array('defined', 'calculated', 'both'))) $part = 'both';
-	    
-	    $defined = array();	
+		
+		$defined = array();	
 		foreach ($this->prices as $inst)
 		{
-		    $defined[$inst->currency->get()->getID()] = $inst->price->get();
+			$defined[$inst->currency->get()->getID()] = $inst->price->get();
 		}
 
 		$baseCurrency = $this->application->getDefaultCurrencyCode();				
@@ -143,13 +143,13 @@ class ProductPricing
 		{
 			if (!empty($defined[$id]))
 		  	{
-		  	    $calculated[$id] = $defined[$id];
+		  		$calculated[$id] = $defined[$id];
 			}
 			else
 			{
-			    $calculated[$id] = ProductPrice::calculatePrice($this->product, $currency, $basePrice);
+				$calculated[$id] = ProductPrice::calculatePrice($this->product, $currency, $basePrice);
 			}
-        
+		
 			$formattedPrice[$id] = $currency->getFormattedPrice($calculated[$id]);		
 		}
 	

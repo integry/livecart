@@ -11,24 +11,24 @@
 	
 	<h1>{t _remind_pass}</h1>
 	
-    {form action="controller=user action=doRemindPassword" method="post" handle=$form}
-        <p>
-            <label for="email">{t _your_email}:</label>
-            {textfield class="text" name="email"}
-        </p>
-        
-        <p>
-            <label></label>
-            <input type="submit" class="submit" value="{tn _continue}" />        
-           	<label class="cancel">
-                {t _or}    
-                <a class="cancel" href="{link route=$return controller=user}">{t _cancel}</a>
-            </label>
-        </p>
-        
-        <input type="hidden" name="return" value="{$return}" />
-        
-    {/form}
+	{form action="controller=user action=doRemindPassword" method="post" handle=$form}
+		<p>
+			<label for="email">{t _your_email}:</label>
+			{textfield class="text" name="email"}
+		</p>
+		
+		<p>
+			<label></label>
+			<input type="submit" class="submit" value="{tn _continue}" />		
+		   	<label class="cancel">
+				{t _or}	
+				<a class="cancel" href="{link route=$return controller=user}">{t _cancel}</a>
+			</label>
+		</p>
+		
+		<input type="hidden" name="return" value="{$return}" />
+		
+	{/form}
 	
 </div>
 

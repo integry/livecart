@@ -27,35 +27,35 @@ abstract class ProductParametersGroup extends MultilingualObject
 
 	public static function mergeGroupsWithFields($className, $groups, $fields)
 	{
-	    return ActiveRecordGroup::mergeGroupsWithFields($className, $groups, $fields);
+		return ActiveRecordGroup::mergeGroupsWithFields($className, $groups, $fields);
 	}
 	
 	public function setNextPosition()
 	{
-	    $className = get_class($this);
-	    
-	    if(!is_integer(self::$nextPosition))
-	    {
-		    $filter = new ARSelectFilter();
-		    $filter->setCondition(new EqualsCond(new ARFieldHandle($className, 'productID'), $this->product->get()->getID()));
-		    $filter->setOrder(new ARFieldHandle($className, 'position'), ARSelectFilter::ORDER_DESC);
-		    $filter->setLimit(1);
-		    
-		    self::$nextPosition = 0;
-		    foreach(ActiveRecord::getRecordSet($className, $filter) as $relatedProductGroup) 
-		    {
-		        self::$nextPosition = $relatedProductGroup->position->get();
-		    }
-	    }
-	    
-	    $this->position->set(++self::$nextPosition);
+		$className = get_class($this);
+		
+		if(!is_integer(self::$nextPosition))
+		{
+			$filter = new ARSelectFilter();
+			$filter->setCondition(new EqualsCond(new ARFieldHandle($className, 'productID'), $this->product->get()->getID()));
+			$filter->setOrder(new ARFieldHandle($className, 'position'), ARSelectFilter::ORDER_DESC);
+			$filter->setLimit(1);
+			
+			self::$nextPosition = 0;
+			foreach(ActiveRecord::getRecordSet($className, $filter) as $relatedProductGroup) 
+			{
+				self::$nextPosition = $relatedProductGroup->position->get();
+			}
+		}
+		
+		$this->position->set(++self::$nextPosition);
 	}
 	
 	public function save($forceOperation = false)
 	{
-	    if(!$this->isExistingRecord()) $this->setNextPosition();
-	    
-	    parent::save($forceOperation);
+		if(!$this->isExistingRecord()) $this->setNextPosition();
+		
+		parent::save($forceOperation);
 	}
 }
 

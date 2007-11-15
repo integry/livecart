@@ -25,13 +25,13 @@ class TransactionResult
 	
 	protected $type;
 	
-    const TYPE_SALE = 0;
-    const TYPE_AUTH = 1;
-    const TYPE_CAPTURE = 2;
-    const TYPE_VOID = 3;	
-    const TYPE_REFUND = 4;
-    
-    public function __construct()
+	const TYPE_SALE = 0;
+	const TYPE_AUTH = 1;
+	const TYPE_CAPTURE = 2;
+	const TYPE_VOID = 3;	
+	const TYPE_REFUND = 4;
+	
+	public function __construct()
 	{		
 		$this->gatewayTransactionID = new TransactionValueMapper();
 		$this->amount = new TransactionValueMapper();
@@ -42,25 +42,25 @@ class TransactionResult
 		$this->rawResponse = new TransactionValueMapper();
 	}
 	
-    public function setTransactionType($type)
-    {
-        $this->type = $type;
-    }
-    
-    public function getTransactionType()
-    {
-        return $this->type;
-    }
+	public function setTransactionType($type)
+	{
+		$this->type = $type;
+	}
+	
+	public function getTransactionType()
+	{
+		return $this->type;
+	}
 
-    public function isCaptured()
-    {
-        return (self::TYPE_SALE == $this->type) || (self::TYPE_CAPTURE == $this->type);
-    }    
-    
-    public function getDetails()
-    {
-        return $this->rawResponse;
-    }
+	public function isCaptured()
+	{
+		return (self::TYPE_SALE == $this->type) || (self::TYPE_CAPTURE == $this->type);
+	}	
+	
+	public function getDetails()
+	{
+		return $this->rawResponse;
+	}
 }
 
 ?>

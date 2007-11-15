@@ -12,84 +12,84 @@
 <thead>
 	<tr class="headRow">
 		
-        <th class="cell_cb"><input type="checkbox" class="checkbox" /></th>
+		<th class="cell_cb"><input type="checkbox" class="checkbox" /></th>
 		
-        {foreach from=$displayedColumns item=type key=column name="columns"}
+		{foreach from=$displayedColumns item=type key=column name="columns"}
 			{if !$smarty.foreach.columns.first}
 				<th class="first cellt_{$type} cell_{$column|replace:'.':'_'}">
 					<div style="position: relative;">
-                    <span class="fieldName">{$column}</span>
+					<span class="fieldName">{$column}</span>
 					
-                    {if 'bool' == $type}
-			    		
-                        <select id="filter_{$column}_{$id}">
+					{if 'bool' == $type}
+						
+						<select id="filter_{$column}_{$id}">
 							<option value="">{tn $column}</option>
 							<option value="1">{tn _yes}</option>
 							<option value="0">{tn _no}</option>
 						</select>	
-                        				
+										
 					{elseif 'numeric' == $type}
-                                                
-                        <div class="filterMenuContainer">
-                        
-                            {img src="image/silk/zoom.png" class="filterIcon" onclick="Event.stop(event);"}
-                            
-                            <div class="filterMenu">
-                                
-                                <ul onclick="$('filter_{$column}_{$id}').filter.initFilter(event);">
-                                    <li class="rangeFilterReset" symbol="">
-                                        <span class="sign">&nbsp;</span>
-                                        {t _grid_show_all}
-                                    </li>
-                                    <li symbol="=">
-                                        <span class="sign">=</span>
-                                        {t _grid_equals}
-                                    </li>
-                                    <li symbol="<>">
-                                        <span class="sign">&ne;</span>
-                                        {t _grid_not_equal}
-                                    </li>
-                                    <li symbol=">">
-                                        <span class="sign">&gt;</span>
-                                        {t _grid_greater}
-                                    </li>
-                                    <li symbol="<">
-                                        <span class="sign">&lt;</span>
-                                        {t _grid_less}
-                                    </li>
-                                    <li symbol=">=">
-                                        <span class="sign">&ge;</span>
-                                        {t _grid_greater_or_equal}
-                                    </li>
-                                    <li symbol="<=">
-                                        <span class="sign">&le;</span>
-                                        {t _grid_less_or_equal}
-                                    </li>
-                                    <li symbol="><">
-                                        <span class="sign">&gt;&lt;</span>
-                                        {t _grid_range}
-                                    </li>
-                                </ul>
-                            
-                            </div>
-                        
-                        </div>
+												
+						<div class="filterMenuContainer">
+						
+							{img src="image/silk/zoom.png" class="filterIcon" onclick="Event.stop(event);"}
+							
+							<div class="filterMenu">
+								
+								<ul onclick="$('filter_{$column}_{$id}').filter.initFilter(event);">
+									<li class="rangeFilterReset" symbol="">
+										<span class="sign">&nbsp;</span>
+										{t _grid_show_all}
+									</li>
+									<li symbol="=">
+										<span class="sign">=</span>
+										{t _grid_equals}
+									</li>
+									<li symbol="<>">
+										<span class="sign">&ne;</span>
+										{t _grid_not_equal}
+									</li>
+									<li symbol=">">
+										<span class="sign">&gt;</span>
+										{t _grid_greater}
+									</li>
+									<li symbol="<">
+										<span class="sign">&lt;</span>
+										{t _grid_less}
+									</li>
+									<li symbol=">=">
+										<span class="sign">&ge;</span>
+										{t _grid_greater_or_equal}
+									</li>
+									<li symbol="<=">
+										<span class="sign">&le;</span>
+										{t _grid_less_or_equal}
+									</li>
+									<li symbol="><">
+										<span class="sign">&gt;&lt;</span>
+										{t _grid_range}
+									</li>
+								</ul>
+							
+							</div>
+						
+						</div>
 
-                        <input type="text" class="text {$type}" id="filter_{$column}_{$id}" value="{$availableColumns.$column.name|escape}" onkeyup="RegexFilter(this, {ldelim} regex : '[^=<>.0-9]' {rdelim});" />
+						<input type="text" class="text {$type}" id="filter_{$column}_{$id}" value="{$availableColumns.$column.name|escape}" onkeyup="RegexFilter(this, {ldelim} regex : '[^=<>.0-9]' {rdelim});" />
 
-                        <div class="rangeFilter" style="display: none;">
-                            <input type="text" class="text numeric min" onclick="event.stopPropagation();" onchange="$('filter_{$column}_{$id}').filter.updateRangeFilter(event);" onkeyup="RegexFilter(this, {ldelim} regex : '[^.0-9]' {rdelim});" />
-                            <span class="rangeTo">-</span>
-                            <input type="text" class="text numeric max" onclick="event.stopPropagation();" onchange="$('filter_{$column}_{$id}').filter.updateRangeFilter(event);" onkeyup="RegexFilter(this, {ldelim} regex : '[^.0-9]' {rdelim});" />
-                        </div>
-        
-        
+						<div class="rangeFilter" style="display: none;">
+							<input type="text" class="text numeric min" onclick="event.stopPropagation();" onchange="$('filter_{$column}_{$id}').filter.updateRangeFilter(event);" onkeyup="RegexFilter(this, {ldelim} regex : '[^.0-9]' {rdelim});" />
+							<span class="rangeTo">-</span>
+							<input type="text" class="text numeric max" onclick="event.stopPropagation();" onchange="$('filter_{$column}_{$id}').filter.updateRangeFilter(event);" onkeyup="RegexFilter(this, {ldelim} regex : '[^.0-9]' {rdelim});" />
+						</div>
+		
+		
 					{* elseif 'date' == $type}
 
 					   {calendar noform="true" class="text `$type`" id="filter_`$column`_`$id`" value=$availableColumns.$column.name|escape style="float: left;"}
 
-                    *}
-                    
+					*}
+					
 					{else}
 
 					   <input type="text" class="text {$type}" id="filter_{$column}_{$id}" value="{$availableColumns.$column.name|escape}"  />
@@ -97,7 +97,7 @@
 					{/if}
 					
 					{img src="image/silk/bullet_arrow_up.png" class="sortPreview" }
-                    					
+										
 					</div>
 					
 				</th>		
@@ -119,18 +119,18 @@
 	{/section}
 </tbody>
 
-    </table>
+	</table>
 </div>
 
 <div class="activeGridColumns" >
 	<ul class="menu">
-        <li class="export">
-            <a href="#" onclick="window.location.href='{link controller=$controller action=export}?' + window.activeGrids['{$prefix}_{$id}'].ricoGrid.getQueryString(); console.log(window.activeGrids['{$prefix}_{$id}'].ricoGrid.getQueryString()); return false;">{t _grid_export}</a>
-        </li>
-        <li class="selectColumns">
-    	   <a href="#" onclick="Element.show($('{$prefix}ColumnMenu_{$id}')); return false;">{t _columns}</a>
-    	</li>
-    </ul>
+		<li class="export">
+			<a href="#" onclick="window.location.href='{link controller=$controller action=export}?' + window.activeGrids['{$prefix}_{$id}'].ricoGrid.getQueryString(); console.log(window.activeGrids['{$prefix}_{$id}'].ricoGrid.getQueryString()); return false;">{t _grid_export}</a>
+		</li>
+		<li class="selectColumns">
+		   <a href="#" onclick="Element.show($('{$prefix}ColumnMenu_{$id}')); return false;">{t _columns}</a>
+		</li>
+	</ul>
 </div>
 
 <div id="{$prefix}ColumnMenu_{$id}" class="activeGridColumnsRoot" style="display: none; position: relative;">
@@ -143,7 +143,7 @@
 			<span class="progressIndicator" style="display: none;"></span>
 			<input type="submit" class="submit" name="sm" value="{tn _change_columns}" /> {t _or} <a class="cancel" onclick="Element.hide($('{$prefix}ColumnMenu_{$id}')); return false;" href="#cancel">{t _cancel}</a>
 		</div>
-	    <div class="activeGridColumnsList">
+		<div class="activeGridColumnsList">
 			{foreach from=$availableColumns item=item key=column}
 			<p class="activeGridcolumn_{$column|replace:'.':'_'}">
 				<input type="checkbox" name="col[{$column}]" class="checkbox" id="column_{$id}_{$column}"{if $displayedColumns.$column}checked="checked"{/if} />
@@ -159,14 +159,14 @@
 
 {literal}
 <script type="text/javascript">
-    if(!window.activeGrids) window.activeGrids = {};
+	if(!window.activeGrids) window.activeGrids = {};
 {/literal};
  	
  	window.activeGrids['{$prefix}_{$id}'] = new ActiveGrid($('{$prefix}_{$id}'), '{$url}', {$totalCount}, $("{$prefix}LoadIndicator_{$id}"), {$rowCount}, {json array=$filters});
-    
+	
 	{foreach from=$displayedColumns item=index key=column name="columns"}
 		{if !$smarty.foreach.columns.first}
-		    new ActiveGridFilter($('filter_{$column}_{$id}'), window.activeGrids['{$prefix}_{$id}']);
+			new ActiveGridFilter($('filter_{$column}_{$id}'), window.activeGrids['{$prefix}_{$id}']);
 		{/if}
 	{/foreach}
 {literal}

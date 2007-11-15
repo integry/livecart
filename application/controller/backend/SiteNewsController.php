@@ -22,7 +22,7 @@ class SiteNewsController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-    public function edit()
+	public function edit()
 	{		
 		$form = $this->buildForm();
 		$form->loadData(NewsPost::getInstanceById($this->request->get('id'), NewsPost::LOAD_DATA)->toArray());
@@ -49,12 +49,12 @@ class SiteNewsController extends StoreManagementController
 	
 	/**
 	 * Create new record
-     * @role create
+	 * @role create
 	 */
-    public function add()
-    {        
-        return $this->save();
-    }	
+	public function add()
+	{		
+		return $this->save();
+	}	
 	
 	/**
 	 * Remove a news entry
@@ -109,21 +109,21 @@ class SiteNewsController extends StoreManagementController
 		
 		return new JSONResponse($post->toArray());
 	}
-    	
-    private function buildForm()
-    {
+		
+	private function buildForm()
+	{
 		ClassLoader::import("framework.request.validator.Form");
-		return new Form($this->buildValidator());        
-    }
+		return new Form($this->buildValidator());		
+	}
 
-    private function buildValidator()
-    {
-		ClassLoader::import("framework.request.validator.RequestValidator");        
-        $validator = new RequestValidator("newspost", $this->request);
-        $validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_enter_text')));
-     
-        return $validator;
-    }
+	private function buildValidator()
+	{
+		ClassLoader::import("framework.request.validator.RequestValidator");		
+		$validator = new RequestValidator("newspost", $this->request);
+		$validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_enter_text')));
+	 
+		return $validator;
+	}
 }
 
 ?>

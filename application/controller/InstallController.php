@@ -12,7 +12,7 @@ ClassLoader::import("framework.request.validator.RequestValidator");
  */	
 class InstallController extends FrontendController
 {
-    public function init()
+	public function init()
 	{
 	  	$this->setLayout('install');
 	}
@@ -20,63 +20,63 @@ class InstallController extends FrontendController
 	public function index()
 	{
 		$requirements = Installer::checkRequirements($this->application);
-        foreach ($requirements as $req)
-        {
-            if (1 != $req)
-            {
-		        $response = new ActionResponse();
-                $response->set('isReqError', true);
-                $response->set('requirements', $requirements);
-                return $response;
-            }
-        }
+		foreach ($requirements as $req)
+		{
+			if (1 != $req)
+			{
+				$response = new ActionResponse();
+				$response->set('isReqError', true);
+				$response->set('requirements', $requirements);
+				return $response;
+			}
+		}
 
-        return new ActionRedirectResponse('install', 'license');
+		return new ActionRedirectResponse('install', 'license');
 	}	
 	
 	public function license()
 	{
-        if ($lastStep = $this->verifyStep())
-        {
-            return $lastStep;
-        }
-        
-        $response = new ActionResponse('license', file_get_contents(ClassLoader::getRealPath('.') . 'license.txt'));
-        $response->set('form', $this->buildLicenseForm());
-        return $response;
-    }
-    
-    public function acceptLicense()
-    {
-        if (!$this->buildLicenseValidator()->isValid())
-        {
-            return new ActionRedirectResponse('install', 'license');
-        }
-        
-        return new ActionRedirectResponse('install', 'database');
-    }
-    
-    public function database()
-    {
-        if ($lastStep = $this->verifyStep())
-        {
-            return $lastStep;
-        }
+		if ($lastStep = $this->verifyStep())
+		{
+			return $lastStep;
+		}
+		
+		$response = new ActionResponse('license', file_get_contents(ClassLoader::getRealPath('.') . 'license.txt'));
+		$response->set('form', $this->buildLicenseForm());
+		return $response;
+	}
+	
+	public function acceptLicense()
+	{
+		if (!$this->buildLicenseValidator()->isValid())
+		{
+			return new ActionRedirectResponse('install', 'license');
+		}
+		
+		return new ActionRedirectResponse('install', 'database');
+	}
+	
+	public function database()
+	{
+		if ($lastStep = $this->verifyStep())
+		{
+			return $lastStep;
+		}
 
-        $response = new ActionResponse('form', $this->buildDatabaseForm());
-        
-        return $response;
-    }
-    
-    public function setDatabase()
-    {
+		$response = new ActionResponse('form', $this->buildDatabaseForm());
+		
+		return $response;
+	}
+	
+	public function setDatabase()
+	{
 		if (!$this->buildDatabaseValidator()->isValid())
 		{
 			return new ActionRedirectResponse('install', 'database');
 		}
 		
 		$dsn = 'mysql://' . 
-			       $this->request->get('username') . 
+				   $this->request->get('username') . 
 				   		($this->request->get('password') ? ':' . $this->request->get('password') : '') . 
 				   			'@' . $this->request->get('server') . 
 				   				'/' . $this->request->get('name');
@@ -97,43 +97,43 @@ class InstallController extends FrontendController
 			
 			file_put_contents($dsnFile, '<?php return ' . var_export($dsn, true) . '; ?>');
 			
-            ActiveRecord::beginTransaction();
-        
+			ActiveRecord::beginTransaction();
+		
 			// import schema
-            Installer::loadDatabaseDump(file_get_contents(ClassLoader::getRealPath('installdata.sql') . '/create.sql'));
-            
-            // create root category
-            Installer::loadDatabaseDump(file_get_contents(ClassLoader::getRealPath('installdata.sql') . '/initialData.sql'));
-		            
-		    // load US states
-            Installer::loadDatabaseDump(file_get_contents(ClassLoader::getRealPath('installdata.sql.state') . '/US.sql'));
-		            
-            ActiveRecord::commit();
-        	
+			Installer::loadDatabaseDump(file_get_contents(ClassLoader::getRealPath('installdata.sql') . '/create.sql'));
+			
+			// create root category
+			Installer::loadDatabaseDump(file_get_contents(ClassLoader::getRealPath('installdata.sql') . '/initialData.sql'));
+					
+			// load US states
+			Installer::loadDatabaseDump(file_get_contents(ClassLoader::getRealPath('installdata.sql.state') . '/US.sql'));
+					
+			ActiveRecord::commit();
+			
 			return new ActionRedirectResponse('install', 'admin');
 		}
 		catch (SQLException $e)
 		{
 			$validator = $this->buildDatabaseValidator();
 			$validator->triggerError('connect', $e->getNativeError());
-            $validator->saveState();		
-            
+			$validator->saveState();		
+			
 			return new ActionRedirectResponse('install', 'database');
 		}
 	}
 
 	public function admin()
 	{
-        if ($lastStep = $this->verifyStep())
-        {
-            return $lastStep;
-        }
+		if ($lastStep = $this->verifyStep())
+		{
+			return $lastStep;
+		}
 
 		return new ActionResponse('form', $this->buildAdminForm());
 	}
-    
-    public function setAdmin()
-    {
+	
+	public function setAdmin()
+	{
 		if (!$this->buildAdminValidator()->isValid())
 		{
 			return new ActionRedirectResponse('install', 'admin');
@@ -164,110 +164,110 @@ class InstallController extends FrontendController
 		
 		return new ActionRedirectResponse('install', 'config');
 	}
-    
-    public function config()
-    {
-        if ($lastStep = $this->verifyStep())
-        {
-            return $lastStep;
-        }
+	
+	public function config()
+	{
+		if ($lastStep = $this->verifyStep())
+		{
+			return $lastStep;
+		}
 
-        $form = $this->buildConfigForm();
-        
-        $form->set('language', 'en');
-        $form->set('curr', 'USD');
-        
+		$form = $this->buildConfigForm();
+		
+		$form->set('language', 'en');
+		$form->set('curr', 'USD');
+		
 		// get all Locale languages
 		$languages = $this->locale->info()->getAllLanguages();
 		asort($languages);
-                
-        $response = new ActionResponse('form', $form);
-        $response->set('languages', $languages);
-        $response->set('currencies', $this->locale->info()->getAllCurrencies());
-        return $response;
-    }
-    
-    public function setConfig()
-    {
+				
+		$response = new ActionResponse('form', $form);
+		$response->set('languages', $languages);
+		$response->set('currencies', $this->locale->info()->getAllCurrencies());
+		return $response;
+	}
+	
+	public function setConfig()
+	{
 		if (!$this->buildConfigValidator()->isValid())
 		{
 			return new ActionRedirectResponse('install', 'config');
 		}
-        
-        Language::deleteCache();
-        
-        // site name
-        $this->config->setValueByLang('STORE_NAME', $this->request->get('language'), $this->request->get('name'));
-        $this->config->save();
-        
-        ClassLoader::import('application.model.Currency');
-        
-        // create currency
-        try
-        {
-            $currency = Currency::getInstanceByID($this->request->get('curr'), Currency::LOAD_DATA);
-        }
-        catch (ARNotFoundException $e)
-        {
-            $currency = ActiveRecord::getNewInstance('Currency');
-            $currency->setID($this->request->get('curr'));
-            $currency->isEnabled->set(true);
-            $currency->isDefault->set(true);
-            $currency->save(ActiveRecord::PERFORM_INSERT);
-        }
-        
-        ClassLoader::import('application.model.system.Language');
-        
-        // create language
-        try
-        {
-            $language = Language::getInstanceByID($this->request->get('language'), Language::LOAD_DATA);
-        }
-        catch (ARNotFoundException $e)
-        {
-            $language = ActiveRecord::getNewInstance('Language');
-            $language->setID($this->request->get('language'));
-            $language->save(ActiveRecord::PERFORM_INSERT);
+		
+		Language::deleteCache();
+		
+		// site name
+		$this->config->setValueByLang('STORE_NAME', $this->request->get('language'), $this->request->get('name'));
+		$this->config->save();
+		
+		ClassLoader::import('application.model.Currency');
+		
+		// create currency
+		try
+		{
+			$currency = Currency::getInstanceByID($this->request->get('curr'), Currency::LOAD_DATA);
+		}
+		catch (ARNotFoundException $e)
+		{
+			$currency = ActiveRecord::getNewInstance('Currency');
+			$currency->setID($this->request->get('curr'));
+			$currency->isEnabled->set(true);
+			$currency->isDefault->set(true);
+			$currency->save(ActiveRecord::PERFORM_INSERT);
+		}
+		
+		ClassLoader::import('application.model.system.Language');
+		
+		// create language
+		try
+		{
+			$language = Language::getInstanceByID($this->request->get('language'), Language::LOAD_DATA);
+		}
+		catch (ARNotFoundException $e)
+		{
+			$language = ActiveRecord::getNewInstance('Language');
+			$language->setID($this->request->get('language'));
+			$language->save(ActiveRecord::PERFORM_INSERT);
 
-            $language->isEnabled->set(true);
-            $language->isDefault->set(true);
-            $language->save();
-        }
-     
-        // set root category name to "LiveCart"
-        ClassLoader::import('application.model.category.Category');
-        $root = Category::getInstanceById(Category::ROOT_ID, Category::LOAD_DATA);
-        $root->setValueByLang('name', $language->getID(), 'LiveCart');
-        $root->save();
-     
-     	// create a default shipping service
-        ClassLoader::import('application.model.delivery.DeliveryZone');
-        ClassLoader::import('application.model.delivery.ShippingService');
-        ClassLoader::import('application.model.delivery.ShippingRate');
-        
+			$language->isEnabled->set(true);
+			$language->isDefault->set(true);
+			$language->save();
+		}
+	 
+		// set root category name to "LiveCart"
+		ClassLoader::import('application.model.category.Category');
+		$root = Category::getInstanceById(Category::ROOT_ID, Category::LOAD_DATA);
+		$root->setValueByLang('name', $language->getID(), 'LiveCart');
+		$root->save();
+	 
+	 	// create a default shipping service
+		ClassLoader::import('application.model.delivery.DeliveryZone');
+		ClassLoader::import('application.model.delivery.ShippingService');
+		ClassLoader::import('application.model.delivery.ShippingRate');
+		
 		$service = ShippingService::getNewInstance(DeliveryZone::getDefaultZoneInstance(), 'Default Service', ShippingService::SUBTOTAL_BASED);
-        $service->save();
-     
-     	$rate = ShippingRate::getNewInstance($service, 0, 100000);
-     	$rate->flatCharge->set(10);
-     	$rate->save();
-     
-        // create a couple of blank static pages
-        ClassLoader::import('application.model.staticpage.StaticPage');
-        $page = StaticPage::getNewInstance();
-        $page->setValueByLang('title', $language->getID(), 'Contact Info');
-        $page->setValueByLang('text', $language->getID(), 'Enter your contact information here');
-        $page->isInformationBox->set(true);
-        $page->save();
-     
-        $page = StaticPage::getNewInstance();
-        $page->setValueByLang('title', $language->getID(), 'Shipping Policy');
-        $page->setValueByLang('text', $language->getID(), 'Enter your shipping rate & policy information here');
-        $page->isInformationBox->set(true);
-        $page->save();
+		$service->save();
+	 
+	 	$rate = ShippingRate::getNewInstance($service, 0, 100000);
+	 	$rate->flatCharge->set(10);
+	 	$rate->save();
+	 
+		// create a couple of blank static pages
+		ClassLoader::import('application.model.staticpage.StaticPage');
+		$page = StaticPage::getNewInstance();
+		$page->setValueByLang('title', $language->getID(), 'Contact Info');
+		$page->setValueByLang('text', $language->getID(), 'Enter your contact information here');
+		$page->isInformationBox->set(true);
+		$page->save();
+	 
+		$page = StaticPage::getNewInstance();
+		$page->setValueByLang('title', $language->getID(), 'Shipping Policy');
+		$page->setValueByLang('text', $language->getID(), 'Enter your shipping rate & policy information here');
+		$page->isInformationBox->set(true);
+		$page->save();
 
 		// create an example site news post
-        ClassLoader::import('application.model.sitenews.NewsPost');		
+		ClassLoader::import('application.model.sitenews.NewsPost');		
 		$news = ActiveRecordModel::getNewInstance('NewsPost');
 		$news->setValueByLang('title', $language->getID(), 'Our store is open');
 		$news->setValueByLang('text', $language->getID(), 'Powered by LiveCart software, we have gone live! Of course, we will have to go to <a href="../backend">the backend area</a> and add some categories and products first...');
@@ -275,40 +275,40 @@ class InstallController extends FrontendController
 		$news->isEnabled->set(true);
 		$news->save();
 
-        return new ActionRedirectResponse('install', 'finish');
-    }
-    
-    public function finish()
-    {
-        if ($lastStep = $this->verifyStep())
-        {
-            return $lastStep;
-        }
+		return new ActionRedirectResponse('install', 'finish');
+	}
+	
+	public function finish()
+	{
+		if ($lastStep = $this->verifyStep())
+		{
+			return $lastStep;
+		}
 
-        $response = new ActionResponse();
-        
-        return $response;
-    }
-    
-    private function verifyStep()
-    {
-        $steps = array('index', 'license', 'database', 'admin', 'config', 'finish');
-        $steps = array_flip($steps);
-        
-        $lastStepFile = ClassLoader::getRealPath('cache') . '/installStep.php';
-        
-        if (file_exists($lastStepFile))
-        {
-            $lastStep = include $lastStepFile;
-            if ($steps[$lastStep] > $steps[$this->request->getActionName()])
-            {
-                return new ActionRedirectResponse('install', $lastStep);
-            }
-        }
-        
-        file_put_contents($lastStepFile, '<?php return ' . var_export($this->request->getActionName(), true) . '; ?>');
-    }
-    
+		$response = new ActionResponse();
+		
+		return $response;
+	}
+	
+	private function verifyStep()
+	{
+		$steps = array('index', 'license', 'database', 'admin', 'config', 'finish');
+		$steps = array_flip($steps);
+		
+		$lastStepFile = ClassLoader::getRealPath('cache') . '/installStep.php';
+		
+		if (file_exists($lastStepFile))
+		{
+			$lastStep = include $lastStepFile;
+			if ($steps[$lastStep] > $steps[$this->request->getActionName()])
+			{
+				return new ActionRedirectResponse('install', $lastStep);
+			}
+		}
+		
+		file_put_contents($lastStepFile, '<?php return ' . var_export($this->request->getActionName(), true) . '; ?>');
+	}
+	
 	/**
 	 * @return RequestValidator
 	 */
@@ -325,8 +325,8 @@ class InstallController extends FrontendController
 	private function buildLicenseForm()
 	{
 		return new Form($this->buildLicenseValidator());
-	}    
-    
+	}	
+	
 	/**
 	 * @return RequestValidator
 	 */
@@ -345,7 +345,7 @@ class InstallController extends FrontendController
 	private function buildDatabaseForm()
 	{
 		return new Form($this->buildDatabaseValidator());
-	}    
+	}	
 
 	/**
 	 * @return RequestValidator
@@ -371,7 +371,7 @@ class InstallController extends FrontendController
 	private function buildAdminForm()
 	{
 		return new Form($this->buildAdminValidator());
-	}    
+	}	
 
 	/**
 	 * @return RequestValidator

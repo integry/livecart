@@ -11,14 +11,14 @@
 			{if '' != $id}
 				<p>
 					{checkbox name="specItem_`$id`" class="checkbox" value="on" id="product_`$cat`_`$product.ID`_specItem_`$id`"}
-                    <label class="checkbox" for="product_{$cat}_{$product.ID}_specItem_{$id}"> {$value}</label>
+					<label class="checkbox" for="product_{$cat}_{$product.ID}_specItem_{$id}"> {$value}</label>
 				</p>
 			{/if}
 		{/foreach}
 
 		<div class="other">
 			<p>
-                <label for="product_{$cat}_{$product.ID}_specItem_other_{$field.ID}"> {t _other}:</label>
+				<label for="product_{$cat}_{$product.ID}_specItem_other_{$field.ID}"> {t _other}:</label>
 				{textfield name="other[`$field.ID`][]" id="product_`$cat`_`$product.ID`_specItem_other_`$field.ID`"}
 			</p>
 		</div>
@@ -43,7 +43,7 @@
 {elseif $field.type == 4}
 	<div class="textarea" style="margin-left: 0;">
 		{textarea id="product_`$cat`_`$product.ID`_`$fieldName`" name=$fieldName class="tinyMCE"}
-        <div class="errorText hidden"></div> 
+		<div class="errorText hidden"></div> 
 	</div>
 
 {elseif $field.type == 6}

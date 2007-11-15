@@ -25,12 +25,12 @@ class SelectorFilter implements SpecificationFilterInterface
 	}
 	
 	/**
-     *	Adds JOIN definition to ARSelectFilter to retrieve product attribute value for the particular SpecField
-     *	
-     *	@param	ARSelectFilter	$filter	Filter instance
-     */
+	 *	Adds JOIN definition to ARSelectFilter to retrieve product attribute value for the particular SpecField
+	 *	
+	 *	@param	ARSelectFilter	$filter	Filter instance
+	 */
 	public function defineJoin(ARSelectFilter $filter)
-    {
+	{
 		$table = $this->getJoinAlias();
 		$filter->joinTable('SpecificationItem', 'Product', 'productID AND ' . $table . '.SpecFieldValueID = ' . $this->specFieldValue->getID(), 'ID', $table);				  				  		  	
 	}

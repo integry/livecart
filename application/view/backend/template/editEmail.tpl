@@ -2,14 +2,14 @@
 
 {form handle=$form action="controller=backend.template action=saveEmail" method="POST" id="templateForm"}
 
-    {if !$template.isFragment}
+	{if !$template.isFragment}
 	<p>
 		<label class="wide">{t _subject}:</label>
 		{textfield name="subject" id="subject" class="text wide"}	
 	</p>
 	{/if}
 	
-    <p>
+	<p>
 		{if !$template.isFragment}
 			<label class="wide">{t _body}:</label>
 		{/if}
@@ -17,15 +17,15 @@
 	</p>
 	
 	{language}
-    	{if !$template.isFragment}
-		    <p>
+		{if !$template.isFragment}
+			<p>
 				<label class="wide">{t _subject}:</label>
 				{textfield name="subject_`$lang.ID`" class="text wide"}	
 			</p>
 		{/if}
 		
-	    <p>
-    		{if !$template.isFragment}
+		<p>
+			{if !$template.isFragment}
 				<label class="wide">{t _body}:</label>
 			{/if}
 			{textarea name="body_`$lang.ID`" id="body_`$lang.ID`" class="body"}
@@ -33,7 +33,7 @@
 	{/language}
 	
 	{hidden name="file" id="file"}
-    	
+		
 	<fieldset class="controls" {denied role="template.save"}style="display: none;"{/denied}>
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" class="submit" value="{tn _save_template}" /> 

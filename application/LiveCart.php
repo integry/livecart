@@ -70,18 +70,18 @@ class LiveCart extends Application
 	 *  Determines if the application is running in development mode
 	 *
 	 *  The development mode has the following changes:
-     *    * SQL query logger is turned on (/cache/activerecord.log) 
-     *    * JavaScript and CSS stylesheet files are unbundled (slower to download, but allows debugging)
-     *
-     *  The development mode can be turned on by creating a file or directory named "dev" in the /cache directory.
-     *  It can be turned off by simply deleting the "dev" file.
+	 *	* SQL query logger is turned on (/cache/activerecord.log) 
+	 *	* JavaScript and CSS stylesheet files are unbundled (slower to download, but allows debugging)
+	 *
+	 *  The development mode can be turned on by creating a file or directory named "dev" in the /cache directory.
+	 *  It can be turned off by simply deleting the "dev" file.
 	 */
-    private $isDevMode;
-    
+	private $isDevMode;
+	
 	/**
 	 *  Determines if the application is installed
 	 */
-    private $isInstalled;
+	private $isInstalled;
 	
 	const EXCLUDE_DEFAULT_CURRENCY = false;
 
@@ -96,9 +96,9 @@ class LiveCart extends Application
 	 */
 	public function __construct()
 	{
-        ClassLoader::import('application.model.ActiveRecordModel');
-        ClassLoader::import('framework.renderer.SmartyRenderer');
-        
+		ClassLoader::import('application.model.ActiveRecordModel');
+		ClassLoader::import('framework.renderer.SmartyRenderer');
+		
 		parent::__construct();
 		
 		unset($this->session);
@@ -109,50 +109,50 @@ class LiveCart extends Application
 		$dsnPath = ClassLoader::getRealPath("storage.configuration.database") . '.php';
 		$this->isInstalled = file_exists($dsnPath);
 		
-        if ($this->isInstalled)
-        {
-            ActiveRecord::setDSN(include $dsnPath);
-        }
+		if ($this->isInstalled)
+		{
+			ActiveRecord::setDSN(include $dsnPath);
+		}
 
-        // LiveCart request routing rules
-        include ClassLoader::getRealPath('application.configuration.route.backend') . '.php';        		
-        		
+		// LiveCart request routing rules
+		include ClassLoader::getRealPath('application.configuration.route.backend') . '.php';				
+				
 		ActiveRecordModel::setApplicationInstance($this);
 		
 		if (file_exists(ClassLoader::getRealPath("cache.dev")))
 		{
-            $this->setDevMode(true);
-        }
-        
-        if ($this->isDevMode())
-        {
-            ActiveRecord::getLogger()->setLogFileName(ClassLoader::getRealPath("cache") . DIRECTORY_SEPARATOR . "activerecord.log");            
-        }
+			$this->setDevMode(true);
+		}
+		
+		if ($this->isDevMode())
+		{
+			ActiveRecord::getLogger()->setLogFileName(ClassLoader::getRealPath("cache") . DIRECTORY_SEPARATOR . "activerecord.log");			
+		}
 
 		$compileDir = $this->isCustomizationMode() ? 'cache.templates_c.customize' : 'cache.templates_c';
-        SmartyRenderer::setCompileDir(ClassLoader::getRealPath($compileDir));
-        
-        // mod_rewrite disabled?
-        if ($this->request->get('noRewrite'))
-        {
+		SmartyRenderer::setCompileDir(ClassLoader::getRealPath($compileDir));
+		
+		// mod_rewrite disabled?
+		if ($this->request->get('noRewrite'))
+		{
 			$this->router->setBaseDir($_SERVER['baseDir'], $_SERVER['virtualBaseDir']);
 		}
 	}
 	
-    public function setDevMode($devMode = true)
-    {
-        $this->isDevMode = $devMode;
-    }	
+	public function setDevMode($devMode = true)
+	{
+		$this->isDevMode = $devMode;
+	}	
 
-    public function isDevMode()
-    {
-        return $this->isDevMode;
-    }	
+	public function isDevMode()
+	{
+		return $this->isDevMode;
+	}	
 	
-    public function isInstalled()
-    {
-        return $this->isInstalled;
-    }	
+	public function isInstalled()
+	{
+		return $this->isInstalled;
+	}	
 	
 	/**
 	 * Registers a new plugin directory (multiple plugin directories are supported)
@@ -174,14 +174,14 @@ class LiveCart extends Application
 	public function getView($controllerName, $actionName)
 	{		
 		// get custom template path
-        $path = ClassLoader::getRealPath('storage.customize.view.' . $controllerName . '.' . $actionName) . '.tpl';
-        
-        if (!is_readable($path))
-        {
-            return parent::getView($controllerName, $actionName);
-        }
-        
-        return $path;
+		$path = ClassLoader::getRealPath('storage.customize.view.' . $controllerName . '.' . $actionName) . '.tpl';
+		
+		if (!is_readable($path))
+		{
+			return parent::getView($controllerName, $actionName);
+		}
+		
+		return $path;
 	}
 
 	/**
@@ -193,14 +193,14 @@ class LiveCart extends Application
 	public function getLayoutPath($layout)
 	{
 		// get custom template path
-        $path = ClassLoader::getRealPath('storage.customize.view.layout.' . $layout) . '.tpl';
-        
-        if (!is_readable($path))
-        {
-            return parent::getLayoutPath($layout);
-        }
-        
-        return $path;
+		$path = ClassLoader::getRealPath('storage.customize.view.layout.' . $layout) . '.tpl';
+		
+		if (!is_readable($path))
+		{
+			return parent::getLayoutPath($layout);
+		}
+		
+		return $path;
 	}	
 		
 	/**
@@ -228,8 +228,8 @@ class LiveCart extends Application
 	
 	public function isBackend()
 	{
-        return $this->isBackend;
-    }
+		return $this->isBackend;
+	}
 	
 	public function templateLocator($tplSource, $smarty)
 	{
@@ -273,7 +273,7 @@ class LiveCart extends Application
 		return parent::getControllerInstance($controllerName);
 	}
 		
-    /**
+	/**
 	 * Executes controllers action and returns response
 	 *
 	 * @param string $controllerName Controller name
@@ -288,32 +288,32 @@ class LiveCart extends Application
 		$this->processPlugins($controllerInstance, $response);
 	
 		return $response;
-	}    
+	}	
 	
 	protected function postProcessResponse(Response $response, Controller $controllerInstance)
 	{
 		if ($response instanceof BlockResponse)
 		{
-            $response->set('user', $controllerInstance->getUser()->toArray());
-		}        
-    }
+			$response->set('user', $controllerInstance->getUser()->toArray());
+		}		
+	}
 
 	/**
- `	 * Execute response post-processor plugins        
+ `	 * Execute response post-processor plugins		
  	 *
 	 * @todo Cache plugin file locations
 	 */
-    private function processPlugins(Controller $controllerInstance, Response $response)
+	private function processPlugins(Controller $controllerInstance, Response $response)
 	{
-        $name = $controllerInstance->getControllerName();
-        $action = $controllerInstance->getRequest()->getActionName();
-        
+		$name = $controllerInstance->getControllerName();
+		$action = $controllerInstance->getRequest()->getActionName();
+		
 		ClassLoader::import('application.ControllerPlugin');
 				
 		$dirs = array_merge(array(ClassLoader::getRealPath('plugin.controller.' . $name . '.' . $action) => 0), self::$pluginDirectories);
 				
-        foreach ($dirs as $pluginDir => $type)
-        {
+		foreach ($dirs as $pluginDir => $type)
+		{
 			if ($type)
 			{
 				$pluginDir = $pluginDir . '/controller/' . $name . '/' . $action;
@@ -321,22 +321,22 @@ class LiveCart extends Application
 
 			if (!is_dir($pluginDir))
 			{
-	            continue;
-	        }
+				continue;
+			}
 
 			foreach (new DirectoryIterator($pluginDir) as $file)
 			{
-	            if (substr($file->getFileName(), -4) == '.php')
-	            {
-	                include_once($file->getPathname());
-	                $class = substr($file->getFileName(), 0, -4);
-	                $plugin = new $class($response, $controllerInstance);
-	                $plugin->process();
-	            }
-	        }
+				if (substr($file->getFileName(), -4) == '.php')
+				{
+					include_once($file->getPathname());
+					$class = substr($file->getFileName(), 0, -4);
+					$plugin = new $class($response, $controllerInstance);
+					$plugin->process();
+				}
+			}
 		}
-    }
-    
+	}
+	
 	public function isCustomizationMode()
 	{
 		return $this->session->get('customizationMode');
@@ -345,13 +345,13 @@ class LiveCart extends Application
 	public function isTranslationMode()
 	{
 		return $this->session->get('translationMode');
-	}    
+	}	
 	
 	private function loadSession()
 	{
 	  	ClassLoader::import("framework.request.Session");
-    	$this->session = new Session();
-    	return $this->session;
+		$this->session = new Session();
+		return $this->session;
 	}
 	
 	/**
@@ -375,10 +375,10 @@ class LiveCart extends Application
 		return $this->locale->translator()->makeText($key, $params);
 	}
 	
-    private function loadLocale()
+	private function loadLocale()
 	{
 		ClassLoader::import('library.locale.Locale');
-		    	
+				
 		$this->locale =	Locale::getInstance($this->localeName);
 		$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('storage.language'));
 		$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('application.configuration.language'));
@@ -393,7 +393,7 @@ class LiveCart extends Application
 	private function loadLocaleName()
 	{
 		ClassLoader::import('library.locale.Locale');
-		    	
+				
 		if ($this->requestLanguage)
 		{
 			$this->localeName = $this->requestLanguage;
@@ -405,29 +405,29 @@ class LiveCart extends Application
 
 		return $this->localeName;
 	}
-    	
+		
 	private function __get($name)
 	{
 		switch ($name)
 	  	{
-		    case 'locale':
-		    	return $this->loadLocale();
-		    break;
+			case 'locale':
+				return $this->loadLocale();
+			break;
 
-		    case 'localeName':
-		    	return $this->loadLocaleName();
-		    break;
+			case 'localeName':
+				return $this->loadLocaleName();
+			break;
 
-		    case 'config':
-		    	return $this->loadConfig();
-		    break;
+			case 'config':
+				return $this->loadConfig();
+			break;
 
-		    case 'session':
-		    	return $this->loadSession();
-		    break;
+			case 'session':
+				return $this->loadSession();
+			break;
 
 			default:
-		    break;
+			break;
 		}
 	}	
 
@@ -470,25 +470,25 @@ class LiveCart extends Application
 			{
 				try
 				{
-                    $langFilter = new ARSelectFilter();
-    	    	  	$langFilter->setOrder(new ARFieldHandle("Language", "position"), ARSelectFilter::ORDER_ASC);
-    				$this->languageList = ActiveRecordModel::getRecordSet("Language", $langFilter);
-    				if (!$this->languageList->size())
-    				{
-                        throw new ApplicationException('No languages have been added');
-                    }
-    				file_put_contents($langCache, '<?php return unserialize(' . var_export(serialize($this->languageList), true) . '); ?>');
-    			}
-    			catch (Exception $e)
-    			{
-                    // if the database hasn't yet been created
-                    $this->languageList = new ARSet();
-                    $lang = ActiveRecordModel::getNewInstance('Language');
-                    $lang->setID('en');
-                    $lang->isEnabled->set(1);
-                    $lang->isDefault->set(1);
-                    $this->languageList->unshift($lang);
-                }
+					$langFilter = new ARSelectFilter();
+				  	$langFilter->setOrder(new ARFieldHandle("Language", "position"), ARSelectFilter::ORDER_ASC);
+					$this->languageList = ActiveRecordModel::getRecordSet("Language", $langFilter);
+					if (!$this->languageList->size())
+					{
+						throw new ApplicationException('No languages have been added');
+					}
+					file_put_contents($langCache, '<?php return unserialize(' . var_export(serialize($this->languageList), true) . '); ?>');
+				}
+				catch (Exception $e)
+				{
+					// if the database hasn't yet been created
+					$this->languageList = new ARSet();
+					$lang = ActiveRecordModel::getNewInstance('Language');
+					$lang->setID('en');
+					$lang->isEnabled->set(1);
+					$lang->isDefault->set(1);
+					$this->languageList->unshift($lang);
+				}
 			}			
 		}
 		
@@ -502,20 +502,20 @@ class LiveCart extends Application
 	 */
 	public function getLanguageSetArray($includeDefaultLanguage = false, $includeDisabledLanguages = true)
 	{
-        $ret = $this->languageList->toArray();
-        
-        $defLang = $this->getDefaultLanguageCode();
-        
-        foreach ($ret as $key => $data)
-        {
-            if ((($data['ID'] == $defLang) && !$includeDefaultLanguage) || (!$includeDisabledLanguages && $data['isEnabled'] == 0))
-            {
-                unset($ret[$key]);
-            }
-        }
-        
-        return $ret;
-    }
+		$ret = $this->languageList->toArray();
+		
+		$defLang = $this->getDefaultLanguageCode();
+		
+		foreach ($ret as $key => $data)
+		{
+			if ((($data['ID'] == $defLang) && !$includeDefaultLanguage) || (!$includeDisabledLanguages && $data['isEnabled'] == 0))
+			{
+				unset($ret[$key]);
+			}
+		}
+		
+		return $ret;
+	}
 
 	/**
 	 * Gets an installed language code array
@@ -679,25 +679,25 @@ class LiveCart extends Application
 		ClassLoader::import('library.payment.PaymentMethodManager');		
 		if (!$enabledOnly)
 		{
-            return PaymentMethodManager::getExpressPaymentHandlerList();
-        }
-        else
-        {
-            return is_array($this->config->get('EXPRESS_HANDLERS')) ? array_keys($this->config->get('EXPRESS_HANDLERS')) : array();
-        }
+			return PaymentMethodManager::getExpressPaymentHandlerList();
+		}
+		else
+		{
+			return is_array($this->config->get('EXPRESS_HANDLERS')) ? array_keys($this->config->get('EXPRESS_HANDLERS')) : array();
+		}
 	}
 
-    public function getExpressPaymentHandler($handlerName, TransactionDetails $details = null)
-    {
-        if (!in_array($handlerName, $this->getExpressPaymentHandlerList(true)))
-        {
-            throw new Exception('Invalid express checkout handler');
-        }
-        
+	public function getExpressPaymentHandler($handlerName, TransactionDetails $details = null)
+	{
+		if (!in_array($handlerName, $this->getExpressPaymentHandlerList(true)))
+		{
+			throw new Exception('Invalid express checkout handler');
+		}
+		
 		ClassLoader::import('library.payment.method.express.' . $handlerName);
 		
 		return $this->getPaymentHandler($handlerName, $details);
-    }
+	}
 
 	/**
 	 * Returns an instance of the selected credit card handler
@@ -711,12 +711,12 @@ class LiveCart extends Application
 		return $this->getPaymentHandler($handler, $details);
 	}
 
-    public function getPaymentHandler($className, TransactionDetails $details = null)
-    {
-        if (!class_exists($className, false))
-        {
-            ClassLoader::import('library.payment.method.' . $className); 
-        }   
+	public function getPaymentHandler($className, TransactionDetails $details = null)
+	{
+		if (!class_exists($className, false))
+		{
+			ClassLoader::import('library.payment.method.' . $className); 
+		}   
 
 		if (is_null($details))
 		{
@@ -734,16 +734,16 @@ class LiveCart extends Application
 		}
 		
 		// check if the currency is supported by the payment handler
-        $currency = $inst->getValidCurrency($details->currency->get());
+		$currency = $inst->getValidCurrency($details->currency->get());
 		if (($details->currency->get() != $currency) && !is_null($details->currency->get()))
 		{
-            $newAmount = Currency::getInstanceById($currency, Currency::LOAD_DATA)->convertAmount(Currency::getInstanceById($details->currency->get(), Currency::LOAD_DATA), $details->amount->get());
-            $details->currency->set($currency);
-            $details->amount->set($newAmount);            
-        }
+			$newAmount = Currency::getInstanceById($currency, Currency::LOAD_DATA)->convertAmount(Currency::getInstanceById($details->currency->get(), Currency::LOAD_DATA), $details->amount->get());
+			$details->currency->set($currency);
+			$details->amount->set($newAmount);			
+		}
 
-        return $inst;
-    }
+		return $inst;
+	}
 
 	/**
 	 * Returns an array of available payment (non-credit card and non-express payment) handlers
@@ -753,23 +753,23 @@ class LiveCart extends Application
 		ClassLoader::import('library.payment.PaymentMethodManager');		
 		if (!$enabledOnly)
 		{
-            return PaymentMethodManager::getRegularPaymentHandlerList();
-        }
-        else
-        {
-            return is_array($this->config->get('PAYMENT_HANDLERS')) ? array_keys($this->config->get('PAYMENT_HANDLERS')) : array();
-        }
+			return PaymentMethodManager::getRegularPaymentHandlerList();
+		}
+		else
+		{
+			return is_array($this->config->get('PAYMENT_HANDLERS')) ? array_keys($this->config->get('PAYMENT_HANDLERS')) : array();
+		}
 	}
 
-    public function getCardTypes(CreditCardPayment $handler)
-    {
+	public function getCardTypes(CreditCardPayment $handler)
+	{
 		$key = get_class($handler) . '_cardTypes';
 		if ($this->config->isValueSet($key, true))
 		{
 			$types = array_keys($this->config->get($key));
 			return array_combine($types, $types);			
 		}
-    }
+	}
 
 	/**
 	 * Returns an array of all real-time shipping rate services
@@ -792,8 +792,8 @@ class LiveCart extends Application
 	/**
 	 * Returns a shipping handler instance
 	 */
-    public function getShippingHandler($className)
-    {
+	public function getShippingHandler($className)
+	{
 		ClassLoader::import('library.shipping.method.' . $className);
 
 		$inst = new $className();
@@ -802,12 +802,12 @@ class LiveCart extends Application
 		foreach ($c as $key => $value)
 		{
 			$value = $this->config->get($key);
-            $key = substr($key, strlen($className) + 1);
+			$key = substr($key, strlen($className) + 1);
 			$inst->setConfigValue($key, $value);
 		}
 		
-		return $inst;        
-    }
+		return $inst;		
+	}
 
 	/**
 	 * Loads currency data from database
@@ -825,7 +825,7 @@ class LiveCart extends Application
 	  	foreach ($currencies as $currency)
 	  	{
 	  		if ($currency->isDefault())
-		    {
+			{
 			  	$this->defaultCurrency = $currency;
 			}
 		

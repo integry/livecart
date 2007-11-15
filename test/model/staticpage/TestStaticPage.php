@@ -11,15 +11,15 @@ ClassLoader::import("application.model.staticpage.StaticPage");
  */ 
 class TestStaticPage extends UnitTest
 {  
-    public function getUsedSchemas()
-    {
-        return array(
-            'StaticPage'
-        );
-    }
-    
-    function testCreate()
-    {        
+	public function getUsedSchemas()
+	{
+		return array(
+			'StaticPage'
+		);
+	}
+	
+	function testCreate()
+	{		
 		$page = StaticPage::getNewInstance();
 		$page->setTitle('test title');
 		$page->save();
@@ -30,10 +30,10 @@ class TestStaticPage extends UnitTest
 		$this->assertEqual($instance->getTitle(), $page->getTitle());
 		
 		$page->delete();
-    }    
+	}	
 
-    function testUpdate()
-    {        
+	function testUpdate()
+	{		
 		$page = StaticPage::getNewInstance();
 		$page->setTitle('test title');
 		$page->save();
@@ -50,7 +50,7 @@ class TestStaticPage extends UnitTest
 		$this->assertTrue(file_exists($page->getFileName()));
 		$page->delete();
 		$this->assertFalse(file_exists($page->getFileName()));
-    }    
+	}	
 
 }
 

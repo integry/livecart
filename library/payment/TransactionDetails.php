@@ -74,13 +74,13 @@ class TransactionDetails
 	
 	public function getData()
 	{
-        return $this->data;
-    }
-    
-    public function getName()
-    {
-        return $this->firstName->get() . ' ' . $this->lastName->get();
-    }
+		return $this->data;
+	}
+	
+	public function getName()
+	{
+		return $this->firstName->get() . ' ' . $this->lastName->get();
+	}
 }
 
 ?>

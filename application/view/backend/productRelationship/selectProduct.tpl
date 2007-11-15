@@ -23,35 +23,35 @@
 
 <div id="catgegoryContainer" class="treeContainer">
 	
-    <div style="margin-bottom: 5px; text-align: center;">
-        <ul class="menu">
-            <li class="done">
-                <a class="menu" href="#" onclick="window.close(); return false;">
-                    {t _done_adding}
-                </a>
-            </li>
-        </ul>
-    </div>
-    
-    <div id="categoryBrowser" class="treeBrowser"> </div>
-        
-    <div id="confirmations"></div>
-        
-    <div id="confirmations">
-        <div id="redZone">
-            <div id="productRelationshipCreateFailure" class="redMessage" style="display: none;">
-                {img class="closeMessage" src="image/silk/cancel.png"}
-                <div>{t _could_not_create_product_relationship}</div>
-            </div>
-        </div>
-        <div id="yellowZone">
-            <div id="productRelationshipCreated" class="yellowMessage" style="display: none;">
-                {img class="closeMessage" src="image/silk/cancel.png"}
-                <div>{t _a_relationship_between_products_was_successfully_created}</div>
-            </div>
-        </div>
-    </div>
-    
+	<div style="margin-bottom: 5px; text-align: center;">
+		<ul class="menu">
+			<li class="done">
+				<a class="menu" href="#" onclick="window.close(); return false;">
+					{t _done_adding}
+				</a>
+			</li>
+		</ul>
+	</div>
+	
+	<div id="categoryBrowser" class="treeBrowser"> </div>
+		
+	<div id="confirmations"></div>
+		
+	<div id="confirmations">
+		<div id="redZone">
+			<div id="productRelationshipCreateFailure" class="redMessage" style="display: none;">
+				{img class="closeMessage" src="image/silk/cancel.png"}
+				<div>{t _could_not_create_product_relationship}</div>
+			</div>
+		</div>
+		<div id="yellowZone">
+			<div id="productRelationshipCreated" class="yellowMessage" style="display: none;">
+				{img class="closeMessage" src="image/silk/cancel.png"}
+				<div>{t _a_relationship_between_products_was_successfully_created}</div>
+			</div>
+		</div>
+	</div>
+	
 </div>
 <div id="activeCategoryPath"></div>
  
@@ -95,28 +95,28 @@
 
 {literal}
 <script type="text/javascript">
-    Backend.Category.links = {};
-    Backend.Category.links.categoryRecursiveAutoloading = '{/literal}{link controller=backend.category action=xmlRecursivePath}{literal}';
+	Backend.Category.links = {};
+	Backend.Category.links.categoryRecursiveAutoloading = '{/literal}{link controller=backend.category action=xmlRecursivePath}{literal}';
 	Backend.Category.links.countTabsItems = '{/literal}{link controller=backend.category action=countTabsItems id=_id_}{literal}';
-    Backend.Category.links.categoryAutoloading = '{/literal}{link controller=backend.category action=xmlBranch}{literal}';	    
-        
-	Backend.Category.init();    
+	Backend.Category.links.categoryAutoloading = '{/literal}{link controller=backend.category action=xmlBranch}{literal}';		
+		
+	Backend.Category.init();	
 	
 	Backend.Category.treeBrowser.setXMLAutoLoading(Backend.Category.links.categoryAutoloading); 
-    Backend.Category.addCategories({/literal}{json array=$categoryList}{literal});
-    
+	Backend.Category.addCategories({/literal}{json array=$categoryList}{literal});
+	
 	Backend.Category.activeCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
 	Backend.Category.initPage();
-    
-    Backend.Category.loadBookmarkedCategory();
-    
-    {/literal}
-        {allowed role="product"}
-            Backend.Product.productsMiscPermision = true;
-        {/allowed}
-    {literal}
+	
+	Backend.Category.loadBookmarkedCategory();
+	
+	{/literal}
+		{allowed role="product"}
+			Backend.Product.productsMiscPermision = true;
+		{/allowed}
+	{literal}
 </script>
 {/literal}
-    
+	
 </body>
 </html>

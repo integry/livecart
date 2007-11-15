@@ -17,20 +17,20 @@ ClassLoader::import('application.model.specification.*');
  */
 class SpecField extends MultilingualObject
 {
-    const DATATYPE_TEXT = 1;
-    const DATATYPE_NUMBERS = 2;
+	const DATATYPE_TEXT = 1;
+	const DATATYPE_NUMBERS = 2;
 
-    const TYPE_NUMBERS_SELECTOR = 1;
-    const TYPE_NUMBERS_SIMPLE = 2;
+	const TYPE_NUMBERS_SELECTOR = 1;
+	const TYPE_NUMBERS_SIMPLE = 2;
 
-    const TYPE_TEXT_SIMPLE = 3;
-    const TYPE_TEXT_ADVANCED = 4;
-    const TYPE_TEXT_SELECTOR = 5;
-    const TYPE_TEXT_DATE = 6;
+	const TYPE_TEXT_SIMPLE = 3;
+	const TYPE_TEXT_ADVANCED = 4;
+	const TYPE_TEXT_SELECTOR = 5;
+	const TYPE_TEXT_DATE = 6;
 
-    /**
-     * Define SpecField database schema
-     */
+	/**
+	 * Define SpecField database schema
+	 */
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -51,11 +51,11 @@ class SpecField extends MultilingualObject
 		$schema->registerField(new ARField("isDisplayedInList", ARBool::instance()));
 		$schema->registerField(new ARField("valuePrefix", ARArray::instance()));
 		$schema->registerField(new ARField("valueSuffix", ARArray::instance()));
-	}    
-    
-	/*####################  Static method implementations ####################*/		    
-    
-    /**
+	}	
+	
+	/*####################  Static method implementations ####################*/			
+	
+	/**
 	 * Get instance SpecField record by id
 	 *
 	 * @param mixred $recordID Id
@@ -120,24 +120,24 @@ class SpecField extends MultilingualObject
 
 	/*####################  Value retrieval and manipulation ####################*/	
 
-    /**
-     * Adds a "choice" value to this field
-     *
-     * @param SpecFieldValue $value
-     *
-     * @todo calculate value position if needed
-     */
-    public function addValue(SpecFieldValue $value)
-    {
+	/**
+	 * Adds a "choice" value to this field
+	 *
+	 * @param SpecFieldValue $value
+	 *
+	 * @todo calculate value position if needed
+	 */
+	public function addValue(SpecFieldValue $value)
+	{
 		$value->specField->set($this);
 		$value->save();
-    }
+	}
 
-    /**
-     * Gets a related table name, where field values are stored
-     *
-     * @return array
-     */
+	/**
+	 * Gets a related table name, where field values are stored
+	 *
+	 * @return array
+	 */
 	public function getValueTableName()
 	{
 		switch ($this->type->get())  
@@ -238,33 +238,33 @@ class SpecField extends MultilingualObject
 	 */
 	public static function getSelectorValueTypes()
 	{
-	    return array(self::TYPE_NUMBERS_SELECTOR, self::TYPE_TEXT_SELECTOR);
+		return array(self::TYPE_NUMBERS_SELECTOR, self::TYPE_TEXT_SELECTOR);
 	}
 	
 	public static function getNumberTypes()
 	{
-	    return array(self::TYPE_NUMBERS_SELECTOR, self::TYPE_NUMBERS_SIMPLE);
+		return array(self::TYPE_NUMBERS_SELECTOR, self::TYPE_NUMBERS_SIMPLE);
 	}
 	
 	public static function getTextTypes()
 	{
-	    return array(self::TYPE_TEXT_SIMPLE, self::TYPE_TEXT_ADVANCED, self::TYPE_TEXT_SELECTOR, self::TYPE_TEXT_DATE);
+		return array(self::TYPE_TEXT_SIMPLE, self::TYPE_TEXT_ADVANCED, self::TYPE_TEXT_SELECTOR, self::TYPE_TEXT_DATE);
 	}
 	
 	public function allowManageFilters()
 	{
-	    return $this->isDate() || $this->isSimpleNumbers();
+		return $this->isDate() || $this->isSimpleNumbers();
 	}
 	
 	public static function getMultilanguageTypes()
 	{
-	    return array(self::TYPE_TEXT_SIMPLE, self::TYPE_TEXT_ADVANCED, self::TYPE_TEXT_SELECTOR);
+		return array(self::TYPE_TEXT_SIMPLE, self::TYPE_TEXT_ADVANCED, self::TYPE_TEXT_SELECTOR);
 	}
 	
 	public static function getDataTypeFromType($type) 
 	{
-	    if(in_array($type, self::getTextTypes())) return self::DATATYPE_TEXT;
-	    else return self::DATATYPE_NUMBERS;
+		if(in_array($type, self::getTextTypes())) return self::DATATYPE_TEXT;
+		else return self::DATATYPE_NUMBERS;
 	}
 
 	public function getFormFieldName($language = false)
@@ -279,11 +279,11 @@ class SpecField extends MultilingualObject
 	 */
 	public static function deleteById($id)
 	{
-	    return parent::deleteByID(__CLASS__, (int)$id);
+		return parent::deleteByID(__CLASS__, (int)$id);
 	}	
  
-    protected function insert()
-    {
+	protected function insert()
+	{
 		// get max position
 	  	$f = new ARSelectFilter();
 	  	$f->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'categoryID'), $this->category->get()->getID()));
@@ -305,14 +305,14 @@ class SpecField extends MultilingualObject
 	 *	@return array
 	 */
 	public function toArray()
-    {
+	{
 	  	$array = parent::toArray();
 	  	$array['fieldName'] = $this->getFormFieldName();
 	  	
 	  	return $array;
 	}
 
-	/*####################  Get related objects ####################*/    
+	/*####################  Get related objects ####################*/	
 
 	public function getFiltersGroupsListArray()
 	{
@@ -320,23 +320,23 @@ class SpecField extends MultilingualObject
 		$filter->setOrder(new ARFieldHandle("FilterGroup", "position"));
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("FilterGroup", "specFieldID"), $this->getID()));
 
-        $filterGroups = FilterGroup::getRecordSet($filter);
-        $filterGroupsArray = array();
-        $i = 0;
-        foreach($filterGroups as $filter)
-        {
-            $filterGroupsArray[$i] = $filter->toArray(false);
-            if($this->isSelector())
-            {
-                $filterGroupsArray[$i]['filtersCount'] = $this->getValuesSet()->getTotalRecordCount();
-            }
-            else
-            {
-                $filterGroupsArray[$i]['filtersCount'] = $filter->getFiltersList()->getTotalRecordCount();
-            }
-            $i++;
-        }
-        
+		$filterGroups = FilterGroup::getRecordSet($filter);
+		$filterGroupsArray = array();
+		$i = 0;
+		foreach($filterGroups as $filter)
+		{
+			$filterGroupsArray[$i] = $filter->toArray(false);
+			if($this->isSelector())
+			{
+				$filterGroupsArray[$i]['filtersCount'] = $this->getValuesSet()->getTotalRecordCount();
+			}
+			else
+			{
+				$filterGroupsArray[$i]['filtersCount'] = $filter->getFiltersList()->getTotalRecordCount();
+			}
+			$i++;
+		}
+		
 		return $filterGroupsArray;
 	}
 	
@@ -347,7 +347,7 @@ class SpecField extends MultilingualObject
 	 */
 	public function getValuesList()
 	{
-	    return SpecFieldValue::getRecordSetArray($this->getID());
+		return SpecFieldValue::getRecordSetArray($this->getID());
 	}
 
 	/**

@@ -9,17 +9,17 @@ include_once('ShippingResultInterface.php');
  */
 class ShippingRateError implements ShippingResultInterface
 {
-    protected $rawResponse;
-    
-    function setRawResponse($rawResponse)
-    {
-        $this->rawResponse = $rawResponse;
-    }
+	protected $rawResponse;
+	
+	function setRawResponse($rawResponse)
+	{
+		$this->rawResponse = $rawResponse;
+	}
 
-    function getRawResponse()
-    {
-        return $this->rawResponse;
-    }   
+	function getRawResponse()
+	{
+		return $this->rawResponse;
+	}   
 }
 
 ?>

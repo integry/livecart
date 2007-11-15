@@ -97,7 +97,7 @@ class Product extends MultilingualObject
 	{
 		$product = parent::getNewInstance(__CLASS__);
 		$product->category->set($category);
-        $product->setValueByLang('name', null, $name);
+		$product->setValueByLang('name', null, $name);
 
 		return $product;
 	}
@@ -113,7 +113,7 @@ class Product extends MultilingualObject
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
 	{
-	    return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
+		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
 	}
 	
 	/**
@@ -126,13 +126,13 @@ class Product extends MultilingualObject
 	 */
 	public static function getInstanceBySKU($sku, $loadReferencedRecords = false)
 	{
-	    $f = new ARSelectFilter();
-	    $f->setCondition(new EqualsCond(new ARFieldHandle('Product', 'sku'), $sku));
-	    $f->setLimit(1);
-	    
-	    $set = self::getRecordSet($f, $loadReferencedRecords);
-	    if (!$set->size())
-	    {
+		$f = new ARSelectFilter();
+		$f->setCondition(new EqualsCond(new ARFieldHandle('Product', 'sku'), $sku));
+		$f->setLimit(1);
+		
+		$set = self::getRecordSet($f, $loadReferencedRecords);
+		if (!$set->size())
+		{
 			return false;
 		}
 		else
@@ -156,63 +156,63 @@ class Product extends MultilingualObject
 	
 	/*####################  Value retrieval and manipulation ####################*/	
 
-    public function isRelatedTo(Product $product)
-    {
-        return ProductRelationship::hasRelationship($product, $this);
-    }
-    
-    /**
-     *  Check if the product is available for purchasing
-     */
-    public function isAvailable()
-    {
-        if (!$this->isLoaded())
-        {
-            $this->load();    
-        }
-        
-    	return self::isAvailableForOrdering($this->isEnabled->get(), $this->stockCount->get(), $this->isBackOrderable->get(), $this->type->get());
+	public function isRelatedTo(Product $product)
+	{
+		return ProductRelationship::hasRelationship($product, $this);
+	}
+	
+	/**
+	 *  Check if the product is available for purchasing
+	 */
+	public function isAvailable()
+	{
+		if (!$this->isLoaded())
+		{
+			$this->load();	
+		}
+		
+		return self::isAvailableForOrdering($this->isEnabled->get(), $this->stockCount->get(), $this->isBackOrderable->get(), $this->type->get());
 	}
 
-    /**
-     *  Determines if the product is downloadable (digital file) - as opposed to shippable products
-     */  
-    public function isDownloadable()
-    {
-        return $this->type->get() == self::TYPE_DOWNLOADABLE;
-    }
-    
-    protected static function isAvailableForOrdering($isEnabled, $stockCount, $isBackOrderable, $type)
-    {
-        if ($isEnabled)
-        {
-    		$config = self::getApplication()->getConfig();
+	/**
+	 *  Determines if the product is downloadable (digital file) - as opposed to shippable products
+	 */  
+	public function isDownloadable()
+	{
+		return $this->type->get() == self::TYPE_DOWNLOADABLE;
+	}
+	
+	protected static function isAvailableForOrdering($isEnabled, $stockCount, $isBackOrderable, $type)
+	{
+		if ($isEnabled)
+		{
+			$config = self::getApplication()->getConfig();
 		
-		    if (($config->get('INVENTORY_TRACKING') == 'DISABLE') || $type == Product::TYPE_DOWNLOADABLE)
-		    {
-                return true;
-            }
-            
-            if (!$stockCount && !$isBackOrderable)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-        else
-        {
-            return false;           
-        } 		
+			if (($config->get('INVENTORY_TRACKING') == 'DISABLE') || $type == Product::TYPE_DOWNLOADABLE)
+			{
+				return true;
+			}
+			
+			if (!$stockCount && !$isBackOrderable)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+		else
+		{
+			return false;		   
+		} 		
 	}
 
 	public function loadRequestData(Request $request)
 	{
-        // basic data
-        parent::loadRequestData($request);
-        
+		// basic data
+		parent::loadRequestData($request);
+		
 	  	if(!$this->isExistingRecord()) 
 		{
 			$this->save();	
@@ -229,14 +229,14 @@ class Product extends MultilingualObject
 		foreach ($currencies as $currency)
 		{
 			$price = $request->get('price_' . $currency);
-            if (strlen($price))
+			if (strlen($price))
 			{
-                $this->setPrice($currency, $price);
+				$this->setPrice($currency, $price);
 			}
 			else if ($request->isValueSet('price_' . $currency))
 			{
-                $this->getPricingHandler()->removePriceByCurrencyCode($currency);
-            }
+				$this->getPricingHandler()->removePriceByCurrencyCode($currency);
+			}
 		}
 
 		// set SpecField's
@@ -381,16 +381,16 @@ class Product extends MultilingualObject
 	{
 		if (!$this->pricingHandlerInstance)
 		{
-            $this->pricingHandlerInstance = new ProductPricing($this, null, self::getApplication());
+			$this->pricingHandlerInstance = new ProductPricing($this, null, self::getApplication());
 		}
 
 		return $this->pricingHandlerInstance;
 	}
 
-    public function isPricingLoaded()
-    {
-        return !is_null($this->pricingHandlerInstance);
-    }
+	public function isPricingLoaded()
+	{
+		return !is_null($this->pricingHandlerInstance);
+	}
 
 	public function setPrice($currencyCode, $price)
 	{
@@ -402,7 +402,7 @@ class Product extends MultilingualObject
 		}
 		else
 		{
-		    $instance->price->set($price);
+			$instance->price->set($price);
 		}
 		
 		$this->getPricingHandler()->setPrice($instance);
@@ -412,10 +412,10 @@ class Product extends MultilingualObject
 	{
 	  	if ($currencyCode instanceof Currency)
 	  	{
-            $currencyCode = $currencyCode->getID();
-        }
-          
-        $instance = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode);
+			$currencyCode = $currencyCode->getID();
+		}
+		  
+		$instance = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode);
 	  	if (!$instance->price->get() && $recalculate)
 	  	{
 	  		return $instance->reCalculatePrice();
@@ -426,28 +426,28 @@ class Product extends MultilingualObject
 		}
 	}
 
-    public function addRelatedProduct(Product $product)
-    {        
-        $relationship = ProductRelationship::getNewInstance($this, $product);
-        $this->getRelationships()->add($relationship);
-        $this->getRemovedRelationships()->removeRecord($relationship);
-    }
-    
-    public function removeFromRelatedProducts(Product $product)
-    {
-        $this->getRelationships();
-        $relationship = ProductRelationship::getInstance($this, $product);
-        
-        $this->relationships->removeRecord($relationship);
-        
-        $this->getRemovedRelationships()->add($relationship);
-    }
-    
-    public function markAsNotLoaded()
-    {
-        parent::markAsNotLoaded();
-        $this->relationships = null;
-    }
+	public function addRelatedProduct(Product $product)
+	{		
+		$relationship = ProductRelationship::getNewInstance($this, $product);
+		$this->getRelationships()->add($relationship);
+		$this->getRemovedRelationships()->removeRecord($relationship);
+	}
+	
+	public function removeFromRelatedProducts(Product $product)
+	{
+		$this->getRelationships();
+		$relationship = ProductRelationship::getInstance($this, $product);
+		
+		$this->relationships->removeRecord($relationship);
+		
+		$this->getRemovedRelationships()->add($relationship);
+	}
+	
+	public function markAsNotLoaded()
+	{
+		parent::markAsNotLoaded();
+		$this->relationships = null;
+	}
 
 	/*####################  Saving ####################*/
 
@@ -461,32 +461,32 @@ class Product extends MultilingualObject
 
 		try
 		{
-            parent::insert();
+			parent::insert();
 
 			// update category product count numbers
-            $catUpdate = new ARUpdateFilter();
-            
-            $catUpdate->addModifier('totalProductCount', new ARExpressionHandle('totalProductCount + 1'));
-            
-            if ($this->isEnabled->get())
-            {
-                $catUpdate->addModifier('activeProductCount', new ARExpressionHandle('activeProductCount + 1'));
+			$catUpdate = new ARUpdateFilter();
+			
+			$catUpdate->addModifier('totalProductCount', new ARExpressionHandle('totalProductCount + 1'));
+			
+			if ($this->isEnabled->get())
+			{
+				$catUpdate->addModifier('activeProductCount', new ARExpressionHandle('activeProductCount + 1'));
 
-                if ($this->stockCount->get() > 0)
-                {
-                    $catUpdate->addModifier('availableProductCount', new ARExpressionHandle('availableProductCount + 1'));
-                }       
-            }
-            
-            $this->updateCategoryCounters($catUpdate);
-    		    		
-    		$update = new ARUpdateFilter();
-    		$update->addModifier('dateUpdated', new ARExpressionHandle('NOW()'));
-    		$update->addModifier('dateCreated', new ARExpressionHandle('NOW()'));
-    		$update->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'ID'), $this->getID()));
-    		ActiveRecordModel::updateRecordSet(__CLASS__, $update);
-            
-            ActiveRecordModel::commit();
+				if ($this->stockCount->get() > 0)
+				{
+					$catUpdate->addModifier('availableProductCount', new ARExpressionHandle('availableProductCount + 1'));
+				}	   
+			}
+			
+			$this->updateCategoryCounters($catUpdate);
+						
+			$update = new ARUpdateFilter();
+			$update->addModifier('dateUpdated', new ARExpressionHandle('NOW()'));
+			$update->addModifier('dateCreated', new ARExpressionHandle('NOW()'));
+			$update->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'ID'), $this->getID()));
+			ActiveRecordModel::updateRecordSet(__CLASS__, $update);
+			
+			ActiveRecordModel::commit();
 		}
 		catch (Exception $e)
 		{
@@ -507,56 +507,56 @@ class Product extends MultilingualObject
 		{
 			parent::update();
 
-            // modify product counters for categories
-            $catUpdate = new ARUpdateFilter();
-    
-            // determines the changes for activeProductCount and availableProductCount fields
-            $activeChange = 0;
-            $availableChange = 0;
-    
-            // when isEnabled flag is modified the activeProductCount will always either increase or decrease
-            if ($this->isEnabled->isModified())
-            {
-                $activeChange = $this->isEnabled->get() ? 1 : -1;
-                
-                // when the stock count is larger than 0, the availableProductCount should also change by one
-                if ($this->isDownloadable() || (!$this->stockCount->isModified() && $this->stockCount->get() > 0))
-                {
-                    $availableChange = $this->isEnabled->get() ? 1 : -1;
-                }
-            }
-            
-            if ($this->stockCount->isModified() && $this->isEnabled->get())
-            {
-                // decrease available product count
-                if ($this->stockCount->get() == 0 && $this->stockCount->getInitialValue() > 0)
-                {
-                    $availableChange = -1;
-                }
-    
-                // increase available product count
-                else if ($this->stockCount->get() > 0 && $this->stockCount->getInitialValue() == 0)
-                {
-                    $availableChange = 1;
-                }
-            }
+			// modify product counters for categories
+			$catUpdate = new ARUpdateFilter();
+	
+			// determines the changes for activeProductCount and availableProductCount fields
+			$activeChange = 0;
+			$availableChange = 0;
+	
+			// when isEnabled flag is modified the activeProductCount will always either increase or decrease
+			if ($this->isEnabled->isModified())
+			{
+				$activeChange = $this->isEnabled->get() ? 1 : -1;
+				
+				// when the stock count is larger than 0, the availableProductCount should also change by one
+				if ($this->isDownloadable() || (!$this->stockCount->isModified() && $this->stockCount->get() > 0))
+				{
+					$availableChange = $this->isEnabled->get() ? 1 : -1;
+				}
+			}
+			
+			if ($this->stockCount->isModified() && $this->isEnabled->get())
+			{
+				// decrease available product count
+				if ($this->stockCount->get() == 0 && $this->stockCount->getInitialValue() > 0)
+				{
+					$availableChange = -1;
+				}
+	
+				// increase available product count
+				else if ($this->stockCount->get() > 0 && $this->stockCount->getInitialValue() == 0)
+				{
+					$availableChange = 1;
+				}
+			}
 
-            if ($activeChange != 0)
-            {
-                $catUpdate->addModifier('activeProductCount', new ARExpressionHandle('activeProductCount ' . (($activeChange > 0) ? '+' : '-') . ' 1'));                
-            }
+			if ($activeChange != 0)
+			{
+				$catUpdate->addModifier('activeProductCount', new ARExpressionHandle('activeProductCount ' . (($activeChange > 0) ? '+' : '-') . ' 1'));				
+			}
 
-            if ($availableChange != 0)
-            {
-                $catUpdate->addModifier('availableProductCount', new ARExpressionHandle('availableProductCount ' . (($availableChange > 0) ? '+' : '-') . ' 1'));                
-            }
+			if ($availableChange != 0)
+			{
+				$catUpdate->addModifier('availableProductCount', new ARExpressionHandle('availableProductCount ' . (($availableChange > 0) ? '+' : '-') . ' 1'));				
+			}
 
-            $this->updateCategoryCounters($catUpdate);
+			$this->updateCategoryCounters($catUpdate);
 
-    		$update = new ARUpdateFilter();
-    		$update->addModifier('dateUpdated', new ARExpressionHandle('NOW()'));
-    		$update->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'ID'), $this->getID()));
-    		ActiveRecordModel::updateRecordSet(__CLASS__, $update);
+			$update = new ARUpdateFilter();
+			$update->addModifier('dateUpdated', new ARExpressionHandle('NOW()'));
+			$update->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'ID'), $this->getID()));
+			ActiveRecordModel::updateRecordSet(__CLASS__, $update);
 
 			ActiveRecordModel::commit();
 		}
@@ -570,7 +570,7 @@ class Product extends MultilingualObject
 	/**
 	 *  @todo move the SKU checking to insert() - otherwise seems to break some tests for now
 	 */
-    public function save($forceOperation = null)
+	public function save($forceOperation = null)
 	{
 		ActiveRecordModel::beginTransaction();
 
@@ -624,22 +624,22 @@ class Product extends MultilingualObject
 		{
 			$product = Product::getInstanceByID($recordID, Product::LOAD_DATA);
 
-            // modify product counters for categories
-            $catUpdate = new ARUpdateFilter();
-    
-            $catUpdate->addModifier('totalProductCount', new ARExpressionHandle('totalProductCount - 1'));
+			// modify product counters for categories
+			$catUpdate = new ARUpdateFilter();
+	
+			$catUpdate->addModifier('totalProductCount', new ARExpressionHandle('totalProductCount - 1'));
 
-            if ($product->isEnabled->get())
-            {
-                $catUpdate->addModifier('activeProductCount', new ARExpressionHandle('activeProductCount - 1'));
+			if ($product->isEnabled->get())
+			{
+				$catUpdate->addModifier('activeProductCount', new ARExpressionHandle('activeProductCount - 1'));
 
-                if ($product->stockCount->get() > 0)
-                {
-                    $catUpdate->addModifier('availableProductCount', new ARExpressionHandle('availableProductCount -1')); 
-                }
-            }
-            
-            $product->updateCategoryCounters($catUpdate);
+				if ($product->stockCount->get() > 0)
+				{
+					$catUpdate->addModifier('availableProductCount', new ARExpressionHandle('availableProductCount -1')); 
+				}
+			}
+			
+			$product->updateCategoryCounters($catUpdate);
 
 			parent::deleteByID(__CLASS__, $recordID);
 			ActiveRecordModel::commit();
@@ -654,42 +654,42 @@ class Product extends MultilingualObject
 	
 	protected function updateCategoryCounters(ARUpdateFilter $catUpdate)
 	{
-        if ($catUpdate->isModifierSet())
-        {
+		if ($catUpdate->isModifierSet())
+		{
 			$categoryPathNodes = $this->category->get()->getPathNodeArray(Category::INCLUDE_ROOT_NODE);
 			$catIDs = array();
-            foreach ($categoryPathNodes as $node)
-            {
-                $catIDs[] = $node['ID'];
-            }			
-            $catIDs[] = $this->category->get()->getID();
-            
-            $catUpdate->setCondition(new INCond(new ARFieldHandle('Category', 'ID'), $catIDs));
+			foreach ($categoryPathNodes as $node)
+			{
+				$catIDs[] = $node['ID'];
+			}			
+			$catIDs[] = $this->category->get()->getID();
+			
+			$catUpdate->setCondition(new INCond(new ARFieldHandle('Category', 'ID'), $catIDs));
 			
 			ActiveRecordModel::updateRecordSet('Category', $catUpdate);
-        }        
-    }
+		}		
+	}
 	
-    public function saveRelationships()
-    {
-        if (is_null($this->relationships)) 
-        {
-            return;            
-        }
-        
-        foreach($this->getRelationships() as $relationship)
-        {
-            $relationship->save();
-        }
-          
-        foreach($this->getRemovedRelationships() as $relationship)
-        {
-            $relationship->delete();
-        }
-    }
-    
+	public function saveRelationships()
+	{
+		if (is_null($this->relationships)) 
+		{
+			return;			
+		}
+		
+		foreach($this->getRelationships() as $relationship)
+		{
+			$relationship->save();
+		}
+		  
+		foreach($this->getRemovedRelationships() as $relationship)
+		{
+			$relationship->delete();
+		}
+	}
+	
 	/*####################  Data array transformation ####################*/
-	    
+		
 	public static function sortAttributesByHandle(&$array)
 	{
 		if (isset($array['attributes']))
@@ -720,13 +720,13 @@ class Product extends MultilingualObject
 	  	$array = parent::toArray();
 	  	if ($this->isLoaded())
 	  	{
-            $array['attributes'] = $this->getSpecification()->toArray();  
+			$array['attributes'] = $this->getSpecification()->toArray();  
 			self::sortAttributesByHandle($array);
-    		$array = array_merge($array, $this->getPricesFields());                
-        }
-        
-        $this->setArrayData($array);
-        
+			$array = array_merge($array, $this->getPricesFields());				
+		}
+		
+		$this->setArrayData($array);
+		
 	  	return $array;
 	}
 	
@@ -734,85 +734,85 @@ class Product extends MultilingualObject
 	{
 		$array = parent::transformArray($array, $schema);
 		
-        $array['isTangible'] = $array['type'] == self::TYPE_TANGIBLE;
-        $array['isDownloadable'] = $array['type'] == self::TYPE_DOWNLOADABLE;
-        
-        if ($array['isEnabled'])
+		$array['isTangible'] = $array['type'] == self::TYPE_TANGIBLE;
+		$array['isDownloadable'] = $array['type'] == self::TYPE_DOWNLOADABLE;
+		
+		if ($array['isEnabled'])
 		{
-            if ($array['isDownloadable'])
-            {
-                $array['isAvailable'] = true;           
-            }
-            else
-            {
-                $array['isAvailable'] = self::isAvailableForOrdering($array['isEnabled'], $array['stockCount'], $array['isBackOrderable'], $array['type']);                
-            }
-        }
-        else
-        {
-            $array['isAvailable'] = false;    
-        }
-        
+			if ($array['isDownloadable'])
+			{
+				$array['isAvailable'] = true;		   
+			}
+			else
+			{
+				$array['isAvailable'] = self::isAvailableForOrdering($array['isEnabled'], $array['stockCount'], $array['isBackOrderable'], $array['type']);				
+			}
+		}
+		else
+		{
+			$array['isAvailable'] = false;	
+		}
+		
 		return $array;
-	}	    
-    
-	/*####################  Get related objects ####################*/    
+	}		
+	
+	/*####################  Get related objects ####################*/	
 
 	public function getSpecificationFieldSet($loadReferencedRecords = false)
 	{
-	    return $this->category->get()->getSpecificationFieldSet(Category::INCLUDE_PARENT, $loadReferencedRecords);
+		return $this->category->get()->getSpecificationFieldSet(Category::INCLUDE_PARENT, $loadReferencedRecords);
 	}
 
 	public function loadSpecification($specificationData = null)
 	{
 	  	if (!$specificationData)
 	  	{
-    		$cond = '
-    		LEFT JOIN 	
-    			SpecField ON specFieldID = SpecField.ID 
-    		LEFT JOIN 	
-    			SpecFieldGroup ON SpecField.specFieldGroupID = SpecFieldGroup.ID 
-    		WHERE 
-    			productID = ' . $this->getID() . '';
-    
-    	    $commonFields = 'SpecFieldGroup.position AS SpecFieldGroupPosition, SpecField.* as valueID, SpecFieldGroup.ID AS SpecFieldGroupID';
-    	    
-            $query = '
-    		(SELECT SpecificationDateValue.*, NULL AS valueID, NULL AS specFieldValuePosition, ' . $commonFields . ' FROM SpecificationDateValue ' . $cond . ')
-    	    UNION
-    		(SELECT SpecificationStringValue.*, NULL, NULL, ' . $commonFields . ' FROM SpecificationStringValue ' . $cond . ')
-    	    UNION
-    		(SELECT SpecificationNumericValue.*, NULL, NULL, ' . $commonFields . ' FROM SpecificationNumericValue ' . $cond . ')
-    	    UNION
-    		(SELECT SpecificationItem.productID, SpecificationItem.specFieldID, SpecFieldValue.value, SpecFieldValue.ID, SpecFieldValue.position, SpecFieldGroup.position, SpecField.*, SpecFieldGroup.ID AS SpecFieldGroupID
-    				 FROM SpecificationItem
-    				 	LEFT JOIN SpecFieldValue ON SpecificationItem.specFieldValueID =  SpecFieldValue.ID
-    				 ' . str_replace('ON specFieldID', 'ON SpecificationItem.specFieldID', $cond) . 
-                     ')
-                     ORDER BY SpecFieldGroupPosition, position, specFieldValuePosition';
-                     
-    		$specificationData = self::getDataBySQL($query);
-    			
-            // preload attribute groups
-            $groups = array();
-            foreach ($specificationData as $spec)
-            {
-                if ($spec['SpecFieldGroupID'])
-                {
-                    $groups[$spec['SpecFieldGroupID']] = true;
-                }
-            }   
-            $groups = array_keys($groups);
-                
-            ActiveRecordModel::getInstanceArray('SpecFieldGroup', $groups);
-        }
+			$cond = '
+			LEFT JOIN 	
+				SpecField ON specFieldID = SpecField.ID 
+			LEFT JOIN 	
+				SpecFieldGroup ON SpecField.specFieldGroupID = SpecFieldGroup.ID 
+			WHERE 
+				productID = ' . $this->getID() . '';
+	
+			$commonFields = 'SpecFieldGroup.position AS SpecFieldGroupPosition, SpecField.* as valueID, SpecFieldGroup.ID AS SpecFieldGroupID';
+			
+			$query = '
+			(SELECT SpecificationDateValue.*, NULL AS valueID, NULL AS specFieldValuePosition, ' . $commonFields . ' FROM SpecificationDateValue ' . $cond . ')
+			UNION
+			(SELECT SpecificationStringValue.*, NULL, NULL, ' . $commonFields . ' FROM SpecificationStringValue ' . $cond . ')
+			UNION
+			(SELECT SpecificationNumericValue.*, NULL, NULL, ' . $commonFields . ' FROM SpecificationNumericValue ' . $cond . ')
+			UNION
+			(SELECT SpecificationItem.productID, SpecificationItem.specFieldID, SpecFieldValue.value, SpecFieldValue.ID, SpecFieldValue.position, SpecFieldGroup.position, SpecField.*, SpecFieldGroup.ID AS SpecFieldGroupID
+					 FROM SpecificationItem
+					 	LEFT JOIN SpecFieldValue ON SpecificationItem.specFieldValueID =  SpecFieldValue.ID
+					 ' . str_replace('ON specFieldID', 'ON SpecificationItem.specFieldID', $cond) . 
+					 ')
+					 ORDER BY SpecFieldGroupPosition, position, specFieldValuePosition';
+					 
+			$specificationData = self::getDataBySQL($query);
+				
+			// preload attribute groups
+			$groups = array();
+			foreach ($specificationData as $spec)
+			{
+				if ($spec['SpecFieldGroupID'])
+				{
+					$groups[$spec['SpecFieldGroupID']] = true;
+				}
+			}   
+			$groups = array_keys($groups);
+				
+			ActiveRecordModel::getInstanceArray('SpecFieldGroup', $groups);
+		}
 
 		$this->specificationInstance = new ProductSpecification($this, $specificationData);
 	}
 
 	public function loadPricing($pricingData = null)
 	{
-        $this->pricingHandlerInstance = new ProductPricing($this, $pricingData, self::getApplication());
+		$this->pricingHandlerInstance = new ProductPricing($this, $pricingData, self::getApplication());
 	}
 
 	public function getPricesFields()
@@ -820,7 +820,7 @@ class Product extends MultilingualObject
 		$prices = $this->getPricingHandler()->toArray();
 	  	foreach($prices['calculated'] as $code => $value)
 	  	{
-	  	    $prices["price_$code"] = $value;
+	  		$prices["price_$code"] = $value;
 	  	}
 
 	  	return $prices;
@@ -846,67 +846,67 @@ class Product extends MultilingualObject
 	 * @param Category $category Category active record
 	 * @return integer
 	 */
-    public static function countItems(Category $category)
-    {
-        return $category->getProductSet(new ARSelectFilter(), false)->getTotalRecordCount();
-    }
-    
-    private function loadRelationships($loadReferencedRecords)
-    {       
-        ClassLoader::import('application.model.product.ProductRelationship');
-        $this->relationships = ProductRelationship::getRelationships($this, $loadReferencedRecords);
-    }
-    
-    /**
-     * @return ARSet
-     */
-    public function getRelationships($loadReferencedRecords = array('RelatedProduct' => 'Product', 'DefaultImage' => 'ProductImage', 'Manufacturer', 'ProductRelationshipGroup'))
-    {
-        if(is_null($this->relationships))
-        {
-            $this->loadRelationships($loadReferencedRecords);
-        }
+	public static function countItems(Category $category)
+	{
+		return $category->getProductSet(new ARSelectFilter(), false)->getTotalRecordCount();
+	}
+	
+	private function loadRelationships($loadReferencedRecords)
+	{	   
+		ClassLoader::import('application.model.product.ProductRelationship');
+		$this->relationships = ProductRelationship::getRelationships($this, $loadReferencedRecords);
+	}
+	
+	/**
+	 * @return ARSet
+	 */
+	public function getRelationships($loadReferencedRecords = array('RelatedProduct' => 'Product', 'DefaultImage' => 'ProductImage', 'Manufacturer', 'ProductRelationshipGroup'))
+	{
+		if(is_null($this->relationships))
+		{
+			$this->loadRelationships($loadReferencedRecords);
+		}
 
-        return $this->relationships;
-    }
-    
-    /**
-     * @return ARSet
-     */
-    public function getRelationshipsArray($loadReferencedRecords = array('RelatedProduct' => 'Product', 'DefaultImage' => 'ProductImage', 'Manufacturer', 'ProductRelationshipGroup'))
-    {
-        ClassLoader::import('application.model.product.ProductRelationship');
-        return ProductRelationship::getRelationshipsArray($this, $loadReferencedRecords);
-    }
-    
-    /**
-     * @return ARSet
-     */
-    public function getRelatedProducts()
-    {
-        $relatedProducts = new ARSet();
-        
-        foreach($this->getRelationships() as $relationship)
-        {
-            $relatedProducts->add($relationship->relatedProduct->get());
-        }
-        return $relatedProducts;
-    }
-       
-    private function getRemovedRelationships()
-    {
-        if(is_null($this->removedRelationships)) $this->removedRelationships = new ARSet();
-        
-        return $this->removedRelationships;
-    }
+		return $this->relationships;
+	}
+	
+	/**
+	 * @return ARSet
+	 */
+	public function getRelationshipsArray($loadReferencedRecords = array('RelatedProduct' => 'Product', 'DefaultImage' => 'ProductImage', 'Manufacturer', 'ProductRelationshipGroup'))
+	{
+		ClassLoader::import('application.model.product.ProductRelationship');
+		return ProductRelationship::getRelationshipsArray($this, $loadReferencedRecords);
+	}
+	
+	/**
+	 * @return ARSet
+	 */
+	public function getRelatedProducts()
+	{
+		$relatedProducts = new ARSet();
+		
+		foreach($this->getRelationships() as $relationship)
+		{
+			$relatedProducts->add($relationship->relatedProduct->get());
+		}
+		return $relatedProducts;
+	}
+	   
+	private function getRemovedRelationships()
+	{
+		if(is_null($this->removedRelationships)) $this->removedRelationships = new ARSet();
+		
+		return $this->removedRelationships;
+	}
 
 	/**
 	 * @return ARSet
 	 */
 	public function getRelationshipGroups()
 	{
-	    ClassLoader::import('application.model.product.ProductRelationshipGroup');
-	    return ProductRelationshipGroup::getProductGroups($this);
+		ClassLoader::import('application.model.product.ProductRelationshipGroup');
+		return ProductRelationshipGroup::getProductGroups($this);
 	}
 
 	/**
@@ -914,14 +914,14 @@ class Product extends MultilingualObject
 	 */
 	public function getRelationshipGroupArray()
 	{
-	    ClassLoader::import('application.model.product.ProductRelationshipGroup');
-	    return ProductRelationshipGroup::getProductGroupArray($this);
+		ClassLoader::import('application.model.product.ProductRelationshipGroup');
+		return ProductRelationshipGroup::getProductGroupArray($this);
 	}
 	
 	public function getRelatedProductsWithGroupsArray()
 	{
-	    ClassLoader::import('application.model.product.ProductRelationshipGroup');
-        return ProductRelationshipGroup::mergeGroupsWithFields($this->getRelationshipGroupArray(), $this->getRelationshipsArray());
+		ClassLoader::import('application.model.product.ProductRelationshipGroup');
+		return ProductRelationshipGroup::mergeGroupsWithFields($this->getRelationshipGroupArray(), $this->getRelationshipsArray());
 	}
 	
 	/**
@@ -929,8 +929,8 @@ class Product extends MultilingualObject
 	 */
 	public function getFileGroups()
 	{
-	    ClassLoader::import('application.model.product.ProductFileGroup');
-	    return ProductFileGroup::getProductGroups($this);
+		ClassLoader::import('application.model.product.ProductFileGroup');
+		return ProductFileGroup::getProductGroups($this);
 	}
 	
 	/**
@@ -938,20 +938,20 @@ class Product extends MultilingualObject
 	 */
 	public function getFiles()
 	{
-	    ClassLoader::import('application.model.product.ProductFile');
-	    return ProductFile::getFilesByProduct($this);
+		ClassLoader::import('application.model.product.ProductFile');
+		return ProductFile::getFilesByProduct($this);
 	}
 	
 	public function getFilesMergedWithGroupsArray()
 	{
-	    ClassLoader::import('application.model.product.ProductFileGroup');
-	    return ProductFileGroup::mergeGroupsWithFields($this->getFileGroups()->toArray(), $this->getFiles()->toArray());
+		ClassLoader::import('application.model.product.ProductFileGroup');
+		return ProductFileGroup::mergeGroupsWithFields($this->getFileGroups()->toArray(), $this->getFiles()->toArray());
 	}
 	
-    public function serialize()
-    {
-        return parent::serialize(array('categoryID', 'Category', 'manufacturerID', 'defaultImageID'));
-    }	
+	public function serialize()
+	{
+		return parent::serialize(array('categoryID', 'Category', 'manufacturerID', 'defaultImageID'));
+	}	
 }
 
 ?>

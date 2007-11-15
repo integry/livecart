@@ -11,21 +11,21 @@ ClassLoader::import('application.model.system.Language');
  */
 class TestLanguage extends UnitTest
 {	  
-    public function __construct()
-    {
-        parent::__construct('test languages');
-    }
-    
-    public function getUsedSchemas()
-    {
-        return array(
-            'Language',
-            'InterfaceTranslation'
-        );
-    }
-    
+	public function __construct()
+	{
+		parent::__construct('test languages');
+	}
+	
+	public function getUsedSchemas()
+	{
+		return array(
+			'Language',
+			'InterfaceTranslation'
+		);
+	}
+	
 	/*
-    function testLanguagesExist() 
+	function testLanguagesExist() 
 	{  
 		$languages = Language::getLanguages();  
 		$this->assertTrue(count($languages) > 0);
@@ -48,7 +48,7 @@ class TestLanguage extends UnitTest
 		{
 		  	if (!$nonDef->isDefault())
 		  	{
-			    break;			    
+				break;				
 			}
 		}
 		

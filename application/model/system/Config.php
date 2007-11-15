@@ -18,8 +18,8 @@ class Config
 	private $isUpdated = false;
 
 	private $application;
-    
-    public function __construct(LiveCart $application)
+	
+	public function __construct(LiveCart $application)
 	{
 		$filePath = $this->getFilePath();
 		if (file_exists($filePath))
@@ -37,9 +37,9 @@ class Config
 		{
 		  	$this->updateSettings();
 		}
-        
-        return isset($this->values[$key]);
-    }
+		
+		return isset($this->values[$key]);
+	}
 	
 	public function get($key)
 	{
@@ -52,24 +52,24 @@ class Config
 		{
 		  	if (is_array($this->values[$key]))
 		  	{
-                $lang = $this->application->getLocaleCode();
-                if (!empty($this->values[$key][$lang]))       
-                {
-                    return $this->values[$key][$lang];
-                }
-                else if (isset($this->values[$key][$this->application->getDefaultLanguageCode()]))
-                {
-                    return $this->values[$key][$this->application->getDefaultLanguageCode()];
-                }
-                else
-                {
-                    return $this->values[$key];
-                }                
-            }
-            else
-            {
-                return $this->values[$key];
-            }
+				$lang = $this->application->getLocaleCode();
+				if (!empty($this->values[$key][$lang]))	   
+				{
+					return $this->values[$key][$lang];
+				}
+				else if (isset($this->values[$key][$this->application->getDefaultLanguageCode()]))
+				{
+					return $this->values[$key][$this->application->getDefaultLanguageCode()];
+				}
+				else
+				{
+					return $this->values[$key];
+				}				
+			}
+			else
+			{
+				return $this->values[$key];
+			}
 		}
 		else
 		{
@@ -77,19 +77,19 @@ class Config
 		}
 	}
 
-    public function toArray()
-    {
-        $array = array();
-        
-        // some of the values are multi-language, so we can't just return the values array
-        // @todo - this can obviously be optimized
-        foreach ($this->values as $key => $value)
-        {
-            $array[$key] = $this->get($key);
-        }
-        
-        return $array;
-    }
+	public function toArray()
+	{
+		$array = array();
+		
+		// some of the values are multi-language, so we can't just return the values array
+		// @todo - this can obviously be optimized
+		foreach ($this->values as $key => $value)
+		{
+			$array[$key] = $this->get($key);
+		}
+		
+		return $array;
+	}
 
 	public function set($key, $value)
 	{
@@ -110,10 +110,10 @@ class Config
 	{
 		if (!is_array($this->values[$key]))
 		{
-            $this->values[$key] = array();    
-        }
-        
-        $this->values[$key][$lang] = $value;
+			$this->values[$key] = array();	
+		}
+		
+		$this->values[$key][$lang] = $value;
 		
 		if ($this->autoSave)
 		{
@@ -123,16 +123,16 @@ class Config
 
 	public function getValueByLang($key, $lang)
 	{
-        if (isset($this->values[$key][$lang]))
-        {
-            return $this->values[$key][$lang];
-        }        
-    }
+		if (isset($this->values[$key][$lang]))
+		{
+			return $this->values[$key][$lang];
+		}		
+	}
 
-    public function isMultiLingual($key)
-    {
-        return is_array($this->values[$key]);
-    }
+	public function isMultiLingual($key)
+	{
+		return is_array($this->values[$key]);
+	}
 
 	/**
 	 *	Create initial settings cache file or update the cache file with new settings from INI files
@@ -152,12 +152,12 @@ class Config
 				if (!isset($this->values[$key]))
 				{
 					// check for multi-lingual values
-                    if (!is_array($value['value']) && substr($value['value'], 0, 1) == '_')
+					if (!is_array($value['value']) && substr($value['value'], 0, 1) == '_')
 					{
-                        $value['value'] = array($this->application->getDefaultLanguageCode() => substr($value['value'], 1)); 
-                    }
-                    
-                    $this->set($key, $value['value']);
+						$value['value'] = array($this->application->getDefaultLanguageCode() => substr($value['value'], 1)); 
+					}
+					
+					$this->set($key, $value['value']);
 				}	
 			}
 		}
@@ -171,9 +171,9 @@ class Config
 	public function save()
 	{		
 		$content = '<?php $config = ' . var_export($this->values, true) . '; ?>';
-	    $fullPath = $this->getFilePath();
-	    if (!is_dir(dirname($fullPath)))
-	    {
+		$fullPath = $this->getFilePath();
+		if (!is_dir(dirname($fullPath)))
+		{
 			mkdir(dirname($fullPath), 0777, true);
 		}
 		file_put_contents($fullPath, $content);
@@ -184,12 +184,12 @@ class Config
 		$file = $this->getSectionFile($sectionId);
 		if (file_exists($file))
 		{
-            return parse_ini_file($file);	            
-        }
-        else
-        {
-            return array();
-        }
+			return parse_ini_file($file);				
+		}
+		else
+		{
+			return array();
+		}
 	}
 
 	public function getSectionLayout($sectionId)
@@ -207,17 +207,17 @@ class Config
 			$ini = array('' => $arr);
 		}	
 
-        // remove validation rules
-        foreach ($ini as &$sect)
-        {
-            foreach ($sect as $key => $value)
-            {
-                if (substr($key, 0, 9) == 'validate_')
-                {
-                    unset($sect[$key]);
-                }
-            }
-        }
+		// remove validation rules
+		foreach ($ini as &$sect)
+		{
+			foreach ($sect as $key => $value)
+			{
+				if (substr($key, 0, 9) == 'validate_')
+				{
+					unset($sect[$key]);
+				}
+			}
+		}
 
 		return $ini;
 	}
@@ -280,9 +280,9 @@ class Config
 		{
 			$extra = '';
 			
-            // evaluate PHP code
-            if (substr($value, 0, 5) == '<?php')
-            {
+			// evaluate PHP code
+			if (substr($value, 0, 5) == '<?php')
+			{
 				$value = substr($value, 5);
 				if (substr($value, -2) == '?>')
 				{
@@ -305,33 +305,33 @@ class Config
 			{
 			  	if (substr($value, 0, 1) == '+')
 			  	{
-                    $extra = 'multi';
-                    $value = substr($value, 1);
-                    $multivalues = array();
-                }
-                  
-                $vl = explode(', ', substr($value, 1, -1));
+					$extra = 'multi';
+					$value = substr($value, 1);
+					$multivalues = array();
+				}
+				  
+				$vl = explode(', ', substr($value, 1, -1));
 			  	$type = array();
 			  	foreach ($vl as $v)
 			  	{
 					if ('multi' == $extra)
 					{
-                        if (substr($v, 0, 1) == '+')
-                        {
-                            $v = substr($v, 1);
-                            $multivalues[$v] = 1;
-                        }                        
-                    }
-                    
-                    $type[$v] = $this->application->translate($v);	
+						if (substr($v, 0, 1) == '+')
+						{
+							$v = substr($v, 1);
+							$multivalues[$v] = 1;
+						}						
+					}
+					
+					$type[$v] = $this->application->translate($v);	
 				}	
 				
-                $value = key($type);
-                
-                if ('multi' == $extra)
-                {
-                    $value = $multivalues;    
-                }                
+				$value = key($type);
+				
+				if ('multi' == $extra)
+				{
+					$value = $multivalues;	
+				}				
 			}
 			else
 			{

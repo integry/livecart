@@ -75,7 +75,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 	public function __construct(LiveCart $application)
 	{
 		parent::__construct($application);
-        
+		
 		unset($this->locale);
 		unset($this->config);
 		unset($this->user);
@@ -83,13 +83,13 @@ abstract class BaseController extends Controller implements LCiTranslator
 
 		$this->router = $this->application->getRouter();
 
-        if (!$application->isInstalled() && !($this instanceof InstallController))
-        {
-            header('Location: ' . $this->router->createUrl(array('controller' => 'install', 'action' => 'index')));
-            exit;            
-        }
-	    
-	    $this->checkAccess();
+		if (!$application->isInstalled() && !($this instanceof InstallController))
+		{
+			header('Location: ' . $this->router->createUrl(array('controller' => 'install', 'action' => 'index')));
+			exit;			
+		}
+		
+		$this->checkAccess();
 		
 		$this->application->setRequestLanguage($this->request->get('requestLanguage'));				
 		$this->configFiles = $this->getConfigFiles();
@@ -103,12 +103,12 @@ abstract class BaseController extends Controller implements LCiTranslator
 			$this->router->setAutoAppendVariables(array('requestLanguage' => $localeCode));
 		}
 		
-        // verify that the action is accessed via HTTPS if it is required
+		// verify that the action is accessed via HTTPS if it is required
 		if ($this->router->isSSL($this->request->getControllerName(), $this->request->getActionName()) && !$this->router->isHttps())
 		{
-            header('Location: ' . $this->router->createFullUrl($_SERVER['REQUEST_URI'], true));
-            exit;
-        }
+			header('Location: ' . $this->router->createFullUrl($_SERVER['REQUEST_URI'], true));
+			exit;
+		}
 	}	
 	
 	/**
@@ -116,18 +116,18 @@ abstract class BaseController extends Controller implements LCiTranslator
 	 */
 	public function getRoles()
 	{
-	    return $this->roles;
+		return $this->roles;
 	}
 	
-    /**
-     * Translate text passed by reference. 
+	/**
+	 * Translate text passed by reference. 
 	 * 
 	 * @see BaseController::translate
 	 * @see BaseController::translateArray
 	 */
 	private function translateByReference(&$text)
 	{
-	    $text = $this->translate($text);
+		$text = $this->translate($text);
 	}
 	
 	/**
@@ -146,13 +146,13 @@ abstract class BaseController extends Controller implements LCiTranslator
 	 * @see BaseController::translate
 	 * @return array
 	 */
-    public function translateArray($array)
-    {
-        array_walk_recursive($array, array(&$this, 'translateByReference'));
-        
-        return $array;
-    }
-    
+	public function translateArray($array)
+	{
+		array_walk_recursive($array, array(&$this, 'translateByReference'));
+		
+		return $array;
+	}
+	
 	/**
 	 * Performs MakeText translation using Locale::LCInterfaceTranslator
 	 * @param string $key
@@ -180,12 +180,12 @@ abstract class BaseController extends Controller implements LCiTranslator
 	{
 		$this->configFiles[] = $langFile;
 		$this->application->setConfigFiles($this->configFiles);
-    }
+	}
 	
 	public function getApplication()
 	{
-        return $this->application;
-    }
+		return $this->application;
+	}
 	
 	protected function getSessionData($key = '')
 	{
@@ -233,68 +233,68 @@ abstract class BaseController extends Controller implements LCiTranslator
 	{
 		switch ($name)
 	  	{
-		    case 'locale':
-		    	$this->locale = $this->application->getLocale();
+			case 'locale':
+				$this->locale = $this->application->getLocale();
 				return $this->locale;
-		    break;
+			break;
 
-		    case 'config':
-		    	$this->config = $this->application->getConfig();
+			case 'config':
+				$this->config = $this->application->getConfig();
 				return $this->config;
-		    break;
+			break;
 
-		    case 'user':
+			case 'user':
 				return $this->getUser();
-		    break;
-		    
-		    case 'session':
-		    	ClassLoader::import("framework.request.Session");
-		    	$this->session = new Session();
+			break;
+			
+			case 'session':
+				ClassLoader::import("framework.request.Session");
+				$this->session = new Session();
 				return $this->session;
-		    break;
-		    
+			break;
+			
 			default:
-		    break;
+			break;
 		}
 	}	
 	
 	private function checkAccess()
 	{
 		// If backend controller is being used then we should 
-	    // check for user permissions to use role assigned to current controller and action
+		// check for user permissions to use role assigned to current controller and action
 		$rolesCacheDir = ClassLoader::getRealPath('cache.roles');
 		if(!is_dir($rolesCacheDir))
 		{
-		    mkdir($rolesCacheDir, 0777, true);
+			mkdir($rolesCacheDir, 0777, true);
 		}
 		
 		$refl = new ReflectionClass($this);
-        $controllerPath = $refl->getFileName();
+		$controllerPath = $refl->getFileName();
 
 		$cachePath = $rolesCacheDir . DIRECTORY_SEPARATOR . md5($controllerPath) . '.php';
 
-        ClassLoader::import("framework.roles.RolesDirectoryParser");
-        ClassLoader::import("framework.roles.RolesParser");
-        $this->roles = new RolesParser($controllerPath, $cachePath);
-	    if($this->roles->wereExpired())
-	    {
-	        ClassLoader::import('application.model.role.Role');
-	        Role::addNewRolesNames($this->roles->getRolesNames());
-	    }
-	    
-	    $role = $this->roles->getRole($this->request->getActionName());
-	    
+		ClassLoader::import("framework.roles.RolesDirectoryParser");
+		ClassLoader::import("framework.roles.RolesParser");
+		$this->roles = new RolesParser($controllerPath, $cachePath);
+		if($this->roles->wereExpired())
+		{
+			ClassLoader::import('application.model.role.Role');
+			Role::addNewRolesNames($this->roles->getRolesNames());
+		}
+		
+		$role = $this->roles->getRole($this->request->getActionName());
+		
 		if ($role)
 		{
-		    if (!$this->user->hasAccess($role))
+			if (!$this->user->hasAccess($role))
 			{
 				if($this->user->isAnonymous())
 				{
-				    throw new UnauthorizedException($this);
+					throw new UnauthorizedException($this);
 				}
 				else
 				{
-				    throw new ForbiddenException($this);
+					throw new ForbiddenException($this);
 				}			
 			}
 		}		

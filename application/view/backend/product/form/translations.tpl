@@ -22,7 +22,7 @@
 		{foreach from=$multiLingualSpecFieldss item="field"}
 			<p>		
 				<label for="product_{$cat}_{$product.ID}_{$field.fieldName}_{$lang.ID}">{$field.name_lang}:</label>		
-                {include file="backend/product/form/specFieldFactory.tpl" field=$field language=$lang.ID}	
+				{include file="backend/product/form/specFieldFactory.tpl" field=$field language=$lang.ID}	
 			</p>
 		{/foreach}
 	</fieldset>

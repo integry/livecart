@@ -10,14 +10,14 @@
  */
 function smarty_block_allowed($params, $content, LiveCartSmarty $smarty, &$repeat)
 {
-    if (!$repeat)
-    {
-        ClassLoader::import('application.helper.AccessStringParser');
-        if(AccessStringParser::run($params['role']))
-        {
-            return $content;
-        }
-    }
+	if (!$repeat)
+	{
+		ClassLoader::import('application.helper.AccessStringParser');
+		if(AccessStringParser::run($params['role']))
+		{
+			return $content;
+		}
+	}
 }
 
 ?>

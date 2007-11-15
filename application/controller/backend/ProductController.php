@@ -19,7 +19,7 @@ class ProductController extends StoreManagementController
 {
 	public function index()
 	{
-        $category = Category::getInstanceByID($this->request->get("id"), Category::LOAD_DATA);
+		$category = Category::getInstanceByID($this->request->get("id"), Category::LOAD_DATA);
 	
 		$availableColumns = $this->getAvailableColumns($category);
 		$displayedColumns = $this->getDisplayedColumns($category);
@@ -31,9 +31,9 @@ class ProductController extends StoreManagementController
 			
 		//$response = $this->productList($category, new ActionResponse());
 		$response = new ActionResponse();
-        $response->set("massForm", $this->getMassForm());
-        $response->set("displayedColumns", $displayedColumns);
-        $response->set("availableColumns", $availableColumns);
+		$response->set("massForm", $this->getMassForm());
+		$response->set("displayedColumns", $displayedColumns);
+		$response->set("availableColumns", $availableColumns);
 		$response->set("categoryID", $category->getID());
 		$response->set("offset", $this->request->get('offset'));
 		$response->set("totalCount", '0');
@@ -64,67 +64,67 @@ class ProductController extends StoreManagementController
 		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
 		$filter->setCondition($cond);
 
-        $filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
+		$filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
 		
-        new ActiveGrid($this->application, $filter, 'Product');
-        					
-        $recordCount = true;
+		new ActiveGrid($this->application, $filter, 'Product');
+							
+		$recordCount = true;
 		$productArray = ActiveRecordModel::getRecordSetArray('Product', $filter, array('Category', 'Manufacturer'), $recordCount);
-        
+		
 		if (!$displayedColumns)
 		{
-            $displayedColumns = $this->getDisplayedColumns($category);
-        }
+			$displayedColumns = $this->getDisplayedColumns($category);
+		}
 		
-        // load specification data
-        foreach ($displayedColumns as $column => $type)
-        {
-            if($column == 'hiddenType') continue;
-            
-            list($class, $field) = explode('.', $column, 2);
-            if ('specField' == $class)
-            {
-                ProductSpecification::loadSpecificationForRecordSetArray($productArray);                    
-                break;
-            }
-        }
+		// load specification data
+		foreach ($displayedColumns as $column => $type)
+		{
+			if($column == 'hiddenType') continue;
+			
+			list($class, $field) = explode('.', $column, 2);
+			if ('specField' == $class)
+			{
+				ProductSpecification::loadSpecificationForRecordSetArray($productArray);					
+				break;
+			}
+		}
 
-        // load price data
-    	ProductPrice::loadPricesForRecordSetArray($productArray);
+		// load price data
+		ProductPrice::loadPricesForRecordSetArray($productArray);
 		
-    	$currency = $this->application->getDefaultCurrency()->getID();
+		$currency = $this->application->getDefaultCurrency()->getID();
 
-    	$data = array();
+		$data = array();
 
 		foreach ($productArray as $product)
-    	{
-            $record = array();
-            foreach ($displayedColumns as $column => $type)
-            {
-                if($column == 'hiddenType') 
-                {
-                    $record[] = $product['type'];
-                    continue;
-                }
-                
-                list($class, $field) = explode('.', $column, 2);
-                if ('Product' == $class)
-                {
+		{
+			$record = array();
+			foreach ($displayedColumns as $column => $type)
+			{
+				if($column == 'hiddenType') 
+				{
+					$record[] = $product['type'];
+					continue;
+				}
+				
+				list($class, $field) = explode('.', $column, 2);
+				if ('Product' == $class)
+				{
 					$value = isset($product[$field . '_lang']) ? 
-                                $product[$field . '_lang'] : (isset($product[$field]) ? $product[$field] : '');
-                }
-                else if ('ProductPrice' == $class)
-                {
+								$product[$field . '_lang'] : (isset($product[$field]) ? $product[$field] : '');
+				}
+				else if ('ProductPrice' == $class)
+				{
 					$value = isset($product['price_' . $currency]) ? $product['price_' . $currency] : 0;
-                }
-                else if ('specField' == $class)
-                {
+				}
+				else if ('specField' == $class)
+				{
 					$value = isset($product['attributes'][$field]['value_lang']) ? $product['attributes'][$field]['value_lang'] : '';
 				}
-                else
-                {
-                    $value = $product[$class][$field];
-                }     
+				else
+				{
+					$value = $product[$class][$field];
+				}	 
 				
 				if ('bool' == $type)
 				{
@@ -132,75 +132,75 @@ class ProductController extends StoreManagementController
 				}
 				
 				$record[] = $value;
-            }
+			}
 
-            $data[] = $record;
-        }
-    	
-    	if ($dataOnly)
-    	{
-            return $data;
-        }
-    	
-    	$return = array();
-    	$return['columns'] = array_keys($displayedColumns);
-    	$return['totalCount'] = $recordCount;
-    	$return['data'] = $data;
-    	
-    	return new JSONResponse($return);	  	  	
+			$data[] = $record;
+		}
+		
+		if ($dataOnly)
+		{
+			return $data;
+		}
+		
+		$return = array();
+		$return['columns'] = array_keys($displayedColumns);
+		$return['totalCount'] = $recordCount;
+		$return['data'] = $data;
+		
+		return new JSONResponse($return);	  	  	
 	}
 
-    public function export()
-    {        
+	public function export()
+	{		
 		@set_time_limit(0);
 		
-        // get category instance
-        $id = substr($this->request->get("id"), 9);
+		// get category instance
+		$id = substr($this->request->get("id"), 9);
 		$category = Category::getInstanceByID($id, Category::LOAD_DATA);
 
-        // init file download
-        header('Content-Disposition: attachment; filename="exported.csv"');        
-        $out = fopen('php://output', 'w');
-        
-        // header row
-        $columns = $this->getDisplayedColumns($category);
-        unset($columns['hiddenType']);
-        foreach ($columns as $column => $type)
-        {
-            $header[] = $this->translate($column);
-        }
-        fputcsv($out, $header);
-        
-        // columns
-        foreach ($this->lists(true, $columns) as $row)
-        {
-            fputcsv($out, $row);
-        }
-        
-        exit;
-    }
+		// init file download
+		header('Content-Disposition: attachment; filename="exported.csv"');		
+		$out = fopen('php://output', 'w');
+		
+		// header row
+		$columns = $this->getDisplayedColumns($category);
+		unset($columns['hiddenType']);
+		foreach ($columns as $column => $type)
+		{
+			$header[] = $this->translate($column);
+		}
+		fputcsv($out, $header);
+		
+		// columns
+		foreach ($this->lists(true, $columns) as $row)
+		{
+			fputcsv($out, $row);
+		}
+		
+		exit;
+	}
 
 	/**
 	 * @role mass
 	 */
-    public function processMass()
-    {        
+	public function processMass()
+	{		
 		$filter = new ARSelectFilter();
 		
-        $category = Category::getInstanceById($this->request->get('id'), Category::LOAD_DATA);
-        $cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
+		$category = Category::getInstanceById($this->request->get('id'), Category::LOAD_DATA);
+		$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
 		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
 		
-        $filter->setCondition($cond);
-        $filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
+		$filter->setCondition($cond);
+		$filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
 		
 		$filters = (array)json_decode($this->request->get('filters'));
 		$this->request->set('filters', $filters);
 		
-        $grid = new ActiveGrid($this->application, $filter, 'Product');
-        $filter->setLimit(0);
+		$grid = new ActiveGrid($this->application, $filter, 'Product');
+		$filter->setLimit(0);
 		
-        $act = $this->request->get('act');
+		$act = $this->request->get('act');
 		$field = array_pop(explode('_', $act, 2));
 		
 		if ('move' == $act)
@@ -239,24 +239,24 @@ class ProductController extends StoreManagementController
 			{
 				return new JSONResponse(0);
 			}			
-		}            
+		}			
 
-        foreach ($products as $product)
+		foreach ($products as $product)
 		{
-            if (substr($act, 0, 7) == 'enable_')
-            {
-                $product->setFieldValue($field, 1);    
-            }        
-            else if (substr($act, 0, 8) == 'disable_')
-            {
-                $product->setFieldValue($field, 0);                 
-            }
-            else if (substr($act, 0, 4) == 'set_')
-            {
-                $product->setFieldValue($field, $this->request->get('set_' . $field));                    
-            }
-            else if ('delete' == $act)
-            {
+			if (substr($act, 0, 7) == 'enable_')
+			{
+				$product->setFieldValue($field, 1);	
+			}		
+			else if (substr($act, 0, 8) == 'disable_')
+			{
+				$product->setFieldValue($field, 0);				 
+			}
+			else if (substr($act, 0, 4) == 'set_')
+			{
+				$product->setFieldValue($field, $this->request->get('set_' . $field));					
+			}
+			else if ('delete' == $act)
+			{
 				Product::deleteById($product->getID());
 			}
 			else if ('manufacturer' == $act)
@@ -282,17 +282,17 @@ class ProductController extends StoreManagementController
 			else if ('inc_stock' == $act)
 			{
 				$product->stockCount->set($product->stockCount->get() + $this->request->get($act));
-			}        
+			}		
 			else if ('addRelated' == $act)
 			{
 				$product->addRelatedProduct($relatedProduct);
-			}            
-            
+			}			
+			
 			$product->save();
-        }		
+		}		
 		
 		return new JSONResponse(array('act' => $this->request->get('act')), 'success', $this->translate('_mass_action_succeed'));	
-    }	
+	}	
 
 	public function autoComplete()
 	{
@@ -346,14 +346,14 @@ class ProductController extends StoreManagementController
 		
 		else if ('specField_' == substr($field, 0, 10))
 		{
-            list($foo, $id) = explode('_', $field);
-        
-            $handle = new ARFieldHandle('SpecificationStringValue', 'value');
+			list($foo, $id) = explode('_', $field);
+		
+			$handle = new ARFieldHandle('SpecificationStringValue', 'value');
 			$locale = $this->locale->getLocaleCode();
-            $searchHandle = MultiLingualObject::getLangSearchHandle($handle, $locale);
+			$searchHandle = MultiLingualObject::getLangSearchHandle($handle, $locale);
 
 		  	$f->setCondition(new EqualsCond(new ARFieldHandle('SpecificationStringValue', 'specFieldID'), $id));
-            $f->mergeCondition(new LikeCond($handle, '%:"' . $this->request->get($field) . '%'));            
+			$f->mergeCondition(new LikeCond($handle, '%:"' . $this->request->get($field) . '%'));			
 			$f->mergeCondition(new LikeCond($searchHandle, $this->request->get($field) . '%'));
 					  	
 		  	$f->setOrder($searchHandle, 'ASC');
@@ -366,7 +366,7 @@ class ProductController extends StoreManagementController
 			}
 
 			$resp = array_keys($resp);
-        }
+		}
 		  	
 		return new AutoCompleteResponse($resp);
 	}
@@ -385,8 +385,8 @@ class ProductController extends StoreManagementController
 		$response = $this->productForm(Product::getNewInstance($category, ''));		
 		if ($this->config->get('AUTO_GENERATE_SKU'))
 		{
-            $response->get('productForm')->set('autosku', true);
-        }
+			$response->get('productForm')->set('autosku', true);
+		}
 		return $response;
 	}
 
@@ -395,20 +395,20 @@ class ProductController extends StoreManagementController
 	 */
 	public function create()
 	{
-	    $product = Product::getNewInstance(Category::getInstanceByID($this->request->get('categoryID')), $this->translate('_new_product'));
-	    
-	    $response = $this->save($product);
-	    
-	    if ($response instanceOf ActionResponse)
-	    {
-	        $response->get('productForm')->clearData();
-            $response->set('id', $product->getID());
-            return $response;
-        }
-        else
-        {
-            return $response;
-        }
+		$product = Product::getNewInstance(Category::getInstanceByID($this->request->get('categoryID')), $this->translate('_new_product'));
+		
+		$response = $this->save($product);
+		
+		if ($response instanceOf ActionResponse)
+		{
+			$response->get('productForm')->clearData();
+			$response->set('id', $product->getID());
+			return $response;
+		}
+		else
+		{
+			return $response;
+		}
 	}
 	
 	/**
@@ -425,7 +425,7 @@ class ProductController extends StoreManagementController
 
 	public function basicData()
 	{
-	    $product = Product::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
+		$product = Product::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
 		$response = $this->productForm($product);
 		$response->set('counters', $this->countTabsItems()->getData());
 		return $response;
@@ -434,121 +434,121 @@ class ProductController extends StoreManagementController
 	public function countTabsItems() {
 	  	ClassLoader::import('application.model.product.*');
 	  	$product = Product::getInstanceByID((int)$this->request->get('id'), ActiveRecord::LOAD_DATA);
-	    
+		
 	  	return new JSONResponse(array(
-	        'tabProductRelationship' => $product->getRelationships(false)->getTotalRecordCount(),
-	        'tabProductFiles' => $product->getFiles(false)->getTotalRecordCount(),
-	        'tabProductImages' => count($product->getImageArray()),
-	    ));
+			'tabProductRelationship' => $product->getRelationships(false)->getTotalRecordCount(),
+			'tabProductFiles' => $product->getFiles(false)->getTotalRecordCount(),
+			'tabProductImages' => count($product->getImageArray()),
+		));
 	}
 	
 	public function info()
 	{
-        ClassLoader::import("application.helper.getDateFromString");
-        ClassLoader::import("application.model.order.OrderedItem");
-                
-	    $product = Product::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
+		ClassLoader::import("application.helper.getDateFromString");
+		ClassLoader::import("application.model.order.OrderedItem");
+				
+		$product = Product::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
 
 		$thisMonth = date('m');
 		$lastMonth = date('Y-m', strtotime(date('m') . '/15 -1 month'));
 
-        $periods = array(
+		$periods = array(
 
-            '_last_1_h' => "-1 hours | now",
-            '_last_3_h' => "-3 hours | now",
-            '_last_6_h' => "-6 hours | now",
-            '_last_12_h' => "-12 hours | now",
-            '_last_24_h' => "-24 hours | now",
-            '_last_3_d' => "-3 days | now",
-            '_this_week' => "w:Monday | now",
-            '_last_week' => "w:Monday ~ -1 week | w:Monday",
-            '_this_month' => $thisMonth . "/1 | now",
-            '_last_month' => $lastMonth . "-1 | " . $lastMonth . "/1",
-            '_this_year' => "January 1 | now",
-            '_last_year' => "January 1 last year | January 1",
-            '_overall' => "now | now"            
-            
-        );
+			'_last_1_h' => "-1 hours | now",
+			'_last_3_h' => "-3 hours | now",
+			'_last_6_h' => "-6 hours | now",
+			'_last_12_h' => "-12 hours | now",
+			'_last_24_h' => "-24 hours | now",
+			'_last_3_d' => "-3 days | now",
+			'_this_week' => "w:Monday | now",
+			'_last_week' => "w:Monday ~ -1 week | w:Monday",
+			'_this_month' => $thisMonth . "/1 | now",
+			'_last_month' => $lastMonth . "-1 | " . $lastMonth . "/1",
+			'_this_year' => "January 1 | now",
+			'_last_year' => "January 1 last year | January 1",
+			'_overall' => "now | now"			
+			
+		);
 
-        $purchaseStats = array();
-        $prevCount = 0;
-        foreach ($periods as $key => $period)
-        {
-            list($from, $to) = explode(' | ', $period);
-                
-            $cond = new EqualsCond(new ARFieldHandle('OrderedItem', 'productID'), $product->getID());
+		$purchaseStats = array();
+		$prevCount = 0;
+		foreach ($periods as $key => $period)
+		{
+			list($from, $to) = explode(' | ', $period);
+				
+			$cond = new EqualsCond(new ARFieldHandle('OrderedItem', 'productID'), $product->getID());
 
-            if ('now' != $from)
-            {
-                $cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('CustomerOrder', 'dateCompleted'), getDateFromString($from)));                
-            }
+			if ('now' != $from)
+			{
+				$cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('CustomerOrder', 'dateCompleted'), getDateFromString($from)));				
+			}
 
-            if ('now' != $to)
-            {
-                $cond->addAnd(new EqualsOrLessCond(new ARFieldHandle('CustomerOrder', 'dateCompleted'), getDateFromString($to)));
-            }        
-    
-            $f = new ARSelectFilter($cond);
-            $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
-            $f->removeFieldList();
-            $f->addField('SUM(OrderedItem.count)');
-            
-            $query = new ARSelectQueryBuilder();
-            $query->setFilter($f);
-            $query->includeTable('OrderedItem');
-            $query->joinTable('CustomerOrder', 'OrderedItem', 'ID', 'customerOrderID');
-            
-            if (($count = array_shift(array_shift(ActiveRecordModel::getDataBySql($query->createString())))) && ($count > $prevCount || '_overall' == $key))
-            {
-                $purchaseStats[$key] = $count;
-            }            
-            
-            if ($count > $prevCount)
-            {
-                $prevCount = $count;
-            }
-        }
+			if ('now' != $to)
+			{
+				$cond->addAnd(new EqualsOrLessCond(new ARFieldHandle('CustomerOrder', 'dateCompleted'), getDateFromString($to)));
+			}		
+	
+			$f = new ARSelectFilter($cond);
+			$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+			$f->removeFieldList();
+			$f->addField('SUM(OrderedItem.count)');
+			
+			$query = new ARSelectQueryBuilder();
+			$query->setFilter($f);
+			$query->includeTable('OrderedItem');
+			$query->joinTable('CustomerOrder', 'OrderedItem', 'ID', 'customerOrderID');
+			
+			if (($count = array_shift(array_shift(ActiveRecordModel::getDataBySql($query->createString())))) && ($count > $prevCount || '_overall' == $key))
+			{
+				$purchaseStats[$key] = $count;
+			}			
+			
+			if ($count > $prevCount)
+			{
+				$prevCount = $count;
+			}
+		}
 
-        // purchased together with...
-        $sql = 'SELECT COUNT(*) AS cnt, OtherItem.productID AS ID FROM OrderedItem LEFT JOIN CustomerOrder ON OrderedItem.customerOrderID=CustomerOrder.ID LEFT JOIN OrderedItem AS OtherItem ON OtherItem.customerOrderID=CustomerOrder.ID WHERE CustomerOrder.isFinalized=1 AND OrderedItem.productID=' . $product->getID() . ' AND OtherItem.productID!=' . $product->getID() . ' GROUP BY OtherItem.productID ORDER BY cnt DESC LIMIT 10';
-        
-        $products = ActiveRecord::getDataBySql($sql);
+		// purchased together with...
+		$sql = 'SELECT COUNT(*) AS cnt, OtherItem.productID AS ID FROM OrderedItem LEFT JOIN CustomerOrder ON OrderedItem.customerOrderID=CustomerOrder.ID LEFT JOIN OrderedItem AS OtherItem ON OtherItem.customerOrderID=CustomerOrder.ID WHERE CustomerOrder.isFinalized=1 AND OrderedItem.productID=' . $product->getID() . ' AND OtherItem.productID!=' . $product->getID() . ' GROUP BY OtherItem.productID ORDER BY cnt DESC LIMIT 10';
+		
+		$products = ActiveRecord::getDataBySql($sql);
 
-        $ids = array();
-        $cnt = array();
-        foreach ($products as $prod)
-        {
-            $ids[] = $prod['ID'];
-            $cnt[$prod['ID']] = $prod['cnt'];
-        }
+		$ids = array();
+		$cnt = array();
+		foreach ($products as $prod)
+		{
+			$ids[] = $prod['ID'];
+			$cnt[$prod['ID']] = $prod['cnt'];
+		}
 
-        $response = new ActionResponse();
-        
-        if ($ids)
-        {
-            $products = ActiveRecord::getRecordSetArray('Product', new ARSelectFilter(new INCond(new ARFieldHandle('Product', 'ID'), $ids)), array('DefaultImage' => 'ProductImage'));
-            foreach ($products as &$prod)
-            {
-                $prod['count'] = $cnt[$prod['ID']];
-            }
-            usort($products, array($this, 'togetherStatsSort'));
-            $response->set('together', $products);
-        }        
+		$response = new ActionResponse();
+		
+		if ($ids)
+		{
+			$products = ActiveRecord::getRecordSetArray('Product', new ARSelectFilter(new INCond(new ARFieldHandle('Product', 'ID'), $ids)), array('DefaultImage' => 'ProductImage'));
+			foreach ($products as &$prod)
+			{
+				$prod['count'] = $cnt[$prod['ID']];
+			}
+			usort($products, array($this, 'togetherStatsSort'));
+			$response->set('together', $products);
+		}		
 
-        $response->set('product', $product->toArray());
-        $response->set('purchaseStats', $purchaseStats);
-        return $response;        
-    }
+		$response->set('product', $product->toArray());
+		$response->set('purchaseStats', $purchaseStats);
+		return $response;		
+	}
 
-    private function togetherStatsSort($a, $b)
-    {
-        if ($a['count'] == $b['count'])
-        {
-            return 0;
-        }
-        
-        return ($a['count'] > $b['count']) ? -1 : 1;
-    }
+	private function togetherStatsSort($a, $b)
+	{
+		if ($a['count'] == $b['count'])
+		{
+			return 0;
+		}
+		
+		return ($a['count'] > $b['count']) ? -1 : 1;
+	}
 
 	protected function getAvailableColumns(Category $category)
 	{
@@ -559,18 +559,18 @@ class ProductController extends StoreManagementController
 		foreach ($productSchema->getFieldList() as $field)
 		{
 			$type = ActiveGrid::getFieldType($field);
-            
+			
 			if (!$type)
 			{
-                continue;
-            }
+				continue;
+			}
 			
 			$availableColumns['Product.' . $field->getName()] = $type;
 		}		
 		
 		$availableColumns['Manufacturer.name'] = 'text';
 		$availableColumns['ProductPrice.price'] = 'numeric';
-        $availableColumns['hiddenType'] = 'numeric';
+		$availableColumns['hiddenType'] = 'numeric';
 
 		foreach ($availableColumns as $column => $type)
 		{
@@ -578,7 +578,7 @@ class ProductController extends StoreManagementController
 		}
 
 		/*
-        // specField columns
+		// specField columns
 		$fields = $category->getSpecificationFieldSet(Category::INCLUDE_PARENT);
 		foreach ($fields as $field)
 		{
@@ -592,13 +592,13 @@ class ProductController extends StoreManagementController
 					);				
 			}
 		}		
-        */
+		*/
 
-        unset($availableColumns['Product.voteSum']);
-        unset($availableColumns['Product.voteCount']);
-        unset($availableColumns['Product.rating']);
-        unset($availableColumns['Product.salesRank']);
-                        
+		unset($availableColumns['Product.voteSum']);
+		unset($availableColumns['Product.voteCount']);
+		unset($availableColumns['Product.rating']);
+		unset($availableColumns['Product.salesRank']);
+						
 		return $availableColumns;
 	}
 	
@@ -616,7 +616,7 @@ class ProductController extends StoreManagementController
 		$displayedColumns = array_intersect_key(array_flip($displayedColumns), $availableColumns);	
 
 		// product ID is always passed as the first column
-        $displayedColumns = array_merge(array('hiddenType' => 'numeric'), $displayedColumns);
+		$displayedColumns = array_merge(array('hiddenType' => 'numeric'), $displayedColumns);
 		$displayedColumns = array_merge(array('Product.ID' => 'numeric'), $displayedColumns);
 				
 		// set field type as value
@@ -631,11 +631,11 @@ class ProductController extends StoreManagementController
 		return $displayedColumns;		
 	}
 	
-    protected function getMassForm()
-    {
+	protected function getMassForm()
+	{
 		ClassLoader::import("framework.request.validator.RequestValidator");
 		ClassLoader::import("framework.request.validator.Form");
-        		
+				
 		$validator = new RequestValidator("productFormValidator", $this->request);
 		
 		$validator->addFilter('set_price', new NumericFilter(''));
@@ -645,8 +645,8 @@ class ProductController extends StoreManagementController
 		$validator->addFilter('set_minimumQuantity', new NumericFilter(''));
 		$validator->addFilter('set_shippingSurchargeAmount', new NumericFilter(''));				
 		
-        return new Form($validator);                
-    }
+		return new Form($validator);				
+	}
 	
 	private function save(Product $product)
 	{
@@ -674,7 +674,7 @@ class ProductController extends StoreManagementController
 							  	$fieldValue->setValueByLang('value', $this->application->getDefaultLanguageCode(), $value);
 							  	$fieldValue->save();
 							  	
-							  	$this->request->set('specItem_' . $fieldValue->getID(), 'on');				    
+							  	$this->request->set('specItem_' . $fieldValue->getID(), 'on');					
 								$needReload = 1;
 							}
 						}  					  
@@ -688,7 +688,7 @@ class ProductController extends StoreManagementController
 						  	$fieldValue->setValueByLang('value', $this->application->getDefaultLanguageCode(), $values);
 						  	$fieldValue->save();
 						  	
-						  	$this->request->set('specField_' . $fieldID, $fieldValue->getID());    
+						  	$this->request->set('specField_' . $fieldID, $fieldValue->getID());	
 							$needReload = 1;					  
 						}					  
 					}
@@ -700,10 +700,10 @@ class ProductController extends StoreManagementController
 			
 			$response = $this->productForm($product);
 			
-		    $response->setHeader('Cache-Control', 'no-cache, must-revalidate');
-		    $response->setHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
-		    $response->setHeader('Content-type', 'text/javascript');
-		    
+			$response->setHeader('Cache-Control', 'no-cache, must-revalidate');
+			$response->setHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
+			$response->setHeader('Content-type', 'text/javascript');
+			
 			return $response;
 		}
 		else
@@ -714,7 +714,7 @@ class ProductController extends StoreManagementController
 			return new JSONResponse(array('errors' => $validator->getErrorList(), 'failure', $this->translate('_could_not_save_product_information')));
 		}	
 	}
-    
+	
 	private function productForm(Product $product)
 	{
 		$specFields = $product->getSpecificationFieldSet(ActiveRecordModel::LOAD_REFERENCES);
@@ -755,47 +755,47 @@ class ProductController extends StoreManagementController
 		
 		if($product->isLoaded())
 		{
-        	$product->loadSpecification();
+			$product->loadSpecification();
 
-        	foreach($product->getSpecification()->toArray() as $attr)
-        	{
-        		if(in_array($attr['SpecField']['type'], SpecField::getSelectorValueTypes()))
-        	    {
-        	    	if(1 == $attr['SpecField']['isMultiValue'])
-        		    {
-        		        foreach($attr['valueIDs'] as $valueID)
-        		        {
-        		            $productFormData["specItem_$valueID"] = "on";
-        		        }
-        		    }
-        		    else
-        		    {
-        		        $productFormData["{$attr['SpecField']['fieldName']}"] = $attr['ID'];
-        		    }
-        	    } 
-        	    else if(in_array($attr['SpecField']['type'], SpecField::getMultilanguageTypes()))
-        	    {
-        	        $productFormData["{$attr['SpecField']['fieldName']}"] = $attr['value'];
-        	        foreach($this->application->getLanguageArray() as $lang)
-        	        {
-        	            if (isset($attr['value_' . $lang]))
-        	            {
+			foreach($product->getSpecification()->toArray() as $attr)
+			{
+				if(in_array($attr['SpecField']['type'], SpecField::getSelectorValueTypes()))
+				{
+					if(1 == $attr['SpecField']['isMultiValue'])
+					{
+						foreach($attr['valueIDs'] as $valueID)
+						{
+							$productFormData["specItem_$valueID"] = "on";
+						}
+					}
+					else
+					{
+						$productFormData["{$attr['SpecField']['fieldName']}"] = $attr['ID'];
+					}
+				} 
+				else if(in_array($attr['SpecField']['type'], SpecField::getMultilanguageTypes()))
+				{
+					$productFormData["{$attr['SpecField']['fieldName']}"] = $attr['value'];
+					foreach($this->application->getLanguageArray() as $lang)
+					{
+						if (isset($attr['value_' . $lang]))
+						{
 							$productFormData["{$attr['SpecField']['fieldName']}_{$lang}"] = $attr['value_' . $lang];
 						}						
-        	        }
-        	    }
-        	    else
-        	    {
-        	    	$productFormData[$attr['SpecField']['fieldName']] = $attr['value'];
-        	    }   
-        	}
-        	
-        	if (isset($productFormData['Manufacturer']['name']))
-        	{
+					}
+				}
+				else
+				{
+					$productFormData[$attr['SpecField']['fieldName']] = $attr['value'];
+				}   
+			}
+			
+			if (isset($productFormData['Manufacturer']['name']))
+			{
 				$productFormData['manufacturer'] = $productFormData['Manufacturer']['name'];
-			}        	
+			}			
 		}
-        
+		
 		$form->setData($productFormData);
 		
 		$languages = array();
@@ -806,7 +806,7 @@ class ProductController extends StoreManagementController
 		
 		// status values
 		$status = array(0 => $this->translate('_disabled'),
-					    1 => $this->translate('_enabled'),	
+						1 => $this->translate('_enabled'),	
 					  );
 		
 		// product types
@@ -814,13 +814,13 @@ class ProductController extends StoreManagementController
 					   1 => $this->translate('_intangible'),	
 					  );
 
-        // default product type
-        if (!$product->isLoaded())
-        {
-            $product->type->set(substr($this->config->get('DEFAULT_PRODUCT_TYPE'), -1));
-            $form->set('type', $product->type->get());
-        }
-    
+		// default product type
+		if (!$product->isLoaded())
+		{
+			$product->type->set(substr($this->config->get('DEFAULT_PRODUCT_TYPE'), -1));
+			$form->set('type', $product->type->get());
+		}
+	
 		// arrange SpecFields's into groups
 		$specFieldsByGroup = array();
 		$prevGroupID = -6541;
@@ -837,7 +837,7 @@ class ProductController extends StoreManagementController
 		}		
 
 		$response = new ActionResponse();
-        $response->set("cat", $product->category->get()->getID());
+		$response->set("cat", $product->category->get()->getID());
 		$response->set("hideFeedbackMessage", $this->request->get("afterAdding") == 'on');
 		$response->set("specFieldList", $specFieldsByGroup);
 		$response->set("productForm", $form);
@@ -857,7 +857,7 @@ class ProductController extends StoreManagementController
 		return $response; 	
 	}
 	
-    /**
+	/**
 	 * @return RequestValidator
 	 */
 	private function buildValidator(Product $product)
@@ -866,13 +866,13 @@ class ProductController extends StoreManagementController
 		
 		$validator = new RequestValidator("productFormValidator", $this->request);
 		
-        $validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name_empty')));		    
+		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name_empty')));			
 		$validator->addFilter('name', new StripHtmlFilter());
 				
 		// check if SKU is entered if not autogenerating
 		if ($this->request->get('save') && !$product->isExistingRecord() && !$this->request->get('autosku'))
 		{
-			$validator->addCheck('sku', new IsNotEmptyCheck($this->translate('_err_sku_empty')));		    		  
+			$validator->addCheck('sku', new IsNotEmptyCheck($this->translate('_err_sku_empty')));					  
 		}
 		
 		// check if entered SKU is unique
@@ -892,8 +892,8 @@ class ProductController extends StoreManagementController
 		  	// validate numeric values
 			if (SpecField::TYPE_NUMBERS_SIMPLE == $field->type->get())
 		  	{
-				$validator->addCheck($fieldname, new IsNumericCheck($this->translate('_err_numeric')));		    
-				$validator->addFilter($fieldname, new NumericFilter());		    
+				$validator->addCheck($fieldname, new IsNumericCheck($this->translate('_err_numeric')));			
+				$validator->addFilter($fieldname, new NumericFilter());			
 			}
 
 		  	// validate required fields
@@ -906,7 +906,7 @@ class ProductController extends StoreManagementController
 				else
 				{
 					ClassLoader::import('application.helper.check.SpecFieldIsValueSelectedCheck');
-					$validator->addCheck($fieldname, new SpecFieldIsValueSelectedCheck($this->translate('_err_specfield_multivaluerequired'), $field, $this->request));		    
+					$validator->addCheck($fieldname, new SpecFieldIsValueSelectedCheck($this->translate('_err_specfield_multivaluerequired'), $field, $this->request));			
 				}			
 			}
 		}  
@@ -915,10 +915,10 @@ class ProductController extends StoreManagementController
 		if(!$product->isExistingRecord()) 
 		{
 			ClassLoader::import('application.controller.backend.ProductPriceController');
-            ProductPriceController::addPricesValidator($validator);
+			ProductPriceController::addPricesValidator($validator);
 			ProductPriceController::addShippingValidator($validator);
-			ProductPriceController::addInventoryValidator($validator);        
-        }
+			ProductPriceController::addInventoryValidator($validator);		
+		}
 		
 		return $validator;
 	}

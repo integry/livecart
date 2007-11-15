@@ -1,4 +1,4 @@
-_import_database=Import Database
+_import_database=Database Migration
 _import_description=The database import tool allows to convert an existing database of other shopping cart program into LiveCart.
 _import_warning=<span>Note:</span> it is highly recommended that the database is imported into an <strong>empty</strong> LiveCart database!
 _begin_import=Begin Database Import

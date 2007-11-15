@@ -15,17 +15,17 @@ class ProductFileController extends StoreManagementController
 {
 	public function index()
 	{
-	    $product = Product::getInstanceByID((int)$this->request->get('id'));
-	    
-	    $response = new ActionResponse();
-	    
+		$product = Product::getInstanceByID((int)$this->request->get('id'));
+		
+		$response = new ActionResponse();
+		
 		$languages = array();
 		foreach($this->application->getLanguageList()->toArray() as $language) $languages[$language['ID']] = $language;
 		$response->set('languages', $languages);
-	    $response->set('productID', $product->getID());
+		$response->set('productID', $product->getID());
 		$response->set('productFilesWithGroups', $product->getFilesMergedWithGroupsArray());
-	    
-	    return $response;
+		
+		return $response;
 	}
 
 	/**
@@ -33,75 +33,75 @@ class ProductFileController extends StoreManagementController
 	 */
 	public function update()
 	{
-        $productFile = ProductFile::getInstanceByID((int)$this->request->get('ID'), ActiveRecord::LOAD_DATA);
-        $productFile->fileName->set($this->request->get('fileName'));
-        
-        $uploadFile = $this->request->get('uploadFile');
-        if($this->request->isValueSet('uploadFile')) 
-        {
-            $productFile->storeFile($uploadFile['tmp_name'], $uploadFile['name']);
-        }
-        
-        return $this->save($productFile);
+		$productFile = ProductFile::getInstanceByID((int)$this->request->get('ID'), ActiveRecord::LOAD_DATA);
+		$productFile->fileName->set($this->request->get('fileName'));
+		
+		$uploadFile = $this->request->get('uploadFile');
+		if($this->request->isValueSet('uploadFile')) 
+		{
+			$productFile->storeFile($uploadFile['tmp_name'], $uploadFile['name']);
+		}
+		
+		return $this->save($productFile);
 	}
 	
 	/**
 	 * @role update
 	 */
 	public function create()
-	{	    
-	    $product = Product::getInstanceByID((int)$this->request->get('productID'));
-	    $uploadFile = $this->request->get('uploadFile');
+	{		
+		$product = Product::getInstanceByID((int)$this->request->get('productID'));
+		$uploadFile = $this->request->get('uploadFile');
 
-	    $productFile = ProductFile::getNewInstance($product, $uploadFile['tmp_name'], $uploadFile['name']);
-        return $this->save($productFile);
+		$productFile = ProductFile::getNewInstance($product, $uploadFile['tmp_name'], $uploadFile['name']);
+		return $this->save($productFile);
 	}
 	
 	private function save(ProductFile $productFile)
 	{
-	    $response = new ActionResponse();
-	    $response->setHeader("Cache-Control", "no-cache, must-revalidate");
-	    $response->setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
-	    
-	    $validator = $this->buildValidator((int)$this->request->get('ID'));
-	    if($validator->isValid())
-	    {   
-		    foreach ($this->application->getLanguageArray(true) as $lang)
+		$response = new ActionResponse();
+		$response->setHeader("Cache-Control", "no-cache, must-revalidate");
+		$response->setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
+		
+		$validator = $this->buildValidator((int)$this->request->get('ID'));
+		if($validator->isValid())
+		{   
+			foreach ($this->application->getLanguageArray(true) as $lang)
 	   		{
 	   			if ($this->request->isValueSet('title_' . $lang))
-	    			$productFile->setValueByLang('title', $lang, $this->request->get('title_' . $lang));
+					$productFile->setValueByLang('title', $lang, $this->request->get('title_' . $lang));
 	
 	   			if ($this->request->isValueSet('description_' . $lang))
-	    			$productFile->setValueByLang('description', $lang, $this->request->get('description_' . $lang));
+					$productFile->setValueByLang('description', $lang, $this->request->get('description_' . $lang));
 	   		}
 	   		
 	   		// Use title as description if no description was provided
 	   		$defaultLang = $this->application->getDefaultLanguageCode();
 	   		if(!$this->request->isValueSet('description_' . $defaultLang) || $this->request->get('description_' . $defaultLang) == '')
 	   		{
-    			$productFile->setValueByLang('description', $defaultLang, $this->request->get('title_' . $defaultLang));
+				$productFile->setValueByLang('description', $defaultLang, $this->request->get('title_' . $defaultLang));
 	   		}
 	   		
 	   		$productFile->allowDownloadDays->set((int)$this->request->get('allowDownloadDays'));
 	   		
 	   		$productFile->save();
-		    $response->set('status', 'success');
-		    $response->set('productFile', $productFile->toArray());
-	    }
-	    else
-	    {
-		    $response->set('status', 'failure');
-		    $response->set('errors', $validator->getErrorList());
-	    }
-	    
-	    return $response;
+			$response->set('status', 'success');
+			$response->set('productFile', $productFile->toArray());
+		}
+		else
+		{
+			$response->set('status', 'failure');
+			$response->set('errors', $validator->getErrorList());
+		}
+		
+		return $response;
 	}
 
 	public function edit()
 	{
-	    $productFile = ProductFile::getInstanceByID((int)$this->request->get('id'), ActiveRecord::LOAD_DATA);
-	    
-	    return new JSONResponse($productFile->toArray());
+		$productFile = ProductFile::getInstanceByID((int)$this->request->get('id'), ActiveRecord::LOAD_DATA);
+		
+		return new JSONResponse($productFile->toArray());
 	}
 
 	/**
@@ -109,9 +109,9 @@ class ProductFileController extends StoreManagementController
 	 */
 	public function delete()
 	{
-	    ProductFile::getInstanceByID((int)$this->request->get('id'))->delete();
-	    
-	    return new JSONResponse(false, 'success');
+		ProductFile::getInstanceByID((int)$this->request->get('id'))->delete();
+		
+		return new JSONResponse(false, 'success');
 	}
 	
 	/**
@@ -119,9 +119,9 @@ class ProductFileController extends StoreManagementController
 	 */
 	public function download()
 	{
-	    $productFile = ProductFile::getInstanceByID((int)$this->request->get('id'), ActiveRecord::LOAD_DATA);
+		$productFile = ProductFile::getInstanceByID((int)$this->request->get('id'), ActiveRecord::LOAD_DATA);
 
-	    return new ObjectFileResponse($productFile);
+		return new ObjectFileResponse($productFile);
 	}
 
 	/**
@@ -129,30 +129,30 @@ class ProductFileController extends StoreManagementController
 	 */
 	public function sort()
 	{ 
-        $target = $this->request->get('target');    
-        preg_match('/_(\d+)$/', $target, $match); // Get group. 
+		$target = $this->request->get('target');	
+		preg_match('/_(\d+)$/', $target, $match); // Get group. 
 
-        foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
-        {
-            if(empty($key)) continue;
-            
-            $file = ProductFile::getInstanceByID((int)$key); 
-            $file->position->set((int)$position);
-            
-            if(isset($match[1])) $file->productFileGroup->set(ProductFileGroup::getInstanceByID((int)$match[1])); 
-            else $file->productFileGroup->setNull();
-            
-            $file->save();
-        }
-        
-        return new JSONResponse(false, 'success');
+		foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
+		{
+			if(empty($key)) continue;
+			
+			$file = ProductFile::getInstanceByID((int)$key); 
+			$file->position->set((int)$position);
+			
+			if(isset($match[1])) $file->productFileGroup->set(ProductFileGroup::getInstanceByID((int)$match[1])); 
+			else $file->productFileGroup->setNull();
+			
+			$file->save();
+		}
+		
+		return new JSONResponse(false, 'success');
 	}
 
 	/**
 	 * @return RequestValidator
 	 */
-    private function buildValidator($existingProductFile = true)
-    {
+	private function buildValidator($existingProductFile = true)
+	{
 		ClassLoader::import("framework.request.validator.RequestValidator");
 		$validator = new RequestValidator("productFileValidator", $this->request);
 
@@ -163,7 +163,7 @@ class ProductFileController extends StoreManagementController
 		if($existingProductFile) $validator->addCheck('fileName', new IsNotEmptyCheck($this->translate('_err_fileName_should_not_be_empty')));
 
 		return $validator;
-    }
+	}
 	
 }
 ?>

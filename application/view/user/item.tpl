@@ -8,19 +8,19 @@
 	
 	{include file="user/userMenu.tpl" current="homeMenu"}
 
-    <div id="userContent">
+	<div id="userContent">
 
-    {if $files}
-        {foreach from=$files item="item"}        
-            <h3>
-                <a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
-            </h3>
-            {include file="user/fileList.tpl" item=$item}
-        {/foreach}            
-    {/if}
+	{if $files}
+		{foreach from=$files item="item"}		
+			<h3>
+				<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
+			</h3>
+			{include file="user/fileList.tpl" item=$item}
+		{/foreach}			
+	{/if}
 
-    </div>
-    
+	</div>
+	
 </div>
 
 {include file="layout/frontend/footer.tpl"}

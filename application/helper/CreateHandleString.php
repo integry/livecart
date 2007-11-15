@@ -16,10 +16,10 @@ function createHandleString($str)
 {
 	if (is_array($str))
 	{
-        $str = array_shift($str);
-    }
+		$str = array_shift($str);
+	}
 
-    $str = str_replace(array('$', '&', '+', '/', '\\', ':', ';', '=', '?', '@', '.', ' ', '"', "'", '#', '*', '>', '<', ','), '-', $str);
+	$str = str_replace(array('$', '&', '+', '/', '\\', ':', ';', '=', '?', '@', '.', ' ', '"', "'", '#', '*', '>', '<', ','), '-', $str);
 
 	$str = preg_replace('/-{2,}/', '-', $str);
 	$str = preg_replace('/^-/', '', $str);

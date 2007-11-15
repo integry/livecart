@@ -14,7 +14,7 @@ Jei turite klausimų, susijusių su šiuo užsakymu, galite siųsti laišką ar 
 Nauja būsena: {if $shipment.status == 2}laukia siuntimo{elseif $shipment.status == 3}išsiųstas{elseif $shipment.status == 4}grąžintas{else}processing{/if}
 
 ------------------------------------------------------------
-Prekė                      Kaina     Kiekis     Tarpinė suma
+Prekė					  Kaina	 Kiekis	 Tarpinė suma
 ------------------------------------------------------------
 {foreach from=$shipment.items item=item}
 {$item.Product.name_lang|truncate:29:"...":"true"|@str_pad:31}{$item.formattedPrice|truncate:9:"..."|@str_pad:10}{$item.count|truncate:8:"..."|@str_pad:9}{$item.formattedSubTotal}

@@ -15,17 +15,17 @@ ClassLoader::import("framework.request.validator.Form");
  */
 class ShippingRateController extends StoreManagementController
 {
-    /**
-     * @role update
-     */
-    public function delete()
-    {
-        if($id = (int)$this->request->get('id'))
-        {
-            ShippingRate::getInstanceByID($id)->delete();
-        }
-        
-        return new JSONResponse(false, 'success');
-    }
+	/**
+	 * @role update
+	 */
+	public function delete()
+	{
+		if($id = (int)$this->request->get('id'))
+		{
+			ShippingRate::getInstanceByID($id)->delete();
+		}
+		
+		return new JSONResponse(false, 'success');
+	}
 }
 ?>

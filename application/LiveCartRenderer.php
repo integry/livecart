@@ -10,8 +10,8 @@ ClassLoader::import('application.LiveCartSmarty');
  *  @author Integry Systems
  */
 class LiveCartRenderer extends SmartyRenderer
-{    	
-    /**
+{		
+	/**
 	 * Template renderer constructor
 	 *
 	 * Creates a smarty instance and sets a compile directory path (this is required

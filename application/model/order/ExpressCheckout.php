@@ -11,9 +11,9 @@ ClassLoader::import("application.model.user.UserAddress");
  */
 class ExpressCheckout extends ActiveRecordModel
 {
-    /**
-     * Define database schema
-     */
+	/**
+	 * Define database schema
+	 */
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -25,7 +25,7 @@ class ExpressCheckout extends ActiveRecordModel
 
 		$schema->registerField(new ARField("method", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("paymentData", ARText::instance()));
-	}    
+	}	
 	
 	/*####################  Static method implementations ####################*/	
 	
@@ -39,44 +39,44 @@ class ExpressCheckout extends ActiveRecordModel
 	
 	public static function getInstanceByOrder(CustomerOrder $order)
 	{
-        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, 'orderID'), $order->getID()));
-        $s = self::getRecordSet(__CLASS__, $f);
-        if ($s->size())
-        {
-            return $s->get(0);
-        }
-    }
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, 'orderID'), $order->getID()));
+		$s = self::getRecordSet(__CLASS__, $f);
+		if ($s->size())
+		{
+			return $s->get(0);
+		}
+	}
 	
-	/*####################  Saving ####################*/    
-    
-    public function deleteInstancesByOrder(CustomerOrder $order)
-    {
-        // remove other ExpressCheckout instances for this order
-        $f = new ARDeleteFilter();
-        $f->setCondition(new EqualsCond(new ARFieldHandle('ExpressCheckout', 'orderID'), $order->getID()));
-        ActiveRecordModel::deleteRecordSet('ExpressCheckout', $f);
-    }
+	/*####################  Saving ####################*/	
+	
+	public function deleteInstancesByOrder(CustomerOrder $order)
+	{
+		// remove other ExpressCheckout instances for this order
+		$f = new ARDeleteFilter();
+		$f->setCondition(new EqualsCond(new ARFieldHandle('ExpressCheckout', 'orderID'), $order->getID()));
+		ActiveRecordModel::deleteRecordSet('ExpressCheckout', $f);
+	}
 	
 	protected function insert()
 	{
-        $this->deleteInstancesByOrder($this->order->get());
-        
-        return parent::insert();
-    }
+		$this->deleteInstancesByOrder($this->order->get());
+		
+		return parent::insert();
+	}
 	
 	/*####################  Get related objects ####################*/	
 	
 	public function getHandler(TransactionDetails $transaction = null)
 	{
-        $handler = $this->getApplication()->getExpressPaymentHandler($this->method->get(), $transaction);
-        $handler->setData(unserialize($this->paymentData->get()));
-        return $handler;        
-    }
+		$handler = $this->getApplication()->getExpressPaymentHandler($this->method->get(), $transaction);
+		$handler->setData(unserialize($this->paymentData->get()));
+		return $handler;		
+	}
 	
 	public function getTransactionDetails()
 	{
-        return $this->getHandler()->getDetails();
-    }    
+		return $this->getHandler()->getDetails();
+	}	
 }
 
 ?>

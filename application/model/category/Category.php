@@ -82,24 +82,24 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 */
 	public static function getNewInstance(Category $parent)
 	{
-	    $category = parent::getNewInstance(__CLASS__, $parent);
-	    
-        $category->activeProductCount->set(0);
-        $category->availableProductCount->set(0);
-        $category->totalProductCount->set(0);
-                
+		$category = parent::getNewInstance(__CLASS__, $parent);
+		
+		$category->activeProductCount->set(0);
+		$category->availableProductCount->set(0);
+		$category->totalProductCount->set(0);
+				
 		return $category;
 	}
 	
 	/*####################  Value retrieval and manipulation ####################*/
 
-    public function getProductCountField()
-    {
+	public function getProductCountField()
+	{
 		$config = self::getApplication()->getConfig();
 		return ($config->get('INVENTORY_TRACKING') != 'ENABLE_AND_HIDE') ? 'activeProductCount' :'availableProductCount';
-    }
+	}
 	
-    public function setValueByLang($fieldName, $langCode, $value)
+	public function setValueByLang($fieldName, $langCode, $value)
 	{
 		return MultiLingualObject::setValueByLang($fieldName, $langCode, $value);
 	}
@@ -153,13 +153,13 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	
 	public function moveTo(Category $parentNode, Category $beforeNode = null)
 	{
-        self::beginTransaction();
-        $result = parent::moveTo($parentNode, $beforeNode);
-        self::recalculateProductsCount();
-        self::commit();
-        
-        return $result;
-    }
+		self::beginTransaction();
+		$result = parent::moveTo($parentNode, $beforeNode);
+		self::recalculateProductsCount();
+		self::commit();
+		
+		return $result;
+	}
 
 	public function isRoot()
 	{
@@ -168,7 +168,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 
 	/*####################  Saving ####################*/
 	
-    /**
+	/**
 	 *
 	 * @todo fix potential bug: when using $this->load() in method, it might
 	 * overwrite the data that was set during runtime
@@ -218,25 +218,25 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 */
 	public function delete()
 	{
-        ActiveRecordModel::beginTransaction();
-	    
+		ActiveRecordModel::beginTransaction();
+		
 		try
 		{
 			$activeProductCount = $this->activeProductCount->get();
 			$totalProductCount = $this->totalProductCount->get();
-            $availableProductCount = $this->availableProductCount->get();
+			$availableProductCount = $this->availableProductCount->get();
 
 			foreach ($this->getPathNodeSet(true) as $node)
 			{
 				$node->setFieldValue("activeProductCount", "activeProductCount - " . $activeProductCount);
 				$node->setFieldValue("totalProductCount", "totalProductCount - " . $totalProductCount);
-                $node->setFieldValue("availableProductCount", "availableProductCount - " . $availableProductCount);
+				$node->setFieldValue("availableProductCount", "availableProductCount - " . $availableProductCount);
 
 				$node->save();
 			}
 			ActiveRecordModel::commit();
 			
-            parent::delete();
+			parent::delete();
 		}
 		catch (Exception $e)
 		{
@@ -252,7 +252,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 *
 	 * @return array
 	 */
-    protected static function transformArray($array, ARSchema $schema)
+	protected static function transformArray($array, ARSchema $schema)
 	{
 		$array = MultiLingualObject::transformArray($array, $schema);
 		$array['unavailableProductCount'] = $array['totalProductCount'] - $array['availableProductCount'];
@@ -274,10 +274,10 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	{
 	  	if (!$this->subCategorySetCache)
 	  	{
-            $this->subCategorySetCache = ActiveRecord::getRecordSet('Category', $this->getSubcategoryFilter(), $loadReferencedRecords);
-        }
-        
-        return $this->subCategorySetCache;
+			$this->subCategorySetCache = ActiveRecord::getRecordSet('Category', $this->getSubcategoryFilter(), $loadReferencedRecords);
+		}
+		
+		return $this->subCategorySetCache;
 	}
 
 	/**
@@ -297,12 +297,12 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	  	$cond = new EqualsCond(new ARFieldHandle('Category', 'parentNodeID'), $this->getID());
 	  	$cond->addAND(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), 1));
 	  	
-        // Hide empty categories
-        $config = self::getApplication()->getConfig();
-        if ('ENABLE_AND_HIDE' == $config->get('INVENTORY_TRACKING'))
-        {
-            $cond->addAND(new MoreThanCond(new ARFieldHandle('Category', $this->getProductCountField()), 0));
-        }        
+		// Hide empty categories
+		$config = self::getApplication()->getConfig();
+		if ('ENABLE_AND_HIDE' == $config->get('INVENTORY_TRACKING'))
+		{
+			$cond->addAND(new MoreThanCond(new ARFieldHandle('Category', $this->getProductCountField()), 0));
+		}		
 	  	
 		$filter->setCondition($cond);
 	  	$filter->setOrder(new ARFieldHandle('Category', 'lft'), 'ASC');
@@ -365,15 +365,15 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return parent::getRootNode(__CLASS__);
 	}
 
-    public function getBranch() 
+	public function getBranch() 
 	{
-        $filter = new ARSelectFilter();
-        $filter->setOrder(new ARFieldHandle("Category", "lft", 'ASC'));
-        $filter->setCondition(new OperatorCond(new ARFieldHandle("Category", "parentNodeID"), $this->getID(), "="));
+		$filter = new ARSelectFilter();
+		$filter->setOrder(new ARFieldHandle("Category", "lft", 'ASC'));
+		$filter->setCondition(new OperatorCond(new ARFieldHandle("Category", "parentNodeID"), $this->getID(), "="));
 			
 		$categoryList = Category::getRecordSet($filter);
-    }
-    
+	}
+	
 	/**
 	 * Gets a list of products assigned to this node
 	 *
@@ -404,16 +404,16 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$filter = $productFilter->getSelectFilter();		
 		if ($productFilter->isSubcategories())
 		{
-            $cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $this->lft->get());
-    		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $this->rgt->get()));
-        }
-        else
-        {
-    		$cond = new EqualsCond(new ARFieldHandle('Product', 'categoryID'), $this->getID());
-        }
+			$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $this->lft->get());
+			$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $this->rgt->get()));
+		}
+		else
+		{
+			$cond = new EqualsCond(new ARFieldHandle('Product', 'categoryID'), $this->getID());
+		}
 
-        $filter->mergeCondition($cond);
-            
+		$filter->mergeCondition($cond);
+			
 		$this->applyInventoryFilter($filter);
 		
 		return $filter;
@@ -421,32 +421,32 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 
 	public function getProductFilter(ARSelectFilter $filter)
 	{
-        $filter->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), 1));
+		$filter->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), 1));
 		
 		$this->applyInventoryFilter($filter);
 		
 		return $filter;
 	}
 
-    private function applyInventoryFilter(ARSelectFilter $filter)
-    {
+	private function applyInventoryFilter(ARSelectFilter $filter)
+	{
 		$c = self::getApplication()->getConfig();
 		if ($c->get('INVENTORY_TRACKING') == 'ENABLE_AND_HIDE')
 		{
 			$cond = new MoreThanCond(new ARFieldHandle('Product', 'stockCount'), 0);
 			$cond->addOr(new EqualsCond(new ARFieldHandle('Product', 'isBackOrderable'), 1));
 			$filter->mergeCondition($cond);					
-		}        
-    }
+		}		
+	}
 
 	public function getFilterSet()
 	{
 		if ($this->filterSetCache)
 		{
-            return $this->filterSetCache;
-        }
-        
-        Classloader::import('application.model.filter.Filter');
+			return $this->filterSetCache;
+		}
+		
+		Classloader::import('application.model.filter.Filter');
 		Classloader::import('application.model.filter.SelectorFilter');
 			
 		// get filter groups
@@ -605,12 +605,12 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 *
 	 * @return ARSet
 	 */
-    public function getSpecificationFieldGroupArray($loadReferencedRecords = false) 
-    {
+	public function getSpecificationFieldGroupArray($loadReferencedRecords = false) 
+	{
 		ClassLoader::import("application.model.category.SpecFieldGroup");  
 		
 		return SpecFieldGroup::getRecordSetArray($this->getSpecificationGroupFilter(), $loadReferencedRecords);
-    }
+	}
 
  	/**
 	 * Loads a set of active record instances of SpecFieldGroup by using a filter
@@ -619,13 +619,13 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 *
 	 * @return ARSet
 	 */
-    public function getSpecificationFieldGroupSet($loadReferencedRecords = false) 
-    {
+	public function getSpecificationFieldGroupSet($loadReferencedRecords = false) 
+	{
 		ClassLoader::import("application.model.category.SpecFieldGroup");  
 		
 		return SpecFieldGroup::getRecordSet($this->getSpecificationGroupFilter(), $loadReferencedRecords);
-    }
-    
+	}
+	
 	/**
 	 * Loads a set of spec field records for a category.
 	 *
@@ -645,12 +645,12 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	public function getSpecificationFieldArray($includeParentFields = true, $loadReferencedRecords = false)
 	{
 		ClassLoader::import("application.model.category.SpecField");
-        return ActiveRecordModel::getRecordSetArray('SpecField', $this->getSpecificationFilter($includeParentFields), array('SpecFieldGroup'));
+		return ActiveRecordModel::getRecordSetArray('SpecField', $this->getSpecificationFilter($includeParentFields), array('SpecFieldGroup'));
 	}
 	
 	public function getSpecFieldsWithGroupsArray()
 	{
-	    return SpecFieldGroup::mergeGroupsWithFields($this->getSpecificationFieldGroupArray(), $this->getSpecificationFieldArray(false, true));
+		return SpecFieldGroup::mergeGroupsWithFields($this->getSpecificationFieldGroupArray(), $this->getSpecificationFieldArray(false, true));
 	}
 	
 	/**
@@ -681,7 +681,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		
 		return $filter;
 	}
-    
+	
 	/**
 	 * Crates a select filter for specification fields groups related to category
 	 *$filter->addField('value', $aliasTable, $aliasField);
@@ -693,94 +693,94 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		
 		$filter = new ARSelectFilter();
 		$filter->setOrder(new ARFieldHandle("SpecFieldGroup", "position"), ARSelectFilter::ORDER_ASC);
-        $filter->setCondition(new EqualsCond(new ARFieldHandle("SpecFieldGroup", "categoryID"), $this->getID()));
+		$filter->setCondition(new EqualsCond(new ARFieldHandle("SpecFieldGroup", "categoryID"), $this->getID()));
 
 		return $filter;
 	}
-    
+	
 	public function serialize()
 	{
-        return parent::serialize(array('defaultImageID', 'parentNodeID'));  
-    }    
-    
-    /**
-     * Reindex the category tree
-     */
-    public static function reindex() 
-    {
-        parent::reindex(__CLASS__);
-    }
-    
-    public static function recalculateProductsCount() 
-    {  
-        ClassLoader::import("application.model.product.Product");
-        
-        self::beginTransaction();     
+		return parent::serialize(array('defaultImageID', 'parentNodeID'));  
+	}	
+	
+	/**
+	 * Reindex the category tree
+	 */
+	public static function reindex() 
+	{
+		parent::reindex(__CLASS__);
+	}
+	
+	public static function recalculateProductsCount() 
+	{  
+		ClassLoader::import("application.model.product.Product");
+		
+		self::beginTransaction();	 
 
-        $fields = array('totalProductCount', 'activeProductCount', 'availableProductCount');
+		$fields = array('totalProductCount', 'activeProductCount', 'availableProductCount');
 
-        // reset counts to 0
-        $sql = 'UPDATE Category SET ';
-        foreach ($fields as $field)
-        {
-            $sql .= $field . '=0' . ('availableProductCount' != $field ? ',' : '');
-        }
+		// reset counts to 0
+		$sql = 'UPDATE Category SET ';
+		foreach ($fields as $field)
+		{
+			$sql .= $field . '=0' . ('availableProductCount' != $field ? ',' : '');
+		}
 
-        self::getDBConnection()->executeUpdate($sql);
+		self::getDBConnection()->executeUpdate($sql);
 
-        // category product counts
-        $sql = 'UPDATE Category SET totalProductCount = (SELECT COUNT(*) FROM Product WHERE categoryID = Category.ID),
-                                    activeProductCount = (SELECT COUNT(*) FROM Product WHERE categoryID = Category.ID AND Product.isEnabled = 1),
-                                    availableProductCount = (SELECT COUNT(*) FROM Product WHERE categoryID = Category.ID AND Product.isEnabled = 1 AND (stockCount > 0 OR type = ' . Product::TYPE_DOWNLOADABLE .  '))';
-        self::getDBConnection()->executeUpdate($sql);
-       
-        //self::updateProductCount(Category::getInstanceByID(Category::ROOT_ID, Category::LOAD_DATA));
-        
-        // add subcategory counts to parent categories
-        // @todo - rewrite so this wouldn't use temporary tables - possible?
-        $sql = 'CREATE TEMPORARY TABLE CategoryCount 
-                    SELECT ID';
-		        
-        foreach ($fields as $field)
-        {
-            $sql .= ', (SELECT SUM(' . $field . ')
+		// category product counts
+		$sql = 'UPDATE Category SET totalProductCount = (SELECT COUNT(*) FROM Product WHERE categoryID = Category.ID),
+									activeProductCount = (SELECT COUNT(*) FROM Product WHERE categoryID = Category.ID AND Product.isEnabled = 1),
+									availableProductCount = (SELECT COUNT(*) FROM Product WHERE categoryID = Category.ID AND Product.isEnabled = 1 AND (stockCount > 0 OR type = ' . Product::TYPE_DOWNLOADABLE .  '))';
+		self::getDBConnection()->executeUpdate($sql);
+	   
+		//self::updateProductCount(Category::getInstanceByID(Category::ROOT_ID, Category::LOAD_DATA));
+		
+		// add subcategory counts to parent categories
+		// @todo - rewrite so this wouldn't use temporary tables - possible?
+		$sql = 'CREATE TEMPORARY TABLE CategoryCount 
+					SELECT ID';
+				
+		foreach ($fields as $field)
+		{
+			$sql .= ', (SELECT SUM(' . $field . ')
 			FROM Category AS cat 
 			WHERE cat.lft >= Category.lft
 				AND cat.rgt <= Category.rgt) AS ' . $field;
-        }
-        
-        $sql .= ' FROM Category';
-        
-        self::getDBConnection()->executeUpdate($sql);
-        
-        $sql = 'UPDATE Category LEFT JOIN CategoryCount ON Category.ID=CategoryCount.ID SET ';
-        foreach ($fields as $field)
-        {
-            $sql .= 'Category.' . $field . '=CategoryCount.' . $field . ('availableProductCount' != $field ? ',' : '');
-        }
+		}
+		
+		$sql .= ' FROM Category';
+		
+		self::getDBConnection()->executeUpdate($sql);
+		
+		$sql = 'UPDATE Category LEFT JOIN CategoryCount ON Category.ID=CategoryCount.ID SET ';
+		foreach ($fields as $field)
+		{
+			$sql .= 'Category.' . $field . '=CategoryCount.' . $field . ('availableProductCount' != $field ? ',' : '');
+		}
 
-        self::getDBConnection()->executeUpdate($sql);
-        
-        self::commit();
-    }
-    
-    // subcategory counts
-    private static function updateProductCount(Category $category)
-    {
-        $countTotal = $countAvailable = $countActive = 0;
-        foreach ($category->getSubCategorySet() as $sub)
-        {
-            self::updateProductCount($sub);
-            $countTotal += $sub->totalProductCount->get();
-            $countAvailable += $sub->availableProductCount->get();
-            $countActive += $sub->activeProductCount->get();    
-        }
-        
-        $category->totalProductCount->set($category->totalProductCount->get() + $countTotal);
-        $category->activeProductCount->set($category->activeProductCount->get() + $countActive);
-        $category->availableProductCount->set($category->availableProductCount->get() + $countAvailable);
-        $category->save();
-    }
+		self::getDBConnection()->executeUpdate($sql);
+		
+		self::commit();
+	}
+	
+	// subcategory counts
+	private static function updateProductCount(Category $category)
+	{
+		$countTotal = $countAvailable = $countActive = 0;
+		foreach ($category->getSubCategorySet() as $sub)
+		{
+			self::updateProductCount($sub);
+			$countTotal += $sub->totalProductCount->get();
+			$countAvailable += $sub->availableProductCount->get();
+			$countActive += $sub->activeProductCount->get();	
+		}
+		
+		$category->totalProductCount->set($category->totalProductCount->get() + $countTotal);
+		$category->activeProductCount->set($category->activeProductCount->get() + $countActive);
+		$category->availableProductCount->set($category->availableProductCount->get() + $countAvailable);
+		$category->save();
+	}
 }
 
 ?>

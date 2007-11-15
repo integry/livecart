@@ -16,19 +16,19 @@
 
 		<ul class="verticalMenu">
 			<li id="addMenu" class="addTreeNode" {denied role="page.create"}style="display: none;"{/denied}><a href="" onclick="pageHandler.showAddForm(); return false;">{t _add_new}</a></li>
-    		<li id="moveUpMenu" class="moveUpTreeNode" {denied role="page.sort"}style="display: none;"{/denied}><a href="" onclick="pageHandler.moveUp(); return false;">{t _move_up}</a></li>
+			<li id="moveUpMenu" class="moveUpTreeNode" {denied role="page.sort"}style="display: none;"{/denied}><a href="" onclick="pageHandler.moveUp(); return false;">{t _move_up}</a></li>
 			<li id="moveDownMenu" class="moveDownTreeNode" {denied role="page.sort"}style="display: none;"{/denied}><a href="" onclick="pageHandler.moveDown(); return false;">{t _move_down}</a></li>
 			<li id="removeMenu" class="removeTreeNode" {denied role="page.remove"}style="display: none;"{/denied}><a href="" onclick="pageHandler.deleteSelected(); return false;">{t _remove}</a></li>
 		</ul>
-        
-        <div id="confirmations">
-            <div id="yellowZone">
-                <div id="staticPageAdded" class="yellowMessage" style="display: none;">
-                    {img class="closeMessage" src="image/silk/cancel.png"}
-                    <div>{t _new_page_was_successfully_added}</div>
-                </div>
-            </div>
-        </div>
+		
+		<div id="confirmations">
+			<div id="yellowZone">
+				<div id="staticPageAdded" class="yellowMessage" style="display: none;">
+					{img class="closeMessage" src="image/silk/cancel.png"}
+					<div>{t _new_page_was_successfully_added}</div>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<div class="treeManagerContainer maxHeight h--100">

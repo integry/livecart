@@ -19,12 +19,12 @@
 			</td>
 			
 			<td class="cartImage">
-			    {if $item.Product.DefaultImage.paths.1}
-                <a href="{productUrl product=$item.Product}">
-			       {img src=$item.Product.DefaultImage.paths.1 alt=$item.Product.name_lang|escape}	  
-                </a>
-                {/if}
-            </td>
+				{if $item.Product.DefaultImage.paths.1}
+				<a href="{productUrl product=$item.Product}">
+				   {img src=$item.Product.DefaultImage.paths.1 alt=$item.Product.name_lang|escape}	  
+				</a>
+				{/if}
+			</td>
 			
 			<td class="cartName">				
 				<div>
@@ -46,9 +46,9 @@
 		</tr>	
 	{/foreach}
 			<tr>
-			    <td colspan="3" class="subTotalCaption">{t _subtotal}:</td>
-			    <td class="subTotal">{$orderTotal}</td>
-			    <td id="cartUpdate"><input type="submit" class="submit" value="{tn _update}" /></td>
+				<td colspan="3" class="subTotalCaption">{t _subtotal}:</td>
+				<td class="subTotal">{$orderTotal}</td>
+				<td id="cartUpdate"><input type="submit" class="submit" value="{tn _update}" /></td>
 			</tr>
 
 		<tr>
@@ -58,10 +58,10 @@
 		<tr>
 			<td colspan="5">
 				<h2></h2>
-                <a href="{link route=$return}" class="continueShopping">{t _continue_shopping}</a>
+				<a href="{link route=$return}" class="continueShopping">{t _continue_shopping}</a>
 				{if $order.isOrderable}
-                    <a href="{link controller=checkout}" class="proceedToCheckout">{t _proceed_checkout}</a>
-                {/if}
+					<a href="{link controller=checkout}" class="proceedToCheckout">{t _proceed_checkout}</a>
+				{/if}
 			</td>
 		</tr>
 	</tbody>
@@ -70,9 +70,9 @@
 {/form}
 
 {if $expressMethods && $order.isOrderable}
-    <div id="expressCheckoutMethods">
-        {foreach from=$expressMethods item=method}
-            <a href="{link controller=checkout action=express id=$method}"><img src="image/payment/{$method}.gif" /></a>
-        {/foreach}
-    </div>
+	<div id="expressCheckoutMethods">
+		{foreach from=$expressMethods item=method}
+			<a href="{link controller=checkout action=express id=$method}"><img src="image/payment/{$method}.gif" /></a>
+		{/foreach}
+	</div>
 {/if}

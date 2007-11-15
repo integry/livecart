@@ -14,17 +14,17 @@ ClassLoader::import('application.model.category.Category');
  */
 class TestMultiLingualObject extends UnitTest
 {	  
-    public function __construct()
-    {
-        parent::__construct('Test multilingual objects');
-    }
-    
-    public function getUsedSchemas()
-    {
-        return array(
+	public function __construct()
+	{
+		parent::__construct('Test multilingual objects');
+	}
+	
+	public function getUsedSchemas()
+	{
+		return array(
 			'Category'
-        );
-    }
+		);
+	}
 
 	function testSerializingValuesWithQuotes()
 	{

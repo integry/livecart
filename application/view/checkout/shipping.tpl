@@ -7,11 +7,11 @@
 
 <div id="content" class="left right checkoutShipping">
 	
-    <div class="checkoutHeader">
-    	<h1>{t _shipping}</h1>
-    	
-        {include file="checkout/checkoutProgress.tpl" progress="progressShipping"}	
-    </div>
+	<div class="checkoutHeader">
+		<h1>{t _shipping}</h1>
+		
+		{include file="checkout/checkoutProgress.tpl" progress="progressShipping"}	
+	</div>
 	
 	{if $shipments|@count > 1}
 		<div class="message">
@@ -20,24 +20,24 @@
 	{/if}
 	
 	<div id="shippingSelect">
-    
-    {form action="controller=checkout action=doSelectShippingMethod" method="POST" handle=$form}
-        {foreach from=$shipments key="key" item="shipment"}
-                       
-    		{include file="checkout/shipmentProductList.tpl"}    			
+	
+	{form action="controller=checkout action=doSelectShippingMethod" method="POST" handle=$form}
+		{foreach from=$shipments key="key" item="shipment"}
+					   
+			{include file="checkout/shipmentProductList.tpl"}				
 
-            {if $shipment.isShippable}
-    			{include file="checkout/shipmentSelectShipping.tpl"}
-    			
-    		{/if}
-                   
-        {/foreach}
-    
-    <input type="submit" class="submit" value="{tn _continue}" />
-    
-    {/form}
+			{if $shipment.isShippable}
+				{include file="checkout/shipmentSelectShipping.tpl"}
+				
+			{/if}
+				   
+		{/foreach}
+	
+	<input type="submit" class="submit" value="{tn _continue}" />
+	
+	{/form}
 
-    </div>
+	</div>
 
 </div>
 

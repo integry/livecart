@@ -16,25 +16,25 @@ class TaxRateController extends StoreManagementController
 {
 	public function index() 
 	{
-	    if(($zoneID = (int)$this->request->get('id')) <= 0)
-	    {
-	        $deliveryZone = null;
-	        $deliveryZoneArray = array('ID' => '');
-	        $taxRatesArray = TaxRate::getRecordSetByDeliveryZone($deliveryZone)->toArray();
-	    }
-	    else
-	    {
-	        $deliveryZone = DeliveryZone::getInstanceByID($zoneID, true);
-	        $deliveryZoneArray = $deliveryZone->toArray();
-	        $taxRatesArray = $deliveryZone->getTaxRates()->toArray();
-	    }
-	    
-	      
+		if(($zoneID = (int)$this->request->get('id')) <= 0)
+		{
+			$deliveryZone = null;
+			$deliveryZoneArray = array('ID' => '');
+			$taxRatesArray = TaxRate::getRecordSetByDeliveryZone($deliveryZone)->toArray();
+		}
+		else
+		{
+			$deliveryZone = DeliveryZone::getInstanceByID($zoneID, true);
+			$deliveryZoneArray = $deliveryZone->toArray();
+			$taxRatesArray = $deliveryZone->getTaxRates()->toArray();
+		}
+		
+		  
 		$form = $this->createTaxRateForm();
 		$enabledTaxes = array();
 		foreach(Tax::getTaxes($deliveryZone)->toArray() as $tax)
 		{
-		    $enabledTaxes[$tax['ID']] = $tax['name'];
+			$enabledTaxes[$tax['ID']] = $tax['name'];
 		}
 		
 		
@@ -43,83 +43,83 @@ class TaxRateController extends StoreManagementController
 		$response->set('taxRates', $taxRatesArray);
 		$response->set('newTaxRate', array('ID' => '', 'DeliveryZone' => $deliveryZoneArray));
 		$response->set('deliveryZone', $deliveryZoneArray);
-	    $response->set('form', $form);
-	    return $response;
+		$response->set('form', $form);
+		return $response;
 	}
 
 	/**
 	 * @role update
 	 */
-    public function delete()
-    {
-        $taxRate = TaxRate::getInstanceByID((int)$this->request->get('id'), true, array('Tax'));
-        $tax = $taxRate->tax->get();
-        $taxRate->delete();
-        
-        return new JSONResponse(array('tax' => $tax->toArray()), 'success');
-    }
-    
-    public function edit()
-    {
-	    $rate = TaxRate::getInstanceByID((int)$this->request->get('id'), true, array('Tax'));
+	public function delete()
+	{
+		$taxRate = TaxRate::getInstanceByID((int)$this->request->get('id'), true, array('Tax'));
+		$tax = $taxRate->tax->get();
+		$taxRate->delete();
 		
-	    $form = $this->createTaxRateForm();
+		return new JSONResponse(array('tax' => $tax->toArray()), 'success');
+	}
+	
+	public function edit()
+	{
+		$rate = TaxRate::getInstanceByID((int)$this->request->get('id'), true, array('Tax'));
+		
+		$form = $this->createTaxRateForm();
 		$form->setData($rate->toArray());
 		
 		$response = new ActionResponse();
 		$response->set('taxRate', $rate->toArray());
-	    $response->set('form', $form);
-	    
-	    return $response;
-    }
-    
+		$response->set('form', $form);
+		
+		return $response;
+	}
+	
 	/**
 	 * @role update
 	 */
-    public function create()
-    {
-        if(($deliveryZoneId = (int)$this->request->get('deliveryZoneID')) > 0)
-        {
-            $deliveryZone = DeliveryZone::getInstanceByID($deliveryZoneId, true);
-        }
-        else
-        {
-            $deliveryZone = null;
-        }
-        
-        $taxRate = TaxRate::getNewInstance($deliveryZone, Tax::getInstanceByID((int)$this->request->get('taxID'), true), (float)$this->request->get('rate'));
-        
-        return $this->save($taxRate);
-    }
-    
+	public function create()
+	{
+		if(($deliveryZoneId = (int)$this->request->get('deliveryZoneID')) > 0)
+		{
+			$deliveryZone = DeliveryZone::getInstanceByID($deliveryZoneId, true);
+		}
+		else
+		{
+			$deliveryZone = null;
+		}
+		
+		$taxRate = TaxRate::getNewInstance($deliveryZone, Tax::getInstanceByID((int)$this->request->get('taxID'), true), (float)$this->request->get('rate'));
+		
+		return $this->save($taxRate);
+	}
+	
 	/**
 	 * @role update
 	 */
-    public function update()
-    {
-        $taxRate = TaxRate::getInstanceByID((int)$this->request->get('taxRateID'), true);
-        
-        return $this->save($taxRate);
-    }
-    
+	public function update()
+	{
+		$taxRate = TaxRate::getInstanceByID((int)$this->request->get('taxRateID'), true);
+		
+		return $this->save($taxRate);
+	}
+	
 	/**
 	 * @role update
 	 */
-    public function save(TaxRate $taxRate)
-    {
-        $validator = $this->createTaxRateFormValidator();
-        if($validator->isValid())
-        {          
-	        $taxRate->setValueArrayByLang(array('name'), $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true, false), $this->request);      
-		    $taxRate->save();
-	            
-            return new JSONResponse(array('rate' => $taxRate->toArray()), 'success', $this->translate('_tax_rate_has_been_successfully_saved'));
-        }
-        else
-        {
-            return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_could_not_save_tax_rate'));
-        }
-    }
+	public function save(TaxRate $taxRate)
+	{
+		$validator = $this->createTaxRateFormValidator();
+		if($validator->isValid())
+		{		  
+			$taxRate->setValueArrayByLang(array('name'), $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true, false), $this->request);	  
+			$taxRate->save();
+				
+			return new JSONResponse(array('rate' => $taxRate->toArray()), 'success', $this->translate('_tax_rate_has_been_successfully_saved'));
+		}
+		else
+		{
+			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_could_not_save_tax_rate'));
+		}
+	}
 	
 	/**
 	 * @return Form

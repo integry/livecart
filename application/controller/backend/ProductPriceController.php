@@ -15,44 +15,44 @@ class ProductPriceController extends StoreManagementController
 	public function index()
 	{
 
-	    $this->locale->translationManager()->loadFile('backend/Product');
-        $product = Product::getInstanceByID($this->request->get('id'), ActiveRecord::LOAD_DATA, ActiveRecord::LOAD_REFERENCES);
+		$this->locale->translationManager()->loadFile('backend/Product');
+		$product = Product::getInstanceByID($this->request->get('id'), ActiveRecord::LOAD_DATA, ActiveRecord::LOAD_REFERENCES);
 
-	    $pricingForm = $this->buildPricingForm($product);
+		$pricingForm = $this->buildPricingForm($product);
 
-	    $response = new ActionResponse();
-	    $response->set("product", $product->toFlatArray());
+		$response = new ActionResponse();
+		$response->set("product", $product->toFlatArray());
 		$response->set("otherCurrencies", $this->application->getCurrencyArray(LiveCart::EXCLUDE_DEFAULT_CURRENCY));
 		$response->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
 		$response->set("pricingForm", $pricingForm);
 
-	    return $response;
+		return $response;
 	}
 
-    /**
-     * @role update
-     */
-    public function save()
-    {
-        $product = Product::getInstanceByID((int)$this->request->get('id'), Product::LOAD_DATA, Product::LOAD_REFERENCES);
+	/**
+	 * @role update
+	 */
+	public function save()
+	{
+		$product = Product::getInstanceByID((int)$this->request->get('id'), Product::LOAD_DATA, Product::LOAD_REFERENCES);
 
 		$validator = $this->buildPricingFormValidator($product);
 		if ($validator->isValid())
 		{
-    		$product->loadSpecification();
-    		$product->loadPricing();
+			$product->loadSpecification();
+			$product->loadPricing();
 
-		    $product->loadRequestData($this->request);
-            $product->save();
+			$product->loadRequestData($this->request);
+			$product->save();
 
-            return new JSONResponse(array('prices' => $product->getPricesFields()), 'success', $this->translate('_product_prices_were_successfully_updated'));
+			return new JSONResponse(array('prices' => $product->getPricesFields()), 'success', $this->translate('_product_prices_were_successfully_updated'));
 		}
 		else
 		{
 			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_product_prices_could_not_be_updated'));
 		}
-    }
-    
+	}
+	
 	public function addShippingValidator(RequestValidator $validator)
 	{
 		// shipping related numeric field validations
@@ -80,7 +80,7 @@ class ProductPriceController extends StoreManagementController
 		$baseCurrency = $this->application->getDefaultCurrency()->getID();
 		$validator->addCheck('price_' . $baseCurrency, new IsNotEmptyCheck($this->translate('_err_price_empty')));
 
-	    $currencies = $this->application->getCurrencyArray();
+		$currencies = $this->application->getCurrencyArray();
 		foreach ($currencies as $currency)
 		{
 			$validator->addCheck('price_' . $currency, new IsNumericCheck($this->translate('_err_price_invalid')));
@@ -89,29 +89,29 @@ class ProductPriceController extends StoreManagementController
 		}
 
 		return $validator;
-	}    
-    
+	}	
+	
 	public function addInventoryValidator(RequestValidator $validator)
 	{
 		if ($this->config->get('INVENTORY_TRACKING') != 'DISABLE')
-		{    
+		{	
 			$validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required')));  
 			$validator->addCheck('stockCount', new IsNumericCheck($this->translate('_err_stock_not_numeric')));		  
 			$validator->addCheck('stockCount', new MinValueCheck($this->translate('_err_stock_negative'), 0));	
-	    }
+		}
 
 		$validator->addFilter('stockCount', new NumericFilter());	
 			
 		return $validator;
 	}
-     
-    private function buildPricingForm(Product $product)
-    {
-        ClassLoader::import("framework.request.validator.Form");
+	 
+	private function buildPricingForm(Product $product)
+	{
+		ClassLoader::import("framework.request.validator.Form");
 		if(!$product->isLoaded()) $product->load(ActiveRecord::LOAD_REFERENCES);
 		
 		$product->loadPricing();
-        $pricing = $product->getPricingHandler();
+		$pricing = $product->getPricingHandler();
 		$form = new Form($this->buildPricingFormValidator());
 		
 		$pricesData = $product->toArray();
@@ -123,27 +123,27 @@ class ProductPriceController extends StoreManagementController
 			$pricesData['price_' . $currency] = isset($pricesData['defined'][$currency]) ? $pricesData['defined'][$currency] : '';
 		}
 
-	    $form->setData($pricesData);
+		$form->setData($pricesData);
 
 		return $form;
-    }
+	}
 
-    private function buildPricingFormValidator()
-    {
+	private function buildPricingFormValidator()
+	{
 		ClassLoader::import("framework.request.validator.RequestValidator");
 		$validator = new RequestValidator("pricingFormValidator", $this->request);
 
 		self::addPricesValidator($validator);
 		self::addShippingValidator($validator);
 		self::addInventoryValidator($validator);
-        		
+				
 		if ($this->config->get('INVENTORY_TRACKING') != 'DISABLE')
 		{
-            $validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required'))); 
-        }
+			$validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required'))); 
+		}
 
 		return $validator;
-    }
-    
+	}
+	
 }
 ?>

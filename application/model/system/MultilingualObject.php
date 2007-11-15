@@ -12,10 +12,10 @@ ClassLoader::import("application.model.system.MultilingualObjectInterface");
  */
 abstract class MultilingualObject extends ActiveRecordModel implements MultilingualObjectInterface
 {
-    private static $defaultLanguageCode = null;
-    
-    private static $currentLanguageCode = null;
-    
+	private static $defaultLanguageCode = null;
+	
+	private static $currentLanguageCode = null;
+	
 	const NO_DEFAULT_VALUE = false;
 
 	public function setValueByLang($fieldName, $langCode, $value)
@@ -24,9 +24,9 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 		{
 			if (!self::$defaultLanguageCode)
 			{
-                self::loadLanguageCodes();
-            }
-            $langCode = self::$defaultLanguageCode;
+				self::loadLanguageCodes();
+			}
+			$langCode = self::$defaultLanguageCode;
 		}
 	
 		$valueArray = $this->getFieldValue($fieldName);
@@ -47,15 +47,15 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 		{
 			if (!self::$defaultLanguageCode)
 			{
-                self::loadLanguageCodes();
-            }
-            $langCode = self::$defaultLanguageCode;
+				self::loadLanguageCodes();
+			}
+			$langCode = self::$defaultLanguageCode;
 		}
 		
 		if (isset($valueArray[$langCode]))
 		{
-            return $valueArray[$langCode];    
-        }
+			return $valueArray[$langCode];	
+		}
 	}
 
 	public function setValueArrayByLang($fieldNameArray, $defaultLangCode, $langCodeArray, Request $request)
@@ -81,21 +81,21 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	}
 
 	/**
-     * Set a whole language field at a time. You can allways skip some language, but as long as it occurs in
-     * languages array it will be writen into the database as empty string. I spent 2 hours writing this feature =]
-     *
-     * @example $specField->setLanguageField('name', array('en' => 'Name', 'lt' => 'Vardas', 'de' => 'Name'), array('lt', 'en', 'de'))
-     *
-     * @param string $fieldName Field name in database schema
-     * @param array $fieldValue Field value in different languages
-     * @param array $langCodeArray Language codes
-     */
+	 * Set a whole language field at a time. You can allways skip some language, but as long as it occurs in
+	 * languages array it will be writen into the database as empty string. I spent 2 hours writing this feature =]
+	 *
+	 * @example $specField->setLanguageField('name', array('en' => 'Name', 'lt' => 'Vardas', 'de' => 'Name'), array('lt', 'en', 'de'))
+	 *
+	 * @param string $fieldName Field name in database schema
+	 * @param array $fieldValue Field value in different languages
+	 * @param array $langCodeArray Language codes
+	 */
 	public function setLanguageField($fieldName, $fieldValue, $langCodeArray)
 	{
-	    foreach ($langCodeArray as $lang)
-	    {
-	        $this->setValueByLang($fieldName, $lang, isset($fieldValue[$lang]) ? $fieldValue[$lang] : '');
-	    }
+		foreach ($langCodeArray as $lang)
+		{
+			$this->setValueByLang($fieldName, $lang, isset($fieldValue[$lang]) ? $fieldValue[$lang] : '');
+		}
 	}
 
 	/**
@@ -109,35 +109,35 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	 * @todo cleanup
 	 * @return array
 	 */
-    public static function transformArray($array, ARSchema $schema)
-    {		
+	public static function transformArray($array, ARSchema $schema)
+	{		
 		$array = parent::transformArray($array, $schema);
 
-        foreach ($schema->getArrayFieldList() as $fieldName => $field)
+		foreach ($schema->getArrayFieldList() as $fieldName => $field)
 		{
 			if (!empty($array[$fieldName]))
 			{
 				$data = $array[$fieldName];
 				
-                if (!is_array($data)) 
+				if (!is_array($data)) 
 				{ 
-				    continue;
-                }					
+					continue;
+				}					
 				
-    			if (!self::$defaultLanguageCode)
-    			{
-                    self::loadLanguageCodes();
-                }
+				if (!self::$defaultLanguageCode)
+				{
+					self::loadLanguageCodes();
+				}
 
 				foreach ($data as $lang => $value)
 				{
 				  	$array[$fieldName . '_' . $lang] = $value;					  	
 				}
 
-                $array[$fieldName] = !empty($data[self::$defaultLanguageCode]) ? $data[self::$defaultLanguageCode] : '';
+				$array[$fieldName] = !empty($data[self::$defaultLanguageCode]) ? $data[self::$defaultLanguageCode] : '';
 
-                $array[$fieldName . '_lang'] = !empty($data[self::$currentLanguageCode]) ? $data[self::$currentLanguageCode] : $array[$fieldName];
-			}	    
+				$array[$fieldName . '_lang'] = !empty($data[self::$currentLanguageCode]) ? $data[self::$currentLanguageCode] : $array[$fieldName];
+			}		
 		}
 		
 		return $array;  	
@@ -222,9 +222,9 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	{
 		$app = self::getApplication();
 
-        self::$currentLanguageCode = $app->getLocaleCode();
-        self::$defaultLanguageCode = $app->getDefaultLanguageCode();
-    }
+		self::$currentLanguageCode = $app->getLocaleCode();
+		self::$defaultLanguageCode = $app->getDefaultLanguageCode();
+	}
 }
 
 ?>

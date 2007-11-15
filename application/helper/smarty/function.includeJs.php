@@ -11,34 +11,34 @@
  */
 function smarty_function_includeJs($params, LiveCartSmarty $smarty) 
 {
-    // fix slashes
-    $fileName = str_replace('\\', DIRECTORY_SEPARATOR, $params['file']);
-    $fileName = str_replace('/', DIRECTORY_SEPARATOR, $fileName);
-    $filePath = ClassLoader::getRealPath('public.javascript.') .  $fileName;
-    
-    $fileName = 'javascript/' . $fileName;
-    
-    if (isset($params['path']))
-    {
-        $filePath = $params['path'];
-    }
-        
-    if(!is_file($filePath)) return;
-    
-    if(isset($params['inline']) && $params['inline'] == 'true')
-    {
-        return '<script src="' . str_replace(DIRECTORY_SEPARATOR, '/', $fileName) . '?' . filemtime($filePath) . '" type="text/javascript"></script>' . "\n";
-    }
-    else
-    {
-        $includedJavascriptTimestamp = $smarty->get_template_vars("INCLUDED_JAVASCRIPT_TIMESTAMP");
-        if(!($includedJavascriptFiles = $smarty->get_template_vars("INCLUDED_JAVASCRIPT_FILES")))
-        {
-           $includedJavascriptFiles = array();
-        }
-        
-        if(isset($includedJavascriptFiles[$filePath]))
-        {
+	// fix slashes
+	$fileName = str_replace('\\', DIRECTORY_SEPARATOR, $params['file']);
+	$fileName = str_replace('/', DIRECTORY_SEPARATOR, $fileName);
+	$filePath = ClassLoader::getRealPath('public.javascript.') .  $fileName;
+	
+	$fileName = 'javascript/' . $fileName;
+	
+	if (isset($params['path']))
+	{
+		$filePath = $params['path'];
+	}
+		
+	if(!is_file($filePath)) return;
+	
+	if(isset($params['inline']) && $params['inline'] == 'true')
+	{
+		return '<script src="' . str_replace(DIRECTORY_SEPARATOR, '/', $fileName) . '?' . filemtime($filePath) . '" type="text/javascript"></script>' . "\n";
+	}
+	else
+	{
+		$includedJavascriptTimestamp = $smarty->get_template_vars("INCLUDED_JAVASCRIPT_TIMESTAMP");
+		if(!($includedJavascriptFiles = $smarty->get_template_vars("INCLUDED_JAVASCRIPT_FILES")))
+		{
+		   $includedJavascriptFiles = array();
+		}
+		
+		if(isset($includedJavascriptFiles[$filePath]))
+		{
 			if (!isset($params['front']))
 			{
 				return false;	
@@ -48,23 +48,23 @@ function smarty_function_includeJs($params, LiveCartSmarty $smarty)
 				unset($includedJavascriptFiles[$filePath]);
 			}			
 		}
-        
-        $fileMTime = filemtime($filePath);
-        if($fileMTime > (int)$includedJavascriptTimestamp)
-        {
-            $smarty->assign("INCLUDED_JAVASCRIPT_TIMESTAMP", $fileMTime);
-        }
-        
-        if(isset($params['front']))
-        {
-            $includedJavascriptFiles = array_merge(array($filePath => $fileName), $includedJavascriptFiles);
-        }
-        else
-        {
-            $includedJavascriptFiles[$filePath] = $fileName;
-        }
-        
-        $smarty->assign("INCLUDED_JAVASCRIPT_FILES", $includedJavascriptFiles);
-    }
+		
+		$fileMTime = filemtime($filePath);
+		if($fileMTime > (int)$includedJavascriptTimestamp)
+		{
+			$smarty->assign("INCLUDED_JAVASCRIPT_TIMESTAMP", $fileMTime);
+		}
+		
+		if(isset($params['front']))
+		{
+			$includedJavascriptFiles = array_merge(array($filePath => $fileName), $includedJavascriptFiles);
+		}
+		else
+		{
+			$includedJavascriptFiles[$filePath] = $fileName;
+		}
+		
+		$smarty->assign("INCLUDED_JAVASCRIPT_FILES", $includedJavascriptFiles);
+	}
 }
 ?>

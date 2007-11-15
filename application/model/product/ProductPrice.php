@@ -115,72 +115,72 @@ class ProductPrice extends ActiveRecordModel
 			$price = 0;
 		}
 
-		return round($price, 2);       
-    }
+		return round($price, 2);	   
+	}
 
 	/*####################  Instance retrieval ####################*/
 
 	/**
 	 * Load product pricing data for a whole array of products at once
-     */
+	 */
 	public static function loadPricesForRecordSetArray(&$productArray)
 	{
-        $ids = array();
+		$ids = array();
 		foreach ($productArray as $key => $product)
 	  	{
 			$ids[$product['ID']] = $key;
 		}
-	       
-        $prices = self::fetchPriceData(array_keys($ids));
-        
-        // sort by product
-        $productPrices = array();
-        foreach ($prices as $price)
-        {
-            $productPrices[$price['productID']][$price['currencyID']] = $price['price'];
-        }
-        
-        $baseCurrency = self::getApplication()->getDefaultCurrencyCode();
-        $currencies = self::getApplication()->getCurrencySet();
-        
-        foreach ($productPrices as $product => $prices)
-        {
-            foreach ($currencies as $id => $currency)
-            {
-                if (!isset($prices[$id]))
-                {
-                    $prices[$id] = self::convertPrice($currency, isset($prices[$baseCurrency]) ? $prices[$baseCurrency] : 0);
-                }
-            }
+		   
+		$prices = self::fetchPriceData(array_keys($ids));
+		
+		// sort by product
+		$productPrices = array();
+		foreach ($prices as $price)
+		{
+			$productPrices[$price['productID']][$price['currencyID']] = $price['price'];
+		}
+		
+		$baseCurrency = self::getApplication()->getDefaultCurrencyCode();
+		$currencies = self::getApplication()->getCurrencySet();
+		
+		foreach ($productPrices as $product => $prices)
+		{
+			foreach ($currencies as $id => $currency)
+			{
+				if (!isset($prices[$id]))
+				{
+					$prices[$id] = self::convertPrice($currency, isset($prices[$baseCurrency]) ? $prices[$baseCurrency] : 0);
+				}
+			}
 
-            foreach ($prices as $id => $price)
-            {
-                $productArray[$ids[$product]]['price_' . $id] = $price;                
-                $productArray[$ids[$product]]['formattedPrice'][$id] = $currencies[$id]->getFormattedPrice($price);
-            }
-        }
+			foreach ($prices as $id => $price)
+			{
+				$productArray[$ids[$product]]['price_' . $id] = $price;				
+				$productArray[$ids[$product]]['formattedPrice'][$id] = $currencies[$id]->getFormattedPrice($price);
+			}
+		}
 	}
 	
 	private static function fetchPriceData($productIDs)
 	{
-        if (!$productIDs)
-        {
+		if (!$productIDs)
+		{
 			return array();	
 		}
 		
 		$baseCurrency = self::getApplication()->getDefaultCurrencyCode();
-        
-        $filter = new ARSelectFilter(new INCond(new ARFieldHandle('ProductPrice', 'productID'), $productIDs));
-        $filter->setOrder(new ARExpressionHandle('currencyID = "' . $baseCurrency . '"'), 'DESC');
-        return ActiveRecordModel::getRecordSetArray('ProductPrice', $filter);		
+		
+		$filter = new ARSelectFilter(new INCond(new ARFieldHandle('ProductPrice', 'productID'), $productIDs));
+		$filter->setOrder(new ARExpressionHandle('currencyID = "' . $baseCurrency . '"'), 'DESC');
+		return ActiveRecordModel::getRecordSetArray('ProductPrice', $filter);		
 	}
 		
 	/**
 	 * Load product pricing data for a whole array of products at once
-     */
+	 */
 	public static function loadPricesForRecordSet(ARSet $products)	
 	{
-        $ids = array();
+		$ids = array();
 		foreach ($products as $key => $product)
 	  	{
 			$ids[$product->getID()] = $key;
@@ -208,7 +208,7 @@ class ProductPrice extends ActiveRecordModel
 	 * @return ARSet
 	 */
 	public static function getProductPricesSet(Product $product)
-	{	    
+	{		
 		// preload currency data (otherwise prices would have to be loaded with referenced records)
 		self::getApplication()->getCurrencySet();
 		
@@ -224,9 +224,9 @@ class ProductPrice extends ActiveRecordModel
 	 */
 	private static function getProductPricesFilter(Product $product)
 	{
-	    ClassLoader::import("application.model.Currency");
+		ClassLoader::import("application.model.Currency");
 
-	    return new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), $product->getID()));
+		return new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), $product->getID()));
 	}
 }
 

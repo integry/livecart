@@ -26,7 +26,7 @@ class ShipmentTax extends ActiveRecordModel
 	/**
 	 * Create a new instance
 	 * 
-     * @return ShipmentTax
+	 * @return ShipmentTax
 	 */
 	public static function getNewInstance(TaxRate $taxRate, Shipment $shipment)
 	{
@@ -40,50 +40,50 @@ class ShipmentTax extends ActiveRecordModel
 	/**
 	 * Recalculate tax amount
 	 */
-    public function recalculateAmount($recalculateShipping = true)
-    {
-        if (!$this->taxRate->get())
-        {
-            return $this->amount->get();
-        }
-        
-        if ($recalculateShipping)
-        {
-            $this->shipment->get()->recalculateAmounts();
-        }
-        
-        $totalAmount = $this->shipment->get()->amount->get();
-        if ($this->shipment->get()->isLoaded())
-        {
-            $totalAmount += $this->shipment->get()->shippingAmount->get();
-        } 
-        
-        $taxAmount = $totalAmount * ($this->taxRate->get()->rate->get() / 100);
-        $this->amount->set(round($taxAmount, 2));
-    }     
-    
-    public function getAmountByCurrency(Currency $currency)
-    {
-        $amountCurrency = $this->shipment->get()->amountCurrency->get();
-        return $currency->convertAmount($amountCurrency, $this->amount->get());                
-    }
-    
-    public function toArray()
-    {
-        $array = parent::toArray();
-        $array['formattedAmount'] = array();
-        
-        $amountCurrency = $this->shipment->get()->amountCurrency->get();
-        $currencies = self::getApplication()->getCurrencySet();
+	public function recalculateAmount($recalculateShipping = true)
+	{
+		if (!$this->taxRate->get())
+		{
+			return $this->amount->get();
+		}
+		
+		if ($recalculateShipping)
+		{
+			$this->shipment->get()->recalculateAmounts();
+		}
+		
+		$totalAmount = $this->shipment->get()->amount->get();
+		if ($this->shipment->get()->isLoaded())
+		{
+			$totalAmount += $this->shipment->get()->shippingAmount->get();
+		} 
+		
+		$taxAmount = $totalAmount * ($this->taxRate->get()->rate->get() / 100);
+		$this->amount->set(round($taxAmount, 2));
+	}	 
+	
+	public function getAmountByCurrency(Currency $currency)
+	{
+		$amountCurrency = $this->shipment->get()->amountCurrency->get();
+		return $currency->convertAmount($amountCurrency, $this->amount->get());				
+	}
+	
+	public function toArray()
+	{
+		$array = parent::toArray();
+		$array['formattedAmount'] = array();
+		
+		$amountCurrency = $this->shipment->get()->amountCurrency->get();
+		$currencies = self::getApplication()->getCurrencySet();
 
-        // get and format prices
-        foreach ($currencies as $id => $currency)
-        {
-            $array['formattedAmount'][$id] = $currency->getFormattedPrice($this->getAmountByCurrency($currency));
-        }
-        
-        return $array;
-    }   
+		// get and format prices
+		foreach ($currencies as $id => $currency)
+		{
+			$array['formattedAmount'][$id] = $currency->getFormattedPrice($this->getAmountByCurrency($currency));
+		}
+		
+		return $array;
+	}   
 }
 
 ?>

@@ -8,7 +8,7 @@ Ja Jums radušies kādi jautājumi sakarā ar šo pasūtījumu, lūdzu sūtiet e
 
 Produkti atceltajā pasūtījumā:
 ------------------------------------------------------------
-Produkts                       Cena      Skaits    Summa
+Produkts					   Cena	  Skaits	Summa
 ------------------------------------------------------------
 {foreach from=$order.shipments item=shipment}
 {foreach from=$shipment.items item=item}

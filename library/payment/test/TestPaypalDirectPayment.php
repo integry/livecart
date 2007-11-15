@@ -101,7 +101,7 @@ class TestPaypalDirectPayment extends PaymentTest
 		$this->assertTrue($result instanceof TransactionResult);
 		
 		$this->details->amount->set(round($this->details->amount->get() * 0.7, 2));		
-        $this->details->gatewayTransactionID->set($result->gatewayTransactionID->get());		
+		$this->details->gatewayTransactionID->set($result->gatewayTransactionID->get());		
 		
 		$capture = $this->getPaymentHandler();
 		$result = $capture->capture();

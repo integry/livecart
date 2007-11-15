@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
@@ -10,22 +10,22 @@
 	{liveCustomization}
 	
 	<!-- Css includes -->
-    {includeCss file="../javascript/library/tinymce/themes/advanced/css/editor_ui.css" front=true}
-    {includeCss file="backend/stat.css" front=true}
-    {includeCss file="backend/Backend.css" front=true}
+	{includeCss file="../javascript/library/tinymce/themes/advanced/css/editor_ui.css" front=true}
+	{includeCss file="backend/stat.css" front=true}
+	{includeCss file="backend/Backend.css" front=true}
 	{compiledCss glue=true}
 	
-    {includeJs file=library/tinymce/tiny_mce.js inline=true}     
-    {includeJs file=library/KeyboardEvent.js front=true}
-    {includeJs file=library/livecart.js front=true}
-    {includeJs file="backend/Backend.js" front=true}    
-    {includeJs file=library/dhtmlHistory/dhtmlHistory.js}    
-    {includeJs file="library/scriptaculous/dragdrop.js" front=true}
-    {includeJs file="library/scriptaculous/slider.js" front=true}
-    {includeJs file="library/scriptaculous/controls.js" front=true}
-    {includeJs file="library/scriptaculous/builder.js" front=true}
-    {includeJs file="library/scriptaculous/effects.js" front=true}
-    {includeJs file="library/prototype/prototype.js" front=true}
+	{includeJs file=library/tinymce/tiny_mce.js inline=true}	 
+	{includeJs file=library/KeyboardEvent.js front=true}
+	{includeJs file=library/livecart.js front=true}
+	{includeJs file="backend/Backend.js" front=true}	
+	{includeJs file=library/dhtmlHistory/dhtmlHistory.js}	
+	{includeJs file="library/scriptaculous/dragdrop.js" front=true}
+	{includeJs file="library/scriptaculous/slider.js" front=true}
+	{includeJs file="library/scriptaculous/controls.js" front=true}
+	{includeJs file="library/scriptaculous/builder.js" front=true}
+	{includeJs file="library/scriptaculous/effects.js" front=true}
+	{includeJs file="library/prototype/prototype.js" front=true}
 		
 	{compiledJs glue=true}
 
@@ -42,9 +42,9 @@
 			window.opener = null;
 			// Permission denied to set property Window.selectPopupWindow
 	   }	   
-    }
-    	
-    tinyMCE.init({
+	}
+		
+	tinyMCE.init({
 		theme : "advanced",
 		mode : "exact",
 		elements : "",
@@ -60,14 +60,14 @@
 		theme_advanced_buttons3 : "",
 		content_css: "{/literal}{baseUrl}{literal}stylesheet/library/TinyMCE.css",
 		relative_urls : true
-    });
+	});
 
 	function onLoad()
 	{
 		Backend.locale = '{/literal}{localeCode}{literal}';
 		Backend.onLoad();
 	}
-    
+	
 	window.onload = onLoad;
 
 	</script>
@@ -77,8 +77,8 @@
 <body>
 <script type="text/javascript">
 {literal}
-    window.historyStorage.init();
-    window.dhtmlHistory.create();
+	window.historyStorage.init();
+	window.dhtmlHistory.create();
 {/literal}
 </script>
 

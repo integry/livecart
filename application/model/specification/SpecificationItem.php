@@ -44,7 +44,7 @@ class SpecificationItem extends Specification
 
 	public static function getRecordCount(ARSelectFilter $filter)
 	{
-	    return parent::getRecordCount(__CLASS__, $filter);
+		return parent::getRecordCount(__CLASS__, $filter);
 	}
 
 	/**
@@ -52,7 +52,7 @@ class SpecificationItem extends Specification
 	 */
 	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedData = false)
 	{
-	    return parent::getRecordSet(__CLASS__, $filter, $loadReferencedData);
+		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedData);
 	}
 	
 	public function set(SpecFieldValue $value)
@@ -60,7 +60,7 @@ class SpecificationItem extends Specification
 	  	// test whether the value belongs to the same field
 		if ($value->specField->get()->getID() != $this->specField->get()->getID())
 	  	{
-		    throw new Exception('Cannot assign SpecField:' . $value->specField->get()->getID() . ' value to SpecField:' . $this->specField->get()->getID());
+			throw new Exception('Cannot assign SpecField:' . $value->specField->get()->getID() . ' value to SpecField:' . $this->specField->get()->getID());
 		}
 		
 		if($value !== $this->specFieldValue->get()) $this->specFieldValue->set($value);

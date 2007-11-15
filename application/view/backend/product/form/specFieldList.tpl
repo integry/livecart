@@ -11,7 +11,7 @@
 		<p{if $field.isRequired} class="required"{/if}>		
 			<label for="product_{$cat}_{$product.ID}_{$field.fieldName}">{$field.name_lang}:</label>				
 			<fieldset class="error">
-                {include file="backend/product/form/specFieldFactory.tpl" field=$field cat=$cat}		
+				{include file="backend/product/form/specFieldFactory.tpl" field=$field cat=$cat}		
 				<div class="errorText hidden"></div>
 			</fieldset>			
 		</p>

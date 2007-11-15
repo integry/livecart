@@ -11,19 +11,19 @@
 
 <script type="text/javascript">
 	var lng = new Backend.LanguageIndex();	
-    {literal}
+	{literal}
 	lng.activeListMessages = { 
-        _activeList_edit:    {/literal}'{t _activeList_edit|addslashes}'{literal},
-        _activeList_delete:  {/literal}'{t _activeList_delete|addslashes}'{literal}
-    }
-    {/literal}
+		_activeList_edit:	{/literal}'{t _activeList_edit|addslashes}'{literal},
+		_activeList_delete:  {/literal}'{t _activeList_delete|addslashes}'{literal}
+	}
+	{/literal}
 	lng.setFormUrl('{link controller=backend.language action=addForm}');
 	lng.setStatusUrl("{link controller=backend.language action=setEnabled}/");
 	lng.setEditUrl("{link controller=backend.language action=edit}");
 	lng.setSortUrl("{link controller=backend.language action=saveorder}");
 	lng.setDeleteUrl("{link controller=backend.language action=delete}");
 	lng.setDelConfirmMsg('{t _confirm_delete}');
-    
+	
 </script>
 
 <div id="confirmations" class="rightConfirmations"></div>
@@ -50,8 +50,8 @@
 			<span class="langCheckBox" {denied role="language.status"}style="display: none;"{/denied}>
 				<input type="checkbox" class="checkbox" disabled="disabled" onclick="lng.setEnabled(this);" />
 			</span>	
-            
-		    <span class="progressIndicator" style="display: none;"></span>
+			
+			<span class="progressIndicator" style="display: none;"></span>
 		
 			<span class="langData">
 				{img src=""}

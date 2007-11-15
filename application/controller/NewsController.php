@@ -11,19 +11,19 @@ ClassLoader::import('application.model.sitenews.NewsPost');
 class NewsController extends FrontendController
 {
 	public function view()
-	{       		
-        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'ID'), $this->request->get('id')));
+	{	   		
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'ID'), $this->request->get('id')));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
 		
 		$s = ActiveRecordModel::getRecordSet('NewsPost', $f);
 		if (!$s->size())
 		{
-            throw new ARNotFoundException('NewsPost', $this->request->get('id'));
-        }
+			throw new ARNotFoundException('NewsPost', $this->request->get('id'));
+		}
 
 		$newsPost = $s->get(0)->toArray();
 		
-        $this->addIndexBreadCrumb();
+		$this->addIndexBreadCrumb();
 		$this->addBreadCrumb($newsPost['title_lang'], '');
 
 		return new ActionResponse('news', $newsPost);
@@ -31,18 +31,18 @@ class NewsController extends FrontendController
 	
 	public function index()
 	{
-        $this->addIndexBreadCrumb();
-        
-        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
+		$this->addIndexBreadCrumb();
+		
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
 		$f->setOrder(new ARFieldHandle('NewsPost', 'position'), 'DESC');
 		
-        return new ActionResponse('news', ActiveRecordModel::getRecordSetArray('NewsPost', $f));
-    }
+		return new ActionResponse('news', ActiveRecordModel::getRecordSetArray('NewsPost', $f));
+	}
 	
 	private function addIndexBreadCrumb()
 	{
 		$this->addBreadCrumb($this->translate('_news'), $this->router->createUrl(array('controller' => 'news'), true));
-    }
+	}
 }
 
 ?>

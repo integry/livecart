@@ -11,16 +11,16 @@
 {* include file="layout/frontend/rightSide.tpl" *}
 
 <div id="content" class="left">
-    
-    <div class="returnToCategory">
-        {assign var="lastBreadcrumb" value=$breadCrumb|@end}
-        {assign var="lastBreadcrumb" value=$breadCrumb|@prev}
-        <a href="{$lastBreadcrumb.url}" class="returnToCategory">{$product.Category.name_lang}</a>
-    </div>
-        
-    <h1>{$product.name_lang}</h1>
-    <div class="clear"></div>
-    
+	
+	<div class="returnToCategory">
+		{assign var="lastBreadcrumb" value=$breadCrumb|@end}
+		{assign var="lastBreadcrumb" value=$breadCrumb|@prev}
+		<a href="{$lastBreadcrumb.url}" class="returnToCategory">{$product.Category.name_lang}</a>
+	</div>
+		
+	<h1>{$product.name_lang}</h1>
+	<div class="clear"></div>
+	
 	<div id="imageContainer">
 		<div id="largeImage" class="{if !$product.DefaultImage.paths.3}missingImage{/if} {if $images|@count > 1}multipleImages{/if}">
 			{if $product.DefaultImage.paths.3}
@@ -29,44 +29,44 @@
 				{img src="image/missing_large.jpg" alt=$product.DefaultImage.name_lang|escape id="mainImage"}
 			{/if}
 		</div>
-        {if $images|@count > 1}
+		{if $images|@count > 1}
 			<div id="moreImages">
-                {foreach from=$images item="image"}
+				{foreach from=$images item="image"}
 					{img src=$image.paths.1 id="img_`$image.ID`" alt=$image.name_lang|escape}
 				{/foreach}
 			</div>
 		{/if}
 	</div>
-    
-    <div id="mainInfo">
+	
+	<div id="mainInfo">
 
-    	{if $product.listAttributes}
-    		<div class="specSummary">
-    			{foreach from=$product.listAttributes item="attr" name="attr"}
-                    {if $attr.values}
-                        {foreach from=$attr.values item="value" name="values"}
-                            {$value.value_lang}
-    						{if !$smarty.foreach.values.last}
-    						/
-    						{/if}
-                        {/foreach}
-                    {elseif $attr.value}
-                        {$attr.SpecField.valuePrefix_lang}{$attr.value}{$attr.SpecField.valueSuffix_lang}
-                    {elseif $attr.value_lang}
-                        {$attr.value_lang}
-                    {/if}
-                                                
-    				{if !$smarty.foreach.attr.last}
-    				/
-    				{/if}
-    			{/foreach}
-    		</div>
-    		
-    		<div style="clear: right;"></div>
-    		
-    	{/if}    
+		{if $product.listAttributes}
+			<div class="specSummary">
+				{foreach from=$product.listAttributes item="attr" name="attr"}
+					{if $attr.values}
+						{foreach from=$attr.values item="value" name="values"}
+							{$value.value_lang}
+							{if !$smarty.foreach.values.last}
+							/
+							{/if}
+						{/foreach}
+					{elseif $attr.value}
+						{$attr.SpecField.valuePrefix_lang}{$attr.value}{$attr.SpecField.valueSuffix_lang}
+					{elseif $attr.value_lang}
+						{$attr.value_lang}
+					{/if}
+												
+					{if !$smarty.foreach.attr.last}
+					/
+					{/if}
+				{/foreach}
+			</div>
+			
+			<div style="clear: right;"></div>
+			
+		{/if}	
 
-        <table>
+		<table>
 			<tr id="productPrice">
 				<td class="param">{t _price}:</td>
 				<td class="value price">{$product.formattedPrice.$currency}</td>
@@ -76,7 +76,7 @@
 					{form action="controller=order action=addToCart id=`$product.ID`" handle=$cartForm}
 						{t _quantity}: {selectfield name="count" options=$quantity}
 						<input type="submit" class="submit" value="{tn _add_to_cart}" />							
-    					{hidden name="return" value=$catRoute}
+						{hidden name="return" value=$catRoute}
 					{/form}
 				</td>
 			</tr>
@@ -111,92 +111,92 @@
 			{/if}
 
 			{if !$product.isDownloadable}
-                {if !$product.stockCount && 'PRODUCT_DISPLAY_NO_STOCK'|config}
-    			<tr>
-    				<td colspan="2" class="noStock"><span>{t _no_stock}</span></td>
-    			</tr>
-    			{/if}
+				{if !$product.stockCount && 'PRODUCT_DISPLAY_NO_STOCK'|config}
+				<tr>
+					<td colspan="2" class="noStock"><span>{t _no_stock}</span></td>
+				</tr>
+				{/if}
 
-                {if $product.stockCount && 'PRODUCT_DISPLAY_LOW_STOCK'|config}
-    			<tr>
-    				<td colspan="2" class="lowStock"><span>{t _low_stock}</span></td>
-    			</tr>
-    			{/if}
-    		{/if}
-    			
+				{if $product.stockCount && 'PRODUCT_DISPLAY_LOW_STOCK'|config}
+				<tr>
+					<td colspan="2" class="lowStock"><span>{t _low_stock}</span></td>
+				</tr>
+				{/if}
+			{/if}
+				
 			{if $product.URL}
-            <tr>
-                <td colspan="2" class="websiteUrl"><a href="{$product.URL}" target="_blank">{t _product_website}</a></td>            
-            </tr>			
-            {/if}
-            
+			<tr>
+				<td colspan="2" class="websiteUrl"><a href="{$product.URL}" target="_blank">{t _product_website}</a></td>			
+			</tr>			
+			{/if}
+			
 		</table>	
-    </div>
+	</div>
    	
    	<div class="clear"></div>
    
    	{if $product.longDescription_lang}
-    <h2>{t _description}</h2>
-    <div id="productDescription">
-        {$product.longDescription_lang}    
-    </div>
+	<h2>{t _description}</h2>
+	<div id="productDescription">
+		{$product.longDescription_lang}	
+	</div>
 	{/if}
 
-    {if $product.attributes}
-    <h2>{t _spec}</h2>
-    <div id="productSpecification">
-        <table>
-            {foreach from=$product.attributes item="attr" name="attributes"}
-                {if $attr.SpecField.isDisplayed && ($attr.values || $attr.value_lang || $attr.value)}
-                    {if $prevAttr.SpecField.SpecFieldGroup.ID != $attr.SpecField.SpecFieldGroup.ID}
-                        <tr class="specificationGroup">
-                            <td colspan="2">{$attr.SpecField.SpecFieldGroup.name_lang}</td>
-                        </tr>
-                    {/if}
-                    <tr {zebra loop="attributes"}>
-                        <td>{$attr.SpecField.name_lang}</td>
-                        <td>
-                            {if $attr.values}
-                                <ul class="attributeList{if $attr.values|@count == 1} singleValue{/if}">
-                                    {foreach from=$attr.values item="value"}
-                                        <li> {$value.value_lang}</li>
-                                    {/foreach}
-                                </ul>
-                            {elseif $attr.value_lang}
-                                {$attr.value_lang}
-                            {elseif $attr.value}
-                                {$attr.SpecField.valuePrefix_lang}{$attr.value}{$attr.SpecField.valueSuffix_lang}
-                            {/if}
-                        </td>
-                    </tr>   
-                    {assign var="prevAttr" value=$attr}                         
-                {/if}
-            {/foreach}
-        </table>
-    </div>
-    {/if}
-    
-    {if $related}
+	{if $product.attributes}
+	<h2>{t _spec}</h2>
+	<div id="productSpecification">
+		<table>
+			{foreach from=$product.attributes item="attr" name="attributes"}
+				{if $attr.SpecField.isDisplayed && ($attr.values || $attr.value_lang || $attr.value)}
+					{if $prevAttr.SpecField.SpecFieldGroup.ID != $attr.SpecField.SpecFieldGroup.ID}
+						<tr class="specificationGroup">
+							<td colspan="2">{$attr.SpecField.SpecFieldGroup.name_lang}</td>
+						</tr>
+					{/if}
+					<tr {zebra loop="attributes"}>
+						<td>{$attr.SpecField.name_lang}</td>
+						<td>
+							{if $attr.values}
+								<ul class="attributeList{if $attr.values|@count == 1} singleValue{/if}">
+									{foreach from=$attr.values item="value"}
+										<li> {$value.value_lang}</li>
+									{/foreach}
+								</ul>
+							{elseif $attr.value_lang}
+								{$attr.value_lang}
+							{elseif $attr.value}
+								{$attr.SpecField.valuePrefix_lang}{$attr.value}{$attr.SpecField.valueSuffix_lang}
+							{/if}
+						</td>
+					</tr>   
+					{assign var="prevAttr" value=$attr}						 
+				{/if}
+			{/foreach}
+		</table>
+	</div>
+	{/if}
+	
+	{if $related}
 	<h2>{t _recommended}</h2>
 	<div id="relatedProducts">
 		
 		{foreach from=$related item=group}
-    	   
-           {if $group.0.ProductRelationshipGroup.name_lang}
-    	       <h3>{$group.0.ProductRelationshipGroup.name_lang}</h3>
-    	   {/if}
-    	   
-           {include file="category/productList.tpl" products=$group}
-           
-    	{/foreach}
+		   
+		   {if $group.0.ProductRelationshipGroup.name_lang}
+			   <h3>{$group.0.ProductRelationshipGroup.name_lang}</h3>
+		   {/if}
+		   
+		   {include file="category/productList.tpl" products=$group}
+		   
+		{/foreach}
 		
 	</div>
 	{/if}
 	
 	{if $reviews}
 	<h2>{t _reviews}</h2>
-    {/if}    
-    
+	{/if}	
+	
 </div>
 
 {literal}

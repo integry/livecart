@@ -25,37 +25,37 @@
 
 <div id="userGroupsWrapper" class="maxHeight h--50">
 	<div id="userGroupsBrowserWithControlls" class="treeContainer maxHeight">
-        <ul class="menu popup">
-            <li class="done">
-                <a href="#" onclick="window.close(); return false;">
-                    {t _cancel_creating}
-                </a>
-            </li>
-        </ul>
-    	<div id="userGroupsBrowser" class="treeBrowser"></div>
-        <ul id="userGroupsBrowserControls" class="verticalMenu">
-            <li class="addTreeNode" style="display: none;"><a id="userGroups_add" href="#add">{t _add}</a></li>
-        </ul>
+		<ul class="menu popup">
+			<li class="done">
+				<a href="#" onclick="window.close(); return false;">
+					{t _cancel_creating}
+				</a>
+			</li>
+		</ul>
+		<div id="userGroupsBrowser" class="treeBrowser"></div>
+		<ul id="userGroupsBrowserControls" class="verticalMenu">
+			<li class="addTreeNode" style="display: none;"><a id="userGroups_add" href="#add">{t _add}</a></li>
+		</ul>
 
-        <div id="confirmations"></div>
+		<div id="confirmations"></div>
 
-        <div class="yellowMessage" id="orderCreatedConfirmation" style="display: none;"><div>{t _new_order_has_been_successfully_created}</div></div>
-        <div class="redMessage" id="userHasNoAddressError" style="display: none;"><div>{t _err_user_has_no_billing_or_shipping_address}</div></div>
+		<div class="yellowMessage" id="orderCreatedConfirmation" style="display: none;"><div>{t _new_order_has_been_successfully_created}</div></div>
+		<div class="redMessage" id="userHasNoAddressError" style="display: none;"><div>{t _err_user_has_no_billing_or_shipping_address}</div></div>
 	</div>
 
-    <span id="fromUsersPage">
-        <h2 style="margin-left: 280px;">{t _select_customer}:</h2>
-        {include file="backend/userGroup/groupContainer.tpl"}
-    </span>
+	<span id="fromUsersPage">
+		<h2 style="margin-left: 280px;">{t _select_customer}:</h2>
+		{include file="backend/userGroup/groupContainer.tpl"}
+	</span>
 </div>
 
 {literal}
 <script type="text/javascript">
-    window.ordersActiveGrid = {};
+	window.ordersActiveGrid = {};
 
 
-    var users = new Backend.UserGroup({/literal}{json array=$userGroups}{literal});
-    window.usersActiveGrid = {};
+	var users = new Backend.UserGroup({/literal}{json array=$userGroups}{literal});
+	window.usersActiveGrid = {};
 </script>
 {/literal}
 

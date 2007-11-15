@@ -10,23 +10,23 @@
 	<h1>{t _pay}</h1>
 		   	
 	<div id="payTotal">
-        <div>
+		<div>
 			Order total: <span class="subTotal">{$order.formattedTotal.$currency}</span>
 		</div>
-    </div>
+	</div>
 		   	
-    <div class="clear"></div> 
-    
+	<div class="clear"></div> 
+	
 	<form action="{link controller=checkout action=payExpressComplete}" method="POST" id="expressComplete">
-    
-	    <input type="submit" class="submit" value="{tn Complete Your Order}" />
+	
+		<input type="submit" class="submit" value="{tn Complete Your Order}" />
 
-    </form>
-    
-    <div class="clear"></div> 
+	</form>
+	
+	<div class="clear"></div> 
 
-    {include file="checkout/orderOverview.tpl"}
-    
+	{include file="checkout/orderOverview.tpl"}
+	
 </div>
 
 {include file="layout/frontend/footer.tpl"}

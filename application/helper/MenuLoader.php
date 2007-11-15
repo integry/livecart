@@ -15,7 +15,7 @@ class MenuLoader {
 	private $reload = true;
 
 	/**
-     * Reads menu structure from files of directorie or from cache. Store if neccesary structure in cache.
+	 * Reads menu structure from files of directorie or from cache. Store if neccesary structure in cache.
 	 */
 	public function __construct()
 	{
@@ -27,9 +27,9 @@ class MenuLoader {
 //			$this->sortMenu();
 			if (!is_dir(dirname($cache_file)))
 			{
-                mkdir(dirname($cache_file), 0777, true);
-            }
-            file_put_contents($cache_file, serialize($this->mainMenu));
+				mkdir(dirname($cache_file), 0777, true);
+			}
+			file_put_contents($cache_file, serialize($this->mainMenu));
 		}
 		else
 		{
@@ -38,13 +38,13 @@ class MenuLoader {
 
 	}
 
-    /**
-     */
+	/**
+	 */
   	public function sortMenu()
   	{
-	    uasort($this->mainMenu, array($this, 'CompareOrders'));
-	    foreach ($this->mainMenu as $key => $value)
-	    {
+		uasort($this->mainMenu, array($this, 'CompareOrders'));
+		foreach ($this->mainMenu as $key => $value)
+		{
 			if (!empty($this->mainMenu[$key]['items']) && is_array($this->mainMenu[$key]['items']))
 			{
 				uasort($this->mainMenu[$key]['items'], array($this, 'CompareOrders'));
@@ -57,18 +57,18 @@ class MenuLoader {
   	 */
   	public function &getAllHierarchy()
   	{
-	    return $this->mainMenu;
+		return $this->mainMenu;
 	}
 
 	/**
-     *
-     */
+	 *
+	 */
   	public function getTopList()
   	{
 		$array = array();
-	    $i = 0;
-	    foreach ($this->mainMenu as $menu)
-	    {
+		$i = 0;
+		foreach ($this->mainMenu as $menu)
+		{
 		  	$array[$i]['title'] = $menu['title'];
 			$array[$i]['order'] = $menu['order'];
 			$array[$i]['controller'] = $menu['controller'];
@@ -105,7 +105,7 @@ class MenuLoader {
 	  	}
 	  	else
 	  	{
-	  	    return reset($this->mainMenu);
+	  		return reset($this->mainMenu);
 	  	}
 	}
 
@@ -113,8 +113,8 @@ class MenuLoader {
 	{
 	  	if ($menu == null)
 	  	{
-		    $menu = &$this->mainMenu;
-		    $level = 1;
+			$menu = &$this->mainMenu;
+			$level = 1;
 		}
 
 	  	foreach ($menu as $key  => $child)
@@ -124,7 +124,7 @@ class MenuLoader {
 				$currentTop = $key;
 			}
 
-		    if ($child['controller'] == $controller && $child['action'] == $action)
+			if ($child['controller'] == $controller && $child['action'] == $action)
 			{
 				$this->currentTopKey = $currentTop;
 			}
@@ -147,8 +147,8 @@ class MenuLoader {
 	  	$files = array();
 	  	foreach ($iter as $value)
 	  	{
-		    if (($value->isFile()) && (".xml" == strtolower(substr($value->getFileName(), -4))))
-		    {
+			if (($value->isFile()) && (".xml" == strtolower(substr($value->getFileName(), -4))))
+			{
 				$files[] = $value->getFileName();
 			}
 		}
@@ -196,8 +196,8 @@ class MenuLoader {
 	{
 		if ($a['order'] == $b['order'])
 		{
-	        return 0;
-	    }
+			return 0;
+		}
 		return ($a['order'] < $b['order']) ? -1 : 1;
 	}
 }

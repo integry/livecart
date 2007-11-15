@@ -45,7 +45,7 @@ class ProductFileGroup extends ProductParametersGroup
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
 	{
-	    return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
+		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
 	}
 	
 	/**
@@ -68,12 +68,12 @@ class ProductFileGroup extends ProductParametersGroup
 	 */
 	public static function getProductGroups(Product $product)
 	{
-	    return self::getRecordSet(self::getProductGroupsFilter($product), !ActiveRecord::LOAD_REFERENCES);
+		return self::getRecordSet(self::getProductGroupsFilter($product), !ActiveRecord::LOAD_REFERENCES);
 	}
 	
 	private static function getProductGroupsFilter(Product $product)
 	{
-	    $filter = new ARSelectFilter();
+		$filter = new ARSelectFilter();
 
 		$filter->setOrder(new ARFieldHandle(__CLASS__, "position"), 'ASC');
 		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "productID"), $product->getID()));
@@ -83,12 +83,12 @@ class ProductFileGroup extends ProductParametersGroup
 	
 	public static function mergeGroupsWithFields($groups, $fields)
 	{
-	    return parent::mergeGroupsWithFields(__CLASS__, $groups, $fields);
+		return parent::mergeGroupsWithFields(__CLASS__, $groups, $fields);
 	}
 
 	private function getFilesFilter()
 	{
-	    $filter = new ARSelectFilter();
+		$filter = new ARSelectFilter();
 
 		$filter->setCondition(new EqualsCond(new ARFieldHandle('ProductFile', "productFileGroupID"), $this->getID()));
 		
@@ -97,17 +97,17 @@ class ProductFileGroup extends ProductParametersGroup
 	
 	public function getFiles($loadReferencedRecords = false) 
 	{
-	    return ProductFile::getRecordSet($this->getFilesFilter(), $loadReferencedRecords);
+		return ProductFile::getRecordSet($this->getFilesFilter(), $loadReferencedRecords);
 	}
 	
 	public function delete()
 	{
-	    foreach($this->getFiles() as $productFile) 
-        {
-            $productFile->deleteFile();
-        }
-        
-	    return parent::delete();
+		foreach($this->getFiles() as $productFile) 
+		{
+			$productFile->deleteFile();
+		}
+		
+		return parent::delete();
 	}
 }
 

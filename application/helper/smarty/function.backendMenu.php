@@ -19,7 +19,7 @@ function smarty_function_backendMenu($params, LiveCartSmarty $smarty)
 	$controller = $smarty->_tpl_vars['request']['controller'];
 	$action = $smarty->_tpl_vars['request']['action'];
 	
-    // load language file for menu
+	// load language file for menu
 	$locale->translationManager()->loadFile('backend/menu');		
 
 	$menuLoader = new MenuLoader();		
@@ -32,41 +32,41 @@ function smarty_function_backendMenu($params, LiveCartSmarty $smarty)
 	{
 	 	if(!empty($topValue['role']) && !AccessStringParser::run($topValue['role'])) 
 	 	{
-	 	    continue;
+	 		continue;
 	 	}
 	 	
 	 	$filteredValue = array();
-	    $filteredValue['title'] = $locale->translator()->translate($topValue['title']);
-	    $filteredValue['controller'] = $topValue['controller'];
-	    $filteredValue['action'] = $topValue['action'];
+		$filteredValue['title'] = $locale->translator()->translate($topValue['title']);
+		$filteredValue['controller'] = $topValue['controller'];
+		$filteredValue['action'] = $topValue['action'];
 
-	    if(!empty($topValue['controller']))
-	    {
-	        $filteredValue['url'] = $router->createUrl(array('controller' => $topValue['controller'], 'action' => $topValue['action']), true);
-	    }
-	    
+		if(!empty($topValue['controller']))
+		{
+			$filteredValue['url'] = $router->createUrl(array('controller' => $topValue['controller'], 'action' => $topValue['action']), true);
+		}
+		
 		if (is_array($topValue['items']))
 		{
-		    $subItems = array();
+			$subItems = array();
 			foreach ($topValue['items'] as &$subValue)
 		  	{
-		  	    if(!empty($subValue['role']) && !AccessStringParser::run($subValue['role'])) 
-		  	    {
-			 	    continue;
-		  	    }
-		  	    
-		  	    $filteredSubValue = array();
-			    $filteredSubValue['title'] = $locale->translator()->translate($subValue['title']);
-		        $filteredSubValue['url'] = $router->createUrl(array('controller' => $subValue['controller'], 'action' => $subValue['action']), true);
-		        $filteredSubValue['controller'] = $subValue['controller'];
-		        $filteredSubValue['action'] = $subValue['action'];
-		        
-		        $subItems[] = $filteredSubValue;
+		  		if(!empty($subValue['role']) && !AccessStringParser::run($subValue['role'])) 
+		  		{
+			 		continue;
+		  		}
+		  		
+		  		$filteredSubValue = array();
+				$filteredSubValue['title'] = $locale->translator()->translate($subValue['title']);
+				$filteredSubValue['url'] = $router->createUrl(array('controller' => $subValue['controller'], 'action' => $subValue['action']), true);
+				$filteredSubValue['controller'] = $subValue['controller'];
+				$filteredSubValue['action'] = $subValue['action'];
+				
+				$subItems[] = $filteredSubValue;
 			}	
 
 			if(count($subItems) > 0)
 			{
-			    $filteredValue['items'] = $subItems;
+				$filteredValue['items'] = $subItems;
 			}
 		}
 

@@ -12,79 +12,79 @@ class PaypalExpressCheckout extends ExpressPayment
 {
 	protected $data;
 	
-    public function getInitUrl($returnUrl, $cancelUrl, $sale = true)
-	{        		
+	public function getInitUrl($returnUrl, $cancelUrl, $sale = true)
+	{				
 		$sandbox = $this->getConfigValue('sandbox') ? 'sandbox.' : '';
 		
 		$paypal = $this->getHandler('SetExpressCheckout');
-        $paypal->setParams($this->details->amount->get(), $returnUrl, $cancelUrl, $sale ? 'Sale' : 'Order');
-        $paypal->execute();
+		$paypal->setParams($this->details->amount->get(), $returnUrl, $cancelUrl, $sale ? 'Sale' : 'Order');
+		$paypal->execute();
 
-        $this->checkErrors($paypal);
+		$this->checkErrors($paypal);
 
-    	$response = $paypal->getAPIResponse();
-        return 'https://www.' . $sandbox . 'paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $response->Token;
-    }
-    
-    public function setData($data)
-    {
-        $this->data = $data;
-    }
-    
-    public function getTransactionDetails($request = null)
-    {        
-        $paypal = $this->getHandler('GetExpressCheckoutDetails');
-        $paypal->setParams($request ? $request['token'] : $this->data['token']);
-        $paypal->execute();
+		$response = $paypal->getAPIResponse();
+		return 'https://www.' . $sandbox . 'paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $response->Token;
+	}
+	
+	public function setData($data)
+	{
+		$this->data = $data;
+	}
+	
+	public function getTransactionDetails($request = null)
+	{		
+		$paypal = $this->getHandler('GetExpressCheckoutDetails');
+		$paypal->setParams($request ? $request['token'] : $this->data['token']);
+		$paypal->execute();
 
-        $this->checkErrors($paypal);
+		$this->checkErrors($paypal);
 
-        $response = $paypal->getAPIResponse();
-        $info = $response->GetExpressCheckoutDetailsResponseDetails->PayerInfo;
+		$response = $paypal->getAPIResponse();
+		$info = $response->GetExpressCheckoutDetailsResponseDetails->PayerInfo;
 
-        $valueMap = array(
-        
-        		'firstName' => $info->PayerName->FirstName,
-        		'lastName' => $info->PayerName->LastName,
-        		'companyName' => isset($info->PayerBusiness) ? $info->PayerBusiness : '',
-        		
-        		'address' => $info->Address->Street1 . ($info->Address->Street2 ? ', ' . $info->Address->Street2 : ''),
-        		'city' => $info->Address->CityName,
-        		'state' => $info->Address->StateOrProvince,
-        		'country' => $info->Address->Country,
-        		'postalCode' => $info->Address->PostalCode,
-        	
-        		'email' => $info->Payer,	
-        		
-        		// customer data
-        		'clientID' => $info->PayerID,
-            );
-        
-        foreach ($valueMap as $key => $value)
-        {
-            $this->details->$key->set($value);
-        }
-        
-        return $this->details;
-    }
-    
-    private function checkErrors($paypal)
-    {
-        if ($paypal->success())
-        {
-        	$response = $paypal->getAPIResponse();
-            if (isset($response->Errors))
-            {
-                throw new PaymentException($response->Errors->LongMessage);
-            }
-        }         
-        else
-        {
-            throw new PaymentException($paypal->getAPIException()->getMessage());
-        }
-    }
-    
-    public function isCreditable()
+		$valueMap = array(
+		
+				'firstName' => $info->PayerName->FirstName,
+				'lastName' => $info->PayerName->LastName,
+				'companyName' => isset($info->PayerBusiness) ? $info->PayerBusiness : '',
+				
+				'address' => $info->Address->Street1 . ($info->Address->Street2 ? ', ' . $info->Address->Street2 : ''),
+				'city' => $info->Address->CityName,
+				'state' => $info->Address->StateOrProvince,
+				'country' => $info->Address->Country,
+				'postalCode' => $info->Address->PostalCode,
+			
+				'email' => $info->Payer,	
+				
+				// customer data
+				'clientID' => $info->PayerID,
+			);
+		
+		foreach ($valueMap as $key => $value)
+		{
+			$this->details->$key->set($value);
+		}
+		
+		return $this->details;
+	}
+	
+	private function checkErrors($paypal)
+	{
+		if ($paypal->success())
+		{
+			$response = $paypal->getAPIResponse();
+			if (isset($response->Errors))
+			{
+				throw new PaymentException($response->Errors->LongMessage);
+			}
+		}		 
+		else
+		{
+			throw new PaymentException($paypal->getAPIException()->getMessage());
+		}
+	}
+	
+	public function isCreditable()
 	{
 		return false;
 	}
@@ -96,24 +96,24 @@ class PaypalExpressCheckout extends ExpressPayment
 	
 	public function isMultiCapture()
 	{
-        return true;
-    }
+		return true;
+	}
 
 	public function isCapturedVoidable()
 	{
-        return false;
-    }	
+		return false;
+	}	
 	
-    public function getValidCurrency($currentCurrencyCode)
-    {
-        $currentCurrencyCode = strtoupper($currentCurrencyCode);
-        return in_array($currentCurrencyCode, self::getSupportedCurrencies()) ? $currentCurrencyCode : 'USD';
-    }
+	public function getValidCurrency($currentCurrencyCode)
+	{
+		$currentCurrencyCode = strtoupper($currentCurrencyCode);
+		return in_array($currentCurrencyCode, self::getSupportedCurrencies()) ? $currentCurrencyCode : 'USD';
+	}
 
-    public static function getSupportedCurrencies()
-    {
-        return array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD');
-    }
+	public static function getSupportedCurrencies()
+	{
+		return array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD');
+	}
 
 	/**
 	 *	Reserve funds on customers credit card
@@ -173,10 +173,10 @@ class PaypalExpressCheckout extends ExpressPayment
 
 		if ($paypal->success())
 		{
-		    $response = $paypal->getAPIResponse();
-		    
-		    if (isset($response->Errors))
-		    {
+			$response = $paypal->getAPIResponse();
+			
+			if (isset($response->Errors))
+			{
 				$error = isset($response->Errors->LongMessage) ? $response->Errors : $error = $response->Errors[0];
 			
 				return new TransactionError($error->LongMessage, $response);
@@ -185,7 +185,7 @@ class PaypalExpressCheckout extends ExpressPayment
 			{
 				$paymentInfo = $response->DoExpressCheckoutPaymentResponseDetails->PaymentInfo;
 				
-                $result = new TransactionResult();
+				$result = new TransactionResult();
 
 				$result->gatewayTransactionID->set($paymentInfo->TransactionID);
 				$result->amount->set($paymentInfo->GrossAmount);
@@ -193,21 +193,21 @@ class PaypalExpressCheckout extends ExpressPayment
 								
 				$result->rawResponse->set($response);
 					
-                if ('Sale' == $type)
-                {
-                    $result->setTransactionType(TransactionResult::TYPE_SALE);
-                }
-                else
-                {
-                    $result->setTransactionType(TransactionResult::TYPE_AUTH);
-                }
-                    							
+				if ('Sale' == $type)
+				{
+					$result->setTransactionType(TransactionResult::TYPE_SALE);
+				}
+				else
+				{
+					$result->setTransactionType(TransactionResult::TYPE_AUTH);
+				}
+												
 				return $result;
 			}
 		}
 		else
 		{
-		    return $paypal->getAPIException();
+			return $paypal->getAPIException();
 		}		
 	}
 	

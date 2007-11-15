@@ -63,12 +63,12 @@ class StaticPageController extends StoreManagementController
 	 */
 	public function reorder()
 	{
-	    $inst = StaticPage::getInstanceById($this->request->get('id'), StaticPage::LOAD_DATA);
-	    
-	    $f = new ARSelectFilter();
-	    $handle = new ARFieldHandle('StaticPage', 'position');
-	    if ('down' == $this->request->get('order'))
-	    {
+		$inst = StaticPage::getInstanceById($this->request->get('id'), StaticPage::LOAD_DATA);
+		
+		$f = new ARSelectFilter();
+		$handle = new ARFieldHandle('StaticPage', 'position');
+		if ('down' == $this->request->get('order'))
+		{
 			$f->setCondition(new MoreThanCond($handle, $inst->position->get()));
 			$f->setOrder($handle, 'ASC');
 		}
@@ -77,7 +77,7 @@ class StaticPageController extends StoreManagementController
 			$f->setCondition(new LessThanCond($handle, $inst->position->get()));
 			$f->setOrder($handle, 'DESC');		
 		}
-	    $f->setLimit(1);
+		$f->setLimit(1);
 		
 		$s = ActiveRecordModel::getRecordSet('StaticPage', $f);
 		
@@ -103,9 +103,9 @@ class StaticPageController extends StoreManagementController
 	 */
 	public function update()
 	{
-	    $page = StaticPage::getInstanceById((int)$this->request->get('id'), StaticPage::LOAD_DATA);
-	    
-	    return $this->save($page);
+		$page = StaticPage::getInstanceById((int)$this->request->get('id'), StaticPage::LOAD_DATA);
+		
+		return $this->save($page);
 	}
 	
 	/**
@@ -113,9 +113,9 @@ class StaticPageController extends StoreManagementController
 	 */
 	public function create()
 	{
-	    $page = StaticPage::getNewInstance();	
-	    
-	    return $this->save($page);
+		$page = StaticPage::getNewInstance();	
+		
+		return $this->save($page);
 	}
 
 	/**
@@ -162,12 +162,12 @@ class StaticPageController extends StoreManagementController
 	{	
 		ClassLoader::import('framework.request.validator.RequestValidator');
 		ClassLoader::import('application.helper.filter.HandleFilter');
-        		
+				
 		$val = new RequestValidator('staticPage', $this->request);
 		$val->addCheck('title', new IsNotEmptyCheck($this->translate('_err_title_empty')));
 		$val->addCheck('text', new IsNotEmptyCheck($this->translate('_err_text_empty')));
 		$val->addFilter('handle', HandleFilter::create());
-        		
+				
 		return $val;
 	}
 }

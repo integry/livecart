@@ -15,7 +15,7 @@ class SpecFieldGroup extends MultilingualObject
 	/**
 	 * Define SpecFieldGroup database schema
 	 */
-    public static function defineSchema()
+	public static function defineSchema()
 	{
 		$schema = self::getSchemaInstance(__CLASS__);
 		$schema->setName(__CLASS__);
@@ -82,7 +82,7 @@ class SpecFieldGroup extends MultilingualObject
 	
 	public static function mergeGroupsWithFields($groups, $fields)
 	{
-	    return ActiveRecordGroup::mergeGroupsWithFields(__CLASS__, $groups, $fields);
+		return ActiveRecordGroup::mergeGroupsWithFields(__CLASS__, $groups, $fields);
 	}	
 	
 	/*####################  Saving ####################*/	
@@ -95,11 +95,11 @@ class SpecFieldGroup extends MultilingualObject
 	 */
 	public static function deleteById($id)
 	{
-	    return parent::deleteByID(__CLASS__, (int)$id);
+		return parent::deleteByID(__CLASS__, (int)$id);
 	}
-    
-    protected function insert()
-    {
+	
+	protected function insert()
+	{
 		// get max position
 	  	$f = new ARSelectFilter();
 	  	$f->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'categoryID'), $this->category->get()->getID()));
@@ -111,7 +111,7 @@ class SpecFieldGroup extends MultilingualObject
 		$this->position->set($position);
 		
 		return parent::insert();
-	}    	
+	}		
 	
 	/*####################  Get related objects ####################*/ 	
 	

@@ -4,7 +4,7 @@
 
 	{textarea name="code" id="code"}
 	{hidden name="file" id="file"}
-    	
+		
 	<fieldset class="controls" {denied role="template.save"}style="display: none;"{/denied}>
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" class="submit" value="{tn _save_template}" /> 

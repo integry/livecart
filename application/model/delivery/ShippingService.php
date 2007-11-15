@@ -16,9 +16,9 @@ ClassLoader::import("application.model.delivery.*");
  */
 class ShippingService extends MultilingualObject 
 {
-    const WEIGHT_BASED = 0;
-    const SUBTOTAL_BASED = 1;
-    
+	const WEIGHT_BASED = 0;
+	const SUBTOTAL_BASED = 1;
+	
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -44,7 +44,7 @@ class ShippingService extends MultilingualObject
 	 * @return ShippingService
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
-	{		    
+	{			
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
 	
@@ -58,15 +58,15 @@ class ShippingService extends MultilingualObject
 	 */
 	public static function getNewInstance(DeliveryZone $deliveryZone = null, $defaultLanguageName, $calculationCriteria)
 	{
-        $instance = parent::getNewInstance(__CLASS__);
-        if($deliveryZone)
-        {
-            $instance->deliveryZone->set($deliveryZone);
-        }
-        $instance->setValueByLang('name', null, $defaultLanguageName);
-        $instance->rangeType->set($calculationCriteria);
-        
-        return $instance;
+		$instance = parent::getNewInstance(__CLASS__);
+		if($deliveryZone)
+		{
+			$instance->deliveryZone->set($deliveryZone);
+		}
+		$instance->setValueByLang('name', null, $defaultLanguageName);
+		$instance->rangeType->set($calculationCriteria);
+		
+		return $instance;
 	}
 
 	/**
@@ -94,33 +94,33 @@ class ShippingService extends MultilingualObject
 	 */
 	public static function getByDeliveryZone(DeliveryZone $deliveryZone = null, $loadReferencedRecords = false)
 	{
- 	    $filter = new ARSelectFilter();
+ 		$filter = new ARSelectFilter();
 
 		$filter->setOrder(new ARFieldHandle(__CLASS__, "position"), 'ASC');
 		
 		if (!$deliveryZone)
 		{
-            $deliveryZone = DeliveryZone::getDefaultZoneInstance();
-        }
-        
-        if ($deliveryZone->isDefault())
+			$deliveryZone = DeliveryZone::getDefaultZoneInstance();
+		}
+		
+		if ($deliveryZone->isDefault())
 		{
-		    $filter->setCondition(new IsNullCond(new ARFieldHandle(__CLASS__, "deliveryZoneID")));
+			$filter->setCondition(new IsNullCond(new ARFieldHandle(__CLASS__, "deliveryZoneID")));
 		}
 		else
 		{
-		    $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "deliveryZoneID"), $deliveryZone->getID()));
+			$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "deliveryZoneID"), $deliveryZone->getID()));
 		}
 		
-        $services = self::getRecordSet($filter, $loadReferencedRecords);
+		$services = self::getRecordSet($filter, $loadReferencedRecords);
 		
-        if ($deliveryZone->isDefault())
-        {
-            foreach ($services as $service)
-            {
-                $service->deliveryZone->set($deliveryZone);
-            }
-        }
+		if ($deliveryZone->isDefault())
+		{
+			foreach ($services as $service)
+			{
+				$service->deliveryZone->set($deliveryZone);
+			}
+		}
 		
 		return $services;		
 	}
@@ -135,7 +135,7 @@ class ShippingService extends MultilingualObject
 	 */
 	public function getRates($loadReferencedRecords = false)
 	{
-	    return ShippingRate::getRecordSetByService($this, $loadReferencedRecords);
+		return ShippingRate::getRecordSetByService($this, $loadReferencedRecords);
 	}
 	
 	/**
@@ -143,68 +143,68 @@ class ShippingService extends MultilingualObject
 	 *
 	 * @return ShipmentDeliveryRate
 	 */
-    public function getDeliveryRate(Shipment $shipment)
-    {
-        // get applicable rates
-        if (self::WEIGHT_BASED == $this->rangeType->get())
-        {
-            $weight = $shipment->getChargeableWeight($this->deliveryZone->get());
-            $cond = new EqualsOrLessCond(new ARFieldHandle('ShippingRate', 'weightRangeStart'), $weight);
-            $cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('ShippingRate', 'weightRangeEnd'), $weight));
-        }    
-        else
-        {
-            $total = $shipment->getSubTotal(self::getApplication()->getDefaultCurrency(), Shipment::WITHOUT_TAXES);
-            $cond = new EqualsOrLessCond(new ARFieldHandle('ShippingRate', 'subtotalRangeStart'), $total);
-            $cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('ShippingRate', 'subtotalRangeEnd'), $total));
-        }
+	public function getDeliveryRate(Shipment $shipment)
+	{
+		// get applicable rates
+		if (self::WEIGHT_BASED == $this->rangeType->get())
+		{
+			$weight = $shipment->getChargeableWeight($this->deliveryZone->get());
+			$cond = new EqualsOrLessCond(new ARFieldHandle('ShippingRate', 'weightRangeStart'), $weight);
+			$cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('ShippingRate', 'weightRangeEnd'), $weight));
+		}	
+		else
+		{
+			$total = $shipment->getSubTotal(self::getApplication()->getDefaultCurrency(), Shipment::WITHOUT_TAXES);
+			$cond = new EqualsOrLessCond(new ARFieldHandle('ShippingRate', 'subtotalRangeStart'), $total);
+			$cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('ShippingRate', 'subtotalRangeEnd'), $total));
+		}
 
-        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ShippingRate', 'shippingServiceID'), $this->getID()));
-        $f->mergeCondition($cond);
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ShippingRate', 'shippingServiceID'), $this->getID()));
+		$f->mergeCondition($cond);
 
-        $rates = ActiveRecordModel::getRecordSet('ShippingRate', $f);
-        
-        if (!$rates->size())
-        {
-            return null;
-        }        
-        
-        $itemCount = $shipment->getChargeableItemCount($this->deliveryZone->get()); 
-        
-        if (!$itemCount && $this->deliveryZone->get()->isFreeShipping->get())
-        {
-            // free shipping
-            $maxRate = 0;
-        }
-        else
-        {
-            $maxRate = 0;
-            
-            foreach ($rates as $rate)
-            {
-                $charge = $rate->flatCharge->get() + ($itemCount * $rate->perItemCharge->get());
+		$rates = ActiveRecordModel::getRecordSet('ShippingRate', $f);
+		
+		if (!$rates->size())
+		{
+			return null;
+		}		
+		
+		$itemCount = $shipment->getChargeableItemCount($this->deliveryZone->get()); 
+		
+		if (!$itemCount && $this->deliveryZone->get()->isFreeShipping->get())
+		{
+			// free shipping
+			$maxRate = 0;
+		}
+		else
+		{
+			$maxRate = 0;
+			
+			foreach ($rates as $rate)
+			{
+				$charge = $rate->flatCharge->get() + ($itemCount * $rate->perItemCharge->get());
 
-                if (self::WEIGHT_BASED == $this->rangeType->get())
-                {
-                    $charge += ($rate->perKgCharge->get() * $weight);
-                }    
-                else
-                {
-                    $charge += ($rate->subtotalPercentCharge->get() / 100) * $total;
-                }                            
+				if (self::WEIGHT_BASED == $this->rangeType->get())
+				{
+					$charge += ($rate->perKgCharge->get() * $weight);
+				}	
+				else
+				{
+					$charge += ($rate->subtotalPercentCharge->get() / 100) * $total;
+				}							
 
-                if ($charge > $maxRate)
-                {
-                    $maxRate = $charge;
-                }
-            }
-        }
-        
-        return ShipmentDeliveryRate::getNewInstance($this, $maxRate);
-    }	
-    
-    public function save($forceOperation = null)
-    {
+				if ($charge > $maxRate)
+				{
+					$maxRate = $charge;
+				}
+			}
+		}
+		
+		return ShipmentDeliveryRate::getNewInstance($this, $maxRate);
+	}	
+	
+	public function save($forceOperation = null)
+	{
 		if ($this->deliveryZone->get() && (0 == $this->deliveryZone->get()->getID()))
 		{
 			$this->deliveryZone->set(null);

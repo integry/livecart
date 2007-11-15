@@ -25,16 +25,16 @@ abstract class ObjectImage extends MultilingualObject
 		$schema->registerField(new ARField("position", ARInteger::instance()));
 		
 		return $schema;
-	}    
+	}	
 	
 	public function deleteImageFiles()
 	{
 		foreach ($this->getImageSizes() as $key => $value)
 	  	{
-	  	    if(is_file($this->getPath($key)))
-	  	    {
+	  		if(is_file($this->getPath($key)))
+	  		{
 			   unlink($this->getPath($key));
-	  	    }
+	  		}
 		}			
 	}
 
@@ -92,8 +92,8 @@ abstract class ObjectImage extends MultilingualObject
 	protected function insert($foreignKeyName)
 	{
 	  	$className = get_class($this);
-          
-        // get current max image position
+		  
+		// get current max image position
 	  	$filter = new ARSelectFilter();
 	  	$filter->setCondition(new EqualsCond(new ARFieldHandle($className, $foreignKeyName), $this->getOwner()->getID()));
 	  	$filter->setOrder(new ARFieldHandle($className, 'position'), 'DESC');
@@ -121,7 +121,7 @@ abstract class ObjectImage extends MultilingualObject
 		  	$owner->defaultImage->set($this);
 		  	$owner->save();	
 		}
-	}	    	
+	}			
 }
 
 ?>

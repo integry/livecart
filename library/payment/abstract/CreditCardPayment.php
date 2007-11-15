@@ -36,7 +36,7 @@ abstract class CreditCardPayment extends OnlinePayment
 	
 	public function setCardData($cardNumber, $expiryMonth, $expiryYear, $cardCode = null)
 	{
-        $cardNumber = str_replace(' ', '', $cardNumber);
+		$cardNumber = str_replace(' ', '', $cardNumber);
 		$this->cardNumber = $cardNumber;
 		$this->expiryMonth = $expiryMonth;
 		$this->expiryYear = $expiryYear;

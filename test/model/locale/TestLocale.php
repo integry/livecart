@@ -10,15 +10,15 @@ ClassLoader::import('library.locale.Locale');
 class TestLocale extends UnitTestCase  
 {
   	/*
-    function testCreate()
+	function testCreate()
   	{
 		// attempt to create non-existing locale
 		$locale = Locale::getInstance('enz');
-		$this->assertFalse($locale);	    
+		$this->assertFalse($locale);		
 		
 		// create existing locale
 		$locale = Locale::getInstance('en');
-		$this->assertTrue($locale instanceof Locale);	    
+		$this->assertTrue($locale instanceof Locale);		
 
 		// set as current locale
 		Locale::setCurrentLocale('en');

@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
@@ -8,17 +8,17 @@
 	<base href="{baseUrl}" /> 
 
 	<!-- Css includes -->
-    {includeCss file="backend/stat.css" force=true}
+	{includeCss file="backend/stat.css" force=true}
 	{includeCss file="backend/Backend.css" force=true}
 
 	{compiledCss}
 
-    
-    {includeJs file="backend/Backend.js" force=true}
-    {includeJs file="library/scriptaculous/scriptaculous.js" force=true}
-    {includeJs file="library/prototype/prototype.js" force=true}
-    {includeJs file="library/tinymce/tiny_mce.js" force=true}
-    
+	
+	{includeJs file="backend/Backend.js" force=true}
+	{includeJs file="library/scriptaculous/scriptaculous.js" force=true}
+	{includeJs file="library/prototype/prototype.js" force=true}
+	{includeJs file="library/tinymce/tiny_mce.js" force=true}
+	
 	<!-- JavaScript includes -->
 	{includeJs file=library/KeyboardEvent.js}
 	{includeJs file=library/json.js}
@@ -27,7 +27,7 @@
 	{includeJs file=library/dhtmlHistory/dhtmlHistory.js}
 	
 	{includeJs file=backend/Customize.js}
-    
+	
 	{compiledJs}
 
 	{literal}

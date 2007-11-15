@@ -64,8 +64,8 @@ class CategoryController extends StoreManagementController
 		
 		$categoryNode->setValueByLang("name", $this->application->getDefaultLanguageCode(), $this->translate("_new_category") . " " . $categoryNode->getID() );
 
-        $categoryNode->save();
-        
+		$categoryNode->save();
+		
 		return new JSONResponse($categoryNode->toArray(), 'success');
 	}
 
@@ -78,7 +78,7 @@ class CategoryController extends StoreManagementController
 	 */
 	public function update()
 	{
-	    $validator = $this->buildValidator();
+		$validator = $this->buildValidator();
 		if($validator->isValid())
 		{
 			$categoryNode = Category::getInstanceByID($this->request->get("id"), Category::LOAD_DATA);
@@ -99,9 +99,9 @@ class CategoryController extends StoreManagementController
 	public function viewTree()
 	{
 		$response = new RawResponse(Category::getInstanceByID(ActiveTreeNode::ROOT_ID, true)->toString());
-        $response->setHeader('Content-type', 'text/plain');
+		$response->setHeader('Content-type', 'text/plain');
 
-	    return $response;
+		return $response;
 	}
 
 	/**
@@ -112,14 +112,14 @@ class CategoryController extends StoreManagementController
 	public function remove()
 	{
 		try
-        {
-            Category::getInstanceByID($this->request->get("id"), true)->delete();
-            return new JSONResponse(false, 'success', $this->translate('_category_was_successfully_removed'));
-        }
-        catch (Exception $e)
-        {
-            return new JSONResponse(false, 'failure', $this->translate('_could_not_remove_category'));
-        }
+		{
+			Category::getInstanceByID($this->request->get("id"), true)->delete();
+			return new JSONResponse(false, 'success', $this->translate('_category_was_successfully_removed'));
+		}
+		catch (Exception $e)
+		{
+			return new JSONResponse(false, 'failure', $this->translate('_could_not_remove_category'));
+		}
 		
 	}
 
@@ -130,26 +130,26 @@ class CategoryController extends StoreManagementController
 	 */
 	public function reorder()
 	{
-	    $targetNode = Category::getInstanceByID((int)$this->request->get("id"));
+		$targetNode = Category::getInstanceByID((int)$this->request->get("id"));
 		$parentNode = Category::getInstanceByID((int)$this->request->get("parentId"));
 		
 		try
 		{
 			if($direction = $this->request->get("direction", false))
 			{
-			    if(ActiveTreeNode::DIRECTION_LEFT == $direction) $targetNode->moveLeft(false);
-			    if(ActiveTreeNode::DIRECTION_RIGHT == $direction) $targetNode->moveRight(false);
+				if(ActiveTreeNode::DIRECTION_LEFT == $direction) $targetNode->moveLeft(false);
+				if(ActiveTreeNode::DIRECTION_RIGHT == $direction) $targetNode->moveRight(false);
 			}
 			else
 			{
-			    $targetNode->moveTo($parentNode);
+				$targetNode->moveTo($parentNode);
 			}
 			
 			return new JSONResponse(false, 'success', $this->translate('_categories_tree_was_reordered'));
 		}
 		catch(Exception $e)
-	    {
-            return new JSONResponse(false, 'failure', $this->translate('_unable_to_reorder_categories_tree'));
+		{
+			return new JSONResponse(false, 'failure', $this->translate('_unable_to_reorder_categories_tree'));
 		}
 		
 		return new JSONResponse($status);
@@ -160,54 +160,54 @@ class CategoryController extends StoreManagementController
 	  	ClassLoader::import('application.model.category.*');
 	  	ClassLoader::import('application.model.filter.*');
 	  	ClassLoader::import('application.model.product.*');
-	    
-	    $category = Category::getInstanceByID((int)$this->request->get('id'), Category::LOAD_DATA);
-	    return new JSONResponse(array(
-	        'tabProducts' => $category->totalProductCount->get(),
-	        'tabFilters' => $this->getFilterCount($category),
-	        'tabFields' => $this->getSpecFieldCount($category),
-	        'tabImages' => $this->getCategoryImageCount($category),
-	    ));
+		
+		$category = Category::getInstanceByID((int)$this->request->get('id'), Category::LOAD_DATA);
+		return new JSONResponse(array(
+			'tabProducts' => $category->totalProductCount->get(),
+			'tabFilters' => $this->getFilterCount($category),
+			'tabFields' => $this->getSpecFieldCount($category),
+			'tabImages' => $this->getCategoryImageCount($category),
+		));
 	}
 	
 	public function xmlBranch() 
 	{
-	    $xmlResponse = new XMLResponse();
-	    $rootID = (int)$this->request->get("id");
+		$xmlResponse = new XMLResponse();
+		$rootID = (int)$this->request->get("id");
 
-	    if(!in_array($rootID, array(Category::ROOT_ID, 0))) 
-	    {
-	       $category = Category::getInstanceByID($rootID);
+		if(!in_array($rootID, array(Category::ROOT_ID, 0))) 
+		{
+		   $category = Category::getInstanceByID($rootID);
 		   $xmlResponse->set("rootID", $rootID);
-           $xmlResponse->set("categoryList", $category->getChildNodes(false, true)->toArray($this->application->getDefaultLanguageCode()));
-	    }
-	    
-	    return $xmlResponse;
+		   $xmlResponse->set("categoryList", $category->getChildNodes(false, true)->toArray($this->application->getDefaultLanguageCode()));
+		}
+		
+		return $xmlResponse;
 	}
 
 	public function xmlRecursivePath() 
 	{
-	    $xmlResponse = new XMLResponse();
-	    $targetID = (int)$this->request->get("id");
-	    
-	    try 
-	    {
-    	    $categoriesList = Category::getInstanceByID($targetID)->getPathBranchesArray();
-    	    if(count($categoriesList) > 0 && isset($categoriesList['children'][0]['parent'])) 
-    	    {
-        	    $xmlResponse->set("rootID", $categoriesList['children'][0]['parent']);
-        	    $xmlResponse->set("categoryList", $categoriesList);
-    	    }
-    	    
-    	    $xmlResponse->set("doNotTouch", $this->request->get("doNotTouch"));
-	    }
-	    catch(Exception $e) 
-	    {
-	    }
-	    
-	    $xmlResponse->set("targetID", $targetID);
-	    
-	    return $xmlResponse;
+		$xmlResponse = new XMLResponse();
+		$targetID = (int)$this->request->get("id");
+		
+		try 
+		{
+			$categoriesList = Category::getInstanceByID($targetID)->getPathBranchesArray();
+			if(count($categoriesList) > 0 && isset($categoriesList['children'][0]['parent'])) 
+			{
+				$xmlResponse->set("rootID", $categoriesList['children'][0]['parent']);
+				$xmlResponse->set("categoryList", $categoriesList);
+			}
+			
+			$xmlResponse->set("doNotTouch", $this->request->get("doNotTouch"));
+		}
+		catch(Exception $e) 
+		{
+		}
+		
+		$xmlResponse->set("targetID", $targetID);
+		
+		return $xmlResponse;
 	}
 	
 	public function popup()
@@ -218,7 +218,7 @@ class CategoryController extends StoreManagementController
 		$response = new ActionResponse();
 		$response->set('categoryList', $categoryList->toArray());
 		return $response;
-    }
+	}
 	
 	public function reindex()
 	{
@@ -251,44 +251,44 @@ class CategoryController extends StoreManagementController
 		return $form;
 	}
 	
-    private function getAllTabsCount()
-    {
-        ClassLoader::import('application.model.category.*');
-        ClassLoader::import('application.model.filter.*');
-        ClassLoader::import('application.model.product.*');
-        
-        $allTabsCount = array();
-        foreach(Category::getRecordSet(new ARSelectFilter()) as $category)
-        {
-            $allTabsCount[$category->getID()] = array(
-                'tabProducts' => $category->totalProductCount->get(),
-                'tabFilters' => 0,
-                'tabFields' => 0,
-                'tabImages' => 0
-            );
-        }
-        
-        foreach(SpecField::getRecordSet(new ARSelectFilter()) as $specField)
-        {
-            $allTabsCount[$specField->category->get()->getID()]['tabFields']++;
-        }
-        
-        foreach(CategoryImage::getRecordSet('CategoryImage', new ARSelectFilter()) as $categoryImage)
-        {
-            $allTabsCount[$categoryImage->category->get()->getID()]['tabImages']++;
-        }
-        
-        foreach(FilterGroup::getRecordSet(new ARSelectFilter()) as $filterGroup)
-        {
-            $allTabsCount[$filterGroup->specField->get()->category->get()->getID()]['tabFilters']++;
-        }
-        
-        return $allTabsCount;
-    }	
-    
+	private function getAllTabsCount()
+	{
+		ClassLoader::import('application.model.category.*');
+		ClassLoader::import('application.model.filter.*');
+		ClassLoader::import('application.model.product.*');
+		
+		$allTabsCount = array();
+		foreach(Category::getRecordSet(new ARSelectFilter()) as $category)
+		{
+			$allTabsCount[$category->getID()] = array(
+				'tabProducts' => $category->totalProductCount->get(),
+				'tabFilters' => 0,
+				'tabFields' => 0,
+				'tabImages' => 0
+			);
+		}
+		
+		foreach(SpecField::getRecordSet(new ARSelectFilter()) as $specField)
+		{
+			$allTabsCount[$specField->category->get()->getID()]['tabFields']++;
+		}
+		
+		foreach(CategoryImage::getRecordSet('CategoryImage', new ARSelectFilter()) as $categoryImage)
+		{
+			$allTabsCount[$categoryImage->category->get()->getID()]['tabImages']++;
+		}
+		
+		foreach(FilterGroup::getRecordSet(new ARSelectFilter()) as $filterGroup)
+		{
+			$allTabsCount[$filterGroup->specField->get()->category->get()->getID()]['tabFilters']++;
+		}
+		
+		return $allTabsCount;
+	}	
+	
 	private function getCategoryImageCount(Category $category)
 	{
-        return $category->getCategoryImagesSet()->getTotalRecordCount();
+		return $category->getCategoryImagesSet()->getTotalRecordCount();
 	}   
 	
 	/**
@@ -297,21 +297,21 @@ class CategoryController extends StoreManagementController
 	 * @param Category $category Category active record
 	 * @return integer
 	 */
-    private function getSpecFieldCount(Category $category)
-    {
-        return $category->getSpecificationFieldSet()->getTotalRecordCount();
-    }	 
-    
+	private function getSpecFieldCount(Category $category)
+	{
+		return $category->getSpecificationFieldSet()->getTotalRecordCount();
+	}	 
+	
 	/**
 	 * Count filter groups in this category
 	 *
 	 * @param Category $category Category active record
 	 * @return integer
 	 */
-    private function getFilterCount(Category $category)
-    {
-        return $category->getFilterGroupSet(false)->getTotalRecordCount();
-    }    
+	private function getFilterCount(Category $category)
+	{
+		return $category->getFilterGroupSet(false)->getTotalRecordCount();
+	}	
 }
 
 ?>

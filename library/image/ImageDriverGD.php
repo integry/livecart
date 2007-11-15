@@ -5,12 +5,12 @@ class ImageDriverGD extends ImageDriver
 {
   	public function resize(ImageManipulator $image, $newPath, $newWidth, $newHeight)
   	{
-	    $path = $image->getImagePath();
-	    $height = $image->getHeight();
-	    $width = $image->getWidth();
-	    $quality = $image->getQuality();
-	    $type = $image->getType();
-	    
+		$path = $image->getImagePath();
+		$height = $image->getHeight();
+		$width = $image->getWidth();
+		$quality = $image->getQuality();
+		$type = $image->getType();
+		
 		switch($type) 
 		{
 			case 1:  $newimg = imagecreatefromgif($path); break;
@@ -25,13 +25,13 @@ class ImageDriverGD extends ImageDriver
 			// http://lt.php.net/manual/en/function.imagecopyresampled.php
 			if($width > 1500 || $height > 1200)
 			{
-			    list($width, $height) = $this->resample($newimg, $width, $height, 1024, 768, 0);
+				list($width, $height) = $this->resample($newimg, $width, $height, 1024, 768, 0);
 			}
-			      
+				  
 			$this->resample($newimg, $width, $height, $newWidth, $newHeight);
 			  
-		    if(!is_dir(dirname($newPath)))
-		    {
+			if(!is_dir(dirname($newPath)))
+			{
 				mkdir(dirname($newPath), 0777, true);			  
 			}
 			
@@ -52,13 +52,13 @@ class ImageDriverGD extends ImageDriver
 				break;
 			}
 			  
-	 	    imagedestroy($newimg);
+	 		imagedestroy($newimg);
 			return true;
 		}
 		else
 		{
 		  	return false;
-		}	    
+		}		
 	}	
 	
 	public function getValidTypes()
@@ -108,7 +108,7 @@ class ImageDriverGD extends ImageDriver
 		
 		if ($quality)
 		{
-			imagecopyresampled($tn,$img,0,0,0,0,$newwdt,$newhgt,$owdt,$ohgt);       
+			imagecopyresampled($tn,$img,0,0,0,0,$newwdt,$newhgt,$owdt,$ohgt);	   
 		}
 		else
 		{

@@ -17,7 +17,7 @@
 	
 	{foreach from=$fields key="fieldName" item="foo"}	
 		<div class="setting" id="setting_{$fieldName}" {if 'bool' != $values.$fieldName.type}style="margin-top: 7px; margin-bottom: 7px;"{/if}>
-        <p{if 'bool' == $values.$fieldName.type} class="checkbox"{/if}>
+		<p{if 'bool' == $values.$fieldName.type} class="checkbox"{/if}>
 			
 			{if 'bool' != $values.$fieldName.type}
 				<label for="{$fieldName}" class="setting">{t `$values.$fieldName.title`}:</label>
@@ -33,23 +33,23 @@
 				<label class="checkbox" for="{$fieldName}">{t `$values.$fieldName.title`}</label>
 			{elseif is_array($values.$fieldName.type)}						
 				{if 'multi' == $values.$fieldName.extra}
-                    <div class="multi">
-                    {foreach from=$values.$fieldName.type item="value" key="key"}
-				        <p>
-                        {checkbox name="`$fieldName`[`$key`]" class="checkbox" value=1}
-				        <label for="{$fieldName}[{$key}]" class="checkbox">{$value}</label>
-				        </p>
-				    {/foreach}
-				        <div class="clear"></div>
-                    </div>
+					<div class="multi">
+					{foreach from=$values.$fieldName.type item="value" key="key"}
+						<p>
+						{checkbox name="`$fieldName`[`$key`]" class="checkbox" value=1}
+						<label for="{$fieldName}[{$key}]" class="checkbox">{$value}</label>
+						</p>
+					{/foreach}
+						<div class="clear"></div>
+					</div>
 				{else}
-                    {selectfield options=$values.$fieldName.type name="$fieldName" id="$fieldName"}
-                {/if}
+					{selectfield options=$values.$fieldName.type name="$fieldName" id="$fieldName"}
+				{/if}
 			{/if}
 			<div class="errorText hidden"></div>
 		</fieldset>
 		</p>
-        </div>	
+		</div>	
 	{foreachelse}
 		{assign var="subsections" value=true}	
 	{/foreach}
@@ -65,8 +65,8 @@
 {/if}
 
 {language}
-    {foreach from=$multiLingualValues key="fieldName" item="foo"}
-    <p>
+	{foreach from=$multiLingualValues key="fieldName" item="foo"}
+	<p>
 		<label for="{$fieldName}_{$lang.ID}" class="setting">{t `$values.$fieldName.title`}:</label>
 
 		<fieldset class="error">
@@ -80,15 +80,15 @@
 <input type="hidden" name="id" value="{$id}" />
 
 <fieldset class="controls">
-    <span class="progressIndicator" style="display: none;"></span>
-    <input type="submit" value="{tn _save}" class="submit" /> 
-    {t _or} 
-    <a class="cancel" href="#" onclick="return false;">{t _cancel}</a>
+	<span class="progressIndicator" style="display: none;"></span>
+	<input type="submit" value="{tn _save}" class="submit" /> 
+	{t _or} 
+	<a class="cancel" href="#" onclick="return false;">{t _cancel}</a>
 </fieldset>
 {/form}
 
 {literal}
 <script type="text/javascript">
-    new Backend.Settings.Editor($('settings'));
+	new Backend.Settings.Editor($('settings'));
 </script>
 {/literal}

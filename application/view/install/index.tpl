@@ -21,7 +21,7 @@
 						{/foreach}
 						</ul>		
 						<p>
-							{t _writePermissionsFix}                            
+							{t _writePermissionsFix}							
 						</p>				
 					{else}
 						<img src="image/silk/gif/delete.gif" />

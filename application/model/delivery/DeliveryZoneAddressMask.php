@@ -33,7 +33,7 @@ class DeliveryZoneAddressMask extends ActiveRecordModel
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
 	{	
-	    return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
+		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
 	
 	/**
@@ -56,10 +56,10 @@ class DeliveryZoneAddressMask extends ActiveRecordModel
 	 */
 	public static function getRecordSetByZone(DeliveryZone $zone, $loadReferencedRecords = false)
 	{
-	    $filter = new ARSelectFilter();
-	    $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'deliveryZoneID'), $zone->getID()));
-	    
-	    return self::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
+		$filter = new ARSelectFilter();
+		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'deliveryZoneID'), $zone->getID()));
+		
+		return self::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 }
 ?>

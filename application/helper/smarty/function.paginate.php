@@ -12,58 +12,58 @@
  */
 function smarty_function_paginate($params, LiveCartSmarty $smarty)
 {
-    $interval = 2;
-    
+	$interval = 2;
+	
 	// determine which page numbers will be displayed
-    $count = ceil($params['count'] / $params['perPage']);
-    
-    $pages = range(max(1, $params['current'] - $interval), min($count, $params['current'] + $interval));
-    
-    if (array_search(1, $pages) === false)
-    {
-        array_unshift($pages, 1);
-    }
-    
-    if (array_search($count, $pages) === false)
-    {
-        $pages[] = $count;
-    }
+	$count = ceil($params['count'] / $params['perPage']);
+	
+	$pages = range(max(1, $params['current'] - $interval), min($count, $params['current'] + $interval));
+	
+	if (array_search(1, $pages) === false)
+	{
+		array_unshift($pages, 1);
+	}
+	
+	if (array_search($count, $pages) === false)
+	{
+		$pages[] = $count;
+	}
 
-    // check for any 1-page sized interval breaks
-    $pr = 0;
-    foreach ($pages as $k)
-    {
-        if ($k - 2 == $pr)
-        {
-            $pages[] = $k - 1;
-        }
-        
-        $pr = $k;
-    }
-    sort($pages);
+	// check for any 1-page sized interval breaks
+	$pr = 0;
+	foreach ($pages as $k)
+	{
+		if ($k - 2 == $pr)
+		{
+			$pages[] = $k - 1;
+		}
+		
+		$pr = $k;
+	}
+	sort($pages);
 
 	// generate output
-    $out = array();
+	$out = array();
 	
 	$application = $smarty->getApplication();
 	
 	// get variable to replace - _page_ if defined, otherwise 0
 	$replace = strpos($params['url'], '_000_') ? '_000_' : 0;
-    
-    if ($params['current'] > 1)
+	
+	if ($params['current'] > 1)
 	{
 		$out[] = '<a class="page previous" href="' . str_replace($replace, $params['current'] - 1, $params['url']) . '">' . $application->translate('_previous') . '</a>';
 	}
 	
 	$pr = 0;
-    foreach ($pages as $k)
+	foreach ($pages as $k)
 	{
 		if ($pr < $k - 1)
 		{
-            $out[] = '...';
-        }
-        
-        if ($k != $params['current'])
+			$out[] = '...';
+		}
+		
+		if ($k != $params['current'])
 		{
 			$out[] = '<a class="page" href="' . str_replace($replace, $k, $params['url']) . '">' . $k . '</a>';			
 		}

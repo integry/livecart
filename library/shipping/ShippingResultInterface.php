@@ -7,8 +7,8 @@
  */
 interface ShippingResultInterface
 {
-    public function setRawResponse($response);
-    public function getRawResponse();
+	public function setRawResponse($response);
+	public function getRawResponse();
 }
 
 ?>

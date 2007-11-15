@@ -13,32 +13,32 @@
 	<h2>{t _returning}</h2>
 	
 	<p>
-        {if $failed}           
-            <div class="errorMsg failed">
-                {t _login_failed}
-            </div>                
-        {else}
-            <label></label>
-            {t _please_sign_in}
-        {/if}
-    </p>
+		{if $failed}		   
+			<div class="errorMsg failed">
+				{t _login_failed}
+			</div>				
+		{else}
+			<label></label>
+			{t _please_sign_in}
+		{/if}
+	</p>
 	
 	{capture assign="return"}user/login{/capture}
 	{include file="user/loginForm.tpl"}
 		
 	<h2>{t _new_cust}</h2>
 
-        <label></label>
-    	{t _not_registered}
+		<label></label>
+		{t _not_registered}
 	
 	{include file="user/regForm.tpl"}
 	
 </div>
 
 {literal}
-    <script type="text/javascript">
-        Event.observe(window, 'load', function() {$('email').focus()});    
-    </script>
+	<script type="text/javascript">
+		Event.observe(window, 'load', function() {$('email').focus()});	
+	</script>
 {/literal}
 
 {include file="layout/frontend/footer.tpl"}

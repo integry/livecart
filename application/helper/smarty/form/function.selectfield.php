@@ -28,7 +28,7 @@ function smarty_function_selectfield($params, $smarty)
 	// Check permissions
 	if($formParams['readonly'])
 	{
-       $params['disabled'] = 'disabled'; 
+	   $params['disabled'] = 'disabled'; 
 	}
 	
 	
@@ -40,17 +40,17 @@ function smarty_function_selectfield($params, $smarty)
 	$fieldValue = $formHandler->get($params['name']);
 	if (is_null($fieldValue))
 	{
-        $fieldValue = $defaultValue;
+		$fieldValue = $defaultValue;
 	}
 	
 	foreach ($options as $value => $title)
 	{
-	    if(preg_match('/optgroup_\d+/', $value))
-	    {
-	        $content .= "\t" . '<optgroup label="' . htmlspecialchars($title) . '" />' . "\n";
-	    }
-	    else
-	    {
+		if(preg_match('/optgroup_\d+/', $value))
+		{
+			$content .= "\t" . '<optgroup label="' . htmlspecialchars($title) . '" />' . "\n";
+		}
+		else
+		{
 			if ($fieldValue == $value && (strlen($fieldValue) == strlen($value)))
 			{
 				$content .= "\t" . '<option value="' . $value . '" selected="selected">' . htmlspecialchars($title)  . '</option>' . "\n";
@@ -59,7 +59,7 @@ function smarty_function_selectfield($params, $smarty)
 			{
 				$content .= "\t" . '<option value="' . $value . '">' . htmlspecialchars($title) . '</option>' . "\n";
 			}
-	    }
+		}
 	}
 	$content .= "</select>";
 	

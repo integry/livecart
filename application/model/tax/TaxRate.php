@@ -33,7 +33,7 @@ class TaxRate extends MultilingualObject
 	 * @return TaxRate
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
-	{		    
+	{			
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
 	
@@ -49,10 +49,10 @@ class TaxRate extends MultilingualObject
 	{
 	  	$instance = ActiveRecord::getNewInstance(__CLASS__);
 
-        if($deliveryZone)
-        {
-            $instance->deliveryZone->set($deliveryZone);
-        }
+		if($deliveryZone)
+		{
+			$instance->deliveryZone->set($deliveryZone);
+		}
 	  	
 	  	$instance->tax->set($tax);
 	  	$instance->rate->set((int)$rate);
@@ -83,24 +83,24 @@ class TaxRate extends MultilingualObject
 	 */
 	public static function getRecordSetByDeliveryZone(DeliveryZone $deliveryZone = null, $includeDisabled = true, $loadReferencedRecords = array('Tax'))
 	{
- 	    $filter = new ARSelectFilter();
+ 		$filter = new ARSelectFilter();
   
 		if(!$deliveryZone)
 		{
-		    $filter->setCondition(new IsNullCond(new ARFieldHandle(__CLASS__, "deliveryZoneID")));
+			$filter->setCondition(new IsNullCond(new ARFieldHandle(__CLASS__, "deliveryZoneID")));
 		}
 		else
 		{
-		    $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "deliveryZoneID"), $deliveryZone->getID()));
+			$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "deliveryZoneID"), $deliveryZone->getID()));
 		}
 		
 		return self::getRecordSet($filter, $loadReferencedRecords);
 	}
 
-    public function applyTax($amount)
-    {
-        return $amount + ($amount * ($this->rate->get() / 100));   
-    }
+	public function applyTax($amount)
+	{
+		return $amount + ($amount * ($this->rate->get() / 100));   
+	}
 }
 
 ?>

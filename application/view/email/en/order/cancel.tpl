@@ -8,7 +8,7 @@ If you have any questions regarding this order, you can send us an email message
 
 Items in the cancelled order:
 ------------------------------------------------------------
-Item                           Price     Qty      Subtotal
+Item						   Price	 Qty	  Subtotal
 ------------------------------------------------------------
 {foreach from=$order.shipments item=shipment}
 {foreach from=$shipment.items item=item}

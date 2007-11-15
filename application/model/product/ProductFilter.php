@@ -89,7 +89,7 @@ class ProductFilter
 	{
 	  	if ('ASC' != $direction)
 	  	{
-		    $direction = 'DESC';
+			$direction = 'DESC';
 		}
 		
 		$currency->defineProductJoin($this->selectFilter);
@@ -103,14 +103,14 @@ class ProductFilter
 	
 	public function includeSubcategories()
 	{
-        $this->includeSubcategories = true;
+		$this->includeSubcategories = true;
 		$this->selectFilter = $this->category->getProductsFilter($this);
-    }
-    
-    public function isSubcategories()
-    {
-        return $this->includeSubcategories;
-    }
+	}
+	
+	public function isSubcategories()
+	{
+		return $this->includeSubcategories;
+	}
 }
 
 ?>

@@ -58,15 +58,15 @@ class MultiValueSpecificationItem implements iSpecification
 	  	// test whether the value belongs to the same field
 		if ($value->specField->get()->getID() != $this->specFieldInstance->getID())
 	  	{
-		    throw new Exception('Cannot assign SpecField:' . $value->specField->get()->getID() . ' value to SpecField:' . $this->specFieldInstance->getID());
+			throw new Exception('Cannot assign SpecField:' . $value->specField->get()->getID() . ' value to SpecField:' . $this->specFieldInstance->getID());
 		}
 
-        if (!isset($this->items[$value->getID()]))
-        {
-    	  	$item = SpecificationItem::getNewInstance($this->productInstance, $this->specFieldInstance, $value);
-    		$this->items[$value->getID()] = $item;
-    	  	unset($this->removedItems[$value->getID()]);            
-        }
+		if (!isset($this->items[$value->getID()]))
+		{
+		  	$item = SpecificationItem::getNewInstance($this->productInstance, $this->specFieldInstance, $value);
+			$this->items[$value->getID()] = $item;
+		  	unset($this->removedItems[$value->getID()]);			
+		}
 	}
 	
 	public function removeValue(SpecFieldValue $value)
@@ -87,14 +87,14 @@ class MultiValueSpecificationItem implements iSpecification
 	
 	protected function setItem(SpecificationItem $item)
 	{
-        $this->items[$item->specFieldValue->get()->getID()] = $item;
+		$this->items[$item->specFieldValue->get()->getID()] = $item;
 	}
 
 	protected function deleteRemovedValues()
 	{
 	  	foreach ($this->removedItems as $item)
 	  	{
-		    $item->delete();
+			$item->delete();
 		}
 		
 		$this->removedItems = array();
@@ -106,8 +106,8 @@ class MultiValueSpecificationItem implements iSpecification
 	  	
 		foreach ($this->items as $item)
 	  	{
-		    if ($item->isModified())
-		    {
+			if ($item->isModified())
+			{
 				$item->save();				
 			}
 		}
@@ -119,8 +119,8 @@ class MultiValueSpecificationItem implements iSpecification
 	  	
 		foreach ($this->items as $key => $item)
 	  	{
-		    $item->delete();
-		    unset($this->items[$key]);
+			$item->delete();
+			unset($this->items[$key]);
 		}  
 	}
 	
@@ -135,7 +135,7 @@ class MultiValueSpecificationItem implements iSpecification
 		$values = array();
 		$isLanguage = (SpecField::TYPE_TEXT_SELECTOR == $this->specFieldInstance->type->get());
 
-        foreach ($this->items as $id => $item)
+		foreach ($this->items as $id => $item)
 		{
 		  	$ids[] = $id;
 		  	
@@ -146,8 +146,8 @@ class MultiValueSpecificationItem implements iSpecification
 			  	$v = array();
 				foreach ($value as $key => $val)
 			  	{
-				    if (substr($key, 0, 5) == 'value')
-				    {
+					if (substr($key, 0, 5) == 'value')
+					{
 						$v[$key] = $val;
 					}
 				}			  

@@ -22,29 +22,29 @@ class PaypalDirectPayment extends CreditCardPayment
 	
 	public function isCardTypeNeeded()
 	{
-        return true;
-    }
+		return true;
+	}
 	
 	public function isMultiCapture()
 	{
-        return true;
-    }
+		return true;
+	}
 
 	public function isCapturedVoidable()
 	{
-        return false;
-    }
+		return false;
+	}
 
-    public function getValidCurrency($currentCurrencyCode)
-    {
-        $currentCurrencyCode = strtoupper($currentCurrencyCode);
-        return in_array($currentCurrencyCode, self::getSupportedCurrencies()) ? $currentCurrencyCode : 'USD';
-    }
+	public function getValidCurrency($currentCurrencyCode)
+	{
+		$currentCurrencyCode = strtoupper($currentCurrencyCode);
+		return in_array($currentCurrencyCode, self::getSupportedCurrencies()) ? $currentCurrencyCode : 'USD';
+	}
 
-    public function getSupportedCurrencies()
-    {
-        return array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD');
-    }
+	public function getSupportedCurrencies()
+	{
+		return array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD');
+	}
 
 	/**
 	 *	Reserve funds on customers credit card
@@ -114,10 +114,10 @@ class PaypalDirectPayment extends CreditCardPayment
 
 		if ($paypal->success())
 		{
-		    $response = $paypal->getAPIResponse();
-		    
-		    if (isset($response->Errors))
-		    {
+			$response = $paypal->getAPIResponse();
+			
+			if (isset($response->Errors))
+			{
 				$error = isset($response->Errors->LongMessage) ? $response->Errors : $error = $response->Errors[0];
 			
 				return new TransactionError($error->LongMessage, $response);
@@ -137,21 +137,21 @@ class PaypalDirectPayment extends CreditCardPayment
 				
 				$result->rawResponse->set($response);
 					
-                if ('Sale' == $type)
-                {
-                    $result->setTransactionType(TransactionResult::TYPE_SALE);
-                }
-                else
-                {
-                    $result->setTransactionType(TransactionResult::TYPE_AUTH);
-                }
-                    							
+				if ('Sale' == $type)
+				{
+					$result->setTransactionType(TransactionResult::TYPE_SALE);
+				}
+				else
+				{
+					$result->setTransactionType(TransactionResult::TYPE_AUTH);
+				}
+												
 				return $result;
 			}
 		}
 		else
 		{
-		    return $paypal->getAPIException();
+			return $paypal->getAPIException();
 		}		
 	}
 	

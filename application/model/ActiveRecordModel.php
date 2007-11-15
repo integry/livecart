@@ -10,7 +10,7 @@ ActiveRecord::$creolePath = ClassLoader::getRealPath("library");
  * application specific model class hierarchy)
  *
  * @package application.model
- * @author Integry Systems <http://integry.com>    
+ * @author Integry Systems <http://integry.com>	
  */
 abstract class ActiveRecordModel extends ActiveRecord
 {	
@@ -36,7 +36,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 	 *  make sure that the data for the particular field has actually been submitted to avoid
 	 *  setting empty values for fields that weren't included in the form
 	 */
-    public function loadRequestData(Request $request)
+	public function loadRequestData(Request $request)
 	{
 		$schema = ActiveRecordModel::getSchemaInstance(get_class($this));
 		foreach ($schema->getFieldList() as $field)
@@ -45,8 +45,8 @@ abstract class ActiveRecordModel extends ActiveRecord
 			{
 				$name = $field->getName();
 				if ($request->isValueSet($name) || 
-                   ($request->isValueSet('checkbox_' . $name) && ('ARBool' == get_class($field->getDataType())))
-                    )
+				   ($request->isValueSet('checkbox_' . $name) && ('ARBool' == get_class($field->getDataType())))
+					)
 				{
 					switch (get_class($field->getDataType()))
 					{
@@ -55,7 +55,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 						break;
 								
 						case 'ARBool':
-                            $this->setFieldValue($name, in_array($request->get($name), array('on', 1)));
+							$this->setFieldValue($name, in_array($request->get($name), array('on', 1)));
 						break;
 							
 						default:
@@ -69,7 +69,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 	
 	protected function setLastPosition()
 	{
-        // get max position
+		// get max position
 	  	$f = new ARSelectFilter();
 	  	$f->setOrder(new ARFieldHandle(get_class($this), 'position'), 'DESC');
 	  	$f->setLimit(1);
@@ -78,7 +78,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 		// default new language state
 		$this->position->set($position);
-    }
+	}
 	
 	protected function insert()
 	{
@@ -134,7 +134,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 			self::$plugins[$className][$action] = array();
 			$dir = ClassLoader::getRealPath($path);
 
-            if (!is_dir($dir))
+			if (!is_dir($dir))
 			{
 				return false;
 			}
@@ -155,8 +155,8 @@ abstract class ActiveRecordModel extends ActiveRecord
 		
 		if (!class_exists('ModelPlugin'))
 		{
-            ClassLoader::import('application.model.ModelPlugin');
-        }
+			ClassLoader::import('application.model.ModelPlugin');
+		}
 		
 		foreach (self::$plugins[$className][$action] as $plugin)
 		{

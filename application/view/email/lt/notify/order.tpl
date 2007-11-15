@@ -6,7 +6,7 @@ Užsakymo adresas:
 
 Jūs užsisakėte šias prekes:
 ------------------------------------------------------------
-Prekė                        Kaina     Kiekis   Tarpinė suma
+Prekė						Kaina	 Kiekis   Tarpinė suma
 ------------------------------------------------------------
 {foreach from=$order.shipments item=shipment}
 {foreach from=$shipment.items item=item}
@@ -14,27 +14,27 @@ Prekė                        Kaina     Kiekis   Tarpinė suma
 {/foreach}
 {/foreach}
 ------------------------------------------------------------
-                                        Tarpinė suma: {$order.formatted_itemSubtotal}
+										Tarpinė suma: {$order.formatted_itemSubtotal}
 {if $order.shippingSubtotal}
-                                        Pristatymas: {$order.formatted_shippingSubtotal}
+										Pristatymas: {$order.formatted_shippingSubtotal}
 {/if}
 {if $order.taxes|@count > 1}
-                           ---------------------------------
-                           Tarpinė suma be mokęsčių: {$order.formatted_subtotalBeforeTaxes}
+						   ---------------------------------
+						   Tarpinė suma be mokęsčių: {$order.formatted_subtotalBeforeTaxes}
 {foreach from=$order.taxes[$order.Currency.ID] item=tax}
-                                {$tax.name_lang}: {$tax.formattedAmount}
+								{$tax.name_lang}: {$tax.formattedAmount}
 {/foreach}
 {/if}
-                           ---------------------------------
-                                     Galutinė suma: {$order.formatted_totalAmount}
+						   ---------------------------------
+									 Galutinė suma: {$order.formatted_totalAmount}
 
-                                     Sumokėta: {$order.formatted_amountPaid}
-                                      Mokėtina suma: {$order.formatted_amountDue}
+									 Sumokėta: {$order.formatted_amountPaid}
+									  Mokėtina suma: {$order.formatted_amountDue}
 
 {* Function to generate address output (address template) *}
 {defun name="address"}
 {if $address}
-{$address.fullName}                
+{$address.fullName}				
 {if $address.companyName}
 {$address.companyName}
 

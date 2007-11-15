@@ -19,7 +19,7 @@ function smarty_function_textarea($params, $smarty)
 	// Check permissions
 	if($formParams['readonly'])
 	{
-        $params['readonly'] = 'readonly'; 
+		$params['readonly'] = 'readonly'; 
 	}
 	
 	$content = '<textarea';

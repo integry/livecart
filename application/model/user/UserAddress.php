@@ -10,9 +10,9 @@ ClassLoader::import("application.model.delivery.State");
  */
 class UserAddress extends ActiveRecordModel
 {
-    /**
-     * Define database schema
-     */
+	/**
+	 * Define database schema
+	 */
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -54,19 +54,19 @@ class UserAddress extends ActiveRecordModel
 
 	public static function transformArray($array, ARSchema $schema)
 	{
-        $array['countryName'] = self::getApplication()->getLocale()->info()->getCountryName($array['countryID']);
-        $array['fullName'] = $array['firstName'] . ' ' . $array['lastName'];
-        if (isset($array['State']))
-        {
-            $array['stateName'] = $array['State']['name'];
-        }        
-        
-        return $array;
-    }
+		$array['countryName'] = self::getApplication()->getLocale()->info()->getCountryName($array['countryID']);
+		$array['fullName'] = $array['firstName'] . ' ' . $array['lastName'];
+		if (isset($array['State']))
+		{
+			$array['stateName'] = $array['State']['name'];
+		}		
+		
+		return $array;
+	}
 
-    public function toString()
-    {
-        $address = array();
+	public function toString()
+	{
+		$address = array();
 
 		$address[] = implode(' ', array($this->firstName->get(), $this->lastName->get()));
 		foreach (array('companyName', 'address1', 'address2') as $field)
@@ -76,13 +76,13 @@ class UserAddress extends ActiveRecordModel
 
 		$address[] = implode(', ', array_reduce(array($this->city->get(), $this->postalCode->get()), array($this, 'filterAddress')));
 
-        if ($this->countryID->get())
-        {
-        	$address[] =  $this->getApplication()->getLocale()->info()->getCountryName($this->countryID->get());
+		if ($this->countryID->get())
+		{
+			$address[] =  $this->getApplication()->getLocale()->info()->getCountryName($this->countryID->get());
 		}
 
 		return implode("\n", array_reduce($address, array($this, 'filterAddress')));
-    }
+	}
 
 	private function reduceAddress($item)
 	{

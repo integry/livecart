@@ -13,15 +13,15 @@ class ShippingTest extends UnitTest
 {
 	function getUsedSchemas()
 	{
-        return array();    
-    }
-    
-    function setUp()
+		return array();	
+	}
+	
+	function setUp()
 	{
 
 	}
 
-    function tearDown()
+	function tearDown()
 	{
 
 	}

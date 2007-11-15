@@ -14,7 +14,7 @@
 	</p>
 	
 	<p>
-	   {t _pass_security_warning}       
+	   {t _pass_security_warning}	   
 	</p>
 	
 </div>

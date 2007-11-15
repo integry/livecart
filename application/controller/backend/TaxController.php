@@ -25,9 +25,9 @@ class TaxController extends StoreManagementController
 		$taxesForms = array();
 		$taxes = array();
 		foreach(Tax::getAllTaxes() as $tax) 
-	    {
-		    $taxes[] = $tax->toArray();
-		    $taxesForms[] = $this->createTaxForm($tax);
+		{
+			$taxes[] = $tax->toArray();
+			$taxesForms[] = $this->createTaxForm($tax);
 		}
 		
 		$response->set("taxesForms", $taxesForms);
@@ -40,82 +40,82 @@ class TaxController extends StoreManagementController
 		return $response;
 	}
 
-    public function edit()
-    {
-	    $tax = Tax::getInstanceByID((int)$this->request->get('id'), true);
+	public function edit()
+	{
+		$tax = Tax::getInstanceByID((int)$this->request->get('id'), true);
 		
-	    $form = $this->createTaxForm($tax);
+		$form = $this->createTaxForm($tax);
 		$form->setData($tax->toArray());
 		
 		
 		$response = new ActionResponse();
 		$response->set('tax', $tax->toArray());
-	    $response->set('taxForm', $form);
-	    
-	    return $response;
-    }
-    
+		$response->set('taxForm', $form);
+		
+		return $response;
+	}
+	
 	/**
 	 * @role remove
 	 */
-    public function delete()
-    {
-        $service = Tax::getInstanceByID((int)$this->request->get('id'));
-        $service->delete();
-        
-        return new JSONResponse(false, 'success');
-    }
+	public function delete()
+	{
+		$service = Tax::getInstanceByID((int)$this->request->get('id'));
+		$service->delete();
+		
+		return new JSONResponse(false, 'success');
+	}
 
 	/**
 	 * @role update
 	 */
-    public function update()
-    {
-        $tax = Tax::getInstanceByID((int)$this->request->get('id'));
-        
-        return $this->saveTax($tax);
-    }
+	public function update()
+	{
+		$tax = Tax::getInstanceByID((int)$this->request->get('id'));
+		
+		return $this->saveTax($tax);
+	}
 
 	/**
 	 * @role create
 	 */
-    public function create()
-    {
-        $tax = Tax::getNewInstance($this->request->get('name'));
-        $tax->position->set(1000);
-        
-        return $this->saveTax($tax);
-    }
-    
-    private function saveTax(Tax $tax)
-    {
-        $validator = $this->createTaxFormValidator($tax);
-        
-        if($validator->isValid())
-        {            
-            $tax->setValueArrayByLang(array('name'), $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true, false), $this->request);      
-		    
-	        $tax->save();
-	        
-	        return new JSONResponse(array('tax' => $tax->toArray()), 'success');
-        }
-        else
-        {
-	        
-	        return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_could_not_save_tax_entry'));
-        }
-    }
-    
+	public function create()
+	{
+		$tax = Tax::getNewInstance($this->request->get('name'));
+		$tax->position->set(1000);
+		
+		return $this->saveTax($tax);
+	}
+	
+	private function saveTax(Tax $tax)
+	{
+		$validator = $this->createTaxFormValidator($tax);
+		
+		if($validator->isValid())
+		{			
+			$tax->setValueArrayByLang(array('name'), $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true, false), $this->request);	  
+			
+			$tax->save();
+			
+			return new JSONResponse(array('tax' => $tax->toArray()), 'success');
+		}
+		else
+		{
+			
+			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_could_not_save_tax_entry'));
+		}
+	}
+	
 	/**
 	 * @return Form
 	 */
 	private function createTaxForm(Tax $tax)
 	{
-	    $form = new Form($this->createTaxFormValidator($tax));
-	    
-        $form->setData($tax->toArray());
-	    
-	    return $form;
+		$form = new Form($this->createTaxFormValidator($tax));
+		
+		$form->setData($tax->toArray());
+		
+		return $form;
 	}
 	
 	/**
@@ -129,20 +129,20 @@ class TaxController extends StoreManagementController
 		return $validator;
 	}
 
-    /**
-     * @role update
-     */
-    public function sort()
-    {
-        foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
-        {
-           $tax = Tax::getInstanceByID((int)$key);
-           $tax->position->set((int)$position);
-           $tax->save();
-        }
+	/**
+	 * @role update
+	 */
+	public function sort()
+	{
+		foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
+		{
+		   $tax = Tax::getInstanceByID((int)$key);
+		   $tax->position->set((int)$position);
+		   $tax->save();
+		}
 
-        return new JSONResponse(false, 'success');
-    }
+		return new JSONResponse(false, 'success');
+	}
 }
 
 ?>

@@ -11,7 +11,7 @@ ClassLoader::import("application.model.user.User");
  */
 class OrderNote extends ActiveRecordModel
 {
-    /**
+	/**
 	 * Define database schema used by this active record instance
 	 *
 	 * @param string $className Schema name
@@ -33,11 +33,11 @@ class OrderNote extends ActiveRecordModel
 	
 	public static function getNewInstance(CustomerOrder $order, User $user)	
 	{
-        $instance = parent::getNewInstance(__CLASS__);
-        $instance->order->set($order);
-        $instance->user->set($user);
-        
-        return $instance;
-    }
-}    
+		$instance = parent::getNewInstance(__CLASS__);
+		$instance->order->set($order);
+		$instance->user->set($user);
+		
+		return $instance;
+	}
+}	
 ?>

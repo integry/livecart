@@ -5,8 +5,8 @@
 		{include file="category/productListItem.tpl"}
 		
 		{if !$smarty.foreach.productList.last}
-            <div class="productSeparator"></div>
-        {/if}
+			<div class="productSeparator"></div>
+		{/if}
 			
 	</li>
 {/foreach}

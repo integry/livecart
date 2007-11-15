@@ -1,10 +1,10 @@
 <div id="productManagerContainer" class="treeManagerContainer maxHeight h--90" style="display: none;">
-    
+	
 	<fieldset class="container">
 		<ul class="menu doneProduct">
 			<li class="done">
-                <a href="#cancelEditing" id="cancel_product_edit" class="cancel">{t _done_editing_product}</a>
-            </li>
+				<a href="#cancelEditing" id="cancel_product_edit" class="cancel">{t _done_editing_product}</a>
+			</li>
 		</ul>
 		
 		<a id="productPage" onclick="Backend.Product.Editor.prototype.goToProductPage();" href="{link controller=product action=index id=_id_}" target="_blank" class="external">{t _product_page}</a>
@@ -56,13 +56,13 @@
 </div>
 {literal}
 <script type="text/javascript">
-    Event.observe($("cancel_product_edit"), "click", function(e) {
-        Event.stop(e); 
-        var product = Backend.Product.Editor.prototype.getInstance(Backend.Product.Editor.prototype.getCurrentProductId(), false);
-        product.removeTinyMce();     
-        product.cancelForm();
-        Backend.Product.Editor.prototype.showCategoriesContainer();
-        Backend.Breadcrumb.display(Backend.Category.activeCategoryId);
-    });
+	Event.observe($("cancel_product_edit"), "click", function(e) {
+		Event.stop(e); 
+		var product = Backend.Product.Editor.prototype.getInstance(Backend.Product.Editor.prototype.getCurrentProductId(), false);
+		product.removeTinyMce();	 
+		product.cancelForm();
+		Backend.Product.Editor.prototype.showCategoriesContainer();
+		Backend.Breadcrumb.display(Backend.Category.activeCategoryId);
+	});
 </script>
 {/literal}

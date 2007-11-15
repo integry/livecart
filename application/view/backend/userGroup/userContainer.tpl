@@ -18,15 +18,15 @@
 			</li>
 		</ul>
 	</div>
-    <div class="sectionContainer maxHeight h--50"></div>
-    
-    {literal}
-    <script type="text/javascript">
-        Event.observe($("cancel_user_edit"), "click", function(e) {
-            Event.stop(e); 
-            var user = Backend.User.Editor.prototype.getInstance(Backend.User.Editor.prototype.getCurrentId(), false);   
-            user.cancelForm();
-        });
-    </script>
-    {/literal}
+	<div class="sectionContainer maxHeight h--50"></div>
+	
+	{literal}
+	<script type="text/javascript">
+		Event.observe($("cancel_user_edit"), "click", function(e) {
+			Event.stop(e); 
+			var user = Backend.User.Editor.prototype.getInstance(Backend.User.Editor.prototype.getCurrentId(), false);   
+			user.cancelForm();
+		});
+	</script>
+	{/literal}
 </div>

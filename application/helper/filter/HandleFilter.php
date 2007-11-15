@@ -12,8 +12,8 @@ class HandleFilter extends RegexFilter
 {
 	public static function create()
 	{
-        return new RegexFilter('[^-.a-zA-Z0-9]*');
-    }
+		return new RegexFilter('[^-.a-zA-Z0-9]*');
+	}
 }
 
 ?>

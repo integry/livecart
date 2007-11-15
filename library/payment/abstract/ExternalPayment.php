@@ -9,7 +9,7 @@ include_once(dirname(__file__) . '/OnlinePayment.php');
  */
 abstract class ExternalPayment extends OnlinePayment
 {
-    /**
+	/**
 	 *	Return payment page URL
 	 */
 	abstract public function getUrl();
@@ -32,28 +32,28 @@ abstract class ExternalPayment extends OnlinePayment
 
 	public function isMultiCapture()
 	{
-        return false;
-    }
+		return false;
+	}
 
 	public function isCapturedVoidable()
 	{
-        return false;
-    }
+		return false;
+	}
 
 	public function setNotifyUrl($url)
 	{
-        $this->notifyUrl = $url;
-    }
+		$this->notifyUrl = $url;
+	}
 
 	public function setReturnUrl($url)
 	{
-        $this->returnUrl = $url;
-    }
+		$this->returnUrl = $url;
+	}
 
 	public function setSiteUrl($url)
 	{
-        $this->siteUrl = $url;
-    }
+		$this->siteUrl = $url;
+	}
 }
 
 ?>

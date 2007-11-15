@@ -9,23 +9,23 @@ ClassLoader::import('application.model.Currency');
  */	
 class OrderController extends FrontendController
 {   
-    /**
-     * @var CustomerOrder
-     */
-    protected $order;
-    
-    /**
-     *  View shopping cart contents
-     */
-    public function index()
-    {
-    	$this->addBreadCrumb($this->translate('_my_session'), $this->router->createUrlFromRoute($this->request->get('return'), true));
+	/**
+	 * @var CustomerOrder
+	 */
+	protected $order;
+	
+	/**
+	 *  View shopping cart contents
+	 */
+	public function index()
+	{
+		$this->addBreadCrumb($this->translate('_my_session'), $this->router->createUrlFromRoute($this->request->get('return'), true));
 		$this->addBreadCrumb($this->translate('_my_basket'), '');
 
 		$this->order->loadItemData();		
 		
-        $currency = Currency::getValidInstanceByID($this->request->get('currency', $this->application->getDefaultCurrencyCode()), Currency::LOAD_DATA);                   
-        		
+		$currency = Currency::getValidInstanceByID($this->request->get('currency', $this->application->getDefaultCurrencyCode()), Currency::LOAD_DATA);				   
+				
 		$response = new ActionResponse();
 		$response->set('cart', $this->order->toArray());
 		$response->set('form', $this->buildCartForm($this->order));
@@ -34,13 +34,13 @@ class OrderController extends FrontendController
 		$response->set('orderTotal', $currency->getFormattedPrice($this->order->getSubTotal($currency)));
 		$response->set('expressMethods', $this->application->getExpressPaymentHandlerList(true));
 		return $response;
-    }   
+	}   
 
-    /**
-     *  Update product quantities
-     */
-    public function update()
-    {
+	/**
+	 *  Update product quantities
+	 */
+	public function update()
+	{
 		foreach ($this->order->getOrderedItems() as $item)
 		{
 			if ($this->request->isValueSet('item_' . $item->getID()))
@@ -51,78 +51,78 @@ class OrderController extends FrontendController
 		
 		$this->order->mergeItems();
 		
-        SessionOrder::save($this->order);
+		SessionOrder::save($this->order);
 		
-        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));	      
-    }
+		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));		  
+	}
 
-    /**
-     *  Remove a product from shopping cart
-     */
-    public function delete()
-    {
+	/**
+	 *  Remove a product from shopping cart
+	 */
+	public function delete()
+	{
 		$this->order->removeItem(ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id')));
 		SessionOrder::save($this->order);
 		
-        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));	      		
-    }
-    
-    /**
-     *  Add a new product to shopping cart
-     */
-    public function addToCart()
-    {
-        $product = Product::getInstanceByID($this->request->get('id'));
-        if (!$product->isAvailable())
-        {
-            throw new ApplicationException('The product ' . $product->sku->get() . '  is not available for ordering!'); 
-        }
-        
-        $count = $this->request->get('count', 1);
+		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));		  		
+	}
+	
+	/**
+	 *  Add a new product to shopping cart
+	 */
+	public function addToCart()
+	{
+		$product = Product::getInstanceByID($this->request->get('id'));
+		if (!$product->isAvailable())
+		{
+			throw new ApplicationException('The product ' . $product->sku->get() . '  is not available for ordering!'); 
+		}
+		
+		$count = $this->request->get('count', 1);
 
-        $this->order->addProduct($product, $count);
-        $this->order->mergeItems();
-        SessionOrder::save($this->order);
-    
-        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
-    }
+		$this->order->addProduct($product, $count);
+		$this->order->mergeItems();
+		SessionOrder::save($this->order);
+	
+		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
+	}
 
 	public function moveToCart()
 	{
-        $item = $this->order->getItemByID($this->request->get('id'));
-        $item->isSavedForLater->set(false);
-        $this->order->mergeItems();
-        $this->order->resetShipments();
-        SessionOrder::save($this->order);
+		$item = $this->order->getItemByID($this->request->get('id'));
+		$item->isSavedForLater->set(false);
+		$this->order->mergeItems();
+		$this->order->resetShipments();
+		SessionOrder::save($this->order);
 		
-        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
+		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
 
 	public function moveToWishList()
 	{
-        $item = $this->order->getItemByID($this->request->get('id'));
-        $item->isSavedForLater->set(true);
-        $this->order->mergeItems();
-        $this->order->resetShipments();
-        SessionOrder::save($this->order);
+		$item = $this->order->getItemByID($this->request->get('id'));
+		$item->isSavedForLater->set(true);
+		$this->order->mergeItems();
+		$this->order->resetShipments();
+		SessionOrder::save($this->order);
 		
-        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
+		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
 	
-    /**
-     *  Add a new product to wish list (save items for buying later)
-     */
-    public function addToWishList()
-    {
-        $product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA);
+	/**
+	 *  Add a new product to wish list (save items for buying later)
+	 */
+	public function addToWishList()
+	{
+		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA);
 
-        $this->order->addToWishList($product);
-        $this->order->mergeItems();
-        SessionOrder::save($this->order);
-              
-        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
-    }
-    
+		$this->order->addToWishList($product);
+		$this->order->mergeItems();
+		SessionOrder::save($this->order);
+			  
+		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
+	}
+	
 	private function buildCartForm(CustomerOrder $order)
 	{
 		ClassLoader::import("framework.request.validator.Form");

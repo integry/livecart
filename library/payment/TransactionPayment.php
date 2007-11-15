@@ -41,14 +41,14 @@ abstract class TransactionPayment
 		}
 		else
 		{
-            return $defaultValue;
-        }
+			return $defaultValue;
+		}
 	}
 	
 	public function getDetails()
 	{
-        return $this->details;
-    }
+		return $this->details;
+	}
 	
 	/**
 	 *	Determine if the payment method supports crediting a refund payment back to customer
@@ -60,7 +60,7 @@ abstract class TransactionPayment
 	/**
 	 *	Return a valid currency code if the supplied currency is not supported by this payment method
 	 */
-    public abstract function getValidCurrency($currentCurrencyCode);
+	public abstract function getValidCurrency($currentCurrencyCode);
 }
 
 ?>

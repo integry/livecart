@@ -14,61 +14,61 @@
 
 function smarty_resource_custom_source($tpl_name, &$tpl_source, LiveCartSmarty $smarty)
 {
-    $paths = custom_get_paths($tpl_name, $smarty);
+	$paths = custom_get_paths($tpl_name, $smarty);
 
-    foreach ($paths as $path)
-    {
-        if (file_exists($path))
-        {
-            $tpl_source = $smarty->processPlugins(file_get_contents($path), $tpl_name);
+	foreach ($paths as $path)
+	{
+		if (file_exists($path))
+		{
+			$tpl_source = $smarty->processPlugins(file_get_contents($path), $tpl_name);
 			return true;
-        } 
-    }
-    
-    return false;
+		} 
+	}
+	
+	return false;
 }
 
 function smarty_resource_custom_timestamp($tpl_name, &$tpl_timestamp, LiveCartSmarty $smarty_obj)
 {
-    $paths = custom_get_paths($tpl_name, $smarty_obj);
-      
-    foreach ($paths as $path)
-    {
-        if (file_exists($path))
-        {
-            $tpl_timestamp = filemtime($path);
-            return true;
-        } 
-    }
-    
-    return false;
+	$paths = custom_get_paths($tpl_name, $smarty_obj);
+	  
+	foreach ($paths as $path)
+	{
+		if (file_exists($path))
+		{
+			$tpl_timestamp = filemtime($path);
+			return true;
+		} 
+	}
+	
+	return false;
 }
 
 function custom_get_paths($tpl_name, LiveCartSmarty $smarty)
 {
-    static $customDirectory = null;
-    
-    if (!$customDirectory)
-    {
-        $customDirectory = ClassLoader::getRealPath('storage.customize.view') . '/';
-    }
-    
-    $paths = array();
-    $paths[] = $customDirectory . $tpl_name;
-    $paths[] = $smarty->template_dir . '/' . $tpl_name;
+	static $customDirectory = null;
+	
+	if (!$customDirectory)
+	{
+		$customDirectory = ClassLoader::getRealPath('storage.customize.view') . '/';
+	}
+	
+	$paths = array();
+	$paths[] = $customDirectory . $tpl_name;
+	$paths[] = $smarty->template_dir . '/' . $tpl_name;
 
-    return $paths;    
+	return $paths;	
 }
 
 function smarty_resource_custom_secure($tpl_name, LiveCartSmarty $smarty_obj)
 {
-    // assume all templates are secure
-    return true;
+	// assume all templates are secure
+	return true;
 }
 
 function smarty_resource_custom_trusted($tpl_name, LiveCartSmarty $smarty_obj)
 {
-    // not used for templates
+	// not used for templates
 }
 
 ?>

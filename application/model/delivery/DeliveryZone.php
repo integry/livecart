@@ -20,8 +20,8 @@ ClassLoader::import('library.shipping.ShippingRateSet');
  */
 class DeliveryZone extends MultilingualObject 
 {
-    const ENABLED_TAXES = false;
-    
+	const ENABLED_TAXES = false;
+	
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -31,7 +31,7 @@ class DeliveryZone extends MultilingualObject
 		$schema->registerField(new ARField("name", ARText::instance()));
 		$schema->registerField(new ARField("isEnabled", ARInteger::instance(1)));
 		$schema->registerField(new ARField("isFreeShipping", ARInteger::instance(1)));
-        $schema->registerField(new ARField("isRealTimeDisabled", ARInteger::instance(1)));
+		$schema->registerField(new ARField("isRealTimeDisabled", ARInteger::instance(1)));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -55,14 +55,14 @@ class DeliveryZone extends MultilingualObject
 	 * @return DeliveryZone
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
-	{		    
+	{			
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
 	
 	public function isDefault()
 	{
-        return 0 == $this->getID();
-    }
+		return 0 == $this->getID();
+	}
 	
 	/*####################  Instance retrieval ####################*/		
 	
@@ -71,8 +71,8 @@ class DeliveryZone extends MultilingualObject
 	 */
 	public static function getAll()
 	{
-	    $filter = new ARSelectFilter();
-	    return self::getRecordSet(__CLASS__, $filter);
+		$filter = new ARSelectFilter();
+		return self::getRecordSet(__CLASS__, $filter);
 	}
 
 	/**
@@ -80,215 +80,215 @@ class DeliveryZone extends MultilingualObject
 	 */
 	public static function getEnabled()
 	{
-	    $filter = new ARSelectFilter();
-	    $filter->setCondition(new EqualsCond(new ArFieldHandle(__CLASS__, "isEnabled"), 1));
-	    	    
-	    return self::getRecordSet(__CLASS__, $filter);
+		$filter = new ARSelectFilter();
+		$filter->setCondition(new EqualsCond(new ArFieldHandle(__CLASS__, "isEnabled"), 1));
+				
+		return self::getRecordSet(__CLASS__, $filter);
 	}
 
 	/**
 	 * Returns the delivery zone, which matches the required address
 	 *
-     * @return DeliveryZone
+	 * @return DeliveryZone
 	 * @todo implement
 	 */
-    public static function getZoneByAddress(UserAddress $address)
-    {
+	public static function getZoneByAddress(UserAddress $address)
+	{
 		if (!$address->isLoaded())
 		{
-            $address->load();    
-        }
-        
-        $zones = array();
-		            
-    	// get zones by state
-    	if ($address->state->get())
-    	{
-            $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('DeliveryZone', 'isEnabled'), true));
-		    $f->setCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneState', 'stateID'), $address->state->get()->getID()));
-		    $s = ActiveRecordModel::getRecordSet('DeliveryZoneState', $f, ActiveRecordModel::LOAD_REFERENCES);
-		    		    
-            foreach ($s as $zoneState)
-            {
-                $zones[] = $zoneState->deliveryZone->get();
-            }    
-        }
-        
+			$address->load();	
+		}
+		
+		$zones = array();
+					
+		// get zones by state
+		if ($address->state->get())
+		{
+			$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('DeliveryZone', 'isEnabled'), true));
+			$f->setCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneState', 'stateID'), $address->state->get()->getID()));
+			$s = ActiveRecordModel::getRecordSet('DeliveryZoneState', $f, ActiveRecordModel::LOAD_REFERENCES);
+						
+			foreach ($s as $zoneState)
+			{
+				$zones[] = $zoneState->deliveryZone->get();
+			}	
+		}
+		
 		// get zones by country
 		if (!$zones)
 		{
-            $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('DeliveryZone', 'isEnabled'), true));
-		    $f->setCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneCountry', 'countryCode'), $address->countryID->get()));
-		    $s = ActiveRecordModel::getRecordSet('DeliveryZoneCountry', $f, ActiveRecordModel::LOAD_REFERENCES);
+			$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('DeliveryZone', 'isEnabled'), true));
+			$f->setCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneCountry', 'countryCode'), $address->countryID->get()));
+			$s = ActiveRecordModel::getRecordSet('DeliveryZoneCountry', $f, ActiveRecordModel::LOAD_REFERENCES);
 
-            foreach ($s as $zone)
-            {
-                $zones[] = $zone->deliveryZone->get();
-            }                
-        }
+			foreach ($s as $zone)
+			{
+				$zones[] = $zone->deliveryZone->get();
+			}				
+		}
 		
 		$maskPoints = array();
 		
 		// leave zones that match masks
 		foreach ($zones as $key => $zone)
 		{
-            $match = $zone->getMaskMatch($address);
-            if (!$match)
-            {
-                unset($zones[$key]);       
-            }
-            else
-            {
-                $maskPoints[$key] = $match;
-            }
-        }
+			$match = $zone->getMaskMatch($address);
+			if (!$match)
+			{
+				unset($zones[$key]);	   
+			}
+			else
+			{
+				$maskPoints[$key] = $match;
+			}
+		}
 		
 		if ($maskPoints)
 		{
-            asort($maskPoints);
-            end($maskPoints);
-            return $zones[key($maskPoints)];
-        }
+			asort($maskPoints);
+			end($maskPoints);
+			return $zones[key($maskPoints)];
+		}
 		
 		return $zones ? array_shift($zones) : DeliveryZone::getDefaultZoneInstance();
-    }
-    
+	}
+	
 	/**
 	 * Returns the default delivery zone instance
 	 *
-     * @return DeliveryZone
+	 * @return DeliveryZone
 	 */
-    public static function getDefaultZoneInstance()
-    {
-        return self::getInstanceById(0);    
-    }    
-    
-	/*####################  Get related objects ####################*/    
-    
+	public static function getDefaultZoneInstance()
+	{
+		return self::getInstanceById(0);	
+	}	
+	
+	/*####################  Get related objects ####################*/	
+	
 	/**
 	 * Determine if the supplied UserAddress matches address masks
 	 *
-     * @return bool
+	 * @return bool
 	 */
-    public function getMaskMatch(UserAddress $address)
-    {
-        return 
-               $this->hasMaskGroupMatch($this->getCityMasks(), $address->city->get()) +
-               
-               ($this->hasMaskGroupMatch($this->getAddressMasks(), $address->address1->get()) ||                
-               $this->hasMaskGroupMatch($this->getAddressMasks(), $address->address2->get())) +
-                         
-               $this->hasMaskGroupMatch($this->getZipMasks(), $address->postalCode->get());                   
-    }
-    
-    private function hasMaskGroupMatch(ARSet $masks, $addressString)
-    {
-        if (!$masks->size())
-        {
-            return true;
-        }
-        
-        $match = false;
-        
-        foreach ($masks as $mask)
-        {
-            if ($this->isMaskMatch($addressString, $mask->mask->get()))
-            {
-                $match = 2;
-            }
-        }
-        
-        return $match;
-    }
-    
-    private function isMaskMatch($addressString, $maskString)
-    {
-        $maskString = str_replace('*', '.*', $maskString);
-        $maskString = str_replace('?', '.{0,1}', $maskString);
-        $maskString = str_replace('/', '\/', $maskString);
-        $maskString = str_replace('\\', '\\\\', $maskString);
-        return @preg_match('/' . $maskString . '/im', $addressString);
-    }
-    
-    /**
-     *  Returns manually defined shipping rates for the particular shipment
-     *
-     *	@return ShippingRateSet
-     */
+	public function getMaskMatch(UserAddress $address)
+	{
+		return 
+			   $this->hasMaskGroupMatch($this->getCityMasks(), $address->city->get()) +
+			   
+			   ($this->hasMaskGroupMatch($this->getAddressMasks(), $address->address1->get()) ||				
+			   $this->hasMaskGroupMatch($this->getAddressMasks(), $address->address2->get())) +
+						 
+			   $this->hasMaskGroupMatch($this->getZipMasks(), $address->postalCode->get());				   
+	}
+	
+	private function hasMaskGroupMatch(ARSet $masks, $addressString)
+	{
+		if (!$masks->size())
+		{
+			return true;
+		}
+		
+		$match = false;
+		
+		foreach ($masks as $mask)
+		{
+			if ($this->isMaskMatch($addressString, $mask->mask->get()))
+			{
+				$match = 2;
+			}
+		}
+		
+		return $match;
+	}
+	
+	private function isMaskMatch($addressString, $maskString)
+	{
+		$maskString = str_replace('*', '.*', $maskString);
+		$maskString = str_replace('?', '.{0,1}', $maskString);
+		$maskString = str_replace('/', '\/', $maskString);
+		$maskString = str_replace('\\', '\\\\', $maskString);
+		return @preg_match('/' . $maskString . '/im', $addressString);
+	}
+	
+	/**
+	 *  Returns manually defined shipping rates for the particular shipment
+	 *
+	 *	@return ShippingRateSet
+	 */
 	public function getDefinedShippingRates(Shipment $shipment)
-    {
+	{
 		$rates = new ShippingRateSet();
 		foreach ($this->getShippingServices() as $service)
 		{
-            $rate = $service->getDeliveryRate($shipment);
-            if ($rate)
-            {
-                $rates->add($rate);
-            }
-        }
+			$rate = $service->getDeliveryRate($shipment);
+			if ($rate)
+			{
+				$rates->add($rate);
+			}
+		}
 				
 		return $rates;		
 	}
 	
-    /**
-     *  Returns real time shipping rates for the particular shipment
-     *
-     *	@return ShippingRateSet
-     */
+	/**
+	 *  Returns real time shipping rates for the particular shipment
+	 *
+	 *	@return ShippingRateSet
+	 */
 	public function getRealTimeRates(Shipment $shipment)
 	{
 		$rates = new ShippingRateSet();
-        
-        $app = self::getApplication();
-        foreach ($app->getEnabledRealTimeShippingServices() as $handler)
-        {
-            $rates->merge(ShipmentDeliveryRate::getRealTimeRates($app->getShippingHandler($handler), $shipment));
-        }      
-        
+		
+		$app = self::getApplication();
+		foreach ($app->getEnabledRealTimeShippingServices() as $handler)
+		{
+			$rates->merge(ShipmentDeliveryRate::getRealTimeRates($app->getShippingHandler($handler), $shipment));
+		}	  
+		
 		return $rates;
-    }
-    
-    /**
-     *  Returns both real time and calculated shipping rates for the particular shipment
-     *
-     *	@return ShippingRateSet
-     */
-    public function getShippingRates(Shipment $shipment)
-    {
-        $defined = $this->getDefinedShippingRates($shipment);
-        if (!$this->isRealTimeDisabled->get())
-        {
-            $defined->merge($this->getRealTimeRates($shipment));
-        }
-     
-        // calculate surcharge
-        $surcharge = 0;
-        foreach ($shipment->getItems() as $item)
-        {           
-            $surcharge += $item->product->get()->shippingSurchargeAmount->get();
-        }
-        
-        $currency = self::getApplication()->getDefaultCurrency();
-        
-        // apply to rates
-        foreach ($defined as $rate)
-        {
-            $rate->setAmountByCurrency($currency, $rate->getAmountByCurrency($currency) + $surcharge);
-        }        
-        
-        // apply taxes
-        foreach ($defined as $rate)
-        {
-            $rate->setAmountWithTax($shipment->applyTaxesToAmount($rate->getCostAmount()));
-        }
-         
-        return $defined;
-    }
+	}
 	
-    /**
-     *
-     *	@return ARSet
-     */
+	/**
+	 *  Returns both real time and calculated shipping rates for the particular shipment
+	 *
+	 *	@return ShippingRateSet
+	 */
+	public function getShippingRates(Shipment $shipment)
+	{
+		$defined = $this->getDefinedShippingRates($shipment);
+		if (!$this->isRealTimeDisabled->get())
+		{
+			$defined->merge($this->getRealTimeRates($shipment));
+		}
+	 
+		// calculate surcharge
+		$surcharge = 0;
+		foreach ($shipment->getItems() as $item)
+		{		   
+			$surcharge += $item->product->get()->shippingSurchargeAmount->get();
+		}
+		
+		$currency = self::getApplication()->getDefaultCurrency();
+		
+		// apply to rates
+		foreach ($defined as $rate)
+		{
+			$rate->setAmountByCurrency($currency, $rate->getAmountByCurrency($currency) + $surcharge);
+		}		
+		
+		// apply taxes
+		foreach ($defined as $rate)
+		{
+			$rate->setAmountWithTax($shipment->applyTaxesToAmount($rate->getCostAmount()));
+		}
+		 
+		return $defined;
+	}
+	
+	/**
+	 *
+	 *	@return ARSet
+	 */
 	public function getTaxRates($includeDisabled = true, $loadReferencedRecords = array('Tax'))
 	{
 		return TaxRate::getRecordSetByDeliveryZone($this, $includeDisabled, $loadReferencedRecords);
@@ -299,7 +299,7 @@ class DeliveryZone extends MultilingualObject
 	 */
 	public function getCountries($loadReferencedRecords = false)
 	{
-	    return DeliveryZoneCountry::getRecordSetByZone($this, $loadReferencedRecords);
+		return DeliveryZoneCountry::getRecordSetByZone($this, $loadReferencedRecords);
 	}
 
 	/**
@@ -307,7 +307,7 @@ class DeliveryZone extends MultilingualObject
 	 */
 	public function getStates($loadReferencedRecords = false)
 	{
-	    return DeliveryZoneState::getRecordSetByZone($this, $loadReferencedRecords);
+		return DeliveryZoneState::getRecordSetByZone($this, $loadReferencedRecords);
 	}
 
 	/**
@@ -315,7 +315,7 @@ class DeliveryZone extends MultilingualObject
 	 */
 	public function getCityMasks($loadReferencedRecords = false)
 	{
-	    return DeliveryZoneCityMask::getRecordSetByZone($this, $loadReferencedRecords);
+		return DeliveryZoneCityMask::getRecordSetByZone($this, $loadReferencedRecords);
 	}
 
 	/**
@@ -323,7 +323,7 @@ class DeliveryZone extends MultilingualObject
 	 */
 	public function getZipMasks($loadReferencedRecords = false)
 	{
-	    return DeliveryZoneZipMask::getRecordSetByZone($this, $loadReferencedRecords);
+		return DeliveryZoneZipMask::getRecordSetByZone($this, $loadReferencedRecords);
 	}
 
 	/**
@@ -331,7 +331,7 @@ class DeliveryZone extends MultilingualObject
 	 */
 	public function getAddressMasks($loadReferencedRecords = false)
 	{
-	    return DeliveryZoneAddressMask::getRecordSetByZone($this, $loadReferencedRecords);
+		return DeliveryZoneAddressMask::getRecordSetByZone($this, $loadReferencedRecords);
 	}
 
 	
@@ -343,7 +343,7 @@ class DeliveryZone extends MultilingualObject
 	 */
 	public function getShippingServices($loadReferencedRecords = false)
 	{
-	    return ShippingService::getByDeliveryZone($this, $loadReferencedRecords);
+		return ShippingService::getByDeliveryZone($this, $loadReferencedRecords);
 	}
 }
 

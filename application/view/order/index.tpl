@@ -5,18 +5,18 @@
 
 <div id="content" class="left right orderIndex">
 	
-    <div class="checkoutHeader">
-    	<h1>{t _your_basket}</h1>
-    	
-    	{if $cart.cartItems}
-        	{include file="checkout/checkoutProgress.tpl" progress="progressCart"}
-        {/if}
-    </div>
+	<div class="checkoutHeader">
+		<h1>{t _your_basket}</h1>
+		
+		{if $cart.cartItems}
+			{include file="checkout/checkoutProgress.tpl" progress="progressCart"}
+		{/if}
+	</div>
 	
 	<div class="clear"></div>
 	
 	{*
-    <p id="cartStats">
+	<p id="cartStats">
 		{maketext text=_item_count params=$cart.basketCount}
 	</p>
 	*}
@@ -27,7 +27,7 @@
 		
 	{if $cart.cartItems}			
 		{include file="order/cartItems.tpl"}
-    {/if}
+	{/if}
 	
 	{if $cart.wishListItems && 'ENABLE_WISHLISTS'|config}
 		{include file="order/wishList.tpl"}
