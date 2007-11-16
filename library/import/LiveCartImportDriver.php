@@ -77,6 +77,11 @@ abstract class LiveCartImportDriver
 		return false;
 	}
 
+	public function isBillingAddress()
+	{
+		return false;
+	}
+
 	public function getNextLanguage()
 	{
 		return null;
@@ -102,7 +107,8 @@ abstract class LiveCartImportDriver
 		$tableMap = $this->getTableMap();
 		if (isset($tableMap[$type]))
 		{
-			return array_shift(array_shift($this->getDataBySQL('SELECT COUNT(*) FROM `' . $tableMap[$type] . '`')));
+			$sql = is_array($tableMap[$type]) ? key($tableMap[$type]) : 'SELECT COUNT(*) FROM `' . $tableMap[$type] . '`';
+			return array_shift(array_shift($this->getDataBySQL($sql)));
 		}
 	}
 
@@ -122,6 +128,11 @@ abstract class LiveCartImportDriver
 
 		foreach ($this->getTableMap() as $table)
 		{
+			if (is_array($table))
+			{
+				$table = array_shift($table);
+			}
+			
 			if (array_search($table, $tables) === false)
 			{
 				return false;
@@ -176,6 +187,62 @@ abstract class LiveCartImportDriver
 		$this->languages[] = $lang;
 	}
 	
+	protected function importProductImage(Product $product, $imagePath)
+	{
+		if (file_exists($imagePath))
+		{
+			if (!isset($product->importedImages))
+			{
+				$product->importedImages = array();
+			}
+			
+			$product->importedImages[] = $imagePath;
+		}
+	}
+	
+	protected function importCategoryImage(Category $category, $imagePath)
+	{
+		if (file_exists($imagePath))
+		{
+			if (!isset($category->importedImages))
+			{
+				$category->importedImages = array();
+			}
+			
+			$category->importedImages[] = $imagePath;
+		}
+	}
+	
+	public function saveProduct(Product $product)
+	{
+		$product->save(ActiveRecord::PERFORM_INSERT);
+		
+		if (!empty($product->importedImages))
+		{
+			foreach ($product->importedImages as $imageFile)
+			{
+				$image = ProductImage::getNewInstance($product);
+				$image->save();
+				$image->setFile($imageFile);
+			}
+		}
+	}
+
+	public function saveCategory(Category $category)
+	{
+		$category->save(ActiveRecord::PERFORM_INSERT);
+		
+		if (!empty($category->importedImages))
+		{
+			foreach ($category->importedImages as $imageFile)
+			{
+				$image = CategoryImage::getNewInstance($category);
+				$image->save();
+				$image->setFile($imageFile);
+			}
+		}
+	}
+
 	public function saveCustomerOrder(CustomerOrder $order)
 	{
 		$order->isFinalized->set(true);

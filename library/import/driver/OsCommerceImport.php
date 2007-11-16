@@ -4,14 +4,17 @@ require_once dirname(__file__) . '/../LiveCartImportDriver.php';
 
 class OsCommerceImport extends LiveCartImportDriver
 {
-	private $languages = array();
+	protected $languages = array();
 
-	private $configMap = null;
+	protected $configMap = null;
 
-	private $categoryMap = null;
+	protected $categoryMap = null;
 
-	private $productSql;
+	protected $productSql;
 
+	private $languagesTruncated;
+	private $currenciesTruncated;
+	
 	public function getName()
 	{
 		return 'osCommerce';
@@ -71,6 +74,11 @@ class OsCommerceImport extends LiveCartImportDriver
 		return true;
 	}
 
+	public function isBillingAddress()
+	{
+		return true;
+	}
+
 	public function getTableMap()
 	{
 		return array(
@@ -81,11 +89,18 @@ class OsCommerceImport extends LiveCartImportDriver
 				'Manufacturer' => 'manufacturers',
 				'Product' => 'products',
 				'User' => 'customers',
+				'BillingAddress' => array('SELECT COUNT(*) FROM address_book LEFT JOIN customers ON address_book.customers_id=customers.customers_id WHERE customers.customers_id IS NOT NULL' => 'address_book')
 			);
 	}
 
 	public function getNextLanguage()
 	{
+		if (!$this->languagesTruncated)
+		{
+			$this->db->executeQuery('TRUNCATE TABLE Language');
+			$this->languagesTruncated = true;
+		}
+		
 		if (!$data = $this->loadRecord('SELECT * FROM languages ORDER BY sort_order ASC'))
 		{
 			return null;
@@ -96,12 +111,23 @@ class OsCommerceImport extends LiveCartImportDriver
 		$lang = ActiveRecordModel::getNewInstance('Language');
 		$lang->setID($data['code']);
 		$lang->isEnabled->set(true);
+		
+		if (1 == $data['sort_order'])
+		{
+			$lang->isDefault->set(true);
+		}
 
 		return $lang;
 	}
 
 	public function getNextCurrency()
 	{
+		if (!$this->currenciesTruncated)
+		{
+			$this->db->executeQuery('TRUNCATE TABLE Currency');
+			$this->currenciesTruncated = true;
+		}
+		
 		if (!$data = $this->loadRecord('SELECT * FROM currencies'))
 		{
 			return null;
@@ -161,8 +187,7 @@ class OsCommerceImport extends LiveCartImportDriver
 			$join = $langs = array();
 			foreach ($this->languages as $id => $code)
 			{
-				$join[] = 'LEFT JOIN categories_description AS category_' . $code . ' ON category_' . $code . '.categories_id=categories.categories_id AND category_' . $code . '.language_id=' . $id;
-				$langs[] = 'category_' . $code . '.categories_name AS name_' . $code;
+				list($join[], $langs[]) = $this->joinCategoryFields($id, $code);
 			}
 
 			// get all categories
@@ -217,13 +242,29 @@ class OsCommerceImport extends LiveCartImportDriver
 		}
 
 		$rec->setID($data['categories_id']);
+		$rec->isEnabled->set(true);
 
 		foreach ($this->languages as $code)
 		{
 			$rec->setValueByLang('name', $code, $data['name_' . $code]);
 		}
 
+		//product image
+		if ($data['categories_image'])
+		{
+			$this->importCategoryImage($rec, $this->path . '/images/' . $data['categories_image']);
+		}
+
+		$rec->rawData = $data;
+
 		return $rec;
+	}
+
+	protected function joinCategoryFields($id, $code)
+	{
+		return array('LEFT JOIN categories_description AS category_' . $code . ' ON category_' . $code . '.categories_id=categories.categories_id AND category_' . $code . '.language_id=' . $id,
+					 'category_' . $code . '.categories_name AS name_' . $code
+					);
 	}
 
 	public function getNextProduct()
@@ -232,11 +273,10 @@ class OsCommerceImport extends LiveCartImportDriver
 		{
 			foreach ($this->languages as $id => $code)
 			{
-				$join[] = 'LEFT JOIN products_description AS product_' . $code . ' ON product_' . $code . '.products_id=products.products_id AND product_' . $code . '.language_id=' . $id;
-				$langs[] = 'product_' . $code . '.products_name AS name_' . $code . ', ' . 'product_' . $code . '.products_description AS descr_' . $code;
+				list($join[], $langs[]) = $this->joinProductFields($id, $code);
 			}
 
-		$this->productSql = 'SELECT *,' . implode(', ', $langs) . ' FROM products ' . implode(' ', $join) . ' LEFT JOIN products_to_categories ON products.products_id=products_to_categories.products_id';
+			$this->productSql = 'SELECT *,' . implode(', ', $langs) . ' FROM products ' . implode(' ', $join) . ' LEFT JOIN products_to_categories ON products.products_id=products_to_categories.products_id';
 		}
 
 		if (!$data = $this->loadRecord($this->productSql))
@@ -271,7 +311,22 @@ class OsCommerceImport extends LiveCartImportDriver
 
 		$rec->setPrice($this->getConfigValue('DEFAULT_CURRENCY'), $data['products_price']);
 
+		//product image
+		if ($data['products_image'])
+		{
+			$this->importProductImage($rec, $this->path . '/images/' . $data['products_image']);
+		}
+
+		$rec->rawData = $data;
+
 		return $rec;
+	}
+
+	protected function joinProductFields($id, $code)
+	{
+		return array('LEFT JOIN products_description AS product_' . $code . ' ON product_' . $code . '.products_id=products.products_id AND product_' . $code . '.language_id=' . $id,
+					 'product_' . $code . '.products_name AS name_' . $code . ', ' . 'product_' . $code . '.products_description AS descr_' . $code
+					);
 	}
 
 	public function getNextCustomerOrder()
@@ -311,6 +366,19 @@ class OsCommerceImport extends LiveCartImportDriver
 		return $order;
 	}
 
+	public function getNextBillingAddress()
+	{
+		if (!$data = $this->loadRecord('SELECT * FROM address_book LEFT JOIN countries ON address_book.entry_country_id=countries.countries_id LEFT JOIN customers ON address_book.customers_id=customers.customers_id WHERE customers.customers_id IS NOT NULL'))
+		{
+			return null;
+		}
+		
+		$address = $this->getUserAddress($data, 'entry_');
+		$address->countryID->set($data['countries_iso_code_2']);
+		
+		return BillingAddress::getNewInstance(User::getInstanceById($this->getRealId('User', $data['customers_id'])), $address);
+	}
+
 	private function getUserAddress($data, $prefix)
 	{
 		$address = UserAddress::getNewInstance();
@@ -320,28 +388,50 @@ class OsCommerceImport extends LiveCartImportDriver
 				'city' => 'city',
 				'postcode' => 'postalCode',
 				'state' => 'stateName',
+				'firstName' => 'firstName',
+				'lastName' => 'lastName',
 			   );
 
 		foreach ($map as $osc => $lc)
 		{
-			$address->$lc->set($data[$prefix . $osc]);
+			if (isset($data[$prefix . $osc]))
+			{
+				$address->$lc->set($data[$prefix . $osc]);
+			}
 		}
 
-		$names = explode(' ', $data[$prefix . 'name'], 2);
-		$address->firstName->set(array_shift($names));
-		$address->lastName->set(array_shift($names));
-
-		$country = array_search($data[$prefix . 'country'], Locale::getInstance('en')->info()->getAllCountries());
-		if (!$country)
+		if (isset($data[$prefix . 'name']))
 		{
-			$country = 'US';
+			$names = explode(' ', $data[$prefix . 'name'], 2);
+			$address->firstName->set(array_shift($names));
+			$address->lastName->set(array_shift($names));			
 		}
 
-		$address->countryID->set($country);
+		if (isset($data[$prefix . 'country']))
+		{
+			$country = array_search($data[$prefix . 'country'], Locale::getInstance('en')->info()->getAllCountries());
+			if (!$country)
+			{
+				$country = 'US';
+			}
+	
+			$address->countryID->set($country);			
+		}
+		
+		return $address;
+	}
+
+	public function saveBillingAddress(BillingAddress $address)
+	{
+		$address->userAddress->get()->save();
+		return $address->save();
 	}
 
 	public function saveCustomerOrder(CustomerOrder $order)
 	{
+		$order->shippingAddress->get()->save();
+		$order->billingAddress->get()->save();
+				
 		$order->save();
 
 		$shipment = $order->getShipments()->get(0);

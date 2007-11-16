@@ -7,6 +7,7 @@ ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.product.Product');
 ClassLoader::import('application.model.order.CustomerOrder');
 ClassLoader::import('application.model.user.User');
+ClassLoader::import('application.model.user.BillingAddress');
 
 class LiveCartImporter
 {
@@ -204,6 +205,7 @@ class LiveCartImporter
 				'Product',
 				'User',
 				'CustomerOrder',
+				'BillingAddress',
 			);
 	}
 

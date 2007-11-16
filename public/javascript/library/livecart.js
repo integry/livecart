@@ -445,9 +445,9 @@ var i = 0; //Position counter
 var base64test = /[^A-Za-z0-9\+\/\=]/g;
 
 if (base64test.exec(inp)) { //Do some error checking
-alert("There were invalid base64 characters in the input text.\n" +
-"Valid base64 characters are A-Z, a-z, 0-9, ?+?, ?/?, and ?=?\n" +
-"Expect errors in decoding.");
+
+	return false;
+	
 }
 inp = inp.replace(/[^A-Za-z0-9\+\/\=]/g, "");
 

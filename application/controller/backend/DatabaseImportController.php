@@ -72,7 +72,7 @@ class DatabaseImportController extends StoreManagementController
 
 		// get importable data types
 		$this->flushResponse(array('types' => $importer->getItemTypes()));
-ActiveRecord::beginTransaction();
+//ActiveRecord::beginTransaction();
 		// process import
 		while (true)
 		{
@@ -85,7 +85,9 @@ ActiveRecord::beginTransaction();
 				break;
 			}
 		}
-ActiveRecord::rollback();
+//ActiveRecord::rollback();
+		
+		$importer->reset();
 		exit;
 	}
 

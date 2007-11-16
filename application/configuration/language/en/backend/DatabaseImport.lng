@@ -31,5 +31,6 @@ Category=Categories
 Product=Products
 User=Users
 CustomerOrder=Orders
+BillingAddress=Customer addresses
 
 _import_completed=Database import completed successfully

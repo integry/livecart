@@ -106,8 +106,6 @@ class Language extends ActiveRecordModel
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
 
 		// default new language state
-		$this->setAsEnabled(0);
-		$this->setAsDefault(0);
 		$this->position->set($position);	  	
 		
 		parent::insert();
