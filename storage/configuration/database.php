@@ -1,1 +1,1 @@
-<?php return 'mysql://root@server/import'; ?>
+<?php return 'mysql://root@localhost/import'; ?>

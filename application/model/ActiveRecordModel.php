@@ -110,8 +110,8 @@ abstract class ActiveRecordModel extends ActiveRecord
 			}
 			
 			$array['formatted_' . $name] = $locale->getFormattedTime($time);
-		}	
-		
+		}
+
 		$data = parent::transformArray($array, $schema);
 		
 		self::executePlugins($data, 'array', $schema->getName());

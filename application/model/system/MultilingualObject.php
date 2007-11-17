@@ -110,7 +110,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	 * @return array
 	 */
 	public static function transformArray($array, ARSchema $schema)
-	{		
+	{
 		$array = parent::transformArray($array, $schema);
 
 		foreach ($schema->getArrayFieldList() as $fieldName => $field)

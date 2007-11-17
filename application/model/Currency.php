@@ -207,8 +207,8 @@ class Currency extends ActiveRecordModel
 		$r = ActiveRecord::getRecordSet('Currency', $filter);
 		if ($r->getTotalRecordCount() > 0)
 		{
-			$max = $r->get(0);			
-			$position = $max->position->get() + 1;		  		  
+			$max = $r->get(0);
+			$position = $max->position->get() + 1; 
 		}
 		else
 		{

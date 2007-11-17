@@ -819,7 +819,7 @@ class CustomerOrder extends ActiveRecordModel
 		}
 
 		$array = parent::toArray();
-		
+
 		$array['cartItems'] = array();
 		$array['wishListItems'] = array();
 			

@@ -97,7 +97,7 @@ class OsCommerceImport extends LiveCartImportDriver
 	{
 		if (!$this->languagesTruncated)
 		{
-			$this->db->executeQuery('TRUNCATE TABLE Language');
+			ActiveRecord::getDbConnection()->executeQuery('TRUNCATE TABLE Language');
 			$this->languagesTruncated = true;
 		}
 		
@@ -124,7 +124,7 @@ class OsCommerceImport extends LiveCartImportDriver
 	{
 		if (!$this->currenciesTruncated)
 		{
-			$this->db->executeQuery('TRUNCATE TABLE Currency');
+			ActiveRecord::getDbConnection()->executeQuery('TRUNCATE TABLE Currency');
 			$this->currenciesTruncated = true;
 		}
 		
