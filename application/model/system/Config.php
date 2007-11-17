@@ -61,10 +61,14 @@ class Config
 				{
 					return $this->values[$key][$this->application->getDefaultLanguageCode()];
 				}
+				else if ($this->isMultiLingual($key))
+				{
+					return array_shift($this->values[$key]);
+				}
 				else
 				{
 					return $this->values[$key];
-				}				
+				}
 			}
 			else
 			{
@@ -131,7 +135,15 @@ class Config
 
 	public function isMultiLingual($key)
 	{
-		return is_array($this->values[$key]);
+		foreach(array_keys($this->values[$key]) as $k)
+		{
+			if (strlen($k) != 2)
+			{
+				return false;
+			}
+		}
+		
+		return count($this->values[$key]) > 0;
 	}
 
 	/**

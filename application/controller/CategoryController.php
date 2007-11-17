@@ -38,7 +38,7 @@ class CategoryController extends FrontendController
 		$this->category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
 	
 		$this->getAppliedFilters();
-	
+
 		// pagination
 		$currentPage = $this->request->get('page', 1); 
 

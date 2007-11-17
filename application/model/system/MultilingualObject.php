@@ -131,10 +131,10 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 
 				foreach ($data as $lang => $value)
 				{
-				  	$array[$fieldName . '_' . $lang] = $value;					  	
+				  	$array[$fieldName . '_' . $lang] = $value;
 				}
 
-				$array[$fieldName] = !empty($data[self::$defaultLanguageCode]) ? $data[self::$defaultLanguageCode] : '';
+				$array[$fieldName] = !empty($data[self::$defaultLanguageCode]) ? $data[self::$defaultLanguageCode] : $data[key($data)] /* use data from any language if the default language is empty */;
 
 				$array[$fieldName . '_lang'] = !empty($data[self::$currentLanguageCode]) ? $data[self::$currentLanguageCode] : $array[$fieldName];
 			}		

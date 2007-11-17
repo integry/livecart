@@ -66,10 +66,13 @@ class ProductController extends FrontendController
 				
 		// allowed shopping cart quantities
 		$quantities = range(max($product->minimumQuantity->get(), 1), 30);
-		$quantity = array_combine($quantities, $quantities);		
+		$quantity = array_combine($quantities, $quantities);
 		
 		// manufacturer filter
-		$f = new ManufacturerFilter($product->manufacturer->get()->getID(), $product->manufacturer->get()->name->get());
+		if ($product->manufacturer->get())
+		{
+			$manFilter = new ManufacturerFilter($product->manufacturer->get()->getID(), $product->manufacturer->get()->name->get());
+		}
 		
 		// get category page route
 		end($this->breadCrumb);
@@ -84,9 +87,14 @@ class ProductController extends FrontendController
 		$response->set('quantity', $quantity);
 		$response->set('cartForm', $this->buildAddToCartForm());		
 		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode())); 
-		$response->set('manufacturerFilter', $f);
 		$response->set('catRoute', $catRoute);
-		return $response;		
+
+		if (isset($manFilter))
+		{
+			$response->set('manufacturerFilter', $f);
+		}
+
+		return $response;
 	} 
 	
 	/**
