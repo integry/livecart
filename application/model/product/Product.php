@@ -580,7 +580,7 @@ class Product extends MultilingualObject
 		}
 		
 		parent::save($forceOperation);
-				
+
 		$this->getSpecification()->save();
 		$this->getPricingHandler()->save();
 		$this->saveRelationships();

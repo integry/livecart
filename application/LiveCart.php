@@ -575,7 +575,6 @@ class LiveCart extends Application
 	{
 		$countries = $this->locale->info()->getAllCountries();
 		$enabled = $this->config->get('ENABLED_COUNTRIES');
-		
 		return array_intersect_key($countries, $enabled);
 	}
 

@@ -4,10 +4,12 @@ ClassLoader::import('application.model.system.Language');
 ClassLoader::import('application.model.Currency');
 ClassLoader::import('application.model.product.Manufacturer');
 ClassLoader::import('application.model.category.Category');
+ClassLoader::import('application.model.category.SpecField');
 ClassLoader::import('application.model.product.Product');
 ClassLoader::import('application.model.order.CustomerOrder');
 ClassLoader::import('application.model.user.User');
 ClassLoader::import('application.model.user.BillingAddress');
+ClassLoader::import('application.model.delivery.State');
 
 class LiveCartImporter
 {
@@ -201,7 +203,9 @@ class LiveCartImporter
 				'Language',
 				'Currency',
 				'Manufacturer',
+				'State',
 				'Category',
+				'SpecField',
 				'Product',
 				'User',
 				'CustomerOrder',

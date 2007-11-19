@@ -34,9 +34,10 @@ class BillingAddress extends UserAddressType
 		
 		$user = $this->user->get();
 		$user->load();	 
-		if (!$user->defaultBillingAddress->get())
+		if (!$user->defaultBillingAddress->get() || ($user->defaultBillingAddress->get() === $this))
 		{
 			$user->defaultBillingAddress->set($this);
+			$user->defaultBillingAddress->setAsModified();
 			$user->save();
 		}
 	}	

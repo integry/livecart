@@ -14,7 +14,7 @@ class OsCommerceImport extends LiveCartImportDriver
 
 	private $languagesTruncated;
 	private $currenciesTruncated;
-	
+
 	public function getName()
 	{
 		return 'osCommerce';
@@ -100,7 +100,7 @@ class OsCommerceImport extends LiveCartImportDriver
 			ActiveRecord::getDbConnection()->executeQuery('TRUNCATE TABLE Language');
 			$this->languagesTruncated = true;
 		}
-		
+
 		if (!$data = $this->loadRecord('SELECT * FROM languages ORDER BY sort_order ASC'))
 		{
 			return null;
@@ -111,7 +111,7 @@ class OsCommerceImport extends LiveCartImportDriver
 		$lang = ActiveRecordModel::getNewInstance('Language');
 		$lang->setID($data['code']);
 		$lang->isEnabled->set(true);
-		
+
 		if (1 == $data['sort_order'])
 		{
 			$lang->isDefault->set(true);
@@ -127,7 +127,7 @@ class OsCommerceImport extends LiveCartImportDriver
 			ActiveRecord::getDbConnection()->executeQuery('TRUNCATE TABLE Currency');
 			$this->currenciesTruncated = true;
 		}
-		
+
 		if (!$data = $this->loadRecord('SELECT * FROM currencies'))
 		{
 			return null;
@@ -285,7 +285,6 @@ class OsCommerceImport extends LiveCartImportDriver
 		}
 
 		$rec = Product::getNewInstance(Category::getInstanceById($this->getRealId('Category', $data['categories_id']), Category::LOAD_DATA));
-
 		$rec->setID($data['products_id']);
 
 		foreach ($this->languages as $code)
@@ -335,7 +334,7 @@ class OsCommerceImport extends LiveCartImportDriver
 		{
 			return null;
 		}
-//print_r($data);
+
 		$order = CustomerOrder::getNewInstance(User::getInstanceById($this->getRealId('User', $data['customers_id']), User::LOAD_DATA));
 		$order->currency->set(Currency::getInstanceById($data['currency'], Currency::LOAD_DATA));
 		$order->dateCompleted->set($data['date_purchased']);
@@ -372,10 +371,10 @@ class OsCommerceImport extends LiveCartImportDriver
 		{
 			return null;
 		}
-		
+
 		$address = $this->getUserAddress($data, 'entry_');
 		$address->countryID->set($data['countries_iso_code_2']);
-		
+
 		return BillingAddress::getNewInstance(User::getInstanceById($this->getRealId('User', $data['customers_id'])), $address);
 	}
 
@@ -388,8 +387,8 @@ class OsCommerceImport extends LiveCartImportDriver
 				'city' => 'city',
 				'postcode' => 'postalCode',
 				'state' => 'stateName',
-				'firstName' => 'firstName',
-				'lastName' => 'lastName',
+				'firstname' => 'firstName',
+				'lastname' => 'lastName',
 			   );
 
 		foreach ($map as $osc => $lc)
@@ -400,11 +399,16 @@ class OsCommerceImport extends LiveCartImportDriver
 			}
 		}
 
-		if (isset($data[$prefix . 'name']))
+		if (!empty($data[$prefix . 'name']))
 		{
 			$names = explode(' ', $data[$prefix . 'name'], 2);
 			$address->firstName->set(array_shift($names));
-			$address->lastName->set(array_shift($names));			
+			$address->lastName->set(array_shift($names));
+		}
+
+		if (isset($data['customers_telephone']))
+		{
+			$address->phone->set($data['customers_telephone']);
 		}
 
 		if (isset($data[$prefix . 'country']))
@@ -414,10 +418,10 @@ class OsCommerceImport extends LiveCartImportDriver
 			{
 				$country = 'US';
 			}
-	
-			$address->countryID->set($country);			
+
+			$address->countryID->set($country);
 		}
-		
+
 		return $address;
 	}
 
@@ -431,7 +435,7 @@ class OsCommerceImport extends LiveCartImportDriver
 	{
 		$order->shippingAddress->get()->save();
 		$order->billingAddress->get()->save();
-				
+
 		$order->save();
 
 		$shipment = $order->getShipments()->get(0);
@@ -446,6 +450,7 @@ class OsCommerceImport extends LiveCartImportDriver
 			$tax->save();
 
 			$shipment->addFixedTax($tax);
+			$shipment->status->set(Shipment::STATUS_SHIPPED);
 			$shipment->save();
 		}
 

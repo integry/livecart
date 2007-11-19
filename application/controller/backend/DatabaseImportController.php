@@ -111,6 +111,8 @@ class DatabaseImportController extends StoreManagementController
 				$drivers[$className] = call_user_func(array($className, 'getName'));
 			}
 		}
+		
+		natcasesort($drivers);
 
 		return $drivers;
 	}

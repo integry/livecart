@@ -63,7 +63,8 @@ class Config
 				}
 				else if ($this->isMultiLingual($key))
 				{
-					return array_shift($this->values[$key]);
+					reset($this->values[$key]);
+					return $this->values[$key][key($this->values[$key])];
 				}
 				else
 				{
@@ -135,9 +136,9 @@ class Config
 
 	public function isMultiLingual($key)
 	{
-		foreach(array_keys($this->values[$key]) as $k)
+		foreach($this->values[$key] as $k => $v)
 		{
-			if (strlen($k) != 2)
+			if (strlen($k) != 2 || !is_string($v))
 			{
 				return false;
 			}

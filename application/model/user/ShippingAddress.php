@@ -33,10 +33,11 @@ class ShippingAddress extends UserAddressType
 		parent::save($forceOperation);
 		
 		$user = $this->user->get();
-		$user->load();		
-		if (!$user->defaultShippingAddress->get())
+		$user->load();
+		if (!$user->defaultShippingAddress->get() || ($this === $user->defaultShippingAddress->get()))
 		{
 			$user->defaultShippingAddress->set($this);
+			$user->defaultShippingAddress->setAsModified();
 			$user->save();
 		}
 	}

@@ -7,15 +7,15 @@ ClassLoader::import("application.model.system.MultilingualObjectInterface");
  * Multilingual data object. Provides facilities to provide field data in various languages
  * as well as data retrieval for the particular language.
  *
- * @author Integry Systems <http://integry.com>  
+ * @author Integry Systems <http://integry.com>
  * @package application.model.system
  */
 abstract class MultilingualObject extends ActiveRecordModel implements MultilingualObjectInterface
 {
 	private static $defaultLanguageCode = null;
-	
+
 	private static $currentLanguageCode = null;
-	
+
 	const NO_DEFAULT_VALUE = false;
 
 	public function setValueByLang($fieldName, $langCode, $value)
@@ -28,14 +28,14 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 			}
 			$langCode = self::$defaultLanguageCode;
 		}
-	
+
 		$valueArray = $this->getFieldValue($fieldName);
-		if (!is_array($valueArray)) 
+		if (!is_array($valueArray))
 		{
 			$valueArray = array();
 		}
 		$valueArray[$langCode] = $value;
-		
+
 		$this->setFieldValue($fieldName, $valueArray);
 	}
 
@@ -51,10 +51,10 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 			}
 			$langCode = self::$defaultLanguageCode;
 		}
-		
+
 		if (isset($valueArray[$langCode]))
 		{
-			return $valueArray[$langCode];	
+			return $valueArray[$langCode];
 		}
 	}
 
@@ -118,12 +118,12 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 			if (!empty($array[$fieldName]))
 			{
 				$data = $array[$fieldName];
-				
-				if (!is_array($data)) 
-				{ 
+
+				if (!is_array($data))
+				{
 					continue;
-				}					
-				
+				}
+
 				if (!self::$defaultLanguageCode)
 				{
 					self::loadLanguageCodes();
@@ -131,18 +131,18 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 
 				foreach ($data as $lang => $value)
 				{
-				  	$array[$fieldName . '_' . $lang] = $value;
+					$array[$fieldName . '_' . $lang] = $value;
 				}
 
-				$array[$fieldName] = !empty($data[self::$defaultLanguageCode]) ? $data[self::$defaultLanguageCode] : $data[key($data)] /* use data from any language if the default language is empty */;
+				$array[$fieldName] = !empty($data[self::$defaultLanguageCode]) ? $data[self::$defaultLanguageCode] : '';
 
-				$array[$fieldName . '_lang'] = !empty($data[self::$currentLanguageCode]) ? $data[self::$currentLanguageCode] : $array[$fieldName];
-			}		
+				$array[$fieldName . '_lang'] = !empty($data[self::$currentLanguageCode]) ? $data[self::$currentLanguageCode] : (!empty($array[$fieldName]) ? $array[$fieldName] : $data[key($data)]); /* use data from any language if the default language is empty */
+			}
 		}
-		
-		return $array;  	
+
+		return $array;
 	}
-	
+
 	/**
 	 *	Creates an ARExpressionHandle for ordering a record set by field value in particular language
 	 *
@@ -156,10 +156,10 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	{
 		$currentLanguage = self::getApplication()->getLocaleCode();
 		$defaultLanguage = self::getApplication()->getDefaultLanguageCode();
-		
+
 		if ($currentLanguage == $defaultLanguage)
 		{
-			$expression = "	  	
+			$expression = "
 			SUBSTRING_INDEX(
 				SUBSTRING_INDEX(
 					SUBSTRING(
@@ -167,12 +167,12 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 						LOCATE('\"" . $defaultLanguage . "\";s:', " . $field->toString() . ") + 7
 					)
 				,'\";',1)
-			,':\"',-1)		  
-			";			  
+			,':\"',-1)
+			";
 		}
 		else
 		{
-			$expression = "	  	
+			$expression = "
 			SUBSTRING_INDEX(
 				SUBSTRING_INDEX(
 					SUBSTRING(
@@ -186,38 +186,38 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 						) + 7
 					)
 				,'\";',1)
-			,':\"',-1)		  
-			";		  
+			,':\"',-1)
+			";
 		}
-		  
-	  	return new ARExpressionHandle($expression);	  	
+
+	  	return new ARExpressionHandle($expression);
 	}
-	
+
 	/**
    	 *	Creates an ARExpressionHandle for performing searches over language fields (finding a value in particular language)
 	 *
-	 *	@return ARExpressionHandle  	 
-   	 */	
+	 *	@return ARExpressionHandle
+   	 */
 	public static function getLangSearchHandle(ARFieldHandle $field, $language)
 	{
 		$expression = "
 			SUBSTRING(
-				SUBSTRING_INDEX(" . $field->toString() . ",'\"" . $language . "\";s:',-1), 
+				SUBSTRING_INDEX(" . $field->toString() . ",'\"" . $language . "\";s:',-1),
 				CEIL(LOG10(
 					SUBSTRING_INDEX(
-						SUBSTRING_INDEX(" . $field->toString() . ",'\"" . $language . "\";s:',-1), 
+						SUBSTRING_INDEX(" . $field->toString() . ",'\"" . $language . "\";s:',-1),
 						':',
 						1) + 1
 					)) + 3,
 				SUBSTRING_INDEX(
-					SUBSTRING_INDEX(" . $field->toString() . ",'\"" . $language . "\";s:',-1), 
+					SUBSTRING_INDEX(" . $field->toString() . ",'\"" . $language . "\";s:',-1),
 					':',
 					1)
 				)";
-	 
-	  	return new ARExpressionHandle($expression);	
+
+	  	return new ARExpressionHandle($expression);
 	}
-	
+
 	private static function loadLanguageCodes()
 	{
 		$app = self::getApplication();

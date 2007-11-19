@@ -28,6 +28,7 @@ class TestProduct extends UnitTest
 	public function __construct()
 	{
 		parent::__construct('Test Product class');
+		ActiveRecordModel::beginTransaction();
 	}
 	
 	public function getUsedSchemas()
@@ -359,8 +360,21 @@ class TestProduct extends UnitTest
 		$this->testMultipleSelectValues();
 
 		$arr = $this->product->toArray();
+	}
+
+	public function testMultipleProductsWithPrices()
+	{
+		$usd = ActiveRecordModel::getNewInstance('Currency');
+		$usd->setID('XXX');
+		$usd->save(ActiveRecord::PERFORM_INSERT);
 		
-		ActiveRecordModel::rollback();
+		for ($k = 0; $k < 5; $k++)
+		{
+			$product = Product::getNewInstance(Category::getRootNode());
+			$product->setPrice('XXX', $k);
+			$product->save();
+			$this->assertEqual($product->getPricingHandler()->getPriceByCurrencyCode('XXX')->price->get(), $k);
+		}
 	}
 
 	public function testAddRelatedProducts()
@@ -541,9 +555,10 @@ class TestProduct extends UnitTest
 	{
 		$productFiles = array();
 		$productFilesO = array();
+		$dir = ClassLoader::getRealPath('cache') . '/';
 		foreach(range(1, 2) as $i)
 		{
-			file_put_contents($productFiles[$i] = md5($i), 'All Your Base Are Belong To Us');
+			file_put_contents($productFiles[$i] = $dir . md5($i), 'All Your Base Are Belong To Us');
 			$productFilesO[$i] = ProductFile::getNewInstance($this->product, $productFiles[$i], 'test_file.txt');
 			$productFilesO[$i]->save();
 		}
@@ -569,9 +584,10 @@ class TestProduct extends UnitTest
 		// create files
 		$productFile = array();
 		$productFiles = array();
+		$dir = ClassLoader::getRealPath('cache') . '/';
 		foreach(range(1, 2) as $i)
 		{
-			file_put_contents($productFiles[$i] = md5($i), "file $i");
+			file_put_contents($productFiles[$i] = $dir . md5($i), "file $i");
 			$productFile[$i] = ProductFile::getNewInstance($this->product, $productFiles[$i], "test_file_$i.txt");
 			$productFile[$i]->save();
 		}
@@ -610,6 +626,11 @@ class TestProduct extends UnitTest
 		foreach($productFiles as $fileName) unlink($fileName);
 		foreach($productFile as $file) $file->delete();
 	}
+
+	function test_SuiteTearDown()
+	{
+		ActiveRecordModel::rollback();
+	}   
 }
 
 ?>

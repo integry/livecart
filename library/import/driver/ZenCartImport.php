@@ -39,6 +39,12 @@ class ZenCartImport extends OsCommerceImport
 		{
 			$product->setValueByLang('shortDescription', $code, $data['shortDescr_' . $code]);
 			
+			// long description the same as name - a common situation?
+			if ($data['name_' . $code] == $data['descr_' . $code])
+			{
+				$product->setValueByLang('longDescription', $code, $data['shortDescr_' . $code]);
+			}
+
 			if (!empty($data['keywords_' . $code]))
 			{
 				$product->keywords->set($data['keywords_' . $code]);

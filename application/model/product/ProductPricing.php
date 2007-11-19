@@ -30,7 +30,7 @@ class ProductPricing
 		$this->product = $product;
 		$this->application = $application;
 
-		if (is_null($prices))
+		if (is_null($prices) && $product->getID())
 		{
 			$prices = $product->getRelatedRecordSet("ProductPrice", new ARSelectFilter());	
 		}
@@ -42,7 +42,7 @@ class ProductPricing
 				$this->setPrice($price);
 			}
 		}
-		else
+		else if (is_array($prices))
 		{
 			foreach ($prices as $id => $price)
 			{
@@ -50,7 +50,7 @@ class ProductPricing
 				$this->prices[$id]->price->set($price);
 				$this->prices[$id]->resetModifiedStatus();
 			}
-		}			
+		}
 	}
 
 	public function setPrice(ProductPrice $price)
@@ -104,6 +104,11 @@ class ProductPricing
 	public function isPriceSet(Currency $currency)
 	{
 		return isset($this->prices[$currency->getID()]);
+	}
+
+	public function getPrices()
+	{
+		return $this->prices;
 	}
 
 	public function save()

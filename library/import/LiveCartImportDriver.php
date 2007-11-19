@@ -26,8 +26,12 @@ abstract class LiveCartImportDriver
 	protected $path;
 	protected $importer;
 
+	protected $languages = array();
+	protected $configMap = null;
+
 	private $recordMap = array();
 	private $recordMapOffsets = array();
+	private $defaultCurrencyCode;
 
 	public function __construct($dsn, $path = null)
 	{
@@ -42,7 +46,7 @@ abstract class LiveCartImportDriver
 		$this->importer = $importer;
 	}
 
-	public function isAttribute()
+	public function isSpecField()
 	{
 		return false;
 	}
@@ -77,7 +81,17 @@ abstract class LiveCartImportDriver
 		return false;
 	}
 
+	public function isManufacturer()
+	{
+		return false;
+	}
+
 	public function isBillingAddress()
+	{
+		return false;
+	}
+
+	public function isState()
 	{
 		return false;
 	}
@@ -132,7 +146,7 @@ abstract class LiveCartImportDriver
 			{
 				$table = array_shift($table);
 			}
-			
+
 			if (array_search($table, $tables) === false)
 			{
 				return false;
@@ -182,11 +196,24 @@ abstract class LiveCartImportDriver
 		return $dataArray;
 	}
 
+	protected function getConfigValue($key)
+	{
+		if (empty($this->configMap))
+		{
+			$this->configMap = $this->getConfigData();
+		}
+
+		if (isset($this->configMap[$key]))
+		{
+			return $this->configMap[$key];
+		}
+	}
+
 	protected function addLanguage(Language $lang)
 	{
 		$this->languages[] = $lang;
 	}
-	
+
 	protected function importProductImage(Product $product, $imagePath)
 	{
 		if (file_exists($imagePath))
@@ -195,11 +222,10 @@ abstract class LiveCartImportDriver
 			{
 				$product->importedImages = array();
 			}
-			
 			$product->importedImages[] = $imagePath;
 		}
 	}
-	
+
 	protected function importCategoryImage(Category $category, $imagePath)
 	{
 		if (file_exists($imagePath))
@@ -208,15 +234,35 @@ abstract class LiveCartImportDriver
 			{
 				$category->importedImages = array();
 			}
-			
+
 			$category->importedImages[] = $imagePath;
 		}
 	}
-	
+
+	public function getDefaultCurrency()
+	{
+		if (!$this->defaultCurrencyCode)
+		{
+			$currency = array_shift(ActiveRecordModel::getRecordSetArray('Currency', new ARSelectFilter(new EqualsCond(new ARFieldHandle('Currency', 'isDefault'), true))));
+			$this->defaultCurrencyCode = $currency['ID'];
+		}
+
+		return $this->defaultCurrencyCode;
+	}
+
 	public function saveProduct(Product $product)
 	{
+		/* @todo: figure out why it is necessary to explicitly mark the fields as modified to force saving */
+		foreach ($product->getPricingHandler()->getPrices() as $price)
+		{
+			$price->product->set($product);
+			$price->product->setAsModified();
+			$price->currency->setAsModified();
+			$price->price->setAsModified();
+		}
+
 		$product->save(ActiveRecord::PERFORM_INSERT);
-		
+
 		if (!empty($product->importedImages))
 		{
 			foreach ($product->importedImages as $imageFile)
@@ -231,7 +277,7 @@ abstract class LiveCartImportDriver
 	public function saveCategory(Category $category)
 	{
 		$category->save(ActiveRecord::PERFORM_INSERT);
-		
+
 		if (!empty($category->importedImages))
 		{
 			foreach ($category->importedImages as $imageFile)
@@ -247,7 +293,7 @@ abstract class LiveCartImportDriver
 	{
 		$order->isFinalized->set(true);
 		$order->save();
-		
+
 		if ($order->shippingAddress->get())
 		{
 			$order->shippingAddress->get()->save();
@@ -261,7 +307,33 @@ abstract class LiveCartImportDriver
 		$order->totalAmount->set($order->calculateTotal($order->currency->get()));
 
 		return $order->save();
-	}	
+	}
+
+	public function saveState(State $state)
+	{
+		// make sure that such state doesn't exist already
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('State', 'countryID'), $state->countryID->get()));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('State', 'code'), $state->code->get()));
+		if (!ActiveRecordModel::getRecordCount('State', $f))
+		{
+			return $state->save();
+		}
+	}
+
+	public function saveUser(User $user)
+	{
+		$user->save();
+
+		if ($user->defaultBillingAddress->get())
+		{
+			$user->defaultBillingAddress->get()->save();
+		}
+
+		if ($user->defaultShippingAddress->get())
+		{
+			$user->defaultShippingAddress->get()->save();
+		}
+	}
 }
 
 ?>

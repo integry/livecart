@@ -32,5 +32,7 @@ Product=Products
 User=Users
 CustomerOrder=Orders
 BillingAddress=Customer addresses
+State=States
+SpecField=Attributes
 
 _import_completed=Database import completed successfully

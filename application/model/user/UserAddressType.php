@@ -47,6 +47,12 @@ abstract class UserAddressType extends ActiveRecordModel
 		return $s->get(0);
 	}
 	
+	public function save()
+	{
+		$this->userAddress->get()->save();
+		return parent::save();
+	}
+	
 	public function serialize()
 	{
 		return parent::serialize(array('userID'));

@@ -12,7 +12,7 @@ Backend.DatabaseImport.prototype =
     initialize: function(form)
     {
         this.form = form;
-        this.request = new LiveCart.AjaxRequest(this.form, null, this.formResponse.bind(this), {onInteractive: this.dataResponse.bind(this), onFailure: function(fff) { console.log('failure', fff); } });
+        this.request = new LiveCart.AjaxRequest(this.form, null, this.formResponse.bind(this), {onInteractive: this.dataResponse.bind(this) });
     },
 
     formResponse: function(originalRequest)
