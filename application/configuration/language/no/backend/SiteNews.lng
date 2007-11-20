@@ -1,0 +1,10 @@
+_site_news=Nyheter
+_add_news=Legg til nytt innlegg
+_cancel_adding_news=Avbryt å legge til nyheter
+_date=Dato
+_title=Tittel
+_text=Innledende tekst
+_err_enter_text=Venligst skriv teksten du vil ha som nyhet
+_del_conf=Er du sikker på at du vil slette dette nyhetsinnlegget?
+_could_not_remove_news=Kunne ikke slette nyhetsinnlegget
+_more_text=Hovedtekst

@@ -1,0 +1,4 @@
+PaypalWebsitePaymentsStandard=PayPal Webside Betaling Standard
+PaypalWebsitePaymentsStandard_EMAIL=Firmaets emailadresse
+PaypalWebsitePaymentsStandard_SANDBOX=Bruk PayPal Sandbox (testområde)
+PaypalWebsitePaymentsStandard_ITEM_NAME=Handlevognens produktbeskrivelse som vises hos PayPal

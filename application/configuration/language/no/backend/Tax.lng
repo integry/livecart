@@ -1,0 +1,10 @@
+_name=navn
+_cancel_adding_new_tax=Kan ikke legge til ny moms
+_cancel_adding_new_tax_rate=Avbryt å legge til ny momssats
+_add_new_tax=Legg til ny moms
+_tax_entry_was_successfully_saved=Momsadgang er lagret
+_could_not_save_tax_entry=Kunne ikke lagre momsadgang
+_manage=Behandle
+_taxes=Moms
+_error_the_name_should_not_be_empty=Navnet burde ikke være tomt
+_are_you_sure_you_want_to_remove_ths_tax=Er du sikker på at du vil fjerne denne momsen? Den kan være brukt i noen leveringssoner.

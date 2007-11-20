@@ -1,0 +1,5 @@
+TwoCheckout=2Checkout  
+TwoCheckout_account=Kontonummer
+TwoCheckout_currency=Kontoens valutta
+TwoCheckout_secretWord=Passord <a href="https://www.2checkout.com/2co/admin/look_and_feel" target="_blank">(?)</a>
+TwoCheckout_test=Test (demostrasjon) modus

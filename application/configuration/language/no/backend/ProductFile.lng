@@ -1,0 +1,13 @@
+_add_new_file=Legg til ny fil
+_add_new_group=Legg til ny gruppe
+_cancel_adding_new_file=Avbryt. Ikke legg til ny fil
+_cancel_adding_file_group=Avbryt. Ikke legg til ny gruppe
+_are_you_sure_you_want_to_delete=Er du sikker på at du vil slette denne filen?
+_are_you_sure_you_want_to_delete_group=Er du sikker på at du vil slette denne gruppen?
+_product_file_group_title=Tittel
+_add_new_file_group=Endre filgruppe
+_err_file_title_is_empty=Feltet filtittel er tomt
+_err_allow_download_days_should_be_a_number=Antall dager må være numeriske (bruk tall, ikke bokstaver)
+_err_allow_download_days_is_empty=Antall dag man kan laste ned er tom
+_err_file_could_not_be_uploaded_to_the_server=Filen kunne ikke lastes opp til serveren
+_err_fileName_should_not_be_empty=Feltet for filnavn er tomt

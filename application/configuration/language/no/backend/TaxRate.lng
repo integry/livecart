@@ -1,0 +1,14 @@
+_no_taxes=Ingen moms er laget ennå
+_cancel_adding_new_tax_rate=Avbryt å legge til ny momssats
+_add_tax=Legg til ny moms
+_add_new_tax_rate=Leg til ny momssats
+_more_taxes_can_be_added=Flere typer moms kan bli lagt til
+_tax_rate_has_been_successfully_saved=Momssats er lagret
+_could_not_save_tax_rate=Kunne ikke lagre momssats
+_tax=Moms
+_rate=Momssats
+_error_rate_should_not_be_empty=Momssats burde ikke være tom
+_error_rate_should_be_numeric_value=Momssats burde ha numerisk verdi (bruk tall)
+_error_rate_should_be_greater_than_zero_and_less_than_hundred=Sats burde være mellom 0 og 100
+_error_tax_should_not_be_empty=Moms burde ikke være tomt
+_here=her

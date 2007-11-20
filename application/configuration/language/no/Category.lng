@@ -1,0 +1,15 @@
+FEATURED=Anbefalte produkter
+SALES_RANK=Bestselgere
+PRODUCT_NAME_ASC=Produktnavn A-Z
+PRODUCT_NAME_DESC=Produktnavn Z-A
+PRICE_ASC=Pris: Lav til høy
+PRICE_DESC=Pris: Høy til lav
+NEWEST_ARRIVALS=Nyheter
+_more_subcats=mer..
+_found_cats=Kategorier funnet
+_not_found=<span class='notFoundMain'>Ingen produkter ble funnet.</span> Vennligst prøv andre stikkord for ditt søk.
+_featured_products=Anbefalte produkter
+_showing_products=Viser [_1] til [_2] av [_3] produkter som ble funnet
+_sort_by=Sorter utifra
+_narrow_by_cat=Begrens resultater til kategorier
+RATING=Kunders rangering

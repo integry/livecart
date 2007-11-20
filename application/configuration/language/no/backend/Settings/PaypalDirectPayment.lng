@@ -1,0 +1,6 @@
+PaypalDirectPayment=PayPal direkte betaling
+PaypalDirectPayment_sandbox=Bruk sandbox (test) område
+PaypalDirectPayment_username=Brukernavn
+PaypalDirectPayment_password=Passord
+PaypalDirectPayment_signature=Signatur
+PaypalDirectPayment_cardTypes=Gyldige kredittkorttyper

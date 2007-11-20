@@ -1,0 +1,13 @@
+_ordered_item_was_successfully_moved=Produktet ble flyttet til en annen leveringsmetode
+_this_shipping_service_has_no_available_rates=Denne servicen er ikke tilgjengelig for brukersone og bestillingspris
+_ordered_item_quantity_was_updated=Produktantall er oppdatert
+_error_updating_item_quantity=Feil ved oppdatering av produktantall
+_item_has_been_successfuly_saved=Produktet er lagt til bestillingen
+_item_was_successfully_removed_from_shipment=Produktet er fjernet fra leveringen
+_error_removing_item_from_shipment=Feil oppsto ved fjerning av produktet fra leveringen
+_downloadable_item_already_exists_in_this_order=Dette nedlastningsproduktet er allerede i bestillingen
+_select_product=Legg produkter til bestillig
+_done_adding_products=Ferdig med å legge til produkter
+_select_shippment=Velg levering
+_shipping_service_is_not_selected=Leveringsservice er ikke valgt
+_shipment=Levering

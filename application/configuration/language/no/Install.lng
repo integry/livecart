@@ -1,0 +1,10 @@
+_writePermissionsFix=<strong>Anbefalt handling:</strong> bruk en FTP klient, endre tilgangstillatelse (chmod) for disse katalogene til 777 (full skrivetilgang). Hvis katalogene ikke eksisterer ennå, så lag dem.
+checkGD=Hjelp til bildemanipulasjon
+checkSession_error=PHP samlinger er ikke lagret. Pass på at session.save_path PHP konfigurasjonsverdien er satt riktig.
+checkMySQL=Hjelp til database
+checkWritePermissions=Katalog skrivetillatelser
+checkPHPVersion=PHP versjon
+checkPHPVersion_error=<a href="http://php.net" target="_blank">PHP</a> versjon må minst være 5.2
+checkMySQL_error=<a href="http://php.net/mysqli" target="_blank">mysqli</a> utvidelsesfil må innstalleres for PHP
+checkGD_error=<a href="http://php.net/gd" target="_blank">GD</a> utvidelsesfil må innstalleres for PHP
+checkSession=PHP samlingskonfigurasjon

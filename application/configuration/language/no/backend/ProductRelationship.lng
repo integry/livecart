@@ -1,0 +1,14 @@
+_done_adding=Ferdig med å legge inn referert produkter
+_a_relationship_between_products_was_successfully_created=Et forhold mellom produkter ble laget
+_could_not_create_product_relationship=Dette produktet er allerede satt som referert
+_select_product=Legg til referert produkt
+_add_new_group=Legg til ny gruppe
+_cancel_adding_new_related_product=Avbryt å legge til nytt forhold
+_cancel_adding_new_group=Avbryt å legge til ny gruppe
+_err_circular=Kan ikke legge til et referert produkt til det samme produktet
+_msg_added=Referert produkt ble lagt til
+_are_you_sure_you_want_to_delete_this_group=Er du sikker på at du vil fjerne denne referansegruppen?
+_are_you_sure_you_want_to_delete_this_relation=Er du sikker på at du vil fjerne denne referansen?
+_relationship_was_successfully_removed=Forholdet ble fjernet
+_product_relationship_group_title=Tittel
+_err_multiple=Dette produktet er allerede satt som referert

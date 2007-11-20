@@ -1,0 +1,16 @@
+_cancel_new=Avbryt
+_save=Lagre
+_add_new=Legg til nytt bilde
+_no_images=Ingen bildet er lagt til dette produktet ennå
+_upload=Legg til bilde
+_delete_confirm=Er du sikker på at du vil fjerne dette bildet?
+_err_not_uploaded=Velg en fil
+_image_title=Skriv bildetittel
+_main_image=Hovedbilde
+_supplemental_images=Supplerende bilder
+_edit_image=Endre bildedetaljer
+_image_file=Velg bildefil
+_err_not_image=Dette er ikke et gyldig bilde
+_err_resize=Feil ved endring av størrelse på bildet
+_max_file_size=Kun JPEG, GIF og PNG filer. Max. filstørrelse: [_1]
+_err_too_large=Filen er for stor

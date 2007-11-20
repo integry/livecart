@@ -1,0 +1,16 @@
+_error_filter_name_empty=Filternavn er tomt
+_error_name_empty=Filternavn er tomt
+_category_has_no_attr=Ingen filtreringsatributter er laget for denne kategorien ennå
+_add_new_filter=Legg til nytt filter
+_cancel_adding_new_filter=Avbryt å legge til nytt filter
+_delete_field=Fjern felt
+_filter_group_was_successfully_removed=Filteret ble fjernet
+_could_not_remove_filter_group=Kunne ikke fjerne filter
+_remove_filter_question=Er du sikker på at du vil fjerne dette filteret?
+_could_not_save_filter_group=Kunne ikke lagre filter
+_error_illegal_date=Uguldig dato
+_filter_group_was_successfully_saved=Filter er lagret
+_FilterGroup_remove_question=Er du sikker på at du vil fjerne dette filteret?
+_error_filter_value_is_not_a_number=Filterverdien må være numerisk
+_error_filter_handle_invalid=Håndtering er ugyldig
+_error_spec_field_is_not_selected=Spesifikasjonsfelt er ikke valgt
