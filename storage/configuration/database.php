@@ -1,1 +1,1 @@
-<?php return 'mysql://root@localhost/import'; ?>
+<?php return 'mysql://root@localhost/livecart_prex'; ?>

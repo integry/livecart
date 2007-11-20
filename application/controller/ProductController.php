@@ -5,22 +5,22 @@ ClassLoader::import('application.controller.FrontendController');
 ClassLoader::import('application.controller.CategoryController');
 
 /**
- * 
+ *
  * @author Integry Systems
  * @package application.controller
  */
 class ProductController extends FrontendController
-{  	
+{
 	public $filters = array();
-  	
+
 	public function index()
 	{
-		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer'));		
+		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer'));
 		$product->loadPricing();
 
 		$this->category = $product->category->get();
 		$this->categoryID = $product->category->get()->getID();
-		
+
 		// get category path for breadcrumb
 		$path = $product->category->get()->getPathNodeArray();
 		include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
@@ -29,7 +29,7 @@ class ProductController extends FrontendController
 			$url = createCategoryUrl(array('data' => $nodeArray), $this->application);
 			$this->addBreadCrumb($nodeArray['name_lang'], $url);
 		}
-		
+
 		// add filters to breadcrumb
 		CategoryController::getAppliedFilters();
 
@@ -50,7 +50,7 @@ class ProductController extends FrontendController
 
 		$productArray = $product->toArray();
 		ProductSpecification::loadSpecificationForProductArray($productArray);
-		
+
 		// attribute summary
 		$productArray['listAttributes'] = array();
 		foreach ($productArray['attributes'] as $attr)
@@ -63,51 +63,51 @@ class ProductController extends FrontendController
 
 		// add product title to breacrumb
 		$this->addBreadCrumb($productArray['name_lang'], '');
-				
+
 		// allowed shopping cart quantities
 		$quantities = range(max($product->minimumQuantity->get(), 1), 30);
 		$quantity = array_combine($quantities, $quantities);
-		
+
 		// manufacturer filter
 		if ($product->manufacturer->get())
 		{
 			$manFilter = new ManufacturerFilter($product->manufacturer->get()->getID(), $product->manufacturer->get()->name->get());
 		}
-		
+
 		// get category page route
 		end($this->breadCrumb);
 		$last = prev($this->breadCrumb);
 		$catRoute = $this->router->getRouteFromUrl($last['url']);
 
 		$response = new ActionResponse();
-		$response->set('product', $productArray);		
-		$response->set('category', $productArray['Category']);		
+		$response->set('product', $productArray);
+		$response->set('category', $productArray['Category']);
 		$response->set('images', $product->getImageArray());
 		$response->set('related', $this->getRelatedProducts($product));
 		$response->set('quantity', $quantity);
-		$response->set('cartForm', $this->buildAddToCartForm());		
-		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode())); 
+		$response->set('cartForm', $this->buildAddToCartForm());
+		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
 		$response->set('catRoute', $catRoute);
 
 		if (isset($manFilter))
 		{
-			$response->set('manufacturerFilter', $f);
+			$response->set('manufacturerFilter', $manFilter);
 		}
 
 		return $response;
-	} 
-	
+	}
+
 	/**
 	 * @return Form
 	 */
 	private function buildAddToCartForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");		
+		ClassLoader::import("framework.request.validator.Form");
 		$form = new Form(new RequestValidator("addToCart", $this->request));
 		$form->enableClientSideValidation(false);
 		return $form;
-	}	
-	
+	}
+
 	private function getRelatedProducts(Product $product)
 	{
 		// get related products
@@ -121,18 +121,18 @@ class ProductController extends FrontendController
 				continue;
 			}
 
-			$p = $r['RelatedProduct'];			
-			
+			$p = $r['RelatedProduct'];
+
 			// @todo: make ActiveRecord automatically recognize the correct parent object
 			$p['DefaultImage'] = $r['DefaultImage'];
-			
+
 			if (isset($r['ProductRelationshipGroup']))
 			{
-				$p['ProductRelationshipGroup'] = $r['ProductRelationshipGroup'];				
+				$p['ProductRelationshipGroup'] = $r['ProductRelationshipGroup'];
 			}
-			$rel[] = $p;	
+			$rel[] = $p;
 		}
-		
+
 		ProductPrice::loadPricesForRecordSetArray($rel);
 
 		// sort related products into groups

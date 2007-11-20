@@ -1,5 +1,5 @@
 <fieldset class="container">
-				
+
 	<div class="image">
 		<a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">
 		{if $product.DefaultImage.paths.2}
@@ -11,7 +11,7 @@
 	</div>
 
 	<div class="descr">
-		
+
 		<div class="title">
 			<a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">{$product.name_lang}</a>
 		</div>
@@ -31,21 +31,21 @@
 					{elseif $attr.value_lang}
 						{$attr.value_lang}
 					{/if}
-												
+
 					{if !$smarty.foreach.attr.last}
 					/
 					{/if}
 				{/foreach}
 			</div>
 		{/if}
-							
+
 		<div class="shortDescr">
 			{$product.shortDescription_lang}
 		</div>
 
 		<div class="order">
 			<div class="pricingInfo">
-			   {t _our_price}: <span class="price">{$product.formattedPrice.$currency}</span>
+				<span>{t _our_price}:</span> <span class="price">{$product.formattedPrice.$currency}</span>
 			</div>
 			<div class="orderingControls">
 				{if $product.isAvailable}
@@ -53,12 +53,12 @@
 				{/if}
 				{if 'ENABLE_WISHLISTS'|config}
 					{if $product.isAvailable}<span class="sep">:</span>{/if}
-					<a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}" class="addToWishList">{t _add_to_wishlist}</a>	
+					<a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}" class="addToWishList">{t _add_to_wishlist}</a>
 				{/if}
-			</div>								
-				
-		</div>	  
-				
+			</div>
+
+		</div>
+
 	</div>
 
 </fieldset>

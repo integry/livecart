@@ -7,20 +7,20 @@
 /* 100% height layout start >> */
 html, body
 {
-	height: 100%; 
+	height: 100%;
 }
 
-div#container 
+div#container
 {
 	position: relative; /* needed for footer positioning*/
-	
+
 	height: auto !important; /* real browsers */
 	height: 100%; /* IE6: treated as min-height*/
 
 	min-height: 100%; /* real browsers */
 }
 
-div#footer 
+div#footer
 {
 	position: absolute;
 	width: 100%;
@@ -63,7 +63,7 @@ h1, h2, h3
 h1
 {
 	font-size: 200%;
-	padding-left: 10px; 
+	padding-left: 10px;
 	margin-bottom: 10px;
 }
 
@@ -88,7 +88,7 @@ td
 	vertical-align: top;
 }
 
-ul 
+ul
 {
   	padding-left: 12px;
 }
@@ -101,7 +101,7 @@ p
 
 table
 {
-    border-spacing: 0;   
+    border-spacing: 0;
 }
 
 .clear
@@ -132,32 +132,32 @@ div.confirmationMsg div
 {
     display: inline;
     padding: 5px;
-    background-color: #FFFCAC;   
+    background-color: #FFFCAC;
     z-index: 0;
 }
 
 /*****************************
 	Layout
 *****************************/
-#container 
+#container
 {
   	margin: 0 auto;
   	width: 950px;
 }
 
-#header 
+#header
 {
   	padding: 20px;
 }
 
-#footer 
+#footer
 {
 	border-top: 1px solid #DDDDDD;
   	padding: 20px;
   	text-align:center;
 }
 
-#leftSide 
+#leftSide
 {
 	float: left;
 	width: 190px;
@@ -165,7 +165,7 @@ div.confirmationMsg div
 	position: relative;
 }
 
-#rightSide 
+#rightSide
 {
 	float:right;
 	width:150px;
@@ -177,7 +177,7 @@ div.confirmationMsg div
 	height: 1px;
 }
 
-#content 
+#content
 {
 	margin-left: 190px;
 	padding: 10px;
@@ -201,7 +201,7 @@ div.confirmationMsg div
 {
 /*    border-top: 1px solid #CCCCCC;   */
     padding-top: 6px;
-  	padding-bottom: 0;    
+  	padding-bottom: 0;
 }
 
 #storeName
@@ -248,7 +248,7 @@ div.box .content
 /*    background-image: url(../../image/silk/bullet_blue.png); */
     background-repeat: no-repeat;
     background-position: left center;
-    padding-left: 20px;   		
+    padding-left: 20px;
     margin-left: -20px;
 }
 
@@ -272,7 +272,7 @@ fieldset.container
 
 .table thead
 {
-    background-color: #FAFAFA;    
+    background-color: #FAFAFA;
 }
 
 .table th
@@ -300,15 +300,15 @@ tr.even
 *****************************/
 #searchContainer
 {
-    border-top: 1px solid #CCCCCC; 
-    border-bottom: 1px solid #DDDDDD; 
-    background: #F7F7F7; 
+    border-top: 1px solid #CCCCCC;
+    border-bottom: 1px solid #DDDDDD;
+    background: #F7F7F7;
     margin-bottom: 10px;
 }
 
 .quickSearch
 {
-	padding-left: 30px; 
+	padding-left: 30px;
 	float: left;
 }
 
@@ -320,7 +320,7 @@ tr.even
 .quickSearch .submit
 {
     margin-bottom: 0;
-    margin-top: 0;    
+    margin-top: 0;
 }
 
 .quickSearch .searchQuery
@@ -339,8 +339,8 @@ tr.even
 *****************************/
 .categories ul
 {
-    margin-left: 0; 
-    padding-left: 0;   
+    margin-left: 0;
+    padding-left: 0;
 }
 
 .categories .content
@@ -359,17 +359,17 @@ tr.even
 
 .categories li
 {
-    margin-top: 5px; 
+    margin-top: 5px;
 }
 
 .categories ul li
 {
-    list-style-type: none;    
+    list-style-type: none;
 }
 
 .categories ul ul
 {
-    list-style-type: disc;   
+    list-style-type: disc;
     margin-top: 8px;
     margin-left: 0;
     padding-left: 12px;
@@ -377,7 +377,7 @@ tr.even
 
 .current ul, .subSubCats
 {
-    margin-left: 0 !important;    
+    margin-left: 0 !important;
     padding-left: 0 !important;
 }
 
@@ -385,7 +385,7 @@ tr.even
 {
     list-style-type: none;
     margin-bottom: 7px;
-    
+
     padding-left: 20px;
     background-image:url(../../image/silk/gif/bullet_arrow_left.gif);
     background-repeat: no-repeat;
@@ -402,7 +402,7 @@ tr.even
 *****************************/
 .filterGroup ul
 {
-	padding: 4px;		
+	padding: 4px;
 	padding-left: 20px;
 	font-size: 90%;
 	padding-right: 0;
@@ -418,6 +418,7 @@ tr.even
 {
     margin-bottom: 2px;
     list-style-type: none;
+    padding-right: 1px;
 }
 
 .filterGroup h4
@@ -433,14 +434,14 @@ tr.even
 .filterGroup .showAll
 {
 	list-style: none;
-	font-weight: bold;	
+	font-weight: bold;
 	margin-top: 5px;
 	padding-top: 2px;
 	background-image: url(../../image/silk/gif/tag_yellow.gif);
 	background-position: center left;
 	background-repeat: no-repeat;
 	padding-left: 20px;
-	margin-left: -20px; 
+	margin-left: -20px;
 
 	z-index: 10;
 
@@ -448,7 +449,7 @@ tr.even
 
 #smallCart
 {
-    padding-top: 10px;    
+    padding-top: 10px;
 }
 
 #smallCart a.checkout
@@ -471,7 +472,7 @@ tr.even
 *****************************/
 .informationMenu ul li
 {
-    list-style-type: none;   
+    list-style-type: none;
     margin-bottom: 5px;
 }
 
@@ -482,7 +483,7 @@ tr.even
 {
 	font-size: smaller;
 	text-align: center;
-	margin-top: 12px;	
+	margin-top: 12px;
 	margin-right: 12px;
 	float: right;
 	font-size: smaller;
@@ -490,7 +491,7 @@ tr.even
 
 #currency a, #language a
 {
-	margin-left: 3px;	
+	margin-left: 3px;
 }
 
 /*****************************
@@ -512,7 +513,7 @@ tr.even
 #breadCrumb ul li
 {
 	float: left;
-	margin-right: 10px;	
+	margin-right: 10px;
 	list-style-type: none;
 }
 
@@ -582,7 +583,7 @@ ul.news li.newsEntry
 
 tr.separator td
 {
-    height: 10px;   
+    height: 10px;
     padding: 15px;
 }
 
@@ -590,7 +591,7 @@ tr.separator div
 {
 	border-bottom: 1px solid #EEEEEE;
 	height: 5px;
-	width: 100%;
+	width: 282px;
 }
 
 .subCategories
@@ -601,11 +602,22 @@ tr.separator div
     float: left;
 }
 
+.subCategories td.subCatImage
+{
+	padding-right: 10px;
+}
+
 .subCategories td.details
 {
-    padding-left: 30px;
+    padding-left: 20px;
+    padding-right: 10px;
     vertical-align: middle;
     height: 140px;
+}
+
+.subCategories td.details.verticalSep
+{
+	border-right: 1px solid #EEEEEE;
 }
 
 .subCategories td.details .count
@@ -626,7 +638,7 @@ tr.separator div
 
 ul.subSubCats
 {
-    margin: 6px;   
+    margin: 6px;
     margin-top: 12px;
 }
 
@@ -640,7 +652,7 @@ li.moreSubCats
 *****************************/
 .keywords
 {
-	font-style: italic;	
+	font-style: italic;
 }
 
 .notFound
@@ -649,17 +661,17 @@ li.moreSubCats
     background-image: url(../../image/silk/gif/emoticon_unhappy.gif);
     background-repeat: no-repeat;
     background-position: 6px center;
-    padding-left: 28px;    
+    padding-left: 28px;
 }
 
 .notFoundMain
 {
-    font-weight: bold;    
+    font-weight: bold;
 }
 
 .allFilters li
 {
-	margin-bottom: 5px !important;	
+	margin-bottom: 5px !important;
 }
 
 .allFilters legend
@@ -669,13 +681,13 @@ li.moreSubCats
     background-image: url(../../image/silk/gif/zoom.gif);
     background-repeat: no-repeat;
     background-position: 6px center;
-    padding-left: 28px;    
+    padding-left: 28px;
     margin-left: 5px;
 }
 
 .allFilters .filterGroup
 {
-    float: left; 
+    float: left;
     width: 30%;
 }
 
@@ -706,7 +718,7 @@ li.moreSubCats
     background-image: url(../../image/silk/gif/resultset_next.gif);
     background-repeat: no-repeat;
     background-position: center right;
-    padding-right: 22px;    
+    padding-right: 22px;
     border: 0;
     text-decoration: underline;
 }
@@ -716,30 +728,30 @@ li.moreSubCats
     background-image: url(../../image/silk/gif/resultset_previous.gif);
     background-repeat: no-repeat;
     background-position: center left;
-    padding-left: 22px;    
+    padding-left: 22px;
     border: 0;
     text-decoration: underline;
 }
 
 .resultPages
 {
-    border-top: 1px solid #CCCCCC;        
+    border-top: 1px solid #CCCCCC;
     padding-top: 10px;
 }
 
 .resultStats
 {
-    padding: 10px; 
+    padding: 10px;
     padding-top: 0;
-    padding-bottom: 5px; 
-    margin-bottom: 15px; 
-    border-bottom: 1px solid #CCCCCC;    
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #CCCCCC;
     font-size: 120%;
 }
 
 .resultStats .pagingInfo
 {
-    float: left; 
+    float: left;
     margin-top: 10px;
     margin-bottom: 10px;
 }
@@ -757,7 +769,7 @@ li.moreSubCats
 
 ul.productList
 {
-	list-style: none;		
+	list-style: none;
 }
 
 ul.productList li
@@ -767,7 +779,7 @@ ul.productList li
 
 ul.productList li.featured .title
 {
-    font-weight: bold;   
+    font-weight: bold;
     background-image: url(../../image/silk/gif/star.gif);
     background-repeat: no-repeat;
     background-position: center left;
@@ -795,7 +807,7 @@ ul.productList .descr
 
 ul.productList .image
 {
-	float: left; 
+	float: left;
     margin-right: 8px;
     width: 100px;
     text-align: center;
@@ -816,7 +828,7 @@ ul.productList a.addToCart
     padding-left: 20px;
     background-image:url(../../image/silk/gif/cart_add.gif);
     background-repeat: no-repeat;
-    background-position: center left;    
+    background-position: center left;
 }
 
 ul.productList .pricingInfo
@@ -836,10 +848,10 @@ ul.productList .orderingControls
 
 .productSeparator
 {
-    border-bottom: 1px solid #EEEEEE; 
-    margin-top: 15px; 
-    margin-bottom: -7px; 
-    margin-left: 110px; 
+    border-bottom: 1px solid #EEEEEE;
+    margin-top: 15px;
+    margin-bottom: -7px;
+    margin-left: 110px;
     margin-right: auto;
 }
 
@@ -853,7 +865,7 @@ ul.productList .orderingControls
 
 .returnToCategory
 {
-	padding: 10px; 
+	padding: 10px;
 	padding-left: 0;
 }
 
@@ -862,18 +874,18 @@ ul.productList .orderingControls
     background-image: url(../../image/silk/gif/resultset_previous.gif);
     background-repeat: no-repeat;
     background-position: center left;
-    padding-left: 22px;    
+    padding-left: 22px;
     list-style-type: none;
-    margin-left: 0;	
+    margin-left: 0;
 }
 
 .specSummary
 {
-    font-weight: bold;    
-    float: right; 
-    background: #FFFCDA; 
+    font-weight: bold;
+    float: right;
+    background: #FFFCDA;
     padding: 10px;
-    font-size: smaller;    
+    font-size: smaller;
     max-width: 400px;
     margin-top: -50px;
     z-index: 10;
@@ -886,12 +898,12 @@ ul.productList .orderingControls
 
 #mainInfo table
 {
-	margin-top: 20px;	
+	margin-top: 20px;
 }
 
 #mainInfo td
 {
-	padding: 5px;		
+	padding: 5px;
 	white-space: nowrap;
 }
 
@@ -908,7 +920,7 @@ ul.productList .orderingControls
 .price
 {
 	font-weight: bold;
-	color: #a52a2a;	
+	color: #a52a2a;
 }
 
 #mainInfo .price
@@ -918,19 +930,19 @@ ul.productList .orderingControls
 
 .noStock, .lowStock
 {
-    text-align: center; 
+    text-align: center;
     font-size: smaller;
 }
 
 #productSpecification table
 {
 	border: 1px solid #AAAAAA;
-	width: auto;	
+	width: auto;
 }
 
 #productSpecification td
 {
-    padding: 5px;    
+    padding: 5px;
     vertical-align: top;
     padding-left: 10px;
     padding-right: 10px;
@@ -939,9 +951,9 @@ ul.productList .orderingControls
 
 tr.specificationGroup
 {
-    font-weight: bold; 
-	font-size: larger; 
-	background-color: #CCCCCC;      
+    font-weight: bold;
+	font-size: larger;
+	background-color: #CCCCCC;
 }
 
 ul.attributeList
@@ -954,7 +966,7 @@ ul.attributeList li
     background-image: url(../../image/silk/gif/tick.gif);
     background-repeat: no-repeat;
     background-position: center left;
-    padding-left: 22px;    
+    padding-left: 22px;
     list-style-type: none;
     margin-left: 0;
 }
@@ -973,7 +985,7 @@ ul.attributeList.singleValue li
 #imageContainer
 {
 	width: 450px;
-	float: left; 
+	float: left;
     text-align: center;
 }
 
@@ -1021,7 +1033,7 @@ ul.attributeList.singleValue li
 
 .cartLinks .submit
 {
-    top: 5px;   
+    top: 5px;
     position: relative;
 }
 
@@ -1033,7 +1045,7 @@ td.addToWishList
 
 #addToCart
 {
-	font-weight: bold;	
+	font-weight: bold;
 }
 
 /*****************************
@@ -1075,7 +1087,7 @@ div.checkout a
 #cart, #wishList
 {
 	width: 100%;
-	margin-left:auto; 
+	margin-left:auto;
 	margin-right:auto;
 }
 
@@ -1143,7 +1155,7 @@ div.checkout a
     background-image: url(../../image/silk/gif/resultset_previous.gif);
     background-repeat: no-repeat;
     background-position: center left;
-    padding-left: 22px;        
+    padding-left: 22px;
     font-weight: bold;
 }
 
@@ -1161,15 +1173,15 @@ div.checkout a
 
 .cartImage
 {
-	width: 60px; 
-	padding: 7px !important; 
+	width: 60px;
+	padding: 7px !important;
 	text-align: center;
 }
 
 .cartImage img
 {
 	vertical-align: middle;
-	border: 1px solid #777777;	
+	border: 1px solid #777777;
 }
 
 #cartUpdate
@@ -1179,7 +1191,7 @@ div.checkout a
 
 #expressCheckoutMethods
 {
-    padding: 20px; 
+    padding: 20px;
     text-align: right;
 }
 
@@ -1205,7 +1217,7 @@ div.checkout a
     width: auto;
     text-align: center;
     padding-top: 1em;
-    float: right;    
+    float: right;
 	height: 3em;
 }
 
@@ -1218,14 +1230,14 @@ div.checkout a
 }
 
 /* completed steps */
-#checkoutProgress a.completed, 
+#checkoutProgress a.completed,
 .progressPayment a,
 #progressCart,
 .progressShipping #progressAddress,
 .shippingSelected,
 .addressSelected
 {
-    border: 3px solid #ADD8E6 !important;            
+    border: 3px solid #ADD8E6 !important;
     background-color: #f8f8f8 !important;
 }
 
@@ -1233,7 +1245,7 @@ div.checkout a
 .progressPayment #progressPayment,
 .progressCart #progressCart,
 .progressAddress #progressAddress,
-.progressShipping #progressShipping        
+.progressShipping #progressShipping
 {
     border: 3px solid #ADD8E6 !important;
     background-color: #FFFCBB !important;
@@ -1249,7 +1261,7 @@ div.checkout a
 
 .addressSelector .selector
 {
-    vertical-align: middle;    
+    vertical-align: middle;
     text-align: center;
 }
 
@@ -1260,7 +1272,7 @@ div.checkout a
 
 .addressSelector .address
 {
-    padding: 5px;    
+    padding: 5px;
 }
 
 .addressSelector .address p
@@ -1277,24 +1289,24 @@ div.checkout a
 
 .shipment
 {
-    width: 70%;    
+    width: 70%;
     border: 1px solid #DDDDDD;
 }
 
 .userViewOrder .shipment
 {
-    width: 90%;    
+    width: 90%;
 }
 
 .shipment td
 {
-    text-align: center;  
+    text-align: center;
     width: 12%;
 }
 
 .shipment .productName
 {
-    text-align: left;   
+    text-align: left;
     width: 64%;
 }
 
@@ -1312,21 +1324,21 @@ div.checkout a
 
 .shippingMethods
 {
-    padding-left: 30px;    
-    padding-bottom: 20px;    
+    padding-left: 30px;
+    padding-bottom: 20px;
     clear: both;
 }
 
 /* Payments */
 #ccForm
 {
-    float: left; 
+    float: left;
     width: 500px;
 }
 
 #ccExpiryMonth, #ccExpiryYear, #ccType
 {
-    width: auto;   
+    width: auto;
 }
 
 #ccCVV
@@ -1341,7 +1353,7 @@ a.cvv
 
 #payTotal
 {
-	margin-top: 20px;	
+	margin-top: 20px;
 }
 
 #payTotal div
@@ -1372,7 +1384,7 @@ a.cvv
 
 .orderOverviewControls
 {
-    width: 70%; 
+    width: 70%;
     text-align: right;
 }
 
@@ -1389,7 +1401,7 @@ a.cvv
 
 .addressContainer
 {
-    width: 50%; 
+    width: 50%;
     float: left;
 }
 
@@ -1410,28 +1422,28 @@ a.cvv
 
 #cvvHelp
 {
-    float: left; 
-    width: 350px; 
-    padding: 5px; 
-    margin-left: 20px; 
+    float: left;
+    width: 350px;
+    padding: 5px;
+    margin-left: 20px;
 }
 
 #cvvExample
 {
-    vertical-align: top; 
+    vertical-align: top;
     float: left;
 }
 
 #testHandlerWarning
 {
-    font-size: 90%; 
-    width: 600px; 
-    margin-left: auto; 
-    margin-right: auto; 
-    border: 1px solid yellow; 
-    padding: 5px; 
-    background-color: #FFFCDA; 
-    margin-top: 15px; 
+    font-size: 90%;
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid yellow;
+    padding: 5px;
+    background-color: #FFFCDA;
+    margin-top: 15px;
     margin-bottom: 15px;
 }
 
@@ -1440,7 +1452,7 @@ a.cvv
     padding-top: 10px;
 }
 
-/*************************** 
+/***************************
 	User account
 ***************************/
 .userLogin .failed
@@ -1449,7 +1461,7 @@ a.cvv
 }
 
 ul#userMenu
-{   
+{
     padding: 0;
 }
 
@@ -1459,7 +1471,7 @@ ul#userMenu
     list-style-type: none;
     background-repeat: no-repeat;
     background-position: center left;
-    padding-left: 22px;            
+    padding-left: 22px;
 }
 
 #userMenu li#homeMenu
@@ -1513,7 +1525,7 @@ ul#userMenu
 
 #userMenuContainer
 {
-    padding: 10px; 
+    padding: 10px;
     float: left;
     background-color: #F7F7F7;
     border: 1px solid #DDDDDD;
@@ -1525,15 +1537,15 @@ ul#userMenu
     margin-left: 210px;
 }
 
-/*************************** 
+/***************************
 	User addresses
 ***************************/
 div.addressBlock
 {
-    border: 1px solid #DDDDDD;    
-    background-color: #FAFAFA; 
-    float: left; 
-    padding: 10px; 
+    border: 1px solid #DDDDDD;
+    background-color: #FAFAFA;
+    float: left;
+    padding: 10px;
     padding-top: 5px;
     padding-bottom: 5px;
     margin-top: 10px;
@@ -1549,16 +1561,16 @@ div.addressControl
     margin-top: 5px;
 }
 
-/*************************** 
+/***************************
 	Orders
 ***************************/
 .orderDetails
 {
-    border: 1px solid #DDDDDD;    
+    border: 1px solid #DDDDDD;
     background-color: #FAFAFA;
     float: left;
     width: 700px;
-    padding: 10px;    
+    padding: 10px;
     margin-bottom: 20px;
 }
 
@@ -1569,7 +1581,7 @@ div.addressControl
 
 .orderDetails .orderMenu
 {
-    float: left; 
+    float: left;
     width: 200px;
 }
 
@@ -1588,7 +1600,7 @@ div.addressControl
 
 .orderMenu li
 {
-    padding: 4px;   
+    padding: 4px;
     margin-left: 0;
     padding-left: 0;
 }
@@ -1608,22 +1620,22 @@ a.invoice, a.viewOrder, a.messages
 	padding-left: 22px;
 	background-image: url(../../image/silk/gif/printer.gif);
 	background-position: left center;
-	background-repeat: no-repeat;   
+	background-repeat: no-repeat;
 }
 
 a.viewOrder
 {
-	background-image: url(../../image/silk/gif/page_white_text.gif);    
+	background-image: url(../../image/silk/gif/page_white_text.gif);
 }
 
 a.messages
 {
-	background-image: url(../../image/silk/gif/email.gif);   
+	background-image: url(../../image/silk/gif/email.gif);
 	color: red;
 }
 
 p.messages
-{    
+{
 }
 
 .cancelled
@@ -1632,7 +1644,7 @@ p.messages
     font-weight: bold;
 }
 
-/*************************** 
+/***************************
 	File downloads
 ***************************/
 ul.downloadFile li
@@ -1653,12 +1665,12 @@ ul.downloadFile li.fileGroup
     font-weight: bold;
 }
 
-/*************************** 
+/***************************
 	Order notes
 ***************************/
 ul.notes
 {
-    list-style-type: none;   
+    list-style-type: none;
     margin-top: 15px;
     padding-left: 0;
 }
@@ -1702,7 +1714,7 @@ ul.notes li.responder_1 .noteText
 
 #noteForm
 {
-    margin-top: 2em;    
+    margin-top: 2em;
     display: block;
 }
 
@@ -1711,21 +1723,21 @@ ul.notes li.responder_1 .noteText
     float: none;
 }
 
-/*************************** 
+/***************************
 	Invoices
 ***************************/
 #invoiceHeader
 {
-    text-align: center; 
-    border-bottom: 1px solid black; 
-    position: relative; 
+    text-align: center;
+    border-bottom: 1px solid black;
+    position: relative;
     margin-top: 20px;
 }
 
 #invoiceLogo
 {
-    position: absolute; 
-    left: 0; 
+    position: absolute;
+    left: 0;
     top: 0;
 }
 
@@ -1786,12 +1798,12 @@ td.amount
     font-weight: bold;
 }
 
-/*************************** 
+/***************************
 	Customization
 ***************************/
 div.templateLocator:hover
 {
-	border: 2px solid blue;	
+	border: 2px solid blue;
 	position: relative;
 	padding: 5px;
 	padding-top: 15px;
@@ -1820,7 +1832,7 @@ div.templateLocator:hover > span.templateName:first-child
 	display: inline;
 }
 
-/*************************** 
+/***************************
 	Form styling
 ***************************/
 form
@@ -1897,12 +1909,12 @@ p.radio, p.checkbox
 p.radio label, p.checkbox label
 {
     white-space: nowrap;
-    margin-top: 3px; 
+    margin-top: 3px;
 }
 
 label.checkbox, label.radio
 {
-  	margin-top: 3px; 
+  	margin-top: 3px;
   	width: auto;
 }
 
@@ -1932,14 +1944,14 @@ option
 	padding-right: 4px;
 }
 
-optgroup option 
+optgroup option
 {
    padding-left: 1em;
    color: black;
    background-color: #ffc;
 }
 
-optgroup  
+optgroup
 {
    font-style: normal;
    font-weight: bold;
@@ -1981,7 +1993,7 @@ input:focus, textarea:focus, select:focus
     background: #ffc;
 }
 
-input.submit:focus 
+input.submit:focus
 {
 	color: #008cff;
 }
@@ -1997,7 +2009,7 @@ label, input, select, form .other, textarea
     margin-bottom: 5px;
 }
 
-a.cancel 
+a.cancel
 {
  	color: red;
 }
@@ -2006,7 +2018,7 @@ fieldset.error, div.error, fieldset.container
 {
 	padding: 0;
 	margin: 0;
-	position: static; 
+	position: static;
 	border: 0;
 	background-color: inherit;
 	background: inherit;
@@ -2017,7 +2029,7 @@ fieldset.error, div.error, fieldset.container
 .errorText /* , fieldset.error div */
 {
 	background-color: #FF0001;
-	float: left; 
+	float: left;
 	width: auto;
 	margin-bottom: 4px;
 	margin-top: 0;
@@ -2025,14 +2037,14 @@ fieldset.error, div.error, fieldset.container
 	color: white;
 }
 
-.hidden 
+.hidden
 {
-	display: none;	
+	display: none;
 }
 
 .visible
 {
-	display: block;	
+	display: block;
 }
 
 .progressIndicator {
@@ -2061,12 +2073,12 @@ label.text
 }
 
 /* textarea container */
-div.textarea 
+div.textarea
 {
- 	margin-bottom: 7px; 
+ 	margin-bottom: 7px;
 }
 
-input.wide 
+input.wide
 {
   	width: 35em;
 }
@@ -2078,5 +2090,5 @@ input.money, input.number
 
 input.date
 {
-  	width: 6em;  
+  	width: 6em;
 }

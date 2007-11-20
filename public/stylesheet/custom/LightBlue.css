@@ -1,0 +1,15 @@
+div.box
+{
+	margin-bottom: 10px;
+}
+
+div.box .title
+{
+	background-color: #E7F8FF;
+	border: 0;
+}
+
+div.box .content
+{
+	background-color: #F3FCFF;
+}

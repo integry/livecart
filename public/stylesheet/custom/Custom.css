@@ -1,3 +1,234 @@
-body {
-    
+.clear
+{
+	height: 0px;
+}
+
+/*
+	Forms
+*/
+input.submit, input.text, input.password, select
+{
+	border: 1px solid lightblue;
+}
+
+/*
+	Header
+*/
+
+/*
+#smallCart
+{
+	position: absolute;
+	text-align: right;
+	width: 100%;
+	left: 0;
+}
+*/
+
+.quickSearch
+{
+	background-image: url(../../theme/LightBlue/cornerBottomLeft.gif);
+	background-repeat: no-repeat;
+	background-position: left bottom;
+	padding-bottom: 3px;
+}
+
+#searchContainer
+{
+	background-image: url(../../theme/LightBlue/boxGradient.gif);
+	background-repeat: repeat-x;
+	background-color: #F3FCFF;
+	border: 0;
+	border-top: 1px solid #143788;
+}
+
+#language
+{
+	padding-top: 1px;
+	padding-bottom: 3px;
+}
+
+#currency
+{
+	background-image: url(../../theme/LightBlue/cornerBottomRight.gif);
+	background-repeat: no-repeat;
+	background-position: right bottom;
+	padding-top: 1px;
+	margin-right: 0;
+	height: 16px;
+	padding-right: 12px;
+	padding-bottom: 3px;
+}
+
+/*
+	Side boxes
+*/
+
+div.box
+{
+	margin-bottom: 10px;
+}
+
+div.box
+{
+	background-color: #F3FCFF;
+	background-image: url(../../theme/LightBlue/bottomCorners.gif);
+	background-repeat: no-repeat;
+	background-position: right bottom;
+}
+
+div.box .title
+{
+	background-color: #E7F8FF;
+	background-color: #cef1ff;
+	border: 0;
+	background-image: url(../../theme/LightBlue/cornerTopLeft.gif);
+	background-repeat: no-repeat;
+	padding: 0;
+}
+
+div.box .title div
+{
+	background-image: url(../../theme/LightBlue/cornerTopRight.gif);
+	background-position: right top;
+	background-repeat: no-repeat;
+	padding: 5px;
+}
+
+div.box .content
+{
+	border: 0;
+	background: none;
+	background-image: url(../../theme/LightBlue/boxGradient.gif);
+	background-repeat: repeat-x;
+}
+
+/*
+	Category/filter boxes
+*/
+.count
+{
+	font-size: smaller;
+}
+
+/*
+	Category list
+*/
+
+.subCategories
+{
+	margin-left: 30px;
+}
+
+.subCategories td.details.verticalSep
+{
+	border: 0;
+}
+
+.subCategories td.details
+{
+	background-color: #F3FCFF;
+	padding: 0;
+	height: 160px;
+	background-repeat: no-repeat;
+	background-image: url(../../theme/LightBlue/cornerTopLeft.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+
+.subCategories .subCatContainer
+{
+	height: 160px;
+	background-repeat: no-repeat;
+	background-image: url(../../theme/LightBlue/cornerBottomLeft.gif);
+	background-repeat: no-repeat;
+	background-position: left bottom;
+}
+
+.subCategories .subCatContainer .subCatContainer
+{
+	background-image: url(../../theme/LightBlue/cornerBottomRight.gif);
+	background-position: right bottom;
+}
+
+.subCategories .subCatContainer .subCatContainer .subCatContainer
+{
+	background-image: url(../../theme/LightBlue/cornerTopRight.gif);
+	background-position: top right;
+	padding-left: 15px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	display: table-cell;
+	vertical-align: middle;
+	width: 227px;
+}
+
+.noSubCats .subCatContainer
+{
+	text-align: center;
+}
+
+tr.separator div
+{
+	border: 0;
+}
+
+/*
+	Product list
+*/
+
+ul.productList li
+{
+	position: relative;
+}
+
+ul.productList .pricingInfo
+{
+	position: absolute;
+	right: 0pt;
+	top: 0pt;
+}
+
+ul.productList .pricingInfo span
+{
+	display: none;
+}
+
+.pricingInfo span.price
+{
+	font-size: larger;
+	display: block !important;
+}
+
+ul.productList .addToCart
+{
+	position: absolute;
+	right: 65pt;
+	top: 1pt;
+}
+
+ul.productList .sep
+{
+	display: none;
+}
+
+ul.productList .orderingControls
+{
+	float: left;
+}
+
+ul.productList .addToWishList
+{
+	background-image: url(../../image/silk/gif/heart_add.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	padding-left: 22px;
+}
+
+.productList .title a
+{
+	width: 400px;
+	white-space: nowrap;
+	overflow: hidden;
+	display: block;
 }
