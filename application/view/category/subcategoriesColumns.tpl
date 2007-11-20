@@ -1,4 +1,4 @@
-{math count=$subCategories|@count equation="max(2, ceil(count / 2))" assign="perColumn"}
+{math count=$subCategories|@count equation="max(1, ceil(count / 2))" assign="perColumn"}
 
 <fieldset class="container">
 {foreach from=$subCategories item="sub" name="subcats"}

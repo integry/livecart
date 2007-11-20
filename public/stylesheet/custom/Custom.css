@@ -67,12 +67,12 @@ input.submit, input.text, input.password, select
 
 #breadCrumb
 {
-	font-size: smaller;	
+	font-size: smaller;
 }
 
 #breadCrumb .separator
 {
-	font-size: smaller;	
+	font-size: smaller;
 }
 
 /*
@@ -107,7 +107,10 @@ div.box .title div
 	background-image: url(../../theme/LightBlue/cornerTopRight.gif);
 	background-position: right top;
 	background-repeat: no-repeat;
-	padding: 5px;
+	padding-top: 7px;
+	padding-bottom: 3px;
+	font-size: 115%;
+	border-bottom: 1px dashed #A6DAFF;
 }
 
 div.box .content
