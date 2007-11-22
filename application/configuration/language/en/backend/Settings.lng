@@ -13,6 +13,12 @@ STORE_NAME=Store name
 
 _display=Display
 
+_layout=Layout
+LANG_SELECTION=Display language selection menu as
+LANG_NAMES=Language names as links
+LANG_FLAGS=Flags
+LANG_DROPDOWN=Language names as a drop-down list
+
 _homepage=Home Page
 NUM_NEWS_INDEX=Number of news entries to display
 INDEX_MAN_FILTERS=Display manufacturer filters

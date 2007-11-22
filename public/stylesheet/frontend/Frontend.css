@@ -494,6 +494,13 @@ tr.even
 	margin-left: 3px;
 }
 
+#language select
+{
+	width: auto;
+	font-size: smaller;
+	margin: 0;
+}
+
 /*****************************
 	Breadcrumb
 *****************************/
@@ -858,9 +865,9 @@ ul.productList .orderingControls
 /*****************************
 	Product page
 *****************************/
-.productPage #header
+.productIndex h1
 {
-
+	width: 600px;
 }
 
 .returnToCategory
@@ -886,8 +893,8 @@ ul.productList .orderingControls
     background: #FFFCDA;
     padding: 10px;
     font-size: smaller;
-    max-width: 400px;
-    margin-top: -50px;
+    max-width: 300px;
+    margin-top: -75px;
     z-index: 10;
 }
 
