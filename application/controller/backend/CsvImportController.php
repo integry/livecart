@@ -1,16 +1,15 @@
 <?php
 
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import('library.import.LiveCartImporter');
 
 /**
- * Import data from other shopping cart programs
+ * Handles product importing through a CSV file
  *
  * @package application.controller.backend
  * @author Integry Systems
  *
  */
-class DatabaseImportController extends StoreManagementController
+class CsvImportController extends StoreManagementController
 {
 	public function index()
 	{
@@ -96,25 +95,6 @@ class DatabaseImportController extends StoreManagementController
 		//print_r($data);
 		echo '|' . base64_encode(json_encode($data));
 		flush();
-	}
-
-	private function getDrivers()
-	{
-		$drivers = array();
-
-		foreach (new DirectoryIterator(ClassLoader::getRealPath('library.import.driver')) as $file)
-		{
-			if (!$file->isDot())
-			{
-				include_once $file->getPathname();
-				$className = basename($file->getFileName(), '.php');
-				$drivers[$className] = call_user_func(array($className, 'getName'));
-			}
-		}
-		
-		natcasesort($drivers);
-
-		return $drivers;
 	}
 
 	private function getForm()
