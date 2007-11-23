@@ -1,0 +1,55 @@
+h1
+{
+	margin-bottom: 6px;
+}
+
+#settingsContent label.setting
+{
+	display: block;
+	float: auto;
+	float: none;
+	margin-bottom: 0px;
+	width: auto;
+}
+
+#settingsContent select
+{
+    width: auto;
+}
+
+p.checkbox
+{
+	padding-left: 0px;
+}
+
+div.multi
+{
+    border: 1px solid gray;
+    margin: 5px;
+    background: #EEE;
+}
+
+#settingsBrowser
+{
+	padding-left: 0px;
+}
+
+#settingsBrowser, #settingsBrowser .containerTableStyle
+{
+    height: 300px;
+}
+
+#settingsBrowser .containerTableStyle
+{
+	padding-left: 5px;
+}
+
+.setting
+{
+    position: relative;
+}
+
+.multi
+{
+    padding: 10px;
+}

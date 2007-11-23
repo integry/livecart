@@ -1,6 +1,8 @@
 {includeJs file="library/livecart.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
+{includeJs file="library/rico/ricobase.js"}
+{includeJs file="library/rico/ricoLiveGrid.js"}
 {includeJs file="library/ActiveGrid.js"}
 {includeJs file="backend/SelectFile.js"}
 
@@ -37,17 +39,25 @@
 </div>
 
 <div id="fileContainer" style="margin-left: 300px; height: 200px; border: 1px solid black;">
+
+    <fieldset class="container activeGridControls">
+    	<span class="activeGridItemsCount">
+    		<span id="filesCount_0">
+    			<span class="rangeCount">{t _listing_files}</span>
+    			<span class="notFound">{t _no_files_found}</span>
+    		</span>	
+    	</span>
+    </fieldset>
     
 {activeGrid 
-	prefix="products" 
+	prefix="files" 
 	id=0 
-	role="product.mass" 
-	controller="backend.product" action="lists" 
+	controller="backend.selectFile" action="lists" 
 	displayedColumns=$displayedColumns 
 	availableColumns=$availableColumns 
 	totalCount=0
 	filters=$filters
-	container="tabProducts"
+	container="fileContainer"
 }    
     
 </div>
