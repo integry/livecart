@@ -2,3 +2,13 @@
 {
 	display: none;
 }
+
+.filesList td, .filesList th
+{
+	width: 10%;
+}
+
+.filesList td.cell_fileName, .filesList th.cell_fileName
+{
+	width: 30%;
+}

@@ -69,11 +69,9 @@
 
 	Backend.SelectFile.treeBrowser.setXMLAutoLoading(Backend.SelectFile.links.categoryAutoloading);
 
-	Backend.SelectFile.activeCategoryId = Backend.SelectFile.treeBrowser.getSelectedItemId();
 	Backend.SelectFile.initPage();
 
-	Backend.SelectFile.loadBookmarkedCategory();
-
+	Backend.SelectFile.loadDirectory({/literal}{json array=$current}{literal});
 </script>
 {/literal}
 

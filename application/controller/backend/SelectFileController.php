@@ -28,6 +28,8 @@ class SelectFileController extends StoreManagementController
 		$response->set('root', array(0 => $root));
 		$response->set('availableColumns', $this->getAvailableColumns());
 		$response->set('displayedColumns', $this->getDisplayedColumns());
+		$response->set('current', $dir);
+				
 		return $response;
 	}
 
@@ -53,7 +55,7 @@ class SelectFileController extends StoreManagementController
 
             $path[] = array('parent' => dirname($parent),
                       'ID' => $parent,
-                      'name' => $parent,
+                      'name' => basename($parent),
                       'childrenCount' => $this->getSubDirectoryCount($parent),
                      );
 
@@ -63,8 +65,11 @@ class SelectFileController extends StoreManagementController
         }
 
 		$path = array_reverse($path);
+		
+		// strip root and root level directory
 		array_shift($path);
-
+		array_shift($path);
+		
 		$out = array();
 		$o =& $out;
 
@@ -108,9 +113,13 @@ class SelectFileController extends StoreManagementController
 	public function lists($dataOnly = false, $displayedColumns = null)
 	{
 		$filters = $this->request->get('filters');
+		
+		if (!$filters)
+		{
+			return new RawResponse();
+		}
+		
 		$files = $this->getFiles($filters['file']);
-
-		$recordCount = count($files);
 
 		if (!$displayedColumns)
 		{
@@ -121,7 +130,7 @@ class SelectFileController extends StoreManagementController
 
 		foreach ($files as $file)
 		{
-			$record = array($file['filePath']);
+			$record = array();
 			foreach ($displayedColumns as $column => $type)
 			{
 				$record[] = $file[$column];
@@ -130,13 +139,97 @@ class SelectFileController extends StoreManagementController
 			$data[] = $record;
 		}
 
+        // searching
+        if (is_array($this->request->get('filters')))
+        {
+            foreach ($this->request->get('filters') as $column => $filter)
+            {
+                if ($filter && isset($displayedColumns[$column]))
+                {
+                    $col = array_search($column, array_keys($displayedColumns));
+                    $type = $displayedColumns[$column];
+					foreach ($data as $index => $row)
+                    {
+                        if ('text' == $type)
+                        {
+							if (stripos($row[$col], $filter) === false)
+	                        {
+	                            unset($data[$index]);
+	                        }							
+						}
+						else if ('numeric' == $type)
+                        {	
+							$filter = str_replace('<>', '!=', $filter);
+							$constraints = explode(' ', $filter);
+							
+							foreach ($constraints as $c)
+							{
+								if (in_array(substr($c, 0, 2), array('!=', '<=', '>=')))
+								{
+									$operator = substr($c, 0, 2);
+									$value = substr($c, 2);   
+								}
+								else if (in_array(substr($c, 0, 1), array('>', '<', '=')))
+								{
+									$operator = substr($c, 0, 1);
+									$value = substr($c, 1);   
+								}
+								else
+								{
+									$operator = '=';
+									$value = $c;
+								}
+								
+								if ('=' == $operator)
+								{
+									$operator = '==';
+								}
+								
+								if (!eval('return $row[$col]' . $operator . '$value' . ';'))
+								{
+									unset($data[$index]);
+								}
+                        	}
+                    	}
+                	}
+            	}
+            }
+        }
+
+        // sorting
+        if ($this->request->isValueSet('sort_col'))
+        {
+            $this->sortColumn = array_search($this->request->get('sort_col'), array_keys($displayedColumns));
+            usort($data, array($this, 'sortFileList'));
+            
+            if ('DESC' == $this->request->get('sort_dir'))
+            {
+                $data = array_reverse($data);
+            }
+        }
+
+        // formatting
+        $date = array_search('fileDate', array_keys($displayedColumns));
+        foreach ($data as &$row)
+        {
+            if (isset($row[$date]))
+            {
+                $row[$date] = $this->locale->getFormattedTime($row[$date], 'date_medium');
+            }
+        }
+
 		$return = array();
 		$return['columns'] = array_keys($displayedColumns);
-		$return['totalCount'] = $recordCount;
-		$return['data'] = $data;
+		$return['totalCount'] = count($data);
+		$return['data'] = array_values($data);
 
 		return new JSONResponse($return);
 	}
+
+    private function sortFileList($a, $b)
+    {
+        return strnatcasecmp($a[$this->sortColumn], $b[$this->sortColumn]);
+    }
 
 	private function getAvailableColumns()
 	{
@@ -160,10 +253,7 @@ class SelectFileController extends StoreManagementController
 			$displayedColumns = $this->getColumns();
 		}
 
-		$availableColumns = $this->getAvailableColumns();
-		$displayedColumns = array_intersect_key(array_flip($displayedColumns), $availableColumns);
-
-		return $displayedColumns;
+		return array_intersect_key($this->getColumns(), array_flip($displayedColumns), $this->getAvailableColumns());
 	}
 
 	private function getColumns()
@@ -240,8 +330,8 @@ class SelectFileController extends StoreManagementController
             {
 				$node = array(
 					'fileName' => $sub->getFileName(),
-					'fileType' => $sub->getType(),
-					'fileSize' => $sub->getSize(),
+					'fileType' => pathinfo($sub->getFileName(), PATHINFO_EXTENSION),
+					'fileSize' => round($sub->getSize() / 1024, 2),
 					'fileDate' => $sub->getMTime(),
 					'filePermissions' => $sub->getPerms(),
 					'fileOwner' => $sub->getOwner(),
