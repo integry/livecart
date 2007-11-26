@@ -1,0 +1,9 @@
+_listing_files=Listing files $from - $to of $count
+_no_files_found=No files found
+fileName=Name
+fileType=Extension
+fileSize=Size
+fileDate=Modification date
+filePermissions=Permissions
+fileOwner=Owner
+fileGroup=Group
