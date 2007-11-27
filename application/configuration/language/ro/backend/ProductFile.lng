@@ -1,0 +1,13 @@
+_add_new_file=Adaugare fisier nou
+_add_new_group=Adaugare grup nou
+_cancel_adding_new_file=Renuntare la adaugarea unui fisier nou
+_cancel_adding_file_group=Renuntare la adaugarea unui grup nou
+_are_you_sure_you_want_to_delete=Sunteti sigur ca doriti sa stergeti acest fisier
+_are_you_sure_you_want_to_delete_group=Sunteti sigur ca doriti sa stergeti acest grup?
+_product_file_group_title=Titlu
+_add_new_file_group=Editare fisier grup
+_err_file_title_is_empty=Fisierul titlu este gol
+_err_allow_download_days_should_be_a_number=Numarul zilelor trebuie sa fie de tip numeric
+_err_allow_download_days_is_empty=Numarul zilelor de descarcat este gol
+_err_file_could_not_be_uploaded_to_the_server=Fisierul nu poate fi actualizat pe server
+_err_fileName_should_not_be_empty=Numele fisierului este gol

@@ -1,0 +1,14 @@
+_no_taxes=Nu au fost create inca taxe
+_add_tax=Adauga o noua taxa
+_tax_rate_has_been_successfully_saved=Cota de taxare a fost salvata cu succes
+_could_not_save_tax_rate=Nu pot salva cota de taxare
+_tax=Taxa
+_rate=Cota taxare
+_add_new_tax_rate=Adauga o noua cota de taxare
+_cancel_adding_new_tax_rate=Renunta la adaugarea unei noi cote de taxare
+_error_rate_should_not_be_empty=Cota de taxare nu poate fi necompletata
+_error_rate_should_be_numeric_value=Cota de taxare trebuie sa fie un indice numeric
+_error_rate_should_be_greater_than_zero_and_less_than_hundred=Cota trebuie sa fie cuprinsa intre 0 si 100
+_error_tax_should_not_be_empty=Taxa nu poate ramane necompletata
+_more_taxes_can_be_added=Mai multe taxe pot fi adaugate
+_here=aici

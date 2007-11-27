@@ -1,0 +1,6 @@
+PaypalDirectPayment=Paypal plata directa
+PaypalDirectPayment_sandbox=Folositi caseta test alaturata
+PaypalDirectPayment_username=Nume utilizator
+PaypalDirectPayment_password=Parola
+PaypalDirectPayment_signature=Semnatura
+PaypalDirectPayment_cardTypes=Tipuri carduri de credit autorizate

@@ -1,0 +1,10 @@
+_writePermissionsFix=strong>Recomandare:</strong> folositi un client FTP, schimbati permisiunea de acces (chmod) pentru acest director  cu 777 (acces total scriere). Daca directorul nu exista inca, va rugam creati-l.
+checkWritePermissions=Permisiune scriere in director
+checkPHPVersion=versiunea PHP
+checkPHPVersion_error=<a href="http://php.net" target="_blank">PHP</a> versiunea trebuie sa fie cel putin 5.2
+checkMySQL=Suport baza de date
+checkMySQL_error=<a href="http://php.net/mysqli" target="_blank">mysqli</a> extensia trebuie sa fie instalata pentru PHP
+checkGD=Suport manipulare imagine
+checkGD_error=<a href="http://php.net/gd" target="_blank">GD</a> extensia trebuie instalata pentru PHP
+checkSession=Configurare sesiune PHP
+checkSession_error=Sesiunea PHP nu a fost salvata. Va rugam asigurati-va ca datele configurarii PHP  session.save_path sunt setate corect

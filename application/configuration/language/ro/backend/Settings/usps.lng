@@ -1,0 +1,17 @@
+UspsShipping=USPS
+_USPS_API_ACCESS=USPS Shipping (expediere) API Access
+UspsShipping_userId=USPS API nume utilizator
+UspsShipping_apiUrl=USPS API URL
+_USPS_DOMESTIC_OPTS=Optiuni expediere interna
+UspsShipping_domestic=Servicii de posta autorizate
+UspsShipping_priorityPackageType=Tipul pachetului postal Priority 
+UspsShipping_isMachinable=Pachetul este manevrabil
+UspsShipping_size=Marime pachet
+_USPS_ITL_OPTS=Optiuni expediere internationala
+UspsShipping_international=Servicii expediere internationala autorizate
+Express=Express
+Priority=Priority
+Parcel=Colet postal
+Library=Library Mail
+BPM=Bound Printed Matter (continut cu destinatie fixa)
+Media=Media Mail

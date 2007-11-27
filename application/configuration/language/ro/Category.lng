@@ -1,0 +1,15 @@
+FEATURED=Produse principale
+SALES_RANK=Cele mai vandute produse
+PRODUCT_NAME_ASC=Denumirea produselor:A-Z
+PRODUCT_NAME_DESC=Denumirea produselor:Z-A
+PRICE_ASC=Preturi in ordine crescatoare
+PRICE_DESC=Preturi in ordine descrescatoare
+NEWEST_ARRIVALS=Cele mai noi produse inregistrate
+RATING=Parerea clientilor
+_found_cats=Categorii gasite
+_not_found=<span class ='notFoundMain'>Nici un produs gasit.</span>Va rugam folositi alte cuvinte - cheie pentru cautare.
+_featured_products=Produse principale
+_showing_products=Prezentarea [...1] la [...2] din [...3] produse gasite.
+_sort_by=sortare dupa
+_narrow_by_cat=Gruparea rezultatelor pe categorii
+_more_subcats=mai multe

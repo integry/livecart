@@ -1,0 +1,6 @@
+_add_response=Adaugare raspuns
+_cancel_response=Anulare raspuns
+_err_enter_text=Va rugam introduceti textul raspunsului
+_admin=Administrator
+_customer=Client
+_no_messages=Nu au fost adaugate inca, de catre client sau administrator, mesaje referitoare la aceasta comanda,. Puteti adauga un raspuns daca doriti sa faceti o actualizare speciala la situatia acestei comenzi. Mesajul va fi transmis automat prin e-mail clientului.

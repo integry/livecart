@@ -1,0 +1,16 @@
+_filter_group_was_successfully_saved=Filtrul a fost salvat cu succes
+_could_not_save_filter_group=Nu pot salva filtrul
+_filter_group_was_successfully_removed=Filtrul a fost indepartat cu succes
+_could_not_remove_filter_group=Nu pot indeparta filtrul
+_add_new_filter=Adaugati un nou filtru
+_category_has_no_attr=Nu au fost create caracteristici filtru pentru aceasta categorie inca.
+_delete_field=Stergeti camp
+_remove_filter_question=Sunteti sigur ca doriti sa indepartati acest filtru?
+_FilterGroup_remove_question=Sunteti sigur ca doriti sa indepartati acest filtru?
+_cancel_adding_new_filter=Renuntare la adaugarea noului filtru
+_error_name_empty=Numele filtrului este gol
+_error_filter_value_is_not_a_number=Indicele filtrului trebuie sa fie un numar
+_error_spec_field_is_not_selected=Specificatia camp nu e selectata
+_error_illegal_date=Data ilegala
+_error_filter_name_empty=Numele filtrului este gol
+_error_filter_handle_invalid=Tranzactie gresita

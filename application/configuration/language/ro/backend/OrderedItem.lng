@@ -1,0 +1,13 @@
+_ordered_item_was_successfully_moved=Produsul a fost mutat cu succes la alta livrare
+_this_shipping_service_has_no_available_rates=Acest serviciu nu este disponibil pentru zona utilizator sau pret comanda
+_ordered_item_quantity_was_updated=Cantitatea articolelor a fost actualizata
+_error_updating_item_quantity=Eroare la actualizarea cantitatii articolelor
+_item_has_been_successfuly_saved=Articolul a fost adaugat la comanda cu succes
+_item_was_successfully_removed_from_shipment=Articolul a fost indepartat de la  livrare cu succes
+_error_removing_item_from_shipment=Eroare aparuta la indepartarea articolului de la livrare
+_downloadable_item_already_exists_in_this_order=Acest articol de descarcat exista deja in aceasta comanda
+_select_product=Adaugare produse la comanda
+_done_adding_products=Adaugare de produse reusita
+_select_shippment=Alegere livrare
+_shipping_service_is_not_selected=Serviciul de livrare  nu este selectat
+_shipment=Livrare

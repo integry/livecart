@@ -1,0 +1,14 @@
+_a_relationship_between_products_was_successfully_created=O legatura intre produse a fost creata cu succes 
+_could_not_create_product_relationship=Acestui produs i s-a atribuit deja o inrudire
+_relationship_was_successfully_removed=Legatura a fost indepartata cu succes
+_select_product=Adaugare produs inrudit
+_add_new_group=Adaugare grup nou
+_done_adding=Adaugarea produselor inrudite a fost efectuata
+_cancel_adding_new_related_product=Renuntare la adaugarea unei noi legaturi
+_cancel_adding_new_group=Renuntare la adaugarea unui grup nou
+_are_you_sure_you_want_to_delete_this_group=Sunteti sigur ca doriti sa stergeti acest grup de legatura?
+_are_you_sure_you_want_to_delete_this_relation=Sunteti sigur ca doriti sa stergeti aceasta legatura?
+_product_relationship_group_title=Titlu
+_err_circular=Nu se poate adauga o inrudire a unui produs cu acelasi produs
+_err_multiple=Acestui produs i s-a atribuit deja o inrudire
+_msg_added=Inrudirea produsului a fost adaugata cu succes

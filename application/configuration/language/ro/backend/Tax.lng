@@ -1,0 +1,10 @@
+_tax_entry_was_successfully_saved=Taxa intrata a fost salvata cu succes
+_could_not_save_tax_entry=Nu pot salva taxa intrata
+_add_new_tax=adaugare taxa noua
+_cancel_adding_new_tax=Renuntare la adaugare taxa noua
+_cancel_adding_new_tax_rate=Renuntare la adaugare rata noua taxare
+_name=Nume
+_manage=Administrare
+_taxes=Taxe
+_error_the_name_should_not_be_empty=Numele nu trebuie sa ramana necompletat
+_are_you_sure_you_want_to_remove_ths_tax=Sunteti sigur ca doriti sa indepartati aceasta taxa? Poate fi folosita in unele zone de livrare.

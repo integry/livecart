@@ -1,0 +1,6 @@
+PaypalExpressCheckout=Verificare Paypal Express
+PaypalExpressCheckout_sandbox=Folositi casuta test alaturata
+PaypalExpressCheckout_username=Nume utilizator
+PaypalExpressCheckout_password=Parola
+PaypalExpressCheckout_signature=Semnatura
+PaypalExpressCheckout_AUTHONLY=Doar plati autorizate fara inregistrarea lor automata

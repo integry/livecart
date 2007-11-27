@@ -1,0 +1,4 @@
+AuthorizeNet=Authorize.net
+AuthorizeNet_login=Autentificare serie
+AuthorizeNet_transactionKey=Cheie tranzactie
+AuthorizeNet_gateway=Adresa URL portal

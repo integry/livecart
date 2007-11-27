@@ -1,0 +1,16 @@
+_cancel_new=Renuntare
+_add_new=Adaugare imagine noua
+_delete_confirm=Sunteti sigur ca doriti sa stergeti aceasta imagine?
+_main_image=Imagine principala
+_supplemental_images=Imagini suplimentare
+_no_images=Pentru acest produs inca nu au fost adaugate imagini
+_max_file_size=Doar fisiere JPEG, GIF si PNG. Dimensiune maxima fisier: [_1]
+_edit_image=Scriere detalii imagine
+_image_title=Introduceti titlul imaginii
+_image_file=Selectati fisierul imagine
+_upload=Adaugati imagine
+_save=Salvati
+_err_not_uploaded=Va rugam selectati un fisier 
+_err_not_image=Aceasta nu este o imagine corespunzatoare
+_err_resize=Eroare redimensionare imagine
+_err_too_large=Fisier prea mare
