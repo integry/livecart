@@ -1,3 +1,4 @@
+_select_file=Select a File
 _listing_files=Listing files $from - $to of $count
 _no_files_found=No files found
 fileName=Name

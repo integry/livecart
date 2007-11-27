@@ -24,13 +24,23 @@
 </style>
 {/literal}
 
+<div id="pageTitleContainer">
+	<div id="pageTitle">{$PAGE_TITLE}</div>
+	<div id="breadcrumb_template" class="dom_template">
+		<span class="breadcrumb_item"><a href=""></a></span>
+		<span class="breadcrumb_separator"> &gt; </span>
+		<span class="breadcrumb_lastItem"></span>
+	</div>
+	<div id="breadcrumb"></div>
+</div>
+
 <div id="popupCategoryContainer" class="treeContainer">
 
 	<div id="categoryBrowser" class="treeBrowser"> </div>
 
 </div>
 
-<div id="fileContainer" style="margin-left: 300px;">
+<div id="fileContainer">
 
     <fieldset class="container activeGridControls">
     	<span class="activeGridItemsCount">
@@ -65,13 +75,14 @@
 
 	Backend.SelectFile.init();
 	Backend.SelectFile.addCategories({/literal}{json array=$root}{literal});
-	Backend.SelectFile.addCategories({/literal}{json array=$directoryList}{literal});
-
 	Backend.SelectFile.treeBrowser.setXMLAutoLoading(Backend.SelectFile.links.categoryAutoloading);
+	Backend.SelectFile.addCategories({/literal}{json array=$directoryList}{literal});
 
 	Backend.SelectFile.initPage();
 
 	Backend.SelectFile.loadDirectory({/literal}{json array=$current}{literal});
+	
+	Backend.Breadcrumb.setTree(Backend.SelectFile.treeBrowser);
 </script>
 {/literal}
 

@@ -1,3 +1,19 @@
+body
+{
+    padding: 0.5em;
+    padding-top: 0;
+}
+
+#fileContainer
+{
+     margin-left: 270px;
+}
+
+#categoryBrowser .containerTableStyle, #categoryBrowser
+{
+    height: 443px;
+}
+
 .filesList .cell_cb
 {
 	display: none;
@@ -11,4 +27,9 @@
 .filesList td.cell_fileName, .filesList th.cell_fileName
 {
 	width: 30%;
+}
+
+.activeGridColumns .export
+{
+    display: none;
 }

@@ -320,52 +320,8 @@ Backend.UserGroup.prototype =
     	{
     		Backend.User.Editor.prototype.getInstance(id);
     	}
-    },
-
-
-	updateHeader: function ( activeGrid, offset )
-	{
-		var liveGrid = activeGrid.ricoGrid;
-
-		var totalCount = liveGrid.metaData.getTotalRows();
-		var from = offset + 1;
-		var to = offset + liveGrid.metaData.getPageSize();
-
-		if (to > totalCount)
-		{
-			to = totalCount;
-		}
-
-		var categoryID = activeGrid.tableInstance.id.split('_')[1];
-		var cont = $('productCount_' + categoryID);
-		var countElement = document.getElementsByClassName('rangeCount', cont)[0];
-		var notFound = document.getElementsByClassName('notFound', cont)[0];
-
-		if (totalCount > 0)
-		{
-			if (!countElement.strTemplate)
-			{
-				countElement.strTemplate = countElement.innerHTML;
-			}
-
-			var str = countElement.strTemplate;
-			str = str.replace(/\$from/, from);
-			str = str.replace(/\$to/, to);
-			str = str.replace(/\$count/, totalCount);
-
-			countElement.innerHTML = str;
-			notFound.style.display = 'none';
-			countElement.style.display = '';
-		}
-		else
-		{
-			notFound.style.display = '';
-			countElement.style.display = 'none';
-		}
     }
 }
-
-
 
 
 Backend.UserGroup.GridFormatter =

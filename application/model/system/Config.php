@@ -140,7 +140,7 @@ class Config
 		{
 			foreach($this->values[$key] as $k => $v)
 			{
-				if (strlen($k) != 2 || !is_string($v))
+				if (strlen($k) != 2 || !is_string($v) || !preg_match('/^[a-z]{2}$/', $k))
 				{
 					return false;
 				}

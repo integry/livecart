@@ -48,16 +48,7 @@ Backend.SelectFile =
 					return true; 
 				}
 			);
-
-		Backend.Breadcrumb.setTree(this.treeBrowser);
-		
-		this.grid.setDataFormatter(Backend.SelectFile.GridFormatter);
-	},
-
-	initPage: function()
-	{
-		Backend.Breadcrumb.display(1);
-
+			
 		Backend.SelectFile.treeBrowser.showFeedback =
 			function(itemId)
 			{
@@ -85,8 +76,61 @@ Backend.SelectFile =
                     img.src = img.originalSrc;
                     this.iconUrls[itemId] = null;
                 }
-			}
+			}			
+		
+		this.grid.setDataFormatter(Backend.SelectFile.GridFormatter);
 	},
+
+	initPage: function()
+	{
+		//Backend.Breadcrumb.display(1);
+	},
+
+	updateHeader: function ( activeGrid, offset )
+	{
+		var liveGrid = activeGrid.ricoGrid;
+
+		var totalCount = liveGrid.metaData.getTotalRows();
+		var from = offset + 1;
+		var to = offset + liveGrid.metaData.getPageSize();
+
+		if (to > totalCount)
+		{
+			to = totalCount;
+		}
+
+		var categoryID = activeGrid.tableInstance.id.split('_')[1];
+		var cont = $('productCount_' + categoryID);
+		var countElement = document.getElementsByClassName('rangeCount', cont)[0];
+		var notFound = document.getElementsByClassName('notFound', cont)[0];
+
+        if (!countElement)
+        {
+            return false;
+        }
+
+		if (totalCount > 0)
+		{
+			if (!countElement.strTemplate)
+			{
+				countElement.strTemplate = countElement.innerHTML;
+			}
+
+			var str = countElement.strTemplate;
+			str = str.replace(/\$from/, from);
+			str = str.replace(/\$to/, to);
+			str = str.replace(/\$count/, totalCount);
+
+			countElement.innerHTML = str;
+			notFound.style.display = 'none';
+			countElement.style.display = '';
+		}
+		else
+		{
+			notFound.style.display = '';
+			countElement.style.display = 'none';
+		}
+    },
 
 	/**
 	 * Tree browser onClick handler. Activates selected category by realoading active
@@ -131,7 +175,7 @@ Backend.SelectFile =
             {
                 category.options = "";
             }
-console.log(!category.childrenCount ? 0 : category.childrenCount);
+
             Backend.SelectFile.treeBrowser.insertNewChild(category.parent,category.ID,category.name, null, 0, 0, 0, category.options, !category.childrenCount ? 0 : category.childrenCount);
         });
     },

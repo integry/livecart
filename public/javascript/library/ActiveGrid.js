@@ -152,11 +152,9 @@ ActiveGrid.prototype =
 	{        	
 		this.ricoGrid.onBeginDataFetch = this.showFetchIndicator.bind(this);	
 
-		if(Backend.Product)
-        {
-            Backend.Product.updateHeader(this, offset);
-		}
-        
+        this.updateHeader(offset);
+
+/*        
 		if(Backend.UserGroup)
         {
             Backend.UserGroup.prototype.updateHeader(this, offset);
@@ -166,10 +164,54 @@ ActiveGrid.prototype =
         {
             Backend.CustomerOrder.prototype.updateHeader(this, offset);
 		}
-        
+*/        
 		this._markSelectedRows();
 	},
 	
+	updateHeader: function (offset)
+	{
+		var liveGrid = this.ricoGrid;
+
+		var totalCount = liveGrid.metaData.getTotalRows();
+		var from = offset + 1;
+		var to = offset + liveGrid.metaData.getPageSize();
+
+		if (to > totalCount)
+		{
+			to = totalCount;
+		}
+
+		var countElement = this.loadIndicator.parentNode.up('div').down('.rangeCount');
+		var notFound = this.loadIndicator.parentNode.up('div').down('.notFound');
+
+        if (!countElement)
+        {
+            return false;
+        }
+
+		if (totalCount > 0)
+		{
+			if (!countElement.strTemplate)
+			{
+				countElement.strTemplate = countElement.innerHTML;
+			}
+
+			var str = countElement.strTemplate;
+			str = str.replace(/\$from/, from);
+			str = str.replace(/\$to/, to);
+			str = str.replace(/\$count/, totalCount);
+
+			countElement.innerHTML = str;
+			notFound.style.display = 'none';
+			countElement.style.display = '';
+		}
+		else
+		{
+			notFound.style.display = '';
+			countElement.style.display = 'none';
+		}
+    },
+		
 	onUpdate: function()
 	{
 		this._markSelectedRows();		
