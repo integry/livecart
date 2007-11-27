@@ -14,10 +14,7 @@ class CsvImportController extends StoreManagementController
 	public function index()
 	{
 		$response = new ActionResponse();
-		$response->set('form', $this->getForm());
-		$response->set('carts', $this->getDrivers());
-		$response->set('dbTypes', array('mysql' => 'MySQL'));
-		$response->set('recordTypes', LiveCartImporter::getRecordTypes());
+        $response->set('form', $this->getForm());
 		return $response;
 	}
 
@@ -109,12 +106,13 @@ class CsvImportController extends StoreManagementController
 		ClassLoader::import('application.helper.filter.HandleFilter');
 
 		$val = new RequestValidator('databaseImport', $this->request);
+/*
 		$val->addCheck('cart', new IsNotEmptyCheck($this->translate('_err_no_cart_selected')));
 		$val->addCheck('dbServer', new IsNotEmptyCheck($this->translate('_err_no_database_server')));
 		$val->addCheck('dbType', new IsNotEmptyCheck($this->translate('_err_no_db_type')));
 		$val->addCheck('dbName', new IsNotEmptyCheck($this->translate('_err_no_database_name')));
 		$val->addCheck('dbUser', new IsNotEmptyCheck($this->translate('_err_no_database_username')));
-
+*/
 		return $val;
 	}
 }
