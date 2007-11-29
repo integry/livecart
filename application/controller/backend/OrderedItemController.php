@@ -23,17 +23,16 @@ class OrderedItemController extends StoreManagementController
 
 		if($product->isDownloadable())
 		{
-			$order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true, array('ShippingAddress' => 'UserAddress', 'Currency'));			
+			$order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true, array('ShippingAddress' => 'UserAddress', 'Currency'));
 	 		$shipment = $order->getDownloadShipment();
 		}
 		else
 		{
 			$shipment = Shipment::getInstanceById('Shipment', (int)$this->request->get('shipmentID'), true, array('Order' => 'CustomerOrder', 'ShippingService', 'ShippingAddress' => 'UserAddress', 'AmountCurrency' => 'Currency'));
 		}
-		
+
 		$history = new OrderHistory($shipment->order->get(), $this->user);
 
-		
 		$existingItem = false;
 		foreach($shipment->getItems() as $item)
 		{
@@ -43,7 +42,7 @@ class OrderedItemController extends StoreManagementController
 				break;
 			}
 		}
-		
+
 		if($existingItem)
 		{
 			$item = $existingItem;
@@ -60,29 +59,29 @@ class OrderedItemController extends StoreManagementController
 		{
 			$order = $shipment->order->get();
 			$currency = $shipment->amountCurrency->get();
-			
+
 			$item = OrderedItem::getNewInstance($order, $product);
 			$item->count->set(1);
 			$item->priceCurrencyID->set($currency->getID());
 			$item->price->set($product->getPrice($currency->getID()));
-			
+
 			$order->addItem($item);
 			$shipment->addItem($item);
 			$shipment->save();
 		}
-		
+
 		$response = $this->save($item, $shipment, $existingItem ? true : false );
-		
+
 		$history->saveLog();
-		
+
 		return $response;
 	}
-	
+
 	public function update()
 	{
-		
+
 	}
-	
+
 	private function save(OrderedItem $item, Shipment $shipment, $existingItem = false)
 	{
 		$validator = $this->createOrderedItemValidator();
@@ -92,9 +91,9 @@ class OrderedItemController extends StoreManagementController
 			{
 				$item->count->set($count);
 			}
-			
+
 			$shipment->loadItems();
-			
+
 			if(!$existingItem)
 			{
 				$shipment->addItem($item);
@@ -106,10 +105,10 @@ class OrderedItemController extends StoreManagementController
 				$shipment->setAvailableRates($shipmentRates);
 				$shipment->setRateId($shipment->getShippingService()->getID());
 			}
-			
+
 			$shipment->recalculateAmounts();
 			$shipment->save();
-			
+
 			return new JSONResponse(array(
 				'item' => array(
 					'ID'			  => $item->getID(),
@@ -136,35 +135,35 @@ class OrderedItemController extends StoreManagementController
 			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_unable_to_update_items_quantity'));
 		}
 	}
-	
+
 	/**
 	 * Products popup
-	 * 
+	 *
 	 * @role update
 	 */
 	public function selectProduct()
 	{
 		ClassLoader::import("application.model.category.Category");
-		
-		$response = new ActionResponse();	   
-		
+
+		$response = new ActionResponse();
+
 		$categoryList = Category::getRootNode()->getDirectChildNodes();
 		$categoryList->unshift(Category::getRootNode());
 
 		$response->set("categoryList", $categoryList->toArray($this->application->getDefaultLanguageCode()));
-		
+
 		$order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);
-		$downloadable = $order->getDownloadShipment();
+		$downloadable = $order->getDownloadShipment(false);
 		$order->loadItems();
 		$shipments = $order->getShipments();
-		
+
 		// has downloadable group?
 		$downloadableGroup = null;
 		foreach($shipments as $key => $shipment)
 		{
 			if(!$shipment->isShippable()) $downloadableGroup = $shipment;
 		}
-		
+
 		$shipmentsArray = array();
 		foreach($shipments as $key => $shipment)
 		{
@@ -173,10 +172,10 @@ class OrderedItemController extends StoreManagementController
 			{
 				continue;
 			}
-			
+
 			$shipmentsArray[$shipment->getID()] = $shipment->toArray();
 			$rate = unserialize($shipment->shippingServiceData->get());
-			
+
 			if(is_object($rate))
 			{
 				$rate->setApplication($this->application);
@@ -188,13 +187,13 @@ class OrderedItemController extends StoreManagementController
 				$shipmentsArray[$shipment->getID()]['ShippingService']['name_lang'] = $this->translate('_shipping_service_is_not_selected');
 			}
 		}
-		
+
 		$response->set("order", $order->toFlatArray());
 		$response->set("shipments", $shipmentsArray);
-		
+
 		return $response;
 	}
-	
+
 	/**
 	 * @return RequestValidator
 	 */
@@ -204,44 +203,44 @@ class OrderedItemController extends StoreManagementController
 		$validator->addCheck('productID', new MinValueCheck('_err_invalid_product', 0));
 		$validator->addCheck('orderID', new MinValueCheck('_err_invalid_customer_order', 0));
 		$validator->addCheck('count', new MinValueCheck('_err_count_should_be_more_than_zero', 0));
-		
+
 		return $validator;
 	}
-	
+
 	/**
 	 * Delete filter from database
-	 * 
+	 *
 	 * @role update
-	 * 
+	 *
 	 * @return JSONResponse
 	 */
 	public function delete()
 	{
 		if($id = $this->request->get("id", false))
 		{
-			$item = OrderedItem::getInstanceByID('OrderedItem', (int)$id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'AmountCurrency' => 'Currency', 'ShippingAddress' => 'UserAddress', 'Product')); 
+			$item = OrderedItem::getInstanceByID('OrderedItem', (int)$id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'AmountCurrency' => 'Currency', 'ShippingAddress' => 'UserAddress', 'Product'));
 			$shipment = $item->shipment->get();
 			$order = $shipment->order->get();
 			$order->loadItems();
-			
+
 			$history = new OrderHistory($order, $this->user);
-			
+
 			$shipment->loadItems();
 			$shipment->removeItem($item);
 			$order->removeItem($item);
-			
+
 			if($shipment->getShippingService())
 			{
 				$shipmentRates = $shipment->order->get()->getDeliveryZone()->getShippingRates($shipment);
 				$shipment->setAvailableRates($shipmentRates);
 				$shipment->setRateId($shipment->getShippingService()->getID());
 			}
-			
+
 			$shipment->recalculateAmounts();
 			$shipment->save();
-			
+
 			$history->saveLog();
-			
+
 			return new JSONResponse(array(
 					'item' => array(
 						'ID'			  => $item->getID(),
@@ -249,7 +248,7 @@ class OrderedItemController extends StoreManagementController
 												'ID' => $shipment->getID(),
 												'amount' => $shipment->amount->get(),
 												'shippingAmount' => $shipment->shippingAmount->get(),
-												'taxAmount' => $shipment->taxAmount->get(),	
+												'taxAmount' => $shipment->taxAmount->get(),
 												'total' =>((float)$shipment->shippingAmount->get() + (float)$shipment->amount->get() + (float)$shipment->taxAmount->get()),
 												'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
 												'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
@@ -259,7 +258,7 @@ class OrderedItemController extends StoreManagementController
 						'priceCurrencyID' => $item->priceCurrencyID->get(),
 						'downloadable' => $item->product->get()->isDownloadable()
 					)
-				), 
+				),
 				'success'
 			);
 		}
@@ -273,66 +272,66 @@ class OrderedItemController extends StoreManagementController
 	 * @role update
 	 */
 	public function changeShipment()
-	{ 
+	{
 		if(($id = (int)$this->request->get("id", false)) && ($fromID = (int)$this->request->get("from", false)) && ($toID = (int)$this->request->get("to", false)))
 		{
-			$item = OrderedItem::getInstanceByID('OrderedItem', $id, true, array('Product')); 
-					
-			$oldShipment = Shipment::getInstanceByID('Shipment', $fromID, true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress', 'AmountCurrency' => 'Currency')); 
-			$newShipment = Shipment::getInstanceByID('Shipment', $toID, true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress', 'AmountCurrency' => 'Currency')); 
+			$item = OrderedItem::getInstanceByID('OrderedItem', $id, true, array('Product'));
+
+			$oldShipment = Shipment::getInstanceByID('Shipment', $fromID, true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress', 'AmountCurrency' => 'Currency'));
+			$newShipment = Shipment::getInstanceByID('Shipment', $toID, true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress', 'AmountCurrency' => 'Currency'));
 
 			$history = new OrderHistory($oldShipment->order->get(), $this->user);
-			
+
 			$zone = $oldShipment->order->get()->getDeliveryZone();
-			
+
 			if($oldShipment !== $newShipment)
 			{
 				$oldShipment->loadItems();
 				$oldShipment->removeItem($item);
-				
+
 				$newShipment->loadItems();
 				$newShipment->addItem($item);
-				
-				
+
+
 				if($oldShipment->getShippingService())
 				{
 					$shipmentRates = $zone->getShippingRates($oldShipment);
 					$oldShipment->setAvailableRates($shipmentRates);
-					
+
 					$oldShipment->setRateId($oldShipment->getShippingService()->getID());
 					$oldShipment->save();
 				}
-			
+
 				if($newShipment->getShippingService())
 				{
 					$shipmentRates = $zone->getShippingRates($newShipment);
 					$newShipment->setAvailableRates($shipmentRates);
-					
+
 					$newShipment->setRateId($newShipment->getShippingService()->getID());
 					$newShipment->save();
 				}
-				
+
 				$item->save();
-				
+
 				if($newShipment->getSelectedRate() || !$newShipment->getShippingService() || !is_int($newShipment->getShippingService()->getID()))
 				{
 					$item->save();
-					
+
 					$oldShipment->recalculateAmounts();
 					$newShipment->recalculateAmounts();
-									
+
 					$oldShipment->save();
 					$newShipment->save();
-					
+
 					$history->saveLog();
-	
+
 					return new JSONResponse(
 						array(
 							'oldShipment' => array(
 								'ID' => $oldShipment->getID(),
 								'amount' => $oldShipment->amount->get(),
 								'shippingAmount' => $oldShipment->shippingAmount->get(),
-								'taxAmount' => $oldShipment->taxAmount->get(),	
+								'taxAmount' => $oldShipment->taxAmount->get(),
 								'total' =>((float)$oldShipment->shippingAmount->get() + (float)$oldShipment->amount->get() + (float)$oldShipment->taxAmount->get()),
 								'prefix' => $oldShipment->amountCurrency->get()->pricePrefix->get(),
 								'suffix' => $oldShipment->amountCurrency->get()->priceSuffix->get()
@@ -346,8 +345,8 @@ class OrderedItemController extends StoreManagementController
 								'prefix' => $newShipment->amountCurrency->get()->pricePrefix->get(),
 								'suffix' => $newShipment->amountCurrency->get()->priceSuffix->get()
 							)
-						), 
-						'success', 
+						),
+						'success',
 						$this->translate('_ordered_item_was_successfully_moved')
 					);
 				}
@@ -357,8 +356,8 @@ class OrderedItemController extends StoreManagementController
 						array(
 							'oldShipment' => array('ID' => $fromID),
 							'newShipment' => array('ID' => $toID)
-						), 
-						'failure', 
+						),
+						'failure',
 						$this->translate('_this_shipping_service_has_no_available_rates')
 					);
 				}
@@ -371,32 +370,32 @@ class OrderedItemController extends StoreManagementController
 	}
 
 	public function changeCount()
-	{   
+	{
 		if(($id = (int)$this->request->get("id", false)) )
 		{
 			$count = (int)$this->request->get("count");
-			$item = OrderedItem::getInstanceByID('OrderedItem', $id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'AmountCurrency' => 'Currency', 'ShippingAddress' => 'UserAddress', 'Product')); 
+			$item = OrderedItem::getInstanceByID('OrderedItem', $id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'AmountCurrency' => 'Currency', 'ShippingAddress' => 'UserAddress', 'Product'));
 			$history = new OrderHistory($item->customerOrder->get(), $this->user);
-			
+
 			$item->count->set($count);
-			
+
 			$shipment = $item->shipment->get();
 			$shipment->loadItems();
-			  
+
 			if($shipment->getShippingService())
 			{
 				$shipmentRates = $shipment->order->get()->getDeliveryZone()->getShippingRates($shipment);
 				$shipment->setAvailableRates($shipmentRates);
 				$shipment->setRateId($shipment->getShippingService()->getID());
 			}
-			
+
 			$shipment->recalculateAmounts();
-			
+
 			$item->save();
 			$shipment->save();
-			
+
 			$history->saveLog();
-			
+
 			return new JSONResponse(array(
 				'ID' => $item->getID(),
 				'Shipment' => array(

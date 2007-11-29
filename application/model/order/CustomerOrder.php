@@ -1205,9 +1205,19 @@ class CustomerOrder extends ActiveRecordModel
 
 	public function getDownloadShipment($createNew = true)
 	{
+		// look for a shipment that only contains downloadable items
 		foreach($this->getShipments() as $shipment)
 		{
 			if (!$shipment->isShippable())
+			{
+				return $shipment;
+			}
+		}
+
+		// look for an empty shipment
+		foreach($this->getShipments() as $shipment)
+		{
+			if (!count($shipment->getItems()))
 			{
 				return $shipment;
 			}
