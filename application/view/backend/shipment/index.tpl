@@ -65,7 +65,7 @@
 	<h2 class="notShippedShipmentsTitle">{t _downloadable}</h2> 
 	<div id="orderShipments_list_{$orderID}_downloadable" class="downloadableShipment"  {denied role='order.update'}style="display: none"{/denied}>		
 		<ul id="orderShipmentsItems_list_{$orderID}_downloadable" class="activeList_add_delete orderShipmentsItem activeList"> 
-			<li id="orderShipments_list_downloadable_{$orderID}_{$downloadableShipment.ID}" class="orderShipment" >
+			<li id="orderShipments_list_{$orderID}_{$downloadableShipment.ID}" class="orderShipment" >
 				<form>
 					{include file="backend/shipment/shipment.tpl" shipment=$downloadableShipment notShippable=true downloadable=1}
 
@@ -167,7 +167,7 @@
 		{/literal}{if $shipment.isShippable}{literal}
 			var shipment = Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}{if $shipment.isShipped}_shipped{/if}_{$shipment.ID}{literal}', {isShipped: {/literal}{if $shipment.isShipped}true{else}false{/if}{literal}});			 
 		{/literal}{else}{literal} 
-			var shipment = Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_downloadable_{$orderID}_{$shipment.ID}{literal}');	   
+			var shipment = Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}');	   
 		{/literal}{/if}{literal} 
 	{/literal}{/foreach}{literal} 
 	
