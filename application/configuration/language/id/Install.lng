@@ -1,0 +1,10 @@
+checkWritePermissions=Directory write permission
+_writePermissionsFix=<strong>Kami menyarankan:</strong> gunakan klien FTP untuk mengubah permission (chmod) direktori-direktori berikut menjadi 777 (full write access). Jika direktori belum ada, silakan buat terlebih dahulu.
+checkPHPVersion=Versi PHP
+checkPHPVersion_error=Dibutuhkan setidaknya <a href="http://php.net" target="_blank">PHP</a> versi 5.2
+checkMySQL=Dukungan database
+checkMySQL_error=Ekstensi PHP <a href="http://php.net/mysqli" target="_blank">mysqli</a> harus diinstall.
+checkGD=Dukungan manipulasi gambar (GD)
+checkGD_error=Ekstensi PHP <a href="http://php.net/gd" target="_blank">GD</a> harus diinstall.
+checkSession=Konfigurasi sesi PHP
+checkSession_error=Sesi PHP tidak disimpan. Pastikan bahwa konfigurasi session.save_path PHP telah diset secara benar.

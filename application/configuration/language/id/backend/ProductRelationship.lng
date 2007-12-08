@@ -1,0 +1,14 @@
+_a_relationship_between_products_was_successfully_created=Kaitan antar produk telah dibuat
+_could_not_create_product_relationship=Produk ini telah dikaitkan dengan produk lain
+_relationship_was_successfully_removed=Kaitan antar produk telah dihapus
+_select_product=Tambahkan produk terkait
+_add_new_group=Tambahkan grup baru
+_done_adding=Selesaikan penambahan produk terkait
+_cancel_adding_new_related_product=Batalkan penambahan kaitan
+_cancel_adding_new_group=Batalkan penambahan grup
+_are_you_sure_you_want_to_delete_this_group=Anda yakin ingin menghapus grup kaitan
+_are_you_sure_you_want_to_delete_this_relation=Anda yakin ingin menghapus kaitan ini?
+_product_relationship_group_title=Judul
+_err_circular=Produk yang dikaitkan tidak boleh sama
+_err_multiple=Produk ini telah dikaitkan dengan produk lain
+_msg_added=Produk terkait telah ditambahkan

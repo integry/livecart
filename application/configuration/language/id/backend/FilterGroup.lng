@@ -1,0 +1,16 @@
+_filter_group_was_successfully_saved=Filter telah disimpan
+_could_not_save_filter_group=Filter tidak dapat disimpan
+_filter_group_was_successfully_removed=Filter telah dihapus
+_could_not_remove_filter_group=Filter tidak dapat dihapus
+_add_new_filter=Tambah filter baru
+_category_has_no_attr=Belum ada filter dibuat untuk kategori ini
+_delete_field=Hapus isian
+_remove_filter_question=Anda yakin ingin menghapus filter ini?
+_FilterGroup_remove_question=Anda yakin ingin menghapus filter ini?
+_cancel_adding_new_filter=Batalkan penambahan filter baru
+_error_name_empty=Nama filter kosong
+_error_filter_value_is_not_a_number=Nilai filter haruslah berupa angka
+_error_spec_field_is_not_selected=Isian Spesifikasi tidak dipilih
+_error_illegal_date=Tanggal yang anda masukkan salah
+_error_filter_name_empty=Nama filter kosong
+_error_filter_handle_invalid=Nama salah

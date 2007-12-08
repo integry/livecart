@@ -1,0 +1,4 @@
+AuthorizeNet=Authorize.net
+AuthorizeNet_login=No. Login
+AuthorizeNet_transactionKey=Kunci Transaksi
+AuthorizeNet_gateway=URL Gateway

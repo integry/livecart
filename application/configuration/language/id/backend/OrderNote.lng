@@ -1,0 +1,6 @@
+_add_response=Tambah respons
+_cancel_response=Batalkan respons
+_err_enter_text=Masukkan isi respons
+_admin=Admin
+_customer=Pelanggan
+_no_messages=Pelanggan atau administrator belum membuat pesan yang terkait dengan order ini. Anda dapat menambah respons jika anda hendak mengubah status order. Sistem akan memberitahukan perubahan status tersebut kepada pelanggan secara otomatis.

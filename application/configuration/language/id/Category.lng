@@ -1,0 +1,15 @@
+FEATURED=Produk unggulan
+SALES_RANK=Terlaris
+PRODUCT_NAME_ASC=Nama produk: A-Z
+PRODUCT_NAME_DESC=Nama produk: Z-A
+PRICE_ASC=Harga: Murah ke Mahal
+PRICE_DESC=Harga: Mahal ke Murah
+NEWEST_ARRIVALS=Produk terbaru
+RATING=Penilaian Pelanggan
+_found_cats=Kategori yang ditemukan
+_not_found=<span class='notFoundMain'>Produk tidak ditemukan.</span> Silakan mencari dengan kata kunci lain.
+_featured_products=Produk unggulan
+_showing_products=Menampilkan [_1] hingga [_2] dari [_3] produk yang ditemukan
+_sort_by=Urut berdasar
+_narrow_by_cat=Saring hasil pencarian dengan kategori
+_more_subcats=lagi...

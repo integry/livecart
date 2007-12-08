@@ -1,0 +1,6 @@
+PaypalDirectPayment=Paypal Direct Payment
+PaypalDirectPayment_sandbox=Gunakan mode kotak pasir (testing)
+PaypalDirectPayment_username=Username
+PaypalDirectPayment_password=Password
+PaypalDirectPayment_signature=Tanda tangan
+PaypalDirectPayment_cardTypes=Jenis kartu kredit yang diaktifkan

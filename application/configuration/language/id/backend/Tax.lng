@@ -1,0 +1,10 @@
+_tax_entry_was_successfully_saved=Data pajak telah disimpan
+_could_not_save_tax_entry=Data pajak tidak dapat disimpan
+_add_new_tax=Tambahkan pajak baru
+_cancel_adding_new_tax=Batalkan penambahan pajak baru
+_cancel_adding_new_tax_rate=Batalkan penambahan biaya pajak baru
+_name=Nama
+_manage=Atur
+_taxes=Pajak
+_error_the_name_should_not_be_empty=Nama tidak boleh kosong
+_are_you_sure_you_want_to_remove_ths_tax=Anda yakin ingin menghapus pajak ini? Pajak ini mungkin digunakan di beberapa Zona Pengiriman

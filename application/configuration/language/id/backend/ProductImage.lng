@@ -1,0 +1,16 @@
+_cancel_new=Batal
+_add_new=Tambahkan gambar baru
+_delete_confirm=Anda yakin ingin menghapus gambar ini?
+_main_image=Gambar Utama
+_supplemental_images=Gambar Tambahan
+_no_images=Produk ini belum memiliki gambar
+_max_file_size=Hanya file JPEG, GIF, dan PNG saja. Ukuran file maksimum: [_1]
+_edit_image=Ubah detail gambar
+_image_title=Masukkan judul gambar
+_image_file=Pilih file gambar
+_upload=Tambahkan gambar
+_save=Simpan
+_err_not_uploaded=Pilih file
+_err_not_image=Gambar salah
+_err_resize=Ukuran gambar gagal diubah
+_err_too_large=File terlalu besar

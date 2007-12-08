@@ -1,0 +1,17 @@
+UspsShipping=USPS
+_USPS_API_ACCESS=Akses API Pengiriman USPS
+UspsShipping_userId=Username API USPS
+UspsShipping_apiUrl=URL API USPS
+_USPS_DOMESTIC_OPTS=Pilihan Pengiriman Domestik
+UspsShipping_domestic=Jasa Pengiriman Yang Aktif
+UspsShipping_priorityPackageType=Jenis paket Priority Mail
+UspsShipping_isMachinable=Paket dapat diolah di mesin
+UspsShipping_size=Ukuran paket
+_USPS_ITL_OPTS=Pilihan Pengiriman Internasional
+UspsShipping_international=Jasa Pengiriman International Yang Aktif
+Express=Express
+Priority=Priority
+Parcel=Parcel Post
+Library=Library Mail
+BPM=Bound Printed Matter
+Media=Media Mail

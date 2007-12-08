@@ -1,0 +1,6 @@
+PaypalExpressCheckout=Paypal Express Checkout
+PaypalExpressCheckout_sandbox=Gunakan mode kotak pasir (testing)
+PaypalExpressCheckout_username=Username
+PaypalExpressCheckout_password=Password
+PaypalExpressCheckout_signature=Tanda tangan
+PaypalExpressCheckout_AUTHONLY=Otorisasi pembayaran tanpa menangkap pembayaran secara otomatis

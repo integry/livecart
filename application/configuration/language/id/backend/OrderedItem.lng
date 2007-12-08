@@ -1,0 +1,13 @@
+_ordered_item_was_successfully_moved=Produk telah dipindahkan ke pengiriman lain
+_this_shipping_service_has_no_available_rates=Jasa pengiriman tidak tersedia untuk zona pengguna dan harga order
+_ordered_item_quantity_was_updated=Jumlah barang telah diubah
+_error_updating_item_quantity=Perubahan jumlah barang gagal
+_item_has_been_successfuly_saved=Barang telah ditambahkan ke order
+_item_was_successfully_removed_from_shipment=Barang telah dihapus dari pengiriman
+_error_removing_item_from_shipment=Penghapusan barang dari pengiriman gagal
+_downloadable_item_already_exists_in_this_order=Barang yang bisa didownload telah ada di order
+_select_product=Tambahkan produk ke order
+_done_adding_products=Selesaikan penambahan produk
+_select_shippment=Pilih pengiriman
+_shipping_service_is_not_selected=Jasa pengiriman belum dipilih
+_shipment=Pengiriman
