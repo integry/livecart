@@ -81,7 +81,7 @@
 	Backend.SelectFile.initPage();
 
 	Backend.SelectFile.loadDirectory({/literal}{json array=$current}{literal});
-	
+
 	Backend.Breadcrumb.setTree(Backend.SelectFile.treeBrowser);
 </script>
 {/literal}

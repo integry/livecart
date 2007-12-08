@@ -29,7 +29,7 @@ class SelectFileController extends StoreManagementController
 		$response->set('availableColumns', $this->getAvailableColumns());
 		$response->set('displayedColumns', $this->getDisplayedColumns());
 		$response->set('current', $dir);
-				
+
 		return $response;
 	}
 
@@ -65,18 +65,27 @@ class SelectFileController extends StoreManagementController
         }
 
 		$path = array_reverse($path);
-		
+
 		// strip root and root level directory
 		array_shift($path);
 		array_shift($path);
-		
+
 		$out = array();
 		$o =& $out;
 
 		foreach ($path as $node)
 		{
-            $o['children'][0] = $node;
-            $o =& $o['children'][0];
+            $o['children'] = $this->getSubDirectories($node['parent']);
+
+			foreach ($o['children'] as $i => $child)
+			{
+				if ($child['ID'] == $node['ID'])
+				{
+					break;
+				}
+			}
+
+            $o =& $o['children'][$i];
         }
 
 		$xmlResponse = new XMLResponse();
@@ -113,12 +122,12 @@ class SelectFileController extends StoreManagementController
 	public function lists($dataOnly = false, $displayedColumns = null)
 	{
 		$filters = $this->request->get('filters');
-		
+
 		if (!$filters)
 		{
 			return new RawResponse();
 		}
-		
+
 		$files = $this->getFiles($filters['file']);
 
 		if (!$displayedColumns)
@@ -155,36 +164,36 @@ class SelectFileController extends StoreManagementController
 							if (stripos($row[$col], $filter) === false)
 	                        {
 	                            unset($data[$index]);
-	                        }							
+	                        }
 						}
 						else if ('numeric' == $type)
-                        {	
+                        {
 							$filter = str_replace('<>', '!=', $filter);
 							$constraints = explode(' ', $filter);
-							
+
 							foreach ($constraints as $c)
 							{
 								if (in_array(substr($c, 0, 2), array('!=', '<=', '>=')))
 								{
 									$operator = substr($c, 0, 2);
-									$value = substr($c, 2);   
+									$value = substr($c, 2);
 								}
 								else if (in_array(substr($c, 0, 1), array('>', '<', '=')))
 								{
 									$operator = substr($c, 0, 1);
-									$value = substr($c, 1);   
+									$value = substr($c, 1);
 								}
 								else
 								{
 									$operator = '=';
 									$value = $c;
 								}
-								
+
 								if ('=' == $operator)
 								{
 									$operator = '==';
 								}
-								
+
 								if (!eval('return $row[$col]' . $operator . '$value' . ';'))
 								{
 									unset($data[$index]);
@@ -197,16 +206,18 @@ class SelectFileController extends StoreManagementController
         }
 
         // sorting
-        if ($this->request->isValueSet('sort_col'))
-        {
-            $this->sortColumn = array_search($this->request->get('sort_col'), array_keys($displayedColumns));
-            usort($data, array($this, 'sortFileList'));
-            
-            if ('DESC' == $this->request->get('sort_dir'))
-            {
-                $data = array_reverse($data);
-            }
-        }
+		if (!$this->request->isValueSet('sort_col'))
+		{
+			$this->request->set('sort_col', 'name');
+		}
+
+		$this->sortColumn = array_search($this->request->get('sort_col'), array_keys($displayedColumns));
+		usort($data, array($this, 'sortFileList'));
+
+		if ('DESC' == $this->request->get('sort_dir'))
+		{
+			$data = array_reverse($data);
+		}
 
         // formatting
         $date = array_search('fileDate', array_keys($displayedColumns));
@@ -250,7 +261,7 @@ class SelectFileController extends StoreManagementController
 
 		if (!$displayedColumns)
 		{
-			$displayedColumns = $this->getColumns();
+			$displayedColumns = array_keys($this->getColumns());
 		}
 
 		return array_intersect_key($this->getColumns(), array_flip($displayedColumns), $this->getAvailableColumns());
@@ -333,12 +344,22 @@ class SelectFileController extends StoreManagementController
 					'fileType' => pathinfo($sub->getFileName(), PATHINFO_EXTENSION),
 					'fileSize' => round($sub->getSize() / 1024, 2),
 					'fileDate' => $sub->getMTime(),
-					'filePermissions' => $sub->getPerms(),
+					'filePermissions' => $this->getFilePerms($sub->getPathName()),
 					'fileOwner' => $sub->getOwner(),
 					'fileGroup' => $sub->getGroup(),
 					'filePath' => $sub->getPathName(),
 					'ID' => $sub->getPathName(),
 				);
+
+				if (function_exists('posix_getpwuid') && ($user = posix_getpwuid($node['fileOwner'])))
+				{
+					$node['fileOwner'] = $user['name'];
+				}
+
+				if (function_exists('posix_getpwuid') && ($group = posix_getgrgid($node['fileGroup'])))
+				{
+					$node['fileGroup'] = $group['name'];
+				}
 
                 $ret[$sub->getPathName()] = $node;
             }
@@ -346,6 +367,38 @@ class SelectFileController extends StoreManagementController
 
         return $ret;
     }
+
+	function getFilePerms($file)
+	{
+		$perms = fileperms($file);
+		if (($perms & 0xC000) == 0xC000) {$info = 's'; } // Socket
+		elseif (($perms & 0xA000) == 0xA000) {$info = 'l'; } // Symbolic Link
+		elseif (($perms & 0x8000) == 0x8000) {$info = '-'; } // Regular
+		elseif (($perms & 0x6000) == 0x6000) {$info = 'b'; } // Block special
+		elseif (($perms & 0x4000) == 0x4000) {$info = 'd'; } // Directory
+		elseif (($perms & 0x2000) == 0x2000) {$info = 'c'; } // Character special
+		elseif (($perms & 0x1000) == 0x1000) {$info = 'p'; } // FIFO pipe
+		else {$info = '?';} // Unknown
+		// Owner
+		$info .= (($perms & 0x0100) ? 'r' : '-');
+		$info .= (($perms & 0x0080) ? 'w' : '-');
+		$info .= (($perms & 0x0040) ?
+		   (($perms & 0x0800) ? 's' : 'x' ) :
+		   (($perms & 0x0800) ? 'S' : '-'));
+		// Group
+		$info .= (($perms & 0x0020) ? 'r' : '-');
+		$info .= (($perms & 0x0010) ? 'w' : '-');
+		$info .= (($perms & 0x0008) ?
+			  (($perms & 0x0400) ? 's' : 'x' ) :
+			  (($perms & 0x0400) ? 'S' : '-'));
+		// World
+		$info .= (($perms & 0x0004) ? 'r' : '-');
+		$info .= (($perms & 0x0002) ? 'w' : '-');
+		$info .= (($perms & 0x0001) ?
+		   (($perms & 0x0200) ? 't' : 'x' ) :
+		   (($perms & 0x0200) ? 'T' : '-'));
+	  return $info;
+	}
 }
 
 ?>
