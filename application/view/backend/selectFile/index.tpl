@@ -66,23 +66,23 @@
 
 {literal}
 <script type="text/javascript">
-	Backend.SelectFile.grid = window.activeGrids['files_0'];
-	Backend.SelectFile.grid.ricoGrid.metaData.options.largeBufferSize = 100;
+	var inst = window.selectFileInstance;
+	inst.grid = window.activeGrids['files_0'];
+	console.log(inst.grid);
+	inst.grid.ricoGrid.metaData.options.largeBufferSize = 100;
 
-	Backend.SelectFile.links = {};
-	Backend.SelectFile.links.categoryRecursiveAutoloading = '{/literal}{link controller=backend.selectFile action=xmlRecursivePath}{literal}';
-	Backend.SelectFile.links.categoryAutoloading = '{/literal}{link controller=backend.selectFile action=xmlBranch}{literal}';
+	inst.links = {};
+	inst.links.categoryRecursiveAutoloading = '{/literal}{link controller=backend.selectFile action=xmlRecursivePath}{literal}';
+	inst.links.categoryAutoloading = '{/literal}{link controller=backend.selectFile action=xmlBranch}{literal}';
 
-	Backend.SelectFile.init();
-	Backend.SelectFile.addCategories({/literal}{json array=$root}{literal});
-	Backend.SelectFile.treeBrowser.setXMLAutoLoading(Backend.SelectFile.links.categoryAutoloading);
-	Backend.SelectFile.addCategories({/literal}{json array=$directoryList}{literal});
+	inst.init();
+	inst.addCategories({/literal}{json array=$root}{literal});
+	inst.treeBrowser.setXMLAutoLoading(inst.links.categoryAutoloading);
+	inst.addCategories({/literal}{json array=$directoryList}{literal});
 
-	Backend.SelectFile.initPage();
+	inst.initPage();
 
-	Backend.SelectFile.loadDirectory({/literal}{json array=$current}{literal});
-
-	Backend.Breadcrumb.setTree(Backend.SelectFile.treeBrowser);
+	inst.loadDirectory({/literal}{json array=$current}{literal});
 </script>
 {/literal}
 

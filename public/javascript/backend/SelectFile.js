@@ -7,7 +7,8 @@ if (Backend == undefined)
 	var Backend = {}
 }
 
-Backend.SelectFile =
+Backend.SelectFile = Class.create();
+Backend.SelectFile.prototype =
 {
 	/**
 	 * Category tree browser instance
@@ -21,35 +22,63 @@ Backend.SelectFile =
 	 */
 	activeCategoryId: null,
 
-	/**
-	 * Category module initialization
-	 */
+	valueElement: null,
+
+	initialize: function(valueElement)
+	{
+		this.valueElement = valueElement;
+
+        var w = window.open(Backend.SelectFile.url, 'selectFile', 'width=950, height=450');
+
+        // close the popup automatically if closing/reloading page
+		Event.observe(window, 'unload', function()
+		{
+			w.close();
+		});
+
+		w.selectFileInstance = this;
+
+        Event.observe(w, 'load',
+            function()
+            {
+            	console.log('loaded');
+            });
+
+        this.window = w;
+	},
+
+	returnValue: function(value, window)
+	{
+		this.valueElement.value = value;
+		window.close();
+	},
+
 	init: function()
 	{
-		this.treeBrowser = new dhtmlXTreeObject("categoryBrowser","","", 0);
+		this.treeBrowser = new dhtmlXTreeObject(this.window.document.getElementById("categoryBrowser"),"","", 0);
 		this.treeBrowser.setImagePath("image/backend/dhtmlxtree/");
 		this.treeBrowser.setStdImages('folderClosed.gif', 'folderOpen.gif', 'folderClosed.gif');
-		this.treeBrowser.setOnClickHandler(this.activateCategory);
+		this.treeBrowser.setOnClickHandler(this.activateCategory.bind(this));
 
 		this.treeBrowser.setOnOpenStartHandler
 			(
-				function(id) 
-				{ 
-					Backend.SelectFile.treeBrowser.showFeedback(id);
-					return true; 
-				}
+				function(id)
+				{
+					this.treeBrowser.showFeedback(id);
+					return true;
+				}.bind(this)
 			);
 
 		this.treeBrowser.setOnOpenEndHandler
 			(
-				function(id) 
-				{ 
-					Backend.SelectFile.treeBrowser.hideFeedback(id);
-					return true; 
-				}
+				function(id)
+				{
+					this.treeBrowser.hideFeedback(id);
+					return true;
+				}.bind(this)
 			);
-			
-		Backend.SelectFile.treeBrowser.showFeedback =
+
+		this.treeBrowser.showFeedback =
 			function(itemId)
 			{
 				if (!this.iconUrls)
@@ -66,7 +95,7 @@ Backend.SelectFile =
                 }
 			}
 
-		Backend.SelectFile.treeBrowser.hideFeedback =
+		this.treeBrowser.hideFeedback =
 			function(itemId)
 			{
                 if (null != this.iconUrls[itemId])
@@ -76,14 +105,15 @@ Backend.SelectFile =
                     img.src = img.originalSrc;
                     this.iconUrls[itemId] = null;
                 }
-			}			
-		
+			}
+
 		this.grid.setDataFormatter(Backend.SelectFile.GridFormatter);
 	},
 
 	initPage: function()
 	{
 		//Backend.Breadcrumb.display(1);
+		this.window.Backend.Breadcrumb.setTree(this.treeBrowser);
 	},
 
 	updateHeader: function ( activeGrid, offset )
@@ -135,22 +165,19 @@ Backend.SelectFile =
 	/**
 	 * Tree browser onClick handler. Activates selected category by realoading active
 	 * tab with category specific data
-	 *
-	 * @todo Find some better way to reference/retrieve the DOM nodes from tree by category ID's
-	 * (automatically assign ID's somehow?). Also necessary for bookmarking (the ID's have to be preassigned).
 	 */
 	activateCategory: function(categoryId)
 	{
-		Backend.Breadcrumb.display(categoryId);
+		this.window.Backend.Breadcrumb.display(categoryId);
 
-        if (Backend.SelectFile.activeCategoryId == categoryId)
+        if (this.activeCategoryId == categoryId)
         {
             return false;
         }
 
-        Backend.SelectFile.grid.setFilterValue('filter_file', categoryId);
-		Backend.SelectFile.grid.reloadGrid();
-		Backend.SelectFile.activeCategoryId = categoryId;
+        this.grid.setFilterValue('filter_file', categoryId);
+		this.grid.reloadGrid();
+		this.activeCategoryId = categoryId;
 	},
 
     /**
@@ -176,34 +203,34 @@ Backend.SelectFile =
                 category.options = "";
             }
 
-            Backend.SelectFile.treeBrowser.insertNewChild(category.parent,category.ID,category.name, null, 0, 0, 0, category.options, !category.childrenCount ? 0 : category.childrenCount);
-        });
+            this.treeBrowser.insertNewChild(category.parent,category.ID,category.name, null, 0, 0, 0, category.options, !category.childrenCount ? 0 : category.childrenCount);
+        }.bind(this));
     },
 
     loadDirectory: function(dir)
     {
-        Backend.SelectFile.treeBrowser.loadXML(Backend.SelectFile.links.categoryRecursiveAutoloading + "?id=" + dir);
+        this.treeBrowser.loadXML(this.links.categoryRecursiveAutoloading + "?id=" + dir);
     }
 }
 
 Backend.SelectFile.GridFormatter =
 {
 	productUrl: '',
-	
+
 	formatValue: function(field, value, id)
 	{
 		if ('fileSize' == field)
 		{
 			value = value + ' KB';
 		}
-		
+
 		else if('fileName' == field)
 		{
             value = '<a href="#" id="file_' + id + '" onclick="Backend.Product.openProduct(' + id + ', event); return false;">' +
                 value +
             '</a>';
 		}
-		
+
 		return value;
 	}
 }

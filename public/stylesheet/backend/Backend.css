@@ -894,7 +894,7 @@ input.radio, input.checkbox, input.submit, input.button, input.reset
 {
     width: auto;
 }
-input.submit, input.reset 
+input.submit, input.reset
 {
 	font-size: 10px;
 	padding: 3px;
@@ -1011,6 +1011,15 @@ label.wide
 select.narrow
 {
     width: 5em;
+}
+
+.button.browse
+{
+	padding-left: 6px;
+	padding-right: 6px;
+	padding-top: 0;
+	padding-bottom: 0;
+	margin: 0;
 }
 
 .UnitConventer_HiUnit

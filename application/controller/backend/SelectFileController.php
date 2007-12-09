@@ -335,7 +335,16 @@ class SelectFileController extends StoreManagementController
     {
         $ret = array();
 
-        foreach (new DirectoryIterator($dir) as $sub)
+        try
+        {
+        	$iterator = new DirectoryIterator($dir);
+		}
+		catch (RuntimeException $e)
+		{
+			return $ret;
+		}
+
+        foreach ($iterator as $sub)
         {
             if ($sub->isFile() && !$sub->isDot())
             {

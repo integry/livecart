@@ -2,7 +2,7 @@ Options -Indexes
 
 <IfModule mod_rewrite.c>
 	RewriteEngine on
-	
+
 	RewriteRule ^$ public/index.php [L]
 
 # demo images
@@ -10,10 +10,10 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^public\/upload\/(.*)$ http://demoimg.livecart.com/upload/$1 [R,L]
 
-	
+
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	
+
 	# if no rule matched the url, we redirect to our front web controller
 	RewriteRule ^(.*)$ public/index.php?route=$1 [QSA,L]
 </IfModule>
