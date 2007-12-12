@@ -28,7 +28,7 @@ Backend.SelectFile.prototype =
 	{
 		this.valueElement = valueElement;
 
-        var w = window.open(Backend.SelectFile.url, 'selectFile', 'width=950, height=450');
+        var w = window.open(Backend.SelectFile.url, 'selectFile', 'width=950, height=480');
 
         // close the popup automatically if closing/reloading page
 		Event.observe(window, 'unload', function()
@@ -38,19 +38,13 @@ Backend.SelectFile.prototype =
 
 		w.selectFileInstance = this;
 
-        Event.observe(w, 'load',
-            function()
-            {
-            	console.log('loaded');
-            });
-
         this.window = w;
 	},
 
 	returnValue: function(value, window)
 	{
 		this.valueElement.value = value;
-		window.close();
+		this.window.close();
 	},
 
 	init: function()
@@ -226,7 +220,7 @@ Backend.SelectFile.GridFormatter =
 
 		else if('fileName' == field)
 		{
-            value = '<a href="#" id="file_' + id + '" onclick="Backend.Product.openProduct(' + id + ', event); return false;">' +
+            value = '<a href="#" id="file_' + id + '" onclick=\'window.selectFileInstance.returnValue("' + id + '", event); return false;\'>' +
                 value +
             '</a>';
 		}

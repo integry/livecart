@@ -2,3 +2,17 @@
 {
 	width: 220px;
 }
+
+.wizardProgress
+{
+	margin-bottom: 1em;
+}
+
+.wizardProgress li
+{
+	float: left;
+	padding: 10px;
+	border: 1px solid black;
+	margin-left: 2em;
+	list-style-type: decimal;
+}

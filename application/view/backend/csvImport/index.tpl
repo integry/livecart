@@ -15,7 +15,10 @@
 {include file="layout/backend/header.tpl"}
 
 <div id="import">
-{form action="controller=backend.databaseImport action=import" method="POST" handle=$form onsubmit="new Backend.DatabaseImport(this); return false;"}
+
+{include file="backend/csvImport/wizardProgress.tpl"}
+
+{form action="controller=backend.csvImport action=setFile" method="POST" handle=$form onsubmit="new Backend.DatabaseImport(this); return false;"}
 
 	<fieldset>
 		<legend>{t _select_file}</legend>
@@ -43,9 +46,9 @@
 
 	<fieldset class="controls">
 		<span class="progressIndicator" style="display: none;"></span>
-		<input type="submit" class="submit" value="{tn _import}" />
+		<input type="submit" class="submit" value="{tn _continue}" />
 		{t _or}
-		<a class="cancel" href="#">{t _cancel}</a>
+		<a class="cancel" href="{link controller=backend.csvImport}">{t _cancel}</a>
 	</fieldset>
 
 {/form}

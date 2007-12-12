@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
+ClassLoader::import("application.model.parser.CsvFile");
 
 /**
  * Handles product importing through a CSV file
@@ -11,10 +12,93 @@ ClassLoader::import("application.controller.backend.abstract.StoreManagementCont
  */
 class CsvImportController extends StoreManagementController
 {
+	const PREVIEW_ROWS = 10;
+
+	private $delimiters = array(
+									'_del_comma' => ',',
+									'_del_semicolon' => ';',
+									'_del_tab' => '	'
+								);
+
 	public function index()
 	{
 		$response = new ActionResponse();
-        $response->set('form', $this->getForm());
+		$response->set('form', $this->getForm());
+		return $response;
+	}
+
+	public function setFile()
+	{
+		$filePath = '';
+
+		if (!empty($_FILES['upload']))
+		{
+			$filePath = ClassLoader::getRealPath('cache') . '/upload.csv';
+			move_uploaded_file($_FILES['upload']['tmp_name'], $filePath);
+		}
+		else
+		{
+			$filePath = $this->request->get('atServer');
+			if (!file_exists($filePath))
+			{
+				$filePath = '';
+			}
+		}
+
+		if (empty($filePath))
+		{
+			$validator = $this->getValidator();
+			$validator->triggerError('atServer', $this->translate('_err_no_file'));
+			$validator->saveState();
+			return new ActionRedirectResponse('backend.csvImport', 'index');
+		}
+
+		return new ActionRedirectResponse('backend.csvImport', 'delimiters', array('query' => 'file=' . $filePath));
+	}
+
+	public function delimiters()
+	{
+		$file = $this->request->get('file');
+		if (!file_exists($file))
+		{
+			return new ActionRedirectResponse('backend.csvImport', 'index');
+		}
+
+		// try to guess the delimiter
+		foreach ($this->delimiters as $delimiter)
+		{
+			$csv = new CsvFile($file, $delimiter);
+			foreach ($this->getPreview($csv) as $row)
+			{
+				if (!isset($count))
+				{
+					$count = count($row);
+				}
+
+				if ($count != count($row))
+				{
+					unset($count);
+					break;
+				}
+			}
+
+			if (isset($count))
+			{
+				break;
+			}
+			else
+			{
+				$delimiter = ',';
+			}
+		}
+
+		$form = $this->getDelimiterForm();
+		$form->set('delimiter', $delimiter);
+
+		$response = new ActionResponse();
+		$response->set('form', $form);
+		$response->set('file', $file);
+		$response->set('delimiters', $this->delimiters);
 		return $response;
 	}
 
@@ -82,7 +166,7 @@ class CsvImportController extends StoreManagementController
 			}
 		}
 //ActiveRecord::rollback();
-		
+
 		$importer->reset();
 		exit;
 	}
@@ -92,6 +176,18 @@ class CsvImportController extends StoreManagementController
 		//print_r($data);
 		echo '|' . base64_encode(json_encode($data));
 		flush();
+	}
+
+	private function getPreview(CsvFile $csv)
+	{
+		$ret = array();
+
+		for ($k = 0; $k < self::PREVIEW_ROWS; $k++)
+		{
+			$ret[] = $csv->getRecord();
+		}
+
+		return $ret;
 	}
 
 	private function getForm()
@@ -105,16 +201,23 @@ class CsvImportController extends StoreManagementController
 		ClassLoader::import('framework.request.validator.RequestValidator');
 		ClassLoader::import('application.helper.filter.HandleFilter');
 
-		$val = new RequestValidator('databaseImport', $this->request);
-/*
-		$val->addCheck('cart', new IsNotEmptyCheck($this->translate('_err_no_cart_selected')));
-		$val->addCheck('dbServer', new IsNotEmptyCheck($this->translate('_err_no_database_server')));
-		$val->addCheck('dbType', new IsNotEmptyCheck($this->translate('_err_no_db_type')));
-		$val->addCheck('dbName', new IsNotEmptyCheck($this->translate('_err_no_database_name')));
-		$val->addCheck('dbUser', new IsNotEmptyCheck($this->translate('_err_no_database_username')));
-*/
-		return $val;
+		return new RequestValidator('databaseImport', $this->request);
 	}
+
+	private function getDelimiterForm()
+	{
+		ClassLoader::import('framework.request.validator.Form');
+		return new Form($this->getDelimiterValidator());
+	}
+
+	private function getDelimiterValidator()
+	{
+		ClassLoader::import('framework.request.validator.RequestValidator');
+		ClassLoader::import('application.helper.filter.HandleFilter');
+
+		return new RequestValidator('databaseImport', $this->request);
+	}
+
 }
 
 ?>
