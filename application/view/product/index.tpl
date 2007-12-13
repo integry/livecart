@@ -146,10 +146,14 @@
 
    	<div class="clear"></div>
 
-   	{if $product.longDescription_lang}
+	{if $product.longDescription_lang || $product.shortDescription_lang}
 	<h2>{t _description}</h2>
 	<div id="productDescription">
-		{$product.longDescription_lang}
+		{if $product.longDescription_lang}
+			{$product.longDescription_lang}
+		{else}
+			{$product.shortDescription_lang}
+		{/if}
 	</div>
 	{/if}
 

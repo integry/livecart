@@ -6,14 +6,14 @@ ClassLoader::import('application.model.Currency');
 /**
  * @author Integry Systems
  * @package application.controller
- */	
+ */
 class OrderController extends FrontendController
-{   
+{
 	/**
 	 * @var CustomerOrder
 	 */
 	protected $order;
-	
+
 	/**
 	 *  View shopping cart contents
 	 */
@@ -22,19 +22,19 @@ class OrderController extends FrontendController
 		$this->addBreadCrumb($this->translate('_my_session'), $this->router->createUrlFromRoute($this->request->get('return'), true));
 		$this->addBreadCrumb($this->translate('_my_basket'), '');
 
-		$this->order->loadItemData();		
-		
-		$currency = Currency::getValidInstanceByID($this->request->get('currency', $this->application->getDefaultCurrencyCode()), Currency::LOAD_DATA);				   
-				
+		$this->order->loadItemData();
+
+		$currency = Currency::getValidInstanceByID($this->request->get('currency', $this->application->getDefaultCurrencyCode()), Currency::LOAD_DATA);
+
 		$response = new ActionResponse();
 		$response->set('cart', $this->order->toArray());
 		$response->set('form', $this->buildCartForm($this->order));
-		$response->set('return', $this->request->get('return'));				
+		$response->set('return', $this->request->get('return'));
 		$response->set('currency', $currency->getID());
 		$response->set('orderTotal', $currency->getFormattedPrice($this->order->getSubTotal($currency)));
 		$response->set('expressMethods', $this->application->getExpressPaymentHandlerList(true));
 		return $response;
-	}   
+	}
 
 	/**
 	 *  Update product quantities
@@ -47,13 +47,13 @@ class OrderController extends FrontendController
 			{
 				$this->order->updateCount($item, $this->request->get('item_' . $item->getID(), 0));
 			}
-		}		 
-		
+		}
+
 		$this->order->mergeItems();
-		
+
 		SessionOrder::save($this->order);
-		
-		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));		  
+
+		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
 
 	/**
@@ -63,10 +63,10 @@ class OrderController extends FrontendController
 	{
 		$this->order->removeItem(ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id')));
 		SessionOrder::save($this->order);
-		
-		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));		  		
+
+		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
-	
+
 	/**
 	 *  Add a new product to shopping cart
 	 */
@@ -75,15 +75,13 @@ class OrderController extends FrontendController
 		$product = Product::getInstanceByID($this->request->get('id'));
 		if (!$product->isAvailable())
 		{
-			throw new ApplicationException('The product ' . $product->sku->get() . '  is not available for ordering!'); 
+			throw new ApplicationException('The product ' . $product->sku->get() . '  is not available for ordering!');
 		}
-		
-		$count = $this->request->get('count', 1);
 
-		$this->order->addProduct($product, $count);
+		$this->order->addProduct($product, $this->request->get('count', 1));
 		$this->order->mergeItems();
 		SessionOrder::save($this->order);
-	
+
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
 
@@ -94,7 +92,7 @@ class OrderController extends FrontendController
 		$this->order->mergeItems();
 		$this->order->resetShipments();
 		SessionOrder::save($this->order);
-		
+
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
 
@@ -105,10 +103,10 @@ class OrderController extends FrontendController
 		$this->order->mergeItems();
 		$this->order->resetShipments();
 		SessionOrder::save($this->order);
-		
+
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
-	
+
 	/**
 	 *  Add a new product to wish list (save items for buying later)
 	 */
@@ -119,43 +117,43 @@ class OrderController extends FrontendController
 		$this->order->addToWishList($product);
 		$this->order->mergeItems();
 		SessionOrder::save($this->order);
-			  
+
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
-	
+
 	private function buildCartForm(CustomerOrder $order)
 	{
 		ClassLoader::import("framework.request.validator.Form");
 
 		$form = new Form($this->buildCartValidator($order));
-		
+
 		foreach ($order->getOrderedItems() as $item)
 		{
 			$name = 'item_' . $item->getID();
-			$form->set($name, $item->count->get());			
+			$form->set($name, $item->count->get());
 		}
-		
+
 		return $form;
 	}
-	
+
 	/**
 	 * @return RequestValidator
 	 */
 	private function buildCartValidator(CustomerOrder $order)
 	{
 		ClassLoader::import("framework.request.validator.RequestValidator");
-		
+
 		$validator = new RequestValidator("cartValidator", $this->request);
 
 		foreach ($order->getOrderedItems() as $item)
 		{
 			$name = 'item_' . $item->getID();
-			$validator->addCheck($name, new IsNumericCheck($this->translate('_err_not_numeric')));	
-			$validator->addFilter($name, new NumericFilter());	
+			$validator->addCheck($name, new IsNumericCheck($this->translate('_err_not_numeric')));
+			$validator->addFilter($name, new NumericFilter());
 		}
-		
+
 		return $validator;
-	}	
+	}
 }
 
 ?>

@@ -10,57 +10,57 @@ class ImageDriverGD extends ImageDriver
 		$width = $image->getWidth();
 		$quality = $image->getQuality();
 		$type = $image->getType();
-		
-		switch($type) 
+
+		switch($type)
 		{
-			case 1:  $newimg = imagecreatefromgif($path); break;
-			case 2:  $newimg = imagecreatefromjpeg($path); break;
-			case 3:  $newimg = imagecreatefrompng($path); break;
+			case IMAGETYPE_GIF:   $newimg = imagecreatefromgif($path); break;
+			case IMAGETYPE_JPEG:  $newimg = imagecreatefromjpeg($path); break;
+			case IMAGETYPE_PNG:   $newimg = imagecreatefrompng($path); break;
 			default: throw new ApplicationException('Invalid image type: ' . $type);
 		}
-		
-		if($newimg) 
+
+		if($newimg)
 		{
 			// resize large images in two steps - first resample, then resize
 			// http://lt.php.net/manual/en/function.imagecopyresampled.php
 			if($width > 1500 || $height > 1200)
 			{
-				list($width, $height) = $this->resample($newimg, $width, $height, 1024, 768, 0);
+				list($width, $height) = $this->resample($newimg, $image, $width, $height, 1024, 768, 0);
 			}
-				  
-			$this->resample($newimg, $width, $height, $newWidth, $newHeight);
-			  
+
+			$this->resample($newimg, $image, $width, $height, $newWidth, $newHeight);
+
 			if(!is_dir(dirname($newPath)))
 			{
-				mkdir(dirname($newPath), 0777, true);			  
+				mkdir(dirname($newPath), 0777, true);
 			}
-			
+
 			$pathInfo = pathinfo($newPath);
 			$ext = strtolower($pathInfo['extension']);
 			if ($ext == 'jpg')
 			{
 			  	$ext = 'jpeg';
 			}
-			
-			switch($ext) 
+
+			switch($type)
 			{
-				case 'gif': imagegif($newimg, $newPath); break;   
-				case 'png': imagepng($newimg, $newPath);  break;
-				case 'jpeg': 
+				case IMAGETYPE_GIF: imagegif($newimg, $newPath); break;
+				case IMAGETYPE_PNG: imagepng($newimg, $newPath);  break;
+				case IMAGETYPE_JPEG:
 				default:
-					imagejpeg($newimg, $newPath, $quality); 
+					imagejpeg($newimg, $newPath, $quality);
 				break;
 			}
-			  
+
 	 		imagedestroy($newimg);
 			return true;
 		}
 		else
 		{
 		  	return false;
-		}		
-	}	
-	
+		}
+	}
+
 	public function getValidTypes()
 	{
 	  	return array(1, /* GIF */
@@ -68,60 +68,97 @@ class ImageDriverGD extends ImageDriver
 	  				 3  /* PNG */
 		  			 );
 	}
-	
-	private function resample(&$img, $owdt, $ohgt, $maxwdt, $maxhgt, $quality = 1) 
+
+	private function resample(&$img, ImageManipulator $source, $owdt, $ohgt, $maxwdt, $maxhgt, $quality = 1)
 	{
 		// make sure the image doesn't get enlarged
 		$maxwdt = min($maxwdt, $owdt);
 		$maxhgt = min($maxhgt, $ohgt);
-				
-		if(!$maxwdt) 
+
+		if(!$maxwdt)
 		{
-			$divwdt = 1;  
+			$divwdt = 1;
 		}
-		else 
+		else
 		{
 			$divwdt = max(1, $owdt/$maxwdt);
 		}
-		
-		if(!$maxhgt) 
+
+		if(!$maxhgt)
 		{
 			$divhgt = 1;
 		}
-		else 
+		else
 		{
 			$divhgt = max(1, $ohgt/$maxhgt);
 		}
-		
-		if($divwdt >= $divhgt) 
+
+		if($divwdt >= $divhgt)
 		{
 			$newwdt = round($owdt/$divwdt);
 			$newhgt = round($ohgt/$divwdt);
-		} 
-		else 
+		}
+		else
 		{
 			$newhgt = round($ohgt/$divhgt);
 			$newwdt = round($owdt/$divhgt);
 		}
-					
-		$tn = imagecreatetruecolor($newwdt,$newhgt);
-		
+
+		$tn = imagecreatetruecolor($newwdt, $newhgt);
+
+		if (in_array($source->getType(), array(IMAGETYPE_GIF, IMAGETYPE_PNG)))
+		{
+			$trnprt_indx = imagecolortransparent($img);
+
+			// If we have a specific transparent color
+			if ($trnprt_indx >= 0)
+			{
+				// Get the original image's transparent color's RGB values
+				$trnprt_color = imagecolorsforindex($img, $trnprt_indx);
+
+				// Allocate the same color in the new image resource
+				$trnprt_indx = imagecolorallocate($tn, $trnprt_color['red'], $trnprt_color['green'], $trnprt_color['blue']);
+
+				// Completely fill the background of the new image with allocated color.
+				imagefill($tn, 0, 0, $trnprt_indx);
+
+				// Set the background color for new image to transparent
+				imagecolortransparent($tn, $trnprt_indx);
+			}
+
+			// Always make a transparent background color for PNGs that don't have one allocated already
+			elseif ($source->getType() == IMAGETYPE_PNG)
+			{
+				// Turn off transparency blending (temporarily)
+				imagealphablending($tn, false);
+
+				// Create a new transparent color for image
+				$color = imagecolorallocatealpha($tn, 0, 0, 0, 127);
+
+				// Completely fill the background of the new image with allocated color.
+				imagefill($tn, 0, 0, $color);
+
+				// Restore transparency blending
+				imagesavealpha($tn, true);
+			}
+		}
+
 		if ($quality)
 		{
-			imagecopyresampled($tn,$img,0,0,0,0,$newwdt,$newhgt,$owdt,$ohgt);	   
+			imagecopyresampled($tn,$img,0,0,0,0,$newwdt,$newhgt,$owdt,$ohgt);
 		}
 		else
 		{
-		   imagecopyresized($tn,$img,0,0,0,0,$newwdt,$newhgt,$owdt,$ohgt);		  
+		   imagecopyresized($tn,$img,0,0,0,0,$newwdt,$newhgt,$owdt,$ohgt);
 		}
-		
+
 		imagedestroy($img);
-		
+
 		$img = $tn;
-				
+
 		return array($newwdt, $newhgt);
 	}
-	
+
 }
 
 ?>

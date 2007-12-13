@@ -1,17 +1,17 @@
 <table class="subCategories">
-{foreach from=$subCategories item="sub" name="subcats"}   
+{foreach from=$subCategories item="sub" name="subcats"}
 	<tr>
 		<td class="subCatImage">
 			<a href="{categoryUrl data=$sub}">
-				{img src=$sub.DefaultImage.paths.1  alt=$sub.name_lang|escape}			
+				{img src=$sub.DefaultImage.paths.1  alt=$sub.name_lang|escape}
 			</a>
 		</td>
 		<td class="details">
 			<div class="subCatName">
-				<a href="{categoryUrl data=$sub}">{$sub.name_lang}</a> 
+				<a href="{categoryUrl data=$sub}">{$sub.name_lang}</a>
 				<span class="count">({$sub.count})</span>
 			</div>
-			
+
 			{if $sub.subCategories}
 			<ul class="subSubCats">
 				{foreach from=$sub.subCategories item="subSub"}
@@ -22,17 +22,17 @@
 				{/foreach}
 			</ul>
 			{/if}
-			
+
 			<div class="subCatDescr">
 				{* $sub.description_lang *}
-			</div>			
-		</td>		
+			</div>
+		</td>
 	</tr>
 	{if !$smarty.foreach.subcats.last}
 		<tr class="separator">
 			<td colspan="2"><div></div></td>
 		</tr>
 	{/if}
-{/foreach}	
+{/foreach}
 </table>
 <div class="clear"></div>

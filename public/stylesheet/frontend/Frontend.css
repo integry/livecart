@@ -613,7 +613,8 @@ tr.separator div
 
 .subCategories td.subCatImage
 {
-	padding-right: 10px;
+	width: 85px;
+	text-align: center;
 }
 
 .subCategories td.details
@@ -1475,9 +1476,10 @@ a.cvv
 {
 	font-size: larger;
 	padding: 6px;
-	background-color: #FFFCAC;
+	background-color: #FFFCCC;
 	display: inline;
 	margin: 20px;
+	border: 2px solid #FFFC8C;
 }
 
 #payTotal .subTotal
