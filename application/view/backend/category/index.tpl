@@ -51,14 +51,14 @@
 
 <div id="catgegoryContainer" class="treeContainer  maxHeight h--60">
 	<div id="categoryBrowser" class="treeBrowser"></div>
-	
+
 	<br />
-	
+
 	{allowed role="category.create,category.remove,category.sort"}
 		{t _with_selected_category}:
 
 		<ul id="categoryBrowserActions" class="verticalMenu">
-	
+
 			{allowed role="category.create"}
 				<li class="addTreeNode">
 					<a href="#" id="createNewCategoryLink">
@@ -66,7 +66,7 @@
 					</a>
 				</li>
 			{/allowed}
-	
+
 			{allowed role="category.sort"}
 				<li class="moveUpTreeNode">
 					<a href="#" id="moveCategoryUp">
@@ -79,7 +79,7 @@
 					</a>
 				</li>
 			{/allowed}
-			
+
 			{allowed role="category.remove"}
 				<li class="removeTreeNode">
 					<a href="#" id="removeCategoryLink">
@@ -88,7 +88,7 @@
 				</li>
 			{/allowed}
 		</ul>
-		
+
 	{/allowed}
 
 	<div id="confirmations">
@@ -126,19 +126,19 @@
 		</div>
 	</div>
 
- 
+
 </div>
 
 <div id="managerContainer" class="treeManagerContainer maxHeight h--60">
-	
+
 	<div id="loadingProduct" style="display: none; position: absolute; text-align: center; width: 100%; padding-top: 200px; z-index: 50000;">
 		<span style="padding: 40px; background-color: white; border: 1px solid black;">{t _loading_product}<span class="progressIndicator"></span></span>
 	</div>
-	
+
 	<div id="categoryTabs">
 		<div id="tabContainer" class="tabContainer">
 			<ul id="tabList" class="tabList tabs">
-	
+
 				{allowed role="product"}
 				<li id="tabProducts" class="tab active">
 					<a href="{link controller=backend.product action=index id=_id_}">{t _products}</a>
@@ -146,25 +146,25 @@
 					<span class="tabHelp">products</span>
 				</li>
 				{/allowed}
-	
+
 				<li id="tabMainDetails" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
 					<a href="{link controller=backend.category action=form id=_id_}">{t _category_details}</a>
 					<span> </span>
 					<span class="tabHelp">categories.details</span>
 				</li>
-				
+
 				<li id="tabFields" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
 					<a href="{link controller=backend.specField action=index id=_id_}">{t _attributes}</a>
 					<span> </span>
 					<span class="tabHelp">categories.attributes</span>
 				</li>
-				
+
 				<li id="tabFilters" class="tab inactive" {denied role="filter"}style="display: none"{/denied}>
 					<a href="{link controller=backend.filterGroup action=index id=_id_}">{t _filters}</a>
 					<span> </span>
 					<span class="tabHelp">categories.filters</span>
 				</li>
-				
+
 				<li id="tabImages" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
 					<a href="{link controller=backend.categoryImage action=index id=_id_}">{t _images}</a>
 					<span> </span>
@@ -175,19 +175,19 @@
 		<div id="sectionContainer" class="sectionContainer maxHeight  h--50">
 		</div>
 	</div>
-	
+
 	<div id="addProductContainer" style="display: none;"></div>
 </div>
 
 <script type="text/javascript">
 	{allowed role="category.sort"}
 		Backend.Category.allowSorting = true;
-	{/allowed} 
-	
+	{/allowed}
+
 	{allowed role="product"}
 		Backend.Product.productsMiscPermision = true;
 	{/allowed}
-	
+
 	Backend.showContainer('managerContainer');
 
 	/**
@@ -202,22 +202,24 @@
 	Backend.Category.links.categoryAutoloading = '{link controller=backend.category action=xmlBranch}';
 	Backend.Category.links.categoryRecursiveAutoloading = '{link controller=backend.category action=xmlRecursivePath}';
 	Backend.Category.links.addProduct  = '{link controller=backend.product action=add id=_id_}';
-		
+
 	Backend.Category.messages = {literal}{}{/literal};
 	Backend.Category.messages._reorder_failed = '{t _reorder_failed|addslashes}';
 	Backend.Category.messages._confirm_category_remove = '{t _confirm_category_remove|addslashes}';
+	Backend.Category.messages._confirm_category_remove = '{t _confirm_category_remove|addslashes}';
+	Backend.Category.messages._confirm_move = '{t _confirm_move|escape}';
 
-	Backend.Category.init(); 
-			
-	Backend.Category.treeBrowser.setXMLAutoLoading(Backend.Category.links.categoryAutoloading); 
+	Backend.Category.init();
+
+	Backend.Category.treeBrowser.setXMLAutoLoading(Backend.Category.links.categoryAutoloading);
 	Backend.Category.addCategories({json array=$categoryList});
 	CategoryTabControl.prototype.loadCategoryTabsCount({json array=$allTabsCount});
-	
+
 	Backend.Category.activeCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
 	Backend.Category.initPage();
-	
+
 	Backend.Category.loadBookmarkedCategory();
-	
+
 	Backend.Category.showControls();
 </script>
 

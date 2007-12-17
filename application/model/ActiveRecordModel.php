@@ -10,12 +10,12 @@ ActiveRecord::$creolePath = ClassLoader::getRealPath("library");
  * application specific model class hierarchy)
  *
  * @package application.model
- * @author Integry Systems <http://integry.com>	
+ * @author Integry Systems <http://integry.com>
  */
 abstract class ActiveRecordModel extends ActiveRecord
-{	
+{
  	private static $application;
- 	
+
  	private static $plugins = array();
 
 	public static function setApplicationInstance(LiveCart $application)
@@ -30,7 +30,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 	{
 		return self::$application;
 	}
-	
+
 	/**
 	 *  Note that the form may not always contain all the fields of the model, so we must always
 	 *  make sure that the data for the particular field has actually been submitted to avoid
@@ -44,7 +44,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 			if (!($field instanceof ARForeignKey || $field instanceof ARPrimaryKey))
 			{
 				$name = $field->getName();
-				if ($request->isValueSet($name) || 
+				if ($request->isValueSet($name) ||
 				   ($request->isValueSet('checkbox_' . $name) && ('ARBool' == get_class($field->getDataType())))
 					)
 				{
@@ -53,20 +53,28 @@ abstract class ActiveRecordModel extends ActiveRecord
 						case 'ARArray':
 							$this->setValueArrayByLang(array($name), self::getApplication()->getDefaultLanguageCode(), self::getApplication()->getLanguageArray(LiveCart::INCLUDE_DEFAULT), $request);
 						break;
-								
+
 						case 'ARBool':
 							$this->setFieldValue($name, in_array($request->get($name), array('on', 1)));
 						break;
-							
+
+						case 'ARInteger':
+						case 'ARFloat':
+							if (is_numeric($request->get($name)))
+							{
+								$this->setFieldValue($name, $request->get($name));
+							}
+						break;
+
 						default:
-							$this->setFieldValue($name, $request->get($name));	
-						break;	
+							$this->setFieldValue($name, $request->get($name));
+						break;
 					}
 				}
 			}
-		}	
+		}
 	}
-	
+
 	protected function setLastPosition()
 	{
 		// get max position
@@ -79,14 +87,14 @@ abstract class ActiveRecordModel extends ActiveRecord
 		// default new language state
 		$this->position->set($position);
 	}
-	
+
 	protected function insert()
 	{
 		$res = parent::insert();
 		$this->executePlugins($this, 'insert');
 		return $res;
 	}
-	
+
 	protected function update()
 	{
 		$this->executePlugins($this, 'update');
@@ -98,27 +106,27 @@ abstract class ActiveRecordModel extends ActiveRecord
 		foreach ($schema->getFieldsByType('ARDateTime') as $name => $field)
 		{
 			$time = strtotime($array[$name]);
-			
+
 			if (!$time)
 			{
 				continue;
 			}
-			
+
 			if (!isset($locale))
 			{
 				$locale = self::getApplication()->getLocale();
 			}
-			
+
 			$array['formatted_' . $name] = $locale->getFormattedTime($time);
 		}
 
 		$data = parent::transformArray($array, $schema);
-		
+
 		self::executePlugins($data, 'array', $schema->getName());
-		
+
 		return $data;
 	}
-	
+
 	private function executePlugins(&$object, $action, $className = null)
 	{
 		// in case the even is array transformation, the classname will be passed in as a separate variable
@@ -138,7 +146,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 			{
 				return false;
 			}
-			
+
 			foreach (new DirectoryIterator($dir) as $plugin)
 			{
 				if ($plugin->isFile())
@@ -147,17 +155,17 @@ abstract class ActiveRecordModel extends ActiveRecord
 				}
 			}
 		}
-		
+
 		if (isset(self::$plugins[$className][$action]) && !self::$plugins[$className][$action])
 		{
 			return false;
 		}
-		
+
 		if (!class_exists('ModelPlugin'))
 		{
 			ClassLoader::import('application.model.ModelPlugin');
 		}
-		
+
 		foreach (self::$plugins[$className][$action] as $plugin)
 		{
 			ClassLoader::import($path . '.' . $plugin);

@@ -1,9 +1,42 @@
 _import_csv=Import CSV File
 
+# Wizard steps
 _select_file=Select a File
+_delimiters=Set delimiters
+_arrange=Arrange fields
+
+# Start
 _upload_file=Upload file
 _select_at_server=Select at server
 _browse=Browse...
+_err_no_file=Please select a file
 
+_options=Import Options
+_target_category=Target category
+
+# Delimiters
+_import_file=File
+_import_category=Category
+
+_set_delimiter=Field Delimiter
+_preview_count=Preview (1 - [_1] of [_2])
+
+_delimiter=Delimiter
+_del_comma=Comma (,)
+_del_semicolon=Semicolon (;)
+_del_pipe=Pipe (|)
+_del_tab=Tab character
+
+# Field mapping
+_map_data=Map CSV Columns to LiveCart Fields
+_first_header=First row is a header row
+Category.ID=Category ID
+_category_x=Category Name [_1]
 _import=Import
 _continue=Continue
+_no_product_fields_selected=Please select at least one product field
+
+_importing=Importing...
+_import_completed=CSV file imported successfully
+_import_cancelled=The import has been reverted sucessfully
+_import_cancel_failed=Could not cancel import procedure

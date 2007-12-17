@@ -49,7 +49,7 @@ Backend.SelectFile.prototype =
 
 	init: function()
 	{
-		this.treeBrowser = new dhtmlXTreeObject(this.window.document.getElementById("categoryBrowser"),"","", 0);
+		this.treeBrowser = new this.window.dhtmlXTreeObject(this.window.document.getElementById("categoryBrowser"),"","", 0);
 		this.treeBrowser.setImagePath("image/backend/dhtmlxtree/");
 		this.treeBrowser.setStdImages('folderClosed.gif', 'folderOpen.gif', 'folderClosed.gif');
 		this.treeBrowser.setOnClickHandler(this.activateCategory.bind(this));

@@ -4,7 +4,8 @@ _cancel_add_product=Cancel adding new product
 # Confirmation
 _could_not_save_product_information=Could not save product information
 _new_product_was_successfully_created=New product was successfully created
-_mass_action_succeed=Mass action succeed
+_mass_action_succeed=Mass action succeeded
+_move_succeeded=Products were moved successfully
 
 # Product list
 

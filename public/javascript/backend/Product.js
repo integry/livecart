@@ -1,7 +1,7 @@
 /**
  *	@author Integry Systems
  */
- 
+
 Backend.Product =
 {
 	productTabCopies: new Array(),
@@ -93,7 +93,7 @@ Backend.Product =
             }
 
         this.reInitAddForm();
-        
+
         ActiveForm.prototype.resetErrorMessages(container.down('form'));
 	},
 
@@ -236,15 +236,39 @@ Backend.Product =
 
         TabControl.prototype.__instances__ = {};
     },
-    
+
     massActionChanged: function(element)
     {
         if ('move' == element.value)
         {
-            new Backend.Category.PopupSelector(element.up('form').down('.move'));
+            var moveElement = element.up('form').down('.move');
+            new Backend.Category.PopupSelector(
+            	function(categoryID, pathAsText, path)
+            	{
+					if (!confirm(Backend.Category.messages._confirm_move + "\n\n" + pathAsText))
+					{
+						return false;
+					}
+
+                    moveElement.down('input').value = categoryID;
+
+					moveElement.up('form').down('input.submit').click();
+
+					var select = moveElement.up('form').down('.select');
+					select.value = 'enable_isEnabled';
+
+					return true;
+            	},
+            	function()
+            	{
+					var select = moveElement.up('form').down('.select');
+					select.value = 'enable_isEnabled';
+					return true;
+				}
+            );
         }
     },
-    
+
     reloadGrid: function(categoryID)
     {
         var table = $('products_' + categoryID);
@@ -257,7 +281,7 @@ Backend.Product =
         if (table)
         {
             table.gridInstance.reloadGrid();
-        }        
+        }
     }
 }
 
@@ -542,7 +566,7 @@ Backend.Product.Editor.prototype =
     setTabCounters: function()
     {
 		if(!this.tabControl.restoreAllCounters(this.id))
-        {		
+        {
             new LiveCart.AjaxRequest(
                 Backend.Product.Editor.prototype.links.countTabsItems + "/" + this.id,
                 false,
@@ -787,7 +811,7 @@ Backend.Product.Prices.prototype =
 Backend.Product.GridFormatter =
 {
 	productUrl: '',
-	
+
     getClassName: function(field, value)
 	{
 
@@ -815,7 +839,7 @@ Backend.Product.GridFormatter =
 function SpecFieldIsValueSelectedCheck(element, params)
 {
     var inputs = element.parentNode.down('.multiValueSelect').getElementsByTagName('input');
-    
+
     for (k = 0; k < inputs.length; k++)
     {
         if ('checkbox' == inputs[k].type)
@@ -830,7 +854,7 @@ function SpecFieldIsValueSelectedCheck(element, params)
             if (inputs[k].value)
             {
                 return true;
-            }            
+            }
         }
-    }    
+    }
 }

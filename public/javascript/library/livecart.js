@@ -1,7 +1,7 @@
 /**
  *	@author Integry Systems
  */
- 
+
 var LiveCart = {
     ajaxUpdaterInstance: null
 }
@@ -9,28 +9,28 @@ var LiveCart = {
 LiveCart.AjaxRequest = Class.create();
 LiveCart.AjaxRequest.prototype = {
     requestCount: 0,
-    
+
 	onComplete: false,
-    
+
     indicatorContainerId: false,
-    
+
     request: false,
-    
+
 	initialize: function(formOrUrl, indicatorId, onComplete, options)
     {
         var url = "";
         var method = "";
         var params = "";
-        
+
         this.onComplete = onComplete;
-        
+
         if (typeof formOrUrl == "object")
         {
             var form = formOrUrl;
             url = form.action;
             method = form.method;
             params = Form.serialize(form);
-        
+
             if (!indicatorId)
             {
                 var controls = form.down('fieldset.controls');
@@ -53,48 +53,48 @@ LiveCart.AjaxRequest.prototype = {
         if (indicatorId)
         {
             this.indicatorContainerId = indicatorId;
-            Element.show(this.indicatorContainerId);            
+            Element.show(this.indicatorContainerId);
         }
-        
+
         if (!options)
         {
             options = {};
         }
-        
+
         options.method = method;
         options.parameters = params;
         options.onComplete = this.postProcessResponse.bind(this, this.parseURI(url));
         options.onFailure = this.reportError;
-       
+
 		document.body.style.cursor = 'progress';
 
         this.request = new Ajax.Request(url, options);
     },
-	
-	parseURI: function(URI) 
+
+	parseURI: function(URI)
 	{
 		if(!URI) return {};
-		
+
 		var splitedURI = URI.split("?");
         var URL = splitedURI[0];
 		var queryString = splitedURI[1];
         var query = {};
-		
-		if(queryString) 
+
+		if(queryString)
 		{
 			$A(queryString.split("&")).each(function(paramString) {
 				var params = paramString.split("=");
-				
+
 				var match = params[0].match(/(.*)\[(\d*)\]$/);
 				if(match)
 				{
 					if(!query[match[1]]) query[match[1]] = $H({});
-					
-					if(match[2] == "") 
+
+					if(match[2] == "")
 					{
 						match[2] = query[match[1]].size();
 					}
-					
+
 					query[match[1]][match[2]] = params[1];
 				}
 				else
@@ -103,7 +103,7 @@ LiveCart.AjaxRequest.prototype = {
 				}
 			});
 		}
-		
+
 		return {
             'url': URL,
 			'queryString': queryString,
@@ -130,7 +130,7 @@ LiveCart.AjaxRequest.prototype = {
     postProcessResponse: function(url, response)
     {
 		this.hideIndicator();
-		
+
 		if ('text/javascript' == response.getResponseHeader('Content-type'))
 		{
             response.responseData = response.responseText.evalJSON();
@@ -148,7 +148,7 @@ LiveCart.AjaxRequest.prototype = {
 	            if(window.selectPopupWindow && window.selectPopupWindow.document)
 				{
 					var win = window.selectPopupWindow;
-					
+
 		            var confirmations = win.$('confirmations');
 	                if(confirmations)
 	                {
@@ -160,10 +160,10 @@ LiveCart.AjaxRequest.prototype = {
 			}
 			catch(e)
 			{
-				
+
 			}
             try
-            {               
+            {
                 // Show confirmation
                 if(response.responseData.status)
                 {
@@ -179,17 +179,17 @@ LiveCart.AjaxRequest.prototype = {
             this.onComplete(response, url);
 		}
     },
-    
+
     showBug: function()
     {
-        new Insertion.Top('bugZone', 
-        '<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="bugMessage">' + 
-            '<img class="closeMessage" src="image/silk/cancel.png"/>' + 
-            '<div>' + Backend.internalErrorMessage + '</div>' + 
+        new Insertion.Top('bugZone',
+        '<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="bugMessage">' +
+            '<img class="closeMessage" src="image/silk/cancel.png"/>' +
+            '<div>' + Backend.internalErrorMessage + '</div>' +
         '</div>');
-        
-        new Backend.SaveConfirmationMessage($('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));	
-		
+
+        new Backend.SaveConfirmationMessage($('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));
+
 		try
 		{
 			if(window.selectPopupWindow)
@@ -197,59 +197,59 @@ LiveCart.AjaxRequest.prototype = {
 				var win = window.selectPopupWindow;
 	            if(win.$('confirmations'))
 	            {
-			        new win.Insertion.Top('bugZone', 
-			        '<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="bugMessage">' + 
-			            '<img class="closeMessage" src="image/silk/cancel.png"/>' + 
-			            '<div>' + Backend.internalErrorMessage + '</div>' + 
+			        new win.Insertion.Top('bugZone',
+			        '<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="bugMessage">' +
+			            '<img class="closeMessage" src="image/silk/cancel.png"/>' +
+			            '<div>' + Backend.internalErrorMessage + '</div>' +
 			        '</div>');
-			        
-			        new Backend.SaveConfirmationMessage(win.$('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));  
+
+			        new Backend.SaveConfirmationMessage(win.$('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));
 	            }
 		    }
 		}
 		catch(e)
 		{
-			
+
 		}
     },
-    
+
     showConfirmation: function(responseData)
-    {       
+    {
 	    if(!responseData.message) return;
-		
+
         var color = null;
         if('success' == responseData.status) color = 'yellow';
         if('failure' == responseData.status) color = 'red';
-        
-        new Insertion.Top(color + 'Zone', 
-        '<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="' + color + 'Message">' + 
-            '<img class="closeMessage" src="image/silk/cancel.png"/>' + 
-            '<div>' + responseData.message + '</div>' + 
+
+        new Insertion.Top(color + 'Zone',
+        '<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="' + color + 'Message">' +
+            '<img class="closeMessage" src="image/silk/cancel.png"/>' +
+            '<div>' + responseData.message + '</div>' +
         '</div>');
-        
-        new Backend.SaveConfirmationMessage($('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));	
-		
+
+        new Backend.SaveConfirmationMessage($('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));
+
 		try
 		{
 			if(window.selectPopupWindow && window.selectPopupWindow.document)
 			{
 				var win = window.selectPopupWindow;
-				
-		        new win.Insertion.Top(color + 'Zone', 
-		        '<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="' + color + 'Message">' + 
-		            '<img class="closeMessage" src="image/silk/cancel.png"/>' + 
-		            '<div>' + responseData.message + '</div>' + 
+
+		        new win.Insertion.Top(color + 'Zone',
+		        '<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="' + color + 'Message">' +
+		            '<img class="closeMessage" src="image/silk/cancel.png"/>' +
+		            '<div>' + responseData.message + '</div>' +
 		        '</div>');
-				
-	            new win.Backend.SaveConfirmationMessage(win.$('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));  
+
+	            new win.Backend.SaveConfirmationMessage(win.$('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));
 		    }
 		}
 		catch(e)
 		{
-			
+
 		}
     },
-    
+
     reportError: function(response)
     {
         alert('Error!\n\n' + response.responseText);
@@ -267,10 +267,10 @@ LiveCart.AjaxUpdater.prototype = {
         var method = "";
         var params = "";
         this.onComplete = onComplete;
-        
+
         var containerId = $(container);
         var indicatorId = $(indicator);
-        
+
         if (typeof formOrUrl == "object")
         {
             var form = formOrUrl;
@@ -292,13 +292,13 @@ LiveCart.AjaxUpdater.prototype = {
             url = formOrUrl;
             method = "post";
         }
-        
+
         LiveCart.ajaxUpdaterInstance = this;
 
         if (indicatorId)
         {
 			this.indicatorContainerId = indicatorId;
-	        Element.show(this.indicatorContainerId);			
+	        Element.show(this.indicatorContainerId);
 		}
 
         var updaterOptions = { method: method,
@@ -332,12 +332,12 @@ LiveCart.AjaxUpdater.prototype = {
                 break;
             }
         }
-        
+
 		document.body.style.cursor = 'progress';
-		
+
         var ajax = new Ajax.Updater({success: containerId},
                          url,
-                         updaterOptions); 
+                         updaterOptions);
 
     },
 
@@ -360,13 +360,13 @@ LiveCart.AjaxUpdater.prototype = {
     postProcessResponse: function(response)
     {
         document.body.style.cursor = 'default';
-        response.responseText.evalScripts();  
+        response.responseText.evalScripts();
         this.hideIndicator();
 
         if (this.onComplete)
         {
 		  	this.onComplete(response);
-		}        
+		}
     },
 
     reportError: function(response)
@@ -447,7 +447,7 @@ var base64test = /[^A-Za-z0-9\+\/\=]/g;
 if (base64test.exec(inp)) { //Do some error checking
 
 	return false;
-	
+
 }
 inp = inp.replace(/[^A-Za-z0-9\+\/\=]/g, "");
 

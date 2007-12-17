@@ -6,15 +6,15 @@
  * @param array $params
  * @param Smarty $smarty
  * @return string
- * 
+ *
  * @package application.helper.smarty.form
  * @author Integry Systems
  */
-function smarty_function_selectfield($params, $smarty) 
+function smarty_function_selectfield($params, $smarty)
 {
 	$formParams = $smarty->_tag_stack[0][1];
 	$formHandler = $formParams['handle'];
-	
+
 	$options = $params['options'];
 	if (empty($options))
 	{
@@ -24,25 +24,28 @@ function smarty_function_selectfield($params, $smarty)
 
 	$defaultValue = $params['value'];
 	unset($params['value']);
-	
+
 	// Check permissions
 	if($formParams['readonly'])
 	{
-	   $params['disabled'] = 'disabled'; 
+	   $params['disabled'] = 'disabled';
 	}
-	
-	
+
 	$content = '<select';
 	foreach ($params as $name => $param) {
-		$content .= ' ' . $name . '="' . $param . '"'; 
+		$content .= ' ' . $name . '="' . $param . '"';
 	}
 	$content .= ">\n";
-	$fieldValue = $formHandler->get($params['name']);
-	if (is_null($fieldValue))
+
+	if ($formHandler)
 	{
-		$fieldValue = $defaultValue;
+		$fieldValue = $formHandler->get($params['name']);
+		if (is_null($fieldValue))
+		{
+			$fieldValue = $defaultValue;
+		}
 	}
-	
+
 	foreach ($options as $value => $title)
 	{
 		if(preg_match('/optgroup_\d+/', $value))
@@ -62,7 +65,7 @@ function smarty_function_selectfield($params, $smarty)
 		}
 	}
 	$content .= "</select>";
-	
+
 	return $content;
 }
 

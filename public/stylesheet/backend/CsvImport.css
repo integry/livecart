@@ -1,3 +1,24 @@
+#import
+{
+	width: 600px;
+}
+
+#targetCategory
+{
+	width: 370px;
+}
+
+fieldset.controls
+{
+	margin-top: 0;
+}
+
+label.wide
+{
+	float: left;
+	width: 370px;
+}
+
 #atServer
 {
 	width: 220px;
@@ -12,7 +33,94 @@
 {
 	float: left;
 	padding: 10px;
-	border: 1px solid black;
+	border: 1px solid #5af;
 	margin-left: 2em;
 	list-style-type: decimal;
+	background-color: #f7f7ff;
+}
+
+.wizardProgress.stepDelimiters #progressSelect,
+.wizardProgress.stepArrange #progressSelect,
+.wizardProgress.stepArrange #progressDelimiters,
+.wizardProgress.stepImport li
+{
+	background-color: #dfd;
+}
+
+.wizardProgress.stepSelect #progressSelect,
+.wizardProgress.stepDelimiters #progressDelimiters,
+.wizardProgress.stepArrange #progressArrange,
+.wizardProgress.stepImport #progressImport
+{
+	background-color: #bfb;
+	font-weight: bold;
+}
+
+#preview td
+{
+	border: 1px solid #666;
+	padding: 2px;
+	font-size: smaller;
+	max-width: 100px;
+}
+
+#preview a.selectLink
+{
+	display: none;
+}
+
+#preview.delimiterSelected a.selectLink
+{
+	display: inline;
+}
+
+#preview.delimiterSelected span.selectLink
+{
+	display: none;
+}
+
+.selectedColumn
+{
+	background-color: #dfd;
+}
+
+#preview table
+{
+	border: 1px solid #666;
+}
+
+.headerRow
+{
+	font-weight: bold;
+	font-size: smaller;
+	text-align: center;
+	background-color: #FEFEFE;
+}
+
+#previewContainer
+{
+	padding: 1px;
+	width: 100%;
+	height: 350px;
+	overflow: auto;
+}
+
+#fieldsContainer
+{
+	padding: 1px;
+	width: 100%;
+	height: 350px;
+	overflow: auto;
+}
+
+.progressBar
+{
+	float: left;
+	margin-right: 10px;
+}
+
+#progress a.cancel
+{
+	position: relative;
+	top: 6px;
 }

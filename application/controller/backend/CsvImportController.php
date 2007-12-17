@@ -2,6 +2,7 @@
 
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.parser.CsvFile");
+ClassLoader::import("application.model.category.Category");
 
 /**
  * Handles product importing through a CSV file
@@ -17,13 +18,20 @@ class CsvImportController extends StoreManagementController
 	private $delimiters = array(
 									'_del_comma' => ',',
 									'_del_semicolon' => ';',
-									'_del_tab' => '	'
+									'_del_pipe' => '|',
+									'_del_tab' => "\t"
 								);
 
 	public function index()
 	{
+		$form = $this->getForm();
+		$root = Category::getInstanceByID($this->request->isValueSet('category') ? $this->request->get('category') : Category::ROOT_ID, Category::LOAD_DATA);
+		$form->set('category', $root->getID());
+		$form->set('atServer', $this->request->get('file'));
+
 		$response = new ActionResponse();
-		$response->set('form', $this->getForm());
+		$response->set('form', $form);
+		$response->set('catPath', $root->getPathNodeArray(true));
 		return $response;
 	}
 
@@ -31,7 +39,7 @@ class CsvImportController extends StoreManagementController
 	{
 		$filePath = '';
 
-		if (!empty($_FILES['upload']))
+		if (!empty($_FILES['upload']['tmp_name']))
 		{
 			$filePath = ClassLoader::getRealPath('cache') . '/upload.csv';
 			move_uploaded_file($_FILES['upload']['tmp_name'], $filePath);
@@ -53,7 +61,7 @@ class CsvImportController extends StoreManagementController
 			return new ActionRedirectResponse('backend.csvImport', 'index');
 		}
 
-		return new ActionRedirectResponse('backend.csvImport', 'delimiters', array('query' => 'file=' . $filePath));
+		return new ActionRedirectResponse('backend.csvImport', 'delimiters', array('query' => 'file=' . $filePath . '&category=' . $this->request->get('category')));
 	}
 
 	public function delimiters()
@@ -92,88 +100,344 @@ class CsvImportController extends StoreManagementController
 			}
 		}
 
+		if (!$delimiter)
+		{
+			$delimiter = ',';
+		}
+
 		$form = $this->getDelimiterForm();
 		$form->set('delimiter', $delimiter);
+		$form->set('file', $file);
+		$form->set('category', $this->request->get('category'));
 
 		$response = new ActionResponse();
 		$response->set('form', $form);
 		$response->set('file', $file);
-		$response->set('delimiters', $this->delimiters);
+
+		$delimiters = array_flip($this->delimiters);
+		foreach ($delimiters as &$title)
+		{
+			$title = $this->translate($title);
+		}
+
+		$response->set('delimiters', $delimiters);
+
+		$csv = new CsvFile($file, $delimiter);
+		$preview = $this->getPreview($csv);
+		$response->set('preview', $preview);
+		$response->set('previewCount', count($preview));
+		$response->set('total', $csv->getRecordCount());
+
+		$response->set('catPath', Category::getInstanceByID($this->request->get('category'), Category::LOAD_DATA)->getPathNodeArray(true));
+
+		return $response;
+	}
+
+	public function preview()
+	{
+		return new ActionResponse('preview', $this->getPreview(new CsvFile($this->request->get('file'), $this->request->get('delimiter'))));
+	}
+
+	public function fields()
+	{
+		ClassLoader::import('application.controller.backend.ProductController');
+
+		$this->loadLanguageFile('backend/Product');
+
+		$fields = array('' => '');
+
+		foreach (ProductController::getAvailableColumns(Category::getInstanceByID($this->request->get('category')), true) as $key => $data)
+		{
+			$fields[$key] = $this->translate($data['name']);
+		}
+
+		unset($fields['hiddenType']);
+
+		$fields['Category.ID'] = $this->translate('Category.ID');
+
+		for ($k = 1; $k <= 10; $k++)
+		{
+			$fields['Category.' . $k] = $this->maketext('_category_x', $k);
+		}
+
+		$csv = new CsvFile($this->request->get('file'), $this->request->get('delimiter'));
+
+		$response = new ActionResponse('columns', $csv->getRecord());
+		$response->set('fields', $fields);
+		$response->set('form', $this->getFieldsForm());
 		return $response;
 	}
 
 	public function import()
 	{
-		//ignore_user_abort(true);
-		set_time_limit(0);
-
-		$validator = $this->getValidator();
-		if (!$validator->isValid())
-		{
-			return new JSONResponse(array('errors' => $validator->getErrorList()));
-		}
-
-		$dsn = $this->request->get('dbType') . '://' .
-				   $this->request->get('dbUser') .
-				   		($this->request->get('dbPass') ? ':' . $this->request->get('dbPass') : '') .
-				   			'@' . $this->request->get('dbServer') .
-				   				'/' . $this->request->get('dbName');
-
-		try
-		{
-			$cart = $this->request->get('cart');
-			ClassLoader::import('library.import.driver.' . $cart);
-			$driver = new $cart($dsn, $this->request->get('filePath'));
-		}
-		catch (SQLException $e)
-		{
-			$validator->triggerError('dbServer', $e->getNativeError());
-			$validator->saveState();
-			return new JSONResponse(array('errors' => $validator->getErrorList()));
-		}
-
-		if (!$driver->isDatabaseValid())
-		{
-			$validator->triggerError('dbName', $this->maketext('_invalid_database', $driver->getName()));
-			$validator->saveState();
-			return new JSONResponse(array('errors' => $validator->getErrorList()));
-		}
-
-		if (!$driver->isPathValid())
-		{
-			$validator->triggerError('filePath', $this->maketext('_invalid_path', $driver->getName()));
-			$validator->saveState();
-			return new JSONResponse(array('errors' => $validator->getErrorList()));
-		}
-
-		$importer = new LiveCartImporter($driver);
-
+		ClassLoader::import('application.model.product.Product');
 		header('Content-type: text/javascript');
 
-		// get importable data types
-		$this->flushResponse(array('types' => $importer->getItemTypes()));
-//ActiveRecord::beginTransaction();
-		// process import
-		while (true)
+		if (file_exists($this->getCancelFile()))
 		{
-			$result = $importer->process();
+			unlink($this->getCancelFile());
+		}
 
-			$this->flushResponse($result);
+		set_time_limit(0);
+		ignore_user_abort(true);
 
-			if (is_null($result))
+		$fields = array();
+		// map CSV fields to LiveCart fields
+		foreach ($this->request->get('column') as $key => $value)
+		{
+			if ($value)
 			{
-				break;
+				list($type, $column) = explode('.', $value, 2);
+				$fields[$type][$column] = $key;
 			}
 		}
-//ActiveRecord::rollback();
 
-		$importer->reset();
+		if (!isset($fields['Product']))
+		{
+			return new JSONResponse(array('errors' => array('err' => $this->translate('_no_product_fields_selected'))));
+		}
+
+		if (isset($fields['Category']))
+		{
+			ksort($fields['Category']);
+		}
+
+		// get import root category
+		$root = Category::getInstanceById($this->request->get('category'), Category::LOAD_DATA);
+
+		// pre-load attributes
+		if (isset($fields['specField']))
+		{
+			ActiveRecordModel::getRecordSet('SpecField',
+											new ARSelectFilter(
+												new INCond(
+													new ARFieldHandle('SpecField', 'ID'),
+													array_keys($fields['specField'])
+												)
+											)
+											);
+		}
+
+		$csv = new CsvFile($this->request->get('file'), $this->request->get('delimiter'));
+		$total = $csv->getRecordCount();
+		if ($this->request->get('firstHeader'))
+		{
+			$total -= 1;
+			$csv->getRecord();
+		}
+
+		$progress = 0;
+		$failed = 0;
+		$categories = array();
+		$impReq = new Request();
+
+		ActiveRecord::beginTransaction();
+
+		foreach ($csv as $record)
+		{
+			if (!is_array($record))
+			{
+				continue;
+			}
+
+			// detect product category
+			if (isset($fields['Category']['ID']))
+			{
+				try
+				{
+					$cat = Category::getInstanceById($fields['Category']['ID'], Category::LOAD_DATA);
+				}
+				catch (ARNotFoundException $e)
+				{
+					$failed++;
+					continue;
+				}
+			}
+			else if (isset($fields['Category']))
+			{
+				$hash = '';
+				$hashRoot = $root;
+				foreach ($fields['Category'] as $level => $csvIndex)
+				{
+					if (!$record[$csvIndex])
+					{
+						continue;
+					}
+
+					$hash .= "\n" . $record[$csvIndex];
+
+					if (!isset($categories[$hash]))
+					{
+						$f = $hashRoot->getSubcategoryFilter();
+						$f->mergeCondition(
+								new EqualsCond(
+									MultiLingualObject::getLangSearchHandle(
+										new ARFieldHandle('Category', 'name'),
+										$this->application->getDefaultLanguageCode()
+									),
+									$record[$csvIndex]
+								)
+							);
+						$set = ActiveRecordModel::getRecordSet('Category', $f);
+						if ($set->size())
+						{
+							$cat = $set->get(0);
+						}
+						else
+						{
+							$cat = Category::getNewInstance($hashRoot);
+							$cat->isEnabled->set(true);
+							$cat->setValueByLang('name', $this->application->getDefaultLanguageCode(), $record[$csvIndex]);
+							$cat->save();
+						}
+
+						$categories[$hash] = $cat;
+					}
+
+					$hashRoot = $categories[$hash];
+				}
+			}
+			else
+			{
+				$cat = $root;
+			}
+
+			$product = Product::getNewInstance($cat);
+			$product->isEnabled->set(true);
+
+			// product information
+			$impReq->clearData();
+			foreach ($fields['Product'] as $field => $csvIndex)
+			{
+				$impReq->set($field, $record[$csvIndex]);
+			}
+
+			// manufacturer
+			if (isset($fields['Manufacturer']['name']))
+			{
+				$impReq->set('manufacturer', $record[$fields['Manufacturer']['name']]);
+			}
+
+			// price
+			if (isset($fields['ProductPrice']['price']))
+			{
+				$impReq->set('price_' . $this->application->getDefaultCurrencyCode(), (float)$record[$fields['ProductPrice']['price']]);
+			}
+
+			// attributes
+			if (isset($fields['specField']))
+			{
+				foreach ($fields['specField'] as $specFieldID => $csvIndex)
+				{
+					if (empty($record[$csvIndex]))
+					{
+						continue;
+					}
+
+					$attr = SpecField::getInstanceByID($specFieldID, SpecField::LOAD_DATA);
+					if ($attr->isSimpleNumbers())
+					{
+						$impReq->set($attr->getFormFieldName(), (float)$record[$csvIndex]);
+					}
+					else if ($attr->isSelector())
+					{
+						$f = new ARSelectFilter(
+								new EqualsCond(
+									SpecFieldValue::getLangSearchHandle(
+										new ARFieldHandle('SpecFieldValue', 'value'),
+										$this->application->getDefaultLanguageCode()
+									),
+									$record[$csvIndex]
+								)
+							);
+
+						$set = $attr->getRelatedRecordSet('SpecFieldValue', $f);
+						if ($set->size())
+						{
+							$value = $set->get(0);
+						}
+						else
+						{
+							$value = SpecFieldValue::getNewInstance($attr);
+
+							if ($attr->type->get() == SpecField::TYPE_NUMBERS_SELECTOR)
+							{
+								$value->value->set($record[$csvIndex]);
+							}
+							else
+							{
+								$value->setValueByLang('value', $this->application->getDefaultLanguageCode(), $record[$csvIndex]);
+							}
+
+							$value->save();
+						}
+
+						$impReq->set($attr->getFormFieldName(), $value->getID());
+					}
+
+					else
+					{
+						$impReq->set($attr->getFormFieldName(), $record[$csvIndex]);
+					}
+				}
+			}
+
+			$product->loadRequestData($impReq);
+
+			$product->save();
+
+			$this->flushResponse(array('progress' => ++$progress, 'total' => $total));
+
+			if (connection_aborted())
+			{
+				$this->cancel();
+			}
+		}
+
+		//ActiveRecord::rollback();
+		ActiveRecord::commit();
+
+		$this->flushResponse(array('progress' => 0, 'total' => $total));
+
 		exit;
+	}
+
+	public function isCancelled()
+	{
+		$k = 0;
+		$ret = false;
+
+		// wait the cancel file for 5 seconds
+		while (++$k < 6 && !$ret)
+		{
+			$ret = file_exists($this->getCancelFile());
+			if ($ret)
+			{
+				unlink($this->getCancelFile());
+			}
+			else
+			{
+				sleep(1);
+			}
+		}
+
+		return new JSONResponse(array('cancelled' => $ret));
+	}
+
+	private function cancel()
+	{
+		file_put_contents($this->getCancelFile(), '');
+		ActiveRecord::rollback();
+		exit;
+	}
+
+	private function getCancelFile()
+	{
+		return ClassLoader::getRealPath('cache') . '/.csvImportCancel';
 	}
 
 	private function flushResponse($data)
 	{
-		//print_r($data);
 		echo '|' . base64_encode(json_encode($data));
 		flush();
 	}
@@ -184,7 +448,16 @@ class CsvImportController extends StoreManagementController
 
 		for ($k = 0; $k < self::PREVIEW_ROWS; $k++)
 		{
-			$ret[] = $csv->getRecord();
+			$row = $csv->getRecord();
+			foreach ($row as &$cell)
+			{
+				if (strlen($cell) > 102)
+				{
+					$cell = substr($cell, 0, 100) . '...';
+				}
+			}
+
+			$ret[] = $row;
 		}
 
 		return $ret;
@@ -201,7 +474,7 @@ class CsvImportController extends StoreManagementController
 		ClassLoader::import('framework.request.validator.RequestValidator');
 		ClassLoader::import('application.helper.filter.HandleFilter');
 
-		return new RequestValidator('databaseImport', $this->request);
+		return new RequestValidator('csvFile', $this->request);
 	}
 
 	private function getDelimiterForm()
@@ -215,9 +488,22 @@ class CsvImportController extends StoreManagementController
 		ClassLoader::import('framework.request.validator.RequestValidator');
 		ClassLoader::import('application.helper.filter.HandleFilter');
 
-		return new RequestValidator('databaseImport', $this->request);
+		return new RequestValidator('csvDelimiters', $this->request);
 	}
 
+	private function getFieldsForm()
+	{
+		ClassLoader::import('framework.request.validator.Form');
+		return new Form($this->getFieldsValidator());
+	}
+
+	private function getFieldsValidator()
+	{
+		ClassLoader::import('framework.request.validator.RequestValidator');
+		ClassLoader::import('application.helper.filter.HandleFilter');
+
+		return new RequestValidator('csvFields', $this->request);
+	}
 }
 
 ?>

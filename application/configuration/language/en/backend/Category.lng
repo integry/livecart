@@ -5,6 +5,7 @@ _loading_product=Loading product...
 _select_category=Select category
 _confirm_move=Are your sure you want to move the selected products to this category:
 _move_products=Move products
+_proceed=Proceed
 
 # Product tabs
 _done_editing_product=Done editing product

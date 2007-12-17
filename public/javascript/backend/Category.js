@@ -1,7 +1,7 @@
 /**
  *	@author Integry Systems
  */
- 
+
 if (Backend == undefined)
 {
 	var Backend = {}
@@ -18,11 +18,13 @@ Backend.Category = {
 	 * Category tree browser instance
 	 */
 	treeBrowser: null,
-    
+
 	/**
 	 * Id of currenty selected category. Used for category tab content switching
 	 */
 	activeCategoryId: null,
+
+	links: {},
 
 	/**
 	 * Category module initialization
@@ -44,24 +46,24 @@ Backend.Category = {
 			Backend.Breadcrumb.display(1);
         }
 
-		Backend.Category.treeBrowser.showFeedback = 
-			function(itemId) 
+		Backend.Category.treeBrowser.showFeedback =
+			function(itemId)
 			{
 				if (!this.iconUrls)
 				{
-					this.iconUrls = new Object();	
+					this.iconUrls = new Object();
 				}
-				
+
 				if (!this.iconUrls[itemId])
 				{
                     this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
                     var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
                     img.originalSrc = img.src;
-    				img.src = 'image/indicator.gif';                    
+    				img.src = 'image/indicator.gif';
                 }
 			}
-		
-		Backend.Category.treeBrowser.hideFeedback = 
+
+		Backend.Category.treeBrowser.hideFeedback =
 			function(itemId)
 			{
                 if (null != this.iconUrls[itemId])
@@ -69,31 +71,31 @@ Backend.Category = {
         			this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
                     var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
                     img.src = img.originalSrc;
-                    this.iconUrls[itemId] = null;                            
+                    this.iconUrls[itemId] = null;
                 }
 			}
-			
+
 		var elements = window.location.hash.split('#');
 		if (elements[1].substr(0, 4) == 'cat_')
 		{
 			var parts = elements[1].split('_');
 			var categoryId = parts[1];
-            
+
             Backend.Category.activeCategoryId = categoryId;
 			Backend.Category.treeBrowser.selectItem(categoryId, false, false);
-            
-			return true;		  
+
+			return true;
 		}
 
         if($('categoryBrowser').getElementsByClassName('selectedTreeRow')[0])
         {
     		var treeNode = $('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode;
-    		treeNode.onclick();	
+    		treeNode.onclick();
     		Backend.ajaxNav.add('cat_' + treeNode.parentObject.id + '#tabProducts');
         }
 	},
-    
-    initTreeControls: function() 
+
+    initTreeControls: function()
     {
         if($("categoryBrowserActions"))
         {
@@ -101,35 +103,35 @@ Backend.Category = {
             {
                 Event.observe($("createNewCategoryLink"), "click", function(e) {
                     Event.stop(e);
-                    Backend.Category.createNewBranch(); 
-                }.bind(this));                
+                    Backend.Category.createNewBranch();
+                }.bind(this));
             }
-            
+
             if ($("removeCategoryLink"))
             {
                 Event.observe($("removeCategoryLink"), "click", function(e) {
                     Event.stop(e);
-                    if (confirm(Backend.Category.messages._confirm_category_remove)) 
+                    if (confirm(Backend.Category.messages._confirm_category_remove))
                     {
-                        Backend.Category.removeBranch(); 
+                        Backend.Category.removeBranch();
                     }
-                }.bind(this));                
+                }.bind(this));
             }
-            
+
             if ($("moveCategoryUp"))
             {
                 Event.observe($("moveCategoryUp"), "click", function(e) {
                     Event.stop(e);
                     this.moveCategory(Backend.Category.activeCategoryId, 'up_strict');
-                }.bind(this));                
+                }.bind(this));
             }
-            
+
             if ($("moveCategoryDown"))
             {
                 Event.observe($("moveCategoryDown"), "click", function(e) {
                     Event.stop(e);
                     this.moveCategory(Backend.Category.activeCategoryId, 'down_strict');
-                }.bind(this));                
+                }.bind(this));
             }
         }
     },
@@ -141,14 +143,14 @@ Backend.Category = {
 	{
 		this.treeBrowser = new dhtmlXTreeObject("categoryBrowser","","", 0);
 
-		Backend.Category.treeBrowser.setCategoryStyle = 
+		Backend.Category.treeBrowser.setCategoryStyle =
 			function(category)
-			{		
+			{
                 this.setItemColor(category.ID, (category.isEnabled < 1 ? '#999' : '#000'), (category.isEnabled < 1 ? '#999' : '#fff'));
             }
 
 		Backend.Breadcrumb.setTree(this.treeBrowser);
-		
+
 		this.treeBrowser.setImagePath("image/backend/dhtmlxtree/");
 		this.treeBrowser.setOnClickHandler(this.activateCategory);
         if(Backend.Category.allowSorting)
@@ -170,16 +172,16 @@ Backend.Category = {
         {
 			return false;
 		}
-		
+
 		var categoryId = Backend.Category.treeBrowser.getSelectedItemId();
-        
-        if(categoryId == '1') 
+
+        if(categoryId == '1')
         {
             if ($("removeCategoryLink"))
             {
                 $("removeCategoryLink").parentNode.hide();
             }
-            
+
             if ($("moveCategoryUp"))
             {
                 $("moveCategoryUp").parentNode.hide();
@@ -192,7 +194,7 @@ Backend.Category = {
             {
                 $("removeCategoryLink").parentNode.show();
             }
-            
+
             if ($("moveCategoryUp"))
             {
                 parentId = Backend.Category.treeBrowser.getParentId(categoryId)
@@ -200,29 +202,29 @@ Backend.Category = {
     			if(parentId)
     			{
     	            nextCategoryId = Backend.Category.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) + 1)
-    	
+
     	            if(nextCategoryId) $("moveCategoryDown").parentNode.show();
     	            else $("moveCategoryDown").parentNode.hide();
-    	            
+
     	            if(categoryIndex > 0) $("moveCategoryUp").parentNode.show();
     	            else $("moveCategoryUp").parentNode.hide();
     			}
     		}
-        }  
+        }
     },
 
 	/**
 	 * Tree browser onClick handler. Activates selected category by realoading active
 	 * tab with category specific data
 	 *
-	 * @todo Find some better way to reference/retrieve the DOM nodes from tree by category ID's 
+	 * @todo Find some better way to reference/retrieve the DOM nodes from tree by category ID's
 	 * (automatically assign ID's somehow?). Also necessary for bookmarking (the ID's have to be preassigned).
 	 */
 	activateCategory: function(categoryId)
 	{
         Backend.Product.hideAddForm();
         Backend.Breadcrumb.display(categoryId);
-  
+
         Backend.Category.showControls();
 
 		if(Backend.Product) Backend.Product.Editor.prototype.showCategoriesContainer();
@@ -231,13 +233,13 @@ Backend.Category = {
         {
             return false;
         }
-		
+
         Backend.Category.tabControl.switchCategory(categoryId, Backend.Category.activeCategoryId);
 		Backend.Category.activeCategoryId = categoryId;
 
 		// set ID for the current tree node element
 		$('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode.id = 'cat_' + categoryId;
-			
+
 		// and register browser history event to enable backwar/forward navigation
 		// Backend.ajaxNav.add('cat_' + categoryId);
 		if(Backend.Category.tabControl.activeTab) Backend.Category.tabControl.activeTab.onclick();
@@ -252,8 +254,8 @@ Backend.Category = {
 	createNewBranch: function()
 	{
 		new LiveCart.AjaxRequest(
-			this.getUrlForNewNode(this.treeBrowser.getSelectedItemId()), 
-            false, 
+			this.getUrlForNewNode(this.treeBrowser.getSelectedItemId()),
+            false,
             function(response) { this.afterNewBranchCreated(response) }.bind(this)
 		);
 	},
@@ -268,11 +270,11 @@ Backend.Category = {
         {
             Backend.Category.treeBrowser._reorderDirection = 'right';
         }
-        
+
         Backend.Category.treeBrowser.moveItem(categoryID, direction);
         Backend.Category.treeBrowser._reorderDirection = false;
         Backend.Category.showControls();
-        
+
         return;
 
     },
@@ -285,17 +287,17 @@ Backend.Category = {
 		if(Backend.Category.treeBrowser.hasChildren(parentCategoryId) === true)
 		{
             Backend.Category.treeBrowser.openItem(parentCategoryId);
-			
+
 			this.createNewCatInterval = setInterval(function()
 			{
 			    if(Backend.Category.treeBrowser.getIndexById(newCategory.ID) !== null)
 				{
                     Backend.Category.treeBrowser.selectItem(newCategory.ID, true);
                     this.tabControl.activateTab("tabMainDetails", newCategory.ID);
-                    
-                    Backend.Breadcrumb.display(newCategory.ID);  
+
+                    Backend.Breadcrumb.display(newCategory.ID);
                     Backend.Category.showControls();
-                    
+
 					clearInterval(this.createNewCatInterval);
 			    }
 			}.bind(this)
@@ -306,12 +308,12 @@ Backend.Category = {
 			 this.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, 0, 0, 0, 0, 'SELECT');
 		     this.tabControl.activateTab("tabMainDetails", newCategory.ID);
 
-            Backend.Breadcrumb.display(newCategory.ID);  
+            Backend.Breadcrumb.display(newCategory.ID);
             Backend.Category.showControls();
 
 		}
 		Backend.Category.treeBrowser.setCategoryStyle(newCategory);
-            
+
 	},
 
 	/**
@@ -340,7 +342,7 @@ Backend.Category = {
 	{
         return this.buildUrl(this.links.create, parentNodeId);
 	},
-    
+
 	getUrlItemsInTabsCount: function(categoryId)
 	{
         return this.buildUrl(Backend.Category.links.countTabsItems, categoryId);
@@ -351,7 +353,7 @@ Backend.Category = {
 		return this.buildUrl(this.links.remove, nodeId);
 	},
 
-    getUrlForNodeReorder: function(id, pid, direction) 
+    getUrlForNodeReorder: function(id, pid, direction)
     {
 		direction = direction || '';
         return Backend.Category.links.reorder
@@ -381,19 +383,19 @@ Backend.Category = {
 
 	reorderCategory: function(targetId, parentId, siblingNodeId)
 	{
-		if (!parentId) 
+		if (!parentId)
 		{
 			return false;
 		}
-		
+
         new LiveCart.AjaxRequest(Backend.Category.getUrlForNodeReorder(targetId, parentId, Backend.Category.treeBrowser._reorderDirection));
-	
+
         return true;
     },
-    
+
     /**
      * Insert array of categories into tree
-     * 
+     *
      * @param array categories Array of category objects. Every category object should contain these elements
      *     parent - Id of parent category
      *     ID - Id o category
@@ -401,15 +403,15 @@ Backend.Category = {
      *     options - Advanced options
      *     childrenCount - Indicates that this node has N childs
      */
-    addCategories: function(categories) 
+    addCategories: function(categories)
     {
-        $A(categories).each(function(category) {         
-            if(!category.parent || 0 == category.parent) 
+        $A(categories).each(function(category) {
+            if(!category.parent || 0 == category.parent)
             {
                 category.options = "";
                 category.parent = 0;
             }
-            else if(!category.option) 
+            else if(!category.option)
             {
                 category.options = "";
             }
@@ -418,18 +420,18 @@ Backend.Category = {
             Backend.Category.treeBrowser.setCategoryStyle(category);
         });
     },
-        
-    loadBookmarkedCategory: function(categoryID) 
-    {       
+
+    loadBookmarkedCategory: function(categoryID)
+    {
         var match = window.location.hash.match(/cat_(\d+)/);
-        if(match) 
+        if(match)
         {
             var alreadyLoaded = false;
             try
             {
-                $A(Backend.Category.treeBrowser._globalIdStorage).each(function(id) 
+                $A(Backend.Category.treeBrowser._globalIdStorage).each(function(id)
                 {
-                    if(id == match[1]) 
+                    if(id == match[1])
 					{
 					   alreadyLoaded = true;
 					   throw $break;
@@ -437,14 +439,14 @@ Backend.Category = {
                 });
             }
             catch(e) { }
-			
-            if(!alreadyLoaded) 
+
+            if(!alreadyLoaded)
             {
                 Backend.Category.treeBrowser.loadXML(Backend.Category.links.categoryRecursiveAutoloading + "?id=" + match[1]);
             }
         }
     },
-    
+
     loadBookmarkedProduct: function()
     {
         var productID = window.location.hash.match(/product_(\d+)/);
@@ -452,7 +454,7 @@ Backend.Category = {
         {
             Element.show($('loadingProduct'));
             Backend.Product.openProduct(productID[1], null, function() { Element.hide($('loadingProduct')); });
-        }        
+        }
     }
 }
 
@@ -475,7 +477,7 @@ CategoryTabControl.prototype = {
 	{
 		this.treeBrowser = treeBrowser;
         Backend.Breadcrumb.setTree(this.treeBrowser);
-		
+
 		this.sectionContainerName = sectionContainerName;
 
 		if (indicatorImageName != undefined)
@@ -490,8 +492,8 @@ CategoryTabControl.prototype = {
 			tabList[i].onmouseover = this.handleTabMouseOver.bindAsEventListener(this);
 			tabList[i].onmouseout = this.handleTabMouseOut.bindAsEventListener(this);
 
-			tabList[i].tabControl = this;			
-			
+			tabList[i].tabControl = this;
+
 			aElementList = tabList[i].getElementsByTagName('a');
 			if (aElementList.length > 0)
 			{
@@ -521,7 +523,7 @@ CategoryTabControl.prototype = {
 				//Element.hide(this.getContainerId(tabList[i].id, treeBrowser.getSelectedItemId()));
 			}
 		}
-		
+
 		// register for AJAX browser navigation handler
 		//this.activeTab.onclick();
 	},
@@ -569,8 +571,8 @@ CategoryTabControl.prototype = {
 	handleTabClick: function()
 	{
 		this.tabControl.activateTab(this);
-		
-		Backend.ajaxNav.add('cat_' + Backend.Category.activeCategoryId + '#' + this.id, this.id);		
+
+		Backend.ajaxNav.add('cat_' + Backend.Category.activeCategoryId + '#' + this.id, this.id);
 	},
 
 	/**
@@ -579,10 +581,10 @@ CategoryTabControl.prototype = {
 	activateTab: function(targetTab, categoryIdToActivate)
 	{
 		targetTab = $(targetTab);
-		
+
         var tab = targetTab;
         var id = categoryIdToActivate;
-        
+
 		var categoryId = (categoryIdToActivate == undefined ? this.treeBrowser.getSelectedItemId() : categoryIdToActivate);
         this.updateTabItemsCount(categoryId);
 
@@ -595,7 +597,7 @@ CategoryTabControl.prototype = {
 		{
 			Backend.setHelpContext(helpContext[0].firstChild.nodeValue);
 		}
-		        
+
 		var tabId = targetTab.id;
 
 		if (this.activeTab == targetTab)
@@ -627,12 +629,12 @@ CategoryTabControl.prototype = {
 		Element.addClassName(this.activeTab, 'active');
 
 		this.loadTabContent(tabId, categoryId);
-		
+
 		$(this.sectionContainerName).immediateDescendants().each(function(container)
 		{
 			container.hide();
 		});
-		
+
 		Element.show(this.getContainerId(this.activeTab.id, categoryId));
 	},
 
@@ -651,8 +653,8 @@ CategoryTabControl.prototype = {
 									 this.getContainerId(tabId, categoryId),
 									 this.getIndicatorId(tabId),
                                      undefined,
-                                     function(){ 
-									   Backend.Category.treeBrowser.hideFeedback(categoryId); 
+                                     function(){
+									   Backend.Category.treeBrowser.hideFeedback(categoryId);
 									   if ('tabMainDetails' == tabId)
 									   {
                                           var nameField = $(containerId).down('form').elements.namedItem('name');
@@ -661,7 +663,7 @@ CategoryTabControl.prototype = {
                                             nameField.select();
                                             nameField.focus();
                                           }
-                                       }                                       
+                                       }
 									 }
                                      );
 		}
@@ -715,44 +717,44 @@ CategoryTabControl.prototype = {
 			}
 		}
 	},
-	
-    loadCategoryTabsCount: function(categories) 
+
+    loadCategoryTabsCount: function(categories)
     {
-        $H(categories).each(function(category) {         
+        $H(categories).each(function(category) {
             CategoryTabControl.prototype.tabItemsCounts[category.key] = category.value;
         });
     },
-    
+
     updateTabItemsCount: function(categoryID)
-    {     
+    {
         if(categoryID != "" && !CategoryTabControl.prototype.tabItemsCounts[categoryID])
         {
             new LiveCart.AjaxRequest(
-                Backend.Category.getUrlItemsInTabsCount(categoryID), 
+                Backend.Category.getUrlItemsInTabsCount(categoryID),
         		false,
-        		function(response) 
-                { 
+        		function(response)
+                {
                     CategoryTabControl.prototype.tabItemsCounts[categoryID] = eval("(" + response.responseText + ")");
-                    CategoryTabControl.prototype.setTabItemsCount(categoryID); 
+                    CategoryTabControl.prototype.setTabItemsCount(categoryID);
                 }
             );
-        } 
-        else 
+        }
+        else
         {
-            CategoryTabControl.prototype.setTabItemsCount(categoryID); 
+            CategoryTabControl.prototype.setTabItemsCount(categoryID);
         }
     },
-    
+
     setTabItemsCount: function(categoryID)
     {
         $H(CategoryTabControl.prototype.tabItemsCounts[categoryID]).each(function(tab) {
             if ($(tab.key))
             {
                 $(tab.key).getElementsByTagName('span')[0].firstChild.nodeValue = ' (' + tab.value + ')';
-            }            
+            }
         });
     },
-    
+
     resetTabItemsCount: function(categoryID)
     {
         CategoryTabControl.prototype.tabItemsCounts[categoryID] = null;
@@ -772,71 +774,82 @@ CategoryTabControl.prototype = {
 
 
 Backend.Category.PopupSelector = Class.create();
-Backend.Category.PopupSelector.prototype = 
+Backend.Category.PopupSelector.prototype =
 {
-    element: null,
+    onAccept: null,
+    onCancel: null,
 
-    initialize: function(element)
+    initialize: function(onAccept, onCancel, categoryID)
     {
-        this.element = element;
+		this.onAccept = onAccept;
+		this.onCancel = onCancel;
 
-        var self = this;
-        var w = window.open(Backend.Category.links.popup, 'selectCategory', 'width=260, height=450');
-        
+        var w = window.open(Backend.Category.links.popup + (categoryID ? '#cat_' + categoryID : ''), 'selectCategory', 'width=260, height=450');
+
         // close the popup automatically if closing/reloading page
 		Event.observe(window, 'unload', function()
 		{
 			w.close();
 		});
-        
-        Event.observe(w, 'load', 
+
+        Event.observe(w, 'load',
             function()
             {
                 Event.observe(w.document.getElementById('select'), 'click', function()
                     {
                         var tree = w.Backend.Category.treeBrowser;
-                        
-                        self.element.down('input').value = tree.getSelectedItemId();
-                        
-                        var name = '';
-                        
+
+                        var pathAsText = '';
+                        var path = {};
+
                         var parentId = tree.getSelectedItemId();
                         do
-                        {       
-                            name = tree.getItemText(parentId) + name;;
+                        {
+                            var name = tree.getItemText(parentId)
+                            pathAsText = name + pathAsText;
+                            path[parentId] = name;
 
                             parentId = tree.getParentId(parentId);
-                            
+
                             if (parentId)
                             {
-                                name = ' > ' + name;
+                                pathAsText = ' > ' + pathAsText;
                             }
                         }
                         while(parentId != 0);
 
-						if (!w.confirm(w.Backend.Category.PopupSelector.prototype.confirmationMsg + "\n\n" + name))
-						{
-							return false;
-						}						
-						
-						self.element.up('form').down('input.submit').click();
+                    	var res = true;
 
-                    	var select = self.element.up('form').down('.select');
-						select.value = 'enable_isEnabled';
-                    	w.close();
+                    	if (this.onAccept)
+                    	{
+                    		res = this.onAccept(tree.getSelectedItemId(), pathAsText, path);
+						}
 
-                    });
-                    
+                    	if (res)
+                    	{
+                    		w.close();
+                    	}
+
+                    }.bindAsEventListener(this) );
+
             	Event.observe(w.document.getElementById('cancel'), 'click', function(e)
                     {
-                    	var select = self.element.up('form').down('.select');
-						select.value = 'enable_isEnabled';
-                    	w.close();
-						                    	
+                    	var res = true;
+
+                    	if (this.onCancel)
+                    	{
+                    		res = this.onCancel(this);
+						}
+
+                    	if (res)
+                    	{
+                    		w.close();
+                    	}
+
                     	Event.stop(e);
-                    });
-            }
+                    }.bindAsEventListener(this) );
+            }.bind(this)
         );
-        
+
     }
 }
