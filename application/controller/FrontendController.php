@@ -63,7 +63,8 @@ abstract class FrontendController extends BaseController
 		$f->setOrder(new ARFieldHandle('StaticPage', 'position'));
 
 		$response = new BlockResponse();
-		$response->set('pages', ActiveRecordModel::getRecordSet('StaticPage', $f)->toArray());
+		$response->set('pages', ActiveRecordModel::getRecordSetArray('StaticPage', $f));
+		unset($f);
 		return $response;
 	}
 
@@ -363,6 +364,15 @@ abstract class FrontendController extends BaseController
 
 			default:
 			break;
+		}
+	}
+
+	public function __destruct()
+	{
+		if (isset($this->order))
+		{
+			$this->order->__destruct();
+			unset($this->order);
 		}
 	}
 }

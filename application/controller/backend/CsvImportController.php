@@ -15,6 +15,8 @@ class CsvImportController extends StoreManagementController
 {
 	const PREVIEW_ROWS = 10;
 
+	const PROGRESS_FLUSH_INTERVAL = 5;
+
 	private $delimiters = array(
 									'_del_comma' => ',',
 									'_del_semicolon' => ';',
@@ -76,6 +78,7 @@ class CsvImportController extends StoreManagementController
 		foreach ($this->delimiters as $delimiter)
 		{
 			$csv = new CsvFile($file, $delimiter);
+			unset($count);
 			foreach ($this->getPreview($csv) as $row)
 			{
 				if (!isset($count))
@@ -90,7 +93,7 @@ class CsvImportController extends StoreManagementController
 				}
 			}
 
-			if (isset($count))
+			if (isset($count) && ($count > 1))
 			{
 				break;
 			}
@@ -240,6 +243,11 @@ class CsvImportController extends StoreManagementController
 				continue;
 			}
 
+			foreach ($record as &$cell)
+			{
+				$cell = trim($cell);
+			}
+
 			// detect product category
 			if (isset($fields['Category']['ID']))
 			{
@@ -321,6 +329,7 @@ class CsvImportController extends StoreManagementController
 			// price
 			if (isset($fields['ProductPrice']['price']))
 			{
+				$record[$fields['ProductPrice']['price']] = preg_replace('/^[\.0-9]/', '', $record[$fields['ProductPrice']['price']]);
 				$impReq->set('price_' . $this->application->getDefaultCurrencyCode(), (float)$record[$fields['ProductPrice']['price']]);
 			}
 
@@ -350,13 +359,9 @@ class CsvImportController extends StoreManagementController
 									$record[$csvIndex]
 								)
 							);
+						$f->setLimit(1);
 
-						$set = $attr->getRelatedRecordSet('SpecFieldValue', $f);
-						if ($set->size())
-						{
-							$value = $set->get(0);
-						}
-						else
+						if (!$value = $attr->getRelatedRecordSet('SpecFieldValue', $f)->shift())
 						{
 							$value = SpecFieldValue::getNewInstance($attr);
 
@@ -386,18 +391,28 @@ class CsvImportController extends StoreManagementController
 
 			$product->save();
 
-			$this->flushResponse(array('progress' => ++$progress, 'total' => $total));
+			$progress++;
+
+			if ($progress % self::PROGRESS_FLUSH_INTERVAL == 0 || ($total == $progress))
+			{
+				$this->flushResponse(array('progress' => $progress, 'total' => $total));
+			}
 
 			if (connection_aborted())
 			{
 				$this->cancel();
 			}
+
+			$product->__destruct();
+			unset($product);
 		}
 
 		//ActiveRecord::rollback();
 		ActiveRecord::commit();
 
 		$this->flushResponse(array('progress' => 0, 'total' => $total));
+
+		//echo '|' . round(memory_get_usage() / (1024*1024), 1);
 
 		exit;
 	}
@@ -438,6 +453,7 @@ class CsvImportController extends StoreManagementController
 
 	private function flushResponse($data)
 	{
+		//echo '|' . round(memory_get_usage() / (1024*1024), 1) . "\n";
 		echo '|' . base64_encode(json_encode($data));
 		flush();
 	}

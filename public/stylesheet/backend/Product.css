@@ -14,7 +14,7 @@
 	padding-right: 22px;
 	background-image: url(../../image/silk/gif/resultset_next.gif);
 	background-position: center right;
-	background-repeat: no-repeat;    
+	background-repeat: no-repeat;
 	float: right;
 }
 
@@ -28,12 +28,12 @@ fieldset.specification
 
 fieldset.specification .numeric
 {
- 	width: 100px; 
+ 	width: 100px;
 }
 
 .multiValueSelect p.selectMenu
 {
-	clear: both; 	 	
+	clear: both;
 	margin-bottom: 10px;
 	font-size: smaller;
 }
@@ -46,8 +46,8 @@ fieldset.specification .numeric
 .multiValueSelect div.other label
 {
   	width: auto;
-  	margin-right: 10px;       
-	line-height: 1.8em; 
+  	margin-right: 10px;
+	line-height: 1.8em;
 }
 
 .multiValueSelect div.other input, input.other
@@ -62,7 +62,7 @@ fieldset.specification .numeric
 
 .autoSKU
 {
-    position: relative; 
+    position: relative;
     top: 5px;
 }
 
@@ -76,7 +76,7 @@ fieldset.specification .numeric
 *************************/
 li.addProduct
 {
-    background-image:url(../../image/silk/add.png);    
+    background-image:url(../../image/silk/add.png);
 }
 
 .productsList
@@ -86,7 +86,7 @@ li.addProduct
 
 .cell_cb
 {
-	width: 4% !important;  
+	width: 4% !important;
 	text-align: center !important;
 }
 
@@ -102,7 +102,7 @@ li.addProduct
 	display: none;
 }
 
-.cellt_numeric, .cellt_bool
+.cellt_numeric, .cellt_bool, .cellt_date
 {
 	width: 10%;
 	text-align: center;
@@ -110,34 +110,34 @@ li.addProduct
 
 .cell_Product_sku
 {
-	width: 10% !important;  
+	width: 10% !important;
 }
 
 .cell_Product_name
 {
-	width: 38% !important;  
+	width: 38% !important;
 }
 
 .cell_Manufacturer_name
 {
-	width: 15% !important;  
+	width: 15% !important;
 }
 
 .cell_ProductPrice_price
 {
-	width: 13% !important;  
+	width: 13% !important;
 	text-align: center;
 }
 
 .cell_Product_stockCount
 {
-	width: 10% !important;  
+	width: 10% !important;
 	text-align: center;
 }
 
 .cell_Product_isEnabled
 {
-	width: 10% !important;   
+	width: 10% !important;
 	text-align: center;
 }
 
@@ -151,7 +151,7 @@ li.addProduct
 /*  	color: red;*/
 }
 
-/* Hide product type */   
+/* Hide product type */
 .cell_hiddenType, #column_hiddenType, #column_hiddenType_label {
     display: none;
 }

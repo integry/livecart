@@ -4,7 +4,7 @@
  *  Part of the LiveCart front controller that is only used when URL rewriting is not available
  *
  *  @author Integry Systems
- *  @package application 
+ *  @package application
  */
 
 // Indicates that URL rewriting is disabled

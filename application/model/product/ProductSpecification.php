@@ -13,7 +13,7 @@ ClassLoader::import("application.model.specification.SpecificationDateValue");
  * can be done with Product class itself.
  *
  * @package application.model.product
- * @author Integry Systems <http://integry.com>   
+ * @author Integry Systems <http://integry.com>
  */
 class ProductSpecification
 {
@@ -23,9 +23,9 @@ class ProductSpecification
 	 * @var Product
 	 */
 	private $product = null;
-	
+
 	private $attributes = array();
-	
+
 	private $removedAttributes = array();
 
 	public function __construct(Product $product, $specificationDataArray = array())
@@ -41,19 +41,19 @@ class ProductSpecification
 	 * @param iSpecification $specification Specification item value
 	 */
 	public function setAttribute(iSpecification $newSpecification)
-	{		
+	{
 		$specField = $newSpecification->getSpecField();
 
 		if(
-			$this->product->isExistingRecord()   
-			&& isset($this->attributes[$newSpecification->getSpecField()->getID()]) 
-			&& ('SpecificationItem' == $specField->getSpecificationFieldClass() 
+			$this->product->isExistingRecord()
+			&& isset($this->attributes[$newSpecification->getSpecField()->getID()])
+			&& ('SpecificationItem' == $specField->getSpecificationFieldClass()
 			&& $newSpecification->specFieldValue->isModified())
 		)
 		{
 			// Delete old value
 			ActiveRecord::deleteByID('SpecificationItem', $this->attributes[$specField->getID()]->getID());
-			
+
 			// And create new
 			$this->attributes[$specField->getID()] = SpecificationItem::getNewInstance($this->product, $specField, $newSpecification->specFieldValue->get());
 		}
@@ -72,27 +72,27 @@ class ProductSpecification
 	 */
 	public function removeAttribute(SpecField $field)
 	{
-		
+
 		$this->removedAttributes[$field->getID()] = $this->attributes[$field->getID()];
 		unset($this->attributes[$field->getID()]);
 	}
 
 	public function removeAttributeValue(SpecField $field, SpecFieldValue $value)
 	{
-	  	
+
 		if (!$field->isSelector())
 	  	{
 			throw new Exception('Cannot remove a value from non selector type specification field');
 		}
-		
+
 		if (!isset($this->attributes[$field->getID()]))
 		{
 		  	return false;
 		}
-		
+
 		if ($field->isMultiValue->get())
 		{
-			$this->attributes[$field->getID()]->removeValue($value);		
+			$this->attributes[$field->getID()]->removeValue($value);
 		}
 		else
 		{
@@ -102,13 +102,13 @@ class ProductSpecification
 	}
 
 	public function isAttributeSet(SpecField $field)
-	{		
-		return isset($this->attributes[$field->getID()]);  
+	{
+		return isset($this->attributes[$field->getID()]);
 	}
-	
+
 	/**
 	 *	Get attribute instance for the particular SpecField.
-	 *	
+	 *
 	 *	If it is a single value selector a SpecFieldValue instance needs to be passed as well
 	 *
 	 *	@param SpecField $field SpecField instance
@@ -124,21 +124,21 @@ class ProductSpecification
 			$this->attributes[$field->getID()] = call_user_func_array(array($field->getSpecificationFieldClass(), 'getNewInstance'), $params);
 		}
 
-		return $this->attributes[$field->getID()];  	
+		return $this->attributes[$field->getID()];
 	}
 
 	public function save()
-	{		
+	{
 		foreach ($this->removedAttributes as $attribute)
 		{
 		  	$attribute->delete();
-		}  
+		}
 		$this->removedAttributes = array();
 
 		foreach ($this->attributes as $attribute)
 		{
 			$attribute->save();
-		}  
+		}
 	}
 
 	public function toArray()
@@ -146,45 +146,45 @@ class ProductSpecification
 		$arr = array();
 		foreach ($this->attributes as $id => $attribute)
 		{
-			$arr[$id] = $attribute->toArray();		 	
+			$arr[$id] = $attribute->toArray();
 		}
 
 		uasort($arr, array($this, 'sortAttributeArray'));
-								
+
 		return $arr;
 	}
-	
+
 	private function sortAttributeArray($a, $b)
 	{
 		if (!isset($a['SpecField']['SpecFieldGroup']['position']))
 		{
-			$a['SpecField']['SpecFieldGroup']['position'] = -1;	
+			$a['SpecField']['SpecFieldGroup']['position'] = -1;
 		}
-		
+
 		if (!isset($b['SpecField']['SpecFieldGroup']['position']))
 		{
-			$b['SpecField']['SpecFieldGroup']['position'] = -1;	
+			$b['SpecField']['SpecFieldGroup']['position'] = -1;
 		}
 
 		if (($a['SpecField']['SpecFieldGroup']['position'] == $b['SpecField']['SpecFieldGroup']['position']))
 		{
 			return ($a['SpecField']['position'] < $b['SpecField']['position']) ? -1 : 1;
 		}
-		
+
 		return ($a['SpecField']['SpecFieldGroup']['position'] < $b['SpecField']['SpecFieldGroup']['position']) ? -1 : 1;
 	}
 
 	public static function loadSpecificationForProductArray(&$productArray)
-	{		
+	{
 		$array = array(&$productArray);
 		self::loadSpecificationForRecordSetArray($array, true);
-		
+
 		$groupIds = array();
 		foreach ($productArray['attributes'] as $attr)
 		{
 			$groupIds[$attr['SpecField']['specFieldGroupID'] != '' ? $attr['SpecField']['specFieldGroupID'] : 'NULL'] = true;
 		}
-		
+
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('SpecFieldGroup', 'ID'), array_keys($groupIds)));
 		$indexedGroups = array();
 		$res = ActiveRecordModel::getRecordSetArray('SpecFieldGroup', $f);
@@ -192,16 +192,16 @@ class ProductSpecification
 		{
 			$indexedGroups[$group['ID']] = $group;
 		}
-		
+
 		foreach ($productArray['attributes'] as &$attr)
 		{
 			if ($attr['SpecField']['specFieldGroupID'])
 			{
-				$attr['SpecField']['SpecFieldGroup'] = $indexedGroups[$attr['SpecField']['specFieldGroupID']];				
+				$attr['SpecField']['SpecFieldGroup'] = $indexedGroups[$attr['SpecField']['specFieldGroupID']];
 			}
 		}
 	}
-	
+
 	/**
 	 * Load product specification data for a whole array of products at once
 	 */
@@ -212,7 +212,7 @@ class ProductSpecification
 	  	{
 			$ids[$product['ID']] = $key;
 		}
-		
+
 		$specificationArray = self::fetchSpecificationData(array_flip($ids), $fullSpecification);
 
 		$specFieldSchema = ActiveRecordModel::getSchemaInstance('SpecField');
@@ -225,7 +225,7 @@ class ProductSpecification
 			{
 				$value['value'] = $spec['value'];
 				$value = MultiLingualObject::transformArray($value, $specStringSchema);
-				
+
 				if (isset($productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']]))
 				{
 					$sp =& $productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']];
@@ -234,20 +234,20 @@ class ProductSpecification
 					continue;
 				}
 			}
-			
+
 			foreach ($specFieldColumns as $key)
 			{
 				$spec['SpecField'][$key] = $spec[$key];
 				unset($spec[$key]);
 			}
-			
+
 			// transform for presentation
 			$spec['SpecField'] = MultiLingualObject::transformArray($spec['SpecField'], $specFieldSchema);
 
 			if ($spec['SpecField']['isMultiValue'])
 			{
 				$spec['valueIDs'] = array($spec['specFieldValueID']);
-				$spec['values'] = array($value);				
+				$spec['values'] = array($value);
 			}
 			else
 			{
@@ -255,8 +255,8 @@ class ProductSpecification
 			}
 
 			// append to product array
-			$productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']] = $spec;		
-			Product::sortAttributesByHandle($productArray[$ids[$spec['productID']]]);	
+			$productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']] = $spec;
+			Product::sortAttributesByHandle($productArray[$ids[$spec['productID']]]);
 		}
 	}
 
@@ -266,13 +266,13 @@ class ProductSpecification
 		{
 			return array();
 		}
-		
+
 		$cond = '
-		LEFT JOIN 	
-			SpecField ON specFieldID = SpecField.ID 
-		LEFT JOIN 	
-			SpecFieldGroup ON SpecField.specFieldGroupID = SpecFieldGroup.ID 
-		WHERE 
+		LEFT JOIN
+			SpecField ON specFieldID = SpecField.ID
+		LEFT JOIN
+			SpecFieldGroup ON SpecField.specFieldGroupID = SpecFieldGroup.ID
+		WHERE
 			productID IN (' . implode(', ', $productIDs) . ')' . ($fullSpecification ? '' : ' AND SpecField.isDisplayedInList = 1');
 
 		$query = '
@@ -285,13 +285,13 @@ class ProductSpecification
 		SELECT SpecificationItem.productID, SpecificationItem.specFieldID, SpecFieldValue.value, SpecFieldValue.ID, SpecFieldValue.position, SpecFieldGroup.position, SpecField.*
 				 FROM SpecificationItem
 				 	LEFT JOIN SpecFieldValue ON SpecificationItem.specFieldValueID =  SpecFieldValue.ID
-				 ' . str_replace('ON specFieldID', 'ON SpecificationItem.specFieldID', $cond) . 
+				 ' . str_replace('ON specFieldID', 'ON SpecificationItem.specFieldID', $cond) .
 				 ' ORDER BY productID, SpecFieldGroupPosition, position, specFieldValuePosition';
-		
+
 		$specificationArray = ActiveRecordModel::getDataBySQL($query);
-		
+
 		$multiLingualFields = array('name', 'description', 'valuePrefix', 'valueSuffix');
-		
+
 		foreach ($specificationArray as &$spec)
 		{
 			// unserialize language field values
@@ -299,19 +299,19 @@ class ProductSpecification
 			{
 				$spec[$value] = unserialize($spec[$value]);
 			}
-			
+
 			if ((SpecField::DATATYPE_TEXT == $spec['dataType'] && SpecField::TYPE_TEXT_DATE != $spec['type'])
 				|| (SpecField::TYPE_NUMBERS_SELECTOR == $spec['type']))
 			{
 				$spec['value'] = unserialize($spec['value']);
-			}		
+			}
 		}
-		
-		return $specificationArray;				
+
+		return $specificationArray;
 	}
 
 	private function loadSpecificationData($specificationDataArray)
-	{	
+	{
 		// preload all specFields from database
 		$specFieldIds = array();
 
@@ -322,11 +322,11 @@ class ProductSpecification
 		  	$specFieldIds[$value['specFieldID']] = $value['specFieldID'];
 		  	if ($value['valueID'])
 		  	{
-		  		$selectors[$value['specFieldID']][$value['valueID']] = $value;		
+		  		$selectors[$value['specFieldID']][$value['valueID']] = $value;
 			}
 			else
 			{
-				$simpleValues[$value['specFieldID']] = $value;  
+				$simpleValues[$value['specFieldID']] = $value;
 			}
 		}
 
@@ -337,11 +337,11 @@ class ProductSpecification
 		{
 		  	$specField = $specFields[$value['specFieldID']];
 
-		  	$class = $specField->getValueTableName();	
-		  	
+		  	$class = $specField->getValueTableName();
+
 			$specification = call_user_func_array(array($class, 'restoreInstance'), array($this->product, $specField, $value['value']));
 		  	$this->attributes[$specField->getID()] = $specification;
-		}		  
+		}
 
 		// selectors
 		foreach ($selectors as $specFieldId => $value)
@@ -367,6 +367,22 @@ class ProductSpecification
 		}
 	}
 
+	public function __destruct()
+	{
+		foreach ($this->attributes as $k => $attr)
+		{
+			$this->attributes[$k]->__destruct();
+			unset($this->attributes[$k]);
+		}
+
+		foreach ($this->removedAttributes as $k => $attr)
+		{
+			$this->removedAttributes[$k]->__destruct();
+			unset($this->removedAttributes[$k]);
+		}
+
+		unset($this->product);
+	}
 }
 
 ?>

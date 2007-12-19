@@ -9,20 +9,20 @@ ClassLoader::import('application.model.Currency');
  * as the Product class provides most of the methods necessary for pricing manipulation.
  *
  * @package application.model.product
- * @author Integry Systems <http://integry.com>   
+ * @author Integry Systems <http://integry.com>
  */
 class ProductPricing
 {
 	const CALCULATED = 'calculated';
 	const DEFINED = 'defined';
 	const BOTH = 'both';
-	
+
 	private $product;
 
 	private $prices = array();
 
 	private $removedPrices = array();
-	
+
 	private $application;
 
 	public function __construct(Product $product, $prices = null, LiveCart $application)
@@ -32,13 +32,13 @@ class ProductPricing
 
 		if (is_null($prices) && $product->getID())
 		{
-			$prices = $product->getRelatedRecordSet("ProductPrice", new ARSelectFilter());	
+			$prices = $product->getRelatedRecordSet("ProductPrice", new ARSelectFilter());
 		}
 
 		if ($prices instanceof ARSet)
 		{
 			foreach ($prices as $price)
-			{				
+			{
 				$this->setPrice($price);
 			}
 		}
@@ -93,11 +93,11 @@ class ProductPricing
 
 	public function removePriceByCurrencyCode($currencyCode)
 	{
-		if (isset($this->prices[$currencyCode])) 
+		if (isset($this->prices[$currencyCode]))
 		{
-			$this->removedPrices[] = $this->prices[$currencyCode];	
+			$this->removedPrices[] = $this->prices[$currencyCode];
 		}
-		
+
 		unset($this->prices[$currencyCode]);
 	}
 
@@ -112,7 +112,7 @@ class ProductPricing
 	}
 
 	public function save()
-	{		
+	{
 		foreach ($this->prices as $price)
 		{
 			$price->save();
@@ -126,22 +126,22 @@ class ProductPricing
 
 	/**
 	 * Convert current product prices to array
-	 * 
+	 *
 	 * @param string $part Which part of array prices you want to get ('defined', 'calculated' or 'both')
 	 */
 	public function toArray($part = null)
 	{
 		if(!in_array($part, array('defined', 'calculated', 'both'))) $part = 'both';
-		
-		$defined = array();	
+
+		$defined = array();
 		foreach ($this->prices as $inst)
 		{
 			$defined[$inst->currency->get()->getID()] = $inst->price->get();
 		}
 
-		$baseCurrency = $this->application->getDefaultCurrencyCode();				
+		$baseCurrency = $this->application->getDefaultCurrencyCode();
 		$basePrice = isset($defined[$baseCurrency]) ? $defined[$baseCurrency] : 0;
-		
+
 		$formattedPrice = $calculated = array();
 
 		foreach ($this->application->getCurrencySet() as $id => $currency)
@@ -154,12 +154,27 @@ class ProductPricing
 			{
 				$calculated[$id] = ProductPrice::calculatePrice($this->product, $currency, $basePrice);
 			}
-		
-			$formattedPrice[$id] = $currency->getFormattedPrice($calculated[$id]);		
+
+			$formattedPrice[$id] = $currency->getFormattedPrice($calculated[$id]);
 		}
-	
+
 		$return = array('defined' => $defined, 'calculated' => $calculated, 'formattedPrice' => $formattedPrice);
 		return ('both' == $part) ? $return : $return[$part];
+	}
+
+	public function __destruct()
+	{
+		foreach ($this->prices as $k => $price)
+		{
+			$this->prices[$k]->__destruct();
+		}
+		unset($this->prices);
+
+		foreach ($this->removedPrices as $k => $price)
+		{
+			$this->removedPrices[$k]->__destruct();
+		}
+		unset($this->removedPrices);
 	}
 }
 

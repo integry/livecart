@@ -9,7 +9,7 @@ include_once dirname(__file__) . '/Specification.php';
  * Links a pre-defined attribute value to a product
  *
  * @package application.model.specification
- * @author Integry Systems <http://integry.com>   
+ * @author Integry Systems <http://integry.com>
  */
 class SpecificationItem extends Specification
 {
@@ -32,13 +32,13 @@ class SpecificationItem extends Specification
 
 		return $specItem;
 	}
-	
+
 	public static function restoreInstance(Product $product, SpecField $field, SpecFieldValue $value)
 	{
 		$inst = parent::getInstanceByID(__CLASS__, array('productID' => $product->getID(), 'specFieldID' => $field->getID(), 'specFieldValueID' => $value->getID()));
 		$inst->specFieldValue->set($value);
 		$inst->resetModifiedStatus();
-	
+
 		return $inst;
 	}
 
@@ -54,7 +54,7 @@ class SpecificationItem extends Specification
 	{
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedData);
 	}
-	
+
 	public function set(SpecFieldValue $value)
 	{
 	  	// test whether the value belongs to the same field
@@ -62,13 +62,19 @@ class SpecificationItem extends Specification
 	  	{
 			throw new Exception('Cannot assign SpecField:' . $value->specField->get()->getID() . ' value to SpecField:' . $this->specField->get()->getID());
 		}
-		
+
 		if($value !== $this->specFieldValue->get()) $this->specFieldValue->set($value);
 	}
 
 	public function toArray()
 	{
 		return $this->specFieldValue->get()->toArray();
+	}
+
+	public function __destruct()
+	{
+		$this->specFieldValue->destructValue();
+		parent::__destruct();
 	}
 }
 

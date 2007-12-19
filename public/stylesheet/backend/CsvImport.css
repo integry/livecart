@@ -52,7 +52,7 @@ label.wide
 .wizardProgress.stepArrange #progressArrange,
 .wizardProgress.stepImport #progressImport
 {
-	background-color: #bfb;
+	background-color: #cfc;
 	font-weight: bold;
 }
 
@@ -95,13 +95,14 @@ label.wide
 	font-size: smaller;
 	text-align: center;
 	background-color: #FEFEFE;
+	text-transform: uppercase;
 }
 
 #previewContainer
 {
 	padding: 1px;
 	width: 100%;
-	height: 350px;
+	max-height: 350px;
 	overflow: auto;
 }
 
@@ -109,7 +110,7 @@ label.wide
 {
 	padding: 1px;
 	width: 100%;
-	height: 350px;
+	max-height: 350px;
 	overflow: auto;
 }
 
