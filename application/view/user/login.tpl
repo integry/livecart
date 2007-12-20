@@ -7,37 +7,36 @@
 {* include file="layout/frontend/rightSide.tpl" *}
 
 <div id="content" class="left right">
-	
+
 	<h1>{t _login}</h1>
-	
+
 	<h2>{t _returning}</h2>
-	
+
 	<p>
-		{if $failed}		   
+		{if $failed}
 			<div class="errorMsg failed">
 				{t _login_failed}
-			</div>				
+			</div>
 		{else}
 			<label></label>
 			{t _please_sign_in}
 		{/if}
 	</p>
-	
-	{capture assign="return"}user/login{/capture}
-	{include file="user/loginForm.tpl"}
-		
+
+	{include file="user/loginForm.tpl" return="user/index"}
+
 	<h2>{t _new_cust}</h2>
 
 		<label></label>
 		{t _not_registered}
-	
+
 	{include file="user/regForm.tpl"}
-	
+
 </div>
 
 {literal}
 	<script type="text/javascript">
-		Event.observe(window, 'load', function() {$('email').focus()});	
+		Event.observe(window, 'load', function() {$('email').focus()});
 	</script>
 {/literal}
 

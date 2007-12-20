@@ -12,9 +12,18 @@
 
 	<div class="descr">
 
-		<div class="title">
-			<a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">{$product.name_lang}</a>
-		</div>
+		<fieldset class="container">
+			<div class="title">
+				<a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">{$product.name_lang}</a>
+			</div>
+
+			<div class="pricingInfo">
+				{if $product.isAvailable}
+					<a href="{link controller=order action=addToCart id=$product.ID returnPath=true}" class="addToCart">{t _add_to_cart}</a>
+				{/if}
+				<span>{t _our_price}:</span> <span class="price">{$product.formattedPrice.$currency}</span>
+			</div>
+		</fieldset>
 
 		{if $product.listAttributes}
 			<div class="spec">
@@ -44,19 +53,11 @@
 		</div>
 
 		<div class="order">
-			<div class="pricingInfo">
-				<span>{t _our_price}:</span> <span class="price">{$product.formattedPrice.$currency}</span>
-			</div>
 			<div class="orderingControls">
-				{if $product.isAvailable}
-					<a href="{link controller=order action=addToCart id=$product.ID returnPath=true}" class="addToCart">{t _add_to_cart}</a>
-				{/if}
 				{if 'ENABLE_WISHLISTS'|config}
-					{if $product.isAvailable}<span class="sep">:</span>{/if}
 					<a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}" class="addToWishList">{t _add_to_wishlist}</a>
 				{/if}
 			</div>
-
 		</div>
 
 	</div>

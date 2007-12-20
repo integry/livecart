@@ -3,7 +3,7 @@
 <fieldset class="container">
 {foreach from=$subCategories item="sub" name="subcats"}
 {if $smarty.foreach.subcats.index % $perColumn == 0}
-<table class="subCategories">
+<table class="subCategories{if $smarty.foreach.subcats.first} first{/if}">
 {/if}
 	<tr>
 		<td class="subCatImage">
@@ -16,7 +16,7 @@
 		<td class="details{if $smarty.foreach.subcats.index < ($smarty.foreach.subcats.total / 2)} verticalSep{/if}{if !$sub.subCategories} noSubCats{/if}">
 			<div class="subCatContainer">
 				<div class="subCatContainer">
-					<div class="subCatContainer">
+					<table><tr><td class="subCatContainer">
 						<div class="subCatName">
 							<a href="{categoryUrl data=$sub}">{$sub.name_lang}</a>
 							<span class="count">({$sub.count})</span>
@@ -42,7 +42,7 @@
 						<div class="subCatDescr">
 							{* $sub.description_lang *}
 						</div>
-					</div>
+					</td></tr></table>
 				</div>
 			</div>
 		</td>

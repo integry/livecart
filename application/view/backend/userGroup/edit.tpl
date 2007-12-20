@@ -1,17 +1,22 @@
 <div id="userGroup_{$userGroup.ID}"></div>
 {form handle=$userGroupForm action="controller=backend.userGroup action=save" id="userGroupForm_`$userGroup.ID`" method="post" onsubmit="Backend.User.Group.prototype.getInstance(this).save(); return false;" role="userGroup.update"}
 	{hidden name="ID"}
-	
+
 	<fieldset class="error">
-		<label>{t _name}</label>
-		{textfield name="name"}
-		<span class="errorText" style="display: none" ></span>
+		<p class="required">
+			<label>{t _name}</label>
+			{textfield name="name"}
+			<span class="errorText" style="display: none" ></span>
+		</p>
 	</fieldset>
+
 	<fieldset class="error">
-		<label>{t _description}</label>
-		{textarea name="description"}
+		<p>
+			<label>{t _description}</label>
+			{textarea name="description"}
+		</p>
 	</fieldset>
-	
+
 	<fieldset class="userGroup_controls controls">
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" class="userGroup_save button submit" value="{t _save}" />

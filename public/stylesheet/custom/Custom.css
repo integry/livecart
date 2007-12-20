@@ -8,6 +8,12 @@
 	padding-right: 0;
 }
 
+fieldset
+{
+	background-color: #F3FCFF;
+	border: 1px solid #A6DAFF
+}
+
 /*
 	Forms
 */
@@ -97,10 +103,6 @@ input.submit, input.text, input.password, select
 div.box
 {
 	margin-bottom: 10px;
-}
-
-div.box
-{
 	background-color: #F3FCFF;
 	background-image: url(../../theme/LightBlue/bottomCorners.gif);
 	background-repeat: no-repeat;
@@ -153,6 +155,11 @@ div.box .content
 	margin-left: 30px;
 }
 
+.subCategories.first
+{
+	# margin-left: 15px;
+}
+
 .subCategories td.details.verticalSep
 {
 	border: 0;
@@ -162,7 +169,6 @@ div.box .content
 {
 	background-color: #E6FAFF;
 	padding: 0;
-	height: 160px;
 	background-repeat: no-repeat;
 	background-image: url(../../theme/LightBlue/cornerTopLeft.gif);
 	background-repeat: no-repeat;
@@ -171,7 +177,6 @@ div.box .content
 
 .subCategories .subCatContainer
 {
-	height: 160px;
 	background-repeat: no-repeat;
 	background-image: url(../../theme/LightBlue/cornerBottomLeft.gif);
 	background-repeat: no-repeat;
@@ -189,11 +194,9 @@ div.box .content
 	background-image: url(../../theme/LightBlue/cornerTopRight.gif);
 	background-position: top right;
 	padding-left: 15px;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	display: table-cell;
 	vertical-align: middle;
-	width: 350px;
+	height: 200px;
+	width: 252px;
 }
 
 .noSubCats .subCatContainer
@@ -227,9 +230,13 @@ ul.productList li
 
 ul.productList .pricingInfo
 {
-	position: absolute;
-	right: 0pt;
-	top: 0pt;
+	float: right;
+	background-color: #FFF3FC;
+	line-height: 2em;
+	padding-right: 1em;
+	margin-top: -5px;
+	margin-bottom: 5px;
+	width: 200px;
 }
 
 ul.productList .pricingInfo span
@@ -240,14 +247,19 @@ ul.productList .pricingInfo span
 .pricingInfo span.price
 {
 	font-size: larger;
-	display: block !important;
+	display: inline !important;
+	padding-left: 0.5em;
+	float: left;
+	background-image: url(../../theme/LightBlue/cornerTopLeft.gif);
+	background-position: left top;
+	background-repeat: no-repeat;
 }
 
-ul.productList .addToCart
+.pricingInfo
 {
-	position: absolute;
-	right: 65pt;
-	top: 1pt;
+	background-image: url(../../theme/LightBlue/cornerTopRight.gif);
+	background-position: right top;
+	background-repeat: no-repeat;
 }
 
 ul.productList .sep
@@ -275,10 +287,14 @@ ul.productList .addToWishList
 
 .productList .title a
 {
-	width: 400px;
-	white-space: nowrap;
 	overflow: hidden;
 	display: block;
+	width: 380px;
+}
+
+ul.productList .spec
+{
+	margin-top: 0;
 }
 
 /*
@@ -290,5 +306,5 @@ ul.productList .addToWishList
 	background-position:left center;
 	background-repeat:no-repeat;
 	padding-left: 22px;
-	padding-top: 3px;
+	padding-top: 4px;
 }

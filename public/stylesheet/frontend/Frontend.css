@@ -102,6 +102,7 @@ p
 table
 {
     border-spacing: 0;
+    border-collapse: collapse;
 }
 
 .clear
@@ -163,6 +164,7 @@ div.confirmationMsg div
 	width: 190px;
 	overflow: visible;
 	position: relative;
+	margin-bottom: 120px;
 }
 
 #rightSide
@@ -406,7 +408,7 @@ tr.even
 	padding-left: 20px;
 	font-size: 90%;
 	padding-right: 0;
-	width: 95%;
+	width: auto;
 }
 
 .filterGroup ul li a
@@ -796,8 +798,8 @@ ul.productList li.featured .title
 ul.productList .title
 {
 	display: block;
-	margin-bottom: 9px;
 	font-size: 120%;
+	float: left;
 }
 
 ul.productList .spec
@@ -805,6 +807,7 @@ ul.productList .spec
 	font-size: smaller;
 	font-weight: bold;
 	margin-bottom: 5px;
+	margin-top: 9px;
 }
 
 ul.productList .descr
@@ -836,11 +839,23 @@ ul.productList a.addToCart
     background-image:url(../../image/silk/gif/cart_add.gif);
     background-repeat: no-repeat;
     background-position: center left;
+    float: right;
+}
+
+.pricingInfo span.price
+{
+/*
+	float: right;
+	width: 100px;
+*/
 }
 
 ul.productList .pricingInfo
 {
-    float: left;
+    float: right;
+    white-space: nowrap;
+    width: 250px;
+    line-height: 1.2em;
 }
 
 ul.productList .orderingControls
