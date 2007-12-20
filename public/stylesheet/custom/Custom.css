@@ -233,10 +233,14 @@ ul.productList .pricingInfo
 	float: right;
 	background-color: #FFF3FC;
 	line-height: 2em;
-	padding-right: 1em;
 	margin-top: -5px;
 	margin-bottom: 5px;
 	width: 200px;
+	background-image: url(../../theme/LightBlue/cornerTopRight.gif);
+	background-position: right top;
+	background-repeat: no-repeat;
+	#padding-top: 5px;
+	#background-position: right 5px;
 }
 
 ul.productList .pricingInfo span
@@ -255,11 +259,23 @@ ul.productList .pricingInfo span
 	background-repeat: no-repeat;
 }
 
-.pricingInfo
+.pricingInfo div
 {
-	background-image: url(../../theme/LightBlue/cornerTopRight.gif);
-	background-position: right top;
+	background-image: url(../../theme/LightBlue/cornerBottomLeft.gif);
+	background-position: left bottom;
 	background-repeat: no-repeat;
+
+}
+
+.pricingInfo div div
+{
+	background-image: url(../../theme/LightBlue/cornerBottomRight.gif);
+	background-position: right bottom;
+}
+
+ul.productList a.addToCart
+{
+	margin-right: 1em;
 }
 
 ul.productList .sep

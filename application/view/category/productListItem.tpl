@@ -17,12 +17,13 @@
 				<a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">{$product.name_lang}</a>
 			</div>
 
-			<div class="pricingInfo">
+			<div class="pricingInfo"><div><div>
 				{if $product.isAvailable}
 					<a href="{link controller=order action=addToCart id=$product.ID returnPath=true}" class="addToCart">{t _add_to_cart}</a>
 				{/if}
 				<span>{t _our_price}:</span> <span class="price">{$product.formattedPrice.$currency}</span>
-			</div>
+				<br class="clear" />
+			</div></div></div>
 		</fieldset>
 
 		{if $product.listAttributes}
