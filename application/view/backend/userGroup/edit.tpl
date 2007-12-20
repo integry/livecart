@@ -2,13 +2,13 @@
 {form handle=$userGroupForm action="controller=backend.userGroup action=save" id="userGroupForm_`$userGroup.ID`" method="post" onsubmit="Backend.User.Group.prototype.getInstance(this).save(); return false;" role="userGroup.update"}
 	{hidden name="ID"}
 
-	<fieldset class="error">
-		<p class="required">
-			<label>{t _name}</label>
+	<p class="required">
+		<label>{t _name}</label>
+		<fieldset class="error">
 			{textfield name="name"}
 			<span class="errorText" style="display: none" ></span>
-		</p>
-	</fieldset>
+		</fieldset>
+	</p>
 
 	<fieldset class="error">
 		<p>

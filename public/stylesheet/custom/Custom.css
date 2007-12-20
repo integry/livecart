@@ -236,7 +236,7 @@ ul.productList .pricingInfo
 	line-height: 2em;
 	margin-top: -5px;
 	margin-bottom: 5px;
-	width: 200px;
+	width: 220px;
 	background-image: url(../../theme/LightBlue/cornerTopRight.gif);
 	background-position: right top;
 	background-repeat: no-repeat;
@@ -294,7 +294,7 @@ ul.productList .orderingControls
 	float: left;
 }
 
-ul.productList .addToWishList
+ul.productList .addToWishList, #productToWishList td.value a
 {
 	background-image: url(../../image/silk/gif/heart_add.gif);
 	background-repeat: no-repeat;
@@ -312,6 +312,65 @@ ul.productList .addToWishList
 ul.productList .spec
 {
 	margin-top: 0;
+}
+
+/*
+	Product page
+*/
+#productPrice, #productToCart, #productToWishList
+{
+	background-color: #FFF3FC;
+}
+
+#productPrice td.value, #productToCart td.value, #productToWishList td.value
+{
+ 	padding-right: 1em;
+}
+
+#productPrice td
+{
+	padding-top: 1em;
+}
+
+#productPrice td.param
+{
+	background-image: url(../../theme/LightBlue/cornerTopLeft.gif);
+	background-position: left top;
+	background-repeat: no-repeat;
+}
+
+#productPrice td.value
+{
+	background-image: url(../../theme/LightBlue/cornerTopRight.gif);
+	background-position: right top;
+	background-repeat: no-repeat;
+}
+
+#productToWishList td.param
+{
+	background-image: url(../../theme/LightBlue/cornerBottomLeft.gif);
+	background-position: left bottom;
+	background-repeat: no-repeat;
+}
+
+#productToWishList td.value
+{
+	background-image: url(../../theme/LightBlue/cornerBottomRight.gif);
+	background-position: right bottom;
+	background-repeat: no-repeat;
+	text-align: left;
+}
+
+#productToWishList td
+{
+	padding-bottom: 1em !important;
+}
+
+#productSpecification tr.first td.param
+{
+	background-image: url(../../theme/LightBlue/cornerTopLeft.gif);
+	background-position: top left;
+	background-repeat: no-repeat;
 }
 
 /*

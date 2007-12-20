@@ -927,6 +927,7 @@ ul.productList .orderingControls
 {
 	padding: 5px;
 	white-space: nowrap;
+	vertical-align: middle;
 }
 
 #mainInfo td.param

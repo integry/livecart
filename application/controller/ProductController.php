@@ -51,11 +51,20 @@ class ProductController extends FrontendController
 		$productArray = $product->toArray();
 		ProductSpecification::loadSpecificationForProductArray($productArray);
 
+		// filter empty attributes
+		foreach ($productArray['attributes'] as $key => $attr)
+		{
+			if ((empty($attr['value']) && empty($attr['values']) && empty($attr['value_lang'])))
+			{
+				unset($productArray['attributes'][$key]);
+			}
+		}
+
 		// attribute summary
 		$productArray['listAttributes'] = array();
 		foreach ($productArray['attributes'] as $attr)
 		{
-			if ($attr['SpecField']['isDisplayedInList'] && (!empty($attr['value']) || !empty($attr['values']) || !empty($attr['value_lang'])))
+			if ($attr['SpecField']['isDisplayedInList'])
 			{
 				$productArray['listAttributes'][] = $attr;
 			}

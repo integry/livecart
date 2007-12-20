@@ -11,16 +11,16 @@
 {* include file="layout/frontend/rightSide.tpl" *}
 
 <div id="content" class="left">
-	
+
 	<div class="returnToCategory">
 		{assign var="lastBreadcrumb" value=$breadCrumb|@end}
 		{assign var="lastBreadcrumb" value=$breadCrumb|@prev}
 		<a href="{$lastBreadcrumb.url}" class="returnToCategory">{$product.Category.name_lang}</a>
 	</div>
-		
+
 	<h1>{$product.name_lang}</h1>
 	<div class="clear"></div>
-	
+
 	<div id="imageContainer">
 		<div id="largeImage" class="{if !$product.DefaultImage.paths.3}missingImage{/if} {if $images|@count > 1}multipleImages{/if}">
 			{if $product.DefaultImage.paths.3}
@@ -37,7 +37,7 @@
 			</div>
 		{/if}
 	</div>
-	
+
 	<div id="mainInfo">
 
 		{if $product.listAttributes}
@@ -55,47 +55,51 @@
 					{elseif $attr.value_lang}
 						{$attr.value_lang}
 					{/if}
-												
+
 					{if !$smarty.foreach.attr.last}
 					/
 					{/if}
 				{/foreach}
 			</div>
-			
-			<div style="clear: right;"></div>
-			
-		{/if}	
 
-		<table>
+			<div style="clear: right;"></div>
+
+		{/if}
+
+		{form action="controller=order action=addToCart id=`$product.ID`" handle=$cartForm}
+		<table id="productPurchaseLinks">
 			<tr id="productPrice">
 				<td class="param">{t _price}:</td>
 				<td class="value price">{$product.formattedPrice.$currency}</td>
 			</tr>
-			<tr>
-				<td colspan="2" class="cartLinks">
-					{form action="controller=order action=addToCart id=`$product.ID`" handle=$cartForm}
-						{t _quantity}: {selectfield name="count" options=$quantity}
-						<input type="submit" class="submit" value="{tn _add_to_cart}" />							
-						{hidden name="return" value=$catRoute}
-					{/form}
+			<tr id="productToCart" class="cartLinks">
+				<td class="param">{t _quantity}:</td>
+				<td class="value">
+					{selectfield name="count" options=$quantity}
+					<input type="submit" class="submit" value="{tn _add_to_cart}" />
+					{hidden name="return" value=$catRoute}
 				</td>
 			</tr>
 
-			{if 'ENABLE_WISHLISTS'|config}
-			<tr>
-				<td colspan="2" class="cartLinks addToWishList">
-					<a href="{link controller=order action=addToWishList id=$product.ID query="return=`$catRoute`"}">{t _add_to_wishlist}</a>			
+			<tr id="productToWishList">
+				<td class="param"></td>
+				<td class="value cartLinks addToWishList">
+					{if 'ENABLE_WISHLISTS'|config}
+						<a href="{link controller=order action=addToWishList id=$product.ID query="return=`$catRoute`"}">{t _add_to_wishlist}</a>
+					{/if}
 				</td>
 			</tr>
-			{/if}
+		</table>
+		{/form}
 
+		<table id="productMainDetails">
 			{if $product.Manufacturer.name}
 			<tr>
 				<td class="param">{t _manufacturer}:</td>
 				<td class="value"><a href="{categoryUrl data=$product.Category addFilter=$manufacturerFilter}">{$product.Manufacturer.name}</a></td>
 			</tr>
 			{/if}
-			
+
 			{if $product.sku}
 			<tr>
 				<td class="param">{t _sku}:</td>
@@ -123,22 +127,23 @@
 				</tr>
 				{/if}
 			{/if}
-				
+
 			{if $product.URL}
 			<tr>
-				<td colspan="2" class="websiteUrl"><a href="{$product.URL}" target="_blank">{t _product_website}</a></td>			
-			</tr>			
+				<td colspan="2" class="websiteUrl"><a href="{$product.URL}" target="_blank">{t _product_website}</a></td>
+			</tr>
 			{/if}
-			
-		</table>	
+
+		</table>
+
 	</div>
-   	
+
    	<div class="clear"></div>
-   
+
    	{if $product.longDescription_lang}
 	<h2>{t _description}</h2>
 	<div id="productDescription">
-		{$product.longDescription_lang}	
+		{$product.longDescription_lang}
 	</div>
 	{/if}
 
@@ -149,13 +154,14 @@
 			{foreach from=$product.attributes item="attr" name="attributes"}
 				{if $attr.SpecField.isDisplayed && ($attr.values || $attr.value_lang || $attr.value)}
 					{if $prevAttr.SpecField.SpecFieldGroup.ID != $attr.SpecField.SpecFieldGroup.ID}
-						<tr class="specificationGroup">
-							<td colspan="2">{$attr.SpecField.SpecFieldGroup.name_lang}</td>
+						<tr class="specificationGroup{if $smarty.foreach.attributes.first} first{/if}">
+							<td class="param">{$attr.SpecField.SpecFieldGroup.name_lang}</td>
+							<td class="value"></td>
 						</tr>
 					{/if}
-					<tr {zebra loop="attributes"}>
-						<td>{$attr.SpecField.name_lang}</td>
-						<td>
+					<tr {zebra loop="attributes"} class="{if $smarty.foreach.attributes.first}first{/if}{if $smarty.foreach.attributes.last} last{/if}">
+						<td class="param">{$attr.SpecField.name_lang}</td>
+						<td class="value">
 							{if $attr.values}
 								<ul class="attributeList{if $attr.values|@count == 1} singleValue{/if}">
 									{foreach from=$attr.values item="value"}
@@ -168,35 +174,35 @@
 								{$attr.SpecField.valuePrefix_lang}{$attr.value}{$attr.SpecField.valueSuffix_lang}
 							{/if}
 						</td>
-					</tr>   
-					{assign var="prevAttr" value=$attr}						 
+					</tr>
+					{assign var="prevAttr" value=$attr}
 				{/if}
 			{/foreach}
 		</table>
 	</div>
 	{/if}
-	
+
 	{if $related}
 	<h2>{t _recommended}</h2>
 	<div id="relatedProducts">
-		
+
 		{foreach from=$related item=group}
-		   
+
 		   {if $group.0.ProductRelationshipGroup.name_lang}
 			   <h3>{$group.0.ProductRelationshipGroup.name_lang}</h3>
 		   {/if}
-		   
+
 		   {include file="category/productList.tpl" products=$group}
-		   
+
 		{/foreach}
-		
+
 	</div>
 	{/if}
-	
+
 	{if $reviews}
 	<h2>{t _reviews}</h2>
-	{/if}	
-	
+	{/if}
+
 </div>
 
 {literal}
