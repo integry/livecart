@@ -178,8 +178,8 @@ class MultiValueSpecificationItem implements iSpecification
 			$this->removedItems[$k]->__destruct();
 		}
 
-		unset($this->removedItems);
-		unset($this->items);
+		$this->removedItems = array();
+		$this->items = array();
 		unset($this->productInstance);
 		unset($this->specFieldInstance);
 	}

@@ -887,8 +887,8 @@ ul.productList .orderingControls
 
 .returnToCategory
 {
-	padding: 10px;
 	padding-left: 0;
+    margin-bottom: 12px;
 }
 
 .returnToCategory a
@@ -896,9 +896,11 @@ ul.productList .orderingControls
     background-image: url(../../image/silk/gif/resultset_previous.gif);
     background-repeat: no-repeat;
     background-position: center left;
-    padding-left: 22px;
+    padding-left: 18px;
     list-style-type: none;
     margin-left: 0;
+    margin-top: 4px;
+    font-weight: bold;
 }
 
 .specSummary
@@ -909,7 +911,7 @@ ul.productList .orderingControls
     padding: 10px;
     font-size: smaller;
     max-width: 300px;
-    margin-top: -75px;
+    margin-top: -40px;
     z-index: 10;
 }
 
@@ -937,7 +939,15 @@ ul.productList .orderingControls
 
 #mainInfo td.websiteUrl
 {
-    text-align: center;
+    border-top: 1px dotted black;
+}
+
+.websiteUrl a
+{
+  	background-image: url(../../image/backend/icon/exLink.gif) !important;
+  	background-repeat: no-repeat;
+	background-position: right 0px;
+	padding-right: 20px;
 }
 
 .price
@@ -979,6 +989,16 @@ tr.specificationGroup
 	background-color: #CCCCCC;
 }
 
+tr.specificationGroup td.param
+{
+	border-right: 0 !important;
+}
+
+tr.specificationGroup td.value
+{
+	border-left: 0 !important;
+}
+
 ul.attributeList
 {
     padding: 0;
@@ -1010,6 +1030,27 @@ ul.attributeList.singleValue li
 	width: 450px;
 	float: left;
     text-align: center;
+}
+
+#outerImageContainer #imageContainer
+{
+	width: auto;
+	float: none;
+}
+
+#lightbox
+{
+	padding: 2px !important;
+}
+
+#keyboardMsg
+{
+	display: none;
+}
+
+#lightboxCaption
+{
+	font-size: 1.2em;
 }
 
 #mainImage

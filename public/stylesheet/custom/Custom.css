@@ -366,11 +366,68 @@ ul.productList .spec
 	padding-bottom: 1em !important;
 }
 
+tr.specificationGroup
+{
+	background-image: url(../../theme/LightBlue/boxGradient.gif);
+	background-repeat: repeat-x;
+	background-color: #F3FCFF;
+}
+
+tr.even
+{
+	background-color: #F5FCFF;
+}
+
+tr.odd
+{
+	background-color: #FCFCFF;
+}
+
 #productSpecification tr.first td.param
 {
 	background-image: url(../../theme/LightBlue/cornerTopLeft.gif);
 	background-position: top left;
 	background-repeat: no-repeat;
+}
+
+#productSpecification tr.first td.value
+{
+	background-image: url(../../theme/LightBlue/cornerTopRight.gif);
+	background-position: top right;
+	background-repeat: no-repeat;
+}
+
+#productSpecification tr.last td.param
+{
+	background-image: url(../../theme/LightBlue/cornerBottomLeft.gif);
+	background-position: bottom left;
+	background-repeat: no-repeat;
+}
+
+#productSpecification tr.last td.value
+{
+	background-image: url(../../theme/LightBlue/cornerBottomRight.gif);
+	background-position: bottom right;
+	background-repeat: no-repeat;
+}
+
+.returnToCategory
+{
+	margin-left: -1em;
+}
+
+.specSummary
+{
+	background: transparent;
+	margin-top: -5px;
+	margin-left: 10px;
+	margin-bottom: 5px;
+	max-width: 1000px;
+	width: auto;
+	padding: 0;
+	z-index: 0;
+	float: none;
+	font-family: sans-serif;
 }
 
 /*

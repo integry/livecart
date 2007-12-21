@@ -1,11 +1,11 @@
 {foreach from=$shipment.items item="item" name="shipment"}
-	<tr{zebra loop="shipment"}>					
+	<tr class="{zebra loop="shipment"}">
 		<td class="productName"><a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a></td>
 		<td>{$item.formattedPrice}</td>
 		<td>{$item.count}</td>
 		<td>{$item.formattedSubTotal}</td>
 	</tr>
-{/foreach}			
+{/foreach}
 
 {if $order.isShippingRequired && $shipment.isShippable}
 	<tr>

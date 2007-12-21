@@ -6,23 +6,23 @@
  * @param array $params
  * @param Smarty $smarty
  * @return string
- * 
+ *
  * @package application.helper.smarty
- * @author Integry Systems 
+ * @author Integry Systems
  */
-function smarty_function_zebra($params, LiveCartSmarty $smarty) 
+function smarty_function_zebra($params, LiveCartSmarty $smarty)
 {
 	if (!isset($smarty->_foreach[$params['loop']]))
 	{
 		return false;
 	}
-	
+
 	if (0 == $smarty->_foreach[$params['loop']]['iteration'] || !isset($smarty->zebra[$params['loop']]))
 	{
 		$smarty->zebra[$params['loop']] = 0;
 	}
-	
-	return ' class="' . (++$smarty->zebra[$params['loop']] % 2 ? 'even' : 'odd') .'"';
+
+	return ++$smarty->zebra[$params['loop']] % 2 ? 'even' : 'odd';
 }
 
 ?>

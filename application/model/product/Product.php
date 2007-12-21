@@ -838,8 +838,6 @@ class Product extends MultilingualObject
 		return ActiveRecordModel::getRecordSetArray('ProductImage', $f);
 	}
 
-
-
 	/**
 	 * Count products in category
 	 *

@@ -6,7 +6,7 @@
 .quickSearch .submit
 {
     position: relative;
-    top: 1px;    
+    top: 1px;
 }
 
 legend {
@@ -28,5 +28,5 @@ legend {
 label.checkbox, label.radio
 {
     margin: 0;
-  	margin-top: 6px; 
+  	margin-top: 6px;
 }

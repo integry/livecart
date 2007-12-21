@@ -1,4 +1,6 @@
 {loadJs}
+{includeJs file="library/lightbox/lightbox.js"}
+{includeCss file="library/lightbox/lightbox.css"}
 
 {assign var="metaDescription" value=$product.shortDescription_lang}
 {assign var="metaKeywords" value=$product.keywords_lang}
@@ -19,52 +21,56 @@
 	</div>
 
 	<h1>{$product.name_lang}</h1>
+
+	{if $product.listAttributes}
+		<div class="specSummary">
+			{foreach from=$product.listAttributes item="attr" name="attr"}
+				{if $attr.values}
+					{foreach from=$attr.values item="value" name="values"}
+						{$value.value_lang}
+						{if !$smarty.foreach.values.last}
+						/
+						{/if}
+					{/foreach}
+				{elseif $attr.value}
+					{$attr.SpecField.valuePrefix_lang}{$attr.value}{$attr.SpecField.valueSuffix_lang}
+				{elseif $attr.value_lang}
+					{$attr.value_lang}
+				{/if}
+
+				{if !$smarty.foreach.attr.last}
+				/
+				{/if}
+			{/foreach}
+		</div>
+
+		<div style="clear: right;"></div>
+
+	{/if}
+
 	<div class="clear"></div>
 
 	<div id="imageContainer">
 		<div id="largeImage" class="{if !$product.DefaultImage.paths.3}missingImage{/if} {if $images|@count > 1}multipleImages{/if}">
 			{if $product.DefaultImage.paths.3}
-				{img src=$product.DefaultImage.paths.3 alt=$product.DefaultImage.name_lang|escape id="mainImage"}
+
+				<a rel="lightbox" href="{$product.DefaultImage.paths.4}" title="{$product.DefaultImage.title_lang|escape}">
+					{img src=$product.DefaultImage.paths.3 alt=$product.DefaultImage.name_lang|escape id="mainImage"}
+				</a>
 			{else}
-				{img src="image/missing_large.jpg" alt=$product.DefaultImage.name_lang|escape id="mainImage"}
+				{img src="image/missing_large.jpg" alt="" id="mainImage"}
 			{/if}
 		</div>
 		{if $images|@count > 1}
 			<div id="moreImages">
 				{foreach from=$images item="image"}
-					{img src=$image.paths.1 id="img_`$image.ID`" alt=$image.name_lang|escape}
+					{img src=$image.paths.1 id="img_`$image.ID`" alt=$image.name_lang|escape onclick="return false;"}
 				{/foreach}
 			</div>
 		{/if}
 	</div>
 
 	<div id="mainInfo">
-
-		{if $product.listAttributes}
-			<div class="specSummary">
-				{foreach from=$product.listAttributes item="attr" name="attr"}
-					{if $attr.values}
-						{foreach from=$attr.values item="value" name="values"}
-							{$value.value_lang}
-							{if !$smarty.foreach.values.last}
-							/
-							{/if}
-						{/foreach}
-					{elseif $attr.value}
-						{$attr.SpecField.valuePrefix_lang}{$attr.value}{$attr.SpecField.valueSuffix_lang}
-					{elseif $attr.value_lang}
-						{$attr.value_lang}
-					{/if}
-
-					{if !$smarty.foreach.attr.last}
-					/
-					{/if}
-				{/foreach}
-			</div>
-
-			<div style="clear: right;"></div>
-
-		{/if}
 
 		{form action="controller=order action=addToCart id=`$product.ID`" handle=$cartForm}
 		<table id="productPurchaseLinks">
@@ -152,31 +158,31 @@
 	<div id="productSpecification">
 		<table>
 			{foreach from=$product.attributes item="attr" name="attributes"}
-				{if $attr.SpecField.isDisplayed && ($attr.values || $attr.value_lang || $attr.value)}
-					{if $prevAttr.SpecField.SpecFieldGroup.ID != $attr.SpecField.SpecFieldGroup.ID}
-						<tr class="specificationGroup{if $smarty.foreach.attributes.first} first{/if}">
-							<td class="param">{$attr.SpecField.SpecFieldGroup.name_lang}</td>
-							<td class="value"></td>
-						</tr>
-					{/if}
-					<tr {zebra loop="attributes"} class="{if $smarty.foreach.attributes.first}first{/if}{if $smarty.foreach.attributes.last} last{/if}">
-						<td class="param">{$attr.SpecField.name_lang}</td>
-						<td class="value">
-							{if $attr.values}
-								<ul class="attributeList{if $attr.values|@count == 1} singleValue{/if}">
-									{foreach from=$attr.values item="value"}
-										<li> {$value.value_lang}</li>
-									{/foreach}
-								</ul>
-							{elseif $attr.value_lang}
-								{$attr.value_lang}
-							{elseif $attr.value}
-								{$attr.SpecField.valuePrefix_lang}{$attr.value}{$attr.SpecField.valueSuffix_lang}
-							{/if}
-						</td>
+
+				{if $prevAttr.SpecField.SpecFieldGroup.ID != $attr.SpecField.SpecFieldGroup.ID}
+					<tr class="specificationGroup{if $smarty.foreach.attributes.first} first{/if}">
+						<td class="param">{$attr.SpecField.SpecFieldGroup.name_lang}</td>
+						<td class="value"></td>
 					</tr>
-					{assign var="prevAttr" value=$attr}
 				{/if}
+				<tr class="{zebra loop="attributes"} {if $smarty.foreach.attributes.first && !$attr.SpecField.SpecFieldGroup.ID}first{/if}{if $smarty.foreach.attributes.last} last{/if}">
+					<td class="param">{$attr.SpecField.name_lang}</td>
+					<td class="value">
+						{if $attr.values}
+							<ul class="attributeList{if $attr.values|@count == 1} singleValue{/if}">
+								{foreach from=$attr.values item="value"}
+									<li> {$value.value_lang}</li>
+								{/foreach}
+							</ul>
+						{elseif $attr.value_lang}
+							{$attr.value_lang}
+						{elseif $attr.value}
+							{$attr.SpecField.valuePrefix_lang}{$attr.value}{$attr.SpecField.valueSuffix_lang}
+						{/if}
+					</td>
+				</tr>
+				{assign var="prevAttr" value=$attr}
+
 			{/foreach}
 		</table>
 	</div>
@@ -215,6 +221,9 @@
 		imageDescr[{$image.ID}] = {json array=$image.title_lang};
 	{/foreach}
 	new Product.ImageHandler(imageData, imageDescr);
+
+	var loadingImage = 'image/loading.gif';
+	var closeButton = 'image/silk/gif/cross.gif';
 </script>
 
 {include file="layout/frontend/footer.tpl"}

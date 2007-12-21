@@ -158,3 +158,10 @@ revision = tip
 
 [tree23.paths]
 default = ssh://mercurial@dev.integry.net/vendor/pclzip
+
+[tree24]
+root = public/javascript/library/lightbox
+revision = tip
+
+[tree24.paths]
+default = ssh://mercurial@dev.integry.net/vendor/lightbox

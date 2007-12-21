@@ -8,10 +8,10 @@
 {defun name="address"}
 {if $address}
 	<p>
-		{$address.fullName}				
+		{$address.fullName}
 	</p>
 	<p>
-		{$address.companyName}				
+		{$address.companyName}
 	</p>
 	<p>
 		{$address.address1}
@@ -29,23 +29,23 @@
 		{$address.countryName}
 	</p>
 {/if}
-{/defun}  
+{/defun}
 
 <div id="content" class="left right">
 
 	<div id="invoice">
-	
+
 		<div id="invoiceHeader">
-		
+
 			{img src="image/promo/logo_small.jpg" id="invoiceLogo"}
-			
+
 			<h1>{t _invoice} #{$order.ID}</h1>
 			<div id="invoiceDate">{$order.formatted_dateCompleted.date_long}</div>
-		
+
 		</div>
-	
+
 		<div id="invoiceContacts">
-		
+
 			<div class="addressContainer">
 				<h2>{t _buyer}</h2>
 				{fun name="address" address=$order.BillingAddress}
@@ -57,43 +57,43 @@
 					Seller's contact information goes here
 				</p>
 			</div>
-		
+
 		</div>
-	
+
 		<div class="clear"></div>
-	
+
 		{foreach from=$order.shipments item="shipment" name="shipments"}
-		   
+
 			{if $shipment.items}
-		   
+
 			{if !$shipment.isShippable}
-				<h2>{t _downloads}</h2>		
+				<h2>{t _downloads}</h2>
 			{else}
 				<h2>{t _shipment} #{$smarty.foreach.shipments.iteration}</h2>
 			{/if}
-		
+
 			<table class="table shipment">
-			
+
 				<thead>
 					<tr>
 						<th class="productName">{t _product}</th>
 						<th>{t _price}</th>
 						<th>{t _quantity}</th>
 						<th>{t _subtotal}</th>
-					</tr>							
+					</tr>
 				</thead>
-				
+
 				<tbody>
-							
+
 					{foreach from=$shipment.items item="item" name="shipment"}
-						<tr{zebra loop="shipment"}>					
+						<tr class="{zebra loop="shipment"}">
 							<td class="productName">{$item.Product.name_lang}</td>
 							<td>{$item.formattedPrice}</td>
 							<td>{$item.count}</td>
 							<td class="amount">{$item.formattedSubTotal}</td>
 						</tr>
-					{/foreach}			
-					
+					{/foreach}
+
 					{if $order.isShippingRequired && $shipment.isShippable && $shipment.selectedRate.formattedPrice[$order.Currency.ID]}
 						<tr>
 							<td colspan="3" class="subTotalCaption">
@@ -104,14 +104,14 @@
 							</td>
 						</tr>
 					{/if}
-							
+
 					{foreach from=$shipment.taxes item="tax"}
-						<tr>					
+						<tr>
 							<td colspan="3" class="tax">{$tax.TaxRate.Tax.name_lang}:</td>
 							<td class="amount">{$tax.formattedAmount[$order.Currency.ID]}</td>
 						</tr>
-					{/foreach}		
-					  
+					{/foreach}
+
 					{if $shipment.isShippable}
 					<tr>
 						<td colspan="3" class="subTotalCaption">
@@ -120,18 +120,18 @@
 						<td class="amount subTotal">{$shipment.formatted_totalAmount}</td>
 					</tr>
 					{/if}
-											
+
 				</tbody>
-			
+
 			</table>
-			
+
 			{/if}
-		
-		{/foreach}	
-		
+
+		{/foreach}
+
 		<h2>{t _payment_info}</h2>
-		
-		<table id="invoicePaymentInfo">		
+
+		<table id="invoicePaymentInfo">
 			<tr class="itemSubtotal">
 				<td>{t _item_subtotal}:</td>
 				<td class="amount">{$order.formatted_itemSubtotal}</td>
@@ -163,10 +163,10 @@
 			<tr class="amountDue">
 				<td>{t _amount_due}:</td>
 				<td class="amount">{$order.formatted_amountDue}</td>
-			</tr>		
+			</tr>
 		</table>
-	
-	</div>	
+
+	</div>
 
 </div>
 

@@ -8,7 +8,7 @@
 	</thead>
 	<tbody>
 	{foreach from=$cart.wishListItems item="item" name="wishList"}
-		<tr {zebra loop="wishList"}>
+		<tr class="{zebra loop="wishList"}">
 			<td class="cartControl">
 				<a href="{link controller=order action=moveToCart id=$item.ID query="return=`$return`"}">{t _move_to_cart}</a>
 				<a href="{link controller=order action=delete id=$item.ID query="return=`$return`"}">{t _remove}</a>
@@ -17,7 +17,7 @@
 				{if $item.Product.DefaultImage.paths.1}
 				<a href="{productUrl product=$item.Product}">
 					{img src=$item.Product.DefaultImage.paths.1 alt=$item.Product.name_lang|escape}
-				</a>	
+				</a>
 				{/if}
 			</td>
 			<td class="cartName">
@@ -26,7 +26,7 @@
 			<td class="cartPrice">
 				{$item.Product.formattedPrice.$currency}
 			</td>
-		</tr>				
+		</tr>
 	{/foreach}
 	</tbody>
 </table>

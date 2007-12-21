@@ -62,11 +62,16 @@ class ProductController extends FrontendController
 
 		// attribute summary
 		$productArray['listAttributes'] = array();
-		foreach ($productArray['attributes'] as $attr)
+		foreach ($productArray['attributes'] as $key => $attr)
 		{
 			if ($attr['SpecField']['isDisplayedInList'])
 			{
 				$productArray['listAttributes'][] = $attr;
+			}
+
+			if (!$attr['SpecField']['isDisplayed'])
+			{
+				unset($productArray['attributes'][$key]);
 			}
 		}
 

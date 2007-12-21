@@ -10,23 +10,23 @@
 	</thead>
 	<tbody>
 	{foreach from=$cart.cartItems item="item" name="cart"}
-		<tr {zebra loop="cart"}>
+		<tr class="{zebra loop="cart"}">
 			<td class="cartControl">
 				{if 'ENABLE_WISHLISTS'|config}
 					<a href="{link controller=order action=moveToWishList id=$item.ID query="return=`$return`"}">{t _move_to_wishlist}</a>
 				{/if}
 				<a href="{link controller=order action=delete id=$item.ID query="return=`$return`"}">{t _remove}</a>
 			</td>
-			
+
 			<td class="cartImage">
 				{if $item.Product.DefaultImage.paths.1}
 				<a href="{productUrl product=$item.Product}">
-				   {img src=$item.Product.DefaultImage.paths.1 alt=$item.Product.name_lang|escape}	  
+				   {img src=$item.Product.DefaultImage.paths.1 alt=$item.Product.name_lang|escape}
 				</a>
 				{/if}
 			</td>
-			
-			<td class="cartName">				
+
+			<td class="cartName">
 				<div>
 					<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
 					<small>({$item.Product.Category.name_lang})</small>
@@ -43,7 +43,7 @@
 			<td class="cartQuant">
 				{textfield name="item_`$item.ID`" class="text"}
 			</td>
-		</tr>	
+		</tr>
 	{/foreach}
 			<tr>
 				<td colspan="3" class="subTotalCaption">{t _subtotal}:</td>
@@ -66,7 +66,7 @@
 		</tr>
 	</tbody>
 </table>
-<input type="hidden" name="return" value="{$return}" />	
+<input type="hidden" name="return" value="{$return}" />
 {/form}
 
 {if $expressMethods && $order.isOrderable}
