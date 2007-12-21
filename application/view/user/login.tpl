@@ -23,7 +23,8 @@
 		{/if}
 	</p>
 
-	{include file="user/loginForm.tpl" return="user/index"}
+	{capture var="return"}{link controller="user"}{/capture}
+	{include file="user/loginForm.tpl" return=$return}
 
 	<h2>{t _new_cust}</h2>
 

@@ -1150,9 +1150,15 @@ div.checkout a
 
 #cart, #wishList
 {
-	width: 100%;
+	width: 80%;
 	margin-left:auto;
 	margin-right:auto;
+}
+
+#wishList table
+{
+	margin-bottom: 1em;
+	width: 100%;
 }
 
 #wishList
@@ -1171,6 +1177,7 @@ div.checkout a
 {
 	width: 120px;
 	overflow: hidden;
+	padding-left: 1em !important;
 }
 
 .cartControl a

@@ -51,7 +51,7 @@ Product.ImageSwitcher.prototype =
 
         var lightBox = $('largeImage').down('a');
         lightBox.href = this.imageData[4];
-        lightBox.title = this.imageDescr;
+        lightBox.title = this.imageDescr ? this.imageDescr : '';
 	}
 }
 
