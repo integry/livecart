@@ -254,9 +254,12 @@ class ProductSpecification
 				$spec = MultiLingualObject::transformArray($spec, $specStringSchema);
 			}
 
-			// append to product array
-			$productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']] = $spec;
-			Product::sortAttributesByHandle($productArray[$ids[$spec['productID']]]);
+			if ((!empty($spec['value']) || !empty($spec['values']) || !empty($spec['value_lang'])))
+			{
+				// append to product array
+				$productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']] = $spec;
+				Product::sortAttributesByHandle($productArray[$ids[$spec['productID']]]);
+			}
 		}
 	}
 

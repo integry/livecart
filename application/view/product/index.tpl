@@ -205,6 +205,15 @@
 	</div>
 	{/if}
 
+	{if $together}
+	<h2>{t _purchased_together}</h2>
+	<div id="purchasedTogether">
+
+		{include file="category/productList.tpl" products=$together}
+
+	</div>
+	{/if}
+
 	{if $reviews}
 	<h2>{t _reviews}</h2>
 	{/if}

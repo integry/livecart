@@ -97,11 +97,35 @@ class ProductController extends FrontendController
 		$response->set('product', $productArray);
 		$response->set('category', $productArray['Category']);
 		$response->set('images', $product->getImageArray());
-		$response->set('related', $this->getRelatedProducts($product));
 		$response->set('quantity', $quantity);
 		$response->set('cartForm', $this->buildAddToCartForm());
 		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
 		$response->set('catRoute', $catRoute);
+
+		// related products
+		$related = $this->getRelatedProducts($product);
+
+		// items purchased together
+		$together = $product->getProductsPurchasedTogether($this->config->get('NUM_PURCHASED_TOGETHER'), true);
+
+		$spec = array();
+		foreach ($related as $key => $group)
+		{
+			foreach ($related[$key] as $i => &$prod)
+			{
+				$spec[] =& $related[$key][$i];
+			}
+		}
+
+		foreach ($together as &$prod)
+		{
+			$spec[] =& $prod;
+		}
+
+		ProductSpecification::loadSpecificationForRecordSetArray($spec);
+
+		$response->set('related', $related);
+		$response->set('together', $together);
 
 		if (isset($manFilter))
 		{

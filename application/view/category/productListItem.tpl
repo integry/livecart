@@ -26,9 +26,9 @@
 			</div></div></div>
 		</fieldset>
 
-		{if $product.listAttributes}
+		{if $product.attributes}
 			<div class="spec">
-				{foreach from=$product.listAttributes item="attr" name="attr"}
+				{foreach from=$product.attributes item="attr" name="attr"}
 					{if $attr.values}
 						{foreach from=$attr.values item="value" name="values"}
 							{$value.value_lang}

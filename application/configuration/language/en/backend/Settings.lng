@@ -98,6 +98,7 @@ _inventory_status=Inventory Status
 PRODUCT_DISPLAY_STOCK=Display the amount of products in stock
 PRODUCT_DISPLAY_LOW_STOCK=Display low-stock warning
 PRODUCT_DISPLAY_NO_STOCK=Display notification if a product is out of stock
+NUM_PURCHASED_TOGETHER=Display products that were purchased together most often
 
 _filters=Product Filters
 

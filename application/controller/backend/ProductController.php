@@ -509,45 +509,11 @@ class ProductController extends StoreManagementController
 			}
 		}
 
-		// purchased together with...
-		$sql = 'SELECT COUNT(*) AS cnt, OtherItem.productID AS ID FROM OrderedItem LEFT JOIN CustomerOrder ON OrderedItem.customerOrderID=CustomerOrder.ID LEFT JOIN OrderedItem AS OtherItem ON OtherItem.customerOrderID=CustomerOrder.ID WHERE CustomerOrder.isFinalized=1 AND OrderedItem.productID=' . $product->getID() . ' AND OtherItem.productID!=' . $product->getID() . ' GROUP BY OtherItem.productID ORDER BY cnt DESC LIMIT 10';
-
-		$products = ActiveRecord::getDataBySql($sql);
-
-		$ids = array();
-		$cnt = array();
-		foreach ($products as $prod)
-		{
-			$ids[] = $prod['ID'];
-			$cnt[$prod['ID']] = $prod['cnt'];
-		}
-
 		$response = new ActionResponse();
-
-		if ($ids)
-		{
-			$products = ActiveRecord::getRecordSetArray('Product', new ARSelectFilter(new INCond(new ARFieldHandle('Product', 'ID'), $ids)), array('DefaultImage' => 'ProductImage'));
-			foreach ($products as &$prod)
-			{
-				$prod['count'] = $cnt[$prod['ID']];
-			}
-			usort($products, array($this, 'togetherStatsSort'));
-			$response->set('together', $products);
-		}
-
+		$response->set('together', $product->getProductsPurchasedTogether(10));
 		$response->set('product', $product->toArray());
 		$response->set('purchaseStats', $purchaseStats);
 		return $response;
-	}
-
-	private function togetherStatsSort($a, $b)
-	{
-		if ($a['count'] == $b['count'])
-		{
-			return 0;
-		}
-
-		return ($a['count'] > $b['count']) ? -1 : 1;
 	}
 
 	public function getAvailableColumns(Category $category, $specField = false)

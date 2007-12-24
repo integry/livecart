@@ -765,6 +765,11 @@ class Product extends MultilingualObject
 
 	public function loadSpecification($specificationData = null)
 	{
+	  	if ($this->specificationInstance)
+	  	{
+	  		return false;
+		}
+
 	  	if (!$specificationData)
 	  	{
 			$cond = '
@@ -944,6 +949,70 @@ class Product extends MultilingualObject
 	{
 		ClassLoader::import('application.model.product.ProductFileGroup');
 		return ProductFileGroup::mergeGroupsWithFields($this->getFileGroups()->toArray(), $this->getFiles()->toArray());
+	}
+
+	public function getProductsPurchasedTogether($limit = null, $enabledOnly = false)
+	{
+		if (0 === $limit)
+		{
+			return array();
+		}
+
+		if (is_null($limit))
+		{
+			$limit = 0;
+		}
+
+		$sql = 'SELECT
+					COUNT(*) AS cnt, OtherItem.productID AS ID FROM OrderedItem
+				LEFT JOIN
+					CustomerOrder ON OrderedItem.customerOrderID=CustomerOrder.ID
+				LEFT JOIN
+					OrderedItem AS OtherItem ON OtherItem.customerOrderID=CustomerOrder.ID
+				LEFT JOIN
+					Product ON OtherItem.productID=Product.ID
+				WHERE
+					CustomerOrder.isFinalized=1 AND OrderedItem.productID=' . $this->getID() . ' AND OtherItem.productID!=' . $this->getID() . ($enabledOnly? ' AND Product.isEnabled=1' : '') . '
+				GROUP
+					BY OtherItem.productID
+				ORDER BY
+					cnt DESC
+				LIMIT ' . (int)$limit;
+
+		$products = ActiveRecord::getDataBySql($sql);
+
+		$ids = array();
+		$cnt = array();
+		foreach ($products as $prod)
+		{
+			$ids[] = $prod['ID'];
+			$cnt[$prod['ID']] = $prod['cnt'];
+		}
+
+		$products = array();
+		if ($ids)
+		{
+			$products = ActiveRecord::getRecordSetArray('Product', new ARSelectFilter(new INCond(new ARFieldHandle('Product', 'ID'), $ids)), array('DefaultImage' => 'ProductImage'));
+			foreach ($products as &$prod)
+			{
+				$prod['count'] = $cnt[$prod['ID']];
+			}
+			usort($products, array($this, 'togetherStatsSort'));
+
+			ProductPrice::loadPricesForRecordSetArray($products);
+		}
+
+		return $products;
+	}
+
+	private function togetherStatsSort($a, $b)
+	{
+		if ($a['count'] == $b['count'])
+		{
+			return 0;
+		}
+
+		return ($a['count'] > $b['count']) ? -1 : 1;
 	}
 
 	public function serialize()
