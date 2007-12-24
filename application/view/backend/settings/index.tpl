@@ -3,22 +3,24 @@
 {includeJs file="library/form/Validator.js"}
 {includeJs file="library/form/ActiveForm.js"}
 {includeJs file="backend/Settings.js"}
+{includeJs file="library/lightbox/lightbox.js"}
 
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 {includeCss file="backend/Settings.css"}
+{includeCss file="library/lightbox/lightbox.css"}
 
 {pageTitle help="settings.configuration"}{t _livecart_settings}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
 <div id="settingsContainer" class="maxHeight h--50">
-	
+
 	<div class="treeContainer">
 		<div id="settingsBrowser" class="treeBrowser"></div>
 		<div id="confirmations"></div>
 	</div>
 
 	<span id="settingsIndicator"></span>
-	
+
 	<div id="settingsContent" class="treeManagerContainer maxHeight">
 		<span class="progressIndicator"></span>
 	</div>

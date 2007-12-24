@@ -11,22 +11,17 @@ ClassLoader::import('library.smarty.libs.Smarty');
 class LiveCartSmarty extends Smarty
 {
 	private $application;
-	
+
 	private $paths = array();
-	
+
 	public function __construct(LiveCart $application)
 	{
 		$this->application = $application;
 		$this->register_modifier('config', array($this, 'config'));
-		
-		foreach (array('application.view', 'storage.customize.view') as $path)
-		{
-			$this->paths[] = ClassLoader::getRealPath($path);
-		}
 	}
-	
+
 	/**
-	 * Get livecart application instance
+	 * Get LiveCart application instance
 	 *
 	 * @return LiveCart
 	 */
@@ -34,22 +29,22 @@ class LiveCartSmarty extends Smarty
 	{
 		return $this->application;
 	}
-	
+
 	/**
 	 *  Retrieve software configuration values from Smarty templates
 	 *
 	 *  <code>
 	 *	  {'STORE_NAME'|config}
 	 *  </code>
-	 */	
+	 */
 	public function config($key)
 	{
 		return self::getApplication()->getConfig()->get($key);
 	}
-	
+
 	public function processPlugins($output, $path)
 	{
-		$path = substr($path, 0, -4);		
+		$path = substr($path, 0, -4);
 		$path = str_replace('\\', '/', $path);
 
 		foreach ($this->getPlugins($path) as $plugin)
@@ -59,7 +54,7 @@ class LiveCartSmarty extends Smarty
 
 		return $output;
 	}
-	
+
 	private function getPlugins($path)
 	{
 		$pluginPath = ClassLoader::getRealPath('plugin.view.' . $path);
@@ -68,14 +63,14 @@ class LiveCartSmarty extends Smarty
 		{
 			return array();
 		}
-		
+
 		if (!class_exists('ViewPlugin', false))
 		{
 			ClassLoader::import('application.ViewPlugin');
 		}
-		
+
 		$plugins = array();
-		
+
 		foreach (new DirectoryIterator($pluginPath) as $plugin)
 		{
 			if ($plugin->isFile())
@@ -85,7 +80,7 @@ class LiveCartSmarty extends Smarty
 				$plugins[] = new $className($this, $this->application);
 			}
 		}
-		
+
 		return $plugins;
 	}
 }

@@ -14,7 +14,7 @@ class LiveCart extends Application
 	private static $pluginDirectories = array();
 
 	private $isBackend = false;
-	
+
   	/**
 	 * Locale instance that application operates on
 	 *
@@ -49,7 +49,7 @@ class LiveCart extends Application
 	 * @var string
 	 */
 	private $defaultLanguageID;
-	
+
 	private $requestLanguage;
 
 	private $languageList = null;
@@ -59,33 +59,39 @@ class LiveCart extends Application
 	private $currencies = null;
 
 	private $defaultCurrency = null;
-	
+
 	private $defaultCurrencyCode = null;
 
 	private $currencyArray;
-	
+
 	private $currencySet;
-	
+
 	/**
 	 *  Determines if the application is running in development mode
 	 *
 	 *  The development mode has the following changes:
-	 *	* SQL query logger is turned on (/cache/activerecord.log) 
+	 *	* SQL query logger is turned on (/cache/activerecord.log)
 	 *	* JavaScript and CSS stylesheet files are unbundled (slower to download, but allows debugging)
 	 *
 	 *  The development mode can be turned on by creating a file or directory named "dev" in the /cache directory.
 	 *  It can be turned off by simply deleting the "dev" file.
 	 */
 	private $isDevMode;
-	
+
 	/**
 	 *  Determines if the application is installed
 	 */
 	private $isInstalled;
-	
+
+	/**
+	 *  Active design theme
+	 *	@see getTheme()
+	 */
+	private $theme = null;
+
 	const EXCLUDE_DEFAULT_CURRENCY = false;
 
-	const INCLUDE_DEFAULT = true;	
+	const INCLUDE_DEFAULT = true;
 
 	/**
 	 * Returns an instance of LiveCart Application
@@ -98,9 +104,9 @@ class LiveCart extends Application
 	{
 		ClassLoader::import('application.model.ActiveRecordModel');
 		ClassLoader::import('framework.renderer.SmartyRenderer');
-		
+
 		parent::__construct();
-		
+
 		unset($this->session);
 		unset($this->config);
 		unset($this->locale);
@@ -108,52 +114,52 @@ class LiveCart extends Application
 
 		$dsnPath = ClassLoader::getRealPath("storage.configuration.database") . '.php';
 		$this->isInstalled = file_exists($dsnPath);
-		
+
 		if ($this->isInstalled)
 		{
 			ActiveRecord::setDSN(include $dsnPath);
 		}
 
 		// LiveCart request routing rules
-		include ClassLoader::getRealPath('application.configuration.route.backend') . '.php';				
-				
+		include ClassLoader::getRealPath('application.configuration.route.backend') . '.php';
+
 		ActiveRecordModel::setApplicationInstance($this);
-		
+
 		if (file_exists(ClassLoader::getRealPath("cache.dev")))
 		{
 			$this->setDevMode(true);
 		}
-		
+
 		if ($this->isDevMode())
 		{
-			ActiveRecord::getLogger()->setLogFileName(ClassLoader::getRealPath("cache") . DIRECTORY_SEPARATOR . "activerecord.log");			
+			ActiveRecord::getLogger()->setLogFileName(ClassLoader::getRealPath("cache") . DIRECTORY_SEPARATOR . "activerecord.log");
 		}
 
 		$compileDir = $this->isCustomizationMode() ? 'cache.templates_c.customize' : 'cache.templates_c';
 		SmartyRenderer::setCompileDir(ClassLoader::getRealPath($compileDir));
-		
+
 		// mod_rewrite disabled?
 		if ($this->request->get('noRewrite'))
 		{
 			$this->router->setBaseDir($_SERVER['baseDir'], $_SERVER['virtualBaseDir']);
 		}
 	}
-	
+
 	public function setDevMode($devMode = true)
 	{
 		$this->isDevMode = $devMode;
-	}	
+	}
 
 	public function isDevMode()
 	{
 		return $this->isDevMode;
-	}	
-	
+	}
+
 	public function isInstalled()
 	{
 		return $this->isInstalled;
-	}	
-	
+	}
+
 	/**
 	 * Registers a new plugin directory (multiple plugin directories are supported)
 	 *
@@ -163,7 +169,7 @@ class LiveCart extends Application
 	{
 		self::$pluginDirectories[$dir] = true;
 	}
-	
+
 	/**
 	 * Gets view path for specified controllers action
 	 *
@@ -172,16 +178,15 @@ class LiveCart extends Application
 	 * @return string View path
 	 */
 	public function getView($controllerName, $actionName)
-	{		
-		// get custom template path
-		$path = ClassLoader::getRealPath('storage.customize.view.' . $controllerName . '.' . $actionName) . '.tpl';
-		
-		if (!is_readable($path))
+	{
+		if ($path = $this->getRenderer()->getTemplatePath($controllerName . '/' . $actionName . '.tpl'))
+		{
+			return $path;
+		}
+		else
 		{
 			return parent::getView($controllerName, $actionName);
 		}
-		
-		return $path;
 	}
 
 	/**
@@ -192,17 +197,16 @@ class LiveCart extends Application
 	 */
 	public function getLayoutPath($layout)
 	{
-		// get custom template path
-		$path = ClassLoader::getRealPath('storage.customize.view.layout.' . $layout) . '.tpl';
-		
-		if (!is_readable($path))
+		if ($path = $this->getRenderer()->getTemplatePath('layout/' . $layout . '.tpl'))
+		{
+			return $path;
+		}
+		else
 		{
 			return parent::getLayoutPath($layout);
 		}
-		
-		return $path;
-	}	
-		
+	}
+
 	/**
 	 * Gets renderer for application
 	 *
@@ -215,47 +219,41 @@ class LiveCart extends Application
 			ClassLoader::import('application.LiveCartRenderer');
 			$this->renderer = new LiveCartRenderer($this);
 		}
-		
+
 		$renderer = parent::getRenderer();
 
 		if ($this->isCustomizationMode() && !$this->isBackend)
-		{			
-			$this->renderer->getSmartyInstance()->register_prefilter(array($this, 'templateLocator'));			
+		{
+			$this->renderer->getSmartyInstance()->register_prefilter(array($this, 'templateLocator'));
 		}
-		
+
 		return $renderer;
-	}	
-	
+	}
+
 	public function isBackend()
 	{
 		return $this->isBackend;
 	}
-	
+
 	public function templateLocator($tplSource, $smarty)
 	{
 		$file = $smarty->_current_file;
 
-		$paths = array(					
-					'custom:',
-					ClassLoader::getRealPath('application.view.'),
-					ClassLoader::getRealPath('storage.customize.view.')
-				 );
-		
-		foreach ($paths as $path)
+		foreach (array_merge('custom:', $this->getRenderer()->getTemplatePaths()) as $path)
 		{
 			if ($path == substr($file, 0, strlen($path)))
 			{
 				$file = substr($file, strlen($path));
-			}			
+			}
 		}
-		
+
 		$file = str_replace('\\', '/', $file);
-			
+
 		$editUrl = $this->getRouter()->createUrl(array('controller' => 'backend.template', 'action' => 'editPopup', 'query' => array('file' => $file)), true);
-		
-		return '<div class="templateLocator"><span class="templateName"><a onclick="window.open(\'' . $editUrl . '\', \'template\', \'width=800,height=600,scrollbars=yes,resizable=yes\'); return false;" href="#">' . $file . '</a></span>' . $tplSource . '</div>';					
-	}	
-		
+
+		return '<div class="templateLocator"><span class="templateName"><a onclick="window.open(\'' . $editUrl . '\', \'template\', \'width=800,height=600,scrollbars=yes,resizable=yes\'); return false;" href="#">' . $file . '</a></span>' . $tplSource . '</div>';
+	}
+
 	/**
 	 * Gets specified controller instance
 	 *
@@ -272,7 +270,7 @@ class LiveCart extends Application
 
 		return parent::getControllerInstance($controllerName);
 	}
-		
+
 	/**
 	 * Executes controllers action and returns response
 	 *
@@ -284,22 +282,22 @@ class LiveCart extends Application
 	protected function execute($controllerInstance, $actionName)
 	{
 		$response = parent::execute($controllerInstance, $actionName);
-		
+
 		$this->processPlugins($controllerInstance, $response);
-	
+
 		return $response;
-	}	
-	
+	}
+
 	protected function postProcessResponse(Response $response, Controller $controllerInstance)
 	{
 		if ($response instanceof BlockResponse)
 		{
 			$response->set('user', $controllerInstance->getUser()->toArray());
-		}		
+		}
 	}
 
 	/**
- `	 * Execute response post-processor plugins		
+ `	 * Execute response post-processor plugins
  	 *
 	 * @todo Cache plugin file locations
 	 */
@@ -307,17 +305,17 @@ class LiveCart extends Application
 	{
 		$name = $controllerInstance->getControllerName();
 		$action = $controllerInstance->getRequest()->getActionName();
-		
+
 		ClassLoader::import('application.ControllerPlugin');
-				
+
 		$dirs = array_merge(array(ClassLoader::getRealPath('plugin.controller.' . $name . '.' . $action) => 0), self::$pluginDirectories);
-				
+
 		foreach ($dirs as $pluginDir => $type)
 		{
 			if ($type)
 			{
 				$pluginDir = $pluginDir . '/controller/' . $name . '/' . $action;
-			}				
+			}
 
 			if (!is_dir($pluginDir))
 			{
@@ -336,7 +334,7 @@ class LiveCart extends Application
 			}
 		}
 	}
-	
+
 	public function isCustomizationMode()
 	{
 		return $this->session->get('customizationMode');
@@ -345,15 +343,15 @@ class LiveCart extends Application
 	public function isTranslationMode()
 	{
 		return $this->session->get('translationMode');
-	}	
-	
+	}
+
 	private function loadSession()
 	{
 	  	ClassLoader::import("framework.request.Session");
 		$this->session = new Session();
 		return $this->session;
 	}
-	
+
 	/**
 	 * Translates text using Locale::LCInterfaceTranslator
 	 * @param string $key
@@ -374,11 +372,11 @@ class LiveCart extends Application
 	{
 		return $this->locale->translator()->makeText($key, $params);
 	}
-	
+
 	private function loadLocale()
 	{
 		ClassLoader::import('library.locale.Locale');
-				
+
 		$this->locale =	Locale::getInstance($this->localeName);
 		$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('storage.language'));
 		$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('application.configuration.language'));
@@ -393,7 +391,7 @@ class LiveCart extends Application
 	private function loadLocaleName()
 	{
 		ClassLoader::import('library.locale.Locale');
-				
+
 		if ($this->requestLanguage)
 		{
 			$this->localeName = $this->requestLanguage;
@@ -405,7 +403,7 @@ class LiveCart extends Application
 
 		return $this->localeName;
 	}
-		
+
 	private function __get($name)
 	{
 		switch ($name)
@@ -429,7 +427,7 @@ class LiveCart extends Application
 			default:
 			break;
 		}
-	}	
+	}
 
 	/**
 	 * @return Locale
@@ -441,7 +439,7 @@ class LiveCart extends Application
 
 	/**
 	 * Get config instance
-	 * 
+	 *
 	 * @return Config
 	 */
 	public function getConfig()
@@ -459,9 +457,9 @@ class LiveCart extends Application
 		if ($this->languageList == null)
 		{
 			ClassLoader::import("application.model.system.Language");
-			
+
 			$langCache = ClassLoader::getRealPath('cache') . '/languages.php';
-			
+
 			if (file_exists($langCache))
 			{
 				$this->languageList = include $langCache;
@@ -489,9 +487,9 @@ class LiveCart extends Application
 					$lang->isDefault->set(1);
 					$this->languageList->unshift($lang);
 				}
-			}			
+			}
 		}
-		
+
 		return $this->languageList;
 	}
 
@@ -503,9 +501,9 @@ class LiveCart extends Application
 	public function getLanguageSetArray($includeDefaultLanguage = false, $includeDisabledLanguages = true)
 	{
 		$ret = $this->languageList->toArray();
-		
+
 		$defLang = $this->getDefaultLanguageCode();
-		
+
 		foreach ($ret as $key => $data)
 		{
 			if ((($data['ID'] == $defLang) && !$includeDefaultLanguage) || (!$includeDisabledLanguages && $data['isEnabled'] == 0))
@@ -513,7 +511,7 @@ class LiveCart extends Application
 				unset($ret[$key]);
 			}
 		}
-		
+
 		return $ret;
 	}
 
@@ -555,12 +553,12 @@ class LiveCart extends Application
 				{
 					$this->defaultLanguageCode = $lang->getID();
 				}
-			}			
+			}
 		}
 
 		return $this->defaultLanguageCode;
 	}
-	
+
 	/**
 	 * Returns active language/locale code (ex: en, lt, de)
 	 *
@@ -581,7 +579,7 @@ class LiveCart extends Application
 	public function isValidCountry($countryCode)
 	{
 		$enabled = $this->config->get('ENABLED_COUNTRIES');
-		return isset($enabled[$countryCode]);		
+		return isset($enabled[$countryCode]);
 	}
 
 	public function setConfigFiles($fileArray)
@@ -621,7 +619,7 @@ class LiveCart extends Application
 
 		return $this->defaultCurrencyCode;
 	}
-	
+
 	/**
 	 * Returns array of enabled currency ID's (codes)
 	 * @param bool $includeDefaultCurrency Whether to include default currency in the list
@@ -630,14 +628,14 @@ class LiveCart extends Application
 	public function getCurrencyArray($includeDefaultCurrency = true)
 	{
 		$defaultCurrency = $this->getDefaultCurrencyCode();
-		
+
 		$currArray = array_flip(array_keys($this->currencies));
-		
+
 		if (!$includeDefaultCurrency)
 		{
 			unset($currArray[$defaultCurrency]);
 		}
-		
+
 		return array_flip($currArray);
 	}
 
@@ -650,7 +648,7 @@ class LiveCart extends Application
 	public function getCurrencySet($includeDefaultCurrency = true)
 	{
 		$defaultCurrency = $this->getDefaultCurrencyCode();
-		
+
 		$currArray = $this->currencies;
 
 		if (!$includeDefaultCurrency)
@@ -660,13 +658,13 @@ class LiveCart extends Application
 
 		return $currArray;
 	}
-	
+
 	/**
 	 * Returns an array of available credit card handlers
 	 */
 	public function getCreditCardHandlerList()
 	{
-		ClassLoader::import('library.payment.PaymentMethodManager');		
+		ClassLoader::import('library.payment.PaymentMethodManager');
 		return PaymentMethodManager::getCreditCardHandlerList();
 	}
 
@@ -675,7 +673,7 @@ class LiveCart extends Application
 	 */
 	public function getExpressPaymentHandlerList($enabledOnly = false)
 	{
-		ClassLoader::import('library.payment.PaymentMethodManager');		
+		ClassLoader::import('library.payment.PaymentMethodManager');
 		if (!$enabledOnly)
 		{
 			return PaymentMethodManager::getExpressPaymentHandlerList();
@@ -692,9 +690,9 @@ class LiveCart extends Application
 		{
 			throw new Exception('Invalid express checkout handler');
 		}
-		
+
 		ClassLoader::import('library.payment.method.express.' . $handlerName);
-		
+
 		return $this->getPaymentHandler($handlerName, $details);
 	}
 
@@ -704,7 +702,7 @@ class LiveCart extends Application
 	public function getCreditCardHandler(TransactionDetails $details = null)
 	{
 		$handler = $this->config->get('CC_HANDLER');
-		
+
 		ClassLoader::import('library.payment.method.cc.' . $handler);
 
 		return $this->getPaymentHandler($handler, $details);
@@ -714,8 +712,8 @@ class LiveCart extends Application
 	{
 		if (!class_exists($className, false))
 		{
-			ClassLoader::import('library.payment.method.' . $className); 
-		}   
+			ClassLoader::import('library.payment.method.' . $className);
+		}
 
 		if (is_null($details))
 		{
@@ -731,14 +729,14 @@ class LiveCart extends Application
 			$key = substr($key, strlen($className) + 1);
 			$inst->setConfigValue($key, $value);
 		}
-		
+
 		// check if the currency is supported by the payment handler
 		$currency = $inst->getValidCurrency($details->currency->get());
 		if (($details->currency->get() != $currency) && !is_null($details->currency->get()))
 		{
 			$newAmount = Currency::getInstanceById($currency, Currency::LOAD_DATA)->convertAmount(Currency::getInstanceById($details->currency->get(), Currency::LOAD_DATA), $details->amount->get());
 			$details->currency->set($currency);
-			$details->amount->set($newAmount);			
+			$details->amount->set($newAmount);
 		}
 
 		return $inst;
@@ -749,7 +747,7 @@ class LiveCart extends Application
 	 */
 	public function getPaymentHandlerList($enabledOnly = false)
 	{
-		ClassLoader::import('library.payment.PaymentMethodManager');		
+		ClassLoader::import('library.payment.PaymentMethodManager');
 		if (!$enabledOnly)
 		{
 			return PaymentMethodManager::getRegularPaymentHandlerList();
@@ -766,7 +764,7 @@ class LiveCart extends Application
 		if ($this->config->isValueSet($key, true))
 		{
 			$types = array_keys($this->config->get($key));
-			return array_combine($types, $types);			
+			return array_combine($types, $types);
 		}
 	}
 
@@ -796,7 +794,7 @@ class LiveCart extends Application
 		ClassLoader::import('library.shipping.method.' . $className);
 
 		$inst = new $className();
-		
+
 		$c = $this->config->getSection('shipping/' . $className);
 		foreach ($c as $key => $value)
 		{
@@ -804,8 +802,22 @@ class LiveCart extends Application
 			$key = substr($key, strlen($className) + 1);
 			$inst->setConfigValue($key, $value);
 		}
-		
-		return $inst;		
+
+		return $inst;
+	}
+
+	public function getTheme()
+	{
+		if (is_null($this->theme))
+		{
+			$this->theme = $this->config->get('THEME');
+			if ('none' == $this->theme)
+			{
+				$this->theme = '';
+			}
+		}
+
+		return $this->theme;
 	}
 
 	/**
@@ -820,14 +832,14 @@ class LiveCart extends Application
 	  	$filter->setOrder(new ArFieldHandle('Currency', 'position'), 'ASC');
 	  	$currencies = ActiveRecord::getRecordSet('Currency', $filter);
 	  	$this->currencies = array();
-	  	
+
 	  	foreach ($currencies as $currency)
 	  	{
 	  		if ($currency->isDefault())
 			{
 			  	$this->defaultCurrency = $currency;
 			}
-		
+
 			$this->currencies[$currency->getID()] = $currency;
 		}
 	}

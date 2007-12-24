@@ -13,7 +13,7 @@ fieldset, div.addressBlock, #userMenuContainer, .orderDetails
 	background-color: #F3FCFF;
 }
 
-.table, .shipment, #userMenuContainer, .orderDetails
+fieldset, .table, .shipment, #userMenuContainer, .orderDetails
 {
 	border: 1px solid #A6DAFF
 }
@@ -47,7 +47,7 @@ input.submit, input.text, input.password, select
 
 .quickSearch
 {
-	background-image: url(../../theme/LightBlue/cornerBottomLeft.gif);
+	background-image: url(../image/cornerBottomLeft.gif);
 	background-repeat: no-repeat;
 	background-position: left bottom;
 	padding-bottom: 3px;
@@ -62,7 +62,7 @@ input.submit, input.text, input.password, select
 
 #searchContainer
 {
-	background-image: url(../../theme/LightBlue/boxGradient.gif);
+	background-image: url(../image/boxGradient.gif);
 	background-repeat: repeat-x;
 	background-color: #F3FCFF;
 	border: 0;
@@ -71,7 +71,7 @@ input.submit, input.text, input.password, select
 
 #searchContainer .wrapper
 {
-	background-image: url(../../theme/LightBlue/cornerBottomRight.gif);
+	background-image: url(../image/cornerBottomRight.gif);
 	background-repeat: no-repeat;
 	background-position: right bottom;
 }
@@ -116,7 +116,7 @@ div.box
 {
 	margin-bottom: 10px;
 	background-color: #F3FCFF;
-	background-image: url(../../theme/LightBlue/bottomCorners.gif);
+	background-image: url(../image/bottomCorners.gif);
 	background-repeat: no-repeat;
 	background-position: right bottom;
 }
@@ -126,14 +126,14 @@ div.box .title
 	background-color: #E7F8FF;
 	background-color: #cef1ff;
 	border: 0;
-	background-image: url(../../theme/LightBlue/cornerTopLeft.gif);
+	background-image: url(../image/cornerTopLeft.gif);
 	background-repeat: no-repeat;
 	padding: 0;
 }
 
 div.box .title div
 {
-	background-image: url(../../theme/LightBlue/cornerTopRight.gif);
+	background-image: url(../image/cornerTopRight.gif);
 	background-position: right top;
 	background-repeat: no-repeat;
 	padding-top: 6px;
@@ -146,7 +146,7 @@ div.box .content
 {
 	border: 0;
 	background: none;
-	background-image: url(../../theme/LightBlue/boxGradient.gif);
+	background-image: url(../image/boxGradient.gif);
 	background-repeat: repeat-x;
 }
 
@@ -182,7 +182,7 @@ div.box .content
 	background-color: #E6FAFF;
 	padding: 0;
 	background-repeat: no-repeat;
-	background-image: url(../../theme/LightBlue/cornerTopLeft.gif);
+	background-image: url(../image/cornerTopLeft.gif);
 	background-repeat: no-repeat;
 	background-position: left top;
 }
@@ -190,20 +190,20 @@ div.box .content
 .subCategories .subCatContainer
 {
 	background-repeat: no-repeat;
-	background-image: url(../../theme/LightBlue/cornerBottomLeft.gif);
+	background-image: url(../image/cornerBottomLeft.gif);
 	background-repeat: no-repeat;
 	background-position: left bottom;
 }
 
 .subCategories .subCatContainer .subCatContainer
 {
-	background-image: url(../../theme/LightBlue/cornerBottomRight.gif);
+	background-image: url(../image/cornerBottomRight.gif);
 	background-position: right bottom;
 }
 
 .subCategories .subCatContainer .subCatContainer .subCatContainer
 {
-	background-image: url(../../theme/LightBlue/cornerTopRight.gif);
+	background-image: url(../image/cornerTopRight.gif);
 	background-position: top right;
 	padding-left: 15px;
 	vertical-align: middle;
@@ -249,7 +249,7 @@ ul.productList .pricingInfo
 	margin-top: -5px;
 	margin-bottom: 5px;
 	width: 220px;
-	background-image: url(../../theme/LightBlue/cornerTopRight.gif);
+	background-image: url(../image/cornerTopRight.gif);
 	background-position: right top;
 	background-repeat: no-repeat;
 	#padding-top: 5px;
@@ -267,14 +267,14 @@ ul.productList .pricingInfo span
 	display: inline !important;
 	padding-left: 0.5em;
 	float: left;
-	background-image: url(../../theme/LightBlue/cornerTopLeft.gif);
+	background-image: url(../image/cornerTopLeft.gif);
 	background-position: left top;
 	background-repeat: no-repeat;
 }
 
 .pricingInfo div
 {
-	background-image: url(../../theme/LightBlue/cornerBottomLeft.gif);
+	background-image: url(../image/cornerBottomLeft.gif);
 	background-position: left bottom;
 	background-repeat: no-repeat;
 
@@ -282,7 +282,7 @@ ul.productList .pricingInfo span
 
 .pricingInfo div div
 {
-	background-image: url(../../theme/LightBlue/cornerBottomRight.gif);
+	background-image: url(../image/cornerBottomRight.gif);
 	background-position: right bottom;
 }
 
@@ -308,7 +308,7 @@ ul.productList .orderingControls
 
 ul.productList .addToWishList, #productToWishList td.value a
 {
-	background-image: url(../../image/silk/gif/heart_add.gif);
+	background-image: url(../../../image/silk/gif/heart_add.gif);
 	background-repeat: no-repeat;
 	background-position: left center;
 	padding-left: 22px;
@@ -346,28 +346,28 @@ ul.productList .spec
 
 #productPrice td.param
 {
-	background-image: url(../../theme/LightBlue/cornerTopLeft.gif);
+	background-image: url(../image/cornerTopLeft.gif);
 	background-position: left top;
 	background-repeat: no-repeat;
 }
 
 #productPrice td.value
 {
-	background-image: url(../../theme/LightBlue/cornerTopRight.gif);
+	background-image: url(../image/cornerTopRight.gif);
 	background-position: right top;
 	background-repeat: no-repeat;
 }
 
 #productToWishList td.param
 {
-	background-image: url(../../theme/LightBlue/cornerBottomLeft.gif);
+	background-image: url(../image/cornerBottomLeft.gif);
 	background-position: left bottom;
 	background-repeat: no-repeat;
 }
 
 #productToWishList td.value
 {
-	background-image: url(../../theme/LightBlue/cornerBottomRight.gif);
+	background-image: url(../image/cornerBottomRight.gif);
 	background-position: right bottom;
 	background-repeat: no-repeat;
 	text-align: left;
@@ -401,28 +401,28 @@ tr.odd
 
 #productSpecification tr.first td.param
 {
-	background-image: url(../../theme/LightBlue/cornerTopLeft.gif);
+	background-image: url(../image/cornerTopLeft.gif);
 	background-position: top left;
 	background-repeat: no-repeat;
 }
 
 #productSpecification tr.first td.value
 {
-	background-image: url(../../theme/LightBlue/cornerTopRight.gif);
+	background-image: url(../image/cornerTopRight.gif);
 	background-position: top right;
 	background-repeat: no-repeat;
 }
 
 #productSpecification tr.last td.param
 {
-	background-image: url(../../theme/LightBlue/cornerBottomLeft.gif);
+	background-image: url(../image/cornerBottomLeft.gif);
 	background-position: bottom left;
 	background-repeat: no-repeat;
 }
 
 #productSpecification tr.last td.value
 {
-	background-image: url(../../theme/LightBlue/cornerBottomRight.gif);
+	background-image: url(../image/cornerBottomRight.gif);
 	background-position: bottom right;
 	background-repeat: no-repeat;
 }
@@ -451,28 +451,28 @@ tr.odd
 */
 #cart .first .cartControl, #wishList .first .cartControl
 {
-	background-image: url(../../theme/LightBlue/cornerTopLeft.gif);
+	background-image: url(../image/cornerTopLeft.gif);
 	background-position: top left;
 	background-repeat: no-repeat;
 }
 
 #cart .first .cartQuant, #wishList .first .cartPrice
 {
-	background-image: url(../../theme/LightBlue/cornerTopRight.gif);
+	background-image: url(../image/cornerTopRight.gif);
 	background-position: top right;
 	background-repeat: no-repeat;
 }
 
 #cart .last, #wishList .last
 {
-	background-image: url(../../theme/LightBlue/cornerBottomLeft.gif);
+	background-image: url(../image/cornerBottomLeft.gif);
 	background-position: bottom left;
 	background-repeat: no-repeat;
 }
 
 #cart .last .cartQuant, #wishList .last .cartPrice
 {
-	background-image: url(../../theme/LightBlue/cornerBottomRight.gif);
+	background-image: url(../image/cornerBottomRight.gif);
 	background-position: bottom right;
 	background-repeat: no-repeat;
 }
@@ -491,26 +491,26 @@ a.proceedToCheckout span
 
 a.proceedToCheckout span, #checkoutProgress a span
 {
-	background-image: url(../../theme/LightBlue/cornerBottomRight.gif);
+	background-image: url(../image/cornerBottomRight.gif);
 	background-position: bottom right;
 	background-repeat: no-repeat;
 }
 
 a.proceedToCheckout span span, #checkoutProgress a span span
 {
-	background-image: url(../../theme/LightBlue/cornerBottomLeft.gif);
+	background-image: url(../image/cornerBottomLeft.gif);
 	background-position: bottom left;
 }
 
 a.proceedToCheckout span span span, #checkoutProgress a span span span
 {
-	background-image: url(../../theme/LightBlue/cornerTopLeft.gif);
+	background-image: url(../image/cornerTopLeft.gif);
 	background-position: top left;
 }
 
 a.proceedToCheckout span span span span, #checkoutProgress a span span span span
 {
-	background-image: url(../../theme/LightBlue/cornerTopRight.gif);
+	background-image: url(../image/cornerTopRight.gif);
 	background-position: top right;
 }
 
@@ -574,7 +574,7 @@ a.proceedToCheckout span span span span
 */
 .newsReadMore a
 {
-	background-image:url(../../image/silk/gif/page_white_text.gif);
+	background-image:url(../../../image/silk/gif/page_white_text.gif);
 	background-position:left center;
 	background-repeat:no-repeat;
 	padding-left: 22px;

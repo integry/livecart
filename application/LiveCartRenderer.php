@@ -10,7 +10,9 @@ ClassLoader::import('application.LiveCartSmarty');
  *  @author Integry Systems
  */
 class LiveCartRenderer extends SmartyRenderer
-{		
+{
+	private $paths = array();
+
 	/**
 	 * Template renderer constructor
 	 *
@@ -21,7 +23,7 @@ class LiveCartRenderer extends SmartyRenderer
 	{
 		self::registerHelperDirectory(ClassLoader::getRealPath('application.helper.smarty'));
 		self::registerHelperDirectory(ClassLoader::getRealPath('application.helper.smarty.form'));
-		parent::__construct($application);		
+		parent::__construct($application);
 	}
 
 	/**
@@ -41,25 +43,45 @@ class LiveCartRenderer extends SmartyRenderer
 		return $this->tpl;
 	}
 
-	/**
-	 * Process
-	 *
-	 * @param Renderable $object Object to render
-	 * @param string $view Path to view
-	 * @return string Rendered output
-	 * @throws ViewNotFoundException if view does not exists
-	 */
-	public function process(Renderable $object, $view)
+	public function getTemplatePaths($template = '')
 	{
-		$customizedPath = ClassLoader::getRealPath('storage.customize.view.') . $view;
-
-		if (file_exists($customizedPath))
+		if (!$this->paths)
 		{
-			$view = $customizedPath;
+			if ($theme = self::getApplication()->getTheme())
+			{
+				$this->paths[] = ClassLoader::getRealPath('storage.customize.view.theme.' . $theme . '.');
+				$this->paths[] = ClassLoader::getRealPath('application.view.theme.' . $theme . '.');
+			}
+
+			$this->paths[] = ClassLoader::getRealPath('storage.customize.view.');
+			$this->paths[] = ClassLoader::getRealPath('application.view.');
+
 		}
-				
-		return parent::process($object, $view);
-	}	
+
+		if (!$template)
+		{
+			return $this->paths;
+		}
+
+		$paths = $this->paths;
+		foreach ($paths as &$path)
+		{
+			$path = $path . $template;
+		}
+
+		return $paths;
+	}
+
+	public function getTemplatePath($template)
+	{
+		foreach ($this->getTemplatePaths($template) as $path)
+		{
+			if (is_readable($path))
+			{
+				return $path;
+			}
+		}
+	}
 }
 
 ?>

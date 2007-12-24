@@ -14,6 +14,7 @@ STORE_NAME=Store name
 _display=Display
 
 _layout=Layout
+THEME=Design theme
 LANG_SELECTION=Display language selection menu as
 LANG_NAMES=Language names as links
 LANG_FLAGS=Flags

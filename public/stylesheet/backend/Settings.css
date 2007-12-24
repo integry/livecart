@@ -36,7 +36,7 @@ div.multi
 
 #settingsBrowser, #settingsBrowser .containerTableStyle
 {
-    height: 300px;
+    height: 350px;
 }
 
 #settingsBrowser .containerTableStyle
@@ -52,4 +52,16 @@ div.multi
 .multi
 {
     padding: 10px;
+}
+
+#themePreview
+{
+	border: 1px solid #eee;
+	margin-bottom: 1em;
+	cursor: -moz-zoom-in;
+}
+
+#keyboardMsg
+{
+	display: none;
 }

@@ -5,59 +5,59 @@
  *
  *  Each template file can have 1 or 2 copies - the original template file (not customized) and user-customized
  *  template file. The goal is to avoid the default view file modifications as it can make updates more difficult
- *  (accidently overwritten customizations, etc.), also there would be no need to make the original templates 
+ *  (accidently overwritten customizations, etc.), also there would be no need to make the original templates
  *  directory writable to enable template modification from admin interface.
  *
  *  @package application.helper.smarty
- *  @author Integry Systems  
+ *  @author Integry Systems
  */
 
 function smarty_resource_custom_source($tpl_name, &$tpl_source, LiveCartSmarty $smarty)
 {
-	$paths = custom_get_paths($tpl_name, $smarty);
-
-	foreach ($paths as $path)
+	if ($path = smarty_custom_get_path($tpl_name, $smarty))
 	{
-		if (file_exists($path))
-		{
-			$tpl_source = $smarty->processPlugins(file_get_contents($path), $tpl_name);
-			return true;
-		} 
+		$tpl_source = $smarty->processPlugins(file_get_contents($path), $tpl_name);
+		return true;
 	}
-	
+
 	return false;
 }
 
 function smarty_resource_custom_timestamp($tpl_name, &$tpl_timestamp, LiveCartSmarty $smarty_obj)
 {
-	$paths = custom_get_paths($tpl_name, $smarty_obj);
-	  
-	foreach ($paths as $path)
+	if ($file = smarty_custom_get_path($tpl_name, $smarty_obj))
 	{
-		if (file_exists($path))
-		{
-			$tpl_timestamp = filemtime($path);
-			return true;
-		} 
+		$tpl_timestamp = filemtime($file);
+		return true;
 	}
-	
+
 	return false;
 }
 
-function custom_get_paths($tpl_name, LiveCartSmarty $smarty)
+function smarty_custom_get_path($tpl_name, LiveCartSmarty $smarty)
 {
-	static $customDirectory = null;
-	
-	if (!$customDirectory)
-	{
-		$customDirectory = ClassLoader::getRealPath('storage.customize.view') . '/';
-	}
-	
-	$paths = array();
-	$paths[] = $customDirectory . $tpl_name;
-	$paths[] = $smarty->template_dir . '/' . $tpl_name;
+	$path = null;
 
-	return $paths;	
+	if ('@' != substr($tpl_name, 0, 1))
+	{
+		$path = $smarty->getApplication()->getRenderer()->getTemplatePath($tpl_name);
+	}
+
+	// absolute path
+	else
+	{
+		$tpl_name = substr($tpl_name, 1);
+		foreach (array(ClassLoader::getRealPath('storage.customize.view.'), ClassLoader::getRealPath('application.view.')) as $path)
+		{
+			$file = $path . $tpl_name;
+			if (file_exists($file))
+			{
+				$path = $file;
+			}
+		}
+	}
+
+	return $path;
 }
 
 function smarty_resource_custom_secure($tpl_name, LiveCartSmarty $smarty_obj)
