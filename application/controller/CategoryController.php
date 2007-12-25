@@ -41,8 +41,14 @@ class CategoryController extends FrontendController
 
 		// pagination
 		$currentPage = $this->request->get('page', 1);
+		$listLayout = $this->request->get('layout') && $this->config->get('ALLOW_SWITCH_LAYOUT') ?
+						('grid' == $this->request->get('layout') ? 'GRID' : 'LIST') :
+						$this->config->get('LIST_LAYOUT');
 
-		$perPage = $this->config->get('NUM_PRODUCTS_PER_CAT');
+		$perPage = ('GRID' == $listLayout) ?
+						$this->config->get('LAYOUT_GRID_COLUMNS') * $this->config->get('LAYOUT_GRID_ROWS') :
+						$this->config->get('NUM_PRODUCTS_PER_CAT');
+
 		$offsetStart = (($currentPage - 1) * $perPage) + 1;
 		$offsetEnd = $currentPage * $perPage;
 
@@ -117,21 +123,6 @@ class CategoryController extends FrontendController
 		$totalCount = $count->getCategoryProductCount($productFilter);
 		$offsetEnd = min($totalCount, $offsetEnd);
 		$this->totalCount = $totalCount;
-
-		$urlParams = array('controller' => 'category', 'action' => 'index',
-						   'id' => $this->request->get('id'),
-						   'cathandle' => $this->request->get('cathandle'),
-						   'page' => '_000_',
-						   );
-
-		$filterChainHandle = $this->setUpBreadCrumbAndReturnFilterChainHandle($currentPage);
-
-		if ($filterChainHandle)
-		{
-			$urlParams['filters'] = $filterChainHandle;
-		}
-
-		$paginationUrl = $this->router->createURL($urlParams, true);
 
 		// narrow by subcategories
 		$subCategories = $this->category->getSubCategoryArray(Category::LOAD_REFERENCES);
@@ -212,7 +203,7 @@ class CategoryController extends FrontendController
 
 		$response = new ActionResponse();
 		$response->set('id', $this->categoryID);
-		$response->set('url', $paginationUrl);
+
 		$response->set('products', $products);
 		$response->set('count', $totalCount);
 		$response->set('offsetStart', $offsetStart);
@@ -221,7 +212,7 @@ class CategoryController extends FrontendController
 		$response->set('currentPage', $currentPage);
 		$response->set('category', $this->category->toArray());
 		$response->set('subCategories', $subCategories);
-		$response->set('filterChainHandle', $filterChainHandle);
+
 		$response->set('currency', $this->getRequestCurrency());
 		$response->set('sortOptions', $sort);
 		$response->set('sortForm', $this->buildSortForm($order));
@@ -230,6 +221,12 @@ class CategoryController extends FrontendController
 		$response->set('allFilters', $filters);
 		$response->set('showAll', $showAll);
 		$response->set('appliedFilters', $filterArray);
+		$response->set('layout', $listLayout);
+
+		$filterChainHandle = $this->setUpBreadCrumbAndReturnFilterChainHandle($currentPage);
+		$response->set('url', $this->getCategoryPageUrl(array('page' => '_000_', 'filters' => $filterChainHandle)));
+		$response->set('layoutUrl', $this->getCategoryPageUrl(array('filters' => $filterChainHandle, 'query' => array('layout' => ('GRID' == $listLayout) ? 'list' : 'grid'))));
+		$response->set('filterChainHandle', $filterChainHandle);
 
 		if (isset($searchQuery))
 		{
@@ -242,6 +239,23 @@ class CategoryController extends FrontendController
 		}
 
 		return $response;
+	}
+
+	private function getCategoryPageUrl($params = array())
+	{
+		if (empty($params['filters']))
+		{
+			unset($params['filters']);
+		}
+
+		$urlParams = array('controller' => 'category', 'action' => 'index',
+				   'id' => $this->request->get('id'),
+				   'cathandle' => $this->request->get('cathandle'),
+				   );
+
+		$urlParams = array_merge($urlParams, $params);
+
+		return $this->router->createURL($urlParams, true);
 	}
 
 	private function getProductsArray(ProductFilter $filter)

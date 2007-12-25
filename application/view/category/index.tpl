@@ -16,7 +16,7 @@
 	{/if}
 
 	{if $foundCategories}
-		{include file="category/foundCategories.tpl"}		
+		{include file="category/foundCategories.tpl"}
 	{/if}
 
 	{if $categoryNarrow}
@@ -28,21 +28,36 @@
 	{if $searchQuery && !$products}
 		<p class="notFound">
 			{t _not_found}
-		</p>	
+		</p>
 	{/if}
 
 	{if $subCatFeatured}
 		<h2>{t _featured_products}</h2>
-		{include file="category/productList.tpl" products=$subCatFeatured}	
+
+		{if 'GRID' == $layout}
+			{include file="category/productGrid.tpl" products=$subCatFeatured}
+		{else}
+			{include file="category/productList.tpl" products=$subCatFeatured}
+		{/if}
 	{/if}
 
-	{if $products}	
+	{if $products}
 		<fieldset class="container">
 		<div class="resultStats">
 			<div class="pagingInfo">
 				{maketext text=_showing_products params=$offsetStart,$offsetEnd,$count}
 			</div>
-			
+
+			{if 'ALLOW_SWITCH_LAYOUT'|@config}
+				<div class="categoryLayoutSwitch">
+					{if 'GRID' == $layout}
+						<a class="layoutSetList" href="{$layoutUrl}">{t _view_as_list}</a>
+					{else}
+						<a class="layoutSetGrid" href="{$layoutUrl}">{t _view_as_grid}</a>
+					{/if}
+				</div>
+			{/if}
+
 			<div class="sortOptions">
 				{if $sortOptions && ($sortOptions|@count > 1)}
 					{t _sort_by}
@@ -51,21 +66,25 @@
 					{/form}
 				{/if}
 				&nbsp;
-			</div>  
+			</div>
 			<div class="clear"></div>
 		</div>
 		</fieldset>
-		
-		{include file="category/productList.tpl" products=$products}
-	
+
+		{if 'GRID' == $layout}
+			{include file="category/productGrid.tpl" products=$products}
+		{else}
+			{include file="category/productList.tpl" products=$products}
+		{/if}
+
 		{if $count > $perPage}
 			<div class="resultPages">
 				{t _pages}: {paginate current=$currentPage count=$count perPage=$perPage url=$url}
 			</div>
 		{/if}
 	{/if}
-		
-</div>		
+
+</div>
 {include file="layout/frontend/footer.tpl"}
 
 </div>

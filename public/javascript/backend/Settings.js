@@ -243,6 +243,7 @@ Backend.Settings.Editor.prototype =
 
 				Event.observe($('THEME'), 'change', change);
 			}
+
     },
 
     initialize: function(container)

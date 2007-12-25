@@ -231,17 +231,12 @@ tr.separator div
 	font-size: 100%;
 }
 
-.resultStats .pagingInfo
-{
-	margin-bottom: 0;
-}
-
 ul.productList li
 {
 	position: relative;
 }
 
-ul.productList .pricingInfo
+ul.productList .pricingInfo, .productGrid .pricingInfo
 {
 	float: right;
 	background-color: #FFF3FC;
@@ -256,7 +251,29 @@ ul.productList .pricingInfo
 	#background-position: right 5px;
 }
 
-ul.productList .pricingInfo span
+.productGrid .pricingInfo
+{
+	float: none;
+	margin: 0 auto;
+}
+
+.productGrid td
+{
+	border-right: 1px solid #eee;
+	border-bottom: 1px solid #eee;
+}
+
+.productGrid td.last
+{
+	border-right: 0;
+}
+
+.productGrid tr.last td
+{
+	border-bottom: 0;
+}
+
+.pricingInfo span
 {
 	display: none;
 }
@@ -286,7 +303,7 @@ ul.productList .pricingInfo span
 	background-position: right bottom;
 }
 
-ul.productList a.addToCart
+.pricingInfo a.addToCart
 {
 	margin-right: 1em;
 }
@@ -306,12 +323,18 @@ ul.productList .orderingControls
 	float: left;
 }
 
-ul.productList .addToWishList, #productToWishList td.value a
+ul.productList .addToWishList, #productToWishList td.value a, .productGrid .addToWishList
 {
 	background-image: url(../../../image/silk/gif/heart_add.gif);
 	background-repeat: no-repeat;
 	background-position: left center;
 	padding-left: 22px;
+}
+
+.productGrid .orderingControls
+{
+	margin-top: 0.5em;
+	font-size: smaller;
 }
 
 .productList .title a

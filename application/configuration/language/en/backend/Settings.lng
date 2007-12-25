@@ -27,7 +27,7 @@ INDEX_PRICE_FILTERS=Display price filters
 
 _general=Category Pages
 _category_pages=Category Pages
-NUM_PRODUCTS_PER_CAT=Number of products per category page
+NUM_PRODUCTS_PER_CAT=Number of products per category page (list layout)
 SORT_ORDER=Default product sort order
 ALLOWED_SORT_ORDER=Allowed sort parameters
 FEATURED=Featured Products
@@ -40,6 +40,14 @@ NEWEST_ARRIVALS=Newest Arrivals
 RATING=Customer Rating
 DISPLAY_NUM_CAT=Display the number of products per category
 DISPLAY_NUM_FILTER=Display the number of products per filter
+
+_product_list_layout=Product List Layout
+LIST_LAYOUT=Default list layout
+LIST=List
+GRID=Grid
+LAYOUT_GRID_COLUMNS=Grid columns
+LAYOUT_GRID_ROWS=Grid rows
+ALLOW_SWITCH_LAYOUT=Allow user to switch list layout
 
 _category_filters=Category Page Filters
 ENABLE_MAN_FILTERS=Enable manufacturer filters

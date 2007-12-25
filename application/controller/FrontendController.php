@@ -25,7 +25,7 @@ abstract class FrontendController extends BaseController
 		unset($this->order);
 
 		// variables to append automatically to all URLs
-		foreach (array('currency', 'sort') as $key)
+		foreach (array('currency', 'sort', 'layout') as $key)
 		{
 			if ($this->request->isValueSet($key))
 			{
