@@ -338,6 +338,11 @@ class CustomerOrder extends ActiveRecordModel
 		// set order total
 		$this->totalAmount->set($this->getTotal($currency));
 
+		if ($this->totalAmount->get() <= $this->getPaidAmount())
+		{
+			$this->isPaid->set(true);
+		}
+
 		$this->isFinalized->set(true);
 		$this->dateCompleted->set(new ARSerializableDateTime());
 		$this->save();

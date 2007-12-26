@@ -8,7 +8,7 @@ ClassLoader::import("application.model.tax.TaxRate");
  * how they are set up for a particular system.
  *
  * @package application.model.order
- * @author Integry Systems <http://integry.com>   
+ * @author Integry Systems <http://integry.com>
  */
 class ShipmentTax extends ActiveRecordModel
 {
@@ -16,27 +16,27 @@ class ShipmentTax extends ActiveRecordModel
 	{
 		$schema = self::getSchemaInstance($className);
 		$schema->setName(__class__);
-		
+
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("taxRateID", "TaxRate", "ID", "TaxRate", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("shipmentID", "Shipment", "ID", "Shipment", ARInteger::instance()));
 		$schema->registerField(new ARField("amount", ARFloat::instance()));
 	}
-	
+
 	/**
 	 * Create a new instance
-	 * 
+	 *
 	 * @return ShipmentTax
 	 */
 	public static function getNewInstance(TaxRate $taxRate, Shipment $shipment)
 	{
-	  	$instance = ActiveRecordModel::getNewInstance(__CLASS__);	  	
+	  	$instance = ActiveRecordModel::getNewInstance(__CLASS__);
 	  	$instance->taxRate->set($taxRate);
 	  	$instance->shipment->set($shipment);
 	  	$instance->recalculateAmount();
 	  	return $instance;
 	}
-	
+
 	/**
 	 * Recalculate tax amount
 	 */
@@ -46,33 +46,31 @@ class ShipmentTax extends ActiveRecordModel
 		{
 			return $this->amount->get();
 		}
-		
+
 		if ($recalculateShipping)
 		{
 			$this->shipment->get()->recalculateAmounts();
 		}
-		
+
 		$totalAmount = $this->shipment->get()->amount->get();
-		if ($this->shipment->get()->isLoaded())
-		{
-			$totalAmount += $this->shipment->get()->shippingAmount->get();
-		} 
-		
+		$this->shipment->get()->load();
+		$totalAmount += $this->shipment->get()->shippingAmount->get();
+
 		$taxAmount = $totalAmount * ($this->taxRate->get()->rate->get() / 100);
 		$this->amount->set(round($taxAmount, 2));
-	}	 
-	
+	}
+
 	public function getAmountByCurrency(Currency $currency)
 	{
 		$amountCurrency = $this->shipment->get()->amountCurrency->get();
-		return $currency->convertAmount($amountCurrency, $this->amount->get());				
+		return $currency->convertAmount($amountCurrency, $this->amount->get());
 	}
-	
+
 	public function toArray()
 	{
 		$array = parent::toArray();
 		$array['formattedAmount'] = array();
-		
+
 		$amountCurrency = $this->shipment->get()->amountCurrency->get();
 		$currencies = self::getApplication()->getCurrencySet();
 
@@ -81,9 +79,9 @@ class ShipmentTax extends ActiveRecordModel
 		{
 			$array['formattedAmount'][$id] = $currency->getFormattedPrice($this->getAmountByCurrency($currency));
 		}
-		
+
 		return $array;
-	}   
+	}
 }
 
 ?>

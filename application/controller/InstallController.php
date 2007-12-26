@@ -24,7 +24,7 @@ class InstallController extends FrontendController
 
 			foreach ($writeFail as $file)
 			{
-				echo '<li>' . dirname($file) . '</li>';
+				echo '<li>' . $file . '</li>';
 			}
 
 			echo '</ul> <p>Please reload this page when the directory write permissions are fixed. Please <a href="http://support.livecart.com">contact the LiveCart support team</a> if any assistance is required.</p>';
