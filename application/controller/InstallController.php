@@ -9,11 +9,32 @@ ClassLoader::import("framework.request.validator.RequestValidator");
  *
  * @author Integry Systems
  * @package application.controller
- */	
+ */
 class InstallController extends FrontendController
 {
 	public function init()
 	{
+		if ($writeFail = Installer::getUnwritableDirectories())
+		{
+			echo '<h1>Some directories do not seem to be writable</h1>
+
+				  <p>You\'re probably trying to set up LiveCart now.</p>
+
+				  <p>Before the installation may continue, please make sure that the following directories are writable (chmod to 755 or 777):</p><ul>';
+
+			foreach ($writeFail as $file)
+			{
+				echo '<li>' . dirname($file) . '</li>';
+			}
+
+			echo '</ul> <p>Please reload this page when the directory write permissions are fixed. Please <a href="http://support.livecart.com">contact the LiveCart support team</a> if any assistance is required.</p>';
+
+			echo '<p>You can also execute this command from shell to fix the write permissions: <br />
+					<div style="margin: 1em; font-family: monospace;">% <span style="font-weight: bold;">chmod -R 0777 ' . implode(' ', $writeFail) . '</span></div></p>';
+
+			exit;
+		}
+
 	  	$this->setLayout('install');
 	}
 
@@ -32,30 +53,30 @@ class InstallController extends FrontendController
 		}
 
 		return new ActionRedirectResponse('install', 'license');
-	}	
-	
+	}
+
 	public function license()
 	{
 		if ($lastStep = $this->verifyStep())
 		{
 			return $lastStep;
 		}
-		
+
 		$response = new ActionResponse('license', file_get_contents(ClassLoader::getRealPath('.') . 'license.txt'));
 		$response->set('form', $this->buildLicenseForm());
 		return $response;
 	}
-	
+
 	public function acceptLicense()
 	{
 		if (!$this->buildLicenseValidator()->isValid())
 		{
 			return new ActionRedirectResponse('install', 'license');
 		}
-		
+
 		return new ActionRedirectResponse('install', 'database');
 	}
-	
+
 	public function database()
 	{
 		if ($lastStep = $this->verifyStep())
@@ -64,60 +85,60 @@ class InstallController extends FrontendController
 		}
 
 		$response = new ActionResponse('form', $this->buildDatabaseForm());
-		
+
 		return $response;
 	}
-	
+
 	public function setDatabase()
 	{
 		if (!$this->buildDatabaseValidator()->isValid())
 		{
 			return new ActionRedirectResponse('install', 'database');
 		}
-		
-		$dsn = 'mysql://' . 
-				   $this->request->get('username') . 
-				   		($this->request->get('password') ? ':' . $this->request->get('password') : '') . 
-				   			'@' . $this->request->get('server') . 
+
+		$dsn = 'mysql://' .
+				   $this->request->get('username') .
+				   		($this->request->get('password') ? ':' . $this->request->get('password') : '') .
+				   			'@' . $this->request->get('server') .
 				   				'/' . $this->request->get('name');
-		
+
 		ClassLoader::import('library.activerecord.ActiveRecord');
 		ActiveRecord::resetDBConnection();
 		ActiveRecord::setDSN($dsn);
-		
+
 		try
 		{
-			$conn = ActiveRecord::getDBConnection();	
-			
+			$conn = ActiveRecord::getDBConnection();
+
 			$dsnFile = ClassLoader::getRealPath('storage.configuration') . '/database.php';
 			if (!file_exists(dirname($dsnFile)))
 			{
 				mkdir(dirname($dsnFile), 0777, true);
 			}
-			
+
 			file_put_contents($dsnFile, '<?php return ' . var_export($dsn, true) . '; ?>');
-			
+
 			ActiveRecord::beginTransaction();
-		
+
 			// import schema
 			Installer::loadDatabaseDump(file_get_contents(ClassLoader::getRealPath('installdata.sql') . '/create.sql'));
-			
+
 			// create root category
 			Installer::loadDatabaseDump(file_get_contents(ClassLoader::getRealPath('installdata.sql') . '/initialData.sql'));
-					
+
 			// load US states
 			Installer::loadDatabaseDump(file_get_contents(ClassLoader::getRealPath('installdata.sql.state') . '/US.sql'));
-					
+
 			ActiveRecord::commit();
-			
+
 			return new ActionRedirectResponse('install', 'admin');
 		}
 		catch (SQLException $e)
 		{
 			$validator = $this->buildDatabaseValidator();
 			$validator->triggerError('connect', $e->getNativeError());
-			$validator->saveState();		
-			
+			$validator->saveState();
+
 			return new ActionRedirectResponse('install', 'database');
 		}
 	}
@@ -131,40 +152,40 @@ class InstallController extends FrontendController
 
 		return new ActionResponse('form', $this->buildAdminForm());
 	}
-	
+
 	public function setAdmin()
 	{
 		if (!$this->buildAdminValidator()->isValid())
 		{
 			return new ActionRedirectResponse('install', 'admin');
 		}
-		
+
 		ClassLoader::import('application.model.user.UserGroup');
 		ClassLoader::import('application.model.user.User');
 		ClassLoader::import('application.model.user.SessionUser');
-		
+
 		ActiveRecordModel::beginTransaction();
-		
+
 		// create user group for administrators
 		$group = UserGroup::getNewInstance('Administrators');
 		$group->setAllRoles();
 		$group->save();
-		
+
 		// create administrator account
 		$user = User::getNewInstance($this->request->get('email'), null, $group);
 		$user->loadRequestData($this->request);
 		$user->setPassword($this->request->get('password'));
 		$user->isEnabled->set(true);
 		$user->save();
-		
-		ActiveRecordModel::commit();		
-		
+
+		ActiveRecordModel::commit();
+
 		// log in
 		SessionUser::setUser($user);
-		
+
 		return new ActionRedirectResponse('install', 'config');
 	}
-	
+
 	public function config()
 	{
 		if ($lastStep = $this->verifyStep())
@@ -173,35 +194,35 @@ class InstallController extends FrontendController
 		}
 
 		$form = $this->buildConfigForm();
-		
+
 		$form->set('language', 'en');
 		$form->set('curr', 'USD');
-		
+
 		// get all Locale languages
 		$languages = $this->locale->info()->getAllLanguages();
 		asort($languages);
-				
+
 		$response = new ActionResponse('form', $form);
 		$response->set('languages', $languages);
 		$response->set('currencies', $this->locale->info()->getAllCurrencies());
 		return $response;
 	}
-	
+
 	public function setConfig()
 	{
 		if (!$this->buildConfigValidator()->isValid())
 		{
 			return new ActionRedirectResponse('install', 'config');
 		}
-		
+
 		Language::deleteCache();
-		
+
 		// site name
 		$this->config->setValueByLang('STORE_NAME', $this->request->get('language'), $this->request->get('name'));
 		$this->config->save();
-		
+
 		ClassLoader::import('application.model.Currency');
-		
+
 		// create currency
 		try
 		{
@@ -215,9 +236,9 @@ class InstallController extends FrontendController
 			$currency->isDefault->set(true);
 			$currency->save(ActiveRecord::PERFORM_INSERT);
 		}
-		
+
 		ClassLoader::import('application.model.system.Language');
-		
+
 		// create language
 		try
 		{
@@ -233,25 +254,25 @@ class InstallController extends FrontendController
 			$language->isDefault->set(true);
 			$language->save();
 		}
-	 
+
 		// set root category name to "LiveCart"
 		ClassLoader::import('application.model.category.Category');
 		$root = Category::getInstanceById(Category::ROOT_ID, Category::LOAD_DATA);
 		$root->setValueByLang('name', $language->getID(), 'LiveCart');
 		$root->save();
-	 
+
 	 	// create a default shipping service
 		ClassLoader::import('application.model.delivery.DeliveryZone');
 		ClassLoader::import('application.model.delivery.ShippingService');
 		ClassLoader::import('application.model.delivery.ShippingRate');
-		
+
 		$service = ShippingService::getNewInstance(DeliveryZone::getDefaultZoneInstance(), 'Default Service', ShippingService::SUBTOTAL_BASED);
 		$service->save();
-	 
+
 	 	$rate = ShippingRate::getNewInstance($service, 0, 100000);
 	 	$rate->flatCharge->set(10);
 	 	$rate->save();
-	 
+
 		// create a couple of blank static pages
 		ClassLoader::import('application.model.staticpage.StaticPage');
 		$page = StaticPage::getNewInstance();
@@ -259,7 +280,7 @@ class InstallController extends FrontendController
 		$page->setValueByLang('text', $language->getID(), 'Enter your contact information here');
 		$page->isInformationBox->set(true);
 		$page->save();
-	 
+
 		$page = StaticPage::getNewInstance();
 		$page->setValueByLang('title', $language->getID(), 'Shipping Policy');
 		$page->setValueByLang('text', $language->getID(), 'Enter your shipping rate & policy information here');
@@ -267,7 +288,7 @@ class InstallController extends FrontendController
 		$page->save();
 
 		// create an example site news post
-		ClassLoader::import('application.model.sitenews.NewsPost');		
+		ClassLoader::import('application.model.sitenews.NewsPost');
 		$news = ActiveRecordModel::getNewInstance('NewsPost');
 		$news->setValueByLang('title', $language->getID(), 'Our store is open');
 		$news->setValueByLang('text', $language->getID(), 'Powered by LiveCart software, we have gone live! Of course, we will have to go to <a href="../backend">the backend area</a> and add some categories and products first...');
@@ -277,7 +298,7 @@ class InstallController extends FrontendController
 
 		return new ActionRedirectResponse('install', 'finish');
 	}
-	
+
 	public function finish()
 	{
 		if ($lastStep = $this->verifyStep())
@@ -286,17 +307,17 @@ class InstallController extends FrontendController
 		}
 
 		$response = new ActionResponse();
-		
+
 		return $response;
 	}
-	
+
 	private function verifyStep()
 	{
 		$steps = array('index', 'license', 'database', 'admin', 'config', 'finish');
 		$steps = array_flip($steps);
-		
+
 		$lastStepFile = ClassLoader::getRealPath('cache') . '/installStep.php';
-		
+
 		if (file_exists($lastStepFile))
 		{
 			$lastStep = include $lastStepFile;
@@ -305,10 +326,10 @@ class InstallController extends FrontendController
 				return new ActionRedirectResponse('install', $lastStep);
 			}
 		}
-		
+
 		file_put_contents($lastStepFile, '<?php return ' . var_export($this->request->getActionName(), true) . '; ?>');
 	}
-	
+
 	/**
 	 * @return RequestValidator
 	 */
@@ -325,8 +346,8 @@ class InstallController extends FrontendController
 	private function buildLicenseForm()
 	{
 		return new Form($this->buildLicenseValidator());
-	}	
-	
+	}
+
 	/**
 	 * @return RequestValidator
 	 */
@@ -345,7 +366,7 @@ class InstallController extends FrontendController
 	private function buildDatabaseForm()
 	{
 		return new Form($this->buildDatabaseValidator());
-	}	
+	}
 
 	/**
 	 * @return RequestValidator
@@ -353,7 +374,7 @@ class InstallController extends FrontendController
 	private function buildAdminValidator()
 	{
 		ClassLoader::import('application.helper.check.IsUniqueEmailCheck');
-		
+
 		$validator = new RequestValidator("createAdmin", $this->request);
 		$validator->addCheck("firstName", new IsNotEmptyCheck($this->translate("Please enter the admin first name")));
 		$validator->addCheck("lastName", new IsNotEmptyCheck($this->translate("Please enter the admin last name")));
@@ -371,7 +392,7 @@ class InstallController extends FrontendController
 	private function buildAdminForm()
 	{
 		return new Form($this->buildAdminValidator());
-	}	
+	}
 
 	/**
 	 * @return RequestValidator
@@ -392,7 +413,7 @@ class InstallController extends FrontendController
 	private function buildConfigForm()
 	{
 		return new Form($this->buildConfigValidator());
-	} 
+	}
 }
 
 ?>
