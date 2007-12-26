@@ -1,5 +1,5 @@
 syntax: regexp
-^storage\/(?!configuration\/(database.php|CustomInitialize.php))(.*)
+^storage\/(.*)
 
 syntax: glob
 .cache
@@ -8,8 +8,5 @@ cache
 public/javascript/compiled/*.*
 public/stylesheet/compiled/*.*
 public/upload/*
-storage/configuration/settings.php
-storage/configuration/database.php
+storage/*.*
 Thumbs.db
-update.bat
-simple update.bat

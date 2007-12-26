@@ -1,22 +1,23 @@
 <?php
+
 include_once(dirname(__file__).'/../../abstract/CreditCardPayment.php');
 
 /**
  *
  * @package library.payment.method.cc
- * @author Integry Systems 
+ * @author Integry Systems
  */
 class AuthorizeNet extends CreditCardPayment
 {
 	private $fields = array();
-	
-	private $gateway = "https://secure.authorize.net/gateway/transact.dll";	
-	
+
+	private $gateway = "https://secure.authorize.net/gateway/transact.dll";
+
 	public function isCreditable()
 	{
 		return true;
 	}
-	
+
 	public function isCardTypeNeeded()
 	{
 		return true;
@@ -26,7 +27,7 @@ class AuthorizeNet extends CreditCardPayment
 	{
 		return true;
 	}
-	
+
 	public function isMultiCapture()
 	{
 		return false;
@@ -35,8 +36,8 @@ class AuthorizeNet extends CreditCardPayment
 	public function isCapturedVoidable()
 	{
 		return true;
-	}	
-	
+	}
+
 	public function getValidCurrency($currency)
 	{
 		return 'USD';
@@ -50,7 +51,7 @@ class AuthorizeNet extends CreditCardPayment
 		$this->addField('x_type', 'AUTH_ONLY');
 		return $this->process();
 	}
-	
+
 	/**
 	 *	Capture reserved funds
 	 */
@@ -59,13 +60,13 @@ class AuthorizeNet extends CreditCardPayment
 		$this->addField('x_type', 'PRIOR_AUTH_CAPTURE');
 		return $this->process();
 	}
-	
+
 	/**
 	 *	Credit (a part) of customers payment
 	 */
 	public function credit()
 	{
-		return $this->process('');		
+		return $this->process('');
 	}
 
 	/**
@@ -85,7 +86,7 @@ class AuthorizeNet extends CreditCardPayment
 		$this->addField('x_type', 'AUTH_CAPTURE');
 		return $this->process();
 	}
-	
+
 	private function initHandler()
 	{
 		$this->addField('x_version', '3.1');
@@ -95,12 +96,17 @@ class AuthorizeNet extends CreditCardPayment
 		$this->addField('x_relay_response', 'False');
 		$this->addField('x_login', $this->getConfigValue('login'));
 		$this->addField('x_tran_key', $this->getConfigValue('transactionKey'));
-								
+
 		$this->addField('x_amount', $this->details->amount->get());
 		$this->addField('x_currency_code', $this->details->currency->get());
 		$this->addField('x_card_num', $this->getCardNumber());
 		$this->addField('x_exp_date', $this->getExpirationMonth() . '/' . $this->getExpirationYear());
-		
+
+		if ($this->getCardCode())
+		{
+			$this->addField('x_card_code', $this->getCardCode());
+		}
+
 		if ($this->getConfigValue('test'))
 		{
 			$this->addField('x_test_request', 'True');
@@ -110,7 +116,7 @@ class AuthorizeNet extends CreditCardPayment
 		{
 			$this->gateway = $this->getConfigValue('gateway');
 		}
-		
+
 		// customer information
 		$this->addField('x_cust_id', $this->details->clientID->get());
 		$this->addField('x_customer_ip', $this->details->ipAddress->get());
@@ -124,52 +130,52 @@ class AuthorizeNet extends CreditCardPayment
 		$this->addField('x_state', $this->details->state->get());
 		$this->addField('x_zip', $this->details->postalCode->get());
 		$this->addField('x_country', $this->details->country->get());
-		
+
 		// order information
-		$this->addField('x_invoice_num', $this->details->invoiceID->get());		
+		$this->addField('x_invoice_num', $this->details->invoiceID->get());
 	}
-	
-	private function addField($field, $value) 
+
+	private function addField($field, $value)
 	{
 		$this->fields[$field] = $value;
-	}	
-	
-	private function process() 
-	{  
+	}
+
+	private function process()
+	{
 		set_time_limit(0);
-		
+
 		$this->initHandler();
-		
+
 		if ($this->details->gatewayTransactionID->get())
 		{
 			$this->addField('x_trans_id', $this->details->gatewayTransactionID->get());
 		}
-		
+
 		// construct the fields string to pass to authorize.net
 		$fields = array();
-		foreach ($this->fields as $key => $value) 
+		foreach ($this->fields as $key => $value)
 		{
 			$fields[] = $key . '=' . urlencode($value);
 		}
-		
+
 		// execute the HTTPS post via CURL
-		$ch = curl_init($this->gateway); 
-		curl_setopt($ch, CURLOPT_HEADER, 0); 
+		$ch = curl_init($this->gateway);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-		curl_setopt($ch, CURLOPT_POSTFIELDS, implode('&', $fields)); 
-		
-		$response = urldecode(curl_exec($ch)); 
-		
-		if (curl_errno($ch)) 
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, implode('&', $fields));
+
+		$response = urldecode(curl_exec($ch));
+
+		if (curl_errno($ch))
 		{
 			return new TransactionError(curl_error($ch), $this->fields);
 		}
-		
+
 		curl_close ($ch);
-		
-		$keys= array ( 
+
+		$keys= array (
 		   "Response Code", "Response Subcode", "Response Reason Code", "Response Reason Text",
 		   "Approval Code", "AVS Result Code", "Transaction ID", "Invoice Number", "Description",
 		   "Amount", "Method", "Transaction Type", "Customer ID", "Cardholder First Name",
@@ -180,29 +186,29 @@ class AuthorizeNet extends CreditCardPayment
 		   "Tax Exempt Flag", "PO Number", "MD5 Hash", "Card Code (CVV2/CVC2/CID) Response Code",
 		   "Cardholder Authentication Verification Value (CAVV) Response Code"
 		);
-		
+
 		$values = $this->getCsvValues($response, '|');
-				
+
 		// add additional keys for reserved fields and merchant defined fields
-		for ($i = 0; $i <= 27; $i++) 
+		for ($i = 0; $i <= 27; $i++)
 		{
 			array_push($keys, 'Reserved Field ' . $i);
 		}
-		
+
 		$i = 0;
-		while (count($keys) < count($values)) 
+		while (count($keys) < count($values))
 		{
 			array_push($keys, 'Merchant Defined Field ' . ++$i);
 		}
-	   
+
 		$result = array_combine($keys, $values);
-		
+
 		// declined transaction
 		if (3 == $result['Response Code'] || in_array($result['Response Reason Code'], array(311)))
 		{
 			return new TransactionError($result['Response Reason Text'], $result);
 		}
-		
+
 		// prepare TransactionResult object
 		$res = new TransactionResult();
 		$res->gatewayTransactionID->set($result['Transaction ID']);
@@ -212,37 +218,37 @@ class AuthorizeNet extends CreditCardPayment
 		$res->AVSzip->set(in_array($result['AVS Result Code'], array('W', 'X', 'Y', 'Z')));
 		$res->CVVmatch->set('M' == $result['AVS Result Code']);
 		$res->rawResponse->set($result);
-		
+
 		switch ($result['Transaction Type'])
 		{
-			case 'auth_capture': 
+			case 'auth_capture':
 				$res->setTransactionType(TransactionResult::TYPE_SALE);
 			break;
 
-			case 'auth_only': 
+			case 'auth_only':
 				$res->setTransactionType(TransactionResult::TYPE_AUTH);
 			break;
 
-			case 'prior_auth_capture': 
+			case 'prior_auth_capture':
 				$res->setTransactionType(TransactionResult::TYPE_CAPTURE);
 			break;
 
-			case 'void': 
+			case 'void':
 				$res->setTransactionType(TransactionResult::TYPE_VOID);
 			break;
 
-			case 'credit': 
+			case 'credit':
 				$res->setTransactionType(TransactionResult::TYPE_REFUND);
 			break;
-			
+
 			default:
 				throw new PaymentException('Transaction type "' . $result['Transaction Type'] . '" is not implemented');
 			break;
 		}
-		
+
 		return $res;
-	}		
-	
+	}
+
 	private function getCSVValues($string, $separator = ",")
 	{
 		$elements = explode($separator, $string);
@@ -269,5 +275,5 @@ class AuthorizeNet extends CreditCardPayment
 		return $elements;
 	}
 }
-	
+
 ?>

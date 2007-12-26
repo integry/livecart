@@ -1,3 +1,4 @@
 Order deny,allow
 Deny From All
+Allow From All
 Allow From localhost
