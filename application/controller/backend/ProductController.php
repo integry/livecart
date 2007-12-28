@@ -426,6 +426,7 @@ class ProductController extends StoreManagementController
 	public function basicData()
 	{
 		$product = Product::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
+		$product->loadSpecification();
 		$response = $this->productForm($product);
 		$response->set('counters', $this->countTabsItems()->getData());
 		return $response;
@@ -723,7 +724,6 @@ class ProductController extends StoreManagementController
 		if($product->isLoaded())
 		{
 			$product->loadSpecification();
-
 			foreach($product->getSpecification()->toArray() as $attr)
 			{
 				if(in_array($attr['SpecField']['type'], SpecField::getSelectorValueTypes()))

@@ -19,7 +19,7 @@ abstract class BackendController extends BaseController
 		}
 
 		parent::__construct($application);
-		
+
 		// Firefox 3 alpha codename
 		if (!preg_match('/Firefox|Minefield/', $_SERVER['HTTP_USER_AGENT']))
 		{
@@ -34,13 +34,13 @@ abstract class BackendController extends BaseController
 			exit;
 		}
 	}
-	
+
 	public function init()
 	{
 	  	$this->setLayout('empty');
 		$this->addBlock('USER_MENU', 'boxUserMenu', 'block/backend/userMenu');
 	}
-	
+
 	public function boxUserMenuBlock()
 	{
 		$response = new BlockResponse();

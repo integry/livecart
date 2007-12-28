@@ -40,6 +40,11 @@
   	background: #CCCCCC;
 }
 
+.activeGrid .selected
+{
+  	background: #fed;
+}
+
 .readonlyGrid .cell_cb
 {
   	display: none;
