@@ -7,7 +7,7 @@
 	border-right: 1px solid #CCC;
 }
 
-.activeGrid_loadIndicator
+.activeGrid_loadIndicator, .activeGrid_massActionProgress
 {
 	position: absolute;
 	width: 100%;
@@ -20,7 +20,29 @@
 	background-color: white;
 	display: inline;
 	padding: 10px;
-	border: 1px solid black;
+	border: 1px solid #ccc;
+}
+
+.activeGrid_massActionProgress .progressBar
+{
+	float: left;
+}
+
+.activeGrid_massActionProgress .container
+{
+	display: inline;
+	padding: 2em;
+	background-color: white;
+	border: 1px solid #ccc;
+	margin: 0pt auto;
+}
+
+.activeGrid_massActionProgress a.cancel
+{
+	float: left;
+	position: relative;
+	top: 6px;
+	margin-left: 0.5em;
 }
 
 .activeGrid td
@@ -37,7 +59,7 @@
 
 .activeGrid_highlight
 {
-  	background: #CCCCCC;
+  	background: #CCCCCC !important;
 }
 
 .activeGrid .selected

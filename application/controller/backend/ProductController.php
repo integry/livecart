@@ -185,20 +185,18 @@ class ProductController extends StoreManagementController
 	 */
 	public function processMass()
 	{
-		$filter = new ARSelectFilter();
-
-		$category = Category::getInstanceById($this->request->get('id'), Category::LOAD_DATA);
-		$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
-		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
-
-		$filter->setCondition($cond);
-		$filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
+		ClassLoader::import('application.helper.massAction.ProductMassActionProcessor');
 
 		$filters = (array)json_decode($this->request->get('filters'));
 		$this->request->set('filters', $filters);
 
+		$category = Category::getInstanceById($this->request->get('id'), Category::LOAD_DATA);
+		$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
+		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
+		$filter = new ARSelectFilter($cond);
+		$filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
+
 		$grid = new ActiveGrid($this->application, $filter, 'Product');
-		$filter->setLimit(0);
 
 		$act = $this->request->get('act');
 		$field = array_pop(explode('_', $act, 2));
@@ -219,79 +217,36 @@ class ProductController extends StoreManagementController
 			return new JSONResponse(array('act' => $this->request->get('act')), 'success', $this->translate('_move_succeeded'));
 		}
 
-		$products = ActiveRecordModel::getRecordSet('Product', $filter, Product::LOAD_REFERENCES);
-
+		$params = array();
 		if ('manufacturer' == $act)
 		{
-			$manufacturer = Manufacturer::getInstanceByName($this->request->get('manufacturer'));
+			$params['manufacturer'] = Manufacturer::getInstanceByName($this->request->get('manufacturer'));
 		}
 		else if ('price' == $act || 'inc_price' == $act)
 		{
-			ProductPrice::loadPricesForRecordSet($products);
-			$baseCurrency = $this->application->getDefaultCurrencyCode();
-			$price = $this->request->get($act);
-			$currencies = $this->application->getCurrencySet();
+			$params['baseCurrency'] = $this->application->getDefaultCurrencyCode();
+			$params['price'] = $this->request->get($act);
+			$params['currencies'] = $this->application->getCurrencySet();
 		}
 		else if ('addRelated' == $act)
 		{
-			$relatedProduct = Product::getInstanceBySKU($this->request->get('related'));
-			if (!$relatedProduct)
+			$params['relatedProduct'] = Product::getInstanceBySKU($this->request->get('related'));
+			if (!$params['relatedProduct'])
 			{
 				return new JSONResponse(0);
 			}
 		}
 
-		foreach ($products as $product)
-		{
-			if (substr($act, 0, 7) == 'enable_')
-			{
-				$product->setFieldValue($field, 1);
-			}
-			else if (substr($act, 0, 8) == 'disable_')
-			{
-				$product->setFieldValue($field, 0);
-			}
-			else if (substr($act, 0, 4) == 'set_')
-			{
-				$product->setFieldValue($field, $this->request->get('set_' . $field));
-			}
-			else if ('delete' == $act)
-			{
-				Product::deleteById($product->getID());
-			}
-			else if ('manufacturer' == $act)
-			{
-				$product->manufacturer->set($manufacturer);
-			}
-			else if ('price' == $act)
-			{
-				$product->setPrice($baseCurrency, $price);
-			}
-			else if ('inc_price' == $act)
-			{
-				$pricing = $product->getPricingHandler();
-				foreach ($currencies as $currency)
-				{
-					if ($pricing->isPriceSet($currency))
-					{
-						$p = $pricing->getPrice($currency);
-						$p->increasePriceByPercent($price);
-					}
-				}
-			}
-			else if ('inc_stock' == $act)
-			{
-				$product->stockCount->set($product->stockCount->get() + $this->request->get($act));
-			}
-			else if ('addRelated' == $act)
-			{
-				$product->addRelatedProduct($relatedProduct);
-			}
+		$mass = new ProductMassActionProcessor($grid, $params);
+		$mass->setCompletionMessage($this->translate('_mass_action_succeed'));
+		return $mass->process(array('Category'));
+	}
 
-			$product->save();
-		}
+	public function isMassCancelled()
+	{
+		ClassLoader::import('application.helper.massAction.ProductMassActionProcessor');
 
-		return new JSONResponse(array('act' => $this->request->get('act')), 'success', $this->translate('_mass_action_succeed'));
+		return new JSONResponse(array('isCancelled' => ProductMassActionProcessor::isCancelled($this->request->get('pid'))));
 	}
 
 	public function autoComplete()

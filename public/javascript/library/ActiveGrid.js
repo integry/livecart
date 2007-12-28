@@ -595,8 +595,11 @@ ActiveGrid.MassActionHandler.prototype =
     valueEntryContainer: null,
     form: null,
     button: null,
+    cancelLink: null,
+    cancelUrl: '',
 
     grid: null,
+    pid: null,
 
     initialize: function(handlerMenu, activeGrid, params)
     {
@@ -673,19 +676,91 @@ ActiveGrid.MassActionHandler.prototype =
             return false;
         }
 
-        var indicator = document.getElementsByClassName('massIndicator', this.handlerMenu)[0];
+        var indicator = this.handlerMenu.down('.massIndicator');
         if (!indicator)
         {
             indicator = this.handlerMenu.down('.progressIndicator');
         }
 
-        new LiveCart.AjaxRequest(this.form, indicator , this.submitCompleted.bind(this));
+        this.formerLength = 0;
+        this.request = new LiveCart.AjaxRequest(this.form, indicator , this.dataResponse.bind(this),  {onInteractive: this.dataResponse.bind(this) });
+
+		this.progressBarContainer = this.handlerMenu.up('.tabProducts').down('.activeGrid_massActionProgress');
+		this.cancelLink = this.progressBarContainer.down('a.cancel');
+		this.cancelUrl = this.cancelLink.href;
+		this.cancelLink.onclick = this.cancel.bind(this);
+
+		this.progressBarContainer.show();
+		this.progressBar = new Backend.ProgressBar(this.progressBarContainer);
 
         this.grid.resetSelection();
     },
 
-    submitCompleted: function()
+	dataResponse: function(originalRequest)
     {
+        var response = originalRequest.responseText.substr(this.formerLength + 1);
+        this.formerLength = originalRequest.responseText.length;
+
+        var portions = response.split('|');
+
+        for (var k = 0; k < portions.length; k++)
+        {
+			if (!portions[k])
+			{
+				continue;
+			}
+
+			if ('}' == portions[k].substr(-1))
+			{
+				if ('{' != portions[k].substr(0, 1))
+				{
+					portions[k] = '{' + portions[k];
+				}
+
+				this.submitCompleted(eval('(' + portions[k] + ')'));
+				return;
+			}
+
+			response = eval('(' + decode64(portions[k]) + ')');
+
+            // progress
+            if (response.progress != undefined)
+            {
+                this.progressBar.update(response.progress, response.total);
+                this.pid = response.pid;
+            }
+        }
+    },
+
+    cancel: function(e)
+    {
+		this.request.request.transport.abort();
+    	new LiveCart.AjaxRequest(Backend.Router.setUrlQueryParam(this.cancelUrl, 'pid', this.pid), null, this.completeCancel.bind(this));
+    	Event.stop(e);
+	},
+
+	completeCancel: function(originalRequest)
+	{
+		var resp = originalRequest.responseData;
+
+		if (resp.isCancelled)
+		{
+			var progress = this.progressBar.getProgress();
+			this.cancelLink.hide();
+			this.progressBar.rewind(progress, this.progressBar.getTotal(), Math.round(progress/50), this.submitCompleted.bind(this));
+		}
+	},
+
+    submitCompleted: function(responseData)
+    {
+    	if (responseData)
+    	{
+    		this.request.showConfirmation(responseData);
+    	}
+
+		this.progressBarContainer.hide();
+		this.cancelLink.show();
+
         this.grid.reloadGrid();
         this.blurButton();
 

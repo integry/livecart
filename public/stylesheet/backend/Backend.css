@@ -267,7 +267,7 @@ html, body{
 #footerContainer {
   	width: 100%;
 	border-collapse: collapse;
-	height: 44px;
+	height: 42px;
 	clear: both;
 }
 #footerLeft {
@@ -1439,6 +1439,38 @@ label.acronym a:hover div
 {
 	background-image: url('../../image/silk/delete.png');
 }
+
+/***************************
+ * Progress bar
+ **************************/
+.progressBar
+{
+    width: 250px;
+    height: 20px;
+    margin-top: 5px;
+    border: 1px solid #30A0F9;
+    background-color: #A2DAFB;
+    text-align: center;
+    line-height: 20px;
+    font-weight: bold;
+}
+
+.progressBarIndicator
+{
+    position: absolute;
+    height: 20px;
+    background-color: #30A0F9;
+    margin-top: 6px;
+    margin-left: 1px;
+}
+
+.progressCount, .progressSeparator, .progressTotal
+{
+    color: white;
+    position: relative;
+    z-index: 2;
+}
+
 
 /***************************
  * Misc

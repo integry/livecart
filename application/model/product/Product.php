@@ -1025,7 +1025,7 @@ class Product extends MultilingualObject
 		unset($this->specificationInstance);
 		unset($this->pricingHandlerInstance);
 
-		parent::__destruct();
+		parent::destruct(array('defaultImageID'));
 	}
 }
 
