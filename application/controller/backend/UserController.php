@@ -164,6 +164,8 @@ class UserController extends StoreManagementController
 	 */
 	public function processMass()
 	{
+		ClassLoader::import('application.helper.massAction.UserMassActionProcessor');
+
 		$filter = new ARSelectFilter();
 
 		$id = (int)$this->request->get('id');
@@ -180,39 +182,9 @@ class UserController extends StoreManagementController
 			return;
 		}
 
-		$filters = (array)json_decode($this->request->get('filters'));
-		$this->request->set('filters', $filters);
-
-		$grid = new ActiveGrid($this->application, $filter, 'User');
-		$filter->setLimit(0);
-
-		$users = ActiveRecordModel::getRecordSet('User', $filter, User::LOAD_REFERENCES);
-
-		$act = $this->request->get('act');
-		$field = array_pop(explode('_', $act, 2));
-
-		foreach ($users as $user)
-		{
-			if (substr($act, 0, 7) == 'enable_')
-			{
-				$user->setFieldValue($field, 1);
-			}
-			else if (substr($act, 0, 8) == 'disable_')
-			{
-				$user->setFieldValue($field, 0);
-			}
-			else if ('delete' == $act)
-			{
-				$user->delete();
-			}
-
-			if ('delete' != $act)
-			{
-				$user->save();
-			}
-		}
-
-		return new JSONResponse(array('act' => $this->request->get('act')), 'success', $this->translate('_mass_action_succeed'));
+		$mass = new UserMassActionProcessor(new ActiveGrid($this->application, $filter, 'User'));
+		$mass->setCompletionMessage($this->translate('_mass_action_succeed'));
+		return $mass->process(User::LOAD_REFERENCES);
 	}
 
 	public function isMassCancelled()

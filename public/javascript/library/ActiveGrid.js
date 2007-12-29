@@ -98,12 +98,6 @@ ActiveGrid.prototype =
 		var rows = this.tableInstance.down('tbody').getElementsByTagName('tr');
 		for (k = 0; k < rows.length; k++)
 		{
-/*
-		  	rows[k].onclick = this.selectRow.bindAsEventListener(this);
-		  	rows[k].onmouseover = this.highlightRow.bindAsEventListener(this);
-		  	rows[k].onmouseout = this.removeRowHighlight.bindAsEventListener(this);
-*/
-
 			Event.observe(rows[k], 'click', this.selectRow.bindAsEventListener(this));
 			Event.observe(rows[k], 'mouseover', this.highlightRow.bindAsEventListener(this));
 			Event.observe(rows[k], 'mouseout', this.removeRowHighlight.bindAsEventListener(this));
@@ -685,7 +679,7 @@ ActiveGrid.MassActionHandler.prototype =
         this.formerLength = 0;
         this.request = new LiveCart.AjaxRequest(this.form, indicator , this.dataResponse.bind(this),  {onInteractive: this.dataResponse.bind(this) });
 
-		this.progressBarContainer = this.handlerMenu.up('.sectionContainer').down('.activeGrid_massActionProgress');
+		this.progressBarContainer = this.handlerMenu.up('div').down('.activeGrid_massActionProgress');
 		this.cancelLink = this.progressBarContainer.down('a.cancel');
 		this.cancelUrl = this.cancelLink.href;
 		this.cancelLink.onclick = this.cancel.bind(this);
@@ -718,6 +712,7 @@ ActiveGrid.MassActionHandler.prototype =
 				}
 
 				this.submitCompleted(eval('(' + portions[k] + ')'));
+
 				return;
 			}
 
@@ -768,6 +763,11 @@ ActiveGrid.MassActionHandler.prototype =
         {
             this.params.onComplete();
         }
+
+        if (this.customComplete)
+        {
+        	this.customComplete();
+		}
     },
 
     blurButton: function()

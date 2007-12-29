@@ -33,19 +33,19 @@ Backend.UserGroup.prototype =
 		Backend.UserGroup.prototype.treeBrowser.setOnClickHandler(this.activateGroup.bind(this));
 
 		Backend.UserGroup.prototype.treeBrowser.showFeedback =
-			function(itemId) 
+			function(itemId)
 			{
 				if (!this.iconUrls)
 				{
-					this.iconUrls = new Object();	
+					this.iconUrls = new Object();
 				}
-				
+
 				if (!this.iconUrls[itemId])
 				{
                     this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
                     var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
                     img.originalSrc = img.src;
-    				img.src = 'image/indicator.gif';                    
+    				img.src = 'image/indicator.gif';
                 }
 			}
 
@@ -57,7 +57,7 @@ Backend.UserGroup.prototype =
         			this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
                     var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
                     img.src = img.originalSrc;
-                    this.iconUrls[itemId] = null;                            
+                    this.iconUrls[itemId] = null;
                 }
 			}
 
@@ -68,7 +68,7 @@ Backend.UserGroup.prototype =
         {
             Element.show($('loadingUser'));
             Backend.UserGroup.prototype.openUser(userID[1], null, function() { Element.hide($('loadingUser')); });
-        }       
+        }
         else
         {
             var id = -2
@@ -80,11 +80,11 @@ Backend.UserGroup.prototype =
             else
             {
                 id = match[1];
-            }            
-            
+            }
+
             // a hackish solution to hide tree feedback after the first/initial list has been loaded
 			Backend.UserGroup.prototype.activeGroup = -3;
-        } 
+        }
 
 	    self.tabControl = TabControl.prototype.getInstance('userGroupsManagerContainer', self.craftTabUrl, self.craftContainerId, {});
 
@@ -92,7 +92,7 @@ Backend.UserGroup.prototype =
 
         this.bindEvents();
 	},
-    
+
     bindEvents: function()
     {
         var self = this;
@@ -205,7 +205,7 @@ Backend.UserGroup.prototype =
 		{
 	        activateTab = $('tabUsers');
 		}
-		
+
         if(id < 0)
         {
             $("tabUserGroup").hide();
@@ -222,7 +222,7 @@ Backend.UserGroup.prototype =
 	        var user = Backend.User.Editor.prototype.getInstance(Backend.User.Editor.prototype.getCurrentId(), false);
 	        user.cancelForm();
         }
-		
+
 		if ($("userGroups_delete"))
 		{
 			if(id <= 1)
@@ -288,15 +288,15 @@ Backend.UserGroup.prototype =
         if (e)
         {
             Event.stop(e);
-    
+
     		if(!e.target)
     		{
                 e.target = e.srcElement
     		}
-    
+
             Element.show(e.target.up('td').down('.progressIndicator'));
         }
-        
+
         Backend.User.Editor.prototype.setCurrentId(id);
 
     	var tabControl = TabControl.prototype.getInstance(
@@ -305,14 +305,14 @@ Backend.UserGroup.prototype =
             Backend.User.Editor.prototype.craftContentId
         );
 
-        tabControl.activateTab(null, 
+        tabControl.activateTab(null,
 								   function(response)
 								   {
 										if (onComplete)
 										{
 											onComplete(response);
 										}
-                                                    
+
                                         Backend.ajaxNav.add("#user_" + id);
 								   });
 
@@ -327,7 +327,7 @@ Backend.UserGroup.prototype =
 Backend.UserGroup.GridFormatter =
 {
 	userUrl: '',
-	
+
     getClassName: function(field, value)
 	{
 
@@ -362,17 +362,18 @@ Backend.UserGroup.GridFormatter =
 Backend.UserGroup.massActionHandler = Class.create();
 Object.extend(Object.extend(Backend.UserGroup.massActionHandler.prototype, ActiveGrid.MassActionHandler.prototype),
     {
-        submitCompleted:
+        customComplete:
             function()
             {
                 Backend.User.Editor.prototype.resetEditors();
-                this.grid.reloadGrid();
+
         		if(window.activeGrids['users_-2'])
         		{
         		    window.activeGrids['users_-2'].reloadGrid();
         		}
+
                 this.blurButton();
-            }        
+            }
     }
 );
 
@@ -387,7 +388,7 @@ Backend.User.Group.prototype =
     {
         this.findNodes(root);
         this.bindEvents();
-		
+
         Form.State.backup(this.nodes.form);
     },
 
@@ -444,15 +445,15 @@ Backend.User.Group.prototype =
 			{
 				option.text = this.nodes.name.value;
 			}.bind(this));
-			
+
             Form.State.backup(this.nodes.form);
         }
         else
         {
             ActiveForm.prototype.serErrorMessages(this.nodes.form, response.errors);
         }
-    }, 
-	
+    },
+
 	cancel: function()
 	{
         Form.State.restore(this.nodes.form);
@@ -516,9 +517,9 @@ Backend.User.Editor.prototype =
         this.findUsedNodes();
         this.bindEvents();
 		this.oldUserGroup = this.nodes.form.elements.namedItem("UserGroup").value;
-        
+
         Backend.User.Editor.prototype.showShippingAddress.apply(this);
-		
+
         Form.State.backup(this.nodes.form, false, false);
 	},
 
@@ -531,7 +532,7 @@ Backend.User.Editor.prototype =
 		this.nodes.submit = this.nodes.form.down('input.submit');
 
 		this.nodes.sameAddress = $("user_" + this.nodes.form.elements.namedItem("UserGroup").value + "_" + this.id +"_sameAddresses");
-        this.nodes.shippingAddress = $("user_" + this.nodes.form.elements.namedItem("UserGroup").value + "_" + this.id +"_shippingAddress"); 
+        this.nodes.shippingAddress = $("user_" + this.nodes.form.elements.namedItem("UserGroup").value + "_" + this.id +"_shippingAddress");
         this.nodes.billingAddress = $("user_" + this.nodes.form.elements.namedItem("UserGroup").value + "_" + this.id +"_billingAddress");
 
         this.nodes.password = this.nodes.form.down('.user_password');
@@ -630,25 +631,25 @@ Backend.User.Editor.prototype =
 			{
 			   response.user.UserGroup = {ID: -1};
 			}
-			
-			if(response.user.UserGroup.ID != this.oldUserGroup) 
+
+			if(response.user.UserGroup.ID != this.oldUserGroup)
 			{
                 if(window.activeGrids["users_-2"])
                 {
                     window.activeGrids["users_-2"].reloadGrid();
                 }
-				
+
 				if(window.activeGrids["users_" + this.oldUserGroup])
 				{
 			        window.activeGrids["users_" + this.oldUserGroup].reloadGrid();
 				}
-				
+
 				if(window.activeGrids["users_" + response.user.UserGroup.ID])
 				{
                     window.activeGrids["users_" + response.user.UserGroup.ID].reloadGrid();
 				}
 			}
-			
+
 			this.oldUserGroup = this.nodes.form.elements.namedItem("UserGroup").value;
 			Form.State.backup(this.nodes.form, false, false);
 		}
@@ -701,7 +702,7 @@ Backend.User.Editor.prototype =
             }.bind(this));
         }
     },
-    
+
     resetEditors: function()
     {
         Backend.User.Editor.prototype.Instances = {};
@@ -710,7 +711,7 @@ Backend.User.Editor.prototype =
         $('userManagerContainer').down('.sectionContainer').innerHTML = '';
 
         TabControl.prototype.__instances__ = {};
-    }        
+    }
 }
 
 
@@ -735,12 +736,12 @@ Backend.User.Add.prototype =
     initialize: function(groupID, grid)
   	{
         this.groupID = groupID;
-        
+
         this.findUsedNodes();
         this.bindEvents();
-        
+
 		Backend.User.Editor.prototype.showShippingAddress.apply(this);
-		
+
         Form.State.backup(this.nodes.form, false, false);
 	},
 

@@ -40,10 +40,11 @@
 			<li class="addTreeNode" {denied role="userGroup.create"}style="display: none;"{/denied}><a id="userGroups_add" href="#add">{t _add_group}</a></li>
 			<li class="removeTreeNode" {denied role="userGroup.remove"}style="display: none;"{/denied}><a id="userGroups_delete" href="#delete">{t _delete_group}</a></li>
 		</ul>
-		
+
 		<div id="confirmations"></div>
+		<div id="yellowZone"></div>
 	</div>
-	
+
 	<span id="fromUsersPage">
 		{include file="backend/customerOrder/orderContainer.tpl"}
 		{include file="backend/userGroup/groupContainer.tpl"}
@@ -61,9 +62,9 @@
 		{allowed role="order"}
 			Backend.CustomerOrder.prototype.ordersMiscPermission = true;
 		{/allowed}
-	{literal}	
-	
-	
+	{literal}
+
+
 	Backend.UserGroup.prototype.Messages.confirmUserDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_user}{literal}';
 	Backend.UserGroup.prototype.Messages.confirmUserGroupRemove = '{/literal}{t _are_you_sure_you_want_to_delete_this_user_group}{literal}';
 	Backend.UserGroup.prototype.Messages.defaultUserName = '{/literal}{t _default_user}{literal}';
@@ -84,7 +85,7 @@
 	Backend.User.Editor.prototype.Links.create = '{/literal}{link controller=backend.user action=create}{literal}';
 	Backend.User.Editor.prototype.Links.update = '{/literal}{link controller=backend.user action=update}{literal}';
 	Backend.User.Editor.prototype.Links.generatePassword = '{/literal}{link controller=backend.user action=generatePassword}{literal}';
-	
+
 	Backend.UserGroup.prototype.usersMiscPermision = {/literal}{allowed role="user"}true{/allowed}{denied role="user"}false{/denied}{literal};
 
 	var users = new Backend.UserGroup({/literal}{json array=$userGroups}{literal});
