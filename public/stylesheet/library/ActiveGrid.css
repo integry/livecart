@@ -59,7 +59,7 @@
 
 .activeGrid_highlight
 {
-  	background: #CCCCCC !important;
+  	background: #ddd !important;
 }
 
 .activeGrid .selected
@@ -238,7 +238,7 @@
     left: 0;
     z-index: 50000;
 
-    border: 1px solid black;
+    border: 1px solid #ccc;
     background-color: white;
     padding: 5px;
 }

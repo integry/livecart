@@ -195,6 +195,12 @@ html, body{
 	padding-right: 20px;
 	font-size: 10px;
 }
+
+#topAuthInfo a
+{
+	color: #eef;
+}
+
 #topBackground {
 	background-image: url(../../image/backend/layout/top_bg.jpg);
     height: 60px;
@@ -492,12 +498,16 @@ html, body{
 #langMenu {
 	padding: 5px;
 	text-align: left;
-  	background-color: #CDD9EE;
-  	background-image: url(../../image/backend/menu/menu_commands_bg.jpg);
+  	background-color: #CDE0FF;
   	background-position: bottom left;
   	background-repeat: repeat-x;
   	font-size: larger;
- 	border:1px solid #999999;
+ 	border:1px solid #ccc;
+}
+
+#langMenu a.cancel
+{
+	font-size: smaller;
 }
 
 #langMenu div {
@@ -511,7 +521,12 @@ html, body{
 }
 
 .langMenuHover {
-	background: #3981E7;
+	background: #58f;
+}
+
+.langMenuHover span
+{
+	color: white;
 }
 
 #langMenuCurrent {
@@ -667,7 +682,7 @@ ul.verticalMenu li
 	background-repeat: no-repeat;
 	background-position: 5px center;
 	border: 1px solid #ccc;
-	background-color: #F9F9F9;
+	background-color: #ffe;
 }
 
 ul.menu li.done
@@ -1471,6 +1486,39 @@ label.acronym a:hover div
     z-index: 2;
 }
 
+/***************************
+ * Rounded corners
+ **************************/
+legend,
+ul.verticalMenu li,
+.activeGridColumnsSelect,
+.activeGrid_loadIndicator div,
+.activeGrid_massActionProgress .container,
+.wizardProgress li
+{
+	-moz-border-radius: 4px;
+}
+
+li.activeList_even, li.activeList_odd,
+fieldset.controls,
+li.logEntry,
+ul.transactions li,
+.activeGrid .filterMenu,
+#langMenu
+{
+	-moz-border-radius: 7px;
+}
+
+ul.languageFormTabs li, .tabList li
+{
+	-moz-border-radius-topleft: 4px;
+	-moz-border-radius-topright: 4px;
+}
+
+#loginContainer
+{
+	-moz-border-radius: 1em;
+}
 
 /***************************
  * Misc
