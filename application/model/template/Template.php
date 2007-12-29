@@ -67,6 +67,8 @@ class Template
 			}
 		}
 
+		ksort($res);
+
 		return $res;
 	}
 
