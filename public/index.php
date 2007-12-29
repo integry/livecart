@@ -16,7 +16,7 @@ function logDestruct($obj, $details = '')
 {
 	if (defined('SHUTDOWN'))
 	{
-		//echo '! ' . get_class($obj) . ($details ? ' (' . $details . ')' : '') . "\n";
+		echo '! ' . get_class($obj) . ($details ? ' (' . $details . ')' : '') . "\n";
 	}
 }
 

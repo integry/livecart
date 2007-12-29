@@ -8,7 +8,7 @@ ClassLoader::import("application.model.order.Shipment");
  * Represents a shopping basket item (one or more instances of the same product)
  *
  * @package application.model.order
- * @author Integry Systems <http://integry.com> 
+ * @author Integry Systems <http://integry.com>
  */
 class OrderedItem extends ActiveRecordModel
 {
@@ -21,7 +21,7 @@ class OrderedItem extends ActiveRecordModel
 	{
 		$schema = self::getSchemaInstance($className);
 		$schema->setName($className);
-		
+
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", "Product", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("customerOrderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
@@ -34,10 +34,10 @@ class OrderedItem extends ActiveRecordModel
 		$schema->registerField(new ARField("dateAdded", ARDateTime::instance()));
 		$schema->registerField(new ARField("isSavedForLater", ARBool::instance()));
 	}
-	
-	/*####################  Static method implementations ####################*/		
-	
-	public static function getNewInstance(CustomerOrder $order, Product $product, $count = 1)	
+
+	/*####################  Static method implementations ####################*/
+
+	public static function getNewInstance(CustomerOrder $order, Product $product, $count = 1)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
 		$instance->customerOrder->set($order);
@@ -46,56 +46,56 @@ class OrderedItem extends ActiveRecordModel
 
 		return $instance;
 	}
-	
-	/*####################  Value retrieval and manipulation ####################*/	
-	
+
+	/*####################  Value retrieval and manipulation ####################*/
+
 	public function getSubTotal(Currency $currency)
 	{
-		return $this->getPrice($currency) * $this->count->get();	
+		return $this->getPrice($currency) * $this->count->get();
 	}
-	
+
 	public function getPrice(Currency $currency)
 	{
 		$itemCurrency = $this->priceCurrencyID->get() ? Currency::getInstanceById($this->priceCurrencyID->get()) : $currency;
 
 		$price = $this->price->get() ? $this->price->get() : $this->product->get()->getPrice($currency->getID());
-		
+
 		return $itemCurrency->convertAmount($currency, $price);
 	}
-	
+
 	public function reserve()
 	{
 		$product = $this->product->get();
 		$product->reservedCount->set($product->reservedCount->get() + $this->reservedProductCount->get());
 	}
-	
+
 	/**
 	 *  @todo implement
-	 */ 
+	 */
 	public function unreserve()
 	{
-		
+
 	}
-	
+
 	/**
 	 *  Determine if the file download period hasn't expired yet
-	 *  
+	 *
 	 *  @return ProductFile
 	 */
 	public function isDownloadable(ProductFile $file)
 	{
 		$orderDate = $this->customerOrder->get()->dateCompleted->get();
-		
+
 		return (abs($orderDate->getDayDifference(new DateTime())) <= $file->allowDownloadDays->get()) ||
 				!$file->allowDownloadDays->get();
-	}	
-	
+	}
+
   	/*####################  Saving ####################*/
-	
+
 	protected function insert()
 	{
 		$this->shipment->setNull();
-		
+
 		$this->priceCurrencyID->set($this->customerOrder->get()->currency->get()->getID());
 		if (!$this->price->get())
 		{
@@ -104,19 +104,19 @@ class OrderedItem extends ActiveRecordModel
 
 		return parent::insert();
 	}
-	
+
 	public function save($forceOperation = null)
 	{
-		$ret = parent::save($forceOperation);		
-		
+		$ret = parent::save($forceOperation);
+
 		// adjust inventory
 		$this->product->get()->save();
-		
+
 		return $ret;
 	}
-   
+
 	protected function update()
-	{					   
+	{
 		if (is_null($this->shipment->get()) || !$this->shipment->get()->getID())
 		{
 			$this->shipment->setNull(false);
@@ -132,13 +132,13 @@ class OrderedItem extends ActiveRecordModel
 			return false;
 		}
 	}
-	
-	/*####################  Data array transformation ####################*/	
-	
+
+	/*####################  Data array transformation ####################*/
+
 	public static function transformArray($array, ARSchema $schema)
 	{
 		$array = parent::transformArray($array, $schema);
-		
+
 		// always use OrderedItem stored prices for presentation, rather than Product's
 		// pricing data, as Product prices may change after the order is completed
 		if ($array['priceCurrencyID'])
@@ -147,12 +147,12 @@ class OrderedItem extends ActiveRecordModel
 			$array['formattedPrice'] = $currency->getFormattedPrice($array['price']);
 			$array['formattedSubTotal'] = $currency->getFormattedPrice($array['price'] * $array['count']);
 		}
-		
+
 		return $array;
 	}
-		
-	/*####################  Get related objects ####################*/	
-		
+
+	/*####################  Get related objects ####################*/
+
 	/**
 	 *  @return ProductFile
 	 */
@@ -170,12 +170,18 @@ class OrderedItem extends ActiveRecordModel
 			return $s->get(0);
 		}
 	}
-	
+
 	public function serialize()
 	{
 		$this->markAsLoaded();
 		return parent::serialize(array('customerOrderID', 'shipmentID', 'productID'));
-	}	
+	}
+
+	public function __destruct()
+	{
+
+		parent::destruct(array('productID', 'shipmentID'));
+	}
 }
 
 ?>

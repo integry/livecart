@@ -1368,6 +1368,7 @@ Backend.ProgressBar.prototype =
 		this.total = container.down('.progressTotal');
 		this.progressBar = container.down('.progressBar');
 		this.progressBarIndicator = container.down('.progressBarIndicator');
+		this.update(0, 0);
 	},
 
 	update: function(progress, total)

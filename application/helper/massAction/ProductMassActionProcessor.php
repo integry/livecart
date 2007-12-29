@@ -2,6 +2,10 @@
 
 include_once dirname(__file__) . '/MassActionProcessor.php';
 
+/**
+ * @package application.helper.massAction
+ * @author Integry Systems
+ */
 class ProductMassActionProcessor extends MassActionProcessor
 {
 	protected function processSet(ARSet $set)
@@ -30,10 +34,6 @@ class ProductMassActionProcessor extends MassActionProcessor
 		else if (substr($act, 0, 4) == 'set_')
 		{
 			$product->setFieldValue($field, $this->request->get('set_' . $field));
-		}
-		else if ('delete' == $act)
-		{
-			Product::deleteById($product->getID());
 		}
 		else if ('manufacturer' == $act)
 		{

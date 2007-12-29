@@ -1,12 +1,12 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-
-ClassLoader::import("application.model.category.Category");
-ClassLoader::import("application.model.filter.FilterGroup");
-ClassLoader::import("application.model.product.Product");
-ClassLoader::import("application.model.product.ProductSpecification");
-ClassLoader::import("application.helper.ActiveGrid");
+ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
+ClassLoader::import('application.model.category.Category');
+ClassLoader::import('application.model.filter.FilterGroup');
+ClassLoader::import('application.model.product.Product');
+ClassLoader::import('application.model.product.ProductSpecification');
+ClassLoader::import('application.helper.ActiveGrid');
+ClassLoader::import('application.helper.massAction.MassActionInterface');
 
 /**
  * Controller for handling product based actions performed by store administrators
@@ -15,7 +15,7 @@ ClassLoader::import("application.helper.ActiveGrid");
  * @author Integry Systems
  * @role product
  */
-class ProductController extends StoreManagementController
+class ProductController extends StoreManagementController implements MassActionInterface
 {
 	public function index()
 	{
@@ -186,9 +186,6 @@ class ProductController extends StoreManagementController
 	public function processMass()
 	{
 		ClassLoader::import('application.helper.massAction.ProductMassActionProcessor');
-
-		$filters = (array)json_decode($this->request->get('filters'));
-		$this->request->set('filters', $filters);
 
 		$category = Category::getInstanceById($this->request->get('id'), Category::LOAD_DATA);
 		$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());

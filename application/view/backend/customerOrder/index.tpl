@@ -42,6 +42,7 @@
 	<div id="orderGroupsBrowser" class="treeBrowser"></div>
 
 	<div id="confirmations"></div>
+	<div id="yellowZone"></div>
 </div>
 
 {include file="backend/customerOrder/orderContainer.tpl"}
@@ -52,22 +53,22 @@
 {literal}
 <script type="text/javascript">
 	Backend.CustomerOrder.Editor.prototype.Links.switchCancelled = '{/literal}{link controller=backend.customerOrder action=switchCancelled}{literal}';
-	
+
 	Backend.CustomerOrder.Links.selectCustomer = '{/literal}{link controller=backend.customerOrder action=selectCustomer}{literal}';
 	Backend.CustomerOrder.Links.createOrder = '{/literal}{link controller=backend.customerOrder action=create}{literal}';
 	Backend.CustomerOrder.Messages.selecCustomerTitle = '{/literal}{t _select_customer_title}{literal}';
 	Backend.CustomerOrder.Messages.areYouSureYouWantToUpdateOrderStatus = '{/literal}{t _are_you_sure_you_want_to_update_order_status|escape}{literal}';
-	
+
 	Backend.CustomerOrder.Editor.prototype.Messages.areYouSureYouWantToActivateThisOrder = '{/literal}{t _are_you_sure_you_want_activate_this_order|escape}{literal}';
 	Backend.CustomerOrder.Editor.prototype.Messages.areYouSureYouWantToCancelThisOrder = '{/literal}{t _are_you_sure_you_want_cancel_this_order|escape}{literal}';
 	Backend.CustomerOrder.Editor.prototype.Messages.orderNum = '{/literal}{t _order_number|escape}{literal}';
 	new Backend.CustomerOrder({/literal}{json array=$orderGroups}{literal});
-	
+
 	{/literal}
 		{allowed role="order"}
 			Backend.CustomerOrder.prototype.ordersMiscPermission = true;
 		{/allowed}
-		
+
 		{allowed role="user"}
 			Backend.CustomerOrder.prototype.usersMiscPermission = true;
 		{/allowed}

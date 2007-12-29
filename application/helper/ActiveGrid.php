@@ -68,7 +68,11 @@ class ActiveGrid
 		}
 
 		// apply filters
-		$filters = $request->get('filters', array());
+		$filters = $request->get('filters');
+		if (!is_array($filters))
+		{
+			$filters = (array)json_decode($request->get('filters'));
+		}
 		foreach ($filters as $field => $value)
 		{
 			if (!strlen($value))

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @package application.helper.massAction
+ * @author Integry Systems
+ */
 abstract class MassActionProcessor
 {
 	protected $grid;
@@ -9,7 +13,7 @@ abstract class MassActionProcessor
 
 	const MASS_ACTION_CHUNK_SIZE = 50;
 
-	public function __construct(ActiveGrid $grid, $params)
+	public function __construct(ActiveGrid $grid, $params = array())
 	{
 		$this->grid = $grid;
 		$this->params = $params;
@@ -45,10 +49,13 @@ abstract class MassActionProcessor
 
 		ActiveRecord::beginTransaction();
 
-		foreach (array_chunk($ids, self::MASS_ACTION_CHUNK_SIZE) as $chunk)
+		$chunkSize = (count($ids) / self::MASS_ACTION_CHUNK_SIZE) > 5 ? self::MASS_ACTION_CHUNK_SIZE : ceil(count($ids) / 5);
+
+		foreach (array_chunk($ids, $chunkSize) as $chunk)
 		{
 			//echo round(memory_get_usage() / (1024*1024), 1) . "MB<br>";
 			$response->flush('|' . base64_encode(json_encode(array('total' => $totalCount, 'progress' => $progress, 'pid' => $this->pid))));
+
 			$this->processSet(ActiveRecordModel::getRecordSet($this->grid->getModelClass(), new ARSelectFilter(new INCond(new ARFieldHandle($this->grid->getModelClass(), 'ID'), $chunk)), $loadReferencedRecords));
 			$progress += count($chunk);
 		}
@@ -89,8 +96,16 @@ abstract class MassActionProcessor
 		foreach ($set as $record)
 		{
 			$this->processRecord($record);
+//echo round(memory_get_usage() / (1024*1024), 1) . "MB \n";
+			if ('delete' == $this->getAction())
+			{
+				$this->deleteRecord($record);
+			}
+			else
+			{
+				$this->saveRecord($record);
+			}
 
-			$record->save();
 			$record->__destruct();
 			unset($record);
 
@@ -102,6 +117,16 @@ abstract class MassActionProcessor
 
 		$set->__destruct();
 		unset($set);
+	}
+
+	protected function saveRecord(ActiveRecordModel $record)
+	{
+		$record->save();
+	}
+
+	protected function deleteRecord(ActiveRecordModel $record)
+	{
+		$record->delete();
 	}
 
 	protected function getAction()

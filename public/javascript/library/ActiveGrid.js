@@ -685,7 +685,7 @@ ActiveGrid.MassActionHandler.prototype =
         this.formerLength = 0;
         this.request = new LiveCart.AjaxRequest(this.form, indicator , this.dataResponse.bind(this),  {onInteractive: this.dataResponse.bind(this) });
 
-		this.progressBarContainer = this.handlerMenu.up('.tabProducts').down('.activeGrid_massActionProgress');
+		this.progressBarContainer = this.handlerMenu.up('.sectionContainer').down('.activeGrid_massActionProgress');
 		this.cancelLink = this.progressBarContainer.down('a.cancel');
 		this.cancelUrl = this.cancelLink.href;
 		this.cancelLink.onclick = this.cancel.bind(this);

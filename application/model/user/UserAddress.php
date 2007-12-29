@@ -59,8 +59,8 @@ class UserAddress extends ActiveRecordModel
 		if (isset($array['State']))
 		{
 			$array['stateName'] = $array['State']['name'];
-		}		
-		
+		}
+
 		return $array;
 	}
 
@@ -87,6 +87,11 @@ class UserAddress extends ActiveRecordModel
 	private function reduceAddress($item)
 	{
 		return trim($item);
+	}
+
+	public function __destruct()
+	{
+		parent::destruct(array('stateID'));
 	}
 }
 ?>

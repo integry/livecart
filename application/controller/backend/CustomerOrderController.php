@@ -1,15 +1,16 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.controller.backend.*");
-ClassLoader::import("application.model.order.*");
-ClassLoader::import("application.model.Currency");
-ClassLoader::import("framework.request.validator.Form");
-ClassLoader::import("framework.request.validator.RequestValidator");
+ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
+ClassLoader::import('application.controller.backend.*');
+ClassLoader::import('application.model.order.*');
+ClassLoader::import('application.model.Currency');
+ClassLoader::import('framework.request.validator.Form');
+ClassLoader::import('framework.request.validator.RequestValidator');
+ClassLoader::import('application.helper.massAction.MassActionInterface');
 
 /**
  * @package application.controller.backend
- * @author Integry Systems 
+ * @author Integry Systems
  * @role order
  */
 class CustomerOrderController extends StoreManagementController
@@ -23,7 +24,7 @@ class CustomerOrderController extends StoreManagementController
 	const TYPE_RETURNED = 7;
 	const TYPE_CARTS = 8;
 	const TYPE_CANCELLED = 9;
-								
+
 	/**
 	 * Action shows filters and datagrid.
 	 * @return ActionResponse
@@ -96,7 +97,7 @@ class CustomerOrderController extends StoreManagementController
 
 			if ($order->user->get()->defaultShippingAddress->get())
 			{
-				$shippingStates = State::getStatesByCountry($order->user->get()->defaultShippingAddress->get()->userAddress->get()->countryID->get());				
+				$shippingStates = State::getStatesByCountry($order->user->get()->defaultShippingAddress->get()->userAddress->get()->countryID->get());
 			   $orderArray['ShippingAddress'] = $order->user->get()->defaultShippingAddress->get()->userAddress->get()->toArray();
 			}
 
@@ -105,15 +106,15 @@ class CustomerOrderController extends StoreManagementController
 			if ($order->user->get()->defaultBillingAddress->get())
 			{
 				$billingStates = State::getStatesByCountry($order->user->get()->defaultBillingAddress->get()->userAddress->get()->countryID->get());
-			   $orderArray['BillingAddress'] = $order->user->get()->defaultBillingAddress->get()->userAddress->get()->toArray();				
+			   $orderArray['BillingAddress'] = $order->user->get()->defaultBillingAddress->get()->userAddress->get()->toArray();
 			}
-			
+
 			$billingStates[''] = '';
 
 			$response->set('shippingStates',  $shippingStates);
 			$response->set('billingStates',  $billingStates);
 		}
-		
+
 		$response->set('order', $orderArray);
 		$response->set('form', $this->createOrderForm($orderArray));
 
@@ -155,18 +156,18 @@ class CustomerOrderController extends StoreManagementController
 
 		$shipableShipmentsCount = 0;
 		$hideShipped = 0;
-		
+
 		$hasDownloadable = false;
 		foreach($order->getShipments() as $shipment)
 		{
 			if($shipment->isShipped()) continue;
 			if(!$shipment->isShippable() && count($shipment->getItems()) > 0) continue;
-			
-			if($shipment->status->get() != Shipment::STATUS_SHIPPED && $shipment->isShippable()) 
+
+			if($shipment->status->get() != Shipment::STATUS_SHIPPED && $shipment->isShippable())
 			{
 				$shipableShipmentsCount++;
 			}
-			
+
 			$rate = unserialize($shipment->shippingServiceData->get());
 			if((count($shipment->getItems()) == 0) || (!is_object($rate) && !$shipment->shippingService->get()))
 			{
@@ -174,7 +175,7 @@ class CustomerOrderController extends StoreManagementController
 				break;
 			}
 		}
-		
+
 //		$response->set('hideShipped', $shipableShipmentsCount > 0 ? $hideShipped : 1);
 		$response->set('hideShipped', false);
 		$response->set('type', $this->getOrderType($order));
@@ -201,7 +202,7 @@ class CustomerOrderController extends StoreManagementController
 				case CustomerOrder::STATUS_AWAITING: return self::TYPE_AWAITING;
 				case CustomerOrder::STATUS_SHIPPED: return self::TYPE_SHIPPED;
 				case CustomerOrder::STATUS_RETURNED: return self::TYPE_RETURNED;
-				default: return 0;												
+				default: return 0;
 			}
 		}
 	}
@@ -263,7 +264,7 @@ class CustomerOrderController extends StoreManagementController
 			$email->setUser($order->user->get());
 			$email->setTemplate('order.cancel');
 			$email->set('order', $order->toArray(array('payments' => true)));
-			$email->send();				
+			$email->send();
 		}
 
 		return new JSONResponse(array(
@@ -281,66 +282,24 @@ class CustomerOrderController extends StoreManagementController
 	 */
 	public function processMass()
 	{
-		$filter = new ARSelectFilter();
+		ClassLoader::import('application.helper.massAction.OrderMassActionProcessor');
 
-		$filters = (array)json_decode($this->request->get('filters'));
-		$this->request->set('filters', $filters);
+		$filter = new ARSelectFilter();
 		$grid = new ActiveGrid($this->application, $filter, 'CustomerOrder');
-		$filter->setLimit(0);
-		
 		$typeCond = $this->getTypeCondition($this->request->get('id'));
 		$this->applyFullNameFilter($typeCond);
-
 		$filter->mergeCondition($typeCond);
 
-		$orders = CustomerOrder::getRecordSet($filter, CustomerOrder::LOAD_REFERENCES);
+		$mass = new OrderMassActionProcessor($grid);
+		$mass->setCompletionMessage($this->translate('_mass_action_succeed'));
+		return $mass->process(CustomerOrder::LOAD_REFERENCES);
+	}
 
-		$act = $this->request->get('act');
-		$field = array_pop(explode('_', $act, 2));
+	public function isMassCancelled()
+	{
+		ClassLoader::import('application.helper.massAction.OrderMassActionProcessor');
 
-		foreach ($orders as $order)
-		{
-		   $history = new OrderHistory($order, $this->user);
-		
-			switch($act)
-			{
-				case 'setNew':
-					$order->status->set(CustomerOrder::STATUS_NEW);
-					break;
-				case 'setProcessing':
-					$order->status->set(CustomerOrder::STATUS_PROCESSING);
-					break;
-				case 'setAwaitingShipment':
-					$order->status->set(CustomerOrder::STATUS_AWAITING);
-					break;
-				case 'setShipped':
-					$order->status->set(CustomerOrder::STATUS_SHIPPED);
-					break;
-				case 'setReturned':
-					$order->status->set(CustomerOrder::STATUS_RETURNED);
-					break;
-				case 'setFinalized':
-					$order->isFinalized->set(1);
-					break;
-				case 'setUnfinalized':
-					$order->isFinalized->set(0);
-					break;
-				case 'setCancel':
-					$order->isCancelled->set(true);
-					break;
-				case 'delete':
-					$order->delete();
-					break;
-			}
-
-			if($act != 'delete')
-			{
-				$order->save();
-				$history->saveLog();
-			}
-		}
-
-		return new JSONResponse(array('act' => $this->request->get('act')), 'success', $this->translate('_mass_action_succeed'));
+		return new JSONResponse(array('isCancelled' => OrderMassActionProcessor::isCancelled($this->request->get('pid'))));
 	}
 
 	public function changeColumns()
@@ -476,59 +435,57 @@ class CustomerOrderController extends StoreManagementController
 	}
 
 	public function export()
-	{		
+	{
 		@set_time_limit(0);
 
 		// init file download
-		header('Content-Disposition: attachment; filename="exported.csv"');		
+		header('Content-Disposition: attachment; filename="exported.csv"');
 		$out = fopen('php://output', 'w');
 
-		$displayedColumns = $this->getDisplayedColumns();		
+		$displayedColumns = $this->getDisplayedColumns();
 		unset($displayedColumns['CustomerOrder.ID2']);
-		
+
 		$data = $this->lists($displayedColumns)->getValue();
-		
+
 		// header row
 		foreach ($data['columns'] as $column)
 		{
 			$header[] = $this->translate($column);
 		}
 		fputcsv($out, $header);
-		
+
 		// columns
 		foreach ($data['data'] as $row)
 		{
 			fputcsv($out, $row);
 		}
-		
+
 		exit;
 	}
 
 	private function applyFullNameFilter(Condition $cond)
 	{
-		if ($filters = $this->request->get('filters'))
+		$filters = (array)json_decode($this->request->get('filters'));
+		if (isset($filters['User.fullName']))
 		{
-			if (isset($filters['User.fullName']))
+			$nameParts = explode(' ', $filters['User.fullName']);
+			unset($filters['User.fullName']);
+			$this->request->set('filters', $filters);
+
+			if(count($nameParts) == 1)
 			{
-				$nameParts = explode(' ', $filters['User.fullName']);
-				unset($filters['User.fullName']);
-				$this->request->set('filters', $filters);
+				$nameParts[1] = $nameParts[0];
+			}
 
-				if(count($nameParts) == 1)
-				{
-					$nameParts[1] = $nameParts[0];
-				}
+			$firstNameCond = new LikeCond(new ARFieldHandle('User', "firstName"), '%' . $nameParts[0] . '%');
+			$firstNameCond->addOR(new LikeCond(new ARFieldHandle('User', "lastName"), '%' . $nameParts[1] . '%'));
 
-				$firstNameCond = new LikeCond(new ARFieldHandle('User', "firstName"), '%' . $nameParts[0] . '%');
-				$firstNameCond->addOR(new LikeCond(new ARFieldHandle('User', "lastName"), '%' . $nameParts[1] . '%'));
+			$lastNameCond = new LikeCond(new ARFieldHandle('User', "firstName"), '%' . $nameParts[0] . '%');
+			$lastNameCond->addOR(new LikeCond(new ARFieldHandle('User', "lastName"), '%' . $nameParts[1] . '%'));
 
-				$lastNameCond = new LikeCond(new ARFieldHandle('User', "firstName"), '%' . $nameParts[0] . '%');
-				$lastNameCond->addOR(new LikeCond(new ARFieldHandle('User', "lastName"), '%' . $nameParts[1] . '%'));
-
-				$cond->addAND($firstNameCond);
-				$cond->addAND($lastNameCond);
-			 }
-		}		
+			$cond->addAND($firstNameCond);
+			$cond->addAND($lastNameCond);
+		 }
 	}
 
 	private function getTypeCondition($type)
@@ -574,14 +531,14 @@ class CustomerOrderController extends StoreManagementController
 				break;
 			default:
 				return;
-		}		
-	
+		}
+
 		$filters = $this->request->get('filters');
 		if (!in_array($type, array(self::TYPE_CANCELLED, self::TYPE_ALL, self::TYPE_SHIPPED, self::TYPE_RETURNED)))
 		{
 			$cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isCancelled"), 0));
 		}
-	
+
 		return $cond;
 	}
 
@@ -595,12 +552,12 @@ class CustomerOrderController extends StoreManagementController
 		$history = new OrderHistory($order, $this->user);
 
 		$oldStatus = $order->status->get();
-		
+
 		$status = (int)$this->request->get('status');
 		$order->status->set($status);
 		$isCancelled = (int)$this->request->get('isCancelled') ? true : false;
 		$order->isCancelled->set($isCancelled);
-		
+
 		$shipments = $order->updateShipmentStatuses();
 		$response = $this->save($order);
 		$history->saveLog();
@@ -613,8 +570,8 @@ class CustomerOrderController extends StoreManagementController
 			$email->setTemplate('order.status');
 			$email->set('order', $order->toArray(array('payments' => true)));
 			$email->set('shipments', $shipments->toArray());
-			$email->send();			
-		}		
+			$email->send();
+		}
 
 		return $response;
 	}
@@ -716,10 +673,10 @@ class CustomerOrderController extends StoreManagementController
 				$shipment->delete();
 			}
 		}
-		
+
 		$order->updateStatusFromShipments();
 		$order->save();
-		
+
 		return new RawResponse();
 	}
 

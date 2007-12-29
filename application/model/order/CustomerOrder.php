@@ -23,11 +23,6 @@ class CustomerOrder extends ActiveRecordModel
 
 	private $taxes = array();
 
-	/**
-	 * @var LogHistory
-	 */
-	private $history = null;
-
 	const STATUS_NEW = 0;
 	const STATUS_PROCESSING = 1;
 	const STATUS_AWAITING = 2;
@@ -96,7 +91,7 @@ class CustomerOrder extends ActiveRecordModel
 		$this->orderedItems = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category', 'DefaultImage' => 'ProductImage'))->getData();
 		$this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter(), self::LOAD_REFERENCES);
 
-		if (!$this->shipments->size())
+		if (!$this->shipments->size() && !$this->isFinalized->get())
 		{
 			$this->shipments = unserialize($this->shipping->get());
 		}
@@ -117,7 +112,6 @@ class CustomerOrder extends ActiveRecordModel
 
 	public function loadAll()
 	{
-		$this->loadItems();
 		$this->loadAddresses();
 		$this->getShipments();
 	}
@@ -1295,6 +1289,37 @@ class CustomerOrder extends ActiveRecordModel
 			default:
 			break;
 		}
+	}
+
+	public function __destruct()
+	{
+		foreach ($this->orderedItems as $item)
+		{
+			$item->__destruct();
+		}
+
+		$this->orderedItems = array();
+
+		foreach ($this->removedItems as $item)
+		{
+			$item->__destruct();
+		}
+
+		$this->removedItems = array();
+
+		$this->taxes = array();
+
+		if (isset($this->shipments))
+		{
+			foreach ($this->shipments as $shipment)
+			{
+				$shipment->__destruct();
+			}
+		}
+
+		$this->shipments = array();
+
+		parent::destruct(array('userID', 'billingAddressID', 'shippingAddressID'));
 	}
 }
 
