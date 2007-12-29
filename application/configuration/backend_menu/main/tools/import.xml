@@ -1,4 +1,5 @@
 <Menu>
 	<Title>_menu_import</Title>
 	<Controller>backend.databaseImport</Controller>
+	<Role>dbmigrate</Role>
 </Menu>

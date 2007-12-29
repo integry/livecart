@@ -3,8 +3,8 @@ ClassLoader::import("application.controller.backend.abstract.StoreManagementCont
 ClassLoader::import("application.model.tax.TaxRate");
 ClassLoader::import("framework.request.validator.RequestValidator");
 ClassLoader::import("framework.request.validator.Form");
-		
-		
+
+
 /**
  * Application settings management
  *
@@ -14,33 +14,50 @@ ClassLoader::import("framework.request.validator.Form");
  */
 class RolesController extends StoreManagementController
 {
-	public function index() 
+	public function index()
 	{
 		Role::cleanUp();
-		
+
 		$userGroupID = (int)$this->request->get('id');
 		$userGroup = UserGroup::getInstanceByID($userGroupID);
 		$activeRoles = $userGroup->getRolesRecordSet();
-		
+
 		$roles = array();
 		$parentID = 0;
-		
+
 		// sort roles by their appearance in backend menu
 		$filter = new ARSelectFilter();
-		foreach (array('product', 'category', 'order', 'user', 'filter') as $roleName)
+		foreach (array('product', 'category', 'filter', 'order', 'user') as $roleName)
 		{
 			$filter->setOrder(new ARExpressionHandle('(Role.name LIKE "' . $roleName . '%")'), 'DESC');
-		}		
-		
+		}
+
+		$menu = new MenuLoader();
+		$menuItems = array_shift($menu->getAllHierarchy());
+		$menuItems = $menuItems['items'];
+		foreach ($menuItems as $topLevel)
+		{
+			if (isset($topLevel['items']))
+			{
+				foreach ($topLevel['items'] as $item)
+				{
+					if (isset($item['role']))
+					{
+						$filter->setOrder(new ARExpressionHandle('(Role.name LIKE "' . $item['role'] . '%")'), 'DESC');
+					}
+				}
+			}
+		}
+
 		foreach(Role::getRecordSet($filter) as $role)
 		{
 			$roleArray = $role->toArray();
-			
+
 			if ('login' == $roleArray['name'])
 			{
 				continue;
 			}
-			
+
 			$roleArray['indent'] = strpos($roleArray['name'], '.') ? 1 : 0;
 			if($roleArray['indent'] > 0)
 			{
@@ -48,7 +65,7 @@ class RolesController extends StoreManagementController
 				if(isset($roles[$rc]) && $roles[$rc]['parent'] === 0)
 				{
 					$parentID = 'smart-' . $roles[$rc]['ID'];
-					
+
 					$roles[] = array(
 						'ID' => $roles[$rc]['ID'],
 						'name' => $roles[$rc]['name'] . '.misc',
@@ -56,7 +73,7 @@ class RolesController extends StoreManagementController
 						'parent' => $parentID,
 						'indent' => 1
 					);
-					
+
 					$roles[$rc]['ID'] = $parentID;
 				}
 				$roleArray['parent'] = $parentID;
@@ -66,38 +83,38 @@ class RolesController extends StoreManagementController
 				$parentID = $roleArray['ID'];
 				$roleArray['parent'] = 0;
 			}
-			
+
 			$roleArray['translation'] = $this->translate(strtolower("_role_" . str_replace('.', '_', $roleArray['name'])));
 			$roles[] = $roleArray;
 		}
-		
+
 		$activeRolesIDs = array();
 		foreach($activeRoles as $role)
 		{
 			$activeRolesIDs[] = $role->getID();
 		}
-				
+
 		$form = $this->createRolesForm($userGroup, $activeRoles);
-				
+
 		$response = new ActionResponse();
 		$response->set('form', $form);
 		$response->set('roles', $roles);
 		$response->set('userGroup', $userGroup->toArray());
 		$response->set('activeRolesIDs', $activeRolesIDs);
-		
+
 		return $response;
 	}
-	
+
 	/**
 	 * Saves changes to current group roles
-	 * 
+	 *
 	 * @role permissions
 	 */
 	public function update()
 	{
 		$userGroupID = (int)$this->request->get('id');
-		$userGroup = UserGroup::getInstanceByID($userGroupID);
-		
+		$userGroup = UserGroup::getInstanceByID($userGroupID, UserGroup::LOAD_DATA);
+
 		$validator = $this->createRolesFormValidator($userGroup);
 		if($validator->isValid())
 		{
@@ -106,15 +123,15 @@ class RolesController extends StoreManagementController
 				if(preg_match('/smart/', $roleID)) continue;
 				$userGroup->applyRole(Role::getInstanceByID((int)$roleID));
 			}
-			
+
 			foreach(explode(',', $this->request->get('unchecked')) as $roleID)
 			{
 				if(preg_match('/smart/', $roleID)) continue;
 				$userGroup->cancelRole(Role::getInstanceByID((int)$roleID));
 			}
-			
+
 			$userGroup->save();
-			
+
 			return new JSONResponse(false, 'success', $this->translate('_group_permissions_were_successfully_updated'));
 		}
 		else
@@ -122,27 +139,27 @@ class RolesController extends StoreManagementController
 			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', '_could_not_update_group_permissions');
 		}
 	}
-	
+
 	private function createRolesForm(UserGroup $userGroup, ARSet $activeRoles)
 	{
 		$form = new Form($this->createRolesFormValidator($userGroup));
-		
+
 		$userGroupID = $userGroup->getID();
 		$activeRolesCheckboxes = array();
 		foreach($activeRoles as $role)
 		{
 			$activeRolesCheckboxes['role_' . $role->getID()] = 1;
 		}
-		
+
 		$form->setData($activeRolesCheckboxes);
-		
+
 		return $form;
 	}
-	
+
 	private function createRolesFormValidator(UserGroup $userGroup)
-	{	
+	{
 		return new RequestValidator('roles_' . $userGroup->getID(), $this->request);
-	}	
+	}
 
 }
 ?>

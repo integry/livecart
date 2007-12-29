@@ -7,7 +7,7 @@ ClassLoader::import("application.controller.backend.abstract.StoreManagementCont
  *
  * @package application.controller.backend
  * @author Integry Systems
- *
+ * @role serverfile
  */
 class SelectFileController extends StoreManagementController
 {

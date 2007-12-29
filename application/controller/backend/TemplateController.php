@@ -106,7 +106,7 @@ class TemplateController extends StoreManagementController
 	}
 
 	/**
-	 * @role save
+	 * @role saveEmail
 	 */
 	public function saveEmail()
 	{

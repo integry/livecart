@@ -8,7 +8,7 @@ ClassLoader::import('library.import.LiveCartImporter');
  *
  * @package application.controller.backend
  * @author Integry Systems
- *
+ * @role dbmigration
  */
 class DatabaseImportController extends StoreManagementController
 {
@@ -86,7 +86,7 @@ class DatabaseImportController extends StoreManagementController
 			}
 		}
 //ActiveRecord::rollback();
-		
+
 		$importer->reset();
 		exit;
 	}
@@ -111,7 +111,7 @@ class DatabaseImportController extends StoreManagementController
 				$drivers[$className] = call_user_func(array($className, 'getName'));
 			}
 		}
-		
+
 		natcasesort($drivers);
 
 		return $drivers;

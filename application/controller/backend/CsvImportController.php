@@ -9,7 +9,7 @@ ClassLoader::import("application.model.category.Category");
  *
  * @package application.controller.backend
  * @author Integry Systems
- *
+ * @role csvimport
  */
 class CsvImportController extends StoreManagementController
 {

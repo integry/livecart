@@ -1,4 +1,5 @@
 <Menu>
 	<Title>_menu_import_csv</Title>
 	<Controller>backend.csvImport</Controller>
+	<Role>csvimport</Role>
 </Menu>
