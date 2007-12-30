@@ -3,7 +3,7 @@
 	language: Czech
 	encoding: windows-1250
 	author: Lubos Jerabek (xnet@seznam.cz)
-	        Jan Uhlir (espinosa@centrum.cz)
+			Jan Uhlir (espinosa@centrum.cz)
 */
 
 // ** I18N

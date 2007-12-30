@@ -65,17 +65,17 @@ ActiveGrid.prototype =
 			rowCount = this.rowCount;
 		}
 
-        if (filters)
-        {
-            this.filters = filters;
-        }
+		if (filters)
+		{
+			this.filters = filters;
+		}
 
 		this.ricoGrid = new Rico.LiveGrid(this.tableInstance.id, rowCount, totalCount, dataUrl,
 								{
 								  prefetchBuffer: true,
 								  onscroll: this.onScroll.bind(this),
 								  sortAscendImg: $("bullet_arrow_up").src,
-						          sortDescendImg: $("bullet_arrow_down").src
+								  sortDescendImg: $("bullet_arrow_down").src
 								}
 							);
 
@@ -92,7 +92,7 @@ ActiveGrid.prototype =
 
 		this.onScroll(this.ricoGrid, 0);
 
-        this.setRequestParameters();
+		this.setRequestParameters();
 		this.ricoGrid.init();
 
 		var rows = this.tableInstance.down('tbody').getElementsByTagName('tr');
@@ -124,15 +124,15 @@ ActiveGrid.prototype =
 				{
 					if(i > 0)
 					{
-                        data['data'][k][i] = stripHtml(data['data'][k][i]);
-                    }
+						data['data'][k][i] = stripHtml(data['data'][k][i]);
+					}
 
-                    var filter = this.filters['filter_' + data['columns'][i]];
-                    if (filter && data['data'][k][i].replace)
-                    {
-                        data['data'][k][i] = data['data'][k][i].replace(new RegExp('(' + filter + ')', 'gi'), '<span class="activeGrid_searchHighlight">$1</span>');
-                    }
-                    data['data'][k][i] = this.dataFormatter.formatValue(data['columns'][i], data['data'][k][i], id);
+					var filter = this.filters['filter_' + data['columns'][i]];
+					if (filter && data['data'][k][i].replace)
+					{
+						data['data'][k][i] = data['data'][k][i].replace(new RegExp('(' + filter + ')', 'gi'), '<span class="activeGrid_searchHighlight">$1</span>');
+					}
+					data['data'][k][i] = this.dataFormatter.formatValue(data['columns'][i], data['data'][k][i], id);
 				}
 			}
 		}
@@ -154,7 +154,7 @@ ActiveGrid.prototype =
 	{
 		this.ricoGrid.onBeginDataFetch = this.showFetchIndicator.bind(this);
 
-        this.updateHeader(offset);
+		this.updateHeader(offset);
 
 		this._markSelectedRows();
 	},
@@ -178,10 +178,10 @@ ActiveGrid.prototype =
 			this.notFound = this.loadIndicator.parentNode.up('div').down('.notFound');
 		}
 
-        if (!this.countElement)
-        {
-            return false;
-        }
+		if (!this.countElement)
+		{
+			return false;
+		}
 
 		if (totalCount > 0)
 		{
@@ -204,7 +204,7 @@ ActiveGrid.prototype =
 			this.notFound.style.display = '';
 			this.countElement.style.display = 'none';
 		}
-    },
+	},
 
 	onUpdate: function()
 	{
@@ -213,64 +213,64 @@ ActiveGrid.prototype =
 
 	setRequestParameters: function()
 	{
-    	this.ricoGrid.options.requestParameters = [];
-        var i = 0;
+		this.ricoGrid.options.requestParameters = [];
+		var i = 0;
 
-        for (k in this.filters)
-    	{
-            if (k.substr(0, 7) == 'filter_')
-            {
-                this.ricoGrid.options.requestParameters[i++] = 'filters[' + k.substr(7, 1000) + ']' + '=' + this.filters[k];
-            }
-        }
-    },
+		for (k in this.filters)
+		{
+			if (k.substr(0, 7) == 'filter_')
+			{
+				this.ricoGrid.options.requestParameters[i++] = 'filters[' + k.substr(7, 1000) + ']' + '=' + this.filters[k];
+			}
+		}
+	},
 
-    reloadGrid: function()
+	reloadGrid: function()
 	{
-        this.setRequestParameters();
+		this.setRequestParameters();
 
-        this.ricoGrid.buffer.clear();
-        this.ricoGrid.resetContents();
-        this.ricoGrid.requestContentRefresh(0, true);
-        this.ricoGrid.fetchBuffer(0, false, true);
+		this.ricoGrid.buffer.clear();
+		this.ricoGrid.resetContents();
+		this.ricoGrid.requestContentRefresh(0, true);
+		this.ricoGrid.fetchBuffer(0, false, true);
 
 		this._markSelectedRows();
-    },
+	},
 
 	getFilters: function()
 	{
-        var res = {};
+		var res = {};
 
-        for (k in this.filters)
-    	{
-            if (k.substr(0, 7) == 'filter_')
-            {
-                res[k.substr(7, 1000)] = this.filters[k];
-            }
-        }
+		for (k in this.filters)
+		{
+			if (k.substr(0, 7) == 'filter_')
+			{
+				res[k.substr(7, 1000)] = this.filters[k];
+			}
+		}
 
-        return res;
-    },
+		return res;
+	},
 
-    getSelectedIDs: function()
-    {
-        var selected = [];
+	getSelectedIDs: function()
+	{
+		var selected = [];
 
-        for (k in this.selectedRows)
-        {
-            if (true == this.selectedRows[k])
-            {
-                selected[selected.length] = k;
-            }
-        }
+		for (k in this.selectedRows)
+		{
+			if (true == this.selectedRows[k])
+			{
+				selected[selected.length] = k;
+			}
+		}
 
-        return selected;
-    },
+		return selected;
+	},
 
-    isInverseSelection: function()
-    {
-        return this.inverseSelection;
-    },
+	isInverseSelection: function()
+	{
+		return this.inverseSelection;
+	},
 
 	/**
 	 *	Select all rows
@@ -281,7 +281,7 @@ ActiveGrid.prototype =
 		this.inverseSelection = this.selectAllInstance.checked;
 		this._markSelectedRows();
 
-        e.stopPropagation();
+		e.stopPropagation();
 	},
 
 	/**
@@ -319,15 +319,15 @@ ActiveGrid.prototype =
 		Element.removeClassName(this._getTargetRow(event), 'activeGrid_highlight');
 	},
 
-    setFilterValue: function(key, value)
-    {
-        this.filters[key] = value;
-    },
+	setFilterValue: function(key, value)
+	{
+		this.filters[key] = value;
+	},
 
-    getFilterValue: function(key)
-    {
-        return this.filters[key];
-    },
+	getFilterValue: function(key)
+	{
+		return this.filters[key];
+	},
 
 	showFetchIndicator: function()
 	{
@@ -340,11 +340,11 @@ ActiveGrid.prototype =
 		this.loadIndicator.style.display = 'none';
 	},
 
-    resetSelection: function()
-    {
+	resetSelection: function()
+	{
 		this.selectedRows = new Object;
 		this.inverseSelection = false;
-    },
+	},
 
 	_markSelectedRows: function()
 	{
@@ -408,28 +408,28 @@ ActiveGridFilter = Class.create();
 
 ActiveGridFilter.prototype =
 {
-    element: null,
+	element: null,
 
-    activeGridInstance: null,
+	activeGridInstance: null,
 
-    focusValue: null,
+	focusValue: null,
 
-    initialize: function(element, activeGridInstance)
-    {
-        this.element = element;
-        this.activeGridInstance = activeGridInstance;
-        this.element.onclick = Event.stop.bindAsEventListener(this);
-        this.element.onfocus = this.filterFocus.bindAsEventListener(this);
-        this.element.onblur = this.filterBlur.bindAsEventListener(this);
-        this.element.onchange = this.setFilterValue.bindAsEventListener(this);
-        this.element.onkeyup = this.checkExit.bindAsEventListener(this);
+	initialize: function(element, activeGridInstance)
+	{
+		this.element = element;
+		this.activeGridInstance = activeGridInstance;
+		this.element.onclick = Event.stop.bindAsEventListener(this);
+		this.element.onfocus = this.filterFocus.bindAsEventListener(this);
+		this.element.onblur = this.filterBlur.bindAsEventListener(this);
+		this.element.onchange = this.setFilterValue.bindAsEventListener(this);
+		this.element.onkeyup = this.checkExit.bindAsEventListener(this);
 
-        this.element.filter = this;
+		this.element.filter = this;
 
    		Element.addClassName(this.element, 'activeGrid_filter_blur');
 
 		this.element.columnName = this.element.value;
-    },
+	},
 
 	filterFocus: function(e)
 	{
@@ -453,19 +453,19 @@ ActiveGridFilter.prototype =
 		if ('' == this.element.value.replace(/ /g, ''))
 		{
 			// only update filter value if it actually has changed
-            if ('' != this.focusValue)
+			if ('' != this.focusValue)
 			{
-                this.setFilterValue();
-            }
+				this.setFilterValue();
+			}
 
 			this.element.value = this.element.columnName;
 		}
 
 		if (this.element.value == this.element.columnName)
 		{
-    		Element.addClassName(this.element, 'activeGrid_filter_blur');
+			Element.addClassName(this.element, 'activeGrid_filter_blur');
 			Element.removeClassName(this.element, 'activeGrid_filter_select');
-		    Element.removeClassName(this.element.up('th'), 'activeGrid_filter_select');
+			Element.removeClassName(this.element.up('th'), 'activeGrid_filter_select');
 		}
 	},
 
@@ -476,13 +476,13 @@ ActiveGridFilter.prototype =
 	{
 		if (27 == e.keyCode)
 		{
-            this.element.value = '';
+			this.element.value = '';
 
-            if (this.activeGridInstance.getFilterValue(this.getFilterName()))
-            {
-                this.setFilterValue();
-			    this.filterBlur();
-            }
+			if (this.activeGridInstance.getFilterValue(this.getFilterName()))
+			{
+				this.setFilterValue();
+				this.filterBlur();
+			}
 
 			this.element.blur();
 		}
@@ -490,85 +490,85 @@ ActiveGridFilter.prototype =
 
 	setFilterValue: function()
 	{
-        this.setFilterValueManualy(this.getFilterName(), this.element.value);
-    },
+		this.setFilterValueManualy(this.getFilterName(), this.element.value);
+	},
 
 	setFilterValueManualy: function(filterName, value)
 	{
-        this.activeGridInstance.setFilterValue(filterName, value);
+		this.activeGridInstance.setFilterValue(filterName, value);
 		this.activeGridInstance.reloadGrid();
-    },
+	},
 
-    getFilterName: function()
-    {
-        return this.element.id.substr(0, this.element.id.indexOf('_', 7));
-    },
+	getFilterName: function()
+	{
+		return this.element.id.substr(0, this.element.id.indexOf('_', 7));
+	},
 
-    initFilter: function(e)
-    {
-        Event.stop(e);
+	initFilter: function(e)
+	{
+		Event.stop(e);
 
-        var element = Event.element(e);
-        if ('LI' != element.tagName && element.up('li'))
-        {
-            element = element.up('li');
-        }
+		var element = Event.element(e);
+		if ('LI' != element.tagName && element.up('li'))
+		{
+			element = element.up('li');
+		}
 
-        this.filterFocus(e);
+		this.filterFocus(e);
 
 		if (element.attributes.getNamedItem('symbol'))
 		{
 			this.element.value = element.attributes.getNamedItem('symbol').nodeValue;
 		}
 
-	    // range fields
+		// range fields
 		var cont = element.up('th');
 		var min = cont.down('.min');
-        var max = cont.down('.max');
+		var max = cont.down('.max');
 
-        // show/hide input fields
-        if ('><' == this.element.value)
-        {
-            Element.hide(this.element);
-            Element.show(this.element.next('div.rangeFilter'));
-            min.focus();
-        }
-        else
-        {
-            Element.show(this.element);
-            Element.hide(this.element.next('div.rangeFilter'));
+		// show/hide input fields
+		if ('><' == this.element.value)
+		{
+			Element.hide(this.element);
+			Element.show(this.element.next('div.rangeFilter'));
+			min.focus();
+		}
+		else
+		{
+			Element.show(this.element);
+			Element.hide(this.element.next('div.rangeFilter'));
 
 			min.value = '';
 			max.value = '';
-        	this.element.focus();
+			this.element.focus();
 
-	        if ('' == this.element.value)
-	        {
-	            this.element.blur();
-	            this.setFilterValue();
-	        }
+			if ('' == this.element.value)
+			{
+				this.element.blur();
+				this.setFilterValue();
+			}
 		}
 
-        // hide menu
-        if (element.up('div.filterMenu'))
-        {
+		// hide menu
+		if (element.up('div.filterMenu'))
+		{
 			Element.hide(element.up('div.filterMenu'));
-	        window.setTimeout(function() { Element.show(this.up('div.filterMenu')); }.bind(element), 200);
+			window.setTimeout(function() { Element.show(this.up('div.filterMenu')); }.bind(element), 200);
 		}
-    },
+	},
 
-    updateRangeFilter: function(e)
-    {
-        var cont = Event.element(e).up('div.rangeFilter');
-        var min = cont.down('.min');
-        var max = cont.down('.max');
+	updateRangeFilter: function(e)
+	{
+		var cont = Event.element(e).up('div.rangeFilter');
+		var min = cont.down('.min');
+		var max = cont.down('.max');
 
 		if ((parseInt(min.value) > parseInt(max.value)) && max.value.length > 0)
 		{
-            var temp = min.value;
-            min.value = max.value;
-            max.value = temp;
-        }
+			var temp = min.value;
+			min.value = max.value;
+			max.value = temp;
+		}
 
 		this.element.value = (min.value.length > 0 ? '>=' + min.value + ' ' : '') + (max.value.length > 0 ? '<=' + max.value : '');
 
@@ -578,106 +578,106 @@ ActiveGridFilter.prototype =
 		{
 			this.initFilter(e);
 		}
-    }
+	}
 }
 
 ActiveGrid.MassActionHandler = Class.create();
 ActiveGrid.MassActionHandler.prototype =
 {
-    handlerMenu: null,
-    actionSelector: null,
-    valueEntryContainer: null,
-    form: null,
-    button: null,
-    cancelLink: null,
-    cancelUrl: '',
+	handlerMenu: null,
+	actionSelector: null,
+	valueEntryContainer: null,
+	form: null,
+	button: null,
+	cancelLink: null,
+	cancelUrl: '',
 
-    grid: null,
-    pid: null,
+	grid: null,
+	pid: null,
 
-    initialize: function(handlerMenu, activeGrid, params)
-    {
-        this.handlerMenu = handlerMenu;
-        this.actionSelector = handlerMenu.down('select');
-        this.valueEntryContainer = handlerMenu.down('.bulkValues');
-        this.form = this.actionSelector.form;
-        this.form.handler = this;
-        this.button = this.form.down('.submit');
+	initialize: function(handlerMenu, activeGrid, params)
+	{
+		this.handlerMenu = handlerMenu;
+		this.actionSelector = handlerMenu.down('select');
+		this.valueEntryContainer = handlerMenu.down('.bulkValues');
+		this.form = this.actionSelector.form;
+		this.form.handler = this;
+		this.button = this.form.down('.submit');
 
-        Event.observe(this.actionSelector, 'change', this.actionSelectorChange.bind(this));
-        Event.observe(this.actionSelector.form, 'submit', this.submit.bindAsEventListener(this));
+		Event.observe(this.actionSelector, 'change', this.actionSelectorChange.bind(this));
+		Event.observe(this.actionSelector.form, 'submit', this.submit.bindAsEventListener(this));
 
-        this.grid = activeGrid;
-        this.params = params;
-        this.paramz = params;
-    },
+		this.grid = activeGrid;
+		this.params = params;
+		this.paramz = params;
+	},
 
-    actionSelectorChange: function()
-    {
+	actionSelectorChange: function()
+	{
 		for (k = 0; k < this.valueEntryContainer.childNodes.length; k++)
-        {
-            if (this.valueEntryContainer.childNodes[k].style)
-            {
-                Element.hide(this.valueEntryContainer.childNodes[k]);
-            }
-        }
+		{
+			if (this.valueEntryContainer.childNodes[k].style)
+			{
+				Element.hide(this.valueEntryContainer.childNodes[k]);
+			}
+		}
 
-        Element.show(this.valueEntryContainer);
+		Element.show(this.valueEntryContainer);
 
-        if (this.actionSelector.form.elements.namedItem(this.actionSelector.value))
-        {
-            var el = this.form.elements.namedItem(this.actionSelector.value);
-            if (el)
-            {
-                Element.show(el);
-                this.form.elements.namedItem(this.actionSelector.value).focus();
-            }
-        }
-        else if (document.getElementsByClassName(this.actionSelector.value, this.handlerMenu))
-        {
+		if (this.actionSelector.form.elements.namedItem(this.actionSelector.value))
+		{
+			var el = this.form.elements.namedItem(this.actionSelector.value);
+			if (el)
+			{
+				Element.show(el);
+				this.form.elements.namedItem(this.actionSelector.value).focus();
+			}
+		}
+		else if (document.getElementsByClassName(this.actionSelector.value, this.handlerMenu))
+		{
 			var el = document.getElementsByClassName(this.actionSelector.value, this.handlerMenu)[0];
 			if (el)
 			{
-                Element.show(el);
-            }
+				Element.show(el);
+			}
 		}
-    },
+	},
 
-    submit: function(e)
-    {
-        if (e)
-        {
+	submit: function(e)
+	{
+		if (e)
+		{
 			Event.stop(e);
 		}
 
 		if ('delete' == this.actionSelector.value)
-        {
+		{
 			if (!confirm(this.deleteConfirmMessage))
 			{
 				return false;
 			}
 		}
 
-        var filters = this.grid.getFilters();
+		var filters = this.grid.getFilters();
 		this.form.elements.namedItem('filters').value = filters ? Object.toJSON(filters) : '';
-        this.form.elements.namedItem('selectedIDs').value = Object.toJSON(this.grid.getSelectedIDs());
-        this.form.elements.namedItem('isInverse').value = this.grid.isInverseSelection() ? 1 : 0;
+		this.form.elements.namedItem('selectedIDs').value = Object.toJSON(this.grid.getSelectedIDs());
+		this.form.elements.namedItem('isInverse').value = this.grid.isInverseSelection() ? 1 : 0;
 
-        if ((0 == this.grid.getSelectedIDs().length) && !this.grid.isInverseSelection())
-        {
-            this.blurButton();
-            alert(this.nothingSelectedMessage);
-            return false;
-        }
+		if ((0 == this.grid.getSelectedIDs().length) && !this.grid.isInverseSelection())
+		{
+			this.blurButton();
+			alert(this.nothingSelectedMessage);
+			return false;
+		}
 
-        var indicator = this.handlerMenu.down('.massIndicator');
-        if (!indicator)
-        {
-            indicator = this.handlerMenu.down('.progressIndicator');
-        }
+		var indicator = this.handlerMenu.down('.massIndicator');
+		if (!indicator)
+		{
+			indicator = this.handlerMenu.down('.progressIndicator');
+		}
 
-        this.formerLength = 0;
-        this.request = new LiveCart.AjaxRequest(this.form, indicator , this.dataResponse.bind(this),  {onInteractive: this.dataResponse.bind(this) });
+		this.formerLength = 0;
+		this.request = new LiveCart.AjaxRequest(this.form, indicator , this.dataResponse.bind(this),  {onInteractive: this.dataResponse.bind(this) });
 
 		this.progressBarContainer = this.handlerMenu.up('div').down('.activeGrid_massActionProgress');
 		this.cancelLink = this.progressBarContainer.down('a.cancel');
@@ -687,18 +687,18 @@ ActiveGrid.MassActionHandler.prototype =
 		this.progressBarContainer.show();
 		this.progressBar = new Backend.ProgressBar(this.progressBarContainer);
 
-        this.grid.resetSelection();
-    },
+		this.grid.resetSelection();
+	},
 
 	dataResponse: function(originalRequest)
-    {
-        var response = originalRequest.responseText.substr(this.formerLength + 1);
-        this.formerLength = originalRequest.responseText.length;
+	{
+		var response = originalRequest.responseText.substr(this.formerLength + 1);
+		this.formerLength = originalRequest.responseText.length;
 
-        var portions = response.split('|');
+		var portions = response.split('|');
 
-        for (var k = 0; k < portions.length; k++)
-        {
+		for (var k = 0; k < portions.length; k++)
+		{
 			if (!portions[k])
 			{
 				continue;
@@ -718,20 +718,20 @@ ActiveGrid.MassActionHandler.prototype =
 
 			response = eval('(' + decode64(portions[k]) + ')');
 
-            // progress
-            if (response.progress != undefined)
-            {
-                this.progressBar.update(response.progress, response.total);
-                this.pid = response.pid;
-            }
-        }
-    },
+			// progress
+			if (response.progress != undefined)
+			{
+				this.progressBar.update(response.progress, response.total);
+				this.pid = response.pid;
+			}
+		}
+	},
 
-    cancel: function(e)
-    {
+	cancel: function(e)
+	{
 		this.request.request.transport.abort();
-    	new LiveCart.AjaxRequest(Backend.Router.setUrlQueryParam(this.cancelUrl, 'pid', this.pid), null, this.completeCancel.bind(this));
-    	Event.stop(e);
+		new LiveCart.AjaxRequest(Backend.Router.setUrlQueryParam(this.cancelUrl, 'pid', this.pid), null, this.completeCancel.bind(this));
+		Event.stop(e);
 	},
 
 	completeCancel: function(originalRequest)
@@ -746,35 +746,35 @@ ActiveGrid.MassActionHandler.prototype =
 		}
 	},
 
-    submitCompleted: function(responseData)
-    {
-    	if (responseData)
-    	{
-    		this.request.showConfirmation(responseData);
-    	}
+	submitCompleted: function(responseData)
+	{
+		if (responseData)
+		{
+			this.request.showConfirmation(responseData);
+		}
 
 		this.progressBarContainer.hide();
 		this.cancelLink.show();
 
-        this.grid.reloadGrid();
-        this.blurButton();
+		this.grid.reloadGrid();
+		this.blurButton();
 
-        if (this.params && this.params.onComplete)
-        {
-            this.params.onComplete();
-        }
-
-        if (this.customComplete)
-        {
-        	this.customComplete();
+		if (this.params && this.params.onComplete)
+		{
+			this.params.onComplete();
 		}
-    },
 
-    blurButton: function()
-    {
-        this.button.disable();
-        this.button.enable();
-    }
+		if (this.customComplete)
+		{
+			this.customComplete();
+		}
+	},
+
+	blurButton: function()
+	{
+		this.button.disable();
+		this.button.enable();
+	}
 }
 
 function RegexFilter(element, params)
@@ -787,8 +787,8 @@ function stripHtml(value)
 {
 	if (!value || !value.replace)
 	{
-        return value;
-    }
+		return value;
+	}
 
-    return value.replace(/<[ \/]*?\w+((\s+\w+(\s*=\s*(?:".*?"|'.*?'|[^'">\s]+))?)+\s*|\s*)[ \/]*>/g, '');
+	return value.replace(/<[ \/]*?\w+((\s+\w+(\s*=\s*(?:".*?"|'.*?'|[^'">\s]+))?)+\s*|\s*)[ \/]*>/g, '');
 }

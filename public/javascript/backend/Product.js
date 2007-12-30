@@ -12,14 +12,14 @@ Backend.Product =
 
 	showAddForm: function(categoryID, caller)
 	{
-        var container = $('addProductContainer');
+		var container = $('addProductContainer');
 
 		// product form has already been downloaded
 		if (this.formTabCopies[categoryID])
 		{
 			container.update('');
-            container.appendChild(this.formTabCopies[categoryID]);
-		    this.initAddForm(categoryID);
+			container.appendChild(this.formTabCopies[categoryID]);
+			this.initAddForm(categoryID);
 		}
 
 		// retrieve product form
@@ -32,94 +32,94 @@ Backend.Product =
 
 	hideAddForm: function()
 	{
-        if ($('addProductContainer'))
-        {
-            Element.hide($('addProductContainer'));
-        }
+		if ($('addProductContainer'))
+		{
+			Element.hide($('addProductContainer'));
+		}
 
-        if ($('categoryTabs'))
-        {
-            Element.show($('categoryTabs'));
-        }
-    },
+		if ($('categoryTabs'))
+		{
+			Element.show($('categoryTabs'));
+		}
+	},
 
 	cancelAddProduct: function(categoryID, noHide)
 	{
-        container = $('addProductContainer');
+		container = $('addProductContainer');
 
-        if (!noHide)
-        {
-            Element.hide(container);
-            Element.show($('categoryTabs'));
-        }
+		if (!noHide)
+		{
+			Element.hide(container);
+			Element.show($('categoryTabs'));
+		}
 
-        ActiveForm.prototype.destroyTinyMceFields(container);
+		ActiveForm.prototype.destroyTinyMceFields(container);
 		this.formTabCopies[categoryID] = container.down('.productForm');
 	},
 
 	resetAddForm: function(form)
 	{
-        ActiveForm.prototype.resetTinyMceFields(form);
+		ActiveForm.prototype.resetTinyMceFields(form);
 	},
 
 	initAddForm: function(categoryID)
 	{
-        container = $('addProductContainer');
+		container = $('addProductContainer');
 
-        Element.hide($('categoryTabs'));
-        Element.show(container);
+		Element.hide($('categoryTabs'));
+		Element.show(container);
 
-        tinyMCE.idCounter = 0;
-        ActiveForm.prototype.initTinyMceFields(container);
-        this.toggleSkuField(container.down('form').elements.namedItem('autosku'));
+		tinyMCE.idCounter = 0;
+		ActiveForm.prototype.initTinyMceFields(container);
+		this.toggleSkuField(container.down('form').elements.namedItem('autosku'));
 
 		this.initSpecFieldControls(0);
 
-        // init type selector logic
-        var typeSel = container.down('select.productType');
-        typeSel.onchange =
-            function(e)
-            {
-                var el = e ? Event.element(e) : this;
-                var cont = el.up('div.productForm');
-                if (1 == el.value)
-                {
-                    cont.addClassName('intangible');
-                }
-                else
-                {
-                    cont.removeClassName('intangible');
-                }
-            }
+		// init type selector logic
+		var typeSel = container.down('select.productType');
+		typeSel.onchange =
+			function(e)
+			{
+				var el = e ? Event.element(e) : this;
+				var cont = el.up('div.productForm');
+				if (1 == el.value)
+				{
+					cont.addClassName('intangible');
+				}
+				else
+				{
+					cont.removeClassName('intangible');
+				}
+			}
 
-        this.reInitAddForm();
+		this.reInitAddForm();
 
-        ActiveForm.prototype.resetErrorMessages(container.down('form'));
+		ActiveForm.prototype.resetErrorMessages(container.down('form'));
 	},
 
-    reInitAddForm: function()
-    {
-        container = $('addProductContainer');
-        var typeSel = container.down('select.productType');
-        typeSel.onchange();
+	reInitAddForm: function()
+	{
+		container = $('addProductContainer');
+		var typeSel = container.down('select.productType');
+		typeSel.onchange();
 
-        // focus Product Name field
-        container.down('form').elements.namedItem('name').focus();
-    },
+		// focus Product Name field
+		container.down('form').elements.namedItem('name').focus();
+	},
 
-    initSpecFieldControls: function(categoryID)
-    {
-        var container = (0 == categoryID) ? $('addProductContainer') : $('tabProductsContent_' + categoryID);
+	initSpecFieldControls: function(categoryID)
+	{
+		var container = (0 == categoryID) ? $('addProductContainer') : $('tabProductsContent_' + categoryID);
 
 		// specField entry logic (multiple value select)
-        var containers = document.getElementsByClassName('multiValueSelect', container);
+		var containers = document.getElementsByClassName('multiValueSelect', container);
 
 		for (k = 0; k < containers.length; k++)
 		{
 			new Backend.Product.specFieldEntryMultiValue(containers[k]);
 		}
 
-        // single value select
+		// single value select
 		var specFieldContainer = document.getElementsByClassName('specification', container)[0];
 
 		if (specFieldContainer)
@@ -130,7 +130,7 @@ Backend.Product =
 				new Backend.Product.specFieldEntrySingleSelect(selects[k]);
 			}
 		}
-    },
+	},
 
 	toggleSkuField: function(checkbox)
 	{
@@ -138,7 +138,7 @@ Backend.Product =
 	  	skuField.disabled = checkbox.checked;
 	  	if (checkbox.checked)
 	  	{
-		    skuField._backedUpValue = skuField.value;
+			skuField._backedUpValue = skuField.value;
 			skuField.value = '';
 		}
 		else
@@ -152,7 +152,7 @@ Backend.Product =
 	{
 	  	while (('FIELDSET' != anchor.tagName) && (undefined != anchor.parentNode))
 	  	{
-		    anchor = anchor.parentNode;
+			anchor = anchor.parentNode;
 		}
 
 		checkboxes = anchor.getElementsByTagName('input');
@@ -170,12 +170,12 @@ Backend.Product =
 		new LiveCart.AjaxRequest(form, null, saveHandler.saveComplete.bind(saveHandler));
 	},
 
-    openProduct: function(id, e, onComplete)
-    {
-        if ($('productIndicator_' + id))
-        {
-            Element.show($('productIndicator_' + id));
-        }
+	openProduct: function(id, e, onComplete)
+	{
+		if ($('productIndicator_' + id))
+		{
+			Element.show($('productIndicator_' + id));
+		}
 
 		if (window.opener)
 		{
@@ -185,72 +185,72 @@ Backend.Product =
 		}
 		else
 		{
-            Backend.Product.Editor.prototype.setCurrentProductId(id);
+			Backend.Product.Editor.prototype.setCurrentProductId(id);
 
 			var tabControl = TabControl.prototype.getInstance('productManagerContainer', Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId, {
-                afterClick: function()
-                {
-                    if (Backend.SelectPopup.prototype.popup)
-                    {
-                        Backend.SelectPopup.prototype.popup.opener.focus();
-                        Backend.SelectPopup.prototype.popup.close();
-                    }
-                }
-            });
+				afterClick: function()
+				{
+					if (Backend.SelectPopup.prototype.popup)
+					{
+						Backend.SelectPopup.prototype.popup.opener.focus();
+						Backend.SelectPopup.prototype.popup.close();
+					}
+				}
+			});
 
-            tabControl.activateTab(null, function(response)
+			tabControl.activateTab(null, function(response)
 			{
 				if(onComplete)
 				{
-			        onComplete(response);
+					onComplete(response);
 				}
 
 				Backend.ajaxNav.add("#product_" + id);
 			}.bind(this));
 
-	        if(Backend.Product.Editor.prototype.hasInstance(id))
+			if(Backend.Product.Editor.prototype.hasInstance(id))
 			{
 				Backend.Product.Editor.prototype.getInstance(id);
 			}
 		}
 
-        if (e)
-        {
-            Event.stop(e);
-        }
-     },
+		if (e)
+		{
+			Event.stop(e);
+		}
+	 },
 
-    setPath: function(categoryID, path)
-    {
-        this.categoryPaths[categoryID] = path;
-    },
+	setPath: function(categoryID, path)
+	{
+		this.categoryPaths[categoryID] = path;
+	},
 
-    resetEditors: function()
-    {
-        Backend.Product.productTabCopies = new Array();
-        Backend.Product.formTabCopies = new Array();
-        Backend.Product.Editor.prototype.__instances__ = {};
-        Backend.Product.Editor.prototype.__currentId__ = null;
+	resetEditors: function()
+	{
+		Backend.Product.productTabCopies = new Array();
+		Backend.Product.formTabCopies = new Array();
+		Backend.Product.Editor.prototype.__instances__ = {};
+		Backend.Product.Editor.prototype.__currentId__ = null;
 
-        $('productManagerContainer').down('.sectionContainer').innerHTML = '';
+		$('productManagerContainer').down('.sectionContainer').innerHTML = '';
 
-        TabControl.prototype.__instances__ = {};
-    },
+		TabControl.prototype.__instances__ = {};
+	},
 
-    massActionChanged: function(element)
-    {
-        if ('move' == element.value)
-        {
-            var moveElement = element.up('form').down('.move');
-            new Backend.Category.PopupSelector(
-            	function(categoryID, pathAsText, path)
-            	{
+	massActionChanged: function(element)
+	{
+		if ('move' == element.value)
+		{
+			var moveElement = element.up('form').down('.move');
+			new Backend.Category.PopupSelector(
+				function(categoryID, pathAsText, path)
+				{
 					if (!confirm(Backend.Category.messages._confirm_move + "\n\n" + pathAsText))
 					{
 						return false;
 					}
 
-                    moveElement.down('input').value = categoryID;
+					moveElement.down('input').value = categoryID;
 
 					moveElement.up('form').down('input.submit').click();
 
@@ -258,31 +258,31 @@ Backend.Product =
 					select.value = 'enable_isEnabled';
 
 					return true;
-            	},
-            	function()
-            	{
+				},
+				function()
+				{
 					var select = moveElement.up('form').down('.select');
 					select.value = 'enable_isEnabled';
 					return true;
 				}
-            );
-        }
-    },
+			);
+		}
+	},
 
-    reloadGrid: function(categoryID)
-    {
-        var table = $('products_' + categoryID);
+	reloadGrid: function(categoryID)
+	{
+		var table = $('products_' + categoryID);
 
-        if (!table && Backend.Product.productTabCopies[categoryID])
-        {
-            table = Backend.Product.productTabCopies[categoryID].getElementsByTagName('table')[0];
-        }
+		if (!table && Backend.Product.productTabCopies[categoryID])
+		{
+			table = Backend.Product.productTabCopies[categoryID].getElementsByTagName('table')[0];
+		}
 
-        if (table)
-        {
-            table.gridInstance.reloadGrid();
-        }
-    }
+		if (table)
+		{
+			table.gridInstance.reloadGrid();
+		}
+	}
 }
 
 Backend.Product.saveHandler = Class.create();
@@ -290,7 +290,7 @@ Backend.Product.saveHandler.prototype =
 {
   	initialize: function(form)
   	{
-	    this.form = form;
+		this.form = form;
 	},
 
 	saveComplete: function(originalRequest)
@@ -304,37 +304,37 @@ Backend.Product.saveHandler.prototype =
 		}
 		else
 		{
-		    var categoryID = this.form.elements.namedItem('categoryID').value;
+			var categoryID = this.form.elements.namedItem('categoryID').value;
 
-            if (response.specFieldHtml)
+			if (response.specFieldHtml)
 			{
-                var specFieldContainer = this.form.down('div.specFieldContainer');
-                if (specFieldContainer)
-                {
-                    specFieldContainer.innerHTML = response.specFieldHtml;
-                    Backend.Product.initSpecFieldControls(categoryID);
-                    response.specFieldHtml.evalScripts();
-                }
-            }
+				var specFieldContainer = this.form.down('div.specFieldContainer');
+				if (specFieldContainer)
+				{
+					specFieldContainer.innerHTML = response.specFieldHtml;
+					Backend.Product.initSpecFieldControls(categoryID);
+					response.specFieldHtml.evalScripts();
+				}
+			}
 
-            // reload product grids
-            var path = Backend.Product.categoryPaths[categoryID]
-            if (path)
-            {
-                for (var k = 0; k <= path.length; k++)
-                {
-                    var category = path[k] ? path[k].ID : 1;
-                    Backend.Product.reloadGrid(category);
-                }
-            }
+			// reload product grids
+			var path = Backend.Product.categoryPaths[categoryID]
+			if (path)
+			{
+				for (var k = 0; k <= path.length; k++)
+				{
+					var category = path[k] ? path[k].ID : 1;
+					Backend.Product.reloadGrid(category);
+				}
+			}
 
 			// reset form and add more products
 			if ($('afAd_new').checked)
 			{
-			    this.form.reset();
-			    $('afAd_new').checked = true;
+				this.form.reset();
+				$('afAd_new').checked = true;
 
-                document.getElementsByClassName('product_sku', this.form)[0].disabled = false;
+				document.getElementsByClassName('product_sku', this.form)[0].disabled = false;
 
 				Backend.Product.reInitAddForm();
 			}
@@ -342,16 +342,16 @@ Backend.Product.saveHandler.prototype =
 			// continue to edit the newly added product
 			else
 			{
-                Element.show($('loadingProduct'));
-                Backend.Product.openProduct(response.id,
-                                            null,
-                                            function()
-                                            {
-                                                Element.hide($('loadingProduct'));
-                                                Backend.Product.cancelAddProduct(categoryID);
-                                                this.form.reset();
-                                            }.bind(this)
-                                            );
+				Element.show($('loadingProduct'));
+				Backend.Product.openProduct(response.id,
+											null,
+											function()
+											{
+												Element.hide($('loadingProduct'));
+												Backend.Product.cancelAddProduct(categoryID);
+												this.form.reset();
+											}.bind(this)
+											);
   			}
  		}
 	}
@@ -393,7 +393,7 @@ Backend.Product.specFieldEntryMultiValue.prototype =
 
 		this.isNumeric = Element.hasClassName(container, 'multiValueNumeric');
 
-        this.fieldStatus = document.getElementsByClassName("fieldStatus", container.parentNode)[0];
+		this.fieldStatus = document.getElementsByClassName("fieldStatus", container.parentNode)[0];
 		this.container = document.getElementsByClassName('other', container)[0];
 
 		var inp = this.container.getElementsByTagName('input')[0];
@@ -403,9 +403,9 @@ Backend.Product.specFieldEntryMultiValue.prototype =
 	bindField: function(field)
 	{
 		var self = this;
-        Event.observe(field, "input", function(e) { self.handleChange(e); });
-        Event.observe(field, "keyup", function(e) { self.handleChange(e); });
-        Event.observe(field, "blur", function(e) { self.handleBlur(e); });
+		Event.observe(field, "input", function(e) { self.handleChange(e); });
+		Event.observe(field, "keyup", function(e) { self.handleChange(e); });
+		Event.observe(field, "blur", function(e) { self.handleBlur(e); });
 
 		if (this.isNumeric)
 		{
@@ -423,7 +423,7 @@ Backend.Product.specFieldEntryMultiValue.prototype =
 		{
 		  	if ('' == fields[k].value)
 		  	{
-			    foundEmpty = true;
+				foundEmpty = true;
 			}
 		}
 
@@ -475,74 +475,74 @@ Backend.Product.specFieldEntryMultiValue.prototype =
 Backend.Product.Editor = Class.create();
 Backend.Product.Editor.prototype =
 {
-    __currentId__: null,
-    __instances__: {},
+	__currentId__: null,
+	__instances__: {},
 
-    initialize: function(id, path)
+	initialize: function(id, path)
   	{
-        this.id = id;
-        this.path = path;
+		this.id = id;
+		this.path = path;
 
-        this.__nodes__();
-        this.__bind__();
+		this.__nodes__();
+		this.__bind__();
 
-        Form.State.backup(this.nodes.form);
+		Form.State.backup(this.nodes.form);
 
-        var self = this;
+		var self = this;
 	},
 
 	__nodes__: function()
-    {
-        this.nodes = {};
-        this.nodes.parent = $("tabProductBasic_" + this.id + "Content");
-        this.nodes.form = this.nodes.parent.down("form");
+	{
+		this.nodes = {};
+		this.nodes.parent = $("tabProductBasic_" + this.id + "Content");
+		this.nodes.form = this.nodes.parent.down("form");
 		this.nodes.cancel = this.nodes.form.down('a.cancel');
 		this.nodes.submit = this.nodes.form.down('input.submit');
-    },
+	},
 
-    __bind__: function(args)
-    {
+	__bind__: function(args)
+	{
 		var self = this;
 		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
-    },
+	},
 
-    __init__: function(tabs)
-    {
-        Backend.Product.Editor.prototype.setCurrentProductId(this.id);
+	__init__: function(tabs)
+	{
+		Backend.Product.Editor.prototype.setCurrentProductId(this.id);
 
-        if ($('productIndicator_' + this.id))
-        {
-            Element.hide($('productIndicator_' + this.id));
-        }
-
-        this.showProductForm();
-        this.tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
-
-        this.setPath();
-
-        this.addTinyMce();
-
-        if(tabs)
+		if ($('productIndicator_' + this.id))
 		{
-            this.tabControl.setAllCounters(tabs, this.id);
-        }
+			Element.hide($('productIndicator_' + this.id));
+		}
+
+		this.showProductForm();
+		this.tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
+
+		this.setPath();
+
+		this.addTinyMce();
+
+		if(tabs)
+		{
+			this.tabControl.setAllCounters(tabs, this.id);
+		}
 		else
 		{
 			this.setTabCounters()
 		}
 
-        this.initSpecFieldControls();
-    },
+		this.initSpecFieldControls();
+	},
 
 	setPath: function() {
 		Backend.Breadcrumb.display(
-		    this.path,
-		    this.nodes.form.elements.namedItem("name").value
-	    );
+			this.path,
+			this.nodes.form.elements.namedItem("name").value
+		);
 	},
 
-    initSpecFieldControls: function()
-    {
+	initSpecFieldControls: function()
+	{
 		// specField entry logic (multiple value select)
 		var containers = document.getElementsByClassName('multiValueSelect', $('tabProductsContent_' + this.id));
 		for (k = 0; k < containers.length; k++)
@@ -561,87 +561,87 @@ Backend.Product.Editor.prototype =
 				new Backend.Product.specFieldEntrySingleSelect(selects[k]);
 			}
 		}
-    },
+	},
 
-    setTabCounters: function()
-    {
+	setTabCounters: function()
+	{
 		if(!this.tabControl.restoreAllCounters(this.id))
-        {
-            new LiveCart.AjaxRequest(
-                Backend.Product.Editor.prototype.links.countTabsItems + "/" + this.id,
-                false,
-                function(reply)
-                {
-                    var counters = eval("(" + reply.responseText + ")");
-                    this.tabControl.setAllCounters(counters, this.id);
-                }.bind(this)
-            );
-        }
-    },
+		{
+			new LiveCart.AjaxRequest(
+				Backend.Product.Editor.prototype.links.countTabsItems + "/" + this.id,
+				false,
+				function(reply)
+				{
+					var counters = eval("(" + reply.responseText + ")");
+					this.tabControl.setAllCounters(counters, this.id);
+				}.bind(this)
+			);
+		}
+	},
 
-    craftProductUrl: function(url)
-    {
-        return url.replace(/_categoryID_/, Backend.Category.treeBrowser.getSelectedItemId()).replace(/_id_/, Backend.Product.Editor.prototype.getCurrentProductId());
-    },
+	craftProductUrl: function(url)
+	{
+		return url.replace(/_categoryID_/, Backend.Category.treeBrowser.getSelectedItemId()).replace(/_id_/, Backend.Product.Editor.prototype.getCurrentProductId());
+	},
 
-    craftProductId: function(tabId)
-    {
-        return tabId + '_' +  Backend.Product.Editor.prototype.getCurrentProductId() + 'Content'
-    },
+	craftProductId: function(tabId)
+	{
+		return tabId + '_' +  Backend.Product.Editor.prototype.getCurrentProductId() + 'Content'
+	},
 
-    getCurrentProductId: function()
-    {
-        return Backend.Product.Editor.prototype.__currentId__;
-    },
+	getCurrentProductId: function()
+	{
+		return Backend.Product.Editor.prototype.__currentId__;
+	},
 
-    setCurrentProductId: function(id)
-    {
-        Backend.Product.Editor.prototype.__currentId__ = id;
-    },
+	setCurrentProductId: function(id)
+	{
+		Backend.Product.Editor.prototype.__currentId__ = id;
+	},
 
-    getInstance: function(id, doInit, path, tabs)
-    {
-        if(!Backend.Product.Editor.prototype.__instances__[id])
-        {
-            Backend.Product.Editor.prototype.__instances__[id] = new Backend.Product.Editor(id, path);
-        }
+	getInstance: function(id, doInit, path, tabs)
+	{
+		if(!Backend.Product.Editor.prototype.__instances__[id])
+		{
+			Backend.Product.Editor.prototype.__instances__[id] = new Backend.Product.Editor(id, path);
+		}
 
-        if(doInit !== false)
-        {
-            Backend.Product.Editor.prototype.__instances__[id].__init__(tabs);
-        }
+		if(doInit !== false)
+		{
+			Backend.Product.Editor.prototype.__instances__[id].__init__(tabs);
+		}
 
-        return Backend.Product.Editor.prototype.__instances__[id];
-    },
+		return Backend.Product.Editor.prototype.__instances__[id];
+	},
 
-    hasInstance: function(id)
-    {
-        return this.__instances__[id] ? true : false;
-    },
+	hasInstance: function(id)
+	{
+		return this.__instances__[id] ? true : false;
+	},
 
-    showProductForm: function(args)
-    {
+	showProductForm: function(args)
+	{
 		this.hideCategoriesContainer();
-    },
+	},
 
-    cancelForm: function()
-    {
-        ActiveForm.prototype.resetErrorMessages(this.nodes.form);
+	cancelForm: function()
+	{
+		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 		Form.restore(this.nodes.form);
-        ActiveForm.prototype.resetTinyMceFields(this.nodes.form);
-    },
+		ActiveForm.prototype.resetTinyMceFields(this.nodes.form);
+	},
 
-    submitForm: function()
-    {
-        new LiveCart.AjaxRequest(this.nodes.form, null, this.formSaved.bind(this));
-    },
+	submitForm: function()
+	{
+		new LiveCart.AjaxRequest(this.nodes.form, null, this.formSaved.bind(this));
+	},
 
-    formSaved: function(responseJSON)
-    {
+	formSaved: function(responseJSON)
+	{
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 		var responseObject = eval("(" + responseJSON.responseText + ")");
 		this.afterSubmitForm(responseObject);
-    },
+	},
 
 	afterSubmitForm: function(response)
 	{
@@ -650,23 +650,23 @@ Backend.Product.Editor.prototype =
 			Form.State.backup(this.nodes.form);
 			if (response.specFieldHtml)
 			{
-                var specFieldContainer = this.nodes.form.down('div.specFieldContainer');
-                if (specFieldContainer)
-                {
-                    specFieldContainer.innerHTML = response.specFieldHtml;
-                    this.initSpecFieldControls();
-                    response.specFieldHtml.evalScripts();
-                }
-            }
+				var specFieldContainer = this.nodes.form.down('div.specFieldContainer');
+				if (specFieldContainer)
+				{
+					specFieldContainer.innerHTML = response.specFieldHtml;
+					this.initSpecFieldControls();
+					response.specFieldHtml.evalScripts();
+				}
+			}
 
-            console.log(this.path);
-            for (var k = 0; k <= this.path.length; k++)
-            {
-                var category = this.path[k] ? this.path[k].ID : 1;
-                Backend.Product.reloadGrid(category);
-            }
+			console.log(this.path);
+			for (var k = 0; k <= this.path.length; k++)
+			{
+				var category = this.path[k] ? this.path[k].ID : 1;
+				Backend.Product.reloadGrid(category);
+			}
 
-            this.resetPricingTab();
+			this.resetPricingTab();
 
 		}
 		else
@@ -680,122 +680,122 @@ Backend.Product.Editor.prototype =
 		this.tabControl.resetContent($('tabProductDiscounts'));
 	},
 
-    hideCategoriesContainer: function(args)
-    {
-        Element.hide($("managerContainer"));
-        Element.show($("productManagerContainer"));
-    },
+	hideCategoriesContainer: function(args)
+	{
+		Element.hide($("managerContainer"));
+		Element.show($("productManagerContainer"));
+	},
 
-    showCategoriesContainer: function(args)
-    {
-        if($("productManagerContainer")) Element.hide($("productManagerContainer"));
-        if($("managerContainer")) Element.show($("managerContainer"));
+	showCategoriesContainer: function(args)
+	{
+		if($("productManagerContainer")) Element.hide($("productManagerContainer"));
+		if($("managerContainer")) Element.show($("managerContainer"));
 
-        if (!Backend.Category.treeBrowser.getSelectedItemId())
-        {
-            Backend.Category.treeBrowser.selectItem(1, false);
-            Backend.Category.activateCategory(1);
-        }
+		if (!Backend.Category.treeBrowser.getSelectedItemId())
+		{
+			Backend.Category.treeBrowser.selectItem(1, false);
+			Backend.Category.activateCategory(1);
+		}
 
-        // container element height may not be reduced automatically when closing a longer product form,
-        // so sometimes extra whitespace remains below the product list
-        Backend.LayoutManager.prototype.collapseAll($('pageContentInnerContainer'));
-    },
+		// container element height may not be reduced automatically when closing a longer product form,
+		// so sometimes extra whitespace remains below the product list
+		Backend.LayoutManager.prototype.collapseAll($('pageContentInnerContainer'));
+	},
 
-    removeTinyMce: function()
-    {
-        ActiveForm.prototype.destroyTinyMceFields(this.nodes.parent);
-    },
+	removeTinyMce: function()
+	{
+		ActiveForm.prototype.destroyTinyMceFields(this.nodes.parent);
+	},
 
-    addTinyMce: function()
-    {
-        ActiveForm.prototype.initTinyMceFields(this.nodes.parent);
-    },
+	addTinyMce: function()
+	{
+		ActiveForm.prototype.initTinyMceFields(this.nodes.parent);
+	},
 
-    goToProductPage: function()
-    {
-        var node = $('productPage');
-        if (!node.urlTemplate)
-        {
-            node.urlTemplate = node.href;
-        }
+	goToProductPage: function()
+	{
+		var node = $('productPage');
+		if (!node.urlTemplate)
+		{
+			node.urlTemplate = node.href;
+		}
 
-        node.href = node.urlTemplate.replace('_id_', Backend.Product.Editor.prototype.getCurrentProductId());
-    }
+		node.href = node.urlTemplate.replace('_id_', Backend.Product.Editor.prototype.getCurrentProductId());
+	}
 }
 
 Backend.Product.Prices = Class.create();
 Backend.Product.Prices.prototype =
 {
-    __instances__: {},
+	__instances__: {},
 
-    initialize: function(parent, product)
-    {
-        this.product = product;
+	initialize: function(parent, product)
+	{
+		this.product = product;
 
-        this.__nodes__($(parent));
-        this.__bind__();
+		this.__nodes__($(parent));
+		this.__bind__();
 
-        Form.State.backup(this.nodes.form);
-    },
+		Form.State.backup(this.nodes.form);
+	},
 
-    getInstance: function(parent, product)
-    {
-        var parentNode = $(parent);
-        if(!Backend.Product.Prices.prototype.__instances__[parentNode.id])
-        {
-            Backend.Product.Prices.prototype.__instances__[parentNode.id] = new Backend.Product.Prices(parentNode.id, product);
-        }
+	getInstance: function(parent, product)
+	{
+		var parentNode = $(parent);
+		if(!Backend.Product.Prices.prototype.__instances__[parentNode.id])
+		{
+			Backend.Product.Prices.prototype.__instances__[parentNode.id] = new Backend.Product.Prices(parentNode.id, product);
+		}
 
-        Backend.Product.Prices.prototype.__instances__[parentNode.id].__init__();
-        return Backend.Product.Prices.prototype.__instances__[parentNode.id];
-    },
+		Backend.Product.Prices.prototype.__instances__[parentNode.id].__init__();
+		return Backend.Product.Prices.prototype.__instances__[parentNode.id];
+	},
 
 	__nodes__: function(parent)
-    {
-        this.nodes = {};
-        this.nodes.parent = parent;
-        this.nodes.form = parent;
+	{
+		this.nodes = {};
+		this.nodes.parent = parent;
+		this.nodes.form = parent;
 
-        this.nodes.submit = this.nodes.parent.down("input.submit");
-        this.nodes.cancel = this.nodes.parent.down("a.cancel");
-    },
+		this.nodes.submit = this.nodes.parent.down("input.submit");
+		this.nodes.cancel = this.nodes.parent.down("a.cancel");
+	},
 
-    __bind__: function(args)
-    {
-        var self = this;
+	__bind__: function(args)
+	{
+		var self = this;
 		Event.observe(this.nodes.cancel, "click", function(e) {
 			Event.stop(e);
 			self.resetForm();
 		});
-    },
+	},
 
-    __init__: function(args)
-    {
-    },
+	__init__: function(args)
+	{
+	},
 
-    submitForm: function()
-    {
-        new LiveCart.AjaxRequest(this.nodes.form, null, this.saveComplete.bind(this));
-    },
+	submitForm: function()
+	{
+		new LiveCart.AjaxRequest(this.nodes.form, null, this.saveComplete.bind(this));
+	},
 
-    resetForm: function(response)
-    {
+	resetForm: function(response)
+	{
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 		Form.State.restore(this.nodes.form);
-    },
+	},
 
-    saveComplete: function(responseJSON)
-    {
-        ActiveForm.prototype.resetErrorMessages(this.nodes.form);
+	saveComplete: function(responseJSON)
+	{
+		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 
 		var responseObject = eval("(" + responseJSON.responseText + ")");
 
 		this.afterSubmitForm(responseObject);
-    },
+	},
 
-    afterSubmitForm: function(response)
-    {
+	afterSubmitForm: function(response)
+	{
 		if('success' == response.status)
 		{
 			var self = this;
@@ -809,14 +809,14 @@ Backend.Product.Prices.prototype =
 		{
 			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors)
 		}
-    }
+	}
 }
 
 Backend.Product.GridFormatter =
 {
 	productUrl: '',
 
-    getClassName: function(field, value)
+	getClassName: function(field, value)
 	{
 
 	},
@@ -826,11 +826,11 @@ Backend.Product.GridFormatter =
 		if ('Product.name' == field && Backend.Product.productsMiscPermision)
 		{
 			value = '<span>' +
-                        '<span class="progressIndicator" id="productIndicator_' + id + '" style="display: none;"></span>' +
-                    '</span>' +
-                    '<a href="' + this.productUrl + id + '" id="product_' + id + '" onclick="Backend.Product.openProduct(' + id + ', event); return false;">' +
-                        value +
-                    '</a>';
+						'<span class="progressIndicator" id="productIndicator_' + id + '" style="display: none;"></span>' +
+					'</span>' +
+					'<a href="' + this.productUrl + id + '" id="product_' + id + '" onclick="Backend.Product.openProduct(' + id + ', event); return false;">' +
+						value +
+					'</a>';
 		}
 
 		return value;
@@ -842,23 +842,23 @@ Backend.Product.GridFormatter =
  */
 function SpecFieldIsValueSelectedCheck(element, params)
 {
-    var inputs = element.parentNode.down('.multiValueSelect').getElementsByTagName('input');
+	var inputs = element.parentNode.down('.multiValueSelect').getElementsByTagName('input');
 
-    for (k = 0; k < inputs.length; k++)
-    {
-        if ('checkbox' == inputs[k].type)
-        {
-            if (inputs[k].checked)
-            {
-                return true;
-            }
-        }
-        else if ('text' == inputs[k].type)
-        {
-            if (inputs[k].value)
-            {
-                return true;
-            }
-        }
-    }
+	for (k = 0; k < inputs.length; k++)
+	{
+		if ('checkbox' == inputs[k].type)
+		{
+			if (inputs[k].checked)
+			{
+				return true;
+			}
+		}
+		else if ('text' == inputs[k].type)
+		{
+			if (inputs[k].value)
+			{
+				return true;
+			}
+		}
+	}
 }

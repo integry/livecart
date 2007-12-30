@@ -8,7 +8,7 @@ Hvis du har noen spørmål rundt dette, kan du sende en email eller kontakte oss
 
 Produkter som er kansellert:
 ------------------------------------------------------------
-Produkt                           Pris     Antall      Sum
+Produkt						   Pris	 Antall	  Sum
 ------------------------------------------------------------
 {foreach from=$order.shipments item=shipment}
 {foreach from=$shipment.items item=item}

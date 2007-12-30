@@ -180,7 +180,7 @@ Backend.CsvImport =
 	},
 
 	dataResponse: function(originalRequest)
-    {
+	{
 		if (originalRequest.responseData && originalRequest.responseData.errors)
 		{
 			this.restoreLayoutAfterCancel();
@@ -188,48 +188,48 @@ Backend.CsvImport =
 			return false;
 		}
 
-        var response = originalRequest.responseText.substr(this.formerLength + 1);
-        this.formerLength = originalRequest.responseText.length;
+		var response = originalRequest.responseText.substr(this.formerLength + 1);
+		this.formerLength = originalRequest.responseText.length;
 
-        var portions = response.split('|');
+		var portions = response.split('|');
 
-        for (var k = 0; k < portions.length; k++)
-        {
+		for (var k = 0; k < portions.length; k++)
+		{
 			response = eval('(' + decode64(portions[k]) + ')');
 
-            // progress
-            if (response.progress != undefined)
-            {
-                this.setProgress(response);
-            }
-        }
-    },
+			// progress
+			if (response.progress != undefined)
+			{
+				this.setProgress(response);
+			}
+		}
+	},
 
-    setProgress: function(response)
-    {
-        var li = $('progress');
-        li.down('.progressBar').show();
+	setProgress: function(response)
+	{
+		var li = $('progress');
+		li.down('.progressBar').show();
 
-        if (response.progress > 0)
-        {
-            this.progressBar.update(response.progress, response.total);
-        }
-        else
-        {
-            li.removeClassName('inProgress');
-            li.addClassName('completed');
+		if (response.progress > 0)
+		{
+			this.progressBar.update(response.progress, response.total);
+		}
+		else
+		{
+			li.removeClassName('inProgress');
+			li.addClassName('completed');
 			li.down('.progressCount').update(response.total);
 			li.down('.progressBarIndicator').hide();
 			li.down('.cancel').hide();
 
 			new Backend.SaveConfirmationMessage($('completeMessage'));
-        }
-    },
+		}
+	},
 
-    cancel: function()
-    {
+	cancel: function()
+	{
 		this.request.request.transport.abort();
-    	new LiveCart.AjaxRequest($('cancelUrl').innerHTML, null, this.completeCancel.bind(this));
+		new LiveCart.AjaxRequest($('cancelUrl').innerHTML, null, this.completeCancel.bind(this));
 	},
 
 	completeCancel: function(originalRequest)

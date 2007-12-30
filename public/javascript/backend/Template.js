@@ -12,7 +12,7 @@ Backend.Template.prototype =
 	initialize: function(categories)
 	{
 		this.treeBrowser = new dhtmlXTreeObject("templateBrowser","","", false);
-        Backend.Breadcrumb.setTree(this.treeBrowser);
+		Backend.Breadcrumb.setTree(this.treeBrowser);
 
 		this.treeBrowser.def_img_x = 'auto';
 		this.treeBrowser.def_img_y = 'auto';
@@ -41,8 +41,8 @@ Backend.Template.prototype =
 				}
 			}
 
-    	this.insertTreeBranch(categories, 0);
-    	this.treeBrowser.closeAllItems();
+		this.insertTreeBranch(categories, 0);
+		this.treeBrowser.closeAllItems();
 	},
 
 	insertTreeBranch: function(treeBranch, rootId)
@@ -63,7 +63,7 @@ Backend.Template.prototype =
 
 	activateCategory: function(id)
 	{
-        if (!this.treeBrowser.hasChildren(id))
+		if (!this.treeBrowser.hasChildren(id))
 		{
 			this.treeBrowser.showFeedback(id);
 			var url = this.urls['edit'].replace('_id_', id);
@@ -108,10 +108,10 @@ Backend.Template.prototype =
 		}
 	},
 
-    cancel: function()
-    {
+	cancel: function()
+	{
 		new LiveCart.AjaxUpdater(this.urls['empty'], 'templateContent', 'settingsIndicator');
-    }
+	}
 }
 
 /**
@@ -142,7 +142,7 @@ Backend.TemplateHandler.prototype =
 
 	submit: function()
 	{
-        $('code').value = editAreaLoader.getValue('code');
+		$('code').value = editAreaLoader.getValue('code');
 		new LiveCart.AjaxRequest(this.form, null, this.saveComplete.bind(this));
 		return false;
 	},
@@ -151,8 +151,8 @@ Backend.TemplateHandler.prototype =
 	{
 		if (opener)
 		{
-            opener.location.reload();
-        }
+			opener.location.reload();
+		}
 	}
 }
 
@@ -210,7 +210,7 @@ Backend.EmailTemplateHandler.prototype =
 
 	submit: function()
 	{
-        $('body').value = editAreaLoader.getValue('body');
+		$('body').value = editAreaLoader.getValue('body');
 
 		if ($('templateContent').down('.languageFormContent'))
 		{

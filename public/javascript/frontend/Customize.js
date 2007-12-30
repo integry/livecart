@@ -108,9 +108,9 @@ Customize.prototype = {
 		file = file.substr(6, file.length);
 	
 		url = this.actionUrl;
-        url = Backend.Router.setUrlQueryParam(url, 'id', id);
+		url = Backend.Router.setUrlQueryParam(url, 'id', id);
 		url = Backend.Router.setUrlQueryParam(url, 'file', file);
-//        url = this.actionUrl + '?id=' + id + '&file=' + file;
+//		url = this.actionUrl + '?id=' + id + '&file=' + file;
 
 		dialog = document.getElementById('transDialogBox');
 
@@ -163,7 +163,7 @@ Customize.prototype = {
 		this.showTranslationSaveIndicator(); 
 		this.updateDocumentTranslations(form.elements.namedItem('id').value, form.elements.namedItem('translation').value);
 		
-        new LiveCart.AjaxUpdater(form, 'translationDialog', 'transSaveIndicator'); 
+		new LiveCart.AjaxUpdater(form, 'translationDialog', 'transSaveIndicator'); 
 		Event.stopObserving(document, 'mousedown', this.bfx, false);
 	},
 	
@@ -204,7 +204,7 @@ Customize.prototype = {
 	{
 	  	if (null != this.initialValue)
 	  	{
-			this.previewTranslations(this.currentId, this.initialValue);		    
+			this.previewTranslations(this.currentId, this.initialValue);			
 		}
 		
 		if ($('translationDialog'))
@@ -217,6 +217,6 @@ Customize.prototype = {
 	
 	stopTransCancel: function(e)
 	{
-        Event.stop(e);
+		Event.stop(e);
 	}	
 }

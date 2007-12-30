@@ -38,63 +38,63 @@ Backend.ObjectImage.prototype =
 	},
 	
 	initList: function(imageList)
-	{             		
+	{			 		
 		for (k = 0; k < imageList.length; k++)
 		{
 		  	this.addToList(imageList[k], false);
 		}  
-		                
-        this.arrangeImages(); 
-        this.initActiveList();
+						
+		this.arrangeImages(); 
+		this.initActiveList();
 		this.activeList.touch(true);  
 	},
-    
-    arrangeImages: function()
-    {
-        var main = this.container.down('.main');
-        
-        main.parentNode.insertBefore(main, main.parentNode.firstChild);
-        
-        var supplemental = this.container.down('.supplemental');
-        var images = this.container.getElementsBySelector('.imageTemplate');
+	
+	arrangeImages: function()
+	{
+		var main = this.container.down('.main');
+		
+		main.parentNode.insertBefore(main, main.parentNode.firstChild);
+		
+		var supplemental = this.container.down('.supplemental');
+		var images = this.container.getElementsBySelector('.imageTemplate');
 
-        var first = images.first();
+		var first = images.first();
 
-        if (first)
-        {           
-            this.container.insertBefore(supplemental, first);  
+		if (first)
+		{		   
+			this.container.insertBefore(supplemental, first);  
 			this.container.insertBefore(first, supplemental);
-        }
-        
-        supplemental.style.display = images.size() <= 1 ? 'none' : '';
-        main.style.display = images.size() == 0 ? 'none' : '';
-    },    
-        
+		}
+		
+		supplemental.style.display = images.size() <= 1 ? 'none' : '';
+		main.style.display = images.size() == 0 ? 'none' : '';
+	},	
+		
 	initActiveList: function()
 	{
 		// display message if no images are uploaded
 		this.showNoImagesMessage();
 
 		this.activeList = ActiveList.prototype.getInstance(this.container, {
-	         
-			 beforeEdit:     function(li) 
+			 
+			 beforeEdit:	 function(li) 
 			 {
-                 if (!this.isContainerEmpty(li, 'edit'))
-                 {
-                     this.toggleContainer(li, 'edit');
-                     return;
-                 }
-                 
-                 var recordId = this.getRecordId(li);	
+				 if (!this.isContainerEmpty(li, 'edit'))
+				 {
+					 this.toggleContainer(li, 'edit');
+					 return;
+				 }
+				 
+				 var recordId = this.getRecordId(li);	
 				 var ownerId = this.getRecordId(li.parentNode);	
 					
 				 var handler = li.parentNode.handler;	
 				
-    			 var uploadForm = $(handler.prefix + 'ImgAdd_' + handler.ownerID).getElementsByTagName('form')[0];
-    			 uploadForm.reset();
-				 var form = uploadForm.cloneNode(true);    
-                 ActiveForm.prototype.resetErrorMessages(form);
-        				 
+				 var uploadForm = $(handler.prefix + 'ImgAdd_' + handler.ownerID).getElementsByTagName('form')[0];
+				 uploadForm.reset();
+				 var form = uploadForm.cloneNode(true);	
+				 ActiveForm.prototype.resetErrorMessages(form);
+						 
 				 form.action = handler.saveUrl;
 				 onsubm = function(e) {var form = Event.element(e); this.showProgressIndicator(form); }
 				 form.onsubmit = onsubm.bindAsEventListener(handler);
@@ -113,7 +113,7 @@ Backend.ObjectImage.prototype =
 				 	expanderIcon = document.getElementsByClassName('expandIcon', legends[k]);
 					if (expanderIcon.length > 0)
 					{
-  				    	expanderIcon[0].parentNode.removeChild(expanderIcon[0]);
+  						expanderIcon[0].parentNode.removeChild(expanderIcon[0]);
 					} 
 				 }
 				 
@@ -126,9 +126,9 @@ Backend.ObjectImage.prototype =
 					  	{
 							if (!imageData[k])
 							{
-                                imageData[k] = '';
-                            }
-                            form.elements.namedItem(k).value = imageData[k];    
+								imageData[k] = '';
+							}
+							form.elements.namedItem(k).value = imageData[k];	
 						}
 					}   
 				 }
@@ -159,64 +159,64 @@ Backend.ObjectImage.prototype =
 				 editCont.appendChild(form);
 				 
 				// Effect.Appear(editCont, {duration: 0.2});
-                 
-                 this.toggleContainerOn(editCont);
+				 
+				 this.toggleContainerOn(editCont);
 
-                 Backend.LanguageForm.prototype.closeTabs(form);                 
-                 new Backend.LanguageForm();
+				 Backend.LanguageForm.prototype.closeTabs(form);				 
+				 new Backend.LanguageForm();
 			 },
-	         
-			 beforeSort:     function(li, order) 
+			 
+			 beforeSort:	 function(li, order) 
 			 { 
 				 var recordId = this.getRecordId(li);	
 				 var ownerId = this.getRecordId(li.parentNode);	
 				 return li.parentNode.handler.sortUrl + '?ownerId=' + ownerId + '&draggedId=' + recordId + '&' + order 
 			 },
-	         
+			 
 			 beforeDelete:   function(li)
-	         {				 	
+			 {				 	
 				 var recordId = this.getRecordId(li);	
 				 li.handler = li.parentNode.handler;
-                 if(confirm(li.parentNode.handler.delConfirmMsg)) 
+				 if(confirm(li.parentNode.handler.delConfirmMsg)) 
 				 {
 					 return li.parentNode.handler.deleteUrl + '/' + recordId;
 				 }
-	         },
-	         afterEdit:      function(li, response) {  },
-	         afterSort:      function(li, response) { li.parentNode.handler.arrangeImages(); },
-	         afterDelete:    function(li, response)  
+			 },
+			 afterEdit:	  function(li, response) {  },
+			 afterSort:	  function(li, response) { li.parentNode.handler.arrangeImages(); },
+			 afterDelete:	function(li, response)  
 			 { 
-	             try 
-	             { 
-	                 response = eval('(' + response + ')'); 
-	             } 
-	             catch(e) 
-	             { 
-	                 return false; 
-	             }
-			            
-                li.handler.updateTabCounters();
+				 try 
+				 { 
+					 response = eval('(' + response + ')'); 
+				 } 
+				 catch(e) 
+				 { 
+					 return false; 
+				 }
+						
+				li.handler.updateTabCounters();
 				li.handler.showNoImagesMessage();	
 				li.handler.arrangeImages();		
 			 }
-	     },
-         
-         this.activeListMessages
-         );
+		 },
+		 
+		 this.activeListMessages
+		 );
 	},
 	
 	updateTabCounters: function()
 	{
-        if (this.container.hasClassName('prodImageList'))
-        {
-            var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
-            tabControl.setCounter('tabProductImages', this.container.getElementsByTagName('li').length - 2);
-        }
-        else
-        {
-            CategoryTabControl.prototype.resetTabItemsCount(this.ownerID);
-        }        
-    },
+		if (this.container.hasClassName('prodImageList'))
+		{
+			var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
+			tabControl.setCounter('tabProductImages', this.container.getElementsByTagName('li').length - 2);
+		}
+		else
+		{
+			CategoryTabControl.prototype.resetTabItemsCount(this.ownerID);
+		}		
+	},
 	
 	showProgressIndicator: function(form)
 	{
@@ -258,9 +258,9 @@ Backend.ObjectImage.prototype =
 	
 	imageClick: function()
 	{
-        for (k in this.imageData['paths']) 
+		for (k in this.imageData['paths']) 
 		{ 
-            if (this.src.substr(this.src.length - this.imageData['paths'][k].length, this.imageData['paths'][k].length) == this.imageData['paths'][k])
+			if (this.src.substr(this.src.length - this.imageData['paths'][k].length, this.imageData['paths'][k].length) == this.imageData['paths'][k])
 			{
 				var currentImg = k;
 			}  
@@ -274,7 +274,7 @@ Backend.ObjectImage.prototype =
 		} 
 
 		this.src = this.imageData['paths'][nextImg];
-    },
+	},
 	
 	addToList: function(imageData, highLight)
 	{
@@ -288,14 +288,14 @@ Backend.ObjectImage.prototype =
 	  	var timeStamp = new Date().getTime();
 		for(k = 1; k < 10; k++)
 	  	{
-            if (!imageData['paths'][k])
+			if (!imageData['paths'][k])
 			{
-                break;
-            }
-            imageData['paths'][k] +=  '?' + timeStamp + 'xyz';
+				break;
+			}
+			imageData['paths'][k] +=  '?' + timeStamp + 'xyz';
 		}
 
-        var templ = this.createEntry(imageData);
+		var templ = this.createEntry(imageData);
 		var entry = $(this.__createElementID(imageData['ID']));
 	  	  	
 	  	ActiveList.prototype.getInstance(this.container).updateRecord(entry, templ);
@@ -306,35 +306,35 @@ Backend.ObjectImage.prototype =
 		errorElement = document.getElementsByClassName('errorText', this.addForm)[0];
 		errorElement.style.display = 'none';
 		this.showProgressIndicator(this.addForm);
-        
-        if(form.action.match(/random=/))
-        {
-            form.action.replace(/random=/, 'random=' + "random=" + Math.random() * 100000)
-        }
-        else
-        {
-            if(form.action.match(/\?/))
-            {
-                form.action += '&';    
-            }
-            else
-            {
-                form.action += '?';
-            }
-            
-            form.action += "random=" + Math.random() * 100000
-        }
-        
+		
+		if(form.action.match(/random=/))
+		{
+			form.action.replace(/random=/, 'random=' + "random=" + Math.random() * 100000)
+		}
+		else
+		{
+			if(form.action.match(/\?/))
+			{
+				form.action += '&';	
+			}
+			else
+			{
+				form.action += '?';
+			}
+			
+			form.action += "random=" + Math.random() * 100000
+		}
+		
 		return false;
 	},
 	
 	cancelAdd: function()
 	{
-        var form = this.addForm.down('form');
-        ActiveForm.prototype.resetErrorMessages(form);
-        Backend.LanguageForm.prototype.closeTabs(form);
-        form.reset();
-    },
+		var form = this.addForm.down('form');
+		ActiveForm.prototype.resetErrorMessages(form);
+		Backend.LanguageForm.prototype.closeTabs(form);
+		form.reset();
+	},
 	
 	postUpload: function(result)
 	{
@@ -342,7 +342,7 @@ Backend.ObjectImage.prototype =
 
 		if (result['error'])  	
 		{
-            errorElement.innerHTML = result['error'];
+			errorElement.innerHTML = result['error'];
 			Element.removeClassName(errorElement, 'hidden');
 			Effect.Appear(errorElement, {duration: 0.4});
 		}
@@ -355,11 +355,11 @@ Backend.ObjectImage.prototype =
 			menu.hide("prodImageAdd", this.addForm)
 			
 			this.initActiveList();
-            
-            this.updateTabCounters(this.container.down('li'));
-            
-            this.arrangeImages();
-		    this.cancelAdd();
+			
+			this.updateTabCounters(this.container.down('li'));
+			
+			this.arrangeImages();
+			this.cancelAdd();
 		}
 	},
 
@@ -371,7 +371,7 @@ Backend.ObjectImage.prototype =
 		if (result['error'])  	
 		{
 			errorElement.removeClassName('hidden');
-            errorElement.innerHTML = result['error'];
+			errorElement.innerHTML = result['error'];
 			Effect.Appear(errorElement, {duration: 0.4});
 		}
 		else

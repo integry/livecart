@@ -11,7 +11,7 @@ SectionExpander.prototype =
 	 */
 	initialize: function(parent)
 	{
-        var sectionList = document.getElementsByClassName('expandingSection', $(parent));
+		var sectionList = document.getElementsByClassName('expandingSection', $(parent));
 
 		for (var i = 0; i < sectionList.length; i++)
 		{
@@ -22,11 +22,11 @@ SectionExpander.prototype =
 			}
 		}
 	},
-    
-    unexpand: function(parent)
-    {
+	
+	unexpand: function(parent)
+	{
 		Element.addClassName($(parent), 'expanded');
-    },
+	},
 
 	/**
 	 * Legend element click handler

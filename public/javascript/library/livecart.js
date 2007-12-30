@@ -3,82 +3,82 @@
  */
 
 var LiveCart = {
-    ajaxUpdaterInstance: null
+	ajaxUpdaterInstance: null
 }
 
 LiveCart.AjaxRequest = Class.create();
 LiveCart.AjaxRequest.prototype = {
-    requestCount: 0,
+	requestCount: 0,
 
 	onComplete: false,
 
-    indicatorContainerId: false,
+	indicatorContainerId: false,
 
-    request: false,
+	request: false,
 
 	initialize: function(formOrUrl, indicatorId, onComplete, options)
-    {
-        var url = "";
-        var method = "";
-        var params = "";
+	{
+		var url = "";
+		var method = "";
+		var params = "";
 
-        this.onComplete = onComplete;
+		this.onComplete = onComplete;
 
-        if (typeof formOrUrl == "object")
-        {
-            var form = formOrUrl;
-            url = form.action;
-            method = form.method;
-            params = Form.serialize(form);
+		if (typeof formOrUrl == "object")
+		{
+			var form = formOrUrl;
+			url = form.action;
+			method = form.method;
+			params = Form.serialize(form);
 
-            if (!indicatorId)
-            {
-                var controls = form.down('fieldset.controls');
-                if (controls)
-                {
-                    indicatorId = controls.down('.progressIndicator');
-                    if(indicatorId.style.visibility == 'hidden')
-                    {
-                        this.adjustIndicatorVisibility = true;
-                    }
-                }
-            }
-        }
-        else
-        {
-            url = formOrUrl;
-            method = "post";
-        }
+			if (!indicatorId)
+			{
+				var controls = form.down('fieldset.controls');
+				if (controls)
+				{
+					indicatorId = controls.down('.progressIndicator');
+					if(indicatorId.style.visibility == 'hidden')
+					{
+						this.adjustIndicatorVisibility = true;
+					}
+				}
+			}
+		}
+		else
+		{
+			url = formOrUrl;
+			method = "post";
+		}
 
-        if (indicatorId)
-        {
-            this.indicatorContainerId = indicatorId;
-            Element.show(this.indicatorContainerId);
-        }
+		if (indicatorId)
+		{
+			this.indicatorContainerId = indicatorId;
+			Element.show(this.indicatorContainerId);
+		}
 
-        if (!options)
-        {
-            options = {};
-        }
+		if (!options)
+		{
+			options = {};
+		}
 
-        options.method = method;
-        options.parameters = params;
-        options.onComplete = this.postProcessResponse.bind(this, this.parseURI(url));
-        options.onFailure = this.reportError;
+		options.method = method;
+		options.parameters = params;
+		options.onComplete = this.postProcessResponse.bind(this, this.parseURI(url));
+		options.onFailure = this.reportError;
 
 		document.body.style.cursor = 'progress';
 
-        this.request = new Ajax.Request(url, options);
-    },
+		this.request = new Ajax.Request(url, options);
+	},
 
 	parseURI: function(URI)
 	{
 		if(!URI) return {};
 
 		var splitedURI = URI.split("?");
-        var URL = splitedURI[0];
+		var URL = splitedURI[0];
 		var queryString = splitedURI[1];
-        var query = {};
+		var query = {};
 
 		if(queryString)
 		{
@@ -99,135 +99,135 @@ LiveCart.AjaxRequest.prototype = {
 				}
 				else
 				{
-				    query[params[0]] = params[1];
+					query[params[0]] = params[1];
 				}
 			});
 		}
 
 		return {
-            'url': URL,
+			'url': URL,
 			'queryString': queryString,
 			'query': query
-        };
+		};
 	},
 
 	hideIndicator: function()
 	{
-        if(this.indicatorContainerId)
-        {
-            Element.hide(this.indicatorContainerId);
-        }
+		if(this.indicatorContainerId)
+		{
+			Element.hide(this.indicatorContainerId);
+		}
 	},
 
 	showIndicator: function()
 	{
 		if(this.indicatorContainerId)
-        {
-            Element.show(this.indicatorContainerId);
-        }
+		{
+			Element.show(this.indicatorContainerId);
+		}
 	},
 
-    postProcessResponse: function(url, response)
-    {
+	postProcessResponse: function(url, response)
+	{
 		this.hideIndicator();
 
 		if ('text/javascript' == response.getResponseHeader('Content-type'))
 		{
-            response.responseData = response.responseText.evalJSON();
-        }
+			response.responseData = response.responseText.evalJSON();
+		}
 
 		if ('text/javascript' == response.getResponseHeader('Content-type') && $('confirmations'))
 		{
-            var confirmations = $('confirmations');
-            if(!confirmations.down('#yellowZone')) new Insertion.Top('confirmations', '<div id="yellowZone"></div>');
-            if(!confirmations.down('#redZone')) new Insertion.Top('confirmations', '<div id="redZone"></div>');
-            if(!confirmations.down('#bugZone')) new Insertion.Top('confirmations', '<div id="bugZone"></div>');
+			var confirmations = $('confirmations');
+			if(!confirmations.down('#yellowZone')) new Insertion.Top('confirmations', '<div id="yellowZone"></div>');
+			if(!confirmations.down('#redZone')) new Insertion.Top('confirmations', '<div id="redZone"></div>');
+			if(!confirmations.down('#bugZone')) new Insertion.Top('confirmations', '<div id="bugZone"></div>');
 
-            try
+			try
 			{
-	            if(window.selectPopupWindow && window.selectPopupWindow.document)
+				if(window.selectPopupWindow && window.selectPopupWindow.document)
 				{
 					var win = window.selectPopupWindow;
 
-		            var confirmations = win.$('confirmations');
-	                if(confirmations)
-	                {
-			            if(!confirmations.down('#yellowZone')) new win.Insertion.Top('confirmations', '<div id="yellowZone"></div>');
-			            if(!confirmations.down('#redZone')) new win.Insertion.Top('confirmations', '<div id="redZone"></div>');
-			            if(!confirmations.down('#bugZone')) new win.Insertion.Top('confirmations', '<div id="bugZone"></div>');
+					var confirmations = win.$('confirmations');
+					if(confirmations)
+					{
+						if(!confirmations.down('#yellowZone')) new win.Insertion.Top('confirmations', '<div id="yellowZone"></div>');
+						if(!confirmations.down('#redZone')) new win.Insertion.Top('confirmations', '<div id="redZone"></div>');
+						if(!confirmations.down('#bugZone')) new win.Insertion.Top('confirmations', '<div id="bugZone"></div>');
 					}
-                }
+				}
 			}
 			catch(e)
 			{
 
 			}
-            try
-            {
-                // Show confirmation
-                if(response.responseData.status)
-                {
-                    this.showConfirmation(response.responseData);
-                }
-            }
-            catch (e)  { this.showBug(); }
-        }
+			try
+			{
+				// Show confirmation
+				if(response.responseData.status)
+				{
+					this.showConfirmation(response.responseData);
+				}
+			}
+			catch (e)  { this.showBug(); }
+		}
 
 		document.body.style.cursor = 'default';
-        if (this.onComplete)
-        {
-            this.onComplete(response, url);
+		if (this.onComplete)
+		{
+			this.onComplete(response, url);
 		}
-    },
+	},
 
-    showBug: function()
-    {
-        new Insertion.Top('bugZone',
-        '<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="bugMessage">' +
-            '<img class="closeMessage" src="image/silk/cancel.png"/>' +
-            '<div>' + Backend.internalErrorMessage + '</div>' +
-        '</div>');
+	showBug: function()
+	{
+		new Insertion.Top('bugZone',
+		'<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="bugMessage">' +
+			'<img class="closeMessage" src="image/silk/cancel.png"/>' +
+			'<div>' + Backend.internalErrorMessage + '</div>' +
+		'</div>');
 
-        new Backend.SaveConfirmationMessage($('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));
+		new Backend.SaveConfirmationMessage($('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));
 
 		try
 		{
 			if(window.selectPopupWindow)
 			{
 				var win = window.selectPopupWindow;
-	            if(win.$('confirmations'))
-	            {
-			        new win.Insertion.Top('bugZone',
-			        '<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="bugMessage">' +
-			            '<img class="closeMessage" src="image/silk/cancel.png"/>' +
-			            '<div>' + Backend.internalErrorMessage + '</div>' +
-			        '</div>');
+				if(win.$('confirmations'))
+				{
+					new win.Insertion.Top('bugZone',
+					'<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="bugMessage">' +
+						'<img class="closeMessage" src="image/silk/cancel.png"/>' +
+						'<div>' + Backend.internalErrorMessage + '</div>' +
+					'</div>');
 
-			        new Backend.SaveConfirmationMessage(win.$('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));
-	            }
-		    }
+					new Backend.SaveConfirmationMessage(win.$('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));
+				}
+			}
 		}
 		catch(e)
 		{
 
 		}
-    },
+	},
 
-    showConfirmation: function(responseData)
-    {
-	    if(!responseData.message) return;
+	showConfirmation: function(responseData)
+	{
+		if(!responseData.message) return;
 
-        var color = null;
-        if('success' == responseData.status) color = 'yellow';
-        if('failure' == responseData.status) color = 'red';
+		var color = null;
+		if('success' == responseData.status) color = 'yellow';
+		if('failure' == responseData.status) color = 'red';
 
-        new Insertion.Top(color + 'Zone',
-        '<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="' + color + 'Message">' +
-            '<img class="closeMessage" src="image/silk/cancel.png"/>' +
-            '<div>' + responseData.message + '</div>' +
-        '</div>');
+		new Insertion.Top(color + 'Zone',
+		'<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="' + color + 'Message">' +
+			'<img class="closeMessage" src="image/silk/cancel.png"/>' +
+			'<div>' + responseData.message + '</div>' +
+		'</div>');
 
-        new Backend.SaveConfirmationMessage($('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));
+		new Backend.SaveConfirmationMessage($('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));
 
 		try
 		{
@@ -235,111 +235,111 @@ LiveCart.AjaxRequest.prototype = {
 			{
 				var win = window.selectPopupWindow;
 
-		        new win.Insertion.Top(color + 'Zone',
-		        '<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="' + color + 'Message">' +
-		            '<img class="closeMessage" src="image/silk/cancel.png"/>' +
-		            '<div>' + responseData.message + '</div>' +
-		        '</div>');
+				new win.Insertion.Top(color + 'Zone',
+				'<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="' + color + 'Message">' +
+					'<img class="closeMessage" src="image/silk/cancel.png"/>' +
+					'<div>' + responseData.message + '</div>' +
+				'</div>');
 
-	            new win.Backend.SaveConfirmationMessage(win.$('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));
-		    }
+				new win.Backend.SaveConfirmationMessage(win.$('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));
+			}
 		}
 		catch(e)
 		{
 
 		}
-    },
+	},
 
-    reportError: function(response)
-    {
-        alert('Error!\n\n' + response.responseText);
-    }
+	reportError: function(response)
+	{
+		alert('Error!\n\n' + response.responseText);
+	}
 }
 
 LiveCart.AjaxUpdater = Class.create();
 LiveCart.AjaxUpdater.prototype = {
 
-    indicatorContainerId: null,
+	indicatorContainerId: null,
 
-    initialize: function(formOrUrl, container, indicator, insertionPosition, onComplete)
-    {
-        var url = "";
-        var method = "";
-        var params = "";
-        this.onComplete = onComplete;
+	initialize: function(formOrUrl, container, indicator, insertionPosition, onComplete)
+	{
+		var url = "";
+		var method = "";
+		var params = "";
+		this.onComplete = onComplete;
 
-        var containerId = $(container);
-        var indicatorId = $(indicator);
+		var containerId = $(container);
+		var indicatorId = $(indicator);
 
-        if (typeof formOrUrl == "object")
-        {
-            var form = formOrUrl;
-            url = form.action;
-            method = form.method;
-            params = Form.serialize(form);
+		if (typeof formOrUrl == "object")
+		{
+			var form = formOrUrl;
+			url = form.action;
+			method = form.method;
+			params = Form.serialize(form);
 
-            if (!indicatorId)
-            {
-                var controls = form.down('fieldset.controls');
-                if (controls)
-                {
-                    indicatorId = controls.down('.progressIndicator');
-                }
-            }
-        }
-        else
-        {
-            url = formOrUrl;
-            method = "post";
-        }
-
-        LiveCart.ajaxUpdaterInstance = this;
-
-        if (indicatorId)
-        {
-			this.indicatorContainerId = indicatorId;
-	        Element.show(this.indicatorContainerId);
+			if (!indicatorId)
+			{
+				var controls = form.down('fieldset.controls');
+				if (controls)
+				{
+					indicatorId = controls.down('.progressIndicator');
+				}
+			}
+		}
+		else
+		{
+			url = formOrUrl;
+			method = "post";
 		}
 
-        var updaterOptions = { method: method,
-                               parameters: params,
-                               onComplete: this.postProcessResponse.bind(this),
-                               onFailure: this.reportError.bind(this)
-                               };
+		LiveCart.ajaxUpdaterInstance = this;
 
-        if (insertionPosition != undefined)
-        {
-            switch(insertionPosition)
-            {
-                case 'top':
-                    updaterOptions.insertion = Insertion.Top;
-                break;
+		if (indicatorId)
+		{
+			this.indicatorContainerId = indicatorId;
+			Element.show(this.indicatorContainerId);
+		}
 
-                case 'bottom':
-                    updaterOptions.insertion = Insertion.Bottom;
-                break;
+		var updaterOptions = { method: method,
+							   parameters: params,
+							   onComplete: this.postProcessResponse.bind(this),
+							   onFailure: this.reportError.bind(this)
+							   };
 
-                case 'before':
-                    updaterOptions.insertion = Insertion.Before;
-                break;
+		if (insertionPosition != undefined)
+		{
+			switch(insertionPosition)
+			{
+				case 'top':
+					updaterOptions.insertion = Insertion.Top;
+				break;
 
-                case 'after':
-                    updaterOptions.insertion = Insertion.After;
-                break;
+				case 'bottom':
+					updaterOptions.insertion = Insertion.Bottom;
+				break;
 
-                default:
-                    alert('Invalid insertion position value in AjaxUpdater');
-                break;
-            }
-        }
+				case 'before':
+					updaterOptions.insertion = Insertion.Before;
+				break;
+
+				case 'after':
+					updaterOptions.insertion = Insertion.After;
+				break;
+
+				default:
+					alert('Invalid insertion position value in AjaxUpdater');
+				break;
+			}
+		}
 
 		document.body.style.cursor = 'progress';
 
-        var ajax = new Ajax.Updater({success: containerId},
-                         url,
-                         updaterOptions);
+		var ajax = new Ajax.Updater({success: containerId},
+						 url,
+						 updaterOptions);
 
-    },
+	},
 
 	hideIndicator: function()
 	{
@@ -351,28 +351,28 @@ LiveCart.AjaxUpdater.prototype = {
 
 	showIndicator: function()
 	{
-        if (this.indicatorContainerId)
-        {
-		    Element.show(this.indicatorContainerId);
+		if (this.indicatorContainerId)
+		{
+			Element.show(this.indicatorContainerId);
 		}
 	},
 
-    postProcessResponse: function(response)
-    {
-        document.body.style.cursor = 'default';
-        response.responseText.evalScripts();
-        this.hideIndicator();
+	postProcessResponse: function(response)
+	{
+		document.body.style.cursor = 'default';
+		response.responseText.evalScripts();
+		this.hideIndicator();
 
-        if (this.onComplete)
-        {
+		if (this.onComplete)
+		{
 		  	this.onComplete(response);
 		}
-    },
+	},
 
-    reportError: function(response)
-    {
-        alert('Error!\n\n' + response.responseText);
-    }
+	reportError: function(response)
+	{
+		alert('Error!\n\n' + response.responseText);
+	}
 }
 
 /**
@@ -388,7 +388,7 @@ LiveCart.AjaxUpdater.prototype = {
  *
  * Don't forget to set the correct Content-type header before sending the content:
  * <code>
- *      $response->setHeader('Content-type', 'application/xml');
+ *	  $response->setHeader('Content-type', 'application/xml');
  * </code>
  *
  * @param xml Element
@@ -413,7 +413,7 @@ function xml2HtmlElement(xml)
 		{
 		  	for (a = 0; a < xml.attributes.length; a++)
 		  	{
-			    att = xml.attributes[a];
+				att = xml.attributes[a];
 				el.setAttribute(att.name, att.value);
 			}
 		}
@@ -487,31 +487,31 @@ return _utf8_decode(out);
 
  // private method for UTF-8 decoding
 function _utf8_decode(utftext) {
-     var string = "";
-     var i = 0;
-     var c, c1, c2 = 0;
+	 var string = "";
+	 var i = 0;
+	 var c, c1, c2 = 0;
 
-     while ( i < utftext.length ) {
+	 while ( i < utftext.length ) {
 
-         c = utftext.charCodeAt(i);
+		 c = utftext.charCodeAt(i);
 
-         if (c < 128) {
-             string += String.fromCharCode(c);
-             i++;
-         }
-         else if((c > 191) && (c < 224)) {
-             c2 = utftext.charCodeAt(i+1);
-             string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
-             i += 2;
-         }
-         else {
-             c2 = utftext.charCodeAt(i+1);
-             c3 = utftext.charCodeAt(i+2);
-             string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-             i += 3;
-         }
+		 if (c < 128) {
+			 string += String.fromCharCode(c);
+			 i++;
+		 }
+		 else if((c > 191) && (c < 224)) {
+			 c2 = utftext.charCodeAt(i+1);
+			 string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+			 i += 2;
+		 }
+		 else {
+			 c2 = utftext.charCodeAt(i+1);
+			 c3 = utftext.charCodeAt(i+2);
+			 string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+			 i += 3;
+		 }
 
-     }
+	 }
 
-     return string;
+	 return string;
 }

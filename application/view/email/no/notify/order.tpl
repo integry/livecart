@@ -6,7 +6,7 @@ Order administration:
 
 Følgende produkter er bestilt:
 ------------------------------------------------------------
-Produkt                           Pris     Antall      Sum
+Produkt						   Pris	 Antall	  Sum
 ------------------------------------------------------------
 {foreach from=$order.shipments item=shipment}
 {foreach from=$shipment.items item=item}
@@ -14,27 +14,27 @@ Produkt                           Pris     Antall      Sum
 {/foreach}
 {/foreach}
 ------------------------------------------------------------
-                                        Sum: {$order.formatted_itemSubtotal}
+										Sum: {$order.formatted_itemSubtotal}
 {if $order.shippingSubtotal}
-                                        Porto: {$order.formatted_shippingSubtotal}
+										Porto: {$order.formatted_shippingSubtotal}
 {/if}
 {if $order.taxes|@count > 1}
-                           ---------------------------------
-                           Sum ekskl. moms: {$order.formatted_subtotalBeforeTaxes}
+						   ---------------------------------
+						   Sum ekskl. moms: {$order.formatted_subtotalBeforeTaxes}
 {foreach from=$order.taxes[$order.Currency.ID] item=tax}
-                                {$tax.name_lang}: {$tax.formattedAmount}
+								{$tax.name_lang}: {$tax.formattedAmount}
 {/foreach}
 {/if}
-                           ---------------------------------
-                                     Sum Totalt: {$order.formatted_totalAmount}
+						   ---------------------------------
+									 Sum Totalt: {$order.formatted_totalAmount}
 
-                                     Betalt beløp: {$order.formatted_amountPaid}
-                                      Betalingsfrist: {$order.formatted_amountDue}
+									 Betalt beløp: {$order.formatted_amountPaid}
+									  Betalingsfrist: {$order.formatted_amountDue}
 
 {* Function to generate address output (address template) *}
 {defun name="address"}
 {if $address}
-{$address.fullName}                
+{$address.fullName}				
 {if $address.companyName}
 {$address.companyName}
 

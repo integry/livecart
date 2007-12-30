@@ -8,7 +8,7 @@ Jika Anda memiliki pertanyaan seputar order anda, maka Anda dapat mengirimkan e-
 
 Barang pada order yang dibatalkan:
 ------------------------------------------------------------
-Barang                         Harga     Jumlah   Subtotal
+Barang						 Harga	 Jumlah   Subtotal
 ------------------------------------------------------------
 {foreach from=$order.shipments item=shipment}
 {foreach from=$shipment.items item=item}

@@ -33,8 +33,8 @@ Backend.Currency.prototype =
 	
 	hideNewForm: function()
 	{
-        var menu = new ActiveForm.Slide("currPageMenu");
-        menu.hide("addNewCurrency", 'addCurr')     
+		var menu = new ActiveForm.Slide("currPageMenu");
+		menu.hide("addNewCurrency", 'addCurr')	 
 	},
 	
 	doShowAddForm: function(request)
@@ -56,7 +56,7 @@ Backend.Currency.prototype =
 			z = this.renderItem(data[k], z);
 			
 			list.appendChild(z);
-            Event.observe(list.childElements().last().down('.checkbox'), "click",  function(e) { this.setEnabled(e.target); }.bind(this));
+			Event.observe(list.childElements().last().down('.checkbox'), "click",  function(e) { this.setEnabled(e.target); }.bind(this));
 		}		 
 	},
 	
@@ -108,22 +108,22 @@ Backend.Currency.prototype =
 		// hide menu..
 		Backend.Currency.prototype.hideNewForm();
 
- 	    var itemData = eval('(' + originalRequest.responseText + ")");
+ 		var itemData = eval('(' + originalRequest.responseText + ")");
 		
 	  	var template = $('currencyList_template');
 	  	
-        var activeList = ActiveList.prototype.getInstance('currencyList');
+		var activeList = ActiveList.prototype.getInstance('currencyList');
 		var li = activeList.addRecord(itemData['ID'], this.renderItem(itemData, template.cloneNode(true)));
 		Event.observe(li.down('.checkbox'), "click",  function(e) { this.setEnabled(e.target); }.bind(this));
 		
-        this.resetRatesContainer();
+		this.resetRatesContainer();
 	},	
 	
 	updateItem: function(originalRequest)
 	{
- 	    var response = eval('(' + originalRequest.responseText + ")");
+ 		var response = eval('(' + originalRequest.responseText + ")");
 		var itemData = response.currency;
-        
+		
 		var node = $('currencyList_' + itemData.ID);
 	  	var template = $('currencyList_template');
 		var cl = template.cloneNode(true);
@@ -132,13 +132,13 @@ Backend.Currency.prototype =
 	  	
 		this.renderItem(itemData, cl);
 
-        var activeList = ActiveList.prototype.getInstance('currencyList');
-        activeList.decorateItems();
-        activeList.createSortable(true);
+		var activeList = ActiveList.prototype.getInstance('currencyList');
+		activeList.decorateItems();
+		activeList.createSortable(true);
 		
-        Event.observe(cl.down('.checkbox'), "click",  function(e) { this.setEnabled(e.target); }.bind(this));
-        ActiveList.prototype.highlight(cl);
-        this.resetRatesContainer();
+		Event.observe(cl.down('.checkbox'), "click",  function(e) { this.setEnabled(e.target); }.bind(this));
+		ActiveList.prototype.highlight(cl);
+		this.resetRatesContainer();
 	},
 	
 	setEnabled: function(node) 
@@ -170,17 +170,17 @@ Backend.Currency.prototype =
 /************************************
 	EDIT
 *************************************/
-    saveFormat: function(form)
-    {
-        new LiveCart.AjaxRequest(form, null, this.completeSaveFormat.bind(form)); 
-    },
+	saveFormat: function(form)
+	{
+		new LiveCart.AjaxRequest(form, null, this.completeSaveFormat.bind(form)); 
+	},
 
-    completeSaveFormat: function()
-    {
+	completeSaveFormat: function()
+	{
 		var li = this.parentNode.up('li');
-        this.parentNode.innerHTML = '';
-		ActiveList.prototype.highlight(li, 'yellow');    
-    },
+		this.parentNode.innerHTML = '';
+		ActiveList.prototype.highlight(li, 'yellow');	
+	},
 
 /************************************
 	RATES

@@ -28,9 +28,9 @@ Backend.SelectFile.prototype =
 	{
 		this.valueElement = valueElement;
 
-        var w = window.open(Backend.SelectFile.url, 'selectFile', 'width=950, height=480');
+		var w = window.open(Backend.SelectFile.url, 'selectFile', 'width=950, height=480');
 
-        // close the popup automatically if closing/reloading page
+		// close the popup automatically if closing/reloading page
 		Event.observe(window, 'unload', function()
 		{
 			w.close();
@@ -38,7 +38,7 @@ Backend.SelectFile.prototype =
 
 		w.selectFileInstance = this;
 
-        this.window = w;
+		this.window = w;
 	},
 
 	returnValue: function(value, window)
@@ -82,23 +82,23 @@ Backend.SelectFile.prototype =
 
 				if (!this.iconUrls[itemId])
 				{
-                    this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
-                    var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
-                    img.originalSrc = img.src;
-    				img.src = 'image/indicator.gif';
-                }
+					this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
+					var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
+					img.originalSrc = img.src;
+					img.src = 'image/indicator.gif';
+				}
 			}
 
 		this.treeBrowser.hideFeedback =
 			function(itemId)
 			{
-                if (null != this.iconUrls[itemId])
-                {
-        			this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
-                    var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
-                    img.src = img.originalSrc;
-                    this.iconUrls[itemId] = null;
-                }
+				if (null != this.iconUrls[itemId])
+				{
+					this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
+					var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
+					img.src = img.originalSrc;
+					this.iconUrls[itemId] = null;
+				}
 			}
 
 		this.grid.setDataFormatter(Backend.SelectFile.GridFormatter);
@@ -128,10 +128,10 @@ Backend.SelectFile.prototype =
 		var countElement = document.getElementsByClassName('rangeCount', cont)[0];
 		var notFound = document.getElementsByClassName('notFound', cont)[0];
 
-        if (!countElement)
-        {
-            return false;
-        }
+		if (!countElement)
+		{
+			return false;
+		}
 
 		if (totalCount > 0)
 		{
@@ -154,7 +154,7 @@ Backend.SelectFile.prototype =
 			notFound.style.display = '';
 			countElement.style.display = 'none';
 		}
-    },
+	},
 
 	/**
 	 * Tree browser onClick handler. Activates selected category by realoading active
@@ -164,47 +164,47 @@ Backend.SelectFile.prototype =
 	{
 		this.window.Backend.Breadcrumb.display(categoryId);
 
-        if (this.activeCategoryId == categoryId)
-        {
-            return false;
-        }
+		if (this.activeCategoryId == categoryId)
+		{
+			return false;
+		}
 
-        this.grid.setFilterValue('filter_file', categoryId);
+		this.grid.setFilterValue('filter_file', categoryId);
 		this.grid.reloadGrid();
 		this.activeCategoryId = categoryId;
 	},
 
-    /**
-     * Insert array of categories into tree
-     *
-     * @param array categories Array of category objects. Every category object should contain these elements
-     *     parent - Id of parent category
-     *     ID - Id o category
-     *     name - Category name in current language
-     *     options - Advanced options
-     *     childrenCount - Indicates that this node has N childs
-     */
-    addCategories: function(categories)
-    {
-        $A(categories).each(function(category) {
-            if(!category.parent || 0 == category.parent)
-            {
-                category.options = "";
-                category.parent = 0;
-            }
-            else if(!category.option)
-            {
-                category.options = "";
-            }
+	/**
+	 * Insert array of categories into tree
+	 *
+	 * @param array categories Array of category objects. Every category object should contain these elements
+	 *	 parent - Id of parent category
+	 *	 ID - Id o category
+	 *	 name - Category name in current language
+	 *	 options - Advanced options
+	 *	 childrenCount - Indicates that this node has N childs
+	 */
+	addCategories: function(categories)
+	{
+		$A(categories).each(function(category) {
+			if(!category.parent || 0 == category.parent)
+			{
+				category.options = "";
+				category.parent = 0;
+			}
+			else if(!category.option)
+			{
+				category.options = "";
+			}
 
-            this.treeBrowser.insertNewChild(category.parent,category.ID,category.name, null, 0, 0, 0, category.options, !category.childrenCount ? 0 : category.childrenCount);
-        }.bind(this));
-    },
+			this.treeBrowser.insertNewChild(category.parent,category.ID,category.name, null, 0, 0, 0, category.options, !category.childrenCount ? 0 : category.childrenCount);
+		}.bind(this));
+	},
 
-    loadDirectory: function(dir)
-    {
-        this.treeBrowser.loadXML(this.links.categoryRecursiveAutoloading + "?id=" + dir);
-    }
+	loadDirectory: function(dir)
+	{
+		this.treeBrowser.loadXML(this.links.categoryRecursiveAutoloading + "?id=" + dir);
+	}
 }
 
 Backend.SelectFile.GridFormatter =
@@ -220,9 +220,9 @@ Backend.SelectFile.GridFormatter =
 
 		else if('fileName' == field)
 		{
-            value = '<a href="#" id="file_' + id + '" onclick=\'window.selectFileInstance.returnValue("' + id + '", event); return false;\'>' +
-                value +
-            '</a>';
+			value = '<a href="#" id="file_' + id + '" onclick=\'window.selectFileInstance.returnValue("' + id + '", event); return false;\'>' +
+				value +
+			'</a>';
 		}
 
 		return value;

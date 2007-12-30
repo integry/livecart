@@ -13,15 +13,15 @@ class SelectFileController extends StoreManagementController
 {
 	public function index()
 	{
-        $dir = getcwd();
+		$dir = getcwd();
 
-        chdir('/');
+		chdir('/');
 
-        $root = array('parent' => 0,
-                      'ID' => getcwd(),
-                      'name' => getcwd(),
-                      'childrenCount' => 22,
-                     );
+		$root = array('parent' => 0,
+					  'ID' => getcwd(),
+					  'name' => getcwd(),
+					  'childrenCount' => 22,
+					 );
 
 		$response = new ActionResponse();
 		$response->set('directoryList', $this->getSubDirectories(getcwd()));
@@ -39,30 +39,30 @@ class SelectFileController extends StoreManagementController
 
 		if (1 == $targetID)
 		{
-            $dir = getcwd();
-            chdir('/');
-            $targetID = getcwd();
-        }
+			$dir = getcwd();
+			chdir('/');
+			$targetID = getcwd();
+		}
 
-        chdir($targetID);
+		chdir($targetID);
 
 		$parent = $targetID;
 		$lastParent = '';
 		$path = array();
 		while ($parent != $lastParent)
 		{
-            $lastParent = $parent;
+			$lastParent = $parent;
 
-            $path[] = array('parent' => dirname($parent),
-                      'ID' => $parent,
-                      'name' => basename($parent),
-                      'childrenCount' => $this->getSubDirectoryCount($parent),
-                     );
+			$path[] = array('parent' => dirname($parent),
+					  'ID' => $parent,
+					  'name' => basename($parent),
+					  'childrenCount' => $this->getSubDirectoryCount($parent),
+					 );
 
-            $parent = dirname($parent);
-            chdir($parent);
-            $parent = getcwd();
-        }
+			$parent = dirname($parent);
+			chdir($parent);
+			$parent = getcwd();
+		}
 
 		$path = array_reverse($path);
 
@@ -75,7 +75,7 @@ class SelectFileController extends StoreManagementController
 
 		foreach ($path as $node)
 		{
-            $o['children'] = $this->getSubDirectories($node['parent']);
+			$o['children'] = $this->getSubDirectories($node['parent']);
 
 			foreach ($o['children'] as $i => $child)
 			{
@@ -85,8 +85,8 @@ class SelectFileController extends StoreManagementController
 				}
 			}
 
-            $o =& $o['children'][$i];
-        }
+			$o =& $o['children'][$i];
+		}
 
 		$xmlResponse = new XMLResponse();
 
@@ -99,15 +99,15 @@ class SelectFileController extends StoreManagementController
 		$xmlResponse->set("targetID", $targetID);
 
 		return $xmlResponse;
-    }
+	}
 
 	public function xmlBranch()
 	{
 		$rootID = $this->request->get("id");
 
 		$xmlResponse = new XMLResponse();
-        $xmlResponse->set("rootID", $rootID);
-        $xmlResponse->set("tree", $this->getSubDirectories($rootID));
+		$xmlResponse->set("rootID", $rootID);
+		$xmlResponse->set("tree", $this->getSubDirectories($rootID));
 
 		return $xmlResponse;
 	}
@@ -148,26 +148,26 @@ class SelectFileController extends StoreManagementController
 			$data[] = $record;
 		}
 
-        // searching
-        if (is_array($this->request->get('filters')))
-        {
-            foreach ($this->request->get('filters') as $column => $filter)
-            {
-                if ($filter && isset($displayedColumns[$column]))
-                {
-                    $col = array_search($column, array_keys($displayedColumns));
-                    $type = $displayedColumns[$column];
+		// searching
+		if (is_array($this->request->get('filters')))
+		{
+			foreach ($this->request->get('filters') as $column => $filter)
+			{
+				if ($filter && isset($displayedColumns[$column]))
+				{
+					$col = array_search($column, array_keys($displayedColumns));
+					$type = $displayedColumns[$column];
 					foreach ($data as $index => $row)
-                    {
-                        if ('text' == $type)
-                        {
+					{
+						if ('text' == $type)
+						{
 							if (stripos($row[$col], $filter) === false)
-	                        {
-	                            unset($data[$index]);
-	                        }
+							{
+								unset($data[$index]);
+							}
 						}
 						else if ('numeric' == $type)
-                        {
+						{
 							$filter = str_replace('<>', '!=', $filter);
 							$constraints = explode(' ', $filter);
 
@@ -198,14 +198,14 @@ class SelectFileController extends StoreManagementController
 								{
 									unset($data[$index]);
 								}
-                        	}
-                    	}
-                	}
-            	}
-            }
-        }
+							}
+						}
+					}
+				}
+			}
+		}
 
-        // sorting
+		// sorting
 		if (!$this->request->isValueSet('sort_col'))
 		{
 			$this->request->set('sort_col', 'name');
@@ -219,15 +219,15 @@ class SelectFileController extends StoreManagementController
 			$data = array_reverse($data);
 		}
 
-        // formatting
-        $date = array_search('fileDate', array_keys($displayedColumns));
-        foreach ($data as &$row)
-        {
-            if (isset($row[$date]))
-            {
-                $row[$date] = $this->locale->getFormattedTime($row[$date], 'date_medium');
-            }
-        }
+		// formatting
+		$date = array_search('fileDate', array_keys($displayedColumns));
+		foreach ($data as &$row)
+		{
+			if (isset($row[$date]))
+			{
+				$row[$date] = $this->locale->getFormattedTime($row[$date], 'date_medium');
+			}
+		}
 
 		$return = array();
 		$return['columns'] = array_keys($displayedColumns);
@@ -237,10 +237,10 @@ class SelectFileController extends StoreManagementController
 		return new JSONResponse($return);
 	}
 
-    private function sortFileList($a, $b)
-    {
-        return strnatcasecmp($a[$this->sortColumn], $b[$this->sortColumn]);
-    }
+	private function sortFileList($a, $b)
+	{
+		return strnatcasecmp($a[$this->sortColumn], $b[$this->sortColumn]);
+	}
 
 	private function getAvailableColumns()
 	{
@@ -278,43 +278,43 @@ class SelectFileController extends StoreManagementController
 			'filePermissions' => 'text',
 			'fileOwner' => 'text',
 			'fileGroup' => 'text',
-        );
+		);
 	}
 
 	private function getSubDirectories($dir)
 	{
-        $ret = array();
+		$ret = array();
 
-        foreach (new DirectoryIterator($dir) as $sub)
-        {
-            if ($sub->isDir() && !$sub->isDot())
-            {
-                $node = array('parent' => $dir,
-                              'ID' => $sub->getPathName(),
-                              'name' => $sub->getFileName(),
-                              'childrenCount' => $this->getSubDirectoryCount($sub->getPathName()),
-                             );
+		foreach (new DirectoryIterator($dir) as $sub)
+		{
+			if ($sub->isDir() && !$sub->isDot())
+			{
+				$node = array('parent' => $dir,
+							  'ID' => $sub->getPathName(),
+							  'name' => $sub->getFileName(),
+							  'childrenCount' => $this->getSubDirectoryCount($sub->getPathName()),
+							 );
 
-                $ret[$sub->getPathName()] = $node;
-            }
-        }
+				$ret[$sub->getPathName()] = $node;
+			}
+		}
 
-        uksort($ret, 'strnatcasecmp');
+		uksort($ret, 'strnatcasecmp');
 
-        // set numeric indexes
-        $out = array();
-        foreach ($ret as $node)
-        {
-            $out[] = $node;
-        }
+		// set numeric indexes
+		$out = array();
+		foreach ($ret as $node)
+		{
+			$out[] = $node;
+		}
 
-        return $out;
-    }
+		return $out;
+	}
 
-    private function getSubDirectoryCount($dir)
-    {
-        try
-        {
+	private function getSubDirectoryCount($dir)
+	{
+		try
+		{
 			foreach (new DirectoryIterator($dir) as $sub)
 			{
 				if ($sub->isDir() && !$sub->isDot())
@@ -328,26 +328,26 @@ class SelectFileController extends StoreManagementController
 			return 0;
 		}
 
-        return 0;
-    }
+		return 0;
+	}
 
-    private function getFiles($dir)
-    {
-        $ret = array();
+	private function getFiles($dir)
+	{
+		$ret = array();
 
-        try
-        {
-        	$iterator = new DirectoryIterator($dir);
+		try
+		{
+			$iterator = new DirectoryIterator($dir);
 		}
 		catch (RuntimeException $e)
 		{
 			return $ret;
 		}
 
-        foreach ($iterator as $sub)
-        {
-            if ($sub->isFile() && !$sub->isDot())
-            {
+		foreach ($iterator as $sub)
+		{
+			if ($sub->isFile() && !$sub->isDot())
+			{
 				$node = array(
 					'fileName' => $sub->getFileName(),
 					'fileType' => pathinfo($sub->getFileName(), PATHINFO_EXTENSION),
@@ -370,12 +370,12 @@ class SelectFileController extends StoreManagementController
 					$node['fileGroup'] = $group['name'];
 				}
 
-                $ret[$sub->getPathName()] = $node;
-            }
-        }
+				$ret[$sub->getPathName()] = $node;
+			}
+		}
 
-        return $ret;
-    }
+		return $ret;
+	}
 
 	function getFilePerms($file)
 	{

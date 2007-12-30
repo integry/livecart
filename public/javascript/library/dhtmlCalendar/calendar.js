@@ -96,7 +96,7 @@ Calendar.is_opera = /opera/i.test(navigator.userAgent);
 Calendar.is_khtml = /Konqueror|Safari|KHTML/i.test(navigator.userAgent);
 
 // BEGIN: UTILITY FUNCTIONS; beware that these might be moved into a separate
-//        library, at some point.
+//		library, at some point.
 
 Calendar.getAbsolutePos = function(el) {
 	var SL = 0, ST = 0;
@@ -624,7 +624,7 @@ Calendar.cellClick = function(el, ev) {
 			date.setMonth(m);
 		};
 		switch (el.navtype) {
-		    case 400:
+			case 400:
 			Calendar.removeClass(el, "hilite");
 			var text = Calendar._TT["ABOUT"];
 			if (typeof text != "undefined") {
@@ -640,12 +640,12 @@ Calendar.cellClick = function(el, ev) {
 			}
 			alert(text);
 			return;
-		    case -2:
+			case -2:
 			if (year > cal.minYear) {
 				date.setFullYear(year - 1);
 			}
 			break;
-		    case -1:
+			case -1:
 			if (mon > 0) {
 				setMonth(mon - 1);
 			} else if (year-- > cal.minYear) {
@@ -653,7 +653,7 @@ Calendar.cellClick = function(el, ev) {
 				setMonth(11);
 			}
 			break;
-		    case 1:
+			case 1:
 			if (mon < 11) {
 				setMonth(mon + 1);
 			} else if (year < cal.maxYear) {
@@ -661,15 +661,15 @@ Calendar.cellClick = function(el, ev) {
 				setMonth(0);
 			}
 			break;
-		    case 2:
+			case 2:
 			if (year < cal.maxYear) {
 				date.setFullYear(year + 1);
 			}
 			break;
-		    case 100:
+			case 100:
 			cal.setFirstDayOfWeek(el.fdow);
 			return;
-		    case 50:
+			case 50:
 			var range = el._range;
 			var current = el.innerHTML;
 			for (var i = range.length; --i >= 0;)
@@ -684,10 +684,10 @@ Calendar.cellClick = function(el, ev) {
 			el.innerHTML = newval;
 			cal.onUpdateTime();
 			return;
-		    case 0:
+			case 0:
 			// TODAY will bring us here
 			if ((typeof cal.getDateStatus == "function") &&
-			    cal.getDateStatus(date, date.getFullYear(), date.getMonth(), date.getDate())) {
+				cal.getDateStatus(date, date.getFullYear(), date.getMonth(), date.getDate())) {
 				return false;
 			}
 			break;
@@ -969,32 +969,32 @@ Calendar._keyEvent = function(ev) {
 		K = ev.keyCode;
 	if (ev.ctrlKey) {
 		switch (K) {
-		    case 37: // KEY left
+			case 37: // KEY left
 			act && Calendar.cellClick(cal._nav_pm);
 			break;
-		    case 38: // KEY up
+			case 38: // KEY up
 			act && Calendar.cellClick(cal._nav_py);
 			break;
-		    case 39: // KEY right
+			case 39: // KEY right
 			act && Calendar.cellClick(cal._nav_nm);
 			break;
-		    case 40: // KEY down
+			case 40: // KEY down
 			act && Calendar.cellClick(cal._nav_ny);
 			break;
-		    default:
+			default:
 			return false;
 		}
 	} else switch (K) {
-	    case 32: // KEY space (now)
+		case 32: // KEY space (now)
 		Calendar.cellClick(cal._nav_now);
 		break;
-	    case 27: // KEY esc
+		case 27: // KEY esc
 		act && cal.callCloseHandler();
 		break;
-	    case 37: // KEY left
-	    case 38: // KEY up
-	    case 39: // KEY right
-	    case 40: // KEY down
+		case 37: // KEY left
+		case 38: // KEY up
+		case 39: // KEY right
+		case 40: // KEY down
 		if (act) {
 			var prev, x, y, ne, el, step;
 			prev = K == 37 || K == 38;
@@ -1018,7 +1018,7 @@ Calendar._keyEvent = function(ev) {
 			};
 			while (1) {
 				switch (K) {
-				    case 37: // KEY left
+					case 37: // KEY left
 					if (--x >= 0)
 						ne = cal.ar_days[y][x];
 					else {
@@ -1027,7 +1027,7 @@ Calendar._keyEvent = function(ev) {
 						continue;
 					}
 					break;
-				    case 38: // KEY up
+					case 38: // KEY up
 					if (--y >= 0)
 						ne = cal.ar_days[y][x];
 					else {
@@ -1035,7 +1035,7 @@ Calendar._keyEvent = function(ev) {
 						setVars();
 					}
 					break;
-				    case 39: // KEY right
+					case 39: // KEY right
 					if (++x < 7)
 						ne = cal.ar_days[y][x];
 					else {
@@ -1044,7 +1044,7 @@ Calendar._keyEvent = function(ev) {
 						continue;
 					}
 					break;
-				    case 40: // KEY down
+					case 40: // KEY down
 					if (++y < cal.ar_days.length)
 						ne = cal.ar_days[y][x];
 					else {
@@ -1065,11 +1065,11 @@ Calendar._keyEvent = function(ev) {
 			}
 		}
 		break;
-	    case 13: // KEY enter
+		case 13: // KEY enter
 		if (act)
 			Calendar.cellClick(cal.currentDateEl, ev);
 		break;
-	    default:
+		default:
 		return false;
 	}
 	return Calendar.stopEvent(ev);
@@ -1167,13 +1167,13 @@ Calendar.prototype._init = function (firstDayOfWeek, date) {
 				cell.caldate = new Date(date);
 				cell.ttip = "_";
 				if (!this.multiple && current_month
-				    && iday == mday && this.hiliteToday) {
+					&& iday == mday && this.hiliteToday) {
 					cell.className += " selected";
 					this.currentDateEl = cell;
 				}
 				if (date.getFullYear() == TY &&
-				    date.getMonth() == TM &&
-				    iday == TD) {
+					date.getMonth() == TM &&
+					iday == TD) {
 					cell.className += " today";
 					cell.ttip += Calendar._TT["PART_TODAY"];
 				}
@@ -1396,7 +1396,7 @@ Calendar.prototype.showAtElement = function (el, opts) {
 			br.y += window.pageYOffset;
 			br.x += window.pageXOffset;
 		}
-        
+		
 		var tmp = box.x + box.width - br.x;
 		if (tmp > 0) box.x -= tmp;
 		tmp = box.y + box.height - br.y;
@@ -1414,19 +1414,19 @@ Calendar.prototype.showAtElement = function (el, opts) {
 		}
 		// vertical alignment
 		switch (valign) {
-		    case "T": p.y -= h; break;
-		    case "B": p.y += el.offsetHeight; break;
-		    case "C": p.y += (el.offsetHeight - h) / 2; break;
-		    case "t": p.y += el.offsetHeight - h; break;
-		    case "b": break; // already there
+			case "T": p.y -= h; break;
+			case "B": p.y += el.offsetHeight; break;
+			case "C": p.y += (el.offsetHeight - h) / 2; break;
+			case "t": p.y += el.offsetHeight - h; break;
+			case "b": break; // already there
 		}
 		// horizontal alignment
 		switch (halign) {
-		    case "L": p.x -= w; break;
-		    case "R": p.x += el.offsetWidth; break;
-		    case "C": p.x += (el.offsetWidth - w) / 2; break;
-		    case "l": p.x += el.offsetWidth - w; break;
-		    case "r": break; // already there
+			case "L": p.x -= w; break;
+			case "R": p.x += el.offsetWidth; break;
+			case "C": p.x += (el.offsetWidth - w) / 2; break;
+			case "l": p.x += el.offsetWidth - w; break;
+			case "r": break; // already there
 		}
 		p.width = w;
 		p.height = h + 40;
@@ -1579,7 +1579,7 @@ Date._MD = new Array(31,28,31,30,31,30,31,31,30,31,30,31);
 Date.SECOND = 1000 /* milliseconds */;
 Date.MINUTE = 60 * Date.SECOND;
 Date.HOUR   = 60 * Date.MINUTE;
-Date.DAY    = 24 * Date.HOUR;
+Date.DAY	= 24 * Date.HOUR;
 Date.WEEK   =  7 * Date.DAY;
 
 Date.parseDate = function(str, fmt) {
@@ -1596,44 +1596,44 @@ Date.parseDate = function(str, fmt) {
 		if (!a[i])
 			continue;
 		switch (b[i]) {
-		    case "%d":
-		    case "%e":
+			case "%d":
+			case "%e":
 			d = parseInt(a[i], 10);
 			break;
 
-		    case "%m":
+			case "%m":
 			m = parseInt(a[i], 10) - 1;
 			break;
 
-		    case "%Y":
-		    case "%y":
+			case "%Y":
+			case "%y":
 			y = parseInt(a[i], 10);
 			(y < 100) && (y += (y > 29) ? 1900 : 2000);
 			break;
 
-		    case "%b":
-		    case "%B":
+			case "%b":
+			case "%B":
 			for (j = 0; j < 12; ++j) {
 				if (Calendar._MN[j].substr(0, a[i].length).toLowerCase() == a[i].toLowerCase()) { m = j; break; }
 			}
 			break;
 
-		    case "%H":
-		    case "%I":
-		    case "%k":
-		    case "%l":
+			case "%H":
+			case "%I":
+			case "%k":
+			case "%l":
 			hr = parseInt(a[i], 10);
 			break;
 
-		    case "%P":
-		    case "%p":
+			case "%P":
+			case "%p":
 			if (/pm/i.test(a[i]) && hr < 12)
 				hr += 12;
 			else if (/am/i.test(a[i]) && hr >= 12)
 				hr -= 12;
 			break;
 
-		    case "%M":
+			case "%M":
 			min = parseInt(a[i], 10);
 			break;
 		}

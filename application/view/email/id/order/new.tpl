@@ -10,7 +10,7 @@ Jika Anda memiliki pertanyaan seputar order ini, Anda dapat mengirimkan pesan ke
 
 Berikut adalah barang yang Anda order dari kami:
 ------------------------------------------------------------
-Barang                         Harga     Jumlah   Subtotal
+Barang						 Harga	 Jumlah   Subtotal
 ------------------------------------------------------------
 {foreach from=$order.shipments item=shipment}
 {foreach from=$shipment.items item=item}
@@ -18,27 +18,27 @@ Barang                         Harga     Jumlah   Subtotal
 {/foreach}
 {/foreach}
 ------------------------------------------------------------
-                                        Subtotal: {$order.formatted_itemSubtotal}
+										Subtotal: {$order.formatted_itemSubtotal}
 {if $order.shippingSubtotal}
-                                Biaya Pengiriman: {$order.formatted_shippingSubtotal}
+								Biaya Pengiriman: {$order.formatted_shippingSubtotal}
 {/if}
 {if $order.taxes|@count > 1}
-                           ---------------------------------
-                          Subtotal sebelum pajak: {$order.formatted_subtotalBeforeTaxes}
+						   ---------------------------------
+						  Subtotal sebelum pajak: {$order.formatted_subtotalBeforeTaxes}
 {foreach from=$order.taxes[$order.Currency.ID] item=tax}
-                                {$tax.name_lang}: {$tax.formattedAmount}
+								{$tax.name_lang}: {$tax.formattedAmount}
 {/foreach}
 {/if}
-                           ---------------------------------
-                               Total keseluruhan: {$order.formatted_totalAmount}
+						   ---------------------------------
+							   Total keseluruhan: {$order.formatted_totalAmount}
 
-                                  Jumlah dibayar: {$order.formatted_amountPaid}
-                                 Jumlah terutang: {$order.formatted_amountDue}
+								  Jumlah dibayar: {$order.formatted_amountPaid}
+								 Jumlah terutang: {$order.formatted_amountDue}
 
 {* Function to generate address output (address template) *}
 {defun name="address"}
 {if $address}
-{$address.fullName}                
+{$address.fullName}				
 {if $address.companyName}
 {$address.companyName}
 

@@ -10,14 +10,14 @@ ActiveForm = Class.create();
 ActiveForm.prototype = {
 
 
-    /**
-     * Generate valid handle from item title
-     *
-     * @param string title Input title
-     * @return string valid handle
-     */
-    generateHandle: function(title)
-    {
+	/**
+	 * Generate valid handle from item title
+	 *
+	 * @param string title Input title
+	 * @return string valid handle
+	 */
+	generateHandle: function(title)
+	{
 		handle = title.toLowerCase();
 
 		handle = handle.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,""); // trim
@@ -37,183 +37,183 @@ ActiveForm.prototype = {
 		handle = handle.replace(/^\./g, "");
 		handle = handle.replace(/\.$/g, "");
 
-        return handle;
-    },
-
-    resetErrorMessages: function(form)
-    {
-        if ('form' != form.tagName.toLowerCase())
-        {
-            form = form.down('form');
-        }
-
-        var messages = document.getElementsByClassName('errorText', form);
-        for (k = 0; k < messages.length; k++)
-        {
-            messages[k].innerHTML = '';
-            messages[k].style.display = 'none';
-        }
+		return handle;
 	},
 
-    resetErrorMessage: function(formElement)
-    {
-        var errorText = formElement.up().down(".errorText");
+	resetErrorMessages: function(form)
+	{
+		if ('form' != form.tagName.toLowerCase())
+		{
+			form = form.down('form');
+		}
 
-        if (errorText)
-        {
-    	  	errorText.innerHTML = '';
-    	  	errorText.style.display = 'none';
-    	  	Element.addClassName(errorText, 'hidden');
-        }
-    },
+		var messages = document.getElementsByClassName('errorText', form);
+		for (k = 0; k < messages.length; k++)
+		{
+			messages[k].innerHTML = '';
+			messages[k].style.display = 'none';
+		}
+	},
 
-    setErrorMessages: function(form, errorMessages)
-    {
-        if ('form' != form.tagName.toLowerCase()) form = form.down('form');
+	resetErrorMessage: function(formElement)
+	{
+		var errorText = formElement.up().down(".errorText");
 
-        var focusField = true;
+		if (errorText)
+		{
+		  	errorText.innerHTML = '';
+		  	errorText.style.display = 'none';
+		  	Element.addClassName(errorText, 'hidden');
+		}
+	},
+
+	setErrorMessages: function(form, errorMessages)
+	{
+		if ('form' != form.tagName.toLowerCase()) form = form.down('form');
+
+		var focusField = true;
 		$H(errorMessages).each(function(error)
 		{
 			if (form.elements.namedItem(error.key))
 		  	{
-                var formElement = form.elements.namedItem(error.key);
-                var errorMessage = error.value;
+				var formElement = form.elements.namedItem(error.key);
+				var errorMessage = error.value;
 
-                ActiveForm.prototype.setErrorMessage(formElement, errorMessage, focusField);
-                focusField = false;
+				ActiveForm.prototype.setErrorMessage(formElement, errorMessage, focusField);
+				focusField = false;
 			}
 		});
 	},
 
-    setErrorMessage: function(formElement, errorMessage, focusField)
-    {
-        if (focusField)
-        {
-//            alert(errorMessage);
-            Element.focus(formElement);
-        }
+	setErrorMessage: function(formElement, errorMessage, focusField)
+	{
+		if (focusField)
+		{
+//			alert(errorMessage);
+			Element.focus(formElement);
+		}
 
-        var errorContainer = formElement.up().down(".errorText");
-        if (errorContainer)
-        {
-    		errorContainer.innerHTML = errorMessage;
-    	  	Element.removeClassName(errorContainer, 'hidden');
-    		Effect.Appear(errorContainer);
-        }
-        else
-        {
-            console.info("Please add \n...\n <div class=\"errorText hidden\"></div> \n...\n after " + formElement.name);
-        }
-    },
+		var errorContainer = formElement.up().down(".errorText");
+		if (errorContainer)
+		{
+			errorContainer.innerHTML = errorMessage;
+		  	Element.removeClassName(errorContainer, 'hidden');
+			Effect.Appear(errorContainer);
+		}
+		else
+		{
+			console.info("Please add \n...\n <div class=\"errorText hidden\"></div> \n...\n after " + formElement.name);
+		}
+	},
 
-    updateNewFields: function(className, ids, parent)
-    {
-        ids = $H(ids);
-        ids.each(function(transformation) { transformation.value = new RegExp(transformation.value);   });
-        var attributes = ['class', 'name', 'id', 'for'];
-        var attributesLength = attributes.length;
-        var fields = $A(document.getElementsByClassName(className));
+	updateNewFields: function(className, ids, parent)
+	{
+		ids = $H(ids);
+		ids.each(function(transformation) { transformation.value = new RegExp(transformation.value);   });
+		var attributes = ['class', 'name', 'id', 'for'];
+		var attributesLength = attributes.length;
+		var fields = $A(document.getElementsByClassName(className));
 
-        fields.each(function(element)
-        {
-            for(var a = 0; a < attributesLength; a++)
-            {
-               var attr = attributes[a];
-               ids.each(function(transformation) {
-                   if (element[attr]) element[attr] = element[attr].replace(transformation.value, transformation.key);
-               });
-            };
-        });
-    },
+		fields.each(function(element)
+		{
+			for(var a = 0; a < attributesLength; a++)
+			{
+			   var attr = attributes[a];
+			   ids.each(function(transformation) {
+				   if (element[attr]) element[attr] = element[attr].replace(transformation.value, transformation.key);
+			   });
+			};
+		});
+	},
 
-    lastTinyMceId: 0,
+	lastTinyMceId: 0,
 
-    disabledTextareas: {},
-    lastDisabledTextareaId: 1,
-    idleTinyMCEFields: {},
+	disabledTextareas: {},
+	lastDisabledTextareaId: 1,
+	idleTinyMCEFields: {},
 
-    initTinyMceFields: function(container)
-    {
+	initTinyMceFields: function(container)
+	{
 		var textareas = $(container).getElementsBySelector('textarea.tinyMCE');
 		for (k = 0; k < textareas.length; k++)
 		{
 			if (textareas[k].readOnly)
-            {
+			{
 				setInterval
-                textareas[k].style.display = 'none';
-                new Insertion.After(textareas[k], '<div class="disabledTextarea" id="disabledTextareas_' + (ActiveForm.prototype.lastDisabledTextareaId++) + '">' + textareas[k].value + '</div>');
-                var disabledTextarea = textareas[k].up().down('.disabledTextarea');
-                ActiveForm.prototype.disabledTextareas[disabledTextarea.id] = disabledTextarea;
+				textareas[k].style.display = 'none';
+				new Insertion.After(textareas[k], '<div class="disabledTextarea" id="disabledTextareas_' + (ActiveForm.prototype.lastDisabledTextareaId++) + '">' + textareas[k].value + '</div>');
+				var disabledTextarea = textareas[k].up().down('.disabledTextarea');
+				ActiveForm.prototype.disabledTextareas[disabledTextarea.id] = disabledTextarea;
 
-                var hoverFunction = function()
-                {
-                    $H(ActiveForm.prototype.disabledTextareas).each(function(iter)
-                    {
-                        iter.value.style.backgroundColor = '';
-                        iter.value.style.borderStyle = '';
-                        iter.value.style.borderWidth = '';
-                    });
-                }
+				var hoverFunction = function()
+				{
+					$H(ActiveForm.prototype.disabledTextareas).each(function(iter)
+					{
+						iter.value.style.backgroundColor = '';
+						iter.value.style.borderStyle = '';
+						iter.value.style.borderWidth = '';
+					});
+				}
 
-                Event.observe(document.body, 'mousedown', hoverFunction, true);
-                Event.observe(disabledTextarea, 'click', function()
-                {
-                    this.style.backgroundColor = '#ffc';
-                    this.style.borderStyle = 'inset';
-                    this.style.borderWidth = '2px';
-                }, true);
+				Event.observe(document.body, 'mousedown', hoverFunction, true);
+				Event.observe(disabledTextarea, 'click', function()
+				{
+					this.style.backgroundColor = '#ffc';
+					this.style.borderStyle = 'inset';
+					this.style.borderWidth = '2px';
+				}, true);
 
-            }
-            else
-            {
-                textareas[k].tinyMCEId = (this.lastTinyMceId++);
+			}
+			else
+			{
+				textareas[k].tinyMCEId = (this.lastTinyMceId++);
 				if (!textareas[k].id)
-                {
-                    textareas[k].id = 'tinyMceControll_' + textareas[k].tinyMCEId;
-                }
+				{
+					textareas[k].id = 'tinyMceControll_' + textareas[k].tinyMCEId;
+				}
 
 				ActiveForm.prototype.idleTinyMCEFields[textareas[k].id] = window.setInterval(function(tinyMCEField)
 				{
-				    if(!tinyMCEField || 0 >= tinyMCEField.offsetHeight) return;
+					if(!tinyMCEField || 0 >= tinyMCEField.offsetHeight) return;
 					window.clearInterval(ActiveForm.prototype.idleTinyMCEFields[tinyMCEField.id]);
 					tinyMCE.execCommand('mceAddControl', true, tinyMCEField.id); 
 				}.bind(this, textareas[k]), 1000);
-            }
+			}
 		}
-    },
+	},
 
-    destroyTinyMceFields: function(container) {
-        var textareas = container.getElementsBySelector('textarea.tinyMCE');
+	destroyTinyMceFields: function(container) {
+		var textareas = container.getElementsBySelector('textarea.tinyMCE');
 		for (k = 0; k < textareas.length; k++)
 		{
-            if (textareas[k].readOnly)
-            {
-                textareas[k].style.display = 'block';
-                var disabledTextarea = textareas[k].up().down('.disabledTextarea');
-                if (disabledTextarea)
-                {
-                    Element.remove(disabledTextarea);
-                    delete ActiveForm.prototype.disabledTextareas[disabledTextarea.id];
-                }
+			if (textareas[k].readOnly)
+			{
+				textareas[k].style.display = 'block';
+				var disabledTextarea = textareas[k].up().down('.disabledTextarea');
+				if (disabledTextarea)
+				{
+					Element.remove(disabledTextarea);
+					delete ActiveForm.prototype.disabledTextareas[disabledTextarea.id];
+				}
 
-            }
-            else
-            {
-    			tinyMCE.execCommand('mceRemoveControl', true, textareas[k].id);
-                window.clearInterval(ActiveForm.prototype.idleTinyMCEFields[textareas[k].id]);
-            }
+			}
+			else
+			{
+				tinyMCE.execCommand('mceRemoveControl', true, textareas[k].id);
+				window.clearInterval(ActiveForm.prototype.idleTinyMCEFields[textareas[k].id]);
+			}
 		}
-    },
+	},
 
 	resetTinyMceFields: function(container)
 	{
 		var textareas = container.getElementsBySelector('textarea.tinyMCE');
 		for(k = 0; k < textareas.length; k++)
 		{
-            if (textareas[k].readonly)
-            {
-                continue;
-            }
+			if (textareas[k].readonly)
+			{
+				continue;
+			}
 			tinyMCE.execInstanceCommand(textareas[k].id, 'mceSetContent', true, '', true);
 		}
 	}
@@ -227,10 +227,10 @@ ActiveForm.Slide.prototype = {
 		this.ul = $(ul);
 	},
 
-    show: function(className, form, ignoreFields, onCompleteCallback)
+	show: function(className, form, ignoreFields, onCompleteCallback)
 	{
 		// Show progress indicator
-        this.ul.getElementsBySelector(".progressIndicator").invoke("show");
+		this.ul.getElementsBySelector(".progressIndicator").invoke("show");
 
 		setTimeout(function(className, form, ignoreFields, onCompleteCallback)
 		{
@@ -241,15 +241,15 @@ ActiveForm.Slide.prototype = {
 			}
 
 			if(form)
-	        {
-	            Effect.BlindDown(form, {duration: 0.3});
-	            Effect.Appear(form, {duration: 0.66});
+			{
+				Effect.BlindDown(form, {duration: 0.3});
+				Effect.Appear(form, {duration: 0.66});
 
-	            setTimeout(function() {
-	                form.style.display = 'block';
-	                form.style.height = 'auto';
-	            }, 700);
-	        }
+				setTimeout(function() {
+					form.style.display = 'block';
+					form.style.height = 'auto';
+				}, 700);
+			}
 
 			ignoreFields = ignoreFields || [];
 			var form = $(form);
@@ -258,7 +258,7 @@ ActiveForm.Slide.prototype = {
 			this.ul.childElements().invoke("hide");
 			if(cancel)
 			{
-			    Element.show(this.ul.down("." + className + 'Cancel'));
+				Element.show(this.ul.down("." + className + 'Cancel'));
 			}
 
 			$A(form.getElementsByTagName("input")).each(function(input)
@@ -269,53 +269,53 @@ ActiveForm.Slide.prototype = {
 					throw $break;
 				}
 			});
-            
-	        if(window.Form.State && !Form.State.hasBackup(form)) Form.State.backup(form, ignoreFields);
-            if(window.ActiveList) ActiveList.prototype.collapseAll();
+			
+			if(window.Form.State && !Form.State.hasBackup(form)) Form.State.backup(form, ignoreFields);
+			if(window.ActiveList) ActiveList.prototype.collapseAll();
 			ActiveForm.prototype.initTinyMceFields(form);
 
 			if(onCompleteCallback)
 			{
-			    onCompleteCallback();
+				onCompleteCallback();
 			}
 		}.bind(this, className, form, ignoreFields, onCompleteCallback), 10);
 	},
 
-    hide: function(className, form, ignoreFields, onCompleteCallback)
-    {
-        // Hide progress indicator
-        this.ul.getElementsBySelector(".progressIndicator").invoke("hide");
+	hide: function(className, form, ignoreFields, onCompleteCallback)
+	{
+		// Hide progress indicator
+		this.ul.getElementsBySelector(".progressIndicator").invoke("hide");
 
-        setTimeout(function(className, form, ignoreFields, onCompleteCallback)
-        {
-	        if(typeof(ignoreFields) == 'function')
-	        {
-	            onCompleteCallback = ignoreFields;
-                ignoreFields = [];
-	        }
+		setTimeout(function(className, form, ignoreFields, onCompleteCallback)
+		{
+			if(typeof(ignoreFields) == 'function')
+			{
+				onCompleteCallback = ignoreFields;
+				ignoreFields = [];
+			}
 
-	        ignoreFields = ignoreFields || [];
+			ignoreFields = ignoreFields || [];
 			var form = $(form);
 
-            if(window.Form.State) Form.State.restore(form, ignoreFields);
-            ActiveForm.prototype.destroyTinyMceFields(form);
+			if(window.Form.State) Form.State.restore(form, ignoreFields);
+			ActiveForm.prototype.destroyTinyMceFields(form);
 
-	        if(form)
-	        {
-	            Effect.Fade(form, {duration: 0.2});
-	            Effect.BlindUp(form, {duration: 0.3});
-	            setTimeout(
-                    function() 
-                    { 
-                        form.style.display = 'none'; 
+			if(form)
+			{
+				Effect.Fade(form, {duration: 0.2});
+				Effect.BlindUp(form, {duration: 0.3});
+				setTimeout(
+					function() 
+					{ 
+						form.style.display = 'none'; 
 
-            			if (onCompleteCallback)
-            			{
-            				onCompleteCallback();
-            			}
+						if (onCompleteCallback)
+						{
+							onCompleteCallback();
+						}
 
-                    }, 300);
-	        }
+					}, 300);
+			}
 
 			this.ul.childElements().each(function(element) 
 			{
@@ -325,12 +325,12 @@ ActiveForm.Slide.prototype = {
 				}
 				else
 				{
-	                Element.hide(element);
+					Element.hide(element);
 				}
 			});
 
 		}.bind(this, className, form, ignoreFields, onCompleteCallback), 10);
-    }
+	}
 }
 
 
@@ -338,62 +338,62 @@ ActiveForm.Slide.prototype = {
  * Extend focus to use it with TinyMce fields.
  *
  * @example
- *     <code> Element.focus(element) </code>
+ *	 <code> Element.focus(element) </code>
  *
  *   This won't work
- *     <code>
- *         $(element).focus();
- *         element.focus();
- *     </code>
+ *	 <code>
+ *		 $(element).focus();
+ *		 element.focus();
+ *	 </code>
  *
  * @param HTMLElement element
  */
 Element.focus = function(element)
 {
-    var styleDisplay = element.style.display;
-    var styleHeight = element.style.height;
-    var styleVisibility = element.style.visibility;
-    var elementType = element.type;
+	var styleDisplay = element.style.display;
+	var styleHeight = element.style.height;
+	var styleVisibility = element.style.visibility;
+	var elementType = element.type;
 
-    if ('none' == element.style.display || "hidden" == element.type)
-    {
-        if (Element.isTinyMce(element)) element.style.height = '80px';
+	if ('none' == element.style.display || "hidden" == element.type)
+	{
+		if (Element.isTinyMce(element)) element.style.height = '80px';
 
-        element.style.visibility = 'hidden';
-        element.style.display = 'block';
-        try { element.type = elementType; } catch(e) {}
-        element.focus();
-        element.style.display = styleDisplay;
-        element.style.height = styleHeight;
-        element.style.visibility = styleVisibility;
-        try { element.type = elementType; } catch(e) {}
+		element.style.visibility = 'hidden';
+		element.style.display = 'block';
+		try { element.type = elementType; } catch(e) {}
+		element.focus();
+		element.style.display = styleDisplay;
+		element.style.height = styleHeight;
+		element.style.visibility = styleVisibility;
+		try { element.type = elementType; } catch(e) {}
 
-        if (Element.isTinyMce(element)) element.style.height = '1px';
-    }
-    else
-    {
-        element.focus();
-    }
+		if (Element.isTinyMce(element)) element.style.height = '1px';
+	}
+	else
+	{
+		element.focus();
+	}
 
-    if (Element.isTinyMce(element))
-    {
-        var inst = tinyMCE.getInstanceById(element.nextSibling.down(".mceEditorIframe").id);
-        tinyMCE.execCommand("mceStartTyping");
-        inst.contentWindow.focus();
-    }
+	if (Element.isTinyMce(element))
+	{
+		var inst = tinyMCE.getInstanceById(element.nextSibling.down(".mceEditorIframe").id);
+		tinyMCE.execCommand("mceStartTyping");
+		inst.contentWindow.focus();
+	}
 }
 
 /**
  * Check if field is tinyMce field
  *
  * @example
- *     <code> Element.isTinyMce(element) </code>
+ *	 <code> Element.isTinyMce(element) </code>
  *
  * @param HTMLElement element
  */
 Element.isTinyMce = function(element)
 {
-    return element.nextSibling && element.nextSibling.nodeType != 3 && Element.hasClassName(element.nextSibling, "mceEditorContainer");
+	return element.nextSibling && element.nextSibling.nodeType != 3 && Element.hasClassName(element.nextSibling, "mceEditorContainer");
 }
 
 /**
@@ -404,34 +404,34 @@ Element.isTinyMce = function(element)
  * from validation, so most of the time there is no need to worry.
  *
  * @example
- *     <code> Element.saveTinyMceFields(element) </code>
+ *	 <code> Element.saveTinyMceFields(element) </code>
  *
  * @param HTMLElement element
  */
 Element.saveTinyMceFields = function(element)
 {
-    document.getElementsByClassName("mceEditorIframe", element).each(function(mceControl)
-    {
-         tinyMCE.getInstanceById(mceControl.id).triggerSave();
-    });
+	document.getElementsByClassName("mceEditorIframe", element).each(function(mceControl)
+	{
+		 tinyMCE.getInstanceById(mceControl.id).triggerSave();
+	});
 }
 
 Form.focus = function(form)
 {
 	form = $(form);
 
-    if(form.tagName != 'FORM')
+	if(form.tagName != 'FORM')
 	{
 		form = form.down('form');
 	}
 	
 	if(form)
 	{
-	    var firstElement = form.down('input[type=text]');   
-	    
-	    if(firstElement)
-	    {
-	        firstElement.focus();
-	    }
+		var firstElement = form.down('input[type=text]');   
+		
+		if(firstElement)
+		{
+			firstElement.focus();
+		}
 	}
 }

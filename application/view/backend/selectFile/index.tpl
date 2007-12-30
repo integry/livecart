@@ -42,14 +42,14 @@
 
 <div id="fileContainer">
 
-    <fieldset class="container activeGridControls">
-    	<span class="activeGridItemsCount">
-    		<span id="filesCount_0">
-    			<span class="rangeCount">{t _listing_files}</span>
-    			<span class="notFound">{t _no_files_found}</span>
-    		</span>
-    	</span>
-    </fieldset>
+	<fieldset class="container activeGridControls">
+		<span class="activeGridItemsCount">
+			<span id="filesCount_0">
+				<span class="rangeCount">{t _listing_files}</span>
+				<span class="notFound">{t _no_files_found}</span>
+			</span>
+		</span>
+	</fieldset>
 
 {activeGrid
 	prefix="files"

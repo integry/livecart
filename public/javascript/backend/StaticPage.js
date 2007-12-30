@@ -13,7 +13,7 @@ Backend.StaticPage.prototype =
 	initialize: function(pages)
 	{
 		this.treeBrowser = new dhtmlXTreeObject("pageBrowser","","", false);
-//        Backend.Breadcrumb.setTree(this.treeBrowser);
+//		Backend.Breadcrumb.setTree(this.treeBrowser);
 		
 		this.treeBrowser.def_img_x = 'auto';
 		this.treeBrowser.def_img_y = 'auto';
@@ -31,8 +31,8 @@ Backend.StaticPage.prototype =
 				
 				if (!this.iconUrls[itemId])
 				{
-                    this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
-                }
+					this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
+				}
 
 				this.setItemImage(itemId, '../../../image/indicator.gif');
 			}
@@ -46,22 +46,22 @@ Backend.StaticPage.prototype =
 				}				
 			}
 		
-    	this.insertTreeBranch(pages, 0);    
-    	
-    	this.showControls();
+		this.insertTreeBranch(pages, 0);	
+		
+		this.showControls();
 	},
 	
 	showAddForm: function()
 	{
 		this.treeBrowser.clearSelection();
 		this.showControls();
-        new LiveCart.AjaxUpdater(this.urls['add'], $('pageContent'), $('settingsIndicator'), null, this.displayPage.bind(this));			
+		new LiveCart.AjaxUpdater(this.urls['add'], $('pageContent'), $('settingsIndicator'), null, this.displayPage.bind(this));			
 	},
 	
 	initForm: function()
 	{
 		tinyMCE.idCounter = 0;
-        ActiveForm.prototype.initTinyMceFields($('editContainer'));
+		ActiveForm.prototype.initTinyMceFields($('editContainer'));
 	},
 	
 	insertTreeBranch: function(treeBranch, rootId)
@@ -80,10 +80,10 @@ Backend.StaticPage.prototype =
 	save: function(form)
 	{
 		form.action = form.id.value 
-            ? pageHandler.urls.update
-            : pageHandler.urls.create;
-            
-        new LiveCart.AjaxRequest(form, $('saveIndicator'), this.saveCompleted.bind(this));	
+			? pageHandler.urls.update
+			: pageHandler.urls.create;
+			
+		new LiveCart.AjaxRequest(form, $('saveIndicator'), this.saveCompleted.bind(this));	
 	},
 	
 	saveCompleted: function(originalRequest)
@@ -103,7 +103,7 @@ Backend.StaticPage.prototype =
 	
 	activateCategory: function(id)
 	{
-//        Backend.Breadcrumb.display(id);
+//		Backend.Breadcrumb.display(id);
 		
 		if (!this.treeBrowser.hasChildren(id))
 		{
@@ -111,8 +111,8 @@ Backend.StaticPage.prototype =
 			var url = this.urls['edit'].replace('_id_', id);
 			var upd = new LiveCart.AjaxUpdater(url, 'pageContent', 'settingsIndicator');
 			upd.onComplete = this.displayPage.bind(this);
-            
-            this.showControls()
+			
+			this.showControls()
 		}
 	},
 
@@ -142,11 +142,11 @@ Backend.StaticPage.prototype =
 		
 		if (response.id != 0)
 		{
-            
-            parentId = this.treeBrowser.getParentId(response.id)
-            categoryIndex = this.treeBrowser.getIndexById(response.id)
+			
+			parentId = this.treeBrowser.getParentId(response.id)
+			categoryIndex = this.treeBrowser.getIndexById(response.id)
 			if(parseInt(categoryIndex) - 1 > 0) { 
-                secondId = this.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) - 1)
+				secondId = this.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) - 1)
 			} else {
 				secondId = this.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) + 1)
 			}
@@ -156,7 +156,7 @@ Backend.StaticPage.prototype =
 			
 			try 
 			{
-                this.treeBrowser.selectItem(secondId, true);
+				this.treeBrowser.selectItem(secondId, true);
 			}
 			catch(e)
 			{
@@ -197,53 +197,53 @@ Backend.StaticPage.prototype =
 	
 	showTemplateCode: function()
 	{
-        if ($('templateCode'))
-        {
-            Element.show($('templateCode'));  
-            Element.hide($('staticPageMenu'));
-        }
-    },
+		if ($('templateCode'))
+		{
+			Element.show($('templateCode'));  
+			Element.hide($('staticPageMenu'));
+		}
+	},
 
-    showControls: function()
-    {
-        var categoryId = this.treeBrowser.getSelectedItemId();
-        
-        parentId = this.treeBrowser.getParentId(categoryId)
-        categoryIndex = this.treeBrowser.getIndexById(categoryId)
-        
-        nextCategoryId = categoryId ? this.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) + 1) : 0;
+	showControls: function()
+	{
+		var categoryId = this.treeBrowser.getSelectedItemId();
+		
+		parentId = this.treeBrowser.getParentId(categoryId)
+		categoryIndex = this.treeBrowser.getIndexById(categoryId)
+		
+		nextCategoryId = categoryId ? this.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) + 1) : 0;
 
-        if(nextCategoryId && categoryId) 
-        {
-            $("moveDownMenu").show();            
-        }
-        else 
-        {
-            $("moveDownMenu").hide();
-        }
-        
-        if(categoryId && categoryIndex > 0) 
-        {
-            $("moveUpMenu").show();
-        }
-        else
-        {
-            $("moveUpMenu").hide();
-        }
+		if(nextCategoryId && categoryId) 
+		{
+			$("moveDownMenu").show();			
+		}
+		else 
+		{
+			$("moveDownMenu").hide();
+		}
+		
+		if(categoryId && categoryIndex > 0) 
+		{
+			$("moveUpMenu").show();
+		}
+		else
+		{
+			$("moveUpMenu").hide();
+		}
 
-        if(categoryId) 
-        {
-            $("removeMenu").show();
-        }
-        else
-        {
-            $("removeMenu").hide();
-        }
+		if(categoryId) 
+		{
+			$("removeMenu").show();
+		}
+		else
+		{
+			$("removeMenu").hide();
+		}
 
-    },
-    
-    cancel: function()
-    {
-		new LiveCart.AjaxUpdater(this.urls['empty'], 'pageContent', 'settingsIndicator');        
-    }
+	},
+	
+	cancel: function()
+	{
+		new LiveCart.AjaxUpdater(this.urls['empty'], 'pageContent', 'settingsIndicator');		
+	}
 }

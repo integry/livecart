@@ -5,44 +5,44 @@
 function validateForm(form)
 {
 	Element.saveTinyMceFields(form);
-    ActiveForm.prototype.resetErrorMessages(form);
+	ActiveForm.prototype.resetErrorMessages(form);
 
-    var isFormValid = true;
-    var focusField = true;
+	var isFormValid = true;
+	var focusField = true;
 
 	$H(form._validator.value.evalJSON()).each(function(checks)
 	{
-        var formElement = form[checks.key];
+		var formElement = form[checks.key];
 		if (!formElement) return;
-        
-        $H(checks.value).each(function(formElement, check) 
-		{                
+		
+		$H(checks.value).each(function(formElement, check) 
+		{				
 			if (window[check.key] && !window[check.key](formElement, check.value.param)) // If element is not valid
 			{
-                // radio button group
-                if (!formElement.parentNode && formElement.length)
-                {
-                    formElement = formElement[formElement.length - 1];
-                }
-                
-                ActiveForm.prototype.setErrorMessage(formElement, check.value.error, focusField);
+				// radio button group
+				if (!formElement.parentNode && formElement.length)
+				{
+					formElement = formElement[formElement.length - 1];
+				}
+				
+				ActiveForm.prototype.setErrorMessage(formElement, check.value.error, focusField);
 				isFormValid = false;
-                focusField = false;
+				focusField = false;
 				throw $break;
 			}
-	    }.bind(this, formElement));
+		}.bind(this, formElement));
 	}.bind(this));
-    
+	
 	return isFormValid;
 }
 
 function applyFilters(form, ev)
 {	
-    if(!ev || !ev.target) 
-    { 
-        ev = window.event; 
-        ev.target = ev.srcElement;
-    }
+	if(!ev || !ev.target) 
+	{ 
+		ev = window.event; 
+		ev.target = ev.srcElement;
+	}
 
 	var filterData = form.elements.namedItem('_filter').value;
 	var filter = filterData.evalJSON();
@@ -59,7 +59,7 @@ function applyFilters(form, ev)
 	{
 		if (typeof elementFilters[k] == 'object' && window[k])
 		{
-            eval(k + '(element, elementFilters[k]);');
+			eval(k + '(element, elementFilters[k]);');
 		}
 	}	
 }
@@ -70,22 +70,22 @@ function applyFilters(form, ev)
 function trim(strValue)
 {
  	var objRegExp = /^(\s*)$/;
-    //check for all spaces
-    if(objRegExp.test(strValue))
-    {
+	//check for all spaces
+	if(objRegExp.test(strValue))
+	{
 		strValue = strValue.replace(objRegExp, '');
-       	if( strValue.length == 0)
-       	{
-        	return strValue;
-       	}
-    }
+	   	if( strValue.length == 0)
+	   	{
+			return strValue;
+	   	}
+	}
    	//check for leading & trailing spaces
    	objRegExp = /^(\s*)([\W\w]*)(\b\s*$)/;
    	if(objRegExp.test(strValue))
    	{
-       //remove leading and trailing whitespace characters
-       strValue = strValue.replace(objRegExp, '$2');
-    }
+	   //remove leading and trailing whitespace characters
+	   strValue = strValue.replace(objRegExp, '$2');
+	}
   	return strValue;
 }
 
@@ -93,26 +93,26 @@ function trim(strValue)
 function IsNotEmptyCheck(element, params)
 {
 	// radio buttons
-    if (!element.parentNode && element.length)
+	if (!element.parentNode && element.length)
 	{
-        for (k = 0; k < element.length; k++)
-        {
-            if (element[k].checked)
-            {
-                return true;
-            }
-        }   
-    }
-    
-    else
-    {
-        if (element.getAttribute("type") == "checkbox") 
-        {
-    		return element.checked;
-    	}
-    	
-    	return (element.value.length > 0);       
-    }
+		for (k = 0; k < element.length; k++)
+		{
+			if (element[k].checked)
+			{
+				return true;
+			}
+		}   
+	}
+	
+	else
+	{
+		if (element.getAttribute("type") == "checkbox") 
+		{
+			return element.checked;
+		}
+		
+		return (element.value.length > 0);	   
+	}
 }
 
 function MinLengthCheck(element, params)
@@ -123,12 +123,12 @@ function MinLengthCheck(element, params)
 function IsLengthBetweenCheck(element, params)
 {
 	var len = element.value.length;
-    return ((len >= params.minLength && len <= params.maxLength) || (len == 0 && params.allowEmpty));
+	return ((len >= params.minLength && len <= params.maxLength) || (len == 0 && params.allowEmpty));
 }
 
 function PasswordEqualityCheck(element, params)
 {
-    return (element.value == element.form.elements.namedItem(params.secondPasswordFieldname).value);
+	return (element.value == element.form.elements.namedItem(params.secondPasswordFieldname).value);
 }
 
 function MaxLengthCheck(element, params)
@@ -182,8 +182,8 @@ function MaxValueCheck(element, constraint)
 *********************************************/
 function NumericFilter(elm, params)
 {
-    elm.focus();
-    
+	elm.focus();
+	
 	var value = elm.value;
 	
 	// Remove leading zeros
@@ -216,9 +216,9 @@ function NumericFilter(elm, params)
 
 	if ('' != dollars && '-' != dollars)
 	{
-        dollars = parseInt(dollars);	  
+		dollars = parseInt(dollars);	  
 
-        if(!dollars) dollars = 0;
+		if(!dollars) dollars = 0;
 	}
 	
 	if (2 == parts.length)
@@ -232,15 +232,15 @@ function NumericFilter(elm, params)
 
 function IntegerFilter(element, params)
 {
-    element.focus();
-    
+	element.focus();
+	
 	element.value = element.value.replace(/[^\d]/, '');
 	element.value = element.value.replace(/^0/, '');
-    
-    if(element.value == '') 
-    {
-        element.value = 0;
-    }
+	
+	if(element.value == '') 
+	{
+		element.value = 0;
+	}
 }
 
 function RegexFilter(element, params)
