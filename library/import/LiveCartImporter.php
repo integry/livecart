@@ -122,7 +122,7 @@ class LiveCartImporter
 			}
 			catch (Exception $e)
 			{
-//				var_dump($e);
+				var_dump($e);
 			}
 
 			// import completed?

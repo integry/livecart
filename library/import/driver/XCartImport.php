@@ -256,7 +256,7 @@ class XCartImport extends LiveCartImportDriver
 		// root level categories first
 		if ($data = array_shift($this->categoryMap))
 		{
-			$parentNode = 0 == $data['parentid'] ? Category::getRootNode(Category::LOAD_DATA) : Category::getInstanceById($this->getRealId('Category', $data['parentid']), Category::LOAD_DATA);
+			$parentNode = 0 == $data['parentid'] ? Category::getRootNode() : Category::getInstanceById($this->getRealId('Category', $data['parentid']));
 			$rec = Category::getNewInstance($parentNode);
 		}
 		else
@@ -360,7 +360,7 @@ class XCartImport extends LiveCartImportDriver
 			return null;
 		}
 
-		$rec = Product::getNewInstance(Category::getInstanceById($this->getRealId('Category', $data['categoryid']), Category::LOAD_DATA));
+		$rec = Product::getNewInstance(Category::getInstanceById($this->getRealId('Category', $data['categoryid'])));
 		$rec->setID($data['productid']);
 		$rec->keywords->set($data['keywords']);
 
@@ -385,7 +385,7 @@ class XCartImport extends LiveCartImportDriver
 
 		if ($data['manufacturerid'])
 		{
-			$rec->manufacturer->set(Manufacturer::getInstanceById($this->getRealId('Manufacturer', $data['manufacturerid']), Manufacturer::LOAD_DATA));
+			$rec->manufacturer->set(Manufacturer::getInstanceById($this->getRealId('Manufacturer', $data['manufacturerid'])));
 		}
 
 		foreach (array(
@@ -443,13 +443,13 @@ class XCartImport extends LiveCartImportDriver
 		}
 
 		$order = CustomerOrder::getNewInstance($user);
-		$order->currency->set(Currency::getInstanceById($this->getDefaultCurrency(), Currency::LOAD_DATA));
+		$order->currency->set(Currency::getInstanceById($this->getDefaultCurrency()));
 		$order->dateCompleted->set($data['date']);
 
 		// products
 		foreach ($this->getDataBySql('SELECT * FROM xcart_order_details WHERE orderid=' . $data['orderid']) as $prod)
 		{
-			$product = Product::getInstanceById($this->getRealId('Product', $prod['productid']), Product::LOAD_DATA);
+			$product = Product::getInstanceById($this->getRealId('Product', $prod['productid']));
 			$order->addProduct($product, $prod['amount']);
 
 			$item = array_shift($order->getItemsByProduct($product));

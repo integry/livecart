@@ -696,6 +696,10 @@ Backend.Product.Editor.prototype =
             Backend.Category.treeBrowser.selectItem(1, false);
             Backend.Category.activateCategory(1);
         }
+
+        // container element height may not be reduced automatically when closing a longer product form,
+        // so sometimes extra whitespace remains below the product list
+        Backend.LayoutManager.prototype.collapseAll($('pageContentInnerContainer'));
     },
 
     removeTinyMce: function()

@@ -681,7 +681,7 @@ ul.verticalMenu li
 	padding-left: 28px;
 	background-repeat: no-repeat;
 	background-position: 5px center;
-	border: 1px solid #ccc;
+	border: 1px solid #ddd;
 	background-color: #ffe;
 }
 
@@ -1503,6 +1503,7 @@ li.activeList_even, li.activeList_odd,
 fieldset.controls,
 li.logEntry,
 ul.transactions li,
+div.yellowMessage div, div.redMessage div, div.bugMessage div,
 .activeGrid .filterMenu,
 #langMenu
 {
