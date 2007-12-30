@@ -2,7 +2,7 @@
 
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.parser.CsvFile");
-ClassLoader::import("application.model.category.Category");
+ClassLoader::import("application.model.product.Product");
 
 /**
  * Handles product importing through a CSV file
@@ -173,8 +173,7 @@ class CsvImportController extends StoreManagementController
 
 	public function import()
 	{
-		ClassLoader::import('application.model.product.Product');
-		header('Content-type: text/javascript');
+		$response = new JSONResponse(null);
 
 		if (file_exists($this->getCancelFile()))
 		{
@@ -395,7 +394,7 @@ class CsvImportController extends StoreManagementController
 
 			if ($progress % self::PROGRESS_FLUSH_INTERVAL == 0 || ($total == $progress))
 			{
-				$this->flushResponse(array('progress' => $progress, 'total' => $total));
+				$response->flush($this->getResponse(array('progress' => $progress, 'total' => $total)));
 			}
 
 			if (connection_aborted())
@@ -410,7 +409,7 @@ class CsvImportController extends StoreManagementController
 		//ActiveRecord::rollback();
 		ActiveRecord::commit();
 
-		$this->flushResponse(array('progress' => 0, 'total' => $total));
+		$response->flush($this->getResponse(array('progress' => 0, 'total' => $total)));
 
 		//echo '|' . round(memory_get_usage() / (1024*1024), 1);
 
@@ -451,11 +450,9 @@ class CsvImportController extends StoreManagementController
 		return ClassLoader::getRealPath('cache') . '/.csvImportCancel';
 	}
 
-	private function flushResponse($data)
+	private function getResponse($data)
 	{
-		//echo '|' . round(memory_get_usage() / (1024*1024), 1) . "\n";
-		echo '|' . base64_encode(json_encode($data));
-		flush();
+		return '|' . base64_encode(json_encode($data));
 	}
 
 	private function getPreview(CsvFile $csv)

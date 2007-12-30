@@ -68,34 +68,39 @@ class DatabaseImportController extends StoreManagementController
 
 		$importer = new LiveCartImporter($driver);
 
-		header('Content-type: text/javascript');
+		$response = new JSONResponse(null);
 
 		// get importable data types
-		$this->flushResponse(array('types' => $importer->getItemTypes()));
-//ActiveRecord::beginTransaction();
+		$response->flush($this->getResponse(array('types' => $importer->getItemTypes())));
+
+		ActiveRecord::beginTransaction();
+
 		// process import
 		while (true)
 		{
 			$result = $importer->process();
 
-			$this->flushResponse($result);
+			$response->flush($this->getResponse($result));
+
+//echo '|' . round(memory_get_usage() / (1024*1024), 1) . " ($result[type] : " . array_shift(array_shift(ActiveRecord::getDataBySQL("SELECT COUNT(*) FROM " . $result['type']))) . ")<br> \n";
 
 			if (is_null($result))
 			{
 				break;
 			}
 		}
-//ActiveRecord::rollback();
+
+		ActiveRecord::commit();
+		//ActiveRecord::rollback();
 
 		$importer->reset();
-		exit;
+
+		return $response;
 	}
 
-	private function flushResponse($data)
+	private function getResponse($data)
 	{
-		//print_r($data);
-		echo '|' . base64_encode(json_encode($data));
-		flush();
+		return '|' . base64_encode(json_encode($data));
 	}
 
 	private function getDrivers()

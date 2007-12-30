@@ -8,7 +8,7 @@
 	<fieldset class="error">
 		<p id="agreeContainer" onclick="if (Event.element(event) != $('accept')) { $('accept').click(); }">
 	{/literal}
-			{checkbox name=accept class="checbox" style="float: left; margin-right: 5px;"}
+			{checkbox name=accept id=accept class="checbox" style="float: left; margin-right: 5px;"}
 			<label class="checkbox">I accept the license agreement</label>
 			<span class="errorText hidden"></span>
 			<br class="clear" />
@@ -28,4 +28,9 @@
 	}
 	</style>
 <![endif]-->
+
+<script type="text/javascript">
+	$('accept').focus();
+</script>
+
 {/literal}

@@ -8,6 +8,14 @@
 	width: 370px;
 }
 
+#targetCategory
+{
+	background-image: url(../../image/silk/folder.png);
+	padding-left: 20px;
+	background-position: center left;
+	background-repeat: no-repeat;
+}
+
 fieldset.controls
 {
 	margin-top: 0;

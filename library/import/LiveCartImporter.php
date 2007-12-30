@@ -116,7 +116,14 @@ class LiveCartImporter
 		{
 			$id = $this->getCurrentProgress();
 
-			$record = call_user_func_array(array($this->driver, 'getNext' . $type), array($id));
+			try
+			{
+				$record = call_user_func_array(array($this->driver, 'getNext' . $type), array($id));
+			}
+			catch (Exception $e)
+			{
+//				var_dump($e);
+			}
 
 			// import completed?
 			if (null == $record)
@@ -143,10 +150,15 @@ class LiveCartImporter
 					$record->save(ActiveRecord::PERFORM_INSERT);
 				}
 			}
-			catch (SQLException $e)
+			catch (Exception $e)
 			{
-				//print_r("\r\n", $e->getMessage());
+//				var_dump($e);
 			}
+
+			ActiveRecord::clearPool();
+			$record->__destruct();
+			$record->destruct();
+			unset($record);
 
 			$this->setProgress($this->getCurrentProgress() + 1);
 		}

@@ -80,7 +80,7 @@ Backend.DatabaseImport.prototype =
         var li = $('progress_' + response.type);
         li.down('.progressBar').show();
         li.down('.progressTotal').update(response.total);
-//console.log(response.progress);
+
         if (response.progress > 0)
         {
             li.down('.progressCount').update(response.progress);

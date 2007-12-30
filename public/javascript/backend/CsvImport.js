@@ -76,6 +76,8 @@ Backend.CsvImport =
 			$('preview').hide();
 			$('progress').show();
 
+			this.progressBar = new Backend.ProgressBar($('progress'));
+
 			$('wizardProgress').removeClassName('stepArrange');
 			$('wizardProgress').addClassName('stepImport');
 		}
@@ -200,12 +202,6 @@ Backend.CsvImport =
             {
                 this.setProgress(response);
             }
-
-            // cancel
-            else if (response.cancelled)
-            {
-                this.setProgress(response);
-            }
         }
     },
 
@@ -213,11 +209,10 @@ Backend.CsvImport =
     {
         var li = $('progress');
         li.down('.progressBar').show();
-        li.down('.progressTotal').update(response.total);
 
         if (response.progress > 0)
         {
-            this.updateProgress(response.progress, response.total, li);
+            this.progressBar.update(response.progress, response.total);
         }
         else
         {
@@ -244,8 +239,8 @@ Backend.CsvImport =
 		if (resp.cancelled)
 		{
 			var container = $('progress');
-			var progress = container.down('.progressCount').innerHTML;
-			var total = container.down('.progressTotal').innerHTML;
+			var progress = this.progressBar.getProgress();
+			var total = this.progressBar.getTotal();
 
 			var step = Math.round(progress/50);
 			if (step < 1)
@@ -253,26 +248,16 @@ Backend.CsvImport =
 				step = 1;
 			}
 
-			Backend.CsvImport.rewindProgressBar(progress, total, container, step);
+			this.progressBar.rewind(progress, total, step,
+				function()
+				{
+					this.restoreLayoutAfterCancel();
+					new Backend.SaveConfirmationMessage($('cancelCompleteMessage'));
+				}.bind(this));
 		}
 		else
 		{
 			new Backend.SaveConfirmationMessage($('cancelFailureMessage'));
-		}
-	},
-
-	rewindProgressBar: function(progress, total, container, step)
-	{
-		if (progress > 0)
-		{
-			progress -= step;
-			Backend.CsvImport.updateProgress(progress, total, container);
-			setTimeout(function() { Backend.CsvImport.rewindProgressBar(progress, total, container, step) }, 70);
-		}
-		else
-		{
-			this.restoreLayoutAfterCancel();
-			new Backend.SaveConfirmationMessage($('cancelCompleteMessage'));
 		}
 	},
 
@@ -284,12 +269,5 @@ Backend.CsvImport =
 		$('progress').hide();
 		$('wizardProgress').removeClassName('stepImport');
 		$('wizardProgress').addClassName('stepArrange');
-	},
-
-	updateProgress: function(progress, total, container)
-	{
-		container.down('.progressCount').update(progress);
-		var progressWidth = (parseFloat(progress) / parseFloat(total)) * container.down('.progressBar').clientWidth;
-		container.down('.progressBarIndicator').style.width = progressWidth + 'px';
 	}
 }

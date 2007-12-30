@@ -233,7 +233,7 @@ class OsCommerceImport extends LiveCartImportDriver
 		// root level categories first
 		if ($data = array_shift($this->categoryMap))
 		{
-			$parentNode = 0 == $data['parent_id'] ? Category::getRootNode(Category::LOAD_DATA) : Category::getInstanceById($this->getRealId('Category', $data['parent_id']), Category::LOAD_DATA);
+			$parentNode = 0 == $data['parent_id'] ? Category::getRootNode() : Category::getInstanceById($this->getRealId('Category', $data['parent_id']));
 			$rec = Category::getNewInstance($parentNode);
 		}
 		else
@@ -284,7 +284,7 @@ class OsCommerceImport extends LiveCartImportDriver
 			return null;
 		}
 
-		$rec = Product::getNewInstance(Category::getInstanceById($this->getRealId('Category', $data['categories_id']), Category::LOAD_DATA));
+		$rec = Product::getNewInstance(Category::getInstanceById($this->getRealId('Category', $data['categories_id'])));
 		$rec->setID($data['products_id']);
 
 		foreach ($this->languages as $code)
@@ -299,7 +299,7 @@ class OsCommerceImport extends LiveCartImportDriver
 
 		if ($data['manufacturers_id'])
 		{
-			$rec->manufacturer->set(Manufacturer::getInstanceById($this->getRealId('Manufacturer', $data['manufacturers_id']), Manufacturer::LOAD_DATA));
+			$rec->manufacturer->set(Manufacturer::getInstanceById($this->getRealId('Manufacturer', $data['manufacturers_id'])));
 		}
 
 		$rec->sku->set($data['products_model']);
@@ -335,15 +335,15 @@ class OsCommerceImport extends LiveCartImportDriver
 			return null;
 		}
 
-		$order = CustomerOrder::getNewInstance(User::getInstanceById($this->getRealId('User', $data['customers_id']), User::LOAD_DATA));
-		$order->currency->set(Currency::getInstanceById($data['currency'], Currency::LOAD_DATA));
+		$order = CustomerOrder::getNewInstance(User::getInstanceById($this->getRealId('User', $data['customers_id'])));
+		$order->currency->set(Currency::getInstanceById($data['currency']));
 		$order->dateCompleted->set($data['date_purchased']);
 
 		// products
 		$tax = 0;
 		foreach ($this->getDataBySql('SELECT * FROM orders_products WHERE orders_id=' . $data['id']) as $prod)
 		{
-			$product = Product::getInstanceById($this->getRealId('Product', $prod['products_id']), Product::LOAD_DATA);
+			$product = Product::getInstanceById($this->getRealId('Product', $prod['products_id']));
 			$order->addProduct($product, $prod['products_quantity']);
 
 			$item = array_shift($order->getItemsByProduct($product));

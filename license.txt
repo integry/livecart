@@ -2,9 +2,9 @@ LiveCart is owned and developed by UAB "Integry Systems", a Limited Liability Co
 
 Except where otherwise noted, all of the documentation and software included in the LIVECART package is copyrighted by UAB "Integry Systems".
 
-Copyright (C) 2007, UAB "Integry Systems". ALL RIGHTS RESERVED.
+Copyright (C) 2007-2008, UAB "Integry Systems". ALL RIGHTS RESERVED.
 
-This Software is licensed not sold.  You may use this Software only as described in this license.  
+This Software is licensed not sold.  You may use this Software only as described in this license.
 
 If you do not agree to the terms of this license, do not install the Software or use any registration number that was provided with the Software.
 

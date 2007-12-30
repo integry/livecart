@@ -9,7 +9,7 @@
 	<p>
 		{err for="name"}
 			{{label Store name:}}
-			{textfield class="text"}
+			{textfield class="text" id="name"}
 		{/err}
 	</p>
 
@@ -29,4 +29,10 @@
 
 	<input type="submit" class="submit" value="Complete installation" />
 
-{/form} 
+{/form}
+
+{literal}
+<script type="text/javascript">
+	$('name').focus();
+</script>
+{/literal}

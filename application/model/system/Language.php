@@ -5,7 +5,7 @@ ClassLoader::import("application.model.ActiveRecordModel");
 /**
  * System language logic - adding, removing or enabling languages.
  *
- * @author Integry Systems <http://integry.com>  
+ * @author Integry Systems <http://integry.com>
  * @package application.model.system
  */
 class Language extends ActiveRecordModel
@@ -68,19 +68,19 @@ class Language extends ActiveRecordModel
 	public function save($forceOperation = 0)
 	{
 		self::deleteCache();
-		
+
 		return parent::save($forceOperation);
 	}
-	
+
 	public static function deleteById($id)
 	{
 		self::deleteCache();
 
 		// make sure the language record exists
 		$inst = ActiveRecord::getInstanceById('Language', $id, true);
-		
+
 		// make sure it's not the default currency
-		if (true != $inst->isDefault->get())			
+		if (true != $inst->isDefault->get())
 		{
 			ActiveRecord::deleteByID('Language', $id);
 			return true;
@@ -90,12 +90,16 @@ class Language extends ActiveRecordModel
 		  	return false;
 		}
 	}
-	
+
 	public static function deleteCache()
 	{
-		@unlink(ClassLoader::getRealPath('cache') . '/languages.php');		
+		$cacheFile = ClassLoader::getRealPath('cache') . '/languages.php';
+		if (file_exists($cacheFile))
+		{
+			unlink($cacheFile);
+		}
 	}
-	
+
 	protected function insert()
 	{
 	  	// get max position
@@ -106,25 +110,35 @@ class Language extends ActiveRecordModel
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
 
 		// default new language state
-		$this->position->set($position);	  	
-		
+		$this->position->set($position);
+
 		parent::insert();
 	}
-	
+
 	public function toArray()
 	{
 	  	$array = parent::toArray();
-	  	
+
 	  	$info = self::getApplication()->getLocale()->info();
 		$array['name'] = $info->getLanguageName($array['ID']);
 	  	$array['originalName'] = $info->getOriginalLanguageName($array['ID']);
-	  	
+
 		if (file_exists(ClassLoader::getRealPath('public.image.localeflag') . '/' . $array['ID'] . '.png'))
 		{
 		  	$array['image'] = 'image/localeflag/' . $array['ID'] . '.png';
-		}	  	
-		
+		}
+
 		return $array;
+	}
+
+	/**
+	 *
+	 * PHP segfaults (5.2.3 / mod_php) on installation time when an unsaved instance is destructed,
+	 * so to avoid this, we're simply not destructing the Language instances (and there's no need for that anyway)
+	 */
+	public function __destruct()
+	{
+
 	}
 }
 

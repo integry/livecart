@@ -1373,10 +1373,23 @@ Backend.ProgressBar.prototype =
 
 	update: function(progress, total)
 	{
+		if (progress < 0)
+		{
+			progress = 0;
+		}
+
 		this.counter.update(progress);
 		this.total.update(total);
 
-		var progressWidth = (parseFloat(progress) / parseFloat(total)) * this.progressBar.clientWidth;
+		if (parseFloat(total))
+		{
+			var progressWidth = (parseFloat(progress) / parseFloat(total)) * this.progressBar.clientWidth;
+		}
+		else
+		{
+			var progressWidth = 0;
+		}
+
 		this.progressBarIndicator.style.width = progressWidth + 'px';
 	},
 

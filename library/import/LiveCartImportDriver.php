@@ -270,7 +270,10 @@ abstract class LiveCartImportDriver
 				$image = ProductImage::getNewInstance($product);
 				$image->save();
 				$image->setFile($imageFile);
+				$image->__destruct();
 			}
+
+			unset($product->importedImages);
 		}
 	}
 
@@ -322,7 +325,7 @@ abstract class LiveCartImportDriver
 
 	public function saveUser(User $user)
 	{
-		$user->save();
+		$user->save(ActiveRecordModel::PERFORM_INSERT);
 
 		if ($user->defaultBillingAddress->get())
 		{

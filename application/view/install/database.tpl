@@ -14,32 +14,38 @@
 	<p>
 		{err for="server"}
 			{{label Database server:}}
-			{textfield class="text"} <div style="margin-top: -5px;"><small>Usually <em>localhost</em></small></div>
-		{/err}	
+			{textfield class="text" id="server"} <div style="margin-top: -5px;"><small>Usually <em>localhost</em></small></div>
+		{/err}
 	</p>
 
 	<p>
 		{err for="name"}
 			{{label Database name:}}
 			{textfield class="text"}
-		{/err}	
+		{/err}
 	</p>
 
 	<p>
 		{err for="username"}
 			{{label Database user name:}}
 			{textfield class="text"}
-		{/err}	
+		{/err}
 	</p>
 
 	<p>
 		{err for="password"}
 			{{label Password:}}
 			{textfield type="password" class="text password"}
-		{/err}	
+		{/err}
 	</p>
 
 	<div class="clear"></div>
 	<input type="submit" value="Continue installation" />
 	{/form}
 </div>
+
+{literal}
+<script type="text/javascript">
+	$('server').focus();
+</script>
+{/literal}

@@ -4,14 +4,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />	
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 
 	<title>
 		LiveCart Installer
 		{* $PAGE_TITLE *}
 	</title>
 	<base href="{baseUrl}" />
-	
+
 	<!-- Css includes -->
 	<link href="stylesheet/install/Install.css" rel="Stylesheet" type="text/css"/>
 
@@ -30,14 +30,14 @@
 		</style>
 	<![endif]-->
 	{/literal}
-		
+
 	{includeJs file="library/prototype/prototype.js"}
 	{includeJs file="library/livecart.js"}
 	{includeJs file="library/form/Validator.js"}
 	{includeJs file="library/form/ActiveForm.js"}
-	{includeJs file="library/scriptaculous/effects.js"}	
+	{includeJs file="library/scriptaculous/effects.js"}
 	{compiledJs glue=false}
-	
+
 </head>
 
 <body>
@@ -59,9 +59,9 @@
 			<div class="clear"></div>
 		</div>
 		<div id="installFooter">
-		  &copy; <a href="http://livecart.com" target="_blank">UAB Integry Systems</a>, 2007
+		  &copy; <a href="http://livecart.com" target="_blank">UAB Integry Systems</a>, 2007-2008
 		</div>
-	</div>	
+	</div>
 </body>
 
 </html>

@@ -4,7 +4,7 @@
   	padding: 0;
 }
 
-html, body 
+html, body
 {
 	height:100%; /* needed for container min-height */
 }
@@ -63,7 +63,7 @@ td
 	vertical-align: top;
 }
 
-ul 
+ul
 {
   	padding-left: 12px;
 }
@@ -76,7 +76,7 @@ p
 
 table
 {
-    border-spacing: 0;   
+    border-spacing: 0;
 }
 
 .clear
@@ -107,24 +107,24 @@ div.confirmationMsg div
 {
     display: inline;
     padding: 5px;
-    background-color: #FFFCAC;   
+    background-color: #FFFCAC;
     z-index: 0;
 }
 
 /*****************************
 	Layout
 *****************************/
-#container 
+#container
 {
 	position:relative; /* needed for footer positioning*/
-	
+
 	height:auto !important; /* real browsers */
 	height:100%; /* IE6: treaded as min-height*/
 
 	min-height:100%; /* real browsers */
 }
 
-#header 
+#header
 {
   	padding: 15px;
   	padding-bottom: 10px;
@@ -134,18 +134,18 @@ div.confirmationMsg div
 
 #header #title
 {
-  	font-size: 30px;    
+  	font-size: 30px;
   	margin-right: 2em;
 }
 
-#footer 
+#footer
 {
 	border-top: 1px solid #DDDDDD;
   	padding: 20px;
   	text-align:center;
 }
 
-#leftSide 
+#leftSide
 {
 	float: left;
 	width: 190px;
@@ -153,7 +153,7 @@ div.confirmationMsg div
 	position: relative;
 }
 
-#rightSide 
+#rightSide
 {
 	float:right;
 	width:150px;
@@ -165,7 +165,7 @@ div.confirmationMsg div
 	height: 1px;
 }
 
-#content 
+#content
 {
 	margin-left: 190px;
 	padding: 10px;
@@ -182,7 +182,7 @@ div.confirmationMsg div
 	margin-right: 0px;
 }
 
-/*************************** 
+/***************************
 	Form styling
 ***************************/
 form
@@ -265,12 +265,12 @@ p.radio, p.checkbox
 p.radio label, p.checkbox label
 {
     white-space: nowrap;
-    margin-top: 3px; 
+    margin-top: 3px;
 }
 
 label.checkbox, label.radio
 {
-  	margin-top: 3px; 
+  	margin-top: 3px;
   	width: auto;
 }
 
@@ -301,14 +301,14 @@ option
 	padding-right: 4px;
 }
 
-optgroup option 
+optgroup option
 {
    padding-left: 1em;
    color: black;
    background-color: #ffc;
 }
 
-optgroup  
+optgroup
 {
    font-style: normal;
    font-weight: bold;
@@ -350,7 +350,7 @@ input:focus, textarea:focus, select:focus
     background: #ffc;
 }
 
-input.submit:focus 
+input.submit:focus
 {
 	color: #008cff;
 }
@@ -366,7 +366,7 @@ label, input, select, form .other, textarea
     margin-bottom: 5px;
 }
 
-a.cancel 
+a.cancel
 {
  	color: red;
 }
@@ -375,7 +375,7 @@ fieldset.error, div.error, fieldset.container
 {
 	padding: 0px;
 	margin: 0px;
-	position: static; 
+	position: static;
 	border: 0;
 	background-color: inherit;
 	background: inherit;
@@ -386,7 +386,7 @@ fieldset.error, div.error, fieldset.container
 .errorText /* , fieldset.error div */
 {
 	background-color: #FF0001;
-	float: left; 
+	float: left;
 	width: auto;
 	margin-bottom: 4px;
 	margin-top: 0px;
@@ -394,14 +394,14 @@ fieldset.error, div.error, fieldset.container
 	color: white;
 }
 
-.hidden 
+.hidden
 {
-	display: none;	
+	display: none;
 }
 
 .visible
 {
-	display: block;	
+	display: block;
 }
 
 .progressIndicator {
@@ -425,12 +425,12 @@ label.title
 }
 
 /* textarea container */
-div.textarea 
+div.textarea
 {
- 	margin-bottom: 7px; 
+ 	margin-bottom: 7px;
 }
 
-input.wide 
+input.wide
 {
   	width: 35em;
 }
@@ -442,7 +442,7 @@ input.money, input.number
 
 input.date
 {
-  	width: 6em;  
+  	width: 6em;
 }
 
 /*************************
@@ -468,7 +468,7 @@ input.date
 	width:100%;
 	bottom:0; /* stick to bottom */
 	background:#183583;
-	border-top:1px #1835B3;    
+	border-top:1px #1835B3;
 	padding-top: 1em;
 	padding-bottom: 1em;
 	text-align: center;
@@ -476,7 +476,7 @@ input.date
 
 #installFooter, #installFooter a
 {
-	color: white;    
+	color: white;
 }
 
 
@@ -526,7 +526,7 @@ dd
     margin-left: 0;
     margin-top: 1em;
     margin-bottom: 1em;
-    height: 450px;
+    height: 400px;
     overflow: auto;
     padding: 1em;
     border: 1px solid #BBF;
@@ -535,11 +535,11 @@ dd
 
 #agreeContainer
 {
-    padding-left: 0; 
+    padding-left: 0;
     border: 1px solid #BFB;
     background-color: #EFE;
-    float: left; 
-    padding: 0.6em; 
+    float: left;
+    padding: 0.6em;
     cursor: pointer;
 }
 
@@ -554,11 +554,11 @@ dd
 
 form
 {
-    padding-left: 0; 
+    padding-left: 0;
     border: 1px solid #BFB;
     background-color: #EFE;
-    float: left; 
-    padding: 0.6em; 
+    float: left;
+    padding: 0.6em;
     white-space: nowrap;
     margin: 0pt auto;
 }
@@ -579,6 +579,7 @@ form
     margin-right: 1em;
     margin-bottom: 5px;
     text-align: center;
+    -moz-border-radius: 4px;
 }
 
 #progressRequirements
