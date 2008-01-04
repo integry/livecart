@@ -13,6 +13,8 @@ class LiveCartRenderer extends SmartyRenderer
 {
 	private $paths = array();
 
+	private $blockConfiguration = null;
+
 	/**
 	 * Template renderer constructor
 	 *
@@ -52,10 +54,8 @@ class LiveCartRenderer extends SmartyRenderer
 				$this->paths[] = ClassLoader::getRealPath('storage.customize.view.theme.' . $theme . '.');
 				$this->paths[] = ClassLoader::getRealPath('application.view.theme.' . $theme . '.');
 			}
-
 			$this->paths[] = ClassLoader::getRealPath('storage.customize.view.');
 			$this->paths[] = ClassLoader::getRealPath('application.view.');
-
 		}
 
 		if (!$template)
@@ -81,6 +81,137 @@ class LiveCartRenderer extends SmartyRenderer
 				return $path;
 			}
 		}
+	}
+
+	public function render($view)
+	{
+		if (!realpath($view))
+		{
+			$view = $this->getTemplatePath($view);
+		}
+
+		return parent::render($view);
+	}
+
+	public function getBlockConfiguration()
+	{
+		if (is_null($this->blockConfiguration))
+		{
+			$config = $this->parseConfigFile($this->getTemplatePath('block.ini'));
+			$request = $this->getApplication()->getRequest();
+			$controller = $request->getControllerName();
+			$validPairs = array(
+							array('*', '*'),
+							array($controller, '*'),
+							array($controller, $request->getActionName()),
+							);
+
+			$this->blockConfiguration = array();
+			foreach ($validPairs as $pair)
+			{
+				if (isset($config[$pair[0]][$pair[1]]))
+				{
+					$this->blockConfiguration = array_merge($this->blockConfiguration, $config[$pair[0]][$pair[1]]);
+				}
+			}
+		}
+
+		return $this->blockConfiguration;
+	}
+
+	public function isBlock($objectName)
+	{
+		return '.tpl' != strtolower(substr($objectName, -4));
+	}
+
+	/**
+	 *
+	 */
+	private function parseConfigFile($file)
+	{
+		$config = parse_ini_file($file, true);
+		$parsed = array();
+		foreach ($config as $file => $actions)
+		{
+			foreach ($actions as $action => $command)
+			{
+				$req = $this->parseKey($action);
+				$con = $req['controller'];
+				$act = $req['action'];
+				unset($req['controller'], $req['action']);
+
+				$parsed[$con][$act][$file][] = array('params' => $req, 'action' => $this->parseCommand($command));
+			}
+		}
+
+		return $parsed;
+	}
+
+	private function parseKey($key)
+	{
+		$res = array();
+
+		// first part is always controller name (or *, which is all controllers and actions)
+		$parts = explode('/', $key);
+		$res['controller'] = array_shift($parts);
+
+		if (!$res['controller'])
+		{
+			$res['controller'] = '*';
+		}
+
+		// second part can be either action name or record ID (special/shorthand case)
+		$sec = array_shift($parts);
+		if (is_numeric($sec))
+		{
+			$res['id'] = $sec;
+		}
+		else
+		{
+			$res['action'] = $sec;
+		}
+
+		if (empty($res['action']))
+		{
+			$res['action'] = '*';
+		}
+
+		// anything else can be key=value pairs (a numeric value without key is considered to be an "id")
+		foreach ($parts as $pair)
+		{
+			if (is_numeric($pair))
+			{
+				$res['id'] = $pair;
+			}
+			else if (strpos($pair, '='))
+			{
+				list($key, $value) = explode('=', $pair, 2);
+				$res[$key] = $value;
+			}
+		}
+
+		return $res;
+	}
+
+	private function parseCommand($command)
+	{
+		$res = array();
+		$parts = explode(':', $command);
+
+		$res['command'] = count($parts) > 1 ? array_shift($parts) : 'append';
+		$res['view'] = array_shift($parts);
+
+		if ('.tpl' == substr($res['view'], -4))
+		{
+			$res['view'] = substr($res['view'], 0, -4);
+		}
+
+		if (empty($res['call']))
+		{
+			$res['call'] = array('BaseController', 'getGeneric');
+		}
+
+		return $res;
 	}
 }
 

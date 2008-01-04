@@ -487,6 +487,7 @@ html, body{
 	left: -30px;
 	top: 13px;
 	overflow: hidden;
+	opacity: 0.9;
 }
 
 #langMenuIndicator {

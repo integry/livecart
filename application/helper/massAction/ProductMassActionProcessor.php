@@ -46,7 +46,7 @@ class ProductMassActionProcessor extends MassActionProcessor
 		else if ('inc_price' == $act)
 		{
 			$pricing = $product->getPricingHandler();
-			foreach ($currencies as $currency)
+			foreach ($this->params['currencies'] as $currency)
 			{
 				if ($pricing->isPriceSet($currency))
 				{

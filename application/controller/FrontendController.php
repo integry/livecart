@@ -36,6 +36,8 @@ abstract class FrontendController extends BaseController
 
 	public function init()
 	{
+	  	parent::init();
+
 	  	$this->setLayout('frontend');
 	  	$this->addBlock('CATEGORY_BOX', 'boxCategory', 'block/box/category');
 	  	$this->addBlock('BREADCRUMB', 'boxBreadCrumb', 'block/box/breadcrumb');

@@ -2,9 +2,14 @@
 {
     table-layout: fixed;
 	width: 100%;
-	height: 100%;
 	border: 2px solid #CCC;
 	border-right: 1px solid #CCC;
+/*	border-bottom: 1px solid #CCC; */
+}
+
+.activeGridScroller
+{
+	-moz-opacity: 0.7;
 }
 
 .activeGrid_loadIndicator, .activeGrid_massActionProgress
@@ -57,14 +62,108 @@
     width: 100%;
 }
 
-.activeGrid_highlight
+.activeGrid .sortedColumn
+{
+	background: #ded;
+}
+
+.activeGrid .sortedColumn.sort1
+{
+	background: #ddefdd;
+}
+
+.activeGrid .sortedColumn.sort2
+{
+	background: #ddf0dd;
+}
+
+.activeGrid .sortedColumn.sort3
+{
+	background: #ddf1dd;
+}
+
+.activeGrid .sortedColumn.sort4
+{
+	background: #ddf2dd;
+}
+
+.activeGrid .sortedColumn.sort5
+{
+	background: #ddf4dd;
+}
+.activeGrid .sortedColumn.sort6
+{
+	background: #ddf5dd;
+}
+
+.activeGrid .sortedColumn.sort7
+{
+	background: #ddf6dd;
+}
+
+.activeGrid .sortedColumn.sort8
+{
+	background: #ddf7dd;
+}
+
+.activeGrid .sortedColumn.sort9
+{
+	background: #ddf8dd;
+}
+
+.activeGrid .sortedColumn.sort10
+{
+	background: #ddf9dd;
+}
+
+.activeGrid .sortedColumn.sort11
+{
+	background: #ddfadd;
+}
+
+.activeGrid .sortedColumn.sort12
+{
+	background: #ddfbdd;
+}
+
+.activeGrid .sortedColumn.sort13
+{
+	background: #ddfcdd;
+}
+
+.activeGrid .sortedColumn.sort14
+{
+	background: #ddfddd;
+}
+
+.activeGrid .sortedColumn.sort15
+{
+	background: #ddfedd;
+}
+
+.activeGrid .sortedColumn.sort16
+{
+	background: #ddffdd;
+}
+
+.activeGrid_highlight td
 {
   	background: #ddd !important;
+}
+
+.activeGrid_highlight td.sortedColumn
+{
+  	background: #cec !important;
 }
 
 .activeGrid .selected
 {
   	background: #fed;
+}
+
+.activeGrid .selected td.sortedColumn
+{
+	background: #FFF6DD !important;
 }
 
 .readonlyGrid .cell_cb
@@ -128,11 +227,11 @@
 
 .activeGrid th, .activeGrid td
 {
-  	height: 23px;
+  	height: 28px;
   	padding: 2px;
   	white-space: nowrap;
 	border-left: 1px inset #ddd;
-	border-bottom: 1px solid #ddd;
+	border-bottom: 1px inset #ddd;
 }
 
 .activeGrid th

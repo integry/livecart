@@ -377,8 +377,9 @@ Backend.Category = {
 
 		new LiveCart.AjaxRequest(this.getUrlForNodeRemoval(nodeIdToRemove));
 
-		this.treeBrowser.deleteItem(nodeIdToRemove, true);
 		this.activateCategory(parentNodeId);
+		this.tabControl.activateTab($('tabProducts'), parentNodeId);
+		this.treeBrowser.deleteItem(nodeIdToRemove, true);
 	},
 
 	reorderCategory: function(targetId, parentId, siblingNodeId)

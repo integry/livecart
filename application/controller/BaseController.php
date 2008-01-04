@@ -9,8 +9,8 @@ ClassLoader::import("library.locale.LCiTranslator");
 
 /**
  * Base controller for the whole application
- * 
- * Store controller which implements common operations needed for both frontend and 
+ *
+ * Store controller which implements common operations needed for both frontend and
  * backend
  *
  * @package application.controller
@@ -24,28 +24,28 @@ abstract class BaseController extends Controller implements LCiTranslator
 	 * @var User
 	 */
 	protected $user = null;
-	
+
 	/**
 	 * Session instance
 	 *
 	 * @var Session
 	 */
 	protected $session = null;
-	
+
 	/**
 	 * Router instance
 	 *
 	 * @var Router
 	 */
 	protected $router = null;
-	
+
 	/**
 	 * Locale
 	 *
 	 * @var Locale
 	 */
 	protected $locale = null;
-	
+
 	/**
 	 * Configuration handler instance
 	 *
@@ -57,16 +57,16 @@ abstract class BaseController extends Controller implements LCiTranslator
 	 * Configuration files (language, registry)
 	 */
 	protected $configFiles = array();
-	
+
 	/**
 	 * Roles
-	 * 
+	 *
 	 * @var RolesParser
 	 */
 	protected $roles;
 
 	/**
-	 * Bese controller constructor: restores user object by using session data and 
+	 * Bese controller constructor: restores user object by using session data and
 	 * checks a permission to a requested action
 	 *
 	 * @param LiveCart $application Application instance
@@ -75,7 +75,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 	public function __construct(LiveCart $application)
 	{
 		parent::__construct($application);
-		
+
 		unset($this->locale);
 		unset($this->config);
 		unset($this->user);
@@ -86,12 +86,12 @@ abstract class BaseController extends Controller implements LCiTranslator
 		if (!$application->isInstalled() && !($this instanceof InstallController))
 		{
 			header('Location: ' . $this->router->createUrl(array('controller' => 'install', 'action' => 'index')));
-			exit;			
+			exit;
 		}
-		
+
 		$this->checkAccess();
-		
-		$this->application->setRequestLanguage($this->request->get('requestLanguage'));				
+
+		$this->application->setRequestLanguage($this->request->get('requestLanguage'));
 		$this->configFiles = $this->getConfigFiles();
 		$this->application->setConfigFiles($this->configFiles);
 
@@ -102,15 +102,40 @@ abstract class BaseController extends Controller implements LCiTranslator
 		{
 			$this->router->setAutoAppendVariables(array('requestLanguage' => $localeCode));
 		}
-		
+
 		// verify that the action is accessed via HTTPS if it is required
 		if ($this->router->isSSL($this->request->getControllerName(), $this->request->getActionName()) && !$this->router->isHttps())
 		{
 			header('Location: ' . $this->router->createFullUrl($_SERVER['REQUEST_URI'], true));
 			exit;
 		}
-	}	
-	
+	}
+
+	public function getLayoutStructure()
+	{
+		$renderer = $this->application->getRenderer();
+		foreach ($renderer->getBlockConfiguration() as $object => $commands)
+		{
+			foreach ($commands as $command)
+			{
+				if ($renderer->isBlock($object))
+				{
+					if ('append' == $command['action']['command'])
+					{
+						$this->addBlock($object, $command['action']['call'], $command['action']['view']);
+					}
+				}
+			}
+		}
+
+		return parent::getLayoutStructure();
+	}
+
+	public function getGenericBlock()
+	{
+		return new BlockResponse();
+	}
+
 	/**
 	 * @return RolesParser
 	 */
@@ -118,10 +143,17 @@ abstract class BaseController extends Controller implements LCiTranslator
 	{
 		return $this->roles;
 	}
-	
+
+	protected function init()
+	{
+		parent::init();
+
+		$this->application->processInitPlugins($this);
+	}
+
 	/**
-	 * Translate text passed by reference. 
-	 * 
+	 * Translate text passed by reference.
+	 *
 	 * @see BaseController::translate
 	 * @see BaseController::translateArray
 	 */
@@ -129,7 +161,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 	{
 		$text = $this->translate($text);
 	}
-	
+
 	/**
 	 * Translates text using Locale::LCInterfaceTranslator
 	 * @param string $key
@@ -139,20 +171,20 @@ abstract class BaseController extends Controller implements LCiTranslator
 	{
 		return $this->locale->translator()->translate($key);
 	}
-	
+
 	/**
 	 * Translate array recursively
-	 * 
+	 *
 	 * @see BaseController::translate
 	 * @return array
 	 */
 	public function translateArray($array)
 	{
 		array_walk_recursive($array, array(&$this, 'translateByReference'));
-		
+
 		return $array;
 	}
-	
+
 	/**
 	 * Performs MakeText translation using Locale::LCInterfaceTranslator
 	 * @param string $key
@@ -172,26 +204,26 @@ abstract class BaseController extends Controller implements LCiTranslator
 			$sessionUser = new SessionUser();
 			$this->user = $sessionUser->getUser();
 		}
-		
+
 		return $this->user;
 	}
-	
+
 	public function loadLanguageFile($langFile)
 	{
 		$this->configFiles[] = $langFile;
 		$this->application->setConfigFiles($this->configFiles);
 	}
-	
+
 	public function getApplication()
 	{
 		return $this->application;
 	}
-	
+
 	protected function getSessionData($key = '')
 	{
 		return $this->session->getControllerData($this, $key);
 	}
-	
+
 	protected function setSessionData($key, $value)
 	{
 		return $this->session->setControllerData($this, $key, $value);
@@ -218,7 +250,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 			else
 			{
 				$file = basename($class->getFileName());
-			}			
+			}
 
 			$files[] = substr($file, 0, -14);
 			$class = $class->getParentClass();
@@ -246,28 +278,28 @@ abstract class BaseController extends Controller implements LCiTranslator
 			case 'user':
 				return $this->getUser();
 			break;
-			
+
 			case 'session':
 				ClassLoader::import("framework.request.Session");
 				$this->session = new Session();
 				return $this->session;
 			break;
-			
+
 			default:
 			break;
 		}
-	}	
-	
+	}
+
 	private function checkAccess()
 	{
-		// If backend controller is being used then we should 
+		// If backend controller is being used then we should
 		// check for user permissions to use role assigned to current controller and action
 		$rolesCacheDir = ClassLoader::getRealPath('cache.roles');
 		if(!is_dir($rolesCacheDir))
 		{
 			mkdir($rolesCacheDir, 0777, true);
 		}
-		
+
 		$refl = new ReflectionClass($this);
 		$controllerPath = $refl->getFileName();
 
@@ -281,9 +313,9 @@ abstract class BaseController extends Controller implements LCiTranslator
 			ClassLoader::import('application.model.role.Role');
 			Role::addNewRolesNames($this->roles->getRolesNames());
 		}
-		
+
 		$role = $this->roles->getRole($this->request->getActionName());
-		
+
 		if ($role)
 		{
 			if (!$this->user->hasAccess($role))
@@ -295,9 +327,9 @@ abstract class BaseController extends Controller implements LCiTranslator
 				else
 				{
 					throw new ForbiddenException($this);
-				}			
+				}
 			}
-		}		
+		}
 	}
 }
 

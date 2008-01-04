@@ -107,10 +107,7 @@ class LiveCart extends Application
 
 		parent::__construct();
 
-		unset($this->session);
-		unset($this->config);
-		unset($this->locale);
-		unset($this->localeName);
+		unset($this->session, $this->config, $this->locale, $this->localeName);
 
 		$dsnPath = ClassLoader::getRealPath("storage.configuration.database") . '.php';
 		$this->isInstalled = file_exists($dsnPath);
@@ -283,7 +280,7 @@ class LiveCart extends Application
 	{
 		$response = parent::execute($controllerInstance, $actionName);
 
-		$this->processPlugins($controllerInstance, $response);
+		$this->processActionPlugins($controllerInstance, $response);
 
 		return $response;
 	}
@@ -297,39 +294,58 @@ class LiveCart extends Application
 	}
 
 	/**
- `	 * Execute response post-processor plugins
- 	 *
-	 * @todo Cache plugin file locations
+ `	 * Execute controller initialization plugins
 	 */
-	private function processPlugins(Controller $controllerInstance, Response $response)
+	public function processInitPlugins(Controller $controllerInstance)
 	{
-		$name = $controllerInstance->getControllerName();
-		$action = $controllerInstance->getRequest()->getActionName();
+		return $this->processPlugins($controllerInstance, new RawResponse, 'init');
+	}
 
+	/**
+ `	 * Execute response post-processor plugins
+	 */
+	private function processActionPlugins(Controller $controllerInstance, Response $response)
+	{
+		return $this->processPlugins($controllerInstance, $response, $controllerInstance->getRequest()->getActionName());
+	}
+
+	private function processPlugins(Controller $controllerInstance, Response $response, $action)
+	{
 		ClassLoader::import('application.ControllerPlugin');
 
-		$dirs = array_merge(array(ClassLoader::getRealPath('plugin.controller.' . $name . '.' . $action) => 0), self::$pluginDirectories);
+		$dirs = array_merge(array(ClassLoader::getRealPath('plugin') => 0), self::$pluginDirectories);
 
-		foreach ($dirs as $pluginDir => $type)
+		$parent = get_class($controllerInstance);
+		do
 		{
-			if ($type)
-			{
-				$pluginDir = $pluginDir . '/controller/' . $name . '/' . $action;
-			}
+			$hierarchy[strtolower(substr($parent, 0, -10))] = true;
+			$parent = get_parent_class($parent);
+		}
+		while ($parent);
 
-			if (!is_dir($pluginDir))
-			{
-				continue;
-			}
+		$hierarchy[$controllerInstance->getControllerName()] = true;
+		$hierarchy = array_keys($hierarchy);
 
-			foreach (new DirectoryIterator($pluginDir) as $file)
+		foreach ($dirs as $pluginRoot => $foo)
+		{
+			foreach ($hierarchy as $name)
 			{
-				if (substr($file->getFileName(), -4) == '.php')
+				$pluginDir = $pluginRoot . '/controller/' . $name . '/' . $action;
+
+				if (!is_dir($pluginDir))
 				{
-					include_once($file->getPathname());
-					$class = substr($file->getFileName(), 0, -4);
-					$plugin = new $class($response, $controllerInstance);
-					$plugin->process();
+					continue;
+				}
+
+				foreach (new DirectoryIterator($pluginDir) as $file)
+				{
+					if (substr($file->getFileName(), -4) == '.php')
+					{
+						include_once($file->getPathname());
+						$class = substr($file->getFileName(), 0, -4);
+						$plugin = new $class($response, $controllerInstance);
+						$plugin->process();
+					}
 				}
 			}
 		}
