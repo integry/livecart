@@ -55,6 +55,19 @@ class LiveCartSmarty extends Smarty
 		return $output;
 	}
 
+	public function _smarty_include($params)
+	{
+		// strip custom:
+		$path = substr($params['smarty_include_tpl_file'], 7);
+
+		ob_start();
+		parent::_smarty_include($params);
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		echo $this->application->getRenderer()->applyLayoutModifications($path, $output);
+	}
+
 	private function getPlugins($path)
 	{
 		$pluginPath = ClassLoader::getRealPath('plugin.view.' . $path);

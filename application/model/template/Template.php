@@ -60,14 +60,14 @@ class Template
 						$res[$file->getFileName()]['subs'] = $dir;
 					}
 				}
-				elseif (substr($file->getFileName(), -4) == '.tpl')
+				else //if (substr($file->getFileName(), -4) == '.tpl')
 				{
 					$res[$file->getFileName()]['id'] = $id;
 				}
 			}
 		}
 
-		ksort($res);
+		uasort($res, array(self, 'sortTree'));
 
 		return $res;
 	}
@@ -110,6 +110,14 @@ class Template
 	public function getFileName()
 	{
 		return $this->file;
+	}
+
+	public function sortTree($a, $b)
+	{
+		$ap = (isset($a['subs']) * 10) + strnatcasecmp($b['id'], $a['id']);
+		$bp = (isset($b['subs']) * 10) + strnatcasecmp($a['id'], $b['id']);
+
+		return $ap > $bp ? -1 : ($ap == $bp) ? 0 : 1;
 	}
 
 	private function checkForChanges()

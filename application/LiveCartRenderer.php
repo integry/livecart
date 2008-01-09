@@ -90,10 +90,37 @@ class LiveCartRenderer extends SmartyRenderer
 			$view = $this->getTemplatePath($view);
 		}
 
-		return parent::render($view);
+		$output = parent::render($view);
+
+		return $this->applyLayoutModifications($view, $output);
 	}
 
-	public function getBlockConfiguration()
+	public function applyLayoutModifications($tplPath, $output)
+	{
+		if (realpath($tplPath))
+		{
+			$tplPath = $this->getRelativeTemplatePath($tplPath);
+		}
+
+		if ($conf = $this->getBlockConfiguration($tplPath))
+		{
+			foreach ($conf as $command)
+			{
+				switch ($command['action']['command'])
+				{
+					case 'remove':
+						$output = '';
+					break;
+				}
+
+			}
+			//var_dump($conf);
+		}
+
+		return $output;
+	}
+
+	public function getBlockConfiguration($blockOrTemplate = null)
 	{
 		if (is_null($this->blockConfiguration))
 		{
@@ -116,7 +143,17 @@ class LiveCartRenderer extends SmartyRenderer
 			}
 		}
 
-		return $this->blockConfiguration;
+		if (!is_null($blockOrTemplate))
+		{
+			if (isset($this->blockConfiguration[$blockOrTemplate]))
+			{
+				return $this->blockConfiguration[$blockOrTemplate];
+			}
+		}
+		else
+		{
+			return $this->blockConfiguration;
+		}
 	}
 
 	public function isBlock($objectName)
@@ -212,6 +249,18 @@ class LiveCartRenderer extends SmartyRenderer
 		}
 
 		return $res;
+	}
+
+	private function getRelativeTemplatePath($template)
+	{
+		foreach (array('application.view', 'storage.customize.view') as $path)
+		{
+			$path = ClassLoader::getRealPath($path);
+			if (substr($template, 0, strlen($path)) == $path)
+			{
+				return substr($template, strlen($path) + 1);
+			}
+		}
 	}
 }
 
