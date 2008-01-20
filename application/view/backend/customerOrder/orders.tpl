@@ -43,7 +43,7 @@
 
 	<span style="{if $orderGroupID == 8}visibility: hidden;{else}{denied role="order.mass"}visibility: hidden;{/denied}{/if}" id="orderMass_{$orderGroupID}" class="activeGridMass">
 
-		{form action="controller=backend.customerOrder action=processMass id=$orderGroupID" handle=$massForm onsubmit="return false;"}
+		{form action="controller=backend.customerOrder action=processMass id=$orderGroupID" method="POST" handle=$massForm onsubmit="return false;"}
 
 		<input type="hidden" name="filters" value="" />
 		<input type="hidden" name="selectedIDs" value="" />

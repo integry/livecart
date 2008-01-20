@@ -22,7 +22,7 @@
 
 	<span {denied role="product.mass"}style="display: none;"{/denied} id="productMass_{$categoryID}" class="activeGridMass">
 
-		{form action="controller=backend.product action=processMass id=$categoryID" handle=$massForm onsubmit="return false;"}
+		{form action="controller=backend.product action=processMass id=$categoryID" method="POST" handle=$massForm onsubmit="return false;"}
 
 		<input type="hidden" name="filters" value="" />
 		<input type="hidden" name="selectedIDs" value="" />

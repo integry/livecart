@@ -67,7 +67,7 @@ class Template
 			}
 		}
 
-		uasort($res, array(self, 'sortTree'));
+		uasort($res, array('Template', 'sortTree'));
 
 		return $res;
 	}

@@ -129,6 +129,7 @@ LiveCart.AjaxRequest.prototype = {
 
 	postProcessResponse: function(url, response)
 	{
+		document.body.style.cursor = 'default';
 		this.hideIndicator();
 
 		if ('text/javascript' == response.getResponseHeader('Content-type'))
@@ -173,7 +174,6 @@ LiveCart.AjaxRequest.prototype = {
 			catch (e)  { this.showBug(); }
 		}
 
-		document.body.style.cursor = 'default';
 		if (this.onComplete)
 		{
 			this.onComplete(response, url);
