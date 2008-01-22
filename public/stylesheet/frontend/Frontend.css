@@ -615,6 +615,7 @@ tr.separator div
 {
 	width: 85px;
 	text-align: center;
+	padding-right: 15px;
 }
 
 .subCategories td.details
@@ -1598,16 +1599,12 @@ ul#userMenu
 
 #userMenu li#orderMenu
 {
-    border-top: 1px solid #DDDDDD;
-    padding-top: 10px;
     background-position: bottom left;
     background-image: url(../../image/silk/gif/package.gif);
 }
 
 #userMenu li#addressMenu
 {
-    border-top: 1px solid #DDDDDD;
-    padding-top: 10px;
     background-position: bottom left;
     background-image: url(../../image/silk/gif/book_addresses.gif);
 }
@@ -1629,10 +1626,14 @@ ul#userMenu
 
 #userMenu li#signOutMenu
 {
-    border-top: 1px solid #DDDDDD;
-    padding-top: 10px;
     background-position: bottom left;
     background-image: url(../../image/silk/gif/door_out.gif);
+}
+
+#userMenu li#signOutMenu, #userMenu li#addressMenu, #userMenu li#orderMenu
+{
+	border-top: 1px solid #DDDDDD;
+    padding-top: 10px;
 }
 
 #userMenu li.selected
@@ -1922,8 +1923,6 @@ div.templateLocator:hover
 {
 	border: 2px solid blue;
 	position: relative;
-	padding: 5px;
-	padding-top: 15px;
 	z-index: 2;
 }
 

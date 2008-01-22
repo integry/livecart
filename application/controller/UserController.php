@@ -503,7 +503,14 @@ class UserController extends FrontendController
 			}
 		}
 
-		return new RedirectResponse($this->request->get('return'));
+		if ($return = $this->request->get('return'))
+		{
+			return new RedirectResponse();
+		}
+		else
+		{
+			return new ActionRedirectResponse('user', 'index');
+		}
 	}
 
 	public function remindPassword()

@@ -236,7 +236,7 @@ class LiveCart extends Application
 	{
 		$file = $smarty->_current_file;
 
-		foreach (array_merge('custom:', $this->getRenderer()->getTemplatePaths()) as $path)
+		foreach (array_merge(array('custom:'), $this->getRenderer()->getTemplatePaths()) as $path)
 		{
 			if ($path == substr($file, 0, strlen($path)))
 			{
@@ -248,7 +248,7 @@ class LiveCart extends Application
 
 		$editUrl = $this->getRouter()->createUrl(array('controller' => 'backend.template', 'action' => 'editPopup', 'query' => array('file' => $file)), true);
 
-		return '<div class="templateLocator"><span class="templateName"><a onclick="window.open(\'' . $editUrl . '\', \'template\', \'width=800,height=600,scrollbars=yes,resizable=yes\'); return false;" href="#">' . $file . '</a></span>' . $tplSource . '</div>';
+		return '<div class="templateLocator"><span class="templateName"><a onclick="window.open(\'' . $editUrl . '\', \'template\', \'width=800,height=600,scrollbars=yes,resizable=yes\'); return false;" href="#">' . $file  . '</a></span>' . $tplSource . '</div>';
 	}
 
 	/**
