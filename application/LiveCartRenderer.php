@@ -64,13 +64,17 @@ class LiveCartRenderer extends SmartyRenderer
 		}
 
 		$paths = $this->paths;
-
 		foreach ($paths as &$path)
 		{
 			$path = $path . $template;
 		}
 
 		return $paths;
+	}
+
+	public function resetTemplatePaths()
+	{
+		$this->paths = array();
 	}
 
 	public function getTemplatePath($template)
@@ -84,30 +88,9 @@ class LiveCartRenderer extends SmartyRenderer
 		}
 	}
 
-	public function getThemeList()
-	{
-		$themes = array('light' => 'light', 'barebone' => 'barebone');
-
-		foreach (array(ClassLoader::getRealPath('application.view.theme'), ClassLoader::getRealPath('storage.customize.view.theme')) as $themeDir)
-		{
-			if (file_exists($themeDir))
-			{
-				foreach (new DirectoryIterator($themeDir) as $dir)
-				{
-					if ($dir->isDir() && !$dir->isDot())
-					{
-						$themes[$dir->getFileName()] = $dir->getFileName();
-					}
-				}
-			}
-		}
-
-		return $themes;
-	}
-
 	public function render($view)
 	{
-		if (!file_exists($view))
+		if (!realpath($view))
 		{
 			$view = $this->getTemplatePath($view);
 		}

@@ -278,14 +278,9 @@ class LiveCart extends Application
 	 */
 	protected function execute($controllerInstance, $actionName)
 	{
-		$originalResponse = parent::execute($controllerInstance, $actionName);
+		$response = parent::execute($controllerInstance, $actionName);
 
-		$response = $this->processActionPlugins($controllerInstance, $originalResponse);
-
-		if ($response !== $originalResponse)
-		{
-			$this->processResponse($response);
-		}
+		$this->processActionPlugins($controllerInstance, $response);
 
 		return $response;
 	}
@@ -350,39 +345,10 @@ class LiveCart extends Application
 						$class = substr($file->getFileName(), 0, -4);
 						$plugin = new $class($response, $controllerInstance);
 						$plugin->process();
-
-						$response = $plugin->getResponse();
-						if ($plugin->isStopped())
-						{
-							return $response;
-						}
 					}
 				}
 			}
 		}
-
-		return $response;
-	}
-
-	/**
-	 * Renders response from controller action
-	 *
-	 * @param string $controllerInstance Controller
-	 * @param Response $response Response to render
-	 * @return string Renderer content
-	 * @throws ViewNotFoundException if view does not exists for specified controller
-	 */
-	protected function render(Controller $controllerInstance, Response $response)
-	{
-		$output = parent::render($controllerInstance, $response);
-
-		if ($cache = $controllerInstance->getCacheHandler())
-		{
-			$cache->setData($output);
-			$cache->save();
-		}
-
-		return $output;
 	}
 
 	public function isCustomizationMode()
@@ -861,7 +827,7 @@ class LiveCart extends Application
 		if (is_null($this->theme))
 		{
 			$this->theme = $this->config->get('THEME');
-			if ('barebone' == $this->theme)
+			if ('none' == $this->theme)
 			{
 				$this->theme = '';
 			}
@@ -872,6 +838,7 @@ class LiveCart extends Application
 
 	public function setTheme($theme)
 	{
+		$this->getRenderer()->resetTemplatePaths();
 		$this->theme = $theme;
 	}
 
