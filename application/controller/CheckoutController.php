@@ -457,7 +457,7 @@ class CheckoutController extends FrontendController
 		$response->set('otherMethods', $external);
 
 		// auto redirect to external payment page if only one handler is enabled
-		if (1 == count($external) && !$ccHandler && !$ccForm->getValidator()->getErrorList())
+		if (1 == count($external) && !$this->config->get('CC_ENABLE') && !$ccForm->getValidator()->getErrorList())
 		{
 			$this->request->set('id', $external[0]);
 			return $this->redirect();

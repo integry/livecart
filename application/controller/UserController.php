@@ -505,7 +505,7 @@ class UserController extends FrontendController
 
 		if ($return = $this->request->get('return'))
 		{
-			return new RedirectResponse();
+			return new RedirectResponse($return);
 		}
 		else
 		{

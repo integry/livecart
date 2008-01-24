@@ -8,7 +8,7 @@ TMP=/tmp/build
 PACKAGE=/var/db/livecart
 
 MAIN=/var/www/livecart
-BUILD=/var/www/build
+#BUILD=/var/www/build
 
 # get last log message
 cd $MAIN
@@ -38,7 +38,8 @@ VERSION=`head .version`
 
 # remove non-distributed files
 rm -rf build cache doc update
-rm -rf storage/configuration/database.php
+rm -rf public/cache public/upload
+rm -rf storage/configuration/*.php
 rm -rf library/payment/test/simpletest
 rm -rf library/payment/test/unittest
 
@@ -62,11 +63,14 @@ cd $TMP
 rm -rf .hg*
 rm -rf .snap
 
-mkdir cache
 rm -rf storage
-mkdir storage
-mkdir public/cache
-mkdir public/upload
+mkdir cache storage
+mkdir storage/configuration
+mkdir public/cache public/upload
+
+echo "<?php
+	// your custom initialization code goes here
+?>" > storage/configuration/CustomInitialize.php
 
 # create package files
 TAR=$PACKAGE/livecart-$VERSION.tar
