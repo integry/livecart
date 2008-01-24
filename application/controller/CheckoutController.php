@@ -533,6 +533,19 @@ class CheckoutController extends FrontendController
 	/**
 	 *	@role login
 	 */
+	public function payOffline()
+	{
+		if (!$this->config->get('OFFLINE_PAYMENT'))
+		{
+			return new ActionRedirectResponse('checkout', 'pay');
+		}
+
+		return $this->finalizeOrder();
+	}
+
+	/**
+	 *	@role login
+	 */
 	public function payExpress()
 	{
 		$res = $this->validateExpressCheckout();
@@ -699,6 +712,11 @@ class CheckoutController extends FrontendController
 		$transaction->setHandler($handler);
 		$transaction->save();
 
+		return $this->finalizeOrder();
+	}
+
+	private function finalizeOrder()
+	{
 		$newOrder = $this->order->finalize(Currency::getValidInstanceById($this->getRequestCurrency()));
 
 		$orderArray = $this->order->toArray(array('payments' => true));

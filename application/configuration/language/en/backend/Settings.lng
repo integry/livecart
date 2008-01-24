@@ -170,6 +170,9 @@ _checkout=Checkout
 _credit_card_options=Credit Card Options
 REQUIRE_CVV=Require Card Verification Code (CVV) to be entered
 
+_offline_payments=Offline Payments
+OFFLINE_PAYMENT=Allow offline payments
+
 _purchase=Orders
 MIN_TOTAL=Minimum order total
 MAX_TOTAL=Maximum order total (0 - no limit)

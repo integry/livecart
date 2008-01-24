@@ -1,8 +1,8 @@
 _checkout=Checkout
 
-######################## 
+########################
 # Select order addresses
-######################## 
+########################
 _select_addresses=Select Order Addresses
 _continue=Continue
 
@@ -14,16 +14,16 @@ _add_billing_address=Add New Billing Address
 _select_shipping_address=Please select the shipping address!
 _select_billing_address=Please select the billing address!
 
-######################## 
+########################
 # Select shipping methods
-######################## 
+########################
 _select_shipping=Select shipping method
 _err_select_shipping=Please select a shipping method for this shipment
 _info_multi_shipments=One or more of your ordered products requires a separate shipment.
 
-######################## 
+########################
 # Pay
-######################## 
+########################
 _pay=Complete Your Order
 _total=Order Total
 _pay_securely=Pay securely with a credit card
@@ -39,6 +39,10 @@ _will_ship_to=Order will be shipped to
 _will_bill_to=Order will be billed to
 _change=Change
 
+_pay_offline=Pay Offline
+_offline_instructions=Offline payment instructions at payment page
+_offline_complete_payment=Make payment offline
+
 _err_enter_cc_num=Please enter credit card number
 _err_select_cc_type=Please select credit card type
 _err_select_cc_expiry_month=Please select card expiration month
@@ -52,15 +56,15 @@ _select_payment_method=Select a payment method
 
 _any_changes=Any changes needed?
 
-######################## 
+########################
 # CVV Help
-######################## 
+########################
 _cvv=Card Verification Value
 _cvv_description=Card Verification Value (CVV) provides an additional level of online fraud protection. The number is located on your credit card and is generally three to four digits long.
 
-######################## 
+########################
 # Confirmation
-######################## 
+########################
 _order_completed=Order Completed
 _completed_paid=Your payment has been received. You can track the status of your order from <a href="%url">your account</a>.
 _completed_not_paid=...insert your offline payment instructions here...

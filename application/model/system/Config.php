@@ -161,20 +161,27 @@ class Config
 		$sections = $this->getAllSections();
 		foreach ($sections as $section)
 		{
-			$s = $this->getSettingsBySection($section);
-
-			foreach ($s as $key => $value)
+			try
 			{
-				if (!isset($this->values[$key]))
-				{
-					// check for multi-lingual values
-					if (!is_array($value['value']) && substr($value['value'], 0, 1) == '_')
-					{
-						$value['value'] = array($this->application->getDefaultLanguageCode() => substr($value['value'], 1));
-					}
+				$s = $this->getSettingsBySection($section);
 
-					$this->set($key, $value['value']);
+				foreach ($s as $key => $value)
+				{
+					if (!isset($this->values[$key]))
+					{
+						// check for multi-lingual values
+						if (!is_array($value['value']) && substr($value['value'], 0, 1) == '_')
+						{
+							$value['value'] = array($this->application->getDefaultLanguageCode() => substr($value['value'], 1));
+						}
+
+						$this->set($key, $value['value']);
+					}
 				}
+			}
+			catch (SQLException $e)
+			{
+				// not installed yet
 			}
 		}
 
@@ -188,11 +195,17 @@ class Config
 	{
 		$content = '<?php $config = ' . var_export($this->values, true) . '; ?>';
 		$fullPath = $this->getFilePath();
+
+		$directoryExists = true;
 		if (!is_dir(dirname($fullPath)))
 		{
-			mkdir(dirname($fullPath), 0777, true);
+			$directoryExists = @mkdir(dirname($fullPath), 0777, true);
 		}
-		file_put_contents($fullPath, $content);
+
+		if ($directoryExists)
+		{
+			file_put_contents($fullPath, $content);
+		}
 	}
 
 	public function getSection($sectionId)

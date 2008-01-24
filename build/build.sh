@@ -65,12 +65,7 @@ rm -rf .snap
 
 rm -rf storage
 mkdir cache storage
-mkdir storage/configuration
 mkdir public/cache public/upload
-
-echo "<?php
-	// your custom initialization code goes here
-?>" > storage/configuration/CustomInitialize.php
 
 # create package files
 TAR=$PACKAGE/livecart-$VERSION.tar

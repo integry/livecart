@@ -76,11 +76,6 @@ abstract class BaseController extends Controller implements LCiTranslator
 	{
 		parent::__construct($application);
 
-		unset($this->locale);
-		unset($this->config);
-		unset($this->user);
-		unset($this->session);
-
 		$this->router = $this->application->getRouter();
 
 		if (!$application->isInstalled() && !($this instanceof InstallController))
@@ -88,6 +83,11 @@ abstract class BaseController extends Controller implements LCiTranslator
 			header('Location: ' . $this->router->createUrl(array('controller' => 'install', 'action' => 'index')));
 			exit;
 		}
+
+		unset($this->locale);
+		unset($this->config);
+		unset($this->user);
+		unset($this->session);
 
 		$this->checkAccess();
 
@@ -297,7 +297,10 @@ abstract class BaseController extends Controller implements LCiTranslator
 		$rolesCacheDir = ClassLoader::getRealPath('cache.roles');
 		if(!is_dir($rolesCacheDir))
 		{
-			mkdir($rolesCacheDir, 0777, true);
+			if (!@mkdir($rolesCacheDir, 0777, true))
+			{
+				return false;
+			}
 		}
 
 		$refl = new ReflectionClass($this);
