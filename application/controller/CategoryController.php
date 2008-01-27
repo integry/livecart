@@ -143,6 +143,7 @@ class CategoryController extends FrontendController
 				$categoryNarrow = $this->getSubCategoriesBySearchQuery($selectFilter, $subCategories);
 			}
 
+			include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
 			return new RedirectResponse(createCategoryUrl(array('data' => $this->category->toArray(), 'filters' => $this->filters), $this->application));
 		}
 
@@ -192,6 +193,7 @@ class CategoryController extends FrontendController
 		// no products found, but found one category name - redirect to this category
 		if (isset($foundCategories) && (1 == $foundCategories->size()) && !$products)
 		{
+			include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
 			return new RedirectResponse(createCategoryUrl(array('data' => $foundCategories->get(0)->toArray()), $this->application));
 		}
 
