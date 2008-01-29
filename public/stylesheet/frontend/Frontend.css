@@ -1921,7 +1921,7 @@ td.amount
 ***************************/
 div.templateLocator:hover
 {
-	border: 2px solid blue;
+	border: 1px dotted blue;
 	position: relative;
 	z-index: 2;
 }
@@ -1930,13 +1930,13 @@ div.templateLocator span.templateName
 {
 	display: none;
 	position: absolute;
-	top: -2px;
-	left: -2px;
+	top: -1px;
+	left: -1px;
 	background-color: #DDF;
 	height: 15px;
 	padding: 3px;
 	z-index: 1;
-	border: 2px solid blue;
+	border: 1px dotted blue;
 	padding-left: 25px;
 	background-image: url(../../image/silk/gif/layout_edit.gif);
 	background-position: 4px center;
