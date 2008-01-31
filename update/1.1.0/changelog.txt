@@ -1,0 +1,64 @@
+Major additions:
+* Direct and complete data import from other shopping cart programs - osCommerce, X-Cart and Zen-Cart
+* Product and category data import from CSV files
+* Order, product and user data export to CSV file
+* Support for design themes and a new default theme
+* Advanced layout configuration - blocks, templates and themes can be configured for each and every page
+
+New translations:
+* Indonesian
+* Norwegian
+* Romanian
+
+Payment gateway integrations:
+* Added ChronoPay integration (both "Connect to Gateway" and payment page methods)
+* Offline payment can be selected as a payment method at checkout (if enabled)
+
+Front-end improvements:
+* Product list can now be viewed in grid layout (in addition to list layout)
+* If all the search results come from one category, redirect to this category automatically. For example, when searching for "Nokia" through all products, but there are results only in Cell Phones category, the search results are displayed in Cell Phones category context (including Cell Phone filters for further search results narrowing, etc.)
+* Product detail page images can now be enlarged
+* Display other items purchased together with the product by previous customers in product detail page
+* Language selection menu can be configured to be displayed as flags, drop-down list or as links
+
+Back-end improvements:
+* Alert popups are no longer being used to display form error messages - the errors are only being displayed below the respective form fields.
+* Added ability to switch design themes from configuration settings
+* Live progress bar is displayed when applying mass actions to products/orders/users, which provides feedback on how much of the task is completed and how much is left
+* Added ability to cancel mass actions (and rollback the changes)
+* Improved data grid control - smoother scrolling and selected rows are highlighted with different background color
+* Arrange access permission list in User Group Permissions tab in the same order as the functionality is available from the main menu, which makes it easier to locate applicable permissions for particular backend functionality.
+* Several minor visual interface improvements, tweaks and standardization throughout the backen
+
+System improvements:
+* Slightly reduced overall memory usage
+* Extended capabilities of the controller plugin system - it is now possible to target parent controller classes as well, so it is now possible to assign a controller plugin to all actions within the store frontend, for example. It is also possible to execute plugins before executing the controller actions (a pre-filter) in addition to the previously available possibility to execute plugins before the controller actions.
+
+System fixes:
+* Fixed a problem that caused errors when using LiveCart in languages that were not covered by the I18Nv2 library (like Twi language)
+* Transparent GIF and PNG images are now being resized correctly, keeping the transparency instead of setting black background.
+* All prices and totals now have two decimals ($10.00 instead of $10 and $10.90 instead of $10.9)
+* Multilingual config values were returned as arrays after changing the default store language if there were no values entered for the new default language
+* Multilingual data values were returned blank after changing the default store language if there were no values entered for the new default language
+
+Front-end fixes:
+* Fixed JavaScript warning in product page when switching to different image
+* Cancel link in user password reminder page didn't work correctly
+* PHP error messages were displayed in site frontend after changing the default store language
+
+Back-end fixes:
+* Empty shipments are no longer being left when managing order's products
+* Fixed a bug that caused tax amount to be displayed incorrectly in the backend area
+* Template files weren't sorted alphabetically in the template editor file tree
+* E-mail templates were editable from the page template editor section
+* User's password was reset when modifying user account details from backend
+* Mass actions on large product/user/order sets no longer run out of memory
+* Delivery zone management bug fixes
+* A number of minor bug fixes
+
+Installer improvements:
+* More friendly installer error message, when the necessary directories didn't have a write permission. Now a shell command is generated, which can be used to fix permissions problem immediately.
+* Install wizard can now be completed without using a mouse as all the form fields are focused automatically
+
+Other:
+* Replaced space indentation with tabs in source code

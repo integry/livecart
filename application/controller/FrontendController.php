@@ -36,16 +36,17 @@ abstract class FrontendController extends BaseController
 
 	public function init()
 	{
-	  	parent::init();
+		parent::init();
 
-	  	$this->setLayout('frontend');
-	  	$this->addBlock('CATEGORY_BOX', 'boxCategory', 'block/box/category');
-	  	$this->addBlock('BREADCRUMB', 'boxBreadCrumb', 'block/box/breadcrumb');
-	  	$this->addBlock('LANGUAGE', 'boxLanguageSelect', 'block/box/language');
-	  	$this->addBlock('CURRENCY', 'boxSwitchCurrency', 'block/box/currency');
-	  	$this->addBlock('CART', 'boxShoppingCart', 'block/box/shoppingCart');
-	  	$this->addBlock('SEARCH', 'boxSearch', 'block/box/search');
-	  	$this->addBlock('INFORMATION', 'boxInformationMenu', 'block/box/informationMenu');
+		$this->setLayout('frontend');
+		$this->addBlock('CATEGORY_BOX', 'boxCategory', 'block/box/category');
+		$this->addBlock('BREADCRUMB', 'boxBreadCrumb', 'block/box/breadcrumb');
+		$this->addBlock('LANGUAGE', 'boxLanguageSelect', 'block/box/language');
+		$this->addBlock('CURRENCY', 'boxSwitchCurrency', 'block/box/currency');
+		$this->addBlock('CART', 'boxShoppingCart', 'block/box/shoppingCart');
+		$this->addBlock('SEARCH', 'boxSearch', 'block/box/search');
+		$this->addBlock('INFORMATION', 'boxInformationMenu', 'block/box/informationMenu');
+		$this->addBlock('TRACKING', 'tracking', 'block/tracking');
 	}
 
 	protected function getRequestCurrency()
@@ -311,6 +312,30 @@ abstract class FrontendController extends BaseController
 		$response->set('currentId', $this->categoryID);
 		$response->set('lang', 'en');
 		return $response;
+	}
+
+	protected function trackingBlock()
+	{
+		$code = array();
+
+		foreach ($this->config->get('TRACKING_SERVICES') as $class => $enabled)
+		{
+			ClassLoader::import('library.tracking.method.' . $class);
+
+			$data = array();
+
+			foreach ($this->config->getSection('tracking/' . $class) as $key => $value)
+			{
+				$value = $this->config->get($key);
+				$key = substr($key, strlen($class) + 1);
+				$data[$key] = $value;
+			}
+
+			$tracker = new $class($data);
+			$code[$class] = $tracker->getHtml();
+		}
+
+		return new BlockResponse('code', $code);
 	}
 
 	/**

@@ -187,6 +187,10 @@ STORE_STATE=Store state
 STORE_ZIP=Store ZIP code
 STORE_CITY=Store city
 
+_tracking_analytics=Analytics & Tracking
+_external_tracking=External Services
+TRACKING_SERVICES=Enabled services
+
 _def_cust_addr=Default Customer Address
 DEF_COUNTRY=Default country
 DEF_STATE=Default state

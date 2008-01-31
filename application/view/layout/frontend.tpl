@@ -4,10 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />	
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 	<meta name="Keywords" content="{$metaKeywords|escape}" />
 	<meta name="Description" content="{$metaDescription|escape}" />
-	
+
 	<title>
 		{if $PAGE_TITLE}
 			{$PAGE_TITLE|@strip_tags}
@@ -20,8 +20,8 @@
 		- {'STORE_NAME'|config}
 	</title>
 	<base href="{baseUrl}"></base>
-	{liveCustomization}	
-	
+	{liveCustomization}
+
 	<!-- Css includes -->
 	<link href="stylesheet/frontend/Frontend.css" rel="Stylesheet" type="text/css"/>
 	<!--[if IE]>
@@ -41,8 +41,9 @@
 <body>
 	<div id="container" class="lang_{localeCode}">
 		{$ACTION_VIEW}
-	</div>	
+	</div>
 	{liveCustomization action="menu"}
+	{block TRACKING}
 </body>
 
 </html>
