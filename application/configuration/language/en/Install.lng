@@ -5,7 +5,7 @@ checkPHPVersion=PHP version
 checkPHPVersion_error=<a href="http://php.net" target="_blank">PHP</a> version must be at least 5.2
 
 checkMySQL=Database support
-checkMySQL_error=<a href="http://php.net/mysqli" target="_blank">mysqli</a> extension must be installed for PHP
+checkMySQL_error=<a href="http://php.net/mysqli" target="_blank">mysqli</a> or <a href="http://php.net/mysqli" target="_blank">mysql</a> extension must be installed for PHP
 
 checkGD=Image manipulation support
 checkGD_error=<a href="http://php.net/gd" target="_blank">GD</a> extension must be installed for PHP

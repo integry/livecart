@@ -79,7 +79,7 @@ class Installer
 
 	public function checkMySQL()
 	{
-		return function_exists('mysqli_get_server_version');
+		return function_exists('mysqli_get_server_version') || function_exists('mysql_query');
 	}
 
 	public function checkGD()
