@@ -40,6 +40,7 @@ abstract class FrontendController extends BaseController
 
 		$this->setLayout('frontend');
 		$this->addBlock('CATEGORY_BOX', 'boxCategory', 'block/box/category');
+		$this->addBlock('ROOT_CATEGORIES', 'boxRootCategory', 'block/box/rootCategory');
 		$this->addBlock('BREADCRUMB', 'boxBreadCrumb', 'block/box/breadcrumb');
 		$this->addBlock('LANGUAGE', 'boxLanguageSelect', 'block/box/language');
 		$this->addBlock('CURRENCY', 'boxSwitchCurrency', 'block/box/currency');
@@ -260,6 +261,9 @@ abstract class FrontendController extends BaseController
 		  	$topCategoryId = $this->categoryID;
 		}
 
+		$this->topCategoryId = $topCategoryId;
+		$this->topCategories = $topCategories;
+
 		foreach ($topCategories as &$cat)
 		{
 		  	if ($topCategoryId == $cat['ID'])
@@ -290,8 +294,6 @@ abstract class FrontendController extends BaseController
 							$current =& $sib;
 						}
 					}
-
-
 				}
 			}
 		}
@@ -311,6 +313,14 @@ abstract class FrontendController extends BaseController
 		$response->set('categories', $topCategories);
 		$response->set('currentId', $this->categoryID);
 		$response->set('lang', 'en');
+		return $response;
+	}
+
+	protected function boxRootCategoryBlock()
+	{
+		$response = new BlockResponse();
+		$response->set('categories', $this->topCategories);
+		$response->set('currentId', $this->topCategoryId);
 		return $response;
 	}
 

@@ -951,6 +951,13 @@ class Product extends MultilingualObject
 		return ProductFileGroup::mergeGroupsWithFields($this->getFileGroups()->toArray(), $this->getFiles()->toArray());
 	}
 
+	public function getOptions()
+	{
+		$f = new ARSelectFilter();
+		$f->setOrder(new ARFieldHandle('ProductOption', 'position'), 'ASC');
+		return $this->getRelatedRecordSet('ProductOption', $f);
+	}
+
 	public function getProductsPurchasedTogether($limit = null, $enabledOnly = false)
 	{
 		if (0 === $limit)

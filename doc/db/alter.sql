@@ -1,11 +1,13 @@
 # ---------------------------------------------------------------------- #
-# Script generated with: DeZign for Databases v4.2.0                     #
+# Script generated with: DeZign for Databases v5.0.0                     #
 # Target DBMS:           MySQL 4                                         #
 # Project file:          LiveCart.dez                                    #
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-11-13 20:12                                #
+# Created on:            2008-02-02 15:30                                #
+# Model version:         Version 2008-02-02                              #
+# From model version:    Version 2008-02-01 2                            #
 # ---------------------------------------------------------------------- #
 
 
@@ -18,6 +20,8 @@ ALTER TABLE Product DROP FOREIGN KEY Category_Product;
 ALTER TABLE Product DROP FOREIGN KEY Manufacturer_Product;
 
 ALTER TABLE Product DROP FOREIGN KEY ProductImage_Product;
+
+ALTER TABLE Product DROP FOREIGN KEY Product_Product;
 
 ALTER TABLE Category DROP FOREIGN KEY Category_Category;
 
@@ -161,11 +165,114 @@ ALTER TABLE ExpressCheckout DROP FOREIGN KEY UserAddress_ExpressCheckout;
 
 ALTER TABLE ExpressCheckout DROP FOREIGN KEY CustomerOrder_ExpressCheckout;
 
+ALTER TABLE ProductOption DROP FOREIGN KEY Product_ProductOption;
+
+ALTER TABLE ProductOption DROP FOREIGN KEY Category_ProductOption;
+
+ALTER TABLE ProductOptionChoice DROP FOREIGN KEY ProductOption_ProductOptionChoice;
+
+ALTER TABLE OrderedItemOption DROP FOREIGN KEY OrderedItem_OrderedItemOption;
+
+ALTER TABLE OrderedItemOption DROP FOREIGN KEY ProductOptionChoice_OrderedItemOption;
+
+ALTER TABLE ProductRatingType DROP FOREIGN KEY Category_ProductRatingType;
+
+ALTER TABLE ProductRating DROP FOREIGN KEY ProductRatingType_ProductRating;
+
+ALTER TABLE ProductRating DROP FOREIGN KEY ProductReview_ProductRating;
+
+ALTER TABLE CategoryPresentation DROP FOREIGN KEY Category_CategoryPresentation;
+
+ALTER TABLE ProductPriceRule DROP FOREIGN KEY Product_ProductPriceRule;
+
+ALTER TABLE ProductPriceRule DROP FOREIGN KEY UserGroup_ProductPriceRule;
+
+ALTER TABLE ProductPresentation DROP FOREIGN KEY Product_ProductPresentation;
+
 # ---------------------------------------------------------------------- #
-# Modify table "ShipmentTax"                                             #
+# Modify table "ProductOption"                                           #
 # ---------------------------------------------------------------------- #
 
-ALTER TABLE ShipmentTax MODIFY taxRateID INTEGER UNSIGNED COMMENT 'ID of the TaxRate that is being applied to the shipment';
+ALTER TABLE ProductOption DROP PRIMARY KEY;
+
+ALTER TABLE ProductOption MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE ProductOption ADD CONSTRAINT PK_ProductOption 
+    PRIMARY KEY (ID);
+
+# ---------------------------------------------------------------------- #
+# Modify table "ProductOptionChoice"                                     #
+# ---------------------------------------------------------------------- #
+
+ALTER TABLE ProductOptionChoice DROP PRIMARY KEY;
+
+ALTER TABLE ProductOptionChoice MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE ProductOptionChoice ADD CONSTRAINT PK_ProductOptionChoice 
+    PRIMARY KEY (ID);
+
+# ---------------------------------------------------------------------- #
+# Modify table "ProductRatingType"                                       #
+# ---------------------------------------------------------------------- #
+
+ALTER TABLE ProductRatingType DROP PRIMARY KEY;
+
+ALTER TABLE ProductRatingType MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE ProductRatingType ADD CONSTRAINT PK_ProductRatingType 
+    PRIMARY KEY (ID);
+
+# ---------------------------------------------------------------------- #
+# Modify table "ProductRating"                                           #
+# ---------------------------------------------------------------------- #
+
+ALTER TABLE ProductRating DROP PRIMARY KEY;
+
+ALTER TABLE ProductRating MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE ProductRating ADD CONSTRAINT PK_ProductRating 
+    PRIMARY KEY (ID);
+
+# ---------------------------------------------------------------------- #
+# Modify table "CategoryPresentation"                                    #
+# ---------------------------------------------------------------------- #
+
+ALTER TABLE CategoryPresentation DROP PRIMARY KEY;
+
+ALTER TABLE CategoryPresentation DROP COLUMN ID;
+
+ALTER TABLE CategoryPresentation CHANGE categoryID ID INTEGER UNSIGNED NOT NULL;
+
+ALTER TABLE CategoryPresentation MODIFY ID INTEGER UNSIGNED NOT NULL;
+
+ALTER TABLE CategoryPresentation ADD CONSTRAINT PK_CategoryPresentation 
+    PRIMARY KEY (ID);
+
+# ---------------------------------------------------------------------- #
+# Modify table "ProductPriceRule"                                        #
+# ---------------------------------------------------------------------- #
+
+ALTER TABLE ProductPriceRule DROP PRIMARY KEY;
+
+ALTER TABLE ProductPriceRule MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE ProductPriceRule ADD CONSTRAINT PK_ProductPriceRule 
+    PRIMARY KEY (ID);
+
+# ---------------------------------------------------------------------- #
+# Modify table "ProductPresentation"                                     #
+# ---------------------------------------------------------------------- #
+
+ALTER TABLE ProductPresentation DROP PRIMARY KEY;
+
+ALTER TABLE ProductPresentation DROP COLUMN ID;
+
+ALTER TABLE ProductPresentation CHANGE productID ID INTEGER UNSIGNED NOT NULL;
+
+ALTER TABLE ProductPresentation MODIFY ID INTEGER UNSIGNED NOT NULL;
+
+ALTER TABLE ProductPresentation ADD CONSTRAINT PK_ProductPresentation 
+    PRIMARY KEY (ID);
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
@@ -179,6 +286,9 @@ ALTER TABLE Product ADD CONSTRAINT Manufacturer_Product
 
 ALTER TABLE Product ADD CONSTRAINT ProductImage_Product 
     FOREIGN KEY (defaultImageID) REFERENCES ProductImage (ID) ON DELETE SET NULL ON UPDATE SET NULL;
+
+ALTER TABLE Product ADD CONSTRAINT Product_Product 
+    FOREIGN KEY (parentID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Category ADD CONSTRAINT Category_Category 
     FOREIGN KEY (parentNodeID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -392,3 +502,39 @@ ALTER TABLE ExpressCheckout ADD CONSTRAINT UserAddress_ExpressCheckout
 
 ALTER TABLE ExpressCheckout ADD CONSTRAINT CustomerOrder_ExpressCheckout 
     FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductOption ADD CONSTRAINT Product_ProductOption 
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductOption ADD CONSTRAINT Category_ProductOption 
+    FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductOptionChoice ADD CONSTRAINT ProductOption_ProductOptionChoice 
+    FOREIGN KEY (optionID) REFERENCES ProductOption (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE OrderedItemOption ADD CONSTRAINT OrderedItem_OrderedItemOption 
+    FOREIGN KEY (orderedItemID) REFERENCES OrderedItem (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE OrderedItemOption ADD CONSTRAINT ProductOptionChoice_OrderedItemOption 
+    FOREIGN KEY (choiceID) REFERENCES ProductOptionChoice (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductRatingType ADD CONSTRAINT Category_ProductRatingType 
+    FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductRating ADD CONSTRAINT ProductRatingType_ProductRating 
+    FOREIGN KEY (ratingTypeID) REFERENCES ProductRatingType (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductRating ADD CONSTRAINT ProductReview_ProductRating 
+    FOREIGN KEY (reviewID) REFERENCES ProductReview (ID);
+
+ALTER TABLE CategoryPresentation ADD CONSTRAINT Category_CategoryPresentation 
+    FOREIGN KEY (ID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductPriceRule ADD CONSTRAINT Product_ProductPriceRule 
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductPriceRule ADD CONSTRAINT UserGroup_ProductPriceRule 
+    FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductPresentation ADD CONSTRAINT Product_ProductPresentation 
+    FOREIGN KEY (ID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;

@@ -1511,7 +1511,7 @@ div.yellowMessage div, div.redMessage div, div.bugMessage div,
 	-moz-border-radius: 7px;
 }
 
-ul.languageFormTabs li, .tabList li
+ul.languageFormTabs li, .tabList li, .tabs li
 {
 	-moz-border-radius-topleft: 4px;
 	-moz-border-radius-topright: 4px;

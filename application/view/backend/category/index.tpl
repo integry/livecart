@@ -26,6 +26,7 @@
 {includeJs file="backend/Product.js"}
 {includeJs file="backend/RelatedProduct.js"}
 {includeJs file="backend/ProductFile.js"}
+{includeJs file="backend/ProductOption.js"}
 
 {includeCss file="library/ActiveList.css"}
 {includeCss file="library/ActiveGrid.css"}
@@ -34,6 +35,7 @@
 {includeCss file="backend/SpecField.css"}
 {includeCss file="backend/ProductRelationship.css"}
 {includeCss file="backend/ProductFile.css"}
+{includeCss file="backend/ProductOption.css"}
 {includeCss file="backend/Filter.css"}
 {includeCss file="backend/CategoryImage.css"}
 {includeCss file="library/TabControl.css"}
@@ -48,6 +50,7 @@
 <div id="productRelationshipGroup_item_blank" class="dom_template">{include file="backend/productRelationshipGroup/form.tpl"}</div>
 <div id="productFileGroup_item_blank">{include file="backend/productFileGroup/form.tpl"}</div>
 <div id="productFile_item_blank">{include file="backend/productFile/form.tpl"}</div>
+<div id="productOption_item_blank" class="dom_template">{include file="backend/productOption/form.tpl"}</div>
 
 <div id="catgegoryContainer" class="treeContainer  maxHeight h--60">
 	<div id="categoryBrowser" class="treeBrowser"></div>
