@@ -28,8 +28,8 @@ ul.activeList, .activeListGroup
 
 .activeList li, .activeListGroup li
 {
-    padding: 5px; 
-    width: auto;    
+    padding: 5px;
+    width: auto;
 }
 
 li.activeList_even, li.activeList_odd
@@ -43,9 +43,14 @@ li.activeList_even, li.activeList_odd
     border: 2px solid #EEEEEE;
 }
 
+li.activeList_even:hover, li.activeList_odd:hover
+{
+    border: 2px solid #ccc;
+}
+
 .activeList label
 {
-    white-space: normal;    
+    white-space: normal;
 }
 
 ul.activeListGroup > li
@@ -54,10 +59,10 @@ ul.activeListGroup > li
 }
 
 .activeList_add_sort li {
-    cursor: move;   
+    cursor: move;
 }
 
-li.activeList_delete_inProgress 
+li.activeList_delete_inProgress
 {
     background-color: #FFE0E0 ! important;
 }

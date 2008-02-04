@@ -279,6 +279,7 @@ html, body{
 #footerLeft {
   	width: 824px;
 	background-image:url(../../image/backend/layout/footer.png);
+	background-image:url(../../image/backend/layout/footer_stretch.png);
 	color: #FFFFFF;
 	font-size: x-small;
 	padding-left: 10px;
@@ -355,7 +356,7 @@ html, body{
 }
 
 #nav li {
-	padding-left:10px;
+	padding-left: 8px;
 	white-space: nowrap;
 	height: 18px;
 }
@@ -407,9 +408,9 @@ html, body{
 
 #nav li ul {
   	margin-top: 4px;
-  	left: 10px;
-  	border: 1px solid #999999;
-  	background-image: url(../../image/backend/menu/menu_commands_bg.jpg);
+  	left: 8px;
+  	border: 1px solid #bbb;
+  	/* background-image: url(../../image/backend/menu/menu_commands_bg.jpg); */
   	background-position: bottom left;
   	background-repeat: repeat-x;
   	background-color: #CDD9EE;
@@ -424,6 +425,10 @@ html, body{
 	background-image: none;
 	border-bottom: 1px dotted #999999;
 	padding: 2px;
+}
+
+#nav li ul li:last-child {
+	border-bottom: 0;
 }
 
 #nav li ul li div {
@@ -1515,6 +1520,12 @@ ul.languageFormTabs li, .tabList li, .tabs li
 {
 	-moz-border-radius-topleft: 4px;
 	-moz-border-radius-topright: 4px;
+}
+
+#nav li ul
+{
+	-moz-border-radius-bottomleft: 6px;
+	-moz-border-radius-bottomright: 6px;
 }
 
 #loginContainer

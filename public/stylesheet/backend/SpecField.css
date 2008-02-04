@@ -10,11 +10,11 @@
 
 .addSpecFieldGroup
 {
-    background-image: url(../../image/silk/table_add.png);        
+    background-image: url(../../image/silk/table_add.png);
 }
 
 .specField legend, .specField_step_values, .specField_language_translation, .specField_group_language_translation {
-    display: none;    
+    display: none;
 }
 
 .specField_step_lev1 {
@@ -107,7 +107,7 @@
     margin-bottom: 10px;
 }
 
-.specField .specField_mergeCheckbox 
+.specField .specField_mergeCheckbox
 {
    float: none;
 }
@@ -152,7 +152,7 @@ h2.specField_values_title {
 }
 
 .specFieldListGroup > li {
-	border: 2px solid grey;  
+	border: 2px solid #ccc;
 }
 
 .specField_step_translations, .specField_step_values_translations {
