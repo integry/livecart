@@ -85,7 +85,7 @@ class LiveCartRenderer extends SmartyRenderer
 
 	public function render($view)
 	{
-		if (!realpath($view))
+		if (!file_exists($view))
 		{
 			$view = $this->getTemplatePath($view);
 		}
