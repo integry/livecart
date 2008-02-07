@@ -173,6 +173,13 @@
 					<span> </span>
 					<span class="tabHelp">categories.images</span>
 				</li>
+
+				<li id="tabOptions" class="tab inactive" {denied role="option"}style="display: none"{/denied}>
+					<a href="{link controller=backend.productOption action=index id=_id_ query="category=true"}">{t _options}</a>
+					<span> </span>
+					<span class="tabHelp">products.define</span>
+				</li>
+
 			</ul>
 		</div>
 		<div id="sectionContainer" class="sectionContainer maxHeight  h--50">

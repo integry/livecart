@@ -5,9 +5,9 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2008-02-02 15:30                                #
-# Model version:         Version 2008-02-02                              #
-# From model version:    Version 2008-02-01 2                            #
+# Created on:            2008-02-06 00:56                                #
+# Model version:         Version 2008-02-06 1                            #
+# From model version:    Version 2008-02-06                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -169,6 +169,8 @@ ALTER TABLE ProductOption DROP FOREIGN KEY Product_ProductOption;
 
 ALTER TABLE ProductOption DROP FOREIGN KEY Category_ProductOption;
 
+ALTER TABLE ProductOption DROP FOREIGN KEY ProductOptionChoice_ProductOption;
+
 ALTER TABLE ProductOptionChoice DROP FOREIGN KEY ProductOption_ProductOptionChoice;
 
 ALTER TABLE OrderedItemOption DROP FOREIGN KEY OrderedItem_OrderedItemOption;
@@ -193,86 +195,7 @@ ALTER TABLE ProductPresentation DROP FOREIGN KEY Product_ProductPresentation;
 # Modify table "ProductOption"                                           #
 # ---------------------------------------------------------------------- #
 
-ALTER TABLE ProductOption DROP PRIMARY KEY;
-
-ALTER TABLE ProductOption MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE ProductOption ADD CONSTRAINT PK_ProductOption 
-    PRIMARY KEY (ID);
-
-# ---------------------------------------------------------------------- #
-# Modify table "ProductOptionChoice"                                     #
-# ---------------------------------------------------------------------- #
-
-ALTER TABLE ProductOptionChoice DROP PRIMARY KEY;
-
-ALTER TABLE ProductOptionChoice MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE ProductOptionChoice ADD CONSTRAINT PK_ProductOptionChoice 
-    PRIMARY KEY (ID);
-
-# ---------------------------------------------------------------------- #
-# Modify table "ProductRatingType"                                       #
-# ---------------------------------------------------------------------- #
-
-ALTER TABLE ProductRatingType DROP PRIMARY KEY;
-
-ALTER TABLE ProductRatingType MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE ProductRatingType ADD CONSTRAINT PK_ProductRatingType 
-    PRIMARY KEY (ID);
-
-# ---------------------------------------------------------------------- #
-# Modify table "ProductRating"                                           #
-# ---------------------------------------------------------------------- #
-
-ALTER TABLE ProductRating DROP PRIMARY KEY;
-
-ALTER TABLE ProductRating MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE ProductRating ADD CONSTRAINT PK_ProductRating 
-    PRIMARY KEY (ID);
-
-# ---------------------------------------------------------------------- #
-# Modify table "CategoryPresentation"                                    #
-# ---------------------------------------------------------------------- #
-
-ALTER TABLE CategoryPresentation DROP PRIMARY KEY;
-
-ALTER TABLE CategoryPresentation DROP COLUMN ID;
-
-ALTER TABLE CategoryPresentation CHANGE categoryID ID INTEGER UNSIGNED NOT NULL;
-
-ALTER TABLE CategoryPresentation MODIFY ID INTEGER UNSIGNED NOT NULL;
-
-ALTER TABLE CategoryPresentation ADD CONSTRAINT PK_CategoryPresentation 
-    PRIMARY KEY (ID);
-
-# ---------------------------------------------------------------------- #
-# Modify table "ProductPriceRule"                                        #
-# ---------------------------------------------------------------------- #
-
-ALTER TABLE ProductPriceRule DROP PRIMARY KEY;
-
-ALTER TABLE ProductPriceRule MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE ProductPriceRule ADD CONSTRAINT PK_ProductPriceRule 
-    PRIMARY KEY (ID);
-
-# ---------------------------------------------------------------------- #
-# Modify table "ProductPresentation"                                     #
-# ---------------------------------------------------------------------- #
-
-ALTER TABLE ProductPresentation DROP PRIMARY KEY;
-
-ALTER TABLE ProductPresentation DROP COLUMN ID;
-
-ALTER TABLE ProductPresentation CHANGE productID ID INTEGER UNSIGNED NOT NULL;
-
-ALTER TABLE ProductPresentation MODIFY ID INTEGER UNSIGNED NOT NULL;
-
-ALTER TABLE ProductPresentation ADD CONSTRAINT PK_ProductPresentation 
-    PRIMARY KEY (ID);
+ALTER TABLE ProductOption CHANGE defaultOptionID defaultChoiceID INTEGER UNSIGNED;
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
@@ -508,6 +431,9 @@ ALTER TABLE ProductOption ADD CONSTRAINT Product_ProductOption
 
 ALTER TABLE ProductOption ADD CONSTRAINT Category_ProductOption 
     FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductOption ADD CONSTRAINT ProductOptionChoice_ProductOption 
+    FOREIGN KEY (defaultChoiceID) REFERENCES ProductOptionChoice (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductOptionChoice ADD CONSTRAINT ProductOption_ProductOptionChoice 
     FOREIGN KEY (optionID) REFERENCES ProductOption (ID) ON DELETE CASCADE ON UPDATE CASCADE;

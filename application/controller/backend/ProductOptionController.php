@@ -5,12 +5,13 @@ ClassLoader::import("application.model.product.ProductOption");
 ClassLoader::import("application.model.product.ProductOptionChoice");
 ClassLoader::import("library.*");
 
+
 /**
  * Configurable product options
  *
  * @package application.controller.backend
  * @author Integry Systems
- * @role category
+ * @role option
  */
 class ProductOptionController extends StoreManagementController
 {
@@ -32,7 +33,9 @@ class ProductOptionController extends StoreManagementController
 		$response = new ActionResponse();
 
 		$parentId = $this->request->get('id');
-		$product = Product::getInstanceByID($parentId);
+		$parent = $this->request->get('category') ? Category::getInstanceByID($parentId) : Product::getInstanceByID($parentId);
+
+		$parentId = ($this->request->get('category') ? 'c' : '') . $parentId;
 
 		$defaultProductOptionValues = array
 		(
@@ -41,7 +44,8 @@ class ProductOptionController extends StoreManagementController
 			'values' => array(),
 			'rootId' => 'productOption_item_new_' . $parentId . '_form',
 			'type' => ProductOption::TYPE_BOOL,
-			'parentID' => $parentId
+			'parentID' => $parentId,
+			'isDisplayed' => true
 		);
 
 		$response->set('parentID', $parentId);
@@ -49,7 +53,7 @@ class ProductOptionController extends StoreManagementController
 		$response->set('productOptionsList', $defaultProductOptionValues);
 		$response->set('defaultLangCode', $this->application->getDefaultLanguageCode());
 		$response->set('defaultCurrencyCode', $this->application->getDefaultCurrencyCode());
-		$response->set('options', $product->getOptions()->toArray());
+		$response->set('options', $parent->getOptions()->toArray());
 
 		return $response;
 	}
@@ -63,6 +67,12 @@ class ProductOptionController extends StoreManagementController
 	{
 		$response = new ActionResponse();
 		$option = ProductOption::getInstanceByID($this->request->get('id'), true);
+
+		if ($option->defaultChoice->get())
+		{
+			$option->defaultChoice->get()->load();
+		}
+
 		$productOptionList = $option->toArray();
 
 		foreach($option->getChoiceSet()->toArray() as $value)
@@ -77,9 +87,6 @@ class ProductOptionController extends StoreManagementController
 		return new JSONResponse($productOptionList);
 	}
 
-	/**
-	 * @role update
-	 */
 	public function update()
 	{
 		try
@@ -98,12 +105,19 @@ class ProductOptionController extends StoreManagementController
 		return $this->save($productOption);
 	}
 
-	/**
-	 * @role update
-	 */
 	public function create()
 	{
-		$productOption = ProductOption::getNewInstance(Product::getInstanceByID($this->request->get('parentID', false)));
+		$parentId = $this->request->get('parentID', false);
+		if (substr($parentId, 0, 1) == 'c')
+		{
+			$parent = Category::getInstanceByID(substr($parentId, 1));
+		}
+		else
+		{
+			$parent = Product::getInstanceByID($parentId);
+		}
+
+		$productOption = ProductOption::getNewInstance($parent);
 
 		return $this->save($productOption);
 	}
@@ -122,6 +136,29 @@ class ProductOptionController extends StoreManagementController
 		{
 			$productOption->loadRequestData($this->request);
 			$productOption->save();
+
+			// create a default choice for non-select options
+			if (!$productOption->isSelect())
+			{
+				if (!$productOption->defaultChoice->get())
+				{
+					$defChoice = ProductOptionChoice::getNewInstance($productOption);
+				}
+				else
+				{
+					$defChoice = $productOption->defaultChoice->get();
+					$defChoice->load();
+				}
+
+				$defChoice->loadRequestData($this->request);
+				$defChoice->save();
+
+				if (!$productOption->defaultChoice->get())
+				{
+					$productOption->defaultChoice->set($defChoice);
+					$productOption->save();
+				}
+			}
 
 			$parentID = (int)$this->request->get('parentID');
 			$values = $this->request->get('values');
@@ -177,9 +214,8 @@ class ProductOptionController extends StoreManagementController
 	}
 
 	/**
-	 * Delete specification field from database
+	 * Delete option from database
 	 *
-	 * @role update
 	 * @return JSONResponse
 	 */
 	public function delete()
@@ -191,14 +227,31 @@ class ProductOptionController extends StoreManagementController
 		}
 		else
 		{
-			return new JSONResponse(false, 'failure', $this->translate('_could_not_remove_attribute'));
+			return new JSONResponse(false, 'failure', $this->translate('_could_not_remove_option'));
 		}
 	}
 
 	/**
-	 * Sort specification fields
+	 * Delete option from database
 	 *
-	 * @role update
+	 * @return JSONResponse
+	 */
+	public function deleteChoice()
+	{
+		if($id = $this->request->get("id", false))
+		{
+			ProductOptionChoice::deleteById($id);
+			return new JSONResponse(false, 'success');
+		}
+		else
+		{
+			return new JSONResponse(false, 'failure', $this->translate('_could_not_remove_option_choice'));
+		}
+	}
+
+	/**
+	 * Sort options
+	 *
 	 * @return JSONResponse
 	 */
 	public function sort()
@@ -210,6 +263,28 @@ class ProductOptionController extends StoreManagementController
 			if(!empty($key))
 			{
 				$productOption = ProductOption::getInstanceByID((int)$key);
+				$productOption->setFieldValue('position', (int)$position);
+				$productOption->save();
+			}
+		}
+
+		return new JSONResponse(false, 'success');
+	}
+
+	/**
+	 * Sort product option choices
+	 *
+	 * @return JSONResponse
+	 */
+	public function sortChoice()
+	{
+		$target = $this->request->get('target');
+
+		foreach($this->request->get($target, array()) as $position => $key)
+		{
+			if(!empty($key))
+			{
+				$productOption = ProductOptionChoice::getInstanceByID((int)$key);
 				$productOption->setFieldValue('position', (int)$position);
 				$productOption->save();
 			}
@@ -242,8 +317,7 @@ class ProductOptionController extends StoreManagementController
 			'languageCodes' => array_keys($languages),
 			'messages' => array
 			(
-				'deleteField' => $this->translate('_delete_field'),
-				'removeFieldQuestion' => $this->translate('_remove_field_question')
+				'removeFieldQuestion' => $this->translate('_ProductOption_remove_question')
 			),
 
 			'selectorValueTypes' => array(ProductOption::TYPE_SELECT),

@@ -386,12 +386,12 @@ Backend.SpecField.prototype = {
 		// if selected type is a selector type then show selector options fields (aka step 2)
 		if(this.selectorValueTypes.indexOf(this.type) === -1)
 		{
-			this.nodes.tabsContainer.style.visibility = 'hidden';
+			this.nodes.tabsContainer.hide();
 			Element.hide(this.nodes.multipleSelector.up());
 		}
 		else
 		{
-			this.nodes.tabsContainer.style.visibility = 'visible';
+			this.nodes.tabsContainer.show();
 			Element.show(this.nodes.multipleSelector.up());
 		}
 

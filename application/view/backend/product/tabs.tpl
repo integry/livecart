@@ -38,15 +38,17 @@
 				<span class="tabHelp">products.edit.files</span>
 			</li>
 
-			<li id="tabOptions" class="tab inactive">
+			<li id="tabOptions" class="tab inactive" {denied role="option"}style="display:none;"{/denied}>
 				<a href="{link controller=backend.productOption action=index id=_id_}?categoryID=_categoryID_">{t _options}</a>
 				<span class="tabHelp">products.edit.options</span>
 			</li>
 
+{*
 			<li id="tabChildren" class="tab inactive">
 				<a href="{link controller=backend.product action=operation id=_id_}?categoryID=_categoryID_">{t _children}</a>
 				<span class="tabHelp">products.edit.operations</span>
 			</li>
+*}
 
 			<li id="tabInfo" class="tab inactive">
 				<a href="{link controller=backend.product action=info id=_id_}?categoryID=_categoryID_">{t _info}</a>

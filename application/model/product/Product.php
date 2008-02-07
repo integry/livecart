@@ -951,8 +951,9 @@ class Product extends MultilingualObject
 		return ProductFileGroup::mergeGroupsWithFields($this->getFileGroups()->toArray(), $this->getFiles()->toArray());
 	}
 
-	public function getOptions()
+	public function getOptions($includeInheritedOptions = false)
 	{
+		ClassLoader::import('application.model.product.ProductOption');
 		$f = new ARSelectFilter();
 		$f->setOrder(new ARFieldHandle('ProductOption', 'position'), 'ASC');
 		return $this->getRelatedRecordSet('ProductOption', $f);

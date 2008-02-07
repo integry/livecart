@@ -16,6 +16,8 @@ _images=Images
 _related=Related Products
 _files=Files
 _info=Info
+_options=Options
+_children=Children
 
 # Confirmations
 _new_category_was_successfully_created=New category was successfully created
@@ -101,6 +103,23 @@ _product_file_max_size=Max file size: [_1]
 
 # Product relationship
 _product_relationship_group_title=Title
+
+# Product options
+_ProductOption_main=Main
+_ProductOption_values=Choices
+_ProductOption_is_required=Required
+_ProductOption_displayed_in_product_page=Displayed in product page
+_ProductOption_displayed_in_list=Displayed in product list
+_ProductOption_displayed_in_cart=Displayed in shopping cart
+_ProductOption_type=Type
+_ProductOption_type_bool=Checkbox
+_ProductOption_type_select=Select box
+_ProductOption_type_text=Text entry
+_ProductOption_title=Title
+_option_price_diff=Price difference
+_ProductOption_description=Description
+_option_name=Title
+_ProductOption_add_values=Add choice
 
 # index
 _products=Products

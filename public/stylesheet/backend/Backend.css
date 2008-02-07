@@ -1221,7 +1221,7 @@ fieldset.group p
 .tabs li
 {
     display: inline;
-    padding: 6px 15px 7px 15px ! important;
+    padding: 6px 15px 6px 15px ! important;
     border: 1px solid #ccc;
     vertical-align: middle;
 }

@@ -384,7 +384,8 @@ class ProductController extends StoreManagementController implements MassActionI
 		return $response;
 	}
 
-	public function countTabsItems() {
+	public function countTabsItems()
+	{
 	  	ClassLoader::import('application.model.product.*');
 	  	$product = Product::getInstanceByID((int)$this->request->get('id'), ActiveRecord::LOAD_DATA);
 
@@ -392,6 +393,7 @@ class ProductController extends StoreManagementController implements MassActionI
 			'tabProductRelationship' => $product->getRelationships(false)->getTotalRecordCount(),
 			'tabProductFiles' => $product->getFiles(false)->getTotalRecordCount(),
 			'tabProductImages' => count($product->getImageArray()),
+			'tabOptions' => $product->getOptions()->getTotalRecordCount(),
 		));
 	}
 

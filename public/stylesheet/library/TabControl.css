@@ -30,6 +30,7 @@
 	padding: 7px 17px 7px 17px;
 	background-color: #fff;
 	border-top: 2px solid red;
+	font-size: 1em !important;
 }
 
 .tabContainer ul li.hover

@@ -27,7 +27,7 @@ class RolesController extends StoreManagementController
 
 		// sort roles by their appearance in backend menu
 		$filter = new ARSelectFilter();
-		foreach (array('product', 'category', 'filter', 'order', 'user') as $roleName)
+		foreach (array('product', 'category', 'option', 'filter', 'order', 'user') as $roleName)
 		{
 			$filter->setOrder(new ARExpressionHandle('(Role.name LIKE "' . $roleName . '%")'), 'DESC');
 		}

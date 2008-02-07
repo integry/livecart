@@ -649,6 +649,9 @@ CategoryTabControl.prototype = {
 		}
 		if (categoryId != "" && Element.empty(containerId))
 		{
+			// temporary "content" to avoid the content to be loaded twice
+			$(containerId).update('&nbsp;');
+
 			Backend.Category.treeBrowser.showFeedback(parseInt(categoryId));
 			new LiveCart.AjaxUpdater(this.getTabUrl(tabId, categoryId),
 									 this.getContainerId(tabId, categoryId),

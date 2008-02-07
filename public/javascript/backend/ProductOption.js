@@ -74,6 +74,7 @@ Backend.ProductOption.prototype =
 			if(confirm(Backend.ProductOption.prototype.msg.removeFieldQuestion))
 			return Backend.ProductOption.prototype.links.deleteField + this.getRecordId(li)
 		},
+
 		afterDelete:	function(li, response)
 		{
 			try
@@ -87,16 +88,27 @@ Backend.ProductOption.prototype =
 
 			if(response.status == 'success')
 			{
-				CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li, 3));
+				var id = this.getRecordId(li, 3);
+				if (id.substr(0, 1) == 'c')
+				{
+					CategoryTabControl.prototype.resetTabItemsCount(id.substr(1));
+				}
+				else
+				{
+
+				}
 
 				return true;
 			}
 
 			return false;
 		},
-		beforeSort:	 function(li, order) {
+
+		beforeSort:	 function(li, order)
+		{
 			return Backend.ProductOption.prototype.links.sortField + "?target=" + this.ul.id + "&" + order
 		},
+
 		afterSort:	 function(li, order) {	}
 	},
 
@@ -118,15 +130,25 @@ Backend.ProductOption.prototype =
 		this.parentID			= this.productOption.parentID;
 		this.rootId				= this.productOption.rootId;
 
-		this.type				  = this.productOption.type;
+		if (this.parentID.substr(0, 1) == 'c')
+		{
+			this.categoryID = this.parentID.substr(1);
+		}
+
+		this.type				= this.productOption.type;
 		this.values				= this.productOption.values;
-		this.name				  = this.productOption.name_lang;
+		this.name				= this.productOption.name_lang;
+		this.description		= this.productOption.description_lang;
 		this.backupName			= this.name;
 
-		this.isRequired			= this.productOption.isRequired == 1 ? true : false;
-		this.isDisplayed		   = this.productOption.isDisplayed == 1 ? true : false;
+		['isRequired', 'isDisplayed', 'isDisplayedInList', 'isDisplayedInCart'].each(
+		function(key)
+		{
+			this[key] = this.productOption[key] == 1;
+		}.bind(this));
 
 		this.loadLanguagesAction();
+
 		this.findUsedNodes();
 
 		this.bindFields();
@@ -201,25 +223,17 @@ Backend.ProductOption.prototype =
 	 */
 	findUsedNodes: function()
 	{
-		if(!this.nodes) this.nodes = [];
-
+		this.nodes = [];
 		this.nodes.parent = $(this.rootId);
 
 		this.nodes.form 				= this.nodes.parent.getElementsByTagName("form")[0];
 		this.nodes.tabsContainer	   = this.nodes.parent.down('.tabs');
-
 		this.nodes.type = document.getElementsByClassName(this.cssPrefix + "form_type", this.nodes.parent)[0];
 
 		this.nodes.stateLinks 			= document.getElementsByClassName(this.cssPrefix + "change_state", this.nodes.parent);
 		this.nodes.stepTranslations 	= document.getElementsByClassName(this.cssPrefix + "step_translations", this.nodes.parent)[0];
 		this.nodes.stepMain 			= document.getElementsByClassName(this.cssPrefix + "step_main", this.nodes.parent)[0];
 		this.nodes.stepValues	   	= document.getElementsByClassName(this.cssPrefix + "step_values", this.nodes.parent)[0];
-
-		this.nodes.mergeValuesLink		= this.nodes.stepValues.down("."  + this.cssPrefix + "mergeValuesLink");
-		this.nodes.mergeValuesCancelLink  = this.nodes.stepValues.down("."  + this.cssPrefix + "mergeValuesCancelLink");
-		this.nodes.mergeValuesControls	= this.nodes.stepValues.down("."  + this.cssPrefix + "mergeValuesControls");
-		this.nodes.mergeValuesSubmit	  = this.nodes.stepValues.down("."  + this.cssPrefix + "mergeValuesSubmit");
-		this.nodes.mergeValuesCancel	  = this.nodes.stepValues.down("."  + this.cssPrefix + "mergeValuesCancel");
 
 		this.nodes.stepLevOne 			= document.getElementsByClassName(this.cssPrefix + "step_lev1", this.nodes.parent);
 
@@ -230,19 +244,24 @@ Backend.ProductOption.prototype =
 
 		var self = this;
 		this.nodes.labels = {};
-		$A(['type', 'name', 'isRequired', 'isDisplayed']).each(function(field)
+		$A(['type', 'name', 'isRequired', 'isDisplayed', 'isDisplayedInList', 'isDisplayedInCart']).each(function(field)
 		{
 			this.nodes.labels[field] = document.getElementsByClassName(self.cssPrefix + "form_" + field + "_label", this.nodes.parent)[0];
 		}.bind(this));
 
-		this.nodes.mainTitle 			= document.getElementsByClassName(this.cssPrefix + "title", this.nodes.parent)[0];
 		this.nodes.id 					= document.getElementsByClassName(this.cssPrefix + "form_id", this.nodes.parent)[0];
 		this.nodes.parentID 			= document.getElementsByClassName(this.cssPrefix + "form_parentID", this.nodes.parent)[0];
 
-		this.nodes.isRequired		  	= document.getElementsByClassName(this.cssPrefix + "form_isRequired", this.nodes.parent)[0];
-		this.nodes.isDisplayed		  = document.getElementsByClassName(this.cssPrefix + "form_isDisplayed", this.nodes.parent)[0];
+		['isRequired', 'isDisplayed', 'isDisplayedInList', 'isDisplayedInCart'].each(
+		function(key)
+		{
+			this.nodes[key] = document.getElementsByClassName(this.cssPrefix + "form_" + key, this.nodes.parent)[0];
+		}.bind(this));
 
 		this.nodes.name 				= document.getElementsByClassName(this.cssPrefix + "form_name", this.nodes.parent)[0];
+		this.nodes.description			= document.getElementsByClassName(this.cssPrefix + "form_description", this.nodes.parent)[0];
+		this.nodes.price 				= document.getElementsByClassName(this.cssPrefix + "form_priceDiff", this.nodes.parent)[0];
+		this.nodes.optionPriceContainer = document.getElementsByClassName("optionPriceContainer", this.nodes.parent)[0];
 
 		this.nodes.valuesDefaultGroup 	= document.getElementsByClassName(this.cssPrefix + "form_values_group", this.nodes.parent)[0];
 
@@ -262,6 +281,8 @@ Backend.ProductOption.prototype =
 
 		this.nodes.productOptionValuesTemplate = document.getElementsByClassName(this.cssPrefix + "form_values_value", this.nodes.valuesDefaultGroup)[0];
 		this.nodes.productOptionValuesUl	   = this.nodes.valuesDefaultGroup.getElementsByTagName('ul')[0];
+
+		this.nodes.mainTitle 			= document.getElementsByClassName(this.cssPrefix + "title", this.nodes.parent)[0];
 	},
 
 	/**
@@ -298,11 +319,6 @@ Backend.ProductOption.prototype =
 		Event.observe(this.nodes.cancel, "click", function(e) { Event.stop(e); self.cancelAction() } );
 		if(this.id.match('new')) Event.observe(this.nodes.cancelLink, "click", function(e) { Event.stop(e); self.cancelAction() } );
 		Event.observe(this.nodes.save, "click", function(e) { self.saveAction(e) } );
-
-		Event.observe(this.nodes.mergeValuesLink, 'click', function(e) { Event.stop(e); self.toggleValuesMerging(); });
-		Event.observe(this.nodes.mergeValuesCancelLink, 'click', function(e) { Event.stop(e); self.toggleValuesMerging(); });
-		Event.observe(this.nodes.mergeValuesSubmit, 'click', function(e) { Event.stop(e); self.mergeValues(); });
-		Event.observe(this.nodes.mergeValuesCancel, 'click', function(e) { Event.stop(e); self.toggleValuesMerging(); });
 
 		// Also some actions must be executed on load. Be aware of the order in which those actions are called
 		this.loadProductOptionAction();
@@ -345,11 +361,13 @@ Backend.ProductOption.prototype =
 		// if selected type is a selector type then show selector options fields (aka step 2)
 		if(this.type == this.TYPE_SELECT)
 		{
-			this.nodes.tabsContainer.style.visibility = 'visible';
+			this.nodes.tabsContainer.show();
+			this.nodes.optionPriceContainer.hide();
 		}
 		else
 		{
-			this.nodes.tabsContainer.style.visibility = 'hidden';
+			this.nodes.tabsContainer.hide();
+			this.nodes.optionPriceContainer.show();
 		}
 	},
 
@@ -380,8 +398,6 @@ Backend.ProductOption.prototype =
 		this.fieldsList = ActiveList.prototype.getInstance(this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0], {
 			beforeSort: function(li, order)
 			{
-				if(self.mergingMode) self.colorMergedValues();
-
 				return self.links.sortValues + '?target=' + this.ul.id + '&' + order;
 			},
 			afterSort: function(li, response){	},
@@ -449,17 +465,26 @@ Backend.ProductOption.prototype =
 		if(this.parentID) this.nodes.parentID.value = this.parentID;
 
 		this.nodes.name.value = this.productOption.name_lang ? this.productOption.name_lang : '';
+		this.nodes.description.value = this.productOption.description_lang ? this.productOption.description_lang : '';
+
+		if (this.productOption.DefaultChoice)
+		{
+			this.nodes.price.value = this.productOption.DefaultChoice.priceDiff ? this.productOption.DefaultChoice.priceDiff : '';
+		}
 
 		this.nodes.name.id = this.cssPrefix + this.parentID + "_" + this.id + "_name_" + this.languageCodes[0];
 
-		this.nodes.isRequired.checked = this.isRequired;
-		this.nodes.isDisplayed.checked = this.isDisplayed;
+		['isRequired', 'isDisplayed', 'isDisplayedInList', 'isDisplayedInCart'].each(
+		function(key)
+		{
+			this.nodes[key].checked = this[key] == 1;
+			this.nodes[key].id = this.cssPrefix + this.parentID + "_" + this.id + "_" + key;
+		}.bind(this));
 
-		this.nodes.isRequired.id		   = this.cssPrefix + this.parentID + "_" + this.id + "_isRequired";
-		this.nodes.isDisplayed.id		  = this.cssPrefix + this.parentID + "_" + this.id + "_isDisplayed";
+		Event.observe(this.nodes.price, "input", function(e) { new NumericFilter(this); }, false);
 
 		$A(['name',
-			'isRequired',  'isDisplayed',
+			'isRequired',  'isDisplayed', 'isDisplayedInList', 'isDisplayedInCart',
 			'type']).each(function(fieldName)
 		{
 			this.nodes.labels[fieldName].onclick = function() {
@@ -489,7 +514,7 @@ Backend.ProductOption.prototype =
 		}
 		this.changeMainTitleAction(this.nodes.name.value);
 
-		var fields = ['name'];
+		var fields = ['name', 'description'];
 		for(var i = 1; i < this.languageCodes.length; i++)
 		{
 			for(var j = 0; j < fields.length; j++)
@@ -579,9 +604,9 @@ Backend.ProductOption.prototype =
 		var isNew = id ? true : false;
 
 		activeList.remove(li);
-		if(!isNew)
+		if(!isNew && this.categoryID)
 		{
-			CategoryTabControl.prototype.resetTabItemsCount(this.parentID);
+			CategoryTabControl.prototype.resetTabItemsCount(this.categoryID);
 		}
 
 		for(var i = 1; i < this.languageCodes.length; i++)
@@ -719,17 +744,18 @@ Backend.ProductOption.prototype =
 		input.value = value.name_lang ? value.name_lang : '' ;
 		input.id = this.cssPrefix + "field_" + id + "_value_" + this.languageCodes[0];
 
-		// price field
-		var priceField = li.down("input." + this.cssPrefix + "valuePrice");
-		priceField.name = "prices[" + id + "]";
-		priceField.value = value.priceDiff ? value.priceDiff : '';
-		priceField.id = this.cssPrefix + "field_" + id + "_price";
-
 		Event.observe(input, "input", function(e) { self.mainValueFieldChangedAction(e) }, false);
 		Event.observe(input, "input", function(e) {
 			if(!this.up('li').next() && this.value != '') self.addValueFieldAction();
 			this.focus();
 		});
+
+		// price field
+		var priceField = li.down("input." + this.cssPrefix + "valuePrice");
+		priceField.name = "prices[" + id + "]";
+		priceField.value = value.priceDiff ? value.priceDiff : '';
+		priceField.id = this.cssPrefix + "field_" + id + "_price";
+		Event.observe(priceField, "input", function(e) { new NumericFilter(this); }, false);
 
 		// now insert all translation fields
 		var nodeValues = this.nodes.parent.down('.productOption_step_values');
@@ -891,7 +917,10 @@ Backend.ProductOption.prototype =
 				activeRecord.touch();
 			}
 
-			CategoryTabControl.prototype.resetTabItemsCount(this.parentID);
+			if (this.categoryID)
+			{
+				CategoryTabControl.prototype.resetTabItemsCount(this.categoryID);
+			}
 		}
 		else if(jsonResponse.errors)
 		{
@@ -978,146 +1007,4 @@ Backend.ProductOption.prototype =
 
 		form.show("addProductOption", fieldFormId, ['type']);
 	},
-
-	toggleValuesMerging: function()
-	{
-		var self = this;
-		var valuesUl = this.nodes.productOptionValuesUl;
-
-		this.mergingMode = !this.mergingMode;
-
-		this.mergedValues = {};
-		if(this.mergingMode)
-		{
-			this.nodes.mergeValuesControls.show();
-			this.nodes.valuesAddFieldLink.hide();
-			this.nodes.controls.hide();
-			this.nodes.mergeValuesCancelLink.show();
-			this.nodes.mergeValuesLink.hide();
-
-			if (this.nodes.stepValues.down('.languageForm'))
-			{
-				this.nodes.stepValues.down('.languageForm').hide();
-			}
-		}
-		else
-		{
-			this.nodes.mergeValuesControls.hide();
-			this.nodes.valuesAddFieldLink.show();
-
-			this.nodes.mergeValuesCancelLink.hide();
-			this.nodes.mergeValuesLink.show();
-			this.nodes.controls.show();
-			this.colorMergedValues();
-		}
-
-		$A(valuesUl.getElementsByTagName('li')).each(function(li)
-		{
-			var checkbox = li.down("." + self.cssPrefix + "mergeCheckbox");
-
-			if(self.mergingMode) checkbox.show();
-			else checkbox.hide();
-
-			if(!self.mergingCheckboxesBinded)
-			{
-				checkbox.li = li;
-				Event.observe(checkbox, 'click', function(e) {
-					if(true == this.checked) self.addToMergedValues(this.li);
-					else self.removeToMergedValues(this.li);
-
-					self.colorMergedValues();
-				});
-			}
-		});
-
-		this.mergingCheckboxesBinded = true;
-	},
-
-	mergeValues: function()
-	{
-		var mergedString = "";
-		$H(this.mergedValues).each(function(mergedValue) {
-			if(Element.hasClassName(mergedValue.value, this.cssPrefix + "valueMergedWinner"))
-			{
-				mergeIntoValue = "mergeIntoValue="  + mergedValue.key;
-			}
-			mergedString += ("&mergedValues[]=" + mergedValue.key);
-		}.bind(this));
-
-		new LiveCart.AjaxRequest(
-			Backend.ProductOption.prototype.links.mergeValues + "?" + mergeIntoValue + mergedString,
-			this.nodes.mergeValuesSubmit.parentNode.down('.progressIndicator'),
-			function(reply)
-			{
-				this.handleMergeValuesResponse(eval("(" + reply.responseText + ")"));
-			}.bind(this)
-		);
-	},
-
-	handleMergeValuesResponse: function(response)
-	{
-		if('success' == response.status)
-		{
-			var self = this;
-			$H(this.mergedValues).each(function(mergedValue)
-			{
-				if(Element.hasClassName(mergedValue.value, self.cssPrefix + "valueMergedWinner"))
-				{
-					Element.removeClassName(mergedValue.value, self.cssPrefix + "valueMergedWinner");
-					mergedValue.value.down("." + self.cssPrefix + "mergeCheckbox").checked = false;
-					ActiveList.prototype.highlight(mergedValue.value);
-				}
-				else
-				{
-					self.deleteValueFieldAction(mergedValue.value);
-				}
-
-				delete self.mergedValues[mergedValue.key];
-			});
-		}
-		else
-		{
-			alert('Failed to merge values. Not implemented!')
-		}
-	},
-
-	addToMergedValues: function(li)
-	{
-		this.mergedValues[this.fieldsList.getRecordId(li)] = li;
-	},
-
-	removeToMergedValues: function(li)
-	{
-		delete this.mergedValues[this.fieldsList.getRecordId(li)];
-	},
-
-	colorMergedValues: function()
-	{
-		var self = this;
-		var winner = true;
-		var valuesUl = this.nodes.productOptionValuesUl;
-		$A(valuesUl.getElementsByTagName('li')).each(function(li)
-		{
-			Element.removeClassName(li, self.cssPrefix + "valueMergedWinner");
-			Element.removeClassName(li, self.cssPrefix + "valueMergedLooser");
-
-			if(self.mergedValues[self.fieldsList.getRecordId(li)])
-			{
-				if(!winner)
-				{
-					Element.addClassName(li, self.cssPrefix + "valueMergedLooser");
-				}
-				else
-				{
-					Element.addClassName(li, self.cssPrefix + "valueMergedWinner");
-				}
-
-				winner = false;
-			}
-			else
-			{
-				li.down("." + self.cssPrefix + "mergeCheckbox").checked = false;
-			}
-		});
-	}
 }

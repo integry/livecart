@@ -27,40 +27,41 @@ class ProductOption extends MultilingualObject
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", null, ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("defaultChoiceID", "ProductOptionChoice", "ID", null, ARInteger::instance()));
 
 		$schema->registerField(new ARField("name", ARArray::instance()));
+		$schema->registerField(new ARField("description", ARArray::instance()));
 		$schema->registerField(new ARField("type", ARInteger::instance(4)));
 		$schema->registerField(new ARField("isRequired", ARBool::instance()));
-		$schema->registerField(new ARField("isVisible", ARBool::instance()));
+		$schema->registerField(new ARField("isDisplayed", ARBool::instance()));
+		$schema->registerField(new ARField("isDisplayedInList", ARBool::instance()));
+		$schema->registerField(new ARField("isDisplayedInCart", ARBool::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance(4)));
 	}
 
 	/**
-	 * Creates a new option instance that is assigned to a category
+	 * Creates a new option instance
 	 *
 	 * @param Category $category
 	 *
 	 * @return Product
 	 */
-	public static function getNewInstanceByCategory(Category $category)
+	public static function getNewInstance(ActiveRecordModel $parent)
 	{
 		$option = parent::getNewInstance(__CLASS__);
-		$option->category->set($category);
 
-		return $option;
-	}
-
-	/**
-	 * Creates a new option instance that is assigned to a product
-	 *
-	 * @param Category $category
-	 *
-	 * @return Product
-	 */
-	public static function getNewInstance(Product $product)
-	{
-		$option = parent::getNewInstance(__CLASS__);
-		$option->product->set($product);
+		if ($parent instanceof Product)
+		{
+			$option->product->set($parent);
+		}
+		else if ($parent instanceof Category)
+		{
+			$option->category->set($parent);
+		}
+		else
+		{
+			throw new ApplicationException('ProductOption parent must be either Product or Category');
+		}
 
 		return $option;
 	}
@@ -131,15 +132,6 @@ class ProductOption extends MultilingualObject
 	}
 
 	/*####################  Data array transformation ####################*/
-
-	public function toArray()
-	{
-	  	$array = parent::toArray();
-
-		$this->setArrayData($array);
-
-	  	return $array;
-	}
 
 	public static function transformArray($array, ARSchema $schema)
 	{

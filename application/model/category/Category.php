@@ -656,6 +656,14 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return SpecFieldGroup::mergeGroupsWithFields($this->getSpecificationFieldGroupArray(), $this->getSpecificationFieldArray(false, true));
 	}
 
+	public function getOptions($includeInheritedOptions = false)
+	{
+		ClassLoader::import('application.model.product.ProductOption');
+		$f = new ARSelectFilter();
+		$f->setOrder(new ARFieldHandle('ProductOption', 'position'), 'ASC');
+		return $this->getRelatedRecordSet('ProductOption', $f);
+	}
+
 	/**
 	 * Crates a select filter for specification fields related to category
 	 *

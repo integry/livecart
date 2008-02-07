@@ -8,12 +8,8 @@
     background-image: url(../../image/silk/tag_blue_add.png);
 }
 
-.addProductOptionGroup
+.productOption legend, .productOption_step_values, .productOption_language_translation
 {
-    background-image: url(../../image/silk/table_add.png);
-}
-
-.productOption legend, .productOption_step_values, .productOption_language_translation, .productOption_group_language_translation {
     display: none;
 }
 
@@ -35,40 +31,12 @@
     margin-right: 1em;
 }
 
-.productOption_group_controls, .productOption_group_translations {
-    background: #fff;
-}
-
-.productOption_group_title {
-    font-size: 300%;
-    color: grey;
-    font-weight: bold;
-}
-
-.productOptionGroup_translations {
-    display: none;
-}
-
-.productOption_title {
+.productOption_title, .productOption_choiceCount {
     font-size: 200%;
-}
-
-.productOption_group_title input {
-    width: 200px;
-    display: none;
-}
-
-.productOption_new_group .productOption_group_title input {
-    display: block;
 }
 
 .productOptionList .activeList_container {
     padding-left: 80px;
-}
-
-.productOptionList li, .productOptionListGroup li {
-    margin-bottom: 10px;
-    width: auto;
 }
 
 .productOptionList li li {
@@ -149,10 +117,6 @@
 
 h2.productOption_values_title {
    width: 7em ! important;
-}
-
-.productOptionListGroup > li {
-	border: 2px solid grey;
 }
 
 .productOption_step_translations, .productOption_step_values_translations {

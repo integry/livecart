@@ -17,11 +17,12 @@ class CategoryController extends StoreManagementController
 	{
 		$categoryList = Category::getRootNode()->getDirectChildNodes();
 		$categoryList->unshift(Category::getRootNode());
-		
+
 		$response = new ActionResponse();
 		$response->set('categoryList', $categoryList->toArray());
-		$response->set('allTabsCount', $this->getAllTabsCount());
-		$response->set('maxUploadSize', ini_get('upload_max_filesize'));		
+		$response->set('allTabsCount', array(Category::ROOT_ID => $this->getTabCounts(Category::ROOT_ID)));
+		$response->set('maxUploadSize', ini_get('upload_max_filesize'));
+		$response->set('defaultCurrencyCode', $this->application->getDefaultCurrencyCode());
 		return $response;
 	}
 
@@ -29,7 +30,7 @@ class CategoryController extends StoreManagementController
 	 * Displays category form (for creating a new category or modifying an existing one)
 	 *
 	 * @role !category
-	 * 
+	 *
 	 * @return ActionResponse
 	 */
 	public function form()
@@ -51,27 +52,27 @@ class CategoryController extends StoreManagementController
 	 * Creates a new category record
 	 *
 	 * @role !category.create
-	 * 
+	 *
 	 * @return ActionRedirectResponse
 	 */
 	public function create()
 	{
 		$parent = Category::getInstanceByID((int)$this->request->get("id"));
-		
+
 		$categoryNode = Category::getNewInstance($parent);
 		$categoryNode->setValueByLang("name", $this->application->getDefaultLanguageCode(), 'dump' );
 		$categoryNode->save();
-		
+
 		$categoryNode->setValueByLang("name", $this->application->getDefaultLanguageCode(), $this->translate("_new_category") . " " . $categoryNode->getID() );
 
 		$categoryNode->save();
-		
+
 		return new JSONResponse($categoryNode->toArray(), 'success');
 	}
 
 	/**
 	 * Updates a category record
-	 * 
+	 *
 	 * @role !category.update
 	 *
 	 * @return ActionRedirectResponse
@@ -83,11 +84,11 @@ class CategoryController extends StoreManagementController
 		{
 			$categoryNode = Category::getInstanceByID($this->request->get("id"), Category::LOAD_DATA);
 			$categoryNode->setFieldValue('isEnabled', $this->request->get('isEnabled', 0));
-			
+
 			$multilingualFields = array("name", "description", "keywords");
 			$categoryNode->setValueArrayByLang($multilingualFields, $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true), $this->request);
 			$categoryNode->save();
-			
+
 			return new JSONResponse($categoryNode->toFlatArray(), 'success', $this->translate('_category_succsessfully_saved'));
 		}
 	}
@@ -120,7 +121,7 @@ class CategoryController extends StoreManagementController
 		{
 			return new JSONResponse(false, 'failure', $this->translate('_could_not_remove_category'));
 		}
-		
+
 	}
 
 	/**
@@ -132,7 +133,7 @@ class CategoryController extends StoreManagementController
 	{
 		$targetNode = Category::getInstanceByID((int)$this->request->get("id"));
 		$parentNode = Category::getInstanceByID((int)$this->request->get("parentId"));
-		
+
 		try
 		{
 			if($direction = $this->request->get("direction", false))
@@ -144,87 +145,94 @@ class CategoryController extends StoreManagementController
 			{
 				$targetNode->moveTo($parentNode);
 			}
-			
+
 			return new JSONResponse(false, 'success', $this->translate('_categories_tree_was_reordered'));
 		}
 		catch(Exception $e)
 		{
 			return new JSONResponse(false, 'failure', $this->translate('_unable_to_reorder_categories_tree'));
 		}
-		
+
 		return new JSONResponse($status);
 	}
 
-	public function countTabsItems() 
+	public function countTabsItems()
 	{
-	  	ClassLoader::import('application.model.category.*');
+		return new JSONResponse($this->getTabCounts((int)$this->request->get('id')));
+	}
+
+	private function getTabCounts($categoryId)
+	{
+		ClassLoader::import('application.model.category.*');
 	  	ClassLoader::import('application.model.filter.*');
 	  	ClassLoader::import('application.model.product.*');
-		
-		$category = Category::getInstanceByID((int)$this->request->get('id'), Category::LOAD_DATA);
-		return new JSONResponse(array(
+
+		$category = Category::getInstanceByID($categoryId, Category::LOAD_DATA);
+
+		return array(
 			'tabProducts' => $category->totalProductCount->get(),
 			'tabFilters' => $this->getFilterCount($category),
 			'tabFields' => $this->getSpecFieldCount($category),
 			'tabImages' => $this->getCategoryImageCount($category),
-		));
+			'tabOptions' => $category->getOptions()->getTotalRecordCount(),
+		);
 	}
-	
-	public function xmlBranch() 
+
+	public function xmlBranch()
 	{
 		$xmlResponse = new XMLResponse();
 		$rootID = (int)$this->request->get("id");
 
-		if(!in_array($rootID, array(Category::ROOT_ID, 0))) 
+		if(!in_array($rootID, array(Category::ROOT_ID, 0)))
 		{
 		   $category = Category::getInstanceByID($rootID);
 		   $xmlResponse->set("rootID", $rootID);
 		   $xmlResponse->set("categoryList", $category->getChildNodes(false, true)->toArray($this->application->getDefaultLanguageCode()));
 		}
-		
+
 		return $xmlResponse;
 	}
 
-	public function xmlRecursivePath() 
+	public function xmlRecursivePath()
 	{
 		$xmlResponse = new XMLResponse();
 		$targetID = (int)$this->request->get("id");
-		
-		try 
+
+		try
 		{
 			$categoriesList = Category::getInstanceByID($targetID)->getPathBranchesArray();
-			if(count($categoriesList) > 0 && isset($categoriesList['children'][0]['parent'])) 
+			if(count($categoriesList) > 0 && isset($categoriesList['children'][0]['parent']))
 			{
 				$xmlResponse->set("rootID", $categoriesList['children'][0]['parent']);
 				$xmlResponse->set("categoryList", $categoriesList);
 			}
-			
+
 			$xmlResponse->set("doNotTouch", $this->request->get("doNotTouch"));
 		}
-		catch(Exception $e) 
+		catch(Exception $e)
 		{
 		}
-		
+
 		$xmlResponse->set("targetID", $targetID);
-		
+
 		return $xmlResponse;
 	}
-	
+
 	public function popup()
 	{
 		$categoryList = Category::getRootNode()->getDirectChildNodes();
 		$categoryList->unshift(Category::getRootNode());
-		
+
 		$response = new ActionResponse();
 		$response->set('categoryList', $categoryList->toArray());
 		return $response;
 	}
-	
+
 	public function reindex()
 	{
 		ActiveTreeNode::reindex("Category");
 	}
-	
+
 	/**
 	 * Builds a category form validator
 	 *
@@ -250,47 +258,12 @@ class CategoryController extends StoreManagementController
 		$form = new Form($this->buildValidator());
 		return $form;
 	}
-	
-	private function getAllTabsCount()
-	{
-		ClassLoader::import('application.model.category.*');
-		ClassLoader::import('application.model.filter.*');
-		ClassLoader::import('application.model.product.*');
-		
-		$allTabsCount = array();
-		foreach(Category::getRecordSet(new ARSelectFilter()) as $category)
-		{
-			$allTabsCount[$category->getID()] = array(
-				'tabProducts' => $category->totalProductCount->get(),
-				'tabFilters' => 0,
-				'tabFields' => 0,
-				'tabImages' => 0
-			);
-		}
-		
-		foreach(SpecField::getRecordSet(new ARSelectFilter()) as $specField)
-		{
-			$allTabsCount[$specField->category->get()->getID()]['tabFields']++;
-		}
-		
-		foreach(CategoryImage::getRecordSet('CategoryImage', new ARSelectFilter()) as $categoryImage)
-		{
-			$allTabsCount[$categoryImage->category->get()->getID()]['tabImages']++;
-		}
-		
-		foreach(FilterGroup::getRecordSet(new ARSelectFilter()) as $filterGroup)
-		{
-			$allTabsCount[$filterGroup->specField->get()->category->get()->getID()]['tabFilters']++;
-		}
-		
-		return $allTabsCount;
-	}	
-	
+
 	private function getCategoryImageCount(Category $category)
 	{
 		return $category->getCategoryImagesSet()->getTotalRecordCount();
-	}   
-	
+	}
+
 	/**
 	 * Count specification fields in this category
 	 *
@@ -300,8 +273,8 @@ class CategoryController extends StoreManagementController
 	private function getSpecFieldCount(Category $category)
 	{
 		return $category->getSpecificationFieldSet()->getTotalRecordCount();
-	}	 
-	
+	}
+
 	/**
 	 * Count filter groups in this category
 	 *
@@ -311,7 +284,7 @@ class CategoryController extends StoreManagementController
 	private function getFilterCount(Category $category)
 	{
 		return $category->getFilterGroupSet(false)->getTotalRecordCount();
-	}	
+	}
 }
 
 ?>
