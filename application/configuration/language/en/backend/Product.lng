@@ -116,9 +116,8 @@ _allow_back_ordering=Allow back-ordering
 _product_specification=Product Specification
 _specification_attributes=Specification Attributes
 
-_when_the_product_is_added=When the product is added
-_add_another_product=Add another product
-_continue_with_more_details=Continue with more detailed product configuration (add images, define related products, etc.)
+_save_and_another=Save and add another
+_save_and_continue=Save and continue editing
 
 # Errors
 

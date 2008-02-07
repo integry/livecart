@@ -329,10 +329,9 @@ Backend.Product.saveHandler.prototype =
 			}
 
 			// reset form and add more products
-			if ($('afAd_new').checked)
+			if (this.form.elements.namedItem('afterAdding').checked)
 			{
 				this.form.reset();
-				$('afAd_new').checked = true;
 
 				document.getElementsByClassName('product_sku', this.form)[0].disabled = false;
 

@@ -393,7 +393,7 @@ class ProductController extends StoreManagementController implements MassActionI
 			'tabProductRelationship' => $product->getRelationships(false)->getTotalRecordCount(),
 			'tabProductFiles' => $product->getFiles(false)->getTotalRecordCount(),
 			'tabProductImages' => count($product->getImageArray()),
-			'tabOptions' => $product->getOptions()->getTotalRecordCount(),
+			'tabProductOptions' => $product->getOptions()->getTotalRecordCount(),
 		));
 	}
 

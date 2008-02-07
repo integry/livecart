@@ -38,7 +38,7 @@
 				<span class="tabHelp">products.edit.files</span>
 			</li>
 
-			<li id="tabOptions" class="tab inactive" {denied role="option"}style="display:none;"{/denied}>
+			<li id="tabProductOptions" class="tab inactive" {denied role="option"}style="display:none;"{/denied}>
 				<a href="{link controller=backend.productOption action=index id=_id_}?categoryID=_categoryID_">{t _options}</a>
 				<span class="tabHelp">products.edit.options</span>
 			</li>
