@@ -24,16 +24,69 @@ class OrderController extends FrontendController
 
 		$this->order->loadItemData();
 
+		// load product options
+		$products = new ARSet();
+		foreach ($this->order->getOrderedItems() as $item)
+		{
+			$products->add($item->product->get());
+		}
+
+		$options = ProductOption::loadOptionsForProductSet($products);
+
+		$optionsArray = array();
+		foreach ($this->order->getOrderedItems() as $item)
+		{
+			$optionsArray[$item->getID()] = $this->getOptionsArray($options[$item->product->get()->getID()], $item);
+		}
+
 		$currency = Currency::getValidInstanceByID($this->request->get('currency', $this->application->getDefaultCurrencyCode()), Currency::LOAD_DATA);
 
 		$response = new ActionResponse();
 		$response->set('cart', $this->order->toArray());
-		$response->set('form', $this->buildCartForm($this->order));
+		$response->set('form', $this->buildCartForm($this->order, $options));
 		$response->set('return', $this->request->get('return'));
 		$response->set('currency', $currency->getID());
+		$response->set('options', $optionsArray);
 		$response->set('orderTotal', $currency->getFormattedPrice($this->order->getSubTotal($currency)));
 		$response->set('expressMethods', $this->application->getExpressPaymentHandlerList(true));
 		return $response;
+	}
+
+	public function options()
+	{
+		$response = $this->index();
+		$response->set('editOption', $this->request->get('id'));
+		return $response;
+	}
+
+	public function optionForm()
+	{
+		$item = $this->order->getItemByID($this->request->get('id'));
+		$options = $optionsArray = array();
+		$product = $item->product->get();
+		$options[$product->getID()] = $product->getOptions(true);
+		$optionsArray[$item->getID()] = $this->getOptionsArray($options[$product->getID()], $item);
+
+		$this->setLayout('empty');
+
+		$response = new ActionResponse();
+		$response->set('form', $this->buildOptionsForm($item, $options));
+		$response->set('options', $optionsArray);
+		$response->set('item', $item->toArray());
+		return $response;
+	}
+
+	private function getOptionsArray($set, $item)
+	{
+		$out = array();
+		foreach ($set as $option)
+		{
+			$arr = $option->toArray();
+			$arr['fieldName'] = $this->getFormFieldName($item, $option);
+			$out[] = $arr;
+		}
+
+		return $out;
 	}
 
 	/**
@@ -45,6 +98,13 @@ class OrderController extends FrontendController
 		{
 			if ($this->request->isValueSet('item_' . $item->getID()))
 			{
+				foreach ($item->product->get()->getOptions(true) as $option)
+				{
+					$this->modifyItemOption($item, $option, $this->getFormFieldName($item, $option));
+				}
+
+				$item->save();
+
 				$this->order->updateCount($item, $this->request->get('item_' . $item->getID(), 0));
 			}
 		}
@@ -78,9 +138,28 @@ class OrderController extends FrontendController
 			throw new ApplicationException('The product ' . $product->sku->get() . '  is not available for ordering!');
 		}
 
-		$this->order->addProduct($product, $this->request->get('count', 1));
+		ClassLoader::import('application.controller.ProductController');
+		if (!ProductController::buildAddToCartValidator($product->getOptions(true)->toArray())->isValid())
+		{
+			return new ActionRedirectResponse('product', 'index', array('id' => $product->getID(), 'query' => 'return=' . $this->request->get('return')));
+		}
+
+		ActiveRecordModel::beginTransaction();
+
+		$item = $this->order->addProduct($product, $this->request->get('count', 1));
+
+		if ($item instanceof OrderedItem)
+		{
+			foreach ($product->getOptions(true) as $option)
+			{
+				$this->modifyItemOption($item, $option, 'option_' . $option->getID());
+			}
+		}
+
 		$this->order->mergeItems();
 		SessionOrder::save($this->order);
+
+		ActiveRecordModel::commit();
 
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
@@ -121,25 +200,104 @@ class OrderController extends FrontendController
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
 
-	private function buildCartForm(CustomerOrder $order)
+	private function modifyItemOption(OrderedItem $item, ProductOption $option, $varName)
+	{
+		if ($option->isBool() && $this->request->isValueSet('checkbox_' . $varName))
+		{
+			if ($this->request->get($varName))
+			{
+				$item->addOptionChoice($option->defaultChoice->get());
+			}
+			else
+			{
+				$item->removeOption($option);
+			}
+		}
+		else if ($this->request->isValueSet($varName))
+		{
+			if ($option->isSelect())
+			{
+				$item->addOptionChoice($option->getChoiceByID($this->request->get($varName)));
+			}
+			else if ($option->isText())
+			{
+				$text = $this->request->get($varName);
+
+				if ($text)
+				{
+					$choice = $item->addOptionChoice($option->defaultChoice->get());
+					$choice->optionText->set($text);
+				}
+				else
+				{
+					$item->removeOption($option);
+				}
+			}
+		}
+	}
+
+	/**
+	 *	@todo Optimize loading of product options
+	 */
+	private function buildCartForm(CustomerOrder $order, $options)
 	{
 		ClassLoader::import("framework.request.validator.Form");
 
-		$form = new Form($this->buildCartValidator($order));
+		$form = new Form($this->buildCartValidator($order, $options));
 
 		foreach ($order->getOrderedItems() as $item)
 		{
-			$name = 'item_' . $item->getID();
-			$form->set($name, $item->count->get());
+			$this->setFormItem($item, $form);
 		}
 
 		return $form;
 	}
 
+	private function buildOptionsForm(OrderedItem $item, $options)
+	{
+		ClassLoader::import("framework.request.validator.Form");
+
+		$form = new Form($this->buildOptionsValidator($item, $options));
+		$this->setFormItem($item, $form);
+
+		return $form;
+	}
+
+	private function setFormItem(OrderedItem $item, Form $form)
+	{
+		$name = 'item_' . $item->getID();
+		$form->set($name, $item->count->get());
+
+		foreach ($item->getOptions() as $option)
+		{
+			$productOption = $option->choice->get()->option->get();
+
+			if ($productOption->isBool())
+			{
+				$value = true;
+			}
+			else if ($productOption->isText())
+			{
+				$value = $option->optionText->get();
+			}
+			else if ($productOption->isSelect())
+			{
+				$value = $option->choice->get()->getID();
+			}
+
+			$form->set($this->getFormFieldName($item, $productOption), $value);
+		}
+	}
+
+	private function getFormFieldName(OrderedItem $item, ProductOption $option)
+	{
+		return 'itemOption_' . $item->getID() . '_' . $option->getID();
+	}
+
 	/**
 	 * @return RequestValidator
 	 */
-	private function buildCartValidator(CustomerOrder $order)
+	private function buildCartValidator(CustomerOrder $order, $options)
 	{
 		ClassLoader::import("framework.request.validator.RequestValidator");
 
@@ -147,12 +305,39 @@ class OrderController extends FrontendController
 
 		foreach ($order->getOrderedItems() as $item)
 		{
-			$name = 'item_' . $item->getID();
-			$validator->addCheck($name, new IsNumericCheck($this->translate('_err_not_numeric')));
-			$validator->addFilter($name, new NumericFilter());
+			$this->buildItemValidation($validator, $item, $options);
 		}
 
 		return $validator;
+	}
+
+	private function buildOptionsValidator(OrderedItem $item, $options)
+	{
+		ClassLoader::import("framework.request.validator.RequestValidator");
+
+		$validator = new RequestValidator("optionValidator", $this->request);
+		$this->buildItemValidation($validator, $item, $options);
+
+		return $validator;
+	}
+
+	private function buildItemValidation(RequestValidator $validator, $item, $options)
+	{
+		$name = 'item_' . $item->getID();
+		$validator->addCheck($name, new IsNumericCheck($this->translate('_err_not_numeric')));
+		$validator->addFilter($name, new NumericFilter());
+
+		$productID = $item->product->get()->getID();
+		if (isset($options[$productID]))
+		{
+			foreach ($options[$productID] as $option)
+			{
+				if ($option->isRequired->get())
+				{
+					$validator->addCheck($this->getFormFieldName($item, $option), new IsNotEmptyCheck($this->translate('_err_option_' . $option->type->get())));
+				}
+			}
+		}
 	}
 }
 

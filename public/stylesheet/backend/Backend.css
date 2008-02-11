@@ -1054,6 +1054,11 @@ select.narrow
 	margin-right: 1em;
 }
 
+.UnitConventer_SwitchUnits
+{
+	font-size: smaller;
+}
+
 /***************************
 	Form types
 ***************************/

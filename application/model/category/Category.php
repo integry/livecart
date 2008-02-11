@@ -660,8 +660,26 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	{
 		ClassLoader::import('application.model.product.ProductOption');
 		$f = new ARSelectFilter();
+
+		if ($includeInheritedOptions)
+		{
+			$ids = array();
+			foreach(array_reverse($this->getPathNodeArray(true)) as $cat)
+			{
+				$ids[] = $cat['ID'];
+				$f->setOrder(new ARExpressionHandle('ProductOption.categoryID=' . $cat['ID']), 'DESC');
+			}
+
+			$f->setCondition(new INCond(new ARFieldHandle('ProductOption', 'categoryID'), $ids));
+		}
+		else
+		{
+			$f->setCondition(new EqualsCond(new ARFieldHandle('ProductOption', 'categoryID'), $this->getID()));
+		}
+
 		$f->setOrder(new ARFieldHandle('ProductOption', 'position'), 'ASC');
-		return $this->getRelatedRecordSet('ProductOption', $f);
+
+		return ProductOption::getRecordSet($f, array('DefaultChoice' => 'ProductOptionChoice'));
 	}
 
 	/**

@@ -1,8 +1,6 @@
 <?php
 
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.category.Category');
-ClassLoader::import('application.model.system.MultilingualObject');
+ClassLoader::import('application.model.product.ProductOption');
 
 /**
  * One of the main entities of the system - defines and handles product related logic.
@@ -19,12 +17,14 @@ class ProductOptionChoice extends MultilingualObject
 		$schema->setName("ProductOptionChoice");
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("optionID", "ProductOption", "ID", null, ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("optionID", "ProductOption", "ID", "ProductOption", ARInteger::instance()));
 
 		$schema->registerField(new ARField("priceDiff", ARFloat::instance(4)));
 		$schema->registerField(new ARField("hasImage", ARBool::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance(4)));
 		$schema->registerField(new ARField("name", ARArray::instance()));
+
+		$schema->registerCircularReference('Option', 'ProductOption');
 	}
 
 	/**
@@ -58,6 +58,12 @@ class ProductOptionChoice extends MultilingualObject
 
 	/*####################  Value retrieval and manipulation ####################*/
 
+	public function getPriceDiff($currencyCode, $basePrice = false)
+	{
+		$basePrice = false === $basePrice ? $this->priceDiff->get() : $basePrice;
+		return ProductPrice::convertPrice(Currency::getInstanceByID($currencyCode), $basePrice);
+	}
+
 	/*####################  Saving ####################*/
 
 	/**
@@ -72,36 +78,19 @@ class ProductOptionChoice extends MultilingualObject
 		return parent::deleteByID(__CLASS__, $recordID);
 	}
 
-
 	/*####################  Data array transformation ####################*/
-
-	public function toArray()
-	{
-	  	$array = parent::toArray();
-
-		$this->setArrayData($array);
-
-	  	return $array;
-	}
 
 	public static function transformArray($array, ARSchema $schema)
 	{
 		$array = parent::transformArray($array, $schema);
 
+		$array['formattedPrice'] = array();
+		foreach (self::getApplication()->getCurrencySet() as $id => $currency)
+		{
+			$array['formattedPrice'][$id] = $currency->getFormattedPrice(self::getPriceDiff($id, $array['priceDiff']));
+		}
+
 		return $array;
-	}
-
-	/*####################  Get related objects ####################*/
-
-		/**
-	 * Count products in category
-	 *
-	 * @param Category $category Category active record
-	 * @return integer
-	 */
-	public static function countItems(Category $category)
-	{
-		return $category->getProductSet(new ARSelectFilter(), false)->getTotalRecordCount();
 	}
 
 }

@@ -19,6 +19,8 @@ class ProductOption extends MultilingualObject
 
 	const TYPE_TEXT = 2;
 
+	protected $choices = array();
+
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -27,7 +29,7 @@ class ProductOption extends MultilingualObject
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("defaultChoiceID", "ProductOptionChoice", "ID", null, ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("defaultChoiceID", "ProductOptionChoice", "ID", "ProductOptionChoice", ARInteger::instance()));
 
 		$schema->registerField(new ARField("name", ARArray::instance()));
 		$schema->registerField(new ARField("description", ARArray::instance()));
@@ -37,6 +39,8 @@ class ProductOption extends MultilingualObject
 		$schema->registerField(new ARField("isDisplayedInList", ARBool::instance()));
 		$schema->registerField(new ARField("isDisplayedInCart", ARBool::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance(4)));
+
+		$schema->registerCircularReference('DefaultChoice', 'ProductOptionChoice');
 	}
 
 	/**
@@ -112,9 +116,113 @@ class ProductOption extends MultilingualObject
 
 	public function addChoice(ProductOptionChoice $choice)
 	{
-		$relationship = ProductRelationship::getNewInstance($this, $product);
-		$this->getRelationships()->add($relationship);
-		$this->getRemovedRelationships()->removeRecord($relationship);
+		$this->choices[$choice->getID()] = $choice;
+	}
+
+	public function getChoiceByID($id)
+	{
+		$s = $this->getRelatedRecordSet('ProductOptionChoice', new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductOptionChoice', 'ID'), $id)));
+		if ($s->size())
+		{
+			return $s->get(0);
+		}
+	}
+
+	public static function loadOptionsForProductSet(ARSet $products)
+	{
+		// load category options
+		$f = new ARSelectFilter();
+
+		$categories = $productIDs = array();
+		foreach ($products as $product)
+		{
+			$categories[$product->category->get()->getID()] = $product->category->get();
+			$productIDs[] = $product->getID();
+		}
+
+		foreach ($categories as $category)
+		{
+			$c = new EqualsOrLessCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
+			$c->addAND(new EqualsOrMoreCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
+
+			if (!isset($categoryCond))
+			{
+				$categoryCond = $c;
+			}
+			else
+			{
+				$categoryCond->addOR($c);
+			}
+		}
+
+		// product options
+		$productCond = new INCond(new ARFieldHandle('ProductOption', 'productID'), $productIDs);
+		if (!isset($categoryCond))
+		{
+			$categoryCond = $productCond;
+		}
+		else
+		{
+			$categoryCond->addOR($productCond);
+		}
+
+		$f->setCondition($categoryCond);
+
+		// ordering
+		$f->setOrder(new ARFieldHandle('ProductOption', 'productID'), 'DESC');
+		$f->setOrder(new ARFieldHandle('Category', 'lft'), 'DESC');
+		$f->setOrder(new ARFieldHandle('ProductOption', 'position'), 'DESC');
+
+		$options = ProductOption::getRecordSet($f, array('DefaultChoice' => 'ProductOptionChoice', 'Category'));
+
+		self::loadChoicesForRecordSet($options);
+
+		// sort by products
+		$sorted = array();
+		foreach ($products as $product)
+		{
+			foreach ($options as $index => $option)
+			{
+				if ($option->product->get() && ($option->product->get()->getID() == $product->getID()))
+				{
+					$sorted[$product->getID()][] = $option;
+					$options->remove($index);
+				}
+
+				if ($option->category->get() && $option->category->get()->isAncestorOf($product->category->get()))
+				{
+					$sorted[$product->getID()][] = $option;
+				}
+			}
+		}
+
+		return $sorted;
+	}
+
+	public static function loadChoicesForRecordSet(ARSet $options)
+	{
+		$ids = $refs = array();
+
+		// load select option choices
+		foreach ($options as $option)
+		{
+			if ($option->isSelect())
+			{
+				$ids[] = $option->getID();
+				$refs[$option->getID()] = $option;
+			}
+		}
+
+		if ($ids)
+		{
+			$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductOptionChoice', 'optionID'), $ids));
+			$f->setOrder(new ARFieldHandle('ProductOptionChoice', 'position'));
+
+			foreach (ActiveRecordModel::getRecordSet('ProductOptionChoice', $f) as $choice)
+			{
+				$refs[$choice->option->get()->getID()]->addChoice($choice);
+			}
+		}
 	}
 
 	/*####################  Saving ####################*/
@@ -133,11 +241,32 @@ class ProductOption extends MultilingualObject
 
 	/*####################  Data array transformation ####################*/
 
+	/*
 	public static function transformArray($array, ARSchema $schema)
 	{
 		$array = parent::transformArray($array, $schema);
 
 		return $array;
+	}
+	*/
+
+	public function toArray()
+	{
+		$array = parent::toArray();
+
+	  	if ($this->choices)
+	  	{
+	  		$array['choices'] = array();
+
+	  		foreach ($this->choices as $choice)
+	  		{
+	  			$array['choices'][] = $choice->toArray();
+			}
+		}
+
+		$this->setArrayData($array);
+
+	  	return $array;
 	}
 
 	/*####################  Get related objects ####################*/

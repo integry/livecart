@@ -352,7 +352,7 @@ ul.productList .spec
 /*
 	Product page
 */
-#productPrice, #productToCart, #productToWishList
+#productPurchaseLinks
 {
 	background-color: #FFF3FC;
 }

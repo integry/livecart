@@ -91,7 +91,7 @@ class ProductOptionController extends StoreManagementController
 	{
 		try
 		{
-			$productOption = ProductOption::getInstanceByID((int)$this->request->get('ID'));
+			$productOption = ProductOption::getInstanceByID((int)$this->request->get('ID'), ProductOption::LOAD_DATA, array('DefaultChoice' => 'ProductOptionChoice'));
 		}
 		catch (ARNotFoundException $e)
 		{

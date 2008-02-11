@@ -956,7 +956,16 @@ class Product extends MultilingualObject
 		ClassLoader::import('application.model.product.ProductOption');
 		$f = new ARSelectFilter();
 		$f->setOrder(new ARFieldHandle('ProductOption', 'position'), 'ASC');
-		return $this->getRelatedRecordSet('ProductOption', $f);
+		$options = $this->getRelatedRecordSet('ProductOption', $f, array('DefaultChoice' => 'ProductOptionChoice'));
+
+		if ($includeInheritedOptions)
+		{
+			$options->merge($this->category->get()->getOptions(true));
+
+			ProductOption::loadChoicesForRecordSet($options);
+		}
+
+		return $options;
 	}
 
 	public function getProductsPurchasedTogether($limit = null, $enabledOnly = false)

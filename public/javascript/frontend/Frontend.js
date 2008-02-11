@@ -56,6 +56,39 @@ Product.ImageSwitcher.prototype =
 }
 
 /*****************************
+	Order related JS
+*****************************/
+Order = {}
+
+Order.OptionLoader = Class.create();
+Order.OptionLoader.prototype =
+{
+	initialize: function(container)
+	{
+		container = $(container)
+		if (!container)
+		{
+			return false;
+		}
+
+		container.getElementsByClassName('productOptionsMenu').each(
+			function(cont)
+			{
+				Event.observe(cont.down('a'), 'click', this.loadForm.bind(this));
+			}.bind(this)
+		);
+	},
+
+	loadForm: function(e)
+	{
+		var a = Event.element(e);
+		a.addClassName('ajaxIndicator');
+		new LiveCart.AjaxUpdater(a.attributes.getNamedItem('ajax').nodeValue, a.up('.productOptions'));
+		Event.stop(e);
+	}
+}
+
+/*****************************
 	User related JS
 *****************************/
 User = {}

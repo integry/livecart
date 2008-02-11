@@ -391,7 +391,7 @@ abstract class FrontendController extends BaseController
 				$this->order = SessionOrder::getOrder();
 
 				// check if order currency matches the request currency
-				if ($this->order->currency->get() != $this->getRequestCurrency())
+				if (!$this->order->currency->get() || ($this->order->currency->get()->getID() != $this->getRequestCurrency()))
 				{
 					$this->order->changeCurrency(Currency::getInstanceByID($this->getRequestCurrency()));
 				}

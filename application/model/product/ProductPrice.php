@@ -4,11 +4,11 @@ ClassLoader::import("application.model.ActiveRecordModel");
 ClassLoader::import("application.model.Currency");
 
 /**
- * Product price class. Prices can be entered in different currencies. 
+ * Product price class. Prices can be entered in different currencies.
  * Each instance of ProductPrice determines product price in a particular currency.
  *
  * @package application.model.product
- * @author Integry Systems <http://integry.com>   
+ * @author Integry Systems <http://integry.com>
  */
 class ProductPrice extends ActiveRecordModel
 {
@@ -22,7 +22,7 @@ class ProductPrice extends ActiveRecordModel
 		$schema->registerField(new ARField("price", ARFloat::instance(16)));
 	}
 
-	/*####################  Static method implementations ####################*/		
+	/*####################  Static method implementations ####################*/
 
 	public static function getNewInstance(Product $product, Currency $currency)
 	{
@@ -31,7 +31,7 @@ class ProductPrice extends ActiveRecordModel
 		$instance->currency->set($currency);
 		return $instance;
 	}
-	
+
 	public static function getInstance(Product $product, Currency $currency)
 	{
 		$filter = new ARSelectFilter();
@@ -51,7 +51,7 @@ class ProductPrice extends ActiveRecordModel
 		}
 
 		return $instance;
-	}	
+	}
 
 	/**
 	 * Loads a set of active record product price by using a filter
@@ -66,7 +66,7 @@ class ProductPrice extends ActiveRecordModel
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
-	/*####################  Value retrieval and manipulation ####################*/	
+	/*####################  Value retrieval and manipulation ####################*/
 
 	public function reCalculatePrice()
 	{
@@ -84,11 +84,11 @@ class ProductPrice extends ActiveRecordModel
 
 		return round($price, 2);
 	}
-	
+
 	public function increasePriceByPercent($percentIncrease)
 	{
-		$multiply = (100 + $percentIncrease) / 100; 
-		$this->price->set($this->price->get() * $multiply);	
+		$multiply = (100 + $percentIncrease) / 100;
+		$this->price->set($this->price->get() * $multiply);
 	}
 
 	public static function calculatePrice(Product $product, Currency $currency, $basePrice = null)
@@ -101,8 +101,8 @@ class ProductPrice extends ActiveRecordModel
 
 		return self::convertPrice($currency, $basePrice);
 	}
-	
-	protected static function convertPrice(Currency $currency, $basePrice)
+
+	public static function convertPrice(Currency $currency, $basePrice)
 	{
 		$rate = (float)$currency->rate->get();
 		if ($rate)
@@ -114,7 +114,7 @@ class ProductPrice extends ActiveRecordModel
 			$price = 0;
 		}
 
-		return round($price, 2);	   
+		return round($price, 2);
 	}
 
 	/*####################  Instance retrieval ####################*/
@@ -129,19 +129,19 @@ class ProductPrice extends ActiveRecordModel
 	  	{
 			$ids[$product['ID']] = $key;
 		}
-		   
+
 		$prices = self::fetchPriceData(array_keys($ids));
-		
+
 		// sort by product
 		$productPrices = array();
 		foreach ($prices as $price)
 		{
 			$productPrices[$price['productID']][$price['currencyID']] = $price['price'];
 		}
-		
+
 		$baseCurrency = self::getApplication()->getDefaultCurrencyCode();
 		$currencies = self::getApplication()->getCurrencySet();
-		
+
 		foreach ($productPrices as $product => $prices)
 		{
 			foreach ($currencies as $id => $currency)
@@ -159,25 +159,25 @@ class ProductPrice extends ActiveRecordModel
 			}
 		}
 	}
-	
+
 	private static function fetchPriceData($productIDs)
 	{
 		if (!$productIDs)
 		{
-			return array();	
+			return array();
 		}
-		
+
 		$baseCurrency = self::getApplication()->getDefaultCurrencyCode();
-		
+
 		$filter = new ARSelectFilter(new INCond(new ARFieldHandle('ProductPrice', 'productID'), $productIDs));
 		$filter->setOrder(new ARExpressionHandle('currencyID = "' . $baseCurrency . '"'), 'DESC');
-		return ActiveRecordModel::getRecordSetArray('ProductPrice', $filter);		
+		return ActiveRecordModel::getRecordSetArray('ProductPrice', $filter);
 	}
-		
+
 	/**
 	 * Load product pricing data for a whole array of products at once
 	 */
-	public static function loadPricesForRecordSet(ARSet $products)	
+	public static function loadPricesForRecordSet(ARSet $products)
 	{
 		$ids = array();
 		foreach ($products as $key => $product)
@@ -186,12 +186,12 @@ class ProductPrice extends ActiveRecordModel
 		}
 
 		$priceArray = self::fetchPriceData(array_flip($ids));
-							
+
 		$pricing = array();
 		foreach ($priceArray as $price)
 		{
 			$pricing[$price['productID']][$price['currencyID']] = $price['price'];
-		}			
+		}
 		foreach ($pricing as $productID => $productPricing)
 		{
 			$product = $products->get($ids[$productID]);
@@ -207,10 +207,10 @@ class ProductPrice extends ActiveRecordModel
 	 * @return ARSet
 	 */
 	public static function getProductPricesSet(Product $product)
-	{		
+	{
 		// preload currency data (otherwise prices would have to be loaded with referenced records)
 		self::getApplication()->getCurrencySet();
-		
+
 		return self::getRecordSet(self::getProductPricesFilter($product));
 	}
 

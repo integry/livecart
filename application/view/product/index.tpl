@@ -72,12 +72,21 @@
 
 	<div id="mainInfo">
 
-		{form action="controller=order action=addToCart id=`$product.ID`" handle=$cartForm}
+		{form action="controller=order action=addToCart id=`$product.ID`" handle=$cartForm method="POST"}
 		<table id="productPurchaseLinks">
 			<tr id="productPrice">
 				<td class="param">{t _price}:</td>
 				<td class="value price">{$product.formattedPrice.$currency}</td>
 			</tr>
+
+			{if $options}
+				<tr>
+					<td colspan="2" class="productOptions">
+						{include file="product/options.tpl"}
+					</td>
+				</tr>
+			{/if}
+
 			<tr id="productToCart" class="cartLinks">
 				<td class="param">{t _quantity}:</td>
 				<td class="value">

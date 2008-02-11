@@ -3,6 +3,7 @@
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.order.CustomerOrder");
 ClassLoader::import("application.model.order.Shipment");
+ClassLoader::import('application.model.order.OrderedItemOption');
 
 /**
  * Represents a shopping basket item (one or more instances of the same product)
@@ -12,6 +13,10 @@ ClassLoader::import("application.model.order.Shipment");
  */
 class OrderedItem extends ActiveRecordModel
 {
+	protected $optionChoices = array();
+
+	protected $removedChoices = array();
+
 	/**
 	 * Define database schema used by this active record instance
 	 *
@@ -56,9 +61,25 @@ class OrderedItem extends ActiveRecordModel
 
 	public function getPrice(Currency $currency)
 	{
+		$isFinalized = $this->customerOrder->get()->isFinalized->get();
+
 		$itemCurrency = $this->priceCurrencyID->get() ? Currency::getInstanceById($this->priceCurrencyID->get()) : $currency;
 
-		$price = $this->price->get() ? $this->price->get() : $this->product->get()->getPrice($currency->getID());
+		$price = $isFinalized ? $this->price->get() : $this->product->get()->getPrice($currency->getID());
+
+		foreach ($this->optionChoices as $choice)
+		{
+			if ($isFinalized)
+			{
+				$optionPrice = $choice->priceDiff->get();
+			}
+			else
+			{
+				$optionPrice = $choice->choice->get()->getPriceDiff($currency->getID());
+			}
+
+			$price += $optionPrice;
+		}
 
 		return $itemCurrency->convertAmount($currency, $price);
 	}
@@ -90,6 +111,70 @@ class OrderedItem extends ActiveRecordModel
 				!$file->allowDownloadDays->get();
 	}
 
+	public function removeOption(ProductOption $option)
+	{
+		foreach ($this->optionChoices as $key => $ch)
+		{
+			if ($ch->choice->get()->option->get()->getID() == $option->getID())
+			{
+				$this->removedChoices[] = $ch;
+				unset($this->optionChoices[$key]);
+			}
+		}
+	}
+
+	public function removeOptionChoice(ProductOptionChoice $choice)
+	{
+		foreach ($this->optionChoices as $key => $ch)
+		{
+			if ($ch->choice->get()->getID() == $choice->getID())
+			{
+				$this->removedChoices[] = $ch;
+				unset($this->optionChoices[$key]);
+			}
+		}
+	}
+
+	public function addOptionChoice(ProductOptionChoice $choice)
+	{
+		if (!$choice->isLoaded())
+		{
+			$choice->load();
+		}
+
+		foreach ($this->optionChoices as $key => $ch)
+		{
+			// already added?
+			if ($ch->choice->get()->getID() == $choice->getID())
+			{
+				return $ch;
+			}
+
+			// other choice from the same option - needs removal
+			if ($ch->choice->get()->option->get()->getID() == $choice->option->get()->getID())
+			{
+				$this->removedChoices[] = $ch;
+				unset($this->optionChoices[$key]);
+			}
+		}
+
+		$choice = OrderedItemOption::getNewInstance($this, $choice);
+
+		$this->optionChoices[$choice->choice->get()->option->get()->getID()] = $choice;
+
+		return $choice;
+	}
+
+	public function loadOption(OrderedItemOption $option)
+	{
+		$this->optionChoices[$option->choice->get()->option->get()->getID()] = $option;
+	}
+
+	public function getOptions()
+	{
+		return $this->optionChoices;
+	}
+
   	/*####################  Saving ####################*/
 
 	protected function insert()
@@ -108,6 +193,17 @@ class OrderedItem extends ActiveRecordModel
 	public function save($forceOperation = null)
 	{
 		$ret = parent::save($forceOperation);
+
+		// save options
+		foreach ($this->removedChoices as $rem)
+		{
+			$rem->delete();
+		}
+
+		foreach ($this->optionChoices as $choice)
+		{
+			$choice->save();
+		}
 
 		// adjust inventory
 		$this->product->get()->save();
@@ -135,18 +231,24 @@ class OrderedItem extends ActiveRecordModel
 
 	/*####################  Data array transformation ####################*/
 
-	public static function transformArray($array, ARSchema $schema)
+	public function toArray()
 	{
-		$array = parent::transformArray($array, $schema);
+		$array = parent::toArray();
 
-		// always use OrderedItem stored prices for presentation, rather than Product's
-		// pricing data, as Product prices may change after the order is completed
-		if ($array['priceCurrencyID'])
+		if (isset($array['priceCurrencyID']))
 		{
 			$currency = Currency::getInstanceByID($array['priceCurrencyID']);
-			$array['formattedPrice'] = $currency->getFormattedPrice($array['price']);
-			$array['formattedSubTotal'] = $currency->getFormattedPrice($array['price'] * $array['count']);
+			$array['formattedPrice'] = $currency->getFormattedPrice($this->getPrice($currency));
+			$array['formattedSubTotal'] = $currency->getFormattedPrice($this->getSubTotal($currency));
 		}
+
+		$array['options'] = array();
+		foreach ($this->optionChoices as $id => $choice)
+		{
+			$array['options'][$id] = $choice->toArray();
+		}
+
+		$this->setArrayData($array);
 
 		return $array;
 	}
@@ -179,7 +281,6 @@ class OrderedItem extends ActiveRecordModel
 
 	public function __destruct()
 	{
-
 		parent::destruct(array('productID', 'shipmentID'));
 	}
 }

@@ -21,7 +21,7 @@
 			<td class="cartImage">
 				{if $item.Product.DefaultImage.paths.1}
 				<a href="{productUrl product=$item.Product}">
-				   {img src=$item.Product.DefaultImage.paths.1 alt=$item.Product.name_lang|escape}
+					{img src=$item.Product.DefaultImage.paths.1 alt=$item.Product.name_lang|escape}
 				</a>
 				{/if}
 			</td>
@@ -31,6 +31,34 @@
 					<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
 					<small>({$item.Product.Category.name_lang})</small>
 				</div>
+				{if $options[$item.ID]}
+					<div class="productOptions">
+						{foreach from=$options[$item.ID] item=option}
+							{if 1 == $option.isDisplayedInCart || $item.ID == $editOption}
+								{include file="product/optionItem.tpl selectedChoice=$item.options[$option.ID]}
+							{elseif $item.options[$option.ID]}
+								<div class="nonEditableOption">
+									{$option.name_lang}:
+									{if 0 == $option.type}
+										{t _option_yes}
+									{elseif 1 == $option.type}
+										{$item.options[$option.ID].Choice.name_lang}
+									{else}
+										{$item.options[$option.ID].optionText|@htmlspecialchars}
+									{/if}
+									{if $item.options[$option.ID].Choice.priceDiff != 0}
+										<span class="optionPrice">
+											({$item.options[$option.ID].Choice.formattedPrice.$currency})
+										</span>
+									{/if}
+								</div>
+							{/if}
+						{/foreach}
+						<div class="productOptionsMenu">
+							<a href="{link controller=order action=options id=$item.ID}" ajax="{link controller=order action=optionForm id=$item.ID}">{t _edit_options}</a>
+						</div>
+					</div>
+				{/if}
 			</td>
 			<td class="cartPrice">
 				{$item.formattedSubTotal}

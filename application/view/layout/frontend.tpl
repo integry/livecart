@@ -35,7 +35,7 @@
 
 	<!-- JavaScript includes -->
 	{* <script type="text/javascript" src="firebug/firebug.js"></script> *}
-	{compiledJs}
+	{compiledJs glue=true nameMethod=hash}
 </head>
 
 <body>

@@ -23,6 +23,8 @@ class CustomerOrder extends ActiveRecordModel
 
 	private $taxes = array();
 
+	private $deliveryZone;
+
 	const STATUS_NEW = 0;
 	const STATUS_PROCESSING = 1;
 	const STATUS_AWAITING = 2;
@@ -89,11 +91,28 @@ class CustomerOrder extends ActiveRecordModel
 		}
 
 		$this->orderedItems = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category', 'DefaultImage' => 'ProductImage'))->getData();
-		$this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter(), self::LOAD_REFERENCES);
 
-		if (!$this->shipments->size() && !$this->isFinalized->get())
+		if ($this->orderedItems)
 		{
-			$this->shipments = unserialize($this->shipping->get());
+			$this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter(), self::LOAD_REFERENCES);
+
+			if (!$this->shipments->size() && !$this->isFinalized->get())
+			{
+				$this->shipments = unserialize($this->shipping->get());
+			}
+
+			// load applied product option choices
+			$ids = array();
+			foreach ($this->orderedItems as $key => $item)
+			{
+				$ids[] = $item->getID();
+			}
+
+			$f = new ARSelectFilter(new INCond(new ARFieldHandle('OrderedItemOption', 'orderedItemID'), $ids));
+			foreach (ActiveRecordModel::getRecordSet('OrderedItemOption', $f, array('Option' => 'ProductOption', 'Choice' => 'ProductOptionChoice'/*, 'DefaultChoice' => 'ProductOptionChoice'*/)) as $itemOption)
+			{
+				$itemOption->orderedItem->get()->loadOption($itemOption);
+			}
 		}
 	}
 
@@ -133,10 +152,16 @@ class CustomerOrder extends ActiveRecordModel
 			}
 
 			$count = $this->validateCount($product, $count);
-			$this->orderedItems[] = OrderedItem::getNewInstance($this, $product, $count);
+			$item = OrderedItem::getNewInstance($this, $product, $count);
+			$this->orderedItems[] = $item;
 		}
 
 		$this->resetShipments();
+
+		if (isset($item))
+		{
+			return $item;
+		}
 	}
 
 	public function updateCount(OrderedItem $item, $count)
@@ -1163,14 +1188,19 @@ class CustomerOrder extends ActiveRecordModel
 	{
 		ClassLoader::import("application.model.delivery.DeliveryZone");
 
-		if ($this->isShippingRequired() && $this->shippingAddress->get())
+		if (!$this->deliveryZone)
 		{
-			return DeliveryZone::getZoneByAddress($this->shippingAddress->get());
+			if ($this->isShippingRequired() && $this->shippingAddress->get())
+			{
+				$this->deliveryZone = DeliveryZone::getZoneByAddress($this->shippingAddress->get());
+			}
+			else
+			{
+				$this->deliveryZone = DeliveryZone::getDefaultZoneInstance();
+			}
 		}
-		else
-		{
-			return DeliveryZone::getDefaultZoneInstance();
-		}
+
+		return $this->deliveryZone;
 	}
 
 	/**

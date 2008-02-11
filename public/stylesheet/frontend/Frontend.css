@@ -1013,6 +1013,34 @@ ul.productList .orderingControls
     font-size: smaller;
 }
 
+#productPurchaseLinks .productOptions
+{
+	padding: 0 0.5em;
+}
+
+.productOptions p
+{
+	margin: 5px 0;
+}
+
+.productOptions label.field
+{
+	display: block;
+	float: none;
+	margin-bottom: 0;
+}
+
+.productOptions input.text, .productOptions select
+{
+	margin-top: 2px;
+	margin-bottom: 0;
+}
+
+.productOptions .description
+{
+	font-size: 0.85em;
+}
+
 #productSpecification table
 {
 	border: 1px solid #AAAAAA;
@@ -1217,6 +1245,16 @@ div.checkout a
 	overflow: hidden;
 	padding: 3px;
 	vertical-align: middle;
+}
+
+#cart .productOptions
+{
+	margin: 1em 0;
+}
+
+#cart .productOptionsMenu
+{
+	font-size: smaller;
 }
 
 .cartControl
@@ -2011,9 +2049,10 @@ label
     padding-right: 6px;
     margin-top: 0;
     margin-bottom: 0;
+    line-height: 19px;
 }
 
-p.required label
+.required label
 {
 	font-weight: bold;
 }
@@ -2031,7 +2070,7 @@ p.radio label, p.checkbox label
 
 label.checkbox, label.radio
 {
-  	margin-top: 3px;
+  	line-height: 1em;
   	width: auto;
 }
 
@@ -2101,7 +2140,7 @@ input.radio, input.checkbox, input.submit, input.button, input.reset
 input.radio, input.checkbox
 {
     float: left;
-    margin-right: 1em;
+    margin-right: 0.5em;
     cursor: pointer;
 }
 
@@ -2172,6 +2211,14 @@ fieldset.error, div.error, fieldset.container
 	background-position: center center;
 	background-repeat: no-repeat;
 	clear: none;
+}
+
+a.ajaxIndicator
+{
+	background-image: url(../../image/indicator.gif);
+	background-position: right center;
+	background-repeat: no-repeat;
+	padding-right: 22px;
 }
 
 p.checkbox label {

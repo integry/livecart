@@ -98,9 +98,24 @@ class ProductController extends FrontendController
 		$response->set('category', $productArray['Category']);
 		$response->set('images', $product->getImageArray());
 		$response->set('quantity', $quantity);
-		$response->set('cartForm', $this->buildAddToCartForm());
 		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
 		$response->set('catRoute', $catRoute);
+
+		// product options
+		$options = $product->getOptions(true)->toArray();
+		$response->set('allOptions', $options);
+
+		foreach ($options as $key => $option)
+		{
+			if (!$option['isDisplayed'])
+			{
+				unset($options[$key]);
+			}
+		}
+		$response->set('options', $options);
+
+		// add to cart form
+		$response->set('cartForm', $this->buildAddToCartForm($options));
 
 		// related products
 		$related = $this->getRelatedProducts($product);
@@ -135,14 +150,33 @@ class ProductController extends FrontendController
 		return $response;
 	}
 
+	public function buildAddToCartValidator($options)
+	{
+		ClassLoader::import("framework.request.validator.Form");
+		$validator = new RequestValidator("addToCart", $this->request);
+
+		// option validation
+		foreach ($options as $option)
+		{
+			if ($option['isRequired'])
+			{
+				$validator->addCheck('option_' . $option['ID'], new IsNotEmptyCheck($this->translate('_err_option_' . $option['type'])));
+			}
+		}
+
+		return $validator;
+	}
+
 	/**
 	 * @return Form
 	 */
-	private function buildAddToCartForm()
+	private function buildAddToCartForm($options)
 	{
 		ClassLoader::import("framework.request.validator.Form");
-		$form = new Form(new RequestValidator("addToCart", $this->request));
+
+		$form = new Form($this->buildAddToCartValidator($options));
 		$form->enableClientSideValidation(false);
+
 		return $form;
 	}
 
