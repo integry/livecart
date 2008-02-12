@@ -5,9 +5,9 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2008-02-06 00:56                                #
-# Model version:         Version 2008-02-06 1                            #
-# From model version:    Version 2008-02-06                              #
+# Created on:            2008-02-11 18:28                                #
+# Model version:         Version 2008-02-11 1                            #
+# From model version:    Version 2008-02-11                              #
 # ---------------------------------------------------------------------- #
 
 

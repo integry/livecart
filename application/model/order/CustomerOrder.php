@@ -109,7 +109,7 @@ class CustomerOrder extends ActiveRecordModel
 			}
 
 			$f = new ARSelectFilter(new INCond(new ARFieldHandle('OrderedItemOption', 'orderedItemID'), $ids));
-			foreach (ActiveRecordModel::getRecordSet('OrderedItemOption', $f, array('Option' => 'ProductOption', 'Choice' => 'ProductOptionChoice'/*, 'DefaultChoice' => 'ProductOptionChoice'*/)) as $itemOption)
+			foreach (ActiveRecordModel::getRecordSet('OrderedItemOption', $f, array('DefaultChoice' => 'ProductOptionChoice', 'Option' => 'ProductOption', 'Choice' => 'ProductOptionChoice')) as $itemOption)
 			{
 				$itemOption->orderedItem->get()->loadOption($itemOption);
 			}
