@@ -1954,6 +1954,19 @@ td.amount
     font-weight: bold;
 }
 
+.itemOptions
+{
+	list-style-type: none;
+	padding: 0.5em;
+	font-size: 0.85em;
+	color: #777;
+}
+
+.itemOptions .optionPrice
+{
+	color: #444;
+}
+
 /***************************
 	Customization
 ***************************/

@@ -87,7 +87,10 @@
 
 					{foreach from=$shipment.items item="item" name="shipment"}
 						<tr class="{zebra loop="shipment"}">
-							<td class="productName">{$item.Product.name_lang}</td>
+							<td class="productName">
+								{$item.Product.name_lang}
+								{include file="user/itemOptions.tpl" options=$item.options}
+							</td>
 							<td>{$item.formattedPrice}</td>
 							<td>{$item.count}</td>
 							<td class="amount">{$item.formattedSubTotal}</td>

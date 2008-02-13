@@ -66,6 +66,19 @@ class OrderedItemOption extends ActiveRecordModel
 		$this->priceDiff->set($this->choice->get()->getPriceDiff($currency));
 	}
 
+	/*####################  Data array transformation ####################*/
+
+	public static function transformArray($array, ARSchema $schema)
+	{
+		$array = parent::transformArray($array, $schema);
+
+		$array['formattedPrice'] = array();
+		$currency = Currency::getInstanceByID($array['OrderedItem']['CustomerOrder']['Currency']['ID']);
+		$array['formattedPrice'] = $currency->getFormattedPrice($array['priceDiff']);
+
+		return $array;
+	}
+
 }
 
 ?>

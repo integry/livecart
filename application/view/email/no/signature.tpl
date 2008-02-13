@@ -1,3 +1,3 @@
 ------------------------
-{'butikknavnet_ditt'|config}
+{'STORE_NAME'|config}
 {link url=true}

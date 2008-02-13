@@ -1,4 +1,4 @@
-Ny beskjed ang. bestilling hos {'butikknavnet_ditt'|config}
+Ny beskjed ang. bestilling hos {'STORE_NAME'|config}
 En kunde har sendt en ny beskjed ang. bestillingsnr. #{$order.ID}
 
 --------------------------------------------------

@@ -1,7 +1,7 @@
-Velkommen til {'butikknavnet_ditt'|config}!
+Velkommen til {'STORE_NAME'|config}!
 Kjære {$user.fullName},
 
-Her er din kontaktinformasjon som kunde hos {'butikknavnet_ditt'|config}:
+Her er din kontaktinformasjon som kunde hos {'STORE_NAME'|config}:
 
 E-mail: {$user.email}
 Passord: {$user.newPassword}

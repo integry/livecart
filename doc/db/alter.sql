@@ -5,9 +5,9 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2008-02-11 18:28                                #
-# Model version:         Version 2008-02-11 1                            #
-# From model version:    Version 2008-02-11                              #
+# Created on:            2008-02-13 23:05                                #
+# Model version:         Version 2008-02-13                              #
+# From model version:    1.01                                            #
 # ---------------------------------------------------------------------- #
 
 
@@ -20,8 +20,6 @@ ALTER TABLE Product DROP FOREIGN KEY Category_Product;
 ALTER TABLE Product DROP FOREIGN KEY Manufacturer_Product;
 
 ALTER TABLE Product DROP FOREIGN KEY ProductImage_Product;
-
-ALTER TABLE Product DROP FOREIGN KEY Product_Product;
 
 ALTER TABLE Category DROP FOREIGN KEY Category_Category;
 
@@ -165,37 +163,139 @@ ALTER TABLE ExpressCheckout DROP FOREIGN KEY UserAddress_ExpressCheckout;
 
 ALTER TABLE ExpressCheckout DROP FOREIGN KEY CustomerOrder_ExpressCheckout;
 
-ALTER TABLE ProductOption DROP FOREIGN KEY Product_ProductOption;
-
-ALTER TABLE ProductOption DROP FOREIGN KEY Category_ProductOption;
-
-ALTER TABLE ProductOption DROP FOREIGN KEY ProductOptionChoice_ProductOption;
-
-ALTER TABLE ProductOptionChoice DROP FOREIGN KEY ProductOption_ProductOptionChoice;
-
-ALTER TABLE OrderedItemOption DROP FOREIGN KEY OrderedItem_OrderedItemOption;
-
-ALTER TABLE OrderedItemOption DROP FOREIGN KEY ProductOptionChoice_OrderedItemOption;
-
-ALTER TABLE ProductRatingType DROP FOREIGN KEY Category_ProductRatingType;
-
-ALTER TABLE ProductRating DROP FOREIGN KEY ProductRatingType_ProductRating;
-
-ALTER TABLE ProductRating DROP FOREIGN KEY ProductReview_ProductRating;
-
-ALTER TABLE CategoryPresentation DROP FOREIGN KEY Category_CategoryPresentation;
-
-ALTER TABLE ProductPriceRule DROP FOREIGN KEY Product_ProductPriceRule;
-
-ALTER TABLE ProductPriceRule DROP FOREIGN KEY UserGroup_ProductPriceRule;
-
-ALTER TABLE ProductPresentation DROP FOREIGN KEY Product_ProductPresentation;
-
 # ---------------------------------------------------------------------- #
-# Modify table "ProductOption"                                           #
+# Modify table "Product"                                                 #
 # ---------------------------------------------------------------------- #
 
-ALTER TABLE ProductOption CHANGE defaultOptionID defaultChoiceID INTEGER UNSIGNED;
+ALTER TABLE Product ADD COLUMN parentID INTEGER UNSIGNED;
+
+ALTER TABLE Product ADD COLUMN position INTEGER UNSIGNED DEFAULT 0;
+
+ALTER TABLE Product MODIFY parentID INTEGER UNSIGNED AFTER defaultImageID;
+
+# ---------------------------------------------------------------------- #
+# Modify table "ProductReview"                                           #
+# ---------------------------------------------------------------------- #
+
+ALTER TABLE ProductReview MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
+
+# ---------------------------------------------------------------------- #
+# Modify table "ShipmentTax"                                             #
+# ---------------------------------------------------------------------- #
+
+ALTER TABLE ShipmentTax MODIFY taxRateID INTEGER UNSIGNED COMMENT 'ID of the TaxRate that is being applied to the shipment';
+
+# ---------------------------------------------------------------------- #
+# Add table "ProductOption"                                              #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ProductOption (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    productID INTEGER UNSIGNED,
+    categoryID INTEGER UNSIGNED,
+    defaultChoiceID INTEGER UNSIGNED,
+    name MEDIUMTEXT,
+    description MEDIUMTEXT,
+    type TINYINT,
+    isRequired BOOL,
+    isDisplayed BOOL,
+    isDisplayedInList BOOL,
+    isDisplayedInCart BOOL,
+    position INTEGER UNSIGNED DEFAULT 0,
+    CONSTRAINT PK_ProductOption PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "ProductOptionChoice"                                        #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ProductOptionChoice (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    optionID INTEGER UNSIGNED,
+    priceDiff NUMERIC(12,2),
+    hasImage BOOL,
+    position INTEGER UNSIGNED DEFAULT 0,
+    name MEDIUMTEXT,
+    CONSTRAINT PK_ProductOptionChoice PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "OrderedItemOption"                                          #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE OrderedItemOption (
+    orderedItemID INTEGER UNSIGNED NOT NULL,
+    choiceID INTEGER UNSIGNED NOT NULL,
+    priceDiff NUMERIC(12,2),
+    optionText MEDIUMTEXT,
+    CONSTRAINT PK_OrderedItemOption PRIMARY KEY (orderedItemID, choiceID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "ProductRatingType"                                          #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ProductRatingType (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    categoryID INTEGER UNSIGNED,
+    name MEDIUMTEXT,
+    position INTEGER UNSIGNED DEFAULT 0,
+    CONSTRAINT PK_ProductRatingType PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "ProductRating"                                              #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ProductRating (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    reviewID INTEGER UNSIGNED,
+    ratingTypeID INTEGER UNSIGNED,
+    rating INTEGER,
+    CONSTRAINT PK_ProductRating PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "CategoryPresentation"                                       #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE CategoryPresentation (
+    ID INTEGER UNSIGNED NOT NULL,
+    isSubcategories BOOL,
+    theme VARCHAR(70),
+    CONSTRAINT PK_CategoryPresentation PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "ProductPriceRule"                                           #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ProductPriceRule (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    productID INTEGER UNSIGNED,
+    userGroupID INTEGER UNSIGNED,
+    quantity INTEGER,
+    price NUMERIC(12,2),
+    CONSTRAINT PK_ProductPriceRule PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "ProductPresentation"                                        #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ProductPresentation (
+    ID INTEGER UNSIGNED NOT NULL,
+    theme VARCHAR(70),
+    CONSTRAINT PK_ProductPresentation PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
