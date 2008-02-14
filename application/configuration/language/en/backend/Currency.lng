@@ -2,7 +2,7 @@
 _currency_was_successfully_enabled=Currency was successfully enabled
 _currency_was_successfully_saved=Currency was successfully saved
 
-_rate_save_conf=Currency exchange rates were successfully saved 
+_rate_save_conf=Currency exchange rates were successfully saved
 
 _currencies=Currencies
 
@@ -25,6 +25,8 @@ _confirm_delete=Are you sure you wish to delete this currency?
 _pr_form=Price Formatting
 _pr_prefix=Price display prefix
 _pr_suffix=Price display suffix
+
+_base_currency_warning=WARNING: the product prices for all your products will be 0.00 if the prices are not entered in the new base currency! Are you sure you wish to change the base currency for your store?
 
 # rates
 
