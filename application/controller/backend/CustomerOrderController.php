@@ -253,6 +253,7 @@ class CustomerOrderController extends StoreManagementController
 	{
 		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, true);
 		$history = new OrderHistory($order, $this->user);
+		$order->loadAll();
 		$order->isCancelled->set(!$order->isCancelled->get());
 		$order->save();
 		$history->saveLog();

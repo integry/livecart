@@ -37,7 +37,6 @@ _quantity=Quantity
 _product=Product
 
 # Product options
-_option_yes=Yes
 _err_option_0=This option must be selected
 _err_option_1=Please select an option
 _err_option_2=This field cannot be left blank

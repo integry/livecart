@@ -22,6 +22,8 @@ abstract class FrontendController extends BaseController
 	{
 		parent::__construct($application);
 
+		$this->request->sanitizeAllData();
+
 		unset($this->order);
 
 		// variables to append automatically to all URLs

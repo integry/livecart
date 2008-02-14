@@ -16,6 +16,8 @@ _last_month=Last month
 _this_year=This year
 _last_year=Last year
 
+_option_yes=Yes
+
 # Order statuses
 _status_new=New
 _status_processing=Processing
