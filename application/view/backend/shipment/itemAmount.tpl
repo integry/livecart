@@ -8,12 +8,39 @@
 		<td class="orderShipmentsItem_info_name_td">
 			<div class="orderShipmentsItem_info_name">
 				<a href="{backendProductUrl product=$item.Product}">{$item.Product.name_lang}</a>
+				{if $item.options}
+					({$item.formattedBasePrice})
+					<div class="productOptions">
+						<ul class="itemOptions">
+						{foreach from=$item.options item=option}
+							<li>
+								{$option.Choice.Option.name_lang}:
+								{if 0 == $option.Choice.Option.type}
+									{t _option_yes}
+								{elseif 1 == $option.Choice.Option.type}
+									{$option.Choice.name_lang}
+								{else}
+									{$option.optionText|@htmlspecialchars}
+								{/if}
+
+								{if $option.priceDiff != 0}
+									<span class="optionPrice">({$option.formattedPrice})</span>
+								{/if}
+							</li>
+						{/foreach}
+						</ul>
+
+						<div class="menu productOptionsMenu">
+							<a href="{link controller=backend.orderedItem action=optionForm id=$item.ID}">{t _edit_options}</a>
+						</div>
+					</div>
+				{/if}
 			</div>
 		</td>
 		<td class="orderShipmentsItem_info_price_td">
 			<div class="orderShipmentsItem_info_price">
 				<span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
-				<span class="price">{$item.price|string_format:"%.2f"}</span>
+				<span class="price">{$item.itemPrice|string_format:"%.2f"}</span>
 				<span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
 			</div>
 		</td>
@@ -27,9 +54,9 @@
 		<td class="orderShipmentsItem_info_total_td ">
 			<div class="orderShipmentsItem_info_total item_subtotal">
 				<span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
-				<span class="price">{math assign=price equation="x * y" x=$item.price|default:0 y=$item.count|default:0}{$price|string_format:"%.2f"}</span>
+				<span class="price">{$item.itemSubTotal|string_format:"%.2f"}</span>
 				<span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
-			</div> 
+			</div>
 		</td>
 	</tr>
 </table>

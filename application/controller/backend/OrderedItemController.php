@@ -419,6 +419,18 @@ class OrderedItemController extends StoreManagementController
 		}
 	}
 
+	public function optionForm()
+	{
+		ClassLoader::import('application.controller.OrderController');
+
+		$item = ActiveRecordModel::getInstanceById('OrderedItem', $this->request->get('id'), true, true);
+		$item->customerOrder->get()->loadAll();
+
+		$c = new OrderController($this->application);
+
+		return $c->optionForm($item->customerOrder->get());
+	}
+
 }
 
 ?>

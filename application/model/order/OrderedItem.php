@@ -238,8 +238,12 @@ class OrderedItem extends ActiveRecordModel
 		if (isset($array['priceCurrencyID']))
 		{
 			$currency = Currency::getInstanceByID($array['priceCurrencyID']);
-			$array['formattedPrice'] = $currency->getFormattedPrice($this->getPrice($currency));
-			$array['formattedSubTotal'] = $currency->getFormattedPrice($this->getSubTotal($currency));
+			$array['itemPrice'] = $this->getPrice($currency);
+			$array['itemSubTotal'] = $this->getSubTotal($currency);
+
+			$array['formattedBasePrice'] = $currency->getFormattedPrice($array['price']);
+			$array['formattedPrice'] = $currency->getFormattedPrice($array['itemPrice']);
+			$array['formattedSubTotal'] = $currency->getFormattedPrice($array['itemSubTotal']);
 		}
 
 		$array['options'] = array();

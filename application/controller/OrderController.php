@@ -59,9 +59,11 @@ class OrderController extends FrontendController
 		return $response;
 	}
 
-	public function optionForm()
+	public function optionForm(CustomerOrder $order = null)
 	{
-		$item = $this->order->getItemByID($this->request->get('id'));
+		$order = $order ? $order : $this->order;
+
+		$item = $order->getItemByID($this->request->get('id'));
 		$options = $optionsArray = array();
 		$product = $item->product->get();
 		$options[$product->getID()] = $product->getOptions(true);

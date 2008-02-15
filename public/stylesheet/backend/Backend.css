@@ -672,6 +672,11 @@ ul.menu li {
   	color: red;
 }
 
+div.menu a
+{
+	font-size: smaller;
+}
+
 ul.verticalMenu
 {
 	padding: 15px;

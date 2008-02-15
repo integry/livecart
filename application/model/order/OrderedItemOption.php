@@ -73,7 +73,7 @@ class OrderedItemOption extends ActiveRecordModel
 		$array = parent::transformArray($array, $schema);
 
 		$array['formattedPrice'] = array();
-		$currency = Currency::getInstanceByID($array['OrderedItem']['CustomerOrder']['Currency']['ID']);
+		$currency = Currency::getInstanceByID($array['OrderedItem']['priceCurrencyID']);
 		$array['formattedPrice'] = $currency->getFormattedPrice($array['priceDiff']);
 
 		return $array;
