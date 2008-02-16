@@ -31,7 +31,8 @@
 						</ul>
 
 						<div class="menu productOptionsMenu">
-							<a href="{link controller=backend.orderedItem action=optionForm id=$item.ID}">{t _edit_options}</a>
+							<a href="{link controller=backend.orderedItem action=optionForm id=$item.ID}" onclick="Backend.OrderedItem.loadOptionsForm(event);">{t _edit_options}</a>
+							<span class="progressIndicator" style="display: none;"></span>
 						</div>
 					</div>
 				{/if}

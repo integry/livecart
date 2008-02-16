@@ -428,9 +428,29 @@ class OrderedItemController extends StoreManagementController
 
 		$c = new OrderController($this->application);
 
-		return $c->optionForm($item->customerOrder->get());
+		$response = $c->optionForm($item->customerOrder->get());
+		$response->set('currency', $item->customerOrder->get()->currency->get()->getID());
+		return $response;
 	}
 
+	public function saveOptions()
+	{
+		ClassLoader::import('application.controller.OrderController');
+
+		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id'), OrderedItem::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
+		$item->customerOrder->get()->loadAll();
+		foreach ($item->product->get()->getOptions(true) as $option)
+		{
+			OrderController::modifyItemOption($item, $option, $this->request, OrderController::getFormFieldName($item, $option));
+		}
+
+		$item->save();
+		$item->shipment->get()->save();
+
+		$this->application->getLocale()->translationManager()->loadFile('backend/Shipment');
+
+		return new ActionResponse('item', $item->toArray());
+	}
 }
 
 ?>

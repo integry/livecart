@@ -102,7 +102,7 @@ class OrderController extends FrontendController
 			{
 				foreach ($item->product->get()->getOptions(true) as $option)
 				{
-					$this->modifyItemOption($item, $option, $this->getFormFieldName($item, $option));
+					$this->modifyItemOption($item, $option, $this->request, $this->getFormFieldName($item, $option));
 				}
 
 				$item->save();
@@ -154,7 +154,7 @@ class OrderController extends FrontendController
 		{
 			foreach ($product->getOptions(true) as $option)
 			{
-				$this->modifyItemOption($item, $option, 'option_' . $option->getID());
+				$this->modifyItemOption($item, $option, $this->request, 'option_' . $option->getID());
 			}
 		}
 
@@ -202,11 +202,11 @@ class OrderController extends FrontendController
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
 
-	private function modifyItemOption(OrderedItem $item, ProductOption $option, $varName)
+	public function modifyItemOption(OrderedItem $item, ProductOption $option, Request $request, $varName)
 	{
-		if ($option->isBool() && $this->request->isValueSet('checkbox_' . $varName))
+		if ($option->isBool() && $request->isValueSet('checkbox_' . $varName))
 		{
-			if ($this->request->get($varName))
+			if ($request->get($varName))
 			{
 				$item->addOptionChoice($option->defaultChoice->get());
 			}
@@ -215,15 +215,15 @@ class OrderController extends FrontendController
 				$item->removeOption($option);
 			}
 		}
-		else if ($this->request->isValueSet($varName))
+		else if ($request->isValueSet($varName))
 		{
 			if ($option->isSelect())
 			{
-				$item->addOptionChoice($option->getChoiceByID($this->request->get($varName)));
+				$item->addOptionChoice($option->getChoiceByID($request->get($varName)));
 			}
 			else if ($option->isText())
 			{
-				$text = $this->request->get($varName);
+				$text = $request->get($varName);
 
 				if ($text)
 				{
@@ -291,7 +291,7 @@ class OrderController extends FrontendController
 		}
 	}
 
-	private function getFormFieldName(OrderedItem $item, ProductOption $option)
+	public function getFormFieldName(OrderedItem $item, ProductOption $option)
 	{
 		return 'itemOption_' . $item->getID() . '_' . $option->getID();
 	}

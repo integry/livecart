@@ -686,6 +686,7 @@ class CustomerOrderController extends StoreManagementController
 		$order->loadAll();
 
 		$this->setLayout('frontend');
+		$this->loadLanguageFile('Frontend');
 		$this->loadLanguageFile('User');
 
 		return new ActionResponse('order', $order->toArray(array('payments' => true)));

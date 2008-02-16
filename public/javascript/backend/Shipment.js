@@ -137,17 +137,17 @@ Backend.OrderedItem = {
 	   total.innerHTML = Backend.Shipment.prototype.formatAmount(parseFloat(input.value) * parseFloat(price.innerHTML));
    },
 
-   changeProductCount: function(input, orderID, itemID, shipmentID)
+   changeProductCount: function(input, orderID, itemID, shipmentID, force)
    {
 	   if(input.value == input.lastValue) return;
 
 	   var price = input.up('tr').down('.orderShipmentsItem_info_price').down('.price');
 	   var total = input.up('tr').down('.orderShipmentsItem_info_total').down('.price');
 
-	   if(confirm(Backend.OrderedItem.Messages.areYouRealyWantToUpdateItemsCount))
+	   if(force || confirm(Backend.OrderedItem.Messages.areYouRealyWantToUpdateItemsCount))
 	   {
 		   new LiveCart.AjaxRequest(
-			   Backend.OrderedItem.Links.changeItemCount + "/" + itemID + "?count=" + input.value,
+			   this.getCountSaveUrl(itemID, input.value),
 			   input.up('.orderShipmentsItem_info_count').down('.progressIndicator'),
 			   function(response)
 			   {
@@ -190,9 +190,46 @@ Backend.OrderedItem = {
 		   input.value = input.lastValue;
 		   Backend.OrderedItem.updateProductCount(input, orderID);
 	   }
-   }
-};
+	},
 
+	getCountSaveUrl: function(itemID, count)
+	{
+		return Backend.OrderedItem.Links.changeItemCount + "/" + itemID + "?count=" + count;
+	},
+
+	loadOptionsForm: function(e)
+	{
+		var link = Event.element(e);
+		var container = link.up('.productOptions');
+
+		container.itemHtml = container.innerHTML;
+
+		new LiveCart.AjaxUpdater(link.href, container, link.next('.progressIndicator'));
+
+		Event.stop(e);
+	},
+
+	saveOptions: function(e)
+	{
+		var target = Event.element(e);
+		new LiveCart.AjaxUpdater(target, target.up('li'), null, null,
+			function()
+			{
+				var id = target.elements.namedItem('id').value;
+				Backend.OrderedItem.changeProductCount($('orderShipmentsItem_count_' + id), target.elements.namedItem('orderID').value, id, target.elements.namedItem('shipmentID').value, true);
+			}
+		);
+		Event.stop(e);
+	},
+
+	reloadItem: function(e)
+	{
+		var container = Event.element(e).up('.productOptions');
+		container.innerHTML = container.itemHtml;
+
+		Event.stop(e);
+	}
+};
 
 Backend.Shipment = Class.create();
 Backend.Shipment.prototype =
@@ -287,7 +324,8 @@ Backend.Shipment.prototype =
 			this.nodes.itemsList = this.nodes.root.down('ul');
 			this.orderID = this.nodes.form.elements.namedItem('orderID').value;
 			this.ID = this.nodes.form.elements.namedItem('ID').value;
-			this.nodes.status = this.nodes.form.elements.namedItem('status');
+			this.nodes.status = $('orderShipment_status_' + this.ID);
+			//this.nodes.form.elements.namedItem('status');
 		}
 
 
@@ -305,9 +343,9 @@ Backend.Shipment.prototype =
 				Event.observe("orderShipment_USPS_" + this.ID + "_submit", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).toggleUSPS(); }.bind(this));
 				Event.observe("orderShipment_USPS_" + this.ID + "_cancel", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).toggleUSPS(true); }.bind(this));
 				Event.observe("orderShipment_USPS_" + this.ID + "_select", 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).USPSChanged(); }.bind(this));
-	
+
 				// Bind status changes
-				Event.observe("orderShipment_status_" + this.ID, 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).changeStatus(); }.bind(this));				
+				Event.observe("orderShipment_status_" + this.ID, 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).changeStatus(); }.bind(this));
 			}
 
 			// Bind Items events
@@ -403,7 +441,7 @@ Backend.Shipment.prototype =
 				li.down("#orderShipment_USPS__submit").id  = "orderShipment_USPS_" + response.shipment.ID + "_submit";
 				li.down("#orderShipment_USPS__cancel").id  = "orderShipment_USPS_" + response.shipment.ID + "_cancel";
 				li.down("#orderShipment_USPS__select").id  = "orderShipment_USPS_" + response.shipment.ID + "_select";
-				li.down("#orderShipment_status__feedback").id = "orderShipment_status_" + response.shipment.ID + "_feedback";				
+				li.down("#orderShipment_status__feedback").id = "orderShipment_status_" + response.shipment.ID + "_feedback";
 			}
 
 			for(var z = -1; z <= 3; z++)
@@ -477,12 +515,12 @@ Backend.Shipment.prototype =
 				   var listNode = $("orderShipments_list_" + this.orderID + "_" + this.ID).down('ul.orderShipmentsItem');
 				   var itemsList = ActiveList.prototype.getInstance(listNode);
 				   itemsList.id = "orderShipmentsItems_list_" + this.orderID + "_" + this.ID;
-					
+
 					if (!this.nodes.root.up(".shipmentCategoty"))
 					{
 						this.nodes.root = listNode.up('li');
 					}
-					
+
 					this.nodes.root.up(".shipmentCategoty").show();
 
 
@@ -625,7 +663,7 @@ Backend.Shipment.prototype =
 	afterChangeStatus: function(response)
 	{
 		var orderID = this.nodes.form.elements.namedItem('orderID').value;
-		var select = this.nodes.form.elements.namedItem('status');
+		var select = this.nodes.status;
 
 		if(response.status == 'success')
 		{
@@ -722,7 +760,7 @@ Backend.Shipment.prototype =
 
 	changeStatus: function(confirmed)
 	{
-		var select = this.nodes.form.elements.namedItem('status');
+		var select = this.nodes.status;
 
 		var proceed = false;
 		if(confirmed)
@@ -769,7 +807,7 @@ Backend.Shipment.prototype =
 		}
 		else
 		{
-			url = Backend.Shipment.Links.changeStatus + "/" + this.nodes.form.elements.namedItem('ID').value + "?status=" + this.nodes.form.elements.namedItem('status').value;
+			url = Backend.Shipment.Links.changeStatus + "/" + this.nodes.form.elements.namedItem('ID').value + "?status=" + this.nodes.status.value;
 		}
 
 		new LiveCart.AjaxRequest(
@@ -998,9 +1036,9 @@ Backend.Shipment.prototype =
 
 									var shipment = Backend.Shipment.prototype.getInstance(shipmentContainer);
 									shipment.ID = a.shipment.ID;
-									
+
 									shipment.addNewProductToShipment(this.objectID, orderID, this.popup.document);
-									
+
 								}.bind(this), true);
 							}
 						}

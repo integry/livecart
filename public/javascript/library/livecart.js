@@ -284,6 +284,10 @@ LiveCart.AjaxUpdater.prototype = {
 				if (controls)
 				{
 					indicatorId = controls.down('.progressIndicator');
+					if(indicatorId.style.visibility == 'hidden')
+					{
+						this.adjustIndicatorVisibility = true;
+					}
 				}
 			}
 		}

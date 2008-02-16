@@ -1,3 +1,5 @@
+<form>
+
 <input type="hidden" name="ID" value="{$shipment.ID|default:$shipmentID}" />
 <input type="hidden" name="orderID" value="{$shipment.Order.ID|default:$orderID}" />
 <input type="hidden" name="shippingServiceID" value="{$shipment.ShippingService.ID|default:$shippingServiceID}" />
@@ -20,7 +22,7 @@
 			</div>
 		</td>
 	</tr>
-	
+
 	<tr class="orderShipment_info_tax_row">
 		<td class="orderShipmentsItem_info_report_td">
 			<div class="orderShipmentsItem_info_report">
@@ -37,12 +39,12 @@
 			</div>
 		</td>
 	</tr>
-	
+
 	<tr class="orderShipment_info_shipping_row">
 		<td class="orderShipmentsItem_info_report_td">
 			<div class="orderShipmentsItem_info_report">
 				<span class="progressIndicator" style="display: none;"></span>
-				{t _shipping}:  
+				{t _shipping}:
 				<a href="#change" class="orderShipment_change_usps" id="orderShipment_change_usps_{$shipment.ID}"  style="{if $shipment.status == 3}display: none;{/if} {denied role='order.update'}display: none{/denied}">{$shipment.ShippingService.name_lang|default:$shippingServiceIsNotSelected}</a>
 				{denied role='order.update'}<b>{$shipment.ShippingService.name_lang|default:$shippingServiceIsNotSelected}</b>{/denied}
 				<span class="controls" id="orderShipment_USPS_{$shipment.ID}" style="display: none">
@@ -51,7 +53,7 @@
 						<option value="{$shipment.ShippingService.ID|default:$shippingServiceID}" selected="selected">{$shipment.ShippingService.name_lang|default:$shippingServiceIsNotSelected}</option>
 						{/if}
 					</select>
-				
+
 					<span class="progressIndicator" style="display: none;"></span>
 					<input type="submit" value="{t _save}" class="button submit"  id="orderShipment_USPS_{$shipment.ID}_submit" />
 					or
@@ -69,7 +71,7 @@
 			</div>
 		</td>
 	</tr>
-	
+
 	<tr class="orderShipment_info_total_row">
 		<td class="orderShipmentsItem_info_report_td">
 			<div class="orderShipmentsItem_info_report">

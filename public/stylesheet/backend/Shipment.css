@@ -55,16 +55,24 @@
     display: none !important;
 }
 
+/*
 .orderShippedShipments .orderShipment_info
 {
     padding-bottom: 20px;
 }
+*/
 
 li.orderShipment
 {
     margin: 0;
     padding: 0;
     border: 0;
+}
+
+li.orderShipment:hover, .orderShippedShipments ul.activeList > li:hover, .downloadableShipment ul.activeList > li:hover
+{
+	border-width: 0;
+	border-bottom-width: 1px;
 }
 
 .orderShipments li
@@ -133,7 +141,7 @@ li.orderShipment
 .orderShipmentsItem_info_sku { width: 70px; }
 
 .orderShipmentsItem_info_name_td { width: 100%;  }
-.orderShipmentsItem_info_name { width: 350px;  }
+.orderShipmentsItem_info_name { width: 500px;  }
 
 .orderShipmentsItem_info_price_td { width: 80px; text-align: center;}
 .orderShipmentsItem_info_price { width: 80px; text-align: center;  }
@@ -174,7 +182,11 @@ li.orderShipment
 
 .orderShipmentsItem_info .productOptions
 {
+	background-color: #fff;
+	border: 1px solid #ccc;
 	margin-left: 8px;
+	margin-top: 0.5em;
+	padding: 0.2em 0.5em 0.5em;
 }
 
 .orderShipmentsItem_info .itemOptions
@@ -187,6 +199,11 @@ li.orderShipment
 .orderShippedShipments .productOptionsMenu
 {
 	display: none;
+}
+
+.optionFormContainer
+{
+	margin-top: 0.5em;
 }
 
 .tabOrderProductsContent .orderShipment .activeList li .orderShipmentsItem_info .itemOptions li

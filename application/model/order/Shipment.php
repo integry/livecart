@@ -485,7 +485,7 @@ class Shipment extends ActiveRecordModel
 		// shipping rate for a saved shipment
 		if (!isset($array['selectedRate']) && isset($array['shippingAmount']))
 		{
-			$currency = Currency::getInstanceByID($array['AmountCurrency']['ID']);
+			$currency = $this->order->get()->currency->get();
 			$array['selectedRate']['formattedPrice'] = array();
 			foreach ($currencies as $id => $currency)
 			{
