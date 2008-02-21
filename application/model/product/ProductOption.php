@@ -5,8 +5,7 @@ ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.system.MultilingualObject');
 
 /**
- * One of the main entities of the system - defines and handles product related logic.
- * This class allows to assign or change product attribute values, product files, images, related products, etc.
+ * Configurable product options
  *
  * @package application.model.product
  * @author Integry Systems <http://integry.com>
@@ -240,15 +239,6 @@ class ProductOption extends MultilingualObject
 	}
 
 	/*####################  Data array transformation ####################*/
-
-	/*
-	public static function transformArray($array, ARSchema $schema)
-	{
-		$array = parent::transformArray($array, $schema);
-
-		return $array;
-	}
-	*/
 
 	public function toArray()
 	{

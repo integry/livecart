@@ -553,7 +553,6 @@ Backend.User.Editor.prototype =
 		);
 		Event.observe(this.nodes.generatePassword, "click", function(e) {
 			Event.stop(e);
-	 		console.log(Backend.User.Add.prototype.generatePassword.apply);
 			Backend.User.Add.prototype.generatePassword.apply(this)
 		}.bind(this));
 

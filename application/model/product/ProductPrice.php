@@ -155,7 +155,10 @@ class ProductPrice extends ActiveRecordModel
 			foreach ($prices as $id => $price)
 			{
 				$productArray[$ids[$product]]['price_' . $id] = $price;
-				$productArray[$ids[$product]]['formattedPrice'][$id] = $currencies[$id]->getFormattedPrice($price);
+				if (isset($currencies[$id]))
+				{
+					$productArray[$ids[$product]]['formattedPrice'][$id] = $currencies[$id]->getFormattedPrice($price);
+				}
 			}
 		}
 	}

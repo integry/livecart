@@ -15,11 +15,30 @@
 			<label for="details_{$categoryId}">{t _descr}:</label>
 			{textarea name="description" id="details_$categoryId" class="tinyMCE"}
 		</p>
-		
+
 		<p>
 			<label for="keywords_{$categoryId}">{t _keywords}:</label>
 			{textarea name="keywords" id="keywords_$categoryId" class="categoryKeywords"}
 		</p>
+
+		<fieldset>
+			<legend>{t _presentation}</legend>
+
+			<div style="float: left; width: 550px;">
+				<p>
+					<label for="theme_{$categoryId}">{t _theme}:</label>
+					{selectfield name="theme" id="theme_`$categoryId`" options=$themes}
+				</p>
+
+				<p>
+					<label></label>
+					{checkbox name="isSubcategories" class="checkbox" id="isSubcategories_`$categoryId`"}
+					<label class="checkbox" for="isSubcategories_{$categoryId}">{t _theme_subcategories}</label>
+				</p>
+			</div>
+
+			<div style="float: left;" id="categoryThemePreview_{$categoryId}"></div>
+		</fieldset>
 
 		{language}
 			<p>
@@ -36,8 +55,8 @@
 			</p>
 		{/language}
 
-	</fieldset>		
-	
+	</fieldset>
+
 	<fieldset class="controls">
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" class="submit" id="submit" value="{tn _save}"/> or
@@ -46,3 +65,9 @@
 	</fieldset>
 
 {/form}
+
+{literal}
+<script type="text/javascript">
+{/literal}
+	new Backend.ThemePreview($('categoryThemePreview_{$categoryId}'), $('theme_{$categoryId}'));
+</script>

@@ -8,7 +8,7 @@ ClassLoader::import('application.model.specification.*');
 /**
  * Specification attributes allow to define specific product models with a specific set of features or parameters.
  *
- * Each SpecField is a separate attribute. For example, screen size for laptops, ISBN code for books, 
+ * Each SpecField is a separate attribute. For example, screen size for laptops, ISBN code for books,
  * horsepowers for cars, etc. Since SpecFields are linked to categories, products from different categories can
  * have different set of attributes.
  *
@@ -35,7 +35,7 @@ class SpecField extends MultilingualObject
 	{
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("SpecField");
-		
+
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", "Category", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("specFieldGroupID", "SpecFieldGroup", "ID", "SpecFieldGroup", ARInteger::instance()));
@@ -51,10 +51,10 @@ class SpecField extends MultilingualObject
 		$schema->registerField(new ARField("isDisplayedInList", ARBool::instance()));
 		$schema->registerField(new ARField("valuePrefix", ARArray::instance()));
 		$schema->registerField(new ARField("valueSuffix", ARArray::instance()));
-	}	
-	
-	/*####################  Static method implementations ####################*/			
-	
+	}
+
+	/*####################  Static method implementations ####################*/
+
 	/**
 	 * Get instance SpecField record by id
 	 *
@@ -79,14 +79,14 @@ class SpecField extends MultilingualObject
 	 * @return  SpecField
 	 */
 	public static function getNewInstance(Category $category, $dataType = false, $type = false)
-	{		
+	{
 		$specField = parent::getNewInstance(__CLASS__);
 		$specField->category->set($category);
 
 		if ($dataType)
 		{
 			$specField->dataType->set($dataType);
-			$specField->type->set($type); 
+			$specField->type->set($type);
 		}
 
 		return $specField;
@@ -118,7 +118,7 @@ class SpecField extends MultilingualObject
 		return parent::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
-	/*####################  Value retrieval and manipulation ####################*/	
+	/*####################  Value retrieval and manipulation ####################*/
 
 	/**
 	 * Adds a "choice" value to this field
@@ -140,7 +140,7 @@ class SpecField extends MultilingualObject
 	 */
 	public function getValueTableName()
 	{
-		switch ($this->type->get())  
+		switch ($this->type->get())
 		{
 		  	case SpecField::TYPE_NUMBERS_SELECTOR:
 		  	case SpecField::TYPE_TEXT_SELECTOR:
@@ -152,20 +152,20 @@ class SpecField extends MultilingualObject
 				break;
 
 		  	case SpecField::TYPE_TEXT_SIMPLE:
-		  	case SpecField::TYPE_TEXT_ADVANCED:			  				  	
+		  	case SpecField::TYPE_TEXT_ADVANCED:
 				return 'SpecificationStringValue';
 				break;
 
 		  	case SpecField::TYPE_TEXT_DATE:
 				return 'SpecificationDateValue';
 				break;
-				
+
 			default:
 				throw new Exception('Invalid specField type: ' . $this->type->get());
-		}			
-	  	
+		}
+
 	}
-	
+
 	public function getSpecificationFieldClass()
 	{
 		$specValueClass = $this->getValueTableName();
@@ -173,10 +173,10 @@ class SpecField extends MultilingualObject
 		{
 			if ($this->isMultiValue->get())
 			{
-				$specValueClass = 'MultiValueSpecificationItem';	  	
+				$specValueClass = 'MultiValueSpecificationItem';
 			}
 		}
-		
+
 		return $specValueClass;
 	}
 
@@ -198,9 +198,9 @@ class SpecField extends MultilingualObject
 	 */
 	public function isSelector()
 	{
-		return in_array($this->type->get(), SpecField::getSelectorValueTypes());  
+		return in_array($this->type->get(), SpecField::getSelectorValueTypes());
 	}
-	
+
 	/**
 	 * Check if current specification field is text type
 	 *
@@ -208,7 +208,7 @@ class SpecField extends MultilingualObject
 	 */
 	public function isTextField()
 	{
-		return in_array($this->type->get(), array(SpecField::TYPE_TEXT_SIMPLE, SpecField::TYPE_TEXT_ADVANCED));  
+		return in_array($this->type->get(), array(SpecField::TYPE_TEXT_SIMPLE, SpecField::TYPE_TEXT_ADVANCED));
 	}
 
 	/**
@@ -218,7 +218,7 @@ class SpecField extends MultilingualObject
 	 */
 	public function isSimpleNumbers()
 	{
-		return $this->type->get() == SpecField::TYPE_NUMBERS_SIMPLE;  
+		return $this->type->get() == SpecField::TYPE_NUMBERS_SIMPLE;
 	}
 
 	/**
@@ -228,7 +228,7 @@ class SpecField extends MultilingualObject
 	 */
 	public function isDate()
 	{
-		return $this->type->get() == SpecField::TYPE_TEXT_DATE;  
+		return $this->type->get() == SpecField::TYPE_TEXT_DATE;
 	}
 
 	/**
@@ -240,28 +240,28 @@ class SpecField extends MultilingualObject
 	{
 		return array(self::TYPE_NUMBERS_SELECTOR, self::TYPE_TEXT_SELECTOR);
 	}
-	
+
 	public static function getNumberTypes()
 	{
 		return array(self::TYPE_NUMBERS_SELECTOR, self::TYPE_NUMBERS_SIMPLE);
 	}
-	
+
 	public static function getTextTypes()
 	{
 		return array(self::TYPE_TEXT_SIMPLE, self::TYPE_TEXT_ADVANCED, self::TYPE_TEXT_SELECTOR, self::TYPE_TEXT_DATE);
 	}
-	
+
 	public function allowManageFilters()
 	{
 		return $this->isDate() || $this->isSimpleNumbers();
 	}
-	
+
 	public static function getMultilanguageTypes()
 	{
 		return array(self::TYPE_TEXT_SIMPLE, self::TYPE_TEXT_ADVANCED, self::TYPE_TEXT_SELECTOR);
 	}
-	
-	public static function getDataTypeFromType($type) 
+
+	public static function getDataTypeFromType($type)
 	{
 		if(in_array($type, self::getTextTypes())) return self::DATATYPE_TEXT;
 		else return self::DATATYPE_NUMBERS;
@@ -272,7 +272,7 @@ class SpecField extends MultilingualObject
 	  	return 'specField_' . $this->getID() . ($language && (self::getApplication()->getDefaultLanguageCode() != $language) ? '_' . $language : '');
 	}
 
-	/*####################  Saving ####################*/	
+	/*####################  Saving ####################*/
 
 	/**
 	 * Delete spec field from database
@@ -280,8 +280,8 @@ class SpecField extends MultilingualObject
 	public static function deleteById($id)
 	{
 		return parent::deleteByID(__CLASS__, (int)$id);
-	}	
- 
+	}
+
 	protected function insert()
 	{
 		// get max position
@@ -290,14 +290,14 @@ class SpecField extends MultilingualObject
 	  	$f->setOrder(new ARFieldHandle(__CLASS__, 'position'), 'DESC');
 	  	$f->setLimit(1);
 	  	$rec = ActiveRecord::getRecordSetArray(__CLASS__, $f);
-		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;	  
-		
+		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
+
 		$this->position->set($position);
 
 		return parent::insert();
-	}	
-	
-	/*####################  Data array transformation ####################*/	
+	}
+
+	/*####################  Data array transformation ####################*/
 
 	/**
 	 *	Returns SpecField array representations
@@ -308,11 +308,11 @@ class SpecField extends MultilingualObject
 	{
 	  	$array = parent::toArray();
 	  	$array['fieldName'] = $this->getFormFieldName();
-	  	
+	  	$this->setArrayData($array);
 	  	return $array;
 	}
 
-	/*####################  Get related objects ####################*/	
+	/*####################  Get related objects ####################*/
 
 	public function getFiltersGroupsListArray()
 	{
@@ -336,10 +336,10 @@ class SpecField extends MultilingualObject
 			}
 			$i++;
 		}
-		
+
 		return $filterGroupsArray;
 	}
-	
+
 	/**
 	 * Loads a set of spec field records in current category
 	 *

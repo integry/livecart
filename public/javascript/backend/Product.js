@@ -658,7 +658,6 @@ Backend.Product.Editor.prototype =
 				}
 			}
 
-			console.log(this.path);
 			for (var k = 0; k <= this.path.length; k++)
 			{
 				var category = this.path[k] ? this.path[k].ID : 1;

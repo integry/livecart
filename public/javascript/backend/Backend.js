@@ -612,6 +612,46 @@ Backend.NavMenu.prototype =
 	}
 }
 
+Backend.ThemePreview = Class.create();
+Backend.ThemePreview.prototype =
+{
+	initialize: function(container, select)
+	{
+		var img = document.createElement('img');
+		img.addClassName('themePreview');
+		container.appendChild(img);
+		select.image = img;
+
+		var change =
+			function()
+			{
+				var img = this.image;
+
+				if ('' == this.value)
+				{
+					img.hide();
+				}
+				else
+				{
+					img.show();
+				}
+
+				img.src = 'theme' + (this.value != 'none' ? '/' + this.value : '') + '/preview_small.png';
+				img.href = 'theme' + (this.value != 'none' ? '/' + this.value : '') + '/preview.png';
+				img.title = this.value;
+				img.onclick =
+					function()
+					{
+						showLightbox(this);
+					}
+			}
+
+		change.bind(select)();
+
+		Event.observe(select, 'change', change);
+	}
+}
+
 /*************************************************
 	Language switch menu
 *************************************************/
@@ -1041,7 +1081,6 @@ Backend.UnitConventer.prototype =
 	{
 		if (!$(root))
 		{
-			console.log(root);
 			return false;
 		}
 

@@ -221,27 +221,7 @@ Backend.Settings.Editor.prototype =
 		'THEME':
 			function()
 			{
-				var img = document.createElement('img');
-				img.id = 'themePreview';
-				$('setting_THEME').appendChild(img);
-
-				var change =
-					function()
-					{
-						var img = $('themePreview');
-						img.src = 'theme' + (this.value != 'none' ? '/' + this.value : '') + '/preview_small.png';
-						img.href = 'theme' + (this.value != 'none' ? '/' + this.value : '') + '/preview.png';
-						img.title = this.value;
-						img.onclick =
-							function()
-							{
-								showLightbox(this);
-							}
-					}
-
-				change.bind($('THEME'))();
-
-				Event.observe($('THEME'), 'change', change);
+				new Backend.ThemePreview($('setting_THEME'), $('THEME'));
 			}
 
 	},

@@ -33,6 +33,8 @@ class CategoryController extends FrontendController
 
 	public function index()
 	{
+		ClassLoader::import('application.model.presentation.CategoryPresentation');
+
 		// get category instance
 		$this->categoryID = $this->request->get('id');
 		$this->category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
@@ -201,6 +203,12 @@ class CategoryController extends FrontendController
 		foreach ($this->filters as $filter)
 		{
 			$filterArray[] = $filter->toArray();
+		}
+
+		// display theme
+		if ($theme = CategoryPresentation::getThemeByCategory($this->category))
+		{
+			$this->application->setTheme($theme->getTheme());
 		}
 
 		$response = new ActionResponse();

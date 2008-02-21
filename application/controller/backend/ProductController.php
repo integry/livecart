@@ -377,10 +377,22 @@ class ProductController extends StoreManagementController implements MassActionI
 
 	public function basicData()
 	{
+		ClassLoader::import('application.LiveCartRenderer');
+		ClassLoader::import('application.model.presentation.ProductPresentation');
+
 		$product = Product::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
 		$product->loadSpecification();
+
 		$response = $this->productForm($product);
 		$response->set('counters', $this->countTabsItems()->getData());
+		$response->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
+
+		$set = $product->getRelatedRecordSet('ProductPresentation', new ARSelectFilter());
+		if ($set->size())
+		{
+			$response->get('productForm')->set('theme', $set->get(0)->getTheme());
+		}
+
 		return $response;
 	}
 
@@ -572,6 +584,8 @@ class ProductController extends StoreManagementController implements MassActionI
 
 	private function save(Product $product)
 	{
+		ClassLoader::import('application.model.presentation.ProductPresentation');
+
 		$validator = $this->buildValidator($product);
 		if ($validator->isValid())
 		{
@@ -619,6 +633,18 @@ class ProductController extends StoreManagementController implements MassActionI
 
 			$product->loadRequestData($this->request);
 			$product->save();
+
+			// presentation
+			if ($theme = $this->request->get('theme'))
+			{
+				$instance = ProductPresentation::getInstance($product);
+				$instance->loadRequestData($this->request);
+				$instance->save();
+			}
+			else
+			{
+				ActiveRecord::deleteByID('ProductPresentation', $product->getID());
+			}
 
 			$response = $this->productForm($product);
 
@@ -686,22 +712,22 @@ class ProductController extends StoreManagementController implements MassActionI
 					{
 						foreach($attr['valueIDs'] as $valueID)
 						{
-							$productFormData["specItem_$valueID"] = "on";
+							$productFormData['specItem_' . $valueID] = "on";
 						}
 					}
 					else
 					{
-						$productFormData["{$attr['SpecField']['fieldName']}"] = $attr['ID'];
+						$productFormData[$attr['SpecField']['fieldName']] = $attr['ID'];
 					}
 				}
 				else if(in_array($attr['SpecField']['type'], SpecField::getMultilanguageTypes()))
 				{
-					$productFormData["{$attr['SpecField']['fieldName']}"] = $attr['value'];
+					$productFormData[$attr['SpecField']['fieldName']] = $attr['value'];
 					foreach($this->application->getLanguageArray() as $lang)
 					{
 						if (isset($attr['value_' . $lang]))
 						{
-							$productFormData["{$attr['SpecField']['fieldName']}_{$lang}"] = $attr['value_' . $lang];
+							$productFormData[$attr['SpecField']['fieldName'] . '_' . $lang] = $attr['value_' . $lang];
 						}
 					}
 				}

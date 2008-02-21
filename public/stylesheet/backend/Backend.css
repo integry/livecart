@@ -1553,3 +1553,16 @@ a.external
 	background-position: right center;
 	padding-right: 22px;
 }
+
+.themePreview
+{
+	border: 1px solid #eee;
+	margin-bottom: 1em;
+	cursor: -moz-zoom-in;
+}
+
+/* lightbox */
+#keyboardMsg
+{
+	display: none;
+}

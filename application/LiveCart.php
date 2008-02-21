@@ -836,6 +836,11 @@ class LiveCart extends Application
 		return $this->theme;
 	}
 
+	public function setTheme($theme)
+	{
+		$this->theme = $theme;
+	}
+
 	/**
 	 * Loads currency data from database
 	 */

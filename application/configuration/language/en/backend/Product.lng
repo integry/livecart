@@ -97,6 +97,9 @@ _keywords=Keywords
 _mark_as_featured_product=Mark as featured product
 _allow_fractional_quantities=Allow fractional quantities
 
+_presentation=Presentation
+_theme=Design theme
+
 # Pricing and shipping
 
 _pricing=Pricing

@@ -35,15 +35,26 @@ class CategoryController extends StoreManagementController
 	 */
 	public function form()
 	{
-		ClassLoader::import("framework.request.validator.Form");
+		ClassLoader::import('framework.request.validator.Form');
+		ClassLoader::import('application.LiveCartRenderer');
+		ClassLoader::import('application.model.presentation.CategoryPresentation');
 
 		$response = new ActionResponse();
 		$form = $this->buildForm();
 		$response->set("catalogForm", $form);
 
-		$categoryArr = Category::getInstanceByID($this->request->get("id"), Category::LOAD_DATA)->toArray();
+		$category = Category::getInstanceByID($this->request->get("id"), Category::LOAD_DATA);
+		$categoryArr = $category->toArray();
 		$form->setData($categoryArr);
 		$response->set("categoryId", $categoryArr['ID']);
+
+		$set = $category->getRelatedRecordSet('CategoryPresentation', new ARSelectFilter());
+		if ($set->size())
+		{
+			$form->set('theme', $set->get(0)->getTheme());
+		}
+
+		$response->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
 
 		return $response;
 	}
@@ -79,6 +90,8 @@ class CategoryController extends StoreManagementController
 	 */
 	public function update()
 	{
+		ClassLoader::import('application.model.presentation.CategoryPresentation');
+
 		$validator = $this->buildValidator();
 		if($validator->isValid())
 		{
@@ -88,6 +101,18 @@ class CategoryController extends StoreManagementController
 			$multilingualFields = array("name", "description", "keywords");
 			$categoryNode->setValueArrayByLang($multilingualFields, $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true), $this->request);
 			$categoryNode->save();
+
+			// presentation
+			if ($theme = $this->request->get('theme'))
+			{
+				$instance = CategoryPresentation::getInstance($categoryNode);
+				$instance->loadRequestData($this->request);
+				$instance->save();
+			}
+			else
+			{
+				ActiveRecord::deleteByID('CategoryPresentation', $categoryNode->getID());
+			}
 
 			return new JSONResponse($categoryNode->toFlatArray(), 'success', $this->translate('_category_succsessfully_saved'));
 		}

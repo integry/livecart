@@ -2,6 +2,15 @@
  *	@author Integry Systems
  */
 
+Event.observe(window, 'load',
+	function()
+	{
+		window.loadingImage = 'image/loading.gif';
+		window.closeButton = 'image/silk/gif/cross.gif';
+		initLightbox();
+	}
+);
+
 if (Backend == undefined)
 {
 	var Backend = {}

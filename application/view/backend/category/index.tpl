@@ -8,6 +8,7 @@
 {includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
 {includeJs file="library/TabControl.js"}
+{includeJs file="library/lightbox/lightbox.js"}
 
 {includeJs file="library/rico/ricobase.js"}
 {includeJs file="library/rico/ricoLiveGrid.js"}
@@ -40,6 +41,7 @@
 {includeCss file="backend/CategoryImage.css"}
 {includeCss file="library/TabControl.css"}
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
+{includeCss file="library/lightbox/lightbox.css"}
 
 {pageTitle help="cat"}<span id="activeCategoryPath"></span><span id="activeProductPath" style="display: none;"><span id="productCategoryPath"></span><span id="activeProductName"></span></span><span style="display: none;">{t _products_and_categories}</span>{/pageTitle}
 {include file="layout/backend/header.tpl"}

@@ -15,6 +15,8 @@ class ProductController extends FrontendController
 
 	public function index()
 	{
+		ClassLoader::import('application.model.presentation.ProductPresentation');
+
 		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer'));
 		$product->loadPricing();
 
@@ -145,6 +147,12 @@ class ProductController extends FrontendController
 		if (isset($manFilter))
 		{
 			$response->set('manufacturerFilter', $manFilter);
+		}
+
+		// display theme
+		if ($theme = ProductPresentation::getThemeByProduct($product))
+		{
+			$this->application->setTheme($theme->getTheme());
 		}
 
 		return $response;
