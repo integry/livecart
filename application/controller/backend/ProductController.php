@@ -19,6 +19,8 @@ class ProductController extends StoreManagementController implements MassActionI
 {
 	public function index()
 	{
+		ClassLoader::import('application.LiveCartRenderer');
+
 		$category = Category::getInstanceByID($this->request->get("id"), Category::LOAD_DATA);
 
 		$availableColumns = $this->getAvailableColumns($category);
@@ -31,17 +33,18 @@ class ProductController extends StoreManagementController implements MassActionI
 
 		//$response = $this->productList($category, new ActionResponse());
 		$response = new ActionResponse();
-		$response->set("massForm", $this->getMassForm());
-		$response->set("displayedColumns", $displayedColumns);
-		$response->set("availableColumns", $availableColumns);
-		$response->set("categoryID", $category->getID());
-		$response->set("offset", $this->request->get('offset'));
-		$response->set("totalCount", '0');
-		$response->set("currency", $this->application->getDefaultCurrency()->getID());
-		$response->set("filters", $this->request->get('filters'));
+		$response->set('massForm', $this->getMassForm());
+		$response->set('displayedColumns', $displayedColumns);
+		$response->set('availableColumns', $availableColumns);
+		$response->set('categoryID', $category->getID());
+		$response->set('offset', $this->request->get('offset'));
+		$response->set('totalCount', '0');
+		$response->set('currency', $this->application->getDefaultCurrency()->getID());
+		$response->set('filters', $this->request->get('filters'));
+		$response->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
 
 		$path = $this->getCategoryPathArray($category);
-		$response->set("path", $path);
+		$response->set('path', $path);
 
 		return $response;
 	}
@@ -214,6 +217,15 @@ class ProductController extends StoreManagementController implements MassActionI
 			return new JSONResponse(array('act' => $this->request->get('act')), 'success', $this->translate('_move_succeeded'));
 		}
 
+		// remove design themes
+		if (('theme' == $act) && !$this->request->get('theme'))
+		{
+			ClassLoader::import('application.model.presentation.ProductPresentation');
+			ActiveRecord::deleteRecordSet('ProductPresentation', new ARDeleteFilter($filter->getCondition()), null, array('Product', 'Category'));
+
+			return new JSONResponse(array('act' => $this->request->get('act')), 'success', $this->translate('_themes_removed'));
+		}
+
 		$params = array();
 		if ('manufacturer' == $act)
 		{
@@ -232,6 +244,11 @@ class ProductController extends StoreManagementController implements MassActionI
 			{
 				return new JSONResponse(0);
 			}
+		}
+		else if ('theme' == $act)
+		{
+			ClassLoader::import('application.model.presentation.ProductPresentation');
+			$params['theme'] = $this->request->get('theme');
 		}
 
 		$mass = new ProductMassActionProcessor($grid, $params);

@@ -6,6 +6,7 @@ _could_not_save_product_information=Could not save product information
 _new_product_was_successfully_created=New product was successfully created
 _mass_action_succeed=Mass action succeeded
 _move_succeeded=Products were moved successfully
+_themes_removed=Design themes were removed from selected products
 
 # Product list
 
@@ -39,6 +40,7 @@ _disable_back_ordering=Disable back-ordering
 _enable_back_ordering=Enable back-ordering
 _requires_separate_shippment=Require separate shipment
 _do_not_require_separate_shippment=Do not require separate shipment
+_set_theme=Set design theme
 
 _enter_sku=Please enter product SKU
 

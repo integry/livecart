@@ -63,6 +63,12 @@ class ProductMassActionProcessor extends MassActionProcessor
 		{
 			$product->addRelatedProduct($this->params['relatedProduct']);
 		}
+		else if ('theme' == $act)
+		{
+			$instance = ProductPresentation::getInstance($product);
+			$instance->theme->set($this->params['theme']);
+			$instance->save();
+		}
 	}
 }
 

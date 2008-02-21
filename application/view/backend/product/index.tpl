@@ -62,6 +62,10 @@
 				<option value="disable_isSeparateShipment">{t _do_not_require_separate_shippment}</option>
 			</optgroup>
 
+			<optgroup label="{t _presentation}">
+				<option value="theme">{t _set_theme}</option>
+			</optgroup>
+
 		</select>
 
 		<span class="bulkValues" style="display: none;">
@@ -71,6 +75,7 @@
 			<span class="move">
 				<input type="hidden" name="categoryID" />
 			</span>
+
 			{textfield id="massForm_inc_price_`$categoryID`" class="text number" name="inc_price"}
 			{textfield id="massForm_inc_stock_`$categoryID`" class="text number" name="inc_stock"}
 			{textfield id="massForm_set_stockCount_`$categoryID`" class="text number" name="set_stockCount"}
@@ -80,6 +85,7 @@
    			{textfield id="massForm_manufacturer_`$categoryID`" name="manufacturer" class="text" autocomplete="controller=backend.manufacturer field=manufacturer" id="set_manufacturer_`$categoryID`"}
 			{textfield id="massForm_set_keywords_`$categoryID`" name="set_keywords" class="text" id="set_keywords_`$categoryID`" autocomplete="controller=backend.product field=keywords"}
 			{textfield id="massForm_set_URL_`$categoryID`" name="set_URL" class="text" id="set_url_`$categoryID`" autocomplete="controller=backend.product field=URL"}
+			{selectfield id="massForm_theme_`$categoryID`" name="theme" options=$themes}
 		</span>
 
 		<input type="submit" value="{tn _process}" class="submit" />
