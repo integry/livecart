@@ -636,8 +636,8 @@ Backend.ThemePreview.prototype =
 					img.show();
 				}
 
-				img.src = 'theme' + (this.value != 'none' ? '/' + this.value : '') + '/preview_small.png';
-				img.href = 'theme' + (this.value != 'none' ? '/' + this.value : '') + '/preview.png';
+				img.src = 'theme' + (this.value != 'barebone' ? '/' + this.value : '') + '/preview_small.png';
+				img.href = 'theme' + (this.value != 'barebone' ? '/' + this.value : '') + '/preview.png';
 				img.title = this.value;
 				img.onclick =
 					function()

@@ -827,7 +827,7 @@ class LiveCart extends Application
 		if (is_null($this->theme))
 		{
 			$this->theme = $this->config->get('THEME');
-			if ('none' == $this->theme)
+			if ('barebone' == $this->theme)
 			{
 				$this->theme = '';
 			}

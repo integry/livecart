@@ -85,7 +85,7 @@ class LiveCartRenderer extends SmartyRenderer
 
 	public function getThemeList()
 	{
-		$themes = array('default' => 'default', 'none' => 'none');
+		$themes = array('default' => 'default', 'barebone' => 'barebone');
 
 		if (file_exists(ClassLoader::getRealPath('application.view.theme')))
 		{
