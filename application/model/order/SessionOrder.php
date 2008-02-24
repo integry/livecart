@@ -6,7 +6,7 @@ ClassLoader::import('application.model.order.CustomerOrder');
 /**
  *
  * @package application.model.order
- * @author Integry Systems <http://integry.com> 
+ * @author Integry Systems <http://integry.com>
  */
 class SessionOrder
 {
@@ -18,40 +18,38 @@ class SessionOrder
 	public static function getOrder()
 	{
 		$session = new Session();
-		
-		
+
 		$id = $session->get('CustomerOrder');
 		if ($id)
 		{
 			try
 			{
 				$instance = CustomerOrder::getInstanceById($id, true);
-				
+
 				if (!$instance->getOrderedItems())
 				{
 					$instance->loadItems();
 				}
-				
-			
-				$instance->isSyncedToSession = true;					
+
+				$instance->isSyncedToSession = true;
 			}
 			catch (ARNotFoundException $e)
 			{
-				unset($instance);	
+				unset($instance);
 			}
 		}
-		
+
 		if (!isset($instance))
 		{
 			$userId = SessionUser::getUser()->getID();
-			
+
 			// get the last unfinalized order by this user
 			if ($userId > 0)
 			{
 				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $userId));
 				$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
 				$f->setOrder(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
-				$f->setLimit(1);		  
+				$f->setLimit(1);
 				$orders = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
 				if ($orders->size())
 				{
@@ -59,30 +57,30 @@ class SessionOrder
 				}
 			}
 		}
-	
+
 		if (!isset($instance))
 		{
 			$instance = CustomerOrder::getNewInstance(User::getNewInstance(0));
 			$instance->user->set(NULL);
-		}	
+		}
 
 		if (!$instance->user->get() && SessionUser::getUser()->getID() > 0)
 		{
 			$instance->user->set(SessionUser::getUser());
 			$instance->save();
 		}
-				
+
 		if ($instance->isFinalized->get())
 		{
 			$session->unsetValue('CustomerOrder');
 			return self::getOrder();
 		}
-				
+
 		self::setOrder($instance);
-				
+
 		return $instance;
 	}
-	
+
 	public static function setOrder(CustomerOrder $order)
 	{
 		$session = new Session();
@@ -93,7 +91,7 @@ class SessionOrder
 	{
 		// mark shipment data as modified - to force saving
 		$order->getShipments();
-		
+
 		$order->save();
 		self::setOrder($order);
 	}
@@ -101,7 +99,7 @@ class SessionOrder
 	public static function destroy()
 	{
 		$session = new Session();
-		$session->unsetValue('CustomerOrder');		
+		$session->unsetValue('CustomerOrder');
 	}
 }
 

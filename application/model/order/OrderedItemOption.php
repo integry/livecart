@@ -28,6 +28,7 @@ class OrderedItemOption extends ActiveRecordModel
 		$schema->registerField(new ARField("optionText", ARText::instance()));
 
 		$schema->registerCircularReference('Choice', 'ProductOptionChoice');
+		$schema->registerCircularReference('DefaultChoice', 'ProductOptionChoice');
 	}
 
 	/*####################  Static method implementations ####################*/

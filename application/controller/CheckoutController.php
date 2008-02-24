@@ -693,6 +693,7 @@ class CheckoutController extends FrontendController
 	public function completed()
 	{
 		$order = CustomerOrder::getInstanceByID((int)$this->session->get('completedOrderID'), CustomerOrder::LOAD_DATA);
+		$order->loadAll();
 		$response = new ActionResponse();
 		$response->set('order', $order->toArray());
 		$response->set('url', $this->router->createUrl(array('controller' => 'user', 'action' => 'viewOrder', 'id' => $this->session->get('completedOrderID')), true));

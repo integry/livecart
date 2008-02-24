@@ -4,9 +4,12 @@ abstract class TrackingMethod
 {
 	private $data = array();
 
-	public final function __construct($data)
+	protected $controller;
+
+	public final function __construct($data, Controller $controller)
 	{
 		$this->data = $data;
+		$this->controller = $controller;
 	}
 
 	public function getValue($key)

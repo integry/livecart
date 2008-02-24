@@ -343,7 +343,7 @@ abstract class FrontendController extends BaseController
 				$data[$key] = $value;
 			}
 
-			$tracker = new $class($data);
+			$tracker = new $class($data, $this);
 			$code[$class] = $tracker->getHtml();
 		}
 

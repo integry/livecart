@@ -25,6 +25,8 @@ class ProductOption extends MultilingualObject
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("ProductOption");
 
+		$schema->registerCircularReference('DefaultChoice', 'ProductOptionChoice');
+
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", null, ARInteger::instance()));
@@ -38,8 +40,6 @@ class ProductOption extends MultilingualObject
 		$schema->registerField(new ARField("isDisplayedInList", ARBool::instance()));
 		$schema->registerField(new ARField("isDisplayedInCart", ARBool::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance(4)));
-
-		$schema->registerCircularReference('DefaultChoice', 'ProductOptionChoice');
 	}
 
 	/**
