@@ -168,7 +168,9 @@ class UserController extends FrontendController
 	 */
 	public function item()
 	{
-		$item = ActiveRecordModel::getInstanceById('OrderedItem', $this->request->get('id'), ActiveRecordModel::LOAD_DATA, array('CustomerOrder', 'Product'))->toArray();
+		$item = ActiveRecordModel::getInstanceById('OrderedItem', $this->request->get('id'), ActiveRecordModel::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
+		$item->loadOptions();
+		$item = $item->toArray();
 
 		$this->addAccountBreadcrumb();
 		$this->addFilesBreadcrumb();

@@ -23,7 +23,7 @@ function smarty_prefilter_config($tplSource, $smarty)
 	// template customizations - allow to load from a different source
 	$source = preg_replace('/{include file="([-.a-zA-Z0-9@\/]+)"(.*)}/msU', '{include file="custom:$1"\\2}', $source);
 
-	$source = preg_replace('/{block (.+?)}/', '{foreach from=\$$1 item=item key=key}{$item}{/foreach}', $source);
+	$source = preg_replace('/{block (.+?)}/', '{foreach from=\$$1 item=includedBlock key=key}{$includedBlock}{/foreach}', $source);
 
 	// help system
 	$source = preg_replace('/{help (.+?)}/', '{helpLink id=$1}', $source);
@@ -62,6 +62,14 @@ function smarty_prefilter_config($tplSource, $smarty)
 function labelVars($var)
 {
 	return preg_replace("/`(.*)`/", "{\\1}", $var[0]);
+}
+
+if (!function_exists('str_pad_left'))
+{
+	function str_pad_left($string, $count)
+	{
+		return str_pad($string, $count, ' ', STR_PAD_LEFT);
+	}
 }
 
 ?>

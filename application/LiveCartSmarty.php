@@ -68,6 +68,28 @@ class LiveCartSmarty extends Smarty
 		echo $this->application->getRenderer()->applyLayoutModifications($path, $output);
 	}
 
+   /**
+     * Get the compile path for this resource
+     *
+     * @param string $resource_name
+     * @return string results of {@link _get_auto_filename()}
+     */
+    public function _get_compile_path($resource_name)
+    {
+        if (substr($resource_name, 0, 7) == 'custom:')
+        {
+        	if (!function_exists('smarty_custom_get_path'))
+        	{
+        		include ClassLoader::getRealPath('application.helper.smarty.') . 'resource.custom.php';
+			}
+
+        	$resource_name = smarty_custom_get_path(substr($resource_name, 7), $this);
+		}
+
+        return $this->_get_auto_filename($this->compile_dir, $resource_name,
+                                         $this->_compile_id) . '.php';
+    }
+
 	private function getPlugins($path)
 	{
 		$pluginPath = ClassLoader::getRealPath('plugin.view.' . $path);

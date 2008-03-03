@@ -366,7 +366,8 @@ class Product extends MultilingualObject
 	{
 		if (!$this->specificationInstance)
 		{
-			$this->specificationInstance = new ProductSpecification($this);
+			//$this->specificationInstance = new ProductSpecification($this);
+			$this->loadSpecification();
 		}
 
 		return $this->specificationInstance;

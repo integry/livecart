@@ -359,6 +359,27 @@ class SpecField extends MultilingualObject
 	{
 		return SpecFieldValue::getRecordSet($this->getID());
 	}
+
+	/**
+	 *	Adds JOIN definition to ARSelectFilter to retrieve product attribute value for the particular SpecField
+	 *
+	 *	@param	ARSelectFilter	$filter	Filter instance
+	 */
+	public function defineJoin(ARSelectFilter $filter)
+	{
+		$table = $this->getJoinAlias();
+		$filter->joinTable($this->getValueTableName(), 'Product', 'productID AND ' . $table . '.SpecFieldID = ' . $this->getID(), 'ID', $table);
+	}
+
+	public function getFieldHandle($field)
+	{
+		return new ARExpressionHandle($this->getJoinAlias() . '.' . $field);
+	}
+
+	protected function getJoinAlias()
+	{
+		return 'specField_' . $this->getID();
+	}
 }
 
 ?>

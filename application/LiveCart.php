@@ -278,9 +278,14 @@ class LiveCart extends Application
 	 */
 	protected function execute($controllerInstance, $actionName)
 	{
-		$response = parent::execute($controllerInstance, $actionName);
+		$originalResponse = parent::execute($controllerInstance, $actionName);
 
-		$this->processActionPlugins($controllerInstance, $response);
+		$response = $this->processActionPlugins($controllerInstance, $originalResponse);
+
+		if ($response !== $originalResponse)
+		{
+			$this->processResponse($response);
+		}
 
 		return $response;
 	}
@@ -345,10 +350,18 @@ class LiveCart extends Application
 						$class = substr($file->getFileName(), 0, -4);
 						$plugin = new $class($response, $controllerInstance);
 						$plugin->process();
+
+						$response = $plugin->getResponse();
+						if ($plugin->isStopped())
+						{
+							return $response;
+						}
 					}
 				}
 			}
 		}
+
+		return $response;
 	}
 
 	public function isCustomizationMode()

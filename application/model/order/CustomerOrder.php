@@ -101,18 +101,7 @@ class CustomerOrder extends ActiveRecordModel
 				$this->shipments = unserialize($this->shipping->get());
 			}
 
-			// load applied product option choices
-			$ids = array();
-			foreach ($this->orderedItems as $key => $item)
-			{
-				$ids[] = $item->getID();
-			}
-
-			$f = new ARSelectFilter(new INCond(new ARFieldHandle('OrderedItemOption', 'orderedItemID'), $ids));
-			foreach (ActiveRecordModel::getRecordSet('OrderedItemOption', $f, array('DefaultChoice' => 'ProductOptionChoice', 'Option' => 'ProductOption', 'Choice' => 'ProductOptionChoice')) as $itemOption)
-			{
-				$itemOption->orderedItem->get()->loadOption($itemOption);
-			}
+			OrderedItemOption::loadOptionsForItemSet(ARSet::buildFromArray($this->orderedItems));
 		}
 	}
 
@@ -282,6 +271,11 @@ class CustomerOrder extends ActiveRecordModel
 	{
 		$orderedItem->customerOrder->set($this);
 		$this->orderedItems[] = $orderedItem;
+
+		if ($orderedItem->shipment->get())
+		{
+			$orderedItem->shipment->get()->addItem($orderedItem);
+		}
 	}
 
 	/**
@@ -506,7 +500,7 @@ class CustomerOrder extends ActiveRecordModel
 
 		if ($this->isModified() || $isModified)
 		{
-			$this->shipping->set(serialize($this->shipments));
+			$this->shipping->set($this->isFinalized->get() ? '' : serialize($this->shipments));
 		}
 
 		if (!$this->isFinalized->get() && !$this->orderedItems && !$allowEmpty)
@@ -637,7 +631,7 @@ class CustomerOrder extends ActiveRecordModel
 			$zone = $this->getDeliveryZone();
 			foreach ($this->shipments as $shipment)
 			{
-				if($shipment->getShippingService())
+				if ($shipment->getShippingService())
 				{
 					$shipmentRates = $zone->getShippingRates($shipment);
 					$shipment->setAvailableRates($shipmentRates);

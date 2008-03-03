@@ -36,7 +36,10 @@ class OrderController extends FrontendController
 		$optionsArray = array();
 		foreach ($this->order->getOrderedItems() as $item)
 		{
-			$optionsArray[$item->getID()] = $this->getOptionsArray($options[$item->product->get()->getID()], $item);
+			if (isset($options[$item->product->get()->getID()]))
+			{
+				$optionsArray[$item->getID()] = $this->getOptionsArray($options[$item->product->get()->getID()], $item);
+			}
 		}
 
 		$currency = Currency::getValidInstanceByID($this->request->get('currency', $this->application->getDefaultCurrencyCode()), Currency::LOAD_DATA);

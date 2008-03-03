@@ -149,13 +149,11 @@ class ProductController extends FrontendController
 			$response->set('manufacturerFilter', $manFilter);
 		}
 
-		/*
 		// display theme
 		if ($theme = ProductPresentation::getThemeByProduct($product))
 		{
 			$this->application->setTheme($theme->getTheme());
 		}
-		*/
 
 		return $response;
 	}

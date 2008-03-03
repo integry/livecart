@@ -10,7 +10,7 @@ Status has been updated for one or more shipments from your order #{$order.ID}.
 If you have any questions regarding this order, you can send us an email message or contact from the following page:
 {link controller=user action=viewOrder id=$order.ID url=true}
 
-{foreach from=$shipments item=shipment}
+{foreach from=$order.shipments item=shipment}
 New status: {if $shipment.status == 2}awaiting shipment{elseif $shipment.status == 3}shipped{elseif $shipment.status == 4}returned{else}processing{/if}
 
 {include file="email/blockItemHeader.tpl"}

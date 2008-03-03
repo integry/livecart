@@ -1746,7 +1746,7 @@ div.addressControl
     margin-left: 220px;
 }
 
-.orderMenu ul
+#content .orderMenu ul
 {
     list-style-type: none;
     margin: 5px;

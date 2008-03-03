@@ -4,15 +4,15 @@
 			{t _you_are_here}:
 		</div>
 		<ul>
-		{foreach from=$breadCrumb item="item" name="breadCrumb"}		
+		{foreach from=$breadCrumb item="breadCrumbItem" name="breadCrumb"}
 			<li class="{if $smarty.foreach.breadCrumb.first}first {/if}{if $smarty.foreach.breadCrumb.last}last{/if}">
 				{if !$smarty.foreach.breadCrumb.last}
-					<a href="{$item.url}">{$item.title}</a> 
+					<a href="{$breadCrumbItem.url}">{$breadCrumbItem.title}</a>
 					<span class="separator">&gt;</span>
 				{else}
-					{$item.title}
+					{$breadCrumbItem.title}
 				{/if}
-			</li>	
+			</li>
 		{/foreach}
 		</ul>
 	</div>

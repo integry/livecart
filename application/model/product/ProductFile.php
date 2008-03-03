@@ -3,15 +3,15 @@
 ClassLoader::import("application.model.ObjectFile");
 
 /**
- * Defines a file that is assigned to a particular product. This is mostly needed for 
+ * Defines a file that is assigned to a particular product. This is mostly needed for
  * tangible (downloadable) products. Multiple files can be assigned to one product and
  * related files can be grouped together using ProductFileGroup, which is useful if there
  * are many files assigned to the same product.
- * 
+ *
  * @package application.model.product
- * @author Integry Systems <http://integry.com>   
+ * @author Integry Systems <http://integry.com>
  */
-class ProductFile extends ObjectFile 
+class ProductFile extends ObjectFile
 {
 	public static function defineSchema($className = __CLASS__)
 	{
@@ -36,12 +36,12 @@ class ProductFile extends ObjectFile
 	{
 		$productFileInstance = parent::getNewInstance(__CLASS__, $filePath, $fileName);
 		$productFileInstance->product->set($product);
-		
+
 		return $productFileInstance;
 	}
 
 	/**
-	 * Gets an existing ProductFile record 
+	 * Gets an existing ProductFile record
 	 * @param mixed $recordID
 	 * @param bool $loadRecordData
 	 * @param bool $loadReferencedRecords
@@ -53,7 +53,7 @@ class ProductFile extends ObjectFile
 	{
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
-	
+
 	/**
 	 * Loads a set of ProductFile instances
 	 *
@@ -66,27 +66,27 @@ class ProductFile extends ObjectFile
 	{
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
-		
+
 	/**
 	 *
 	 * @param Product $product
-	 * 
+	 *
 	 * @return ARSet
 	 */
 	public static function getFilesByProduct(Product $product)
 	{
-		return self::getRecordSet(self::getFilesByProductFilter($product));
+		return self::getRecordSet(self::getFilesByProductFilter($product), array('ProductFileGroup'));
 	}
-	
+
 	private static function getFilesByProductFilter(Product $product)
 	{
-		$filter = new ARSelectFilter();	
-		$filter->joinTable('ProductFileGroup', 'ProductFile', 'ID', 'productFileGroupID');	
-		
-		$filter->setOrder(new ARFieldHandle("ProductFileGroup", "position"), ARSelectFilter::ORDER_ASC);		
+		$filter = new ARSelectFilter();
+		$filter->joinTable('ProductFileGroup', 'ProductFile', 'ID', 'productFileGroupID');
+
+		$filter->setOrder(new ARFieldHandle("ProductFileGroup", "position"), ARSelectFilter::ORDER_ASC);
 		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), $product->getID()));
 		$filter->setOrder(new ARFieldHandle(__CLASS__, 'position'), ARSelectFilter::ORDER_ASC);
-		
+
 		return $filter;
 	}
 }

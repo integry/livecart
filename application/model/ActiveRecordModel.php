@@ -92,13 +92,16 @@ abstract class ActiveRecordModel extends ActiveRecord
 	{
 		$res = parent::insert();
 		$this->executePlugins($this, 'insert');
+		$this->executePlugins($this, 'save');
 		return $res;
 	}
 
 	protected function update()
 	{
 		$this->executePlugins($this, 'update');
-		return parent::update();
+		$res = parent::update();
+		$this->executePlugins($this, 'save');
+		return $res;
 	}
 
 	protected static function transformArray($array, ARSchema $schema)
@@ -129,7 +132,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 	private function executePlugins(&$object, $action, $className = null)
 	{
-		// in case the even is array transformation, the classname will be passed in as a separate variable
+		// in case the event is array transformation, the classname will be passed in as a separate variable
 		if (!$className)
 		{
 			$className = get_class($object);

@@ -135,6 +135,11 @@ class OrderedItem extends ActiveRecordModel
 		}
 	}
 
+	public function addOption(ProductOption $option)
+	{
+		return $this->addOptionChoice($option->defaultChoice->get());
+	}
+
 	public function addOptionChoice(ProductOptionChoice $choice)
 	{
 		if (!$choice->isLoaded())
@@ -173,6 +178,25 @@ class OrderedItem extends ActiveRecordModel
 	public function getOptions()
 	{
 		return $this->optionChoices;
+	}
+
+	public function loadOptions()
+	{
+		foreach ($this->getRelatedRecordSet('OrderedItemOption', new ARSelectFilter(), true) as $option)
+		{
+			$this->optionChoices[$option->choice->get()->option->get()->getID()] = $option;
+		}
+	}
+
+	public function getOptionChoice(ProductOption $option)
+	{
+		foreach ($this->optionChoices as $choice)
+		{
+			if ($choice->choice->get()->option->get()->getID() == $option->getID())
+			{
+				return $choice;
+			}
+		}
 	}
 
   	/*####################  Saving ####################*/
@@ -286,6 +310,19 @@ class OrderedItem extends ActiveRecordModel
 	public function __destruct()
 	{
 		parent::destruct(array('productID', 'shipmentID'));
+	}
+
+	public function __clone()
+	{
+		parent::__clone();
+
+		foreach ($this->optionChoices as $key => $option)
+		{
+			$newOpt = clone $option;
+			$newOpt->orderedItem->set($this);
+			$newOpt->choice->setAsModified();
+			$this->optionChoices[$key] = $newOpt;
+		}
 	}
 }
 

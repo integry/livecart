@@ -87,13 +87,16 @@ class LiveCartRenderer extends SmartyRenderer
 	{
 		$themes = array('default' => 'default', 'barebone' => 'barebone');
 
-		if (file_exists(ClassLoader::getRealPath('application.view.theme')))
+		foreach (array(ClassLoader::getRealPath('application.view.theme'), ClassLoader::getRealPath('storage.customize.view.theme')) as $themeDir)
 		{
-			foreach (new DirectoryIterator(ClassLoader::getRealPath('application.view.theme')) as $dir)
+			if (file_exists($themeDir))
 			{
-				if ($dir->isDir() && !$dir->isDot())
+				foreach (new DirectoryIterator($themeDir) as $dir)
 				{
-					$themes[$dir->getFileName()] = $dir->getFileName();
+					if ($dir->isDir() && !$dir->isDot())
+					{
+						$themes[$dir->getFileName()] = $dir->getFileName();
+					}
 				}
 			}
 		}
