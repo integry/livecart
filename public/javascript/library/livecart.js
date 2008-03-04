@@ -26,6 +26,11 @@ LiveCart.AjaxRequest.prototype = {
 
 		if (typeof formOrUrl == "object")
 		{
+			if (tinyMCE)
+			{
+				tinyMCE.triggerSave();
+			}
+
 			var form = formOrUrl;
 			url = form.action;
 			method = form.method;
@@ -273,6 +278,11 @@ LiveCart.AjaxUpdater.prototype = {
 
 		if (typeof formOrUrl == "object")
 		{
+			if (tinyMCE)
+			{
+				tinyMCE.triggerSave();
+			}
+
 			var form = formOrUrl;
 			url = form.action;
 			method = form.method;
