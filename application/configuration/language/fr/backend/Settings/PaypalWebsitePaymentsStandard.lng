@@ -1,0 +1,4 @@
+PaypalWebsitePaymentsStandard=Paypal systême de payement de site standard
+PaypalWebsitePaymentsStandard_EMAIL=Adresse courriel d'affaires
+PaypalWebsitePaymentsStandard_SANDBOX=Utiliser le mode test de paypal
+PaypalWebsitePaymentsStandard_ITEM_NAME=description des items du charriot d'achat a afficher sur Paypal

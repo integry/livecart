@@ -1,0 +1,10 @@
+checkWritePermissions=Vérifier vos droits d'écriture (chmod)
+_writePermissionsFix=ACTION RECOMMANDÉE ...avec votre client ftp modifier les permissions pour ces répertoires (777). Si le répertoire n'existe pas s.v.p veuillez le créer.
+checkPHPVersion=Version php
+checkPHPVersion_error=erreur lors de la vérification de la version PHP. votre version doit ètre 5.2 minimum.
+checkMySQL=Support base de données
+checkMySQL_error=L'extension doit mysql doit ètre installée pour php
+checkGD=support de manutention des images GD
+checkGD_error=Gd Erreur  L'extension GD doit ètre installée
+checkSession=Configuration de session php
+checkSession_error=les sessions PHP ne seront pas sauvegardées. s.v.p assurez vous que les valeurs de la configuration PHP sont réglées correctement.

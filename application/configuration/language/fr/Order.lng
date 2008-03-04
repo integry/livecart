@@ -1,0 +1,11 @@
+_your_basket=Votre panier d'achat
+_wish_list_items=Les items de votre liste de souhaits-(acheter plus tard)
+_move_to_cart=Déplacer vers le panier
+_remove=Enlever
+_continue_shopping=Poursuivre le magasinage
+_move_to_wishlist=Déplacer vers la liste de souhaiits
+_proceed_checkout=Passer a la caisse
+_update=Mettre a jour
+_empty_basket=Vider le panier
+_cart_items=Items du panier
+_item_count=Il y a [quant,_1,item,items,no items] dans votre panier d'achat

@@ -1,0 +1,6 @@
+PaypalDirectPayment=Paypal payement direct
+PaypalDirectPayment_sandbox=Utiliser l'environnement de test
+PaypalDirectPayment_username=Nom d'utilisateur
+PaypalDirectPayment_password=Mot de passe
+PaypalDirectPayment_signature=Signature
+PaypalDirectPayment_cardTypes=Carte de crédit permises

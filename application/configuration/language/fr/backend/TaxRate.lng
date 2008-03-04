@@ -1,0 +1,14 @@
+_no_taxes=Pas de taxes crées jusqu'a maintenant
+_add_tax=Ajouter une nouvelle taxe
+_tax_rate_has_been_successfully_saved=Le taux de taxe a été sauvegardé avec succès
+_could_not_save_tax_rate=Ne peut sauvegarder le taux de taxe
+_tax=Taxe
+_rate=Taux de taxe
+_add_new_tax_rate=Ajouter un nouveau taux de taxe
+_cancel_adding_new_tax_rate=Canceller l'ajout d'un nouveau taux de taxe
+_error_rate_should_not_be_empty=Vous devez compléter l'espace tauc de taxe
+_error_rate_should_be_numeric_value=Le taux de taxe doit ètre une valeur numérique
+_error_rate_should_be_greater_than_zero_and_less_than_hundred=Le taux doit ètre entre 0 et 100
+_error_tax_should_not_be_empty=Vous devez compléter l'espace taxe
+_more_taxes_can_be_added=Plus de taxe peuvent ètre ajoutées
+_here=Ici

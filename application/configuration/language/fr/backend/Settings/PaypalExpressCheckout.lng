@@ -1,0 +1,6 @@
+PaypalExpressCheckout=Paypal Express Checkout
+PaypalExpressCheckout_sandbox=Utiliser l'environnement test
+PaypalExpressCheckout_username=Nom d'utilisateur
+PaypalExpressCheckout_password=Mot de passe
+PaypalExpressCheckout_signature=Signeture
+PaypalExpressCheckout_AUTHONLY=Seulement authoriser les payement sans les reprendre automatiquement

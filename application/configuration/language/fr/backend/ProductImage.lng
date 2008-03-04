@@ -1,0 +1,16 @@
+_main_image=Image principale
+_supplemental_images=Image supplémentaire
+_save=Sauvegarder
+_cancel_new=Canceller
+_add_new=Ajouter une nouvelle image
+_delete_confirm=Ètes vous certain de vouloir supprimer cette image
+_no_images=Aucune image n'a été ajoutée a ce produit
+_max_file_size=Fichiers JPEG,Gif et PNG seulement. format max fichier: [_1]
+_edit_image=Éditer les détails de la photo
+_image_title=Inscrire le titre de la photo
+_image_file=Choisir une photo
+_upload=Ajouter une photo
+_err_not_uploaded=s.v.p choisir une photo
+_err_not_image=Photo invalide
+_err_resize=Erreur de redimensionnement de la photo
+_err_too_large=La photo est trop grande

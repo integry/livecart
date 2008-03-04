@@ -1,0 +1,13 @@
+_add_new_group=Ajouter un nouveau groupe
+_add_new_file=Ajouter un nouveau fichier
+_cancel_adding_new_file=Canceller l'ajout du nouveau fichier
+_cancel_adding_file_group=Canceller l,ajour d'un nouveau groupe
+_are_you_sure_you_want_to_delete=Ètes vous certain de vouloir supprimer ce fichier
+_are_you_sure_you_want_to_delete_group=Ètes vous certain de vouloir supprimer ce groupe
+_product_file_group_title=Titre
+_add_new_file_group=Éditer le groupe de fichier
+_err_file_title_is_empty=Vous devez inscrire un titre pour ce fichier
+_err_allow_download_days_should_be_a_number=Le nombre de jour doit ètre de type numérique
+_err_allow_download_days_is_empty=Le nombre de jour pour télécharger est vide
+_err_file_could_not_be_uploaded_to_the_server=Le fichier ne peut ètre importé vers le serveur
+_err_fileName_should_not_be_empty=Vous devez inscrire un nom pour le fichier

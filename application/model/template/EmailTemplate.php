@@ -6,7 +6,7 @@ ClassLoader::import('application.model.template.Template');
  * E-mail template file logic - saving and retrieving template code.
  *
  * There are two sets of template files active at the same time:
- *	
+ *
  *		1) application.view.email.en - default view template files
  *		2) storage.customize.view.email.en - edited template files.
  *
@@ -51,7 +51,7 @@ class EmailTemplate extends Template
 	{
 		$this->body = $body;
 	}
-	
+
 	public function save()
 	{
 		if ($this->isFragment())
@@ -62,8 +62,8 @@ class EmailTemplate extends Template
 		{
 			$this->code = $this->subject . "\n" . $this->body;
 		}
-		
-		return parent::save($forceOperation);
+
+		return parent::save();
 	}
 
 	/**
@@ -80,8 +80,8 @@ class EmailTemplate extends Template
 	public function getOtherLanguages()
 	{
 		$result = array();
-	
-		$app = ActiveRecordModel::getApplication();		
+
+		$app = ActiveRecordModel::getApplication();
 		foreach ($app->getLanguageArray() as $lang)
 		{
 			$file = $this->getLangTemplatePath($lang);
@@ -90,7 +90,7 @@ class EmailTemplate extends Template
 				$result[$lang] = $this->getLangTemplate($lang);
 			}
 		}
-	
+
 		return $result;
 	}
 
@@ -103,7 +103,7 @@ class EmailTemplate extends Template
 	{
 		return 'email/' . $lang . '/' . substr($this->file, 9);
 	}
-	
+
 	public function toArray()
 	{
 		$ret = parent::toArray();

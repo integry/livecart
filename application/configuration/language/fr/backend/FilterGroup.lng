@@ -1,0 +1,16 @@
+_filter_group_was_successfully_saved=Le filtre a été sauvegardé avec succès
+_could_not_save_filter_group=Ne peut sauvegarder le filtre
+_filter_group_was_successfully_removed=Le filtre a été retiré avec succès
+_could_not_remove_filter_group=Ne peut retirer le filtre
+_add_new_filter=Ajouter un nouveau filtre
+_category_has_no_attr=Aucun attribut filtrable n'a été crée pour cette catégorie
+_delete_field=Supprimer le champ
+_remove_filter_question=Ètes vous certain de vouloir retirer ce filtre?
+_FilterGroup_remove_question=Ètes vous certain de vouloir retirer ce filtre?
+_cancel_adding_new_filter=Cancelle l'ajout d'un nouveau filtre
+_error_name_empty=Le nom du filtre n'est pas complété
+_error_filter_value_is_not_a_number=La valeur du filtre doit ètre un nombre
+_error_spec_field_is_not_selected=L'espace spécification n'est pas sélectionné
+_error_illegal_date=Date illégale
+_error_filter_name_empty=Vous devez inscrire un nom pour le filtre
+_error_filter_handle_invalid=L'extention est non valide

@@ -1,0 +1,13 @@
+_ordered_item_was_successfully_moved=Le produit a été déplacé avec succès vers une autre livraison
+_this_shipping_service_has_no_available_rates=Le service n'est pas disponible pour la zone de livraison et pour le prix de la commande
+_ordered_item_quantity_was_updated=La quantité de l'item est mise a jour
+_error_updating_item_quantity=Une erreur s'est produite lors de la mise a jour de la quantité de l'item
+_item_has_been_successfuly_saved=L'item a été ajouté avec succès a la commande
+_item_was_successfully_removed_from_shipment=L'item a été retiré avec succès de la commande
+_error_removing_item_from_shipment=Une erreur s'est produite lors du retrait de l'item de la commande
+_downloadable_item_already_exists_in_this_order=Cet item téléchargeable existe déja dans cette commande
+_select_product=Ajouter des produits a la commande
+_done_adding_products=Ajout réussi
+_select_shippment=Choisir la livraison
+_shipping_service_is_not_selected=Le service de livraison n'est pas sélectionné
+_shipment=Expédition

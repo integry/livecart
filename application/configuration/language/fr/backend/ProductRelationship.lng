@@ -1,0 +1,14 @@
+_add_new_group=Ajouter un nouveau groupe
+_are_you_sure_you_want_to_delete_this_group=Ètes vous certain de vouloir supprimer
+_are_you_sure_you_want_to_delete_this_relation=Ètes vous certain de vouloir supprimer
+_a_relationship_between_products_was_successfully_created=Une relation entre les produits a été crée avec succès
+_could_not_create_product_relationship=Ce produit a déja été assigné comme relatif
+_relationship_was_successfully_removed=La relation a été retirée avec succès
+_select_product=Ajouter un produit connexe
+_done_adding=Produit connexe ajouté
+_cancel_adding_new_related_product=Canceller l'ajout d'une nouvelle relation
+_cancel_adding_new_group=Canceller l'ajout d'un nouveau groupe
+_product_relationship_group_title=Titre
+_err_circular=Ne peut ajouter un produit relatif a un même produit
+_err_multiple=Ce produit a déja été assigné comme relatif
+_msg_added=Le produit relatif a été ajouté avec succès

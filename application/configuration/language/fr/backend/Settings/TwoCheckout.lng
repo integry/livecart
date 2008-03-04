@@ -1,0 +1,5 @@
+TwoCheckout=2Checkout
+TwoCheckout_account=Identifiant de compte
+TwoCheckout_currency=Devise du compte
+TwoCheckout_secretWord=Mot secret <a href="https://www.2checkout.com/2co/admin/look_and_feel" target="_blank">(?)</a>
+TwoCheckout_test=Test ( mode démo)

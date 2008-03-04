@@ -1,0 +1,10 @@
+_tax_entry_was_successfully_saved=L'inscription de taxe a été sauvegardé avec succès
+_could_not_save_tax_entry=Ne peut sauvegarder l'inscription de taxe
+_add_new_tax=Ajouter une nouvelle taxe
+_cancel_adding_new_tax=Canceller l'ajout d'une nouvelle taxe
+_cancel_adding_new_tax_rate=Canceller l'ajout d'un nouveau taux de taxe
+_name=Nom
+_manage=Administrer
+_taxes=Taxes
+_error_the_name_should_not_be_empty=Vous devez inscrire un nom
+_are_you_sure_you_want_to_remove_ths_tax=Ètes vous certain de vouloir retirer cette taxe? Elle est peut ètre utilisée pour certaines zones de livraison.

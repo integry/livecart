@@ -1,0 +1,6 @@
+_add_response=Ajouter une réponse
+_cancel_response=Canceller la réponse
+_err_enter_text=Écrire le texte de la réponse
+_admin=Administration
+_customer=Client
+_no_messages=Pas de message a propos de cette commande n'a été ajouté pad l'admin ou par le client.Yous pouvez répondre si vous voulez afin de procéder a une mise a jour a propos du statut de la commande.Le message sera envoyé par courriel automatiquement au client

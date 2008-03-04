@@ -14,21 +14,21 @@ ClassLoader::import("library.*");
  * @role language
  */
 class LanguageController extends StoreManagementController
-{	
+{
 	const langFileExt = 'lng';
 
 	public function export()
 	{
 		// preload current locale
 		$this->locale;
-		
+
 		$tempDir = ClassLoader::getRealPath('cache.tmp.' . rand(1, 10000000));
-		
+
 		$locale = Locale::getInstance($this->request->get('id'));
 
 		$fileDir = ClassLoader::getRealPath('application.configuration.language.en');
 		$files = $locale->translationManager()->getDefinitionFiles($fileDir);
-		
+
 		// prepare language files
 		$translated = array();
 		foreach ($files as $file)
@@ -41,68 +41,68 @@ class LanguageController extends StoreManagementController
 			{
 				$default = array();
 			}
-			
+
 			// get translated definitions
 			$transl = $locale->translationManager()->getCacheDefs($relPath, true);
-			
+
 			$transl = array_merge($default, $transl);
-			
+
 			$values = array();
 			foreach($transl as $key => $value)
 			{
 				$values[] = $key . '=' . $value;
 			}
-			
+
 			$path = $tempDir . '/' . $locale->getLocaleCode() . '/' . $relPath;
 
 			if ($values)
 			{
 				if (!is_dir(dirname($path)))
 				{
-					mkdir(dirname($path), null, true);
+					mkdir(dirname($path), 0777, true);
 				}
 
 				file_put_contents($path, implode("\n", $values));
 			}
 		}
-		
+
 		// put the files in zip archive
 		require_once(ClassLoader::getRealPath('library.pclzip') . '/pclzip.lib.php');
-		
+
 		if (!is_dir($tempDir))
 		{
 			return new ActionRedirectResponse('backend.language', 'edit', array('id' => $locale->getLocaleCode()));
 		}
-		
+
 		chdir($tempDir);
 		$zip = $tempDir . '/temp.zip';
 		$archive = new PclZip($zip);
 		$archive->add($locale->getLocaleCode());
-		
+
 		$file = ObjectFile::getNewInstance('ObjectFile', $zip, 'LiveCart-' . $locale->getLocaleCode() . '.zip');
 		$response = new ObjectFileResponse($file);
-		
+
 		// remove the temp directory
 		$this->delTree($tempDir);
-		
-		return $response;		
+
+		return $response;
 	}
 
-	private function delTree($path) 
+	private function delTree($path)
 	{
-		if (is_dir($path)) 
+		if (is_dir($path))
 		{
 			$entries = scandir($path);
-			foreach ($entries as $entry) 
+			foreach ($entries as $entry)
 			{
-				if ($entry != '.' && $entry != '..') 
+				if ($entry != '.' && $entry != '..')
 				{
 					$this->delTree($path . DIRECTORY_SEPARATOR . $entry);
 				}
-			}			
+			}
 			rmdir($path);
-		} 
-		else 
+		}
+		else
 		{
 			unlink($path);
 		}
@@ -123,13 +123,13 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Displays definitions edit page.
-	 * @return ActionResponse	 
+	 * @return ActionResponse
 	 */
 	public function edit()
-	{		
+	{
 		// preload current locale
 		$this->locale;
-		
+
 		// get locale instance for the language being translated
 		$editLocaleName = $this->request->get('id');
 		$editLocale = Locale::getInstance($editLocaleName);
@@ -146,10 +146,10 @@ class LanguageController extends StoreManagementController
 		foreach ($files as $file)
 		{
 			$relPath = substr($file, strlen($fileDir) + 1);
-			
+
 			// get default English definitions (to get all definition keys)
 			$keys = $enLocale->translationManager()->getFileDefs($file);
-			
+
 			$enDefs[$relPath] = $keys;
 
 			foreach ($enDefs[$relPath] as &$value)
@@ -161,40 +161,40 @@ class LanguageController extends StoreManagementController
 		  	{
 				$keys[$key] = '';
 			}
-				  		  			
+
 			// get language default definitions
 			$default = $editLocale->translationManager()->getFileDefs($relPath, true);
 			if (!is_array($default))
 			{
 				$default = array();
 			}
-			
+
 			// get translated definitions
 			$transl = $editLocale->translationManager()->getCacheDefs($relPath, true);
-						
+
 			// put all definitions together
-			$translated[$relPath] = array_merge($keys, $default, $transl);	
-		}		
-		
+			$translated[$relPath] = array_merge($keys, $default, $transl);
+		}
+
 		uksort($translated, array($this, 'sortTranslations'));
-		
+
 		if (!$this->config->get('SHOW_BACKEND_LANG_FILES'))
 		{
 			foreach ($enDefs as $key => $value)
 			{
 				if (substr($key, 0, 7) == 'backend' || 'Install.lng' == $key)
 				{
-					unset($enDefs[$key]);					
+					unset($enDefs[$key]);
 				}
 			}
 		}
-		
+
 		$response = new ActionResponse();
 		$response->set("id", $editLocaleName);
 		$response->set("translations", @json_encode($translated));
 		$response->set("english", @json_encode($enDefs));
 		$response->set("edit_language", $editLocale->info()->getLanguageName($editLocaleName));
-					
+
 		return $response;
 	}
 
@@ -202,15 +202,15 @@ class LanguageController extends StoreManagementController
 	{
 		$dirA = substr($a, 0, strrpos($a, '/'));
 		$dirB = substr($b, 0, strrpos($b, '/'));
-		
+
 		if ($dirA == $dirB)
 		{
-			return $a > $b ? -1 : 1;   
+			return $a > $b ? -1 : 1;
 		}
 		else
 		{
-			return $dirA > $dirB ? -1 : 1;			   
-		}		
+			return $dirA > $dirB ? -1 : 1;
+		}
 	}
 
 	/**
@@ -224,14 +224,14 @@ class LanguageController extends StoreManagementController
 		$this->locale;
 
 		// get locale instance
-		$localeCode = $this->request->get("id");		
+		$localeCode = $this->request->get("id");
 		$editLocale = Locale::getInstance($localeCode);
-		
+
 		if (!$editLocale)
 		{
 		  	throw new ApplicationException('Locale "' . $localeCode .'" not found');
 		}
-		
+
 		// get submited translation data
 		$submitedLang = json_decode($this->request->get("translations"), true);
 
@@ -239,19 +239,19 @@ class LanguageController extends StoreManagementController
 		{
 		  	$submitedLang = array();
 		}
-		
+
 		// walk through all files and update definitions
 		foreach ($submitedLang as $file => $data)
 		{
 		  	$file = substr($file, 0, -4);
-			$existing = $editLocale->translationManager()->getCacheDefs($file . '.php', true);				
+			$existing = $editLocale->translationManager()->getCacheDefs($file . '.php', true);
 		  	$data = array_merge($existing, $data);
 		  	$editLocale->translationManager()->saveCacheData($localeCode . '/' . $file, $data);
 		}
-		
+
 		return new JSONResponse(false, 'success', $this->translate('_translations_were_successfully_saved'));
 	}
-	
+
 	/**
 	 * Displays main admin page.
 	 * @return ActionResponse
@@ -266,7 +266,7 @@ class LanguageController extends StoreManagementController
 		$response->set("languageArray", json_encode($list));
 		return $response;
 	}
-	
+
 	/**
 	 * @role create
 	 */
@@ -279,33 +279,33 @@ class LanguageController extends StoreManagementController
 		$list = $this->getLanguages()->toArray();
 		foreach($list as $key => $value)
 		{
-			unset($languagesSelect[$value['ID']]);			
+			unset($languagesSelect[$value['ID']]);
 		}
 
 		// sort Locale language list
-		asort($languagesSelect);	  	
+		asort($languagesSelect);
 
 		$response = new ActionResponse();
 		$response->set("languages_select", $languagesSelect);
-		return $response;				
+		return $response;
 	}
-	
+
 	/**
 	 * Remove a language
 	 * @role remove
 	 * @return RawResponse
 	 */
 	public function delete()
-	{  	
+	{
 		$langId = $this->request->get('id');
-		
+
 		try
 	  	{
-			Language::deleteById($langId);	
-			return new JSONResponse(false, 'success');		
+			Language::deleteById($langId);
+			return new JSONResponse(false, 'success');
 		}
 		catch (Exception $exc)
-		{			  	
+		{
 			return new JSONResponse(false, 'failure', $this->translate('_could_not_remove_language'));
 		}
 	}
@@ -323,12 +323,12 @@ class LanguageController extends StoreManagementController
 			$update = new ARUpdateFilter();
 			$update->setCondition(new EqualsCond(new ARFieldHandle('Language', 'ID'), $value));
 			$update->addModifier('position', $key);
-			ActiveRecord::updateRecordSet('Language', $update);  	
+			ActiveRecord::updateRecordSet('Language', $update);
 		}
 
 		$resp = new RawResponse();
 	  	$resp->setContent($this->request->get('draggedId'));
-		return $resp;		  	
+		return $resp;
 	}
 
 	/**
@@ -338,15 +338,15 @@ class LanguageController extends StoreManagementController
 	 */
 	public function setDefault()
 	{
-		try 
+		try
 		{
 			$r = ActiveRecord::getInstanceByID('Language', $this->request->get('id'), true);
 		}
 		catch (ARNotFoundException $e)
 		{
-			return new RawResponse(0);  	
+			return new RawResponse(0);
 		}
-			
+
 		ActiveRecord::beginTransaction();
 
 		$update = new ARUpdateFilter();
@@ -358,7 +358,7 @@ class LanguageController extends StoreManagementController
 
 		ActiveRecord::commit();
 
-		return new ActionRedirectResponse('backend.language', 'index');				
+		return new ActionRedirectResponse('backend.language', 'index');
 	}
 
 	/**
@@ -368,11 +368,11 @@ class LanguageController extends StoreManagementController
 	 */
 	public function setEnabled()
 	{
-		$id = $this->request->get('id');		
+		$id = $this->request->get('id');
 		$lang = Language::getInstanceById($id);
 		$lang->setAsEnabled($this->request->get("status"));
 		$lang->save();
-		
+
 		return new JSONResponse(array('language' => $lang->toArray()), 'success');
 	}
 
@@ -405,7 +405,7 @@ class LanguageController extends StoreManagementController
 		{
 			$list[$key]['name'] = $this->locale->info()->getOriginalLanguageName($value['ID']);
 		}
-		
+
 		$response->set('returnRoute', $this->request->get('returnRoute'));
 		$response->set('languages', $list);
 		$response->set('currentLanguage', $this->locale->getLocaleCode());
@@ -417,10 +417,10 @@ class LanguageController extends StoreManagementController
 	 * @return RedirectResponse
 	 * @todo Save language preference in User Settings, so the language would be selected automatically for subsequent visits
 	 */
-	public function changeLanguage() 
+	public function changeLanguage()
 	{
 		$returnRoute = base64_decode($this->request->get('returnRoute'));
-		
+
 		$lang = $this->request->get('id');
 		$langInst = Language::getInstanceById($lang);
 		if ($langInst)
@@ -431,16 +431,16 @@ class LanguageController extends StoreManagementController
 			}
 			else
 			{
-			  	$returnRoute = $lang . '/' . $returnRoute;			  
+			  	$returnRoute = $lang . '/' . $returnRoute;
 			}
-		}		
-				
+		}
+
 		return new RedirectResponse($this->router->createUrlFromRoute($returnRoute));
 	}
 
 	/**
 	 * Displays translation dialog menu for Live Translations
-	 * 
+	 *
 	 * @return ActionResponse
 	 */
 	public function translationDialog()
@@ -448,9 +448,9 @@ class LanguageController extends StoreManagementController
 	  	$id = $this->request->get('id');
 	  	$file = base64_decode($this->request->get('file'));
 	  	$translation = $this->locale->translationManager()->get($file, $id);
-	  		  	
+
 	  	$defaultTranslation = Locale::getInstance($this->application->getDefaultLanguageCode())->translationManager()->get($file, $id);
-	  		  	
+
 	  	$response = new ActionResponse();
 	  	$response->set('id', $id);
 	  	$response->set('file', $file);
@@ -459,10 +459,10 @@ class LanguageController extends StoreManagementController
 	  	$response->set('language', Language::getInstanceByID($this->locale->getLocaleCode())->toArray());
 	  	return $response;
 	}
-	
+
 	/**
 	 * Saves a single translation entry from Live Translations dialog menu
-	 * 
+	 *
 	 * @role update
 	 * @return ActionResponse
 	 */
@@ -475,7 +475,7 @@ class LanguageController extends StoreManagementController
 
 	  	return new RawResponse();
 	}
-	
+
 	private function getLanguages($active = 0)
 	{
 	  	$filter = new ARSelectFilter();
