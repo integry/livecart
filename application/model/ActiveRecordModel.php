@@ -108,19 +108,22 @@ abstract class ActiveRecordModel extends ActiveRecord
 	{
 		foreach ($schema->getFieldsByType('ARDateTime') as $name => $field)
 		{
-			$time = strtotime($array[$name]);
-
-			if (!$time)
+			if (isset($array[$name]))
 			{
-				continue;
-			}
+				$time = strtotime($array[$name]);
 
-			if (!isset($locale))
-			{
-				$locale = self::getApplication()->getLocale();
-			}
+				if (!$time)
+				{
+					continue;
+				}
 
-			$array['formatted_' . $name] = $locale->getFormattedTime($time);
+				if (!isset($locale))
+				{
+					$locale = self::getApplication()->getLocale();
+				}
+
+				$array['formatted_' . $name] = $locale->getFormattedTime($time);
+			}
 		}
 
 		$data = parent::transformArray($array, $schema);

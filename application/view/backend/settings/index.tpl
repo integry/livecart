@@ -41,6 +41,12 @@
 	<div id="handler_ENABLED_COUNTRIES" style="position: absolute; right: 0; z-index: 10; padding-right: 5px;">
 		<a href="#" class="countrySelect">{t _select_all}</a> | <a href="#" class="countryDeselect">{t _deselect_all}</a>
 	</div>
+
+	<div id="handler_ENABLE_SITEMAPS">
+		<a href="{link controller=sitemap action=ping}" id="siteMapPing" class="menu">{t _sitemap_ping}</a>
+		<span class="progressIndicator" id="siteMapFeedback" style="display: none;"></span>
+		<div id="siteMapSubmissionResult"></div>
+	</div>
 </div>
 
 {include file="layout/backend/footer.tpl"}

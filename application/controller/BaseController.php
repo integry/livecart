@@ -65,6 +65,8 @@ abstract class BaseController extends Controller implements LCiTranslator
 	 */
 	protected $roles;
 
+	protected $cacheHandler;
+
 	/**
 	 * Bese controller constructor: restores user object by using session data and
 	 * checks a permission to a requested action
@@ -149,6 +151,16 @@ abstract class BaseController extends Controller implements LCiTranslator
 		parent::init();
 
 		$this->application->processInitPlugins($this);
+	}
+
+	protected function setCache(OutputCache $cache)
+	{
+		$this->cacheHandler = $cache;
+	}
+
+	public function getCacheHandler()
+	{
+		return $this->cacheHandler;
 	}
 
 	/**

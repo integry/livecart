@@ -364,6 +364,27 @@ class LiveCart extends Application
 		return $response;
 	}
 
+	/**
+	 * Renders response from controller action
+	 *
+	 * @param string $controllerInstance Controller
+	 * @param Response $response Response to render
+	 * @return string Renderer content
+	 * @throws ViewNotFoundException if view does not exists for specified controller
+	 */
+	protected function render(Controller $controllerInstance, Response $response)
+	{
+		$output = parent::render($controllerInstance, $response);
+
+		if ($cache = $controllerInstance->getCacheHandler())
+		{
+			$cache->setData($output);
+			$cache->save();
+		}
+
+		return $output;
+	}
+
 	public function isCustomizationMode()
 	{
 		return $this->session->get('customizationMode');

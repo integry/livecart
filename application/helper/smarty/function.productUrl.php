@@ -10,25 +10,30 @@ ClassLoader::import('application.helper.CreateHandleString');
  * @return string
  *
  * @package application.helper.smarty
- * @author Integry Systems 
+ * @author Integry Systems
  */
 function smarty_function_productUrl($params, LiveCartSmarty $smarty)
-{		
-	$product = $params['product'];	
+{
+	return createProductUrl($params, $smarty->getApplication());
+}
+
+function createProductUrl($params, LiveCart $application)
+{
+	$product = $params['product'];
 	$handle = createHandleString($product['name_lang']);
-		
-	$urlParams = array('controller' => 'product', 
-					   'action' => 'index', 
-					   'producthandle' => $handle, 
+
+	$urlParams = array('controller' => 'product',
+					   'action' => 'index',
+					   'producthandle' => $handle,
 					   'id' => $product['ID']);
-					   
-	$url = $smarty->getApplication()->getRouter()->createUrl($urlParams, true);	
+
+	$url = $application->getRouter()->createUrl($urlParams, true);
 
 	if (!empty($params['filterChainHandle']))
 	{
-		$url = $smarty->getApplication()->getRouter()->setUrlQueryParam($url, 'filters', $params['filterChainHandle']);
+		$url = $application->getRouter()->setUrlQueryParam($url, 'filters', $params['filterChainHandle']);
 	}
-	
+
 	return $url;
 }
 

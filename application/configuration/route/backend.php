@@ -14,6 +14,9 @@ $routes = array(
 					array("backend", array('controller' => 'backend.index', 'action' => 'index'), array()),
 					array("admin", array('controller' => 'backend.index', 'action' => 'index'), array()),
 
+					// sitemaps
+					array("sitemap-:type-:id", array('controller' => 'sitemap', 'action' => 'sitemap'), array("id" => "[0-9]+")),
+
 					// category URLs
 					array("shop/:cathandle.:id", array('controller' => 'category', 'action' => 'index'), array("cathandle" => $handle, "id" => "[0-9]+")),
 					array("shop/:cathandle.:id/:page", array('controller' => 'category', 'action' => 'index'), array("cathandle" => $handle, "id" => "[0-9]+","page" => "[0-9_]+")),

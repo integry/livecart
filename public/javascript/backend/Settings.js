@@ -222,8 +222,24 @@ Backend.Settings.Editor.prototype =
 			function()
 			{
 				new Backend.ThemePreview($('setting_THEME'), $('THEME'));
-			}
+			},
 
+		'ENABLE_SITEMAPS':
+			function()
+			{
+				var cont = $('setting_ENABLE_SITEMAPS');
+				var menu = cont.insertBefore($('handler_ENABLE_SITEMAPS').cloneNode(true), cont.lastChild);
+
+				var siteMapSubmit =
+					function(e)
+					{
+						Event.stop(e);
+
+						new LiveCart.AjaxUpdater(Event.element(e).href, $('siteMapSubmissionResult'), $('siteMapFeedback'));
+					}
+
+				Event.observe($('siteMapPing'), 'click', siteMapSubmit);
+			}
 	},
 
 	initialize: function(container)

@@ -53,3 +53,15 @@ div.multi
 {
     padding: 10px;
 }
+
+.siteMapSubmission li
+{
+	background: url(../../image/silk/tick.png) no-repeat center left;
+	padding-left: 22px;
+	list-style-type: none;
+}
+
+.siteMapSubmission li.submitFail
+{
+	background-image: url(../../image/silk/cancel.png)
+}

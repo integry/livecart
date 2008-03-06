@@ -200,6 +200,11 @@ DEF_CITY=Default city
 _realtime_shipping=Real-time Shipping Rates
 SHIPPING_HANDLERS=Enabled shipping handlers
 
+_sitemaps=XML Sitemaps
+ENABLE_SITEMAPS=Enable sitemaps
+SITEMAPS_GZ=Apply gzip compression to sitemap files (saves bandwidth)
+_sitemap_ping=Submit sitemap to search engines
+
 _email=Email
 
 _email_store=Notify Store Administrator by E-mail when:
