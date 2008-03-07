@@ -182,7 +182,7 @@ class ProductSpecification
 		$groupIds = array();
 		foreach ($productArray['attributes'] as $attr)
 		{
-			$groupIds[$attr['SpecField']['specFieldGroupID'] != '' ? $attr['SpecField']['specFieldGroupID'] : 'NULL'] = true;
+			$groupIds[isset($attr['SpecField']['specFieldGroupID']) ? $attr['SpecField']['specFieldGroupID'] : 'NULL'] = true;
 		}
 
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('SpecFieldGroup', 'ID'), array_keys($groupIds)));
@@ -195,7 +195,7 @@ class ProductSpecification
 
 		foreach ($productArray['attributes'] as &$attr)
 		{
-			if ($attr['SpecField']['specFieldGroupID'])
+			if (isset($attr['SpecField']['specFieldGroupID']))
 			{
 				$attr['SpecField']['SpecFieldGroup'] = $indexedGroups[$attr['SpecField']['specFieldGroupID']];
 			}
