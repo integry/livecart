@@ -7,6 +7,6 @@ syntax: glob
 cache
 public/javascript/compiled/*.*
 public/stylesheet/compiled/*.*
-public/upload/*
+#public/upload/*
 storage/*.*
 Thumbs.db
