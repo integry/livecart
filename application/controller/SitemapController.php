@@ -13,7 +13,7 @@ ClassLoader::import('application.helper.smarty.function#newsUrl');
 ClassLoader::import('application.model.system.OutputCache');
 
 /**
- * Generates XML sitemaps
+ * Displays static pages
  *
  * @author Integry Systems
  * @package application.controller

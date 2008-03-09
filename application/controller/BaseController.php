@@ -65,6 +65,8 @@ abstract class BaseController extends Controller implements LCiTranslator
 	 */
 	protected $roles;
 
+	protected $cacheHandler;
+
 	/**
 	 * Bese controller constructor: restores user object by using session data and
 	 * checks a permission to a requested action
@@ -76,11 +78,6 @@ abstract class BaseController extends Controller implements LCiTranslator
 	{
 		parent::__construct($application);
 
-		unset($this->locale);
-		unset($this->config);
-		unset($this->user);
-		unset($this->session);
-
 		$this->router = $this->application->getRouter();
 
 		if (!$application->isInstalled() && !($this instanceof InstallController))
@@ -88,6 +85,11 @@ abstract class BaseController extends Controller implements LCiTranslator
 			header('Location: ' . $this->router->createUrl(array('controller' => 'install', 'action' => 'index')));
 			exit;
 		}
+
+		unset($this->locale);
+		unset($this->config);
+		unset($this->user);
+		unset($this->session);
 
 		$this->checkAccess();
 
@@ -125,11 +127,6 @@ abstract class BaseController extends Controller implements LCiTranslator
 						$this->addBlock($object, $command['action']['call'], $command['action']['view']);
 					}
 				}
-
-				if ('theme' == $command['action']['command'])
-				{
-					$this->application->setTheme($command['action']['view']);
-				}
 			}
 		}
 
@@ -154,6 +151,16 @@ abstract class BaseController extends Controller implements LCiTranslator
 		parent::init();
 
 		$this->application->processInitPlugins($this);
+	}
+
+	protected function setCache(OutputCache $cache)
+	{
+		$this->cacheHandler = $cache;
+	}
+
+	public function getCacheHandler()
+	{
+		return $this->cacheHandler;
 	}
 
 	/**
@@ -302,7 +309,10 @@ abstract class BaseController extends Controller implements LCiTranslator
 		$rolesCacheDir = ClassLoader::getRealPath('cache.roles');
 		if(!is_dir($rolesCacheDir))
 		{
-			mkdir($rolesCacheDir, 0777, true);
+			if (!@mkdir($rolesCacheDir, 0777, true))
+			{
+				return false;
+			}
 		}
 
 		$refl = new ReflectionClass($this);

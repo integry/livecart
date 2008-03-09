@@ -14,8 +14,6 @@ _add_billing_address=Add New Billing Address
 _select_shipping_address=Please select the shipping address!
 _select_billing_address=Please select the billing address!
 
-_err_no_rates_for_address=No shipping rates are available for the selected address!
-
 ########################
 # Select shipping methods
 ########################
