@@ -1,6 +1,6 @@
-######################## 
+########################
 # Log in
-######################## 
+########################
 _login=Sign In
 _your_pass=Your password
 _password_sent=Password Sent
@@ -15,9 +15,9 @@ _please_sign_in=Please sign in
 _login_failed=Login failed. Please make sure that your e-mail and password are entered correctly.
 _not_registered=Not registered yet?
 
-######################## 
+########################
 # Create new account
-######################## 
+########################
 _user_registration=New Account Registration
 _contact_info=Contact Information
 _your_first_name=First name
@@ -46,9 +46,9 @@ _err_enter_password=Please enter your password
 _err_enter_current_password=Please enter your current password
 _err_incorrect_current_password=Your current password is not entered correctly
 
-######################## 
+########################
 # Add new address
-######################## 
+########################
 _billing_address=Billing Address
 _shipping_address=Shipping Address
 _add_billing_address=Add New Billing Address
@@ -59,9 +59,9 @@ _edit_shipping_address=Edit Shipping Address
 
 _continue=Continue
 
-######################## 
+########################
 # Manage user account
-######################## 
+########################
 _your_account=Your Account
 _acc_home=Your Account Home
 _orders=Orders
@@ -74,9 +74,9 @@ _download_recent=Download Recently Purchased Files
 _recent_orders=Your Recent Orders
 _no_orders_placed=You haven't placed any orders yet
 
-######################## 
+########################
 # Change password
-######################## 
+########################
 _change_pass=Change Password
 _current_pass=Current Password
 _enter_new_pass=Enter new password
@@ -84,9 +84,9 @@ _reenter_new_pass=Re-enter new password
 _complete_pass_change=Change Password
 _confirm_password_change=Your password has been changed
 
-######################## 
+########################
 # Change e-mail
-######################## 
+########################
 _current_email=Current e-mail address
 _change_email=Change Your E-mail Address
 _new_email=Enter new e-mail address
@@ -94,9 +94,9 @@ _err_not_unique_email_for_change=The e-mail address you entered is already regis
 _complete_email_change=Change E-mail
 _confirm_email_change=Your e-mail address has been changed
 
-######################## 
+########################
 # Manage shipping and billing addresses
-######################## 
+########################
 _manage_addresses=Manage Your Addresses
 _billing_addresses=Billing Addresses
 _shipping_addresses=Shipping Addresses
@@ -108,9 +108,9 @@ _country=Country
 _state=State
 _postal_code=Postal Code
 
-######################## 
+########################
 # View order
-######################## 
+########################
 _order=Order
 _your_orders=Your Orders
 _no_orders_found=No orders were found
@@ -131,10 +131,11 @@ _recipient=Recipient
 
 _displaying_orders=Displaying [_1] to [_2] of [_3] found orders
 _orders_found=[quant,_1,order,orders] found
+_unread_messages=[quant,_1,unread message,unread messages]
 
-######################## 
+########################
 # Invoice
-######################## 
+########################
 _invoice=Invoice
 _buyer=Buyer
 _seller=Seller
@@ -155,24 +156,24 @@ _support=Support
 _have_questions=Have questions regarding your order? Here is the place to ask them and get answers.
 _enter_question=Enter your question or response
 
-######################## 
+########################
 # Order notes
-######################## 
+########################
 _respond_admin=Support
 _respond_customer=Me
 _err_enter_note=Please enter your question or response
 _submit_response=Submit response
 
-######################## 
+########################
 # Download files
-######################## 
+########################
 _files_found=[quant,_1,file,files] found
 _your_files=Download Files
 _no_files_found=No files found
 
-######################## 
+########################
 # Shipment statuses
-######################## 
+########################
 _status=Status
 _returned=Returned
 _shipped=Shipped
