@@ -1,0 +1,4 @@
+AuthorizeNet_login=Identificador de Inicio de Sesión
+AuthorizeNet=Authorize.net
+AuthorizeNet_transactionKey=Transaction key
+AuthorizeNet_gateway=Gateway URL

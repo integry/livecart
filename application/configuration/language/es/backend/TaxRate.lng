@@ -1,0 +1,14 @@
+_no_taxes=Ningún impuesto ha sido creado aún
+_add_tax=Agregar nuevo impuesto
+_tax_rate_has_been_successfully_saved=La tarifa del impuesto ha sido guardada satisfactoriamente
+_could_not_save_tax_rate=No puede guardar la tarifa del impuesto
+_tax=Impuesto
+_rate=Tarifa de impuesto
+_add_new_tax_rate=Agregar nueva tarifa de impuesto
+_cancel_adding_new_tax_rate=Cancelar agregando nueva tarifa de impuesto
+_error_rate_should_not_be_empty=Por favor teclee la tarifa del impuesto
+_error_rate_should_be_numeric_value=La tarifa del impuesto debe ser un valor numérico
+_error_rate_should_be_greater_than_zero_and_less_than_hundred=La tarifa debe estar entre 0 y 100
+_error_tax_should_not_be_empty=Por favor teclee la tarifa del impuesto
+_more_taxes_can_be_added=Mas impuestos pueden ser agregados
+_here=aquí

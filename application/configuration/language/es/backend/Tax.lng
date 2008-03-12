@@ -1,0 +1,10 @@
+_tax_entry_was_successfully_saved=El registro del impuesto fue guardado satisfactoriamente
+_could_not_save_tax_entry=no puede guardar el registro del impuesto
+_add_new_tax=Agregar nuevo impuesto
+_cancel_adding_new_tax=Cancelar agregando nuevo impuesto
+_cancel_adding_new_tax_rate=Cancelar agregando nuevo impuesto
+_name=nombre
+_manage=Manejo
+_taxes=Impuestos
+_error_the_name_should_not_be_empty=Por favor teclee un nombre
+_are_you_sure_you_want_to_remove_ths_tax=Esta seguro de eliminar este impuesto? Puede estar en uso en algunas zonas de entrega.

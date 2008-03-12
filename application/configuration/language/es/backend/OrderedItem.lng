@@ -1,0 +1,13 @@
+_ordered_item_was_successfully_moved=El producto fue movido a otro envío satisfactoriamente
+_this_shipping_service_has_no_available_rates=Este servicio no esta disponible para la zona del usuario y monto de la orden
+_ordered_item_quantity_was_updated=La cantidad del artículo fue actualizada
+_error_updating_item_quantity=Error en la actualización de la cantidad del artículo
+_item_has_been_successfuly_saved=El artículo fue agregado a la orden satisfactoriamente
+_item_was_successfully_removed_from_shipment=El artículo fue eliminado del envío satisfactoriamente
+_error_removing_item_from_shipment=Error generado al eliminar el artículo del envío
+_downloadable_item_already_exists_in_this_order=Este artículo descargable ya existe en esta orden
+_select_product=Agregar productos a la orden
+_done_adding_products=Terminar la agregación de productos
+_select_shippment=Seleccionar envío
+_shipping_service_is_not_selected=El servicio de envío no ha sido seleccionado
+_shipment=Envío

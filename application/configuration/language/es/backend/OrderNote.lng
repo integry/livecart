@@ -1,0 +1,6 @@
+_add_response=Agregar respuesta
+_cancel_response=Cancelar respuesta
+_err_enter_text=Por favor teclee su respuesta
+_admin=Admin
+_customer=Cliente
+_no_messages=No hay mensajes que hayan sido agregados por el cliente ó por el adminstrador para esta orden aún. Puede agregar una respuesta si necesita hacer una actualización especial en el estatus de la orden. El mensaje será enviado por e-mail al cliente automáticamente.

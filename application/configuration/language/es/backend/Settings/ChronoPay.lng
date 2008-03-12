@@ -1,0 +1,5 @@
+ChronoPay_productid=Identificador de Producto (Product ID) de ChronoPay
+ChronoPay_productname=Descripción del artículo de la lista de compras a desplegar en ChronoPay
+ChronoPay_currency=Moneda en ChronoPay
+ChronoPayGateway_productid=Identificador de Producto (Product ID) de ChronoPay
+ChronoPayGateway_secret=Llave secreta compartida

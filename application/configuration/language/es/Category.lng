@@ -1,0 +1,17 @@
+_view_as_list=Ver como listado
+_view_as_grid=Ver en bloques
+_sort_by=Ordenar por
+_featured_products=Productos especiales
+FEATURED=Productos Escogidos
+SALES_RANK=Mas vendidos
+PRODUCT_NAME_ASC=Nombre del Producto: A-Z
+PRODUCT_NAME_DESC=Nombre del Producto: Z-A
+PRICE_ASC=Precio: Menor a Mayor
+PRICE_DESC=Precio: Mayor a Menor
+NEWEST_ARRIVALS=Nuevos ingresos
+RATING=Calificación del Cliente
+_found_cats=Encontrar Categorías
+_not_found=<span class='notFoundMain'>No se encontraron productos.</span> Por favor intente con diferentes palabras para su búsqueda.
+_showing_products=Mostrando [_1] a [_2] de [_3] productos encontrados
+_narrow_by_cat=Resultado seleccionado por categoría
+_more_subcats=mas...

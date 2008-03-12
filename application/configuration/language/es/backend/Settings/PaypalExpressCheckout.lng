@@ -1,0 +1,6 @@
+PaypalExpressCheckout_password=Contraseña
+PaypalExpressCheckout=Realizar compra con Paypal Express
+PaypalExpressCheckout_sandbox=Utilizar ambiente sandbox (prueba)
+PaypalExpressCheckout_username=Usuario
+PaypalExpressCheckout_signature=Firma
+PaypalExpressCheckout_AUTHONLY=Autorizar pagos únicamente sin capturarlos automáticamente

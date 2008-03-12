@@ -1,0 +1,4 @@
+PaypalWebsitePaymentsStandard=Sito Web de Paypal para Pagos Estándar
+PaypalWebsitePaymentsStandard_EMAIL=Dirección de e-mail del negocio
+PaypalWebsitePaymentsStandard_SANDBOX=Utilizar ambiente sandbox (prueba) de Paypal
+PaypalWebsitePaymentsStandard_ITEM_NAME=Descripción del artículo de la lista de compras a desplegar en Paypal

@@ -1,0 +1,10 @@
+_site_news=Sitio de Noticias
+_add_news=Agregar una nueva noticia
+_cancel_adding_news=Cancelar agregando noticias
+_date=Fecha
+_title=Título
+_text=Texto de introducción
+_more_text=Texto completo
+_err_enter_text=Por favor registre el texto complementario
+_del_conf=Esta seguro de borrar esta noticia?
+_could_not_remove_news=No puede borrar esta noticia

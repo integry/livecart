@@ -1,0 +1,10 @@
+_select_file=Seleccione un archivo
+_listing_files=Desplegar archivos $from - $to de $count
+_no_files_found=No se encontraron archivos
+fileName=Nombre
+fileType=Extensión
+fileSize=Tamaño
+fileDate=Fecha de Modificación
+filePermissions=Permisos
+fileOwner=Propietario
+fileGroup=Grupo

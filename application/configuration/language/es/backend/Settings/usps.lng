@@ -1,0 +1,17 @@
+UspsShipping=USPS
+_USPS_API_ACCESS=API de acceso a envíos por USPS
+UspsShipping_userId=Usuario de API de USPS
+UspsShipping_apiUrl=URL del API de USPS
+_USPS_DOMESTIC_OPTS=Opciones locales de envío
+UspsShipping_domestic=Servicios de correo habilitados
+UspsShipping_priorityPackageType=Prioridad por tipo de paquete de correo
+UspsShipping_isMachinable=El paquete permite escribirle
+UspsShipping_size=Tamaño del paquete
+_USPS_ITL_OPTS=Opciones internacionales de envío
+UspsShipping_international=Servicios de mensajería internacional habilitado
+Express=Inmediato
+Priority=Prioridad
+Parcel=Servicio postal de paquetes
+Library=Biblioteca de correo
+BPM=Materia impresa en borde
+Media=Medio de Correo

@@ -1,0 +1,10 @@
+checkWritePermissions=Permisos de escritura en Directorio
+_writePermissionsFix=<strong>Acción recomendada:</strong> Utilizando un cliente FTP, cambie los permisos de acceso (chmod) para estos directorios a 777 (acceso total de escritura). Si el directorio no existe aún, por favor crearlo.
+checkPHPVersion=Version PHP
+checkPHPVersion_error=<a href="http://php.net" target="_blank">PHP</a>la versión debe ser al menos 5.2
+checkMySQL=Soporte para Base de Datos
+checkMySQL_error=<a href="http://php.net/mysqli" target="_blank">mysqli</a> esta extensión debe ser instalada para PHP  
+checkGD=Soporte para manipulación de imágenes
+checkGD_error=<a href="http://php.net/gd" target="_blank">GD</a> esta extensión debe ser instalada para PHP
+checkSession=Configuración de sesion de PHP
+checkSession_error=Las sesiones de PHP no están siendo guardadas. Por favor asegurese que el valor de configuración de PHP session.save_path PHP está configurado correctamente.

@@ -1,0 +1,17 @@
+_cancel_new=Cancelar agregando nueva imagen
+_add_new=Agregar nueva imagen
+_add_new_title=Agregar Nueva Imagen
+_delete_confirm=Esta seguro de borrar esta imagen?
+_main_image=Imagen principal
+_supplemental_images=Imagenes adicionales
+_no_images=Ninguna imagen ha sido agregada a este producto aún
+_max_file_size=Archivos JPEG, GIF and PNG solamente.  Tamaño máximo de archivo: [_1]
+_edit_image=Modificar detalles de la imagen
+_image_title=Registre el título de la imagen
+_image_file=Seleccione el archivo de la imagen
+_upload=Agregar imagen
+_save=Guardar
+_err_not_uploaded=Por favor seleccione un archivo
+_err_not_image=Esta no es una imagen válida
+_err_resize=Error al redimensionar la imagen
+_err_too_large=Archivo muy grande

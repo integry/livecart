@@ -1,0 +1,16 @@
+_filter_group_was_successfully_saved=El filtro ha sido guardado satisfactoriamente
+_could_not_save_filter_group=No se puede guardar el filtro
+_filter_group_was_successfully_removed=Filtro eliminado satisfactoriamente
+_could_not_remove_filter_group=El filtro no se puede eliminar
+_add_new_filter=Agregar un nuevo filtro
+_category_has_no_attr=No se han registrado aún atributos para realizar el filtro en esta categoría
+_delete_field=Borrar el campo
+_remove_filter_question=Esta seguro de eliminar el filtro?
+_FilterGroup_remove_question=Esta seguro de eliminar el filtro?
+_cancel_adding_new_filter=Cancelar agregar nuevo filtro
+_error_name_empty=Por favor, ingrese un nombre para el filtro
+_error_filter_value_is_not_a_number=los valores del filtro deben ser numéricos
+_error_spec_field_is_not_selected=La especificación del campo no esta seleccionada
+_error_illegal_date=Fecha inválida
+_error_filter_name_empty=Por favor, ingrese un nombre para el filtro
+_error_filter_handle_invalid=Manejo inválido

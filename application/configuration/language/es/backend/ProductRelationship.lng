@@ -1,0 +1,16 @@
+_a_relationship_between_products_was_successfully_created=La relación entre los productos fue creada satisfactoriamente
+_could_not_create_product_relationship=Este producto ya ha sido actualizado como relacionado
+_relationship_was_successfully_removed=La relación fue eliminada satisfactoriamente
+_select_product=Agregar un producto relacionado
+_add_new_group=Agregar un nuevo grupo
+_add_group_title=Agregar un nuevo grupo de productos relacionados
+_done_adding=Terminar agregando productos relacionados
+_cancel_adding_new_related_product=Cancelar agregando nuevas relaciones
+_cancel_adding_new_group=Cancelar agregando un grupo nuevo
+_are_you_sure_you_want_to_delete_this_group=Esta seguro de borrar este grupo de relaciones?
+_are_you_sure_you_want_to_delete_this_relation=Esta seguro de borrar esta relacion?
+_product_relationship_group_title=Título
+_err_relationship_name_is_empty=Por favor teclee el nombre del grupo
+_err_circular=No puede agregar un producto relacionado al mismo producto
+_err_multiple=Este producto ya ha sido actualizado como relacionado
+_msg_added=Producto relacionado agregado satisfactoriamente
