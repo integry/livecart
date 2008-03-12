@@ -12,7 +12,7 @@
 
 	<div class="descr">
 
-		<fieldset class="container">
+		<div class="container">
 			<div class="title">
 				<a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">{$product.name_lang}</a>
 			</div>
@@ -24,7 +24,7 @@
 				<span>{t _our_price}:</span> <span class="price">{$product.formattedPrice.$currency}</span>
 				<br class="clear" />
 			</div></div></div>
-		</fieldset>
+		</div>
 
 		{if $product.attributes}
 			<div class="spec">

@@ -831,7 +831,7 @@ ul.productList li
     font-weight: bold;
     background-image: url(../../image/silk/gif/star.gif);
     background-repeat: no-repeat;
-    background-position: center left;
+    background-position: top left;
     padding-left: 22px;
 }
 
@@ -1011,34 +1011,6 @@ ul.productList .orderingControls
 {
     text-align: center;
     font-size: smaller;
-}
-
-#productPurchaseLinks .productOptions
-{
-	padding: 0 0.5em;
-}
-
-.productOptions p
-{
-	margin: 5px 0;
-}
-
-.productOptions label.field
-{
-	display: block;
-	float: none;
-	margin-bottom: 0;
-}
-
-.productOptions input.text, .productOptions select
-{
-	margin-top: 2px;
-	margin-bottom: 0;
-}
-
-.productOptions .description
-{
-	font-size: 0.85em;
 }
 
 #productSpecification table
@@ -1245,16 +1217,6 @@ div.checkout a
 	overflow: hidden;
 	padding: 3px;
 	vertical-align: middle;
-}
-
-#cart .productOptions
-{
-	margin: 1em 0;
-}
-
-#cart .productOptionsMenu
-{
-	font-size: smaller;
 }
 
 .cartControl
@@ -1746,7 +1708,7 @@ div.addressControl
     margin-left: 220px;
 }
 
-#content .orderMenu ul
+.orderMenu ul
 {
     list-style-type: none;
     margin: 5px;
@@ -1954,28 +1916,14 @@ td.amount
     font-weight: bold;
 }
 
-.itemOptions
-{
-	list-style-type: none;
-	padding: 0.5em;
-	font-size: 0.85em;
-	color: #777;
-}
-
-.itemOptions .optionPrice
-{
-	color: #444;
-}
-
 /***************************
 	Customization
 ***************************/
 div.templateLocator:hover
 {
-	border: 1px dotted red;
+	border: 1px dotted blue;
 	position: relative;
 	z-index: 2;
-	padding: 2px;
 }
 
 div.templateLocator span.templateName
@@ -1984,7 +1932,7 @@ div.templateLocator span.templateName
 	position: absolute;
 	top: -1px;
 	left: -1px;
-	background-color: lightyellow;
+	background-color: #DDF;
 	height: 15px;
 	padding: 3px;
 	z-index: 1;
@@ -2062,10 +2010,9 @@ label
     padding-right: 6px;
     margin-top: 0;
     margin-bottom: 0;
-    line-height: 19px;
 }
 
-.required label
+p.required label
 {
 	font-weight: bold;
 }
@@ -2083,7 +2030,7 @@ p.radio label, p.checkbox label
 
 label.checkbox, label.radio
 {
-  	line-height: 1em;
+  	margin-top: 3px;
   	width: auto;
 }
 
@@ -2153,7 +2100,7 @@ input.radio, input.checkbox, input.submit, input.button, input.reset
 input.radio, input.checkbox
 {
     float: left;
-    margin-right: 0.5em;
+    margin-right: 1em;
     cursor: pointer;
 }
 
@@ -2224,14 +2171,6 @@ fieldset.error, div.error, fieldset.container
 	background-position: center center;
 	background-repeat: no-repeat;
 	clear: none;
-}
-
-a.ajaxIndicator
-{
-	background-image: url(../../image/indicator.gif);
-	background-position: right center;
-	background-repeat: no-repeat;
-	padding-right: 22px;
 }
 
 p.checkbox label {
