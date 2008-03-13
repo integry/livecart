@@ -322,6 +322,10 @@ class CheckoutController extends FrontendController
 			}
 			else if (!$shipmentRates->size())
 			{
+				$validator = $this->buildAddressSelectorValidator($this->order);
+				$validator->triggerError('selectedAddress', $this->translate('_err_no_rates_for_address'));
+				$validator->saveState();
+
 			 	return new ActionRedirectResponse('checkout', 'selectAddress');
 			}
 			else
@@ -860,7 +864,8 @@ class CheckoutController extends FrontendController
 	private function buildAddressSelectorForm(CustomerOrder $order)
 	{
 		ClassLoader::import("framework.request.validator.Form");
-		$validator = new RequestValidator("addressSelectorValidator_blank", $this->request);
+		//$validator = new RequestValidator("addressSelectorValidator_blank", $this->request);
+		$validator = $this->buildAddressSelectorValidator($order);
 		return new Form($validator);
 	}
 
