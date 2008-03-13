@@ -1,6 +1,5 @@
 syntax: regexp
-^storage\/language\/(.*)
-^storage\/configuration\/(.*)
+^storage\/(.*)
 
 syntax: glob
 .cache
@@ -8,6 +7,6 @@ syntax: glob
 cache
 public/javascript/compiled/*.*
 public/stylesheet/compiled/*.*
-#public/upload/*
-storage/language/*.*
+public/upload/*
+storage/*.*
 Thumbs.db
