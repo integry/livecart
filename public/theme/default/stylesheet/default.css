@@ -602,28 +602,28 @@ tr.odd
 
 #productSpecification tr.first td.param
 {
-	background-image: url(../image/cornerTopLeft.gif);
+	background-image: url(../../light/image/cornerTopLeft.gif);
 	background-position: top left;
 	background-repeat: no-repeat;
 }
 
 #productSpecification tr.first td.value
 {
-	background-image: url(../image/cornerTopRight.gif);
+	background-image: url(../../light/image/cornerTopRight.gif);
 	background-position: top right;
 	background-repeat: no-repeat;
 }
 
 #productSpecification tr.last td.param
 {
-	background-image: url(../image/cornerBottomLeft.gif);
+	background-image: url(../../light/image/cornerBottomLeft.gif);
 	background-position: bottom left;
 	background-repeat: no-repeat;
 }
 
 #productSpecification tr.last td.value
 {
-	background-image: url(../image/cornerBottomRight.gif);
+	background-image: url(../../light/image/cornerBottomRight.gif);
 	background-position: bottom right;
 	background-repeat: no-repeat;
 }
@@ -669,28 +669,28 @@ tr.odd
 */
 #cart .first .cartControl, #wishList .first .cartControl
 {
-	background-image: url(../image/cornerTopLeft.gif);
+	background-image: url(../../light/image/cornerTopLeft.gif);
 	background-position: top left;
 	background-repeat: no-repeat;
 }
 
 #cart .first .cartQuant, #wishList .first .cartPrice
 {
-	background-image: url(../image/cornerTopRight.gif);
+	background-image: url(../../light/image/cornerTopRight.gif);
 	background-position: top right;
 	background-repeat: no-repeat;
 }
 
 #cart .last, #wishList .last
 {
-	background-image: url(../image/cornerBottomLeft.gif);
+	background-image: url(../../light/image/cornerBottomLeft.gif);
 	background-position: bottom left;
 	background-repeat: no-repeat;
 }
 
 #cart .last .cartQuant, #wishList .last .cartPrice
 {
-	background-image: url(../image/cornerBottomRight.gif);
+	background-image: url(../../light/image/cornerBottomRight.gif);
 	background-position: bottom right;
 	background-repeat: no-repeat;
 }
@@ -709,26 +709,26 @@ a.proceedToCheckout span
 
 a.proceedToCheckout span, #checkoutProgress a span
 {
-	background-image: url(../image/cornerBottomRight.gif);
+	background-image: url(../../light/image/cornerBottomRight.gif);
 	background-position: bottom right;
 	background-repeat: no-repeat;
 }
 
 a.proceedToCheckout span span, #checkoutProgress a span span
 {
-	background-image: url(../image/cornerBottomLeft.gif);
+	background-image: url(../../light/image/cornerBottomLeft.gif);
 	background-position: bottom left;
 }
 
 a.proceedToCheckout span span span, #checkoutProgress a span span span
 {
-	background-image: url(../image/cornerTopLeft.gif);
+	background-image: url(../../light/image/cornerTopLeft.gif);
 	background-position: top left;
 }
 
 a.proceedToCheckout span span span span, #checkoutProgress a span span span span
 {
-	background-image: url(../image/cornerTopRight.gif);
+	background-image: url(../../light/image/cornerTopRight.gif);
 	background-position: top right;
 }
 
