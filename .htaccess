@@ -6,9 +6,9 @@ Options -Indexes
 	RewriteRule ^$ public/index.php [L]
 
 #demo images
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^public\/upload\/(.*)$ http://demoimg.livecart.com/upload/$1 [R,L]
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteRule ^public\/upload\/(.*)$ http://demoimg.livecart.com/upload/$1 [R,L]
 
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d

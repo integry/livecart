@@ -807,6 +807,17 @@ table.productGrid
 	table-layout: fixed;
 }
 
+/* IE 6 */
+* html table.productGrid
+{
+	width: auto;
+}
+
+* html .resultStats
+{
+	width: 710px;
+}
+
 .productGrid td
 {
 	text-align: center;
@@ -831,7 +842,6 @@ ul.productList li
     font-weight: bold;
     background-image: url(../../image/silk/gif/star.gif);
     background-repeat: no-repeat;
-    background-position: center left;
     padding-left: 22px;
 }
 
@@ -839,7 +849,6 @@ ul.productList .title
 {
 	display: block;
 	font-size: 120%;
-	float: left;
 }
 
 .productGrid .title
@@ -902,6 +911,7 @@ ul.productList .pricingInfo
     white-space: nowrap;
     width: 250px;
     line-height: 1.2em;
+    margin-top: -15px;
 }
 
 ul.productList .orderingControls

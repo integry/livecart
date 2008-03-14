@@ -1,0 +1,47 @@
+Major additions:
+* Product options - now it is possible to sell configurable products with various types of options, for example, clothing with different sizes, "buildable" products (like custom PC's), etc.
+* New default design theme
+* Full support for Google Analytics, including the order detail tracking
+* Ability to set individual design theme for each product and category from backend
+* Added support for XML sitemaps
+
+New translations:
+* French
+* Spanish
+
+Payment gateway integrations:
+* Added PayMate integration
+
+Front-end improvements:
+* Added a new layout block ROOT_CATEGORY which is intended for displaying the main categories of the store as tabs
+
+Back-end improvements:
+* Added warning message before changing the store base currency in backend (the prices are set to 0 unless they were previously entered in the new base currency)
+* Added "save and add another product" button to the product creation form at backend. Previously there were 2 radio buttons to determine the action after a product is added - now it's simply 2 save buttons.
+* Set design themes for multiple products via mass action
+* Updated TinyMCE library (WYSIWYG editor) to version 3.0.3 - the editor should now work and load slightly faster
+
+System improvements:
+* Ability to change design theme from layout configuration
+* Some database query optimization
+* E-mail template structure optimization
+
+System fixes:
+* Fixed a bug which prevented LiveCart to work when there was a dot in installation directory path (for example, /home/sites/mysite.com)
+
+Front-end fixes:
+* Fixed a bug that caused PHP error when trying to apply manufacturer filter from store home page (in some cases)
+* Fixed occasional problems with loading of customized templates
+* Error pages (like error 404) now issue a proper HTTP status header
+
+Back-end fixes:
+* Languages can now be activated immediately after they are added, without the need to reload the backend page
+* Fixed occassional problems with translation search
+
+Installer fixes:
+* Allow to install LiveCart with PHP's MySQL extension as well (instead of only mysqli)
+
+Other:
+* Replaced space indentation with tabs in source code
+* "default" theme renamed to "light"
+* Theme "none" renamed to "barebone"

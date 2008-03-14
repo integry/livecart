@@ -462,7 +462,10 @@ Backend.LangEdit.prototype =
 
 				if (key.toLowerCase().indexOf(filter) == -1
 				   && this.translations[file][key].toLowerCase().indexOf(filter) == -1
-				   && english[key].toLowerCase().indexOf(filter) == -1
+				   && ((english[file] && english[file][key].toLowerCase().indexOf(filter) == -1)
+				   		||
+				   		(english[key] && english[key].toLowerCase().indexOf(filter) == -1)
+				   	  )
 				   )
 				{
 					continue;

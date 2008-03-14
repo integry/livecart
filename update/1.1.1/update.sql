@@ -564,3 +564,6 @@ ALTER TABLE ProductPriceRule ADD CONSTRAINT UserGroup_ProductPriceRule
 
 ALTER TABLE ProductPresentation ADD CONSTRAINT Product_ProductPresentation
     FOREIGN KEY (ID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+INSERT INTO Role (name) VALUES ('option');
+INSERT INTO AccessControlAssociation SET roleID=(SELECT ID FROM Role WHERE name='option'), userGroupID=1;

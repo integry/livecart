@@ -395,14 +395,6 @@ ul.productList .pricingInfo
 	position: relative;
 }
 
-/* IE */
-* html .productGrid .pricingInfo, *+html .productGrid .pricingInfo,
-* html .pricingInfo span.price, *+html .pricingInfo span.price,
-* html .pricingInfo a.addToCart, *+html .pricingInfo a.addToCart
-{
-	position: static;
-}
-
 .productGrid td
 {
 	border-right: 1px solid #eee;
@@ -464,6 +456,21 @@ ul.productList .pricingInfo
 	top: 30px;
 	left: 0;
 	text-align: center;
+}
+
+/* IE */
+* html .productGrid .pricingInfo, *+html .productGrid .pricingInfo,
+* html .pricingInfo span.price, *+html .pricingInfo span.price,
+* html .pricingInfo a.addToCart, *+html .pricingInfo a.addToCart
+{
+	position: static;
+}
+
+.productGrid .pricingInfo,
+.pricingInfo span.price,
+.pricingInfo a.addToCart
+{
+	_position: static;
 }
 
 ul.productList .sep
