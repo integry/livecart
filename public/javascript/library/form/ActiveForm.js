@@ -176,7 +176,7 @@ ActiveForm.prototype = {
 				{
 					if(!tinyMCEField || 0 >= tinyMCEField.offsetHeight) return;
 					window.clearInterval(ActiveForm.prototype.idleTinyMCEFields[tinyMCEField.id]);
-					tinyMCE.execCommand('mceAddControl', true, tinyMCEField.id); 
+					tinyMCE.execCommand('mceAddControl', true, tinyMCEField.id);
 				}.bind(this, textareas[k]), 1000);
 			}
 		}
@@ -269,7 +269,7 @@ ActiveForm.Slide.prototype = {
 					throw $break;
 				}
 			});
-			
+
 			if(window.Form.State && !Form.State.hasBackup(form)) Form.State.backup(form, ignoreFields);
 			if(window.ActiveList) ActiveList.prototype.collapseAll();
 			ActiveForm.prototype.initTinyMceFields(form);
@@ -305,9 +305,9 @@ ActiveForm.Slide.prototype = {
 				Effect.Fade(form, {duration: 0.2});
 				Effect.BlindUp(form, {duration: 0.3});
 				setTimeout(
-					function() 
-					{ 
-						form.style.display = 'none'; 
+					function()
+					{
+						form.style.display = 'none';
 
 						if (onCompleteCallback)
 						{
@@ -317,7 +317,7 @@ ActiveForm.Slide.prototype = {
 					}, 300);
 			}
 
-			this.ul.childElements().each(function(element) 
+			this.ul.childElements().each(function(element)
 			{
 				if(!element.className.match(/Cancel/))
 				{
@@ -410,6 +410,11 @@ Element.isTinyMce = function(element)
  */
 Element.saveTinyMceFields = function(element)
 {
+	if (tinyMCE)
+	{
+		tinyMCE.triggerSave();
+	}
+
 	document.getElementsByClassName("mceEditorIframe", element).each(function(mceControl)
 	{
 		 tinyMCE.getInstanceById(mceControl.id).triggerSave();
@@ -424,11 +429,11 @@ Form.focus = function(form)
 	{
 		form = form.down('form');
 	}
-	
+
 	if(form)
 	{
-		var firstElement = form.down('input[type=text]');   
-		
+		var firstElement = form.down('input[type=text]');
+
 		if(firstElement)
 		{
 			firstElement.focus();
