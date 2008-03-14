@@ -669,8 +669,13 @@ class CheckoutController extends FrontendController
 		// to be displayed after the payment. In this case we're doing meta-redirect to get back to our site.
 		else if ($handler->isHtmlResponse())
 		{
+			$returnUrl = $handler->getReturnUrlFromRequest($this->request->toArray());
+			if (!$returnUrl)
+			{
+				$returnUrl = $this->router->createUrl(array('controller' => 'checkout', 'action' => 'completed', 'query' => array('id' => $this->order->getID())));
+			}
 			$response = new ActionResponse('order', $order->toArray());
-			$response->set('returnUrl', $handler->getReturnUrlFromRequest($this->request->toArray()));
+			$response->set('returnUrl', $returnUrl);
 			return $response;
 		}
 	}

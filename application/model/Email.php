@@ -154,8 +154,6 @@ class Email
 		if ($this->template)
 		{
 			$smarty = $this->application->getRenderer()->getSmartyInstance();
-			$smarty->compile_dir = ClassLoader::getRealPath('cache.templates_c');
-			$smarty->template_dir = ClassLoader::getRealPath('application.view');
 
 			foreach ($this->values as $key => $value)
 			{

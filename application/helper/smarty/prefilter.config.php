@@ -1,5 +1,5 @@
 <?php
-
+//var_dump('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'); exit;
 /**
  * Initial template prefilter (insert additional prefilter to this function)
  *
@@ -62,14 +62,6 @@ function smarty_prefilter_config($tplSource, $smarty)
 function labelVars($var)
 {
 	return preg_replace("/`(.*)`/", "{\\1}", $var[0]);
-}
-
-if (!function_exists('str_pad_left'))
-{
-	function str_pad_left($string, $count)
-	{
-		return str_pad($string, $count, ' ', STR_PAD_LEFT);
-	}
 }
 
 ?>

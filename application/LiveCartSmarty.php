@@ -18,6 +18,9 @@ class LiveCartSmarty extends Smarty
 	{
 		$this->application = $application;
 		$this->register_modifier('config', array($this, 'config'));
+		$this->load_filter('pre', 'config');
+
+		parent::__construct();
 	}
 
 	/**

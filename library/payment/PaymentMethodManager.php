@@ -3,7 +3,7 @@
 /**
  *
  * @package library.payment
- * @author Integry Systems 
+ * @author Integry Systems
  */
 class PaymentMethodManager
 {
@@ -11,12 +11,12 @@ class PaymentMethodManager
 	{
 		return self::getPaymentHandlerList(dirname(__FILE__) . '/method/cc');
 	}
-	
+
 	public function getExpressPaymentHandlerList()
 	{
 		return self::getPaymentHandlerList(dirname(__FILE__) . '/method/express');
 	}
-	
+
 	public function getRegularPaymentHandlerList()
 	{
 		return self::getPaymentHandlerList(dirname(__FILE__) . '/method');
@@ -25,7 +25,7 @@ class PaymentMethodManager
 	private function getPaymentHandlerList($dir)
 	{
 		$ret = array();
-		
+
 		foreach (new DirectoryIterator($dir) as $method)
 		{
 			if ($method->isFile() && substr($method->getFileName(), 0, 1) != '.')
@@ -33,8 +33,10 @@ class PaymentMethodManager
 				$ret[] = basename($method->getFileName(), '.php');
 			}
 		}
-		
-		return $ret;	
+
+		sort($ret);
+
+		return $ret;
 	}
 }
 
