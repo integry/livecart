@@ -1,11 +1,12 @@
 # ---------------------------------------------------------------------- #
-# Script generated with: DeZign for Databases v4.2.0                     #
+# Script generated with: DeZign for Databases v5.0.1                     #
 # Target DBMS:           MySQL 4                                         #
 # Project file:          LiveCart.dez                                    #
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database drop script                            #
-# Created on:            2007-11-13 20:09                                #
+# Created on:            2008-03-16 22:17                                #
+# Model version:         Version 2008-03-16                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -18,6 +19,8 @@ ALTER TABLE Product DROP FOREIGN KEY Category_Product;
 ALTER TABLE Product DROP FOREIGN KEY Manufacturer_Product;
 
 ALTER TABLE Product DROP FOREIGN KEY ProductImage_Product;
+
+ALTER TABLE Product DROP FOREIGN KEY Product_Product;
 
 ALTER TABLE Category DROP FOREIGN KEY Category_Category;
 
@@ -161,6 +164,32 @@ ALTER TABLE ExpressCheckout DROP FOREIGN KEY UserAddress_ExpressCheckout;
 
 ALTER TABLE ExpressCheckout DROP FOREIGN KEY CustomerOrder_ExpressCheckout;
 
+ALTER TABLE ProductOption DROP FOREIGN KEY Product_ProductOption;
+
+ALTER TABLE ProductOption DROP FOREIGN KEY Category_ProductOption;
+
+ALTER TABLE ProductOption DROP FOREIGN KEY ProductOptionChoice_ProductOption;
+
+ALTER TABLE ProductOptionChoice DROP FOREIGN KEY ProductOption_ProductOptionChoice;
+
+ALTER TABLE OrderedItemOption DROP FOREIGN KEY OrderedItem_OrderedItemOption;
+
+ALTER TABLE OrderedItemOption DROP FOREIGN KEY ProductOptionChoice_OrderedItemOption;
+
+ALTER TABLE ProductRatingType DROP FOREIGN KEY Category_ProductRatingType;
+
+ALTER TABLE ProductRating DROP FOREIGN KEY ProductRatingType_ProductRating;
+
+ALTER TABLE ProductRating DROP FOREIGN KEY ProductReview_ProductRating;
+
+ALTER TABLE CategoryPresentation DROP FOREIGN KEY Category_CategoryPresentation;
+
+ALTER TABLE ProductPriceRule DROP FOREIGN KEY Product_ProductPriceRule;
+
+ALTER TABLE ProductPriceRule DROP FOREIGN KEY UserGroup_ProductPriceRule;
+
+ALTER TABLE ProductPresentation DROP FOREIGN KEY Product_ProductPresentation;
+
 # ---------------------------------------------------------------------- #
 # Drop table "Product"                                                   #
 # ---------------------------------------------------------------------- #
@@ -178,6 +207,8 @@ ALTER TABLE Product ALTER COLUMN voteSum DROP DEFAULT;
 ALTER TABLE Product ALTER COLUMN voteCount DROP DEFAULT;
 
 ALTER TABLE Product ALTER COLUMN hits DROP DEFAULT;
+
+ALTER TABLE Product ALTER COLUMN position DROP DEFAULT;
 
 ALTER TABLE Product DROP PRIMARY KEY;
 
@@ -872,3 +903,105 @@ ALTER TABLE ExpressCheckout DROP PRIMARY KEY;
 # Drop table #
 
 DROP TABLE ExpressCheckout;
+
+# ---------------------------------------------------------------------- #
+# Drop table "ProductOption"                                             #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE ProductOption ALTER COLUMN position DROP DEFAULT;
+
+ALTER TABLE ProductOption DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE ProductOption;
+
+# ---------------------------------------------------------------------- #
+# Drop table "ProductOptionChoice"                                       #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE ProductOptionChoice ALTER COLUMN position DROP DEFAULT;
+
+ALTER TABLE ProductOptionChoice DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE ProductOptionChoice;
+
+# ---------------------------------------------------------------------- #
+# Drop table "OrderedItemOption"                                         #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE OrderedItemOption DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE OrderedItemOption;
+
+# ---------------------------------------------------------------------- #
+# Drop table "ProductRatingType"                                         #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE ProductRatingType ALTER COLUMN position DROP DEFAULT;
+
+ALTER TABLE ProductRatingType DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE ProductRatingType;
+
+# ---------------------------------------------------------------------- #
+# Drop table "ProductRating"                                             #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE ProductRating DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE ProductRating;
+
+# ---------------------------------------------------------------------- #
+# Drop table "CategoryPresentation"                                      #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE CategoryPresentation DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE CategoryPresentation;
+
+# ---------------------------------------------------------------------- #
+# Drop table "ProductPriceRule"                                          #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE ProductPriceRule DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE ProductPriceRule;
+
+# ---------------------------------------------------------------------- #
+# Drop table "ProductPresentation"                                       #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE ProductPresentation DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE ProductPresentation;
