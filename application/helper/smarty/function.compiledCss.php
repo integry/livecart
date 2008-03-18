@@ -11,8 +11,8 @@
  */
 function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 {
-	$includedStylesheetTimestamp = $smarty->get_template_vars("INCLUDED_STYLESHEET_TIMESTAMP");
-	$includedStylesheetFiles = $smarty->get_template_vars("INCLUDED_STYLESHEET_FILES");
+	$includedStylesheetTimestamp = $smarty->_smarty_vars["INCLUDED_STYLESHEET_TIMESTAMP"];
+	$includedStylesheetFiles = $smarty->_smarty_vars["INCLUDED_STYLESHEET_FILES"];
 
 	if(isset($params['glue']) && ($params['glue'] == true) && !$smarty->getApplication()->isDevMode())
 	{

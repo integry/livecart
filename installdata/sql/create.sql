@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2008-03-16 22:17                                #
-# Model version:         Version 2008-03-16                              #
+# Created on:            2008-03-16 22:42                                #
+# Model version:         Version 2008-03-16 1                            #
 # ---------------------------------------------------------------------- #
 
 
@@ -51,7 +51,8 @@ CREATE TABLE Product (
     salesRank INTEGER COMMENT 'Number of products sold',
     position INTEGER UNSIGNED DEFAULT 0,
     CONSTRAINT PK_Product PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE INDEX IDX_Product_Category ON Product (categoryID);
 
@@ -85,7 +86,8 @@ CREATE TABLE Category (
     lft INTEGER COMMENT 'Determines category order in tree',
     rgt INTEGER COMMENT 'Determines category order in tree',
     CONSTRAINT PK_Category PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE INDEX IDX_Category_1 ON Category (defaultImageID);
 
@@ -99,7 +101,8 @@ CREATE TABLE Language (
     isDefault BOOL DEFAULT 0,
     position INTEGER UNSIGNED DEFAULT 0,
     CONSTRAINT PK_Language PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "SpecificationItem"                                          #
@@ -110,7 +113,8 @@ CREATE TABLE SpecificationItem (
     productID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the product the value is linked to',
     specFieldID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the attribute (SpecField)',
     CONSTRAINT PK_SpecificationItem PRIMARY KEY (specFieldValueID, productID, specFieldID)
-) COMMENT = 'Product specification: maps input field value list to a particular product';
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT = 'Product specification: maps input field value list to a particular product';
 
 CREATE INDEX IDX_Specification_1 ON SpecificationItem (specFieldValueID);
 
@@ -137,7 +141,8 @@ CREATE TABLE SpecField (
     valuePrefix MEDIUMTEXT COMMENT 'Fixed prefix for all numeric values',
     valueSuffix MEDIUMTEXT COMMENT 'Fixed suffix for all numeric values (for example, sec, kg, px, etc.)',
     CONSTRAINT PK_SpecField PRIMARY KEY (ID)
-) COMMENT = 'Field data type. Available types: 1. text field 2. drop down list (select one item from a list) 3. select multiple items from a list';
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT = 'Field data type. Available types: 1. text field 2. drop down list (select one item from a list) 3. select multiple items from a list';
 
 CREATE INDEX IDX_SpecField_1 ON SpecField (categoryID);
 
@@ -151,7 +156,8 @@ CREATE TABLE SpecFieldValue (
     value MEDIUMTEXT COMMENT 'The actual attribute value (translatable)',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other values that are assigned to the same attribute',
     CONSTRAINT PK_SpecFieldValue PRIMARY KEY (ID)
-) COMMENT = 'Is there a need to translate this field to diferent languages?';
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT = 'Is there a need to translate this field to diferent languages?';
 
 CREATE INDEX IDX_SpecFieldValue_1 ON SpecFieldValue (specFieldID);
 
@@ -175,7 +181,8 @@ CREATE TABLE CustomerOrder (
     status TINYINT COMMENT '1 - backordered 2 - awaiting shipment 3 - shipped 4 - returned',
     shipping TEXT COMMENT 'serialized PHP shipping rate data',
     CONSTRAINT PK_CustomerOrder PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE INDEX IDX_CustomerOrder_1 ON CustomerOrder (status);
 
@@ -197,7 +204,8 @@ CREATE TABLE OrderedItem (
     price FLOAT COMMENT 'Product item price at the time the product was added to shopping cart',
     isSavedForLater BOOL COMMENT 'Determines if the product has been added to shopping cart or to a wish list',
     CONSTRAINT PK_OrderedItem PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE INDEX IDX_OrderedItem_1 ON OrderedItem (productID);
 
@@ -223,7 +231,8 @@ CREATE TABLE User (
     isEnabled BOOL NOT NULL COMMENT 'Determines if the user account is enabled',
     isAdmin BOOL NOT NULL,
     CONSTRAINT PK_User PRIMARY KEY (ID)
-) COMMENT = 'Store system base user (including frontend and backend)';
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT = 'Store system base user (including frontend and backend)';
 
 CREATE UNIQUE INDEX IDX_email ON User (email);
 
@@ -236,7 +245,8 @@ CREATE TABLE AccessControlAssociation (
     roleID INTEGER UNSIGNED NOT NULL COMMENT 'Referenced Role ID',
     userGroupID INTEGER UNSIGNED NOT NULL COMMENT 'Referenced UserGroup ID',
     CONSTRAINT PK_AccessControlAssociation PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "UserGroup"                                                  #
@@ -247,7 +257,8 @@ CREATE TABLE UserGroup (
     name VARCHAR(60) NOT NULL COMMENT 'User group name',
     description TEXT COMMENT 'User group description',
     CONSTRAINT PK_UserGroup PRIMARY KEY (ID)
-) COMMENT = 'A list of role based groups in a store system';
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT = 'A list of role based groups in a store system';
 
 # ---------------------------------------------------------------------- #
 # Add table "Filter"                                                     #
@@ -263,7 +274,8 @@ CREATE TABLE Filter (
     rangeDateStart DATE COMMENT 'Range interval starting value for date values. Use NULL if there''s no starting value (negative infinity).',
     rangeDateEnd DATE COMMENT 'Range interval ending value for date values. Use NULL if there''s no ending value (infinity).',
     CONSTRAINT PK_Filter PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "FilterGroup"                                                #
@@ -276,7 +288,8 @@ CREATE TABLE FilterGroup (
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other FilterGroups',
     isEnabled BOOL COMMENT 'Determine if the FilterGroup is active',
     CONSTRAINT PK_FilterGroup PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "Role"                                                       #
@@ -286,7 +299,8 @@ CREATE TABLE Role (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     name VARCHAR(150) NOT NULL COMMENT 'Role package name (for example, backend.category.add)',
     CONSTRAINT PK_Role PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "ProductRelationship"                                        #
@@ -298,7 +312,8 @@ CREATE TABLE ProductRelationship (
     productRelationshipGroupID INTEGER UNSIGNED COMMENT 'ID of the related Product',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'ID of the ProductRelationshipGroup - if the related product is assigned to one (grouped together with similar products)',
     CONSTRAINT PK_ProductRelationship PRIMARY KEY (ProductID, relatedProductID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "ProductPrice"                                               #
@@ -309,7 +324,8 @@ CREATE TABLE ProductPrice (
     currencyID CHAR(3) NOT NULL COMMENT 'Price Currency ID',
     price NUMERIC(12,2) NOT NULL COMMENT 'The actual price value',
     CONSTRAINT PK_ProductPrice PRIMARY KEY (productID, currencyID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "Currency"                                                   #
@@ -325,7 +341,8 @@ CREATE TABLE Currency (
     pricePrefix TEXT COMMENT 'Used for price formatting. Symbols to place before price price, for example $, etc.',
     priceSuffix TEXT COMMENT 'Used for price formatting. Symbols to place after the price - usually the currency code itself',
     CONSTRAINT PK_Currency PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "Manufacturer"                                               #
@@ -335,7 +352,8 @@ CREATE TABLE Manufacturer (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     name VARCHAR(60) NOT NULL COMMENT 'Name (brand name) of the manufacturer',
     CONSTRAINT PK_Manufacturer PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "ProductImage"                                               #
@@ -347,7 +365,8 @@ CREATE TABLE ProductImage (
     title MEDIUMTEXT COMMENT 'Image name (translatable)',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other images that are assigned to the same product (the first image is the default one)',
     CONSTRAINT PK_ProductImage PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "ProductFile"                                                #
@@ -364,7 +383,8 @@ CREATE TABLE ProductFile (
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other ProductFiles that are assigned to the same product',
     allowDownloadDays INTEGER COMMENT 'Allow customer to download the product only for a certain number of days after placing the order',
     CONSTRAINT PK_ProductFile PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "Discount"                                                   #
@@ -377,7 +397,8 @@ CREATE TABLE Discount (
     discountType TINYINT COMMENT '1- % 2- currency',
     discountValue NUMERIC,
     CONSTRAINT PK_Discount PRIMARY KEY (ID)
-) COMMENT = '1- % 2- currency';
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT = '1- % 2- currency';
 
 # ---------------------------------------------------------------------- #
 # Add table "CategoryImage"                                              #
@@ -389,7 +410,8 @@ CREATE TABLE CategoryImage (
     title MEDIUMTEXT COMMENT 'Image name (translatable)',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other images that are assigned to the same category (the first image is the default one)',
     CONSTRAINT PK_CategoryImage PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE INDEX IDX_CategoryImage_1 ON CategoryImage (categoryID);
 
@@ -402,7 +424,8 @@ CREATE TABLE SpecificationNumericValue (
     specFieldID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the attribute (SpecField)',
     value FLOAT COMMENT 'The actual attribute value (numeric) assigned to a particular product',
     CONSTRAINT PK_SpecificationNumericValue PRIMARY KEY (productID, specFieldID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE INDEX IDX_SpecificationNumericValue_1 ON SpecificationNumericValue (value ASC,specFieldID ASC);
 
@@ -417,7 +440,8 @@ CREATE TABLE SpecificationStringValue (
     specFieldID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the attribute (SpecField)',
     value MEDIUMTEXT COMMENT 'The actual attribute value (string) assigned to a particular product',
     CONSTRAINT PK_SpecificationStringValue PRIMARY KEY (productID, specFieldID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE INDEX IDX_SpecificationStringValue_1 ON SpecificationStringValue (specFieldID,productID);
 
@@ -430,7 +454,8 @@ CREATE TABLE SpecificationDateValue (
     specFieldID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the attribute (SpecField)',
     value DATE COMMENT 'The actual attribute value (date) assigned to a particular product',
     CONSTRAINT PK_SpecificationDateValue PRIMARY KEY (productID, specFieldID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE INDEX IDX_SpecificationDateValue_1 ON SpecificationDateValue (value,specFieldID);
 
@@ -447,7 +472,8 @@ CREATE TABLE State (
     name VARCHAR(100) COMMENT 'State name',
     subdivisionType VARCHAR(60) COMMENT 'For US states, the value for this field would be "State", for Canadian provinces, it would be "Province"',
     CONSTRAINT PK_State PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE INDEX IDX_State_1 ON State (countryID);
 
@@ -464,7 +490,8 @@ CREATE TABLE PostalCode (
     latitude NUMERIC(2),
     longitude NUMERIC(2),
     CONSTRAINT PK_PostalCode PRIMARY KEY (countryCode, code)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "SpecFieldGroup"                                             #
@@ -476,7 +503,8 @@ CREATE TABLE SpecFieldGroup (
     name MEDIUMTEXT COMMENT 'Group name (translatable)',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other groups',
     CONSTRAINT PK_SpecFieldGroup PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "ProductRelationshipGroup"                                   #
@@ -488,7 +516,8 @@ CREATE TABLE ProductRelationshipGroup (
     position INTEGER UNSIGNED DEFAULT 0,
     name MEDIUMTEXT,
     CONSTRAINT PK_ProductRelationshipGroup PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "HelpComment"                                                #
@@ -501,7 +530,8 @@ CREATE TABLE HelpComment (
     text TEXT,
     timeAdded DATETIME,
     CONSTRAINT PK_HelpComment PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "ProductReview"                                              #
@@ -515,7 +545,8 @@ CREATE TABLE ProductReview (
     text TEXT,
     dateCreated TIMESTAMP,
     CONSTRAINT PK_ProductReview PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "UserAddress"                                                #
@@ -535,7 +566,8 @@ CREATE TABLE UserAddress (
     countryID CHAR(2) COMMENT '2-letter country code',
     phone VARCHAR(100) COMMENT 'Phone number',
     CONSTRAINT PK_UserAddress PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "BillingAddress"                                             #
@@ -546,7 +578,8 @@ CREATE TABLE BillingAddress (
     userID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the User that is associated to the address',
     userAddressID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the UserAddress entity',
     CONSTRAINT PK_BillingAddress PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE INDEX IDX_BillingAddress_1 ON BillingAddress (userID);
 
@@ -579,7 +612,8 @@ CREATE TABLE Transaction (
     ccName VARCHAR(100),
     comment TEXT,
     CONSTRAINT PK_Transaction PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "Shipment"                                                   #
@@ -598,7 +632,8 @@ CREATE TABLE Shipment (
     trackingCode VARCHAR(100) COMMENT 'Online tracking code for this shipment',
     shippingServiceData TEXT COMMENT 'Serialized ShipmentDeliveryRate class data - for real-time shipping rates only',
     CONSTRAINT PK_Shipment PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "ShippingAddress"                                            #
@@ -609,7 +644,8 @@ CREATE TABLE ShippingAddress (
     userID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the User that is associated to the address',
     userAddressID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the UserAddress entity',
     CONSTRAINT PK_ShippingAddress PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "OrderNote"                                                  #
@@ -624,7 +660,8 @@ CREATE TABLE OrderNote (
     time TIMESTAMP NOT NULL,
     text TEXT,
     CONSTRAINT PK_OrderNote PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "DeliveryZone"                                               #
@@ -638,7 +675,8 @@ CREATE TABLE DeliveryZone (
     position INTEGER UNSIGNED DEFAULT 0,
     name VARCHAR(100) COMMENT 'Delivery zone name',
     CONSTRAINT PK_DeliveryZone PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "DeliveryZoneCountry"                                        #
@@ -649,7 +687,8 @@ CREATE TABLE DeliveryZoneCountry (
     deliveryZoneID INTEGER UNSIGNED COMMENT 'ID of the referenced DeliveryZone',
     countryCode CHAR(2) NOT NULL COMMENT '2-letter country code',
     CONSTRAINT PK_DeliveryZoneCountry PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "DeliveryZoneState"                                          #
@@ -660,7 +699,8 @@ CREATE TABLE DeliveryZoneState (
     deliveryZoneID INTEGER UNSIGNED COMMENT 'ID of the referenced DeliveryZone',
     stateID INTEGER UNSIGNED COMMENT 'ID of the referenced State',
     CONSTRAINT PK_DeliveryZoneState PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "DeliveryZoneCityMask"                                       #
@@ -671,7 +711,8 @@ CREATE TABLE DeliveryZoneCityMask (
     deliveryZoneID INTEGER UNSIGNED COMMENT 'ID of the referenced DeliveryZone',
     mask VARCHAR(60) COMMENT 'City name mask. For example, "New Y*k" or "New Y" would match "New York".',
     CONSTRAINT PK_DeliveryZoneCityMask PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "DeliveryZoneZipMask"                                        #
@@ -682,7 +723,8 @@ CREATE TABLE DeliveryZoneZipMask (
     deliveryZoneID INTEGER UNSIGNED COMMENT 'ID of the referenced DeliveryZone',
     mask VARCHAR(60) COMMENT 'ZIP/postal code mask. For example, "90*" would match "90210".',
     CONSTRAINT PK_DeliveryZoneZipMask PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "DeliveryZoneAddressMask"                                    #
@@ -693,7 +735,8 @@ CREATE TABLE DeliveryZoneAddressMask (
     deliveryZoneID INTEGER UNSIGNED COMMENT 'ID of the referenced DeliveryZone',
     mask VARCHAR(60) COMMENT 'Address mask. For example, "*th Avenue" corresponds to "5th Avenue", "6th Avenue", etc.',
     CONSTRAINT PK_DeliveryZoneAddressMask PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "Tax"                                                        #
@@ -704,7 +747,8 @@ CREATE TABLE Tax (
     name MEDIUMTEXT COMMENT 'Tax name (translatable). For example, "VAT"',
     position INTEGER UNSIGNED DEFAULT 0,
     CONSTRAINT PK_Tax PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "TaxRate"                                                    #
@@ -717,7 +761,8 @@ CREATE TABLE TaxRate (
     rate FLOAT COMMENT 'Tax rate. For example, 20, to set a 20% rate.',
     CONSTRAINT PK_TaxRate PRIMARY KEY (ID),
     CONSTRAINT TUC_TaxRate_DeliveryZone_Tax UNIQUE (deliveryZoneID, taxID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "ShippingRate"                                               #
@@ -735,7 +780,8 @@ CREATE TABLE ShippingRate (
     subtotalPercentCharge FLOAT COMMENT 'Fee calculation as a percentage of a subtotal',
     perKgCharge FLOAT COMMENT 'Charge per each kg of weight',
     CONSTRAINT PK_ShippingRate PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "ProductFileGroup"                                           #
@@ -747,7 +793,8 @@ CREATE TABLE ProductFileGroup (
     name MEDIUMTEXT COMMENT 'File group name (translatable)',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other ProductFileGroups that are assigned to the same product',
     CONSTRAINT PK_ProductFileGroup PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "ShippingService"                                            #
@@ -760,7 +807,8 @@ CREATE TABLE ShippingService (
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other ShippingServices',
     rangeType TINYINT COMMENT '0 - weight based range 1 - subtotal based range',
     CONSTRAINT PK_ShippingService PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "StaticPage"                                                 #
@@ -774,7 +822,8 @@ CREATE TABLE StaticPage (
     isInformationBox BOOL NOT NULL COMMENT 'Determines if a link to the page is being displayed in the "Information Box" menu',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other StaticPages',
     CONSTRAINT PK_StaticPage PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "ShipmentTax"                                                #
@@ -786,7 +835,8 @@ CREATE TABLE ShipmentTax (
     shipmentID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the shipment the tax is being applied to',
     amount FLOAT COMMENT 'Tax amount',
     CONSTRAINT PK_ShipmentTax PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "OrderLog"                                                   #
@@ -804,7 +854,8 @@ CREATE TABLE OrderLog (
     oldValue TEXT,
     newValue TEXT,
     CONSTRAINT PK_OrderLog PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "NewsPost"                                                   #
@@ -819,7 +870,8 @@ CREATE TABLE NewsPost (
     text MEDIUMTEXT,
     moreText MEDIUMTEXT,
     CONSTRAINT PK_NewsPost PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "DeliveryZoneRealTimeService"                                #
@@ -830,7 +882,8 @@ CREATE TABLE DeliveryZoneRealTimeService (
     deliveryZoneID INTEGER UNSIGNED,
     serviceClassName VARCHAR(100),
     CONSTRAINT PK_DeliveryZoneRealTimeService PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "ExpressCheckout"                                            #
@@ -843,7 +896,8 @@ CREATE TABLE ExpressCheckout (
     method VARCHAR(40),
     paymentData TEXT,
     CONSTRAINT PK_ExpressCheckout PRIMARY KEY (ID)
-);
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add table "ProductOption"                                              #

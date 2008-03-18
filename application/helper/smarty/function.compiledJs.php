@@ -11,8 +11,8 @@
  */
 function smarty_function_compiledJs($params, LiveCartSmarty $smarty)
 {
-	$includedJavascriptTimestamp = $smarty->get_template_vars("INCLUDED_JAVASCRIPT_TIMESTAMP");
-	$includedJavascriptFiles = $smarty->get_template_vars("INCLUDED_JAVASCRIPT_FILES");
+	$includedJavascriptTimestamp = $smarty->_smarty_vars["INCLUDED_JAVASCRIPT_TIMESTAMP"];
+	$includedJavascriptFiles = $smarty->_smarty_vars["INCLUDED_JAVASCRIPT_FILES"];
 
 	if($includedJavascriptFiles && isset($params['glue']) && $params['glue'] == 'true' && !$smarty->getApplication()->isDevMode())
 	{

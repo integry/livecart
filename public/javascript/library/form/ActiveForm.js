@@ -410,10 +410,12 @@ Element.isTinyMce = function(element)
  */
 Element.saveTinyMceFields = function(element)
 {
-	if (tinyMCE)
+	if (!window.tinyMCE)
 	{
-		tinyMCE.triggerSave();
+		return false;
 	}
+
+	tinyMCE.triggerSave();
 
 	document.getElementsByClassName("mceEditorIframe", element).each(function(mceControl)
 	{

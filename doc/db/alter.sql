@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2008-03-15 02:13                                #
-# Model version:         Version 2008-03-15                              #
+# Created on:            2008-03-18 22:55                                #
+# Model version:         Version 2008-03-18 1                            #
 # From model version:    1.1.1                                           #
 # ---------------------------------------------------------------------- #
 
@@ -190,6 +190,24 @@ ALTER TABLE ProductPriceRule DROP FOREIGN KEY Product_ProductPriceRule;
 ALTER TABLE ProductPriceRule DROP FOREIGN KEY UserGroup_ProductPriceRule;
 
 ALTER TABLE ProductPresentation DROP FOREIGN KEY Product_ProductPresentation;
+
+# ---------------------------------------------------------------------- #
+# Add table "SearchLog"                                                  #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE SearchLog (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    keywords VARCHAR(100),
+    ip INTEGER,
+    time DATETIME,
+    CONSTRAINT PK_SearchLog PRIMARY KEY (ID),
+    CONSTRAINT TUC_SearchLog_1 UNIQUE (keywords, ip)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+CREATE INDEX IDX_SearchLog_1 ON SearchLog (keywords);
+
+CREATE INDEX IDX_SearchLog_2 ON SearchLog (time);
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #

@@ -26,8 +26,8 @@ function smarty_function_includeCss($params, LiveCartSmarty $smarty)
 	}
 	else
 	{
-		$includedStylesheetTimestamp = $smarty->get_template_vars("INCLUDED_STYLESHEET_TIMESTAMP");
-		if(!($includedStylesheetFiles = $smarty->get_template_vars("INCLUDED_STYLESHEET_FILES")))
+		$includedStylesheetTimestamp = $smarty->_smarty_vars['INCLUDED_STYLESHEET_TIMESTAMP'];
+		if(!($includedStylesheetFiles = $smarty->_smarty_vars['INCLUDED_STYLESHEET_FILES']))
 		{
 		   $includedStylesheetFiles = array();
 		}
@@ -40,7 +40,7 @@ function smarty_function_includeCss($params, LiveCartSmarty $smarty)
 		$fileMTime = filemtime($filePath);
 		if($fileMTime > (int)$includedStylesheetTimestamp)
 		{
-			$smarty->assign("INCLUDED_STYLESHEET_TIMESTAMP", $fileMTime);
+			$smarty->_smarty_vars['INCLUDED_STYLESHEET_TIMESTAMP'] = $fileMTime;
 		}
 
 		if(isset($params['front']))
@@ -52,7 +52,7 @@ function smarty_function_includeCss($params, LiveCartSmarty $smarty)
 			array_push($includedStylesheetFiles, $filePath);
 		}
 
-		$smarty->assign("INCLUDED_STYLESHEET_FILES", $includedStylesheetFiles);
+		$smarty->_smarty_vars['INCLUDED_STYLESHEET_FILES'] = $includedStylesheetFiles;
 	}
 }
 ?>
