@@ -39,6 +39,8 @@ abstract class BackendController extends BaseController
 	{
 	  	$this->setLayout('empty');
 		$this->addBlock('USER_MENU', 'boxUserMenu', 'block/backend/userMenu');
+
+		return parent::init();
 	}
 
 	public function boxUserMenuBlock()
