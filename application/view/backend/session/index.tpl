@@ -18,27 +18,27 @@
 	<p>
 		<label for="password">{t _password}:</label>
 		<fieldset class="container">
-			<input type="password" class="text" id="password" name="password" />
+			<input type="password" class="text" id="password" name="password" value="{$password|escape}" />
 			<a href="{link controller=user action="remindPassword" query="return=$return"}" class="forgottenPassword">
 				{t _remind_password}
-			</a>			
+			</a>
 		</fieldset>
-	</p>	
+	</p>
 
    	<p>
 		<label></label>
 		<input type="submit" class="submit" value="{tn _login}" />
 	</p>
-	
-	<input type="hidden" name="return" value="{$return}" />	
-	
+
+	<input type="hidden" name="return" value="{$return}" />
+
 </form>
 
 </div>
 
 {literal}
 	<script type="text/javascript">
-		Event.observe(window, 'load', function() {$('email').focus()});	
+		Event.observe(window, 'load', function() {$('email').focus()});
 	</script>
 {/literal}
 
