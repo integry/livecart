@@ -50,6 +50,8 @@ class LiveCartSmarty extends Smarty
 		$path = substr($path, 0, -4);
 		$path = str_replace('\\', '/', $path);
 
+		$path = $this->translatePath($path);
+
 		foreach ($this->getPlugins($path) as $plugin)
 		{
 			$output = $plugin->process($output);
@@ -92,6 +94,14 @@ class LiveCartSmarty extends Smarty
         return $this->_get_auto_filename($this->compile_dir, $resource_name,
                                          $this->_compile_id) . '.php';
     }
+
+	private function translatePath($path)
+	{
+		if (substr($path, 0, 1) == '@')
+		{
+			return substr($path, 1);
+		}
+	}
 
 	private function getPlugins($path)
 	{
