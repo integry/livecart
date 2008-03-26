@@ -99,8 +99,10 @@ class LiveCartSmarty extends Smarty
 	{
 		if (substr($path, 0, 1) == '@')
 		{
-			return substr($path, 1);
+			$path = substr($path, 1);
 		}
+
+		return $path;
 	}
 
 	private function getPlugins($path)
