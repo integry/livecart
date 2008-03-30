@@ -1,0 +1,6 @@
+_admin=Amministratore
+_customer=Cliente
+_no_messages=Nessun messaggio inerente a questo ordine è stato aggiunto dal cliente o dall'amministratore. Puoi aggiungere una risposta se necessario. Il messaggio sarà inviato automaticamente a mezzo e-mail al cliente.
+_err_enter_text=Inserisci il testo della risposta
+_cancel_response=Cancella la risposta
+_add_response=Aggiungi una risposta

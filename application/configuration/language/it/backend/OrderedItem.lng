@@ -1,0 +1,13 @@
+_select_product=Aggiungi prodotti all'ordine
+_done_adding_products=Ho finito di aggiungere prodotti
+_shipment=Spedizione
+_shipping_service_is_not_selected=Metodo di spedizione non selezionato
+_select_shippment=Scegli una spedizione:
+_downloadable_item_already_exists_in_this_order=Questo articolo scaricabile è già presente in questo ordine
+_error_removing_item_from_shipment=Errore durante la rimozione dell'articolo dalla spedizione
+_item_was_successfully_removed_from_shipment=Articolo correttamente rimosso dalla spedizione
+_item_has_been_successfuly_saved=Articolo correttamente aggiunto all'ordine
+_error_updating_item_quantity=Errore durante l'aggiornamento della quantità
+_ordered_item_quantity_was_updated=quantità dell'articolo aggiornata
+_this_shipping_service_has_no_available_rates=Questo servizio non è disponibile
+_ordered_item_was_successfully_moved=Prodotto correttamente spostato in un'altra spedizione

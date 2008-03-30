@@ -1,0 +1,16 @@
+_remove_filter_question=Sei sicuro di voler cancellare questo filtro?
+_FilterGroup_remove_question=Sei sicuro di voler cancellare questo gruppo di filtri?
+_category_has_no_attr=Per questa categoria non sono stati ancora creati attributi filtrabili
+_filter_group_was_successfully_saved=Filtro salvato correttamente
+_could_not_save_filter_group=Non posso salvare il filtro
+_filter_group_was_successfully_removed=Filtro rimosso con successo
+_could_not_remove_filter_group=Non posso rimuovere il filtro
+_add_new_filter=Aggiungi un nuovo filtro
+_delete_field=Cancella campo
+_cancel_adding_new_filter=Annulla aggiuna di un nuovo filtro
+_error_name_empty=Inserisci il nome del filtro
+_error_filter_value_is_not_a_number=Il valore del filtro deve essere un numero
+_error_spec_field_is_not_selected=Campo di specifica non selezionato
+_error_illegal_date=Data non valida
+_error_filter_name_empty=Inserisci il nome del filtro
+_error_filter_handle_invalid=Gestore (handle) non valido

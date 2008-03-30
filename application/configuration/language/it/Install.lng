@@ -1,0 +1,10 @@
+checkWritePermissions=Cartella con permessi
+_writePermissionsFix=<strong>Azione suggerita:</strong> utilizzando un client FTP, modifica (con chmod) i permessi di accesso di queste cartelle a 777 (accesso totale in scrittura). Se la cartella non dovesse esistere, sei pregato di crearla.
+checkPHPVersion=Versione PHP
+checkPHPVersion_error=<a href="http://php.net" target="_blank">PHP</a> deve essere almeno la versione 5.2
+checkMySQL=Supporto Database
+checkMySQL_error=<a href="http://php.net/mysqli" target="_blank">mysqli</a> o la <a href="http://php.net/mysqli" target="_blank">estensione mysql</a> devono essere installati nel PHP
+checkGD=Supporto Immagini
+checkGD_error=<a href="http://php.net/gd" target="_blank">GD</a>. Questa estensione deve essere installata in PHP
+checkSession=Configurazione sessione PHP
+checkSession_error=Le sessioni PHP non vengono salvate. Per favore, verifica che il valore di configurazione PHP session.save_path sia stato settato correttamente.

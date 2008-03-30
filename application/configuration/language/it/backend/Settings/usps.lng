@@ -1,0 +1,17 @@
+UspsShipping=USPS
+_USPS_API_ACCESS=USPS Accesso API
+UspsShipping_userId=USPS API utente
+UspsShipping_apiUrl=USPS API URL
+_USPS_DOMESTIC_OPTS=Opzioni Spedizioni Nazionali
+UspsShipping_domestic=Abilita servizi postali
+UspsShipping_size=Dimensione collo
+_USPS_ITL_OPTS=Opzioni Spedizioni Internazionali
+UspsShipping_international=Abilita servizi postali internazionali
+Express=Espresso
+Priority=Prioritario
+Parcel=Servizio pacchi postali 
+Library=Plico
+BPM=Stampati
+Media=Media
+UspsShipping_priorityPackageType=Posta Prioritaria USPS
+UspsShipping_isMachinable=USPS Il collo è lavorabile

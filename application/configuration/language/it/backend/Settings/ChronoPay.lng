@@ -1,0 +1,5 @@
+ChronoPay_productid=ID prodotto ChronoPay
+ChronoPay_productname=Descrizione articolo da mostrare in ChronoPay
+ChronoPay_currency=Valuta ChronoPay
+ChronoPayGateway_productid=ID Prodotto ChronoPay
+ChronoPayGateway_secret=Chiave segreta condivisa

@@ -1,0 +1,14 @@
+_here=qui
+_more_taxes_can_be_added=possono essere aggiunte più tasse
+_error_tax_should_not_be_empty=Inserisci il valore della tassa
+_error_rate_should_be_greater_than_zero_and_less_than_hundred=Il valore deve essere compreso tra 0 e 100
+_error_rate_should_be_numeric_value=Il valore della tassa deve essere numerico
+_error_rate_should_not_be_empty=Inserisci il valore della tassa
+_cancel_adding_new_tax_rate=Annulla inserimento nuova tassa
+_add_new_tax_rate=Aggiungi nuovo valore della tassa
+_tax=Tassa
+_rate=Valore Tassa
+_could_not_save_tax_rate=Non posso salvare il valore della tassa
+_tax_rate_has_been_successfully_saved=Il valore della tassa è stato salvato correttamente
+_add_tax=Aggiungi nuova tassa
+_no_taxes=Non sono state ancora create tasse.

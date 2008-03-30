@@ -1,0 +1,17 @@
+FEATURED=Prodotti in Evidenza
+SALES_RANK=I più Venduti
+PRODUCT_NAME_ASC=Nome Prodotto: A-Z
+PRODUCT_NAME_DESC=Nome Prodotto: Z-A
+PRICE_ASC=Prezzo: ascendente
+PRICE_DESC=Prezzo: discendente
+NEWEST_ARRIVALS=Ultimi Arrivi
+RATING=Voto
+_found_cats=Trova categorie
+_featured_products=Prodotti in Evidenza
+_sort_by=Ordina per
+_more_subcats=altro...
+_view_as_list=Mostra come lista
+_view_as_grid=Mostra come griglia
+_showing_products=Mostro i prodotti trovati da [_1] a [_2] su [_3]
+_not_found=<span class='notFoundMain'>Nessun prodotto trovato!</span> Prova ad utilizzare una parola differente per la tua ricerca.
+_narrow_by_cat=Filtra i risultati per categoria

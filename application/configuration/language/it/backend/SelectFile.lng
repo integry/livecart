@@ -1,0 +1,10 @@
+_select_file=Seleziona un File
+fileType=Estensione
+fileName=Nome File
+fileSize=Dimensione File
+fileDate=Data di Modifica
+filePermissions=Permessi
+fileOwner=Proprietario
+fileGroup=Gruppo
+_no_files_found=Nessun file trovato
+_listing_files=Mostro i file $from - $to di $count

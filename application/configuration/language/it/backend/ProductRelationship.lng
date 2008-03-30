@@ -1,0 +1,16 @@
+_done_adding=Aggiunta dei prodotti collegati completata
+_select_product=Aggiungi prodotto collegato
+_add_new_group=Aggiungi nuovo gruppo
+_add_group_title=Aggiungi un nuovo Gruppo di Prodotti Collegati
+_product_relationship_group_title=Nome
+_cancel_adding_new_group=Annulla aggiungi nuovo gruppo
+_err_multiple=Questo prodotto è già stato aggiunto come collegato
+_msg_added=Prodotto collegato aggiunto correttamente
+_cancel_adding_new_related_product=Annulla aggiungi nuova relazione
+_are_you_sure_you_want_to_delete_this_group=Sei sicuro di voler cancellare questo gruppo di prodotti collegati?
+_are_you_sure_you_want_to_delete_this_relation=Sei sicuro di voler cancellare questa relazione?
+_relationship_was_successfully_removed=La relazione è stata rimossa correttamente
+_err_relationship_name_is_empty=Inserisci il nome del gruppo
+_err_circular=Non puoi aggiungere questo prodotto a sè stesso
+_could_not_create_product_relationship=Questo prodotto è già stato assegnato come collegato
+_a_relationship_between_products_was_successfully_created=La relazione tra i prodotti è stata creata correttamente

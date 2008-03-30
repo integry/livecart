@@ -1,0 +1,10 @@
+_tax_entry_was_successfully_saved=Nuova tassa correttamente salvata
+_could_not_save_tax_entry=Non posso salvare la nuova tassa
+_add_new_tax=Aggiungi nuova tassa
+_cancel_adding_new_tax=Annulla aggiunta nuova tassa
+_cancel_adding_new_tax_rate=Cancella aggiunta nuovo valore della tassa
+_name=Nome
+_manage=Amministra
+_taxes=Tasse
+_error_the_name_should_not_be_empty=Inserisci il nome
+_are_you_sure_you_want_to_remove_ths_tax=Sei sicuro di voler rimuovere questa tassa? Potrebbe essere utilizzata in altre zone di spedizione.

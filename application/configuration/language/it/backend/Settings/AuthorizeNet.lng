@@ -1,0 +1,4 @@
+AuthorizeNet=Authorize.net
+AuthorizeNet_login=ID Utente
+AuthorizeNet_transactionKey=Transaction key
+AuthorizeNet_gateway=Indirizzo Gateway URL
