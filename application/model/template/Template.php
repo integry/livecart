@@ -25,6 +25,7 @@ class Template
 		$fileName = preg_replace('/^[\\\.\/]+/', '', $fileName);
 
 		$path = self::getRealFilePath($fileName);
+
 		if (file_exists($path))
 		{
 			$this->code = file_get_contents($path);
@@ -33,14 +34,15 @@ class Template
 		$this->file = $fileName;
 	}
 
-	public static function getTree($dir = null)
+	public static function getTree($dir = null, $isCustom = null)
 	{
 	  	if (!$dir)
 	  	{
 			$dir = ClassLoader::getRealPath('application.view.');
+			$customFiles = self::getTree(ClassLoader::getRealPath('storage.customize.view.'), true);
 		}
 
-		$rootLn = strlen(ClassLoader::getRealPath('application.view.'));
+		$rootLn = strlen(ClassLoader::getRealPath($isCustom ? 'storage.customize.view.' : 'application.view.'));
 
 		$res = array();
 		$d = new DirectoryIterator($dir);
@@ -63,8 +65,14 @@ class Template
 				else //if (substr($file->getFileName(), -4) == '.tpl')
 				{
 					$res[$file->getFileName()]['id'] = $id;
+					$res[$file->getFileName()]['isCustom'] = !file_exists(self::getOriginalFilePath($id));
 				}
 			}
+		}
+
+		if (isset($customFiles))
+		{
+			$res = array_merge($res, $customFiles);
 		}
 
 		uasort($res, array('Template', 'sortTree'));
@@ -180,12 +188,18 @@ class Template
 		return unlink($path);
 	}
 
+	public function isCustomFile()
+	{
+		return !file_exists(self::getOriginalFilePath($this->file));
+	}
+
 	public function toArray()
 	{
 		$array = array();
 		$array['code'] = $this->code;
 		$array['file'] = $this->file;
 		$array['isCustomized'] = file_exists(self::getCustomizedFilePath($this->file));
+		$array['isCustomFile'] = $this->isCustomFile();
 		return $array;
 	}
 }

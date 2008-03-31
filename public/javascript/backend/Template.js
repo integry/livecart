@@ -41,8 +41,10 @@ Backend.Template.prototype =
 				}
 			}
 
+		this.treeBrowser.enableDragAndDrop(1);
 		this.insertTreeBranch(categories, 0);
 		this.treeBrowser.closeAllItems();
+		this.treeBrowser.setDragHandler(this.moveTemplate);
 	},
 
 	insertTreeBranch: function(treeBranch, rootId)
@@ -51,8 +53,20 @@ Backend.Template.prototype =
 		{
 		  	if('function' != typeof treeBranch[k])
 		  	{
-				this.treeBrowser.insertNewItem(rootId, treeBranch[k].id, k, null, 0, 0, 0, '');
 
+				if(!treeBranch[k].isCustom && !treeBranch[k].subs)
+				{
+					this.treeBrowser.enableDragAndDrop(0);
+				}
+				else
+				{
+					//this.treeBrowser.enableDragAndDrop(1);
+				}
+
+				this.treeBrowser.insertNewItem(rootId, treeBranch[k].id, k, null, 0, 0, 0, '');
+				this.treeBrowser.setUserData(treeBranch[k].id, treeBranch[k]);
+				//this.treeBrowser.lockItem(treeBranch[k].id);
+//console.log(this.treeBrowser._globalIdStorageFind(treeBranch[k].id));
 				if (treeBranch[k].subs)
 				{
 					this.insertTreeBranch(treeBranch[k].subs, treeBranch[k].id);
@@ -106,6 +120,18 @@ Backend.Template.prototype =
 		{
 			new Backend.EmailTemplateHandler($('templateForm'));
 		}
+	},
+
+	moveTemplate: function(targetId, parentId, siblingNodeId)
+	{
+		if (!parentId)
+		{
+			return false;
+		}
+
+		new LiveCart.AjaxRequest(Backend.Category.getUrlForNodeReorder(targetId, parentId, Backend.Category.treeBrowser._reorderDirection));
+
+		return true;
 	},
 
 	cancel: function()

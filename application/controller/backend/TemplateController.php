@@ -18,7 +18,7 @@ class TemplateController extends StoreManagementController
 	{
 		$files = Template::getTree();
 
-		unset($files['install']);
+		unset($files['install'], $files['email']);
 
 		if (!$this->config->get('SHOW_BACKEND_TEMPLATE_FILES'))
 		{
@@ -31,11 +31,7 @@ class TemplateController extends StoreManagementController
 			unset($files['layout']['subs']['empty.tpl']);
 		}
 
-		unset($files['email']);
-
-		$response = new ActionResponse();
-		$response->set('categories', json_encode($files));
-		return $response;
+		return new ActionResponse('categories', json_encode($files));
 	}
 
 	public function edit()

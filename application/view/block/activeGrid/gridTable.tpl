@@ -137,7 +137,7 @@
 <div class="activeGridColumns" >
 	<ul class="menu">
 		<li class="export">
-			<a href="#" onclick="window.location.href='{link controller=$controller action=export}?' + window.activeGrids['{$prefix}_{$id}'].ricoGrid.getQueryString(); console.log(window.activeGrids['{$prefix}_{$id}'].ricoGrid.getQueryString()); return false;">{t _grid_export}</a>
+			<a href="#" onclick="window.location.href='{link controller=$controller action=export}?' + window.activeGrids['{$prefix}_{$id}'].ricoGrid.getQueryString(); return false;">{t _grid_export}</a>
 		</li>
 		<li class="selectColumns">
 		   <a href="#" onclick="Element.show($('{$prefix}ColumnMenu_{$id}')); return false;">{t _columns}</a>

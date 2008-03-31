@@ -68,7 +68,7 @@
 <script type="text/javascript">
 	var inst = window.selectFileInstance;
 	inst.grid = window.activeGrids['files_0'];
-	console.log(inst.grid);
+
 	inst.grid.ricoGrid.metaData.options.largeBufferSize = 100;
 
 	inst.links = {};
