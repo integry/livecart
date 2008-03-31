@@ -152,9 +152,9 @@ class LanguageController extends StoreManagementController
 
 			$enDefs[$relPath] = $keys;
 
-			foreach ($enDefs[$relPath] as &$value)
+			foreach ($enDefs[$relPath] as $key => $value)
 			{
-				$value = htmlspecialchars($value);
+				$enDefs[$relPath][$key] = htmlspecialchars($value);
 			}
 
 		  	foreach ($keys as $key => $value)

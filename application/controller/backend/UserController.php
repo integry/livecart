@@ -251,7 +251,7 @@ class UserController extends StoreManagementController
 
 			$this->saveAddresses($user);
 
-			return new JSONResponse(array('user' => $user->toArray()), 'success', $this->translate('_user_details_were_successfully_saved'));
+			return new JSONResponse(array('user' => $user->toFlatArray()), 'success', $this->translate('_user_details_were_successfully_saved'));
 		}
 		else
 		{
