@@ -176,6 +176,8 @@ class LiveCart extends Application
 	 */
 	public function getView($controllerName, $actionName)
 	{
+		$controllerName = str_replace('.', DIRECTORY_SEPARATOR, $controllerName);
+
 		if ($path = $this->getRenderer()->getTemplatePath($controllerName . '/' . $actionName . '.tpl'))
 		{
 			return $path;

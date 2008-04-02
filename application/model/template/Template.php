@@ -39,7 +39,14 @@ class Template
 	  	if (!$dir)
 	  	{
 			$dir = ClassLoader::getRealPath('application.view.');
+
+			// get user created template files
 			$customFiles = self::getTree(ClassLoader::getRealPath('storage.customize.view.'), true);
+		}
+
+		if (!file_exists($dir))
+		{
+			return array();
 		}
 
 		$rootLn = strlen(ClassLoader::getRealPath($isCustom ? 'storage.customize.view.' : 'application.view.'));
@@ -72,7 +79,7 @@ class Template
 
 		if (isset($customFiles))
 		{
-			$res = array_merge($res, $customFiles);
+			$res = self::array_merge_rec($res, $customFiles);
 		}
 
 		uasort($res, array('Template', 'sortTree'));
@@ -202,6 +209,46 @@ class Template
 		$array['isCustomFile'] = $this->isCustomFile();
 		return $array;
 	}
+
+	private function array_merge_rec($array1, $array2)
+	{
+		$arrays = func_get_args();
+		$narrays = count($arrays);
+
+		// check arguments
+		// comment out if more performance is necessary (in this case the foreach loop will trigger a warning if the argument is not an array)
+		for ($i = 0; $i < $narrays; $i ++) {
+			if (!is_array($arrays[$i])) {
+				// also array_merge_recursive returns nothing in this case
+				trigger_error('Argument #' . ($i+1) . ' is not an array - trying to merge array with scalar! Returning null!', E_USER_WARNING);
+				return;
+			}
+		}
+
+		// the first array is in the output set in every case
+		$ret = $arrays[0];
+
+		// merege $ret with the remaining arrays
+		for ($i = 1; $i < $narrays; $i ++) {
+			foreach ($arrays[$i] as $key => $value) {
+				if (((string) $key) === ((string) intval($key))) { // integer or string as integer key - append
+					$ret[] = $value;
+				}
+				else { // string key - megre
+					if (is_array($value) && isset($ret[$key])) {
+						// if $ret[$key] is not an array you try to merge an scalar value with an array - the result is not defined (incompatible arrays)
+						// in this case the call will trigger an E_USER_WARNING and the $ret[$key] will be null.
+						$ret[$key] = self::array_merge_rec($ret[$key], $value);
+					}
+					else {
+						$ret[$key] = $value;
+					}
+				}
+			}
+		}
+
+		return $ret;
+}
 }
 
 ?>

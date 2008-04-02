@@ -112,7 +112,7 @@ class CategoryController extends FrontendController
 			}
 		}
 
-		if ($this->category->isRoot() || $this->filters)
+		if ($this->category->isRoot() || $this->filters || $this->request->get('includeSub'))
 		{
 			$productFilter->includeSubcategories();
 		}

@@ -319,7 +319,7 @@ Backend.LangEdit.prototype =
 
 	initTreeBrowser: function()
 	{
-		this.treeBrowser = new dhtmlXTreeObject("langBrowser","","", false);
+		this.treeBrowser = new dhtmlXTreeObject("langBrowser","","", 0);
 		Backend.Breadcrumb.setTree(this.treeBrowser);
 
 		this.treeBrowser.def_img_x = 'auto';

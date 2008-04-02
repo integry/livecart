@@ -12,7 +12,7 @@ Backend.Settings.prototype =
 
 	initialize: function(categories)
 	{
-		this.treeBrowser = new dhtmlXTreeObject("settingsBrowser","","", false);
+		this.treeBrowser = new dhtmlXTreeObject("settingsBrowser","","", 0);
 		Backend.Breadcrumb.setTree(this.treeBrowser);
 
 		this.treeBrowser.def_img_x = 'auto';

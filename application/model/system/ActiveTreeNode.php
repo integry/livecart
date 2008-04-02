@@ -710,6 +710,12 @@ class ActiveTreeNode extends ActiveRecordModel
 	private function buildPathBranchesArray($path, $level)
 	{
 		$branch = array();
+
+		if (!isset($path[$level]['ID']))
+		{
+			return $branch;
+		}
+
 		$branch['children'] = Category::getInstanceByID($path[$level]['ID'])->getChildNodes(false, true)->toArray();
 
 		$childrenCount = count($branch['children']);

@@ -1,6 +1,8 @@
 <?php
 
 ClassLoader::import("application.model.ObjectFile");
+ClassLoader::import("application.model.product.Product");
+ClassLoader::import("application.model.product.ProductFileGroup");
 
 /**
  * Defines a file that is assigned to a particular product. This is mostly needed for

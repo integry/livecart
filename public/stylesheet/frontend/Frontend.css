@@ -2109,7 +2109,7 @@ label.cancel
 {
     float: none;
     position: relative;
-    top: -6px;
+    line-height: 1.5em;
     padding-left: 0;
 }
 

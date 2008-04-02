@@ -21,7 +21,7 @@ Backend.UserGroup.prototype =
 	{
 		var self = this;
 
-		Backend.UserGroup.prototype.treeBrowser = new dhtmlXTreeObject("userGroupsBrowser","","", false);
+		Backend.UserGroup.prototype.treeBrowser = new dhtmlXTreeObject("userGroupsBrowser","","", 0);
 		Backend.Breadcrumb.setTree(Backend.UserGroup.prototype.treeBrowser);
 
 		Backend.UserGroup.prototype.treeBrowser.setOnClickHandler(this.activateGroup);

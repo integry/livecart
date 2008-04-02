@@ -11,7 +11,7 @@ Backend.Template.prototype =
 
 	initialize: function(categories)
 	{
-		this.treeBrowser = new dhtmlXTreeObject("templateBrowser","","", false);
+		this.treeBrowser = new dhtmlXTreeObject("templateBrowser","","", 0);
 		Backend.Breadcrumb.setTree(this.treeBrowser);
 
 		this.treeBrowser.def_img_x = 'auto';
@@ -41,7 +41,7 @@ Backend.Template.prototype =
 				}
 			}
 
-		this.treeBrowser.enableDragAndDrop(1);
+		//this.treeBrowser.enableDragAndDrop(1);
 		this.insertTreeBranch(categories, 0);
 		this.treeBrowser.closeAllItems();
 		this.treeBrowser.setDragHandler(this.moveTemplate);
@@ -54,29 +54,35 @@ Backend.Template.prototype =
 		  	if('function' != typeof treeBranch[k])
 		  	{
 
+				//this.treeBrowser.enableDragAndDrop('temporary_disabled');
+				this.treeBrowser.enableDragAndDrop(0);
+
 				if(!treeBranch[k].isCustom && !treeBranch[k].subs)
 				{
 					this.treeBrowser.enableDragAndDrop(0);
 				}
 				else
 				{
-					//this.treeBrowser.enableDragAndDrop(1);
+					this.treeBrowser.enableDragAndDrop('temporary_disabled');
 				}
 
 				this.treeBrowser.insertNewItem(rootId, treeBranch[k].id, k, null, 0, 0, 0, '');
-				this.treeBrowser.setUserData(treeBranch[k].id, treeBranch[k]);
+				this.treeBrowser.setUserData(treeBranch[k].id, 'isCustom', treeBranch[k].isCustom);
 				//this.treeBrowser.lockItem(treeBranch[k].id);
 //console.log(this.treeBrowser._globalIdStorageFind(treeBranch[k].id));
 				if (treeBranch[k].subs)
 				{
 					this.insertTreeBranch(treeBranch[k].subs, treeBranch[k].id);
 				}
+				///ole.log(treeBranch[k]);
 			}
 		}
 	},
 
 	activateCategory: function(id)
 	{
+		this.treeBrowser.enableDragAndDrop(this.treeBrowser.getUserData(id, 'isCustom') ? 1 : 0);
+console.log(this.treeBrowser.getUserData(id, 'isCustom') ? 1 : 0);
 		if (!this.treeBrowser.hasChildren(id))
 		{
 			this.treeBrowser.showFeedback(id);
