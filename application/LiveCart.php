@@ -282,6 +282,12 @@ class LiveCart extends Application
 	{
 		$originalResponse = parent::execute($controllerInstance, $actionName);
 
+		// override Apache's AddDefaultCharset directive
+		if ($originalResponse instanceof ActionResponse)
+		{
+			$originalResponse->setHeader('Content-type', 'text/html;charset=utf-8');
+		}
+
 		$response = $this->processActionPlugins($controllerInstance, $originalResponse);
 
 		if ($response !== $originalResponse)
