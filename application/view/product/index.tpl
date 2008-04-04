@@ -79,6 +79,7 @@
 				<td class="value price">{$product.formattedPrice.$currency}</td>
 			</tr>
 
+			{if 'ENABLE_CART'|config}
 			{if $options}
 				<tr>
 					<td colspan="2" class="productOptions">
@@ -95,6 +96,7 @@
 					{hidden name="return" value=$catRoute}
 				</td>
 			</tr>
+			{/if}
 
 			<tr id="productToWishList">
 				<td class="param"></td>

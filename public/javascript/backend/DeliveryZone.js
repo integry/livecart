@@ -1454,7 +1454,7 @@ Backend.DeliveryZone.TaxRate.prototype =
 
 		this.nodes.ratesList = $(this.prefix + "taxRatesList_" + this.deliveryZoneId)
 
-		if(!this.rate.ID)
+		if(0 == this.rate.ID)
 		{
 			this.nodes.menu = $(this.prefix + "menu_" + this.deliveryZoneId);
 			this.nodes.menuCancelLink = $(this.prefix + "new_" + this.deliveryZoneId + "_cancel");
@@ -1468,7 +1468,7 @@ Backend.DeliveryZone.TaxRate.prototype =
 	   Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
 
 	   Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
-	   if(!this.rate.ID)
+	   if(0 == this.rate.ID)
 	   {
 		   Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
 	   }
@@ -1503,7 +1503,7 @@ Backend.DeliveryZone.TaxRate.prototype =
 	save: function(event)
 	{
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-		var action = this.rate.ID
+		var action = this.rate.ID > 0
 			? Backend.DeliveryZone.TaxRate.prototype.Links.update
 			: Backend.DeliveryZone.TaxRate.prototype.Links.create;
 
@@ -1522,7 +1522,7 @@ Backend.DeliveryZone.TaxRate.prototype =
 	{
 		if(response.status == 'success')
 		{
-			if(!this.rate.ID)
+			if(0 == this.rate.ID)
 			{
 				var li = this.ratesActiveList.addRecord(response.rate.ID, '<span class="' + this.prefix + 'taxRatesList_title">' + response.rate.Tax.name + '</span>');
 				this.removeTaxOption(this.nodes.taxID.value);
@@ -1543,7 +1543,7 @@ Backend.DeliveryZone.TaxRate.prototype =
 	cancel: function()
 	{
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-		if(!this.rate.ID)
+		if(0 == this.rate.ID)
 		{
 			this.hideNewForm();
 		}

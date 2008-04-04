@@ -130,6 +130,8 @@ class LiveCart extends Application
 		if ($this->isDevMode())
 		{
 			ActiveRecord::getLogger()->setLogFileName(ClassLoader::getRealPath("cache") . DIRECTORY_SEPARATOR . "activerecord.log");
+			error_reporting(E_ALL);
+			ini_set('display_errors', 'On');
 		}
 
 		$compileDir = $this->isCustomizationMode() ? 'cache.templates_c.customize' : 'cache.templates_c';
@@ -283,7 +285,7 @@ class LiveCart extends Application
 		$originalResponse = parent::execute($controllerInstance, $actionName);
 
 		// override Apache's AddDefaultCharset directive
-		if ($originalResponse instanceof ActionResponse)
+		if (get_class($originalResponse) ==  'ActionResponse')
 		{
 			$originalResponse->setHeader('Content-type', 'text/html;charset=utf-8');
 		}

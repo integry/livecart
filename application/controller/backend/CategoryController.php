@@ -206,7 +206,7 @@ class CategoryController extends StoreManagementController
 	public function xmlBranch()
 	{
 		$xmlResponse = new XMLResponse();
-		$rootID = (int)$this->request->get("id");
+		$rootID = (int)$this->request->get("id", 1);
 
 		if(!in_array($rootID, array(Category::ROOT_ID, 0)))
 		{
