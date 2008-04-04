@@ -328,7 +328,8 @@ class CsvImportController extends StoreManagementController
 			// price
 			if (isset($fields['ProductPrice']['price']))
 			{
-				$record[$fields['ProductPrice']['price']] = preg_replace('/^[\.0-9]/', '', $record[$fields['ProductPrice']['price']]);
+				$record[$fields['ProductPrice']['price']] = str_replace(',', '.', $record[$fields['ProductPrice']['price']]);
+				$record[$fields['ProductPrice']['price']] = preg_replace('/[^\.0-9]/', '', $record[$fields['ProductPrice']['price']]);
 				$impReq->set('price_' . $this->application->getDefaultCurrencyCode(), (float)$record[$fields['ProductPrice']['price']]);
 			}
 
@@ -406,7 +407,7 @@ class CsvImportController extends StoreManagementController
 			unset($product);
 		}
 
-		//ActiveRecord::rollback();
+		ActiveRecord::rollback();
 		ActiveRecord::commit();
 
 		$response->flush($this->getResponse(array('progress' => 0, 'total' => $total)));

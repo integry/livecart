@@ -129,7 +129,7 @@ fieldse, div.addressBlock, .table, .shipment, #userMenuContainer, .orderDetails
 /*
 	Forms
 */
-input.submit, input.text, input.password, select
+input.submit, input.text, input.password, select, textarea
 {
 	border: 1px solid lightblue;
 }
