@@ -79,17 +79,22 @@ class OsCommerceImport extends LiveCartImportDriver
 		return true;
 	}
 
+	public function getVerificationTableNames()
+	{
+		return array('categories', 'currencies', 'orders', 'languages', 'manufacturers', 'products', 'customers');
+	}
+
 	public function getTableMap()
 	{
 		return array(
-				'Category' => 'categories',
-				'Currency' => 'currencies',
-				'CustomerOrder' => 'orders',
-				'Language' => 'languages',
-				'Manufacturer' => 'manufacturers',
-				'Product' => 'products',
-				'User' => 'customers',
-				'BillingAddress' => array('SELECT COUNT(*) FROM address_book LEFT JOIN customers ON address_book.customers_id=customers.customers_id WHERE customers.customers_id IS NOT NULL' => 'address_book')
+				'Category' => $this->getTablePrefix() . 'categories',
+				'Currency' => $this->getTablePrefix() . 'currencies',
+				'CustomerOrder' => $this->getTablePrefix() . 'orders',
+				'Language' => $this->getTablePrefix() . 'languages',
+				'Manufacturer' => $this->getTablePrefix() . 'manufacturers',
+				'Product' => $this->getTablePrefix() . 'products',
+				'User' => $this->getTablePrefix() . 'customers',
+				'BillingAddress' => array('SELECT COUNT(*) FROM ' . $this->getTablePrefix() . 'address_book LEFT JOIN ' . $this->getTablePrefix() . 'customers ON ' . $this->getTablePrefix() . 'address_book.customers_id=' . $this->getTablePrefix() . 'customers.customers_id WHERE ' . $this->getTablePrefix() . 'customers.customers_id IS NOT NULL' => $this->getTablePrefix() . 'address_book')
 			);
 	}
 
@@ -101,7 +106,7 @@ class OsCommerceImport extends LiveCartImportDriver
 			$this->languagesTruncated = true;
 		}
 
-		if (!$data = $this->loadRecord('SELECT * FROM languages ORDER BY sort_order ASC'))
+		if (!$data = $this->loadRecord('SELECT * FROM ' . $this->getTablePrefix() . 'languages ORDER BY sort_order ASC'))
 		{
 			return null;
 		}
@@ -128,7 +133,7 @@ class OsCommerceImport extends LiveCartImportDriver
 			$this->currenciesTruncated = true;
 		}
 
-		if (!$data = $this->loadRecord('SELECT * FROM currencies'))
+		if (!$data = $this->loadRecord('SELECT * FROM ' . $this->getTablePrefix() . 'currencies'))
 		{
 			return null;
 		}
@@ -151,7 +156,7 @@ class OsCommerceImport extends LiveCartImportDriver
 
 	public function getNextManufacturer()
 	{
-		if (!$data = $this->loadRecord('SELECT * FROM manufacturers'))
+		if (!$data = $this->loadRecord('SELECT * FROM ' . $this->getTablePrefix() . 'manufacturers'))
 		{
 			return null;
 		}
@@ -165,7 +170,7 @@ class OsCommerceImport extends LiveCartImportDriver
 
 	public function getNextUser()
 	{
-		if (!$data = $this->loadRecord('SELECT * FROM customers'))
+		if (!$data = $this->loadRecord('SELECT * FROM ' . $this->getTablePrefix() . 'customers'))
 		{
 			return null;
 		}
@@ -191,7 +196,7 @@ class OsCommerceImport extends LiveCartImportDriver
 			}
 
 			// get all categories
-			foreach ($this->getDataBySQL('SELECT *,' . implode(', ', $langs) . ' FROM categories ' . implode(' ', $join) . ' ORDER BY sort_order ASC') as $category)
+			foreach ($this->getDataBySQL('SELECT *,' . implode(', ', $langs) . ' FROM ' . $this->getTablePrefix() . 'categories ' . implode(' ', $join) . ' ORDER BY sort_order ASC') as $category)
 			{
 				$this->categoryMap[$category['categories_id']] = $category;
 			}
@@ -262,7 +267,7 @@ class OsCommerceImport extends LiveCartImportDriver
 
 	protected function joinCategoryFields($id, $code)
 	{
-		return array('LEFT JOIN categories_description AS category_' . $code . ' ON category_' . $code . '.categories_id=categories.categories_id AND category_' . $code . '.language_id=' . $id,
+		return array('LEFT JOIN ' . $this->getTablePrefix() . 'categories_description AS category_' . $code . ' ON ' . $this->getTablePrefix() . 'category_' . $code . '.categories_id=' . $this->getTablePrefix() . 'categories.categories_id AND ' . $this->getTablePrefix() . 'category_' . $code . '.language_id=' . $id,
 					 'category_' . $code . '.categories_name AS name_' . $code
 					);
 	}
@@ -276,7 +281,7 @@ class OsCommerceImport extends LiveCartImportDriver
 				list($join[], $langs[]) = $this->joinProductFields($id, $code);
 			}
 
-			$this->productSql = 'SELECT *,' . implode(', ', $langs) . ' FROM products ' . implode(' ', $join) . ' LEFT JOIN products_to_categories ON products.products_id=products_to_categories.products_id';
+			$this->productSql = 'SELECT *,' . implode(', ', $langs) . ' FROM ' . $this->getTablePrefix() . 'products ' . implode(' ', $join) . ' LEFT JOIN ' . $this->getTablePrefix() . 'products_to_categories ON ' . $this->getTablePrefix() . 'products.products_id=' . $this->getTablePrefix() . 'products_to_categories.products_id';
 		}
 
 		if (!$data = $this->loadRecord($this->productSql))
@@ -323,14 +328,14 @@ class OsCommerceImport extends LiveCartImportDriver
 
 	protected function joinProductFields($id, $code)
 	{
-		return array('LEFT JOIN products_description AS product_' . $code . ' ON product_' . $code . '.products_id=products.products_id AND product_' . $code . '.language_id=' . $id,
+		return array('LEFT JOIN ' . $this->getTablePrefix() . 'products_description AS product_' . $code . ' ON ' . $this->getTablePrefix() . 'product_' . $code . '.products_id=' . $this->getTablePrefix() . 'products.products_id AND product_' . $code . '.language_id=' . $id,
 					 'product_' . $code . '.products_name AS name_' . $code . ', ' . 'product_' . $code . '.products_description AS descr_' . $code
 					);
 	}
 
 	public function getNextCustomerOrder()
 	{
-		if (!$data = $this->loadRecord('SELECT *, orders.orders_id AS id, orders_total.value FROM orders LEFT JOIN orders_total ON (orders.orders_id=orders_total.orders_id AND class="ot_shipping")'))
+		if (!$data = $this->loadRecord('SELECT *, ' . $this->getTablePrefix() . 'orders.orders_id AS id, ' . $this->getTablePrefix() . 'orders_total.value FROM ' . $this->getTablePrefix() . 'orders LEFT JOIN ' . $this->getTablePrefix() . 'orders_total ON (' . $this->getTablePrefix() . 'orders.orders_id=' . $this->getTablePrefix() . 'orders_total.orders_id AND class="ot_shipping")'))
 		{
 			return null;
 		}
@@ -341,7 +346,7 @@ class OsCommerceImport extends LiveCartImportDriver
 
 		// products
 		$tax = 0;
-		foreach ($this->getDataBySql('SELECT * FROM orders_products WHERE orders_id=' . $data['id']) as $prod)
+		foreach ($this->getDataBySql('SELECT * FROM ' . $this->getTablePrefix() . 'orders_products WHERE ' . $this->getTablePrefix() . 'orders_id=' . $data['id']) as $prod)
 		{
 			$product = Product::getInstanceById($this->getRealId('Product', $prod['products_id']));
 			$order->addProduct($product, $prod['products_quantity']);
@@ -367,7 +372,7 @@ class OsCommerceImport extends LiveCartImportDriver
 
 	public function getNextBillingAddress()
 	{
-		if (!$data = $this->loadRecord('SELECT * FROM address_book LEFT JOIN countries ON address_book.entry_country_id=countries.countries_id LEFT JOIN customers ON address_book.customers_id=customers.customers_id WHERE customers.customers_id IS NOT NULL'))
+		if (!$data = $this->loadRecord('SELECT * FROM ' . $this->getTablePrefix() . 'address_book LEFT JOIN ' . $this->getTablePrefix() . 'countries ON ' . $this->getTablePrefix() . 'address_book.entry_country_id=' . $this->getTablePrefix() . 'countries.countries_id LEFT JOIN ' . $this->getTablePrefix() . 'customers ON ' . $this->getTablePrefix() . 'address_book.customers_id=' . $this->getTablePrefix() . 'customers.customers_id WHERE ' . $this->getTablePrefix() . 'customers.customers_id IS NOT NULL'))
 		{
 			return null;
 		}
@@ -478,7 +483,7 @@ class OsCommerceImport extends LiveCartImportDriver
 	{
 		if (empty($this->configMap))
 		{
-			$config = $this->getDataBySQL('SELECT * FROM configuration');
+			$config = $this->getDataBySQL('SELECT * FROM ' . $this->getTablePrefix() . 'configuration');
 
 			foreach ($config as $row)
 			{

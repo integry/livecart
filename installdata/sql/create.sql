@@ -1,12 +1,12 @@
 # ---------------------------------------------------------------------- #
-# Script generated with: DeZign for Databases v5.0.1                     #
+# Script generated with: DeZign for Databases v5.1.1                     #
 # Target DBMS:           MySQL 4                                         #
 # Project file:          LiveCart.dez                                    #
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2008-03-16 22:42                                #
-# Model version:         Version 2008-03-16 1                            #
+# Created on:            2008-04-06 01:30                                #
+# Model version:         Version 2008-04-06 1                            #
 # ---------------------------------------------------------------------- #
 
 
@@ -340,6 +340,9 @@ CREATE TABLE Currency (
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other Currencies',
     pricePrefix TEXT COMMENT 'Used for price formatting. Symbols to place before price price, for example $, etc.',
     priceSuffix TEXT COMMENT 'Used for price formatting. Symbols to place after the price - usually the currency code itself',
+    decimalSeparator CHAR(3) DEFAULT '.',
+    thousandSeparator CHAR(3) DEFAULT ' ',
+    decimalCount INTEGER DEFAULT 2,
     CONSTRAINT PK_Currency PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -1010,6 +1013,24 @@ CREATE TABLE ProductPresentation (
     CONSTRAINT PK_ProductPresentation PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "SearchLog"                                                  #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE SearchLog (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    keywords VARCHAR(100),
+    ip INTEGER,
+    time DATETIME,
+    CONSTRAINT PK_SearchLog PRIMARY KEY (ID),
+    CONSTRAINT TUC_SearchLog_1 UNIQUE (keywords, ip)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+CREATE INDEX IDX_SearchLog_1 ON SearchLog (keywords);
+
+CREATE INDEX IDX_SearchLog_2 ON SearchLog (time);
 
 # ---------------------------------------------------------------------- #
 # Foreign key constraints                                                #

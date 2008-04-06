@@ -78,17 +78,22 @@ class XCartImport extends LiveCartImportDriver
 		return true;
 	}
 
+	public function getVerificationTableNames()
+	{
+		return array('categories', 'orders', 'products', 'customers', 'states', 'extra_fields');
+	}
+
 	public function getTableMap()
 	{
 		return array(
-				'Category' => 'xcart_categories',
-				'CustomerOrder' => 'xcart_orders',
-				'Language' => array('SELECT COUNT(DISTINCT code) FROM xcart_languages' => 'xcart_languages'),
-				'Manufacturer' => 'xcart_manufacturers',
-				'Product' => 'xcart_products',
-				'User' => 'xcart_customers',
-				'State' => 'xcart_states',
-				'SpecField' => 'xcart_extra_fields',
+				'Category' => $this->getTablePrefix() . 'categories',
+				'CustomerOrder' => $this->getTablePrefix() . 'orders',
+				'Language' => array('SELECT COUNT(DISTINCT code) FROM ' . $this->getTablePrefix() . 'languages' => $this->getTablePrefix() . 'languages'),
+				'Manufacturer' => $this->getTablePrefix() . 'manufacturers',
+				'Product' => $this->getTablePrefix() . 'products',
+				'User' => $this->getTablePrefix() . 'customers',
+				'State' => $this->getTablePrefix() . 'states',
+				'SpecField' => $this->getTablePrefix() . 'extra_fields',
 			);
 	}
 
@@ -100,7 +105,7 @@ class XCartImport extends LiveCartImportDriver
 			$this->languagesTruncated = true;
 		}
 
-		if (!$data = $this->loadRecord('SELECT DISTINCT code FROM xcart_languages'))
+		if (!$data = $this->loadRecord('SELECT DISTINCT code FROM ' . $this->getTablePrefix() . 'languages'))
 		{
 			return null;
 		}
@@ -135,7 +140,7 @@ class XCartImport extends LiveCartImportDriver
 
 	public function getNextManufacturer()
 	{
-		if (!$data = $this->loadRecord('SELECT * FROM xcart_manufacturers'))
+		if (!$data = $this->loadRecord('SELECT * FROM ' . $this->getTablePrefix() . 'manufacturers'))
 		{
 			return null;
 		}
@@ -149,7 +154,7 @@ class XCartImport extends LiveCartImportDriver
 
 	public function getNextState()
 	{
-		if (!$data = $this->loadRecord('SELECT * FROM xcart_states'))
+		if (!$data = $this->loadRecord('SELECT * FROM ' . $this->getTablePrefix() . 'states'))
 		{
 			return null;
 		}
@@ -170,7 +175,7 @@ class XCartImport extends LiveCartImportDriver
 
 	public function getNextUser()
 	{
-		if (!$data = $this->loadRecord('SELECT * FROM xcart_customers'))
+		if (!$data = $this->loadRecord('SELECT * FROM ' . $this->getTablePrefix() . 'customers'))
 		{
 			return null;
 		}
@@ -213,7 +218,7 @@ class XCartImport extends LiveCartImportDriver
 			}
 
 			// get all categories
-			$sql = 'SELECT xcart_categories.*, ' . implode(', ', $langs) . ' FROM xcart_categories ' . implode(' ', $join) . ' ORDER BY order_by ASC';
+			$sql = 'SELECT ' . $this->getTablePrefix() . 'categories.*, ' . implode(', ', $langs) . ' FROM ' . $this->getTablePrefix() . 'categories ' . implode(' ', $join) . ' ORDER BY order_by ASC';
 			foreach ($this->getDataBySQL($sql) as $category)
 			{
 				$this->categoryMap[$category['categoryid']] = $category;
@@ -278,7 +283,7 @@ class XCartImport extends LiveCartImportDriver
 		}
 
 		//images
-		$images = $this->getDataBySQL('SELECT * FROM xcart_images_C WHERE id=' . $data['categoryid'] . ' ORDER BY orderby ASC');
+		$images = $this->getDataBySQL('SELECT * FROM ' . $this->getTablePrefix() . 'images_C WHERE id=' . $data['categoryid'] . ' ORDER BY orderby ASC');
 		foreach ($images as $image)
 		{
 			$this->importCategoryImage($rec, $this->path . '/' . $image['image_path']);
@@ -291,7 +296,7 @@ class XCartImport extends LiveCartImportDriver
 
 	protected function joinCategoryFields($code, $id)
 	{
-		return array('LEFT JOIN xcart_categories_lng AS category_' . $code . ' ON category_' . $code . '.categoryid=xcart_categories.categoryid AND category_' . $code . '.code="' . $id . '"',
+		return array('LEFT JOIN ' . $this->getTablePrefix() . 'categories_lng AS category_' . $code . ' ON category_' . $code . '.categoryid=' . $this->getTablePrefix() . 'categories.categoryid AND category_' . $code . '.code="' . $id . '"',
 					 'category_' . $code . '.category AS category_' . $code . ', category_' . $code . '.description AS description_' . $code
 					);
 	}
@@ -307,7 +312,7 @@ class XCartImport extends LiveCartImportDriver
 			}
 
 			// get all categories
-			$this->specFieldSql = 'SELECT xcart_extra_fields.*, ' . implode(', ', $langs) . ' FROM xcart_extra_fields ' . implode(' ', $join) . ' ORDER BY orderby ASC';
+			$this->specFieldSql = 'SELECT ' . $this->getTablePrefix() . 'extra_fields.*, ' . implode(', ', $langs) . ' FROM ' . $this->getTablePrefix() . 'extra_fields ' . implode(' ', $join) . ' ORDER BY orderby ASC';
 		}
 
 		if (!$data = $this->loadRecord($this->specFieldSql))
@@ -332,7 +337,7 @@ class XCartImport extends LiveCartImportDriver
 
 	protected function joinAttributeFields($code, $id)
 	{
-		return array('LEFT JOIN xcart_extra_fields_lng AS field_' . $code . ' ON field_' . $code . '.fieldid=xcart_extra_fields.fieldid AND field_' . $code . '.code="' . $id . '"',
+		return array('LEFT JOIN ' . $this->getTablePrefix() . 'extra_fields_lng AS field_' . $code . ' ON field_' . $code . '.fieldid=' . $this->getTablePrefix() . 'extra_fields.fieldid AND field_' . $code . '.code="' . $id . '"',
 					 'field_' . $code . '.field AS fieldname_' . $code
 					);
 	}
@@ -348,11 +353,11 @@ class XCartImport extends LiveCartImportDriver
 
 			foreach ($this->attributes as $attr)
 			{
-				$join[] = 'LEFT JOIN xcart_extra_field_values  AS extra_' . $attr['fieldid'] . ' ON (extra_' . $attr['fieldid'] . '.productid=xcart_products.productid AND extra_' . $attr['fieldid'] . '.fieldid=' . $attr['fieldid'] . ')';
+				$join[] = 'LEFT JOIN ' . $this->getTablePrefix() . 'extra_field_values  AS extra_' . $attr['fieldid'] . ' ON (extra_' . $attr['fieldid'] . '.productid=' . $this->getTablePrefix() . 'products.productid AND extra_' . $attr['fieldid'] . '.fieldid=' . $attr['fieldid'] . ')';
 				$langs[] = 'extra_' . $attr['fieldid'] . '.value AS extrafield_' . $attr['fieldid'];
 			}
 
-			$this->productSql = 'SELECT xcart_products.*, xcart_products_categories.categoryid, ' . implode(', ', $langs) . ', (SELECT price FROM xcart_pricing WHERE xcart_pricing.productid=xcart_products.productid ORDER BY quantity ASC LIMIT 1) AS price FROM xcart_products ' . implode(' ', $join) . ' LEFT JOIN xcart_products_categories ON (xcart_products.productid=xcart_products_categories.productid AND xcart_products_categories.main="Y")';
+			$this->productSql = 'SELECT ' . $this->getTablePrefix() . 'products.*, ' . $this->getTablePrefix() . 'products_categories.categoryid, ' . implode(', ', $langs) . ', (SELECT price FROM ' . $this->getTablePrefix() . 'pricing WHERE ' . $this->getTablePrefix() . 'pricing.productid=' . $this->getTablePrefix() . 'products.productid ORDER BY quantity ASC LIMIT 1) AS price FROM ' . $this->getTablePrefix() . 'products ' . implode(' ', $join) . ' LEFT JOIN ' . $this->getTablePrefix() . 'products_categories ON (' . $this->getTablePrefix() . 'products.productid=' . $this->getTablePrefix() . 'products_categories.productid AND ' . $this->getTablePrefix() . 'products_categories.main="Y")';
 		}
 
 		if (!$data = $this->loadRecord($this->productSql))
@@ -407,10 +412,10 @@ class XCartImport extends LiveCartImportDriver
 		//images
 		$images = array_merge(
 			// main thumbnail
-			$this->getDataBySQL('SELECT * FROM xcart_images_T WHERE id=' . $data['productid'] . ' ORDER BY orderby ASC'),
+			$this->getDataBySQL('SELECT * FROM ' . $this->getTablePrefix() . 'images_T WHERE id=' . $data['productid'] . ' ORDER BY orderby ASC'),
 
 			// additional large size images
-			$this->getDataBySQL('SELECT * FROM xcart_images_D WHERE id=' . $data['productid'] . ' ORDER BY orderby ASC')
+			$this->getDataBySQL('SELECT * FROM ' . $this->getTablePrefix() . 'images_D WHERE id=' . $data['productid'] . ' ORDER BY orderby ASC')
 			);
 
 		foreach ($images as $image)
@@ -425,14 +430,14 @@ class XCartImport extends LiveCartImportDriver
 
 	protected function joinProductFields($id, $code)
 	{
-		return array('LEFT JOIN xcart_products_lng AS product_' . $code . ' ON (product_' . $code . '.productid=xcart_products.productid AND product_' . $code . '.code="' . $id . '")',
+		return array('LEFT JOIN ' . $this->getTablePrefix() . 'products_lng AS product_' . $code . ' ON (product_' . $code . '.productid=' . $this->getTablePrefix() . 'products.productid AND product_' . $code . '.code="' . $id . '")',
 					 'product_' . $code . '.product AS name_' . $code . ', ' . 'product_' . $code . '.descr AS descr_' . $code . ', ' . 'product_' . $code . '.fulldescr AS fulldescr_' . $code
 					);
 	}
 
 	public function getNextCustomerOrder()
 	{
-		if (!$data = $this->loadRecord('SELECT xcart_orders.*, xcart_customers.email AS userEmail FROM xcart_orders LEFT JOIN xcart_customers ON xcart_orders.login=xcart_customers.login'))
+		if (!$data = $this->loadRecord('SELECT ' . $this->getTablePrefix() . 'orders.*, ' . $this->getTablePrefix() . 'customers.email AS userEmail FROM ' . $this->getTablePrefix() . 'orders LEFT JOIN ' . $this->getTablePrefix() . 'customers ON ' . $this->getTablePrefix() . 'orders.login=' . $this->getTablePrefix() . 'customers.login'))
 		{
 			return null;
 		}
@@ -447,7 +452,7 @@ class XCartImport extends LiveCartImportDriver
 		$order->dateCompleted->set($data['date']);
 
 		// products
-		foreach ($this->getDataBySql('SELECT * FROM xcart_order_details WHERE orderid=' . $data['orderid']) as $prod)
+		foreach ($this->getDataBySql('SELECT * FROM ' . $this->getTablePrefix() . 'order_details WHERE orderid=' . $data['orderid']) as $prod)
 		{
 			$product = Product::getInstanceById($this->getRealId('Product', $prod['productid']));
 			$order->addProduct($product, $prod['amount']);
@@ -553,7 +558,7 @@ class XCartImport extends LiveCartImportDriver
 	{
 		$map = array();
 
-		foreach ($this->getDataBySQL('SELECT * FROM xcart_config') as $row)
+		foreach ($this->getDataBySQL('SELECT * FROM ' . $this->getTablePrefix() . 'config') as $row)
 		{
 			$map[$row['name']] = $row['value'];
 		}

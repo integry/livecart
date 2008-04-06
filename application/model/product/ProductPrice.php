@@ -82,7 +82,7 @@ class ProductPrice extends ActiveRecordModel
 			$price = 0;
 		}
 
-		return round($price, 2);
+		return round($price, $currency->decimalCount->get());
 	}
 
 	public function increasePriceByPercent($percentIncrease)
@@ -114,7 +114,7 @@ class ProductPrice extends ActiveRecordModel
 			$price = 0;
 		}
 
-		return round($price, 2);
+		return round($price, $currency->decimalCount->get());
 	}
 
 	/*####################  Instance retrieval ####################*/

@@ -1,13 +1,13 @@
 # ---------------------------------------------------------------------- #
-# Script generated with: DeZign for Databases v5.0.1                     #
+# Script generated with: DeZign for Databases v5.1.1                     #
 # Target DBMS:           MySQL 4                                         #
 # Project file:          LiveCart.dez                                    #
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2008-03-18 22:55                                #
-# Model version:         Version 2008-03-18 1                            #
-# From model version:    1.1.1                                           #
+# Created on:            2008-04-06 03:17                                #
+# Model version:         Version 2008-04-06 2                            #
+# From model version:    Version 2008-04-06 1                            #
 # ---------------------------------------------------------------------- #
 
 
@@ -192,22 +192,14 @@ ALTER TABLE ProductPriceRule DROP FOREIGN KEY UserGroup_ProductPriceRule;
 ALTER TABLE ProductPresentation DROP FOREIGN KEY Product_ProductPresentation;
 
 # ---------------------------------------------------------------------- #
-# Add table "SearchLog"                                                  #
+# Modify table "Currency"                                                #
 # ---------------------------------------------------------------------- #
 
-CREATE TABLE SearchLog (
-    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    keywords VARCHAR(100),
-    ip INTEGER,
-    time DATETIME,
-    CONSTRAINT PK_SearchLog PRIMARY KEY (ID),
-    CONSTRAINT TUC_SearchLog_1 UNIQUE (keywords, ip)
-)
-ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE Currency ALTER COLUMN decimalSeparator DROP DEFAULT;
 
-CREATE INDEX IDX_SearchLog_1 ON SearchLog (keywords);
+ALTER TABLE Currency MODIFY decimalSeparator VARCHAR(3) DEFAULT '.';
 
-CREATE INDEX IDX_SearchLog_2 ON SearchLog (time);
+ALTER TABLE Currency MODIFY thousandSeparator VARCHAR(3) DEFAULT ' ';
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #

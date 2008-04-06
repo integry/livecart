@@ -7,7 +7,7 @@
  * taxes and other charges can also be converted to other currencies using the currency rates.
  *
  * @package application.model
- * @author Integry Systems <http://integry.com>   
+ * @author Integry Systems <http://integry.com>
  */
 class Currency extends ActiveRecordModel
 {
@@ -25,17 +25,20 @@ class Currency extends ActiveRecordModel
 		$schema->registerField(new ARField("position", ARInteger::instance()));
 		$schema->registerField(new ARField("pricePrefix", ARText::instance(20)));
 		$schema->registerField(new ARField("priceSuffix", ARText::instance(20)));
+		$schema->registerField(new ARField("decimalSeparator", ARVarchar::instance(3)));
+		$schema->registerField(new ARField("thousandSeparator", ARVarchar::instance(3)));
+		$schema->registerField(new ARField("decimalCount", ARInteger::instance()));
 	}
-	
-	/*####################  Static method implementations ####################*/		
+
+	/*####################  Static method implementations ####################*/
 
 	public static function getInstanceById($id, $loadData = true)
 	{
 		return ActiveRecordModel::getInstanceById(__CLASS__, $id, $loadData);
 	}
 
-	/*####################  Instance retrieval ####################*/		
-	
+	/*####################  Instance retrieval ####################*/
+
 	/**
 	 *  Return Currency instance by ID and provide additional validation. If the currency doesn't exist
 	 *  or is not valid, instance of the default currency is returned.
@@ -46,22 +49,22 @@ class Currency extends ActiveRecordModel
 	{
 		try
 		{
-			$instance = ActiveRecordModel::getInstanceById(__CLASS__, $id, $loadData);	
+			$instance = ActiveRecordModel::getInstanceById(__CLASS__, $id, $loadData);
 		}
 		catch (ARNotFoundException $e)
 		{
 			$instance = null;
 		}
-		
+
 		if (!$instance || !$instance->isEnabled->get())
 		{
-			$instance = self::getApplication()->getDefaultCurrency();	
+			$instance = self::getApplication()->getDefaultCurrency();
 		}
-		
+
 		return $instance;
 	}
 
-	/*####################  Value retrieval and manipulation ####################*/		
+	/*####################  Value retrieval and manipulation ####################*/
 
 	public function setAsDefault($default = true)
 	{
@@ -72,74 +75,43 @@ class Currency extends ActiveRecordModel
 	{
 	  	return $this->isDefault->get();
 	}
-	
+
 	public function getFormattedPrice($price)
 	{
-		$price = round($price, 2);
-		
-		$parts = explode('.', $price);				
-		
-		$dollars = $parts[0];
-		
-		if (!isset($parts[1]))
-		{
-			$parts[1] = 0;
-		}
-		
-		if ($parts[1] > 0)
-		{
-			$cents = $parts[1];
-			if (strlen($cents) == 1)
-			{
-				$cents = $cents . '0';
-			}
-			
-			if (strlen($cents) > 2)
-			{
-				$cents = substr($cents, 0, 2);
-			}
-			
-			$price = $dollars . '.' . $cents;			
-		}		
-		else
-		{
-			$price = $dollars . '.00';
-		}
-		
 		if (!$this->isLoaded())
 		{
 			$this->load();
 		}
-		
-		return $this->pricePrefix->get() . $price . $this->priceSuffix->get();
+
+		return $this->pricePrefix->get() . number_format($price, $this->decimalCount->get(), $this->decimalSeparator->get(), $this->thousandSeparator->get()) . $this->priceSuffix->get();
 	}
-	
+
 	public function convertAmountFromDefaultCurrency($amount)
 	{
 		$rate = $this->rate->get();
-		return $amount / (empty($rate) ? 1 : $rate);   
+		return $amount / (empty($rate) ? 1 : $rate);
 	}
-	
+
 	public function convertAmountToDefaultCurrency($amount)
 	{
 		$rate = $this->rate->get();
-		return $amount * (empty($rate) ? 1 : $rate);		
+		return $amount * (empty($rate) ? 1 : $rate);
 	}
 
 	public function convertAmount(Currency $currency, $amount)
 	{
 		$amount = $currency->convertAmountToDefaultCurrency($amount);
-		return $this->convertAmountFromDefaultCurrency($amount);		
+		return $this->convertAmountFromDefaultCurrency($amount);
 	}
-	
-	/*####################  Data array transformation ####################*/		
-	
+
+	/*####################  Data array transformation ####################*/
+
 	public static function transformArray($array, ARSchema $schema)
 	{
 		$array = parent::transformArray($array, $schema);
 		$array['name'] = self::getApplication()->getLocale()->info()->getCurrencyName($array['ID']);
 		return $array;
-	}	
+	}
 
 	/*####################  Saving ####################*/
 
@@ -147,9 +119,9 @@ class Currency extends ActiveRecordModel
 	{
 		// make sure the currency record exists
 		$inst = ActiveRecord::getInstanceById('Currency', $id, true);
-		
+
 		// make sure it's not the default currency
-		if (true != $inst->isDefault->get())			
+		if (true != $inst->isDefault->get())
 		{
 			ActiveRecord::deleteByID('Currency', $id);
 			return true;
@@ -159,7 +131,7 @@ class Currency extends ActiveRecordModel
 		  	return false;
 		}
 	}
-	
+
 	public function save($forceOperation = 0)
 	{
 		// do not allow 0 rates
@@ -167,12 +139,12 @@ class Currency extends ActiveRecordModel
 		{
 			$this->rate->set(1);
 		}
-		
+
 //		file_put_contents(ClassLoader::getRealPath('installdata.currency.test') . '.php', var_export($this->priceSuffix->get(), true));
-		
+
 		return parent::save($forceOperation);
 	}
-	
+
 	protected function insert()
 	{
 	  	// check currency symbol
@@ -182,20 +154,20 @@ class Currency extends ActiveRecordModel
 			if (isset($prefixes[$this->getID()]))
 			{
 				$signs = $prefixes[$this->getID()];
-				
+
 				$this->pricePrefix->set($signs[0]);
-					
+
 				if (isset($signs[1]))
 				{
 					$this->priceSuffix->set($signs[1]);
 				}
 			}
 		}
-		  
+
 		// check if default currency exists
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle('Currency', 'isDefault'), 1));
-		
+
 		$r = ActiveRecord::getRecordSet('Currency', $filter);
 		$isDefault = ($r->getTotalRecordCount() == 0);
 
@@ -203,26 +175,26 @@ class Currency extends ActiveRecordModel
 		$filter = new ARSelectFilter();
 		$filter->setOrder(new ARFieldHandle('Currency', 'position'), 'DESC');
 		$filter->setLimit(1);
-		
+
 		$r = ActiveRecord::getRecordSet('Currency', $filter);
 		if ($r->getTotalRecordCount() > 0)
 		{
 			$max = $r->get(0);
-			$position = $max->position->get() + 1; 
+			$position = $max->position->get() + 1;
 		}
 		else
 		{
 		  	$position = 0;
 		}
-		
+
 		if ($isDefault)
 		{
 		  	$this->isDefault->set(true);
 		  	$this->isEnabled->set(true);
 		}
-		
+
 		$this->position->set($position);
-		
+
 		parent::insert();
 	}
 }

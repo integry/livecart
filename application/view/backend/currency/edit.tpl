@@ -13,11 +13,26 @@
 		<label>{t _pr_suffix}:</label>
 		{textfield name="priceSuffix" class="currencyPriceSuffix"}
 	</p>
-	
+
+	<p>
+		<label>{t _pr_decimal_sep}:</label>
+		{textfield name="decimalSeparator" class="currencyPriceSuffix"}
+	</p>
+
+	<p>
+		<label>{t _pr_thousand_sep}:</label>
+		{textfield name="thousandSeparator" class="currencyPriceSuffix"}
+	</p>
+
+	<p>
+		<label>{t _pr_decimal_count}:</label>
+		{textfield name="decimalCount" class="currencyPriceSuffix"}
+	</p>
+
 	<fieldset class="controls">
 		<span class="progressIndicator" style="display: none;"></span>
-		<input type="submit" value="{tn _save}" class="submit"> 
-		{t _or} 
+		<input type="submit" value="{tn _save}" class="submit">
+		{t _or}
 		<a href="#cancel" onclick="this.parentNode.parentNode.parentNode.innerHTML = ''; return false;" class="cancel">{t _cancel}</a>
 	</fieldset>
 </fieldset>

@@ -90,8 +90,8 @@ class DatabaseImportController extends StoreManagementController
 			}
 		}
 
-		ActiveRecord::commit();
-		//ActiveRecord::rollback();
+		//ActiveRecord::commit();
+		ActiveRecord::rollback();
 
 		$importer->reset();
 

@@ -25,6 +25,9 @@ _confirm_delete=Are you sure you wish to delete this currency?
 _pr_form=Price Formatting
 _pr_prefix=Price display prefix
 _pr_suffix=Price display suffix
+_pr_decimal_sep=Decimal separator
+_pr_thousand_sep=Thousands separator
+_pr_decimal_count=Decimal count
 
 _base_currency_warning=WARNING: the product prices for all your products will be 0.00 if the prices are not entered in the new base currency! Are you sure you wish to change the base currency for your store?
 

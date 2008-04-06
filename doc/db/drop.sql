@@ -1,12 +1,12 @@
 # ---------------------------------------------------------------------- #
-# Script generated with: DeZign for Databases v5.0.1                     #
+# Script generated with: DeZign for Databases v5.1.1                     #
 # Target DBMS:           MySQL 4                                         #
 # Project file:          LiveCart.dez                                    #
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database drop script                            #
-# Created on:            2008-03-16 22:42                                #
-# Model version:         Version 2008-03-16 1                            #
+# Created on:            2008-04-06 01:30                                #
+# Model version:         Version 2008-04-06 1                            #
 # ---------------------------------------------------------------------- #
 
 
@@ -429,6 +429,12 @@ ALTER TABLE Currency ALTER COLUMN isDefault DROP DEFAULT;
 ALTER TABLE Currency ALTER COLUMN isEnabled DROP DEFAULT;
 
 ALTER TABLE Currency ALTER COLUMN position DROP DEFAULT;
+
+ALTER TABLE Currency ALTER COLUMN decimalSeparator DROP DEFAULT;
+
+ALTER TABLE Currency ALTER COLUMN thousandSeparator DROP DEFAULT;
+
+ALTER TABLE Currency ALTER COLUMN decimalCount DROP DEFAULT;
 
 ALTER TABLE Currency DROP PRIMARY KEY;
 
@@ -1005,3 +1011,17 @@ ALTER TABLE ProductPresentation DROP PRIMARY KEY;
 # Drop table #
 
 DROP TABLE ProductPresentation;
+
+# ---------------------------------------------------------------------- #
+# Drop table "SearchLog"                                                 #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE SearchLog DROP PRIMARY KEY;
+
+DROP INDEX TUC_SearchLog_1 ON SearchLog;
+
+# Drop table #
+
+DROP TABLE SearchLog;

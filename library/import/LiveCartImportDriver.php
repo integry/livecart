@@ -31,7 +31,9 @@ abstract class LiveCartImportDriver
 
 	private $recordMap = array();
 	private $recordMapOffsets = array();
+	private $fieldTests = array();
 	private $defaultCurrencyCode;
+	private $tablePrefix = null;
 
 	public function __construct($dsn, $path = null)
 	{
@@ -40,6 +42,8 @@ abstract class LiveCartImportDriver
 	}
 
 	public abstract function getTableMap();
+
+	protected abstract function getVerificationTableNames();
 
 	public function setImporter(LiveCartImporter $importer)
 	{
@@ -164,6 +168,64 @@ abstract class LiveCartImportDriver
 	public function getRealId($type, $id)
 	{
 		return $this->importer->getRealId($type, $id);
+	}
+
+	protected function getTablePrefix()
+	{
+		if (is_null($this->tablePrefix))
+		{
+			$dbinfo = $this->db->getDatabaseInfo();
+			$tables = array();
+			foreach($dbinfo->getTables() as $tbl)
+			{
+    			$tables[] = $tbl->getName();
+    		}
+
+			// find all possible prefixes
+			$prefixes = array();
+			foreach ($tables as $table)
+			{
+				foreach ($this->getVerificationTableNames() as $target)
+				{
+					if (strpos($table, $target) !== false)
+					{
+						$prefixes[substr($table, 0, strpos($table, $target))] = true;
+					}
+				}
+			}
+
+			// leave only valid prefixes
+			foreach ($prefixes as $prefix => $foo)
+			{
+				foreach ($this->getVerificationTableNames() as $target)
+				{
+					if (array_search($prefix . $target, $tables) === false)
+					{
+						unset($prefixes[$prefix]);
+					}
+				}
+			}
+
+			$this->tablePrefix = key($prefixes);
+		}
+
+		return $this->tablePrefix;
+	}
+
+	protected function fieldExists($table, $field)
+	{
+		if (!isset($this->fieldTests[$table]))
+		{
+			$columns = array();
+			foreach ($this->db->getDatabaseInfo()->getTable($this->getTablePrefix() . $table)->getColumns() as $column)
+			{
+				$columns[$column->getName()] = true;
+			}
+
+			$this->fieldTests[$table] = $columns;
+		}
+
+		return isset($this->fieldTests[$table][$field]);
 	}
 
 	protected function loadRecord($sql)
