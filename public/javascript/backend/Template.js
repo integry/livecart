@@ -82,7 +82,7 @@ Backend.Template.prototype =
 	activateCategory: function(id)
 	{
 		this.treeBrowser.enableDragAndDrop(this.treeBrowser.getUserData(id, 'isCustom') ? 1 : 0);
-console.log(this.treeBrowser.getUserData(id, 'isCustom') ? 1 : 0);
+
 		if (!this.treeBrowser.hasChildren(id))
 		{
 			this.treeBrowser.showFeedback(id);

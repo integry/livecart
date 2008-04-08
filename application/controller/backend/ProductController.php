@@ -787,7 +787,7 @@ class ProductController extends StoreManagementController implements MassActionI
 
 		// arrange SpecFields's into groups
 		$specFieldsByGroup = array();
-		$prevGroupID = -6541;
+		$prevGroupID = -1;
 
 		foreach ($specFieldArray as $field)
 		{
@@ -811,6 +811,7 @@ class ProductController extends StoreManagementController implements MassActionI
 		$response->set("productStatuses", $status);
 		$response->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
 		$response->set("otherCurrencies", $this->application->getCurrencyArray(LiveCart::EXCLUDE_DEFAULT_CURRENCY));
+
 		$productData = $product->toArray();
 		if (empty($productData['ID']))
 		{
@@ -890,9 +891,7 @@ class ProductController extends StoreManagementController implements MassActionI
 	private function buildForm(Product $product)
 	{
 		ClassLoader::import("framework.request.validator.Form");
-
-		$form = new Form($this->buildValidator($product));
-		return $form;
+		return new Form($this->buildValidator($product));
 	}
 
 	/**

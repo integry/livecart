@@ -102,7 +102,7 @@ class OsCommerceImport extends LiveCartImportDriver
 	{
 		if (!$this->languagesTruncated)
 		{
-			ActiveRecord::getDbConnection()->executeQuery('TRUNCATE TABLE Language');
+			ActiveRecord::executeUpdate('DELETE FROM Language');
 			$this->languagesTruncated = true;
 		}
 
@@ -113,8 +113,7 @@ class OsCommerceImport extends LiveCartImportDriver
 
 		$this->languages[$data['languages_id']] = $data['code'];
 
-		$lang = ActiveRecordModel::getNewInstance('Language');
-		$lang->setID($data['code']);
+		$lang = ActiveRecordModel::getInstanceByIdIfExists('Language', $data['code']);
 		$lang->isEnabled->set(true);
 
 		if (1 == $data['sort_order'])
@@ -129,7 +128,7 @@ class OsCommerceImport extends LiveCartImportDriver
 	{
 		if (!$this->currenciesTruncated)
 		{
-			ActiveRecord::getDbConnection()->executeQuery('TRUNCATE TABLE Currency');
+			ActiveRecord::executeUpdate('DELETE FROM Currency');
 			$this->currenciesTruncated = true;
 		}
 
@@ -138,8 +137,7 @@ class OsCommerceImport extends LiveCartImportDriver
 			return null;
 		}
 
-		$curr = ActiveRecordModel::getNewInstance('Currency');
-		$curr->setID($data['code']);
+		$curr = ActiveRecordModel::getInstanceByIdIfExists('Currency', $data['code']);
 		$curr->pricePrefix->set($data['symbol_left']);
 		$curr->priceSuffix->set($data['symbol_right']);
 		$curr->rate->set($data['value']);
@@ -196,7 +194,8 @@ class OsCommerceImport extends LiveCartImportDriver
 			}
 
 			// get all categories
-			foreach ($this->getDataBySQL('SELECT *,' . implode(', ', $langs) . ' FROM ' . $this->getTablePrefix() . 'categories ' . implode(' ', $join) . ' ORDER BY sort_order ASC') as $category)
+			$q = 'SELECT *,' . $this->getTablePrefix() . 'categories.categories_id AS categories_id,' . implode(', ', $langs) . ' FROM ' . $this->getTablePrefix() . 'categories ' . implode(' ', $join) . ' ORDER BY sort_order ASC';
+			foreach ($this->getDataBySQL($q) as $category)
 			{
 				$this->categoryMap[$category['categories_id']] = $category;
 			}
@@ -281,7 +280,7 @@ class OsCommerceImport extends LiveCartImportDriver
 				list($join[], $langs[]) = $this->joinProductFields($id, $code);
 			}
 
-			$this->productSql = 'SELECT *,' . implode(', ', $langs) . ' FROM ' . $this->getTablePrefix() . 'products ' . implode(' ', $join) . ' LEFT JOIN ' . $this->getTablePrefix() . 'products_to_categories ON ' . $this->getTablePrefix() . 'products.products_id=' . $this->getTablePrefix() . 'products_to_categories.products_id';
+			$this->productSql = 'SELECT *,' . implode(', ', $langs) . ' FROM ' . $this->getTablePrefix() . 'products ' . implode(' ', $join) . ' LEFT JOIN ' . $this->getTablePrefix() . 'products_to_categories ON ' . $this->getTablePrefix() . 'products.products_id=' . $this->getTablePrefix() . 'products_to_categories.products_id LEFT JOIN ' . $this->getTablePrefix() . 'categories ON ' . $this->getTablePrefix() . 'products_to_categories.categories_id=' . $this->getTablePrefix() . 'categories.categories_id  WHERE ' . $this->getTablePrefix() . 'categories.categories_id IS NOT NULL';
 		}
 
 		if (!$data = $this->loadRecord($this->productSql))

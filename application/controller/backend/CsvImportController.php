@@ -463,6 +463,11 @@ class CsvImportController extends StoreManagementController
 		for ($k = 0; $k < self::PREVIEW_ROWS; $k++)
 		{
 			$row = $csv->getRecord();
+			if (!is_array($row))
+			{
+				break;
+			}
+
 			foreach ($row as &$cell)
 			{
 				if (strlen($cell) > 102)

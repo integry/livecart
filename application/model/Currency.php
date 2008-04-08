@@ -195,7 +195,7 @@ class Currency extends ActiveRecordModel
 
 		$this->position->set($position);
 
-		parent::insert();
+		return parent::insert();
 	}
 }
 

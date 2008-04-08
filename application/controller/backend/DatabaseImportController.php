@@ -76,18 +76,26 @@ class DatabaseImportController extends StoreManagementController
 		ActiveRecord::beginTransaction();
 
 		// process import
-		while (true)
+		try
 		{
-			$result = $importer->process();
-
-			$response->flush($this->getResponse($result));
-
-//echo '|' . round(memory_get_usage() / (1024*1024), 1) . " ($result[type] : " . array_shift(array_shift(ActiveRecord::getDataBySQL("SELECT COUNT(*) FROM " . $result['type']))) . ")<br> \n";
-
-			if (is_null($result))
+			while (true)
 			{
-				break;
+				$result = $importer->process();
+
+				$response->flush($this->getResponse($result));
+
+	//echo '|' . round(memory_get_usage() / (1024*1024), 1) . " ($result[type] : " . array_shift(array_shift(ActiveRecord::getDataBySQL("SELECT COUNT(*) FROM " . $result['type']))) . ")<br> \n";
+
+				if (is_null($result))
+				{
+					break;
+				}
 			}
+		}
+		catch (Exception $e)
+		{
+			print_r($e->getMessage());
+			ActiveRecord::rollback();
 		}
 
 		//ActiveRecord::commit();

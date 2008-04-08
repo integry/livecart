@@ -206,6 +206,7 @@ abstract class LiveCartImportDriver
 				}
 			}
 
+			reset($prefixes);
 			$this->tablePrefix = key($prefixes);
 		}
 

@@ -5,7 +5,7 @@
 {/if}
 
 {if $field.type == 1 || $field.type == 5}
-	{if $field.isMultiValue}		
+	{if $field.isMultiValue}
 		<fieldset class="container multiValueSelect{if $field.type == 1} multiValueNumeric{/if}">
 		{foreach from=$field.values key="id" item="value"}
 			{if '' != $id}
@@ -43,7 +43,7 @@
 {elseif $field.type == 4}
 	<div class="textarea" style="margin-left: 0;">
 		{textarea id="product_`$cat`_`$product.ID`_`$fieldName`" name=$fieldName class="tinyMCE"}
-		<div class="errorText hidden"></div> 
+		<div class="errorText hidden"></div>
 	</div>
 
 {elseif $field.type == 6}

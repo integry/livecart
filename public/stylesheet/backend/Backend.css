@@ -1313,7 +1313,7 @@ ul.languageFormTabs li
     border-bottom: 0px;
     background-color: #f5f5f5;
     margin-left: 2px;
-    padding: 0.5em 1em 0.5em 1em ! important;
+    padding: 0.5em ! important;
 }
 
 ul.languageFormTabs li:hover, ul.languageFormTabs li.active

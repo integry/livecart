@@ -62,7 +62,7 @@ class Template
 
 				if ($file->isDir())
 				{
-					$dir = self::getTree($file->getPathName());
+					$dir = self::getTree($file->getPathName(), $isCustom);
 					if ($dir)
 					{
 						$res[$file->getFileName()]['id'] = $id;

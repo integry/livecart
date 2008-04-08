@@ -57,11 +57,7 @@ function smarty_block_form(&$params, $content, $smarty, &$repeat)
 			$actionURL = $params['url'];
 			unset($params['url']);
 		}
-		elseif ('self' == $formAction)
-		{
-			$actionURL = $_SERVER['REQUEST_URI'];
-		}
-		else
+		else if ($formAction)
 		{
 			$vars = explode(" ", $formAction);
 			$URLVars = array();
@@ -80,6 +76,10 @@ function smarty_block_form(&$params, $content, $smarty, &$repeat)
 			{
 				$actionURL = "INVALID_FORM_ACTION_URL";
 			}
+		}
+		else if ('self' == $formAction || !$formAction)
+		{
+			$actionURL = $_SERVER['REQUEST_URI'];
 		}
 
 		if (!empty($params['onsubmit']))

@@ -51,7 +51,7 @@ class ProductController extends FrontendController
 		}
 
 		$productArray = $product->toArray();
-		ProductSpecification::loadSpecificationForProductArray($productArray);
+		//ProductSpecification::loadSpecificationForProductArray($productArray);
 
 		// filter empty attributes
 		foreach ($productArray['attributes'] as $key => $attr)

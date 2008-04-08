@@ -147,12 +147,14 @@ class LiveCartImporter
 				}
 				else
 				{
-					$record->save(ActiveRecord::PERFORM_INSERT);
+					//$record->save(ActiveRecord::PERFORM_INSERT);
+					$record->save();
 				}
 			}
 			catch (Exception $e)
 			{
-//				var_dump($e);
+				var_dump($e);
+				throw $e;
 			}
 
 			ActiveRecord::clearPool();

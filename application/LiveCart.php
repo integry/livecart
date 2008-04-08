@@ -674,7 +674,11 @@ class LiveCart extends Application
 	{
 		if (!$this->defaultCurrencyCode)
 		{
-			$this->defaultCurrencyCode = $this->getDefaultCurrency()->getID();
+			$def = $this->getDefaultCurrency();
+			if ($def)
+			{
+				$this->defaultCurrencyCode = $def->getID();
+			}
 		}
 
 		return $this->defaultCurrencyCode;
