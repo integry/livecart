@@ -38,6 +38,7 @@ class CategoryController extends FrontendController
 		// get category instance
 		$this->categoryID = $this->request->get('id');
 		$this->category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
+		$categoryArray = $this->category->toArray();
 
 		$this->getAppliedFilters();
 
@@ -138,15 +139,29 @@ class CategoryController extends FrontendController
 		// if all the results come from one category, redirect to this category
 		if ((count($categoryNarrow) == 1) && (count($this->filters) == 1))
 		{
-			while (count($categoryNarrow) == 1)
+			$canNarrow = true;
+
+			foreach ($products as $product)
 			{
-				$this->category = Category::getInstanceByID($categoryNarrow[0]['ID'], Category::LOAD_DATA);
-				$subCategories = $this->category->getSubCategoryArray(Category::LOAD_REFERENCES);
-				$categoryNarrow = $this->getSubCategoriesBySearchQuery($selectFilter, $subCategories);
+				if ($product['Category']['ID'] == $this->categoryID)
+				{
+					$canNarrow = false;
+				}
 			}
 
-			include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
-			return new RedirectResponse(createCategoryUrl(array('data' => $this->category->toArray(), 'filters' => $this->filters), $this->application));
+			if ($canNarrow)
+			{
+				while (count($categoryNarrow) == 1)
+				{
+					$this->category = Category::getInstanceByID($categoryNarrow[0]['ID'], Category::LOAD_DATA);
+					$subCategories = $this->category->getSubCategoryArray(Category::LOAD_REFERENCES);
+					$subCategories[] = $categoryArray;
+					$categoryNarrow = $this->getSubCategoriesBySearchQuery($selectFilter, $subCategories);
+				}
+
+				include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
+				return new RedirectResponse(createCategoryUrl(array('data' => $this->category->toArray(), 'filters' => $this->filters), $this->application));
+			}
 		}
 
 		// get subcategory-subcategories
@@ -220,7 +235,7 @@ class CategoryController extends FrontendController
 		$response->set('offsetEnd', $offsetEnd);
 		$response->set('perPage', $perPage);
 		$response->set('currentPage', $currentPage);
-		$response->set('category', $this->category->toArray());
+		$response->set('category', $categoryArray);
 		$response->set('subCategories', $subCategories);
 
 		$response->set('currency', $this->getRequestCurrency());

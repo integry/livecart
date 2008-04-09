@@ -57,7 +57,7 @@ function smarty_block_form(&$params, $content, $smarty, &$repeat)
 			$actionURL = $params['url'];
 			unset($params['url']);
 		}
-		else if ($formAction)
+		else if ($formAction && ('self' != $formAction))
 		{
 			$vars = explode(" ", $formAction);
 			$URLVars = array();

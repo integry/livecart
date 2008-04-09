@@ -7,7 +7,10 @@ Event.observe(window, 'load',
 	{
 		window.loadingImage = 'image/loading.gif';
 		window.closeButton = 'image/silk/gif/cross.gif';
-		initLightbox();
+		if (window.initLightbox)
+		{
+			initLightbox();
+		}
 	}
 );
 

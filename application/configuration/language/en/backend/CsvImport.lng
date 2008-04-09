@@ -34,7 +34,6 @@ Category.ID=Category ID
 _category_x=Category Name [_1]
 _import=Import
 _continue=Continue
-_no_product_fields_selected=Please select at least one product field
 
 _importing=Importing...
 _import_completed=CSV file imported successfully

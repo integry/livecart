@@ -194,11 +194,6 @@ class CsvImportController extends StoreManagementController
 			}
 		}
 
-		if (!isset($fields['Product']))
-		{
-			return new JSONResponse(array('errors' => array('err' => $this->translate('_no_product_fields_selected'))));
-		}
-
 		if (isset($fields['Category']))
 		{
 			ksort($fields['Category']);
@@ -309,87 +304,93 @@ class CsvImportController extends StoreManagementController
 				$cat = $root;
 			}
 
-			$product = Product::getNewInstance($cat);
-			$product->isEnabled->set(true);
-
-			// product information
-			$impReq->clearData();
-			foreach ($fields['Product'] as $field => $csvIndex)
+			if (isset($fields['Product']))
 			{
-				$impReq->set($field, $record[$csvIndex]);
-			}
+				$product = Product::getNewInstance($cat);
+				$product->isEnabled->set(true);
 
-			// manufacturer
-			if (isset($fields['Manufacturer']['name']))
-			{
-				$impReq->set('manufacturer', $record[$fields['Manufacturer']['name']]);
-			}
-
-			// price
-			if (isset($fields['ProductPrice']['price']))
-			{
-				$record[$fields['ProductPrice']['price']] = str_replace(',', '.', $record[$fields['ProductPrice']['price']]);
-				$record[$fields['ProductPrice']['price']] = preg_replace('/[^\.0-9]/', '', $record[$fields['ProductPrice']['price']]);
-				$impReq->set('price_' . $this->application->getDefaultCurrencyCode(), (float)$record[$fields['ProductPrice']['price']]);
-			}
-
-			// attributes
-			if (isset($fields['specField']))
-			{
-				foreach ($fields['specField'] as $specFieldID => $csvIndex)
+				// product information
+				$impReq->clearData();
+				foreach ($fields['Product'] as $field => $csvIndex)
 				{
-					if (empty($record[$csvIndex]))
-					{
-						continue;
-					}
+					$impReq->set($field, $record[$csvIndex]);
+				}
 
-					$attr = SpecField::getInstanceByID($specFieldID, SpecField::LOAD_DATA);
-					if ($attr->isSimpleNumbers())
-					{
-						$impReq->set($attr->getFormFieldName(), (float)$record[$csvIndex]);
-					}
-					else if ($attr->isSelector())
-					{
-						$f = new ARSelectFilter(
-								new EqualsCond(
-									SpecFieldValue::getLangSearchHandle(
-										new ARFieldHandle('SpecFieldValue', 'value'),
-										$this->application->getDefaultLanguageCode()
-									),
-									$record[$csvIndex]
-								)
-							);
-						$f->setLimit(1);
+				// manufacturer
+				if (isset($fields['Manufacturer']['name']))
+				{
+					$impReq->set('manufacturer', $record[$fields['Manufacturer']['name']]);
+				}
 
-						if (!$value = $attr->getRelatedRecordSet('SpecFieldValue', $f)->shift())
+				// price
+				if (isset($fields['ProductPrice']['price']))
+				{
+					$record[$fields['ProductPrice']['price']] = str_replace(',', '.', $record[$fields['ProductPrice']['price']]);
+					$record[$fields['ProductPrice']['price']] = preg_replace('/[^\.0-9]/', '', $record[$fields['ProductPrice']['price']]);
+					$impReq->set('price_' . $this->application->getDefaultCurrencyCode(), (float)$record[$fields['ProductPrice']['price']]);
+				}
+
+				// attributes
+				if (isset($fields['specField']))
+				{
+					foreach ($fields['specField'] as $specFieldID => $csvIndex)
+					{
+						if (empty($record[$csvIndex]))
 						{
-							$value = SpecFieldValue::getNewInstance($attr);
-
-							if ($attr->type->get() == SpecField::TYPE_NUMBERS_SELECTOR)
-							{
-								$value->value->set($record[$csvIndex]);
-							}
-							else
-							{
-								$value->setValueByLang('value', $this->application->getDefaultLanguageCode(), $record[$csvIndex]);
-							}
-
-							$value->save();
+							continue;
 						}
 
-						$impReq->set($attr->getFormFieldName(), $value->getID());
-					}
+						$attr = SpecField::getInstanceByID($specFieldID, SpecField::LOAD_DATA);
+						if ($attr->isSimpleNumbers())
+						{
+							$impReq->set($attr->getFormFieldName(), (float)$record[$csvIndex]);
+						}
+						else if ($attr->isSelector())
+						{
+							$f = new ARSelectFilter(
+									new EqualsCond(
+										SpecFieldValue::getLangSearchHandle(
+											new ARFieldHandle('SpecFieldValue', 'value'),
+											$this->application->getDefaultLanguageCode()
+										),
+										$record[$csvIndex]
+									)
+								);
+							$f->setLimit(1);
 
-					else
-					{
-						$impReq->set($attr->getFormFieldName(), $record[$csvIndex]);
+							if (!$value = $attr->getRelatedRecordSet('SpecFieldValue', $f)->shift())
+							{
+								$value = SpecFieldValue::getNewInstance($attr);
+
+								if ($attr->type->get() == SpecField::TYPE_NUMBERS_SELECTOR)
+								{
+									$value->value->set($record[$csvIndex]);
+								}
+								else
+								{
+									$value->setValueByLang('value', $this->application->getDefaultLanguageCode(), $record[$csvIndex]);
+								}
+
+								$value->save();
+							}
+
+							$impReq->set($attr->getFormFieldName(), $value->getID());
+						}
+
+						else
+						{
+							$impReq->set($attr->getFormFieldName(), $record[$csvIndex]);
+						}
 					}
 				}
+
+				$product->loadRequestData($impReq);
+
+				$product->save();
+
+				$product->__destruct();
+				unset($product);
 			}
-
-			$product->loadRequestData($impReq);
-
-			$product->save();
 
 			$progress++;
 
@@ -402,12 +403,9 @@ class CsvImportController extends StoreManagementController
 			{
 				$this->cancel();
 			}
-
-			$product->__destruct();
-			unset($product);
 		}
 
-		ActiveRecord::rollback();
+		//ActiveRecord::rollback();
 		ActiveRecord::commit();
 
 		$response->flush($this->getResponse(array('progress' => 0, 'total' => $total)));
