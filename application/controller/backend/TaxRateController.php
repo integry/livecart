@@ -41,7 +41,7 @@ class TaxRateController extends StoreManagementController
 		$response = new ActionResponse();
 		$response->set('enabledTaxes', $enabledTaxes);
 		$response->set('taxRates', $taxRatesArray);
-		$response->set('newTaxRate', array('ID' => '0', 'DeliveryZone' => $deliveryZoneArray));
+		$response->set('newTaxRate', array('ID' => '', 'DeliveryZone' => $deliveryZoneArray));
 		$response->set('deliveryZone', $deliveryZoneArray);
 		$response->set('form', $form);
 		return $response;
@@ -97,9 +97,7 @@ class TaxRateController extends StoreManagementController
 	 */
 	public function update()
 	{
-		$taxRate = TaxRate::getInstanceByID((int)$this->request->get('taxRateID'), true);
-
-		return $this->save($taxRate);
+		return $this->save(TaxRate::getInstanceByID((int)$this->request->get('taxRateID'), true));
 	}
 
 	/**
@@ -110,7 +108,7 @@ class TaxRateController extends StoreManagementController
 		$validator = $this->createTaxRateFormValidator();
 		if($validator->isValid())
 		{
-			$taxRate->setValueArrayByLang(array('name'), $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true, false), $this->request);
+			$taxRate->loadRequestData($this->request);
 			$taxRate->save();
 
 			return new JSONResponse(array('rate' => $taxRate->toArray()), 'success', $this->translate('_tax_rate_has_been_successfully_saved'));

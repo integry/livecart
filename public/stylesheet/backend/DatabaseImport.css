@@ -22,7 +22,7 @@
     padding-left: 2em;
 }
 
-#importProgress li
+#progressBarContainer li
 {
     list-style-type: none;
     margin-bottom: 1em;
@@ -32,12 +32,12 @@
     padding-left: 22px;
 }
 
-#importProgress li.completed
+#progressBarContainer li.completed
 {
     background-image: url(../../image/silk/tick.png);
 }
 
-#importProgress li.inProgress
+#progressBarContainer li.inProgress
 {
     background-image: url(../../image/indicator.gif);
 }

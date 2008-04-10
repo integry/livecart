@@ -8,25 +8,25 @@
 	<base href="{baseUrl}" />
 
 	{liveCustomization}
-	
+
 	<!-- Css includes -->
 	{includeCss file="../javascript/library/tinymce/themes/advanced/css/editor_ui.css" front=true}
 	{includeCss file="backend/stat.css" front=true}
 	{includeCss file="backend/Backend.css" front=true}
 	{compiledCss glue=true}
-	
-	{includeJs file=library/tinymce/tiny_mce.js inline=true}	 
+
+	{includeJs file=library/tinymce/tiny_mce.js inline=true}
 	{includeJs file=library/KeyboardEvent.js front=true}
 	{includeJs file=library/livecart.js front=true}
-	{includeJs file="backend/Backend.js" front=true}	
-	{includeJs file=library/dhtmlHistory/dhtmlHistory.js}	
+	{includeJs file="backend/Backend.js" front=true}
+	{includeJs file=library/dhtmlHistory/dhtmlHistory.js}
 	{includeJs file="library/scriptaculous/dragdrop.js" front=true}
 	{includeJs file="library/scriptaculous/slider.js" front=true}
 	{includeJs file="library/scriptaculous/controls.js" front=true}
 	{includeJs file="library/scriptaculous/builder.js" front=true}
 	{includeJs file="library/scriptaculous/effects.js" front=true}
 	{includeJs file="library/prototype/prototype.js" front=true}
-		
+
 	{compiledJs glue=true}
 
 	{literal}
@@ -35,18 +35,19 @@
 	{
 	   try
 	   {
-			window.opener.selectPopupWindow = window;	
+			window.opener.selectPopupWindow = window;
 	   }
 	   catch (e)
 	   {
 			window.opener = null;
 			// Permission denied to set property Window.selectPopupWindow
-	   }	   
+	   }
 	}
-		
+
 	tinyMCE.init({
 		theme : "advanced",
 		mode : "exact",
+		plugins: "table,contextmenu",
 		elements : "",
 		auto_reset_designmode : true,
 		theme_advanced_resizing_use_cookie : false,
@@ -55,8 +56,8 @@
 		theme_advanced_path_location : "bottom",
 		document_base_url : "{/literal}{baseUrl}{literal}",
 		remove_script_host : "true",
-		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,styleselect,formatselect",
-		theme_advanced_buttons2 : "bullist,numlist,separator,outdent,indent,separator,undo,redo,separator,link,unlink,anchor,image,cleanup,separator,code,removeformat,visualaid,separator,sub,sup,separator,charmap",
+		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,styleselect,formatselect,separator,sub,sup,separator,charmap",
+		theme_advanced_buttons2 : "bullist,numlist,separator,outdent,indent,separator,undo,redo,separator,link,unlink,anchor,image,cleanup,separator,code,removeformat,separator,table",
 		theme_advanced_buttons3 : "",
 		content_css: "{/literal}{baseUrl}{literal}stylesheet/library/TinyMCE.css",
 		relative_urls : true
@@ -67,7 +68,7 @@
 		Backend.locale = '{/literal}{localeCode}{literal}';
 		Backend.onLoad();
 	}
-	
+
 	window.onload = onLoad;
 
 	</script>

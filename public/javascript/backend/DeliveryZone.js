@@ -145,14 +145,14 @@ Backend.DeliveryZone.prototype =
 
 			var activateTab = $('tabDeliveryZoneShipping');
 			$("tabDeliveryZoneCountry").hide();
-			$("tabDeliveryZoneTaxes").hide();
+			//$("tabDeliveryZoneTaxes").hide();
 			$("deliveryZone_delete").parentNode.hide();
 		}
 		else
 		{
 			var activateTab = $('tabDeliveryZoneCountry');
 			$("tabDeliveryZoneCountry").show();
-			$("tabDeliveryZoneTaxes").show();
+			//$("tabDeliveryZoneTaxes").show();
 			$("deliveryZone_delete").parentNode.show();
 		}
 
@@ -1524,14 +1524,16 @@ Backend.DeliveryZone.TaxRate.prototype =
 		{
 			if(0 == this.rate.ID)
 			{
-				var li = this.ratesActiveList.addRecord(response.rate.ID, '<span class="' + this.prefix + 'taxRatesList_title">' + response.rate.Tax.name + '</span>');
+				var li = this.ratesActiveList.addRecord(response.rate.ID, '<span class="' + this.prefix + 'taxRatesList_title">' + response.rate.Tax.name + '</span> <span class="taxRate_taxRatesList_rate">(<span>' + response.rate.rate + '</span>%)</span>');
 				this.removeTaxOption(this.nodes.taxID.value);
 				this.hideNewForm();
 			}
 			else
 			{
 				Form.State.backup(this.nodes.form);
-				this.ratesActiveList.toggleContainer(this.nodes.root.up('li'), 'edit', 'yellow');
+				var container = this.nodes.root.up('li');
+				container.down('.taxRate_taxRatesList_rate').down('span').update(response.rate.rate);
+				this.ratesActiveList.toggleContainer(container, 'edit', 'yellow');
 			}
 		}
 		else

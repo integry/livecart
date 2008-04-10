@@ -89,7 +89,14 @@
 
 	<fieldset>
 		<legend>Importing</legend>
-		<ul>
+
+		<ul class="menu">
+			<li>
+				<a class="cancel" href="{link controller=backend.databaseImport}">{t _cancel}</a>
+			</li>
+		</ul>
+
+		<ul id="progressBarContainer">
 			{foreach from=$recordTypes item=type}
 				<li id="progress_{$type}" style="display: none;">
 					<h2>{translate text=$type}</h2>

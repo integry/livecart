@@ -3,3 +3,8 @@ body, td
     font-family: arial, verdana;
     font-size: 14px;
 }
+
+#tinymce td:focus
+{
+	outline: 1px solid black;
+}
