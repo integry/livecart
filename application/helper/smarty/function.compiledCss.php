@@ -14,7 +14,7 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 	$includedStylesheetTimestamp = $smarty->_smarty_vars["INCLUDED_STYLESHEET_TIMESTAMP"];
 	$includedStylesheetFiles = $smarty->_smarty_vars["INCLUDED_STYLESHEET_FILES"];
 
-	if(isset($params['glue']) && ($params['glue'] == true) && !$smarty->getApplication()->isDevMode())
+	if(isset($params['glue']) && ($params['glue'] == true) && !$smarty->getApplication()->isDevMode() && !$smarty->getApplication()->isTranslationMode() && !$smarty->getApplication()->isCustomizationMode())
 	{
 		$request = $smarty->getApplication()->getRequest();
 		$compiledFileName = $request->getControllerName() . '-' . $request->getActionName() . '.css';

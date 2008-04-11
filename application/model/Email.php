@@ -56,6 +56,10 @@ class Email
 				$this->connection->setPassword($config->get('SMTP_PASSWORD'));
 			}
 		}
+		else if ('FAKE' == $config->get('EMAIL_METHOD'))
+		{
+			$this->connection = new Swift_Connection_Fake();
+		}
 		else
 		{
 			$this->connection = new Swift_Connection_NativeMail();

@@ -336,9 +336,12 @@ class CustomerOrder extends ActiveRecordModel
 			$this->shippingAddress->set($shippingAddress);
 		}
 
-		$billingAddress = clone $this->billingAddress->get();
-		$billingAddress->save();
-		$this->billingAddress->set($billingAddress);
+		if ($this->billingAddress->get())
+		{
+			$billingAddress = clone $this->billingAddress->get();
+			$billingAddress->save();
+			$this->billingAddress->set($billingAddress);
+		}
 
 		// move wish list items to a separate order
 		$wishList = CustomerOrder::getNewInstance($this->user->get());

@@ -7,7 +7,7 @@ ClassLoader::import("application.model.delivery.DeliveryZoneCityMask");
 /**
  *
  * @package test.model.delivery
- * @author Integry Systems 
+ * @author Integry Systems
  */
 class TestDeliveryZoneCityMask extends UnitTest
 {
@@ -20,11 +20,11 @@ class TestDeliveryZoneCityMask extends UnitTest
 	{
 		parent::__construct('delivery zone city masks tests');
 	}
-	
+
 	public function getUsedSchemas()
 	{
 		return array(
-			'DeliveryZone', 
+			'DeliveryZone',
 			'DeliveryZoneCityMask',
 		);
 	}
@@ -32,43 +32,23 @@ class TestDeliveryZoneCityMask extends UnitTest
 	public function setUp()
 	{
 		parent::setUp();
-		
+
 		$this->zone = DeliveryZone::getNewInstance();
 		$this->zone->setValueByLang('name', 'en', ':TEST_ZONE');
 		$this->zone->isEnabled->set(1);
 		$this->zone->isFreeShipping->set(1);
 		$this->zone->save();
 	}
-	
+
 	public function testCreateNewDeliveryZoneCityMask()
 	{
 		$cityMask = DeliveryZoneCityMask::getNewInstance($this->zone, 'Viln%');
 		$cityMask->save();
-		
+
 		$cityMask->reload();
-		
+
 		$this->assertEqual($cityMask->deliveryZone->get(), $this->zone);
 		$this->assertTrue($cityMask->mask->get(), 'Viln%');
-	}
-	
-	public function testDeleteDeliveryZoneCityMask()
-	{
-		$cityMask = DeliveryZoneCityMask::getNewInstance($this->zone, 'Viln%');
-		$cityMask->save();
-		
-		$this->assertTrue($cityMask->isExistingRecord());
-		
-		$cityMask->reload();
-		
-		try 
-		{ 
-			$cityMask->load(); 
-			$this->fail(); 
-		} 
-		catch(Exception $e) 
-		{ 
-			$this->pass(); 
-		}
 	}
 }
 ?>

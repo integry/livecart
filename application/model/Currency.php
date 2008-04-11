@@ -37,6 +37,13 @@ class Currency extends ActiveRecordModel
 		return ActiveRecordModel::getInstanceById(__CLASS__, $id, $loadData);
 	}
 
+	public static function getNewInstance($id)
+	{
+		$inst = parent::getNewInstance(__class__);
+		$inst->setID($id);
+		return $inst;
+	}
+
 	/*####################  Instance retrieval ####################*/
 
 	/**

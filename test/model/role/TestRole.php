@@ -13,21 +13,21 @@ class TestRole extends UnitTest
 	{
 		parent::__construct('Role tests');
 	}
-	
+
 	public function getUsedSchemas()
 	{
 		return array(
 			'Role'
 		);
 	}
-	
+
 	public function testCreateNewRole()
 	{
-		$role = Role::getNewInstance('testing_s5df4s4sadad');
+		$role = Role::getNewInstance('testing');
 		$role->save();
-		
+
 		$role->reload();
-		
+
 		$this->assertEqual($role->name->get(), 'testing');
 	}
 
@@ -35,10 +35,10 @@ class TestRole extends UnitTest
 	{
 		$newRole = Role::getNewInstance('testing');
 		$newRole->save();
-		
+
 		$role = Role::getInstanceByName('testing');
 		$this->assertReference($role, $newRole);
-		
+
 		$role = Role::getInstanceByName('unknown');
 		$this->assertNull($role, null);
 	}

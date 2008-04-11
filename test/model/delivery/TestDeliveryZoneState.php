@@ -9,7 +9,7 @@ ClassLoader::import("application.model.delivery.DeliveryZoneState");
 /**
  *
  * @package test.model.delivery
- * @author Integry Systems 
+ * @author Integry Systems
  */
 class TestDeliveryZoneState extends UnitTest
 {
@@ -17,7 +17,7 @@ class TestDeliveryZoneState extends UnitTest
 	 * @var DeliveryZone
 	 */
 	private $zone;
-	
+
 	/**
 	 * @var State
 	 */
@@ -31,55 +31,34 @@ class TestDeliveryZoneState extends UnitTest
 	public function getUsedSchemas()
 	{
 		return array(
-			'DeliveryZone', 
-			'DeliveryZoneCountry', 
+			'DeliveryZone',
+			'DeliveryZoneCountry',
 			'DeliveryZoneState'
 		);
 	}
-	
+
 	public function setUp()
 	{
 		parent::setUp();
-		
+
 		$this->zone = DeliveryZone::getNewInstance();
 		$this->zone->setValueByLang('name', 'en', ':TEST_ZONE');
 		$this->zone->isEnabled->set(1);
 		$this->zone->isFreeShipping->set(1);
 		$this->zone->save();
-		
-		$this->alaska = State::getInstanceByID(1, true, true); 
+
+		$this->alaska = State::getInstanceByID(1, true, true);
 	}
-	
+
 	public function testCreateNewDeliveryZoneState()
 	{
 		$deliveryState = DeliveryZoneState::getNewInstance($this->zone,  $this->alaska);
 		$deliveryState->save();
-		
+
 		$deliveryState->reload();
-		
+
 		$this->assertEqual($deliveryState->deliveryZone->get(), $this->zone);
 		$this->assertTrue($deliveryState->state->get() === $this->alaska);
-	}
-	
-	public function testDeleteDeliveryZoneState()
-	{
-		$deliveryState = DeliveryZoneState::getNewInstance($this->zone,  $this->alaska);
-		$deliveryState->save();
-		
-		$this->assertTrue($deliveryState->isExistingRecord());
-		
-		$deliveryState->delete();
-		$deliveryState->markAsNotLoaded();
-		
-		try 
-		{ 
-			$deliveryState->load(); 
-			$this->fail(); 
-		} 
-		catch(Exception $e) 
-		{ 
-			$this->pass(); 
-		}
 	}
 }
 ?>

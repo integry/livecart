@@ -155,7 +155,10 @@ class CategoryController extends FrontendController
 				{
 					$this->category = Category::getInstanceByID($categoryNarrow[0]['ID'], Category::LOAD_DATA);
 					$subCategories = $this->category->getSubCategoryArray(Category::LOAD_REFERENCES);
-					$subCategories[] = $categoryArray;
+					if ($subCategories)
+					{
+						$subCategories[] = $categoryArray;
+					}
 					$categoryNarrow = $this->getSubCategoriesBySearchQuery($selectFilter, $subCategories);
 				}
 

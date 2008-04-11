@@ -224,11 +224,11 @@ class InstallController extends FrontendController
 		ClassLoader::import('application.model.Currency');
 
 		// create currency
-		try
+		if (ActiveRecord::objectExists('Currency', $this->request->get('curr'))
 		{
 			$currency = Currency::getInstanceByID($this->request->get('curr'), Currency::LOAD_DATA);
 		}
-		catch (ARNotFoundException $e)
+		else
 		{
 			$currency = ActiveRecord::getNewInstance('Currency');
 			$currency->setID($this->request->get('curr'));
@@ -240,11 +240,11 @@ class InstallController extends FrontendController
 		ClassLoader::import('application.model.system.Language');
 
 		// create language
-		try
+		if (ActiveRecord::objectExists('Language', $this->request->get('language'))
 		{
 			$language = Language::getInstanceByID($this->request->get('language'), Language::LOAD_DATA);
 		}
-		catch (ARNotFoundException $e)
+		else
 		{
 			$language = ActiveRecord::getNewInstance('Language');
 			$language->setID($this->request->get('language'));

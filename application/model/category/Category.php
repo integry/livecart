@@ -789,6 +789,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		}
 
 		self::getDBConnection()->executeUpdate($sql);
+		self::getDBConnection()->executeUpdate('DROP TEMPORARY TABLE CategoryCount');
 
 		self::commit();
 	}

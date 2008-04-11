@@ -13,12 +13,12 @@ ClassLoader::import('application.model.category.Category');
  * @package test.model.system
  */
 class TestMultiLingualObject extends UnitTest
-{	  
+{
 	public function __construct()
 	{
 		parent::__construct('Test multilingual objects');
 	}
-	
+
 	public function getUsedSchemas()
 	{
 		return array(
@@ -30,54 +30,66 @@ class TestMultiLingualObject extends UnitTest
 	{
 		// two quotes
 		$testValue = 'This is a value with "quotes" :)';
-		
+
 		$root = Category::getInstanceByID(1);
-		$new = Category::getNewInstance($root);		
+		$new = Category::getNewInstance($root);
 		$new->setValueByLang('name', 'en', $testValue);
 		$new->save();
-		
-		ActiveRecordModel::removeFromPool($new);
+
+		ActiveRecord::clearPool();
 		$restored = Category::getInstanceByID($new->getID(), Category::LOAD_DATA);
 		$array = $restored->toArray();
-	
-		$this->assertEqual($testValue, $array['name']);
-		
+
+		$this->assertEqual($testValue, $restored->getValueByLang('name', 'en'));
+
 		// one quote
 		$testValue = 'NX9420 C2D T7400 17" WSXGA+ WVA BRIGHT VIEW 1024MB 120GB DVD+/-RW DL ATI MOBILITY RADEON X1600 256MB WLAN BT TPM XPPKeyb En';
-		
+
 		$restored->setValueByLang('name', 'en', $testValue);
-		$restored->save();		
-		ActiveRecordModel::removeFromPool($restored);
-		
+		$restored->save();
+		ActiveRecord::clearPool();
+
 		$restored->totalProductCount->set(333);
-		
+
 		$another = Category::getInstanceByID($restored->getID(), Category::LOAD_DATA);
-		$array = $another->toArray();
-	
-		$this->assertEqual($testValue, $array['name']);
+
+		$this->assertEqual($testValue, $another->getValueByLang('name', 'en'));
 	}
 
-	function testSerializingAll_ASCII_Characters()
+	function testSerializingUsASCII_Characters()
 	{
 		$testValue = '';
 
-		for ($k = 0; $k <= 255; $k++)
+		for ($k = 0; $k <= 127; $k++)
 		{
-			$testValue .= chr($k);  
+			$testValue .= chr($k);
 		}
 
 		$testValue = 'x' . $testValue;
 
 		$root = Category::getInstanceByID(1);
-		$new = Category::getNewInstance($root);		
+		$new = Category::getNewInstance($root);
 		$new->setValueByLang('name', 'en', $testValue);
 		$new->save();
-		
-		ActiveRecordModel::removeFromPool($new);
-		$restored = Category::getInstanceByID($new->getID(), Category::LOAD_DATA);
-		$array = $restored->toArray();
 
-		$this->assertEqual($testValue, $array['name']);
+		ActiveRecordModel::clearPool();
+		$restored = Category::getInstanceByID($new->getID(), Category::LOAD_DATA);
+
+		$this->assertEqual($testValue, $restored->getValueByLang('name', 'en'));
+	}
+
+	function testSerializingUTF()
+	{
+		$utf = 'kvīīīāāāččččdddd';
+		$root = Category::getInstanceByID(1);
+		$new = Category::getNewInstance($root);
+		$new->setValueByLang('name', 'en', $utf);
+		$new->save();
+
+		ActiveRecordModel::clearPool();
+		$restored = Category::getInstanceByID($new->getID(), Category::LOAD_DATA);
+
+		$this->assertEqual($utf, $restored->getValueByLang('name', 'en'));
 	}
 }
 
