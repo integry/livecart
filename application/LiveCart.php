@@ -382,9 +382,9 @@ class LiveCart extends Application
 	 * @return string Renderer content
 	 * @throws ViewNotFoundException if view does not exists for specified controller
 	 */
-	protected function render(Controller $controllerInstance, Response $response)
+	protected function render(Controller $controllerInstance, Response $response, $actionName = null)
 	{
-		$output = parent::render($controllerInstance, $response);
+		$output = parent::render($controllerInstance, $response, $actionName);
 
 		if ($cache = $controllerInstance->getCacheHandler())
 		{

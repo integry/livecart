@@ -314,7 +314,12 @@ Backend.LangEdit.prototype =
 			fileName = fileName.substr(0, fileName.length - 4);
 		}
 
-		this.treeBrowser.insertNewItem(path, file, fileName, null, 0, 0, 0, '');
+		if (!path)
+		{
+			path = 0;
+		}
+
+		this.treeBrowser.insertNewItem(path, file, fileName, null, 0, 0, 0, '', 1);
 	},
 
 	initTreeBrowser: function()
