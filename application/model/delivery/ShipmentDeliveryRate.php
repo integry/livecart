@@ -10,22 +10,22 @@ ClassLoader::import('application.model.delivery.ShippingService');
  * the available rates. ShipmentDeliveryRate can be either a pre-defined rate or a real-time rate.
  *
  * @package application.model.delivery
- * @author Integry Systems <http://integry.com> 
+ * @author Integry Systems <http://integry.com>
  */
 class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 {
 	protected $amountWithTax;
-	
+
 	/**
 	 * @var LiveCart
 	 */
 	private $application;
-	
+
 	public function setApplication($application)
 	{
 		$this->application = $application;
 	}
-	
+
 	public static function getNewInstance(ShippingService $service, $cost)
 	{
 		$inst = new ShipmentDeliveryRate();
@@ -34,44 +34,44 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 		$inst->setCost($cost, $service->getApplication()->getDefaultCurrencyCode());
 		return $inst;
 	}
-	
+
 	public static function getRealTimeRates(ShippingRateCalculator $handler, Shipment $shipment)
 	{
 		$handler->setWeight($shipment->getChargeableWeight());
-		
-		$address = $shipment->order->get()->shippingAddress->get();		
-		$handler->setDestCountry($address->countryID->get()); 
-		
+
+		$address = $shipment->order->get()->shippingAddress->get();
+		$handler->setDestCountry($address->countryID->get());
+
 		$handler->setDestZip($address->postalCode->get());
 		$config = $shipment->getApplication()->getConfig();
 		$handler->setSourceCountry($config->get('STORE_COUNTRY'));
 		$handler->setSourceZip($config->get('STORE_ZIP'));
-		
+
 		$rates = new ShippingRateSet();
 
-		foreach ($handler->getAllRates() as $k => $rate)		
-		{   
+		foreach ($handler->getAllRates() as $k => $rate)
+		{
 			$newRate = new ShipmentDeliveryRate();
 			$newRate->setApplication($shipment->getApplication());
-			$newRate->setCost($rate->getCostAmount(), $rate->getCostCurrency()); 
+			$newRate->setCost($rate->getCostAmount(), $rate->getCostCurrency());
 			$newRate->setServiceName($rate->getServiceName());
 			$newRate->setClassName($rate->getClassName());
 			$newRate->setProviderName($rate->getProviderName());
 			$newRate->setServiceId($rate->getClassName() . '_' . $k);
 			$rates->add($newRate);
 		}
-		
+
 		return $rates;
 	}
-	
+
 	public function getAmountByCurrency(Currency $currency)
 	{
 		$amountCurrency = Currency::getInstanceById($this->getCostCurrency());
 		$amount = $currency->convertAmount($amountCurrency, $this->getCostAmount());
-		
-		return round($amount, 2);
+
+		return $amount;
 	}
-	
+
 	public function setAmountByCurrency(Currency $currency, $amount)
 	{
 		$amountCurrency = Currency::getInstanceById($this->getCostCurrency());
@@ -82,7 +82,7 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 	{
 		$this->amountWithTax = $amount;
 	}
-	
+
 	public function toArray()
 	{
 		$array = parent::toArray();
@@ -102,15 +102,15 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 		$array['price'] = $prices;
 		$array['formattedPrice'] = $formattedPrices;
 		$array['taxPrice'] = $taxPrices;
-				
+
 		// shipping service name
 		$id = $this->getServiceID();
 		if (is_numeric($id))
 		{
 			try
 			{
-				$service = ShippingService::getInstanceById($id, ShippingService::LOAD_DATA);   
-				$array['ShippingService'] = $service->toArray();				
+				$service = ShippingService::getInstanceById($id, ShippingService::LOAD_DATA);
+				$array['ShippingService'] = $service->toArray();
 			}
 			catch (ARNotFoundException $e)
 			{
@@ -121,18 +121,18 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 		{
 			$array['ShippingService'] = array('name_lang' => $this->getServiceName(), 'provider' => $this->getProviderName());
 		}
-		
+
 		return $array;
 	}
-	
+
 	public function serialize()
 	{
-		$vars = get_object_vars($this); 
+		$vars = get_object_vars($this);
 		unset($vars['application']);
-		
+
 		return serialize($vars);
 	}
-	
+
 	public function unserialize($serialized)
 	{
 		foreach (unserialize($serialized) as $key => $value)

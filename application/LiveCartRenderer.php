@@ -136,7 +136,6 @@ class LiveCartRenderer extends SmartyRenderer
 				}
 
 			}
-			//var_dump($conf);
 		}
 
 		return $output;

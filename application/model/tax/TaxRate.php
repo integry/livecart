@@ -7,7 +7,7 @@ ClassLoader::import("application.model.tax.*");
  * Defines a tax rate for a DeliveryZone. Tax rates are applied to order totals and shipping charges as well.
  *
  * @package application.model.tax
- * @author Integry Systems <http://integry.com>  
+ * @author Integry Systems <http://integry.com>
  */
 class TaxRate extends MultilingualObject
 {
@@ -15,11 +15,11 @@ class TaxRate extends MultilingualObject
 	{
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("TaxRate");
-		
+
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("deliveryZoneID", "DeliveryZone", "ID", "DeliveryZone", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("taxID", "Tax", "ID", "Tax", ARInteger::instance()));
-		
+
 		$schema->registerField(new ARField("rate", ARFloat::instance()));
 	}
 
@@ -33,13 +33,13 @@ class TaxRate extends MultilingualObject
 	 * @return TaxRate
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
-	{			
+	{
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
-	
+
 	/**
 	 * Create new tax rate
-	 * 
+	 *
 	 * @param DeliveryZone $deliveryZone Delivery zone instance
 	 * @param Tax $tax Tax type
 	 * @param float $rate Rate in percents
@@ -53,10 +53,10 @@ class TaxRate extends MultilingualObject
 		{
 			$instance->deliveryZone->set($deliveryZone);
 		}
-	  	
+
 	  	$instance->tax->set($tax);
 	  	$instance->rate->set((int)$rate);
-	  	
+
 	  	return $instance;
 	}
 
@@ -72,11 +72,11 @@ class TaxRate extends MultilingualObject
 	{
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
-	
+
 	/**
 	 * Load rates from known delivery zone
 	 *
-	 * @param DeliveryZone $deliveryZone 
+	 * @param DeliveryZone $deliveryZone
 	 * @param bool $loadReferencedRecords
 	 *
 	 * @return ARSet
@@ -84,8 +84,8 @@ class TaxRate extends MultilingualObject
 	public static function getRecordSetByDeliveryZone(DeliveryZone $deliveryZone = null, $includeDisabled = true, $loadReferencedRecords = array('Tax'))
 	{
  		$filter = new ARSelectFilter();
-  
-		if(!$deliveryZone)
+
+		if(!$deliveryZone || $deliveryZone->isDefault())
 		{
 			$filter->setCondition(new IsNullCond(new ARFieldHandle(__CLASS__, "deliveryZoneID")));
 		}
@@ -93,13 +93,23 @@ class TaxRate extends MultilingualObject
 		{
 			$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "deliveryZoneID"), $deliveryZone->getID()));
 		}
-		
+
 		return self::getRecordSet($filter, $loadReferencedRecords);
 	}
 
 	public function applyTax($amount)
 	{
-		return $amount + ($amount * ($this->rate->get() / 100));   
+		return $amount + ($amount * ($this->rate->get() / 100));
+	}
+
+	protected function insert()
+	{
+		if ($this->deliveryZone->get()->isDefault())
+		{
+			$this->deliveryZone->setNull();
+		}
+
+		return parent::insert();
 	}
 }
 

@@ -30,6 +30,8 @@ _add_to_wishlist=Add to Wishlist
 # Orders
 _total=Total
 _subtotal=Subtotal
+_subtotal_before_tax=Subtotal before tax
+_total_before_tax=Total before tax
 _shipping=Shipping
 _order_total=Order total
 _price=Price

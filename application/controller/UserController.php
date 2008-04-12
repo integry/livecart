@@ -399,6 +399,7 @@ class UserController extends FrontendController
 	public function orderInvoice()
 	{
 		$this->addAccountBreadcrumb();
+		$this->application->setTheme('');
 
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->get('id')));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));

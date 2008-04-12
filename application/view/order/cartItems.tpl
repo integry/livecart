@@ -61,10 +61,10 @@
 				{/if}
 			</td>
 			<td class="cartPrice">
-				{$item.formattedSubTotal}
+				{$item.formattedDisplaySubTotal}
 				{if $item.count != 1}
 					<div class="subTotalCalc">
-						{$item.count} x {$item.formattedPrice}
+						{$item.count} x {$item.formattedDisplayPrice}
 					</div>
 				{/if}
 			</td>
@@ -75,7 +75,7 @@
 	{/foreach}
 			<tr>
 				<td colspan="3" class="subTotalCaption">{t _subtotal}:</td>
-				<td class="subTotal">{$orderTotal}</td>
+				<td class="subTotal">{$cart.formattedTotal.$currency}</td>
 				<td id="cartUpdate"><input type="submit" class="submit" value="{tn _update}" /></td>
 			</tr>
 

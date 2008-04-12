@@ -54,10 +54,11 @@ class ShipmentTax extends ActiveRecordModel
 
 		$totalAmount = $this->shipment->get()->amount->get();
 		$this->shipment->get()->load();
+
 		$totalAmount += $this->shipment->get()->shippingAmount->get();
 
 		$taxAmount = $totalAmount * ($this->taxRate->get()->rate->get() / 100);
-		$this->amount->set(round($taxAmount, 2));
+		$this->amount->set($taxAmount);
 	}
 
 	public function getAmountByCurrency(Currency $currency)

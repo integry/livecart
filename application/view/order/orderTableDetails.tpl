@@ -4,11 +4,18 @@
 			<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
 			{include file="user/itemOptions.tpl" options=$item.options}
 		</td>
-		<td>{$item.formattedPrice}</td>
+		<td>{$item.formattedDisplayPrice}</td>
 		<td>{$item.count}</td>
-		<td>{$item.formattedSubTotal}</td>
+		<td>{$item.formattedDisplaySubTotal}</td>
 	</tr>
 {/foreach}
+
+{if $shipment.taxes && !$hideTaxes}
+	<tr>
+		<td colspan="3" class="subTotalCaption beforeTax">{t _subtotal_before_tax}:</td>
+		<td>{$shipment.formattedSubTotalBeforeTax[$order.Currency.ID]}</td>
+	</tr>
+{/if}
 
 {if $order.isShippingRequired && $shipment.isShippable}
 	<tr>

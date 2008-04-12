@@ -66,67 +66,13 @@
 
 			{if $shipment.items}
 
-			{if !$shipment.isShippable}
-				<h2>{t _downloads}</h2>
-			{else}
-				<h2>{t _shipment} #{$smarty.foreach.shipments.iteration}</h2>
-			{/if}
+				{if !$shipment.isShippable}
+					<h2>{t _downloads}</h2>
+				{else}
+					<h2>{t _shipment} #{$smarty.foreach.shipments.iteration}</h2>
+				{/if}
 
-			<table class="table shipment">
-
-				<thead>
-					<tr>
-						<th class="productName">{t _product}</th>
-						<th>{t _price}</th>
-						<th>{t _quantity}</th>
-						<th>{t _subtotal}</th>
-					</tr>
-				</thead>
-
-				<tbody>
-
-					{foreach from=$shipment.items item="item" name="shipment"}
-						<tr class="{zebra loop="shipment"}">
-							<td class="productName">
-								{$item.Product.name_lang}
-								{include file="user/itemOptions.tpl" options=$item.options}
-							</td>
-							<td>{$item.formattedPrice}</td>
-							<td>{$item.count}</td>
-							<td class="amount">{$item.formattedSubTotal}</td>
-						</tr>
-					{/foreach}
-
-					{if $order.isShippingRequired && $shipment.isShippable && $shipment.selectedRate.formattedPrice[$order.Currency.ID]}
-						<tr>
-							<td colspan="3" class="subTotalCaption">
-								{t _shipping} ({$shipment.ShippingService.name_lang}):
-							</td>
-							<td class="amount">
-								{$shipment.selectedRate.formattedPrice[$order.Currency.ID]}
-							</td>
-						</tr>
-					{/if}
-
-					{foreach from=$shipment.taxes item="tax"}
-						<tr>
-							<td colspan="3" class="tax">{$tax.TaxRate.Tax.name_lang}:</td>
-							<td class="amount">{$tax.formattedAmount[$order.Currency.ID]}</td>
-						</tr>
-					{/foreach}
-
-					{if $shipment.isShippable}
-					<tr>
-						<td colspan="3" class="subTotalCaption">
-							{t _shipment_total}:
-						</td>
-						<td class="amount subTotal">{$shipment.formatted_totalAmount}</td>
-					</tr>
-					{/if}
-
-				</tbody>
-
-			</table>
+				{include file="user/shipmentEntry.tpl}
 
 			{/if}
 

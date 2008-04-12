@@ -682,6 +682,7 @@ class CustomerOrderController extends StoreManagementController
 
 	public function printInvoice()
 	{
+		$this->application->setTheme('');
 		$order = CustomerOrder::getInstanceById($this->request->get('id'), CustomerOrder::LOAD_DATA, CustomerOrder::LOAD_REFERENCES);
 		$order->loadAll();
 

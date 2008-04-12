@@ -54,18 +54,32 @@ class OrderedItem extends ActiveRecordModel
 
 	/*####################  Value retrieval and manipulation ####################*/
 
-	public function getSubTotal(Currency $currency)
+	public function getSubTotal(Currency $currency, $includeTaxes = true)
 	{
-		return $this->getPrice($currency) * $this->count->get();
+		$subTotal = $this->getPrice($currency) * $this->count->get();
+
+		if ($includeTaxes)
+		{
+			$deliveryZone = $this->customerOrder->get()->getDeliveryZone();
+			if ($deliveryZone->isDefault())
+			{
+				foreach ($deliveryZone->getTaxRates() as $rate)
+				{
+					$subTotal = $subTotal / (1 + ($rate->rate->get() / 100));
+				}
+			}
+		}
+
+		return $subTotal;
 	}
 
-	public function getPrice(Currency $currency)
+	public function getPrice(Currency $currency, $includeTaxes = true)
 	{
 		$isFinalized = $this->customerOrder->get()->isFinalized->get();
 
 		$itemCurrency = $this->priceCurrencyID->get() ? Currency::getInstanceById($this->priceCurrencyID->get()) : $currency;
 
-		$price = $isFinalized ? $this->price->get() : $this->product->get()->getPrice($currency->getID());
+		$price = $isFinalized ? $this->price->get() : $this->getItemPrice($currency, $includeTaxes);
 
 		foreach ($this->optionChoices as $choice)
 		{
@@ -82,6 +96,25 @@ class OrderedItem extends ActiveRecordModel
 		}
 
 		return $itemCurrency->convertAmount($currency, $price);
+	}
+
+	private function getItemPrice(Currency $currency, $includeTaxes = true)
+	{
+		$price = $this->product->get()->getPrice($currency->getID());
+
+		if ($includeTaxes)
+		{
+			$zone = $this->customerOrder->get()->getDeliveryZone();
+			if (!$zone->isDefault())
+			{
+				foreach (DeliveryZone::getDefaultZoneInstance()->getTaxRates() as $rate)
+				{
+					$price = $price / (1 + ($rate->rate->get() / 100));
+				}
+			}
+		}
+
+		return $price;
 	}
 
 	public function reserve()
@@ -264,9 +297,13 @@ class OrderedItem extends ActiveRecordModel
 			$currency = Currency::getInstanceByID($array['priceCurrencyID']);
 			$array['itemPrice'] = $this->getPrice($currency);
 			$array['itemSubTotal'] = $this->getSubTotal($currency);
+			$array['displayPrice'] = $this->getPrice($currency, !$this->customerOrder->get()->getDeliveryZone()->isDefault());
+			$array['displaySubTotal'] = $this->getSubTotal($currency, !$this->customerOrder->get()->getDeliveryZone()->isDefault());
 
 			$array['formattedBasePrice'] = $currency->getFormattedPrice($array['price']);
 			$array['formattedPrice'] = $currency->getFormattedPrice($array['itemPrice']);
+			$array['formattedDisplayPrice'] = $currency->getFormattedPrice($array['displayPrice']);
+			$array['formattedDisplaySubTotal'] = $currency->getFormattedPrice($array['displaySubTotal']);
 			$array['formattedSubTotal'] = $currency->getFormattedPrice($array['itemSubTotal']);
 		}
 

@@ -23,23 +23,6 @@
 		</td>
 	</tr>
 
-	<tr class="orderShipment_info_tax_row">
-		<td class="orderShipmentsItem_info_report_td">
-			<div class="orderShipmentsItem_info_report">
-				{t _taxes}:
-			</div>
-		</td>
-		<td class="orderShipmentsItem_info_tax_td">
-			<div class="orderShipmentsItem_info_tax">
-				<span class="orderShipment_info_subtotal shipment_taxAmount">
-					<span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
-					<span class="price">{$shipment.taxAmount|default:0|string_format:"%.2f"}</span>
-					<span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
-				</span>
-			</div>
-		</td>
-	</tr>
-
 	<tr class="orderShipment_info_shipping_row">
 		<td class="orderShipmentsItem_info_report_td">
 			<div class="orderShipmentsItem_info_report">
@@ -66,6 +49,23 @@
 				<span class="orderShipment_info_shippingAmount shipment_shippingAmount">
 					<span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
 					<span class="price">{$shipment.shippingAmount|default:0|string_format:"%.2f"}</span>
+					<span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
+				</span>
+			</div>
+		</td>
+	</tr>
+
+	<tr class="orderShipment_info_tax_row">
+		<td class="orderShipmentsItem_info_report_td">
+			<div class="orderShipmentsItem_info_report">
+				{t _taxes}:
+			</div>
+		</td>
+		<td class="orderShipmentsItem_info_tax_td">
+			<div class="orderShipmentsItem_info_tax">
+				<span class="orderShipment_info_subtotal shipment_taxAmount">
+					<span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
+					<span class="price">{$shipment.taxAmount|default:0|string_format:"%.2f"}</span>
 					<span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
 				</span>
 			</div>

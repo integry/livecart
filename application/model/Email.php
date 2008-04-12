@@ -171,6 +171,8 @@ class Email
 			$this->text = array_shift($parts);
 		}
 
+		$this->text = str_replace("\r", "", $this->text);
+		$this->text = str_replace("\n\n\n", "\n\n", $this->text);
 		$message = new Swift_Message($this->subject, $this->text);
 
 		try

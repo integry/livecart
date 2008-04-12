@@ -43,6 +43,7 @@ if (!defined('TEST_INITIALIZED'))
 
 	ClassLoader::import('application.LiveCart');
 	UnitTest::setApplication(new LiveCart);
+	UnitTest::getApplication()->getConfig()->setAutoSave(false);
 	UnitTest::getApplication()->getConfig()->set('EMAIL_METHOD', 'FAKE');
 }
 

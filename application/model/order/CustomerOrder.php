@@ -610,6 +610,7 @@ class CustomerOrder extends ActiveRecordModel
 	{
 		if ($this->isFinalized->get())
 		{
+			$this->getTaxes($currency);
 			return $currency->convertAmount($this->currency->get(), $this->totalAmount->get());
 		}
 		else
@@ -623,6 +624,11 @@ class CustomerOrder extends ActiveRecordModel
 		$total = 0;
 		$id = $currency->getID();
 
+		if (!$this->shipments)
+		{
+			$this->getShipments();
+		}
+
 		if ($this->shipments instanceof ARSet && !$this->shipments->size())
 		{
 			$this->shipments = null;
@@ -630,30 +636,9 @@ class CustomerOrder extends ActiveRecordModel
 
 		if ($this->shipments)
 		{
-			$this->taxes[$id] = array();
-			$zone = $this->getDeliveryZone();
-			foreach ($this->shipments as $shipment)
-			{
-				if ($shipment->getShippingService())
-				{
-					$shipmentRates = $zone->getShippingRates($shipment);
-					$shipment->setAvailableRates($shipmentRates);
-					$shipment->setRateId($shipment->getShippingService()->getID());
-				}
-
-				$total += $shipment->getTotal($currency);
-
-				foreach ($shipment->getTaxes() as $tax)
-				{
-					$taxId = ($tax->taxRate->get() && $tax->taxRate->get()->tax->get()) ? $tax->taxRate->get()->tax->get()->getID() : 0;
-					if (!isset($this->taxes[$id][$taxId]))
-					{
-						$this->taxes[$id][$taxId] = 0;
-					}
-
-					$this->taxes[$id][$taxId] += $tax->getAmountByCurrency($currency);
-				}
-			}
+			// @todo: the tax calculation is slightly off when it's calculated for the first time, so it has to be called twice
+			$this->getTaxes($currency);
+			$total += $this->getTaxes($currency);
 		}
 		else
 		{
@@ -663,7 +648,41 @@ class CustomerOrder extends ActiveRecordModel
 			}
 		}
 
-		return round($total, 2);
+		return $total;
+	}
+
+	private function getTaxes(Currency $currency)
+	{
+		$id = $currency->getID();
+
+		$total = 0;
+
+		$this->taxes[$id] = array();
+		$zone = $this->getDeliveryZone();
+		foreach ($this->shipments as $shipment)
+		{
+			if ($shipment->getShippingService())
+			{
+				$shipmentRates = $zone->getShippingRates($shipment);
+				$shipment->setAvailableRates($shipmentRates);
+				$shipment->setRateId($shipment->getShippingService()->getID());
+			}
+
+			$total += $shipment->getTotal($currency);
+
+			foreach ($shipment->getTaxes() as $tax)
+			{
+				$taxId = ($tax->taxRate->get() && $tax->taxRate->get()->tax->get()) ? $tax->taxRate->get()->tax->get()->getID() : 0;
+				if (!isset($this->taxes[$id][$taxId]))
+				{
+					$this->taxes[$id][$taxId] = 0;
+				}
+
+				$this->taxes[$id][$taxId] += $tax->getAmountByCurrency($currency);
+			}
+		}
+
+		return $total;
 	}
 
 	public function isProcessing()
@@ -888,14 +907,16 @@ class CustomerOrder extends ActiveRecordModel
 		}
 
 		// taxes
-		$array['taxes'] = array();
+		$array['taxes'] = $taxAmount = array();
 		foreach ($this->taxes as $currencyId => $taxes)
 		{
+			$taxAmount[$currencyId] = 0;
 			$array['taxes'][$currencyId] = array();
 			$currency = Currency::getInstanceById($currencyId);
 
 			foreach ($taxes as $taxId => $amount)
 			{
+				$taxAmount[$currencyId] += $amount;
 				$array['taxes'][$currencyId][$taxId] = Tax::getInstanceById($taxId)->toArray();
 				$array['taxes'][$currencyId][$taxId]['formattedAmount'] = $currency->getFormattedPrice($amount);
 			}
@@ -903,11 +924,17 @@ class CustomerOrder extends ActiveRecordModel
 
 		$array['total'] = $total;
 
-		$array['formattedTotal'] = array();
+		$array['formattedTotal'] = $array['formattedTotalBeforeTax'] = array();
 		if (is_array($array['total']))
 		{
 			foreach ($array['total'] as $id => $amount)
 			{
+				if (!isset($taxAmount[$id]))
+				{
+					$taxAmount[$id] = 0;
+				}
+
+				$array['formattedTotalBeforeTax'][$id] = $currencies[$id]->getFormattedPrice($amount - $taxAmount[$id]);
 				$array['formattedTotal'][$id] = $currencies[$id]->getFormattedPrice($amount);
 			}
 		}
@@ -916,7 +943,7 @@ class CustomerOrder extends ActiveRecordModel
 		$array['isShippingRequired'] = (int)$this->isShippingRequired();
 
 		// status
-		$array['isReturned'] = (int)$this->isReturned();;
+		$array['isReturned'] = (int)$this->isReturned();
 		$array['isShipped'] = (int)$this->isShipped();
 		$array['isAwaitingShipment'] = (int)$this->isAwaitingShipment();
 		$array['isProcessing'] = (int)$this->isProcessing();
