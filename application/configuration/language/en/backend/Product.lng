@@ -72,6 +72,7 @@ Product.isFractionalUnit=Is fractional unit
 
 Manufacturer.name=Manufacturer
 ProductPrice.price=Price
+ProductPrice.listPrice=List price
 
 # Main form
 
@@ -105,6 +106,7 @@ _theme=Design theme
 # Pricing and shipping
 
 _pricing=Pricing
+_list_price=List price
 _shipping=Shipping
 _shipping_weight=Shipping weight
 _other=Other

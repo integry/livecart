@@ -16,6 +16,7 @@ class ProductPricing
 	const CALCULATED = 'calculated';
 	const DEFINED = 'defined';
 	const BOTH = 'both';
+	const LIST_PRICE = true;
 
 	private $product;
 
@@ -91,10 +92,16 @@ class ProductPricing
 		unset($this->prices[$currency->getID()]);
 	}
 
-	public function removePriceByCurrencyCode($currencyCode)
+	public function removePriceByCurrencyCode($currencyCode, $listPrice = false)
 	{
 		if (isset($this->prices[$currencyCode]))
 		{
+			if ($listPrice)
+			{
+				$this->prices[$currencyCode]->listPrice->setNull();
+				return false;
+			}
+
 			$this->removedPrices[] = $this->prices[$currencyCode];
 		}
 
@@ -129,14 +136,19 @@ class ProductPricing
 	 *
 	 * @param string $part Which part of array prices you want to get ('defined', 'calculated' or 'both')
 	 */
-	public function toArray($part = null)
+	public function toArray($part = null, $listPrice = false)
 	{
-		if(!in_array($part, array('defined', 'calculated', 'both'))) $part = 'both';
+		if (!in_array($part, array('defined', 'calculated', 'both')))
+		{
+			$part = 'both';
+		}
+
+		$field = $listPrice ? 'listPrice' : 'price';
 
 		$defined = array();
 		foreach ($this->prices as $inst)
 		{
-			$defined[$inst->currency->get()->getID()] = $inst->price->get();
+			$defined[$inst->currency->get()->getID()] = $inst->$field->get();
 		}
 
 		$baseCurrency = $this->application->getDefaultCurrencyCode();

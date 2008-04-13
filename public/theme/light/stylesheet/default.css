@@ -278,6 +278,11 @@ ul.productList .pricingInfo, .productGrid .pricingInfo
 	display: none;
 }
 
+.pricingInfo span.listPrice
+{
+	display: inline;
+}
+
 .pricingInfo span.price
 {
 	font-size: larger;

@@ -1241,6 +1241,7 @@ fieldset.group p
     text-decoration: none;
     color: black;
     -moz-outline: none;
+    vertical-align: middle;
 }
 
 .tabs li.active a

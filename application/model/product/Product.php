@@ -208,6 +208,25 @@ class Product extends MultilingualObject
 		}
 	}
 
+	private function loadPricingFromRequest(Request $request, $listPrice = false)
+	{
+		$field = $listPrice ? 'listPrice' : 'price';
+
+		$currencies = self::getApplication()->getCurrencyArray();
+		foreach ($currencies as $currency)
+		{
+			$price = $request->get($field . '_' . $currency);
+			if (strlen($price))
+			{
+				$this->setPrice($currency, $price, $listPrice);
+			}
+			else if ($request->isValueSet($field . '_' . $currency))
+			{
+				$this->getPricingHandler()->removePriceByCurrencyCode($currency, $listPrice);
+			}
+		}
+	}
+
 	public function loadRequestData(Request $request)
 	{
 		// basic data
@@ -225,19 +244,8 @@ class Product extends MultilingualObject
 		}
 
 		// set prices
-		$currencies = self::getApplication()->getCurrencyArray();
-		foreach ($currencies as $currency)
-		{
-			$price = $request->get('price_' . $currency);
-			if (strlen($price))
-			{
-				$this->setPrice($currency, $price);
-			}
-			else if ($request->isValueSet('price_' . $currency))
-			{
-				$this->getPricingHandler()->removePriceByCurrencyCode($currency);
-			}
-		}
+		$this->loadPricingFromRequest($request);
+		$this->loadPricingFromRequest($request, true);
 
 		// set SpecField's
 		$fields = $this->category->get()->getSpecificationFieldSet(Category::INCLUDE_PARENT);
@@ -393,17 +401,17 @@ class Product extends MultilingualObject
 		return !is_null($this->pricingHandlerInstance);
 	}
 
-	public function setPrice($currencyCode, $price)
+	public function setPrice($currencyCode, $price, $listPrice = false)
 	{
 	  	$instance = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode);
 
-	  	if (strlen($price) == 0)
+	  	if (strlen($price) == 0 && !$listPrice)
 	  	{
 	  		$this->getPricingHandler()->removePriceByCurrencyCode($currencyCode);
 		}
 		else
 		{
-			$instance->price->set($price);
+			$instance->setFieldValue($listPrice ? 'listPrice' : 'price', $price);
 		}
 
 		$this->getPricingHandler()->setPrice($instance);
@@ -826,8 +834,18 @@ class Product extends MultilingualObject
 		$prices = $this->getPricingHandler()->toArray();
 	  	foreach($prices['calculated'] as $code => $value)
 	  	{
-	  		$prices["price_$code"] = $value;
+	  		$prices['price_' . $code] = $value;
 	  	}
+
+	  	$listPrices = $this->getPricingHandler()->toArray(ProductPricing::BOTH, ProductPricing::LIST_PRICE);
+	  	foreach($listPrices['calculated'] as $code => $value)
+	  	{
+	  		if ($value > 0)
+	  		{
+	  			$prices['listPrice_' . $code] = $value;
+	  		}
+	  	}
+	  	$prices['formattedListPrice'] = $listPrices['formattedPrice'];
 
 	  	return $prices;
 	}

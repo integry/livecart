@@ -14,15 +14,22 @@ class ProductPriceController extends StoreManagementController
 {
 	public function index()
 	{
-
 		$this->locale->translationManager()->loadFile('backend/Product');
 		$product = Product::getInstanceByID($this->request->get('id'), ActiveRecord::LOAD_DATA, ActiveRecord::LOAD_REFERENCES);
 
 		$pricingForm = $this->buildPricingForm($product);
 
+		$f = new ARSelectFilter(new NotEqualsCond(new ARFieldHandle('Currency', 'isDefault'), true));
+		$f->setOrder(new ARFieldHandle('Currency', 'position'));
+		$otherCurrencies = array();
+		foreach (ActiveRecordModel::getRecordSetArray('Currency', $f) as $row)
+		{
+			$otherCurrencies[] = $row['ID'];
+		}
+
 		$response = new ActionResponse();
 		$response->set("product", $product->toFlatArray());
-		$response->set("otherCurrencies", $this->application->getCurrencyArray(LiveCart::EXCLUDE_DEFAULT_CURRENCY));
+		$response->set("otherCurrencies", $otherCurrencies);
 		$response->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
 		$response->set("pricingForm", $pricingForm);
 
@@ -52,7 +59,7 @@ class ProductPriceController extends StoreManagementController
 			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_product_prices_could_not_be_updated'));
 		}
 	}
-	
+
 	public function addShippingValidator(RequestValidator $validator)
 	{
 		// shipping related numeric field validations
@@ -85,42 +92,50 @@ class ProductPriceController extends StoreManagementController
 		{
 			$validator->addCheck('price_' . $currency, new IsNumericCheck($this->translate('_err_price_invalid')));
 			$validator->addCheck('price_' . $currency, new MinValueCheck($this->translate('_err_price_negative'), 0));
+			$validator->addCheck('listPrice_' . $currency, new MinValueCheck($this->translate('_err_price_negative'), 0));
 			$validator->addFilter('price_' . $currency, new NumericFilter());
+			$validator->addFilter('listPrice_' . $currency, new NumericFilter());
 		}
 
 		return $validator;
-	}	
-	
+	}
+
 	public function addInventoryValidator(RequestValidator $validator)
 	{
 		if ($this->config->get('INVENTORY_TRACKING') != 'DISABLE')
-		{	
-			$validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required')));  
-			$validator->addCheck('stockCount', new IsNumericCheck($this->translate('_err_stock_not_numeric')));		  
-			$validator->addCheck('stockCount', new MinValueCheck($this->translate('_err_stock_negative'), 0));	
+		{
+			$validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required')));
+			$validator->addCheck('stockCount', new IsNumericCheck($this->translate('_err_stock_not_numeric')));
+			$validator->addCheck('stockCount', new MinValueCheck($this->translate('_err_stock_negative'), 0));
 		}
 
-		$validator->addFilter('stockCount', new NumericFilter());	
-			
+		$validator->addFilter('stockCount', new NumericFilter());
+
 		return $validator;
 	}
-	 
+
 	private function buildPricingForm(Product $product)
 	{
 		ClassLoader::import("framework.request.validator.Form");
 		if(!$product->isLoaded()) $product->load(ActiveRecord::LOAD_REFERENCES);
-		
+
 		$product->loadPricing();
 		$pricing = $product->getPricingHandler();
 		$form = new Form($this->buildPricingFormValidator());
-		
+
 		$pricesData = $product->toArray();
+		$listPrices = $pricing->toArray(ProductPricing::DEFINED, ProductPricing::LIST_PRICE);
 		$pricesData['shippingHiUnit'] = (int)$pricesData['shippingWeight'];
 		$pricesData['shippingLoUnit'] = ($pricesData['shippingWeight'] - $pricesData['shippingHiUnit']) * 1000;
 
 		foreach ($pricesData['calculated'] as $currency => $price)
 		{
 			$pricesData['price_' . $currency] = isset($pricesData['defined'][$currency]) ? $pricesData['defined'][$currency] : '';
+		}
+
+		foreach ($listPrices as $currency => $price)
+		{
+			$pricesData['listPrice_' . $currency] = $price;
 		}
 
 		$form->setData($pricesData);
@@ -136,14 +151,14 @@ class ProductPriceController extends StoreManagementController
 		self::addPricesValidator($validator);
 		self::addShippingValidator($validator);
 		self::addInventoryValidator($validator);
-				
+
 		if ($this->config->get('INVENTORY_TRACKING') != 'DISABLE')
 		{
-			$validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required'))); 
+			$validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required')));
 		}
 
 		return $validator;
 	}
-	
+
 }
 ?>

@@ -17,7 +17,14 @@
 	{if $product.isAvailable && 'ENABLE_CART'|config}
 		<a href="{link controller=order action=addToCart id=$product.ID returnPath=true}" class="addToCart">{t _add_to_cart}</a>
 	{/if}
-	<span class="price">{$product.formattedPrice.$currency}</span>
+	<span class="price">
+		{$product.formattedPrice.$currency}
+		{if $product.formattedListPrice.$currency}
+				<span class="listPrice">
+					{$product.formattedListPrice.$currency}
+				</span>
+		{/if}
+	</span>
 	<br class="clear" />
 </div></div></div>
 

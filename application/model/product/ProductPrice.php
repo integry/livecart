@@ -20,6 +20,7 @@ class ProductPrice extends ActiveRecordModel
 		$schema->registerField(new ARPrimaryForeignKeyField("productID", "Product", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARPrimaryForeignKeyField("currencyID", "Currency", "ID", null, ARChar::instance(3)));
 		$schema->registerField(new ARField("price", ARFloat::instance(16)));
+		$schema->registerField(new ARField("listPrice", ARFloat::instance(16)));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -133,16 +134,26 @@ class ProductPrice extends ActiveRecordModel
 		$prices = self::fetchPriceData(array_keys($ids));
 
 		// sort by product
-		$productPrices = array();
+		$listPrice = $productPrices = array();
 		foreach ($prices as $price)
 		{
 			$productPrices[$price['productID']][$price['currencyID']] = $price['price'];
+			$listPrices[$price['productID']][$price['currencyID']] = $price['listPrice'];
 		}
 
+		self::getPricesFromArray($productArray, $productPrices, $ids, false);
+		self::getPricesFromArray($productArray, $listPrices, $ids, true);
+	}
+
+	private static function getPricesFromArray(&$productArray, $priceArray, $ids, $listPrice = false)
+	{
 		$baseCurrency = self::getApplication()->getDefaultCurrencyCode();
 		$currencies = self::getApplication()->getCurrencySet();
 
-		foreach ($productPrices as $product => $prices)
+		$priceField = $listPrice ? 'listPrice' : 'price';
+		$formattedPriceField = $listPrice ? 'formattedListPrice' : 'formattedPrice';
+
+		foreach ($priceArray as $product => $prices)
 		{
 			foreach ($currencies as $id => $currency)
 			{
@@ -154,10 +165,15 @@ class ProductPrice extends ActiveRecordModel
 
 			foreach ($prices as $id => $price)
 			{
-				$productArray[$ids[$product]]['price_' . $id] = $price;
+				if ((0 == $price) && $listPrice)
+				{
+					continue;
+				}
+
+				$productArray[$ids[$product]][$priceField . '_' . $id] = $price;
 				if (isset($currencies[$id]))
 				{
-					$productArray[$ids[$product]]['formattedPrice'][$id] = $currencies[$id]->getFormattedPrice($price);
+					$productArray[$ids[$product]][$formattedPriceField][$id] = $currencies[$id]->getFormattedPrice($price);
 				}
 			}
 		}

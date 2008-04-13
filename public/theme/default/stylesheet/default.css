@@ -433,6 +433,11 @@ ul.productList .pricingInfo
 	left: 0;
 }
 
+.pricingInfo span.listPrice
+{
+	display: inline;
+}
+
 .pricingInfo br
 {
 	display: none;
@@ -552,7 +557,7 @@ ul.productList .spec
 
 #productPrice td
 {
-	padding-top: 1em;
+	padding-top: 16px;
 }
 
 #productToWishList td.value
@@ -660,7 +665,7 @@ tr.odd
 	font-weight: bold;
 	height: 29px;
 	padding-left: 25px;
-	position: relative;
+	position: static;
 	width: 125px;
 }
 

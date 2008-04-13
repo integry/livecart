@@ -15,32 +15,32 @@ abstract class ObjectImageController extends StoreManagementController
 	abstract protected function getModelClass();
 	abstract protected function getOwnerClass();
 	abstract protected function getForeignKeyName();
-		
+
 	public function index()
 	{
 		$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), (int)$this->request->get('id'));
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle($this->getModelClass(), $this->getForeignKeyName()), $owner->getID()));
 		$filter->setOrder(new ARFieldHandle($this->getModelClass(), 'position'));
-		
+
 		$imageArray = ActiveRecordModel::getRecordSetArray($this->getModelClass(), $filter);
-				
+
 		$response = new ActionResponse();
 		$response->set('form', $this->buildForm($owner->getID()));
 		$response->set('maxSize', ini_get('upload_max_filesize'));
 		$response->set('ownerId', $owner->getID());
 		$response->set('images', json_encode($imageArray));
-		return $response;		  
-	}	
-	
+		return $response;
+	}
+
 	public function upload()
-	{	
+	{
 		$ownerId = $this->request->get('ownerId');
-		
+
 		$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), $ownerId);
-			  	
+
 		$validator = $this->buildValidator($ownerId);
-		
+
 		if (!$validator->isValid())
 		{
 		  	$errors = $validator->getErrorList();
@@ -53,14 +53,14 @@ abstract class ObjectImageController extends StoreManagementController
 			$catImage = call_user_func_array(array($this->getModelClass(), 'getNewInstance'), array($owner));
 
 			$multilingualFields = array("title");
-			$catImage->setValueArrayByLang($multilingualFields, $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true), $this->request);			
-			
+			$catImage->setValueArrayByLang($multilingualFields, $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true), $this->request);
+
 			$catImage->save();
-			
+
 		  	// resize image
 		  	$resizer = new ImageManipulator($_FILES['image']['tmp_name']);
 		  	$res = $catImage->resizeImage($resizer);
-		  	
+
 			if ($res)
 			{
 			  	ActiveRecord::commit();
@@ -70,58 +70,58 @@ abstract class ObjectImageController extends StoreManagementController
 			{
 			  	$result = array('error' => $this->translate('_err_resize'));
 				ActiveRecord::rollback();
-			}	  			  		  	
+			}
 		}
-		
+
 		$this->setLayout('iframeJs');
 		$response = new ActionResponse();
-		$response->set('ownerId', $ownerId);		
-		$response->set('result', json_encode($result));		
+		$response->set('ownerId', $ownerId);
+		$response->set('result', json_encode($result));
 		return $response;
-	}	
-	
+	}
+
 	public function save()
 	{
-		ActiveRecord::beginTransaction();	  
+		ActiveRecord::beginTransaction();
 		$image = null;
 	  	try
-		{  
+		{
 			$image = ActiveRecord::getInstanceById($this->getModelClass(), $this->request->get('imageId'), true);
-			
+
 			$multilingualFields = array("title");
-			$image->setValueArrayByLang($multilingualFields, $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true), $this->request);			
+			$image->setValueArrayByLang($multilingualFields, $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true), $this->request);
 			$image->save();
-			
+
 		  	if ($_FILES['image']['tmp_name'])
 		  	{
 				$resizer = new ImageManipulator($_FILES['image']['tmp_name']);
-				
+
 				if (!$resizer->isValidImage())
 				{
 				  	throw new InvalidImageException();
-				}				
-				
+				}
+
 				if (!$image->resizeImage($resizer))
 				{
 				  	throw new ImageResizeException();
-				}				
+				}
 			}
 		}
 		catch (InvalidImageException $exc)
 		{
-			$error = $this->translate('_err_not_image');	  	
-		}  	
+			$error = $this->translate('_err_not_image');
+		}
 		catch (ImageResizeException $exc)
 		{
-			$error = $this->translate('_err_resize');	  	
-		}  	
+			$error = $this->translate('_err_resize');
+		}
 		catch (Exception $exc)
 		{
-			$error = $this->translate('_err_not_found ' . get_class($exc));	  	
+			$error = $this->translate('_err_not_found ' . get_class($exc));
 		}
-		
+
 		$response = new ActionResponse();
-		
+
 		if (isset($error))
 		{
 		  	ActiveRecord::rollback();
@@ -131,21 +131,21 @@ abstract class ObjectImageController extends StoreManagementController
 		{
 			ActiveRecord::commit();
 		  	$result = $image->toArray();
-		}		
-		
+		}
+
 		$this->setLayout('iframeJs');
-		$response->set('ownerId', $this->request->get('ownerId'));		
-		$response->set('imageId', $this->request->get('imageId'));		
+		$response->set('ownerId', $this->request->get('ownerId'));
+		$response->set('imageId', $this->request->get('imageId'));
 	  	$response->set('result', json_encode($result));
 		return $response;
-	}	
-	
+	}
+
 	/**
 	 * Remove an image
 	 * @return RawResponse
 	 */
 	public function delete()
-	{  					
+	{
 		try
 		{
 			call_user_func_array(array($this->getModelClass(), 'deleteByID'), array($this->request->get('id')));
@@ -153,10 +153,10 @@ abstract class ObjectImageController extends StoreManagementController
 		}
 		catch (ARNotFoundException $exc)
 		{
-			return false;  
+			return false;
 		}
-	}		
-	
+	}
+
 	/**
 	 * Save image order
 	 * @return RawResponse
@@ -164,15 +164,16 @@ abstract class ObjectImageController extends StoreManagementController
 	public function saveOrder()
 	{
 	  	$ownerId = $this->request->get('ownerId');
-	  	
+
 		$order = array_filter($this->request->get('catImageList_' . $ownerId, $this->request->get('prodImageList_' . $ownerId)), array($this, 'filterOrder'));
-			
+		$order = array_values($order);
+
 		foreach ($order as $key => $value)
 		{
 			$update = new ARUpdateFilter();
 			$update->setCondition(new EqualsCond(new ARFieldHandle($this->getModelClass(), 'ID'), $value));
 			$update->addModifier('position', $key);
-			ActiveRecord::updateRecordSet($this->getModelClass(), $update);  	
+			ActiveRecord::updateRecordSet($this->getModelClass(), $update);
 		}
 
 		// set owners main image
@@ -180,19 +181,19 @@ abstract class ObjectImageController extends StoreManagementController
 		{
 			$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), $ownerId);
 			$owner->defaultImage->set(ActiveRecordModel::getInstanceByID($this->getModelClass(), $order[0]));
-			$owner->save();			
+			$owner->save();
 		}
 
 		$resp = new RawResponse();
 	  	$resp->setContent($this->request->get('draggedId'));
-		return $resp;		  	
-	}				
-	
+		return $resp;
+	}
+
 	private function filterOrder($item)
 	{
 		return trim($item);
 	}
-	
+
 	/**
 	 * Builds an image upload form validator
 	 *
@@ -213,7 +214,7 @@ abstract class ObjectImageController extends StoreManagementController
 		$imageCheck->setFieldName('image');
 		$imageCheck->setValidTypes($manip->getValidTypes());
 		$validator->addCheck('image', $imageCheck);
-		
+
 		return $validator;
 	}
 
@@ -225,8 +226,8 @@ abstract class ObjectImageController extends StoreManagementController
 	protected function buildForm($catId)
 	{
 		ClassLoader::import("framework.request.validator.Form");
-		return new Form($this->buildValidator($catId));		
-	}	
+		return new Form($this->buildValidator($catId));
+	}
 }
 
 ?>

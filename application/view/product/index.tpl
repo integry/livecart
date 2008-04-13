@@ -76,7 +76,14 @@
 		<table id="productPurchaseLinks">
 			<tr id="productPrice">
 				<td class="param">{t _price}:</td>
-				<td class="value price">{$product.formattedPrice.$currency}</td>
+				<td class="value price">
+					{$product.formattedPrice.$currency}
+					{if $product.formattedListPrice.$currency}
+						<span class="listPrice">
+							{$product.formattedListPrice.$currency}
+						</span>
+					{/if}
+				</td>
 			</tr>
 
 			{if 'ENABLE_CART'|config}

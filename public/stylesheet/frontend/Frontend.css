@@ -905,6 +905,13 @@ ul.productList a.addToCart, .productGrid a.addToCart
 */
 }
 
+.listPrice
+{
+	text-decoration: line-through;
+	font-size: smaller;
+	font-weight: normal;
+}
+
 ul.productList .pricingInfo
 {
     float: right;

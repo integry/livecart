@@ -8,13 +8,13 @@ ClassLoader::import("library.image.ImageManipulator");
  * other entities in the future
  *
  * @package application.model
- * @author Integry Systems <http://integry.com>   
+ * @author Integry Systems <http://integry.com>
  */
 abstract class ObjectImage extends MultilingualObject
 {
 	abstract public static function getImageSizes();
 	abstract public function getOwner();
-		
+
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -23,10 +23,10 @@ abstract class ObjectImage extends MultilingualObject
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARField("title", ARArray::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance()));
-		
+
 		return $schema;
-	}	
-	
+	}
+
 	public function deleteImageFiles()
 	{
 		foreach ($this->getImageSizes() as $key => $value)
@@ -35,7 +35,7 @@ abstract class ObjectImage extends MultilingualObject
 	  		{
 			   unlink($this->getPath($key));
 	  		}
-		}			
+		}
 	}
 
 	public static function deleteByID($className, $id, $foreignKeyName)
@@ -43,7 +43,7 @@ abstract class ObjectImage extends MultilingualObject
 		$inst = ActiveRecordModel::getInstanceById($className, $id, ActiveRecordModel::LOAD_DATA);
 		$inst->getOwner()->load();
 		$inst->deleteImageFiles();
-		
+
 		// check if main image is being deleted
 		$owner = $inst->getOwner();
 		$owner->load(array(get_class($inst)));
@@ -63,19 +63,19 @@ abstract class ObjectImage extends MultilingualObject
 			  	$owner->save();
 			}
 		}
-		
+
 		return parent::deleteByID($className, $id);
-	}	
-	
+	}
+
 	public function setFile($file)
 	{
 		return $this->resizeImage(new ImageManipulator($file));
 	}
-	
+
 	public function resizeImage(ImageManipulator $resizer)
 	{
 	  	$publicRoot = dirname(ClassLoader::getRealPath('public.upload')) . '/';
-		  
+
 		foreach ($this->getImageSizes() as $key => $size)
 	  	{
 			$filePath = $publicRoot . $this->getPath($key);
@@ -85,14 +85,14 @@ abstract class ObjectImage extends MultilingualObject
 			  	break;
 			}
 		}
-		
-		return $res;	  
-	}	
-	
+
+		return $res;
+	}
+
 	protected function insert($foreignKeyName)
 	{
 	  	$className = get_class($this);
-		  
+
 		// get current max image position
 	  	$filter = new ARSelectFilter();
 	  	$filter->setCondition(new EqualsCond(new ARFieldHandle($className, $foreignKeyName), $this->getOwner()->getID()));
@@ -101,27 +101,32 @@ abstract class ObjectImage extends MultilingualObject
 	  	$maxPosSet = ActiveRecord::getRecordSet($className, $filter);
 		if ($maxPosSet->size() > 0)
 		{
-			$maxPos = $maxPosSet->get(0)->position->get() + 1;  	
+			$maxPos = $maxPosSet->get(0)->position->get() + 1;
 		}
 		else
 		{
-		  	$maxPos = 0;		  	
-		}			  
+		  	$maxPos = 0;
+		}
 
-			ActiveRecord::$logger->logAction($maxPos);		
-			
+			ActiveRecord::$logger->logAction($maxPos);
+
 		$this->position->set($maxPos);
-				
-		parent::insert();
 
+		return parent::insert();
+	}
+
+	public function save()
+	{
+		parent::save();
+var_dump($this->position->get());
 		// set as main image if it's the first image being uploaded
-		if (0 == $maxPos)
+		if (1 <= $this->position->get())
 		{
 			$owner = $this->getOwner();
 		  	$owner->defaultImage->set($this);
-		  	$owner->save();	
+		  	$owner->save();
 		}
-	}			
+	}
 }
 
 ?>

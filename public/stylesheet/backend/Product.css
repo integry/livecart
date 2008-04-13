@@ -71,6 +71,16 @@ fieldset.specification .numeric
     display: none;
 }
 
+.listPrice
+{
+	margin-left: 1.5em;
+}
+
+.listPrice input
+{
+	font-size: smaller;
+}
+
 /*************************
 	Product list
 *************************/
