@@ -142,7 +142,10 @@ class ProductPrice extends ActiveRecordModel
 		}
 
 		self::getPricesFromArray($productArray, $productPrices, $ids, false);
-		self::getPricesFromArray($productArray, $listPrices, $ids, true);
+		if (isset($listPrices))
+		{
+			self::getPricesFromArray($productArray, $listPrices, $ids, true);
+		}
 	}
 
 	private static function getPricesFromArray(&$productArray, $priceArray, $ids, $listPrice = false)
