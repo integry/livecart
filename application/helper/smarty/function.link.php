@@ -7,21 +7,21 @@ ClassLoader::import("framework.request.Router");
  * As the format of application part addresing migth vary, links should be created
  * by using this helper method. When the addressing schema changes, all links
  * will be regenerated
- * 
+ *
  * "query" is a special paramater, that will be appended to a generated link as "?query"
  * Example: {link controller=category action=remove id=33 query="language=$lang&returnto=someurl"}
  *
  * @param array $params List of parameters passed to a function
  * @param Smarty $smarty Smarty instance
  * @return string Smarty function resut (formatted link)
- * 
+ *
  * @package application.helper.smarty
  * @author Integry Systems
  */
 function smarty_function_link($params, LiveCartSmarty $smarty)
 {
 	$router = $smarty->getApplication()->getRouter();
-	
+
 	// should full URL be generated?
 	if (isset($params['url']))
 	{
@@ -30,9 +30,9 @@ function smarty_function_link($params, LiveCartSmarty $smarty)
 	}
 	else
 	{
-		$fullUrl = false;		
+		$fullUrl = false;
 	}
-	
+
 	// replace & with &amp;
 	if (isset($params['nohtml']))
 	{
@@ -44,26 +44,39 @@ function smarty_function_link($params, LiveCartSmarty $smarty)
 		$router->setVariableSeparator('&amp;');
 	}
 
-	try
+	if (isset($params['self']))
 	{
-		if (!empty($params['route']))
-		{
-			$result = $router->createUrlFromRoute($params['route'], true);
-		}
-		else
-		{			
-			unset($params['route']);
-			$result = $router->createURL($params, true);			
-		}
+		$result = $_SERVER['REQUEST_URI'];
 	}
-	catch(RouterException $e)
+	else
 	{
-		return "INVALID_LINK";
+		try
+		{
+			if (!empty($params['route']))
+			{
+				$result = $router->createUrlFromRoute($params['route'], true);
+			}
+			else
+			{
+				unset($params['route']);
+				$result = $router->createURL($params, true);
+			}
+		}
+		catch(RouterException $e)
+		{
+			return "INVALID_LINK";
+		}
 	}
 
 	if ($fullUrl)
 	{
 		$result = $router->createFullUrl($result);
+	}
+
+	unset($params['route'], $params['nohtml'], $params['self'], $params['controller'], $params['action']);
+	foreach ($params as $key => $value)
+	{
+		$result = $router->setUrlQueryParam($result, $key, $value);
 	}
 
 	return $result;

@@ -365,16 +365,23 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 */
 	public static function getRootNode()
 	{
-		return parent::getRootNode(__CLASS__);
+		$node = parent::getRootNode(__CLASS__);
+		$node->load();
+		return $node;
 	}
 
-	public function getBranch()
+	public function getBranchFilter(ARSelectFilter $filter = null)
 	{
-		$filter = new ARSelectFilter();
-		$filter->setOrder(new ARFieldHandle("Category", "lft", 'ASC'));
-		$filter->setCondition(new OperatorCond(new ARFieldHandle("Category", "parentNodeID"), $this->getID(), "="));
+		if (is_null($filter))
+		{
+			$filter = new ARSelectFilter();
+		}
 
-		$categoryList = Category::getRecordSet($filter);
+		$filter->setOrder(new ARFieldHandle("Category", "lft"), 'ASC');
+		$filter->mergeCondition(new MoreThanCond(new ARFieldHandle("Category", "lft"), $this->lft->get()));
+		$filter->mergeCondition(new LessThanCond(new ARFieldHandle("Category", "rgt"), $this->rgt->get()));
+
+		return $filter;
 	}
 
 	/**

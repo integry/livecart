@@ -118,9 +118,9 @@ abstract class ObjectImage extends MultilingualObject
 	public function save()
 	{
 		parent::save();
-var_dump($this->position->get());
+
 		// set as main image if it's the first image being uploaded
-		if (1 <= $this->position->get())
+		if ($this->position->get() <= 1)
 		{
 			$owner = $this->getOwner();
 		  	$owner->defaultImage->set($this);

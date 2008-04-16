@@ -100,6 +100,11 @@ IMG_C_W_4=Width (pixels)
 IMG_C_H_4=Height (pixels)
 IMG_C_Q_4=Quality (0 - 100)
 
+_content_blocks=Content blocks
+_sale_items=On-sale Products
+SALE_ITEMS_COUNT=Number of on-sale products to display per block
+_newest_products=Newest Products
+NEWEST_ITEMS_COUNT=Number of newest products to display
 
 _product_page=Product Page
 _inventory_status=Inventory Status

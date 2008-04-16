@@ -1,3 +1,4 @@
+{if $allLanguages|@count > 1}
 <div id="language">
 	{if 'LANG_SELECTION'|config == 'LANG_DROPDOWN'}
 		<select onchange="window.location.href=this.value;">
@@ -15,3 +16,4 @@
 		{/foreach}
 	{/if}
 </div>
+{/if}

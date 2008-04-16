@@ -43,6 +43,9 @@ abstract class FrontendController extends BaseController
 		$this->setLayout('frontend');
 		$this->addBlock('CATEGORY_BOX', 'boxCategory', 'block/box/category');
 		$this->addBlock('ROOT_CATEGORIES', 'boxRootCategory', 'block/box/rootCategory');
+		$this->addBlock('DYNAMIC_CATEGORIES', 'dynamicCategoryMenu', 'block/box/dynamicCategory');
+		$this->addBlock('SALE_ITEMS', 'saleItems', 'block/box/saleItems');
+		$this->addBlock('NEWEST_PRODUCTS', 'newestProducts', 'block/box/newestProducts');
 		$this->addBlock('BREADCRUMB', 'boxBreadCrumb', 'block/box/breadcrumb');
 		$this->addBlock('LANGUAGE', 'boxLanguageSelect', 'block/box/language');
 		$this->addBlock('CURRENCY', 'boxSwitchCurrency', 'block/box/currency');
@@ -52,7 +55,7 @@ abstract class FrontendController extends BaseController
 		$this->addBlock('TRACKING', 'tracking', 'block/tracking');
 	}
 
-	protected function getRequestCurrency()
+	public function getRequestCurrency()
 	{
 		return Currency::getValidInstanceById($this->request->get('currency', $this->application->getDefaultCurrencyCode()))->getID();
 	}
@@ -318,6 +321,42 @@ abstract class FrontendController extends BaseController
 		return $response;
 	}
 
+	protected function dynamicCategoryMenuBlock()
+	{
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), true));
+		$categories = ActiveRecordModel::getRecordSetArray('Category', Category::getRootNode()->getBranchFilter($f));
+
+		$tree = array(1 => array('subCategories' => array()));
+		foreach ($categories as $key => &$category)
+		{
+			$tree[$category['ID']] =& $category;
+		}
+
+		foreach ($categories as &$category)
+		{
+			$tree[$category['parentNodeID']]['subCategories'][] =& $category;
+		}
+
+		$tree = $tree[1]['subCategories'];
+
+		if ($this->categoryID < 1)
+		{
+		  	$this->categoryID = 1;
+		}
+
+		$response = new BlockResponse('categories', $tree);
+
+		$path = Category::getInstanceById($this->categoryID)->getPathNodeSet(false)->toArray();
+		if ($path)
+		{
+			$response->set('topCategoryId', $path[0]['ID']);
+		}
+
+		$response->set('currentId', $this->categoryID);
+
+		return $response;
+	}
+
 	protected function boxRootCategoryBlock()
 	{
 		$response = new BlockResponse();
@@ -326,9 +365,74 @@ abstract class FrontendController extends BaseController
 		return $response;
 	}
 
+	protected function saleItemsBlock($useRoot = false)
+	{
+		ClassLoader::import('application.model.product.ProductFilter');
+
+		if ($useRoot || $this->categoryID < 1)
+		{
+		  	$this->categoryID = Category::ROOT_ID;
+		}
+
+		$category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
+		$filter = new ProductFilter($category, new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isOnSale'), true)));
+		$filter->includeSubcategories();
+		$selectFilter = $filter->getSelectFilter();
+		$selectFilter->setLimit($this->config->get('SALE_ITEMS_COUNT'));
+		$selectFilter->setOrder(new ARExpressionHandle('RAND()'));
+
+		$products = ActiveRecord::getRecordSetArray('Product', $selectFilter, array('Category', 'DefaultImage' => 'ProductImage'));
+
+		ProductPrice::loadPricesForRecordSetArray($products);
+
+		if ($products)
+		{
+			return new BlockResponse('products', $products);
+		}
+		else if (!$category->isRoot())
+		{
+			return $this->saleItemsBlock(true);
+		}
+	}
+
+	protected function newestProductsBlock($useRoot = false)
+	{
+		ClassLoader::import('application.model.product.ProductFilter');
+
+		if ($useRoot || $this->categoryID < 1)
+		{
+		  	$this->categoryID = Category::ROOT_ID;
+		}
+
+		$category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
+		$filter = new ProductFilter($category, new ARSelectFilter());
+		$filter->includeSubcategories();
+		$selectFilter = $filter->getSelectFilter();
+		$selectFilter->setLimit($this->config->get('NEWEST_ITEMS_COUNT'));
+		$selectFilter->setOrder(new ARFieldHandle('Product', 'dateCreated'), 'DESC');
+
+		$products = ActiveRecord::getRecordSetArray('Product', $selectFilter, array('Category', 'DefaultImage' => 'ProductImage'));
+
+		ProductPrice::loadPricesForRecordSetArray($products);
+
+		if ($products)
+		{
+			return new BlockResponse('products', $products);
+		}
+		else if (!$category->isRoot())
+		{
+			return $this->newestProductsBlock(true);
+		}
+	}
+
 	protected function trackingBlock()
 	{
 		$code = array();
+
+		if (!$this->config->get('TRACKING_SERVICES'))
+		{
+			return false;
+		}
 
 		foreach ($this->config->get('TRACKING_SERVICES') as $class => $enabled)
 		{

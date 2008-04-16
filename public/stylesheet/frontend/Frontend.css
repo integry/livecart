@@ -169,9 +169,9 @@ div.confirmationMsg div
 
 #rightSide
 {
-	float:right;
-	width:150px;
-	display: none;
+	float: right;
+	width: 190px;
+	margin-bottom: 100px;
 }
 
 #clearFooter {
@@ -2286,4 +2286,82 @@ input.money, input.number
 input.date
 {
   	width: 6em;
+}
+
+/*************************
+	Special offers (sale items)
+*************************/
+.saleItems ul, .newestProducts ul
+{
+	list-style-type: none;
+	padding-left: 0;
+}
+
+.saleItems .image
+{
+	float: left;
+}
+
+/*************************
+	Dynamic menu
+*************************/
+.dynamicMenu .content
+{
+	padding: 0 !important;
+}
+
+.dynamicMenu, .dynamicMenu ul { /* all lists */
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	/* float : left; */
+	width : 142px;
+}
+
+.dynamicMenu li { /* all list items */
+	position : relative;
+	/* float : left; */
+	margin: 0;
+}
+
+.dynamicMenu li ul { /* second-level lists */
+	position : absolute;
+	left: -999em;
+	margin-left : 142px;
+	margin-top : -32px;
+}
+
+.dynamicMenu li ul ul { /* third-and-above-level lists */
+	left: -999em;
+}
+
+.dynamicMenu li a, .dynamicMenu li .currentName
+{
+	width: 140px;
+	/* w\idth : 10em; */
+	display : block;
+	font-weight : bold;
+	text-decoration : none;
+	border-top: 1px solid #eee;
+	border-bottom: 1px solid #eee;
+	padding : 7px;
+	margin-left: 0;
+}
+
+.dynamicMenu li li a
+{
+	background-color: #eee;
+}
+
+.dynamicMenu li.current a
+{
+	background-color: transparent;
+}
+
+.dynamicMenu li:hover ul ul, .dynamicMenu li:hover ul ul ul, .dynamicMenu li.sfhover ul ul, .dynamicMenu li.sfhover ul ul ul {
+	left: -999em;
+}
+
+.dynamicMenu li:hover ul, .dynamicMenu li li:hover ul, .dynamicMenu li li li:hover ul, .dynamicMenu li.sfhover ul, .dynamicMenu li li.sfhover ul, .dynamicMenu li li li.sfhover ul { /* lists nested under hovered list items */
+	left: auto;
 }

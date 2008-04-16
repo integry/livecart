@@ -305,6 +305,10 @@ class LiveCart extends Application
 		if ($response instanceof BlockResponse)
 		{
 			$response->set('user', $controllerInstance->getUser()->toArray());
+			if ($controllerInstance instanceof FrontendController)
+			{
+				$response->set('currency', $controllerInstance->getRequestCurrency());
+			}
 		}
 	}
 

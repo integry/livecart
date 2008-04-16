@@ -98,6 +98,7 @@ _website_address=Website address
 _manufacturer=Manufacturer
 _keywords=Keywords
 _mark_as_featured_product=Mark as featured product
+_mark_as_sale_product=Mark as on-sale product
 _allow_fractional_quantities=Allow fractional quantities
 
 _presentation=Presentation
@@ -154,6 +155,8 @@ _hint_longdescr=Detailed description which is displayed in the product details p
 _hint_keywords=Supply words or phrases here that may assist users in searching products.
 
 _hint_featured=Featured products are displayed above all other products, so marking a product as featured will provide extra exposure to this product.
+
+_hint_sale=On-sale products are displayed in separate blocks throughout the store, which help to improve visibility for products that are on special sale.
 
 _hint_surcharge=Define additional shipping charges for this particular product
 
