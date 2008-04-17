@@ -104,7 +104,7 @@ class TaxRate extends MultilingualObject
 
 	protected function insert()
 	{
-		if ($this->deliveryZone->get()->isDefault())
+		if (!$this->deliveryZone->get() || $this->deliveryZone->get()->isDefault())
 		{
 			$this->deliveryZone->setNull();
 		}

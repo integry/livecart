@@ -4,6 +4,7 @@ set -e
 
 MAIN=/home/mercurial/repo/livecart
 BUILD=/home/mercurial/repo/build
+SNAPSHOTBACKUP=/home/mercurial/repo/build-backup
 TMP=/tmp/build
 PACKAGE=/var/db/livecart
 
@@ -18,6 +19,8 @@ LOG=`hg log -l 1 --template "{desc}"`
 rm -rf $TMP
 cp -rf $MAIN $TMP
 find $TMP -name '.hg' | xargs rm -rf
+
+cp -r $BUILD $SNAPSHOTBACKUP
 
 # copy all files to build repo
 mv $BUILD/.hg $TMP/.hg
@@ -102,5 +105,8 @@ rm -rf $ZIP
 zip -rq $ZIP .
 
 rm -rf /tmp/update
+
+rm -rf $BUILD
+mv $SNAPSHOTBACKUP $BUILD
 
 echo 'Build process completed successfuly'

@@ -2329,6 +2329,7 @@ input.date
 	left: -999em;
 	margin-left : 142px;
 	margin-top : -32px;
+	z-index: 1;
 }
 
 .dynamicMenu li ul ul { /* third-and-above-level lists */

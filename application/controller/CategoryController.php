@@ -113,7 +113,7 @@ class CategoryController extends FrontendController
 			}
 		}
 
-		if ($this->category->isRoot() || $this->filters || $this->request->get('includeSub'))
+		if (($this->category->isRoot() && $this->filters) || $this->filters || $this->request->get('includeSub'))
 		{
 			$productFilter->includeSubcategories();
 		}
@@ -666,6 +666,11 @@ class CategoryController extends FrontendController
 
 	public function getAppliedFilters()
 	{
+		if ($this->filters)
+		{
+			return $this->filters;
+		}
+
 		if ($this->request->get('filters'))
 		{
 			$valueFilterIds = array();
@@ -762,6 +767,11 @@ class CategoryController extends FrontendController
 				}
 			}
 		}
+	}
+
+	public function getProductFilter()
+	{
+		return $this->productFilter;
 	}
 }
 
