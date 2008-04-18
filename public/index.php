@@ -52,16 +52,27 @@ register_shutdown_function('onShutDown');
 			}
 			catch (Exception $e)
 			{
-				echo "<br/><strong>" . get_class($e) . " ERROR:</strong> " . $e->getMessage()."\n\n";
-				echo "<br /><strong>FILE TRACE:</strong><br />\n\n";
-				echo ApplicationException::getFileTrace($e->getTrace());
-				exit;
+				die('error');
 			}
 		}
 
 		try
 		{
-			$app->run();
+			if ($app->isDevMode())
+			{
+				try
+				{
+					$app->run();
+				}
+				catch (Exception $e)
+				{
+					dump_livecart_trace($e);
+				}
+			}
+			else
+			{
+				$app->run();
+			}
 		}
 		catch (HTTPStatusException $e)
 		{
@@ -77,25 +88,36 @@ register_shutdown_function('onShutDown');
 			$app->getRouter()->setRequestedRoute($route);
 			runApp($app);
 		}
+
+		catch (ARNotFoundException $e)
+		{
+			$app->getRouter()->setRequestedRoute('err/redirect/404');
+			runApp($app);
+		}
+
+		catch (ControllerNotFoundException $e)
+		{
+			$app->getRouter()->setRequestedRoute('err/redirect/404');
+			runApp($app);
+		}
+
+		catch (ActionNotFoundException $e)
+		{
+			$app->getRouter()->setRequestedRoute('err/redirect/404');
+			runApp($app);
+		}
+
 		catch (UnsupportedBrowserException $e)
 		{
 			header('Location: ' . $app->getRouter()->createUrl(array('controller' => 'err', 'action' =>'backendBrowser')));
 			exit;
 		}
+
 		catch (Exception $e)
 		{
-			if ($app->isDevMode())
-			{
-				echo "<br/><strong>" . get_class($e) . " ERROR:</strong> " . $e->getMessage()."\n\n";
-				echo "<br /><strong>FILE TRACE:</strong><br />\n\n";
-				echo ApplicationException::getFileTrace($e->getTrace());
-			}
-			else
-			{
-				$route = 'err/redirect/500';
-				$app->getRouter()->setRequestedRoute($route);
-				runApp($app);
-			}
+			$route = 'err/redirect/500';
+			$app->getRouter()->setRequestedRoute($route);
+			runApp($app);
 		}
 	}
 
@@ -104,6 +126,14 @@ register_shutdown_function('onShutDown');
 	if (!empty($_GET['stat']))
 	{
 		$stat->display();
+	}
+
+	function dump_livecart_trace(Exception $e)
+	{
+		echo "<br/><strong>" . get_class($e) . " ERROR:</strong> " . $e->getMessage()."\n\n";
+		echo "<br /><strong>FILE TRACE:</strong><br />\n\n";
+		echo ApplicationException::getFileTrace($e->getTrace());
+		exit;
 	}
 
 ?>
