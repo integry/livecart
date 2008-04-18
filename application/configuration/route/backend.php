@@ -55,8 +55,6 @@ if ($this->config->get('SSL_PAYMENT'))
 {
 	$this->router->setSslAction('checkout', 'pay');
 	$this->router->setSslAction('backend.payment', 'ccForm');
-//	$this->router->setSslAction('backend.customerOrder');
-//	$this->router->setSslAction('backend.CustomerOrder');
 }
 
 if ($this->config->get('SSL_CHECKOUT'))
@@ -67,6 +65,11 @@ if ($this->config->get('SSL_CHECKOUT'))
 if ($this->config->get('SSL_CUSTOMER'))
 {
 	$this->router->setSslAction('user');
+}
+
+if ($sslHost = $this->config->get('SSL_DOMAIN'))
+{
+	$this->router->setSslHost($sslHost);
 }
 
 // language index page

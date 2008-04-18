@@ -273,3 +273,6 @@ SSL_PAYMENT=Payment page
 SSL_CHECKOUT=All checkout pages
 SSL_CUSTOMER=All customer account area pages
 SSL_BACKEND=All administration back-end pages
+
+_ssl_domain=https domain name
+SSL_DOMAIN=Use a different domain name for secure pages (e.g. secure.mysite.com)
