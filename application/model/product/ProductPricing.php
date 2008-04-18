@@ -167,6 +167,11 @@ class ProductPricing
 				$calculated[$id] = ProductPrice::calculatePrice($this->product, $currency, $basePrice);
 			}
 
+			if (!$calculated[$id] && $listPrice)
+			{
+				continue;
+			}
+
 			$formattedPrice[$id] = $currency->getFormattedPrice($calculated[$id]);
 		}
 
