@@ -2,7 +2,7 @@
 <script type="text/javascript"><!--//--><![CDATA[//><!--
 
 sfHover = function() {
-	var sfEls = document.getElementById("nav").getElementsByTagName("LI");
+	var sfEls = document.getElementById("dynamicNav").getElementsByTagName("LI");
 	for (var i=0; i<sfEls.length; i++) {
 		sfEls[i].onmouseover=function() {
 			this.className+=" sfhover";
@@ -19,7 +19,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 
 {defun name="dynamicCategoryTree" node=false filters=false}
 	{if $node}
-		<ul>
+		<ul id="dynamicNav">
 		{foreach from=$node item=category}
 			{if $category.ID == $currentId}
 				<li class="current{if $category.ID == $topCategoryId} topCategory{/if}">

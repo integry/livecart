@@ -27,6 +27,7 @@ _your_email=E-mail address
 _your_phone=Phone number
 _password=Enter password
 _conf_password=Re-enter password
+_complete_reg=Complete Registration
 
 # errors
 _err_enter_first_name=Please enter your first name

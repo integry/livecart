@@ -2316,6 +2316,8 @@ input.date
 	list-style: none;
 	/* float : left; */
 	width : 142px;
+	z-index: 10000;
+	position: relative;
 }
 
 .dynamicMenu li { /* all list items */
@@ -2329,7 +2331,7 @@ input.date
 	left: -999em;
 	margin-left : 142px;
 	margin-top : -32px;
-	z-index: 1;
+	z-index: 10000;
 }
 
 .dynamicMenu li ul ul { /* third-and-above-level lists */
