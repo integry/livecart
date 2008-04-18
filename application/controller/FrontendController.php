@@ -375,7 +375,7 @@ abstract class FrontendController extends BaseController
 		}
 
 		$category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
-		$filter = new ProductFilter($category, new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isOnSale'), true)));
+		$filter = new ProductFilter($category, new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isFeatured'), true)));
 		$filter->includeSubcategories();
 		$selectFilter = $filter->getSelectFilter();
 		$selectFilter->setLimit($this->config->get('SALE_ITEMS_COUNT'));

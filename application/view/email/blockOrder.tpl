@@ -12,6 +12,6 @@
 {/foreach}
 {/if}
 						   ---------------------------------
-{t _grand_total|@str_pad_left:49}: {$order.formatted_totalAmount}
+{t _grand_total|@str_pad_left:49}: {$order.formattedTotal[$order.Currency.ID]}
 {t _amount_paid|@str_pad_left:49}: {$order.formatted_amountPaid}
 {t _amount_due|@str_pad_left:49}: {$order.formatted_amountDue}

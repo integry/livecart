@@ -76,8 +76,8 @@
 
 	<p>
 		<label></label>
-		{checkbox name="isOnSale" class="checkbox" id="product_`$cat`_`$product.ID`_isOnSale"}
-		<label for="product_{$cat}_{$product.ID}_isOnSale" class="acronym checkbox"><a>{t _mark_as_sale_product}<div>{t _hint_sale}</div></a></label>
+		{checkbox name="isFeatured" class="checkbox" id="product_`$cat`_`$product.ID`_isFeatured"}
+		<label for="product_{$cat}_{$product.ID}_isFeatured" class="acronym checkbox"><a>{t _mark_as_sale_product}<div>{t _hint_sale}</div></a></label>
 	</p>
 
 	<p>

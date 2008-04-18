@@ -470,7 +470,7 @@ class CategoryController extends FrontendController
 	private function getSubCatFeaturedProducts()
 	{
 		$selFilter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isFeatured'), true));
-		$selFilter->setOrder(new ARFieldHandle('Product', 'salesRank'));
+		$selFilter->setOrder(new ARExpressionHandle('RAND()'));
 		$selFilter->setLimit($this->config->get('NUM_PRODUCTS_PER_CAT'));
 
 		$featuredFilter = new ProductFilter($this->category, $selFilter);

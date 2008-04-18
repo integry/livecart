@@ -638,7 +638,10 @@ class CustomerOrder extends ActiveRecordModel
 		{
 			// @todo: the tax calculation is slightly off when it's calculated for the first time, so it has to be called twice
 			$this->getTaxes($currency);
-			$total += $this->getTaxes($currency);
+			foreach ($this->shipments as $shipment)
+			{
+				$total += $shipment->getTotal($currency);
+			}
 		}
 		else
 		{
@@ -646,6 +649,7 @@ class CustomerOrder extends ActiveRecordModel
 			{
 				$total += $item->getSubTotal($currency);
 			}
+			$total += $this->getTaxes($currency);
 		}
 
 		return $total;
@@ -659,30 +663,33 @@ class CustomerOrder extends ActiveRecordModel
 
 		$this->taxes[$id] = array();
 		$zone = $this->getDeliveryZone();
-		foreach ($this->shipments as $shipment)
+		if ($this->shipments)
 		{
-			if ($shipment->getShippingService())
+			foreach ($this->shipments as $shipment)
 			{
-				$shipmentRates = $zone->getShippingRates($shipment);
-				$shipment->setAvailableRates($shipmentRates);
-				$shipment->setRateId($shipment->getShippingService()->getID());
-			}
-
-			$total += $shipment->getTotal($currency);
-
-			foreach ($shipment->getTaxes() as $tax)
-			{
-				$taxId = ($tax->taxRate->get() && $tax->taxRate->get()->tax->get()) ? $tax->taxRate->get()->tax->get()->getID() : 0;
-				if (!isset($this->taxes[$id][$taxId]))
+				if ($shipment->getShippingService())
 				{
-					$this->taxes[$id][$taxId] = 0;
+					$shipmentRates = $zone->getShippingRates($shipment);
+					$shipment->setAvailableRates($shipmentRates);
+					$shipment->setRateId($shipment->getShippingService()->getID());
 				}
 
-				$this->taxes[$id][$taxId] += $tax->getAmountByCurrency($currency);
+				$total += $shipment->getTotal($currency);
+
+				foreach ($shipment->getTaxes() as $tax)
+				{
+					$taxId = ($tax->taxRate->get() && $tax->taxRate->get()->tax->get()) ? $tax->taxRate->get()->tax->get()->getID() : 0;
+					if (!isset($this->taxes[$id][$taxId]))
+					{
+						$this->taxes[$id][$taxId] = 0;
+					}
+
+					$this->taxes[$id][$taxId] += $tax->getAmountByCurrency($currency);
+				}
 			}
 		}
 
-		return $total;
+		return array_sum($this->taxes[$id]);
 	}
 
 	public function isProcessing()
@@ -859,7 +866,6 @@ class CustomerOrder extends ActiveRecordModel
 		}
 
 		$array = parent::toArray();
-
 		$array['cartItems'] = array();
 		$array['wishListItems'] = array();
 

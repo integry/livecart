@@ -38,7 +38,7 @@
 	{compiledJs glue=true nameMethod=hash}
 </head>
 
-<body>
+<body class="{$request.controller}Con {$request.controller}-{$request.action}">
 	<div id="container" class="lang_{localeCode}">
 		{$ACTION_VIEW}
 	</div>
