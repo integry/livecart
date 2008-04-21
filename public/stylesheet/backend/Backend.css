@@ -382,8 +382,8 @@ html, body{
 	margin: 0px;
 	margin-right: 10px;
 	text-align: center;
-	padding: 5px;
-	height: 18px;
+	padding: 2px 5px 0 5px;
+	line-height: 26px;
 }
 
 #nav #navSelected div {
@@ -407,13 +407,14 @@ html, body{
 }
 
 #nav li ul {
-  	margin-top: 4px;
+
   	left: 8px;
   	border: 1px solid #bbb;
   	/* background-image: url(../../image/backend/menu/menu_commands_bg.jpg); */
   	background-position: bottom left;
   	background-repeat: repeat-x;
   	background-color: #CDD9EE;
+  	line-height: 20px;
   	padding: 5px;
   	width: 200px;
 }
@@ -601,14 +602,16 @@ html, body{
 /***************************
 	Work area content
 ***************************/
-#pageTitleContainer {
-	height:20px;
+#pageTitleContainer
+{
+	height: 25px;
 	padding-top: 5px;
 	background-color: #E6E6E6;
 	position: relative;
 	width: 100%;
 	clear: both;
 }
+
 #pageTitle {
   	font-weight: bold;
 	padding-left: 20px;
@@ -665,7 +668,7 @@ ul.menu li {
   	float: none;
     background-repeat: no-repeat;
     background-position: center left;
-    padding-left: 22px;
+    padding: 2px 0 2px 22px;
 }
 
 .menu a {

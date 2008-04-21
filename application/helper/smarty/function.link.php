@@ -73,7 +73,7 @@ function smarty_function_link($params, LiveCartSmarty $smarty)
 		$result = $router->createFullUrl($result);
 	}
 
-	unset($params['route'], $params['nohtml'], $params['self'], $params['controller'], $params['action']);
+	unset($params['route'], $params['nohtml'], $params['self'], $params['controller'], $params['action'], $params['query']);
 	foreach ($params as $key => $value)
 	{
 		$result = $router->setUrlQueryParam($result, $key, $value);

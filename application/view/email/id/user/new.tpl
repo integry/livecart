@@ -11,4 +11,4 @@ Anda dapat melihat status order Anda, melihat order terdahulu, mendownload file 
 Anda dapat login ke rekening Anda di:
 {link controller=user action=login url=true}
 
-{include file="email/en/signature.tpl"}
+{include file="email/id/signature.tpl"}

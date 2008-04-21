@@ -19,4 +19,4 @@ Nauja būsena: {if $shipment.status == 2}laukia siuntimo{elseif $shipment.status
 
 {/foreach}
 
-{include file="email/en/signature.tpl"}
+{include file="email/lt/signature.tpl"}

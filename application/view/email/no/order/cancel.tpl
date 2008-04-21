@@ -9,4 +9,4 @@ Hvis du har noen spørmål rundt dette, kan du sende en email eller kontakte oss
 Produkter som er kansellert:
 {include file="email/blockOrderItems.tpl"}
 
-{include file="email/en/signature.tpl"}
+{include file="email/no/signature.tpl"}

@@ -465,7 +465,12 @@ class CustomerOrderController extends StoreManagementController
 
 	private function applyFullNameFilter(Condition $cond)
 	{
-		$filters = (array)json_decode($this->request->get('filters'));
+		$filters = $this->request->get('filters');
+		if (!is_array($filters))
+		{
+			$filters = (array)json_decode($filters);
+		}
+
 		if (isset($filters['User.fullName']))
 		{
 			$nameParts = explode(' ', $filters['User.fullName']);

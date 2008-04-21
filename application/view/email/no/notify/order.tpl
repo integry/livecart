@@ -9,4 +9,4 @@ Følgende produkter er bestilt:
 
 {include file="email/blockOrderAddresses.tpl"}
 
-{include file="email/en/signature.tpl"}
+{include file="email/no/signature.tpl"}

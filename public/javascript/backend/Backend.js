@@ -12,11 +12,21 @@ function showHelp(url)
 	return window.open(url, 'helpWin', 'width=400, height=700, resizable, scrollbars, location=no');
 }
 
-var Backend = {};
+var Backend =
+{
+	setTranslations: function(translations)
+	{
+		Backend.translations = translations;
+	},
+
+	getTranslation: function(key)
+	{
+		return this.translations[key];
+	}
+};
 
 // set default locale
 Backend.locale = 'en';
-
 
 Backend.openedContainersStack = [];
 Backend.showContainer = function(containerID)
@@ -931,7 +941,7 @@ Backend.SaveConfirmationMessage.prototype =
 
 		if(!this.element.id)
 		{
-			this.element.id = 'saveConfirmationMessage_' + (Backend.SaveConfirmationMessage.prototype++);
+			this.element.id = 'saveConfirmationMessage_' + (Backend.SaveConfirmationMessage.prototype.counter++);
 		}
 
 		if(!Backend.SaveConfirmationMessage.prototype.timers[this.element.id])

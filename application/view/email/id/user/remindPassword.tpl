@@ -9,4 +9,4 @@ Password: {$user.newPassword}
 Anda dapat login ke rekening Anda di:
 {link controller=user action=login url=true}
 
-{include file="email/en/signature.tpl"}
+{include file="email/id/signature.tpl"}

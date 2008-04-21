@@ -122,3 +122,5 @@ _make_payment=Veiciet maksājumu par šo pasūtījumu
 _order_processing=Šis pasūtījums tiek apstrādāts
 _displaying_orders=Rādāmi [_1] līdz [_2] no [_3] atrastajiem pasūtījumiem
 _orders_found=[quantf,_1,Atrasts,Atrasti] [quant,_1,pasūtījums,pasūtījumi]
+_complete_reg=Pabeigt reģistrāciju
+_unread_messages=[quant,_1,neizlasīts ziņojums,neizlasīti ziņojumi]

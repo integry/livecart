@@ -8,4 +8,4 @@ Seorang pelanggan mengirimkan pesan mengenai order #{$order.ID}
 Anda dapat memberi respons melalui panel manajemen order:
 {backendOrderUrl order=$order url=true}#tabOrderCommunication__
 
-{include file="email/en/signature.tpl"}
+{include file="email/id/signature.tpl"}

@@ -45,8 +45,7 @@ abstract class BackendController extends BaseController
 
 	public function boxUserMenuBlock()
 	{
-		$response = new BlockResponse();
-		return $response;
+		return new BlockResponse('languageData', json_encode($this->locale->translationManager()->getLoadedDefinitions()));
 	}
 }
 

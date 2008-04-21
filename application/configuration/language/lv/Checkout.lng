@@ -35,3 +35,10 @@ _cvv_description=Kartes Pārbaudes Kods (CVV) nodrošina papildus aizsardzību p
 _order_completed=Pasūtījums Pabeigts
 _completed_paid=Jūsu maksājums ir saņemts. Jūs varat sekot līdzi pasūtījuma statusam no <a href="%url">Jūsu klienta konta</a>.
 _completed_not_paid=...ievietojiet maksājumu instrukcijas šeit...
+_err_no_rates_for_address=Izvēlētajai adresei nav pieejami sūtīšanas tarifi
+_pay_offline=Samaksāt ar pārskaitījumu
+_offline_instructions=Bankas pārskaitījumu instrukcijas...
+_offline_complete_payment=Maksāt ar pārskaitījumu
+_other_methods=Citas maksājumu metodes
+_select_payment_method=Izvēlieties maksājuma metodi
+_any_changes=Nepieciešamas izmaiņas?

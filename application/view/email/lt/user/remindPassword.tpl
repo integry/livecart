@@ -9,4 +9,4 @@ Slaptažodis: {$user.newPassword}
 Prisijungti galite šiu adresu:
 {link controller=user action=login url=true}
 
-{include file="email/en/signature.tpl"}
+{include file="email/lt/signature.tpl"}

@@ -11,4 +11,4 @@ Fra din kundeside kan du til enhver tid se status på dine bestillinger, se tidl
 Du kan logge deg inn på din kundeside her:
 {link controller=user action=login url=true}
 
-{include file="email/en/signature.tpl"}
+{include file="email/no/signature.tpl"}

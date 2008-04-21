@@ -67,7 +67,12 @@ LiveCart.AjaxRequest.prototype = {
 		}
 
 		options.method = method;
-		options.parameters = params;
+
+		if (!options.parameters)
+		{
+			options.parameters = params;
+		}
+
 		options.onComplete = this.postProcessResponse.bind(this, this.parseURI(url));
 		options.onFailure = this.reportError;
 

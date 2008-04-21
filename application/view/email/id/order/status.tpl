@@ -19,4 +19,4 @@ Status baru: {if $shipment.status == 2}menunggu pengiriman{elseif $shipment.stat
 
 {/foreach}
 
-{include file="email/en/signature.tpl"}
+{include file="email/id/signature.tpl"}

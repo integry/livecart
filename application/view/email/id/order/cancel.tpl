@@ -9,4 +9,4 @@ Jika Anda memiliki pertanyaan seputar order anda, maka Anda dapat mengirimkan e-
 Barang pada order yang dibatalkan:
 {include file="email/blockOrderItems.tpl"}
 
-{include file="email/en/signature.tpl"}
+{include file="email/id/signature.tpl"}

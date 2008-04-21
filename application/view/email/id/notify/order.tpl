@@ -9,4 +9,4 @@ Barang-barang berikut telah dipesan:
 
 {include file="email/blockOrderAddresses.tpl"}
 
-{include file="email/en/signature.tpl"}
+{include file="email/id/signature.tpl"}

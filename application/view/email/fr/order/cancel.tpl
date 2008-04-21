@@ -9,4 +9,4 @@ Si vous avez des questions concernant cette commande, vous pouvez nous envoyer u
 Items de la comande cancellée:
 {include file="email/blockOrderItems.tpl"}
 
-{include file="email/en/signature.tpl"}
+{include file="email/fr/signature.tpl"}

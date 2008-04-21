@@ -9,4 +9,4 @@ Užsisakytas šias prekes:
 
 {include file="email/blockOrderAddresses.tpl"}
 
-{include file="email/en/signature.tpl"}
+{include file="email/lt/signature.tpl"}

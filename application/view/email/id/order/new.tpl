@@ -13,4 +13,4 @@ Berikut adalah barang yang Anda order dari kami:
 
 {include file="email/blockOrderAddresses.tpl"}
 
-{include file="email/en/signature.tpl"}
+{include file="email/id/signature.tpl"}

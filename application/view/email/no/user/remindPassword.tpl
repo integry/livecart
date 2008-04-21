@@ -9,4 +9,4 @@ Passord: {$user.newPassword}
 Du kan bruke denne linken til å logge eg inn på din kundeside:
 {link controller=user action=login url=true}
 
-{include file="email/en/signature.tpl"}
+{include file="email/no/signature.tpl"}

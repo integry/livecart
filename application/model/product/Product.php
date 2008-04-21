@@ -845,6 +845,7 @@ class Product extends MultilingualObject
 	  			$prices['listPrice_' . $code] = $value;
 	  		}
 	  	}
+
 	  	$prices['formattedListPrice'] = $listPrices['formattedPrice'];
 
 	  	return $prices;

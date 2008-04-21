@@ -1,0 +1,43 @@
+_newsletters=Newsletters
+_messages=Messages
+_subscribers=Subscribers
+_create_message=Send new message
+_loading_newsletter=Loading message
+
+_cancel_create_newsletter=Cancel sending a new message
+_subject=Message subject
+_text=Message text
+_save_and_continue=Save and continue
+_save_message=Save message
+_send_message=Send message
+_err_title_empty=Please enter the message subject
+_err_text_empty=Please enter the message text
+
+_no_messages_found=No messages found
+_listing_messages=Listing messages $from - $to of $count
+_process=Process
+_newsletter_delete_confirm=Really delete selected messages?
+_nothing_selected=Please select at least one message first
+
+NewsletterMessage.ID=ID
+NewsletterMessage.status=Status
+NewsletterMessage.time=Date
+NewsletterMessage.subject=Subject
+
+_edit_message=Edit message
+_submission_info=Delivery information
+_done_editing_message=Done editing message
+
+_send_to=Send to
+_all_users=All registered users
+_all_subscribers=All newsletter subscribers
+
+_status=Status
+_status_0=Not sent
+_status_1=Partially sent
+_status_2=Sent
+_messages_sent=Messages sent
+_sending=Sending
+
+_message_successfully_saved=Message was saved successfully
+_message_successfully_sent=Newsletter messages have been sent successfully

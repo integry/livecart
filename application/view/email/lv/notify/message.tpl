@@ -8,4 +8,4 @@ Klients ir pievienojis jaunu paziņojumu pie pasūtījuma #{$order.ID}
 Jūs varat pievienot atbildi no administrācijas zonas:
 {backendOrderUrl order=$order url=true}#tabOrderCommunication__
 
-{include file="email/en/signature.tpl"}
+{include file="email/lv/signature.tpl"}

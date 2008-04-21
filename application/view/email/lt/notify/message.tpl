@@ -8,4 +8,4 @@ Vartotojas parašė naują žinutę susijusią su užsakymu #{$order.ID}
 Jūs galite pridėti atsakymą iš Užsakymų valdymo dalies:
 {backendOrderUrl order=$order url=true}#tabOrderCommunication__
 
-{include file="email/en/signature.tpl"}
+{include file="email/lt/signature.tpl"}

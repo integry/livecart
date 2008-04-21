@@ -9,4 +9,4 @@ Sono stati ordinati i seguenti articoli:
 
 {include file="email/blockOrderAddresses.tpl"}
 
-{include file="email/en/signature.tpl"}
+{include file="email/it/signature.tpl"}

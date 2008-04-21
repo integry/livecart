@@ -8,4 +8,4 @@ Un utente ha aggiunto un nuovo messaggio in merito all'ordine #{$order.ID}
 Puoi aggiungere una risposta direttamente dal pannello di amministrazione:
 {backendOrderUrl order=$order url=true}#tabOrderCommunication__
 
-{include file="email/en/signature.tpl"}
+{include file="email/it/signature.tpl"}

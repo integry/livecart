@@ -8,4 +8,4 @@ Un client a laissé un nouveau message a propos de la commande #{$order.ID}
 Vous pouvez répondre a partir du tableau de gestion des commandes:
 {backendOrderUrl order=$order url=true}#tabOrderCommunication__
 
-{include file="email/en/signature.tpl"}
+{include file="email/fr/signature.tpl"}

@@ -66,7 +66,14 @@ register_shutdown_function('onShutDown');
 				}
 				catch (Exception $e)
 				{
-					dump_livecart_trace($e);
+					if (!$e instanceof HTTPStatusException)
+					{
+						dump_livecart_trace($e);
+					}
+					else
+					{
+						throw $e;
+					}
 				}
 			}
 			else

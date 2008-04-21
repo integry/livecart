@@ -13,4 +13,4 @@ Atgādinām, ka pasūtījāt sekojošos produktus:
 
 {include file="email/blockOrderAddresses.tpl"}
 
-{include file="email/en/signature.tpl"}
+{include file="email/lv/signature.tpl"}

@@ -9,4 +9,4 @@ Ja Jums radušies kādi jautājumi sakarā ar šo pasūtījumu, lūdzu sūtiet e
 Produkti atceltajā pasūtījumā:
 {include file="email/blockOrderItems.tpl"}
 
-{include file="email/en/signature.tpl"}
+{include file="email/lv/signature.tpl"}

@@ -19,4 +19,4 @@ Nouveau statut: {if $shipment.status == 2}awaiting shipment{elseif $shipment.sta
 
 {/foreach}
 
-{include file="email/en/signature.tpl"}
+{include file="email/fr/signature.tpl"}

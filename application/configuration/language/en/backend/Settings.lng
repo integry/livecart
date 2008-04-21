@@ -225,6 +225,7 @@ EMAIL_STATUS_UPDATE=order status is updated
 EMAIL_ORDER_CANCELLATION=order is cancelled
 EMAIL_ORDERNOTE=a new message is added to order
 MAIN_EMAIL=Store e-mail address (all outgoing messages will be sent from this address)
+NEWSLETTER_EMAIL=Newsletter e-mail address (all newsletter messages will be sent from this address)
 
 _email_delivery=E-mail Delivery Method
 EMAIL_METHOD=E-mail delivery type

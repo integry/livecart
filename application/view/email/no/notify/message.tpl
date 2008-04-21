@@ -8,4 +8,4 @@ En kunde har sendt en ny beskjed ang. bestillingsnr. #{$order.ID}
 Du kan svare på denne fra order management panel:
 {backendOrderUrl order=$order url=true}#tabOrderCommunication__
 
-{include file="email/en/signature.tpl"}
+{include file="email/no/signature.tpl"}

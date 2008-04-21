@@ -10,4 +10,4 @@ oppure contattarci direttamente da questa pagina:
 Articoli contenuti nell'ordine cancellato:
 {include file="email/blockOrderItems.tpl"}
 
-{include file="email/en/signature.tpl"}
+{include file="email/it/signature.tpl"}

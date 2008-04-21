@@ -10,4 +10,4 @@ Ada pesan baru mengenai order Anda.
 Anda dapat memberikan respons dari halaman berikut:
 {link controller=user action=viewOrder id=$order.ID url=true}
 
-{include file="email/en/signature.tpl"}
+{include file="email/id/signature.tpl"}

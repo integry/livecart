@@ -20,4 +20,4 @@ Nuovo stato: {if $shipment.status == 2}in attesa di spedizione{elseif $shipment.
 
 {/foreach}
 
-{include file="email/en/signature.tpl"}
+{include file="email/it/signature.tpl"}

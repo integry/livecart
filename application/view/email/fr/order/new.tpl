@@ -13,4 +13,4 @@ Nous vous rappelons que l'item a été commandé:
 
 {include file="email/blockOrderAddresses.tpl"}
 
-{include file="email/en/signature.tpl"}
+{include file="email/fr/signature.tpl"}

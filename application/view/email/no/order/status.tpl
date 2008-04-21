@@ -19,4 +19,4 @@ Ny status: {if $shipment.status == 2}Forventet levering{elseif $shipment.status 
 
 {/foreach}
 
-{include file="email/en/signature.tpl"}
+{include file="email/no/signature.tpl"}

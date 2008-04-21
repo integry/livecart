@@ -10,4 +10,4 @@ Un nouveau message a été ajouté a propos de votre commande.
 Vous pouvez répondre a ce message a partir de la page suivante:
 {link controller=user action=viewOrder id=$order.ID url=true}
 
-{include file="email/en/signature.tpl"}
+{include file="email/fr/signature.tpl"}

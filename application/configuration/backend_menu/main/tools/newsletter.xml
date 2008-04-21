@@ -1,0 +1,5 @@
+<Menu>
+	<Title>_menu_newsletter</Title>
+	<Controller>backend.newsletter</Controller>
+	<Role>newsletter</Role>
+</Menu>

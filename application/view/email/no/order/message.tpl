@@ -10,4 +10,4 @@ En ny beskjed er lagt til ang. din bestilling.
 Du kan svare på denne beskjeden på følgende link:
 {link controller=user action=viewOrder id=$order.ID url=true}
 
-{include file="email/en/signature.tpl"}
+{include file="email/no/signature.tpl"}

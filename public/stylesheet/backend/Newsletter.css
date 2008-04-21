@@ -1,0 +1,75 @@
+#tabSubscribers, #tabSubmissionStats
+{
+	display: none;
+}
+
+.addNewsletterMenu
+{
+	background-image: url(../../image/silk/email_add.png);
+}
+
+#tabMessagesContent .selectColumns
+{
+	display: none;
+}
+
+.cell_NewsletterMessage_status, .cell_NewsletterMessage_time
+{
+	width: 15%;
+}
+
+.newsletterForm
+{
+	float: left;
+}
+
+.tabMessageInfoContent .confirmations
+{
+	float: left;
+}
+
+.newsletterForm textarea, .newsletterForm input.wide
+{
+	width: 550px;
+}
+
+.newsletterForm textarea
+{
+	font-family: monospace;
+	height: 400px;
+	font-size: larger;
+}
+
+.sendLabel
+{
+	margin-right: 2em;
+	width: auto;
+}
+
+.sendContainer
+{
+	float: left;
+	margin-left: 1em;
+	width: 400px;
+}
+
+.recipientCount
+{
+	border: 1px solid #ccc;
+	background-color: #fff;
+	padding: 5px;
+	font-size: smaller;
+	float: left;
+}
+
+.sendProgress .progressBar
+{
+	float: left;
+}
+
+.sendProgress a.cancel
+{
+	float: left;
+	line-height: 30px;
+	margin-left: 1em;
+}

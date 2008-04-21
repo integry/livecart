@@ -12,4 +12,4 @@ ordini, scaricare files e modificare le informazioni relative agli indirizzi di 
 Puoi utilizzare questo indirizzo per accedere al tuo account:
 {link controller=user action=login url=true}
 
-{include file="email/en/signature.tpl"}
+{include file="email/it/signature.tpl"}

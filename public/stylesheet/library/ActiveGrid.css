@@ -181,6 +181,7 @@
 {
     padding: 0;
     text-align: center;
+	width: 30px;
 }
 
 .activeGrid .cell_cb input
