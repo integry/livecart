@@ -29,7 +29,7 @@
 	</ul>
 	<div class="sectionContainer maxHeight h--95">
 		<div id="tabMessagesContent" class="maxHeight tabPageContainer">
-			<ul class="menu" {denied role="newsletter.create"}style="display: none;"{/denied}>
+			<ul class="menu">
 				<li class="addNewsletterMenu">
 					<a href="#" onclick="Backend.Newsletter.showAddForm(this); return false;">
 						{t _create_message}
