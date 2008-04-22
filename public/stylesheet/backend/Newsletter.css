@@ -1,4 +1,4 @@
-#tabSubscribers, #tabSubmissionStats
+#tabSubmissionStats, #tabMessageInfo, #newsletterManagerContainer .tabs
 {
 	display: none;
 }
@@ -8,12 +8,12 @@
 	background-image: url(../../image/silk/email_add.png);
 }
 
-#tabMessagesContent .selectColumns
+#tabMessagesContent .selectColumns, #tabSubscribersContent .selectColumns
 {
 	display: none;
 }
 
-.cell_NewsletterMessage_status, .cell_NewsletterMessage_time
+.cell_NewsletterMessage_status, .cell_NewsletterMessage_time, .cell_NewsletterSubscriber_isEnabled
 {
 	width: 15%;
 }

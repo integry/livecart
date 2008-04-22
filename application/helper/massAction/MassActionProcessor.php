@@ -141,7 +141,21 @@ class MassActionProcessor
 
 	protected function processRecord(ActiveRecordModel $record)
 	{
+		$act = $this->getAction();
+		$field = $this->getField();
 
+		if (substr($act, 0, 7) == 'enable_')
+		{
+			$record->setFieldValue($field, 1);
+		}
+		else if (substr($act, 0, 8) == 'disable_')
+		{
+			$record->setFieldValue($field, 0);
+		}
+		else if (substr($act, 0, 4) == 'set_')
+		{
+			$record->setFieldValue($field, $this->request->get('set_' . $field));
+		}
 	}
 
 	private function cancel()

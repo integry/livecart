@@ -23,19 +23,7 @@ class ProductMassActionProcessor extends MassActionProcessor
 		$act = $this->getAction();
 		$field = $this->getField();
 
-		if (substr($act, 0, 7) == 'enable_')
-		{
-			$product->setFieldValue($field, 1);
-		}
-		else if (substr($act, 0, 8) == 'disable_')
-		{
-			$product->setFieldValue($field, 0);
-		}
-		else if (substr($act, 0, 4) == 'set_')
-		{
-			$product->setFieldValue($field, $this->request->get('set_' . $field));
-		}
-		else if ('manufacturer' == $act)
+		if ('manufacturer' == $act)
 		{
 			$product->manufacturer->set($this->params['manufacturer']);
 		}
@@ -68,6 +56,10 @@ class ProductMassActionProcessor extends MassActionProcessor
 			$instance = ProductPresentation::getInstance($product);
 			$instance->theme->set($this->params['theme']);
 			$instance->save();
+		}
+		else
+		{
+			parent::processRecord($product);
 		}
 	}
 }

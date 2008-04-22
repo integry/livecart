@@ -15,7 +15,9 @@
 {pageTitle help="tools.newsletter"}{t _newsletters}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
-<div id="confirmations"></div>
+<div id="confirmations" style="position: absolute; right: 0; top: 0;">
+	<div id="yellowZone"></div>
+</div>
 
 <div id="newsletterTabContainer" class="tabContainer maxHeight h--20">
 
@@ -25,7 +27,7 @@
 
 	<ul class="tabList tabs">
 		<li id="tabMessages" class="tab active"><a href="{link controller=backend.newsletter action=list}">{t _messages}</a></li>
-		<li id="tabSubscribers" class="tab inactive"><a href="{link controller=backend.newsletterSubscriber action=list}">{t _subscribers}</a></li>
+		<li id="tabSubscribers" class="tab inactive"><a href="{link controller=backend.newsletterSubscriber}">{t _subscribers}</a></li>
 	</ul>
 	<div class="sectionContainer maxHeight h--95">
 		<div id="tabMessagesContent" class="maxHeight tabPageContainer">

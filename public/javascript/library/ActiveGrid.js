@@ -614,6 +614,11 @@ ActiveGrid.MassActionHandler.prototype =
 
 	actionSelectorChange: function()
 	{
+		if (!this.valueEntryContainer)
+		{
+			return false;
+		}
+
 		for (k = 0; k < this.valueEntryContainer.childNodes.length; k++)
 		{
 			if (this.valueEntryContainer.childNodes[k].style)

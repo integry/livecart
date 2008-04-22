@@ -60,6 +60,7 @@
 		theme_advanced_buttons2 : "bullist,numlist,separator,outdent,indent,separator,undo,redo,separator,link,unlink,anchor,image,cleanup,separator,code,separator,table,separator,sub,sup,separator,charmap",
 		theme_advanced_buttons3 : "",
 		content_css: "{/literal}{baseUrl}{literal}stylesheet/library/TinyMCE.css",
+		forced_root_block : '',
 		relative_urls : true
 	});
 
