@@ -4,7 +4,7 @@
  * @package application.helper.massAction
  * @author Integry Systems
  */
-abstract class MassActionProcessor
+class MassActionProcessor
 {
 	protected $grid;
 	protected $params;
@@ -141,7 +141,7 @@ abstract class MassActionProcessor
 
 	protected function processRecord(ActiveRecordModel $record)
 	{
-		throw new Exception('Implement me');
+
 	}
 
 	private function cancel()

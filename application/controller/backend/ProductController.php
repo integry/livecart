@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
+ClassLoader::import('application.controller.backend.abstract.ActiveGridController');
 ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.filter.FilterGroup');
 ClassLoader::import('application.model.product.Product');
@@ -15,7 +15,7 @@ ClassLoader::import('application.helper.massAction.MassActionInterface');
  * @author Integry Systems
  * @role product
  */
-class ProductController extends StoreManagementController implements MassActionInterface
+class ProductController extends ActiveGridController implements MassActionInterface
 {
 	public function index()
 	{
@@ -23,25 +23,12 @@ class ProductController extends StoreManagementController implements MassActionI
 
 		$category = Category::getInstanceByID($this->request->get("id"), Category::LOAD_DATA);
 
-		$availableColumns = $this->getAvailableColumns($category);
-		$displayedColumns = $this->getDisplayedColumns($category);
-
-		// sort available columns by display state (displayed columns first)
-		$displayedAvailable = array_intersect_key($availableColumns, $displayedColumns);
-		$notDisplayedAvailable = array_diff_key($availableColumns, $displayedColumns);
-		$availableColumns = array_merge($displayedAvailable, $notDisplayedAvailable);
-
-		//$response = $this->productList($category, new ActionResponse());
 		$response = new ActionResponse();
-		$response->set('massForm', $this->getMassForm());
-		$response->set('displayedColumns', $displayedColumns);
-		$response->set('availableColumns', $availableColumns);
 		$response->set('categoryID', $category->getID());
-		$response->set('offset', $this->request->get('offset'));
-		$response->set('totalCount', '0');
 		$response->set('currency', $this->application->getDefaultCurrency()->getID());
-		$response->set('filters', $this->request->get('filters'));
 		$response->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
+
+		$this->setGridResponse($response);
 
 		$path = $this->getCategoryPathArray($category);
 		$response->set('path', $path);
@@ -51,14 +38,64 @@ class ProductController extends StoreManagementController implements MassActionI
 
 	public function changeColumns()
 	{
-		$columns = array_keys($this->request->get('col', array()));
-		$this->setSessionData('columns', $columns);
+		parent::changeColumns();
+
 		return new ActionRedirectResponse('backend.product', 'index', array('id' => $this->request->get('id')));
 	}
 
-	public function lists($dataOnly = false, $displayedColumns = null)
+	protected function getClassName()
 	{
-		$id = substr($this->request->get("id"), 9);
+		return 'Product';
+	}
+
+	protected function getRequestColumns()
+	{
+		return $this->getDisplayedColumns(Category::getInstanceByID(substr($this->request->get("id"), 9), Category::LOAD_DATA));
+	}
+
+	protected function getAvailableRequestColumns()
+	{
+		return $this->getAvailableColumns(Category::getInstanceByID(substr($this->request->get("id"), 9), Category::LOAD_DATA));
+	}
+
+	protected function getReferencedData()
+	{
+		return array('Category', 'Manufacturer');
+	}
+
+	protected function getColumnValue($product, $class, $field)
+	{
+		if ($class == 'hiddenType')
+		{
+			return $product['type'];
+		}
+
+		if ('Product' == $class)
+		{
+			$value = isset($product[$field . '_lang']) ?
+						$product[$field . '_lang'] : (isset($product[$field]) ? $product[$field] : '');
+		}
+		else if ('ProductPrice' == $class)
+		{
+			$currency = $this->application->getDefaultCurrency()->getID();
+			$value = isset($product['price_' . $currency]) ? $product['price_' . $currency] : 0;
+		}
+		else if ('specField' == $class)
+		{
+			$value = isset($product['attributes'][$field]['value_lang']) ? $product['attributes'][$field]['value_lang'] : '';
+		}
+		else
+		{
+			$value = parent::getColumnValue($product, $class, $field);
+		}
+
+		return $value;
+	}
+
+	protected function getSelectFilter()
+	{
+		$id = $this->request->get("id");
+		$id = is_numeric($id) ? $id : substr($this->request->get("id"), 9);
 		$category = Category::getInstanceByID($id, Category::LOAD_DATA);
 
 		$filter = new ARSelectFilter();
@@ -69,16 +106,11 @@ class ProductController extends StoreManagementController implements MassActionI
 
 		$filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
 
-		new ActiveGrid($this->application, $filter, 'Product');
+		return $filter;
+	}
 
-		$recordCount = true;
-		$productArray = ActiveRecordModel::getRecordSetArray('Product', $filter, array('Category', 'Manufacturer'), $recordCount);
-
-		if (!$displayedColumns)
-		{
-			$displayedColumns = $this->getDisplayedColumns($category);
-		}
-
+	protected function processDataArray($productArray, $displayedColumns)
+	{
 		// load specification data
 		foreach ($displayedColumns as $column => $type)
 		{
@@ -95,92 +127,7 @@ class ProductController extends StoreManagementController implements MassActionI
 		// load price data
 		ProductPrice::loadPricesForRecordSetArray($productArray);
 
-		$currency = $this->application->getDefaultCurrency()->getID();
-
-		$data = array();
-
-		foreach ($productArray as $product)
-		{
-			$record = array();
-			foreach ($displayedColumns as $column => $type)
-			{
-				if($column == 'hiddenType')
-				{
-					$record[] = $product['type'];
-					continue;
-				}
-
-				list($class, $field) = explode('.', $column, 2);
-				if ('Product' == $class)
-				{
-					$value = isset($product[$field . '_lang']) ?
-								$product[$field . '_lang'] : (isset($product[$field]) ? $product[$field] : '');
-				}
-				else if ('ProductPrice' == $class)
-				{
-					$value = isset($product['price_' . $currency]) ? $product['price_' . $currency] : 0;
-				}
-				else if ('specField' == $class)
-				{
-					$value = isset($product['attributes'][$field]['value_lang']) ? $product['attributes'][$field]['value_lang'] : '';
-				}
-				else
-				{
-					$value = $product[$class][$field];
-				}
-
-				if ('bool' == $type)
-				{
-					$value = $value ? $this->translate('_yes') : $this->translate('_no');
-				}
-
-				$record[] = $value;
-			}
-
-			$data[] = $record;
-		}
-
-		if ($dataOnly)
-		{
-			return $data;
-		}
-
-		$return = array();
-		$return['columns'] = array_keys($displayedColumns);
-		$return['totalCount'] = $recordCount;
-		$return['data'] = $data;
-
-		return new JSONResponse($return);
-	}
-
-	public function export()
-	{
-		@set_time_limit(0);
-
-		// get category instance
-		$id = substr($this->request->get("id"), 9);
-		$category = Category::getInstanceByID($id, Category::LOAD_DATA);
-
-		// init file download
-		header('Content-Disposition: attachment; filename="exported.csv"');
-		$out = fopen('php://output', 'w');
-
-		// header row
-		$columns = $this->getDisplayedColumns($category);
-		unset($columns['hiddenType']);
-		foreach ($columns as $column => $type)
-		{
-			$header[] = $this->translate($column);
-		}
-		fputcsv($out, $header);
-
-		// columns
-		foreach ($this->lists(true, $columns) as $row)
-		{
-			fputcsv($out, $row);
-		}
-
-		exit;
+		return $productArray;
 	}
 
 	/**
@@ -188,15 +135,7 @@ class ProductController extends StoreManagementController implements MassActionI
 	 */
 	public function processMass()
 	{
-		ClassLoader::import('application.helper.massAction.ProductMassActionProcessor');
-
-		$category = Category::getInstanceById($this->request->get('id'), Category::LOAD_DATA);
-		$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
-		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
-		$filter = new ARSelectFilter($cond);
-		$filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
-
-		$grid = new ActiveGrid($this->application, $filter, 'Product');
+		$filter = $this->getSelectFilter();
 
 		$act = $this->request->get('act');
 		$field = array_pop(explode('_', $act, 2));
@@ -251,16 +190,82 @@ class ProductController extends StoreManagementController implements MassActionI
 			$params['theme'] = $this->request->get('theme');
 		}
 
-		$mass = new ProductMassActionProcessor($grid, $params);
-		$mass->setCompletionMessage($this->translate('_mass_action_succeed'));
-		return $mass->process(array('Category'));
+		return parent::processMass($params);
 	}
 
-	public function isMassCancelled()
+	protected function getMassActionProcessor()
 	{
-		ClassLoader::import('application.helper.massAction.ProductMassActionProcessor');
+		 ClassLoader::import('application.helper.massAction.ProductMassActionProcessor');
+		 return 'ProductMassActionProcessor';
+	}
 
-		return new JSONResponse(array('isCancelled' => ProductMassActionProcessor::isCancelled($this->request->get('pid'))));
+	protected function getMassCompletionMessage()
+	{
+		return $this->translate('_mass_action_succeed');
+	}
+
+	protected function getMassValidator()
+	{
+		$validator = parent::getMassValidator();
+
+		$validator->addFilter('set_price', new NumericFilter(''));
+		$validator->addFilter('set_stock', new NumericFilter(''));
+		$validator->addFilter('inc_price', new NumericFilter(''));
+		$validator->addFilter('inc_stock', new NumericFilter(''));
+		$validator->addFilter('set_minimumQuantity', new NumericFilter(''));
+		$validator->addFilter('set_shippingSurchargeAmount', new NumericFilter(''));
+
+		return $validator;
+	}
+
+	public function getAvailableColumns(Category $category, $specField = false)
+	{
+		$availableColumns = parent::getAvailableColumns();
+
+		// specField columns
+		if ($specField)
+		{
+			$fields = $category->getSpecificationFieldSet(Category::INCLUDE_PARENT);
+			foreach ($fields as $field)
+			{
+				if (!$field->isMultiValue->get())
+				{
+					$fieldArray = $field->toArray();
+					$availableColumns['specField.' . $field->getID()] = array
+						(
+							'name' => $fieldArray['name_lang'],
+							'type' => $field->isSimpleNumbers() ? 'numeric' : 'text'
+						);
+				}
+			}
+		}
+
+		unset($availableColumns['Product.voteSum']);
+		unset($availableColumns['Product.voteCount']);
+		unset($availableColumns['Product.rating']);
+		unset($availableColumns['Product.salesRank']);
+
+		return $availableColumns;
+	}
+
+	protected function getCustomColumns()
+	{
+		$availableColumns['Manufacturer.name'] = 'text';
+		$availableColumns['ProductPrice.price'] = 'numeric';
+		$availableColumns['hiddenType'] = 'numeric';
+
+		return $availableColumns;
+	}
+
+	protected function getDisplayedColumns(Category $category)
+	{
+		// product ID is always passed as the first column
+		return parent::getDisplayedColumns($category, array('hiddenType' => 'numeric'));
+	}
+
+	protected function getDefaultColumns()
+	{
+		return array('Product.ID', 'hiddenType','Product.sku', 'Product.name', 'Manufacturer.name', 'ProductPrice.price', 'Product.stockCount', 'Product.isEnabled');
 	}
 
 	public function autoComplete()
@@ -498,105 +503,6 @@ class ProductController extends StoreManagementController implements MassActionI
 		$response->set('product', $product->toArray());
 		$response->set('purchaseStats', $purchaseStats);
 		return $response;
-	}
-
-	public function getAvailableColumns(Category $category, $specField = false)
-	{
-		// get available columns
-		$productSchema = ActiveRecordModel::getSchemaInstance('Product');
-
-		$availableColumns = array();
-		foreach ($productSchema->getFieldList() as $field)
-		{
-			$type = ActiveGrid::getFieldType($field);
-
-			if (!$type)
-			{
-				continue;
-			}
-
-			$availableColumns['Product.' . $field->getName()] = $type;
-		}
-
-		$availableColumns['Manufacturer.name'] = 'text';
-		$availableColumns['ProductPrice.price'] = 'numeric';
-		$availableColumns['hiddenType'] = 'numeric';
-
-		foreach ($availableColumns as $column => $type)
-		{
-			$availableColumns[$column] = array('name' => $this->translate($column), 'type' => $type);
-		}
-
-		// specField columns
-		if ($specField)
-		{
-			$fields = $category->getSpecificationFieldSet(Category::INCLUDE_PARENT);
-			foreach ($fields as $field)
-			{
-				if (!$field->isMultiValue->get())
-				{
-					$fieldArray = $field->toArray();
-					$availableColumns['specField.' . $field->getID()] = array
-						(
-							'name' => $fieldArray['name_lang'],
-							'type' => $field->isSimpleNumbers() ? 'numeric' : 'text'
-						);
-				}
-			}
-		}
-
-		unset($availableColumns['Product.voteSum']);
-		unset($availableColumns['Product.voteCount']);
-		unset($availableColumns['Product.rating']);
-		unset($availableColumns['Product.salesRank']);
-
-		return $availableColumns;
-	}
-
-	protected function getDisplayedColumns(Category $category)
-	{
-		// get displayed columns
-		$displayedColumns = $this->getSessionData('columns');
-
-		if (!$displayedColumns)
-		{
-			$displayedColumns = array('Product.ID', 'hiddenType','Product.sku', 'Product.name', 'Manufacturer.name', 'ProductPrice.price', 'Product.stockCount', 'Product.isEnabled');
-		}
-
-		$availableColumns = $this->getAvailableColumns($category);
-		$displayedColumns = array_intersect_key(array_flip($displayedColumns), $availableColumns);
-
-		// product ID is always passed as the first column
-		$displayedColumns = array_merge(array('hiddenType' => 'numeric'), $displayedColumns);
-		$displayedColumns = array_merge(array('Product.ID' => 'numeric'), $displayedColumns);
-
-		// set field type as value
-		foreach ($displayedColumns as $column => $foo)
-		{
-			if (is_numeric($displayedColumns[$column]))
-			{
-				$displayedColumns[$column] = $availableColumns[$column]['type'];
-			}
-		}
-
-		return $displayedColumns;
-	}
-
-	protected function getMassForm()
-	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-		ClassLoader::import("framework.request.validator.Form");
-
-		$validator = new RequestValidator("productFormValidator", $this->request);
-
-		$validator->addFilter('set_price', new NumericFilter(''));
-		$validator->addFilter('set_stock', new NumericFilter(''));
-		$validator->addFilter('inc_price', new NumericFilter(''));
-		$validator->addFilter('inc_stock', new NumericFilter(''));
-		$validator->addFilter('set_minimumQuantity', new NumericFilter(''));
-		$validator->addFilter('set_shippingSurchargeAmount', new NumericFilter(''));
-
-		return new Form($validator);
 	}
 
 	private function save(Product $product)

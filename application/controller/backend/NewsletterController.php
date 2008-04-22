@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
+ClassLoader::import('application.controller.backend.abstract.ActiveGridController');
 ClassLoader::import("application.model.newsletter.*");
 ClassLoader::import("framework.request.validator.RequestValidator");
 ClassLoader::import("framework.request.validator.Form");
@@ -12,27 +12,23 @@ ClassLoader::import("framework.request.validator.Form");
  * @author Integry Systems
  * @role newsletter
  */
-class NewsletterController extends StoreManagementController
+class NewsletterController extends ActiveGridController
 {
 	const PROGRESS_FLUSH_INTERVAL = 10;
 
 	public function index()
 	{
-		$response = new ActionResponse();
-		$response->set('massForm', $this->getMassForm());
+		return $this->setGridResponse(new ActionResponse());
+	}
 
-		$availableColumns = $this->getAvailableColumns();
-		$displayedColumns = $this->getDisplayedColumns();
+	protected function getClassName()
+	{
+		return 'NewsletterMessage';
+	}
 
-		// sort available columns by display state (displayed columns first)
-		$displayedAvailable = array_intersect_key($availableColumns, $displayedColumns);
-		$notDisplayedAvailable = array_diff_key($availableColumns, $displayedColumns);
-		$availableColumns = array_merge($displayedAvailable, $notDisplayedAvailable);
-
-		$response->set('displayedColumns', $displayedColumns);
-		$response->set('availableColumns', $availableColumns);
-
-		return $response;
+	protected function getDefaultColumns()
+	{
+		return array('NewsletterMessage.ID', 'NewsletterMessage.subject', 'NewsletterMessage.status', 'NewsletterMessage.time');
 	}
 
 	public function add()
@@ -141,154 +137,6 @@ class NewsletterController extends StoreManagementController
 		return '|' . base64_encode(json_encode($data));
 	}
 
-	public function lists($dataOnly = false, $displayedColumns = null)
-	{
-		$filter = new ARSelectFilter();
-
-		new ActiveGrid($this->application, $filter, 'NewsletterMessage');
-
-		$recordCount = true;
-		$newsletterArray = ActiveRecordModel::getRecordSetArray('NewsletterMessage', $filter, false, $recordCount);
-
-		if (!$displayedColumns)
-		{
-			$displayedColumns = $this->getDisplayedColumns();
-		}
-
-		$data = array();
-
-		foreach ($newsletterArray as $newsletter)
-		{
-			$record = array();
-			foreach ($displayedColumns as $column => $type)
-			{
-				list($class, $field) = explode('.', $column, 2);
-				$value = $newsletter/*[$class]*/[$field];
-
-				if ('bool' == $type)
-				{
-					$value = $value ? $this->translate('_yes') : $this->translate('_no');
-				}
-
-				$record[] = $value;
-			}
-
-			$data[] = $record;
-		}
-
-		if ($dataOnly)
-		{
-			return $data;
-		}
-
-		$return = array();
-		$return['columns'] = array_keys($displayedColumns);
-		$return['totalCount'] = $recordCount;
-		$return['data'] = $data;
-
-		return new JSONResponse($return);
-	}
-
-	public function getAvailableColumns()
-	{
-		// get available columns
-		$schema = ActiveRecordModel::getSchemaInstance('NewsletterMessage');
-
-		$availableColumns = array();
-		foreach ($schema->getFieldList() as $field)
-		{
-			$type = ActiveGrid::getFieldType($field);
-
-			if (!$type)
-			{
-				continue;
-			}
-
-			$availableColumns['NewsletterMessage.' . $field->getName()] = $type;
-		}
-
-		foreach ($availableColumns as $column => $type)
-		{
-			$availableColumns[$column] = array('name' => $this->translate($column), 'type' => $type);
-		}
-
-		unset($availableColumns['NewsletterMessage.text']);
-
-		return $availableColumns;
-	}
-
-
-	protected function getDisplayedColumns()
-	{
-		// get displayed columns
-		//$displayedColumns = $this->getSessionData('columns');
-
-		$displayedColumns = null;
-		if (!$displayedColumns)
-		{
-			$displayedColumns = array('NewsletterMessage.ID', 'NewsletterMessage.subject', 'NewsletterMessage.status', 'NewsletterMessage.time');
-		}
-
-		$availableColumns = $this->getAvailableColumns();
-		$displayedColumns = array_intersect_key(array_flip($displayedColumns), $availableColumns);
-
-		// set field type as value
-		foreach ($displayedColumns as $column => $foo)
-		{
-			if (is_numeric($displayedColumns[$column]))
-			{
-				$displayedColumns[$column] = $availableColumns[$column]['type'];
-			}
-		}
-
-		$displayedColumns = array_merge(array('NewsletterMessage.ID' => 'numeric'), $displayedColumns);
-
-		return $displayedColumns;
-	}
-
-	public function processMass()
-	{
-		ClassLoader::import('application.helper.massAction.NewsletterMessageMassActionProcessor');
-
-		$grid = new ActiveGrid($this->application, new ARSelectFilter(), 'NewsletterMessage');
-
-		$mass = new NewsletterMessageMassActionProcessor($grid, array());
-		$mass->setCompletionMessage($this->translate('_mass_action_succeed'));
-		return $mass->process();
-	}
-
-	public function isMassCancelled()
-	{
-		ClassLoader::import('application.helper.massAction.NewsletterMessageMassActionProcessor');
-
-		return new JSONResponse(array('isCancelled' => NewsletterMessageMassActionProcessor::isCancelled($this->request->get('pid'))));
-	}
-
-	public function export()
-	{
-		@set_time_limit(0);
-
-		// init file download
-		header('Content-Disposition: attachment; filename="exported.csv"');
-		$out = fopen('php://output', 'w');
-
-		// header row
-		$columns = $this->getDisplayedColumns();
-		foreach ($columns as $column => $type)
-		{
-			$header[] = $this->translate($column);
-		}
-		fputcsv($out, $header);
-
-		// columns
-		foreach ($this->lists(true, $columns) as $row)
-		{
-			fputcsv($out, $row);
-		}
-
-		exit;
-	}
-
 	private function getForm()
 	{
 		return new Form($this->createValidator());
@@ -300,12 +148,6 @@ class NewsletterController extends StoreManagementController
 		$validator->addCheck('subject', new IsNotEmptyCheck($this->translate('_err_title_empty')));
 		$validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_text_empty')));
 		return $validator;
-	}
-
-	private function getMassForm()
-	{
-		$validator = new RequestValidator("newsletterMassValidator", $this->request);
-		return new Form($validator);
 	}
 
 	private function getRecipientData($data)

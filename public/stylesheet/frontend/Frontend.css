@@ -171,7 +171,6 @@ div.confirmationMsg div
 {
 	float: right;
 	width: 190px;
-	margin-bottom: 100px;
 }
 
 #clearFooter {
@@ -2316,7 +2315,7 @@ input.date
 	list-style: none;
 	/* float : left; */
 	width : 142px;
-	z-index: 10000;
+	z-index: 10;
 	position: relative;
 }
 
