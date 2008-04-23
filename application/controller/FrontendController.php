@@ -52,6 +52,7 @@ abstract class FrontendController extends BaseController
 		$this->addBlock('CART', 'boxShoppingCart', 'block/box/shoppingCart');
 		$this->addBlock('SEARCH', 'boxSearch', 'block/box/search');
 		$this->addBlock('INFORMATION', 'boxInformationMenu', 'block/box/informationMenu');
+		$this->addBlock('NEWSLETTER', 'boxNewsletterSubscribe', 'block/box/newsletterSubscribe');
 		$this->addBlock('TRACKING', 'tracking', 'block/tracking');
 	}
 
@@ -75,6 +76,18 @@ abstract class FrontendController extends BaseController
 		$response->set('pages', ActiveRecordModel::getRecordSetArray('StaticPage', $f));
 		unset($f);
 		return $response;
+	}
+
+	protected function boxNewsletterSubscribeBlock()
+	{
+		if (!$this->user->isAnonymous())
+		{
+			return false;
+		}
+
+		ClassLoader::import('application.controller.NewsletterController');
+		ClassLoader::import('framework.request.validator.Form');
+		return new BlockResponse('form', new Form(NewsletterController::getSubscribeValidator()));
 	}
 
 	protected function boxShoppingCartBlock()

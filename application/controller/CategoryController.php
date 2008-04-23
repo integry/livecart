@@ -664,14 +664,22 @@ class CategoryController extends FrontendController
 		$this->priceFilters = $priceFilters;
 	}
 
-	public function getAppliedFilters()
+	public function getAppliedFilters(FrontendController $controller = null)
 	{
+		if (!$controller)
+		{
+			$controller = $this;
+		}
+
 		if ($this->filters)
 		{
 			return $this->filters;
 		}
 
-		if ($this->request->get('filters'))
+		$request = $controller->getRequest();
+		$app = $controller->getApplication();
+
+		if ($request->get('filters'))
 		{
 			$valueFilterIds = array();
 			$selectorFilterIds = array();
@@ -679,7 +687,7 @@ class CategoryController extends FrontendController
 			$priceFilterIds = array();
 			$searchFilters = array();
 
-			$filters = explode(',', $this->request->get('filters'));
+			$filters = explode(',', $request->get('filters'));
 
 			foreach ($filters as $filter)
 			{
@@ -755,7 +763,7 @@ class CategoryController extends FrontendController
 			{
 				foreach ($priceFilterIds as $filterId)
 				{
-					$this->filters[] = new PriceFilter($filterId, $this->application);
+					$this->filters[] = new PriceFilter($filterId, $app);
 				}
 			}
 

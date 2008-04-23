@@ -1,2 +1,14 @@
+_subscribe_to_newsletter=Our Newsletter
+_enter_your_email_to_subscribe=Please enter your e-mail address to subscribe to our newsletter
+_err_email_empty=Please enter your e-mail address
+_err_invalid_email=This is not a valid e-mail address
+
+_confirm_instructions=We have sent an e-mail message to the e-mail address you just provided. Please follow the link in this message to confirm your newsletter subscription.
+_confirm_subscription=Please confirm your e-mail address
+
+_confirming_email=E-mail address confirmation
+_confirm_successful=You have successfully confirmed your e-mail address
+_confirm_unsuccessful=We could not verify your e-mail address. Please make sure that you have correctly pasted the link from confirmation message to your browser's address bar.
+
 _unsubscribe=Unsubscribing from our newsletter
 _unsubscribe_sucessful=You have successfully unsubscribed from receiving our newsletter messages.

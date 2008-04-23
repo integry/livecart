@@ -15,9 +15,7 @@
 <div id="content" class="left">
 
 	<div class="returnToCategory">
-		{assign var="lastBreadcrumb" value=$breadCrumb|@end}
-		{assign var="lastBreadcrumb" value=$breadCrumb|@prev}
-		<a href="{$lastBreadcrumb.url}" class="returnToCategory">{$product.Category.name_lang}</a>
+		<a href="{link route=$catRoute}" class="returnToCategory">{$product.Category.name_lang}</a>
 	</div>
 
 	<h1>{$product.name_lang}</h1>

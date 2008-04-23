@@ -24,6 +24,66 @@ class NewsletterController extends FrontendController
 		return new ActionResponse();
 	}
 
+	public function subscribe()
+	{
+		$email = $this->request->get('email');
+
+		if (!$this->user->isAnonymous() || User::getInstanceByEmail($email))
+		{
+			return new ActionRedirectResponse('newsletter', 'alreadySubscribed');
+		}
+
+		$validator = $this->getSubscribeValidator();
+		if (!$validator->isValid())
+		{
+			return new ActionRedirectResponse('index', 'index');
+		}
+
+		$instance = NewsletterSubscriber::getInstanceByEmail($email);
+		if (!$instance)
+		{
+			$instance = NewsletterSubscriber::getNewInstanceByEmail($email);
+		}
+
+		$instance->save();
+
+		$mail = new Email($this->application);
+		$mail->setTo($email);
+		$mail->setTemplate('newsletter/confirm');
+		$mail->set('subscriber', $instance->toArray());
+		$mail->set('email', $email);
+		$mail->send();
+
+		return new ActionResponse('subscriber', $instance->toArray());
+	}
+
+	public function alreadySubscribed()
+	{
+		return new ActionResponse();
+	}
+
+	public function confirm()
+	{
+		$instance = NewsletterSubscriber::getInstanceByEmail($this->request->get('email'));
+		if ($instance && ($instance->confirmationCode->get() == $this->request->get('code')))
+		{
+			$instance->isEnabled->set(true);
+			$instance->save();
+		}
+
+		return new ActionResponse('subscriber', $instance->toArray());
+	}
+
+	public function getSubscribeValidator()
+	{
+		$this->loadLanguageFile('Newsletter');
+		ClassLoader::import('framework.request.validator.RequestValidator');
+		$validator = new RequestValidator("newsletterSubscribe", $this->getRequest());
+		$validator->addCheck('email', new IsNotEmptyCheck($this->translate('_err_email_empty')));
+		$validator->addCheck('email', new IsValidEmailCheck($this->translate('_err_invalid_email')));
+		return $validator;
+	}
+
 }
 
 ?>

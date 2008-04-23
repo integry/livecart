@@ -22,12 +22,41 @@ class NewsletterSubscriber extends ActiveRecordModel
 		$schema->registerField(new ARField("confirmationCode", ARVarchar::instance(40)));
 	}
 
-	public function getNewInstanceByUser(User $user)
+	public static function getNewInstanceByUser(User $user)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
 		$instance->user->set($user);
 		$instance->email->set($user->email->get());
 		return $instance;
+	}
+
+	public static function getNewInstanceByEmail($email)
+	{
+		$instance = parent::getNewInstance(__CLASS__);
+		$instance->email->set($email);
+		return $instance;
+	}
+
+	public static function getInstanceByEmail($email)
+	{
+		$s = self::getRecordSet(__class__, new ARSelectFilter(new EqualsCond(new ARFieldHandle(__class__, 'email'), $email)));
+		if ($s->size())
+		{
+			return $s->get(0);
+		}
+	}
+
+	protected function insert()
+	{
+		$str = '';
+		for ($k = 0; $k < 20; $k++)
+		{
+			$str .= chr(rand(0, 255));
+		}
+
+		$this->confirmationCode->set(substr(md5($str), 0, 12));
+
+		return parent::insert();
 	}
 }
 

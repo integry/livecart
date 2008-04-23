@@ -64,7 +64,7 @@ class NewsletterMessage extends ActiveRecordModel
 		$config = $application->getConfig();
 
 		$email = new Email($application);
-		$email->setTemplate('newsletter');
+		$email->setTemplate('newsletter/template');
 		$email->set('subject', $this->subject->get());
 		$email->set('text', $this->text->get());
 		$email->set('email', $this->text->get());

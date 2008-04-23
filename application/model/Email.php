@@ -86,7 +86,7 @@ class Email
 		$this->from = new Swift_Address($email, $name);
 	}
 
-	public function setTo($email, $name)
+	public function setTo($email, $name = null)
 	{
 		$this->recipients->addTo($email, $name);
 	}

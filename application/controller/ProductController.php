@@ -161,7 +161,7 @@ class ProductController extends FrontendController
 	public function buildAddToCartValidator($options)
 	{
 		ClassLoader::import("framework.request.validator.Form");
-		$validator = new RequestValidator("addToCart", $this->request);
+		$validator = new RequestValidator("addToCart", $this->getRequest());
 
 		// option validation
 		foreach ($options as $option)

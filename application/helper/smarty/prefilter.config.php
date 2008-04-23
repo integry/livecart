@@ -1,5 +1,5 @@
 <?php
-//var_dump('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'); exit;
+
 /**
  * Initial template prefilter (insert additional prefilter to this function)
  *
@@ -23,7 +23,8 @@ function smarty_prefilter_config($tplSource, $smarty)
 	// template customizations - allow to load from a different source
 	$source = preg_replace('/{include file="([-.a-zA-Z0-9@\/]+)"(.*)}/msU', '{include file="custom:$1"\\2}', $source);
 
-	$source = preg_replace('/{block (.+?)}/', '{foreach from=\$$1 item=includedBlock key=key}{$includedBlock}{/foreach}', $source);
+	//$source = preg_replace('/{block (.+?)}/', '{foreach from=\$$1 item=includedBlock key=key}{$includedBlock}{/foreach}', $source);
+	$source = preg_replace('/{block (.+?)}/', '{renderBlock block=$1}', $source);
 
 	// help system
 	$source = preg_replace('/{help (.+?)}/', '{helpLink id=$1}', $source);

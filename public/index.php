@@ -39,6 +39,11 @@ register_shutdown_function('onShutDown');
 		include $custom;
 	}
 
+	if (version_compare('5.2', PHP_VERSION, '>'))
+	{
+		ClassLoader::import('library.json.json');
+	}
+
 	function runApp(LiveCart $app)
 	{
 		static $attempts = 0;
@@ -52,6 +57,10 @@ register_shutdown_function('onShutDown');
 			}
 			catch (Exception $e)
 			{
+				if ($app->isDevMode())
+				{
+					dump_livecart_trace($e);
+				}
 				die('error');
 			}
 		}
