@@ -361,6 +361,9 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		{
 			$response->get('productForm')->set('autosku', true);
 		}
+
+		$response->get('productForm')->set('isEnabled', true);
+
 		return $response;
 	}
 
