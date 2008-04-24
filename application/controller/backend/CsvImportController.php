@@ -149,7 +149,8 @@ class CsvImportController extends StoreManagementController
 
 		$fields = array('' => '');
 
-		foreach (ProductController::getAvailableColumns(Category::getInstanceByID($this->request->get('category')), true) as $key => $data)
+		$productController = new ProductController($this->application);
+		foreach ($productController->getAvailableColumns(Category::getInstanceByID($this->request->get('category')), true) as $key => $data)
 		{
 			$fields[$key] = $this->translate($data['name']);
 		}
@@ -306,8 +307,31 @@ class CsvImportController extends StoreManagementController
 
 			if (isset($fields['Product']))
 			{
-				$product = Product::getNewInstance($cat);
-				$product->isEnabled->set(true);
+				$product = null;
+
+				if (isset($fields['Product']['ID']))
+				{
+					$id = $record[$fields['Product']['ID']];
+					if (ActiveRecord::objectExists('Product', $id))
+					{
+						$product = Product::getInstanceByID($id, Product::LOAD_DATA);
+					}
+				}
+				else if (isset($fields['Product']['sku']))
+				{
+					$product = Product::getInstanceBySku($record[$fields['Product']['sku']]);
+				}
+
+				if ($product)
+				{
+					$product->loadSpecification();
+					$product->loadPricing();
+				}
+				else
+				{
+					$product = Product::getNewInstance($cat);
+					$product->isEnabled->set(true);
+				}
 
 				// product information
 				$impReq->clearData();

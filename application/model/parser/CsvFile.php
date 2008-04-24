@@ -18,6 +18,8 @@ class CsvFile implements Iterator
 
 	protected $iteratorValue;
 
+	protected $isValid = true;
+
 	public function __construct($filePath, $delimiter)
 	{
 		$this->path = $filePath;
@@ -74,11 +76,12 @@ class CsvFile implements Iterator
 
 	public function valid()
 	{
-		return !feof($this->getFileHandle());
+		return $this->isValid;
 	}
 
 	public function next()
 	{
+		$this->isValid = !feof($this->getFileHandle());
 		$this->iteratorKey++;
 		$this->iteratorValue = $this->getRecord();
 	}

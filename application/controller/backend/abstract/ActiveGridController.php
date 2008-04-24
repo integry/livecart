@@ -47,7 +47,7 @@ abstract class ActiveGridController extends StoreManagementController
 			$displayedColumns = $this->getRequestColumns();
 		}
 
-		$this->processDataArray($productArray, $displayedColumns);
+		$productArray = $this->processDataArray($productArray, $displayedColumns);
 
 		$data = array();
 
@@ -213,7 +213,7 @@ abstract class ActiveGridController extends StoreManagementController
 		}
 		else if (isset($record[$class][$field]))
 		{
-			$record[$class][$field];
+			return $record[$class][$field];
 		}
 		else
 		{
