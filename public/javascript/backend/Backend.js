@@ -22,6 +22,16 @@ var Backend =
 	getTranslation: function(key)
 	{
 		return this.translations[key];
+	},
+
+	keepSessionAlive: function()
+	{
+		setInterval("Backend.sendKeepAlivePing();", 300 * 1000);
+	},
+
+	sendKeepAlivePing: function()
+	{
+		new LiveCart.AjaxRequest(Backend.keepAliveUrl);
 	}
 };
 

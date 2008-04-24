@@ -18,13 +18,13 @@ class IndexController extends StoreManagementController
 	{
 		// order stats
 		$conditions = array(
-		
+
 			'last' => new EqualsOrMoreCond(new ARFieldHandle('CustomerOrder', 'dateCompleted'), time() - 86400),
 			'new' => new IsNullCond(new ARFieldHandle('CustomerOrder', 'status')),
-			'processing' => new EqualsCond(new ARFieldHandle('CustomerOrder', 'status'), CustomerOrder::STATUS_PROCESSING),	  
+			'processing' => new EqualsCond(new ARFieldHandle('CustomerOrder', 'status'), CustomerOrder::STATUS_PROCESSING),
 			'total' => new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true),
 		);
-		
+
 		foreach ($conditions as $key => $cond)
 		{
 			$f = new ARSelectFilter($cond);
@@ -40,14 +40,14 @@ class IndexController extends StoreManagementController
 		// inventory stats
 		$lowStock = new EqualsOrLessCond(new ARFieldHandle('Product', 'stockCount'), $this->config->get('LOW_STOCK'));
 		$lowStock->addAnd(new MoreThanCond(new ARFieldHandle('Product', 'stockCount'), 0));
-		
+
 		$conditions = array(
-		
+
 			'lowStock' => $lowStock,
 			'outOfStock' => new EqualsOrLessCond(new ARFieldHandle('Product', 'stockCount'), 0),
-		
+
 		);
-		
+
 		foreach ($conditions as $key => $cond)
 		{
 			$cond->addAnd(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), true));
@@ -56,9 +56,9 @@ class IndexController extends StoreManagementController
 
 		// overall stats
 		$rootCat = Category::getRootNode();
-		$rootCat->load();			   
+		$rootCat->load();
 
-		$response = new ActionResponse();		
+		$response = new ActionResponse();
 		$response->set('orderCount', $orderCount);
 		$response->set('inventoryCount', $inventoryCount);
 		$response->set('rootCat', $rootCat->toArray());
@@ -66,25 +66,30 @@ class IndexController extends StoreManagementController
 		$response->set('lastMonth', date('Y-m', strtotime(date('m') . '/15 -1 month')));
 		return $response;
 	}
-	
+
 	public function totalOrders()
 	{
 		// "January 1 | now" - this year
 		// or
 		// "w:Monday ~ -1 week | w:Monday" - last week
 		list($from, $to) = explode(' | ', $this->request->get('period'));
-				
+
 		$cond = new EqualsOrMoreCond(new ARFieldHandle('CustomerOrder', 'dateCompleted'), getDateFromString($from));
-		
+
 		if ('now' != $to)
 		{
 			$cond->addAnd(new EqualsOrLessCond(new ARFieldHandle('CustomerOrder', 'dateCompleted'), getDateFromString($to)));
-		}		
-		
+		}
+
 		$f = new ARSelectFilter($cond);
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
-		
+
 		return new RawResponse(ActiveRecordModel::getRecordCount('CustomerOrder', $f));
+	}
+
+	public function keepAlive()
+	{
+		return new RawResponse('OK');
 	}
 }
 

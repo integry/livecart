@@ -70,10 +70,14 @@
 		Backend.onLoad();
 	}
 
+	{/literal}
+
 	window.onload = onLoad;
 
+	Backend.keepAliveUrl = '{link controller=backend.index action=keepAlive}';
+	Backend.keepSessionAlive();
+
 	</script>
-	{/literal}
 
 </head>
 <body>
