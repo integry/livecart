@@ -22,7 +22,7 @@
 <a id="help" href="#" target="_blank" style="display: none;">Help</a>
 
 <div id="catgegoryContainer" class="treeContainer">
-	
+
 	<div style="margin-bottom: 5px; text-align: center;">
 		<ul class="menu">
 			<li class="done">
@@ -32,11 +32,9 @@
 			</li>
 		</ul>
 	</div>
-	
+
 	<div id="categoryBrowser" class="treeBrowser"> </div>
-		
-	<div id="confirmations"></div>
-		
+
 	<div id="confirmations">
 		<div id="redZone">
 			<div id="productRelationshipCreateFailure" class="redMessage" style="display: none;">
@@ -51,10 +49,10 @@
 			</div>
 		</div>
 	</div>
-	
+
 </div>
 <div id="activeCategoryPath"></div>
- 
+
 <div id="managerContainer" class="treeManagerContainer">
 	<div id="tabContainer" class="tabContainer">
 	<ul id="tabList" class="tabList tabs">
@@ -70,19 +68,19 @@
 			<span> </span>
 			<span class="tabHelp">cat.details</span>
 		</li>
-		
+
 		<li id="tabFields" class="tab inactive">
 			<a href="{link controller=backend.specField action=index id=_id_}">{t _attributes}</a>
 			<span> </span>
 			<span class="tabHelp">cat.attr</span>
 		</li>
-		
+
 		<li id="tabFilters" class="tab inactive">
 			<a href="{link controller=backend.filterGroup action=index id=_id_}">{t _filters}</a>
 			<span> </span>
 			<span class="tabHelp">cat.filters</span>
 		</li>
-		
+
 		<li id="tabImages" class="tab inactive">
 			<a href="{link controller=backend.categoryImage action=index id=_id_}">{t _images}</a>
 			<span> </span>
@@ -98,18 +96,18 @@
 	Backend.Category.links = {};
 	Backend.Category.links.categoryRecursiveAutoloading = '{/literal}{link controller=backend.category action=xmlRecursivePath}{literal}';
 	Backend.Category.links.countTabsItems = '{/literal}{link controller=backend.category action=countTabsItems id=_id_}{literal}';
-	Backend.Category.links.categoryAutoloading = '{/literal}{link controller=backend.category action=xmlBranch}{literal}';		
-		
-	Backend.Category.init();	
-	
-	Backend.Category.treeBrowser.setXMLAutoLoading(Backend.Category.links.categoryAutoloading); 
+	Backend.Category.links.categoryAutoloading = '{/literal}{link controller=backend.category action=xmlBranch}{literal}';
+
+	Backend.Category.init();
+
+	Backend.Category.treeBrowser.setXMLAutoLoading(Backend.Category.links.categoryAutoloading);
 	Backend.Category.addCategories({/literal}{json array=$categoryList}{literal});
-	
+
 	Backend.Category.activeCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
 	Backend.Category.initPage();
-	
+
 	Backend.Category.loadBookmarkedCategory();
-	
+
 	{/literal}
 		{allowed role="product"}
 			Backend.Product.productsMiscPermision = true;
@@ -117,6 +115,6 @@
 	{literal}
 </script>
 {/literal}
-	
+
 </body>
 </html>

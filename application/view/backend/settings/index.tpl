@@ -16,7 +16,6 @@
 
 	<div class="treeContainer">
 		<div id="settingsBrowser" class="treeBrowser"></div>
-		<div id="confirmations"></div>
 	</div>
 
 	<span id="settingsIndicator"></span>

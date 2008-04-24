@@ -75,7 +75,6 @@
 	window.onload = onLoad;
 
 	Backend.keepAliveUrl = '{link controller=backend.index action=keepAlive}';
-	Backend.keepSessionAlive();
 
 	</script>
 

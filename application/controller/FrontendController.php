@@ -184,6 +184,8 @@ abstract class FrontendController extends BaseController
 
 	protected function boxSearchBlock()
 	{
+		ClassLoader::import('application.model.category.Category');
+
 		if ($this->categoryID < 1)
 		{
 		  	$this->categoryID = Category::ROOT_ID;

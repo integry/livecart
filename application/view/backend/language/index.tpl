@@ -10,9 +10,9 @@
 {include file="layout/backend/header.tpl"}
 
 <script type="text/javascript">
-	var lng = new Backend.LanguageIndex();	
+	var lng = new Backend.LanguageIndex();
 	{literal}
-	lng.activeListMessages = { 
+	lng.activeListMessages = {
 		_activeList_edit:	{/literal}'{t _activeList_edit|addslashes}'{literal},
 		_activeList_delete:  {/literal}'{t _activeList_delete|addslashes}'{literal}
 	}
@@ -23,10 +23,8 @@
 	lng.setSortUrl("{link controller=backend.language action=saveorder}");
 	lng.setDeleteUrl("{link controller=backend.language action=delete}");
 	lng.setDelConfirmMsg('{t _confirm_delete}');
-	
-</script>
 
-<div id="confirmations" class="rightConfirmations"></div>
+</script>
 
 <fieldset class="container" {denied role="language.create"}style="display: none;"{/denied}>
 	<ul class="menu" id="langPageMenu">
@@ -49,25 +47,25 @@
 
 			<span class="langCheckBox" {denied role="language.status"}style="display: none;"{/denied}>
 				<input type="checkbox" class="checkbox" disabled="disabled" onclick="lng.setEnabled(this);" />
-			</span>	
-			
+			</span>
+
 			<span class="progressIndicator" style="display: none;"></span>
-		
+
 			<span class="langData">
 				{img src=""}
-				<span class="langTitle"></span> 
+				<span class="langTitle"></span>
 				<span class="langInactive">({t _inactive})</span>
 			</span>
-			
+
 			<div class="langListMenu">
 				<a href="{link controller=backend.language action=setDefault}/" class="listLink setDefault" {denied role="language.status"}style="display: none;"{/denied}>
 					{t _set_as_default}
 				</a>
 				<span class="langDefault">{t _default_language}</span>
 			</div>
-			
+
 		</div>
-	</div>			
+	</div>
 </li>
 </ul>
 

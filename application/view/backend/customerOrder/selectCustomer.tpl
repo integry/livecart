@@ -37,8 +37,6 @@
 			<li class="addTreeNode" style="display: none;"><a id="userGroups_add" href="#add">{t _add}</a></li>
 		</ul>
 
-		<div id="confirmations"></div>
-
 		<div class="yellowMessage" id="orderCreatedConfirmation" style="display: none;"><div>{t _new_order_has_been_successfully_created}</div></div>
 		<div class="redMessage" id="userHasNoAddressError" style="display: none;"><div>{t _err_user_has_no_billing_or_shipping_address}</div></div>
 	</div>

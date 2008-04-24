@@ -142,12 +142,14 @@ LiveCart.AjaxRequest.prototype = {
 		document.body.style.cursor = 'default';
 		this.hideIndicator();
 
-		if (response.getResponseHeader('Content-type').match(/text\/javascript/))
+		var contentType = response.getResponseHeader('Content-type');
+
+		if (contentType && contentType.match(/text\/javascript/))
 		{
 			response.responseData = response.responseText.evalJSON();
 		}
 
-		if (response.getResponseHeader('Content-type').match(/text\/javascript/) && $('confirmations'))
+		if (contentType && contentType.match(/text\/javascript/) && $('confirmations'))
 		{
 			var confirmations = $('confirmations');
 			if(!confirmations.down('#yellowZone')) new Insertion.Top('confirmations', '<div id="yellowZone"></div>');

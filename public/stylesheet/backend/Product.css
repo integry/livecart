@@ -38,6 +38,11 @@ fieldset.specification .numeric
 	font-size: smaller;
 }
 
+fieldset.specification .notDisplayed
+{
+	color: #aaa;
+}
+
 .multiValueSelect label
 {
 

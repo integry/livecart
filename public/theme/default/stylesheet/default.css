@@ -917,7 +917,6 @@ font-weight: normal;
 	background-repeat: repeat-x;
 	background-position: left bottom;
 	list-style-type: none;
-	display: block;
 }
 .categories .content a:hover, .filterGroup a:hover
 {
@@ -1126,6 +1125,7 @@ li.moreSubCats, li.moreSubCats a
 .filterGroup .count, .categories .count
 {
 	color: #666666;
+	line-height: 19px;
 }
 
 .filterGroup .showAll

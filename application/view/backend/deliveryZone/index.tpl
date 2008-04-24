@@ -27,21 +27,20 @@
 				<li class="addTreeNode"><a id="newZoneInputButton" href="#add" {denied role='delivery.create'}style="display: none"{/denied}>{t _add_new_delivery_zone}</a></li>
 				<li class="removeTreeNode"><a id="deliveryZone_delete" href="#delete" {denied role='delivery.remove'}style="display: none"{/denied}>{t _remove}</a></li>
 			</ul>
-			<div id="confirmations"></div>
 		</div>
 	</div>
-	
+
 	<div id="deliveryZoneManagerContainer" class="treeManagerContainer">
 		<div class="tabContainer">
 			<ul class="tabList tabs">
 				<li id="tabDeliveryZoneCountry" class="tab active">
 					<a href="{link controller=backend.deliveryZone action=countriesAndStates}?id=_id_">{t _countries_and_states}</a>
 				</li>
-				
+
 				<li id="tabDeliveryZoneShipping" class="tab inactive">
 					<a href="{link controller=backend.shippingService action=index}?id=_id_">{t _shipping_rates}</a>
 				</li>
-				
+
 				<li id="tabDeliveryZoneTaxes" class="tab inactive">
 					<a href="{link controller=backend.taxRate action=index}?id=_id_">{t _tax_rates}</a>
 				</li>
@@ -56,7 +55,7 @@
 {literal}
 <script type="text/javascript">
 	Backend.showContainer('deliveryZoneManagerContainer');
-		
+
 	Backend.DeliveryZone.prototype.Messages.confirmZoneDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_zone}{literal}';
 	Backend.DeliveryZone.prototype.Messages.defaultZoneName = '{/literal}{t _default_zone}{literal}';
 	Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmAddressDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_address_mask}{literal}';
@@ -65,7 +64,7 @@
 	Backend.DeliveryZone.ShippingService.prototype.Messages.confirmDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_service}{literal}';
 	Backend.DeliveryZone.ShippingRate.prototype.Messages.confirmDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_rate}{literal}';
 	Backend.DeliveryZone.TaxRate.prototype.Messages.confirmDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_tax_rate}{literal}';
-	
+
 	Backend.DeliveryZone.prototype.Links.edit = '{/literal}{link controller=backend.deliveryZone action=edit}?id=_id_{literal}';
 	Backend.DeliveryZone.prototype.Links.remove = '{/literal}{link controller=backend.deliveryZone action=delete}{literal}';
 	Backend.DeliveryZone.prototype.Links.save = '{/literal}{link controller=backend.deliveryZone action=save}{literal}';
@@ -87,12 +86,12 @@
 	Backend.DeliveryZone.ShippingService.prototype.Links.update = '{/literal}{link controller=backend.shippingService action=update}{literal}';
 	Backend.DeliveryZone.ShippingService.prototype.Links.create = '{/literal}{link controller=backend.shippingService action=create}{literal}';
 	Backend.DeliveryZone.ShippingService.prototype.Links.validateRates = '{/literal}{link controller=backend.shippingService action=validateRates}{literal}';
-	
+
 	Backend.DeliveryZone.TaxRate.prototype.Links.update = '{/literal}{link controller=backend.taxRate action=update}{literal}';
 	Backend.DeliveryZone.TaxRate.prototype.Links.create = '{/literal}{link controller=backend.taxRate action=create}{literal}';
 	Backend.DeliveryZone.TaxRate.prototype.Links.remove = '{/literal}{link controller=backend.taxRate action=delete}{literal}';
 	Backend.DeliveryZone.TaxRate.prototype.Links.edit = '{/literal}{link controller=backend.taxRate action=edit}{literal}';
-	
+
 	var zones = new Backend.DeliveryZone({/literal}{$zones}{literal});
 
 </script>

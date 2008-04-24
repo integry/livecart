@@ -54,6 +54,41 @@
 <div id="productFile_item_blank">{include file="backend/productFile/form.tpl"}</div>
 <div id="productOption_item_blank" class="dom_template">{include file="backend/productOption/form.tpl"}</div>
 
+<div id="confirmations">
+	<div id="redZone">
+		<div id="productRelationshipCreateFailure" class="redMessage" style="display: none;">
+			{img class="closeMessage" src="image/silk/cancel.png" }
+			<div>{t _could_not_create_product_relationship}</div>
+		</div>
+		<div id="productFileSaveFailure" class="redMessage" style="display: none;">
+			{img class="closeMessage" src="image/silk/cancel.png"}
+			<div>{t _could_not_save_product_file}</div>
+		</div>
+		<div id="productImageSaveFailure" class="redMessage" style="display: none;">
+			{img class="closeMessage" src="image/silk/cancel.png"}
+			<div>{t _could_not_save_product_image}</div>
+		</div>
+	</div>
+	<div id="yellowZone">
+		<div id="categoryImageSaved" class="yellowMessage" style="display: none;">
+			{img class="closeMessage" src="image/silk/cancel.png"}
+			<div>{t _category_image_was_successfully_saved}</div>
+		</div>
+		<div id="productImageSaved" class="yellowMessage" style="display: none;">
+			{img class="closeMessage" src="image/silk/cancel.png"}
+			<div>{t _product_image_was_successfully_saved}</div>
+		</div>
+		<div id="productFileSaved" class="yellowMessage" style="display: none;">
+			{img class="closeMessage" src="image/silk/cancel.png"}
+			<div>{t _product_file_was_successfully_saved}</div>
+		</div>
+		<div id="productRelationshipCreated" class="yellowMessage" style="display: none;">
+			{img class="closeMessage" src="image/silk/cancel.png"}
+			<div>{t _a_relationship_between_products_was_successfully_created}</div>
+		</div>
+	</div>
+</div>
+
 <div id="catgegoryContainer" class="treeContainer  maxHeight h--60">
 	<div id="categoryBrowser" class="treeBrowser"></div>
 
@@ -95,42 +130,6 @@
 		</ul>
 
 	{/allowed}
-
-	<div id="confirmations">
-		<div id="redZone">
-			<div id="productRelationshipCreateFailure" class="redMessage" style="display: none;">
-				{img class="closeMessage" src="image/silk/cancel.png" }
-				<div>{t _could_not_create_product_relationship}</div>
-			</div>
-			<div id="productFileSaveFailure" class="redMessage" style="display: none;">
-				{img class="closeMessage" src="image/silk/cancel.png"}
-				<div>{t _could_not_save_product_file}</div>
-			</div>
-			<div id="productImageSaveFailure" class="redMessage" style="display: none;">
-				{img class="closeMessage" src="image/silk/cancel.png"}
-				<div>{t _could_not_save_product_image}</div>
-			</div>
-		</div>
-		<div id="yellowZone">
-			<div id="categoryImageSaved" class="yellowMessage" style="display: none;">
-				{img class="closeMessage" src="image/silk/cancel.png"}
-				<div>{t _category_image_was_successfully_saved}</div>
-			</div>
-			<div id="productImageSaved" class="yellowMessage" style="display: none;">
-				{img class="closeMessage" src="image/silk/cancel.png"}
-				<div>{t _product_image_was_successfully_saved}</div>
-			</div>
-			<div id="productFileSaved" class="yellowMessage" style="display: none;">
-				{img class="closeMessage" src="image/silk/cancel.png"}
-				<div>{t _product_file_was_successfully_saved}</div>
-			</div>
-			<div id="productRelationshipCreated" class="yellowMessage" style="display: none;">
-				{img class="closeMessage" src="image/silk/cancel.png"}
-				<div>{t _a_relationship_between_products_was_successfully_created}</div>
-			</div>
-		</div>
-	</div>
-
 
 </div>
 

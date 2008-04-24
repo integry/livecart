@@ -40,9 +40,6 @@
 
 <div id="orderGroupsWrapper" class="treeContainer maxHeight h--50">
 	<div id="orderGroupsBrowser" class="treeBrowser"></div>
-
-	<div id="confirmations"></div>
-	<div id="yellowZone"></div>
 </div>
 
 {include file="backend/customerOrder/orderContainer.tpl"}

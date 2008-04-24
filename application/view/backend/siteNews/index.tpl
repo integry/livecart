@@ -17,8 +17,6 @@
 
 {include file="layout/backend/header.tpl"}
 
-<div id="confirmations" class="rightConfirmations"></div>
-
 {allowed role="news.create"}
 
 	<ul class="menu" id="newsMenu">
@@ -37,13 +35,13 @@
 
 		<p>
 			<label>{t _date}</label>
-			{calendar name="time" id="time"}		
+			{calendar name="time" id="time"}
 		</p>
 		<p>
 			{{err for="title"}}
 				<label>{t _title}:</label>
 				{textfield class="text"}
-			{/err}	
+			{/err}
 		</p>
 		<p>
 			{{err for="text"}}
@@ -55,7 +53,7 @@
 			<label class="wide" style="margin-top: 1em;">{t _more_text}:</label>
 			{textarea name="moreText" class="tinyMCE"}
 		</p>
-	
+
 		{language}
 			<p>
 				<label class="wide">{t _title}:</label>
@@ -70,7 +68,7 @@
 				{textarea name="moreText_`$lang.ID`" class="tinyMCE"}
 			</p>
 		{/language}
-		
+
 		<fieldset class="controls" {denied role="news"}style="display: none;"{/denied}>
 			<span class="progressIndicator" style="display: none;"></span>
 			<input type="submit" class="submit save" value="{tn _save}" />
@@ -78,7 +76,7 @@
 			{t _or} <a class="cancel" href="#" onclick="Backend.SiteNews.prototype.hideAddForm(); return false;">{t _cancel}</a>
 		</fieldset>
 	{/form}
-	
+
 </fieldset>
 
 <ul id="newsList" class="activeList {allowed role="news.sort"}activeList_add_sort{/allowed} {allowed role="news.delete"}activeList_add_delete{/allowed} {allowed role="news.update"}activeList_add_edit{/allowed}">
@@ -96,26 +94,26 @@
 <li id="newsList_template" style="position: relative;">
 	<div>
 		<div class="newsListContainer">
-			
+
 			<span class="newsCheckBox"{denied role="news.status"} style="display: none;"{/denied}>
 				<input type="checkbox" class="checkbox" name="isEnabled" onclick="this.up('li').handler.setEnabled(this);" />
 				<span class="progressIndicator" style="float: left; padding: 0; display: none;"></span>
-			</span>	
-			
-			<span class="progressIndicator" style="display: none; "></span>
-		
-			<span class="newsData">
-				<span class="newsTitle"></span> 
-				<span class="newsDate"></span> 
-				<br class="clear" />
-				<span class="newsText"></span> 
 			</span>
-											
+
+			<span class="progressIndicator" style="display: none; "></span>
+
+			<span class="newsData">
+				<span class="newsTitle"></span>
+				<span class="newsDate"></span>
+				<br class="clear" />
+				<span class="newsText"></span>
+			</span>
+
 		</div>
-		
+
 		<div class="formContainer activeList_editContainer" style="display: none;"></div>
-		
-	</div>			
+
+	</div>
 	<div class="clear"></div>
 </li>
 </ul>

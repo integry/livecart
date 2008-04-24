@@ -5,7 +5,7 @@ include_once(dirname(__file__) . '/../../abstract/CreditCardPayment.php');
 /**
  *
  * @package library.payment.method.cc
- * @author Integry Systems 
+ * @author Integry Systems
  */
 class TestCreditCard extends CreditCardPayment
 {
@@ -13,17 +13,17 @@ class TestCreditCard extends CreditCardPayment
 	{
 		return true;
 	}
-	
+
 	public function isCardTypeNeeded()
 	{
 		return false;
 	}
-	
+
 	public function isVoidable()
 	{
 		return true;
 	}
-	
+
 	public function isMultiCapture()
 	{
 		return true;
@@ -32,8 +32,8 @@ class TestCreditCard extends CreditCardPayment
 	public function isCapturedVoidable()
 	{
 		return true;
-	}	
-	
+	}
+
 	/**
 	 *	All currencies supported, except LTL
 	 */
@@ -50,18 +50,18 @@ class TestCreditCard extends CreditCardPayment
 		$result = $this->process('');
 		if ($result instanceof TransactionResult)
 		{
-			$result->setTransactionType(TransactionResult::TYPE_AUTH);					
+			$result->setTransactionType(TransactionResult::TYPE_AUTH);
 		}
-		
+
 		return $result;
 	}
-	
+
 	/**
 	 *	Capture reserved funds
 	 */
 	public function capture()
 	{
-		$result = $this->process('');		
+		$result = $this->process('');
 		if ($result instanceof TransactionResult)
 		{
 			$result->setTransactionType(TransactionResult::TYPE_CAPTURE);
@@ -69,7 +69,7 @@ class TestCreditCard extends CreditCardPayment
 
 		return $result;
 	}
-	
+
 	/**
 	 *	Credit (a part) of customers payment
 	 */
@@ -80,7 +80,7 @@ class TestCreditCard extends CreditCardPayment
 		{
 			$result->setTransactionType(TransactionResult::TYPE_VOID);
 		}
-		
+
 		return $result;
 	}
 
@@ -107,35 +107,35 @@ class TestCreditCard extends CreditCardPayment
 		{
 			$result->setTransactionType(TransactionResult::TYPE_SALE);
 		}
-		
+
 		return $result;
 	}
-	
+
 	public function toArray()
 	{
 		$ret = parent::toArray();
 		$ret['name'] = 'Test';
 		return $ret;
 	}
-	
+
 	private function process($type)
-	{		
-		if ($this->getCardCode() == '000')
+	{
+		if ($this->getCardCode() != '000')
 		{
-			return new TransactionError($this->details, '');	
+			return new TransactionError($this->details, '');
 		}
-		
+
 		$result = new TransactionResult();
 		$result->gatewayTransactionID->set('TESTCC' . rand(1, 10000000));
 		$result->amount->set($this->details->amount->get());
 		$result->currency->set($this->details->currency->get());
-		
+
 		$result->AVSaddr->set(true);
 		$result->AVSzip->set(true);
-		$result->CVVmatch->set(true);	
-		
-		return $result;		
+		$result->CVVmatch->set(true);
+
+		return $result;
 	}
 }
-	
+
 ?>

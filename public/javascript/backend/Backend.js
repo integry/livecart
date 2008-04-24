@@ -24,14 +24,25 @@ var Backend =
 		return this.translations[key];
 	},
 
-	keepSessionAlive: function()
-	{
-		setInterval("Backend.sendKeepAlivePing();", 300 * 1000);
-	},
-
 	sendKeepAlivePing: function()
 	{
 		new LiveCart.AjaxRequest(Backend.keepAliveUrl);
+	},
+
+	onLoad: function()
+	{
+		// AJAX navigation
+		dhtmlHistory.initialize();
+		dhtmlHistory.addListener(Backend.ajaxNav.handle);
+		dhtmlHistory.handleBookmark();
+
+		setInterval("Backend.sendKeepAlivePing();", 300 * 1000);
+		if (!$('confirmations'))
+		{
+			var el = document.createElement('div');
+			el.id = 'confirmations';
+			document.body.appendChild(el);
+		}
 	}
 };
 
@@ -72,17 +83,6 @@ Backend.hideContainer = function()
 Backend.setHelpContext = function(context)
 {
 	$('help').href = 'http://doc.livecart.com/help/' + context;
-}
-
-/*************************************************
-	onLoad handler
-**************************************************/
-Backend.onLoad = function()
-{
-	// AJAX navigation
-	dhtmlHistory.initialize();
-	dhtmlHistory.addListener(Backend.ajaxNav.handle);
-	dhtmlHistory.handleBookmark();
 }
 
 /*************************************************
@@ -944,6 +944,7 @@ Backend.SaveConfirmationMessage.prototype =
 {
 	counter: 0,
 	timers: {},
+	options: {},
 
 	initialize: function(element, options)
 	{
@@ -951,7 +952,7 @@ Backend.SaveConfirmationMessage.prototype =
 
 		if(!this.element.id)
 		{
-			this.element.id = 'saveConfirmationMessage_' + (Backend.SaveConfirmationMessage.prototype.counter++);
+			this.element.id = this.getGeneratedId();
 		}
 
 		if(!Backend.SaveConfirmationMessage.prototype.timers[this.element.id])
@@ -983,6 +984,8 @@ Backend.SaveConfirmationMessage.prototype =
 			Event.observe(closeButton, 'click', function(e) { this.hide() }.bind(this) )
 		}
 
+		this.options = options;
+
 		this.show();
 	},
 
@@ -1011,13 +1014,13 @@ Backend.SaveConfirmationMessage.prototype =
 
 		this.displaying = true;
 
-		Backend.SaveConfirmationMessage.prototype.timers[this.element.id].scrollEffect = new Effect.ScrollTo(this.element, {offset: -24});
+		//Backend.SaveConfirmationMessage.prototype.timers[this.element.id].scrollEffect = new Effect.ScrollTo(this.element, {offset: -24});
 		Backend.SaveConfirmationMessage.prototype.timers[this.element.id].appearEffect = new Effect.Appear(this.element, {duration: 0.4, afterFinish: this.highlight.bind(this)});
 	},
 
 	highlight: function()
 	{
-		this.innerElement.focus();
+		//this.innerElement.focus();
 		Backend.SaveConfirmationMessage.prototype.timers[this.element.id].effectHighlight = new Effect.Highlight(this.innerElement, { duration: 0.4 });
 
 		// do not hide error or permanent confirmation messages
@@ -1031,6 +1034,11 @@ Backend.SaveConfirmationMessage.prototype =
 	{
 		Backend.SaveConfirmationMessage.prototype.timers[this.element.id].fadeEffect = Effect.Fade(this.element, {duration: 0.4});
 		Backend.SaveConfirmationMessage.prototype.timers[this.element.id].fadeTimeout = setTimeout(function() { this.displaying = false; }.bind(this), 4000);
+
+		if (this.options && this.options.delete)
+		{
+			this.element.parentNode.removeChild(this.element);
+		}
 	},
 
 	stopTimers: function()
@@ -1040,6 +1048,19 @@ Backend.SaveConfirmationMessage.prototype =
 		if(Backend.SaveConfirmationMessage.prototype.timers[this.element.id].appearEffect) Backend.SaveConfirmationMessage.prototype.timers[this.element.id].appearEffect.cancel();
 		if(Backend.SaveConfirmationMessage.prototype.timers[this.element.id].fadeEffect) Backend.SaveConfirmationMessage.prototype.timers[this.element.id].fadeEffect.cancel();
 		if(Backend.SaveConfirmationMessage.prototype.timers[this.element.id].effectHighlight) Backend.SaveConfirmationMessage.prototype.timers[this.element.id].effectHighlight.cancel();
+	},
+
+	getGeneratedId: function()
+	{
+		return 'saveConfirmationMessage_' + (Backend.SaveConfirmationMessage.prototype.counter++);
+	},
+
+	showMessage: function(message)
+	{
+		var el = document.createElement('div');
+		el.className = 'yellowMessage';
+		$('confirmations').appendChild(el);
+		new Backend.SaveConfirmationMessage(el, {delete: true, message: message});
 	}
 }
 

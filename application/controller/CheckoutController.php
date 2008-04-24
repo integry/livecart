@@ -218,6 +218,7 @@ class CheckoutController extends FrontendController
 		$response->set('billingAddresses', $this->user->getBillingAddressArray());
 		$response->set('shippingAddresses', $this->user->getShippingAddressArray());
 		$response->set('form', $form);
+		$response->set('order', $this->order->toArray());
 		return $response;
 	}
 
@@ -374,6 +375,7 @@ class CheckoutController extends FrontendController
 		$response->set('rates', $rateArray);
 		$response->set('currency', $this->getRequestCurrency());
 		$response->set('form', $form);
+		$response->set('order', $this->order->toArray());
 
 		return $response;
 	}

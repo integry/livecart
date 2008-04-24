@@ -17,10 +17,9 @@
 <div id="templatePageContainer">
 	<div class="treeContainer">
 		<div id="templateBrowser" class="treeBrowser"></div>
-		<div id="confirmations"></div>
 	</div>
 
-	<div class="treeManagerContainer">		
+	<div class="treeManagerContainer">
 		<div id="templateContent">
 			{include file="backend/template/emptyPage.tpl"}
 		</div>

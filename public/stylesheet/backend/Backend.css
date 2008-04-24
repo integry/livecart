@@ -353,6 +353,7 @@ html, body{
   	color: #0000FF;
   	font-weight: bold;
   	font-size: 15px;
+  	display: block;
 }
 
 #nav li {
@@ -455,7 +456,7 @@ html, body{
 }
 
 #nav li a:hover {
-	text-decoration: underline;
+	color: black;
 }
 
 #nav li ul li:hover, .menuCommandHover {
@@ -1570,4 +1571,14 @@ a.external
 #keyboardMsg
 {
 	display: none;
+}
+
+#confirmations
+{
+	position: fixed;
+	right: 1em;
+	top: 1em;
+	background: url(../../image/backend/confirmationBackground.png);
+	-moz-border-radius: 6px;
+	z-index: 10000;
 }

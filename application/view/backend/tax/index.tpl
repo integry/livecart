@@ -24,7 +24,6 @@
 	Backend.Tax.prototype.Messages.confirmRemove = "{t _are_you_sure_you_want_to_remove_ths_tax}";
 </script>
 
-<div id="confirmations"></div>
 {include file="backend/tax/taxes.tpl"}
 
 {include file="layout/backend/footer.tpl"}

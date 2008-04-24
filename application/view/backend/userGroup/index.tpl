@@ -40,9 +40,6 @@
 			<li class="addTreeNode" {denied role="userGroup.create"}style="display: none;"{/denied}><a id="userGroups_add" href="#add">{t _add_group}</a></li>
 			<li class="removeTreeNode" {denied role="userGroup.remove"}style="display: none;"{/denied}><a id="userGroups_delete" href="#delete">{t _delete_group}</a></li>
 		</ul>
-
-		<div id="confirmations"></div>
-		<div id="yellowZone"></div>
 	</div>
 
 	<span id="fromUsersPage">

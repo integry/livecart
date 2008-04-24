@@ -15,10 +15,6 @@
 {pageTitle help="tools.newsletter"}{t _newsletters}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
-<div id="confirmations" style="position: absolute; right: 0; top: 0;">
-	<div id="yellowZone"></div>
-</div>
-
 <div id="newsletterTabContainer" class="tabContainer maxHeight h--20">
 
 	<div id="loadingNewsletter" style="display: none; position: absolute; text-align: center; width: 100%; padding-top: 200px; z-index: 50000;">

@@ -8,7 +8,7 @@
 		{/if}
 
 		{foreach from=$fieldList item=field}
-		<p{if $field.isRequired} class="required"{/if}>
+		<p class="{if $field.isRequired}required{/if} {if !$field.isDisplayed}notDisplayed{/if}">
 			<label for="product_{$cat}_{$product.ID}_{$field.fieldName}">{$field.name_lang}:</label>
 			<fieldset class="error">
 				{include file="backend/product/form/specFieldFactory.tpl" field=$field cat=$cat}

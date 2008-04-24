@@ -50,16 +50,15 @@
 
 	<div class="treeContainer">
 		<div id="langBrowser" class="treeBrowser"></div>
-		
+
 		<ul class="verticalMenu">
 			<li class="langExport">
 				<a href="{link controller=backend.language action=export id=$id}">
 					{t _export}
 				</a>
 			</li>
-		</ul>		
-		
-		<div id="confirmations"></div>
+		</ul>
+
 	</div>
 
 	<div class="treeManagerContainer">
@@ -87,7 +86,7 @@
 
 						<br />
 						<br />
-						
+
 						<label>{t _search_trans}:</label>
 
 						<fieldset class="container">

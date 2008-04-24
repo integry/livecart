@@ -218,7 +218,7 @@ Backend.CsvImport =
 		{
 			li.removeClassName('inProgress');
 			li.addClassName('completed');
-			li.down('.progressCount').update(response.total);
+			this.progressBar.update(response.total, response.total);
 			li.down('.progressBarIndicator').hide();
 			li.down('.cancel').hide();
 
