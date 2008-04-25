@@ -73,6 +73,7 @@ Product.isFractionalUnit=Is fractional unit
 Manufacturer.name=Manufacturer
 ProductPrice.price=Price
 ProductPrice.listPrice=List price
+ProductImage.url=Image URL
 
 # Main form
 

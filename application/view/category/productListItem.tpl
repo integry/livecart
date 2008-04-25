@@ -21,6 +21,8 @@
 				{if $product.isAvailable && 'ENABLE_CART'|config}
 					<a href="{link controller=order action=addToCart id=$product.ID returnPath=true}" class="addToCart">{t _add_to_cart}</a>
 				{/if}
+
+				{if 'DISPLAY_PRICES'|config}
 				<span>{t _our_price}:</span>
 
 				<span class="price">
@@ -31,6 +33,7 @@
 							</span>
 					{/if}
 				</span>
+				{/if}
 
 				<br class="clear" />
 			</div></div></div>

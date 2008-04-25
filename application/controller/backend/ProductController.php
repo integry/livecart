@@ -60,7 +60,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	protected function getReferencedData()
 	{
-		return array('Category', 'Manufacturer');
+		return array('Category', 'Manufacturer', 'DefaultImage' => 'ProductImage');
 	}
 
 	protected function getColumnValue($product, $class, $field)
@@ -69,6 +69,8 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		{
 			return $product['type'];
 		}
+
+		$value = '';
 
 		if ('Product' == $class)
 		{
@@ -83,6 +85,13 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		else if ('specField' == $class)
 		{
 			$value = isset($product['attributes'][$field]['value_lang']) ? $product['attributes'][$field]['value_lang'] : '';
+		}
+		else if ('ProductImage' == $class)
+		{
+			if (!empty($product['DefaultImage']['urls']))
+			{
+				$value = $product['DefaultImage']['urls'][1];
+			}
 		}
 		else
 		{
@@ -239,6 +248,12 @@ class ProductController extends ActiveGridController implements MassActionInterf
 				}
 			}
 		}
+
+		$availableColumns['ProductImage.url'] = array
+			(
+				'name' => $this->translate('ProductImage.url'),
+				'type' => 'text'
+			);
 
 		unset($availableColumns['Product.voteSum']);
 		unset($availableColumns['Product.voteCount']);

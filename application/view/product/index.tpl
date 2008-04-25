@@ -72,6 +72,8 @@
 
 		{form action="controller=order action=addToCart id=`$product.ID`" handle=$cartForm method="POST"}
 		<table id="productPurchaseLinks">
+
+			{if 'DISPLAY_PRICES'|config}
 			<tr id="productPrice">
 				<td class="param">{t _price}:</td>
 				<td class="value price">
@@ -83,6 +85,7 @@
 					{/if}
 				</td>
 			</tr>
+			{/if}
 
 			{if 'ENABLE_CART'|config}
 			{if $options}

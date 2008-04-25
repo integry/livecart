@@ -544,13 +544,14 @@ Backend.NavMenu.prototype =
 
 				menuItem = topItem.cloneNode(true);
 
-				menuItem.getElementsByTagName('a')[0].href = mItem['url'];
+				var a = menuItem.getElementsByTagName('a')[0];
+				a.href = mItem['url'];
 				if(!mItem['url'])
 				{
-					menuItem.getElementsByTagName('a')[0].onclick = function() { return false; }
-					menuItem.getElementsByTagName('a')[0].style.textDecoration = 'none';
+					a.onclick = function() { return false; }
+					a.className = 'topItem';
 				}
-				menuItem.getElementsByTagName('a')[0].innerHTML = mItem['title'];
+				a.innerHTML = mItem['title'];
 				menuItem.style.display = 'block';
 
 				if (topIndex == index)
@@ -737,6 +738,13 @@ PopupMenuHandler.prototype =
 
 		this.x = xPos;
 		this.y = yPos;
+	},
+
+	getByElement: function(element, x, y)
+	{
+		var inst = new PopupMenuHandler(x, y, element.offsetWidth, element.offsetHeight);
+		element.style.left = inst.x + 'px';
+		element.style.top = inst.y + 'px';
 	},
 
 	getScrollX: function()
@@ -1234,10 +1242,14 @@ Backend.LanguageForm.prototype =
 		Element.toggleClassName(tab, 'active');
 
 		// hide tab contents
-		var cont = tab.up('.languageForm').down('.languageFormContent').getElementsByClassName('languageFormContainer');
-		for (var k = 0; k < cont.length; k++)
+		var cont = tab.up('.languageForm').down('.languageFormContent');
+		if (cont)
 		{
-			Element.removeClassName(cont[k], 'active');
+			cont = cont.getElementsByClassName('languageFormContainer');
+			for (var k = 0; k < cont.length; k++)
+			{
+				Element.removeClassName(cont[k], 'active');
+			}
 		}
 
 		if (Element.hasClassName(tab, 'active'))
@@ -1258,10 +1270,14 @@ Backend.LanguageForm.prototype =
 		}
 
 		// hide tab contents
-		var cont = container.down('.languageFormContent').getElementsByClassName('languageFormContainer');
-		for (var k = 0; k < cont.length; k++)
+		var cont = container.down('.languageFormContent');
+		if (cont)
 		{
-			Element.removeClassName(cont[k], 'active');
+			cont = cont.getElementsByClassName('languageFormContainer');
+			for (var k = 0; k < cont.length; k++)
+			{
+				Element.removeClassName(cont[k], 'active');
+			}
 		}
 	}
 }

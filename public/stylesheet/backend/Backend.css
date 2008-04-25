@@ -348,7 +348,7 @@ html, body{
 	display: block;
 }
 
-#nav a {
+#nav a, #nav .topItem:hover {
   	text-decoration: none;
   	color: #0000FF;
   	font-weight: bold;

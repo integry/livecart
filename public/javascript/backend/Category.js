@@ -320,7 +320,6 @@ Backend.Category = {
 			 this.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, null, 0, 0, 0, '', 1);
 			 this.treeBrowser.showItemSign(newCategory.ID, 0);
 			 this.treeBrowser.selectItem(newCategory.ID, true);
-			 console.log(parentCategoryId, newCategory.ID, newCategory.name, null, 0, 0, 0, '', 1);
 			 this.tabControl.activateTab("tabMainDetails", newCategory.ID);
 
 			Backend.Breadcrumb.display(newCategory.ID);

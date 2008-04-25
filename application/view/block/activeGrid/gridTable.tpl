@@ -18,7 +18,10 @@
 	</div>
 </div>
 
-<div>
+<div class="activeGridContainer">
+
+<div class="activeGridCellContent" style="display: none;"></div>
+
 <table class="activeGrid {$prefix}List {denied role=$role}readonlyGrid{/denied}" id="{$prefix}_{$id}">
 
 <thead>

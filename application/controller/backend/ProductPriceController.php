@@ -84,10 +84,10 @@ class ProductPriceController extends StoreManagementController
 	public function addPricesValidator(RequestValidator $validator)
 	{
 		// price in base currency
-		$baseCurrency = $this->application->getDefaultCurrency()->getID();
+		$baseCurrency = $this->getApplication()->getDefaultCurrency()->getID();
 		$validator->addCheck('price_' . $baseCurrency, new IsNotEmptyCheck($this->translate('_err_price_empty')));
 
-		$currencies = $this->application->getCurrencyArray();
+		$currencies = $this->getApplication()->getCurrencyArray();
 		foreach ($currencies as $currency)
 		{
 			$validator->addCheck('price_' . $currency, new IsNumericCheck($this->translate('_err_price_invalid')));

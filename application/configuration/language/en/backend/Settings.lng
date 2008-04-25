@@ -40,6 +40,7 @@ NEWEST_ARRIVALS=Newest Arrivals
 RATING=Customer Rating
 DISPLAY_NUM_CAT=Display the number of products per category
 DISPLAY_NUM_FILTER=Display the number of products per filter
+DISPLAY_PRICES=Display product prices
 
 _product_list_layout=Product List Layout
 LIST_LAYOUT=Default list layout

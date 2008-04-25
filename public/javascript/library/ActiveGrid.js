@@ -99,7 +99,13 @@ ActiveGrid.prototype =
 		for (k = 0; k < rows.length; k++)
 		{
 			Event.observe(rows[k], 'click', this.selectRow.bindAsEventListener(this));
-			Event.observe(rows[k], 'mouseover', this.highlightRow.bindAsEventListener(this));
+
+			var cells = rows[k].getElementsByTagName('td');
+			for (i = 0; i < cells.length; i++)
+			{
+				Event.observe(cells[i], 'mouseover', this.highlightRow.bindAsEventListener(this));
+			}
+
 			Event.observe(rows[k], 'mouseout', this.removeRowHighlight.bindAsEventListener(this));
 		}
 	},
@@ -132,7 +138,7 @@ ActiveGrid.prototype =
 					{
 						data['data'][k][i] = data['data'][k][i].replace(new RegExp('(' + filter + ')', 'gi'), '<span class="activeGrid_searchHighlight">$1</span>');
 					}
-					data['data'][k][i] = this.dataFormatter.formatValue(data['columns'][i], data['data'][k][i], id);
+					data['data'][k][i] = '<span>' + this.dataFormatter.formatValue(data['columns'][i], data['data'][k][i], id) + '</span>';
 				}
 			}
 		}
@@ -309,6 +315,31 @@ ActiveGrid.prototype =
 	highlightRow: function(event)
 	{
 		Element.addClassName(this._getTargetRow(event), 'activeGrid_highlight');
+
+		var cell = this._getTargetCell(event);
+		if (cell)
+		{
+			var value = cell.down('span');
+			if (value && value.offsetWidth > cell.offsetWidth)
+			{
+				if (!this.cellContentContainer)
+				{
+					var cont = cell.up('.activeGridContainer');
+					this.cellContentContainer = cont.down('.activeGridCellContent');
+				}
+
+				var xPos = Event.pointerX(event) - 50 - window.scrollX;
+				var yPos = Event.pointerY(event) + 25 - window.scrollY;
+				this.cellContentContainer.innerHTML = value.innerHTML;
+
+				this.cellContentContainer.style.visibility = 'none';
+				this.cellContentContainer.style.display = 'block';
+
+				PopupMenuHandler.prototype.getByElement(this.cellContentContainer, xPos, yPos);
+
+				this.cellContentContainer.style.visibility = 'visible';
+			}
+		}
 	},
 
 	/**
@@ -316,6 +347,11 @@ ActiveGrid.prototype =
 	 */
 	removeRowHighlight: function(event)
 	{
+		if (this.cellContentContainer)
+		{
+			this.cellContentContainer.style.display = 'none';
+		}
+
 		Element.removeClassName(this._getTargetRow(event), 'activeGrid_highlight');
 	},
 
@@ -396,6 +432,14 @@ ActiveGrid.prototype =
 	_getTargetRow: function(event)
 	{
 		return Event.element(event).up('tr');
+	},
+
+	/**
+	 *	Return event target cell element
+	 */
+	_getTargetCell: function(event)
+	{
+		return Event.element(event).up('td');
 	},
 
 	_getHeaderRow: function()

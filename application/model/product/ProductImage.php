@@ -74,7 +74,9 @@ class ProductImage extends ObjectImage
 	{
 		$array = parent::transformArray($array, $schema);
 
-		$array['paths'] = array();
+		$array['paths'] = $array['urls'] = array();
+		$baseUrl = self::getApplication()->getRouter()->getBaseUrl();
+
 		foreach (self::getImageSizes() as $key => $value)
 	  	{
 			$productID = isset($array['Product']['ID']) ? $array['Product']['ID'] : (isset($array['productID']) ? $array['productID'] : false);
@@ -85,6 +87,7 @@ class ProductImage extends ObjectImage
 			}
 
 			$array['paths'][$key] = self::getImagePath($array['ID'], $productID, $key);
+			$array['urls'][$key] = $baseUrl . $array['paths'][$key];
 		}
 
 		return $array;
