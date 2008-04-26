@@ -171,6 +171,7 @@ div.confirmationMsg div
 {
 	float: right;
 	width: 190px;
+	display: none;
 }
 
 #clearFooter {

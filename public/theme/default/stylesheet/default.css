@@ -368,6 +368,7 @@ tr.separator div
 {
 	padding-right: 0;
 	font-size: 100%;
+	width: 98% !important;
 }
 
 ul.productList li

@@ -148,6 +148,7 @@ class CsvImportController extends StoreManagementController
 		$this->loadLanguageFile('backend/Product');
 
 		$fields = array('' => '');
+		$fields['Product.ID'] = $this->translate('Product.ID');
 
 		$productController = new ProductController($this->application);
 		foreach ($productController->getAvailableColumns(Category::getInstanceByID($this->request->get('category')), true) as $key => $data)
@@ -156,6 +157,9 @@ class CsvImportController extends StoreManagementController
 		}
 
 		unset($fields['hiddenType']);
+		unset($fields['ProductImage.url']);
+
+		$fields['ProductImage.mainurl'] = $this->translate('_main_image_url');
 
 		$fields['Category.ID'] = $this->translate('Category.ID');
 
@@ -228,6 +232,8 @@ class CsvImportController extends StoreManagementController
 		$failed = 0;
 		$categories = array();
 		$impReq = new Request();
+
+		$references = array('DefaultImage' => 'ProductImage', 'Manufacturer');
 
 		ActiveRecord::beginTransaction();
 
@@ -314,12 +320,12 @@ class CsvImportController extends StoreManagementController
 					$id = $record[$fields['Product']['ID']];
 					if (ActiveRecord::objectExists('Product', $id))
 					{
-						$product = Product::getInstanceByID($id, Product::LOAD_DATA);
+						$product = Product::getInstanceByID($id, Product::LOAD_DATA, $references);
 					}
 				}
 				else if (isset($fields['Product']['sku']))
 				{
-					$product = Product::getInstanceBySku($record[$fields['Product']['sku']]);
+					$product = Product::getInstanceBySku($record[$fields['Product']['sku']], $references);
 				}
 
 				if ($product)
@@ -411,6 +417,29 @@ class CsvImportController extends StoreManagementController
 				$product->loadRequestData($impReq);
 
 				$product->save();
+
+				if (isset($fields['ProductImage']['mainurl']))
+				{
+					if (!$image = $product->defaultImage->get())
+					{
+						$image = ProductImage::getNewInstance($product);
+					}
+
+					$fetch = new NetworkFetch($record[$fields['ProductImage']['mainurl']]);
+
+					if ($fetch->fetch())
+					{
+						$man = new ImageManipulator($fetch->getTmpFile());
+						if ($man->isValidImage())
+						{
+							$image->save();
+							$image->resizeImage($man);
+							$image->save();
+						}
+					}
+
+					unset($image);
+				}
 
 				$product->__destruct();
 				unset($product);
