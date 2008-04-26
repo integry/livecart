@@ -159,7 +159,12 @@ class CsvImportController extends StoreManagementController
 		unset($fields['hiddenType']);
 		unset($fields['ProductImage.url']);
 
-		$fields['ProductImage.mainurl'] = $this->translate('_main_image_url');
+		$fields['ProductImage.mainurl'] = $this->translate('_main_image_location');
+
+		for ($k = 1; $k <= 3; $k++)
+		{
+			$fields['ProductAdditionalImage.' . $k] = $this->maketext('_additional_image_location', $k);
+		}
 
 		$fields['Category.ID'] = $this->translate('Category.ID');
 
@@ -425,20 +430,17 @@ class CsvImportController extends StoreManagementController
 						$image = ProductImage::getNewInstance($product);
 					}
 
-					$fetch = new NetworkFetch($record[$fields['ProductImage']['mainurl']]);
-
-					if ($fetch->fetch())
-					{
-						$man = new ImageManipulator($fetch->getTmpFile());
-						if ($man->isValidImage())
-						{
-							$image->save();
-							$image->resizeImage($man);
-							$image->save();
-						}
-					}
+					$this->importImage($image, $record[$fields['ProductImage']['mainurl']]);
 
 					unset($image);
+				}
+
+				if (isset($fields['ProductAdditionalImage']))
+				{
+					foreach ($fields['ProductAdditionalImage'] as $index)
+					{
+						$this->importImage(ProductImage::getNewInstance($product), $record[$index]);
+					}
 				}
 
 				$product->__destruct();
@@ -458,6 +460,8 @@ class CsvImportController extends StoreManagementController
 			}
 		}
 
+		Category::recalculateProductsCount();
+
 		//ActiveRecord::rollback();
 		ActiveRecord::commit();
 
@@ -466,6 +470,51 @@ class CsvImportController extends StoreManagementController
 		//echo '|' . round(memory_get_usage() / (1024*1024), 1);
 
 		exit;
+	}
+
+	private function importImage(ProductImage $image, $path)
+	{
+		if (!$path)
+		{
+			return false;
+		}
+
+		if (@parse_url($path, PHP_URL_SCHEME))
+		{
+			$fetch = new NetworkFetch($path);
+			$path = $fetch->fetch() ? $fetch->getTmpFile() : '';
+		}
+		else
+		{
+			if (!file_exists($path))
+			{
+				foreach (array('/tmp/import/', 'import/') as $loc)
+				{
+					$p = $loc . $path;
+					if (file_exists($p))
+					{
+						$path = $p;
+						break;
+					}
+				}
+			}
+
+			if (!file_exists($path))
+			{
+				$path = '';
+			}
+		}
+
+		if ($path)
+		{
+			$man = new ImageManipulator($path);
+			if ($man->isValidImage())
+			{
+				$image->save();
+				$image->resizeImage($man);
+				$image->save();
+			}
+		}
 	}
 
 	public function isCancelled()

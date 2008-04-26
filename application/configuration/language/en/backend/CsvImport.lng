@@ -32,7 +32,8 @@ _map_data=Map CSV Columns to LiveCart Fields
 _first_header=First row is a header row
 Category.ID=Category ID
 _category_x=Category Name [_1]
-_main_image_url=Main product image file URL
+_main_image_location=Main product image file path or URL
+_additional_image_location=Additional image file path or URL [_1]
 _import=Import
 _continue=Continue
 

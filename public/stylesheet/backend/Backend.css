@@ -876,6 +876,11 @@ input, select, file, form.other
     vertical-align: middle;
 }
 
+option
+{
+	padding-right: 1em;
+}
+
 select
 {
     width: 15.5em;
