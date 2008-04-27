@@ -199,8 +199,11 @@ ActiveForm.prototype = {
 			}
 			else
 			{
-				tinyMCE.execCommand('mceRemoveControl', true, textareas[k].id);
-				window.clearInterval(ActiveForm.prototype.idleTinyMCEFields[textareas[k].id]);
+				if (tinyMCE.getInstanceById(textareas[k].id))
+				{
+					tinyMCE.execCommand('mceRemoveControl', false, textareas[k].id);
+					window.clearInterval(ActiveForm.prototype.idleTinyMCEFields[textareas[k].id]);
+				}
 			}
 		}
 	},
