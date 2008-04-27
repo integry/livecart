@@ -1,3 +1,6 @@
+{assign var="metaDescription" value='INDEX_META_DESCRIPTION'|config}
+{assign var="metaKeywords" value='INDEX_META_KEYWORDS'|config}
+
 <div class="index">
 
 {include file="layout/frontend/header.tpl"}
@@ -24,8 +27,8 @@
 		{/foreach}
 		</ul>
 	{/if}
-	
-</div>		
+
+</div>
 
 {include file="layout/frontend/footer.tpl"}
 

@@ -21,9 +21,13 @@ LANG_FLAGS=Flags
 LANG_DROPDOWN=Language names as a drop-down list
 
 _homepage=Home Page
+_homepage_display=Display Configuration
 NUM_NEWS_INDEX=Number of news entries to display
 INDEX_MAN_FILTERS=Display manufacturer filters
 INDEX_PRICE_FILTERS=Display price filters
+_homepage_meta_tags=Home Page Meta Tags
+INDEX_META_DESCRIPTION=Meta description tag value
+INDEX_META_KEYWORDS=Meta keywords tag value
 
 _general=Category Pages
 _category_pages=Category Pages

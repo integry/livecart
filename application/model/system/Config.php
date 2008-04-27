@@ -172,7 +172,7 @@ class Config
 						// check for multi-lingual values
 						if (!is_array($value['value']) && substr($value['value'], 0, 1) == '_')
 						{
-							$value['value'] = array($this->application->getDefaultLanguageCode() => substr($value['value'], 1));
+							$value['value'] = array($this->application->getDefaultLanguageCode() => (string)substr($value['value'], 1));
 						}
 
 						$this->set($key, $value['value']);
