@@ -132,6 +132,17 @@ class TemplateController extends StoreManagementController
 		}
 	}
 
+	public function delete()
+	{
+		$custPath = Template::getCustomizedFilePath($this->request->get('file'));
+		if (file_exists($custPath))
+		{
+			unlink($custPath);
+		}
+
+		return new JSONResponse(false, 'success', $this->translate('_template_has_been_successfully_deleted'));
+	}
+
 	/**
 	 * @role saveEmail
 	 */

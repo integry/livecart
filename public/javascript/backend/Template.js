@@ -44,21 +44,50 @@ Backend.Template.prototype =
 		//this.treeBrowser.enableDragAndDrop(1);
 		this.insertTreeBranch(categories, 0);
 		this.treeBrowser.closeAllItems();
-		this.treeBrowser.setDragHandler(this.moveTemplate);
+		//this.treeBrowser.setDragHandler(this.moveTemplate);
 
-		var createTemplate = $('createTemplate');
+		var createTemplate = $('createTemplate').down('a');
 		createTemplate.editUrl = createTemplate.href;
-		createTemplate.href = '#';
+		createTemplate.href = '#create';
 		Event.observe(createTemplate, 'click', function(e)
 			{
 				var el = Event.element(e);
-				var upd = new LiveCart.AjaxUpdater(el.href, 'templateContent');
+				var upd = new LiveCart.AjaxUpdater(el.editUrl, 'templateContent');
 				upd.onComplete = this.displayTemplate.bind(this);
+
 				if ($('code'))
 				{
 					editAreaLoader.delete_instance("code");
 				}
 				Event.stop(e);
+			}.bindAsEventListener(this));
+
+		var deleteTemplate = $('deleteTemplate').down('a');
+		deleteTemplate.url = deleteTemplate.href;
+		deleteTemplate.href = '#delete';
+		Event.observe(deleteTemplate, 'click', function(e)
+			{
+				Event.stop(e);
+
+				if (!confirm(Backend.getTranslation('_confirm_template_delete')))
+				{
+					return false;
+				}
+
+				var nodeIdToRemove = this.treeBrowser.getSelectedItemId();
+				var upd = new LiveCart.AjaxRequest(Event.element(e).url.replace('_id_', this.treeBrowser.getSelectedItemId()));
+				upd.onComplete =
+					function()
+					{
+						new LiveCart.AjaxUpdater(this.urls['empty'], 'templateContent', 'settingsIndicator');
+						this.treeBrowser.deleteItem(nodeIdToRemove, true);
+					}.bind(this);
+
+				if ($('code'))
+				{
+					editAreaLoader.delete_instance("code");
+				}
+
 			}.bindAsEventListener(this));
 	},
 
@@ -68,7 +97,6 @@ Backend.Template.prototype =
 		{
 		  	if('function' != typeof treeBranch[k])
 		  	{
-
 				//this.treeBrowser.enableDragAndDrop('temporary_disabled');
 				this.treeBrowser.enableDragAndDrop(0);
 
@@ -78,7 +106,7 @@ Backend.Template.prototype =
 				}
 				else
 				{
-					this.treeBrowser.enableDragAndDrop('temporary_disabled');
+					//this.treeBrowser.enableDragAndDrop('temporary_disabled');
 				}
 
 				this.treeBrowser.insertNewItem(rootId, treeBranch[k].id, k, null, 0, 0, 0, '');
@@ -89,14 +117,23 @@ Backend.Template.prototype =
 				{
 					this.insertTreeBranch(treeBranch[k].subs, treeBranch[k].id);
 				}
-				///ole.log(treeBranch[k]);
 			}
 		}
 	},
 
 	activateCategory: function(id)
 	{
-		this.treeBrowser.enableDragAndDrop(this.treeBrowser.getUserData(id, 'isCustom') ? 1 : 0);
+		var isCustom = this.treeBrowser.getUserData(id, 'isCustom');
+		//this.treeBrowser.enableDragAndDrop(isCustom ? 1 : 0);
+
+		if (isCustom)
+		{
+			$('deleteTemplate').show();
+		}
+		else
+		{
+			$('deleteTemplate').hide();
+		}
 
 		if (!this.treeBrowser.hasChildren(id))
 		{
@@ -135,11 +172,11 @@ Backend.Template.prototype =
 
 		if ($('code'))
 		{
-			new Backend.TemplateHandler($('templateForm'));
+			new Backend.TemplateHandler($('templateForm'), this);
 		}
 		else
 		{
-			new Backend.EmailTemplateHandler($('templateForm'));
+			new Backend.EmailTemplateHandler($('templateForm'), this);
 		}
 	},
 
@@ -169,9 +206,10 @@ Backend.TemplateHandler.prototype =
 {
 	form: null,
 
-	initialize: function(form)
+	initialize: function(form, owner)
 	{
 		this.form = form;
+		this.owner = owner;
 		Event.observe(this.form, 'submit', this.submit.bindAsEventListener(this));
 
 		editAreaLoader.init({
@@ -200,6 +238,17 @@ Backend.TemplateHandler.prototype =
 		if (opener)
 		{
 			opener.location.reload();
+		}
+
+		var tpl = originalRequest.responseData.template;
+		console.log(originalRequest.responseData);
+		if (tpl.isCustomFile && ("true" == originalRequest.responseData.isNew))
+		{
+			var branch = {};
+			tpl.id = tpl.file;
+			branch[tpl.file] = tpl;
+			this.owner.insertTreeBranch(branch, '');
+			this.owner.treeBrowser.selectItem(tpl.file, false, false);
 		}
 	}
 }

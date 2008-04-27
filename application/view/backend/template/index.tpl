@@ -24,8 +24,8 @@
 					{t _create_template}
 				</a>
 			</li>
-			<li class="removeTreeNode" id="deleteTemplate">
-				<a href="{link controller=backend.template action=delete}">
+			<li class="removeTreeNode" id="deleteTemplate" style="display: none;">
+				<a href="{link controller=backend.template action=delete query="file=_id_"}">
 					{t _delete_template}
 				</a>
 			</li>
