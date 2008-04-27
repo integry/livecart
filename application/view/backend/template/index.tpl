@@ -17,6 +17,20 @@
 <div id="templatePageContainer">
 	<div class="treeContainer">
 		<div id="templateBrowser" class="treeBrowser"></div>
+
+		<ul id="categoryBrowserActions" class="verticalMenu">
+			<li class="addTreeNode" id="createTemplate">
+				<a href="{link controller=backend.template action=add}">
+					{t _create_template}
+				</a>
+			</li>
+			<li class="removeTreeNode" id="deleteTemplate">
+				<a href="{link controller=backend.template action=delete}">
+					{t _delete_template}
+				</a>
+			</li>
+		</ul>
+
 	</div>
 
 	<div class="treeManagerContainer">

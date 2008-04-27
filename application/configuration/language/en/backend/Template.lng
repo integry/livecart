@@ -2,6 +2,11 @@ _edit_templates=Edit Templates
 _edit_template=Edit Template File
 _please_select=Please select a template file to edit
 _save_template=Save Template
+_template_file_name=File name
+
+_create_template=Create template file
+_delete_template=Delete template file
+_file_name_empty=Please enter the file name
 
 # E-mail templates
 _edit_email_templates=Edit E-mail Templates

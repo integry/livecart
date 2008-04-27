@@ -42,6 +42,14 @@ class TemplateController extends StoreManagementController
 	  	$response->set('fileName', $template->getFileName());
 	  	$response->set('form', $this->getTemplateForm($template));
 	  	$response->set('code', base64_encode($template->getCode()));
+	  	$response->set('template', $template->toArray());
+		return $response;
+	}
+
+	public function add()
+	{
+		$response = $this->edit();
+		$response->get('form')->getValidator()->addCheck('fileName', new IsNotEmptyCheck($this->translate('_file_name_empty')));
 		return $response;
 	}
 
@@ -87,13 +95,36 @@ class TemplateController extends StoreManagementController
 	{
 		$code = $this->request->get('code');
 
-		$template = new Template($this->request->get('file'));
+		if ($this->request->get('fileName'))
+		{
+			$fileName = $this->request->get('fileName');
+			if (!strtolower(substr($fileName, 0, 4)) != '.tpl')
+			{
+				$fileName .= '.tpl';
+			}
+			$template = new Template($fileName);
+		}
+		else
+		{
+			$template = new Template($this->request->get('file'));
+		}
+
 		$template->setCode($code);
 		$res = $template->save();
 
+		$origPath = $this->request->get('file');
+		if ($template->isCustomFile() && !$this->request->get('new') && ($template->getFileName() != $origPath))
+		{
+			$origPath = Template::getCustomizedFilePath($origPath);
+			if (file_exists($origPath))
+			{
+				unlink($origPath);
+			}
+		}
+
 		if($res)
 		{
-			return new JSONResponse(false, 'success', $this->translate('_template_has_been_successfully_updated'));
+			return new JSONResponse(array('template' => $template->toArray(), 'isNew' => $this->request->get('new')), 'success', $this->translate('_template_has_been_successfully_updated'));
 		}
 		else
 		{
@@ -153,6 +184,7 @@ class TemplateController extends StoreManagementController
 		$form = new Form(new RequestValidator('template', $this->request));
 		$form->setData($template->toArray());
 		$form->set('code', '');
+		$form->set('fileName', $template->getFileName());
 		return $form;
 	}
 

@@ -45,6 +45,21 @@ Backend.Template.prototype =
 		this.insertTreeBranch(categories, 0);
 		this.treeBrowser.closeAllItems();
 		this.treeBrowser.setDragHandler(this.moveTemplate);
+
+		var createTemplate = $('createTemplate');
+		createTemplate.editUrl = createTemplate.href;
+		createTemplate.href = '#';
+		Event.observe(createTemplate, 'click', function(e)
+			{
+				var el = Event.element(e);
+				var upd = new LiveCart.AjaxUpdater(el.href, 'templateContent');
+				upd.onComplete = this.displayTemplate.bind(this);
+				if ($('code'))
+				{
+					editAreaLoader.delete_instance("code");
+				}
+				Event.stop(e);
+			}.bindAsEventListener(this));
 	},
 
 	insertTreeBranch: function(treeBranch, rootId)
@@ -157,7 +172,7 @@ Backend.TemplateHandler.prototype =
 	initialize: function(form)
 	{
 		this.form = form;
-		this.form.onsubmit = this.submit.bindAsEventListener(this);
+		Event.observe(this.form, 'submit', this.submit.bindAsEventListener(this));
 
 		editAreaLoader.init({
 			id : "code",		// textarea id
@@ -172,10 +187,11 @@ Backend.TemplateHandler.prototype =
 		editAreaLoader.setSelectionRange('code', 0, 0);
 	},
 
-	submit: function()
+	submit: function(e)
 	{
 		$('code').value = editAreaLoader.getValue('code');
 		new LiveCart.AjaxRequest(this.form, null, this.saveComplete.bind(this));
+		Event.stop(e);
 		return false;
 	},
 

@@ -14,7 +14,9 @@ body {
 	font-size: 1.4em;
 	color: #333;
 	margin: 0px;
+/*
 	background-color:#E6E6E6;
+*/
 	background-image:url(../../image/backend/layout/workarea_shade_vertical_wide.jpg);
 	background-position: right 200px;
 	background-repeat: repeat-y;
