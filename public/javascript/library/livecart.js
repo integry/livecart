@@ -273,7 +273,7 @@ LiveCart.AjaxUpdater.prototype = {
 
 	indicatorContainerId: null,
 
-	initialize: function(formOrUrl, container, indicator, insertionPosition, onComplete)
+	initialize: function(formOrUrl, container, indicator, insertionPosition, onComplete, options)
 	{
 		var url = "";
 		var method = "";
@@ -322,30 +322,34 @@ LiveCart.AjaxUpdater.prototype = {
 			Element.show(this.indicatorContainerId);
 		}
 
-		var updaterOptions = { method: method,
-							   parameters: params,
-							   onComplete: this.postProcessResponse.bind(this),
-							   onFailure: this.reportError.bind(this)
-							   };
+		if (!options)
+		{
+			options = {};
+		}
+
+		options.method = method;
+		options.parameters = params;
+		options.onComplete = this.postProcessResponse.bind(this);
+		options.onFailure = this.reportError.bind(this);
 
 		if (insertionPosition != undefined)
 		{
 			switch(insertionPosition)
 			{
 				case 'top':
-					updaterOptions.insertion = Insertion.Top;
+					options.insertion = Insertion.Top;
 				break;
 
 				case 'bottom':
-					updaterOptions.insertion = Insertion.Bottom;
+					options.insertion = Insertion.Bottom;
 				break;
 
 				case 'before':
-					updaterOptions.insertion = Insertion.Before;
+					options.insertion = Insertion.Before;
 				break;
 
 				case 'after':
-					updaterOptions.insertion = Insertion.After;
+					options.insertion = Insertion.After;
 				break;
 
 				default:
@@ -358,7 +362,7 @@ LiveCart.AjaxUpdater.prototype = {
 
 		var ajax = new Ajax.Updater({success: containerId},
 						 url,
-						 updaterOptions);
+						 options);
 
 	},
 

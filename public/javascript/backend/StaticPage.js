@@ -55,7 +55,7 @@ Backend.StaticPage.prototype =
 	{
 		this.treeBrowser.clearSelection();
 		this.showControls();
-		new LiveCart.AjaxUpdater(this.urls['add'], $('pageContent'), $('settingsIndicator'), null, this.displayPage.bind(this));
+		new LiveCart.AjaxUpdater(this.urls['add'], $('pageContent'), $('settingsIndicator'), null, this.displayPage.bind(this), {onLoaded: function() { ActiveForm.prototype.destroyTinyMceFields($('pageContent')); } });
 	},
 
 	initForm: function()
@@ -109,7 +109,7 @@ Backend.StaticPage.prototype =
 		{
 			this.treeBrowser.showFeedback(id);
 			var url = this.urls['edit'].replace('_id_', id);
-			var upd = new LiveCart.AjaxUpdater(url, 'pageContent', 'settingsIndicator');
+			var upd = new LiveCart.AjaxUpdater(url, 'pageContent', 'settingsIndicator', null, null, {onLoaded: function() { ActiveForm.prototype.destroyTinyMceFields($('pageContent')); }} );
 			upd.onComplete = this.displayPage.bind(this);
 
 			this.showControls()
@@ -118,6 +118,7 @@ Backend.StaticPage.prototype =
 
 	displayPage: function(response)
 	{
+		tinyMCE.idCounter = 0;
 		this.treeBrowser.hideFeedback();
 		this.initForm();
 		Event.observe($('cancel'), 'click', this.cancel.bindAsEventListener(this));

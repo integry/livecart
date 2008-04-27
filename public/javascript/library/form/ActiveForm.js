@@ -422,7 +422,10 @@ Element.saveTinyMceFields = function(element)
 
 	document.getElementsByClassName("mceEditorIframe", element).each(function(mceControl)
 	{
-		 tinyMCE.getInstanceById(mceControl.id).triggerSave();
+		 if (tinyMCE.getInstanceById(mceControl.id))
+		 {
+		 	tinyMCE.getInstanceById(mceControl.id).triggerSave();
+		 }
 	});
 }
 
