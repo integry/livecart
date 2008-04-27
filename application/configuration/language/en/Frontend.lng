@@ -17,6 +17,7 @@ _by_price=By Price
 
 # Search
 _all_products=All Products
+_search=Search
 
 # Currencies
 _switch_currency=Switch Currency
@@ -26,6 +27,7 @@ _shopping_basket=Shopping Basket
 _shopping_cart=Shopping Cart
 _add_to_cart=Add to Cart
 _add_to_wishlist=Add to Wishlist
+_cart_item_count=[quantf,_1,<strong>%d</strong> item,<strong>%d</strong> items,no items]
 
 # Orders
 _total=Total

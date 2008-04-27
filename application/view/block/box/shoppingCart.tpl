@@ -4,7 +4,7 @@
 
 	{if 'ENABLE_CART'|config}
 		<span class="sep">|</span>
-		<a href="{link controller=order returnPath=true}" class="menu_shoppingCart">{t _shopping_cart}</a> <span class="menu_cartItemCount">({maketext text="<strong>[_1]</strong> [quant,_1,item,items, no items]" params=$order.baskedCount})</span>
+		<a href="{link controller=order returnPath=true}" class="menu_shoppingCart">{t _shopping_cart}</a> <span class="menu_cartItemCount">({maketext text="_cart_item_count" params=$order.basketCount})</span>
 		{if $order.isOrderable}
 			<span class="sep">|</span> <a href="{link controller=checkout returnPath=true}" class="checkout">{t _checkout}</a>
 		{/if}
