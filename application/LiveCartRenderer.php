@@ -84,6 +84,19 @@ class LiveCartRenderer extends SmartyRenderer
 		}
 	}
 
+	public function getBaseTemplatePath($tplName)
+	{
+		$tplName = substr($tplName, 1);
+		foreach (array(ClassLoader::getRealPath('storage.customize.view.'), ClassLoader::getRealPath('application.view.')) as $path)
+		{
+			$file = $path . $tplName;
+			if (file_exists($file))
+			{
+				return $file;
+			}
+		}
+	}
+
 	public function getThemeList()
 	{
 		$themes = array('default' => 'default', 'barebone' => 'barebone');

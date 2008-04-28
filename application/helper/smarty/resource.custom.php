@@ -46,15 +46,7 @@ function smarty_custom_get_path($tpl_name, LiveCartSmarty $smarty)
 	// absolute path
 	else
 	{
-		$tpl_name = substr($tpl_name, 1);
-		foreach (array(ClassLoader::getRealPath('storage.customize.view.'), ClassLoader::getRealPath('application.view.')) as $path)
-		{
-			$file = $path . $tpl_name;
-			if (file_exists($file))
-			{
-				$path = $file;
-			}
-		}
+		$path = $smarty->getApplication()->getRenderer()->getBaseTemplatePath($tpl_name);
 	}
 
 	return $path;

@@ -240,11 +240,30 @@ class LiveCart extends Application
 	{
 		$file = $smarty->_current_file;
 
-		foreach (array_merge(array('custom:'), $this->getRenderer()->getTemplatePaths()) as $path)
+		if (substr($file, 0, 7) == 'custom:')
+		{
+			$file = substr($file, 7);
+		}
+
+		if (substr($file, 0, 1) == '@')
+		{
+			$file = $this->getRenderer()->getBaseTemplatePath($file);
+		}
+
+		if (!file_exists($file))
+		{
+			$file = $this->getRenderer()->getTemplatePath($file);
+		}
+
+		$paths = array(ClassLoader::getRealPath('storage.customize.view'),
+					   ClassLoader::getRealPath('application.view'));
+
+		foreach ($paths as $path)
 		{
 			if ($path == substr($file, 0, strlen($path)))
 			{
-				$file = substr($file, strlen($path));
+				$file = substr($file, strlen($path) + 1);
+				break;
 			}
 		}
 
@@ -252,7 +271,7 @@ class LiveCart extends Application
 
 		$editUrl = $this->getRouter()->createUrl(array('controller' => 'backend.template', 'action' => 'editPopup', 'query' => array('file' => $file)), true);
 
-		return '<div class="templateLocator"><span class="templateName"><a onclick="window.open(\'' . $editUrl . '\', \'template\', \'width=800,height=600,scrollbars=yes,resizable=yes\'); return false;" href="#">' . $file  . '</a></span>' . $tplSource . '</div>';
+		return '<span class="templateLocator" ondblclick="window.open(\'' . $editUrl . '\', \'template\', \'width=800,height=600,scrollbars=yes,resizable=yes\'); Event.stop(event); return false;" onmouseover="this.addClassName(\'activeTpl\'); Event.stop(event);" onmouseout="this.removeClassName(\'activeTpl\'); Event.stop(event);"><span class="templateName"><a onclick="window.open(\'' . $editUrl . '\', \'template\', \'width=800,height=600,scrollbars=yes,resizable=yes\'); return false;" href="#">' . $file  . '</a></span>' . $tplSource . '</span>';
 	}
 
 	/**

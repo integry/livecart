@@ -1987,34 +1987,43 @@ td.amount
 /***************************
 	Customization
 ***************************/
-div.templateLocator:hover
+span.templateLocator
 {
-	border: 1px dotted red;
+	display: block;
+}
+
+span.templateLocator.activeTpl
+{
+	border: 2px dotted red;
 	position: relative;
 	z-index: 2;
 	padding: 2px;
 }
 
-div.templateLocator span.templateName
+span.templateLocator span.templateName
 {
 	display: none;
 	position: absolute;
-	top: -1px;
-	left: -1px;
+	top: 0px;
+	left: 0px;
 	background-color: lightyellow;
 	height: 15px;
 	padding: 3px;
 	z-index: 1;
-	border: 1px dotted blue;
 	padding-left: 25px;
 	background-image: url(../../image/silk/gif/layout_edit.gif);
 	background-position: 4px center;
 	background-repeat: no-repeat;
 }
 
-div.templateLocator:hover > span.templateName:first-child
+span.templateLocator.activeTpl:hover > span.templateName:first-child
 {
 	display: inline;
+}
+
+span.templateLocator.activeTpl
+{
+
 }
 
 /***************************

@@ -12,7 +12,7 @@
  */
 function smarty_function_liveCustomization($params, LiveCartSmarty $smarty)
 {
-	if ($smarty->getApplication()->isTranslationMode())
+	if ($smarty->getApplication()->isTranslationMode() || $smarty->getApplication()->isCustomizationMode())
 	{
 		if (!isset($params['action']))
 		{
