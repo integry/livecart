@@ -199,7 +199,14 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$params['theme'] = $this->request->get('theme');
 		}
 
-		return parent::processMass($params);
+		$response = parent::processMass($params);
+
+		if ('delete' == $act)
+		{
+			Category::recalculateProductsCount();
+		}
+
+		return $response;
 	}
 
 	protected function getMassActionProcessor()
