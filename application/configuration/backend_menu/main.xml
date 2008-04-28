@@ -5,72 +5,72 @@
 	<Action>index</Action>
     <Items>
         <Menu>
-        	<Title>_menu_products</Title>		
+        	<Title>_menu_products</Title>
         	<Controller>backend.category</Controller>
-        	<Action>index</Action>	
-        	<Role>category,product</Role>	
+        	<Action>index</Action>
+        	<Role>category,product</Role>
         </Menu>
         <Menu>
-        	<Title>_menu_orders</Title>		
+        	<Title>_menu_orders</Title>
         	<Controller>backend.customerOrder</Controller>
-        	<Role>order</Role>	
+        	<Role>order</Role>
         </Menu>
         <Menu>
-        	<Title>_menu_users</Title>	
+        	<Title>_menu_users</Title>
         	<Controller>backend.userGroup</Controller>
-        	<Role>userGroup</Role>	
+        	<Role>userGroup</Role>
         </Menu>
         <Menu>
         	<Title>_menu_content</Title>
         	<Role>page,news</Role>
         	<Items>
         		<Menu>
-		        	<Title>_menu_pages</Title>	
+		        	<Title>_menu_pages</Title>
 		        	<Controller>backend.staticPage</Controller>
-		        	<Role>page</Role>	
+		        	<Role>page</Role>
 		        </Menu>
         		<Menu>
-		        	<Title>_menu_news</Title>	
+		        	<Title>_menu_news</Title>
 		        	<Controller>backend.siteNews</Controller>
-		        	<Role>news</Role>	
+		        	<Role>news</Role>
 		        </Menu>
 		    </Items>
         </Menu>
         <Menu>
-        	<Title>_menu_settings</Title>	
+        	<Title>_menu_settings</Title>
         	<Role>settings,delivery,currency,language,delivery,taxes,update</Role>
             <Items>
                 <Menu>
-                	<Title>_menu_configuration</Title>	
+                	<Title>_menu_configuration</Title>
                 	<Controller>backend.settings</Controller>
-                	<Role>settings</Role>	
+                	<Role>settings</Role>
                 </Menu>
                 <Menu>
-                	<Title>_menu_delivery_zones</Title>	
+                	<Title>_menu_delivery_zones</Title>
                 	<Controller>backend.deliveryZone</Controller>
                 	<Action>index</Action>
                 	<Role>delivery</Role>
                 </Menu>
                 <Menu>
-                	<Title>_menu_tax</Title>	
+                	<Title>_menu_tax</Title>
                 	<Controller>backend.tax</Controller>
                 	<Action>index</Action>
                 	<Role>taxes</Role>
                 </Menu>
                 <Menu>
-                	<Title>_menu_currencies</Title>	
+                	<Title>_menu_currencies</Title>
                 	<Controller>backend.currency</Controller>
                 	<Action>index</Action>
                 	<Role>currency</Role>
                 </Menu>
                 <Menu>
-                	<Title>_menu_languages</Title>	
+                	<Title>_menu_languages</Title>
                 	<Controller>backend.language</Controller>
                 	<Action>index</Action>
                 	<Role>language</Role>
                 </Menu>
                 <Menu>
-                	<Title>_menu_update</Title>	
+                	<Title>_menu_update</Title>
                 	<Controller>backend.update</Controller>
                 	<Action>index</Action>
                 	<Role>update</Role>
@@ -78,7 +78,7 @@
             </Items>
         </Menu>
         <Menu>
-        	<Title>_menu_customize</Title>		
+        	<Title>_menu_customize</Title>
         	<Role>customize,template</Role>
         	<Items>
         		<Menu>
@@ -95,6 +95,11 @@
         			<Title>_menu_email_templates</Title>
         			<Controller>backend.template</Controller>
         			<Action>email</Action>
+                	<Role>template</Role>
+        		</Menu>
+        		<Menu>
+        			<Title>_menu_css_edit</Title>
+        			<Controller>backend.cssEditor</Controller>
                 	<Role>template</Role>
         		</Menu>
         	</Items>

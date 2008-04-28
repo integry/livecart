@@ -1,0 +1,12 @@
+.cssWarning
+{
+	margin-top: 1em;
+	padding: 0.5em;
+	background-color: #ffeeee;
+}
+
+#templateContent textarea#code
+{
+    height: 500px;
+    width: 900px;
+}

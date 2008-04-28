@@ -1101,12 +1101,12 @@ fieldset.addForm legend
 ***************************/
 .odd
 {
-  	background-color: #EEEEEE;
+  	background-color: #fff;
 }
 
 .even
 {
-
+	background-color: #fafafa;
 }
 
 /***************************
