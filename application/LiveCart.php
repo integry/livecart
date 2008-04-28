@@ -321,10 +321,10 @@ class LiveCart extends Application
 
 	protected function postProcessResponse(Response $response, Controller $controllerInstance)
 	{
-		if ($response instanceof ActionResponse)
+		if ($response instanceof ActionResponse && $this->isInstalled())
 		{
 			$response->set('user', $controllerInstance->getUser()->toArray());
-			if ($controllerInstance instanceof FrontendController && $this->isInstalled())
+			if ($controllerInstance instanceof FrontendController)
 			{
 				$response->set('currency', $controllerInstance->getRequestCurrency());
 			}
