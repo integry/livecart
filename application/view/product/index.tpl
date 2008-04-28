@@ -8,9 +8,7 @@
 
 <div class="productIndex productCategory_{$product.Category.ID} product_{$product.ID}">
 
-{include file="layout/frontend/header.tpl"}
-{* include file="layout/frontend/leftSide.tpl" *}
-{* include file="layout/frontend/rightSide.tpl" *}
+{include file="product/layout.tpl"}
 
 <div id="content" class="left">
 

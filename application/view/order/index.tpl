@@ -1,7 +1,6 @@
 {loadJs form=true}
-{include file="layout/frontend/header.tpl"}
-{* include file="layout/frontend/leftSide.tpl" *}
-{* include file="layout/frontend/rightSide.tpl" *}
+
+{include file="checkout/layout.tpl"}
 
 <div id="content" class="left right orderIndex">
 
@@ -9,7 +8,7 @@
 		<h1>{t _your_basket}</h1>
 
 		{if $cart.cartItems}
-			{include file="checkout/checkoutProgress.tpl" progress="progressCart"}
+			{include file="checkout/checkoutProgress.tpl" progress="progressCart" order=cart}
 		{/if}
 	</div>
 
