@@ -356,6 +356,7 @@ html, body{
   	font-weight: bold;
   	font-size: 15px;
   	display: block;
+  	-moz-outline:none;
 }
 
 #nav li {

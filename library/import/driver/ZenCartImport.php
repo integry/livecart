@@ -90,7 +90,7 @@ class ZenCartImport extends OsCommerceImport
 	protected function joinProductFields($id, $code)
 	{
 		return array('LEFT JOIN ' . $this->getTablePrefix() . 'products_description AS product_' . $code . ' ON product_' . $code . '.products_id=' . $this->getTablePrefix() . 'products.products_id AND product_' . $code . '.language_id=' . $id,
-					 'products_url AS products_url, product_' . $code . '.products_name AS name_' . $code . ', ' . 'product_' . $code . '.products_description AS descr_' . $code .
+					 'product_' . $code . '.products_url AS products_url, product_' . $code . '.products_name AS name_' . $code . ', ' . 'product_' . $code . '.products_description AS descr_' . $code .
 
 					 ($this->fieldExists('products_description', 'products_short_description') ? ', product_' . $code . '.products_short_description AS shortDescr_' . $code : '') .
 					 ($this->fieldExists('products_description', 'products_meta_keywords') ? ', product_' . $code . '.products_meta_keywords AS keywords_' . $code : '')

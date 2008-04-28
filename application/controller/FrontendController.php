@@ -58,7 +58,11 @@ abstract class FrontendController extends BaseController
 
 	public function getRequestCurrency()
 	{
-		return Currency::getValidInstanceById($this->request->get('currency', $this->application->getDefaultCurrencyCode()))->getID();
+		$currency = Currency::getValidInstanceById($this->request->get('currency', $this->application->getDefaultCurrencyCode()));
+		if ($currency)
+		{
+			return $currency->getID();
+		}
 	}
 
 	protected function addBreadCrumb($title, $url)

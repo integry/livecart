@@ -110,6 +110,26 @@ class InstallController extends FrontendController
 		{
 			$conn = ActiveRecord::getDBConnection();
 
+			// test if InnoDB tables can be created
+			$table = 'TestInnoDB';
+			$create = 'CREATE TABLE ' . $table . ' (ID INTEGER) ENGINE = INNODB';
+			$drop = 'DROP TABLE ' . $table;
+
+			ActiveRecord::executeUpdate($create);
+			$data = ActiveRecord::getDataBySQL('SHOW TABLE STATUS');
+			ActiveRecord::executeUpdate($drop);
+
+			foreach ($data as $row)
+			{
+				if (strtolower($row['Name']) == strtolower($table))
+				{
+					if (strtolower($row['Engine']) != 'innodb')
+					{
+						throw new SQLException('', $this->translate('_err_innodb_not_available'));
+					}
+				}
+			}
+
 			$dsnFile = ClassLoader::getRealPath('storage.configuration') . '/database.php';
 			if (!file_exists(dirname($dsnFile)))
 			{
@@ -182,6 +202,12 @@ class InstallController extends FrontendController
 
 		// log in
 		SessionUser::setUser($user);
+
+		// set store email
+		$this->config->set('MAIN_EMAIL', $this->request->get('email'));
+		$this->config->set('NOTIFICATION_EMAIL', $this->request->get('email'));
+		$this->config->set('NEWSLETTER_EMAIL', $this->request->get('email'));
+		$this->config->save();
 
 		return new ActionRedirectResponse('install', 'config');
 	}
