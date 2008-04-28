@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database drop script                            #
-# Created on:            2008-04-06 01:30                                #
-# Model version:         Version 2008-04-06 1                            #
+# Created on:            2008-04-28 18:26                                #
+# Model version:         Version 2008-04-28                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -189,6 +189,14 @@ ALTER TABLE ProductPriceRule DROP FOREIGN KEY Product_ProductPriceRule;
 ALTER TABLE ProductPriceRule DROP FOREIGN KEY UserGroup_ProductPriceRule;
 
 ALTER TABLE ProductPresentation DROP FOREIGN KEY Product_ProductPresentation;
+
+ALTER TABLE NewsletterSubscriber DROP FOREIGN KEY User_NewsletterSubscriber;
+
+ALTER TABLE NewsletterSentMessage DROP FOREIGN KEY NewsletterMessage_NewsletterSentMessage;
+
+ALTER TABLE NewsletterSentMessage DROP FOREIGN KEY NewsletterSubscriber_NewsletterSentMessage;
+
+ALTER TABLE NewsletterSentMessage DROP FOREIGN KEY User_NewsletterSentMessage;
 
 # ---------------------------------------------------------------------- #
 # Drop table "Product"                                                   #
@@ -431,8 +439,6 @@ ALTER TABLE Currency ALTER COLUMN isEnabled DROP DEFAULT;
 ALTER TABLE Currency ALTER COLUMN position DROP DEFAULT;
 
 ALTER TABLE Currency ALTER COLUMN decimalSeparator DROP DEFAULT;
-
-ALTER TABLE Currency ALTER COLUMN thousandSeparator DROP DEFAULT;
 
 ALTER TABLE Currency ALTER COLUMN decimalCount DROP DEFAULT;
 
@@ -1025,3 +1031,43 @@ DROP INDEX TUC_SearchLog_1 ON SearchLog;
 # Drop table #
 
 DROP TABLE SearchLog;
+
+# ---------------------------------------------------------------------- #
+# Drop table "NewsletterSubscriber"                                      #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE NewsletterSubscriber ALTER COLUMN isEnabled DROP DEFAULT;
+
+ALTER TABLE NewsletterSubscriber DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE NewsletterSubscriber;
+
+# ---------------------------------------------------------------------- #
+# Drop table "NewsletterMessage"                                         #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE NewsletterMessage ALTER COLUMN status DROP DEFAULT;
+
+ALTER TABLE NewsletterMessage DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE NewsletterMessage;
+
+# ---------------------------------------------------------------------- #
+# Drop table "NewsletterSentMessage"                                     #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE NewsletterSentMessage DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE NewsletterSentMessage;

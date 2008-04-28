@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2008-04-06 01:30                                #
-# Model version:         Version 2008-04-06 1                            #
+# Created on:            2008-04-28 18:26                                #
+# Model version:         Version 2008-04-28                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -323,6 +323,7 @@ CREATE TABLE ProductPrice (
     productID INTEGER UNSIGNED NOT NULL COMMENT 'The Product the price is being defined for',
     currencyID CHAR(3) NOT NULL COMMENT 'Price Currency ID',
     price NUMERIC(12,2) NOT NULL COMMENT 'The actual price value',
+    listPrice NUMERIC(12,2),
     CONSTRAINT PK_ProductPrice PRIMARY KEY (productID, currencyID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -341,7 +342,7 @@ CREATE TABLE Currency (
     pricePrefix TEXT COMMENT 'Used for price formatting. Symbols to place before price price, for example $, etc.',
     priceSuffix TEXT COMMENT 'Used for price formatting. Symbols to place after the price - usually the currency code itself',
     decimalSeparator CHAR(3) DEFAULT '.',
-    thousandSeparator CHAR(3) DEFAULT ' ',
+    thousandSeparator CHAR(3),
     decimalCount INTEGER DEFAULT 2,
     CONSTRAINT PK_Currency PRIMARY KEY (ID)
 )
@@ -1033,6 +1034,47 @@ CREATE INDEX IDX_SearchLog_1 ON SearchLog (keywords);
 CREATE INDEX IDX_SearchLog_2 ON SearchLog (time);
 
 # ---------------------------------------------------------------------- #
+# Add table "NewsletterSubscriber"                                       #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE NewsletterSubscriber (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    userID INTEGER UNSIGNED,
+    isEnabled BOOL DEFAULT 0,
+    email VARCHAR(100),
+    confirmationCode VARCHAR(40),
+    CONSTRAINT PK_NewsletterSubscriber PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "NewsletterMessage"                                          #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE NewsletterMessage (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    status TINYINT NOT NULL DEFAULT 0 COMMENT '0 - not sent 1 - partially sent 2 - sent',
+    time DATETIME,
+    subject VARCHAR(200),
+    text TEXT,
+    CONSTRAINT PK_NewsletterMessage PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "NewsletterSentMessage"                                      #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE NewsletterSentMessage (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    messageID INTEGER UNSIGNED,
+    userID INTEGER UNSIGNED,
+    subscriberID INTEGER UNSIGNED,
+    CONSTRAINT PK_NewsletterSentMessage PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
 # Foreign key constraints                                                #
 # ---------------------------------------------------------------------- #
 
@@ -1299,3 +1341,15 @@ ALTER TABLE ProductPriceRule ADD CONSTRAINT UserGroup_ProductPriceRule
 
 ALTER TABLE ProductPresentation ADD CONSTRAINT Product_ProductPresentation 
     FOREIGN KEY (ID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE NewsletterSubscriber ADD CONSTRAINT User_NewsletterSubscriber 
+    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE NewsletterSentMessage ADD CONSTRAINT NewsletterMessage_NewsletterSentMessage 
+    FOREIGN KEY (messageID) REFERENCES NewsletterMessage (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE NewsletterSentMessage ADD CONSTRAINT NewsletterSubscriber_NewsletterSentMessage 
+    FOREIGN KEY (subscriberID) REFERENCES NewsletterSubscriber (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE NewsletterSentMessage ADD CONSTRAINT User_NewsletterSentMessage 
+    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;
