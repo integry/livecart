@@ -307,6 +307,7 @@ class OsCommerceImport extends LiveCartImportDriver
 		}
 
 		$rec->sku->set($data['products_model']);
+		$rec->URL->set($data['products_url']);
 		$rec->isEnabled->set((int)(1 == $data['products_status']));
 		$rec->shippingWeight->set($data['products_weight']);
 		$rec->stockCount->set($data['products_quantity']);
@@ -328,7 +329,7 @@ class OsCommerceImport extends LiveCartImportDriver
 	protected function joinProductFields($id, $code)
 	{
 		return array('LEFT JOIN ' . $this->getTablePrefix() . 'products_description AS product_' . $code . ' ON ' . $this->getTablePrefix() . 'product_' . $code . '.products_id=' . $this->getTablePrefix() . 'products.products_id AND product_' . $code . '.language_id=' . $id,
-					 'product_' . $code . '.products_name AS name_' . $code . ', ' . 'product_' . $code . '.products_description AS descr_' . $code
+					 'products_url AS products_url, product_' . $code . '.products_name AS name_' . $code . ', ' . 'product_' . $code . '.products_description AS descr_' . $code
 					);
 	}
 
