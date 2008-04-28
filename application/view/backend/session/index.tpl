@@ -10,6 +10,9 @@
 </div>
 
 <div id="loginContainer">
+{if $request.failed}
+	<div class="loginFailed">{t _login_failed}</div>
+{/if}
 <form action="{link controller=backend.session action=doLogin}" method="POST" />
 	<p>
 	   <label for="email">{t _email}:</label>

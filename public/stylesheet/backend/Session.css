@@ -15,7 +15,7 @@ body
 
 #logoContainer
 {
-    text-align: center; 
+    text-align: center;
     padding: 30px;
 }
 
@@ -30,4 +30,11 @@ body
     font-size: smaller;
     display: block;
     margin-bottom: 1em;
+}
+
+.loginFailed
+{
+	color: red;
+	font-size: smaller;
+	margin-bottom: 1em;
 }
