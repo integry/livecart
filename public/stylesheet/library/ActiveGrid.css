@@ -431,14 +431,35 @@
     border: 0;
 }
 
-.activeGridColumns li.export
+.activeGridColumns ul.menu li
+{
+	padding-left: 0;
+	float: left;
+}
+
+.activeGridColumns ul.menu a
+{
+	padding: 0px 0 2px 22px;
+	background-repeat: no-repeat;
+}
+
+.activeGridColumns li.reload a
+{
+	background-image: url('../../image/silk/table_refresh.png');
+}
+
+.activeGridColumns li.export a
 {
 	background-image: url('../../image/silk/table_save.png');
 }
 
-.activeGridColumns li.selectColumns
+.activeGridColumns li.selectColumns a
 {
 	background-image: url('../../image/silk/table_add.png');
+}
+
+.activeGridColumns li.selectColumns
+{
 	margin-right: 0;
 }
 
