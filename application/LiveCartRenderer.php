@@ -51,9 +51,9 @@ class LiveCartRenderer extends SmartyRenderer
 		{
 			if ($theme = self::getApplication()->getTheme())
 			{
-				$this->paths[] = ClassLoader::getRealPath('storage.customize.view.theme.' . $theme . '.');
-				$this->paths[] = ClassLoader::getRealPath('application.view.theme.' . $theme . '.');
+				$this->paths = array_merge($this->paths, $this->getThemePaths($theme));
 			}
+
 			$this->paths[] = ClassLoader::getRealPath('storage.customize.view.');
 			$this->paths[] = ClassLoader::getRealPath('application.view.');
 		}
@@ -101,6 +101,7 @@ class LiveCartRenderer extends SmartyRenderer
 	{
 		$themes = array('default' => 'default', 'barebone' => 'barebone');
 
+		$otherThemes = array();
 		foreach (array(ClassLoader::getRealPath('application.view.theme'), ClassLoader::getRealPath('storage.customize.view.theme')) as $themeDir)
 		{
 			if (file_exists($themeDir))
@@ -109,11 +110,14 @@ class LiveCartRenderer extends SmartyRenderer
 				{
 					if ($dir->isDir() && !$dir->isDot())
 					{
-						$themes[$dir->getFileName()] = $dir->getFileName();
+						$otherThemes[$dir->getFileName()] = $dir->getFileName();
 					}
 				}
 			}
 		}
+
+		ksort($otherThemes);
+		return array_merge($themes, $otherThemes);
 
 		return $themes;
 	}
@@ -193,6 +197,30 @@ class LiveCartRenderer extends SmartyRenderer
 	public function isBlock($objectName)
 	{
 		return '.tpl' != strtolower(substr($objectName, -4));
+	}
+
+	private function getThemePaths($theme)
+	{
+		$paths = array();
+		$paths[] = ClassLoader::getRealPath('storage.customize.view.theme.' . $theme . '.');
+		$paths[] = ClassLoader::getRealPath('application.view.theme.' . $theme . '.');
+
+		$inherit = ClassLoader::getRealPath('application.view.theme.' . $theme . '.inherit') . '.php';
+		if (file_exists($inherit))
+		{
+			$inherited = include $inherit;
+			if (!is_array($inherited))
+			{
+				$inherited = array($inherited);
+			}
+
+			foreach ($inherited as $parent)
+			{
+				$paths = array_merge($paths, $this->getThemePaths($parent));
+			}
+		}
+
+		return $paths;
 	}
 
 	/**

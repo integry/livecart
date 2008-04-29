@@ -71,8 +71,7 @@ div#footer
 
 #footerContent
 {
-	float: left;
-	width: 894px;
+	margin: 0 28px;
 	height: 67px;
 	background-color: #E7F4FA;
 }
@@ -298,7 +297,6 @@ div.box .content
 
 .subCategories.first
 {
-	# margin-left: 10px;
 	# padding-right: 15px;
 }
 
@@ -520,6 +518,12 @@ ul.productList .addToWishList, #productToWishList td.value a, .productGrid .addT
 .productGrid .orderingControls
 {
 	margin-top: 0.5em;
+}
+
+ul.productList .title
+{
+	position: static;
+	margin: 0 0 10px 0;
 }
 
 .productList .title a
@@ -843,12 +847,6 @@ a.proceedToCheckout span span span span
 	color: #BADFF9;
 	font-size: 11px;
 	text-decoration: none;
-}
-
-
-#headerSearchBar
-{
-	width: 950px;
 }
 
 #searchContainer
@@ -1322,6 +1320,18 @@ ul.productList .descr
 	background-repeat: repeat-x;
 	background-position: center bottom;
 }
+
+/*************************
+	Special offers (sale items)
+*************************/
+.box.productList li
+{
+	background-image: url(../image/sep_hor.gif);
+	background-repeat: repeat-x;
+	background-position: center bottom;
+	padding-bottom: 5px;
+}
+
 /*****************************
 	Information menu
 *****************************/
@@ -1425,7 +1435,7 @@ ul.productList .descr
 	text-align: left;
 	line-height: 16px;
 	text-decoration: none;
-	width: 225px;
+/*	width: 225px; */
 	padding-bottom: 5px;
 }
 
@@ -1553,7 +1563,7 @@ ul.productList a.addToCart, .productGrid a.addToCart
 
 table.productGrid
 {
-	width: 680px;
+	/*width: 680px;*/
 	table-layout: fixed;
 }
 

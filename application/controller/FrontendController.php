@@ -396,6 +396,8 @@ abstract class FrontendController extends BaseController
 		$category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
 		$filter = new ProductFilter($category, new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isFeatured'), true)));
 		$filter->includeSubcategories();
+		$filter->setEnabledOnly();
+
 		$selectFilter = $filter->getSelectFilter();
 		$selectFilter->setLimit($this->config->get('SALE_ITEMS_COUNT'));
 		$selectFilter->setOrder(new ARExpressionHandle('RAND()'));
@@ -426,6 +428,8 @@ abstract class FrontendController extends BaseController
 		$category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
 		$filter = new ProductFilter($category, new ARSelectFilter());
 		$filter->includeSubcategories();
+		$filter->setEnabledOnly();
+
 		$selectFilter = $filter->getSelectFilter();
 		$selectFilter->setLimit($this->config->get('NEWEST_ITEMS_COUNT'));
 		$selectFilter->setOrder(new ARFieldHandle('Product', 'dateCreated'), 'DESC');

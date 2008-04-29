@@ -4,9 +4,7 @@
 
 <div class="categoryIndex category_{$category.ID}">
 
-{include file="layout/frontend/header.tpl"}
-{include file="layout/frontend/leftSide.tpl"}
-{include file="layout/frontend/rightSide.tpl"}
+{include file="layout/frontend/layout.tpl"}
 
 <div id="content">
 	<h1>{$news.title_lang}</h1>
@@ -17,8 +15,8 @@
 	{if $news.moreText_lang}
 		<p>{$news.moreText_lang}</p>
 	{/if}
-	
-</div>		
+
+</div>
 {include file="layout/frontend/footer.tpl"}
 
 </div>

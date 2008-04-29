@@ -2,16 +2,16 @@
 
 <div class="userRegister">
 
-{include file="layout/frontend/header.tpl"}
-{* include file="layout/frontend/leftSide.tpl" *}
-{* include file="layout/frontend/rightSide.tpl" *}
+{include file="layout/frontend/layout.tpl"}
 
-<div id="content" class="left right">
-	
+<div id="content">
+
 	<h1>{t _user_registration}</h1>
-		
-	{include file="user/regForm.tpl"}
-	
+
+	<fieldset class="container">
+		{include file="user/regForm.tpl"}
+	</fieldset>
+
 </div>
 
 {include file="layout/frontend/footer.tpl"}

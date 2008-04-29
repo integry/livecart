@@ -164,12 +164,12 @@ div.box .content
 
 .subCategories
 {
-	margin-left: 30px;
+	margin-left: 0;
 }
 
 .subCategories.first
 {
-	# margin-left: 15px;
+	# margin-left: 0;
 }
 
 .subCategories td.details.verticalSep
@@ -208,7 +208,13 @@ div.box .content
 	padding-left: 15px;
 	vertical-align: middle;
 	height: 200px;
-	width: 252px;
+	width: 257px;
+}
+
+.subCategories td.subCatImage
+{
+	padding-left: 10px;
+	padding-right: 15px;
 }
 
 .noSubCats .subCatContainer

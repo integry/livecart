@@ -556,7 +556,7 @@ class Shipment extends ActiveRecordModel
 		// no taxes are calculated for downloadable products
 		if (!$this->isShippable())
 		{
-			return new ARSet();
+			//return new ARSet();
 		}
 
 		if (!$this->taxes)

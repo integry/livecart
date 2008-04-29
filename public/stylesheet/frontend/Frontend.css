@@ -170,8 +170,9 @@ div.confirmationMsg div
 #rightSide
 {
 	float: right;
-	width: 190px;
+	width: 210px;
 	display: none;
+	padding-right: 10px;
 }
 
 #clearFooter {
@@ -499,7 +500,7 @@ tr.even
 #language select
 {
 	width: auto;
-	font-size: smaller;
+	font-size: 0.9em;
 	margin: 0;
 }
 
@@ -600,14 +601,13 @@ tr.separator div
 {
 	border-bottom: 1px solid #EEEEEE;
 	height: 5px;
-	width: 282px;
 }
 
 .subCategories
 {
     margin-top: 10px;
-    margin-left: 20px;
-    width: 45%;
+    margin-left: 5px;
+    width: 49%;
     float: left;
 }
 
@@ -771,7 +771,8 @@ a.layoutSetList, a.layoutSetGrid
 {
 	background-repeat: no-repeat;
 	background-position: left 1px;
-	padding-left: 20px;
+	padding: 1px 0 1px 20px;
+	font-size: smaller;
 }
 
 a.layoutSetList
@@ -847,8 +848,11 @@ ul.productList li
 
 ul.productList .title
 {
-	display: block;
-	font-size: 120%;
+	display:block;
+	font-size:120%;
+	margin-top:10px;
+	position:relative;
+	top:-20px;
 }
 
 .productGrid .title
@@ -1223,11 +1227,6 @@ div.checkout a
 /*****************************
 	Shopping cart
 *****************************/
-#cartItems h2
-{
-    margin: 0;
-}
-
 #cartStats
 {
  	padding-top: 10px;
@@ -1742,7 +1741,7 @@ div.addressControl
     border: 1px solid #DDDDDD;
     background-color: #FAFAFA;
     float: left;
-    width: 700px;
+    width: 96%;
     padding: 10px;
     margin-bottom: 20px;
 }
@@ -2300,15 +2299,40 @@ input.date
 /*************************
 	Special offers (sale items)
 *************************/
-.saleItems ul, .newestProducts ul
+.box.productList ul
 {
 	list-style-type: none;
 	padding-left: 0;
+	margin-top: 0.5em;
 }
 
-.saleItems .image
+.box.productList .image
 {
 	float: left;
+	width: 45px;
+	text-align: center;
+}
+
+.box.productList .productInfo
+{
+	float: left;
+	width: 110px;
+	font-size: 0.85em;
+	overflow: hidden;
+}
+
+.box.productList .pricingInfo .price
+{
+	position: static;
+	float: left;
+	width: 55px;
+	font-size: 1em;
+	text-align: center;
+}
+
+.box.productList li
+{
+	margin-bottom: 7px;
 }
 
 /*************************

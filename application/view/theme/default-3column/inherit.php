@@ -1,0 +1,1 @@
+<?php return array('barebone-3column', 'default'); ?>

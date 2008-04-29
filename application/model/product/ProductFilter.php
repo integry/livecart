@@ -109,6 +109,11 @@ class ProductFilter
 		$this->selectFilter = $this->category->getProductsFilter($this);
 	}
 
+	public function setEnabledOnly()
+	{
+		$this->selectFilter->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), true));
+	}
+
 	public function isSubcategories()
 	{
 		return $this->includeSubcategories;

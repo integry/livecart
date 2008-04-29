@@ -2,9 +2,7 @@
 {loadJs form=true}
 <div class="userViewOrder">
 
-{include file="layout/frontend/header.tpl"}
-{* include file="layout/frontend/leftSide.tpl" *}
-{* include file="layout/frontend/rightSide.tpl" *}
+{include file="user/layout.tpl"}
 
 <div id="content" class="left right">
 
@@ -53,7 +51,7 @@
 					<h2>{t _ordered_products}</h2>
 				{/if}
 
-				{include file="user/shipmentEntry.tpl}
+				{include file="user/shipmentEntry.tpl"}
 
 			{/if}
 

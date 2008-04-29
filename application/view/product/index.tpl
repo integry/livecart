@@ -12,6 +12,8 @@
 
 <div id="content" class="left">
 
+	<fieldset class="container">
+
 	<div class="returnToCategory">
 		<a href="{link route=$catRoute}" class="returnToCategory">{$product.Category.name_lang}</a>
 	</div>
@@ -238,6 +240,8 @@
 	{if $reviews}
 	<h2>{t _reviews}</h2>
 	{/if}
+
+	</fieldset>
 
 </div>
 

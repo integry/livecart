@@ -30,6 +30,11 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 	$includedStylesheetTimestamp = $smarty->_smarty_vars["INCLUDED_STYLESHEET_TIMESTAMP"];
 	$includedStylesheetFiles = $smarty->_smarty_vars["INCLUDED_STYLESHEET_FILES"];
 
+	if ($includedStylesheetFiles)
+	{
+		uksort($includedStylesheetFiles, 'strnatcasecmp');
+	}
+
 	if(isset($params['glue']) && ($params['glue'] == true) && !$smarty->getApplication()->isDevMode() && !$smarty->getApplication()->isTranslationMode() && !$smarty->getApplication()->isCustomizationMode())
 	{
 		$request = $smarty->getApplication()->getRequest();

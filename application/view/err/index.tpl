@@ -1,5 +1,4 @@
-{include file="layout/frontend/header.tpl"}
-{include file="layout/frontend/leftSide.tpl"}
+{include file="layout/frontend/layout.tpl"}
 
 <div id="content">
 {$description} [Error Code {$id}]

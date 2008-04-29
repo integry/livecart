@@ -3,15 +3,13 @@
 
 <div class="userRemindPassword">
 
-{include file="layout/frontend/header.tpl"}
-{* include file="layout/frontend/leftSide.tpl" *}
-{* include file="layout/frontend/rightSide.tpl" *}
+{include file="layout/frontend/layout.tpl"}
 
-<div id="content" class="left right">
+<div id="content">
 
 	<h1>{t _remind_pass}</h1>
 
-	{form action="controller=user action=doRemindPassword" method="post" handle=$form}
+	{form action="controller=user action=doRemindPassword" method="post" style="float: left" handle=$form}
 		<p>
 			{err for="email"}
 				{{label {t _your_email}: }}

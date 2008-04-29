@@ -3,6 +3,7 @@
 
 <div id="footer">
     <div id="footerLeftCorner"></div>
+	<div id="footerRightCorner"></div>
 
 	<div id="footerContent">
 		{block INFORMATION}
@@ -16,8 +17,6 @@
 
 		</div>
 	</div>
-
-    <div id="footerRightCorner"></div>
 
 	<div class="clear"></div>
 

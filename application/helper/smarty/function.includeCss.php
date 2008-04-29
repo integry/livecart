@@ -43,9 +43,13 @@ function smarty_function_includeCss($params, LiveCartSmarty $smarty)
 			$smarty->_smarty_vars['INCLUDED_STYLESHEET_TIMESTAMP'] = $fileMTime;
 		}
 
-		if(isset($params['front']))
+		if (isset($params['front']))
 		{
 			array_unshift($includedStylesheetFiles, $filePath);
+		}
+		else if (isset($params['last']))
+		{
+			$includedStylesheetFiles['x' . (count($includedStylesheetFiles) + 200)] = $filePath;
 		}
 		else
 		{

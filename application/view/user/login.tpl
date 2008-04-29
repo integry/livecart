@@ -2,16 +2,15 @@
 
 <div class="userLogin">
 
-{include file="layout/frontend/header.tpl"}
-{* include file="layout/frontend/leftSide.tpl" *}
-{* include file="layout/frontend/rightSide.tpl" *}
+{include file="layout/frontend/layout.tpl"}
 
-<div id="content" class="left right">
+<div id="content">
 
 	<h1>{t _login}</h1>
 
 	<h2>{t _returning}</h2>
 
+	<fieldset class="container">
 	<p>
 		{if $failed}
 			<div class="errorMsg failed">
@@ -32,6 +31,8 @@
 		{t _not_registered}
 
 	{include file="user/regForm.tpl"}
+
+	</fieldset>
 
 </div>
 

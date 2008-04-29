@@ -1,10 +1,6 @@
 {pageTitle}{t _invoice} #{$order.ID}{/pageTitle}
 <div class="userOrderInvoice">
 
-{* include file="layout/frontend/header.tpl" *}
-{* include file="layout/frontend/leftSide.tpl" *}
-{* include file="layout/frontend/rightSide.tpl" *}
-
 {defun name="address"}
 {if $address}
 	<p>

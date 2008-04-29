@@ -3,7 +3,7 @@
 	{if $product.DefaultImage.paths.1}
 		{img src=$product.DefaultImage.paths.1 alt=$product.name_lang|escape}
 	{else}
-		{img src=image/missing_small.jpg alt=$product.name_lang|escape}
+		{img src=image/missing_mini.jpg alt=$product.name_lang|escape}
 	{/if}
 	</a>
 </div>

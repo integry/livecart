@@ -4,9 +4,7 @@
 
 <div class="categoryIndex category_{$category.ID}">
 
-{include file="layout/frontend/header.tpl"}
-{include file="layout/frontend/leftSide.tpl"}
-{include file="layout/frontend/rightSide.tpl"}
+{include file="layout/frontend/layout.tpl"}
 
 <div id="content">
 	<h1>{t _news}</h1>
@@ -16,10 +14,10 @@
 			<li class="newsEntry">
 				{include file="news/newsEntry.tpl" entry=$entry}
 			</li>
-		{/foreach}	
+		{/foreach}
 	</ul>
 
-</div>		
+</div>
 {include file="layout/frontend/footer.tpl"}
 
 </div>

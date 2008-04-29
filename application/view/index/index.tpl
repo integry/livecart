@@ -3,9 +3,7 @@
 
 <div class="index">
 
-{include file="layout/frontend/header.tpl"}
-{include file="layout/frontend/leftSide.tpl"}
-{include file="layout/frontend/rightSide.tpl"}
+{include file="layout/frontend/layout.tpl"}
 
 <div id="content">
 
@@ -26,6 +24,16 @@
 			{/if}
 		{/foreach}
 		</ul>
+	{/if}
+
+	{if $subCatFeatured}
+		<h2>{t _featured_products}</h2>
+
+		{if 'GRID' == $layout}
+			{include file="category/productGrid.tpl" products=$subCatFeatured}
+		{else}
+			{include file="category/productList.tpl" products=$subCatFeatured}
+		{/if}
 	{/if}
 
 </div>

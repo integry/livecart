@@ -12,8 +12,6 @@
 		{/if}
 	</div>
 
-	<div class="clear"></div>
-
 	{*
 	<p id="cartStats">
 		{maketext text=_item_count params=$cart.basketCount}
