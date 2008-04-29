@@ -27,6 +27,8 @@ class Transaction extends ActiveRecordModel
 	const METHOD_CREDITCARD = 1;
 	const METHOD_ONLINE = 2;
 
+	const LAST_DIGIT_COUNT = 5;
+
 	/**
 	 *  Instance of payment handler object
 	 *  @TransactionPayment
@@ -62,7 +64,7 @@ class Transaction extends ActiveRecordModel
 
 		$schema->registerField(new ARField("ccExpiryYear", ARInteger::instance()));
 		$schema->registerField(new ARField("ccExpiryMonth", ARInteger::instance()));
-		$schema->registerField(new ARField("ccLastDigits", ARInteger::instance()));
+		$schema->registerField(new ARField("ccLastDigits", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("ccType", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("ccName", ARVarchar::instance(100)));
 		$schema->registerField(new ARField("comment", ARText::instance()));
@@ -374,8 +376,13 @@ class Transaction extends ActiveRecordModel
 			$this->ccType->set($this->handler->getCardType());
 			$this->ccName->set($this->handler->getDetails()->getName());
 
-			// only the last 5 digits of credit card number are stored
-			$this->ccLastDigits->set(substr($this->handler->getCardNumber(), -5));
+			$this->ccLastDigits->set($this->handler->getCardNumber());
+
+			// only the last 5 digits of credit card number are normally stored
+			if (!$this->handler->isCardNumberStored())
+			{
+				$this->truncateCcNumber();
+			}
 		}
 
 		if ($this->handler)
@@ -384,6 +391,11 @@ class Transaction extends ActiveRecordModel
 		}
 
 		return parent::insert();
+	}
+
+	public function truncateCcNumber()
+	{
+		$this->ccLastDigits->set(substr($this->ccLastDigits->get(), -1 * self::LAST_DIGIT_COUNT));
 	}
 
 	/*####################  Data array transformation ####################*/
@@ -413,6 +425,7 @@ class Transaction extends ActiveRecordModel
 		$array['isVoidable'] = $this->isVoidable();
 		$array['isCapturable'] = $this->isCapturable();
 		$array['isMultiCapture'] = $this->isMultiCapture();
+		$array['hasFullNumber'] = strlen($this->ccLastDigits->get()) > self::LAST_DIGIT_COUNT;
 
 		return $array;
 	}

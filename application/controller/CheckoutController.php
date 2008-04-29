@@ -893,7 +893,10 @@ class CheckoutController extends FrontendController
 	private function buildCreditCardForm()
 	{
 		ClassLoader::import("framework.request.validator.Form");
-		return new Form($this->buildCreditCardValidator());
+		$form = new Form($this->buildCreditCardValidator());
+		$form->set('ccExpiryMonth', date('n'));
+		$form->set('ccExpiryYear', date('Y'));
+		return $form;
 	}
 
 	private function buildCreditCardValidator()

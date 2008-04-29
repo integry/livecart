@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2008-04-28 18:26                                #
-# Model version:         Version 2008-04-28                              #
+# Created on:            2008-04-29 23:57                                #
+# Model version:         Version 2008-04-29 1                            #
 # ---------------------------------------------------------------------- #
 
 
@@ -611,7 +611,7 @@ CREATE TABLE Transaction (
     isVoided BOOL NOT NULL,
     ccExpiryYear INTEGER COMMENT 'Credit card expiration year',
     ccExpiryMonth TINYINT COMMENT 'Credit card expiration month',
-    ccLastDigits CHAR(5) COMMENT 'Last 4 digits of credit card number',
+    ccLastDigits CHAR(80) COMMENT 'Last 4 digits of credit card number',
     ccType VARCHAR(40),
     ccName VARCHAR(100),
     comment TEXT,

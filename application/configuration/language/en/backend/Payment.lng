@@ -31,6 +31,7 @@ _not_captured=Amount not captured
 _amount_due=Amount due
 
 # Transaction details
+_delete_cc_num=Delete card number from database
 _type_sale=Sale
 _type_authorization=Authorization
 _type_capture=Capture
