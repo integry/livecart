@@ -399,6 +399,11 @@ class CategoryController extends FrontendController
 			$index = array();
 			foreach ($subCategories as $key => $cat)
 			{
+				if (Category::ROOT_ID == $cat['ID'])
+				{
+					continue;
+				}
+
 				$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $cat['lft']);
 				$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $cat['rgt']));
 				$case->addCondition($cond, new ARExpressionHandle($cat['ID']));

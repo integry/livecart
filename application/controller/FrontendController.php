@@ -109,6 +109,7 @@ abstract class FrontendController extends BaseController
 	{
 		$returnRoute = $this->router->getRequestedRoute();
 		$returnRoute = $this->router->createUrlFromRoute($returnRoute, true);
+		$returnRoute = $this->router->addQueryParams($returnRoute);
 		$returnRoute = $this->router->setUrlQueryParam($returnRoute, 'currency', '_curr_');
 
 		$current = $this->getRequestCurrency();
@@ -158,7 +159,7 @@ abstract class FrontendController extends BaseController
 					$returnRoute = '';
 				}
 
-				$languages[$key]['url'] = $this->router->createUrlFromRoute($lang['ID'] . '/' . $returnRoute, true);
+				$languages[$key]['url'] = $this->router->addQueryParams($this->router->createUrlFromRoute($lang['ID'] . '/' . $returnRoute, true));
 			}
 		}
 
