@@ -32,6 +32,17 @@ class RolesController extends StoreManagementController
 			$filter->setOrder(new ARExpressionHandle('(Role.name LIKE "' . $roleName . '%")'), 'DESC');
 		}
 
+		// disabled roles
+		$disable = ClassLoader::getRealPath('storage.configuration.DisabledRoles') . '.php';
+		if (file_exists($disable))
+		{
+			$disabledRoles = include $disable;
+			foreach ($disabledRoles as $disabled)
+			{
+				$filter->mergeCondition(new NotEqualsCond(new ARFieldHandle('Role', 'name'), $disabled));
+			}
+		}
+
 		$menu = new MenuLoader();
 		$menuItems = array_shift($menu->getAllHierarchy());
 		$menuItems = $menuItems['items'];
@@ -115,18 +126,60 @@ class RolesController extends StoreManagementController
 		$userGroupID = (int)$this->request->get('id');
 		$userGroup = UserGroup::getInstanceByID($userGroupID, UserGroup::LOAD_DATA);
 
+		// disabled roles
+		$disable = ClassLoader::getRealPath('storage.configuration.DisabledRoles') . '.php';
+		if (file_exists($disable))
+		{
+			$disabledRoles = include $disable;
+			foreach ($disabledRoles as $disabled)
+			{
+				$c = new EqualsCond(new ARFieldHandle('Role', 'name'), $disabled);
+
+				if (!isset($cond))
+				{
+					$cond = $c;
+				}
+				else
+				{
+					$cond->addOr($c);
+				}
+			}
+
+			if (isset($cond))
+			{
+				$disabled = array();
+				foreach (ActiveRecordModel::getRecordSetArray('Role', new ARSelectFilter($cond)) as $role)
+				{
+					$disabled[$role['ID']] = true;
+				}
+			}
+		}
+
+		if (!isset($disabled))
+		{
+			$disabled = array();
+		}
+
 		$validator = $this->createRolesFormValidator($userGroup);
 		if($validator->isValid())
 		{
 			foreach(explode(',', $this->request->get('checked')) as $roleID)
 			{
-				if(preg_match('/smart/', $roleID)) continue;
+				if (preg_match('/smart/', $roleID) || isset($disabled[$roleID]))
+				{
+					continue;
+				}
+
 				$userGroup->applyRole(Role::getInstanceByID((int)$roleID));
 			}
 
 			foreach(explode(',', $this->request->get('unchecked')) as $roleID)
 			{
-				if(preg_match('/smart/', $roleID)) continue;
+				if (preg_match('/smart/', $roleID) || isset($disabled[$roleID]))
+				{
+					continue;
+				}
+
 				$userGroup->cancelRole(Role::getInstanceByID((int)$roleID));
 			}
 
