@@ -1559,6 +1559,7 @@ ul.productList a.addToCart, .productGrid a.addToCart
     padding-left: 0;
     text-indent: 27px;
     float: right;
+    font-size: 1em;
 }
 
 table.productGrid

@@ -770,9 +770,11 @@ li.moreSubCats
 a.layoutSetList, a.layoutSetGrid
 {
 	background-repeat: no-repeat;
-	background-position: left 1px;
-	padding: 1px 0 1px 20px;
+	background-position: left 0px;
+	padding: 0 0 0 20px;
 	font-size: smaller;
+	padding-bottom: 2px;
+	line-height: 18px;
 }
 
 a.layoutSetList
@@ -816,7 +818,7 @@ table.productGrid
 
 * html .resultStats
 {
-	width: 710px;
+/*	width: 710px; */
 }
 
 .productGrid td
@@ -899,6 +901,7 @@ ul.productList a.addToCart, .productGrid a.addToCart
     background-repeat: no-repeat;
     background-position: center left;
     float: right;
+    font-size: smaller;
 }
 
 .pricingInfo span.price

@@ -175,7 +175,7 @@ class CategoryController extends FrontendController
 
 		// get subcategory featured products
 		$subCatFeatured = array();
-		if (($subCategories && !$products) || $this->category->isRoot())
+		if (($subCategories && !$products) || ($this instanceof IndexController))
 		{
 			$subCatFeatured = $this->getSubCatFeaturedProducts();
 		}

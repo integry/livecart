@@ -735,6 +735,20 @@ Backend.Product.Prices.prototype =
 		this.__nodes__($(parent));
 		this.__bind__();
 
+		this.nodes.form.down('fieldset.pricing').getElementsByClassName('price').each(function(price)
+		{
+			var listPrice = price.form.elements.namedItem('listPrice_' + price.name.substr(6));
+
+			price.onchange = function()
+			{
+				listPrice.disabled = this.value.length == 0;
+			}
+
+			price.onkeyup = price.onchange;
+
+			price.onchange();
+		});
+
 		Form.State.backup(this.nodes.form);
 	},
 

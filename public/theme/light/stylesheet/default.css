@@ -246,15 +246,14 @@ ul.productList .pricingInfo, .productGrid .pricingInfo
 {
 	float: right;
 	background-color: #FFF3FC;
+
 	line-height: 2em;
 	margin-top: -5px;
 	margin-bottom: 5px;
-	width: 220px;
+
 	background-image: url(../image/cornerTopRight.gif);
 	background-position: right top;
 	background-repeat: no-repeat;
-	#padding-top: 5px;
-	#background-position: right 5px;
 }
 
 .productGrid .pricingInfo
@@ -286,7 +285,8 @@ ul.productList .pricingInfo, .productGrid .pricingInfo
 
 .pricingInfo span.listPrice
 {
-	display: inline;
+	display: block;
+	line-height: 1em;
 }
 
 .pricingInfo span.price
@@ -295,9 +295,6 @@ ul.productList .pricingInfo, .productGrid .pricingInfo
 	display: inline !important;
 	padding-left: 0.5em;
 	float: left;
-	background-image: url(../image/cornerTopLeft.gif);
-	background-position: left top;
-	background-repeat: no-repeat;
 }
 
 .pricingInfo div
@@ -305,13 +302,22 @@ ul.productList .pricingInfo, .productGrid .pricingInfo
 	background-image: url(../image/cornerBottomLeft.gif);
 	background-position: left bottom;
 	background-repeat: no-repeat;
-
+	border-top: 1px solid white;
 }
 
 .pricingInfo div div
 {
 	background-image: url(../image/cornerBottomRight.gif);
 	background-position: right bottom;
+	border: 0;
+}
+
+.pricingInfo div div div
+{
+	background-image: url(../image/cornerTopLeft.gif);
+	background-position: left top;
+	width: auto;
+	border-top: 1px solid white;
 }
 
 .pricingInfo a.addToCart

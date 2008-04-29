@@ -13,7 +13,7 @@
 </div>
 
 
-<div class="pricingInfo"><div><div>
+<div class="pricingInfo"><div><div><div>
 	{if $product.isAvailable && 'ENABLE_CART'|config}
 		<a href="{link controller=order action=addToCart id=$product.ID returnPath=true}" class="addToCart">{t _add_to_cart}</a>
 	{/if}
@@ -27,8 +27,8 @@
 		{/if}
 	</span>
 	{/if}
-	<br class="clear" />
-</div></div></div>
+	<div class="clear"></div>
+</div></div></div></div>
 
 <div class="order">
 	<div class="orderingControls">
