@@ -826,6 +826,8 @@ class LiveCart extends Application
 			$details->amount->set($newAmount);
 		}
 
+		$inst->setApplication($this);
+
 		return $inst;
 	}
 

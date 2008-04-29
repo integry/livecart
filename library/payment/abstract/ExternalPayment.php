@@ -5,7 +5,7 @@ include_once(dirname(__file__) . '/OnlinePayment.php');
 /**
  *
  * @package library.payment.abstract
- * @author Integry Systems 
+ * @author Integry Systems
  */
 abstract class ExternalPayment extends OnlinePayment
 {
@@ -13,12 +13,12 @@ abstract class ExternalPayment extends OnlinePayment
 	 *	Return payment page URL
 	 */
 	abstract public function getUrl();
-	
+
 	/**
 	 *	Payment confirmation post-back
 	 */
 	abstract public function notify($requestArray);
-	
+
 	/**
 	 *	Extract order ID from payment gateway response data
 	 */
@@ -48,6 +48,11 @@ abstract class ExternalPayment extends OnlinePayment
 	public function setReturnUrl($url)
 	{
 		$this->returnUrl = $url;
+	}
+
+	public function setCancelUrl($url)
+	{
+		$this->cancelUrl = $url;
 	}
 
 	public function setSiteUrl($url)
