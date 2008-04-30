@@ -1,3 +1,4 @@
+{pageTitle}{'STORE_NAME'|config}{/pageTitle}
 {assign var="metaDescription" value='INDEX_META_DESCRIPTION'|config}
 {assign var="metaKeywords" value='INDEX_META_KEYWORDS'|config}
 
