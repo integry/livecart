@@ -1,0 +1,92 @@
+Major additions and improvements:
+* Newsletters - send bulk e-mail messages to your customers and newsletter subscribers
+* CSS file editor - edit CSS stylesheet files directly from admin backend
+* Added 3-column layouts for all design themes
+
+New translations:
+* Italian
+
+New payment options:
+* Added ability to process credit card payments offline
+
+Installer improvements:
+* Installer verifies that MySQL InnoDB storage engine is enabled and working to avoid creating MyISAM tables
+* Store e-mail addresses are automatically set in store configuration on installation
+
+Frontend improvements:
+* It is now possible to enter product "list prices". These are useful if you want to show how much cheaper your products are in comparison to competing offers or manufacturers suggested retail price, or with your own old price for items that are on special sale.
+* Added featured and newest product side blocks
+* Set meta description and keywords for the home page from backend Configuration panel
+* Made it easier to change the layout for all user area and checkout pages at once by adding container template file for including the main page blocks
+* Added ability to turn off shopping cart functionality
+* Ability to hide product prices in frontend by changing configuration settings
+
+Backend improvements:
+* Display an information message after an unsuccessful login attempt
+* WYSIWYG text editors in backend now have the ability to change text font and colors, create tables, also added a contextual popup menu
+* Ability to add and remove custom template files
+* Added Reload buttons to all data grids in backend to allow refreshing data without reloading the entire browser page
+* Backend sessions are no longer automatically terminated on inactivity
+* New products are now enabled by default when adding them from backend
+* Added ability to completely disable certain user permissions, so that they are not visible anywhere in the backend and cannot be enabled from backend, even when having the rights to change all user group permissions. This is useful to limit administrator access to certain features, while still allowing them to change access permissions for other user groups.
+* Improved the displaying of the action completion confirmation messages in backend and page content is no longer scrolled just to show the message
+* Moving a mouse cursor over data grid cells, which values are too long to fit in the cell, the full cell content is displayed in a popup hint
+* Ability to export product main image URLs to CSV file
+
+System improvements:
+* Define default tax rates that are automatically included in catalog prices. This is useful for countries that use VAT tax (all EU countries, for example). It is still possible to override the default tax rate for different shipping destinations (for example, do not charge VAT for orders that come from non-EU countries).
+* All database select queries are run as prepared statements to avoid possible SQL injection attacks
+* More effective page block rendering - they're being processed only when their inclusion is requested from view template, so pages without or with less side menu blocks should render slightly faster than before
+* Added ability to easily create new design themes that are based on (inherit) existing themes without copying the original theme code. Besides, one derived theme can inherit the code from multiple parent themes at once.
+* It is now possible to configure decimal and thousands separators as well as decimal number count for price formatting in every currency
+* Configure different domain for secure pages (for example, secure.mystore.com)
+* System e-mail message formatting improvements
+
+System fixes:
+* When Apache's AddDefaultCharset directive was in use, the page encoding was not UTF-8
+* Fixed a minor bug with View plugin loading
+* Controller initialization plugins now work for backend controllers as well
+* Tax amounts are now displayed in order confirmation emails
+
+Frontend fixes:
+* Currency and language couldn't be changed from search result pages
+* When there were search or filter results in both parent category and in exactly one of it's subcategories, the user was automatically redirected to the subcategory
+* Some language strings were hardcoded in frontend template files and therefore weren't translatable to other languages
+* Trying to access a non-existing page now returns an error-code 404 error page (page not found), instead of error 500 (internal server error)
+* Fixed minor issues with client side form validation
+* Live translation didn't work with some setups
+* Multi-select product attribute values were displayed twice in the product detail page
+
+Backend fixes:
+* Category product counts were not updated after deleting products
+* It was not possible to edit two static pages or news entries without reloading the backend page between edits
+* It was not possible to add new currencies if all the currencies were removed
+* "Done editing product" command often did not work
+* Saving product attributes made PHP process to crash on servers that run PHP in CGI mode
+* Main product and category images could not be changed without deleting the old main image first
+* When adding an offline payment to order, it only appeared in payment list after reloading the order payments tab
+* Backend template files are now editable as well
+* Custom template files are now displayed in template editor file tree
+* HTML/JavaScript code is properly escaped in textarea and WYSIWYG editors, so a more complex code in editors no longer break page layout
+* Backend now works in FireFox 3
+
+Database migration tool improvements and fixes:
+* It now recognizes tables with arbitrary name prefixes. Until now it was only possible to import from databases that had the default table name prefixes.
+* It has been made more stable. In the event of an unsuccessful import, the LiveCart database is returned to it's previous state.
+* OsCommerce/ZenCart migration now works when there are orphaned records in the database (for example, products assigned to non-existing category)
+* Product URLs are imported as well when migrating database from OsCommerce or ZenCart
+* Database migration now works for earlier ZenCart versions as well.
+
+CSV file importer improvements and fixes:
+* Fixed: CSV importer didn't process the last record in the CSV file
+* Fixed: The first digit of the price was dropped when importing products from CSV file
+* Fixed: PHP warning messages were displayed if there were less than 10 records in the importable CSV file
+* Ability to import category structure only from CSV file (without importing products)
+* Import product image files from URL or by local file names
+* Added ability to update existing product data
+
+Live Customization improvements and fixes:
+* Fixed: theme specific template files weren't editable from Live Customization mode
+* Fixed: default theme was not rendered correctly in Live Customization mode
+* Improved template selector in Live Customization mode - now only the top level template file is outlined when moving mouse over page blocks, without outlinining the parent templates, which makes the interface much cleaner.
+* Template code editor is now opened also on mouse double click on editable page area

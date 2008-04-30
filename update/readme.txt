@@ -16,6 +16,6 @@ II.  Applying the update
 
 If the update was successful, you should receive a confirmation message.
 
-If you encounter any problems when updating your LiveCart installation please contact the support team (http://support.turn-k.net).
+If you encounter any problems when updating your LiveCart installation please contact the support team (http://support.livecart.com).
 
 For an updated version of these instructions, please visit http://doc.livecart.com/install/update

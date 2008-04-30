@@ -265,7 +265,7 @@ Backend.Newsletter.saveHandler.prototype =
 			for (var k = 0; k < portions.length; k++)
 			{
 				response = eval('(' + decode64(portions[k]) + ')');
-			console.log(response);
+
 				// progress
 				if (response.progress != undefined)
 				{

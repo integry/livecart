@@ -241,7 +241,7 @@ Backend.TemplateHandler.prototype =
 		}
 
 		var tpl = originalRequest.responseData.template;
-		console.log(originalRequest.responseData);
+
 		if (tpl.isCustomFile && ("true" == originalRequest.responseData.isNew))
 		{
 			var branch = {};
