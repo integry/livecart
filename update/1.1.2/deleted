@@ -1,0 +1,14 @@
+application/helper/smarty/prefilter.templateLocator.php
+public/javascript/library/editarea/plugins/syntax_selection/langs/de.js
+public/javascript/library/editarea/plugins/syntax_selection/langs/dk.js
+public/javascript/library/editarea/plugins/syntax_selection/langs/en.js
+public/javascript/library/editarea/plugins/syntax_selection/langs/fr.js
+public/javascript/library/editarea/plugins/syntax_selection/langs/hr.js
+public/javascript/library/editarea/plugins/syntax_selection/langs/it.js
+public/javascript/library/editarea/plugins/syntax_selection/langs/ja.js
+public/javascript/library/editarea/plugins/syntax_selection/langs/nl.js
+public/javascript/library/editarea/plugins/syntax_selection/langs/pl.js
+public/javascript/library/editarea/plugins/syntax_selection/langs/pt.js
+public/javascript/library/editarea/plugins/syntax_selection/syntax_selection.js
+public/javascript/library/tinymce/tiny_mce_src.js
+public/javascript/library/tinymce/utils/mclayer.js
