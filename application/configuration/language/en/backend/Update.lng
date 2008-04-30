@@ -5,3 +5,5 @@ _current=Current Version
 
 _newer_available=A newer version of LiveCart is available. <a href="http://livecart.com/user">Download updates here</a>
 _up_to_date=Your LiveCart installation is using the latest version and is up to date.
+
+_update_successful=LiveCart update completed successfully

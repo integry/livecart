@@ -21,14 +21,14 @@ class UpdateController extends StoreManagementController
 		$out = "GET /version HTTP/1.1\r\n";
 		$out .= "Host: update.livecart.com\r\n";
 		$out .= "Connection: Close\r\n\r\n";
-	
+
 		fwrite($f, $out);
 		$res = '';
-		while (!feof($f)) 
+		while (!feof($f))
 		{
 			$res .= fgets($f, 128);
 		}
-		
+
 		$res = str_replace("\r", '', $res);
 		list($headers, $version) = explode("\n\n", $res);
 	$current = $this->getCurrentVersion();
@@ -38,8 +38,8 @@ class UpdateController extends StoreManagementController
 		$response->set('newest', $version);
 		$response->set('needUpdate', version_compare($current, $version, '<'));
 		return $response;
-	}	
-	
+	}
+
 	/**
 	 *  Handles LiveCart update process
 	 */
@@ -50,10 +50,10 @@ class UpdateController extends StoreManagementController
 		{
 			return new RawResponse('Update directory not found');
 		}
-		
+
 		$progress = array();
 		$errors = array();
-				
+
 		// load SQL dump file
 		$sql = $dir . '/update.sql';
 		if (file_exists($sql))
@@ -68,7 +68,7 @@ class UpdateController extends StoreManagementController
 				$errors['sql'] = $e->getMessage();
 			}
 		}
-		
+
 		// execute custom update code
 		$code = $dir . '/custom.php';
 		if (file_exists($code))
@@ -82,19 +82,19 @@ class UpdateController extends StoreManagementController
 			{
 				$progress['code'] = true;
 			}
-			
+
 			ob_end_clean();
 		}
-		
+
 		$response = new ActionResponse();
 		$response->set('progress', $progress);
 		$response->set('errors', $errors);
 		return $response;
 	}
-	
+
 	private function getCurrentVersion()
 	{
-		return file_get_contents(ClassLoader::getRealPath('.') . '/.version');
+		return trim(file_get_contents(ClassLoader::getRealPath('.') . '/.version'));
 	}
 }
 
