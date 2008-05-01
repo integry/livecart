@@ -12,9 +12,12 @@
  */
 function smarty_function_renderBlock($params, LiveCartSmarty $smarty)
 {
+	//var_dump($smarty);
+	if ($smarty->get_template_vars($params['block']))
+	{
+		var_dump($smarty->get_template_vars($params['block']));
+	}
 	return $smarty->getApplication()->getBlockContent($params['block']);
-
-
 }
 
 ?>

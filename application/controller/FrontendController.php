@@ -259,43 +259,70 @@ abstract class FrontendController extends BaseController
 		return $response;
 	}
 
+	private function getTopCategories()
+	{
+		if (!isset($this->topCategories))
+		{
+			$this->topCategories = Category::getInstanceByID(1)->getSubcategoryArray();
+		}
+
+		return $this->topCategories;
+	}
+
+	private function getTopCategoryId()
+	{
+		$this->getCurrentCategoryPath();
+		return $this->topCategoryId;
+	}
+
+	private function getCurrentCategoryPath()
+	{
+		if (!isset($this->currentCategoryPath))
+		{
+			if ($this->categoryID < 1)
+			{
+				$this->categoryID = 1;
+			}
+
+			$currentCategory = Category::getInstanceByID($this->categoryID, Category::LOAD_DATA);
+
+			// get path of the current category (except for top categories)
+			if (!(1 == $currentCategory->getID()) && (1 < $currentCategory->parentNode->get()->getID()))
+			{
+				$path = $currentCategory->getPathNodeSet(false)->toArray();
+
+				$topCategoryId = $path[0]['ID'];
+				unset($path[0]);
+			}
+			else
+			{
+				$topCategoryId = $this->categoryID;
+			}
+
+			$this->topCategoryId = $topCategoryId;
+			$this->currentCategoryPath = $path;
+		}
+
+		return $this->currentCategoryPath;
+	}
+
 	protected function boxCategoryBlock()
 	{
 		ClassLoader::import('application.model.category.Category');
 
-		if ($this->categoryID < 1)
-		{
-		  	$this->categoryID = 1;
-		}
-
 		// get top categories
-		$rootCategory = Category::getInstanceByID(1);
-		$topCategories = $rootCategory->getSubcategoryArray();
-		$currentCategory = Category::getInstanceByID($this->categoryID, Category::LOAD_DATA);
-
-		// get path of the current category (except for top categories)
-		if (!(1 == $currentCategory->getID()) && (1 < $currentCategory->parentNode->get()->getID()))
-		{
-			$path = $currentCategory->getPathNodeSet(false)->toArray();
-
-			$topCategoryId = $path[0]['ID'];
-			unset($path[0]);
-		}
-		else
-		{
-		  	$topCategoryId = $this->categoryID;
-		}
-
-		$this->topCategoryId = $topCategoryId;
-		$this->topCategories = $topCategories;
+		$topCategories = $this->getTopCategories();
+		$path = $this->getCurrentCategoryPath();
 
 		foreach ($topCategories as &$cat)
 		{
-		  	if ($topCategoryId == $cat['ID'])
+		  	if ($this->topCategoryId == $cat['ID'])
 		  	{
 				$current =& $cat;
 			}
 		}
+
+		$currentCategory = Category::getInstanceByID($this->categoryID, Category::LOAD_DATA);
 
 		// get sibling (same-level) categories (except for top categories)
 		if (!(1 == $currentCategory->getID()) && (1 < $currentCategory->parentNode->get()->getID()))
@@ -380,8 +407,8 @@ abstract class FrontendController extends BaseController
 	protected function boxRootCategoryBlock()
 	{
 		$response = new BlockResponse();
-		$response->set('categories', $this->topCategories);
-		$response->set('currentId', $this->topCategoryId);
+		$response->set('categories', $this->getTopCategories());
+		$response->set('currentId', $this->getTopCategoryId());
 		return $response;
 	}
 

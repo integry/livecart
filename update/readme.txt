@@ -12,7 +12,9 @@ II.  Applying the update
 
 2) Upload the unpacked files to your LiveCart installation directory. Allow to overwrite files when prompted.
 
-3) From your web browser open the following URL: http://yourstore.com/backend.update/update
+3) Go to your backend area and log in otherwise the update won't take effect
+
+4) From your web browser open the following URL: http://yourstore.com/backend.update/update
 
 If the update was successful, you should receive a confirmation message.
 
