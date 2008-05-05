@@ -182,8 +182,7 @@ class UserGroup extends ActiveRecordModel
 			}
 		}
 
-
-		if(count($this->appliedRoles) > 0)
+		if(count($this->appliedRoles) > 0 && is_object(reset($this->appliedRoles)))
 		{
 			// adding new associations is a bit trickier
 			// First, find all nodes that are already in DB
