@@ -141,7 +141,7 @@ class UserController extends FrontendController
 		$query->addField('COUNT(*)', null, 'cnt');
 		$query->addField('orderID');
 
-		foreach (ActiveRecordModel::getDataBySQL($query->createString()) as $res)
+		foreach (ActiveRecordModel::getDataBySQL($query->getPreparedStatement(ActiveRecord::getDBConnection())) as $res)
 		{
 			$orderArray[$ids[$res['orderID']]]['unreadMessageCount'] = $res['cnt'];
 		}

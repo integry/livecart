@@ -146,6 +146,7 @@ input.submit, input.text, input.password, select, textarea
 	float: left;
 	height: 47px;
 	background-image: url(../image/headerTop.jpg);
+	width: 100%;
 }
 
 #headerLeftCorner

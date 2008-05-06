@@ -430,7 +430,7 @@ class CategoryController extends FrontendController
 			$query->joinTable('Category', 'Product', 'ID', 'categoryID');
 			$query->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
 
-			$count = ActiveRecordModel::getDataBySQL($query->createString());
+			$count = $query->getPreparedStatement(ActiveRecord::getDBConnection())->executeQuery();
 
 			$categoryNarrow = array();
 

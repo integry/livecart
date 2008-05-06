@@ -135,7 +135,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$filter = $this->getProductsFilter($productFilter);
 		$filter->setLimit(0);
 		$query->setFilter($filter);
-		$data = ActiveRecord::getDataBySQL($query->createString());
+		$data = ActiveRecord::getDataBySQL($query->getPreparedStatement(ActiveRecord::getDBConnection()));
 		return $data[0]['cnt'];
 	}
 
