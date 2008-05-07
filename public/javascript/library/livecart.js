@@ -233,7 +233,7 @@ LiveCart.AjaxRequest.prototype = {
 		if('success' == responseData.status) color = 'yellow';
 		if('failure' == responseData.status) color = 'red';
 
-		new Insertion.Top(color + 'Zone',
+		new Insertion.Top('confirmations',
 		'<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="' + color + 'Message">' +
 			'<img class="closeMessage" src="image/silk/cancel.png"/>' +
 			'<div>' + responseData.message + '</div>' +

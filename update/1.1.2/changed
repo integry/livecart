@@ -61,9 +61,11 @@ application/helper/smarty/form/function.textarea.php
 application/helper/smarty/function.compiledCss.php
 application/helper/smarty/function.compiledJs.php
 application/helper/smarty/function.includeCss.php
+application/helper/smarty/function.includeJs.php
 application/helper/smarty/function.link.php
 application/helper/smarty/function.liveCustomization.php
 application/helper/smarty/function.loadJs.php
+application/helper/smarty/function.pageName.php
 application/helper/smarty/modifier.str_pad_left.php
 application/helper/smarty/prefilter.config.php
 application/helper/smarty/resource.custom.php
@@ -82,6 +84,7 @@ application/model/order/ShipmentTax.php
 application/model/order/Transaction.php
 application/model/parser/CsvFile.php
 application/model/product/Product.php
+application/model/product/ProductCount.php
 application/model/product/ProductFile.php
 application/model/product/ProductFilter.php
 application/model/product/ProductImage.php
@@ -92,6 +95,7 @@ application/model/system/Config.php
 application/model/tax/TaxRate.php
 application/model/template/Template.php
 application/model/user/SessionUser.php
+application/model/user/UserGroup.php
 application/view/backend/category/index.tpl
 application/view/backend/category/xmlBranch.tpl
 application/view/backend/category/xmlNodes.tpl
@@ -227,6 +231,7 @@ framework/response/JSONResponse.php
 framework/response/XMLResponse.php
 installdata/sql/create.sql
 library/activerecord/ARSerializableDateTime.php
+library/activerecord/ARSet.php
 library/activerecord/ARValueMapper.php
 library/activerecord/ActiveRecord.php
 library/activerecord/query/ARSelectQueryBuilder.php
@@ -237,6 +242,7 @@ library/activerecord/query/filter/ARFieldHandleInterface.php
 library/activerecord/query/filter/ARFilter.php
 library/activerecord/query/filter/ARSelectFilter.php
 library/activerecord/query/filter/Condition.php
+library/creole/common/PreparedStatementCommon.php
 library/image/ImageManipulator.php
 library/import/LiveCartImportDriver.php
 library/import/LiveCartImporter.php
