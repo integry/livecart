@@ -151,8 +151,11 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 		if ('move' == $act)
 		{
+			new ActiveGrid($this->application, $filter, $this->getClassName());
+
 			$cat = Category::getInstanceById($this->request->get('categoryID'), Category::LOAD_DATA);
 			$update = new ARUpdateFilter();
+
 			$update->setCondition($filter->getCondition());
 			$update->addModifier('Product.categoryID', $cat->getID());
 			$update->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');

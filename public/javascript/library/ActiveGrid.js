@@ -314,9 +314,10 @@ ActiveGrid.prototype =
 	 */
 	highlightRow: function(event)
 	{
-		Element.addClassName(this._getTargetRow(event), 'activeGrid_highlight');
-
 		var cell = this._getTargetCell(event);
+		var row = cell ? cell.parentNode : this._getTargetRow(event);
+		Element.addClassName(row, 'activeGrid_highlight');
+
 		if (cell)
 		{
 			var value = cell.down('span');
@@ -349,6 +350,7 @@ ActiveGrid.prototype =
 	{
 		if (this.cellContentContainer)
 		{
+			// hide() not used intentionally
 			this.cellContentContainer.style.display = 'none';
 		}
 

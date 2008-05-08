@@ -1,10 +1,6 @@
 /**
  *	@author Integry Systems
  */
-function showHelp(url)
-{
-	return window.open(url, 'helpWin', 'width=400, height=700, resizable, scrollbars, location=no');
-}
 
 var Backend =
 {
