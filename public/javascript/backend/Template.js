@@ -46,49 +46,52 @@ Backend.Template.prototype =
 		this.treeBrowser.closeAllItems();
 		//this.treeBrowser.setDragHandler(this.moveTemplate);
 
-		var createTemplate = $('createTemplate').down('a');
-		createTemplate.editUrl = createTemplate.href;
-		createTemplate.href = '#create';
-		Event.observe(createTemplate, 'click', function(e)
-			{
-				var el = Event.element(e);
-				var upd = new LiveCart.AjaxUpdater(el.editUrl, 'templateContent');
-				upd.onComplete = this.displayTemplate.bind(this);
-
-				if ($('code'))
+		if ($('createTemplate'))
+		{
+			var createTemplate = $('createTemplate').down('a');
+			createTemplate.editUrl = createTemplate.href;
+			createTemplate.href = '#create';
+			Event.observe(createTemplate, 'click', function(e)
 				{
-					editAreaLoader.delete_instance("code");
-				}
-				Event.stop(e);
-			}.bindAsEventListener(this));
+					var el = Event.element(e);
+					var upd = new LiveCart.AjaxUpdater(el.editUrl, 'templateContent');
+					upd.onComplete = this.displayTemplate.bind(this);
 
-		var deleteTemplate = $('deleteTemplate').down('a');
-		deleteTemplate.url = deleteTemplate.href;
-		deleteTemplate.href = '#delete';
-		Event.observe(deleteTemplate, 'click', function(e)
-			{
-				Event.stop(e);
-
-				if (!confirm(Backend.getTranslation('_confirm_template_delete')))
-				{
-					return false;
-				}
-
-				var nodeIdToRemove = this.treeBrowser.getSelectedItemId();
-				var upd = new LiveCart.AjaxRequest(Event.element(e).url.replace('_id_', this.treeBrowser.getSelectedItemId()));
-				upd.onComplete =
-					function()
+					if ($('code'))
 					{
-						new LiveCart.AjaxUpdater(this.urls['empty'], 'templateContent', 'settingsIndicator');
-						this.treeBrowser.deleteItem(nodeIdToRemove, true);
-					}.bind(this);
+						editAreaLoader.delete_instance("code");
+					}
+					Event.stop(e);
+				}.bindAsEventListener(this));
 
-				if ($('code'))
+			var deleteTemplate = $('deleteTemplate').down('a');
+			deleteTemplate.url = deleteTemplate.href;
+			deleteTemplate.href = '#delete';
+			Event.observe(deleteTemplate, 'click', function(e)
 				{
-					editAreaLoader.delete_instance("code");
-				}
+					Event.stop(e);
 
-			}.bindAsEventListener(this));
+					if (!confirm(Backend.getTranslation('_confirm_template_delete')))
+					{
+						return false;
+					}
+
+					var nodeIdToRemove = this.treeBrowser.getSelectedItemId();
+					var upd = new LiveCart.AjaxRequest(Event.element(e).url.replace('_id_', this.treeBrowser.getSelectedItemId()));
+					upd.onComplete =
+						function()
+						{
+							new LiveCart.AjaxUpdater(this.urls['empty'], 'templateContent', 'settingsIndicator');
+							this.treeBrowser.deleteItem(nodeIdToRemove, true);
+						}.bind(this);
+
+					if ($('code'))
+					{
+						editAreaLoader.delete_instance("code");
+					}
+
+				}.bindAsEventListener(this));
+		}
 	},
 
 	insertTreeBranch: function(treeBranch, rootId)
@@ -126,13 +129,16 @@ Backend.Template.prototype =
 		var isCustom = this.treeBrowser.getUserData(id, 'isCustom');
 		//this.treeBrowser.enableDragAndDrop(isCustom ? 1 : 0);
 
-		if (isCustom)
+		if ($('deleteTemplate'))
 		{
-			$('deleteTemplate').show();
-		}
-		else
-		{
-			$('deleteTemplate').hide();
+			if (isCustom)
+			{
+				$('deleteTemplate').show();
+			}
+			else
+			{
+				$('deleteTemplate').hide();
+			}
 		}
 
 		if (!this.treeBrowser.hasChildren(id))
