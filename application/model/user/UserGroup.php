@@ -79,14 +79,27 @@ class UserGroup extends ActiveRecordModel
 	{
 		if(!$this->rolesLoaded || $force)
 		{
-			$associations = AccessControlAssociation::getRecordSetArrayByUserGroup($this, new ARSelectFilter(), self::LOAD_REFERENCES);
-			foreach($associations as $assoc)
+			$roleFile = $this->getRoleCacheFile();
+
+			if (!file_exists($roleFile))
 			{
-				$this->appliedRoles[$assoc['roleID']] = $assoc['Role'];
+				$associations = AccessControlAssociation::getRecordSetArrayByUserGroup($this, new ARSelectFilter(), self::LOAD_REFERENCES);
+				foreach($associations as $assoc)
+				{
+					$this->appliedRoles[$assoc['roleID']] = $assoc['Role'];
+				}
+
+				file_put_contents($roleFile, '<?php return ' . var_export($this->appliedRoles, true) . '; ?>');
 			}
 
+			$this->appliedRoles = include $roleFile;
 			$this->rolesLoaded = true;
 		}
+	}
+
+	public function getRoleCacheFile()
+	{
+		return ClassLoader::getRealPath('cache.roles.') . $this->getID() . '.php';
 	}
 
 	public function setAllRoles()
@@ -153,6 +166,8 @@ class UserGroup extends ActiveRecordModel
 
 	private function updateRoles()
 	{
+   		unlink($this->getRoleCacheFile());
+
    		if(count($this->canceledRoles) > 0)
 		{
 			// Delete canceled associations
