@@ -616,7 +616,10 @@ Backend.ProductOption.prototype =
 			// if new or not main language
 			if(isNew || i > 0)
 			{
-				Element.remove(translatedValue);
+				if (translatedValue)
+				{
+					Element.remove(translatedValue);
+				}
 			}
 			else
 			{
