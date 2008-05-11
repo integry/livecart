@@ -41,7 +41,7 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 
 		$address = $shipment->order->get()->shippingAddress->get();
 		$handler->setDestCountry($address->countryID->get());
-
+		$handler->setDestState($address->state->get());
 		$handler->setDestZip($address->postalCode->get());
 		$config = $shipment->getApplication()->getConfig();
 		$handler->setSourceCountry($config->get('STORE_COUNTRY'));

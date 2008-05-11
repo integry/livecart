@@ -7,18 +7,19 @@ include_once('ShippingRateResult.php');
 /**
  *
  * @package library.shipping
- * @author Integry Systems 
+ * @author Integry Systems
  */
 abstract class ShippingRateCalculator
 {
-	protected $destCountry;   
-	protected $destZip;   
-	protected $sourceCountry;   
-	protected $sourceZip;   
-	protected $weight;   
-	
-	protected $config = array();	
-	
+	protected $destCountry;
+	protected $destZip;
+	protected $destState;
+	protected $sourceCountry;
+	protected $sourceZip;
+	protected $weight;
+
+	protected $config = array();
+
 	public function setDestCountry($country)
 	{
 		$this->destCountry = $country;
@@ -27,6 +28,11 @@ abstract class ShippingRateCalculator
 	public function setDestZip($zip)
 	{
 		$this->destZip = $zip;
+	}
+
+	public function setDestState($state)
+	{
+		$this->destState = $state;
 	}
 
 	public function setSourceCountry($country)
@@ -43,12 +49,12 @@ abstract class ShippingRateCalculator
 	{
 		$this->weight = $grams;
 	}
-	
+
 	public function setConfigValue($key, $value)
 	{
 		$this->config[$key] = $value;
 	}
-	
+
 	public function getConfigValue($key, $defaultValue = '')
 	{
 		if (isset($this->config[$key]))
@@ -59,8 +65,8 @@ abstract class ShippingRateCalculator
 		{
 			return $defaultValue;
 		}
-	}	
-	
+	}
+
 	/**
 	 *  Return shipping rates for the particular service
 	 */
