@@ -816,6 +816,14 @@ class ActiveTreeNode extends ActiveRecordModel
 		foreach($recordSet as $record) return $record;
 		return null;
 	}
+
+	public function __destruct()
+	{
+		$this->childList = null;
+		$this->pathNodes = null;
+
+		return parent::__destruct();
+	}
 }
 
 ?>

@@ -5,23 +5,23 @@ include_once(dirname(__file__) . '/../ShippingRateCalculator.php');
 /**
  *
  * @package library.shipping.method
- * @author Integry Systems 
+ * @author Integry Systems
  */
 class UspsShipping extends ShippingRateCalculator
 {
 	private $service;
-	
+
 	private $container;
-	
+
 	public function getProviderName()
 	{
 		return 'USPS';
 	}
-	
+
 	public function getAllRates()
 	{
 		$return = new ShippingRateSet();
-		
+
 		if ('US' == $this->destCountry)
 		{
 			$services = array_keys($this->getConfigValue('domestic'));
@@ -40,7 +40,7 @@ class UspsShipping extends ShippingRateCalculator
 		{
 			$rates = $this->getRates();
 			$services = array_keys($this->getConfigValue('international'));
-			
+
 			if ($rates instanceof ShippingRateSet)
 			{
 				foreach ($rates as $rate)
@@ -51,47 +51,48 @@ class UspsShipping extends ShippingRateCalculator
 						if (substr($name, 0, strlen($service) + 2) == $service . ' (')
 						{
 							$return->add($rate);
-							break;   
+							break;
 						}
 					}
 				}
 			}
 		}
-		
+
 		return $return;
 	}
-	
+
 	public function getRates()
 	{
-		include_once(dirname(__file__) . '/../library/usps/usps.php');   
-		
+		include_once(dirname(__file__) . '/../library/usps/usps.php');
+
 		$usps = new USPSHandler();
 
 		$usps->setServer($this->getConfigValue('server', 'http://production.shippingapis.com/ShippingAPI.dll'));
 		$usps->setUserName($this->getConfigValue('userId'));
-		
+
 		$usps->setOrigZip($this->sourceZip);
 		$usps->setDestZip($this->destZip);
 
 		$country = isset($this->countries[$this->destCountry]) ? $this->countries[$this->destCountry] : 'USA';
 		$usps->setCountry($country);
-		
+
 		// get weight in pounds/ounces
-		$pounds = floor($this->weight / 453.59237);
-		$ounces = ceil(($this->weight % 453.59237) / 28.3495231);
-		$usps->setWeight($pounds, $ounces);	 
-		
+		$weight = $this->weight * 1000;
+		$pounds = floor($weight / 453.59237);
+		$ounces = ceil(($weight % 453.59237) / 28.3495231);
+		$usps->setWeight($pounds, $ounces);
+
 		$usps->setMachinable($this->getConfigValue('isMachinable') ? 'TRUE' : 'FALSE');
 		$usps->setService($this->service);
 		$usps->setSize($this->getConfigValue('size', 'Regular'));
-		
+
 		if ($this->container)
 		{
-			$usps->setContainer($this->container);			
+			$usps->setContainer($this->container);
 		}
-					
+
 		$price = $usps->getPrice();
-		
+
 		// success
 		if (isset($price->list))
 		{
@@ -100,24 +101,24 @@ class UspsShipping extends ShippingRateCalculator
 			{
 				$r = new ShippingRateResult();
 				$r->setServiceName(isset($rate->mailservice) ? $rate->mailservice : $rate->svcdescription . ' ('. $rate->svccommitments .')');
-				$r->setCost($rate->rate, 'USD');	
+				$r->setCost($rate->rate, 'USD');
 				$r->setClassName(get_class($this));
 				$r->setProviderName($this->getProviderName());
 				$result->add($r);
 			}
-		}		
+		}
 		// error
 		else
 		{
 			$errorMsg = isset($price->error) ? $price->error->description : '';
-			$result = new ShippingRateError($errorMsg);  
+			$result = new ShippingRateError($errorMsg);
 		}
-		
+
 		$result->setRawResponse($price);
-		
-		return $result;				
+
+		return $result;
 	}
-	
+
 	public function setMachinable($isMachinable = true)
 	{
 		$this->setConfigValue('isMachinable', $isMachinable);
@@ -126,18 +127,18 @@ class UspsShipping extends ShippingRateCalculator
 	public function setService($service)
 	{
 		$this->service = $service;
-		
+
 		if ('Express' == $service)
 		{
-			$this->setContainer('Flat Rate Envelope');	
-		}		
+			$this->setContainer('Flat Rate Envelope');
+		}
 	}
-	
+
 	public function setUserId($userId)
 	{
 		$this->setConfigValue('userId', $userId);
 	}
-	
+
 	public function setContainer($container)
 	{
 		$this->container = $container;
@@ -147,9 +148,9 @@ class UspsShipping extends ShippingRateCalculator
 	{
 		$this->size = $size;
 	}
-	
+
 	private $countries = array(
-		
+
 		'AD' => 'Andorra',
 		'AE' => 'United Arab Emirates',
 		'AF' => 'Afghanistan',

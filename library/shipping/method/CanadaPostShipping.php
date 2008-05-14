@@ -34,7 +34,7 @@ class CanadaPostShipping extends ShippingRateCalculator
 				<lineItems>
 					<item>
 						<quantity> 1 </quantity>
-						<weight> ' . round($this->weight / 1000, 3) . ' </weight>
+						<weight> ' . $this->weight . ' </weight>
 						<length> 1 </length>
 						<width> 1 </width>
 						<height> 1 </height>

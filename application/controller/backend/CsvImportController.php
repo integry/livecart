@@ -270,7 +270,7 @@ class CsvImportController extends StoreManagementController
 			else if (isset($fields['Category']))
 			{
 				$hash = '';
-				$hashRoot = $root;
+				$hashRoot = $root->getID();
 				foreach ($fields['Category'] as $level => $csvIndex)
 				{
 					if (!$record[$csvIndex])
@@ -282,7 +282,7 @@ class CsvImportController extends StoreManagementController
 
 					if (!isset($categories[$hash]))
 					{
-						$f = $hashRoot->getSubcategoryFilter();
+						$f = Category::getInstanceByID($hashRoot)->getSubcategoryFilter();
 						$f->mergeCondition(
 								new EqualsCond(
 									MultiLingualObject::getLangSearchHandle(
@@ -292,23 +292,21 @@ class CsvImportController extends StoreManagementController
 									$record[$csvIndex]
 								)
 							);
-						$set = ActiveRecordModel::getRecordSet('Category', $f);
-						if ($set->size())
+
+						$cat = ActiveRecordModel::getRecordSet('Category', $f)->get(0);
+						if (!$cat)
 						{
-							$cat = $set->get(0);
-						}
-						else
-						{
-							$cat = Category::getNewInstance($hashRoot);
+							$cat = Category::getNewInstance(Category::getInstanceByID($hashRoot));
 							$cat->isEnabled->set(true);
 							$cat->setValueByLang('name', $this->application->getDefaultLanguageCode(), $record[$csvIndex]);
 							$cat->save();
 						}
 
-						$categories[$hash] = $cat;
+						$categories[$hash] = $cat->getID();
 					}
 
 					$hashRoot = $categories[$hash];
+					$cat = Category::getInstanceByID($hashRoot);
 				}
 			}
 			else
@@ -444,14 +442,17 @@ class CsvImportController extends StoreManagementController
 				}
 
 				$product->__destruct();
-				unset($product);
+				$product->destruct(true);
 			}
+
+			ActiveRecord::clearPool();
 
 			$progress++;
 
 			if ($progress % self::PROGRESS_FLUSH_INTERVAL == 0 || ($total == $progress))
 			{
 				$response->flush($this->getResponse(array('progress' => $progress, 'total' => $total)));
+//				echo '|' . round(memory_get_usage() / (1024*1024), 1) . '|' . count($categories) . "\n";
 			}
 
 			if (connection_aborted())

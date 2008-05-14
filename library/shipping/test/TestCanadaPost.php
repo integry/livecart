@@ -17,7 +17,7 @@ class TestCanadaPost extends ShippingTest
 		$this->post = new CanadaPostShipping();
 		$this->post->setConfigValue('merchantID', 'CPC_DEMO_XML');
 		$this->post->setSourceZip('m1p1c0');
-		$this->post->setWeight(1500);
+		$this->post->setWeight(1.500);
 	}
 
 	public function testUSRates()
@@ -43,7 +43,7 @@ class TestCanadaPost extends ShippingTest
 	{
 		$post = $this->post;
 
-		$post->setWeight(1500 * 1000);
+		$post->setWeight(1500);
 		$post->setDestCountry('US');
 		$post->setDestZip('90210');
 		$post->setDestState('CA');
@@ -79,7 +79,7 @@ class TestCanadaPost extends ShippingTest
 	{
 		$post = $this->post;
 		$post->setDestCountry('LT');
-		$post->setWeight(15000);
+		$post->setWeight(15);
 
 		$rates = $post->getAllRates();
 

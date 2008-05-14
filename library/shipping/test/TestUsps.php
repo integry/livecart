@@ -8,7 +8,7 @@ include_once(dirname(__file__) . '/../method/UspsShipping.php');
 /**
  *
  * @package library.shipping.test
- * @author Integry Systems 
+ * @author Integry Systems
  */
 class TestUsps extends ShippingTest
 {
@@ -23,56 +23,56 @@ class TestUsps extends ShippingTest
 		$usps->setDestZip('20008');
 		$usps->setSize('REGULAR');
 		$usps->setMachinable(true);
-		$usps->setWeight(15000);		
-										
+		$usps->setWeight(15);
+
 		// priority
 		$usps->setService('Priority');
 
 		$usps->setContainer('Flat Rate Envelope');
-		$rates = $usps->getRates();	 
+		$rates = $usps->getRates();
 		$this->assertTrue($rates instanceof ShippingRateSet);
 
 		$usps->setContainer('Flat Rate Box');
-		$rates = $usps->getRates();	 
+		$rates = $usps->getRates();
 		$this->assertTrue($rates instanceof ShippingRateSet);
 
 		// express
-		$usps->setService('Express');		
-		$rates = $usps->getRates();	 
+		$usps->setService('Express');
+		$rates = $usps->getRates();
 		$this->assertTrue($rates instanceof ShippingRateSet);
 
 		// first class
 /*
-		$usps->setService('First Class');		
-		$rates = $usps->getRates();	 
+		$usps->setService('First Class');
+		$rates = $usps->getRates();
 		$this->assertTrue($rates instanceof ShippingRateSet);
-		var_dump($rates);		
+		var_dump($rates);
 */
 
 		// parcel post
-		$usps->setService('Parcel');		
-		$rates = $usps->getRates();	 
+		$usps->setService('Parcel');
+		$rates = $usps->getRates();
 		$this->assertTrue($rates instanceof ShippingRateSet);
 
 		// Bound Printed Matter
-		$usps->setWeight(3000); 
-		$usps->setService('BPM'); 
-		$rates = $usps->getRates();	 
+		$usps->setWeight(3);
+		$usps->setService('BPM');
+		$rates = $usps->getRates();
 		$this->assertTrue($rates instanceof ShippingRateSet);
 
 		// Media
-		$usps->setWeight(3000); 
-		$usps->setService('Media'); 
-		$rates = $usps->getRates();	 
-		$this->assertTrue($rates instanceof ShippingRateSet);	   
+		$usps->setWeight(3);
+		$usps->setService('Media');
+		$rates = $usps->getRates();
+		$this->assertTrue($rates instanceof ShippingRateSet);
 
 		// overweight package
-		$usps->setWeight(50000); 
-		$usps->setService('Media'); 
-		$rates = $usps->getRates();	 
+		$usps->setWeight(50);
+		$usps->setService('Media');
+		$rates = $usps->getRates();
 		$this->assertTrue($rates instanceof ShippingRateError);
-	}   
-	
+	}
+
 	public function testInternational()
 	{
 		$usps = new UspsShipping();
@@ -82,11 +82,11 @@ class TestUsps extends ShippingTest
 		$usps->setDestCountry('LT');
 		$usps->setSize('REGULAR');
 		$usps->setMachinable(true);
-		$usps->setWeight(15000);		
+		$usps->setWeight(15);
 		$usps->setService('Package');
-				
-		$rates = $usps->getRates();	 
-		
+
+		$rates = $usps->getRates();
+
 		$this->assertTrue($rates instanceof ShippingRateSet);
 
 	}
