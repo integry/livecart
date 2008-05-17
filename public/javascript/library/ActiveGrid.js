@@ -110,6 +110,20 @@ ActiveGrid.prototype =
 		}
 	},
 
+	setInitialData: function(data)
+	{
+		if (data)
+		{
+			this.ricoGrid.buffer.update(data, 0);
+			this.ricoGrid.viewPort.bufferChanged();
+			this.ricoGrid.viewPort.refreshContents(0);
+		}
+		else
+		{
+			this.ricoGrid.requestContentRefresh(offset);
+		}
+	},
+
 	getRows: function(data)
 	{
 		var HTML = '';

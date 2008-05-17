@@ -181,6 +181,7 @@ abstract class ActiveGridController extends StoreManagementController
 		$response->set('offset', $this->request->get('offset'));
 		$response->set('totalCount', '0');
 		$response->set('filters', $this->request->get('filters'));
+		$response->set('data', $this->lists(false, $displayedColumns)->getData());
 
 		return $response;
 	}

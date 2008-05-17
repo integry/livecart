@@ -186,6 +186,7 @@
 {/literal};
 
  	window.activeGrids['{$prefix}_{$id}'] = new ActiveGrid($('{$prefix}_{$id}'), '{$url}', {$totalCount}, $("{$prefix}LoadIndicator_{$id}"), {$rowCount}, {json array=$filters});
+	window.activeGrids['{$prefix}_{$id}'].setInitialData({json array=$data});
 
 	{foreach from=$displayedColumns item=index key=column name="columns"}
 		{if !$smarty.foreach.columns.first}
