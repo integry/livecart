@@ -130,7 +130,7 @@ Backend.ProductOption.prototype =
 		this.parentID			= this.productOption.parentID;
 		this.rootId				= this.productOption.rootId;
 
-		if (this.parentID.substr(0, 1) == 'c')
+		if (this.parentID.substr && this.parentID.substr(0, 1) == 'c')
 		{
 			this.categoryID = this.parentID.substr(1);
 		}

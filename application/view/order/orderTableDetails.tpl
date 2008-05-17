@@ -13,7 +13,7 @@
 {if $shipment.taxes && !$hideTaxes}
 	<tr>
 		<td colspan="3" class="subTotalCaption beforeTax">{t _subtotal_before_tax}:</td>
-		<td>{$shipment.formattedSubTotalBeforeTax[$order.Currency.ID]}</td>
+		<td>{$shipment.formatted_amount}</td>
 	</tr>
 {/if}
 

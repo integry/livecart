@@ -242,19 +242,21 @@ class Shipment extends ActiveRecordModel
 
 	public function applyTaxesToAmount($amount)
 	{
+		$taxAmount = 0;
+
 		foreach ($this->getTaxes() as $tax)
 		{
 			if ($tax->taxRate->get())
 			{
-				$amount = $tax->taxRate->get()->applyTax($amount);
+				$taxAmount += $tax->taxRate->get()->applyTax($amount) - $amount;
 			}
 			else
 			{
-				$amount += $tax->amount->get();
+				$taxAmount += $tax->amount->get();
 			}
 		}
 
-		return $amount;
+		return $amount + $taxAmount;
 	}
 
 	public function reduceTaxesFromAmount($amount)
@@ -475,6 +477,7 @@ class Shipment extends ActiveRecordModel
 		// total amount
 		$array['totalAmount'] = $this->getTotal();
 		$array['formatted_totalAmount'] = $this->order->get()->currency->get()->getFormattedPrice($array['totalAmount']);
+		$array['formatted_amount'] = $this->order->get()->currency->get()->getFormattedPrice($array['amount']);
 
 		// formatted subtotal
 		$array['formattedSubTotal'] = $array['formattedSubTotalBeforeTax'] = array();
