@@ -2,6 +2,7 @@
 <script type="text/javascript">
 	Backend.Product.Editor.prototype.links = {};
 	Backend.Product.Editor.prototype.links.countTabsItems = '{/literal}{link controller=backend.product action=countTabsItems}{literal}';
+	Backend.Product.GridFormatter.productUrl = '{/literal}{backendProductUrl}{literal}';
 </script>
 {/literal}
 
@@ -113,6 +114,7 @@
 	totalCount=$totalCount
 	filters=$filters
 	container="tabProducts"
+	dataFormatter="Backend.Product.GridFormatter"
 }
 
 </div>
@@ -120,8 +122,6 @@
 {literal}
 <script type="text/javascript">
 {/literal}
-	Backend.Product.GridFormatter.productUrl = '{backendProductUrl}';
-	window.activeGrids['products_{$categoryID}'].setDataFormatter(Backend.Product.GridFormatter);
 
 	var massHandler = new ActiveGrid.MassActionHandler(
 						$('productMass_{$categoryID}'),

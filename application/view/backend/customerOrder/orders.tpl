@@ -84,6 +84,21 @@
 
 </fieldset>
 
+{literal}
+<script type="text/javascript">
+	Backend.CustomerOrder.GridFormatter.orderUrl = '{/literal}{backendOrderUrl}{literal}';
+	Backend.User.OrderGridFormatter.orderUrl = '{/literal}{backendOrderUrl}{literal}';
+{/literal}
+
+{if $userID}
+	{assign var=dataFormatter value="Backend.User.OrderGridFormatter"};
+{else}
+	{assign var=dataFormatter value="Backend.CustomerOrder.GridFormatter"};
+{/if}
+
+</script>
+
+
 {activeGrid
 	prefix="orders"
 	id=$orderGroupID
@@ -96,21 +111,13 @@
 	showID=true
 	container="tabPageContainer"
 	filters=$filters
+	dataFormatter=$dataFormatter
 }
 
 </div>
 
 {literal}
 <script type="text/javascript">
-	window.activeGrids['{/literal}orders_{$orderGroupID}{literal}'].setDataFormatter(new Backend.CustomerOrder.GridFormatter());
-
-	Backend.CustomerOrder.GridFormatter.prototype.orderUrl = '{/literal}{backendOrderUrl}{literal}';
-
-	if ({/literal}{json array=$userID}{literal} != null)
-	{
-		Backend.User.OrderGridFormatter.orderUrl = '{/literal}{backendOrderUrl}{literal}';
-		window.activeGrids['{/literal}orders_{$orderGroupID}{literal}'].setDataFormatter(Backend.User.OrderGridFormatter);
-	}
 
 	var massHandler = new ActiveGrid.MassActionHandler($('{/literal}orderMass_{$orderGroupID}{literal}'),
 													   window.activeGrids['{/literal}orders_{$orderGroupID}{literal}'],

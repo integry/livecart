@@ -12,3 +12,6 @@ _confirm_unsuccessful=We could not verify your e-mail address. Please make sure 
 
 _unsubscribe=Unsubscribing from our newsletter
 _unsubscribe_sucessful=You have successfully unsubscribed from receiving our newsletter messages.
+
+_already_subscribed=You have already subscribed
+_already_subscribed_info=You have already subscribed to our newsletter

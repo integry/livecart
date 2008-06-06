@@ -15,7 +15,7 @@ class SelectFileController extends StoreManagementController
 	{
 		$dir = getcwd();
 
-		chdir('/');
+		@chdir('/');
 
 		$root = array('parent' => 0,
 					  'ID' => getcwd(),
@@ -40,11 +40,11 @@ class SelectFileController extends StoreManagementController
 		if (1 == $targetID)
 		{
 			$dir = getcwd();
-			chdir('/');
+			@chdir('/');
 			$targetID = getcwd();
 		}
 
-		chdir($targetID);
+		@chdir($targetID);
 
 		$parent = $targetID;
 		$lastParent = '';
@@ -60,7 +60,7 @@ class SelectFileController extends StoreManagementController
 					 );
 
 			$parent = dirname($parent);
-			chdir($parent);
+			@chdir($parent);
 			$parent = getcwd();
 		}
 

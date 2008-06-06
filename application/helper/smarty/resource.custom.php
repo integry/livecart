@@ -16,7 +16,7 @@ function smarty_resource_custom_source($tpl_name, &$tpl_source, LiveCartSmarty $
 {
 	if ($path = smarty_custom_get_path($tpl_name, $smarty))
 	{
-		$tpl_source = $smarty->processPlugins(file_get_contents($path), $tpl_name);
+		$tpl_source = file_get_contents($path);
 		return true;
 	}
 

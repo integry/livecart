@@ -313,7 +313,7 @@ class LiveCartRenderer extends SmartyRenderer
 		return $res;
 	}
 
-	private function getRelativeTemplatePath($template)
+	public function getRelativeTemplatePath($template)
 	{
 		foreach (array('application.view', 'storage.customize.view') as $path)
 		{

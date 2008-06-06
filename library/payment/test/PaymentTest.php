@@ -1,15 +1,16 @@
 <?php
 
+/*
 include_once('simpletest/unit_tester.php');
 include_once('unittest/UnitTest.php');
 include_once('simpletest/reporter.php');
-
+*/
 include_once('../TransactionDetails.php');
 
 /**
  *
  * @package library.payment.test
- * @author Integry Systems 
+ * @author Integry Systems
  */
 class PaymentTest extends UnitTest
 {
@@ -19,7 +20,7 @@ class PaymentTest extends UnitTest
 	}
 
 	public function tearDown()
-	{		
+	{
 	}
 
 	public function setUp()
@@ -31,7 +32,7 @@ class PaymentTest extends UnitTest
 		$details->city->set('Vilnius');
 		$details->state->set('Vilnius');
 		$details->country->set('LT');
-		$details->postalCode->set('05214');								
+		$details->postalCode->set('05214');
 
 		$details->shippingFirstName->set('Rinalds');
 		$details->shippingLastName->set('Uzkalns');
@@ -39,23 +40,23 @@ class PaymentTest extends UnitTest
 		$details->shippingCity->set('Vilnius');
 		$details->shippingState->set('Vilnius');
 		$details->shippingCountry->set('LT');
-		$details->shippingPostalCode->set('05214');								
+		$details->shippingPostalCode->set('05214');
 
 		$details->phone->set('+370-66666666');
-		$details->email->set('test@integry.net');								
-				
+		$details->email->set('test@integry.net');
+
 		$details->clientID->set('1');
 		$details->ipAddress->set($_SERVER['REMOTE_ADDR']);
-		
+
 		$details->invoiceID->set(rand(1, 10000000));
-				
+
 		$details->amount->set('21.17');
 		$details->currency->set('USD');
-		$details->description->set('LiveCart Order');								
+		$details->description->set('LiveCart Order');
 
-		$this->details = $details;		
+		$this->details = $details;
 	}
-	
+
 	public function getUsedSchemas()
 	{
 		return array();

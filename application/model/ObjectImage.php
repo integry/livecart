@@ -108,8 +108,6 @@ abstract class ObjectImage extends MultilingualObject
 		  	$maxPos = 0;
 		}
 
-			ActiveRecord::$logger->logAction($maxPos);
-
 		$this->position->set($maxPos);
 
 		return parent::insert();
@@ -120,7 +118,7 @@ abstract class ObjectImage extends MultilingualObject
 		parent::save();
 
 		// set as main image if it's the first image being uploaded
-		if ($this->position->get() <= 1)
+		if ($this->position->get() == 0)
 		{
 			$owner = $this->getOwner();
 		  	$owner->defaultImage->set($this);

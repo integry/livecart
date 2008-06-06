@@ -48,6 +48,11 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return 'Product';
 	}
 
+	protected function getCSVFileName()
+	{
+		return 'products.csv';
+	}
+
 	protected function getRequestColumns()
 	{
 		return $this->getDisplayedColumns(Category::getInstanceByID(substr($this->request->get("id"), 9), Category::LOAD_DATA));
@@ -515,7 +520,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$query->includeTable('OrderedItem');
 			$query->joinTable('CustomerOrder', 'OrderedItem', 'ID', 'customerOrderID');
 
-			if (($count = array_shift(array_shift(ActiveRecordModel::getDataBySql($query->createString())))) && ($count > $prevCount || '_overall' == $key))
+			if (($count = array_shift(array_shift(ActiveRecordModel::getDataBySql($query->getPreparedStatement(ActiveRecord::getDBConnection()))))) && ($count > $prevCount || '_overall' == $key))
 			{
 				$purchaseStats[$key] = $count;
 			}

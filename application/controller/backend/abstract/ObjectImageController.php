@@ -35,6 +35,7 @@ abstract class ObjectImageController extends StoreManagementController
 
 	public function upload()
 	{
+		echo 'test';
 		$ownerId = $this->request->get('ownerId');
 
 		$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), $ownerId);
@@ -72,6 +73,10 @@ abstract class ObjectImageController extends StoreManagementController
 				ActiveRecord::rollback();
 			}
 		}
+
+		// pre-PHP 5.2 JSON encoding breaks because of recursion
+		unset($result['Category']['DefaultImage']['Category']);
+		unset($result['Product']['DefaultImage']['Product']);
 
 		$this->setLayout('iframeJs');
 		$response = new ActionResponse();

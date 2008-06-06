@@ -528,6 +528,7 @@ class CheckoutController extends FrontendController
 		}
 		else
 		{
+			var_dump($result);
 			throw new Exception('Unknown transaction result type: ' . get_class($result));
 		}
 

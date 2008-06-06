@@ -282,3 +282,9 @@ SSL_BACKEND=All administration back-end pages
 
 _ssl_domain=https domain name
 SSL_DOMAIN=Use a different domain name for secure pages (e.g. secure.mysite.com)
+
+# Technical
+_technical=Technical
+_proxy=Use proxy server for outgoing connections
+PROXY_HOST=Proxy server host name
+PROXY_PORT=Proxy server port

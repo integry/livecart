@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
+ClassLoader::import('application.controller.backend.abstract.ActiveGridController');
 ClassLoader::import('application.controller.backend.*');
 ClassLoader::import('application.model.order.*');
 ClassLoader::import('application.model.Currency');
@@ -13,7 +13,7 @@ ClassLoader::import('application.helper.massAction.MassActionInterface');
  * @author Integry Systems
  * @role order
  */
-class CustomerOrderController extends StoreManagementController
+class CustomerOrderController extends ActiveGridController
 {
 	const TYPE_ALL = 1;
 	const TYPE_CURRENT = 2;
@@ -44,6 +44,21 @@ class CustomerOrderController extends StoreManagementController
 		);
 
 		return new ActionResponse('orderGroups', $orderGroups);
+	}
+
+	protected function getClassName()
+	{
+		return 'CustomerOrder';
+	}
+
+	protected function getReferencedData()
+	{
+		return array('User', 'Currency', 'ShippingAddress' => 'UserAddress');
+	}
+
+	protected function getDefaultColumns()
+	{
+		return array('CustomerOrder.dateCompleted', 'CustomerOrder.totalAmount', 'CustomerOrder.status', 'User.email', 'User.ID', 'User.fullName', 'CustomerOrder.ID2', 'CustomerOrder.ID');
 	}
 
 	public function info()
@@ -223,26 +238,18 @@ class CustomerOrderController extends StoreManagementController
 
 	public function orders()
 	{
-		$availableColumns = $this->getAvailableColumns();
-		$displayedColumns = $this->getDisplayedColumns();
-
-		// sort available columns by display state (displayed columns first)
-		$displayedAvailable = array_intersect_key($availableColumns, $displayedColumns);
-		$notDisplayedAvailable = array_diff_key($availableColumns, $displayedColumns);
-		$availableColumns = array_merge($displayedAvailable, $notDisplayedAvailable);
-
 		$response = new ActionResponse();
 		$response->set("massForm", $this->getMassForm());
 		$response->set("orderGroupID", $this->request->get('id'));
-		$response->set("displayedColumns", $displayedColumns);
-		$response->set("availableColumns", $availableColumns);
-		$response->set("offset", $this->request->get('offset'));
-		$response->set("filters", ((int)$this->request->get('userID') ? array('filter_User.ID' => $this->request->get('userID')) : false));
+
 		if ($this->request->get('userID'))
 		{
 			$response->set('userID', $this->request->get('userID'));
 		}
-		$response->set("totalCount", '0');
+
+		$this->setGridResponse($response);
+		$response->set("filters", ((int)$this->request->get('userID') ? array('filter_User.ID' => $this->request->get('userID')) : false));
+
 		return $response;
 	}
 
@@ -304,12 +311,12 @@ class CustomerOrderController extends StoreManagementController
 
 	public function changeColumns()
 	{
-		$columns = array_keys($this->request->get('col', array()));
-		$this->setSessionData('columns', $columns);
+		parent::changeColumns();
+
 		return new ActionRedirectResponse('backend.customerOrder', 'orders', array('id' => $this->request->get('id')));
 	}
 
-	public function lists($displayedColumns = null)
+	protected function getSelectFilter()
 	{
 		$filter = new ARSelectFilter();
 
@@ -328,7 +335,11 @@ class CustomerOrderController extends StoreManagementController
 			}
 		}
 
-		list ($foo, $id) = explode('_', $this->request->get('id'));
+		$id = $this->request->get('id');
+		if (!is_numeric($id))
+		{
+			list ($foo, $id) = explode('_', $this->request->get('id'));
+		}
 		$cond = $this->getTypeCondition($id);
 
 		$this->applyFullNameFilter($cond);
@@ -343,44 +354,24 @@ class CustomerOrderController extends StoreManagementController
 			$filter->setOrder(new ARFieldHandle("User", "firstName"), $direction);
 		}
 
-		$filter->setCondition($cond);
-
-		new ActiveGrid($this->application, $filter, 'CustomerOrder');
-
-		$recordCount = true;
-		$orders = ActiveRecordModel::getRecordSetArray('CustomerOrder', $filter, true, $recordCount);
-
-		if (!$displayedColumns)
+		if ($this->request->get('userID'))
 		{
-			$displayedColumns = $this->getDisplayedColumns();
+			$cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->request->get('userID')));
 		}
 
-		$data = array();
-		foreach ($orders as $order)
+		$filter->setCondition($cond);
+
+		return $filter;
+	}
+
+	public function processDataArray($orders, $displayedColumns)
+	{
+		foreach ($orders as &$order)
 		{
-			$record = array();
-			foreach ($displayedColumns as $column => $type)
+			$order['ID2'] = $order['ID'];
+
+			foreach ($order as $field => &$value)
 			{
-				list($class, $field) = explode('.', $column, 2);
-				if ('CustomerOrder' == $class)
-				{
-					$value = isset($order[$field]) ? $order[$field] : '';
-				}
-				if ('User' == $class)
-				{
-					$value = isset($order['User'][$field]) ? $order['User'][$field] : '';
-				}
-
-				if ('ShippingAddress' == $class)
-				{
-					$value = isset($order['ShippingAddress'][$field]) ? $order['ShippingAddress'][$field] : '';
-				}
-
-				if ('bool' == $type)
-				{
-					$value = $value ? $this->translate('_yes') : $this->translate('_no');
-				}
-
 				if('status' == $field)
 				{
 					switch($order[$field])
@@ -412,7 +403,7 @@ class CustomerOrderController extends StoreManagementController
 
 					if(isset($order['Currency']))
 					{
-						$value .= ' ' . $order['Currency']["ID"];
+						$value .= ' ' . $order['Currency']['ID'];
 					}
 				}
 
@@ -420,47 +411,22 @@ class CustomerOrderController extends StoreManagementController
 				{
 					$value = '-';
 				}
-
-				$record[] = $value;
 			}
-
-			$data[] = $record;
 		}
 
-		return new JSONResponse(array(
-			'columns' => array_keys($displayedColumns),
-			'totalCount' => $recordCount,
-			'data' => $data
-		));
+		return $orders;
 	}
 
-	public function export()
+	protected function getCSVFileName()
 	{
-		@set_time_limit(0);
+		return 'orders.csv';
+	}
 
-		// init file download
-		header('Content-Disposition: attachment; filename="exported.csv"');
-		$out = fopen('php://output', 'w');
-
+	protected function getExportColumns()
+	{
 		$displayedColumns = $this->getDisplayedColumns();
 		unset($displayedColumns['CustomerOrder.ID2']);
-
-		$data = $this->lists($displayedColumns)->getValue();
-
-		// header row
-		foreach ($data['columns'] as $column)
-		{
-			$header[] = $this->translate($column);
-		}
-		fputcsv($out, $header);
-
-		// columns
-		foreach ($data['data'] as $row)
-		{
-			fputcsv($out, $row);
-		}
-
-		exit;
+		return $displayedColumns;
 	}
 
 	private function applyFullNameFilter(Condition $cond)
@@ -753,41 +719,7 @@ class CustomerOrderController extends StoreManagementController
 		return trim($item);
 	}
 
-	protected function getDisplayedColumns()
-	{
-		// get displayed columns
-		$displayedColumns = $this->getSessionData('columns');
-
-		if (!$displayedColumns)
-		{
-			$displayedColumns = array(
-				'CustomerOrder.dateCompleted',
-				'CustomerOrder.totalAmount',
-				'CustomerOrder.status',
-			);
-		}
-
-		$availableColumns = $this->getAvailableColumns();
-		$displayedColumns = array_intersect_key(array_flip($displayedColumns), $availableColumns);
-
-		$displayedColumns = array_merge(array('User.email' => 'text'), $displayedColumns);
-		$displayedColumns = array_merge(array('User.ID' => 'number'), $displayedColumns); // user id must go after user email here
-		$displayedColumns = array_merge(array('User.fullName' => 'text'), $displayedColumns);
-		$displayedColumns = array_merge(array('CustomerOrder.ID2' => 'numeric'), $displayedColumns);
-		$displayedColumns = array_merge(array('CustomerOrder.ID' => 'numeric'), $displayedColumns);
-
-		// set field type as value
-		foreach ($displayedColumns as $column => $foo)
-		{
-			if (is_numeric($displayedColumns[$column]))
-			{
-				$displayedColumns[$column] = $availableColumns[$column]['type'];
-			}
-		}
-		return $displayedColumns;
-	}
-
-	protected function getAvailableColumns()
+	public function getAvailableColumns()
 	{
 		// get available columns
 		$availableColumns = array();
@@ -810,6 +742,7 @@ class CustomerOrderController extends StoreManagementController
 		}
 
 		unset($availableColumns['CustomerOrder.shipping']);
+		unset($availableColumns['CustomerOrder.isFinalized']);
 
 		$availableColumns['CustomerOrder.status'] = 'text';
 
@@ -832,8 +765,6 @@ class CustomerOrderController extends StoreManagementController
 			);
 		}
 
-		unset($availableColumns['CustomerOrder.isFinalized']);
-
 		return $availableColumns;
 	}
 
@@ -843,7 +774,6 @@ class CustomerOrderController extends StoreManagementController
 
 		return new Form($validator);
 	}
-
 
 	/**
 	 * @return RequestValidator

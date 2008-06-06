@@ -9,12 +9,12 @@ ClassLoader::import('application.model.sitenews.NewsPost');
  * @author Integry Systems
  * @package application.controller
  */
-class IndexController extends CategoryController 
+class IndexController extends CategoryController
 {
-	public function index() 
+	public function index()
 	{
 		ClassLoader::import('application.controller.CategoryController');
-		
+
 		$this->request->set('id', Category::ROOT_ID);
 		$this->request->set('cathandle', '.');
 

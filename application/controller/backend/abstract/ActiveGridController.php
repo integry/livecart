@@ -17,7 +17,7 @@ abstract class ActiveGridController extends StoreManagementController
 		$out = fopen('php://output', 'w');
 
 		// header row
-		$columns = $this->getRequestColumns();
+		$columns = $this->getExportColumns();
 		unset($columns['hiddenType']);
 		foreach ($columns as $column => $type)
 		{
@@ -40,6 +40,7 @@ abstract class ActiveGridController extends StoreManagementController
 		new ActiveGrid($this->application, $filter, $this->getClassName());
 
 		$recordCount = true;
+
 		$productArray = ActiveRecordModel::getRecordSetArray($this->getClassName(), $filter, $this->getReferencedData(), $recordCount);
 
 		if (!$displayedColumns)
@@ -81,9 +82,9 @@ abstract class ActiveGridController extends StoreManagementController
 		return new JSONResponse($return);
 	}
 
-	protected function processDataArray($productArray, $displayedColumns)
+	protected function processDataArray($dataArray, $displayedColumns)
 	{
-		return $productArray;
+		return $dataArray;
 	}
 
 	public function processMass($params = array())
@@ -165,6 +166,11 @@ abstract class ActiveGridController extends StoreManagementController
 		return $this->getAvailableColumns();
 	}
 
+	protected function getExportColumns()
+	{
+		return $this->getDisplayedColumns();
+	}
+
 	protected function setGridResponse(ActionResponse $response)
 	{
 		$displayedColumns = $this->getRequestColumns();
@@ -184,11 +190,6 @@ abstract class ActiveGridController extends StoreManagementController
 		$response->set('data', $this->lists(false, $displayedColumns)->getData());
 
 		return $response;
-	}
-
-	protected function postProcessDataArray($array)
-	{
-		return $array;
 	}
 
 	protected function formatValue($value, $type)

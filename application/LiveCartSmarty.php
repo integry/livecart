@@ -73,6 +73,12 @@ class LiveCartSmarty extends Smarty
 		echo $this->application->getRenderer()->applyLayoutModifications($path, $output);
 	}
 
+	public function _compile_source($resource_name, &$source_content, &$compiled_content, $cache_include_path=null)
+	{
+		$source_content = $this->processPlugins($source_content, $resource_name);
+		return parent::_compile_source($resource_name, $source_content, $compiled_content, $cache_include_path);
+	}
+
    /**
      * Get the compile path for this resource
      *
@@ -97,9 +103,19 @@ class LiveCartSmarty extends Smarty
 
 	private function translatePath($path)
 	{
+		if (substr($path, 0, 7) == 'custom:')
+		{
+			$path = substr($path, 7);
+		}
+
 		if (substr($path, 0, 1) == '@')
 		{
 			$path = substr($path, 1);
+		}
+
+		if ($relative = LiveCartRenderer::getRelativeTemplatePath($path))
+		{
+			$path = $relative;
 		}
 
 		return $path;

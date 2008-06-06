@@ -34,7 +34,6 @@ class ProductOptionController extends StoreManagementController
 
 		$parentId = $this->request->get('id');
 		$parent = $this->request->get('category') ? Category::getInstanceByID($parentId) : Product::getInstanceByID($parentId);
-
 		$parentId = ($this->request->get('category') ? 'c' : '') . $parentId;
 
 		$defaultProductOptionValues = array

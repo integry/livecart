@@ -272,20 +272,11 @@ Backend.CustomerOrder.prototype =
 Backend.CustomerOrder.Links = {};
 Backend.CustomerOrder.Messages = {};
 
-Backend.CustomerOrder.GridFormatter = Class.create();
-Backend.CustomerOrder.GridFormatter.prototype =
+Backend.CustomerOrder.GridFormatter =
 {
 	lastUserID: 0,
 
-	initialize: function()
-	{
-
-	},
-
-	getClassName: function(field, value)
-	{
-
-	},
+	orderUrl: '',
 
 	formatValue: function(field, value, id)
 	{
@@ -329,7 +320,7 @@ if (!Backend.User)
 	Backend.User = {};
 }
 
-Backend.User.OrderGridFormatter = new Backend.CustomerOrder.GridFormatter();
+Backend.User.OrderGridFormatter = Object.clone(Backend.CustomerOrder.GridFormatter);
 Backend.User.OrderGridFormatter.parentFormatValue = Backend.User.OrderGridFormatter.formatValue;
 Backend.User.OrderGridFormatter.formatValue =
 	function(field, value, id)
