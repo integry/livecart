@@ -166,7 +166,7 @@ class UserGroup extends ActiveRecordModel
 
 	private function updateRoles()
 	{
-   		unlink($this->getRoleCacheFile());
+   		@unlink($this->getRoleCacheFile());
 
    		if(count($this->canceledRoles) > 0)
 		{

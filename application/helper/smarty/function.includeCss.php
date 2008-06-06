@@ -11,12 +11,14 @@
  */
 function smarty_function_includeCss($params, LiveCartSmarty $smarty)
 {
-	// fix slashes
-	$fileName = str_replace('\\', DIRECTORY_SEPARATOR, $params['file']);
-	$fileName = str_replace('/', DIRECTORY_SEPARATOR, $fileName);
+	$fileName = $params['file'];
 	$filePath = substr($fileName, 0, 1) != '/' ?
 					ClassLoader::getRealPath('public.stylesheet.') .  $fileName :
 					ClassLoader::getRealPath('public') .  $fileName;
+
+	// fix slashes
+	$filePath = str_replace('\\', DIRECTORY_SEPARATOR, $filePath);
+	$filePath = str_replace('/', DIRECTORY_SEPARATOR, $filePath);
 
 	if(!is_file($filePath)) return;
 
