@@ -1,0 +1,8 @@
+_no_subscribers_found=Inga prenumeranter funna
+_listing_subscribers=Listar prenumeranter $from - $to av $count
+_process=Bearbeta
+_newsletter_delete_confirm=Ta bort prenumeranter?
+_nothing_selected=Välj minst en prenumerant först
+NewsletterSubscriber.ID=ID
+NewsletterSubscriber.isEnabled=Aktiv
+NewsletterSubscriber.email=E-mail

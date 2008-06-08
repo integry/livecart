@@ -1,0 +1,14 @@
+_no_taxes=Ingen moms har definierats ännu
+_add_tax=Lägg till ny moms
+_tax_rate_has_been_successfully_saved=Moms har sparats
+_could_not_save_tax_rate=Kunde inte spara momssats
+_tax=Moms
+_rate=Momssats
+_add_new_tax_rate=Lägg till ny momssats
+_cancel_adding_new_tax_rate=Avbryt lägga till ny momssats
+_error_rate_should_not_be_empty=Mata in momssats (%)
+_error_rate_should_be_numeric_value=Momssats skall anges som ett tal
+_error_rate_should_be_greater_than_zero_and_less_than_hundred=Skall vara mellan 0 och 100
+_error_tax_should_not_be_empty=Mata in momssats
+_more_taxes_can_be_added=Ytterligare moms kan anges
+_here=här

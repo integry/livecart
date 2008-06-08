@@ -1,0 +1,12 @@
+checkSession_error=PHP sessioner har inte sparats. Se till att <a href="http://php.net/manual/en/ref.session.php#ini.session.save-path"><em>session.save_path</em></a> PHP inställning har fått korrekt värde.
+
+checkSession=PHP sessionskonfigurering
+checkGD_error=<a href="http://php.net/gd" target="_blank">GD</a> tillägg måste installeras i PHP
+checkGD=Stöd för manipulering av bilder
+checkMySQL_error=<a href="http://php.net/mysqli" target="_blank">mysqli</a> eller <a href="http://php.net/mysqli" target="_blank">mysql</a> tillägg måste installeras i PHP
+checkMySQL=Stöd för databas
+checkPHPVersion_error=<a href="http://php.net" target="_blank">PHP</a> version måste vara lägst 5.2
+checkPHPVersion=PHP version
+_writePermissionsFix=<strong>Vi rekommenderar:</strong> att du använder en FTP klient för att ändra åtkomsträttigheter (chmod) för dessa kataloger till 777 (fullständiga skrivrättigheter). Om katalogen inte existerar ännu, skapa den.
+checkWritePermissions=Skrivrättigheter i katalog
+_err_innodb_not_available=<a href="http://dev.mysql.com/doc/refman/5.0/en/innodb-overview.html" target="_blank">InnoDB table storage engine</a> är inte aktiverad för MySQL. Kontrolera inställningarna för din MySQL databas server och försök igen.

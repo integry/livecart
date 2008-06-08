@@ -1,0 +1,5 @@
+ChronoPay_productid=ChronoPay product ID
+ChronoPay_productname=Beskrivning att visa i varukorg hos ChronoPay
+ChronoPay_currency=ChronoPay valuta
+ChronoPayGateway_productid=ChronoPay product ID
+ChronoPayGateway_secret=Shared secret key

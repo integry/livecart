@@ -1,0 +1,13 @@
+_add_new_file=Lägg till ny fil
+_add_new_group=Lägg till ny grupp
+_cancel_adding_new_file=Avbryt lägga till ny fil
+_cancel_adding_file_group=Avbryt lägga till ny grupp
+_are_you_sure_you_want_to_delete=Är du säker på att du vill ta bort den här filen
+_are_you_sure_you_want_to_delete_group=Är du säker på att du vill ta bort den här gruppen
+_product_file_group_title=Rubrik
+_add_new_file_group=Ändra grupp
+_err_file_title_is_empty=Mata in filnamn
+_err_allow_download_days_should_be_a_number=Antal dagar skall vara ett numeriskt värde
+_err_allow_download_days_is_empty=Mata in antal dagar för nedladdning
+_err_file_could_not_be_uploaded_to_the_server=Filen kunde inte laddas upp till servern
+_err_fileName_should_not_be_empty=Ange filnamn

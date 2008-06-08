@@ -1,0 +1,15 @@
+_edit_templates=Ändra template
+_edit_template=Ändra template fil
+_please_select=Välj template fil som skall ändras
+_save_template=Spara template
+_template_file_name=Filnamn
+_create_template=Skapa template fil
+_delete_template=Ta bort template fil
+_file_name_empty=Ange filnamn
+_edit_email_templates=Ändra e-mail templates
+_subject=Ärende
+_body=Meddelande
+_confirm_template_delete=Skall makerad template tas bort?
+_template_has_been_successfully_updated=Template ha sparats
+_could_not_update_template=Template kunde inte sparas
+_template_has_been_successfully_deleted=Template filen har tagits bort

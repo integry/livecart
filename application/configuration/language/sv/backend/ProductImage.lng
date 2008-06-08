@@ -1,0 +1,17 @@
+_max_file_size=Endast JPEG, GIF och PNG filer. Max filstorlek: [_1]
+_cancel_new=Avbryt lägga till ny bild
+_add_new=Lägg till ny bild
+_add_new_title=Lägg till ny bild
+_delete_confirm=Är du säker på att du vill ta bort den här bilden?
+_main_image=Huvudbild
+_supplemental_images=Ytterligare bilder
+_no_images=Inga bilder har lagts till produkten ännu.
+_edit_image=Ändra bilduppgifter
+_image_title=Ändra bildrubrik
+_image_file=Välj bildfil
+_upload=Lägg till bild
+_save=Spara
+_err_not_uploaded=Välj en fil
+_err_not_image=Detta är inte en giltig bild
+_err_resize=Fel vid skalning av bilden
+_err_too_large=Bildfilen är för stor

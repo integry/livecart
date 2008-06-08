@@ -1,0 +1,6 @@
+PaypalDirectPayment=Paypal Direct Payment
+PaypalDirectPayment_sandbox=Använd Paypal Sandbox (testmiljö)
+PaypalDirectPayment_username=Username  
+PaypalDirectPayment_password=Password  
+PaypalDirectPayment_signature=Signature  
+PaypalDirectPayment_cardTypes=Enabled credit card types

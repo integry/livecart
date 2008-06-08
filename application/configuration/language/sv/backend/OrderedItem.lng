@@ -1,0 +1,13 @@
+_ordered_item_was_successfully_moved=Produkt flyttad till en annan leverans
+_this_shipping_service_has_no_available_rates=Denna tjänst är ej tillgänglig för aktuell zon och ordersumma
+_ordered_item_quantity_was_updated=Antal uppdaterat
+_error_updating_item_quantity=Fel vid uppdatering av antal
+_item_has_been_successfuly_saved=Produkten har lagts till på ordern
+_item_was_successfully_removed_from_shipment=Produkten har tagits bort från leveransen
+_error_removing_item_from_shipment=Fel vid borttagning av produkt från leverans
+_downloadable_item_already_exists_in_this_order=Nedladdningsbar produkt finns redan i denna order
+_select_product=Lägg till produkter på order
+_done_adding_products=Klar med att lägga till produkter
+_select_shippment=Välj leverans
+_shipping_service_is_not_selected=Leveranssätt ej valt
+_shipment=Leverans

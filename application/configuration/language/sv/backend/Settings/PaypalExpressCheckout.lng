@@ -1,0 +1,6 @@
+PaypalExpressCheckout_sandbox=Använd Paypal Sandbox (testmiljö)
+PaypalExpressCheckout=Paypal Express Checkout
+PaypalExpressCheckout_username=Username  
+PaypalExpressCheckout_password=Password  
+PaypalExpressCheckout_signature=Signature  
+PaypalExpressCheckout_AUTHONLY=Endast auktorisera belopp utan att debitera dem automatiskt

@@ -1,0 +1,10 @@
+_select_file=Välj en fil
+_listing_files=Listar filer $from - $to av $count
+_no_files_found=Inga filer hittades
+fileName=Namn
+fileType=Tillägg
+fileSize=Storlek
+fileDate=Ändrad datum
+filePermissions=Rättigheter
+fileOwner=Ägare
+fileGroup=Grupp

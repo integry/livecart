@@ -1,0 +1,16 @@
+_a_relationship_between_products_was_successfully_created=Relation mellan produkter har skapats
+_could_not_create_product_relationship=Den här produkten har redan angetts som relaterad
+_relationship_was_successfully_removed=Relation mellan produkter borttagen
+_select_product=Lägg till relaterad produkt
+_add_new_group=Lägg till ny grupp
+_add_group_title=Lägg till ny grupp relaterade produkter
+_done_adding=Klar
+_cancel_adding_new_related_product=Avbryt lägga till ny relation
+_cancel_adding_new_group=Avbryt lägga till ny grupp
+_are_you_sure_you_want_to_delete_this_group=Är du säker på att du vill ta bort den här gruppen av relationer?
+_are_you_sure_you_want_to_delete_this_relation=Är du säker på att du vill ta bort den här relationen?
+_product_relationship_group_title=Rubrik
+_err_relationship_name_is_empty=Namn på gruppen
+_err_circular=Kan inte lägga till relaterad produkt till samma produkt
+_err_multiple=Den här produkten har redan angetts som relaterad
+_msg_added=Relaterad produkt har lagts till

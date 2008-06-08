@@ -1,0 +1,11 @@
+_subscribe_to_newsletter=Vårt nyhetsbrev
+_enter_your_email_to_subscribe=Mata in din e-mail adress för att prenumerera på vårt nyhetsbrev.
+_err_email_empty=Mata in din e-mail adress
+_err_invalid_email=Ogiltig e-mail adress
+_confirm_instructions=Vi har skickat ett e-mail till adressen du angivit. Klicka på länken i detta meddelande för att bekräfta din prenumeration.
+_confirm_subscription=Bekräfta din e-mail adress
+_confirming_email=E-mail bekräftelse
+_confirm_successful=Din e-mail adress har bekräftats
+_confirm_unsuccessful=Vi kunde inte bekräfta din e-mail adress. Se till att du klistrat in hela länken från bekräftelsemailet i browserns adressfält.
+_unsubscribe=Avbeställ prenumeration på vårt nyhetsbrev
+_unsubscribe_sucessful=Du har nu avbeställt prenumeration på vårt nyhetsbrev.

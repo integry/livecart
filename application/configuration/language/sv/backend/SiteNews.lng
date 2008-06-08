@@ -1,0 +1,10 @@
+_site_news=Nyheter
+_add_news=Lägg till nyhet
+_cancel_adding_news=Avbryt lägga till nyhet
+_date=Datum
+_title=Rubrik
+_text=Ingress
+_more_text=Brödtext
+_err_enter_text=Mata in text för nyhet
+_del_conf=Är du säker på att du vill ta bort denna nyhet?
+_could_not_remove_news=Kunde inte ta bort nyhet

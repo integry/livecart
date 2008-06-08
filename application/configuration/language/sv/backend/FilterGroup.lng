@@ -1,0 +1,16 @@
+_filter_group_was_successfully_saved=Filter sparat
+_could_not_save_filter_group=Kunde inte spara filter
+_filter_group_was_successfully_removed=Filter borttaget
+_could_not_remove_filter_group=Kunde inte ta bort filter
+_add_new_filter=Lägg till nytt filter
+_category_has_no_attr=Det finns inga attribut som kan filtreras i denna kategori ännu
+_delete_field=Ta bort fält
+_remove_filter_question=Är du säker på att du vill ta bort det här filtret?
+_FilterGroup_remove_question=Är du säker på att du vill ta bort det här filtret?
+_cancel_adding_new_filter=Avbryt lägga till nytt filter
+_error_name_empty=Mata in filtrets namn
+_error_filter_value_is_not_a_number=Filtrets värde skall vara numeriskt
+_error_spec_field_is_not_selected=Specifikationsfält ej valt
+_error_illegal_date=Ogiltigt datum
+_error_filter_name_empty=Mata in filtrets namn
+_error_filter_handle_invalid=Ogiltigt handle

@@ -1,0 +1,4 @@
+PaypalWebsitePaymentsStandard=Paypal Website Payments Standard
+PaypalWebsitePaymentsStandard_EMAIL=Business e-mail address
+PaypalWebsitePaymentsStandard_SANDBOX=Använd Paypal Sandbox (testmiljö)
+PaypalWebsitePaymentsStandard_ITEM_NAME=Beskrivning som visas i varukorg på Paypal

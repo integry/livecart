@@ -1,0 +1,7 @@
+_common_css=Gemensamt (alla teman)
+_edit_css=Ändra CSS Stylesheet filer
+_save_css=Spara CSS
+_please_select=Välj CSS som skall ändras. Det finns ett separat stylesheet för varje tema. Du kan också ändra den gemensamma filen som gäller för samtliga teman.
+_css_warn=OBS: undvik att ändra LiveCart CSS-filer direkt eftersom de kommer att skrivas över av framtida uppdateringar. Gör i stället dina ändringar här. Du kan även kopiera och här klistra in hela det stylesheet du vill ändra.
+_css_file_has_been_successfully_updated=CSS fil sparad
+_could_not_update_css_file=Kunde inte spara CSS fil

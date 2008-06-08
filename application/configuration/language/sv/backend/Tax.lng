@@ -1,0 +1,10 @@
+_tax_entry_was_successfully_saved=Momssats har sparats
+_could_not_save_tax_entry=Kunde inte spara moms
+_add_new_tax=Lägg till ny moms
+_cancel_adding_new_tax=Avbryt lägga till ny moms
+_cancel_adding_new_tax_rate=Avbryt lägga till ny momssats
+_name=Namn
+_manage=Hantera
+_taxes=Moms
+_error_the_name_should_not_be_empty=Ange namn
+_are_you_sure_you_want_to_remove_ths_tax=Är du säker på att du vill ta bort den här momsen? Den kan användas i några leveranszoner.
