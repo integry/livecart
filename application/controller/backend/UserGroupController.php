@@ -68,7 +68,7 @@ class UserGroupController extends ActiveGridController
 		$response->set('newUser', array('UserGroup' => array('ID' => $id), 'ID' => 0, 'isEnabled' => 1));
 		$response->set('availableUserGroups', $availableUserGroups);
 		$response->set('form', $form);
-		$response->set('countries', $this->application->getEnabledCountries());
+		$response->set('countries', array_merge(array('' => ''), $this->application->getEnabledCountries()));
 
 		$response->set("userGroupID", $id);
 

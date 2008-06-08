@@ -36,7 +36,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 	 *  make sure that the data for the particular field has actually been submitted to avoid
 	 *  setting empty values for fields that weren't included in the form
 	 */
-	public function loadRequestData(Request $request)
+	public function loadRequestData(Request $request, $prefix = '')
 	{
 		$schema = ActiveRecordModel::getSchemaInstance(get_class($this));
 		foreach ($schema->getFieldList() as $field)
@@ -44,8 +44,10 @@ abstract class ActiveRecordModel extends ActiveRecord
 			if (!($field instanceof ARForeignKey || $field instanceof ARPrimaryKey))
 			{
 				$name = $field->getName();
-				if ($request->isValueSet($name) ||
-				   ($request->isValueSet('checkbox_' . $name) && ('ARBool' == get_class($field->getDataType())))
+				$reqName = $prefix . $name;
+
+				if ($request->isValueSet($reqName) ||
+				   ($request->isValueSet('checkbox_' . $reqName) && ('ARBool' == get_class($field->getDataType())))
 					)
 				{
 					switch (get_class($field->getDataType()))
@@ -55,19 +57,19 @@ abstract class ActiveRecordModel extends ActiveRecord
 						break;
 
 						case 'ARBool':
-							$this->setFieldValue($name, in_array($request->get($name), array('on', 1)));
+							$this->setFieldValue($name, in_array($request->get($reqName), array('on', 1)));
 						break;
 
 						case 'ARInteger':
 						case 'ARFloat':
-							if (is_numeric($request->get($name)))
+							if (is_numeric($request->get($reqName)))
 							{
-								$this->setFieldValue($name, $request->get($name));
+								$this->setFieldValue($name, $request->get($reqName));
 							}
 						break;
 
 						default:
-							$this->setFieldValue($name, $request->get($name));
+							$this->setFieldValue($name, $request->get($reqName));
 						break;
 					}
 				}

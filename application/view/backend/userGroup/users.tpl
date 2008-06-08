@@ -75,6 +75,12 @@
 
 </fieldset>
 
+{literal}
+<script type="text/javascript">
+	Backend.UserGroup.GridFormatter.userUrl = '{/literal}{backendUserUrl}{literal}';
+</script>
+{/literal}
+
 {activeGrid
 	prefix="users"
 	id=$userGroupID
@@ -84,15 +90,13 @@
 	availableColumns=$availableColumns
 	totalCount=$totalCount
 	container="tabPageContainer"
+	dataFormatter="Backend.UserGroup.GridFormatter"
 }
 
 </div>
 
 {literal}
 <script type="text/javascript">
-	Backend.UserGroup.GridFormatter.userUrl = '{/literal}{backendUserUrl}{literal}';
-	window.activeGrids['{/literal}users_{$userGroupID}{literal}'].setDataFormatter(Backend.UserGroup.GridFormatter);
-
 	var massHandler = new Backend.UserGroup.massActionHandler($('{/literal}userMass_{$userGroupID}{literal}'), window.activeGrids['{/literal}users_{$userGroupID}{literal}']);
 	massHandler.deleteConfirmMessage = '{/literal}{t _are_you_sure_you_want_to_delete_this_user|addslashes}{literal}' ;
 	massHandler.nothingSelectedMessage = '{/literal}{t _nothing_selected|addslashes}{literal}' ;
