@@ -5,9 +5,9 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2008-04-30 03:11                                #
-# Model version:         1.1.2                                           #
-# From model version:    1.1.1                                           #
+# Created on:            2008-06-07 15:36                                #
+# Model version:         Version 2008-06-07                              #
+# From model version:    Version 2008-04-28                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -191,90 +191,14 @@ ALTER TABLE ProductPriceRule DROP FOREIGN KEY UserGroup_ProductPriceRule;
 
 ALTER TABLE ProductPresentation DROP FOREIGN KEY Product_ProductPresentation;
 
-# ---------------------------------------------------------------------- #
-# Modify table "ProductPrice"                                            #
-# ---------------------------------------------------------------------- #
+ALTER TABLE NewsletterSubscriber DROP FOREIGN KEY User_NewsletterSubscriber;
 
-ALTER TABLE ProductPrice ADD COLUMN listPrice NUMERIC(12,2);
+ALTER TABLE NewsletterSentMessage DROP FOREIGN KEY NewsletterMessage_NewsletterSentMessage;
 
-# ---------------------------------------------------------------------- #
-# Modify table "Currency"                                                #
-# ---------------------------------------------------------------------- #
+ALTER TABLE NewsletterSentMessage DROP FOREIGN KEY NewsletterSubscriber_NewsletterSentMessage;
 
-ALTER TABLE Currency ADD COLUMN decimalSeparator CHAR(3) DEFAULT '.';
+ALTER TABLE NewsletterSentMessage DROP FOREIGN KEY User_NewsletterSentMessage;
 
-ALTER TABLE Currency ADD COLUMN thousandSeparator CHAR(3);
-
-ALTER TABLE Currency ADD COLUMN decimalCount INTEGER DEFAULT 2;
-
-# ---------------------------------------------------------------------- #
-# Modify table "Transaction"                                             #
-# ---------------------------------------------------------------------- #
-
-ALTER TABLE Transaction MODIFY ccLastDigits CHAR(80) COMMENT 'Last 4 digits of credit card number';
-
-# ---------------------------------------------------------------------- #
-# Add table "SearchLog"                                                  #
-# ---------------------------------------------------------------------- #
-
-CREATE TABLE SearchLog (
-    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    keywords VARCHAR(100),
-    ip INTEGER,
-    time DATETIME,
-    CONSTRAINT PK_SearchLog PRIMARY KEY (ID),
-    CONSTRAINT TUC_SearchLog_1 UNIQUE (keywords, ip)
-)
-ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
-
-CREATE INDEX IDX_SearchLog_1 ON SearchLog (keywords);
-
-CREATE INDEX IDX_SearchLog_2 ON SearchLog (time);
-
-# ---------------------------------------------------------------------- #
-# Add table "NewsletterSubscriber"                                       #
-# ---------------------------------------------------------------------- #
-
-CREATE TABLE NewsletterSubscriber (
-    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    userID INTEGER UNSIGNED,
-    isEnabled BOOL DEFAULT 0,
-    email VARCHAR(100),
-    confirmationCode VARCHAR(40),
-    CONSTRAINT PK_NewsletterSubscriber PRIMARY KEY (ID)
-)
-ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
-
-# ---------------------------------------------------------------------- #
-# Add table "NewsletterMessage"                                          #
-# ---------------------------------------------------------------------- #
-
-CREATE TABLE NewsletterMessage (
-    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    status TINYINT NOT NULL DEFAULT 0 COMMENT '0 - not sent 1 - partially sent 2 - sent',
-    time DATETIME,
-    subject VARCHAR(200),
-    text TEXT,
-    CONSTRAINT PK_NewsletterMessage PRIMARY KEY (ID)
-)
-ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
-
-# ---------------------------------------------------------------------- #
-# Add table "NewsletterSentMessage"                                      #
-# ---------------------------------------------------------------------- #
-
-CREATE TABLE NewsletterSentMessage (
-    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    messageID INTEGER UNSIGNED,
-    userID INTEGER UNSIGNED,
-    subscriberID INTEGER UNSIGNED,
-    CONSTRAINT PK_NewsletterSentMessage PRIMARY KEY (ID)
-)
-ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
-
-# ---------------------------------------------------------------------- #
-# Add foreign key constraints                                            #
-# ---------------------------------------------------------------------- #
 
 ALTER TABLE Product ADD CONSTRAINT Category_Product
     FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
