@@ -58,7 +58,7 @@ class CustomerOrderController extends ActiveGridController
 
 	protected function getDefaultColumns()
 	{
-		return array('CustomerOrder.dateCompleted', 'CustomerOrder.totalAmount', 'CustomerOrder.status', 'User.email', 'User.ID', 'User.fullName', 'CustomerOrder.ID2', 'CustomerOrder.ID');
+		return array('CustomerOrder.ID2', 'User.fullName', 'User.email', 'CustomerOrder.dateCompleted', 'CustomerOrder.totalAmount', 'CustomerOrder.status', 'User.ID');
 	}
 
 	public function info()

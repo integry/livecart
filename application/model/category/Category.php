@@ -256,6 +256,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	{
 		$array = MultiLingualObject::transformArray($array, $schema);
 		$array['unavailableProductCount'] = $array['totalProductCount'] - $array['availableProductCount'];
+		$array['inactiveProductCount'] = $array['totalProductCount'] - $array['activeProductCount'];
 		$c = self::getApplication()->getConfig();
 
 		$array['count'] = ('ENABLE_AND_HIDE' == $c->get('INVENTORY_TRACKING')) ? $array['availableProductCount'] : $array['activeProductCount'];

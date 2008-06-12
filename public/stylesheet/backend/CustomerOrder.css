@@ -39,7 +39,7 @@
 
 .cell_User_ID
 {
-    display: none;   
+    display: none;
 }
 
 /* no mass processing for shopping carts */
@@ -74,8 +74,8 @@
 .order_acceptanceStatus
 {
     font-size: 120%;
-    text-align: center; 
-    margin-top: 20px; 
+    text-align: center;
+    margin-top: 20px;
     display: none;
 }
 
@@ -91,54 +91,49 @@
 
 .order_acceptanceStatusValue
 {
-    font-weight: bold; 
+    font-weight: bold;
 }
 
 .order_editAddress
 {
-	background-image: url(../../image/silk/pencil.png);    
+	background-image: url(../../image/silk/pencil.png);
 }
 
 .order_accept
 {
-	background-image: url(../../image/silk/accept.png);    
+	background-image: url(../../image/silk/accept.png);
 }
 
 .order_cancel
 {
-	background-image: url(../../image/silk/cancel.png);    
+	background-image: url(../../image/silk/cancel.png);
 }
 
 .order_addShipment
 {
-	background-image: url(../../image/silk/package_add.png);    
+	background-image: url(../../image/silk/package_add.png);
 }
 
 .order_addProduct
 {
-	background-image: url(../../image/silk/cart_put.png);    
+	background-image: url(../../image/silk/cart_put.png);
 }
 
-.order_shippingAddress input, 
+.order_shippingAddress input,
 .order_billingAddress input,
-.order_shippingAddress select, 
-.order_billingAddress select, 
+.order_shippingAddress select,
+.order_billingAddress select,
 .order_status select
 {
     width: 10em;
 }
 
-.order_shippingAddress, 
-.order_billingAddress, 
-.order_info, 
+.order_shippingAddress,
+.order_billingAddress,
+.order_info,
 .order_status
 {
     width: 45%;
-}
-
-.order_status
-{   
-    margin-left: 10px;
 }
 
 .order_shippingAddress, .order_info
@@ -149,13 +144,13 @@
 
 #orderGroupsTabContainer
 {
-    display: none;    
+    display: none;
 }
 
 #orderManagerContainer
 {
     padding: 0;
-    border: 0; 
+    border: 0;
     background-color: transparent;
 }
 
@@ -167,7 +162,7 @@
 #orderManagerContainer.cancelled .tabOrderProductsContent ul.menu,
 #orderManagerContainer.cancelled .tabOrderProductsContent .activeList_icons,
 #orderManagerContainer.cancelled .tabOrderPaymentsContent ul.menu,
-#orderManagerContainer.cancelled .orderStatus, 
+#orderManagerContainer.cancelled .orderStatus,
 #orderManagerContainer.cancelled .orderShipment_status,
 #orderManagerContainer.cancelled .captureMenu
 {

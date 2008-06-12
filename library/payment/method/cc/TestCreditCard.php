@@ -89,7 +89,7 @@ class TestCreditCard extends CreditCardPayment
 	 */
 	public function void()
 	{
-		$result = $this->process('');
+		$result = $this->process('Void');
 		if ($result instanceof TransactionResult)
 		{
 			$result->setTransactionType(TransactionResult::TYPE_VOID);
@@ -120,7 +120,7 @@ class TestCreditCard extends CreditCardPayment
 
 	private function process($type)
 	{
-		if ($this->getCardCode() != '000')
+		if ($this->getCardCode() != '000' && 'Void' != $type)
 		{
 			return new TransactionError($this->details, '');
 		}

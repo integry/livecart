@@ -6,14 +6,14 @@
 		</td>
 		<td>{$item.formattedDisplayPrice}</td>
 		<td>{$item.count}</td>
-		<td>{$item.formattedDisplaySubTotal}</td>
+		<td class="amount">{$item.formattedDisplaySubTotal}</td>
 	</tr>
 {/foreach}
 
 {if $shipment.taxes && !$hideTaxes}
 	<tr>
 		<td colspan="3" class="subTotalCaption beforeTax">{t _subtotal_before_tax}:</td>
-		<td>{$shipment.formatted_amount}</td>
+		<td class="amount">{$shipment.formatted_amount}</td>
 	</tr>
 {/if}
 

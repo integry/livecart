@@ -771,7 +771,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$validator = new RequestValidator("productFormValidator", $this->request);
 
 		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name_empty')));
-		$validator->addFilter('name', new StripHtmlFilter());
 
 		// check if SKU is entered if not autogenerating
 		if ($this->request->get('save') && !$product->isExistingRecord() && !$this->request->get('autosku'))

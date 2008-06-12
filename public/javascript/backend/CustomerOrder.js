@@ -266,6 +266,18 @@ Backend.CustomerOrder.prototype =
 			$(container).remove();
 			TabControl.prototype.getInstance("orderManagerContainer").loadedContents[identificator] = false;
 		}
+	},
+
+	changePaidStatus: function(select, url)
+	{
+		if (!confirm(Backend.getTranslation('_confirm_change_paid_status')))
+		{
+			select.value = 1 - select.value;
+			return false;
+		}
+
+		url = url.replace(/_stat_/, select.value);
+		new LiveCart.AjaxRequest(url, select.parentNode.down('.progressIndicator'));
 	}
 }
 

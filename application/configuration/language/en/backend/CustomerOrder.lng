@@ -15,6 +15,7 @@ _mass_action_succeed=Mass action succeed
 
 _are_you_sure_you_want_activate_this_order=Are you sure you want to activate this order?
 _are_you_sure_you_want_cancel_this_order=Are you sure you want to cancel this order?
+_confirm_change_paid_status=Really change the payment status for this order?
 
 _order_number=Order #
 

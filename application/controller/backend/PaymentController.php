@@ -251,6 +251,29 @@ class PaymentController extends StoreManagementController
 		}
 	}
 
+	public function changeOrderPaidStatus()
+	{
+		$order = CustomerOrder::getInstanceById($this->request->get('id'));
+		if (0 == $this->request->get('status'))
+		{
+			foreach ($order->getTransactions() as $transaction)
+			{
+				$transaction->void();
+			}
+		}
+		else
+		{
+			$transaction = Transaction::getNewOfflineTransactionInstance($order, $order->getDueAmount());
+			$transaction->user->set($this->user);
+			$transaction->save();
+		}
+
+		$order->isPaid->set($this->request->get('status') == true);
+		$order->save();
+
+		return new RawResponse();
+	}
+
 	private function getTransactionUpdateResponse()
 	{
 		$response = new CompositeJSONResponse();

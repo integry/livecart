@@ -32,7 +32,7 @@
 
 			/
 			*}
-			
+
 			{$order.Currency.pricePrefix}<span class="order_totalAmount">{$order.totalAmount|default:0|string_format:"%.2f"}</span>{$order.Currency.priceSuffix}
 		</label>
 	</p>
@@ -46,7 +46,8 @@
 
 	<p>
 		<label for="order_{$order.ID})_isPaid">{t _is_paid}</label>
-		<label>{if $order.isPaid}{t _yes}{else}{t _no}{/if}</label>
+		<select style="width: auto; float: left;" onchange="Backend.CustomerOrder.prototype.changePaidStatus(this, '{link controller=backend.payment action=changeOrderPaidStatus id=$order.ID query='status=_stat_'}');"><option value=0>{t _no}</option><option value=1{if $order.isPaid} selected="selected"{/if}>{t _yes}</option></select>
+		<span class="progressIndicator" style="display: none; float: left; padding-top: 0; padding-left: 0;"></span>
 	</p>
 </fieldset>
 
@@ -109,7 +110,7 @@
 
 <script type="text/javascript">
 	Backend.CustomerOrder.prototype.treeBrowser.selectItem({$type|default:0}, false);
-	
+
 	Backend.CustomerOrder.Editor.prototype.existingUserAddresses = {json array=$existingUserAddresses}
 	{literal}
 	var status = Backend.CustomerOrder.Editor.prototype.getInstance({/literal}{$order.ID}, true, {json array=$hideShipped}, {$order.isCancelled}, {$order.isFinalized}{literal});
@@ -121,5 +122,5 @@
 	{/literal}{if $formBillingAddress}{literal}
 		var billingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_{$order.ID}_billingAddress_form{literal}'), 'billingAddress');
 	{/literal}{/if}
-	
+
 </script>

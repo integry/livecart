@@ -838,6 +838,11 @@ class CustomerOrder extends ActiveRecordModel
 		return $paid;
 	}
 
+	public function getDueAmount()
+	{
+		return $this->getTotal($this->currency->get()) - $this->getPaidAmount();
+	}
+
 	/*####################  Data array transformation ####################*/
 
 	/**
