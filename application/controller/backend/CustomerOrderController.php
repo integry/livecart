@@ -316,6 +316,83 @@ class CustomerOrderController extends ActiveGridController
 		return new ActionRedirectResponse('backend.customerOrder', 'orders', array('id' => $this->request->get('id')));
 	}
 
+	public function exportDetailed()
+	{
+		@set_time_limit(0);
+
+		$this->loadLanguageFile('backend/Product');
+		$this->loadLanguageFile('backend/User');
+
+		// init file download
+		header('Content-Disposition: attachment; filename="orderDetails.csv"');
+		$out = fopen('php://output', 'w');
+
+		// header row
+		$columns = array_intersect_key($this->getAvailableColumns(), array_flip($this->getDefaultColumns()));
+		$detailColumns = array(array('Product', 'sku'), array('Product', 'name_lang'), array('Product', 'Manufacturer', 'name'), array('OrderedItem', 'count'), array('OrderedItem', 'price'), array('OrderedItem', 'priceCurrencyID'), array('OrderedItem', 'itemSubtotal'), array('ShippingAddress', 'phone'), array('ShippingAddress', 'companyName'), array('ShippingAddress', 'address1'), array('ShippingAddress', 'address2'), array('ShippingAddress', 'city'), array('ShippingAddress', 'stateName'), array('ShippingAddress', 'postalCode'), array('ShippingAddress', 'countryName'));
+		unset($columns['hiddenType']);
+
+		foreach ($columns as $column => $type)
+		{
+			$header[] = $this->translate($column);
+		}
+
+		foreach ($detailColumns as $column)
+		{
+			$cnt = count($column);
+			$field = $column[$cnt - 2] . '.' . $column[$cnt - 1];
+			if (substr($field, -5) == '_lang')
+			{
+				$field = substr($field, 0, -5);
+			}
+			$header[] = $this->translate($field);
+		}
+
+		fputcsv($out, $header);
+
+		// collect order ID's
+		$ids = array();
+		foreach ($this->lists(true, $columns) as $row)
+		{
+			$ids[] = $row[1];
+		}
+
+		// fetch detailed data
+		$f = new ARSelectFilter(new INCond(new ARFieldHandle('OrderedItem', 'customerOrderID'), $ids));
+		$data = array();
+		foreach (ActiveRecordModel::getRecordSetArray('OrderedItem', $f, array('Product', 'CustomerOrder', 'Manufacturer', 'ShippingAddress' => 'UserAddress')) as $row)
+		{
+			$data[$row['customerOrderID']][] = $row;
+		}
+
+		// columns
+		foreach ($this->lists(true, $columns) as $row)
+		{
+			foreach ($data[$row[1]] as $item)
+			{
+				//print_r($item);
+				$itemData = $row;
+				foreach ($detailColumns as $column)
+				{
+					$value = $this->getColumnValue($item, $column[0], $column[1]);
+					if (is_array($value))
+					{
+						if (isset($column[2]) && isset($value[$column[2]]))
+						{
+							$value = $value[$column[2]];
+						}
+					}
+
+					$itemData[] = $value;
+				}
+
+				fputcsv($out, $itemData);
+			}
+		}
+
+		exit;
+	}
+
 	protected function getSelectFilter()
 	{
 		$filter = new ARSelectFilter();

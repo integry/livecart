@@ -75,17 +75,27 @@ CustomerOrder.isCancelled=Is cancelled
 ShippingAddress.countryID=Country
 ShippingAddress.city=City
 ShippingAddress.address1=Address
+ShippingAddress.address2=Address line 2
 ShippingAddress.postalCode=Postal code
+ShippingAddress.countryName=Country
+ShippingAddress.stateName=State
+ShippingAddress.phone=Phone
+ShippingAddress.companyName=Company
 User.ID=User ID
 User.email=E-mail
 User.firstName=First name
 User.lastName=Last name
 User.companyName=Company name
 User.fullName=Full name
+OrderedItem.count=Count
+OrderedItem.price=Unit price
+OrderedItem.priceCurrencyID=Currency
+OrderedItem.itemSubtotal=Item subtotal
 
 _listing_orders=Listing orders $from - $to of $count
 _no_orders=No orders found
 _STATUS_AWAITING=Awaiting Shipment
+_detailed_export=Export order details
 
 # Mass actions
 _nothing_selected=Please select at least one order first

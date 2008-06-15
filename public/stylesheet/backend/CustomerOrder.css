@@ -63,6 +63,11 @@
     display: none;
 }
 
+.activeGridColumns li.detailedExport a
+{
+	background-image: url('../../image/silk/table_save.png');
+}
+
 /******************
     overview
 ******************/

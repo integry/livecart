@@ -114,10 +114,16 @@
 	dataFormatter=$dataFormatter
 }
 
-</div>
+<li class="detailedExport" id="detailedExportContainer_{$orderGroupID}">
+	<a href="#" onclick="window.location.href='{link controller=backend.customerOrder action=exportDetailed}?' + window.activeGrids['orders_{$orderGroupID}'].ricoGrid.getQueryString(); return false;">{t _detailed_export}</a>
+</li>
 
 {literal}
 <script type="text/javascript">
+
+	var detailedExport = $('detailedExportContainer_{/literal}{$orderGroupID}{literal}');
+	var menu = $('tabOrders_{/literal}{$orderGroupID}{literal}Content').down('.activeGridColumns').down('.menu', 1);
+	menu.insertBefore(detailedExport, menu.firstChild);
 
 	var massHandler = new ActiveGrid.MassActionHandler($('{/literal}orderMass_{$orderGroupID}{literal}'),
 													   window.activeGrids['{/literal}orders_{$orderGroupID}{literal}'],

@@ -318,6 +318,15 @@ class OrderedItem extends ActiveRecordModel
 		return $array;
 	}
 
+	public static function transformArray($array, ARSchema $schema)
+	{
+		$array = parent::transformArray($array, $schema);
+
+		$array['itemSubtotal'] = $array['count'] * $array['price'];
+
+		return $array;
+	}
+
 	/*####################  Get related objects ####################*/
 
 	/**
