@@ -8,6 +8,7 @@ TMP=/tmp/build
 PACKAGE=/var/db/livecart
 
 MAIN=/var/www/livecart
+MAIN=/var/www/release
 #BUILD=/var/www/build
 
 # get last log message
