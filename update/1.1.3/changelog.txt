@@ -1,0 +1,30 @@
+New translation:
+* Swedish
+
+New shipping calculator:
+* Canada post
+
+Backend improvements:
+* Added ability to export full order details (ordered products, shipping address) to CSV file from backend, which allows to export complete order data to 3rd party systems (accounting, inventory, etc.)
+* Added ability to mark order as paid (or not paid) through a drop down menu, which eases the workflow for stores that receive lots of offline payments as each received transaction doesn't need to be entered in system individually.
+* Initial data grid contents are loaded together with the grid itself, so the initial product, order and user management backend sections open faster now
+* Allow HTML code in product names
+* New user account can be created from backend without assigning billing/shipping addresses to that account
+
+Backend fixes:
+* Instead of moving only the selected products to a new category, all products of that category were moved instead
+* When adding a related product to a product with a custom SKU, the SKU was reset to a default auto-generated value.
+* When uploading images for either category or product, the second uploaded image was always set as the main image
+* Delivery zone management section in backend did not work in French language
+* Fixed a JavaScript error when adding a new product option or viewing category options
+* LiveCart ran out of memory when importing products from CSV with many different categories
+* Fixed a JavaScript error in e-mail template editor
+* User -> Orders tab displayed all orders instead of only displaying orders of the particular user
+
+Frontend fixes:
+* Order subtotal was displayed incorrectly when there were two or more applicable taxes
+* Theme-specific CSS files were not loaded on Windows servers
+* PayPal Website Payments Standard module didn't pass the currency value to PayPal
+* An error was raised when subscribing to newsletter with an e-mail address that was already in the database
+* Minor tweaks to the default theme
+
