@@ -56,14 +56,14 @@
 <script type="text/javascript">
 	Backend.showContainer('deliveryZoneManagerContainer');
 
-	Backend.DeliveryZone.prototype.Messages.confirmZoneDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_zone}{literal}';
-	Backend.DeliveryZone.prototype.Messages.defaultZoneName = '{/literal}{t _default_zone}{literal}';
-	Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmAddressDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_address_mask}{literal}';
-	Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmCityDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_city_mask}{literal}';
-	Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmZipDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_zip_mask}{literal}';
-	Backend.DeliveryZone.ShippingService.prototype.Messages.confirmDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_service}{literal}';
-	Backend.DeliveryZone.ShippingRate.prototype.Messages.confirmDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_rate}{literal}';
-	Backend.DeliveryZone.TaxRate.prototype.Messages.confirmDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_tax_rate}{literal}';
+	Backend.DeliveryZone.prototype.Messages.confirmZoneDelete = Backend.getTranslation('_are_you_sure_you_want_to_delete_this_zone');
+	Backend.DeliveryZone.prototype.Messages.defaultZoneName = Backend.getTranslation('_default_zone');
+	Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmAddressDelete = Backend.getTranslation('_are_you_sure_you_want_to_delete_this_address_mask');
+	Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmCityDelete = Backend.getTranslation('_are_you_sure_you_want_to_delete_this_city_mask');
+	Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmZipDelete = Backend.getTranslation('_are_you_sure_you_want_to_delete_this_zip_mask');
+	Backend.DeliveryZone.ShippingService.prototype.Messages.confirmDelete = Backend.getTranslation('_are_you_sure_you_want_to_delete_this_service');
+	Backend.DeliveryZone.ShippingRate.prototype.Messages.confirmDelete = Backend.getTranslation('_are_you_sure_you_want_to_delete_this_rate');
+	Backend.DeliveryZone.TaxRate.prototype.Messages.confirmDelete = Backend.getTranslation('_are_you_sure_you_want_to_delete_this_tax_rate');
 
 	Backend.DeliveryZone.prototype.Links.edit = '{/literal}{link controller=backend.deliveryZone action=edit}?id=_id_{literal}';
 	Backend.DeliveryZone.prototype.Links.remove = '{/literal}{link controller=backend.deliveryZone action=delete}{literal}';
