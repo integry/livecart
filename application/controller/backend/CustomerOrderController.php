@@ -324,7 +324,7 @@ class CustomerOrderController extends ActiveGridController
 		$this->loadLanguageFile('backend/User');
 
 		// init file download
-		//header('Content-Disposition: attachment; filename="orderDetails.csv"');
+		header('Content-Disposition: attachment; filename="orderDetails.csv"');
 		$out = fopen('php://output', 'w');
 
 		// header row
