@@ -324,7 +324,7 @@ class CustomerOrderController extends ActiveGridController
 		$this->loadLanguageFile('backend/User');
 
 		// init file download
-		header('Content-Disposition: attachment; filename="orderDetails.csv"');
+		//header('Content-Disposition: attachment; filename="orderDetails.csv"');
 		$out = fopen('php://output', 'w');
 
 		// header row
@@ -350,11 +350,22 @@ class CustomerOrderController extends ActiveGridController
 
 		fputcsv($out, $header);
 
+		// find ID column index
+		$index = -1;
+		foreach ($columns as $col => $type)
+		{
+			$index++;
+			if ('CustomerOrder.ID2' == $col)
+			{
+				break;
+			}
+		}
+
 		// collect order ID's
 		$ids = array();
 		foreach ($this->lists(true, $columns) as $row)
 		{
-			$ids[] = $row[1];
+			$ids[] = $row[$index];
 		}
 
 		// fetch detailed data
@@ -368,7 +379,7 @@ class CustomerOrderController extends ActiveGridController
 		// columns
 		foreach ($this->lists(true, $columns) as $row)
 		{
-			foreach ($data[$row[1]] as $item)
+			foreach ($data[$row[$index]] as $item)
 			{
 				//print_r($item);
 				$itemData = $row;
@@ -380,6 +391,10 @@ class CustomerOrderController extends ActiveGridController
 						if (isset($column[2]) && isset($value[$column[2]]))
 						{
 							$value = $value[$column[2]];
+						}
+						else
+						{
+							$value = '';
 						}
 					}
 
