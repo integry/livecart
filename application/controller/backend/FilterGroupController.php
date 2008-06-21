@@ -16,24 +16,24 @@ class FilterGroupController extends StoreManagementController
 {
 	/**
 	 * Configuration array
-	 * 
+	 *
 	 * @see self::getConfig()
 	 */
 	private $filtersConfig = array();
 
 	/**
 	 * Filters group index page
-	 * 
+	 *
 	 * @return ActionResponse
 	 */
 	public function index()
-	{		
+	{
 		$response = new ActionResponse();
 
 		$categoryID = (int)$this->request->get('id');
 		$category = Category::getInstanceByID($categoryID);
 		$specFieldsList = $category->getSpecificationFieldSet();
-		
+
 		$blankFilter = array
 		(
 			'ID' => $categoryID . '_new',
@@ -42,13 +42,13 @@ class FilterGroupController extends StoreManagementController
 			'categoryID' => $categoryID,
 			'specFields' => $this->getSpecFieldOptions($category->getSpecificationFieldArray())
 		);
-		
+
 		$response->set('filters', $this->createFiltersInGroupsCountArray($category->getFilterGroupSet()));
 		$response->set('blankFilter', $blankFilter);
 		$response->set('categoryID', $categoryID);
 		$response->set('configuration', $this->getConfig());
 		$response->set('defaultLangCode', $this->application->getDefaultLanguageCode());
-		
+
 		return $response;
 	}
 
@@ -63,46 +63,46 @@ class FilterGroupController extends StoreManagementController
 		{
 			$filterGroup->setFieldValue('specFieldID', SpecField::getInstanceByID((int)$specFieldID));
 		}
-		
+
 		return $this->save($filterGroup);
 	}
-	
+
 	/**
 	 * @role update
 	 */
 	public function update()
 	{
 		$filterGroup = FilterGroup::getInstanceByID((int)$this->request->get('ID'));
-		
+
 		return $this->save($filterGroup);
 	}
-	
+
 	/**
 	 * Creates a new or modifies an exisitng specification field (according to a passed parameters)
-	 * 
+	 *
 	 * @return JSONResponse Status and errors list if status was equal to failure
 	 */
 	private function save(FilterGroup $filterGroup)
 	{
 		$this->getConfig();
-		
+
 		$errors = $this->validate($this->request->getValueArray(array('name', 'filters', 'specFieldID', 'ID')), $this->filtersConfig['languageCodes']);
-		
+
 		if(!$errors)
 		{
 			$name = $this->request->get('name');
 			$filters = $this->request->get('filters', false);
-			
+
 			$filterGroup->setLanguageField('name',  $name, $this->filtersConfig['languageCodes']);
 			$filterGroup->specField->set(SpecField::getInstanceByID((int)$this->request->get('specFieldID')));
 			$filterGroup->save();
-			
+
 			$specField = $filterGroup->specField->get();
 			$specField->load();
 			$specFieldType = $specField->type->get();
 
 			$newIDs = array();
-			if(!empty($filters) && !$specField->isSelector()) 
+			if(!empty($filters) && !$specField->isSelector())
 			{
 				$newIDs = $filterGroup->saveFilters($filters, $specFieldType, $this->filtersConfig['languageCodes']);
 			}
@@ -117,26 +117,26 @@ class FilterGroupController extends StoreManagementController
 
 	/**
 	 * Get filter group data from database
-	 * 
+	 *
 	 * @role update
-	 * 
+	 *
 	 * @return JSONResponse
 	 */
 	public function item()
 	{
 		$groupID = $this->request->get('id');
 		$categoryID = $this->request->get('categoryID');
-		
+
 		$response = new ActionResponse();
 		$filterGroup = FilterGroup::getInstanceByID($groupID, true, array('SpecField', 'Category'));
-		
+
 		$filterGroupArray = $filterGroup->toArray();
-				
+
 		foreach($filterGroup->getFiltersList() as $filter)
 		{
 			$filterGroupArray['filters'][$filter->getID()] = $filter->toArray(false);
 		}
-		
+
 		if($filterGroup->specField->get()->isSelector())
 		{
 			$filterGroupArray['filtersCount'] = $filterGroup->specField->get()->getValuesSet()->getTotalRecordCount();
@@ -145,20 +145,20 @@ class FilterGroupController extends StoreManagementController
 		{
 			$filterGroupArray['filtersCount'] = isset($filterGroupArray['filters']) ? count($filterGroupArray['filters']) : 0;
 		}
-			
+
 		$filterGroupArray['rootId'] = "filter_items_list_" . $categoryID . "_".$filterGroupArray['ID'];
 		$filterGroupArray['categoryID'] = $categoryID;
-		
-		$filterGroupArray['specFields'] = $this->getSpecFieldOptions(Category::getInstanceByID($categoryID, ActiveRecord::LOAD_DATA)->getSpecificationFieldArray());		   
+
+		$filterGroupArray['specFields'] = $this->getSpecFieldOptions(Category::getInstanceByID($categoryID, ActiveRecord::LOAD_DATA)->getSpecificationFieldArray());
 
 		return new JSONResponse($filterGroupArray);
 	}
 
 	/**
 	 * Delete filter group
-	 * 
+	 *
 	 * @role remove
-	 * 
+	 *
 	 * @return JSONResponse Status
 	 */
 	public function delete()
@@ -176,9 +176,9 @@ class FilterGroupController extends StoreManagementController
 
 	/**
 	 * Sort filter groups
-	 * 
+	 *
 	 * @role sort
-	 * 
+	 *
 	 * @return JSONResponse Status
 	 */
 	public function sort()
@@ -204,7 +204,7 @@ class FilterGroupController extends StoreManagementController
 		{
 			if(!isset($field['type'])) throw new Exception();
 			if(!in_array($field['type'], array(SpecField::TYPE_TEXT_SIMPLE, SpecField::TYPE_TEXT_ADVANCED)))
-			{				
+			{
 				$specFieldOptions[] = array(
 					'ID' => $field['ID'],
 					'type' => $field['type'],
@@ -214,19 +214,19 @@ class FilterGroupController extends StoreManagementController
 				);
 			}
 		}
-		
+
 		return $specFieldOptions;
 	}
-	
+
 	/**
 	 * Create and return configuration array
-	 * 
+	 *
 	 * @see self::$filtersConfig
 	 */
 	private function getConfig()
 	{
 		if(!empty($this->filtersConfig)) return $this->filtersConfig;
-		
+
 		$languages[$this->application->getDefaultLanguageCode()] =  $this->locale->info()->getLanguageName($this->application->getDefaultLanguageCode());
 		foreach ($this->application->getLanguageList()->toArray() as $lang)
 		{
@@ -250,10 +250,10 @@ class FilterGroupController extends StoreManagementController
 			'typesWithNoFiltering' => array(),
 			'dateFormat' => $this->locale->info()->getDateFormat()
 			);
-			
+
 		return $this->filtersConfig;
 	}
-	
+
 	private function createFiltersInGroupsCountArray(ARSet $filtersGroupsSet)
 	{
 		$filterGroupIds = array();
@@ -262,30 +262,31 @@ class FilterGroupController extends StoreManagementController
 		{
 			$filterGroupIds[] = $filterGroup->getID();
 		}
-		
+
 		if(!empty($filterGroupIds))
 		{
 			$db = ActiveRecord::getDBConnection();
-			
+
 			$filterGroupIdsString = implode(',',  $filterGroupIds);
-			
+
 			$filtersResultArray = array();
 			$filtersResultSet = $db->executeQuery("SELECT filterGroupID, COUNT(*) AS filtersCount FROM Filter WHERE filterGroupID IN ($filterGroupIdsString) GROUP BY filterGroupID");
 			while ($filtersResultSet->next()) $filtersResultArray[] = $filtersResultSet->getRow();
 			$filtersResultCount = count($filtersResultArray);
-			
+
 			$specFieldValuesResultArray = array();
-			
+
 			$specFieldValuesResultSet = $db->executeQuery("SELECT specFieldID, COUNT(specFieldID) AS filtersCount FROM SpecFieldValue WHERE specFieldID IN (SELECT specFieldID FROM FilterGroup WHERE ID in ($filterGroupIdsString)) GROUP BY specFieldID");
 			while ($specFieldValuesResultSet->next()) $specFieldValuesResultArray[] = $specFieldValuesResultSet->getRow();
 			$specFieldValuesResultCount = count($specFieldValuesResultArray);
-	
+
 			foreach($filtersGroupsSet as $filterGroup)
 			{
 				$filterGroupArray = $filterGroup->toArray();
 				$filterGroupArray['filtersCount'] = 0;
-				
-				if($filterGroup->specField->get()->allowManageFilters())
+
+				$field = $filterGroup->specField->get();
+				if($field->isDate() || $field->isSimpleNumbers())
 				{
 					for($i = 0; $i < $filtersResultCount; $i++)
 					{
@@ -297,7 +298,7 @@ class FilterGroupController extends StoreManagementController
 				}
 				else
 				{
-					
+
 	   				for($i = 0; $i < $specFieldValuesResultCount; $i++)
 					{
 						if($specFieldValuesResultArray[$i]['specFieldID'] == $filterGroupArray['SpecField']['ID'])
@@ -305,16 +306,16 @@ class FilterGroupController extends StoreManagementController
 							$filterGroupArray['filtersCount'] = $specFieldValuesResultArray[$i]['filtersCount'];
 						}
 					}
-					
+
 				}
-				
+
 				$filtersGroupsArray[] = $filterGroupArray;
 			}
 		}
-		
+
 		return $filtersGroupsArray;
 	}
-	
+
 	/**
 	 * Validates filter group form
 	 *
@@ -324,7 +325,7 @@ class FilterGroupController extends StoreManagementController
 	private function validate($values = array(), $languageCodes)
 	{
 		$errors = array();
-		
+
 		if(!isset($values['name']) || $values['name'][$languageCodes[0]] == '')
 		{
 			$errors['name['.$languageCodes[0].']'] = '_error_name_empty';
@@ -332,13 +333,13 @@ class FilterGroupController extends StoreManagementController
 
 		$specField = SpecField::getInstanceByID((int)$values['specFieldID']);
 		if(!$specField->isLoaded()) $specField->load();
-		
+
 		if(isset($values['filters']) && !$specField->isSelector())
-		{				 
+		{
 			$filtersCount = count($values['filters']);
 			$i = 0;
 			foreach ($values['filters'] as $key => $v)
-			{				
+			{
 				$i++;
 				// If emty last new filter, ignore it
 				if($filtersCount == $i && $v['name'][$languageCodes[0]] == '' && preg_match("/new/", $key)) continue;
@@ -351,13 +352,13 @@ class FilterGroupController extends StoreManagementController
 							$errors['filters['.$key.'][rangeStart]'] = '_error_filter_value_is_not_a_number';
 						}
 					break;
-					case SpecField::TYPE_TEXT_DATE: 
+					case SpecField::TYPE_TEXT_DATE:
 						if(
 								!isset($v['rangeDateStart'])
-							 || !isset($v['rangeDateEnd']) 
-							 || count($sdp = explode('-', $v['rangeDateStart'])) != 3 
+							 || !isset($v['rangeDateEnd'])
+							 || count($sdp = explode('-', $v['rangeDateStart'])) != 3
 							 || count($edp = explode('-', $v['rangeDateEnd'])) != 3
-							 || !checkdate($edp[1], $edp[2], $edp[0]) 
+							 || !checkdate($edp[1], $edp[2], $edp[0])
 							 || !checkdate($sdp[1], $sdp[2], $sdp[0])
 						){
 							$errors['filters['.$key.'][rangeDateStart_show]'] = '_error_illegal_date';
@@ -371,9 +372,9 @@ class FilterGroupController extends StoreManagementController
 				}
 			}
 		}
-		
+
 		return $errors;
-	}	
+	}
 }
 
 ?>

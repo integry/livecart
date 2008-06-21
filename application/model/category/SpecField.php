@@ -1,5 +1,6 @@
 <?php
-ClassLoader::import("application.model.system.MultilingualObject");
+
+ClassLoader::import("application.model.eav.EavFieldCommon");
 ClassLoader::import("application.model.category.Category");
 ClassLoader::import("application.model.category.SpecFieldValue");
 ClassLoader::import("application.model.category.SpecFieldGroup");
@@ -15,42 +16,60 @@ ClassLoader::import('application.model.specification.*');
  * @package application.model.category
  * @author Integry Systems <http://integry.com>
  */
-class SpecField extends MultilingualObject
+class SpecField extends EavFieldCommon
 {
-	const DATATYPE_TEXT = 1;
-	const DATATYPE_NUMBERS = 2;
-
-	const TYPE_NUMBERS_SELECTOR = 1;
-	const TYPE_NUMBERS_SIMPLE = 2;
-
-	const TYPE_TEXT_SIMPLE = 3;
-	const TYPE_TEXT_ADVANCED = 4;
-	const TYPE_TEXT_SELECTOR = 5;
-	const TYPE_TEXT_DATE = 6;
-
 	/**
 	 * Define SpecField database schema
 	 */
 	public static function defineSchema($className = __CLASS__)
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("SpecField");
-
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
+		$schema = parent::defineSchema($className);
 		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", "Category", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("specFieldGroupID", "SpecFieldGroup", "ID", "SpecFieldGroup", ARInteger::instance()));
-		$schema->registerField(new ARField("name", ARArray::instance()));
-		$schema->registerField(new ARField("description", ARArray::instance()));
-		$schema->registerField(new ARField("type", ARInteger::instance(2)));
-		$schema->registerField(new ARField("dataType", ARInteger::instance(2)));
-		$schema->registerField(new ARField("position", ARInteger::instance(2)));
-		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
-		$schema->registerField(new ARField("isMultiValue", ARBool::instance()));
-		$schema->registerField(new ARField("isRequired", ARBool::instance()));
-		$schema->registerField(new ARField("isDisplayed", ARBool::instance()));
-		$schema->registerField(new ARField("isDisplayedInList", ARBool::instance()));
-		$schema->registerField(new ARField("valuePrefix", ARArray::instance()));
-		$schema->registerField(new ARField("valueSuffix", ARArray::instance()));
+	}
+
+	public function getOwnerClass()
+	{
+		return 'Product';
+	}
+
+	public function getStringValueClass()
+	{
+		return 'SpecificationStringValue';
+	}
+
+	public function getNumericValueClass()
+	{
+		return 'SpecificationNumericValue';
+	}
+
+	public function getDateValueClass()
+	{
+		return 'SpecificationDateValue';
+	}
+
+	public function getSelectValueClass()
+	{
+		return 'SpecificationItem';
+	}
+
+	public function getMultiSelectValueClass()
+	{
+		return 'MultiValueSpecificationItem';
+	}
+
+	public function getFieldIDColumnName()
+	{
+		return 'specFieldID';
+	}
+
+	public function getObjectIDColumnName()
+	{
+		return 'productID';
+	}
+
+	protected function getParentCondition()
+	{
+		return new EqualsCond(new ARFieldHandle(get_class($this), 'categoryID'), $this->category->get()->getID());
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -80,42 +99,10 @@ class SpecField extends MultilingualObject
 	 */
 	public static function getNewInstance(Category $category, $dataType = false, $type = false)
 	{
-		$specField = parent::getNewInstance(__CLASS__);
+		$specField = parent::getNewInstance(__CLASS__, $dataType, $type);
 		$specField->category->set($category);
 
-		if ($dataType)
-		{
-			$specField->dataType->set($dataType);
-			$specField->type->set($type);
-		}
-
 		return $specField;
-	}
-
-	/**
-	 * Get a set of SpecField records
-	 *
-	 * @param ARSelectFilter $filter
-	 * @param bool $loadReferencedRecords Load referenced tables data
-	 *
-	 * @return ActiveRecordSet
-	 */
-	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
-	{
-		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
-	}
-
-	/**
-	 * Get a set of SpecField records
-	 *
-	 * @param ARSelectFilter $filter
-	 * @param bool $loadReferencedRecords Load referenced tables data
-	 *
-	 * @return array
-	 */
-	public static function getRecordSetArray(ARSelectFilter $filter, $loadReferencedRecords = false)
-	{
-		return parent::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
 	/*####################  Value retrieval and manipulation ####################*/
@@ -133,212 +120,7 @@ class SpecField extends MultilingualObject
 		$value->save();
 	}
 
-	/**
-	 * Gets a related table name, where field values are stored
-	 *
-	 * @return array
-	 */
-	public function getValueTableName()
-	{
-		switch ($this->type->get())
-		{
-		  	case SpecField::TYPE_NUMBERS_SELECTOR:
-		  	case SpecField::TYPE_TEXT_SELECTOR:
-				return 'SpecificationItem';
-				break;
-
-		  	case SpecField::TYPE_NUMBERS_SIMPLE:
-				return 'SpecificationNumericValue';
-				break;
-
-		  	case SpecField::TYPE_TEXT_SIMPLE:
-		  	case SpecField::TYPE_TEXT_ADVANCED:
-				return 'SpecificationStringValue';
-				break;
-
-		  	case SpecField::TYPE_TEXT_DATE:
-				return 'SpecificationDateValue';
-				break;
-
-			default:
-				throw new Exception('Invalid specField type: ' . $this->type->get());
-		}
-
-	}
-
-	public function getSpecificationFieldClass()
-	{
-		$specValueClass = $this->getValueTableName();
-		if ('SpecificationItem' == $specValueClass)
-		{
-			if ($this->isMultiValue->get())
-			{
-				$specValueClass = 'MultiValueSpecificationItem';
-			}
-		}
-
-		return $specValueClass;
-	}
-
-	/**
-	 * This method is checking if SpecField record with passed id exist in the database
-	 *
-	 * @param int $id Record id
-	 * @return bool
-	 */
-	public static function exists($id)
-	{
-		return ActiveRecord::objectExists(__CLASS__, (int)$id);
-	}
-
-	/**
-	 * Check if current specification field is selector type
-	 *
-	 * @return boolean
-	 */
-	public function isSelector()
-	{
-		return in_array($this->type->get(), SpecField::getSelectorValueTypes());
-	}
-
-	/**
-	 * Check if current specification field is text type
-	 *
-	 * @return boolean
-	 */
-	public function isTextField()
-	{
-		return in_array($this->type->get(), array(SpecField::TYPE_TEXT_SIMPLE, SpecField::TYPE_TEXT_ADVANCED));
-	}
-
-	/**
-	 * Check if current specification field type is simple numbers
-	 *
-	 * @return boolean
-	 */
-	public function isSimpleNumbers()
-	{
-		return $this->type->get() == SpecField::TYPE_NUMBERS_SIMPLE;
-	}
-
-	/**
-	 * Check if current specification field type is date
-	 *
-	 * @return boolean
-	 */
-	public function isDate()
-	{
-		return $this->type->get() == SpecField::TYPE_TEXT_DATE;
-	}
-
-	/**
-	 * Get array of selector types
-	 *
-	 * @return array
-	 */
-	public static function getSelectorValueTypes()
-	{
-		return array(self::TYPE_NUMBERS_SELECTOR, self::TYPE_TEXT_SELECTOR);
-	}
-
-	public static function getNumberTypes()
-	{
-		return array(self::TYPE_NUMBERS_SELECTOR, self::TYPE_NUMBERS_SIMPLE);
-	}
-
-	public static function getTextTypes()
-	{
-		return array(self::TYPE_TEXT_SIMPLE, self::TYPE_TEXT_ADVANCED, self::TYPE_TEXT_SELECTOR, self::TYPE_TEXT_DATE);
-	}
-
-	public function allowManageFilters()
-	{
-		return $this->isDate() || $this->isSimpleNumbers();
-	}
-
-	public static function getMultilanguageTypes()
-	{
-		return array(self::TYPE_TEXT_SIMPLE, self::TYPE_TEXT_ADVANCED, self::TYPE_TEXT_SELECTOR);
-	}
-
-	public static function getDataTypeFromType($type)
-	{
-		if(in_array($type, self::getTextTypes())) return self::DATATYPE_TEXT;
-		else return self::DATATYPE_NUMBERS;
-	}
-
-	public function getFormFieldName($language = false)
-	{
-	  	return 'specField_' . $this->getID() . ($language && (self::getApplication()->getDefaultLanguageCode() != $language) ? '_' . $language : '');
-	}
-
-	/*####################  Saving ####################*/
-
-	/**
-	 * Delete spec field from database
-	 */
-	public static function deleteById($id)
-	{
-		return parent::deleteByID(__CLASS__, (int)$id);
-	}
-
-	protected function insert()
-	{
-		// get max position
-	  	$f = new ARSelectFilter();
-	  	$f->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'categoryID'), $this->category->get()->getID()));
-	  	$f->setOrder(new ARFieldHandle(__CLASS__, 'position'), 'DESC');
-	  	$f->setLimit(1);
-	  	$rec = ActiveRecord::getRecordSetArray(__CLASS__, $f);
-		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
-
-		$this->position->set($position);
-
-		return parent::insert();
-	}
-
-	/*####################  Data array transformation ####################*/
-
-	/**
-	 *	Returns SpecField array representations
-	 *
-	 *	@return array
-	 */
-	public function toArray()
-	{
-	  	$array = parent::toArray();
-	  	$array['fieldName'] = $this->getFormFieldName();
-	  	$this->setArrayData($array);
-	  	return $array;
-	}
-
 	/*####################  Get related objects ####################*/
-
-	public function getFiltersGroupsListArray()
-	{
-		$filter = new ARSelectFilter();
-		$filter->setOrder(new ARFieldHandle("FilterGroup", "position"));
-		$filter->setCondition(new EqualsCond(new ARFieldHandle("FilterGroup", "specFieldID"), $this->getID()));
-
-		$filterGroups = FilterGroup::getRecordSet($filter);
-		$filterGroupsArray = array();
-		$i = 0;
-		foreach($filterGroups as $filter)
-		{
-			$filterGroupsArray[$i] = $filter->toArray(false);
-			if($this->isSelector())
-			{
-				$filterGroupsArray[$i]['filtersCount'] = $this->getValuesSet()->getTotalRecordCount();
-			}
-			else
-			{
-				$filterGroupsArray[$i]['filtersCount'] = $filter->getFiltersList()->getTotalRecordCount();
-			}
-			$i++;
-		}
-
-		return $filterGroupsArray;
-	}
 
 	/**
 	 * Loads a set of spec field records in current category
@@ -358,27 +140,6 @@ class SpecField extends MultilingualObject
 	public function getValuesSet()
 	{
 		return SpecFieldValue::getRecordSet($this->getID());
-	}
-
-	/**
-	 *	Adds JOIN definition to ARSelectFilter to retrieve product attribute value for the particular SpecField
-	 *
-	 *	@param	ARSelectFilter	$filter	Filter instance
-	 */
-	public function defineJoin(ARSelectFilter $filter)
-	{
-		$table = $this->getJoinAlias();
-		$filter->joinTable($this->getValueTableName(), 'Product', 'productID AND ' . $table . '.SpecFieldID = ' . $this->getID(), 'ID', $table);
-	}
-
-	public function getFieldHandle($field)
-	{
-		return new ARExpressionHandle($this->getJoinAlias() . '.' . $field);
-	}
-
-	protected function getJoinAlias()
-	{
-		return 'specField_' . $this->getID();
 	}
 }
 

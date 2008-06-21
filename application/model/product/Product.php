@@ -299,7 +299,14 @@ class Product extends MultilingualObject
 					}
 					else
 					{
-						$this->setAttributeValue($field, $request->get($fieldName));
+						if (strlen($request->get($fieldName)))
+						{
+							$this->setAttributeValue($field, $request->get($fieldName));
+						}
+						else
+						{
+							$this->removeAttribute($field);
+						}
 					}
 				}
 			}
@@ -309,9 +316,9 @@ class Product extends MultilingualObject
 	/**
 	 * Sets specification attribute
 	 *
-	 * @param iSpecification $specification Specification item value
+	 * @param iEavSpecification $specification Specification item value
 	 */
-	public function setAttribute(iSpecification $specification)
+	public function setAttribute(iEavSpecification $specification)
 	{
 		$this->getSpecification()->setAttribute($specification);
 	}

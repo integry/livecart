@@ -1,58 +1,45 @@
 <?php
 
-include_once dirname(__file__) . '/Specification.php';
+ClassLoader::import('application.model.eav.EavValueSpecificationCommon');
 
 /**
  * An attribute value that is assigned to a particular product.
  * Concrete attribute value types (string, number, date, etc.) are defined by subclasses.
  *
  * @package application.model.specification
- * @author Integry Systems <http://integry.com>   
+ * @author Integry Systems <http://integry.com>
  */
-abstract class ValueSpecification extends Specification
+abstract class ValueSpecification extends EavValueSpecificationCommon
 {
-	public static function defineSchema($className = __CLASS__)
+	public static function getFieldClass()
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
+		return 'SpecField';
+	}
 
-		$schema->registerField(new ARPrimaryForeignKeyField("productID", "Product", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARPrimaryForeignKeyField("specFieldID", "SpecField", "ID", null, ARInteger::instance()));
+	public static function getOwnerClass()
+	{
+		return 'Product';
+	}
+
+	public static function getFieldIDColumnName()
+	{
+		return 'specFieldID';
+	}
+
+	public static function getOwnerIDColumnName()
+	{
+		return 'productID';
 	}
 
 	public static function getNewInstance($class, Product $product, SpecField $field, $value)
 	{
-		$specItem = parent::getNewInstance($class);
-		$specItem->product->set($product);
-		$specItem->specField->set($field);
-		$specItem->value->set($value);
-
-		return $specItem;
+		return parent::getNewInstance($class, $product, $field, $value);
 	}
-	
+
 	public static function restoreInstance($class, Product $product, SpecField $field, $value)
 	{
-		$specItem = parent::getInstanceByID($class, array('productID' => $product->getID(), 'specFieldID' => $field->getID()));
-		$specItem->value->set($value);
-		$specItem->resetModifiedStatus();
-
-		return $specItem;
+		return parent::restoreInstance($class, $product, $field, $value);
 	}
-
-	public static function transformArray($array, ARSchema $schema)
-	{
-		unset($array['Product']);
-		unset($array['SpecField']);
-		return MultiLingualObject::transformArray($array, $schema);
-	}
-
-	public function toArray()
-	{	
-		$arr  = parent::toFlatArray();
-		$arr['SpecField'] = $this->specField->get()->toArray();
-		
-		return $arr;
-	}	
 }
 
 ?>

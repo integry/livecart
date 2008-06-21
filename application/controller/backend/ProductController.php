@@ -541,7 +541,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	private function save(Product $product)
 	{
 		ClassLoader::import('application.model.presentation.ProductPresentation');
-
 		$validator = $this->buildValidator($product);
 		if ($validator->isValid())
 		{

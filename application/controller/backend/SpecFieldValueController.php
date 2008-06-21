@@ -11,10 +11,10 @@ ClassLoader::import("library.*");
  * @role category
  */
 class SpecFieldValueController extends StoreManagementController
-{  
+{
 	/**
 	 * Delete specification field value from database
-	 * 
+	 *
 	 * @role update
 	 * @return JSONResponse Indicates status
 	 */
@@ -22,7 +22,7 @@ class SpecFieldValueController extends StoreManagementController
 	{
 		if($id = $this->request->get("id", false))
 		{
-			SpecFieldValue::deleteById($id);
+			ActiveRecordModel::deleteById('SpecFieldValue', $id);
 			return new JSONResponse(false, 'success');
 		}
 		else
@@ -30,10 +30,10 @@ class SpecFieldValueController extends StoreManagementController
 			return new JSONResponse(false, 'failure');
 		}
 	}
- 
+
 	/**
 	 * Sort specification field values
-	 * 
+	 *
 	 * @role update
 	 * return JSONResponse Indicates status
 	 */
@@ -52,14 +52,14 @@ class SpecFieldValueController extends StoreManagementController
 
 		return new JSONResponse(false, 'success');
 	}
-	
+
 	/**
 	 * @role update
 	 */
 	public function mergeValues()
 	{
 		$mergedIntoValue = SpecFieldValue::getInstanceByID((int)$this->request->get('mergeIntoValue'), true);
-		
+
 		foreach($this->request->get('mergedValues') as $mergedValueId)
 		{
 			$mergedValue = SpecFieldValue::getInstanceByID((int)$mergedValueId, true);

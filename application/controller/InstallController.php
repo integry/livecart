@@ -130,7 +130,7 @@ class InstallController extends FrontendController
 				}
 			}
 
-			$dsnFile = ClassLoader::getRealPath('storage.configuration') . '/database.php';
+			$dsnFile = $this->getDsnFile();
 			if (!file_exists(dirname($dsnFile)))
 			{
 				mkdir(dirname($dsnFile), 0777, true);
@@ -332,9 +332,25 @@ class InstallController extends FrontendController
 			return $lastStep;
 		}
 
+		if (!file_exists($this->getDsnFile()))
+		{
+			@unlink($this->getStepFile());
+			return new ActionRedirectResponse('install', 'index');
+		}
+
 		$response = new ActionResponse();
 
 		return $response;
+	}
+
+	private function getDsnFile()
+	{
+		return ClassLoader::getRealPath('storage.configuration') . '/database.php';
+	}
+
+	private function getStepFile()
+	{
+		return ClassLoader::getRealPath('cache') . '/installStep.php';
 	}
 
 	private function verifyStep()
@@ -342,7 +358,7 @@ class InstallController extends FrontendController
 		$steps = array('index', 'license', 'database', 'admin', 'config', 'finish');
 		$steps = array_flip($steps);
 
-		$lastStepFile = ClassLoader::getRealPath('cache') . '/installStep.php';
+		$lastStepFile = $this->getStepFile();
 
 		if (file_exists($lastStepFile))
 		{

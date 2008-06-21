@@ -82,7 +82,7 @@ class SpecFieldController extends StoreManagementController
 	 */
 	public function update()
 	{
-		if(SpecField::exists((int)$this->request->get('ID')))
+		if(ActiveRecordModel::objectExists('SpecField', (int)$this->request->get('ID')))
 		{
 			$specField = SpecField::getInstanceByID((int)$this->request->get('ID'));
 		}
@@ -218,7 +218,7 @@ class SpecFieldController extends StoreManagementController
 	{
 		if($id = $this->request->get("id", false))
 		{
-			SpecField::deleteById($id);
+			ActiveRecordModel::deleteById('SpecField', $id);
 			return new JSONResponse(false, 'success');
 		}
 		else
@@ -320,7 +320,7 @@ class SpecFieldController extends StoreManagementController
 				$handleCond->addAND(new EqualsCond(new ARFieldHandle('SpecField', 'categoryID'), (int)$values['categoryID']));
 				$handleCond->addAND(new NotEqualsCond(new ARFieldHandle('SpecField', 'ID'), (int)$values['ID']));
 			$filter->setCondition($handleCond);
-			if(count(SpecField::getRecordSetArray($filter)) > 0)
+			if(count(ActiveRecordModel::getRecordSetArray('SpecField', $filter)) > 0)
 			{
 				$errors['handle'] =  '_error_handle_exists';
 			}

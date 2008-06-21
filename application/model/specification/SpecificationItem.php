@@ -1,9 +1,9 @@
 <?php
 
-ClassLoader::import("application.model.ActiveRecordModel");
-ClassLoader::import("application.model.product.*");
-
-include_once dirname(__file__) . '/Specification.php';
+ClassLoader::import('application.model.eav.EavItemCommon');
+ClassLoader::import('application.model.product.Product');
+ClassLoader::import('application.model.category.SpecField');
+ClassLoader::import('application.model.category.SpecFieldValue');
 
 /**
  * Links a pre-defined attribute value to a product
@@ -11,71 +11,73 @@ include_once dirname(__file__) . '/Specification.php';
  * @package application.model.specification
  * @author Integry Systems <http://integry.com>
  */
-class SpecificationItem extends Specification
+class SpecificationItem extends EavItemCommon
 {
+	public static function getFieldClass()
+	{
+		return 'SpecField';
+	}
+
+	public static function getOwnerClass()
+	{
+		return 'Product';
+	}
+
+	public static function getValueClass()
+	{
+		return 'SpecFieldValue';
+	}
+
+	public static function getFieldIDColumnName()
+	{
+		return 'specFieldID';
+	}
+
+	public static function getOwnerIDColumnName()
+	{
+		return 'productID';
+	}
+
+	public static function getValueIDColumnName()
+	{
+		return 'specFieldValueID';
+	}
+
+	public function getOwner()
+	{
+		return $this->product;
+	}
+
+	public function getField()
+	{
+		return $this->specField;
+	}
+
+	public function getValue()
+	{
+		return $this->specFieldValue;
+	}
+
 	public static function defineSchema($className = __CLASS__)
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("SpecificationItem");
-
-		$schema->registerField(new ARPrimaryForeignKeyField("specFieldID", "SpecField", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARPrimaryForeignKeyField("specFieldValueID", "SpecFieldValue", "ID", "SpecFieldValue", ARInteger::instance()));
-		$schema->registerField(new ARPrimaryForeignKeyField("productID", "Product", "ID", null, ARInteger::instance()));
+		return parent::defineSchema($className);
 	}
 
 	public static function getNewInstance(Product $product, SpecField $field, SpecFieldValue $value)
 	{
-		$specItem = parent::getNewInstance(__CLASS__);
-		$specItem->product->set($product);
-		$specItem->specField->set($field);
-		$specItem->specFieldValue->set($value);
-
-		return $specItem;
+		return parent::getNewInstance(__CLASS__, $product, $field, $value);
 	}
 
 	public static function restoreInstance(Product $product, SpecField $field, SpecFieldValue $value)
 	{
-		$inst = parent::getInstanceByID(__CLASS__, array('productID' => $product->getID(), 'specFieldID' => $field->getID(), 'specFieldValueID' => $value->getID()));
-		$inst->specFieldValue->set($value);
-		$inst->resetModifiedStatus();
-
-		return $inst;
-	}
-
-	public static function getRecordCount(ARSelectFilter $filter)
-	{
-		return parent::getRecordCount(__CLASS__, $filter);
-	}
-
-	/**
-	 * @return ARSet
-	 */
-	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedData = false)
-	{
-		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedData);
+		return parent::restoreInstance(__CLASS__, $product, $field, $value);
 	}
 
 	public function set(SpecFieldValue $value)
 	{
-	  	// test whether the value belongs to the same field
-		if ($value->specField->get()->getID() != $this->specField->get()->getID())
-	  	{
-			throw new Exception('Cannot assign SpecField:' . $value->specField->get()->getID() . ' value to SpecField:' . $this->specField->get()->getID());
-		}
-
-		if($value !== $this->specFieldValue->get()) $this->specFieldValue->set($value);
+	  	return parent::set($value);
 	}
 
-	public function toArray()
-	{
-		return $this->specFieldValue->get()->toArray();
-	}
-
-	public function __destruct()
-	{
-		$this->specFieldValue->destructValue();
-		parent::__destruct();
-	}
 }
 
 ?>

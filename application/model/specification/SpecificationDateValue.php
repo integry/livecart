@@ -1,21 +1,18 @@
 <?php
 
-include_once dirname(__file__) . '/ValueSpecification.php';
+ClassLoader::import('application.model.specification.ValueSpecification');
 
 /**
  * Date attribute value assigned to a particular product.
- * 
+ *
  * @package application.model.specification
- * @author Integry Systems <http://integry.com>   
+ * @author Integry Systems <http://integry.com>
  */
 class SpecificationDateValue extends ValueSpecification
 {
 	public static function defineSchema($className = __CLASS__)
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("SpecificationDateValue");
-
-		parent::defineSchema($className);		  	
+		$schema = parent::defineSchema($className);
 		$schema->registerField(new ARField("value", ARDate::instance()));
 	}
 
@@ -23,23 +20,11 @@ class SpecificationDateValue extends ValueSpecification
 	{
 		return parent::getNewInstance(__CLASS__, $product, $field, $value);
 	}
-	
+
 	public static function restoreInstance(Product $product, SpecField $field, $value)
 	{
 		return parent::restoreInstance(__CLASS__, $product, $field, $value);
 	}
-	
-	public function toArray()
-	{
-		$array = parent::toArray();
-		
-		if ($array['value'])
-		{
-			$array['formatted'] = $this->getApplication()->getLocale()->getFormattedTime(strtotime($array['value']));
-		}
-			
-		return $array;
-	}	
 }
 
 ?>
