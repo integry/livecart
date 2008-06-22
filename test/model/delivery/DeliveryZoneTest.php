@@ -16,7 +16,7 @@ ClassLoader::import("application.model.tax.TaxRate");
  * @package test.model.delivery
  * @author Integry Systems
  */
-class TestDeliveryZone extends UnitTest
+class DeliveryZoneTest extends UnitTest
 {
 	public function __construct()
 	{
@@ -47,7 +47,7 @@ class TestDeliveryZone extends UnitTest
 
 		$this->assertEqual($zone->name->get(), ':TEST_ZONE');
 		$this->assertEqual($zone->isEnabled->get(), 1);
-		$this->assertTrue($zone->isFreeShipping->get(), 1);
+		$this->assertEqual($zone->isFreeShipping->get(), 1);
 	}
 
 	public function testGetAllDeliveryZones()

@@ -9,7 +9,7 @@ ClassLoader::import('application.model.user.User');
  * @author Integry Systems
  * @package test.model.system
  */
-class TestActiveRecordModel extends UnitTest
+class ActiveRecordModelTest extends UnitTest
 {
 	public function __construct()
 	{
@@ -71,7 +71,7 @@ class TestActiveRecordModel extends UnitTest
 		$newAddress->save();
 
 		// primary key (autoincrement)
-		$this->assertNotEqual($address->getID(), $newAddress->getID());
+		$this->assertNotEquals($address->getID(), $newAddress->getID());
 	}
 }
 

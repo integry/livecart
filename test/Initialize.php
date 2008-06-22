@@ -24,16 +24,16 @@ if (!defined('TEST_INITIALIZED'))
 
 	// set unittest and simpletest library root directory
 	$libDir = dirname(__FILE__) . '/_library/';
-	ClassLoader::mountPath('simpletest', realpath($libDir . 'simpletest/'));
+	ClassLoader::mountPath('phpunit', realpath($libDir . 'phpunit/'));
 	ClassLoader::mountPath('unittest', realpath($libDir . 'unittest') . '/');
 	ClassLoader::mountPath('testdir', dirname(__FILE__).'/');
-	ClassLoader::import("simpletest.*");
+	ClassLoader::import("phpunit.*");
 	ClassLoader::import("unittest.*");
 	ClassLoader::import("testdir.*");
 
-	ClassLoader::load('unit_tester');
-	ClassLoader::load('mock_objects');
-	ClassLoader::load('reporter');
+	//ClassLoader::load('unit_tester');
+	//ClassLoader::load('mock_objects');
+	//ClassLoader::load('reporter');
 
 	ClassLoader::import('unittest.UnitTest');
 

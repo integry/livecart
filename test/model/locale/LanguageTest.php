@@ -7,98 +7,102 @@ ClassLoader::import('application.model.system.Language');
  * Language model test
  *
  * @author Integry Systems
- * @package test.model.locale 
+ * @package test.model.locale
  */
-class TestLanguage extends UnitTest
-{	  
+class LanguageTest extends UnitTest
+{
 	public function __construct()
 	{
 		parent::__construct('test languages');
 	}
-	
+
 	public function getUsedSchemas()
 	{
 		return array(
 			'Language',
-			'InterfaceTranslation'
 		);
 	}
-	
+
+	public function testNothing()
+	{
+		$this->pass();
+	}
+
 	/*
-	function testLanguagesExist() 
-	{  
-		$languages = Language::getLanguages();  
+	function testLanguagesExist()
+	{
+		$languages = Language::getLanguages();
 		$this->assertTrue(count($languages) > 0);
 	}
-	
-	function testDefaultLanguageExists() 
-	{  
-		$def = Language::getDefaultLanguage();  
+
+	function testDefaultLanguageExists()
+	{
+		$def = Language::getDefaultLanguage();
 		$this->assertTrue($def instanceof Language);
 	}
-		
+
 	function testSwitchDefaultLanguages()
 	{
 		// get current default language
-		$def = Language::getDefaultLanguage();  
+		$def = Language::getDefaultLanguage();
 
 		// get active languages
-		$languages = Language::getLanguages(1);  
-		foreach ($languages as $nonDef) 
+		$languages = Language::getLanguages(1);
+		foreach ($languages as $nonDef)
 		{
 		  	if (!$nonDef->isDefault())
 		  	{
-				break;				
+				break;
 			}
 		}
-		
+
 		// switch default languages
 		$def->setAsDefault(0);
 		$def->save();
-		
+
 		$nonDef->setAsDefault();
 		$nonDef->save();
-		
-		$newDef = Language::getDefaultLanguage();  
+
+		$newDef = Language::getDefaultLanguage();
 		$this->assertTrue($newDef->getID() == $nonDef->getID());
-		
+
 		// switch back using static functions
 		Language::setDefault($def->getID());
-		$newDef = Language::getDefaultLanguage();  
-		$this->assertTrue($newDef->getID() == $def->getID());				
+		$newDef = Language::getDefaultLanguage();
+		$this->assertTrue($newDef->getID() == $def->getID());
 	}
-	
+
 	function testActivatingAndInactivating()
 	{
 		// inactivate all languages
-		$languages = Language::getLanguages();  
-		foreach ($languages as $lang) 
+		$languages = Language::getLanguages();
+		foreach ($languages as $lang)
 		{
 		  	$lang->setAsEnabled(false);
 		  	$lang->save();
 		}
-			  
+
 		// get inactive languages
-		$inactive = Language::getLanguages(2);  
+		$inactive = Language::getLanguages(2);
 		$this->assertEqual($inactive->getTotalRecordCount(), $languages->getTotalRecordCount());
 
 		// get active languages - should be none
-		$active = Language::getLanguages(1); 		 
+		$active = Language::getLanguages(1);
 		$this->assertEqual($active->getTotalRecordCount(), 0);
-		
+
 		// activate all languages using static function
-		foreach ($languages as $lang) 
+		foreach ($languages as $lang)
 		{
 		  	Language::setEnabled($lang->getID(), true);
 		}
 
 		// get active languages
-		$active = Language::getLanguages(1);  
+		$active = Language::getLanguages(1);
 		$this->assertEqual($active->getTotalRecordCount(), $languages->getTotalRecordCount());
 	}
 
 	function testAddNewLanguage()
-	{		
+	{
 	  	Language::add('it');
 
 	  	// try to read back the new object
@@ -121,7 +125,7 @@ class TestLanguage extends UnitTest
 		  	$interface = false;
 		}
 		$this->assertTrue($interface instanceof InterfaceTranslation);
-		
+
 		// try to read non-existing object
 		try
 	  	{

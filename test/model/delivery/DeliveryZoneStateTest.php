@@ -1,31 +1,39 @@
 <?php
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
+ClassLoader::import("application.model.delivery.State");
 ClassLoader::import("application.model.delivery.DeliveryZone");
 ClassLoader::import("application.model.delivery.DeliveryZoneCountry");
+ClassLoader::import("application.model.delivery.DeliveryZoneState");
 
 /**
  *
  * @package test.model.delivery
  * @author Integry Systems
  */
-class TestDeliveryZoneCountry extends UnitTest
+class DeliveryZoneStateTest extends UnitTest
 {
 	/**
 	 * @var DeliveryZone
 	 */
 	private $zone;
 
+	/**
+	 * @var State
+	 */
+	private $alaska;
+
 	public function __construct()
 	{
-		parent::__construct('delivery zone countries tests');
+		parent::__construct('delivery zone states tests');
 	}
 
 	public function getUsedSchemas()
 	{
 		return array(
 			'DeliveryZone',
-			'DeliveryZoneCountry'
+			'DeliveryZoneCountry',
+			'DeliveryZoneState'
 		);
 	}
 
@@ -38,17 +46,19 @@ class TestDeliveryZoneCountry extends UnitTest
 		$this->zone->isEnabled->set(1);
 		$this->zone->isFreeShipping->set(1);
 		$this->zone->save();
+
+		$this->alaska = State::getInstanceByID(1, true, true);
 	}
 
-	public function testCreateNewDeliveryZoneCountry()
+	public function testCreateNewDeliveryZoneState()
 	{
-		$deliveryCountry = DeliveryZoneCountry::getNewInstance($this->zone, 'LT');
-		$deliveryCountry->save();
+		$deliveryState = DeliveryZoneState::getNewInstance($this->zone,  $this->alaska);
+		$deliveryState->save();
 
-		$deliveryCountry->reload();
+		$deliveryState->reload();
 
-		$this->assertEqual($deliveryCountry->deliveryZone->get(), $this->zone);
-		$this->assertTrue($deliveryCountry->countryCode->get(), 'LT');
+		$this->assertEqual($deliveryState->deliveryZone->get(), $this->zone);
+		$this->assertTrue($deliveryState->state->get() === $this->alaska);
 	}
 }
 ?>

@@ -165,3 +165,10 @@ revision = tip
 
 [tree24.paths]
 default = ssh://mercurial@dev.integry.net/vendor/lightbox
+
+[tree25]
+root = test/_library/phpunit
+revision = tip
+
+[tree25.paths]
+default = ssh://mercurial@dev.integry.net/vendor/phpunit

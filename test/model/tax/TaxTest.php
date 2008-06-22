@@ -7,7 +7,7 @@ ClassLoader::import("application.model.tax.Tax");
  * @author Integry Systems
  * @package test.model.tax
  */
-class TestTax extends UnitTest
+class TaxTest extends UnitTest
 {
 	/**
 	 * Delivery zone

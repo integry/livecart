@@ -2,14 +2,14 @@
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
 ClassLoader::import("application.model.delivery.DeliveryZone");
-ClassLoader::import("application.model.delivery.DeliveryZoneAddressMask");
+ClassLoader::import("application.model.delivery.DeliveryZoneCountry");
 
 /**
  *
  * @package test.model.delivery
  * @author Integry Systems
  */
-class TestDeliveryZoneAddressMask extends UnitTest
+class DeliveryZoneCountryTest extends UnitTest
 {
 	/**
 	 * @var DeliveryZone
@@ -18,14 +18,14 @@ class TestDeliveryZoneAddressMask extends UnitTest
 
 	public function __construct()
 	{
-		parent::__construct('delivery zone city masks tests');
+		parent::__construct('delivery zone countries tests');
 	}
 
 	public function getUsedSchemas()
 	{
 		return array(
 			'DeliveryZone',
-			'DeliveryZoneAddressMask'
+			'DeliveryZoneCountry'
 		);
 	}
 
@@ -40,15 +40,15 @@ class TestDeliveryZoneAddressMask extends UnitTest
 		$this->zone->save();
 	}
 
-	public function testCreateNewDeliveryZoneAddressMask()
+	public function testCreateNewDeliveryZoneCountry()
 	{
-		$addressMask = DeliveryZoneAddressMask::getNewInstance($this->zone, 'Viln%');
-		$addressMask->save();
+		$deliveryCountry = DeliveryZoneCountry::getNewInstance($this->zone, 'LT');
+		$deliveryCountry->save();
 
-		$addressMask->reload();
+		$deliveryCountry->reload();
 
-		$this->assertEqual($addressMask->deliveryZone->get(), $this->zone);
-		$this->assertTrue($addressMask->mask->get(), 'Viln%');
+		$this->assertEqual($deliveryCountry->deliveryZone->get(), $this->zone);
+		$this->assertEqual($deliveryCountry->countryCode->get(), 'LT');
 	}
 }
 ?>

@@ -9,7 +9,7 @@ ClassLoader::import('application.model.system.*');
  * @author Integry Systems
  * @package test.model.system
  */
-class TestNetworkFetch extends UnitTest
+class NetworkFetchTest extends UnitTest
 {
 	public function __construct()
 	{

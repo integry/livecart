@@ -11,6 +11,12 @@ MAIN=/var/www/livecart
 MAIN=/var/www/release
 #BUILD=/var/www/build
 
+# check if there are no uncommitted files left
+if [ `hg fstatus | grep -v '\[' | grep ' ' | wc -l` != 0 ]; then
+	echo "Uncommitted files left"
+	exit
+fi
+
 # get last log message
 cd $MAIN
 LOG=`hg log -l 1 --template "{desc}"`

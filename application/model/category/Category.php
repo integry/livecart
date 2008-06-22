@@ -196,8 +196,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 				{
 					if ($node->getID() != $this->getID())
 					{
-						$node->setFieldValue("activeProductCount", $activeProductCountUpdateStr);
-						$node->save();
+						$f = new ARUpdateFilter();
+						$f->addModifier('activeProductCount', new ARExpressionHandle($activeProductCountUpdateStr));
+						$node->updateRecord($f);
 					}
 				}
 			}
@@ -619,7 +620,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	public function getSpecificationFieldGroupArray($loadReferencedRecords = false)
 	{
 		ClassLoader::import("application.model.category.SpecFieldGroup");
-		return ActiveRecordModel::getRecordSetArray('SpecFieldGroup', $this->getSpecificationGroupFilter(), $loadReferencedRecords);
+
+		return SpecFieldGroup::getRecordSetArray($this->getSpecificationGroupFilter(), $loadReferencedRecords);
 	}
 
  	/**
@@ -633,7 +635,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	{
 		ClassLoader::import("application.model.category.SpecFieldGroup");
 
-		return ActiveRecordModel::getRecordSet('SpecFieldGroup', $this->getSpecificationGroupFilter(), $loadReferencedRecords);
+		return SpecFieldGroup::getRecordSet($this->getSpecificationGroupFilter(), $loadReferencedRecords);
 	}
 
 	/**
@@ -649,7 +651,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	public function getSpecificationFieldSet($includeParentFields = false, $loadReferencedRecords = false)
 	{
 		ClassLoader::import("application.model.category.SpecField");
-		return ActiveRecordModel::getRecordSet('SpecField', $this->getSpecificationFilter($includeParentFields), true);
+		return SpecField::getRecordSet($this->getSpecificationFilter($includeParentFields), true);
 	}
 
 	public function getSpecificationFieldArray($includeParentFields = true, $loadReferencedRecords = false)
@@ -660,7 +662,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 
 	public function getSpecFieldsWithGroupsArray()
 	{
-		return ActiveRecordGroup::mergeGroupsWithFields('SpecFieldGroup', $this->getSpecificationFieldGroupArray(), $this->getSpecificationFieldArray(false, true));
+		return SpecFieldGroup::mergeGroupsWithFields($this->getSpecificationFieldGroupArray(), $this->getSpecificationFieldArray(false, true));
 	}
 
 	public function getOptions($includeInheritedOptions = false)

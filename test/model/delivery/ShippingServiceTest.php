@@ -7,9 +7,9 @@ ClassLoader::import("application.model.delivery.ShippingRate");
 /**
  *
  * @package test.model.delivery
- * @author Integry Systems 
+ * @author Integry Systems
  */
-class TestShippingService extends UnitTest
+class ShippingServiceTest extends UnitTest
 {
 	/**
 	 * Delivery zone
@@ -22,7 +22,7 @@ class TestShippingService extends UnitTest
 	{
 		parent::__construct('shiping service tests');
 	}
-	
+
 	public function getUsedSchemas()
 	{
 		return array(
@@ -31,24 +31,24 @@ class TestShippingService extends UnitTest
 			'DeliveryZone'
 		);
 	}
-	
+
 	public function setUp()
 	{
 		parent::setUp();
-		
+
 		$this->deliveryZone = DeliveryZone::getNewInstance();
 		$this->deliveryZone->setValueByLang('name', 'en', 'test zone');
 		$this->deliveryZone->save();
 	}
-	
+
 	public function testCreateNewService()
 	{
 		$service = ShippingService::getNewInstance($this->deliveryZone, 'Test service', ShippingService::SUBTOTAL_BASED);
 		$service->position->set(1);
 		$service->save();
-		
+
 		$service->reload();
-		
+
 		$this->assertEqual($service->getValueByLang('name', 'en'), 'Test service');
 		$this->assertEqual($service->position->get(), 1);
 		$this->assertTrue($service->deliveryZone->get() === $this->deliveryZone);
@@ -61,7 +61,7 @@ class TestShippingService extends UnitTest
 		$service1->save();
 		$service2 = ShippingService::getNewInstance($this->deliveryZone, 'Test service 2', ShippingService::SUBTOTAL_BASED);
 		$service2->save();
-		
+
 		$services = ShippingService::getByDeliveryZone($this->deliveryZone);
 		$this->assertTrue($service1 === $services->get(0));
 		$this->assertTrue($service2 === $services->get(1));
@@ -71,12 +71,12 @@ class TestShippingService extends UnitTest
 	{
 		$service = ShippingService::getNewInstance($this->deliveryZone, 'Test service 1', ShippingService::SUBTOTAL_BASED);
 		$service->save();
-		
+
 		$rate1 = ShippingRate::getNewInstance($service, 1.1, 1.2);
 		$rate1->save();
 		$rate2 = ShippingRate::getNewInstance($service, 1.3, 1.4);
 		$rate2->save();
-		
+
 		$rates = $service->getRates();
 		$this->assertTrue($rate1 === $rates->get(0));
 		$this->assertTrue($rate2 === $rates->get(1));

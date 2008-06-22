@@ -6,9 +6,9 @@ ClassLoader::import("application.model.delivery.ShippingService");
 /**
  *
  * @package test.model.delivery
- * @author Integry Systems 
+ * @author Integry Systems
  */
-class TestShippingRate extends UnitTest
+class ShippingRateTest extends UnitTest
 {
 	/**
 	 * Delivery zone
@@ -16,10 +16,10 @@ class TestShippingRate extends UnitTest
 	 * @var DeliveryZone
 	 */
 	private $deliveryZone = null;
-	
+
 	/**
 	 * Shipping service
-	 * 
+	 *
 	 * @var ShippingService
 	 */
 	private $shippingService = null;
@@ -28,7 +28,7 @@ class TestShippingRate extends UnitTest
 	{
 		parent::__construct('shiping rate tests');
 	}
-	
+
 	public function getUsedSchemas()
 	{
 		return array(
@@ -37,19 +37,19 @@ class TestShippingRate extends UnitTest
 			'ShippingRate'
 		);
 	}
-	
+
 	public function setUp()
 	{
 		parent::setUp();
-		
+
 		$this->deliveryZone = DeliveryZone::getNewInstance();
 		$this->deliveryZone->setValueByLang('name', 'en', 'test zone');
 		$this->deliveryZone->save();
-		
+
 		$this->shippingService = ShippingService::getNewInstance($this->deliveryZone, 'test category', ShippingService::SUBTOTAL_BASED);
 		$this->shippingService->save();
 	}
-	
+
 	public function testCreateNewRate()
 	{
 		$shippingRate = ShippingRate::getNewInstance($this->shippingService, 1.5, 10.5);
@@ -59,17 +59,17 @@ class TestShippingRate extends UnitTest
 		$shippingRate->subtotalPercentCharge->set(1.3);
 		$shippingRate->perKgCharge->set(1.4);
 		$shippingRate->save();
-		
+
 		$shippingRate->reload();
-		
+
 		$this->assertTrue($shippingRate->shippingService->get() === $this->shippingService);
-		
+
 		// Range start and range end can be retrived using range start and range end shortcuts or using full name getSubtotalRange* or getWeightRange*
 		$this->assertEqual($shippingRate->getRangeStart(), 1.5);
 		$this->assertEqual($shippingRate->getRangeEnd(), 10.5);
 		$this->assertEqual($shippingRate->subtotalRangeStart->get(), $shippingRate->getRangeStart());
 		$this->assertEqual($shippingRate->subtotalRangeEnd->get(), $shippingRate->getRangeEnd());
-		
+
 		$this->assertEqual($shippingRate->flatCharge->get(), 1.1);
 		$this->assertEqual($shippingRate->perItemCharge->get(), 1.2);
 		$this->assertEqual($shippingRate->subtotalPercentCharge->get(), 1.3);
@@ -82,7 +82,7 @@ class TestShippingRate extends UnitTest
 		$rate1->save();
 		$rate2 = ShippingRate::getNewInstance($this->shippingService, 1.3, 1.4);
 		$rate2->save();
-		
+
 		$rates = ShippingRate::getRecordSetByService($this->shippingService);
 		$this->assertTrue($rate1 === $rates->get(0));
 		$this->assertTrue($rate2 === $rates->get(1));

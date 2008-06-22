@@ -11,7 +11,7 @@ ClassLoader::import("application.model.product.Product");
  * @package test.model.category
  * @author Integry Systems
  */
-class testSpecFieldValue extends UnitTest
+class SpecFieldValueTest extends UnitTest
 {
 	/**
 	 * Root category
@@ -73,7 +73,7 @@ class testSpecFieldValue extends UnitTest
 			$specFieldValues[1]->mergeWith($specFieldValues[2]);
 			$this->fail();
 		} catch(ApplicationException $e) {
-			$this->swallowErrors();
+			//$this->swallowErrors();
 			$this->pass();
 		} catch(Exception $e) {
 			$this->fail();
@@ -103,7 +103,7 @@ class testSpecFieldValue extends UnitTest
 	public function testUpdateSpecificationItems()
 	{
 		$specFieldValues = array();
-		foreach(range(1, 2) as $i)
+		foreach(range(1, 3) as $i)
 		{
 			$specFieldValues[$i] = SpecFieldValue::getNewInstance($this->specField);
 			$specFieldValues[$i]->save();
@@ -132,6 +132,11 @@ class testSpecFieldValue extends UnitTest
 		} catch(ARNotFoundException $e) {
 		   $this->pass();
 		}
+
+		// After merging values specification item should point to other value
+		$this->assertTrue($specificationItems[1]->specFieldValue->get() === $specFieldValues[1]);
+		$this->assertTrue($specificationItems[2]->specFieldValue->get() === $specFieldValues[2]);
+		$this->assertTrue($specificationItems[2]->specFieldValue->get() !== $specFieldValues[3]);
 	}
 }
 

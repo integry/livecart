@@ -8,11 +8,11 @@ ClassLoader::import("application.model.category.Category");
  *  @author Integry Systems
  *  @package test.model.product
  */
-class TestProductRelationshipGroup extends UnitTest
+class ProductRelationshipGroupTest extends UnitTest
 {
 	private $groupAutoIncrementNumber = 0;
 	private $productAutoIncrementNumber = 0;
-	
+
 	/**
 	 * @var Product
 	 */
@@ -22,14 +22,14 @@ class TestProductRelationshipGroup extends UnitTest
 	 * @var Category
 	 */
 	private $rootCategory = null;
- 
+
 	public function __construct()
 	{
 		parent::__construct('Related product groups tests');
-		
+
 		$this->rootCategory = Category::getInstanceByID(Category::ROOT_ID);
 	}
-	
+
 	public function getUsedSchemas()
 	{
 		return array(
@@ -37,11 +37,11 @@ class TestProductRelationshipGroup extends UnitTest
 			'Product'
 		);
 	}
-	
+
 	public function setUp()
 	{
 		parent::setUp();
-		
+
 		// Create some product
 		$this->product = Product::getNewInstance($this->rootCategory, 'test');
 		$this->product->save();
@@ -50,28 +50,28 @@ class TestProductRelationshipGroup extends UnitTest
 		$dump = ProductRelationshipGroup::getNewInstance($this->product);
 		$dump->save();
 	}
-	
+
 	public function testCreateNewGroup()
 	{
 		$group = ProductRelationshipGroup::getNewInstance($this->product);
 		$group->setValueByLang('name', 'en', 'TEST_GROUP');
 		$group->save();
-		
+
 		// Reload
 		$group->reload(array('Product'));
-		
+
 		$name = $group->name->get();
 		$this->assertEqual($name['en'], 'TEST_GROUP');
 		$this->assertEqual($this->product->getID(), $group->product->get()->getID());
 		$this->assertTrue($this->product === $group->product->get());
 	}
-		
+
 	public function testDeleteGroup()
 	{
 		$group = ProductRelationshipGroup::getNewInstance($this->product);
 		$group->save();
 		$this->assertTrue($group->isExistingRecord());
-		
+
 		$group->delete();
 		$this->assertFalse($group->isLoaded());
 	}
@@ -80,8 +80,8 @@ class TestProductRelationshipGroup extends UnitTest
 	{
 		// new product
 		$product = Product::getNewInstance($this->rootCategory, 'test');
-		$product->save();	
-		
+		$product->save();
+
 		$groups = array();
 		foreach(range(1, 3) as $i)
 		{
@@ -90,7 +90,7 @@ class TestProductRelationshipGroup extends UnitTest
 			$groups[$i]->setValueByLang('name', 'en', 'TEST_GROUP_' . $i);
 			$groups[$i]->save();
 		}
-		
+
 		$this->assertEqual(count($groups), ProductRelationshipGroup::getProductGroups($product)->getTotalRecordCount());
 		$i = 1;
 		foreach(ProductRelationshipGroup::getProductGroups($product) as $group)

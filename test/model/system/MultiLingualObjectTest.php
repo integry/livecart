@@ -12,7 +12,7 @@ ClassLoader::import('application.model.category.Category');
  * @author Integry Systems
  * @package test.model.system
  */
-class TestMultiLingualObject extends UnitTest
+class MultiLingualObjectTest extends UnitTest
 {
 	public function __construct()
 	{

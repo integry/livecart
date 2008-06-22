@@ -7,7 +7,7 @@ ClassLoader::import("application.model.role.Role");
  *  @author Integry Systems
  *  @package test.model.role
  */
-class TestRole extends UnitTest
+class RoleTest extends UnitTest
 {
 	public function __construct()
 	{
@@ -37,7 +37,7 @@ class TestRole extends UnitTest
 		$newRole->save();
 
 		$role = Role::getInstanceByName('testing');
-		$this->assertReference($role, $newRole);
+		$this->assertSame($role, $newRole);
 
 		$role = Role::getInstanceByName('unknown');
 		$this->assertNull($role, null);

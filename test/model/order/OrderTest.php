@@ -16,7 +16,7 @@ ClassLoader::import("library.payment.*");
  *  @author Integry Systems
  *  @package test.model.order
  */
-class TestOrder extends UnitTestCase
+class OrderTest extends UnitTest
 {
 	private $order;
 
@@ -26,9 +26,15 @@ class TestOrder extends UnitTestCase
 
 	private $user;
 
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct('Test order logic');
+	}
+
+	public function setUp()
+	{
+		parent::setUp();
+
 		ActiveRecordModel::beginTransaction();
 
 		ActiveRecord::executeUpdate('DELETE FROM TaxRate');
@@ -46,6 +52,7 @@ class TestOrder extends UnitTestCase
 		}
 
 		// initialize order
+		ActiveRecordModel::executeUpdate('DELETE FROM User WHERE email="test@test.com"');
 		$user = User::getNewInstance('test@test.com');
 		$user->save();
 		$this->user = $user;
@@ -98,9 +105,13 @@ class TestOrder extends UnitTestCase
 		$this->products[] = $product;
 	}
 
-	function tearDown()
+	public function getUsedSchemas()
 	{
-		$this->order->save(true);
+		return array(
+			'CustomerOrder',
+			'OrderedItem',
+			'Shipment',
+		);
 	}
 
 	function testAddingToAndRemovingFromCart()
@@ -127,6 +138,11 @@ class TestOrder extends UnitTestCase
 
 	function testShipments()
 	{
+		foreach ($this->products as $product)
+		{
+			$this->order->addProduct($product, 1);
+		}
+
 		$this->assertEqual($this->order->getShipments()->size(), 2);
 	}
 
@@ -168,6 +184,10 @@ class TestOrder extends UnitTestCase
 
 	function testFinalize()
 	{
+		$this->order->addProduct($this->products[0], 1);
+		$this->order->addProduct($this->products[1], 1);
+		$this->order->save();
+
 		$this->order->finalize($this->usd);
 		$total = $this->order->getTotal($this->usd);
 
@@ -219,6 +239,12 @@ class TestOrder extends UnitTestCase
 
 	function testPayment()
 	{
+		$this->order->addProduct($this->products[0], 1);
+		$this->order->addProduct($this->products[1], 1);
+		$this->order->save();
+
+		$this->order->finalize($this->usd);
+
 		$result = new TransactionResult();
 		$result->amount->set($this->order->totalAmount->get());
 		$result->currency->set($this->order->currency->get()->getID());
@@ -296,16 +322,16 @@ class TestOrder extends UnitTestCase
 		$order->addProduct($product, 1);
 		$order->save();
 
-		$this->assertTrue($order->getSubTotal($this->usd), $price);
+		$this->assertEqual($order->getSubTotal($this->usd), $price);
 
 		$order->finalize($this->usd);
-		$this->assertTrue($order->getSubTotal($this->usd), $price);
+		$this->assertEqual($order->getSubTotal($this->usd), $price);
 
 		ActiveRecord::clearPool();
 
 		$loadedOrder = CustomerOrder::getInstanceById($order->getID());
 		$loadedOrder->loadAll();
-		$this->assertTrue($loadedOrder->getSubTotal($this->usd), $price);
+		$this->assertEqual($loadedOrder->getSubTotal($this->usd), $price);
 	}
 
 	function testDigitalItemsAddedThroughShipment()

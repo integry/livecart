@@ -8,7 +8,7 @@ ClassLoader::import("application.model.category.Category");
  * @package test.model.category
  * @author Integry Systems
  */
-class TestCategory extends UnitTest
+class CategoryTest extends UnitTest
 {
 	/**
 	 * Root category
@@ -461,6 +461,8 @@ class TestCategory extends UnitTest
 
 	public function testActiveProductCountWhenChangingCategoryAvailability()
 	{
+		$this->root->reload();
+
 		$rootActiveProductCount = $this->root->activeProductCount->get();
 		$rootAotalProductCount = $this->root->totalProductCount->get();
 		$rootAvailableProductCount = $this->root->availableProductCount->get();

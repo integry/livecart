@@ -8,7 +8,7 @@ ClassLoader::import("application.model.product.ProductPricing");
  *  @author Integry Systems
  *  @package test.model.product
  */
-class TestProductPricing extends UnitTest
+class ProductPricingTest extends UnitTest
 {
 	/**
 	 * Root category

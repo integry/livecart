@@ -2,14 +2,14 @@
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
 ClassLoader::import("application.model.delivery.DeliveryZone");
-ClassLoader::import("application.model.delivery.DeliveryZoneZipMask");
+ClassLoader::import("application.model.delivery.DeliveryZoneCityMask");
 
 /**
  *
  * @package test.model.delivery
  * @author Integry Systems
  */
-class TestDeliveryZoneZipMask extends UnitTest
+class DeliveryZoneCityMaskTest extends UnitTest
 {
 	/**
 	 * @var DeliveryZone
@@ -25,7 +25,7 @@ class TestDeliveryZoneZipMask extends UnitTest
 	{
 		return array(
 			'DeliveryZone',
-			'DeliveryZoneZipMask'
+			'DeliveryZoneCityMask',
 		);
 	}
 
@@ -40,15 +40,15 @@ class TestDeliveryZoneZipMask extends UnitTest
 		$this->zone->save();
 	}
 
-	public function testCreateNewDeliveryZoneZipMask()
+	public function testCreateNewDeliveryZoneCityMask()
 	{
-		$zipMask = DeliveryZoneZipMask::getNewInstance($this->zone, 'Viln%');
-		$zipMask->save();
+		$cityMask = DeliveryZoneCityMask::getNewInstance($this->zone, 'Viln%');
+		$cityMask->save();
 
-		$zipMask->reload();
+		$cityMask->reload();
 
-		$this->assertEqual($zipMask->deliveryZone->get(), $this->zone);
-		$this->assertTrue($zipMask->mask->get(), 'Viln%');
+		$this->assertEqual($cityMask->deliveryZone->get(), $this->zone);
+		$this->assertEqual($cityMask->mask->get(), 'Viln%');
 	}
 }
 ?>
