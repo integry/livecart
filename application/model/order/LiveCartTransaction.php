@@ -51,7 +51,7 @@ class LiveCartTransaction extends TransactionDetails
 		}
 
 		// amount
-		$this->amount->set($order->getTotal($currency));
+		$this->amount->set(round($order->getTotal($currency), 2));
 		$this->currency->set($currency->getID());
 
 		// transaction identification
