@@ -49,6 +49,9 @@ class CategoryTest extends UnitTest
 
 	public function testCreateCategory()
 	{
+		Category::reindex();
+		$this->root->reload();
+
 		// Get root node info, before it is modified
 		$rootLft = $this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
 		$rootRgt = $this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
@@ -85,12 +88,16 @@ class CategoryTest extends UnitTest
 	public function testDeleteCategory()
 	{
 		$startingPositions = array();
-		foreach($this->root->getChildNodes(false, true) as $category)
+		$nodes = $this->root->getChildNodes(false, true);
+		$nodes->add($this->root);
+
+		$this->root->reload();
+		foreach($nodes as $category)
 		{
 			$startingPositions[$category->getID()] = array(
 				'lft'	 => $category->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME),
 				'rgt'	 => $category->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME),
-				'parent'  => $category->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(),
+				'parent'  => $category == $this->root ? '0' : $category->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(),
 			);
 		}
 
@@ -102,33 +109,33 @@ class CategoryTest extends UnitTest
 		// nested nodes
 		$nestedNodes = array();
 		$lastNode = $this->root;
-		foreach(range(1, 4) as $i)
+		foreach(array() as $i)
 		{
 			$nestedNodes[$i] = Category::getNewInstance($lastNode);
 			$nestedNodes[$i]->setValueByLang("name", 'en', 'TEST ' . rand(1, 1000));
 			$nestedNodes[$i]->save();
 			$lastNode = $nestedNodes[$i];
 		}
+		$newCategory->reload();
 
 		// Delete child node
 		$newCategory->delete();
 		$this->assertFalse($newCategory->isExistingRecord());
 		$this->assertFalse($newCategory->isLoaded());
 
-		// Delete nested nodes
-		$nestedNodes[$i]->delete();
-		$this->assertFalse($nestedNodes[$i]->isExistingRecord());
-		$this->assertFalse($nestedNodes[$i]->isLoaded());
-
 		// Check to see if everything is back to starting values
 		$activeTreeNodes = ActiveRecord::retrieveFromPool(get_class($newCategory));
-  		foreach($activeTreeNodes as $instance)
+  		foreach($activeTreeNodes as $category)
 		{
-			if(!$category) continue;
+			$category->reload();
+			if(!$category->getID()) continue;
 
 			$this->assertEqual($category->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $startingPositions[$category->getID()]['lft']);
 			$this->assertEqual($category->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $startingPositions[$category->getID()]['rgt']);
-			$this->assertEqual($category->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(), $startingPositions[$category->getID()]['parent']);
+			if (!$category->isRoot())
+			{
+				$this->assertEqual($category->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(), $startingPositions[$category->getID()]['parent']);
+			}
 		}
 	}
 
