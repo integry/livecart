@@ -1,4 +1,4 @@
-{'STORE_NAME'|config} Order Status Update
+Jaunumi par {'STORE_NAME'|config} pasūtījumu
 Cien. {$user.fullName},
 
 {if $order.shipments|@count == 1}

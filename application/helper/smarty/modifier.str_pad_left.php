@@ -6,14 +6,14 @@
  *  @package application.helper.smarty
  *  @author Integry Systems
  */
-function smarty_modifier_str_pad_left($string, $count)
+function smarty_modifier_str_pad_left($string, $count, $pad = ' ')
 {
-	return str_pad_left($string, $count);
+	return str_pad_left($string, $count, $pad);
 }
 
-function str_pad_left($string, $count, $pad_type = STR_PAD_LEFT)
+function str_pad_left($string, $count, $pad = ' ')
 {
-	return iconv_str_pad($string, $count, ' ', $pad_type);
+	return iconv_str_pad($string, $count, $pad, STR_PAD_LEFT);
 }
 
 function iconv_str_pad( $input, $pad_length, $pad_string = '', $pad_type = 1, $charset = "UTF-8" )

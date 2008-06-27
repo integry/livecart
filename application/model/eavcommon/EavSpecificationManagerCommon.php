@@ -24,9 +24,31 @@ abstract class EavSpecificationManagerCommon
 
 	public abstract function getFieldClass();
 
-	public function __construct(ActiveRecordModel $owner, $specificationDataArray = array())
+	public function __construct(ActiveRecordModel $owner, $specificationDataArray = null)
 	{
 		$this->owner = $owner;
+
+		if (is_null($specificationDataArray) && $owner->getID())
+		{
+			$specificationDataArray = self::fetchRawSpecificationData(get_class($this), array($owner->getID()), true);
+
+			$groupClass = $this->getFieldClass() . 'Group';
+			$groupIDColumn = strtolower(substr($groupClass, 0, 1)) . substr($groupClass, 1) . 'ID';
+
+			// preload attribute groups
+			$groups = array();
+			foreach ($specificationDataArray as $spec)
+			{
+				if ($spec[$groupIDColumn])
+				{
+					$groups[$spec[$groupIDColumn]] = true;
+				}
+			}
+			$groups = array_keys($groups);
+
+			ActiveRecordModel::getInstanceArray($groupClass, $groups);
+		}
+
 		$this->loadSpecificationData($specificationDataArray);
 	}
 
@@ -122,6 +144,40 @@ abstract class EavSpecificationManagerCommon
 		return $this->attributes[$field->getID()];
 	}
 
+	/**
+	 * Sets specification attribute value
+	 *
+	 * @param SpecField $field Specification field instance
+	 * @param mixed $value Attribute value
+	 */
+	public function setAttributeValue(EavFieldCommon $field, $value)
+	{
+		if (!is_null($value))
+		{
+			$specification = $this->getAttribute($field, $value);
+			$specification->set($value);
+
+			$this->setAttribute($specification);
+		}
+		else
+		{
+			$this->removeAttribute($field);
+		}
+	}
+
+	/**
+	 * Sets specification String attribute value by language
+	 *
+	 * @param SpecField $field Specification field instance
+	 * @param unknown $value Attribute value
+	 */
+	public function setAttributeValueByLang(EavFieldCommon $field, $langCode, $value)
+	{
+		$specification = $this->getAttribute($field);
+		$specification->setValueByLang($langCode, $value);
+		$this->setAttribute($specification);
+	}
+
 	public function save()
 	{
 		foreach ($this->removedAttributes as $attribute)
@@ -172,13 +228,13 @@ abstract class EavSpecificationManagerCommon
 		return ($a[$field][$fieldGroup]['position'] < $b[$field][$fieldGroup]['position']) ? -1 : 1;
 	}
 
-	public static function loadSpecificationForRecordArray(&$productArray)
+	public static function loadSpecificationForRecordArray($class, &$productArray)
 	{
 		$array = array(&$productArray);
-		self::loadSpecificationForRecordSetArray($array, true);
+		self::loadSpecificationForRecordSetArray($class, $array, true);
 
-		$fieldClass = $this->getFieldClass();
-		$groupClass = $this->getFieldClass() . 'Group';
+		$fieldClass = call_user_func(array($class, 'getFieldClass'));
+		$groupClass = $fieldClass . 'Group';
 		$groupIDColumn = strtolower(substr($groupClass, 0, 1)) . substr($groupClass, 1) . 'ID';
 
 		$groupIds = array();
@@ -272,7 +328,7 @@ abstract class EavSpecificationManagerCommon
 		}
 	}
 
-	protected static function fetchSpecificationData($class, $objectIDs, $fullSpecification = false)
+	private static function fetchRawSpecificationData($class, $objectIDs, $fullSpecification = false)
 	{
 		if (!$objectIDs)
 		{
@@ -300,7 +356,7 @@ abstract class EavSpecificationManagerCommon
 			' . $objectColumn . ' IN (' . implode(', ', $objectIDs) . ')' . ($fullSpecification ? '' : ' AND ' . $fieldClass . '.isDisplayedInList = 1');
 
 		$query = '
-		SELECT ' . $dateClass . '.*, NULL AS ' . $valueColumn . ', NULL AS specFieldValuePosition, ' . $groupClass . '.position AS SpecFieldGroupPosition, ' . $fieldClass . '.* as valueID FROM ' . $dateClass . ' ' . $cond . '
+		SELECT ' . $dateClass . '.*, NULL AS valueID, NULL AS specFieldValuePosition, ' . $groupClass . '.position AS SpecFieldGroupPosition, ' . $fieldClass . '.* as valueID FROM ' . $dateClass . ' ' . $cond . '
 		UNION
 		SELECT ' . $stringClass . '.*, NULL, NULL AS specFieldValuePosition, ' . $groupClass . '.position, ' . $fieldClass . '.* as valueID FROM ' . $stringClass . ' ' . $cond . '
 		UNION
@@ -312,7 +368,17 @@ abstract class EavSpecificationManagerCommon
 				 ' . str_replace('ON ' . $fieldColumn, 'ON ' . $valueItemClass . '.' . $fieldColumn, $cond) .
 				 ' ORDER BY ' . $objectColumn . ', SpecFieldGroupPosition, position, specFieldValuePosition';
 
-		$specificationArray = ActiveRecordModel::getDataBySQL($query);
+		return ActiveRecordModel::getDataBySQL($query);
+	}
+
+	protected static function fetchSpecificationData($class, $objectIDs, $fullSpecification = false)
+	{
+		if (!$objectIDs)
+		{
+			return array();
+		}
+
+		$specificationArray = self::fetchRawSpecificationData($class, $objectIDs, $fullSpecification);
 
 		$multiLingualFields = array('name', 'description', 'valuePrefix', 'valueSuffix');
 
@@ -336,6 +402,11 @@ abstract class EavSpecificationManagerCommon
 
 	protected function loadSpecificationData($specificationDataArray)
 	{
+		if (!is_array($specificationDataArray))
+		{
+			$specificationDataArray = array();
+		}
+
 		// get value class and field names
 		$fieldClass = $this->getFieldClass();
 		$fieldColumn = call_user_func(array($fieldClass, 'getFieldIDColumnName'));

@@ -92,6 +92,18 @@ class UserGroupTest extends UnitTest
 		$this->assertEqual($group->getRolesRecordSet()->getTotalRecordCount(), 1);
 	}
 
+	public function testSetAllRoles()
+	{
+		$group = UserGroup::getNewInstance('testing', 'testing');
+		$group->save();
+		$group->setAllRoles();
+		$group->save();
+
+		$user = User::getNewInstance('testing@testingsss.com', null, $group);
+		$user->save();
+		$this->assertTrue($user->hasBackendAccess());
+	}
+
 	public function testCancelRoles()
 	{
 		$group = UserGroup::getNewInstance('testing', 'testing');

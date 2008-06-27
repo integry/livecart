@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import("application.model.eav.EavSpecificationManagerCommon");
+ClassLoader::import("application.model.eavcommon.EavSpecificationManagerCommon");
 ClassLoader::import("application.model.specification.SpecificationItem");
 ClassLoader::import("application.model.specification.MultiValueSpecificationItem");
 ClassLoader::import("application.model.specification.SpecificationStringValue");

@@ -1,3 +1,3 @@
 ------------------------------------------------------------
-Item						   Price	 Qty	  Subtotal
+{t _product|@str_pad_iconv:25}{t _price|@str_pad_iconv:11}{t _qty|@str_pad_iconv:9}{t _subtotal}
 ------------------------------------------------------------

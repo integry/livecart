@@ -331,17 +331,7 @@ class Product extends MultilingualObject
 	 */
 	public function setAttributeValue(SpecField $field, $value)
 	{
-		if (!is_null($value))
-		{
-			$specification = $this->getSpecification()->getAttribute($field, $value);
-			$specification->set($value);
-
-			$this->setAttribute($specification);
-		}
-		else
-		{
-			$this->getSpecification()->removeAttribute($field);
-		}
+		$this->getSpecification()->setAttributeValue($field, $value);
 	}
 
 	/**
@@ -352,9 +342,7 @@ class Product extends MultilingualObject
 	 */
 	public function setAttributeValueByLang(SpecField $field, $langCode, $value)
 	{
-		$specification = $this->getSpecification()->getAttribute($field);
-		$specification->setValueByLang($langCode, $value);
-		$this->setAttribute($specification);
+		$this->getSpecification()->setAttributeValueByLang($field, $langCode, $value);
 	}
 
 	/**
@@ -784,48 +772,6 @@ class Product extends MultilingualObject
 	  	if ($this->specificationInstance)
 	  	{
 	  		return false;
-		}
-
-	  	if (!$specificationData)
-	  	{
-			$cond = '
-			LEFT JOIN
-				SpecField ON specFieldID = SpecField.ID
-			LEFT JOIN
-				SpecFieldGroup ON SpecField.specFieldGroupID = SpecFieldGroup.ID
-			WHERE
-				productID = ' . $this->getID() . '';
-
-			$commonFields = 'SpecFieldGroup.position AS SpecFieldGroupPosition, SpecField.* as valueID, SpecFieldGroup.ID AS SpecFieldGroupID';
-
-			$query = '
-			(SELECT SpecificationDateValue.*, NULL AS valueID, NULL AS specFieldValuePosition, ' . $commonFields . ' FROM SpecificationDateValue ' . $cond . ')
-			UNION
-			(SELECT SpecificationStringValue.*, NULL, NULL, ' . $commonFields . ' FROM SpecificationStringValue ' . $cond . ')
-			UNION
-			(SELECT SpecificationNumericValue.*, NULL, NULL, ' . $commonFields . ' FROM SpecificationNumericValue ' . $cond . ')
-			UNION
-			(SELECT SpecificationItem.productID, SpecificationItem.specFieldID, SpecFieldValue.value, SpecFieldValue.ID, SpecFieldValue.position, SpecFieldGroup.position, SpecField.*, SpecFieldGroup.ID AS SpecFieldGroupID
-					 FROM SpecificationItem
-					 	LEFT JOIN SpecFieldValue ON SpecificationItem.specFieldValueID =  SpecFieldValue.ID
-					 ' . str_replace('ON specFieldID', 'ON SpecificationItem.specFieldID', $cond) .
-					 ')
-					 ORDER BY SpecFieldGroupPosition, position, specFieldValuePosition';
-
-			$specificationData = self::getDataBySQL($query);
-
-			// preload attribute groups
-			$groups = array();
-			foreach ($specificationData as $spec)
-			{
-				if ($spec['SpecFieldGroupID'])
-				{
-					$groups[$spec['SpecFieldGroupID']] = true;
-				}
-			}
-			$groups = array_keys($groups);
-
-			ActiveRecordModel::getInstanceArray('SpecFieldGroup', $groups);
 		}
 
 		$this->specificationInstance = new ProductSpecification($this, $specificationData);

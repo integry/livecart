@@ -1,9 +1,9 @@
 <?php
 
-ClassLoader::import("application.model.eav.EavFieldCommon");
-ClassLoader::import("application.model.category.Category");
-ClassLoader::import("application.model.category.SpecFieldValue");
-ClassLoader::import("application.model.category.SpecFieldGroup");
+ClassLoader::import('application.model.eavcommon.EavFieldCommon');
+ClassLoader::import('application.model.category.Category');
+ClassLoader::import('application.model.category.SpecFieldValue');
+ClassLoader::import('application.model.category.SpecFieldGroup');
 ClassLoader::import('application.model.specification.*');
 
 /**
@@ -24,7 +24,7 @@ class SpecField extends EavFieldCommon
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = parent::defineSchema($className);
-		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", "Category", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField('categoryID', 'Category', 'ID', 'Category', ARInteger::instance()));
 	}
 
 	public function getOwnerClass()
@@ -65,6 +65,11 @@ class SpecField extends EavFieldCommon
 	public function getObjectIDColumnName()
 	{
 		return 'productID';
+	}
+
+	public function getOwnerIDColumnName()
+	{
+		return 'categoryID';
 	}
 
 	protected function getParentCondition()
@@ -108,38 +113,13 @@ class SpecField extends EavFieldCommon
 	/*####################  Value retrieval and manipulation ####################*/
 
 	/**
-	 * Adds a "choice" value to this field
+	 * Adds a 'choice' value to this field
 	 *
 	 * @param SpecFieldValue $value
-	 *
-	 * @todo calculate value position if needed
 	 */
 	public function addValue(SpecFieldValue $value)
 	{
-		$value->specField->set($this);
-		$value->save();
-	}
-
-	/*####################  Get related objects ####################*/
-
-	/**
-	 * Loads a set of spec field records in current category
-	 *
-	 * @return array
-	 */
-	public function getValuesList()
-	{
-		return SpecFieldValue::getRecordSetArray($this->getID());
-	}
-
-	/**
-	 * Loads a set of spec field records in current category
-	 *
-	 * @return ARSet
-	 */
-	public function getValuesSet()
-	{
-		return SpecFieldValue::getRecordSet($this->getID());
+		return parent::addValue($value);
 	}
 }
 

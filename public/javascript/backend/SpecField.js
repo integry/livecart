@@ -91,7 +91,10 @@ Backend.SpecField.prototype = {
 
 			if(response.status == 'success')
 			{
-				CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li, 3));
+				if (CategoryTabControl.prototype.resetTabItemsCount)
+				{
+					CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li, 3));
+				}
 
 				return true;
 			}
@@ -533,9 +536,9 @@ Backend.SpecField.prototype = {
 		this.nodes.valuePrefix.id = this.cssPrefix + this.categoryID + "_" + this.id + "_valuePrefix_" + this.languageCodes[0];
 		this.nodes.valueSuffix.id = this.cssPrefix + this.categoryID + "_" + this.id + "_valueSuffix_" + this.languageCodes[0];
 
-		this.nodes.name.name = "name_" + this.languageCodes[0];
-		this.nodes.valuePrefix.name = "valuePrefix_" + this.languageCodes[0];
-		this.nodes.valueSuffix.name = "valueSuffix_" + this.languageCodes[0];
+		this.nodes.name.name = "name";
+		this.nodes.valuePrefix.name = "valuePrefix";
+		this.nodes.valueSuffix.name = "valueSuffix";
 
 		this.nodes.multipleSelector.checked = this.isMultiValue;
 		this.nodes.isRequired.checked = this.isRequired;
@@ -590,7 +593,7 @@ Backend.SpecField.prototype = {
 		this.changeMainTitleAction(this.nodes.name.value);
 
 		if(this.specField.description_lang) this.nodes.description.value = this.specField.description_lang;
-		this.nodes.description.name = "description_" + this.languageCodes[0];
+		this.nodes.description.name = "description";
 
 		this.nodes.description.id = this.cssPrefix + this.categoryID + "_" + this.id + "_description_" + this.languageCodes[0];
 		var fields = ['name', 'valuePrefix', 'valueSuffix', 'description'];
@@ -695,7 +698,10 @@ Backend.SpecField.prototype = {
 			// if new or not main language
 			if(isNew || i > 0)
 			{
-				Element.remove(translatedValue);
+				if (translatedValue)
+				{
+					Element.remove(translatedValue);
+				}
 			}
 			else
 			{
@@ -1027,7 +1033,10 @@ Backend.SpecField.prototype = {
 		if(jsonResponse.status == 'success')
 		{
 			// reset product forms
-			Backend.Product.resetEditors();
+			if (Backend.Product)
+			{
+				Backend.Product.resetEditors();
+			}
 
 			if(this.nodes.parent.tagName.toLowerCase() == 'li')
 			{
@@ -1062,20 +1071,26 @@ Backend.SpecField.prototype = {
 				activeRecord.touch();
 			}
 
-			CategoryTabControl.prototype.resetTabItemsCount(this.categoryID);
+			if (CategoryTabControl.prototype.resetTabItemsCount)
+			{
+				CategoryTabControl.prototype.resetTabItemsCount(this.categoryID);
+			}
 
 			// Reload filters (uncomment when API is frozen)
 
-			try { // try to remove filter container
-				var tc = Backend.Category.tabControl;
+			if (Backend.Category)
+			{
+				try { // try to remove filter container
+					var tc = Backend.Category.tabControl;
 
-				var tabContent = $(tc.getContainerId('tabFilters', tc.treeBrowser.getSelectedItemId()));
-				$A(tabContent.getElementsByTagName("ul")).each(function(ul) {
-					try{ ActiveList.prototype.destroy(ul); } catch(e){ }
-				});
+					var tabContent = $(tc.getContainerId('tabFilters', tc.treeBrowser.getSelectedItemId()));
+					$A(tabContent.getElementsByTagName("ul")).each(function(ul) {
+						try{ ActiveList.prototype.destroy(ul); } catch(e){ }
+					});
 
-				Element.remove(tabContent);
-			} catch (e){
+					Element.remove(tabContent);
+				} catch (e){
+				}
 			}
 		}
 		else if(jsonResponse.errors)
@@ -1368,7 +1383,10 @@ Backend.SpecFieldGroup.prototype = {
 			response = eval('(' + response + ')');
 
 			if(response.status == 'success') {
-				CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li, 2));
+				if (CategoryTabControl.prototype.resetTabItemsCount)
+				{
+					CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li, 2));
+				}
 
 				return true;
 			}

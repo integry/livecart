@@ -18,6 +18,8 @@ abstract class ActiveRecordModel extends ActiveRecord
 
  	private static $plugins = array();
 
+ 	private $specificationInstance;
+
 	public static function setApplicationInstance(LiveCart $application)
 	{
 		self::$application = $application;
@@ -75,6 +77,31 @@ abstract class ActiveRecordModel extends ActiveRecord
 				}
 			}
 		}
+	}
+
+	public function getSpecification()
+	{
+		if (!$this->specificationInstance)
+		{
+			$this->loadSpecification();
+		}
+
+		return $this->specificationInstance;
+	}
+
+	public function loadSpecification($specificationData = null)
+	{
+	  	if ($this->specificationInstance)
+	  	{
+	  		return false;
+		}
+
+		if (!$this instanceof EavAble)
+		{
+			throw new ApplicationException(get_class($this) . ' does not support EAV');
+		}
+
+		$this->specificationInstance = new EavSpecificationManager(EavObject::getInstance($this), $specificationData);
 	}
 
 	protected function setLastPosition()

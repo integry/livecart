@@ -1,7 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.ActiveRecordModel');
-ClassLoader::import('application.model.eav.iEavSpecification');
+ClassLoader::import('application.model.eavcommon.iEavSpecification');
 
 /**
  *
@@ -17,7 +17,7 @@ abstract class EavSpecificationCommon extends ActiveRecordModel implements iEavS
 
 	public function getFieldInstance()
 	{
-		return $this->specField->get();
+		return $this->getField()->get();
 	}
 
 	public function getOwner()

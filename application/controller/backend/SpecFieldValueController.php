@@ -1,7 +1,7 @@
 <?php
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.category.*");
-ClassLoader::import("library.*");
+
+ClassLoader::import('application.controller.backend.abstract.eav.EavFieldValueControllerCommon');
+ClassLoader::import('application.model.specification.SpecFieldValue');
 
 /**
  * Category specification field value controller
@@ -10,8 +10,13 @@ ClassLoader::import("library.*");
  * @author	Integry Systems
  * @role category
  */
-class SpecFieldValueController extends StoreManagementController
+class SpecFieldValueController extends EavFieldValueControllerCommon
 {
+	protected function getClassName()
+	{
+		return 'SpecFieldValue';
+	}
+
 	/**
 	 * Delete specification field value from database
 	 *
@@ -20,15 +25,7 @@ class SpecFieldValueController extends StoreManagementController
 	 */
 	public function delete()
 	{
-		if($id = $this->request->get("id", false))
-		{
-			ActiveRecordModel::deleteById('SpecFieldValue', $id);
-			return new JSONResponse(false, 'success');
-		}
-		else
-		{
-			return new JSONResponse(false, 'failure');
-		}
+		return parent::delete();
 	}
 
 	/**
@@ -39,18 +36,7 @@ class SpecFieldValueController extends StoreManagementController
 	 */
 	public function sort()
 	{
-		foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
-		{
-			// Except new fields, because they are not yet in database
-			if(!empty($key) && !preg_match('/^new/', $key))
-			{
-				$specField = SpecFieldValue::getInstanceByID((int)$key);
-				$specField->setFieldValue('position', (int)$position);
-				$specField->save();
-			}
-		}
-
-		return new JSONResponse(false, 'success');
+		return parent::sort();
 	}
 
 	/**
@@ -58,15 +44,6 @@ class SpecFieldValueController extends StoreManagementController
 	 */
 	public function mergeValues()
 	{
-		$mergedIntoValue = SpecFieldValue::getInstanceByID((int)$this->request->get('mergeIntoValue'), true);
-
-		foreach($this->request->get('mergedValues') as $mergedValueId)
-		{
-			$mergedValue = SpecFieldValue::getInstanceByID((int)$mergedValueId, true);
-			$mergedIntoValue->mergeWith($mergedValue);
-		}
-
-		$mergedIntoValue->save();
-		return new JSONResponse(array('status' => 'success'));
+		return parent::mergeValues();
 	}
 }

@@ -20,6 +20,11 @@ abstract class BackendController extends BaseController
 
 		parent::__construct($application);
 
+		if (!isset($_SERVER['HTTP_USER_AGENT']))
+		{
+			$_SERVER['HTTP_USER_AGENT'] = 'Firefox';
+		}
+
 		// Firefox 3 alpha codename
 		if (!preg_match('/Firefox|Minefield/', $_SERVER['HTTP_USER_AGENT']))
 		{

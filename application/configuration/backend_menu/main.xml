@@ -52,6 +52,10 @@
                 	<Role>delivery</Role>
                 </Menu>
                 <Menu>
+                	<Title>_menu_custom_fields</Title>
+                	<Controller>backend.customField</Controller>
+                </Menu>
+                <Menu>
                 	<Title>_menu_tax</Title>
                 	<Controller>backend.tax</Controller>
                 	<Action>index</Action>

@@ -9,7 +9,7 @@ ClassLoader::import('application.model.system.MultilingualObject');
  * horsepowers for cars, etc. Since SpecFields are linked to categories, products from different categories can
  * have different set of attributes.
  *
- * @package application.model.eav
+ * @package application.model.eavcommon
  * @author Integry Systems <http://integry.com>
  */
 abstract class EavFieldCommon extends MultilingualObject
@@ -43,6 +43,8 @@ abstract class EavFieldCommon extends MultilingualObject
 	public abstract function getFieldIDColumnName();
 
 	public abstract function getObjectIDColumnName();
+
+	public abstract function getOwnerIDColumnName();
 
 	protected abstract function getParentCondition();
 
@@ -94,6 +96,19 @@ abstract class EavFieldCommon extends MultilingualObject
 		}
 
 		return $field;
+	}
+
+	/*####################  Value retrieval and manipulation ####################*/
+
+	/**
+	 * Adds a 'choice' value to this field
+	 *
+	 * @param SpecFieldValue $value
+	 */
+	public function addValue(EavValueCommon $value)
+	{
+		$value->getField()->set($this);
+		$value->save();
 	}
 
 	/**
@@ -182,6 +197,13 @@ abstract class EavFieldCommon extends MultilingualObject
 		return $this->type->get() == self::TYPE_TEXT_DATE;
 	}
 
+	public function getGroup()
+	{
+		$group = get_class($this) . 'Group';
+		$var = strtolower(substr($group, 0, 1)) . substr($group, 1);
+		return $this->$var;
+	}
+
 	/**
 	 * Get array of selector types
 	 *
@@ -254,6 +276,30 @@ abstract class EavFieldCommon extends MultilingualObject
 		$this->position->set($position);
 
 		return parent::insert();
+	}
+
+	/*####################  Get related objects ####################*/
+
+	/**
+	 * Loads a set of spec field records in current category
+	 *
+	 * @return array
+	 */
+	public function getValuesList()
+	{
+		$valueClass = call_user_func(array($this->getSelectValueClass(), 'getValueClass'));
+		return call_user_func(array($valueClass, 'getRecordSetArray'), $this->getID());
+	}
+
+	/**
+	 * Loads a set of spec field records in current category
+	 *
+	 * @return ARSet
+	 */
+	public function getValuesSet()
+	{
+		$valueClass = call_user_func(array($this->getSelectValueClass(), 'getValueClass'));
+		return call_user_func(array($valueClass, 'getRecordSet'), $this->getID());
 	}
 
 	/*####################  Data array transformation ####################*/

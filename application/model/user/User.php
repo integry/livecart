@@ -4,6 +4,7 @@ ClassLoader::import("application.model.ActiveRecordModel");
 ClassLoader::import("application.model.user.BillingAddress");
 ClassLoader::import("application.model.user.ShippingAddress");
 ClassLoader::import("application.model.user.UserGroup");
+ClassLoader::import("application.model.eav.EavAble");
 
 /**
  * Store user logic (including frontend and backend), including authorization and access control checking
@@ -11,7 +12,7 @@ ClassLoader::import("application.model.user.UserGroup");
  * @package application.model.user
  * @author Integry Systems <http://integry.com>
  */
-class User extends ActiveRecordModel
+class User extends ActiveRecordModel implements EavAble
 {
 	/**
 	 * ID of anonymous user that is not authorized

@@ -1,5 +1,6 @@
 <?php
 
+ClassLoader::import("application.model.eavcommon.iEavFieldManager");
 ClassLoader::import("application.model.system.ActiveTreeNode");
 ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import("application.model.category.CategoryImage");
@@ -15,7 +16,7 @@ ClassLoader::import("application.model.filter.*");
  * @author Integry Systems
  * @todo Update product counts when category is moved
  */
-class Category extends ActiveTreeNode implements MultilingualObjectInterface
+class Category extends ActiveTreeNode implements MultilingualObjectInterface, iEavFieldManager
 {
 	const INCLUDE_PARENT = true;
 

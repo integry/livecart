@@ -106,23 +106,23 @@ ActiveList.prototype = {
 	 * @var int
 	 */
 	tabIndex: 666,
-	
+
 	/**
 	 * The alpha level of menu when it is hidden
-	 * 
+	 *
 	 * @var double [0,1]
 	 */
-	visibleMenuOpacity: 1, 
-	
+	visibleMenuOpacity: 1,
+
 	/**
 	 * The alpha level of menu when it is visible
-	 * 
+	 *
 	 * @var double [0,1]
 	 */
-	hiddenMenuOpacity: 0.15, 
+	hiddenMenuOpacity: 0.15,
 
 	activeListsUsers: {},
-	
+
 	messages: {},
 
 	/**
@@ -144,7 +144,7 @@ ActiveList.prototype = {
 		}
 
 		this.messages = messages;
-					
+
 		Element.addClassName(this.ul, this.ul.id);
 
 		// Check if ul has an id
@@ -177,42 +177,42 @@ ActiveList.prototype = {
 		this.createSortable();
 		this.decorateItems();
 	},
-	
+
 	/**
 	 * Get active list singleton. If ul list is allready an ActiveList then use it's instance. In other case create new instance
-	 * 
+	 *
 	 * @param HTMLUlElement ul
 	 * @param object callbacks
 	 * @param object messages
 	 */
 	getInstance: function(ul, callbacks, messages)
-	{  
-		var ulElement = $(ul);	   
+	{
+		var ulElement = $(ul);
 		if(!ulElement.id)
 		{
 			throw Error('Active record main UL element is required to have an id. Also all list items should take that id plus "_"  as a prefix');
 			return false;
 		}
-	   
-		if(!ActiveList.prototype.activeListsUsers[ulElement.id]) 
+
+		if(!ActiveList.prototype.activeListsUsers[ulElement.id])
 		{
 			ActiveList.prototype.activeListsUsers[ulElement.id] = new ActiveList(ulElement.id, callbacks, messages);
 		}
-		
+
 		return ActiveList.prototype.activeListsUsers[ulElement.id];
 
 	},
 
 	/**
 	 * Destroy active list object associated with given list
-	 * 
+	 *
 	 * @param HTMLUlElement ul	destroy: function(ul)
-	 */	
+	 */
 	destroy: function(ul)
-	{  
+	{
 	   var id = ul.id ? ul.id : ul;
-	   
-	   if(ActiveList.prototype.activeListsUsers[id]) 
+
+	   if(ActiveList.prototype.activeListsUsers[id])
 	   {
 		   delete this.activeListsUsers[id];
 	   }
@@ -223,15 +223,15 @@ ActiveList.prototype = {
 	   if(this.isSortable)
 	   {
 		   Sortable.destroy(this.ul);
-		   this.isSortable = false; 
-		   $A(this.acceptFromLists).each(function(ul) 
+		   this.isSortable = false;
+		   $A(this.acceptFromLists).each(function(ul)
 		   {
 			   if(ActiveList.prototype.activeListsUsers[ul.id])
 			   {
 				   ActiveList.prototype.activeListsUsers[ul.id].isSortable = false;
 				   var s = Sortable.options(ul);
-	 
- 				   if(s) 
+
+ 				   if(s)
 				   {
 					  Draggables.removeObserver(s.element);
 					  s.draggables.invoke('destroy');
@@ -263,7 +263,7 @@ ActiveList.prototype = {
 		   iconContainer.style.visibility = 'visible';
 	   });
 	},
-						   
+
 
 	/**
 	 * Split list by odd and even active records by adding ActiveList_odd or ActiveList_even to each element
@@ -285,7 +285,7 @@ ActiveList.prototype = {
 
 	/**
 	 * Adds classes ActiveList_odd and ActiveList_even to separate odd elements from even
-	 * 
+	 *
 	 * @param HtmlElementLi A reference to item element. Default is current item
 	 * @param {Object} position Element position in ActiveList
 	 */
@@ -314,28 +314,28 @@ ActiveList.prototype = {
 	toggleContainer: function(li, action, highlight)
 	{
 		var container = this.getContainer(li, action);
-		
-		if(container.style.display == 'none') 
+
+		if(container.style.display == 'none')
 		{
 			this.toggleContainerOn(container, highlight);
 		}
-		else 
+		else
 		{
 			this.toggleContainerOff(container, highlight);
 			Element.removeClassName(li, action + '_inProgress');
 		}
 	},
-	
+
 	/**
-	 * Expand data container 
-	 * 
+	 * Expand data container
+	 *
 	 * @param HTMLElementDiv container Reference to the container
 	 */
 	toggleContainerOn: function(container, highlight)
-	{			 
+	{
 		container = $(container);
 		ActiveList.prototype.collapseAll();
-		
+
 		Sortable.destroy(this.ul);
 		// Destroy parent sortable as well
 		var parentList = this.ul.up(".activeList");
@@ -343,52 +343,52 @@ ActiveList.prototype = {
 		{
 		   ActiveList.prototype.activeListsUsers[parentList.id].destroySortable(true);
 		}
-		
+
 		if(BrowserDetect.browser != 'Explorer')
 		{
 			Effect.BlindDown(container, { duration: 0.5 });
 			Effect.Appear(container, { duration: 1.0 });
-			setTimeout(function() { 
-				container.style.height = 'auto'; 
+			setTimeout(function() {
+				container.style.height = 'auto';
 				container.style.display = 'block';
-				
+
 				if(highlight) this.highlight(container.up('li'), highlight);
 			}.bind(this), 300);
-		} 
+		}
 		else
 		{
 			container.style.display = 'block';
 			if(highlight) this.highlight(container.up('li'), highlight);
 		}
-		
+
 		Element.addClassName(container.up('li'), this.cssPrefix  + this.getContainerAction(container) + '_inProgress');
 	},
 
 	/**
-	 * Collapse data container 
-	 * 
+	 * Collapse data container
+	 *
 	 * @param HTMLElementDiv container Reference to the container
 	 */
 	toggleContainerOff: function(container, highlight)
 	{
 		var container = $(container);
 		this.createSortable(true);
-		
+
 		// Create parent sortable as well
 		var parentList = this.ul.up(".activeList");
 		if(parentList && ActiveList.prototype.activeListsUsers[parentList.id])
 		{
 		   ActiveList.prototype.activeListsUsers[parentList.id].createSortable(true);
 		}
-		
+
 		if(BrowserDetect.browser != 'Explorer')
 		{
 			Effect.BlindUp(container, {duration: 0.2});
-			setTimeout(function() { 
+			setTimeout(function() {
 				container.style.display = 'none';
 				if(highlight) this.highlight(container.up('li'), highlight);
 			}.bind(this), 40);
-		} 
+		}
 		else
 		{
 			container.style.display = 'none';
@@ -397,7 +397,7 @@ ActiveList.prototype = {
 
 		Element.removeClassName(container.up('li'), this.cssPrefix  + this.getContainerAction(container) + '_inProgress');
 	},
-	
+
 	getContainerAction: function(container)
 	{
 		var matches = container.className.match(/activeList_(\w+)Container/);
@@ -406,7 +406,7 @@ ActiveList.prototype = {
 			return matches[1];
 		}
 	},
-	
+
 	/**
 	 * Check if item container is empty
 	 *
@@ -452,7 +452,7 @@ ActiveList.prototype = {
 	{
 		if(!level) level = 1;
 		var matches = li.id.match(/_([a-zA-Z0-9]*)(?=(?:_|\b))/g);
-		
+
 		var id = matches[matches.length-level];
 		return id ? id.substr(1) : false;
 	},
@@ -483,12 +483,12 @@ ActiveList.prototype = {
 			icon.position = tmp[4];
 			icon.sibling = tmp[5];
 
-			if(icon.action != 'sort') 
+			if(icon.action != 'sort')
 			{
 				li[icon.action + 'Container'] = document.getElementsByClassName(self.cssPrefix + icon.action + 'Container', li)[0];
 			}
 		});
-		
+
 		li.prevParentId = this.ul.id;
 	},
 
@@ -512,7 +512,7 @@ ActiveList.prototype = {
 
 		if(typeof dom == 'string')
 		{
-			li.innerHTML = dom; 
+			li.innerHTML = dom;
 		}
 		else if (dom[0])
 		{
@@ -523,7 +523,7 @@ ActiveList.prototype = {
 				// Please forgive me if you will create links to elements you want to add and they will just not work
 				// My suggestion is to create those links after you have added new record to list
 				var cloned_dom = dom[i].cloneNode(true);
-				while(cloned_dom.childNodes.length > 0) li.appendChild(cloned_dom.childNodes[0]);	
+				while(cloned_dom.childNodes.length > 0) li.appendChild(cloned_dom.childNodes[0]);
 			}
 		}
 		else
@@ -532,9 +532,9 @@ ActiveList.prototype = {
 			while(cloned_dom.childNodes.length > 0) li.appendChild(cloned_dom.childNodes[0]);
 			li.className = dom.className;
 		}
-				
+
 		this.decorateLi(li);
-		this.colorizeItem(li, this.ul.childNodes.length);			
+		this.colorizeItem(li, this.ul.childNodes.length);
 
 		if(touch || touch === undefined)
 		{
@@ -544,23 +544,23 @@ ActiveList.prototype = {
 
 		return li;
 	},
-	
+
 	updateRecord: function(oldLi, newLi)
 	{
 	  	oldLi.parentNode.replaceChild(newLi, oldLi);
 		this.decorateLi(newLi);
 		this.colorizeItem(newLi, this.ul.childNodes.length);
-		this.rebindIcons(newLi);		
+		this.rebindIcons(newLi);
 
 		this.highlight(newLi, 'yellow');
 		this.touch(true);
 	},
-	
+
 	highlight: function(li, color)
 	{
 		if(!li) li = this._currentLi;
 		li = $(li);
-		
+
 		switch(color)
 		{
 			case 'red':
@@ -574,10 +574,10 @@ ActiveList.prototype = {
 				new Effect.Highlight(li, {startcolor:'#FBFF85', endcolor:'#F5F5F5'});
 				break;
 		}
-		
+
 	   setTimeout(function(li)
 	   {
-		   var textInput = li.down("input[@type=text]"); 
+		   var textInput = li.down("input[@type=text]");
 		   if(textInput)
 		   {
 		   	   textInput.focus();
@@ -620,7 +620,7 @@ ActiveList.prototype = {
 	decorateLi: function(li)
 	{
 		var self = this;
-		
+
 		// Bind events
 		Event.observe(li, "mouseover", function(e) { self.showMenu(this) });
 		Event.observe(li, "mouseout",  function(e) { self.hideMenu(this) });
@@ -631,37 +631,37 @@ ActiveList.prototype = {
 			var iconsDiv = document.createElement('span');
 			Element.addClassName(iconsDiv, self.cssPrefix + 'icons');
 			li.insertBefore(iconsDiv, li.firstChild);
-	
+
 			// add all icons
 			$A(this.ul.className.split(' ')).each(function(className)
 			{
 				// If icon is not progress and it was added to a whole list or only this item then put that icon into container
 				self.addIconToContainer(li, className);
 			});
-	
+
 			// progress is not a div like all other icons. It has no fixed size and is not clickable.
 			// This is done to properly handle animated images because i am not sure if all browsers will
 			// handle animated backgrounds in the same way. Also differently from icons progress icon
 			// can vary in size while all other icons are always the same size
 			iconProgress = document.createElement('img');
 			iconProgress.src = this.icons.progress;
-			
+
 			if (this.messages && this.messages._activeList_progress)
 			{
-				iconImage.alt = this.messages._activeList_progress;				
+				iconImage.alt = this.messages._activeList_progress;
 			}
-			
+
 			if (this.messages && this.messages._activeList_progress)
 			{
-				iconImage.title = iconImage.alt = this.messages._activeList_progress;			
+				iconImage.title = iconImage.alt = this.messages._activeList_progress;
 			}
-			
+
 			iconProgress.style.visibility = 'hidden';
-			
+
 			Element.addClassName(iconProgress, self.cssPrefix + 'progress');
 			iconsDiv.appendChild(iconProgress);
-	
-	
+
+
 			li.progress = iconProgress;
 			li.prevParentId = this.ul.id;
 		}
@@ -669,20 +669,20 @@ ActiveList.prototype = {
 
 	/**
 	 * Add icon to container according to active list classes current record classes
-	 * 
-	 * @param HtmlElementLi Element 
+	 *
+	 * @param HtmlElementLi Element
 	 * @param string className ActiveList(ul) classes separated by space
 	 */
 	addIconToContainer: function(li, className)
 	{
 		var container = li.down("span." + this.cssPrefix + 'icons');
-		
+
 		var regex = new RegExp('^' + this.cssPrefix + '(add|remove)_(\\w+)(_(before|after)_(\\w+))*');
 		var tmp = regex.exec(className);
 
 		if(!tmp) return;
 
-		var icon = {};   
+		var icon = {};
 
 		icon.type = tmp[1];
 		icon.action = tmp[2];
@@ -691,20 +691,20 @@ ActiveList.prototype = {
 		icon.sibling = tmp[5];
 
 		if(icon.action == 'accept') return true;
-		
+
 		if(icon.action != 'sort')
 		{
 			var iconImage = document.createElement('img');
-			
+
 			iconImage.src = icon.image;
 			if(this.messages && this.messages['_activeList_' + icon.action])
 			{
-				iconImage.title = iconImage.alt = this.messages['_activeList_' + icon.action];			 
+				iconImage.title = iconImage.alt = this.messages['_activeList_' + icon.action];
 			}
-			
+
 			Element.addClassName(iconImage, this.cssPrefix + icon.action);
-			Element.addClassName(iconImage, this.cssPrefix + 'icons_container');	 
-			
+			Element.addClassName(iconImage, this.cssPrefix + 'icons_container');
+
 			// If icon is removed from this item than do not display the icon
 			if((Element.hasClassName(li, this.cssPrefix + 'remove_' + icon.action) || !Element.hasClassName(this.ul, this.cssPrefix + 'add_' + icon.action)) && !Element.hasClassName(li, this.cssPrefix + 'add_' + icon.action))
 			{
@@ -730,7 +730,7 @@ ActiveList.prototype = {
 				li.appendChild(contentContainer);
 				li[icon.action + 'Container'] = contentContainer;
 			}
-		} 
+		}
 	},
 
 	/**
@@ -751,12 +751,12 @@ ActiveList.prototype = {
 		if(action != 'sort')
 		{
 			this._currentLi = li;
-			
+
 			Element.addClassName(li, this.cssPrefix  + action + '_inProgress');
-		
+
 			var url = this.callbacks[('before-'+action).camelize()].call(this, li);
 
-			if(!url) 
+			if(!url)
 			{
 				Element.removeClassName(li, this.cssPrefix  + action + '_inProgress');
 				return false;
@@ -798,7 +798,7 @@ ActiveList.prototype = {
 
 	/**
 	 * Toggle progress indicator off
-	 * 
+	 *
 	 * @param HtmlElementLi li A reference to item element
 	 */
 	offProgress: function(li)
@@ -808,7 +808,7 @@ ActiveList.prototype = {
 
 	/**
 	 * Toggle progress indicator on
-	 * 
+	 *
 	 * @param HtmlElementLi li A reference to item element
 	 */
 	onProgress: function(li)
@@ -828,14 +828,14 @@ ActiveList.prototype = {
 	callUserCallback: function(action, response, li)
 	{
 		this._currentLi = li;
-		
+
 		if(action == 'delete')
 		{
 			var duration = 0.5;
 			Effect.Fade(li, { duration: duration });
-			setTimeout( 
-			function() 
-			{ 
+			setTimeout(
+			function()
+			{
 				Element.remove(li);
 				this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
 			}.bind(this), duration * 1000 );
@@ -844,7 +844,7 @@ ActiveList.prototype = {
 		{
 			this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
 		}
-		
+
 
 		//Element.removeClassName(li, this.cssPrefix  + action + '_inProgress');
 
@@ -855,20 +855,20 @@ ActiveList.prototype = {
 	 * Generate array of elements from wich this active list can accept elements.
 	 * This array is generated from class name. Example: If this ul had "aciveList_accept_otherALClass"
 	 * then the list would accept elements from all active lists with class otherALClass
-	 * 
+	 *
 	 */
 	generateAcceptFromArray: function()
 	{
 		var self = this;
 		var regex = new RegExp('^' + self.cssPrefix + 'accept_(\\w+)');
-		
+
 		this.acceptFromLists = [this.ul];
 		$A(this.ul.className.split(' ')).each(function(className)
 		{
 			var tmp = regex.exec(className);
 			if(!tmp) return;
 			var allowedClassName = tmp[1];
-			
+
 			self.acceptFromLists = $$('ul.' + allowedClassName);
 		});
 	},
@@ -881,25 +881,25 @@ ActiveList.prototype = {
 	createSortable: function (forse)
 	{
 		Element.addClassName(this.ul, this.cssPrefix.substr(0, this.cssPrefix.length-1));
-		
+
 		if(Element.hasClassName(this.ul, this.cssPrefix + 'add_sort') && (forse || !this.isSortable))
-		{	
+		{
 			Sortable.create(this.ul.id,
 			{
 				dropOnEmpty:   true,
 				containment:   this.acceptFromLists,
-				onChange:	  function(elementObj) 
-				{ 
+				onChange:	  function(elementObj)
+				{
 					this.dragged = elementObj;
 				}.bind(this),
-				onUpdate:	  function() { 
+				onUpdate:	  function() {
 					setTimeout(function() { this.saveSortOrder(); }.bind(this), 1);
 				}.bind(this),
-				
+
 				starteffect: function(){ this.scrollStart() }.bind(this),
 				endeffect: function(){ this.scrollEnd() }.bind(this)
 			});
-			
+
 			// Undraggable items
 			Sortable.options(this.ul).draggables.each(function(draggable)
 			{
@@ -908,59 +908,59 @@ ActiveList.prototype = {
 					draggable.destroy();
 				}
 			});
-			
 
-			this.isSortable = true; 
-			$A(this.acceptFromLists).each(function(ul) 
+
+			this.isSortable = true;
+			$A(this.acceptFromLists).each(function(ul)
 			{
-				if(ActiveList.prototype.activeListsUsers[ul.id]) 
+				if(ActiveList.prototype.activeListsUsers[ul.id])
 				{
 					ActiveList.prototype.activeListsUsers[ul.id].createSortable();
 				}
 			});
-		}		
+		}
 	},
 
-	getWindowScroll: function() 
+	getWindowScroll: function()
 	{
 		var T, L, W, H;
-	  
-		if (w.document.document.document.documentElement && documentElement.scrollTop) 
+
+		if (w.document.document.document.documentElement && documentElement.scrollTop)
 		{
 			T = documentElement.scrollTop;
 			L = documentElement.scrollLeft;
-		} 
-		else if (w.document.body) 
+		}
+		else if (w.document.body)
 		{
 			T = body.scrollTop;
 			L = body.scrollLeft;
 		}
-	
-		if (w.innerWidth) 
+
+		if (w.innerWidth)
 		{
 			W = w.innerWidth;
 			H = w.innerHeight;
-		} 
-		else if (w.document.documentElement && documentElement.clientWidth) 
+		}
+		else if (w.document.documentElement && documentElement.clientWidth)
 		{
 			W = documentElement.clientWidth;
 			H = documentElement.clientHeight;
-		} 
-		else 
+		}
+		else
 		{
 			W = body.offsetWidth;
 			H = body.offsetHeight
 		}
-		
+
 		return { top: T, left: L, width: W, height: H };
 	},
 
-	findTopY: function(obj) 
+	findTopY: function(obj)
 	{
 		var curtop = 0;
-		if (obj.offsetParent) 
+		if (obj.offsetParent)
 		{
-			while (obj.offsetParent) 
+			while (obj.offsetParent)
 			{
 				curtop += obj.offsetTop;
 				obj = obj.offsetParent;
@@ -970,16 +970,16 @@ ActiveList.prototype = {
 		{
 			curtop += obj.y;
 		}
-	  
+
 		return curtop;
 	},
-	
-	findBottomY: function(obj) 
+
+	findBottomY: function(obj)
 	{
 		return this.findTopY(obj) + obj.offsetHeight;
 	},
-	
-	scrollSome: function() 
+
+	scrollSome: function()
 	{
 		var scroller = this.getWindowScroll();
 		var yTop = this.findTopY(this.dragged);
@@ -994,14 +994,14 @@ ActiveList.prototype = {
 			window.scrollTo(0,scroller.top - 30);
 		}
 	},
-	
-	scrollStart: function(e) 
+
+	scrollStart: function(e)
 	{
 		var $this = this;
 		this.dragged = e;
 	},
-	
-	scrollEnd: function(e) 
+
+	scrollEnd: function(e)
 	{
 		clearInterval(this.scrollPoll);
 	},
@@ -1015,14 +1015,14 @@ ActiveList.prototype = {
 	 */
 	showMenu: function(li)
 	{
-		var self = this;	
-		
+		var self = this;
+
 		$H(this.icons).each(function(icon)
 		{
 			if(!li[icon.key] || icon.key == 'progress') return;
-			
+
 			try {
-				li[icon.key].setOpacity(self.visibleMenuOpacity);			
+				li[icon.key].setOpacity(self.visibleMenuOpacity);
 			} catch(e) {
 				li[icon.key].style.visibility = 'visible';
 			}
@@ -1038,12 +1038,12 @@ ActiveList.prototype = {
 	 */
 	hideMenu: function(li)
 	{
-		var self = this;	
-	
+		var self = this;
+
 		$H(this.icons).each(function(icon)
 		{
 			if(!li[icon.key] || icon.key == 'progress') return;
-			
+
 			try {
 				li[icon.key].setOpacity(self.hiddenMenuOpacity);
 			} catch(e) {
@@ -1065,22 +1065,22 @@ ActiveList.prototype = {
 			// execute the action
 			this._currentLi = this.dragged;
 			var url = this.callbacks.beforeSort.call(this, this.dragged, order);
-				
-				
+
+
 			if(url)
 			{
 				this.destroySortable();
-			
+
 				// Destroy parent sortable as well
 				var parentList = this.ul.up(".activeList");
 				if(parentList && ActiveList.prototype.activeListsUsers[parentList.id])
 				{
 					ActiveList.prototype.activeListsUsers[parentList.id].destroySortable(true);
 				}
-			
+
 				// display feedback
 				this.onProgress(this.dragged);
-				
+
 				new LiveCart.AjaxRequest(
 					url + "&draggedID=" + this.dragged.id,
 					false,
@@ -1104,12 +1104,12 @@ ActiveList.prototype = {
 	 */
 	restoreDraggedItem: function(item, li)
 	{
-		// if moving elements from one active list to another we should also change the id of the HTMLLElement 
+		// if moving elements from one active list to another we should also change the id of the HTMLLElement
 		if(li.prevParentId != li.parentNode.id && li.parentNode.id == this.ul.id)
 		{
-			li.id = li.parentNode.id + "_" + li.id.substring(li.prevParentId.length + 1); 
+			li.id = li.parentNode.id + "_" + li.id.substring(li.prevParentId.length + 1);
 		}
-		
+
 		this.rebindIcons(li);
 		this.hideMenu(li);
 
@@ -1117,14 +1117,14 @@ ActiveList.prototype = {
 
 		var success = this.callbacks.afterSort.call(this, li, item);
 		this.createSortable(true);
-		
+
 		// Recreate parent list sortable as well
 		var parentList = this.ul.up(".activeList");
 		if(parentList && ActiveList.prototype.activeListsUsers[parentList.id])
 		{
 			ActiveList.prototype.activeListsUsers[parentList.id].createSortable(true);
 		}
-		
+
 		this.colorizeItems();
 		li.prevParentId = this.ul.id;
 		this.offProgress(li);
@@ -1133,7 +1133,7 @@ ActiveList.prototype = {
 		{
 			this.highlight(li, 'yellow');
 		}
-		
+
 		this.dragged = false;
 	},
 
@@ -1245,18 +1245,21 @@ ActiveList.prototype = {
 
 	/**
 	 * Remove record from active list
-	 * 
+	 *
 	 * @param HtmlElementLi li A reference to item element
 	 */
 	remove: function(li, touch)
 	{
 		if(touch !== false) touch = true;
-		
+
 		if(touch && BrowserDetect.browser != 'Explorer')
 		{
 			Effect.SwitchOff(li, {duration: 1});
-			setTimeout(function() { 
-				Element.remove(li); 
+			setTimeout(function() {
+				if (li.parentNode)
+				{
+					Element.remove(li);
+				}
 			}, 10);
 		}
 		else
@@ -1264,16 +1267,16 @@ ActiveList.prototype = {
 			Element.remove(li);
 		}
 	},
-	
+
 	/**
 	 * Collapse all opened records
-	 * 
+	 *
 	 * @param lists You can specify wich lists to collapse
 	 */
 	collapseAll: function()
 	{
 		var activeLists = {};
-		
+
 		if(!this.ul)
 		{
 			activeLists = ActiveList.prototype.activeListsUsers;
@@ -1282,13 +1285,13 @@ ActiveList.prototype = {
 		{
 			activeLists[this.ul.id] = true;
 		}
-		
-		$H(activeLists).each(function(activeList) 
+
+		$H(activeLists).each(function(activeList)
 		{
 			if(!activeList.value.ul || 0 >= activeList.value.ul.offsetHeight) return; // if list is invisible there is no need to collapse it
-			
+
 			var containers = document.getElementsByClassName('activeList_container', activeList.value.ul);
-			
+
 			for(var i = 0; i < containers.length; i++)
 			{
 				if(0 >= containers[i].offsetHeight) continue;
@@ -1297,26 +1300,26 @@ ActiveList.prototype = {
 			}
 		});
 	},
-	
-	
+
+
 	recreateVisibleLists: function()
 	{
-		$H(ActiveList.prototype.activeListsUsers).each(function(activeList) 
+		$H(ActiveList.prototype.activeListsUsers).each(function(activeList)
 		{
 			if(!activeList.value.ul || 0 >= activeList.value.ul.offsetHeight) return; // if list is invisible there is no need to collapse it
 			ActiveList.prototype.getInstance(activeList.value.ul).touch();
 		});
 	},
-	
+
 	/**
 	 * Get list of references to all ActiveList ActiveRecords (li)
 	 */
 	getChildList: function()
 	{
-		
+
 		var liArray = this.ul.getElementsByTagName("li");
 		var childList = [];
-		
+
 		for(var i = 0; i < liArray.length; i++)
 		{
 			if(this.ul == liArray[i].parentNode && !Element.hasClassName(liArray[i], 'ignore') && !Element.hasClassName(liArray[i], 'dom_template'))
@@ -1324,10 +1327,10 @@ ActiveList.prototype = {
 				childList[childList.length] = liArray[i];
 			}
 		}
-		
+
 		return childList;
 	},
-	
+
 	/**
 	 * Make list work again
 	 */
