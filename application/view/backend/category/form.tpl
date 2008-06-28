@@ -55,6 +55,9 @@
 				<label>{t _keywords}:</label>
 				{textarea name="keywords_`$lang.ID`" class="categoryKeywords"}
 			</p>
+
+			{include file="backend/eav/language.tpl" item=$category language=$lang.ID}
+
 		{/language}
 
 	</fieldset>

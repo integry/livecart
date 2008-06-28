@@ -104,6 +104,12 @@ abstract class EavFieldCommon extends MultilingualObject
 		return call_user_func_array(array($class, 'getNewInstance'), array($this));
 	}
 
+	public function getValueInstanceByID($id, $loadData = false)
+	{
+		$class = call_user_func(array($this->getSelectValueClass(), 'getValueClass'));
+		return call_user_func_array(array($class, 'getInstanceByID'), array($id, $loadData));
+	}
+
 	/*####################  Value retrieval and manipulation ####################*/
 
 	/**

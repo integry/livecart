@@ -233,6 +233,10 @@ abstract class EavSpecificationManagerCommon
 
 		if (($a[$field][$fieldGroup]['position'] == $b[$field][$fieldGroup]['position']))
 		{
+			if (!isset($a[$field]['position']))
+			{
+				var_dump($a);
+			}
 			return ($a[$field]['position'] < $b[$field]['position']) ? -1 : 1;
 		}
 
@@ -293,7 +297,7 @@ abstract class EavSpecificationManagerCommon
 				{
 					if ($request->isValueSet($fieldName) && !in_array($request->get($fieldName), array('other', '')))
 				  	{
-				  		$this->setAttributeValue($field, SpecFieldValue::getInstanceByID((int)$request->get($fieldName), ActiveRecordModel::LOAD_DATA));
+				  		$this->setAttributeValue($field, $field->getValueInstanceByID($request->get($fieldName), ActiveRecordModel::LOAD_DATA));
 				  	}
 				}
 				else

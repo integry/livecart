@@ -15,16 +15,11 @@
 			{textarea class="longDescr tinyMCE" name="longDescription_`$lang.ID`" id="product_`$cat`_`$product.ID`_longdes_`$lang.ID`"}
 		</div>
 	</p>
-	
+
 	{if $multiLingualSpecFieldss}
 	<fieldset>
 		<legend>{t _specification_attributes}</legend>
-		{foreach from=$multiLingualSpecFieldss item="field"}
-			<p>		
-				<label for="product_{$cat}_{$product.ID}_{$field.fieldName}_{$lang.ID}">{$field.name_lang}:</label>		
-				{include file="backend/product/form/specFieldFactory.tpl" field=$field language=$lang.ID}	
-			</p>
-		{/foreach}
+		{include file="backend/eav/language.tpl" item=$product cat=$cat language=$lang.ID}
 	</fieldset>
 	{/if}
 {/language}

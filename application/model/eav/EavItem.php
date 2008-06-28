@@ -78,6 +78,12 @@ class EavItem extends EavItemCommon
 	  	return parent::set($value);
 	}
 
+	public function toArray()
+	{
+		$arr = parent::toArray();
+		$arr['EavField'] = $arr['Field'];
+		return $arr;
+	}
 }
 
 ?>

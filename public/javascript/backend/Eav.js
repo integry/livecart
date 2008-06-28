@@ -10,6 +10,12 @@ Backend.Eav.prototype =
 	initialize: function(container)
 	{
 		this.container = container;
+
+		if (!container)
+		{
+			return;
+		}
+
 		this.initFieldControls(container);
 	},
 
@@ -24,15 +30,10 @@ Backend.Eav.prototype =
 		}
 
 		// single value select
-		var specFieldContainer = document.getElementsByClassName('specification', container)[0];
-
-		if (specFieldContainer)
+		var selects = container.getElementsByTagName('select');
+		for (k = 0; k < selects.length; k++)
 		{
-			var selects = specFieldContainer.getElementsByTagName('select');
-			for (k = 0; k < selects.length; k++)
-			{
-				new Backend.Eav.specFieldEntrySingleSelect(selects[k]);
-			}
+			new Backend.Eav.specFieldEntrySingleSelect(selects[k]);
 		}
 	}
 }
