@@ -15,6 +15,7 @@ class EavObject extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField("manufacturerID", "Manufacturer", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("userID", "User", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("userGroupID", "UserGroup", "ID", null, ARInteger::instance()));
+		$schema->registerField(new ARField("classID", ARInteger::instance(2)));
 	}
 
 	public static function getInstance(EavAble $parent)
@@ -40,6 +41,7 @@ class EavObject extends ActiveRecordModel
 		$field = self::getInstanceField($parent);
 		$instance = parent::getNewInstance(__CLASS__);
 		$instance->$field->set($parent);
+		$instance->classID->set(EavField::getClassID($parent));
 
 		return $instance;
 	}

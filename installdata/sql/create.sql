@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2008-04-29 23:57                                #
-# Model version:         Version 2008-04-29 1                            #
+# Created on:            2008-06-28 03:16                                #
+# Model version:         Version 2008-06-28                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -25,6 +25,7 @@ CREATE TABLE Product (
     defaultImageID INTEGER UNSIGNED COMMENT 'ID of ProductImage, which has been designated as the default image for the particular product',
     parentID INTEGER UNSIGNED,
     isEnabled BOOL NOT NULL DEFAULT 0 COMMENT 'Determines if the Product is enabled (visible and available in the store frontend) 0- not available 1- available 2- disabled (not visble)',
+    isRecurring BOOL,
     sku VARCHAR(20) NOT NULL COMMENT 'Product stock keeping unit code',
     name MEDIUMTEXT COMMENT 'Product name (translatable)',
     shortDescription MEDIUMTEXT COMMENT 'A shorter description of the product (translatable). The short description is usually displayed in the category product list',
@@ -322,6 +323,7 @@ ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 CREATE TABLE ProductPrice (
     productID INTEGER UNSIGNED NOT NULL COMMENT 'The Product the price is being defined for',
     currencyID CHAR(3) NOT NULL COMMENT 'Price Currency ID',
+    recurringID INTEGER UNSIGNED,
     price NUMERIC(12,2) NOT NULL COMMENT 'The actual price value',
     listPrice NUMERIC(12,2),
     CONSTRAINT PK_ProductPrice PRIMARY KEY (productID, currencyID)
@@ -1070,8 +1072,158 @@ CREATE TABLE NewsletterSentMessage (
     messageID INTEGER UNSIGNED,
     userID INTEGER UNSIGNED,
     subscriberID INTEGER UNSIGNED,
-    time DATETIME,
     CONSTRAINT PK_NewsletterSentMessage PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "RecurringProductPeriod"                                     #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE RecurringProductPeriod (
+    ID INTEGER UNSIGNED NOT NULL,
+    productID INTEGER UNSIGNED,
+    position INTEGER UNSIGNED DEFAULT 0,
+    periodType TINYINT COMMENT '0 - day, 1 - week, 2 - month, 3 - year',
+    periodLength INTEGER,
+    rebillCount INTEGER,
+    name MEDIUMTEXT,
+    description MEDIUMTEXT,
+    CONSTRAINT PK_RecurringProductPeriod PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "EavDateValue"                                               #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE EavDateValue (
+    objectID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the product the value is linked to',
+    fieldID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the attribute (SpecField)',
+    value DATE COMMENT 'The actual attribute value (date) assigned to a particular product',
+    CONSTRAINT PK_EavDateValue PRIMARY KEY (objectID, fieldID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+CREATE INDEX IDX_EavDateValue_1 ON EavDateValue (value,fieldID);
+
+CREATE INDEX IDX_EavDateValue_2 ON EavDateValue (fieldID,objectID);
+
+# ---------------------------------------------------------------------- #
+# Add table "EavStringValue"                                             #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE EavStringValue (
+    objectID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the product the value is linked to',
+    fieldID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the attribute (SpecField)',
+    value MEDIUMTEXT COMMENT 'The actual attribute value (string) assigned to a particular product',
+    CONSTRAINT PK_EavStringValue PRIMARY KEY (objectID, fieldID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+CREATE INDEX IDX_EavStringValue_1 ON EavStringValue (fieldID,objectID);
+
+# ---------------------------------------------------------------------- #
+# Add table "EavNumericValue"                                            #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE EavNumericValue (
+    objectID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the product the value is linked to',
+    fieldID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the attribute (SpecField)',
+    value FLOAT COMMENT 'The actual attribute value (numeric) assigned to a particular product',
+    CONSTRAINT PK_EavNumericValue PRIMARY KEY (objectID, fieldID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+CREATE INDEX IDX_EavNumericValue_1 ON EavNumericValue (value ASC,fieldID ASC);
+
+CREATE INDEX IDX_EavNumericValue_2 ON EavNumericValue (objectID,fieldID);
+
+# ---------------------------------------------------------------------- #
+# Add table "EavItem"                                                    #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE EavItem (
+    valueID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the pre-defined attribute value (SpecFieldValue)',
+    objectID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the product the value is linked to',
+    fieldID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the attribute (SpecField)',
+    CONSTRAINT PK_EavItem PRIMARY KEY (valueID, objectID, fieldID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT = 'Product specification: maps input field value list to a particular product';
+
+CREATE INDEX IDX_Specification_1 ON EavItem (valueID);
+
+CREATE INDEX IDX_Specification_2 ON EavItem (objectID);
+
+# ---------------------------------------------------------------------- #
+# Add table "EavValue"                                                   #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE EavValue (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    fieldID INTEGER UNSIGNED COMMENT 'The attribute (SpecField) ID the particular value is assigned to',
+    value MEDIUMTEXT COMMENT 'The actual attribute value (translatable)',
+    position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other values that are assigned to the same attribute',
+    CONSTRAINT PK_EavValue PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT = 'Is there a need to translate this field to diferent languages?';
+
+CREATE INDEX IDX_SpecFieldValue_1 ON EavValue (fieldID);
+
+# ---------------------------------------------------------------------- #
+# Add table "EavField"                                                   #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE EavField (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    eavFieldGroupID INTEGER UNSIGNED COMMENT 'SpecFieldGroup ID if the attribute is being grouped together with other related attributes. If the attribute is not grouped, the value is NULL.',
+    classID INTEGER COMMENT 'The Category the particular SpecField (attribute) belongs to',
+    name MEDIUMTEXT COMMENT 'Attribute name (translatable)',
+    description MEDIUMTEXT COMMENT 'Attribute description / explanation (translatable)',
+    type SMALLINT DEFAULT 1 COMMENT 'Field data type. Available types: 1. selector (numeric) 2. input (numeric) 3. input (text) 4. editor (text) 5. selector (text) 6. Date',
+    dataType SMALLINT DEFAULT 0 COMMENT '1. text 2. numeric',
+    position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Order number (position relative to other fields)',
+    handle VARCHAR(40),
+    isMultiValue BOOL COMMENT 'Determines if multiple values can be selected for selector attributes',
+    isRequired BOOL COMMENT 'Determines if a value has to be provided/entered for this attribute when creating or updating product information',
+    isDisplayed BOOL COMMENT 'Determines if the attribute value is displayed in product page',
+    isDisplayedInList BOOL COMMENT 'Determines if the attribute value is displayed in a category/search page (attribute summary)',
+    valuePrefix MEDIUMTEXT COMMENT 'Fixed prefix for all numeric values',
+    valueSuffix MEDIUMTEXT COMMENT 'Fixed suffix for all numeric values (for example, sec, kg, px, etc.)',
+    CONSTRAINT PK_EavField PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT = 'Field data type. Available types: 1. text field 2. drop down list (select one item from a list) 3. select multiple items from a list';
+
+CREATE INDEX IDX_SpecField_1 ON EavField (classID);
+
+# ---------------------------------------------------------------------- #
+# Add table "EavFieldGroup"                                              #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE EavFieldGroup (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    classID INTEGER COMMENT 'The Category the particular SpecFieldGroup (attribute group) belongs to',
+    name MEDIUMTEXT COMMENT 'Group name (translatable)',
+    position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other groups',
+    CONSTRAINT PK_EavFieldGroup PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+CREATE INDEX IDX_EavFieldGroup_1 ON EavFieldGroup (classID);
+
+# ---------------------------------------------------------------------- #
+# Add table "EavObject"                                                  #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE EavObject (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    categoryID INTEGER UNSIGNED,
+    customerOrderID INTEGER UNSIGNED,
+    manufacturerID INTEGER UNSIGNED,
+    userID INTEGER UNSIGNED,
+    userGroupID INTEGER UNSIGNED,
+    classID TINYINT UNSIGNED,
+    CONSTRAINT PK_EavObject PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -1079,278 +1231,329 @@ ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 # Foreign key constraints                                                #
 # ---------------------------------------------------------------------- #
 
-ALTER TABLE Product ADD CONSTRAINT Category_Product
+ALTER TABLE Product ADD CONSTRAINT Category_Product 
     FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE Product ADD CONSTRAINT Manufacturer_Product
+ALTER TABLE Product ADD CONSTRAINT Manufacturer_Product 
     FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
-ALTER TABLE Product ADD CONSTRAINT ProductImage_Product
+ALTER TABLE Product ADD CONSTRAINT ProductImage_Product 
     FOREIGN KEY (defaultImageID) REFERENCES ProductImage (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
-ALTER TABLE Product ADD CONSTRAINT Product_Product
+ALTER TABLE Product ADD CONSTRAINT Product_Product 
     FOREIGN KEY (parentID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE Category ADD CONSTRAINT Category_Category
+ALTER TABLE Category ADD CONSTRAINT Category_Category 
     FOREIGN KEY (parentNodeID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE Category ADD CONSTRAINT CategoryImage_Category
+ALTER TABLE Category ADD CONSTRAINT CategoryImage_Category 
     FOREIGN KEY (defaultImageID) REFERENCES CategoryImage (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
-ALTER TABLE SpecificationItem ADD CONSTRAINT SpecFieldValue_SpecificationItem
+ALTER TABLE SpecificationItem ADD CONSTRAINT SpecFieldValue_SpecificationItem 
     FOREIGN KEY (specFieldValueID) REFERENCES SpecFieldValue (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE SpecificationItem ADD CONSTRAINT Product_SpecificationItem
+ALTER TABLE SpecificationItem ADD CONSTRAINT Product_SpecificationItem 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE SpecificationItem ADD CONSTRAINT SpecField_SpecificationItem
+ALTER TABLE SpecificationItem ADD CONSTRAINT SpecField_SpecificationItem 
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE SpecField ADD CONSTRAINT Category_SpecField
+ALTER TABLE SpecField ADD CONSTRAINT Category_SpecField 
     FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE SpecField ADD CONSTRAINT SpecFieldGroup_SpecField
+ALTER TABLE SpecField ADD CONSTRAINT SpecFieldGroup_SpecField 
     FOREIGN KEY (specFieldGroupID) REFERENCES SpecFieldGroup (ID) ON DELETE CASCADE;
 
-ALTER TABLE SpecFieldValue ADD CONSTRAINT SpecField_SpecFieldValue
+ALTER TABLE SpecFieldValue ADD CONSTRAINT SpecField_SpecFieldValue 
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE CustomerOrder ADD CONSTRAINT User_CustomerOrder
+ALTER TABLE CustomerOrder ADD CONSTRAINT User_CustomerOrder 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
 
-ALTER TABLE CustomerOrder ADD CONSTRAINT UserAddress_CustomerOrder
+ALTER TABLE CustomerOrder ADD CONSTRAINT UserAddress_CustomerOrder 
     FOREIGN KEY (billingAddressID) REFERENCES UserAddress (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
-ALTER TABLE CustomerOrder ADD CONSTRAINT UserAddress_CustomerOrder_Shipping
+ALTER TABLE CustomerOrder ADD CONSTRAINT UserAddress_CustomerOrder_Shipping 
     FOREIGN KEY (shippingAddressID) REFERENCES UserAddress (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
-ALTER TABLE OrderedItem ADD CONSTRAINT Product_OrderedItem
+ALTER TABLE OrderedItem ADD CONSTRAINT Product_OrderedItem 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE OrderedItem ADD CONSTRAINT CustomerOrder_OrderedItem
+ALTER TABLE OrderedItem ADD CONSTRAINT CustomerOrder_OrderedItem 
     FOREIGN KEY (customerOrderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE OrderedItem ADD CONSTRAINT Shipment_OrderedItem
+ALTER TABLE OrderedItem ADD CONSTRAINT Shipment_OrderedItem 
     FOREIGN KEY (shipmentID) REFERENCES Shipment (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE User ADD CONSTRAINT ShippingAddress_User
+ALTER TABLE User ADD CONSTRAINT ShippingAddress_User 
     FOREIGN KEY (defaultShippingAddressID) REFERENCES ShippingAddress (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
-ALTER TABLE User ADD CONSTRAINT BillingAddress_User
+ALTER TABLE User ADD CONSTRAINT BillingAddress_User 
     FOREIGN KEY (defaultBillingAddressID) REFERENCES BillingAddress (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
-ALTER TABLE User ADD CONSTRAINT UserGroup_User
+ALTER TABLE User ADD CONSTRAINT UserGroup_User 
     FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID) ON DELETE SET NULL ON UPDATE CASCADE;
 
-ALTER TABLE AccessControlAssociation ADD CONSTRAINT UserGroup_AccessControlAssociation
+ALTER TABLE AccessControlAssociation ADD CONSTRAINT UserGroup_AccessControlAssociation 
     FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE AccessControlAssociation ADD CONSTRAINT Role_AccessControlAssociation
+ALTER TABLE AccessControlAssociation ADD CONSTRAINT Role_AccessControlAssociation 
     FOREIGN KEY (roleID) REFERENCES Role (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE Filter ADD CONSTRAINT FilterGroup_Filter
+ALTER TABLE Filter ADD CONSTRAINT FilterGroup_Filter 
     FOREIGN KEY (filterGroupID) REFERENCES FilterGroup (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE FilterGroup ADD CONSTRAINT SpecField_FilterGroup
+ALTER TABLE FilterGroup ADD CONSTRAINT SpecField_FilterGroup 
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductRelationship ADD CONSTRAINT Product_RelatedProduct_
+ALTER TABLE ProductRelationship ADD CONSTRAINT Product_RelatedProduct_ 
     FOREIGN KEY (ProductID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductRelationship ADD CONSTRAINT Product_ProductRelationship
+ALTER TABLE ProductRelationship ADD CONSTRAINT Product_ProductRelationship 
     FOREIGN KEY (relatedProductID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductRelationship ADD CONSTRAINT ProductRelationshipGroup_ProductRelationship
+ALTER TABLE ProductRelationship ADD CONSTRAINT ProductRelationshipGroup_ProductRelationship 
     FOREIGN KEY (productRelationshipGroupID) REFERENCES ProductRelationshipGroup (ID) ON DELETE CASCADE;
 
-ALTER TABLE ProductPrice ADD CONSTRAINT Product_ProductPrice
+ALTER TABLE ProductPrice ADD CONSTRAINT Product_ProductPrice 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductPrice ADD CONSTRAINT Currency_ProductPrice
+ALTER TABLE ProductPrice ADD CONSTRAINT Currency_ProductPrice 
     FOREIGN KEY (currencyID) REFERENCES Currency (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductImage ADD CONSTRAINT Product_ProductImage
+ALTER TABLE ProductPrice ADD CONSTRAINT RecurringProductPeriod_ProductPrice 
+    FOREIGN KEY (recurringID) REFERENCES RecurringProductPeriod (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductImage ADD CONSTRAINT Product_ProductImage 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductFile ADD CONSTRAINT Product_ProductFile
+ALTER TABLE ProductFile ADD CONSTRAINT Product_ProductFile 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductFile ADD CONSTRAINT ProductFileGroup_ProductFile
+ALTER TABLE ProductFile ADD CONSTRAINT ProductFileGroup_ProductFile 
     FOREIGN KEY (productFileGroupID) REFERENCES ProductFileGroup (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE Discount ADD CONSTRAINT Product_Discount
+ALTER TABLE Discount ADD CONSTRAINT Product_Discount 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE CategoryImage ADD CONSTRAINT Category_CategoryImage
+ALTER TABLE CategoryImage ADD CONSTRAINT Category_CategoryImage 
     FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE;
 
-ALTER TABLE SpecificationNumericValue ADD CONSTRAINT Product_SpecificationNumericValue
+ALTER TABLE SpecificationNumericValue ADD CONSTRAINT Product_SpecificationNumericValue 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE SpecificationNumericValue ADD CONSTRAINT SpecField_SpecificationNumericValue
+ALTER TABLE SpecificationNumericValue ADD CONSTRAINT SpecField_SpecificationNumericValue 
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE SpecificationStringValue ADD CONSTRAINT Product_SpecificationStringValue
+ALTER TABLE SpecificationStringValue ADD CONSTRAINT Product_SpecificationStringValue 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE SpecificationStringValue ADD CONSTRAINT SpecField_SpecificationStringValue
+ALTER TABLE SpecificationStringValue ADD CONSTRAINT SpecField_SpecificationStringValue 
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE SpecificationDateValue ADD CONSTRAINT Product_SpecificationDateValue
+ALTER TABLE SpecificationDateValue ADD CONSTRAINT Product_SpecificationDateValue 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE SpecificationDateValue ADD CONSTRAINT SpecField_SpecificationDateValue
+ALTER TABLE SpecificationDateValue ADD CONSTRAINT SpecField_SpecificationDateValue 
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE SpecFieldGroup ADD CONSTRAINT Category_SpecFieldGroup
+ALTER TABLE SpecFieldGroup ADD CONSTRAINT Category_SpecFieldGroup 
     FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE;
 
-ALTER TABLE ProductRelationshipGroup ADD CONSTRAINT Product_ProductRelationshipGroup
+ALTER TABLE ProductRelationshipGroup ADD CONSTRAINT Product_ProductRelationshipGroup 
     FOREIGN KEY (ProductID) REFERENCES Product (ID) ON DELETE CASCADE;
 
-ALTER TABLE ProductReview ADD CONSTRAINT Product_ProductReview
+ALTER TABLE ProductReview ADD CONSTRAINT Product_ProductReview 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE;
 
-ALTER TABLE ProductReview ADD CONSTRAINT User_ProductReview
+ALTER TABLE ProductReview ADD CONSTRAINT User_ProductReview 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
 
-ALTER TABLE UserAddress ADD CONSTRAINT State_UserAddress
+ALTER TABLE UserAddress ADD CONSTRAINT State_UserAddress 
     FOREIGN KEY (stateID) REFERENCES State (ID) ON DELETE SET NULL;
 
-ALTER TABLE BillingAddress ADD CONSTRAINT User_BillingAddress
+ALTER TABLE BillingAddress ADD CONSTRAINT User_BillingAddress 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE BillingAddress ADD CONSTRAINT UserAddress_BillingAddress
+ALTER TABLE BillingAddress ADD CONSTRAINT UserAddress_BillingAddress 
     FOREIGN KEY (userAddressID) REFERENCES UserAddress (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE Transaction ADD CONSTRAINT CustomerOrder_Transaction
+ALTER TABLE Transaction ADD CONSTRAINT CustomerOrder_Transaction 
     FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE;
 
-ALTER TABLE Transaction ADD CONSTRAINT Transaction_Transaction
+ALTER TABLE Transaction ADD CONSTRAINT Transaction_Transaction 
     FOREIGN KEY (parentTransactionID) REFERENCES Transaction (ID) ON DELETE CASCADE;
 
-ALTER TABLE Transaction ADD CONSTRAINT User_Transaction
+ALTER TABLE Transaction ADD CONSTRAINT User_Transaction 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
-ALTER TABLE Shipment ADD CONSTRAINT CustomerOrder_Shipment
+ALTER TABLE Shipment ADD CONSTRAINT CustomerOrder_Shipment 
     FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE Shipment ADD CONSTRAINT ShippingService_Shipment
+ALTER TABLE Shipment ADD CONSTRAINT ShippingService_Shipment 
     FOREIGN KEY (shippingServiceID) REFERENCES ShippingService (ID) ON DELETE SET NULL;
 
-ALTER TABLE ShippingAddress ADD CONSTRAINT User_ShippingAddress
+ALTER TABLE ShippingAddress ADD CONSTRAINT User_ShippingAddress 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ShippingAddress ADD CONSTRAINT UserAddress_ShippingAddress
+ALTER TABLE ShippingAddress ADD CONSTRAINT UserAddress_ShippingAddress 
     FOREIGN KEY (userAddressID) REFERENCES UserAddress (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE OrderNote ADD CONSTRAINT CustomerOrder_OrderNote
+ALTER TABLE OrderNote ADD CONSTRAINT CustomerOrder_OrderNote 
     FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE OrderNote ADD CONSTRAINT User_OrderNote
+ALTER TABLE OrderNote ADD CONSTRAINT User_OrderNote 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
 
-ALTER TABLE DeliveryZoneCountry ADD CONSTRAINT DeliveryZone_DeliveryZoneCountry
+ALTER TABLE DeliveryZoneCountry ADD CONSTRAINT DeliveryZone_DeliveryZoneCountry 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE DeliveryZoneState ADD CONSTRAINT DeliveryZone_DeliveryZoneState
+ALTER TABLE DeliveryZoneState ADD CONSTRAINT DeliveryZone_DeliveryZoneState 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE DeliveryZoneState ADD CONSTRAINT State_DeliveryZoneState
+ALTER TABLE DeliveryZoneState ADD CONSTRAINT State_DeliveryZoneState 
     FOREIGN KEY (stateID) REFERENCES State (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE DeliveryZoneCityMask ADD CONSTRAINT DeliveryZone_DeliveryZoneCityMask
+ALTER TABLE DeliveryZoneCityMask ADD CONSTRAINT DeliveryZone_DeliveryZoneCityMask 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE DeliveryZoneZipMask ADD CONSTRAINT DeliveryZone_DeliveryZoneZipMask
+ALTER TABLE DeliveryZoneZipMask ADD CONSTRAINT DeliveryZone_DeliveryZoneZipMask 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE DeliveryZoneAddressMask ADD CONSTRAINT DeliveryZone_DeliveryZoneAddressMask
+ALTER TABLE DeliveryZoneAddressMask ADD CONSTRAINT DeliveryZone_DeliveryZoneAddressMask 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE TaxRate ADD CONSTRAINT Tax_TaxRate
+ALTER TABLE TaxRate ADD CONSTRAINT Tax_TaxRate 
     FOREIGN KEY (taxID) REFERENCES Tax (ID) ON DELETE CASCADE;
 
-ALTER TABLE TaxRate ADD CONSTRAINT DeliveryZone_TaxRate
+ALTER TABLE TaxRate ADD CONSTRAINT DeliveryZone_TaxRate 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ShippingRate ADD CONSTRAINT ShippingService_ShippingRate
+ALTER TABLE ShippingRate ADD CONSTRAINT ShippingService_ShippingRate 
     FOREIGN KEY (shippingServiceID) REFERENCES ShippingService (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductFileGroup ADD CONSTRAINT Product_ProductFileGroup
+ALTER TABLE ProductFileGroup ADD CONSTRAINT Product_ProductFileGroup 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ShippingService ADD CONSTRAINT DeliveryZone_ShippingService
+ALTER TABLE ShippingService ADD CONSTRAINT DeliveryZone_ShippingService 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ShipmentTax ADD CONSTRAINT TaxRate_ShipmentTax
+ALTER TABLE ShipmentTax ADD CONSTRAINT TaxRate_ShipmentTax 
     FOREIGN KEY (taxRateID) REFERENCES TaxRate (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ShipmentTax ADD CONSTRAINT Shipment_ShipmentTax
+ALTER TABLE ShipmentTax ADD CONSTRAINT Shipment_ShipmentTax 
     FOREIGN KEY (shipmentID) REFERENCES Shipment (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE OrderLog ADD CONSTRAINT User_OrderLog
+ALTER TABLE OrderLog ADD CONSTRAINT User_OrderLog 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE SET NULL ON UPDATE CASCADE;
 
-ALTER TABLE OrderLog ADD CONSTRAINT CustomerOrder_OrderLog
+ALTER TABLE OrderLog ADD CONSTRAINT CustomerOrder_OrderLog 
     FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE DeliveryZoneRealTimeService ADD CONSTRAINT DeliveryZone_DeliveryZoneRealTimeService
+ALTER TABLE DeliveryZoneRealTimeService ADD CONSTRAINT DeliveryZone_DeliveryZoneRealTimeService 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
 
-ALTER TABLE ExpressCheckout ADD CONSTRAINT UserAddress_ExpressCheckout
+ALTER TABLE ExpressCheckout ADD CONSTRAINT UserAddress_ExpressCheckout 
     FOREIGN KEY (addressID) REFERENCES UserAddress (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ExpressCheckout ADD CONSTRAINT CustomerOrder_ExpressCheckout
+ALTER TABLE ExpressCheckout ADD CONSTRAINT CustomerOrder_ExpressCheckout 
     FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductOption ADD CONSTRAINT Product_ProductOption
+ALTER TABLE ProductOption ADD CONSTRAINT Product_ProductOption 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductOption ADD CONSTRAINT Category_ProductOption
+ALTER TABLE ProductOption ADD CONSTRAINT Category_ProductOption 
     FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductOption ADD CONSTRAINT ProductOptionChoice_ProductOption
+ALTER TABLE ProductOption ADD CONSTRAINT ProductOptionChoice_ProductOption 
     FOREIGN KEY (defaultChoiceID) REFERENCES ProductOptionChoice (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductOptionChoice ADD CONSTRAINT ProductOption_ProductOptionChoice
+ALTER TABLE ProductOptionChoice ADD CONSTRAINT ProductOption_ProductOptionChoice 
     FOREIGN KEY (optionID) REFERENCES ProductOption (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE OrderedItemOption ADD CONSTRAINT OrderedItem_OrderedItemOption
+ALTER TABLE OrderedItemOption ADD CONSTRAINT OrderedItem_OrderedItemOption 
     FOREIGN KEY (orderedItemID) REFERENCES OrderedItem (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE OrderedItemOption ADD CONSTRAINT ProductOptionChoice_OrderedItemOption
+ALTER TABLE OrderedItemOption ADD CONSTRAINT ProductOptionChoice_OrderedItemOption 
     FOREIGN KEY (choiceID) REFERENCES ProductOptionChoice (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductRatingType ADD CONSTRAINT Category_ProductRatingType
+ALTER TABLE ProductRatingType ADD CONSTRAINT Category_ProductRatingType 
     FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductRating ADD CONSTRAINT ProductRatingType_ProductRating
+ALTER TABLE ProductRating ADD CONSTRAINT ProductRatingType_ProductRating 
     FOREIGN KEY (ratingTypeID) REFERENCES ProductRatingType (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductRating ADD CONSTRAINT ProductReview_ProductRating
+ALTER TABLE ProductRating ADD CONSTRAINT ProductReview_ProductRating 
     FOREIGN KEY (reviewID) REFERENCES ProductReview (ID);
 
-ALTER TABLE CategoryPresentation ADD CONSTRAINT Category_CategoryPresentation
+ALTER TABLE CategoryPresentation ADD CONSTRAINT Category_CategoryPresentation 
     FOREIGN KEY (ID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductPriceRule ADD CONSTRAINT Product_ProductPriceRule
+ALTER TABLE ProductPriceRule ADD CONSTRAINT Product_ProductPriceRule 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductPriceRule ADD CONSTRAINT UserGroup_ProductPriceRule
+ALTER TABLE ProductPriceRule ADD CONSTRAINT UserGroup_ProductPriceRule 
     FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductPresentation ADD CONSTRAINT Product_ProductPresentation
+ALTER TABLE ProductPresentation ADD CONSTRAINT Product_ProductPresentation 
     FOREIGN KEY (ID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE NewsletterSubscriber ADD CONSTRAINT User_NewsletterSubscriber
+ALTER TABLE NewsletterSubscriber ADD CONSTRAINT User_NewsletterSubscriber 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE NewsletterSentMessage ADD CONSTRAINT NewsletterMessage_NewsletterSentMessage
+ALTER TABLE NewsletterSentMessage ADD CONSTRAINT NewsletterMessage_NewsletterSentMessage 
     FOREIGN KEY (messageID) REFERENCES NewsletterMessage (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE NewsletterSentMessage ADD CONSTRAINT NewsletterSubscriber_NewsletterSentMessage
+ALTER TABLE NewsletterSentMessage ADD CONSTRAINT NewsletterSubscriber_NewsletterSentMessage 
     FOREIGN KEY (subscriberID) REFERENCES NewsletterSubscriber (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE NewsletterSentMessage ADD CONSTRAINT User_NewsletterSentMessage
+ALTER TABLE NewsletterSentMessage ADD CONSTRAINT User_NewsletterSentMessage 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE RecurringProductPeriod ADD CONSTRAINT Product_RecurringProductPeriod 
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE EavDateValue ADD CONSTRAINT EavField_EavDateValue 
+    FOREIGN KEY (fieldID) REFERENCES EavField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE EavDateValue ADD CONSTRAINT EavObject_EavDateValue 
+    FOREIGN KEY (objectID) REFERENCES EavObject (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE EavStringValue ADD CONSTRAINT EavField_EavStringValue 
+    FOREIGN KEY (fieldID) REFERENCES EavField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE EavStringValue ADD CONSTRAINT EavObject_EavStringValue 
+    FOREIGN KEY (objectID) REFERENCES EavObject (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE EavNumericValue ADD CONSTRAINT EavObject_EavNumericValue 
+    FOREIGN KEY (objectID) REFERENCES EavObject (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE EavNumericValue ADD CONSTRAINT EavField_EavNumericValue 
+    FOREIGN KEY (fieldID) REFERENCES EavField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE EavItem ADD CONSTRAINT EavValue_EavItem 
+    FOREIGN KEY (valueID) REFERENCES EavValue (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE EavItem ADD CONSTRAINT EavObject_EavItem 
+    FOREIGN KEY (objectID) REFERENCES EavObject (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE EavValue ADD CONSTRAINT EavField_EavValue 
+    FOREIGN KEY (fieldID) REFERENCES EavField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE EavField ADD CONSTRAINT EavFieldGroup_EavField 
+    FOREIGN KEY (eavFieldGroupID) REFERENCES EavFieldGroup (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE EavObject ADD CONSTRAINT Category_EavObject 
+    FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE EavObject ADD CONSTRAINT User_EavObject 
+    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE EavObject ADD CONSTRAINT UserGroup_EavObject 
+    FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE EavObject ADD CONSTRAINT Manufacturer_EavObject 
+    FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE EavObject ADD CONSTRAINT CustomerOrder_EavObject 
+    FOREIGN KEY (customerOrderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;

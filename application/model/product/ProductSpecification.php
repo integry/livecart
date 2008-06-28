@@ -28,6 +28,11 @@ class ProductSpecification extends EavSpecificationManagerCommon
 		return 'SpecField';
 	}
 
+	public function getSpecificationFieldSet($loadReferencedRecords = false)
+	{
+		return $this->owner->category->get()->getSpecificationFieldSet(Category::INCLUDE_PARENT, $loadReferencedRecords);
+	}
+
 	/**
 	 * Removes persisted product specification property
 	 *

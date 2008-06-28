@@ -21,6 +21,8 @@
 			{textarea name="keywords" id="keywords_$categoryId" class="categoryKeywords"}
 		</p>
 
+		{include file="backend/eav/fields.tpl" item=$category}
+
 		<fieldset>
 			<legend>{t _presentation}</legend>
 

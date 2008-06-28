@@ -29,6 +29,16 @@ class EavField extends EavFieldCommon
 
 	public function getClassID($className)
 	{
+		if ($className instanceof EavObject)
+		{
+			return $className->classID->get();
+		}
+
+		if (is_object($className))
+		{
+			$className = get_class($className);
+		}
+
 		$classes = self::getEavClasses();
 		if (isset($classes[$className]))
 		{

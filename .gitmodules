@@ -1,63 +1,63 @@
 [submodule "framework"]
 	path = framework
-	url = root@dev.integry.net:framework
+	url = git@dev.integry.net:framework
 [submodule "library/activerecord"]
 	path = library/activerecord
-	url = root@dev.integry.net:activerecord
+	url = git@dev.integry.net:activerecord
 [submodule "library/smarty"]
 	path = library/smarty
-	url = root@dev.integry.net:vendor/smarty
+	url = git@dev.integry.net:vendor/smarty
 [submodule "library/stat"]
 	path = library/stat
-	url = root@dev.integry.net:library/stat
+	url = git@dev.integry.net:library/stat
 [submodule "library/json"]
 	path = library/json
-	url = root@dev.integry.net:vendor/json
+	url = git@dev.integry.net:vendor/json
 [submodule "library/locale"]
 	path = library/locale
-	url = root@dev.integry.net:library/locale
+	url = git@dev.integry.net:library/locale
 [submodule "library/creole"]
 	path = library/creole
-	url = root@dev.integry.net:vendor/creole
+	url = git@dev.integry.net:vendor/creole
 [submodule "library/swiftmailer"]
 	path = library/swiftmailer
-	url = root@dev.integry.net:vendor/swiftmailer
+	url = git@dev.integry.net:vendor/swiftmailer
 [submodule "library/I18Nv2"]
 	path = library/I18Nv2
-	url = root@dev.integry.net:vendor/I18Nv2
+	url = git@dev.integry.net:vendor/I18Nv2
 [submodule "library/payment/method/library/paypal/phppaypalpro"]
 	path = library/payment/method/library/paypal/phppaypalpro
-	url = root@dev.integry.net:vendor/phppaypalpro
+	url = git@dev.integry.net:vendor/phppaypalpro
 [submodule "library/pclzip"]
 	path = library/pclzip
-	url = root@dev.integry.net:vendor/pclzip
+	url = git@dev.integry.net:vendor/pclzip
 [submodule "test/_library/simpletest"]
 	path = test/_library/simpletest
-	url = root@dev.integry.net:vendor/simpletest
+	url = git@dev.integry.net:vendor/simpletest
 [submodule "test/_library/phpunit"]
 	path = test/_library/phpunit
-	url = root@dev.integry.net:vendor/phpunit
+	url = git@dev.integry.net:vendor/phpunit
 [submodule "test/_library/unittest"]
 	path = test/_library/unittest
-	url = root@dev.integry.net:vendor/unittest
+	url = git@dev.integry.net:vendor/unittest
 [submodule "public/javascript/library/editarea"]
 	path = public/javascript/library/editarea
-	url = root@dev.integry.net:vendor/editarea
+	url = git@dev.integry.net:vendor/editarea
 [submodule "public/javascript/library/prototype"]
 	path = public/javascript/library/prototype
-	url = root@dev.integry.net:vendor/prototype
+	url = git@dev.integry.net:vendor/prototype
 [submodule "public/javascript/library/tinymce"]
 	path = public/javascript/library/tinymce
-	url = root@dev.integry.net:vendor/tinymce
+	url = git@dev.integry.net:vendor/tinymce
 [submodule "public/javascript/library/dhtmlxtree"]
 	path = public/javascript/library/dhtmlxtree
-	url = root@dev.integry.net:vendor/dhtmlxtree
+	url = git@dev.integry.net:vendor/dhtmlxtree
 [submodule "public/javascript/library/rico"]
 	path = public/javascript/library/rico
-	url = root@dev.integry.net:vendor/rico
+	url = git@dev.integry.net:vendor/rico
 [submodule "public/javascript/library/lightbox"]
 	path = public/javascript/library/lightbox
-	url = root@dev.integry.net:vendor/lightbox
+	url = git@dev.integry.net:vendor/lightbox
 [submodule "public/javascript/library/scriptaculous"]
 	path = public/javascript/library/scriptaculous
-	url = root@dev.integry.net:vendor/scriptaculous
+	url = git@dev.integry.net:vendor/scriptaculous

@@ -56,6 +56,8 @@ class CategoryController extends StoreManagementController
 
 		$response->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
 
+		$category->getSpecification()->setFormResponse($response, $form);
+
 		return $response;
 	}
 

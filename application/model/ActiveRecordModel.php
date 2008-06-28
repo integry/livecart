@@ -96,12 +96,16 @@ abstract class ActiveRecordModel extends ActiveRecord
 	  		return false;
 		}
 
-		if (!$this instanceof EavAble)
+		if (!$this instanceof EavAble && !$this instanceof EavObject)
 		{
 			throw new ApplicationException(get_class($this) . ' does not support EAV');
 		}
 
-		$this->specificationInstance = new EavSpecificationManager(EavObject::getInstance($this), $specificationData);
+		ClassLoader::import("application.model.eav.EavSpecificationManager");
+
+		$obj = $this instanceof EavObject ? $this : EavObject::getInstance($this);
+
+		$this->specificationInstance = new EavSpecificationManager($obj, $specificationData);
 	}
 
 	protected function setLastPosition()
@@ -184,7 +188,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 			foreach (new DirectoryIterator($dir) as $plugin)
 			{
-				if ($plugin->isFile())
+				if ($plugin->isFile() && ('php' == pathinfo($plugin->getFileName(), PATHINFO_EXTENSION)))
 				{
 					self::$plugins[$className][$action][] = basename($plugin->getFileName(), '.php');
 				}

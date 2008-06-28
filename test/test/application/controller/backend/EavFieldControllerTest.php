@@ -55,7 +55,6 @@ class EavFieldControllerTest extends UnitTest implements ControllerTestCase
 		$group->save();
 		$this->request->set('id', EavField::getClassID($class));
 		$response = $this->controller->index();
-		var_dump($response->get('specFieldsWithGroups'));
 	}
 }
 

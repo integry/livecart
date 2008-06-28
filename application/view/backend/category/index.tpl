@@ -13,13 +13,7 @@
 {includeJs file="library/rico/ricobase.js"}
 {includeJs file="library/rico/ricoLiveGrid.js"}
 
-{* Calendar *}
-{includeJs file="library/dhtmlCalendar/calendar.js"}
-{includeJs file="library/dhtmlCalendar/lang/calendar-en.js"}
-{includeJs file="library/dhtmlCalendar/lang/calendar-`$curLanguageCode`.js"}
-{includeJs file="library/dhtmlCalendar/calendar-setup.js"}
-{includeCss file="library/dhtmlCalendar/calendar-win2k-cold-2.css"}
-
+{includeJs file="backend/Product.js"}
 {includeJs file="backend/Category.js"}
 {includeJs file="backend/SpecField.js"}
 {includeJs file="backend/Filter.js"}
@@ -28,6 +22,8 @@
 {includeJs file="backend/RelatedProduct.js"}
 {includeJs file="backend/ProductFile.js"}
 {includeJs file="backend/ProductOption.js"}
+
+{include file="backend/eav/includes.tpl"}
 
 {includeCss file="library/ActiveList.css"}
 {includeCss file="library/ActiveGrid.css"}

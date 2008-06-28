@@ -139,7 +139,7 @@ class LiveCartSmarty extends Smarty
 
 		foreach (new DirectoryIterator($pluginPath) as $plugin)
 		{
-			if ($plugin->isFile())
+			if ($plugin->isFile() && ('php' == pathinfo($plugin->getFileName(), PATHINFO_EXTENSION)))
 			{
 				$className = basename($plugin->getFileName(), '.php');
 				ClassLoader::import('plugin.view.' . $path . '.' . $className);

@@ -28,6 +28,13 @@ class EavSpecificationManager extends EavSpecificationManagerCommon
 		return 'EavField';
 	}
 
+	public function getSpecificationFieldSet($loadReferencedRecords = false)
+	{
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle($this->getFieldClass(), 'classID'), EavField::getClassID($this->owner)));
+		$f->setOrder(new ARFieldHandle($this->getFieldClass(), 'position'));
+		return ActiveRecordModel::getRecordSet($this->getFieldClass(), $f, $loadReferencedRecords);
+	}
+
 	public function save()
 	{
 		$this->owner->save();

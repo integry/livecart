@@ -24,6 +24,8 @@ abstract class EavSpecificationManagerCommon
 
 	public abstract function getFieldClass();
 
+	public abstract function getSpecificationFieldSet($loadReferencedRecords = false);
+
 	public function __construct(ActiveRecordModel $owner, $specificationDataArray = null)
 	{
 		$this->owner = $owner;
@@ -50,6 +52,11 @@ abstract class EavSpecificationManagerCommon
 		}
 
 		$this->loadSpecificationData($specificationDataArray);
+	}
+
+	public function getGroupClass()
+	{
+		return $this->getFieldClass() . 'Group';
 	}
 
 	/**
@@ -91,7 +98,11 @@ abstract class EavSpecificationManagerCommon
 	 */
 	public function removeAttribute(EavFieldCommon $field)
 	{
-		$this->removedAttributes[$field->getID()] = $this->attributes[$field->getID()];
+		if (isset($this->attributes[$field->getID()]))
+		{
+			$this->removedAttributes[$field->getID()] = $this->attributes[$field->getID()];
+		}
+
 		unset($this->attributes[$field->getID()]);
 	}
 
@@ -226,6 +237,139 @@ abstract class EavSpecificationManagerCommon
 		}
 
 		return ($a[$field][$fieldGroup]['position'] < $b[$field][$fieldGroup]['position']) ? -1 : 1;
+	}
+
+	public function getFormData()
+	{
+		$selectorTypes = EavFieldCommon::getSelectorValueTypes();
+		$multiLingualTypes = SpecField::getMultilanguageTypes();
+		$languageArray = ActiveRecordModel::getApplication()->getLanguageArray();
+		$fieldClass = $this->getFieldClass();
+
+		foreach($this->toArray() as $attr)
+		{
+			if(in_array($attr[$fieldClass]['type'], $selectorTypes))
+			{
+				if(1 == $attr[$fieldClass]['isMultiValue'])
+				{
+					foreach($attr['valueIDs'] as $valueID)
+					{
+						$formData['specItem_' . $valueID] = "on";
+					}
+				}
+				else
+				{
+					$formData[$attr[$fieldClass]['fieldName']] = $attr['ID'];
+				}
+			}
+			else if(in_array($attr[$fieldClass]['type'], $multiLingualTypes))
+			{
+				$formData[$attr[$fieldClass]['fieldName']] = $attr['value'];
+				foreach($languageArray as $lang)
+				{
+					if (isset($attr['value_' . $lang]))
+					{
+						$formData[$attr[$fieldClass]['fieldName'] . '_' . $lang] = $attr['value_' . $lang];
+					}
+				}
+			}
+			else
+			{
+				$formData[$attr[$fieldClass]['fieldName']] = $attr['value'];
+			}
+		}
+
+		return $formData;
+	}
+
+	public function setFormResponse(ActionResponse $response, Form $form)
+	{
+		$specFields = $this->owner->getSpecification()->getSpecificationFieldSet(ActiveRecordModel::LOAD_REFERENCES);
+		$specFieldArray = $specFields->toArray();
+
+		// set select values
+		$selectors = EavFieldCommon::getSelectorValueTypes();
+		foreach ($specFields as $key => $field)
+		{
+		  	if (in_array($field->type->get(), $selectors))
+		  	{
+				$values = $field->getValuesSet()->toArray();
+				$specFieldArray[$key]['values'] = array('' => '');
+				foreach ($values as $value)
+				{
+					$specFieldArray[$key]['values'][$value['ID']] = $value['value_lang'];
+				}
+
+				if (!$field->isMultiValue->get())
+				{
+					$specFieldArray[$key]['values']['other'] = ActiveRecordModel::getApplication()->translate('_enter_other');
+				}
+			}
+		}
+
+		// arrange SpecFields's into groups
+		$specFieldsByGroup = array();
+		$prevGroupID = -1;
+
+		$groupClass = 'SpecFieldGroup';
+		foreach ($specFieldArray as $field)
+		{
+			$groupID = isset($field[$groupClass]['ID']) ? $field[$groupClass]['ID'] : '';
+			if((int)$groupID && $prevGroupID != $groupID)
+			{
+				$prevGroupID = $groupID;
+			}
+
+			$specFieldsByGroup[$groupID][] = $field;
+		}
+
+		// get multi language spec fields
+		$multiLingualSpecFields = array();
+		foreach ($specFields as $key => $field)
+		{
+		  	if ($field->isTextField())
+		  	{
+		  		$multiLingualSpecFields[] = $field->toArray();
+			}
+		}
+
+		$response->set("specFieldList", $specFieldsByGroup);
+		$response->set("multiLingualSpecFieldss", $multiLingualSpecFields);
+
+		$this->setFormValidator($form->getValidator());
+	}
+
+	private function setFormValidator(RequestValidator $validator)
+	{
+		$specFields = $this->getSpecificationFieldSet(ActiveRecordModel::LOAD_REFERENCES);
+
+		$application = ActiveRecordModel::getApplication();
+
+		foreach ($specFields as $key => $field)
+		{
+			$fieldname = $field->getFormFieldName();
+
+		  	// validate numeric values
+			if (EavFieldCommon::TYPE_NUMBERS_SIMPLE == $field->type->get())
+		  	{
+				$validator->addCheck($fieldname, new IsNumericCheck($application->translate('_err_numeric')));
+				$validator->addFilter($fieldname, new NumericFilter());
+			}
+
+		  	// validate required fields
+			if ($field->isRequired->get())
+		  	{
+				if (!($field->isSelector() && $field->isMultiValue->get()))
+				{
+					$validator->addCheck($fieldname, new IsNotEmptyCheck($application->translate('_err_specfield_required')));
+				}
+				else
+				{
+					ClassLoader::import('application.helper.check.SpecFieldIsValueSelectedCheck');
+					$validator->addCheck($fieldname, new SpecFieldIsValueSelectedCheck($application->translate('_err_specfield_multivaluerequired'), $field, $application->getRequest()));
+				}
+			}
+		}
 	}
 
 	public static function loadSpecificationForRecordArray($class, &$productArray)

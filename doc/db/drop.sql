@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database drop script                            #
-# Created on:            2008-04-29 23:57                                #
-# Model version:         Version 2008-04-29 1                            #
+# Created on:            2008-06-28 03:16                                #
+# Model version:         Version 2008-06-28                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -73,6 +73,8 @@ ALTER TABLE ProductRelationship DROP FOREIGN KEY ProductRelationshipGroup_Produc
 ALTER TABLE ProductPrice DROP FOREIGN KEY Product_ProductPrice;
 
 ALTER TABLE ProductPrice DROP FOREIGN KEY Currency_ProductPrice;
+
+ALTER TABLE ProductPrice DROP FOREIGN KEY RecurringProductPeriod_ProductPrice;
 
 ALTER TABLE ProductImage DROP FOREIGN KEY Product_ProductImage;
 
@@ -197,6 +199,38 @@ ALTER TABLE NewsletterSentMessage DROP FOREIGN KEY NewsletterMessage_NewsletterS
 ALTER TABLE NewsletterSentMessage DROP FOREIGN KEY NewsletterSubscriber_NewsletterSentMessage;
 
 ALTER TABLE NewsletterSentMessage DROP FOREIGN KEY User_NewsletterSentMessage;
+
+ALTER TABLE RecurringProductPeriod DROP FOREIGN KEY Product_RecurringProductPeriod;
+
+ALTER TABLE EavDateValue DROP FOREIGN KEY EavField_EavDateValue;
+
+ALTER TABLE EavDateValue DROP FOREIGN KEY EavObject_EavDateValue;
+
+ALTER TABLE EavStringValue DROP FOREIGN KEY EavField_EavStringValue;
+
+ALTER TABLE EavStringValue DROP FOREIGN KEY EavObject_EavStringValue;
+
+ALTER TABLE EavNumericValue DROP FOREIGN KEY EavObject_EavNumericValue;
+
+ALTER TABLE EavNumericValue DROP FOREIGN KEY EavField_EavNumericValue;
+
+ALTER TABLE EavItem DROP FOREIGN KEY EavValue_EavItem;
+
+ALTER TABLE EavItem DROP FOREIGN KEY EavObject_EavItem;
+
+ALTER TABLE EavValue DROP FOREIGN KEY EavField_EavValue;
+
+ALTER TABLE EavField DROP FOREIGN KEY EavFieldGroup_EavField;
+
+ALTER TABLE EavObject DROP FOREIGN KEY Category_EavObject;
+
+ALTER TABLE EavObject DROP FOREIGN KEY User_EavObject;
+
+ALTER TABLE EavObject DROP FOREIGN KEY UserGroup_EavObject;
+
+ALTER TABLE EavObject DROP FOREIGN KEY Manufacturer_EavObject;
+
+ALTER TABLE EavObject DROP FOREIGN KEY CustomerOrder_EavObject;
 
 # ---------------------------------------------------------------------- #
 # Drop table "Product"                                                   #
@@ -1071,3 +1105,123 @@ ALTER TABLE NewsletterSentMessage DROP PRIMARY KEY;
 # Drop table #
 
 DROP TABLE NewsletterSentMessage;
+
+# ---------------------------------------------------------------------- #
+# Drop table "RecurringProductPeriod"                                    #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE RecurringProductPeriod ALTER COLUMN position DROP DEFAULT;
+
+ALTER TABLE RecurringProductPeriod DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE RecurringProductPeriod;
+
+# ---------------------------------------------------------------------- #
+# Drop table "EavDateValue"                                              #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE EavDateValue DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE EavDateValue;
+
+# ---------------------------------------------------------------------- #
+# Drop table "EavStringValue"                                            #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE EavStringValue DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE EavStringValue;
+
+# ---------------------------------------------------------------------- #
+# Drop table "EavNumericValue"                                           #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE EavNumericValue DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE EavNumericValue;
+
+# ---------------------------------------------------------------------- #
+# Drop table "EavItem"                                                   #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE EavItem DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE EavItem;
+
+# ---------------------------------------------------------------------- #
+# Drop table "EavValue"                                                  #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE EavValue ALTER COLUMN position DROP DEFAULT;
+
+ALTER TABLE EavValue DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE EavValue;
+
+# ---------------------------------------------------------------------- #
+# Drop table "EavField"                                                  #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE EavField ALTER COLUMN type DROP DEFAULT;
+
+ALTER TABLE EavField ALTER COLUMN dataType DROP DEFAULT;
+
+ALTER TABLE EavField ALTER COLUMN position DROP DEFAULT;
+
+ALTER TABLE EavField DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE EavField;
+
+# ---------------------------------------------------------------------- #
+# Drop table "EavFieldGroup"                                             #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE EavFieldGroup ALTER COLUMN position DROP DEFAULT;
+
+ALTER TABLE EavFieldGroup DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE EavFieldGroup;
+
+# ---------------------------------------------------------------------- #
+# Drop table "EavObject"                                                 #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE EavObject DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE EavObject;

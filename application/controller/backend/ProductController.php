@@ -620,38 +620,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	private function productForm(Product $product)
 	{
-		$specFields = $product->getSpecificationFieldSet(ActiveRecordModel::LOAD_REFERENCES);
-		$specFieldArray = $specFields->toArray();
-
-		// set select values
-		$selectors = SpecField::getSelectorValueTypes();
-		foreach ($specFields as $key => $field)
-		{
-		  	if (in_array($field->type->get(), $selectors))
-		  	{
-				$values = $field->getValuesSet()->toArray();
-				$specFieldArray[$key]['values'] = array('' => '');
-				foreach ($values as $value)
-				{
-					$specFieldArray[$key]['values'][$value['ID']] = $value['value_lang'];
-				}
-
-				if (!$field->isMultiValue->get())
-				{
-					$specFieldArray[$key]['values']['other'] = $this->translate('_enter_other');
-				}
-			}
-		}
-		// get multi language spec fields
-		$multiLingualSpecFields = array();
-		foreach ($specFields as $key => $field)
-		{
-		  	if ($field->isTextField())
-		  	{
-		  		$multiLingualSpecFields[] = $field->toArray();
-			}
-		}
-
 		$form = $this->buildForm($product);
 
 		$productFormData = $product->toArray();
@@ -659,38 +627,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		if($product->isLoaded())
 		{
 			$product->loadSpecification();
-			foreach($product->getSpecification()->toArray() as $attr)
-			{
-				if(in_array($attr['SpecField']['type'], SpecField::getSelectorValueTypes()))
-				{
-					if(1 == $attr['SpecField']['isMultiValue'])
-					{
-						foreach($attr['valueIDs'] as $valueID)
-						{
-							$productFormData['specItem_' . $valueID] = "on";
-						}
-					}
-					else
-					{
-						$productFormData[$attr['SpecField']['fieldName']] = $attr['ID'];
-					}
-				}
-				else if(in_array($attr['SpecField']['type'], SpecField::getMultilanguageTypes()))
-				{
-					$productFormData[$attr['SpecField']['fieldName']] = $attr['value'];
-					foreach($this->application->getLanguageArray() as $lang)
-					{
-						if (isset($attr['value_' . $lang]))
-						{
-							$productFormData[$attr['SpecField']['fieldName'] . '_' . $lang] = $attr['value_' . $lang];
-						}
-					}
-				}
-				else
-				{
-					$productFormData[$attr['SpecField']['fieldName']] = $attr['value'];
-				}
-			}
+			$productFormData = array_merge($productFormData, $product->getSpecification()->getFormData());
 
 			if (isset($productFormData['Manufacturer']['name']))
 			{
@@ -699,12 +636,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		}
 
 		$form->setData($productFormData);
-
-		$languages = array();
-		foreach ($this->application->getLanguageArray() as $lang)
-		{
-			$languages[$lang] = $this->locale->info()->getOriginalLanguageName($lang);
-		}
 
 		// status values
 		$status = array(0 => $this->translate('_disabled'),
@@ -723,28 +654,12 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$form->set('type', $product->type->get());
 		}
 
-		// arrange SpecFields's into groups
-		$specFieldsByGroup = array();
-		$prevGroupID = -1;
-
-		foreach ($specFieldArray as $field)
-		{
-			$groupID = isset($field['SpecFieldGroup']['ID']) ? $field['SpecFieldGroup']['ID'] : '';
-			if((int)$groupID && $prevGroupID != $groupID)
-			{
-				$prevGroupID = $groupID;
-			}
-
-			$specFieldsByGroup[$groupID][] = $field;
-		}
-
 		$response = new ActionResponse();
+		$product->getSpecification()->setFormResponse($response, $form);
 		$response->set("cat", $product->category->get()->getID());
 		$response->set("hideFeedbackMessage", $this->request->get("afterAdding") == 'on');
-		$response->set("specFieldList", $specFieldsByGroup);
 		$response->set("productForm", $form);
 		$response->set("path", $product->category->get()->getPathNodeArray(true));
-		$response->set("multiLingualSpecFieldss", $multiLingualSpecFields);
 		$response->set("productTypes", $types);
 		$response->set("productStatuses", $status);
 		$response->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
@@ -782,35 +697,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		{
 			ClassLoader::import('application.helper.check.IsUniqueSkuCheck');
 			$validator->addCheck('sku', new IsUniqueSkuCheck($this->translate('_err_sku_not_unique'), $product));
-		}
-
-		// spec field validator
-		$specFields = $product->getSpecificationFieldSet(ActiveRecordModel::LOAD_REFERENCES);
-
-		foreach ($specFields as $key => $field)
-		{
-			$fieldname = $field->getFormFieldName();
-
-		  	// validate numeric values
-			if (SpecField::TYPE_NUMBERS_SIMPLE == $field->type->get())
-		  	{
-				$validator->addCheck($fieldname, new IsNumericCheck($this->translate('_err_numeric')));
-				$validator->addFilter($fieldname, new NumericFilter());
-			}
-
-		  	// validate required fields
-			if ($field->isRequired->get())
-		  	{
-				if (!($field->isSelector() && $field->isMultiValue->get()))
-				{
-					$validator->addCheck($fieldname, new IsNotEmptyCheck($this->translate('_err_specfield_required')));
-				}
-				else
-				{
-					ClassLoader::import('application.helper.check.SpecFieldIsValueSelectedCheck');
-					$validator->addCheck($fieldname, new SpecFieldIsValueSelectedCheck($this->translate('_err_specfield_multivaluerequired'), $field, $this->request));
-				}
-			}
 		}
 
 		// validate price input in all currencies

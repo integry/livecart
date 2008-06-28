@@ -762,11 +762,6 @@ class Product extends MultilingualObject
 
 	/*####################  Get related objects ####################*/
 
-	public function getSpecificationFieldSet($loadReferencedRecords = false)
-	{
-		return $this->category->get()->getSpecificationFieldSet(Category::INCLUDE_PARENT, $loadReferencedRecords);
-	}
-
 	public function loadSpecification($specificationData = null)
 	{
 	  	if ($this->specificationInstance)
