@@ -21,45 +21,6 @@
 /*************************
 	Product form
 *************************/
-fieldset.specification
-{
-  	margin-top: 10px;
-}
-
-fieldset.specification .numeric
-{
- 	width: 100px;
-}
-
-.multiValueSelect p.selectMenu
-{
-	clear: both;
-	margin-bottom: 10px;
-	font-size: smaller;
-}
-
-fieldset.specification .notDisplayed
-{
-	color: #aaa;
-}
-
-.multiValueSelect label
-{
-
-}
-
-.multiValueSelect div.other label
-{
-  	width: auto;
-  	margin-right: 10px;
-	line-height: 1.8em;
-}
-
-.multiValueSelect div.other input, input.other
-{
-  	width: 200px;
-}
-
 .productForm.intangible .shipping, .productForm.intangible .inventory
 {
     display: none;

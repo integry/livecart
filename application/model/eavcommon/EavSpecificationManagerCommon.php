@@ -239,12 +239,121 @@ abstract class EavSpecificationManagerCommon
 		return ($a[$field][$fieldGroup]['position'] < $b[$field][$fieldGroup]['position']) ? -1 : 1;
 	}
 
+	public function loadRequestData(Request $request)
+	{
+		$fields = $this->getSpecificationFieldSet();
+		$application = ActiveRecordModel::getApplication();
+
+		// create new select values
+		if ($request->isValueSet('other'))
+		{
+			foreach ($request->get('other') as $fieldID => $values)
+			{
+				$field = call_user_func_array(array($this->getFieldClass(), 'getInstanceByID'), array($fieldID, ActiveRecordModel::LOAD_DATA));
+
+				if (is_array($values))
+				{
+					// multiple select
+					foreach ($values as $value)
+					{
+						if ($value)
+						{
+							$fieldValue = $field->getNewValueInstance();
+							$fieldValue->setValueByLang('value', $application->getDefaultLanguageCode(), $value);
+							$fieldValue->save();
+
+							$request->set('specItem_' . $fieldValue->getID(), 'on');
+						}
+					}
+				}
+				else
+				{
+					// single select
+					if ('other' == $request->get('specField_' . $fieldID))
+					{
+						$fieldValue = $field->getNewValueInstance();
+						$fieldValue->setValueByLang('value', $application->getDefaultLanguageCode(), $values);
+						$fieldValue->save();
+
+						$request->set('specField_' . $fieldID, $fieldValue->getID());
+					}
+				}
+			}
+		}
+
+		$languages = ActiveRecordModel::getApplication()->getLanguageArray(LiveCart::INCLUDE_DEFAULT);
+
+		foreach ($fields as $field)
+		{
+			$fieldName = $field->getFormFieldName();
+
+			if ($field->isSelector())
+			{
+				if (!$field->isMultiValue->get())
+				{
+					if ($request->isValueSet($fieldName) && !in_array($request->get($fieldName), array('other', '')))
+				  	{
+				  		$this->setAttributeValue($field, SpecFieldValue::getInstanceByID((int)$request->get($fieldName), ActiveRecordModel::LOAD_DATA));
+				  	}
+				}
+				else
+				{
+					$values = $field->getValuesSet();
+
+					foreach ($values as $value)
+					{
+					  	if ($request->isValueSet($value->getFormFieldName()) || $request->isValueSet('checkbox_' . $value->getFormFieldName()))
+					  	{
+						  	if ($request->get($value->getFormFieldName()))
+						  	{
+								$this->setAttributeValue($field, $value);
+							}
+							else
+							{
+								$this->removeAttributeValue($field, $value);
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				if ($request->isValueSet($fieldName))
+			  	{
+			  		if ($field->isTextField())
+					{
+						foreach ($languages as $language)
+						{
+						  	if ($request->isValueSet($field->getFormFieldName($language)))
+						  	{
+								$this->setAttributeValueByLang($field, $language, $request->get($field->getFormFieldName($language)));
+							}
+						}
+					}
+					else
+					{
+						if (strlen($request->get($fieldName)))
+						{
+							$this->setAttributeValue($field, $request->get($fieldName));
+						}
+						else
+						{
+							$this->removeAttribute($field);
+						}
+					}
+				}
+			}
+		}
+	}
+
 	public function getFormData()
 	{
 		$selectorTypes = EavFieldCommon::getSelectorValueTypes();
 		$multiLingualTypes = SpecField::getMultilanguageTypes();
 		$languageArray = ActiveRecordModel::getApplication()->getLanguageArray();
 		$fieldClass = $this->getFieldClass();
+
+		$formData = array();
 
 		foreach($this->toArray() as $attr)
 		{
@@ -336,10 +445,12 @@ abstract class EavSpecificationManagerCommon
 		$response->set("specFieldList", $specFieldsByGroup);
 		$response->set("multiLingualSpecFieldss", $multiLingualSpecFields);
 
-		$this->setFormValidator($form->getValidator());
+		$form->setData($this->getFormData());
+
+		//$this->setFormValidator($form->getValidator());
 	}
 
-	private function setFormValidator(RequestValidator $validator)
+	public function setValidation(RequestValidator $validator)
 	{
 		$specFields = $this->getSpecificationFieldSet(ActiveRecordModel::LOAD_REFERENCES);
 

@@ -1,4 +1,4 @@
-_same_billing_and_shipping_addresses?=Samme faktura- og leveringsadresse? 
+_same_billing_and_shipping_addresses?=Samme faktura- og leveringsadresse?
 _shipping_address=Leveringsadresse
 _home=Hjem
 _base_help=Hjelp
@@ -49,3 +49,5 @@ _company=Firma
 _postal_code=Postnummer
 _loading=Laster opp date..
 _internal_error_have_accurred=Intern feil er oppstått
+_other=Annet
+_enter_other=Gå til annet >>

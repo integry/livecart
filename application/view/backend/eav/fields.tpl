@@ -1,5 +1,5 @@
 {assign var=containerId value=$blah|rand:1000000}
-<div id="{$containerId}">
+<div id="eavContainer_{$containerId}">
 {foreach from=$specFieldList key=groupID item=fieldList}
 
 	{if $groupID}
@@ -22,3 +22,8 @@
 	{/if}
 {/foreach}
 </div>
+
+{literal}
+<script type="text/javascript">
+	new Backend.Eav($('eavContainer_{/literal}{$containerId}'));
+</script>

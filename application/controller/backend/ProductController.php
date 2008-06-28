@@ -544,48 +544,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$validator = $this->buildValidator($product);
 		if ($validator->isValid())
 		{
-			$needReload = 0;
-
-			// create new specField values
-			if ($this->request->isValueSet('other'))
-			{
-				$other = $this->request->get('other');
-				foreach ($other as $fieldID => $values)
-				{
-					$field = SpecField::getInstanceByID($fieldID);
-
-					if (is_array($values))
-					{
-						// multiple select
-						foreach ($values as $value)
-						{
-						  	if ($value)
-						  	{
-								$fieldValue = SpecFieldValue::getNewInstance($field);
-							  	$fieldValue->setValueByLang('value', $this->application->getDefaultLanguageCode(), $value);
-							  	$fieldValue->save();
-
-							  	$this->request->set('specItem_' . $fieldValue->getID(), 'on');
-								$needReload = 1;
-							}
-						}
-					}
-					else
-					{
-						// single select
-						if ('other' == $this->request->get('specField_' . $fieldID))
-						{
-							$fieldValue = SpecFieldValue::getNewInstance($field);
-						  	$fieldValue->setValueByLang('value', $this->application->getDefaultLanguageCode(), $values);
-						  	$fieldValue->save();
-
-						  	$this->request->set('specField_' . $fieldID, $fieldValue->getID());
-							$needReload = 1;
-						}
-					}
-				}
-			}
-
 			$product->loadRequestData($this->request);
 			$product->save();
 
@@ -707,6 +665,8 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			ProductPriceController::addShippingValidator($validator);
 			ProductPriceController::addInventoryValidator($validator);
 		}
+
+		$product->getSpecification()->setValidation($validator);
 
 		return $validator;
 	}

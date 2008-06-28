@@ -1,5 +1,5 @@
 _add_product=Legg til nytt produkt
-_cancel_add_product=Avbryt å legge til nytt produkt 
+_cancel_add_product=Avbryt å legge til nytt produkt
 _could_not_save_product_information=Kunne ikke lagre produktinformasjon
 _new_product_was_successfully_created=Nytt produkt ble laget
 _mass_action_succeed=Massehandling fullført
@@ -80,8 +80,6 @@ _allow_fractional_quantities=Tillatt antall produktdeler
 _pricing=Priser
 _shipping=Levering
 _shipping_weight=Leveringsvekt
-_other=Annet
-_enter_other=Gå til annet >>
 _minimum_order_quantity=Minimum bestillingskvantitet
 _shipping_surcharge=Tilleggsgebyr på levering
 _requires_separate_shipment=Krever separat levering

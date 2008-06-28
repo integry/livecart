@@ -243,74 +243,11 @@ class Product extends MultilingualObject
 			$this->manufacturer->set(Manufacturer::getInstanceByName($request->get('manufacturer')));
 		}
 
+		$this->getSpecification()->loadRequestData($request);
+
 		// set prices
 		$this->loadPricingFromRequest($request);
 		$this->loadPricingFromRequest($request, true);
-
-		// set SpecField's
-		$fields = $this->category->get()->getSpecificationFieldSet(Category::INCLUDE_PARENT);
-		foreach ($fields as $field)
-		{
-			$fieldName = $field->getFormFieldName();
-
-			if ($field->isSelector())
-			{
-				if (!$field->isMultiValue->get())
-				{
-					if ($request->isValueSet($fieldName) && !in_array($request->get($fieldName), array('other', '')))
-				  	{
-				  		$this->setAttributeValue($field, SpecFieldValue::getInstanceByID((int)$request->get($fieldName), ActiveRecordModel::LOAD_DATA));
-				  	}
-				}
-				else
-				{
-					$values = $field->getValuesSet();
-
-					foreach ($values as $value)
-					{
-					  	if ($request->isValueSet($value->getFormFieldName()) || $request->isValueSet('checkbox_' . $value->getFormFieldName()))
-					  	{
-						  	if ($request->get($value->getFormFieldName()))
-						  	{
-								$this->setAttributeValue($field, $value);
-							}
-							else
-							{
-								$this->removeAttributeValue($field, $value);
-							}
-						}
-					}
-				}
-			}
-			else
-			{
-				if ($request->isValueSet($fieldName))
-			  	{
-			  		if ($field->isTextField())
-					{
-						$languages = self::getApplication()->getLanguageArray(LiveCart::INCLUDE_DEFAULT);
-						foreach ($languages as $language)
-						{
-						  	if ($request->isValueSet($field->getFormFieldName($language)))
-						  	{
-								$this->setAttributeValueByLang($field, $language, $request->get($field->getFormFieldName($language)));
-							}
-						}
-					}
-					else
-					{
-						if (strlen($request->get($fieldName)))
-						{
-							$this->setAttributeValue($field, $request->get($fieldName));
-						}
-						else
-						{
-							$this->removeAttribute($field);
-						}
-					}
-				}
-			}
-		}
 	}
 
 	/**

@@ -168,7 +168,7 @@ abstract class EavMultiValueItemCommon implements iEavSpecification
 		{
 		  	$ids[] = $id;
 
-			$value = $item->specFieldValue->get()->toArray();
+			$value = $item->getField()->get()->toArray();
 
 			if ($isLanguage)
 			{

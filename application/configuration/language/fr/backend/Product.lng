@@ -106,7 +106,6 @@ _generate_sku=Générer le code produit automatiquement
 _handle=Gérer
 _mark_as_featured_product=Marquer comme produit vedette
 _allow_fractional_quantities=Permettre les quantitées fractionnaires
-_enter_other=Inscrire autre
 _minimum_order_quantity=Quantité minimale
 _shipping_surcharge=surcharge expédition
 _allow_back_ordering=Permettre le backordering (en cas de rupture de stock)

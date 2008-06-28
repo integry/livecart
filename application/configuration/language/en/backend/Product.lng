@@ -111,9 +111,6 @@ _pricing=Pricing
 _list_price=List price
 _shipping=Shipping
 _shipping_weight=Shipping weight
-_other=Other
-_enter_other=Enter Other >>
-
 
 _minimum_order_quantity=Minimum order quantity
 _shipping_surcharge=Shipping surcharge

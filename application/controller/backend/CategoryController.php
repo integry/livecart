@@ -39,11 +39,10 @@ class CategoryController extends StoreManagementController
 		ClassLoader::import('application.LiveCartRenderer');
 		ClassLoader::import('application.model.presentation.CategoryPresentation');
 
-		$response = new ActionResponse();
-		$form = $this->buildForm();
-		$response->set("catalogForm", $form);
-
 		$category = Category::getInstanceByID($this->request->get("id"), Category::LOAD_DATA);
+		$form = $this->buildForm($category);
+		$response = new ActionResponse("catalogForm", $form);
+
 		$categoryArr = $category->toArray();
 		$form->setData($categoryArr);
 		$response->set("categoryId", $categoryArr['ID']);
@@ -94,14 +93,11 @@ class CategoryController extends StoreManagementController
 	{
 		ClassLoader::import('application.model.presentation.CategoryPresentation');
 
-		$validator = $this->buildValidator();
+		$categoryNode = Category::getInstanceByID($this->request->get("id"), Category::LOAD_DATA);
+		$validator = $this->buildValidator($categoryNode);
 		if($validator->isValid())
 		{
-			$categoryNode = Category::getInstanceByID($this->request->get("id"), Category::LOAD_DATA);
-			$categoryNode->setFieldValue('isEnabled', $this->request->get('isEnabled', 0));
-
-			$multilingualFields = array("name", "description", "keywords");
-			$categoryNode->setValueArrayByLang($multilingualFields, $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true), $this->request);
+			$categoryNode->loadRequestData($this->request);
 			$categoryNode->save();
 
 			// presentation
@@ -265,13 +261,16 @@ class CategoryController extends StoreManagementController
 	 *
 	 * @return RequestValidator
 	 */
-	private function buildValidator()
+	private function buildValidator(Category $category)
 	{
 		ClassLoader::import("framework.request.validator.RequestValidator");
 
 		$validator = new RequestValidator("category", $this->request);
-		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("Catgory name should not be empty")));
+		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("Category name should not be empty")));
 		$validator->addFilter("name", new StripHtmlFilter());
+
+		$category->getSpecification()->setValidation($validator);
+
 		return $validator;
 	}
 
@@ -280,10 +279,9 @@ class CategoryController extends StoreManagementController
 	 *
 	 * @return Form
 	 */
-	private function buildForm()
+	private function buildForm(Category $category)
 	{
-		$form = new Form($this->buildValidator());
-		return $form;
+		return new Form($this->buildValidator($category));
 	}
 
 	private function getCategoryImageCount(Category $category)

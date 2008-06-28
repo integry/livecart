@@ -28,17 +28,17 @@
 				<span class="errorText hidden"> </span>
 			</fieldset>
 		</p>
-			  
+
 		<p class="checkbox">
-			<input type="checkbox" value="1" name="multipleSelector" class="checkbox specField_form_multipleSelector" {denied role="category.update"}disabled="disabled"{/denied} />
+			<input type="checkbox" value="1" name="isMultiValue" class="checkbox specField_form_multipleSelector" {denied role="category.update"}disabled="disabled"{/denied} />
 			<label class="specField_form_multipleSelector_label">{t _SpecField_select_multiple}</label>
 		</p>
-							
+
 		<p class="checkbox specField_form_advancedText">
 			<input type="checkbox" value="1" name="advancedText" class="checkbox" {denied role="category.update"}disabled="disabled"{/denied} />
 			<label class="specField_form_advancedText_label">{t _SpecField_formated_text}</label>
 		</p>
-		
+
 		<div>
 			<p class="required">
 				<label class="specField_form_name_label">{t _SpecField_title}</label>
@@ -47,7 +47,7 @@
 					<span class="errorText hidden"> </span>
 				</fieldset>
 			</p>
-	
+
 			<p class="specField_handle">
 				<label  class="specField_form_handle_label">{t _SpecField_handle}</label>
 				<fieldset class="error">
@@ -55,7 +55,7 @@
 					<span class="errorText hidden"> </span>
 				</fieldset>
 			</p>
-	  
+
 			<p>
 				<label  class="specField_form_valuePrefix_label sufixAndPrefix">{t _SpecField_valuePrefix}</label>
 				<fieldset class="error sufixAndPrefix">
@@ -63,7 +63,7 @@
 					<span class="errorText hidden"> </span>
 				</fieldset>
 			</p>
-			
+
 			<p>
 				<label  class="specField_form_valueSuffix_label sufixAndPrefix">{t _SpecField_valueSuffix}</label>
 				<fieldset class="error sufixAndPrefix">
@@ -74,32 +74,32 @@
 
 			<p>
 				<label class="specField_form_description_label">{t _SpecField_description}</label>
-				
+
 				<fieldset class="error">
 					<textarea name="description" class="specField_form_description" rows="5" cols="40" {denied role="category.update"}readonly="readonly"{/denied}></textarea>
 					<span class="errorText hidden"> </span>
 				</fieldset>
 			</p>
-		
+
 		</div>
-		
+
 		<p class="checkbox">
 			<input type="checkbox" value="1" name="isRequired" class="checkbox specField_form_isRequired" {denied role="category.update"}disabled="disabled"{/denied} />
 			<label class="specField_form_isRequired_label">{t _SpecField_is_required}</label>
 		</p>
-		
+
 		<p class="checkbox">
 			<input type="checkbox" value="1" name="isDisplayed" class="checkbox specField_form_isDisplayed" {denied role="category.update"}disabled="disabled"{/denied} />
 			<label class="specField_form_isDisplayed_label">{t _SpecField_displayed_on_front_page}</label>
 		</p>
-			  
+
 		<p class="checkbox">
 			<input type="checkbox" value="1" name="isDisplayedInList" class="checkbox specField_form_isDisplayedInList" {denied role="category.update"}disabled="disabled"{/denied} />
 			<label class="specField_form_isDisplayedInList_label">{t _SpecField_displayed_in_product_list}</label>
-		</p>		
-		
+		</p>
+
 		<div class="clear"></div>
-		
+
 		{language}
 
 			<p>
@@ -119,8 +119,8 @@
 				<textarea name="description_{$lang.ID}" rows="5" cols="40" {denied role="category.update"}readonly="readonly"{/denied}></textarea>
 			</p>
 
-		{/language}  
-			
+		{/language}
+
 	</fieldset>
 
 	<!-- STEP 2 -->
@@ -150,8 +150,8 @@
 						{t _or}
 						<a href="#" class="cancel specField_mergeValuesCancel">{t _cancel}</a>
 					</span>
-				</p>   
-					 	
+				</p>
+
 				{language}
 					<ul>
 						<li class="dom_template specField_form_values_value" id="specField_form_values_">
@@ -162,8 +162,8 @@
 						</li>
 					</ul>
 				{/language}
-				
-				
+
+
 			</div>
 
 			<div class="clear"></div>

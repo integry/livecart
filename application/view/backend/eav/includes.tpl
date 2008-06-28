@@ -6,3 +6,4 @@
 {includeCss file="library/dhtmlCalendar/calendar-win2k-cold-2.css"}
 
 {includeJs file="backend/Eav.js"}
+{includeCss file="backend/Eav.css"}

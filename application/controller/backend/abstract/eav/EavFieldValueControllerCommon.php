@@ -57,7 +57,7 @@ abstract class EavFieldValueControllerCommon extends StoreManagementController
 
 		foreach($this->request->get('mergedValues') as $mergedValueId)
 		{
-			$mergedValue = SpecFieldValue::getInstanceByID($mergedValueId, true);
+			$mergedValue = $this->getInstanceByID($mergedValueId, true);
 			$mergedIntoValue->mergeWith($mergedValue);
 		}
 
@@ -67,7 +67,7 @@ abstract class EavFieldValueControllerCommon extends StoreManagementController
 
 	private function getInstanceByID($id)
 	{
-		return call_user_func_array(array($this->getClassName(), 'getInstanceById'), array($id));
+		return call_user_func_array(array($this->getClassName(), 'getInstanceById'), array($id, ActiveRecordModel::LOAD_DATA));
 	}
 }
 

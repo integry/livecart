@@ -77,6 +77,11 @@ abstract class ActiveRecordModel extends ActiveRecord
 				}
 			}
 		}
+
+		if ($this instanceof EavAble)
+		{
+			$this->getSpecification()->loadRequestData($request);
+		}
 	}
 
 	public function getSpecification()
@@ -134,6 +139,18 @@ abstract class ActiveRecordModel extends ActiveRecord
 		$this->executePlugins($this, 'update');
 		$res = parent::update();
 		$this->executePlugins($this, 'save');
+		return $res;
+	}
+
+	public function save()
+	{
+		$res = parent::save();
+
+		if ($this instanceof EavAble && $this->specificationInstance)
+		{
+			$this->specificationInstance->save();
+		}
+
 		return $res;
 	}
 
