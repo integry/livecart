@@ -99,7 +99,7 @@
     font-weight: bold;
 }
 
-.order_editAddress
+.order_editAddress, .order_editFields
 {
 	background-image: url(../../image/silk/pencil.png);
 }
@@ -122,6 +122,30 @@
 .order_addProduct
 {
 	background-image: url(../../image/silk/cart_put.png);
+}
+
+.customFields form,
+.customFields .order_cancelEditFields,
+.customFields.editing .overview,
+.customFields.editing .order_editFields
+{
+	display: none;
+}
+
+.customFields.editing form,
+.customFields.editing .order_cancelEditFields
+{
+	display: inline;
+}
+
+.overview td
+{
+	padding: 0.5em;
+}
+
+.overview .attributeList
+{
+	margin-left: 1em;
 }
 
 .order_shippingAddress input,

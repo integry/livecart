@@ -1,7 +1,7 @@
 /**
  *	@author Integry Systems
  */
- 
+
 function validateForm(form)
 {
 	Element.saveTinyMceFields(form);
@@ -14,9 +14,9 @@ function validateForm(form)
 	{
 		var formElement = form[checks.key];
 		if (!formElement) return;
-		
-		$H(checks.value).each(function(formElement, check) 
-		{				
+
+		$H(checks.value).each(function(formElement, check)
+		{
 			if (window[check.key] && !window[check.key](formElement, check.value.param)) // If element is not valid
 			{
 				// radio button group
@@ -24,7 +24,7 @@ function validateForm(form)
 				{
 					formElement = formElement[formElement.length - 1];
 				}
-				
+
 				ActiveForm.prototype.setErrorMessage(formElement, check.value.error, focusField);
 				isFormValid = false;
 				focusField = false;
@@ -32,22 +32,22 @@ function validateForm(form)
 			}
 		}.bind(this, formElement));
 	}.bind(this));
-	
+
 	return isFormValid;
 }
 
 function applyFilters(form, ev)
-{	
-	if(!ev || !ev.target) 
-	{ 
-		ev = window.event; 
+{
+	if(!ev || !ev.target)
+	{
+		ev = window.event;
 		ev.target = ev.srcElement;
 	}
 
 	var filterData = form.elements.namedItem('_filter').value;
 	var filter = filterData.evalJSON();
 
-	var element = ev.target;	
+	var element = ev.target;
 	elementFilters = filter[element.name];
 
 	if ('undefined' == elementFilters)
@@ -61,7 +61,7 @@ function applyFilters(form, ev)
 		{
 			eval(k + '(element, elementFilters[k]);');
 		}
-	}	
+	}
 }
 
 /*********************************************
@@ -101,17 +101,17 @@ function IsNotEmptyCheck(element, params)
 			{
 				return true;
 			}
-		}   
+		}
 	}
-	
+
 	else
 	{
-		if (element.getAttribute("type") == "checkbox") 
+		if (element.getAttribute("type") == "checkbox")
 		{
 			return element.checked;
 		}
-		
-		return (element.value.length > 0);	   
+
+		return (element.value.length > 0);
 	}
 }
 
@@ -183,15 +183,15 @@ function MaxValueCheck(element, constraint)
 function NumericFilter(elm, params)
 {
 	elm.focus();
-	
+
 	var value = elm.value;
-	
+
 	// Remove leading zeros
 	value = value.replace(/^0+/, '');
 	if(!value) return;
-	
+
 	value = value.replace(',' , '.');
-	
+
 	// only keep the last comma
 	parts = value.split('.');
 
@@ -203,41 +203,41 @@ function NumericFilter(elm, params)
 
 	// split digits and decimal part
 	parts = value.split('.');
-	
+
 	// leading comma (for example: .5 converted to 0.5)
 	if ('' == parts[0] && 2 == parts.length)
 	{
 	  	parts[0] = '0';
 	}
-	
+
 	//next remove all characters save 0 though 9
 	//in both elms of the array
 	dollars = parts[0].replace(/^-?[^0-9]-/gi, '');
 
 	if ('' != dollars && '-' != dollars)
 	{
-		dollars = parseInt(dollars);	  
+		dollars = parseInt(dollars);
 
 		if(!dollars) dollars = 0;
 	}
-	
+
 	if (2 == parts.length)
 	{
 		cents = parts[1].replace(/[^0-9]/gi, '');
 		dollars += '.' + cents;
 	}
-	
+
 	elm.value = dollars;
 }
 
 function IntegerFilter(element, params)
 {
 	element.focus();
-	
+
 	element.value = element.value.replace(/[^\d]/, '');
 	element.value = element.value.replace(/^0/, '');
-	
-	if(element.value == '') 
+
+	if(element.value == '')
 	{
 		element.value = 0;
 	}

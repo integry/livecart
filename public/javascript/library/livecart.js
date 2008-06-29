@@ -331,6 +331,13 @@ LiveCart.AjaxUpdater.prototype = {
 		options.parameters = params;
 		options.onComplete = this.postProcessResponse.bind(this);
 		options.onFailure = this.reportError.bind(this);
+		options.onSuccess = function()
+			{
+				if (ActiveForm)
+				{
+					ActiveForm.prototype.destroyTinyMceFields($(container));
+				}
+			}
 
 		if (insertionPosition != undefined)
 		{

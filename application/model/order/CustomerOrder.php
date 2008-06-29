@@ -123,6 +123,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	{
 		$this->loadAddresses();
 		$this->getShipments();
+		$this->getSpecification();
 	}
 
 	/**

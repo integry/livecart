@@ -1011,3 +1011,53 @@ Backend.CustomerOrder.Address.prototype =
 		}
 	}
 }
+
+Backend.CustomerOrder.CustomFields = Class.create();
+Backend.CustomerOrder.CustomFields.prototype =
+{
+	orderId: null,
+	container: null,
+	form: null,
+
+	initialize: function(orderId)
+	{
+		this.orderId = orderId;
+		this.container = $('tabOrderInfo_' + orderId + 'Content').down('.customFields');
+		this.form = this.container.down('form');
+
+		Event.observe(this.container.down('.order_editFields').down('a'), 'click', this.showEditForm.bindAsEventListener(this));
+		Event.observe(this.container.down('.order_cancelEditFields').down('a'), 'click', this.hideEditForm.bindAsEventListener(this));
+		Event.observe(this.container.down('a.cancel'), 'click', this.hideEditForm.bindAsEventListener(this));
+		Event.observe(this.form, 'submit', this.submitForm.bindAsEventListener(this));
+	},
+
+	showEditForm: function(e)
+	{
+		Event.stop(e);
+		this.container.addClassName('editing');
+	},
+
+	hideEditForm: function(e)
+	{
+		Event.stop(e);
+		this.container.removeClassName('editing');
+		this.form.reset();
+		ActiveForm.prototype.resetErrorMessages(this.form);
+	},
+
+	submitForm: function(e)
+	{
+		Event.stop(e);
+		if (!validateForm(this.form))
+		{
+			return false;
+		}
+
+		new LiveCart.AjaxUpdater(this.form, this.container, null, null, this.submitComplete.bind(this));
+	},
+
+	submitComplete: function()
+	{
+		this.container.removeClassName('editing');
+	}
+}

@@ -16,6 +16,7 @@
 {includeCss file="backend/User.css"}
 {includeCss file="backend/SelectCustomerPopup.css"}
 
+{include file="backend/eav/includes.tpl"}
 
 {pageTitle help="userGroups"}{t _livecart_users}{/pageTitle}
 {include file="layout/backend/meta.tpl"}

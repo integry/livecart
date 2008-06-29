@@ -233,10 +233,6 @@ abstract class EavSpecificationManagerCommon
 
 		if (($a[$field][$fieldGroup]['position'] == $b[$field][$fieldGroup]['position']))
 		{
-			if (!isset($a[$field]['position']))
-			{
-				var_dump($a);
-			}
 			return ($a[$field]['position'] < $b[$field]['position']) ? -1 : 1;
 		}
 
@@ -718,6 +714,7 @@ abstract class EavSpecificationManagerCommon
 				{
 					$values[$val['valueID']] = $val['value'];
 				}
+
 				$specification = call_user_func_array(array($multiValueItemClass, 'restoreInstance'), array($this->owner, $specField, $values));
 			}
 			else

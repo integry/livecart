@@ -128,6 +128,9 @@ _is_canceled=Is cancelled
 _order_id=Order ID
 _is_finalized=Is finalized
 
+_custom_info=Custom Information
+_no_info_entered_yet=No custom information has been entered yet
+
 _edit=Edit
 _view=View
 
@@ -148,6 +151,12 @@ _phone=Phone
 
 # Errors
 _invalid_Status=Invalid status
+
+_country_empty=Please select the country
+_city_empty=Please enter the city name
+_address_empty=Please enter the address
+_first_name_is_empty=Please enter the first name
+_last_name_is_empty=Please enter the last name
 
 # Invoice
 _order_invoice=Invoice

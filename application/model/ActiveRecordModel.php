@@ -183,6 +183,18 @@ abstract class ActiveRecordModel extends ActiveRecord
 		return $data;
 	}
 
+	public function toArray($force = false)
+	{
+		$array = parent::toArray($force);
+
+		if ($this->specificationInstance && !isset($array['attributes']))
+		{
+			$array['attributes'] = $this->specificationInstance->toArray();
+		}
+
+		return $array;
+	}
+
 	private function executePlugins(&$object, $action, $className = null)
 	{
 		// in case the event is array transformation, the classname will be passed in as a separate variable

@@ -87,6 +87,12 @@
 
 <br class="clear" />
 
+{if $specFieldList}
+<div class="customFields">
+	{include file="backend/customerOrder/saveFields.tpl"}
+</div>
+{/if}
+
 {if $formShippingAddress}
 	{form handle=$formShippingAddress action="controller=backend.customerOrder action=updateAddress" id="orderInfo_`$order.ID`_shippingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
 		<fieldset class="order_shippingAddress">

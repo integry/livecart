@@ -215,10 +215,10 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 
 			$values = $this->request->get('values');
 
+			$specField->loadRequestData($this->request);
 			$specField->setFieldValue('dataType', $dataType);
 			$specField->setFieldValue('type', $type);
 
-			$specField->loadRequestData($this->request);
 			$specField->save();
 
 			// save specification field values in database

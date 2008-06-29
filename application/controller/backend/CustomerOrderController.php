@@ -64,6 +64,7 @@ class CustomerOrderController extends ActiveGridController
 	public function info()
 	{
 		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('ShippingAddress' => 'UserAddress', 'BillingAddress' => 'UserAddress', 'State', 'User', 'Currency'));
+		$order->getSpecification();
 
 		$response = new ActionResponse();
 		$response->set('statuses', array(
@@ -194,6 +195,11 @@ class CustomerOrderController extends ActiveGridController
 //		$response->set('hideShipped', $shipableShipmentsCount > 0 ? $hideShipped : 1);
 		$response->set('hideShipped', false);
 		$response->set('type', $this->getOrderType($order));
+
+		// custom fields
+		$form = $this->createFieldsForm($order);
+		$order->getSpecification()->setFormResponse($response, $form);
+		$response->set('fieldsForm', $form);
 
 		return $response;
 	}
@@ -608,6 +614,26 @@ class CustomerOrderController extends ActiveGridController
 	/**
 	 * @role update
 	 */
+	public function saveFields()
+	{
+		$order = CustomerOrder::getInstanceByID($this->request->get('id'), true);
+		$order->loadAll();
+		if ($this->createFieldsFormValidator($order)->isValid())
+		{
+			$order->loadRequestData($this->request);
+			$order->save();
+
+			$response = new ActionResponse('order', $order->toArray());
+			$form = $this->createFieldsForm($order);
+			$order->getSpecification()->setFormResponse($response, $form);
+			$response->set('fieldsForm', $form);
+			return $response;
+		}
+	}
+
+	/**
+	 * @role update
+	 */
 	public function update()
 	{
 		$order = CustomerOrder::getInstanceByID((int)$this->request->get('ID'), true);
@@ -925,6 +951,24 @@ class CustomerOrderController extends ActiveGridController
 		$form->setData($orderArray);
 
 		return $form;
+	}
+
+	/**
+	 * @return RequestValidator
+	 */
+	private function createFieldsFormValidator(CustomerOrder $order)
+	{
+		$validator = new RequestValidator("CustomerOrderFields", $this->request);
+		$order->getSpecification()->setValidation($validator);
+		return $validator;
+	}
+
+	/**
+	 * @return Form
+	 */
+	private function createFieldsForm(CustomerOrder $order)
+	{
+		return new Form($this->createFieldsFormValidator($order));
 	}
 }
 ?>
