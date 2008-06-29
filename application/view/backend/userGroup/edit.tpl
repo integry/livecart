@@ -17,6 +17,8 @@
 		</p>
 	</fieldset>
 
+	{include file="backend/eav/fields.tpl" item=$userGroup}
+
 	<fieldset class="userGroup_controls controls">
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" class="userGroup_save button submit" value="{t _save}" />

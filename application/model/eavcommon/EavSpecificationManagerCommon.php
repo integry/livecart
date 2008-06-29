@@ -553,7 +553,8 @@ abstract class EavSpecificationManagerCommon
 				if (isset($productArray[$ids[$spec[$objectColumn]]]['attributes'][$spec[$fieldColumn]]))
 				{
 					$sp =& $productArray[$ids[$spec[$objectColumn]]]['attributes'][$spec[$fieldColumn]];
-					$sp['valueIDs'][] = $spec[$valueColumn];
+					//$sp['valueIDs'][] = $spec[$valueColumn];
+					$sp['valueIDs'][] = $spec['valueID'];
 					$sp['values'][] = $value;
 					continue;
 				}
@@ -570,7 +571,9 @@ abstract class EavSpecificationManagerCommon
 
 			if ($spec[$fieldClass]['isMultiValue'])
 			{
-				$spec['valueIDs'] = array($spec[$valueColumn]);
+				//var_dump($spec);
+				//$spec['valueIDs'] = array($spec[$valueColumn]);
+				$spec['valueIDs'] = array($spec['valueID']);
 				$spec['values'] = array($value);
 			}
 			else

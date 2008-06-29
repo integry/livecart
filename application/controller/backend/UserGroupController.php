@@ -39,6 +39,8 @@ class UserGroupController extends ActiveGridController
 		$response->set('userGroup', $group->toArray());
 		$response->set('userGroupForm', $form);
 
+		$group->getSpecification()->setFormResponse($response, $form);
+
 		return $response;
 	}
 
@@ -82,10 +84,7 @@ class UserGroupController extends ActiveGridController
 	 */
 	public function save()
 	{
-		$name = $this->request->get('name');
-		$description = $this->request->get('description');
-
-		if($id = (int)$this->request->get('id'))
+		if($id = $this->request->get('id'))
 		{
 			$group = UserGroup::getInstanceByID($id);
 		}
@@ -97,9 +96,7 @@ class UserGroupController extends ActiveGridController
 		$validator = $this->createUserGroupFormValidator($group);
 		if($validator->isValid())
 		{
-			$group->name->set($name);
-			$group->description->set($description);
-
+			$group->loadRequestData($this->request);
 			$group->save();
 
 			return new JSONResponse(array('group' => $group->toArray()), 'success', $this->translate('_user_group_successfully_saved'));
@@ -151,7 +148,7 @@ class UserGroupController extends ActiveGridController
 	{
 		$validator = new RequestValidator("userGroupForm_" . $group->isExistingRecord() ? $group->getID() : '', $this->request);
 		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("_error_name_should_not_be_empty")));
-
+		$group->getSpecification()->setValidation($validator);
 		return $validator;
 	}
 

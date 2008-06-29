@@ -49,11 +49,6 @@ class Manufacturer extends ActiveRecordModel implements EavAble
 			return self::getNewInstance($name);
 		}
 	}
-
-	public function getSpecification()
-	{
-
-	}
 }
 
 ?>

@@ -34,7 +34,8 @@ class UserController extends StoreManagementController
 		$user->loadAddresses();
 		$response->set('someUser', $user->toArray());
 		$response->set('availableUserGroups', $availableUserGroups);
-		$response->set('form', self::createUserForm($this, $user));
+
+		$user->getSpecification()->setFormResponse($response, $form);
 
 		return $response;
 	}
@@ -71,7 +72,6 @@ class UserController extends StoreManagementController
 		$validator->addCheck('firstName', new IsNotEmptyCheck($controller->translate('_err_first_name_empty')));
 		$validator->addCheck('lastName', new IsNotEmptyCheck($controller->translate('_err_last_name_empty')));
 
-
 		$passwordLengthStart = 6;
 		$passwordLengthEnd = 30;
 		$allowEmpty = $user;
@@ -83,6 +83,13 @@ class UserController extends StoreManagementController
 			));
 
 		$validator->addCheck('userGroupID', new IsNumericCheck($controller->translate('_err_invalid_group')));
+
+		if (!$user)
+		{
+			$user = ActiveRecordModel::getNewInstance('User');
+		}
+
+		$user->getSpecification()->setValidation($validator);
 
 		return $validator;
 	}
@@ -210,9 +217,6 @@ class UserController extends StoreManagementController
 		{
 			$email = $this->request->get('email');
 			$password = $this->request->get('password');
-			$firstName = $this->request->get('firstName');
-			$lastName = $this->request->get('lastName');
-			$companyName = $this->request->get('companyName');
 
 			if(($user && $email != $user->email->get() && User::getInstanceByEmail($email)) ||
 			   (!$user && User::getInstanceByEmail($email)))

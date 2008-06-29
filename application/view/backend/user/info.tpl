@@ -6,15 +6,15 @@
 			<div class="errorText" style="display: none" ></span>
 		</fieldset>
 	</p>
-	
+
 	<p class="required">
 		<label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_userGroup" class="user_userGroupLabel">{t _user_group}</label>
 		<fieldset class="error user_userGroup">
 			{selectfield name="UserGroup" options=$availableUserGroups id="user_`$someUser.UserGroup.ID`_`$someUser.ID`_userGroup"}
 			<div class="errorText hidden"> </div>
-		</fieldset> 
+		</fieldset>
 	</p>
-	
+
 	<p class="required">
 		<label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_firstName">{t _first_name}</label>
 		<fieldset class="error">
@@ -47,6 +47,8 @@
 		</fieldset>
 	</p>
 
+	{include file="backend/eav/fields.tpl" item=$someUser}
+
 	<p {if !$someUser.ID}class="required"{/if}>
 		<label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_password">{t _password}</label>
 		<fieldset class="error userPasswordBlock">
@@ -60,14 +62,14 @@
 			<div class="errorText" style="display: none" ></span>
 		</fieldset>
 	</p>
-		
+
 	<p class="sameAddress">
 		{checkbox name="sameAddresses" id="user_`$someUser.UserGroup.ID`_`$someUser.ID`_sameAddresses" class="checkbox"}
-		<label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_sameAddresses" class="checkbox">{t _same_billing_and_shipping_addresses?}</label>	   
+		<label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_sameAddresses" class="checkbox">{t _same_billing_and_shipping_addresses?}</label>
 	</p>
-	
+
 	<br class="clear" />
-	
+
 	<fieldset id="user_{$someUser.UserGroup.ID}_{$someUser.ID}_billingAddress" class="user_billingAddress">
 		<legend>{t _billing_address}</legend>
 		{include file=backend/user/address_edit.tpl namePrefix="billingAddress_" idPrefix="user_`$someUser.UserGroup.ID`_`$someUser.ID`_billingAddress" address=$someUser.defaultBillingAddress states=$billingAddressStates}
@@ -77,15 +79,15 @@
 		<legend>{t _shipping_address}</legend>
 		{include file=backend/user/address_edit.tpl namePrefix="shippingAddress_" idPrefix="user_`$someUser.UserGroup.ID`_`$someUser.ID`_shippingAddress" address=$someUser.defaultShippingAddress states=$shippingAddressStates}
 	</fieldset>
-	
-	
+
+
 	<fieldset class="controls">
 		<span class="progressIndicator" style="display: none;"></span>
-		<input type="submit" name="save" class="submit" value="{t _save}" id="user_{$someUser.UserGroup.ID}_{$someUser.ID}_submit"> 
-		{t _or} 
+		<input type="submit" name="save" class="submit" value="{t _save}" id="user_{$someUser.UserGroup.ID}_{$someUser.ID}_submit">
+		{t _or}
 		<a class="cancel" href="#">{t _cancel}</a>
 	</fieldset>
-	
+
 	<script type="text/javascript">
 		{literal}
 		if({/literal}{$someUser.ID}{literal} > 0)

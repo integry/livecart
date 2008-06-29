@@ -6,6 +6,7 @@ ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.order.OrderedItem");
 ClassLoader::import("application.model.order.Shipment");
 ClassLoader::import("application.model.delivery.ShipmentDeliveryRate");
+ClassLoader::import("application.model.eav.EavAble");
 
 /**
  * Represents customers order - products placed in shopping basket or wish list
@@ -13,7 +14,7 @@ ClassLoader::import("application.model.delivery.ShipmentDeliveryRate");
  * @package application.model.order
  * @author Integry Systems <http://integry.com>
  */
-class CustomerOrder extends ActiveRecordModel
+class CustomerOrder extends ActiveRecordModel implements EavAble
 {
 	public $orderedItems = array();
 

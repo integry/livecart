@@ -2,6 +2,7 @@
 
 ClassLoader::import("application.model.ActiveRecordModel");
 ClassLoader::import("application.model.role.*");
+ClassLoader::import("application.model.eav.EavAble");
 
 /**
  * All users can be assigned to a group. Assigning users to a group is necessary to provide admin
@@ -10,7 +11,7 @@ ClassLoader::import("application.model.role.*");
  * @package application.model.role
  * @author Integry Systems <http://integry.com>
  */
-class UserGroup extends ActiveRecordModel
+class UserGroup extends ActiveRecordModel implements EavAble
 {
 	private $appliedRoles = array();
 	private $canceledRoles = array();
