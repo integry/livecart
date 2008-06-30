@@ -62,10 +62,6 @@ class ActiveGrid
 				$filter->setOrder($handle, $request->get('sort_dir'));
 			}
 		}
-		else if ($modelClass)
-		{
-			$filter->setOrder(new ARFieldHandle($modelClass, 'ID'), 'DESC');
-		}
 
 		// apply filters
 		$filters = $request->get('filters');

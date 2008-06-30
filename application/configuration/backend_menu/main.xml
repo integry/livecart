@@ -34,6 +34,11 @@
 		        	<Controller>backend.siteNews</Controller>
 		        	<Role>news</Role>
 		        </Menu>
+        		<Menu>
+		        	<Title>_menu_manufacturers</Title>
+		        	<Controller>backend.manufacturer</Controller>
+		        	<Role>product</Role>
+		        </Menu>
 		    </Items>
         </Menu>
         <Menu>

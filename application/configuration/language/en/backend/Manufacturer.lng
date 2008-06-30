@@ -1,0 +1,15 @@
+_manufacturers=Manufacturers
+
+# grid
+Manufacturer.name=Manufacturer name
+_listing_manufacturers=Listing manufacturers $from - $to of $count
+_no_manufacturers=No manufacturers found
+_are_you_sure_you_want_to_delete_manufacturer=Really delete selected manufacturers?
+_nothing_selected=Please select at least one manufacturer first
+
+# editor
+_cancel_editing_manufacturer=Cancel editing manufacturer
+_manufacturer_info=General information
+_manufacturer_images=Images
+_manufacturer_was_successfully_saved=Manufacturer information was successfully saved
+_could_not_save_manufacturer=Could not save manufacturer information

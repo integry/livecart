@@ -38,6 +38,7 @@ abstract class ActiveGridController extends StoreManagementController
 	{
 		$filter = $this->getSelectFilter();
 		new ActiveGrid($this->application, $filter, $this->getClassName());
+		$this->setDefaultSortOrder($filter);
 
 		$recordCount = true;
 
@@ -241,6 +242,11 @@ abstract class ActiveGridController extends StoreManagementController
 	protected function getCSVFileName()
 	{
 		return 'exported.csv';
+	}
+
+	protected function setDefaultSortOrder(ARSelectFilter $filter)
+	{
+		$filter->setOrder(new ARFieldHandle($this->getClassName(), 'ID'), 'DESC');
 	}
 
 	protected function getMassValidator()

@@ -333,7 +333,7 @@ LiveCart.AjaxUpdater.prototype = {
 		options.onFailure = this.reportError.bind(this);
 		options.onSuccess = function()
 			{
-				if (ActiveForm)
+				if (ActiveForm && $(container))
 				{
 					ActiveForm.prototype.destroyTinyMceFields($(container));
 				}
