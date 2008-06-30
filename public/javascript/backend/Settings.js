@@ -239,6 +239,34 @@ Backend.Settings.Editor.prototype =
 					}
 
 				Event.observe($('siteMapPing'), 'click', siteMapSubmit);
+			},
+
+		'IMG_P_W_1':
+			function()
+			{
+				var prefixes = ['P', 'C'];
+				for (var k = 0; k < prefixes.length; k++)
+				{
+					var prefix = prefixes[k];
+					for (var size = 1; size <= 4; size++)
+					{
+						var width = $('setting_IMG_' + prefix + '_W_' + size);
+						var height = $('setting_IMG_' + prefix + '_H_' + size);
+
+						// move field
+						var widthInput = width.down('input');
+						var x = document.createElement('span');
+						x.innerHTML = ' x ';
+						widthInput.parentNode.insertBefore(height.down('input'), widthInput.nextSibling);
+						widthInput.parentNode.insertBefore(x, widthInput.nextSibling);
+
+						// move label
+						var widthLabel = width.down('label');
+						widthLabel.innerHTML = widthLabel.innerHTML.substring(0, widthLabel.innerHTML.length - 1) + ' x ' + height.down('label').innerHTML;
+
+						height.parentNode.removeChild(height);
+					}
+				}
 			}
 	},
 
