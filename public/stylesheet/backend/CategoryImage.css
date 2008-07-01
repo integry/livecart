@@ -4,30 +4,30 @@
     font-size: smaller;
 }
 
-.catImageAdd, .prodImageAdd
+.catImageAdd, .prodImageAdd, .manImageAdd
 {
-    background-image: url(../../image/silk/image_add.png);     
+    background-image: url(../../image/silk/image_add.png);
 }
 
-.imageTitle 
+.imageTitle
 {
     font-weight: bold;
     font-size: larger;
     margin: 0 10px;
 }
 
-img.image 
+img.image
 {
     cursor: -moz-zoom-in;
     vertical-align: top;
 }
 
-.activeList_editContainer .container legend 
+.activeList_editContainer .container legend
 {
     display: none;
 }
 
-.activeList_editContainer .container fieldset legend 
+.activeList_editContainer .container fieldset legend
 {
     display: block;
 }

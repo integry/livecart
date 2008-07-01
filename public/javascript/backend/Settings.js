@@ -244,7 +244,15 @@ Backend.Settings.Editor.prototype =
 		'IMG_P_W_1':
 			function()
 			{
-				var prefixes = ['P', 'C'];
+				// move all sections to one row
+				$('settings').addClassName('imageSettings');
+
+				var wCapt = Backend.getTranslation('IMG_P_W_1');
+				var hCapt = Backend.getTranslation('IMG_P_H_1');
+				var sizeCapt = wCapt + ' x ' + hCapt + ':';
+				var qualityCapt = Backend.getTranslation('IMG_P_Q_1')  + ':';
+
+				var prefixes = ['P', 'C', 'M'];
 				for (var k = 0; k < prefixes.length; k++)
 				{
 					var prefix = prefixes[k];
@@ -252,6 +260,7 @@ Backend.Settings.Editor.prototype =
 					{
 						var width = $('setting_IMG_' + prefix + '_W_' + size);
 						var height = $('setting_IMG_' + prefix + '_H_' + size);
+						var quality = $('setting_IMG_' + prefix + '_Q_' + size);
 
 						// move field
 						var widthInput = width.down('input');
@@ -260,9 +269,9 @@ Backend.Settings.Editor.prototype =
 						widthInput.parentNode.insertBefore(height.down('input'), widthInput.nextSibling);
 						widthInput.parentNode.insertBefore(x, widthInput.nextSibling);
 
-						// move label
-						var widthLabel = width.down('label');
-						widthLabel.innerHTML = widthLabel.innerHTML.substring(0, widthLabel.innerHTML.length - 1) + ' x ' + height.down('label').innerHTML;
+						// set label text
+						width.down('label').innerHTML = sizeCapt;
+						quality.down('label').innerHTML = qualityCapt;
 
 						height.parentNode.removeChild(height);
 					}

@@ -76,15 +76,6 @@ _p_large=Enlarged Product Page Image
 IMG_P_W_1=Width (pixels)
 IMG_P_H_1=Height (pixels)
 IMG_P_Q_1=Quality (0 - 100)
-IMG_P_W_2=Width (pixels)
-IMG_P_H_2=Height (pixels)
-IMG_P_Q_2=Quality (0 - 100)
-IMG_P_W_3=Width (pixels)
-IMG_P_H_3=Height (pixels)
-IMG_P_Q_3=Quality (0 - 100)
-IMG_P_W_4=Width (pixels)
-IMG_P_H_4=Height (pixels)
-IMG_P_Q_4=Quality (0 - 100)
 
 _category_image=Category Image Sizes
 _c_small=Small
@@ -92,23 +83,16 @@ _c_thumb=Thumbnail
 _c_medium=Medium
 _c_large=Large
 
-IMG_C_W_1=Width (pixels)
-IMG_C_H_1=Height (pixels)
-IMG_C_Q_1=Quality (0 - 100)
-IMG_C_W_2=Width (pixels)
-IMG_C_H_2=Height (pixels)
-IMG_C_Q_2=Quality (0 - 100)
-IMG_C_W_3=Width (pixels)
-IMG_C_H_3=Height (pixels)
-IMG_C_Q_3=Quality (0 - 100)
-IMG_C_W_4=Width (pixels)
-IMG_C_H_4=Height (pixels)
-IMG_C_Q_4=Quality (0 - 100)
+_manufacturer_image=Manufacturer Image Sizes
+_m_small=Small
+_m_thumb=Thumbnail
+_m_medium=Medium
+_m_large=Large
 
 _content_blocks=Content blocks
 _sale_items=On-sale Products
 SALE_ITEMS_COUNT=Number of on-sale products to display per block
-_newest_products=Newest Products
+_newest_items=Newest Products
 NEWEST_ITEMS_COUNT=Number of newest products to display
 
 _product_page=Product Page

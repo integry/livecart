@@ -11,8 +11,10 @@
 {includeCss file="library/ActiveList.css"}
 {includeCss file="library/ActiveGrid.css"}
 
+{includeJs file="backend/ObjectImage.js"}
 {includeJs file="backend/Manufacturer.js"}
 {includeCss file="backend/Manufacturer.css"}
+{includeCss file="backend/CategoryImage.css"}
 
 {includeJs file="library/ActiveList.js"}
 {includeCss file="library/ActiveGrid.css"}
@@ -42,8 +44,8 @@
 				<a href="{link controller=backend.manufacturer action=edit id=_id_}"}">{t _manufacturer_info}</a>
 				<span class="tabHelp">products</span>
 			</li>
-			<li id="tabOrdersList" class="tab active">
-				<a href="{link controller=backend.customerOrder action=orders id=1 query='userID=_id_'}">{t _orders}</a>
+			<li id="tabImages" class="tab active">
+				<a href="{link controller=backend.manufacturerImage id=_id_}">{t _manufacturer_images}</a>
 				<span class="tabHelp">products</span>
 			</li>
 		</ul>

@@ -79,6 +79,12 @@ abstract class ObjectImage extends MultilingualObject
 		foreach ($this->getImageSizes() as $key => $size)
 	  	{
 			$filePath = $publicRoot . $this->getPath($key);
+
+			if (!file_exists(dirname($filePath)))
+			{
+				mkdir(dirname($filePath), 0777, true);
+			}
+
 			$res = $resizer->resize($size[0], $size[1], $filePath);
 			if (!$res)
 			{

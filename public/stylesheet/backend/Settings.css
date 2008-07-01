@@ -65,3 +65,17 @@ div.multi
 {
 	background-image: url(../../image/silk/cancel.png)
 }
+
+.imageSettings fieldset.settings fieldset.settings
+{
+	float: left;
+	width: 22.5%;
+	margin-right: 1%;
+	padding: 0.5%;
+}
+
+.imageSettings fieldset.settings fieldset.settings legend
+{
+	font-size: 0.85em;
+	font-weight: bold;
+}
