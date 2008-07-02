@@ -1,1 +1,10 @@
 _custom_fields=Custom Fields
+
+Category=Categories
+CustomerOrder=Orders
+Manufacturer=Manufacturers
+User=Users
+UserGroup=User groups
+
+_SpecField_displayed_on_front_page=Editable by customer
+_SpecField_displayed_in_product_list=Visible to customer

@@ -2,3 +2,16 @@
 {
 	display: none;
 }
+
+.isDisplayed, .isDisplayedInList
+{
+	display: none;
+}
+
+#tabFieldsContent_2 .isDisplayed,
+#tabFieldsContent_2 .isDisplayedInList,
+#tabFieldsContent_4 .isDisplayed,
+#tabFieldsContent_4 .isDisplayedInList
+{
+	display: block;
+}

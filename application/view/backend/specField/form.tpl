@@ -88,12 +88,12 @@
 			<label class="specField_form_isRequired_label">{t _SpecField_is_required}</label>
 		</p>
 
-		<p class="checkbox">
+		<p class="checkbox isDisplayed">
 			<input type="checkbox" value="1" name="isDisplayed" class="checkbox specField_form_isDisplayed" {denied role="category.update"}disabled="disabled"{/denied} />
 			<label class="specField_form_isDisplayed_label">{t _SpecField_displayed_on_front_page}</label>
 		</p>
 
-		<p class="checkbox">
+		<p class="checkbox isDisplayedInList">
 			<input type="checkbox" value="1" name="isDisplayedInList" class="checkbox specField_form_isDisplayedInList" {denied role="category.update"}disabled="disabled"{/denied} />
 			<label class="specField_form_isDisplayedInList_label">{t _SpecField_displayed_in_product_list}</label>
 		</p>

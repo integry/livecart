@@ -15,6 +15,7 @@ class CustomFieldController extends StoreManagementController
 	public function init()
 	{
 		$this->loadLanguageFile('backend/Category');
+		$this->loadLanguageFile('backend/CustomField');
 		return parent::init();
 	}
 

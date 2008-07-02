@@ -420,7 +420,7 @@ abstract class EavSpecificationManagerCommon
 		$specFieldsByGroup = array();
 		$prevGroupID = -1;
 
-		$groupClass = 'SpecFieldGroup';
+		$groupClass = $this->getFieldClass() . 'Group';
 		foreach ($specFieldArray as $field)
 		{
 			$groupID = isset($field[$groupClass]['ID']) ? $field[$groupClass]['ID'] : '';
@@ -442,6 +442,7 @@ abstract class EavSpecificationManagerCommon
 			}
 		}
 
+		$response->set("groupClass", $groupClass);
 		$response->set("specFieldList", $specFieldsByGroup);
 		$response->set("multiLingualSpecFieldss", $multiLingualSpecFields);
 
