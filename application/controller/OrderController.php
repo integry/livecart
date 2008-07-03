@@ -38,7 +38,20 @@ class OrderController extends FrontendController
 		{
 			if (isset($options[$item->product->get()->getID()]))
 			{
-				$optionsArray[$item->getID()] = $this->getOptionsArray($options[$item->product->get()->getID()], $item);
+				$optionsArray[$item->getID()] = $this->getOptionsArray($options[$item->product->get()->getID()], $item, 'isDisplayedInCart');
+				$moreOptions[$item->getID()] = $this->getOptionsArray($options[$item->product->get()->getID()], $item, 'isDisplayed');
+			}
+		}
+
+		// are there any options that are available for customer to set, but not displayed right away?
+		foreach ($moreOptions as &$options)
+		{
+			foreach ($options as $key => $option)
+			{
+				if ($option['isDisplayedInCart'])
+				{
+					unset($options[$key]);
+				}
 			}
 		}
 
@@ -50,6 +63,7 @@ class OrderController extends FrontendController
 		$response->set('return', $this->request->get('return'));
 		$response->set('currency', $currency->getID());
 		$response->set('options', $optionsArray);
+		$response->set('moreOptions', $moreOptions);
 		$response->set('orderTotal', $currency->getFormattedPrice($this->order->getSubTotal($currency)));
 		$response->set('expressMethods', $this->application->getExpressPaymentHandlerList(true));
 		return $response;
@@ -62,7 +76,7 @@ class OrderController extends FrontendController
 		return $response;
 	}
 
-	public function optionForm(CustomerOrder $order = null)
+	public function optionForm(CustomerOrder $order = null, $filter = 'isDisplayed')
 	{
 		$order = $order ? $order : $this->order;
 
@@ -70,7 +84,7 @@ class OrderController extends FrontendController
 		$options = $optionsArray = array();
 		$product = $item->product->get();
 		$options[$product->getID()] = $product->getOptions(true);
-		$optionsArray[$item->getID()] = $this->getOptionsArray($options[$product->getID()], $item);
+		$optionsArray[$item->getID()] = $this->getOptionsArray($options[$product->getID()], $item, $filter);
 
 		$this->setLayout('empty');
 
@@ -81,14 +95,18 @@ class OrderController extends FrontendController
 		return $response;
 	}
 
-	private function getOptionsArray($set, $item)
+	private function getOptionsArray($set, $item, $filter = 'isDisplayed')
 	{
 		$out = array();
 		foreach ($set as $option)
 		{
 			$arr = $option->toArray();
 			$arr['fieldName'] = $this->getFormFieldName($item, $option);
-			$out[] = $arr;
+
+			if (!$filter || $option->$filter->get())
+			{
+				$out[] = $arr;
+			}
 		}
 
 		return $out;

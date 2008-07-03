@@ -428,7 +428,7 @@ class OrderedItemController extends StoreManagementController
 
 		$c = new OrderController($this->application);
 
-		$response = $c->optionForm($item->customerOrder->get());
+		$response = $c->optionForm($item->customerOrder->get(), '');
 		$response->set('currency', $item->customerOrder->get()->currency->get()->getID());
 		return $response;
 	}

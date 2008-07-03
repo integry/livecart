@@ -31,7 +31,7 @@
 					<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
 					<small>({$item.Product.Category.name_lang})</small>
 				</div>
-				{if $options[$item.ID]}
+				{if $options[$item.ID] || $moreOptions[$item.ID]}
 					<div class="productOptions">
 						{foreach from=$options[$item.ID] item=option}
 							{if 1 == $option.isDisplayedInCart || $item.ID == $editOption}
@@ -54,9 +54,12 @@
 								</div>
 							{/if}
 						{/foreach}
+
+						{if $moreOptions[$item.ID]}
 						<div class="productOptionsMenu">
 							<a href="{link controller=order action=options id=$item.ID}" ajax="{link controller=order action=optionForm id=$item.ID}">{t _edit_options}</a>
 						</div>
+						{/if}
 					</div>
 				{/if}
 			</td>
