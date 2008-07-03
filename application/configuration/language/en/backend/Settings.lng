@@ -29,7 +29,7 @@ _homepage_meta_tags=Home Page Meta Tags
 INDEX_META_DESCRIPTION=Meta description tag value
 INDEX_META_KEYWORDS=Meta keywords tag value
 
-_general=Category Pages
+_general=Categories
 _category_pages=Category Pages
 NUM_PRODUCTS_PER_CAT=Number of products per category page (list layout)
 SORT_ORDER=Default product sort order
@@ -95,12 +95,24 @@ SALE_ITEMS_COUNT=Number of on-sale products to display per block
 _newest_items=Newest Products
 NEWEST_ITEMS_COUNT=Number of newest products to display
 
-_product_page=Product Page
+_product_page=Products
 _inventory_status=Inventory Status
 PRODUCT_DISPLAY_STOCK=Display the amount of products in stock
 PRODUCT_DISPLAY_LOW_STOCK=Display low-stock warning
 PRODUCT_DISPLAY_NO_STOCK=Display notification if a product is out of stock
 NUM_PURCHASED_TOGETHER=Display products that were purchased together most often
+
+_reviews_and_ratings=Product Reviews and Ratings
+ENABLE_REVIEWS=Enable reviews
+ENABLE_RATINGS=Enable ratings
+REVIEWS_WITH_RATINGS=Require entering a review when rating a product
+ENABLE_ANONYMOUS_RATINGS=Allow anonymous (unregistered user) ratings and reviews
+REQUIRE_PURCHASE_TO_RATE=Require customer to have purchased a product to be able to rate/review it
+APPROVE_REVIEWS=Automatically approve reviews
+APPROVE_REVIEWS_AUTO=All
+APPROVE_REVIEWS_USER=By registered users only
+APPROVE_REVIEWS_NONE=None
+RATING_SCALE=Rating scale
 
 _filters=Product Filters
 

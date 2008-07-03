@@ -276,6 +276,15 @@ Backend.Settings.Editor.prototype =
 						height.parentNode.removeChild(height);
 					}
 				}
+			},
+
+		'RATING_SCALE':
+			function()
+			{
+				var input = $('setting_RATING_SCALE').down('input');
+				var span = document.createElement('span');
+				span.innerHTML = '1 - ';
+				input.parentNode.insertBefore(span, input);
 			}
 	},
 
