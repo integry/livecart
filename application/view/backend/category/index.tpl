@@ -177,6 +177,12 @@
 					<span class="tabHelp">products.define</span>
 				</li>
 
+				<li id="tabRatingCategories" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
+					<a href="{link controller=backend.ratingCategory action=index id=_id_}">{t _rating_categories}</a>
+					<span> </span>
+					<span class="tabHelp">categories</span>
+				</li>
+
 			</ul>
 		</div>
 		<div id="sectionContainer" class="sectionContainer maxHeight  h--50">
