@@ -17,7 +17,7 @@ class ProductRatingType extends ActiveRecordModel
 		$schema->setName($className);
 
 		$schema->registerField(new ARPrimaryKeyField('ID', ARInteger::instance()));
-		$schema->registerField(new ARPrimaryForeignKeyField('categoryID', 'Category', 'ID', null, ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField('categoryID', 'Category', 'ID', null, ARInteger::instance()));
 		$schema->registerField(new ARField('name', ARArray::instance()));
 		$schema->registerField(new ARField('position', ARInteger::instance()));
 	}

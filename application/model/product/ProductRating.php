@@ -28,10 +28,11 @@ class ProductRating extends ActiveRecordModel
 
 	/*####################  Static method implementations ####################*/
 
-	public static function getNewInstance(Product $product)
+	public static function getNewInstance(Product $product, ProductRatingType $type = null)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
 		$instance->product->set($product);
+		$instance->ratingType->set($type);
 		return $instance;
 	}
 

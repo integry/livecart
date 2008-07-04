@@ -60,7 +60,27 @@ class ProductRatingTest extends UnitTest
 
 	public function testRatingTypes()
 	{
+		$type = ProductRatingType::getNewInstance(Category::getRootNode());
+		$type->save();
 
+		$rating = ProductRating::getNewInstance($this->product, $type);
+		$rating->rating->set(5);
+		$rating->save();
+
+		$this->product->reload();
+		$this->assertEqual($this->product->ratingCount->get(), 1);
+		$this->assertEqual($this->product->ratingSum->get(), 5);
+		$this->assertEqual($this->product->rating->get(), 5);
+
+		ActiveRecord::clearPool();
+		$summary = ProductRatingSummary::getInstance($this->product, $type);
+		$summary->reload();
+		ActiveRecord::executeUpdate('UPDATE ProductRatingSummary SET ratingSum = ratingSum+5, ratingCount=1, rating=ratingSum/ratingCount WHERE (ProductRatingSummary.ID=18)');
+		var_dump(ActiveRecord::getDataBySQL('SELECT * FROM ProductRatingSummary WHERE ID=' . $summary->getID()));
+		var_dump($summary->isExistingRecord());
+		$this->assertEqual($summary->ratingCount->get(), 1);
+		$this->assertEqual($summary->ratingSum->get(), 5);
+		$this->assertEqual($summary->rating->get(), 5);
 	}
 }
 ?>
