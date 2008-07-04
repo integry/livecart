@@ -67,8 +67,8 @@ class Product extends MultilingualObject
 		$schema->registerField(new ARField("isFeatured", ARBool::instance()));
 		$schema->registerField(new ARField("type", ARInteger::instance(4)));
 
-		$schema->registerField(new ArField("voteSum", ARInteger::instance()));
-		$schema->registerField(new ArField("voteCount", ARInteger::instance()));
+		$schema->registerField(new ArField("ratingSum", ARInteger::instance()));
+		$schema->registerField(new ArField("ratingCount", ARInteger::instance()));
 		$schema->registerField(new ArField("rating", ARFloat::instance(8)));
 
 		$schema->registerField(new ArField("minimumQuantity", ARFloat::instance(8)));
