@@ -9,13 +9,18 @@
 	-moz-outline:none;
 }
 
-.activeGridScroller
+.activeGridScroller, x:-moz-any-link
 {
 	-moz-opacity: 0.7;
 	position: relative;
 	margin-top: 28px;
 	overflow: auto;
 	left: -2px;
+}
+
+.activeGridScroller, x:-moz-any-link, x:default
+{
+	left: 0;
 }
 
 .activeGrid_loadIndicator, .activeGrid_massActionProgress
@@ -260,7 +265,7 @@
 .activeGrid th
 {
 	background-color: #DDDDDD;
-    overflow: hidden;
+    /* overflow: hidden; */
     white-space: nowrap;
     padding: 0;
     padding: 3px;
