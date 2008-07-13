@@ -1242,6 +1242,11 @@ td.addToWishList
 	font-weight: bold;
 }
 
+#rateProduct
+{
+	margin-left: 10px;
+}
+
 #rateProduct table td
 {
 	padding: 4px;
@@ -1260,11 +1265,6 @@ td.addToWishList
 	left: -85px;
 }
 
-#rateProduct input.submit
-{
-	margin: 1em 0 1em 1em;
-}
-
 .ratingCategoryName
 {
 	font-weight: bold;
@@ -1276,6 +1276,16 @@ td.addToWishList
 	background: #fff;
 	padding: 0;
 	vertical-align: middle;
+}
+
+.reviewForm
+{
+	margin-top: 1em;
+}
+
+.reviewForm label
+{
+	float: none;
 }
 
 /*****************************
@@ -2177,6 +2187,12 @@ label
 	font-weight: bold;
 }
 
+.required label span
+{
+	background: url(../../image/required.gif) right center no-repeat;
+	padding-right:9px;
+}
+
 p.radio, p.checkbox
 {
    padding-left: 11em;
@@ -2305,13 +2321,23 @@ fieldset.error, div.error, fieldset.container
 
 .errorText /* , fieldset.error div */
 {
-	background-color: #FF0001;
+	color: #f22;
+	background: url(../../image/silk/gif/bullet_error.gif) left center no-repeat;
 	float: left;
 	width: auto;
 	margin-bottom: 4px;
 	margin-top: 0;
 	padding: 3px;
-	color: white;
+	padding-left: 20px;
+	font-weight: bold;
+	font-family: Tahoma;
+}
+
+.hasError
+{
+	border-color: red;
+	background-color: #FFFAFA;
+	border-color: red !important;
 }
 
 .hidden

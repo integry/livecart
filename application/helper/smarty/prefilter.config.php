@@ -12,6 +12,33 @@
  */
 function smarty_prefilter_config($source, $smarty)
 {
+	/**
+		shorthand syntax for form error handling
+
+		instead of writing this:
+
+		<label for="name">Your Name:</label>
+		<fieldset class="error">
+			{textfield name="name"}
+			<div class="errorText hidden{error for="name"} visible{/error}">{error for="name"}{$msg}{/error}</div>
+		</fieldset>
+
+		it is possible to write this:
+
+		{err for="name"}
+			{{label Your Name}}
+			{textfield}
+		{/err}
+	*/
+	$source = preg_replace('/{{1,2}err for="(.*)"}{1,2}(.*){{label(.*)}}(.*){\/err}/msU', '{{err for="\\1"}}\\2<label for="\\1"><span>\\3</span></label>\\4{/err}', $source);
+
+	// replace `backticks` to {curly braces} for <label>
+	$source = preg_replace_callback('|<label for="(.*)">|', 'labelVars', $source);
+
+	$source = preg_replace('/{{err for="(.*)"}{2,3}+(.*){(calendar|checkbox|filefield|password|radio|selectfield|textfield|textarea)(.*)}(.*){\/err}/msU', '\\2<fieldset class="error">{\\3 name="\\1" \\4}\\5
+	<div class="errorText hidden{error for="\\1"} visible{/error}">{error for="\\1"}{$msg}{/error}</div>
+	</fieldset>', $source);
+
 	// pass block as parameter for another block
 	// for example, {maketext text=sometext params=|link user/login|}
 	$source = preg_replace('/{([^\{\}\n]+)\{([^\{\}\n]+)\}(.*)}/', '{capture assign=blockAsParamValue}{$2}{/capture}{$1\$blockAsParamValue$3}', $source);
@@ -41,33 +68,6 @@ function smarty_prefilter_config($source, $smarty)
 	// help system
 	$source = preg_replace('/{help (.+?)}/', '{helpLink id=$1}', $source);
 	$source = preg_replace('/{see (.+?)}/', '{helpSeeAlsoItem id=$1}', $source);
-
-	/**
-		shorthand syntax for form error handling
-
-		instead of writing this:
-
-		<label for="name">Your Name:</label>
-		<fieldset class="error">
-			{textfield name="name"}
-			<div class="errorText hidden{error for="name"} visible{/error}">{error for="name"}{$msg}{/error}</div>
-		</fieldset>
-
-		it is possible to write this:
-
-		{err for="name"}
-			{{label Your Name}}
-			{textfield}
-		{/err}
-	*/
-	$source = preg_replace('/{{1,2}err for="(.*)"}{1,2}(.*){{label(.*)}}(.*){\/err}/msU', '{{err for="\\1"}}\\2<label for="\\1">\\3</label>\\4{/err}', $source);
-
-	// replace `backticks` to {curly braces} for <label>
-	$source = preg_replace_callback('|<label for="(.*)">|', 'labelVars', $source);
-
-	$source = preg_replace('/{{err for="(.*)"}{2,3}+(.*){(calendar|checkbox|filefield|password|radio|selectfield|textfield|textarea)(.*)}(.*){\/err}/msU', '\\2<fieldset class="error">{\\3 name="\\1" \\4}\\5
-	<div class="errorText hidden{error for="\\1"} visible{/error}">{error for="\\1"}{$msg}{/error}</div>
-	</fieldset>', $source);
 
 	return $source;
 }

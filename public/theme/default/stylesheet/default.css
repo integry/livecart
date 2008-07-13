@@ -591,6 +591,11 @@ ul.productList .spec
 	border-bottom: 1px solid #def;
 }
 
+#rateProduct .productTable
+{
+	margin-left: 0;
+}
+
 .productIndex .productTable
 {
 	border: 0;
