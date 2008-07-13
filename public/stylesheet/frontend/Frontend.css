@@ -843,9 +843,11 @@ ul.productList li
 .featured .title a
 {
     font-weight: bold;
+/*
     background-image: url(../../image/silk/gif/star.gif);
     background-repeat: no-repeat;
     padding-left: 22px;
+*/
 }
 
 ul.productList .title
@@ -933,6 +935,11 @@ ul.productList .orderingControls
     float: right;
 }
 
+.orderingControls *
+{
+	vertical-align: middle;
+}
+
 .shortDescr
 {
 	font-size: 90%;
@@ -945,6 +952,11 @@ ul.productList .orderingControls
     margin-bottom: -7px;
     margin-left: 110px;
     margin-right: auto;
+}
+
+.listItemSeparator
+{
+	color: #ccc;
 }
 
 /*****************************
@@ -985,9 +997,15 @@ ul.productList .orderingControls
     z-index: 10;
 }
 
+#productSummaryContainer
+{
+	float: left;
+}
+
 #mainInfo
 {
     clear: right;
+    margin-bottom: 1em;
 }
 
 #mainInfo table
@@ -1018,6 +1036,22 @@ ul.productList .orderingControls
   	background-repeat: no-repeat;
 	background-position: right 0px;
 	padding-right: 20px;
+}
+
+.overallRating
+{
+	font-weight: bold;
+	text-align: center;
+}
+
+.ratingBreakdown
+{
+	text-align: right;
+	color: #888;
+	list-style-type: none;
+	float: left;
+	clear: left;
+	margin-top: 0.5em;
 }
 
 .price
@@ -1163,10 +1197,8 @@ ul.attributeList.singleValue li
 
 #largeImage.missingImage
 {
-	width: 300px;
 	height: auto;
 }
-
 
 #moreImages
 {
@@ -1208,6 +1240,42 @@ td.addToWishList
 #addToCart
 {
 	font-weight: bold;
+}
+
+#rateProduct table td
+{
+	padding: 4px;
+/*	vertical-align: middle; */
+}
+
+#rateProduct .heading
+{
+	font-weight: bold;
+}
+
+#rateProduct .errorText
+{
+	position: relative;
+	white-space: nowrap;
+	left: -85px;
+}
+
+#rateProduct input.submit
+{
+	margin: 1em 0 1em 1em;
+}
+
+.ratingCategoryName
+{
+	font-weight: bold;
+	margin-bottom: 0.5em;
+}
+
+.ratingPreview
+{
+	background: #fff;
+	padding: 0;
+	vertical-align: middle;
 }
 
 /*****************************
@@ -2030,6 +2098,18 @@ span.templateLocator.activeTpl
 /***************************
 	Form styling
 ***************************/
+.confirmationMessage
+{
+	border: 1px solid #0c0;
+	background-color: #efe;
+	padding: 7px;
+	padding-left: 30px;
+	background-image: url(../../image/silk/gif/tick.gif);
+	background-position: 5px center;
+	background-repeat: no-repeat;
+	margin: 0.5em;
+}
+
 form
 {
      display: inline;

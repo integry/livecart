@@ -68,6 +68,13 @@
 
 		<div class="order">
 			<div class="orderingControls">
+				{if $product.rating && 'ENABLE_RATINGS'|config}
+					<img src="image/rating/{ {$product.rating*2|@round}/2}.gif" />
+					{if 'ENABLE_WISHLISTS'|config}
+						<span class="listItemSeparator">|</span>
+					{/if}
+				{/if}
+
 				{if 'ENABLE_WISHLISTS'|config}
 					<a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}" class="addToWishList">{t _add_to_wishlist}</a>
 				{/if}

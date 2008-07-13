@@ -102,7 +102,7 @@ class ProductRelationshipTest extends UnitTest
 		$relationship = ProductRelationship::getNewInstance($this->product1, $this->product2);
 		$relationship->save();
 
-		// reloat
+		// reload
 		$relationship->reload(array('RelatedProduct' => 'Product'));
 
 		// Check if product and related products are not null

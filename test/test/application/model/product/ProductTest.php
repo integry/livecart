@@ -627,6 +627,24 @@ class ProductTest extends UnitTest
 		foreach($productFile as $file) $file->delete();
 	}
 
+	public function testAutoSku()
+	{
+		$this->assertEqual($this->product->sku->get(), 'SKU' . $this->product->getID());
+
+		//reset sku
+		$this->product->sku->set('CUSTOM');
+		$this->product->save();
+
+		ActiveRecordModel::clearPool();
+
+		$product = Product::getInstanceByID($this->product->getID(), true);
+		$product->isEnabled->set(true);
+		$product->save();
+
+		// SKU shouldn't be reset for products that are not loaded
+		$this->assertNotEquals($this->product->sku->get(), 'SKU' . $product->getID());
+	}
+
 	function test_SuiteTearDown()
 	{
 		ActiveRecordModel::rollback();

@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import('application.model.ActiveRecordModel');
+ClassLoader::import('application.model.MultilingualObject');
 ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.user.User');
 
@@ -9,7 +9,7 @@ ClassLoader::import('application.model.user.User');
  * @package application.model.product
  * @author Integry Systems <http://integry.com>
  */
-class ProductRatingType extends ActiveRecordModel
+class ProductRatingType extends MultilingualObject
 {
 	public static function defineSchema($className = __CLASS__)
 	{
@@ -31,9 +31,45 @@ class ProductRatingType extends ActiveRecordModel
 		return $instance;
 	}
 
+	public static function getCategoryRatingTypes(Category $category)
+	{
+		$f = new ARSelectFilter();
+		$f->setOrder(new ARFieldHandle(__CLASS__, 'position'));
+		return $category->getRelatedRecordSet(__CLASS__, $f);
+	}
+
 	public static function getProductRatingTypes(Product $product)
 	{
-		return self::getRecordSet(__CLASS__, self::getRatingTypeFilter($product), array('Category'));
+		$types = self::getRecordSet(__CLASS__, self::getRatingTypeFilter($product), array('Category'));
+		if (!$types)
+		{
+			$types = self::getDefaultRatingTypeSet();
+		}
+
+		return $types;
+	}
+
+	public static function getProductRatingTypeArray(Product $product)
+	{
+		$types = self::getRecordSetArray(__CLASS__, self::getRatingTypeFilter($product), array('Category'));
+		if (!$types)
+		{
+			$types = self::getDefaultRatingTypeSet()->toArray();
+		}
+
+		return $types;
+	}
+
+	public static function getDefaultRatingType()
+	{
+		return self::getNewInstance(Category::getRootNode());
+	}
+
+	private function getDefaultRatingTypeSet()
+	{
+		$set = new ARSet();
+		$set->unshift(self::getDefaultRatingType());
+		return $set;
 	}
 
 	private function getRatingTypeFilter(Product $product)

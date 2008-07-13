@@ -2,6 +2,19 @@
  *	@author Integry Systems
  */
 
+ConfirmationMessage = Class.create();
+ConfirmationMessage.prototype =
+{
+	initialize: function(parent, message)
+	{
+		var div = document.createElement('div');
+		div.className = 'confirmationMessage';
+		div.innerHTML = message;
+
+		parent.appendChild(div);
+		new Effect.Highlight(div, { duration: 0.4 });
+	}
+}
 
 /*****************************
 	Product related JS
@@ -52,6 +65,41 @@ Product.ImageSwitcher.prototype =
 		var lightBox = $('largeImage').down('a');
 		lightBox.href = this.imageData[4];
 		lightBox.title = this.imageDescr ? this.imageDescr : '';
+	}
+}
+
+Product.Rating = Class.create();
+Product.Rating.prototype =
+{
+	form: null,
+
+	initialize: function(form)
+	{
+		this.form = form;
+		new LiveCart.AjaxRequest(form, null, this.complete.bind(this));
+	},
+
+	complete: function(req)
+	{
+		var response = req.responseData;
+		if(response.status == 'success')
+		{
+			var parent = this.form.parentNode;
+			parent.removeChild(this.form);
+			new ConfirmationMessage(parent, response.message);
+		}
+		else
+		{
+			ActiveForm.prototype.setErrorMessages(this.form, response.errors);
+		}
+	},
+
+	updatePreview: function(e)
+	{
+		var input = Event.element(e);
+		var preview = input.up('tr').down('.ratingPreview').down('img');
+		preview.src = 'image/rating/' + input.value + '.gif';
+		preview.show();
 	}
 }
 

@@ -22,6 +22,7 @@
 {includeJs file="backend/RelatedProduct.js"}
 {includeJs file="backend/ProductFile.js"}
 {includeJs file="backend/ProductOption.js"}
+{includeJs file="backend/RatingType.js"}
 
 {include file="backend/eav/includes.tpl"}
 
@@ -35,6 +36,7 @@
 {includeCss file="backend/ProductOption.css"}
 {includeCss file="backend/Filter.css"}
 {includeCss file="backend/CategoryImage.css"}
+{includeCss file="backend/RatingType.css"}
 {includeCss file="library/TabControl.css"}
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 {includeCss file="library/lightbox/lightbox.css"}
@@ -177,8 +179,8 @@
 					<span class="tabHelp">products.define</span>
 				</li>
 
-				<li id="tabRatingCategories" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
-					<a href="{link controller=backend.ratingCategory action=index id=_id_}">{t _rating_categories}</a>
+				<li id="tabRatingCategories" class="tab inactive" {denied role="ratingcategory"}style="display: none"{/denied}>
+					<a href="{link controller=backend.ratingType action=index id=_id_}">{t _rating_categories}</a>
 					<span> </span>
 					<span class="tabHelp">categories</span>
 				</li>

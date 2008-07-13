@@ -6,8 +6,18 @@ _no_stock=Currently not in stock
 _manufacturer=Manufacturer
 _sku=SKU
 _in_stock=In Stock
+_overall_rating=Overall rating
 _description=Description
 _spec=Product Specification
 _recommended=Recommended Products
 _reviews=Customer Reviews
 _purchased_together=Customers Who Bought This Item Also Bought
+
+_rate_product_name=Rate [_1]
+_default_rating_category=Select your rating
+_rate=Rate
+_err_no_rating_selected=Please select a rating
+_err_already_rated=You have already rated this product
+_msg_rating_added=Your rating has been added.
+_msg_rating_login_required=You have to <a href="[_1]">sign in</a> to rate this product.
+_msg_rating_purchase_required=Only customers who have purchased this product may rate it.

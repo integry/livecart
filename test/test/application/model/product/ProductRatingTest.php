@@ -58,6 +58,30 @@ class ProductRatingTest extends UnitTest
 		$this->assertEqual($this->product->rating->get(), 5);
 	}
 
+	public function testSimpleRatingWithNullRatingType()
+	{
+		$defaultRatingType = ProductRatingType::getDefaultRatingType();
+
+		$rating = ProductRating::getNewInstance($this->product, $defaultRatingType);
+		$rating->rating->set(6);
+		$rating->save();
+
+		$this->product->reload();
+		$this->assertEqual($this->product->ratingCount->get(), 1);
+		$this->assertEqual($this->product->ratingSum->get(), 6);
+		$this->assertEqual($this->product->rating->get(), 6);
+
+		$rating = ProductRating::getNewInstance($this->product, $defaultRatingType);
+		$rating->rating->set(4);
+		$rating->user->set($this->user);
+		$rating->save();
+
+		$this->product->reload();
+		$this->assertEqual($this->product->ratingCount->get(), 2);
+		$this->assertEqual($this->product->ratingSum->get(), 10);
+		$this->assertEqual($this->product->rating->get(), 5);
+	}
+
 	public function testRatingTypes()
 	{
 		$type = ProductRatingType::getNewInstance(Category::getRootNode());

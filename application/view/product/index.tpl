@@ -1,4 +1,4 @@
-{loadJs}
+{loadJs form=true}
 {includeJs file="library/lightbox/lightbox.js"}
 {includeCss file="library/lightbox/lightbox.css"}
 
@@ -17,6 +17,10 @@
 	<div class="returnToCategory">
 		<a href="{link route=$catRoute}" class="returnToCategory">{$product.Category.name_lang}</a>
 	</div>
+
+	{if $message}
+		<div class="confirmationMessage">{$message}</div>
+	{/if}
 
 	<h1>{$product.name_lang}</h1>
 
@@ -68,99 +72,104 @@
 		{/if}
 	</div>
 
-	<div id="mainInfo">
+	<div id="productSummaryContainer">
+		<div id="mainInfo">
 
-		{form action="controller=order action=addToCart id=`$product.ID`" handle=$cartForm method="POST"}
-		<table id="productPurchaseLinks">
+			{form action="controller=order action=addToCart id=`$product.ID`" handle=$cartForm method="POST"}
+			<table id="productPurchaseLinks">
 
-			{if 'DISPLAY_PRICES'|config}
-			<tr id="productPrice">
-				<td class="param">{t _price}:</td>
-				<td class="value price">
-					{$product.formattedPrice.$currency}
-					{if $product.formattedListPrice.$currency}
-						<span class="listPrice">
-							{$product.formattedListPrice.$currency}
-						</span>
-					{/if}
-				</td>
-			</tr>
-			{/if}
-
-			{if 'ENABLE_CART'|config}
-			{if $options}
-				<tr>
-					<td colspan="2" class="productOptions">
-						{include file="product/options.tpl"}
+				{if 'DISPLAY_PRICES'|config}
+				<tr id="productPrice">
+					<td class="param">{t _price}:</td>
+					<td class="value price">
+						{$product.formattedPrice.$currency}
+						{if $product.formattedListPrice.$currency}
+							<span class="listPrice">
+								{$product.formattedListPrice.$currency}
+							</span>
+						{/if}
 					</td>
 				</tr>
-			{/if}
+				{/if}
 
-			<tr id="productToCart" class="cartLinks">
-				<td class="param">{t _quantity}:</td>
-				<td class="value">
-					{selectfield name="count" options=$quantity}
-					<input type="submit" class="submit" value="{tn _add_to_cart}" />
-					{hidden name="return" value=$catRoute}
-				</td>
-			</tr>
-			{/if}
+				{if 'ENABLE_CART'|config}
+				{if $options}
+					<tr>
+						<td colspan="2" class="productOptions">
+							{include file="product/options.tpl"}
+						</td>
+					</tr>
+				{/if}
 
-			<tr id="productToWishList">
-				<td class="param"></td>
-				<td class="value cartLinks addToWishList">
-					{if 'ENABLE_WISHLISTS'|config}
-						<a href="{link controller=order action=addToWishList id=$product.ID query="return=`$catRoute`"}">{t _add_to_wishlist}</a>
+				<tr id="productToCart" class="cartLinks">
+					<td class="param">{t _quantity}:</td>
+					<td class="value">
+						{selectfield name="count" options=$quantity}
+						<input type="submit" class="submit" value="{tn _add_to_cart}" />
+						{hidden name="return" value=$catRoute}
+					</td>
+				</tr>
+				{/if}
+
+				<tr id="productToWishList">
+					<td class="param"></td>
+					<td class="value cartLinks addToWishList">
+						{if 'ENABLE_WISHLISTS'|config}
+							<a href="{link controller=order action=addToWishList id=$product.ID query="return=`$catRoute`"}">{t _add_to_wishlist}</a>
+						{/if}
+					</td>
+				</tr>
+			</table>
+			{/form}
+
+			<table id="productMainDetails">
+				{if $product.Manufacturer.name}
+				<tr>
+					<td class="param">{t _manufacturer}:</td>
+					<td class="value"><a href="{categoryUrl data=$product.Category addFilter=$manufacturerFilter}">{$product.Manufacturer.name}</a></td>
+				</tr>
+				{/if}
+
+				{if $product.sku}
+				<tr>
+					<td class="param">{t _sku}:</td>
+					<td class="value">{$product.sku}</td>
+				</tr>
+				{/if}
+
+				{if $product.stockCount && 'PRODUCT_DISPLAY_STOCK'|config}
+				<tr>
+					<td class="param">{t _in_stock}:</td>
+					<td class="value">{$product.stockCount}</td>
+				</tr>
+				{/if}
+
+				{if !$product.isDownloadable}
+					{if !$product.stockCount && 'PRODUCT_DISPLAY_NO_STOCK'|config}
+					<tr>
+						<td colspan="2" class="noStock"><span>{t _no_stock}</span></td>
+					</tr>
 					{/if}
-				</td>
-			</tr>
-		</table>
-		{/form}
 
-		<table id="productMainDetails">
-			{if $product.Manufacturer.name}
-			<tr>
-				<td class="param">{t _manufacturer}:</td>
-				<td class="value"><a href="{categoryUrl data=$product.Category addFilter=$manufacturerFilter}">{$product.Manufacturer.name}</a></td>
-			</tr>
-			{/if}
+					{if $product.stockCount && 'PRODUCT_DISPLAY_LOW_STOCK'|config}
+					<tr>
+						<td colspan="2" class="lowStock"><span>{t _low_stock}</span></td>
+					</tr>
+					{/if}
+				{/if}
 
-			{if $product.sku}
-			<tr>
-				<td class="param">{t _sku}:</td>
-				<td class="value">{$product.sku}</td>
-			</tr>
-			{/if}
-
-			{if $product.stockCount && 'PRODUCT_DISPLAY_STOCK'|config}
-			<tr>
-				<td class="param">{t _in_stock}:</td>
-				<td class="value">{$product.stockCount}</td>
-			</tr>
-			{/if}
-
-			{if !$product.isDownloadable}
-				{if !$product.stockCount && 'PRODUCT_DISPLAY_NO_STOCK'|config}
+				{if $product.URL}
 				<tr>
-					<td colspan="2" class="noStock"><span>{t _no_stock}</span></td>
+					<td colspan="2" class="websiteUrl"><a href="{$product.URL}" target="_blank">{t _product_website}</a></td>
 				</tr>
 				{/if}
 
-				{if $product.stockCount && 'PRODUCT_DISPLAY_LOW_STOCK'|config}
-				<tr>
-					<td colspan="2" class="lowStock"><span>{t _low_stock}</span></td>
-				</tr>
-				{/if}
-			{/if}
+			</table>
+		</div>
 
-			{if $product.URL}
-			<tr>
-				<td colspan="2" class="websiteUrl"><a href="{$product.URL}" target="_blank">{t _product_website}</a></td>
-			</tr>
-			{/if}
-
-		</table>
-
+		{if $product.ratingCount > 0}
+			{include file="product/ratingSummary.tpl"}
+		{/if}
 	</div>
 
    	<div class="clear"></div>
@@ -179,11 +188,11 @@
 	{if $product.attributes}
 	<h2>{t _spec}</h2>
 	<div id="productSpecification">
-		<table>
+		<table class="productTable">
 			{foreach from=$product.attributes item="attr" name="attributes"}
 
 				{if $prevAttr.SpecField.SpecFieldGroup.ID != $attr.SpecField.SpecFieldGroup.ID}
-					<tr class="specificationGroup{if $smarty.foreach.attributes.first} first{/if}">
+					<tr class="specificationGroup heading{if $smarty.foreach.attributes.first} first{/if}">
 						<td class="param">{$attr.SpecField.SpecFieldGroup.name_lang}</td>
 						<td class="value"></td>
 					</tr>
@@ -231,9 +240,20 @@
 	{if $together}
 	<h2>{t _purchased_together}</h2>
 	<div id="purchasedTogether">
-
 		{include file="category/productList.tpl" products=$together}
+	</div>
+	{/if}
 
+	{if 'ENABLE_RATINGS'|config && !$isRated}
+	<h2>{maketext text="_rate_product_name" params=$product.name_lang}</h2>
+	<div id="rateProduct">
+		{if $isLoginRequiredToRate}
+			<p>{maketext text=_msg_rating_login_required params={link user/login}}</p>
+		{elseif $isPurchaseRequiredToRate}
+			<p>{t _msg_rating_purchase_required}</p>
+		{else}
+			{include file="product/rate.tpl"}
+		{/if}
 	</div>
 	{/if}
 

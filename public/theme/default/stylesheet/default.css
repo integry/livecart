@@ -527,15 +527,19 @@ ul.productList .title
 	margin: 0 0 10px 0;
 }
 
+.productList .title a, .productGrid .title a
+{
+	font-size: 14px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #2E8B98;
+}
+
 .productList .title a
 {
 	overflow: hidden;
 	display: block;
 	width: 400px;
-	font-size: 14px;
-	font-family: Arial, Helvetica, sans-serif;
-	font-weight: normal;
-	color: #2E8B98;
+
 }
 
 ul.productList .spec
@@ -587,14 +591,14 @@ ul.productList .spec
 	border-bottom: 1px solid #def;
 }
 
-#productSpecification table
+.productIndex .productTable
 {
 	border: 0;
 	margin-right: 10px;
 	margin-left: 10px;
 }
 
-tr.specificationGroup
+.productTable tr.heading
 {
 	background-repeat: repeat-x;
 	background-color: #D2EEF2;
@@ -611,28 +615,28 @@ tr.odd
 	background-color: #F1FAFF;
 }
 
-#productSpecification tr.first td.param
+.productTable tr.first td.param
 {
 	background-image: url(../../light/image/cornerTopLeft.gif);
 	background-position: top left;
 	background-repeat: no-repeat;
 }
 
-#productSpecification tr.first td.value
+.productTable tr.first td.value
 {
 	background-image: url(../../light/image/cornerTopRight.gif);
 	background-position: top right;
 	background-repeat: no-repeat;
 }
 
-#productSpecification tr.last td.param
+.productTable tr.last td.param
 {
 	background-image: url(../../light/image/cornerBottomLeft.gif);
 	background-position: bottom left;
 	background-repeat: no-repeat;
 }
 
-#productSpecification tr.last td.value
+.productTable tr.last td.value
 {
 	background-image: url(../../light/image/cornerBottomRight.gif);
 	background-position: bottom right;
@@ -1509,10 +1513,13 @@ h3, h3 a
 	padding-top: 1em;
 }
 
+#productSummaryContainer
+{
+	margin-left: 20px;
+}
+
 #mainInfo
 {
-	float: left;
-	margin-left: 20px;
 	border: 1px solid #cde;
 }
 

@@ -10,10 +10,22 @@
  * @package application.helper.smarty
  *  @author Integry Systems
  */
-function smarty_prefilter_config($tplSource, $smarty)
+function smarty_prefilter_config($source, $smarty)
 {
+	// pass block as parameter for another block
+	// for example, {maketext text=sometext params=|link user/login|}
+	$source = preg_replace('/{([^\{\}]+)\{([^\{\}]+)\}(.*)}/', '{capture assign=blockAsParamValue}{$2}{/capture}{$1\$blockAsParamValue$3}', $source);
+
+	// shorthand syntax for foreach
+	// for example {foreach $items as $item}
+	$source = preg_replace('/{foreach \$([^ ]+)[ ]+as[ ]+\$([^ ]+)}/', '{foreach from=\$$1 item=$2}', $source);
+
+	// link shorthand syntax
+	// {link user/login} is equal to {link controller=user action=login}
+	$source = preg_replace('/{link ([a-zA-Z0-9]*)\/([a-zA-Z0-9]*)(.*)}/', '{link controller="$1" action="$2" $3}', $source);
+
 	// translations
-	$source = preg_replace('/{tn (.+?)}/', '{translate|escape:"html" text="$1" disableLiveTranslation="true"}', $tplSource);
+	$source = preg_replace('/{tn (.+?)}/', '{translate|escape:"html" text="$1" disableLiveTranslation="true"}', $source);
 	$source = preg_replace('/{t ([^\|]+?)}/', '{translate text="$1"}', $source);
 	$source = preg_replace('/{t ([^|]+)\|([^}]+)}/', '{capture assign="translation_$1"}{translate text=$1}{/capture}{\$translation_$1|$2}', $source);
 

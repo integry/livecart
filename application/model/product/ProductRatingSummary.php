@@ -47,6 +47,13 @@ class ProductRatingSummary extends ActiveRecordModel
 			return self::getNewInstance($product, $type);
 		}
 	}
+
+	public static function getProductRatingsArray(Product $product)
+	{
+		$f = new ARSelectFilter();
+		$f->setOrder(new ARFieldHandle('ProductRatingType', 'position'));
+		return $product->getRelatedRecordSetArray('ProductRatingSummary', $f, array('ProductRatingType'));
+	}
 }
 
 ?>

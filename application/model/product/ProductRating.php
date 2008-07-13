@@ -32,6 +32,12 @@ class ProductRating extends ActiveRecordModel
 	{
 		$instance = parent::getNewInstance(__CLASS__);
 		$instance->product->set($product);
+
+		if ($type && is_null($type->getID()))
+		{
+			$type = null;
+		}
+
 		$instance->ratingType->set($type);
 		return $instance;
 	}

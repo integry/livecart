@@ -71,3 +71,8 @@ li.activeList_edit_inProgress, li.activeList_remove_sort
 {
     cursor: auto;
 }
+
+.activeListTitle
+{
+	font-size: 200%;
+}

@@ -25,6 +25,12 @@ class ProductRatingTypeTest extends UnitTest
 		);
 	}
 
+	public function setUp()
+	{
+		parent::setUp();
+		ActiveRecordModel::executeUpdate('DELETE FROM ProductRatingType');
+	}
+
 	public function testProductRatingTypes()
 	{
 		$subCategory = Category::getNewInstance(Category::getRootNode());

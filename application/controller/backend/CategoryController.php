@@ -198,6 +198,7 @@ class CategoryController extends StoreManagementController
 			'tabFields' => $this->getSpecFieldCount($category),
 			'tabImages' => $this->getCategoryImageCount($category),
 			'tabOptions' => $category->getOptions()->getTotalRecordCount(),
+			'tabRatingCategories' => ProductRatingType::getCategoryRatingTypes($category)->size(),
 		);
 	}
 
