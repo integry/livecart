@@ -14,7 +14,7 @@ function smarty_prefilter_config($source, $smarty)
 {
 	// pass block as parameter for another block
 	// for example, {maketext text=sometext params=|link user/login|}
-	$source = preg_replace('/{([^\{\}]+)\{([^\{\}]+)\}(.*)}/', '{capture assign=blockAsParamValue}{$2}{/capture}{$1\$blockAsParamValue$3}', $source);
+	$source = preg_replace('/{([^\{\}\n]+)\{([^\{\}\n]+)\}(.*)}/', '{capture assign=blockAsParamValue}{$2}{/capture}{$1\$blockAsParamValue$3}', $source);
 
 	// shorthand syntax for foreach
 	// for example {foreach $items as $item}
