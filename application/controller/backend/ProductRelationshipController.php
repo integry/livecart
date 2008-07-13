@@ -23,7 +23,7 @@ class ProductRelationshipController extends StoreManagementController
 
 		$response = new ActionResponse();
 
-		$response->set('categoryID', $this->request->get('categoryID'));
+		$response->set('categoryID', $product->category->get()->getID());
 		$response->set('languages', $languages);
 		$response->set('productID', $productID);
 		$response->set('relationships', $product->getRelationships()->toArray());
