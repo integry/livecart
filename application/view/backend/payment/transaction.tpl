@@ -33,13 +33,13 @@
 				{t _processed_by}: <a href="{backendUserUrl user=$transaction.User}">{$transaction.User.fullName}</a>
 			{/if}
 
-			{if $transaction.comment}
-				<div class="transactionComment">
-					{$transaction.comment}
-				</div>
-			{/if}
-
 		</div>
+
+		{if $transaction.comment}
+			<div class="transactionComment">
+				{$transaction.comment}
+			</div>
+		{/if}
 
 	</div>
 

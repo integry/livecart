@@ -29,7 +29,7 @@ abstract class BackendController extends BaseController
 		if (!preg_match('/Firefox|Minefield/', $_SERVER['HTTP_USER_AGENT']))
 		{
 			ClassLoader::import('application.controller.backend.UnsupportedBrowserException');
-			throw new UnsupportedBrowserException();
+			//throw new UnsupportedBrowserException();
 		}
 
 		if (!$this->user->hasBackendAccess() && !($this instanceof SessionController))

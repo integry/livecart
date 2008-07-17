@@ -270,9 +270,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 				'type' => 'text'
 			);
 
-		unset($availableColumns['Product.voteSum']);
-		unset($availableColumns['Product.voteCount']);
-		unset($availableColumns['Product.rating']);
+		unset($availableColumns['Product.ratingSum']);
 		unset($availableColumns['Product.salesRank']);
 
 		return $availableColumns;

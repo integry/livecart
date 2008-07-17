@@ -36,6 +36,7 @@
 .tabContainer ul li.hover
 {
 	border-top: 2px solid red;
+	cursor: hand;
 }
 
 .tabContainer ul li.hover, .tabContainer ul li.inactive

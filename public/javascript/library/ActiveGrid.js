@@ -534,7 +534,7 @@ ActiveGridFilter.prototype =
 	 */
 	checkExit: function(e)
 	{
-		if (27 == e.keyCode)
+		if (27 == e.keyCode || (13 == e.keyCode && !this.element.value))
 		{
 			this.element.value = '';
 
@@ -545,6 +545,12 @@ ActiveGridFilter.prototype =
 			}
 
 			this.element.blur();
+		}
+
+		else if (13 == e.keyCode)
+		{
+			this.filterBlur();
+			this.setFilterValue();
 		}
 	},
 

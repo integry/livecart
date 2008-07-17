@@ -365,6 +365,7 @@ Backend.LangEdit.prototype =
 			this.displayFile(id);
 
 			Backend.Breadcrumb.display(id);
+			$('currentFileTitle').innerHTML = id.substr(0, id.length - 4);
 		}
 	},
 
@@ -391,13 +392,13 @@ Backend.LangEdit.prototype =
 		if ($('allFiles').checked/* && $('filter').value*/)
 		{
 			$('allFilesTitle').show();
-			$('pageTitle').hide();
+			$('currentFileTitle').hide();
 			this.showAll(e);
 		}
 		else
 		{
 			$('allFilesTitle').hide();
-			$('pageTitle').show();
+			$('currentFileTitle').show();
 			this.showSelected(e);
 		}
 
