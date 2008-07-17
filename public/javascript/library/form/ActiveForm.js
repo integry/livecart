@@ -48,15 +48,21 @@ ActiveForm.prototype = {
 		}
 
 		var messages = document.getElementsByClassName('errorText', form);
-		for (k = 0; k < messages.length; k++)
+		for (var k = 0; k < messages.length; k++)
 		{
 			messages[k].innerHTML = '';
 			messages[k].style.display = 'none';
+		}
+
+		for (var k = 0; k < form.elements.length; k++)
+		{
+			form.elements.item(k).removeClassName('hasError');
 		}
 	},
 
 	resetErrorMessage: function(formElement)
 	{
+		formElement.removeClassName('hasError');
 		var errorText = formElement.up().down(".errorText");
 
 		if (errorText)
@@ -89,9 +95,10 @@ ActiveForm.prototype = {
 	{
 		if (focusField)
 		{
-//			alert(errorMessage);
 			Element.focus(formElement);
 		}
+
+		formElement.addClassName('hasError');
 
 		var errorContainer = formElement.up().down(".errorText");
 		if (errorContainer)

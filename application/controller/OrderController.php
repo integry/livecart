@@ -33,7 +33,7 @@ class OrderController extends FrontendController
 
 		$options = ProductOption::loadOptionsForProductSet($products);
 
-		$optionsArray = array();
+		$moreOptions = $optionsArray = array();
 		foreach ($this->order->getOrderedItems() as $item)
 		{
 			if (isset($options[$item->product->get()->getID()]))

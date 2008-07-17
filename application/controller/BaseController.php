@@ -242,6 +242,23 @@ abstract class BaseController extends Controller implements LCiTranslator
 		return $this->session->setControllerData($this, $key, $value);
 	}
 
+	protected function isAjax()
+	{
+		return $this->request->isAjax();
+	}
+
+	protected function setMessage($message)
+	{
+		$this->setSessionData('message', $message);
+	}
+
+	public function getMessage()
+	{
+		$msg = $this->getSessionData('message');
+		$this->setMessage('');
+		return $msg;
+	}
+
 	/**
 	 * 	Automatically preloads language files
 	 *

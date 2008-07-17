@@ -42,10 +42,15 @@ LiveCart.AjaxRequest.prototype = {
 				if (controls)
 				{
 					indicatorId = controls.down('.progressIndicator');
-					if(indicatorId.style.visibility == 'hidden')
-					{
-						this.adjustIndicatorVisibility = true;
-					}
+				}
+				else
+				{
+					indicatorId = form.down('.progressIndicator');
+				}
+
+				if (indicatorId && indicatorId.style.visibility == 'hidden')
+				{
+					this.adjustIndicatorVisibility = true;
 				}
 			}
 		}

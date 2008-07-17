@@ -10,26 +10,8 @@
  * @package application.helper.smarty
  *  @author Integry Systems
  */
-function smarty_prefilter_config($tplSource, $smarty)
+function smarty_prefilter_config($source, $smarty)
 {
-	// translations
-	$source = preg_replace('/{tn (.+?)}/', '{translate|escape:"html" text="$1" disableLiveTranslation="true"}', $tplSource);
-	$source = preg_replace('/{t ([^\|]+?)}/', '{translate text="$1"}', $source);
-	$source = preg_replace('/{t ([^|]+)\|([^}]+)}/', '{capture assign="translation_$1"}{translate text=$1}{/capture}{\$translation_$1|$2}', $source);
-
-	// roles
-	$source = preg_replace('/{role ([\w.]+)}/', '{role name="$1"}', $source);
-
-	// template customizations - allow to load from a different source
-	$source = preg_replace('/{include file="([-.a-zA-Z0-9@\/]+)"(.*)}/msU', '{include file="custom:$1"\\2}', $source);
-
-	//$source = preg_replace('/{block (.+?)}/', '{foreach from=\$$1 item=includedBlock key=key}{$includedBlock}{/foreach}', $source);
-	$source = preg_replace('/{block (.+?)}/', '{renderBlock block=$1}', $source);
-
-	// help system
-	$source = preg_replace('/{help (.+?)}/', '{helpLink id=$1}', $source);
-	$source = preg_replace('/{see (.+?)}/', '{helpSeeAlsoItem id=$1}', $source);
-
 	/**
 		shorthand syntax for form error handling
 
@@ -48,7 +30,7 @@ function smarty_prefilter_config($tplSource, $smarty)
 			{textfield}
 		{/err}
 	*/
-	$source = preg_replace('/{{1,2}err for="(.*)"}{1,2}(.*){{label(.*)}}(.*){\/err}/msU', '{{err for="\\1"}}\\2<label for="\\1">\\3</label>\\4{/err}', $source);
+	$source = preg_replace('/{{1,2}err for="(.*)"}{1,2}(.*){{label(.*)}}(.*){\/err}/msU', '{{err for="\\1"}}\\2<label for="\\1"><span>\\3</span></label>\\4{/err}', $source);
 
 	// replace `backticks` to {curly braces} for <label>
 	$source = preg_replace_callback('|<label for="(.*)">|', 'labelVars', $source);
@@ -56,6 +38,36 @@ function smarty_prefilter_config($tplSource, $smarty)
 	$source = preg_replace('/{{err for="(.*)"}{2,3}+(.*){(calendar|checkbox|filefield|password|radio|selectfield|textfield|textarea)(.*)}(.*){\/err}/msU', '\\2<fieldset class="error">{\\3 name="\\1" \\4}\\5
 	<div class="errorText hidden{error for="\\1"} visible{/error}">{error for="\\1"}{$msg}{/error}</div>
 	</fieldset>', $source);
+
+	// pass block as parameter for another block
+	// for example, {maketext text=sometext params=|link user/login|}
+	$source = preg_replace('/{([^\{\}\n]+)\{([^\{\}\n]+)\}(.*)}/', '{capture assign=blockAsParamValue}{$2}{/capture}{$1\$blockAsParamValue$3}', $source);
+
+	// shorthand syntax for foreach
+	// for example {foreach $items as $item}
+	$source = preg_replace('/{foreach \$([^ ]+)[ ]+as[ ]+\$([^ ]+)}/', '{foreach from=\$$1 item=$2}', $source);
+
+	// link shorthand syntax
+	// {link user/login} is equal to {link controller=user action=login}
+	$source = preg_replace('/{link ([a-zA-Z0-9]*)\/([a-zA-Z0-9]*)(.*)}/', '{link controller="$1" action="$2" $3}', $source);
+
+	// translations
+	$source = preg_replace('/{tn (.+?)}/', '{translate|escape:"html" text="$1" disableLiveTranslation="true"}', $source);
+	$source = preg_replace('/{t ([^\|]+?)}/', '{translate text="$1"}', $source);
+	$source = preg_replace('/{t ([^|]+)\|([^}]+)}/', '{capture assign="translation_$1"}{translate text=$1}{/capture}{\$translation_$1|$2}', $source);
+
+	// roles
+	$source = preg_replace('/{role ([\w.]+)}/', '{role name="$1"}', $source);
+
+	// template customizations - allow to load from a different source
+	$source = preg_replace('/{include file="([-.a-zA-Z0-9@\/]+)"(.*)}/msU', '{include file="custom:$1"\\2}', $source);
+
+	//$source = preg_replace('/{block (.+?)}/', '{foreach from=\$$1 item=includedBlock key=key}{$includedBlock}{/foreach}', $source);
+	$source = preg_replace('/{block (.+?)}/', '{renderBlock block=$1}', $source);
+
+	// help system
+	$source = preg_replace('/{help (.+?)}/', '{helpLink id=$1}', $source);
+	$source = preg_replace('/{see (.+?)}/', '{helpSeeAlsoItem id=$1}', $source);
 
 	return $source;
 }

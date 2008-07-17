@@ -324,6 +324,7 @@ class LiveCart extends Application
 		if ($response instanceof ActionResponse && $this->isInstalled())
 		{
 			$response->set('user', $controllerInstance->getUser()->toArray());
+			$response->set('message', $controllerInstance->getMessage());
 			if ($controllerInstance instanceof FrontendController)
 			{
 				$response->set('currency', $controllerInstance->getRequestCurrency());
@@ -823,7 +824,7 @@ class LiveCart extends Application
 		{
 			$newAmount = Currency::getInstanceById($currency, Currency::LOAD_DATA)->convertAmount(Currency::getInstanceById($details->currency->get(), Currency::LOAD_DATA), $details->amount->get());
 			$details->currency->set($currency);
-			$details->amount->set($newAmount);
+			$details->amount->set(round($newAmount, 2));
 		}
 
 		$inst->setApplication($this);

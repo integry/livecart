@@ -427,6 +427,28 @@ class Product extends MultilingualObject
 			$update->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'ID'), $this->getID()));
 			ActiveRecordModel::updateRecordSet(__CLASS__, $update);
 
+			// generate SKU automatically if not set
+			if (!$this->sku->get())
+			{
+				ClassLoader::import('application.helper.check.IsUniqueSkuCheck');
+
+				$sku = $this->getID();
+
+				do
+				{
+					$check = new IsUniqueSkuCheck('', $this);
+					$exists = $check->isValid('SKU' . $sku);
+					if (!$exists)
+					{
+						$sku = '0' . $sku;
+					}
+				}
+				while (!$exists);
+
+				$this->sku->set('SKU' . $sku);
+				$this->save();
+			}
+
 			ActiveRecordModel::commit();
 		}
 		catch (Exception $e)
@@ -446,8 +468,6 @@ class Product extends MultilingualObject
 
 		try
 		{
-			parent::update();
-
 			// modify product counters for categories
 			$catUpdate = new ARUpdateFilter();
 
@@ -492,6 +512,8 @@ class Product extends MultilingualObject
 				$catUpdate->addModifier('availableProductCount', new ARExpressionHandle('availableProductCount ' . (($availableChange > 0) ? '+' : '-') . ' 1'));
 			}
 
+			parent::update();
+
 			$this->updateCategoryCounters($catUpdate);
 
 			$update = new ARUpdateFilter();
@@ -525,28 +547,6 @@ class Product extends MultilingualObject
 		$this->getSpecification()->save();
 		$this->getPricingHandler()->save();
 		$this->saveRelationships();
-
-		// generate SKU automatically if not set
-		if (!$this->sku->get())
-		{
-			ClassLoader::import('application.helper.check.IsUniqueSkuCheck');
-
-			$sku = $this->getID();
-
-			do
-			{
-				$check = new IsUniqueSkuCheck('', $this);
-				$exists = $check->isValid('SKU' . $sku);
-				if (!$exists)
-				{
-				  	$sku = '0' . $sku;
-				}
-			}
-			while (!$exists);
-
-			$this->sku->set('SKU' . $sku);
-			$this->save();
-		}
 
 		self::commit();
 	}

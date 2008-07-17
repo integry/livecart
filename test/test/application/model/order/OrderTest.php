@@ -38,6 +38,7 @@ class OrderTest extends UnitTest
 		ActiveRecordModel::beginTransaction();
 
 		ActiveRecord::executeUpdate('DELETE FROM TaxRate');
+		ActiveRecord::executeUpdate('DELETE FROM Currency');
 
 		// set up currency
 		if (ActiveRecord::objectExists('Currency', 'USD'))

@@ -1,0 +1,55 @@
+.addTypeMenu li.addRatingType
+{
+    background-image: url(../../image/silk/thumb_up.png);
+}
+
+.typeList
+{
+    width: 700px;
+}
+
+.typeList li
+{
+    padding: 5px;
+	width: 43em;
+}
+
+.ttypeList .activeList_icons
+{
+    left: 5px;
+    position: absolute;
+    width: auto;
+}
+
+.typeTitle
+{
+    font-weight: bold;
+    float: left;
+}
+
+.typeDate
+{
+    font-size: smaller;
+    float: right;
+}
+
+.typeListContainer
+{
+    padding-left: 60px;
+}
+
+.typeText
+{
+    display: block;
+}
+
+.typeList input.add, .addRatingTypeForm input.save
+{
+    display: none;
+}
+
+.formContainer
+{
+    padding-left: 60px;
+    padding-top: 1em;
+}

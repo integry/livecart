@@ -166,6 +166,9 @@ class AuthorizeNet extends CreditCardPayment
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, implode('&', $fields));
 
+		//curl_setopt($ch, CURLOPT_PROXY, 'proxy.shr.secureserver.net');
+		//curl_setopt($ch, CURLOPT_PROXYPORT, 3128);
+
 		$response = urldecode(curl_exec($ch));
 
 		if (curl_errno($ch))
@@ -201,10 +204,15 @@ class AuthorizeNet extends CreditCardPayment
 			array_push($keys, 'Merchant Defined Field ' . ++$i);
 		}
 
+		while (count($values) < count($keys))
+		{
+			array_push($values, '');
+		}
+
 		$result = array_combine($keys, $values);
 
 		// declined transaction
-		if (3 == $result['Response Code'] || in_array($result['Response Reason Code'], array(311)))
+		if (1 != $result['Response Code'] || in_array($result['Response Reason Code'], array(311)))
 		{
 			return new TransactionError($result['Response Reason Text'], $result);
 		}
@@ -219,7 +227,7 @@ class AuthorizeNet extends CreditCardPayment
 		$res->CVVmatch->set('M' == $result['AVS Result Code']);
 		$res->rawResponse->set($result);
 
-		switch ($result['Transaction Type'])
+		switch (strtolower($result['Transaction Type']))
 		{
 			case 'auth_capture':
 				$res->setTransactionType(TransactionResult::TYPE_SALE);

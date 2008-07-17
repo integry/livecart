@@ -1,42 +1,5 @@
 /**
  * Backend.ProductOption
- *
- * Script for managing spec field formcount
- *
- * The following class manages spec field forms. I have used an separate js file (a class)
- * because there are a lot of thing happening when you are dealing with spec fields forms.
- *
- * To use this class you should simply pass specFIelds values to it like so
- * @example
- * <code>
- *	 new Backend.ProductOption({
- *		"ID":"new",
- *		"name":"a:2:{s:2:\"en\";s:11:\"Electronics\";s:2:\"lt\";s:11:\"Elektronika\";}",
- *		"description":[],
- *		"handle":"",
- *		"values":[],
- *		"rootId": "productOption_item_new",
- *		"type":5,
- *		"dataType":2
- *	 });
- * </code>
- *
- * I hope whoever reads this will figure aut what each value means. Name, description and values
- * can have multiple values for each language
- *
- * Also you should know that some values are not meant to be passed to constructor (it will also
- * work fine... meaby) Here is an example
- *
- * @example
- * <code>
- *	 Backend.ProductOption.prototype.languages = {"en":"English","lt":"Lithuanian","de":"German"};
- *	 Backend.ProductOption.prototype.types = createTypesOptions({"2":{"1":"Selector","2":"Numbers"},"1":{"3":"Text","4":"Word processer","5":"selector","6":"Date"}});
- *	 Backend.ProductOption.prototype.messages = {"deleteField":"delete field"};
- *	 Backend.ProductOption.prototype.selectorValueTypes = [1,5];
- *	 Backend.ProductOption.prototype.doNotTranslateTheseValueTypes = [2];
- *	 Backend.ProductOption.prototype.countNewValues = 0;
- * </code>
- *
  * @author   Integry Systems
  * @namespace Backend.ProductOption
  */
