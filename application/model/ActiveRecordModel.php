@@ -154,6 +154,19 @@ abstract class ActiveRecordModel extends ActiveRecord
 		return $res;
 	}
 
+	public function updateTimeStamp()
+	{
+		$args = func_get_args();
+		$update = new ARUpdateFilter();
+
+		foreach ($args as $field)
+		{
+			$update->addModifier($field, new ARExpressionHandle('NOW()'));
+		}
+
+		return $this->updateRecord($update);
+	}
+
 	protected static function transformArray($array, ARSchema $schema)
 	{
 		foreach ($schema->getFieldsByType('ARDateTime') as $name => $field)

@@ -69,7 +69,7 @@
 		<div class="order">
 			<div class="orderingControls">
 				{if $product.rating && 'ENABLE_RATINGS'|config}
-					<img src="image/rating/{ {$product.rating*2|@round}/2}.gif" />
+					{include file="category/productListRating.tpl"}
 					{if 'ENABLE_WISHLISTS'|config}
 						<span class="listItemSeparator">|</span>
 					{/if}

@@ -30,6 +30,36 @@
 <input type="hidden" name="rating" />
 <div class="errorText hidden">{error for="rating"}{/error}</div>
 
-<input class="submit" type="submit" value="{tn _rate}" /> <span class="progressIndicator" style="display: none;"></span>
+{if !'ENABLE_REVIEWS'|config || !$ratingForm|@isRequired:'nickname'}
+	<p>
+		<input class="submit" type="submit" value="{tn _submit_rating}" /> <span class="progressIndicator" style="display: none;"></span>
+	</p>
+{/if}
+
+{if 'ENABLE_REVIEWS'|config}
+	<div class="reviewForm">
+		<div{if $ratingForm|@isRequired:'nickname'} class="required"{/if}>
+			{err for="nickname"}
+				{{label {t _nickname}: }}
+				{textfield class="text wide"}
+			{/err}
+		</div>
+		<div{if $ratingForm|@isRequired:'title'} class="required"{/if}>
+			{err for="title"}
+				{{label {t _summary}: }}
+				{textfield class="text wide"}
+			{/err}
+		</div>
+		<div{if $ratingForm|@isRequired:'text'} class="required"{/if}>
+			{err for="text"}
+				{{label {t _review_text}: }}
+				{textarea}
+			{/err}
+		</div>
+	</div>
+	<p>
+		<input class="submit" type="submit" value="{tn _submit_review}" /> <span class="progressIndicator" style="display: none;"></span>
+	</p>
+{/if}
 
 {/form}

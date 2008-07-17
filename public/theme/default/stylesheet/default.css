@@ -507,6 +507,11 @@ ul.productList .addToWishList, #productToWishList td.value a, .productGrid .addT
 	padding-bottom: 3px;
 }
 
+.productListRating
+{
+	padding-bottom: 3px;
+}
+
 .productGrid .addToWishList
 {
 	background-image: url(../../../image/silk/gif/heart_add.gif);
@@ -1482,12 +1487,14 @@ ul.news li.newsEntry
 
 h3, h3 a
 {
-	margin-bottom: 10px;
+	margin-bottom: 1em;
 	font-size: 14px;
 	font-family: Arial, Helvetica, sans-serif;
 	color: #168c9d;
 	text-decoration: none;
+	font-weight: bold;
 }
+
 .productSeparator
 {
 	margin-top: 15px;

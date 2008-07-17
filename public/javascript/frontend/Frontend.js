@@ -97,7 +97,19 @@ Product.Rating.prototype =
 	updatePreview: function(e)
 	{
 		var input = Event.element(e);
-		var preview = input.up('tr').down('.ratingPreview').down('img');
+		var tr = input.up('tr');
+		if (!tr)
+		{
+			return false;
+		}
+
+		var hasError = input.up('tr').down('.hasError');
+		if (hasError)
+		{
+			ActiveForm.prototype.resetErrorMessage(hasError);
+		}
+
+		var preview = tr.down('.ratingPreview').down('img');
 		preview.src = 'image/rating/' + input.value + '.gif';
 		preview.show();
 	}

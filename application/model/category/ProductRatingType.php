@@ -41,7 +41,7 @@ class ProductRatingType extends MultilingualObject
 	public static function getProductRatingTypes(Product $product)
 	{
 		$types = self::getRecordSet(__CLASS__, self::getRatingTypeFilter($product), array('Category'));
-		if (!$types)
+		if (!$types->size())
 		{
 			$types = self::getDefaultRatingTypeSet();
 		}
@@ -68,7 +68,7 @@ class ProductRatingType extends MultilingualObject
 	private function getDefaultRatingTypeSet()
 	{
 		$set = new ARSet();
-		$set->unshift(self::getDefaultRatingType());
+		$set->add(self::getDefaultRatingType());
 		return $set;
 	}
 

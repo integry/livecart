@@ -758,6 +758,7 @@ li.moreSubCats
     margin-bottom: 15px;
     border-bottom: 1px solid #CCCCCC;
     font-size: 120%;
+    position: relative;
 }
 
 .resultStats .pagingInfo, .categoryLayoutSwitch
@@ -959,6 +960,11 @@ ul.productList .orderingControls
 	color: #ccc;
 }
 
+.productListRating a
+{
+	font-size: smaller;
+}
+
 /*****************************
 	Product page
 *****************************/
@@ -1042,6 +1048,17 @@ ul.productList .orderingControls
 {
 	font-weight: bold;
 	text-align: center;
+}
+
+.overallRating *
+{
+	vertical-align: middle;
+}
+
+.overallRating a
+{
+	font-weight: normal;
+	font-size: smaller;
 }
 
 .ratingBreakdown
@@ -1258,7 +1275,7 @@ td.addToWishList
 	font-weight: bold;
 }
 
-#rateProduct .errorText
+#rateProduct .productTable .errorText
 {
 	position: relative;
 	white-space: nowrap;
@@ -1286,6 +1303,60 @@ td.addToWishList
 .reviewForm label
 {
 	float: none;
+}
+
+.reviewTitle
+{
+	line-height: 1.5em;
+	font-weight: bold;
+}
+
+.reviewText
+{
+	margin-top: 0;
+}
+
+div.review
+{
+	padding-top: 1em;
+	border-top: 1px solid #eee;
+}
+
+div.review.first
+{
+	padding-top: 0;
+	border: 0;
+}
+
+div.review .ratingBreakdown
+{
+	float: right;
+	margin: 0.5em;
+	padding: 1em;
+	border: 1px solid #eee;
+}
+
+.readAllReviews
+{
+	font-weight: bold;
+}
+
+/*****************************
+	Review page
+*****************************/
+.reviewIndex .pagingInfo
+{
+	float: none;
+	text-align: right;
+	margin-top: 0;
+	position: absolute;
+	bottom: 5px;
+	right: 0;
+}
+
+.reviewIndex #ratingSummary
+{
+	float: left;
 }
 
 /*****************************
@@ -2327,8 +2398,7 @@ fieldset.error, div.error, fieldset.container
 	width: auto;
 	margin-bottom: 4px;
 	margin-top: 0;
-	padding: 3px;
-	padding-left: 20px;
+	padding: 0px 3px 3px 20px;
 	font-weight: bold;
 	font-family: Tahoma;
 }

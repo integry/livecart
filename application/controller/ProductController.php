@@ -5,6 +5,7 @@ ClassLoader::import('application.controller.FrontendController');
 ClassLoader::import('application.controller.CategoryController');
 ClassLoader::import('framework.request.validator.Form');
 ClassLoader::import('framework.request.validator.RequestValidator');
+ClassLoader::import('application.model.presentation.ProductPresentation');
 
 /**
  *
@@ -15,10 +16,10 @@ class ProductController extends FrontendController
 {
 	public $filters = array();
 
+	const REVIEWS_PER_PAGE = 1;
+
 	public function index()
 	{
-		ClassLoader::import('application.model.presentation.ProductPresentation');
-
 		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA, array('ProductImage', 'Manufacturer'));
 		$product->loadPricing();
 
@@ -28,6 +29,7 @@ class ProductController extends FrontendController
 		// get category path for breadcrumb
 		$path = $product->category->get()->getPathNodeArray();
 		include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
+		include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.productUrl.php');
 		foreach ($path as $nodeArray)
 		{
 			$url = createCategoryUrl(array('data' => $nodeArray), $this->application);
@@ -80,7 +82,7 @@ class ProductController extends FrontendController
 		}
 
 		// add product title to breacrumb
-		$this->addBreadCrumb($productArray['name_lang'], '');
+		$this->addBreadCrumb($productArray['name_lang'], createProductUrl(array('product' => $productArray), $this->application));
 
 		// allowed shopping cart quantities
 		$quantities = range(max($product->minimumQuantity->get(), 1), 30);
@@ -176,11 +178,23 @@ class ProductController extends FrontendController
 			$response->set('ratings', ProductRatingSummary::getProductRatingsArray($product));
 		}
 
+		// reviews
+		if ($this->config->get('ENABLE_REVIEWS') && $product->reviewCount->get() && ($numReviews = $this->config->get('NUM_REVIEWS_IN_PRODUCT_PAGE')))
+		{
+			$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductReview', 'isEnabled'), true));
+			$f->setLimit($numReviews);
+			$reviews = $product->getRelatedRecordSetArray('ProductReview', $f);
+			$this->pullRatingDetailsForReviewArray($reviews);
+			$response->set('reviews', $reviews);
+		}
+
 		// display theme
 		if ($theme = ProductPresentation::getThemeByProduct($product))
 		{
 			$this->application->setTheme($theme->getTheme());
 		}
+
+		$this->product = $product;
 
 		return $response;
 	}
@@ -189,30 +203,54 @@ class ProductController extends FrontendController
 	{
 		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA);
 		$ratingTypes = ProductRatingType::getProductRatingTypes($product);
-		$validator = $this->buildRatingValidator($ratingTypes->toArray(), $product);
+
+		$validator = $this->buildRatingValidator($ratingTypes->toArray(), $product, true);
+
+		$redirect = new ActionRedirectResponse('product', 'index', array('id' => $product->getID()));
+
 		if ($validator->isValid())
 		{
+			$msg = $this->translate('_msg_rating_added');
+
+			if ($this->isAddingReview())
+			{
+				$review = ProductReview::getNewInstance($product, $this->user);
+				$review->loadRequestData($this->request);
+				$review->ip->set($this->request->getIpLong());
+
+				// approval status
+				$approval = $this->config->get('APPROVE_REVIEWS');
+				$review->isEnabled->set(('APPROVE_REVIEWS_AUTO' == $approval) || (('APPROVE_REVIEWS_USER' == $approval) && !$this->user->isAnonymous()));
+
+				$review->save();
+
+				$msg = $this->translate('_msg_review_added');
+			}
+
 			foreach ($ratingTypes as $type)
 			{
-				$rating = ProductRating::getNewInstance($product, $type);
+				$rating = ProductRating::getNewInstance($product, $type, $this->user);
 				$rating->rating->set($this->request->get('rating_'  . $type->getID()));
+				if (isset($review))
+				{
+					$rating->review->set($review);
+				}
+				$rating->ip->set($this->request->getIpLong());
 				$rating->save();
 			}
 
-			setcookie('rating_' . $product->getID(), true, strtotime('+6 months'), $this->router->getBaseDirFromUrl());
-
-			$msg = $this->translate('_msg_rating_added');
-			$redirect = new ActionRedirectResponse('product', 'index', array('id' => $product->getID()));
-
 			if ($this->isAjax())
 			{
-				return new JSONResponse(array('message' => $msg), 'success');
+				$response = new JSONResponse(array('message' => $msg), 'success');
 			}
 			else
 			{
 				$this->setMessage($msg);
-				return $redirect;
+				$response = $redirect;
 			}
+
+			$response->setCookie('rating_' . $product->getID(), true, strtotime('+6 months'), $this->router->getBaseDirFromUrl());
+			return $response;
 		}
 		else
 		{
@@ -225,6 +263,37 @@ class ProductController extends FrontendController
 				return $redirect;
 			}
 		}
+	}
+
+	public function reviews()
+	{
+		if (!$this->config->get('ENABLE_REVIEWS'))
+		{
+			throw new HTTPStatusException(404);
+		}
+
+		$response = $this->index();
+
+		$page = $this->request->get('page', 1);
+		$perPage = $this->config->get('REVIEWS_PER_PAGE');
+		$offsetStart = ($this->request->get('page', 1) - 1) * $perPage;
+
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductReview', 'isEnabled'), true));
+		$f->setLimit($perPage, $offsetStart);
+		$f->setOrder(new ARFieldHandle('ProductReview', 'dateCreated'), 'DESC');
+		$reviews = $this->product->getRelatedRecordSetArray('ProductReview', $f);
+		$this->pullRatingDetailsForReviewArray($reviews);
+
+		$response->set('reviews', $reviews);
+		$response->set('offsetStart', $offsetStart + 1);
+		$response->set('offsetEnd', min($offsetStart + $perPage, $this->product->reviewCount->get()));
+		$response->set('page', $page);
+		$response->set('perPage', $perPage);
+		$response->set('url', $this->router->createUrl(array('controller' => 'product', 'action' => 'reviews', 'id' => $this->product->getID(), 'page' => '_000_')));
+
+		$this->addBreadCrumb($this->translate('_reviews'), '');
+
+		return $response;
 	}
 
 	public function buildAddToCartValidator($options)
@@ -243,6 +312,31 @@ class ProductController extends FrontendController
 		return $validator;
 	}
 
+	private function pullRatingDetailsForReviewArray(&$reviews)
+	{
+		$ids = $indexes = array();
+		foreach ($reviews as $index => $review)
+		{
+			$ids[] = $review['ID'];
+			$indexes[$review['ID']] = $index;
+		}
+
+		$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductRating', 'reviewID'), $ids));
+		$f->setOrder(new ARFieldHandle('ProductRatingType', 'position'));
+		$ratings = ActiveRecordModel::getRecordSetArray('ProductRating', $f, array('ProductRatingType'));
+
+		foreach ($ratings as $rating)
+		{
+			$review =& $reviews[$indexes[$rating['reviewID']]];
+			if (!isset($review['ratings']))
+			{
+				$review['ratings'] = array();
+			}
+
+			$review['ratings'][] = $rating;
+		}
+	}
+
 	/**
 	 * @return Form
 	 */
@@ -259,7 +353,7 @@ class ProductController extends FrontendController
 		return new Form($this->buildRatingValidator($ratingTypes, $product));
 	}
 
-	private function buildRatingValidator($ratingTypes, Product $product)
+	private function buildRatingValidator($ratingTypes, Product $product, $isRating = false)
 	{
 		$validator = new RequestValidator("productRating", $this->getRequest());
 
@@ -269,7 +363,7 @@ class ProductController extends FrontendController
 			$validator->addCheck('rating_' . $type['ID'], new IsNotEmptyCheck($this->translate('_err_no_rating_selected')));
 		}
 
-		if ($this->isRated($product))
+		if ($this->isRated($product, $isRating))
 		{
 			$validator->addCheck('rating', new VariableCheck(true, new IsEmptyCheck($this->translate('_err_already_rated'))));
 		}
@@ -277,17 +371,53 @@ class ProductController extends FrontendController
 		$validator->addCheck('rating', new VariableCheck($this->isLoginRequiredToRate(), new IsEmptyCheck($this->maketext('_msg_rating_login_required', $this->router->createUrl(array('controller' => 'user', 'action' => 'login'))))));
 		$validator->addCheck('rating', new VariableCheck($this->isPurchaseRequiredToRate($product), new IsEmptyCheck($this->translate('_msg_rating_purchase_required'))));
 
+		if ($this->isAddingReview())
+		{
+			$validator->addCheck('nickname', new IsNotEmptyCheck($this->translate('_err_no_review_nickname')));
+			$validator->addCheck('title', new IsNotEmptyCheck($this->translate('_err_no_review_summary')));
+			$validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_no_review_text')));
+		}
+
 		return $validator;
 	}
 
-	private function getRatingTypes(Product $product)
+	private function isAddingReview()
 	{
-
+		return $this->config->get('ENABLE_REVIEWS') && ($this->config->get('REVIEWS_WITH_RATINGS') || ($this->request->get('nickname') || $this->request->get('title') || $this->request->get('text')));
 	}
 
-	private function isRated(Product $product)
+	private function isRated(Product $product, $isRating = false)
 	{
-		return !empty($_COOKIE['rating_' . $product->getID()]);
+		if (!empty($_COOKIE['rating_' . $product->getID()]))
+		{
+			return true;
+		}
+
+		if ($isRating)
+		{
+			ClassLoader::import("application.helper.getDateFromString");
+
+			$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductRating', 'productID'), $product->getID()));
+			if (!$this->user->isAnonymous())
+			{
+				$cond = new EqualsCond(new ARFieldHandle('ProductRating', 'userID'), $this->user->getID());
+			}
+			else
+			{
+				if ($hours = $this->config->get('RATING_SAME_IP_TIME'))
+				{
+					$cond = new EqualsCond(new ARFieldHandle('ProductRating', 'ip'), $this->request->getIPLong());
+					$cond->addAnd(new MoreThanCond(new ARFieldHandle('ProductRating', 'dateCreated'), getDateFromString('-' . $hours . ' hours')));
+				}
+			}
+
+			if (isset($cond))
+			{
+				$f->mergeCondition($cond);
+	//var_dump(ActiveRecordModel::getRecordSetArray('ProductRating', $f));
+				return ActiveRecordModel::getRecordCount('ProductRating', $f) > 0;
+			}
+		}
 	}
 
 	private function isLoginRequiredToRate()
@@ -304,18 +434,18 @@ class ProductController extends FrontendController
 				return true;
 			}
 
-			if (!is_null($this->isPurchaseRequiredToRate))
+			if (is_null($this->isPurchaseRequiredToRate))
 			{
-				return $this->isPurchaseRequiredToRate;
+				ClassLoader::import('application.model.order.CustomerOrder');
+				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
+				$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderedItem', 'productID'), $product->getID()));
+				$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
+				$f->setLimit(1);
+
+				$this->isPurchaseRequiredToRate = ActiveRecordModel::getRecordCount('OrderedItem', $f, array('CustomerOrder')) < 1;
 			}
 
-			ClassLoader::import('application.model.order.CustomerOrder');
-			$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
-			$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderedItem', 'productID'), $product->getID()));
-			$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
-			$f->setLimit(1);
-
-			$this->isPurchaseRequiredToRate = ActiveRecordModel::getRecordCount('OrderedItem', $f, array('CustomerOrder')) < 1;
+			return $this->isPurchaseRequiredToRate;
 		}
 	}
 

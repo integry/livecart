@@ -8,7 +8,7 @@ ClassLoader::import("application.controller.backend.SpecFieldController");
  * @package test.model.category
  * @author Integry Systems
  */
-class SpecFieldControllerTest extends UnitTest
+class SpecFieldControllerTest extends UnitTest implements BackendControllerTestCase
 {
 	/**
 	 * Root category
@@ -30,21 +30,6 @@ class SpecFieldControllerTest extends UnitTest
 	public function setUp()
 	{
 		parent::setUp();
-
-		ClassLoader::import('application.model.user.SessionUser');
-		ClassLoader::import('application.model.user.UserGroup');
-
-		// set up user
-		$group = UserGroup::getNewInstance('Unit tester');
-		$group->save();
-		$group->setAllRoles();
-		$group->save();
-		$user = User::getNewInstance('unittest@test.com', null, $group);
-		$user->save();
-		SessionUser::setUser($user);
-
-		$this->request = self::getApplication()->getRequest();
-
 		$this->controller = new SpecFieldController(self::getApplication());
 	}
 

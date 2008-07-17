@@ -25,7 +25,7 @@ class ErrController extends FrontendController
 		$id = $this->request->get('id');
 		$params = array();
 
-		if($this->request->isAjax())
+		if($this->isAjax())
 		{
 			$params['query'] = array('ajax' => 1);
 		}

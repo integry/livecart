@@ -24,11 +24,13 @@ class ProductRating extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField('reviewID', 'ProductReview', 'ID', null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField('ratingTypeID', 'ProductRatingType', 'ID', null, ARInteger::instance()));
 		$schema->registerField(new ARField('rating', ARInteger::instance()));
+		$schema->registerField(new ARField('ip', ARInteger::instance()));
+		$schema->registerField(new ARField('dateCreated', ARDateTime::instance()));
 	}
 
 	/*####################  Static method implementations ####################*/
 
-	public static function getNewInstance(Product $product, ProductRatingType $type = null)
+	public static function getNewInstance(Product $product, ProductRatingType $type = null, User $user = null)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
 		$instance->product->set($product);
@@ -37,8 +39,14 @@ class ProductRating extends ActiveRecordModel
 		{
 			$type = null;
 		}
-
 		$instance->ratingType->set($type);
+
+		if ($user && $user->isAnonymous())
+		{
+			$user = null;
+		}
+		$instance->user->set($user);
+
 		return $instance;
 	}
 
@@ -47,6 +55,7 @@ class ProductRating extends ActiveRecordModel
 		self::beginTransaction();
 
 		parent::insert();
+		$this->updateTimeStamp('dateCreated');
 
 		$summary = ProductRatingSummary::getInstance($this->product->get(), $this->ratingType->get());
 		$summary->save();
@@ -58,6 +67,11 @@ class ProductRating extends ActiveRecordModel
 
 		$summary->updateRecord(clone $f);
 		$this->product->get()->updateRecord(clone $f);
+
+		if ($this->review->get())
+		{
+			$this->review->get()->updateRecord(clone $f);
+		}
 
 		self::commit();
 	}

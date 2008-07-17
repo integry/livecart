@@ -113,7 +113,9 @@ APPROVE_REVIEWS_AUTO=All
 APPROVE_REVIEWS_USER=By registered users only
 APPROVE_REVIEWS_NONE=None
 RATING_SCALE=Rating scale
-
+RATING_SAME_IP_TIME=Allow anonymous ratings from the same IP address every ... hours
+NUM_REVIEWS_IN_PRODUCT_PAGE=Number of reviews to display in product page
+REVIEWS_PER_PAGE=Number of reviews per page
 _filters=Product Filters
 
 _general_filter=General Options
