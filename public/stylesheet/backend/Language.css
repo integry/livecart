@@ -1,5 +1,5 @@
 label.radio {
-	width: auto;  
+	width: auto;
 	float: left;
 	margin-right: 10px;
 }
@@ -13,7 +13,7 @@ label.radio {
 
 #langPageMenu li
 {
-    background-image: url(../../image/silk/world_add.png);    
+    background-image: url(../../image/silk/world_add.png);
 }
 
 #languageList_template
@@ -45,8 +45,8 @@ label.radio {
 }
 
 #languageList .checkbox {
-  	margin: 0; 
-	margin-left: 2px; 
+  	margin: 0;
+	margin-left: 2px;
 	float: none;
 }
 
@@ -63,7 +63,7 @@ label.radio {
   	padding-left: 60px;
 }
 
-.langListContainer .progressIndicator 
+.langListContainer .progressIndicator
 {
     padding-left: 1px;
 }
@@ -72,11 +72,11 @@ label.radio {
   	display: none;
 }
 
-.setDefault, 
-.default .langDefault, 
-.disabled .langInactive 
+.setDefault,
+.default .langDefault,
+.disabled .langInactive
 {
-  	display: inline;  
+  	display: inline;
 }
 
 .default .setDefault,
@@ -88,7 +88,7 @@ label.radio {
 /* edit */
 .langExport
 {
-    background-image: url(../../image/silk/compress.png);    
+    background-image: url(../../image/silk/compress.png);
 }
 
 #langPath
@@ -105,6 +105,7 @@ label.radio {
     font-weight: bold;
     float: left;
     width: 300px;
+    clear: left;
 }
 
 div.tip
@@ -119,10 +120,10 @@ div.tip
 
 .lang-translation input, .lang-translation textarea {
 	width: 445px;
-}  
+}
 
 .lang-translation textarea {
-	height: 150px;  
+	height: 150px;
 }
 
 .lang-key {
@@ -142,8 +143,8 @@ div.tip
 
 .rightConfirmations
 {
-    position: absolute ! important; 
-    right: 0px ! important; 
+    position: absolute ! important;
+    right: 0px ! important;
     width: 600px ! important;
 }
 
@@ -154,6 +155,6 @@ div.tip
 
 #translations
 {
-    display: block; 
+    display: block;
 	margin-bottom: 15px;
 }

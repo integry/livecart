@@ -9,12 +9,25 @@
 	-moz-outline:none;
 }
 
+.activeGridViewportContainer
+{
+	overflow: hidden;
+	overflow: visible;
+	position: relative;
+}
+
+.activeGridScroller
+{
+	overflow: auto;
+	position: absolute;
+	right: 0;
+	top: 28px;
+}
+
 .activeGridScroller, x:-moz-any-link
 {
 	-moz-opacity: 0.7;
 	position: relative;
-	margin-top: 28px;
-	overflow: auto;
 	left: -2px;
 }
 
@@ -29,6 +42,7 @@
 	width: 100%;
 	padding-top: 200px;
 	text-align: center;
+	z-index: 1;
 }
 
 .activeGrid_loadIndicator div
@@ -197,10 +211,10 @@
     margin: 0;
 }
 
-.activeGrid th input, .activeGrid th select
+.activeGrid th input.text, .activeGrid th select
 {
     width: 70%;
-    font-size: smaller;
+    font-size: 11px;
     font-weight: bold;
     border: 1px solid #888888;
     float: left;
@@ -255,6 +269,7 @@
 {
 	border-left: 1px solid #ccc;
 	border-bottom: 1px solid #ccc;
+	height: 26px;
 }
 
 .activeGrid th .fieldName
@@ -316,7 +331,7 @@
 .activeGrid th .sortPreview, .activeGrid th .sortImg
 {
     position: absolute;
-    right: 5px;
+    right: -3px;
     margin-top: 2px;
 }
 
@@ -367,9 +382,10 @@
 .activeGrid th .filterMenu li
 {
     padding: 5px;
+    padding-left: 2px;
+    padding-right: 25px;
     list-style-type: none;
     font-weight: normal;
-    padding-right: 25px;
 }
 
 .activeGrid th .filterMenu li:hover
@@ -380,8 +396,15 @@
 .activeGrid th .filterMenu span.sign
 {
     float: left;
-    width: 30px;
+    width: 25px;
     font-weight: bold;
+    text-align: center;
+}
+
+.filterMenu li
+{
+	white-space: nowrap;
+	min-width: 200px;
 }
 
 /***********************
@@ -474,7 +497,7 @@
 	border: 1px solid black;
 	text-align: center;
 	white-space: nowrap;
-	width: 250px;
+	width: 280px;
 	position: absolute;
 	right: -250px;
 	top: -385px;
@@ -499,7 +522,8 @@
 
 .activeGridColumnsList label
 {
-    width: 190px;
+    width: auto;
+    max-width: 220px;
 }
 
 .activeGridControls

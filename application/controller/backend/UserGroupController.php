@@ -156,6 +156,7 @@ class UserGroupController extends ActiveGridController
 	{
 		$availableColumns = parent::getAvailableColumns();
 		$availableColumns['UserGroup.name'] = array('type' => 'text', 'name' => $this->translate('UserGroup.name'));
+		unset($availableColumns['User.password']);
 		return $availableColumns;
 	}
 

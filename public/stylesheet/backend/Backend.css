@@ -32,6 +32,11 @@ a img
   	border: 0;
 }
 
+img[src=""]
+{
+	display: none;
+}
+
 a, a:visited
 {
   	color: darkblue;
@@ -357,12 +362,13 @@ html, body{
   	font-size: 15px;
   	display: block;
   	-moz-outline:none;
+  	white-space: nowrap;
 }
 
 #nav li {
 	padding-left: 8px;
 	white-space: nowrap;
-	height: 18px;
+	height: 19px;
 }
 
 #nav li div {
@@ -420,7 +426,6 @@ html, body{
   	background-color: #CDD9EE;
   	line-height: 20px;
   	padding: 5px;
-  	width: 200px;
 }
 
 #nav li ul li {
@@ -494,7 +499,7 @@ html, body{
 	z-index: 20;
 	width: 110px;
 	padding-top: 6px;
-	left: -30px;
+	left: -15px;
 	top: 13px;
 	overflow: hidden;
 	opacity: 0.9;
@@ -867,8 +872,8 @@ p.radio, p.checkbox, fieldset.radio, fieldset.checkbox
 p.radio label, p.checkbox label, fieldset.radio label, fieldset.checkbox label
 {
     white-space: nowrap;
-    margin-top: 3px;
     cursor: pointer;
+    vertical-align: middle;
 }
 
 input, select, file, form.other
@@ -896,8 +901,6 @@ select.country option, select.state option
 
 label.checkbox, label.radio, p.checkbox label
 {
-  	margin-top: 3px;
-  	width: auto;
     cursor: pointer;
     width: auto;
 }
@@ -932,7 +935,9 @@ textarea, .disabledTextarea
 input.radio, input.checkbox, input.submit, input.button, input.reset
 {
     width: auto;
+    vertical-align: middle;
 }
+
 input.submit, input.reset
 {
 	font-size: 10px;
@@ -1316,7 +1321,11 @@ ul.languageFormTabs
     height: 100%;
     width: 300px;
     display: inline;
+}
 
+ul.languageFormTabs
+{
+	position: relative;
 }
 
 ul.languageFormTabs li
@@ -1327,7 +1336,8 @@ ul.languageFormTabs li
     border-bottom: 0px;
     background-color: #f5f5f5;
     margin-left: 2px;
-    padding: 0.5em ! important;
+    padding: 7px ! important;
+    font-size: 14px;
 }
 
 ul.languageFormTabs li:hover, ul.languageFormTabs li.active

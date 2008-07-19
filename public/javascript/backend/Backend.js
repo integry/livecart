@@ -638,16 +638,16 @@ Backend.ThemePreview.prototype =
 			{
 				var img = this.image;
 
-				if ('' == this.value)
+				if (!this.value || 0 == this.value)
 				{
 					img.hide();
+					return;
 				}
 				else
 				{
 					img.show();
 				}
 
-				img.src = 'theme' + (this.value != 'barebone' ? '/' + this.value : '') + '/preview_small.png';
 				img.href = 'theme' + (this.value != 'barebone' ? '/' + this.value : '') + '/preview.png';
 				img.title = this.value;
 				img.onclick =
@@ -655,6 +655,20 @@ Backend.ThemePreview.prototype =
 					{
 						showLightbox(this);
 					}
+
+				img.onload =
+					function()
+					{
+						this.show();
+					}
+
+				img.onerror =
+					function()
+					{
+						this.hide();
+					}
+
+				img.src = 'theme' + (this.value != 'barebone' ? '/' + this.value : '') + '/preview_small.png';
 			}
 
 		change.bind(select)();
@@ -1033,7 +1047,7 @@ Backend.SaveConfirmationMessage.prototype =
 		Backend.SaveConfirmationMessage.prototype.timers[this.element.id].fadeEffect = Effect.Fade(this.element, {duration: 0.4});
 		Backend.SaveConfirmationMessage.prototype.timers[this.element.id].fadeTimeout = setTimeout(function() { this.displaying = false; }.bind(this), 4000);
 
-		if (this.options && this.options.delete)
+		if (this.options && this.options.del/* && this.options.delete !KONQUEROR */)
 		{
 			this.element.parentNode.removeChild(this.element);
 		}
@@ -1058,7 +1072,7 @@ Backend.SaveConfirmationMessage.prototype =
 		var el = document.createElement('div');
 		el.className = 'yellowMessage';
 		$('confirmations').appendChild(el);
-		new Backend.SaveConfirmationMessage(el, {delete: true, message: message});
+		new Backend.SaveConfirmationMessage(el, {del: true, message: message});
 	}
 }
 

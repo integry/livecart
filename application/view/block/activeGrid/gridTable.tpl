@@ -54,35 +54,35 @@
 								<ul onclick="$('filter_{$column}_{$id}').filter.initFilter(event);">
 									<li class="rangeFilterReset" symbol="">
 										<span class="sign">&nbsp;</span>
-										{t _grid_show_all}
+										<span class="signLabel">{t _grid_show_all}</span>
 									</li>
 									<li symbol="=">
 										<span class="sign">=</span>
-										{t _grid_equals}
+										<span class="signLabel">{t _grid_equals}</span>
 									</li>
 									<li symbol="<>">
 										<span class="sign">&ne;</span>
-										{t _grid_not_equal}
+										<span class="signLabel">{t _grid_not_equal}</span>
 									</li>
 									<li symbol=">">
 										<span class="sign">&gt;</span>
-										{t _grid_greater}
+										<span class="signLabel">{t _grid_greater}</span>
 									</li>
 									<li symbol="<">
 										<span class="sign">&lt;</span>
-										{t _grid_less}
+										<span class="signLabel">{t _grid_less}</span>
 									</li>
 									<li symbol=">=">
 										<span class="sign">&ge;</span>
-										{t _grid_greater_or_equal}
+										<span class="signLabel">{t _grid_greater_or_equal}</span>
 									</li>
 									<li symbol="<=">
 										<span class="sign">&le;</span>
-										{t _grid_less_or_equal}
+										<span class="signLabel">{t _grid_less_or_equal}</span>
 									</li>
 									<li symbol="><">
-										<span class="sign">&gt;&lt;</span>
-										{t _grid_range}
+										<span class="sign">&#8812;</span>
+										<span class="signLabel">{t _grid_range}</span>
 									</li>
 								</ul>
 

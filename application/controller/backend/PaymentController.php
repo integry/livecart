@@ -334,7 +334,7 @@ class PaymentController extends StoreManagementController
 
 		$validator = new RequestValidator("offlinePayment", $this->request);
 		$validator->addCheck('amount', new IsNotEmptyCheck($this->translate('_err_enter_amount')));
-		$validator->addCheck('amount', new MinValueCheck($this->translate('_err_amount_not_positive'), 0.000001));
+		$validator->addCheck('amount', new MinValueCheck($this->translate('_err_amount_not_positive'), 0.01));
 
 		$validator->addFilter('amount', new NumericFilter());
 

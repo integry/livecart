@@ -17,7 +17,7 @@
 
 li.productRelationshipGroup_item {
     border: 2px solid grey;
-    margin-bottom: 0.5em;   
+    margin-bottom: 0.5em;
 }
 
 li.productRelationshipGroup_item li {
@@ -25,9 +25,8 @@ li.productRelationshipGroup_item li {
 }
 
 .productRelationship_title {
-    font-size: 1.5em; 
+    font-size: 1.5em;
     font-weight: bold;
-    float: left;
 }
 
 .productRelationship_image
@@ -41,7 +40,7 @@ li.productRelationshipGroup_item li {
     padding-bottom: 1em;
 }
 
-.productRelationship_list .activeList_icons 
+.productRelationship_list .activeList_icons
 {
     float: left;
     width: 50px;
@@ -61,5 +60,4 @@ a.openRelatedProduct
     background-repeat: no-repeat;
     padding-left: 22px;
     margin-left: 10px;
-    line-height: 2em;    
 }

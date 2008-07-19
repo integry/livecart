@@ -92,9 +92,10 @@
 						<fieldset class="container">
 							<input type="text" id="filter" /> <img src="image/silk/cross.png" id="clearFilter" style="vertical-align: middle; cursor: pointer; display: none;" />
 
-							<input type="checkbox" class="checkbox" id="allFiles" />
-							<label for="allFiles" class="checkbox">{t _all_files}</label>
-
+							<p>
+								<input type="checkbox" class="checkbox" id="allFiles" />
+								<label for="allFiles" class="checkbox">{t _all_files}</label>
+							</p>
 						</fieldset>
 
 						<div id="langNotFound" style="display: none;">{t _no_translations_found}</div>
@@ -106,7 +107,7 @@
 			<br />
 
 			<fieldset class="container" id="langPath">
-				<div id="pageTitle"></div>
+				<div id="currentFileTitle"></div>
 				<div id="allFilesTitle" style="display: none;">{t _all_files_title}</div>
 			</fieldset>
 
