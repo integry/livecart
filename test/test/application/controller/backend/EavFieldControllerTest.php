@@ -8,7 +8,7 @@ ClassLoader::import("application.controller.backend.EavFieldController");
  * @package test.controller.backend
  * @author Integry Systems
  */
-class EavFieldControllerTest extends UnitTest implements ControllerTestCase
+class EavFieldControllerTest extends UnitTest implements BackendControllerTestCase
 {
 	private $controller;
 

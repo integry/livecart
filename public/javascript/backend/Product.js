@@ -141,6 +141,17 @@ Backend.Product =
 		{
 			Element.show($('productIndicator_' + id));
 		}
+		else if (e)
+		{
+			var indicator = Event.element(e).parentNode.down('.progressIndicator');
+			if (indicator)
+			{
+				indicator.show();
+
+				// ugly hack
+				setTimeout(function() { indicator.hide() }, 5000);
+			}
+		}
 
 		if (window.opener)
 		{

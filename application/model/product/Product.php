@@ -70,6 +70,7 @@ class Product extends MultilingualObject
 		$schema->registerField(new ArField("ratingSum", ARInteger::instance()));
 		$schema->registerField(new ArField("ratingCount", ARInteger::instance()));
 		$schema->registerField(new ArField("rating", ARFloat::instance(8)));
+		$schema->registerField(new ArField("reviewCount", ARInteger::instance()));
 
 		$schema->registerField(new ArField("minimumQuantity", ARFloat::instance(8)));
 		$schema->registerField(new ArField("shippingSurchargeAmount", ARFloat::instance(8)));
@@ -420,12 +421,7 @@ class Product extends MultilingualObject
 			}
 
 			$this->updateCategoryCounters($catUpdate);
-
-			$update = new ARUpdateFilter();
-			$update->addModifier('dateUpdated', new ARExpressionHandle('NOW()'));
-			$update->addModifier('dateCreated', new ARExpressionHandle('NOW()'));
-			$update->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'ID'), $this->getID()));
-			ActiveRecordModel::updateRecordSet(__CLASS__, $update);
+			$this->updateTimeStamp('dateCreated', 'dateUpdated');
 
 			// generate SKU automatically if not set
 			if (!$this->sku->get())
@@ -633,27 +629,7 @@ class Product extends MultilingualObject
 
 	public static function sortAttributesByHandle(&$array)
 	{
-		if (isset($array['attributes']))
-		{
-			foreach ($array['attributes'] as $attr)
-			{
-				if (isset($attr['SpecField']))
-				{
-					$array['byHandle'][$attr['SpecField']['handle']] = $attr;
-				}
-				else
-				{
-					if (!$attr['isMultiValue'])
-					{
-						$array['byHandle'][$attr['handle']] = $attr;
-					}
-					else
-					{
-						$array['byHandle'][$attr['handle']][$attr['specFieldValueID']] = $attr;
-					}
-				}
-			}
-		}
+		return ProductSpecification::sortAttributesByHandle('ProductSpecification', $array);
 	}
 
 	public function toArray()

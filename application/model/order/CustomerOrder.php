@@ -129,7 +129,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	/**
 	 *  Add a product to shopping basket
 	 */
-	public function addProduct(Product $product, $count)
+	public function addProduct(Product $product, $count = 1)
 	{
 		if (0 >= $count)
 		{

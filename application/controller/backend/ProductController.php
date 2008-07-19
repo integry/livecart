@@ -459,6 +459,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			'tabProductFiles' => $product->getFiles(false)->getTotalRecordCount(),
 			'tabProductImages' => count($product->getImageArray()),
 			'tabProductOptions' => $product->getOptions()->getTotalRecordCount(),
+			'tabProductReviews' => $product->getRelatedRecordCount('ProductReview'),
 		));
 	}
 

@@ -582,7 +582,36 @@ abstract class EavSpecificationManagerCommon
 			{
 				// append to product array
 				$productArray[$ids[$spec[$objectColumn]]]['attributes'][$spec[$fieldColumn]] = $spec;
-				Product::sortAttributesByHandle($productArray[$ids[$spec[$objectColumn]]]);
+				self::sortAttributesByHandle($class, $productArray[$ids[$spec[$objectColumn]]]);
+			}
+		}
+	}
+
+	public static function sortAttributesByHandle($class, &$array)
+	{
+		$fieldClass = call_user_func(array($class, 'getFieldClass'));
+		$valueItemClass = call_user_func(array($fieldClass, 'getSelectValueClass'));
+		$valueClass = call_user_func(array($valueItemClass, 'getValueClass'));
+
+		if (isset($array['attributes']))
+		{
+			foreach ($array['attributes'] as $attr)
+			{
+				if (isset($attr[$fieldClass]))
+				{
+					$array['byHandle'][$attr[$fieldClass]['handle']] = $attr;
+				}
+				else
+				{
+					if (!$attr['isMultiValue'])
+					{
+						$array['byHandle'][$attr['handle']] = $attr;
+					}
+					else
+					{
+						$array['byHandle'][$attr['handle']][$attr[$valueClass]] = $attr;
+					}
+				}
 			}
 		}
 	}

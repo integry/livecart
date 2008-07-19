@@ -1,0 +1,18 @@
+_listing_reviews=Listing reviews $from - $to of $count
+_no_reviews_found=No reviews found
+
+_approve=Approve
+_disapprove=Disapprove
+
+_delete_conf=Really delete selected reviews?
+_nothing_selected=Please select at least one review first
+_process=Process
+
+# columns
+ProductReview.title=Summary
+ProductReview.nickname=Author name
+ProductReview.dateCreated=Creation date
+ProductReview.text=Review text
+ProductReview.isEnabled=Approved
+ProductReview.rating=Rating
+Product.name=Product name

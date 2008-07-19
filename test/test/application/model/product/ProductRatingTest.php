@@ -124,5 +124,43 @@ class ProductRatingTest extends UnitTest
 		$this->assertEqual($summary->ratingSum->get(), 4);
 		$this->assertEqual($summary->rating->get(), 4);
 	}
+
+	public function testRatingDelete()
+	{
+		// first rating
+		$rating = ProductRating::getNewInstance($this->product);
+		$rating->rating->set(6);
+		$rating->save();
+
+		// second rating
+		$rating = ProductRating::getNewInstance($this->product);
+		$rating->rating->set(4);
+		$rating->save();
+
+		$rating->delete();
+
+		$this->product->reload();
+		$this->assertEqual($this->product->ratingCount->get(), 1);
+		$this->assertEqual($this->product->ratingSum->get(), 6);
+		$this->assertEqual($this->product->rating->get(), 6);
+	}
+
+	public function testRatingUpdate()
+	{
+		// initial rating
+		$rating = ProductRating::getNewInstance($this->product);
+		$rating->rating->set(6);
+		$rating->save();
+
+		// change rating
+		$rating->rating->set(8);
+		$rating->save();
+
+		$this->product->reload();
+		$this->assertEqual($this->product->ratingCount->get(), 1);
+		$this->assertEqual($this->product->ratingSum->get(), 8);
+		$this->assertEqual($this->product->rating->get(), 8);
+	}
 }
+
 ?>

@@ -11,13 +11,31 @@ _description=Description
 _spec=Product Specification
 _recommended=Recommended Products
 _reviews=Customer Reviews
+_read_all_reviews=Read all [_1] reviews
 _purchased_together=Customers Who Bought This Item Also Bought
 
 _rate_product_name=Rate [_1]
+_review_product_name=Rate and Review [_1]
+_review_count=[quant,_1,review,reviews]
 _default_rating_category=Select your rating
-_rate=Rate
+_nickname=Name or nickname
+_summary=Short summary of your review
+_review_text=Review
+_submit_rating=Submit your rating
+_submit_review=Submit your rating and review
 _err_no_rating_selected=Please select a rating
 _err_already_rated=You have already rated this product
+_err_no_review_nickname=Please enter your name or nickname
+_err_no_review_summary=Please enter the review summary
+_err_no_review_text=Please enter the review text
+
+# reviews
+_reviews_for=Customer Reviews for [_1]
+_showing_reviews=Showing [_1] to [_2] of [_3] reviews
+
 _msg_rating_added=Your rating has been added.
 _msg_rating_login_required=You have to <a href="[_1]">sign in</a> to rate this product.
 _msg_rating_purchase_required=Only customers who have purchased this product may rate it.
+_msg_review_added=Your review has been added.
+_msg_review_login_required=You have to <a href="[_1]">sign in</a> to review this product.
+_msg_review_purchase_required=Only customers who have purchased this product may review it.

@@ -78,6 +78,8 @@ LiveCart.AjaxRequest.prototype = {
 			options.parameters = params;
 		}
 
+		options.parameters += (options.parameters ? '&' : '') + 'ajax=true';
+
 		options.onComplete = this.postProcessResponse.bind(this, this.parseURI(url));
 		options.onFailure = this.reportError;
 
@@ -343,6 +345,8 @@ LiveCart.AjaxUpdater.prototype = {
 					ActiveForm.prototype.destroyTinyMceFields($(container));
 				}
 			}
+
+		options.parameters += (options.parameters ? '&' : '') + 'ajax=true';
 
 		if (insertionPosition != undefined)
 		{

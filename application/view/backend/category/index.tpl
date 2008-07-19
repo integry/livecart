@@ -23,6 +23,7 @@
 {includeJs file="backend/ProductFile.js"}
 {includeJs file="backend/ProductOption.js"}
 {includeJs file="backend/RatingType.js"}
+{includeJs file="backend/Review.js"}
 
 {include file="backend/eav/includes.tpl"}
 
@@ -37,6 +38,7 @@
 {includeCss file="backend/Filter.css"}
 {includeCss file="backend/CategoryImage.css"}
 {includeCss file="backend/RatingType.css"}
+{includeCss file="backend/Review.css"}
 {includeCss file="library/TabControl.css"}
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 {includeCss file="library/lightbox/lightbox.css"}
@@ -181,6 +183,12 @@
 
 				<li id="tabRatingCategories" class="tab inactive" {denied role="ratingcategory"}style="display: none"{/denied}>
 					<a href="{link controller=backend.ratingType action=index id=_id_}">{t _rating_categories}</a>
+					<span> </span>
+					<span class="tabHelp">categories</span>
+				</li>
+
+				<li id="tabReviews" class="tab inactive" {denied role="ratingcategory"}style="display: none"{/denied}>
+					<a href="{link controller=backend.review action=index id=_id_ query="category=true"}">{t _reviews}</a>
 					<span> </span>
 					<span class="tabHelp">categories</span>
 				</li>

@@ -220,6 +220,11 @@ abstract class BaseController extends Controller implements LCiTranslator
 		return $this->user;
 	}
 
+	public function setUser(User $user)
+	{
+		$this->user = $user;
+	}
+
 	public function loadLanguageFile($langFile)
 	{
 		$this->locale->translationManager()->loadFile($langFile);
@@ -244,7 +249,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 
 	protected function isAjax()
 	{
-		return $this->request->isAjax();
+		return $this->request->get('ajax');
 	}
 
 	protected function setMessage($message)

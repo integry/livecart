@@ -8,7 +8,7 @@ ClassLoader::import("application.controller.backend.abstract.BackendController")
  * @package application.controller.backend
  * @author Integry Systems
  */
-class ErrController extends BackendController 
+class ErrController extends BackendController
 {
 	public function index()
 	{
@@ -16,20 +16,20 @@ class ErrController extends BackendController
 		$response->set('id', $this->request->get('id'));
 		$response->set('ajax', $this->request->get('ajax'));
 		$response->set('description', HTTPStatusException::getCodeMeaning($this->request->get('id')));
-		
+
 		return $response;
 	}
-	
+
 	public function redirect()
 	{
 		$id = $this->request->get('id');
 		$params = array();
-		
-		if($this->request->isAjax())
+
+		if($this->isAjax())
 		{
 			$params['query'] = array('ajax' => 1);
 		}
-		
+
 		switch($id)
 		{
 			case 401:
@@ -37,7 +37,7 @@ class ErrController extends BackendController
 			case 403:
 			case 404:
 				$params['id'] = $id;
-				return new ActionRedirectResponse('backend.err', 'index', $params);  
+				return new ActionRedirectResponse('backend.err', 'index', $params);
 			default:
 			   	return new RawResponse('error ' . $this->request->get('id'));
 		}

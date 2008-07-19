@@ -24,11 +24,13 @@ class ProductRating extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField('reviewID', 'ProductReview', 'ID', null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField('ratingTypeID', 'ProductRatingType', 'ID', null, ARInteger::instance()));
 		$schema->registerField(new ARField('rating', ARInteger::instance()));
+		$schema->registerField(new ARField('ip', ARInteger::instance()));
+		$schema->registerField(new ARField('dateCreated', ARDateTime::instance()));
 	}
 
 	/*####################  Static method implementations ####################*/
 
-	public static function getNewInstance(Product $product, ProductRatingType $type = null)
+	public static function getNewInstance(Product $product, ProductRatingType $type = null, User $user = null)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
 		$instance->product->set($product);
@@ -37,9 +39,27 @@ class ProductRating extends ActiveRecordModel
 		{
 			$type = null;
 		}
-
 		$instance->ratingType->set($type);
+
+		if ($user && $user->isAnonymous())
+		{
+			$user = null;
+		}
+		$instance->user->set($user);
+
 		return $instance;
+	}
+
+	public function delete()
+	{
+		parent::delete();
+
+		$f = new ARUpdateFilter();
+		$f->addModifier('ratingSum', new ARExpressionHandle('ratingSum-' . $this->rating->get()));
+		$f->addModifier('ratingCount', new ARExpressionHandle('ratingCount-1'));
+		$f->addModifier('rating', new ARExpressionHandle('ratingSum/ratingCount'));
+
+		$this->updateRatings($f);
 	}
 
 	protected function insert()
@@ -47,6 +67,7 @@ class ProductRating extends ActiveRecordModel
 		self::beginTransaction();
 
 		parent::insert();
+		$this->updateTimeStamp('dateCreated');
 
 		$summary = ProductRatingSummary::getInstance($this->product->get(), $this->ratingType->get());
 		$summary->save();
@@ -56,10 +77,42 @@ class ProductRating extends ActiveRecordModel
 		$f->addModifier('ratingCount', new ARExpressionHandle('ratingCount+1'));
 		$f->addModifier('rating', new ARExpressionHandle('ratingSum/ratingCount'));
 
-		$summary->updateRecord(clone $f);
-		$this->product->get()->updateRecord(clone $f);
+		$this->updateRatings($f);
 
 		self::commit();
+	}
+
+	protected function update()
+	{
+		self::beginTransaction();
+
+		$ratingDiff = $this->rating->get() - $this->rating->getInitialValue();
+
+		$f = new ARUpdateFilter();
+		$f->addModifier('ratingSum', new ARExpressionHandle('ratingSum+(' . $ratingDiff . ')'));
+		$f->addModifier('rating', new ARExpressionHandle('ratingSum/ratingCount'));
+
+		$this->updateRatings($f);
+
+		parent::update();
+
+		self::commit();
+	}
+
+	private function updateRatings(ARUpdateFilter $f)
+	{
+		$this->product->get()->updateRecord(clone $f);
+
+		$summary = ProductRatingSummary::getInstance($this->product->get(), $this->ratingType->get());
+		if ($summary->getID())
+		{
+			$summary->updateRecord(clone $f);
+		}
+
+		if ($this->review->get() && !$this->review->get()->isDeleted())
+		{
+			$this->review->get()->updateRecord(clone $f);
+		}
 	}
 }
 

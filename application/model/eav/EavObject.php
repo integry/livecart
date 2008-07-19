@@ -46,10 +46,14 @@ class EavObject extends ActiveRecordModel
 		return $instance;
 	}
 
+	public function getClassField($className)
+	{
+		return strtolower(substr($className, 0, 1)) . substr($className, 1) . 'ID';
+	}
+
 	private function getInstanceField(ActiveRecordModel $instance)
 	{
-		$class = get_class($instance);
-		return strtolower(substr($class, 0, 1)) . substr($class, 1) . 'ID';
+		return self::getClassField(get_class($instance));
 	}
 }
 
