@@ -1052,10 +1052,6 @@ li.moreSubCats, li.moreSubCats a
 	margin-left: 0;
 }
 
-
-
-
-
 /*****************************
 	Filters
 *****************************/
@@ -1616,4 +1612,9 @@ table.productGrid
 	color: #cc6600;
 	height: 28px;
 	vertical-align: middle;
+}
+
+.proceedToCheckout, .continueShopping
+{
+	font-size: 13px;
 }

@@ -51,10 +51,9 @@ Backend.Category = {
 	initPage: function()
 	{
 		// check for bookmark
-		if (window.location.hash.length == 0)
+		if (!window.location.hash)
 		{
-			window.location.hash = $('tabProducts') ?  '#cat_1#tabProducts__' : '#cat_1#tabMainDetails__';
-
+			window.location.hash = $('tabProducts') ?  'cat_1#tabProducts__' : 'cat_1#tabMainDetails__';
 			Backend.Breadcrumb.display(1);
 		}
 
@@ -88,6 +87,7 @@ Backend.Category = {
 			}
 
 		var elements = window.location.hash.split('#');
+
 		if (elements[1].substr(0, 4) == 'cat_')
 		{
 			var parts = elements[1].split('_');
@@ -102,7 +102,6 @@ Backend.Category = {
 		if($('categoryBrowser').getElementsByClassName('selectedTreeRow')[0])
 		{
 			var treeNode = $('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode;
-			treeNode.onclick();
 			Backend.ajaxNav.add('cat_' + treeNode.parentObject.id + '#tabProducts');
 		}
 	},
@@ -609,7 +608,6 @@ CategoryTabControl.prototype = {
 
 		$(this.sectionContainerName).childElements().invoke("hide");
 
-
 		// get help context
 		var helpContext = document.getElementsByClassName('tabHelp', targetTab);
 		if (helpContext.length > 0)
@@ -808,13 +806,7 @@ Backend.Category.PopupSelector.prototype =
 
 		var w = window.open(Backend.Category.links.popup + (categoryID ? '#cat_' + categoryID : ''), 'selectCategory', 'width=260, height=450');
 
-		// close the popup automatically if closing/reloading page
-		Event.observe(window, 'unload', function()
-		{
-			w.close();
-		});
-
-		Event.observe(w, 'load',
+		window.popupOnload =
 			function()
 			{
 				Event.observe(w.document.getElementById('select'), 'click', function()
@@ -870,8 +862,12 @@ Backend.Category.PopupSelector.prototype =
 
 						Event.stop(e);
 					}.bindAsEventListener(this) );
-			}.bind(this)
-		);
+			}.bind(this);
 
+		// close the popup automatically if closing/reloading page
+		Event.observe(window, 'unload', function()
+		{
+			w.close();
+		});
 	}
 }

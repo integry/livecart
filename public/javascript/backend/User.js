@@ -75,7 +75,7 @@ Backend.UserGroup.prototype =
 			var match = null;
 			if(!(match = Backend.ajaxNav.getHash().match(/group_(-?\d+)#\w+/)))
 			{
-				window.location.hash = '#group_' + id + '#tabUsers__';
+				window.location.hash = 'group_' + id + '#tabUsers__';
 			}
 			else
 			{

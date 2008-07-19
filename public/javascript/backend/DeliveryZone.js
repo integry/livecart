@@ -49,7 +49,7 @@ Backend.DeliveryZone.prototype =
 
 		this.insertTreeBranch(zones, 0);
 
-		if(!Backend.ajaxNav.getHash().match(/zone_-?\d+#\w+/)) window.location.hash = '#zone_-1#tabDeliveryZoneShipping__';
+		if(!Backend.ajaxNav.getHash().match(/zone_-?\d+#\w+/)) window.location.hash = 'zone_-1#tabDeliveryZoneShipping__';
 		this.tabControl = TabControl.prototype.getInstance('deliveryZoneManagerContainer', this.craftTabUrl, this.craftContainerId, {});
 
 		this.bindEvents();
