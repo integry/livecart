@@ -270,8 +270,8 @@ class ProductController extends ActiveGridController implements MassActionInterf
 				'type' => 'text'
 			);
 
-		unset($availableColumns['Product.voteSum']);
-		unset($availableColumns['Product.voteCount']);
+		unset($availableColumns['Product.ratingSum']);
+		unset($availableColumns['Product.ratingCount']);
 		unset($availableColumns['Product.rating']);
 		unset($availableColumns['Product.salesRank']);
 
@@ -461,6 +461,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			'tabProductFiles' => $product->getFiles(false)->getTotalRecordCount(),
 			'tabProductImages' => count($product->getImageArray()),
 			'tabProductOptions' => $product->getOptions()->getTotalRecordCount(),
+			'tabProductReviews' => $product->getRelatedRecordCount('ProductReview'),
 		));
 	}
 

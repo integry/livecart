@@ -192,6 +192,9 @@ class CategoryController extends StoreManagementController
 
 		$category = Category::getInstanceByID($categoryId, Category::LOAD_DATA);
 
+		$reviewCond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
+		$reviewCond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
+
 		return array(
 			'tabProducts' => $category->totalProductCount->get(),
 			'tabFilters' => $this->getFilterCount($category),
@@ -199,6 +202,7 @@ class CategoryController extends StoreManagementController
 			'tabImages' => $this->getCategoryImageCount($category),
 			'tabOptions' => $category->getOptions()->getTotalRecordCount(),
 			'tabRatingCategories' => ProductRatingType::getCategoryRatingTypes($category)->size(),
+			'tabReviews' => ActiveRecordModel::getRecordCount('ProductReview', new ARSelectFilter($reviewCond), array('Category', 'Product')),
 		);
 	}
 

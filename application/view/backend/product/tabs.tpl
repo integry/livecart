@@ -43,6 +43,11 @@
 				<span class="tabHelp">products.edit.options</span>
 			</li>
 
+			<li id="tabProductReviews" class="tab inactive" {denied role="option"}style="display:none;"{/denied}>
+				<a href="{link controller=backend.review action=index id=_id_}">{t _reviews}</a>
+				<span class="tabHelp">categories</span>
+			</li>
+
 {*
 			<li id="tabChildren" class="tab inactive">
 				<a href="{link controller=backend.product action=operation id=_id_}?categoryID=_categoryID_">{t _children}</a>

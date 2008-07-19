@@ -50,6 +50,18 @@ class ProductRating extends ActiveRecordModel
 		return $instance;
 	}
 
+	public function delete()
+	{
+		parent::delete();
+
+		$f = new ARUpdateFilter();
+		$f->addModifier('ratingSum', new ARExpressionHandle('ratingSum-' . $this->rating->get()));
+		$f->addModifier('ratingCount', new ARExpressionHandle('ratingCount-1'));
+		$f->addModifier('rating', new ARExpressionHandle('ratingSum/ratingCount'));
+
+		$this->updateRatings($f);
+	}
+
 	protected function insert()
 	{
 		self::beginTransaction();
@@ -65,15 +77,42 @@ class ProductRating extends ActiveRecordModel
 		$f->addModifier('ratingCount', new ARExpressionHandle('ratingCount+1'));
 		$f->addModifier('rating', new ARExpressionHandle('ratingSum/ratingCount'));
 
-		$summary->updateRecord(clone $f);
+		$this->updateRatings($f);
+
+		self::commit();
+	}
+
+	protected function update()
+	{
+		self::beginTransaction();
+
+		$ratingDiff = $this->rating->get() - $this->rating->getInitialValue();
+
+		$f = new ARUpdateFilter();
+		$f->addModifier('ratingSum', new ARExpressionHandle('ratingSum+(' . $ratingDiff . ')'));
+		$f->addModifier('rating', new ARExpressionHandle('ratingSum/ratingCount'));
+
+		$this->updateRatings($f);
+
+		parent::update();
+
+		self::commit();
+	}
+
+	private function updateRatings(ARUpdateFilter $f)
+	{
 		$this->product->get()->updateRecord(clone $f);
 
-		if ($this->review->get())
+		$summary = ProductRatingSummary::getInstance($this->product->get(), $this->ratingType->get());
+		if ($summary->getID())
+		{
+			$summary->updateRecord(clone $f);
+		}
+
+		if ($this->review->get() && !$this->review->get()->isDeleted())
 		{
 			$this->review->get()->updateRecord(clone $f);
 		}
-
-		self::commit();
 	}
 }
 

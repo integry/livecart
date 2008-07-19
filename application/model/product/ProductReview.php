@@ -54,6 +54,12 @@ class ProductReview extends ActiveRecordModel
 		// reduce product review count
 		$this->updateProductCounter(false);
 
+		// update ratings
+		foreach ($this->getRelatedRecordSet('ProductRating') as $rating)
+		{
+			$rating->delete();
+		}
+
 		return parent::delete();
 	}
 

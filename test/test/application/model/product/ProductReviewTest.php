@@ -79,5 +79,47 @@ class ProductReviewTest extends UnitTest
 		$this->assertEqual($review->ratingSum->get(), 10);
 		$this->assertEqual($review->rating->get(), 5);
 	}
+
+
+	public function testDelete()
+	{
+		$type = ProductRatingType::getNewInstance(Category::getRootNode());
+		$type->save();
+		$type2 = ProductRatingType::getNewInstance(Category::getRootNode());
+		$type2->save();
+
+		for ($k = 0; $k <= 1; $k++)
+		{
+			$review = ProductReview::getNewInstance($this->product, $this->user);
+			$review->save();
+
+			$rating = ProductRating::getNewInstance($this->product, $type);
+			$rating->rating->set(6 + $k);
+			$rating->review->set($review);
+			$rating->save();
+
+			$rating = ProductRating::getNewInstance($this->product, $type2);
+			$rating->rating->set(4 + $k);
+			$rating->review->set($review);
+			$rating->save();
+		}
+
+		$this->product->reload();
+		$this->assertEqual($this->product->ratingCount->get(), 4);
+		$this->assertEqual($this->product->ratingSum->get(), 22);
+		$this->assertEqual($this->product->rating->get(), 5.5);
+
+		// delete last review
+		$review->delete();
+
+		$this->product->reload();
+		$this->assertEqual($this->product->ratingCount->get(), 2);
+		$this->assertEqual($this->product->ratingSum->get(), 10);
+		$this->assertEqual($this->product->rating->get(), 5);
+
+		// check rating summaries
+		$summary = ProductRatingSummary::getInstance($this->product, $type2);
+		$this->assertEqual($summary->rating->get(), 4);
+	}
 }
 ?>
