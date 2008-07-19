@@ -5,9 +5,9 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2008-07-16 16:00                                #
-# Model version:         Version 2008-07-16 3                            #
-# From model version:    Version 2008-07-16 2                            #
+# Created on:            2008-07-20 00:26                                #
+# Model version:         Version 2008-07-20                              #
+# From model version:    Version 2008-07-16 3                            #
 # ---------------------------------------------------------------------- #
 
 
@@ -246,26 +246,6 @@ ALTER TABLE ProductRatingSummary DROP FOREIGN KEY Product_ProductRatingSummary;
 ALTER TABLE ProductRatingSummary DROP FOREIGN KEY ProductRatingType_ProductRatingSummary;
 
 # ---------------------------------------------------------------------- #
-# Modify table "ProductReview"                                           #
-# ---------------------------------------------------------------------- #
-
-ALTER TABLE ProductReview MODIFY ID INTEGER UNSIGNED NOT NULL;
-
-ALTER TABLE ProductReview ADD COLUMN rating FLOAT;
-
-ALTER TABLE ProductReview ADD COLUMN ratingSum INTEGER NOT NULL;
-
-ALTER TABLE ProductReview ADD COLUMN ratingCount INTEGER NOT NULL;
-
-ALTER TABLE ProductReview MODIFY rating FLOAT AFTER dateCreated;
-
-ALTER TABLE ProductReview MODIFY ratingSum INTEGER NOT NULL AFTER rating;
-
-ALTER TABLE ProductReview MODIFY ratingCount INTEGER NOT NULL AFTER ratingSum;
-
-ALTER TABLE ProductReview MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
-
-# ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
 # ---------------------------------------------------------------------- #
 
@@ -273,7 +253,7 @@ ALTER TABLE Product ADD CONSTRAINT Category_Product
     FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Product ADD CONSTRAINT Manufacturer_Product 
-    FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE Product ADD CONSTRAINT ProductImage_Product 
     FOREIGN KEY (defaultImageID) REFERENCES ProductImage (ID) ON DELETE SET NULL ON UPDATE SET NULL;

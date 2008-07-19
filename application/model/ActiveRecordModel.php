@@ -18,6 +18,8 @@ abstract class ActiveRecordModel extends ActiveRecord
 
  	private static $plugins = array();
 
+ 	private static $eavQueue = array();
+
  	private $specificationInstance;
 
 	public static function setApplicationInstance(LiveCart $application)
@@ -206,6 +208,63 @@ abstract class ActiveRecordModel extends ActiveRecord
 		}
 
 		return $array;
+	}
+
+	public static function addToEavQueue($className, &$record)
+	{
+		self::$eavQueue[$className][] =& $record;
+	}
+
+	public static function loadEav()
+	{
+		if (!self::$eavQueue)
+		{
+			return false;
+		}
+
+		$map = array();
+
+		// build query for fetching EavObject gateway objects for all queued records
+		foreach (self::$eavQueue as $class => &$objects)
+		{
+			$ids = array();
+			foreach ($objects as &$object)
+			{
+				$ids[] = $object['ID'];
+				$map[$class][$object['ID']] =& $object;
+			}
+
+			$c = new INCond(new ARFieldHandle('EavObject', EavObject::getClassField($class)), $ids);
+			if (!isset($cond))
+			{
+				$cond = $c;
+			}
+			else
+			{
+				$cond->addOr($c);
+			}
+		}
+
+		// fetch EAV values
+		$eavObjects = ActiveRecordModel::getRecordSetArray('EavObject', new ARSelectFilter($cond));
+		EavSpecificationManager::loadSpecificationForRecordSetArray($eavObjects, true);
+
+		// assign attribute values to the respective records
+		foreach ($eavObjects as $entry)
+		{
+			unset($entry['ID']);
+			foreach ($entry as $field => $refId)
+			{
+				if ($refId)
+				{
+					$class = ucfirst(substr($field, 0, -2));
+					$map[$class][$refId]['attributes'] = $entry['attributes'];
+					break;
+				}
+			}
+		}
+
+		self::$eavQueue = array();
 	}
 
 	private function executePlugins(&$object, $action, $className = null)

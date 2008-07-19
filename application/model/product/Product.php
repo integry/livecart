@@ -629,27 +629,7 @@ class Product extends MultilingualObject
 
 	public static function sortAttributesByHandle(&$array)
 	{
-		if (isset($array['attributes']))
-		{
-			foreach ($array['attributes'] as $attr)
-			{
-				if (isset($attr['SpecField']))
-				{
-					$array['byHandle'][$attr['SpecField']['handle']] = $attr;
-				}
-				else
-				{
-					if (!$attr['isMultiValue'])
-					{
-						$array['byHandle'][$attr['handle']] = $attr;
-					}
-					else
-					{
-						$array['byHandle'][$attr['handle']][$attr['specFieldValueID']] = $attr;
-					}
-				}
-			}
-		}
+		return ProductSpecification::sortAttributesByHandle('ProductSpecification', $array);
 	}
 
 	public function toArray()

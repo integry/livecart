@@ -1,2 +1,5 @@
 #!/bin/sh
+
+# Check modification status for all submodules
+
 find . -name '.git' -execdir git status -q ';'

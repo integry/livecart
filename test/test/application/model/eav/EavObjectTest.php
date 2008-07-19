@@ -27,6 +27,7 @@ class EavObjectTest extends UnitTest
 		parent::setUp();
 		ActiveRecordModel::executeUpdate('DELETE FROM EavField');
 		ActiveRecordModel::executeUpdate('DELETE FROM EavObject');
+		ActiveRecordModel::executeUpdate('DELETE FROM Manufacturer');
 	}
 
 	/**
@@ -82,7 +83,37 @@ class EavObjectTest extends UnitTest
 		$this->assertEqual($testValue, $attr->getValueByLang('value', 'en'));
 	}
 
+	public function testEavQueue()
+	{
+		// set up Manufacturer records
+		$field = EavField::getNewInstance('Manufacturer', EavField::DATATYPE_TEXT, EavField::TYPE_TEXT_SIMPLE);
+		$field->save();
 
+		$data = array('first', 'second', 'third');
+		foreach ($data as $value)
+		{
+			$manufacturer = Manufacturer::getNewInstance($value);
+			$manufacturer->getSpecification()->setAttributeValueByLang($field, 'en', $value . ' test');
+			$manufacturer->save();
+		}
+
+		ActiveRecordModel::clearPool();
+
+		// fetch them from database
+		$manufacturers = ActiveRecordModel::getRecordSetArray('Manufacturer', new ARSelectFilter());
+		foreach ($manufacturers as &$entry)
+		{
+			ActiveRecordModel::addToEavQueue('Manufacturer', $entry);
+		}
+
+		// load EAV data
+		ActiveRecordModel::loadEav();
+
+		foreach ($manufacturers as $man)
+		{
+			$this->assertEqual($man['name'] . ' test', $man['attributes'][$field->getID()]['value_en']);
+		}
+	}
 }
 
 ?>
