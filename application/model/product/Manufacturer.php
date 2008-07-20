@@ -22,6 +22,7 @@ class Manufacturer extends ActiveRecordModel implements EavAble
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARField("name", ARVarchar::instance(60)));
 		$schema->registerField(new ARForeignKeyField("defaultImageID", "ManufacturerImage", "ID", null, ARInteger::instance()));
+		$schema->registerAutoReference('defaultImageID');
 	}
 
 	public static function getNewInstance($name)

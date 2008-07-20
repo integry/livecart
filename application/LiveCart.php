@@ -584,7 +584,7 @@ class LiveCart extends Application
 	 */
 	public function getLanguageSetArray($includeDefaultLanguage = false, $includeDisabledLanguages = true)
 	{
-		$ret = $this->languageList->toArray();
+		$ret = $this->getLanguageList()->toArray();
 
 		$defLang = $this->getDefaultLanguageCode();
 
@@ -913,6 +913,19 @@ class LiveCart extends Application
 	public function setTheme($theme)
 	{
 		$this->theme = $theme;
+	}
+
+	public function clearCachedVars()
+	{
+		$this->defaultLanguageID = null;
+		$this->requestLanguage = null;
+		$this->languageList = null;
+		$this->configFiles = array();
+		$this->currencies = null;
+		$this->defaultCurrency = null;
+		$this->defaultCurrencyCode = null;
+		$this->currencyArray = null;
+		$this->currencySet = null;
 	}
 
 	/**
