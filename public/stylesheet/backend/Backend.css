@@ -340,6 +340,11 @@ html, body{
 	position: relative;
 }
 
+#nav li li
+{
+	float: none;
+}
+
 #nav li ul { /* second-level lists */
 	display: none;
 	position: absolute;

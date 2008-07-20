@@ -67,7 +67,7 @@ Backend.CustomerOrder.prototype =
 		{
 			if(!Backend.ajaxNav.getHash().match(/group_\d+#\w+/))
 			{
-				window.location.hash = '#group_1#tabOrders__';
+				window.location.hash = 'group_1#tabOrders__';
 			}
 		}
 

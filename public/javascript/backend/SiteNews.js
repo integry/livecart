@@ -151,6 +151,7 @@ Backend.SiteNews.PostEntry.prototype =
 
 		time_button.realInput = time_real;
 		time_button.showInput = time;
+
 		time.realInput = time_real;
 		time.showInput = time;
 

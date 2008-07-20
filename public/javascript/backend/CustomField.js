@@ -40,7 +40,7 @@ Backend.CustomField = {
 		// check for bookmark
 		if (window.location.hash.length == 0)
 		{
-			window.location.hash = $('tabProducts') ?  '#cat_1#tabProducts__' : '#cat_1#tabFields__';
+			window.location.hash = 'cat_1#tabFields__';
 		}
 
 		Backend.CustomField.treeBrowser.showFeedback =

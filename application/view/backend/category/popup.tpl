@@ -36,6 +36,11 @@
 
 {literal}
 <script type="text/javascript">
+	if (window.opener.popupOnload())
+	{
+		window.onload = window.opener.popupOnload;
+	}
+
 	Backend.Category.links = {};
 	Backend.Category.links.categoryRecursiveAutoloading = '{/literal}{link controller=backend.category action=xmlRecursivePath}{literal}';
 	Backend.Category.links.categoryAutoloading = '{/literal}{link controller=backend.category action=xmlBranch}{literal}';
