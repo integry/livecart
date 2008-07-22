@@ -229,6 +229,19 @@ class CategoryController extends FrontendController
 			$this->application->setTheme($theme->getTheme());
 		}
 
+		// load EAV data
+		foreach ($products as $key => $product)
+		{
+			if (isset($product['Manufacturer']))
+			{
+				ActiveRecordModel::addToEavQueue('Manufacturer', $products[$key]['Manufacturer']);
+			}
+		}
+
+		ActiveRecordModel::addToEavQueue('Category', $categoryArray);
+
+		ActiveRecordModel::loadEav();
+
 		$response = new ActionResponse();
 		$response->set('id', $this->categoryID);
 

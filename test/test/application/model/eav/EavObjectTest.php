@@ -106,6 +106,9 @@ class EavObjectTest extends UnitTest
 			ActiveRecordModel::addToEavQueue('Manufacturer', $entry);
 		}
 
+		// duplicate
+		$manufacturers = array_merge($manufacturers, $manufacturers);
+
 		// load EAV data
 		ActiveRecordModel::loadEav();
 

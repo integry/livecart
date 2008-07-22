@@ -349,7 +349,7 @@ abstract class EavSpecificationManagerCommon
 	public function getFormData()
 	{
 		$selectorTypes = EavFieldCommon::getSelectorValueTypes();
-		$multiLingualTypes = SpecField::getMultilanguageTypes();
+		$multiLingualTypes = EavFieldCommon::getMultilanguageTypes();
 		$languageArray = ActiveRecordModel::getApplication()->getLanguageArray();
 		$fieldClass = $this->getFieldClass();
 
@@ -528,6 +528,8 @@ abstract class EavSpecificationManagerCommon
 		}
 
 		$fieldClass = call_user_func(array($class, 'getFieldClass'));
+		$groupClass = $fieldClass . 'Group';
+		$groupColumn = call_user_func_array(array($fieldClass, 'getGroupIDColumnName'), array($fieldClass));
 		$stringClass = call_user_func(array($fieldClass, 'getStringValueClass'));
 		$fieldColumn = call_user_func(array($fieldClass, 'getFieldIDColumnName'));
 		$objectColumn = call_user_func(array($fieldClass, 'getObjectIDColumnName'));
@@ -550,7 +552,6 @@ abstract class EavSpecificationManagerCommon
 				if (isset($productArray[$ids[$spec[$objectColumn]]]['attributes'][$spec[$fieldColumn]]))
 				{
 					$sp =& $productArray[$ids[$spec[$objectColumn]]]['attributes'][$spec[$fieldColumn]];
-					//$sp['valueIDs'][] = $spec[$valueColumn];
 					$sp['valueIDs'][] = $spec['valueID'];
 					$sp['values'][] = $value;
 					continue;
@@ -568,14 +569,29 @@ abstract class EavSpecificationManagerCommon
 
 			if ($spec[$fieldClass]['isMultiValue'])
 			{
-				//var_dump($spec);
-				//$spec['valueIDs'] = array($spec[$valueColumn]);
 				$spec['valueIDs'] = array($spec['valueID']);
 				$spec['values'] = array($value);
 			}
 			else
 			{
 				$spec = MultiLingualObject::transformArray($spec, $specStringSchema);
+			}
+
+			// groups
+			//if (!isset($spec[$groupColumn])) { var_dump($spec); exit; }
+			if ($spec[$fieldClass][$groupColumn])
+			{
+				$spec[$fieldClass][$groupClass] = array(
+										'ID' => $spec[$fieldClass][$groupColumn],
+										'name' => $spec['SpecFieldGroupName'],
+										'position' => $spec['SpecFieldGroupPosition']);
+
+				if (!isset($groupSchema))
+				{
+					$groupSchema = ActiveRecordModel::getSchemaInstance($groupClass);
+				}
+
+				$spec[$fieldClass][$groupClass] = MultiLingualObject::transformArray($spec[$fieldClass][$groupClass], $groupSchema);
 			}
 
 			if ((!empty($spec['value']) || !empty($spec['values']) || !empty($spec['value_lang'])))
@@ -643,14 +659,16 @@ abstract class EavSpecificationManagerCommon
 		WHERE
 			' . $objectColumn . ' IN (' . implode(', ', $objectIDs) . ')' . ($fullSpecification ? '' : ' AND ' . $fieldClass . '.isDisplayedInList = 1');
 
+		$group = $groupClass . '.position AS SpecFieldGroupPosition, ' . $groupClass . '.name AS SpecFieldGroupName, ';
+
 		$query = '
-		SELECT ' . $dateClass . '.*, NULL AS valueID, NULL AS specFieldValuePosition, ' . $groupClass . '.position AS SpecFieldGroupPosition, ' . $fieldClass . '.* as valueID FROM ' . $dateClass . ' ' . $cond . '
+		SELECT ' . $dateClass . '.*, NULL AS valueID, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* as valueID FROM ' . $dateClass . ' ' . $cond . '
 		UNION
-		SELECT ' . $stringClass . '.*, NULL, NULL AS specFieldValuePosition, ' . $groupClass . '.position, ' . $fieldClass . '.* as valueID FROM ' . $stringClass . ' ' . $cond . '
+		SELECT ' . $stringClass . '.*, NULL, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* as valueID FROM ' . $stringClass . ' ' . $cond . '
 		UNION
-		SELECT ' . $numericClass . '.*, NULL, NULL AS specFieldValuePosition, ' . $groupClass . '.position, ' . $fieldClass . '.* as valueID FROM ' . $numericClass . ' ' . $cond . '
+		SELECT ' . $numericClass . '.*, NULL, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* as valueID FROM ' . $numericClass . ' ' . $cond . '
 		UNION
-		SELECT ' . $valueItemClass . '.' . $objectColumn . ', ' . $valueItemClass . '.' . $fieldColumn . ', ' . $valueClass . '.value, ' . $valueClass . '.ID, ' . $valueClass . '.position, ' . $groupClass . '.position, ' . $fieldClass . '.*
+		SELECT ' . $valueItemClass . '.' . $objectColumn . ', ' . $valueItemClass . '.' . $fieldColumn . ', ' . $valueClass . '.value, ' . $valueClass . '.ID, ' . $valueClass . '.position, ' . $group . $fieldClass . '.*
 				 FROM ' . $valueItemClass . '
 				 	LEFT JOIN ' . $valueClass . ' ON ' . $valueItemClass . '.' . $valueColumn . ' = ' . $valueClass . '.ID
 				 ' . str_replace('ON ' . $fieldColumn, 'ON ' . $valueItemClass . '.' . $fieldColumn, $cond) .
@@ -668,7 +686,7 @@ abstract class EavSpecificationManagerCommon
 
 		$specificationArray = self::fetchRawSpecificationData($class, $objectIDs, $fullSpecification);
 
-		$multiLingualFields = array('name', 'description', 'valuePrefix', 'valueSuffix');
+		$multiLingualFields = array('name', 'description', 'valuePrefix', 'valueSuffix', 'SpecFieldGroupName');
 
 		foreach ($specificationArray as &$spec)
 		{

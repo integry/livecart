@@ -48,6 +48,12 @@ abstract class EavFieldCommon extends MultilingualObject
 
 	protected abstract function getParentCondition();
 
+	public static function getGroupIDColumnName($className)
+	{
+		$group = $className . 'Group';
+		return strtolower(substr($group, 0, 1)) . substr($group, 1) . 'ID';
+	}
+
 	/**
 	 * Define database schema
 	 */

@@ -13,33 +13,7 @@
 <h2>{t _spec}</h2>
 <div id="productSpecification">
 	<table class="productTable">
-		{foreach from=$product.attributes item="attr" name="attributes"}
-
-			{if $prevAttr.SpecField.SpecFieldGroup.ID != $attr.SpecField.SpecFieldGroup.ID}
-				<tr class="specificationGroup heading{if $smarty.foreach.attributes.first} first{/if}">
-					<td class="param">{$attr.SpecField.SpecFieldGroup.name_lang}</td>
-					<td class="value"></td>
-				</tr>
-			{/if}
-			<tr class="{zebra loop="attributes"} {if $smarty.foreach.attributes.first && !$attr.SpecField.SpecFieldGroup.ID}first{/if}{if $smarty.foreach.attributes.last} last{/if}">
-				<td class="param">{$attr.SpecField.name_lang}</td>
-				<td class="value">
-					{if $attr.values}
-						<ul class="attributeList{if $attr.values|@count == 1} singleValue{/if}">
-							{foreach from=$attr.values item="value"}
-								<li> {$value.value_lang}</li>
-							{/foreach}
-						</ul>
-					{elseif $attr.value_lang}
-						{$attr.value_lang}
-					{elseif $attr.value}
-						{$attr.SpecField.valuePrefix_lang}{$attr.value}{$attr.SpecField.valueSuffix_lang}
-					{/if}
-				</td>
-			</tr>
-			{assign var="prevAttr" value=$attr}
-
-		{/foreach}
+		{include file="product/specificationTableBody.tpl" attributes=$product.attributes field=SpecField group=SpecFieldGroup}
 	</table>
 </div>
 {/if}

@@ -222,6 +222,9 @@ abstract class ActiveRecordModel extends ActiveRecord
 			return false;
 		}
 
+		ClassLoader::import('application.model.eav.EavObject');
+		ClassLoader::import('application.model.eav.EavSpecificationManager');
+
 		$map = array();
 
 		// build query for fetching EavObject gateway objects for all queued records
@@ -231,7 +234,19 @@ abstract class ActiveRecordModel extends ActiveRecord
 			foreach ($objects as &$object)
 			{
 				$ids[] = $object['ID'];
-				$map[$class][$object['ID']] =& $object;
+
+				if (!isset($map[$class][$object['ID']]))
+				{
+					$map[$class][$object['ID']] = null;
+					$ref =& $map[$class][$object['ID']];
+					$ref['attributes'] = array();
+					$ref['byHandle'] = array();
+				}
+
+				$ref =& $map[$class][$object['ID']];
+
+				$object['attributes'] =& $ref['attributes'];
+				$object['byHandle'] =& $ref['byHandle'];
 			}
 
 			$c = new INCond(new ARFieldHandle('EavObject', EavObject::getClassField($class)), $ids);
@@ -258,7 +273,10 @@ abstract class ActiveRecordModel extends ActiveRecord
 				if ($refId)
 				{
 					$class = ucfirst(substr($field, 0, -2));
-					$map[$class][$refId]['attributes'] = $entry['attributes'];
+					if (isset($entry['attributes']))
+					{
+						$map[$class][$refId]['attributes'] = $entry['attributes'];
+					}
 					break;
 				}
 			}
