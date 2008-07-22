@@ -279,6 +279,15 @@ class CategoryController extends FrontendController
 			$response->set('foundCategories', $foundCategories->toArray());
 		}
 
+		// look for manufacturer filter
+		foreach ($this->filters as $filter)
+		{
+			if ($filter instanceof ManufacturerFilter)
+			{
+				$response->set('manufacturerFilter', $filter->toArray());
+			}
+		}
+
 		return $response;
 	}
 

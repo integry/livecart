@@ -7,7 +7,8 @@
 {include file="layout/frontend/layout.tpl"}
 
 <div id="content">
-	<h1>{$category.name_lang}{if $searchQuery} &gt;&gt; "<span class="keywords">{$searchQuery}</span>"{/if}</h1>
+
+	{include file="category/head.tpl"}
 
 	{if $allFilters.filters}
 		{include file="category/allFilters.tpl"}
