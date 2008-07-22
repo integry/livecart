@@ -215,6 +215,14 @@ abstract class ActiveRecordModel extends ActiveRecord
 		self::$eavQueue[$className][] =& $record;
 	}
 
+	public static function addArrayToEavQueue($className, &$array)
+	{
+		foreach ($array as &$element)
+		{
+			self::addToEavQueue($className, $element);
+		}
+	}
+
 	public static function loadEav()
 	{
 		if (!self::$eavQueue)

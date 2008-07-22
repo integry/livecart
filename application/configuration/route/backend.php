@@ -34,6 +34,9 @@ $routes = array(
 					array(":producthandle.:id", array('controller' => 'product', 'action' => 'index'), array("producthandle" => $handle, "id" => "[0-9]+")),
 					array("product/reviews/:id/:page", array('controller' => 'product', 'action' => 'reviews'), array("cathandle" => $handle, "id" => "[0-9]+","page" => "[0-9_]+")),
 
+					// manufacturer pages
+					array("manufacturer/:handle-:id", array('controller' => 'manufacturers', 'action' => 'view'), array("handle" => $handle, "id" => "[0-9]+")),
+
 					// default rules
 					array("", array("controller" => "index", "action" => "index"), array()),
 					array(":controller", array("action" => "index"), array()),

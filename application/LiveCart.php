@@ -329,6 +329,12 @@ class LiveCart extends Application
 			{
 				$response->set('currency', $controllerInstance->getRequestCurrency());
 			}
+
+			// fetch queued EAV data
+			if (class_exists('ActiveRecordModel', false))
+			{
+				ActiveRecordModel::loadEav();
+			}
 		}
 	}
 

@@ -2135,6 +2135,16 @@ td.amount
 }
 
 /***************************
+	Manufacturers
+***************************/
+.manufacturerColumn
+{
+	width: 47%;
+	margin-left: 2.5%;
+	float: left;
+}
+
+/***************************
 	Customization
 ***************************/
 span.templateLocator

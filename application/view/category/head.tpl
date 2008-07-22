@@ -1,6 +1,4 @@
-{if !$manufacturerFilter}
-	<h1>{$category.name_lang}{if $searchQuery} &gt;&gt; "<span class="keywords">{$searchQuery}</span>"{/if}</h1>
-{else}
+{if $manufacturerFilter && ($appliedFilters|@count == 1) && ($currentPage == 1)}
 	<h1>{$manufacturerFilter.name_lang}</h1>
 
 	{if $products.0.Manufacturer.attributes || $products.0.Manufacturer.DefaultImage.ID}
@@ -18,4 +16,6 @@
 			{/if}
 		</fieldset>
 	{/if}
+{else}
+	<h1>{$category.name_lang}{if $searchQuery} &gt;&gt; "<span class="keywords">{$searchQuery}</span>"{/if}</h1>
 {/if}

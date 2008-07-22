@@ -44,6 +44,13 @@ function smarty_function_link($params, LiveCartSmarty $smarty)
 		$router->setVariableSeparator('&amp;');
 	}
 
+	$queryParams = $params;
+	unset($queryParams['route'], $queryParams['nohtml'], $queryParams['self'], $queryParams['controller'], $queryParams['action'], $queryParams['id'], $queryParams['query']);
+	if (!isset($params['query']))
+	{
+		$params['query'] = $queryParams;
+	}
+
 	if (isset($params['self']))
 	{
 		$result = $_SERVER['REQUEST_URI'];
@@ -71,12 +78,6 @@ function smarty_function_link($params, LiveCartSmarty $smarty)
 	if ($fullUrl)
 	{
 		$result = $router->createFullUrl($result);
-	}
-
-	unset($params['route'], $params['nohtml'], $params['self'], $params['controller'], $params['action'], $params['id'], $params['query']);
-	foreach ($params as $key => $value)
-	{
-		$result = $router->setUrlQueryParam($result, $key, $value);
 	}
 
 	return $result;
