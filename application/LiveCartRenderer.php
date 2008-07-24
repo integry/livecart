@@ -158,11 +158,16 @@ class LiveCartRenderer extends SmartyRenderer
 		return $output;
 	}
 
-	public function getBlockConfiguration($blockOrTemplate = null)
+	public function getBlockConfiguration($blockOrTemplate = null, $file = null)
 	{
-		if (is_null($this->blockConfiguration))
+		if (is_null($this->blockConfiguration) || $file)
 		{
-			$config = $this->parseConfigFile($this->getTemplatePath('block.ini'));
+			if (!$file)
+			{
+				$file = $this->getTemplatePath('block.ini');
+			}
+
+			$config = $this->parseConfigFile($file);
 			$request = $this->getApplication()->getRequest();
 			$controller = $request->getControllerName();
 			$validPairs = array(
@@ -171,12 +176,34 @@ class LiveCartRenderer extends SmartyRenderer
 							array($controller, $request->getActionName()),
 							);
 
+			foreach ($config as &$byController)
+			{
+				foreach ($byController as &$byAction)
+				{
+					foreach ($byAction as &$byContainer)
+					{
+						foreach ($byContainer as $index => $block)
+						{
+							foreach ($block['params']['variables'] as $key => $value)
+							{
+								if ($request->get($key) != $value)
+								{
+									unset($byContainer[$index]);
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+
 			$this->blockConfiguration = array();
 			foreach ($validPairs as $pair)
 			{
 				if (isset($config[$pair[0]][$pair[1]]))
 				{
-					$this->blockConfiguration = array_merge($this->blockConfiguration, $config[$pair[0]][$pair[1]]);
+					$element = $config[$pair[0]][$pair[1]];
+					$this->blockConfiguration = array_merge($this->blockConfiguration, $element);
 				}
 			}
 		}
@@ -250,6 +277,24 @@ class LiveCartRenderer extends SmartyRenderer
 	{
 		$res = array();
 
+		// check for variables
+		$variables = array();
+		$parts = explode(' ', $key);
+		$key = array_shift($parts);
+
+		foreach ($parts as $part)
+		{
+			$pair = explode(':', $part, 2);
+			$variableKey = trim(array_shift($pair));
+			$variableValue = trim(array_shift($pair));
+			if ($variableKey)
+			{
+				$variables[$variableKey] = $variableValue;
+			}
+		}
+
+		$res['variables'] = $variables;
+
 		// first part is always controller name (or *, which is all controllers and actions)
 		$parts = explode('/', $key);
 		$res['controller'] = array_shift($parts);
@@ -297,7 +342,15 @@ class LiveCartRenderer extends SmartyRenderer
 		$res = array();
 		$parts = explode(':', $command);
 
-		$res['command'] = count($parts) > 1 ? array_shift($parts) : 'append';
+		if ('remove' == $command)
+		{
+			$res['command'] = 'remove';
+		}
+		else
+		{
+			$res['command'] = count($parts) > 1 ? array_shift($parts) : 'append';
+		}
+
 		$res['view'] = array_shift($parts);
 
 		if ('.tpl' == substr($res['view'], -4))

@@ -2144,6 +2144,20 @@ td.amount
 	float: left;
 }
 
+.manufacturerImage
+{
+	margin: 1em;
+	margin-top: 0;
+	float: right;
+	border: 1px solid #ddd;
+}
+
+.manufacturerAttributes
+{
+	float: left;
+	margin-left: 1em;
+}
+
 /***************************
 	Customization
 ***************************/

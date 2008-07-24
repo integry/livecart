@@ -122,7 +122,7 @@ class LiveCart extends Application
 
 		ActiveRecordModel::setApplicationInstance($this);
 
-		if (file_exists(ClassLoader::getRealPath("cache.dev")))
+		if (file_exists(ClassLoader::getRealPath('cache.dev')))
 		{
 			$this->setDevMode(true);
 		}
@@ -321,19 +321,49 @@ class LiveCart extends Application
 
 	protected function postProcessResponse(Response $response, Controller $controllerInstance)
 	{
-		if ($response instanceof ActionResponse && $this->isInstalled())
+		if (!$response instanceof ActionResponse || !$this->isInstalled())
 		{
-			$response->set('user', $controllerInstance->getUser()->toArray());
-			$response->set('message', $controllerInstance->getMessage());
-			if ($controllerInstance instanceof FrontendController)
-			{
-				$response->set('currency', $controllerInstance->getRequestCurrency());
-			}
+			return false;
+		}
 
-			// fetch queued EAV data
-			if (class_exists('ActiveRecordModel', false))
+		$response->set('user', $controllerInstance->getUser()->toArray());
+		$response->set('message', $controllerInstance->getMessage());
+		if ($controllerInstance instanceof FrontendController)
+		{
+			$response->set('currency', $controllerInstance->getRequestCurrency());
+		}
+
+		// fetch queued EAV data
+		if (class_exists('ActiveRecordModel', false))
+		{
+			ActiveRecordModel::loadEav();
+		}
+
+		$renderer = $this->getRenderer();
+
+		if (get_class($response) == 'ActionResponse')
+		{
+			foreach ($renderer->getBlockConfiguration() as $object => $commands)
 			{
-				ActiveRecordModel::loadEav();
+				foreach ($commands as $command)
+				{
+					if ($renderer->isBlock($object))
+					{
+						switch ($command['action']['command'])
+						{
+							case 'append':
+								$controllerInstance->addBlock($object, $command['action']['call'], $command['action']['view']);
+								break;
+							case 'remove':
+								$controllerInstance->removeBlock($object);
+								break;
+							case 'prepend':
+								$controllerInstance->addBlock($object, $command['action']['call'], $command['action']['view'], true);
+								break;
+
+						}
+					}
+				}
 			}
 		}
 	}

@@ -113,26 +113,6 @@ abstract class BaseController extends Controller implements LCiTranslator
 		}
 	}
 
-	public function getLayoutStructure()
-	{
-		$renderer = $this->application->getRenderer();
-		foreach ($renderer->getBlockConfiguration() as $object => $commands)
-		{
-			foreach ($commands as $command)
-			{
-				if ($renderer->isBlock($object))
-				{
-					if ('append' == $command['action']['command'])
-					{
-						$this->addBlock($object, $command['action']['call'], $command['action']['view']);
-					}
-				}
-			}
-		}
-
-		return parent::getLayoutStructure();
-	}
-
 	public function getGenericBlock()
 	{
 		return new BlockResponse();
