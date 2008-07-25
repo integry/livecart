@@ -193,6 +193,12 @@
 					<span class="tabHelp">categories</span>
 				</li>
 
+				<li id="tabProductLists" class="tab inactive" {denied role="ratingcategory"}style="display: none"{/denied}>
+					<a href="{link controller=backend.productList action=index id=_id_}">{t _product_lists}</a>
+					<span> </span>
+					<span class="tabHelp">categories</span>
+				</li>
+
 			</ul>
 		</div>
 		<div id="sectionContainer" class="sectionContainer maxHeight  h--50">

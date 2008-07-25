@@ -2,6 +2,7 @@
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/Initialize.php';
 
 ClassLoader::import('application.LiveCartRenderer');
+ClassLoader::import('application.controller.IndexController');
 
 /**
  *

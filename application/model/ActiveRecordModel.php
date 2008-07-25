@@ -115,13 +115,22 @@ abstract class ActiveRecordModel extends ActiveRecord
 		$this->specificationInstance = new EavSpecificationManager($obj, $specificationData);
 	}
 
-	protected function setLastPosition()
+	protected function setLastPosition($parentField = null, ARValueMapper $parent = null)
 	{
+		if ($parentField && !$parent)
+		{
+			$parent = $this->$parentField;
+		}
+
+		$parentField .= 'ID';
+
 		// get max position
-	  	$f = new ARSelectFilter();
-	  	$f->setOrder(new ARFieldHandle(get_class($this), 'position'), 'DESC');
-	  	$f->setLimit(1);
-	  	$rec = ActiveRecord::getRecordSetArray(get_class($this), $f);
+	  	$cond = $parent ? new EqualsCond(new ARFieldHandle(get_class($this), $parentField), $parent->get()->getID()) : null;
+
+		$f = new ARSelectFilter($cond);
+		$f->setOrder(new ARFieldHandle(get_class($this), 'position'), 'DESC');
+		$f->setLimit(1);
+		$rec = ActiveRecord::getRecordSetArray(get_class($this), $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
 
 		// default new language state
