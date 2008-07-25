@@ -39,6 +39,7 @@ class User extends ActiveRecordModel implements EavAble
 		$schema->registerField(new ARField("companyName", ARVarchar::instance(60)));
 		$schema->registerField(new ARField("dateCreated", ARDateTime::instance()));
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
+		$schema->registerField(new ARField("preferences", ARArray::instance()));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -296,6 +297,22 @@ class User extends ActiveRecordModel implements EavAble
 	public function isLoggedIn()
 	{
 		return ($this->getID() != self::ANONYMOUS_USER_ID);
+	}
+
+	public function setPreference($key, $value)
+	{
+		$preferences =& $this->preferences->get();
+		$preferences[$key] = $value;
+		$this->preferences->set($preferences);
+	}
+
+	public function getPreference($key)
+	{
+		$preferences =& $this->preferences->get();
+		if (isset($preferences[$key]))
+		{
+			return $preferences[$key];
+		}
 	}
 
 	/**

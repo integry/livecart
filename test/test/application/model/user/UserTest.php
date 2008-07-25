@@ -76,5 +76,19 @@ class UserTest extends UnitTest
 		$this->assertSame($usersWithGroup->get($usersWithGroup->getTotalRecordCount() - 1), $userWithGroup);
 		$this->assertSame($usersWithoutGroup->get($usersWithoutGroup->getTotalRecordCount() - 1), $userWithoutGroup);
 	}
+
+	public function testPreferences()
+	{
+		$user = User::getNewInstance('_tester@tester.com', 'tester', $this->group);
+		$user->setPreference('test', 'value');
+		$user->save();
+		$this->assertEqual($user->getPreference('test'), 'value');
+
+		ActiveRecordModel::clearPool();
+		$reloaded = User::getInstanceByID($user->getID());
+		$this->assertNotSame($user, $reloaded);
+		$this->assertEqual($reloaded->getPreference('test'), 'value');
+	}
 }
+
 ?>
