@@ -41,7 +41,7 @@ function smarty_prefilter_config($source, $smarty)
 
 	// pass block as parameter for another block
 	// for example, {maketext text=sometext params=|link user/login|}
-	$source = preg_replace('/{([^\{\}\n]+)\{([^\{\}\n]+)\}(.*)}/', '{capture assign=blockAsParamValue}{$2}{/capture}{$1\$blockAsParamValue$3}', $source);
+	$source = replaceNonLiteral('/{([^\{\}\n]+)\{([^\{\}\n]+)\}(.*)}/', '{capture assign=blockAsParamValue}{$2}{/capture}{$1\$blockAsParamValue$3}', $source);
 
 	// shorthand syntax for foreach
 	// for example {foreach $items as $item}
@@ -70,6 +70,36 @@ function smarty_prefilter_config($source, $smarty)
 	$source = preg_replace('/{see (.+?)}/', '{helpSeeAlsoItem id=$1}', $source);
 
 	return $source;
+}
+
+function replaceNonLiteral($from, $to, $what)
+{
+	$index = 0;
+	$tagPos = 0;
+	$inLiteral = false;
+	$result = '';
+	while ($index < strlen($what))
+	{
+		$nextTag = $inLiteral ? '{/literal}' : '{literal}';
+		$tagPos = strpos($what, $nextTag, $index);
+		if ($tagPos === false)
+		{
+			$tagPos = strlen($what);
+		}
+
+		$portion = substr($what, $index, $tagPos - $index);
+		if (!$inLiteral)
+		{
+			$portion = preg_replace($from, $to, $portion);
+		}
+
+		$result .= $portion;
+
+		$inLiteral = 1 - $inLiteral;
+		$index = $tagPos;
+	}
+
+	return $result;
 }
 
 function labelVars($var)
