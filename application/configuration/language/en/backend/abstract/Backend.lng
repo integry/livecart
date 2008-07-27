@@ -38,6 +38,9 @@ _grid_range=Range
 _grid_export=Export data
 _grid_reload=Reload
 
+# Tabs
+_more_tabs=More
+
 # Language forms
 _langform_translate=Translate
 

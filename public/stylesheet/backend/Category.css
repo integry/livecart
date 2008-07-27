@@ -17,3 +17,8 @@
 {
     position: relative;
 }
+
+#categoryTabs
+{
+	overflow: hidden;
+}

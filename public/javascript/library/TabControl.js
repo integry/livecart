@@ -1,10 +1,10 @@
 /**
  *	@author Integry Systems
  */
- 
-Event.fire = function(element, event) 
+
+Event.fire = function(element, event)
 {
-   Event.observers.each(function(observer) 
+   Event.observers.each(function(observer)
    {
 		if(observer[1] == event && observer[0] == element)
 		{
@@ -18,7 +18,7 @@ Event.fire = function(element, event)
 var TabControl = Class.create();
 TabControl.prototype = {
 	__instances__: {},
-	
+
 	activeTab: null,
 	indicatorImageName: "image/indicator.gif",
 
@@ -29,14 +29,14 @@ TabControl.prototype = {
 		this.idParserCallback = idParserCallback;
 		this.callbacks = callbacks ? callbacks : {};
 		this.loadedContents = {};
-		
+
 		this.__nodes__();
 		this.__bind__();
 
 		this.decorateTabs();
 		this.countersCache = {};
 	},
-	
+
 	__nodes__: function()
 	{
 		this.nodes = {};
@@ -45,47 +45,47 @@ TabControl.prototype = {
 		this.nodes.tabListElements = document.getElementsByClassName("tab", this.nodes.tabList);
 		this.nodes.sectionContainer = this.nodes.tabContainer.down(".sectionContainer");
 	},
-	
+
 	__bind__: function()
 	{
-		var self = this;   
-		this.nodes.tabListElements.each(function(li) 
+		var self = this;
+		this.nodes.tabListElements.each(function(li)
 		{
 			var link = li.down('a');
 			var indicator = '<img src="' + self.indicatorImageName + '" class="tabIndicator" alt="Tab indicator" style="display: none" /> ';
-			
+
 			Event.observe(link, 'click', function(e) { if(e) Event.stop(e); });
-			
-			li.onclick = function(e) { 
+
+			li.onclick = function(e) {
 				if(!e) e = window.event;
 				if(e) Event.stop(e);
-				
+
 				if (e)
 				{
 					var keyboard = new KeyboardEvent(e);
 					if (keyboard.isShift())
-					{						
+					{
 						self.resetContent(Event.element(e).up('li'));
 					}
 				}
 
-				self.handleTabClick({'target': li});  
-				
+				self.handleTabClick({'target': li});
+
 				if(Backend.Produc)
 				{
 					Backend.Product.hideAddForm();
 				}
 			}
-   
-			Event.observe(li, 'mouseover', function(e) { 
-				if(e) Event.stop(e); 
-				self.handleTabMouseOver({'target': li}) 
+
+			Event.observe(li, 'mouseover', function(e) {
+				if(e) Event.stop(e);
+				self.handleTabMouseOver({'target': li})
 			});
-			Event.observe(li, 'mouseout', function(e) { 
-				if(e) Event.stop(e); 
-				self.handleTabMouseOut({'target': li}) 
+			Event.observe(li, 'mouseout', function(e) {
+				if(e) Event.stop(e);
+				self.handleTabMouseOut({'target': li})
 			});
-			
+
 			li.update(indicator + li.innerHTML);
 		});
 	},
@@ -99,7 +99,7 @@ TabControl.prototype = {
 				var firstLink = tab.down('a');
 				new Insertion.After(firstLink, '<span class="tabCounter"> </span>');
 			}
-		});  
+		});
 	},
 
 	getInstance: function(tabContainerName, urlParserCallback, idParserCallback, callbacks)
@@ -108,7 +108,7 @@ TabControl.prototype = {
 		{
 			TabControl.prototype.__instances__[tabContainerName] = new TabControl(tabContainerName, urlParserCallback, idParserCallback, callbacks);
 		}
-				
+
 		return TabControl.prototype.__instances__[tabContainerName];
 	},
 
@@ -136,14 +136,14 @@ TabControl.prototype = {
 		window.setTimeout(function()
 			{
 				document.getElementsByClassName('redMessage').each(function(message){ message.hide(); });
-				document.getElementsByClassName('bugMessage').each(function(message){ message.hide(); });   
+				document.getElementsByClassName('bugMessage').each(function(message){ message.hide(); });
 			}, 10);
 
 		if(this.callbacks.beforeClick) this.callbacks.beforeClick.call(this);
 		this.activateTab(args.target);
 		if(this.callbacks.afterClick) this.callbacks.afterClick.call(this);
 	},
-	
+
 	addHistory: function()
 	{
 		setTimeout(function()
@@ -159,12 +159,12 @@ TabControl.prototype = {
 					throw $break;
 				}
 			});
-			
+
 			if(locationHash.match(/__/))
 			{
 				locationHash = locationHash.substr(0, locationHash.length - 2);
 			}
-			
+
 			Backend.ajaxNav.add(locationHash.substring(1) + "#" + this.activeTab.id);
 		}.bind(this), dhtmlHistory.currentWaitTime * 2);
 	},
@@ -172,56 +172,56 @@ TabControl.prototype = {
 	activateTab: function(targetTab, onComplete)
 	{
 		targetTab = $(targetTab);
-		
-		if(!targetTab) 
+
+		if(!targetTab)
 		{
-			targetTab = this.nodes.tabListElements[0];	
+			targetTab = this.nodes.tabListElements[0];
 		}
-				
+
 		// get help context
 		var helpContext = document.getElementsByClassName('tabHelp', targetTab);
 		if (helpContext.length > 0)
 		{
 			Backend.setHelpContext(helpContext[0].firstChild.nodeValue);
 		}
-		
+
 		var contentId = this.idParserCallback(targetTab.id);
-		
+
 		// Cancel loading tab if false was returned
 		if(!contentId)
 		{
 			return;
 		}
-		
-		if(!$(contentId)) new Insertion.Top(this.nodes.sectionContainer, '<div id="' + contentId + '" class="tabPageContainer ' + targetTab.id + 'Content"></div>');		
+
+		if(!$(contentId)) new Insertion.Top(this.nodes.sectionContainer, '<div id="' + contentId + '" class="tabPageContainer ' + targetTab.id + 'Content"></div>');
 
 		var self = this;
 		$A(this.nodes.tabListElements).each(function(tab) {
 			Element.removeClassName(tab, 'active');
 			Element.addClassName(tab, 'inactive');
 		});
-		
+
 		document.getElementsByClassName("tabPageContainer", this.nodes.sectionContainer).each(function(container) {
 			Element.hide(container);
 		})
-		
+
 		this.activeTab = targetTab;
 		this.activeContent = $(contentId);
-				
+
 		Element.removeClassName(this.activeTab, 'hover');
 		Element.addClassName(this.activeTab, 'active');
 		Element.show(contentId);
-		
+
 		if(!onComplete && this.callbacks.onComplete)
 		{
 			onComplete = this.callbacks.onComplete;
 		}
-		
+
 		if (!this.loadedContents[this.urlParserCallback(targetTab.down('a').href) + contentId] && Element.empty($(contentId)))
 		{
 			this.loadedContents[this.urlParserCallback(targetTab.down('a').href) + contentId] = true;
 			new LiveCart.AjaxUpdater(this.urlParserCallback(targetTab.down('a').href), contentId, targetTab.down('.tabIndicator'), 'bottom', function(activeContent, onComplete, response)
-			{ 
+			{
 				if (Form.focus)
 				{
 					setTimeout(function() { Form.focus(activeContent) }.bind(this, activeContent), 20);
@@ -231,7 +231,7 @@ TabControl.prototype = {
 				{
 					onComplete(response);
 				}
-				
+
 			}.bind(this, this.activeContent, onComplete));
 		}
 		else if(onComplete)
@@ -240,7 +240,7 @@ TabControl.prototype = {
 			{
 				Form.focus(this.activeContent);
 			}
-			
+
 			onComplete();
 		}
 		else
@@ -250,9 +250,9 @@ TabControl.prototype = {
 				Form.focus(this.activeContent);
 			}
 		}
-	   
+
 		this.addHistory();
-		
+
 		// Hide tabs if only one is visible
 		this.nodes.tabList.show();
 		this.hideAllTabs = true;
@@ -263,7 +263,7 @@ TabControl.prototype = {
 				throw $break;
 			}
 		}.bind(this));
-		
+
 		if(this.hideAllTabs)
 		{
 			this.nodes.tabList.hide();
@@ -280,7 +280,7 @@ TabControl.prototype = {
 		{
 			return false;
 		}
-		
+
 		var id = this.idParserCallback(tabObj.id);
 		this.loadedContents[this.urlParserCallback(tabObj.down('a').href) + id] = false;
 		if ($(id))
@@ -304,15 +304,15 @@ TabControl.prototype = {
 	{
 		$(tabId).url = url;
 	},
-	
+
 	setCounter: function(tab, value, hashId)
 	{
 		if(!this.countersCache[hashId]) this.countersCache[hashId] = {};
-		
+
 		tab = $(tab);
-		
+
 		if(!tab) throw new Error('Could not find tab!');
-		
+
 		var counter = tab.down('.tabCounter');
 		if(false === value)
 		{
@@ -325,15 +325,15 @@ TabControl.prototype = {
 			this.countersCache[hashId][tab.id] = value;
 		}
 	},
-		
+
 	setAllCounters: function(counters, hashId)
-	{	 
+	{
 		var self = this;
 		$H(counters).each(function(tab) {
 			self.setCounter(tab[0], tab[1], hashId);
 		});
 	},
-	
+
 	restoreCounter: function(tab, hashId)
 	{
 		tab = $(tab);
@@ -343,31 +343,132 @@ TabControl.prototype = {
 			this.setCounter(tab.id, this.countersCache[hashId][tab.id]);
 			return true;
 		}
-		
+
 		return false;
 	},
-	
+
 	restoreAllCounters: function(hashId)
 	{
 		var restored = false;
 		if(this.countersCache[hashId])
 		{
 			$A(this.nodes.tabListElements).each(function(tab) {
-				restored = this.restoreCounter(tab, hashId) ? true : restored;	
+				restored = this.restoreCounter(tab, hashId) ? true : restored;
 			}.bind(this));
 		}
-		
-		return restored;  
+
+		return restored;
 	},
-	
+
 	getCounter: function(tab)
 	{
 		tab = $(tab);
-		
+
 		if(!tab) throw new Error('Could not find tab!');
-		
-		var counter = tab.down('.tabCounter');	  
+
+		var counter = tab.down('.tabCounter');
 		var match = counter.innerHTML.match(/\((\d+)\)/);
 		return match ? parseInt(match[1]) : 0;
+	}
+}
+
+var TabCustomize = Class.create();
+TabCustomize.prototype =
+{
+	tabList: null,
+
+	moreTabs: null,
+
+	moreTabsMenu: null,
+
+	saveUrl: null,
+
+	initialize: function(tabList)
+	{
+		this.tabList = tabList;
+
+		this.moreTabs = tabList.down('.moreTabs');
+		this.moreTabsMenu = this.moreTabs.down('.moreTabsMenu');
+
+		Event.observe(this.moreTabs, 'click', this.toggleMenu.bindAsEventListener(this));
+	},
+
+	setPrefsSaveUrl: function(url)
+	{
+		this.saveUrl = url;
+	},
+
+	toggleMenu: function(e)
+	{
+		Event.stop(e);
+
+		this.moreTabsMenu.innerHTML = '';
+		var cloned = this.tabList.cloneNode(true);
+		this.moreTabsMenu.appendChild(cloned);
+
+		$A(cloned.getElementsBySelector('li.hidden')).reverse().each(function(el)
+		{
+			el.parentNode.insertBefore(el, el.parentNode.firstChild);
+		});
+
+		$A(cloned.getElementsBySelector('li')).each(function(el)
+		{
+			Event.observe(el, 'click', this.toggleVisibility.bindAsEventListener(this));
+		}.bind(this));
+
+		this.moreTabsMenu.show();
+
+		Event.observe(document, 'click', this.hideMenu.bindAsEventListener(this), true);
+	},
+
+	toggleVisibility: function(e)
+	{
+		Event.stop(e);
+
+		var li = Event.element(e);
+		if ('LI' != li.tagName)
+		{
+			li = li.up('li');
+		}
+
+		var tab = this.tabList.down('#' + li.id);
+
+		if (li.hasClassName('hidden'))
+		{
+			this.setVisible(tab);
+		}
+		else
+		{
+			this.setHidden(tab);
+		}
+
+		this.setPreference(tab);
+		this.hideMenu();
+	},
+
+	setVisible: function(tab)
+	{
+		tab.removeClassName('hidden');
+		tab.onclick();
+	},
+
+	setHidden: function(tab)
+	{
+		tab.addClassName('hidden');
+	},
+
+	hideMenu: function()
+	{
+		this.moreTabsMenu.hide();
+		this.moreTabsMenu.innerHTML = '';
+
+		Event.stopObserving(document, 'click', this.hideMenu.bindAsEventListener(this), true);
+	},
+
+	setPreference: function(li)
+	{
+		var url = Backend.Router.setUrlQueryParam(this.saveUrl, 'key', 'tab_' + li.id);
+		var url = Backend.Router.setUrlQueryParam(url, 'value', !li.hasClassName('hidden'));
+		new LiveCart.AjaxRequest(url);
 	}
 }

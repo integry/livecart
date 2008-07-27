@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Display a tip block
+ * Language forms
  *
  * @package application.helper.smarty
  * @author Integry Systems
@@ -14,22 +14,22 @@ function smarty_block_language($params, $content, LiveCartSmarty $smarty, &$repe
 	{
 		return false;
 	}
-	
+
 	if ($repeat)
 	{
-		$smarty->languageBlock = $smarty->getApplication()->getLanguageSetArray();		
+		$smarty->languageBlock = $smarty->getApplication()->getLanguageSetArray();
 		$smarty->assign('languageBlock', $smarty->languageBlock);
 		$smarty->assign('lang', array_shift($smarty->languageBlock));
 		$smarty->langHeadDisplayed = false;
 	}
 	else
-	{		
+	{
 		if (!trim($content))
 		{
 			$repeat = false;
 			return false;
 		}
-		
+
 		if ($smarty->languageBlock)
 		{
 			$repeat = true;
@@ -52,7 +52,7 @@ function smarty_block_language($params, $content, LiveCartSmarty $smarty, &$repe
 			$content .= $smarty->fetch('block/backend/langFormFoot.tpl');
 		}
 
-		return $content;				
+		return $content;
 	}
 }
 ?>

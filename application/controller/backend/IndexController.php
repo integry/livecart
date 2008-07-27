@@ -87,6 +87,14 @@ class IndexController extends StoreManagementController
 		return new RawResponse(ActiveRecordModel::getRecordCount('CustomerOrder', $f));
 	}
 
+	public function setUserPreference()
+	{
+		$user = $this->user;
+		$user->setPreference($this->request->get('key'), $this->request->get('value'));
+		var_dump($user->preferences->isModified());
+		$user->save();
+	}
+
 	public function keepAlive()
 	{
 		return new RawResponse('OK');

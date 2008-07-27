@@ -10,6 +10,7 @@
 	padding: 0px;
 	height: 22px;
 	padding-top: 8px;
+	white-space: nowrap;
 }
 
 .tabContainer ul.tabList li
@@ -50,4 +51,82 @@
 	padding: 10px;
 	border: 1px solid #ccc;
 	background-color: #f5f5f5;
+}
+
+.tabContainer ul.tabList li.tab.hidden
+{
+	display: none;
+}
+
+li.moreTabs
+{
+	border: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	background-color: #fff;
+	margin-right: 0;
+}
+
+li.moreTabs a
+{
+	font-weight: bold;
+	font-size: 0.85em;
+	text-decoration: underline;
+}
+
+li.moreTabs ul
+{
+	height: auto !important;
+	padding: 0 !important;
+}
+
+li.moreTabs li
+{
+	float: none !important;
+	border: 0 !important;
+	background: #fff !important;
+	display: block !important;
+	margin-right: 0 !important;
+	font-weight: normal !important;
+}
+
+.tabContainer ul li.moreTabs li
+{
+	font-size: 0.85em !important;
+	padding-left: 10px !important;
+}
+
+li.moreTabs .moreTabsMenu
+{
+	position: absolute;
+	right: 0;
+	z-index: 10;
+	border: 1px solid #000;
+}
+
+li.moreTabs li.hidden, li.moreTabs li.hidden *, li.moreTabs li:hover
+{
+	color: #777;
+}
+
+li.moreTabs li:hover
+{
+	text-decoration: line-through;
+}
+
+li.moreTabs li, li.moreTabs li *, li.moreTabs li.hidden:hover
+{
+	color: #000;
+	text-decoration: none;
+}
+
+li.moreTabs li:hover
+{
+	background-color: #eee !important;
+}
+
+li.moreTabs .moreTabs
+{
+	display: none !important;
 }

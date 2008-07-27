@@ -141,65 +141,17 @@
 
 	<div id="categoryTabs">
 		<div id="tabContainer" class="tabContainer">
-			<ul id="tabList" class="tabList tabs">
-
-				{allowed role="product"}
-				<li id="tabProducts" class="tab active">
-					<a href="{link controller=backend.product action=index id=_id_}">{t _products}</a>
-					<span> </span>
-					<span class="tabHelp">products</span>
-				</li>
-				{/allowed}
-
-				<li id="tabMainDetails" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
-					<a href="{link controller=backend.category action=form id=_id_}">{t _category_details}</a>
-					<span> </span>
-					<span class="tabHelp">categories.details</span>
-				</li>
-
-				<li id="tabFields" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
-					<a href="{link controller=backend.specField action=index id=_id_}">{t _attributes}</a>
-					<span> </span>
-					<span class="tabHelp">categories.attributes</span>
-				</li>
-
-				<li id="tabFilters" class="tab inactive" {denied role="filter"}style="display: none"{/denied}>
-					<a href="{link controller=backend.filterGroup action=index id=_id_}">{t _filters}</a>
-					<span> </span>
-					<span class="tabHelp">categories.filters</span>
-				</li>
-
-				<li id="tabImages" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
-					<a href="{link controller=backend.categoryImage action=index id=_id_}">{t _images}</a>
-					<span> </span>
-					<span class="tabHelp">categories.images</span>
-				</li>
-
-				<li id="tabOptions" class="tab inactive" {denied role="option"}style="display: none"{/denied}>
-					<a href="{link controller=backend.productOption action=index id=_id_ query="category=true"}">{t _options}</a>
-					<span> </span>
-					<span class="tabHelp">products.define</span>
-				</li>
-
-				<li id="tabRatingCategories" class="tab inactive" {denied role="ratingcategory"}style="display: none"{/denied}>
-					<a href="{link controller=backend.ratingType action=index id=_id_}">{t _rating_categories}</a>
-					<span> </span>
-					<span class="tabHelp">categories</span>
-				</li>
-
-				<li id="tabReviews" class="tab inactive" {denied role="ratingcategory"}style="display: none"{/denied}>
-					<a href="{link controller=backend.review action=index id=_id_ query="category=true"}">{t _reviews}</a>
-					<span> </span>
-					<span class="tabHelp">categories</span>
-				</li>
-
-				<li id="tabProductLists" class="tab inactive" {denied role="ratingcategory"}style="display: none"{/denied}>
-					<a href="{link controller=backend.productList action=index id=_id_}">{t _product_lists}</a>
-					<span> </span>
-					<span class="tabHelp">categories</span>
-				</li>
-
-			</ul>
+			{tabControl id="tabList"}
+				{tab id="tabProducts" role="product" help="products"}<a href="{link controller=backend.product action=index id=_id_}">{t _products}</a>{/tab}
+				{tab id="tabMainDetails" role="category" help="categories.details"}<a href="{link controller=backend.category action=form id=_id_}">{t _category_details}</a>{/tab}
+				{tab id="tabFields" role="category" help="categories.attributes"}<a href="{link controller=backend.specField action=index id=_id_}">{t _attributes}</a>{/tab}
+				{tab id="tabFilters" role="filter" help="categories.filters"}<a href="{link controller=backend.filterGroup action=index id=_id_}">{t _filters}</a>{/tab}
+				{tab id="tabImages" role="category" help="categories.images"}<a href="{link controller=backend.categoryImage action=index id=_id_}">{t _images}</a>{/tab}
+				{tab id="tabOptions" role="option" help="categories"}<a href="{link controller=backend.productOption action=index id=_id_ query="category=true"}">{t _options}</a>{/tab}
+				{tab id="tabRatingCategories" role="ratingcategory" help="categories" hidden=true}<a href="{link controller=backend.ratingType action=index id=_id_}">{t _rating_categories}</a>{/tab}
+				{tab id="tabReviews" role="ratingcategory" help="categories" hidden=true}<a href="{link controller=backend.review action=index id=_id_ query="category=true"}">{t _reviews}</a>{/tab}
+				{tab id="tabProductLists" role="ratingcategory" help="categories" hidden=true}<a href="{link controller=backend.productList action=index id=_id_}">{t _product_lists}</a>{/tab}
+			{/tabControl}
 		</div>
 		<div id="sectionContainer" class="sectionContainer maxHeight  h--50">
 		</div>

@@ -301,9 +301,9 @@ class User extends ActiveRecordModel implements EavAble
 
 	public function setPreference($key, $value)
 	{
-		$preferences =& $this->preferences->get();
+		$preferences = $this->preferences->get();
 		$preferences[$key] = $value;
-		$this->preferences->set($preferences);
+		$this->preferences->set($preferences, true);
 	}
 
 	public function getPreference($key)
@@ -313,6 +313,8 @@ class User extends ActiveRecordModel implements EavAble
 		{
 			return $preferences[$key];
 		}
+
+		return null;
 	}
 
 	/**
