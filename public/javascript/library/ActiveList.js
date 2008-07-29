@@ -145,14 +145,12 @@ ActiveList.prototype = {
 
 		this.messages = messages;
 
-		Element.addClassName(this.ul, this.ul.id);
-
-		// Check if ul has an id
-		if(!this.ul.id)
+		if (!this.ul.id)
 		{
-			throw Error('Active record main UL element is required to have an id. Also all list items should take that id plus "_"  as a prefix');
-			return false;
+			Backend.setUniqueID(this.ul);
 		}
+
+		Element.addClassName(this.ul, this.ul.id);
 
 		// Check if all required callbacks are passed
 		var missedCallbacks = [];
@@ -164,6 +162,7 @@ ActiveList.prototype = {
 			if(!callbacks[before]) missedCallbacks[missedCallbacks.length] = before;
 			if(!callbacks[after]) missedCallbacks[missedCallbacks.length] = after;
 		}
+
 		if(missedCallbacks.length > 0)
 		{
 				throw Error('Callback' + (missedCallbacks.length > 1 ? 's' : '') + ' are missing (' + missedCallbacks.join(', ') +')' );
@@ -188,10 +187,18 @@ ActiveList.prototype = {
 	getInstance: function(ul, callbacks, messages)
 	{
 		var ulElement = $(ul);
-		if(!ulElement.id)
+
+		// fix list ID if it was set as numeric only
+		if (!isNaN(parseInt(ulElement.id)))
 		{
-			throw Error('Active record main UL element is required to have an id. Also all list items should take that id plus "_"  as a prefix');
-			return false;
+			var id = ulElement.id;
+			Backend.setUniqueID(ulElement);
+			ulElement.id += '_' + id;
+		}
+
+		if (!ulElement.id)
+		{
+			Backend.setUniqueID(ulElement);
 		}
 
 		if(!ActiveList.prototype.activeListsUsers[ulElement.id])
@@ -200,7 +207,6 @@ ActiveList.prototype = {
 		}
 
 		return ActiveList.prototype.activeListsUsers[ulElement.id];
-
 	},
 
 	/**
@@ -469,7 +475,8 @@ ActiveList.prototype = {
 		var self = this;
 		$A(this.ul.className.split(' ')).each(function(className)
 		{
-			var container = document.getElementsByClassName(self.cssPrefix + 'icons', li)[0];
+			//var container = document.getElementsByClassName(self.cssPrefix + 'icons', li)[0];
+			var container = li.iconContainer;
 
 			var regex = new RegExp('^' + self.cssPrefix + '(add|remove)_(\\w+)(_(before|after)_(\\w+))*');
 			var tmp = regex.exec(className);
@@ -580,7 +587,14 @@ ActiveList.prototype = {
 		   var textInput = li.down("input[@type=text]");
 		   if(textInput)
 		   {
-		   	   textInput.focus();
+				try
+				{
+					textInput.focus();
+				}
+				catch (e)
+				{
+					return false;
+				}
 		   }
 	   }.bind(this, li), 600);
 	},
@@ -621,16 +635,23 @@ ActiveList.prototype = {
 	{
 		var self = this;
 
+		// fix li ID if it was set as numeric only
+		if (!isNaN(parseInt(li.id)))
+		{
+			li.id = li.parentNode.id + '_' + li.id;
+		}
+
 		// Bind events
 		Event.observe(li, "mouseover", function(e) { self.showMenu(this) });
 		Event.observe(li, "mouseout",  function(e) { self.hideMenu(this) });
 
 		// Create icons container. All icons will be placed incide it
-		if(!li.down('.' + self.cssPrefix + 'icons'))
+		if(!li.iconContainer)
 		{
 			var iconsDiv = document.createElement('span');
 			Element.addClassName(iconsDiv, self.cssPrefix + 'icons');
 			li.insertBefore(iconsDiv, li.firstChild);
+			li.iconContainer = iconsDiv;
 
 			// add all icons
 			$A(this.ul.className.split(' ')).each(function(className)
@@ -675,7 +696,7 @@ ActiveList.prototype = {
 	 */
 	addIconToContainer: function(li, className)
 	{
-		var container = li.down("span." + this.cssPrefix + 'icons');
+		var container = li.iconContainer;
 
 		var regex = new RegExp('^' + this.cssPrefix + '(add|remove)_(\\w+)(_(before|after)_(\\w+))*');
 		var tmp = regex.exec(className);
@@ -1115,7 +1136,10 @@ ActiveList.prototype = {
 
 		this._currentLi = li;
 
-		var success = this.callbacks.afterSort.call(this, li, item);
+		if (this.callbacks.afterSort)
+		{
+			var success = this.callbacks.afterSort.call(this, li, item);
+		}
 		this.createSortable(true);
 
 		// Recreate parent list sortable as well
@@ -1338,5 +1362,22 @@ ActiveList.prototype = {
 	{
 		this.generateAcceptFromArray(force);
 		this.createSortable(force);
+	}
+}
+
+ActiveList.CallbacksCommon = function() {}
+ActiveList.CallbacksCommon.prototype =
+{
+	beforeDelete: function(li)
+	{
+		if(confirm(this.callbacks.deleteMessage))
+		{
+			return Backend.Router.createUrl(this.callbacks.controller, 'delete', {id: this.getRecordId(li)});
+		}
+	},
+
+	beforeSort: function(li, order)
+	{
+		return Backend.Router.createUrl(this.callbacks.controller, 'sort', {target: li.parentNode.id}) + '&' + order;
 	}
 }

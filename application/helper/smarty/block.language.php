@@ -40,6 +40,7 @@ function smarty_block_language($params, $content, LiveCartSmarty $smarty, &$repe
 
 		if (!$smarty->langHeadDisplayed)
 		{
+			$smarty->assign('langFormId', 'langForm_' . uniqid());
 			$content = $smarty->fetch('block/backend/langFormHead.tpl') . $content;
 			$smarty->langHeadDisplayed = true;
 		}

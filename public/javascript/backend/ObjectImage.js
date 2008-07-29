@@ -163,7 +163,7 @@ Backend.ObjectImage.prototype =
 				 this.toggleContainerOn(editCont);
 
 				 Backend.LanguageForm.prototype.closeTabs(form);
-				 new Backend.LanguageForm();
+				 new Backend.LanguageForm(form);
 			 },
 
 			 beforeSort:	 function(li, order)

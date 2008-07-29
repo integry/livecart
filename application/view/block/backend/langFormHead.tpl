@@ -1,4 +1,4 @@
-<fieldset class="languageForm" >
+<fieldset class="languageForm" id="{$langFormId}">
 
 	<div class="languageTabsContainer">
 		<span class="languageFormCaption">

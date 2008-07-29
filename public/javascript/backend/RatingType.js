@@ -149,7 +149,7 @@ Backend.RatingType.PostEntry.prototype =
 		form.down('a.cancel').onclick = this.cancelEditForm.bindAsEventListener(this);
 		form.onsubmit = this.save.bindAsEventListener(this);
 
-		new Backend.LanguageForm();
+		new Backend.LanguageForm(form);
 
 		this.list.toggleContainerOn(this.list.getContainer(this.node, 'edit'));
 	},

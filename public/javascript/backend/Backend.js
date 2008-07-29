@@ -4,6 +4,8 @@
 
 var Backend =
 {
+	idCounter: 0,
+
 	setTranslations: function(translations)
 	{
 		Backend.translations = translations;
@@ -16,7 +18,13 @@ var Backend =
 
 	sendKeepAlivePing: function()
 	{
-		new LiveCart.AjaxRequest(Backend.keepAliveUrl);
+		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.index', 'keepAlive'));
+	},
+
+	setUniqueID: function(element)
+	{
+		element.id = 'generatedId_' + ++this.idCounter;
+		return element.id;
 	},
 
 	onLoad: function()
@@ -1067,17 +1075,28 @@ Backend.SaveConfirmationMessage.prototype =
 		return 'saveConfirmationMessage_' + (Backend.SaveConfirmationMessage.prototype.counter++);
 	},
 
-	showMessage: function(message)
+	showMessage: function(message, type)
 	{
+		if (!type)
+		{
+			type = 'yellow';
+		}
+
 		var el = document.createElement('div');
-		el.className = 'yellowMessage';
-		$('confirmations').appendChild(el);
+		el.className = type + 'Message';
+		var close = document.createElement('img');
+		close.className = 'closeMessage';
+		close.src = 'image/silk/cancel.png';
+
+		var confirmations = $('confirmations');
+		confirmations.appendChild(el);
+		el.appendChild(close);
 		new Backend.SaveConfirmationMessage(el, {del: true, message: message});
 	}
 }
 
 /**
- * Unit conventer
+ * Converts between metric and English units
  */
 Backend.UnitConventer = Class.create();
 Backend.UnitConventer.prototype =
@@ -1218,7 +1237,15 @@ Backend.LanguageForm.prototype =
 {
 	initialize: function(root)
 	{
-		var forms = document.getElementsByClassName('languageForm', root);
+		if (root.hasClassName('languageForm'))
+		{
+			var forms = [root];
+		}
+		else
+		{
+			var forms = document.getElementsByClassName('languageForm', root);
+		}
+
 		for (var k = 0; k < forms.length; k++)
 		{
 			var tabs = forms[k].down('ul.languageFormTabs').getElementsByTagName('li');
@@ -1287,32 +1314,127 @@ Backend.LanguageForm.prototype =
 }
 
 /***************************************************
- * MVC View
+ * MVC
  **************************************************/
-Backend.RegisterMVC = function(MVC)
+
+MVC = {}
+MVC.Model = function() {}
+MVC.Model.prototype =
 {
-	MVC.Messages = {};
-	MVC.Links = {};
+	controller: null,
 
-	MVC.Model.prototype.defaultLanguage = false;
-
-	MVC.Model.prototype.getDefaultLanguage = function()
+	setController: function(controller)
 	{
-		if(this.defaultLanguage === false)
+		this.controller = controller;
+		this.notifyAllData(this.controller);
+	},
+
+	store: function(name, value)
+	{
+		if(arguments.length == 1)
 		{
-			this.languages.each(function(language)
+			this._data = name;
+			if (this.controller)
 			{
-				if(parseInt(language.value.isDefault))
-				{
-					this.defaultLanguage = language.value;
-				}
-			}.bind(this));
+				this.notifyAllData(this.controller);
+			}
+		}
+		else
+		{
+			this._data[name] = value;
+			if (this.controller)
+			{
+				this.controller.notifyDataChange(name, value);
+			}
+		}
+	},
+
+	/**
+	 *	Notify observers (controllers) that all data has been changed (usually on initial state)
+	 */
+	notifyAllData: function(recipient, data, prefix)
+	{
+		if (!data)
+		{
+			data = this._data;
 		}
 
-		return this.defaultLanguage;
-	}
+		if (!prefix)
+		{
+			prefix = '';
+		}
 
-	MVC.Model.prototype.store = MVC.View.prototype.assign = function(name, value)
+		$H(data).each(function(val)
+		{
+			if (val[1] instanceof Object)
+			{
+				this.notifyAllData(recipient, val[1], prefix + val[0] + '.');
+			}
+			recipient.notifyDataChange(prefix + val[0], val[1]);
+		}.bind(this));
+	},
+
+	save: function(form, onSaveResponse)
+	{
+		if(true == this.saving) return;
+		this.saving = true;
+		this.serverError = false;
+
+		var self = this;
+
+		new LiveCart.AjaxRequest(
+			form,
+			false,
+			function(response)
+			{
+				var responseHash = {};
+				try
+				{
+					responseHash = eval("(" + response.responseText + ")");
+				}
+				catch(e)
+				{
+					responseHash['status'] = 'serverError';
+					responseHash['responseText'] = response.responseText;
+				}
+
+				this.afterSave(responseHash, onSaveResponse);
+			}.bind(this)
+		);
+	},
+
+	afterSave: function(response, onSaveResponse)
+	{
+		switch(response.status)
+		{
+			case 'success':
+				this.store('ID', response.ID);
+				if (response.data)
+				{
+					this.store(response.data);
+				}
+				break;
+			case 'failure':
+				this.errors = response.errors;
+				break;
+			case 'serverError':
+				this.serverError = response.responseText;
+				break;
+		}
+
+		onSaveResponse.call(this, response.status);
+		this.saving = false;
+	}
+}
+
+MVC.View = function() {}
+MVC.View.prototype =
+{
+	form: null,
+
+	boundVariables: {},
+
+	assign: function(name, value)
 	{
 		if(arguments.length == 1)
 		{
@@ -1321,6 +1443,65 @@ Backend.RegisterMVC = function(MVC)
 		else
 		{
 			this._data[name] = value;
+		}
+	},
+
+	bindForm: function(form)
+	{
+		this.form = form;
+	},
+
+	bindVariable: function(element, variableName)
+	{
+		this.boundVariables[variableName] = element;
+	},
+
+	notifyDataChange: function(name, value)
+	{
+		if (this.form)
+		{
+			var element = this.form.elements.namedItem(name);
+
+			if (element)
+			{
+				element.value = value;
+			}
+		}
+
+		if (this.boundVariables[name])
+		{
+			var element = this.boundVariables[name];
+
+			// set value to form elements
+			if (element instanceof HTMLInputElement ||
+				element instanceof HTMLTextAreaElement ||
+				element instanceof HTMLSelectElement ||
+				element instanceof HTMLButtonElement)
+			{
+				element.value = value;
+			}
+
+			// innerHTML to others
+			else
+			{
+				element.innerHTML = value;
+			}
+		}
+	}
+}
+
+Backend.RegisterMVC = function(MVC)
+{
+	MVC.Messages = {};
+	MVC.Links = {};
+
+	MVC.Model.prototype.defaultLanguage = false;
+
+	MVC.Controller.prototype.notifyDataChange = function(name, value)
+	{
+		if(this.view)
+		{
+			this.view.notifyDataChange(name, value);
 		}
 	}
 
@@ -1351,7 +1532,6 @@ Backend.RegisterMVC = function(MVC)
 		return found ? destination : defaultValue;
 	}
 }
-
 
 /********************************************************************
  * Select popup
@@ -1443,6 +1623,30 @@ Backend.SelectPopup.prototype = {
  ********************************************************************/
 Backend.Router =
 {
+	urlTemplate: '',
+
+	setUrlTemplate: function(url)
+	{
+		url = url.replace(/controller/, '__c__');
+		this.urlTemplate = url.replace(/action/, '__a__');
+	},
+
+	createUrl: function(controller, action, params)
+	{
+		var url = this.urlTemplate.replace(/__c__/, controller);
+		url = url.replace(/__a__/, action);
+
+		if (params)
+		{
+			$H(params).each(function(param)
+			{
+				url = this.setUrlQueryParam(url, param[0], param[1])
+			}.bind(this));
+		}
+
+		return url;
+	},
+
 	setUrlQueryParam: function(url, key, value)
 	{
 		return url + (url.match(/\?/) ? '&' : '?') + key + '=' + value;

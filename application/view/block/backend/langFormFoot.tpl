@@ -1,8 +1,6 @@
 	</div>
 </fieldset>
 
-{literal}
 <script type="text/javascript">
-	new Backend.LanguageForm();
+	new Backend.LanguageForm($('{$langFormId}'));
 </script>
-{/literal}
