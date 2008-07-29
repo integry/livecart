@@ -74,7 +74,7 @@
 
 	window.onload = onLoad;
 
-	Backend.keepAliveUrl = '{link controller=backend.index action=keepAlive}';
+	Backend.Router.setUrlTemplate('{link controller=controller action=action}');
 
 	</script>
 

@@ -8,40 +8,40 @@ ClassLoader::import("application.model.product.Product");
  * Controller for handling product based actions performed by store administrators
  *
  * @package application.controller.backend
- * @author Integry Systems 
+ * @author Integry Systems
  * @role product
  */
-class ProductRelationshipGroupController extends StoreManagementController 
+class ProductRelationshipGroupController extends StoreManagementController
 {
 	/**
 	 * @role update
 	 */
 	public function create()
 	{
-		$product = Product::getInstanceByID((int)$this->request->get('productID'));
+		$product = Product::getInstanceByID((int)$this->request->get('ownerID'));
 		$relationshipGroup = ProductRelationshipGroup::getNewInstance($product);
-		
+
 		return $this->save($relationshipGroup);
 	}
-	
+
 	/**
 	 * @role update
 	 */
 	public function update()
 	{
 		$relationshipGroup = ProductRelationshipGroup::getInstanceByID((int)$this->request->get('ID'));
-		
+
 		return $this->save($relationshipGroup);
 	}
-	
+
 	/**
 	 * @role update
 	 */
 	public function delete()
 	{
 		ProductRelationshipGroup::getInstanceByID((int)$this->request->get('id'))->delete();
-		
-		return new JSONResponse(false, 'success');   
+
+		return new JSONResponse(false, 'success');
 	}
 
 	/**
@@ -52,18 +52,18 @@ class ProductRelationshipGroupController extends StoreManagementController
 		foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
 		{
 			if(empty($key)) continue;
-			$relationship = ProductRelationshipGroup::getInstanceByID((int)$key); 
+			$relationship = ProductRelationshipGroup::getInstanceByID((int)$key);
 			$relationship->position->set((int)$position);
 			$relationship->save();
 		}
-		
-		return new JSONResponse(false, 'success');   
+
+		return new JSONResponse(false, 'success');
 	}
 
 	public function edit()
 	{
 		$group = ProductRelationshipGroup::getInstanceByID((int)$this->request->get('id'), true);
-		
+
 		return new JSONResponse($group->toArray());
 	}
 
@@ -72,7 +72,7 @@ class ProductRelationshipGroupController extends StoreManagementController
 		ClassLoader::import("framework.request.validator.RequestValidator");
 		$validator = new RequestValidator("productRelationshipGroupValidator", $this->request);
 
-		$validator->addCheck('name_' . $this->application->getDefaultLanguageCode(), new IsNotEmptyCheck($this->translate('_err_relationship_name_is_empty')));
+		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_relationship_name_is_empty')));
 
 		return $validator;
 	}
@@ -82,17 +82,10 @@ class ProductRelationshipGroupController extends StoreManagementController
 		$validator = $this->buildValidator();
 		if ($validator->isValid())
 		{
-			foreach ($this->application->getLanguageArray(true) as $lang)
-			{
-				if ($this->request->isValueSet('name_' . $lang))
-				{
-					$relationshipGroup->setValueByLang('name', $lang, $this->request->get('name_' . $lang));
-				}
-			}
-			
+			$relationshipGroup->loadRequestData($this->request);
 			$relationshipGroup->save();
-			
-			return new JSONResponse(array('ID' => $relationshipGroup->getID()), 'success');
+
+			return new JSONResponse(array('ID' => $relationshipGroup->getID(), 'data' => $relationshipGroup->toArray()), 'success');
 		}
 		else
 		{

@@ -2,6 +2,37 @@
  *	@author Integry Systems
  */
 
+Function.prototype.inheritsFrom = function( parentClassOrObject )
+{
+	if ( parentClassOrObject.constructor == Function )
+	{
+		//Normal Inheritance
+		this.prototype = new parentClassOrObject;
+		this.prototype.constructor = this;
+		this.prototype.parent = parentClassOrObject.prototype;
+	}
+	else
+	{
+		//Pure Virtual Inheritance
+		this.prototype = parentClassOrObject;
+		this.prototype.constructor = this;
+		this.prototype.parent = parentClassOrObject;
+	}
+
+	this.parent = this.prototype.parent;
+
+	if (this.methods)
+	{
+		$H(this.methods).each(function(func)
+		{
+			this.prototype[func[0]] = func[1];
+		}.bind(this)
+		);
+	}
+
+	return this;
+}
+
 var LiveCart = {
 	ajaxUpdaterInstance: null
 }
@@ -340,7 +371,7 @@ LiveCart.AjaxUpdater.prototype = {
 		options.onFailure = this.reportError.bind(this);
 		options.onSuccess = function()
 			{
-				if (ActiveForm && $(container))
+				if (window.ActiveForm && $(container))
 				{
 					ActiveForm.prototype.destroyTinyMceFields($(container));
 				}

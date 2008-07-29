@@ -19,6 +19,7 @@
 {includeJs file="backend/Filter.js"}
 {includeJs file="backend/ObjectImage.js"}
 {includeJs file="backend/Product.js"}
+{includeJs file="backend/abstract/ProductListCommon.js"}
 {includeJs file="backend/RelatedProduct.js"}
 {includeJs file="backend/ProductFile.js"}
 {includeJs file="backend/ProductOption.js"}
@@ -49,7 +50,6 @@
 <div id="specField_item_blank" class="dom_template">{include file="backend/specField/form.tpl"}</div>
 <div id="specField_group_blank" class="dom_template">{include file="backend/specField/group.tpl"}</div>
 <div id="filter_item_blank" class="dom_template">{include file="backend/filterGroup/form.tpl"}</div>
-<div id="productRelationshipGroup_item_blank" class="dom_template">{include file="backend/productRelationshipGroup/form.tpl"}</div>
 <div id="productFileGroup_item_blank">{include file="backend/productFileGroup/form.tpl"}</div>
 <div id="productFile_item_blank">{include file="backend/productFile/form.tpl"}</div>
 <div id="productOption_item_blank" class="dom_template">{include file="backend/productOption/form.tpl"}</div>

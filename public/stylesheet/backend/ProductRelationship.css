@@ -1,26 +1,28 @@
-.productRelationship_add
+.tabProductRelationshipContent .addProduct
 {
     background-image: url(../../image/silk/link_add.png);
 }
 
-.productRelationshipGroup_add
+.tabProductRelationshipContent .addGroup
 {
     background-image: url(../../image/silk/table_add.png);
 }
 
-
-.productRelationshipGroup_title {
+.tabProductRelationshipContent .groupTitle
+{
     color: grey;
     font-size: 300%;
     font-weight: bold;
 }
 
-li.productRelationshipGroup_item {
+li.groupContainer
+{
     border: 2px solid grey;
     margin-bottom: 0.5em;
 }
 
-li.productRelationshipGroup_item li {
+li.groupContainer li
+{
  	margin-top: 0.5em;
 }
 
@@ -36,18 +38,18 @@ li.productRelationshipGroup_item li {
     text-align: center;
 }
 
-.productRelationship_list {
+.subList {
     padding-bottom: 1em;
 }
 
-.productRelationship_list .activeList_icons
+.subList .activeList_icons
 {
     float: left;
     width: 50px;
     padding-top: 4px;
 }
 
-.productRelationship_list li
+.subList li
 {
     margin-bottom: 10px;
     padding: 5px;

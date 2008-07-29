@@ -5,7 +5,7 @@ ClassLoader::import("application.model.category.Category");
 ClassLoader::import("application.model.product.Product");
 
 /**
- * Controller for handling product based actions performed by store administrators
+ * Manage related products
  *
  * @package application.controller.backend
  * @author Integry Systems
@@ -18,13 +18,8 @@ class ProductRelationshipController extends StoreManagementController
 		$productID = (int)$this->request->get('id');
 		$product = Product::getInstanceByID($productID, ActiveRecord::LOAD_DATA, array('Category'));
 
-		$languages = array();
-		foreach($this->application->getLanguageList()->toArray() as $language) $languages[$language['ID']] = $language;
-
 		$response = new ActionResponse();
-
 		$response->set('categoryID', $product->category->get()->getID());
-		$response->set('languages', $languages);
 		$response->set('productID', $productID);
 		$response->set('relationships', $product->getRelationships()->toArray());
 		$response->set('relationshipsWithGroups', $product->getRelatedProductsWithGroupsArray());
