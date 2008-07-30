@@ -45,6 +45,9 @@ class ProductControllerTest extends UnitTest implements ControllerTestCase
 		$this->product->save();
 
 		$this->request->set('id', $this->product->getID());
+
+		self::getApplication()->getConfig()->set('ENABLE_REVIEWS', true);
+		self::getApplication()->getConfig()->set('ENABLE_ANONYMOUS_RATINGS', true);
 	}
 
 	public function testSimpleRating()
@@ -79,8 +82,8 @@ class ProductControllerTest extends UnitTest implements ControllerTestCase
 
 		$response = $this->controller->index();
 		$ratings = $response->get('rating');
-
-		$this->assertEqual(count($ratings), 3);
+print_r($response->getData()); exit;
+ 		$this->assertEqual(count($ratings), 3);
 
 		foreach ($ratings as $key => $rating)
 		{
