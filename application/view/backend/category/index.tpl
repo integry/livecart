@@ -21,6 +21,7 @@
 {includeJs file="backend/Product.js"}
 {includeJs file="backend/abstract/ProductListCommon.js"}
 {includeJs file="backend/RelatedProduct.js"}
+{includeJs file="backend/ProductList.js"}
 {includeJs file="backend/ProductFile.js"}
 {includeJs file="backend/ProductOption.js"}
 {includeJs file="backend/RatingType.js"}

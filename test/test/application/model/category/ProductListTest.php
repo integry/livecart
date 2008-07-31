@@ -60,5 +60,24 @@ class ProductListTest extends UnitTest
 		$list->addProduct($product);
 	}
 
+	public function testContaining()
+	{
+		$root = Category::getRootNode();
+
+		$list = ProductList::getNewInstance($root);
+		$list->save();
+
+		$product = Product::getNewInstance($root);
+		$product->save();
+
+		$list->addProduct($product);
+
+		$another = Product::getNewInstance($root);
+		$another->save();
+
+		$this->assertTrue($list->contains($product));
+		$this->assertFalse($list->contains($another));
+	}
+
 }
 ?>

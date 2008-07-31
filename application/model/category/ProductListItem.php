@@ -20,6 +20,7 @@ class ProductListItem extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField('productListID', 'ProductList', 'ID', null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField('productID', 'Product', 'ID', null, ARInteger::instance()));
 		$schema->registerField(new ARField('position', ARInteger::instance()));
+		$schema->registerAutoReference('productID');
 	}
 
 	/*####################  Static method implementations ####################*/

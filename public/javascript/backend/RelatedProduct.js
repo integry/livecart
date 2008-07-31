@@ -5,13 +5,25 @@
 if(!Backend) Backend = {};
 if(!Backend.Product) Backend.Product = {};
 
-Backend.RelatedProduct = {}
-Backend.RelatedProduct.activeListCallbacks = Backend.ProductListCommon.Product.activeListCallbacks;
+Backend.RelatedProduct =
+{
+	groupController: 'backend.productRelationshipGroup',
+
+	itemController:  'backend.productRelationship',
+
+	getContainer: function(ownerID)
+	{
+		return $('tabProductRelationship_' + ownerID + 'Content');
+	}
+}
+
+Backend.RelatedProduct.activeListCallbacks = function()
+{
+	this.controller = this.namespace.itemController;
+}
 
 Backend.RelatedProduct.activeListCallbacks.methods =
 {
-	controller: 'backend.productRelationship',
-
 	namespace: Backend.RelatedProduct,
 
 	beforeDelete: function(li)
@@ -86,13 +98,12 @@ Backend.RelatedProduct.Group = {};
 Backend.RelatedProduct.Group.Callbacks = function()
 {
 	this.deleteMessage = this.namespace.Group.Messages.areYouSureYouWantToDelete;
+	this.controller = this.namespace.groupController;
 }
 
 Backend.RelatedProduct.Group.Callbacks.methods =
 {
 	deleteMessage: null,
-
-	controller: 'backend.productRelationshipGroup',
 
 	namespace: Backend.RelatedProduct,
 
@@ -154,10 +165,13 @@ Backend.RelatedProduct.Group.Model = function(data)
 
 Backend.RelatedProduct.Group.Model.methods =
 {
-	save: function(form, onSaveResponse)
+	namespace: Backend.RelatedProduct,
+
+	save: function(form, onSaveResponse, scope)
 	{
-		form.action = Backend.Router.createUrl('backend.productRelationshipGroup', this.isNew ? 'create' : 'update');
-		return this.parent.save.call(this, form, onSaveResponse);
+		var self = scope || this;
+		form.action = Backend.Router.createUrl(self.namespace.groupController, self.isNew ? 'create' : 'update');
+		return this.parent.save.call(self, form, onSaveResponse);
 	},
 
 	getOwnerID: function()
@@ -167,9 +181,15 @@ Backend.RelatedProduct.Group.Model.methods =
 
 	getOwnerIDField: function()
 	{
-		return 'Product.ID';
+		return this.getOwnerClass() + '.ID';
+	},
+
+	getOwnerClass: function()
+	{
+		return 'Product';
 	}
 }
+
 Backend.RelatedProduct.Group.Model.inheritsFrom(MVC.Model);
 
 Backend.RelatedProduct.Group.Controller = function(root, model)
@@ -196,10 +216,12 @@ Backend.RelatedProduct.Group.Controller.prototype =
 
 	index: function(ownerID)
 	{
-		var container = $('tabProductRelationship_' + ownerID + 'Content');
+		var container = this.container = this.namespace.getContainer(ownerID);
 
 		var newFormElement = container.down('.newForm').down('.groupForm');
-		var emptyGroupModel = new this.namespace.Group.Model({Product: {ID: ownerID}});
+		var modelParams = {}
+		modelParams[this.namespace.Group.Model.prototype.getOwnerClass()] = {ID: ownerID}
+		var emptyGroupModel = new this.namespace.Group.Model(modelParams);
 		var newForm = new this.namespace.Group.Controller(newFormElement, emptyGroupModel);
 
 		Event.observe(container.down('.addGroup').down('a'), "click", function(e)
@@ -208,21 +230,29 @@ Backend.RelatedProduct.Group.Controller.prototype =
 			newForm.showNewForm();
 		});
 
-		Event.observe(container.down('.addProduct').down('a'), 'click', function(e)
+		var addProduct = container.down('.addProduct');
+		if (addProduct)
 		{
-			Event.stop(e);
-			var self = this;
-			new Backend.SelectPopup(
-				this.namespace.links.selectProduct,
-				this.namespace.messages.selectProductTitle,
-				{
-					onObjectSelect: function() { self.namespace.addProductToList(ownerID, this.objectID, this.popup.document) }
-				}
-			);
-		}.bind(this));
+			Event.observe(addProduct.down('a'), 'click', function(e)
+			{
+				Event.stop(e);
+				var self = this;
+				new Backend.SelectPopup(
+					this.namespace.links.selectProduct,
+					this.namespace.messages.selectProductTitle,
+					{
+						onObjectSelect: function() { self.namespace.addProductToList(ownerID, this.objectID, this.popup.document) }
+					}
+				);
+			}.bind(this));
+		}
 
 		// items without group
-		ActiveList.prototype.getInstance(container.down('.noGroup'), new this.namespace.activeListCallbacks(ownerID));
+		var noGroup = container.down('.noGroup');
+		if (noGroup)
+		{
+			ActiveList.prototype.getInstance(noGroup, new this.namespace.activeListCallbacks(ownerID));
+		}
 
 		// group list
 		var groupList = ActiveList.prototype.getInstance(container.down('.activeListGroup'), new this.namespace.Group.Callbacks);
@@ -342,7 +372,6 @@ Backend.RelatedProduct.Group.Controller.prototype =
 Backend.RelatedProduct.Group.View = function(root, ownerID)
 {
 	this.ownerID = ownerID;
-	this.container = $('tabProductRelationship_' + this.ownerID + 'Content');
 	this.findNodes(root, ownerID);
 	this.clear();
 }
@@ -357,6 +386,8 @@ Backend.RelatedProduct.Group.View.methods =
 
 	findNodes: function(root, ownerID)
 	{
+		this.container = this.namespace.getContainer(ownerID);
+
 		this.nodes = {};
 		this.nodes.root = root;
 		this.nodes.form = ('FORM' == this.nodes.root.tagName) ? this.nodes.root : this.nodes.root.down('form');

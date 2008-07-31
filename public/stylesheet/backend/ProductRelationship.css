@@ -3,15 +3,15 @@
     background-image: url(../../image/silk/link_add.png);
 }
 
-.tabProductRelationshipContent .addGroup
+.tabProductLists .addGroup, .tabProductRelationshipContent .addGroup
 {
     background-image: url(../../image/silk/table_add.png);
 }
 
-.tabProductRelationshipContent .groupTitle
+.tabProductLists .groupTitle, .tabProductRelationshipContent .groupTitle
 {
     color: grey;
-    font-size: 300%;
+    font-size: 250%;
     font-weight: bold;
 }
 

@@ -38,7 +38,7 @@ class ProductRelationshipController extends StoreManagementController
 
 		$categoryList = Category::getRootNode()->getDirectChildNodes();
 		$categoryList->unshift(Category::getRootNode());
-		$response->set("categoryList", $categoryList->toArray($this->application->getDefaultLanguageCode()));
+		$response->set("categoryList", $categoryList->toArray());
 
 		return $response;
 	}

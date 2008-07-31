@@ -1,0 +1,11 @@
+_really_remove_product_list=Really delete this product list?
+_really_remove_product_from_list=Really remove this product from list?
+
+_select_product=Select a product
+_add_new_list=Add product list
+_cancel_adding_new_list=Cancel adding new product list
+_add_product=Add product to list
+
+_add_list_title=Add New Product List
+_list_name=List name
+_err_relationship_name_is_empty=Please enter the list name

@@ -7,7 +7,9 @@ Function.prototype.inheritsFrom = function( parentClassOrObject )
 	if ( parentClassOrObject.constructor == Function )
 	{
 		//Normal Inheritance
-		this.prototype = new parentClassOrObject;
+		var c = function() {}
+		c.prototype = parentClassOrObject.prototype;
+		this.prototype = new c();
 		this.prototype.constructor = this;
 		this.prototype.parent = parentClassOrObject.prototype;
 	}
@@ -20,6 +22,12 @@ Function.prototype.inheritsFrom = function( parentClassOrObject )
 	}
 
 	this.parent = this.prototype.parent;
+	this.prototype.parentConstructor = parentClassOrObject;
+
+	this.prototype.callConstructor = function(args)
+	{
+		return this.parentConstructor.apply(this, args);
+	};
 
 	if (this.methods)
 	{
@@ -31,6 +39,26 @@ Function.prototype.inheritsFrom = function( parentClassOrObject )
 	}
 
 	return this;
+}
+
+// not really working yet
+Function.prototype.inherit = function()
+{
+	var extendedClass = function()
+	{
+		this.callConstructor(arguments);
+	}
+
+	var c = function() {}
+	c.prototype = this.prototype;
+	extendedClass.prototype = new c();
+	extendedClass.prototype.constructor = this;
+	extendedClass.prototype.parent = this.prototype;
+
+	extendedClass.parent = this.prototype.parent;
+	this.prototype.parentConstructor = this;
+
+	return extendedClass;
 }
 
 var LiveCart = {

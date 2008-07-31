@@ -82,7 +82,7 @@ class ProductControllerTest extends UnitTest implements ControllerTestCase
 
 		$response = $this->controller->index();
 		$ratings = $response->get('rating');
-print_r($response->getData()); exit;
+
  		$this->assertEqual(count($ratings), 3);
 
 		foreach ($ratings as $key => $rating)

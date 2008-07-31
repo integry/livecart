@@ -661,7 +661,7 @@ CategoryTabControl.prototype = {
 
 		if ($(containerId) == undefined)
 		{
-			new Insertion.Bottom(this.sectionContainerName, '<div class="' + tabId + '" id="' + containerId + '"></div>');
+			new Insertion.Bottom(this.sectionContainerName, '<div class="' + tabId + ' tabPageContainer" id="' + containerId + '"></div>');
 		}
 		if (categoryId != "" && Element.empty(containerId))
 		{
