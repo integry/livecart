@@ -29,6 +29,7 @@ class CategoryController extends FrontendController
   	{
 	  	parent::init();
 	  	$this->addBlock('FILTER_BOX', 'boxFilter', 'block/box/filter');
+	  	$this->addBlock('PRODUCT_LISTS', 'productList', 'block/productList');
 	}
 
 	public function index()
@@ -516,6 +517,37 @@ class CategoryController extends FrontendController
 		$form->enableClientSideValidation(false);
 		$form->set('sort', $order);
 		return $form;
+	}
+
+	protected function productListBlock()
+	{
+		// get list items
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductList', 'categoryID'), $this->category->getID()));
+		$f->setOrder(new ARFieldHandle('ProductList', 'position'));
+		$f->setOrder(new ARFieldHandle('ProductListItem', 'productListID'));
+		$f->setOrder(new ARFieldHandle('ProductListItem', 'position'));
+
+		$items = array();
+		foreach (ActiveRecordModel::getRecordSetArray('ProductListItem', $f, array('ProductList', 'Product', 'ProductImage')) as $item)
+		{
+			$entry =& $item['Product'];
+			$entry['ProductList'] =& $item['ProductList'];
+			$items[] =& $entry;
+		}
+
+		ProductSpecification::loadSpecificationForRecordSetArray($items);
+		ProductPrice::loadPricesForRecordSetArray($items);
+
+		// sort by lists
+		$lists = array();
+		foreach ($items as &$item)
+		{
+			$lists[$item['ProductList']['ID']][] =& $item;
+		}
+
+		$response = new BlockResponse();
+		$response->set('lists', $lists);
+		return $response;
 	}
 
 	protected function boxFilterBlock()

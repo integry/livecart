@@ -32,10 +32,12 @@ class ProductListController extends ProductListControllerCommon
 
 		// get list items
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductListItem', 'productListID'), $ids));
-		$f->setOrder(new ARFieldHandle('ProductListItem', 'productListID'));
 		$f->setOrder(new ARFieldHandle('ProductList', 'position'));
+		$f->setOrder(new ARFieldHandle('ProductListItem', 'productListID'));
 		$f->setOrder(new ARFieldHandle('ProductListItem', 'position'));
 		$items = ActiveRecordModel::getRecordSetArray('ProductListItem', $f, array('ProductList', 'Product', 'ProductImage'));
+
+		$items = ActiveRecordGroup::mergeGroupsWithFields('ProductList', $lists, $items);
 
 		$response = new ActionResponse();
 		$response->set('ownerID', $categoryID);

@@ -30,6 +30,8 @@
 		</p>
 	{/if}
 
+	{block PRODUCT_LISTS}
+
 	{if $subCatFeatured}
 		<h2>{t _featured_products}</h2>
 
