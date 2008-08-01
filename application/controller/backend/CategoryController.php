@@ -203,6 +203,7 @@ class CategoryController extends StoreManagementController
 			'tabOptions' => $category->getOptions()->getTotalRecordCount(),
 			'tabRatingCategories' => ProductRatingType::getCategoryRatingTypes($category)->size(),
 			'tabReviews' => ActiveRecordModel::getRecordCount('ProductReview', new ARSelectFilter($reviewCond), array('Category', 'Product')),
+			'tabProductLists' => $category->getRelatedRecordCount('ProductList'),
 		);
 	}
 

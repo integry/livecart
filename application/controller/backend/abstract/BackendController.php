@@ -44,14 +44,20 @@ abstract class BackendController extends BaseController
 	{
 	  	$this->setLayout('empty');
 		$this->addBlock('USER_MENU', 'boxUserMenu', 'block/backend/userMenu');
-
+		$this->addBlock('TRANSLATIONS', 'translations', 'block/backend/translations');
 		return parent::init();
 	}
 
 	public function boxUserMenuBlock()
 	{
+		return $this->translationsBlock();
+	}
+
+	public function translationsBlock()
+	{
 		return new BlockResponse('languageData', json_encode($this->locale->translationManager()->getLoadedDefinitions()));
 	}
+
 }
 
 ?>

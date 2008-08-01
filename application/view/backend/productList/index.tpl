@@ -10,7 +10,7 @@
 	Backend.ProductList.messages = {};
 	with(Backend.ProductList)
 	{
-		links.selectProduct = '{/literal}{link controller=backend.productRelationship action=selectProduct}#cat_{$categoryID}#tabProducts__{literal}';
+		links.selectProduct = '{/literal}{link controller=backend.productRelationship action=selectProduct}#cat_{$ownerID}#tabProducts__{literal}';
 		messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}';
 		messages.areYouSureYouWantToDelete = '{/literal}{t _really_remove_product_from_list|addslashes}{literal}';
 	}
@@ -57,6 +57,8 @@
 		<li class="addProduct"><a href="#selectProduct">{t _add_product}</a></li>
 	</ul>
 </div>
+
+{block TRANSLATIONS}
 
 <script type="text/javascript">
 	Backend.ProductList.Group.Controller.prototype.index({$ownerID});

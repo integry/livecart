@@ -17,8 +17,9 @@ Backend.RelatedProduct =
 	}
 }
 
-Backend.RelatedProduct.activeListCallbacks = function()
+Backend.RelatedProduct.activeListCallbacks = function(ownerID)
 {
+	this.ownerID = ownerID;
 	this.controller = this.namespace.itemController;
 }
 
@@ -95,10 +96,11 @@ Backend.RelatedProduct.addProductToList = function(ownerID, relatedownerID, popu
 
 Backend.RelatedProduct.Group = {};
 
-Backend.RelatedProduct.Group.Callbacks = function()
+Backend.RelatedProduct.Group.Callbacks = function(ownerID)
 {
 	this.deleteMessage = this.namespace.Group.Messages.areYouSureYouWantToDelete;
 	this.controller = this.namespace.groupController;
+	this.ownerID = ownerID;
 }
 
 Backend.RelatedProduct.Group.Callbacks.methods =
@@ -255,7 +257,7 @@ Backend.RelatedProduct.Group.Controller.prototype =
 		}
 
 		// group list
-		var groupList = ActiveList.prototype.getInstance(container.down('.activeListGroup'), new this.namespace.Group.Callbacks);
+		var groupList = ActiveList.prototype.getInstance(container.down('.activeListGroup'), new this.namespace.Group.Callbacks(ownerID));
 		newForm.view.setGroupList(groupList);
 
 		// each group

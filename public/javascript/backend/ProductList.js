@@ -34,8 +34,6 @@ Backend.ProductList.activeListCallbacks.methods =
 
 Backend.ProductList.activeListCallbacks.inheritsFrom(Backend.RelatedProduct.activeListCallbacks);
 
-Backend.ProductList.addProductToList = Backend.RelatedProduct.addProductToList;
-
 Backend.ProductList.Group = {};
 Backend.ProductList.Group.Links = {};
 Backend.ProductList.Group.Messages = {};
@@ -47,7 +45,12 @@ Backend.ProductList.Group.Callbacks = function()
 
 Backend.ProductList.Group.Callbacks.methods =
 {
-	namespace: Backend.ProductList
+	namespace: Backend.ProductList,
+
+	afterDelete: function(li, response)
+	{
+		CategoryTabControl.prototype.resetTabItemsCount(this.callbacks.ownerID);
+	}
 }
 
 Backend.ProductList.Group.Callbacks.inheritsFrom(Backend.RelatedProduct.Group.Callbacks);
@@ -93,6 +96,7 @@ Backend.ProductList.Group.View.methods =
 	{
 		var li = this.parent.createNewGroup.call(this);
 		this.addMenu(li);
+		CategoryTabControl.prototype.resetTabItemsCount(this.ownerID);
 	},
 
 	addMenu: function(li, container)
@@ -166,7 +170,7 @@ Backend.ProductList.addProductToList = function(owner, relatedownerID, popup)
 				tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') + 1);
 				*/
 				new Backend.SelectPopup.prototype.popup.Backend.SaveConfirmationMessage('productRelationshipCreated');
-				new Backend.SaveConfirmationMessage('productRelationshipCreated');
+				Backend.SaveConfirmationMessage.prototype.showMessage(Backend.getTranslation('_added_to_product_list'));
 			}
 		}
 	);
