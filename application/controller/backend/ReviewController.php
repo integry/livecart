@@ -95,6 +95,7 @@ class ReviewController extends ActiveGridController
 		unset($availableColumns['ProductReview.ratingSum']);
 		unset($availableColumns['ProductReview.ratingCount']);
 		unset($availableColumns['ProductReview.ip']);
+		unset($availableColumns['Product.ID']);
 
 		return $availableColumns;
 	}

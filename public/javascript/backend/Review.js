@@ -20,7 +20,7 @@ Backend.Review.GridFormatter =
 			this.productIDs[id] = value;
 		}
 
-		if ('Review.title' == field || 'Review.nickname' == field)
+		if ('ProductReview.title' == field || 'ProductReview.nickname' == field)
 		{
 			return '<span><span class="progressIndicator manufacturerIndicator" id="reviewIndicator_' + id + '" style="display: none;"></span></span>' +
 				'<a href="' + this.url + '#review_' + id + '" id="review_' + id + '" onclick="Backend.Review.Editor.prototype.open(' + id + ', event); return false;">' +
