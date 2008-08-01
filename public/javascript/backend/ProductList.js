@@ -86,6 +86,46 @@ Backend.ProductList.Group.View = function()
 Backend.ProductList.Group.View.methods =
 {
 	namespace: Backend.ProductList,
+
+	menu: null,
+
+	createNewGroup: function()
+	{
+		var li = this.parent.createNewGroup.call(this);
+		this.addMenu(li);
+	},
+
+	addMenu: function(li, container)
+	{
+		var menu = this.getMenu(container);
+		li.insertBefore(menu, li.down('ul.subList'));
+
+		var addProduct = menu.down('.addProduct');
+
+		Event.observe(addProduct.down('a'), 'click', function(e)
+		{
+			Event.stop(e);
+			var self = this;
+			new Backend.SelectPopup(
+				this.namespace.links.selectProduct,
+				this.namespace.messages.selectProductTitle,
+				{
+					onObjectSelect: function() { self.namespace.addProductToList(li, this.objectID, this.popup.document) }
+				}
+			);
+		}.bind(this));
+	},
+
+	getMenu: function(container)
+	{
+		if (!this.menu)
+		{
+			var menuContainer = container ? container : this.container;
+			this.menu = menuContainer.down('.addProductToListMenu').down('ul');
+		}
+
+		return this.menu.cloneNode(true);
+	}
 }
 
 Backend.ProductList.Group.View.inheritsFrom(Backend.RelatedProduct.Group.View);
@@ -141,22 +181,9 @@ Backend.ProductList.Group.Controller.methods =
 		this.parent.index.call(this, ownerID);
 
 		// each group
-		$A(this.container.getElementsBySelector('li.groupContainer')).each(function(ul)
+		$A(this.container.getElementsBySelector('li.groupContainer')).each(function(li)
 		{
-			var addProduct = ul.down('.addProduct');
-
-			Event.observe(addProduct.down('a'), 'click', function(e)
-			{
-				Event.stop(e);
-				var self = this;
-				new Backend.SelectPopup(
-					this.namespace.links.selectProduct,
-					this.namespace.messages.selectProductTitle,
-					{
-						onObjectSelect: function() { self.namespace.addProductToList(ul, this.objectID, this.popup.document) }
-					}
-				);
-			}.bind(this));
+			Backend.ProductList.Group.View.prototype.addMenu(li, this.namespace.getContainer(ownerID));
 		}.bind(this));
 	}
 }

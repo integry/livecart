@@ -353,7 +353,7 @@ Backend.RelatedProduct.Group.Controller.prototype =
 		}
 		else
 		{
-			this.view.hideForm(highlight);
+			this.view.hideForm();
 		}
 	},
 
@@ -435,6 +435,8 @@ Backend.RelatedProduct.Group.View.methods =
 		this.groupList.touch(true)
 
 		this.clear();
+
+		return li;
 	},
 
 	showForm: function()

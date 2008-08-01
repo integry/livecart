@@ -36,9 +36,6 @@
 			<span class="groupTitle">{$item.ProductList.name}</span>
 			{include file="backend/productList/form.tpl"}
 			<ul id="{$item.ProductList.ID}" class="subList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_subList">
-			<ul class="menu">
-				<li class="addProduct"><a href="#selectProduct">{t _add_product}</a></li>
-			</ul>
 	{/if}
 
 	{if $item.Product.ID} {* For empty groups *}
@@ -51,7 +48,15 @@
 {/foreach}
 </ul>
 
-<div class="blankItem" class="dom_template">{include file="backend/productList/form.tpl"}</div>
+<div class="blankItem" class="dom_template">
+	{include file="backend/productList/form.tpl"}
+</div>
+
+<div class="addProductToListMenu dom_template">
+	<ul class="menu">
+		<li class="addProduct"><a href="#selectProduct">{t _add_product}</a></li>
+	</ul>
+</div>
 
 <script type="text/javascript">
 	Backend.ProductList.Group.Controller.prototype.index({$ownerID});

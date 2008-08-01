@@ -1237,7 +1237,7 @@ Backend.LanguageForm.prototype =
 {
 	initialize: function(root)
 	{
-		if (root.hasClassName('languageForm'))
+		if (root && root.hasClassName('languageForm'))
 		{
 			var forms = [root];
 		}
@@ -1453,6 +1453,11 @@ MVC.View.prototype =
 
 	bindVariable: function(element, variableName)
 	{
+		if (!element)
+		{
+			return false;
+		}
+
 		this.boundVariables[variableName] = element;
 	},
 

@@ -63,3 +63,8 @@ a.openRelatedProduct
     padding-left: 22px;
     margin-left: 10px;
 }
+
+.tabProductLists .activeList ul.menu
+{
+	margin-left: 2px;
+}
