@@ -228,11 +228,21 @@ class LiveCartRenderer extends SmartyRenderer
 
 	private function getThemePaths($theme)
 	{
-		$paths = array();
+		$paths = $inheritConf = array();
 		$paths[] = ClassLoader::getRealPath('storage.customize.view.theme.' . $theme . '.');
 		$paths[] = ClassLoader::getRealPath('application.view.theme.' . $theme . '.');
 
-		$inherit = ClassLoader::getRealPath('application.view.theme.' . $theme . '.inherit') . '.php';
+		$inheritConf[] = ClassLoader::getRealPath('storage.customize.view.theme.' . $theme . '.inherit') . '.php';
+		$inheritConf[] = ClassLoader::getRealPath('application.view.theme.' . $theme . '.inherit') . '.php';
+
+		foreach ($inheritConf as $inherit)
+		{
+			if (file_exists($inherit))
+			{
+				break;
+			}
+		}
+
 		if (file_exists($inherit))
 		{
 			$inherited = include $inherit;
