@@ -3,6 +3,7 @@ _edit_template=Edit Template File
 _please_select=Please select a template file to edit
 _save_template=Save Template
 _template_file_name=File name
+_save_for_theme=Save for specific theme only
 
 _create_template=Create template file
 _delete_template=Delete template file

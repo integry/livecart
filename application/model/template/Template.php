@@ -19,10 +19,25 @@ class Template
 
 	protected $file;
 
-	public function __construct($fileName)
+	protected $theme;
+
+	public function __construct($fileName, $theme = null)
 	{
+		$this->theme = $theme;
+
 		// do not allow to leave view template directory by prefixing ../
 		$fileName = preg_replace('/^[\\\.\/]+/', '', $fileName);
+
+		if ($this->theme)
+		{
+			if (substr($fileName, 0, 6) == 'theme/')
+			{
+				$parts = explode('/', $fileName, 3);
+				$fileName = $parts[2];
+			}
+
+			$fileName = 'theme/' . $this->theme . '/' . $fileName;
+		}
 
 		$path = self::getRealFilePath($fileName);
 

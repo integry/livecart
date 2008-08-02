@@ -6,7 +6,7 @@
 		<p>
 			{{err for="fileName"}}
 				<label style="margin-top: 9px;">{t _template_file_name}:</label>
-				{textfield class="text"}
+				{textfield class="text wide"}
 			{/err}
 		</p>
 		<div class="clear" style="margin-bottom: 1em;"></div>
@@ -20,6 +20,10 @@
 	{/if}
 
 	<fieldset class="controls" {denied role="template.save"}style="display: none;"{/denied}>
+		<div class="saveThemeSelector" style="float: right;">
+			{t _save_for_theme}: {selectfield name=theme options=$themes blank=true}
+		</div>
+
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" class="submit" value="{tn _save_template}" />
 		{t _or}

@@ -43,6 +43,7 @@ class TemplateController extends StoreManagementController
 	  	$response->set('form', $this->getTemplateForm($template));
 	  	$response->set('code', base64_encode($template->getCode()));
 	  	$response->set('template', $template->toArray());
+	  	$response->set('themes', $this->application->getRenderer()->getThemeList());
 		return $response;
 	}
 
@@ -98,19 +99,16 @@ class TemplateController extends StoreManagementController
 		if ($this->request->get('fileName'))
 		{
 			$fileName = $this->request->get('fileName');
-			if (!strtolower(substr($fileName, 0, 4)) != '.tpl')
+			if (strtolower(substr($fileName, -4)) != '.tpl')
 			{
 				$fileName .= '.tpl';
 			}
-			$template = new Template($fileName);
+			$template = new Template($fileName, $this->request->get('theme'));
 		}
 		else
 		{
-			$template = new Template($this->request->get('file'));
+			$template = new Template($this->request->get('file'), $this->request->get('theme'));
 		}
-
-		$template->setCode($code);
-		$res = $template->save();
 
 		$origPath = $this->request->get('file');
 		if ($template->isCustomFile() && !$this->request->get('new') && ($template->getFileName() != $origPath))
@@ -121,6 +119,9 @@ class TemplateController extends StoreManagementController
 				unlink($origPath);
 			}
 		}
+
+		$template->setCode($code);
+		$res = $template->save();
 
 		if($res)
 		{

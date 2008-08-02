@@ -37,6 +37,11 @@ function smarty_function_selectfield($params, $smarty)
 	}
 	$content .= ">\n";
 
+	if (isset($params['blank']))
+	{
+		$content .= '<option></option>';
+	}
+
 	if ($formHandler)
 	{
 		$fieldValue = $formHandler->get($params['name']);
