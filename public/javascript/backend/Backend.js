@@ -1730,3 +1730,228 @@ Backend.ProgressBar.prototype =
 	},
 
 }
+
+/*****************************************
+	Multi-instance editor
+******************************************/
+
+Backend.MultiInstanceEditor = function(id)
+{
+	this.id = id ? id : '';
+
+	this.findUsedNodes();
+	this.bindEvents();
+
+	Form.State.backup(this.nodes.form, false, false);
+}
+
+Backend.MultiInstanceEditor.prototype =
+{
+	Links: {},
+	Messages: {},
+	Instances: {},
+	CurrentId: null,
+
+	namespace: null,
+
+	hasInstance: function(id)
+	{
+		return this.Instances[id] ? true : false;
+	},
+
+	getCurrentId: function()
+	{
+		return this.namespace.prototype.CurrentId;
+	},
+
+	setCurrentId: function(id)
+	{
+		this.namespace.prototype.CurrentId = id;
+	},
+
+	craftTabUrl: function(url)
+	{
+		return url.replace(/_id_/, this.namespace.prototype.getCurrentId());
+	},
+
+	craftContentId: function(tabId)
+	{
+		return tabId + '_' +  this.namespace.prototype.getCurrentId() + 'Content'
+	},
+
+	getInstance: function(id, doInit)
+	{
+		var root = this.namespace.prototype;
+
+		if(!root.Instances[id])
+		{
+			root.Instances[id] = new this.namespace(id);
+		}
+
+		if(doInit !== false)
+		{
+			root.Instances[id].init();
+		}
+
+		root.setCurrentId(id);
+
+		return root.Instances[id];
+	},
+
+	getInstanceContainer: function(id)
+	{
+		throw 'Implement me';
+	},
+
+	getMainContainerId: function()
+	{
+		throw 'Implement me';
+	},
+
+	getNavHashPrefix: function()
+	{
+		throw 'Implement me';
+	},
+
+	getListContainer: function()
+	{
+		throw 'Implement me';
+	},
+
+	getActiveGrid: function()
+	{
+		return false;
+	},
+
+	getNavHash: function(id)
+	{
+		return this.getNavHashPrefix() + id;
+	},
+
+	findUsedNodes: function()
+	{
+		this.nodes = {};
+		this.nodes.parent = this.getInstanceContainer(this.id);
+		this.nodes.form = this.nodes.parent.down("form");
+		this.nodes.cancel = this.nodes.form.down('a.cancel');
+		this.nodes.submit = this.nodes.form.down('input.submit');
+	},
+
+	bindEvents: function(args)
+	{
+		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancelForm()}.bind(this));
+	},
+
+	init: function(args)
+	{
+		this.namespace.prototype.setCurrentId(this.id);
+
+		Backend.showContainer(this.getMainContainerId());
+		this.getListContainer().hide();
+
+		this.tabControl = TabControl.prototype.getInstance(this.getMainContainerId(), false);
+
+		this.setPath();
+	},
+
+	setPath: function()
+	{
+
+	},
+
+	cancelForm: function()
+	{
+		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
+		Form.restore(this.nodes.form, false, false);
+
+		Backend.hideContainer(this.getMainContainerId());
+		this.getListContainer().show();
+
+		this.namespace.prototype.setCurrentId(0);
+	},
+
+	submitForm: function()
+	{
+		new LiveCart.AjaxRequest(
+			this.nodes.form,
+			false,
+			function(responseJSON) {
+				ActiveForm.prototype.resetErrorMessages(this.nodes.form);
+				var responseObject = eval("(" + responseJSON.responseText + ")");
+				this.afterSubmitForm(responseObject);
+		   }.bind(this)
+		);
+	},
+
+	afterSubmitForm: function(response)
+	{
+		if(response.status == 'success')
+		{
+			var grid = this.getActiveGrid();
+			if (grid)
+			{
+				grid.reloadGrid();
+			}
+
+			Form.State.backup(this.nodes.form, false, false);
+		}
+		else
+		{
+			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors)
+		}
+	},
+
+	open: function(id, e, onComplete)
+	{
+		if (e)
+		{
+			Event.stop(e);
+
+			if(!e.target)
+			{
+				e.target = e.srcElement
+			}
+
+			var progressIndicator = e.target.up('td').down('.progressIndicator');
+
+			progressIndicator.show();
+		}
+
+		var root = this.namespace.prototype;
+
+		root.setCurrentId(id);
+
+		var tabControl = TabControl.prototype.getInstance(
+			root.getMainContainerId(),
+			root.craftTabUrl.bind(this),
+			root.craftContentId.bind(this)
+		);
+
+		tabControl.activateTab(null,
+								   function(response)
+								   {
+										root.getInstance(id);
+										Backend.ajaxNav.add(root.getNavHash(id));
+
+										if (progressIndicator)
+										{
+											progressIndicator.hide();
+										}
+								   });
+
+		if(root.hasInstance(id))
+		{
+			root.getInstance(id);
+		}
+	},
+
+	resetEditors: function()
+	{
+		this.namespace.prototype.Instances = {};
+		this.namespace.prototype.CurrentId = null;
+
+		$(this.getMainContainerId()).down('.sectionContainer').innerHTML = '';
+
+		TabControl.prototype.__instances__ = {};
+	}
+}
