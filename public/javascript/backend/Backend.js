@@ -1735,9 +1735,10 @@ Backend.ProgressBar.prototype =
 	Multi-instance editor
 ******************************************/
 
-Backend.MultiInstanceEditor = function(id)
+Backend.MultiInstanceEditor = function(id, owner)
 {
 	this.id = id ? id : '';
+	this.owner = owner;
 
 	this.findUsedNodes();
 	this.bindEvents();
@@ -1779,13 +1780,13 @@ Backend.MultiInstanceEditor.prototype =
 		return tabId + '_' +  this.namespace.prototype.getCurrentId() + 'Content'
 	},
 
-	getInstance: function(id, doInit)
+	getInstance: function(id, doInit, owner)
 	{
 		var root = this.namespace.prototype;
 
 		if(!root.Instances[id])
 		{
-			root.Instances[id] = new this.namespace(id);
+			root.Instances[id] = new this.namespace(id, owner);
 		}
 
 		if(doInit !== false)
@@ -1825,7 +1826,11 @@ Backend.MultiInstanceEditor.prototype =
 
 	getNavHash: function(id)
 	{
-		return this.getNavHashPrefix() + id;
+		var prefix = this.getNavHashPrefix();
+		if (prefix)
+		{
+			return prefix + id;
+		}
 	},
 
 	findUsedNodes: function()
@@ -1847,7 +1852,7 @@ Backend.MultiInstanceEditor.prototype =
 		this.namespace.prototype.setCurrentId(this.id);
 
 		Backend.showContainer(this.getMainContainerId());
-		this.getListContainer().hide();
+		this.getListContainer(this.owner).hide();
 
 		this.tabControl = TabControl.prototype.getInstance(this.getMainContainerId(), false);
 
@@ -1865,7 +1870,7 @@ Backend.MultiInstanceEditor.prototype =
 		Form.restore(this.nodes.form, false, false);
 
 		Backend.hideContainer(this.getMainContainerId());
-		this.getListContainer().show();
+		this.getListContainer(this.owner).show();
 
 		this.namespace.prototype.setCurrentId(0);
 	},
@@ -1901,7 +1906,7 @@ Backend.MultiInstanceEditor.prototype =
 		}
 	},
 
-	open: function(id, e, onComplete)
+	open: function(id, e, onComplete, owner)
 	{
 		if (e)
 		{
@@ -1922,7 +1927,7 @@ Backend.MultiInstanceEditor.prototype =
 		root.setCurrentId(id);
 
 		var tabControl = TabControl.prototype.getInstance(
-			root.getMainContainerId(),
+			root.getMainContainerId(owner),
 			root.craftTabUrl.bind(this),
 			root.craftContentId.bind(this)
 		);
@@ -1930,8 +1935,12 @@ Backend.MultiInstanceEditor.prototype =
 		tabControl.activateTab(null,
 								   function(response)
 								   {
-										root.getInstance(id);
-										Backend.ajaxNav.add(root.getNavHash(id));
+										root.getInstance(id, true, owner);
+										var navHash = root.getNavHash(id);
+										if (navHash)
+										{
+											Backend.ajaxNav.add(navHash);
+										}
 
 										if (progressIndicator)
 										{
@@ -1950,7 +1959,7 @@ Backend.MultiInstanceEditor.prototype =
 		this.namespace.prototype.Instances = {};
 		this.namespace.prototype.CurrentId = null;
 
-		$(this.getMainContainerId()).down('.sectionContainer').innerHTML = '';
+		$(this.getMainContainerId(this.ownerID)).down('.sectionContainer').innerHTML = '';
 
 		TabControl.prototype.__instances__ = {};
 	}

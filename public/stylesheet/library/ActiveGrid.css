@@ -357,7 +357,7 @@
 {
     float: left;
     position: relative;
-    z-index: 65000;
+    z-index: 5;
 }
 
 .activeGrid .filterMenu
