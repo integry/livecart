@@ -23,33 +23,52 @@ class ReviewController extends ActiveGridController
 
 	public function edit()
 	{
-		$manufacturer = ActiveRecordModel::getInstanceById('Manufacturer', $this->request->get('id'), Manufacturer::LOAD_DATA, Manufacturer::LOAD_REFERENCES);
-		$manufacturer->getSpecification();
+		$review = ActiveRecordModel::getInstanceById('ProductReview', $this->request->get('id'), ProductReview::LOAD_DATA, array('Product'));
+		//$manufacturer->getSpecification();
 
-		$response = new ActionResponse('manufacturer', $manufacturer->toArray());
-		$form = $this->buildForm($manufacturer);
-		$form->setData($manufacturer->toArray());
+		$response = new ActionResponse('review', $review->toArray());
+		$form = $this->buildForm($review);
+		$form->setData($review->toArray());
 
-		$manufacturer->getSpecification()->setFormResponse($response, $form);
+		// get ratings
+		foreach ($review->getRelatedRecordSetArray('ProductRating', new ARSelectFilter()) as $rating)
+		{
+			$form->set('rating_' . $rating['ratingTypeID'], $rating['rating']);
+		}
+
+		//$manufacturer->getSpecification()->setFormResponse($response, $form);
 		$response->set('form', $form);
+		$response->set('ratingTypes', ProductRatingType::getProductRatingTypes($review->product->get())->toArray());
+
+		$options = range(1, $this->config->get('RATING_SCALE'));
+		$response->set('ratingOptions', array_combine($options, $options));
 
 		return $response;
 	}
 
 	public function update()
 	{
-		$manufacturer = ActiveRecordModel::getInstanceById('Manufacturer', $this->request->get('id'), Manufacturer::LOAD_DATA, Manufacturer::LOAD_REFERENCES);
-		$validator = $this->buildValidator($manufacturer);
+		$review = ActiveRecordModel::getInstanceById('ProductReview', $this->request->get('id'), ProductReview::LOAD_DATA, array('Product'));
+		$validator = $this->buildValidator($review);
 
 		if ($validator->isValid())
 		{
-			$manufacturer->loadRequestData($this->request);
-			$manufacturer->save();
-			return new JSONResponse(array('manufacturer' => $manufacturer->toFlatArray()), 'success', $this->translate('_manufacturer_was_successfully_saved'));
+			$review->loadRequestData($this->request);
+			$review->save();
+
+			// set ratings
+			foreach ($review->getRelatedRecordSet('ProductRating', new ARSelectFilter()) as $rating)
+			{
+				$typeId = $rating->ratingType->get() ? $rating->ratingType->get()->getID() : '';
+				$rating->rating->set($this->request->get('rating_' . $typeId));
+				$rating->save();
+			}
+
+			return new JSONResponse(array('review' => $review->toFlatArray()), 'success', $this->translate('_review_was_successfully_saved'));
 		}
 		else
 		{
-			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_could_not_save_manufacturer'));
+			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure');
 		}
 	}
 
@@ -160,14 +179,21 @@ class ReviewController extends ActiveGridController
 		return array('Product', 'Category');
 	}
 
-	private function buildValidator(Manufacturer $manufacturer)
+	private function buildValidator(ProductReview $review)
 	{
 		ClassLoader::import("framework.request.validator.RequestValidator");
 
-		$validator = new RequestValidator("manufacturer", $this->request);
-		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("_manufacturer_name_empty")));
+		$validator = new RequestValidator("productRating", $this->getRequest());
 
-		$manufacturer->getSpecification()->setValidation($validator);
+		// option validation
+		foreach (ProductRatingType::getProductRatingTypes($review->product->get())->toArray() as $type)
+		{
+			$validator->addCheck('rating_' . $type['ID'], new IsNotEmptyCheck($this->translate('_err_no_rating_selected')));
+		}
+
+		$validator->addCheck('nickname', new IsNotEmptyCheck($this->translate('_err_no_review_nickname')));
+		$validator->addCheck('title', new IsNotEmptyCheck($this->translate('_err_no_review_summary')));
+		$validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_no_review_text')));
 
 		return $validator;
 	}
@@ -177,11 +203,11 @@ class ReviewController extends ActiveGridController
 	 *
 	 * @return Form
 	 */
-	private function buildForm(Manufacturer $manufacturer)
+	private function buildForm(ProductReview $review)
 	{
 		ClassLoader::import("framework.request.validator.Form");
 
-		return new Form($this->buildValidator($manufacturer));
+		return new Form($this->buildValidator($review));
 	}
 }
 

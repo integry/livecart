@@ -8,13 +8,13 @@
  * @return string
  *
  * @package application.helper.smarty
- * @author Integry Systems 
+ * @author Integry Systems
  */
 function smarty_function_translate($params, LiveCartSmarty $smarty)
 {
 	$application = $smarty->getApplication();
-	
-	$translation = $application->translate($params['text']);
+
+	$translation = $application->translate(trim($params['text']));
 	$translation = preg_replace('/%([a-zA-Z]*)/e', 'smarty_replace_translation_var(\'\\1\', $smarty)', $translation);
 
 	if ($application->isTranslationMode() && !isset($params['disableLiveTranslation']) && !$application->isBackend())
@@ -23,7 +23,7 @@ function smarty_function_translate($params, LiveCartSmarty $smarty)
 		$file = '__file_'.base64_encode($file);
 		$translation = '<span class="transMode __trans_' . $params['text'].' '. $file .'">'.$translation.'</span>';
 	}
-	
+
 //	return '<span style="color: red; font-weight: bold; display: none;">' . $translation . '</span>';
 	return $translation;
 }

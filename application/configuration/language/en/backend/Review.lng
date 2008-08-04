@@ -8,6 +8,13 @@ _delete_conf=Really delete selected reviews?
 _nothing_selected=Please select at least one review first
 _process=Process
 
+_nickname=Nickname
+_title=Summary
+_text=Text
+_rating=Rating
+_review_was_successfully_saved=Product review was successfully saved
+_cancel_editing_review=Cancel editing review
+
 # columns
 ProductReview.title=Summary
 ProductReview.nickname=Author name

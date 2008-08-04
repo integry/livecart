@@ -30,7 +30,7 @@
 
 </div>
 
-{* User managing container *}
+{* Editors *}
 <div id="manufacturerManagerContainer" style="display: none;">
 	<fieldset class="container">
 		<ul class="menu">
