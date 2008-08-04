@@ -1577,6 +1577,7 @@ ul.productList a.addToCart, .productGrid a.addToCart
     text-indent: 27px;
     float: right;
     font-size: 1em;
+    overflow: hidden;
 }
 
 table.productGrid

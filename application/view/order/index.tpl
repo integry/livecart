@@ -19,8 +19,9 @@
 	*}
 
 	{if !$cart.cartItems && !$cart.wishListItems}
-		<div class="clear"></div>
-		{t _empty_basket}. <a href="{link route=$return}">{t _continue_shopping}</a>.
+		<div style="clear: left;">
+			{t _empty_basket}. <a href="{link route=$return}">{t _continue_shopping}</a>.
+		</div>
 	{else}
 
 	{if $cart.cartItems}

@@ -710,6 +710,7 @@ class LiveCart extends Application
 	public function setRequestLanguage($langCode)
 	{
 	  	$this->requestLanguage = $langCode;
+	  	unset($this->locale, $this->localeName);
 	}
 
 	/**

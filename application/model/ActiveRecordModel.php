@@ -211,6 +211,8 @@ abstract class ActiveRecordModel extends ActiveRecord
 	{
 		$array = parent::toArray($force);
 
+		self::executePlugins($array, 'array', get_class($this));
+
 		if ($this->specificationInstance && !isset($array['attributes']))
 		{
 			$array['attributes'] = $this->specificationInstance->toArray();

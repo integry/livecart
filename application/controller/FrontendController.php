@@ -54,6 +54,7 @@ abstract class FrontendController extends BaseController
 		$this->addBlock('INFORMATION', 'boxInformationMenu', 'block/box/informationMenu');
 		$this->addBlock('NEWSLETTER', 'boxNewsletterSubscribe', 'block/box/newsletterSubscribe');
 		$this->addBlock('TRACKING', 'tracking', 'block/tracking');
+		$this->addBlock('NEWS', 'latestNews', 'block/box/latestNews');
 	}
 
 	public function getRequestCurrency()
@@ -503,6 +504,19 @@ abstract class FrontendController extends BaseController
 		}
 
 		return new BlockResponse('code', $code);
+	}
+
+	public function latestNewsBlock()
+	{
+		ClassLoader::import('application.model.sitenews.NewsPost');
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
+		$f->setOrder(new ARFieldHandle('NewsPost', 'position'), 'DESC');
+		$f->setLimit($this->config->get('NUM_NEWS_INDEX') + 1);
+		$news = ActiveRecordModel::getRecordSetArray('NewsPost', $f);
+
+		$response = new BlockResponse('news', $news);
+		$response->set('isNewsArchive', count($news) > $this->config->get('NUM_NEWS_INDEX'));
+		return $response;
 	}
 
 	/**

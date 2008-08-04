@@ -480,6 +480,22 @@ tr.even
 }
 
 /*****************************
+	Latest news block
+*****************************/
+.latestNewsSide
+{
+	list-style-type: none;
+	padding-left: 0;
+}
+
+.latestNewsSide .date
+{
+	font-size: smaller;
+	display: block;
+	margin-bottom: 0.5em;
+}
+
+/*****************************
 	Currency switch
 *****************************/
 #currency, #language
@@ -791,6 +807,11 @@ a.layoutSetGrid
 .categoryLayoutSwitch
 {
 	margin-left: 1em;
+}
+
+.category-allProducts .categoryLayoutSwitch
+{
+	display: none;
 }
 
 .resultStats .sortOptions

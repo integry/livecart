@@ -292,6 +292,41 @@ class CategoryController extends FrontendController
 		return $response;
 	}
 
+	/**
+	 *	Display a list of all categories
+	 */
+	public function all()
+	{
+		$root = Category::getRootNode();
+		$f = new ARSelectFilter(new MoreThanCond(new ARFieldHandle('Category', $root->getProductCountField()), 0));
+		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('Category', 'ID'), $root->getID()));
+		$f->setOrder(MultiLingualObject::getLangOrderHandle(new ARFieldHandle('Category', 'name')));
+
+		return new ActionResponse('categories', ActiveRecordModel::getRecordSetArray('Category', $f, array('CategoryImage')));
+	}
+
+	/**
+	 *	Display a list of all products
+	 */
+	public function allProducts()
+	{
+		$this->request->set('page', $this->request->get('id', 1));
+		$this->request->set('id', 1);
+		$this->request->set('includeSub', true);
+		$this->removeBlock('PRODUCT_LISTS');
+
+		$response = $this->index();
+		$response->set('subCategories', array());
+		$response->set('categoryNarrow', array());
+		$response->set('url', $this->router->createUrl(array('controller' => 'category', 'action' => 'allProducts', 'id' => 0)));
+
+		$category = $response->get('category');
+		$category['name_lang'] = $this->translate('_all_products');
+		$response->set('category', $category);
+
+		return $response;
+	}
+
 	private function getCategoryPageUrl($params = array())
 	{
 		if (empty($params['filters']))
@@ -553,6 +588,11 @@ class CategoryController extends FrontendController
 	protected function boxFilterBlock()
 	{
 		$filterGroups = $this->filterGroups;
+
+		if (!$filterGroups)
+		{
+			return false;
+		}
 
 	 	$response = new BlockResponse();
 
