@@ -39,6 +39,7 @@ class OrderTest extends UnitTest
 
 		ActiveRecord::executeUpdate('DELETE FROM TaxRate');
 		ActiveRecord::executeUpdate('DELETE FROM Currency');
+		ActiveRecordModel::executeUpdate('DELETE FROM DeliveryZone');
 
 		// set up currency
 		if (ActiveRecord::objectExists('Currency', 'USD'))
@@ -368,7 +369,84 @@ class OrderTest extends UnitTest
 		$loadedOrder = CustomerOrder::getInstanceById($order->getID());
 		$loadedOrder->loadAll();
 		$this->assertEqual($loadedOrder->getSubTotal($this->usd), $price);
+	}
 
+	public function testOrderTotalAmountWithTaxesAndDeliveryZone()
+	{
+		// create delivery zone/tax environment
+		$zone = DeliveryZone::getNewInstance();
+		$zone->name->set('Latvia');
+		$zone->save();
+
+		$country = DeliveryZoneCountry::getNewInstance($zone, 'LV');
+		$country->save();
+
+		$tax = Tax::getNewInstance('VAT');
+		$tax->save();
+
+		$taxRate = TaxRate::getNewInstance($zone, $tax, 20);
+		$taxRate->save();
+
+		$service = ShippingService::getNewInstance($zone, 'def', ShippingService::SUBTOTAL_BASED);
+		$service->save();
+
+		$shippingRate = ShippingRate::getNewInstance($service, 0, 10000000);
+		$shippingRate->flatCharge->set(100);
+		$shippingRate->save();
+
+		// user address
+		$address = UserAddress::getNewInstance();
+		$address->countryID->set('LV');
+
+		$billingAddress = BillingAddress::getNewInstance($this->user, $address);
+		$billingAddress->save();
+
+		// set up order
+		$this->order->user->set($this->user);
+		$this->order->billingAddress->set($address);
+		$this->order->shippingAddress->set($address);
+		$this->order->save();
+
+		$this->order->addProduct($this->products[0]);
+		$this->order->save();
+
+		// make sure the correct delivery zone is used
+		$this->assertSame($this->order->getDeliveryZone(), $zone);
+
+		// calculate expected costs
+		$itemPrice = $this->products[0]->getPrice($this->usd);
+		$itemPriceWithTax = $itemPrice * 1.2;
+		$shippingWithTax = 120;
+		$total = $shippingWithTax + $itemPriceWithTax;
+		$tax = 40; // (100 + 100) * 0.2
+
+		$shipment = $this->order->getShipments()->get(0);
+		$this->assertEqual($shipment->getTotal(), $itemPriceWithTax);
+
+		$rates = $zone->getShippingRates($shipment);
+		$shipment->setAvailableRates($rates);
+		$shipment->setRateId($rates->get(0)->getServiceID());
+		$shipment->save();
+
+		$this->assertEqual($this->order->getTotal($this->usd), $total);
+		$this->order->save();
+
+		ActiveRecord::clearPool();
+		$order = CustomerOrder::getInstanceByID($this->order->getID(), true);
+		$order->loadAll();
+
+		$this->assertEqual($order->getShipments()->get(0)->getTaxAmount($this->usd), $tax);
+
+		$order->finalize($this->usd);
+
+		$this->assertEqual($order->getShipments()->get(0)->getTaxAmount($this->usd), $tax);
+
+		$this->assertEqual($order->getTotal($this->usd), $total);
+
+		ActiveRecord::clearPool();
+		$order = CustomerOrder::getInstanceByID($this->order->getID());
+		$order->loadAll();
+		$this->assertEqual($order->getTotal($this->usd), $total);
 	}
 
 	function test_SuiteTearDown()

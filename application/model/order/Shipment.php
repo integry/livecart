@@ -204,6 +204,12 @@ class Shipment extends ActiveRecordModel
 		return $subTotal;
 	}
 
+	public function getTotalWithoutTax()
+	{
+		$this->recalculateAmounts(false);
+		return $this->amount->get() + $this->shippingAmount->get();
+	}
+
 	public function getTotal()
 	{
 		$this->recalculateAmounts();
@@ -269,7 +275,7 @@ class Shipment extends ActiveRecordModel
 		return $amount;
 	}
 
-	public function recalculateAmounts()
+	public function recalculateAmounts($calculateTax = true)
 	{
 		$this->loadItems();
 
@@ -283,14 +289,17 @@ class Shipment extends ActiveRecordModel
 		$this->amount->set($this->getSubTotal($currency, self::WITHOUT_TAXES));
 
 		// total taxes
-		$taxes = 0;
-		foreach ($this->getTaxes() as $tax)
+		if ($calculateTax)
 		{
-			$tax->recalculateAmount(false);
-			$taxes += $tax->getAmountByCurrency($currency);
-		}
+			$taxes = 0;
+			foreach ($this->getTaxes() as $tax)
+			{
+				$tax->recalculateAmount(false);
+				$taxes += $tax->getAmountByCurrency($currency);
+			}
 
-		$this->taxAmount->set($taxes);
+			$this->taxAmount->set($taxes);
+		}
 
 		// shipping rate
 		if ($rate = $this->getSelectedRate())

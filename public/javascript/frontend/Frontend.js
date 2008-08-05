@@ -131,7 +131,7 @@ Order.OptionLoader.prototype =
 			return false;
 		}
 
-		container.getElementsByClassName('productOptionsMenu').each(
+		$A(container.getElementsByClassName('productOptionsMenu')).each(
 			function(cont)
 			{
 				Event.observe(cont.down('a'), 'click', this.loadForm.bind(this));

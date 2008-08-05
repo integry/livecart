@@ -1,7 +1,7 @@
-<input type="hidden" name="return" value="{$return}" />	
+<input type="hidden" name="return" value="{$return}" />
 
 <p class="required">
-	{{err for="firstName"}} 
+	{{err for="firstName"}}
 	   {{label {t _your_first_name}:}}
 	   {textfield class="text" id="firstName"}
 	{/err}
@@ -66,7 +66,7 @@
 	<script type="text/javascript">
 	{/literal}
 		new User.StateSwitcher($('country'), $('state_select'), $('state_text'),
-				'{link controller=user action=states}');	   
+				'{link controller=user action=states}');
 	</script>
 </p>
 

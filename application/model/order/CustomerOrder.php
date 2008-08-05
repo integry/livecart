@@ -122,6 +122,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	public function loadAll()
 	{
 		$this->loadAddresses();
+		$this->loadItems();
 		$this->getShipments();
 		$this->getSpecification();
 	}

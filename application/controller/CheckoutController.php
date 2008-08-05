@@ -765,6 +765,7 @@ class CheckoutController extends FrontendController
 
 	private function getTransaction()
 	{
+		$this->order->loadAll();
 		return new LiveCartTransaction($this->order, Currency::getValidInstanceById($this->getRequestCurrency()));
 	}
 

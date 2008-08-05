@@ -95,7 +95,9 @@ class OrderedItem extends ActiveRecordModel
 			$price += $optionPrice;
 		}
 
-		return $itemCurrency->convertAmount($currency, $price);
+		$price = $itemCurrency->convertAmount($currency, $price);
+
+		return $price;
 	}
 
 	private function getItemPrice(Currency $currency, $includeTaxes = true)

@@ -10,6 +10,28 @@ ClassLoader::import("application.helper.smarty.prefilter#config");
  */
 class PrefilterTest extends UnitTest
 {
+	public function testErrShorthand()
+	{
+		$code = '{err for="firstName"}{{label {t _your_first_name}:}}{textfield class="text"}{/err}';
+		$replaced = smarty_prefilter_config($code, null);
+		$expected = '<label for="firstName"><span>{translate text="_your_first_name"}:</span></label><fieldset class="error">{textfield name="firstName"  class="text"}
+	<div class="errorText hidden{error for="firstName"} visible{/error}">{error for="firstName"}{$msg}{/error}</div>
+	</fieldset>';
+
+		$this->assertEqual($replaced, $expected);
+	}
+
+	public function testErrShorthandTranslation()
+	{
+		$code = '{err for="firstName"}{label _your_first_name}{textfield class="text"}{/err}';
+		$replaced = smarty_prefilter_config($code, null);
+		$expected = '<label for="firstName"><span>{translate text="_your_first_name"}</span></label><fieldset class="error">{textfield name="firstName"  class="text"}
+	<div class="errorText hidden{error for="firstName"} visible{/error}">{error for="firstName"}{$msg}{/error}</div>
+	</fieldset>';
+
+		$this->assertEqual($replaced, $expected);
+	}
+
 	public function testBlockAsParamValue()
 	{
 		$code = '{someblock test={anotherblock}}';
