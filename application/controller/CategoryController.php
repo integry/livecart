@@ -589,11 +589,6 @@ class CategoryController extends FrontendController
 	{
 		$filterGroups = $this->filterGroups;
 
-		if (!$filterGroups)
-		{
-			return false;
-		}
-
 	 	$response = new BlockResponse();
 
 		// remove empty filter groups

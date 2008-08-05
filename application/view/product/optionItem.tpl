@@ -23,6 +23,7 @@
 			{if 1 == $option.type}
 				<fieldset class="error">
 				<select name="{$fieldName}">
+					<option></option>
 					{foreach from=$option.choices item=choice}
 						<option value="{$choice.ID}"{if $selectedChoice.Choice.ID == $choice.ID} selected="selected"{/if}>
 							{$choice.name_lang}

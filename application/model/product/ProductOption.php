@@ -3,6 +3,7 @@
 ClassLoader::import('application.model.product.Product');
 ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.system.MultilingualObject');
+ClassLoader::import('application.model.product.ProductOptionChoice');
 
 /**
  * Configurable product options
@@ -188,9 +189,13 @@ class ProductOption extends MultilingualObject
 					$options->remove($index);
 				}
 
-				if ($option->category->get() && $option->category->get()->isAncestorOf($product->category->get()))
+				if ($option->category->get())
 				{
-					$sorted[$product->getID()][] = $option;
+					$option->category->get()->load();
+					if ($option->category->get()->isAncestorOf($product->category->get()))
+					{
+						$sorted[$product->getID()][] = $option;
+					}
 				}
 			}
 		}

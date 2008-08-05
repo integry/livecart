@@ -24,6 +24,24 @@ class OrderController extends FrontendController
 
 		$this->order->loadItemData();
 
+		$options = $this->getItemOptions();
+
+		$currency = Currency::getValidInstanceByID($this->request->get('currency', $this->application->getDefaultCurrencyCode()), Currency::LOAD_DATA);
+
+		$response = new ActionResponse();
+		$response->set('cart', $this->order->toArray());
+		$response->set('form', $this->buildCartForm($this->order, $options));
+		$response->set('return', $this->request->get('return'));
+		$response->set('currency', $currency->getID());
+		$response->set('options', $options['visible']);
+		$response->set('moreOptions', $options['more']);
+		$response->set('orderTotal', $currency->getFormattedPrice($this->order->getSubTotal($currency)));
+		$response->set('expressMethods', $this->application->getExpressPaymentHandlerList(true));
+		return $response;
+	}
+
+	private function getItemOptions()
+	{
 		// load product options
 		$products = new ARSet();
 		foreach ($this->order->getOrderedItems() as $item)
@@ -36,10 +54,11 @@ class OrderController extends FrontendController
 		$moreOptions = $optionsArray = array();
 		foreach ($this->order->getOrderedItems() as $item)
 		{
-			if (isset($options[$item->product->get()->getID()]))
+			$productID = $item->product->get()->getID();
+			if (isset($options[$productID]))
 			{
-				$optionsArray[$item->getID()] = $this->getOptionsArray($options[$item->product->get()->getID()], $item, 'isDisplayedInCart');
-				$moreOptions[$item->getID()] = $this->getOptionsArray($options[$item->product->get()->getID()], $item, 'isDisplayed');
+				$optionsArray[$productID] = $this->getOptionsArray($options[$productID], $item, 'isDisplayedInCart');
+				$moreOptions[$productID] = $this->getOptionsArray($options[$productID], $item, 'isDisplayed');
 			}
 		}
 
@@ -55,18 +74,7 @@ class OrderController extends FrontendController
 			}
 		}
 
-		$currency = Currency::getValidInstanceByID($this->request->get('currency', $this->application->getDefaultCurrencyCode()), Currency::LOAD_DATA);
-
-		$response = new ActionResponse();
-		$response->set('cart', $this->order->toArray());
-		$response->set('form', $this->buildCartForm($this->order, $options));
-		$response->set('return', $this->request->get('return'));
-		$response->set('currency', $currency->getID());
-		$response->set('options', $optionsArray);
-		$response->set('moreOptions', $moreOptions);
-		$response->set('orderTotal', $currency->getFormattedPrice($this->order->getSubTotal($currency)));
-		$response->set('expressMethods', $this->application->getExpressPaymentHandlerList(true));
-		return $response;
+		return array('visible' => $optionsArray, 'more' => $moreOptions);
 	}
 
 	public function options()
@@ -103,7 +111,9 @@ class OrderController extends FrontendController
 			$arr = $option->toArray();
 			$arr['fieldName'] = $this->getFormFieldName($item, $option);
 
-			if (!$filter || $option->$filter->get())
+			$invalid = !empty($_SESSION['optionError'][$item->getID()][$option->getID()]) && ('isDisplayedInCart' == $filter);
+//$invalid = false;
+			if (!$filter || $option->$filter->get() || $invalid)
 			{
 				$out[] = $arr;
 			}
@@ -117,6 +127,14 @@ class OrderController extends FrontendController
 	 */
 	public function update()
 	{
+		$this->order->loadItemData();
+		$validator = $this->buildCartValidator($this->order, $this->getItemOptions());
+
+		if (!$validator->isValid())
+		{
+			return new ActionRedirectResponse('order', 'index');
+		}
+
 		foreach ($this->order->getOrderedItems() as $item)
 		{
 			if ($this->request->isValueSet('item_' . $item->getID()))
@@ -312,9 +330,10 @@ class OrderController extends FrontendController
 		}
 	}
 
-	public function getFormFieldName(OrderedItem $item, ProductOption $option)
+	public function getFormFieldName(OrderedItem $item, $option)
 	{
-		return 'itemOption_' . $item->getID() . '_' . $option->getID();
+		$optionID = $option instanceof ProductOption ? $option->getID() : $option['ID'];
+		return 'itemOption_' . $item->getID() . '_' . $optionID;
 	}
 
 	/**
@@ -322,6 +341,8 @@ class OrderController extends FrontendController
 	 */
 	private function buildCartValidator(CustomerOrder $order, $options)
 	{
+		unset($_SESSION['optionError']);
+
 		ClassLoader::import("framework.request.validator.RequestValidator");
 
 		$validator = new RequestValidator("cartValidator", $this->request);
@@ -351,13 +372,33 @@ class OrderController extends FrontendController
 		$validator->addFilter($name, new NumericFilter());
 
 		$productID = $item->product->get()->getID();
-		if (isset($options[$productID]))
+
+		if (isset($options['visible'][$productID]))
 		{
-			foreach ($options[$productID] as $option)
+			foreach ($options['visible'][$productID] as $option)
 			{
-				if ($option->isRequired->get())
+				if ($option['isRequired'])
 				{
-					$validator->addCheck($this->getFormFieldName($item, $option), new IsNotEmptyCheck($this->translate('_err_option_' . $option->type->get())));
+					$validator->addCheck($this->getFormFieldName($item, $option), new IsNotEmptyCheck($this->translate('_err_option_' . $option['type'])));
+				}
+			}
+		}
+
+		if (isset($options['more'][$productID]))
+		{
+			foreach ($options['more'][$productID] as $option)
+			{
+				if ($option['isRequired'])
+				{
+					$field = $this->getFormFieldName($item, $option);
+					if ($this->request->isValueSet($field) || $this->request->isValueSet('checkbox_' . $field))
+					{
+						$validator->addCheck($field, new IsNotEmptyCheck($this->translate('_err_option_' . $option['type'])));
+						if (!$this->request->get($field))
+						{
+							$_SESSION['optionError'][$item->getID()][$option['ID']] = true;
+						}
+					}
 				}
 			}
 		}

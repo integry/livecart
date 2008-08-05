@@ -1137,6 +1137,16 @@ ul.productList .orderingControls
 	font-size: 0.85em;
 }
 
+.productOptions .errorText
+{
+	clear: left;
+}
+
+.nonEditableOption
+{
+	line-height: 2em;
+}
+
 #productSpecification table
 {
 	border: 1px solid #AAAAAA;
@@ -1438,7 +1448,7 @@ div.checkout a
 
 #cart .productOptions
 {
-	margin: 1em 0;
+	margin: 0.5em 0;
 }
 
 #cart .productOptionsMenu

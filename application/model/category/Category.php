@@ -689,7 +689,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 
 		$f->setOrder(new ARFieldHandle('ProductOption', 'position'), 'ASC');
 
-		return ProductOption::getRecordSet($f, array('DefaultChoice' => 'ProductOptionChoice'));
+		return ProductOption::getRecordSet($f, array('ProductOptionChoice'));
 	}
 
 	/**
