@@ -1,0 +1,67 @@
+<?php
+die('test');
+class ContactFormController extends FrontendController
+{
+	public function index()
+	{
+		return new ActionResponse();
+	}
+
+	public function send()
+	{
+		if (!$this->buildValidator()->isValid())
+		{
+			return new ActionRedirectResponse('contact', 'index');
+		}
+
+		$email = new Email($this->application);
+		$email->setFrom($this->request->get('email'), $this->request->get('name'));
+		$email->setSubject('LiveCart contact form');
+		$email->setText($this->request->get('msg'));
+
+		$emails = array_keys(self::getDepartments());
+		$to = isset($emails[$this->request->get('dep')]) ? $emails[$this->request->get('dep')] : 'info@livecart.com';
+		//$email->setTo($to, 'LiveCart');
+
+		$email->setTo('info@livecart.com', 'LiveCart (' . $to . ')');
+
+		$email->send();
+
+		return new ActionRedirectResponse('contactForm', 'sent');
+	}
+
+	public function sent()
+	{
+		$this->addBreadCrumb('Contact', $this->router->createUrl(array('controller' => 'contact')));
+		$this->addBreadCrumb('Inquiry Sent', '');
+
+		return new ActionResponse();
+	}
+
+	public function getDepartments()
+	{
+		return array(
+			'sales@livecart.com' => 'Pre-sales',
+			'support@livecart.com' => 'General support',
+			'installation@livecart.com' => 'Installation help',
+			'custom-programming@livecart.com' => 'Custom programming requests',
+		);
+	}
+
+	public function buildValidator(Request $request = null)
+	{
+		ClassLoader::import("framework.request.validator.RequestValidator");
+
+		$request = $request ? $request : $this->request;
+
+		$validator = new RequestValidator("contactForm", $request);
+		$validator->addCheck('email', new IsNotEmptyCheck('Please enter your e-mail address'));
+		$validator->addCheck('name', new IsNotEmptyCheck('Please enter your name'));
+		$validator->addCheck('msg', new IsNotEmptyCheck('Please enter the message'));
+		$validator->addCheck('surname', new MaxLengthCheck('Please do not enter anything here', 0));
+
+		return $validator;
+	}
+}
+
+?>

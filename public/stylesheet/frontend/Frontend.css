@@ -2194,6 +2194,15 @@ td.amount
 	margin-left: 1em;
 }
 
+/*************************
+	Contact form
+*************************/
+#contactForm textarea
+{
+	width: 500px;
+	height: 200px;
+}
+
 /***************************
 	Customization
 ***************************/

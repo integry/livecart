@@ -14,6 +14,9 @@ $routes = array(
 					array("backend", array('controller' => 'backend.index', 'action' => 'index'), array()),
 					array("admin", array('controller' => 'backend.index', 'action' => 'index'), array()),
 
+					// contact form
+					array("contact", array('controller' => 'contactForm', 'action' => 'index'), array()),
+
 					// sitemaps
 					array("sitemap-:type-:id", array('controller' => 'sitemap', 'action' => 'sitemap'), array("id" => "[0-9]+")),
 
