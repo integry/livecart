@@ -401,25 +401,17 @@ class UserController extends FrontendController
 		$this->addAccountBreadcrumb();
 		$this->application->setTheme('');
 
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->get('id')));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), 0));
+		$order = $this->getOrder($this->request->get('id'));
 
-		$s = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
-		if ($s->size())
-		{
-			$order = $s->get(0);
-			$order->loadAll();
-			$response = new ActionResponse();
-			$response->set('order', $order->toArray(array('payments' => true)));
-			$response->set('user', $this->user->toArray());
-			return $response;
-		}
-		else
+		if (!$order)
 		{
 			return new ActionRedirectResponse('user', 'index');
 		}
+
+		$response = new ActionResponse();
+		$response->set('order', $order->toArray(array('payments' => true)));
+		$response->set('user', $this->user->toArray());
+		return $response;
 	}
 
 	public function register()
@@ -914,6 +906,32 @@ class UserController extends FrontendController
 	}
 
 	/**
+	 *	Make payment for unpaid or partially paid order
+	 */
+	public function pay()
+	{
+		$this->loadLanguageFile('Checkout');
+		$this->addAccountBreadcrumb();
+		$this->addBreadCrumb($this->translate('_pay'), '');
+
+		$order = $this->getOrder($this->request->get('id'));
+
+		if (!$order || $order->isPaid->get())
+		{
+			return new ActionRedirectResponse('user', 'index');
+		}
+
+		$response = new ActionResponse();
+		$response->set('order', $order->toArray(array('payments' => true)));
+		$response->set('id', $order->getID());
+
+		$checkout = new CheckoutController($this->application);
+		$checkout->setPaymentMethodResponse($response);
+
+		return $response;
+	}
+
+	/**
 	 *	@return User
 	 */
 	private function createUser($password = '')
@@ -1192,6 +1210,23 @@ class UserController extends FrontendController
 		$validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_enter_note')));
 		$validator->addFilter('text', new HtmlSpecialCharsFilter);
 		return $validator;
+	}
+
+	private function getOrder($id)
+	{
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $id));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), 0));
+
+		$s = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
+		if ($s->size())
+		{
+			$order = $s->get(0);
+			$order->loadAll();
+
+			return $order;
+		}
 	}
 }
 

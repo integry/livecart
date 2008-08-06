@@ -137,7 +137,10 @@ class CheckoutController extends FrontendController
 
 		$paymentData = array_diff_key($this->request->toArray(), array_flip(array('controller', 'action', 'id', 'route', 'PHPSESSID')));
 
-		$express = ExpressCheckout::getNewInstance($this->order, $handler);
+		// @todo - determine if the order is new or completed earlier, but unpaid
+		// for now only new orders can be paid with express checkout methods
+		$order = $this->getPaymentOrder();
+		$express = ExpressCheckout::getNewInstance($order, $handler);
 		$express->address->set($address);
 		$express->paymentData->set(serialize($paymentData));
 		$express->save();
@@ -157,12 +160,12 @@ class CheckoutController extends FrontendController
 			}
 
 			SessionUser::setUser($user);
-			$this->order->user->set($user);
+			$order->user->set($user);
 		}
 
-		$this->order->billingAddress->set($address);
-		$this->order->shippingAddress->set($address);
-		$this->order->save();
+		$order->billingAddress->set($address);
+		$order->shippingAddress->set($address);
+		$order->save();
 
 		return new ActionRedirectResponse('checkout', 'shipping');
 	}
@@ -440,6 +443,21 @@ class CheckoutController extends FrontendController
 		$response->set('order', $this->order->toArray());
 		$response->set('currency', $this->getRequestCurrency());
 
+		$this->setPaymentMethodResponse($response);
+
+		$external = $this->application->getPaymentHandlerList(true);
+		// auto redirect to external payment page if only one handler is enabled
+		if (1 == count($external) && !$this->config->get('OFFLINE_PAYMENT') && !$this->config->get('CC_ENABLE') && !$ccForm->getValidator()->getErrorList())
+		{
+			$this->request->set('id', $external[0]);
+			return $this->redirect();
+		}
+
+		return $response;
+	}
+
+	public function setPaymentMethodResponse(ActionResponse $response)
+	{
 		$ccHandler = $this->application->getCreditCardHandler();
 		$ccForm = $this->buildCreditCardForm();
 		$response->set('ccForm', $ccForm);
@@ -461,15 +479,6 @@ class CheckoutController extends FrontendController
 		// other payment methods
 		$external = $this->application->getPaymentHandlerList(true);
 		$response->set('otherMethods', $external);
-
-		// auto redirect to external payment page if only one handler is enabled
-		if (1 == count($external) && !$this->config->get('OFFLINE_PAYMENT') && !$this->config->get('CC_ENABLE') && !$ccForm->getValidator()->getErrorList())
-		{
-			$this->request->set('id', $external[0]);
-			return $this->redirect();
-		}
-
-		return $response;
 	}
 
 	/**
@@ -477,18 +486,25 @@ class CheckoutController extends FrontendController
 	 */
 	public function payCreditCard()
 	{
-		if ($redirect = $this->validateOrder($this->order, self::STEP_PAYMENT))
+		if ($id = $this->request->get('id'))
+		{
+			$this->request->set('order', $id);
+		}
+
+		$order = $this->getPaymentOrder();
+
+		if ($redirect = $this->validateOrder($order, self::STEP_PAYMENT))
 		{
 			return $redirect;
 		}
 
 		if (!$this->buildCreditCardValidator()->isValid())
 		{
-			return new ActionRedirectResponse('checkout', 'pay');
+			return $this->getPaymentPageRedirect();
 		}
 
 		// already paid?
-		if ($this->order->isPaid->get())
+		if ($order->isPaid->get())
 		{
 			return new ActionRedirectResponse('checkout', 'completed');
 		}
@@ -524,7 +540,7 @@ class CheckoutController extends FrontendController
 			$validator->triggerError('creditCardError', $this->translate('_err_processing_cc'));
 			$validator->saveState();
 
-			$response = new ActionRedirectResponse('checkout', 'pay');
+			$response = $this->getPaymentPageRedirect();
 		}
 		else
 		{
@@ -535,6 +551,18 @@ class CheckoutController extends FrontendController
 		ActiveRecordModel::commit();
 
 		return $response;
+	}
+
+	private function getPaymentPageRedirect()
+	{
+		if ($id = $this->request->get('id'))
+		{
+			return new ActionRedirectResponse('user', 'pay', array('id' => $id));
+		}
+		else
+		{
+			return new ActionRedirectResponse('checkout', 'pay');
+		}
 	}
 
 	/**
@@ -602,7 +630,7 @@ class CheckoutController extends FrontendController
 			$validator->triggerError('creditCardError', $result->getMessage());
 			$validator->saveState();
 
-			return new ActionRedirectResponse('checkout', 'pay');
+			return $this->getPaymentPageRedirect();
 		}
 		else
 		{
@@ -618,15 +646,18 @@ class CheckoutController extends FrontendController
 	 */
 	public function redirect()
 	{
-		if ($redirect = $this->validateOrder($this->order, self::STEP_PAYMENT))
+		$order = $this->getPaymentOrder();
+		if ($redirect = $this->validateOrder($order, self::STEP_PAYMENT))
 		{
 			return $redirect;
 		}
 
+		$notifyParams = $this->request->isValueSet('order') ? array('order' => $this->request->get('order')) : array();
+
 		$class = $this->request->get('id');
 		$handler = $this->application->getPaymentHandler($class, $this->getTransaction());
-		$handler->setNotifyUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'notify', 'id' => $class))));
-		$handler->setReturnUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'completeExternal', 'id' => $this->order->getID()))));
+		$handler->setNotifyUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'notify', 'id' => $class, 'query' => $notifyParams))));
+		$handler->setReturnUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'completeExternal', 'id' => $order->getID()))));
 		$handler->setCancelUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'pay'))));
 		$handler->setSiteUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'index', 'action' => 'index'))));
 		return new RedirectResponse($handler->getUrl());
@@ -658,7 +689,7 @@ class CheckoutController extends FrontendController
 			$validator->triggerError('creditCardError', $result->getMessage());
 			$validator->saveState();
 
-			return new ActionRedirectResponse('checkout', 'pay');
+			return $this->getPaymentPageRedirect();
 		}
 
 		// determine if the notification URL is called by payment gateway or the customer himself
@@ -718,6 +749,35 @@ class CheckoutController extends FrontendController
 		$this->addBreadCrumb($this->translate('_cvv'), '');
 
 		return new ActionResponse();
+	}
+
+	private function getPaymentOrder()
+	{
+		if (!$this->paymentOrder)
+		{
+			if ($this->request->get('order'))
+			{
+				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->get('order')));
+				$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
+				$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+				$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isPaid'), false));
+				$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), 0));
+
+				$s = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
+				if ($s->size())
+				{
+					$order = $s->get(0);
+					$order->loadAll();
+					$this->paymentOrder = $this->order = $order;
+				}
+			}
+			else
+			{
+				$this->paymentOrder = $this->order;
+			}
+		}
+
+		return $this->paymentOrder;
 	}
 
 	private function registerPayment(TransactionResult $result, TransactionPayment $handler)
@@ -780,6 +840,11 @@ class CheckoutController extends FrontendController
 	 */
 	private function validateOrder(CustomerOrder $order, $step = 0)
 	{
+		if ($order->isFinalized->get())
+		{
+			return false;
+		}
+
 		// no items in shopping cart
 		if (!count($order->getShoppingCartItems()))
 		{
@@ -893,7 +958,7 @@ class CheckoutController extends FrontendController
 		return $validator;
 	}
 
-	private function buildCreditCardForm()
+	public function buildCreditCardForm()
 	{
 		ClassLoader::import("framework.request.validator.Form");
 		$form = new Form($this->buildCreditCardValidator());

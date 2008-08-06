@@ -1748,6 +1748,11 @@ a.cvv
     margin-bottom: -25px;
 }
 
+.user-pay .orderOverviewControls, .user-pay .addressContainer a
+{
+	display: none;
+}
+
 #overviewAddresses
 {
     padding-top: 2em;
@@ -2453,7 +2458,7 @@ fieldset.error, div.error, fieldset.container
 	width: auto;
 	margin-bottom: 4px;
 	margin-top: 0;
-	padding: 0px 3px 3px 20px;
+	padding: 0px 3px 0px 20px;
 	font-weight: bold;
 	font-family: Tahoma;
 }

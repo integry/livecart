@@ -1,9 +1,9 @@
 {if $order.isCancelled}
 	<span class="cancelled">{t _cancelled}</span>
 {elseif !$order.isPaid}
-	<span class="awaitingPayment">{t _awaiting_payment} 
+	<span class="awaitingPayment">{t _awaiting_payment}
 	<strong>{$order.formattedTotal[$order.Currency.ID]}</strong></span>.
-	{t _make_payment}.
+	<a href="{link controller=user action=pay id=$order.ID}">{t _make_payment}</a>.
 {else}
 	{if $order.isReturned}
 		<span class="returned">{t _returned}</span>

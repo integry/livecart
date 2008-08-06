@@ -287,6 +287,12 @@ class Transaction extends ActiveRecordModel
 		$this->isVoided->set(true);
 		$this->save();
 
+		if ($this->order->get()->getDueAmount() > 0)
+		{
+			$this->order->get()->isPaid->set(false);
+			$this->order->get()->save();
+		}
+
 		self::commit();
 
 		return $instance;
