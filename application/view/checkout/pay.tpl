@@ -108,9 +108,9 @@
 
 	{if 'OFFLINE_PAYMENT'|config}
 		<h2>{t _pay_offline}</h2>
-		<p>
-			{t _offline_instructions}
-		</p>
+
+		{include file="checkout/offlinePaymentInfo.tpl"}
+
 		<form action="{link controller=checkout action=payOffline}" method="POST">
 			<input type="submit" value="{tn _offline_complete_payment}" />
 		</form>
