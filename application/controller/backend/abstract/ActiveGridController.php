@@ -4,6 +4,8 @@ ClassLoader::import('application.controller.backend.abstract.StoreManagementCont
 
 abstract class ActiveGridController extends StoreManagementController
 {
+	const EXPORT_BUFFER_ROW_COUNT = 200;
+
 	abstract protected function getClassName();
 
 	abstract protected function getDefaultColumns();
@@ -11,6 +13,9 @@ abstract class ActiveGridController extends StoreManagementController
 	public function export()
 	{
 		@set_time_limit(0);
+
+		$count = ActiveRecordModel::getRecordCount($this->getClassName(), $this->getListFilter(), $this->getReferencedData());
+		$bufferCnt = ceil($count / self::EXPORT_BUFFER_ROW_COUNT);
 
 		// init file download
 		header('Content-Disposition: attachment; filename="' . $this->getCSVFileName() . '"');
@@ -25,35 +30,43 @@ abstract class ActiveGridController extends StoreManagementController
 		}
 		fputcsv($out, $header);
 
-		// columns
-		foreach ($this->lists(true, $columns) as $row)
+		// data
+		for ($bufferIndex = 1; $bufferIndex <= $bufferCnt; $bufferIndex++)
 		{
-			fputcsv($out, $row);
+			foreach ($this->lists(true, $columns, $bufferIndex) as $row)
+			{
+				fputcsv($out, $row);
+			}
 		}
 
 		exit;
 	}
 
-	public function lists($dataOnly = false, $displayedColumns = null)
+	public function lists($dataOnly = false, $displayedColumns = null, $exportBufferIndex = 0)
 	{
-		$filter = $this->getSelectFilter();
-		new ActiveGrid($this->application, $filter, $this->getClassName());
+		$filter = $this->getListFilter();
 		$this->setDefaultSortOrder($filter);
 
 		$recordCount = true;
 
-		$productArray = ActiveRecordModel::getRecordSetArray($this->getClassName(), $filter, $this->getReferencedData(), $recordCount);
+		if ($exportBufferIndex)
+		{
+			$exportFrom = ($exportBufferIndex - 1) * self::EXPORT_BUFFER_ROW_COUNT;
+			$filter->setLimit(self::EXPORT_BUFFER_ROW_COUNT, $exportFrom);
+		}
 
 		if (!$displayedColumns)
 		{
 			$displayedColumns = $this->getRequestColumns();
 		}
 
+		$productArray = ActiveRecordModel::getRecordSetArray($this->getClassName(), $filter, $this->getReferencedData(), $recordCount);
+
 		$productArray = $this->processDataArray($productArray, $displayedColumns);
 
 		$data = array();
 
-		foreach ($productArray as $row)
+		foreach ($productArray as &$row)
 		{
 			$record = array();
 			foreach ($displayedColumns as $column => $type)
@@ -68,6 +81,23 @@ abstract class ActiveGridController extends StoreManagementController
 			}
 
 			$data[] = $record;
+
+			// avoid possible memory leaks due to circular references (http://bugs.php.net/bug.php?id=33595)
+			// only do this for CSV export
+			// @todo: if necessary, move to ActiveRecordModel::unsetArray($row);
+			if ($exportBufferIndex)
+			{
+				foreach ($row as $key => $subArray)
+				{
+					if (is_array($subArray))
+					{
+						foreach ($subArray as $subKey => $subValue)
+						{
+							unset($row[$key][$subKey]);
+						}
+					}
+				}
+			}
 		}
 
 		if ($dataOnly)
@@ -81,6 +111,13 @@ abstract class ActiveGridController extends StoreManagementController
 		$return['data'] = $data;
 
 		return new JSONResponse($return);
+	}
+
+	private function getListFilter()
+	{
+		$filter = $this->getSelectFilter();
+		new ActiveGrid($this->application, $filter, $this->getClassName());
+		return $filter;
 	}
 
 	protected function processDataArray($dataArray, $displayedColumns)

@@ -285,6 +285,12 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $availableColumns;
 	}
 
+	protected function getExportColumns()
+	{
+		$category = Category::getInstanceByID($this->request->get('id'), Category::LOAD_DATA);
+		return $this->getDisplayedColumns($category);
+	}
+
 	protected function getDisplayedColumns(Category $category)
 	{
 		// product ID is always passed as the first column

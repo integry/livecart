@@ -3,7 +3,7 @@
 ClassLoader::import('application.model.ObjectImage');
 
 /**
- * manufacturer image (icon). One manufacturer can have multiple images.
+ * Manufacturer image (logo). One manufacturer can have multiple images.
  *
  * @package application.model.manufacturer
  * @author Integry Systems <http://integry.com>
