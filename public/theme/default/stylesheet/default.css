@@ -1216,9 +1216,9 @@ body {
 	background-repeat: repeat-x;
 }
 
-.page_content_bg {
-	background-color: #FFFFFF;
-	background: url(../image/page_top.gif) top left repeat-x;
+.page_content_bg
+{
+	background: #FFFFFF url(../image/page_top.gif) top left repeat-x;
 	border-right: 1px solid #e0f0fc;
 	border-left: 1px solid #E0F0FC;
 }
