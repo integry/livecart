@@ -24,7 +24,11 @@
 		Event.observe(li, 'mouseover', function()
 		{
 			li.addClassName('hover');
-			li.down('div.wrapper').style.width = 120;
+			var wrapper = li.down('div.wrapper');
+			if (wrapper)
+			{
+				wrapper.style.width = 120;
+			}
 		});
 		Event.observe(li, 'mouseout', function() { li.removeClassName('hover'); });
 	});

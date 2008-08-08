@@ -205,8 +205,9 @@ div.confirmationMsg div
 /*    border-top: 1px solid #CCCCCC;   */
     padding-top: 6px;
   	padding-bottom: 0;
-	position: relative;
 	z-index: 100;
+	position: relative;
+	width: 100%;
 }
 
 #storeName
@@ -897,7 +898,6 @@ ul.productList .spec
 	margin-bottom: 5px;
 	margin-top: 9px;
 	text-align: left;
-	float: left;
 }
 
 ul.productList .descr

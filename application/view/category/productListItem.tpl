@@ -40,6 +40,7 @@
 		</div>
 
 		{if $product.attributes}
+			<fieldset class="container">
 			<div class="spec">
 				{foreach from=$product.attributes item="attr" name="attr"}
 					{if $attr.values}
@@ -60,7 +61,7 @@
 					{/if}
 				{/foreach}
 			</div>
-			<div class="clear"></div>
+			</fieldset>
 		{/if}
 
 		<div class="shortDescr">

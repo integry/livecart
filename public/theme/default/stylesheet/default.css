@@ -421,7 +421,7 @@ ul.productList .pricingInfo
 {
 	padding: 0;
 	text-align: center;
-	width: 125px;
+	width: 100%;
 
 	font-size: 18px;
 	display: block;
@@ -1218,10 +1218,15 @@ body {
 
 .page_content_bg {
 	background-color: #FFFFFF;
-	background-image: url(../image/page_top.gif);
-	background-repeat: repeat-x;
+	background: url(../image/page_top.gif) top left repeat-x;
 	border-right: 1px solid #e0f0fc;
 	border-left: 1px solid #E0F0FC;
+}
+
+/* IE 6 does not respect repeat-x declaration for page_content_bg in product list pages... */
+#content, #leftSide, #rightSide
+{
+	//background: #fff;
 }
 
 .sep_hor {
@@ -1283,7 +1288,6 @@ body {
 	background-repeat: no-repeat;
 	background-position: left bottom;
 	text-indent: 8px;
-
 }
 
 .rootCategories li a
@@ -1299,7 +1303,8 @@ body {
 }
 
 .rootCategories li a,
-.rootCategories li:hover li a
+.rootCategories li:hover li a,
+.rootCategories li.hover li a
 {
 	color: #0C3D65;
 }
