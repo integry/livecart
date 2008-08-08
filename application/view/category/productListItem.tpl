@@ -60,6 +60,7 @@
 					{/if}
 				{/foreach}
 			</div>
+			<div class="clear"></div>
 		{/if}
 
 		<div class="shortDescr">

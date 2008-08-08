@@ -603,7 +603,7 @@ ul.productList .spec
 
 .productIndex .productTable
 {
-	border: 0;
+	border: 0 !important;
 	margin-right: 10px;
 	margin-left: 10px;
 }
@@ -623,6 +623,17 @@ tr.even
 tr.odd
 {
 	background-color: #F1FAFF;
+}
+
+.productTable tr.first td
+{
+	//background-color: #D2EEF2 !important;
+	//background-image: none;
+}
+
+.productTable tr.first td.ratingPreview
+{
+	background-color: #fff !important;
 }
 
 .productTable tr.first td.param

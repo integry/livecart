@@ -205,6 +205,8 @@ div.confirmationMsg div
 /*    border-top: 1px solid #CCCCCC;   */
     padding-top: 6px;
   	padding-bottom: 0;
+	position: relative;
+	z-index: 100;
 }
 
 #storeName
@@ -879,6 +881,7 @@ ul.productList .title
 	margin-top:10px;
 	position:relative;
 	top:-20px;
+	text-align: left;
 }
 
 .productGrid .title
@@ -893,6 +896,8 @@ ul.productList .spec
 	font-weight: bold;
 	margin-bottom: 5px;
 	margin-top: 9px;
+	text-align: left;
+	float: left;
 }
 
 ul.productList .descr
@@ -1293,6 +1298,7 @@ td.addToWishList
 #rateProduct table td
 {
 	padding: 4px;
+	text-align: center;
 /*	vertical-align: middle; */
 }
 
@@ -1311,7 +1317,7 @@ td.addToWishList
 .ratingCategoryName
 {
 	font-weight: bold;
-	margin-bottom: 0.5em;
+	vertical-align: middle;
 }
 
 .ratingPreview

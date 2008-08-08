@@ -1,5 +1,5 @@
 {loadJs form=true}
-<div class="box productList newestProducts">
+<div class="box newsletter">
 	<div class="title">
 		<div>{t _subscribe_to_newsletter}</div>
 	</div>
