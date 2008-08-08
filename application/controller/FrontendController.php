@@ -407,8 +407,26 @@ abstract class FrontendController extends BaseController
 
 	protected function boxRootCategoryBlock()
 	{
+		$topCategories = $this->getTopCategories();
+		$ids = array();
+		foreach ($topCategories as $cat)
+		{
+			$ids[] = $cat['ID'];
+		}
+
+		$f = new ARSelectFilter(new INCond(new ARFieldHandle('Category', 'parentNodeID'), $ids));
+		$f->setOrder(new ARFieldHandle('Category', 'parentNodeID'));
+		$f->setOrder(new ARFieldHandle('Category', 'lft'));
+
+		$subCategories = array();
+		foreach (ActiveRecordModel::getRecordSetArray('Category', $f) as $cat)
+		{
+			$subCategories[$cat['parentNodeID']][] = $cat;
+		}
+
 		$response = new BlockResponse();
-		$response->set('categories', $this->getTopCategories());
+		$response->set('categories', $topCategories);
+		$response->set('subCategories', $subCategories);
 		$response->set('currentId', $this->getTopCategoryId());
 		return $response;
 	}

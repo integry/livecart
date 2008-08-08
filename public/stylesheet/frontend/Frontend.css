@@ -1137,11 +1137,6 @@ ul.productList .orderingControls
 	font-size: 0.85em;
 }
 
-.productOptions .errorText
-{
-	clear: left;
-}
-
 .nonEditableOption
 {
 	line-height: 2em;
@@ -2463,7 +2458,6 @@ fieldset.error, div.error, fieldset.container
 {
 	color: #f22;
 	background: url(../../image/silk/gif/bullet_error.gif) left center no-repeat;
-	float: left;
 	width: auto;
 	margin-bottom: 4px;
 	margin-top: 0;
@@ -2580,6 +2574,51 @@ input.date
 .box.productList li
 {
 	margin-bottom: 7px;
+}
+
+/*************************
+	Top root category menu
+*************************/
+.rootCategories li div.wrapper
+{
+	display: none;
+	position: absolute;
+	z-index: 10;
+}
+
+.rootCategories li:hover div.wrapper,
+.rootCategories li.hover div.wrapper
+{
+	display: block;
+}
+
+.rootCategories li ul
+{
+	padding-left: 0;
+	display: table;
+}
+
+.rootCategories li ul li
+{
+	float: none;
+	background: none;
+	border: 0;
+	white-space: nowrap;
+}
+
+.rootCategories li ul li a
+{
+	display: block;
+}
+
+.rootCategories li ul li a,
+.rootCategories li ul li span,
+.rootCategories li:hover ul li a,
+.rootCategories li:hover ul li span,
+.rootCategories li.hover ul li a,
+.rootCategories li.hover ul li span
+{
+	background: none;
 }
 
 /*************************

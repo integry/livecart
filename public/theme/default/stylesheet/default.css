@@ -1247,11 +1247,11 @@ body {
 
 .box categories,
 {
-background:none;
+	background: none;
 }
 .box narrowResults
 {
-background:none;
+	background: none;
 }
 
 .rootCategories li
@@ -1281,12 +1281,16 @@ background:none;
 	background-image: url(../image/tab_btn_11.gif);
 	background-repeat: no-repeat;
 	background-position: right bottom;
-	color: #0C3D65;
 	text-decoration: none;
 	font-size: 11px;
 	text-transform: uppercase;
 	padding-right: 8px;
+}
 
+.rootCategories li a,
+.rootCategories li:hover li a
+{
+	color: #0C3D65;
 }
 
 .rootCategories li.current
@@ -1321,6 +1325,33 @@ background:none;
 	margin-right: 0px;
 	padding-right: 8px;
 }
+
+.rootCategories li div.wrapper
+{
+	border: 1px solid #6e99ae;
+	border-top: 0;
+	background: url(../image/bodyBackground.png);
+}
+
+.rootCategories li li
+{
+	margin: 0;
+	padding-left: 0;
+}
+
+.rootCategories li li a:hover,
+.rootCategories li:hover li a:hover
+{
+	background-color: #0d3f64;
+	color: white;
+}
+
+.rootCategories li.hover li,
+.rootCategories li.hover li a
+{
+	width: 220px;
+}
+
 ul.productList .descr
 {
     margin-left: 110px;
