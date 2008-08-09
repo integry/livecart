@@ -1585,7 +1585,7 @@ h3, h3 a
 	background-position: center top;
 }
 
-#relatedProducts
+#relatedProducts, #purchasedTogether
 {
 	margin-right: 20px;
 }

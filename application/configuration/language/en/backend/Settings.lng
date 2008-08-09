@@ -102,6 +102,9 @@ PRODUCT_DISPLAY_LOW_STOCK=Display low-stock warning
 PRODUCT_DISPLAY_NO_STOCK=Display notification if a product is out of stock
 NUM_PURCHASED_TOGETHER=Display products that were purchased together most often
 
+_inquiry_form=Product Inquiry Contact Form
+PRODUCT_INQUIRY_FORM=Display product inquiry form
+
 _reviews_and_ratings=Product Reviews and Ratings
 ENABLE_REVIEWS=Enable reviews
 ENABLE_RATINGS=Enable ratings

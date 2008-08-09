@@ -19,6 +19,11 @@
 
 		{include file="product/head.tpl"}
 		{include file="product/details.tpl"}
+
+		{if 'PRODUCT_INQUIRY_FORM'|config}
+			{include file="product/contactForm.tpl"}
+		{/if}
+
 		{include file="product/ratingForm.tpl"}
 
 		{if $reviews}

@@ -39,3 +39,10 @@ _msg_rating_purchase_required=Only customers who have purchased this product may
 _msg_review_added=Your review has been added.
 _msg_review_login_required=You have to <a href="[_1]">sign in</a> to review this product.
 _msg_review_purchase_required=Only customers who have purchased this product may review it.
+
+# inquiry form
+_inquire=Inquire About This Product
+_inquiry_name=Your name
+_inquiry_email=Your e-mail address
+_inquiry_msg=Your message
+_inquiry_form_sent=Your inquiry was received and we will get back to you as soon as possible.

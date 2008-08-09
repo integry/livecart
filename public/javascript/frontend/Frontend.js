@@ -115,6 +115,33 @@ Product.Rating.prototype =
 	}
 }
 
+Product.ContactForm = Class.create();
+Product.ContactForm.prototype =
+{
+	form: null,
+
+	initialize: function(form)
+	{
+		this.form = form;
+		new LiveCart.AjaxRequest(form, null, this.complete.bind(this));
+	},
+
+	complete: function(req)
+	{
+		var response = req.responseData;
+		if(response.status == 'success')
+		{
+			var parent = this.form.parentNode;
+			parent.removeChild(this.form);
+			new ConfirmationMessage(parent, response.message);
+		}
+		else
+		{
+			ActiveForm.prototype.setErrorMessages(this.form, response.errors);
+		}
+	}
+}
+
 /*****************************
 	Order related JS
 *****************************/

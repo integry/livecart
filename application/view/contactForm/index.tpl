@@ -15,6 +15,7 @@
 		{/err}
 	</p>
 
+	{* anti-spam *}
 	<div style="display: none;">
 		{err for="surname"}
 			{{label Your surname:}}

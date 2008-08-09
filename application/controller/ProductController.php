@@ -188,6 +188,12 @@ class ProductController extends FrontendController
 			$response->set('reviews', $reviews);
 		}
 
+		// contact form
+		if ($this->config->get('PRODUCT_INQUIRY_FORM'))
+		{
+			$response->set('contactForm', $this->buildContactForm());
+		}
+
 		// display theme
 		if ($theme = ProductPresentation::getThemeByProduct($product))
 		{
@@ -294,6 +300,48 @@ class ProductController extends FrontendController
 		$this->addBreadCrumb($this->translate('_reviews'), '');
 
 		return $response;
+	}
+
+	public function sendContactForm()
+	{
+		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA);
+		$redirect = new ActionRedirectResponse('product', 'index', array('id' => $product->getID()));
+
+		$validator = $this->buildContactValidator();
+		if ($validator->isValid())
+		{
+			$email = new Email($this->application);
+			$email->setTemplate('contactForm/productInquiry');
+			$email->setFrom($this->request->get('email'), $this->request->get('name'));
+			$email->setTo($this->config->get('NOTIFICATION_EMAIL'), $this->config->get('STORE_NAME'));
+			$email->set('message', $this->request->get('msg'));
+			$email->set('product', $product->toArray());
+			$email->send();
+
+			$msg = $this->translate('_inquiry_form_sent');
+			if ($this->isAjax())
+			{
+				$response = new JSONResponse(array('message' => $msg), 'success');
+			}
+			else
+			{
+				$this->setMessage($msg);
+				$response = $redirect;
+			}
+
+			return $response;
+		}
+		else
+		{
+			if ($this->isAjax())
+			{
+				return new JSONResponse(array('errors' => $validator->getErrorList()));
+			}
+			else
+			{
+				return $redirect;
+			}
+		}
 	}
 
 	public function buildAddToCartValidator($options)
@@ -485,6 +533,28 @@ class ProductController extends FrontendController
 		}
 
 		return $byGroup;
+	}
+
+	private function buildContactForm()
+	{
+		ClassLoader::import("framework.request.validator.Form");
+		return new Form($this->buildContactValidator());
+	}
+
+	public function buildContactValidator(Request $request = null)
+	{
+		$this->loadLanguageFile('ContactForm');
+		ClassLoader::import("framework.request.validator.RequestValidator");
+
+		$request = $request ? $request : $this->request;
+
+		$validator = new RequestValidator("productContactForm", $request);
+		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name')));
+		$validator->addCheck('email', new IsNotEmptyCheck($this->translate('_err_email')));
+		$validator->addCheck('msg', new IsNotEmptyCheck($this->translate('_err_message')));
+		$validator->addCheck('surname', new MaxLengthCheck('Please do not enter anything here', 0));
+
+		return $validator;
 	}
 }
 
