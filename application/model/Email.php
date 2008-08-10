@@ -38,6 +38,7 @@ class Email
 	{
 		$this->application = $application;
 		$this->set('request', $application->getRequest()->toArray());
+
 		$config = $this->application->getConfig();
 		$this->application->getLocale()->translationManager()->loadFile('User');
 
