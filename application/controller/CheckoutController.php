@@ -660,6 +660,15 @@ class CheckoutController extends FrontendController
 		$handler->setReturnUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'completeExternal', 'id' => $order->getID()))));
 		$handler->setCancelUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'pay'))));
 		$handler->setSiteUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'index', 'action' => 'index'))));
+
+		if ($handler->isPostRedirect())
+		{
+			$response = new ActionResponse();
+			$response->set('url', $handler->getUrl());
+			$response->set('params', $handler->getPostParams());
+			return $response;
+		}
+
 		return new RedirectResponse($handler->getUrl());
 	}
 

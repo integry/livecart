@@ -58,6 +58,8 @@ _select_payment_method=Select a payment method
 
 _any_changes=Any changes needed?
 
+_redirecting_to_payment_page=Redirecting to payment page...
+
 ########################
 # CVV Help
 ########################

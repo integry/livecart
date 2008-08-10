@@ -59,6 +59,23 @@ abstract class ExternalPayment extends OnlinePayment
 	{
 		$this->siteUrl = $url;
 	}
+
+	/**
+	 * Determines if the user redirect is done by form submission (POST)
+	 * or if it can be done by redirecting using a direct URL (GET)
+	 */
+	public function isPostRedirect()
+	{
+		return false;
+	}
+
+	/**
+	 * Key => value parameter array to be used in POST based redirects
+	 */
+	public function getPostParams()
+	{
+		return array();
+	}
 }
 
 ?>
