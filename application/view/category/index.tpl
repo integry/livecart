@@ -30,7 +30,9 @@
 		</p>
 	{/if}
 
-	{block PRODUCT_LISTS}
+	{if !$searchQuery}
+		{block PRODUCT_LISTS}
+	{/if}
 
 	{if $subCatFeatured}
 		<h2>{t _featured_products}</h2>

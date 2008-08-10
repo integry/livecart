@@ -597,7 +597,7 @@ class CategoryController extends FrontendController
 
 		$url = $this->router->createUrlFromRoute($this->router->getRequestedRoute(), true);
 		$url = $this->router->addQueryParams($url);
-		foreach ($filterGroups as $key => $grp)
+		foreach ((array)$filterGroups as $key => $grp)
 		{
 			if (empty($grp['filters']))
 			{
@@ -621,6 +621,12 @@ class CategoryController extends FrontendController
 			$chunks = array_chunk($manFilters, $maxCriteria);
 			$manFilters = $chunks[0];
 			$response->set('allManufacturers', $this->router->setUrlQueryParam($url, 'showAll', 'brand'));
+		}
+
+		if (!$this->category)
+		{
+			$this->category = Category::getRootNode();
+			$this->category->load();
 		}
 
 		// index page filters

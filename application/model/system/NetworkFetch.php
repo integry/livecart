@@ -28,7 +28,9 @@ class NetworkFetch
 	{
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $this->url);
-		curl_setopt($ch, CURLOPT_FILE, $this->tmpFile);
+
+		$stream = fopen($this->tmpFile, 'w');
+		curl_setopt($ch, CURLOPT_FILE, $stream);
 
 		return curl_exec($ch);
 	}

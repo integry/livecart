@@ -230,7 +230,6 @@ class CsvImportController extends StoreManagementController
 		if ($this->request->get('firstHeader'))
 		{
 			$total -= 1;
-			$csv->getRecord();
 		}
 
 		$progress = 0;
@@ -242,10 +241,17 @@ class CsvImportController extends StoreManagementController
 
 		ActiveRecord::beginTransaction();
 
+		$isFirst = true;
 		foreach ($csv as $record)
 		{
 			if (!is_array($record))
 			{
+				continue;
+			}
+
+			if ($isFirst && $this->request->get('firstHeader'))
+			{
+				$isFirst = false;
 				continue;
 			}
 
