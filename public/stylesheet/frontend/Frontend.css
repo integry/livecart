@@ -202,10 +202,9 @@ div.confirmationMsg div
 *****************************/
 #header
 {
-/*    border-top: 1px solid #CCCCCC;   */
     padding-top: 6px;
   	padding-bottom: 0;
-	z-index: 100;
+	z-index: 50;
 	position: relative;
 	width: 100%;
 }
@@ -1040,6 +1039,12 @@ ul.productList .orderingControls
     margin-bottom: 1em;
 }
 
+#ratingSummary
+{
+	float: left;
+	width: 250px;
+}
+
 #mainInfo table
 {
 	margin-top: 20px;
@@ -1231,6 +1236,12 @@ ul.attributeList.singleValue li
 #lightboxCaption
 {
 	font-size: 1.2em;
+}
+
+/* select elements do not respect z-index in IE 6 */
+.lightboxOn select
+{
+	// visibility: hidden;
 }
 
 #mainImage

@@ -212,7 +212,16 @@ LiveCart.AjaxRequest.prototype = {
 
 		if (contentType && contentType.match(/text\/javascript/))
 		{
-			response.responseData = response.responseText.evalJSON();
+			var responseData = response.responseText.evalJSON();
+			try
+			{
+				response.responseData = responseData;
+			}
+			catch (e)
+			{
+				// IE 6 won't let add new properties to the request object
+				response = { responseData: responseData }
+			}
 		}
 
 		if (contentType && contentType.match(/text\/javascript/) && $('confirmations'))
@@ -241,6 +250,7 @@ LiveCart.AjaxRequest.prototype = {
 			{
 
 			}
+
 			try
 			{
 				// Show confirmation
@@ -445,7 +455,7 @@ LiveCart.AjaxUpdater.prototype = {
 	{
 		if (this.indicatorContainerId)
 		{
-			this.indicatorContainerId.hide();
+			Element.hide(this.indicatorContainerId);
 		}
 	},
 

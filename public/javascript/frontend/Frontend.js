@@ -142,6 +142,30 @@ Product.ContactForm.prototype =
 	}
 }
 
+// lightbox changes
+window.setTimeout(function()
+{
+	if (!window.showLightbox)
+	{
+		return false;
+	}
+
+	var oldShowLightbox = window.showLightbox;
+	var oldHideLightbox = window.hideLightbox;
+
+	window.showLightbox = function()
+	{
+		oldShowLightbox.apply(this, arguments);
+		Element.addClassName(document.body, 'lightboxOn');
+	}
+
+	window.hideLightbox = function()
+	{
+		oldHideLightbox.apply(this, arguments);
+		Element.removeClassName(document.body, 'lightboxOn');
+	}
+}, 2000);
+
 /*****************************
 	Order related JS
 *****************************/
