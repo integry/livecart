@@ -12,10 +12,7 @@
 		{if $PAGE_TITLE}
 			{$PAGE_TITLE|@strip_tags}
 		{else}
-			{if $breadCrumb}
-				{assign var="lastBreadcrumb" value=$breadCrumb|@end}
-				{$lastBreadcrumb.title}
-			{/if}
+			{block BREADCRUMB_TITLE}
 		{/if}
 		- {'STORE_NAME'|config}
 	</title>

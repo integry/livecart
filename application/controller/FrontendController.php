@@ -47,6 +47,7 @@ abstract class FrontendController extends BaseController
 		$this->addBlock('SALE_ITEMS', 'saleItems', 'block/box/saleItems');
 		$this->addBlock('NEWEST_PRODUCTS', 'newestProducts', 'block/box/newestProducts');
 		$this->addBlock('BREADCRUMB', 'boxBreadCrumb', 'block/box/breadcrumb');
+		$this->addBlock('BREADCRUMB_TITLE', 'boxBreadCrumbTitle', 'block/box/breadcrumbTitle');
 		$this->addBlock('LANGUAGE', 'boxLanguageSelect', 'block/box/language');
 		$this->addBlock('CURRENCY', 'boxSwitchCurrency', 'block/box/currency');
 		$this->addBlock('CART', 'boxShoppingCart', 'block/box/shoppingCart');
@@ -186,6 +187,13 @@ abstract class FrontendController extends BaseController
 		$response = new BlockResponse();
 		$response->set('breadCrumb', $this->breadCrumb);
 		return $response;
+	}
+
+	protected function boxBreadCrumbTitleBlock()
+	{
+		$breadCrumbCopy = $this->breadCrumb;
+		$last = array_pop($breadCrumbCopy);
+		return new BlockResponse('breacCrumb', $last);
 	}
 
 	protected function boxSearchBlock()
