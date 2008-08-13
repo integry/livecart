@@ -26,7 +26,7 @@ class DatabaseImportController extends StoreManagementController
 	{
 		//ignore_user_abort(true);
 		set_time_limit(0);
-
+echo '..';
 		$validator = $this->getValidator();
 		if (!$validator->isValid())
 		{
@@ -98,7 +98,7 @@ class DatabaseImportController extends StoreManagementController
 			ActiveRecord::rollback();
 		}
 
-		if (!$this->application->isDevMode())
+		if (!$this->application->isDevMode() || 1)
 		{
 			ActiveRecord::commit();
 		}

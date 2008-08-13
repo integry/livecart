@@ -50,7 +50,7 @@ abstract class LiveCartImportDriver
 		$this->importer = $importer;
 	}
 
-	public function isSpecField()
+	public function isBillingAddress()
 	{
 		return false;
 	}
@@ -80,22 +80,38 @@ abstract class LiveCartImportDriver
 		return false;
 	}
 
-	public function isUser()
-	{
-		return false;
-	}
-
 	public function isManufacturer()
 	{
 		return false;
 	}
 
-	public function isBillingAddress()
+	public function isNewsletterSubscriber()
+	{
+		return false;
+	}
+
+	public function isSpecField()
 	{
 		return false;
 	}
 
 	public function isState()
+	{
+		return false;
+	}
+
+	public function isStaticPage()
+	{
+		return false;
+	}
+
+	public function isUser()
+	{
+		return false;
+	}
+
+
+	public function isProductRelationship()
 	{
 		return false;
 	}
@@ -279,7 +295,7 @@ abstract class LiveCartImportDriver
 
 	protected function importProductImage(Product $product, $imagePath)
 	{
-		if (file_exists($imagePath))
+		if (file_exists($imagePath) || (strtolower(substr($imagePath, 0, 7)) == 'http://'))
 		{
 			if (!isset($product->importedImages))
 			{

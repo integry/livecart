@@ -230,10 +230,11 @@ class XCartImport extends LiveCartImportDriver
 				$level = 0;
 				while ($id != 0 && ($level < 100))
 				{
+					$level++;
+
 					if (isset($this->categoryMap[$id]['parentid']))
 					{
 						$id = $this->categoryMap[$id]['parentid'];
-						$level++;
 					}
 
 					// parent category does not exist, so remove the category
@@ -326,6 +327,7 @@ class XCartImport extends LiveCartImportDriver
 		$rec->setID($data['fieldid']);
 		$rec->handle->set($data['service_name']);
 		$rec->setValueByLang('name', $this->defLang, $data['field']);
+		$rec->isDisplayed->set(true);
 
 		foreach ($this->languages as $code => $id)
 		{
@@ -455,7 +457,7 @@ class XCartImport extends LiveCartImportDriver
 		foreach ($this->getDataBySql('SELECT * FROM ' . $this->getTablePrefix() . 'order_details WHERE orderid=' . $data['orderid']) as $prod)
 		{
 			$product = Product::getInstanceById($this->getRealId('Product', $prod['productid']));
-			$order->addProduct($product, $prod['amount']);
+			$order->addProduct($product, $prod['amount'], true);
 
 			$item = array_shift($order->getItemsByProduct($product));
 			$item->price->set($prod['price']);

@@ -69,6 +69,20 @@ abstract class ObjectImage extends MultilingualObject
 
 	public function setFile($file)
 	{
+		if (substr(strtolower($file), 0, 7) == 'http://')
+		{
+			$fetch = new NetworkFetch($file);
+			$fetch->fetch();
+			$this->cacheFile = $fetch->getTmpFile();
+
+			if (!file_exists($this->cacheFile))
+			{
+				return null;
+			}
+
+			$file = $this->cacheFile;
+		}
+
 		return $this->resizeImage(new ImageManipulator($file));
 	}
 
@@ -129,6 +143,14 @@ abstract class ObjectImage extends MultilingualObject
 			$owner = $this->getOwner();
 		  	$owner->defaultImage->set($this);
 		  	$owner->save();
+		}
+	}
+
+	public function __destruct()
+	{
+		if ($this->cacheFile)
+		{
+			@unlink($this->cacheFile);
 		}
 	}
 }

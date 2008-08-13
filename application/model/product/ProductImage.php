@@ -74,6 +74,11 @@ class ProductImage extends ObjectImage
 	{
 		$array = parent::transformArray($array, $schema);
 
+		if (!$array['ID'])
+		{
+			return $array;
+		}
+
 		$array['paths'] = $array['urls'] = array();
 		$baseUrl = self::getApplication()->getRouter()->getBaseUrl();
 

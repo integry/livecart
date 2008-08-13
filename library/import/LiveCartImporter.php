@@ -6,10 +6,13 @@ ClassLoader::import('application.model.product.Manufacturer');
 ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.category.SpecField');
 ClassLoader::import('application.model.product.Product');
+ClassLoader::import('application.model.product.ProductRelationship');
 ClassLoader::import('application.model.order.CustomerOrder');
 ClassLoader::import('application.model.user.User');
 ClassLoader::import('application.model.user.BillingAddress');
 ClassLoader::import('application.model.delivery.State');
+ClassLoader::import('application.model.newsletter.NewsletterSubscriber');
+ClassLoader::import('application.model.staticpage.StaticPage');
 
 class LiveCartImporter
 {
@@ -195,6 +198,7 @@ class LiveCartImporter
 
 			$types = $this->getRecordTypes();
 			unset($types[array_search('Language', $types)]);
+			unset($types[array_search('ProductRelationship', $types)]);
 
 			foreach ($types as $type)
 			{
@@ -202,7 +206,7 @@ class LiveCartImporter
 				$f->setOrder(new ARFieldHandle($type, 'ID'), 'DESC');
 				$f->setLimit(1);
 				$record = array_shift(ActiveRecordModel::getRecordSetArray($type, $f));
-				$offsets[$type] = $record['ID'] + 1;
+				$offsets[$type] = $record['ID'];
 			}
 
 			file_put_contents($file, '<?php return ' . var_export($offsets, true) . '; ?>');
@@ -224,6 +228,9 @@ class LiveCartImporter
 				'User',
 				'CustomerOrder',
 				'BillingAddress',
+				'ProductRelationship',
+				'NewsletterSubscriber',
+				'StaticPage',
 			);
 	}
 

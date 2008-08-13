@@ -206,10 +206,11 @@ class OsCommerceImport extends LiveCartImportDriver
 				$level = 0;
 				while ($id != 0 && ($level < 100))
 				{
+					$level++;
+
 					if (isset($this->categoryMap[$id]['parent_id']))
 					{
 						$id = $this->categoryMap[$id]['parent_id'];
-						$level++;
 					}
 
 					// parent category does not exist, so remove the category
@@ -349,7 +350,7 @@ class OsCommerceImport extends LiveCartImportDriver
 		foreach ($this->getDataBySql('SELECT * FROM ' . $this->getTablePrefix() . 'orders_products WHERE ' . $this->getTablePrefix() . 'orders_id=' . $data['id']) as $prod)
 		{
 			$product = Product::getInstanceById($this->getRealId('Product', $prod['products_id']));
-			$order->addProduct($product, $prod['products_quantity']);
+			$order->addProduct($product, $prod['products_quantity'], true);
 
 			$item = array_shift($order->getItemsByProduct($product));
 			$item->price->set($prod['products_price']);

@@ -130,7 +130,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	/**
 	 *  Add a product to shopping basket
 	 */
-	public function addProduct(Product $product, $count = 1)
+	public function addProduct(Product $product, $count = 1, $ignoreAvailability = false)
 	{
 		if (0 >= $count)
 		{
@@ -138,7 +138,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		}
 		else
 		{
-			if (!$product->isAvailable())
+			if (!$product->isAvailable() && !$ignoreAvailability)
 			{
 				throw new ApplicationException('Product is not available (' . $product->getID() . ')');
 			}
@@ -362,8 +362,13 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			$this->isPaid->set(true);
 		}
 
+		if (!$this->dateCompleted->get())
+		{
+			$this->dateCompleted->set(new ARSerializableDateTime());
+		}
+
 		$this->isFinalized->set(true);
-		$this->dateCompleted->set(new ARSerializableDateTime());
+
 		$this->save();
 
 		self::commit();
@@ -481,12 +486,15 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		{
 			$count = 0;
 
-			foreach($this->shipments as $shipment)
+			if ($this->shipments)
 			{
-				if($shipment->isModified())
+				foreach($this->shipments as $shipment)
 				{
-					$isModified = true;
-					break;
+					if($shipment->isModified())
+					{
+						$isModified = true;
+						break;
+					}
 				}
 			}
 		}
