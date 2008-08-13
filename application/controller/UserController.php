@@ -445,6 +445,8 @@ class UserController extends FrontendController
 	 */
 	public function login()
 	{
+		$this->addBreadCrumb($this->translate('_login'), $this->router->createUrl(array('controller' => 'user', 'action' => 'login'), true));
+
 		$response = new ActionResponse();
 		$response->set('regForm', $this->buildRegForm());
 		$response->set('email', $this->request->get('email'));
@@ -510,6 +512,8 @@ class UserController extends FrontendController
 
 	public function remindPassword()
 	{
+		$this->addBreadCrumb($this->translate('_remind_password'), $this->router->createUrl(array('controller' => 'user', 'action' => 'login'), true));
+
 		$response = new ActionResponse();
 		$response->set('form', $this->buildPasswordReminderForm());
 		$response->set('return', $this->request->get('return'));

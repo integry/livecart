@@ -72,23 +72,23 @@
 			</tr>
 			{/if}
 
-			{if 'ENABLE_CART'|config}
-			{if $options}
-				<tr>
-					<td colspan="2" class="productOptions">
-						{include file="product/options.tpl"}
+			{if $product.isAvailable && 'ENABLE_CART'|config}
+				{if $options}
+					<tr>
+						<td colspan="2" class="productOptions">
+							{include file="product/options.tpl"}
+						</td>
+					</tr>
+				{/if}
+
+				<tr id="productToCart" class="cartLinks">
+					<td class="param">{t _quantity}:</td>
+					<td class="value">
+						{selectfield name="count" options=$quantity}
+						<input type="submit" class="submit" value="{tn _add_to_cart}" />
+						{hidden name="return" value=$catRoute}
 					</td>
 				</tr>
-			{/if}
-
-			<tr id="productToCart" class="cartLinks">
-				<td class="param">{t _quantity}:</td>
-				<td class="value">
-					{selectfield name="count" options=$quantity}
-					<input type="submit" class="submit" value="{tn _add_to_cart}" />
-					{hidden name="return" value=$catRoute}
-				</td>
-			</tr>
 			{/if}
 
 			<tr id="productToWishList">

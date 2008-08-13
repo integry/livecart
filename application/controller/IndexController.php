@@ -16,7 +16,7 @@ class IndexController extends CategoryController
 		ClassLoader::import('application.controller.CategoryController');
 
 		$this->request->set('id', Category::ROOT_ID);
-		$this->request->set('cathandle', '.');
+		$this->request->set('cathandle', '-');
 
 		$response = parent::index();
 

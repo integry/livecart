@@ -21,6 +21,11 @@ function createCategoryUrl($params, LiveCart $application)
 {
 	$category = $params['data'];
 
+	if (!isset($category['ID']))
+	{
+		$category['ID'] = 1;
+	}
+
 	$handle = isset($category['name_lang']) ? createHandleString($category['name_lang']) : '';
 
 	$filters = array();
@@ -55,11 +60,6 @@ function createCategoryUrl($params, LiveCart $application)
 	if (empty($handle))
 	{
 		$handle = '-';
-	}
-
-	if (!isset($category['ID']))
-	{
-		$category['ID'] = 1;
 	}
 
 	$urlParams = array('controller' => 'category',

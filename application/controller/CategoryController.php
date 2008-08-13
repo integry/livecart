@@ -363,7 +363,7 @@ class CategoryController extends FrontendController
 		if (substr($order, 0, 12) == 'product_name')
 		{
 			$dir = array_pop(explode('_', $order)) == 'asc' ? 'ASC' : 'DESC';
-			$selectFilter->setOrder(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $this->locale->getLocaleCode()), $dir);
+			$selectFilter->setOrder(Product::getLangOrderHandle(new ARFieldHandle('Product', 'name')), $dir);
 		}
 		else if (substr($order, 0, 5) == 'price')
 		{

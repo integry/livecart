@@ -37,6 +37,8 @@
 		{/if}
 	{/if}
 
+	{include file="category/categoryProductList.tpl"}
+
 </div>
 
 {include file="layout/frontend/footer.tpl"}
