@@ -1,12 +1,12 @@
 # ---------------------------------------------------------------------- #
-# Script generated with: DeZign for Databases v5.1.1                     #
+# Script generated with: DeZign for Databases v5.2.0                     #
 # Target DBMS:           MySQL 4                                         #
 # Project file:          LiveCart.dez                                    #
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2008-06-28 03:16                                #
-# Model version:         Version 2008-06-28                              #
+# Created on:            2008-08-12 01:35                                #
+# Model version:         Version 2008-08-12                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -26,6 +26,11 @@ CREATE TABLE Product (
     parentID INTEGER UNSIGNED,
     isEnabled BOOL NOT NULL DEFAULT 0 COMMENT 'Determines if the Product is enabled (visible and available in the store frontend) 0- not available 1- available 2- disabled (not visble)',
     isRecurring BOOL,
+    isFeatured BOOL NOT NULL DEFAULT 0 COMMENT 'Determines if the product has been marked as featured product',
+    isSeparateShipment BOOL NOT NULL COMMENT 'Determines if a separate shipment is required for delivering this product',
+    isFreeShipping BOOL NOT NULL COMMENT 'Determines if free shipping is available for this product',
+    isBackOrderable BOOL NOT NULL COMMENT 'Determines if this product is available for backordering. If backordering is enabled, customers can order the product even if it is out of stock',
+    isFractionalUnit BOOL NOT NULL,
     sku VARCHAR(20) NOT NULL COMMENT 'Product stock keeping unit code',
     name MEDIUMTEXT COMMENT 'Product name (translatable)',
     shortDescription MEDIUMTEXT COMMENT 'A shorter description of the product (translatable). The short description is usually displayed in the category product list',
@@ -34,18 +39,14 @@ CREATE TABLE Product (
     dateCreated TIMESTAMP NOT NULL COMMENT 'Product creation date',
     dateUpdated TIMESTAMP COMMENT 'Product last update date',
     URL TINYTEXT COMMENT 'External website URL (manufacturers website, etc.)',
-    isFeatured BOOL NOT NULL DEFAULT 0 COMMENT 'Determines if the product has been marked as featured product',
     type TINYINT UNSIGNED DEFAULT 0 COMMENT 'Determines if the product is intangible (1) or tangible (0)',
-    voteSum INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sum of all rating votes',
-    voteCount INTEGER UNSIGNED DEFAULT 0 COMMENT 'Count of all rating votes',
-    rating FLOAT COMMENT 'Product rating (voteSum divided by voteCount)',
+    ratingSum INTEGER UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Sum of all rating votes',
+    ratingCount INTEGER UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Count of all rating votes',
+    rating FLOAT NOT NULL COMMENT 'Product rating (voteSum divided by voteCount)',
     hits INTEGER UNSIGNED DEFAULT 0 COMMENT 'Number of times the product has been viewed by customers',
+    reviewCount INTEGER NOT NULL,
     minimumQuantity FLOAT COMMENT 'Minimum amount of the product that can be ordered',
     shippingSurchargeAmount NUMERIC(12,2) COMMENT 'Additional surcharge for shipping (extra large, etc. items)',
-    isSeparateShipment BOOL NOT NULL COMMENT 'Determines if a separate shipment is required for delivering this product',
-    isFreeShipping BOOL NOT NULL COMMENT 'Determines if free shipping is available for this product',
-    isBackOrderable BOOL NOT NULL COMMENT 'Determines if this product is available for backordering. If backordering is enabled, customers can order the product even if it is out of stock',
-    isFractionalUnit BOOL NOT NULL,
     shippingWeight NUMERIC(8,3) COMMENT 'Weight of the product (including shipping wrappers, etc). This value is used for calculating the shipping rates.',
     stockCount FLOAT COMMENT 'Number of products in stock',
     reservedCount FLOAT COMMENT 'Number of products that are reserved (ordered and in stock but not delivered yet)',
@@ -231,6 +232,7 @@ CREATE TABLE User (
     dateCreated TIMESTAMP NOT NULL COMMENT 'The date the users account was created',
     isEnabled BOOL NOT NULL COMMENT 'Determines if the user account is enabled',
     isAdmin BOOL NOT NULL,
+    preferences TEXT,
     CONSTRAINT PK_User PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT = 'Store system base user (including frontend and backend)';
@@ -356,6 +358,7 @@ ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE Manufacturer (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    defaultImageID INTEGER UNSIGNED,
     name VARCHAR(60) NOT NULL COMMENT 'Name (brand name) of the manufacturer',
     CONSTRAINT PK_Manufacturer PRIMARY KEY (ID)
 )
@@ -547,12 +550,20 @@ CREATE TABLE ProductReview (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     productID INTEGER UNSIGNED,
     userID INTEGER UNSIGNED,
+    isEnabled BOOL,
+    ip INTEGER(11) UNSIGNED,
+    dateCreated TIMESTAMP,
+    rating FLOAT,
+    ratingSum INTEGER NOT NULL,
+    ratingCount INTEGER NOT NULL,
+    nickname VARCHAR(100),
     title VARCHAR(255),
     text TEXT,
-    dateCreated TIMESTAMP,
     CONSTRAINT PK_ProductReview PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+CREATE INDEX IP_address ON ProductReview (ip);
 
 # ---------------------------------------------------------------------- #
 # Add table "UserAddress"                                                #
@@ -973,12 +984,18 @@ ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE ProductRating (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    productID INTEGER UNSIGNED NOT NULL,
+    userID INTEGER UNSIGNED,
     reviewID INTEGER UNSIGNED,
     ratingTypeID INTEGER UNSIGNED,
-    rating INTEGER,
+    rating INTEGER NOT NULL,
+    dateCreated TIMESTAMP,
+    ip INTEGER(11) UNSIGNED,
     CONSTRAINT PK_ProductRating PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+CREATE INDEX IP_address ON ProductRating (ip);
 
 # ---------------------------------------------------------------------- #
 # Add table "CategoryPresentation"                                       #
@@ -1228,6 +1245,90 @@ CREATE TABLE EavObject (
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
+# Add table "ManufacturerImage"                                          #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ManufacturerImage (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    manufacturerID INTEGER UNSIGNED NOT NULL COMMENT 'The Product the particular image belongs to',
+    title MEDIUMTEXT COMMENT 'Image name (translatable)',
+    position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other images that are assigned to the same product (the first image is the default one)',
+    CONSTRAINT PK_ManufacturerImage PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "ProductRatingSummary"                                       #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ProductRatingSummary (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    productID INTEGER UNSIGNED,
+    ratingTypeID INTEGER UNSIGNED,
+    ratingSum INTEGER NOT NULL,
+    ratingCount INTEGER NOT NULL,
+    rating FLOAT NOT NULL,
+    CONSTRAINT PK_ProductRatingSummary PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "ProductList"                                                #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ProductList (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    categoryID INTEGER UNSIGNED,
+    isRandomOrder BOOL,
+    listStyle INTEGER,
+    limitCount INTEGER,
+    position INTEGER UNSIGNED DEFAULT 0,
+    name MEDIUMTEXT,
+    CONSTRAINT PK_ProductList PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "ProductListItem"                                            #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ProductListItem (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    productListID INTEGER UNSIGNED,
+    productID INTEGER UNSIGNED,
+    position INTEGER UNSIGNED DEFAULT 0,
+    CONSTRAINT PK_ProductListItem PRIMARY KEY (ID),
+    CONSTRAINT TUC_ProductListItem_1 UNIQUE (productListID, productID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "DiscountCondition"                                          #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE DiscountCondition (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    parentNodeID INTEGER,
+    lft INTEGER,
+    rgt INTEGER,
+    isAnyProduct BOOL,
+    isEnabled BOOL,
+    isValidByDate BOOL,
+    isAllSubconditions BOOL,
+    dateFrom TIMESTAMP,
+    dateTo TIMESTAMP,
+    count FLOAT,
+    subtotal FLOAT,
+    comparisonType TINYINT COMMENT '0 - equal, 1 - less than or equal, 2 - greater than or equal, 3 - not equal',
+    name MEDIUMTEXT,
+    description MEDIUMTEXT,
+    couponCode VARCHAR(40),
+    serializedCondition TEXT,
+    CONSTRAINT PK_DiscountCondition PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
 # Foreign key constraints                                                #
 # ---------------------------------------------------------------------- #
 
@@ -1235,7 +1336,7 @@ ALTER TABLE Product ADD CONSTRAINT Category_Product
     FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Product ADD CONSTRAINT Manufacturer_Product 
-    FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE Product ADD CONSTRAINT ProductImage_Product 
     FOREIGN KEY (defaultImageID) REFERENCES ProductImage (ID) ON DELETE SET NULL ON UPDATE SET NULL;
@@ -1324,6 +1425,9 @@ ALTER TABLE ProductPrice ADD CONSTRAINT Currency_ProductPrice
 ALTER TABLE ProductPrice ADD CONSTRAINT RecurringProductPeriod_ProductPrice 
     FOREIGN KEY (recurringID) REFERENCES RecurringProductPeriod (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
+ALTER TABLE Manufacturer ADD CONSTRAINT ManufacturerImage_Manufacturer 
+    FOREIGN KEY (defaultImageID) REFERENCES ManufacturerImage (ID) ON DELETE SET NULL ON UPDATE SET NULL;
+
 ALTER TABLE ProductImage ADD CONSTRAINT Product_ProductImage 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -1364,10 +1468,10 @@ ALTER TABLE ProductRelationshipGroup ADD CONSTRAINT Product_ProductRelationshipG
     FOREIGN KEY (ProductID) REFERENCES Product (ID) ON DELETE CASCADE;
 
 ALTER TABLE ProductReview ADD CONSTRAINT Product_ProductReview 
-    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE;
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductReview ADD CONSTRAINT User_ProductReview 
-    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
+    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE UserAddress ADD CONSTRAINT State_UserAddress 
     FOREIGN KEY (stateID) REFERENCES State (ID) ON DELETE SET NULL;
@@ -1484,7 +1588,13 @@ ALTER TABLE ProductRating ADD CONSTRAINT ProductRatingType_ProductRating
     FOREIGN KEY (ratingTypeID) REFERENCES ProductRatingType (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductRating ADD CONSTRAINT ProductReview_ProductRating 
-    FOREIGN KEY (reviewID) REFERENCES ProductReview (ID);
+    FOREIGN KEY (reviewID) REFERENCES ProductReview (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductRating ADD CONSTRAINT Product_ProductRating 
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductRating ADD CONSTRAINT User_ProductRating 
+    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE CategoryPresentation ADD CONSTRAINT Category_CategoryPresentation 
     FOREIGN KEY (ID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1557,3 +1667,21 @@ ALTER TABLE EavObject ADD CONSTRAINT Manufacturer_EavObject
 
 ALTER TABLE EavObject ADD CONSTRAINT CustomerOrder_EavObject 
     FOREIGN KEY (customerOrderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ManufacturerImage ADD CONSTRAINT Manufacturer_ManufacturerImage 
+    FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductRatingSummary ADD CONSTRAINT Product_ProductRatingSummary 
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductRatingSummary ADD CONSTRAINT ProductRatingType_ProductRatingSummary 
+    FOREIGN KEY (ratingTypeID) REFERENCES ProductRatingType (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductList ADD CONSTRAINT Category_ProductList 
+    FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductListItem ADD CONSTRAINT ProductList_ProductListItem 
+    FOREIGN KEY (productListID) REFERENCES ProductList (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductListItem ADD CONSTRAINT Product_ProductListItem 
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
