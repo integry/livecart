@@ -14,6 +14,11 @@ class VCS extends ExternalPayment
 		return 'https://www.vcs.co.za/vvonline/ccform.asp';
 	}
 
+	public function isPostRedirect()
+	{
+		return true;
+	}
+
 	public function getPostParams()
 	{
 		$params = array();
@@ -36,8 +41,6 @@ class VCS extends ExternalPayment
 		// URL for Cancelled Transactions.
 		$params['p10'] = $this->siteUrl;
 
-//		$params['complete_url'] = $this->returnUrl;
-
 		// customer information
 		$params['p'] = $this->details->email->get();
 
@@ -48,10 +51,12 @@ class VCS extends ExternalPayment
 	{
 		echo '<CallBackResponse>Accepted</CallBackResponse>';
 
+file_put_contents('/var/www/livecart/cache/vcs', var_export($requestArray, true));
+
 		$result = new TransactionResult();
 		$result->gatewayTransactionID->set($requestArray['p2']);
 		$result->amount->set($requestArray['p6']);
-		$result->currency->set($this->get2CoCurrency());
+		$result->currency->set('ZAR');
 		$result->rawResponse->set($requestArray);
 		$result->setTransactionType(TransactionResult::TYPE_SALE);
 
@@ -68,15 +73,9 @@ class VCS extends ExternalPayment
 		return true;
 	}
 
-	public function get2CoCurrency()
-	{
-		return $this->getValidCurrency($this->getConfigValue('currency'));
-	}
-
 	public function getValidCurrency($currentCurrencyCode)
 	{
-		$currentCurrencyCode = strtoupper($currentCurrencyCode);
-		return in_array($currentCurrencyCode, array('AUD', 'CAD', 'CHF', 'DKK', 'EUR', 'GBP', 'HKD', 'JPY', 'NOK', 'NZD', 'SEK', 'USD')) ? $currentCurrencyCode : 'USD';
+		return 'ZAR';
 	}
 
 	public function isVoidable()

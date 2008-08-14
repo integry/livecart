@@ -281,7 +281,7 @@ class Config
 
 				$subpath = $file->getPath() . '/' . substr($key, 3);
 
-				if (file_exists($subpath))
+				if (file_exists($subpath) && (strlen($key) > 3))
 				{
 				  	$out['subs'] = $this->getTree($subpath, substr($key, 3));
 				}

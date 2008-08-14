@@ -1,12 +1,12 @@
 # ---------------------------------------------------------------------- #
-# Script generated with: DeZign for Databases v5.1.1                     #
+# Script generated with: DeZign for Databases v5.2.0                     #
 # Target DBMS:           MySQL 4                                         #
 # Project file:          LiveCart.dez                                    #
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database drop script                            #
-# Created on:            2008-06-28 03:16                                #
-# Model version:         Version 2008-06-28                              #
+# Created on:            2008-08-12 01:35                                #
+# Model version:         Version 2008-08-12                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -75,6 +75,8 @@ ALTER TABLE ProductPrice DROP FOREIGN KEY Product_ProductPrice;
 ALTER TABLE ProductPrice DROP FOREIGN KEY Currency_ProductPrice;
 
 ALTER TABLE ProductPrice DROP FOREIGN KEY RecurringProductPeriod_ProductPrice;
+
+ALTER TABLE Manufacturer DROP FOREIGN KEY ManufacturerImage_Manufacturer;
 
 ALTER TABLE ProductImage DROP FOREIGN KEY Product_ProductImage;
 
@@ -184,6 +186,10 @@ ALTER TABLE ProductRating DROP FOREIGN KEY ProductRatingType_ProductRating;
 
 ALTER TABLE ProductRating DROP FOREIGN KEY ProductReview_ProductRating;
 
+ALTER TABLE ProductRating DROP FOREIGN KEY Product_ProductRating;
+
+ALTER TABLE ProductRating DROP FOREIGN KEY User_ProductRating;
+
 ALTER TABLE CategoryPresentation DROP FOREIGN KEY Category_CategoryPresentation;
 
 ALTER TABLE ProductPriceRule DROP FOREIGN KEY Product_ProductPriceRule;
@@ -232,6 +238,18 @@ ALTER TABLE EavObject DROP FOREIGN KEY Manufacturer_EavObject;
 
 ALTER TABLE EavObject DROP FOREIGN KEY CustomerOrder_EavObject;
 
+ALTER TABLE ManufacturerImage DROP FOREIGN KEY Manufacturer_ManufacturerImage;
+
+ALTER TABLE ProductRatingSummary DROP FOREIGN KEY Product_ProductRatingSummary;
+
+ALTER TABLE ProductRatingSummary DROP FOREIGN KEY ProductRatingType_ProductRatingSummary;
+
+ALTER TABLE ProductList DROP FOREIGN KEY Category_ProductList;
+
+ALTER TABLE ProductListItem DROP FOREIGN KEY ProductList_ProductListItem;
+
+ALTER TABLE ProductListItem DROP FOREIGN KEY Product_ProductListItem;
+
 # ---------------------------------------------------------------------- #
 # Drop table "Product"                                                   #
 # ---------------------------------------------------------------------- #
@@ -244,9 +262,9 @@ ALTER TABLE Product ALTER COLUMN isFeatured DROP DEFAULT;
 
 ALTER TABLE Product ALTER COLUMN type DROP DEFAULT;
 
-ALTER TABLE Product ALTER COLUMN voteSum DROP DEFAULT;
+ALTER TABLE Product ALTER COLUMN ratingSum DROP DEFAULT;
 
-ALTER TABLE Product ALTER COLUMN voteCount DROP DEFAULT;
+ALTER TABLE Product ALTER COLUMN ratingCount DROP DEFAULT;
 
 ALTER TABLE Product ALTER COLUMN hits DROP DEFAULT;
 
@@ -1225,3 +1243,71 @@ ALTER TABLE EavObject DROP PRIMARY KEY;
 # Drop table #
 
 DROP TABLE EavObject;
+
+# ---------------------------------------------------------------------- #
+# Drop table "ManufacturerImage"                                         #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE ManufacturerImage ALTER COLUMN position DROP DEFAULT;
+
+ALTER TABLE ManufacturerImage DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE ManufacturerImage;
+
+# ---------------------------------------------------------------------- #
+# Drop table "ProductRatingSummary"                                      #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE ProductRatingSummary DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE ProductRatingSummary;
+
+# ---------------------------------------------------------------------- #
+# Drop table "ProductList"                                               #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE ProductList ALTER COLUMN position DROP DEFAULT;
+
+ALTER TABLE ProductList DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE ProductList;
+
+# ---------------------------------------------------------------------- #
+# Drop table "ProductListItem"                                           #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE ProductListItem ALTER COLUMN position DROP DEFAULT;
+
+ALTER TABLE ProductListItem DROP PRIMARY KEY;
+
+DROP INDEX TUC_ProductListItem_1 ON ProductListItem;
+
+# Drop table #
+
+DROP TABLE ProductListItem;
+
+# ---------------------------------------------------------------------- #
+# Drop table "DiscountCondition"                                         #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE DiscountCondition DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE DiscountCondition;
