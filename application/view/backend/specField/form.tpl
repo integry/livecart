@@ -31,6 +31,7 @@
 
 		<p class="checkbox">
 			<input type="checkbox" value="1" name="isMultiValue" class="checkbox specField_form_multipleSelector" {denied role="category.update"}disabled="disabled"{/denied} />
+			<input type="hidden" value="1" name="checkbox_isMultiValue" />
 			<label class="specField_form_multipleSelector_label">{t _SpecField_select_multiple}</label>
 		</p>
 

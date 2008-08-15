@@ -34,6 +34,12 @@ abstract class FrontendController extends BaseController
 				$this->router->addAutoAppendQueryVariable($key, $this->request->get($key));
 			}
 		}
+
+		// disallow creating new EAV select field values from frontend
+		if (is_array($this->request->get('other')))
+		{
+			$this->request->remove('other');
+		}
 	}
 
 	public function init()

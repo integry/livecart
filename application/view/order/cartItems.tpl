@@ -91,7 +91,7 @@
 						<div class="container">
 			{/header}
 			{content}
-					{include file="backend/eav/fields.tpl" item=$cart filter="isDisplayed"}
+					{include file="block/eav/fields.tpl" item=$cart filter="isDisplayed"}
 			{/content}
 			{footer}
 						<p>

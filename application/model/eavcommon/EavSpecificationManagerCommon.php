@@ -420,11 +420,6 @@ abstract class EavSpecificationManagerCommon
 				{
 					$specFieldArray[$key]['values'][$value['ID']] = $value['value_lang'];
 				}
-
-				if (!$field->isMultiValue->get())
-				{
-					$specFieldArray[$key]['values']['other'] = ActiveRecordModel::getApplication()->translate('_enter_other');
-				}
 			}
 		}
 

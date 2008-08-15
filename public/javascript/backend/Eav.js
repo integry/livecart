@@ -58,6 +58,12 @@ Backend.Eav.specFieldEntrySingleSelect.prototype =
 	handleChange: function(e)
 	{
 		var otherInput = this.field.parentNode.getElementsByTagName('input')[0];
+
+		if (!otherInput)
+		{
+			return false;
+		}
+
 		otherInput.style.display = ('other' == this.field.value) ? 'block' : 'none';
 
 		if ('none' != otherInput.style.display)
@@ -87,8 +93,11 @@ Backend.Eav.specFieldEntryMultiValue.prototype =
 		this.mainContainer = container;
 		this.container = document.getElementsByClassName('other', container)[0];
 
-		var inp = this.container.getElementsByTagName('input')[0];
-		this.bindField(inp);
+		if (this.container)
+		{
+			var inp = this.container.getElementsByTagName('input');
+			this.bindField(inp);
+		}
 	},
 
 	selectAll: function(e)
@@ -166,14 +175,17 @@ Backend.Eav.specFieldEntryMultiValue.prototype =
 	{
 		Event.stop(e);
 
-		var nodes = this.container.getElementsByTagName('p');
-		var ln = nodes.length;
-		for (k = 1; k < ln; k++)
+		if (this.container)
 		{
-		  	nodes[1].parentNode.removeChild(nodes[1]);
+			var nodes = this.container.getElementsByTagName('p');
+			var ln = nodes.length;
+			for (k = 1; k < ln; k++)
+			{
+				nodes[1].parentNode.removeChild(nodes[1]);
+			}
+			nodes[0].getElementsByTagName('input')[0].value = '';
 		}
 
-		nodes[0].getElementsByTagName('input')[0].value = '';
 		this.toggleAll(false);
 	},
 

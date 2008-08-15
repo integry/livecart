@@ -1091,6 +1091,11 @@ select.narrow
 	font-size: smaller;
 }
 
+.specificationGroup
+{
+	font-weight: bold;
+}
+
 /***************************
 	Form types
 ***************************/

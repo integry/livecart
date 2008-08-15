@@ -16,12 +16,14 @@
 			{/if}
 		{/foreach}
 
-		<div class="other">
-			<p>
-				<label for="product_{$cat}_{$item.ID}_specItem_other_{$field.ID}"> {t _other}:</label>
-				{textfield name="other[`$field.ID`][]" id="product_`$cat`_`$item.ID`_specItem_other_`$field.ID`"}
-			</p>
-		</div>
+		{if !$disableNewOptionValues}
+			<div class="other">
+				<p>
+					<label for="product_{$cat}_{$item.ID}_specItem_other_{$field.ID}"> {t _other}:</label>
+					{textfield name="other[`$field.ID`][]" id="product_`$cat`_`$item.ID`_specItem_other_`$field.ID`"}
+				</p>
+			</div>
+		{/if}
 
 		<p class="selectMenu">
 			<a href="#" class="eavSelectAll">{t _select_all}</a> | <a href="#" class="deselect eavDeselectAll">{t _deselect_all}</a>
@@ -30,8 +32,13 @@
 		</fieldset>
 		<input class="fieldStatus" name="{$fieldName}" value="" style="display: none;" />
 	{else}
+		{if !$disableNewOptionValues}
+			{php}$field = $this->get_template_vars('field'); $field['values']['other'] = $this->getApplication()->translate('_enter_other'); $this->assign('field', $field);{/php}
+		{/if}
 		{selectfield id="product_`$cat`_`$item.ID`_`$fieldName`" name=$fieldName options=$field.values class="select"}
-		{textfield name="other[`$field.ID`]" id="product_`$cat`_`$item.ID`_specItem_other_`$field.ID`" style="display: none" class="text wide"}
+		{if !$disableNewOptionValues}
+			{textfield name="other[`$field.ID`]" id="product_`$cat`_`$item.ID`_specItem_other_`$field.ID`" style="display: none" class="text wide"}
+		{/if}
 	{/if}
 
 {elseif $field.type == 2}
