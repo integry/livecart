@@ -70,6 +70,14 @@ abstract class ExternalPayment extends OnlinePayment
 	}
 
 	/**
+	 * Determines if the transaction information is posted back by payment gateway
+	 */
+	public function isNotify()
+	{
+		return true;
+	}
+
+	/**
 	 * Key => value parameter array to be used in POST based redirects
 	 */
 	public function getPostParams()

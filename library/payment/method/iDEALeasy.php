@@ -7,16 +7,21 @@ include_once(dirname(__file__) . '/../abstract/ExternalPayment.php');
  * @package library.payment.method
  * @author Integry Systems
  */
-class iDEAL extends ExternalPayment
+class iDEALeasy extends ExternalPayment
 {
 	public function getUrl()
 	{
-		return 'https://www.vcs.co.za/vvonline/ccform.asp';
+		return 'https://internetkassa.abnamro.nl/ncol/prod/orderstandard.asp';
 	}
 
 	public function isPostRedirect()
 	{
 		return true;
+	}
+
+	public function isNotify()
+	{
+		return false;
 	}
 
 	public function getPostParams()
@@ -27,7 +32,7 @@ class iDEAL extends ExternalPayment
 		$params['PSPID'] = $this->getConfigValue('account');
 		$params['orderID'] = $this->details->invoiceID->get();
 		$params['COM'] = $this->getConfigValue('description');
-		$params['amount'] = $this->details->amount->get();
+		$params['amount'] = $this->details->amount->get() * 100;
 		$params['currency'] = 'EUR';
 		$params['language'] = 'NL_NL';
 		$params['PM'] = 'iDEAL';
@@ -48,23 +53,12 @@ class iDEAL extends ExternalPayment
 
 	public function notify($requestArray)
 	{
-		echo '<CallBackResponse>Accepted</CallBackResponse>';
-
-file_put_contents('/var/www/livecart/cache/vcs', var_export($requestArray, true));
-
-		$result = new TransactionResult();
-		$result->gatewayTransactionID->set($requestArray['p2']);
-		$result->amount->set($requestArray['p6']);
-		$result->currency->set('ZAR');
-		$result->rawResponse->set($requestArray);
-		$result->setTransactionType(TransactionResult::TYPE_SALE);
-
-		return $result;
+		return null;
 	}
 
 	public function getOrderIdFromRequest($requestArray)
 	{
-		return $requestArray['p2'];
+		return null;
 	}
 
 	public function isHtmlResponse()
@@ -74,7 +68,7 @@ file_put_contents('/var/www/livecart/cache/vcs', var_export($requestArray, true)
 
 	public function getValidCurrency($currentCurrencyCode)
 	{
-		return 'ZAR';
+		return 'EUR';
 	}
 
 	public function isVoidable()

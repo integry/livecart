@@ -661,6 +661,12 @@ class CheckoutController extends FrontendController
 		$handler->setCancelUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'pay'))));
 		$handler->setSiteUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'index', 'action' => 'index'))));
 
+		// transaction information is not return back online, so the order is finalized right away
+		if (!$handler->isNotify())
+		{
+			$this->finalizeOrder();
+		}
+
 		if ($handler->isPostRedirect())
 		{
 			$response = new ActionResponse();
