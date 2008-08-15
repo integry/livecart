@@ -141,6 +141,11 @@ ActiveForm.prototype = {
 
 	initTinyMceFields: function(container)
 	{
+		if (!window.tinyMCE)
+		{
+			return false;
+		}
+
 		var textareas = $(container).getElementsBySelector('textarea.tinyMCE');
 		for (k = 0; k < textareas.length; k++)
 		{

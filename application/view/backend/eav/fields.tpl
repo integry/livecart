@@ -1,29 +1,45 @@
+{include file="backend/eav/includes.tpl"}
 {assign var=containerId value=$blah|rand:1000000}
-<div id="eavContainer_{$containerId}">
-{foreach from=$specFieldList key=groupID item=fieldList}
 
-	{if $groupID}
-		<fieldset>
-			<legend>{$fieldList.0.$groupClass.name_lang}</legend>
-	{/if}
+{sect}
+	{header}
+		<div id="eavContainer_{$containerId}">
+	{/header}
+	{content}
+		{foreach from=$specFieldList key=groupID item=fieldList}
 
-	{foreach from=$fieldList item=field}
-	<p class="{if $field.isRequired}required{/if} {if !$field.isDisplayed}notDisplayed{/if}">
-		<label for="product_{$cat}_{$product.ID}_{$field.fieldName}">{$field.name_lang}:</label>
-		<fieldset class="error">
-			{include file="backend/eav/specFieldFactory.tpl" field=$field cat=$cat}
-			<div class="errorText hidden"></div>
-		</fieldset>
-	</p>
-	{/foreach}
+			{if $groupID}
+				<fieldset>
+					<legend>{$fieldList.0.$groupClass.name_lang}</legend>
+			{/if}
 
-	{if $groupID}
-		</fieldset>
-	{/if}
-{/foreach}
-</div>
+			{foreach from=$fieldList item=field}
+				{if !$filter || ($filter && $field[$filter])}
+					<p class="{if $field.isRequired}required{/if} {if !$field.isDisplayed}notDisplayed{/if}">
+						<label for="product_{$cat}_{$product.ID}_{$field.fieldName}">{$field.name_lang}:</label>
+						<fieldset class="error">
+							{include file="backend/eav/specFieldFactory.tpl" field=$field cat=$cat}
+							{if $field.description}
+								<div class="fieldDescription">{$field.description}</div>
+							{/if}
+							<div class="errorText hidden{error for=$field.fieldName} visible{/error}">{error for=$field.fieldName}{$msg}{/error}</div>
+						</fieldset>
+					</p>
+				{/if}
+			{/foreach}
 
-{literal}
-<script type="text/javascript">
-	new Backend.Eav($('eavContainer_{/literal}{$containerId}'));
-</script>
+			{if $groupID}
+				</fieldset>
+			{/if}
+		{/foreach}
+	{/content}
+
+	{footer}
+		</div>
+
+		{literal}
+		<script type="text/javascript">
+			new Backend.Eav($('eavContainer_{/literal}{$containerId}'));
+		</script>
+	{/footer}
+{/sect}

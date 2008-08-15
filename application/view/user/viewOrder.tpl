@@ -83,6 +83,8 @@
 			{/if}
 		{/defun}
 
+		{include file="order/fieldValues.tpl"}
+
 		<div id="overviewAddresses">
 
 			{if $order.ShippingAddress}

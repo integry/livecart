@@ -199,6 +199,24 @@ Order.OptionLoader.prototype =
 	}
 }
 
+Order.submitCartForm = function(anchor)
+{
+	var form = anchor.up('form');
+
+	if (validateForm(form))
+	{
+		var redirect = document.createElement('input');
+		redirect.type = 'hidden';
+		redirect.name = 'proceed';
+		redirect.value = 'true';
+		form.appendChild(redirect);
+
+		form.submit();
+	}
+
+	return false;
+}
+
 /*****************************
 	User related JS
 *****************************/

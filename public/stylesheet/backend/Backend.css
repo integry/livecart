@@ -1086,6 +1086,11 @@ select.narrow
 	font-size: smaller;
 }
 
+.fieldDescription
+{
+	font-size: smaller;
+}
+
 /***************************
 	Form types
 ***************************/

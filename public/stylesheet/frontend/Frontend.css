@@ -1561,6 +1561,29 @@ div.checkout a
     text-align: right;
 }
 
+#cartFields .container
+{
+	padding: 0 1em 0.5em 0.5em;
+	background-color: lightyellow;
+	border: 1px solid #ddd;
+	margin: 0.5em 0;
+}
+
+#cartFields .wide, #cartFields textarea
+{
+	width: 100%;
+}
+
+#cartFields textarea
+{
+	height: 80px;
+}
+
+.fieldDescription
+{
+	font-size: smaller;
+}
+
 /*****************************
 	Checkout
 ***************************/
@@ -1767,7 +1790,7 @@ a.cvv
 
 #overviewAddresses
 {
-    padding-top: 2em;
+    padding-top: 0.5em;
     padding-bottom: 2em;
 }
 
@@ -2551,7 +2574,43 @@ input.money, input.number
 
 input.date
 {
-  	width: 6em;
+  	width: 7em;
+}
+
+/***************************
+	Calendar
+***************************/
+img.calendar_button
+{
+    margin-left: 0.5em;
+    cursor: pointer;
+    border: 0px none;
+    vertical-align: middle;
+}
+
+img.calendar_button_hover
+{
+    background: red;
+}
+
+/***************************
+	EAV
+***************************/
+.eavAttributes label
+{
+	float: none;
+	width: auto;
+	display: block;
+}
+
+.eavAttributes .attrName
+{
+	font-weight: bold;
+}
+
+.eavAttributes .attrValue
+{
+	margin-left: 1em;
 }
 
 /*************************

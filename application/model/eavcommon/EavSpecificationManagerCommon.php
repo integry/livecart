@@ -391,6 +391,18 @@ abstract class EavSpecificationManagerCommon
 		return $formData;
 	}
 
+	public function isValid($validatorName = 'eavValidator')
+	{
+		ClassLoader::import('framework.request.validator.RequestValidator');
+
+		$request = new Request();
+		$request->setValueArray($this->getFormData());
+		$validator = new RequestValidator($validatorName, $request);
+		$this->setValidation($validator);
+
+		return $validator->isValid();
+	}
+
 	public function setFormResponse(ActionResponse $response, Form $form)
 	{
 		$specFields = $this->owner->getSpecification()->getSpecificationFieldSet(ActiveRecordModel::LOAD_REFERENCES);
@@ -451,7 +463,7 @@ abstract class EavSpecificationManagerCommon
 		//$this->setFormValidator($form->getValidator());
 	}
 
-	public function setValidation(RequestValidator $validator)
+	public function setValidation(RequestValidator $validator, $filtersOnly = false)
 	{
 		$specFields = $this->getSpecificationFieldSet(ActiveRecordModel::LOAD_REFERENCES);
 
@@ -464,12 +476,16 @@ abstract class EavSpecificationManagerCommon
 		  	// validate numeric values
 			if (EavFieldCommon::TYPE_NUMBERS_SIMPLE == $field->type->get())
 		  	{
-				$validator->addCheck($fieldname, new IsNumericCheck($application->translate('_err_numeric')));
+				if (!$filtersOnly)
+				{
+					$validator->addCheck($fieldname, new IsNumericCheck($application->translate('_err_numeric')));
+				}
+
 				$validator->addFilter($fieldname, new NumericFilter());
 			}
 
 		  	// validate required fields
-			if ($field->isRequired->get())
+			if ($field->isRequired->get() && !$filtersOnly)
 		  	{
 				if (!($field->isSelector() && $field->isMultiValue->get()))
 				{

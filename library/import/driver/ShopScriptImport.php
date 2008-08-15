@@ -189,6 +189,8 @@ class ShopScriptImport extends LiveCartImportDriver
 			$currency->rate->set($data['currency_value']);
 		}
 
+		$currency->isEnabled->set(true);
+
 		if ($this->getConfigValue('CONF_DEFAULT_CURRENCY') == $data['CID'])
 		{
 			$f = new ARUpdateFilter();

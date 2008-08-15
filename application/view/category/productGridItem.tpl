@@ -15,7 +15,7 @@
 
 <div class="pricingInfo"><div><div><div>
 	{if $product.isAvailable && 'ENABLE_CART'|config}
-		<a href="{link controller=order action=addToCart id=$product.ID returnPath=true}" class="addToCart">{t _add_to_cart}</a>
+		<a href="{link controller=order action=addToCart id=$product.ID returnPath=true}" rel="nofollow" class="addToCart">{t _add_to_cart}</a>
 	{/if}
 	{if 'DISPLAY_PRICES'|config}
 	<span class="price">
@@ -40,7 +40,7 @@
 		{/if}
 
 		{if 'ENABLE_WISHLISTS'|config}
-			<a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}" class="addToWishList">{t _add_to_wishlist}</a>
+			<a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}" rel="nofollow" class="addToWishList">{t _add_to_wishlist}</a>
 		{/if}
 	</div>
 </div>

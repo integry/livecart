@@ -58,17 +58,20 @@ function smarty_function_calendar($params, $smarty)
 	$output .= '<img src="image/silk/calendar.png" id="'.$params['id'].'_button" class="calendar_button" title="Date selector" onmouseover="Element.addClassName(this, \'calendar_button_hover\');" onmouseout="Element.removeClassName(this, \'calendar_button_hover\');" />';
 	$output .= <<<JAVASCRIPT
 <script type="text/javascript">
+	var visible = $("{$params['id']}");
 	var button = $("{$params['id']}_button");
-	var realInput = button.parentNode.down('.calendar-real');
+	var realInput = button.parentNode.down('.hidden');
 	button.realInput = realInput;
-	$("{$params['id']}_button").showInput = $("{$params['id']}");
-	$("{$params['id']}").realInput = realInput;
-	$("{$params['id']}").showInput = $("{$params['id']}");
 
-	Event.observe($("{$params['id']}"),		"dbclick",   Calendar.updateDate );
-	Event.observe($("{$params['id']}"),		"keyup",	 Calendar.updateDate );
-	Event.observe($("{$params['id']}"),		"blur",	  Calendar.updateDate );
-	Event.observe($("{$params['id']}_button"), "mousedown", Calendar.updateDate );
+	button.showInput = visible;
+	visible.realInput = realInput;
+	visible.showInput = visible;
+
+	Event.observe(visible, "dbclick",   Calendar.updateDate );
+	Event.observe(visible, "keyup",	 Calendar.updateDate );
+	Event.observe(visible, "blur",	  Calendar.updateDate );
+	Event.observe(button, "mousedown", Calendar.updateDate );
+	Event.observe(visible, "blur", function() { if (!this.value) { this.realInput.value = ''; } });
 
 	Calendar.setup({
 		inputField:	 "{$params['id']}",
@@ -79,7 +82,7 @@ function smarty_function_calendar($params, $smarty)
 		singleClick:	true
 	});
 
-	$("{$params['id']}").ondblclick = $("{$params['id']}_button").onclick;
+	visible.ondblclick = button.onclick;
 </script>
 JAVASCRIPT;
 

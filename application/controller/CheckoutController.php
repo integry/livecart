@@ -425,6 +425,7 @@ class CheckoutController extends FrontendController
 	public function pay()
 	{
 		$this->order->loadAll();
+		$this->order->getSpecification();
 
 		if ($redirect = $this->validateOrder($this->order, self::STEP_PAYMENT))
 		{
@@ -874,7 +875,8 @@ class CheckoutController extends FrontendController
 		}
 
 		// order is not orderable (too few/many items, etc.)
-		$isOrderable = $order->isOrderable();
+		$isOrderable = $order->isOrderable(true, true);
+
 		if (!$isOrderable || $isOrderable instanceof OrderException)
 		{
 			return new ActionRedirectResponse('order', 'index');

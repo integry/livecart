@@ -37,3 +37,5 @@
 
 	</tbody>
 </table>
+
+{include file="order/fieldValues.tpl"}

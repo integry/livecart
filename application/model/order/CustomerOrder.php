@@ -362,10 +362,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			$this->isPaid->set(true);
 		}
 
-		if (!$this->dateCompleted->get())
-		{
-			$this->dateCompleted->set(new ARSerializableDateTime());
-		}
+		$this->dateCompleted->set(new ARSerializableDateTime());
 
 		$this->isFinalized->set(true);
 
@@ -762,7 +759,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	/**
 	 *  Determines if the order matches defined requirements/constraints (min/max total, etc.)
 	 */
-	public function isOrderable()
+	public function isOrderable($setErrorMessages = false, $checkFields = false)
 	{
 		ClassLoader::import('application.model.order.OrderException');
 
@@ -802,6 +799,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		if ($minTotal && ($total < $minTotal))
 		{
 			return new OrderException(OrderException::MIN_TOTAL, $total, $minTotal, $app);
+		}
+
+		// custom fields
+		if ($checkFields && (!$this->getSpecification()->isValid($setErrorMessages  ? 'cartValidator' : null)))
+		{
+			return false;
 		}
 
 		return true;

@@ -84,27 +84,47 @@
 				<td id="cartUpdate"><input type="submit" class="submit" value="{tn _update}" /></td>
 			</tr>
 
+		{sect}
+			{header}
+				<tr id="cartFields">
+					<td colspan="5">
+						<div class="container">
+			{/header}
+			{content}
+					{include file="backend/eav/fields.tpl" item=$cart filter="isDisplayed"}
+			{/content}
+			{footer}
+						<p>
+							<label></label>
+							<input type="submit" class="submit" value="{tn _update}" name="saveFields" />
+						</p>
+						</div>
+					</td>
+				</tr>
+			{/footer}
+		{/sect}
+
 		<tr>
 			<td colspan="4"></td>
 			<td class="cartQuant"></td>
 		</tr>
 		<tr>
 			<td colspan="5">
-				<a href="{link route=$return}" class="continueShopping">{t _continue_shopping}</a>
+				<a href="{link route=$return}" class="continueShopping"><span><span><span><span>{t _continue_shopping}</span></span></span></span></a>
 				{if $cart.isOrderable}
-					<a href="{link controller=checkout}" class="proceedToCheckout"><span><span><span><span>{t _proceed_checkout}</span></span></span></span></a>
+					<a href="{link controller=checkout}" class="proceedToCheckout" onclick="return Order.submitCartForm(this);"><span><span><span><span>{t _proceed_checkout}</span></span></span></span></a>
 				{/if}
 			</td>
 		</tr>
 	</tbody>
 </table>
 <input type="hidden" name="return" value="{$return}" />
-{/form}
 
 {if $expressMethods && $cart.isOrderable}
 	<div id="expressCheckoutMethods">
 		{foreach from=$expressMethods item=method}
-			<a href="{link controller=checkout action=express id=$method}"><img src="image/payment/{$method}.gif" /></a>
+			<input type="image" name="redirect" value="{link controller=checkout action=express id=$method}" src="image/payment/{$method}.gif" />
 		{/foreach}
 	</div>
 {/if}
+{/form}

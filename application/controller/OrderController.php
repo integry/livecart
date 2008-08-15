@@ -28,15 +28,20 @@ class OrderController extends FrontendController
 
 		$currency = Currency::getValidInstanceByID($this->request->get('currency', $this->application->getDefaultCurrencyCode()), Currency::LOAD_DATA);
 
+		$form = $this->buildCartForm($this->order, $options);
+
 		$response = new ActionResponse();
 		$response->set('cart', $this->order->toArray());
-		$response->set('form', $this->buildCartForm($this->order, $options));
+		$response->set('form', $form);
 		$response->set('return', $this->request->get('return'));
 		$response->set('currency', $currency->getID());
 		$response->set('options', $options['visible']);
 		$response->set('moreOptions', $options['more']);
 		$response->set('orderTotal', $currency->getFormattedPrice($this->order->getSubTotal($currency)));
 		$response->set('expressMethods', $this->application->getExpressPaymentHandlerList(true));
+
+		$this->order->getSpecification()->setFormResponse($response, $form);
+
 		return $response;
 	}
 
@@ -137,6 +142,8 @@ class OrderController extends FrontendController
 
 		foreach ($this->order->getOrderedItems() as $item)
 		{
+			$this->order->loadRequestData($this->request);
+
 			if ($this->request->isValueSet('item_' . $item->getID()))
 			{
 				foreach ($item->product->get()->getOptions(true) as $option)
@@ -153,6 +160,18 @@ class OrderController extends FrontendController
 		$this->order->mergeItems();
 
 		SessionOrder::save($this->order);
+
+		// proceed with the checkout
+		if ($this->request->get('proceed'))
+		{
+			return new ActionRedirectResponse('checkout', 'index');
+		}
+
+		// redirect to payment gateway
+		if ($url = $this->request->get('redirect'))
+		{
+			return new RedirectResponse($url);
+		}
 
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
@@ -351,6 +370,8 @@ class OrderController extends FrontendController
 		{
 			$this->buildItemValidation($validator, $item, $options);
 		}
+
+		$order->getSpecification()->setValidation($validator, true);
 
 		return $validator;
 	}

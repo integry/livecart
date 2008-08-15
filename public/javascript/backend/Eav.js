@@ -2,6 +2,11 @@
  *	@author Integry Systems
  */
 
+if (!window.Backend)
+{
+	Backend = {}
+}
+
 Backend.Eav = Class.create();
 Backend.Eav.prototype =
 {
