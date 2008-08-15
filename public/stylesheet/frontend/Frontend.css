@@ -830,7 +830,7 @@ a.layoutSetGrid
 
 table.productGrid
 {
-	width: 100%;
+	width: 99%;
 	table-layout: fixed;
 }
 
