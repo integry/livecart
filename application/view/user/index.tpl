@@ -18,6 +18,10 @@
 
 	<fieldset class="container" style="float: left; width: 100%;">
 
+		{if $message}
+			<div class="confirmationMessage">{$message}</div>
+		{/if}
+
 		{if $notes}
 			<h2>{t _unread_msg}</h2>
 			<ul class="notes">

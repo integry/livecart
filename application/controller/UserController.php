@@ -304,6 +304,40 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
+	public function personal()
+	{
+		$this->addAccountBreadcrumb();
+		$this->addBreadcrumb($this->translate('_personal_info'), '');
+
+		$form = $this->buildPersonalDataForm($this->user);
+		$response = new ActionResponse('form', $form);
+		$this->user->getSpecification()->setFormResponse($response, $form);
+
+		return $response;
+	}
+
+	/**
+	 *	@role login
+	 */
+	public function savePersonal()
+	{
+		$validator = $this->buildPersonalDataValidator($this->user);
+		if (!$validator->isValid())
+		{
+			return new ActionRedirectResponse('user', 'personal');
+		}
+
+		$this->user->loadRequestData($this->request, array('firstName', 'lastName', 'companyName'));
+		$this->user->save();
+
+		$this->setMessage($this->translate('_personal_data_saved'));
+
+		return new ActionRedirectResponse('user', 'index');
+	}
+
+	/**
+	 *	@role login
+	 */
 	public function addresses()
 	{
 		$this->addAccountBreadcrumb();
@@ -416,8 +450,11 @@ class UserController extends FrontendController
 
 	public function register()
 	{
-		$response = new ActionResponse();
-		$response->set('regForm', $this->buildRegForm());
+		$form = $this->buildRegForm();
+		$response = new ActionResponse('regForm', $form);
+
+		SessionUser::getAnonymousUser()->getSpecification()->setFormResponse($response, $form);
+
 		return $response;
 	}
 
@@ -447,10 +484,14 @@ class UserController extends FrontendController
 	{
 		$this->addBreadCrumb($this->translate('_login'), $this->router->createUrl(array('controller' => 'user', 'action' => 'login'), true));
 
+		$form = $this->buildRegForm();
 		$response = new ActionResponse();
-		$response->set('regForm', $this->buildRegForm());
+		$response->set('regForm', $form);
 		$response->set('email', $this->request->get('email'));
 		$response->set('failed', $this->request->get('failed'));
+
+		SessionUser::getAnonymousUser()->getSpecification()->setFormResponse($response, $form);
+
 		return $response;
 	}
 
@@ -562,6 +603,9 @@ class UserController extends FrontendController
 		$response->set('form', $form);
 		$response->set('countries', $this->getCountryList($form));
 		$response->set('states', $this->getStateList($form->get('billing_country')));
+
+		SessionUser::getAnonymousUser()->getSpecification()->setFormResponse($response, $form);
+
 		return $response;
 	}
 
@@ -947,6 +991,9 @@ class UserController extends FrontendController
 		$user->email->set($this->request->get('email'));
 		$user->isEnabled->set(true);
 
+		// custom fields
+		$user->loadRequestData($this->request, array());
+
 		if ($password)
 		{
 			$user->setPassword($password);
@@ -1089,6 +1136,24 @@ class UserController extends FrontendController
 		return $validator;
 	}
 
+	private function buildPersonalDataForm(User $user)
+	{
+		ClassLoader::import("framework.request.validator.Form");
+		$form = new Form($this->buildPersonalDataValidator($user));
+		$form->setData($this->user->toArray());
+		return $form;
+	}
+
+	private function buildPersonalDataValidator(User $user)
+	{
+		ClassLoader::import("framework.request.validator.RequestValidator");
+
+		$validator = new RequestValidator("userData", $this->request);
+		$this->validateName($validator);
+		$user->getSpecification()->setValidation($validator);
+		return $validator;
+	}
+
 	private function buildRegForm()
 	{
 		ClassLoader::import("framework.request.validator.Form");
@@ -1103,6 +1168,9 @@ class UserController extends FrontendController
 		$this->validateName($validator);
 		$this->validateEmail($validator);
 		$this->validatePassword($validator);
+
+		SessionUser::getAnonymousUser()->getSpecification()->setValidation($validator);
+
 		return $validator;
 	}
 
@@ -1149,7 +1217,7 @@ class UserController extends FrontendController
 		$validator->addCheck('shipping_state_select', new ConditionalCheck($shippingCondition, $stateCheck));
 //		$validator->addCheck('billing_state_select', new IsValidStateCheck($this->translate('_err_select_state')));
 
-//		$validator->addConditionalCheck($shippingCondition, )
+		SessionUser::getAnonymousUser()->getSpecification()->setValidation($validator);
 
 		return $validator;
 	}

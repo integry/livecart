@@ -96,6 +96,12 @@ _complete_email_change=Change E-mail
 _confirm_email_change=Your e-mail address has been changed
 
 ########################
+# Personal data
+########################
+_personal_info=Personal Data
+_personal_data_saved=Your personal data has been updated
+
+########################
 # Manage shipping and billing addresses
 ########################
 _manage_addresses=Manage Your Addresses

@@ -42,6 +42,8 @@ abstract class ActiveRecordModel extends ActiveRecord
 	 */
 	public function loadRequestData(Request $request, $prefix = '')
 	{
+		$enabledFields = is_array($prefix) ? array_flip($prefix) : null;
+
 		$schema = ActiveRecordModel::getSchemaInstance(get_class($this));
 		foreach ($schema->getFieldList() as $field)
 		{
@@ -49,6 +51,11 @@ abstract class ActiveRecordModel extends ActiveRecord
 			{
 				$name = $field->getName();
 				$reqName = $prefix . $name;
+
+				if (is_array($enabledFields) && !isset($enabledFields[$name]))
+				{
+					continue;
+				}
 
 				if ($request->isValueSet($reqName) ||
 				   ($request->isValueSet('checkbox_' . $reqName) && ('ARBool' == get_class($field->getDataType())))

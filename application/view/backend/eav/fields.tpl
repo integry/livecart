@@ -3,7 +3,7 @@
 
 {sect}
 	{header}
-		<div id="eavContainer_{$containerId}">
+		<div id="eavContainer_{$containerId}" class="eavContainer">
 	{/header}
 	{content}
 		{foreach from=$specFieldList key=groupID item=fieldList}
@@ -16,7 +16,7 @@
 			{foreach from=$fieldList item=field}
 				{if !$filter || ($filter && $field[$filter])}
 					<p class="{if $field.isRequired}required{/if} {if !$field.isDisplayed}notDisplayed{/if}">
-						<label for="product_{$cat}_{$product.ID}_{$field.fieldName}">{$field.name_lang}:</label>
+						<label for="product_{$cat}_{$product.ID}_{$field.fieldName}"><span>{$field.name_lang}:</span></label>
 						<fieldset class="error">
 							{include file="backend/eav/specFieldFactory.tpl" field=$field cat=$cat}
 							{if $field.description}

@@ -59,6 +59,8 @@
 				{/err}
 			</p>
 
+			{include file="block/eav/fields.tpl" item=$user filter="isDisplayed"}
+
 		<h3>{t _billing_address}</h3>
 
 			<p class="required">

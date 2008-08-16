@@ -42,6 +42,8 @@
 		{/err}
 	</p>
 
+	{include file="block/eav/fields.tpl" item=$user filter="isDisplayed"}
+
 	<label></label>
 	<input type="submit" class="submit" value="{tn _complete_reg}" />
 

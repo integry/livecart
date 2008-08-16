@@ -45,7 +45,10 @@
 	{$field.valuePrefix_lang}{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name=$fieldName class="text numeric"}{$field.valueSuffix_lang}
 
 {elseif $field.type == 3}
-	{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name=$fieldName class="text wide" autocomplete="controller=backend.product field=`$fieldName`"}
+	{if !$disableAutocomplete}
+		{assign var="autocomplete" value="controller=backend.product field=`$fieldName`"}
+	{/if}
+	{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name=$fieldName class="text wide" autocomplete=$autocomplete}
 
 {elseif $field.type == 4}
 	<div class="textarea" style="margin-left: 0;">

@@ -1865,7 +1865,7 @@ ul#userMenu
     margin-bottom: 10px;
     list-style-type: none;
     background-repeat: no-repeat;
-    background-position: center left;
+    background-position: bottom left;
     padding-left: 22px;
 }
 
@@ -1876,14 +1876,17 @@ ul#userMenu
 
 #userMenu li#orderMenu
 {
-    background-position: bottom left;
     background-image: url(../../image/silk/gif/package.gif);
 }
 
 #userMenu li#addressMenu
 {
-    background-position: bottom left;
     background-image: url(../../image/silk/gif/book_addresses.gif);
+}
+
+#userMenu li#personalMenu
+{
+    background-image: url(../../image/silk/gif/user.gif);
 }
 
 #userMenu li#emailMenu
@@ -1903,11 +1906,10 @@ ul#userMenu
 
 #userMenu li#signOutMenu
 {
-    background-position: bottom left;
     background-image: url(../../image/silk/gif/door_out.gif);
 }
 
-#userMenu li#signOutMenu, #userMenu li#addressMenu, #userMenu li#orderMenu
+#userMenu li#signOutMenu, #userMenu li#personalMenu, #userMenu li#orderMenu
 {
 	border-top: 1px solid #DDDDDD;
     padding-top: 10px;
@@ -2611,6 +2613,11 @@ img.calendar_button_hover
 .eavAttributes .attrValue
 {
 	margin-left: 1em;
+}
+
+.eavContainer .wide
+{
+	width: 15em;
 }
 
 /*************************
