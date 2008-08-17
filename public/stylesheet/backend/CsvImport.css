@@ -133,3 +133,11 @@ label.wide
 	position: relative;
 	top: 6px;
 }
+
+.lastName
+{
+	clear: both;
+	font-size: smaller;
+	overflow: hidden;
+	padding-top: 1em;
+}

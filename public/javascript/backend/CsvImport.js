@@ -9,6 +9,8 @@ if (Backend == undefined)
 
 Backend.CsvImport =
 {
+	isCompleted: false,
+
 	showCategorySelector: function(current)
 	{
 		new Backend.Category.PopupSelector(
@@ -69,8 +71,9 @@ Backend.CsvImport =
 		// proceed with import
 		else
 		{
+			this.isCompleted = false;
 			$('delimitersForm').action = $('importUrl').innerHTML;
-			this.request = new LiveCart.AjaxRequest($('delimitersForm'), $('previewIndicator'), this.dataResponse.bind(this),  {onInteractive: this.dataResponse.bind(this) });
+			this.request = this.getImportRequest();
 			$('importControls').hide();
 			$('columns').hide();
 			$('preview').hide();
@@ -81,6 +84,11 @@ Backend.CsvImport =
 			$('wizardProgress').removeClassName('stepArrange');
 			$('wizardProgress').addClassName('stepImport');
 		}
+	},
+
+	getImportRequest: function()
+	{
+		return new LiveCart.AjaxRequest($('delimitersForm'), $('previewIndicator'), this.onComplete.bind(this),  {onInteractive: this.dataResponse.bind(this), onSuccess: this.onComplete.bind(this) });
 	},
 
 	loadFields: function()
@@ -181,6 +189,8 @@ Backend.CsvImport =
 
 	dataResponse: function(originalRequest)
 	{
+		this.isCompleted = false;
+
 		if (originalRequest.responseData && originalRequest.responseData.errors)
 		{
 			this.restoreLayoutAfterCancel();
@@ -205,6 +215,28 @@ Backend.CsvImport =
 		}
 	},
 
+	onComplete: function(originalRequest)
+	{
+		if (this.isCancelled)
+		{
+			this.completeCancel(originalRequest);
+			return;
+		}
+
+		if (!this.isCompleted)
+		{
+			if (!this.nonTransactional)
+			{
+				new Backend.SaveConfirmationMessage($('nonTransactionalMessage'));
+			}
+
+			$('delimitersForm').elements.namedItem('continue').value = true;
+			this.isCancelled = false;
+			this.request = this.getImportRequest();
+			this.nonTransactional = true;
+		}
+	},
+
 	setProgress: function(response)
 	{
 		var li = $('progress');
@@ -213,6 +245,11 @@ Backend.CsvImport =
 		if (response.progress > 0)
 		{
 			this.progressBar.update(response.progress, response.total);
+
+			if (response.lastName)
+			{
+				li.down('.lastName').innerHTML = response.lastName;
+			}
 		}
 		else
 		{
@@ -223,11 +260,13 @@ Backend.CsvImport =
 			li.down('.cancel').hide();
 
 			new Backend.SaveConfirmationMessage($('completeMessage'));
+			this.isCompleted = true;
 		}
 	},
 
 	cancel: function()
 	{
+		this.isCancelled = true;
 		this.request.request.transport.abort();
 		new LiveCart.AjaxRequest($('cancelUrl').innerHTML, null, this.completeCancel.bind(this));
 	},
@@ -257,8 +296,13 @@ Backend.CsvImport =
 		}
 		else
 		{
-			new Backend.SaveConfirmationMessage($('cancelFailureMessage'));
+			if (!this.nonTransactional)
+			{
+				new Backend.SaveConfirmationMessage($('cancelFailureMessage'));
+			}
 		}
+
+		this.isCancelled = true;
 	},
 
 	restoreLayoutAfterCancel: function()

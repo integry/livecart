@@ -41,3 +41,5 @@ _importing=Importing...
 _import_completed=CSV file imported successfully
 _import_cancelled=The import has been reverted sucessfully
 _import_cancel_failed=Could not cancel import procedure
+
+_timeout_error=Server timeout detected. Restarting import in non-transactional mode (cannot be reverted).

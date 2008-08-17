@@ -190,6 +190,11 @@ class CsvImportController extends StoreManagementController
 			unlink($this->getCancelFile());
 		}
 
+		if (!$this->request->get('continue'))
+		{
+			$this->clearCacheProgress();
+		}
+
 		set_time_limit(0);
 		ignore_user_abort(true);
 
@@ -239,7 +244,16 @@ class CsvImportController extends StoreManagementController
 
 		$references = array('DefaultImage' => 'ProductImage', 'Manufacturer');
 
-		ActiveRecord::beginTransaction();
+		$processed = 0;
+		if ($this->request->get('continue'))
+		{
+			$startFrom = $this->getCacheProgress() + 1;
+		}
+
+		if (!$this->request->get('continue'))
+		{
+			ActiveRecord::beginTransaction();
+		}
 
 		$isFirst = true;
 		foreach ($csv as $record)
@@ -253,6 +267,18 @@ class CsvImportController extends StoreManagementController
 			{
 				$isFirst = false;
 				continue;
+			}
+
+			// continue timed-out import
+			if ($this->request->get('continue'))
+			{
+				if (++$processed < $startFrom)
+				{
+					$progress++;
+					continue;
+				}
+
+				$this->setCacheProgress($processed);
 			}
 
 			foreach ($record as &$cell)
@@ -447,6 +473,7 @@ class CsvImportController extends StoreManagementController
 					}
 				}
 
+				$lastName = $product->getValueByLang('name', 'en');
 				$product->__destruct();
 				$product->destruct(true);
 			}
@@ -457,13 +484,23 @@ class CsvImportController extends StoreManagementController
 
 			if ($progress % self::PROGRESS_FLUSH_INTERVAL == 0 || ($total == $progress))
 			{
-				$response->flush($this->getResponse(array('progress' => $progress, 'total' => $total)));
+				$response->flush($this->getResponse(array('progress' => $progress, 'total' => $total, 'lastName' => $lastName)));
 //				echo '|' . round(memory_get_usage() / (1024*1024), 1) . '|' . count($categories) . "\n";
 			}
 
+			// test non-transactional mode
+			if (!$this->request->get('continue') && $progress > 50) exit;
+
 			if (connection_aborted())
 			{
-				$this->cancel();
+				if ($this->request->get('continue'))
+				{
+					exit;
+				}
+				else
+				{
+					$this->cancel();
+				}
 			}
 		}
 
@@ -629,6 +666,29 @@ class CsvImportController extends StoreManagementController
 		ClassLoader::import('application.helper.filter.HandleFilter');
 
 		return new RequestValidator('csvFields', $this->request);
+	}
+
+	private function setCacheProgress($index)
+	{
+		file_put_contents($this->getProgressFile(), $index);
+	}
+
+	private function getCacheProgress()
+	{
+		return file_exists($this->getProgressFile()) ? file_get_contents($this->getProgressFile()) : null;
+	}
+
+	private function clearCacheProgress()
+	{
+		if (file_exists($this->getProgressFile()))
+		{
+			unlink($this->getProgressFile());
+		}
+	}
+
+	private function getProgressFile()
+	{
+		return ClassLoader::getRealPath('cache.') . 'csvProgress';
 	}
 }
 

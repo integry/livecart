@@ -21,6 +21,7 @@
 
 	{hidden name="file"}
 	{hidden name="category"}
+	{hidden name="continue"}
 
 	<span style="display: none;">
 		<span id="fieldsUrl">{link controller=backend.csvImport action=fields}</span>
@@ -71,6 +72,10 @@
 		<div style="float: left; margin-bottom: 1em;">{t _import_cancel_failed}</div>
 	</div>
 
+	<div id="nonTransactionalMessage" class="redMessage" style="display: none;">
+		<div style="float: left; margin-bottom: 1em;">{t _timeout_error}</div>
+	</div>
+
 	<div class="clear"></div>
 
 	<fieldset id="columns" style="display: none;">
@@ -111,6 +116,7 @@
 			<span class="progressTotal"></span>
 		</div>
 		<a class="cancel" href="#" onclick="Backend.CsvImport.cancel(); return false;">{t _cancel}</a>
+		<div class="lastName"></div>
 	</fieldset>
 
 	</div>
