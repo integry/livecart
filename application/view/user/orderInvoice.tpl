@@ -45,6 +45,14 @@
 			<div class="addressContainer">
 				<h2>{t _buyer}</h2>
 				{fun name="address" address=$order.BillingAddress}
+				{foreach $order.User.attributes as $attr}
+					{if $attr.EavField.isDisplayedInList && ($attr.value || $attr.values)}
+						<p>
+							{$attr.EavField.name_lang}:
+							{include file="product/attributeValue.tpl"}
+						</p>
+					{/if}
+				{/foreach}
 			</div>
 
 			<div class="addressContainer">
