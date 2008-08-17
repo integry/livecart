@@ -37,6 +37,7 @@ Backend.SelectFile.prototype =
 		});
 
 		w.selectFileInstance = this;
+		w.test = 'test';
 
 		this.window = w;
 	},

@@ -120,7 +120,7 @@ ActiveGrid.prototype =
 		}
 		else
 		{
-			this.ricoGrid.requestContentRefresh(offset);
+			this.ricoGrid.requestContentRefresh(0);
 		}
 	},
 

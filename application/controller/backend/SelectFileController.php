@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
+ClassLoader::import("application.controller.backend.abstract.ActiveGridController");
 
 /**
  * Server side file select dialog
@@ -9,8 +9,13 @@ ClassLoader::import("application.controller.backend.abstract.StoreManagementCont
  * @author Integry Systems
  * @role serverfile
  */
-class SelectFileController extends StoreManagementController
+class SelectFileController extends ActiveGridController
 {
+	protected function getClassName()
+	{
+		return null;
+	}
+
 	public function index()
 	{
 		$dir = getcwd();
@@ -26,9 +31,13 @@ class SelectFileController extends StoreManagementController
 		$response = new ActionResponse();
 		$response->set('directoryList', $this->getSubDirectories(getcwd()));
 		$response->set('root', array(0 => $root));
-		$response->set('availableColumns', $this->getAvailableColumns());
-		$response->set('displayedColumns', $this->getDisplayedColumns());
 		$response->set('current', $dir);
+
+		$this->setGridResponse($response);
+		$response->set('offset', 0);
+		$response->set('data', '');
+
+		//print_r($response->getData());
 
 		return $response;
 	}
@@ -242,7 +251,7 @@ class SelectFileController extends StoreManagementController
 		return strnatcasecmp($a[$this->sortColumn], $b[$this->sortColumn]);
 	}
 
-	private function getAvailableColumns()
+	public function getAvailableColumns()
 	{
 		$availableColumns = array();
 
@@ -254,7 +263,7 @@ class SelectFileController extends StoreManagementController
 		return $availableColumns;
 	}
 
-	private function getDisplayedColumns()
+	protected function getDisplayedColumns()
 	{
 		// get displayed columns
 		$displayedColumns = $this->getSessionData('columns');
@@ -267,7 +276,12 @@ class SelectFileController extends StoreManagementController
 		return array_intersect_key($this->getColumns(), array_flip($displayedColumns), $this->getAvailableColumns());
 	}
 
-	private function getColumns()
+	protected function getDefaultColumns()
+	{
+		return array();
+	}
+
+	protected function getColumns()
 	{
 		return array(
 			'ID' => 'numeric',
