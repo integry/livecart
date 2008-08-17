@@ -5,33 +5,35 @@
 {foreach from=$layout key=groupName item=fields name="groups"}
 
 	{if !$fields && !$smarty.foreach.groups.first}
-		{assign var="subsections" value=false}	
+		{assign var="subsections" value=false}
 		</fieldset>
 	{/if}
 
 	<fieldset class="settings">
-	
+
 		{if $groupName}
 			<legend>{t $groupName}</legend>
 		{/if}
-	
-	{foreach from=$fields key="fieldName" item="foo"}	
+
+	{foreach from=$fields key="fieldName" item="foo"}
 		<div class="setting" id="setting_{$fieldName}" {if 'bool' != $values.$fieldName.type}style="margin-top: 7px; margin-bottom: 7px;"{/if}>
 		<p{if 'bool' == $values.$fieldName.type} class="checkbox"{/if}>
-			
+
 			{if 'bool' != $values.$fieldName.type}
 				<label for="{$fieldName}" class="setting">{t `$values.$fieldName.title`}:</label>
 			{/if}
-				
+
 		<fieldset class="error">
 			{if 'string' == $values.$fieldName.type}
 				{textfield class="text wide" name="$fieldName" id="$fieldName"}
+			{elseif 'longtext' == $values.$fieldName.type}
+				{textarea class="tinyMCE" name="$fieldName" id="$fieldName"}
 			{elseif 'num' == $values.$fieldName.type || 'float' == $values.$fieldName.type}
-				{textfield class="text number" name="$fieldName" id="$fieldName"}			
+				{textfield class="text number" name="$fieldName" id="$fieldName"}
 			{elseif 'bool' == $values.$fieldName.type}
-				{checkbox class="checkbox" name="$fieldName" id="$fieldName" value="1"}			
+				{checkbox class="checkbox" name="$fieldName" id="$fieldName" value="1"}
 				<label class="checkbox" for="{$fieldName}">{t `$values.$fieldName.title`}</label>
-			{elseif is_array($values.$fieldName.type)}						
+			{elseif is_array($values.$fieldName.type)}
 				{if 'multi' == $values.$fieldName.extra}
 					<div class="multi">
 					{foreach from=$values.$fieldName.type item="value" key="key"}
@@ -49,9 +51,9 @@
 			<div class="errorText hidden"></div>
 		</fieldset>
 		</p>
-		</div>	
+		</div>
 	{foreachelse}
-		{assign var="subsections" value=true}	
+		{assign var="subsections" value=true}
 	{/foreach}
 
 	{if $fields || $smarty.foreach.groups.last}
@@ -70,7 +72,11 @@
 		<label for="{$fieldName}_{$lang.ID}" class="setting">{t `$values.$fieldName.title`}:</label>
 
 		<fieldset class="error">
-			{textfield class="text wide" name="`$fieldName`_`$lang.ID`" id="`$fieldName`_`$lang.ID`"}
+			{if $types.$fieldName == 'longtext'}
+				{textarea class="tinyMCE" name="`$fieldName`_`$lang.ID`" id="`$fieldName`_`$lang.ID`"}
+			{else}
+				{textfield class="text wide" name="`$fieldName`_`$lang.ID`" id="`$fieldName`_`$lang.ID`"}
+			{/if}
 			<div class="errorText hidden"></div>
 		</fieldset>
 	</p>
@@ -81,8 +87,8 @@
 
 <fieldset class="controls">
 	<span class="progressIndicator" style="display: none;"></span>
-	<input type="submit" value="{tn _save}" class="submit" /> 
-	{t _or} 
+	<input type="submit" value="{tn _save}" class="submit" />
+	{t _or}
 	<a class="cancel" href="#" onclick="return false;">{t _cancel}</a>
 </fieldset>
 {/form}

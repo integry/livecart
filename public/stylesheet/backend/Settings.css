@@ -78,4 +78,5 @@ div.multi
 {
 	font-size: 0.85em;
 	font-weight: bold;
+	white-space: normal;
 }

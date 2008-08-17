@@ -13,7 +13,7 @@ STORE_NAME=Store name
 
 _display=Display
 
-_layout=Layout
+_layout=Appearance
 THEME=Design theme
 LANG_SELECTION=Display language selection menu as
 LANG_NAMES=Language names as links
@@ -165,6 +165,13 @@ PRICE_FILTER_TO_7=Price To
 PRICE_FILTER_TO_8=Price To
 PRICE_FILTER_TO_9=Price To
 PRICE_FILTER_TO_10=Price To
+
+_invoice=Invoices
+_seller_info=Seller Information
+INVOICE_SELLER_INFO=Seller contact information in invoice
+
+_invoice_preferences=Invoice Options
+INVOICE_SHOW_PAYMENT_INFO=Show payments
 
 _users=User Accounts
 USER_COUNT_RECENT_ORDERS=Number of recent orders to display in account homepage

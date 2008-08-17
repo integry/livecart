@@ -50,7 +50,7 @@
 			<div class="addressContainer">
 				<h2>{t _seller}</h2>
 				<p>
-					Seller's contact information goes here
+					{'INVOICE_SELLER_INFO'|config}
 				</p>
 			</div>
 
@@ -74,6 +74,7 @@
 
 		{/foreach}
 
+		{if 'INVOICE_SHOW_PAYMENT_INFO'|config}
 		<h2>{t _payment_info}</h2>
 
 		<table id="invoicePaymentInfo">
@@ -110,6 +111,7 @@
 				<td class="amount">{$order.formatted_amountDue}</td>
 			</tr>
 		</table>
+		{/if}
 
 	</div>
 

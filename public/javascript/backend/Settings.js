@@ -88,9 +88,11 @@ Backend.Settings.prototype =
 			return false;
 		}
 
-		$('settingsContent').update(response.responseText);
+		var container = $('settingsContent');
+		ActiveForm.prototype.destroyTinyMceFields(container);
+		container.update(response.responseText);
 
-		var cancel = document.getElementsByClassName('cancel', $('settingsContent'))[0];
+		var cancel = document.getElementsByClassName('cancel', container)[0];
 		Event.observe(cancel, 'click', this.resetForm.bindAsEventListener(this));
 	},
 
@@ -299,6 +301,8 @@ Backend.Settings.Editor.prototype =
 				this.handlers[id]();
 			}
 		}
+
+		ActiveForm.prototype.initTinyMceFields(container);
 	}
 }
 
