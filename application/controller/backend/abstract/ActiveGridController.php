@@ -247,7 +247,7 @@ abstract class ActiveGridController extends StoreManagementController
 
 	protected function getColumnValue($record, $class, $field)
 	{
-		if (!isset($record[$class][$field]) && isset($record[$field]))
+		if (!isset($record[$class][$field]) && isset($record[$field]) && ($this->getClassName() == $class))
 		{
 			return $record[$field];
 		}
