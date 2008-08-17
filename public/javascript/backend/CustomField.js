@@ -7,6 +7,51 @@ if (Backend == undefined)
 	var Backend = {}
 }
 
+var oldLoadFunc = Backend.SpecField.prototype.loadSpecFieldAction;
+Backend.SpecField.prototype.loadSpecFieldAction = function()
+{
+	var res = oldLoadFunc.apply(this, arguments);
+
+	// users
+	if (4 == this.categoryID)
+	{
+		var toggleFunc = function() { this.toggleCheckboxes(this.nodes.isRequired, [this.nodes.isDisplayed]); }.bind(this);
+		toggleFunc();
+		this.nodes.isRequired.onchange = toggleFunc;
+	}
+	// orders
+	else if (2 == this.categoryID)
+	{
+		var requiredFunc = function() { this.toggleCheckboxes(this.nodes.isRequired, [this.nodes.isDisplayed, this.nodes.isDisplayedInList]); }.bind(this);
+		requiredFunc();
+		this.nodes.isRequired.onchange = requiredFunc;
+
+		var editableFunc = function() { this.toggleCheckboxes(this.nodes.isDisplayed, [this.nodes.isDisplayedInList]); }.bind(this);
+		editableFunc();
+		this.nodes.isDisplayed.onchange = editableFunc;
+	}
+
+	return res;
+}
+
+Backend.SpecField.prototype.toggleCheckboxes = function(main, others)
+{
+	for (k = 0; k < others.length; k++)
+	{
+		var container = others[k].up('p');
+		if (main.checked)
+		{
+			container.hide();
+		}
+		else
+		{
+			container.show();
+		}
+
+		others[k].checked = main.checked;
+	}
+}
+
 Backend.CustomField = {
 
 	/**

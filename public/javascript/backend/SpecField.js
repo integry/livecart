@@ -554,25 +554,22 @@ Backend.SpecField.prototype = {
 			'multipleSelector', 'isRequired',  'isDisplayed',
 			'isDisplayedInList', 'type', 'description', 'advancedText']).each(function(fieldName)
 		{
-			this.nodes.labels[fieldName].onclick = function() {
-				var input = this.nodes[fieldName];
+			var input = this.nodes[fieldName];
 
-				if(input.down('input'))
-				{
-					input = input.down('input');
-				}
-				else if(input.down('select'))
-				{
-					input = input.down('select');
-				}
-				else if(input.down('textarea'))
-				{
-					input = input.down('textarea');
-				}
+			if(input.down('input'))
+			{
+				input = input.down('input');
+			}
+			else if(input.down('select'))
+			{
+				input = input.down('select');
+			}
+			else if(input.down('textarea'))
+			{
+				input = input.down('textarea');
+			}
 
-				if('checkbox' == input.type) input.checked = !input.checked;
-				else input.focus();
-			}.bind(this);
+			this.nodes.labels[fieldName].setAttribute('for', input.id);
 		}.bind(this));
 
 		if(this.type == Backend.SpecField.prototype.TYPE_TEXT_ADVANCED)

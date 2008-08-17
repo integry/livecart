@@ -16,8 +16,8 @@
 {includeJs file="library/dhtmlCalendar/calendar-setup.js"}
 {includeCss file="library/dhtmlCalendar/calendar-win2k-cold-2.css"}
 
-{includeJs file="backend/CustomField.js"}
 {includeJs file="backend/SpecField.js"}
+{includeJs file="backend/CustomField.js"}
 
 {includeCss file="library/ActiveList.css"}
 {includeCss file="library/ActiveGrid.css"}
