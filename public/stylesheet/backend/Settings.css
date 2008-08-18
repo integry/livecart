@@ -80,3 +80,13 @@ div.multi
 	font-weight: bold;
 	white-space: normal;
 }
+
+#upload
+{
+	display: none;
+}
+
+.settingImage
+{
+	display: block;
+}

@@ -331,6 +331,11 @@ class Config
 				$type = 'longtext';
 				$value = substr($value, 1);
 			}
+			else if ('%' == substr($value, 0, 1))
+			{
+				$type = 'image';
+				$value = substr($value, 1);
+			}
 			elseif (is_numeric($value))
 			{
 			  	$type = (strpos($value, '.') !== false) ? 'float' : 'num';

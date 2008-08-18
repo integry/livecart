@@ -15,6 +15,7 @@ _display=Display
 
 _layout=Appearance
 THEME=Design theme
+LOGO=Logo image
 LANG_SELECTION=Display language selection menu as
 LANG_NAMES=Language names as links
 LANG_FLAGS=Flags

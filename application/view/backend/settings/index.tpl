@@ -48,4 +48,6 @@
 	</div>
 </div>
 
+<iframe id="upload" name="upload"></iframe>
+
 {include file="layout/backend/footer.tpl"}

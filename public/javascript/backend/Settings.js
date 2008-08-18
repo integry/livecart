@@ -109,12 +109,60 @@ Backend.Settings.prototype =
 
 	save: function(form)
 	{
-		new LiveCart.AjaxRequest(form, null, this.displaySaveConfirmation.bind(this));
+		var input = form.getElementsByTagName('input');
+		var hasFiles = false;
+		for (var k = 0; k < input.length; k++)
+		{
+			if ('file' == input[k].type)
+			{
+				hasFiles = true;
+				break;
+			}
+		}
+
+		if (hasFiles)
+		{
+			$('upload').onload = this.completeUpload.bind(this);
+			form.submit();
+		}
+		else
+		{
+			new LiveCart.AjaxRequest(form, null, this.afterSave.bind(this));
+		}
+
+		return false;
 	},
 
-	displaySaveConfirmation: function()
+	completeUpload: function()
 	{
-		new Backend.SaveConfirmationMessage(document.getElementsByClassName('yellowMessage')[0]);
+		var dataString = $('upload').contentDocument.body.innerHTML;
+		if (dataString.substr(0, 5) == '<pre>')
+		{
+			dataString = dataString.substr(5, dataString.length);
+		}
+		if (dataString.substr(-6) == '</pre>')
+		{
+			dataString = dataString.substr(0, dataString.length - 6);
+		}
+
+		this.afterSave({responseData: dataString.evalJSON()});
+	},
+
+	afterSave: function(result)
+	{
+		Backend.SaveConfirmationMessage.prototype.showMessage(result.responseData.message);
+
+		// update image upload settings
+		var images = $('settingsContent').getElementsByClassName('settingImage');
+		for (k = 0; k < images.length; k++)
+		{
+			var setting = images[k].up().down('input').id;
+			var value = result.responseData[setting];
+			if (value)
+			{
+				images[k].src = value + '?' + (Math.random() * 100000);
+			}
+		}
 	}
 }
 

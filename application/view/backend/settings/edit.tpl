@@ -1,6 +1,6 @@
 <h1>{$title}</h1>
 
-{form action="controller=backend.settings action=save" method="post" handle=$form onsubmit="settings.save(this); return false;" role="settings.update" id="settings"}
+{form action="controller=backend.settings action=save" method="post" handle=$form onsubmit="return settings.save(this);" role="settings.update" id="settings" type="multipart/form-data" target="upload"}
 
 {foreach from=$layout key=groupName item=fields name="groups"}
 
@@ -26,6 +26,9 @@
 		<fieldset class="error">
 			{if 'string' == $values.$fieldName.type}
 				{textfield class="text wide" name="$fieldName" id="$fieldName"}
+			{elseif 'image' == $values.$fieldName.type}
+				{filefield name="$fieldName" id="$fieldName"}
+				<image class="settingImage" src="{$fieldName|config}" />
 			{elseif 'longtext' == $values.$fieldName.type}
 				{textarea class="tinyMCE" name="$fieldName" id="$fieldName"}
 			{elseif 'num' == $values.$fieldName.type || 'float' == $values.$fieldName.type}
