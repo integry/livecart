@@ -46,7 +46,8 @@
 
 {elseif $field.type == 3}
 	{if !$disableAutocomplete}
-		{assign var="autocomplete" value="controller=backend.product field=`$fieldName`"}
+		{assign var="autocompleteController" value=$autocompleteController|@or:'backend.product'}
+		{assign var="autocomplete" value="controller=`$autocompleteController` field=`$fieldName`"}
 	{/if}
 	{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name=$fieldName class="text wide" autocomplete=$autocomplete}
 

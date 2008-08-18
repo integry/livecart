@@ -18,7 +18,7 @@
 					<p class="{if $field.isRequired}required{/if} {if !$field.isDisplayed}notDisplayed{/if}">
 						<label for="product_{$cat}_{$product.ID}_{$field.fieldName}"><span>{$field.name_lang}:</span></label>
 						<fieldset class="error">
-							{include file="backend/eav/specFieldFactory.tpl" field=$field cat=$cat}
+							{include file="backend/eav/specFieldFactory.tpl" field=$field cat=$cat autocompleteController="backend.eavFieldValue"}
 							{if $field.description}
 								<div class="fieldDescription">{$field.description}</div>
 							{/if}
