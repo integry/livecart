@@ -1,16 +1,14 @@
 <?php
 
-if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../../test/Initialize.php';
-
 include_once('PaymentTest.php');
-include_once(dirname(__file__) . '/../method/cc/PaypalDirectPayment.php');
+ClassLoader::import('library.payment.method.cc.PaypalDirectPayment');
 
 /**
  *
  * @package library.payment.test
  * @author Integry Systems
  */
-class TestPaypalDirectPayment extends PaymentTest
+class PaypalDirectPaymentTest extends PaymentTest
 {
 	private function getPaymentHandler()
 	{

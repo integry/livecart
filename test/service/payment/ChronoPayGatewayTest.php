@@ -1,18 +1,14 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors', 'On');
-
-include_once('unittest/UTStandalone.php');
 include_once('PaymentTest.php');
-include_once(dirname(__file__) . '/../method/cc/ChronoPayGateway.php');
+ClassLoader::import('library.payment.method.cc.ChronoPayGateway');
 
 /**
  *
  * @package library.payment.test
  * @author Integry Systems
  */
-class TestChronoPayGateway extends PaymentTest
+class ChronoPayGatewayTest extends PaymentTest
 {
 	private function getPaymentHandler()
 	{
