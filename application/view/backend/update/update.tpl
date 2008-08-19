@@ -4,6 +4,6 @@
 
 {include file="layout/backend/header.tpl"}
 
-{t _update_successful}
+{t _update_successful|branding}
 
 {include file="layout/backend/footer.tpl"}

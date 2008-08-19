@@ -10,7 +10,7 @@
 
 		<div id="footerCopyright">
 
-			<span style="font-size: smaller;"><a href="http://livecart.com" target="_blank">Powered By LiveCart</a></span>
+			<span style="font-size: smaller;"><a href="{'POWERED_BY_URL'|config}" target="_blank">{'POWERED_BY_FRONTEND'|config}</a></span>
 			<div style="font-size: smaller; margin-top: 5px;">
 				All trademarks used are properties of their respective owners.
 			</div>

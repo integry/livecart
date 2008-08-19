@@ -297,3 +297,20 @@ _technical=Technical
 _proxy=Use proxy server for outgoing connections
 PROXY_HOST=Proxy server host name
 PROXY_PORT=Proxy server port
+
+# Private labels
+_private_label=Private Label
+
+_names_and_copyrights=Software Names and Copyright Messages
+SOFT_NAME=Software Name
+POWERED_BY_FRONTEND="Powered by" message in store front-end
+POWERED_BY_URL="Powered by" link URL in store front-end
+POWERED_BY_BACKEND=Copyright message in back-end
+
+_backend_logos=Backend Logo Images
+BACKEND_LOGO=Small logo image in page header
+BACKEND_LOGIN_LOGO=Login page logo image
+
+_backend_options=Display Options
+BACKEND_SHOW_HELP=Display help link
+BACKEND_SHOW_FOOTER_LINKS=Display footer links

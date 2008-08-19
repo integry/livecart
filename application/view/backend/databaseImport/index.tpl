@@ -10,9 +10,9 @@
 
 {include file="layout/backend/header.tpl"}
 
-<p>{t _import_description}</p>
+<p>{t _import_description|branding}</p>
 
-<p class="importWarning">{t _import_warning}</p>
+<p class="importWarning">{t _import_warning|branding}</p>
 
 <div id="import">
 {form action="controller=backend.databaseImport action=import" method="POST" handle=$form onsubmit="new Backend.DatabaseImport(this); return false;"}

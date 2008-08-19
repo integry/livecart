@@ -22,15 +22,17 @@
 			<tr>
 				<td id="footerLeft">
 					<div style="float: left;">
-						&copy; UAB <a href="http://integry.com" target="_blank">Integry Systems</a>, 2007-2008
+						{'POWERED_BY_BACKEND'|config}
 					</div>
-					<div id="supportLinks" style="float: left; padding-left: 50px;">
-						<a href="http://support.livecart.com" target="_blank">Customer Support</a>
-						/
-						<a href="http://forums.livecart.com" target="_blank">Forums</a>
-						/
-						<a href="http://bugs.livecart.com" target="_blank">Report a Bug</a>
-					</div>
+					{if 'BACKEND_SHOW_FOOTER_LINKS'|config}
+						<div id="supportLinks" style="float: left; padding-left: 50px;">
+							<a href="http://support.livecart.com" target="_blank">Customer Support</a>
+							/
+							<a href="http://forums.livecart.com" target="_blank">Forums</a>
+							/
+							<a href="http://bugs.livecart.com" target="_blank">Report a Bug</a>
+						</div>
+					{/if}
 				</td>
 				<td id="footerStretch">
 					&nbsp;

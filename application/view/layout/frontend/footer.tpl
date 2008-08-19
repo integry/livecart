@@ -3,16 +3,10 @@
 <div id="footer">
 
 	<div style="float: left;">
-		<span style="font-size: smaller; position: absolute; margin-left: 80px;">Powered By</span>
-		<a href="http://livecart.com">
-			{img src="image/promo/logo_small.jpg" alt="LiveCart Logo" style="vertical-align: middle;" }
-		</a>
+		<a href="{'POWERED_BY_URL'|config}" target="_blank">{'POWERED_BY_FRONTEND'|config}</a>
 	</div>
 
-	<div style="float: left; margin-left: 160px; margin-top: 15px;">
-
-		&copy; 2007-2008 <a href="http://livecart.com">UAB Integry Systems</a>
-		<br />
+	<div style="float: left; margin-left: 160px;">
 		<div style="font-size: smaller; margin-top: 5px;">
 			All trademarks used are properties of their respective owners.
 		</div>

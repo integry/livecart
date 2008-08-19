@@ -1,12 +1,12 @@
 {includeCss file="backend/Session.css"}
-{pageTitle}{t _backend_login}{/pageTitle}
+{pageTitle}{t _backend_login|branding}{/pageTitle}
 
 {include file="layout/backend/meta.tpl"}
 
-<h1 id="loginHeader">{t _backend_login}</h1>
+<h1 id="loginHeader">{t _backend_login|branding}</h1>
 
 <div id="logoContainer">
-	<img src="image/promo/transparentlogo.png" />
+	{img src='BACKEND_LOGIN_LOGO'|config|@or:"image/promo/transparentlogo.png"}
 </div>
 
 <div id="loginContainer">

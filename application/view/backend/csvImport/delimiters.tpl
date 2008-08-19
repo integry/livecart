@@ -79,7 +79,7 @@
 	<div class="clear"></div>
 
 	<fieldset id="columns" style="display: none;">
-		<legend>{t _map_data}</legend>
+		<legend>{t _map_data|branding}</legend>
 
 		<div id="fieldsContainer"></div>
 		<div class="clear"></div>
