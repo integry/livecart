@@ -1,4 +1,4 @@
-{pageTitle help="update"}{t _update_livecart}{/pageTitle}
+{pageTitle help="update"}{t _update_livecart|branding}{/pageTitle}
 
 {includeCss file="backend/Update.css"}
 
