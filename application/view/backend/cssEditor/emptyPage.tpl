@@ -3,5 +3,5 @@
 </p>
 
 <p class="cssWarning">
-	{t _css_warn}
+	{t _css_warn|branding}
 </p>

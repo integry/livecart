@@ -97,6 +97,7 @@ class SettingsController extends StoreManagementController
 			$defLang = $this->application->getDefaultLanguageCode();
 
 			$this->config->setAutoSave(false);
+			$data = array();
 			foreach ($values as $key => $value)
 			{
 				if (($this->config->isMultiLingual($key) && 'string' == $value['type']) || 'longtext' == $value['type'])
@@ -107,16 +108,27 @@ class SettingsController extends StoreManagementController
 						$this->config->setValueByLang($key, $lang, $this->request->get($key . '_' . $lang));
 					}
 				}
+				else if ('image' == $value['type'])
+				{
+					$file = 'upload/' . $key . '-' . $_FILES[$key]['name'];
+					$path = ClassLoader::getRealPath('public.') . $file;
+					if (@move_uploaded_file($_FILES[$key]['tmp_name'], $path))
+					{
+						$this->config->set($key, $file);
+					}
+				}
 				else
 				{
 					$this->config->set($key, $this->request->get($key, 'bool' == $value['type'] ? 0 : ''));
 				}
+
+				$data[$key] = $this->config->get($key);
 			}
 
 			$this->config->save();
 			$this->config->setAutoSave(true);
 
-			return new JSONResponse(false, 'success', $this->translate('_save_conf'));
+			return new JSONResponse($data, 'success', $this->translate('_save_conf'));
 		}
 	}
 

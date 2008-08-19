@@ -1,4 +1,4 @@
-{pageTitle help="update"}{t _update_livecart}{/pageTitle}
+{pageTitle help="update"}{t _update_livecart|branding}{/pageTitle}
 
 {includeCss file="backend/Update.css"}
 
@@ -17,9 +17,9 @@
 
 <p>
 {if $needUpdate}
-	{t _newer_available}.
+	{t _newer_available|branding}.
 {else}
-	{t _up_to_date}
+	{t _up_to_date|branding}
 {/if}
 </p>
 

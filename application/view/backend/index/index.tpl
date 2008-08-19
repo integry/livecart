@@ -1,4 +1,4 @@
-{pageTitle help=""}{t _livecart_backend}{/pageTitle}
+{pageTitle help=""}{t _livecart_backend|branding}{/pageTitle}
 
 {includeCss file="backend/Index.css"}
 

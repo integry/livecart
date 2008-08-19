@@ -9,7 +9,7 @@
 {includeCss file="backend/Settings.css"}
 {includeCss file="library/lightbox/lightbox.css"}
 
-{pageTitle help="settings.configuration"}{t _livecart_settings}{/pageTitle}
+{pageTitle help="settings.configuration"}{t _livecart_settings|branding}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
 <div id="settingsContainer" class="maxHeight h--50">
@@ -47,5 +47,7 @@
 		<div id="siteMapSubmissionResult"></div>
 	</div>
 </div>
+
+<iframe id="upload" name="upload"></iframe>
 
 {include file="layout/backend/footer.tpl"}

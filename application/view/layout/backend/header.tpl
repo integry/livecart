@@ -34,13 +34,13 @@
 				<div id="topLogoContainer">
 
 					<div id="systemMenu">
-							<a id="help" href="#" target="_blank">{t _base_help}</a>
+							<a id="help" href="#" target="_blank" {if !'BACKEND_SHOW_HELP'|config}style="display:none;"{/if}>{t _base_help}</a>
 							{backendLangMenu}
 					</div>
 
 					<div id="topLogoImageContainer">
 					 	<a href="{link controller=backend.index action=index}">
-						 	{img src="image/backend/layout/logo_tr.png" id="topLogoImage"}
+						 	{img src='BACKEND_LOGO'|config|@or:"image/backend/layout/logo_tr.png" id="topLogoImage"}
 						</a>
 					</div>
 

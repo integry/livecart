@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-	<title>LiveCart Admin - {$TITLE}</title>
+	<title>{'SOFT_NAME'|config} Admin - {$TITLE}</title>
 	<base href="{baseUrl}" />
 
 	{liveCustomization}

@@ -18,6 +18,7 @@ class LiveCartSmarty extends Smarty
 	{
 		$this->application = $application;
 		$this->register_modifier('config', array($this, 'config'));
+		$this->register_modifier('branding', array($this, 'branding'));
 		$this->load_filter('pre', 'config');
 
 		parent::__construct();
@@ -43,6 +44,15 @@ class LiveCartSmarty extends Smarty
 	public function config($key)
 	{
 		return self::getApplication()->getConfig()->get($key);
+	}
+
+	/**
+	 *  Replace "LiveCart" with alternative name if rebranding options are used
+	 */
+	public function branding($string)
+	{
+		$softName = self::getApplication()->getConfig()->get('SOFT_NAME');
+		return 'LiveCart' != $softName ? str_replace('LiveCart', $softName, $string) : $string;
 	}
 
 	public function processPlugins($output, $path)
