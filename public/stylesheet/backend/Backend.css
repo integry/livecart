@@ -1284,8 +1284,8 @@ fieldset.group p
 
 .tabs li.active
 {
-    background: #fff !important;
-    padding: 6px 17px 8px 17px ! important;
+    background: #fcfcfc !important;
+    padding: 6px 17px 4px 17px ! important;
     border-top: 2px solid red;
     font-weight: bold;
 }
