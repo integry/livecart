@@ -1233,6 +1233,27 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		return $this->shipments;
 	}
 
+	public function getDiscountConditions()
+	{
+		return ActiveRecordModel::getRecordSetArray('DiscountCondition', $this->getDiscountConditionFilter());
+	}
+
+	private function getDiscountConditionFilter()
+	{
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('DiscountCondition', 'parentNodeID'), 1));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('DiscountCondition', 'isEnabled'), 1));
+
+		// conditions valid by date
+		$dateCondition = new EqualsCond(new ARFieldHandle('DiscountCondition', 'isValidByDate'), false);
+		$byDate = new EqualsCond(new ARFieldHandle('DiscountCondition', 'isValidByDate'), true);
+		$byDate->mergeCondition(EqualsOrMoreCond(new ARFieldHandle('DiscountCondition', 'validFrom'), time()));
+		$byDate->mergeCondition(EqualsOrLessCond(new ARFieldHandle('DiscountCondition', 'validTo'), time()));
+		$dateCondition->addOr($byDate);
+		$f->mergeCondition($dateCondition);
+
+		return $f;
+	}
+
 	public function getDeliveryZone()
 	{
 		ClassLoader::import("application.model.delivery.DeliveryZone");

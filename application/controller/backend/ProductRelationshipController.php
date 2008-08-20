@@ -51,7 +51,7 @@ class ProductRelationshipController extends StoreManagementController
 	public function addRelated()
 	{
 		$productID = (int)$this->request->get('id');
-		$relatedProductID = (int)$this->request->get('relatedProductID');
+		$relatedProductID = (int)$this->request->get('relatedownerID');
 
 		$relatedProduct = Product::getInstanceByID($relatedProductID, true, array('DefaultImage' => 'ProductImage'), Product::LOAD_DATA);
 		$product = Product::getInstanceByID($productID, Product::LOAD_DATA);
