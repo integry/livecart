@@ -26,7 +26,6 @@ class ProductFilter
 		$this->category = $category;
 		$this->productFilter = $filter;
 		$this->selectFilter = $this->category->getProductFilter($filter);
-//		$this->selectFilter->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), true));
 	}
 
 	/**
