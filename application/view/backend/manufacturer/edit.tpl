@@ -10,6 +10,10 @@
 
 	{include file="backend/eav/fields.tpl" item=$manufacturer}
 
+	{language}
+		{include file="backend/eav/language.tpl" item=$manufacturer language=$lang.ID}
+	{/language}
+
 	<fieldset class="controls">
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" name="save" class="submit" value="{t _save}">

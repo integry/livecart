@@ -1251,14 +1251,17 @@ Backend.LanguageForm.prototype =
 			var tabs = forms[k].down('ul.languageFormTabs').getElementsByTagName('li');
 			for (var t = 0; t < tabs.length; t++)
 			{
-				tabs[t].onclick = this.handleTabClick.bindAsEventListener(this);
+				if (tabs[t].hasClassName('langTab'))
+				{
+					tabs[t].onclick = this.handleTabClick.bindAsEventListener(this);
+				}
 			}
 		}
 	},
 
 	handleTabClick: function(e)
 	{
-		var tab = Event.element(e);
+		var tab = e.innerHTML ? e : Event.element(e);
 
 		// make other tabs inactive
 		var tabs = tab.parentNode.getElementsByTagName('li');
@@ -1283,7 +1286,7 @@ Backend.LanguageForm.prototype =
 			}
 		}
 
-		if (Element.hasClassName(tab, 'active'))
+		if (Element.hasClassName(tab, 'langTab') && Element.hasClassName(tab, 'active'))
 		{
 			// get language code
 			var id = tab.className.match(/languageFormTabs_([a-z]{2})/)[1];
@@ -1962,5 +1965,112 @@ Backend.MultiInstanceEditor.prototype =
 		$(this.getMainContainerId(this.ownerID)).down('.sectionContainer').innerHTML = '';
 
 		TabControl.prototype.__instances__ = {};
+	}
+}
+
+var TabCustomize = Class.create();
+TabCustomize.prototype =
+{
+	tabList: null,
+
+	moreTabs: null,
+
+	moreTabsMenu: null,
+
+	saveUrl: null,
+
+	initialize: function(tabList)
+	{
+		this.tabList = tabList;
+
+		this.moreTabs = tabList.down('.moreTabs');
+		this.moreTabsMenu = this.moreTabs.down('.moreTabsMenu');
+
+		Event.observe(this.moreTabs, 'click', this.toggleMenu.bindAsEventListener(this));
+		this.setPrefsSaveUrl(Backend.Router.createUrl('backend.index', 'setUserPreference'));
+	},
+
+	setPrefsSaveUrl: function(url)
+	{
+		this.saveUrl = url;
+	},
+
+	toggleMenu: function(e)
+	{
+		Event.stop(e);
+
+		this.moreTabsMenu.innerHTML = '';
+		var cloned = this.tabList.cloneNode(true);
+		this.moreTabsMenu.appendChild(cloned);
+
+		$A(cloned.getElementsBySelector('li.hidden')).reverse().each(function(el)
+		{
+			el.parentNode.insertBefore(el, el.parentNode.firstChild);
+		});
+
+		$A(cloned.getElementsBySelector('li')).each(function(el)
+		{
+			el.id = 'toggle_' + el.id;
+			Event.observe(el, 'click', this.toggleVisibility.bindAsEventListener(this));
+		}.bind(this));
+
+		this.moreTabsMenu.show();
+
+		Event.observe(document, 'click', this.hideMenu.bindAsEventListener(this), true);
+	},
+
+	toggleVisibility: function(e)
+	{
+		Event.stop(e);
+
+		var li = Event.element(e);
+		if ('LI' != li.tagName)
+		{
+			li = li.up('li');
+		}
+
+		var id = li.id.substr(7);
+
+		var tab = this.tabList.down('#' + id);
+
+		if (li.hasClassName('hidden'))
+		{
+			this.setVisible(tab, e);
+		}
+		else
+		{
+			this.setHidden(tab);
+		}
+
+		this.setPreference(tab);
+		this.hideMenu();
+	},
+
+	setVisible: function(tab, e)
+	{
+		tab.removeClassName('hidden');
+		tab.onclick(tab);
+	},
+
+	setHidden: function(tab)
+	{
+		tab.addClassName('hidden');
+	},
+
+	hideMenu: function()
+	{
+		this.moreTabsMenu.hide();
+		this.moreTabsMenu.innerHTML = '';
+
+		Event.stopObserving(document, 'click', this.hideMenu.bindAsEventListener(this), true);
+	},
+
+	setPreference: function(li)
+	{
+		var id = li.id.split(/__/).pop();
+
+		var url = Backend.Router.setUrlQueryParam(this.saveUrl, 'key', 'tab_' + id);
+		var url = Backend.Router.setUrlQueryParam(url, 'value', !li.hasClassName('hidden'));
+		new LiveCart.AjaxRequest(url);
 	}
 }

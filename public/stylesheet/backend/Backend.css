@@ -833,7 +833,7 @@ fieldset
 {
     margin: 1em 0;
     padding: 1em;
-    background: #f8f8f8;
+    background: #fbfbfb;
     margin: auto 0;
     margin-bottom: 10px;
     border: 1px solid #DDD;
@@ -1284,7 +1284,7 @@ fieldset.group p
 
 .tabs li.active
 {
-    background: #fcfcfc !important;
+    background: #fdfdfd !important;
     padding: 6px 17px 4px 17px ! important;
     border-top: 2px solid red;
     font-weight: bold;
@@ -1336,14 +1336,16 @@ ul.languageFormTabs
     height: 100%;
     width: 300px;
     display: inline;
-}
-
-ul.languageFormTabs
-{
 	position: relative;
+	padding-right: 150px;
 }
 
 ul.languageFormTabs li
+{
+	list-style-type: none;
+}
+
+ul.languageFormTabs li.langTab
 {
     display: inline;
     cursor: pointer;
@@ -1355,13 +1357,13 @@ ul.languageFormTabs li
     font-size: 14px;
 }
 
-ul.languageFormTabs li:hover, ul.languageFormTabs li.active
+ul.languageFormTabs li.langTab:hover, ul.languageFormTabs li.langTab.active
 {
     border-top: 2px solid red;
     background-color: #fafafa;
 }
 
-ul.languageFormTabs li.active
+ul.languageFormTabs li.langTab.active
 {
     background-color: #fff;
     font-weight: bold;
@@ -1387,6 +1389,35 @@ ul.languageFormTabs li.active
  	display: block;
 }
 
+ul.languageFormTabs li.moreTabs
+{
+	background-color: transparent;
+}
+
+ul.languageFormTabs li.moreTabs li
+{
+	display: none;
+}
+
+ul.languageFormTabs li.moreTabs li.langTab
+{
+	display: block;
+}
+
+li.langTab.hidden
+{
+	display: none !important;
+}
+
+.moreTabsMenu li.hidden
+{
+	display: block !important;
+}
+
+.moreTabsMenu li
+{
+	white-space: nowrap;
+}
 
 /***************************
 	Tree browser
