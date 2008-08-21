@@ -1315,11 +1315,12 @@ Translation tabs
     border: 0px none;
     background-color: transparent;
     padding: 0;
+    position: relative;
+    width: 100%;
 }
 
 .languageFormCaption
 {
-    height: 100%;
     margin-right: 10px;
     display: inline;
     padding: 0.5em 1em 0.5em 1em ! important;
@@ -1328,16 +1329,19 @@ Translation tabs
 
 .languageTabsContainer
 {
-   height: 1.5em;
+   height: 30px;
+   position: relative;
 }
 
 ul.languageFormTabs
 {
     height: 100%;
-    width: 300px;
-    display: inline;
-	position: relative;
-	padding-right: 150px;
+    width: 100%;
+    display: block;
+	position: absolute;
+	white-space: nowrap;
+	overflow: hidden;
+	padding-top: 8px;
 }
 
 ul.languageFormTabs li
@@ -1389,17 +1393,23 @@ ul.languageFormTabs li.langTab.active
  	display: block;
 }
 
-ul.languageFormTabs li.moreTabs
+.languageTabsContainer li.moreTabs
 {
-	background-color: transparent;
+	background-color: #FDFDFD;
+	position: absolute;
+	z-index: 60;
+	right: 0;
+	top: 0;
+	height: 100%;
+	padding-left: 20px;
 }
 
-ul.languageFormTabs li.moreTabs li
+.languageTabsContainer li.moreTabs li
 {
 	display: none;
 }
 
-ul.languageFormTabs li.moreTabs li.langTab
+.languageTabsContainer li.moreTabs li.langTab
 {
 	display: block;
 }
@@ -1407,6 +1417,11 @@ ul.languageFormTabs li.moreTabs li.langTab
 li.langTab.hidden
 {
 	display: none !important;
+}
+
+.moreTabs .moreLink
+{
+	line-height: 30px;
 }
 
 .moreTabsMenu li.hidden
@@ -1417,6 +1432,7 @@ li.langTab.hidden
 .moreTabsMenu li
 {
 	white-space: nowrap;
+	padding: 3px;
 }
 
 /***************************

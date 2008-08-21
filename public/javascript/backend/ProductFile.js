@@ -356,6 +356,8 @@ Backend.ProductFile.View.methods =
 		this.nodes.downloadLink = this.nodes.root.down('.' + this.prefix + 'download_link');
 
 		this.nodes.newFileCancelLink = $(this.prefix + 'new_' + productID + '_cancel');
+
+		new Backend.LanguageForm(root);
 	},
 
 	createUploadIFrame: function()
@@ -789,6 +791,8 @@ Backend.ProductFile.Group.View.methods = {
 		this.nodes.newGroupCancelLink = $(this.prefix + 'new_' + productID + '_cancel');
 
 		this.nodes.languageForm = this.nodes.root.down('.languageForm');
+
+		new Backend.LanguageForm(this.nodes.languageForm);
 	},
 
 	setDefaultLanguageValues: function()

@@ -66,6 +66,7 @@ li.moreTabs
 	top: -2px;
 	background-color: #fff;
 	margin-right: 0;
+	list-style: none;
 }
 
 li.moreTabs a
@@ -102,12 +103,14 @@ li.moreTabs .moreTabsMenu
 	position: absolute;
 	right: 0;
 	z-index: 10;
-	border: 1px solid #000;
+	border: 1px solid #aaa;
+	background-color: #fff;
 }
 
 li.moreTabs li.hidden, li.moreTabs li.hidden *, li.moreTabs li:hover
 {
 	color: #777;
+	opacity: 0.6;
 }
 
 li.moreTabs li:hover

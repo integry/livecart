@@ -1257,6 +1257,8 @@ Backend.LanguageForm.prototype =
 				}
 			}
 		}
+
+		new TabCustomize(root.down('ul'));
 	},
 
 	handleTabClick: function(e)
@@ -1983,7 +1985,7 @@ TabCustomize.prototype =
 	{
 		this.tabList = tabList;
 
-		this.moreTabs = tabList.down('.moreTabs');
+		this.moreTabs = tabList.parentNode.down('.moreTabs');
 		this.moreTabsMenu = this.moreTabs.down('.moreTabsMenu');
 
 		Event.observe(this.moreTabs, 'click', this.toggleMenu.bindAsEventListener(this));
@@ -2002,6 +2004,7 @@ TabCustomize.prototype =
 		this.moreTabsMenu.innerHTML = '';
 		var cloned = this.tabList.cloneNode(true);
 		this.moreTabsMenu.appendChild(cloned);
+		cloned.removeClassName('languageFormTabs');
 
 		$A(cloned.getElementsBySelector('li.hidden')).reverse().each(function(el)
 		{
@@ -2012,6 +2015,11 @@ TabCustomize.prototype =
 		{
 			el.id = 'toggle_' + el.id;
 			Event.observe(el, 'click', this.toggleVisibility.bindAsEventListener(this));
+
+			if (el.hasClassName('languageFormCaption'))
+			{
+				el.parentNode.removeChild(el);
+			}
 		}.bind(this));
 
 		this.moreTabsMenu.show();
