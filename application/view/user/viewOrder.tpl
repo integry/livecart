@@ -101,8 +101,6 @@
 
 		</div>
 
-		</fieldset>
-
 		<h2 id="msg">{t _support}</h2>
 
 		<p class="noteAbout">{t _have_questions}</p>
@@ -122,6 +120,8 @@
 		   {/err}
 		   <input type="submit" class="submit" value="{tn _submit_response}" />
 		{/form}
+
+		</fieldset>
 
 	</div>
 

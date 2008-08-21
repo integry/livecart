@@ -27,7 +27,10 @@ class NetworkFetch
 	public function fetchWithCurl()
 	{
 		$ch = curl_init();
+
 		curl_setopt($ch, CURLOPT_URL, $this->url);
+		curl_setopt($ch, CURLOPT_REFERER, $this->url);
+		curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.8.1.11) Gecko/20071204 Ubuntu/7.10 (gutsy) Firefox/2.0.0.11');
 
 		$stream = fopen($this->tmpFile, 'w');
 		curl_setopt($ch, CURLOPT_FILE, $stream);

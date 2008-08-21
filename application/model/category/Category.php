@@ -396,7 +396,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	 */
 	public function getProductArray(ProductFilter $productFilter, $loadReferencedRecords = false)
 	{
-		return ActiveRecordModel::getRecordSetArray('Product', $this->getProductsFilter($productFilter, true), $loadReferencedRecords);
+		return ActiveRecordModel::getRecordSetArray('Product', $this->getProductsFilter($productFilter), $loadReferencedRecords);
 	}
 
 	/**
@@ -413,14 +413,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	/**
 	 *	Create a basic ARSelectFilter object to select category products
 	 */
-	public function getProductsFilter(ProductFilter $productFilter, $clone = false)
+	public function getProductsFilter(ProductFilter $productFilter)
 	{
 		$filter = $productFilter->getSelectFilter();
-
-		if ($clone)
-		{
-			$filter = clone $filter;
-		}
 
 		if ($productFilter->isSubcategories())
 		{
