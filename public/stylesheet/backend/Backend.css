@@ -192,6 +192,8 @@ html, body{
 #pageHeader {
   	background-color: #30a0f9;
     height: 99px;
+    position: relative;
+    z-index: 2000;
 }
 #headerContainer {
   	height: 55px;
@@ -618,7 +620,7 @@ html, body{
 ***************************/
 #pageTitleContainer
 {
-	height: 25px;
+	height: 21px;
 	padding-top: 5px;
 	background-color: #E6E6E6;
 	position: relative;

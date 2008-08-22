@@ -7,6 +7,19 @@
 {
     padding-bottom: 4px;
     padding-top: 8px;
+    -moz-border-radius: 0;
+    border: 0;
+    background-color: #fff !important;
+}
+
+.tabOrderProductsContent .orderShipment .activeList li.activeList_odd
+{
+	background-color: #f6f6ff !important;
+}
+
+.orderShipmentsItem
+{
+	border: 1px solid #eee;
 }
 
 .tabOrderProductsContent h2
@@ -72,7 +85,6 @@ li.orderShipment
 li.orderShipment:hover, .orderShippedShipments ul.activeList > li:hover, .downloadableShipment ul.activeList > li:hover
 {
 	border-width: 0;
-	border-bottom-width: 1px;
 }
 
 .orderShipments li
@@ -138,9 +150,10 @@ li.orderShipment:hover, .orderShippedShipments ul.activeList > li:hover, .downlo
 }
 
 .orderShipmentsItem_info_sku_td { min-width: 80px; padding-left: 40px !important; }
-.orderShipmentsItem_info_sku { min-width: 70px; font-size: smaller; }
+.orderShipmentsItem_info_sku { min-width: 70px; font-size: smaller; text-align: center; }
 
 .orderShipmentsItem_info_sku img { margin-top: 0.5em; }
+.orderShipmentsItem_info_sku a { display: block; }
 
 .orderShipmentsItem_info_name_td { width: 100%;  }
 .orderShipmentsItem_info_name { width: 500px;  }
@@ -243,8 +256,8 @@ li.orderShipment:hover, .orderShippedShipments ul.activeList > li:hover, .downlo
 .orderShipmentsItem .activeList_icons
 {
     vertical-align: top;
-    padding-top: 10px !important;
     padding-right: 0px;
+    padding-left: 5px;
     display: inline;
     position: absolute;
 }
