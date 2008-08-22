@@ -21,9 +21,13 @@ class SettingsController extends StoreManagementController
 	 */
 	public function index()
 	{
-		$response = new ActionResponse();
-		$response->set('categories', json_encode($this->config->getTree()));
-		return $response;
+		$tree = $this->config->getTree();
+		if (file_exists($this->getPrivateLabelFile()))
+		{
+			unset($tree['49-private-label']);
+		}
+
+		return new ActionResponse('categories', json_encode($tree));
 	}
 
 	/**
@@ -130,6 +134,19 @@ class SettingsController extends StoreManagementController
 
 			return new JSONResponse($data, 'success', $this->translate('_save_conf'));
 		}
+	}
+
+	/**
+	 * @role update
+	 */
+	public function disablePrivateLabel()
+	{
+		file_put_contents($this->getPrivateLabelFile(), '');
+	}
+
+	private function getPrivateLabelFile()
+	{
+		return ClassLoader::getRealPath('storage.') . 'privateLabelDisabled';
 	}
 
 	private function getValidationRules(&$values)

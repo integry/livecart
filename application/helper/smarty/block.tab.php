@@ -13,7 +13,7 @@ function smarty_block_tab($params, $content, LiveCartSmarty $smarty, &$repeat)
 	if (!$repeat)
 	{
 		ClassLoader::import('application.helper.AccessStringParser');
-		if(!AccessStringParser::run($params['role']))
+		if(!empty($params['role']) && !AccessStringParser::run($params['role']))
 		{
 			return false;
 		}

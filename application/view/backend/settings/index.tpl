@@ -46,6 +46,11 @@
 		<span class="progressIndicator" id="siteMapFeedback" style="display: none;"></span>
 		<div id="siteMapSubmissionResult"></div>
 	</div>
+
+	<div id="handler_SOFT_NAME">
+		<a href="{link controller=backend.settings action=disablePrivateLabel}" id="disablePrivateLabel" class="menu">{t _disable_private_label_change}</a>
+		<span class="progressIndicator" style="display: none;"></span>
+	</div>
 </div>
 
 <iframe id="upload" name="upload"></iframe>

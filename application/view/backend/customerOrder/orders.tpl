@@ -122,7 +122,7 @@
 <script type="text/javascript">
 
 	var detailedExport = $('detailedExportContainer_{/literal}{$orderGroupID}{literal}');
-	var menu = $('tabOrders_{/literal}{$orderGroupID}{literal}Content').down('.activeGridColumns').down('.menu', 1);
+	var menu = detailedExport.up('.tabPageContainer').down('.activeGridColumns').down('.menu', 1);
 	menu.insertBefore(detailedExport, menu.firstChild);
 
 	var massHandler = new ActiveGrid.MassActionHandler($('{/literal}orderMass_{$orderGroupID}{literal}'),

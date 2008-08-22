@@ -52,6 +52,8 @@ Backend.Settings.prototype =
 
 		this.insertTreeBranch(categories, 0);
 		this.treeBrowser.closeAllItems(0);
+
+		window.settings = this;
 	},
 
 	insertTreeBranch: function(treeBranch, rootId)
@@ -169,6 +171,8 @@ Backend.Settings.prototype =
 Backend.Settings.Editor = Class.create();
 Backend.Settings.Editor.prototype =
 {
+	owner: null,
+
 	handlers:
 	{
 		'ENABLED_COUNTRIES':
@@ -291,6 +295,28 @@ Backend.Settings.Editor.prototype =
 				Event.observe($('siteMapPing'), 'click', siteMapSubmit);
 			},
 
+		'SOFT_NAME':
+			function()
+			{
+				var cont = $('setting_SOFT_NAME').up('form');
+				var menu = cont.insertBefore($('handler_SOFT_NAME').cloneNode(true), cont.firstChild);
+
+				var disablePrivateLabel =
+					function(e)
+					{
+						Event.stop(e);
+
+						var link = Event.element(e);
+						new LiveCart.AjaxRequest(link.href, link.parentNode.down('.progressIndicator'), function()
+						{
+							this.owner.activateCategory('00-store');
+							this.owner.treeBrowser.deleteItem('49-private-label', true);
+						}.bind(this));
+					}.bind(this);
+
+				Event.observe(menu.down('a'), 'click', disablePrivateLabel);
+			},
+
 		'IMG_P_W_1':
 			function()
 			{
@@ -338,15 +364,16 @@ Backend.Settings.Editor.prototype =
 			}
 	},
 
-	initialize: function(container)
+	initialize: function(container, handler)
 	{
+		this.owner = handler;
 		var settings = container.getElementsBySelector('div.setting');
 		for (k = 0; k < settings.length; k++)
 		{
 			var id = settings[k].id.substr(8);
 			if (this.handlers[id])
 			{
-				this.handlers[id]();
+				this.handlers[id].bind(this)();
 			}
 		}
 

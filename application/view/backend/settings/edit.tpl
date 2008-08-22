@@ -98,6 +98,6 @@
 
 {literal}
 <script type="text/javascript">
-	new Backend.Settings.Editor($('settings'));
+	new Backend.Settings.Editor($('settings'), window.settings);
 </script>
 {/literal}
