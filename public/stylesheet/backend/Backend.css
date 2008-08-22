@@ -1339,13 +1339,13 @@ Translation tabs
 
 ul.languageFormTabs
 {
-    height: 100%;
+    height: 21px;
     width: 100%;
     display: block;
 	position: absolute;
 	white-space: nowrap;
 	overflow: hidden;
-	padding-top: 8px;
+	padding-top: 10px;
 }
 
 ul.languageFormTabs li
