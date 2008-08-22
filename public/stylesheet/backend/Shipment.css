@@ -137,8 +137,10 @@ li.orderShipment:hover, .orderShippedShipments ul.activeList > li:hover, .downlo
     padding: 4px;
 }
 
-.orderShipmentsItem_info_sku_td { width: 80px; padding-left: 40px !important; }
-.orderShipmentsItem_info_sku { width: 70px; }
+.orderShipmentsItem_info_sku_td { min-width: 80px; padding-left: 40px !important; }
+.orderShipmentsItem_info_sku { min-width: 70px; font-size: smaller; }
+
+.orderShipmentsItem_info_sku img { margin-top: 0.5em; }
 
 .orderShipmentsItem_info_name_td { width: 100%;  }
 .orderShipmentsItem_info_name { width: 500px;  }

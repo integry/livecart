@@ -223,6 +223,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 		if ($this->specificationInstance && !isset($array['attributes']))
 		{
 			$array['attributes'] = $this->specificationInstance->toArray();
+			EavSpecificationManager::sortAttributesByHandle('EavSpecificationManager', $array);
 		}
 
 		return $array;

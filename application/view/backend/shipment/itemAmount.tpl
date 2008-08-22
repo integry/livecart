@@ -3,12 +3,16 @@
 		<td class="orderShipmentsItem_info_sku_td">
 		   <div class="orderShipmentsItem_info_sku">
 			   {$item.Product.sku}
+
+				{if $item.Product.DefaultImage.paths.1}
+					<a href="{$item.Product.DefaultImage.paths.4}" rel="lightbox"><img src="{$item.Product.DefaultImage.paths.1}" /></a>
+				{/if}
 		   </div>
 		</td>
 		<td class="orderShipmentsItem_info_name_td">
 			<div class="orderShipmentsItem_info_name">
 				<a href="{backendProductUrl product=$item.Product}">{$item.Product.name_lang}</a>
-				{if $item.options}
+				{if $allOptions[$item.Product.ID] || $item.options}
 					({$item.formattedBasePrice})
 					<div class="productOptions">
 						<ul class="itemOptions">

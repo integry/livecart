@@ -49,18 +49,22 @@ class VCS extends ExternalPayment
 
 	public function notify($requestArray)
 	{
-		echo '<CallBackResponse>Accepted</CallBackResponse>';
+		if (empty($requestArray['test']))
+		{
+			echo '<CallBackResponse>Accepted</CallBackResponse>';
+		}
 
-file_put_contents('/var/www/livecart/cache/vcs', var_export($requestArray, true));
+		if (substr($requestArray['p3'], -8) == 'APPROVED')
+		{
+			$result = new TransactionResult();
+			$result->gatewayTransactionID->set($requestArray['p2']);
+			$result->amount->set($requestArray['p6']);
+			$result->currency->set('ZAR');
+			$result->rawResponse->set($requestArray);
+			$result->setTransactionType(TransactionResult::TYPE_SALE);
 
-		$result = new TransactionResult();
-		$result->gatewayTransactionID->set($requestArray['p2']);
-		$result->amount->set($requestArray['p6']);
-		$result->currency->set('ZAR');
-		$result->rawResponse->set($requestArray);
-		$result->setTransactionType(TransactionResult::TYPE_SALE);
-
-		return $result;
+			return $result;
+		}
 	}
 
 	public function getOrderIdFromRequest($requestArray)

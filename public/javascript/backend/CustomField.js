@@ -18,6 +18,7 @@ Backend.SpecField.prototype.loadSpecFieldAction = function()
 		var toggleFunc = function() { this.toggleCheckboxes(this.nodes.isRequired, [this.nodes.isDisplayed]); }.bind(this);
 		toggleFunc();
 		this.nodes.isRequired.onchange = toggleFunc;
+		this.nodes.labels['isDisplayedInList'].innerHTML = Backend.getTranslation('_show_in_invoice');
 	}
 	// orders
 	else if (2 == this.categoryID)

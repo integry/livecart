@@ -775,6 +775,11 @@ class CustomerOrderController extends ActiveGridController
 		$order = CustomerOrder::getInstanceById($this->request->get('id'), CustomerOrder::LOAD_DATA, CustomerOrder::LOAD_REFERENCES);
 		$order->loadAll();
 
+		if ($order->user->get())
+		{
+			$order->user->get()->getSpecification();
+		}
+
 		$this->setLayout('frontend');
 		$this->loadLanguageFile('Frontend');
 		$this->loadLanguageFile('User');

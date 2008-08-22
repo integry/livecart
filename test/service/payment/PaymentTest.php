@@ -5,7 +5,9 @@ include_once('simpletest/unit_tester.php');
 include_once('unittest/UnitTest.php');
 include_once('simpletest/reporter.php');
 */
-include_once('../TransactionDetails.php');
+
+include_once 'Initialize.php';
+ClassLoader::import('library.payment.TransactionDetails');
 
 /**
  *
@@ -14,11 +16,6 @@ include_once('../TransactionDetails.php');
  */
 class PaymentTest extends UnitTest
 {
-	public function __construct($name = null)
-	{
-		UnitTestCase::__construct($name);
-	}
-
 	public function tearDown()
 	{
 	}
@@ -46,6 +43,12 @@ class PaymentTest extends UnitTest
 		$details->email->set('test@integry.net');
 
 		$details->clientID->set('1');
+
+		if (empty($_SERVER['REMOTE_ADDR']))
+		{
+			$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+		}
+
 		$details->ipAddress->set($_SERVER['REMOTE_ADDR']);
 
 		$details->invoiceID->set(rand(1, 10000000));

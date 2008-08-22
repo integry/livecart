@@ -416,6 +416,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	public function getProductsFilter(ProductFilter $productFilter)
 	{
 		$filter = $productFilter->getSelectFilter();
+
 		if ($productFilter->isSubcategories())
 		{
 			$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $this->lft->get());
