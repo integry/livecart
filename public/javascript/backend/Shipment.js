@@ -260,6 +260,10 @@ Backend.Shipment.prototype =
 			this.toggleStatuses();
 			Form.State.backup(this.nodes.form);
 		}
+
+		window.loadingImage = 'image/loading.gif';
+		window.closeButton = 'image/silk/gif/cross.gif';
+		initLightbox();
 	},
 
 	toggleStatuses: function()

@@ -449,7 +449,14 @@ class OrderedItemController extends StoreManagementController
 
 		$this->application->getLocale()->translationManager()->loadFile('backend/Shipment');
 
-		return new ActionResponse('item', $item->toArray());
+		$response = new ActionResponse('item', $item->toArray());
+
+		// load product options
+		$products = new ARSet();
+		$products->add($item->product->get());
+		$response->set('allOptions', ProductOption::loadOptionsForProductSet($products));
+
+		return $response;
 	}
 }
 

@@ -93,6 +93,15 @@ class ShipmentController extends StoreManagementController
 		$response->set('statusesWithoutShipped', $statuses);
 		$response->set('newShipmentForm', $form);
 
+		// load product options
+		$products = new ARSet();
+		foreach ($order->getOrderedItems() as $item)
+		{
+			$products->add($item->product->get());
+		}
+
+		$response->set('allOptions', ProductOption::loadOptionsForProductSet($products));
+
 		return $response;
 	}
 

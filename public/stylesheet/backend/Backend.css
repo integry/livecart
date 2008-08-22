@@ -1735,6 +1735,11 @@ a.external
 	display: none;
 }
 
+#overlay
+{
+	background-image: url(../../image/overlay.png) !important;
+}
+
 #confirmations
 {
 	position: fixed;
