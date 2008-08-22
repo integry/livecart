@@ -192,6 +192,8 @@ html, body{
 #pageHeader {
   	background-color: #30a0f9;
     height: 99px;
+    position: relative;
+    z-index: 2000;
 }
 #headerContainer {
   	height: 55px;
@@ -618,7 +620,7 @@ html, body{
 ***************************/
 #pageTitleContainer
 {
-	height: 25px;
+	height: 21px;
 	padding-top: 5px;
 	background-color: #E6E6E6;
 	position: relative;
@@ -833,10 +835,12 @@ fieldset
 {
     margin: 1em 0;
     padding: 1em;
-    background: #f8f8f8;
+    background: #fbfbfb;
     margin: auto 0;
     margin-bottom: 10px;
     border: 1px solid #DDD;
+    position: relative;
+    z-index: 10;
 }
 
 legend
@@ -1284,8 +1288,8 @@ fieldset.group p
 
 .tabs li.active
 {
-    background: #fff !important;
-    padding: 6px 17px 8px 17px ! important;
+    background: #fdfdfd !important;
+    padding: 6px 17px 4px 17px ! important;
     border-top: 2px solid red;
     font-weight: bold;
 }
@@ -1315,35 +1319,43 @@ Translation tabs
     border: 0px none;
     background-color: transparent;
     padding: 0;
+    position: relative;
+    width: 100%;
+    z-index: 200;
 }
 
 .languageFormCaption
 {
-    height: 100%;
     margin-right: 10px;
     display: inline;
     padding: 0.5em 1em 0.5em 1em ! important;
     vertical-align: middle;
+    font-size: smaller;
 }
 
 .languageTabsContainer
 {
-   height: 1.5em;
+   height: 30px;
+   position: relative;
 }
 
 ul.languageFormTabs
 {
-    height: 100%;
-    width: 300px;
-    display: inline;
-}
-
-ul.languageFormTabs
-{
-	position: relative;
+    height: 21px;
+    width: 100%;
+    display: block;
+	position: absolute;
+	white-space: nowrap;
+	overflow: hidden;
+	padding-top: 10px;
 }
 
 ul.languageFormTabs li
+{
+	list-style-type: none;
+}
+
+ul.languageFormTabs li.langTab
 {
     display: inline;
     cursor: pointer;
@@ -1351,19 +1363,19 @@ ul.languageFormTabs li
     border-bottom: 0px;
     background-color: #f5f5f5;
     margin-left: 2px;
-    padding: 7px ! important;
+    padding: 4px ! important;
     font-size: 14px;
 }
 
-ul.languageFormTabs li:hover, ul.languageFormTabs li.active
+ul.languageFormTabs li.langTab:hover, ul.languageFormTabs li.langTab.active
 {
     border-top: 2px solid red;
     background-color: #fafafa;
 }
 
-ul.languageFormTabs li.active
+ul.languageFormTabs li.langTab.active
 {
-    background-color: #fff;
+    background-color: #FDFDFD;
     font-weight: bold;
 	position: relative;
 	z-index: 50;
@@ -1372,8 +1384,8 @@ ul.languageFormTabs li.active
 .languageFormContent
 {
     padding: 10px;
-    border: 1px solid #b3d4ef;
-    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    background-color: #FDFDFD;
     position: relative;
 }
 
@@ -1387,6 +1399,124 @@ ul.languageFormTabs li.active
  	display: block;
 }
 
+.languageTabsContainer li.moreTabs
+{
+	background-color: #FDFDFD;
+	position: absolute;
+	z-index: 60;
+	right: 0;
+	top: 0;
+	height: 30px;
+	padding: 0;
+	padding-left: 20px;
+}
+
+.languageTabsContainer li.moreTabs li
+{
+	display: none;
+}
+
+.languageTabsContainer li.moreTabs li.langTab
+{
+	display: block;
+}
+
+li.langTab.hidden
+{
+	display: none !important;
+}
+
+.moreTabs .moreLink
+{
+	line-height: 30px;
+}
+
+.moreTabsMenu li.hidden
+{
+	display: block !important;
+}
+
+.moreTabsMenu li
+{
+	white-space: nowrap;
+	padding: 3px !important;
+}
+
+li.moreTabs
+{
+	border: 0;
+	position: absolute;
+	right: 0;
+	top: -2px;
+	background-color: #fff;
+	margin-right: 0;
+	list-style: none;
+}
+
+li.moreTabs a
+{
+	font-weight: bold;
+	font-size: 0.85em;
+	text-decoration: underline;
+}
+
+li.moreTabs ul
+{
+	height: auto !important;
+	padding: 0 !important;
+}
+
+li.moreTabs li
+{
+	float: none !important;
+	border: 0 !important;
+	background: #fff !important;
+	display: block !important;
+	margin-right: 0 !important;
+	font-weight: normal !important;
+}
+
+.tabContainer ul li.moreTabs li
+{
+	font-size: 0.85em !important;
+	padding-left: 10px !important;
+}
+
+li.moreTabs .moreTabsMenu
+{
+	position: absolute;
+	right: 0;
+	z-index: 100;
+	border: 1px solid #aaa;
+	background-color: #fff;
+}
+
+li.moreTabs li.hidden, li.moreTabs li.hidden *, li.moreTabs li:hover
+{
+	color: #777;
+	opacity: 0.6;
+}
+
+li.moreTabs li:hover
+{
+	text-decoration: line-through;
+}
+
+li.moreTabs li, li.moreTabs li *, li.moreTabs li.hidden:hover
+{
+	color: #000;
+	text-decoration: none;
+}
+
+li.moreTabs li:hover
+{
+	background-color: #eee !important;
+}
+
+li.moreTabs .moreTabs
+{
+	display: none !important;
+}
 
 /***************************
 	Tree browser
@@ -1605,6 +1735,11 @@ a.external
 #keyboardMsg
 {
 	display: none;
+}
+
+#overlay
+{
+	background-image: url(../../image/overlay.png) !important;
 }
 
 #confirmations

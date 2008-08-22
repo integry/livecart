@@ -300,6 +300,7 @@ PROXY_PORT=Proxy server port
 
 # Private labels
 _private_label=Private Label
+_disable_private_label_change=Disable further editing
 
 _names_and_copyrights=Software Names and Copyright Messages
 SOFT_NAME=Software Name

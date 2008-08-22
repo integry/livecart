@@ -81,7 +81,10 @@ class ShipmentController extends StoreManagementController
 
 		if ($downloadable = $order->getDownloadShipment(false))
 		{
-			$response->set('downloadableShipment', $downloadable->toArray());
+			if (!isset($shipmentsArray[$downloadable->getID()]))
+			{
+				$response->set('downloadableShipment', $downloadable->toArray());
+			}
 		}
 
 		$response->set('taxAmount', $taxAmount);
@@ -92,6 +95,15 @@ class ShipmentController extends StoreManagementController
 		unset($statuses[3]);
 		$response->set('statusesWithoutShipped', $statuses);
 		$response->set('newShipmentForm', $form);
+
+		// load product options
+		$products = new ARSet();
+		foreach ($order->getOrderedItems() as $item)
+		{
+			$products->add($item->product->get());
+		}
+
+		$response->set('allOptions', ProductOption::loadOptionsForProductSet($products));
 
 		return $response;
 	}
@@ -239,7 +251,7 @@ class ShipmentController extends StoreManagementController
 	 */
 	public function create()
 	{
-		$order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true, array('BillingAddress' => 'UserAddress', 'ShippingAddress' => 'UserAddress'));
+		$order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true, array('BillingAddress', 'ShippingAddress'));
 
 		/*
 		$order->loadAll();

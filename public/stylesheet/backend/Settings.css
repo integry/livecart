@@ -90,3 +90,8 @@ div.multi
 {
 	display: block;
 }
+
+#handler_SOFT_NAME
+{
+	margin-bottom: 0.5em;
+}

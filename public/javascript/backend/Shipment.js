@@ -260,6 +260,10 @@ Backend.Shipment.prototype =
 			this.toggleStatuses();
 			Form.State.backup(this.nodes.form);
 		}
+
+		window.loadingImage = 'image/loading.gif';
+		window.closeButton = 'image/silk/gif/cross.gif';
+		initLightbox();
 	},
 
 	toggleStatuses: function()
@@ -923,6 +927,7 @@ Backend.Shipment.prototype =
 		s = new String(i);
 		if(s.indexOf('.') < 0) { s += '.00'; }
 		if(s.indexOf('.') == (s.length - 2)) { s += '0'; }
+		//if(s.indexOf('.') < (s.length - 2)) { s = s.substr(0, s.indexOf('.') + 2); }
 		s = minus + s;
 		return s;
 	},

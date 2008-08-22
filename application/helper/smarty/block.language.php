@@ -21,6 +21,16 @@ function smarty_block_language($params, $content, LiveCartSmarty $smarty, &$repe
 		$smarty->assign('languageBlock', $smarty->languageBlock);
 		$smarty->assign('lang', array_shift($smarty->languageBlock));
 		$smarty->langHeadDisplayed = false;
+
+		$user = SessionUser::getUser();
+		foreach ($smarty->getApplication()->getLanguageSetArray() as $lang)
+		{
+			$userPref = $user->getPreference('tab_lang_' . $lang['ID']);
+			$isHidden = is_null($userPref) ? !empty($params['hidden']) : $userPref == 'false';
+			$classNames[$lang['ID']] = $isHidden ? 'hidden' : '';
+		}
+
+		$smarty->langClassNames = $classNames;
 	}
 	else
 	{
@@ -36,11 +46,12 @@ function smarty_block_language($params, $content, LiveCartSmarty $smarty, &$repe
 		}
 
 		$contentLang = $smarty->get_template_vars('lang');
-		$content = '<div class="languageFormContainer languageFormContainer_' . $contentLang['ID'] . '">' . $content . '</div>';
+		$content = '<div class="languageFormContainer languageFormContainer_' . $contentLang['ID'] . ' ' . $smarty->langClassNames[$contentLang['ID']] . '">' . $content . '</div>';
 
 		if (!$smarty->langHeadDisplayed)
 		{
 			$smarty->assign('langFormId', 'langForm_' . uniqid());
+			$smarty->assign('classNames', $smarty->langClassNames);
 			$content = $smarty->fetch('block/backend/langFormHead.tpl') . $content;
 			$smarty->langHeadDisplayed = true;
 		}
