@@ -253,7 +253,12 @@ Backend.Category = {
 
 		// and register browser history event to enable backwar/forward navigation
 		// Backend.ajaxNav.add('cat_' + categoryId);
-		if(Backend.Category.tabControl.activeTab) Backend.Category.tabControl.activeTab.onclick();
+
+		if (!Backend.Category.tabControl.activeTab)
+		{
+			Backend.Category.tabControl.activeTab = $('tabList').down('li');
+		}
+		Backend.Category.tabControl.activeTab.onclick();
 
 		var currentProductId = Backend.Product.Editor.prototype.getCurrentProductId();
 		if(currentProductId)

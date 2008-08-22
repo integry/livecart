@@ -837,6 +837,8 @@ fieldset
     margin: auto 0;
     margin-bottom: 10px;
     border: 1px solid #DDD;
+    position: relative;
+    z-index: 10;
 }
 
 legend
@@ -1317,6 +1319,7 @@ Translation tabs
     padding: 0;
     position: relative;
     width: 100%;
+    z-index: 200;
 }
 
 .languageFormCaption
@@ -1325,6 +1328,7 @@ Translation tabs
     display: inline;
     padding: 0.5em 1em 0.5em 1em ! important;
     vertical-align: middle;
+    font-size: smaller;
 }
 
 .languageTabsContainer
@@ -1357,7 +1361,7 @@ ul.languageFormTabs li.langTab
     border-bottom: 0px;
     background-color: #f5f5f5;
     margin-left: 2px;
-    padding: 7px ! important;
+    padding: 4px ! important;
     font-size: 14px;
 }
 
@@ -1369,7 +1373,7 @@ ul.languageFormTabs li.langTab:hover, ul.languageFormTabs li.langTab.active
 
 ul.languageFormTabs li.langTab.active
 {
-    background-color: #fff;
+    background-color: #FDFDFD;
     font-weight: bold;
 	position: relative;
 	z-index: 50;
@@ -1378,8 +1382,8 @@ ul.languageFormTabs li.langTab.active
 .languageFormContent
 {
     padding: 10px;
-    border: 1px solid #b3d4ef;
-    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    background-color: #FDFDFD;
     position: relative;
 }
 
@@ -1400,7 +1404,8 @@ ul.languageFormTabs li.langTab.active
 	z-index: 60;
 	right: 0;
 	top: 0;
-	height: 100%;
+	height: 30px;
+	padding: 0;
 	padding-left: 20px;
 }
 
@@ -1432,7 +1437,83 @@ li.langTab.hidden
 .moreTabsMenu li
 {
 	white-space: nowrap;
-	padding: 3px;
+	padding: 3px !important;
+}
+
+li.moreTabs
+{
+	border: 0;
+	position: absolute;
+	right: 0;
+	top: -2px;
+	background-color: #fff;
+	margin-right: 0;
+	list-style: none;
+}
+
+li.moreTabs a
+{
+	font-weight: bold;
+	font-size: 0.85em;
+	text-decoration: underline;
+}
+
+li.moreTabs ul
+{
+	height: auto !important;
+	padding: 0 !important;
+}
+
+li.moreTabs li
+{
+	float: none !important;
+	border: 0 !important;
+	background: #fff !important;
+	display: block !important;
+	margin-right: 0 !important;
+	font-weight: normal !important;
+}
+
+.tabContainer ul li.moreTabs li
+{
+	font-size: 0.85em !important;
+	padding-left: 10px !important;
+}
+
+li.moreTabs .moreTabsMenu
+{
+	position: absolute;
+	right: 0;
+	z-index: 100;
+	border: 1px solid #aaa;
+	background-color: #fff;
+}
+
+li.moreTabs li.hidden, li.moreTabs li.hidden *, li.moreTabs li:hover
+{
+	color: #777;
+	opacity: 0.6;
+}
+
+li.moreTabs li:hover
+{
+	text-decoration: line-through;
+}
+
+li.moreTabs li, li.moreTabs li *, li.moreTabs li.hidden:hover
+{
+	color: #000;
+	text-decoration: none;
+}
+
+li.moreTabs li:hover
+{
+	background-color: #eee !important;
+}
+
+li.moreTabs .moreTabs
+{
+	display: none !important;
 }
 
 /***************************

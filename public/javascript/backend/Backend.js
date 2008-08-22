@@ -1248,6 +1248,7 @@ Backend.LanguageForm.prototype =
 
 		for (var k = 0; k < forms.length; k++)
 		{
+			new TabCustomize(forms[k]);
 			var tabs = forms[k].down('ul.languageFormTabs').getElementsByTagName('li');
 			for (var t = 0; t < tabs.length; t++)
 			{
@@ -1257,8 +1258,6 @@ Backend.LanguageForm.prototype =
 				}
 			}
 		}
-
-		new TabCustomize(root.down('ul'));
 	},
 
 	handleTabClick: function(e)
@@ -1985,11 +1984,28 @@ TabCustomize.prototype =
 	{
 		this.tabList = tabList;
 
+		if (!(this.tabList instanceof HTMLUListElement))
+		{
+			this.tabList = this.tabList.down('ul');
+		}
+
 		this.moreTabs = tabList.parentNode.down('.moreTabs');
 		this.moreTabsMenu = this.moreTabs.down('.moreTabsMenu');
 
 		Event.observe(this.moreTabs, 'click', this.toggleMenu.bindAsEventListener(this));
 		this.setPrefsSaveUrl(Backend.Router.createUrl('backend.index', 'setUserPreference'));
+
+		// set background for moreTabs
+		var el = this.moreTabs.parentNode;
+		while (el && el.getStyle('background-color') == 'transparent')
+		{
+			el = el.parentNode;
+		}
+
+		if (el)
+		{
+			this.moreTabs.style.backgroundColor = el.getStyle('background-color');
+		}
 	},
 
 	setPrefsSaveUrl: function(url)

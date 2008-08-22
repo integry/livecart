@@ -38,7 +38,8 @@ li.activeList_even, li.activeList_odd
     margin: 5px 10px;
     margin-left: 0;
     white-space: nowrap;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     background-color: #FAFAFA;
     border: 2px solid #EEEEEE;
 }
