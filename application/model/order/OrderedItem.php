@@ -49,6 +49,11 @@ class OrderedItem extends ActiveRecordModel
 		$instance->product->set($product);
 		$instance->count->set($count);
 
+		if ($order->isFinalized->get())
+		{
+			$instance->price->set($instance->getItemPrice($order->currency->get(), false));
+		}
+
 		return $instance;
 	}
 

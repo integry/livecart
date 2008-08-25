@@ -26,6 +26,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 	private $deliveryZone;
 
+	private $fixedDiscounts = array();
+
 	const STATUS_NEW = 0;
 	const STATUS_PROCESSING = 1;
 	const STATUS_AWAITING = 2;
@@ -125,6 +127,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$this->loadItems();
 		$this->getShipments();
 		$this->getSpecification();
+		$this->fixedDiscounts = $this->getRelatedRecordSet('OrderDiscount')->getData();
 	}
 
 	/**
@@ -145,7 +148,15 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 			$count = $this->validateCount($product, $count);
 			$item = OrderedItem::getNewInstance($this, $product, $count);
-			$this->orderedItems[] = $item;
+
+			if (!$this->isFinalized->get() || !$this->shipments || !$this->shipments->size())
+			{
+				$this->orderedItems[] = $item;
+			}
+			else
+			{
+				$this->shipments->get(0)->addItem($item);
+			}
 		}
 
 		$this->resetShipments();
@@ -481,8 +492,6 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		// If shipment is modified
 		if ($this->isFinalized->get())
 		{
-			$count = 0;
-
 			if ($this->shipments)
 			{
 				foreach($this->shipments as $shipment)
@@ -506,7 +515,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			// reorder shipments when cart items are modified
 			$this->resetShipments();
 
-			$this->totalAmount->set($this->calculateTotal($this->currency->get()));
+			$this->totalAmount->set($this->getTotal($this->currency->get(), true));
 		}
 
 		if ($this->isModified() || $isModified)
@@ -615,35 +624,66 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	{
 		if (!$this->shipments)
 		{
-			return $this->getSubTotal(Currency $currency);
+			return $this->getSubTotal($currency);
 		}
 
 		$subTotal = 0;
 		foreach ($this->shipments as $shipment)
 		{
-			$subTotal +- $shipment->getTotalWithoutTax();
+			$subTotal += $shipment->getTotalWithoutTax();
 		}
 
 		return $subTotal;
 	}
 
 	/**
-	 *  Get total amount for order, including shipping costs
+	 *  Get total amount for order, including shipping costs, discounts and taxes
 	 */
-	public function getTotal(Currency $currency)
+	public function getTotal(Currency $currency, $recalculateAmount = false)
 	{
-		if ($this->isFinalized->get())
+		if ($this->isFinalized->get() && !$recalculateAmount)
 		{
 			$this->getTaxes($currency);
 			return $currency->convertAmount($this->currency->get(), $this->totalAmount->get());
 		}
 		else
 		{
-			return $this->calculateTotal($currency);
+			$total = $this->calculateTotal($currency);
+
+			if ($discountAmount = $this->getFixedDiscountAmount($currency))
+			{
+				foreach ($this->shipments as $shipment)
+				{
+					$shipment->applyFixedDiscount($total, $discountAmount);
+				}
+
+				$total = $this->calculateTotal($currency, false);
+			}
+
+			return $total;
 		}
 	}
 
-	public function calculateTotal(Currency $currency)
+	public function getFixedDiscountAmount()
+	{
+		$amount = 0;
+		foreach ($this->fixedDiscounts as $discount)
+		{
+			$amount += $discount->amount->get();
+		}
+
+		return $amount;
+	}
+
+	public function registerFixedDiscount(OrderDiscount $discount)
+	{
+		$this->fixedDiscounts[$discount->getID()] = $discount;
+	}
+
+	/**
+	 *	Get full order total, including taxes and shipping, but excluding fixed discounts
+	 */
+	public function calculateTotal(Currency $currency, $recalculateAmounts = true)
 	{
 		$total = 0;
 		$id = $currency->getID();
@@ -664,7 +704,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			$this->getTaxes($currency);
 			foreach ($this->shipments as $shipment)
 			{
-				$total += $shipment->getTotal($currency);
+				$total += $shipment->getTotal($recalculateAmounts);
 			}
 		}
 		else

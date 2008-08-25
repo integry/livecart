@@ -86,15 +86,20 @@ class Shipment extends ActiveRecordModel
 
 	public function addItem(OrderedItem $item)
 	{
-		foreach($this->items as $key => $shipmentItem)
+		$this->loadItems();
+
+		foreach ($this->items as $key => $shipmentItem)
 		{
-			if($shipmentItem === $item)
+			if ($shipmentItem === $item)
 			{
 				return;
 			}
 		}
+
 		$this->items[] = $item;
 		$item->shipment->set($this);
+
+		$this->markAsModified();
 	}
 
 	public function removeItem(OrderedItem $item)
@@ -104,10 +109,27 @@ class Shipment extends ActiveRecordModel
 			if($shipmentItem === $item)
 			{
 				unset($this->items[$key]);
-				$item->shipment->setNull( );
+				$item->shipment->setNull();
+
+				$this->markAsModified();
 				break;
 			}
 		}
+	}
+
+	private function markAsModified()
+	{
+		$this->isModified = true;
+	}
+
+	public function isModified()
+	{
+		if ($this->isModified)
+		{
+			return true;
+		}
+
+		return parent::isModified();
 	}
 
 	public function getChargeableWeight(DeliveryZone $zone = null)
@@ -190,7 +212,11 @@ class Shipment extends ActiveRecordModel
 		$subTotal = 0;
 		foreach ($this->items as $item)
 		{
-			if(!$item->isDeleted())
+if (!$item->getSubTotal($currency))
+{
+	print_r($item->product->get()->toFlatArray());
+}
+			if (!$item->isDeleted())
 			{
 				$subTotal += $item->getSubTotal($currency);
 			}
@@ -210,9 +236,13 @@ class Shipment extends ActiveRecordModel
 		return $this->amount->get() + $this->shippingAmount->get();
 	}
 
-	public function getTotal()
+	public function getTotal($recalculate = true)
 	{
-		$this->recalculateAmounts();
+		if ($recalculate)
+		{
+			$this->recalculateAmounts();
+		}
+
 		return $this->amount->get() + $this->shippingAmount->get() + $this->taxAmount->get();
 	}
 
@@ -244,6 +274,29 @@ class Shipment extends ActiveRecordModel
 	public function isLost()
 	{
 		return $this->status->get() == self::STATUS_CONFIRMED_AS_LOST;
+	}
+
+	/**
+	 *	Apply a fixed amount discount to shipment total
+	 *	This is a little tricky to calculate as the fixed discount must be split over all shipments
+	 *	and must be applied to order total after taxes
+	 */
+	public function applyFixedDiscount($orderTotal, $discountAmount)
+	{
+		// calculate discount amount that applies to this shipment
+		$shipmentTotal = $this->getTotal();
+		$shipmentDiscount = ($this->getTotal() / $orderTotal) * $discountAmount;
+		$discountMultiplier = 1 - ($shipmentDiscount / $shipmentTotal);
+
+		foreach ($this->getTaxes() as $tax)
+		{
+			$tax->amount->set($tax->amount->get() * $discountMultiplier);
+		}
+
+		foreach (array('amount', 'shippingAmount', 'taxAmount') as $amount)
+		{
+			$this->$amount->set($this->$amount->get() * $discountMultiplier);
+		}
 	}
 
 	public function applyTaxesToAmount($amount)

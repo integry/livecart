@@ -21,7 +21,7 @@ class OrderDiscount extends ActiveRecordModel
 		$schema->setName($className);
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARPrimaryForeignKeyField("orderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("orderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
 		$schema->registerField(new ARField("amount", ARFloat::instance()));
 	}
 
@@ -32,6 +32,12 @@ class OrderDiscount extends ActiveRecordModel
 		$instance = parent::getNewInstance(__CLASS__);
 		$instance->order->set($order);
 		return $instance;
+	}
+
+	public function save()
+	{
+		parent::save();
+		$this->order->get()->registerFixedDiscount($this);
 	}
 }
 

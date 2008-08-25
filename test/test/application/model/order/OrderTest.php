@@ -26,11 +26,6 @@ class OrderTest extends UnitTest
 
 	private $user;
 
-	public function __construct()
-	{
-		parent::__construct('Test order logic');
-	}
-
 	public function setUp()
 	{
 		parent::setUp();
@@ -428,6 +423,7 @@ class OrderTest extends UnitTest
 		$shipment->setRateId($rates->get(0)->getServiceID());
 		$shipment->save();
 
+		$this->assertEqual($this->order->getSubTotalBeforeTax($this->usd), $total - $tax);
 		$this->assertEqual($this->order->getTotal($this->usd), $total);
 		$this->order->save();
 
@@ -449,9 +445,37 @@ class OrderTest extends UnitTest
 		$this->assertEqual($order->getTotal($this->usd), $total);
 	}
 
-	function test_SuiteTearDown()
+	public function testFixedDiscountWithoutTaxAndShipping()
 	{
-		ActiveRecordModel::rollback();
+		$this->order->addProduct($this->products[0]);
+		$this->order->getShipments();
+		$this->order->save();
+
+		// before finalizing
+		$total = $this->order->getTotal($this->usd);
+
+		$discount = OrderDiscount::getNewInstance($this->order);
+		$discount->amount->set(10);
+		$discount->save();
+
+		$this->assertEquals($this->order->getTotal($this->usd), $total - 10);
+		$this->order->save();
+
+		// finalized
+		$this->order->finalize($this->usd);
+		$this->assertEquals($this->order->getTotal($this->usd), $total - 10);
+
+		// reload order
+		ActiveRecordModel::clearPool();
+		$order = CustomerOrder::getInstanceByID($this->order->getID());
+		$order->loadAll();
+		$this->assertEquals($order->getTotal($this->usd), $total - 10);
+
+		// modify reloaded order
+		$newTotal = $this->products[0]->getPrice($this->usd) + $this->products[1]->getPrice($this->usd);
+		$order->addProduct($this->products[1]);
+		$order->save();
+		$this->assertEquals($order->getTotal($this->usd), $newTotal - 10);
 	}
 }
 
