@@ -36,6 +36,42 @@ class DiscountAction extends ActiveRecordModel
 		return $instance;
 	}
 
+	public static function getByConditions(array $conditions)
+	{
+		$ids = array();
+		foreach ($conditions as $condition)
+		{
+			$ids[] = $condition['ID'];
+		}
+
+		if (!$ids)
+		{
+			return new ARSet();
+		}
+
+		return ActiveRecordModel::getRecordSet(__CLASS__, new ARSelectFilter(new INCond(new ARFieldHandle(__CLASS__, 'conditionID'), $ids)));
+	}
+
+	public function isOrderDiscount()
+	{
+		return self::TYPE_ORDER_DISCOUNT == $this->type->get();
+	}
+
+	public function getOrderDiscount()
+	{
+		if (!$this->isOrderDiscount())
+		{
+			return null;
+		}
+
+		$subTotal = $this->order->get()->getSubTotal();
+		$discountAmount = $this->amountMeasure->get() == self::MEASURE_PERCENT ? $subTotal * ($this->amount->get() / 100) : $this->amount->get();
+
+		$discount = OrderDiscount::getNewInstance($this->order->get());
+		$discount->amount->set($discountAmount);
+
+		return $discount;
+	}
 }
 
 ?>

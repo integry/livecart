@@ -69,6 +69,32 @@ class DiscountConditionTest extends UnitTest
 		$this->assertSame($this->root->getDirectChildNodes()->get(0), $condition);
 	}
 
+	public function testBasicRestrictions()
+	{
+		$condition = DiscountCondition::getNewInstance();
+		$condition->save();
+
+		// no conditions, because not enabled
+		$this->assertEquals(count($this->order->getDiscountConditions()), 0);
+
+		// enable condition - should be available now
+		$condition->isEnabled->set(true);
+		$condition->save();
+		$this->assertEquals(count($this->order->getDiscountConditions()), 1);
+
+		// set time restriction in future - no longer available
+		$condition->validFrom->set(time() + 100);
+		$condition->validTo->set(time() + 200);
+		$condition->save();
+		$this->assertEquals(count($this->order->getDiscountConditions()), 0);
+
+		// set time restriction in present - available again
+		$condition->validFrom->set(time() - 100);
+		$condition->validTo->set(time() + 100);
+		$condition->save();
+		$this->assertEquals(count($this->order->getDiscountConditions()), 1);
+	}
+
 	public function testGlobalDiscount()
 	{
 		$this->order->addProduct($this->product1, 1, true);
@@ -81,13 +107,22 @@ class DiscountConditionTest extends UnitTest
 		$condition->isEnabled->set(true);
 		$condition->save();
 
-		$this->assertSame($this->order->getDiscountConditions()->get(0), $condition);
+		$conditions = $this->order->getDiscountConditions();
+		$this->assertEqual($conditions[0]['ID'], $condition->getID());
 
 		$result = DiscountAction::getNewInstance($condition);
 		$result->type->set(DiscountAction::TYPE_ORDER_DISCOUNT);
 		$result->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
 		$result->amount->set(10);
 		$result->save();
+
+		$actions = $this->order->getDiscountActions();
+		$this->assertEqual($actions->get(0)->getID(), $result->getID());
+
+		$discounts = $this->order->getCalculatedDiscounts();
+		$this->assertEqual($discounts->size(), 1);
+
+		return;
 
 		$newTotal = $this->order->getTotal($this->usd);
 		$this->assertEqual($orderTotal * 0.9, $newTotal);

@@ -363,13 +363,10 @@ class ActiveTreeNode extends ActiveRecordModel
 	{
 		$className = get_class($this);
 		$this->load();
-		$leftValue = $this->getFieldValue(self::LEFT_NODE_FIELD_NAME);
-		$rightValue = $this->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
 
 		$filter = new ARSelectFilter();
-		$cond = new OperatorCond(new ARFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $leftValue, "<=");
-		$cond->addAND(new OperatorCond(new ARFieldHandle($className, self::RIGHT_NODE_FIELD_NAME), $rightValue, ">="));
 
+		$cond = $this->getPathNodeCondition();
 		if (!$includeRootNode)
 		{
 			$cond->addAND(new OperatorCond(new ARFieldHandle($className, "ID"), self::ROOT_ID, "<>"));
@@ -379,6 +376,16 @@ class ActiveTreeNode extends ActiveRecordModel
 		$filter->setOrder(new ARFieldHandle($className, self::LEFT_NODE_FIELD_NAME), ARSelectFilter::ORDER_ASC);
 
 		return $filter;
+	}
+
+	public function getPathNodeCondition()
+	{
+		$className = get_class($this);
+		$leftValue = $this->getFieldValue(self::LEFT_NODE_FIELD_NAME);
+		$rightValue = $this->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
+		$cond = new OperatorCond(new ARFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $leftValue, "<=");
+		$cond->addAND(new OperatorCond(new ARFieldHandle($className, self::RIGHT_NODE_FIELD_NAME), $rightValue, ">="));
+		return $cond;
 	}
 
 	/**

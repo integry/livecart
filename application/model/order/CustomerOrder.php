@@ -611,6 +611,22 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		return $subTotal;
 	}
 
+	public function getSubTotalBeforeTax(Currency $currency)
+	{
+		if (!$this->shipments)
+		{
+			return $this->getSubTotal(Currency $currency);
+		}
+
+		$subTotal = 0;
+		foreach ($this->shipments as $shipment)
+		{
+			$subTotal +- $shipment->getTotalWithoutTax();
+		}
+
+		return $subTotal;
+	}
+
 	/**
 	 *  Get total amount for order, including shipping costs
 	 */
@@ -663,11 +679,40 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		return $total;
 	}
 
+	public function getDiscounts()
+	{
+		if ($this->isFinalized->get())
+		{
+			return $this->getRelatedRecordSet('OrderDiscount');
+		}
+		else
+		{
+			return $this->getCalculatedDiscounts();
+		}
+	}
+
+	public function getCalculatedDiscounts()
+	{
+		$discounts = new ARSet();
+		foreach ($this->getDiscountActions() as $action)
+		{
+			if ($discount = $action->getOrderDiscount($this))
+			{
+				$discounts->add($discount);
+			}
+		}
+
+		return $discounts;
+	}
+
+	public function getItemDiscountActions(OrderedItem $item)
+	{
+
+	}
+
 	private function getTaxes(Currency $currency)
 	{
 		$id = $currency->getID();
-
-		$total = 0;
 
 		$this->taxes[$id] = array();
 		$zone = $this->getDeliveryZone();
@@ -681,8 +726,6 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 					$shipment->setAvailableRates($shipmentRates);
 					$shipment->setRateId($shipment->getShippingService()->getID());
 				}
-
-				$total += $shipment->getTotal($currency);
 
 				foreach ($shipment->getTaxes() as $tax)
 				{
@@ -1235,23 +1278,14 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 	public function getDiscountConditions()
 	{
-		return ActiveRecordModel::getRecordSetArray('DiscountCondition', $this->getDiscountConditionFilter());
+		ClassLoader::import('application.model.discount.DiscountCondition');
+		return DiscountCondition::getOrderDiscountConditions($this);
 	}
 
-	private function getDiscountConditionFilter()
+	public function getDiscountActions()
 	{
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('DiscountCondition', 'parentNodeID'), 1));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('DiscountCondition', 'isEnabled'), 1));
-
-		// conditions valid by date
-		$dateCondition = new EqualsCond(new ARFieldHandle('DiscountCondition', 'isValidByDate'), false);
-		$byDate = new EqualsCond(new ARFieldHandle('DiscountCondition', 'isValidByDate'), true);
-		$byDate->mergeCondition(EqualsOrMoreCond(new ARFieldHandle('DiscountCondition', 'validFrom'), time()));
-		$byDate->mergeCondition(EqualsOrLessCond(new ARFieldHandle('DiscountCondition', 'validTo'), time()));
-		$dateCondition->addOr($byDate);
-		$f->mergeCondition($dateCondition);
-
-		return $f;
+		ClassLoader::import('application.model.discount.DiscountAction');
+		return DiscountAction::getByConditions($this->getDiscountConditions());
 	}
 
 	public function getDeliveryZone()
