@@ -489,7 +489,7 @@ class CsvImportController extends StoreManagementController
 			}
 
 			// test non-transactional mode
-			if (!$this->request->get('continue') && $progress > 50) exit;
+			//if (!$this->request->get('continue')) exit;
 
 			if (connection_aborted())
 			{
@@ -506,8 +506,11 @@ class CsvImportController extends StoreManagementController
 
 		Category::recalculateProductsCount();
 
-		//ActiveRecord::rollback();
-		ActiveRecord::commit();
+		if (!$this->request->get('continue'))
+		{
+			//ActiveRecord::rollback();
+			ActiveRecord::commit();
+		}
 
 		$response->flush($this->getResponse(array('progress' => 0, 'total' => $total)));
 
