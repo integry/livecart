@@ -370,37 +370,7 @@ class OrderTest extends UnitTest
 	{
 		// create delivery zone/tax environment
 		$zone = DeliveryZone::getNewInstance();
-		$zone->name->set('Latvia');
-		$zone->save();
-
-		$country = DeliveryZoneCountry::getNewInstance($zone, 'LV');
-		$country->save();
-
-		$tax = Tax::getNewInstance('VAT');
-		$tax->save();
-
-		$taxRate = TaxRate::getNewInstance($zone, $tax, 20);
-		$taxRate->save();
-
-		$service = ShippingService::getNewInstance($zone, 'def', ShippingService::SUBTOTAL_BASED);
-		$service->save();
-
-		$shippingRate = ShippingRate::getNewInstance($service, 0, 10000000);
-		$shippingRate->flatCharge->set(100);
-		$shippingRate->save();
-
-		// user address
-		$address = UserAddress::getNewInstance();
-		$address->countryID->set('LV');
-
-		$billingAddress = BillingAddress::getNewInstance($this->user, $address);
-		$billingAddress->save();
-
-		// set up order
-		$this->order->user->set($this->user);
-		$this->order->billingAddress->set($address);
-		$this->order->shippingAddress->set($address);
-		$this->order->save();
+		$this->createOrderWithZone($zone);
 
 		$this->order->addProduct($this->products[0]);
 		$this->order->save();
@@ -476,6 +446,73 @@ class OrderTest extends UnitTest
 		$order->addProduct($this->products[1]);
 		$order->save();
 		$this->assertEquals($order->getTotal($this->usd), $newTotal - 10);
+	}
+
+	public function testFixedDiscountWithTaxesAndDeliveryZone()
+	{
+		$this->createOrderWithZone();
+
+		$this->order->addProduct($this->products[0]);
+		$this->order->save();
+
+		$shipment = $this->order->getShipments()->get(0);
+		$rates = $this->order->getDeliveryZone()->getShippingRates($shipment);
+		$shipment->setAvailableRates($rates);
+		$shipment->setRateId($rates->get(0)->getServiceID());
+		$shipment->save();
+
+		$initTotal = $this->order->getTotal($this->usd);
+		$initTax = $this->order->getTaxAmount();
+
+		$discount = OrderDiscount::getNewInstance($this->order);
+		$discount->amount->set(10);
+		$discount->save();
+
+		$this->assertEquals((int)$this->order->getTotal($this->usd), (int)($initTotal - 10));
+		$tax = $this->order->getTaxAmount();
+
+		$expectedTax = (110 / 6) + 20;
+		$this->assertEquals(round($expectedTax, 2), round($tax, 2));
+	}
+
+	private function createOrderWithZone(DeliveryZone $zone = null)
+	{
+		if (is_null($zone))
+		{
+			$zone = DeliveryZone::getNewInstance();
+		}
+
+		$zone->name->set('Latvia');
+		$zone->save();
+
+		$country = DeliveryZoneCountry::getNewInstance($zone, 'LV');
+		$country->save();
+
+		$tax = Tax::getNewInstance('VAT');
+		$tax->save();
+
+		$taxRate = TaxRate::getNewInstance($zone, $tax, 20);
+		$taxRate->save();
+
+		$service = ShippingService::getNewInstance($zone, 'def', ShippingService::SUBTOTAL_BASED);
+		$service->save();
+
+		$shippingRate = ShippingRate::getNewInstance($service, 0, 10000000);
+		$shippingRate->flatCharge->set(100);
+		$shippingRate->save();
+
+		// user address
+		$address = UserAddress::getNewInstance();
+		$address->countryID->set('LV');
+
+		$billingAddress = BillingAddress::getNewInstance($this->user, $address);
+		$billingAddress->save();
+
+		// set up order
+		$this->order->user->set($this->user);
+		$this->order->billingAddress->set($address);
+		$this->order->shippingAddress->set($address);
+		$this->order->save();
 	}
 }
 

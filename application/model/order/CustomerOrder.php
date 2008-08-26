@@ -783,6 +783,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		return array_sum($this->taxes[$id]);
 	}
 
+	public function getTaxAmount()
+	{
+		return $this->getTaxes($this->currency->get());
+	}
+
 	public function isProcessing()
 	{
 		return $this->status->get() == self::STATUS_PROCESSING;
