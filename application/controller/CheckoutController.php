@@ -685,12 +685,13 @@ class CheckoutController extends FrontendController
 	 */
 	public function notify()
 	{
-		$handler = $this->application->getPaymentHandler($this->request->get('id'), $this->getTransaction());
+		$handler = $this->application->getPaymentHandler($this->request->get('id'));
 		$orderId = $handler->getOrderIdFromRequest($this->request->toArray());
 
 		$order = CustomerOrder::getInstanceById($orderId, CustomerOrder::LOAD_DATA);
 		$order->loadAll();
 		$this->order = $order;
+		$handler->setDetails($this->getTransaction());
 
 		$result = $handler->notify($this->request->toArray());
 
