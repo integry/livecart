@@ -20,7 +20,7 @@ abstract class TransactionPayment
 
 	private $config = array();
 
-	public function __construct(TransactionDetails $transactionDetails)
+	public function __construct(TransactionDetails $transactionDetails = null)
 	{
 		$this->details = $transactionDetails;
 	}
@@ -50,6 +50,11 @@ abstract class TransactionPayment
 	public function getDetails()
 	{
 		return $this->details;
+	}
+
+	public function setDetails(TransactionDetails $transactionDetails)
+	{
+		$this->details = $transactionDetails;
 	}
 
 	public function setApplication(LiveCart $application)

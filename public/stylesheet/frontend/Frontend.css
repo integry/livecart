@@ -1145,6 +1145,8 @@ ul.productList .orderingControls
 .productOptions .description
 {
 	font-size: 0.85em;
+	white-space: normal;
+	width: 250px;
 }
 
 .nonEditableOption
@@ -2506,6 +2508,7 @@ fieldset.error, div.error, fieldset.container
 	padding: 0px 3px 0px 20px;
 	font-weight: bold;
 	font-family: Tahoma;
+	clear: left;
 }
 
 .hasError
