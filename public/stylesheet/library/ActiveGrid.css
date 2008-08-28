@@ -535,6 +535,7 @@
 {
     float: left;
     text-align: right;
+    font-size: smaller;
 }
 
 .activeGridMass select
@@ -577,4 +578,10 @@
 	-moz-border-radius: 6px;
 	padding: 0.5em;
 	font-size: 0.85em;
+}
+
+.rangeCount
+{
+	color: #88c;
+	font-size: smaller;
 }
