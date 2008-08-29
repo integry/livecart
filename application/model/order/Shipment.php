@@ -123,7 +123,7 @@ class Shipment extends ActiveRecordModel
 		{
 			if (!$item->product->get()->isFreeShipping->get() || !$zone->isFreeShipping->get())
 			{
-				$weight += $item->product->get()->shippingWeight->get();
+				$weight += $item->product->get()->getShippingWeight();
 			}
 		}
 
@@ -390,7 +390,6 @@ class Shipment extends ActiveRecordModel
 				$this->shippingServiceData->set(serialize($rate));
 			}
 		}
-
 
 		// Update order status if to reflect it's shipments statuses
 		if (!$downloadable && $this->isShippable() && $this->order->get()->isFinalized->get())

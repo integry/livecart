@@ -17,6 +17,8 @@ class OrderedItem extends ActiveRecordModel
 
 	protected $removedChoices = array();
 
+	protected $subItems = null;
+
 	/**
 	 * Define database schema used by this active record instance
 	 *
@@ -31,6 +33,7 @@ class OrderedItem extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", "Product", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("customerOrderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("shipmentID", "Shipment", "ID", "Shipment", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("parentID", "OrderedItem", "ID", "OrderedItem", ARInteger::instance()));
 
 		$schema->registerField(new ARField("priceCurrencyID", ARChar::instance(3)));
 		$schema->registerField(new ARField("price", ARFloat::instance()));
@@ -56,6 +59,12 @@ class OrderedItem extends ActiveRecordModel
 
 	public function getSubTotal(Currency $currency, $includeTaxes = true)
 	{
+		// bundle items do not affect order total - only the parent item has a set price
+		if ($this->parent->get())
+		{
+			return 0;
+		}
+
 		$subTotal = $this->getPrice($currency) * $this->count->get();
 
 		if ($includeTaxes)
@@ -122,15 +131,49 @@ class OrderedItem extends ActiveRecordModel
 	public function reserve()
 	{
 		$product = $this->product->get();
-		$product->reservedCount->set($product->reservedCount->get() + $this->reservedProductCount->get());
+		if (!$product->isBundle())
+		{
+			$this->reservedProductCount->set($this->count->get());
+			$product->reservedCount->set($product->reservedCount->get() + $this->reservedProductCount->get());
+		}
+		else
+		{
+			foreach ($this->getSubItems() as $item)
+			{
+				$item->reserve();
+			}
+		}
 	}
 
 	/**
-	 *  @todo implement
+	 * Release reserved products back to inventory
+	 * @todo implement
 	 */
 	public function unreserve()
 	{
 
+	}
+
+	/**
+	 * Remove reserved products from inventory (i.e. the products are shipped)
+	 * @todo implement
+	 */
+	public function removeFromInventory()
+	{
+		$product = $this->product->get();
+		if (!$product->isBundle())
+		{
+			$product->reservedCount->set($product->reservedCount->get() - $this->reservedProductCount->get());
+			$product->stockCount->set($product->stockCount->get() - $this->reservedProductCount->get());
+			$this->reservedProductCount->set(0);
+		}
+		else
+		{
+			foreach ($this->getSubItems() as $item)
+			{
+				$item->removeFromInventory();
+			}
+		}
 	}
 
 	/**
@@ -234,6 +277,31 @@ class OrderedItem extends ActiveRecordModel
 		}
 	}
 
+	public function getSubItems()
+	{
+		if (!$this->product->get()->isBundle())
+		{
+			return null;
+		}
+
+		if (is_null($this->subItems))
+		{
+			$this->subItems = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product'));
+		}
+
+		return $this->subItems;
+	}
+
+	public function registerSubItem(OrderedItem $item)
+	{
+		if (is_null($this->subItems))
+		{
+			$this->subItems = new ARSet();
+		}
+
+		$this->subItems->add($item);
+	}
+
   	/*####################  Saving ####################*/
 
 	protected function insert()
@@ -264,8 +332,29 @@ class OrderedItem extends ActiveRecordModel
 			$choice->save();
 		}
 
-		// adjust inventory
+		// update inventory
+		$shipment = $this->shipment->get();
+		if (!$shipment && $this->parent->get())
+		{
+			$shipment = $this->parent->get()->shipment->get();
+		}
+
+		if ($shipment && ($this->reservedProductCount->get() > 0) && $this->customerOrder->get()->isFinalized->get() && ($shipment->status->get() == Shipment::STATUS_SHIPPED))
+		{
+			$this->removeFromInventory();
+		}
+
+		// save sub-items for bundles
+		if ($this->product->get()->isBundle())
+		{
+			foreach ($this->getSubItems() as $item)
+			{
+				$item->save();
+			}
+		}
+
 		$this->product->get()->save();
+		$this->subItems = null;
 
 		return $ret;
 	}

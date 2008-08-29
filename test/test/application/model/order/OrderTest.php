@@ -449,6 +449,97 @@ class OrderTest extends UnitTest
 		$this->assertEqual($order->getTotal($this->usd), $total);
 	}
 
+	public function testInventory()
+	{
+		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+
+		$product = $this->products[0];
+		$product->stockCount->set(2);
+		$product->save();
+
+		$order = CustomerOrder::getNewInstance($this->user);
+		$order->addProduct($product, 1);
+		$order->save();
+		$order->finalize($this->usd);
+
+		$product->reload();
+		$this->assertEqual($product->reservedCount->get(), 1);
+
+		// mark order as shipped - the stock is gone
+		$order->setStatus(CustomerOrder::STATUS_SHIPPED);
+		foreach ($order->getShipments() as $shipment)
+		{
+			$this->assertEqual($shipment->status->get(), Shipment::STATUS_SHIPPED);
+		}
+
+		$this->assertEqual($product->stockCount->get(), 1);
+	}
+
+	public function testOrderingABundle()
+	{
+		$container = Product::getNewInstance(Category::getRootNode());
+		$container->isEnabled->set(true);
+		$container->type->set(Product::TYPE_BUNDLE);
+		$container->setPrice($this->usd, 100);
+		$container->save();
+
+		foreach ($this->products as $product)
+		{
+			ProductBundle::getNewInstance($container, $product)->save();
+		}
+
+		$this->assertTrue($container->isAvailable());
+
+		foreach ($this->products as $product)
+		{
+			$product->stockCount->set(2);
+			$product->save();
+		}
+
+		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+
+		$order = CustomerOrder::getNewInstance($this->user);
+		$order->addProduct($container, 1);
+		$order->save();
+		$order->finalize($this->usd);
+
+		$this->assertEqual($order->getTotal($this->usd), 100);
+
+		$containerItem = array_shift($order->getItemsByProduct($container));
+		$this->assertSame($containerItem->product->get(), $container);
+
+		$subItems = $containerItem->getSubItems();
+		$this->assertEqual($subItems->size(), count($this->products));
+
+		// the sub-items should never show up in the order product list
+		ActiveRecord::clearPool();
+		$reloaded = CustomerOrder::getInstanceByID($order->getID());
+		$reloaded->loadItems();
+		$this->assertEqual(count($reloaded->getOrderedItems()), 1);
+
+		// check inventory
+		foreach ($this->products as $product)
+		{
+			$this->assertEqual($product->reservedCount->get(), 1);
+			$this->assertEqual($product->stockCount->get(), 2);
+		}
+
+		// mark order as shipped - the stock is gone
+		$this->assertNotEquals($order->status->get(), CustomerOrder::STATUS_SHIPPED);
+		$order->setStatus(CustomerOrder::STATUS_SHIPPED);
+		foreach ($order->getShipments() as $shipment)
+		{
+			$this->assertEqual($shipment->status->get(), Shipment::STATUS_SHIPPED);
+		}
+
+		foreach ($this->products as $product)
+		{
+			$product->reload();
+			$this->assertEqual($product->reservedCount->get(), 0);
+			$this->assertEqual($product->stockCount->get(), 1);
+		}
+	}
+
 	function test_SuiteTearDown()
 	{
 		ActiveRecordModel::rollback();

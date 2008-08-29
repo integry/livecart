@@ -103,6 +103,15 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			}
 
 			OrderedItemOption::loadOptionsForItemSet(ARSet::buildFromArray($this->orderedItems));
+
+			foreach ($this->orderedItems as $key => $item)
+			{
+				if ($item->parent->get())
+				{
+					$item->parent->get()->registerSubItem($item);
+					unset($this->orderedItems[$key]);
+				}
+			}
 		}
 	}
 
@@ -289,7 +298,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	 *
 	 *  @return CustomerOrder New order instance containing wishlist items
 	 */
-	public function finalize(Currency $currency, $reserveProducts = null)
+	public function finalize(Currency $currency)
 	{
 		self::beginTransaction();
 
@@ -303,22 +312,31 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			$shipment->save();
 		}
 
-		if (!is_null($reserveProducts))
-		{
-			$reserveProducts = ($c->get('INVENTORY_TRACKING') != 'DISABLE');
-		}
+		$reserveProducts = self::getApplication()->getConfig()->get('INVENTORY_TRACKING') != 'DISABLE';
 
 		foreach ($this->getShoppingCartItems() as $item)
 		{
+			$item->priceCurrencyID->set($currency->getID());
+			$item->price->set($item->product->get()->getPrice($currency->getID()));
+			$item->save();
+
+			// create sub-items for bundled products
+			if ($item->product->get()->isBundle())
+			{
+				foreach ($item->product->get()->getBundledProducts() as $bundled)
+				{
+					$bundledItem = OrderedItem::getNewInstance($this, $bundled->relatedProduct->get(), 1);
+					$bundledItem->parent->set($item);
+					$bundledItem->save();
+				}
+			}
+
 			// reserve products if inventory is enabled
 			if ($reserveProducts)
 			{
 				$item->reserve();
+				$item->save();
 			}
-
-			$item->priceCurrencyID->set($currency->getID());
-			$item->price->set($item->product->get()->getPrice($currency->getID()));
-			$item->save();
 		}
 
 		if (!$this->shippingAddress->get() && $this->user->get()->defaultShippingAddress->get())
@@ -528,6 +546,13 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		return parent::update($force);
 	}
 
+	public function setStatus($status)
+	{
+		$this->status->set($status);
+		$this->save();
+		$this->updateShipmentStatuses();
+	}
+
 	public function updateShipmentStatuses()
 	{
 		$filter = new ARSelectFilter();
@@ -542,19 +567,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$shipments = ActiveRecordModel::getRecordSet('Shipment', $filter, Shipment::LOAD_REFERENCES);
 		foreach ($shipments as $key => $shipment)
 		{
-			if ($shipment->status->get() == $this->status->get())
+			if ($shipment->status->get() != $this->status->get())
 			{
-				$shipments->remove($key);
+				$shipment->status->set($this->status->get());
+				$shipment->save();
 			}
-
-			$shipment->status->set($this->status->get());
 		}
-
-		$update = new ARUpdateFilter();
-		$update->setCondition($filter->getCondition());
-		$update->addModifier('Shipment.status', $this->status->get());
-
-		ActiveRecordModel::updateRecordSet('Shipment', $update);
 
 		return $shipments;
 	}

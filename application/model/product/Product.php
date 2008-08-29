@@ -31,6 +31,8 @@ class Product extends MultilingualObject
 
 	const TYPE_DOWNLOADABLE = 1;
 
+	const TYPE_BUNDLE = 2;
+
 	/**
 	 * Related products
 	 * @return ARSet
@@ -42,6 +44,8 @@ class Product extends MultilingualObject
 	 * @return ARSet
 	 */
 	private $removedRelationships = null;
+
+	private $bundledProducts = null;
 
 	public static function defineSchema($className = __CLASS__)
 	{
@@ -85,7 +89,6 @@ class Product extends MultilingualObject
 		$schema->registerField(new ArField("reservedCount", ARFloat::instance(8)));
 		$schema->registerField(new ArField("salesRank", ARInteger::instance()));
 	}
-
 
 	/**
 	 * Creates a new product instance
@@ -165,14 +168,34 @@ class Product extends MultilingualObject
 	/**
 	 *  Check if the product is available for purchasing
 	 */
-	public function isAvailable()
+	public function isAvailable($requireEnabled = true)
 	{
 		if (!$this->isLoaded())
 		{
 			$this->load();
 		}
 
-		return self::isAvailableForOrdering($this->isEnabled->get(), $this->stockCount->get(), $this->isBackOrderable->get(), $this->type->get());
+		if (!$this->isBundle())
+		{
+			return self::isAvailableForOrdering($this->isEnabled->get() || !$requireEnabled, $this->stockCount->get(), $this->isBackOrderable->get(), $this->type->get());
+		}
+		else
+		{
+			if (!$this->isEnabled->get())
+			{
+				return false;
+			}
+
+			foreach ($this->getBundledProducts() as $item)
+			{
+				if (!$item->relatedProduct->get()->isAvailable(false))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
 	}
 
 	/**
@@ -181,6 +204,14 @@ class Product extends MultilingualObject
 	public function isDownloadable()
 	{
 		return $this->type->get() == self::TYPE_DOWNLOADABLE;
+	}
+
+	/**
+	 *  Determines if the product is a bundle (container of other products)
+	 */
+	public function isBundle()
+	{
+		return $this->type->get() == self::TYPE_BUNDLE;
 	}
 
 	protected static function isAvailableForOrdering($isEnabled, $stockCount, $isBackOrderable, $type)
@@ -389,6 +420,27 @@ class Product extends MultilingualObject
 	{
 		parent::markAsNotLoaded();
 		$this->relationships = null;
+	}
+
+	public function getShippingWeight()
+	{
+		if (!$this->isBundle())
+		{
+			if (!$this->isDownloadable())
+			{
+				return $this->shippingWeight->get();
+			}
+		}
+		else
+		{
+			$weight = 0;
+			foreach ($this->getBundledProducts() as $item)
+			{
+				$weight += $item->relatedProduct->get()->getShippingWeight();
+			}
+
+			return $weight;
+		}
 	}
 
 	/*####################  Saving ####################*/
@@ -911,6 +963,17 @@ class Product extends MultilingualObject
 		}
 
 		return ($a['count'] > $b['count']) ? -1 : 1;
+	}
+
+	public function getBundledProducts()
+	{
+		if (is_null($this->bundledProducts))
+		{
+			ClassLoader::import('application.model.product.ProductBundle');
+			$this->bundledProducts = ProductBundle::getBundledProductSet($this);
+		}
+
+		return $this->bundledProducts;
 	}
 
 	public function serialize()
