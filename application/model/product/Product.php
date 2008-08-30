@@ -203,7 +203,24 @@ class Product extends MultilingualObject
 	 */
 	public function isDownloadable()
 	{
-		return $this->type->get() == self::TYPE_DOWNLOADABLE;
+		if (!$this->isBundle())
+		{
+			return $this->type->get() == self::TYPE_DOWNLOADABLE;
+		}
+		else
+		{
+			$isDownloadable = true;
+			foreach ($this->getBundledProducts() as $product)
+			{
+				if (!$product->relatedProduct->get()->isDownloadable())
+				{
+					$isDownloadable = false;
+					break;
+				}
+			}
+
+			return $isDownloadable;
+		}
 	}
 
 	/**

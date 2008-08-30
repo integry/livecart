@@ -302,7 +302,7 @@ class Shipment extends ActiveRecordModel
 		}
 
 		// shipping rate
-		if ($rate = $this->getSelectedRate())
+		if (($rate = $this->getSelectedRate()) && $this->isShippable())
 		{
 			$amount = $rate->getAmountByCurrency($currency);
 			if ($this->order->get()->getDeliveryZone()->isDefault())

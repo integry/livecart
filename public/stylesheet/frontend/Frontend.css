@@ -2065,6 +2065,11 @@ p.messages
     font-weight: bold;
 }
 
+.subItemList
+{
+	margin: 4px;
+}
+
 /***************************
 	File downloads
 ***************************/

@@ -540,6 +540,29 @@ class OrderTest extends UnitTest
 		}
 	}
 
+	public function testDownloadableBundle()
+	{
+		$container = Product::getNewInstance(Category::getRootNode());
+		$container->isEnabled->set(true);
+		$container->type->set(Product::TYPE_BUNDLE);
+		$container->setPrice($this->usd, 100);
+		$container->save();
+
+		foreach ($this->products as $product)
+		{
+			$product->type->set(Product::TYPE_DOWNLOADABLE);
+			ProductBundle::getNewInstance($container, $product)->save();
+		}
+
+		$order = CustomerOrder::getNewInstance($this->user);
+		$order->addProduct($container, 1);
+		$order->save();
+		$order->finalize($this->usd);
+
+		$this->assertEqual($order->getShipments()->size(), 1);
+		$this->assertFalse($order->getShipments()->get(0)->isShippable());
+	}
+
 	function test_SuiteTearDown()
 	{
 		ActiveRecordModel::rollback();

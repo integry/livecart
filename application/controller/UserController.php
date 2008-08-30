@@ -170,6 +170,7 @@ class UserController extends FrontendController
 	{
 		$item = ActiveRecordModel::getInstanceById('OrderedItem', $this->request->get('id'), ActiveRecordModel::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
 		$item->loadOptions();
+		$subItems = $item->getSubitems();
 		$item = $item->toArray();
 
 		$this->addAccountBreadcrumb();
@@ -180,8 +181,7 @@ class UserController extends FrontendController
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
 
 		$fileArray = $this->loadDownloadableItems($f);
-
-		if (!$fileArray)
+		if (!$fileArray && !$subItems)
 		{
 			return new ActionRedirectResponse('user', 'index');
 		}
@@ -190,6 +190,12 @@ class UserController extends FrontendController
 		$response->set('user', $this->user->toArray());
 		$response->set('files', $fileArray);
 		$response->set('item', $item);
+
+		if ($subItems)
+		{
+			$response->set('subItems', $subItems->toArray());
+		}
+
 		return $response;
 	}
 

@@ -52,6 +52,22 @@
 				{else}
 					{$item.Product.name_lang}
 				{/if}
+
+				{sect}
+					{header}
+						<ul>
+					{/header}
+					{content}
+						{foreach $item.subItems as $subItem}
+							{if $subItem.Product.isDownloadable}
+								<li><a href="{link controller=user action=item id=$subItem.ID}">{$subItem.Product.name_lang}</a></li>
+							{/if}
+						{/foreach}
+					{/content}
+					{footer}
+						</ul>
+					{/footer}
+				{/sect}
 			</li>
 		{/foreach}
 		</ul>

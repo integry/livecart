@@ -404,6 +404,15 @@ class OrderedItem extends ActiveRecordModel
 			$array['options'][$id] = $choice->toArray();
 		}
 
+		$array['subItems'] = array();
+		if ($this->subItems)
+		{
+			foreach ($this->subItems as $subItem)
+			{
+				$array['subItems'][] = $subItem->toArray();
+			}
+		}
+
 		$this->setArrayData($array);
 
 		return $array;
