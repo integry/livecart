@@ -9,6 +9,10 @@
 
 	{liveCustomization}
 
+	{if 'FAVICON'|config}
+		<link href="{'FAVICON'|config}" rel="shortcut icon" />
+	{/if}
+
 	<!-- Css includes -->
 	{includeCss file="../javascript/library/tinymce/themes/advanced/css/editor_ui.css" front=true}
 	{includeCss file="backend/stat.css" front=true}

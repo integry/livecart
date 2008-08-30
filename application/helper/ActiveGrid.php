@@ -1,5 +1,7 @@
 <?php
 
+ClassLoader::import("application.helper.getDateFromString");
+
 /**
  * @package application.helper
  * @author Integry Systems
@@ -83,7 +85,7 @@ class ActiveGrid
 			{
 				$fieldInst = $this->getFieldInstance($field);
 
-				if ($fieldInst && ($fieldInst->getDataType() instanceof ARNumeric || $fieldInst->getDataType() instanceof ARPeriod))
+				if ($fieldInst && ($fieldInst->getDataType() instanceof ARNumeric))
 				{
 					$value = preg_replace('/[ ]{2,}/', ' ', $value);
 
@@ -114,6 +116,19 @@ class ActiveGrid
 
 						$filter->mergeCondition(new OperatorCond($handle, $value, $operator));
 					}
+				}
+				else if ($fieldInst->getDataType() instanceof ARPeriod)
+				{
+					list($from, $to) = explode(' | ', $value);
+
+					$cond = new EqualsOrMoreCond($handle, getDateFromString($from));
+
+					if ('now' != $to)
+					{
+						$cond->addAnd(new EqualsOrLessCond($handle, getDateFromString($to)));
+					}
+
+					$filter->mergeCondition($cond);
 				}
 				else
 				{
