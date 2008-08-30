@@ -36,10 +36,23 @@ class ProductBundleTest extends UnitTest
 
 	public function testCreateAndRetrieve()
 	{
+		// set up currency
+		if (ActiveRecord::objectExists('Currency', 'USD'))
+		{
+			$this->usd = Currency::getInstanceByID('USD', Currency::LOAD_DATA);
+		}
+		else
+		{
+			$this->usd = Currency::getNewInstance('USD');
+			$this->usd->setAsDefault();
+			$this->usd->save();
+		}
+
 		$products = array();
 		for ($k = 0; $k <= 2; $k++)
 		{
 			$products[$k] = Product::getNewInstance($this->root);
+			$products[$k]->setPrice($this->usd, $k + 1);
 			$products[$k]->save();
 
 			$bundled = ProductBundle::getNewInstance($this->container, $products[$k]);
@@ -53,14 +66,16 @@ class ProductBundleTest extends UnitTest
 		{
 			$this->assertSame($item->relatedProduct->get(), $products[$index]);
 		}
+
+		$this->assertEqual(ProductBundle::getTotalBundlePrice($this->container, $this->usd), 6);
 	}
 
 	/**
-	 *	@expectedException ProductRelationshipException
+	 *
 	 */
 	public function testBundlingProductToItself()
 	{
-		ProductBundle::getNewInstance($this->container, $this->container);
+		$this->assertNull(ProductBundle::getNewInstance($this->container, $this->container));
 	}
 
 	public function testShippingWeight()
@@ -91,7 +106,6 @@ class ProductBundleTest extends UnitTest
 		ProductBundle::getNewInstance($this->container, $product2)->save();
 
 		// bundle container not enabled
-		$this->assertTrue($product1->isAvailable() && $product2->isAvailable());
 		$this->assertFalse($this->container->isAvailable());
 
 		$this->container->isEnabled->set(true);

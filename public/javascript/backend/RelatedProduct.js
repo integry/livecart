@@ -27,6 +27,8 @@ Backend.RelatedProduct.activeListCallbacks.methods =
 {
 	namespace: Backend.RelatedProduct,
 
+	tab: 'tabProductRelationship',
+
 	beforeDelete: function(li)
 	{
 		if(confirm(this.callbacks.namespace.messages.areYouSureYouWantToDelete))
@@ -49,7 +51,7 @@ Backend.RelatedProduct.activeListCallbacks.methods =
 		if(!response.error)
 		{
 			var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
-			tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') - 1);
+			tabControl.setCounter(this.callbacks.tab, tabControl.getCounter(this.callbacks.tab) - 1);
 
 			return true;
 		}
@@ -221,16 +223,20 @@ Backend.RelatedProduct.Group.Controller.prototype =
 		var container = this.container = this.namespace.getContainer(ownerID);
 
 		var newFormElement = container.down('.newForm').down('.groupForm');
-		var modelParams = {}
+		var modelParams = {};
 		modelParams[this.namespace.Group.Model.prototype.getOwnerClass()] = {ID: ownerID}
 		var emptyGroupModel = new this.namespace.Group.Model(modelParams);
 		var newForm = new this.namespace.Group.Controller(newFormElement, emptyGroupModel);
 
-		Event.observe(container.down('.addGroup').down('a'), "click", function(e)
+		var addGroup = container.down('.addGroup');
+		if (addGroup)
 		{
-			Event.stop(e);
-			newForm.showNewForm();
-		});
+			Event.observe(addGroup.down('a'), "click", function(e)
+			{
+				Event.stop(e);
+				newForm.showNewForm();
+			});
+		}
 
 		var addProduct = container.down('.addProduct');
 		if (addProduct)
@@ -257,20 +263,24 @@ Backend.RelatedProduct.Group.Controller.prototype =
 		}
 
 		// group list
-		var groupList = ActiveList.prototype.getInstance(container.down('.activeListGroup'), new this.namespace.Group.Callbacks(ownerID));
-		newForm.view.setGroupList(groupList);
-
-		// each group
-		$A(container.getElementsBySelector('li.groupContainer')).each(function(ul)
+		var groupUl = container.down('.activeListGroup');
+		if (groupUl)
 		{
-			var group = ul.down('ul.subList');
-			if (group)
-			{
-				ActiveList.prototype.getInstance(group, new this.namespace.activeListCallbacks(ownerID));
-			}
-		}.bind(this));
+			var groupList = ActiveList.prototype.getInstance(groupUl, new this.namespace.Group.Callbacks(ownerID));
+			newForm.view.setGroupList(groupList);
 
-		groupList.createSortable(true);
+			// each group
+			$A(container.getElementsBySelector('li.groupContainer')).each(function(ul)
+			{
+				var group = ul.down('ul.subList');
+				if (group)
+				{
+					ActiveList.prototype.getInstance(group, new this.namespace.activeListCallbacks(ownerID));
+				}
+			}.bind(this));
+
+			groupList.createSortable(true);
+		}
 	},
 
 	getInstance: function(rootNode)
@@ -297,7 +307,11 @@ Backend.RelatedProduct.Group.Controller.prototype =
 
 		Event.observe(this.view.nodes.save, 'click', function(e) { Event.stop(e); self.onSave(); });
 		Event.observe(this.view.nodes.cancel, 'click', function(e) { Event.stop(e); self.onCancel(); });
-		Event.observe(this.view.nodes.newGroupCancelLink, 'click', function(e) { Event.stop(e); self.onCancel(); });
+
+		if (this.view.nodes.newGroupCancelLink)
+		{
+			Event.observe(this.view.nodes.newGroupCancelLink, 'click', function(e) { Event.stop(e); self.onCancel(); });
+		}
 	},
 
 	onSave: function()

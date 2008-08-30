@@ -53,8 +53,7 @@ class ProductBundle extends ActiveRecordModel
 	{
 		if(null == $product || null == $related || $product === $related || $product->getID() == $related->getID())
 		{
-			require_once('ProductRelationshipException.php');
-			throw new ProductRelationshipException('Expected two different products when creating a relationship');
+			return null;
 		}
 
 		$relationship = parent::getNewInstance(__CLASS__);
@@ -144,6 +143,24 @@ class ProductBundle extends ActiveRecordModel
 	public static function getBundledProductArray(Product $product, $loadReferencedRecords = array('RelatedProduct' => 'Product'))
 	{
 		return parent::getRecordSetArray(__CLASS__, self::getFilter($product), $loadReferencedRecords);
+	}
+
+	public static function getTotalBundlePrice(Product $product, Currency $currency)
+	{
+		$products = new ARSet();
+		foreach (self::getBundledProductSet($product) as $item)
+		{
+			$products->add($item->relatedProduct->get());
+		}
+		ProductPrice::loadPricesForRecordSet($products);
+
+		$total = 0;
+		foreach ($products as $item)
+		{
+			$total += $item->getPrice($currency);
+		}
+
+		return $total;
 	}
 
 	private static function getFilter(Product $product)

@@ -392,6 +392,10 @@ Backend.Product.Editor.prototype =
 		}
 
 		this.initSpecFieldControls();
+
+		var typeSel = this.nodes.form.elements.namedItem("type");
+		typeSel.onchange = this.changeType;
+		typeSel.onchange();
 	},
 
 	setPath: function() {
@@ -399,6 +403,18 @@ Backend.Product.Editor.prototype =
 			this.path,
 			this.nodes.form.elements.namedItem("name").value
 		);
+	},
+
+	changeType: function()
+	{
+		if (2 == this.value)
+		{
+			$('tabProductBundle').show();
+		}
+		else
+		{
+			$('tabProductBundle').hide();
+		}
 	},
 
 	initSpecFieldControls: function()

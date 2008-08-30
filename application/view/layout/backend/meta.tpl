@@ -75,8 +75,9 @@
 	window.onload = onLoad;
 
 	Backend.Router.setUrlTemplate('{link controller=controller action=action}');
-
 	</script>
+
+	{block TRANSLATIONS}
 
 </head>
 <body>

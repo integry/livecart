@@ -2029,6 +2029,12 @@ TabCustomize.prototype =
 
 		$A(cloned.getElementsBySelector('li')).each(function(el)
 		{
+			var anchor = el.down('a');
+			if (anchor)
+			{
+				anchor.parentNode.replaceChild(document.createTextNode(anchor.firstChild.data), anchor);
+			}
+
 			el.id = 'toggle_' + el.id;
 			Event.observe(el, 'click', this.toggleVisibility.bindAsEventListener(this));
 
