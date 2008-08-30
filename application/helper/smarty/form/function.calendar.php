@@ -67,10 +67,17 @@ function smarty_function_calendar($params, $smarty)
 	visible.realInput = realInput;
 	visible.showInput = visible;
 
-	Event.observe(visible, "dbclick",   Calendar.updateDate );
-	Event.observe(visible, "keyup",	 Calendar.updateDate );
-	Event.observe(visible, "blur",	  Calendar.updateDate );
-	Event.observe(button, "mousedown", Calendar.updateDate );
+	var updateDate = function(e)
+	{
+		Calendar.updateDate.bind(this)();
+		Event.stop(e);
+	};
+
+	Event.observe(visible, "dbclick", updateDate.bind(visible));
+	Event.observe(visible, "keyup",	 updateDate.bind(visible));
+	Event.observe(visible, "blur",	updateDate.bind(visible));
+	Event.observe(button, "mousedown", updateDate.bind(button));
+	Event.observe(button, "click", updateDate.bind(button));
 	Event.observe(visible, "blur", function() { if (!this.value) { this.realInput.value = ''; } });
 
 	Calendar.setup({

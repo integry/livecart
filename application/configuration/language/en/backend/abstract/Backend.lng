@@ -37,6 +37,9 @@ _grid_less_or_equal=Less Than or Equal To
 _grid_range=Range
 _grid_export=Export data
 _grid_reload=Reload
+_today=Today
+_yesterday=Yesterday
+_last_7_days=Last 7 days
 
 # Tabs
 _more_tabs=More

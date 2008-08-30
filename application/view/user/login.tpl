@@ -2,35 +2,41 @@
 
 <div class="userLogin">
 
-{include file="layout/frontend/layout.tpl"}
+{include file="layout/frontend/layout.tpl" hideLeft=true}
 
-<div id="content">
+<div id="content" class="left">
 
 	<h1>{t _login}</h1>
 
-	<h2>{t _returning}</h2>
+	<div class="returningCustomer">
+		<h2>{t _returning}</h2>
 
-	<fieldset class="container">
-	<p>
-		{if $failed}
-			<div class="errorMsg failed">
-				{t _login_failed}
-			</div>
-		{else}
+		<fieldset class="container">
+		<p>
+			{if $failed}
+				<div class="errorMsg failed">
+					{t _login_failed}
+				</div>
+			{else}
+				<label></label>
+				{t _please_sign_in}
+			{/if}
+		</p>
+
+		{capture var="return"}{link controller="user"}{/capture}
+		{include file="user/loginForm.tpl" return=$return}
+	</div>
+
+	<div class="newCustomer">
+		<h2>{t _new_cust}</h2>
+
 			<label></label>
-			{t _please_sign_in}
-		{/if}
-	</p>
+			{t _not_registered}
 
-	{capture var="return"}{link controller="user"}{/capture}
-	{include file="user/loginForm.tpl" return=$return}
+		{include file="user/regForm.tpl"}
+	</div>
 
-	<h2>{t _new_cust}</h2>
-
-		<label></label>
-		{t _not_registered}
-
-	{include file="user/regForm.tpl"}
+	<div class="clear"></div>
 
 	</fieldset>
 
