@@ -140,7 +140,7 @@ class ProductBundle extends ActiveRecordModel
 	 * @param Product $product
 	 * @return array
 	 */
-	public static function getBundledProductArray(Product $product, $loadReferencedRecords = array('RelatedProduct' => 'Product'))
+	public static function getBundledProductArray(Product $product, $loadReferencedRecords = array('RelatedProduct' => 'Product', 'ProductImage'))
 	{
 		return parent::getRecordSetArray(__CLASS__, self::getFilter($product), $loadReferencedRecords);
 	}

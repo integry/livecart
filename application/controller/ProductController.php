@@ -188,6 +188,27 @@ class ProductController extends FrontendController
 			$response->set('reviews', $reviews);
 		}
 
+		// bundled products
+		if ($product->isBundle())
+		{
+			$bundledProducts = array();
+			foreach (ProductBundle::getBundledProductArray($product) as $bundled)
+			{
+				$bundledProducts[] = $bundled['RelatedProduct'];
+			}
+
+			ProductPrice::loadPricesForRecordSetArray($bundledProducts);
+			$response->set('bundledProducts', $bundledProducts);
+
+			$currency = Currency::getInstanceByID($this->getRequestCurrency());
+			$total = ProductBundle::getTotalBundlePrice($product, $currency);
+			$response->set('bundleTotal', $currency->getFormattedPrice($total));
+
+			$saving = $total - $product->getPrice($currency);
+			$response->set('bundleSavingTotal', $currency->getFormattedPrice($saving));
+			$response->set('bundleSavingPercent', round(($saving / $total) * 100));
+		}
+
 		// contact form
 		if ($this->config->get('PRODUCT_INQUIRY_FORM'))
 		{

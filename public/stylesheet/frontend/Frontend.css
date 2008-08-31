@@ -118,6 +118,13 @@ table
 	color: #FF0000;
 }
 
+.highlight
+{
+	background-color: #ffffe0;
+	border: 1px solid yellow;
+	padding: 1em;
+}
+
 .message
 {
 	padding: 15px;
@@ -1384,6 +1391,28 @@ div.review .ratingBreakdown
 .readAllReviews
 {
 	font-weight: bold;
+}
+
+#bundle .productInfo
+{
+	width: 150px;
+}
+
+.bundleList, .bundleInfo
+{
+	float: left;
+	padding-right: 0.5em;
+	margin-left: 1em;
+}
+
+.bundleList
+{
+	border-right: 1px solid #eee;
+}
+
+.bundlePrice
+{
+	font-size: larger;
 }
 
 /*****************************
@@ -2653,21 +2682,21 @@ img.calendar_button_hover
 /*************************
 	Special offers (sale items)
 *************************/
-.box.productList ul
+.compactProductList ul
 {
 	list-style-type: none;
 	padding-left: 0;
 	margin-top: 0.5em;
 }
 
-.box.productList .image
+.compactProductList .image
 {
 	float: left;
 	width: 45px;
 	text-align: center;
 }
 
-.box.productList .productInfo
+.compactProductList .productInfo
 {
 	float: left;
 	width: 100px;
@@ -2675,7 +2704,7 @@ img.calendar_button_hover
 	overflow: hidden;
 }
 
-.box.productList .pricingInfo .price
+.compactProductList .pricingInfo .price
 {
 	position: static;
 	float: left;
@@ -2684,8 +2713,9 @@ img.calendar_button_hover
 	text-align: center;
 }
 
-.box.productList li
+.compactProductList li
 {
+	list-style-type: none;
 	margin-bottom: 7px;
 }
 

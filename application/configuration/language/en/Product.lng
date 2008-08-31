@@ -14,6 +14,11 @@ _reviews=Customer Reviews
 _read_all_reviews=Read all [_1] reviews
 _purchased_together=Customers Who Bought This Item Also Bought
 
+_bundle_includes=This Item Includes
+_regular_price=Regular price
+_bundle_price=Bundle price
+_bundle_save=save
+
 _rate_product_name=Rate [_1]
 _review_product_name=Rate and Review [_1]
 _review_count=[quant,_1,review,reviews]

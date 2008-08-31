@@ -18,6 +18,11 @@
 		</div>
 
 		{include file="product/head.tpl"}
+
+		{if $product.type == 2}
+			{include file="product/bundle.tpl"}
+		{/if}
+
 		{include file="product/details.tpl"}
 
 		{if 'PRODUCT_INQUIRY_FORM'|config}
