@@ -5,9 +5,9 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2008-07-25 23:53                                #
-# Model version:         Version 2008-07-25                              #
-# From model version:    Version 2008-07-24                              #
+# Created on:            2008-08-28 13:10                                #
+# Model version:         Version 2008-08-28                              #
+# From model version:    Version 2008-08-24 4                            #
 # ---------------------------------------------------------------------- #
 
 
@@ -251,23 +251,51 @@ ALTER TABLE ProductListItem DROP FOREIGN KEY ProductList_ProductListItem;
 
 ALTER TABLE ProductListItem DROP FOREIGN KEY Product_ProductListItem;
 
+ALTER TABLE DiscountCondition DROP FOREIGN KEY DiscountCondition_DiscountCondition;
+
+ALTER TABLE DiscountAction DROP FOREIGN KEY DiscountCondition_DiscountAction;
+
+ALTER TABLE OrderDiscount DROP FOREIGN KEY CustomerOrder_OrderDiscount;
+
+ALTER TABLE OrderCoupon DROP FOREIGN KEY CustomerOrder_OrderCoupon;
+
+ALTER TABLE DiscountConditionRecord DROP FOREIGN KEY DiscountCondition_DiscountConditionRecord;
+
+ALTER TABLE DiscountConditionRecord DROP FOREIGN KEY DeliveryZone_DiscountConditionRecord;
+
+ALTER TABLE DiscountConditionRecord DROP FOREIGN KEY Product_DiscountConditionRecord;
+
+ALTER TABLE DiscountConditionRecord DROP FOREIGN KEY Manufacturer_DiscountConditionRecord;
+
+ALTER TABLE DiscountConditionRecord DROP FOREIGN KEY Category_DiscountConditionRecord;
+
+ALTER TABLE DiscountConditionRecord DROP FOREIGN KEY UserGroup_DiscountConditionRecord;
+
+ALTER TABLE DiscountConditionRecord DROP FOREIGN KEY User_DiscountConditionRecord;
+
 # ---------------------------------------------------------------------- #
-# Modify table "User"                                                    #
+# Modify table "OrderedItem"                                             #
 # ---------------------------------------------------------------------- #
 
-ALTER TABLE User MODIFY ID INTEGER UNSIGNED NOT NULL;
+ALTER TABLE OrderedItem MODIFY ID INTEGER UNSIGNED NOT NULL;
 
-ALTER TABLE User ADD COLUMN preferences TEXT;
+ALTER TABLE OrderedItem ADD COLUMN parentID INTEGER UNSIGNED;
 
-ALTER TABLE User MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE OrderedItem MODIFY parentID INTEGER UNSIGNED AFTER shipmentID;
+
+ALTER TABLE OrderedItem MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
 
 # ---------------------------------------------------------------------- #
-# Modify table "ProductListItem"                                         #
+# Add table "ProductBundle"                                              #
 # ---------------------------------------------------------------------- #
 
-ALTER TABLE ProductListItem MODIFY ID INTEGER UNSIGNED NOT NULL;
-
-ALTER TABLE ProductListItem MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
+CREATE TABLE ProductBundle (
+    productID INTEGER UNSIGNED NOT NULL,
+    relatedProductID INTEGER UNSIGNED NOT NULL COMMENT 'The Product the related Product is assigned to',
+    position INTEGER UNSIGNED DEFAULT 0 COMMENT 'ID of the ProductRelationshipGroup - if the related product is assigned to one (grouped together with similar products)',
+    CONSTRAINT PK_ProductBundle PRIMARY KEY (productID, relatedProductID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
@@ -326,6 +354,9 @@ ALTER TABLE OrderedItem ADD CONSTRAINT CustomerOrder_OrderedItem
 
 ALTER TABLE OrderedItem ADD CONSTRAINT Shipment_OrderedItem 
     FOREIGN KEY (shipmentID) REFERENCES Shipment (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE OrderedItem ADD CONSTRAINT OrderedItem_OrderedItem 
+    FOREIGN KEY (parentID) REFERENCES OrderedItem (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE User ADD CONSTRAINT ShippingAddress_User 
     FOREIGN KEY (defaultShippingAddressID) REFERENCES ShippingAddress (ID) ON DELETE SET NULL ON UPDATE SET NULL;
@@ -626,3 +657,42 @@ ALTER TABLE ProductListItem ADD CONSTRAINT ProductList_ProductListItem
 
 ALTER TABLE ProductListItem ADD CONSTRAINT Product_ProductListItem 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE DiscountCondition ADD CONSTRAINT DiscountCondition_DiscountCondition 
+    FOREIGN KEY (parentNodeID) REFERENCES DiscountCondition (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE DiscountAction ADD CONSTRAINT DiscountCondition_DiscountAction 
+    FOREIGN KEY (conditionID) REFERENCES DiscountCondition (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE OrderDiscount ADD CONSTRAINT CustomerOrder_OrderDiscount 
+    FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE OrderCoupon ADD CONSTRAINT CustomerOrder_OrderCoupon 
+    FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE DiscountConditionRecord ADD CONSTRAINT DiscountCondition_DiscountConditionRecord 
+    FOREIGN KEY (conditionID) REFERENCES DiscountCondition (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE DiscountConditionRecord ADD CONSTRAINT DeliveryZone_DiscountConditionRecord 
+    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE DiscountConditionRecord ADD CONSTRAINT Product_DiscountConditionRecord 
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE DiscountConditionRecord ADD CONSTRAINT Manufacturer_DiscountConditionRecord 
+    FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID);
+
+ALTER TABLE DiscountConditionRecord ADD CONSTRAINT Category_DiscountConditionRecord 
+    FOREIGN KEY (categoryID) REFERENCES Category (ID);
+
+ALTER TABLE DiscountConditionRecord ADD CONSTRAINT UserGroup_DiscountConditionRecord 
+    FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID);
+
+ALTER TABLE DiscountConditionRecord ADD CONSTRAINT User_DiscountConditionRecord 
+    FOREIGN KEY (userID) REFERENCES User (ID);
+
+ALTER TABLE ProductBundle ADD CONSTRAINT Product_ProductBundle 
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductBundle ADD CONSTRAINT Product_ProductBundle_Related 
+    FOREIGN KEY (relatedProductID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
