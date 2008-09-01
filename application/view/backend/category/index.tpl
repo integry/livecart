@@ -24,6 +24,7 @@
 {includeJs file="backend/ProductList.js"}
 {includeJs file="backend/ProductFile.js"}
 {includeJs file="backend/ProductOption.js"}
+{includeJs file="backend/ProductBundle.js"}
 {includeJs file="backend/RatingType.js"}
 {includeJs file="backend/Review.js"}
 
@@ -35,6 +36,7 @@
 {includeCss file="backend/Product.css"}
 {includeCss file="backend/SpecField.css"}
 {includeCss file="backend/ProductRelationship.css"}
+{includeCss file="backend/ProductBundle.css"}
 {includeCss file="backend/ProductFile.css"}
 {includeCss file="backend/ProductOption.css"}
 {includeCss file="backend/Filter.css"}
@@ -143,7 +145,7 @@
 	<div id="categoryTabs">
 		<div id="tabContainer" class="tabContainer">
 			{tabControl id="tabList"}
-				{tab id="tabProducts" role="product" help="products"}<a href="{link controller=backend.product action=index id=_id_}">{t _products}</a>{/tab}
+				{tab id="tabProducts" role="product" help="products"}<a href="{link controller=backend.product action=index id=_id_ }">{t _products}</a>{/tab}
 				{tab id="tabMainDetails" role="category" help="categories.details"}<a href="{link controller=backend.category action=form id=_id_}">{t _category_details}</a>{/tab}
 				{tab id="tabFields" role="category" help="categories.attributes"}<a href="{link controller=backend.specField action=index id=_id_}">{t _attributes}</a>{/tab}
 				{tab id="tabFilters" role="filter" help="categories.filters"}<a href="{link controller=backend.filterGroup action=index id=_id_}">{t _filters}</a>{/tab}

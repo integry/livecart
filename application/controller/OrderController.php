@@ -193,15 +193,19 @@ class OrderController extends FrontendController
 	public function addToCart()
 	{
 		$product = Product::getInstanceByID($this->request->get('id'));
+
+		$productRedirect = new ActionRedirectResponse('product', 'index', array('id' => $product->getID(), 'query' => 'return=' . $this->request->get('return')));
 		if (!$product->isAvailable())
 		{
-			throw new ApplicationException('The product ' . $product->sku->get() . '  is not available for ordering!');
+			$productController = new ProductController($this->application);
+			$productController->setErrorMessage($this->translate('_product_unavailable'));
+			return $productRedirect;
 		}
 
 		ClassLoader::import('application.controller.ProductController');
 		if (!ProductController::buildAddToCartValidator($product->getOptions(true)->toArray())->isValid())
 		{
-			return new ActionRedirectResponse('product', 'index', array('id' => $product->getID(), 'query' => 'return=' . $this->request->get('return')));
+			return $productRedirect;
 		}
 
 		ActiveRecordModel::beginTransaction();
@@ -220,6 +224,8 @@ class OrderController extends FrontendController
 		SessionOrder::save($this->order);
 
 		ActiveRecordModel::commit();
+
+		$this->setMessage($this->makeText('_added_to_cart', array($product->getValueByLang('name', $this->getRequestLanguage()))));
 
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}

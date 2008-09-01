@@ -1,6 +1,4 @@
-{if $message}
-	<div class="confirmationMessage">{$message}</div>
-{/if}
+{include file="block/message.tpl"}
 
 <h1>{$product.name_lang}</h1>
 

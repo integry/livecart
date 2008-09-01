@@ -1252,6 +1252,11 @@ fieldset.group p
 /***************************
 	Tabs
 ***************************/
+.tabContainer
+{
+	position: relative;
+}
+
 .tabs
 {
     list-style: none;
@@ -1310,7 +1315,7 @@ fieldset.group p
 }
 
 /**************************
-Translation tabs
+	Translation tabs
 ***************************/
 .languageForm
 {

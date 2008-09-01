@@ -59,9 +59,12 @@ $routes = array(
 
 // custom routes
 $routeDir = ClassLoader::getRealPath('storage.configuration.route');
-foreach (glob($routeDir . '/*.php') as $file)
+foreach ((array)glob($routeDir . '/*.php') as $file)
 {
-	include $file;
+	if ($file)
+	{
+		include $file;
+	}
 }
 
 // SSL

@@ -86,6 +86,7 @@ _enabled=Enabled (visible)
 
 _tangible=Tangible (shippable)
 _intangible=Intangible (downloadable)
+_bundle=Bundle (container)
 
 _inventory=Inventory
 _items_in_stock=Items in stock

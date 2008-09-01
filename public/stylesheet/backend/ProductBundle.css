@@ -1,0 +1,10 @@
+.tabProductBundleContent .total
+{
+	border-bottom: 1px solid #DDDDDD;
+	line-height: 2em;
+}
+
+.tabProductBundleContent .newTotal
+{
+	display: none;
+}

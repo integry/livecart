@@ -19,6 +19,10 @@
 	<base href="{baseUrl}"></base>
 	{liveCustomization}
 
+	{if 'FAVICON'|config}
+		<link href="{'FAVICON'|config}" rel="shortcut icon" />
+	{/if}
+
 	<!-- Css includes -->
 	<link href="stylesheet/frontend/Frontend.css" rel="Stylesheet" type="text/css"/>
 	<!--[if IE]>

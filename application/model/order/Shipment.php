@@ -145,7 +145,7 @@ class Shipment extends ActiveRecordModel
 		{
 			if (!$item->product->get()->isFreeShipping->get() || !$zone->isFreeShipping->get())
 			{
-				$weight += $item->product->get()->shippingWeight->get();
+				$weight += $item->product->get()->getShippingWeight();
 			}
 		}
 
@@ -355,7 +355,7 @@ if (!$item->getSubTotal($currency))
 		}
 
 		// shipping rate
-		if ($rate = $this->getSelectedRate())
+		if (($rate = $this->getSelectedRate()) && $this->isShippable())
 		{
 			$amount = $rate->getAmountByCurrency($currency);
 			if ($this->order->get()->getDeliveryZone()->isDefault())
@@ -443,7 +443,6 @@ if (!$item->getSubTotal($currency))
 				$this->shippingServiceData->set(serialize($rate));
 			}
 		}
-
 
 		// Update order status if to reflect it's shipments statuses
 		if (!$downloadable && $this->isShippable() && $this->order->get()->isFinalized->get())

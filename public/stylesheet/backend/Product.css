@@ -19,6 +19,16 @@
 	float: right;
 }
 
+#productTabList
+{
+	padding-bottom: 3px;
+}
+
+#toggle_tabProductBundle
+{
+	display: none !important;
+}
+
 /*************************
 	Product form
 *************************/

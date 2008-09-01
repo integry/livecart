@@ -3,6 +3,26 @@
 		<td class="productName">
 			<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
 			{include file="user/itemOptions.tpl" options=$item.options}
+
+			{sect}
+				{header}
+					<ul class="subItemList">
+				{/header}
+				{content}
+					{foreach $item.subItems as $subItem}
+						{if $subItem.Product.isDownloadable}
+							<li>
+								<a href="{link controller=user action=item id=$subItem.ID}">{$subItem.Product.name_lang}</a>
+								{include file="user/itemOptions.tpl" options=$subItem.options}
+							</li>
+						{/if}
+					{/foreach}
+				{/content}
+				{footer}
+					</ul>
+				{/footer}
+			{/sect}
+
 		</td>
 		<td>{$item.formattedDisplayPrice}</td>
 		<td>{$item.count}</td>

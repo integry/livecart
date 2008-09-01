@@ -244,6 +244,18 @@ abstract class BaseController extends Controller implements LCiTranslator
 		return $msg;
 	}
 
+	protected function setErrorMessage($message)
+	{
+		$this->setSessionData('errorMessage', $message);
+	}
+
+	public function getErrorMessage()
+	{
+		$msg = $this->getSessionData('errorMessage');
+		$this->setErrorMessage('');
+		return $msg;
+	}
+
 	/**
 	 * 	Automatically preloads language files
 	 *

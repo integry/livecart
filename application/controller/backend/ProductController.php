@@ -461,6 +461,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	  	$product = Product::getInstanceByID((int)$this->request->get('id'), ActiveRecord::LOAD_DATA);
 
 	  	return new JSONResponse(array(
+			'tabProductBundle' => count(ProductBundle::getBundledProductArray($product)),
 			'tabProductRelationship' => $product->getRelationships(false)->getTotalRecordCount(),
 			'tabProductFiles' => $product->getFiles(false)->getTotalRecordCount(),
 			'tabProductImages' => count($product->getImageArray()),
@@ -606,8 +607,9 @@ class ProductController extends ActiveGridController implements MassActionInterf
 					  );
 
 		// product types
-		$types = array(0 => $this->translate('_tangible'),
-					   1 => $this->translate('_intangible'),
+		$types = array(Product::TYPE_TANGIBLE => $this->translate('_tangible'),
+					   Product::TYPE_DOWNLOADABLE => $this->translate('_intangible'),
+					   Product::TYPE_BUNDLE => $this->translate('_bundle'),
 					  );
 
 		// default product type

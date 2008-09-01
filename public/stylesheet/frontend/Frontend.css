@@ -118,6 +118,13 @@ table
 	color: #FF0000;
 }
 
+.highlight
+{
+	background-color: #ffffe0;
+	border: 1px solid yellow;
+	padding: 1em;
+}
+
 .message
 {
 	padding: 15px;
@@ -1386,6 +1393,28 @@ div.review .ratingBreakdown
 	font-weight: bold;
 }
 
+#bundle .productInfo
+{
+	width: 150px;
+}
+
+.bundleList, .bundleInfo
+{
+	float: left;
+	padding-right: 0.5em;
+	margin-left: 1em;
+}
+
+.bundleList
+{
+	border-right: 1px solid #eee;
+}
+
+.bundlePrice
+{
+	font-size: larger;
+}
+
 /*****************************
 	Review page
 *****************************/
@@ -1852,6 +1881,28 @@ a.cvv
 /***************************
 	User account
 ***************************/
+.newCustomer
+{
+	float: left;
+	width: 58%;
+}
+
+.returningCustomer
+{
+	float: right;
+	width: 40%;
+}
+
+.returningCustomer label
+{
+	width: 120px;
+}
+
+.returningCustomer input.text
+{
+	width: 10em;
+}
+
 .userLogin .failed
 {
     margin: 0;
@@ -2041,6 +2092,11 @@ p.messages
 {
     color: red;
     font-weight: bold;
+}
+
+.subItemList
+{
+	margin: 4px;
 }
 
 /***************************
@@ -2287,7 +2343,7 @@ span.templateLocator.activeTpl
 /***************************
 	Form styling
 ***************************/
-.confirmationMessage
+.confirmationMessage, .errorMessage
 {
 	border: 1px solid #0c0;
 	background-color: #efe;
@@ -2297,6 +2353,13 @@ span.templateLocator.activeTpl
 	background-position: 5px center;
 	background-repeat: no-repeat;
 	margin: 0.5em;
+}
+
+.errorMessage
+{
+	border: 1px solid #c00;
+	background-color: #fee;
+	background-image: url(../../image/silk/gif/cancel.gif);
 }
 
 form
@@ -2626,21 +2689,21 @@ img.calendar_button_hover
 /*************************
 	Special offers (sale items)
 *************************/
-.box.productList ul
+.compactProductList ul
 {
 	list-style-type: none;
 	padding-left: 0;
 	margin-top: 0.5em;
 }
 
-.box.productList .image
+.compactProductList .image
 {
 	float: left;
 	width: 45px;
 	text-align: center;
 }
 
-.box.productList .productInfo
+.compactProductList .productInfo
 {
 	float: left;
 	width: 100px;
@@ -2648,7 +2711,7 @@ img.calendar_button_hover
 	overflow: hidden;
 }
 
-.box.productList .pricingInfo .price
+.compactProductList .pricingInfo .price
 {
 	position: static;
 	float: left;
@@ -2657,8 +2720,9 @@ img.calendar_button_hover
 	text-align: center;
 }
 
-.box.productList li
+.compactProductList li
 {
+	list-style-type: none;
 	margin-bottom: 7px;
 }
 

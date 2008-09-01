@@ -2,6 +2,7 @@ _product_website=Product Website
 
 _low_stock=Low on stock, order soon!
 _no_stock=Currently not in stock
+_product_unavailable=This product currently is not available for ordering
 
 _manufacturer=Manufacturer
 _sku=SKU
@@ -13,6 +14,11 @@ _recommended=Recommended Products
 _reviews=Customer Reviews
 _read_all_reviews=Read all [_1] reviews
 _purchased_together=Customers Who Bought This Item Also Bought
+
+_bundle_includes=This Item Includes
+_regular_price=Regular price
+_bundle_price=Bundle price
+_bundle_save=save
 
 _rate_product_name=Rate [_1]
 _review_product_name=Rate and Review [_1]
