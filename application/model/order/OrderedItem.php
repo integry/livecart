@@ -260,7 +260,7 @@ class OrderedItem extends ActiveRecordModel
 
 	public function loadOptions()
 	{
-		foreach ($this->getRelatedRecordSet('OrderedItemOption', new ARSelectFilter(), true) as $option)
+		foreach ($this->getRelatedRecordSet('OrderedItemOption', new ARSelectFilter(), array('ProductOptionChoice')) as $option)
 		{
 			$this->optionChoices[$option->choice->get()->option->get()->getID()] = $option;
 		}
@@ -297,6 +297,15 @@ class OrderedItem extends ActiveRecordModel
 		if (is_null($this->subItems))
 		{
 			$this->subItems = new ARSet();
+		}
+
+		$id = $item->getID();
+		foreach ($this->subItems as $subItem)
+		{
+			if ($subItem->getID() == $id)
+			{
+				return false;
+			}
 		}
 
 		$this->subItems->add($item);

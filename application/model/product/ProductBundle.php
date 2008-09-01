@@ -112,7 +112,8 @@ class ProductBundle extends ActiveRecordModel
 	protected function insert()
 	{
 	  	// get max position
-	  	$f = self::getFilter($this->product->get());
+	  	$f = new ARSelectFilter(self::getFilter($this->product->get())->getCondition());
+	  	$f->setOrder(new ARFieldHandle(__CLASS__, "position"), 'DESC');
 	  	$f->setLimit(1);
 	  	$rec = ActiveRecord::getRecordSetArray(__CLASS__, $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 0;

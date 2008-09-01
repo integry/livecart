@@ -410,6 +410,7 @@ Backend.Product.Editor.prototype =
 		if (2 == this.value)
 		{
 			$('tabProductBundle').show();
+			$('tabProductBundle').removeClassName('hidden');
 		}
 		else
 		{

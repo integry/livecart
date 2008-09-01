@@ -11,7 +11,10 @@
 				{content}
 					{foreach $item.subItems as $subItem}
 						{if $subItem.Product.isDownloadable}
-							<li><a href="{link controller=user action=item id=$subItem.ID}">{$subItem.Product.name_lang}</a></li>
+							<li>
+								<a href="{link controller=user action=item id=$subItem.ID}">{$subItem.Product.name_lang}</a>
+								{include file="user/itemOptions.tpl" options=$subItem.options}
+							</li>
 						{/if}
 					{/foreach}
 				{/content}

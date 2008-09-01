@@ -2,6 +2,7 @@ _product_website=Product Website
 
 _low_stock=Low on stock, order soon!
 _no_stock=Currently not in stock
+_product_unavailable=This product currently is not available for ordering
 
 _manufacturer=Manufacturer
 _sku=SKU

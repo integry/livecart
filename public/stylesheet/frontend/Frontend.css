@@ -2343,7 +2343,7 @@ span.templateLocator.activeTpl
 /***************************
 	Form styling
 ***************************/
-.confirmationMessage
+.confirmationMessage, .errorMessage
 {
 	border: 1px solid #0c0;
 	background-color: #efe;
@@ -2353,6 +2353,13 @@ span.templateLocator.activeTpl
 	background-position: 5px center;
 	background-repeat: no-repeat;
 	margin: 0.5em;
+}
+
+.errorMessage
+{
+	border: 1px solid #c00;
+	background-color: #fee;
+	background-image: url(../../image/silk/gif/cancel.gif);
 }
 
 form
