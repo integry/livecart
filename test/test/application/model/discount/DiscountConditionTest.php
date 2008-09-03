@@ -111,22 +111,220 @@ class DiscountConditionTest extends UnitTest
 		$this->assertEqual($conditions[0]['ID'], $condition->getID());
 
 		$result = DiscountAction::getNewInstance($condition);
+		$result->isEnabled->set(true);
 		$result->type->set(DiscountAction::TYPE_ORDER_DISCOUNT);
 		$result->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
 		$result->amount->set(10);
 		$result->save();
 
-		$actions = $this->order->getDiscountActions();
+		$actions = $this->order->getDiscountActions(true);
 		$this->assertEqual($actions->get(0)->getID(), $result->getID());
 
 		$discounts = $this->order->getCalculatedDiscounts();
 		$this->assertEqual($discounts->size(), 1);
 
-		return;
-
 		$newTotal = $this->order->getTotal($this->usd);
 		$this->assertEqual($orderTotal * 0.9, $newTotal);
 	}
+
+	public function testRecordCount()
+	{
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->save();
+
+		$this->assertEquals(0, (int)$condition->recordCount->get());
+
+		$record = DiscountConditionRecord::getNewInstance($condition, $this->product1);
+		$record->save();
+		$this->assertEquals(1, $condition->recordCount->get());
+
+		$record = DiscountConditionRecord::getNewInstance($condition, $this->product2);
+		$record->save();
+		$this->assertEquals(2, $condition->recordCount->get());
+
+		$record->delete();
+		$this->assertEquals(1, $condition->recordCount->get());
+	}
+
+	public function testIsProductMatching()
+	{
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->save();
+
+		$record = DiscountConditionRecord::getNewInstance($condition, $this->product1);
+		$record->save();
+
+		$condition->loadAll();
+
+		$this->assertFalse($condition->isProductMatching($this->product2));
+		$this->assertTrue($condition->isProductMatching($this->product1));
+
+		// check matching by manufacturer
+		$manufacturer = Manufacturer::getNewInstance('testing');
+		$manufacturer->save();
+		$this->product2->manufacturer->set($manufacturer);
+
+		$record = DiscountConditionRecord::getNewInstance($condition, $manufacturer);
+		$record->save();
+
+		$condition->loadAll();
+
+		$this->assertTrue($condition->isProductMatching($this->product2));
+
+		// check matching by category
+		$newCategory = Category::getNewInstance(Category::getRootNode());
+		$newCategory->save();
+		$newSubCategory = Category::getNewInstance($newCategory);
+		$newSubCategory->save();
+
+		$newProduct = Product::getNewInstance($newSubCategory);
+		$newProduct->save();
+
+		$record = DiscountConditionRecord::getNewInstance($condition, $newCategory);
+		$record->save();
+
+		$this->assertFalse($condition->isProductMatching($newProduct));
+		$condition->loadAll();
+		$this->assertTrue($condition->isProductMatching($newProduct));
+
+		// sub-condition
+		$sub = DiscountCondition::getNewInstance($condition);
+		$sub->isEnabled->set(true);
+		$sub->save();
+
+		$condition->isAllSubconditions->set(true);
+		$condition->save();
+		$condition->loadAll();
+
+		$manufacturer = Manufacturer::getNewInstance('new one');
+		$manufacturer->save();
+
+		$record = DiscountConditionRecord::getNewInstance($sub, $manufacturer);
+		$record->save();
+		$sub->loadAll();
+
+		$this->assertFalse($condition->isProductMatching($newProduct));
+
+		$newProduct->manufacturer->set($manufacturer);
+		$newProduct->save();
+		$this->assertTrue($condition->isProductMatching($newProduct));
+
+		// sub-sub condition
+		$sub->isAllSubconditions->set(false);
+		$sub->save();
+
+		for ($k = 1; $k <= 2; $k++)
+		{
+			$subs[$k] = DiscountCondition::getNewInstance($sub);
+			$subs[$k]->isEnabled->set(true);
+		}
+
+		// false
+		$subs[1]->save();
+		$someManufacturer = Manufacturer::getNewInstance('Manufacturer without products');
+		$someManufacturer->save();
+		$record = DiscountConditionRecord::getNewInstance($subs[1], $someManufacturer);
+		$record->save();
+
+		$subs[1]->loadAll();
+		$sub->loadAll();
+		$condition->loadAll();
+
+		$this->assertFalse($subs[1]->isProductMatching($newProduct));
+		$this->assertFalse($condition->isProductMatching($newProduct));
+
+		// true
+		$subs[2]->save();
+		$record = DiscountConditionRecord::getNewInstance($subs[2], $newProduct);
+		$record->save();
+
+		$subs[2]->loadAll();
+		$sub->loadAll();
+		$condition->loadAll();
+
+		$this->assertTrue($condition->isProductMatching($newProduct));
+	}
+
+	public function testOrderMinTotal()
+	{
+		$this->order->addProduct($this->product1, 1, true);
+		$this->order->addProduct($this->product2, 1, true);
+		$this->order->save();
+		// order total = 30
+
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->subTotal->set(10);
+		$condition->comparisonType->set(DiscountCondition::COMPARE_GTEQ);
+		$condition->save();
+
+		$this->assertEquals(1, count($this->order->getDiscountConditions()));
+
+		$condition->subTotal->set(50);
+		$condition->save();
+		$this->assertEquals(0, count($this->order->getDiscountConditions()));
+
+		$condition->subTotal->set(30);
+		$condition->save();
+		$this->assertEquals(1, count($this->order->getDiscountConditions()));
+	}
+
+	public function testOrderTotalRange()
+	{
+		$this->order->addProduct($this->product1, 1, true);
+		$this->order->addProduct($this->product2, 1, true);
+		$this->order->save();
+		// order total = 30
+
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		//$condition->isAllSubconditions->set(true);
+		$condition->subTotal->set(10);
+		$condition->comparisonType->set(DiscountCondition::COMPARE_GTEQ);
+		$condition->save();
+
+		$sub = DiscountCondition::getNewInstance($condition);
+		$sub->isEnabled->set(true);
+		$sub->subTotal->set(60);
+		$sub->comparisonType->set(DiscountCondition::COMPARE_LTEQ);
+		$sub->save();
+
+		$this->assertEquals(1, count($this->order->getDiscountConditions()));
+
+		$condition->subTotal->set(50);
+		$condition->save();
+		$this->assertEquals(0, count($this->order->getDiscountConditions()));
+
+		$condition->subTotal->set(30);
+		$condition->save();
+		$this->assertEquals(1, count($this->order->getDiscountConditions()));
+	}
+
+	public function testOrderItemCount()
+	{
+		$this->order->addProduct($this->product1, 1, true);
+		$this->order->addProduct($this->product2, 1, true);
+		$this->order->save();
+
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->count->set(1);
+		$condition->comparisonType->set(DiscountCondition::COMPARE_GTEQ);
+		$condition->save();
+
+		$this->assertEquals(1, count($this->order->getDiscountConditions()));
+
+		$condition->count->set(3);
+		$condition->save();
+		$this->assertEquals(0, count($this->order->getDiscountConditions()));
+
+		$condition->count->set(2);
+		$condition->save();
+		$this->assertEquals(1, count($this->order->getDiscountConditions()));
+	}
+
 }
 
 ?>

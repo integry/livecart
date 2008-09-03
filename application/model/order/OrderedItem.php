@@ -62,7 +62,7 @@ class OrderedItem extends ActiveRecordModel
 
 	/*####################  Value retrieval and manipulation ####################*/
 
-	public function getSubTotal(Currency $currency, $includeTaxes = true)
+	public function getSubTotal(Currency $currency, $includeTaxes = true, $applyDiscounts = true)
 	{
 		// bundle items do not affect order total - only the parent item has a set price
 		if ($this->parent->get())
@@ -71,6 +71,14 @@ class OrderedItem extends ActiveRecordModel
 		}
 
 		$subTotal = $this->getPrice($currency) * $this->count->get();
+
+		if ($applyDiscounts)
+		{
+			foreach ($this->customerOrder->get()->getItemDiscountActions($this) as $action)
+			{
+				$subTotal -= $action->getDiscountAmount($subTotal);
+			}
+		}
 
 		if ($includeTaxes)
 		{

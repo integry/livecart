@@ -28,6 +28,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 	private $fixedDiscounts = array();
 
+	private $discountActions = null;
+
 	const STATUS_NEW = 0;
 	const STATUS_PROCESSING = 1;
 	const STATUS_AWAITING = 2;
@@ -67,6 +69,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	{
 		$instance = parent::getNewInstance(__CLASS__);
 		$instance->user->set($user);
+		$instance->currency->set(self::getApplication()->getDefaultCurrency());
 
 		return $instance;
 	}
@@ -624,14 +627,14 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		return $this->status->get();
 	}
 
-	public function getSubTotal(Currency $currency)
+	public function getSubTotal(Currency $currency, $applyDiscounts = true)
 	{
 		$subTotal = 0;
 		foreach ($this->orderedItems as $item)
 		{
 			if (!$item->isSavedForLater->get())
 			{
-				$subTotal += $item->getSubTotal($currency);
+				$subTotal += $item->getSubTotal($currency, false, $applyDiscounts);
 			}
 		}
 
@@ -765,7 +768,17 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 	public function getItemDiscountActions(OrderedItem $item)
 	{
+		$actions = array();
 
+		foreach ($this->getDiscountActions() as $action)
+		{
+			if ($action->isItemApplicable($item))
+			{
+				$actions[] = $action;
+			}
+		}
+
+		return $actions;
 	}
 
 	private function getTaxes(Currency $currency)
@@ -1345,10 +1358,15 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		return DiscountCondition::getOrderDiscountConditions($this);
 	}
 
-	public function getDiscountActions()
+	public function getDiscountActions($reload = false)
 	{
-		ClassLoader::import('application.model.discount.DiscountAction');
-		return DiscountAction::getByConditions($this->getDiscountConditions());
+		if (is_null($this->discountActions) || $reload)
+		{
+			ClassLoader::import('application.model.discount.DiscountAction');
+			$this->discountActions = DiscountAction::getByConditions($this->getDiscountConditions());
+		}
+
+		return $this->discountActions;
 	}
 
 	public function getDeliveryZone()

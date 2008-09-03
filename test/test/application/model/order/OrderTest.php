@@ -4,6 +4,7 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.p
 
 ClassLoader::import("application.model.category.*");
 ClassLoader::import("application.model.product.*");
+ClassLoader::import("application.model.discount.*");
 ClassLoader::import("application.model.order.*");
 ClassLoader::import("application.model.user.User");
 ClassLoader::import("application.model.user.*");
@@ -25,11 +26,6 @@ class OrderTest extends UnitTest
 	private $usd;
 
 	private $user;
-
-	public function __construct()
-	{
-		parent::__construct('Test order logic');
-	}
 
 	public function setUp()
 	{
@@ -533,7 +529,7 @@ class OrderTest extends UnitTest
 		$this->assertEqual($order->getShipments()->size(), 1);
 		$this->assertFalse($order->getShipments()->get(0)->isShippable());
 	}
-	
+
 	public function testFixedDiscountWithoutTaxAndShipping()
 	{
 		$this->order->addProduct($this->products[0]);
@@ -592,6 +588,164 @@ class OrderTest extends UnitTest
 
 		$expectedTax = (110 / 6) + 20;
 		$this->assertEquals(round($expectedTax, 2), round($tax, 2));
+	}
+
+	public function testSimpleItemDiscount()
+	{
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->save();
+
+		$record = DiscountConditionRecord::getNewInstance($condition, $this->products[0]);
+		$record->save();
+		$condition->loadAll();
+
+		$action = DiscountAction::getNewInstance($condition);
+		$action->isEnabled->set(true);
+		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
+		$action->amount->set(10);
+		$action->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
+		$action->save();
+
+		$this->order->addProduct($this->products[0]);
+		$this->order->addProduct($this->products[1]);
+		$this->order->save();
+
+		// order wide 10% discount on all items
+		$originalTotal = $this->products[0]->getPrice($this->usd) + $this->products[1]->getPrice($this->usd);
+		$this->assertEquals($this->order->getTotal($this->usd), $originalTotal * 0.9);
+
+		// discount applied on the same items that matched the rules
+		$action->actionCondition->set($condition);
+		$expectedTotal = ($this->products[0]->getPrice($this->usd) * 0.9) + $this->products[1]->getPrice($this->usd);
+		$this->assertEquals($this->order->getTotal($this->usd), $expectedTotal);
+
+		// apply discount to the second item as well
+		$record = DiscountConditionRecord::getNewInstance($condition, $this->products[1]);
+		$record->save();
+		$condition->loadAll();
+		$this->assertEquals($this->order->getTotal($this->usd), $originalTotal * 0.9);
+	}
+
+	public function testApplyingTwoDiscountsToOneItemAndOneToOther()
+	{
+		for ($k = 1; $k <= 2; $k++)
+		{
+			$cond[$k] = DiscountCondition::getNewInstance();
+			$cond[$k]->isEnabled->set(true);
+			$cond[$k]->save();
+
+			$action[$k] = DiscountAction::getNewInstance($cond[$k]);
+			$action[$k]->isEnabled->set(true);
+			$action[$k]->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
+			$action[$k]->amount->set(10 * $k);
+			$action[$k]->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
+			$action[$k]->save();
+		}
+
+		$this->order->addProduct($this->products[0]);
+		$this->order->addProduct($this->products[1]);
+		$this->order->save();
+
+		// order wide 28% discount (cumulative 10% and 20% discount) on all items
+		$originalTotal = $this->products[0]->getPrice($this->usd) + $this->products[1]->getPrice($this->usd);
+		$this->assertEquals($this->order->getTotal($this->usd), $originalTotal * 0.72);
+
+		// apply 20% discount to both items, and 10% discount to first item only
+		$record = DiscountConditionRecord::getNewInstance($cond[1], $this->products[0]);
+		$record->save();
+		$cond[1]->loadAll();
+		$this->assertFalse($cond[1]->isProductMatching($this->products[1]));
+
+		$action[1]->actionCondition->set($cond[1]);
+		$action[1]->save();
+
+		$expectedTotal = ($this->products[0]->getPrice($this->usd) * 0.9 * 0.8) + ($this->products[1]->getPrice($this->usd) * 0.8);
+		$this->assertEquals($this->order->getTotal($this->usd), $expectedTotal);
+	}
+
+	public function testDiscountPriority()
+	{
+		for ($k = 1; $k <= 2; $k++)
+		{
+			$cond[$k] = DiscountCondition::getNewInstance();
+			$cond[$k]->isEnabled->set(true);
+			$cond[$k]->save();
+
+			$action[$k] = DiscountAction::getNewInstance($cond[$k]);
+			$action[$k]->isEnabled->set(true);
+			$action[$k]->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
+			$action[$k]->amount->set(10 * $k);
+			$action[$k]->amountMeasure->set(1 - ($k - 1)); // 0 - percent, 1 - amount
+			$action[$k]->save();
+		}
+
+		$price0 = $this->products[0]->getPrice($this->usd);
+		$price1 = $this->products[1]->getPrice($this->usd);
+		$total = $price0 + $price1;
+
+		$this->order->addProduct($this->products[0]);
+		$this->order->addProduct($this->products[1]);
+		$this->order->save();
+
+		$expectedTotal = (($price0 - 10) * 0.8) + (($price1 - 10) * 0.8);
+		$this->assertEquals($this->order->getTotal($this->usd), $expectedTotal);
+
+		// switch priorities
+		$action[1]->position->set(1);
+		$action[1]->save();
+		$action[2]->position->set(0);
+		$action[2]->save();
+
+		$this->order->getDiscountActions(true);
+		$expectedTotal = (($price0 * 0.8) - 10) + (($price1 * 0.8) - 10);
+		$this->assertEquals($this->order->getTotal($this->usd), $expectedTotal);
+	}
+
+	public function testDisabledDiscountConditions()
+	{
+		for ($k = 1; $k <= 2; $k++)
+		{
+			$cond[$k] = DiscountCondition::getNewInstance();
+			$cond[$k]->isEnabled->set($k == 1);
+			$cond[$k]->save();
+
+			$action[$k] = DiscountAction::getNewInstance($cond[$k]);
+			$action[$k]->isEnabled->set(true);
+			$action[$k]->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
+			$action[$k]->amount->set(10 * $k);
+			$action[$k]->amountMeasure->set(1 - ($k - 1)); // 0 - percent, 1 - amount
+			$action[$k]->save();
+		}
+
+		$price0 = $this->products[0]->getPrice($this->usd);
+		$price1 = $this->products[1]->getPrice($this->usd);
+		$total = $price0 + $price1;
+
+		$this->order->addProduct($this->products[0]);
+		$this->order->addProduct($this->products[1]);
+		$this->order->save();
+
+		$this->assertEquals($this->order->getTotal($this->usd), $total - 20);
+
+		// add a second action
+		$act = DiscountAction::getNewInstance($cond[1]);
+		$act->isEnabled->set(true);
+		$act->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
+		$act->amount->set(30);
+		$act->amountMeasure->set(DiscountAction::MEASURE_AMOUNT); // 0 - percent, 1 - amount
+		$act->save();
+		$cond[1]->loadAll();
+
+		$this->order->getDiscountActions(true);
+		$this->assertEquals($this->order->getTotal($this->usd), $total - 20 - 60);
+
+		// and disable it
+		$act->isEnabled->set(false);
+		$act->save();
+
+		$this->order->getDiscountActions(true);
+		$this->assertEquals($this->order->getTotal($this->usd), $total - 20);
 	}
 
 	private function createOrderWithZone(DeliveryZone $zone = null)

@@ -160,6 +160,11 @@ class Product extends MultilingualObject
 
 	/*####################  Value retrieval and manipulation ####################*/
 
+	public function belongsTo(Category $category)
+	{
+		return $category->isAncestorOf($this->category->get());
+	}
+
 	public function isRelatedTo(Product $product)
 	{
 		return ProductRelationship::hasRelationship($product, $this);

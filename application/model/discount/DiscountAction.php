@@ -2,13 +2,15 @@
 
 ClassLoader::import('application.model.ActiveRecordModel');
 ClassLoader::import('application.model.discount.DiscountCondition');
+ClassLoader::import('application.model.order.OrderDiscount');
 
 class DiscountAction extends ActiveRecordModel
 {
-	const TYPE_ORDER_DISCOUNT = 1;
+	const TYPE_ORDER_DISCOUNT = 0;
+	const TYPE_ITEM_DISCOUNT = 1;
 
-	const MEASURE_PERCENT = 1;
-	const MEASURE_AMOUNT = 2;
+	const MEASURE_PERCENT = 0;
+	const MEASURE_AMOUNT = 1;
 
 	/**
 	 * Action for discount condition (define the actual discount)
@@ -22,8 +24,13 @@ class DiscountAction extends ActiveRecordModel
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("conditionID", "DiscountCondition", "ID", "DiscountCondition", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("actionConditionID", "DiscountCondition", "ID", "DiscountCondition", ARInteger::instance()));
 
+		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
 		$schema->registerField(new ARField("type", ARInteger::instance()));
+
+		$schema->registerField(new ARField("position", ARInteger::instance()));
+
 		$schema->registerField(new ARField("amountMeasure", ARInteger::instance()));
 		$schema->registerField(new ARField("amount", ARFloat::instance()));
 	}
@@ -49,7 +56,11 @@ class DiscountAction extends ActiveRecordModel
 			return new ARSet();
 		}
 
-		return ActiveRecordModel::getRecordSet(__CLASS__, new ARSelectFilter(new INCond(new ARFieldHandle(__CLASS__, 'conditionID'), $ids)));
+		$f = new ARSelectFilter(new INCond(new ARFieldHandle(__CLASS__, 'conditionID'), $ids));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'isEnabled'), true));
+		$f->setOrder(new ARFieldHandle(__CLASS__, 'position'));
+
+		return ActiveRecordModel::getRecordSet(__CLASS__, $f);
 	}
 
 	public function isOrderDiscount()
@@ -57,20 +68,40 @@ class DiscountAction extends ActiveRecordModel
 		return self::TYPE_ORDER_DISCOUNT == $this->type->get();
 	}
 
-	public function getOrderDiscount()
+	public function isItemApplicable(OrderedItem $item)
+	{
+		if (!$this->actionCondition->get())
+		{
+			return true;
+		}
+
+		return $this->actionCondition->get()->isProductMatching($item->product->get());
+	}
+
+	public function getOrderDiscount(CustomerOrder $order)
 	{
 		if (!$this->isOrderDiscount())
 		{
 			return null;
 		}
 
-		$subTotal = $this->order->get()->getSubTotal();
-		$discountAmount = $this->amountMeasure->get() == self::MEASURE_PERCENT ? $subTotal * ($this->amount->get() / 100) : $this->amount->get();
+		$discountAmount = $this->getDiscountAmount($order->getSubTotal($order->currency->get()));
 
-		$discount = OrderDiscount::getNewInstance($this->order->get());
+		$discount = OrderDiscount::getNewInstance($order);
 		$discount->amount->set($discountAmount);
 
 		return $discount;
+	}
+
+	public function getDiscountAmount($price)
+	{
+		return ($this->amountMeasure->get() == self::MEASURE_PERCENT) ? $price * ($this->amount->get() / 100) : $this->amount->get();
+	}
+
+	protected function insert()
+	{
+	  	$this->setLastPosition();
+		return parent::insert();
 	}
 }
 

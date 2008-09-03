@@ -178,9 +178,8 @@ class ActiveTreeNode extends ActiveRecordModel
 		$className = get_class($this);
 
 		$nodeFilter = new ARSelectFilter();
-		$cond = new OperatorCond(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $this->getField(self::LEFT_NODE_FIELD_NAME)->get(), ">");
-		$cond->addAND(new OperatorCond(new ArFieldHandle($className, self::RIGHT_NODE_FIELD_NAME), $this->getField(self::RIGHT_NODE_FIELD_NAME)->get(), "<"));
 
+		$cond = $this->getChildNodeCondition();
 		if ($loadOnlyDirectChildren)
 		{
 			$cond->addAND(new EqualsCond(new ARFieldHandle($className, self::PARENT_NODE_FIELD_NAME), $this->getID()));
@@ -192,6 +191,15 @@ class ActiveTreeNode extends ActiveRecordModel
 		$childList = ActiveRecord::getRecordSet($className, $nodeFilter, $loadReferencedRecords);
 
 		return $childList;
+	}
+
+	public function getChildNodeCondition()
+	{
+		$className = get_class($this);
+		$cond = new OperatorCond(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $this->getField(self::LEFT_NODE_FIELD_NAME)->get(), ">");
+		$cond->addAND(new OperatorCond(new ArFieldHandle($className, self::RIGHT_NODE_FIELD_NAME), $this->getField(self::RIGHT_NODE_FIELD_NAME)->get(), "<"));
+
+		return $cond;
 	}
 
 	/**

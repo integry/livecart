@@ -7,6 +7,22 @@ ClassLoader::import('application.model.discount.DiscountConditionRecord');
 
 class DiscountCondition extends ActiveTreeNode
 {
+	// equal
+	const COMPARE_EQ = 0;
+
+	// less than or equal
+	const COMPARE_LTEQ = 1;
+
+	// greater than or equal
+	const COMPARE_GTEQ = 2;
+
+	// not equal
+	const COMPARE_NE = 3;
+
+	private $records = array();
+
+	private $subConditions = array();
+
 	/**
 	 * Define database schema for Category model
 	 *
@@ -25,12 +41,78 @@ class DiscountCondition extends ActiveTreeNode
 
 		$schema->registerField(new ARField("validFrom", ARDateTime::instance()));
 		$schema->registerField(new ARField("validTo", ARDateTime::instance()));
+		$schema->registerField(new ARField("subTotal", ARInteger::instance()));
+		$schema->registerField(new ARField("count", ARInteger::instance()));
+		$schema->registerField(new ARField("comparisonType", ARInteger::instance()));
+
+		$schema->registerField(new ARField("position", ARInteger::instance()));
 
 		$schema->registerField(new ARField("name", ARArray::instance()));
 		$schema->registerField(new ARField("description", ARArray::instance()));
 
 		$schema->registerField(new ARField("couponCode", ARVarchar::instance(100)));
 		$schema->registerField(new ARField("serializedCondition", ARText::instance()));
+	}
+
+	public function loadAll()
+	{
+		$set = new ARSet();
+		$set->add($this);
+		self::loadConditionRecords($set);
+		self::loadSubConditions($set);
+	}
+
+	public function registerRecord(DiscountConditionRecord $record)
+	{
+		$this->records[$record->getID()] = $record;
+	}
+
+	public function registerSubCondition(DiscountCondition $condition)
+	{
+		$this->subConditions[$condition->getID()] = $condition;
+	}
+
+	public function isProductMatching(Product $product)
+	{
+		// no records defined
+		if (!$this->recordCount->get())
+		{
+			return true;
+		}
+
+		$isMatching = false;
+
+		foreach ($this->records as $record)
+		{
+			$isMatching = ($record->product->get() && ($record->product->get()->getID() == $product->getID()))
+						  || ($record->manufacturer->get() && $product->manufacturer->get() && ($record->manufacturer->get()->getID() == $product->manufacturer->get()->getID()))
+						  || ($record->category->get() && $product->belongsTo($record->category->get()));
+
+			if ($isMatching)
+			{
+				break;
+			}
+		}
+
+		if ($this->hasSubConditions())
+		{
+			foreach ($this->subConditions as $subCondition)
+			{
+				$isMatching = $subCondition->isProductMatching($product);
+
+				if (!$isMatching && $this->isAllSubconditions->get())
+				{
+					return false;
+				}
+			}
+		}
+
+		return $isMatching;
+	}
+
+	public function hasSubConditions()
+	{
+		return ($this->rgt->get() - $this->lft->get()) > 1;
 	}
 
 	public static function getRootNode()
@@ -78,7 +160,54 @@ class DiscountCondition extends ActiveTreeNode
 		return $tree['sub'];
 	}
 
-	private static function hasAllSubConditions($condition)
+	public static function loadConditionRecords(ARSet $conditionSet)
+	{
+		$ids = array();
+		foreach ($conditionSet as $condition)
+		{
+			if ($condition->recordCount->get())
+			{
+				$ids[] = $condition->getID();
+			}
+		}
+
+		if (!$ids)
+		{
+			return null;
+		}
+
+		$f = new ARSelectFilter(new INCond(new ARFieldHandle('DiscountConditionRecord', 'conditionID'), $ids));
+		foreach (ActiveRecordModel::getRecordSet('DiscountConditionRecord', $f, array('Category')) as $record)
+		{
+			$record->condition->get()->registerRecord($record);
+		}
+	}
+
+	public static function loadSubConditions(ARSet $conditionSet)
+	{
+		$cond = array();
+		foreach ($conditionSet as $condition)
+		{
+			if ($condition->hasSubConditions())
+			{
+				$cond[] = $condition->getChildNodeCondition();
+			}
+		}
+
+		if (!$cond)
+		{
+			return null;
+		}
+
+		$f = new ARSelectFilter(Condition::mergeFromArray($cond, true));
+
+		foreach (ActiveRecordModel::getRecordSet(__CLASS__, $f) as $condition)
+		{
+			$condition->parentNode->get()->registerSubCondition($condition);
+		}
+	}
+
+	private static function hasAllSubConditions(array $condition)
 	{
 		// no subconditions created
 		if (1 == ($condition['rgt'] - $condition['lft']))
@@ -143,7 +272,7 @@ class DiscountCondition extends ActiveTreeNode
 		return !$condition['isAllSubconditions'];
 	}
 
-	private static function getConditionTreeFromArray($conditions)
+	private static function getConditionTreeFromArray(array $conditions)
 	{
 		$idMap = array();
 		foreach ($conditions as &$condition)
@@ -158,7 +287,7 @@ class DiscountCondition extends ActiveTreeNode
 				continue;
 			}
 
-			$idMap[$condition['parentNodeID']]['sub'][] = $condition;
+			$idMap[$condition['parentNodeID']]['sub'][] =& $condition;
 		}
 
 		// super-root node
@@ -167,15 +296,18 @@ class DiscountCondition extends ActiveTreeNode
 
 	private static function getNonRecordConditions(CustomerOrder $order)
 	{
-		$cond = new EqualsCond(new ARFieldHandle('DiscountCondition', 'recordCount'), 0);
-		self::applyConstraintConditions($cond);
+		$cond = new EqualsCond(new ARFieldHandle(__CLASS__, 'recordCount'), 0);
+		self::applyConstraintConditions($cond, $order);
 		$filter = new ARSelectFilter($cond);
-		return ActiveRecordModel::getRecordSetArray('DiscountCondition', $filter);
+		$filter->setOrder(new ARFieldHandle(__CLASS__, 'position'), 'ASC');
+		return ActiveRecordModel::getRecordSetArray(__CLASS__, $filter);
 	}
 
 	private static function getRecordConditions(CustomerOrder $order)
 	{
-		$conditions = ActiveRecordModel::getRecordSetArray('DiscountConditionRecord', new ARSelectFilter(self::getRecordCondition($order)), array('DiscountCondition'));
+		$filter = new ARSelectFilter(self::getRecordCondition($order));
+		$filter->setOrder(new ARFieldHandle(__CLASS__, 'position'), 'ASC');
+		$conditions = ActiveRecordModel::getRecordSetArray('DiscountConditionRecord', $filter, array(__CLASS__));
 
 		if (!$conditions)
 		{
@@ -186,8 +318,8 @@ class DiscountCondition extends ActiveTreeNode
 		$count = array();
 		foreach ($conditions as $condition)
 		{
-			$id = $condition['DiscountCondition']['ID'];
-			if ($count[$id])
+			$id = $condition[__CLASS__]['ID'];
+			if (empty($count[$id]))
 			{
 				$count[$id] = 0;
 			}
@@ -200,7 +332,7 @@ class DiscountCondition extends ActiveTreeNode
 		$validConditions = array();
 		foreach ($conditions as $key => $condition)
 		{
-			$cond = $condition['DiscountCondition'];
+			$cond = $condition[__CLASS__];
 			if (!$cond['isAnyRecord'] && ($cond['recordCount'] > $count[$cond['ID']]))
 			{
 				unset($conditions[$key]);
@@ -250,7 +382,7 @@ class DiscountCondition extends ActiveTreeNode
 		}
 
 		$cond = Condition::mergeFromArray($conditions, true);
-		self::applyConstraintConditions($cond);
+		self::applyConstraintConditions($cond, $order);
 		return $cond;
 	}
 
@@ -304,28 +436,69 @@ class DiscountCondition extends ActiveTreeNode
 		return $query;
 	}
 
-	private static function applyConstraintConditions(Condition $cond)
+	private static function applyConstraintConditions(Condition $cond, CustomerOrder $order)
 	{
-		$cond->addAND(new EqualsCond(new ARFieldHandle('DiscountCondition', 'isEnabled'), true));
+		$cond->addAND(new EqualsCond(new ARFieldHandle(__CLASS__, 'isEnabled'), true));
 		self::applyDateCondition($cond);
+
+		$totalCond = self::applyOrderTotalCondition($cond, $order);
+		$totalCond->addOr(self::applyOrderItemCountCondition($cond, $order));
+		$cond->addAND($totalCond);
 	}
 
 	private static function applyDateCondition(Condition $cond)
 	{
-		$dateCondition = new EqualsCond(new ARFieldHandle('DiscountCondition', 'validFrom'), '0000-00-00');
-		$dateCondition->addAND(new EqualsCond(new ARFieldHandle('DiscountCondition', 'validTo'), '0000-00-00'));
-		$byDate = new EqualsOrLessCond(new ARFieldHandle('DiscountCondition', 'validFrom'), time());
-		$byDate->addAND(new EqualsOrMoreCond(new ARFieldHandle('DiscountCondition', 'validTo'), time()));
+		$dateCondition = new EqualsCond(new ARFieldHandle(__CLASS__, 'validFrom'), '0000-00-00');
+		$dateCondition->addAND(new EqualsCond(new ARFieldHandle(__CLASS__, 'validTo'), '0000-00-00'));
+		$byDate = new EqualsOrLessCond(new ARFieldHandle(__CLASS__, 'validFrom'), time());
+		$byDate->addAND(new EqualsOrMoreCond(new ARFieldHandle(__CLASS__, 'validTo'), time()));
 		$dateCondition->addOr($byDate);
 		$cond->addAND($dateCondition);
 	}
 
-	/*
-	private static function isApplicableToOrder(CustomerOrder $order, array $condition)
+	private static function applyOrderTotalCondition(Condition $cond, CustomerOrder $order)
 	{
-		$rules = unserialize($condition['serializedCondition']);
+		return self::applyRangeCondition($cond, $order, 'subTotal', $order->getSubTotal($order->currency->get(), false));
 	}
-	* */
+
+	private static function applyOrderItemCountCondition(Condition $cond, CustomerOrder $order)
+	{
+		return self::applyRangeCondition($cond, $order, 'count', $order->getShoppingCartItemCount());
+	}
+
+	private static function applyRangeCondition(Condition $cond, CustomerOrder $order, $field, $amount)
+	{
+		$compHandle = new ARFieldHandle(__CLASS__, 'comparisonType');
+		$nullCond = new IsNullCond($compHandle);
+
+		$operators = array( '=' => self::COMPARE_EQ,
+							'<=' => self::COMPARE_GTEQ,
+							'>=' => self::COMPARE_LTEQ,
+							'!=' => self::COMPARE_NE);
+
+		$totalHandle = new ARFieldHandle(__CLASS__, $field);
+
+		$conditions = array();
+		foreach ($operators as $operator => $code)
+		{
+			$c = new EqualsCond($compHandle, $code);
+			$c->addAND(new OperatorCond($totalHandle, $amount, $operator));
+			$conditions[] = $c;
+		}
+
+		$totalCond = Condition::mergeFromArray($conditions, true);
+		$totalCond->addAND(new EqualsCond(new ARFieldHandle(__CLASS__, 'recordCount'), 0));
+
+		$nullCond->addOR($totalCond);
+
+		return $nullCond;
+	}
+
+	protected function insert()
+	{
+		$this->setLastPosition();
+		return parent::insert();
+	}
 }
 
 ?>
