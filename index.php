@@ -7,11 +7,13 @@
  *  @package application
  */
 
+define('NOREWRITE', false);
+
 // Indicates that URL rewriting is disabled
 $_GET['noRewrite'] = true;
 
 // Apache: index.php/route
-if (preg_match('/^Apache/', $_SERVER['SERVER_SOFTWARE']))
+if (preg_match('/^Apache/', $_SERVER['SERVER_SOFTWARE']) && !NOREWRITE)
 {
 	$_GET['route'] = isset($_SERVER['PATH_INFO']) ? substr($_SERVER['PATH_INFO'], 1) : '';
 	$_SERVER['virtualBaseDir'] = $_SERVER['SCRIPT_NAME'] . '/';

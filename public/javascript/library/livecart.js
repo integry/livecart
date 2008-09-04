@@ -119,6 +119,8 @@ LiveCart.AjaxRequest.prototype = {
 			method = "post";
 		}
 
+		url = this.fixUrl(url);
+
 		if (indicatorId)
 		{
 			this.indicatorContainerId = indicatorId;
@@ -145,6 +147,19 @@ LiveCart.AjaxRequest.prototype = {
 		document.body.style.cursor = 'progress';
 
 		this.request = new Ajax.Request(url, options);
+	},
+
+	fixUrl: function(url)
+	{
+		// fix repeting ? in URLs
+		var urlParts = url.split(/\?/);
+		var url = urlParts.shift();
+		if (urlParts.length)
+		{
+			url += '?' + urlParts.join('&');
+		}
+
+		return url;
 	},
 
 	parseURI: function(URI)
@@ -389,6 +404,8 @@ LiveCart.AjaxUpdater.prototype = {
 			url = formOrUrl;
 			method = "post";
 		}
+
+		url = LiveCart.AjaxRequest.prototype.fixUrl(url);
 
 		LiveCart.ajaxUpdaterInstance = this;
 
