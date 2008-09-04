@@ -109,6 +109,9 @@ class OrderTest extends UnitTest
 			'CustomerOrder',
 			'OrderedItem',
 			'Shipment',
+			'DiscountAction',
+			'DiscountCondition',
+			'DiscountConditionRecord',
 		);
 	}
 
@@ -746,6 +749,52 @@ class OrderTest extends UnitTest
 
 		$this->order->getDiscountActions(true);
 		$this->assertEquals($this->order->getTotal($this->usd), $total - 20);
+	}
+
+	public function testFixedDiscountWithItemDiscount()
+	{
+		// order wide discount
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->save();
+
+		$action = DiscountAction::getNewInstance($condition);
+		$action->isEnabled->set(true);
+		$action->type->set(DiscountAction::TYPE_ORDER_DISCOUNT);
+		$action->amount->set(10);
+		$action->amountMeasure->set(DiscountAction::MEASURE_AMOUNT);
+		$action->save();
+
+		// item discount
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->save();
+
+		$record = DiscountConditionRecord::getNewInstance($condition, $this->products[0]);
+		$record->save();
+
+		$action = DiscountAction::getNewInstance($condition);
+		$action->actionCondition->set($condition);
+		$action->isEnabled->set(true);
+		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
+		$action->amount->set(10);
+		$action->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
+		$action->save();
+
+		$condition->loadAll();
+
+		$this->order->addProduct($this->products[0]);
+		$this->order->addProduct($this->products[1]);
+		$this->order->save();
+
+		$this->assertEquals(count($this->order->getDiscountConditions()), 2);
+		$this->assertEquals($this->order->getDiscountActions(true)->size(), 2);
+
+		$expectedTotal = ($this->products[0]->getPrice($this->usd) * 0.9) + $this->products[1]->getPrice($this->usd) - 10;
+		$this->assertEquals($this->order->getTotal($this->usd), $expectedTotal);
+
+		$this->order->finalize($this->usd);
+		$this->assertEquals($this->order->getTotal($this->usd), $expectedTotal);
 	}
 
 	private function createOrderWithZone(DeliveryZone $zone = null)

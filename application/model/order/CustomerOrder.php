@@ -673,12 +673,20 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 			if ($discountAmount = $this->getFixedDiscountAmount($currency))
 			{
-				foreach ($this->shipments as $shipment)
+				if ($this->shipments)
 				{
-					$shipment->applyFixedDiscount($total, $discountAmount);
+					foreach ($this->shipments as $shipment)
+					{
+						$shipment->applyFixedDiscount($total, $discountAmount);
+					}
 				}
 
 				$total = $this->calculateTotal($currency, false);
+
+				if (!$this->shipments)
+				{
+					$total -= $discountAmount;
+				}
 			}
 
 			return $total;
@@ -691,6 +699,14 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		foreach ($this->fixedDiscounts as $discount)
 		{
 			$amount += $discount->amount->get();
+		}
+
+		foreach ($this->getDiscountActions() as $action)
+		{
+			if ($action->isOrderDiscount() && $action->isFixedAmount())
+			{
+				$amount += $action->amount->get();
+			}
 		}
 
 		return $amount;
@@ -772,7 +788,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		foreach ($this->getDiscountActions() as $action)
 		{
-			if ($action->isItemApplicable($item))
+			if ($action->isItemDiscount() && $action->isItemApplicable($item))
 			{
 				$actions[] = $action;
 			}

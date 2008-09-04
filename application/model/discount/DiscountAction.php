@@ -68,6 +68,16 @@ class DiscountAction extends ActiveRecordModel
 		return self::TYPE_ORDER_DISCOUNT == $this->type->get();
 	}
 
+	public function isItemDiscount()
+	{
+		return self::TYPE_ITEM_DISCOUNT == $this->type->get();
+	}
+
+	public function isFixedAmount()
+	{
+		return self::MEASURE_AMOUNT == $this->amountMeasure->get();
+	}
+
 	public function isItemApplicable(OrderedItem $item)
 	{
 		if (!$this->actionCondition->get())

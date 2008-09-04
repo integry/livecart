@@ -57,10 +57,7 @@ register_shutdown_function('onShutDown');
 			}
 			catch (Exception $e)
 			{
-				if ($app->isDevMode())
-				{
-					dump_livecart_trace($e);
-				}
+				dump_livecart_trace($e);
 				die('error');
 			}
 		}
