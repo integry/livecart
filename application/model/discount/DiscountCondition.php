@@ -37,6 +37,8 @@ class DiscountCondition extends ActiveTreeNode
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
 		$schema->registerField(new ARField("isAnyRecord", ARBool::instance()));
 		$schema->registerField(new ARField("isAllSubconditions", ARBool::instance()));
+		$schema->registerField(new ARField("isActionCondition", ARBool::instance()));
+
 		$schema->registerField(new ARField("recordCount", ARInteger::instance()));
 
 		$schema->registerField(new ARField("validFrom", ARDateTime::instance()));
@@ -307,15 +309,15 @@ class DiscountCondition extends ActiveTreeNode
 	{
 		$filter = new ARSelectFilter(self::getRecordCondition($order));
 		$filter->setOrder(new ARFieldHandle(__CLASS__, 'position'), 'ASC');
-		$conditions = ActiveRecordModel::getRecordSetArray('DiscountConditionRecord', $filter, array(__CLASS__));
+		$conditions = ActiveRecordModel::getRecordSetArray('DiscountConditionRecord', $filter, array(__CLASS__, 'Category'));
 
 		if (!$conditions)
 		{
 			return array();
 		}
 
-		// count conditions
-		$count = array();
+		// get retrieved record count for each condition
+		$count = $records = array();
 		foreach ($conditions as $condition)
 		{
 			$id = $condition[__CLASS__]['ID'];
@@ -324,6 +326,7 @@ class DiscountCondition extends ActiveTreeNode
 				$count[$id] = 0;
 			}
 			$count[$id]++;
+			$records[$id][] = $condition;
 		}
 
 		// check if the order contains all required records
@@ -340,6 +343,76 @@ class DiscountCondition extends ActiveTreeNode
 			else
 			{
 				$validConditions[$cond['ID']] = $cond;
+			}
+		}
+
+		// filter out non-matching item count/subtotal conditions
+		foreach ($validConditions as $condKey => $condition)
+		{
+			if (!is_null($condition['count']) || !is_null($condition['subTotal']))
+			{
+				$matchingItemCount = $matchingItemSubTotal = array();
+				foreach ($records[$condition['ID']] as $record)
+				{
+					$items = array();
+					if ($record['productID'])
+					{
+						$items = $order->getItemsByProduct(Product::getInstanceById($record['productID']));
+					}
+					elseif ($record['manufacturerID'])
+					{
+						foreach ($order->getShoppingCartItems() as $item)
+						{
+							if ($manufacturer = $item->product->get()->manufacturer->get())
+							{
+								$items[] = $item;
+							}
+						}
+					}
+					elseif ($record['categoryID'])
+					{
+						foreach ($order->getShoppingCartItems() as $item)
+						{
+							$category = $item->product->get()->category->get();
+
+							if (($category->lft->get() >= $record['Category']['lft']) && ($category->rgt->get() >= $record['Category']['rgt']))
+							{
+								$items[] = $item;
+							}
+						}
+					}
+					else
+					{
+						$items = array();
+					}
+
+					foreach ($items as $item)
+					{
+						$matchingItemCount[$item->getID()] = $item->count->get();
+						$matchingItemSubTotal[$item->getID()] = $item->getSubTotal($order->currency->get(), null, false);
+					}
+				}
+
+				if (!is_null($condition['count']))
+				{
+					$expCount = $condition['count'];
+					$foundCount = array_sum($matchingItemCount);
+				}
+				else
+				{
+					$expCount = $condition['subTotal'];
+					$foundCount = array_sum($matchingItemSubTotal);
+				}
+
+				$compType = $condition['comparisonType'];
+
+				if ((($foundCount > $expCount) && (self::COMPARE_LTEQ == $compType)) ||
+					(($foundCount < $expCount) && (self::COMPARE_GTEQ == $compType)) ||
+					(($foundCount != $expCount) && (self::COMPARE_EQ == $compType)) ||
+					(($foundCount == $expCount) && (self::COMPARE_NE == $compType)))
+				{
+					unset($validConditions[$condKey]);
+				}
 			}
 		}
 
@@ -381,7 +454,9 @@ class DiscountCondition extends ActiveTreeNode
 			$conditions[] = $cond;
 		}
 
-		$cond = Condition::mergeFromArray($conditions, true);
+		$cond = new EqualsCond(new ARFieldHandle(__CLASS__, 'isEnabled'), true);
+		$cond->addAND(new OrChainCondition($conditions));
+
 		self::applyConstraintConditions($cond, $order);
 		return $cond;
 	}
@@ -411,7 +486,7 @@ class DiscountCondition extends ActiveTreeNode
 			}
 		}
 
-		return $ids;
+		return array_keys($ids);
 	}
 
 	private static function getOrderCategoryIDs(CustomerOrder $order)
@@ -439,10 +514,11 @@ class DiscountCondition extends ActiveTreeNode
 	private static function applyConstraintConditions(Condition $cond, CustomerOrder $order)
 	{
 		$cond->addAND(new EqualsCond(new ARFieldHandle(__CLASS__, 'isEnabled'), true));
+		$cond->addAND(new EqualsCond(new ARFieldHandle(__CLASS__, 'isActionCondition'), 0));
 		self::applyDateCondition($cond);
 
-		$totalCond = self::applyOrderTotalCondition($cond, $order);
-		$totalCond->addOr(self::applyOrderItemCountCondition($cond, $order));
+		$totalCond = self::applyOrderTotalCondition($order);
+		$totalCond->addOr(self::applyOrderItemCountCondition($order));
 		$cond->addAND($totalCond);
 	}
 
@@ -456,26 +532,24 @@ class DiscountCondition extends ActiveTreeNode
 		$cond->addAND($dateCondition);
 	}
 
-	private static function applyOrderTotalCondition(Condition $cond, CustomerOrder $order)
+	private static function applyOrderTotalCondition(CustomerOrder $order)
 	{
-		return self::applyRangeCondition($cond, $order, 'subTotal', $order->getSubTotal($order->currency->get(), false));
+		return self::applyRangeCondition($order, 'subTotal', $order->getSubTotal($order->currency->get(), false));
 	}
 
-	private static function applyOrderItemCountCondition(Condition $cond, CustomerOrder $order)
+	private static function applyOrderItemCountCondition(CustomerOrder $order)
 	{
-		return self::applyRangeCondition($cond, $order, 'count', $order->getShoppingCartItemCount());
+		return self::applyRangeCondition($order, 'count', $order->getShoppingCartItemCount());
 	}
 
-	private static function applyRangeCondition(Condition $cond, CustomerOrder $order, $field, $amount)
+	private static function applyRangeCondition(CustomerOrder $order, $field, $amount)
 	{
-		$compHandle = new ARFieldHandle(__CLASS__, 'comparisonType');
-		$nullCond = new IsNullCond($compHandle);
-
 		$operators = array( '=' => self::COMPARE_EQ,
 							'<=' => self::COMPARE_GTEQ,
 							'>=' => self::COMPARE_LTEQ,
 							'!=' => self::COMPARE_NE);
 
+		$compHandle = new ARFieldHandle(__CLASS__, 'comparisonType');
 		$totalHandle = new ARFieldHandle(__CLASS__, $field);
 
 		$conditions = array();
@@ -486,10 +560,10 @@ class DiscountCondition extends ActiveTreeNode
 			$conditions[] = $c;
 		}
 
-		$totalCond = Condition::mergeFromArray($conditions, true);
-		$totalCond->addAND(new EqualsCond(new ARFieldHandle(__CLASS__, 'recordCount'), 0));
+		$conditions[] = new MoreThanCond(new ARFieldHandle(__CLASS__, 'recordCount'), 0);
 
-		$nullCond->addOR($totalCond);
+		$nullCond = new IsNullCond($compHandle);
+		$nullCond->addOR(new OrChainCondition($conditions));
 
 		return $nullCond;
 	}

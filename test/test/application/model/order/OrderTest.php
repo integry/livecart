@@ -508,6 +508,8 @@ class OrderTest extends UnitTest
 			$this->assertEqual($product->reservedCount->get(), 0);
 			$this->assertEqual($product->stockCount->get(), 1);
 		}
+
+		$this->config->set('INVENTORY_TRACKING', 'DISABLE');
 	}
 
 	public function testDownloadableBundle()
@@ -795,6 +797,234 @@ class OrderTest extends UnitTest
 
 		$this->order->finalize($this->usd);
 		$this->assertEquals($this->order->getTotal($this->usd), $expectedTotal);
+	}
+
+	public function testDiscountForSomeItemsIfCertainNumberOfOtherItemsAreInCart()
+	{
+		// order condition
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->save();
+		$record = DiscountConditionRecord::getNewInstance($condition, $this->products[0]);
+		$record->save();
+
+		// action condition
+		$actionCondition = DiscountCondition::getNewInstance();
+		$actionCondition->isActionCondition->set(true);
+		$actionCondition->isEnabled->set(true);
+		$actionCondition->save();
+		$record = DiscountConditionRecord::getNewInstance($actionCondition, $this->products[1]);
+		$record->save();
+
+		$action = DiscountAction::getNewInstance($condition);
+		$action->actionCondition->set($actionCondition);
+		$action->isEnabled->set(true);
+		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
+		$action->amount->set(10);
+		$action->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
+		$action->save();
+
+		$this->order->addProduct($this->products[0], 3);
+		$this->order->addProduct($this->products[1], 2);
+		$this->order->save();
+
+		$this->assertEquals(count($this->order->getDiscountConditions()), 1);
+		$this->assertEquals($this->order->getDiscountActions(true)->size(), 1);
+
+		$price0 = $this->products[0]->getPrice($this->usd);
+		$price1 = $this->products[1]->getPrice($this->usd);
+
+		$expectedTotal = ($price1 * 0.9 * 2) + ($price0 * 3);
+		$this->assertEquals($expectedTotal, $this->order->getTotal($this->usd));
+
+		// require at least 4 items of products[0], but we have only 3 in cart, so no discount
+		$condition->comparisonType->set(DiscountCondition::COMPARE_GTEQ);
+		$condition->count->set(4);
+		$condition->save();
+		$this->order->getDiscountActions(true);
+		$normalPrice = ($price1 * 2) + ($price0 * 3);
+		$this->assertEquals($normalPrice, $this->order->getTotal($this->usd));
+
+		// require at least 3 items of products[0], so this should pass
+		$condition->count->set(3);
+		$condition->save();
+		$this->order->getDiscountActions(true);
+		$this->assertEquals($expectedTotal, $this->order->getTotal($this->usd));
+
+		// require less than 5 items of products[0] - pass
+		$condition->count->set(5);
+		$condition->comparisonType->set(DiscountCondition::COMPARE_LTEQ);
+		$condition->save();
+		$this->order->getDiscountActions(true);
+		$this->assertEquals($expectedTotal, $this->order->getTotal($this->usd));
+
+		// require less than 2 items of products[0] - no discount
+		$condition->count->set(2);
+		$condition->comparisonType->set(DiscountCondition::COMPARE_LTEQ);
+		$condition->save();
+		$this->order->getDiscountActions(true);
+		$this->assertEquals($normalPrice, $this->order->getTotal($this->usd));
+
+		// require exactly 7 items of products[0] - no discount
+		$condition->count->set(7);
+		$condition->comparisonType->set(DiscountCondition::COMPARE_EQ);
+		$condition->save();
+		$this->assertEquals($this->order->getDiscountActions(true)->size(), 0);
+		$this->assertEquals($normalPrice, $this->order->getTotal($this->usd));
+
+		// require exactly 3 items of products[0] - pass
+		$condition->count->set(3);
+		$condition->comparisonType->set(DiscountCondition::COMPARE_EQ);
+		$condition->save();
+		$this->assertEquals($this->order->getDiscountActions(true)->size(), 1);
+		$this->assertEquals($expectedTotal, $this->order->getTotal($this->usd));
+
+		// require count other than 2 items of products[0] - pass
+		$condition->count->set(2);
+		$condition->comparisonType->set(DiscountCondition::COMPARE_NE);
+		$condition->save();
+		$this->order->getDiscountActions(true);
+		$this->assertEquals($expectedTotal, $this->order->getTotal($this->usd));
+
+		// require count other than 3 items of products[0] - no discount
+		$condition->count->set(3);
+		$condition->comparisonType->set(DiscountCondition::COMPARE_NE);
+		$condition->save();
+		$this->assertEquals($this->order->getDiscountActions(true)->size(), 0);
+		$this->assertEquals($normalPrice, $this->order->getTotal($this->usd));
+	}
+
+	public function testDiscountForManufacturerProducts()
+	{
+		$manufacturer = Manufacturer::getNewInstance('Discount Test');
+		$manufacturer->save();
+		$this->products[0]->manufacturer->set($manufacturer);
+		$this->products[0]->save();
+
+		// order condition
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->count->set(4);
+		$condition->comparisonType->set(DiscountCondition::COMPARE_GTEQ);
+		$condition->save();
+		$record = DiscountConditionRecord::getNewInstance($condition, $manufacturer);
+		$record->save();
+
+		$action = DiscountAction::getNewInstance($condition);
+		$action->actionCondition->set($condition);
+		$action->isEnabled->set(true);
+		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
+		$action->amount->set(10);
+		$action->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
+		$action->save();
+
+		$this->order->addProduct($this->products[0], 3);
+		$this->order->addProduct($this->products[1], 2);
+		$this->order->save();
+
+		$price0 = $this->products[0]->getPrice($this->usd);
+		$price1 = $this->products[1]->getPrice($this->usd);
+		$expectedTotal = ($price1 * 2) + ($price0 * 0.9 * 3);
+		$normalPrice = ($price1 * 2) + ($price0 * 3);
+
+		$this->assertEquals($normalPrice, $this->order->getTotal($this->usd));
+
+		// require only 3 items of this manufacturer
+		$condition->count->set(3);
+		$condition->save();
+
+		$this->assertEquals($this->order->getDiscountActions(true)->size(), 1);
+		$this->assertEquals($expectedTotal, $this->order->getTotal($this->usd));
+	}
+
+	public function testDiscountForCategoryProducts()
+	{
+		$category = Category::getNewInstance(Category::getRootNode());
+		$category->save();
+		$newProduct = Product::getNewInstance($category);
+		$newProduct->isEnabled->set(true);
+		$newProduct->setPrice($this->usd, 100);
+		$newProduct->save();
+
+		// order condition
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->count->set(4);
+		$condition->comparisonType->set(DiscountCondition::COMPARE_GTEQ);
+		$condition->save();
+		$record = DiscountConditionRecord::getNewInstance($condition, $category);
+		$record->save();
+
+		$action = DiscountAction::getNewInstance($condition);
+		$action->actionCondition->set($condition);
+		$action->isEnabled->set(true);
+		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
+		$action->amount->set(10);
+		$action->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
+		$action->save();
+
+		$this->order->addProduct($this->products[0], 3);
+		$this->order->addProduct($newProduct, 2);
+		$this->order->save();
+
+		$price0 = $this->products[0]->getPrice($this->usd);
+		$price1 = $newProduct->getPrice($this->usd);
+		$expectedTotal = ($price0 * 3) + ($price1 * 0.9 * 2);
+		$normalPrice = ($price0 * 3) + ($price1 * 2);
+
+		$this->assertEquals($normalPrice, $this->order->getTotal($this->usd));
+
+		// require only 2 items of this category
+		$condition->count->set(2);
+		$condition->save();
+
+		$this->assertEquals($this->order->getDiscountActions(true)->size(), 1);
+		$this->assertEquals($expectedTotal, $this->order->getTotal($this->usd));
+	}
+
+	public function testDiscountForCategoryProductsBySubTotal()
+	{
+		$category = Category::getNewInstance(Category::getRootNode());
+		$category->save();
+		$newProduct = Product::getNewInstance($category);
+		$newProduct->isEnabled->set(true);
+		$newProduct->setPrice($this->usd, 100);
+		$newProduct->save();
+
+		// order condition
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->subTotal->set(300);
+		$condition->comparisonType->set(DiscountCondition::COMPARE_GTEQ);
+		$condition->save();
+		$record = DiscountConditionRecord::getNewInstance($condition, $category);
+		$record->save();
+
+		$action = DiscountAction::getNewInstance($condition);
+		$action->actionCondition->set($condition);
+		$action->isEnabled->set(true);
+		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
+		$action->amount->set(10);
+		$action->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
+		$action->save();
+
+		$this->order->addProduct($this->products[0], 3);
+		$this->order->addProduct($newProduct, 2);
+		$this->order->save();
+
+		$price0 = $this->products[0]->getPrice($this->usd);
+		$price1 = $newProduct->getPrice($this->usd);
+		$expectedTotal = ($price0 * 3) + ($price1 * 0.9 * 2);
+		$normalPrice = ($price0 * 3) + ($price1 * 2);
+
+		$this->assertEquals($normalPrice, $this->order->getTotal($this->usd));
+
+		// require subtotal to be at least 150 (we have 200)
+		$condition->subTotal->set(150);
+		$condition->save();
+
+		$this->assertEquals($this->order->getDiscountActions(true)->size(), 1);
+		$this->assertEquals($expectedTotal, $this->order->getTotal($this->usd));
 	}
 
 	private function createOrderWithZone(DeliveryZone $zone = null)
