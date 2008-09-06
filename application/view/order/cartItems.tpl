@@ -31,13 +31,13 @@
 					<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
 					<small>({$item.Product.Category.name_lang})</small>
 				</div>
-				{if $options[$item.Product.ID] || $moreOptions[$item.Product.ID]}
+				{if $options[$item.ID] || $moreOptions[$item.ID]}
 					<div class="productOptions">
-						{foreach from=$options[$item.Product.ID] item=option}
+						{foreach from=$options[$item.ID] item=option}
 							{include file="product/optionItem.tpl selectedChoice=$item.options[$option.ID]}
 						{/foreach}
 
-						{foreach from=$moreOptions[$item.Product.ID] item=option}
+						{foreach from=$moreOptions[$item.ID] item=option}
 							{if $item.options[$option.ID]}
 								<div class="nonEditableOption">
 									{$option.name_lang}:
@@ -57,7 +57,7 @@
 							{/if}
 						{/foreach}
 
-						{if $moreOptions[$item.Product.ID]}
+						{if $moreOptions[$item.ID]}
 						<div class="productOptionsMenu">
 							<a href="{link controller=order action=options id=$item.ID}" ajax="{link controller=order action=optionForm id=$item.ID}">{t _edit_options}</a>
 						</div>

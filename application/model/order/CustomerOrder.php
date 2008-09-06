@@ -419,7 +419,15 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		foreach ($this->orderedItems as $item)
 		{
-			$byProduct[$item->product->get()->getID()][(int)$item->isSavedForLater->get()][] = $item;
+			// do not merge items that are same product, but different options
+			$choiceHash = array();
+			foreach ($item->getOptions() as $choice)
+			{
+				$choiceHash[] = md5($choice->choice->get()->getID() . '_' . $choice->optionText->get());
+			}
+			$hash = $choiceHash ? '_' . md5(implode('', $choiceHash)) : '';
+
+			$byProduct[$item->product->get()->getID() . $hash][(int)$item->isSavedForLater->get()][] = $item;
 		}
 
 		foreach ($byProduct as $productID => $itemsByStatus)

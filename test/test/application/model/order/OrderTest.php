@@ -285,6 +285,51 @@ class OrderTest extends UnitTest
 		$this->assertEqual(count($order->getOrderedItems()), 2);
 	}
 
+	public function testMergeItemsWithOptions()
+	{
+		$product = $this->products[0];
+		$option = ProductOption::getNewInstance($product);
+		$option->save();
+		$choice1 = ProductOptionChoice::getNewInstance($option);
+		$choice1->save();
+		$choice2 = ProductOptionChoice::getNewInstance($option);
+		$choice2->save();
+
+		$order = CustomerOrder::getNewInstance($this->user);
+		$item = $order->addProduct($product, 1);
+		$this->assertIsA($item, 'OrderedItem');
+		$this->assertEqual(count($order->getShoppingCartItemCount()), 1);
+
+		$order->addProduct($product, 1);
+		$this->assertEqual(count($order->getItemsByProduct($product)), 2);
+		$this->assertEqual($order->getShoppingCartItemCount(), 2);
+
+		// merge without options
+		$order->mergeItems();
+		$this->assertEqual(count($order->getItemsByProduct($product)), 1);
+		$this->assertEqual($order->getShoppingCartItemCount(), 2);
+
+		// merge with options
+		$item = array_shift($order->getItemsByProduct($product));
+		$item->count->set(1);
+		$item->addOptionChoice($choice1);
+
+		$item2 = $order->addProduct($product, 1);
+		$item2->addOptionChoice($choice2);
+
+		$order->mergeItems();
+		$this->assertEqual(count($order->getItemsByProduct($product)), 2);
+		$this->assertEqual($order->getShoppingCartItemCount(), 2);
+
+		// set same options
+		$item2->removeOptionChoice($choice2);
+		$item2->addOptionChoice($choice1);
+
+		$order->mergeItems();
+		$this->assertEqual(count($order->getItemsByProduct($product)), 1);
+		$this->assertEqual($order->getShoppingCartItemCount(), 2);
+	}
+
 	function testUpdateCounts()
 	{
 		$product = $this->products[0];
