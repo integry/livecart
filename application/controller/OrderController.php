@@ -48,13 +48,13 @@ class OrderController extends FrontendController
 	private function getItemOptions()
 	{
 		// load product options
-		$products = new ARSet();
+		$products = array();
 		foreach ($this->order->getOrderedItems() as $item)
 		{
-			$products->add($item->product->get());
+			$products[$item->product->get()->getID()] = $item->product->get();
 		}
 
-		$options = ProductOption::loadOptionsForProductSet($products);
+		$options = ProductOption::loadOptionsForProductSet(ARSet::buildFromArray($products));
 
 		$moreOptions = $optionsArray = array();
 		foreach ($this->order->getOrderedItems() as $item)
@@ -62,8 +62,8 @@ class OrderController extends FrontendController
 			$productID = $item->product->get()->getID();
 			if (isset($options[$productID]))
 			{
-				$optionsArray[$productID] = $this->getOptionsArray($options[$productID], $item, 'isDisplayedInCart');
-				$moreOptions[$productID] = $this->getOptionsArray($options[$productID], $item, 'isDisplayed');
+				$optionsArray[$item->getID()] = $this->getOptionsArray($options[$productID], $item, 'isDisplayedInCart');
+				$moreOptions[$item->getID()] = $this->getOptionsArray($options[$productID], $item, 'isDisplayed');
 			}
 		}
 
@@ -225,7 +225,7 @@ class OrderController extends FrontendController
 
 		ActiveRecordModel::commit();
 
-		$this->setMessage($this->makeText('_added_to_cart', array($product->getValueByLang('name', $this->getRequestLanguage()))));
+		//$this->setMessage($this->makeText('_added_to_cart', array($product->getValueByLang('name', $this->getRequestLanguage()))));
 
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
