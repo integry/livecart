@@ -1803,12 +1803,22 @@ Backend.MultiInstanceEditor.prototype =
 		return root.Instances[id];
 	},
 
+	getAddInstance: function()
+	{
+		return new this.namespace('');
+	},
+
 	getInstanceContainer: function(id)
 	{
 		throw 'Implement me';
 	},
 
 	getMainContainerId: function()
+	{
+		throw 'Implement me';
+	},
+
+	getAddContainerId: function()
 	{
 		throw 'Implement me';
 	},
@@ -1966,6 +1976,84 @@ Backend.MultiInstanceEditor.prototype =
 		$(this.getMainContainerId(this.ownerID)).down('.sectionContainer').innerHTML = '';
 
 		TabControl.prototype.__instances__ = {};
+	},
+
+	showAddForm: function(caller)
+	{
+		var container = $(this.getAddContainerId());
+
+		// product form has already been downloaded
+		if (this.formTabCopy)
+		{
+			container.update('');
+			container.appendChild(this.formTabCopy);
+			this.initAddForm();
+		}
+
+		// retrieve product form
+		else
+		{
+			var url = this.Links.add;
+			new LiveCart.AjaxUpdater(url, container, caller.up('.menu').down('.progressIndicator'), null, this.initAddForm.bind(this));
+		}
+	},
+
+	hideAddForm: function()
+	{
+		if ($(this.getAddContainerId()))
+		{
+			Element.hide($(this.getAddContainerId()));
+		}
+
+		if (this.getListContainer())
+		{
+			Element.show(this.getListContainer());
+		}
+	},
+
+	cancelAdd: function(noHide)
+	{
+		container = $(this.getAddContainerId());
+
+		if (!noHide)
+		{
+			Element.hide(container);
+			Element.show(this.getListContainer());
+		}
+
+		ActiveForm.prototype.destroyTinyMceFields(container);
+		this.formTabCopy = container.down('form');
+	},
+
+	resetAddForm: function(form)
+	{
+		ActiveForm.prototype.resetTinyMceFields(form);
+	},
+
+	initAddForm: function()
+	{
+		container = $(this.getAddContainerId());
+
+		Element.hide(this.getListContainer());
+		Element.show(container);
+
+		tinyMCE.idCounter = 0;
+		ActiveForm.prototype.initTinyMceFields(container);
+
+		this.reInitAddForm();
+
+		ActiveForm.prototype.resetErrorMessages(container.down('form'));
+	},
+
+	saveAdd: function(e)
+	{
+		Event.stop(e);
+		var instance = this.getAddInstance();
+		instance.submitForm();
+	},
+
+	reInitAddForm: function()
+	{
 	}
 }
 

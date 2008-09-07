@@ -1,0 +1,30 @@
+_pricing_rules=Pricing Rules
+
+# grid
+DiscountCondition.name=Name
+DiscountCondition.isEnabled=Enabled
+DiscountCondition.couponCode=Coupon code
+DiscountCondition.position=Priority
+DiscountCondition.validFrom=Date valid from
+DiscountCondition.validTo=Date valid to
+_listing_rules=Listing pricing rules $from - $to of $count
+_no_rules=No pricing rules found
+_are_you_sure_you_want_to_delete_rule=Really delete selected pricing rules?
+_nothing_selected=Please select at least one pricing rule first
+
+_create_rule=Add new rule
+
+# editor
+_cancel_adding_rule=Cancel adding pricing rule
+_save_and_continue=Save and continue
+
+_main_info=Main Information
+_conditions=Conditions
+_actions=Actions
+
+_manufacturer_info=General information
+_manufacturer_images=Images
+
+_rule_was_successfully_saved=The pricing rule was successfully saved
+
+_rule_name_empty=Please enter the pricing rule name

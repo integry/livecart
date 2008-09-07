@@ -5,7 +5,7 @@ ClassLoader::import('application.model.system.MultilingualObject');
 ClassLoader::import('application.model.discount.DiscountAction');
 ClassLoader::import('application.model.discount.DiscountConditionRecord');
 
-class DiscountCondition extends ActiveTreeNode
+class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInterface
 {
 	// equal
 	const COMPARE_EQ = 0;
@@ -568,10 +568,35 @@ class DiscountCondition extends ActiveTreeNode
 		return $nullCond;
 	}
 
+	public function setValueByLang($fieldName, $langCode, $value)
+	{
+		return MultiLingualObject::setValueByLang($fieldName, $langCode, $value);
+	}
+
+	public function getValueByLang($fieldName, $langCode = null, $returnDefaultIfEmpty = true)
+	{
+		return MultiLingualObject::getValueByLang($fieldName, $langCode, $returnDefaultIfEmpty);
+	}
+
+	public function setValueArrayByLang($fieldNameArray, $defaultLangCode, $langCodeArray, Request $request)
+	{
+		return MultiLingualObject::setValueArrayByLang($fieldNameArray, $defaultLangCode, $langCodeArray, $request);
+	}
+
 	protected function insert()
 	{
 		$this->setLastPosition();
 		return parent::insert();
+	}
+
+	/**
+	 * Creates array representation
+	 *
+	 * @return array
+	 */
+	protected static function transformArray($array, ARSchema $schema)
+	{
+		return MultiLingualObject::transformArray($array, $schema);
 	}
 }
 

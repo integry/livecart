@@ -1,0 +1,14 @@
+.activeGrid .cell_DiscountCondition_isEnabled
+{
+	width: 120px;
+}
+
+.activeGrid .cellt_text.cell_DiscountCondition_name
+{
+	width: 250px;
+}
+
+.addDiscountMenu
+{
+	background-image: url(../../image/silk/calculator_add.png);
+}

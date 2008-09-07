@@ -21,9 +21,13 @@
         	<Role>userGroup</Role>
         </Menu>
         <Menu>
-        	<Title>_menu_content</Title>
+        	<Title>_menu_manage</Title>
         	<Role>page,news</Role>
         	<Items>
+        		<Menu>
+		        	<Title>_menu_pricing_rules</Title>
+		        	<Controller>backend.discount</Controller>
+		        </Menu>
         		<Menu>
 		        	<Title>_menu_pages</Title>
 		        	<Controller>backend.staticPage</Controller>
