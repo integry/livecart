@@ -134,6 +134,24 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		return $instance;
 	}
 
+	public static function isCouponCodes()
+	{
+		$c = new NotEqualsCond(new ARFieldHandle(__CLASS__, 'couponCode'), '');
+		$c->addAND(new EqualsCond(new ARFieldHandle(__CLASS__, 'isEnabled'), 1));
+		return ActiveRecordModel::getRecordCount(__CLASS__, new ARSelectFilter($c));
+	}
+
+	public static function getInstanceByCoupon($code)
+	{
+		$c = new EqualsCond(new ARFieldHandle(__CLASS__, 'couponCode'), $code);
+		$c->addAND(new EqualsCond(new ARFieldHandle(__CLASS__, 'isEnabled'), 1));
+		$set = ActiveRecordModel::getRecordSet(__CLASS__, new ARSelectFilter($c));
+		if ($set->size())
+		{
+			return $set->get(0);
+		}
+	}
+
 	public static function getNewInstance(DiscountCondition $parentCondition = null)
 	{
 		if (!$parentCondition)
@@ -541,6 +559,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		$cond->addAND(new EqualsCond(new ARFieldHandle(__CLASS__, 'isEnabled'), true));
 		$cond->addAND(new EqualsCond(new ARFieldHandle(__CLASS__, 'isActionCondition'), 0));
 		self::applyDateCondition($cond);
+		self::applyCouponCondition($cond, $order);
 
 		$totalCond = self::applyOrderTotalCondition($order);
 		$totalCond->addOr(self::applyOrderItemCountCondition($order));
@@ -555,6 +574,25 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		$byDate->addAND(new EqualsOrMoreCond(new ARFieldHandle(__CLASS__, 'validTo'), time()));
 		$dateCondition->addOr($byDate);
 		$cond->addAND($dateCondition);
+	}
+
+	private static function applyCouponCondition(Condition $cond, CustomerOrder $order)
+	{
+		if ($order->getCoupons()->size())
+		{
+			return;
+		}
+
+		$handle = new ARFieldHandle(__CLASS__, 'couponCode');
+		$couponCond = new IsNullCond($handle);
+
+		foreach ($order->getCoupons() as $coupon)
+		{
+			$couponCond->addOr(new EqualsCond($handle, $coupon->couponCode->get()));
+		}
+		$couponCond->addOr(new EqualsCond($handle, ''));
+
+		$cond->addAND($couponCond);
 	}
 
 	private static function applyOrderTotalCondition(CustomerOrder $order)

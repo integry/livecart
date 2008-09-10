@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.order.CustomerOrder');
+ClassLoader::import('application.model.discount.DiscountCondition');
 ClassLoader::import('application.model.Currency');
 
 /**
@@ -39,6 +40,7 @@ class OrderController extends FrontendController
 		$response->set('moreOptions', $options['more']);
 		$response->set('orderTotal', $currency->getFormattedPrice($this->order->getSubTotal($currency)));
 		$response->set('expressMethods', $this->application->getExpressPaymentHandlerList(true));
+		$response->set('isCouponCodes', DiscountCondition::isCouponCodes());
 
 		$this->order->getSpecification()->setFormResponse($response, $form);
 
@@ -132,6 +134,31 @@ class OrderController extends FrontendController
 	 */
 	public function update()
 	{
+		// coupon code
+		if ($this->request->get('coupon'))
+		{
+			$code = $this->request->get('coupon');
+
+			if ($condition = DiscountCondition::getInstanceByCoupon($code))
+			{
+				$exists = false;
+				foreach ($this->order->getCoupons() as $coupon)
+				{
+					if ($coupon->couponCode->get() == $code)
+					{
+						$exists = true;
+					}
+				}
+
+				if (!$exists)
+				{
+					OrderCoupon::getNewInstance($this->order, $code)->save();
+				}
+			}
+
+			$this->order->getCoupons(true);
+		}
+
 		$this->order->loadItemData();
 		$validator = $this->buildCartValidator($this->order, $this->getItemOptions());
 

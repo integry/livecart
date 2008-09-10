@@ -95,6 +95,16 @@
 				<td id="cartUpdate"><input type="submit" class="submit" value="{tn _update}" /></td>
 			</tr>
 
+		{if $isCouponCodes}
+				<tr id="couponCodes">
+					<td colspan="5">
+						<div class="container">
+							{t _have_coupon}: <input type="text" class="text coupon" name="coupon" /> <input type="submit" class="submit coupon" value="{tn _add_coupon}" />
+						</div>
+					</td>
+				<tr>
+		{/if}
+
 		{sect}
 			{header}
 				<tr id="cartFields">

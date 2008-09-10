@@ -10,3 +10,6 @@ _update=Update
 _empty_basket=Your shopping basket is empty
 _your_basket=Your Shopping Basket
 _item_count=There are [quant,_1,item,items,no items] in your shopping basket.
+
+_have_coupon=Have a discount coupon? Enter coupon code
+_add_coupon=Add coupon

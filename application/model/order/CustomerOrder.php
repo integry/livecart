@@ -3,6 +3,7 @@
 ClassLoader::import("application.model.Currency");
 ClassLoader::import("application.model.user.User");
 ClassLoader::import("application.model.product.Product");
+ClassLoader::import("application.model.order.OrderCoupon");
 ClassLoader::import("application.model.order.OrderedItem");
 ClassLoader::import("application.model.order.Shipment");
 ClassLoader::import("application.model.order.OrderDiscount");
@@ -32,6 +33,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	private $orderDiscounts = array();
 
 	private $discountActions = null;
+
+	private $coupons = null;
 
 	const STATUS_NEW = 0;
 	const STATUS_PROCESSING = 1;
@@ -779,6 +782,21 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		}
 
 		return $total;
+	}
+
+	public function getCoupons($reload = false)
+	{
+		if (!$this->getID())
+		{
+			return new ARSet();
+		}
+
+		if ((is_null($this->coupons) || $reload))
+		{
+			$this->coupons = $this->getRelatedRecordSet('OrderCoupon');
+		}
+
+		return $this->coupons;
 	}
 
 	public function getDiscounts()

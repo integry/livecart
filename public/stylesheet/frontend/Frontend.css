@@ -1592,12 +1592,23 @@ div.checkout a
     text-align: right;
 }
 
-#cartFields .container
+#cartFields .container, #couponCodes .container
 {
 	padding: 0 1em 0.5em 0.5em;
 	background-color: lightyellow;
 	border: 1px solid #ddd;
 	margin: 0.5em 0;
+}
+
+#couponCodes .container
+{
+	background-color: #e8ffff;
+	padding-bottom: 0;
+}
+
+.text.coupon
+{
+	width: 160px;
 }
 
 #cartFields .wide, #cartFields textarea
