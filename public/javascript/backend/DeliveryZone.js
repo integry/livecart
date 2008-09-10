@@ -696,7 +696,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 		inactive.substr(0, active.length - 1);
 
 
-		new LiveCart.AjaxRequest(url + "/" + this.zoneID + "?" + active + inactive);
+		new LiveCart.AjaxRequest(url + "/" + this.zoneID, null, null, {parameters: active + inactive});
 	},
 
 	addCountry: function()

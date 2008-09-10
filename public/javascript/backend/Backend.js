@@ -80,7 +80,11 @@ Backend.hideContainer = function()
 **************************************************/
 Backend.setHelpContext = function(context)
 {
-	$('help').href = 'http://doc.livecart.com/help/' + context;
+	var help = $('help');
+	if (help)
+	{
+		help.href = 'http://doc.livecart.com/help/' + context;
+	}
 }
 
 /*************************************************
@@ -1934,6 +1938,12 @@ Backend.MultiInstanceEditor.prototype =
 			var progressIndicator = e.target.up('td').down('.progressIndicator');
 
 			progressIndicator.show();
+		}
+
+		if (window.opener)
+		{
+			window.opener.selectProductPopup.getSelectedObject(id);
+			return;
 		}
 
 		var root = this.namespace.prototype;

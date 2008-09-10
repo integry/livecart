@@ -80,9 +80,10 @@ class PaypalWebsitePaymentsStandard extends ExternalPayment
 			while (!feof($fp))
 			{
 				$res = fgets ($fp, 1024);
+
 				if (strcmp ($res, "VERIFIED") == 0)
 				{
-					if ($paymentStatus != 'Completed')
+					if (($paymentStatus != 'Completed') && !$this->getConfigValue('SANDBOX'))
 					{
 						throw new PaymentException('Payment is not completed');
 					}

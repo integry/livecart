@@ -721,12 +721,18 @@ ul.menu li.done
     padding-left: 0;
 }
 
+ul.menu.popup li.done a
+{
+	font-weight: bold;
+	background: url(../../image/silk/accept.png) center left no-repeat;
+	padding-left: 22px;
+}
+
 ul.menu.popup
 {
     border: 0;
     padding: 0;
     margin-bottom: 5px;
-    margin-top: -3px;
     text-align: center;
 }
 

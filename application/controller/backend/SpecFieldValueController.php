@@ -1,7 +1,7 @@
 <?php
 
 ClassLoader::import('application.controller.backend.abstract.eav.EavFieldValueControllerCommon');
-ClassLoader::import('application.model.specification.SpecFieldValue');
+ClassLoader::import('application.model.category.SpecFieldValue');
 
 /**
  * Category specification field value controller

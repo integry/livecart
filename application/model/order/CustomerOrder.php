@@ -5,6 +5,7 @@ ClassLoader::import("application.model.user.User");
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.order.OrderedItem");
 ClassLoader::import("application.model.order.Shipment");
+ClassLoader::import("application.model.order.OrderDiscount");
 ClassLoader::import("application.model.delivery.ShipmentDeliveryRate");
 ClassLoader::import("application.model.eav.EavAble");
 

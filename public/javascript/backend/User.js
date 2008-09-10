@@ -297,6 +297,12 @@ Backend.UserGroup.prototype =
 			Element.show(e.target.up('td').down('.progressIndicator'));
 		}
 
+		if (window.opener)
+		{
+			window.opener.selectProductPopup.getSelectedObject(id);
+			return;
+		}
+
 		Backend.User.Editor.prototype.setCurrentId(id);
 
 		var tabControl = TabControl.prototype.getInstance(
@@ -335,24 +341,23 @@ Backend.UserGroup.GridFormatter =
 
 	formatValue: function(field, value, id)
 	{
-		if ('User.email' == field && Backend.UserGroup.prototype.usersMiscPermision)
+		if('User.email' == field && window.opener && window.opener.Backend.CustomerOrder)
+		{
+			value = '<span><span class="progressIndicator userIndicator" id="userIndicator_' + id + '" style="display: none;"></span></span>' + '<a href="#select" onclick="window.opener.Backend.CustomerOrder.prototype.customerPopup.getSelectedObject(' + id + '); return false;">' + value + '</a>';
+		}
+
+		else if ('User.email' == field)
 		{
 			value = '<span><span class="progressIndicator userIndicator" id="userIndicator_' + id + '" style="display: none;"></span></span>' +
 				'<a href="' + this.userUrl + id + '" id="user_' + id + '" onclick="Backend.UserGroup.prototype.openUser(' + id + ', event); return false;">' +
 					 value +
 				'</a>';
 		}
-		else if('User.email' == field && window.opener)
-		{
-			value = '<span><span class="progressIndicator userIndicator" id="userIndicator_' + id + '" style="display: none;"></span></span>' + '<a href="#select" onclick="window.opener.Backend.CustomerOrder.prototype.customerPopup.getSelectedObject(' + id + '); return false;">' + value + '</a>';
-				// asdasd'
-		}
 
 		if(value == '-')
 		{
 			value = "<center>" + value + "</center>";
 		}
-
 
 		return value;
 	}

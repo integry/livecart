@@ -54,6 +54,11 @@ class ManufacturerController extends ActiveGridController
 		return $this->getGridResponse();
 	}
 
+	public function selectPopup()
+	{
+		return $this->index();
+	}
+
 	private function getGridResponse()
 	{
 		$this->loadLanguageFile('backend/Product');

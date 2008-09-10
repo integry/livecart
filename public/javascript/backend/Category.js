@@ -256,8 +256,18 @@ Backend.Category = {
 
 		if (!Backend.Category.tabControl.activeTab)
 		{
-			Backend.Category.tabControl.activeTab = $('tabList').down('li');
+			var tabList = $('tabList');
+			if (tabList)
+			{
+				Backend.Category.tabControl.activeTab = tabList.down('li');
+			}
 		}
+
+		if (!Backend.Category.tabControl.activeTab)
+		{
+			return false;
+		}
+
 		Backend.Category.tabControl.activeTab.onclick();
 
 		var currentProductId = Backend.Product.Editor.prototype.getCurrentProductId();
@@ -808,6 +818,11 @@ Backend.Category.PopupSelector.prototype =
 	{
 		this.onAccept = onAccept;
 		this.onCancel = onCancel;
+
+		if (!Backend.Category.links.popup)
+		{
+			Backend.Category.links.popup = Backend.Router.createUrl('backend.category', 'popup');
+		}
 
 		var w = window.open(Backend.Category.links.popup + (categoryID ? '#cat_' + categoryID : ''), 'selectCategory', 'width=260, height=450');
 

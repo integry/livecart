@@ -22,8 +22,39 @@ _main_info=Main Information
 _conditions=Conditions
 _actions=Actions
 
-_manufacturer_info=General information
-_manufacturer_images=Images
+_add_new_condition=Add new condition
+_add_subcondition=Add sub-condition
+_confirm_condition_delete=Really delete this condition?
+_all_subconditions_must_match=All sub-conditions must be true
+_add_product=Add product
+_add_category=Add category
+_add_manufacturer=Add manufacturer
+_add_usergroup=Add user group
+_add_user=Add customer
+_add_deliveryzone=Add delivery zone
+
+Category=Category
+Product=Product
+Manufacturer=Manufacturer
+User=Customer
+UserGroup=User group
+DeliveryZone=Delivery Zone
+
+_type_order_total=Order total is
+_type_order_count=Total number of items in cart is
+_type_items_in_cart=Selected products are present in cart
+_type_user_group=Customer belongs to selected user group
+_type_user=Customer is
+_type_delivery_zone=Order delivery zone is
+
+_compare_eq=equal to
+_compare_lteq=less than or equal to
+_compare_gteq=more than or equal to
+_compare_ne=not equal to
+
+_with_count=with count
+_with_subTotal=with subtotal
+_all_items_must_be_present=All items must be present in cart
 
 _rule_was_successfully_saved=The pricing rule was successfully saved
 

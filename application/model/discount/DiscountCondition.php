@@ -60,8 +60,10 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 	{
 		$set = new ARSet();
 		$set->add($this);
-		self::loadConditionRecords($set);
-		self::loadSubConditions($set);
+		$subConditions = self::loadSubConditions($set);
+		$subConditions->add($this);
+		self::loadConditionRecords($subConditions, 'DiscountConditionRecord');
+		//self::loadConditionRecords($subConditions, array('Category' => array('DiscountConditionRecord'), 'Product', 'Manufacturer', 'User', 'UserGroup', 'DeliveryZone'));
 	}
 
 	public function registerRecord(DiscountConditionRecord $record)
@@ -162,7 +164,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		return $tree['sub'];
 	}
 
-	public static function loadConditionRecords(ARSet $conditionSet)
+	public static function loadConditionRecords(ARSet $conditionSet, $referencedRecords = array('Category'))
 	{
 		$ids = array();
 		foreach ($conditionSet as $condition)
@@ -179,7 +181,9 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		}
 
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('DiscountConditionRecord', 'conditionID'), $ids));
-		foreach (ActiveRecordModel::getRecordSet('DiscountConditionRecord', $f, array('Category')) as $record)
+		$f->setOrder(new ARFieldHandle('DiscountConditionRecord', 'categoryID'), 'DESC');
+		$f->setOrder(new ARFieldHandle('DiscountConditionRecord', 'manufacturerID'), 'DESC');
+		foreach (ActiveRecordModel::getRecordSet('DiscountConditionRecord', $f, $referencedRecords) as $record)
 		{
 			$record->condition->get()->registerRecord($record);
 		}
@@ -198,15 +202,18 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 
 		if (!$cond)
 		{
-			return null;
+			return new ARSet();
 		}
 
 		$f = new ARSelectFilter(Condition::mergeFromArray($cond, true));
+		$subConditions = ActiveRecordModel::getRecordSet(__CLASS__, $f);
 
-		foreach (ActiveRecordModel::getRecordSet(__CLASS__, $f) as $condition)
+		foreach ($subConditions as $condition)
 		{
 			$condition->parentNode->get()->registerSubCondition($condition);
 		}
+
+		return $subConditions;
 	}
 
 	private static function hasAllSubConditions(array $condition)
@@ -597,6 +604,23 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 	protected static function transformArray($array, ARSchema $schema)
 	{
 		return MultiLingualObject::transformArray($array, $schema);
+	}
+
+	public function toArray()
+	{
+		$array = parent::toArray();
+
+		foreach ($this->subConditions as $sub)
+		{
+			$array['sub'][] = $sub->toArray();
+		}
+
+		foreach ($this->records as $record)
+		{
+			$array['records'][] = $record->toArray();
+		}
+
+		return $array;
 	}
 }
 

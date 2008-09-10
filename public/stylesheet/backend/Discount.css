@@ -12,3 +12,217 @@
 {
 	background-image: url(../../image/silk/calculator_add.png);
 }
+
+.conditions select, .actions select
+{
+	width: auto;
+}
+
+#conditionTemplate, #actionTemplate, #recordTemplate, #selectRecordTemplate
+{
+	display: none;
+}
+
+.allSubsMenu
+{
+	margin: 6px;
+}
+
+a.subCondition
+{
+	font-size: smaller;
+	color: #f00;
+}
+
+.conditionContainer.root
+{
+	float: left;
+}
+
+.conditionContainer.root > li > .recordContainer
+{
+	display: none !important;
+}
+
+.conditionContainer
+{
+	list-style-type: none;
+}
+
+.conditionContainer .conditionContainer
+{
+	padding: 0.5em;
+	padding-top: 2px;
+	border: 1px solid #ddd;
+}
+
+.conditionContainer .conditionContainer .conditionContainer
+{
+	margin: 0.5em;
+	margin-left: 34px;
+}
+
+.conditionContainer .conditionInfo
+{
+	display: none;
+}
+
+.conditionContainer .conditionContainer .conditionInfo
+{
+	display: block;
+}
+
+.conditionDelete, .recordDelete
+{
+	opacity: 0.15;
+	vertical-align: middle;
+	margin: 0 7px;
+}
+
+.conditionDelete:hover, .recordDelete:hover
+{
+	opacity: 1;
+	cursor: pointer;
+}
+
+.fieldUpdating
+{
+	padding-right: 20px;
+	background: url(../../image/indicator.gif) center right no-repeat;
+}
+
+.comparisonField
+{
+	display: none;
+}
+
+.type_2 > .conditionInfo .comparisonField
+{
+	display: inline;
+}
+
+.selectRecordUpdating
+{
+	float: left;
+	height: 16px;
+	padding-right: 15px;
+	padding-left: 7px;
+	padding-top: 6px;
+	background: url(../../image/indicator.gif) center left no-repeat;
+}
+
+.selectRecordUpdating input
+{
+	display: none;
+}
+
+.recordContainer, .selectRecordContainer
+{
+	margin-left: 34px;
+	margin-bottom: 1em;
+}
+
+.conditionContainer, .conditionContainer .conditionContainer .conditionContainer, .conditionContainer .conditionContainer .conditionContainer .conditionContainer .conditionContainer
+{
+	background-color: #fafafa;
+}
+
+.conditionContainer .conditionContainer, .conditionContainer .conditionContainer .conditionContainer .conditionContainer
+{
+	background-color: #fff;
+}
+
+.recordContainer ul.menu li, div.conditionItems
+{
+	display: none;
+}
+
+.recordContainer ul.menu div.conditionItems li
+{
+	display: inline;
+}
+
+.recordContainer ul.menu
+{
+	display: none;
+}
+
+.type_2 > .recordContainer ul.menu,
+.type_4 > .recordContainer ul.menu,
+.type_2 > .recordContainer ul.menu div.conditionItems,
+.type_4 > .recordContainer ul.menu li.addConditionUser
+{
+	display: block;
+}
+
+.selectRecordContainer
+{
+	display: none;
+	padding-left: 7px;
+}
+
+.type_0 > .recordContainer,
+.type_1 > .recordContainer,
+.type_3 > .recordContainer,
+.type_5 > .recordContainer
+{
+	display: none;
+}
+
+.type_3 > .selectRecordContainer,
+.type_5 > .selectRecordContainer
+{
+	display: block;
+}
+
+.allItemsMenu
+{
+	display: none;
+	margin-left: 8px;
+	margin-top: 4px;
+}
+
+.type_2 > .recordContainer .allItemsMenu
+{
+	display: block;
+}
+
+.selectRecordContainer li, .recordContainer li
+{
+	list-style-type: none;
+}
+
+.recordTypeSep, .recordClass
+{
+	display: none;
+}
+
+.type_2 > .recordContainer .recordTypeSep, .type_2 > .recordContainer .recordClass
+{
+	display: inline;
+}
+
+.addRootCondition
+{
+	background-image: url(../../image/silk/arrow_divide_down.png);
+}
+
+.addConditionCategory
+{
+	background-image: url(../../image/silk/folder_add.png);
+}
+
+.addConditionProduct
+{
+	background-image: url(../../image/silk/package_add.png);
+}
+
+.addConditionManufacturer
+{
+	background-image: url(../../image/silk/cog_add.png);
+}
+
+.addConditionUser
+{
+	background-image: url(../../image/silk/user_add.png);
+}

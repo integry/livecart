@@ -10,6 +10,9 @@
 {includeCss file="library/ActiveList.css"}
 {includeCss file="library/ActiveGrid.css"}
 
+{includeJs file="backend/Category.js"}
+{includeCss file="backend/Category.css"}
+
 {includeJs file="backend/Discount.js"}
 {includeCss file="backend/Discount.css"}
 
@@ -59,7 +62,7 @@
 		Backend.Discount.Editor.prototype.Links.add = Backend.Router.createUrl('backend.discount', 'add');
 		Event.observe($("cancel_user_edit"), "click", function(e) {
 			Event.stop(e);
-			var editor = Backend.Discount.Editor.prototype.getInstance(Backend.Manufacturer.Editor.prototype.getCurrentId(), false);
+			var editor = Backend.Discount.Editor.prototype.getInstance(Backend.Discount.Editor.prototype.getCurrentId(), false);
 			editor.cancelForm();
 		});
 	</script>

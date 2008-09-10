@@ -85,6 +85,10 @@ _product_information_was_saved=Product information was saved successfuly
 _notification_product_was_successfuly=Product was added successfuly. You may now add another product.
 _product_added_continuing=Product was added successfuly. Loading product modification form...
 
+# Product select popup
+_done_adding=Done adding products
+_select_product=Select a product
+
 # ProductFileGroup
 _productFileGroup_title=Group title
 

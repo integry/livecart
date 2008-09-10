@@ -347,6 +347,13 @@ ActiveGrid.prototype =
 				var yPos = Event.pointerY(event) + 25 - window.scrollY;
 				this.cellContentContainer.innerHTML = value.innerHTML;
 
+				// remove progress indicator
+				var pI = this.cellContentContainer.down('.progressIndicator');
+				if (pI)
+				{
+					pI.parentNode.removeChild(pI);
+				}
+
 				this.cellContentContainer.style.visibility = 'none';
 				this.cellContentContainer.style.display = 'block';
 

@@ -3,6 +3,7 @@ _mass_action_succeed=Mass action succeed
 _user_details_were_successfully_saved=User details were successfully saved
 _could_not_save_user_details=Could not save user details
 
+_all_users=All users
 _default_user_group=Customers
 
 _user=User
@@ -26,3 +27,7 @@ _err_first_name_empty=Please enter first name
 _err_passwords_are_not_the_same=Passwords do not match
 _err_this_email_is_already_being_used_by_other_user=This e-mail is already being used by another user
 _err_password_lenght_should_be_in_interval=Password length should be in interval from %s to %s
+
+# popup selector
+_select_users=Select a customer
+_cancel_adding=Cancel adding users

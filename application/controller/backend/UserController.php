@@ -210,6 +210,20 @@ class UserController extends StoreManagementController
 		return new JSONResponse($states);
 	}
 
+	public function selectPopup()
+	{
+		$userGroups = array();
+		$userGroups[] = array('ID' => -2, 'name' => $this->translate('_all_users'), 'rootID' => 0);
+		$userGroups[] = array('ID' => -1, 'name' => $this->translate('_default_user_group'), 'rootID' => -2);
+
+		foreach(UserGroup::getRecordSet(new ARSelectFilter())->toArray() as $group)
+		{
+			$userGroups[] = array('ID' => $group['ID'], 'name' => $group['name'], 'rootID' => -2);
+		}
+
+		return new ActionResponse('userGroups', $userGroups);
+	}
+
 	private function save(User $user = null)
 	{
    		$validator = self::createUserFormValidator($this, $user);

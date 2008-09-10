@@ -53,9 +53,7 @@ class MassActionProcessor
 
 		foreach (array_chunk($ids, $chunkSize) as $chunk)
 		{
-			//echo round(memory_get_usage() / (1024*1024), 1) . "MB<br>";
 			$response->flush('|' . base64_encode(json_encode(array('total' => $totalCount, 'progress' => $progress, 'pid' => $this->pid))));
-
 			$this->processSet(ActiveRecordModel::getRecordSet($this->grid->getModelClass(), new ARSelectFilter(new INCond(new ARFieldHandle($this->grid->getModelClass(), 'ID'), $chunk)), $loadReferencedRecords));
 			$progress += count($chunk);
 		}
@@ -117,6 +115,7 @@ class MassActionProcessor
 
 		$set->__destruct();
 		unset($set);
+		ActiveRecord::clearPool();
 	}
 
 	protected function saveRecord(ActiveRecordModel $record)

@@ -252,9 +252,15 @@ class CategoryController extends StoreManagementController
 		$categoryList = Category::getRootNode()->getDirectChildNodes();
 		$categoryList->unshift(Category::getRootNode());
 
-		$response = new ActionResponse();
-		$response->set('categoryList', $categoryList->toArray());
-		return $response;
+		return new ActionResponse('categoryList', $categoryList->toArray());
+	}
+
+	public function productSelectPopup()
+	{
+		$categoryList = Category::getRootNode()->getDirectChildNodes();
+		$categoryList->unshift(Category::getRootNode());
+
+		return new ActionResponse('categoryList', $categoryList->toArray());
 	}
 
 	public function reindex()

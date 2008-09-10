@@ -13,3 +13,7 @@ _manufacturer_info=General information
 _manufacturer_images=Images
 _manufacturer_was_successfully_saved=Manufacturer information was successfully saved
 _could_not_save_manufacturer=Could not save manufacturer information
+
+# selector
+_select_manufacturer=Select a manufacturer
+_done_adding=Done adding manufacturers

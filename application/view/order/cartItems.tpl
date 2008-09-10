@@ -123,7 +123,7 @@
 {if $expressMethods && $cart.isOrderable}
 	<div id="expressCheckoutMethods">
 		{foreach from=$expressMethods item=method}
-			<input type="image" name="redirect" value="{link controller=checkout action=express id=$method}" src="image/payment/{$method}.gif" />
+			<a href="{link controller=checkout action=express id=$method}"><img src="image/payment/{$method}.gif" /></a>
 		{/foreach}
 	</div>
 {/if}
