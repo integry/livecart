@@ -2060,6 +2060,7 @@ Backend.MultiInstanceEditor.prototype =
 		Event.stop(e);
 		var instance = this.getAddInstance();
 		instance.submitForm();
+		return instance;
 	},
 
 	reInitAddForm: function()

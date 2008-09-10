@@ -8,6 +8,7 @@ class DiscountAction extends ActiveRecordModel
 {
 	const TYPE_ORDER_DISCOUNT = 0;
 	const TYPE_ITEM_DISCOUNT = 1;
+	const TYPE_CUSTOM_DISCOUNT = 5;
 
 	const MEASURE_PERCENT = 0;
 	const MEASURE_AMOUNT = 1;

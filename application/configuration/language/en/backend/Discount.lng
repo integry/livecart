@@ -56,6 +56,19 @@ _with_count=with count
 _with_subTotal=with subtotal
 _all_items_must_be_present=All items must be present in cart
 
-_rule_was_successfully_saved=The pricing rule was successfully saved
+_add_new_action=Add new action
 
+_action=Discount type
+_amount=Discount amount
+_apply_to=Apply discount to
+
+_percentage_discount=Percentage discount
+_fixed_amount_discount=Fixed amount discount
+_apply_order=Whole order
+_apply_matched_items=Matched items only
+_apply_custom_items=Items matched by a custom condition
+_confirm_action_delete=Really delete this action?
+_is_enabled=Enabled
+
+_rule_was_successfully_saved=The pricing rule was successfully saved
 _rule_name_empty=Please enter the pricing rule name

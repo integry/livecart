@@ -78,6 +78,14 @@ Backend.Discount.Editor.methods =
 	beforeSaveAdd: function(e)
 	{
 		var instance = this.saveAdd(e);
+		instance.oldAfterSubmit = instance.afterSubmitForm.bind(instance);
+		instance.afterSubmitForm = function(response)
+		{
+			this.oldAfterSubmit(response);
+			this.cancelForm();
+			this.cancelAdd();
+			Backend.Discount.Editor.prototype.open(response.condition.ID);
+		}
 	}
 }
 
@@ -159,15 +167,13 @@ Backend.Discount.Condition.prototype =
 		Event.observe(this.recordContainer.down('.addConditionProduct'), 'click', this.addProduct.bind(this));
 		Event.observe(this.recordContainer.down('.addConditionManufacturer'), 'click', this.addManufacturer.bind(this));
 		Event.observe(this.recordContainer.down('.addConditionUser'), 'click', this.addUser.bind(this));
-		Event.observe(this.recordContainer.down('.addConditionUserGroup'), 'click', this.addUserGroup.bind(this));
-		Event.observe(this.recordContainer.down('.addConditionDeliveryZone'), 'click', this.addDeliveryZone.bind(this));
 	},
 
 	setValues: function()
 	{
 		this.compSel.value = this.condition.comparisonType;
 		this.valueField.value = this.condition.count != null ? this.condition.count : this.condition.subTotal;
-		this.isAllSubconditions.checked = this.condition.isAllSubconditions;
+		this.isAllSubconditions.checked = this.condition.isAllSubconditions == 1;
 
 		// value is reversed in user interface
 		this.isAnyRecord.checked = this.condition.isAnyRecord == 0;
@@ -562,41 +568,214 @@ Backend.Discount.Condition.prototype =
 
 			height: 510
 		});
+	}
+}
+
+
+Backend.Discount.Action = function(action, container)
+{
+	this.action = action;
+	this.container = container;
+
+	if (!this.namespace.prototype.template)
+	{
+		this.namespace.prototype.template = $('actionTemplate').down('li')
+	}
+
+	this.createNode();
+}
+
+Backend.Discount.Action.prototype =
+{
+	namespace: Backend.Discount.Action,
+
+	node: null,
+
+	TYPE_ORDER_DISCOUNT: 0,
+	TYPE_ITEM_DISCOUNT: 1,
+	TYPE_CUSTOM_DISCOUNT: 5,
+
+	MEASURE_PERCENT: 0,
+	MEASURE_AMOUNT: 1,
+
+	createAction: function(action)
+	{
+		return new Backend.Discount.Action(action, $('actionContainer_' + action.Condition.ID));
 	},
 
-	addUserGroup: function(e)
+	initializeList: function()
 	{
-		Event.stop(e);
-		var w = new Backend.SelectPopup( Backend.Router.createUrl('backend.manufacturer', 'selectPopup'), '',
-		{
-			onObjectSelect: function(id)
-			{
-				this.addRecord('Manufacturer', id, function()
+		return ActiveList.prototype.getInstance($('actionContainer_' + this.action.Condition.ID), {
+			 beforeSort:	 function(li, order)
+			 {
+				return Backend.Router.createUrl('backend.discount', 'sortActions', {draggedId: this.getRecordId(li), conditionId: this.getRecordId(li.parentNode) }) + '&' + order;
+			   },
+			 beforeDelete:   function(li)
+			 {
+				if(confirm(Backend.getTranslation('_confirm_action_delete')))
 				{
-					$(w.popup.document.getElementById('manufacturerIndicator_' + id)).hide();
-				});
-				return true;
-			}.bind(this),
-
-			height: 510
-		});
+					return Backend.Router.createUrl('backend.discount', 'deleteAction', {id:  this.getRecordId(li) });
+				}
+			 },
+			 afterSort:	  function(li, response) {  },
+			 afterDelete:	function(li, response) { }
+		 }, null);
 	},
 
-	addDeliveryZone: function(e)
+	findUsedNodes: function()
 	{
-		Event.stop(e);
-		var w = new Backend.SelectPopup( Backend.Router.createUrl('backend.manufacturer', 'selectPopup'), '',
-		{
-			onObjectSelect: function(id)
-			{
-				this.addRecord('Manufacturer', id, function()
-				{
-					$(w.popup.document.getElementById('manufacturerIndicator_' + id)).hide();
-				});
-				return true;
-			}.bind(this),
+		this.amountMeasure = this.node.down('.actionType');
+		this.amount = this.node.down('.comparisonValue');
+		this.type = this.node.down('.applyTo');
+		this.isEnabled = this.node.down('.isEnabled');
+		this.subConditionContainer = this.node.down('.conditionContainer');
 
-			height: 510
-		});
+		this.percentSign = this.node.down('.percent');
+		this.currencySign = this.node.down('.currency');
+	},
+
+	bindEvents: function()
+	{
+		[this.amountMeasure, this.amount, this.type, this.isEnabled].each(function(field)
+		{
+			field.name += '_' + this.action.ID;
+			Event.observe(field, 'change', this.saveFieldChange.bind(this));
+		}.bind(this));
+
+		Event.observe(this.addAction, 'click', this.addAction.bind(this));
+
+		this.isEnabled.id = 'isEnabled_' + this.action.ID;
+		$(this.isEnabled.parentNode).down('label').setAttribute('for', 'isEnabled_' + this.action.ID);
+
+		Event.observe(this.type, 'change', this.changeType.bind(this));
+		Event.observe(this.amountMeasure, 'change', this.changeAmountMeasure.bind(this));
+	},
+
+	setValues: function()
+	{
+		this.amountMeasure.value = this.action.amountMeasure;
+		this.amount.value = this.action.amount;
+
+		if (this.action.ActionCondition)
+		{
+			this.type.value = (this.action.ActionCondition.ID == this.action.Condition.ID) ? this.TYPE_ITEM_DISCOUNT : this.TYPE_CUSTOM_DISCOUNT;
+
+			if (this.type.value == this.TYPE_CUSTOM_DISCOUNT)
+			{
+				this.addCondition(this.action.ActionCondition);
+			}
+		}
+		else
+		{
+			this.type.value = this.TYPE_ORDER_DISCOUNT;
+		}
+
+		this.isEnabled.checked = this.action.isEnabled == 1;
+	},
+
+	changeType: function()
+	{
+		if (this.type.value != this.TYPE_CUSTOM_DISCOUNT)
+		{
+			this.subConditionContainer.down('ul.conditionContainer').innerHTML = '';
+			this.subConditionContainer.hide();
+		}
+		else
+		{
+			this.subConditionContainer.show();
+		}
+	},
+
+	changeAmountMeasure: function()
+	{
+		this.percentSign.hide();
+		this.currencySign.hide();
+
+		if (this.amountMeasure.value == this.MEASURE_PERCENT)
+		{
+			this.percentSign.show();
+		}
+		else
+		{
+			this.currencySign.show();
+		}
+	},
+
+	addAction: function(e, id)
+	{
+		var element = Event.element(e);
+		Event.stop(e);
+		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.discount', 'addAction', {id: id}), element.parentNode.down('.progressIndicator'), this.completeAdd.bind(this));
+	},
+
+	completeAdd: function(originalRequest)
+	{
+		var instance = new Backend.Discount.Action(originalRequest.responseData, $('actionContainer_' + originalRequest.responseData.Condition.ID));
+		var list = instance.initializeList();
+		list.decorateItems();
+		list.createSortable(true);
+	},
+
+	createNode: function()
+	{
+		var el = this.template.cloneNode(true);
+		el.id = 'discountAction_' + this.action.ID;
+		this.container.appendChild(el);
+		this.node = el;
+
+		this.findUsedNodes();
+
+		var recordClassName = '';
+
+		this.setValues();
+		this.bindEvents();
+		this.changeType(true);
+		this.changeAmountMeasure();
+	},
+
+	saveFieldChange: function(e)
+	{
+		var field = Event.element(e);
+
+		if (field == this.productFieldSel)
+		{
+			field = this.amount;
+		}
+
+		$(field.parentNode).addClassName('fieldUpdating');
+
+		var value = field.value;
+		if ('checkbox' == field.type)
+		{
+			value = field.checked ? 1 : 0;
+		}
+
+		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.discount', 'updateActionField', {type: this.amountMeasure.value, field: field.name, value: value}), null, this.completeUpdateField.bind(this));
+	},
+
+	addCondition: function(condition)
+	{
+		var instance = new Backend.Discount.Condition(condition, [], this.subConditionContainer);
+		if (instance.typeSel.value != instance.TYPE_ITEMS)
+		{
+			instance.typeSel.value = instance.TYPE_ITEMS;
+			instance.changeType();
+		}
+		//this.subConditionContainer.down('ul.menu').down('a').onclick = instance.createSubCondition.bind(instance);
+	},
+
+	completeUpdateField: function(originalRequest)
+	{
+		if (typeof originalRequest.responseData == 'object')
+		{
+			var field = originalRequest.responseData.field;
+			this.addCondition(originalRequest.responseData.condition);
+		}
+		else
+		{
+			var field = originalRequest.responseData;
+		}
+
+		$(this[field]).parentNode.removeClassName('fieldUpdating');
 	}
 }

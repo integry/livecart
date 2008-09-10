@@ -20,23 +20,9 @@ class DiscountController extends ActiveGridController
 
 	public function index()
 	{
-		return $this->getGridResponse();
-	}
+		$response = $this->getGridResponse();
 
-	public function add()
-	{
-		return new ActionResponse('form', $this->buildForm());
-	}
-
-	public function edit()
-	{
-		$condition = ActiveRecordModel::getInstanceById('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA, DiscountCondition::LOAD_REFERENCES);
-		$condition->loadAll();
-
-		$response = new ActionResponse('condition', $condition->toArray());
-		$form = $this->buildForm();
-		$form->setData($condition->toArray());
-		$response->set('form', $form);
+		$response->set('form', $this->buildForm());
 
 		$response->set('conditionForm', $this->buildConditionForm());
 
@@ -58,6 +44,34 @@ class DiscountController extends ActiveGridController
 						'subTotal' => $this->translate('_with_subTotal'),
 						));
 
+		$response->set('actionTypes', array(
+						DiscountAction::MEASURE_PERCENT => $this->translate('_percentage_discount'),
+						DiscountAction::MEASURE_AMOUNT => $this->translate('_fixed_amount_discount'),
+					  ));
+
+		$response->set('applyToChoices', array(
+						DiscountAction::TYPE_ORDER_DISCOUNT => $this->translate('_apply_order'),
+						DiscountAction::TYPE_ITEM_DISCOUNT => $this->translate('_apply_matched_items'),
+						DiscountAction::TYPE_CUSTOM_DISCOUNT => $this->translate('_apply_custom_items'),
+					  ));
+
+		$response->set('currencyCode', $this->application->getDefaultCurrencyCode());
+
+		return $response;
+	}
+
+	public function add()
+	{
+		return new ActionResponse('form', $this->buildForm());
+	}
+
+	public function edit()
+	{
+		$condition = ActiveRecordModel::getInstanceById('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA, DiscountCondition::LOAD_REFERENCES);
+		$condition->loadAll();
+
+		$response = new ActionResponse('condition', $condition->toArray());
+
 		$records = array();
 		$zones = ActiveRecordModel::getRecordSetArray('DeliveryZone', new ARSelectFilter());
 		//$zones = array_merge(array(DeliveryZone::getDefaultZoneInstance()->toArray()), $zones);
@@ -67,6 +81,25 @@ class DiscountController extends ActiveGridController
 		$records['UserGroup'] = ActiveRecordModel::getRecordSetArray('UserGroup', new ARSelectFilter());
 
 		$response->set('records', $records);
+
+		$form = $this->buildForm();
+		$form->setData($condition->toArray());
+		$response->set('form', $form);
+
+		// actions
+		$f = new ARSelectFilter();
+		$f->setOrder(new ARFieldHandle('DiscountAction', 'position'));
+		$actions = $condition->getRelatedRecordSet('DiscountAction', $f, array('DiscountCondition', 'DiscountCondition_ActionCondition'));
+		foreach ($actions as $action)
+		{
+			if ($action->actionCondition->get())
+			{
+				$action->actionCondition->get()->load();
+				$action->actionCondition->get()->loadAll();
+			}
+		}
+
+		$response->set('actions', $actions->toArray());
 
 		return $response;
 	}
@@ -209,6 +242,83 @@ class DiscountController extends ActiveGridController
 		}
 	}
 
+	public function addAction()
+	{
+		$parent = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA);
+		$child = DiscountAction::getNewInstance($parent);
+		$child->isEnabled->set(true);
+		$child->save();
+
+		return new JSONResponse($child->toArray());
+	}
+
+	public function deleteAction()
+	{
+		$action = ActiveRecordModel::getInstanceByID('DiscountAction', $this->request->get('id'), DiscountAction::LOAD_DATA);
+		$action->delete();
+
+		return new JSONResponse(true);
+	}
+
+	public function updateActionField()
+	{
+		list($fieldName, $id) = explode('_', $this->request->get('field'));
+		$value = $this->request->get('value');
+
+		$action = ActiveRecordModel::getInstanceByID('DiscountAction', $id, DiscountAction::LOAD_DATA, array('DiscountCondition', 'DiscountCondition_ActionCondition'));
+
+		if ('type' == $fieldName)
+		{
+			switch ($value)
+			{
+				case DiscountAction::TYPE_ORDER_DISCOUNT:
+					$action->actionCondition->set(null);
+					break;
+
+				case DiscountAction::TYPE_ITEM_DISCOUNT:
+					$action->actionCondition->set($action->condition->get());
+					break;
+
+				case DiscountAction::TYPE_CUSTOM_DISCOUNT:
+					$newCondition = DiscountCondition::getNewInstance();
+					$newCondition->isEnabled->set(true);
+					$newCondition->isActionCondition->set(true);
+					$newCondition->save();
+
+					$action->actionCondition->set($newCondition);
+					$action->save();
+
+					return new JSONResponse(array('field' => $fieldName, 'condition' => $newCondition->toArray()));
+
+					break;
+			}
+		}
+		else
+		{
+			$action->$fieldName->set($value);
+		}
+
+		$action->save();
+
+		return new JSONResponse($fieldName);
+	}
+
+	public function sortActions()
+	{
+	  	$order = $this->request->get('actionContainer_' . $this->request->get('conditionId'));
+		foreach ($order as $key => $value)
+		{
+			$update = new ARUpdateFilter();
+			$update->setCondition(new EqualsCond(new ARFieldHandle('DiscountAction', 'ID'), $value));
+			$update->addModifier('position', $key);
+			ActiveRecord::updateRecordSet('DiscountAction', $update);
+		}
+
+		$resp = new RawResponse();
+	  	$resp->setContent($this->request->get('draggedId'));
+		return $resp;
+	}
+
 	public function changeColumns()
 	{
 		parent::changeColumns();
@@ -247,8 +357,10 @@ class DiscountController extends ActiveGridController
 
 	protected function getSelectFilter()
 	{
-		// we don't need the root node
-		return new ARSelectFilter(new EqualsCond(new ARFieldHandle($this->getClassName(), 'parentNodeID'), 1));
+		// we don't need the root node or action conditions
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle($this->getClassName(), 'parentNodeID'), 1));
+		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle($this->getClassName(), 'isActionCondition'), 1));
+		return $f;
 	}
 
 	protected function setDefaultSortOrder(ARSelectFilter $filter)

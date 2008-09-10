@@ -226,3 +226,24 @@ a.subCondition
 {
 	background-image: url(../../image/silk/user_add.png);
 }
+
+.addAction
+{
+	background-image: url(../../image/silk/calculator_add.png);
+}
+
+.actionContainer .activeList_icons
+{
+	float: left;
+}
+
+.actionCondition .recordContainer
+{
+	display: block;
+	margin-left: 0;
+}
+
+.actionCondition .allItemsMenu
+{
+	display: none !important;
+}
