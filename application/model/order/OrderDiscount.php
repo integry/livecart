@@ -23,6 +23,7 @@ class OrderDiscount extends ActiveRecordModel
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("orderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
 		$schema->registerField(new ARField("amount", ARFloat::instance()));
+		$schema->registerField(new ARField("description", ARText::instance()));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -38,6 +39,13 @@ class OrderDiscount extends ActiveRecordModel
 	{
 		parent::save();
 		$this->order->get()->registerFixedDiscount($this);
+	}
+
+	public function toArray()
+	{
+		$array = parent::toArray();
+		$array['formatted_amount'] = $this->order->get()->currency->get()->getFormattedPrice($array['amount'] * -1);
+		return $array;
 	}
 }
 

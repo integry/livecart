@@ -65,11 +65,13 @@
 					</div>
 				{/if}
 			</td>
-			<td class="cartPrice">
-				{$item.formattedDisplaySubTotal}
-				{if $item.count != 1}
+			<td class="cartPrice {if $item.formattedBasePrice != $item.formattedPrice}discount{/if}">
+				{if $item.count == 1}
+					<span class="basePrice">{$item.formattedBasePrice}</span><span class="actualPrice">{$item.formattedPrice}</span>
+				{else}
+					{$item.formattedDisplaySubTotal}
 					<div class="subTotalCalc">
-						{$item.count} x {$item.formattedDisplayPrice}
+						{$item.count} x <span class="basePrice">{$item.formattedBasePrice}</span><span class="actualPrice">{$item.formattedPrice}</span>
 					</div>
 				{/if}
 			</td>
@@ -78,6 +80,15 @@
 			</td>
 		</tr>
 	{/foreach}
+
+	{foreach from=$cart.discounts item=discount}
+			<tr>
+				<td colspan="3" class="subTotalCaption">{t _discount}: <span class="discountDesc">{$discount.description}</span></td>
+				<td class="amount discountAmount">{$discount.formatted_amount}</td>
+				<td></td>
+			</tr>
+	{/foreach}
+
 			<tr>
 				<td colspan="3" class="subTotalCaption">{t _subtotal}:</td>
 				<td class="subTotal">{$cart.formattedTotal.$currency}</td>

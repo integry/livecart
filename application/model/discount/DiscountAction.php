@@ -61,7 +61,7 @@ class DiscountAction extends ActiveRecordModel
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'isEnabled'), true));
 		$f->setOrder(new ARFieldHandle(__CLASS__, 'position'));
 
-		$actions = ActiveRecordModel::getRecordSet(__CLASS__, $f, array('ActionCondition' => 'DiscountCondition'));
+		$actions = ActiveRecordModel::getRecordSet(__CLASS__, $f, array('DiscountCondition', 'DiscountCondition_ActionCondition'));
 
 		// load records for action condition
 		$actionConditions = new ARSet();
@@ -88,7 +88,7 @@ class DiscountAction extends ActiveRecordModel
 
 	public function isItemDiscount()
 	{
-		return self::TYPE_ITEM_DISCOUNT == $this->type->get();
+		return (self::TYPE_ITEM_DISCOUNT == $this->type->get()) || (self::MEASURE_PERCENT == $this->amountMeasure->get());
 	}
 
 	public function isFixedAmount()

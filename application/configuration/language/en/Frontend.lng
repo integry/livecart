@@ -40,6 +40,7 @@ _price=Price
 _quantity=Quantity
 _qty=Qty
 _product=Product
+_discount=Discount
 
 # Product options
 _err_option_0=This option must be selected

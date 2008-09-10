@@ -374,7 +374,8 @@ class OrderedItemController extends StoreManagementController
 		if(($id = (int)$this->request->get("id", false)) )
 		{
 			$count = (int)$this->request->get("count");
-			$item = OrderedItem::getInstanceByID('OrderedItem', $id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'AmountCurrency' => 'Currency', 'ShippingAddress' => 'UserAddress', 'Product'));
+			$item = OrderedItem::getInstanceByID('OrderedItem', $id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'AmountCurrency' => 'Currency', 'ShippingAddress' => 'UserAddress', 'Product', 'Category'));
+			$item->customerOrder->get()->loadAll();
 			$history = new OrderHistory($item->customerOrder->get(), $this->user);
 
 			$item->count->set($count);

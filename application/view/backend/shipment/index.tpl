@@ -43,6 +43,17 @@
 				<span class="priceSuffix">{$order.Currency.priceSuffix}</span>
 			</td>
 		</tr>
+
+		{if $order.discounts}
+			<tr>
+				<td class="orderShipment_report_description">{t _discounts}</td>
+				<td class="orderShipment_report_discounts orderShipment_report_value">
+					<span class="pricePrefix">{$order.Currency.pricePrefix}</span>
+					<span class="price">{$order.discountAmount|string_format:"%.2f"}</span> <span class="priceSuffix">{$order.Currency.priceSuffix}</span>
+				</td>
+			</tr>
+		{/if}
+
 		<tr>
 			<td class="orderShipment_report_description">{t _taxes}</td>
 			<td class="orderShipment_report_tax orderShipment_report_value">
@@ -50,14 +61,27 @@
 				<span class="price">{$taxAmount|string_format:"%.2f"}</span> <span class="priceSuffix">{$order.Currency.priceSuffix}</span>
 			</td>
 		</tr>
+
 		<tr class="orderShipment_report_total">
 			<td class="orderShipment_report_description">{t _total_price}</td>
 			<td class="orderShipment_report_total orderShipment_report_value">
 				<span class="pricePrefix">{$order.Currency.pricePrefix}</span>
-				<span class="price">{$totalAmount|string_format:"%.2f"}</span>
+				<span class="price">{$order.totalAmount|string_format:"%.2f"}</span>
 				<span class="priceSuffix">{$order.Currency.priceSuffix}</span>
 			</td>
 		</tr>
+	</table>
+</fieldset>
+
+<fieldset class="discounts">
+	<legend>{t _discounts}</legend>
+	<table class="discounts">
+		{foreach from=$order.discounts item=discount name=discounts}
+			<tr class="{zebra loop="discounts"}">
+				<td>{$discount.description}</td>
+				<td class="amount">{$discount.formatted_amount}</td>
+			</tr>
+		{/foreach}
 	</table>
 </fieldset>
 

@@ -16,6 +16,13 @@
 		{include file="order/orderTableDetails.tpl" hideTaxes=true}
 	{/foreach}
 
+	{foreach from=$order.discounts item=discount}
+		<tr>
+			<td colspan="3" class="subTotalCaption">{t _discount}: <span class="discountDesc">{$discount.description}</span></td>
+			<td class="amount discountAmount">{$discount.formatted_amount}</td>
+		</tr>
+	{/foreach}
+
   	{if $order.taxes}
 		<tr>
 			<td colspan="3" class="tax">{t _total_before_tax}:</td>

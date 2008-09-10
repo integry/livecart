@@ -238,7 +238,7 @@ Backend.Discount.Condition.prototype =
 			value = field.checked ? 1 : 0;
 		}
 
-		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.discount', 'updateConditionField', {type: this.typeSel.value, field: field.name, productField: this.productFieldSel.value, value: value}), null, this.completeUpdateField.bind(this));
+		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.discount', 'updateConditionField', {type: this.typeSel.value, field: field.name, productField: this.productFieldSel.value, value: value, comparisonType: this.compSel.value}), null, this.completeUpdateField.bind(this));
 	},
 
 	completeUpdateField: function(originalRequest)

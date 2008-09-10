@@ -408,10 +408,11 @@ class OrderedItem extends ActiveRecordModel
 		if (isset($array['priceCurrencyID']))
 		{
 			$currency = Currency::getInstanceByID($array['priceCurrencyID']);
-			$array['itemPrice'] = $this->getPrice($currency);
+			$array['itemBasePrice'] = $this->getPrice($currency);
 			$array['itemSubTotal'] = $this->getSubTotal($currency);
 			$array['displayPrice'] = $this->getPrice($currency, !$this->customerOrder->get()->getDeliveryZone()->isDefault());
 			$array['displaySubTotal'] = $this->getSubTotal($currency, !$this->customerOrder->get()->getDeliveryZone()->isDefault());
+			$array['itemPrice'] = $array['displaySubTotal'] / $array['count'];
 
 			$array['formattedBasePrice'] = $currency->getFormattedPrice($array['price']);
 			$array['formattedPrice'] = $currency->getFormattedPrice($array['itemPrice']);

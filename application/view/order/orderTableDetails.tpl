@@ -22,9 +22,8 @@
 					</ul>
 				{/footer}
 			{/sect}
-
 		</td>
-		<td>{$item.formattedDisplayPrice}</td>
+		<td class="{if $item.formattedBasePrice != $item.formattedPrice}discount{/if}"><span class="basePrice">{$item.formattedBasePrice}</span><span class="actualPrice">{$item.formattedPrice}</span></td>
 		<td>{$item.count}</td>
 		<td class="amount">{$item.formattedDisplaySubTotal}</td>
 	</tr>

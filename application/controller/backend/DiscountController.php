@@ -126,6 +126,7 @@ class DiscountController extends ActiveGridController
 	{
 		$parent = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA);
 		$child = DiscountCondition::getNewInstance($parent);
+		$child->isEnabled->set(true);
 		$child->save();
 
 		return new JSONResponse($child->toArray());
@@ -154,6 +155,7 @@ class DiscountController extends ActiveGridController
 
 		if (('count' == $field) || ('subTotal' == $field))
 		{
+			$condition->comparisonType->set($this->request->get('comparisonType'));
 			$condition->count->set(null);
 			$condition->subTotal->set(null);
 		}
@@ -272,10 +274,12 @@ class DiscountController extends ActiveGridController
 			switch ($value)
 			{
 				case DiscountAction::TYPE_ORDER_DISCOUNT:
+					$action->type->set(DiscountAction::TYPE_ORDER_DISCOUNT);
 					$action->actionCondition->set(null);
 					break;
 
 				case DiscountAction::TYPE_ITEM_DISCOUNT:
+					$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 					$action->actionCondition->set($action->condition->get());
 					break;
 
@@ -286,6 +290,7 @@ class DiscountController extends ActiveGridController
 					$newCondition->save();
 
 					$action->actionCondition->set($newCondition);
+					$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 					$action->save();
 
 					return new JSONResponse(array('field' => $fieldName, 'condition' => $newCondition->toArray()));

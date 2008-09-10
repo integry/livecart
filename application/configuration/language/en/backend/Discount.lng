@@ -40,7 +40,7 @@ User=Customer
 UserGroup=User group
 DeliveryZone=Delivery Zone
 
-_type_order_total=Order total is
+_type_order_total=Order subtotal is
 _type_order_count=Total number of items in cart is
 _type_items_in_cart=Selected products are present in cart
 _type_user_group=Customer belongs to selected user group

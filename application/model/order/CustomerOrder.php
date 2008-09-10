@@ -29,6 +29,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 	private $fixedDiscounts = array();
 
+	private $orderDiscounts = array();
+
 	private $discountActions = null;
 
 	const STATUS_NEW = 0;
@@ -332,7 +334,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		foreach ($this->getShoppingCartItems() as $item)
 		{
 			$item->priceCurrencyID->set($currency->getID());
-			$item->price->set($item->product->get()->getPrice($currency->getID()));
+			$item->price->set($item->getSubTotal($currency, false) / $item->count->get());
 			$item->save();
 
 			// create sub-items for bundled products
@@ -390,6 +392,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		// set order total
 		$this->totalAmount->set($this->getTotal($currency));
 
+		// save discounts
+		foreach ($this->orderDiscounts as $discount)
+		{
+			$discount->save();
+		}
+
 		if ($this->totalAmount->get() <= $this->getPaidAmount())
 		{
 			$this->isPaid->set(true);
@@ -398,6 +406,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$this->dateCompleted->set(new ARSerializableDateTime());
 
 		$this->isFinalized->set(true);
+		unset($this->shipments);
 
 		$this->save();
 
@@ -710,11 +719,18 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			$amount += $discount->amount->get();
 		}
 
-		foreach ($this->getDiscountActions() as $action)
+		if (!$this->isFinalized->get())
 		{
-			if ($action->isOrderDiscount() && $action->isFixedAmount())
+			foreach ($this->getDiscountActions() as $id => $action)
 			{
-				$amount += $action->amount->get();
+				if ($action->isOrderDiscount() && $action->isFixedAmount())
+				{
+					$discount = $action->amount->get();
+					$amount += $discount;
+					$this->orderDiscounts[$id] = OrderDiscount::getNewInstance($this);
+					$this->orderDiscounts[$id]->amount->set($discount);
+					$this->orderDiscounts[$id]->description->set($action->condition->get()->getValueByLang('name'));
+				}
 			}
 		}
 
@@ -1117,6 +1133,14 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$array['isAwaitingShipment'] = (int)$this->isAwaitingShipment();
 		$array['isProcessing'] = (int)$this->isProcessing();
 
+		// discounts
+		$array['discountAmount'] = 0;
+		foreach (array_merge($this->fixedDiscounts, $this->orderDiscounts) as $key => $discount)
+		{
+			$array['discounts'][$discount->getID() ? $discount->getID() : $key] = $discount->toArray();
+			$array['discountAmount'] -= $discount->amount->get();
+		}
+
 		// payments
 		if (isset($options['payments']))
 		{
@@ -1379,6 +1403,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 	public function getDiscountConditions()
 	{
+		if ($this->isFinalized->get())
+		{
+			return array();
+		}
+
 		ClassLoader::import('application.model.discount.DiscountCondition');
 		return DiscountCondition::getOrderDiscountConditions($this);
 	}

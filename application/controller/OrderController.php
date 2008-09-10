@@ -279,7 +279,7 @@ class OrderController extends FrontendController
 				$item->removeOption($option);
 			}
 		}
-		else if ($request->isValueSet($varName))
+		else if ($request->get($varName))
 		{
 			if ($option->isSelect())
 			{

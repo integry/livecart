@@ -240,8 +240,10 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 				$rgt[$subCond['rgt']] = true;
 			}
 
-			ksort($lft);
-			ksort($rgt);
+			$lft = array_keys($lft);
+			$rgt = array_keys($rgt);
+			sort($lft);
+			sort($rgt);
 
 			// check if first and last child nodes are there
 			if ((array_shift($lft) - 1 != $condition['lft']) || (array_pop($rgt) + 1 != $condition['rgt']))
@@ -250,6 +252,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 			}
 
 			// look for gaps in lft/rgt indexes
+			$lft = array_flip($lft);
 			foreach ($rgt as $r)
 			{
 				if (!isset($lft[$r + 1]))
@@ -260,10 +263,12 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		}
 
 		// check if subconditions are valid
+		$hasValid = false;
 		foreach ($condition['sub'] as $sub)
 		{
 			if (self::hasAllSubConditions($sub))
 			{
+				$hasValid = true;
 				if (!$condition['isAllSubconditions'])
 				{
 					return true;
@@ -278,7 +283,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 			}
 		}
 
-		return !$condition['isAllSubconditions'];
+		return $hasValid;
 	}
 
 	private static function getConditionTreeFromArray(array $conditions)
@@ -343,6 +348,17 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		foreach ($conditions as $key => $condition)
 		{
 			$cond = $condition[__CLASS__];
+
+			// only require all records for products (not actual for users, etc.)
+			if (!empty($records[$cond['ID']][0]))
+			{
+				$rec = $records[$cond['ID']][0];
+				if (is_null($rec['productID']) && is_null($rec['manufacturerID']) && is_null($rec['categoryID']))
+				{
+					$conditions[$key]['isAnyRecord'] = $cond['isAnyRecord'] = true;
+				}
+			}
+
 			if (!$cond['isAnyRecord'] && ($cond['recordCount'] > $count[$cond['ID']]))
 			{
 				unset($conditions[$key]);
@@ -359,6 +375,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 			if (!is_null($condition['count']) || !is_null($condition['subTotal']))
 			{
 				$matchingItemCount = $matchingItemSubTotal = array();
+
 				foreach ($records[$condition['ID']] as $record)
 				{
 					$items = array();
@@ -382,7 +399,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 						{
 							$category = $item->product->get()->category->get();
 
-							if (($category->lft->get() >= $record['Category']['lft']) && ($category->rgt->get() >= $record['Category']['rgt']))
+							if (($category->lft->get() >= $record['Category']['lft']) && ($category->rgt->get() <= $record['Category']['rgt']))
 							{
 								$items[] = $item;
 							}
@@ -432,11 +449,12 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 			'productID' => self::getOrderProductIDs($order),
 			'categoryID' => self::getOrderCategoryIDs($order),
 			'manufacturerID' => self::getOrderManufacturerIDs($order),
-			'userID' => $order->user->get()->getID(),
+			'userID' => $order->user->get() ? $order->user->get()->getID() : null,
 			'deliveryZoneID' => $order->getDeliveryZone()->getID(),
 		);
 
-		if ($userGroup = $order->user->get()->userGroup->get())
+		$order->user->get()->load();
+		if ($order->user->get() && ($userGroup = $order->user->get()->userGroup->get()))
 		{
 			$records['userGroupID'] = $userGroup->getID();
 		}

@@ -315,3 +315,8 @@ li.orderShipment:hover, .orderShippedShipments ul.activeList > li:hover, .downlo
     overflow: visible ! important;
     white-space: normal ! important;
 }
+
+table.discounts td
+{
+	padding: 4px;
+}

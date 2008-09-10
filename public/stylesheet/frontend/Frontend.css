@@ -2221,6 +2221,23 @@ td.amount
     text-align: center;
 }
 
+.basePrice
+{
+    display: none;
+}
+
+.discount .basePrice
+{
+	text-decoration: line-through;
+	display: inline;
+	margin-right: 4px;
+}
+
+.discount .actualPrice
+{
+	color: #f00;
+}
+
 #invoicePaymentInfo td.amount
 {
     width: auto;
