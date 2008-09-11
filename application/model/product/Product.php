@@ -998,6 +998,52 @@ class Product extends MultilingualObject
 		return parent::serialize(array('categoryID', 'Category', 'manufacturerID', 'defaultImageID'));
 	}
 
+	public function __clone()
+	{
+		parent::__clone();
+
+		$this->loadSpecification();
+		$this->specificationInstance = clone $this->specificationInstance;
+		$this->specificationInstance->setOwner($this);
+
+		$this->loadPricing();
+		$this->pricingHandlerInstance = clone $this->pricingHandlerInstance;
+		$this->pricingHandlerInstance->setProduct($this);
+
+		// images
+		if ($this->defaultImage->get())
+		{
+			$this->defaultImage->set(clone $this->defaultImage->get());
+		}
+
+		$this->save();
+
+		// options
+		foreach (ProductOption::getProductOptions($this->originalRecord) as $option)
+		{
+			$clonedOpt = clone $option;
+			$clonedOpt->product->set($this);
+			$clonedOpt->save();
+		}
+
+		// related products
+		$groups[] = array();
+		foreach ($this->originalRecord->getRelationships() as $relationship)
+		{
+			$group = $relationship->productRelationshipGroup->get();
+			$id = $group ? $group->getID() : null;
+			if ($id)
+			{
+				$groups[$id] = clone $group;
+				$groups[$id]->product->set($this);
+				$groups[$id]->save();
+			}
+
+			$cloned = ProductRelationship::getNewInstance($this, $relationship->relatedProduct->get(), $id ? $groups[$id] : null);
+			$cloned->save();
+		}
+	}
+
 	public function __destruct()
 	{
 		unset($this->specificationInstance);

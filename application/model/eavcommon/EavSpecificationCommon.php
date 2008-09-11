@@ -20,9 +20,21 @@ abstract class EavSpecificationCommon extends ActiveRecordModel implements iEavS
 		return $this->getField()->get();
 	}
 
+	public function getOwnerVarName()
+	{
+		return 'product';
+	}
+
 	public function getOwner()
 	{
-		return $this->product;
+		$field = $this->getOwnerVarName();
+		return $this->$field;
+	}
+
+	public function setOwner(ActiveRecordModel $owner)
+	{
+		$field = $this->getOwnerVarName();
+		$this->$field->set($owner);
 	}
 
 	public function set($value)

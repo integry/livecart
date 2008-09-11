@@ -201,6 +201,10 @@ class ProductController extends ActiveGridController implements MassActionInterf
 				return new JSONResponse(0);
 			}
 		}
+		else if ('copy' == $act)
+		{
+			$params['category'] = Category::getInstanceById($this->request->get('categoryID'), Category::LOAD_DATA);
+		}
 		else if ('theme' == $act)
 		{
 			ClassLoader::import('application.model.presentation.ProductPresentation');
@@ -209,7 +213,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 		$response = parent::processMass($params);
 
-		if ('delete' == $act)
+		if ('delete' == $act || 'copy' == $act)
 		{
 			Category::recalculateProductsCount();
 		}

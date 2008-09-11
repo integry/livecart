@@ -43,9 +43,9 @@ class EavItem extends EavItemCommon
 		return 'valueID';
 	}
 
-	public function getOwner()
+	public function getOwnerVarName()
 	{
-		return $this->object;
+		return 'object';
 	}
 
 	public function getField()

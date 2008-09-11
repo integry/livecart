@@ -51,6 +51,12 @@ class ProductMassActionProcessor extends MassActionProcessor
 		{
 			$product->addRelatedProduct($this->params['relatedProduct']);
 		}
+		else if ('copy' == $act)
+		{
+			$cloned = clone $product;
+			$cloned->category->set($this->params['category']);
+			$cloned->save();
+		}
 		else if ('theme' == $act)
 		{
 			$instance = ProductPresentation::getInstance($product);

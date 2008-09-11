@@ -357,6 +357,17 @@ abstract class ActiveRecordModel extends ActiveRecord
 			new $plugin($object, self::$application);
 		}
 	}
+
+	public function __clone()
+	{
+		parent::__clone();
+
+		if (($this instanceof EavAble) && $this->specificationInstance)
+		{
+			$this->specificationInstance = clone $this->specificationInstance;
+			$this->specificationInstance->setOwner(EavObject::getInstance($this));
+		}
+	}
 }
 
 ?>
