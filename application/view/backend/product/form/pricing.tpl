@@ -8,7 +8,11 @@
 				{t _list_price}:
 				{textfield name="listPrice_$baseCurrency" class="money" id="product_listPrice_`$cat`_`$product.ID`_`$baseCurrency`"}
 			</span>
+			<a href="" class="menu" style="font-size: smaller; display: none;">{t _set_quant}</a>
 			<div class="errorText hidden"></div>
+
+			{include file="backend/product/form/quantityPricing.tpl" currency=$baseCurrency}
+
 		</fieldset>
 	</p>
 	{foreach from=$otherCurrencies item="currency"}
@@ -20,7 +24,9 @@
 				{t _list_price}:
 				{textfield name="listPrice_$currency" class="money" id="product_listPrice_`$cat`_`$product.ID`_`$currency`"}
 			</span>
+			<a href="" class="menu" style="font-size: smaller; display: none;">{t _set_quant}</a>
 			<div class="errorText hidden"></div>
+			{include file="backend/product/form/quantityPricing.tpl" currency=$currency}
 		</fieldset>
 	</p>
 	{/foreach}

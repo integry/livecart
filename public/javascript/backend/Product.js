@@ -686,6 +686,263 @@ Backend.Product.Prices.prototype =
 	}
 }
 
+Backend.Product.QuantityPrice = function(container, rules)
+{
+	this.rules = rules;
+	this.container = container;
+	this.hiddenValue = container.parentNode.down('.hiddenValue');
+	this.headRow = container.down('thead').down('tr');
+
+	if (this.rules && this.rules.serializedRules && (this.rules.serializedRules != {}))
+	{
+		$H(this.rules.serializedRules).each(function(pair, index)
+		{
+			var quant = pair[0];
+			var prices = pair[1];
+			var col = this.createColumn();
+			this.headRow.lastChild.down('input').value = quant;
+
+			if (prices instanceof Array)
+			{
+				var obj = {};
+				for (k = 0; k < prices.length; k++)
+				{
+					obj[k] = prices[k];
+				}
+				prices = obj;
+			}
+
+			$H(prices).each(function(pair)
+			{
+				var group = pair[0];
+				var price = pair[1];
+				var row = this.getGroupRow(group);
+				row.getElementsByTagName('input')[index + 1].value = price;
+			}.bind(this));
+		}.bind(this));
+
+		this.createRow();
+		this.createColumn();
+		this.deleteColumn(1);
+		this.deleteRow(this.container.down('select'));
+
+		$A(this.container.getElementsByTagName('select')).each(this.changeGroup.bind(this));
+
+		this.container.parentNode.show();
+	}
+	else
+	{
+		this.container.parentNode.hide();
+		this.menuLink = this.container.up('fieldset').down('a.menu');
+		this.menuLink.onclick = this.showForm.bind(this);
+		this.menuLink.show();
+	}
+
+	this.initCells(this.container);
+}
+
+Backend.Product.QuantityPrice.prototype =
+{
+	showForm: function(e)
+	{
+		Event.stop(e);
+		this.menuLink.hide();
+		this.container.parentNode.show();
+	},
+
+	initCells: function(container)
+	{
+		$A(container.getElementsByClassName('quantity')).each(function(field) { field.onchange = this.changeQuantity.bindAsEventListener(this); field.onkeyup = function(){NumericFilter(field);}}.bind(this));
+		$A(container.getElementsByTagName('select')).each(function(field) { field.onchange = this.changeGroup.bindAsEventListener(this);}.bind(this));
+		$A(container.getElementsByClassName('qprice')).each(function(field) { field.onchange = this.changePrice.bindAsEventListener(this); field.onkeyup = function(){NumericFilter(field);}}.bind(this));
+	},
+
+	getGroupRow: function(groupID)
+	{
+		var row = null;
+		$A(this.container.getElementsByTagName('select')).each(function(field)
+		{
+			if (field.value == groupID)
+			{
+				row = field.up('tr');
+				return;
+			}
+		});
+
+		if (!row)
+		{
+			row = this.createRow();
+			row.down('select').value = groupID;
+		}
+
+		return row;
+	},
+
+	changeQuantity: function(field)
+	{
+		if (field instanceof Event)
+		{
+			field = Event.element(field);
+		}
+
+		// last column
+		if (this.getColumnNumber(field) == this.getColumnCount() -1)
+		{
+			if (field.value != '')
+			{
+				this.createColumn();
+			}
+		}
+
+		if (field.value == '')
+		{
+			this.deleteColumn(this.getColumnNumber(field));
+		}
+
+		this.indexForm();
+	},
+
+	changePrice: function()
+	{
+		this.indexForm();
+	},
+
+	changeGroup: function(field)
+	{
+		if (field instanceof Event)
+		{
+			field = Event.element(field);
+		}
+
+		if (field.value == '')
+		{
+			if (this.getRowNumber(field) != this.getRowCount() - 1)
+			{
+				this.deleteRow(field);
+			}
+		}
+		else
+		{
+			// last column
+			if (this.getRowNumber(field) == this.getRowCount() - 1)
+			{
+				this.createRow();
+			}
+		}
+
+		var selectedGroups = {};
+		var selects = this.container.getElementsByTagName('select');
+		$A(selects).each(function(sel)
+		{
+			if (0 == sel.value.length)
+			{
+				return;
+			}
+
+			selectedGroups[sel.value] = sel;
+		});
+
+		$A(selects).each(function(sel)
+		{
+			var opts = sel.getElementsByTagName('option');
+			$A(opts).each(function(opt)
+			{
+				if (selectedGroups[opt.value] && (selectedGroups[opt.value] != sel))
+				{
+					opt.hide();
+				}
+				else
+				{
+					opt.show();
+				}
+			});
+		}.bind(this));
+
+		this.indexForm();
+	},
+
+	getColumnNumber: function(field)
+	{
+		return this.getNodeIndex(field.up('td'));
+	},
+
+	getRowNumber: function(field)
+	{
+		return this.getNodeIndex(field.up('tr')) + 1;
+	},
+
+	getColumnCount: function()
+	{
+		return this.container.down('tr').getElementsByTagName('td').length;
+	},
+
+	getRowCount: function()
+	{
+		return this.container.getElementsByTagName('tr').length;
+	},
+
+	deleteColumn: function(columnID)
+	{
+		var rows = this.container.getElementsByTagName('tr');
+		for (var k = 0; k < rows.length; k++)
+		{
+			var cell = rows[k].getElementsByTagName('td')[columnID];
+			cell.parentNode.removeChild(cell);
+		}
+	},
+
+	deleteRow: function(field)
+	{
+		var row = field.up('tr');
+		row.parentNode.removeChild(row);
+	},
+
+	createColumn: function()
+	{
+		var rows = this.container.getElementsByTagName('tr');
+		for (var k = 0; k < rows.length; k++)
+		{
+			var cell = rows[k].lastChild.cloneNode(true);
+			rows[k].appendChild(cell);
+			cell.down('input').value = '';
+			this.initCells(cell);
+		}
+	},
+
+	createRow: function()
+	{
+		var row = $A(this.container.getElementsByTagName('tr')).pop();
+		var cloned = row.cloneNode(true);
+		this.container.down('tbody').appendChild(cloned);
+		$A(cloned.getElementsByTagName('input')).each(function(f) {f.value = '';});
+		this.initCells(cloned);
+
+		return cloned;
+	},
+
+	// there should be an existing function for that
+	getNodeIndex: function(node)
+	{
+		var nodes = node.parentNode.getElementsByTagName(node.tagName);
+		for (k = 0; k < nodes.length; k++)
+		{
+			if (nodes[k] == node)
+			{
+				return k;
+			}
+		}
+	},
+
+	indexForm: function()
+	{
+		var val = {quant: [], group: [], price: []};
+		$A(this.container.getElementsByClassName('quantity')).each(function(f){val.quant.push(f.value); });
+		$A(this.container.getElementsByTagName('select')).each(function(f){val.group.push(f.value); });
+		$A(this.container.getElementsByClassName('qprice')).each(function(f){val.price.push(f.value); });
+		this.hiddenValue.value = Object.toJSON(val);
+	}
+}
+
 Backend.Product.GridFormatter =
 {
 	productUrl: '',

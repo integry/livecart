@@ -48,6 +48,7 @@ class ProductControllerTest extends UnitTest implements ControllerTestCase
 
 		self::getApplication()->getConfig()->set('ENABLE_REVIEWS', true);
 		self::getApplication()->getConfig()->set('ENABLE_ANONYMOUS_RATINGS', true);
+		self::getApplication()->getConfig()->set('REVIEWS_WITH_RATINGS', false);
 	}
 
 	public function testSimpleRating()

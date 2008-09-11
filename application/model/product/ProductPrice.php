@@ -21,6 +21,7 @@ class ProductPrice extends ActiveRecordModel
 		$schema->registerField(new ARPrimaryForeignKeyField("currencyID", "Currency", "ID", null, ARChar::instance(3)));
 		$schema->registerField(new ARField("price", ARFloat::instance(16)));
 		$schema->registerField(new ARField("listPrice", ARFloat::instance(16)));
+		$schema->registerField(new ARField("serializedRules", ARText::instance(16)));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -248,6 +249,13 @@ class ProductPrice extends ActiveRecordModel
 		ClassLoader::import("application.model.Currency");
 
 		return new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), $product->getID()));
+	}
+
+	public static function transformArray($array, ARSchema $schema)
+	{
+		$array = parent::transformArray($array, $schema);
+		$array['serializedRules'] = unserialize($array['serializedRules']);
+		return $array;
 	}
 }
 

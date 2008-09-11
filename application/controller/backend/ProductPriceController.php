@@ -33,6 +33,26 @@ class ProductPriceController extends StoreManagementController
 		$response->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
 		$response->set("pricingForm", $pricingForm);
 
+		// get user groups
+		$f = new ARSelectFilter();
+		$f->setOrder(new ARFieldHandle('UserGroup', 'name'));
+		$groups[0] = $this->translate('_all_customers');
+		foreach (ActiveRecordModel::getRecordSetArray('UserGroup', $f) as $group)
+		{
+			$groups[$group['ID']] = $group['name'];
+		}
+		$groups[''] = '';
+		$response->set('userGroups', $groups);
+
+		// all product prices in a separate array
+		$prices = array();
+		foreach ($product->getRelatedRecordSetArray('ProductPrice', new ARSelectFilter()) as $price)
+		{
+			$prices[$price['currencyID']] = $price;
+		}
+
+		$response->set('prices', $prices);
+
 		return $response;
 	}
 
@@ -48,6 +68,43 @@ class ProductPriceController extends StoreManagementController
 		{
 			$product->loadSpecification();
 			$product->loadPricing();
+
+			if ($quantities = $this->request->get('quantityPricing'))
+			{
+				foreach ($product->getRelatedRecordSet('ProductPrice', new ARSelectFilter()) as $price)
+				{
+					$id = $price->currency->get()->getID();
+					$prices = array();
+					if (!empty($quantities[$id]))
+					{
+						$values = json_decode($quantities[$id], true);
+						$prices = array();
+
+						// no group selected - set all customers
+						if ('' == $values['group'][0])
+						{
+							$values['group'][0] = 0;
+						}
+
+						$quantCount = count($values['quant']);
+						foreach ($values['group'] as $groupIndex => $group)
+						{
+							foreach ($values['quant'] as $quantIndex => $quant)
+							{
+								$pr = $values['price'][($groupIndex * $quantCount) + $quantIndex];
+								if (strlen($pr) != 0)
+								{
+									$prices[$quant][$group] = (float)$pr;
+								}
+							}
+						}
+					}
+
+					ksort($prices);
+					$price->serializedRules->set(serialize($prices));
+					$price->save();
+				}
+			}
 
 			$product->loadRequestData($this->request);
 			$product->save();

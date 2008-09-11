@@ -7,6 +7,10 @@ _items_in_stock=Items in stock
 _pricing=Pricing
 _shipping_weight=Shipping weight
 
+_set_quant=Set quantity/group prices
+_quantity=Quantity
+_group=User group
+
 _minimum_order_quantity=Minimum order quantity
 _shipping_surcharge=Shipping surcharge
 _requires_separate_shipment=Requires separate shipment

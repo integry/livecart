@@ -84,7 +84,7 @@ class TaxRateTest extends UnitTest
 		$user->save();
 
 		$order = CustomerOrder::getNewInstance($user);
-		$order->addProduct($product, 1);
+		$order->addProduct($product, 1, true);
 		$order->currency->set($currency);
 		$order->save();
 

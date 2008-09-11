@@ -212,10 +212,6 @@ class Shipment extends ActiveRecordModel
 		$subTotal = 0;
 		foreach ($this->items as $item)
 		{
-if (!$item->getSubTotal($currency))
-{
-	print_r($item->product->get()->toFlatArray());
-}
 			if (!$item->isDeleted())
 			{
 				$subTotal += $item->getSubTotal($currency);

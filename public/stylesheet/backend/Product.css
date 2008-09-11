@@ -147,3 +147,55 @@ li.addProduct
 {
     display: none;
 }
+
+/********************
+	Pricing
+*********************/
+div.quantityPricing
+{
+	margin-bottom: 1em;
+}
+
+.quantityPricing table
+{
+	border: 1px solid #eee;
+}
+
+div.quantityPricing .quantityLabel,
+div.quantityPricing .groupLabel
+{
+	font-size: smaller;
+	font-weight: bold;
+}
+
+div.quantityPricing .quantityLabel
+{
+	float: right;
+	margin-bottom: 10px;
+}
+
+div.quantityPricing .groupLabel
+{
+	margin-top: 10px;
+	float: left;
+}
+
+.quantityPricing select
+{
+	width: 150px;
+}
+
+.quantityPricing td
+{
+	padding: 0 2px;
+}
+
+.quantityPricing .number
+{
+	width: 50px;
+}
+
+.quantityRow, .groupColumn
+{
+	background-color: lightyellow;
+}
