@@ -31,9 +31,9 @@ abstract class EavValueSpecification extends EavValueSpecificationCommon
 		return 'objectID';
 	}
 
-	public function getOwner()
+	public function getOwnerVarName()
 	{
-		return $this->object;
+		return 'object';
 	}
 
 	public function getField()

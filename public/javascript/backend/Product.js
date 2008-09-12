@@ -215,13 +215,14 @@ Backend.Product =
 
 	massActionChanged: function(element)
 	{
-		if ('move' == element.value)
+		if ('move' == element.value || 'copy' == element.value)
 		{
 			var moveElement = element.up('form').down('.move');
 			new Backend.Category.PopupSelector(
 				function(categoryID, pathAsText, path)
 				{
-					if (!confirm(Backend.Category.messages._confirm_move + "\n\n" + pathAsText))
+					var conf = 'move' == element.value ? Backend.Category.messages._confirm_move : Backend.getTranslation('_copy_conf');
+					if (!confirm(conf + "\n\n" + pathAsText))
 					{
 						return false;
 					}

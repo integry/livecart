@@ -1261,6 +1261,7 @@ fieldset.group p
 .tabContainer
 {
 	position: relative;
+	z-index: 200;
 }
 
 .tabs
@@ -1502,10 +1503,15 @@ li.moreTabs .moreTabsMenu
 	background-color: #fff;
 }
 
+.moreTabsMenu ul.tabList
+{
+	height: auto !important;
+	max-height: 1000px !important;
+}
+
 li.moreTabs li.hidden, li.moreTabs li.hidden *, li.moreTabs li:hover
 {
 	color: #777;
-	opacity: 0.6;
 }
 
 li.moreTabs li:hover

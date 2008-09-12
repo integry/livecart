@@ -56,6 +56,19 @@ class ProductPricing
 		}
 	}
 
+	/**
+	 *	Used to change parent product after cloning
+	 */
+	public function setProduct(Product $product)
+	{
+		$this->product = $product;
+
+		foreach ($this->prices as $k => $price)
+		{
+			$this->prices[$k]->product->set($product);
+		}
+	}
+
 	public function setPrice(ProductPrice $price)
 	{
 		$this->prices[$price->currency->get()->getID()] = $price;
@@ -218,6 +231,14 @@ class ProductPricing
 		return $prices;
 	}
 
+	public function __clone()
+	{
+		foreach ($this->prices as $k => $price)
+		{
+			$this->prices[$k] = clone $price;
+		}
+	}	
+	
 	public function __destruct()
 	{
 		foreach ($this->prices as $k => $price)

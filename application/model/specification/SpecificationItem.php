@@ -43,9 +43,9 @@ class SpecificationItem extends EavItemCommon
 		return 'specFieldValueID';
 	}
 
-	public function getOwner()
+	public function getOwnerVarName()
 	{
-		return $this->product;
+		return 'product';
 	}
 
 	public function getField()

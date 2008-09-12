@@ -141,8 +141,45 @@ abstract class ObjectImage extends MultilingualObject
 		if ($this->position->get() == 0)
 		{
 			$owner = $this->getOwner();
-		  	$owner->defaultImage->set($this);
-		  	$owner->save();
+			$owner->defaultImage->set($this);
+			$owner->save();
+		}
+	}
+
+	public function _clone(ActiveRecordModel $owner)
+	{
+		$cloned = clone $this;
+		$cloned->setOwner($owner);
+		$cloned->save();
+
+		foreach ($this->getImageSizes() as $key => $value)
+	  	{
+			$p = $this->getPath($key);
+			$originalPaths[$key] = $this->getPath($key);
+		}
+
+		print_r($originalPaths);
+
+		parent::__clone();
+
+		$originalPaths = array();
+		foreach ($this->getImageSizes() as $key => $value)
+	  	{
+			$originalPaths[$key] = $this->getPath($key);
+		}
+
+		print_r($originalPaths);
+
+
+		print_r($this->getImageSizes());
+
+		return;
+		foreach (1 as $key => $value)
+	  	{
+	  		if(is_file($this->getPath($key)))
+	  		{
+			   unlink($this->getPath($key));
+	  		}
 		}
 	}
 

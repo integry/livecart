@@ -135,6 +135,22 @@ abstract class EavMultiValueItemCommon implements iEavSpecification
 		}
 	}
 
+	public function setOwner(ActiveRecordModel $owner)
+	{
+		foreach ($this->items as $item)
+	  	{
+			$item->setOwner($owner);
+		}
+	}
+
+	public function __clone()
+	{
+		foreach ($this->items as $key => $item)
+	  	{
+			$this->items[$key] = clone $item;
+		}
+	}
+
 	public function __destruct()
 	{
 		foreach ($this->items as $k => $attr)

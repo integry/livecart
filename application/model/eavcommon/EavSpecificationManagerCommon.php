@@ -54,6 +54,16 @@ abstract class EavSpecificationManagerCommon
 		$this->loadSpecificationData($specificationDataArray);
 	}
 
+	public function setOwner(ActiveRecordModel $owner)
+	{
+		$this->owner = $owner;
+
+		foreach ($this->attributes as $attribute)
+		{
+			$attribute->setOwner($owner);
+		}
+	}
+
 	public function getGroupClass()
 	{
 		return $this->getFieldClass() . 'Group';
@@ -784,6 +794,14 @@ abstract class EavSpecificationManagerCommon
 			}
 
 		  	$this->attributes[$specField->getID()] = $specification;
+		}
+	}
+
+	public function __clone()
+	{
+		foreach ($this->attributes as $key => $attribute)
+		{
+			$this->attributes[$key] = clone $attribute;
 		}
 	}
 

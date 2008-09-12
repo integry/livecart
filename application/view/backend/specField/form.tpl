@@ -1,6 +1,6 @@
-<ul class="tabs">
+<ul class="tabs tabList">
 	<li class="active"><a href="#step_main" class="specField_change_state" >{t _SpecField_main}</a></li>
-	<li><a href="#step_values" class="specField_change_state" >{t _SpecField_values}</a></li>
+	<li class=""><a href="#step_values" class="specField_change_state" >{t _SpecField_values}</a></li>
 </ul>
 
 <form action="{link controller=backend.specField action=save}" method="post" class="specField {denied role="category.update"}formReadonly{/denied}">

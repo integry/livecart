@@ -822,6 +822,11 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		$category->availableProductCount->set($category->availableProductCount->get() + $countAvailable);
 		$category->save();
 	}
+
+	public function __clone()
+	{
+		//foreach
+	}
 }
 
 ?>

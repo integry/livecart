@@ -13,11 +13,13 @@ _themes_removed=Design themes were removed from selected products
 _process=Save
 _nothing_selected=Please select at least one product first
 _delete_conf=Really delete the selected products?
+_copy_conf=Copy selected products to this category?
 _product_information_was_successfully_saved=Product information was successfully saved
 _with_selected=With selected
 _new_product=New Product
 
 _move_to_category=Move to other category
+_copy_to_category=Copy to other category
 _set_manufacter=Set manufacturer
 _set_keywords=Set keywords
 _set_website_address=Set website address
