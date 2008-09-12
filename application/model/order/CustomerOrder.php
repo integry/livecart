@@ -733,7 +733,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			{
 				if ($action->isOrderDiscount() && $action->isFixedAmount())
 				{
-					$discount = $action->amount->get();
+					$discount = $this->currency->get()->convertAmount(self::getApplication()->getDefaultCurrency(), $action->amount->get());
 					$amount += $discount;
 					$this->orderDiscounts[$id] = OrderDiscount::getNewInstance($this);
 					$this->orderDiscounts[$id]->amount->set($discount);

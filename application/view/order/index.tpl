@@ -18,6 +18,8 @@
 	</p>
 	*}
 
+	{include file="block/message.tpl"}
+
 	{if !$cart.cartItems && !$cart.wishListItems}
 		<div style="clear: left;">
 			{t _empty_basket}. <a href="{link route=$return}">{t _continue_shopping}</a>.

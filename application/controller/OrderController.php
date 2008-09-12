@@ -119,7 +119,7 @@ class OrderController extends FrontendController
 			$arr['fieldName'] = $this->getFormFieldName($item, $option);
 
 			$invalid = !empty($_SESSION['optionError'][$item->getID()][$option->getID()]) && ('isDisplayedInCart' == $filter);
-//$invalid = false;
+
 			if (!$filter || $option->$filter->get() || $invalid)
 			{
 				$out[] = $arr;
@@ -208,7 +208,9 @@ class OrderController extends FrontendController
 	 */
 	public function delete()
 	{
-		$this->order->removeItem(ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id')));
+		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id'), ActiveRecordModel::LOAD_DATA, array('Product'));
+		$this->setMessage($this->makeText('_removed_from_cart', array($item->product->get()->getValueByLang('name', $this->getRequestLanguage()))));
+		$this->order->removeItem($item);
 		SessionOrder::save($this->order);
 
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
@@ -219,7 +221,7 @@ class OrderController extends FrontendController
 	 */
 	public function addToCart()
 	{
-		$product = Product::getInstanceByID($this->request->get('id'));
+		$product = Product::getInstanceByID($this->request->get('id'), true, array('Category'));
 
 		$productRedirect = new ActionRedirectResponse('product', 'index', array('id' => $product->getID(), 'query' => 'return=' . $this->request->get('return')));
 		if (!$product->isAvailable())
@@ -252,7 +254,7 @@ class OrderController extends FrontendController
 
 		ActiveRecordModel::commit();
 
-		//$this->setMessage($this->makeText('_added_to_cart', array($product->getValueByLang('name', $this->getRequestLanguage()))));
+		$this->setMessage($this->makeText('_added_to_cart', array($product->getValueByLang('name', $this->getRequestLanguage()))));
 
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
@@ -265,6 +267,8 @@ class OrderController extends FrontendController
 		$this->order->resetShipments();
 		SessionOrder::save($this->order);
 
+		$this->setMessage($this->makeText('_moved_to_cart', array($item->product->get()->getValueByLang('name', $this->getRequestLanguage()))));
+
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
 
@@ -275,6 +279,8 @@ class OrderController extends FrontendController
 		$this->order->mergeItems();
 		$this->order->resetShipments();
 		SessionOrder::save($this->order);
+
+		$this->setMessage($this->makeText('_moved_to_wishlist', array($item->product->get()->getValueByLang('name', $this->getRequestLanguage()))));
 
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
@@ -289,6 +295,8 @@ class OrderController extends FrontendController
 		$this->order->addToWishList($product);
 		$this->order->mergeItems();
 		SessionOrder::save($this->order);
+
+		$this->setMessage($this->makeText('_added_to_wishlist', array($product->getValueByLang('name', $this->getRequestLanguage()))));
 
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
