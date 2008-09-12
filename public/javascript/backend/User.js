@@ -63,7 +63,7 @@ Backend.UserGroup.prototype =
 
 		this.insertTreeBranch(groups, 0);
 
-		var userID = window.location.hash.match(/user_(\d+)/);
+		var userID = Backend.getHash().match(/user_(\d+)/);
 		if (userID && userID[1])
 		{
 			Element.show($('loadingUser'));

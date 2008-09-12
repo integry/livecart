@@ -27,6 +27,11 @@ var Backend =
 		return element.id;
 	},
 
+	getHash: function()
+	{
+		return Backend.AjaxNavigationHandler.prototype.getHash();
+	},
+
 	onLoad: function()
 	{
 		// AJAX navigation
@@ -128,6 +133,10 @@ Backend.AjaxNavigationHandler.prototype =
 	getHash: function()
 	{
 		var hash = document.location.hash;
+
+		// Safari
+		hash = hash.replace(/%23/, '#');
+
 		return ("#" == hash[0]) ? ('__' == hash.substring(-2) ? hash.substring(1, hash.length - 2) : hash) : hash.substring(0, hash.length - 1);
 	},
 

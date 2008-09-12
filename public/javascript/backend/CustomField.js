@@ -84,7 +84,7 @@ Backend.CustomField = {
 	initPage: function()
 	{
 		// check for bookmark
-		if (window.location.hash.length == 0)
+		if (Backend.getHash().length == 0)
 		{
 			window.location.hash = 'cat_1#tabFields__';
 		}
@@ -118,7 +118,7 @@ Backend.CustomField = {
 				}
 			}
 
-		var elements = window.location.hash.split('#');
+		var elements = Backend.getHash().split('#');
 		if (elements[1].substr(0, 4) == 'cat_')
 		{
 			var parts = elements[1].split('_');

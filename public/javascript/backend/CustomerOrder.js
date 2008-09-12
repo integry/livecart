@@ -55,7 +55,7 @@ Backend.CustomerOrder.prototype =
 
 		this.insertTreeBranch(groups, 0);
 
-		var orderID = window.location.hash.match(/order_(\d+)/);
+		var orderID = Backend.getHash().match(/order_(\d+)/);
 		if (orderID && orderID[1])
 		{
 			Element.show($('loadingOrder'));
@@ -241,7 +241,7 @@ Backend.CustomerOrder.prototype =
 															Backend.CustomerOrder.prototype.orderLoaded = true;
 
 
-															if (!window.location.hash.match(/order_(\d+)/))
+															if (!Backend.getHash().match(/order_(\d+)/))
 															{
 																Backend.ajaxNav.add("order_" + id);
 															}

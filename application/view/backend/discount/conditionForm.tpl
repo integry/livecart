@@ -26,6 +26,13 @@
 	{/err}
 </p>
 
+<p>
+	{err for="position"}
+		{label {t DiscountCondition.position}}
+		{textfield class="number"}
+	{/err}
+</p>
+
 {language}
 	<p>
 		<label>{t DiscountCondition.name}</label>

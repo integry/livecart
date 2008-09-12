@@ -205,7 +205,8 @@
 
 .activeGrid .cell_cb input
 {
-    width: auto;
+    width: 13px;
+    height: 13px;
     float: none;
     padding: 0;
     margin: 0;

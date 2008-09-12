@@ -51,7 +51,7 @@ Backend.Category = {
 	initPage: function()
 	{
 		// check for bookmark
-		if (!window.location.hash)
+		if (!Backend.getHash())
 		{
 			window.location.hash = $('tabProducts') ?  'cat_1#tabProducts__' : 'cat_1#tabMainDetails__';
 			Backend.Breadcrumb.display(1);
@@ -86,7 +86,7 @@ Backend.Category = {
 				}
 			}
 
-		var elements = window.location.hash.split('#');
+		var elements = Backend.getHash().split('#');
 
 		if (elements[1].substr(0, 4) == 'cat_')
 		{
@@ -456,7 +456,8 @@ Backend.Category = {
 
 	loadBookmarkedCategory: function(categoryID)
 	{
-		var match = window.location.hash.match(/cat_(\d+)/);
+		var match = Backend.getHash().match(/cat_(\d+)/);
+
 		if(match)
 		{
 			var alreadyLoaded = false;
@@ -482,7 +483,7 @@ Backend.Category = {
 
 	loadBookmarkedProduct: function()
 	{
-		var productID = window.location.hash.match(/product_(\d+)/);
+		var productID = Backend.getHash().match(/product_(\d+)/);
 		if (productID && productID[1])
 		{
 			Element.show($('loadingProduct'));

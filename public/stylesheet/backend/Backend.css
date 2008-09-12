@@ -1421,6 +1421,7 @@ ul.languageFormTabs li.langTab.active
 	height: 30px;
 	padding: 0;
 	padding-left: 20px;
+	width: auto;
 }
 
 .languageTabsContainer li.moreTabs li
