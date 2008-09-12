@@ -1006,7 +1006,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$this->currency->set($currency);
 		foreach ($this->getOrderedItems() as $item)
 		{
-			$item->price->set($item->product->get()->getPrice($currency));
+			$item->price->set($item->product->get()->getItemPrice($item, $currency));
 			$item->priceCurrencyID->set($currency->getID());
 			$item->save();
 		}
@@ -1158,6 +1158,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			$array['discounts'][$discount->getID() ? $discount->getID() : $key] = $discount->toArray();
 			$array['discountAmount'] -= $discount->amount->get();
 		}
+		$array['formatted_discountAmount'] = $this->currency->get()->getFormattedPrice($array['discountAmount']);
 
 		// payments
 		if (isset($options['payments']))

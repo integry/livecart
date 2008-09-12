@@ -403,6 +403,16 @@ class Product extends MultilingualObject
 		$this->getPricingHandler()->setPrice($instance);
 	}
 
+	public function getItemPrice(OrderedItem $item, $currencyCode)
+	{
+	  	if ($currencyCode instanceof Currency)
+	  	{
+			$currencyCode = $currencyCode->getID();
+		}
+
+		return $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode)->getItemPrice($item);
+	}
+
 	public function getPrice($currencyCode, $recalculate = true)
 	{
 	  	if ($currencyCode instanceof Currency)

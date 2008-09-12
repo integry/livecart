@@ -1072,6 +1072,54 @@ class OrderTest extends UnitTest
 		$this->assertEquals($expectedTotal, $this->order->getTotal($this->usd));
 	}
 
+	public function testQuantityPrices()
+	{
+		$product = $this->products[0];
+		$this->order->addProduct($product, 5);
+
+		$price = $product->getPricingHandler()->getPriceByCurrencyCode('USD');
+		$this->assertIsA($price, 'ProductPrice');
+
+		$price->setPriceRule(5, null, 15);
+		$this->assertEquals($this->order->getTotal($this->usd), 75);
+
+		$price->removePriceRule(5, null);
+		$this->assertEquals($this->order->getTotal($this->usd), 500);
+
+		$price->setPriceRule(4, null, 15);
+		$this->assertEquals($this->order->getTotal($this->usd), 75);
+
+		$price->removePriceRule(4, null);
+		$price->setPriceRule(6, null, 15);
+		$this->assertEquals($this->order->getTotal($this->usd), 500);
+
+		$price->setPriceRule(9, null, 15);
+		$this->assertEquals($this->order->getTotal($this->usd), 500);
+
+		// user group pricing
+		$group = UserGroup::getNewInstance('test');
+		$group->save();
+
+		$price->setPriceRule(4, null, 15);
+		$price->setPriceRule(4, $group, 10);
+		$this->assertEquals($this->order->getTotal($this->usd), 75);
+
+		$user = $this->order->user->get();
+		$user->userGroup->set($group);
+		$user->save();
+		$this->assertEquals($this->order->getTotal($this->usd), 50);
+
+		$price->removePriceRule(4, null);
+		$price->removePriceRule(4, $group);
+
+		$price->setPriceRule(4, null, 15);
+		$price->setPriceRule(6, $group, 10);
+		$this->assertEquals($this->order->getTotal($this->usd), 75);
+
+		$price->setPriceRule(5, $group, 10);
+		$this->assertEquals($this->order->getTotal($this->usd), 50);
+	}
+
 	private function createOrderWithZone(DeliveryZone $zone = null)
 	{
 		if (is_null($zone))

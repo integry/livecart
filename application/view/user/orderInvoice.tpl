@@ -106,6 +106,14 @@
 					</tr>
 				{/foreach}
 			{/if}
+
+			{if $order.discountAmount}
+				<tr class="discountAmount">
+					<td>{t _discount}:</td>
+					<td class="amount">{$order.formatted_discountAmount}</td>
+				</tr>
+			{/if}
+
 			<tr class="grandTotal">
 				<td>{t _grand_total}:</td>
 				<td class="amount">{$order.formatted_totalAmount}</td>

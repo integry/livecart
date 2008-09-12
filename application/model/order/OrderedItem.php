@@ -124,7 +124,7 @@ class OrderedItem extends ActiveRecordModel
 
 	private function getItemPrice(Currency $currency, $includeTaxes = true)
 	{
-		$price = $this->product->get()->getPrice($currency->getID());
+		$price = $this->product->get()->getItemPrice($this, $currency->getID());
 
 		if ($includeTaxes)
 		{
@@ -333,7 +333,7 @@ class OrderedItem extends ActiveRecordModel
 		$this->priceCurrencyID->set($this->customerOrder->get()->currency->get()->getID());
 		if (!$this->price->get())
 		{
-			$this->price->set($this->product->get()->getPrice($this->priceCurrencyID->get()));
+			$this->price->set($this->product->get()->getItemPrice($this, $this->priceCurrencyID->get()));
 		}
 
 		return parent::insert();
@@ -391,6 +391,12 @@ class OrderedItem extends ActiveRecordModel
 
 		if ($this->isModified())
 		{
+			$user = $this->customerOrder->get()->user->get();
+			if ($user)
+			{
+				$user->load();
+			}
+			$this->price->set($this->product->get()->getItemPrice($this, $this->customerOrder->get()->currency->get()));
 			return parent::update();
 		}
 		else

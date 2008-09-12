@@ -70,27 +70,111 @@ class ProductPrice extends ActiveRecordModel
 
 	/*####################  Value retrieval and manipulation ####################*/
 
-	public function reCalculatePrice()
+	public function getItemPrice(OrderedItem $item)
 	{
-		$defaultCurrency = self::getApplication()->getDefaultCurrency();
-		$basePrice = $this->product->get()->getPrice($defaultCurrency->getID(), Product::DO_NOT_RECALCULATE_PRICE);
-
-		if ($this->currency->get()->rate->get())
+		if ($this->price->get())
 		{
-			$price = $basePrice / $this->currency->get()->rate->get();
+			$rules = unserialize($this->serializedRules->get());
+			$price = $this->price->get();
+
+			// quantity/group based prices
+			if ($rules)
+			{
+				$user = $item->customerOrder->get()->user->get();
+				$groupID = ($user && $user->userGroup->get()) ? $user->userGroup->get()->getID() : 0;
+
+				foreach (array($groupID, 0) as $group)
+				{
+					$p = $this->getGroupPrice($item, $group, $rules);
+					if (!is_null($p))
+					{
+						return $p;
+					}
+				}
+			}
+
+			return $price;
 		}
 		else
 		{
-			$price = 0;
+			$defaultCurrency = self::getApplication()->getDefaultCurrency();
+			return $this->convertFromDefaultCurrency($this->product->get()->getItemPrice($item, $defaultCurrency->getID()));
+		}
+	}
+
+	private function getGroupPrice(OrderedItem $item, $groupID, $rules)
+	{
+		$found = array();
+		foreach ($rules as $quant => $prices)
+		{
+			if (isset($prices[$groupID]))
+			{
+				$found[$quant] = $prices[$groupID];
+			}
 		}
 
-		return $price;
+		$quantities = array_keys($found);
+		sort($quantities);
+		$cnt = count($quantities);
+		$itemCnt = $item->count->get();
+
+		for ($k = 0; $k < $cnt; $k++)
+		{
+			if ($quantities[$k] <= $itemCnt && (($k == $cnt - 1) || ($quantities[$k + 1] >= $itemCnt)))
+			{
+				return $found[$quantities[$k]];
+			}
+		}
+
+		return null;
+	}
+
+	public function reCalculatePrice()
+	{
+		$defaultCurrency = self::getApplication()->getDefaultCurrency();
+		return $this->convertFromDefaultCurrency($this->product->get()->getPrice($defaultCurrency->getID(), Product::DO_NOT_RECALCULATE_PRICE));
+	}
+
+	private function convertFromDefaultCurrency($price)
+	{
+		if ($this->currency->get()->rate->get())
+		{
+			return $price / $this->currency->get()->rate->get();
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	public function increasePriceByPercent($percentIncrease)
 	{
 		$multiply = (100 + $percentIncrease) / 100;
 		$this->price->set($this->price->get() * $multiply);
+	}
+
+	public function setPriceRule($quantity, UserGroup $group = null, $price)
+	{
+		$rules = unserialize($this->serializedRules->get());
+		$rules[$quantity][is_null($group) ? 0 : $group->getID()] = $price;
+		$this->setRules($rules);
+	}
+
+	public function removePriceRule($quantity, UserGroup $group = null)
+	{
+		$rules = unserialize($this->serializedRules->get());
+		unset($rules[$quantity][is_null($group) ? 0 : $group->getID()]);
+		if (empty($rules[$quantity]))
+		{
+			unset($rules[$quantity]);
+		}
+		$this->setRules($rules);
+	}
+
+	private function setRules($rules)
+	{
+		ksort($rules);
+		$this->serializedRules->set(serialize($rules));
 	}
 
 	public static function calculatePrice(Product $product, Currency $currency, $basePrice = null)
@@ -213,8 +297,9 @@ class ProductPrice extends ActiveRecordModel
 		$pricing = array();
 		foreach ($priceArray as $price)
 		{
-			$pricing[$price['productID']][$price['currencyID']] = $price['price'];
+			$pricing[$price['productID']][$price['currencyID']] = $price;
 		}
+
 		foreach ($pricing as $productID => $productPricing)
 		{
 			$product = $products->get($ids[$productID]);

@@ -471,7 +471,12 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 			'deliveryZoneID' => $order->getDeliveryZone()->getID(),
 		);
 
-		$order->user->get()->load();
+		$user = $order->user->get();
+		if ($user)
+		{
+			$user->load();
+		}
+
 		if ($order->user->get() && ($userGroup = $order->user->get()->userGroup->get()))
 		{
 			$records['userGroupID'] = $userGroup->getID();
