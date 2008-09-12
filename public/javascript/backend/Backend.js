@@ -146,6 +146,10 @@ Backend.AjaxNavigationHandler.prototype =
 		if(!params.recoverFromIndex) params.recoverFromIndex = 0;
 
 		var elementId = element.substr(0, element.length - 2);
+
+		// Safari
+		elementId = elementId.replace(/%23/, '#');
+
 		var hashElements = elementId.split('#');
 
 		for (var hashPart = params.recoverFromIndex; hashPart < hashElements.length; hashPart++)

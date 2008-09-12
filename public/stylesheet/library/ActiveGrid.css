@@ -9,6 +9,11 @@
 	-moz-outline:none;
 }
 
+.activeGridContainer
+{
+	position: relative;
+}
+
 .activeGridViewportContainer
 {
 	overflow: hidden;
@@ -19,21 +24,23 @@
 .activeGridScroller
 {
 	overflow: auto;
-	position: absolute;
+	position: relative;
 	right: 0;
-	top: 28px;
+	top: 26px;
 }
 
 .activeGridScroller, x:-moz-any-link
 {
 	-moz-opacity: 0.7;
-	position: relative;
-	left: -2px;
+/*	position: relative; */
+	left: 0px;
+	margin-right: 2px;
 }
 
 .activeGridScroller, x:-moz-any-link, x:default
 {
 	left: 0;
+	margin-right: 0;
 }
 
 .activeGrid_loadIndicator, .activeGrid_massActionProgress
@@ -85,6 +92,7 @@
 {
     margin-right: -67px;
     width: 100%;
+    max-height: 450px;
 }
 
 .activeGrid .sortedColumn
@@ -266,6 +274,12 @@
 	border-bottom: 1px inset #ddd;
 }
 
+@media screen and (-webkit-min-device-pixel-ratio:0)
+{
+	.activeGrid th, .activeGrid td { height: 27px; }
+	.activeGridScroller { width: 30px; top: 28px; }
+}
+
 .activeGrid th
 {
 	border-left: 1px solid #ccc;
@@ -283,8 +297,7 @@
 	background-color: #DDDDDD;
     /* overflow: hidden; */
     white-space: nowrap;
-    padding: 0;
-    padding: 3px;
+    padding: 0 2px;
 }
 
 .activeGrid .headRow
@@ -450,7 +463,6 @@
 ***************************************/
 .activeGridColumns
 {
-	margin-bottom: -7px;
 	padding-top: 5px;
 	text-align: right;
 }
