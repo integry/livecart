@@ -58,6 +58,10 @@ class ProductTest extends UnitTest
 		$this->product->setValueByLang("name", "lt", "Bandomasis produktas");
 		$this->product->setFieldValue("isEnabled", true);
 		$this->product->save();
+
+		$this->usd = ActiveRecordModel::getNewInstance('Currency');
+		$this->usd->setID('ZZZ');
+		$this->usd->save(ActiveRecord::PERFORM_INSERT);
 	}
 
 	/**
@@ -643,6 +647,64 @@ class ProductTest extends UnitTest
 
 		// SKU shouldn't be reset for products that are not loaded
 		$this->assertNotEquals($this->product->sku->get(), 'SKU' . $product->getID());
+	}
+
+	public function testClone()
+	{
+		$image = ActiveRecordModel::getNewInstance('ProductImage');
+		$image->product->set($this->product);
+		$image->save();
+
+		$this->assertSame($image, $this->product->defaultImage->get());
+
+		$numField = SpecField::getNewInstance($this->productCategory, SpecField::DATATYPE_NUMBERS, SpecField::TYPE_NUMBERS_SIMPLE);
+		$numField->save();
+		$this->product->setAttributeValue($numField, 100);
+		$this->product->save();
+
+		$option = ProductOption::getNewInstance($this->product);
+		$option->type->set(ProductOption::TYPE_SELECT);
+		$option->setValueByLang('name', 'en', 'test');
+		$option->save();
+
+		$related = Product::getNewInstance($this->productCategory, 'related');
+		$related->save();
+		$relGroup = ProductRelationshipGroup::getNewInstance($this->product);
+		$relGroup->save();
+		$rel = ProductRelationship::getNewInstance($this->product, $related, $relGroup);
+		$rel->save();
+
+		$this->assertEquals(1, $this->product->getRelationships()->size());
+
+		$cloned = clone $this->product;
+		$this->assertEquals(100, $cloned->getSpecification()->getAttribute($numField)->value->get());
+
+		$cloned->setAttributeValue($numField, 200);
+		$cloned->setPrice($this->usd, 80);
+		$cloned->save();
+
+		$this->assertNotEquals($cloned->getID(), $this->product->getID());
+
+		ActiveRecordModel::clearPool();
+		$reloaded = Product::getInstanceByID($cloned->getID(), true);
+
+		$reloaded->loadPricing();
+		$this->assertEquals(80, $reloaded->getPrice($this->usd));
+
+		$reloaded->loadSpecification();
+		$this->assertEquals(200, $reloaded->getSpecification()->getAttribute($numField)->value->get());
+
+		// related products
+		$rel = $reloaded->getRelationships();
+		$this->assertEquals(1, $rel->size());
+		$this->assertSame($reloaded, $rel->get(0)->productRelationshipGroup->get()->product->get());
+
+		// options
+		$clonedOpts = ProductOption::getProductOptions($reloaded);
+		$this->assertEquals(1, $clonedOpts->size());
+
+		// image
+
 	}
 
 	function test_SuiteTearDown()

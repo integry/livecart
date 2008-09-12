@@ -6,6 +6,8 @@
 </script>
 {/literal}
 
+{block TRANSLATIONS}
+
 <div>
 
 <fieldset class="container" {denied role="product.create"}style="display: none"{/denied}>
@@ -35,6 +37,7 @@
 			<option value="enable_isEnabled">{t _enable}</option>
 			<option value="disable_isEnabled">{t _disable}</option>
 			<option value="move">{t _move_to_category}</option>
+			<option value="copy">{t _copy_to_category}</option>
 			<option value="delete">{t _delete}</option>
 
 			<option value="manufacturer">{t _set_manufacter}</option>

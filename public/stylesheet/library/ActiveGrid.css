@@ -259,7 +259,7 @@
 .activeGrid th, .activeGrid td
 {
   	height: 28px;
-  	padding: 2px;
+  	padding: 0 2px;
   	white-space: nowrap;
 	border-left: 1px inset #ddd;
 	border-bottom: 1px inset #ddd;

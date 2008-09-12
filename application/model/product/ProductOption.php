@@ -128,6 +128,13 @@ class ProductOption extends MultilingualObject
 		}
 	}
 
+	public static function getProductOptions(Product $product)
+	{
+		$options = $product->getRelatedRecordSet('ProductOption');
+		self::loadChoicesForRecordSet($options);
+		return $options;
+	}
+
 	public static function loadOptionsForProductSet(ARSet $products)
 	{
 		// load category options
@@ -274,6 +281,29 @@ class ProductOption extends MultilingualObject
 		return $this->getRelatedRecordSet('ProductOptionChoice', $f);
 	}
 
+	public function __clone()
+	{
+		parent::__clone();
+
+		$this->choices = null;
+		$this->save();
+
+		$defaultChoice = $this->originalRecord->defaultChoice->get();
+
+		foreach ($this->originalRecord->getChoiceSet() as $choice)
+		{
+			$newChoice = clone $choice;
+			$newChoice->option->set($this);
+			$newChoice->save();
+
+			if ($defaultChoice && ($choice->getID() == $defaultChoice->getID()))
+			{
+				$this->defaultChoice->set($newChoice);
+			}
+		}
+
+		$this->save();
+	}
 }
 
 ?>

@@ -5,13 +5,28 @@
 /* Category manager styling */
 .tabContainer ul.tabList
 {
+	max-height: 18px;
 	list-style: none;
 	margin:0px;
 	padding: 0px;
-	height: auto;
+	height: 18px;
 	padding-top: 8px;
 	padding-bottom: 4px;
 	white-space: nowrap;
+}
+
+ul.tabList
+{
+/*
+	padding-bottom: 0px;
+	position: relative;
+	z-index: 200;
+*/
+}
+
+ul.tabList li.inactive, ul.tabList li.hover
+{
+	padding-bottom: 4px !important;
 }
 
 .tabContainer ul.tabList li
@@ -50,9 +65,11 @@
 
 .sectionContainer
 {
+	position: relative;
 	padding: 10px;
 	border: 1px solid #ccc;
 	background-color: #fdfdfd;
+	/*margin-top: -1px; */
 }
 
 .tabContainer ul.tabList li.tab.hidden
