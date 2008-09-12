@@ -8,7 +8,7 @@ TMP=/tmp/build
 PACKAGE=/var/db/livecart
 
 MAIN=/var/www/livecart
-MAIN=/var/www/release
+#MAIN=/var/www/release
 #BUILD=/var/www/build
 
 # check if there are no uncommitted files left
@@ -44,7 +44,7 @@ VERSION=`head .version`
 # cp .version /home/livecart/public_html/update/.version
 
 # remove non-distributed files
-rm -rf build cache doc update
+rm -rf build cache doc update .git* .snap
 rm -rf public/cache public/upload
 rm -rf storage/configuration/*.php
 rm -rf library/payment/test/simpletest
