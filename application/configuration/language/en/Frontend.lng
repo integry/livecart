@@ -66,6 +66,12 @@ _remind_password=I have forgotten my password
 _sale_items=Special Offer
 _newest_products=Newest Products
 
+# Custom pages
+_contact=Contact
+_manufacturers=Manufacturers
+_categories=Categories
+_all_products=All products
+
 # Common words
 _save=Save
 _or=or

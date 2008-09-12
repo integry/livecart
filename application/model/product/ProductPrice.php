@@ -95,11 +95,13 @@ class ProductPrice extends ActiveRecordModel
 
 			return $price;
 		}
-		else
+		else if ($this->currency->get()->getID() != self::getApplication()->getDefaultCurrencyCode())
 		{
 			$defaultCurrency = self::getApplication()->getDefaultCurrency();
 			return $this->convertFromDefaultCurrency($this->product->get()->getItemPrice($item, $defaultCurrency->getID()));
 		}
+
+		return 0;
 	}
 
 	private function getGroupPrice(OrderedItem $item, $groupID, $rules)

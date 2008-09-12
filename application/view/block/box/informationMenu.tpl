@@ -1,4 +1,4 @@
-{if $pages}		
+{if $pages}
 <div class="box informationMenu">
 	<div class="title">
 		<div>{t _information}</div>

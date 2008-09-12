@@ -33,6 +33,8 @@ class DiscountConditionTest extends UnitTest
 	public function setUp()
 	{
 		parent::setUp();
+		ActiveRecord::executeUpdate('DELETE FROM DiscountCondition');
+		ActiveRecord::executeUpdate('DELETE FROM DiscountAction');
 		$this->root = DiscountCondition::getRootNode();
 
 		$this->usd = ActiveRecordModel::getInstanceByIDIfExists('Currency', 'USD');
@@ -71,28 +73,30 @@ class DiscountConditionTest extends UnitTest
 
 	public function testBasicRestrictions()
 	{
+		$this->order->addProduct($this->product1, 1, true);
+
 		$condition = DiscountCondition::getNewInstance();
 		$condition->save();
 
 		// no conditions, because not enabled
-		$this->assertEquals(count($this->order->getDiscountConditions()), 0);
+		$this->assertEquals(count($this->order->getDiscountConditions(true)), 0);
 
 		// enable condition - should be available now
 		$condition->isEnabled->set(true);
 		$condition->save();
-		$this->assertEquals(count($this->order->getDiscountConditions()), 1);
+		$this->assertEquals(count($this->order->getDiscountConditions(true)), 1);
 
 		// set time restriction in future - no longer available
 		$condition->validFrom->set(time() + 100);
 		$condition->validTo->set(time() + 200);
 		$condition->save();
-		$this->assertEquals(count($this->order->getDiscountConditions()), 0);
+		$this->assertEquals(count($this->order->getDiscountConditions(true)), 0);
 
 		// set time restriction in present - available again
 		$condition->validFrom->set(time() - 100);
 		$condition->validTo->set(time() + 100);
 		$condition->save();
-		$this->assertEquals(count($this->order->getDiscountConditions()), 1);
+		$this->assertEquals(count($this->order->getDiscountConditions(true)), 1);
 	}
 
 	public function testGlobalDiscount()
@@ -107,7 +111,7 @@ class DiscountConditionTest extends UnitTest
 		$condition->isEnabled->set(true);
 		$condition->save();
 
-		$conditions = $this->order->getDiscountConditions();
+		$conditions = $this->order->getDiscountConditions(true);
 		$this->assertEqual($conditions[0]['ID'], $condition->getID());
 
 		$result = DiscountAction::getNewInstance($condition);
@@ -124,7 +128,9 @@ class DiscountConditionTest extends UnitTest
 		$this->assertEqual($discounts->size(), 1);
 
 		$newTotal = $this->order->getTotal($this->usd);
-		$this->assertEqual($orderTotal * 0.9, $newTotal);
+
+		// uuhh.. Failed asserting that <double:27> matches expected value <double:27>.
+		$this->assertEqual((string)($orderTotal * 0.9), (string)$newTotal);
 	}
 
 	public function testRecordCount()
@@ -260,15 +266,15 @@ class DiscountConditionTest extends UnitTest
 		$condition->comparisonType->set(DiscountCondition::COMPARE_GTEQ);
 		$condition->save();
 
-		$this->assertEquals(1, count($this->order->getDiscountConditions()));
+		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
 
 		$condition->subTotal->set(50);
 		$condition->save();
-		$this->assertEquals(0, count($this->order->getDiscountConditions()));
+		$this->assertEquals(0, count($this->order->getDiscountConditions(true)));
 
 		$condition->subTotal->set(30);
 		$condition->save();
-		$this->assertEquals(1, count($this->order->getDiscountConditions()));
+		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
 	}
 
 	public function testOrderTotalRange()
@@ -291,15 +297,15 @@ class DiscountConditionTest extends UnitTest
 		$sub->comparisonType->set(DiscountCondition::COMPARE_LTEQ);
 		$sub->save();
 
-		$this->assertEquals(1, count($this->order->getDiscountConditions()));
+		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
 
 		$condition->subTotal->set(50);
 		$condition->save();
-		$this->assertEquals(0, count($this->order->getDiscountConditions()));
+		$this->assertEquals(0, count($this->order->getDiscountConditions(true)));
 
 		$condition->subTotal->set(30);
 		$condition->save();
-		$this->assertEquals(1, count($this->order->getDiscountConditions()));
+		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
 	}
 
 	public function testOrderItemCount()
@@ -314,15 +320,15 @@ class DiscountConditionTest extends UnitTest
 		$condition->comparisonType->set(DiscountCondition::COMPARE_GTEQ);
 		$condition->save();
 
-		$this->assertEquals(1, count($this->order->getDiscountConditions()));
+		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
 
 		$condition->count->set(3);
 		$condition->save();
-		$this->assertEquals(0, count($this->order->getDiscountConditions()));
+		$this->assertEquals(0, count($this->order->getDiscountConditions(true)));
 
 		$condition->count->set(2);
 		$condition->save();
-		$this->assertEquals(1, count($this->order->getDiscountConditions()));
+		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
 	}
 
 }

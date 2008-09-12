@@ -1,0 +1,108 @@
+New major features:
+* Powerful and advanced pricing/promotions/discount management
+* Quantity and user group based pricing
+* Discount coupons
+* Product bundles
+* Custom user registration fields
+* Custom order fields
+* Product reviews and ratings (configurable rating categories)
+
+New browser support for backend:
+* Opera
+* Apple Safari
+* Google Chrome
+
+Other important additions:
+* Custom product lists/selections to highlight certain products in category pages
+* Ability to enter detailed manufacturer information (customizable fields) and upload manufacturer logo images
+* Product inquiry contact form
+* General contact form
+
+New language packs:
+* Hungarian
+* Slovak
+
+New payment processor integrations:
+* MoneyBookers
+* iDEALeasy (ABN-AMRO)
+* VCS (South Africa)
+
+New shopping cart support for database migration:
+* Shop-script
+
+Improved customizability:
+* Added ability to upload store logo from backend (without having to modify template files)
+* Added ability to easily and completely rebrand a LiveCart installation by changing the software name, powered by notice text, backend logos, options, etc. from the backend settings configuration panel.
+* Added configuration options for customizing invoices without having to edit the invoice template file (for example, to enter the seller contact information)
+* Upload favicon image from backend
+
+Store frontend improvements:
+* New store pages:
+	* alphabetical list of all store categories
+	* a list of all products from all categories
+	* a list of all manufacturers
+* Improved form interface - required fields are now marked with asterisk in addition to making them bold and error message styling has been improved as well
+* Added ability to make online payments for unpaid (completed via offline payment) or partially paid orders from user account area
+* Display action status messages after adding and removing items from cart
+* Rearranged the login and registration forms in signup and checkout address pages in two columns to improve visibility of the registration form (which was below signup form before)
+* Default theme: added dynamic menu to top level category tabs, which display subcategories on mouse over
+* Added ability for customers to edit their names and company names, as well as custom fields
+* Side menu block for latest news
+* Display manufacturer information in category page
+* Added a separate template file for entering offline payment instructions
+
+Store backend improvements:
+* Ability to copy/duplicate products
+* Data grid date filtering (preselected intervals, custom date ranges not implemented yet)
+* In some sections less used tabs can be hidden
+* Tabs for certain languages can now easily be added and removed from language forms without having to remove the language itself
+* An enlargeble product thumbnail image is displayed in order product list in backend
+* Large CSV file imports can now be completed successfully even if there are web server level (for example, Apache) script execution timeouts imposed. In case a timeout is detected, the import routine is automatically called again to resume the import.
+* When importing a CSV file, the name of the currently imported product is displayed below the import progress bar
+* Added possibility to save a template file for a specific theme only
+* Image size configuration section in backend has been made a little more compact
+* Multiple visual improvements
+
+Store frontend fixes:
+* It was not possible to add the same product to cart multiple times with different options selected
+* It is no longer possible to add a product to cart without selecting a required product option
+* Product options that were set to be not displayed in frontend were still changable by customer after clicking Edit Options link in the shopping basket
+* Fixed presentation of long product option descriptions in product page - they were not wrapped in separate lines causing the layout to break
+* Show an error message in product page when trying to add an unavailable product to cart instead of showing general error page
+* "Add to cart" button is no longer displayed in product pages for those products that cannot be ordered
+* Several frontend pages didn't have the page title included in the <title> tag
+* IE rendering fixes for the default theme
+* Fixed problems with AJAX functionality in frontend in IE 6
+* Fixed a bug that caused offline payment method to be inaccessible in case exactly one external payment method was enabled and credit card payments
+disabled - checkout was redirecting to the external page automatically skipping payment method selection.
+* Fixed shopping cart page layout in default template when there are no items in cart
+* Order transaction amount was not properly rounded (more than 2 decimal signs left) before passing it to payment processor in case the store currency was not supported by the payment processor and the amount had to be converted
+
+Store backend fixes:
+* Product CSV export did not work
+* CSV export of large data sets could sometimes run out of memory - now there's no limit on exportable data set size
+* Some backend functionality did not work on IIS servers
+* External product image import from CSV did not work on some servers
+* Category level product options were not editable for ordered products that didn't have any options selected by customer
+* Fixed template editor problems in Firefox 3
+* Language translations were not editable for product files
+* The first record of a CSV file was imported as a product even if it was set as a header row
+* Fixed JavaScript error when saving product prices with Firefox 3
+* Fixed a bug that caused custom created template files go blank after saving them, in case they were not located in the template root directory
+
+System fixes:
+* Proper handling of inventory stock amounts
+* Orders are now marked as not paid after voiding transactions
+* Fixed a bug that caused order totals to be calculated incorrectly if the base currency exchange rates were other than 1.00 or 0 (i.e., the default
+currency was changed)
+* Layout manipulation from INI files was not working properly
+* Made Authorize.net payment module work correctly with Quantum Gateway and probably other Authorize.net compatible payment processors as well
+
+System improvements:
+* https URL's can now point not only to different domains, but different directories as well
+* Added Canadian provinces to predefined state/region list
+* Custom routing rule files can be loaded from storage/configuration/route directory
+* Theme inheritance configuration file can also be located in the storage/customize/view directory
+
+Internal changes:
+* Migrated unit test classes from SimpleTest to PHPUnit
