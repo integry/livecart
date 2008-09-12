@@ -1,0 +1,17 @@
+_cancel_new=Új kép hozáadásának visszavonása
+_add_new=Új kép hozáadása
+_add_new_title=Új Kép Hozáadása
+_delete_confirm=Valóban le akarod törölni ezt a képet?
+_main_image=Fő kép
+_supplemental_images=Kiegészítő képek
+_no_images=Ehhez a termékhez még nincsnek hozzáadott képek
+_max_file_size=Csak JPEG, GIF és PNG fájlok. Max fájl méret: [_1]
+_edit_image=Kép részleteinek szerkesztése
+_image_title=Kép cím megadása
+_image_file=Kép fájl kiválasztása
+_upload=Kép hozáadása
+_save=Mentés
+_err_not_uploaded=Válassz ki egy fájlt
+_err_not_image=Ez nem valós kép
+_err_resize=Probléma a kép át-méretezésekor
+_err_too_large=A fájl túl nagy méretű

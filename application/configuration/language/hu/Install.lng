@@ -1,0 +1,11 @@
+_err_innodb_not_available=<a ref="http://dev.mysql.com/doc/refman/5.0/en/innodb-overview.html" target="_blank">InnoDB adattábla tároló modul</a> nincs engedélyezve a MySQLnek. Ellenőrizd a MySQL szerver beállításait és próbáld újra!
+checkWritePermissions=Könyvtár hozzáférési jogok
+_writePermissionsFix=<strong>Ajánlott módszer:</strong> egy FTP klienst használva, állítsd a konyvtár hozzáférési jogokat (chmod) a következő konyvtáraknak 777 -re (teljes hozzáférés). Ha a könyvtár még nem létezik, hozd létre!
+checkPHPVersion=PHP verzió
+checkPHPVersion_error=A <a href="http://php.net" target="_blank">PHP</a> legalább 5.2-es verziójú kell legyen!
+checkMySQL=Adatbázis támogatás
+checkMySQL_error=A <a href="http://php.net/mysqli" target="_blank">mysqli</a> vagy a <a href="http://php.net/mysqli" target="_blank">mysql</a> modulok telepítve kell legyenek a PHP -ben.
+checkGD=Kép kezelési támogatás
+checkGD_error=<a href="http://php.net/gd" target="_blank">GD</a> modul telepítve kell legyen a PHP -ben
+checkSession=PHP session konfiguráció
+checkSession_error=A PHP sessionok nem tárolódnak. Bizonyosodj meg, hogy a <a href="http://php.net/manual/en/ref.session.php#ini.session.save-path"><em>session.save_path</em></a> PHP beállításaid helyesek.

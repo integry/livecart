@@ -1,0 +1,12 @@
+_cart_items=Položky v košíku - kúpiť teraz
+_wish_list_items=Položky v zozname želaní - kúpiť neskôr
+_edit_options=Zmeniť možnosti
+_move_to_wishlist=Presunúť do zoznamu prianí
+_move_to_cart=Presunúť do košíka
+_remove=Odstrániť
+_continue_shopping=Pokračovať v nakupovaní
+_proceed_checkout=Pokračovať k úhrade
+_update=Aktualizovať
+_empty_basket=Váš nákupný košík je prázdny
+_your_basket=Váš nákupný košík
+_item_count=Vo Vašom nákupnom košíku sa nachádza: [quant,_1,položka,položiek,žiadne položky].

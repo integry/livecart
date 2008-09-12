@@ -1,0 +1,15 @@
+_edit_templates=Zmeniť šablóny
+_edit_template=Zmeniť súbor šablóny
+_please_select=Pre editáciu vyberte prosím súbor so šablónou.
+_save_template=Uložiť šablónu
+_template_file_name=Meno súboru
+_create_template=Vytvoriť súbor šablóny
+_delete_template=Odstrániť súbor šablóny
+_file_name_empty=Prosím vložte meno súboru
+_edit_email_templates=Zmeniť e-mailové šablóny
+_subject=Predmet správy
+_body=Telo správy
+_confirm_template_delete=Naozaj chcete vymazať vybraný súbor šablóny?
+_template_has_been_successfully_updated=Šablóna bola úspešne uložená
+_could_not_update_template=Šablónu sa nepodarilo uložiť
+_template_has_been_successfully_deleted=Súbor šablóny bol úspešne odstránený

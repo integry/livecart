@@ -1,0 +1,13 @@
+_ordered_item_was_successfully_moved=Termék sikeresen áthelyezve másik szállítmányba
+_this_shipping_service_has_no_available_rates=Ez a szolgáltatás nem elérhető a kliens zónájában és a rendelés értékeben
+_ordered_item_quantity_was_updated=Termék mennyisége frissítve
+_error_updating_item_quantity=Termék mennyiség frissítése sikertelen
+_item_has_been_successfuly_saved=A termél sikeresen hozzáadva a rendeléshez
+_item_was_successfully_removed_from_shipment=Termék eltávolítva a szállítmányból
+_error_removing_item_from_shipment=Termék eltávolítása a szállítmánybol sikertelen
+_downloadable_item_already_exists_in_this_order=Ezt a letölthető terméket már tartalmazza a rendelés
+_select_product=Termék hozzáadása a rendeléshez
+_done_adding_products=Termék hozáadás befejezése
+_select_shippment=Szállítmány kiválasztása
+_shipping_service_is_not_selected=Szállítmányozási szolgáltatás nincs kiválasztva
+_shipment=Szállítmány

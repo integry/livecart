@@ -1,0 +1,13 @@
+_add_new_file=Új fájl hozáadása
+_add_new_group=Új csoport hozáadása
+_cancel_adding_new_file=Új fájl hozáadás visszavonása
+_cancel_adding_file_group=Új csoport hozáadás visszavonása
+_are_you_sure_you_want_to_delete=Valóban le akarod törölni ezt a fájlt
+_are_you_sure_you_want_to_delete_group=Valóban le akarod törölni ezt a csoportot
+_product_file_group_title=Cím
+_add_new_file_group=Fájl csoport szerkesztése
+_err_file_title_is_empty=Adj címet a fájlnak
+_err_allow_download_days_should_be_a_number=Napok száma numerikus típus kell legyen
+_err_allow_download_days_is_empty=Add meg hány napig tölthető le
+_err_file_could_not_be_uploaded_to_the_server=Fájl nem tölthető fel a szerverre
+_err_fileName_should_not_be_empty=Add meg a fájl nevét

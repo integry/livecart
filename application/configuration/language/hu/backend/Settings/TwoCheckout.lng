@@ -1,0 +1,5 @@
+TwoCheckout=2Checkout
+TwoCheckout_account=Fiók ID
+TwoCheckout_currency=Fiók pénznem
+TwoCheckout_secretWord=Titkos szó <a href="https://www.2checkout.com/2co/admin/look_and_feel" target="_blank">(?)</a>
+TwoCheckout_test=Tesztelési mód 

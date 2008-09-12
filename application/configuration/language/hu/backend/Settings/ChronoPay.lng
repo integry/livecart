@@ -1,0 +1,5 @@
+ChronoPay_productid=ChronoPay product ID
+ChronoPay_productname=A bevásárló kosár termék leírás mutatása a ChronoPay -en
+ChronoPay_currency=ChronoPay pénznem
+ChronoPayGateway_productid=ChronoPay termék ID
+ChronoPayGateway_secret=Megosztott titkos kulcs

@@ -1,0 +1,10 @@
+_add_new_tax=Pridať novú daň
+_cancel_adding_new_tax=Zrušiť pridávanie novej dane
+_cancel_adding_new_tax_rate=Zrušiť pridávanie novej sadzby dane
+_name=Meno
+_manage=Spravovať
+_tax_entry_was_successfully_saved=Záznam o dani bol úspešne uložený
+_could_not_save_tax_entry=Nepodarilo sa uložiť záznam o dani
+_taxes=Dane
+_error_the_name_should_not_be_empty=Prosím vložte meno
+_are_you_sure_you_want_to_remove_ths_tax=Skutočne chcete odstrániť túto daň? Môže sa používať v niektorých dodacích zónach.

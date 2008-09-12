@@ -1,0 +1,10 @@
+_tax_entry_was_successfully_saved=Adó bejegyzés elmentve
+_could_not_save_tax_entry=Adó bejegyzés mentése sikertelen
+_add_new_tax=Új adó hozzáadása
+_cancel_adding_new_tax=Új adó hozzáadás visszavonása
+_cancel_adding_new_tax_rate=Új adó ráta hozzáadás visszavonása
+_name=Név
+_manage=Menedszelés
+_taxes=Adók
+_error_the_name_should_not_be_empty=Adj nevet
+_are_you_sure_you_want_to_remove_ths_tax=Valóban letörlöd ezt az adót? Használatban lehet némely szállítási zónában

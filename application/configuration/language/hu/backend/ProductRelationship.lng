@@ -1,0 +1,16 @@
+_a_relationship_between_products_was_successfully_created=A termékek közötti kapcsolat létrehozva
+_could_not_create_product_relationship=Ez a termék már rendelkezik kapcsolattal
+_relationship_was_successfully_removed=A kapcsolat eltávolítva
+_select_product=Kapcsolódó termék hozzáadása
+_add_new_group=Új csoport hozzáadása
+_add_group_title=Új kapcsolódó termék csoport hozzáadása
+_done_adding=Kapcsolódó termékek hozzáadva
+_cancel_adding_new_related_product=Új kapcsolat hozzáadásának visszavonása
+_cancel_adding_new_group=Új csoport hozzáadásának visszavonása
+_are_you_sure_you_want_to_delete_this_group=Valóban törlöd ezt a kapcsolat csoportot?
+_are_you_sure_you_want_to_delete_this_relation=Valóban törlöd ezt a kapcsolatot?
+_product_relationship_group_title=Cím
+_err_relationship_name_is_empty=Add meg a csoport nevét
+_err_circular=Nem adható kapcsolódó termék ugyanahhoz a csoporthoz
+_err_multiple=Ez a termék már hozzárendelt mint kapcsolódó
+_msg_added=Kapcsolódó termékek hozzáadva

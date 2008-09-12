@@ -1,0 +1,16 @@
+_filter_group_was_successfully_saved=Szűrő sikeresen elmentve
+_could_not_save_filter_group=Szűrő mentése sikertelen
+_filter_group_was_successfully_removed=Szűrő sikeresen eltávolítva
+_could_not_remove_filter_group=Szűrő eltávolítvása sikertelen
+_add_new_filter=Új szűrő
+_category_has_no_attr=Nincsenek szűrhető specifikációk létrehozva ehhez a kategóriához
+_delete_field=Mező törlése
+_remove_filter_question=Biztos, hogy eltávolítod ezt a szűrőt?
+_FilterGroup_remove_question=Biztos, hogy eltávolítod ezt a szűrőt?
+_cancel_adding_new_filter=Új szűrő hozzádásának visszavonása
+_error_name_empty=Add meg a szűrő nevét
+_error_filter_value_is_not_a_number=Szűrő érték szám kell legyen
+_error_spec_field_is_not_selected=Specifikáció mező nincs kiválasztva
+_error_illegal_date=Tiltott dátum
+_error_filter_name_empty=Add meg a szűrő nevét
+_error_filter_handle_invalid=Tiltott kezelő

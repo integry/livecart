@@ -1,0 +1,6 @@
+_customer=Zákazník
+_add_response=Pridať odpoveď
+_cancel_response=Zrušiť odpoveď
+_err_enter_text=Prosím, vložte text odpovede
+_admin=Admin
+_no_messages=Zatiaľ nebola pridaná žiadna správa ohľadne tejto objednávky ani zákazníkom, ani administrátorom. Ak chcete aktualizovať stav objednávky môžete pridať odpoveď. Správa bude automaticky odoslaná zákazníkovi.

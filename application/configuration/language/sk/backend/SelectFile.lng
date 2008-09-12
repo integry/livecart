@@ -1,0 +1,10 @@
+_select_file=Vyberte si súbor
+_listing_files=Výpis súborov $from - $to z $count
+_no_files_found=Neboli nájdené žiadne súbory
+fileName=Meno
+fileType=Prípona
+fileSize=Veľkosť
+fileDate=Dátum zmeny
+filePermissions=Práva
+fileOwner=Vlastník
+fileGroup=Skupina

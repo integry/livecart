@@ -1,0 +1,13 @@
+_add_new_file_group=Editovať skupinu súborov
+_add_new_file=Pridať nový súbor
+_add_new_group=Pridať novú skupinu
+_cancel_adding_new_file=Zrušiť pridávanie nového súboru
+_cancel_adding_file_group=Zrušiť pridávanie novej skupiny
+_are_you_sure_you_want_to_delete=Skutočne chcete odstrániť tento súbor?
+_are_you_sure_you_want_to_delete_group=Skutočne chcete odstrániť túto skupinu?
+_product_file_group_title=Titulok
+_err_file_title_is_empty=Prosím vložte titulok súboru
+_err_allow_download_days_should_be_a_number=Počet dní by mal byť číslo
+_err_allow_download_days_is_empty=Prosím vložte počet dní na stiahnutie
+_err_file_could_not_be_uploaded_to_the_server=Súbor sa nepodarilo nahrať na server
+_err_fileName_should_not_be_empty=Prosím vložte meno súboru

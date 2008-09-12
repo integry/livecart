@@ -1,0 +1,10 @@
+_select_file=Fájl kiválasztása
+_listing_files=Fájlok listázása $from - $to a $count -ból/-ből
+_no_files_found=Nem találtam fájlt
+fileName=Név
+fileType=Kiterjesztés
+fileSize=Méret
+fileDate=Módosítás dátuma
+filePermissions=Jogosultságok
+fileOwner=Tulajdonos
+fileGroup=Csoport

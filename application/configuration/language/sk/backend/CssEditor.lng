@@ -1,0 +1,7 @@
+_save_css=Uložiť CSS
+_common_css=Všeobecné (všetky témy)
+_could_not_update_css_file=Nepodarilo sa uložiť CSS súbor
+_css_file_has_been_successfully_updated=CSS súbor bol úspešne uložený
+_edit_css=Zmeniť súbor CSS
+_please_select=Prosím, vyberte CSS súbor, ktorý chcete zmeniť. Je tam separavaný súbor pre kaýzdú tému. Môžete tiež zmeniť všeobecný súbor, ktorý sa aplikuje na všetky témy.
+_css_warn=POZNÁMKA: vždy sa priamo vyhnite zmene LiveCart CSS súborom - keďže zmeny môžu byť prepísané budúcimi aktualizáciami. Namiesto toho, tu definujte iba zmeny štýlu. Alebo, ak je to viac vyhovujúce, môžete tiež kopírovať a prilepiť celý súbor, ktorý si želáte zmeniť.

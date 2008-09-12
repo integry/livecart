@@ -1,0 +1,17 @@
+FEATURED=Podobné produkty
+SALES_RANK=Najpredávanejšie
+PRODUCT_NAME_ASC=Názov produktu: A-Z
+PRODUCT_NAME_DESC=Názov produktu: Z-A
+PRICE_ASC=Cena: od najnižšej po najvyššiu
+PRICE_DESC=Cena: od najvyššej po najnižšiu
+NEWEST_ARRIVALS=Nové produkty
+_found_cats=Nájdené kategórie
+_not_found=<span class='notFoundMain'>Žiadne produkty neboli nájdené.</span>Prosím, skúste vyhľadávanie podľa iných kľúčových slov.
+RATING=Zákaznícke hodnotenie
+_featured_products=Podobné produkty
+_more_subcats=viac...
+_view_as_list=Zobraziť ako zoznam
+_view_as_grid=Zobraziť ako tabuľku
+_sort_by=Triediť podľa
+_narrow_by_cat=Zúžiť výber podľa kategórie
+_showing_products=Zobrazených [_1] až [_2] z [_3] nájdených produktov.

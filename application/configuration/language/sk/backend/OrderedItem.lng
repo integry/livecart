@@ -1,0 +1,13 @@
+_ordered_item_quantity_was_updated=Množstvo položiek bolo aktualizované
+_select_product=Pridať produkty na objednávku
+_shipment=Zásielka
+_item_has_been_successfuly_saved=Poloźka bola úspešne pridaná na objednávku
+_ordered_item_was_successfully_moved=Produkt bol úspešne presunutý do inej zásielky
+_item_was_successfully_removed_from_shipment=Položka bola úspešne odstránená zo zásielky
+_shipping_service_is_not_selected=Zásielková služba nie je vybraná
+_this_shipping_service_has_no_available_rates=Táto služba nie je dostupná pre užívateľskú zónu a objednávkovú cenu
+_error_updating_item_quantity=Vyskytla sa chyba pri aktualizovaní množstva položiek
+_error_removing_item_from_shipment=Vyskytla sa chyba pri odstráňovaní položky zo zásielky
+_done_adding_products=Pidávanie produktov ukončené
+_downloadable_item_already_exists_in_this_order=táto stiahnuteľná položka už existuje v tejto objednávke
+_select_shippment=Vybrať zásielku

@@ -1,0 +1,18 @@
+_not_found=<span class='notFoundMain'>Nem találtunk ilyen terméket.</span> Próbálj más kulcs szavak segítségével keresni!
+_featured_products=Kiemelt termékek
+_view_as_grid=Megjelenítés rácsként
+_view_as_list=Megjelenítés listaként
+_sort_by=Rendezés
+FEATURED=Kiemelt termékek
+SALES_RANK=Leg vásároltabb
+PRODUCT_NAME_ASC=Termék név: A-Z
+PRODUCT_NAME_DESC=Termék név: Z-A
+PRICE_ASC=Ár: Legolcsóbb-Legdrágább
+PRICE_DESC=Ár: Legdrágább-Legolcsóbb
+NEWEST_ARRIVALS=Legújabb
+RATING=Vásárlói értékelés
+_found_cats=Talált kategóriák
+_showing_products=[_1] - [_2] a [_3] talált termékből
+
+_narrow_by_cat=Találatok szűkítése kategóriák szerint
+_more_subcats=több...

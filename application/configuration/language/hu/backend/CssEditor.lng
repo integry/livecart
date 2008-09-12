@@ -1,0 +1,7 @@
+_common_css=Közös (minden dizájn)
+_edit_css=CSS Stylesheet fájlok szerkesztése
+_save_css=CSS Mentése
+_please_select=Válassz egy szerkesztendő CSS fájlt. Különálló CSS fájllal rendelkezik mindegyik dizájn. Szerkesztheted a közös fájlt is, amely mindegyik fájlra vonatkozik.
+_css_file_has_been_successfully_updated=A CSS fájl sikeresen elmentve
+_could_not_update_css_file=Sikertelen CSS fájl mentés
+_css_warn=MEGJEGYZÉS: soha ne szerkeszd direkt módon a LiveCart CSS fájlokat -mivel a változtatások esetlegesen felül lesznek írva a frissítések által. Inkább csak a stílus változtatásokat definiáld itt. Vagy ha ez még kézenfekvőbb, ide bemásolhatod a teljes CSS fájlt amit szerkeszteni szeretnél.

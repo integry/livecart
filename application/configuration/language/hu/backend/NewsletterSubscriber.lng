@@ -1,0 +1,8 @@
+_no_subscribers_found=Nincs felíratkozott
+_listing_subscribers=Felíratkozottak megjelenítése $ - $to a $count -ból/-ből
+_process=Feldolgozás alatt
+_newsletter_delete_confirm=Biztos eltávolítod a kijelölt felíratkozottakat?
+_nothing_selected=Legalább egy felíratkozottat ki kell jelölni
+NewsletterSubscriber.ID=ID
+NewsletterSubscriber.isEnabled=Engedélyezve
+NewsletterSubscriber.email=E-mail

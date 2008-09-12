@@ -1,0 +1,13 @@
+_subscribe_to_newsletter=Hírlevelünk
+_enter_your_email_to_subscribe=Kérünk add meg e-mail címed, hogy feliratkozz hírlevelünkre!
+_err_email_empty=Kérünk add meg e-mail címed
+_err_invalid_email=Ez nem egy valós e-mail cím!
+_confirm_instructions=Hamarosan egy levelet kapsz az általad megadott e-mail címre. Kövesd az abban található instrukciókat, hogy feliratkozz hírlevelünkre!
+_confirm_subscription=Kérünk, igazold vissza e-mail címed
+_confirming_email=E-mail cím viiszaigazolása
+_confirm_successful=Sikeresen visszaigazoltad e-mail címed
+_confirm_unsuccessful=Nem tudtuk leellenőrizni e-mail címed. Kérünk bizonyosodj meg, hogy helyesen másoltad be a megadott címet böngésződ címsorába!
+_unsubscribe=Hírlevél visszamondása
+_unsubscribe_sucessful=Sikeresen leíratkoztál hírlevelünkről
+_already_subscribed=Már felíratkoztál
+_already_subscribed_info=Már felíratkoztál hírlevelünkre!

@@ -1,0 +1,6 @@
+PaypalExpressCheckout=Paypal Express Checkout
+PaypalExpressCheckout_sandbox=Használd a Paypal Sandbox -ot (kísérleti környezet)
+PaypalExpressCheckout_username=Felhasználó
+PaypalExpressCheckout_password=Jelszó
+PaypalExpressCheckout_signature=Aláírás
+PaypalExpressCheckout_AUTHONLY=Csak érvényesítsd a kifizetéseket, begyűjtés nelkül

@@ -1,0 +1,17 @@
+_upload=Pridať obrázok
+_err_not_uploaded=Prosím, vyberte súbor
+_err_not_image=Toto nie je platný obrázok
+_err_resize=Nepodarilo sa zmeniť veľkosť obrázku
+_err_too_large=Príliš veľký súbor
+_save=Uložiť
+_image_file=Vyberte si súbor obrázka
+_cancel_new=Zrušiť pridávanie nového obrázka
+_add_new=Pridať nový obrázok
+_add_new_title=Pridať nový obrázok
+_delete_confirm=Skutočne chcete odstrániť tento obrázok?
+_main_image=Hlavný obrázok
+_supplemental_images=Doplnkové obrázky
+_no_images=Tomuto produktu neboli zatiaľ pridané žiadne obrázky
+_max_file_size=Iba JPEG, GIF a PNG súbory. Maximálna veľkosť: [_1]
+_edit_image=Zmeniť detaily obrázka
+_image_title=Pridať titulok obrázka

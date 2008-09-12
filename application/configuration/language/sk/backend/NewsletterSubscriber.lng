@@ -1,0 +1,8 @@
+_listing_subscribers=Výpis predplatiteľov $from - $to z $count
+_process=Spracovať
+_no_subscribers_found=Žiadni predplatitelia
+_newsletter_delete_confirm=Skutočne odstrániť vybraných predplatiteľov noviniek?
+_nothing_selected=Prosím, najprv vyberte aspoň jedného predplatiteľa
+NewsletterSubscriber.ID=ID
+NewsletterSubscriber.email=E-mail
+NewsletterSubscriber.isEnabled=Zapnutý

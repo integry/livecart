@@ -1,0 +1,10 @@
+_site_news=Oldal Hírei
+_add_news=Új hír hozzáadása
+_cancel_adding_news=Új hír hozzáadás visszavonása
+_date=Dátum
+_title=Cím
+_text=Bevezető szöveg
+_more_text=Teljes szöveg
+_err_enter_text=Szöveg megadása kötelező
+_del_conf=Valóban letörli ezt hír bejegyzést?
+_could_not_remove_news=Hír bejegyzés törlése sikertelen

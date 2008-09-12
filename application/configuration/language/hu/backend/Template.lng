@@ -1,0 +1,15 @@
+_edit_templates=Sablonok szerkesztése
+_edit_template=Sablon fájl szerkesztése
+_please_select=Válassz ki egy szerkesztendő sablon fájlt
+_save_template=Sablon mentése
+_template_file_name=Fájl név
+_create_template=Sablon fájl létrehozása
+_delete_template=Sablon fájl törlése
+_file_name_empty=Add meg a fájl nevet
+_edit_email_templates=E-mail sablonok szerkesztése
+_subject=Üzenet tárgya
+_body=Üzenet tartalmi része
+_confirm_template_delete=Valóban törlöd a kijelölt sablon fájlt?
+_template_has_been_successfully_updated=Sablon sikeresen elmentve
+_could_not_update_template=A sablon mentése sikertelen
+_template_has_been_successfully_deleted=A sablon fájl törölve

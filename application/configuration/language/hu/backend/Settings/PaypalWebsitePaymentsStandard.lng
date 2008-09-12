@@ -1,0 +1,4 @@
+PaypalWebsitePaymentsStandard=Paypal Website Payments Standard
+PaypalWebsitePaymentsStandard_EMAIL=Business e-mail cím
+PaypalWebsitePaymentsStandard_SANDBOX=Használd a Paypal Sandbox -ot (kísérleti környezet)
+PaypalWebsitePaymentsStandard_ITEM_NAME=Bevásárló kosár termék leírás mutatása a PayPal -on

@@ -1,0 +1,6 @@
+PaypalDirectPayment=Paypal Direct Payment
+PaypalDirectPayment_sandbox=Használd a Paypal Sandbox -ot (kísérleti környezet)
+PaypalDirectPayment_username=Felhasználó
+PaypalDirectPayment_password=Jelszó
+PaypalDirectPayment_signature=Aláírás
+PaypalDirectPayment_cardTypes=Engedélyezett hitelkártya típusok

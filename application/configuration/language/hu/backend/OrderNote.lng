@@ -1,0 +1,6 @@
+_add_response=Válasz hozzáadása
+_cancel_response=Válasz visszavonása
+_err_enter_text=Kérem adjon választ
+_admin=Admin
+_customer=Kliens
+_no_messages=Ehhez a rendeléshez nem adott hozzá információt sem az ügyfél sem adminisztrátor. Hozzáadhatsz információt, ha szükséges valamilyen speciális megjegyzés a rendelés státuszához. Ez az üzenet automatikusan elküldésre kerül az ügyfélnek.
