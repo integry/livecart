@@ -181,6 +181,43 @@ class ProductPricing
 		return ('both' == $part) ? $return : $return[$part];
 	}
 
+	public function getDiscountPrices(User $user, $currency)
+	{
+		if (!$currency instanceof Currency)
+		{
+			$currency = Currency::getInstanceByID($currency);
+		}
+
+		$price = $this->getPrice($currency);
+		if (!$price->price->get())
+		{
+			$price = $this->getPriceByCurrencyCode($this->application->getDefaultCurrencyCode());
+		}
+
+		$prices = array();
+		foreach ($price->getUserPrices($user) as $quant => $pr)
+		{
+			$pr = $currency->convertAmount($price->currency->get(), $pr);
+			$prices[$quant] = array(
+								'price' => $pr,
+								'formattedPrice' => $currency->getFormattedPrice($pr),
+								'from' => $quant
+							);
+		}
+
+		foreach ($prices as $quant => &$price)
+		{
+			if (isset($previousPrice))
+			{
+				$previousPrice['to'] = $quant - 1;
+			}
+
+			$previousPrice =& $price;
+		}
+
+		return $prices;
+	}
+
 	public function __destruct()
 	{
 		foreach ($this->prices as $k => $price)

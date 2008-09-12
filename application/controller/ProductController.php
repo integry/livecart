@@ -221,6 +221,9 @@ class ProductController extends FrontendController
 			$this->application->setTheme($theme->getTheme());
 		}
 
+		// discounted pricing
+		$response->set('quantityPricing', $product->getPricingHandler()->getDiscountPrices($this->user, $this->getRequestCurrency()));
+
 		$this->product = $product;
 
 		return $response;

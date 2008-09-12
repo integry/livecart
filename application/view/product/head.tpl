@@ -57,17 +57,39 @@
 		<table id="productPurchaseLinks">
 
 			{if 'DISPLAY_PRICES'|config}
-			<tr id="productPrice">
-				<td class="param">{t _price}:</td>
-				<td class="value price">
-					{$product.formattedPrice.$currency}
-					{if $product.formattedListPrice.$currency}
-						<span class="listPrice">
-							{$product.formattedListPrice.$currency}
-						</span>
-					{/if}
-				</td>
-			</tr>
+				<tr id="productPrice">
+					<td class="param">{t _price}:</td>
+					<td class="value price">
+						{$product.formattedPrice.$currency}
+						{if $product.formattedListPrice.$currency}
+							<span class="listPrice">
+								{$product.formattedListPrice.$currency}
+							</span>
+						{/if}
+					</td>
+				</tr>
+				{if $quantityPricing}
+					<tr>
+						<td colspan="2">
+							<table class="quantityPrice">
+							{foreach from=$quantityPricing item=quantityPrice key=quant name=quant}
+								<tr class="{zebra loop=quant}">
+									<td class="quantityAmount">
+										{if $quantityPrice.to}
+											{$quantityPrice.from} - {$quantityPrice.to}
+										{else}
+											{maketext text="_x_or_more" params=$quantityPrice.from}
+										{/if}
+									</td>
+									<td class="price quantityPrice">
+										{$quantityPrice.formattedPrice}
+									</td>
+								</tr>
+							{/foreach}
+							</table>
+						</td>
+					</tr>
+				{/if}
 			{/if}
 
 			{if $product.isAvailable && 'ENABLE_CART'|config}

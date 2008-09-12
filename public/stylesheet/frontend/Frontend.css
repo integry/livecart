@@ -1126,6 +1126,17 @@ ul.productList .orderingControls
     font-size: smaller;
 }
 
+table.quantityPrice
+{
+	border: 1px solid #def;
+	margin: 0 auto;
+}
+
+.price.quantityPrice
+{
+	font-size: 1em !important;
+}
+
 #productPurchaseLinks .productOptions
 {
 	padding: 0 0.5em;

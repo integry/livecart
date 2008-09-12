@@ -171,6 +171,36 @@ class ProductPrice extends ActiveRecordModel
 		$this->setRules($rules);
 	}
 
+	public function getUserPrices(User $user)
+	{
+		$id = $this->getGroupId($user);
+		$rules = unserialize($this->serializedRules->get());
+		$found = array();
+
+		if (is_array($rules))
+		{
+			foreach ($rules as $quant => $prices)
+			{
+				if (isset($prices[$id]))
+				{
+					$found[$quant] = $prices[$id];
+				}
+			}
+		}
+
+		return $found;
+	}
+
+	private function getGroupId(User $user)
+	{
+		if (!$user)
+		{
+			return 0;
+		}
+
+		return is_null($user->userGroup->get()) ? 0 : $user->userGroup->get()->getID();
+	}
+
 	private function setRules($rules)
 	{
 		ksort($rules);

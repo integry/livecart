@@ -710,6 +710,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 				}
 			}
 
+			if ($total < 0)
+			{
+				$total = 0;
+			}
+
 			return $total;
 		}
 	}
