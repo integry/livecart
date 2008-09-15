@@ -401,7 +401,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			$discount->save();
 		}
 
-		if ($this->totalAmount->get() <= $this->getPaidAmount())
+		if (round($this->totalAmount->get(), 2) <= round($this->getPaidAmount(), 2))
 		{
 			$this->isPaid->set(true);
 		}
@@ -409,11 +409,16 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$this->dateCompleted->set(new ARSerializableDateTime());
 
 		$this->isFinalized->set(true);
+
+		// @todo: fix order total calculation
+		$shipments = $this->shipments;
 		unset($this->shipments);
 
 		$this->save();
-
 		self::commit();
+
+		// @todo: see above
+		$this->shipments = $shipments;
 
 		return $wishList;
 	}
