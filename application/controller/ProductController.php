@@ -467,7 +467,7 @@ class ProductController extends FrontendController
 
 		if ($isRating)
 		{
-			ClassLoader::import("application.helper.getDateFromString");
+			ClassLoader::importNow("application.helper.getDateFromString");
 
 			$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductRating', 'productID'), $product->getID()));
 			if (!$this->user->isAnonymous())

@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import('application.helper.CreateHandleString');
+ClassLoader::importNow('application.helper.CreateHandleString');
 
 /**
  * Generates product page URL

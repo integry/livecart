@@ -1,6 +1,7 @@
 <?php
 
-ClassLoader::import("application.model.delivery.*");
+ClassLoader::import('application.model.delivery.*');
+ClassLoader::import('application.model.tax.TaxRate');
 ClassLoader::import('library.shipping.ShippingRateSet');
 
 /**

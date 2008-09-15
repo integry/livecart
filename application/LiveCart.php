@@ -114,7 +114,7 @@ class LiveCart extends Application
 
 		if ($this->isInstalled)
 		{
-			ActiveRecord::setDSN(include $dsnPath);
+			ActiveRecordModel::setDSN(include $dsnPath);
 		}
 
 		// LiveCart request routing rules
@@ -129,7 +129,7 @@ class LiveCart extends Application
 
 		if ($this->isDevMode())
 		{
-			ActiveRecord::getLogger()->setLogFileName(ClassLoader::getRealPath("cache") . DIRECTORY_SEPARATOR . "activerecord.log");
+			ActiveRecordModel::getLogger()->setLogFileName(ClassLoader::getRealPath("cache") . DIRECTORY_SEPARATOR . "activerecord.log");
 			error_reporting(E_ALL);
 			ini_set('display_errors', 'On');
 		}

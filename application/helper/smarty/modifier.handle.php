@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import('application.helper.CreateHandleString');
+ClassLoader::importNow('application.helper.CreateHandleString');
 
 /**
  *  Return an alternative value if the primary value is empty.

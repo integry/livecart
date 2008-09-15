@@ -1,6 +1,12 @@
 <?php
 
 ClassLoader::import('application.model.ActiveRecordModel');
+ClassLoader::import('application.model.category.Category');
+ClassLoader::import('application.model.order.CustomerOrder');
+ClassLoader::import('application.model.product.Manufacturer');
+ClassLoader::import('application.model.user.User');
+ClassLoader::import('application.model.user.UserGroup');
+ClassLoader::import('application.model.eav.EavField');
 
 class EavObject extends ActiveRecordModel
 {

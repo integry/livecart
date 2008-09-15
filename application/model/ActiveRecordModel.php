@@ -105,6 +105,8 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 	public function loadSpecification($specificationData = null)
 	{
+		ClassLoader::import("application.model.eav.EavObject");
+
 	  	if ($this->specificationInstance)
 	  	{
 	  		return false;

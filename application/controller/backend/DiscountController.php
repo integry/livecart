@@ -2,6 +2,8 @@
 
 ClassLoader::import("application.controller.backend.abstract.ActiveGridController");
 ClassLoader::import("application.model.discount.DiscountCondition");
+ClassLoader::import("application.model.discount.DiscountConditionRecord");
+ClassLoader::import("application.model.discount.DiscountAction");
 
 /**
  *
@@ -176,7 +178,7 @@ class DiscountController extends ActiveGridController
 	public function addRecord()
 	{
 		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA);
-		$object = ActiveRecordModel::getInstanceByID($this->request->get('class'), $this->request->get('recordID'), DiscountCondition::LOAD_DATA);
+		$object = DiscountConditionRecord::getOwnerInstance($this->request->get('class'), $this->request->get('recordID'));
 		$record = DiscountConditionRecord::getNewInstance($condition, $object);
 		$record->save();
 

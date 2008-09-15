@@ -3,6 +3,8 @@
 ClassLoader::import('application.model.order.CustomerOrder');
 ClassLoader::import('application.model.discount.DiscountCondition');
 ClassLoader::import('application.model.Currency');
+ClassLoader::import('application.model.product.Product');
+ClassLoader::import('application.model.product.ProductOption');
 
 /**
  * @author Integry Systems
