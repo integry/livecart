@@ -543,6 +543,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		foreach ($order->getOrderedItems() as $item)
 		{
 			$category = $item->product->get()->category->get();
+			$category->load();
 			$conditions[$category->getID()] = $category->getPathNodeCondition();
 		}
 

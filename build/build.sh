@@ -8,23 +8,23 @@ TMP=/tmp/build
 PACKAGE=/var/db/livecart
 
 MAIN=/var/www/livecart
-MAIN=/var/www/release
+#MAIN=/var/www/release
 #BUILD=/var/www/build
 
 # check if there are no uncommitted files left
-if [ `hg fstatus | grep -v '\[' | grep ' ' | wc -l` != 0 ]; then
-	echo "Uncommitted files left"
-	exit
-fi
+#if [ `hg fstatus | grep -v '\[' | grep ' ' | wc -l` != 0 ]; then
+#	echo "Uncommitted files left"
+#	exit
+#fi
 
 # get last log message
 cd $MAIN
-LOG=`hg log -l 1 --template "{desc}"`
+#LOG=`hg log -l 1 --template "{desc}"`
 
 # copy to a temporary directory and remove .hg directories
 rm -rf $TMP
 cp -rf $MAIN $TMP
-find $TMP -name '.hg' | xargs rm -rf
+find $TMP -name '.git' | xargs rm -rf
 
 # copy all files to build repo
 mv $BUILD/.hg $TMP/.hg
@@ -44,7 +44,7 @@ VERSION=`head .version`
 # cp .version /home/livecart/public_html/update/.version
 
 # remove non-distributed files
-rm -rf build cache doc update
+rm -rf build cache doc update .git* .snap
 rm -rf public/cache public/upload
 rm -rf storage/configuration/*.php
 rm -rf library/payment/test/simpletest

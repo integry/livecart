@@ -35,6 +35,8 @@ class OrderTest extends UnitTest
 
 		ActiveRecord::executeUpdate('DELETE FROM TaxRate');
 		ActiveRecord::executeUpdate('DELETE FROM Currency');
+		ActiveRecord::executeUpdate('DELETE FROM DiscountCondition');
+		ActiveRecord::executeUpdate('DELETE FROM DiscountAction');
 		ActiveRecordModel::executeUpdate('DELETE FROM DeliveryZone');
 
 		// set up currency

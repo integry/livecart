@@ -69,6 +69,16 @@ class UpdateController extends StoreManagementController
 			}
 		}
 
+		// clear cache
+		$this->delTree(ClassLoader::getRealPath('cache'));
+		$this->delTree(ClassLoader::getRealPath('public.cache'));
+
+		foreach (array('cache', 'storage') as $secured)
+		{
+			$dir = ClassLoader::getRealPath($secured);
+			file_put_contents($dir . '/.htaccess', 'Deny from all');
+		}
+
 		// execute custom update code
 		$code = $dir . '/custom.php';
 		if (file_exists($code))
@@ -90,6 +100,30 @@ class UpdateController extends StoreManagementController
 		$response->set('progress', $progress);
 		$response->set('errors', $errors);
 		return $response;
+	}
+
+	private function delTree($path)
+	{
+		if (is_dir($path))
+		{
+			$entries = scandir($path);
+			foreach ($entries as $entry)
+			{
+				if ($entry != '.' && $entry != '..')
+				{
+					$this->delTree($path . DIRECTORY_SEPARATOR . $entry);
+				}
+			}
+
+			if (substr($path, -6) != '/cache')
+			{
+				rmdir($path);
+			}
+		}
+		else
+		{
+			unlink($path);
+		}
 	}
 
 	private function getCurrentVersion()

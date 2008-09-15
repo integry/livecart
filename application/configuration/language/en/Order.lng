@@ -11,5 +11,11 @@ _empty_basket=Your shopping basket is empty
 _your_basket=Your Shopping Basket
 _item_count=There are [quant,_1,item,items,no items] in your shopping basket.
 
+_added_to_cart=[_1] has been added to your shopping basket
+_removed_from_cart=[_1] has been removed from shopping basket
+_added_to_wishlist=[_1] has been added to your wish list
+_moved_to_wishlist=[_1] has been moved to wish list
+_moved_to_cart=[_1] has been moved to shopping basket
+
 _have_coupon=Have a discount coupon? Enter coupon code
 _add_coupon=Add coupon
