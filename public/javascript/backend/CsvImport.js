@@ -205,6 +205,11 @@ Backend.CsvImport =
 
 		for (var k = 0; k < portions.length; k++)
 		{
+			if (0 == portions[k].length)
+			{
+				continue;
+			}
+
 			response = eval('(' + decode64(portions[k]) + ')');
 
 			// progress

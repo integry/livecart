@@ -1182,6 +1182,11 @@ img.calendar_button_hover
     background: red;
 }
 
+.calendar
+{
+	z-index: 12;
+}
+
 /***************************
 	Multicolumn groups
 ***************************/

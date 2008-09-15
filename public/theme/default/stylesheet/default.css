@@ -95,7 +95,12 @@ div#footer
 {
 	float: left;
 	margin-top: 20px;
-	width: 550px;
+	width: 500px;
+}
+
+#leftSide .informationMenu
+{
+	display: none;
 }
 
 #content
@@ -1395,12 +1400,10 @@ ul.productList .descr
 /*****************************
 	Information menu
 *****************************/
-.informationMenu ul li
+.informationMenu .infoLink
 {
-	list-style-type: none;
 	margin-bottom: 5px;
 	font-size: smaller;
-	display: inline;
 	margin-top: 20px;
 }
 

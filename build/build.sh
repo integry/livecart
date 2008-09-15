@@ -44,7 +44,7 @@ VERSION=`head .version`
 # cp .version /home/livecart/public_html/update/.version
 
 # remove non-distributed files
-rm -rf build cache doc update .git* .snap
+rm -rf build cache doc update .git* .snap test push
 rm -rf public/cache public/upload
 rm -rf storage/configuration/*.php
 rm -rf library/payment/test/simpletest
@@ -83,6 +83,8 @@ gzip -9 $TAR
 ZIP=$PACKAGE/livecart-$VERSION.zip
 rm -rf $ZIP
 zip -rq $ZIP .
+
+set +e
 
 # copy changed files for update
 rm -rf /tmp/update
