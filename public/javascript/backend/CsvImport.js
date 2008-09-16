@@ -222,6 +222,14 @@ Backend.CsvImport =
 
 	onComplete: function(originalRequest)
 	{
+		// sometimes the dataResponse() function is not called, so we have to double check if we're not done yet
+		var response = eval('(' + decode64(originalRequest.responseText.split('|').pop()) + ')');
+		if (0 == response.progress)
+		{
+			this.isCompleted = true;
+			this.setProgress(response);
+		}
+
 		if (this.isCancelled)
 		{
 			this.completeCancel(originalRequest);
