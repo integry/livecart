@@ -81,7 +81,7 @@ class NewsletterMessage extends ActiveRecordModel
 			$email->set('email', $subscriber->email->get());
 		}
 
-		$sent->time->set(new ARExpressionHandle('NOW()'));
+		//$sent->time->set(new ARExpressionHandle('NOW()'));
 		$sent->save();
 
 		if ($this->status->get() == self::STATUS_NOT_SENT)
