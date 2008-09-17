@@ -43,7 +43,7 @@
 <div id="discountManagerContainer" style="display: none;">
 	<fieldset class="container">
 		<ul class="menu">
-			<li class="done"><a href="#cancelEditing" id="cancel_user_edit" class="cancel">{t _cancel_editing_manufacturer}</a></li>
+			<li class="done"><a href="#cancelEditing" id="cancel_user_edit" class="cancel">{t _cancel_editing_discount}</a></li>
 		</ul>
 	</fieldset>
 
