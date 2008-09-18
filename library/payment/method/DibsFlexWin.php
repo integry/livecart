@@ -34,6 +34,8 @@ class DibsFlexWin extends ExternalPayment
 		$params['callbackurl'] = $this->notifyUrl;
 		$params['accepturl'] = $this->returnUrl;
 		$params['cancelurl'] = $this->siteUrl;
+		$params['lang'] = ActiveRecordModel::getApplication()->getLocaleCode();
+		$params['skiplastpage'] = 1;
 
 		$params['md5key'] = $this->getMd5Key($params);
 
