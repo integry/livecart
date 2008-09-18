@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database drop script                            #
-# Created on:            2008-09-12 10:10                                #
-# Model version:         Version 2008-09-12 3                            #
+# Created on:            2008-09-14 22:04                                #
+# Model version:         Version 2008-08-19                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -49,8 +49,6 @@ ALTER TABLE OrderedItem DROP FOREIGN KEY Product_OrderedItem;
 ALTER TABLE OrderedItem DROP FOREIGN KEY CustomerOrder_OrderedItem;
 
 ALTER TABLE OrderedItem DROP FOREIGN KEY Shipment_OrderedItem;
-
-ALTER TABLE OrderedItem DROP FOREIGN KEY OrderedItem_OrderedItem;
 
 ALTER TABLE User DROP FOREIGN KEY ShippingAddress_User;
 
@@ -194,6 +192,10 @@ ALTER TABLE ProductRating DROP FOREIGN KEY User_ProductRating;
 
 ALTER TABLE CategoryPresentation DROP FOREIGN KEY Category_CategoryPresentation;
 
+ALTER TABLE ProductPriceRule DROP FOREIGN KEY Product_ProductPriceRule;
+
+ALTER TABLE ProductPriceRule DROP FOREIGN KEY UserGroup_ProductPriceRule;
+
 ALTER TABLE ProductPresentation DROP FOREIGN KEY Product_ProductPresentation;
 
 ALTER TABLE NewsletterSubscriber DROP FOREIGN KEY User_NewsletterSubscriber;
@@ -249,32 +251,6 @@ ALTER TABLE ProductListItem DROP FOREIGN KEY ProductList_ProductListItem;
 ALTER TABLE ProductListItem DROP FOREIGN KEY Product_ProductListItem;
 
 ALTER TABLE DiscountCondition DROP FOREIGN KEY DiscountCondition_DiscountCondition;
-
-ALTER TABLE DiscountAction DROP FOREIGN KEY DiscountCondition_DiscountAction;
-
-ALTER TABLE DiscountAction DROP FOREIGN KEY DiscountCondition_DiscountAction_ActionCondition;
-
-ALTER TABLE OrderDiscount DROP FOREIGN KEY CustomerOrder_OrderDiscount;
-
-ALTER TABLE OrderCoupon DROP FOREIGN KEY CustomerOrder_OrderCoupon;
-
-ALTER TABLE DiscountConditionRecord DROP FOREIGN KEY DiscountCondition_DiscountConditionRecord;
-
-ALTER TABLE DiscountConditionRecord DROP FOREIGN KEY DeliveryZone_DiscountConditionRecord;
-
-ALTER TABLE DiscountConditionRecord DROP FOREIGN KEY Product_DiscountConditionRecord;
-
-ALTER TABLE DiscountConditionRecord DROP FOREIGN KEY Manufacturer_DiscountConditionRecord;
-
-ALTER TABLE DiscountConditionRecord DROP FOREIGN KEY Category_DiscountConditionRecord;
-
-ALTER TABLE DiscountConditionRecord DROP FOREIGN KEY UserGroup_DiscountConditionRecord;
-
-ALTER TABLE DiscountConditionRecord DROP FOREIGN KEY User_DiscountConditionRecord;
-
-ALTER TABLE ProductBundle DROP FOREIGN KEY Product_ProductBundle;
-
-ALTER TABLE ProductBundle DROP FOREIGN KEY Product_ProductBundle_Related;
 
 # ---------------------------------------------------------------------- #
 # Drop table "Product"                                                   #
@@ -1073,6 +1049,18 @@ ALTER TABLE CategoryPresentation DROP PRIMARY KEY;
 DROP TABLE CategoryPresentation;
 
 # ---------------------------------------------------------------------- #
+# Drop table "ProductPriceRule"                                          #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE ProductPriceRule DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE ProductPriceRule;
+
+# ---------------------------------------------------------------------- #
 # Drop table "ProductPresentation"                                       #
 # ---------------------------------------------------------------------- #
 
@@ -1320,78 +1308,8 @@ DROP TABLE ProductListItem;
 
 # Drop constraints #
 
-ALTER TABLE DiscountCondition ALTER COLUMN validFrom DROP DEFAULT;
-
-ALTER TABLE DiscountCondition ALTER COLUMN validTo DROP DEFAULT;
-
-ALTER TABLE DiscountCondition ALTER COLUMN position DROP DEFAULT;
-
 ALTER TABLE DiscountCondition DROP PRIMARY KEY;
 
 # Drop table #
 
 DROP TABLE DiscountCondition;
-
-# ---------------------------------------------------------------------- #
-# Drop table "DiscountAction"                                            #
-# ---------------------------------------------------------------------- #
-
-# Drop constraints #
-
-ALTER TABLE DiscountAction ALTER COLUMN position DROP DEFAULT;
-
-ALTER TABLE DiscountAction DROP PRIMARY KEY;
-
-# Drop table #
-
-DROP TABLE DiscountAction;
-
-# ---------------------------------------------------------------------- #
-# Drop table "OrderDiscount"                                             #
-# ---------------------------------------------------------------------- #
-
-# Drop constraints #
-
-ALTER TABLE OrderDiscount DROP PRIMARY KEY;
-
-# Drop table #
-
-DROP TABLE OrderDiscount;
-
-# ---------------------------------------------------------------------- #
-# Drop table "OrderCoupon"                                               #
-# ---------------------------------------------------------------------- #
-
-# Drop constraints #
-
-ALTER TABLE OrderCoupon DROP PRIMARY KEY;
-
-# Drop table #
-
-DROP TABLE OrderCoupon;
-
-# ---------------------------------------------------------------------- #
-# Drop table "DiscountConditionRecord"                                   #
-# ---------------------------------------------------------------------- #
-
-# Drop constraints #
-
-ALTER TABLE DiscountConditionRecord DROP PRIMARY KEY;
-
-# Drop table #
-
-DROP TABLE DiscountConditionRecord;
-
-# ---------------------------------------------------------------------- #
-# Drop table "ProductBundle"                                             #
-# ---------------------------------------------------------------------- #
-
-# Drop constraints #
-
-ALTER TABLE ProductBundle ALTER COLUMN position DROP DEFAULT;
-
-ALTER TABLE ProductBundle DROP PRIMARY KEY;
-
-# Drop table #
-
-DROP TABLE ProductBundle;

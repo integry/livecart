@@ -566,14 +566,22 @@ class CustomerOrderController extends ActiveGridController
 				break;
 			case self::TYPE_CURRENT:
 				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1);
-				$cond2 = new NotEqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_SHIPPED);
-				$cond2->addOR(new NotEqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_RETURNED));
+				$cond2 = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_PROCESSING);
+
+				// @todo fix NEW status = NULL bug
+				$cond2->addOR(new IsNullCond(new ARFieldHandle('CustomerOrder', "status")));
+
+				$cond2->addOR(new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_AWAITING));
 				$cond2->addOR(new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_NEW));
-				$cond2->addAND($cond);
+				$cond->addAND($cond2);
 				break;
 			case self::TYPE_NEW:
-				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_NEW);
-				$cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
+				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1);
+				$cond2 = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_NEW);
+
+				// @todo fix NEW status = NULL bug
+				$cond2->addOR(new IsNullCond(new ARFieldHandle('CustomerOrder', "status")));
+				$cond->addAND($cond2);
 				break;
 			case self::TYPE_PROCESSING:
 				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_PROCESSING);

@@ -21,7 +21,7 @@ class NewsletterSentMessage extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField("messageID", "NewsletterMessage", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("userID", "User", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("subscriberID", "NewsletterSubscriber", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARField("time", ARDateTime::instance()));
+		//$schema->registerField(new ARField("time", ARDateTime::instance()));
 	}
 
 	public static function getNewInstanceBySubscriber(NewsletterMessage $message, NewsletterSubscriber $subscriber)

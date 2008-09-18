@@ -15,6 +15,7 @@ _nothing_selected=Please select at least one pricing rule first
 _create_rule=Add new rule
 
 # editor
+_cancel_editing_discount=Cancel editing pricing rule
 _cancel_adding_rule=Cancel adding pricing rule
 _save_and_continue=Save and continue
 
