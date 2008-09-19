@@ -331,6 +331,46 @@ class DiscountConditionTest extends UnitTest
 		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
 	}
 
+	public function testEmptyCondition()
+	{
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->save();
+
+		$this->order->addProduct($this->product1, 1, true);
+		$this->order->save();
+		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
+	}
+
+	public function testUserCoupon()
+	{
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->couponCode->set('test');
+		$condition->save();
+
+		$someUser = User::getNewInstance('discount...condition@test');
+		$someUser->save();
+		$userCond = DiscountCondition::getNewInstance($condition);
+		$userCond->isEnabled->set(true);
+		$userCond->save();
+
+		DiscountConditionRecord::getNewInstance($userCond, $someUser)->save();
+
+		$this->order->addProduct($this->product1, 1, true);
+		$this->order->addProduct($this->product2, 1, true);
+		$this->order->save();
+		$this->assertEquals(0, count($this->order->getDiscountConditions(true)));
+
+		$this->order->user->set($someUser);
+		$this->order->save();
+		$this->assertEquals(0, count($this->order->getDiscountConditions(true)));
+
+		OrderCoupon::getNewInstance($this->order, 'test')->save();
+		$this->order->getCoupons(true);
+		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
+	}
+
 }
 
 ?>
