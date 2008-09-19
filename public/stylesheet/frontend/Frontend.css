@@ -1409,6 +1409,11 @@ div.review .ratingBreakdown
 	width: 150px;
 }
 
+#bundle .pricingInfo
+{
+	float: left;
+}
+
 .bundleList, .bundleInfo
 {
 	float: left;

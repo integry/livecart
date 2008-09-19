@@ -65,13 +65,13 @@
 					</div>
 				{/if}
 			</td>
-			<td class="cartPrice {if $item.formattedBasePrice != $item.formattedPrice}discount{/if}">
+			<td class="cartPrice {if $item.itemBasePrice > $item.itemPrice}discount{/if}">
 				{if $item.count == 1}
 					<span class="basePrice">{$item.formattedBasePrice}</span><span class="actualPrice">{$item.formattedPrice}</span>
 				{else}
 					{$item.formattedDisplaySubTotal}
 					<div class="subTotalCalc">
-						{$item.count} x <span class="basePrice">{$item.formattedBasePrice}</span><span class="actualPrice">{$item.formattedPrice}</span>
+						{$item.count} x <span class="basePrice">{$item.formattedDisplayPrice}</span><span class="actualPrice">{$item.formattedPrice}</span>
 					</div>
 				{/if}
 			</td>
