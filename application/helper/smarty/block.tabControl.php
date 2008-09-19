@@ -13,11 +13,11 @@ function smarty_block_tabControl($params, $content, LiveCartSmarty $smarty, &$re
 	if (!$repeat)
 	{
 		$more = '<li class="moreTabs">
-					<a href="#">' . $smarty->getApplication()->translate('_more_tabs') . ' &#9662;</a>
+					<a href="#" class="moreTabsLink"><span class="downArrow">&#9662; </span><span>' . strtolower($smarty->getApplication()->translate('_more_tabs')) . '</span></a>
 					<div class="moreTabsMenu" style="display: none;"></div>
 				</li>';
 
-		$content = '<ul id="' . $params['id'] . '" class="tabList tabs">' . $content . $more . '</ul>';
+		$content = '<ul id="' . $params['id'] . '" class="tabList tabs">' . $more . $content . '</ul>';
 
 		$content .= '<script type="text/javascript">var tabCust = new TabCustomize($("' . $params['id'] . '")); tabCust.setPrefsSaveUrl("' . $smarty->getApplication()->getRouter()->createUrl(array('controller' => 'backend.index', 'action' => 'setUserPreference')) . '")</script>';
 

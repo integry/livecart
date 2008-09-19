@@ -415,6 +415,7 @@ abstract class FrontendController extends BaseController
 		}
 
 		$response->set('currentId', $this->categoryID);
+		$response->set('currentCategory', Category::getInstanceByID($this->categoryID)->toArray());
 
 		return $response;
 	}

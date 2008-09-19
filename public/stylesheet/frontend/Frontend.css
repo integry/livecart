@@ -397,11 +397,10 @@ tr.even
 {
     list-style-type: none;
     margin-bottom: 7px;
-
     padding-left: 20px;
     background-image:url(../../image/silk/gif/bullet_arrow_left.gif);
     background-repeat: no-repeat;
-    background-position: center left;
+    background-position: left 2px;
 }
 
 .categories .count
@@ -2823,23 +2822,50 @@ img.calendar_button_hover
 	margin: 0;
 	list-style: none;
 	/* float : left; */
-	width : 142px;
+	/* width : 142px; */
 	z-index: 10;
 	position: relative;
+	background-color: #F6F6F6;
 }
 
 .dynamicMenu li { /* all list items */
 	position : relative;
 	/* float : left; */
 	margin: 0;
+	border-top: 1px solid #ddd;
 }
 
 .dynamicMenu li ul { /* second-level lists */
 	position : absolute;
 	left: -999em;
 	margin-left : 142px;
-	margin-top : -32px;
+	margin-top : -30px;
 	z-index: 10000;
+}
+
+.dynamicMenu ul ul
+{
+	padding-left: 0;
+	border: 1px solid #ddd;
+	border-top: 0;
+}
+
+.dynamicMenu li:hover a,
+.dynamicMenu li.sfhover a,
+.dynamicMenu li:hover li:hover a,
+.dynamicMenu li.sfhover li.sfhover a,
+.dynamicMenu li:hover li:hover li:hover a,
+.dynamicMenu li.sfhover li.sfhover li.sfhover a
+{
+	background-color: lightyellow;
+}
+
+.dynamicMenu li:hover li a,
+.dynamicMenu li.sfhover li a,
+.dynamicMenu li:hover li:hover li a,
+.dynamicMenu li.sfhover li:hover li a
+{
+	background-color: #F6F6F6;
 }
 
 .dynamicMenu li ul ul { /* third-and-above-level lists */
@@ -2853,20 +2879,35 @@ img.calendar_button_hover
 	display : block;
 	font-weight : bold;
 	text-decoration : none;
-	border-top: 1px solid #eee;
-	border-bottom: 1px solid #eee;
 	padding : 7px;
+	padding-right: 0;
 	margin-left: 0;
-}
-
-.dynamicMenu li li a
-{
-	background-color: #eee;
 }
 
 .dynamicMenu li.current a
 {
 	background-color: transparent;
+}
+
+.dynamicMenu li.current ul
+{
+	display: block;
+	margin-top: 0pt;
+	position: static;
+	border: 0;
+}
+
+.dynamicMenu li.current ul li
+{
+	margin-bottom: 0;
+	margin-left: 5px;
+	padding-left: 12px;
+	border: 0;
+}
+
+.dynamicMenu li.current ul li a
+{
+	padding: 3px;
 }
 
 .dynamicMenu li:hover ul ul, .dynamicMenu li:hover ul ul ul, .dynamicMenu li.sfhover ul ul, .dynamicMenu li.sfhover ul ul ul {
