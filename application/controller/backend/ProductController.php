@@ -392,6 +392,8 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	 */
 	public function add()
 	{
+		$this->loadLanguageFile('backend/ProductPrice');
+
 		$category = Category::getInstanceByID($this->request->get("id"), ActiveRecordModel::LOAD_DATA);
 
 		$response = $this->productForm(Product::getNewInstance($category, ''));

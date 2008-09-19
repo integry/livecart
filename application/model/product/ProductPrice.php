@@ -173,7 +173,7 @@ class ProductPrice extends ActiveRecordModel
 		$this->setRules($rules);
 	}
 
-	public function getUserPrices(User $user)
+	public function getUserPrices(User $user = null)
 	{
 		$id = $this->getGroupId($user);
 		$rules = unserialize($this->serializedRules->get());
@@ -190,10 +190,15 @@ class ProductPrice extends ActiveRecordModel
 			}
 		}
 
+		if ($id > 0 && !$found)
+		{
+			return $this->getUserPrices(null);
+		}
+
 		return $found;
 	}
 
-	private function getGroupId(User $user)
+	private function getGroupId(User $user = null)
 	{
 		if (!$user)
 		{
