@@ -81,10 +81,10 @@ class ShipmentController extends StoreManagementController
 
 		if ($downloadable = $order->getDownloadShipment(false))
 		{
-			if (!isset($shipmentsArray[$downloadable->getID()]))
-			{
+//			if (!isset($shipmentsArray[$downloadable->getID()]))
+//			{
 				$response->set('downloadableShipment', $downloadable->toArray());
-			}
+//			}
 		}
 
 		$response->set('taxAmount', $taxAmount);
