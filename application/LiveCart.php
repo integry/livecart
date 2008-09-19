@@ -365,7 +365,9 @@ class LiveCart extends Application
 							case 'prepend':
 								$controllerInstance->addBlock($object, $command['action']['call'], $command['action']['view'], true);
 								break;
-
+							case 'theme':
+								$this->setTheme($command['action']['view']);
+								break;
 						}
 					}
 				}
@@ -955,6 +957,7 @@ class LiveCart extends Application
 	public function setTheme($theme)
 	{
 		$this->theme = $theme;
+		$this->getRenderer()->resetPaths();
 	}
 
 	public function clearCachedVars()

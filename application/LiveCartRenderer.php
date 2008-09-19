@@ -73,6 +73,11 @@ class LiveCartRenderer extends SmartyRenderer
 		return $paths;
 	}
 
+	public function resetPaths()
+	{
+		$this->paths = array();
+	}
+
 	public function getTemplatePath($template)
 	{
 		foreach ($this->getTemplatePaths($template) as $path)
@@ -140,7 +145,6 @@ class LiveCartRenderer extends SmartyRenderer
 		{
 			$tplPath = $this->getRelativeTemplatePath($tplPath);
 		}
-
 		if ($conf = $this->getBlockConfiguration($tplPath))
 		{
 			foreach ($conf as $command)
