@@ -392,6 +392,7 @@ class OrderedItemController extends StoreManagementController
 
 			$shipment->recalculateAmounts();
 
+			$item->customerOrder->get()->save();
 			$item->save();
 			$shipment->save();
 

@@ -69,6 +69,7 @@ application/controller/backend/ErrController.php
 application/controller/backend/FilterGroupController.php
 application/controller/backend/IndexController.php
 application/controller/backend/ManufacturerController.php
+application/controller/backend/NewsletterController.php
 application/controller/backend/OrderedItemController.php
 application/controller/backend/PaymentController.php
 application/controller/backend/ProductController.php
@@ -111,6 +112,8 @@ application/model/category/Category.php
 application/model/category/SpecField.php
 application/model/category/SpecFieldGroup.php
 application/model/category/SpecFieldValue.php
+application/model/newsletter/NewsletterMessage.php
+application/model/newsletter/NewsletterSentMessage.php
 application/model/order/CustomerOrder.php
 application/model/order/LiveCartTransaction.php
 application/model/order/OrderedItem.php
@@ -151,6 +154,7 @@ application/view/backend/customerOrder/selectCustomer.tpl
 application/view/backend/databaseImport/index.tpl
 application/view/backend/index/index.tpl
 application/view/backend/language/edit.tpl
+application/view/backend/newsletter/index.tpl
 application/view/backend/payment/transaction.tpl
 application/view/backend/product/form/pricing.tpl
 application/view/backend/product/form/specFieldList.tpl
@@ -182,6 +186,7 @@ application/view/block/backend/langFormFoot.tpl
 application/view/block/backend/langFormHead.tpl
 application/view/block/backend/langMenu.tpl
 application/view/block/backend/userMenu.tpl
+application/view/block/box/dynamicCategory.tpl
 application/view/block/box/informationMenu.tpl
 application/view/block/box/menuProductList.tpl
 application/view/block/box/newsletterSubscribe.tpl
@@ -694,7 +699,6 @@ public/stylesheet/backend/Manufacturer.css
 public/stylesheet/backend/ProductBundle.css
 public/stylesheet/backend/RatingType.css
 public/stylesheet/backend/Review.css
-push
 status
 util/DefaultLanguageChange.php
 util/ImportDemoDatabase.php

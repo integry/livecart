@@ -1120,6 +1120,12 @@ class OrderTest extends UnitTest
 
 		$price->setPriceRule(5, $group, 10);
 		$this->assertEquals($this->order->getTotal($this->usd), 50);
+
+		$price->setPriceRule(2, $group, 7);
+		$price->setPriceRule(3, $group, 8);
+		$price->setPriceRule(4, $group, 9);
+		$price->setPriceRule(6, $group, 11);
+		$this->assertEquals($this->order->getTotal($this->usd), 50);
 	}
 
 	private function createOrderWithZone(DeliveryZone $zone = null)

@@ -122,7 +122,7 @@ class ProductPrice extends ActiveRecordModel
 
 		for ($k = 0; $k < $cnt; $k++)
 		{
-			if ($quantities[$k] <= $itemCnt && (($k == $cnt - 1) || ($quantities[$k + 1] >= $itemCnt)))
+			if ($quantities[$k] <= $itemCnt && (($k == $cnt - 1) || ($quantities[$k + 1] > $itemCnt)))
 			{
 				return $found[$quantities[$k]];
 			}
