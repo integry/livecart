@@ -827,6 +827,8 @@ Backend.Category.PopupSelector.prototype =
 
 		var w = window.open(Backend.Category.links.popup + (categoryID ? '#cat_' + categoryID : ''), 'selectCategory', 'width=260, height=450');
 
+		this.window = w;
+
 		window.popupOnload =
 			function()
 			{
@@ -857,7 +859,7 @@ Backend.Category.PopupSelector.prototype =
 
 						if (this.onAccept)
 						{
-							res = this.onAccept(tree.getSelectedItemId(), pathAsText, path);
+							res = this.onAccept(tree.getSelectedItemId(), pathAsText, path, w);
 						}
 
 						if (res)

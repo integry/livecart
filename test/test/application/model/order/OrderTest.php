@@ -1074,6 +1074,52 @@ class OrderTest extends UnitTest
 		$this->assertEquals($expectedTotal, $this->order->getTotal($this->usd));
 	}
 
+	public function testDiscountByAdditionalCategories()
+	{
+		$product = $this->products[1];
+
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->save();
+
+		$actionCondition = DiscountCondition::getNewInstance();
+		$actionCondition->isEnabled->set(true);
+		$actionCondition->save();
+
+		$action = DiscountAction::getNewInstance($condition);
+		$action->actionCondition->set($actionCondition);
+		$action->isEnabled->set(true);
+		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
+		$action->amount->set(10);
+		$action->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
+		$action->save();
+
+		$randomCategory = Category::getNewInstance(Category::getRootNode());
+		$randomCategory->save();
+		DiscountConditionRecord::getNewInstance($actionCondition, $randomCategory)->save();
+
+		$this->order->addProduct($product, 1, true);
+		$this->order->save();
+
+		$this->assertFalse($actionCondition->isProductMatching($product));
+
+		$customCategory = Category::getNewInstance(Category::getRootNode());
+		$customCategory->save();
+		ProductCategory::getNewInstance($product, $customCategory)->save();
+		DiscountConditionRecord::getNewInstance($actionCondition, $customCategory)->save();
+
+		$actionCondition->loadAll();
+		$this->assertTrue($actionCondition->isProductMatching($product));
+
+		$this->assertEquals($this->order->getDiscountActions(true)->size(), 1);
+		$this->assertEquals($this->products[1]->getPrice($this->usd) * 0.9, $this->order->getTotal($this->usd));
+
+		ActiveRecordModel::clearPool();
+		$order = CustomerOrder::getInstanceByID($this->order->getID());
+		$order->loadAll();
+		$this->assertEquals($this->products[1]->getPrice($this->usd) * 0.9, $this->order->getTotal($this->usd));
+	}
+
 	public function testQuantityPrices()
 	{
 		$product = $this->products[0];

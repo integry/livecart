@@ -2,11 +2,11 @@
 
 /**
  * Assigns a related (recommended) product to a particular product
- * 
+ *
  * @package application.model.product
- * @author Integry Systems <http://integry.com>   
+ * @author Integry Systems <http://integry.com>
  */
-class ProductRelationship extends ActiveRecord 
+class ProductRelationship extends ActiveRecordModel
 {
 	public static function defineSchema($className = __CLASS__)
 	{
@@ -18,9 +18,9 @@ class ProductRelationship extends ActiveRecord
 		$schema->registerField(new ARForeignKeyField("productRelationshipGroupID", "ProductRelationshipGroup", "ID", "ProductRelationshipGroup", ARInteger::instance()));
 		$schema->registerField(new ARField("position",  ARInteger::instance()));
 	}
-	
-	/*####################  Static method implementations ####################*/			
-	
+
+	/*####################  Static method implementations ####################*/
+
 	/**
 	 * Get related product active record by ID
 	 *
@@ -36,16 +36,16 @@ class ProductRelationship extends ActiveRecord
 			'productID' => $product->getID(),
 			'relatedProductID' => $relatedProduct->getID()
 		);
-		
+
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
 	}
-	
+
 	/**
 	 * Creates a new related product
 	 *
 	 * @param Product $product
 	 * @param Product $relatedProduct
-	 * 
+	 *
 	 * @return ProductRelationship
 	 */
 	public static function getNewInstance(Product $product, Product $related, ProductRelationshipGroup $group = null)
@@ -55,19 +55,19 @@ class ProductRelationship extends ActiveRecord
 			require_once('ProductRelationshipException.php');
 			throw new ProductRelationshipException('Expected two different products when creating a relationship');
 		}
-		
+
 		$relationship = parent::getNewInstance(__CLASS__);
-		
+
 		$relationship->product->set($product);
 		$relationship->relatedProduct->set($related);
 		if(!is_null($group))
 		{
 			$relationship->productRelationshipGroup->set($group);
 		}
-		
+
 		return $relationship;
 	}
-	
+
 	/**
 	 * Get relationships set
 	 *
@@ -80,7 +80,7 @@ class ProductRelationship extends ActiveRecord
 	{
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
-		
+
 	/**
 	 * Gets an existing relationship instance
 	 *
@@ -95,24 +95,24 @@ class ProductRelationship extends ActiveRecord
 	{
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
-	
-	/*####################  Value retrieval and manipulation ####################*/		
-	
+
+	/*####################  Value retrieval and manipulation ####################*/
+
 	public static function hasRelationship(Product $product, Product $relatedToProduct)
 	{
 		$recordID = array(
-			'productID' => $product->getID(), 
+			'productID' => $product->getID(),
 			'relatedProductID' => $relatedToProduct->getID()
 		);
-				
+
 		if(self::retrieveFromPool(__CLASS__, $recordID)) return true;
 		if(self::objectExists(__CLASS__, $recordID)) return true;
-		
+
 		return false;
 	}
-	
-	/*####################  Saving ####################*/		
-	
+
+	/*####################  Saving ####################*/
+
 	protected function insert()
 	{
 	  	// get max position
@@ -120,13 +120,13 @@ class ProductRelationship extends ActiveRecord
 	  	$f->setLimit(1);
 	  	$rec = ActiveRecord::getRecordSetArray('ProductRelationship', $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 0;
-		$this->position->set($position);	
-		
-		return parent::insert();
-	}		
+		$this->position->set($position);
 
-	/*####################  Get related objects ####################*/		
-	
+		return parent::insert();
+	}
+
+	/*####################  Get related objects ####################*/
+
 	/**
 	 * Get product relationships
 	 *
@@ -137,7 +137,7 @@ class ProductRelationship extends ActiveRecord
 	{
 		return self::getRecordSet(self::getRelatedProductsSetFilter($product), $loadReferencedRecords);
 	}
-	
+
 	/**
 	 * Get product relationships
 	 *
@@ -148,18 +148,18 @@ class ProductRelationship extends ActiveRecord
 	{
 		return parent::getRecordSetArray(__CLASS__, self::getRelatedProductsSetFilter($product), $loadReferencedRecords);
 	}
-	
+
 	private static function getRelatedProductsSetFilter(Product $product)
 	{
 		$filter = new ARSelectFilter();
 
-		$filter->joinTable('ProductRelationshipGroup', 'ProductRelationship', 'ID', 'productRelationshipGroupID');		
-		$filter->setOrder(new ARFieldHandle("ProductRelationshipGroup", "position"), 'ASC');			
-		$filter->setOrder(new ARFieldHandle("ProductRelationship", "position"), 'ASC');	
+		$filter->joinTable('ProductRelationshipGroup', 'ProductRelationship', 'ID', 'productRelationshipGroupID');
+		$filter->setOrder(new ARFieldHandle("ProductRelationshipGroup", "position"), 'ASC');
+		$filter->setOrder(new ARFieldHandle("ProductRelationship", "position"), 'ASC');
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("ProductRelationship", "productID"), $product->getID()));
-		
+
 		return $filter;
-	}	
+	}
 }
 
 ?>

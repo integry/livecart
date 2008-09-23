@@ -21,7 +21,8 @@
 			{tab id="tabProductFiles" help="products.edit.files" hidden=true}<a href="{link controller=backend.productFile action=index id=_id_}?categoryID=_categoryID_">{t _files}</a>{/tab}
 			{tab id="tabProductOptions" role="option" help="products.edit.options"}<a href="{link controller=backend.productOption action=index id=_id_}?categoryID=_categoryID_">{t _options}</a>{/tab}
 			{tab id="tabProductReviews" help="categories" hidden=true}<a href="{link controller=backend.review action=index id=_id_}">{t _reviews}</a>{/tab}
-			{tab id="tabInfo" help="products.edit.info"}<a href="{link controller=backend.product action=info id=_id_}?categoryID=_categoryID_">{t _info}</a>{/tab}
+			{tab id="tabProductCategories" help="products.edit.info"}<a href="{link controller=backend.productCategory action=index id=_id_}?categoryID=_categoryID_">{t _product_categories}</a>{/tab}
+			{tab id="tabInfo" help="products.edit"}<a href="{link controller=backend.product action=info id=_id_}?categoryID=_categoryID_">{t _info}</a>{/tab}
 		{/tabControl}
 
 		{*

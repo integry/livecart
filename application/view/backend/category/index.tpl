@@ -21,6 +21,7 @@
 {includeJs file="backend/Product.js"}
 {includeJs file="backend/abstract/ProductListCommon.js"}
 {includeJs file="backend/RelatedProduct.js"}
+{includeJs file="backend/ProductCategory.js"}
 {includeJs file="backend/ProductList.js"}
 {includeJs file="backend/ProductFile.js"}
 {includeJs file="backend/ProductOption.js"}
@@ -37,6 +38,7 @@
 {includeCss file="backend/SpecField.css"}
 {includeCss file="backend/ProductRelationship.css"}
 {includeCss file="backend/ProductBundle.css"}
+{includeCss file="backend/ProductCategory.css"}
 {includeCss file="backend/ProductFile.css"}
 {includeCss file="backend/ProductOption.css"}
 {includeCss file="backend/Filter.css"}

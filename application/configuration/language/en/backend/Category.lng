@@ -18,6 +18,7 @@ _files=Files
 _info=Info
 _options=Options
 _bundled_products=Bundled Products
+_product_categories=Categories
 
 # Confirmations
 _new_category_was_successfully_created=New category was successfully created

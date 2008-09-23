@@ -112,12 +112,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$id = is_numeric($id) ? $id : substr($this->request->get("id"), 9);
 		$category = Category::getInstanceByID($id, Category::LOAD_DATA);
 
-		$filter = new ARSelectFilter();
-
-		$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
-		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
-		$filter->setCondition($cond);
-
+		$filter = new ARSelectFilter($category->getProductCondition(true));
 		$filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
 
 		return $filter;
@@ -473,6 +468,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			'tabProductImages' => count($product->getImageArray()),
 			'tabProductOptions' => $product->getOptions()->getTotalRecordCount(),
 			'tabProductReviews' => $product->getRelatedRecordCount('ProductReview'),
+			'tabProductCategories' => $product->getRelatedRecordCount('ProductCategory') + 1,
 		));
 	}
 

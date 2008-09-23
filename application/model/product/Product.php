@@ -47,6 +47,8 @@ class Product extends MultilingualObject
 
 	private $bundledProducts = null;
 
+	private $additionalCategories = null;
+
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -162,7 +164,20 @@ class Product extends MultilingualObject
 
 	public function belongsTo(Category $category)
 	{
-		return $category->isAncestorOf($this->category->get());
+		$belongsTo = $category->isAncestorOf($this->category->get());
+
+		if (!$belongsTo && $this->additionalCategories)
+		{
+			foreach ($this->additionalCategories as $cat)
+			{
+				if ($category->isAncestorOf($cat))
+				{
+					return true;
+				}
+			}
+		}
+
+		return $belongsTo;
 	}
 
 	public function isRelatedTo(Product $product)
@@ -477,6 +492,28 @@ class Product extends MultilingualObject
 
 	/*####################  Saving ####################*/
 
+	public function getCountUpdateFilter($isDeleting = false)
+	{
+		$sign = $isDeleting ? '-' : '+';
+
+		// update category product count numbers
+		$catUpdate = new ARUpdateFilter();
+
+		$catUpdate->addModifier('totalProductCount', new ARExpressionHandle('totalProductCount ' . $sign . ' 1'));
+
+		if ($this->isEnabled->get())
+		{
+			$catUpdate->addModifier('activeProductCount', new ARExpressionHandle('activeProductCount ' . $sign . ' 1'));
+
+			if ($this->stockCount->get() > 0)
+			{
+				$catUpdate->addModifier('availableProductCount', new ARExpressionHandle('availableProductCount ' . $sign . ' 1'));
+			}
+		}
+
+		return $catUpdate;
+	}
+
 	/**
 	 * Inserts new product record to a database
 	 *
@@ -489,22 +526,7 @@ class Product extends MultilingualObject
 		{
 			parent::insert();
 
-			// update category product count numbers
-			$catUpdate = new ARUpdateFilter();
-
-			$catUpdate->addModifier('totalProductCount', new ARExpressionHandle('totalProductCount + 1'));
-
-			if ($this->isEnabled->get())
-			{
-				$catUpdate->addModifier('activeProductCount', new ARExpressionHandle('activeProductCount + 1'));
-
-				if ($this->stockCount->get() > 0)
-				{
-					$catUpdate->addModifier('availableProductCount', new ARExpressionHandle('availableProductCount + 1'));
-				}
-			}
-
-			$this->updateCategoryCounters($catUpdate);
+			$this->updateCategoryCounters($this->getCountUpdateFilter(), $this->category->get());
 			$this->updateTimeStamp('dateCreated', 'dateUpdated');
 
 			// generate SKU automatically if not set
@@ -594,7 +616,7 @@ class Product extends MultilingualObject
 
 			parent::update();
 
-			$this->updateCategoryCounters($catUpdate);
+			$this->updateCategoryCounters($catUpdate, $this->category->get());
 
 			$update = new ARUpdateFilter();
 			$update->addModifier('dateUpdated', new ARExpressionHandle('NOW()'));
@@ -645,22 +667,13 @@ class Product extends MultilingualObject
 		{
 			$product = Product::getInstanceByID($recordID, Product::LOAD_DATA);
 
-			// modify product counters for categories
-			$catUpdate = new ARUpdateFilter();
+			$filter = $product->getCountUpdateFilter(true);
+			$product->updateCategoryCounters($filter, $product->category->get());
 
-			$catUpdate->addModifier('totalProductCount', new ARExpressionHandle('totalProductCount - 1'));
-
-			if ($product->isEnabled->get())
+			foreach ($product->getAdditionalCategories() as $category)
 			{
-				$catUpdate->addModifier('activeProductCount', new ARExpressionHandle('activeProductCount - 1'));
-
-				if ($product->stockCount->get() > 0)
-				{
-					$catUpdate->addModifier('availableProductCount', new ARExpressionHandle('availableProductCount -1'));
-				}
+				$product->updateCategoryCounters($filter, $category);
 			}
-
-			$product->updateCategoryCounters($catUpdate);
 
 			parent::deleteByID(__CLASS__, $recordID);
 			ActiveRecordModel::commit();
@@ -673,17 +686,22 @@ class Product extends MultilingualObject
 		}
 	}
 
-	protected function updateCategoryCounters(ARUpdateFilter $catUpdate)
+	public function delete()
+	{
+		return self::deleteByID($this->getID());
+	}
+
+	public function updateCategoryCounters(ARUpdateFilter $catUpdate, Category $category)
 	{
 		if ($catUpdate->isModifierSet())
 		{
-			$categoryPathNodes = $this->category->get()->getPathNodeArray(Category::INCLUDE_ROOT_NODE);
+			$categoryPathNodes = $category->getPathNodeArray(Category::INCLUDE_ROOT_NODE);
 			$catIDs = array();
 			foreach ($categoryPathNodes as $node)
 			{
 				$catIDs[] = $node['ID'];
 			}
-			$catIDs[] = $this->category->get()->getID();
+			$catIDs[] = $category->getID();
 
 			$catUpdate->setCondition(new INCond(new ARFieldHandle('Category', 'ID'), $catIDs));
 
@@ -836,6 +854,40 @@ class Product extends MultilingualObject
 		}
 
 		return $this->relationships;
+	}
+
+	public function getAdditionalCategories()
+	{
+		if (is_null($this->additionalCategories))
+		{
+			$this->additionalCategories = array();
+
+			ClassLoader::import('application.model.category.ProductCategory');
+
+			$categories = new ARSet();
+			$filter = new ARSelectFilter();
+			$filter->setOrder(new ARFieldHandle('Category', 'lft'));
+			foreach ($this->getRelatedRecordSet('ProductCategory', $filter, array('Category')) as $productCat)
+			{
+				$this->registerAdditionalCategory($productCat->category->get());
+			}
+		}
+
+		return $this->additionalCategories;
+	}
+
+	public function loadAdditionalCategoriesForSet(ARSet $set)
+	{
+		$map = $set->getIDMap();
+		foreach (ActiveRecordModel::getRecordSet('ProductCategory', new ARSelectFilter(new INCond(new ARFieldHandle('ProductCategory', 'productID'), $set->getRecordIDs())), array('Category')) as $additional)
+		{
+			$map[$additional->product->get()->getID()]->registerAdditionalCategory($additional->category->get());
+		}
+	}
+
+	public function registerAdditionalCategory(Category $category)
+	{
+		$this->additionalCategories[$category->getID()] = $category;
 	}
 
 	/**

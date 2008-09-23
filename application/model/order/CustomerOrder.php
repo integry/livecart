@@ -123,6 +123,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 					unset($this->orderedItems[$key]);
 				}
 			}
+
+			Product::loadAdditionalCategoriesForSet(ARSet::buildFromArray($this->orderedItems)->extractReferencedItemSet('product'));
 		}
 	}
 
@@ -1450,6 +1452,24 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		}
 
 		return $this->discountActions;
+	}
+
+	public function loadItemCategories()
+	{
+		// load additional categories
+		$set = array();
+		foreach ($this->getShoppingCartItems() as $item)
+		{
+			$set[$item->product->get()->getID()][$item->getID()] = $item;
+		}
+
+		foreach (ActiveRecordModel::getRecordSet('ProductCategory', new ARSelectFilter(new INCond(new ARFieldHandle('ProductCategory', 'productID'), array_keys($set))), array('Category')) as $additional)
+		{
+			foreach ($set[$additional->product->get()->getID()] as $item)
+			{
+				$item->registerAdditionalCategory($additional->category->get());
+			}
+		}
 	}
 
 	public function getDeliveryZone()

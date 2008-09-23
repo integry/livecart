@@ -371,6 +371,27 @@ class DiscountConditionTest extends UnitTest
 		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
 	}
 
+	public function testAdditionalCategories()
+	{
+		$customCategory = Category::getNewInstance(Category::getRootNode());
+		$customCategory->save();
+
+		$product = $this->product1;
+		ProductCategory::getNewInstance($product, $customCategory)->save();
+
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->save();
+
+		DiscountConditionRecord::getNewInstance($condition, $customCategory)->save();
+
+		$condition->loadAll();
+
+		$this->order->addProduct($product, 1, true);
+		$this->order->save();
+
+		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
+	}
 }
 
 ?>

@@ -2,8 +2,9 @@
 {includeJs file="library/lightbox/lightbox.js"}
 {includeCss file="library/lightbox/lightbox.css"}
 
-{assign var="metaDescription" value=$product.shortDescription_lang}
-{assign var="metaKeywords" value=$product.keywords_lang}
+{assign var="metaDescription" value=$product.shortDescription_lang|@strip_tags}
+{assign var="metaKeywords" value=$product.keywords}
+
 {pageTitle}{$product.name_lang}{/pageTitle}
 
 <div class="productIndex productCategory_{$product.Category.ID} product_{$product.ID}">
