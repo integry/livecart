@@ -58,7 +58,14 @@ class DeliveryZone extends MultilingualObject
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
 	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
+		if ((0 == $recordID) && $loadRecordData)
+		{
+			return self::getDefaultZoneInstance();
+		}
+		else
+		{
+			return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
+		}
 	}
 
 	public function isDefault()

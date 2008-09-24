@@ -147,7 +147,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$this->loadItems();
 		$this->getShipments();
 		$this->getSpecification();
-		$this->fixedDiscounts = $this->getRelatedRecordSet('OrderDiscount')->getData();
+
+		if ($this->isExistingRecord())
+		{
+			$this->fixedDiscounts = $this->getRelatedRecordSet('OrderDiscount')->getData();
+		}
 	}
 
 	/**

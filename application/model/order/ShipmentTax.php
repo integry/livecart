@@ -12,6 +12,10 @@ ClassLoader::import("application.model.tax.TaxRate");
  */
 class ShipmentTax extends ActiveRecordModel
 {
+	const TYPE_SUBTOTAL = 1;
+
+	const TYPE_SHIPPING = 2;
+
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -20,6 +24,7 @@ class ShipmentTax extends ActiveRecordModel
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("taxRateID", "TaxRate", "ID", "TaxRate", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("shipmentID", "Shipment", "ID", "Shipment", ARInteger::instance()));
+		$schema->registerField(new ARField("type", ARInteger::instance(2)));
 		$schema->registerField(new ARField("amount", ARFloat::instance()));
 	}
 
@@ -28,12 +33,13 @@ class ShipmentTax extends ActiveRecordModel
 	 *
 	 * @return ShipmentTax
 	 */
-	public static function getNewInstance(TaxRate $taxRate, Shipment $shipment)
+	public static function getNewInstance(TaxRate $taxRate, Shipment $shipment, $type)
 	{
 	  	$instance = ActiveRecordModel::getNewInstance(__CLASS__);
 	  	$instance->taxRate->set($taxRate);
 	  	$instance->shipment->set($shipment);
-	  	$instance->recalculateAmount();
+	  	$instance->recalculateAmount(null, $type);
+	  	$instance->type->set($type);
 	  	return $instance;
 	}
 
@@ -53,7 +59,19 @@ class ShipmentTax extends ActiveRecordModel
 		}
 
 		$this->shipment->get()->load();
-		$totalAmount = $this->shipment->get()->getTotalWithoutTax();
+
+		if (!$this->type->get())
+		{
+			$totalAmount = $this->shipment->get()->getTotalWithoutTax();
+		}
+		else if (self::TYPE_SUBTOTAL == $this->type->get())
+		{
+			$totalAmount = $this->shipment->get()->getSubTotalBeforeTax();
+		}
+		else if (self::TYPE_SHIPPING == $this->type->get())
+		{
+			$totalAmount = $this->shipment->get()->getShippingTotalBeforeTax();
+		}
 
 		$taxAmount = $totalAmount * ($this->taxRate->get()->rate->get() / 100);
 		$this->amount->set($taxAmount);
@@ -63,6 +81,11 @@ class ShipmentTax extends ActiveRecordModel
 	{
 		$amountCurrency = $this->shipment->get()->amountCurrency->get();
 		return $currency->convertAmount($amountCurrency, $this->amount->get());
+	}
+
+	public function isItemTax()
+	{
+		return self::TYPE_SUBTOTAL == $this->type->get();
 	}
 
 	public function toArray()

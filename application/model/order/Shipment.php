@@ -226,6 +226,18 @@ class Shipment extends ActiveRecordModel
 		return $subTotal;
 	}
 
+	public function getSubTotalBeforeTax()
+	{
+		$this->recalculateAmounts(false);
+		return $this->amount->get();
+	}
+
+	public function getShippingTotalBeforeTax()
+	{
+		$this->recalculateAmounts(false);
+		return $this->shippingAmount->get();
+	}
+
 	public function getTotalWithoutTax()
 	{
 		$this->recalculateAmounts(false);
@@ -301,13 +313,16 @@ class Shipment extends ActiveRecordModel
 
 		foreach ($this->getTaxes() as $tax)
 		{
-			if ($tax->taxRate->get())
+			if ($tax->isItemTax())
 			{
-				$taxAmount += $tax->taxRate->get()->applyTax($amount) - $amount;
-			}
-			else
-			{
-				$taxAmount += $tax->amount->get();
+				if ($tax->taxRate->get())
+				{
+					$taxAmount += $tax->taxRate->get()->applyTax($amount) - $amount;
+				}
+				else
+				{
+					$taxAmount += $tax->amount->get();
+				}
 			}
 		}
 
@@ -633,15 +648,29 @@ class Shipment extends ActiveRecordModel
 			}
 			else
 			{
-				$zone = $this->order->get()->getDeliveryZone();
-
-				$rates = $zone->getTaxRates(DeliveryZone::ENABLED_TAXES);
-
 				$this->taxes = new ARSet();
 
-				foreach ($rates as $rate)
+				// subtotal taxes
+				$zone = $this->order->get()->getDeliveryZone();
+				foreach ($zone->getTaxRates(DeliveryZone::ENABLED_TAXES) as $rate)
 				{
-					$this->taxes->unshift(ShipmentTax::getNewInstance($rate, $this));
+					$this->taxes->unshift(ShipmentTax::getNewInstance($rate, $this, ShipmentTax::TYPE_SUBTOTAL));
+				}
+
+				// shipping amount taxes
+				$shippingTaxZoneId = self::getApplication()->getConfig()->get('DELIVERY_TAX');
+				if (is_numeric($shippingTaxZoneId))
+				{
+					$shippingTaxZone = DeliveryZone::getInstanceById($shippingTaxZoneId, DeliveryZone::LOAD_DATA);
+				}
+				else
+				{
+					$shippingTaxZone = $zone;
+				}
+
+				foreach ($shippingTaxZone->getTaxRates(DeliveryZone::ENABLED_TAXES) as $rate)
+				{
+					$this->taxes->unshift(ShipmentTax::getNewInstance($rate, $this, ShipmentTax::TYPE_SHIPPING));
 				}
 			}
 		}

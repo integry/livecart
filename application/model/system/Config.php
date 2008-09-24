@@ -326,6 +326,54 @@ class Config
 			  	$type = 'bool';
 			  	$value = 1 - ('-' == $value);
 			}
+			elseif (is_array($value) || ('/' == substr($value, 0, 1)) || ('+/' == substr($value, 0, 2)) && '/' == substr($value, -1))
+			{
+			  	if (!is_array($value))
+			  	{
+					if (substr($value, 0, 1) == '+')
+					{
+						$extra = 'multi';
+						$value = substr($value, 1);
+						$multivalues = array();
+					}
+
+					$vl = explode(', ', substr($value, 1, -1));
+					$type = array();
+					foreach ($vl as $v)
+					{
+						if ('multi' == $extra)
+						{
+							if (substr($v, 0, 1) == '+')
+							{
+								$v = substr($v, 1);
+								$multivalues[$v] = 1;
+							}
+						}
+
+						$type[$v] = $this->application->translate($v);
+					}
+
+					$value = key($type);
+
+					if ('multi' == $extra)
+					{
+						$value = $multivalues;
+					}
+				}
+				else
+				{
+					$type = $value['values'];
+
+					if (isset($value['default']))
+					{
+						$value = $value['default'];
+					}
+					else
+					{
+						$value = key($type);
+					}
+				}
+			}
 			else if ('@' == substr($value, 0, 1))
 			{
 				$type = 'longtext';
@@ -339,38 +387,6 @@ class Config
 			elseif (is_numeric($value))
 			{
 			  	$type = (strpos($value, '.') !== false) ? 'float' : 'num';
-			}
-			elseif (('/' == substr($value, 0, 1)) || ('+/' == substr($value, 0, 2)) && '/' == substr($value, -1))
-			{
-			  	if (substr($value, 0, 1) == '+')
-			  	{
-					$extra = 'multi';
-					$value = substr($value, 1);
-					$multivalues = array();
-				}
-
-				$vl = explode(', ', substr($value, 1, -1));
-			  	$type = array();
-			  	foreach ($vl as $v)
-			  	{
-					if ('multi' == $extra)
-					{
-						if (substr($v, 0, 1) == '+')
-						{
-							$v = substr($v, 1);
-							$multivalues[$v] = 1;
-						}
-					}
-
-					$type[$v] = $this->application->translate($v);
-				}
-
-				$value = key($type);
-
-				if ('multi' == $extra)
-				{
-					$value = $multivalues;
-				}
 			}
 			else
 			{

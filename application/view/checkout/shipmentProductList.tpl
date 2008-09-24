@@ -25,10 +25,12 @@
 		{/if}
 
 		{foreach from=$shipment.taxes item="tax"}
-			<tr>
-				<td colspan="3" class="tax">{$tax.TaxRate.Tax.name_lang} ({$tax.TaxRate.rate}%):</td>
-				<td>{$tax.formattedAmount.$currency}</td>
-			</tr>
+			{if $tax.amount}
+				<tr>
+					<td colspan="3" class="tax">{$tax.TaxRate.Tax.name_lang} ({$tax.TaxRate.rate}%):</td>
+					<td>{$tax.formattedAmount.$currency}</td>
+				</tr>
+			{/if}
 		{/foreach}
 
 		<tr>

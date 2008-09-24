@@ -201,7 +201,13 @@ MAX_QUANT=Maximum quantity of products per order (0 - no limit)
 ENABLE_CART=Enable shopping cart
 ENABLE_WISHLISTS=Enable wishlists
 
-_shipping=Shipping Methods
+_shipping=Delivery Settings
+
+_delivery_tax_calculation=Tax Calculation For Shipping Costs
+DELIVERY_TAX=Delivery zone tax settings to use for calculating shipping cost taxes
+_tax_target_zone=Order target delivery zone
+_default_zone=Default zone
+
 _store_loc_add=Store Location Address
 STORE_COUNTRY=Store country
 STORE_STATE=Store state
