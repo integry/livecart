@@ -13,8 +13,9 @@ class ProductRelationship extends ActiveRecordModel
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("ProductRelationship");
 
-		$schema->registerField(new ARPrimaryForeignKeyField("productID", "Product", "ID", "Product", ARInteger::instance()));
-		$schema->registerField(new ARPrimaryForeignKeyField("relatedProductID", "Product", "ID", "Product", ARInteger::instance()));
+		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", "Product", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("relatedProductID", "Product", "ID", "Product", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("productRelationshipGroupID", "ProductRelationshipGroup", "ID", "ProductRelationshipGroup", ARInteger::instance()));
 		$schema->registerField(new ARField("position",  ARInteger::instance()));
 	}
@@ -32,12 +33,11 @@ class ProductRelationship extends ActiveRecordModel
 	 */
 	public static function getInstance(Product $product, Product $relatedProduct, $loadRecordData = false, $loadReferencedRecords = false)
 	{
-		$recordID = array(
-			'productID' => $product->getID(),
-			'relatedProductID' => $relatedProduct->getID()
-		);
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), $product->getID()));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'relatedProductID'), $relatedProduct->getID()));
 
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
+		$set = parent::getRecordSet(__CLASS__, $f, $loadReferencedRecords);
+		return $set->size() ? $set->get(0) : null;
 	}
 
 	/**
@@ -100,15 +100,7 @@ class ProductRelationship extends ActiveRecordModel
 
 	public static function hasRelationship(Product $product, Product $relatedToProduct)
 	{
-		$recordID = array(
-			'productID' => $product->getID(),
-			'relatedProductID' => $relatedToProduct->getID()
-		);
-
-		if(self::retrieveFromPool(__CLASS__, $recordID)) return true;
-		if(self::objectExists(__CLASS__, $recordID)) return true;
-
-		return false;
+		return self::getInstance($product, $relatedToProduct) instanceof ProductRelationship;
 	}
 
 	/*####################  Saving ####################*/

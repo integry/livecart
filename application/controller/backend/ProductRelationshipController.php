@@ -87,7 +87,7 @@ class ProductRelationshipController extends StoreManagementController
 	public function delete()
 	{
 		$productID = (int)$this->request->get('id');
-		$relatedProductID = (int)$this->request->get('relatedProductID');
+		$relatedProductID = (int)$this->request->get('relatedownerID');
 
 		$relatedProduct = Product::getInstanceByID($relatedProductID);
 		$product = Product::getInstanceByID($productID);

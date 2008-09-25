@@ -837,7 +837,7 @@ class Product extends MultilingualObject
 		return $category->getProductSet(new ARSelectFilter(), false)->getTotalRecordCount();
 	}
 
-	private function loadRelationships($loadReferencedRecords)
+	public function loadRelationships($loadReferencedRecords = false)
 	{
 		ClassLoader::import('application.model.product.ProductRelationship');
 		$this->relationships = ProductRelationship::getRelationships($this, $loadReferencedRecords);

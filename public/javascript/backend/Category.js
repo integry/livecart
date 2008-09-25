@@ -259,7 +259,7 @@ Backend.Category = {
 			var tabList = $('tabList');
 			if (tabList)
 			{
-				Backend.Category.tabControl.activeTab = tabList.down('li');
+				Backend.Category.tabControl.activeTab = tabList.down('li.tab');
 			}
 		}
 
@@ -476,7 +476,7 @@ Backend.Category = {
 
 			if(!alreadyLoaded)
 			{
-				Backend.Category.treeBrowser.loadXML(Backend.Category.links.categoryRecursiveAutoloading + "?id=" + match[1]);
+				Backend.Category.treeBrowser.loadXML(Backend.Category.links.categoryRecursiveAutoloading + "?id=" + match[1], function() { this.activeCategoryId = null; this.activateCategory(match[1]);}.bind(this));
 			}
 		}
 	},
@@ -543,6 +543,7 @@ CategoryTabControl.prototype = {
 			{
 				tabList[i].id = 'tab' + i;
 			}
+
 			if (Element.hasClassName(tabList[i], 'active'))
 			{
 				this.activeTab = tabList[i];

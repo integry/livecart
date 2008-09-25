@@ -506,10 +506,7 @@ class ProductTest extends UnitTest
 		$this->product->save();
 
 		// Now they are removed
-		foreach($this->product->getRelatedProducts() as $relatedProduct)
-		{
-			$this->product->removeFromRelatedProducts($relatedProduct);
-		}
+		$this->product->loadRelationships();
 		$this->assertEqual(0, $this->product->getRelatedProducts()->getTotalRecordCount());
 	}
 
