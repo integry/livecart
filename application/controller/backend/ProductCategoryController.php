@@ -29,7 +29,12 @@ class ProductCategoryController extends StoreManagementController
 		}
 
 		$response = new ActionResponse('product', $product->toArray());
-		$response->set('categories', $additional->toArray());
+
+		if ($additional)
+		{
+			$response->set('categories', $additional->toArray());
+		}
+
 		return $response;
 	}
 
@@ -44,7 +49,6 @@ class ProductCategoryController extends StoreManagementController
 
 		return new RawResponse($category->getID());
 	}
-
 
 	public function addCategory()
 	{

@@ -180,9 +180,9 @@ class Product extends MultilingualObject
 		return $belongsTo;
 	}
 
-	public function isRelatedTo(Product $product)
+	public function isRelatedTo(Product $product, $type)
 	{
-		return ProductRelationship::hasRelationship($product, $this);
+		return ProductRelationship::hasRelationship($product, $this, $type);
 	}
 
 	/**
@@ -446,19 +446,20 @@ class Product extends MultilingualObject
 		}
 	}
 
-	public function addRelatedProduct(Product $product)
+	public function addRelatedProduct(Product $product, $type = 0)
 	{
 		$relationship = ProductRelationship::getNewInstance($this, $product);
-		$this->getRelationships()->add($relationship);
+		$relationship->type->set($type);
+		$this->getRelationships($type)->add($relationship);
 		$this->getRemovedRelationships()->removeRecord($relationship);
 	}
 
-	public function removeFromRelatedProducts(Product $product)
+	public function removeFromRelatedProducts(Product $product, $type)
 	{
-		$this->getRelationships();
-		$relationship = ProductRelationship::getInstance($this, $product);
+		$this->getRelationships($type);
+		$relationship = ProductRelationship::getInstance($this, $product, $type);
 
-		$this->relationships->removeRecord($relationship);
+		$this->relationships[$type]->removeRecord($relationship);
 
 		$this->getRemovedRelationships()->add($relationship);
 	}
@@ -711,19 +712,22 @@ class Product extends MultilingualObject
 
 	public function saveRelationships()
 	{
+		foreach($this->getRemovedRelationships() as $relationship)
+		{
+			$relationship->delete();
+		}
+
 		if (is_null($this->relationships))
 		{
 			return;
 		}
 
-		foreach($this->getRelationships() as $relationship)
+		foreach($this->relationships as $type => $relationships)
 		{
-			$relationship->save();
-		}
-
-		foreach($this->getRemovedRelationships() as $relationship)
-		{
-			$relationship->delete();
+			foreach ($relationships as $relationship)
+			{
+				$relationship->save();
+			}
 		}
 	}
 
@@ -837,23 +841,23 @@ class Product extends MultilingualObject
 		return $category->getProductSet(new ARSelectFilter(), false)->getTotalRecordCount();
 	}
 
-	public function loadRelationships($loadReferencedRecords = false)
+	public function loadRelationships($loadReferencedRecords = false, $type = 0)
 	{
 		ClassLoader::import('application.model.product.ProductRelationship');
-		$this->relationships = ProductRelationship::getRelationships($this, $loadReferencedRecords);
+		if (empty($this->relationships[$type]))
+		{
+			$this->relationships[$type] = ProductRelationship::getRelationships($this, $loadReferencedRecords, $type);
+		}
+
+		return $this->relationships[$type];
 	}
 
 	/**
 	 * @return ARSet
 	 */
-	public function getRelationships($loadReferencedRecords = array('RelatedProduct' => 'Product', 'DefaultImage' => 'ProductImage', 'Manufacturer', 'ProductRelationshipGroup'))
+	public function getRelationships($type = 0, $loadReferencedRecords = array('RelatedProduct' => 'Product', 'DefaultImage' => 'ProductImage', 'Manufacturer', 'ProductRelationshipGroup'))
 	{
-		if(is_null($this->relationships))
-		{
-			$this->loadRelationships($loadReferencedRecords);
-		}
-
-		return $this->relationships;
+		return $this->loadRelationships($loadReferencedRecords, $type);
 	}
 
 	public function getAdditionalCategories()
@@ -893,20 +897,20 @@ class Product extends MultilingualObject
 	/**
 	 * @return ARSet
 	 */
-	public function getRelationshipsArray($loadReferencedRecords = array('RelatedProduct' => 'Product', 'DefaultImage' => 'ProductImage', 'Manufacturer', 'ProductRelationshipGroup'))
+	public function getRelationshipsArray($type, $loadReferencedRecords = array('RelatedProduct' => 'Product', 'DefaultImage' => 'ProductImage', 'Manufacturer', 'ProductRelationshipGroup'))
 	{
 		ClassLoader::import('application.model.product.ProductRelationship');
-		return ProductRelationship::getRelationshipsArray($this, $loadReferencedRecords);
+		return ProductRelationship::getRelationshipsArray($this, $loadReferencedRecords, $type);
 	}
 
 	/**
 	 * @return ARSet
 	 */
-	public function getRelatedProducts()
+	public function getRelatedProducts($type = 0)
 	{
 		$relatedProducts = new ARSet();
 
-		foreach($this->getRelationships() as $relationship)
+		foreach($this->getRelationships($type) as $relationship)
 		{
 			$relatedProducts->add($relationship->relatedProduct->get());
 		}
@@ -923,25 +927,25 @@ class Product extends MultilingualObject
 	/**
 	 * @return ARSet
 	 */
-	public function getRelationshipGroups()
+	public function getRelationshipGroups($type)
 	{
 		ClassLoader::import('application.model.product.ProductRelationshipGroup');
-		return ProductRelationshipGroup::getProductGroups($this);
+		return ProductRelationshipGroup::getProductGroups($this, $type);
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getRelationshipGroupArray()
+	public function getRelationshipGroupArray($type = 0)
 	{
 		ClassLoader::import('application.model.product.ProductRelationshipGroup');
-		return ProductRelationshipGroup::getProductGroupArray($this);
+		return ProductRelationshipGroup::getProductGroupArray($this, $type);
 	}
 
-	public function getRelatedProductsWithGroupsArray()
+	public function getRelatedProductsWithGroupsArray($type = 0)
 	{
 		ClassLoader::import('application.model.product.ProductRelationshipGroup');
-		return ProductRelationshipGroup::mergeGroupsWithFields($this->getRelationshipGroupArray(), $this->getRelationshipsArray());
+		return ProductRelationshipGroup::mergeGroupsWithFields($this->getRelationshipGroupArray($type), $this->getRelationshipsArray($type));
 	}
 
 	/**

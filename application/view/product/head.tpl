@@ -35,7 +35,7 @@
 		{if $product.DefaultImage.paths.3}
 
 			<a rel="lightbox" href="{$product.DefaultImage.paths.4}" title="{$product.DefaultImage.title_lang|escape}">
-				{img src=$product.DefaultImage.paths.3 alt=$product.DefaultImage.name_lang|escape id="mainImage"}
+				{img src=$product.DefaultImage.paths.3 alt=$product.DefaultImage.title_lang|escape id="mainImage"}
 			</a>
 		{else}
 			{img src="image/missing_large.jpg" alt="" id="mainImage"}

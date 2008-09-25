@@ -5,22 +5,23 @@ ClassLoader::import("application.model.product.ProductParametersGroup");
 /**
  * Groups related products. This is useful when there are several different related products assigned
  * to one product, so similar products could be grouped together.
- * 
+ *
  * @package application.model.product
- * @author Integry Systems <http://integry.com>   
+ * @author Integry Systems <http://integry.com>
  */
-class ProductRelationshipGroup extends ProductParametersGroup 
+class ProductRelationshipGroup extends ProductParametersGroup
 {
 	private static $nextPosition = false;
-	
+
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = parent::defineSchema($className);
 		$schema->setName("ProductRelationshipGroup");
 
 		$schema->registerField(new ARField("name", ARArray::instance()));
+		$schema->registerField(new ARField("type", ARInteger::instance()));
 	}
-	
+
 	/**
 	 * Load related products group record set
 	 *
@@ -33,7 +34,7 @@ class ProductRelationshipGroup extends ProductParametersGroup
 	{
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
-	
+
 	/**
 	 * Get related products group active record by ID
 	 *
@@ -47,43 +48,45 @@ class ProductRelationshipGroup extends ProductParametersGroup
 	{
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
 	}
-	
+
 	/**
 	 * Creates a new related products group
 	 *
 	 * @param Product $product
-	 * 
+	 *
 	 * @return ProductRelationshipGroup
 	 */
-	public static function getNewInstance(Product $product)
+	public static function getNewInstance(Product $product, $type)
 	{
 		$group = parent::getNewInstance(__CLASS__);
 		$group->product->set($product);
+		$group->type->set($type);
 
 		return $group;
 	}
-	
+
 	/**
 	 * @return ARSet
 	 */
-	public static function getProductGroups(Product $product)
+	public static function getProductGroups(Product $product, $type)
 	{
-		return self::getRecordSet(self::getProductGroupsFilter($product), !ActiveRecord::LOAD_REFERENCES);
-	}
-	
-	public static function getProductGroupArray(Product $product)
-	{
-		return parent::getRecordSetArray(__CLASS__, self::getProductGroupsFilter($product), !ActiveRecord::LOAD_REFERENCES);
+		return self::getRecordSet(self::getProductGroupsFilter($product, $type), !ActiveRecord::LOAD_REFERENCES);
 	}
 
-	private static function getProductGroupsFilter(Product $product)
+	public static function getProductGroupArray(Product $product, $type)
+	{
+		return parent::getRecordSetArray(__CLASS__, self::getProductGroupsFilter($product, $type), !ActiveRecord::LOAD_REFERENCES);
+	}
+
+	private static function getProductGroupsFilter(Product $product, $type)
 	{
 		$filter = new ARSelectFilter();
 		$filter->setOrder(new ARFieldHandle("ProductRelationshipGroup", "position"), 'ASC');
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("ProductRelationshipGroup", "productID"), $product->getID()));
-		
+		$filter->mergeCondition(new EqualsCond(new ARFieldHandle("ProductRelationshipGroup", "type"), $type));
+
 		return $filter;
-	}	
+	}
 
 	public static function mergeGroupsWithFields($groups, $fields)
 	{

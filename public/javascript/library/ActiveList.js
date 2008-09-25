@@ -297,6 +297,8 @@ ActiveList.prototype = {
 	 */
 	colorizeItem: function(li, position)
 	{
+		Element.addClassName(li, 'activeList');
+
 		if(position % 2 == 0)
 		{
 			Element.removeClassName(li, this.cssPrefix + "odd");

@@ -463,7 +463,8 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	  	return new JSONResponse(array(
 			'tabProductBundle' => count(ProductBundle::getBundledProductArray($product)),
-			'tabProductRelationship' => $product->getRelationships(false)->getTotalRecordCount(),
+			'tabProductRelationship' => $product->getRelationships(ProductRelationship::TYPE_CROSS)->getTotalRecordCount(),
+			'tabProductUpsell' => $product->getRelationships(ProductRelationship::TYPE_UP)->getTotalRecordCount(),
 			'tabProductFiles' => $product->getFiles(false)->getTotalRecordCount(),
 			'tabProductImages' => count($product->getImageArray()),
 			'tabProductOptions' => $product->getOptions()->getTotalRecordCount(),
