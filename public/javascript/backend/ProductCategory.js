@@ -15,9 +15,12 @@ Backend.ProductCategory = function(container, product, categories)
 	this.findUsedNodes();
 	this.bindEvents();
 
-	for (k = 0; k < categories.length; k++)
+	if (categories)
 	{
-		this.addCategory(categories[k].ID, this.getCategoryPath(categories[k]));
+		for (k = 0; k < categories.length; k++)
+		{
+			this.addCategory(categories[k].ID, this.getCategoryPath(categories[k]));
+		}
 	}
 }
 
