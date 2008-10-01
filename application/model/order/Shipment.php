@@ -145,7 +145,7 @@ class Shipment extends ActiveRecordModel
 		{
 			if (!$item->product->get()->isFreeShipping->get() || !$zone->isFreeShipping->get())
 			{
-				$weight += $item->product->get()->getShippingWeight();
+				$weight += ($item->product->get()->getShippingWeight() * $item->count->get());
 			}
 		}
 
@@ -384,7 +384,7 @@ class Shipment extends ActiveRecordModel
 
 		if ($this->taxes)
 		{
-			$this->taxes->unshift($tax);
+			$this->taxes->add($tax);
 		}
 		else
 		{
@@ -643,7 +643,7 @@ class Shipment extends ActiveRecordModel
 				$this->taxes = $this->getRelatedRecordSet('ShipmentTax', new ARSelectFilter(), array('Tax', 'TaxRate'));
 				foreach ($this->fixedTaxes as $tax)
 				{
-					$this->taxes->unshift($tax);
+					$this->taxes->add($tax);
 				}
 			}
 			else
@@ -654,7 +654,7 @@ class Shipment extends ActiveRecordModel
 				$zone = $this->order->get()->getDeliveryZone();
 				foreach ($zone->getTaxRates(DeliveryZone::ENABLED_TAXES) as $rate)
 				{
-					$this->taxes->unshift(ShipmentTax::getNewInstance($rate, $this, ShipmentTax::TYPE_SUBTOTAL));
+					$this->taxes->add(ShipmentTax::getNewInstance($rate, $this, ShipmentTax::TYPE_SUBTOTAL));
 				}
 
 				// shipping amount taxes
@@ -670,11 +670,16 @@ class Shipment extends ActiveRecordModel
 
 				foreach ($shippingTaxZone->getTaxRates(DeliveryZone::ENABLED_TAXES) as $rate)
 				{
-					$this->taxes->unshift(ShipmentTax::getNewInstance($rate, $this, ShipmentTax::TYPE_SHIPPING));
+					$this->taxes->add(ShipmentTax::getNewInstance($rate, $this, ShipmentTax::TYPE_SHIPPING));
 				}
 			}
 		}
 
+		return $this->taxes;
+	}
+
+	public function getAppliedTaxes()
+	{
 		return $this->taxes;
 	}
 

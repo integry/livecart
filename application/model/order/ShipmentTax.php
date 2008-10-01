@@ -38,8 +38,9 @@ class ShipmentTax extends ActiveRecordModel
 	  	$instance = ActiveRecordModel::getNewInstance(__CLASS__);
 	  	$instance->taxRate->set($taxRate);
 	  	$instance->shipment->set($shipment);
-	  	$instance->recalculateAmount(null, $type);
 	  	$instance->type->set($type);
+	  	$instance->recalculateAmount(null);
+
 	  	return $instance;
 	}
 
@@ -73,6 +74,21 @@ class ShipmentTax extends ActiveRecordModel
 			$totalAmount = $this->shipment->get()->getShippingTotalBeforeTax();
 		}
 
+		$otherTaxes = 0;
+		foreach ($this->shipment->get()->getAppliedTaxes() as $tax)
+		{
+			if (($this->type->get() == $tax->type->get()))
+			{
+				$otherTaxes += $tax->amount->get();
+
+				if ($this->taxRate->get()->tax->get()->getID() == $tax->taxRate->get()->tax->get()->getID())
+				{
+					$otherTaxes = 0;
+				}
+			}
+		}
+
+		$totalAmount += $otherTaxes;
 		$taxAmount = $totalAmount * ($this->taxRate->get()->rate->get() / 100);
 		$this->amount->set($taxAmount);
 	}
