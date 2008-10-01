@@ -688,6 +688,11 @@ class CheckoutController extends FrontendController
 		$handler = $this->application->getPaymentHandler($this->request->get('id'));
 		$orderId = $handler->getOrderIdFromRequest($this->request->toArray());
 
+		if (!$this->getRequestCurrency())
+		{
+			$this->request->set('currency', $handler->getCurrency($this->request->get('currency')));
+		}
+
 		$order = CustomerOrder::getInstanceById($orderId, CustomerOrder::LOAD_DATA);
 		$order->loadAll();
 		$this->order = $order;

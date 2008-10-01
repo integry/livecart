@@ -495,6 +495,7 @@ class UserController extends FrontendController
 		$response->set('regForm', $form);
 		$response->set('email', $this->request->get('email'));
 		$response->set('failed', $this->request->get('failed'));
+		$response->set('return', $this->request->get('return'));
 
 		SessionUser::getAnonymousUser()->getSpecification()->setFormResponse($response, $form);
 
@@ -961,6 +962,7 @@ class UserController extends FrontendController
 
 	/**
 	 *	Make payment for unpaid or partially paid order
+	 *	@role login
 	 */
 	public function pay()
 	{
