@@ -34,7 +34,7 @@
 				{if $options[$item.ID] || $moreOptions[$item.ID]}
 					<div class="productOptions">
 						{foreach from=$options[$item.ID] item=option}
-							{include file="product/optionItem.tpl selectedChoice=$item.options[$option.ID]}
+							{include file="product/optionItem.tpl" selectedChoice=$item.options[$option.ID]}
 						{/foreach}
 
 						{foreach from=$moreOptions[$item.ID] item=option}

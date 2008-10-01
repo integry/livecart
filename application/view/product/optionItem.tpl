@@ -6,7 +6,7 @@
 			<label for={$fieldName} class="checkbox">
 				{$option.name_lang}
 				{if $option.DefaultChoice.priceDiff != 0}
-					({$option.DefaultChoice.formattedPrice.$currency})
+					(+{$option.DefaultChoice.formattedPrice.$currency})
 				{/if}
 			</label>
 
@@ -28,7 +28,7 @@
 						<option value="{$choice.ID}"{if $selectedChoice.Choice.ID == $choice.ID} selected="selected"{/if}>
 							{$choice.name_lang}
 							{if $choice.priceDiff != 0}
-								({$choice.formattedPrice.$currency})</label>
+								(+{$choice.formattedPrice.$currency})</label>
 							{/if}
 						</option>
 					{/foreach}
