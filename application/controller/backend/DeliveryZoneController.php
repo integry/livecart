@@ -46,9 +46,9 @@ class DeliveryZoneController extends StoreManagementController
 		$allCountries = $localeInfo->getAllCountries();
 
 		$allStates = array();
-		foreach(State::getAllStates()->toArray() as $state)
+		foreach(State::getAllStatesArray() as $state)
 		{
-			$allStates[$state['ID']] = $localeInfo->getCountryName($state['countryID']) . ":" . $state['name'];
+			$allStates[$state['ID']] = $localeInfo->getCountryName($state['countryID']) . ": " . $state['name'];
 		}
 
 		$selectedCountries = array();
