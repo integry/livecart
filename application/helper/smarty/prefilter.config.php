@@ -31,12 +31,12 @@ function smarty_prefilter_config($source, $smarty)
 		{/err}
 	*/
 
-	$source = preg_replace('/{{1,2}err for="(.*)"}{1,2}(.*)\{\{label (.*)\}\}(.*){\/err}/msU', '{{err for="\\1"}}\\2<label for="\\1"><span>\\3</span></label>\\4{/err}', $source);
+	$source = preg_replace('/{{1,2}err for="(.*)"}{1,2}(.*)\{\{label (.*)\}\}(.*){\/err}/msU', '{{err for="\\1"}}\\2<label for="\\1"><span class="label">\\3</span></label>\\4{/err}', $source);
 
 	// @todo: user/checkout.tpl doesn't compile correctly
 	if (strpos($source, '{label') !== false)
 	{
-		$source = preg_replace('/{{1,2}err for="(.*)"}{1,2}(.*)\{label (.*)\}(.*){\/err}/msU', '{{err for="\\1"}}\\2<label for="\\1"><span>{t \\3}</span></label>\\4{/err}', $source);
+		$source = preg_replace('/{{1,2}err for="(.*)"}{1,2}(.*)\{label (.*)\}(.*){\/err}/msU', '{{err for="\\1"}}\\2<label for="\\1"><span class="label">{t \\3}</span></label>\\4{/err}', $source);
 	}
 
 	// replace `backticks` to {curly braces} for <label>

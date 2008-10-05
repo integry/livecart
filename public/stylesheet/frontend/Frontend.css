@@ -2478,7 +2478,7 @@ label
 	font-weight: bold;
 }
 
-.required label span
+.required label span.label
 {
 	background: url(../../image/required.gif) right center no-repeat;
 	padding-right:9px;

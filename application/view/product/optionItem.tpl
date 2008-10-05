@@ -29,8 +29,9 @@
 			{{err for="`$fieldName`"}}
 			{if 1 == $option.type}
 				{if 0 == $option.displayType}
+					<fieldset class="error">
 					<select name="{$fieldName}">
-						<option>{$option.selectMessage_lang}</option>
+						<option value="">{$option.selectMessage_lang}</option>
 						{foreach from=$option.choices item=choice}
 							<option value="{$choice.ID}"{if $selectedChoice.Choice.ID == $choice.ID} selected="selected"{/if}>
 								{$choice.name_lang}
