@@ -1171,6 +1171,12 @@ table.quantityPrice
 	line-height: 2em;
 }
 
+.radioOptions
+{
+	padding: 0 0.5em;
+	border: 1px solid #aaa;
+}
+
 #productSpecification table
 {
 	border: 1px solid #AAAAAA;

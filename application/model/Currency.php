@@ -127,6 +127,7 @@ class Currency extends ActiveRecordModel
 	{
 		$array = parent::transformArray($array, $schema);
 		$array['name'] = self::getApplication()->getLocale()->info()->getCurrencyName($array['ID']);
+		$array['format'] = $array['pricePrefix'] . '%d.' . $array['decimalCount'] . 'f' . $array['priceSuffix'];
 		return $array;
 	}
 

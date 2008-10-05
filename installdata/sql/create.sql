@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2008-09-12 10:10                                #
-# Model version:         Version 2008-09-12 3                            #
+# Created on:            2008-10-05 20:43                                #
+# Model version:         Version 2008-10-05 2                            #
 # ---------------------------------------------------------------------- #
 
 
@@ -317,11 +317,14 @@ ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE ProductRelationship (
-    ProductID INTEGER UNSIGNED NOT NULL,
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    productID INTEGER UNSIGNED NOT NULL,
+    categoryID INTEGER UNSIGNED,
     relatedProductID INTEGER UNSIGNED NOT NULL COMMENT 'The Product the related Product is assigned to',
     productRelationshipGroupID INTEGER UNSIGNED COMMENT 'ID of the related Product',
+    type INTEGER NOT NULL COMMENT '0 - related product (cross-sell), 1 - up-sell',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'ID of the ProductRelationshipGroup - if the related product is assigned to one (grouped together with similar products)',
-    CONSTRAINT PK_ProductRelationship PRIMARY KEY (ProductID, relatedProductID)
+    CONSTRAINT PK_ProductRelationship PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -532,6 +535,8 @@ ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 CREATE TABLE ProductRelationshipGroup (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     ProductID INTEGER UNSIGNED,
+    categoryID INTEGER UNSIGNED,
+    type INTEGER NOT NULL COMMENT 'see ProductRelationship',
     position INTEGER UNSIGNED DEFAULT 0,
     name MEDIUMTEXT,
     CONSTRAINT PK_ProductRelationshipGroup PRIMARY KEY (ID)
@@ -860,6 +865,7 @@ CREATE TABLE ShipmentTax (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     taxRateID INTEGER UNSIGNED COMMENT 'ID of the TaxRate that is being applied to the shipment',
     shipmentID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the shipment the tax is being applied to',
+    type TINYINT COMMENT 'applied to: NULL - total amount (deprecated), 1 - subtotal, 2 - shipping amount',
     amount FLOAT COMMENT 'Tax amount',
     CONSTRAINT PK_ShipmentTax PRIMARY KEY (ID)
 )
@@ -937,11 +943,14 @@ CREATE TABLE ProductOption (
     defaultChoiceID INTEGER UNSIGNED,
     name MEDIUMTEXT,
     description MEDIUMTEXT,
+    selectMessage MEDIUMTEXT,
     type TINYINT,
     isRequired BOOL,
     isDisplayed BOOL,
     isDisplayedInList BOOL,
     isDisplayedInCart BOOL,
+    isPriceIncluded BOOL COMMENT 'Include product price when displaying option price (base product price + option choice price = option display price)',
+    displayType INTEGER COMMENT '0 - select box, 1 - radio buttons',
     position INTEGER UNSIGNED DEFAULT 0,
     CONSTRAINT PK_ProductOption PRIMARY KEY (ID)
 )
@@ -1408,6 +1417,17 @@ CREATE TABLE ProductBundle (
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
+# Add table "ProductCategory"                                            #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ProductCategory (
+    productID INTEGER UNSIGNED NOT NULL,
+    categoryID INTEGER UNSIGNED NOT NULL,
+    CONSTRAINT PK_ProductCategory PRIMARY KEY (productID, categoryID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
 # Foreign key constraints                                                #
 # ---------------------------------------------------------------------- #
 
@@ -1490,13 +1510,16 @@ ALTER TABLE FilterGroup ADD CONSTRAINT SpecField_FilterGroup
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductRelationship ADD CONSTRAINT Product_RelatedProduct_ 
-    FOREIGN KEY (ProductID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductRelationship ADD CONSTRAINT Product_ProductRelationship 
     FOREIGN KEY (relatedProductID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductRelationship ADD CONSTRAINT ProductRelationshipGroup_ProductRelationship 
     FOREIGN KEY (productRelationshipGroupID) REFERENCES ProductRelationshipGroup (ID) ON DELETE CASCADE;
+
+ALTER TABLE ProductRelationship ADD CONSTRAINT Category_ProductRelationship 
+    FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductPrice ADD CONSTRAINT Product_ProductPrice 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1548,6 +1571,9 @@ ALTER TABLE SpecFieldGroup ADD CONSTRAINT Category_SpecFieldGroup
 
 ALTER TABLE ProductRelationshipGroup ADD CONSTRAINT Product_ProductRelationshipGroup 
     FOREIGN KEY (ProductID) REFERENCES Product (ID) ON DELETE CASCADE;
+
+ALTER TABLE ProductRelationshipGroup ADD CONSTRAINT Category_ProductRelationshipGroup 
+    FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductReview ADD CONSTRAINT Product_ProductReview 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1803,3 +1829,9 @@ ALTER TABLE ProductBundle ADD CONSTRAINT Product_ProductBundle
 
 ALTER TABLE ProductBundle ADD CONSTRAINT Product_ProductBundle_Related 
     FOREIGN KEY (relatedProductID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductCategory ADD CONSTRAINT Category_ProductCategory 
+    FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductCategory ADD CONSTRAINT Product_ProductCategory 
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;

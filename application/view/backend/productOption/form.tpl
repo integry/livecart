@@ -35,6 +35,12 @@
 			<label class="productOption_form_isDisplayedInCart_label">{t _ProductOption_displayed_in_cart}</label>
 		</p>
 
+		<p class="checkbox">
+			<input type="checkbox" value="1" name="isPriceIncluded" class="checkbox productOption_form_isPriceIncluded" />
+			<input type="hidden" value="1" name="checkbox_isPriceIncluded" />
+			<label class="productOption_form_isPriceIncluded_label">{t _ProductOption_price_included}</label>
+		</p>
+
 		<p class="required">
 			<label class="productOption_form_type_label">{t _ProductOption_type}</label>
 			<fieldset class="error">
@@ -52,6 +58,27 @@
 				<label class="productOption_form_name_label">{t _ProductOption_title}</label>
 				<fieldset class="error">
 					<input type="text" name="name" class="productOption_form_name"  />
+					<span class="errorText hidden"> </span>
+				</fieldset>
+			</p>
+		</div>
+
+		<div class="optionSelectMessage">
+			<p>
+				<label class="productOption_form_displayType_label">{t _ProductOption_display_as}</label>
+				<fieldset class="error">
+					<select name="displayType" class="productOption_form_displayType">
+						<option value="0">{t _ProductOption_displayType_selectBox}</option>
+						<option value="1">{t _ProductOption_displayType_radioButtons}</option>
+					</select>
+					<span class="errorText hidden"> </span>
+				</fieldset>
+			</p>
+
+			<p>
+				<label class="productOption_form_selectMessage_label">{t _ProductOption_selectMessage}</label>
+				<fieldset class="error">
+					<input type="text" name="selectMessage" class="productOption_form_selectMessage"  />
 					<span class="errorText hidden"> </span>
 				</fieldset>
 			</p>
@@ -85,6 +112,12 @@
 				<label class="translation_name_label">{t _ProductOption_title}</label>
 				<input type="text" name="name_{$lang.ID}"  />
 			</p>
+
+			<p class="optionSelectMessage">
+				<label class="translation_name_label">{t _ProductOption_selectMessage}</label>
+				<input type="text" name="selectMessage_{$lang.ID}"  />
+			</p>
+
 			<p>
 				<label class="translation_description_label">{t _ProductOption_description}</label>
 				<textarea name="description_{$lang.ID}" ></textarea>

@@ -104,7 +104,7 @@ Backend.ProductOption.prototype =
 		this.description		= this.productOption.description_lang;
 		this.backupName			= this.name;
 
-		['isRequired', 'isDisplayed', 'isDisplayedInList', 'isDisplayedInCart'].each(
+		['isRequired', 'isDisplayed', 'isDisplayedInList', 'isDisplayedInCart', 'isPriceIncluded'].each(
 		function(key)
 		{
 			this[key] = this.productOption[key] == 1;
@@ -192,6 +192,7 @@ Backend.ProductOption.prototype =
 		this.nodes.form 				= this.nodes.parent.getElementsByTagName("form")[0];
 		this.nodes.tabsContainer	   = this.nodes.parent.down('.tabs');
 		this.nodes.type = document.getElementsByClassName(this.cssPrefix + "form_type", this.nodes.parent)[0];
+		this.nodes.displayType = document.getElementsByClassName(this.cssPrefix + "form_displayType", this.nodes.parent)[0];
 
 		this.nodes.stateLinks 			= document.getElementsByClassName(this.cssPrefix + "change_state", this.nodes.parent);
 		this.nodes.stepTranslations 	= document.getElementsByClassName(this.cssPrefix + "step_translations", this.nodes.parent)[0];
@@ -207,7 +208,7 @@ Backend.ProductOption.prototype =
 
 		var self = this;
 		this.nodes.labels = {};
-		$A(['type', 'name', 'isRequired', 'isDisplayed', 'isDisplayedInList', 'isDisplayedInCart']).each(function(field)
+		$A(['type', 'name', 'isRequired', 'isDisplayed', 'isDisplayedInList', 'isDisplayedInCart', 'isPriceIncluded']).each(function(field)
 		{
 			this.nodes.labels[field] = document.getElementsByClassName(self.cssPrefix + "form_" + field + "_label", this.nodes.parent)[0];
 		}.bind(this));
@@ -215,7 +216,7 @@ Backend.ProductOption.prototype =
 		this.nodes.id 					= document.getElementsByClassName(this.cssPrefix + "form_id", this.nodes.parent)[0];
 		this.nodes.parentID 			= document.getElementsByClassName(this.cssPrefix + "form_parentID", this.nodes.parent)[0];
 
-		['isRequired', 'isDisplayed', 'isDisplayedInList', 'isDisplayedInCart'].each(
+		['isRequired', 'isDisplayed', 'isDisplayedInList', 'isDisplayedInCart', 'isPriceIncluded'].each(
 		function(key)
 		{
 			this.nodes[key] = document.getElementsByClassName(this.cssPrefix + "form_" + key, this.nodes.parent)[0];
@@ -223,6 +224,7 @@ Backend.ProductOption.prototype =
 
 		this.nodes.name 				= document.getElementsByClassName(this.cssPrefix + "form_name", this.nodes.parent)[0];
 		this.nodes.description			= document.getElementsByClassName(this.cssPrefix + "form_description", this.nodes.parent)[0];
+		this.nodes.selectMessage		= document.getElementsByClassName(this.cssPrefix + "form_selectMessage", this.nodes.parent)[0];
 		this.nodes.price 				= document.getElementsByClassName(this.cssPrefix + "form_priceDiff", this.nodes.parent)[0];
 		this.nodes.optionPriceContainer = document.getElementsByClassName("optionPriceContainer", this.nodes.parent)[0];
 
@@ -326,14 +328,32 @@ Backend.ProductOption.prototype =
 		{
 			this.nodes.tabsContainer.show();
 			this.nodes.optionPriceContainer.hide();
+			this.toggleSelectMessageFields(true);
 		}
 		else
 		{
 			this.nodes.tabsContainer.hide();
 			this.nodes.optionPriceContainer.show();
+			this.toggleSelectMessageFields(false);
 		}
 	},
 
+	toggleSelectMessageFields: function(isDisplayed)
+	{
+		$A(this.nodes.parent.getElementsByClassName('optionSelectMessage')).each(
+			function(node)
+			{
+				if (isDisplayed)
+				{
+					node.show();
+				}
+				else
+				{
+					node.hide();
+				}
+			}
+		);
+	},
 
 	bindOneValue: function(li)
 	{
@@ -429,6 +449,8 @@ Backend.ProductOption.prototype =
 
 		this.nodes.name.value = this.productOption.name_lang ? this.productOption.name_lang : '';
 		this.nodes.description.value = this.productOption.description_lang ? this.productOption.description_lang : '';
+		this.nodes.selectMessage.value = this.productOption.selectMessage_lang ? this.productOption.selectMessage_lang : '';
+		this.nodes.displayType.value = this.productOption.displayType;
 
 		if (this.productOption.DefaultChoice)
 		{
@@ -437,7 +459,7 @@ Backend.ProductOption.prototype =
 
 		this.nodes.name.id = this.cssPrefix + this.parentID + "_" + this.id + "_name_" + this.languageCodes[0];
 
-		['isRequired', 'isDisplayed', 'isDisplayedInList', 'isDisplayedInCart'].each(
+		['isRequired', 'isDisplayed', 'isDisplayedInList', 'isDisplayedInCart', 'isPriceIncluded'].each(
 		function(key)
 		{
 			this.nodes[key].checked = this[key] == 1;
@@ -447,7 +469,7 @@ Backend.ProductOption.prototype =
 		Event.observe(this.nodes.price, "input", function(e) { new NumericFilter(this); }, false);
 
 		$A(['name',
-			'isRequired',  'isDisplayed', 'isDisplayedInList', 'isDisplayedInCart',
+			'isRequired',  'isDisplayed', 'isDisplayedInList', 'isDisplayedInCart', 'isPriceIncluded',
 			'type']).each(function(fieldName)
 		{
 			this.nodes.labels[fieldName].onclick = function() {

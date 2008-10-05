@@ -108,7 +108,7 @@ class ProductController extends FrontendController
 		$response->set('catRoute', $catRoute);
 
 		// product options
-		$options = $product->getOptions(true)->toArray();
+		$options = $product->getOptionsArray();
 		$response->set('allOptions', $options);
 
 		foreach ($options as $key => $option)

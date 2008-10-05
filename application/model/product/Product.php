@@ -617,6 +617,11 @@ class Product extends MultilingualObject
 
 			parent::update();
 
+			if (!$this->isLoaded())
+			{
+				$this->load(array('Category'));
+			}
+
 			$this->updateCategoryCounters($catUpdate, $this->category->get());
 
 			$update = new ARUpdateFilter();
@@ -985,6 +990,14 @@ class Product extends MultilingualObject
 
 			ProductOption::loadChoicesForRecordSet($options);
 		}
+
+		return $options;
+	}
+
+	public function getOptionsArray()
+	{
+		$options = $this->getOptions(true)->toArray();
+		ProductOption::includeProductPrice($this, $options);
 
 		return $options;
 	}
