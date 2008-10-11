@@ -200,6 +200,7 @@ MIN_QUANT=Minimum quantity of products per order
 MAX_QUANT=Maximum quantity of products per order (0 - no limit)
 ENABLE_CART=Enable shopping cart
 ENABLE_WISHLISTS=Enable wishlists
+ENABLE_MULTIADDRESS=Allow shipping to multiple addresses
 
 _shipping=Delivery Settings
 

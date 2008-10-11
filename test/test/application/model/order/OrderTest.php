@@ -436,8 +436,8 @@ class OrderTest extends OrderTestCommon
 
 		// mark order as shipped - the stock is gone
 		$this->assertNotEquals($order->status->get(), CustomerOrder::STATUS_SHIPPED);
-		$order->setStatus(CustomerOrder::STATUS_SHIPPED);
-		foreach ($order->getShipments() as $shipment)
+		$reloaded->setStatus(CustomerOrder::STATUS_SHIPPED);
+		foreach ($reloaded->getShipments() as $shipment)
 		{
 			$this->assertEqual($shipment->status->get(), Shipment::STATUS_SHIPPED);
 		}
@@ -903,8 +903,8 @@ class OrderTest extends OrderTestCommon
 		$action->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
 		$action->save();
 
-		$this->order->addProduct($this->products[0], 3);
-		$this->order->addProduct($newProduct, 2);
+		$this->order->addProduct($this->products[0], 3, true);
+		$this->order->addProduct($newProduct, 2, true);
 		$this->order->save();
 
 		$price0 = $this->products[0]->getPrice($this->usd);
@@ -948,8 +948,8 @@ class OrderTest extends OrderTestCommon
 		$action->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
 		$action->save();
 
-		$this->order->addProduct($this->products[0], 3);
-		$this->order->addProduct($newProduct, 2);
+		$this->order->addProduct($this->products[0], 3, true);
+		$this->order->addProduct($newProduct, 2, true);
 		$this->order->save();
 
 		$price0 = $this->products[0]->getPrice($this->usd);
@@ -1065,6 +1065,108 @@ class OrderTest extends OrderTestCommon
 		$price->setPriceRule(4, $group, 9);
 		$price->setPriceRule(6, $group, 11);
 		$this->assertEquals($this->order->getTotal($this->usd), 50);
+	}
+
+	public function testShippingToMultipleAddresses()
+	{
+		$address1 = UserAddress::getNewInstance();
+		$address1->countryID->set('US');
+		$address1->save();
+
+		$address2 = UserAddress::getNewInstance();
+		$address2->countryID->set('CA');
+		$address2->save();
+
+		// zones, taxes and shipping rates
+		$zone1 = DeliveryZone::getNewInstance();
+		$zone1->isEnabled->set(true);
+		$zone1->name->set('USA');
+		$zone1->save();
+		DeliveryZoneCountry::getNewInstance($zone1, 'US')->save();
+
+		$zone2 = DeliveryZone::getNewInstance();
+		$zone2->isEnabled->set(true);
+		$zone2->name->set('Canada');
+		$zone2->save();
+		DeliveryZoneCountry::getNewInstance($zone2, 'CA')->save();
+
+		$tax = Tax::getNewInstance('VAT');
+		$tax->save();
+
+		TaxRate::getNewInstance($zone1, $tax, 20)->save();
+		TaxRate::getNewInstance($zone2, $tax, 15)->save();
+
+		$service = ShippingService::getNewInstance($zone1, 'def1', ShippingService::SUBTOTAL_BASED);
+		$service->save();
+		$shippingRate = ShippingRate::getNewInstance($service, 0, 10000000);
+		$shippingRate->flatCharge->set(100);
+		$shippingRate->save();
+
+		$service = ShippingService::getNewInstance($zone2, 'def2', ShippingService::SUBTOTAL_BASED);
+		$service->save();
+		$shippingRate = ShippingRate::getNewInstance($service, 0, 10000000);
+		$shippingRate->flatCharge->set(78);
+		$shippingRate->save();
+
+		// set up order
+		$this->order->isMultiAddress->set(true);
+		$this->order->save(true);
+
+		$product = $this->products[0];
+
+		$shipment1 = Shipment::getNewInstance($this->order);
+		$shipment1->shippingAddress->set($address1);
+		$shipment1->save();
+
+		$shipment2 = Shipment::getNewInstance($this->order);
+		$shipment2->shippingAddress->set($address2);
+		$shipment2->save();
+
+		$this->order->addProduct($product, 1, true, $shipment1);
+		$item = $this->order->addProduct($product, 1, true, $shipment2);
+
+		// edit amount after saving just to make things more complicated
+		$this->order->save();
+		$item->count->set(2);
+
+		// shipments shouldn't be reset like for regular orders
+		$this->assertEquals($this->order->getShipments()->size(), 2);
+
+		$price = $product->getPrice($this->usd);
+		$this->assertEquals($this->order->getTotal($this->usd), ($price * 1.2) + ($price * 2 * 1.15));
+
+		// test if delivery zones are determined correctly
+		$this->assertEqual($shipment1->getDeliveryZone()->getID(), $zone1->getID());
+
+		// check if shipping rates are available
+		$this->assertEqual($shipment1->getShippingRates()->size(), 1);
+		$this->assertEqual($shipment1->getShippingRates()->get(0)->getCostAmount(), 100);
+		$this->assertEqual($shipment2->getShippingRates()->get(0)->getCostAmount(), 78);
+
+		foreach (array($shipment1, $shipment2) as $shipment)
+		{
+			$shipment->setRateId($shipment->getShippingRates()->get(0)->getServiceID());
+			$shipment->recalculateAmounts();
+			$shipment->save();
+		}
+
+		$this->order->save();
+		$this->order->finalize($this->usd);
+
+		// reload order
+		ActiveRecordModel::clearPool();
+		$order = CustomerOrder::getInstanceById($this->order->getID(), true);
+		$order->loadAll();
+
+		$this->assertEquals($order->getShipments()->size(), 2);
+		foreach ($order->getShipments() as $key => $shipment)
+		{
+			$this->assertEquals(count($shipment->getItems()), 1);
+			$this->assertEquals(array_shift($shipment->getItems())->count->get(), $key + 1);
+		}
+
+		// order total with taxes and shipping
+		$this->assertEqual($order->getTotal($this->usd), (($price + 100) * 1.2) + ((($price * 2) + 78) * 1.15));
 	}
 
 	private function createOrderWithZone(DeliveryZone $zone = null)

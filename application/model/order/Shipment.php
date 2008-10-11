@@ -49,6 +49,7 @@ class Shipment extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField("orderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("amountCurrencyID", "Currency", "ID", "Currency", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("shippingServiceID", "ShippingService", "ID", "ShippingService", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("shippingAddressID", "shippingAddress", "ID", 'UserAddress', ARInteger::instance()));
 
 		$schema->registerField(new ARField("trackingCode", ARVarchar::instance(100)));
 		$schema->registerField(new ARField("dateShipped", ARDateTime::instance()));
@@ -57,6 +58,7 @@ class Shipment extends ActiveRecordModel
 		$schema->registerField(new ARField("shippingAmount", ARFloat::instance()));
 		$schema->registerField(new ARField("status", ARInteger::instance(2)));
 		$schema->registerField(new ARField("shippingServiceData", ARText::instance(50)));
+		//$schema->registerAutoReference('shippingAddressID');
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -132,13 +134,41 @@ class Shipment extends ActiveRecordModel
 		return parent::isModified();
 	}
 
+	public function getShippingAddress()
+	{
+		foreach (array($this->shippingAddress->get(), $this->order->get()->shippingAddress->get()) as $address)
+		{
+			if ($address)
+			{
+				return $address;
+			}
+		}
+	}
+
+	public function getDeliveryZone()
+	{
+		if (!$this->deliveryZone)
+		{
+			if ($address = $this->getShippingAddress())
+			{
+				$this->deliveryZone = DeliveryZone::getZoneByAddress($address);
+			}
+			else
+			{
+				$this->deliveryZone = DeliveryZone::getDefaultZoneInstance();
+			}
+		}
+
+		return $this->deliveryZone;
+	}
+
 	public function getChargeableWeight(DeliveryZone $zone = null)
 	{
 		$weight = 0;
 
 		if (is_null($zone))
 		{
-			$zone = $this->order->get()->getDeliveryZone();
+			$zone = $this->getDeliveryZone();
 		}
 
 		foreach ($this->items as $item)
@@ -167,6 +197,11 @@ class Shipment extends ActiveRecordModel
 		return $count;
 	}
 
+	public function getShippingRates()
+	{
+		return $this->getDeliveryZone()->getShippingRates($this);
+	}
+
 	public function setAvailableRates(ShippingRateSet $rates)
 	{
 		$this->availableShippingRates = $rates;
@@ -174,17 +209,37 @@ class Shipment extends ActiveRecordModel
 
 	public function getAvailableRates()
 	{
+		if (!$this->availableShippingRates)
+		{
+			$this->setAvailableRates($this->getShippingRates());
+		}
+
 		return $this->availableShippingRates;
 	}
 
 	public function setRateId($serviceId)
 	{
+		if (!$this->getAvailableRates())
+		{
+			$this->setAvailableRates($this->getShippingRates());
+		}
+
 		$this->selectedRateId = $serviceId;
+
+		if ($this->order->get()->isMultiAddress->get())
+		{
+			$this->shippingServiceData->set(serialize($this->getSelectedRate()));
+		}
 	}
 
 	public function getRateId()
 	{
-		return $this->selectedRateId ;
+		if ($this->order->get()->isMultiAddress->get() && !$this->selectedRateId)
+		{
+			$this->selectedRateId = unserialize($this->shippingServiceData->get())->getServiceId();
+		}
+
+		return $this->selectedRateId;
 	}
 
 	public function isShippable()
@@ -355,6 +410,12 @@ class Shipment extends ActiveRecordModel
 		// total taxes
 		if ($calculateTax)
 		{
+			if ($this->isLoaded())
+			{
+				$this->deleteRelatedRecordSet('ShipmentTax');
+				$this->taxes = null;
+			}
+
 			$taxes = 0;
 			foreach ($this->getTaxes() as $tax)
 			{
@@ -369,7 +430,7 @@ class Shipment extends ActiveRecordModel
 		if (($rate = $this->getSelectedRate()) && $this->isShippable())
 		{
 			$amount = $rate->getAmountByCurrency($currency);
-			if ($this->order->get()->getDeliveryZone()->isDefault())
+			if ($this->getDeliveryZone()->isDefault())
 			{
 				$amount = $this->reduceTaxesFromAmount($amount);
 			}
@@ -476,7 +537,14 @@ class Shipment extends ActiveRecordModel
 		// save taxes
 		foreach ($this->getTaxes() as $tax)
 		{
-			$tax->save();
+			if ($tax->amount->get())
+			{
+				$tax->save();
+			}
+			else
+			{
+				$tax->delete();
+			}
 		}
 	}
 
@@ -587,7 +655,22 @@ class Shipment extends ActiveRecordModel
 		}
 
 		// taxes
-		$array['taxes'] = $this->getTaxes()->toArray();
+		$taxes = array();
+		foreach ($this->getTaxes() as $tax)
+		{
+			$taxes[$tax->taxRate->get()->getID()][] = $tax;
+		}
+
+		foreach ($taxes as $taxType)
+		{
+			$amount = 0;
+			foreach ($taxType as $tax)
+			{
+				$amount += $tax->amount->get();
+			}
+
+			$array['taxes'][] = $tax->toArray($amount);
+		}
 
 		// consists of downloadable files only?
 		$array['isShippable'] = $this->isShippable();
@@ -607,9 +690,8 @@ class Shipment extends ActiveRecordModel
 
 	public function getSelectedRate()
 	{
-		if ($serializedRate = $this->shippingServiceData->get())
+		if (($serializedRate = $this->shippingServiceData->get()) && ($rate = unserialize($serializedRate)))
 		{
-			$rate = unserialize($serializedRate);
 			$rate->setApplication($this->getApplication());
 
 			if($this->getRateId() == $rate->getServiceId())
@@ -638,7 +720,7 @@ class Shipment extends ActiveRecordModel
 		{
 			$this->load();
 
-			if ($this->isLoaded())
+			if ($this->isLoaded() && $this->order->get()->isFinalized->get())
 			{
 				$this->taxes = $this->getRelatedRecordSet('ShipmentTax', new ARSelectFilter(), array('Tax', 'TaxRate'));
 				foreach ($this->fixedTaxes as $tax)
@@ -646,12 +728,13 @@ class Shipment extends ActiveRecordModel
 					$this->taxes->add($tax);
 				}
 			}
-			else
+
+			if (!$this->taxes || !$this->taxes->size())
 			{
 				$this->taxes = new ARSet();
 
 				// subtotal taxes
-				$zone = $this->order->get()->getDeliveryZone();
+				$zone = $this->getDeliveryZone();
 				foreach ($zone->getTaxRates(DeliveryZone::ENABLED_TAXES) as $rate)
 				{
 					$this->taxes->add(ShipmentTax::getNewInstance($rate, $this, ShipmentTax::TYPE_SUBTOTAL));

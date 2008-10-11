@@ -75,15 +75,16 @@ class ShipmentTax extends ActiveRecordModel
 		}
 
 		$otherTaxes = 0;
-		foreach ($this->shipment->get()->getAppliedTaxes() as $tax)
+		if ($totalAmount > 0)
 		{
-			if (($this->type->get() == $tax->type->get()))
+			foreach ($this->shipment->get()->getAppliedTaxes() as $tax)
 			{
-				$otherTaxes += $tax->amount->get();
-
-				if ($this->taxRate->get()->tax->get()->getID() == $tax->taxRate->get()->tax->get()->getID())
+				if (($this->type->get() == $tax->type->get()))
 				{
-					$otherTaxes = 0;
+					if ($this->taxRate->get()->tax->get()->includesTax($tax->taxRate->get()->tax->get()))
+					{
+						$otherTaxes += $tax->amount->get();
+					}
 				}
 			}
 		}
@@ -104,8 +105,14 @@ class ShipmentTax extends ActiveRecordModel
 		return self::TYPE_SUBTOTAL == $this->type->get();
 	}
 
-	public function toArray()
+	public function toArray($amount = null)
 	{
+		if (!is_null($amount))
+		{
+			$realAmount = $this->amount->get();
+			$this->amount->set($amount);
+		}
+
 		$array = parent::toArray();
 		$array['formattedAmount'] = array();
 
@@ -116,6 +123,11 @@ class ShipmentTax extends ActiveRecordModel
 		foreach ($currencies as $id => $currency)
 		{
 			$array['formattedAmount'][$id] = $currency->getFormattedPrice($this->getAmountByCurrency($currency));
+		}
+
+		if (isset($realAmount))
+		{
+			$this->amount->set($realAmount);
 		}
 
 		return $array;

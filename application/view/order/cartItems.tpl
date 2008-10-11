@@ -64,6 +64,9 @@
 						{/if}
 					</div>
 				{/if}
+				{if $multi}
+					{include file="order/selectItemAddress.tpl" item=$item}
+				{/if}
 			</td>
 			<td class="cartPrice {if $item.itemBasePrice > $item.itemPrice}discount{/if}">
 				{if $item.count == 1}
@@ -133,7 +136,17 @@
 			<td colspan="5">
 				<a href="{link route=$return}" class="continueShopping"><span><span><span><span>{t _continue_shopping}</span></span></span></span></a>
 				{if $cart.isOrderable}
-					<a href="{link controller=checkout}" class="proceedToCheckout" onclick="return Order.submitCartForm(this);"><span><span><span><span>{t _proceed_checkout}</span></span></span></span></a>
+					<div class="checkoutButtons">
+						<a href="{link controller=checkout}" class="proceedToCheckout" onclick="return Order.submitCartForm(this);"><span><span><span><span>{t _proceed_checkout}</span></span></span></span></a>
+
+						{if 'ENABLE_MULTIADDRESS'|config}
+							{if !$multi}
+								<a href="{link controller=order action=setMultiAddress}" class="multiAddressCheckout">{t _ship_to_multiple}</a>
+							{else}
+								<a href="{link controller=order action=setSingleAddress}" class="multiAddressCheckout">{t _ship_to_single}</a>
+							{/if}
+						{/if}
+					</div>
 				{/if}
 			</td>
 		</tr>
@@ -141,7 +154,7 @@
 </table>
 <input type="hidden" name="return" value="{$return}" />
 
-{if $expressMethods && $cart.isOrderable}
+{if $expressMethods && $cart.isOrderable && !$cart.isMultiAddress}
 	<div id="expressCheckoutMethods">
 		{foreach from=$expressMethods item=method}
 			<a href="{link controller=checkout action=express id=$method}"><img src="image/payment/{$method}.gif" /></a>

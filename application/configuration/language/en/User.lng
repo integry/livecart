@@ -131,6 +131,7 @@ _downloads=Downloads
 _order_total=Order Total
 _shipment_total=Shipment Total
 _shipping=Shipping
+_shipment_shipped_to=Shipped to
 
 _view_details=View Details
 _order_id=Order ID

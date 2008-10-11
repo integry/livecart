@@ -11,7 +11,7 @@
 		{include file="checkout/checkoutProgress.tpl" progress="progressShipping"}
 	</div>
 
-	{if $shipments|@count > 1}
+	{if $shipments|@count > 1 && !$order.isMultiAddress}
 		<div class="message">
 			{t _info_multi_shipments}
 		</div>
@@ -21,6 +21,10 @@
 
 	{form action="controller=checkout action=doSelectShippingMethod" method="POST" handle=$form}
 		{foreach from=$shipments key="key" item="shipment"}
+
+			{if $order.isMultiAddress}
+				<h2>{$shipment.ShippingAddress.compact}</h2>
+			{/if}
 
 			{include file="checkout/shipmentProductList.tpl"}
 

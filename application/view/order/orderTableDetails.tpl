@@ -39,7 +39,7 @@
 {/if}
 
 {if $order.isShippingRequired && $shipment.isShippable && $shipment.ShippingService}
-	<tr>
+	<tr class="overviewShippingInfo">
 		<td colspan="3" class="subTotalCaption">
 			{t _shipping} ({$shipment.ShippingService.name_lang}):
 		</td>

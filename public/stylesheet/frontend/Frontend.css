@@ -1577,6 +1577,19 @@ div.checkout a
     font-weight: bold;
 }
 
+.checkoutButtons
+{
+    float: right;
+    width: 400px;
+}
+
+.multiAddressCheckout
+{
+	clear: right;
+	display: block;
+	text-align: right;
+}
+
 .proceedToCheckout
 {
     background-color: #DDEEFF;
@@ -1584,9 +1597,13 @@ div.checkout a
     background-position: 97% center;
     background-repeat: no-repeat;
     border: 1px solid #DDDDDD;
-    float: right;
     font-weight: bold;
     padding: 5px 27px 5px 5px;
+}
+
+select.multiAddress
+{
+	width: 100%;
 }
 
 .cartImage
@@ -1849,6 +1866,17 @@ a.cvv
 .user-pay .orderOverviewControls, .user-pay .addressContainer a
 {
 	display: none;
+}
+
+.multiAddress .shipmentAddress
+{
+	text-align: left;
+	font-weight: bold;
+}
+
+.multiAddress .overviewShippingInfo td
+{
+	padding-bottom: 1em;
 }
 
 #overviewAddresses
@@ -2131,6 +2159,11 @@ p.messages
 	margin: 4px;
 }
 
+.shipmentAddress
+{
+	margin-bottom: 0.5em;
+}
+
 /***************************
 	File downloads
 ***************************/
@@ -2273,6 +2306,7 @@ td.amount
 #invoicePaymentInfo td.amount
 {
     width: auto;
+    text-align: right;
 }
 
 #invoicePaymentInfo .beforeTaxSubtotal td.amount

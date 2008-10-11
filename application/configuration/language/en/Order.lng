@@ -11,6 +11,10 @@ _empty_basket=Your shopping basket is empty
 _your_basket=Your Shopping Basket
 _item_count=There are [quant,_1,item,items,no items] in your shopping basket.
 
+_ship_to_multiple=Ship to multiple addresses
+_ship_to_single=Ship to a single address
+_select_shipping_addresses=Select Shipping Addresses
+
 _added_to_cart=[_1] has been added to your shopping basket
 _removed_from_cart=[_1] has been removed from shopping basket
 _added_to_wishlist=[_1] has been added to your wish list

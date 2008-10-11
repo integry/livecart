@@ -53,7 +53,7 @@ class ProductRelationshipGroupTest extends UnitTest
 
 	public function testCreateNewGroup()
 	{
-		$group = ProductRelationshipGroup::getNewInstance($this->product);
+		$group = ProductRelationshipGroup::getNewInstance($this->product, ProductRelationship::TYPE_CROSS);
 		$group->setValueByLang('name', 'en', 'TEST_GROUP');
 		$group->save();
 
@@ -68,7 +68,7 @@ class ProductRelationshipGroupTest extends UnitTest
 
 	public function testDeleteGroup()
 	{
-		$group = ProductRelationshipGroup::getNewInstance($this->product);
+		$group = ProductRelationshipGroup::getNewInstance($this->product, ProductRelationship::TYPE_CROSS);
 		$group->save();
 		$this->assertTrue($group->isExistingRecord());
 
@@ -85,15 +85,15 @@ class ProductRelationshipGroupTest extends UnitTest
 		$groups = array();
 		foreach(range(1, 3) as $i)
 		{
-			$groups[$i] = ProductRelationshipGroup::getNewInstance($product);
+			$groups[$i] = ProductRelationshipGroup::getNewInstance($product, ProductRelationship::TYPE_CROSS);
 			$groups[$i]->position->set($i);
 			$groups[$i]->setValueByLang('name', 'en', 'TEST_GROUP_' . $i);
 			$groups[$i]->save();
 		}
 
-		$this->assertEqual(count($groups), ProductRelationshipGroup::getProductGroups($product)->getTotalRecordCount());
+		$this->assertEqual(count($groups), ProductRelationshipGroup::getProductGroups($product, ProductRelationship::TYPE_CROSS)->getTotalRecordCount());
 		$i = 1;
-		foreach(ProductRelationshipGroup::getProductGroups($product) as $group)
+		foreach(ProductRelationshipGroup::getProductGroups($product, ProductRelationship::TYPE_CROSS) as $group)
 		{
 			$this->assertTrue($groups[$i] === $group);
 			$i++;

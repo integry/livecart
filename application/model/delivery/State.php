@@ -57,8 +57,6 @@ class State extends ActiveRecordModel
 			$states[$state['ID']] = $state['name'];
 		}
 
-		asort($states);
-
 		return $states;
 	}
 

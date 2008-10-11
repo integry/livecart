@@ -253,16 +253,14 @@ class CheckoutController extends FrontendController
 			$this->order->billingAddress->set($billing->userAddress->get());
 
 			// shipping address
-			if ($this->order->isShippingRequired())
+			if ($this->order->isShippingRequired() && !$this->order->isMultiAddress->get())
 			{
-
 				if ($this->request->get('sameAsBilling'))
 				{
 					$shipping = $billing;
 				}
 				else
 				{
-
 					$f = new ARSelectFilter();
 					$f->setCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userID'), $this->user->getID()));
 					$f->mergeCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userAddressID'), $this->request->get('shippingAddress')));
@@ -310,15 +308,22 @@ class CheckoutController extends FrontendController
 
 		$shipments = $this->order->getShipments();
 
+		foreach($shipments as $shipment)
+		{
+			if(count($shipment->getItems()) == 0)
+			{
+				$shipment->delete();
+				$shipments->removeRecord($shipment);
+			}
+		}
+
 		$form = $this->buildShippingForm($shipments);
-		$zone = $this->order->getDeliveryZone();
 
 		$needSelecting = false;
 
 		foreach ($shipments as $key => $shipment)
 		{
-			$shipmentRates = $zone->getShippingRates($shipment);
-			$shipment->setAvailableRates($shipmentRates);
+			$shipmentRates = $shipment->getAvailableRates();
 
 			if ($shipmentRates->size() > 1)
 			{
@@ -410,6 +415,11 @@ class CheckoutController extends FrontendController
 				}
 
 				$shipment->setRateId($selectedRateId);
+
+				if ($this->order->isMultiAddress->get())
+				{
+					$shipment->save();
+				}
 			}
 		}
 
@@ -430,6 +440,15 @@ class CheckoutController extends FrontendController
 		if ($redirect = $this->validateOrder($this->order, self::STEP_PAYMENT))
 		{
 			return $redirect;
+		}
+
+		// @todo: the addresses should be loaded automatically...
+		foreach ($this->order->getShipments() as $shipment)
+		{
+			if ($shipment->shippingAddress->get())
+			{
+				$shipment->shippingAddress->get()->load();
+			}
 		}
 
 		// check for express checkout data for this order
@@ -891,7 +910,7 @@ class CheckoutController extends FrontendController
 		// shipping address selected
 		if ($step >= self::STEP_SHIPPING)
 		{
-			if ((!$order->shippingAddress->get() && $order->isShippingRequired()) || !$order->billingAddress->get())
+			if ((!$order->shippingAddress->get() && $order->isShippingRequired() && !$order->isMultiAddress->get()) || !$order->billingAddress->get())
 			{
 				return new ActionRedirectResponse('checkout', 'selectAddress');
 			}
@@ -973,7 +992,7 @@ class CheckoutController extends FrontendController
 		$validator = new RequestValidator("addressSelectorValidator", $this->request);
 		$validator->addCheck('billingAddress', new IsNotEmptyCheck($this->translate('_select_billing_address')));
 
-		if ($order->isShippingRequired())
+		if ($order->isShippingRequired() && !$order->isMultiAddress->get())
 		{
 			$validator->addCheck('shippingAddress', new OrCheck(array('shippingAddress', 'sameAsBilling'), array(new IsNotEmptyCheck($this->translate('_select_shipping_address')), new IsNotEmptyCheck('')), $this->request));
 		}

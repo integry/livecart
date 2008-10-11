@@ -26,3 +26,10 @@ body, html {
 {
     padding-left: 270px;
 }
+
+#availableShipments
+{
+	display: block;
+	width: 100%;
+	clear: both;
+}

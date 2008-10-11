@@ -1904,7 +1904,7 @@ INSERT INTO `State` (`ID`, `countryID`, `code`, `name`, `subdivisionType`) VALUE
 (1900, 'LV', 'BU', 'Bauskas rajons', NULL),
 (1901, 'LV', 'CE', 'Cēsu rajons', NULL),
 (1902, 'LV', 'DA', 'Daugavpils rajons', NULL),
-(1903, 'LV', 'DGV', 'Daugpilis', NULL),
+(1903, 'LV', 'DGV', 'Daugavpils', NULL),
 (1904, 'LV', 'DO', 'Dobeles rajons', NULL),
 (1905, 'LV', 'GU', 'Gulbenes rajons', NULL),
 (1906, 'LV', 'JEL', 'Jelgava', NULL),

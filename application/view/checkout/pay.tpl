@@ -61,7 +61,7 @@
 
 	<div id="overviewAddresses">
 
-		{if $order.ShippingAddress}
+		{if $order.ShippingAddress && !$order.isMultiAddress}
 		<div class="addressContainer">
 			<h3>{t _will_ship_to}:</h3>
 			{fun name="address" address=$order.ShippingAddress}

@@ -20,8 +20,43 @@ class OrderController extends FrontendController
 	 */
 	public function index()
 	{
-		$this->addBreadCrumb($this->translate('_my_session'), $this->router->createUrlFromRoute($this->request->get('return'), true));
+		if ($this->order->isMultiAddress->get())
+		{
+			return new ActionRedirectResponse('order', 'multi');
+		}
+
+		$response = $this->getCartPageResponse();
 		$this->addBreadCrumb($this->translate('_my_basket'), '');
+		return $response;
+	}
+
+	/**
+	 *	@role login
+	 */
+	public function multi()
+	{
+		if (!$this->order->isMultiAddress->get())
+		{
+			return new ActionRedirectResponse('order', 'index');
+		}
+
+		$response = $this->getCartPageResponse();
+
+		// we're loading through a set, because all referenced records need to be loaded before array transformation
+		$addresses = array();
+		foreach ($this->user->getShippingAddressSet()->toArray() as $address)
+		{
+			$addresses[$address['UserAddress']['ID']] = $address['UserAddress']['compact'];
+		}
+		$response->set('addresses', $addresses);
+
+		$this->addBreadCrumb($this->translate('_select_shipping_addresses'), '');
+		return $response;
+	}
+
+	private function getCartPageResponse()
+	{
+		$this->addBreadCrumb($this->translate('_my_session'), $this->router->createUrlFromRoute($this->request->get('return'), true));
 
 		$this->order->loadItemData();
 
@@ -184,6 +219,56 @@ class OrderController extends FrontendController
 			}
 		}
 
+		if ($this->order->isMultiAddress->get())
+		{
+			$addresses = $this->user->getShippingAddressSet();
+			$this->order->getShipments();
+
+			foreach ($this->order->getOrderedItems() as $item)
+			{
+				if ($addressId = $this->request->get('address_' . $item->getID()))
+				{
+					if (!$item->shipment->get() || ($item->shipment->get()->getID() != $addressId))
+					{
+						foreach ($this->order->getShipments() as $shipment)
+						{
+							if ($shipment->shippingAddress->get() && ($shipment->shippingAddress->get()->getID() == $addressId))
+							{
+								if (!$item->shipment->get() || ($item->shipment->get()->getID() != $shipment->getID()))
+								{
+									if ($item->shipment->get())
+									{
+										$item->shipment->get()->removeItem($item);
+									}
+
+									$shipment->addItem($item);
+								}
+							}
+						}
+
+						if (!$item->shipment->get())
+						{
+							$address = ActiveRecordModel::getInstanceById('UserAddress', $addressId);
+							if ($address->isLoaded())
+							{
+								$shipment = Shipment::getNewInstance($this->order);
+								$shipment->shippingAddress->set($address);
+								$shipment->save();
+								$this->order->addShipment($shipment);
+
+								$shipment->addItem($item);
+							}
+						}
+
+						$item->save();
+					}
+				}
+
+				$item->shipment->get()->shippingServiceData->set(null);
+				$item->shipment->get()->save();
+			}
+		}
+
 		$this->order->mergeItems();
 
 		SessionOrder::save($this->order);
@@ -246,6 +331,11 @@ class OrderController extends FrontendController
 			foreach ($product->getOptions(true) as $option)
 			{
 				$this->modifyItemOption($item, $option, $this->request, 'option_' . $option->getID());
+			}
+
+			if ($this->order->isMultiAddress->get())
+			{
+				$item->save();
 			}
 		}
 
@@ -338,6 +428,45 @@ class OrderController extends FrontendController
 	}
 
 	/**
+	 *	@role login
+	 */
+	public function setMultiAddress()
+	{
+		if (!$this->config->get('ENABLE_MULTIADDRESS'))
+		{
+			return new ActionRedirectResponse('order', 'index');
+		}
+
+		$this->order->isMultiAddress->set(true);
+
+		// split items
+		foreach ($this->order->getOrderedItems() as $item)
+		{
+			if ($item->count->get() > 1)
+			{
+				$count = $item->count->get();
+				$item->count->set(1);
+				for ($k = 1; $k < $count; $k++)
+				{
+					$this->order->addItem(clone $item);
+				}
+			}
+		}
+
+		$this->order->save();
+
+		return new ActionRedirectResponse('order', 'multi');
+	}
+
+	public function setSingleAddress()
+	{
+		$this->order->isMultiAddress->set(false);
+		$this->order->mergeItems();
+		SessionOrder::save($this->order);
+		return new ActionRedirectResponse('order', 'index');
+	}
+
+	/**
 	 *	@todo Optimize loading of product options
 	 */
 	private function buildCartForm(CustomerOrder $order, $options)
@@ -349,6 +478,11 @@ class OrderController extends FrontendController
 		foreach ($order->getOrderedItems() as $item)
 		{
 			$this->setFormItem($item, $form);
+
+			if ($this->order->isMultiAddress->get() && $item->shipment->get() && $item->shipment->get()->shippingAddress->get())
+			{
+				$form->set('address_' . $item->getID(), $item->shipment->get()->shippingAddress->get()->getID());
+			}
 		}
 
 		return $form;

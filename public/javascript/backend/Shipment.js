@@ -1078,9 +1078,84 @@ Backend.Shipment.prototype =
 			menu.hide(null, "orderShipments_new_" + orderID + "_controls");
 			Backend.Shipment.prototype.getInstance("orderShipments_new_" + orderID + "_form").save(); ;
 		}.bind(this));
+	},
+
+	editShippingAddress: function()
+	{
+		var container = this.nodes.root.down('.shipmentAddress');
+		this.nodes.shipmentAddressContainer = container;
+		this.nodes.shipmentAddressView = container.down('.viewAddress');
+		this.nodes.shipmentAddressEdit = container.down('.editAddress');
+		this.nodes.shipmentAddressMenu = container.down('.menu');
+
+		new LiveCart.AjaxUpdater(Backend.Router.createUrl('backend.shipment', 'editAddress', {id: this.ID}), this.nodes.shipmentAddressEdit, container.down('.menu').down('.progressIndicator'), null, this.completeAddressLoading.bind(this));
+	},
+
+	completeAddressLoading: function()
+	{
+		this.nodes.shipmentAddressView.hide();
+		this.nodes.shipmentAddressMenu.hide();
+		this.nodes.shipmentAddressEdit.show();
+
+		this.nodes.existingAddressSelector = this.nodes.shipmentAddressContainer.down('.existingUserAddress');
+		Event.observe(this.nodes.existingAddressSelector, 'change', this.useExistingAddress.bind(this));
+
+		this.nodes.addressForm = this.nodes.shipmentAddressContainer.down('form');
+
+		Event.observe(this.nodes.addressForm, 'submit', function (e)
+		{
+			Event.stop(e);
+			if (validateForm(Event.element(e)))
+			{
+				this.saveShipmentAddress();
+			}
+		}.bindAsEventListener(this));
+
+		Event.observe(this.nodes.shipmentAddressContainer.down('.cancel'), 'click', this.cancelAddressEdit.bindAsEventListener(this));
+	},
+
+	useExistingAddress: function()
+	{
+		if (this.nodes.existingAddressSelector.value)
+		{
+			var form = this.nodes.addressForm;
+			var address = Backend.CustomerOrder.Editor.prototype.existingUserAddresses[form.elements.namedItem('existingUserAddress').value];
+
+			['firstName', 'lastName', 'countryID', 'stateID', 'stateName', 'city', 'address1', 'address2', 'postalCode', 'phone'].each(function(field)
+			{
+				if (address.UserAddress[field])
+				{
+					form.elements.namedItem(field).value = address.UserAddress[field];
+				}
+			}.bind(this));
+
+			form.elements.namedItem('stateID').stateSwitcher.updateStates(null, function(){ form.elements.namedItem('stateID').value = address.UserAddress.stateID; }.bind(this));
+		}
+	},
+
+	saveShipmentAddress: function(e)
+	{
+		new LiveCart.AjaxRequest(this.nodes.addressForm, null, this.completeAddressSave.bind(this));
+	},
+
+	completeAddressSave: function(originalRequest)
+	{
+		this.nodes.shipmentAddressView.update(originalRequest.responseData.compact);
+		this.cancelAddressEdit();
+	},
+
+	cancelAddressEdit: function(e)
+	{
+		if (e)
+		{
+			Event.stop(e);
+		}
+
+		this.nodes.shipmentAddressView.show();
+		this.nodes.shipmentAddressMenu.show();
+		this.nodes.shipmentAddressEdit.hide();
 	}
 }
-
 
 
 Backend.Shipment.Callbacks =

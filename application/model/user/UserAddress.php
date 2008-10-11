@@ -30,6 +30,7 @@ class UserAddress extends ActiveRecordModel
 		$schema->registerField(new ARField("postalCode", ARVarchar::instance(50)));
 		$schema->registerField(new ARField("countryID", ARChar::instance(2)));
 		$schema->registerField(new ARField("phone", ARVarchar::instance(100)));
+		$schema->registerAutoReference('stateID');
 	}
 
 	public static function getNewInstance()
@@ -61,32 +62,51 @@ class UserAddress extends ActiveRecordModel
 			$array['stateName'] = $array['State']['name'];
 		}
 
+		$array['compact'] = self::getAddressString($array, ', ');
+
 		return $array;
 	}
 
 	public function toString()
 	{
-		$address = array();
-
-		$address[] = implode(' ', array($this->firstName->get(), $this->lastName->get()));
-		foreach (array('companyName', 'address1', 'address2') as $field)
-		{
-			$address[] = $this->$field->get();
-		}
-
-		$address[] = implode(', ', array_reduce(array($this->city->get(), $this->postalCode->get()), array($this, 'filterAddress')));
-
-		if ($this->countryID->get())
-		{
-			$address[] =  $this->getApplication()->getLocale()->info()->getCountryName($this->countryID->get());
-		}
-
-		return implode("\n", array_reduce($address, array($this, 'filterAddress')));
+		return self::getAddressString($this->toArray(), "\n");
 	}
 
-	private function reduceAddress($item)
+	private static function getAddressString(array $addressArray, $separator)
 	{
-		return trim($item);
+		$address = array();
+
+		$address[] = implode(' ', array($addressArray['firstName'], $addressArray['lastName']));
+		foreach (array('companyName', 'address1', 'address2') as $field)
+		{
+			$address[] = $addressArray[$field];
+		}
+
+		$address[] = implode(', ', array_filter(array($addressArray['city'], $addressArray['postalCode']), 'trim'));
+		$address[] = $addressArray['stateName'];
+
+		if ($addressArray['countryID'])
+		{
+			$address[] =  self::getApplication()->getLocale()->info()->getCountryName($addressArray['countryID']);
+		}
+
+		return implode($separator, array_filter($address, 'trim'));
+	}
+
+	public function loadRequestData(Request $request)
+	{
+		parent::loadRequestData($request);
+
+		if($request->get('stateID'))
+		{
+			$this->state->set(State::getInstanceByID((int)$request->get('stateID'), true));
+			$this->stateName->set(null);
+		}
+		else
+		{
+			$this->stateName->set($request->get('stateName'));
+			$this->state->set(null);
+		}
 	}
 
 	public function __destruct()

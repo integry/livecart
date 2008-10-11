@@ -35,7 +35,7 @@
 	{/foreach}
 	</table>
 
-	{if $order.isShippingRequired}
+	{if $order.isShippingRequired && !$order.isMultiAddress}
 
 		<p>
 			{checkbox name="sameAsBilling" class="checkbox"}

@@ -73,17 +73,19 @@
 	</table>
 </fieldset>
 
-<fieldset class="discounts">
-	<legend>{t _discounts}</legend>
-	<table class="discounts">
-		{foreach from=$order.discounts item=discount name=discounts}
-			<tr class="{zebra loop="discounts"}">
-				<td>{$discount.description}</td>
-				<td class="amount">{$discount.formatted_amount}</td>
-			</tr>
-		{/foreach}
-	</table>
-</fieldset>
+{if $order.discounts}
+	<fieldset class="discounts">
+		<legend>{t _discounts}</legend>
+		<table class="discounts">
+			{foreach from=$order.discounts item=discount name=discounts}
+				<tr class="{zebra loop="discounts"}">
+					<td>{$discount.description}</td>
+					<td class="amount">{$discount.formatted_amount}</td>
+				</tr>
+			{/foreach}
+		</table>
+	</fieldset>
+{/if}
 
 <div id="order{$orderID}_downloadableShipments" class="downloadableShipments shipmentCategoty" style="display: none">
 	<h2 class="notShippedShipmentsTitle">{t _downloadable}</h2>

@@ -60,7 +60,7 @@ class ProductRelationshipTest extends UnitTest
 		$this->product2->save();
 
    		// create new group
-		$this->group = ProductRelationshipGroup::getNewInstance($this->product1);
+		$this->group = ProductRelationshipGroup::getNewInstance($this->product1, ProductRelationship::TYPE_CROSS);
 		$this->group->position->set(5);
 		$this->group->save();
 		$this->groupAutoIncrementNumber = $this->group->getID();
@@ -149,7 +149,7 @@ class ProductRelationshipTest extends UnitTest
 		$groups = array(0 => null);
 		foreach(range(1, 2) as $i)
 		{
-			$groups[$i] = ProductRelationshipGroup::getNewInstance($product);
+			$groups[$i] = ProductRelationshipGroup::getNewInstance($product, ProductRelationship::TYPE_CROSS);
 			$groups[$i]->position->set($i);
 			$groups[$i]->setValueByLang('name', 'en', 'TEST_GROUP_' . $i);
 			$groups[$i]->save();
@@ -171,7 +171,7 @@ class ProductRelationshipTest extends UnitTest
 		// test order
 		$groupPosition = -1;
 		$productPosition = -1;
-		foreach(ProductRelationship::getRelationships($product) as $relationship)
+		foreach(ProductRelationship::getRelationships($product, false, ProductRelationship::TYPE_CROSS) as $relationship)
 		{
 			$currentGroupPosition = $relationship->productRelationshipGroup->get() ? $relationship->productRelationshipGroup->get()->position->get() : $groupPosition;
 			$currentProductPosition = $relationship->position->get();
@@ -195,17 +195,17 @@ class ProductRelationshipTest extends UnitTest
 		$relationship = ProductRelationship::getNewInstance($product[1], $product[2]);
 
 		// Check relationship
-		$this->assertFalse(ProductRelationship::hasRelationship($product[1], $product[2]));
-		$this->assertFalse(ProductRelationship::hasRelationship($product[1], $product[3]));
+		$this->assertFalse(ProductRelationship::hasRelationship($product[1], $product[2], ProductRelationship::TYPE_CROSS));
+		$this->assertFalse(ProductRelationship::hasRelationship($product[1], $product[3], ProductRelationship::TYPE_CROSS));
 
 		// Double check relationship to be sure that it is not being created by previous test
-		$this->assertFalse(ProductRelationship::hasRelationship($product[1], $product[3]));
+		$this->assertFalse(ProductRelationship::hasRelationship($product[1], $product[3], ProductRelationship::TYPE_CROSS));
 
 		// Save and check again. Has relationship will return true if the record was set
 		$relationship->save();
 
-		$this->assertTrue(ProductRelationship::hasRelationship($product[1], $product[2]));
-		$this->assertFalse(ProductRelationship::hasRelationship($product[1], $product[3]));
+		$this->assertTrue(ProductRelationship::hasRelationship($product[1], $product[2], ProductRelationship::TYPE_CROSS));
+		$this->assertFalse(ProductRelationship::hasRelationship($product[1], $product[3], ProductRelationship::TYPE_CROSS));
 	}
 }
 ?>

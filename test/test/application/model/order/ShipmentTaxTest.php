@@ -55,7 +55,6 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->save();
 
 		$this->order->finalize($this->usd);
-
 		$this->assertEquals($this->order->getTotal($this->usd), (100 * 1.2) + (100 * 1.5));
 	}
 
@@ -97,8 +96,60 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->save();
 
 		$this->order->finalize($this->usd);
-
 		$this->assertEquals($this->order->getTotal($this->usd), 200 * 1.10 * 1.15);
+	}
+
+	public function testTaxAmountChange()
+	{
+		$tax = Tax::getNewInstance('GST');
+		$tax->save();
+
+		// shipment delivery zone
+		$zone = DeliveryZone::getNewInstance();
+		$zone->name->set('Canada');
+		$zone->save();
+		$country = DeliveryZoneCountry::getNewInstance($zone, 'US');
+		$country->save();
+
+		// taxes
+		TaxRate::getNewInstance($zone, $tax, 10)->save();
+
+		$this->order->save(true);
+
+		$shipment = Shipment::getNewInstance($this->order);
+		$shipment->save();
+		$this->order->addShipment($shipment);
+
+		$item = $this->order->addProduct($this->products[0], 1, false, $shipment);
+		$shipment->recalculateAmounts();
+		$this->order->save();
+		$this->assertEqual($shipment->taxAmount->get(), 10);
+
+		$this->order->updateCount($item, 2);
+		$shipment->recalculateAmounts();
+		$this->assertEqual($shipment->taxAmount->get(), 20);
+
+		$this->order->save();
+		$shipment->save();
+
+		// there should only be one ShipmentTax instance for this shipment
+		$this->assertEqual($shipment->getRelatedRecordSet('ShipmentTax')->size(), 1);
+
+		// reload order and add more items
+		ActiveRecord::clearPool();
+		$order = CustomerOrder::getInstanceByID($this->order->getID(), true);
+		$order->loadAll();
+
+		$shipment = $order->getShipments()->get(0);
+		$order->addProduct($this->products[1], 1, false, $shipment);
+
+		$shipment->recalculateAmounts();
+		$shipment->save();
+		$order->save();
+		$this->order->finalize($this->usd);
+
+		$this->assertEqual($shipment->getRelatedRecordSet('ShipmentTax')->size(), 1);
+		$this->assertEqual($shipment->getRelatedRecordSet('ShipmentTax')->get(0)->amount->get(), 40);
 	}
 }
 

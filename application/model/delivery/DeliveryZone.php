@@ -128,7 +128,7 @@ class DeliveryZone extends MultilingualObject
 		{
 			$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('DeliveryZone', 'isEnabled'), true));
 			$f->setCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneCountry', 'countryCode'), $address->countryID->get()));
-			$s = ActiveRecordModel::getRecordSet('DeliveryZoneCountry', $f, ActiveRecordModel::LOAD_REFERENCES);
+			$s = ActiveRecordModel::getRecordSet('DeliveryZoneCountry', $f, array('DeliveryZone'));
 
 			foreach ($s as $zone)
 			{
@@ -303,7 +303,7 @@ class DeliveryZone extends MultilingualObject
 	{
 		if (!$this->taxRates)
 		{
-			$this->taxRates = TaxRate::getRecordSetByDeliveryZone($this, $includeDisabled, $loadReferencedRecords);
+			$this->taxRates = TaxRate::getRecordSetByDeliveryZone($this, $loadReferencedRecords);
 		}
 
 		return $this->taxRates;

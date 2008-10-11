@@ -397,10 +397,20 @@ class User extends ActiveRecordModel implements EavAble
 			$f->setOrder(new ARExpressionHandle('ID = ' . $this->defaultBillingAddress->get()->getID()));
 		}
 
-		return ActiveRecordModel::getRecordSetArray('BillingAddress', $f, array('UserAddress', 'State'));
+		return ActiveRecordModel::getRecordSetArray('BillingAddress', $f, array('UserAddress'));
 	}
 
 	public function getShippingAddressArray($defaultFirst = true)
+	{
+		return ActiveRecordModel::getRecordSetArray('ShippingAddress', $this->getShippingAddressFilter($defaultFirst), array('UserAddress'));
+	}
+
+	public function getShippingAddressSet($defaultFirst = true)
+	{
+		return ActiveRecordModel::getRecordSet('ShippingAddress', $this->getShippingAddressFilter($defaultFirst), array('UserAddress'));
+	}
+
+	private function getShippingAddressFilter($defaultFirst = true)
 	{
 		$f = new ARSelectFilter();
 		$f->setCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userID'), $this->getID()));
@@ -409,7 +419,7 @@ class User extends ActiveRecordModel implements EavAble
 			$f->setOrder(new ARExpressionHandle('ID = ' . $this->defaultShippingAddress->get()->getID()));
 		}
 
-		return ActiveRecordModel::getRecordSetArray('ShippingAddress', $f, array('UserAddress', 'State'));
+		return $f;
 	}
 
 	public function __destruct()

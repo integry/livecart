@@ -142,7 +142,7 @@ class CustomerOrderController extends ActiveGridController
 		}
 
 		$addressOptions = array('' => '');
-		$addressOptions['optgroup_0'] = $this->translate('_shipping_addresses');
+		$addressOptions['optgroup_0'] = $this->translate('_billing_addresses');
 		$addresses = array();
 		foreach($user->getBillingAddressArray() as $address)
 		{
@@ -150,7 +150,7 @@ class CustomerOrderController extends ActiveGridController
 			$addresses[$address['ID']] = $address;
 		}
 
-		$addressOptions['optgroup_1'] = $this->translate('_billing_addresses');
+		$addressOptions['optgroup_1'] = $this->translate('_shipping_addresses');
 		foreach($user->getShippingAddressArray() as $address)
 		{
 			$addressOptions[$address['ID']] = $this->createAddressString($address);
@@ -723,30 +723,7 @@ class CustomerOrderController extends ActiveGridController
 			$address = UserAddress::getInstanceByID('UserAddress', (int)$this->request->get('ID'), true, array('State'));
 
 			$history = new OrderHistory($order, $this->user);
-
-			$address->address1->set($this->request->get('address1'));
-			$address->address2->set($this->request->get('address2'));
-			$address->city->set($this->request->get('city'));
-
-
-			if($this->request->get('stateID'))
-			{
-				$address->state->set(State::getInstanceByID((int)$this->request->get('stateID'), true));
-				$address->stateName->set(null);
-			}
-			else
-			{
-				$address->stateName->set($this->request->get('stateName'));
-				$address->state->set(null);
-			}
-
-			$address->postalCode->set($this->request->get('postalCode'));
-			$address->countryID->set($this->request->get('countryID'));
-			$address->phone->set($this->request->get('phone'));
-			$address->companyName->set($this->request->get('companyName'));
-			$address->firstName->set($this->request->get('firstName'));
-			$address->lastName->set($this->request->get('lastName'));
-
+			$address->loadRequestData($this->request);
 			$address->save();
 			$history->saveLog();
 
@@ -909,7 +886,7 @@ class CustomerOrderController extends ActiveGridController
 	/**
 	 * @return RequestValidator
 	 */
-	private function createUserAddressFormValidator()
+	public function createUserAddressFormValidator()
 	{
 		$validator = new RequestValidator("userAddress", $this->request);
 
@@ -925,7 +902,7 @@ class CustomerOrderController extends ActiveGridController
 	/**
 	 * @return Form
 	 */
-	private function createUserAddressForm($addressArray = array())
+	public function createUserAddressForm($addressArray = array())
 	{
 		$form = new Form($this->createUserAddressFormValidator());
 

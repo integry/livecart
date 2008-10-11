@@ -13,6 +13,9 @@ class ProductRelationshipGroup extends ProductParametersGroup
 {
 	private static $nextPosition = false;
 
+	const TYPE_CROSS = 0;
+	const TYPE_UP = 1;
+
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = parent::defineSchema($className);
