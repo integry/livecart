@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2008-10-05 20:43                                #
-# Model version:         Version 2008-10-05 2                            #
+# Created on:            2008-10-12 19:02                                #
+# Model version:         Version 2008-10-12                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -183,6 +183,7 @@ CREATE TABLE CustomerOrder (
     dateCompleted TIMESTAMP COMMENT 'The date the order was finalized (completed checkout)',
     totalAmount FLOAT COMMENT 'Order total amount, including taxes and shipping costs',
     capturedAmount FLOAT COMMENT 'The amount that is captured from customers credit card',
+    isMultiAddress BOOL NOT NULL,
     isFinalized BOOL NOT NULL COMMENT 'Determines if the order is completed (completed checkout)',
     isPaid BOOL NOT NULL COMMENT 'Determines if the order has been fully paid',
     isCancelled BOOL NOT NULL COMMENT 'Determines if the order is cancelled',
@@ -655,6 +656,7 @@ CREATE TABLE Shipment (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     orderID INTEGER UNSIGNED NOT NULL COMMENT 'ID of order the shipment is assigned to',
     shippingServiceID INTEGER UNSIGNED COMMENT 'ID of the selected ShippingService for this item. In case a real-time shipping rate service is used, the value for this field would be NULL',
+    shippingAddressID INTEGER UNSIGNED,
     amount FLOAT COMMENT 'Total product price amount',
     shippingAmount FLOAT COMMENT 'Shipping price amount',
     taxAmount FLOAT COMMENT 'Total associated tax amount',
@@ -1604,6 +1606,9 @@ ALTER TABLE Shipment ADD CONSTRAINT CustomerOrder_Shipment
 
 ALTER TABLE Shipment ADD CONSTRAINT ShippingService_Shipment 
     FOREIGN KEY (shippingServiceID) REFERENCES ShippingService (ID) ON DELETE SET NULL;
+
+ALTER TABLE Shipment ADD CONSTRAINT UserAddress_Shipment 
+    FOREIGN KEY (shippingAddressID) REFERENCES UserAddress (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE ShippingAddress ADD CONSTRAINT User_ShippingAddress 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;

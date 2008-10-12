@@ -1588,6 +1588,7 @@ div.checkout a
 	clear: right;
 	display: block;
 	text-align: right;
+	padding-top: 1em;
 }
 
 .proceedToCheckout
@@ -1599,6 +1600,7 @@ div.checkout a
     border: 1px solid #DDDDDD;
     font-weight: bold;
     padding: 5px 27px 5px 5px;
+    float: right;
 }
 
 select.multiAddress

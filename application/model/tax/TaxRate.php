@@ -55,7 +55,7 @@ class TaxRate extends MultilingualObject
 		}
 
 	  	$instance->tax->set($tax);
-	  	$instance->rate->set((int)$rate);
+	  	$instance->rate->set($rate);
 
 	  	return $instance;
 	}

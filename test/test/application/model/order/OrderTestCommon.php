@@ -52,6 +52,9 @@ abstract class OrderTestCommon extends UnitTest
 			$this->usd->save();
 		}
 
+		$this->usd->decimalCount->set(2);
+		$this->usd->save();
+
 		// initialize order
 		ActiveRecordModel::executeUpdate('DELETE FROM User WHERE email="test@test.com"');
 		$user = User::getNewInstance('test@test.com');

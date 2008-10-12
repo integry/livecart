@@ -121,6 +121,11 @@ class Currency extends ActiveRecordModel
 		return $this->convertAmountFromDefaultCurrency($amount);
 	}
 
+	public function round($amount)
+	{
+		return round($amount, $this->decimalCount->get() ? $this->decimalCount->get() : 2);
+	}
+
 	/*####################  Data array transformation ####################*/
 
 	public static function transformArray($array, ARSchema $schema)

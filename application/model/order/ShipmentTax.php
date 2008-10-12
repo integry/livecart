@@ -74,23 +74,27 @@ class ShipmentTax extends ActiveRecordModel
 			$totalAmount = $this->shipment->get()->getShippingTotalBeforeTax();
 		}
 
-		$otherTaxes = 0;
-		if ($totalAmount > 0)
+		if (!$totalAmount)
 		{
-			foreach ($this->shipment->get()->getAppliedTaxes() as $tax)
+			$this->amount->set(0);
+			return;
+		}
+
+		$otherTaxes = 0;
+		foreach ($this->shipment->get()->getAppliedTaxes() as $tax)
+		{
+			if (($this->type->get() == $tax->type->get()))
 			{
-				if (($this->type->get() == $tax->type->get()))
+				if ($this->taxRate->get()->tax->get()->includesTax($tax->taxRate->get()->tax->get()))
 				{
-					if ($this->taxRate->get()->tax->get()->includesTax($tax->taxRate->get()->tax->get()))
-					{
-						$otherTaxes += $tax->amount->get();
-					}
+					$otherTaxes += $tax->amount->get();
 				}
 			}
 		}
 
 		$totalAmount += $otherTaxes;
 		$taxAmount = $totalAmount * ($this->taxRate->get()->rate->get() / 100);
+
 		$this->amount->set($taxAmount);
 	}
 

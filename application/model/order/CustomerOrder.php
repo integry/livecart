@@ -757,7 +757,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		if ($this->isFinalized->get() && !$recalculateAmount)
 		{
 			$this->getTaxes($currency);
-			return $currency->convertAmount($this->currency->get(), $this->totalAmount->get());
+			return $currency->round($currency->convertAmount($this->currency->get(), $this->totalAmount->get()));
 		}
 		else
 		{
@@ -786,7 +786,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 				$total = 0;
 			}
 
-			return $total;
+			return $currency->round($total);
 		}
 	}
 

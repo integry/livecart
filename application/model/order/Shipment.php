@@ -733,28 +733,30 @@ class Shipment extends ActiveRecordModel
 			if (!$this->taxes || !$this->taxes->size())
 			{
 				$this->taxes = new ARSet();
+				$taxes = array();
 
-				// subtotal taxes
+				// subtotal tax rates
 				$zone = $this->getDeliveryZone();
 				foreach ($zone->getTaxRates(DeliveryZone::ENABLED_TAXES) as $rate)
 				{
-					$this->taxes->add(ShipmentTax::getNewInstance($rate, $this, ShipmentTax::TYPE_SUBTOTAL));
+					$taxes[$rate->tax->get()->position->get()][ShipmentTax::TYPE_SUBTOTAL] = $rate;
 				}
 
-				// shipping amount taxes
+				// shipping amount tax rates
 				$shippingTaxZoneId = self::getApplication()->getConfig()->get('DELIVERY_TAX');
-				if (is_numeric($shippingTaxZoneId))
-				{
-					$shippingTaxZone = DeliveryZone::getInstanceById($shippingTaxZoneId, DeliveryZone::LOAD_DATA);
-				}
-				else
-				{
-					$shippingTaxZone = $zone;
-				}
+				$shippingTaxZone = !is_numeric($shippingTaxZoneId) ? $zone : DeliveryZone::getInstanceById($shippingTaxZoneId, DeliveryZone::LOAD_DATA);
 
 				foreach ($shippingTaxZone->getTaxRates(DeliveryZone::ENABLED_TAXES) as $rate)
 				{
-					$this->taxes->add(ShipmentTax::getNewInstance($rate, $this, ShipmentTax::TYPE_SHIPPING));
+					$taxes[$rate->tax->get()->position->get()][ShipmentTax::TYPE_SHIPPING] = $rate;
+				}
+
+				foreach ($taxes as $taxRates)
+				{
+					foreach ($taxRates as $type => $rate)
+					{
+						$this->taxes->add(ShipmentTax::getNewInstance($rate, $this, $type));
+					}
 				}
 			}
 		}
