@@ -2125,17 +2125,23 @@ div.orderStatus
     padding: 6px;
 }
 
-a.invoice, a.viewOrder, a.messages
+a.invoice, a.viewOrder, a.reorder, a.messages
 {
 	padding-left: 22px;
 	background-image: url(../../image/silk/gif/printer.gif);
 	background-position: left center;
 	background-repeat: no-repeat;
+	margin-right: 1em;
 }
 
 a.viewOrder
 {
 	background-image: url(../../image/silk/gif/page_white_text.gif);
+}
+
+a.reorder
+{
+	background-image: url(../../image/silk/gif/cart_put.gif);
 }
 
 a.messages
