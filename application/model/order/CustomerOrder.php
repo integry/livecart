@@ -216,7 +216,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 	public function addShipment(Shipment $shipment)
 	{
-		$this->getShipments()->add($shipment);
+		$shipments = $this->getShipments();
+		$shipments->removeRecord($shipment);
+
+		$shipment->order->set($this);
+		$shipments->add($shipment);
 	}
 
 	public function updateCount(OrderedItem $item, $count)
@@ -358,11 +362,20 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		$this->currency->set($currency);
 		$this->loadAll();
+
 		foreach ($this->getShipments() as $shipment)
 		{
 			$shipment->amountCurrencyID->set($currency);
 			$shipment->order->set($this);
 			$shipment->save();
+
+			// clone shipping addresses
+			if ($shipment->shippingAddress->get())
+			{
+				$shippingAddress = clone $shipment->shippingAddress->get();
+				$shippingAddress->save();
+				$shipment->shippingAddress->set($shippingAddress);
+			}
 		}
 
 		$reserveProducts = self::getApplication()->getConfig()->get('INVENTORY_TRACKING') != 'DISABLE';
@@ -1660,6 +1673,91 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			default:
 			break;
 		}
+	}
+
+	public function __clone()
+	{
+		parent::__clone();
+
+		$original = $this->originalRecord;
+
+		foreach ($original->getShipments() as $shipment)
+		{
+			$cloned = clone $shipment;
+			$cloned->order->set($this);
+			$this->addShipment($cloned);
+		}
+
+		$this->save();
+		foreach ($this->getShipments() as $shipment)
+		{
+			if ($shipment->shippingAddress->get())
+			{
+				$shipment->shippingAddress->set($this->getClonedAddress($shipment->shippingAddress->get(), false));
+			}
+			$shipment->save();
+
+			foreach ($shipment->getItems() as $item)
+			{
+				$item->shipment->set($shipment);
+				$item->save();
+			}
+		}
+
+		// addresses
+		if ($this->billingAddress->get())
+		{
+			$this->billingAddress->set($this->getClonedAddress($this->billingAddress->get(), true));
+		}
+
+		if ($this->shippingAddress->get())
+		{
+			$this->shippingAddress->set($this->getClonedAddress($this->shippingAddress->get(), false));
+		}
+
+		$this->save();
+
+		$this->isFinalized->set(false);
+		$this->isPaid->set(false);
+		$this->isCancelled->set(false);
+		$this->dateCompleted->set(null);
+
+		$this->save();
+	}
+
+	/**
+	 *  Try to match an order address to user address and return ID on success
+	 *
+	 *  Order addresses are stored in separate records after the order is completed,
+	 *  so that the user couldn't change them after finishing the order by editing his address book
+	 *
+	 *  @todo: why are the address reloads necessary?
+	 */
+	private function getClonedAddress($address, $isBilling)
+	{
+		$address = $address->toArray();
+		$addressString = $address['compact'];
+
+		$user = $this->user->get();
+		$addresses = $isBilling ? $user->getBillingAddressSet() : $user->getShippingAddressSet();
+
+		foreach ($addresses as $address)
+		{
+			$address->reload();
+			$address->userAddress->get()->reload();
+
+			if ($address->userAddress->get()->toString(", ") == $addressString)
+			{
+				return $address->userAddress->get();
+			}
+		}
+
+		if ($addresses->size())
+		{
+			return $addresses->get(0)->userAddress->get();
+		}
+
+		return null;
 	}
 
 	public function __destruct()

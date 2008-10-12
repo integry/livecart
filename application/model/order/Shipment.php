@@ -530,6 +530,7 @@ class Shipment extends ActiveRecordModel
 			if(!$item->isDeleted())
 			{
 				$item->shipment->set($this);
+				$item->customerOrder->set($this->order->get());
 				$item->save();
 			}
 		}
@@ -839,6 +840,18 @@ class Shipment extends ActiveRecordModel
 			}
 
 			$this->itemIds = array();
+		}
+	}
+
+	public function __clone()
+	{
+		parent::__clone();
+
+		$original = $this->originalRecord;
+
+		foreach ($original->getItems() as $item)
+		{
+			$this->addItem(clone $item);
 		}
 	}
 }

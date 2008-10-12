@@ -1169,6 +1169,73 @@ class OrderTest extends OrderTestCommon
 		$this->assertEqual($order->getTotal($this->usd), (($price + 100) * 1.2) + ((($price * 2) + 78) * 1.15));
 	}
 
+	public function testClone()
+	{
+		$this->order->isMultiAddress->set(true);
+		$this->order->save(true);
+
+		$shipment1 = Shipment::getNewInstance($this->order);
+		$shipment1->save();
+
+		$shipment2 = Shipment::getNewInstance($this->order);
+		$shipment2->save();
+
+		$this->order->addShipment($shipment1);
+		$this->order->addShipment($shipment2);
+
+		$this->order->addProduct($this->products[0], 1, true, $shipment1);
+		$this->order->addProduct($this->products[1], 3, true, $shipment2);
+		$this->assertEquals(2, $this->order->getShipments()->size());
+
+		foreach ($this->order->getShipments() as $shipment)
+		{
+			$shipment->shippingAddress->set($this->user->defaultShippingAddress->get()->userAddress->get());
+		}
+
+		$this->order->user->set($this->user);
+
+		$this->order->save();
+		$this->order->finalize($this->usd);
+
+		ActiveRecord::clearPool();
+		$reloaded = CustomerOrder::getInstanceByID($this->order->getID(), true);
+		$reloaded->loadAll();
+
+		$cloned = clone $reloaded;
+		$cloned->save();
+
+		$this->assertNotEquals($cloned->getID(), $this->order->getID());
+
+		ActiveRecord::clearPool();
+		$order = CustomerOrder::getInstanceByID($cloned->getID(), true);
+		$order->loadAll();
+		$order->currency->get()->load();
+
+		$this->user->reload();
+		$this->user->defaultBillingAddress->get()->reload('UserAddress');
+		$this->user->defaultShippingAddress->get()->reload('UserAddress');
+
+		$this->assertFalse((bool)$order->isFinalized->get());
+
+		$this->assertEquals($this->user->getID(), $order->user->get()->getID());
+		$this->assertEquals($order->billingAddress->get()->getID(), $this->user->defaultBillingAddress->get()->userAddress->get()->getID());
+		$this->assertEquals($order->shippingAddress->get()->getID(), $this->user->defaultShippingAddress->get()->userAddress->get()->getID());
+
+		foreach ($order->getShipments() as $shipment)
+		{
+			$this->assertEquals($shipment->shippingAddress->get()->getID(), $this->user->defaultShippingAddress->get()->userAddress->get()->getID());
+		}
+
+		$this->assertEquals(2, count($order->getOrderedItems()));
+		$this->assertEquals(2, $order->getShipments()->size());
+		$this->assertEquals(1, count($order->getShipments()->get(0)->getItems()));
+		$this->assertEquals(1, count($order->getShipments()->get(1)->getItems()));
+
+		$item = array_shift($order->getShipments()->get(1)->getItems());
+		$this->assertEquals(3, $item->count->get());
+		$this->assertEquals($this->products[1]->getID(), $item->product->get()->getID());
+	}
+
 	private function createOrderWithZone(DeliveryZone $zone = null)
 	{
 		if (is_null($zone))

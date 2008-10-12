@@ -361,16 +361,8 @@ class UserController extends FrontendController
 	 */
 	public function viewOrder()
 	{
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->get('id')));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
-
-		$s = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
-		if ($s->size())
+		if ($order = $this->user->getOrder($this->request->get('id')))
 		{
-			$order = $s->get(0);
-			$order->loadAll();
-
 			$this->addAccountBreadcrumb();
 			$this->addBreadCrumb($this->translate('_your_orders'), $this->router->createUrl(array('controller' => 'user', 'action' => 'orders'), true));
 			$this->addBreadCrumb($order->getID(), '');
@@ -399,6 +391,28 @@ class UserController extends FrontendController
 		}
 	}
 
+	/**
+	 *	@role login
+	 */
+	public function reorder()
+	{
+		$order = $this->user->getOrder($this->request->get('id'));
+		if ($order)
+		{
+			ClassLoader::import('application.model.order.SessionOrder');
+			$newOrder = clone $order;
+			SessionOrder::save($newOrder);
+			return new ActionRedirectResponse('order', 'index');
+		}
+		else
+		{
+			return new ActionRedirectResponse('user', 'index');
+		}
+	}
+
+	/**
+	 *	@role login
+	 */
 	public function addNote()
 	{
 		ClassLoader::import('application.model.order.OrderNote');

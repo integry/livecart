@@ -68,6 +68,7 @@ abstract class OrderTestCommon extends UnitTest
 		$billing->save();
 
 		$address = clone $address;
+		$address->save();
 		$shipping = ShippingAddress::getNewInstance($user, $address);
 		$shipping->save();
 

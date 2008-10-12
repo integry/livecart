@@ -67,9 +67,9 @@ class UserAddress extends ActiveRecordModel
 		return $array;
 	}
 
-	public function toString()
+	public function toString($separator = "\n")
 	{
-		return self::getAddressString($this->toArray(), "\n");
+		return self::getAddressString($this->toArray(), $separator);
 	}
 
 	private static function getAddressString(array $addressArray, $separator)

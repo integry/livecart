@@ -388,26 +388,39 @@ class User extends ActiveRecordModel implements EavAble
 		}
 	}
 
+	public function getOrder($id)
+	{
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $id));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->getID()));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+
+		$s = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
+		if ($s->size())
+		{
+			$order = $s->get(0);
+			$order->loadAll();
+			return $order;
+		}
+	}
+
 	public function getBillingAddressArray($defaultFirst = true)
 	{
-		$f = new ARSelectFilter();
-		$f->setCondition(new EqualsCond(new ARFieldHandle('BillingAddress', 'userID'), $this->getID()));
-		if (!$defaultFirst)
-		{
-			$f->setOrder(new ARExpressionHandle('ID = ' . $this->defaultBillingAddress->get()->getID()));
-		}
+		return ActiveRecordModel::getRecordSetArray('BillingAddress', $this->getBillingAddressFilter($defaultFirst), array('UserAddress', 'State'));
+	}
 
-		return ActiveRecordModel::getRecordSetArray('BillingAddress', $f, array('UserAddress'));
+	public function getBillingAddressSet($defaultFirst = true)
+	{
+		return ActiveRecordModel::getRecordSet('BillingAddress', $this->getBillingAddressFilter($defaultFirst), array('UserAddress', 'State'));
 	}
 
 	public function getShippingAddressArray($defaultFirst = true)
 	{
-		return ActiveRecordModel::getRecordSetArray('ShippingAddress', $this->getShippingAddressFilter($defaultFirst), array('UserAddress'));
+		return ActiveRecordModel::getRecordSetArray('ShippingAddress', $this->getShippingAddressFilter($defaultFirst), array('UserAddress', 'State'));
 	}
 
 	public function getShippingAddressSet($defaultFirst = true)
 	{
-		return ActiveRecordModel::getRecordSet('ShippingAddress', $this->getShippingAddressFilter($defaultFirst), array('UserAddress'));
+		return ActiveRecordModel::getRecordSet('ShippingAddress', $this->getShippingAddressFilter($defaultFirst), array('UserAddress', 'State'));
 	}
 
 	private function getShippingAddressFilter($defaultFirst = true)
@@ -417,6 +430,18 @@ class User extends ActiveRecordModel implements EavAble
 		if (!$defaultFirst)
 		{
 			$f->setOrder(new ARExpressionHandle('ID = ' . $this->defaultShippingAddress->get()->getID()));
+		}
+
+		return $f;
+	}
+
+	private function getBillingAddressFilter($defaultFirst = true)
+	{
+		$f = new ARSelectFilter();
+		$f->setCondition(new EqualsCond(new ARFieldHandle('BillingAddress', 'userID'), $this->getID()));
+		if (!$defaultFirst)
+		{
+			$f->setOrder(new ARExpressionHandle('ID = ' . $this->defaultBillingAddress->get()->getID()));
 		}
 
 		return $f;

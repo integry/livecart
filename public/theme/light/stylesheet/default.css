@@ -519,6 +519,7 @@ tr.odd
 
 a.proceedToCheckout
 {
+	float: right;
 	padding: 0;
 	border: 0;
 	background-color: #FFF3FC;
