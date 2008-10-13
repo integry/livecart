@@ -228,7 +228,7 @@ class OrderController extends FrontendController
 			{
 				if ($addressId = $this->request->get('address_' . $item->getID()))
 				{
-					if (!$item->shipment->get() || ($item->shipment->get()->getID() != $addressId))
+					if (!$item->shipment->get() || !$item->shipment->get()->shippingAddress->get() || ($item->shipment->get()->shippingAddress->get()->getID() != $addressId))
 					{
 						foreach ($this->order->getShipments() as $shipment)
 						{
@@ -242,22 +242,23 @@ class OrderController extends FrontendController
 									}
 
 									$shipment->addItem($item);
+									break;
 								}
 							}
+
+							$shipment = null;
 						}
 
-						if (!$item->shipment->get())
+						if (!$shipment)
 						{
-							$address = ActiveRecordModel::getInstanceById('UserAddress', $addressId);
-							if ($address->isLoaded())
-							{
-								$shipment = Shipment::getNewInstance($this->order);
-								$shipment->shippingAddress->set($address);
-								$shipment->save();
-								$this->order->addShipment($shipment);
+							$address = ActiveRecordModel::getInstanceById('UserAddress', $addressId, true);
 
-								$shipment->addItem($item);
-							}
+							$shipment = Shipment::getNewInstance($this->order);
+							$shipment->shippingAddress->set($address);
+							$shipment->save();
+							$this->order->addShipment($shipment);
+
+							$shipment->addItem($item);
 						}
 
 						$item->save();
