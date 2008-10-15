@@ -690,7 +690,8 @@ class UserController extends FrontendController
 		else
 		{
 			$address = UserAddress::getNewInstance();
-			$address->name->set($user->name->get());
+			$address->firstName->set($user->firstName->get());
+			$address->lastName->set($user->lastName->get());
 			$address->address1->set($this->request->get('shipping_address1'));
 			$address->address2->set($this->request->get('shipping_address2'));
 		}

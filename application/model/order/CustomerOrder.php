@@ -1195,9 +1195,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 			foreach ($taxes as $taxId => $amount)
 			{
-				$taxAmount[$currencyId] += $amount;
-				$array['taxes'][$currencyId][$taxId] = Tax::getInstanceById($taxId)->toArray();
-				$array['taxes'][$currencyId][$taxId]['formattedAmount'] = $currency->getFormattedPrice($amount);
+				if ($amount > 0)
+				{
+					$taxAmount[$currencyId] += $amount;
+					$array['taxes'][$currencyId][$taxId] = Tax::getInstanceById($taxId)->toArray();
+					$array['taxes'][$currencyId][$taxId]['formattedAmount'] = $currency->getFormattedPrice($amount);
+				}
 			}
 		}
 

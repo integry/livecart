@@ -85,18 +85,25 @@
 	{/foreach}
 
 	{foreach from=$cart.discounts item=discount}
-			<tr>
-				<td colspan="3" class="subTotalCaption">{t _discount}: <span class="discountDesc">{$discount.description}</span></td>
-				<td class="amount discountAmount">{$discount.formatted_amount}</td>
-				<td></td>
-			</tr>
+		<tr>
+			<td colspan="3" class="subTotalCaption">{t _discount}: <span class="discountDesc">{$discount.description}</span></td>
+			<td class="amount discountAmount">{$discount.formatted_amount}</td>
+			<td></td>
+		</tr>
 	{/foreach}
 
-			<tr>
-				<td colspan="3" class="subTotalCaption">{t _subtotal}:</td>
-				<td class="subTotal">{$cart.formattedTotal.$currency}</td>
-				<td id="cartUpdate"><input type="submit" class="submit" value="{tn _update}" /></td>
-			</tr>
+	{foreach $cart.taxes.$currency as $tax}
+		<tr>
+			<td colspan="3" class="subTotalCaption">{$tax.name_lang}:</td>
+			<td class="amount taxAmount">{$tax.formattedAmount}</td>
+		</tr>
+	{/foreach}
+
+		<tr>
+			<td colspan="3" class="subTotalCaption">{t _subtotal}:</td>
+			<td class="subTotal">{$cart.formattedTotal.$currency}</td>
+			<td id="cartUpdate"><input type="submit" class="submit" value="{tn _update}" /></td>
+		</tr>
 
 		{if $isCouponCodes}
 				<tr id="couponCodes">

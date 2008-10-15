@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.order.CustomerOrder');
+ClassLoader::import('application.model.order.SessionOrder');
 ClassLoader::import('application.model.discount.DiscountCondition');
 ClassLoader::import('application.model.Currency');
 
@@ -249,7 +250,7 @@ class OrderController extends FrontendController
 							$shipment = null;
 						}
 
-						if (!$shipment)
+						if (!isset($shipment) || !$shipment)
 						{
 							$address = ActiveRecordModel::getInstanceById('UserAddress', $addressId, true);
 
@@ -439,6 +440,7 @@ class OrderController extends FrontendController
 		}
 
 		$this->order->isMultiAddress->set(true);
+		$this->order->shippingAddress->set(null);
 
 		// split items
 		foreach ($this->order->getOrderedItems() as $item)
@@ -461,9 +463,17 @@ class OrderController extends FrontendController
 
 	public function setSingleAddress()
 	{
+		$f = new ARUpdateFilter(new EqualsCond(new ARFieldHandle('OrderedItem', 'customerOrderID'), $this->order->getID()));
+		$f->addModifier('OrderedItem.shipmentID', new ARExpressionHandle('NULL'));
+		ActiveRecordModel::updateRecordSet('OrderedItem', $f);
+
 		$this->order->isMultiAddress->set(false);
+		$this->order->loadAll();
 		$this->order->mergeItems();
+		$this->order->resetShipments();
+
 		SessionOrder::save($this->order);
+		$this->order->deleteRelatedRecordSet('Shipment');
 		return new ActionRedirectResponse('order', 'index');
 	}
 

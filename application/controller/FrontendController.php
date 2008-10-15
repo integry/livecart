@@ -73,6 +73,11 @@ abstract class FrontendController extends BaseController
 		}
 	}
 
+	public function setOrder(CustomerOrder $order)
+	{
+		$this->order = $order;
+	}
+
 	protected function addBreadCrumb($title, $url)
 	{
 		$this->breadCrumb[] = array('title' => $title, 'url' => $url);
