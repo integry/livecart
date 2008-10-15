@@ -269,9 +269,12 @@ CC_HANDLER=Credit card handler
 CC_AUTHONLY=Only authorize payments without capturing them automatically
 
 _customers=Customers
+_registration=Registration
 REQUIRE_PHONE=Require customers to enter phone number on registration
 
 # Countries
+_countries=Countries
+PRIMARY_COUNTRIES=Countries to display first in the country list (2-letter country codes separated by commas)
 ENABLED_COUNTRIES=Enabled Countries
 
 # Backend Options

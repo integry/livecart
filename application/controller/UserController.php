@@ -1085,17 +1085,30 @@ class UserController extends FrontendController
 
 	private function getCountryList(Form $form)
 	{
-		$defCountry = $this->config->get('DEF_COUNTRY');
+		$primaryCountries = str_replace(' ', '', strtoupper($this->config->get('PRIMARY_COUNTRIES')));
+
+		if ($primaryCountries)
+		{
+			$defCountries = explode(',', $primaryCountries);
+		}
+		else
+		{
+			$defCountries = array($this->config->get('DEF_COUNTRY'));
+		}
 
 		$countries = $this->application->getEnabledCountries();
 		asort($countries);
 
-		// set default country first
-		if (isset($countries[$defCountry]))
+		// set default countries first
+		$defCountries = array_reverse($defCountries);
+		foreach ($defCountries as $country)
 		{
-			$d = $countries[$defCountry];
-			unset($countries[$defCountry]);
-			$countries = array_merge(array($defCountry => $d), $countries);
+			if (isset($countries[$country]))
+			{
+				$name = $countries[$country];
+				unset($countries[$country]);
+				$countries = array_merge(array($country => $name), $countries);
+			}
 		}
 
 		return $countries;
