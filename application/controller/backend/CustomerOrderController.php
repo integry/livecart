@@ -53,7 +53,7 @@ class CustomerOrderController extends ActiveGridController
 
 	protected function getReferencedData()
 	{
-		return array('User', 'Currency', 'ShippingAddress' => 'UserAddress');
+		return array('User', 'Currency', 'ShippingAddress' => 'UserAddress', 'State');
 	}
 
 	protected function getDefaultColumns()
@@ -387,8 +387,8 @@ class CustomerOrderController extends ActiveGridController
 		{
 			foreach ($data[$row[$index]] as $item)
 			{
-				//print_r($item);
 				$itemData = $row;
+				$item['OrderedItem'] =& $item;
 				foreach ($detailColumns as $column)
 				{
 					$value = $this->getColumnValue($item, $column[0], $column[1]);
