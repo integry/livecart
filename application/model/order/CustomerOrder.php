@@ -109,7 +109,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		{
 			if (!$this->shipments || !$this->shipments->size())
 			{
-				$this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter(), array('UserAddress'));
+				$this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter(), array('UserAddress', 'ShippingService'));
 
 				// @todo: should be loaded automatically
 				foreach ($this->shipments as $shipment)
@@ -633,7 +633,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		if ($this->isModified() || $isModified)
 		{
-			$this->shipping->set($this->isFinalized->get() || $this->isMultiAddress->get() ? '' : serialize($this->shipments));
+			$this->serializeShipments();
 		}
 
 		if (!$this->isFinalized->get() && !$this->orderedItems && !$allowEmpty)
@@ -648,6 +648,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	public function update($force = false)
 	{
 		return parent::update($force);
+	}
+
+	public function serializeShipments()
+	{
+		$this->shipping->set(($this->isFinalized->get() || $this->isMultiAddress->get()) ? '' : serialize($this->shipments));
 	}
 
 	public function setStatus($status)
@@ -1493,9 +1498,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 						$this->shipments->unshift($downloadable);
 					}
 				}
-			}
 
-			$this->shipping->set(serialize($this->shipments));
+				$this->shipping->set(serialize($this->shipments));
+			}
 		}
 
 		return $this->shipments;

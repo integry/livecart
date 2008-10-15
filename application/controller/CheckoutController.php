@@ -340,6 +340,10 @@ class CheckoutController extends FrontendController
 			else
 			{
 				$shipment->setRateId($shipmentRates->get(0)->getServiceId());
+				if ($this->order->isMultiAddress->get())
+				{
+					$shipment->save();
+				}
 			}
 
 			$rates[$key] = $shipmentRates;
@@ -360,6 +364,8 @@ class CheckoutController extends FrontendController
 		// only one shipping method for each shipment, so we pre-select it automatically
 		if (!$needSelecting)
 		{
+			$this->order->serializeShipments();
+			SessionOrder::save($this->order);
 			return new ActionRedirectResponse('checkout', 'pay');
 		}
 
@@ -421,6 +427,11 @@ class CheckoutController extends FrontendController
 					$shipment->save();
 				}
 			}
+		}
+
+		if (!$this->order->isMultiAddress->get())
+		{
+			$this->order->serializeShipments();
 		}
 
 		SessionOrder::save($this->order);

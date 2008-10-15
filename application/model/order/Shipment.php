@@ -670,7 +670,10 @@ class Shipment extends ActiveRecordModel
 				$amount += $tax->amount->get();
 			}
 
-			$array['taxes'][] = $tax->toArray($amount);
+			if ($amount > 0)
+			{
+				$array['taxes'][] = $tax->toArray($amount);
+			}
 		}
 
 		// consists of downloadable files only?
