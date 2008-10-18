@@ -1,0 +1,13 @@
+_add_new_file=Dodaj nov dokument
+_add_new_group=Dodaj novo skupino
+_cancel_adding_new_file=Prekliči dodajanje novega dokumenta
+_cancel_adding_file_group=Prekliči dodajanje nove skupine
+_are_you_sure_you_want_to_delete=Ste prepirčani da želite izbrisati ta dokument
+_are_you_sure_you_want_to_delete_group=Ste prepričani da želite izbrisati to skupino
+_product_file_group_title=Naslov
+_add_new_file_group=Uredi dokument skupine
+_err_file_title_is_empty=Vpišite naslov skupine
+_err_allow_download_days_should_be_a_number=Število dni mora biti številčno
+_err_allow_download_days_is_empty=Vpišite število dni za prenos
+_err_file_could_not_be_uploaded_to_the_server=Dokumenta ni bilo možno naložiti na server
+_err_fileName_should_not_be_empty=Vpišite ime dokumenta

@@ -1,0 +1,18 @@
+FEATURED=Predstavitveni Izdelki
+SALES_RANK=Najbolj Prodajani
+PRODUCT_NAME_ASC=Ime Izdelka A-Z
+PRODUCT_NAME_DESC=Ime Izdelka Z-A
+PRICE_ASC=Cena: Najnižja do Najvišje
+PRICE_DESC=Cena: Najvišja do Najnižje
+NEWEST_ARRIVALS=Novi Izdelki
+RATING=Ocena Strank
+_found_cats=Najdene Kategorije
+_not_found=<span class='notFoundMain'>Ni zadetkov.</span> Prosimo poskusite z različnimi črkami
+_featured_products=Predstavitveni Izdelki
+_showing_products=Prikaz [_1] do [_2] od [_3] najdenih izdelkov
+_sort_by=Razvrsti
+_narrow_by_cat=Zoži rezultate po kategoriji
+_more_subcats=več...
+_view_as_list=Poglej kot lestvica
+_view_as_grid=Poglej kot seznam
+_all_categories=Vse Kategorije

@@ -1,0 +1,16 @@
+_filter_group_was_successfully_saved=Filter je bil uspešno shranjen
+_could_not_save_filter_group=Ne morem shraniti filtra
+_filter_group_was_successfully_removed=Filter je bil uspešno odstranjen
+_could_not_remove_filter_group=Ne morem odstraniti filtra
+_add_new_filter=Dodaj novi filter
+_category_has_no_attr=Nobenih filtriranih atributov ni bilo narejenih za to kategorijo
+_delete_field=Izbriši polje
+_remove_filter_question=Ste prepričani, da želite odstraniti filter?
+_FilterGroup_remove_question=Ste prepričani, da želite odstraniti filter?
+_cancel_adding_new_filter=Prekliči dodajanje novega filtra
+_error_name_empty=Vpišite ime filtra
+_error_filter_value_is_not_a_number=Vrednost filtra mora biti številka
+_error_spec_field_is_not_selected=Specificirano polje ni izbrano
+_error_illegal_date=Napačen datum
+_error_filter_name_empty=Vpišite ime filtra
+_error_filter_handle_invalid=Rokovanje je napačno

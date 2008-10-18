@@ -1,0 +1,13 @@
+_manufacturers=Proizvajalci
+Manufacturer.name=Ime Proizvajalca
+_listing_manufacturers=Seznam proizvajalcev $from - $to od $
+_no_manufacturers=Ne najdem proizvajalcev
+_are_you_sure_you_want_to_delete_manufacturer=Zares izbrisati izbrane proizvajalce?
+_nothing_selected=Prosimo izberite najmanj enega proizvajalca s seznama
+_cancel_editing_manufacturer=Prekliči urejevanje proizvajalcev
+_manufacturer_info=Splošne informacije
+_manufacturer_images=Slike
+_manufacturer_was_successfully_saved=Informacije o proizvajalcu so bile supešno shranjene
+_could_not_save_manufacturer=Informacije o proizvajalcu niso bile supešno shranjene
+_select_manufacturer=Izberi proizvajalca
+_done_adding=Končano dodajanje proizvajalcev

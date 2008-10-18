@@ -1,0 +1,6 @@
+PaypalDirectPayment=Paypal Direct Payment
+PaypalDirectPayment_sandbox=Uporabi sandbox (test) okolje
+PaypalDirectPayment_username=Uporabniško ime
+PaypalDirectPayment_password=Geslo
+PaypalDirectPayment_signature=Podpis
+PaypalDirectPayment_cardTypes=Omogoči kreditne kartice in tipe

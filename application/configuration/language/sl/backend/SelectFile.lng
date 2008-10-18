@@ -1,0 +1,10 @@
+_select_file=Izberi dokument
+_listing_files=Seznam dokumentov $from - $to od $count
+_no_files_found=Ne najdem dokumentov
+fileName=Ime
+fileType=Ekstension
+fileSize=Velikost
+fileDate=Datum modifikacije
+filePermissions=Dovoljenja
+fileOwner=Lastnik
+fileGroup=Skupina

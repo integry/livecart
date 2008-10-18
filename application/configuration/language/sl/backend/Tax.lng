@@ -1,0 +1,10 @@
+_tax_entry_was_successfully_saved=DDV je uspešno shranjen
+_could_not_save_tax_entry=Ne morem shraniti DDV vnosa
+_add_new_tax=Dodaj novi DDV
+_cancel_adding_new_tax=Prekliči dodajanje novega DDV
+_cancel_adding_new_tax_rate=Prekliči dodajanje vrednosti DDVja
+_name=Ime
+_manage=Urejuj
+_taxes=DDV
+_error_the_name_should_not_be_empty=Vpišite ime
+_are_you_sure_you_want_to_remove_ths_tax=Ste prepričani, da želite izbrisati DDV? Lahko da je uporabljen v nekaterih conah za dostavo.

@@ -1,0 +1,6 @@
+PaypalExpressCheckout=Paypal Express Checkout
+PaypalExpressCheckout_sandbox=Uporabi sandbox (test) okolje
+PaypalExpressCheckout_username=Uporabniško ime
+PaypalExpressCheckout_password=Geslo
+PaypalExpressCheckout_signature=Podpis
+PaypalExpressCheckout_AUTHONLY=Samo avtorizirana plačila brez avtomatičnega zajetja

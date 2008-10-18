@@ -1,0 +1,16 @@
+_a_relationship_between_products_was_successfully_created=Relacija med izdelki je bila uspešno narejena
+_could_not_create_product_relationship=Ta izdelek je že določen v relaciji
+_relationship_was_successfully_removed=Relacija uspešno odstranjena
+_select_product=Dodaj podoben izdelek
+_add_new_group=Dodaj novo skupino
+_add_group_title=Dodaj novo skupino podobnih izdelkov
+_done_adding=Končano dodajanje podobnih izdelkov
+_cancel_adding_new_related_product=Prekliči dodajanje nove relacije
+_cancel_adding_new_group=Prekliči dodajanje nove skupine
+_are_you_sure_you_want_to_delete_this_group=Ste prepričani, da želite izbrisati to skupino za relacije?
+_are_you_sure_you_want_to_delete_this_relation=Ste prepričani, da želite izbrisati relacijo?
+_product_relationship_group_title=Naslov
+_err_relationship_name_is_empty=Vpišite ime skupine
+_err_circular=Ne morem dodati podoben izdelek na isti izdelek
+_err_multiple=Ta izdelek je že določen kot podoben izdelek
+_msg_added=Podoben izdelek uspešno dodan

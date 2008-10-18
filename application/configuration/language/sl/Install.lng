@@ -1,0 +1,11 @@
+_err_innodb_not_available=<a href="http://dev.mysql.com/doc/refman/5.0/en/innodb-overview.html" target="_blank">InnoDB table storage engine</a> ni omogočen za MySQL. Preverite nastavitve MySQL baze in poskusite znova.
+checkWritePermissions=Direktorij pravice za pisanje
+_writePermissionsFix=<strong>Priporočeno:</strong> uporaba FTP, spremeni dovoljenja za dostop (chmod) za te direktorije na 777 (Poplen dostop za pisanje). Če direktorij ne obstaja, ga naredite.
+checkPHPVersion=PHP verzija
+checkPHPVersion_error= <a href="http://php.net" target="_blank">PHP</a> verzija mora biti najmanj 5.2
+checkMySQL=Podpora baze
+checkMySQL_error=<a href="http://php.net/mysqli" target="_blank">mysqli</a> ali <a href="http://php.net/mysqli" target="_blank">mysql</a> podaljšek mora biti inštaliran za PHP
+checkGD=Manipulacisjka podpora slike
+checkGD_error=<a href="http://php.net/gd" target="_blank">GD</a> podaljški morajo biti inštalirani za PHP
+checkSession=PHP session konfiguracija
+checkSession_error=PHP sessions niso shranjeni. Prepričajte se da je <a href="http://php.net/manual/en/ref.session.php#ini.session.save-path"><em>session.save_path</em></a> PHP konfiguracija pravilno nastavljena.
