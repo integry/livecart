@@ -37,7 +37,7 @@
 
 <p>
 	<label></label>
-	{textfield name="address_2" class="text"}
+	{textfield name="address2" class="text"}
 </p>
 
 <p class="required">
