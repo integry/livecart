@@ -28,10 +28,12 @@ class Product extends MultilingualObject
 	const DO_NOT_RECALCULATE_PRICE = false;
 
 	const TYPE_TANGIBLE = 0;
-
 	const TYPE_DOWNLOADABLE = 1;
-
 	const TYPE_BUNDLE = 2;
+
+	const CHILD_OVERRIDE = 0;
+	const CHILD_ADD = 1;
+	const CHILD_SUBSTRACT = 2;
 
 	/**
 	 * Related products
@@ -58,6 +60,7 @@ class Product extends MultilingualObject
 		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("manufacturerID", "Manufacturer", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("defaultImageID", "ProductImage", "ID", null, ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("parentID", "Product", "ID", null, ARInteger::instance()));
 
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
 		$schema->registerField(new ARField("sku", ARVarchar::instance(20)));
@@ -90,6 +93,7 @@ class Product extends MultilingualObject
 		$schema->registerField(new ArField("stockCount", ARFloat::instance(8)));
 		$schema->registerField(new ArField("reservedCount", ARFloat::instance(8)));
 		$schema->registerField(new ArField("salesRank", ARInteger::instance()));
+		$schema->registerField(new ArField("childSettings", ARText::instance()));
 	}
 
 	/**
@@ -161,6 +165,29 @@ class Product extends MultilingualObject
 	}
 
 	/*####################  Value retrieval and manipulation ####################*/
+
+	public function createChildProduct()
+	{
+		$child = ActiveRecord::getNewInstance(__CLASS__);
+		$child->parent->set($this);
+		return $child;
+	}
+
+	public function getChildSetting($setting)
+	{
+		$settings = unserialize($this->childSettings->get());
+		if (isset($settings[$setting]))
+		{
+			return $settings[$setting];
+		}
+	}
+
+	public function setChildSetting($setting, $value)
+	{
+		$settings = unserialize($this->childSettings->get());
+		$settings[$setting] = $value;
+		$this->childSettings->set(serialize($settings));
+	}
 
 	public function belongsTo(Category $category)
 	{
@@ -436,13 +463,13 @@ class Product extends MultilingualObject
 		}
 
 		$instance = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode);
-	  	if (!$instance->price->get() && $recalculate)
+	  	if (!$instance->getPrice() && $recalculate)
 	  	{
 	  		return $instance->reCalculatePrice();
 		}
 		else
 		{
-			return $instance->price->get();
+			return $instance->getPrice();
 		}
 	}
 
@@ -476,7 +503,31 @@ class Product extends MultilingualObject
 		{
 			if (!$this->isDownloadable())
 			{
-				return $this->shippingWeight->get();
+				if ($this->parent->get())
+				{
+					$parentWeight = $this->parent->get()->getShippingWeight();
+					$weight = $this->shippingWeight->get();
+
+					if ($this->getChildSetting('weight') == Product::CHILD_ADD)
+					{
+						return $parentWeight + $weight;
+					}
+					else if ($this->getChildSetting('weight') == Product::CHILD_SUBSTRACT)
+					{
+						return $parentWeight - $weight;
+					}
+					else if ($weight)
+					{
+						return $weight;
+					}
+					{
+						return $parentWeight;
+					}
+				}
+				else
+				{
+					return $this->shippingWeight->get();
+				}
 			}
 		}
 		else
@@ -527,7 +578,11 @@ class Product extends MultilingualObject
 		{
 			parent::insert();
 
-			$this->updateCategoryCounters($this->getCountUpdateFilter(), $this->category->get());
+			if ($this->category->get())
+			{
+				$this->updateCategoryCounters($this->getCountUpdateFilter(), $this->category->get());
+			}
+
 			$this->updateTimeStamp('dateCreated', 'dateUpdated');
 
 			// generate SKU automatically if not set
@@ -535,20 +590,40 @@ class Product extends MultilingualObject
 			{
 				ClassLoader::import('application.helper.check.IsUniqueSkuCheck');
 
-				$sku = $this->getID();
-
-				do
+				if (!$this->parent->get())
 				{
-					$check = new IsUniqueSkuCheck('', $this);
-					$exists = $check->isValid('SKU' . $sku);
-					if (!$exists)
-					{
-						$sku = '0' . $sku;
-					}
-				}
-				while (!$exists);
+					$sku = $this->getID();
 
-				$this->sku->set('SKU' . $sku);
+					do
+					{
+						$check = new IsUniqueSkuCheck('', $this);
+						$exists = $check->isValid('SKU' . $sku);
+						if (!$exists)
+						{
+							$sku = '0' . $sku;
+						}
+					}
+					while (!$exists);
+
+					$sku = 'SKU' . $sku;
+				}
+				else
+				{
+					$sku = $this->parent->get()->sku->get() . '-';
+
+					$k = 0;
+					do
+					{
+						$k++;
+						$check = new IsUniqueSkuCheck('', $this);
+						$exists = $check->isValid($sku . $k);
+					}
+					while (!$exists);
+
+					$sku .= $k;
+				}
+
+				$this->sku->set($sku);
 				$this->save();
 			}
 
@@ -622,7 +697,10 @@ class Product extends MultilingualObject
 				$this->load(array('Category'));
 			}
 
-			$this->updateCategoryCounters($catUpdate, $this->category->get());
+			if ($this->category->get())
+			{
+				$this->updateCategoryCounters($catUpdate, $this->category->get());
+			}
 
 			$update = new ARUpdateFilter();
 			$update->addModifier('dateUpdated', new ARExpressionHandle('NOW()'));
@@ -751,6 +829,12 @@ class Product extends MultilingualObject
 			$array['attributes'] = $this->getSpecification()->toArray();
 			self::sortAttributesByHandle($array);
 			$array = array_merge($array, $this->getPricesFields());
+		}
+
+		if ($this->parent->get())
+		{
+			$parent = $this->parent->get()->toArray();
+			$array = array_merge($parent, $array);
 		}
 
 		$this->setArrayData($array);
