@@ -70,12 +70,41 @@ class ProductPrice extends ActiveRecordModel
 
 	/*####################  Value retrieval and manipulation ####################*/
 
+	public function getPrice()
+	{
+		$price = $this->price->get();
+
+		if ($parent = $this->product->get()->parent->get())
+		{
+			$parentPrice = $parent->getPricingHandler()->getPrice($this->currency->get())->getPrice();
+			if ($this->product->get()->getChildSetting('price') == Product::CHILD_ADD)
+			{
+				return $parentPrice + $price;
+			}
+			else if ($this->product->get()->getChildSetting('price') == Product::CHILD_SUBSTRACT)
+			{
+				return $parentPrice - $price;
+			}
+			else if ($price)
+			{
+				return $price;
+			}
+			{
+				return $parentPrice;
+			}
+		}
+		else
+		{
+			return $price;
+		}
+	}
+
 	public function getItemPrice(OrderedItem $item)
 	{
-		if ($this->price->get())
+		if ($this->getPrice())
 		{
 			$rules = unserialize($this->serializedRules->get());
-			$price = $this->price->get();
+			$price = $this->getPrice();
 
 			// quantity/group based prices
 			if ($rules)

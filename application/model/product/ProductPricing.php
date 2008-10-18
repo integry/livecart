@@ -82,6 +82,17 @@ class ProductPricing
 	 */
 	public function getPrice(Currency $currency)
 	{
+		/*if ($this->product->parent->get())
+		{
+			if (!$this->isPriceSet($currency))
+			{
+				$inst = ProductPrice::getNewInstance($this->product, $currency);
+				$inst->price->set($this->product->parent->get()->getPricingHandler()->getPrice($currency)->price->get());
+				return $inst;
+			}
+		}
+		* */
+
 		if (!$this->isPriceSet($currency))
 		{
 			return ProductPrice::getNewInstance($this->product, $currency);
@@ -202,7 +213,7 @@ class ProductPricing
 		}
 
 		$price = $this->getPrice($currency);
-		if (!$price->price->get())
+		if (!$price->getPrice())
 		{
 			$price = $this->getPriceByCurrencyCode($this->application->getDefaultCurrencyCode());
 		}
@@ -237,8 +248,8 @@ class ProductPricing
 		{
 			$this->prices[$k] = clone $price;
 		}
-	}	
-	
+	}
+
 	public function __destruct()
 	{
 		foreach ($this->prices as $k => $price)

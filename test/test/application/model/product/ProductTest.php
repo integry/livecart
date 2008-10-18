@@ -701,6 +701,65 @@ class ProductTest extends UnitTest
 
 	}
 
+	public function testChildProduct()
+	{
+		$this->product->setPrice($this->usd, 20);
+		$this->product->shippingWeight->set(200);
+		$this->product->save();
+
+		$child = $this->product->createChildProduct();
+
+		$root = Category::getRootNode();
+		$root->reload();
+		$productCount = $root->totalProductCount->get();
+
+		// in array representation, parent product data is used where own data is not set
+		$array = $child->toArray();
+		$this->assertEquals($array['name_en'], $this->product->getValueByLang('name', 'en'));
+
+		// auto-generated SKU is based on parent SKU
+		$child->save();
+		$this->assertEquals($child->sku->get(), $this->product->sku->get() . '-1');
+
+		// category counters should not change
+		$root->reload();
+		$this->assertEquals($root->totalProductCount->get(), $productCount);
+
+		// parent product price used if not defined
+		$this->assertEquals($child->getPrice($this->usd), $this->product->getPrice($this->usd));
+
+		// parent shipping weight used if not defined
+		$this->assertEquals($child->getShippingWeight(), $this->product->getShippingWeight());
+
+		// add/substract parent prices/shipping weights
+		$child->setChildSetting('test', 'value');
+		$this->assertEquals($child->getChildSetting('test'), 'value');
+
+		// prices
+		$child->setChildSetting('price', Product::CHILD_ADD);
+		$child->setPrice($this->usd, 5);
+		$this->assertEquals(20, $this->product->getPrice($this->usd));
+		$this->assertEquals($child->getPrice($this->usd), $this->product->getPrice($this->usd) + 5);
+
+		$child->setChildSetting('price', Product::CHILD_SUBSTRACT);
+		$this->assertEquals($child->getPrice($this->usd), $this->product->getPrice($this->usd) - 5);
+
+		$child->setChildSetting('price', Product::CHILD_OVERRIDE);
+		$this->assertEquals($child->getPrice($this->usd), 5);
+
+		// shipping weight
+		$child->setChildSetting('weight', Product::CHILD_ADD);
+		$child->shippingWeight->set(5);
+		$this->assertEquals(200, $this->product->getShippingWeight());
+		$this->assertEquals($child->getShippingWeight(), $this->product->getShippingWeight() + 5);
+
+		$child->setChildSetting('weight', Product::CHILD_SUBSTRACT);
+		$this->assertEquals($child->getShippingWeight(), $this->product->getShippingWeight() - 5);
+
+		$child->setChildSetting('weight', Product::CHILD_OVERRIDE);
+		$this->assertEquals($child->getShippingWeight(), 5);
+	}
+
 	function test_SuiteTearDown()
 	{
 		ActiveRecordModel::rollback();
