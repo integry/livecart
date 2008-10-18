@@ -8,22 +8,22 @@
  * @return string
  *
  * @package application.helper.smarty
- * @author Integry Systems 
+ * @author Integry Systems
  */
 function smarty_function_paginate($params, LiveCartSmarty $smarty)
 {
 	$interval = 2;
-	
+
 	// determine which page numbers will be displayed
 	$count = ceil($params['count'] / $params['perPage']);
-	
+
 	$pages = range(max(1, $params['current'] - $interval), min($count, $params['current'] + $interval));
-	
+
 	if (array_search(1, $pages) === false)
 	{
 		array_unshift($pages, 1);
 	}
-	
+
 	if (array_search($count, $pages) === false)
 	{
 		$pages[] = $count;
@@ -37,48 +37,39 @@ function smarty_function_paginate($params, LiveCartSmarty $smarty)
 		{
 			$pages[] = $k - 1;
 		}
-		
+
 		$pr = $k;
 	}
 	sort($pages);
 
 	// generate output
 	$out = array();
-	
+
 	$application = $smarty->getApplication();
-	
+
 	// get variable to replace - _page_ if defined, otherwise 0
 	$replace = strpos($params['url'], '_000_') ? '_000_' : 0;
-	
+
+	$render = array();
 	if ($params['current'] > 1)
 	{
-		$out[] = '<a class="page previous" href="' . str_replace($replace, $params['current'] - 1, $params['url']) . '">' . $application->translate('_previous') . '</a>';
+		$urls['previous'] = str_replace($replace, $params['current'] - 1, $params['url']);
 	}
-	
-	$pr = 0;
+
 	foreach ($pages as $k)
 	{
-		if ($pr < $k - 1)
-		{
-			$out[] = '...';
-		}
-		
-		if ($k != $params['current'])
-		{
-			$out[] = '<a class="page" href="' . str_replace($replace, $k, $params['url']) . '">' . $k . '</a>';			
-		}
-		else
-		{
-			$out[] = '<span class="page currentPage">' . $k . '</span>';					
-		}
-		
-		$pr = $k;
+		$urls[$k] = str_replace($replace, $k, $params['url']);
 	}
 
 	if ($params['current'] < $count)
 	{
-		$out[] = '<a class="page next" href="' . str_replace($replace, $params['current'] + 1, $params['url']) . '">' . $application->translate('_next') . '</a>';
+		$urls['next'] = str_replace($replace, $params['current'] + 1, $params['url']);
 	}
+
+	$smarty->assign('urls', $urls);
+	$smarty->assign('pages', $pages);
+	$smarty->assign('current', $params['current']);
+	return $smarty->fetch($smarty->getApplication()->getRenderer()->getTemplatePath('block/box/paginate.tpl'));
 
 	return implode(' ', $out);
 }

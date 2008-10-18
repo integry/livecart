@@ -32,7 +32,7 @@ class ProductCategoryController extends StoreManagementController
 
 		if ($additional)
 		{
-			$response->set('categories', $additional->toArray());
+			$response->set('categories', ARSet::buildFromArray($additional)->toArray());
 		}
 
 		return $response;
