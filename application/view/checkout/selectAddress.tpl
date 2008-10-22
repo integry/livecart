@@ -15,7 +15,7 @@
 
 	{error for="selectedAddress"}<div><span class="errorText">{$msg}</span></div><div class="clear"></div>{/error}
 
-	<h2>{t _billing_address}</h2>
+	<h2 id="billingAddress">{t _billing_address}</h2>
 
 	<a href="{link controller=user action=addBillingAddress returnPath=true}" class="menu">
 		{t _add_billing_address}
@@ -46,7 +46,7 @@
 
 		<div id="shippingSelector">
 
-		<h2>{t _shipping_address}</h2>
+		<h2 id="shippingAddress">{t _shipping_address}</h2>
 
 		<a href="{link controller=user action=addShippingAddress returnPath=true}" class="menu">
 			{t _add_shipping_address}

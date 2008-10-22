@@ -26,6 +26,7 @@
 {includeJs file="backend/ProductFile.js"}
 {includeJs file="backend/ProductOption.js"}
 {includeJs file="backend/ProductBundle.js"}
+{includeJs file="backend/ProductVariation.js"}
 {includeJs file="backend/RatingType.js"}
 {includeJs file="backend/Review.js"}
 
@@ -41,6 +42,7 @@
 {includeCss file="backend/ProductCategory.css"}
 {includeCss file="backend/ProductFile.css"}
 {includeCss file="backend/ProductOption.css"}
+{includeCss file="backend/ProductVariation.css"}
 {includeCss file="backend/Filter.css"}
 {includeCss file="backend/CategoryImage.css"}
 {includeCss file="backend/RatingType.css"}

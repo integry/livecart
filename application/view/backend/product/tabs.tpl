@@ -17,7 +17,7 @@
 			{tab id="tabProductBundle" help="categories" hidden=true}<a href="{link controller=backend.productBundle action=index id=_id_}">{t _bundled_products}</a>{/tab}
 			{tab id="tabProductDiscounts" help="products.edit.pricing"}<a href="{link controller=backend.productPrice action=index id=_id_}?categoryID=_categoryID_">{t _stock_pricing}</a>{/tab}
 			{tab id="tabProductImages" help="products.edit.images"}<a href="{link controller=backend.productImage action=index id=_id_}?categoryID=_categoryID_">{t _images}</a>{/tab}
-			{tab id="tabProductVariations" help="products.edit"}<a href="{link controller=backend.childProduct action=index id=_id_}">{t _variations}</a>{/tab}
+			{tab id="tabProductVariations" help="products.edit"}<a href="{link controller=backend.productVariation action=index id=_id_}">{t _variations}</a>{/tab}
 			{tab id="tabProductRelationship" help="products.edit.related"}<a href="{link controller=backend.productRelationship action=index id=_id_}?categoryID=_categoryID_&type=0">{t _related}</a>{/tab}
 			{tab id="tabProductUpsell" help="products.edit.related"}<a href="{link controller=backend.productRelationship action=index id=_id_}?categoryID=_categoryID_&type=1">{t _upsell}</a>{/tab}
 			{tab id="tabProductFiles" help="products.edit.files" hidden=true}<a href="{link controller=backend.productFile action=index id=_id_}?categoryID=_categoryID_">{t _files}</a>{/tab}

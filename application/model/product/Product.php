@@ -1161,6 +1161,36 @@ class Product extends MultilingualObject
 		return $this->bundledProducts;
 	}
 
+	public function getVariationMatrix()
+	{
+		$children = $this->getRelatedRecordSetArray('Product');
+		if (!$children)
+		{
+			return array();
+		}
+
+		$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductVariationValue', 'productID'), ARSet::extractRecordIDs($children)));
+		$f->setOrder(new ARFieldHandle('ProductVariationType', 'position'));
+		$f->setOrder(new ARFieldHandle('ProductVariation', 'position'));
+
+		$productValues = $products = array();
+		$values = ActiveRecordModel::getRecordSetArray('ProductVariationValue', $f, array('ProductVariation', 'ProductVariationType'));
+		foreach ($values as &$value)
+		{
+			$productId = $value['productID'];
+			$products[$productId] =& $value['Product'];
+			$productValues[$productId][$value['variationID']] =& $value;
+		}
+
+		$matrix = array();
+		foreach ($productValues as $product => &$values)
+		{
+			$matrix[implode('-', array_keys($values))] = $products[$product];
+		}
+
+		return $matrix;
+	}
+
 	public function serialize()
 	{
 		return parent::serialize(array('categoryID', 'Category', 'manufacturerID', 'defaultImageID'));

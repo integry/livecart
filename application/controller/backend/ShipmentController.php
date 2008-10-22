@@ -52,7 +52,10 @@ class ShipmentController extends StoreManagementController
 			{
 				$rate->setApplication($this->application);
 				$shipmentsArray[$shipment->getID()] = array_merge($shipmentsArray[$shipment->getID()], $rate->toArray());
-				$shipmentsArray[$shipment->getID()]['ShippingService']['ID'] = $shipmentsArray[$shipment->getID()]['serviceID'];
+				if (isset($shipmentsArray[$shipment->getID()]['serviceID']))
+				{
+					$shipmentsArray[$shipment->getID()]['ShippingService']['ID'] = $shipmentsArray[$shipment->getID()]['serviceID'];
+				}
 			}
 			else if($shipment->shippingService->get())
 			{

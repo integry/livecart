@@ -701,6 +701,41 @@ class ProductTest extends UnitTest
 
 	}
 
+	public function testVariationMatrix()
+	{
+		$size = ProductVariationType::getNewInstance($this->product);
+		$size->save();
+
+		$color = ProductVariationType::getNewInstance($this->product);
+		$color->save();
+
+		$sizes = $colors = array();
+		foreach (array('Small', 'Large') as $name)
+		{
+			$variation = ProductVariation::getNewInstance($size);
+			$variation->setValueByLang('name', 'en', $name);
+			$variation->save();
+			$sizes[] = $variation;
+		}
+
+		foreach (array('Red', 'Green', 'Blue') as $name)
+		{
+			$variation = ProductVariation::getNewInstance($size);
+			$variation->setValueByLang('name', 'en', $name);
+			$variation->save();
+			$colors[] = $variation;
+		}
+
+		foreach ($sizes as $sizeVar)
+		{
+			foreach ($colors as $colorVar)
+			{
+				$child = $this->product->getVariation(array($sizeVar, $colorVar));
+			}
+		}
+
+	}
+
 	public function testChildProduct()
 	{
 		$this->product->setPrice($this->usd, 20);
