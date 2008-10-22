@@ -15,19 +15,19 @@ class OrderMassActionProcessor extends MassActionProcessor
 		switch($this->getAction())
 		{
 			case 'setNew':
-				$order->status->set(CustomerOrder::STATUS_NEW);
+				$order->setStatus(CustomerOrder::STATUS_NEW);
 				break;
 			case 'setProcessing':
-				$order->status->set(CustomerOrder::STATUS_PROCESSING);
+				$order->setStatus(CustomerOrder::STATUS_PROCESSING);
 				break;
 			case 'setAwaitingShipment':
-				$order->status->set(CustomerOrder::STATUS_AWAITING);
+				$order->setStatus(CustomerOrder::STATUS_AWAITING);
 				break;
 			case 'setShipped':
-				$order->status->set(CustomerOrder::STATUS_SHIPPED);
+				$order->setStatus(CustomerOrder::STATUS_SHIPPED);
 				break;
 			case 'setReturned':
-				$order->status->set(CustomerOrder::STATUS_RETURNED);
+				$order->setStatus(CustomerOrder::STATUS_RETURNED);
 				break;
 			case 'setFinalized':
 				$order->isFinalized->set(1);
