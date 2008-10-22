@@ -1,0 +1,11 @@
+checkGD_error=ספריית  <a href="http://php.net/gd" target="_blank">GD</a> חייבת להיות מותקנת לצורך התמיכה ב PHP
+checkSession=הגדר את איזור שפת PHP
+checkSession_error=האיזורים של נתוני שפת PHP נשמרו. אנא וודא שה <a href="http://php.net/manual/en/ref.session.php#ini.session.save-path"><em>session.save_path</em></a> הוצב כראוי בהגדרת ערכי ה PHP
+checkGD=הפעלת תמיכה בתמונה
+checkMySQL_error=<a href="http://php.net/mysqli" target="_blank">mysqli</a> או <a href="http://php.net/mysqli" target="_blank">mysql</a> חייבות להיות מותקנות על גבי סביבת PHP
+checkMySQL=תמיכה במאגר הנתונים
+checkPHPVersion_error=גרסת <a href="http://php.net" target="_blank">PHP</a> חייבת להכיל לפחות את הגרסה 5.2 ומעלה
+checkPHPVersion=גרסת PHP
+_writePermissionsFix=<strong>פעולה מומלצת</strong> השתמש ב FTP כדי לתת הרשאות גישה (chmod) לכל התיקיות (גישות מלאות). ואם התיקייה לא קיימת עדיין, לחץ על מנת ליצור אותה.
+checkWritePermissions=מדריך לכתיבת הרשאות
+_err_innodb_not_available=<a href="http://dev.mysql.com/doc/refman/5.0/en/innodb-overview.html" target="_blank">מנוע אחסון טבלאות InnoDB</a> לא מופעל ל- mySQL. אנא בדוק מחדש את הגדרות מאגר הנתונים ונסה שנית.

@@ -1,0 +1,13 @@
+_ordered_item_was_successfully_moved=המוצר הועבר בהצלחה למשלוח אחר
+_this_shipping_service_has_no_available_rates=השירות לא זמין עבור איזור המשתמש ומחיר ההזמנה
+_ordered_item_quantity_was_updated=כמות הפריט עודכנה
+_error_updating_item_quantity=שגיאה בעת עדכון כמות הפריטים
+_item_has_been_successfuly_saved=הפריט התווסף בהצלחה להזמנה
+_item_was_successfully_removed_from_shipment=הפריט הוסר בהצלחה מהמשלוח
+_error_removing_item_from_shipment=נוצרה שגיאה בעת הסרת הפריט מהמשלוח
+_downloadable_item_already_exists_in_this_order=קובץ פריט זה כבר קיים בהזמנה זו
+_select_product=הוסף מוצרים להזמנה
+_done_adding_products=סיים להוסיף מוצרים
+_select_shippment=בחר משלוח
+_shipping_service_is_not_selected=לא בחרת בשירות משלוחים
+_shipment=משלוחים

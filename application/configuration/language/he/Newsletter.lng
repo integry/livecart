@@ -1,0 +1,13 @@
+_subscribe_to_newsletter=עלון החדשות
+_enter_your_email_to_subscribe=מעוניין להיות כמנוי לעלון החדשות שלנו? הכנס כאן את כתובת הדוא"ל שלך
+_err_email_empty=אנא הקלד את כתובת הדוא"ל שלך
+_err_invalid_email=כתובת הדוא"ל אינה תקינה
+_confirm_instructions=שלחנו את הדואר אל הדוא"ל שסיפרת.<br>אנא עקוב אחר קישור ההודעה כדי לאשר את המינוי שלך לעלון המידע
+_confirm_subscription=אנא אמת את כתובת הדוא"ל שלך
+_confirming_email=אימות כתובת דוא"ל
+_confirm_successful=הצלחת לאמת את כתובת הדוא"ל שלך
+_confirm_unsuccessful=לא יכולנו לאמת את כתובת הדוא"ל שלך. אנא וודא שלחצת על הקישור שנשלח לך באי-מייל והעתקת אותו בצורה מדוייקת לשורת הכתובת שבדפדפן שלך
+_unsubscribe=בטל את המנוי מעלון המידע
+_unsubscribe_sucessful=אתה ביטלת זה עתה את המנוי ויותר לא תקבל הודעות מעלון המידע שלנו
+_already_subscribed=אתה כבר נמצא כמנוי
+_already_subscribed_info=אתה מנוי לעלון המידע שלנו

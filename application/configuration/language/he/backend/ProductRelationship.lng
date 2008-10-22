@@ -1,0 +1,16 @@
+_product_relationship_group_title=כותרת
+_cancel_adding_new_group=בטל הוספת קבוצה חדשה
+_add_new_group=הוסף קבוצה חדשה
+_err_relationship_name_is_empty=אנא הכנס את שם הקבוצה
+_done_adding=סיים להוסיף מוצרים מקושרים
+_err_circular=לא יכל להוסיף מוצרים מקושרים לאותו המוצר
+_err_multiple=המוצר כבר סומן כמוצר מקושר
+_msg_added=המוצר המקושר התווסף בהצלחה
+_a_relationship_between_products_was_successfully_created=הקשר בין המוצרים נוצר בהצלחה
+_could_not_create_product_relationship=מוצר זה קשר נמצא כקשור
+_relationship_was_successfully_removed=הקשר הוסר בהצלחה
+_select_product=הוסף מוצר מקושר
+_add_group_title=הוסף קבוצה חדשה למוצר מקושר
+_cancel_adding_new_related_product=בטל הוספת קשר חדש
+_are_you_sure_you_want_to_delete_this_group=האם אתה בטוח שברצונך למחוק את קשר הקבוצה הזו?
+_are_you_sure_you_want_to_delete_this_relation=האם אתה בטוח שאתה רוצה למחוק את קשר הקבוצה הזו?

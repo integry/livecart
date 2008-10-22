@@ -1,0 +1,7 @@
+_add_new_field=הוסף אפשרות חדשה
+_cancel_adding_new_field=בטל הוספת אפשרות חדשה
+_error_name_empty=אנא הכנס את שם אפשרות המוצר
+_error_record_id_is_not_valid=אפשרות המוצר לא קיימת
+_could_not_remove_option=לא יכולנו להסיר את האפשרות
+_could_not_remove_option_choice=לא יכולנו להסיר את בחירת האפשרות
+_ProductOption_remove_question=אתה באמת רוצה למחוק את אפשרות הזו של המוצר?

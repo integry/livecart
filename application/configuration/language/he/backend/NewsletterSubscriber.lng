@@ -1,0 +1,8 @@
+_no_subscribers_found=לא נמצאו מנויים
+_listing_subscribers=רשימת מנויים $from - $to מתוך $count
+_process=תהליך
+_newsletter_delete_confirm=האם אתה באמת רוצה להסיר את המנויים לעלון החדשות?
+_nothing_selected=אנא בחר מנוי אחד לפחות
+NewsletterSubscriber.ID=מספר
+NewsletterSubscriber.isEnabled=הוא מופעל
+NewsletterSubscriber.email=אי-מייל
