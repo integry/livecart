@@ -83,6 +83,66 @@ abstract class FrontendController extends BaseController
 		$this->breadCrumb[] = array('title' => $title, 'url' => $url);
 	}
 
+	protected function getCountryList()
+	{
+		$primaryCountries = str_replace(' ', '', strtoupper($this->config->get('PRIMARY_COUNTRIES')));
+
+		if ($primaryCountries)
+		{
+			$defCountries = explode(',', $primaryCountries);
+		}
+		else
+		{
+			$defCountries = array($this->config->get('DEF_COUNTRY'));
+		}
+
+		$countries = $this->application->getEnabledCountries();
+		asort($countries);
+
+		// set default countries first
+		$defCountries = array_reverse($defCountries);
+		foreach ($defCountries as $country)
+		{
+			if (isset($countries[$country]))
+			{
+				$name = $countries[$country];
+				unset($countries[$country]);
+				$countries = array_merge(array($country => $name), $countries);
+			}
+		}
+
+		return $countries;
+	}
+
+	protected function getStateList($country)
+	{
+		$states = State::getStatesByCountry($country);
+
+		if ($states)
+		{
+			$states = array('' => '') + $states;
+		}
+
+		return $states;
+	}
+
+	protected function saveAddress(UserAddress $address, $prefix = '')
+	{
+		$address->loadRequestData($this->request, $prefix);
+		$address->countryID->set($this->request->get($prefix . 'country'));
+		$address->postalCode->set($this->request->get($prefix . 'zip'));
+		$address->stateName->set($this->request->get($prefix . 'state_text'));
+		if ($this->request->get($prefix . 'state_select'))
+		{
+			$address->state->set(State::getStateByIDAndCountry($this->request->get($prefix . 'state_select'), $this->request->get($prefix . 'country')));
+		}
+		else
+		{
+			$address->state->set(null);
+		}
+		$address->save();
+	}
+
 	protected function boxInformationMenuBlock()
 	{
 		ClassLoader::import('application.model.staticpage.StaticPage');

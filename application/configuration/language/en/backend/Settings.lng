@@ -201,6 +201,7 @@ MAX_QUANT=Maximum quantity of products per order (0 - no limit)
 ENABLE_CART=Enable shopping cart
 ENABLE_WISHLISTS=Enable wishlists
 ENABLE_MULTIADDRESS=Allow shipping to multiple addresses
+ENABLE_CHECKOUTDELIVERYSTEP=Enter billing and shipping addresses at separate checkout steps
 
 _shipping=Delivery Settings
 

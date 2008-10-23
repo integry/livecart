@@ -93,18 +93,18 @@ class UserAddress extends ActiveRecordModel
 		return implode($separator, array_filter($address, 'trim'));
 	}
 
-	public function loadRequestData(Request $request)
+	public function loadRequestData(Request $request, $prefix = '')
 	{
-		parent::loadRequestData($request);
+		parent::loadRequestData($request, $prefix);
 
-		if($request->get('stateID'))
+		if($request->get($prefix . 'stateID'))
 		{
-			$this->state->set(State::getInstanceByID((int)$request->get('stateID'), true));
+			$this->state->set(State::getInstanceByID((int)$request->get($prefix . 'stateID'), true));
 			$this->stateName->set(null);
 		}
 		else
 		{
-			$this->stateName->set($request->get('stateName'));
+			$this->stateName->set($request->get($prefix . 'stateName'));
 			$this->state->set(null);
 		}
 	}

@@ -20,6 +20,12 @@ function smarty_function_uniqid($params, LiveCartSmarty $smarty)
 	{
 		$id = uniqid();
 		$smarty->assign('lastUniqId', $id);
+
+		if (isset($params['assign']))
+		{
+			$smarty->assign($params['assign'], $id);
+		}
+
 		return $id;
 	}
 }

@@ -1730,15 +1730,26 @@ select.multiAddress
 
 /* Select address */
 
+table.addressSelector
+{
+	width: 100%;
+}
+
 .addressSelector .selector
 {
     vertical-align: middle;
     text-align: center;
 }
 
+.selector.addAddress
+{
+	vertical-align: top;
+	padding-top: 5px;
+}
+
 .addressSelector a
 {
-    float: right;
+    margin-left: 5px;
 }
 
 .addressSelector .address
@@ -1749,6 +1760,36 @@ select.multiAddress
 .addressSelector .address p
 {
     margin: 3px;
+}
+
+#billingAddressColumn
+{
+	clear: left;
+	margin-right: 1%;
+}
+
+#billingAddressColumn,
+#shippingSelector
+{
+	float: left;
+	width: 49%;
+}
+
+.addAddress .address,
+.addAddress .addressBlock
+{
+	width: 97%;
+}
+
+.addAddress .addressBlock label
+{
+	width: 120px;
+}
+
+.addAddress .addressBlock input,
+.addAddress .addressBlock select
+{
+	width: 97%;
 }
 
 /* Shipping method */
@@ -2052,6 +2093,12 @@ ul#userMenu
 /***************************
 	User addresses
 ***************************/
+div.address,
+div.addressBlock
+{
+    width: 230px;
+}
+
 div.addressBlock
 {
     border: 1px solid #DDDDDD;
@@ -2061,7 +2108,6 @@ div.addressBlock
     padding-top: 5px;
     padding-bottom: 5px;
     margin-top: 10px;
-    width: 230px;
     cursor: pointer;
 }
 

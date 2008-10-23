@@ -217,6 +217,37 @@ Order.submitCartForm = function(anchor)
 	return false;
 }
 
+Order.AddressSelector = function(form)
+{
+	var newAddressToggle = function(radioButton)
+	{
+		if (!radioButton)
+		{
+			return;
+		}
+
+		var addressForm = $(radioButton).up('tr').down('td.address').down('.address');
+
+		radioButton.form.onchange = function()
+		{
+			if (radioButton.checked)
+			{
+				addressForm.show();
+			}
+			else
+			{
+				addressForm.hide();
+			}
+		};
+
+		radioButton.form.onchange();
+	}
+
+	form = $(form);
+	new newAddressToggle(form.down('#billing_new'));
+	new newAddressToggle(form.down('#shipping_new'));
+}
+
 /*****************************
 	User related JS
 *****************************/

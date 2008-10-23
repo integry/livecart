@@ -1044,7 +1044,7 @@ class UserController extends FrontendController
 		if ($validator->isValid())
 		{
 			$address = UserAddress::getNewInstance();
-			$this->saveAddress($address);
+			$this->saveAddress($address, $prefix);
 
 			$addressType = call_user_func_array(array($addressClass, 'getNewInstance'), array($this->user, $address));
 			$addressType->save();
@@ -1064,66 +1064,6 @@ class UserController extends FrontendController
 		{
 			return $failureResponse;
 		}
-	}
-
-	private function saveAddress(UserAddress $address)
-	{
-		$address->loadRequestData($this->request);
-		$address->countryID->set($this->request->get('country'));
-		$address->postalCode->set($this->request->get('zip'));
-		$address->stateName->set($this->request->get('state_text'));
-		if ($this->request->get('state_select'))
-		{
-			$address->state->set(State::getStateByIDAndCountry($this->request->get('state_select'), $this->request->get('country')));
-		}
-		else
-		{
-			$address->state->set(null);
-		}
-		$address->save();
-	}
-
-	private function getCountryList(Form $form)
-	{
-		$primaryCountries = str_replace(' ', '', strtoupper($this->config->get('PRIMARY_COUNTRIES')));
-
-		if ($primaryCountries)
-		{
-			$defCountries = explode(',', $primaryCountries);
-		}
-		else
-		{
-			$defCountries = array($this->config->get('DEF_COUNTRY'));
-		}
-
-		$countries = $this->application->getEnabledCountries();
-		asort($countries);
-
-		// set default countries first
-		$defCountries = array_reverse($defCountries);
-		foreach ($defCountries as $country)
-		{
-			if (isset($countries[$country]))
-			{
-				$name = $countries[$country];
-				unset($countries[$country]);
-				$countries = array_merge(array($country => $name), $countries);
-			}
-		}
-
-		return $countries;
-	}
-
-	private function getStateList($country)
-	{
-		$states = State::getStatesByCountry($country);
-
-		if ($states)
-		{
-			$states = array('' => '') + $states;
-		}
-
-		return $states;
 	}
 
 	/**************  VALIDATION ******************/

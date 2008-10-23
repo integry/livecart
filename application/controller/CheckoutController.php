@@ -181,7 +181,7 @@ class CheckoutController extends FrontendController
 		// check if the user has created a billing address
 		if (!$this->user->defaultBillingAddress->get())
 		{
-			return new ActionRedirectResponse('user', 'addBillingAddress', array('returnPath' => true));
+			//return new ActionRedirectResponse('user', 'addBillingAddress', array('returnPath' => true));
 		}
 
 		if ($redirect = $this->validateOrder($this->order))
@@ -215,13 +215,20 @@ class CheckoutController extends FrontendController
 			}
 		}
 
-		$form->set('sameAsBilling', (int)($form->get('billingAddress') == $form->get('shippingAddress') || !$this->user->defaultShippingAddress->get()));
+		if (!$form->get('checkbox_sameAsBilling'))
+		{
+			$form->set('sameAsBilling', (int)($form->get('billingAddress') == $form->get('shippingAddress') || !$this->user->defaultShippingAddress->get()));
+		}
 
 		$response = new ActionResponse();
 		$response->set('billingAddresses', $this->user->getBillingAddressArray());
 		$response->set('shippingAddresses', $this->user->getShippingAddressArray());
 		$response->set('form', $form);
 		$response->set('order', $this->order->toArray());
+		$response->set('countries', $this->getCountryList($form));
+		$response->set('billing_states', $this->getStateList($form->get('billing_country')));
+		$response->set('shipping_states', $this->getStateList($form->get('shipping_country')));
+
 		return $response;
 	}
 
@@ -232,9 +239,23 @@ class CheckoutController extends FrontendController
 	{
 		$this->user->loadAddresses();
 
-		if (!$this->buildAddressSelectorValidator($this->order)->isValid())
+		$validator = $this->buildAddressSelectorValidator($this->order);
+		if (!$validator->isValid())
 		{
+//			var_dump($validator->getErrorList());
 			return new ActionRedirectResponse('checkout', 'selectAddress');
+		}
+
+		// create a new billing address
+		if (!$this->request->get('billingAddress'))
+		{
+			$this->request->set('billingAddress', $this->createAddress('BillingAddress', 'billing_')->userAddress->get()->getID());
+		}
+
+		// create a new shipping address
+		if (!$this->request->get('shippingAddress') && !$this->request->get('sameAsBilling'))
+		{
+			$this->request->set('shippingAddress', $this->createAddress('ShippingAddress', 'shipping_')->userAddress->get()->getID());
 		}
 
 		try
@@ -803,6 +824,17 @@ class CheckoutController extends FrontendController
 		return new ActionResponse();
 	}
 
+	private function createAddress($addressClass, $prefix)
+	{
+		$address = UserAddress::getNewInstance();
+		$this->saveAddress($address, $prefix);
+
+		$addressType = call_user_func_array(array($addressClass, 'getNewInstance'), array($this->user, $address));
+		$addressType->save();
+
+		return $addressType;
+	}
+
 	private function getPaymentOrder()
 	{
 		if (!$this->paymentOrder)
@@ -992,23 +1024,48 @@ class CheckoutController extends FrontendController
 	private function buildAddressSelectorForm(CustomerOrder $order)
 	{
 		ClassLoader::import("framework.request.validator.Form");
-		//$validator = new RequestValidator("addressSelectorValidator_blank", $this->request);
 		$validator = $this->buildAddressSelectorValidator($order);
-		return new Form($validator);
+
+		$form = new Form($validator);
+		$form->set('billing_country', $this->config->get('DEF_COUNTRY'));
+		$form->set('shipping_country', $this->config->get('DEF_COUNTRY'));
+
+		return $form;
 	}
 
 	private function buildAddressSelectorValidator(CustomerOrder $order)
 	{
+		$this->loadLanguageFile('User');
+
 		ClassLoader::import("framework.request.validator.Form");
 		$validator = new RequestValidator("addressSelectorValidator", $this->request);
-		$validator->addCheck('billingAddress', new IsNotEmptyCheck($this->translate('_select_billing_address')));
+
+		//$validator->addCheck('billingAddress', new IsNotEmptyCheck($this->translate('_select_billing_address')));
+		$validator->addCheck('billingAddress', new OrCheck(array('billingAddress', 'billing_address1'), array(new IsNotEmptyCheck($this->translate('_select_billing_address')), new IsNotEmptyCheck('')), $this->request));
+
+		// validate address entry forms
+		$this->validateAddress($validator, 'billing_', new CheckoutBillingAddressCheckCondition($this->request));
 
 		if ($order->isShippingRequired() && !$order->isMultiAddress->get())
 		{
-			$validator->addCheck('shippingAddress', new OrCheck(array('shippingAddress', 'sameAsBilling'), array(new IsNotEmptyCheck($this->translate('_select_shipping_address')), new IsNotEmptyCheck('')), $this->request));
+			$validator->addCheck('shippingAddress', new OrCheck(array('shippingAddress', 'sameAsBilling', 'shipping_address1'), array(new IsNotEmptyCheck($this->translate('_select_shipping_address')), new IsNotEmptyCheck(''), new IsNotEmptyCheck('')), $this->request));
+			$this->validateAddress($validator, 'shipping_', new CheckoutShippingAddressCheckCondition($this->request));
 		}
 
 		return $validator;
+	}
+
+	private function validateAddress(RequestValidator $validator, $prefix, CheckCondition $condition)
+	{
+		$validator->addCheck($prefix . 'firstName', new ConditionalCheck($condition, new IsNotEmptyCheck($this->translate('_err_enter_first_name'))));
+		$validator->addCheck($prefix . 'lastName', new ConditionalCheck($condition, new IsNotEmptyCheck($this->translate('_err_enter_last_name'))));
+		$validator->addCheck($prefix . 'address1', new ConditionalCheck($condition, new IsNotEmptyCheck($this->translate('_err_enter_address'))));
+		$validator->addCheck($prefix . 'city', new ConditionalCheck($condition, new IsNotEmptyCheck($this->translate('_err_enter_city'))));
+		$validator->addCheck($prefix . 'country', new ConditionalCheck($condition, new IsNotEmptyCheck($this->translate('_err_select_country'))));
+		$validator->addCheck($prefix . 'zip', new ConditionalCheck($condition, new IsNotEmptyCheck($this->translate('_err_enter_zip'))));
+
+		$stateCheck = new OrCheck(array($prefix . 'state_select', $prefix . 'state_text'), array(new IsNotEmptyCheck($this->translate('_err_select_state')), new IsNotEmptyCheck('')), $this->request);
+		$validator->addCheck($prefix . 'state_select', new ConditionalCheck($condition, $stateCheck));
 	}
 
 	public function buildCreditCardForm()
@@ -1038,6 +1095,25 @@ class CheckoutController extends FrontendController
 		$validator->addFilter('ccNum', new RegexFilter('[^ 0-9]'));
 
 		return $validator;
+	}
+}
+
+ClassLoader::import('framework.request.validator.check.CheckCondition');
+
+class CheckoutBillingAddressCheckCondition extends CheckCondition
+{
+	function isSatisfied()
+	{
+		return !$this->request->get('billingAddress');
+	}
+}
+
+class CheckoutShippingAddressCheckCondition extends CheckCondition
+{
+	function isSatisfied()
+	{
+		return  !$this->request->get('shippingAddress') &&
+				!$this->request->get('sameAsBilling');
 	}
 }
 
