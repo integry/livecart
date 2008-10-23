@@ -1161,9 +1161,24 @@ class Product extends MultilingualObject
 		return $this->bundledProducts;
 	}
 
+	public function createVariation($variationArray)
+	{
+		ClassLoader::import('application.model.product.ProductVariationValue');
+
+		$child = $this->createChildProduct();
+		$child->save();
+
+		foreach ($variationArray as $variation)
+		{
+			ProductVariationValue::getNewInstance($child, $variation)->save();
+		}
+
+		return $child;
+	}
+
 	public function getVariationMatrix()
 	{
-		$children = $this->getRelatedRecordSetArray('Product');
+		$children = $this->getRelatedRecordSetArray('Product', new ARSelectFilter());
 		if (!$children)
 		{
 			return array();

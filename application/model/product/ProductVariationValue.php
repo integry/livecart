@@ -21,6 +21,14 @@ class ProductVariationValue extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("variationID", "ProductVariation", "ID", null, ARInteger::instance()));
 	}
+
+	public static function getNewInstance(Product $product, ProductVariation $variation)
+	{
+		$instance = parent::getNewInstance(__CLASS__);
+		$instance->product->set($product);
+		$instance->variation->set($variation);
+		return $instance;
+	}
 }
 
 ?>

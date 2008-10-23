@@ -701,41 +701,6 @@ class ProductTest extends UnitTest
 
 	}
 
-	public function testVariationMatrix()
-	{
-		$size = ProductVariationType::getNewInstance($this->product);
-		$size->save();
-
-		$color = ProductVariationType::getNewInstance($this->product);
-		$color->save();
-
-		$sizes = $colors = array();
-		foreach (array('Small', 'Large') as $name)
-		{
-			$variation = ProductVariation::getNewInstance($size);
-			$variation->setValueByLang('name', 'en', $name);
-			$variation->save();
-			$sizes[] = $variation;
-		}
-
-		foreach (array('Red', 'Green', 'Blue') as $name)
-		{
-			$variation = ProductVariation::getNewInstance($size);
-			$variation->setValueByLang('name', 'en', $name);
-			$variation->save();
-			$colors[] = $variation;
-		}
-
-		foreach ($sizes as $sizeVar)
-		{
-			foreach ($colors as $colorVar)
-			{
-				$child = $this->product->getVariation(array($sizeVar, $colorVar));
-			}
-		}
-
-	}
-
 	public function testChildProduct()
 	{
 		$this->product->setPrice($this->usd, 20);
@@ -793,6 +758,49 @@ class ProductTest extends UnitTest
 
 		$child->setChildSetting('weight', Product::CHILD_OVERRIDE);
 		$this->assertEquals($child->getShippingWeight(), 5);
+	}
+
+	public function testVariationMatrix()
+	{
+		$size = ProductVariationType::getNewInstance($this->product);
+		$size->save();
+
+		$color = ProductVariationType::getNewInstance($this->product);
+		$color->save();
+
+		$sizes = $colors = array();
+		foreach (array('Small', 'Large') as $name)
+		{
+			$variation = ProductVariation::getNewInstance($size);
+			$variation->setValueByLang('name', 'en', $name);
+			$variation->save();
+			$sizes[] = $variation;
+		}
+
+		foreach (array('Red', 'Green', 'Blue') as $name)
+		{
+			$variation = ProductVariation::getNewInstance($size);
+			$variation->setValueByLang('name', 'en', $name);
+			$variation->save();
+			$colors[] = $variation;
+		}
+
+		// create product variations
+		$variations = array();
+		foreach ($sizes as $sizeVar)
+		{
+			foreach ($colors as $colorVar)
+			{
+				$child = $this->product->createVariation(array($sizeVar, $colorVar));
+				$child->save();
+				$variations[$sizeVar->getID()][$colorVar->getID()] = $child;
+			}
+		}
+
+		$matrix = $this->product->getVariationMatrix();
+
+		var_dump($matrix);
+
 	}
 
 	function test_SuiteTearDown()
