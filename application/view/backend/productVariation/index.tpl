@@ -1,7 +1,10 @@
-<table id="productVariationTemplate">
+<table id="productVariationTemplate" class="productVariationTable">
 	<thead>
 		<tr>
-			<th class="variationType"></th>
+			<th class="variationType">
+				<span class="typeName"></span>
+				<a href="#addVariation" class="addVariation">{t _add_variation}</a>
+			</th>
 			<th class="sku">{t _sku}</th>
 			<th class="price">{t _price}</th>
 			<th class="weight">{t _weight}</th>
@@ -15,6 +18,7 @@
 			<td class="sku"><input type="text" class="text" name="sku" /></td>
 			<td class="price">
 				<select name="priceType">
+					<option value="">{t _no_change}</option>
 					<option value="0">{t _add}</option>
 					<option value="1">{t _substract}</option>
 					<option value="2">{t _fixed}</option>
@@ -23,6 +27,7 @@
 			</td>
 			<td class="weight">
 				<select name="weightType">
+					<option value="">{t _no_change}</option>
 					<option value="0">{t _add}</option>
 					<option value="1">{t _substract}</option>
 					<option value="2">{t _fixed}</option>
@@ -35,10 +40,25 @@
 	</tbody>
 </table>
 
-<form action="{link controller=backend.productVariation action=save id=$parent.ID}" method="POST" enctype="multipart/form-data">
+<ul class="menu">
+	<li class="addType"><a href="#addType">{t _add_variation_type}</a></li>
+</ul>
+
+<form action="{link controller=backend.productVariation action=addType id=$parent.ID}" method="POST" enctype="multipart/form-data">
+	<p>
+{*
+		{{err for="name"}}
+			{{label {t _type_name}:}}
+			{textfield class="text"}
+		{/err}
+*}
+	</p>
+</form>
+
+<form class="variationForm" action="{link controller=backend.productVariation action=save id=$parent.ID}" method="POST" enctype="multipart/form-data">
 
 </form>
 
 <script type="text/javascript">
-	Backend.ProductVariation.getInstance({$parent.ID}, {json array=$params});
+	new Backend.ProductVariation.Editor({$parent.ID}, {json array=$params});
 </script>

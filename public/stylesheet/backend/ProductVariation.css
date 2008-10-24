@@ -2,3 +2,24 @@
 {
 	display: none;
 }
+
+.productVariationTable input,
+.productVariationTable select
+{
+	width: 70px;
+}
+
+.productVariationTable td
+{
+	padding: 4px;
+}
+
+.productVariationTable
+{
+	border: 1px solid #ddd;
+}
+
+.productVariationTable thead
+{
+	background-color: lightgreen;
+}

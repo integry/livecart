@@ -31,7 +31,7 @@ class ProductVariationController extends StoreManagementController
 									'parent' => $parentArray,
 									'variationTypes' => $variationTypes->toArray(),
 									'variations' => $variations->toArray(),
-									'matrix' => $product->getVariationMatrix()
+									'matrix' => $parent->getVariationMatrix()
 									));
 
 		return $response;

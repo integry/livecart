@@ -1184,22 +1184,39 @@ class Product extends MultilingualObject
 			return array();
 		}
 
-		$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductVariationValue', 'productID'), ARSet::extractRecordIDs($children)));
+		$ids = array();
+		foreach ($children as $child)
+		{
+			$ids[] = $child['ID'];
+			$products[$child['ID']] = $child;
+		}
+
+		$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductVariationValue', 'productID'), $ids));
 		$f->setOrder(new ARFieldHandle('ProductVariationType', 'position'));
 		$f->setOrder(new ARFieldHandle('ProductVariation', 'position'));
 
-		$productValues = $products = array();
+		$productValues = array();
+		$typeMatrix = array();
 		$values = ActiveRecordModel::getRecordSetArray('ProductVariationValue', $f, array('ProductVariation', 'ProductVariationType'));
 		foreach ($values as &$value)
 		{
 			$productId = $value['productID'];
-			$products[$productId] =& $value['Product'];
 			$productValues[$productId][$value['variationID']] =& $value;
 		}
 
 		$matrix = array();
 		foreach ($productValues as $product => &$values)
 		{
+			$current =& $matrix;
+			foreach ($values as $value)
+			{
+				//print_r($value);
+				if (!isset($current[$value['ID']]))
+				{
+//					$current[$value['ID']] = array()
+				}
+
+			}
 			$matrix[implode('-', array_keys($values))] = $products[$product];
 		}
 

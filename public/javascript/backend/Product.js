@@ -543,12 +543,15 @@ Backend.Product.Editor.prototype =
 
 	hideCategoriesContainer: function(args)
 	{
+		Element.hide($("catgegoryContainer"));
 		Element.hide($("managerContainer"));
 		Element.show($("productManagerContainer"));
+		$('productManagerContainer').removeClassName('treeManagerContainer');
 	},
 
 	showCategoriesContainer: function(args)
 	{
+		Element.show($("catgegoryContainer"));
 		if($("productManagerContainer")) Element.hide($("productManagerContainer"));
 		if($("managerContainer")) Element.show($("managerContainer"));
 

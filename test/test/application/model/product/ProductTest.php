@@ -39,7 +39,10 @@ class ProductTest extends UnitTest
 			'ProductRelationship',
 			'ProductRelationshipGroup',
 			'ProductFile',
-			'ProductFileGroup'
+			'ProductFileGroup',
+			'ProductVariation',
+			'ProductVariationType',
+			'ProductVariationValue',
 		);
 	}
 
@@ -763,9 +766,11 @@ class ProductTest extends UnitTest
 	public function testVariationMatrix()
 	{
 		$size = ProductVariationType::getNewInstance($this->product);
+		$size->setValueByLang('name', 'en', 'Size');
 		$size->save();
 
 		$color = ProductVariationType::getNewInstance($this->product);
+		$color->setValueByLang('name', 'en', 'Color');
 		$color->save();
 
 		$sizes = $colors = array();
@@ -799,7 +804,7 @@ class ProductTest extends UnitTest
 
 		$matrix = $this->product->getVariationMatrix();
 
-		var_dump($matrix);
+		//var_dump($matrix);
 
 	}
 

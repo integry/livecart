@@ -1531,7 +1531,7 @@ li.moreTabs li
 li.moreTabs .moreTabsMenu
 {
 	position: absolute;
-	right: 0;
+	left: 0;
 	z-index: 100;
 	border: 1px solid #aaa;
 	background-color: #fff;
