@@ -184,12 +184,73 @@ Backend.ProductVariation.Editor.prototype =
 
 	getTypes: function()
 	{
-		return this.types;
+		return this.typeInstances;
 	},
 
 	getLastTypeIndex: function()
 	{
 		return this.columnCount - 1;
+	},
+
+	getVariationCombinations: function(skipType)
+	{
+		var combinations = [];
+
+		for (var k = 0; k < this.typeInstances.length; k++)
+		{
+			var type = this.typeInstances[k];
+			var combined = [];
+
+			if (type != skipType)
+			{
+				var variations = type.getVariations();
+
+				if (combinations.length > 0)
+				{
+					for (var c = 0; c < combinations.length; c++)
+					{
+						for (var v = 0; v < variations.length; v++)
+						{
+							var variation = variations[v];
+							variation.push(combinations[c]);
+							combined.push(variation);
+						}
+					}
+				}
+				else
+				{
+					combined = variations;
+				}
+
+				combinations = combined;
+			}
+		}
+
+		return combinations;
+	},
+
+	createItems: function(variations)
+	{
+		var parentTypeVariations = [];
+		for (var k = 0; k < variations.length; k++)
+		{
+			if (variations[k].getType().getIndex() < this.columnCount)
+			{
+				parentTypeVariations.push(variations[k]);
+			}
+		}
+
+		if (parentTypeVariations.length)
+		{
+			var item = this.getItemsByVariations(parentTypeVariations).pop();
+		}
+
+		new Backend.ProductVariationItem({}, variations, item ? item.getRow() : null);
+console.log(item);
+		if (item)
+		{
+			//this.changeRowSpan(1);
+		}
 	},
 
 	getItemsByVariations: function(variations)
@@ -287,46 +348,6 @@ Backend.ProductVariationType.prototype =
 		this.editor.registerVariation(variation);
 	},
 
-	createItems: function(variations)
-	{
-		var subTypes = this.getSubTypes();
-
-		if (this.index < this.getEditor.getLastTypeIndex())
-		{
-			$H(this.variations).each(function(value)
-			{
-				var variation = value[1];
-				var itemVariations = variations;
-
-				itemVariations.unshift(variation);
-
-				for (var sub = 0; sub < subTypes.length; sub++)
-				{
-					subTypes[sub].createItems(itemVariations);
-				}
-			}.bind(this));
-		}
-		else
-		{
-			var parentTypeVariations = [];
-			for (var k = 0; k < variations.length; k++)
-			{
-				if (variations[k].getType() != this)
-				{
-					parentTypeVariations.push(variations[k]);
-				}
-			}
-
-			var item = this.getEditor().getItemsByVariations(parentTypeVariations).pop();
-			new Backend.ProductVariationItem({}, itemVariations, item ? item.getRow() : null);
-
-			if (item)
-			{
-				this.changeRowSpan(1);
-			}
-		}
-	},
-
 	getSubTypes: function()
 	{
 		var sub = [];
@@ -359,7 +380,20 @@ Backend.ProductVariationVar = function(data, type)
 
 	this.type.registerVariation(this);
 
-	this.type.getEditor().getTypeByIndex(0).createItems([this]);
+	var combinations = this.type.getEditor().getVariationCombinations(this.type);
+	if (0 == combinations.length)
+	{
+		console.log(combinations);
+		combinations = [[]];
+	}
+
+	for (var k = 0; k < combinations.length; k++)
+	{
+		combinations[k].push(this);
+		this.type.getEditor().createItems(combinations[k]);
+	}
+
+	console.log(combinations);
 }
 
 Backend.ProductVariationVar.prototype =
