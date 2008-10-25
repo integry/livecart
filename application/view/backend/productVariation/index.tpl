@@ -14,7 +14,10 @@
 	</thead>
 	<tbody>
 		<tr>
-			<td class="variation"></td>
+			<td class="variation" rowspan="1">
+				<input type="text" class="text" name="name" />
+				<span class="name"></span>
+			</td>
 			<td class="sku"><input type="text" class="text" name="sku" /></td>
 			<td class="price">
 				<select name="priceType">
@@ -23,6 +26,7 @@
 					<option value="1">{t _substract}</option>
 					<option value="2">{t _fixed}</option>
 				</select>
+				<br />
 				<input type="text" class="text" name="price" />
 			</td>
 			<td class="weight">
@@ -32,6 +36,7 @@
 					<option value="1">{t _substract}</option>
 					<option value="2">{t _fixed}</option>
 				</select>
+				<br />
 				<input type="text" class="text" name="shippingWeight" />
 			</td>
 			<td class="inventory"><input type="text" class="text" name="inventory" /></td>

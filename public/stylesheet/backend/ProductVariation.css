@@ -6,7 +6,8 @@
 .productVariationTable input,
 .productVariationTable select
 {
-	width: 70px;
+	width: 90px;
+	font-size: smaller;
 }
 
 .productVariationTable td
@@ -22,4 +23,9 @@
 .productVariationTable thead
 {
 	background-color: lightgreen;
+}
+
+.productVariationTable td.variation
+{
+	vertical-align: top;
 }

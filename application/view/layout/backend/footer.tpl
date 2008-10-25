@@ -29,8 +29,6 @@
 							<a href="http://support.livecart.com" target="_blank">Customer Support</a>
 							/
 							<a href="http://forums.livecart.com" target="_blank">Forums</a>
-							/
-							<a href="http://bugs.livecart.com" target="_blank">Report a Bug</a>
 						</div>
 					{/if}
 				</td>

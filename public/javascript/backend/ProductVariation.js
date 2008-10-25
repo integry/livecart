@@ -23,6 +23,14 @@ Backend.ProductVariation.Editor.prototype =
 {
 	typeInstances: {},
 
+	itemInstances: {},
+
+	variationInstances: {},
+
+	columnCount: 0,
+
+	idCounter: 0,
+
 	findUsedNodes: function()
 	{
 		this.container = $('tabProductVariations_' + this.parentId + 'Content');
@@ -35,7 +43,7 @@ Backend.ProductVariation.Editor.prototype =
 
 	bindEvents: function()
 	{
-		Event.observe(this.addLink, 'click', this.showAddTypeForm.bindAsEventListener(this));
+		Event.observe(this.addLink, 'click', this.createType.bindAsEventListener(this));
 	},
 
 	initializeEditor: function()
@@ -45,14 +53,21 @@ Backend.ProductVariation.Editor.prototype =
 		this.mainForm.appendChild(table);
 
 		var rowTemplate = table.down('tbody').down('tr');
+		this.rowTemplate = rowTemplate;
+		this.variationCellTemplate = this.rowTemplate.down('td.variation');
 		rowTemplate.parentNode.removeChild(rowTemplate);
+
+		var typeHeaderCell = table.down('thead').down('th.variationType');
+		typeHeaderCell.parentNode.removeChild(typeHeaderCell);
+		this.typeHeaderCell = typeHeaderCell;
 
 		table.id = '';
 
 		if (0 == this.types.length)
 		{
-			// add default type
-			new Backend.ProductVariationType({}, this);
+			// add default type and value
+			var type = new Backend.ProductVariationType({}, this);
+			var value = new Backend.ProductVariationVar({}, type);
 		}
 		else
 		{
@@ -64,17 +79,34 @@ Backend.ProductVariation.Editor.prototype =
 
 	registerType: function(type)
 	{
-		this.typeInstances[type.getIndex()] = type;
+		this.typeInstances[type.getID()] = type;
+	},
+
+	registerVariation: function(variation)
+	{
+		this.variationInstances[variation.getID()] = variation;
+	},
+
+	registerItem: function(item)
+	{
+		this.itemInstances[item.getID()] = item;
 	},
 
 	getTypeByIndex: function(index)
 	{
-		return this.typeInstances[index];
-	},
+		var foundType = null;
 
-	addVariation: function()
-	{
+		$H(this.typeInstances).each(function(value)
+		{
+			var type = value[1];
+			if (type.index == index)
+			{
+				foundType = type;
+				return;
+			}
+		});
 
+		return foundType;
 	},
 
 	deleteColumn: function(columnID)
@@ -95,20 +127,21 @@ Backend.ProductVariation.Editor.prototype =
 
 	createColumn: function()
 	{
-		var rows = this.table.getElementsByTagName('tr');
+		// header
+		var tr = this.table.down('thead').down('tr');
+		tr.insertBefore(this.typeHeaderCell.cloneNode(true), tr.down('th', this.columnCount));
+
+		// body
+		var rows = this.table.down('tbody').getElementsByTagName('tr');
 		for (var k = 0; k < rows.length; k++)
 		{
 			var clonedCell = rows[k].down('td');
-			if (!clonedCell)
-			{
-				clonedCell = rows[k].down('th');
-			}
 
 			var cell = clonedCell.cloneNode(true);
 			rows[k].insertBefore(cell, clonedCell);
 		}
 
-		return 0;
+		return this.columnCount++;
 	},
 
 	createRow: function()
@@ -122,42 +155,74 @@ Backend.ProductVariation.Editor.prototype =
 		return cloned;
 	},
 
-	showAddTypeForm: function(e)
+	createType: function(e)
 	{
 		Event.stop(e);
 
+		var type = new Backend.ProductVariationType({}, this);
 	},
 
-	hideAddTypeForm: function(e)
+	getTable: function()
 	{
-		Event.stop(e);
-
+		return this.table;
 	},
 
-	showAddVariationForm: function(e)
+	getLastRow: function()
 	{
-		Event.stop(e);
-
+		return this.table.down('tbody').getElementsByTagName('tr').pop();
 	},
 
-	hideAddVariationForm: function(e)
+	getRowTemplate: function()
 	{
-		Event.stop(e);
-
+		return this.rowTemplate;
 	},
 
+	getUniqueID: function()
+	{
+		return 'new_' + ++this.idCounter;
+	},
+
+	getTypes: function()
+	{
+		return this.types;
+	},
+
+	getLastTypeIndex: function()
+	{
+		return this.columnCount - 1;
+	},
+
+	getItemsByVariations: function(variations)
+	{
+		var items = [];
+		$H(this.itemInstances).each(function(value)
+		{
+			var item = value[1];
+			var intersect = item.getVariations().findAll( function(token){ return variations.include(token) } );
+			if (intersect.length == variations.length)
+			{
+				items.unshift(item);
+			}
+		});
+
+		return items;
+	}
 }
 
 Backend.ProductVariationType = function(data, editor)
 {
 	this.data = data;
 	this.editor = editor;
+	this.id = this.data['ID'] ? this.data['ID'] : this.getEditor().getUniqueID();
 
 	this.create();
+	this.editor.registerType(this);
 }
 
 Backend.ProductVariationType.prototype =
 {
+	variations: {},
+
 	getEditor: function()
 	{
 		return this.editor;
@@ -166,6 +231,13 @@ Backend.ProductVariationType.prototype =
 	create: function()
 	{
 		this.index = this.editor.createColumn();
+
+		Event.observe(this.getHeaderCell(), 'click', this.createNewVariation.bind(this));
+	},
+
+	getIndex: function()
+	{
+		return this.index;
 	},
 
 	getCells: function()
@@ -181,7 +253,7 @@ Backend.ProductVariationType.prototype =
 
 	getHeaderCell: function()
 	{
-
+		return this.editor.getTable().down('thead').down('th', this.index);
 	},
 
 	changeRowSpan: function(delta)
@@ -202,21 +274,92 @@ Backend.ProductVariationType.prototype =
 
 	},
 
-	addVariation: function(data)
+	createNewVariation: function(e)
 	{
+		Event.stop(e);
 
+		new Backend.ProductVariationVar({}, this);
 	},
 
-	deleteVariation: function()
+	registerVariation: function(variation)
 	{
+		this.variations[variation.getID()] = variation;
+		this.editor.registerVariation(variation);
+	},
 
+	createItems: function(variations)
+	{
+		var subTypes = this.getSubTypes();
+
+		if (this.index < this.getEditor.getLastTypeIndex())
+		{
+			$H(this.variations).each(function(value)
+			{
+				var variation = value[1];
+				var itemVariations = variations;
+
+				itemVariations.unshift(variation);
+
+				for (var sub = 0; sub < subTypes.length; sub++)
+				{
+					subTypes[sub].createItems(itemVariations);
+				}
+			}.bind(this));
+		}
+		else
+		{
+			var parentTypeVariations = [];
+			for (var k = 0; k < variations.length; k++)
+			{
+				if (variations[k].getType() != this)
+				{
+					parentTypeVariations.push(variations[k]);
+				}
+			}
+
+			var item = this.getEditor().getItemsByVariations(parentTypeVariations).pop();
+			new Backend.ProductVariationItem({}, itemVariations, item ? item.getRow() : null);
+
+			if (item)
+			{
+				this.changeRowSpan(1);
+			}
+		}
+	},
+
+	getSubTypes: function()
+	{
+		var sub = [];
+		var index = this.getIndex();
+		$A(this.getEditor().getTypes()).each(function(type)
+		{
+			if (type.getIndex() > index)
+			{
+				sub.unshift(type);
+			}
+		});
+
+		return sub;
+	},
+
+	getID: function()
+	{
+		return this.id;
 	}
 }
 
+/**
+ * 	Product variation (for example: small, medium, large - for sizes, red, green, blue - for colors, etc.)
+ */
 Backend.ProductVariationVar = function(data, type)
 {
 	this.data = data;
 	this.type = type;
+	this.id = this.data['ID'] ? this.data['ID'] : this.type.getEditor().getUniqueID();
+
+	this.type.registerVariation(this);
+
+	this.type.getEditor().getTypeByIndex(0).createItems([this]);
 }
 
 Backend.ProductVariationVar.prototype =
@@ -224,43 +367,67 @@ Backend.ProductVariationVar.prototype =
 	getType: function()
 	{
 		return this.type;
+	},
+
+	getID: function()
+	{
+		return this.id;
+	},
+
+	getItems: function()
+	{
+
 	}
 }
 
 /**
- *	Actual child product or child product container
+ *	Actual child product
  */
-Backend.ProductVariationItem = function(data, variation)
+Backend.ProductVariationItem = function(data, variations, parentRow)
 {
 	this.data = data;
-	this.variation = variation;
+	this.variations = variations;
+	this.id = this.data['ID'] ? this.data['ID'] : this.getEditor().getUniqueID();
+
+	this.createRow(parentRow);
 }
 
 Backend.ProductVariationItem.prototype =
 {
-	subItems: {},
-
-	createRow: function()
+	createRow: function(parentRow)
 	{
-		var index = this.variation.getType().getIndex();
-		var typeCnt = this.getEditor().getTypeCount();
+		var editor = this.getEditor();
+		this.row = editor.getRowTemplate().cloneNode(true);
 
-		// the item is not created for the last column, so it needs to be done recursively
-		if (index < typeCnt - 1)
+		if (parentRow)
 		{
-			for (var k = index; k < typeCnt; k++)
-			{
-				this.subItems[k] = new Backend.ProductVariationItem
-			}
+			parentRow.parentNode.insertBefore(this.row, parentRow.nextSibling);
 		}
 		else
 		{
-
+			editor.getTable().down('tbody').appendChild(this.row);
 		}
+
+		editor.registerItem(this);
 	},
 
 	getEditor: function()
 	{
-		return this.variation.getType().getEditor();
+		return this.variations[0].getType().getEditor();
+	},
+
+	getID: function()
+	{
+		return this.id;
+	},
+
+	getVariations: function()
+	{
+		return this.variations;
+	},
+
+	getRow: function()
+	{
+		return this.row;
 	}
 }
