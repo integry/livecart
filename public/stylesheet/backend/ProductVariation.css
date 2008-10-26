@@ -25,7 +25,20 @@
 	background-color: lightgreen;
 }
 
-.productVariationTable td.variation
+.productVariationTable td
 {
 	vertical-align: top;
 }
+
+.productVariationTable td.variation span.name,
+.productVariationTable td.variation.input input
+{
+	display: inline;
+}
+
+.productVariationTable td.variation input
+{
+	display: none;
+}
+
+.testBg { 	background: red; }
