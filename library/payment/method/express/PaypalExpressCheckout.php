@@ -17,7 +17,7 @@ class PaypalExpressCheckout extends ExpressPayment
 		$sandbox = $this->getConfigValue('sandbox') ? 'sandbox.' : '';
 
 		$paypal = $this->getHandler('SetExpressCheckout');
-		$paypal->setParams($this->details->amount->get(), $returnUrl, $cancelUrl, $sale ? 'Sale' : 'Order');
+		$paypal->setParams($this->details->amount->get(), $returnUrl, $cancelUrl, $sale ? 'Sale' : 'Order', $this->details->currency->get());
 		$paypal->execute();
 
 		$this->checkErrors($paypal);
