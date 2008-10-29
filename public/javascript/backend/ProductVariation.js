@@ -240,8 +240,6 @@ Backend.ProductVariation.Editor.prototype =
 			}
 		});
 
-		console.log(combinations);
-
 		return combinations;
 	},
 
@@ -311,8 +309,6 @@ Backend.ProductVariationType = function(data, editor)
 
 Backend.ProductVariationType.prototype =
 {
-	variations: {},
-
 	getEditor: function()
 	{
 		return this.editor;
@@ -445,6 +441,7 @@ Backend.ProductVariationVar.prototype =
 
 		for (var k = 0; k < combinations.length; k++)
 		{
+//			console.log(combinations[k].length);
 			combinations[k].push(this);
 			this.type.getEditor().createItem(combinations[k]);
 		}
@@ -563,9 +560,9 @@ Backend.ProductVariationItem.prototype =
 	_arrayDiff: function(v, c, m)
 	{
 		var d = [], e = -1, h, i, j, k;
-		for(i = c.length, k = v.length; i--;)
+		for(var i = c.length, k = v.length; i--;)
 		{
-			for(j = k; j && (h = c[i] !== v[--j]););
+			for(var j = k; j && (h = c[i] !== v[--j]););
 			h && (d[++e] = m ? i : c[i]);
 		}
 		return d;
