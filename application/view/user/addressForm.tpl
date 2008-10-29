@@ -21,7 +21,7 @@
 	{/err}
 </p>
 
-<p{if $form|isRequired:"phone"} class="required"{/if}>
+<p{if 'REQUIRE_PHONE'|config} class="required"{/if}>
 	{{err for="`$prefix`phone"}}
 		{{label {t _your_phone}:}}
 		{textfield class="text"}

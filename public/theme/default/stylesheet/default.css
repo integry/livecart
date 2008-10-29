@@ -822,15 +822,17 @@ a.proceedToCheckout span span span span
 }
 
 /* completed steps */
-#checkoutProgress a.completed, .progressPayment a, #progressCart, .progressShipping #progressAddress, .shippingSelected, .addressSelected
+#checkoutProgress a.completed, .progressPayment a, #progressCart, .progressShipping #progressAddress, .progressShipping #progressShippingAddress, .shippingSelected, .addressSelected
 {
 	background-color: #F3FFF3 !important;
+	border: 0 !important;
 }
 
 /* current step */
-.progressPayment #progressPayment, .progressCart #progressCart, .progressAddress #progressAddress, .progressShipping #progressShipping
+.progressPayment #progressPayment, .progressCart #progressCart, .progressAddress #progressAddress, .progressShippingAddress #progressShippingAddress, .progressShipping #progressShipping
 {
 	background-color: #dfd !important;
+	border: 0 !important;
 	font-weight: bold;
 }
 

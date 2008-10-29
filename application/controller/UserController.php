@@ -485,11 +485,15 @@ class UserController extends FrontendController
 			return new ActionRedirectResponse('user', 'register');
 		}
 
-		$user = $this->createUser($this->request->get('password'));
+		$this->order;
 
-		if ($this->request->isValueSet('return'))
+		$user = $this->createUser($this->request->get('password'));
+		$this->user = $user;
+		$this->mergeOrder();
+
+		if ($this->request->get('return'))
 		{
-			return new RedirectResponse($this->router->createUrlFromRoute($this->request->get('return')));
+			return new RedirectResponse($this->request->get('return'));
 		}
 		else
 		{
@@ -530,14 +534,29 @@ class UserController extends FrontendController
 		// login
 		SessionUser::setUser($user);
 
+		$this->user = $user;
+		$this->mergeOrder();
+
+		if ($return = $this->request->get('return'))
+		{
+			return new RedirectResponse($return);
+		}
+		else
+		{
+			return new ActionRedirectResponse('user', 'index');
+		}
+	}
+
+	private function mergeOrder()
+	{
 		// load the last un-finalized order by this user
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $user->getID()));
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
 		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
 		$f->setOrder(new ARFieldHandle('CustomerOrder', 'dateCreated'), 'DESC');
 		$f->setLimit(1);
 		$s = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
 
-		if (!$this->order->user->get() || $this->order->user->get()->getID() == $user->getID())
+		if (!$this->order->user->get() || $this->order->user->get()->getID() == $this->user->getID())
 		{
 			if ($s->size())
 			{
@@ -556,19 +575,10 @@ class UserController extends FrontendController
 			{
 				if ($this->order->getID())
 				{
-					$this->order->user->set($user);
+					$this->order->user->set($this->user);
 					SessionOrder::save($this->order);
 				}
 			}
-		}
-
-		if ($return = $this->request->get('return'))
-		{
-			return new RedirectResponse($return);
-		}
-		else
-		{
-			return new ActionRedirectResponse('user', 'index');
 		}
 	}
 

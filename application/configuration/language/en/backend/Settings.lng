@@ -194,6 +194,7 @@ _offline_payments=Offline Payments
 OFFLINE_PAYMENT=Allow offline payments
 
 _purchase=Orders
+_purchase_settings=Purchasing Settings
 MIN_TOTAL=Minimum order total
 MAX_TOTAL=Maximum order total (0 - no limit)
 MIN_QUANT=Minimum quantity of products per order

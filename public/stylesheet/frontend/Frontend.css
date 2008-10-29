@@ -1705,6 +1705,7 @@ select.multiAddress
 .progressPayment a,
 #progressCart,
 .progressShipping #progressAddress,
+.progressShipping #progressShippingAddress,
 .shippingSelected,
 .addressSelected
 {
@@ -1716,6 +1717,7 @@ select.multiAddress
 .progressPayment #progressPayment,
 .progressCart #progressCart,
 .progressAddress #progressAddress,
+.progressShippingAddress #progressShippingAddress,
 .progressShipping #progressShipping
 {
     border: 3px solid #ADD8E6 !important;
