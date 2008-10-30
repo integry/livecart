@@ -218,15 +218,15 @@ Backend.ProductVariation.Editor.prototype =
 
 				if (combinations.length > 0)
 				{
-					for (var c = 0; c < combinations.length; c++)
+					combinations.each(function(combination)
 					{
-						for (var v = 0; v < variations.length; v++)
+						variations.each(function(variation)
 						{
-							var variation = combinations[c];
-							variation.push(variations[v]);
-							combined.push(variation);
-						}
-					}
+							var comb = combination.slice(0);
+							comb.push(variation);
+							combined.push(comb);
+						});
+					});
 				}
 				else
 				{
@@ -236,7 +236,7 @@ Backend.ProductVariation.Editor.prototype =
 					});
 				}
 
-				combinations = combined;
+				combinations = combined.slice(0);
 			}
 		});
 
@@ -248,15 +248,19 @@ Backend.ProductVariation.Editor.prototype =
 		var parentTypeVariations = [];
 		for (var k = 0; k < variations.length; k++)
 		{
-			if (variations[k].getType().getIndex() < this.columnCount - 1)
-			{
-				parentTypeVariations.push(variations[k]);
-			}
+			parentTypeVariations[variations[k].getType().getIndex()] = variations[k];
 		}
 
-		if (parentTypeVariations.length)
+		/* find the parent row = most similar */
+		var item = null;
+		while (parentTypeVariations.length > 1)
 		{
+			parentTypeVariations.pop();
 			var item = this.getItemsByVariations(parentTypeVariations).pop();
+			if (item)
+			{
+				break;
+			}
 		}
 
 		return new Backend.ProductVariationItem({}, variations, item);
@@ -285,14 +289,7 @@ Backend.ProductVariation.Editor.prototype =
 
 	syncRowspans: function()
 	{
-		$H(this.getTypes()).each(function(value)
-		{
-			var cells = value[1].getCells();
-			for (var k = 1; k < cells.length; k++)
-			{
-				cells[k].setAttribute('rowspan', cells[0].getAttribute('rowspan'));
-			}
-		});
+		this.getTypeByIndex(this.getTypeCount() - 1).updateRowSpan();
 	}
 }
 
@@ -328,14 +325,14 @@ Backend.ProductVariationType.prototype =
 
 	getCells: function()
 	{
-		var typeCount = this.getEditor().getTypeCount();
 		var cells = [];
-		$A(this.editor.getTable().down('tbody').getElementsByTagName('tr')).each(function(row)
+		$H(this.editor.getItemInstances()).each(function(value)
 		{
-			var tds = row.getElementsBySelector('td.variation');
-			if (tds.length == typeCount)
+			var item = value[1];
+			var cell = item.getCellByType(this);
+			if (cell)
 			{
-				cells.push(tds[this.index]);
+				cells.push(cell);
 			}
 		}.bind(this));
 
@@ -347,16 +344,26 @@ Backend.ProductVariationType.prototype =
 		return this.editor.getTable().down('thead').down('th', this.index);
 	},
 
-	changeRowSpan: function(delta)
+	updateRowSpan: function()
 	{
+		var rowspan = 1;
+
+		var child = this.editor.getTypeByIndex(this.index + 1);
+		if (child)
+		{
+			var childVar = child.getVariations();
+			rowspan = childVar.length * parseInt(childVar[0].getMainCell().getAttribute('rowspan'));
+		}
+
 		this.getCells().each(function(cell)
 		{
-			cell.rowSpan += delta;
+			cell.rowSpan = rowspan;
 		});
 
 		if (this.index > 0)
 		{
-			this.editor.getTypeByIndex(this.index - 1).changeRowSpan(delta);
+			var parentType = this.editor.getTypeByIndex(this.index - 1);
+			parentType.updateRowSpan();
 		}
 	},
 
@@ -441,14 +448,13 @@ Backend.ProductVariationVar.prototype =
 
 		for (var k = 0; k < combinations.length; k++)
 		{
-//			console.log(combinations[k].length);
 			combinations[k].push(this);
-			this.type.getEditor().createItem(combinations[k]);
+			var item = this.type.getEditor().createItem(combinations[k]);
 		}
 
 		if (this.type.getIndex() > 0)
 		{
-			this.type.getEditor().getTypeByIndex(this.type.getIndex() - 1).changeRowSpan(1);
+			this.type.getEditor().getTypeByIndex(this.type.getIndex() - 1).updateRowSpan();
 		}
 	},
 
@@ -477,24 +483,40 @@ Backend.ProductVariationVar.prototype =
 		{
 			cell.addClassName('input');
 			this.mainCell = cell;
-			Event.observe(this.mainCell.down('input'), 'change', this.changeName.bindAsEventListener(this));
-			Event.observe(this.mainCell.down('input'), 'keyup', this.changeName.bindAsEventListener(this));
+			Event.observe(this.mainCell.down('input'), 'change', this.changeName.bind(this));
+			Event.observe(this.mainCell.down('input'), 'keyup', this.changeName.bind(this));
 		}
 		else
 		{
 			cell.removeClassName('input');
 			this.cells.push(cell);
+			this.changeName(null, cell);
 		}
 	},
 
-	changeName: function(e)
+	changeName: function(e, cell)
 	{
-		var name = $F(Event.element(e));
-
-		this.cells.each(function(cell)
+		if (!this.mainCell.nameInput)
 		{
-			cell.down('span.name').update(name);
+			this.mainCell.nameInput = this.mainCell.down('input');
+		}
+
+		var name = $F(this.mainCell.nameInput);
+
+		(cell ? [cell] : this.cells).each(function(cell)
+		{
+			if (!cell.nameElement)
+			{
+				cell.nameElement = cell.down('span.name');
+			}
+
+			cell.nameElement.update(name);
 		});
+	},
+
+	getMainCell: function()
+	{
+		return this.mainCell;
 	},
 
 	getItems: function()
@@ -508,9 +530,18 @@ Backend.ProductVariationVar.prototype =
  */
 Backend.ProductVariationItem = function(data, variations, parent)
 {
+	var orderedVariations = [];
+	variations.each(function(variation)
+	{
+		orderedVariations[variation.getType().getIndex()] = variation;
+	});
+
+	orderedVariations.reverse();
+
 	this.data = data;
-	this.variations = variations;
+	this.variations = orderedVariations;
 	this.id = this.data['ID'] ? this.data['ID'] : this.getEditor().getUniqueID();
+	this.cells = {};
 
 	this.createRow(parent);
 }
@@ -528,6 +559,7 @@ Backend.ProductVariationItem.prototype =
 
 		this.parent = parent;
 		this.row = editor.getRowTemplate().cloneNode(true);
+		this.row.id = this.getID();
 
 		if (parentRow)
 		{
@@ -540,7 +572,17 @@ Backend.ProductVariationItem.prototype =
 
 		if (this.parent)
 		{
-			var variationCells = this._arrayDiff(this.parent.getVariations(), this.variations);
+			this.variations = this.getSortedVariations();
+			var parentVariations = this.parent.getSortedVariations();
+
+			for (var k = 0; k < this.variations.length; k++)
+			{
+				if (this.variations[k] != parentVariations[k])
+				{
+					var variationCells = this.variations.slice(k);
+					break;
+				}
+			}
 		}
 		else
 		{
@@ -557,26 +599,27 @@ Backend.ProductVariationItem.prototype =
 		editor.syncRowspans();
 	},
 
-	_arrayDiff: function(v, c, m)
-	{
-		var d = [], e = -1, h, i, j, k;
-		for(var i = c.length, k = v.length; i--;)
-		{
-			for(var j = k; j && (h = c[i] !== v[--j]););
-			h && (d[++e] = m ? i : c[i]);
-		}
-		return d;
-	},
-
 	addVariationCell: function(variation)
 	{
+		if (!this.variations.include(variation))
+		{
+			this.variations.push(variation);
+		}
+
 		var cell = this.getEditor().getVariationCellTemplate().cloneNode(true);
 		var lastVariation = this.row.getElementsBySelector('td.variation').pop();
 		this.row.insertBefore(cell, lastVariation ? lastVariation.nextSibling : this.row.firstChild);
 
+		this.cells[variation.getType().getID()] = cell;
+
 		variation.initCell(cell);
 
 		return cell;
+	},
+
+	getCellByType: function(type)
+	{
+		return this.cells[type.getID()];
 	},
 
 	getEditor: function()
@@ -597,6 +640,17 @@ Backend.ProductVariationItem.prototype =
 	getVariations: function()
 	{
 		return this.variations;
+	},
+
+	getSortedVariations: function()
+	{
+		var variations = [];
+		this.variations.each(function(variation)
+		{
+			variations[variation.getType().getIndex()] = variation;
+		});
+
+		return variations;
 	},
 
 	getRow: function()

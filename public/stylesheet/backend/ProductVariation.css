@@ -22,12 +22,28 @@
 
 .productVariationTable thead
 {
-	background-color: lightgreen;
+	background-color: #eef;
+}
+
+.productVariationTable th
+{
+	padding: 5px;
 }
 
 .productVariationTable td
 {
 	vertical-align: top;
+}
+
+.productVariationTable td.image,
+.productVariationTable th.image
+{
+	width: 230px;
+}
+
+.productVariationTable td.variation
+{
+	width: 130px;
 }
 
 .productVariationTable td.variation span.name,
@@ -39,6 +55,12 @@
 .productVariationTable td.variation input
 {
 	display: none;
+	width: 120px;
 }
 
-.testBg { 	background: red; }
+.productVariationTable .addVariation
+{
+	font-weight: normal;
+	font-size: 12px;
+	display: block;
+}

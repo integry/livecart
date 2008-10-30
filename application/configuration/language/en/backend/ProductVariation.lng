@@ -5,6 +5,7 @@ _sku=SKU
 _price=Price
 _weight=Weight
 _inventory=Inventory
+_image=Image
 
 _add=Add
 _substract=Substract

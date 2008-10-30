@@ -2,6 +2,7 @@
 	<thead>
 		<tr>
 			<th class="variationType">
+				<input class="text" />
 				<span class="typeName"></span>
 				<a href="#addVariation" class="addVariation">{t _add_variation}</a>
 			</th>
