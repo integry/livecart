@@ -202,6 +202,7 @@ div.confirmationMsg div
 #content.right
 {
 	margin-right: 0;
+	padding-right: 0;
 }
 
 /*****************************
@@ -1487,7 +1488,7 @@ div.checkout a
 
 #cart, #wishList
 {
-	width: 80%;
+	width: 700px;
 	margin-left:auto;
 	margin-right:auto;
 }
@@ -1644,6 +1645,7 @@ select.multiAddress
 {
 	background-color: #e8ffff;
 	padding-bottom: 0;
+	text-align: center;
 }
 
 .text.coupon

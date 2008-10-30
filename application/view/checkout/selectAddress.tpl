@@ -45,7 +45,7 @@
 							{radio class="radio" name="billingAddress" id="billing_new" value=""}
 						</td>
 						<td class="address addAddress">
-							<label for="billing_new" class="radio">{t _add_billing_address}</label>
+							<label for="billing_new" class="radio">{t _new_billing_address}</label>
 							<div class="address">
 								<div class="addressBlock">
 									{include file="user/addressForm.tpl" prefix="billing_" states=$billing_states}
@@ -98,7 +98,7 @@
 							{radio class="radio" name="shippingAddress" id="shipping_new" value=""}
 						</td>
 						<td class="address addAddress">
-							<label for="shipping_new" class="radio">{t _add_shipping_address}</label>
+							<label for="shipping_new" class="radio">{t _new_shipping_address}</label>
 							<div class="address">
 								<div class="addressBlock">
 									{include file="user/addressForm.tpl" prefix="shipping_" states=$shipping_states}

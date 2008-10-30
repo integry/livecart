@@ -57,6 +57,8 @@ _cart=Cart
 _address=Address
 _shipping=Shipping
 _payment=Payment
+_billing_address=Billing Address
+_shipping_address=Shipping Address
 
 # Users
 _your_account=Your Account

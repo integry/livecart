@@ -240,6 +240,8 @@ Order.AddressSelector = function(form)
 			}
 		};
 
+		radioButton.form.onclick = radioButton.form.onchange;
+
 		radioButton.form.onchange();
 	}
 
