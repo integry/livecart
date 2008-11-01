@@ -55,12 +55,37 @@
 .productVariationTable td.variation input
 {
 	display: none;
-	width: 120px;
+	width: 100px;
+}
+
+.productVariationTable .addVariationContainer
+{
+	text-align: center;
 }
 
 .productVariationTable .addVariation
 {
 	font-weight: normal;
 	font-size: 12px;
+	background: url(../../image/silk/bullet_add.png) no-repeat center left;
+	padding-left: 16px;
+}
+
+.productVariationTable .deleteVariation,
+.productVariationTable .deleteVariationType
+{
 	display: block;
+	float: left;
+	width: 16px;
+	height: 16px;
+	margin-top: 8px;
+	margin-right: 4px;
+	opacity: 0.6;
+	background-image: url(../../image/silk/cancel.png);
+}
+
+.productVariationTable .deleteVariation:hover,
+.productVariationTable .deleteVariationType:hover
+{
+	opacity: 1;
 }

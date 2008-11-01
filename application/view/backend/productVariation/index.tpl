@@ -2,9 +2,11 @@
 	<thead>
 		<tr>
 			<th class="variationType">
+				<a class="deleteVariationType" href="#deleteVariationType"></a>
 				<input class="text" />
-				<span class="typeName"></span>
-				<a href="#addVariation" class="addVariation">{t _add_variation}</a>
+				<div class="addVariationContainer">
+					<a href="#addVariation" class="addVariation">{t _add_variation}</a>
+				</div>
 			</th>
 			<th class="sku">{t _sku}</th>
 			<th class="price">{t _price}</th>
@@ -16,7 +18,10 @@
 	<tbody>
 		<tr>
 			<td class="variation" rowspan="1">
-				<input type="text" class="text" name="name" />
+				<div class="variationInput">
+					<a class="deleteVariation" href="#deleteVariation"></a>
+					<input type="text" class="text" name="name" />
+				</div>
 				<span class="name"></span>
 			</td>
 			<td class="sku"><input type="text" class="text" name="sku" /></td>
