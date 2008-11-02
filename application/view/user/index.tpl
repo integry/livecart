@@ -23,7 +23,7 @@
 		{/if}
 
 		{if $notes}
-			<h2>{t _unread_msg}</h2>
+			<h2 id="unreadMessages">{t _unread_msg}</h2>
 			<ul class="notes">
 				{foreach from=$notes item=note}
 				   <a href="{link controller=user action=viewOrder id=`$note.orderID`}#msg">{t _order} #{$note.orderID}</a>
@@ -33,7 +33,7 @@
 		{/if}
 
 		{if $files}
-			<h2>{t _download_recent}</h2>
+			<h2 id="recentDownloads">{t _download_recent}</h2>
 
 			{foreach from=$files item="item"}
 				<h3>
@@ -45,7 +45,7 @@
 		{/if}
 
 		{if $orders}
-			<h2>{t _recent_orders}</h2>
+			<h2 id="recentOrders">{t _recent_orders}</h2>
 			{foreach from=$orders item="order"}
 				{include file="user/orderEntry.tpl" order=$order}
 			{/foreach}

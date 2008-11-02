@@ -1,7 +1,7 @@
 <h2>{t _inquire}</h2>
 
 <div>
-{form action="controller=product action=sendContactForm" method="POST" handle=$contactForm id="productContactForm" style="float: left;" onsubmit="new Product.ContactForm(this); return false;"}
+{form action="controller=product action=sendContactForm" method="POST" handle=$contactForm id="productContactForm" onsubmit="new Product.ContactForm(this); return false;"}
 	<p>
 		{err for="name"}
 			{{label {t _inquiry_name}:}}

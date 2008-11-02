@@ -2,12 +2,11 @@
 
 	<fieldset class="container" style="position: relative;">
 
-		<div style="float: left;">
+		<div id="logoContainer">
 			<a href="{link}">{img src='LOGO'|config alt="LiveCart Logo"}</a>
 		</div>
 
-		<div style="float: right; text-align: center;">
-
+		<div id="topMenuContainer">
 			{block CART}
 		</div>
 

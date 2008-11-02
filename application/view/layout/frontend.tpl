@@ -39,7 +39,7 @@
 	{compiledJs glue=true nameMethod=hash}
 </head>
 
-<body class="{$request.controller}Con {$request.controller}-{$request.action}">
+<body class="{$request.controller}Con {$request.controller}-{$request.action}{if ($request.requestLanguage == 'he') || ($request.requestLanguage == 'ar')} rtl{/if}">
 	<div id="container" class="lang_{localeCode}">
 		{$ACTION_VIEW}
 	</div>

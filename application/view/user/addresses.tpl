@@ -12,7 +12,7 @@
 
 	<fieldset class="container">
 
-	<h2>{t _billing_addresses}</h2>
+	<h2 id="billingAddresses">{t _billing_addresses}</h2>
 
 	<a href="{link controller=user action=addBillingAddress returnPath=true}" class="menu">
 		{t _add_billing_address}
@@ -31,7 +31,7 @@
 
 	<div style="clear: both;"></div>
 
-	<h2>{t _shipping_addresses}</h2>
+	<h2 id="shippingAddresses">{t _shipping_addresses}</h2>
 
 	<a href="{link controller=user action=addShippingAddress returnPath=true}" class="menu">
 		{t _add_shipping_address}

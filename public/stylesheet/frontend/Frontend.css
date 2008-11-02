@@ -228,6 +228,17 @@ div.confirmationMsg div
     top: -10px;
 }
 
+#logoContainer
+{
+	float: left;
+}
+
+#topMenuContainer
+{
+	float: right;
+	text-align: center
+}
+
 /*****************************
 	Boxes
 *****************************/
@@ -1310,12 +1321,6 @@ ul.attributeList.singleValue li
     padding: 0;
 }
 
-.cartLinks .submit
-{
-    top: 5px;
-    position: relative;
-}
-
 td.addToWishList
 {
     text-align: right;
@@ -1371,7 +1376,7 @@ td.addToWishList
 
 .reviewForm label
 {
-	float: none;
+	float: none !important;
 }
 
 .reviewTitle
@@ -3019,4 +3024,539 @@ img.calendar_button_hover
 
 .dynamicMenu li:hover ul, .dynamicMenu li li:hover ul, .dynamicMenu li li li:hover ul, .dynamicMenu li.sfhover ul, .dynamicMenu li li.sfhover ul, .dynamicMenu li li li.sfhover ul { /* lists nested under hovered list items */
 	left: auto;
+}
+
+/****************************
+	Right-to-left (Hebrew, Arabic, etc.)
+*****************************/
+.rtl
+{
+	direction: rtl;
+}
+
+.rtl #leftSide,
+.rtl .quickSearch,
+.rtl #logoContainer,
+.rtl #breadCrumb,
+.rtl #breadCrumbCaption,
+.rtl #breadCrumb ul,
+.rtl #breadCrumb li
+{
+	float: right;
+}
+
+.rtl #content
+{
+	margin-left: 0;
+	margin-right: 190px;
+}
+
+.rtl #content.left
+{
+	margin-right: 0;
+}
+
+.rtl #content.right
+{
+	margin-left: 0;
+}
+
+.rtl #topMenuContainer
+{
+	float: left;
+	margin-left: 25px;
+}
+
+.rtl #currency,
+.rtl #language,
+.rtl ul.productList a.addToCart,
+.rtl ul.productList .pricingInfo,
+.rtl ul.productList .orderingControls,
+.rtl .productGrid a.addToCart
+{
+	float: left;
+}
+
+.rtl #currency
+{
+	margin-left: 12px;
+}
+
+.rtl #smallCart a.checkout
+{
+	background-position: right center;
+	padding-left: 0;
+	padding-right: 20px;
+}
+
+.rtl h1
+{
+	padding-right: 10px;
+}
+
+.rtl ul
+{
+	padding-right: 12px;
+}
+
+.rtl .quickSearch
+{
+	padding-right: 30px;
+}
+
+.rtl .currentName
+{
+	padding-left: 0;
+	margin-left: 0;
+	padding-right: 20px;
+	margin-right: -20px;
+}
+
+.rtl .categories .content
+{
+	padding-left: 12px !important;
+	padding-right: 20px !important;
+}
+
+.rtl .categories ul
+{
+	padding-right: 0;
+}
+
+.rtl .categories ul ul
+{
+	padding-left: 0;
+	padding-right: 12px;
+}
+
+.rtl .current ul li,
+.rtl .subSubCats li
+{
+	background-position: right 2px;
+	padding-right: 20px;
+}
+
+.rtl .subCategories td.details
+{
+	border-left: 1px solid #EEEEEE;
+}
+
+.rtl .subCategories td.details.verticalSep
+{
+	border: 0;
+}
+
+.rtl .filterGroup ul
+{
+	padding-left: 0;
+	padding-right: 20px;
+}
+
+.rtl .filterGroup .showAll
+{
+	background-position: center right;
+	padding-left: 0;
+	margin-left: 0;
+	padding-right: 20px;
+	margin-right: -20px;
+}
+
+.rtl .notFound
+{
+    background-position: right center;
+    padding-right: 28px;
+}
+
+.rtl .allFilters legend
+{
+    background-position: right center;
+    padding-right: 28px;
+}
+
+.rtl .allFilters .filterGroup
+{
+    float: right;
+}
+
+.rtl .foundCategories
+{
+	margin-left: 0;
+	margin-right: 1em;
+}
+
+.rtl .resultPages .previous
+{
+    background-position: center right;
+    padding-left: 0;
+    padding-right: 22px;
+}
+
+.rtl .resultStats .pagingInfo,
+.rtl .categoryLayoutSwitch,
+.rtl #productSummaryContainer,
+.rtl #ratingSummary,
+.rtl .ratingBreakdown,
+.rtl #imageContainer,
+.rtl #bundle .pricingInfo,
+.rtl .bundleList,
+.rtl .bundleInfo,
+.rtl .reviewIndex #ratingSummary,
+.rtl .checkoutHeader h1,
+.rtl #ccForm,
+.rtl #cvvHelp,
+.rtl #cvvExample,
+.rtl #userMenuContainer,
+.rtl div.addressBlock,
+.rtl .orderDetails,
+.rtl .orderDetails .orderMenu,
+.rtl .responseUser,
+.rtl .manufacturerColumn,
+.rtl .manufacturerAttributes,
+.rtl label,
+.rtl .compactProductList .image,
+.rtl .compactProductList .productInfo,
+.rtl .compactProductList .pricingInfo .price,
+.rtl .continueShopping
+{
+	float: right;
+}
+
+.rtl .noteDate,
+.rtl .manufacturerImage,
+.rtl input.radio,
+.rtl input.checkbox,
+.rtl .specSummary,
+.rtl div.review .ratingBreakdown,
+.rtl .checkoutButtons,
+.rtl #rightSide,
+.rtl .proceedToCheckout,
+.rtl .resultStats .sortOptions,
+.rtl .noteDate
+{
+    float: left;
+}
+
+.rtl label
+{
+	padding-right: 0;
+	padding-left: 6px;
+}
+
+.rtl a.layoutSetList,
+.rtl a.layoutSetGrid
+{
+	background-position: right 0px;
+	padding: 0 20px;
+}
+
+.rtl .categoryLayoutSwitch
+{
+	margin-left: 0;
+	margin-right: 1em;
+}
+
+.rtl ul.productList .title,
+.rtl ul.productList .spec,
+.rtl .ratingBreakdown,
+.rtl .shipment .productName
+{
+	text-align: right;
+}
+
+.rtl ul.productList .descr
+{
+	margin-left: 0;
+	margin-right: 110px;
+}
+
+.rtl ul.productList .image
+{
+	float: right;
+	margin-right: 0;
+	margin-left: 8px;
+}
+
+.rtl ul.productList a.addToCart,
+.rtl .productGrid a.addToCart,
+.rtl .returnToCategory a,
+.rtl ul.attributeList li,
+.rtl .continueShopping,
+.rtl #expressComplete,
+.rtl #userMenu li,
+.rtl a.invoice,
+.rtl a.viewOrder,
+.rtl a.reorder,
+.rtl a.messages,
+.rtl .confirmationMessage,
+.rtl .errorMessage,
+.rtl .feedback,
+.rtl .feedback_textarea,
+.rtl ul.downloadFile li,
+.rtl .errorText
+{
+    padding-right: 20px;
+    padding-left: 0;
+    background-position: center right;
+}
+
+.rtl a.invoice,
+.rtl a.viewOrder,
+.rtl a.reorder,
+.rtl a.messages
+{
+	margin-left: 1em;
+	margin-right: 0;
+}
+
+.rtl .websiteUrl a,
+.rtl a.ajaxIndicator
+{
+    padding-left: 20px;
+    padding-right: 0;
+    background-position: center left;
+}
+
+.rtl .productSeparator
+{
+	margin-left: 0;
+	margin-right: 110px;
+}
+
+.rtl #rateProduct
+{
+	margin-right: 10px;
+	margin-left: 0;
+}
+
+.rtl #rateProduct .productTable .errorText
+{
+	left: 0;
+	right: -85px;
+}
+
+.rtl .bundleList,
+.rtl .bundleInfo
+{
+	padding: 0;
+	margin: 0;
+	padding-left: 0.5em;
+	margin-right: 1em;
+}
+
+.rtl .bundleList
+{
+	border: 0;
+	border-left: 1px solid #eee;
+}
+
+.rtl .cartListTitle,
+.rtl .multiAddress .shipmentAddress
+{
+	text-align: right;
+}
+
+.rtl #mainInfo td.param,
+.rtl .reviewIndex .pagingInfo,
+.rtl .multiAddressCheckout,
+.rtl #expressCheckoutMethods,
+.rtl .subTotalCaption, .shipment td.tax,
+.rtl .orderOverviewControls,
+.rtl div.addressControl,
+.rtl #invoicePaymentInfo td.amount,
+.rtl td.addToWishList
+{
+	text-align: left !important;
+}
+
+.rtl .cartControl
+{
+	padding-right: 1em  !important;
+	padding-left: 0 !important;
+}
+
+.rtl .addressSelector a
+{
+    margin-left: 0;
+    margin-right: 5px;
+}
+
+.rtl #billingAddressColumn
+{
+	clear: right;
+	margin-right: 0;
+	margin-left: 1%;
+}
+
+.rtl .shippingMethods
+{
+    padding-left: 0;
+    padding-right: 30px;
+}
+
+.rtl #cvvHelp
+{
+	margin: 0;
+	margin-right: 20px;
+}
+
+.rtl #userContent
+{
+	margin-left: 0;
+	margin-right: 210px;
+}
+
+.rtl .orderMenu
+{
+	padding-left: 0;
+	padding-right: 10px;
+}
+
+.rtl .orderDetails .orderContent
+{
+	margin-left: 0;
+	margin-right: 220px;
+}
+
+.rtl #content .orderMenu ul,
+.rtl .orderMenu li
+{
+    margin-right: 0;
+    padding-right: 0;
+}
+
+.rtl ul.downloadFile li.fileGroup,
+.rtl ul.downloadFile ul.notes
+{
+	padding-right: 0;
+}
+
+.rtl p.radio,
+.rtl p.checkbox
+{
+   padding-right: 11em;
+   padding-left: 0;
+}
+
+.rtl optgroup option
+{
+	padding: 0;
+	padding-right: 1em;
+}
+
+.rtl input.radio,
+.rtl input.checkbox
+{
+    margin-right: 0;
+    margin-left: 0.5em;
+    float: right;
+}
+
+.rtl img.calendar_button
+{
+    margin-right: 0.5em;
+    margin-left: 0;
+}
+
+.rtl .eavAttributes .attrValue
+{
+	margin-left: 0;
+	margin-right: 1em;
+}
+
+.rtl .rootCategories li ul,
+.rtl .dynamicMenu ul ul
+{
+	padding-right: 0;
+}
+
+.rtl .dynamicMenu li ul
+{
+	margin-left : 0;
+	margin-right: 142px;
+}
+
+.rtl .resultPages .next
+{
+	background-position: center left;
+    background-image: url(../../image/silk/gif/resultset_previous.gif);
+    padding-left: 20px;
+    padding-right: 0;
+}
+
+.rtl .resultPages .previous
+{
+    background-image: url(../../image/silk/gif/resultset_next.gif);
+	background-position: center right;
+    padding-left: 0;
+    padding-right: 20px;
+}
+
+.rtl .reviewIndex .pagingInfo
+{
+	right: auto;
+	left: 0;
+}
+
+.rtl .discount .basePrice
+{
+	margin-left: 4px;
+}
+
+.rtl #mainInfo,
+.rtl .multiAddressCheckout
+{
+	clear: left;
+}
+
+.rtl .ratingBreakdown,
+.rtl #billingAddressColumn,
+.rtl .errorText
+{
+	clear: right;
+}
+
+.rtl form fieldset
+{
+	float: right;
+}
+
+.rtl ul.productList .descr fieldset.container
+{
+	clear: left;
+}
+
+.rtl .returnToCategory a
+{
+	background-image:url(../../image/silk/gif/resultset_next.gif);
+}
+
+.rtl input.submit
+{
+	float: right;
+}
+
+.rtl .quickSearch input.submit,
+.rtl #productToCart input.submit
+{
+	float: none;
+}
+
+.rtl .checkoutPay input.submit
+{
+	clear: both;
+}
+
+.rtl .resultPages *
+{
+	float: right;
+}
+
+.rtl .resultPages span
+{
+	margin: 0 0.5em;
+}
+
+.rtl .resultPages .currentPage
+{
+	margin: 0;
 }

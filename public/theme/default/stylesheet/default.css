@@ -6,9 +6,9 @@
 
 h1, h2, h3
 {
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-weight: normal;
-	color: #143788;
+	color: #0d71be;
 }
 
 h1
@@ -16,8 +16,6 @@ h1
 	font-size: 24px;
 	padding-left: 10px;
 	margin-bottom: 10px;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	color: #0d71be;
 	padding-top: 8px;
 }
 
@@ -25,13 +23,10 @@ h2
 {
 	font-size: 24px;
 	padding-left: 20px;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	color: #0d71be;
 	background-image: url(../image/h2bg.gif);
 	background-repeat: repeat-x;
 	background-position: center bottom;
 	line-height: 25px;
-	text-align: left;
 	vertical-align: middle;
 	display: block;
 	height: 25px;
@@ -256,7 +251,6 @@ div.box .title
 	font-family: Arial, Helvetica, sans-serif;
 	color: #0a7bc4;
 	font-weight: normal;
-	text-align: left;
 	text-transform: uppercase;
 	border: 0;
 	background-repeat: repeat-x;
@@ -1141,7 +1135,6 @@ li.moreSubCats, li.moreSubCats a
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	color: #0a7bc4;
 	font-weight: normal;
-	text-align: left;
 	text-transform: uppercase;
 	border: 0;
 	background-repeat: repeat-x;
@@ -1185,7 +1178,6 @@ li.moreSubCats, li.moreSubCats a
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	color: #CC6600;
 	font-weight: normal;
-	text-align: left;
 	text-transform: uppercase;
 	border: 0;
 	background-repeat: repeat-x;
@@ -1217,9 +1209,10 @@ li.moreSubCats, li.moreSubCats a
 {
 	margin-top: 0.5em;
 	font-size: smaller;
-	text-align: left;
 }
-body {
+
+body
+{
 	background-image: url(../image/bodyBackground.png);
 	background-repeat: repeat-x;
 }
@@ -1497,7 +1490,6 @@ ul.productList .descr
 	font-weight: normal;
 	font-family: Arial, Helvetica, sans-serif;
 	color: #0b3c65;
-	text-align: left;
 	line-height: 16px;
 	text-decoration: none;
 /*	width: 225px; */
@@ -1676,4 +1668,32 @@ table.productGrid
 .proceedToCheckout, .continueShopping
 {
 	font-size: 13px;
+}
+
+/****************************
+	Right-to-left (Hebrew, Arabic, etc.)
+*****************************/
+
+.rtl .informationMenu,
+.rtl #headerSearchBar
+{
+	float: right;
+}
+
+.rtl
+{
+	float: left;
+}
+
+.rtl #content
+{
+	margin-left: 0;
+	margin-right: 210px;
+	padding-right: 0;
+	padding-left: 35px;
+}
+
+.rtl #headerContent
+{
+	padding-right: 1em;
 }

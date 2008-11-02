@@ -4,7 +4,7 @@
 
 {foreach $pages as $page}
 	{if $last < $page - 1}
-		...
+		<span>...</span>
 	{/if}
 
 	{if $page == $current}
