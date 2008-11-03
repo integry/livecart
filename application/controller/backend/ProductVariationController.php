@@ -101,20 +101,63 @@ class ProductVariationController extends StoreManagementController
 			$array = $$var;
 			if ($array)
 			{
-				ActiveRecordModel::getRecordSet($class, new ARSelectFilter(new INCond($class, 'ID'),
+				ActiveRecordModel::getRecordSet($class, new ARSelectFilter(new INCond($class, 'ID'), $array));
 			}
 		}
 
-		// create new types
-		foreach ($types as $id)
+		$idMap = array();
+
+		// save types
+		foreach ($types as $index => $id)
 		{
 			if (!is_numeric($id))
 			{
-				$existingTypes[] = $id;
+				$type = ProductVariationType::getNewInstance($parent);
+				$idMap[$id] = $type;
+			}
+			else
+			{
+				$type = ActiveRecordModel::getInstanceByID('ProductVariationType', $id);
+			}
+
+			$type->position->set($index);
+
+			$type->save();
+		}
+
+		// save variations
+		$tree = array();
+		foreach ($variations as $typeID => $typeVars)
+		{
+			$type = is_numeric($typeID) ? ActiveRecordModel::getInstanceByID('ProductVariationType', $typeID) : $idMap[$typeID];
+			foreach ($typeVars as $index => $id)
+			{
+				if (!is_numeric($id))
+				{
+					$variation = ProductVariation::getNewInstance($type);
+					$idMap[$id] = $variation;
+				}
+				else
+				{
+					$variation = ActiveRecordModel::getInstanceByID('ProductVariation', $id);
+				}
+
+				$variation->position->set($index);
+				$variation->save();
 			}
 		}
-		var_dump($this->request->toArray());
 
+		// save items
+		foreach (
+
+	}
+
+	private function saveVariationCombinations($combinations, $index)
+	{
+		foreach ($combinations as $combination)
+		{
+
+		}
 	}
 }
 
