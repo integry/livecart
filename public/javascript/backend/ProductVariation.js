@@ -39,20 +39,21 @@ Backend.ProductVariation.Editor.prototype =
 		this.mainMenu = this.container.down('ul.menu');
 		this.addLink = this.mainMenu.down('.addType');
 
-		this.mainForm = this.container.down('form.variationForm');
+		this.form = this.container.down('form.variationForm');
 		this.tableTemplate = this.container.down('#productVariationTemplate');
 	},
 
 	bindEvents: function()
 	{
 		Event.observe(this.addLink, 'click', this.createType.bindAsEventListener(this));
+		Event.observe(this.form, 'submit', this.save.bindAsEventListener(this));
 	},
 
 	initializeEditor: function()
 	{
 		var table = this.tableTemplate.cloneNode(true);
 		this.table = table;
-		this.mainForm.appendChild(table);
+		this.form.down('.tableContainer').appendChild(table);
 
 		var rowTemplate = table.down('tbody').down('tr');
 		this.rowTemplate = rowTemplate;
@@ -378,6 +379,41 @@ Backend.ProductVariation.Editor.prototype =
 	syncRowspans: function()
 	{
 		this.getTypeByIndex(this.getTypeCount() - 1).updateRowSpan();
+	},
+
+	save: function(e)
+	{
+		// validate
+
+		// enumerate rows
+		var rows = [];
+		$A(this.table.down('tbody').getElementsByTagName('tr')).each(function(row)
+		{
+			rows.push(row.instance.getID());
+		});
+
+		this.form.elements.namedItem('items').value = Object.toJSON(rows);
+
+		// types and variations
+		var types = [];
+		var variations = {}
+		for (var k = 0; k < this.getTypeCount(); k++)
+		{
+			var type = this.getTypeByIndex(k);
+			types.push(type.getID());
+
+			variations[type.getID()] = [];
+			type.getVariations().each(function(variation)
+			{
+				variation.getMainCell().nameInput.name = 'variation[' + variation.getID() + ']';
+				variations[type.getID()].push(variation.getID());
+			});
+		}
+
+		this.form.elements.namedItem('types').value = Object.toJSON(types);
+		this.form.elements.namedItem('variations').value = Object.toJSON(variations);
+
+
 	}
 }
 
@@ -618,6 +654,7 @@ Backend.ProductVariationVar.prototype =
 		else
 		{
 			cell.removeClassName('input');
+			cell.down('input').name = '';
 			this.cells.push(cell);
 			this.changeName(null, cell);
 		}
@@ -697,7 +734,7 @@ Backend.ProductVariationItem.prototype =
 
 		this.parent = parent;
 		this.row = editor.getRowTemplate().cloneNode(true);
-		this.row.id = this.getID();
+		this.row.instance = this;
 
 		if (parentRow)
 		{

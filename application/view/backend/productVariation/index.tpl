@@ -3,7 +3,7 @@
 		<tr>
 			<th class="variationType">
 				<a class="deleteVariationType" href="#deleteVariationType"></a>
-				<input class="text" />
+				<input class="text" name="variationType[]" />
 				<div class="addVariationContainer">
 					<a href="#addVariation" class="addVariation">{t _add_variation}</a>
 				</div>
@@ -20,33 +20,33 @@
 			<td class="variation" rowspan="1">
 				<div class="variationInput">
 					<a class="deleteVariation" href="#deleteVariation"></a>
-					<input type="text" class="text" name="name" />
+					<input type="text" class="text" name="name[]" />
 				</div>
 				<span class="name"></span>
 			</td>
-			<td class="sku"><input type="text" class="text" name="sku" /></td>
+			<td class="sku"><input type="text" class="text" name="sku[]" /></td>
 			<td class="price">
-				<select name="priceType">
+				<select name="priceType[]">
 					<option value="">{t _no_change}</option>
 					<option value="0">{t _add}</option>
 					<option value="1">{t _substract}</option>
 					<option value="2">{t _fixed}</option>
 				</select>
 				<br />
-				<input type="text" class="text" name="price" />
+				<input type="text" class="text" name="price[]" />
 			</td>
 			<td class="weight">
-				<select name="weightType">
+				<select name="shippingWeightType[]">
 					<option value="">{t _no_change}</option>
 					<option value="0">{t _add}</option>
 					<option value="1">{t _substract}</option>
 					<option value="2">{t _fixed}</option>
 				</select>
 				<br />
-				<input type="text" class="text" name="shippingWeight" />
+				<input type="text" class="text" name="shippingWeight[]" />
 			</td>
-			<td class="inventory"><input type="text" class="text" name="inventory" /></td>
-			<td class="image"><input type="file" class="text" name="image" /></td>
+			<td class="inventory"><input type="text" class="text" name="inventory[]" /></td>
+			<td class="image"><input type="file" class="text" name="image[]" /></td>
 		</tr>
 	</tbody>
 </table>
@@ -55,19 +55,17 @@
 	<li class="addType"><a href="#addType">{t _add_variation_type}</a></li>
 </ul>
 
-<form action="{link controller=backend.productVariation action=addType id=$parent.ID}" method="POST" enctype="multipart/form-data">
-	<p>
-{*
-		{{err for="name"}}
-			{{label {t _type_name}:}}
-			{textfield class="text"}
-		{/err}
-*}
-	</p>
-</form>
-
-<form class="variationForm" action="{link controller=backend.productVariation action=save id=$parent.ID}" method="POST" enctype="multipart/form-data">
-
+<form class="variationForm" action="{link controller=backend.productVariation action=save id=$parent.ID}" method="POST" enctype="multipart/form-data" target="{uniqid}">
+	<input type="hidden" name="items" />
+	<input type="hidden" name="types" />
+	<input type="hidden" name="variations" />
+	<div class="tableContainer"></div>
+	<fieldset class="controls">
+		<input type="submit" class="submit" value="{tn _save}" >
+		{t _or}
+		<a class="cancel" href="#">{t _cancel}</a>
+	</fieldset>
+	<iframe name="{uniqid last=true}" style="width: 100%; height: 300px;"></iframe>
 </form>
 
 <script type="text/javascript">

@@ -341,6 +341,8 @@ abstract class FrontendController extends BaseController
 
 	private function getTopCategories()
 	{
+		ClassLoader::import('application.model.category.Category');
+
 		if (!isset($this->topCategories))
 		{
 			$this->topCategories = Category::getInstanceByID(1)->getSubcategoryArray();
