@@ -8,6 +8,7 @@
 					<a href="#addVariation" class="addVariation">{t _add_variation}</a>
 				</div>
 			</th>
+			<th class="isEnabled"><input type="checkbox" class="checkbox" /></th>
 			<th class="sku">{t _sku}</th>
 			<th class="price">{t _price} ({$params.currency})</th>
 			<th class="shippingWeight">{t _weight} (kg)</th>
@@ -24,6 +25,7 @@
 				</div>
 				<span class="name"></span>
 			</td>
+			<td class="isEnabled"><input type="checkbox" class="checkbox" name="isEnabled[]" /></td>
 			<td class="sku"><input type="text" class="text" name="sku[]" /></td>
 			<td class="price">
 				<select name="priceType[]">

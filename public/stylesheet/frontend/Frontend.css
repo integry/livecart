@@ -1178,6 +1178,13 @@ table.quantityPrice
 	border: 1px solid #aaa;
 }
 
+.productVariations label
+{
+	float: none;
+	display: block;
+	margin-bottom: 0;
+}
+
 #productSpecification table
 {
 	border: 1px solid #AAAAAA;

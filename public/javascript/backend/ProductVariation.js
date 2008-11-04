@@ -15,7 +15,7 @@ Backend.ProductVariation.Editor = function(parentId, params)
 
 	this.types = params.variationTypes;
 	this.variations = params.variations;
-	this.matrix = params.matrix;
+	this.matrix = params.matrix.products;
 	this.currency = params.currency;
 
 	this.typeInstances = {};

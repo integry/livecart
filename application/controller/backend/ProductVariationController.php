@@ -175,6 +175,8 @@ class ProductVariationController extends StoreManagementController
 			$item->setChildSetting('price', $request['priceType'][$index]);
 			$item->setPrice($currency, $request['price'][$index]);
 
+			$item->isEnabled->set(true);
+
 			$item->save();
 
 			// assign variations

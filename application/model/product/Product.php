@@ -1203,10 +1203,18 @@ class Product extends MultilingualObject
 		$f->setOrder(new ARFieldHandle('ProductVariation', 'position'));
 
 		$productValues = array();
-		$typeMatrix = array();
+		$variations = array();
 		$values = ActiveRecordModel::getRecordSetArray('ProductVariationValue', $f, array('ProductVariation', 'ProductVariationType'));
 		foreach ($values as &$value)
 		{
+			$type = $value['ProductVariationType'];
+			if (!isset($variations[$type['ID']]))
+			{
+				$variations[$type['ID']] = $type;
+				$variations[$type['ID']]['variations'] = array();
+			}
+			$variations[$type['ID']]['variations'][] = $value;
+
 			$productId = $value['productID'];
 			$productValues[$productId][$value['variationID']] =& $value;
 		}
@@ -1217,7 +1225,7 @@ class Product extends MultilingualObject
 			$matrix[implode('-', array_keys($values))] = $products[$product];
 		}
 
-		return $matrix;
+		return array('products' => $matrix, 'variations' => $variations);
 	}
 
 	public function serialize()

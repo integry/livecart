@@ -209,6 +209,10 @@ class ProductController extends FrontendController
 			$response->set('bundleSavingPercent', round(($saving / $total) * 100));
 		}
 
+		// variations
+		$variations = $this->getVariations($product);
+		$response->set('variations', $variations);
+
 		// contact form
 		if ($this->config->get('PRODUCT_INQUIRY_FORM'))
 		{
@@ -382,6 +386,46 @@ class ProductController extends FrontendController
 		}
 
 		return $validator;
+	}
+
+	private function getVariations(Product $product)
+	{
+		$variations = $product->getVariationMatrix();
+
+		// filter out unavailable products
+		foreach ($variations['products'] as $key => &$product)
+		{
+			if (!$product['isEnabled'])
+			{
+				unset($variations['products'][$key]);
+			}
+		}
+
+		// get used variations
+		$usedVariations = array();
+		foreach ($variations['products'] as $key => &$product)
+		{
+			$usedVariations = array_merge($usedVariations, explode('-', $key));
+		}
+
+		$usedVariations = array_flip($usedVariations);
+
+		// prepare select options
+		foreach ($variations['variations'] as &$type)
+		{
+			$type['selectOptions'] = array();
+			foreach ($type['variations'] as $variation)
+			{
+				$var = $variation['Variation'];
+
+				if (isset($usedVariations[$var['ID']]))
+				{
+					$type['selectOptions'][$var['ID']] = $var['name_lang'];
+				}
+			}
+		}
+
+		return $variations;
 	}
 
 	private function pullRatingDetailsForReviewArray(&$reviews)

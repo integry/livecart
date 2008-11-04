@@ -17,7 +17,8 @@
 	width: 60px;
 }
 
-.productVariationTable td
+.productVariationTable td,
+.productVariationTable th
 {
 	padding: 6px;
 }
@@ -30,11 +31,6 @@
 .productVariationTable thead
 {
 	background-color: #eef;
-}
-
-.productVariationTable th
-{
-	padding: 5px;
 }
 
 .productVariationTable td

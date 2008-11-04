@@ -94,9 +94,17 @@
 
 			{if $product.isAvailable && 'ENABLE_CART'|config}
 				{if $options}
-					<tr>
+					<tr id="options">
 						<td colspan="2" class="productOptions">
 							{include file="product/options.tpl"}
+						</td>
+					</tr>
+				{/if}
+
+				{if $variations.products}
+					<tr id="variations">
+						<td colspan="2" class="productVariations">
+							{include file="product/variations.tpl"}
 						</td>
 					</tr>
 				{/if}
