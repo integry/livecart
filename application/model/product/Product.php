@@ -865,6 +865,11 @@ class Product extends MultilingualObject
 			$array['isAvailable'] = false;
 		}
 
+		if ($array['childSettings'])
+		{
+			$array['childSettings'] = unserialize($array['childSettings']);
+		}
+
 		return $array;
 	}
 
@@ -1184,6 +1189,8 @@ class Product extends MultilingualObject
 			return array();
 		}
 
+		ProductPrice::loadPricesForRecordSetArray($children);
+
 		$ids = array();
 		foreach ($children as $child)
 		{
@@ -1207,16 +1214,6 @@ class Product extends MultilingualObject
 		$matrix = array();
 		foreach ($productValues as $product => &$values)
 		{
-			$current =& $matrix;
-			foreach ($values as $value)
-			{
-				//print_r($value);
-				if (!isset($current[$value['ID']]))
-				{
-//					$current[$value['ID']] = array()
-				}
-
-			}
 			$matrix[implode('-', array_keys($values))] = $products[$product];
 		}
 

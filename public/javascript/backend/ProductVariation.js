@@ -9,10 +9,18 @@ if (!Backend.ProductVariation)
 
 Backend.ProductVariation.Editor = function(parentId, params)
 {
+	this.__instances__[parentId] = this;
+
 	this.parentId = parentId;
+
 	this.types = params.variationTypes;
 	this.variations = params.variations;
 	this.matrix = params.matrix;
+	this.currency = params.currency;
+
+	this.typeInstances = {};
+	this.itemInstances = {};
+	this.variationInstances = {};
 
 	this.findUsedNodes();
 	this.bindEvents();
@@ -21,10 +29,10 @@ Backend.ProductVariation.Editor = function(parentId, params)
 
 Backend.ProductVariation.Editor.prototype =
 {
+	__instances__: {},
+
 	typeInstances: {},
-
 	itemInstances: {},
-
 	variationInstances: {},
 
 	columnCount: 0,
@@ -32,6 +40,11 @@ Backend.ProductVariation.Editor.prototype =
 	idCounter: 0,
 
 	itemIndex: 0,
+
+	getInstance: function(parentId)
+	{
+		return this.__instances__[parentId];
+	},
 
 	findUsedNodes: function()
 	{
@@ -77,9 +90,45 @@ Backend.ProductVariation.Editor.prototype =
 		else
 		{
 			// add created types
-			//this.types.each();
-		}
+			this.types.each(function(type)
+			{
+				var inst = new Backend.ProductVariationType(type, this);
 
+				this.variations.each(function(variation)
+				{
+					if (variation.Type.ID == inst.getID())
+					{
+						var value = new Backend.ProductVariationVar(variation, this.typeInstances[variation.Type.ID]);
+
+						if ((variation.Type.position > 0) && (0 == variation.position))
+						{
+							value.addToItems();
+						}
+						else
+						{
+							value.createItems();
+						}
+					}
+				}.bind(this));
+			}.bind(this));
+
+			// add item data
+			$H(this.matrix).each(function(value)
+			{
+				var ids = value[0];
+				var productData = value[1];
+
+				var variations = [];
+				ids.split(/-/).each(function(id)
+				{
+					variations.push(this.variationInstances[id]);
+				}.bind(this));
+
+				var item = this.getItemsByVariations(variations).pop();
+				item.setData(productData);
+				item.initFields();
+			}.bind(this));
+		}
 	},
 
 	registerType: function(type)
@@ -209,17 +258,6 @@ Backend.ProductVariation.Editor.prototype =
 		* */
 
 		return this.columnCount++;
-	},
-
-	createRow: function()
-	{
-		var row = $A(this.table.getElementsByTagName('tr')).pop();
-		var cloned = row.cloneNode(true);
-		this.table.down('tbody').appendChild(cloned);
-		$A(cloned.getElementsByTagName('input')).each(function(f) {f.value = '';});
-		this.initCells(cloned);
-
-		return cloned;
 	},
 
 	createType: function(e)
@@ -412,8 +450,29 @@ Backend.ProductVariation.Editor.prototype =
 
 		this.form.elements.namedItem('types').value = Object.toJSON(types);
 		this.form.elements.namedItem('variations').value = Object.toJSON(variations);
+	},
 
+	updateIDs: function(ids)
+	{
+		['variationInstances', 'typeInstances', 'itemInstances'].each(function(type)
+		{
+			$H(ids).each(function(val)
+			{
+				var id = val[0];
+				var newId = val[1];
+				if (this[type][id])
+				{
+					this[type][id].setID(newId);
+				}
+			}.bind(this));
+		}.bind(this));
+	},
 
+	changeInstanceID: function(instance, type, newId)
+	{
+		var id = instance.getID();
+		this[type][newId] = this[type][id];
+		delete this[type][id];
 	}
 }
 
@@ -435,6 +494,12 @@ Backend.ProductVariationType.prototype =
 		return this.editor;
 	},
 
+	setID: function(id)
+	{
+		this.getEditor().changeInstanceID(this, 'typeInstances', id);
+		this.id = id;
+	},
+
 	create: function()
 	{
 		this.index = this.editor.createColumn();
@@ -442,6 +507,11 @@ Backend.ProductVariationType.prototype =
 		var headerCell = this.getHeaderCell();
 		Event.observe(headerCell.down('.addVariation'), 'click', this.createNewVariation.bind(this));
 		Event.observe(headerCell.down('.deleteVariationType'), 'click', this.delete.bind(this));
+
+		if (this.data['name'])
+		{
+			headerCell.down('input').value = this.data['name'];
+		}
 	},
 
 	getIndex: function()
@@ -478,7 +548,7 @@ Backend.ProductVariationType.prototype =
 		if (child)
 		{
 			var childVar = child.getVariations();
-			rowspan = childVar.length * parseInt(childVar[0].getMainCell().getAttribute('rowspan'));
+			rowspan = childVar.length ? childVar.length * parseInt(childVar[0].getMainCell().getAttribute('rowspan')) : 1;
 		}
 
 		this.getCells().each(function(cell)
@@ -591,8 +661,6 @@ Backend.ProductVariationVar.prototype =
 {
 	mainCell: null,
 
-	name: '',
-
 	cells: [],
 
 	createItems: function()
@@ -613,6 +681,15 @@ Backend.ProductVariationVar.prototype =
 		{
 			this.type.getEditor().getTypeByIndex(this.type.getIndex() - 1).updateRowSpan();
 		}
+	},
+
+	setID: function(id)
+	{
+		this.type.getEditor().changeInstanceID(this, 'variationInstances', id);
+		delete this.type.variations[this.id];
+
+		this.id = id;
+		this.type.variations[this.id] = this;
 	},
 
 	addToItems: function()
@@ -642,9 +719,9 @@ Backend.ProductVariationVar.prototype =
 			this.mainCell = cell;
 			this.mainCell.nameInput = this.mainCell.down('input');
 
-			if (this.name)
+			if (this.data.name)
 			{
-				this.mainCell.nameInput.value = this.name;
+				this.mainCell.nameInput.value = this.data.name;
 			}
 
 			Event.observe(this.mainCell.nameInput, 'change', this.changeName.bind(this));
@@ -662,7 +739,7 @@ Backend.ProductVariationVar.prototype =
 
 	changeName: function(e, cell)
 	{
-		this.name = $F(this.mainCell.nameInput);
+		this.data.name = $F(this.mainCell.nameInput);
 
 		(cell ? [cell] : this.cells).each(function(cell)
 		{
@@ -671,7 +748,7 @@ Backend.ProductVariationVar.prototype =
 				cell.nameElement = cell.down('span.name');
 			}
 
-			cell.nameElement.update(this.name);
+			cell.nameElement.update(this.data.name);
 		}.bind(this));
 	},
 
@@ -752,6 +829,59 @@ Backend.ProductVariationItem.prototype =
 
 		editor.registerItem(this);
 		editor.syncRowspans();
+	},
+
+	setData: function(data)
+	{
+		this.data = data;
+		this.setID(this.data['ID']);
+	},
+
+	setID: function(id)
+	{
+		this.getEditor().changeInstanceID(this, 'itemInstances', id);
+		this.id = id;
+	},
+
+	initFields: function()
+	{
+		if (0 == this.data['shippingWeight'])
+		{
+			this.data['shippingWeight'] = '';
+		}
+
+		['sku', 'shippingWeight', 'stockCount'].each(function(field)
+		{
+			this.row.down('.' + field).down('input').value = this.data[field];
+		}.bind(this));
+
+		var priceField = 'price_' + this.getEditor().currency;
+		if (this.data[priceField] != 0)
+		{
+			this.row.down('.price').down('input').value = this.data[priceField];
+		}
+
+		var priceSelect = this.row.down('.price').down('select');
+		var weightSelect = this.row.down('.shippingWeight').down('select');
+
+		if (this.data.childSettings)
+		{
+			if (this.data.childSettings.price)
+			{
+				priceSelect.value = this.data.childSettings.price;
+			}
+
+			if (this.data.childSettings.weight)
+			{
+				weightSelect.value = this.data.childSettings.weight;
+			}
+		}
+
+		[priceSelect, weightSelect].each(function(el)
+		{
+			Event.observe(el, 'change', this.selectorChanged.bind(this));
+			this.selectorChanged(el);
+		}.bind(this));
 	},
 
 	addVariationCell: function(variation)
@@ -923,5 +1053,19 @@ Backend.ProductVariationItem.prototype =
 	{
 		this.getEditor().unregisterItem(this);
 		this.row.parentNode.removeChild(this.row);
+	},
+
+	selectorChanged: function(e)
+	{
+		var el = (e instanceof Event) ? Event.element(e) : e;
+		var cell = el.up('td');
+		if ($F(el))
+		{
+			cell.addClassName('input');
+		}
+		else
+		{
+			cell.removeClassName('input');
+		}
 	}
 }

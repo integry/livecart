@@ -3,16 +3,23 @@
 	display: none;
 }
 
-.productVariationTable input,
+.productVariationTable input.text,
 .productVariationTable select
 {
 	width: 90px;
 	font-size: smaller;
 }
 
+.productVariationTable .price input,
+.productVariationTable .shippingWeight input,
+.productVariationTable .stockCount input
+{
+	width: 60px;
+}
+
 .productVariationTable td
 {
-	padding: 4px;
+	padding: 6px;
 }
 
 .productVariationTable
@@ -32,7 +39,7 @@
 
 .productVariationTable td
 {
-	vertical-align: top;
+	vertical-align: middle;
 }
 
 .productVariationTable td.image,
@@ -47,12 +54,12 @@
 }
 
 .productVariationTable td.variation span.name,
-.productVariationTable td.variation.input input
+.productVariationTable td.variation.input .variationInput
 {
 	display: inline;
 }
 
-.productVariationTable td.variation input
+.productVariationTable td.variation .variationInput
 {
 	display: none;
 	width: 100px;
@@ -88,4 +95,28 @@
 .productVariationTable .deleteVariationType:hover
 {
 	opacity: 1;
+}
+
+.productVariationTable span.name
+{
+	margin-left: 20px;
+}
+
+.productVariationTable td.price,
+.productVariationTable td.shippingWeight
+{
+	text-align: center;
+}
+
+.productVariationTable td.price input,
+.productVariationTable td.shippingWeight input
+{
+	display: none;
+}
+
+.productVariationTable td.price.input input,
+.productVariationTable td.shippingWeight.input input
+{
+	display: block;
+	margin: 0 auto;
 }

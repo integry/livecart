@@ -9,9 +9,9 @@
 				</div>
 			</th>
 			<th class="sku">{t _sku}</th>
-			<th class="price">{t _price}</th>
-			<th class="weight">{t _weight}</th>
-			<th class="inventory">{t _inventory}</th>
+			<th class="price">{t _price} ({$params.currency})</th>
+			<th class="shippingWeight">{t _weight} (kg)</th>
+			<th class="stockCount">{t _inventory}</th>
 			<th class="image">{t _image}</th>
 		</tr>
 	</thead>
@@ -20,7 +20,7 @@
 			<td class="variation" rowspan="1">
 				<div class="variationInput">
 					<a class="deleteVariation" href="#deleteVariation"></a>
-					<input type="text" class="text" name="name[]" />
+					<input type="text" class="text" name="variation[]" />
 				</div>
 				<span class="name"></span>
 			</td>
@@ -32,20 +32,18 @@
 					<option value="1">{t _substract}</option>
 					<option value="2">{t _fixed}</option>
 				</select>
-				<br />
 				<input type="text" class="text" name="price[]" />
 			</td>
-			<td class="weight">
+			<td class="shippingWeight">
 				<select name="shippingWeightType[]">
 					<option value="">{t _no_change}</option>
 					<option value="0">{t _add}</option>
 					<option value="1">{t _substract}</option>
 					<option value="2">{t _fixed}</option>
 				</select>
-				<br />
 				<input type="text" class="text" name="shippingWeight[]" />
 			</td>
-			<td class="inventory"><input type="text" class="text" name="inventory[]" /></td>
+			<td class="stockCount"><input type="text" class="text" name="stockCount[]" /></td>
 			<td class="image"><input type="file" class="text" name="image[]" /></td>
 		</tr>
 	</tbody>
