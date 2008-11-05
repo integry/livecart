@@ -1099,8 +1099,11 @@ class CheckoutController extends FrontendController
 		$validator->addCheck($prefix . 'country', new ConditionalCheck($condition, new IsNotEmptyCheck($this->translate('_err_select_country'))));
 		$validator->addCheck($prefix . 'zip', new ConditionalCheck($condition, new IsNotEmptyCheck($this->translate('_err_enter_zip'))));
 
-		$stateCheck = new OrCheck(array($prefix . 'state_select', $prefix . 'state_text'), array(new IsNotEmptyCheck($this->translate('_err_select_state')), new IsNotEmptyCheck('')), $this->request);
-		$validator->addCheck($prefix . 'state_select', new ConditionalCheck($condition, $stateCheck));
+		if (!$this->config->get('DISABLE_STATE'))
+		{
+			$stateCheck = new OrCheck(array($prefix . 'state_select', $prefix . 'state_text'), array(new IsNotEmptyCheck($this->translate('_err_select_state')), new IsNotEmptyCheck('')), $this->request);
+			$validator->addCheck($prefix . 'state_select', new ConditionalCheck($condition, $stateCheck));
+		}
 
 		if ($this->config->get('REQUIRE_PHONE'))
 		{

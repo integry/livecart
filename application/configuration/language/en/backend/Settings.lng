@@ -278,6 +278,7 @@ CC_AUTHONLY=Only authorize payments without capturing them automatically
 _customers=Customers
 _registration=Registration
 REQUIRE_PHONE=Require customers to enter phone number on registration
+DISABLE_STATE=Remove state field
 
 # Countries
 _countries=Countries
