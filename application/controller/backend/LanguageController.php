@@ -176,6 +176,9 @@ class LanguageController extends StoreManagementController
 			$translated[$relPath] = array_merge($keys, $default, $transl);
 		}
 
+		$enDefs['Custom.lng'] = $enLocale->translationManager()->getCacheDefs('Custom.lng', true);
+		$translated['Custom.lng'] = $editLocale->translationManager()->getCacheDefs('Custom.lng', true);
+
 		uksort($translated, array($this, 'sortTranslations'));
 
 		if (!$this->config->get('SHOW_BACKEND_LANG_FILES'))
@@ -191,6 +194,7 @@ class LanguageController extends StoreManagementController
 
 		$response = new ActionResponse();
 		$response->set("id", $editLocaleName);
+		$response->set("addForm", $this->buildAddPhraseForm());
 		$response->set("translations", @json_encode($translated));
 		$response->set("english", @json_encode($enDefs));
 		$response->set("edit_language", $editLocale->info()->getLanguageName($editLocaleName));
@@ -247,6 +251,14 @@ class LanguageController extends StoreManagementController
 			$existing = $editLocale->translationManager()->getCacheDefs($file . '.php', true);
 		  	$data = array_merge($existing, $data);
 		  	$editLocale->translationManager()->saveCacheData($localeCode . '/' . $file, $data);
+		}
+
+		// check for custom phrases added to non-English locale
+		if (isset($submitedLang['Custom.lng']))
+		{
+			$enLocale = Locale::getInstance('en');
+			$custom = array_merge($editLocale->translationManager()->getCacheDefs('Custom.php', true), $enLocale->translationManager()->getCacheDefs('Custom.php', true));
+			$enLocale->translationManager()->saveCacheData('en/Custom.php', $custom);
 		}
 
 		return new JSONResponse(false, 'success', $this->translate('_translations_were_successfully_saved'));
@@ -487,6 +499,24 @@ class LanguageController extends StoreManagementController
 		}
 
 		return ActiveRecord::getRecordSet("Language", $filter);
+	}
+
+	private function buildAddPhraseForm()
+	{
+		ClassLoader::import("framework.request.validator.Form");
+		return new Form($this->buildAddPhraseValidator());
+	}
+
+	private function buildAddPhraseValidator()
+	{
+		ClassLoader::import("framework.request.validator.RequestValidator");
+
+		$validator = new RequestValidator("addLangPhrase", $this->request);
+		$validator->addCheck("key", new IsNotEmptyCheck($this->translate("_phrase_key_empty")));
+		$validator->addCheck("value", new IsNotEmptyCheck($this->translate("_phrase_value_empty")));
+		$validator->addFilter("key", new RegexFilter('[^_a-zA-Z0-9]'));
+
+		return $validator;
 	}
 }
 

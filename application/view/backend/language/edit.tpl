@@ -5,6 +5,10 @@
 {includeJs file="library/json.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
+{includeJs file="library/form/ActiveForm.js"}
+{includeJs file="library/form/State.js"}
+{includeJs file="library/form/Validator.js"}
+
 {includeJs file="backend/Language.js"}
 
 {includeCss file="backend/Language.css"}
@@ -57,8 +61,38 @@
 					{t _export}
 				</a>
 			</li>
+			<li class="langAddPhrase">
+				<a href="#" id="addPhrase">
+					{t _add_new}
+				</a>
+			</li>
 		</ul>
 
+		{form id="addPhraseForm" style="display: none;" handle=$addForm}
+			<fieldset>
+				<legend>{t _add_new|@ucwords}</legend>
+				<p>
+					{err for="key"}
+						{label _phrase_key}
+						{textfield class="text"}
+					{/err}
+				</p>
+
+				<p>
+					{err for="value"}
+						{label _phrase_value}
+						{textfield class="text"}
+					{/err}
+				</p>
+
+				<fieldset class="controls">
+					<input type="submit" class="submit" value="{tn _add}" />
+					{t _or}
+					<a class="cancel" href="#cancel">{t _cancel}</a>
+				</fieldset>
+
+			</fieldset>
+		{/form}
 	</div>
 
 	<div class="treeManagerContainer">
@@ -112,7 +146,6 @@
 			</fieldset>
 
 			<div id="translations"></div>
-
 
 			<form id="editLang" method="post" action="{link controller=backend.language action=save id=$id}" onSubmit="langPassDisplaySettings(this); $('saveProgress').style.display = 'inline';">
 
