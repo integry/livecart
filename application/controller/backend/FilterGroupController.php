@@ -92,7 +92,6 @@ class FilterGroupController extends StoreManagementController
 		{
 			$filters = $this->request->get('filters', false);
 
-			//$filterGroup->setLanguageField('name',  $name, $this->filtersConfig['languageCodes']);
 			$filterGroup->loadRequestData($this->request);
 			$filterGroup->specField->set(SpecField::getInstanceByID((int)$this->request->get('specFieldID')));
 			$filterGroup->save();
