@@ -10,6 +10,11 @@ _err_not_positive=The value must be positive
 
 _main=Main
 STORE_NAME=Store name
+STORE_HEADLINE=Store headline
+TITLE_SEPARATOR=Title separator character
+TITLE_FORMAT=Title format
+NAME_FIRST=Store name first
+TITLE_FIRST=Page title first
 
 _display=Display
 

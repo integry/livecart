@@ -179,6 +179,11 @@ class LanguageController extends StoreManagementController
 		$enDefs['Custom.lng'] = $enLocale->translationManager()->getCacheDefs('Custom.lng', true);
 		$translated['Custom.lng'] = $editLocale->translationManager()->getCacheDefs('Custom.lng', true);
 
+		if (!$enDefs['Custom.lng'])
+		{
+			unset($enDefs['Custom.lng']);
+		}
+
 		uksort($translated, array($this, 'sortTranslations'));
 
 		if (!$this->config->get('SHOW_BACKEND_LANG_FILES'))
