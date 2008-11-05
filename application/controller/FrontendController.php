@@ -324,7 +324,10 @@ abstract class FrontendController extends BaseController
 
 		foreach ($search as $cat)
 		{
-			$options[$cat['ID']] = $cat['name_lang'];
+			if ($cat['isEnabled'])
+			{
+				$options[$cat['ID']] = $cat['name_lang'];
+			}
 		}
 
 		ClassLoader::import("framework.request.validator.Form");
