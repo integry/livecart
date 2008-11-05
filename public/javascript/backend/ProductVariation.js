@@ -78,6 +78,8 @@ Backend.ProductVariation.Editor.prototype =
 		typeHeaderCell.parentNode.removeChild(typeHeaderCell);
 		this.typeHeaderCell = typeHeaderCell;
 
+		Event.observe(table.down('thead').down('th.isEnabled').down('input'), 'change', this.toggleAllStatus.bind(this));
+
 		table.id = '';
 
 		if (0 == this.types.length)
@@ -269,6 +271,22 @@ Backend.ProductVariation.Editor.prototype =
 		defVariation.addToItems();
 	},
 
+	toggleAllStatus: function(e)
+	{
+		var el = Event.element(e);
+		var state = el.checked;
+		$H(this.itemInstances).each(function(value)
+		{
+			var inst = value[1];
+			if (!inst.isEnabled)
+			{
+				inst.isEnabled = inst.getRow().down('.isEnabled').down('input');
+			}
+
+			inst.isEnabled.checked = state;
+		});
+	},
+
 	getTable: function()
 	{
 		return this.table;
@@ -427,6 +445,7 @@ Backend.ProductVariation.Editor.prototype =
 		var rows = [];
 		$A(this.table.down('tbody').getElementsByTagName('tr')).each(function(row)
 		{
+			row.down('.isEnabled').down('input').name = 'isEnabled[' +  row.instance.getID() +']';
 			rows.push(row.instance.getID());
 		});
 
@@ -849,6 +868,8 @@ Backend.ProductVariationItem.prototype =
 		{
 			this.data['shippingWeight'] = '';
 		}
+
+		this.row.down('.isEnabled').down('input').checked = (this.data['isEnabled'] == 1);
 
 		['sku', 'shippingWeight', 'stockCount'].each(function(field)
 		{

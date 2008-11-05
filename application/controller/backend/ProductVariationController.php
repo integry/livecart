@@ -163,6 +163,8 @@ class ProductVariationController extends StoreManagementController
 				$item = ActiveRecordModel::getInstanceByID('Product', $id);
 			}
 
+			$item->isEnabled->set(!empty($request['isEnabled'][$id]));
+
 			foreach (array('sku', 'stockCount', 'shippingWeight') as $field)
 			{
 				if ($item->$field->get() || $request[$field][$index])
@@ -174,8 +176,6 @@ class ProductVariationController extends StoreManagementController
 			$item->setChildSetting('weight', $request['shippingWeightType'][$index]);
 			$item->setChildSetting('price', $request['priceType'][$index]);
 			$item->setPrice($currency, $request['price'][$index]);
-
-			$item->isEnabled->set(true);
 
 			$item->save();
 

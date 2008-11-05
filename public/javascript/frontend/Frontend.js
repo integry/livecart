@@ -166,6 +166,91 @@ window.setTimeout(function()
 	}
 }, 2000);
 
+Product.Variations = function(container, variations)
+{
+	this.container = container;
+	this.form = container.up('form');
+	this.variations = variations;
+	this.selectFields = [];
+
+	$H(this.variations.variations).each(function(value)
+	{
+		var type = value[1];
+		var field = this.form.elements.namedItem('variation_' + type['ID']);
+		field.variationIndex = value[0];
+		this.selectFields.push(field);
+		field.disabled = true;
+
+		field.onchange = this.updateVisibleOptions.bind(this);
+	}.bind(this));
+
+	this.combinations = {};
+	$H(this.variations.products).each(function(value)
+	{
+		var root = this.combinations;
+		value[0].split(/-/).each(function(id)
+		{
+			if (!root[id])
+			{
+				root[id] = {};
+			}
+
+			root = root[id];
+		});
+	}.bind(this));
+
+	this.selectFields[0].disabled = false;
+}
+
+Product.Variations.prototype =
+{
+	bindEvents: function()
+	{
+
+	},
+
+	updateVisibleOptions: function(e)
+	{
+		var disable = false;
+		var root = this.combinations;
+		var k = -1;
+		this.selectFields.each(function(field)
+		{
+			k++;
+			if (disable)
+			{
+				field.value = '';
+				field.disabled = true;
+			}
+			else
+			{
+				field.disabled = false;
+				var nextField = this.selectFields[k + 1];
+				var value = field.value;
+
+				if (!root[value])
+				{
+					field.value = '';
+				}
+				else if (nextField)
+				{
+					$A(nextField.options).each(function(opt)
+					{
+						opt.style.display = (root[value][opt.value] || !opt.value) ? '' : 'none';
+					});
+
+					root = root[value];
+				}
+			}
+
+			if (!field.value)
+			{
+				disable = true;
+			}
+		}.bind(this));
+	}
+}
+
 /*****************************
 	Order related JS
 *****************************/
