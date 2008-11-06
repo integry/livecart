@@ -66,19 +66,20 @@ Backend.ProductVariation.Editor.prototype =
 	{
 		var table = this.tableTemplate.cloneNode(true);
 		this.table = table;
-		this.form.down('.tableContainer').appendChild(table);
 
-		var rowTemplate = table.down('tbody').down('tr');
+		this.table.tbody = table.getElementsByTagName('tbody')[0];
+		this.table.thead = table.getElementsByTagName('thead')[0]
+		this.table.thead.tr = table.thead.getElementsByTagName('tr')[0];
+
+		var rowTemplate = table.tbody.getElementsByTagName('tr')[0];
 		this.rowTemplate = rowTemplate;
-		this.variationCellTemplate = this.rowTemplate.down('td.variation');
+		this.variationCellTemplate = this.rowTemplate.getElementsByTagName('td')[0];
 		rowTemplate.parentNode.removeChild(rowTemplate);
 		rowTemplate.removeChild(this.variationCellTemplate);
 
-		var typeHeaderCell = table.down('thead').down('th.variationType');
+		var typeHeaderCell = table.thead.getElementsByTagName('th')[0];
 		typeHeaderCell.parentNode.removeChild(typeHeaderCell);
 		this.typeHeaderCell = typeHeaderCell;
-
-		Event.observe(table.down('thead').down('th.isEnabled').down('input'), 'change', this.toggleAllStatus.bind(this));
 
 		table.id = '';
 
@@ -131,6 +132,9 @@ Backend.ProductVariation.Editor.prototype =
 				item.initFields();
 			}.bind(this));
 		}
+
+		this.form.down('.tableContainer').appendChild(table);
+		Event.observe(table.thead.down('th.isEnabled').down('input'), 'change', this.toggleAllStatus.bind(this));
 	},
 
 	registerType: function(type)
@@ -185,6 +189,8 @@ Backend.ProductVariation.Editor.prototype =
 				});
 			}
 		}.bind(this));
+
+		this.syncRowspans();
 	},
 
 	registerVariation: function(variation)
@@ -235,29 +241,10 @@ Backend.ProductVariation.Editor.prototype =
 		}
 	},
 
-	deleteRow: function(field)
-	{
-		var row = field.up('tr');
-		row.parentNode.removeChild(row);
-	},
-
 	createColumn: function()
 	{
-		// header
-		var tr = this.table.down('thead').down('tr');
-		tr.insertBefore(this.typeHeaderCell.cloneNode(true), tr.down('th', this.columnCount));
-
-		// body
-		/*
-		var rows = this.table.down('tbody').getElementsByTagName('tr');
-		for (var k = 0; k < rows.length; k++)
-		{
-			var clonedCell = rows[k].down('td');
-
-			var cell = clonedCell.cloneNode(true);
-			rows[k].insertBefore(cell, clonedCell);
-		}
-		* */
+		var tr = this.table.thead.tr;
+		tr.insertBefore(this.typeHeaderCell.cloneNode(true), tr.cells[this.columnCount]);
 
 		return this.columnCount++;
 	},
@@ -294,7 +281,7 @@ Backend.ProductVariation.Editor.prototype =
 
 	getLastRow: function()
 	{
-		return this.table.down('tbody').getElementsByTagName('tr').pop();
+		return this.table.tbody.getElementsByTagName('tr').pop();
 	},
 
 	getRowTemplate: function()
@@ -443,7 +430,7 @@ Backend.ProductVariation.Editor.prototype =
 
 		// enumerate rows
 		var rows = [];
-		$A(this.table.down('tbody').getElementsByTagName('tr')).each(function(row)
+		$A(this.table.tbody.getElementsByTagName('tr')).each(function(row)
 		{
 			row.down('.isEnabled').down('input').name = 'isEnabled[' +  row.instance.getID() +']';
 			rows.push(row.instance.getID());
@@ -524,12 +511,13 @@ Backend.ProductVariationType.prototype =
 		this.index = this.editor.createColumn();
 
 		var headerCell = this.getHeaderCell();
-		Event.observe(headerCell.down('.addVariation'), 'click', this.createNewVariation.bind(this));
-		Event.observe(headerCell.down('.deleteVariationType'), 'click', this.delete.bind(this));
+
+		headerCell.getElementsBySelector('.addVariation')[0].onclick = this.createNewVariation.bind(this);
+		headerCell.getElementsBySelector('.deleteVariationType')[0].onclick = this.delete.bind(this);
 
 		if (this.data['name'])
 		{
-			headerCell.down('input').value = this.data['name'];
+			headerCell.getElementsByTagName('input')[0].value = this.data['name'];
 		}
 	},
 
@@ -556,7 +544,7 @@ Backend.ProductVariationType.prototype =
 
 	getHeaderCell: function()
 	{
-		return this.editor.getTable().down('thead').down('th', this.index);
+		return this.editor.getTable().thead.getElementsByTagName('th')[this.index];
 	},
 
 	updateRowSpan: function()
@@ -736,21 +724,21 @@ Backend.ProductVariationVar.prototype =
 		{
 			cell.addClassName('input');
 			this.mainCell = cell;
-			this.mainCell.nameInput = this.mainCell.down('input');
+			this.mainCell.nameInput = this.mainCell.getElementsByTagName('input')[0];
 
 			if (this.data.name)
 			{
 				this.mainCell.nameInput.value = this.data.name;
 			}
 
-			Event.observe(this.mainCell.nameInput, 'change', this.changeName.bind(this));
-			Event.observe(this.mainCell.nameInput, 'keyup', this.changeName.bind(this));
-			Event.observe(this.mainCell.down('.deleteVariation'), 'click', this.delete.bind(this));
+			this.mainCell.nameInput.onchange = this.changeName.bind(this);
+			this.mainCell.nameInput.onkeyup = this.changeName.bind(this);
+			this.mainCell.getElementsBySelector('.deleteVariation')[0].onclick = this.delete.bind(this);
 		}
 		else
 		{
 			cell.removeClassName('input');
-			cell.down('input').name = '';
+			cell.getElementsByTagName('input')[0].name = '';
 			this.cells.push(cell);
 			this.changeName(null, cell);
 		}
@@ -764,7 +752,7 @@ Backend.ProductVariationVar.prototype =
 		{
 			if (!cell.nameElement)
 			{
-				cell.nameElement = cell.down('span.name');
+				cell.nameElement = cell.getElementsByTagName('span')[0];
 			}
 
 			cell.nameElement.update(this.data.name);
@@ -838,7 +826,7 @@ Backend.ProductVariationItem.prototype =
 		}
 		else
 		{
-			editor.getTable().down('tbody').appendChild(this.row);
+			editor.getTable().tbody.appendChild(this.row);
 		}
 
 		this.getTypeCells().each(function(variation)
@@ -869,21 +857,27 @@ Backend.ProductVariationItem.prototype =
 			this.data['shippingWeight'] = '';
 		}
 
-		this.row.down('.isEnabled').down('input').checked = (this.data['isEnabled'] == 1);
+		this.row.fieldCells = {};
+		$A(this.row.cells).each(function(cell)
+		{
+			this.row.fieldCells[cell.className] = cell;
+		}.bind(this));
+
+		this.row.fieldCells['isEnabled'].getElementsByTagName('input')[0].checked = (this.data['isEnabled'] == 1);
 
 		['sku', 'shippingWeight', 'stockCount'].each(function(field)
 		{
-			this.row.down('.' + field).down('input').value = this.data[field];
+			this.row.fieldCells[field].getElementsByTagName('input')[0].value = this.data[field];
 		}.bind(this));
 
 		var priceField = 'price_' + this.getEditor().currency;
-		if (this.data[priceField] != 0)
+		if (this.data[priceField] && (this.data[priceField] != 0))
 		{
-			this.row.down('.price').down('input').value = this.data[priceField];
+			this.row.fieldCells['price'].getElementsByTagName('input')[0].value = this.data[priceField];
 		}
 
-		var priceSelect = this.row.down('.price').down('select');
-		var weightSelect = this.row.down('.shippingWeight').down('select');
+		var priceSelect = this.row.fieldCells['price'].getElementsByTagName('select')[0];
+		var weightSelect = this.row.fieldCells['shippingWeight'].getElementsByTagName('select')[0];
 
 		if (this.data.childSettings)
 		{
@@ -900,14 +894,19 @@ Backend.ProductVariationItem.prototype =
 
 		[priceSelect, weightSelect].each(function(el)
 		{
-			Event.observe(el, 'change', this.selectorChanged.bind(this));
+			el.onchange = this.selectorChanged.bind(this);
 			this.selectorChanged(el);
 		}.bind(this));
 	},
 
+	containsVariation: function(variation)
+	{
+		return this.variations.include(variation);
+	},
+
 	addVariationCell: function(variation)
 	{
-		if (!this.variations.include(variation))
+		if (!this.containsVariation(variation))
 		{
 			this.variations.push(variation);
 		}
@@ -1079,7 +1078,7 @@ Backend.ProductVariationItem.prototype =
 	selectorChanged: function(e)
 	{
 		var el = (e instanceof Event) ? Event.element(e) : e;
-		var cell = el.up('td');
+		var cell = el.parentNode;
 		if ($F(el))
 		{
 			cell.addClassName('input');
