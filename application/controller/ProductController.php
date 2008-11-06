@@ -21,10 +21,16 @@ class ProductController extends FrontendController
 	public function index()
 	{
 		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA, array('ProductImage', 'Manufacturer'));
+
+		if (!$product->isEnabled->get() || $product->parent->get())
+		{
+			throw new ARNotFoundException('Product', $product->getID());
+		}
+
 		$product->loadPricing();
 
-		$this->category = $product->category->get();
-		$this->categoryID = $product->category->get()->getID();
+		$this->category = $product->getCategory();
+		$this->categoryID = $product->getCategory()->getID();
 
 		// get category path for breadcrumb
 		$path = $product->category->get()->getPathNodeArray();
@@ -139,8 +145,12 @@ class ProductController extends FrontendController
 			$response->set('isPurchaseRequiredToRate', $this->isPurchaseRequiredToRate($product));
 		}
 
+		// variations
+		$variations = $product->getVariationData($this->application);
+		$response->set('variations', $variations);
+
 		// add to cart form
-		$response->set('cartForm', $this->buildAddToCartForm($options));
+		$response->set('cartForm', $this->buildAddToCartForm($options, $variations));
 
 		// related products
 		$related = $this->getRelatedProducts($product);
@@ -208,10 +218,6 @@ class ProductController extends FrontendController
 			$response->set('bundleSavingTotal', $currency->getFormattedPrice($saving));
 			$response->set('bundleSavingPercent', round(($saving / $total) * 100));
 		}
-
-		// variations
-		$variations = $this->getVariations($product);
-		$response->set('variations', $variations);
 
 		// contact form
 		if ($this->config->get('PRODUCT_INQUIRY_FORM'))
@@ -372,7 +378,7 @@ class ProductController extends FrontendController
 		}
 	}
 
-	public function buildAddToCartValidator($options)
+	public function buildAddToCartValidator($options, $variations)
 	{
 		$validator = new RequestValidator("addToCart", $this->getRequest());
 
@@ -385,47 +391,15 @@ class ProductController extends FrontendController
 			}
 		}
 
+		if (isset($variations['variations']))
+		{
+			foreach ($variations['variations'] as $variation)
+			{
+				$validator->addCheck('variation_' . $variation['ID'], new IsNotEmptyCheck($this->translate('_err_option_0')));
+			}
+		}
+
 		return $validator;
-	}
-
-	private function getVariations(Product $product)
-	{
-		$variations = $product->getVariationMatrix();
-
-		// filter out unavailable products
-		foreach ($variations['products'] as $key => &$product)
-		{
-			if (!$product['isEnabled'])
-			{
-				unset($variations['products'][$key]);
-			}
-		}
-
-		// get used variations
-		$usedVariations = array();
-		foreach ($variations['products'] as $key => &$product)
-		{
-			$usedVariations = array_merge($usedVariations, explode('-', $key));
-		}
-
-		$usedVariations = array_flip($usedVariations);
-
-		// prepare select options
-		foreach ($variations['variations'] as &$type)
-		{
-			$type['selectOptions'] = array();
-			foreach ($type['variations'] as $variation)
-			{
-				$var = $variation['Variation'];
-
-				if (isset($usedVariations[$var['ID']]))
-				{
-					$type['selectOptions'][$var['ID']] = $var['name_lang'];
-				}
-			}
-		}
-
-		return $variations;
 	}
 
 	private function pullRatingDetailsForReviewArray(&$reviews)
@@ -456,9 +430,9 @@ class ProductController extends FrontendController
 	/**
 	 * @return Form
 	 */
-	private function buildAddToCartForm($options)
+	private function buildAddToCartForm($options, $variations)
 	{
-		$form = new Form($this->buildAddToCartValidator($options));
+		$form = new Form($this->buildAddToCartValidator($options, $variations));
 		$form->enableClientSideValidation(false);
 
 		return $form;

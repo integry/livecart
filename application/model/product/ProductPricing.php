@@ -82,17 +82,6 @@ class ProductPricing
 	 */
 	public function getPrice(Currency $currency)
 	{
-		/*if ($this->product->parent->get())
-		{
-			if (!$this->isPriceSet($currency))
-			{
-				$inst = ProductPrice::getNewInstance($this->product, $currency);
-				$inst->price->set($this->product->parent->get()->getPricingHandler()->getPrice($currency)->price->get());
-				return $inst;
-			}
-		}
-		* */
-
 		if (!$this->isPriceSet($currency))
 		{
 			return ProductPrice::getNewInstance($this->product, $currency);

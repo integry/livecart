@@ -424,7 +424,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 
 						foreach ($order->getShoppingCartItems() as $item)
 						{
-							$category = $item->product->get()->category->get();
+							$category = $item->product->get()->getCategory();
 
 							if (($category->lft->get() >= $record['Category']['lft']) && ($category->rgt->get() <= $record['Category']['rgt']))
 							{
@@ -556,7 +556,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		$order->loadItemCategories();
 		foreach ($order->getOrderedItems() as $item)
 		{
-			$category = $item->product->get()->category->get();
+			$category = $item->product->get()->getCategory();
 			$category->load();
 			$conditions[$category->getID()] = $category->getPathNodeCondition();
 

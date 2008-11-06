@@ -77,6 +77,7 @@ class ProductPrice extends ActiveRecordModel
 		if ($parent = $this->product->get()->parent->get())
 		{
 			$parentPrice = $parent->getPricingHandler()->getPrice($this->currency->get())->getPrice();
+
 			if ($this->product->get()->getChildSetting('price') == Product::CHILD_ADD)
 			{
 				return $parentPrice + $price;
@@ -89,6 +90,7 @@ class ProductPrice extends ActiveRecordModel
 			{
 				return $price;
 			}
+			else
 			{
 				return $parentPrice;
 			}
@@ -352,8 +354,17 @@ class ProductPrice extends ActiveRecordModel
 	 */
 	public static function loadPricesForRecordSet(ARSet $products)
 	{
-		$ids = array();
+		$set = ARSet::buildFromArray($products->getData());
 		foreach ($products as $key => $product)
+	  	{
+			if ($product->parent->get())
+			{
+				$set->add($product->parent->get());
+			}
+		}
+
+		$ids = array();
+		foreach ($set as $key => $product)
 	  	{
 			$ids[$product->getID()] = $key;
 		}
@@ -368,7 +379,7 @@ class ProductPrice extends ActiveRecordModel
 
 		foreach ($pricing as $productID => $productPricing)
 		{
-			$product = $products->get($ids[$productID]);
+			$product = $set->get($ids[$productID]);
 			$product->loadPricing($productPricing);
 		}
 	}

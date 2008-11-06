@@ -501,6 +501,9 @@ class CheckoutController extends FrontendController
 		$this->order->loadAll();
 		$this->order->getSpecification();
 
+		// @todo: variation prices appear as 0.00 without the extra toArray() call :/
+		$this->order->toArray();
+
 		if ($redirect = $this->validateOrder($this->order, self::STEP_PAYMENT))
 		{
 			return $redirect;

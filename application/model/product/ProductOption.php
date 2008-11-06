@@ -149,7 +149,7 @@ class ProductOption extends MultilingualObject
 		$categories = $productIDs = array();
 		foreach ($products as $product)
 		{
-			$categories[$product->category->get()->getID()] = $product->category->get();
+			$categories[$product->getCategory()->getID()] = $product->getCategory();
 			$productIDs[] = $product->getID();
 		}
 

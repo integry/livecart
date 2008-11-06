@@ -30,18 +30,18 @@
 			<td class="price">
 				<select name="priceType[]">
 					<option value="">{t _no_change}</option>
-					<option value="0">{t _add}</option>
-					<option value="1">{t _substract}</option>
-					<option value="2">{t _fixed}</option>
+					<option value="1">{t _add}</option>
+					<option value="2">{t _substract}</option>
+					<option value="0">{t _fixed}</option>
 				</select>
 				<input type="text" class="text" name="price[]" />
 			</td>
 			<td class="shippingWeight">
 				<select name="shippingWeightType[]">
 					<option value="">{t _no_change}</option>
-					<option value="0">{t _add}</option>
-					<option value="1">{t _substract}</option>
-					<option value="2">{t _fixed}</option>
+					<option value="1">{t _add}</option>
+					<option value="2">{t _substract}</option>
+					<option value="0">{t _fixed}</option>
 				</select>
 				<input type="text" class="text" name="shippingWeight[]" />
 			</td>

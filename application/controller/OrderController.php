@@ -321,10 +321,29 @@ class OrderController extends FrontendController
 			return $productRedirect;
 		}
 
+		$variations = $product->getVariationData($this->application);
 		ClassLoader::import('application.controller.ProductController');
-		if (!ProductController::buildAddToCartValidator($product->getOptions(true)->toArray())->isValid())
+		if (!ProductController::buildAddToCartValidator($product->getOptions(true)->toArray(), $variations)->isValid())
 		{
 			return $productRedirect;
+		}
+
+		// check if a variation needs to be added to cart instead of a parent product
+		if ($variations)
+		{
+			$ids = array();
+			foreach ($variations['variations'] as $variation)
+			{
+				$ids[] = $this->request->get('variation_' . $variation['ID']);
+			}
+
+			$hash = implode('-', $ids);
+			if (!isset($variations['products'][$hash]))
+			{
+				return $productRedirect;
+			}
+
+			$product = Product::getInstanceByID($variations['products'][$hash]['ID'], Product::LOAD_DATA);
 		}
 
 		ActiveRecordModel::beginTransaction();

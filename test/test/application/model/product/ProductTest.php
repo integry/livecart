@@ -808,6 +808,18 @@ class ProductTest extends UnitTest
 
 	}
 
+	public function testVariationInventory()
+	{
+		$child = $this->product->createChildProduct();
+		$child->stockCount->set(10);
+		$child->save();
+		$this->assertEquals(10, $this->product->stockCount->get());
+
+		$child->stockCount->set(20);
+		$child->save();
+		$this->assertEquals(20, $this->product->stockCount->get());
+	}
+
 	function test_SuiteTearDown()
 	{
 		ActiveRecordModel::rollback();

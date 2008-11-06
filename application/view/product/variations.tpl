@@ -1,5 +1,5 @@
 {foreach $variations.variations as $variationType}
-	<p>
+	<div>
 		<label>{$variationType.name_lang}</label>
 		<select name="variation_{$variationType.ID}">
 			<option value="">{t _choose}</option>
@@ -7,7 +7,8 @@
 				<option value="{$id}">{$name}</option>
 			{/foreach}
 		</select>
-	</p>
+		{error for="variation_`$variationType.ID`"}<div class="errorText">{$msg}</div>{/error}
+	</div>
 {/foreach}
 
 <script type="text/javascript">

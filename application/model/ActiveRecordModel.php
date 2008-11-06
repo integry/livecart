@@ -160,9 +160,9 @@ abstract class ActiveRecordModel extends ActiveRecord
 		return $res;
 	}
 
-	public function save()
+	public function save($forceOperation = null)
 	{
-		$res = parent::save();
+		$res = parent::save($forceOperation);
 
 		if ($this instanceof EavAble && $this->specificationInstance)
 		{
