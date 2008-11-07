@@ -251,15 +251,12 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$fields = $category->getSpecificationFieldSet(Category::INCLUDE_PARENT);
 			foreach ($fields as $field)
 			{
-				if (!$field->isMultiValue->get())
-				{
-					$fieldArray = $field->toArray();
-					$availableColumns['specField.' . $field->getID()] = array
-						(
-							'name' => $fieldArray['name_lang'],
-							'type' => $field->isSimpleNumbers() ? 'numeric' : 'text'
-						);
-				}
+				$fieldArray = $field->toArray();
+				$availableColumns['specField.' . $field->getID()] = array
+					(
+						'name' => $fieldArray['name_lang'],
+						'type' => $field->isSimpleNumbers() ? 'numeric' : 'text'
+					);
 			}
 		}
 
@@ -269,6 +266,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 				'type' => 'text'
 			);
 
+		unset($availableColumns['Product.childSettings']);
 		unset($availableColumns['Product.ratingSum']);
 		unset($availableColumns['Product.salesRank']);
 

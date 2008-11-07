@@ -151,7 +151,7 @@ class CsvImportController extends StoreManagementController
 		$fields['Product.ID'] = $this->translate('Product.ID');
 
 		$productController = new ProductController($this->application);
-		foreach ($productController->getAvailableColumns(Category::getInstanceByID($this->request->get('category')), true) as $key => $data)
+		foreach ($productController->getAvailableColumns(Category::getInstanceByID($this->request->get('category'), true), true) as $key => $data)
 		{
 			$fields[$key] = $this->translate($data['name']);
 		}
@@ -412,34 +412,55 @@ class CsvImportController extends StoreManagementController
 						}
 						else if ($attr->isSelector())
 						{
-							$f = new ARSelectFilter(
-									new EqualsCond(
-										SpecFieldValue::getLangSearchHandle(
-											new ARFieldHandle('SpecFieldValue', 'value'),
-											$this->application->getDefaultLanguageCode()
-										),
-										$record[$csvIndex]
-									)
-								);
-							$f->setLimit(1);
-
-							if (!$value = $attr->getRelatedRecordSet('SpecFieldValue', $f)->shift())
+							if ($attr->isMultiValue->get())
 							{
-								$value = SpecFieldValue::getNewInstance($attr);
+								$values = explode(',', $record[$csvIndex]);
+							}
+							else
+							{
+								$values = array($record[$csvIndex]);
+							}
 
-								if ($attr->type->get() == SpecField::TYPE_NUMBERS_SELECTOR)
+							foreach ($values as $fieldValue)
+							{
+								$fieldValue = trim($fieldValue);
+
+								$f = new ARSelectFilter(
+										new EqualsCond(
+											SpecFieldValue::getLangSearchHandle(
+												new ARFieldHandle('SpecFieldValue', 'value'),
+												$this->application->getDefaultLanguageCode()
+											),
+											$fieldValue
+										)
+									);
+								$f->setLimit(1);
+
+								if (!$value = $attr->getRelatedRecordSet('SpecFieldValue', $f)->shift())
 								{
-									$value->value->set($record[$csvIndex]);
+									$value = SpecFieldValue::getNewInstance($attr);
+
+									if ($attr->type->get() == SpecField::TYPE_NUMBERS_SELECTOR)
+									{
+										$value->value->set($fieldValue);
+									}
+									else
+									{
+										$value->setValueByLang('value', $this->application->getDefaultLanguageCode(), $fieldValue);
+									}
+
+									$value->save();
+								}
+
+								if (!$attr->isMultiValue->get())
+								{
+									$impReq->set($attr->getFormFieldName(), $value->getID());
 								}
 								else
 								{
-									$value->setValueByLang('value', $this->application->getDefaultLanguageCode(), $record[$csvIndex]);
+									$impReq->set($value->getFormFieldName(), true);
 								}
-
-								$value->save();
 							}
-
-							$impReq->set($attr->getFormFieldName(), $value->getID());
 						}
 
 						else
