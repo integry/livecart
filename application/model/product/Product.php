@@ -907,6 +907,8 @@ class Product extends MultilingualObject
 	public function getName($languageCode)
 	{
 		$parent = $this->parent->get() ? $this->parent->get() : $this;
+		$parent->load();
+
 		foreach (array($parent, $this) as $product)
 		{
 			if ($name = $product->getValueByLang('name', $languageCode))
@@ -1278,6 +1280,12 @@ class Product extends MultilingualObject
 	public function getVariationData(LiveCart $app)
 	{
 		$variations = $this->getVariationMatrix();
+
+		if (!$variations)
+		{
+			return null;
+		}
+
 		$trackInventory = $app->getConfig()->get('INVENTORY_TRACKING') != 'DISABLE';
 
 		// filter out unavailable products
