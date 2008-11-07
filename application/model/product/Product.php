@@ -904,6 +904,18 @@ class Product extends MultilingualObject
 		return $parent->category->get();
 	}
 
+	public function getName($languageCode)
+	{
+		$parent = $this->parent->get() ? $this->parent->get() : $this;
+		foreach (array($parent, $this) as $product)
+		{
+			if ($name = $product->getValueByLang('name', $languageCode))
+			{
+				return $name;
+			}
+		}
+	}
+
 	public function loadSpecification($specificationData = null)
 	{
 	  	if ($this->specificationInstance)
@@ -1218,7 +1230,7 @@ class Product extends MultilingualObject
 
 	public function getVariationMatrix()
 	{
-		$children = $this->getRelatedRecordSetArray('Product', new ARSelectFilter());
+		$children = $this->getRelatedRecordSetArray('Product', new ARSelectFilter(), array('ProductImage'));
 		if (!$children)
 		{
 			return array();

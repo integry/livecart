@@ -299,7 +299,7 @@ class OrderController extends FrontendController
 	public function delete()
 	{
 		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id'), ActiveRecordModel::LOAD_DATA, array('Product'));
-		$this->setMessage($this->makeText('_removed_from_cart', array($item->product->get()->getValueByLang('name', $this->getRequestLanguage()))));
+		$this->setMessage($this->makeText('_removed_from_cart', array($item->product->get()->getName($this->getRequestLanguage()))));
 		$this->order->removeItem($item);
 		SessionOrder::save($this->order);
 
@@ -368,7 +368,7 @@ class OrderController extends FrontendController
 
 		ActiveRecordModel::commit();
 
-		$this->setMessage($this->makeText('_added_to_cart', array($product->getValueByLang('name', $this->getRequestLanguage()))));
+		$this->setMessage($this->makeText('_added_to_cart', array($product->getName($this->getRequestLanguage()))));
 
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
@@ -381,7 +381,7 @@ class OrderController extends FrontendController
 		$this->order->resetShipments();
 		SessionOrder::save($this->order);
 
-		$this->setMessage($this->makeText('_moved_to_cart', array($item->product->get()->getValueByLang('name', $this->getRequestLanguage()))));
+		$this->setMessage($this->makeText('_moved_to_cart', array($item->product->get()->getName('name', $this->getRequestLanguage()))));
 
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
@@ -394,7 +394,7 @@ class OrderController extends FrontendController
 		$this->order->resetShipments();
 		SessionOrder::save($this->order);
 
-		$this->setMessage($this->makeText('_moved_to_wishlist', array($item->product->get()->getValueByLang('name', $this->getRequestLanguage()))));
+		$this->setMessage($this->makeText('_moved_to_wishlist', array($item->product->get()->getName('name', $this->getRequestLanguage()))));
 
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
@@ -410,7 +410,7 @@ class OrderController extends FrontendController
 		$this->order->mergeItems();
 		SessionOrder::save($this->order);
 
-		$this->setMessage($this->makeText('_added_to_wishlist', array($product->getValueByLang('name', $this->getRequestLanguage()))));
+		$this->setMessage($this->makeText('_added_to_wishlist', array($product->getName($this->getRequestLanguage()))));
 
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}

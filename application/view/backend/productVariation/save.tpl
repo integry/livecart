@@ -1,3 +1,6 @@
 <script type="text/javascript">
-	parent.Backend.ProductVariation.Editor.prototype.getInstance({$parent}).updateIDs({json array=$ids});
+	var editor = parent.Backend.ProductVariation.Editor.prototype.getInstance({$parent});
+	editor.updateIDs({json array=$ids});
+	editor.updateImages({json array=$images});
+	parent.Backend.SaveConfirmationMessage.prototype.showMessage('{t _variations_save_conf|escape}');
 </script>

@@ -86,7 +86,7 @@ class ProductPrice extends ActiveRecordModel
 			{
 				return $parentPrice - $price;
 			}
-			else if ($price)
+			else if ((float)$price)
 			{
 				return $price;
 			}
@@ -311,6 +311,21 @@ class ProductPrice extends ActiveRecordModel
 
 		foreach ($priceArray as $product => $prices)
 		{
+			// look for a parent product
+			if (!empty($productArray[$ids[$product]]['parentID']))
+			{
+				$parent = Product::getInstanceByID($productArray[$ids[$product]]['parentID']);
+				$settings = $productArray[$ids[$product]]['childSettings'];
+				if (isset($settings['price']))
+				{
+					$priceSetting = $settings['price'];
+				}
+			}
+			else
+			{
+				$parent = null;
+			}
+
 			foreach ($currencies as $id => $currency)
 			{
 				if (!isset($prices[$id]))
@@ -324,6 +339,12 @@ class ProductPrice extends ActiveRecordModel
 				if ((0 == $price) && $listPrice)
 				{
 					continue;
+				}
+
+				if ($parent && (($priceSetting != Product::CHILD_OVERRIDE) || !$price))
+				{
+					$parentPrice = $parent->getPrice($id);
+					$price = $parentPrice + ($price * (($priceSetting == Product::CHILD_ADD) ? 1 : -1));
 				}
 
 				$productArray[$ids[$product]][$priceField . '_' . $id] = $price;

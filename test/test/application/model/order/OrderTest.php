@@ -1236,6 +1236,49 @@ class OrderTest extends OrderTestCommon
 		$this->assertEquals($this->products[1]->getID(), $item->product->get()->getID());
 	}
 
+	public function testVariationPricing()
+	{
+		$variation = $this->products[0]->createChildProduct();
+		$variation->isEnabled->set(true);
+		$variation->save();
+
+		$this->order->addProduct($variation, 1, true);
+
+		// override price
+		$variation->setPrice('USD', 1);
+		$this->assertEquals($this->order->getTotal($this->usd), 1);
+
+		// add to parent price
+		$variation->setChildSetting('price', Product::CHILD_ADD);
+		$this->assertEquals($this->order->getTotal($this->usd), 101);
+
+		// substract from parent price
+		$variation->setChildSetting('price', Product::CHILD_SUBSTRACT);
+		$this->assertEquals($this->order->getTotal($this->usd), 99);
+
+		// use parent price
+		$variation->setPrice('USD', 0);
+		$variation->setChildSetting('price', Product::CHILD_OVERRIDE);
+		$variation->save();
+		$this->assertEquals($this->order->getTotal($this->usd), 100);
+	}
+
+	public function testReloadedVariationPricing()
+	{
+		$variation = $this->products[0]->createChildProduct();
+		$variation->isEnabled->set(true);
+		$variation->setChildSetting('price', Product::CHILD_OVERRIDE);
+		$variation->setPrice('USD', 0);
+		$variation->save();
+
+		// clear pool and reload only variation instance
+		ActiveRecordModel::clearPool();
+		$reloadedVar = Product::getInstanceByID($variation->getID(), true);
+		$order = CustomerOrder::getNewInstance($this->user);
+		$order->addProduct($reloadedVar, 1, true);
+		$this->assertEquals($order->getTotal($this->usd), 100);
+	}
+
 	private function createOrderWithZone(DeliveryZone $zone = null)
 	{
 		if (is_null($zone))

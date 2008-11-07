@@ -150,6 +150,8 @@ class ProductVariationController extends StoreManagementController
 			}
 		}
 
+		$images = array();
+
 		// save items
 		foreach ($items as $index => $id)
 		{
@@ -164,6 +166,11 @@ class ProductVariationController extends StoreManagementController
 			}
 
 			$item->isEnabled->set(!empty($request['isEnabled'][$id]));
+
+			if (!$request['sku'][$index])
+			{
+				$request['sku'][$index] = $item->sku->get();
+			}
 
 			foreach (array('sku', 'stockCount', 'shippingWeight') as $field)
 			{
@@ -203,7 +210,25 @@ class ProductVariationController extends StoreManagementController
 			}
 
 			// set image
+			if ($_FILES['image']['tmp_name'][$index])
+			{
+				if ($item->defaultImage->get())
+				{
+					$item->defaultImage->get()->load();
+					$image = $item->defaultImage->get();
+				}
+				else
+				{
+					$image = ProductImage::getNewInstance($item);
+				}
 
+				$image->save();
+				$image->setFile($_FILES['image']['tmp_name'][$index]);
+				$image->save();
+
+				$images[$item->getID()] = $image->toArray();
+				unset($images[$item->getID()]['Product']);
+			}
 		}
 
 		ActiveRecordModel::commit();
@@ -217,6 +242,7 @@ class ProductVariationController extends StoreManagementController
 
 		$response = new ActionResponse('ids', $ids);
 		$response->set('parent', $parent->getID());
+		$response->set('images', $images);
 		return $response;
 	}
 

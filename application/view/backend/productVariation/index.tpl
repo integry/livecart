@@ -46,7 +46,7 @@
 				<input type="text" class="text" name="shippingWeight[]" />
 			</td>
 			<td class="stockCount"><input type="text" class="text" name="stockCount[]" /></td>
-			<td class="image"><input type="file" class="text" name="image[]" /></td>
+			<td class="image"><div class="imgContainer"><a href="#" rel="lightbox"><img style="display: none;" /></a></div><input type="file" class="text" name="image[]" /></td>
 		</tr>
 	</tbody>
 </table>
@@ -65,7 +65,7 @@
 		{t _or}
 		<a class="cancel" href="#">{t _cancel}</a>
 	</fieldset>
-	<iframe name="{uniqid last=true}" style="width: 100%; height: 300px;"></iframe>
+	<iframe name="{uniqid last=true}" style="width: 100%; height: 300px; display: none;"></iframe>
 </form>
 
 <script type="text/javascript">

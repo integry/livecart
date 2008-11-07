@@ -828,7 +828,11 @@ class CheckoutController extends FrontendController
 	 */
 	public function completeExternal()
 	{
-		SessionOrder::destroy();
+		if (SessionOrder::getOrder()->getID() != $this->request->get('id'))
+		{
+			SessionOrder::destroy();
+		}
+
 		$order = CustomerOrder::getInstanceById($this->request->get('id'), CustomerOrder::LOAD_DATA);
 		if ($order->user->get() != $this->user)
 		{

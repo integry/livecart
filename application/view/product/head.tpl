@@ -60,7 +60,7 @@
 				<tr id="productPrice">
 					<td class="param">{t _price}:</td>
 					<td class="value price">
-						{$product.formattedPrice.$currency}
+							<span class="realPrice">{$product.formattedPrice.$currency}</span>
 						{if $product.formattedListPrice.$currency}
 							<span class="listPrice">
 								{$product.formattedListPrice.$currency}

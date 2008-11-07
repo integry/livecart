@@ -474,6 +474,14 @@ Backend.ProductVariation.Editor.prototype =
 		}.bind(this));
 	},
 
+	updateImages: function(images)
+	{
+		$H(images).each(function(value)
+		{
+			this.itemInstances[value[0]].showImage(value[1]);
+		}.bind(this));
+	},
+
 	changeInstanceID: function(instance, type, newId)
 	{
 		var id = instance.getID();
@@ -897,6 +905,11 @@ Backend.ProductVariationItem.prototype =
 			el.onchange = this.selectorChanged.bind(this);
 			this.selectorChanged(el);
 		}.bind(this));
+
+		if (this.data.DefaultImage)
+		{
+			this.showImage(this.data.DefaultImage);
+		}
 	},
 
 	containsVariation: function(variation)
@@ -1086,6 +1099,20 @@ Backend.ProductVariationItem.prototype =
 		else
 		{
 			cell.removeClassName('input');
+		}
+	},
+
+	showImage: function(imgData)
+	{
+		if (imgData['paths'])
+		{
+			var img = this.row.fieldCells['image'].getElementsByTagName('img')[0];
+			img.src = imgData['paths'][1] + '?' + (Math.random() * 10000);
+			img.style.display = '';
+
+			anchor = img.parentNode;
+			anchor.href = imgData['paths'][4] + '?' + (Math.random() * 10000);
+			anchor.onclick = function () {showLightbox(this); return false;}
 		}
 	}
 }
