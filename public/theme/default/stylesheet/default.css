@@ -155,7 +155,7 @@ input.submit, input.text, input.date, input.password, select, textarea
 	float: left;
 	width: 25px;
 	height: 47px;
-	background-image: url(../image/headerLeftCorner.gif);
+	background-image: url(../image/headerLeftCorner.jpg);
 }
 
 #headerRightCorner
@@ -163,14 +163,14 @@ input.submit, input.text, input.date, input.password, select, textarea
 	float: right;
 	width: 25px;
 	height: 47px;
-	background-image: url(../image/headerRightCorner.gif);
+	background-image: url(../image/headerRightCorner.jpg);
 }
 
 #headerContent
 {
 	height: 91px;
 	padding-left: 1em;
-	background-image: url(../image/headerContent.gif);
+	background-image: url(../image/headerContent.jpg);
 	position: relative;
 }
 
@@ -1279,8 +1279,8 @@ body
 	background-image: url(../image/tab_btn_09.gif);
 	background-repeat: repeat-x;
 	background-position: center bottom;
-	line-height: 25px;
-	height: 25px;
+	line-height: 27px;
+	height: 27px;
 }
 .rootCategories li span
 {

@@ -28,9 +28,10 @@ Product.ImageHandler.prototype =
 	{
 		imageData.each(function(pair)
 		{
-			if ($('img_' + pair.key))
+			var inst = new Product.ImageSwitcher(pair.key, pair.value, imageDescr[pair.key]);
+			if (!window.defaultImageHandler)
 			{
-				new Product.ImageSwitcher(pair.key, pair.value, imageDescr[pair.key]);
+				window.defaultImageHandler = inst;
 			}
 		});
 	}
@@ -50,7 +51,11 @@ Product.ImageSwitcher.prototype =
 		this.imageData = imageData;
 		this.imageDescr = imageDescr;
 
-		$('img_' + id).onclick = this.switchImage.bind(this);
+		var thumbnail = $('img_' + id);
+		if (thumbnail)
+		{
+			thumbnail.onclick = this.switchImage.bind(this);
+		}
 	},
 
 	switchImage: function()
@@ -165,6 +170,188 @@ window.setTimeout(function()
 		Element.removeClassName(document.body, 'lightboxOn');
 	}
 }, 2000);
+
+Product.Variations = function(container, variations, options)
+{
+	this.container = container;
+	this.form = container.up('form');
+	this.variations = variations;
+	this.selectFields = [];
+	this.options = options;
+
+	this.priceContainer = $('productPrice').down('.price').down('.realPrice');
+	this.defaultPrice = this.priceContainer.innerHTML;
+
+	$H(this.variations.variations).each(function(value)
+	{
+		var type = value[1];
+		var field = this.form.elements.namedItem('variation_' + type['ID']);
+		field.variationIndex = value[0];
+		this.selectFields.push(field);
+		field.disabled = true;
+
+		field.onchange = this.updateVisibleOptions.bind(this);
+	}.bind(this));
+
+	this.combinations = {};
+	$H(this.variations.products).each(function(value)
+	{
+		var root = this.combinations;
+		value[0].split(/-/).each(function(id)
+		{
+			if (!root[id])
+			{
+				root[id] = {};
+			}
+
+			root = root[id];
+		});
+	}.bind(this));
+
+	this.selectFields[0].disabled = false;
+}
+
+Product.Variations.prototype =
+{
+	bindEvents: function()
+	{
+
+	},
+
+	updateVisibleOptions: function(e)
+	{
+		var disable = false;
+		var root = this.combinations;
+		var k = -1;
+		var selectedVariation = [];
+
+		this.selectFields.each(function(field)
+		{
+			k++;
+			if (disable)
+			{
+				field.value = '';
+				field.disabled = true;
+			}
+			else
+			{
+				field.disabled = false;
+				var nextField = this.selectFields[k + 1];
+				var value = field.value;
+
+				if (value)
+				{
+					selectedVariation.push(value);
+				}
+
+				if (!root[value])
+				{
+					field.value = '';
+				}
+				else if (nextField)
+				{
+					$A(nextField.options).each(function(opt)
+					{
+						opt.style.display = (root[value][opt.value] || !opt.value) ? '' : 'none';
+					});
+
+					root = root[value];
+				}
+			}
+
+			if (!field.value)
+			{
+				disable = true;
+			}
+		}.bind(this));
+
+		if (!disable)
+		{
+			this.displayVariationInfo(this.variations.products[selectedVariation.join('-')]);
+		}
+		else
+		{
+			this.showDefaultInfo();
+		}
+
+		/* display variation prices if enough options are selected */
+		var variationCount = $A($H(this.variations.variations)).length;
+		if (selectedVariation.length == variationCount)
+		{
+			selectedVariation.pop();
+		}
+
+		if (selectedVariation.length == (variationCount - 1))
+		{
+			$A(this.selectFields[variationCount - 1].options).each(function(opt)
+			{
+				if (opt.value)
+				{
+					if (!this.variationOptionTemplate)
+					{
+						this.variationOptionTemplate = $('variationOptionTemplate').innerHTML;
+					}
+
+					if (!opt.originalText)
+					{
+						opt.originalText = opt.innerHTML;
+					}
+
+					var variations = selectedVariation.slice(0);
+					variations.push(opt.value);
+					var product = this.variations.products[variations.join('-')];
+
+					if (product)
+					{
+						var text = this.variationOptionTemplate.replace(/%price/, this.getProductPrice(product)).replace(/%name/, opt.originalText);
+						opt.innerHTML = text;
+					}
+					else
+					{
+						opt.innerHTML = opt.originalText;
+					}
+				}
+			}.bind(this));
+		}
+	},
+
+	displayVariationInfo: function(product)
+	{
+		if (product.DefaultImage && product.DefaultImage.paths)
+		{
+			(new Product.ImageSwitcher(product.DefaultImage.ID, product.DefaultImage.paths, product.DefaultImage.name_lang)).switchImage();
+			this.updatePrice(this.getProductPrice(product));
+		}
+		else
+		{
+			this.showDefaultInfo();
+		}
+	},
+
+	getProductPrice: function(product)
+	{
+		return (product.formattedPrice && product.formattedPrice[this.options.currency]) ? product.formattedPrice[this.options.currency] : this.defaultPrice;
+	},
+
+	updatePrice: function(price)
+	{
+		this.priceContainer.innerHTML = price ? price : this.defaultPrice;
+	},
+
+	showDefaultInfo: function()
+	{
+		this.showDefaultImage();
+		this.updatePrice(null);
+	},
+
+	showDefaultImage: function()
+	{
+		if (window.defaultImageHandler)
+		{
+			window.defaultImageHandler.switchImage();
+		}
+	}
+}
 
 /*****************************
 	Order related JS

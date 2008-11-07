@@ -3,16 +3,26 @@
 	display: none;
 }
 
-.productVariationTable input,
+.productVariationTable input.text,
 .productVariationTable select
 {
-	width: 90px;
 	font-size: smaller;
 }
 
-.productVariationTable td
+.productVariationTable input.text
 {
-	padding: 4px;
+	width: 90px;
+}
+
+.productVariationTable .stockCount input
+{
+	width: 60px;
+}
+
+.productVariationTable td,
+.productVariationTable th
+{
+	padding: 6px;
 }
 
 .productVariationTable
@@ -23,11 +33,6 @@
 .productVariationTable thead
 {
 	background-color: #eef;
-}
-
-.productVariationTable th
-{
-	padding: 5px;
 }
 
 .productVariationTable td
@@ -41,18 +46,39 @@
 	width: 230px;
 }
 
+.productVariationTable td.price,
+.productVariationTable th.price,
+.productVariationTable td.shippingWeight,
+.productVariationTable th.shippingWeight
+{
+	width: 90px;
+}
+
+.productVariationTable td.price select,
+.productVariationTable td.shippingWeight select
+{
+	width: 100%;
+	margin-bottom: 0;
+}
+
+.productVariationTable td.price input,
+.productVariationTable td.shippingWeight input
+{
+	width: 86px;
+}
+
 .productVariationTable td.variation
 {
 	width: 130px;
 }
 
 .productVariationTable td.variation span.name,
-.productVariationTable td.variation.input input
+.productVariationTable td.variation.input .variationInput
 {
 	display: inline;
 }
 
-.productVariationTable td.variation input
+.productVariationTable td.variation .variationInput
 {
 	display: none;
 	width: 100px;
@@ -88,4 +114,60 @@
 .productVariationTable .deleteVariationType:hover
 {
 	opacity: 1;
+}
+
+.productVariationTable span.name
+{
+	margin-left: 20px;
+	line-height: 30px;
+}
+
+.productVariationTable td.isEnabled
+{
+	padding-top: 11px;
+	background-color: #ddd;
+}
+
+.productVariationTable td.price,
+.productVariationTable td.shippingWeight
+{
+	text-align: center;
+	padding-bottom: 0;
+}
+
+.productVariationTable td.price input,
+.productVariationTable td.shippingWeight input
+{
+	display: none;
+}
+
+.productVariationTable td.price.input input,
+.productVariationTable td.shippingWeight.input input
+{
+	display: block;
+	margin: 0 auto;
+}
+
+.productVariationTable td.isEnabled input.checkbox,
+.productVariationTable th.isEnabled input.checkbox
+{
+	float: none;
+	margin: 0;
+	margin-right: 0;
+	height: 20px;
+	width: 20px;
+	margin-top: 1px;
+}
+
+.productVariationTable td.image img
+{
+	vertical-align: middle;
+	cursor: -moz-zoom-in;
+}
+
+.productVariationTable td.image .imgContainer
+{
+	width: 50px;
+	min-height: 30px;
+	float: left;
 }

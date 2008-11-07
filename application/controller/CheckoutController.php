@@ -501,6 +501,9 @@ class CheckoutController extends FrontendController
 		$this->order->loadAll();
 		$this->order->getSpecification();
 
+		// @todo: variation prices appear as 0.00 without the extra toArray() call :/
+		$this->order->toArray();
+
 		if ($redirect = $this->validateOrder($this->order, self::STEP_PAYMENT))
 		{
 			return $redirect;
@@ -825,7 +828,11 @@ class CheckoutController extends FrontendController
 	 */
 	public function completeExternal()
 	{
-		SessionOrder::destroy();
+		if (SessionOrder::getOrder()->getID() != $this->request->get('id'))
+		{
+			SessionOrder::destroy();
+		}
+
 		$order = CustomerOrder::getInstanceById($this->request->get('id'), CustomerOrder::LOAD_DATA);
 		if ($order->user->get() != $this->user)
 		{
@@ -1099,8 +1106,11 @@ class CheckoutController extends FrontendController
 		$validator->addCheck($prefix . 'country', new ConditionalCheck($condition, new IsNotEmptyCheck($this->translate('_err_select_country'))));
 		$validator->addCheck($prefix . 'zip', new ConditionalCheck($condition, new IsNotEmptyCheck($this->translate('_err_enter_zip'))));
 
-		$stateCheck = new OrCheck(array($prefix . 'state_select', $prefix . 'state_text'), array(new IsNotEmptyCheck($this->translate('_err_select_state')), new IsNotEmptyCheck('')), $this->request);
-		$validator->addCheck($prefix . 'state_select', new ConditionalCheck($condition, $stateCheck));
+		if (!$this->config->get('DISABLE_STATE'))
+		{
+			$stateCheck = new OrCheck(array($prefix . 'state_select', $prefix . 'state_text'), array(new IsNotEmptyCheck($this->translate('_err_select_state')), new IsNotEmptyCheck('')), $this->request);
+			$validator->addCheck($prefix . 'state_select', new ConditionalCheck($condition, $stateCheck));
+		}
 
 		if ($this->config->get('REQUIRE_PHONE'))
 		{

@@ -1240,9 +1240,11 @@ class UserController extends FrontendController
 		$validator->addCheck($fieldPrefix . 'country', new IsNotEmptyCheck($this->translate('_err_select_country')));
 		$validator->addCheck($fieldPrefix . 'zip', new IsNotEmptyCheck($this->translate('_err_enter_zip')));
 
-		$stateCheck = new OrCheck(array($fieldPrefix . 'state_select', $fieldPrefix . 'state_text'), array(new IsNotEmptyCheck($this->translate('_err_select_state')), new IsNotEmptyCheck('')), $this->request);
-		$validator->addCheck($fieldPrefix . 'state_select', $stateCheck);
-//		$validator->addCheck('billing_state_select', new IsValidStateCheck($this->translate('_err_select_state')));
+		if (!$this->config->get('DISABLE_STATE'))
+		{
+			$stateCheck = new OrCheck(array($fieldPrefix . 'state_select', $fieldPrefix . 'state_text'), array(new IsNotEmptyCheck($this->translate('_err_select_state')), new IsNotEmptyCheck('')), $this->request);
+			$validator->addCheck($fieldPrefix . 'state_select', $stateCheck);
+		}
 	}
 
 	private function validatePassword(RequestValidator $validator)

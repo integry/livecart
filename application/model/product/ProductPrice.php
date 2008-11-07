@@ -77,6 +77,7 @@ class ProductPrice extends ActiveRecordModel
 		if ($parent = $this->product->get()->parent->get())
 		{
 			$parentPrice = $parent->getPricingHandler()->getPrice($this->currency->get())->getPrice();
+
 			if ($this->product->get()->getChildSetting('price') == Product::CHILD_ADD)
 			{
 				return $parentPrice + $price;
@@ -85,10 +86,11 @@ class ProductPrice extends ActiveRecordModel
 			{
 				return $parentPrice - $price;
 			}
-			else if ($price)
+			else if ((float)$price)
 			{
 				return $price;
 			}
+			else
 			{
 				return $parentPrice;
 			}
@@ -309,6 +311,21 @@ class ProductPrice extends ActiveRecordModel
 
 		foreach ($priceArray as $product => $prices)
 		{
+			// look for a parent product
+			if (!empty($productArray[$ids[$product]]['parentID']))
+			{
+				$parent = Product::getInstanceByID($productArray[$ids[$product]]['parentID']);
+				$settings = $productArray[$ids[$product]]['childSettings'];
+				if (isset($settings['price']))
+				{
+					$priceSetting = $settings['price'];
+				}
+			}
+			else
+			{
+				$parent = null;
+			}
+
 			foreach ($currencies as $id => $currency)
 			{
 				if (!isset($prices[$id]))
@@ -322,6 +339,12 @@ class ProductPrice extends ActiveRecordModel
 				if ((0 == $price) && $listPrice)
 				{
 					continue;
+				}
+
+				if ($parent && (($priceSetting != Product::CHILD_OVERRIDE) || !$price))
+				{
+					$parentPrice = $parent->getPrice($id);
+					$price = $parentPrice + ($price * (($priceSetting == Product::CHILD_ADD) ? 1 : -1));
 				}
 
 				$productArray[$ids[$product]][$priceField . '_' . $id] = $price;
@@ -352,8 +375,17 @@ class ProductPrice extends ActiveRecordModel
 	 */
 	public static function loadPricesForRecordSet(ARSet $products)
 	{
-		$ids = array();
+		$set = ARSet::buildFromArray($products->getData());
 		foreach ($products as $key => $product)
+	  	{
+			if ($product->parent->get())
+			{
+				$set->add($product->parent->get());
+			}
+		}
+
+		$ids = array();
+		foreach ($set as $key => $product)
 	  	{
 			$ids[$product->getID()] = $key;
 		}
@@ -368,7 +400,7 @@ class ProductPrice extends ActiveRecordModel
 
 		foreach ($pricing as $productID => $productPricing)
 		{
-			$product = $products->get($ids[$productID]);
+			$product = $set->get($ids[$productID]);
 			$product->loadPricing($productPricing);
 		}
 	}

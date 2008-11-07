@@ -39,7 +39,7 @@ class ProductPresentation extends AbstractPresentation
 
 		// otherwise use the category theme
 		ClassLoader::import('application.model.presentation.CategoryPresentation');
-		return CategoryPresentation::getThemeByCategory($product->category->get());
+		return CategoryPresentation::getThemeByCategory($product->getCategory());
 	}
 }
 

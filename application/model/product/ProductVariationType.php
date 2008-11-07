@@ -35,7 +35,11 @@ class ProductVariationType extends MultilingualObject
 
 	protected function insert()
 	{
-		$this->setLastPosition();
+		if (is_null($this->position->get()))
+		{
+			$this->setLastPosition();
+		}
+
 		parent::insert();
 	}
 }

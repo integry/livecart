@@ -2,6 +2,13 @@
 	<tr class="{zebra loop="shipment"}">
 		<td class="productName">
 			<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
+
+			{if $item.Product.variations}
+				<span class="variations">
+					({include file="order/itemVariationsList.tpl"})
+				</span>
+			{/if}
+
 			{include file="user/itemOptions.tpl" options=$item.options}
 
 			{sect}

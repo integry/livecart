@@ -93,20 +93,22 @@
 					{/err}
 				</p>
 
-				<p class="required">
-					{err for="billing_state_select"}
-						{{label {t _state}:}}
-						{selectfield style="display: none;" options=$states id="billing_state_select"}
-						{textfield name="billing_state_text" class="text" id="billing_state_text"}
-					{/err}
+				{if !'DISABLE_STATE'|config}
+					<p class="required">
+						{err for="billing_state_select"}
+							{{label {t _state}:}}
+							{selectfield style="display: none;" options=$states id="billing_state_select"}
+							{textfield name="billing_state_text" class="text" id="billing_state_text"}
+						{/err}
 
-					{literal}
-					<script type="text/javascript">
-					{/literal}
-						new User.StateSwitcher($('billing_country'), $('billing_state_select'), $('billing_state_text'),
-								'{link controller=user action=states}');
-					</script>
-				</p>
+						{literal}
+						<script type="text/javascript">
+						{/literal}
+							new User.StateSwitcher($('billing_country'), $('billing_state_select'), $('billing_state_text'),
+									'{link controller=user action=states}');
+						</script>
+					</p>
+				{/if}
 
 				<p class="required">
 					{err for="billing_zip"}
@@ -151,21 +153,23 @@
 						{/err}
 					</p>
 
-					<p class="required">
-						{err for="shipping_state_select"}
-							{{label {t _state}:}}
-							{selectfield style="display: none;" options=$states id="shipping_state_select"}
-							{textfield name="shipping_state_text" class="text" id="shipping_state_text"}
-						{/err}
+					{if !'DISABLE_STATE'|config}
+						<p class="required">
+							{err for="shipping_state_select"}
+								{{label {t _state}:}}
+								{selectfield style="display: none;" options=$states id="shipping_state_select"}
+								{textfield name="shipping_state_text" class="text" id="shipping_state_text"}
+							{/err}
 
-						{literal}
-						<script type="text/javascript">
-						{/literal}
-							new User.StateSwitcher($('shipping_country'), $('shipping_state_select'), $('shipping_state_text'),
-									'{link controller=user action=states}');
-							new User.ShippingFormToggler($('sameAsBilling'), $('shippingForm'));
-						</script>
-					</p>
+							{literal}
+							<script type="text/javascript">
+							{/literal}
+								new User.StateSwitcher($('shipping_country'), $('shipping_state_select'), $('shipping_state_text'),
+										'{link controller=user action=states}');
+								new User.ShippingFormToggler($('sameAsBilling'), $('shippingForm'));
+							</script>
+						</p>
+					{/if}
 
 					<p class="required">
 						{err for="shipping_zip"}

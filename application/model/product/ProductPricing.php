@@ -82,17 +82,6 @@ class ProductPricing
 	 */
 	public function getPrice(Currency $currency)
 	{
-		/*if ($this->product->parent->get())
-		{
-			if (!$this->isPriceSet($currency))
-			{
-				$inst = ProductPrice::getNewInstance($this->product, $currency);
-				$inst->price->set($this->product->parent->get()->getPricingHandler()->getPrice($currency)->price->get());
-				return $inst;
-			}
-		}
-		* */
-
 		if (!$this->isPriceSet($currency))
 		{
 			return ProductPrice::getNewInstance($this->product, $currency);
@@ -182,6 +171,9 @@ class ProductPricing
 
 		$formattedPrice = $calculated = array();
 
+		$parent = $this->product->parent->get();
+		$setting = $this->product->getChildSetting('price');
+
 		foreach ($this->application->getCurrencySet() as $id => $currency)
 		{
 			if (!empty($defined[$id]))
@@ -196,6 +188,12 @@ class ProductPricing
 			if (!$calculated[$id] && $listPrice)
 			{
 				continue;
+			}
+
+			if ($parent && (($setting != Product::CHILD_OVERRIDE) || !$calculated[$id]))
+			{
+				$parentPrice = $parent->getPrice($id);
+				$calculated[$id] += $parentPrice * (($setting != Product::CHILD_ADD) ? 1 : -1);
 			}
 
 			$formattedPrice[$id] = $currency->getFormattedPrice($calculated[$id]);

@@ -103,7 +103,17 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			return false;
 		}
 
-		$this->orderedItems = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category', 'DefaultImage' => 'ProductImage'))->getData();
+		$itemSet = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category', 'DefaultImage' => 'ProductImage'));
+		$this->orderedItems = $itemSet->getData();
+
+		$products = $itemSet->extractReferencedItemSet('product');
+		ProductPrice::loadPricesForRecordSet($products);
+
+		$parentIDs = $products->extractReferencedItemSet('parent')->getRecordIDs();
+		if ($parentIDs)
+		{
+			ActiveRecordModel::getRecordSet('Product', new ARSelectFilter(new INCond(new ARFieldHandle('Product', 'ID'), $parentIDs)), array('Category', 'ProductImage'));
+		}
 
 		if ($this->orderedItems)
 		{
@@ -127,6 +137,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			}
 
 			OrderedItemOption::loadOptionsForItemSet(ARSet::buildFromArray($this->orderedItems));
+			ARSet::buildFromArray($this->orderedItems)->extractReferencedItemSet('product', 'ProductSet')->loadVariations();
 
 			foreach ($this->orderedItems as $key => $item)
 			{
@@ -1135,11 +1146,6 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 					}
 					$products->unshift($item->product->get());
 				}
-			}
-
-			if (isset($products))
-			{
-				ProductPrice::loadPricesForRecordSet($products);
 			}
 		}
 

@@ -1,5 +1,6 @@
 <?php
 
+ClassLoader::import('application.model.product.ProductSet');
 ClassLoader::import('application.model.product.ProductSpecification');
 ClassLoader::import('application.model.product.ProductPricing');
 ClassLoader::import('application.model.product.ProductImage');
@@ -50,6 +51,8 @@ class Product extends MultilingualObject
 	private $bundledProducts = null;
 
 	private $additionalCategories = null;
+
+	private $variations = array();
 
 	public static function defineSchema($className = __CLASS__)
 	{
@@ -191,7 +194,7 @@ class Product extends MultilingualObject
 
 	public function belongsTo(Category $category)
 	{
-		$belongsTo = $category->isAncestorOf($this->category->get());
+		$belongsTo = $category->isAncestorOf($this->getCategory());
 
 		if (!$belongsTo && $this->additionalCategories)
 		{
@@ -728,6 +731,15 @@ class Product extends MultilingualObject
 			$this->manufacturer->get()->save();
 		}
 
+		// update parent inventory counter
+		if ($this->stockCount->isModified() && $this->parent->get())
+		{
+			$stockDifference = $this->stockCount->get() - $this->stockCount->getInitialValue();
+
+			$this->parent->get()->stockCount->set($this->parent->get()->stockCount->get() + $stockDifference);
+			$this->parent->get()->save();
+		}
+
 		parent::save($forceOperation);
 
 		$this->getSpecification()->save();
@@ -837,6 +849,11 @@ class Product extends MultilingualObject
 			$array = array_merge($parent, $array);
 		}
 
+		foreach ($this->variations as $variation)
+		{
+			$array['variations'][$variation->getID()] = $variation->toArray();
+		}
+
 		$this->setArrayData($array);
 
 	  	return $array;
@@ -865,10 +882,41 @@ class Product extends MultilingualObject
 			$array['isAvailable'] = false;
 		}
 
+		if ($array['childSettings'])
+		{
+			$array['childSettings'] = unserialize($array['childSettings']);
+		}
+
 		return $array;
 	}
 
 	/*####################  Get related objects ####################*/
+
+	public function getCategory()
+	{
+		$parent = $this->parent->get() ? $this->parent->get() : $this;
+
+		if (!$parent->isLoaded())
+		{
+			$parent->load(array('Category', 'ProductImage'));
+		}
+
+		return $parent->category->get();
+	}
+
+	public function getName($languageCode)
+	{
+		$parent = $this->parent->get() ? $this->parent->get() : $this;
+		$parent->load();
+
+		foreach (array($parent, $this) as $product)
+		{
+			if ($name = $product->getValueByLang('name', $languageCode))
+			{
+				return $name;
+			}
+		}
+	}
 
 	public function loadSpecification($specificationData = null)
 	{
@@ -983,6 +1031,11 @@ class Product extends MultilingualObject
 		$this->additionalCategories[$category->getID()] = $category;
 	}
 
+	public function registerVariation(ProductVariation $variation)
+	{
+		$this->variations[$variation->getID()] = $variation;
+	}
+
 	/**
 	 * @return ARSet
 	 */
@@ -1063,15 +1116,15 @@ class Product extends MultilingualObject
 
 	public function getOptions($includeInheritedOptions = false)
 	{
+		$parent = $this->parent->get() ? $this->parent->get() : $this;
 		ClassLoader::import('application.model.product.ProductOption');
 		$f = new ARSelectFilter();
 		$f->setOrder(new ARFieldHandle('ProductOption', 'position'), 'ASC');
-		$options = $this->getRelatedRecordSet('ProductOption', $f, array('DefaultChoice' => 'ProductOptionChoice'));
+		$options = $parent->getRelatedRecordSet('ProductOption', $f, array('DefaultChoice' => 'ProductOptionChoice'));
 
 		if ($includeInheritedOptions)
 		{
-			$options->merge($this->category->get()->getOptions(true));
-
+			$options->merge($parent->getCategory()->getOptions(true));
 			ProductOption::loadChoicesForRecordSet($options);
 		}
 
@@ -1080,8 +1133,9 @@ class Product extends MultilingualObject
 
 	public function getOptionsArray()
 	{
-		$options = $this->getOptions(true)->toArray();
-		ProductOption::includeProductPrice($this, $options);
+		$parent = $this->parent->get() ? $this->parent->get() : $this;
+		$options = $parent->getOptions(true)->toArray();
+		ProductOption::includeProductPrice($parent, $options);
 
 		return $options;
 	}
@@ -1178,11 +1232,13 @@ class Product extends MultilingualObject
 
 	public function getVariationMatrix()
 	{
-		$children = $this->getRelatedRecordSetArray('Product', new ARSelectFilter());
+		$children = $this->getRelatedRecordSetArray('Product', new ARSelectFilter(), array('ProductImage'));
 		if (!$children)
 		{
 			return array();
 		}
+
+		ProductPrice::loadPricesForRecordSetArray($children);
 
 		$ids = array();
 		foreach ($children as $child)
@@ -1196,10 +1252,18 @@ class Product extends MultilingualObject
 		$f->setOrder(new ARFieldHandle('ProductVariation', 'position'));
 
 		$productValues = array();
-		$typeMatrix = array();
+		$variations = array();
 		$values = ActiveRecordModel::getRecordSetArray('ProductVariationValue', $f, array('ProductVariation', 'ProductVariationType'));
 		foreach ($values as &$value)
 		{
+			$type = $value['ProductVariationType'];
+			if (!isset($variations[$type['ID']]))
+			{
+				$variations[$type['ID']] = $type;
+				$variations[$type['ID']]['variations'] = array();
+			}
+			$variations[$type['ID']]['variations'][] = $value;
+
 			$productId = $value['productID'];
 			$productValues[$productId][$value['variationID']] =& $value;
 		}
@@ -1207,20 +1271,57 @@ class Product extends MultilingualObject
 		$matrix = array();
 		foreach ($productValues as $product => &$values)
 		{
-			$current =& $matrix;
-			foreach ($values as $value)
-			{
-				//print_r($value);
-				if (!isset($current[$value['ID']]))
-				{
-//					$current[$value['ID']] = array()
-				}
-
-			}
 			$matrix[implode('-', array_keys($values))] = $products[$product];
 		}
 
-		return $matrix;
+		return array('products' => $matrix, 'variations' => $variations);
+	}
+
+	public function getVariationData(LiveCart $app)
+	{
+		$variations = $this->getVariationMatrix();
+
+		if (!$variations)
+		{
+			return null;
+		}
+
+		$trackInventory = $app->getConfig()->get('INVENTORY_TRACKING') != 'DISABLE';
+
+		// filter out unavailable products
+		foreach ($variations['products'] as $key => &$product)
+		{
+			if (!$product['isEnabled'] || ($trackInventory && ($product['stockCount'] <= 0)))
+			{
+				unset($variations['products'][$key]);
+			}
+		}
+
+		// get used variations
+		$usedVariations = array();
+		foreach ($variations['products'] as $key => &$product)
+		{
+			$usedVariations = array_merge($usedVariations, explode('-', $key));
+		}
+
+		$usedVariations = array_flip($usedVariations);
+
+		// prepare select options
+		foreach ($variations['variations'] as &$type)
+		{
+			$type['selectOptions'] = array();
+			foreach ($type['variations'] as $variation)
+			{
+				$var = $variation['Variation'];
+
+				if (isset($usedVariations[$var['ID']]))
+				{
+					$type['selectOptions'][$var['ID']] = $var['name_lang'];
+				}
+			}
+		}
+
+		return $variations;
 	}
 
 	public function serialize()

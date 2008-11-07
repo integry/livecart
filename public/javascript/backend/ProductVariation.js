@@ -9,10 +9,18 @@ if (!Backend.ProductVariation)
 
 Backend.ProductVariation.Editor = function(parentId, params)
 {
+	this.__instances__[parentId] = this;
+
 	this.parentId = parentId;
+
 	this.types = params.variationTypes;
 	this.variations = params.variations;
-	this.matrix = params.matrix;
+	this.matrix = params.matrix.products;
+	this.currency = params.currency;
+
+	this.typeInstances = {};
+	this.itemInstances = {};
+	this.variationInstances = {};
 
 	this.findUsedNodes();
 	this.bindEvents();
@@ -21,10 +29,10 @@ Backend.ProductVariation.Editor = function(parentId, params)
 
 Backend.ProductVariation.Editor.prototype =
 {
+	__instances__: {},
+
 	typeInstances: {},
-
 	itemInstances: {},
-
 	variationInstances: {},
 
 	columnCount: 0,
@@ -33,34 +41,43 @@ Backend.ProductVariation.Editor.prototype =
 
 	itemIndex: 0,
 
+	getInstance: function(parentId)
+	{
+		return this.__instances__[parentId];
+	},
+
 	findUsedNodes: function()
 	{
 		this.container = $('tabProductVariations_' + this.parentId + 'Content');
 		this.mainMenu = this.container.down('ul.menu');
 		this.addLink = this.mainMenu.down('.addType');
 
-		this.mainForm = this.container.down('form.variationForm');
+		this.form = this.container.down('form.variationForm');
 		this.tableTemplate = this.container.down('#productVariationTemplate');
 	},
 
 	bindEvents: function()
 	{
 		Event.observe(this.addLink, 'click', this.createType.bindAsEventListener(this));
+		Event.observe(this.form, 'submit', this.save.bindAsEventListener(this));
 	},
 
 	initializeEditor: function()
 	{
 		var table = this.tableTemplate.cloneNode(true);
 		this.table = table;
-		this.mainForm.appendChild(table);
 
-		var rowTemplate = table.down('tbody').down('tr');
+		this.table.tbody = table.getElementsByTagName('tbody')[0];
+		this.table.thead = table.getElementsByTagName('thead')[0]
+		this.table.thead.tr = table.thead.getElementsByTagName('tr')[0];
+
+		var rowTemplate = table.tbody.getElementsByTagName('tr')[0];
 		this.rowTemplate = rowTemplate;
-		this.variationCellTemplate = this.rowTemplate.down('td.variation');
+		this.variationCellTemplate = this.rowTemplate.getElementsByTagName('td')[0];
 		rowTemplate.parentNode.removeChild(rowTemplate);
 		rowTemplate.removeChild(this.variationCellTemplate);
 
-		var typeHeaderCell = table.down('thead').down('th.variationType');
+		var typeHeaderCell = table.thead.getElementsByTagName('th')[0];
 		typeHeaderCell.parentNode.removeChild(typeHeaderCell);
 		this.typeHeaderCell = typeHeaderCell;
 
@@ -76,9 +93,48 @@ Backend.ProductVariation.Editor.prototype =
 		else
 		{
 			// add created types
-			//this.types.each();
+			this.types.each(function(type)
+			{
+				var inst = new Backend.ProductVariationType(type, this);
+
+				this.variations.each(function(variation)
+				{
+					if (variation.Type.ID == inst.getID())
+					{
+						var value = new Backend.ProductVariationVar(variation, this.typeInstances[variation.Type.ID]);
+
+						if ((variation.Type.position > 0) && (0 == variation.position))
+						{
+							value.addToItems();
+						}
+						else
+						{
+							value.createItems();
+						}
+					}
+				}.bind(this));
+			}.bind(this));
+
+			// add item data
+			$H(this.matrix).each(function(value)
+			{
+				var ids = value[0];
+				var productData = value[1];
+
+				var variations = [];
+				ids.split(/-/).each(function(id)
+				{
+					variations.push(this.variationInstances[id]);
+				}.bind(this));
+
+				var item = this.getItemsByVariations(variations).pop();
+				item.setData(productData);
+				item.initFields();
+			}.bind(this));
 		}
 
+		this.form.down('.tableContainer').appendChild(table);
+		Event.observe(table.thead.down('th.isEnabled').down('input'), 'change', this.toggleAllStatus.bind(this));
 	},
 
 	registerType: function(type)
@@ -133,6 +189,8 @@ Backend.ProductVariation.Editor.prototype =
 				});
 			}
 		}.bind(this));
+
+		this.syncRowspans();
 	},
 
 	registerVariation: function(variation)
@@ -183,42 +241,12 @@ Backend.ProductVariation.Editor.prototype =
 		}
 	},
 
-	deleteRow: function(field)
-	{
-		var row = field.up('tr');
-		row.parentNode.removeChild(row);
-	},
-
 	createColumn: function()
 	{
-		// header
-		var tr = this.table.down('thead').down('tr');
-		tr.insertBefore(this.typeHeaderCell.cloneNode(true), tr.down('th', this.columnCount));
-
-		// body
-		/*
-		var rows = this.table.down('tbody').getElementsByTagName('tr');
-		for (var k = 0; k < rows.length; k++)
-		{
-			var clonedCell = rows[k].down('td');
-
-			var cell = clonedCell.cloneNode(true);
-			rows[k].insertBefore(cell, clonedCell);
-		}
-		* */
+		var tr = this.table.thead.tr;
+		tr.insertBefore(this.typeHeaderCell.cloneNode(true), tr.cells[this.columnCount]);
 
 		return this.columnCount++;
-	},
-
-	createRow: function()
-	{
-		var row = $A(this.table.getElementsByTagName('tr')).pop();
-		var cloned = row.cloneNode(true);
-		this.table.down('tbody').appendChild(cloned);
-		$A(cloned.getElementsByTagName('input')).each(function(f) {f.value = '';});
-		this.initCells(cloned);
-
-		return cloned;
 	},
 
 	createType: function(e)
@@ -230,6 +258,22 @@ Backend.ProductVariation.Editor.prototype =
 		defVariation.addToItems();
 	},
 
+	toggleAllStatus: function(e)
+	{
+		var el = Event.element(e);
+		var state = el.checked;
+		$H(this.itemInstances).each(function(value)
+		{
+			var inst = value[1];
+			if (!inst.isEnabled)
+			{
+				inst.isEnabled = inst.getRow().down('.isEnabled').down('input');
+			}
+
+			inst.isEnabled.checked = state;
+		});
+	},
+
 	getTable: function()
 	{
 		return this.table;
@@ -237,7 +281,7 @@ Backend.ProductVariation.Editor.prototype =
 
 	getLastRow: function()
 	{
-		return this.table.down('tbody').getElementsByTagName('tr').pop();
+		return this.table.tbody.getElementsByTagName('tr').pop();
 	},
 
 	getRowTemplate: function()
@@ -378,6 +422,71 @@ Backend.ProductVariation.Editor.prototype =
 	syncRowspans: function()
 	{
 		this.getTypeByIndex(this.getTypeCount() - 1).updateRowSpan();
+	},
+
+	save: function(e)
+	{
+		// validate
+
+		// enumerate rows
+		var rows = [];
+		$A(this.table.tbody.getElementsByTagName('tr')).each(function(row)
+		{
+			row.down('.isEnabled').down('input').name = 'isEnabled[' +  row.instance.getID() +']';
+			rows.push(row.instance.getID());
+		});
+
+		this.form.elements.namedItem('items').value = Object.toJSON(rows);
+
+		// types and variations
+		var types = [];
+		var variations = {}
+		for (var k = 0; k < this.getTypeCount(); k++)
+		{
+			var type = this.getTypeByIndex(k);
+			types.push(type.getID());
+
+			variations[type.getID()] = [];
+			type.getVariations().each(function(variation)
+			{
+				variation.getMainCell().nameInput.name = 'variation[' + variation.getID() + ']';
+				variations[type.getID()].push(variation.getID());
+			});
+		}
+
+		this.form.elements.namedItem('types').value = Object.toJSON(types);
+		this.form.elements.namedItem('variations').value = Object.toJSON(variations);
+	},
+
+	updateIDs: function(ids)
+	{
+		['variationInstances', 'typeInstances', 'itemInstances'].each(function(type)
+		{
+			$H(ids).each(function(val)
+			{
+				var id = val[0];
+				var newId = val[1];
+				if (this[type][id])
+				{
+					this[type][id].setID(newId);
+				}
+			}.bind(this));
+		}.bind(this));
+	},
+
+	updateImages: function(images)
+	{
+		$H(images).each(function(value)
+		{
+			this.itemInstances[value[0]].showImage(value[1]);
+		}.bind(this));
+	},
+
+	changeInstanceID: function(instance, type, newId)
+	{
+		var id = instance.getID();
+		this[type][newId] = this[type][id];
+		delete this[type][id];
 	}
 }
 
@@ -399,13 +508,25 @@ Backend.ProductVariationType.prototype =
 		return this.editor;
 	},
 
+	setID: function(id)
+	{
+		this.getEditor().changeInstanceID(this, 'typeInstances', id);
+		this.id = id;
+	},
+
 	create: function()
 	{
 		this.index = this.editor.createColumn();
 
 		var headerCell = this.getHeaderCell();
-		Event.observe(headerCell.down('.addVariation'), 'click', this.createNewVariation.bind(this));
-		Event.observe(headerCell.down('.deleteVariationType'), 'click', this.delete.bind(this));
+
+		headerCell.getElementsBySelector('.addVariation')[0].onclick = this.createNewVariation.bind(this);
+		headerCell.getElementsBySelector('.deleteVariationType')[0].onclick = this.delete.bind(this);
+
+		if (this.data['name'])
+		{
+			headerCell.getElementsByTagName('input')[0].value = this.data['name'];
+		}
 	},
 
 	getIndex: function()
@@ -431,7 +552,7 @@ Backend.ProductVariationType.prototype =
 
 	getHeaderCell: function()
 	{
-		return this.editor.getTable().down('thead').down('th', this.index);
+		return this.editor.getTable().thead.getElementsByTagName('th')[this.index];
 	},
 
 	updateRowSpan: function()
@@ -442,7 +563,7 @@ Backend.ProductVariationType.prototype =
 		if (child)
 		{
 			var childVar = child.getVariations();
-			rowspan = childVar.length * parseInt(childVar[0].getMainCell().getAttribute('rowspan'));
+			rowspan = childVar.length ? childVar.length * parseInt(childVar[0].getMainCell().getAttribute('rowspan')) : 1;
 		}
 
 		this.getCells().each(function(cell)
@@ -555,8 +676,6 @@ Backend.ProductVariationVar.prototype =
 {
 	mainCell: null,
 
-	name: '',
-
 	cells: [],
 
 	createItems: function()
@@ -577,6 +696,15 @@ Backend.ProductVariationVar.prototype =
 		{
 			this.type.getEditor().getTypeByIndex(this.type.getIndex() - 1).updateRowSpan();
 		}
+	},
+
+	setID: function(id)
+	{
+		this.type.getEditor().changeInstanceID(this, 'variationInstances', id);
+		delete this.type.variations[this.id];
+
+		this.id = id;
+		this.type.variations[this.id] = this;
 	},
 
 	addToItems: function()
@@ -604,20 +732,21 @@ Backend.ProductVariationVar.prototype =
 		{
 			cell.addClassName('input');
 			this.mainCell = cell;
-			this.mainCell.nameInput = this.mainCell.down('input');
+			this.mainCell.nameInput = this.mainCell.getElementsByTagName('input')[0];
 
-			if (this.name)
+			if (this.data.name)
 			{
-				this.mainCell.nameInput.value = this.name;
+				this.mainCell.nameInput.value = this.data.name;
 			}
 
-			Event.observe(this.mainCell.nameInput, 'change', this.changeName.bind(this));
-			Event.observe(this.mainCell.nameInput, 'keyup', this.changeName.bind(this));
-			Event.observe(this.mainCell.down('.deleteVariation'), 'click', this.delete.bind(this));
+			this.mainCell.nameInput.onchange = this.changeName.bind(this);
+			this.mainCell.nameInput.onkeyup = this.changeName.bind(this);
+			this.mainCell.getElementsBySelector('.deleteVariation')[0].onclick = this.delete.bind(this);
 		}
 		else
 		{
 			cell.removeClassName('input');
+			cell.getElementsByTagName('input')[0].name = '';
 			this.cells.push(cell);
 			this.changeName(null, cell);
 		}
@@ -625,16 +754,16 @@ Backend.ProductVariationVar.prototype =
 
 	changeName: function(e, cell)
 	{
-		this.name = $F(this.mainCell.nameInput);
+		this.data.name = $F(this.mainCell.nameInput);
 
 		(cell ? [cell] : this.cells).each(function(cell)
 		{
 			if (!cell.nameElement)
 			{
-				cell.nameElement = cell.down('span.name');
+				cell.nameElement = cell.getElementsByTagName('span')[0];
 			}
 
-			cell.nameElement.update(this.name);
+			cell.nameElement.update(this.data.name);
 		}.bind(this));
 	},
 
@@ -697,7 +826,7 @@ Backend.ProductVariationItem.prototype =
 
 		this.parent = parent;
 		this.row = editor.getRowTemplate().cloneNode(true);
-		this.row.id = this.getID();
+		this.row.instance = this;
 
 		if (parentRow)
 		{
@@ -705,7 +834,7 @@ Backend.ProductVariationItem.prototype =
 		}
 		else
 		{
-			editor.getTable().down('tbody').appendChild(this.row);
+			editor.getTable().tbody.appendChild(this.row);
 		}
 
 		this.getTypeCells().each(function(variation)
@@ -717,9 +846,80 @@ Backend.ProductVariationItem.prototype =
 		editor.syncRowspans();
 	},
 
+	setData: function(data)
+	{
+		this.data = data;
+		this.setID(this.data['ID']);
+	},
+
+	setID: function(id)
+	{
+		this.getEditor().changeInstanceID(this, 'itemInstances', id);
+		this.id = id;
+	},
+
+	initFields: function()
+	{
+		if (0 == this.data['shippingWeight'])
+		{
+			this.data['shippingWeight'] = '';
+		}
+
+		this.row.fieldCells = {};
+		$A(this.row.cells).each(function(cell)
+		{
+			this.row.fieldCells[cell.className] = cell;
+		}.bind(this));
+
+		this.row.fieldCells['isEnabled'].getElementsByTagName('input')[0].checked = (this.data['isEnabled'] == 1);
+
+		['sku', 'shippingWeight', 'stockCount'].each(function(field)
+		{
+			this.row.fieldCells[field].getElementsByTagName('input')[0].value = this.data[field];
+		}.bind(this));
+
+		var priceField = 'price_' + this.getEditor().currency;
+		if (this.data[priceField] && (this.data[priceField] != 0))
+		{
+			this.row.fieldCells['price'].getElementsByTagName('input')[0].value = this.data[priceField];
+		}
+
+		var priceSelect = this.row.fieldCells['price'].getElementsByTagName('select')[0];
+		var weightSelect = this.row.fieldCells['shippingWeight'].getElementsByTagName('select')[0];
+
+		if (this.data.childSettings)
+		{
+			if (this.data.childSettings.price)
+			{
+				priceSelect.value = this.data.childSettings.price;
+			}
+
+			if (this.data.childSettings.weight)
+			{
+				weightSelect.value = this.data.childSettings.weight;
+			}
+		}
+
+		[priceSelect, weightSelect].each(function(el)
+		{
+			el.onchange = this.selectorChanged.bind(this);
+			this.selectorChanged(el);
+		}.bind(this));
+
+		if (this.data.DefaultImage)
+		{
+			this.showImage(this.data.DefaultImage);
+		}
+	},
+
+	containsVariation: function(variation)
+	{
+		return this.variations.include(variation);
+	},
+
 	addVariationCell: function(variation)
 	{
-		if (!this.variations.include(variation))
+		if (!this.containsVariation(variation))
 		{
 			this.variations.push(variation);
 		}
@@ -886,5 +1086,33 @@ Backend.ProductVariationItem.prototype =
 	{
 		this.getEditor().unregisterItem(this);
 		this.row.parentNode.removeChild(this.row);
+	},
+
+	selectorChanged: function(e)
+	{
+		var el = (e instanceof Event) ? Event.element(e) : e;
+		var cell = el.parentNode;
+		if ($F(el))
+		{
+			cell.addClassName('input');
+		}
+		else
+		{
+			cell.removeClassName('input');
+		}
+	},
+
+	showImage: function(imgData)
+	{
+		if (imgData['paths'])
+		{
+			var img = this.row.fieldCells['image'].getElementsByTagName('img')[0];
+			img.src = imgData['paths'][1] + '?' + (Math.random() * 10000);
+			img.style.display = '';
+
+			anchor = img.parentNode;
+			anchor.href = imgData['paths'][4] + '?' + (Math.random() * 10000);
+			anchor.onclick = function () {showLightbox(this); return false;}
+		}
 	}
 }

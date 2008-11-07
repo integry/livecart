@@ -9,13 +9,19 @@
 	<meta name="Description" content="{$metaDescription|escape}" />
 
 	<title>
-		{if $PAGE_TITLE}
-			{$PAGE_TITLE|@strip_tags}
-		{else}
-			{block BREADCRUMB_TITLE}
+		{if !$PAGE_TITLE}
+			{capture assign="PAGE_TITLE"}
+				{block BREADCRUMB_TITLE}
+			{/capture}
 		{/if}
-		- {'STORE_NAME'|config}
+
+		{if 'TITLE_FORMAT'|config == 'NAME_FIRST'}
+			{'STORE_NAME'|config} {'TITLE_SEPARATOR'|config} {$PAGE_TITLE|@strip_tags}
+		{else}
+			{$PAGE_TITLE|@strip_tags} {'TITLE_SEPARATOR'|config} {'STORE_NAME'|config}
+		{/if}
 	</title>
+
 	<base href="{baseUrl}"></base>
 	{liveCustomization}
 

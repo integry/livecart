@@ -31,6 +31,9 @@
 					<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
 					<small>({$item.Product.Category.name_lang})</small>
 				</div>
+
+				{include file="order/itemVariations.tpl"}
+
 				{if $options[$item.ID] || $moreOptions[$item.ID]}
 					<div class="productOptions">
 						{foreach from=$options[$item.ID] item=option}

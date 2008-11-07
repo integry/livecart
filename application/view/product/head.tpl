@@ -60,7 +60,7 @@
 				<tr id="productPrice">
 					<td class="param">{t _price}:</td>
 					<td class="value price">
-						{$product.formattedPrice.$currency}
+							<span class="realPrice">{$product.formattedPrice.$currency}</span>
 						{if $product.formattedListPrice.$currency}
 							<span class="listPrice">
 								{$product.formattedListPrice.$currency}
@@ -94,9 +94,17 @@
 
 			{if $product.isAvailable && 'ENABLE_CART'|config}
 				{if $options}
-					<tr>
+					<tr id="options">
 						<td colspan="2" class="productOptions">
 							{include file="product/options.tpl"}
+						</td>
+					</tr>
+				{/if}
+
+				{if $variations.products}
+					<tr id="variations">
+						<td colspan="2" class="productVariations">
+							{include file="product/variations.tpl"}
 						</td>
 					</tr>
 				{/if}
