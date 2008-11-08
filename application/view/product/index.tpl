@@ -15,7 +15,7 @@
 	<fieldset class="container">
 
 		<div class="returnToCategory">
-			<a href="{link route=$catRoute}" class="returnToCategory">{$product.Category.name_lang}</a>
+			<a href="{link route=$catRoute}">{$product.Category.name_lang}</a>
 		</div>
 
 		{include file="product/head.tpl"}

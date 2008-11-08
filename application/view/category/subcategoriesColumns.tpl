@@ -19,7 +19,7 @@
 					<table><tr><td class="subCatContainer">
 						<div class="subCatName">
 							<a href="{categoryUrl data=$sub}">{$sub.name_lang}</a>
-							<span class="count">({$sub.count})</span>
+							<span class="count">(&rlm;{$sub.count})</span>
 						</div>
 
 						{if $sub.subCategories}
@@ -33,7 +33,7 @@
 								{/if}
 								<li>
 									<a href="{categoryUrl data=$subSub}">{$subSub.name_lang}</a>
-									<span class="count">({$subSub.count})</span>
+									<span class="count">(&rlm;{$subSub.count})</span>
 								</li>
 							{/foreach}
 						</ul>

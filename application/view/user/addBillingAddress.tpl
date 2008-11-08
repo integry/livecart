@@ -3,14 +3,11 @@
 <div class="userAddBillingAddress">
 
 {include file="user/layout.tpl"}
+{include file="user/userMenu.tpl" current="addressMenu"}
 
-<div id="content" class="left right">
+<div id="userContent">
 
 	<h1>{t _add_billing_address}</h1>
-
-	{include file="user/userMenu.tpl" current="addressMenu"}
-
-	<div id="userContent">
 
 		<fieldset class="container">
 

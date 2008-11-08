@@ -12,7 +12,7 @@
 	</div>
 
 	{if $shipments|@count > 1 && !$order.isMultiAddress}
-		<div class="message">
+		<div class="infoMessage">
 			{t _info_multi_shipments}
 		</div>
 	{/if}

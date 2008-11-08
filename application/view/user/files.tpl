@@ -2,13 +2,10 @@
 
 {include file="user/layout.tpl"}
 
-<div id="content" class="left right">
+{include file="user/userMenu.tpl" current="fileMenu"}
+<div id="userContent">
 
 	<h1>{t _your_files}</h1>
-
-	{include file="user/userMenu.tpl" current="fileMenu"}
-
-	<div id="userContent">
 
 		<div class="resultStats">
 			{if $files}

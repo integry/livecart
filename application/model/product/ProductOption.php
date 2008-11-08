@@ -248,7 +248,7 @@ class ProductOption extends MultilingualObject
 		$prices = $prices['calculated'];
 		foreach ($options as &$option)
 		{
-			if (is_array($option['choices']))
+			if (!empty($option['choices']))
 			{
 				foreach ($option['choices'] as &$choice)
 				{

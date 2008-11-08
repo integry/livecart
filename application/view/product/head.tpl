@@ -3,7 +3,7 @@
 <h1>{$product.name_lang}</h1>
 
 {if $product.listAttributes}
-	<div class="specSummary">
+	<div class="specSummary spec">
 		{foreach from=$product.listAttributes item="attr" name="attr"}
 			{if $attr.values}
 				{foreach from=$attr.values item="value" name="values"}

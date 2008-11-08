@@ -21,7 +21,7 @@
 			<h2>{$category.name.0}</h2>
 		{/if}
 		<ul>
-			<li><a href="{categoryUrl data=$category}">{$category.name}</a> <span class="count">({$category.count})</span></li>
+			<li><a href="{categoryUrl data=$category}">{$category.name}</a> <span class="count">(&rlm;{$category.count})</span></li>
 		</ul>
 		{assign var=lastLetter value=$category.name.0|@capitalize}
 	{/foreach}

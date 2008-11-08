@@ -27,7 +27,7 @@
 						<table><tr><td class="subCatContainer">
 							<div class="subCatName">
 								<a href="{categoryUrl data=$sub filters=$appliedFilters}">{$sub.name_lang}</a>
-								<span class="count">({$sub.searchCount})</span>
+								<span class="count">(&rlm;{$sub.searchCount})</span>
 							</div>
 						</td></tr></table>
 					</div>

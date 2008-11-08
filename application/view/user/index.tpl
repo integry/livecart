@@ -2,21 +2,19 @@
 
 {include file="user/layout.tpl"}
 
-<div id="content" class="left right">
+{include file="user/userMenu.tpl" current="homeMenu"}
+
+<div id="userContent" class="left right">
 
 	<h1>{t _your_account} ({$user.fullName})</h1>
 
 	{if $userConfirm}
-	<div class="confirmationMsg">
-		<div>{$userConfirm}</div>
+	<div class="confirmationMessage">
+		{$userConfirm}
 	</div>
 	{/if}
 
-	{include file="user/userMenu.tpl" current="homeMenu"}
-
-	<div id="userContent">
-
-	<fieldset class="container" style="float: left; width: 100%;">
+	<fieldset class="container">
 
 		{if $message}
 			<div class="confirmationMessage">{$message}</div>
@@ -55,11 +53,9 @@
 			</p>
 		{/if}
 
+		<div class="clear"></div>
+
 	</fieldset>
-
-	<div class="clear"></div>
-
-	</div>
 
 </div>
 

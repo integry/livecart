@@ -12,12 +12,6 @@
 		{/if}
 	</div>
 
-	{*
-	<p id="cartStats">
-		{maketext text=_item_count params=$cart.basketCount}
-	</p>
-	*}
-
 	{include file="block/message.tpl"}
 
 	{if !$cart.cartItems && !$cart.wishListItems}

@@ -2,13 +2,10 @@
 
 {include file="user/layout.tpl"}
 
-<div id="content" class="left right">
+{include file="user/userMenu.tpl" current="addressMenu"}
+<div id="userContent">
 
 	<h1>{t _manage_addresses}</h1>
-
-	{include file="user/userMenu.tpl" current="addressMenu"}
-
-	<div id="userContent">
 
 	<fieldset class="container">
 

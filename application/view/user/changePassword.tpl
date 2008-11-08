@@ -4,13 +4,10 @@
 
 {include file="user/layout.tpl"}
 
-<div id="content" class="left right">
+{include file="user/userMenu.tpl" current="passwordMenu"}
+<div id="userContent">
 
 	<h1>{t _change_pass}</h1>
-
-	{include file="user/userMenu.tpl" current="passwordMenu"}
-
-	<div id="userContent">
 
 	<fieldset class="container">
 	{form action="controller=user action=doChangePassword" method="POST" handle=$form}

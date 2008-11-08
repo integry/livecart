@@ -4,13 +4,10 @@
 
 {include file="user/layout.tpl"}
 
-<div id="content" class="left right">
+{include file="user/userMenu.tpl" current="emailMenu"}
+<div id="userContent" style="float: none;">
 
 	<h1>{t _change_email}</h1>
-
-	{include file="user/userMenu.tpl" current="emailMenu"}
-
-	<div id="userContent" style="float: none;">
 
 		<fieldset class="container">
 		{form action="controller=user action=doChangeEmail" method="POST" handle=$form}

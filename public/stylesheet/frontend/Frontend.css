@@ -1,7 +1,41 @@
-*
+/* resets */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, /*strong, */sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td
 {
-  	margin: 0;
-  	padding: 0;
+	margin: 0; padding: 0; border: 0 solid; font-weight: inherit; font-style: inherit; font-size: 100%; font-family: inherit; vertical-align: baseline; background-repeat: no-repeat; background-position: center left;
+	border-color: #ddd;
+}
+
+body
+{
+	line-height: 1.5; color: black; background: white;
+}
+
+ul, ul li
+{
+	list-style: none;
+}
+
+table
+{
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+caption, th, td
+{
+	font-weight: normal;
+}
+
+label
+{
+	display: block;
+	width: auto;
+}
+
+.descr ul li
+{
+	list-style-type: disc;
+	padding-left: 12px;
 }
 
 /* 100% height layout start >> */
@@ -13,10 +47,8 @@ html, body
 div#container
 {
 	position: relative; /* needed for footer positioning*/
-
 	height: auto !important; /* real browsers */
 	height: 100%; /* IE6: treated as min-height*/
-
 	min-height: 100%; /* real browsers */
 }
 
@@ -27,7 +59,8 @@ div#footer
 	bottom: 0; /* stick to bottom */
 }
 
-div#content
+div#content,
+#userContent
 {
     padding-bottom: 120px;
 }
@@ -44,20 +77,9 @@ a
 	color: #143788;
 }
 
-a:hover:active
-{
-    color: blue;
-}
-
-a img
-{
-    border: 0;
-}
-
 h1, h2, h3
 {
 	font-family: "Trebuchet MS";
-	font-weight: normal;
 }
 
 h1
@@ -72,7 +94,8 @@ h2
 	margin-top: 20px;
 	margin-bottom: 1em;
 	padding-top: 7px;
-	border-top: 1px dashed #AAAAAA;
+	border-top-width: 1px;
+	border-style: dashed;
     font-size: 150%;
 }
 
@@ -88,21 +111,9 @@ td
 	vertical-align: top;
 }
 
-ul
-{
-  	padding-left: 12px;
-}
-
 p
 {
-	margin-top: 10px;
-	margin-bottom: 10px;
-}
-
-table
-{
-    border-spacing: 0;
-    border-collapse: collapse;
+	margin: 10px 0;
 }
 
 .clear
@@ -111,38 +122,316 @@ table
     width: 100%;
     height: 1px;
     overflow: hidden;
+    float: none !important;
 }
 
-.errorMsg
+/*****************************
+	Common declarations
+*****************************/
+
+/* 100% width labels */
+label.checkbox, label.radio,
+.productOptions label.field,
+.productVariations label,
+.reviewForm label,
+#noteForm label,
+label.cancel,
+.eavAttributes label
 {
-	color: #FF0000;
+	float: none;
+	width: auto;
 }
 
-.highlight
+/* bold things */
+h4,
+#breadCrumbCaption,
+div.box .title,
+.price,
+#addToCart,
+.required label,
+.errorText,
+.eavAttributes .attrName,
+.featured .title a,
+.currentName,
+.filterGroup .showAll,
+.subCatName,
+.notFoundMain,
+.currentPage,
+.spec,
+.returnToCategory,
+tr.specificationGroup,
+.overallRating,
+.ratingCategoryName,
+.reviewTitle,
+#rateProduct .heading,
+.readAllReviews,
+div.checkout a,
+.subTotalCalc,
+.continueShopping,
+.proceedToCheckout,
+.shipment .subTotal,
+#cart .subTotal,
+#payTotal .subTotal,
+#invoicePaymentInfo .grandTotal td.amount,
+#invoicePaymentInfo .amountDue td.amount,
+.multiAddress .shipmentAddress,
+#userMenu li.selected,
+.cancelled,
+ul.downloadFile li.fileGroup
 {
-	background-color: #ffffe0;
-	border: 1px solid yellow;
-	padding: 1em;
-}
-
-.message
-{
-	padding: 15px;
 	font-weight: bold;
 }
 
-div.confirmationMsg
+/* red things */
+a.messages,
+.cancelled,
+a.cancel,
+.errorMsg,
+.errorText,
+.discount .actualPrice
 {
-    padding: 10px;
+	color: red;
 }
 
-div.confirmationMsg div
+/* auto-width select boxes */
+.quickSearch select,
+#language select,
+#productSort,
+.cartLinks select,
+#ccExpiryMonth, #ccExpiryYear, #ccType
 {
-    display: inline;
-    padding: 5px;
-    background-color: #FFFCAC;
-    z-index: 0;
+	width: auto;
 }
+
+/* smaller input fields */
+.quickSearch select,
+.quickSearch input.text,
+.quickSearch input.submit,
+#language select,
+.cartName small
+#productSort
+{
+	font-size: 0.85em;
+	padding: 0;
+}
+
+/* smaller text */
+.logout,
+.latestNewsSide .date,
+#currency, #language,
+.newsReadMore,
+.count,
+li.moreSubCats,
+a.layoutSetList, a.layoutSetGrid,
+.spec,
+a.addToCart,
+.listPrice,
+.productListRating a,
+.overallRating a,
+.noStock, .lowStock,
+.forgottenPassword,
+#cart .productOptionsMenu,
+.cartControl a,
+.subTotalCalc,
+.fieldDescription,
+.progressOrder,
+a.cvv
+{
+	font-size: smaller;
+}
+
+/* centered text */
+div.box .title,
+.subCategories td.subCatImage,
+.productGrid td,
+ul.productList .image,
+.overallRating,
+.noStock, .lowStock,
+#imageContainer,
+#moreImages,
+#rateProduct table td,
+.cartQuant,
+.cartPrice,
+.cartImage,
+#cartUpdate,
+#couponCodes .container,
+#checkoutProgress,
+.addressSelector .selector,
+.shipment td,
+.shipment .subTotal, #cart .subTotal,
+#invoiceHeader,
+td.amount,
+.compactProductList .image,
+.compactProductList .pricingInfo
+{
+	text-align: center;
+}
+
+/* left aligned text that needs to be overriden from right/center */
+.shipment .productName,
+.multiAddress .shipmentAddress
+{
+	text-align: justify;
+}
+
+/* right aligned text */
+#mainInfo td.param,
+.ratingBreakdown,
+td.addToWishList,
+.reviewIndex .pagingInfo,
+.multiAddressCheckout,
+#expressCheckoutMethods,
+.orderOverviewControls,
+div.addressControl,
+#invoicePaymentInfo td.amount,
+.multiAddressCheckout
+{
+    text-align: right;
+}
+
+/* vertical centering */
+.subCatImage,
+.subCategories td.details,
+.orderingControls *,
+.overallRating *,
+#mainInfo td,
+.ratingCategoryName,
+.ratingPreview,
+#cart td, #wishList td,
+.addressSelector .selector,
+#otherMethods img,
+img.calendar_button
+{
+    vertical-align: middle;
+}
+
+/* left floats */
+#leftSide,
+#logoContainer,
+.quickSearch,
+.subCategories,
+.allFilters .filterGroup,
+.resultStats .pagingInfo, .categoryLayoutSwitch,
+ul.productList .spec,
+ul.productList .image,
+#productSummaryContainer,
+#ratingSummary,
+.ratingBreakdown,
+#imageContainer,
+#bundle .pricingInfo,
+.bundleList, .bundleInfo,
+.reviewIndex #ratingSummary,
+.continueShopping,
+.checkoutHeader h1,
+#billingAddressColumn,
+#shippingSelector,
+#ccForm,
+.addressContainer,
+#cvvExample,
+.newCustomer,
+#userMenuContainer,
+div.addressBlock,
+.orderDetails,
+.orderDetails .orderMenu,
+.responseUser,
+.manufacturerColumn,
+.manufacturerAttributes,
+label,
+input.radio, input.checkbox,
+.compactProductList div
+{
+	float: left;
+}
+
+/* right floats */
+#rightSide,
+#topMenuContainer,
+#currency, #language,
+.resultStats .sortOptions,
+ul.productList a.addToCart, .productGrid a.addToCart,
+ul.productList .pricingInfo,
+ul.productList .orderingControls,
+.specSummary,
+div.review .ratingBreakdown,
+.checkoutButtons,
+.proceedToCheckout,
+#checkoutProgress,
+#cvvHelp,
+.returningCustomer,
+.noteDate,
+.manufacturerImage
+{
+	float: right;
+}
+
+/* links/menus with background images */
+.resultPages .previous,
+ul.productList a.addToCart, .productGrid a.addToCart,
+ul.attributeList li,
+.continueShopping,
+#userMenu li,
+.orderMenu li a,
+ul.downloadFile li,
+.errorText
+{
+	padding-left: 22px;
+}
+
+/* right side background images */
+#smallCart a.checkout,
+.resultPages .next,
+.proceedToCheckout,
+.websiteUrl a
+{
+	padding-right: 22px;
+    background-position: center right;
+}
+
+/* background color 1: light grey */
+tr.odd,
+#searchContainer,
+.categories .content,
+#userMenuContainer,
+fieldset,
+div.addressBlock,
+.orderDetails,
+#productSummaryContainer,
+.noteText,
+.dynamicMenu, .dynamicMenu ul,
+.dynamicMenu li:hover li a,
+.dynamicMenu li.sfhover li a,
+.dynamicMenu li:hover li:hover li a,
+.dynamicMenu li.sfhover li:hover li a
+{
+    background-color: #F9F9F9;
+}
+
+.table thead,
+tr.specificationGroup
+{
+    background-color: #ddd;
+}
+
+tr.even td,
+#checkoutProgress a,
+div.box .title
+{
+    background-color: #eee;
+}
+
+/* light yellow background */
+.highlight,
+#cartFields .container, #couponCodes .container,
+span.templateLocator span.templateName,
+.proceedToCheckout,
+#couponCodes .container,
+#payTotal div,
+#testHandlerWarning,
+.specSummary
+{
+	background-color: #ffffe0;
+}
+
 
 /*****************************
 	Layout
@@ -153,21 +442,15 @@ div.confirmationMsg div
   	width: 950px;
 }
 
-#header
-{
-  	padding: 20px;
-}
-
 #footer
 {
-	border-top: 1px solid #DDDDDD;
+	border-top-width: 1px;
   	padding: 20px;
   	text-align:center;
 }
 
 #leftSide
 {
-	float: left;
 	width: 190px;
 	overflow: visible;
 	position: relative;
@@ -176,22 +459,15 @@ div.confirmationMsg div
 
 #rightSide
 {
-	float: right;
 	width: 210px;
 	display: none;
 	padding-right: 10px;
 }
 
-#clearFooter {
-	clear: both;
-	height: 1px;
-}
-
 #content
 {
 	margin-left: 190px;
-	padding: 10px;
-	padding-top: 0;
+	padding: 0 10px;
 }
 
 #content.left
@@ -205,38 +481,26 @@ div.confirmationMsg div
 	padding-right: 0;
 }
 
+body.threeColumn #content,
+body.threeColumn #userContent
+{
+	padding-right: 240px;
+}
+
 /*****************************
 	Header
 *****************************/
 #header
 {
     padding-top: 6px;
-  	padding-bottom: 0;
 	z-index: 50;
 	position: relative;
 	width: 100%;
 }
 
-#storeName
+#smallCart a.checkout
 {
-	font-family: "Trebuchet MS";
-	font-size: 26px;
-	font-weight: bold;
-	display: inline;
-    position: absolute;
-    left: 90px;
-    top: -10px;
-}
-
-#logoContainer
-{
-	float: left;
-}
-
-#topMenuContainer
-{
-	float: right;
-	text-align: center
+	background-image: url(../../image/silk/gif/cart_go.gif) center right no-repeat;
 }
 
 /*****************************
@@ -251,12 +515,9 @@ div.box
 
 div.box .title
 {
-  	border-bottom: 1px solid #CCCCCC;
-  	border-top: 1px solid #CCCCCC;
+  	border-bottom-width: 1px;
+  	border-top-width: 1px;
   	padding: 3px;
-  	background-color: #EEEEEE;
-  	text-align: center;
-  	font-weight: bold;
   	color: #143788;
 }
 
@@ -264,21 +525,6 @@ div.box .content
 {
   	padding: 5px;
   	overflow: visible;
-}
-
-.currentName
-{
-	font-weight: bold;
-/*    background-image: url(../../image/silk/bullet_blue.png); */
-    background-repeat: no-repeat;
-    background-position: left center;
-    padding-left: 20px;
-    margin-left: -20px;
-}
-
-li.current
-{
-
 }
 
 fieldset.container
@@ -291,12 +537,7 @@ fieldset.container
 *****************************/
 .table
 {
-    border: 1px solid #DDDDDD;
-}
-
-.table thead
-{
-    background-color: #FAFAFA;
+    border-width: 1px;
 }
 
 .table th
@@ -309,42 +550,15 @@ fieldset.container
     padding: 4px;
 }
 
-tr.odd
-{
-    background-color: #F6F6F6;
-}
-
-tr.even
-{
-    background-color: #EEEEEE;
-}
-
 /*****************************
 	Quick search
 *****************************/
 #searchContainer
 {
-    border-top: 1px solid #CCCCCC;
-    border-bottom: 1px solid #DDDDDD;
-    background: #F7F7F7;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
     margin-bottom: 10px;
-}
-
-.quickSearch
-{
-	padding-left: 30px;
-	float: left;
-}
-
-.quickSearch input, .quickSearch select
-{
-    font-size: smaller !important;
-}
-
-.quickSearch .submit
-{
-    margin-bottom: 0;
-    margin-top: 0;
+    padding: 3px 1em;
 }
 
 .quickSearch .searchQuery
@@ -352,28 +566,13 @@ tr.even
 	width: 160px;
 }
 
-.quickSearch select
-{
-    width: auto;
-    padding-left: 0;
-}
-
 /*****************************
 	Category box
 *****************************/
-.categories ul
-{
-    margin-left: 0;
-    padding-left: 0;
-}
-
 .categories .content
 {
-    background-color: #F6F6F6;
-    padding: 12px !important;
-    padding-left: 20px !important;
-    padding-top: 5px !important;
-  	border-bottom: 1px solid #CCCCCC;
+    padding: 5px 12px 12px 22px !important;
+  	border-bottom-width: 1px;
 }
 
 .categories .content a
@@ -386,38 +585,19 @@ tr.even
     margin-top: 5px;
 }
 
-.categories ul li
-{
-    list-style-type: none;
-}
-
 .categories ul ul
 {
-    list-style-type: disc;
-    margin-top: 8px;
-    margin-left: 0;
     padding-left: 12px;
 }
 
 .current ul, .subSubCats
 {
-    margin-left: 0 !important;
     padding-left: 0 !important;
 }
 
 .current ul li, .subSubCats li
 {
-    list-style-type: none;
-    margin-bottom: 7px;
     padding-left: 20px;
-    background-image:url(../../image/silk/gif/bullet_arrow_left.gif);
-    background-repeat: no-repeat;
-    background-position: left 2px;
-}
-
-.categories .count
-{
-
 }
 
 /*****************************
@@ -425,11 +605,8 @@ tr.even
 *****************************/
 .filterGroup ul
 {
-	padding: 4px;
-	padding-left: 20px;
+	text-indent: 22px;
 	font-size: 90%;
-	padding-right: 0;
-	width: auto;
 }
 
 .filterGroup ul li a
@@ -437,57 +614,14 @@ tr.even
     color: #BB5500;
 }
 
-.filterGroup ul li
-{
-    margin-bottom: 2px;
-    list-style-type: none;
-    padding-right: 1px;
-}
-
 .filterGroup h4
 {
-	margin-top: 3px;
-}
-
-.filterGroup .count, .categories .count
-{
-	color: #666666;
+	margin-top: 5px;
 }
 
 .filterGroup .showAll
 {
-	list-style: none;
-	font-weight: bold;
-	margin-top: 5px;
-	padding-top: 2px;
 	background-image: url(../../image/silk/gif/tag_yellow.gif);
-	background-position: center left;
-	background-repeat: no-repeat;
-	padding-left: 20px;
-	margin-left: -20px;
-
-	z-index: 10;
-
-}
-
-#smallCart
-{
-    padding-top: 10px;
-}
-
-#smallCart a.checkout
-{
-	background-image: url(../../image/silk/gif/cart_go.gif);
-	background-position: center right;
-	background-repeat: no-repeat;
-	padding-right: 20px;
-}
-
-.logout
-{
-	margin-top: 0.5em;
-	font-size: smaller;
-	text-align: left;
 }
 
 /*****************************
@@ -495,22 +629,14 @@ tr.even
 *****************************/
 .informationMenu ul li
 {
-    list-style-type: none;
     margin-bottom: 5px;
 }
 
 /*****************************
 	Latest news block
 *****************************/
-.latestNewsSide
-{
-	list-style-type: none;
-	padding-left: 0;
-}
-
 .latestNewsSide .date
 {
-	font-size: smaller;
 	display: block;
 	margin-bottom: 0.5em;
 }
@@ -520,12 +646,7 @@ tr.even
 *****************************/
 #currency, #language
 {
-	font-size: smaller;
-	text-align: center;
-	margin-top: 12px;
-	margin-right: 12px;
-	float: right;
-	font-size: smaller;
+	margin-top: 3px;
 }
 
 #currency a, #language a
@@ -533,46 +654,23 @@ tr.even
 	margin-left: 3px;
 }
 
-#language select
-{
-	width: auto;
-	font-size: 0.9em;
-	margin: 0;
-}
-
 /*****************************
 	Breadcrumb
 *****************************/
 #breadCrumb
 {
-	float: left;
-	width: 100%;
 	padding: 5px;
-/*	font-size: smaller; */
 }
 
-#breadCrumb ul
+#breadCrumb *
 {
-    float: left;
+	display: inline;
 }
 
-#breadCrumb ul li
+#breadCrumb a,
+#breadCrumb li.last
 {
-	float: left;
-	margin-right: 10px;
-	list-style-type: none;
-}
-
-#breadCrumb ul li span.separator
-{
-	margin-left: 5px;
-	font-weight: bold;
-}
-
-#breadCrumbCaption
-{
-    float: left;
-    font-weight: bold;
+	margin: 0 7px;
 }
 
 /*****************************
@@ -583,29 +681,15 @@ tr.even
     font-style: italic;
 }
 
-.newsReadMore
-{
-    font-size: smaller;
-    padding: 0.5em;
-    padding-top: 0;
-}
-
 .newsArchive
 {
     padding-top: 1em;
 }
 
-ul.news
-{
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
 ul.news li.newsEntry
 {
-    margin-top: 0.5em;
-    border-bottom: 1px solid #eee;
+    padding: 0.5em 0;
+    border-bottom-width: 1px;
 }
 
 /*****************************
@@ -613,18 +697,13 @@ ul.news li.newsEntry
 *****************************/
 .count
 {
-    color: #666666;
+    color: #666;
+    white-space: nowrap;
 }
 
 .subCatName
 {
     font-size: larger;
-    font-weight: bold;
-}
-
-.subCatImage
-{
-    vertical-align: middle;
 }
 
 tr.separator td
@@ -635,7 +714,7 @@ tr.separator td
 
 tr.separator div
 {
-	border-bottom: 1px solid #EEEEEE;
+	border-bottom-width: 1px;
 	height: 5px;
 }
 
@@ -644,13 +723,11 @@ tr.separator div
     margin-top: 10px;
     margin-left: 5px;
     width: 49%;
-    float: left;
 }
 
 .subCategories td.subCatImage
 {
 	width: 85px;
-	text-align: center;
 	padding-right: 15px;
 }
 
@@ -658,19 +735,17 @@ tr.separator div
 {
     padding-left: 20px;
     padding-right: 10px;
-    vertical-align: middle;
     height: 140px;
 }
 
 .subCategories td.details.verticalSep
 {
-	border-right: 1px solid #EEEEEE;
+	border-right-width: 1px;
 }
 
 .subCategories td.details .count
 {
     font-weight: normal;
-    font-size: smaller;
 }
 
 .narrowByCat .subCategories td.details
@@ -678,20 +753,10 @@ tr.separator div
     height: auto;
 }
 
-.narrowByCat
-{
-	margin-bottom: 2em;
-}
-
 ul.subSubCats
 {
     margin: 6px;
     margin-top: 12px;
-}
-
-li.moreSubCats
-{
-    font-size: smaller;
 }
 
 /*****************************
@@ -702,20 +767,6 @@ li.moreSubCats
 	font-style: italic;
 }
 
-.notFound
-{
-    margin: 20px;
-    background-image: url(../../image/silk/gif/emoticon_unhappy.gif);
-    background-repeat: no-repeat;
-    background-position: 6px center;
-    padding-left: 28px;
-}
-
-.notFoundMain
-{
-    font-weight: bold;
-}
-
 .allFilters li
 {
 	margin-bottom: 5px !important;
@@ -724,17 +775,13 @@ li.moreSubCats
 .allFilters legend
 {
 	color: black;
-	background-color: inherit;
-    background-image: url(../../image/silk/gif/zoom.gif);
-    background-repeat: no-repeat;
-    background-position: 6px center;
+    background: url(../../image/silk/gif/zoom.gif) inherit 6px center no-repeat;
     padding-left: 28px;
     margin-left: 5px;
 }
 
 .allFilters .filterGroup
 {
-    float: left;
     width: 30%;
 }
 
@@ -749,69 +796,49 @@ li.moreSubCats
     border: 1px solid #143788;
     padding: 2px 6px;
     text-decoration: none;
-    margin-left: 2px;
-    margin-right: 2px;
+    margin: 0 2px;
 }
 
 .currentPage
 {
     background: #143788;
-    font-weight: bold;
     color: white;
+}
+
+.resultPages .next,
+.resultPages .previous
+{
+    border: 0;
+    text-decoration: underline;
 }
 
 .resultPages .next
 {
     background-image: url(../../image/silk/gif/resultset_next.gif);
-    background-repeat: no-repeat;
-    background-position: center right;
-    padding-right: 22px;
-    border: 0;
-    text-decoration: underline;
 }
 
 .resultPages .previous
 {
     background-image: url(../../image/silk/gif/resultset_previous.gif);
-    background-repeat: no-repeat;
-    background-position: center left;
-    padding-left: 22px;
-    border: 0;
-    text-decoration: underline;
 }
 
 .resultPages
 {
-    border-top: 1px solid #CCCCCC;
+    border-top-width: 1px;
     padding-top: 10px;
 }
 
 .resultStats
 {
-    padding: 10px;
-    padding-top: 0;
-    padding-bottom: 5px;
     margin-bottom: 15px;
-    border-bottom: 1px solid #CCCCCC;
+    border-bottom-width: 1px;
     font-size: 120%;
     position: relative;
 }
 
-.resultStats .pagingInfo, .categoryLayoutSwitch
-{
-    float: left;
-    margin-top: 10px;
-    margin-bottom: 0;
-}
-
 a.layoutSetList, a.layoutSetGrid
 {
-	background-repeat: no-repeat;
-	background-position: left 0px;
 	padding: 0 0 0 20px;
-	font-size: smaller;
-	padding-bottom: 2px;
-	line-height: 18px;
 }
 
 a.layoutSetList
@@ -834,47 +861,18 @@ a.layoutSetGrid
 	display: none;
 }
 
-.resultStats .sortOptions
-{
-    float: right;
-    margin-top: 5px;
-}
-
-#productSort
-{
-    width: auto;
-    font-size: smaller;
-}
-
 table.productGrid
 {
 	width: 99%;
 	table-layout: fixed;
 }
 
-/* IE 6 */
-* html table.productGrid
-{
-	width: auto;
-}
-
-* html .resultStats
-{
-/*	width: 710px; */
-}
-
 .productGrid td
 {
-	text-align: center;
 	padding: 1em;
 	position: relative;
 	vertical-align: bottom;
 	overflow: hidden;
-}
-
-ul.productList
-{
-	list-style: none;
 }
 
 ul.productList li
@@ -882,24 +880,9 @@ ul.productList li
 	margin-bottom: 30px;
 }
 
-.featured .title a
-{
-    font-weight: bold;
-/*
-    background-image: url(../../image/silk/gif/star.gif);
-    background-repeat: no-repeat;
-    padding-left: 22px;
-*/
-}
-
 ul.productList .title
 {
-	display:block;
-	font-size:120%;
-	margin-top:10px;
-	position:relative;
-	top:-20px;
-	text-align: left;
+	font-size: 120%;
 }
 
 .productGrid .title
@@ -910,11 +893,7 @@ ul.productList .title
 
 ul.productList .spec
 {
-	font-size: smaller;
-	font-weight: bold;
-	margin-bottom: 5px;
-	margin-top: 9px;
-	text-align: left;
+	margin: 2px 0 5px 0;
 }
 
 ul.productList .descr
@@ -924,15 +903,7 @@ ul.productList .descr
 
 ul.productList .image
 {
-	float: left;
-    margin-right: 8px;
-    width: 100px;
-    text-align: center;
-}
-
-ul.productList .image img
-{
-    vertical-align: top;
+    width: 110px;
 }
 
 ul.productList .order
@@ -942,46 +913,21 @@ ul.productList .order
 
 ul.productList a.addToCart, .productGrid a.addToCart
 {
-    padding-left: 20px;
     background-image:url(../../image/silk/gif/cart_add.gif);
-    background-repeat: no-repeat;
-    background-position: center left;
-    float: right;
-    font-size: smaller;
-}
-
-.pricingInfo span.price
-{
-/*
-	float: right;
-	width: 100px;
-*/
 }
 
 .listPrice
 {
 	text-decoration: line-through;
-	font-size: smaller;
 	font-weight: normal;
 }
 
 ul.productList .pricingInfo
 {
-    float: right;
     white-space: nowrap;
     width: 250px;
     line-height: 1.2em;
-    margin-top: -15px;
-}
-
-ul.productList .orderingControls
-{
-    float: right;
-}
-
-.orderingControls *
-{
-	vertical-align: middle;
+    margin-left: 1em;
 }
 
 .shortDescr
@@ -991,21 +937,13 @@ ul.productList .orderingControls
 
 .productSeparator
 {
-    border-bottom: 1px solid #EEEEEE;
-    margin-top: 15px;
-    margin-bottom: -7px;
-    margin-left: 110px;
-    margin-right: auto;
+    border-bottom-width: 1px;
+    margin: 15px auto -7px 110px;
 }
 
 .listItemSeparator
 {
 	color: #ccc;
-}
-
-.productListRating a
-{
-	font-size: smaller;
 }
 
 /*****************************
@@ -1018,29 +956,14 @@ ul.productList .orderingControls
 
 .returnToCategory
 {
-	padding-left: 0;
-    margin-bottom: 12px;
-}
-
-.returnToCategory a
-{
     background-image: url(../../image/silk/gif/resultset_previous.gif);
-    background-repeat: no-repeat;
-    background-position: center left;
     padding-left: 18px;
-    list-style-type: none;
-    margin-left: 0;
-    margin-top: 4px;
-    font-weight: bold;
+    margin-bottom: 12px;
 }
 
 .specSummary
 {
-    font-weight: bold;
-    float: right;
-    background: #FFFCDA;
     padding: 10px;
-    font-size: smaller;
     max-width: 300px;
     margin-top: -40px;
     z-index: 10;
@@ -1048,36 +971,24 @@ ul.productList .orderingControls
 
 #productSummaryContainer
 {
-	float: left;
+	margin-top: 1em;
 }
 
 #mainInfo
 {
     clear: right;
-    margin-bottom: 1em;
+    margin: 1em;
 }
 
 #ratingSummary
 {
-	float: left;
 	width: 250px;
-}
-
-#mainInfo table
-{
-	margin-top: 20px;
 }
 
 #mainInfo td
 {
 	padding: 5px;
 	white-space: nowrap;
-	vertical-align: middle;
-}
-
-#mainInfo td.param
-{
-    text-align: right;
 }
 
 #mainInfo td.websiteUrl
@@ -1088,41 +999,22 @@ ul.productList .orderingControls
 .websiteUrl a
 {
   	background-image: url(../../image/backend/icon/exLink.gif) !important;
-  	background-repeat: no-repeat;
-	background-position: right 0px;
-	padding-right: 20px;
-}
-
-.overallRating
-{
-	font-weight: bold;
-	text-align: center;
-}
-
-.overallRating *
-{
-	vertical-align: middle;
 }
 
 .overallRating a
 {
 	font-weight: normal;
-	font-size: smaller;
 }
 
 .ratingBreakdown
 {
-	text-align: right;
 	color: #888;
-	list-style-type: none;
-	float: left;
 	clear: left;
 	margin-top: 0.5em;
 }
 
 .price
 {
-	font-weight: bold;
 	color: #a52a2a;
 }
 
@@ -1131,16 +1023,10 @@ ul.productList .orderingControls
 	font-size: larger;
 }
 
-.noStock, .lowStock
-{
-    text-align: center;
-    font-size: smaller;
-}
-
 table.quantityPrice
 {
-	border: 1px solid #def;
-	margin: 0 auto;
+	border-width: 1px;
+	margin: 1em auto;
 }
 
 .price.quantityPrice
@@ -1148,27 +1034,9 @@ table.quantityPrice
 	font-size: 1em !important;
 }
 
-#productPurchaseLinks .productOptions
+.productOptions .productOption
 {
-	padding: 0 0.5em;
-}
-
-.productOptions p
-{
-	margin: 5px 0;
-}
-
-.productOptions label.field
-{
-	display: block;
-	float: none;
-	margin-bottom: 0;
-}
-
-.productOptions input.text, .productOptions select
-{
-	margin-top: 2px;
-	margin-bottom: 0;
+	margin: 3px 0;
 }
 
 .productOptions .description
@@ -1176,46 +1044,24 @@ table.quantityPrice
 	font-size: 0.85em;
 	white-space: normal;
 	width: 250px;
-}
-
-.nonEditableOption
-{
-	line-height: 2em;
+	margin: 0;
 }
 
 .radioOptions
 {
-	padding: 0 0.5em;
-	border: 1px solid #aaa;
-}
-
-.productVariations label
-{
-	float: none;
-	display: block;
-	margin-bottom: 0;
-}
-
-#productSpecification table
-{
-	border: 1px solid #AAAAAA;
-	width: auto;
+	padding-left: 0.5em;
+	border-width: 1px;
 }
 
 #productSpecification td
 {
-    padding: 5px;
-    vertical-align: top;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 5px 10px;
     border: 1px solid white;
 }
 
 tr.specificationGroup
 {
-    font-weight: bold;
 	font-size: larger;
-	background-color: #CCCCCC;
 }
 
 tr.specificationGroup td.param
@@ -1236,29 +1082,16 @@ ul.attributeList
 ul.attributeList li
 {
     background-image: url(../../image/silk/gif/tick.gif);
-    background-repeat: no-repeat;
-    background-position: center left;
-    padding-left: 22px;
-    list-style-type: none;
-    margin-left: 0;
 }
 
 ul.attributeList.singleValue li
 {
     background-image: none;
-    padding-left: 0;
-}
-
-#relatedProducts a.productName
-{
-	display: block;
 }
 
 #imageContainer
 {
 	width: 450px;
-	float: left;
-    text-align: center;
 }
 
 #outerImageContainer #imageContainer
@@ -1282,12 +1115,6 @@ ul.attributeList.singleValue li
 	font-size: 1.2em;
 }
 
-/* select elements do not respect z-index in IE 6 */
-.lightboxOn select
-{
-	// visibility: hidden;
-}
-
 #mainImage
 {
     margin: 20px;
@@ -1303,11 +1130,6 @@ ul.attributeList.singleValue li
 	height: auto;
 }
 
-#moreImages
-{
-	text-align: center;
-}
-
 #moreImages img
 {
 	border: 1px solid black;
@@ -1315,28 +1137,9 @@ ul.attributeList.singleValue li
 	cursor: pointer;
 }
 
-.cartLinks
-{
-	text-align: center;
-	padding-top: 0;
-	vertical-align: middle;
-}
-
 .cartLinks select
 {
-    width: auto;
-    padding: 0;
-}
-
-td.addToWishList
-{
-    text-align: right;
-    padding-bottom: 30px !important;
-}
-
-#addToCart
-{
-	font-weight: bold;
+    font-size: normal;
 }
 
 #rateProduct
@@ -1347,13 +1150,6 @@ td.addToWishList
 #rateProduct table td
 {
 	padding: 4px;
-	text-align: center;
-/*	vertical-align: middle; */
-}
-
-#rateProduct .heading
-{
-	font-weight: bold;
 }
 
 #rateProduct .productTable .errorText
@@ -1363,33 +1159,14 @@ td.addToWishList
 	left: -85px;
 }
 
-.ratingCategoryName
-{
-	font-weight: bold;
-	vertical-align: middle;
-}
-
 .ratingPreview
 {
-	background: #fff;
-	padding: 0;
-	vertical-align: middle;
-}
-
-.reviewForm
-{
-	margin-top: 1em;
-}
-
-.reviewForm label
-{
-	float: none !important;
+	background-color: transparent !important;
 }
 
 .reviewTitle
 {
 	line-height: 1.5em;
-	font-weight: bold;
 }
 
 .reviewText
@@ -1400,7 +1177,7 @@ td.addToWishList
 div.review
 {
 	padding-top: 1em;
-	border-top: 1px solid #eee;
+	border-top-width: 1px;
 }
 
 div.review.first
@@ -1411,15 +1188,9 @@ div.review.first
 
 div.review .ratingBreakdown
 {
-	float: right;
 	margin: 0.5em;
 	padding: 1em;
-	border: 1px solid #eee;
-}
-
-.readAllReviews
-{
-	font-weight: bold;
+	border-width: 1px;
 }
 
 #bundle .productInfo
@@ -1427,21 +1198,15 @@ div.review .ratingBreakdown
 	width: 150px;
 }
 
-#bundle .pricingInfo
-{
-	float: left;
-}
-
 .bundleList, .bundleInfo
 {
-	float: left;
 	padding-right: 0.5em;
 	margin-left: 1em;
 }
 
 .bundleList
 {
-	border-right: 1px solid #eee;
+	border-right: 1px;
 }
 
 .bundlePrice
@@ -1455,16 +1220,10 @@ div.review .ratingBreakdown
 .reviewIndex .pagingInfo
 {
 	float: none;
-	text-align: right;
 	margin-top: 0;
 	position: absolute;
 	bottom: 5px;
 	right: 0;
-}
-
-.reviewIndex #ratingSummary
-{
-	float: left;
 }
 
 /*****************************
@@ -1473,36 +1232,15 @@ div.review .ratingBreakdown
 .forgottenPassword
 {
     display: block;
-    font-size: smaller;
-}
-
-/*****************************
-	Shopping cart box
-*****************************/
-div.checkout a
-{
-	font-weight: bold;
 }
 
 /*****************************
 	Shopping cart
 *****************************/
-#cartStats
-{
- 	padding-top: 10px;
- 	padding-bottom: 10px;
-}
-
-.cartListTitle
-{
-	text-align: left;
-}
-
 #cart, #wishList
 {
 	width: 700px;
-	margin-left:auto;
-	margin-right:auto;
+	margin: 0 auto;
 }
 
 #wishList table
@@ -1520,17 +1258,11 @@ div.checkout a
 {
 	overflow: hidden;
 	padding: 3px;
-	vertical-align: middle;
 }
 
 #cart .productOptions
 {
 	margin: 0.5em 0;
-}
-
-#cart .productOptionsMenu
-{
-	font-size: smaller;
 }
 
 .cartControl
@@ -1540,39 +1272,31 @@ div.checkout a
 	padding-left: 1em !important;
 }
 
-.cartControl a
-{
-	white-space: nowrap;
-	font-size: smaller;
-	margin-bottom: 5px;
-	display: block;
-}
-
 .cartQuant
 {
 	width: 80px;
-	text-align: center;
-	padding-bottom: 5px;
 }
 
 .cartPrice
 {
 	width: 100px;
-	text-align: center;
 	white-space: nowrap;
-	padding-bottom: 5px;
 }
 
 .subTotalCalc
 {
-	font-size: smaller;
-	font-weight: bold;
 	color: #777777;
 }
 
-.cartName
+.cartImage
 {
-	width: auto;
+	width: 60px;
+	padding: 7px !important;
+}
+
+.cartImage img
+{
+	border-width: 1px;
 }
 
 .cartQuant input.text
@@ -1582,17 +1306,11 @@ div.checkout a
 
 .continueShopping
 {
-    float: left;
     background-image: url(../../image/silk/gif/resultset_previous.gif);
-    background-repeat: no-repeat;
-    background-position: center left;
-    padding-left: 22px;
-    font-weight: bold;
 }
 
 .checkoutButtons
 {
-    float: right;
     width: 400px;
 }
 
@@ -1600,20 +1318,16 @@ div.checkout a
 {
 	clear: right;
 	display: block;
-	text-align: right;
 	padding-top: 1em;
 }
 
 .proceedToCheckout
 {
-    background-color: #DDEEFF;
     background-image: url(../../image/silk/gif/cart_go.gif);
-    background-position: 97% center;
-    background-repeat: no-repeat;
-    border: 1px solid #DDDDDD;
-    font-weight: bold;
-    padding: 5px 27px 5px 5px;
-    float: right;
+	background-position: 97% center;
+    border-width: 1px;
+    padding: 5px;
+    padding-right: 27px;
 }
 
 select.multiAddress
@@ -1621,43 +1335,21 @@ select.multiAddress
 	width: 100%;
 }
 
-.cartImage
-{
-	width: 60px;
-	padding: 7px !important;
-	text-align: center;
-}
-
-.cartImage img
-{
-	vertical-align: middle;
-	border: 1px solid #777777;
-}
-
-#cartUpdate
-{
-	text-align: center;
-}
-
 #expressCheckoutMethods
 {
     padding: 20px;
-    text-align: right;
 }
 
 #cartFields .container, #couponCodes .container
 {
 	padding: 0 1em 0.5em 0.5em;
-	background-color: lightyellow;
-	border: 1px solid #ddd;
+	border-width: 1px;
 	margin: 0.5em 0;
 }
 
 #couponCodes .container
 {
-	background-color: #e8ffff;
-	padding-bottom: 0;
-	text-align: center;
+	padding: 1em;
 }
 
 .text.coupon
@@ -1675,11 +1367,6 @@ select.multiAddress
 	height: 80px;
 }
 
-.fieldDescription
-{
-	font-size: smaller;
-}
-
 /*****************************
 	Checkout
 ***************************/
@@ -1693,24 +1380,20 @@ select.multiAddress
 
 .checkoutHeader h1
 {
-    float: left;
     line-height: 2em;
 }
 
 #checkoutProgress
 {
     width: auto;
-    text-align: center;
     padding-top: 1em;
-    float: right;
 	height: 3em;
 }
 
 #checkoutProgress a
 {
     padding: 10px;
-    border: 3px solid #ccc;
-    background-color: #eee;
+    border-width: 3px;
     margin-right: 20px;
 }
 
@@ -1724,7 +1407,7 @@ select.multiAddress
 .addressSelected
 {
     border: 3px solid #ADD8E6 !important;
-    background-color: #f8f8f8 !important;
+    background-color: #F7F7F7 !important;
 }
 
 /* current step */
@@ -1740,7 +1423,6 @@ select.multiAddress
 
 .progressOrder
 {
-    font-size: smaller;
     margin-right: 5px;
 }
 
@@ -1749,12 +1431,6 @@ select.multiAddress
 table.addressSelector
 {
 	width: 100%;
-}
-
-.addressSelector .selector
-{
-    vertical-align: middle;
-    text-align: center;
 }
 
 .selector.addAddress
@@ -1787,7 +1463,6 @@ table.addressSelector
 #billingAddressColumn,
 #shippingSelector
 {
-	float: left;
 	width: 49%;
 }
 
@@ -1818,7 +1493,7 @@ table.addressSelector
 .shipment
 {
     width: 70%;
-    border: 1px solid #DDDDDD;
+    border-width: 1px;
 }
 
 .userViewOrder .shipment
@@ -1828,21 +1503,17 @@ table.addressSelector
 
 .shipment td
 {
-    text-align: center;
     width: 12%;
 }
 
 .shipment .productName
 {
-    text-align: left;
     width: 64%;
 }
 
 .shipment .subTotal, #cart .subTotal
 {
-    font-weight: bold;
 	white-space: nowrap;
-	text-align: center;
 }
 
 .subTotalCaption, .shipment td.tax
@@ -1858,25 +1529,9 @@ table.addressSelector
 }
 
 /* Payments */
-#ccForm
-{
-    float: left;
-    width: 500px;
-}
-
-#ccExpiryMonth, #ccExpiryYear, #ccType
-{
-    width: auto;
-}
-
 #ccCVV
 {
     width: 4em;
-}
-
-a.cvv
-{
-	font-size: smaller;
 }
 
 #payTotal
@@ -1888,15 +1543,9 @@ a.cvv
 {
 	font-size: larger;
 	padding: 6px;
-	background-color: #FFFCCC;
 	display: inline;
 	margin: 20px;
 	border: 2px solid #FFFC8C;
-}
-
-#payTotal .subTotal
-{
-	font-weight: bold;
 }
 
 #payItems
@@ -1914,7 +1563,6 @@ a.cvv
 .orderOverviewControls
 {
     width: 70%;
-    text-align: right;
 }
 
 .orderOverviewControls a
@@ -1925,12 +1573,6 @@ a.cvv
 .user-pay .orderOverviewControls, .user-pay .addressContainer a
 {
 	display: none;
-}
-
-.multiAddress .shipmentAddress
-{
-	text-align: left;
-	font-weight: bold;
 }
 
 .multiAddress .overviewShippingInfo td
@@ -1947,12 +1589,6 @@ a.cvv
 .addressContainer
 {
     width: 50%;
-    float: left;
-}
-
-#otherMethods img
-{
-    vertical-align: middle;
 }
 
 #otherMethods a
@@ -1967,16 +1603,8 @@ a.cvv
 
 #cvvHelp
 {
-    float: left;
-    width: 350px;
+    width: 340px;
     padding: 5px;
-    margin-left: 20px;
-}
-
-#cvvExample
-{
-    vertical-align: top;
-    float: left;
 }
 
 #testHandlerWarning
@@ -1987,7 +1615,6 @@ a.cvv
     margin-right: auto;
     border: 1px solid yellow;
     padding: 5px;
-    background-color: #FFFCDA;
     margin-top: 15px;
     margin-bottom: 15px;
 }
@@ -2002,13 +1629,11 @@ a.cvv
 ***************************/
 .newCustomer
 {
-	float: left;
 	width: 58%;
 }
 
 .returningCustomer
 {
-	float: right;
 	width: 40%;
 }
 
@@ -2027,18 +1652,10 @@ a.cvv
     margin: 0;
 }
 
-ul#userMenu
-{
-    padding: 0;
-}
-
 #userMenu li
 {
     margin-bottom: 10px;
-    list-style-type: none;
-    background-repeat: no-repeat;
     background-position: bottom left;
-    padding-left: 22px;
 }
 
 #userMenu li#homeMenu
@@ -2083,21 +1700,14 @@ ul#userMenu
 
 #userMenu li#signOutMenu, #userMenu li#personalMenu, #userMenu li#orderMenu
 {
-	border-top: 1px solid #DDDDDD;
+	border-top-width: 1px;
     padding-top: 10px;
-}
-
-#userMenu li.selected
-{
-    font-weight: bold;
 }
 
 #userMenuContainer
 {
     padding: 10px;
-    float: left;
-    background-color: #F7F7F7;
-    border: 1px solid #DDDDDD;
+    border-width: 1px;
     margin-bottom: 30px;
 }
 
@@ -2117,19 +1727,14 @@ div.addressBlock
 
 div.addressBlock
 {
-    border: 1px solid #DDDDDD;
-    background-color: #FAFAFA;
-    float: left;
-    padding: 10px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    border-width: 1px;
+    padding: 5px 10px;
     margin-top: 10px;
     cursor: pointer;
 }
 
 div.addressControl
 {
-    text-align: right;
     width: 250px;
     margin-bottom: 15px;
     margin-top: 5px;
@@ -2140,9 +1745,7 @@ div.addressControl
 ***************************/
 .orderDetails
 {
-    border: 1px solid #DDDDDD;
-    background-color: #FAFAFA;
-    float: left;
+    border-width: 1px;
     width: 96%;
     padding: 10px;
     margin-bottom: 20px;
@@ -2155,7 +1758,6 @@ div.addressControl
 
 .orderDetails .orderMenu
 {
-    float: left;
     width: 200px;
 }
 
@@ -2166,17 +1768,14 @@ div.addressControl
 
 #content .orderMenu ul
 {
-    list-style-type: none;
     margin: 5px;
     margin-left: 0;
-    padding-left: 0;
 }
 
 .orderMenu li
 {
     padding: 4px;
     margin-left: 0;
-    padding-left: 0;
 }
 
 .orderMenu .orderTotal
@@ -2189,13 +1788,9 @@ div.orderStatus
     padding: 6px;
 }
 
-a.invoice, a.viewOrder, a.reorder, a.messages
+a.invoice
 {
-	padding-left: 22px;
 	background-image: url(../../image/silk/gif/printer.gif);
-	background-position: left center;
-	background-repeat: no-repeat;
-	margin-right: 1em;
 }
 
 a.viewOrder
@@ -2211,17 +1806,6 @@ a.reorder
 a.messages
 {
 	background-image: url(../../image/silk/gif/email.gif);
-	color: red;
-}
-
-p.messages
-{
-}
-
-.cancelled
-{
-    color: red;
-    font-weight: bold;
 }
 
 .subItemList
@@ -2239,20 +1823,14 @@ p.messages
 ***************************/
 ul.downloadFile li
 {
-    list-style-type: none;
     padding: 4px;
-    padding-left: 22px;
     background-image: url(../../image/silk/gif/disk.gif);
-    background-position: center left;
-    background-repeat: no-repeat;
 }
 
 ul.downloadFile li.fileGroup
 {
-    padding-left: 0;
     background-image: none;
     margin-top: 7px;
-    font-weight: bold;
 }
 
 /***************************
@@ -2260,9 +1838,7 @@ ul.downloadFile li.fileGroup
 ***************************/
 ul.notes
 {
-    list-style-type: none;
     margin-top: 15px;
-    padding-left: 0;
 }
 
 ul.notes li
@@ -2270,20 +1846,9 @@ ul.notes li
     margin-bottom: 10px;
 }
 
-.responseUser
-{
-    float: left;
-}
-
-.noteDate
-{
-    float: right;
-}
-
 .noteText
 {
-    border: 1px solid #EEEEEE;
-    background-color: #FCFCFC;
+    border-width: 1px;
     padding: 5px;
     margin-top: 5px;
     font-family: "Lucida Console", Monospace;
@@ -2307,17 +1872,11 @@ ul.notes li.responder_1 .noteText
     display: block;
 }
 
-#noteForm label
-{
-    float: none;
-}
-
 /***************************
 	Invoices
 ***************************/
 #invoiceHeader
 {
-    text-align: center;
     border-bottom: 1px solid black;
     position: relative;
     margin-top: 20px;
@@ -2351,11 +1910,6 @@ ul.notes li.responder_1 .noteText
     width: 300px;
 }
 
-td.amount
-{
-    text-align: center;
-}
-
 .basePrice
 {
     display: none;
@@ -2368,46 +1922,25 @@ td.amount
 	margin-right: 4px;
 }
 
-.discount .actualPrice
-{
-	color: #f00;
-}
-
 #invoicePaymentInfo td.amount
 {
     width: auto;
-    text-align: right;
 }
 
-#invoicePaymentInfo .beforeTaxSubtotal td.amount
+#invoicePaymentInfo .beforeTaxSubtotal td.amount,
+#invoicePaymentInfo .amountPaid td,
+#invoicePaymentInfo .grandTotal td.amount
 {
     border-top: 1px solid black;
 }
 
 #invoicePaymentInfo .grandTotal td.amount
 {
-    border-top: 1px solid black;
     padding-bottom: 10px;
-}
-
-#invoicePaymentInfo .amountPaid td
-{
-    border-top: 1px solid black;
-}
-
-#invoicePaymentInfo .grandTotal td.amount
-{
-    font-weight: bold;
-}
-
-#invoicePaymentInfo .amountDue td.amount
-{
-    font-weight: bold;
 }
 
 .itemOptions
 {
-	list-style-type: none;
 	padding: 0.5em;
 	font-size: 0.85em;
 	color: #777;
@@ -2425,20 +1958,17 @@ td.amount
 {
 	width: 47%;
 	margin-left: 2.5%;
-	float: left;
 }
 
 .manufacturerImage
 {
 	margin: 1em;
 	margin-top: 0;
-	float: right;
-	border: 1px solid #ddd;
+	border-width: 1px;
 }
 
 .manufacturerAttributes
 {
-	float: left;
 	margin-left: 1em;
 }
 
@@ -2473,14 +2003,12 @@ span.templateLocator span.templateName
 	position: absolute;
 	top: 0px;
 	left: 0px;
-	background-color: lightyellow;
 	height: 15px;
 	padding: 3px;
 	z-index: 1;
 	padding-left: 25px;
 	background-image: url(../../image/silk/gif/layout_edit.gif);
 	background-position: 4px center;
-	background-repeat: no-repeat;
 }
 
 span.templateLocator.activeTpl:hover > span.templateName:first-child
@@ -2488,15 +2016,10 @@ span.templateLocator.activeTpl:hover > span.templateName:first-child
 	display: inline;
 }
 
-span.templateLocator.activeTpl
-{
-
-}
-
 /***************************
 	Form styling
 ***************************/
-.confirmationMessage, .errorMessage
+.confirmationMessage, .errorMessage, .infoMessage
 {
 	border: 1px solid #0c0;
 	background-color: #efe;
@@ -2504,7 +2027,6 @@ span.templateLocator.activeTpl
 	padding-left: 30px;
 	background-image: url(../../image/silk/gif/tick.gif);
 	background-position: 5px center;
-	background-repeat: no-repeat;
 	margin: 0.5em;
 }
 
@@ -2526,83 +2048,49 @@ form p
     clear: both;
 }
 
-.feedback, .feedback_textarea
-{
-    position: absolute ! important;
-    vertical-align: middle;
-    margin-left: 10px;
-    padding-left: 20px;
-    background: url(../../image/silk/gif/error.gif) no-repeat left center;
-    visibility: hidden;
-    white-space: nowrap;
-}
-
-fieldset.group
-{
-    position: relative;
-}
-
-form fieldset.group div
-{
-    width: auto;
-}
-
 fieldset
 {
     margin: 1em 0;
     padding: 1em;
-    background: #f8f8f8;
     margin: auto 0;
     margin-bottom: 10px;
-    border: 1px solid #DDD;
+    border-width: 1px;
 }
 
 legend
 {
 	font-size: 18px;
 	color: #30A0F9;
-	padding-left: 10px;
-	padding-right: 10px;
+	padding: 10px 0;
 	top: -22px;
 }
 
 label
 {
-    float: left;
     width: 156px;
     cursor: pointer;
     padding-right: 6px;
-    margin-top: 0;
-    margin-bottom: 0;
-    line-height: 19px;
-}
-
-.required label
-{
-	font-weight: bold;
 }
 
 .required label span.label
 {
 	background: url(../../image/required.gif) right center no-repeat;
-	padding-right:9px;
+	padding-right: 9px;
 }
 
 p.radio, p.checkbox
 {
-   padding-left: 11em;
+	padding-left: 11em;
 }
 
 p.radio label, p.checkbox label
 {
     white-space: nowrap;
-    margin-top: 3px;
 }
 
 label.checkbox, label.radio
 {
   	line-height: 1em;
-  	width: auto;
 }
 
 input.text, select, file, form.other
@@ -2610,38 +2098,16 @@ input.text, select, file, form.other
     width: 15em;
     font-size: 16px;
     padding: 2px;
-    vertical-align: middle;
 }
 
 label.cancel
 {
-    float: none;
-    position: relative;
-    line-height: 1.5em;
-    padding-left: 0;
+    display: inline;
 }
 
 select
 {
 	padding: 0;
-}
-
-option
-{
-	padding-right: 4px;
-}
-
-optgroup option
-{
-   padding-left: 1em;
-   color: black;
-   background-color: #ffc;
-}
-
-optgroup
-{
-   font-style: normal;
-   font-weight: bold;
 }
 
 textarea
@@ -2650,17 +2116,7 @@ textarea
     width: 40em;
     height: 10em;
     font-size: 14px;
-    font-family: arial, verdana;
     color: #333;
-}
-.feedback_textarea
-{
-   line-height: 10em;
-}
-
-input.submit
-{
-    margin-top: 5px;
 }
 
 input.radio, input.checkbox, input.submit, input.button, input.reset
@@ -2670,8 +2126,7 @@ input.radio, input.checkbox, input.submit, input.button, input.reset
 
 input.radio, input.checkbox
 {
-    float: left;
-    margin-right: 0.5em;
+    margin: 0 0.5em 0 0;
     cursor: pointer;
 }
 
@@ -2680,58 +2135,31 @@ input:focus, textarea:focus, select:focus
     background: #ffc;
 }
 
-input.submit:focus
-{
-	color: #008cff;
-}
-
-input.required, textarea.required, select.required
-{
-    border-color: red;
-}
-
-label, input, select, form .other, textarea
-{
-    margin-top: 5px;
-    margin-bottom: 5px;
-    vertical-align: middle;
-}
-
-a.cancel
-{
- 	color: red;
-}
-
 fieldset.error, div.error, fieldset.container
 {
 	padding: 0;
 	margin: 0;
 	position: static;
 	border: 0;
-	background-color: inherit;
-	background: inherit;
-	/* @todo: let's see how this works for IE */
 	background: none;
 }
 
-.errorText /* , fieldset.error div */
+.errorText
 {
-	color: #f22;
-	background: url(../../image/silk/gif/bullet_error.gif) left center no-repeat;
-	width: auto;
+	background-image: url(../../image/silk/gif/bullet_error.gif);
 	margin-bottom: 4px;
-	margin-top: 0;
-	padding: 0px 3px 0px 20px;
-	font-weight: bold;
-	font-family: Tahoma;
-	clear: left;
 }
 
 .hasError
 {
-	border-color: red;
 	background-color: #FFFAFA;
 	border-color: red !important;
+}
+
+.highlight
+{
+	border: 1px solid yellow;
+	padding: 1em;
 }
 
 .hidden
@@ -2744,43 +2172,19 @@ fieldset.error, div.error, fieldset.container
 	display: block;
 }
 
-.progressIndicator {
+.progressIndicator
+{
 	padding: 15px;
 	width: 30px;
 	height: 20px;
 	background-image: url(../../image/indicator.gif);
 	background-position: center center;
-	background-repeat: no-repeat;
 	clear: none;
-}
-
-a.ajaxIndicator
-{
-	background-image: url(../../image/indicator.gif);
-	background-position: right center;
-	background-repeat: no-repeat;
-	padding-right: 22px;
-}
-
-p.checkbox label {
-    float: none;
-    clear: both;
-}
-
-label.title
-{
-    font-weight: bold;
 }
 
 label.text
 {
     width: auto;
-}
-
-/* textarea container */
-div.textarea
-{
- 	margin-bottom: 7px;
 }
 
 input.wide
@@ -2805,30 +2209,11 @@ img.calendar_button
 {
     margin-left: 0.5em;
     cursor: pointer;
-    border: 0px none;
-    vertical-align: middle;
-}
-
-img.calendar_button_hover
-{
-    background: red;
 }
 
 /***************************
 	EAV
 ***************************/
-.eavAttributes label
-{
-	float: none;
-	width: auto;
-	display: block;
-}
-
-.eavAttributes .attrName
-{
-	font-weight: bold;
-}
-
 .eavAttributes .attrValue
 {
 	margin-left: 1em;
@@ -2844,38 +2229,29 @@ img.calendar_button_hover
 *************************/
 .compactProductList ul
 {
-	list-style-type: none;
-	padding-left: 0;
 	margin-top: 0.5em;
 }
 
 .compactProductList .image
 {
-	float: left;
 	width: 45px;
-	text-align: center;
 }
 
 .compactProductList .productInfo
 {
-	float: left;
 	width: 90px;
 	font-size: 0.85em;
 	overflow: hidden;
 }
 
-.compactProductList .pricingInfo .price
+.compactProductList .pricingInfo
 {
-	position: static;
-	float: left;
-	width: 60px;
+	width: 70px;
 	font-size: 1em;
-	text-align: center;
 }
 
 .compactProductList li
 {
-	list-style-type: none;
 	margin-bottom: 7px;
 }
 
@@ -2897,7 +2273,6 @@ img.calendar_button_hover
 
 .rootCategories li ul
 {
-	padding-left: 0;
 	display: table;
 }
 
@@ -2935,19 +2310,14 @@ img.calendar_button_hover
 .dynamicMenu, .dynamicMenu ul { /* all lists */
 	padding: 0;
 	margin: 0;
-	list-style: none;
-	/* float : left; */
-	/* width : 142px; */
 	z-index: 10;
 	position: relative;
-	background-color: #F6F6F6;
 }
 
 .dynamicMenu li { /* all list items */
 	position : relative;
-	/* float : left; */
 	margin: 0;
-	border-top: 1px solid #ddd;
+	border-top-width: 1px;
 }
 
 .dynamicMenu li ul { /* second-level lists */
@@ -2960,8 +2330,7 @@ img.calendar_button_hover
 
 .dynamicMenu ul ul
 {
-	padding-left: 0;
-	border: 1px solid #ddd;
+	border-width: 1px;
 	border-top: 0;
 }
 
@@ -2973,14 +2342,6 @@ img.calendar_button_hover
 .dynamicMenu li.sfhover li.sfhover li.sfhover a
 {
 	background-color: lightyellow;
-}
-
-.dynamicMenu li:hover li a,
-.dynamicMenu li.sfhover li a,
-.dynamicMenu li:hover li:hover li a,
-.dynamicMenu li.sfhover li:hover li a
-{
-	background-color: #F6F6F6;
 }
 
 .dynamicMenu li ul ul { /* third-and-above-level lists */
@@ -3031,539 +2392,4 @@ img.calendar_button_hover
 
 .dynamicMenu li:hover ul, .dynamicMenu li li:hover ul, .dynamicMenu li li li:hover ul, .dynamicMenu li.sfhover ul, .dynamicMenu li li.sfhover ul, .dynamicMenu li li li.sfhover ul { /* lists nested under hovered list items */
 	left: auto;
-}
-
-/****************************
-	Right-to-left (Hebrew, Arabic, etc.)
-*****************************/
-.rtl
-{
-	direction: rtl;
-}
-
-.rtl #leftSide,
-.rtl .quickSearch,
-.rtl #logoContainer,
-.rtl #breadCrumb,
-.rtl #breadCrumbCaption,
-.rtl #breadCrumb ul,
-.rtl #breadCrumb li
-{
-	float: right;
-}
-
-.rtl #content
-{
-	margin-left: 0;
-	margin-right: 190px;
-}
-
-.rtl #content.left
-{
-	margin-right: 0;
-}
-
-.rtl #content.right
-{
-	margin-left: 0;
-}
-
-.rtl #topMenuContainer
-{
-	float: left;
-	margin-left: 25px;
-}
-
-.rtl #currency,
-.rtl #language,
-.rtl ul.productList a.addToCart,
-.rtl ul.productList .pricingInfo,
-.rtl ul.productList .orderingControls,
-.rtl .productGrid a.addToCart
-{
-	float: left;
-}
-
-.rtl #currency
-{
-	margin-left: 12px;
-}
-
-.rtl #smallCart a.checkout
-{
-	background-position: right center;
-	padding-left: 0;
-	padding-right: 20px;
-}
-
-.rtl h1
-{
-	padding-right: 10px;
-}
-
-.rtl ul
-{
-	padding-right: 12px;
-}
-
-.rtl .quickSearch
-{
-	padding-right: 30px;
-}
-
-.rtl .currentName
-{
-	padding-left: 0;
-	margin-left: 0;
-	padding-right: 20px;
-	margin-right: -20px;
-}
-
-.rtl .categories .content
-{
-	padding-left: 12px !important;
-	padding-right: 20px !important;
-}
-
-.rtl .categories ul
-{
-	padding-right: 0;
-}
-
-.rtl .categories ul ul
-{
-	padding-left: 0;
-	padding-right: 12px;
-}
-
-.rtl .current ul li,
-.rtl .subSubCats li
-{
-	background-position: right 2px;
-	padding-right: 20px;
-}
-
-.rtl .subCategories td.details
-{
-	border-left: 1px solid #EEEEEE;
-}
-
-.rtl .subCategories td.details.verticalSep
-{
-	border: 0;
-}
-
-.rtl .filterGroup ul
-{
-	padding-left: 0;
-	padding-right: 20px;
-}
-
-.rtl .filterGroup .showAll
-{
-	background-position: center right;
-	padding-left: 0;
-	margin-left: 0;
-	padding-right: 20px;
-	margin-right: -20px;
-}
-
-.rtl .notFound
-{
-    background-position: right center;
-    padding-right: 28px;
-}
-
-.rtl .allFilters legend
-{
-    background-position: right center;
-    padding-right: 28px;
-}
-
-.rtl .allFilters .filterGroup
-{
-    float: right;
-}
-
-.rtl .foundCategories
-{
-	margin-left: 0;
-	margin-right: 1em;
-}
-
-.rtl .resultPages .previous
-{
-    background-position: center right;
-    padding-left: 0;
-    padding-right: 22px;
-}
-
-.rtl .resultStats .pagingInfo,
-.rtl .categoryLayoutSwitch,
-.rtl #productSummaryContainer,
-.rtl #ratingSummary,
-.rtl .ratingBreakdown,
-.rtl #imageContainer,
-.rtl #bundle .pricingInfo,
-.rtl .bundleList,
-.rtl .bundleInfo,
-.rtl .reviewIndex #ratingSummary,
-.rtl .checkoutHeader h1,
-.rtl #ccForm,
-.rtl #cvvHelp,
-.rtl #cvvExample,
-.rtl #userMenuContainer,
-.rtl div.addressBlock,
-.rtl .orderDetails,
-.rtl .orderDetails .orderMenu,
-.rtl .responseUser,
-.rtl .manufacturerColumn,
-.rtl .manufacturerAttributes,
-.rtl label,
-.rtl .compactProductList .image,
-.rtl .compactProductList .productInfo,
-.rtl .compactProductList .pricingInfo .price,
-.rtl .continueShopping
-{
-	float: right;
-}
-
-.rtl .noteDate,
-.rtl .manufacturerImage,
-.rtl input.radio,
-.rtl input.checkbox,
-.rtl .specSummary,
-.rtl div.review .ratingBreakdown,
-.rtl .checkoutButtons,
-.rtl #rightSide,
-.rtl .proceedToCheckout,
-.rtl .resultStats .sortOptions,
-.rtl .noteDate
-{
-    float: left;
-}
-
-.rtl label
-{
-	padding-right: 0;
-	padding-left: 6px;
-}
-
-.rtl a.layoutSetList,
-.rtl a.layoutSetGrid
-{
-	background-position: right 0px;
-	padding: 0 20px;
-}
-
-.rtl .categoryLayoutSwitch
-{
-	margin-left: 0;
-	margin-right: 1em;
-}
-
-.rtl ul.productList .title,
-.rtl ul.productList .spec,
-.rtl .ratingBreakdown,
-.rtl .shipment .productName
-{
-	text-align: right;
-}
-
-.rtl ul.productList .descr
-{
-	margin-left: 0;
-	margin-right: 110px;
-}
-
-.rtl ul.productList .image
-{
-	float: right;
-	margin-right: 0;
-	margin-left: 8px;
-}
-
-.rtl ul.productList a.addToCart,
-.rtl .productGrid a.addToCart,
-.rtl .returnToCategory a,
-.rtl ul.attributeList li,
-.rtl .continueShopping,
-.rtl #expressComplete,
-.rtl #userMenu li,
-.rtl a.invoice,
-.rtl a.viewOrder,
-.rtl a.reorder,
-.rtl a.messages,
-.rtl .confirmationMessage,
-.rtl .errorMessage,
-.rtl .feedback,
-.rtl .feedback_textarea,
-.rtl ul.downloadFile li,
-.rtl .errorText
-{
-    padding-right: 20px;
-    padding-left: 0;
-    background-position: center right;
-}
-
-.rtl a.invoice,
-.rtl a.viewOrder,
-.rtl a.reorder,
-.rtl a.messages
-{
-	margin-left: 1em;
-	margin-right: 0;
-}
-
-.rtl .websiteUrl a,
-.rtl a.ajaxIndicator
-{
-    padding-left: 20px;
-    padding-right: 0;
-    background-position: center left;
-}
-
-.rtl .productSeparator
-{
-	margin-left: 0;
-	margin-right: 110px;
-}
-
-.rtl #rateProduct
-{
-	margin-right: 10px;
-	margin-left: 0;
-}
-
-.rtl #rateProduct .productTable .errorText
-{
-	left: 0;
-	right: -85px;
-}
-
-.rtl .bundleList,
-.rtl .bundleInfo
-{
-	padding: 0;
-	margin: 0;
-	padding-left: 0.5em;
-	margin-right: 1em;
-}
-
-.rtl .bundleList
-{
-	border: 0;
-	border-left: 1px solid #eee;
-}
-
-.rtl .cartListTitle,
-.rtl .multiAddress .shipmentAddress
-{
-	text-align: right;
-}
-
-.rtl #mainInfo td.param,
-.rtl .reviewIndex .pagingInfo,
-.rtl .multiAddressCheckout,
-.rtl #expressCheckoutMethods,
-.rtl .subTotalCaption, .shipment td.tax,
-.rtl .orderOverviewControls,
-.rtl div.addressControl,
-.rtl #invoicePaymentInfo td.amount,
-.rtl td.addToWishList
-{
-	text-align: left !important;
-}
-
-.rtl .cartControl
-{
-	padding-right: 1em  !important;
-	padding-left: 0 !important;
-}
-
-.rtl .addressSelector a
-{
-    margin-left: 0;
-    margin-right: 5px;
-}
-
-.rtl #billingAddressColumn
-{
-	clear: right;
-	margin-right: 0;
-	margin-left: 1%;
-}
-
-.rtl .shippingMethods
-{
-    padding-left: 0;
-    padding-right: 30px;
-}
-
-.rtl #cvvHelp
-{
-	margin: 0;
-	margin-right: 20px;
-}
-
-.rtl #userContent
-{
-	margin-left: 0;
-	margin-right: 210px;
-}
-
-.rtl .orderMenu
-{
-	padding-left: 0;
-	padding-right: 10px;
-}
-
-.rtl .orderDetails .orderContent
-{
-	margin-left: 0;
-	margin-right: 220px;
-}
-
-.rtl #content .orderMenu ul,
-.rtl .orderMenu li
-{
-    margin-right: 0;
-    padding-right: 0;
-}
-
-.rtl ul.downloadFile li.fileGroup,
-.rtl ul.downloadFile ul.notes
-{
-	padding-right: 0;
-}
-
-.rtl p.radio,
-.rtl p.checkbox
-{
-   padding-right: 11em;
-   padding-left: 0;
-}
-
-.rtl optgroup option
-{
-	padding: 0;
-	padding-right: 1em;
-}
-
-.rtl input.radio,
-.rtl input.checkbox
-{
-    margin-right: 0;
-    margin-left: 0.5em;
-    float: right;
-}
-
-.rtl img.calendar_button
-{
-    margin-right: 0.5em;
-    margin-left: 0;
-}
-
-.rtl .eavAttributes .attrValue
-{
-	margin-left: 0;
-	margin-right: 1em;
-}
-
-.rtl .rootCategories li ul,
-.rtl .dynamicMenu ul ul
-{
-	padding-right: 0;
-}
-
-.rtl .dynamicMenu li ul
-{
-	margin-left : 0;
-	margin-right: 142px;
-}
-
-.rtl .resultPages .next
-{
-	background-position: center left;
-    background-image: url(../../image/silk/gif/resultset_previous.gif);
-    padding-left: 20px;
-    padding-right: 0;
-}
-
-.rtl .resultPages .previous
-{
-    background-image: url(../../image/silk/gif/resultset_next.gif);
-	background-position: center right;
-    padding-left: 0;
-    padding-right: 20px;
-}
-
-.rtl .reviewIndex .pagingInfo
-{
-	right: auto;
-	left: 0;
-}
-
-.rtl .discount .basePrice
-{
-	margin-left: 4px;
-}
-
-.rtl #mainInfo,
-.rtl .multiAddressCheckout
-{
-	clear: left;
-}
-
-.rtl .ratingBreakdown,
-.rtl #billingAddressColumn,
-.rtl .errorText
-{
-	clear: right;
-}
-
-.rtl form fieldset
-{
-	float: right;
-}
-
-.rtl ul.productList .descr fieldset.container
-{
-	clear: left;
-}
-
-.rtl .returnToCategory a
-{
-	background-image:url(../../image/silk/gif/resultset_next.gif);
-}
-
-.rtl input.submit
-{
-	float: right;
-}
-
-.rtl .quickSearch input.submit,
-.rtl #productToCart input.submit
-{
-	float: none;
-}
-
-.rtl .checkoutPay input.submit
-{
-	clear: both;
-}
-
-.rtl .resultPages *
-{
-	float: right;
-}
-
-.rtl .resultPages span
-{
-	margin: 0 0.5em;
-}
-
-.rtl .resultPages .currentPage
-{
-	margin: 0;
 }

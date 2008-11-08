@@ -170,7 +170,7 @@ input.submit, input.text, input.date, input.password, select, textarea
 {
 	height: 91px;
 	padding-left: 1em;
-	background-image: url(../image/headerContent.jpg);
+	background: url(../image/headerContent.jpg) repeat-x;
 	position: relative;
 }
 
@@ -241,7 +241,6 @@ div.box
 {
 	margin-bottom: 10px;
 	background-color:none;
-	background-repeat: no-repeat;
 	background-position: right bottom;
 }
 
@@ -263,7 +262,6 @@ div.box .title
 div.box .title div
 {
 	background-position: right top;
-	background-repeat: no-repeat;
 	padding-top: 6px;
 	padding-bottom: 4px;
 	font-size: 14px;
@@ -330,8 +328,6 @@ div.box .content
 
 .subCategories .subCatContainer
 {
-	background-repeat: no-repeat;
-	background-repeat: no-repeat;
 	background-position: left bottom;
 }
 
@@ -447,7 +443,6 @@ ul.productList .pricingInfo
 {
 	background-position: left top;
 	background-image: url(../image/button_bg.gif) !important;
-	background-repeat: no-repeat;
 	display: block;
 	line-height: 29px;
 	height: 29px;
@@ -499,8 +494,6 @@ ul.productList .orderingControls
 ul.productList .addToWishList, #productToWishList td.value a, .productGrid .addToWishList
 {
 	background-image: url(../../../image/silk/gif/heart_add.gif);
-	background-repeat: no-repeat;
-	background-position: left center;
 	padding-left: 22px;
 	font-size: smaller;
 	padding-top: 3px;
@@ -515,8 +508,6 @@ ul.productList .addToWishList, #productToWishList td.value a, .productGrid .addT
 .productGrid .addToWishList
 {
 	background-image: url(../../../image/silk/gif/heart_add.gif);
-	background-repeat: no-repeat;
-	background-position: left center;
 	padding-left: 20px;
 	width: 120px;
 }
@@ -640,28 +631,24 @@ tr.odd
 {
 	background-image: url(../../light/image/cornerTopLeft.gif);
 	background-position: top left;
-	background-repeat: no-repeat;
 }
 
 .productTable tr.first td.value
 {
 	background-image: url(../../light/image/cornerTopRight.gif);
 	background-position: top right;
-	background-repeat: no-repeat;
 }
 
 .productTable tr.last td.param
 {
 	background-image: url(../../light/image/cornerBottomLeft.gif);
 	background-position: bottom left;
-	background-repeat: no-repeat;
 }
 
 .productTable tr.last td.value
 {
 	background-image: url(../../light/image/cornerBottomRight.gif);
 	background-position: bottom right;
-	background-repeat: no-repeat;
 }
 
 .returnToCategory
@@ -707,28 +694,24 @@ tr.odd
 {
 	background-image: url(../../light/image/cornerTopLeft.gif);
 	background-position: top left;
-	background-repeat: no-repeat;
 }
 
 #cart .first .cartQuant, #wishList .first .cartPrice
 {
 	background-image: url(../../light/image/cornerTopRight.gif);
 	background-position: top right;
-	background-repeat: no-repeat;
 }
 
 #cart .last, #wishList .last
 {
 	background-image: url(../../light/image/cornerBottomLeft.gif);
 	background-position: bottom left;
-	background-repeat: no-repeat;
 }
 
 #cart .last .cartQuant, #wishList .last .cartPrice
 {
 	background-image: url(../../light/image/cornerBottomRight.gif);
 	background-position: bottom right;
-	background-repeat: no-repeat;
 }
 
 a.proceedToCheckout
@@ -747,7 +730,6 @@ a.proceedToCheckout span, #checkoutProgress a span
 {
 	background-image: url(../../light/image/cornerBottomRight.gif);
 	background-position: bottom right;
-	background-repeat: no-repeat;
 }
 
 a.proceedToCheckout span span, #checkoutProgress a span span
@@ -854,7 +836,6 @@ a.proceedToCheckout span span span span
 .quickSearch
 {
 	background-image:none;
-	background-repeat: no-repeat;
 	background-position: left bottom;
 	padding-bottom: 3px;
 }
@@ -923,7 +904,7 @@ font-weight: normal;
 .categories ul
 {
 	display: block;
-	background-image: url(../image/leftmenu_bg.gif);
+	background: url(../image/leftmenu_bg.gif) repeat;
 	text-indent: 0px;
 	margin: 0px;
 	padding: 0px;
@@ -964,7 +945,6 @@ font-weight: normal;
 {
 	list-style-type: none;
 	display: inline-block;
-	background-repeat: no-repeat;
 	background-position: left 1px;
 	background-image: url(../image/leftmenu4.gif);
 	padding-left: 10px;
@@ -977,8 +957,6 @@ font-weight: normal;
 	margin-top: 0px;
 	margin-left: 0px;
 	padding-left: 0px;
-	background-repeat: no-repeat;
-	background-position: left center;
 	margin-left: 0px;
 }
 
@@ -1021,7 +999,6 @@ ul.subSubCats
 	color: #168c9d;
 	text-decoration: none;
 	background-image: url(../image/arrow.jpg);
-	background-repeat: no-repeat;
 	background-position: left center;
 	list-style-type: none;
 	margin: 0px;
@@ -1092,8 +1069,6 @@ li.moreSubCats, li.moreSubCats a
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: small;
 	background-image: url(../image/arrow_narrow.gif);
-	background-repeat: no-repeat;
-	background-position: left center;
 	padding-left: 10px;
 	margin-left: -8px;
 }
@@ -1157,7 +1132,6 @@ li.moreSubCats, li.moreSubCats a
 	margin-top: 0px;
 	padding-top: 0px;
 	background-position: right top;
-	background-repeat: no-repeat;
 	padding-left: 0px;
 	margin-left: 0px;
 	z-index: 10;
@@ -1286,16 +1260,15 @@ body
 {
 	display: block;
 	background-image: url(../image/tab_btn_08.gif);
-	background-repeat: no-repeat;
 	background-position: left bottom;
-	text-indent: 8px;
+	padding-left: 8px;
+	white-space: nowrap;
 }
 
 .rootCategories li a
 {
 	display: block;
 	background-image: url(../image/tab_btn_11.gif);
-	background-repeat: no-repeat;
 	background-position: right bottom;
 	text-decoration: none;
 	font-size: 11px;
@@ -1327,7 +1300,6 @@ body
 .rootCategories li.current span
 {
 	background-image: url(../image/tab_btn_03.gif);
-	background-repeat: no-repeat;
 	background-position: left bottom;
 	width: auto;
 }
@@ -1335,7 +1307,6 @@ body
 .rootCategories li.current a
 {
 	background-image: url(../image/tab_btn_06.gif);
-	background-repeat: no-repeat;
 	background-position: right bottom;
 	width: auto;
 	color: #E8F4FA;
@@ -1426,7 +1397,6 @@ ul.productList .descr
 	display: inline-block;
 	text-decoration: none;
 	background-position: left center;
-	background-repeat: no-repeat;
 	padding: 5px 0 5px 20px;
 	margin-left: 1.3em;
 }
@@ -1634,7 +1604,6 @@ table.productGrid
 	background-color: #DDEEFF;
 	background-image: url(../image/checkout_p.png);
 	background-position: 100% center;
-	background-repeat: no-repeat;
 	border: 1px solid #DDDDDD;
 	float: right;
 	font-weight: bold;
@@ -1651,8 +1620,6 @@ table.productGrid
 {
 	float: left;
 	background-image: url(../image/checkout_p2.jpg);
-	background-repeat: no-repeat;
-	background-position: left center;
 	font-weight: bold;
 	width: 208px;
 	padding-top: 15px;
@@ -1680,7 +1647,7 @@ table.productGrid
 	float: right;
 }
 
-.rtl
+.rtl .xx
 {
 	float: left;
 }

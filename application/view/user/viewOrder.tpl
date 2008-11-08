@@ -3,14 +3,11 @@
 <div class="userViewOrder">
 
 {include file="user/layout.tpl"}
+{include file="user/userMenu.tpl" current="ordersMenu"}
 
-<div id="content" class="left right">
+<div id="userContent">
 
 	<h1>{t _view_order} #{$order.ID} ({$order.formatted_dateCompleted.date_long})</h1>
-
-	{include file="user/userMenu.tpl" current="ordersMenu"}
-
-	<div id="userContent">
 
 		<fieldset class="container">
 

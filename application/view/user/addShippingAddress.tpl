@@ -4,13 +4,10 @@
 
 {include file="user/layout.tpl"}
 
-<div id="content" class="left right">
+{include file="user/userMenu.tpl" current="addressMenu"}
+<div id="userContent">
 
 	<h1>{t _add_shipping_address}</h1>
-
-	{include file="user/userMenu.tpl" current="addressMenu"}
-
-	<div id="userContent">
 
 	<fieldset class="container">
 

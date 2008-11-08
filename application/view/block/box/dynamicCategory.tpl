@@ -29,7 +29,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 					<a href="{categoryUrl data=$category filters=$category.filters}">{$category.name_lang}</a>
 			{/if}
 					{if 'DISPLAY_NUM_CAT'|config}
-						<span class="count">({$category.count})</span>
+						<span class="count">(&rlm;{$category.count})</span>
 					{/if}
 					{if $category.subCategories}
 		   				{fun name="dynamicCategoryTree" node=$category.subCategories}

@@ -31,7 +31,7 @@
 						<li>
 							<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a>
 							{if 'DISPLAY_NUM_FILTER'|config}
-								 <span class="count">({$filter.count})</span>
+								 <span class="count">(&rlm;{$filter.count})</span>
 							{/if}
 						</li>
 					{/foreach}
@@ -51,7 +51,7 @@
 						<li>
 							<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a>
 							{if 'DISPLAY_NUM_FILTER'|config}
-								<span class="count">({$filter.count})</span>
+								<span class="count">(&rlm;{$filter.count})</span>
 							{/if}
 						</li>
 					{/foreach}
@@ -67,7 +67,7 @@
 						<li>
 							<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a>
 							{if 'DISPLAY_NUM_FILTER'|config}
-								 <span class="count">({$filter.count})</span>
+								 <span class="count">(&rlm;{$filter.count})</span>
 							{/if}
 						</li>
 					{/foreach}

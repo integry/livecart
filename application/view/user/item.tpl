@@ -2,13 +2,10 @@
 
 {include file="user/layout.tpl"}
 
-<div id="content" class="left right">
+{include file="user/userMenu.tpl" current="homeMenu"}
+<div id="userContent">
 
 	<h1>{t _your_files}: {$item.Product.name_lang}</h1>
-
-	{include file="user/userMenu.tpl" current="homeMenu"}
-
-	<div id="userContent">
 
 	{if $files}
 		{foreach from=$files item="item"}

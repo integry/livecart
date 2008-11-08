@@ -3,6 +3,10 @@
 
 	{include file="checkout/testHandler.tpl"}
 
+	<div id="cvvHelp" style="display: none;">
+		{include file="checkout/cvvHelp.tpl"}
+	</div>
+
 	{if $id}{assign var=ccId value=" id=`$id`"}{/if}
 	{form action="controller=checkout action=payCreditCard`$ccId`" handle=$ccForm method="POST"}
 
@@ -51,13 +55,12 @@
 			{/err}
 		</p>
 
-		<input type="submit" class="submit" value="{tn _complete_now}" />
+		<p>
+			<input type="submit" class="submit" value="{tn _complete_now}" />
+		</p>
 
 		</div>
 
-		<div id="cvvHelp" style="display: none;">
-			{include file="checkout/cvvHelp.tpl"}
-		</div>
 
 	{/form}
 
