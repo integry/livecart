@@ -844,6 +844,7 @@ Backend.ProductVariationItem.prototype =
 
 		editor.registerItem(this);
 		editor.syncRowspans();
+		this.initFields();
 	},
 
 	setData: function(data)
@@ -875,7 +876,10 @@ Backend.ProductVariationItem.prototype =
 
 		['sku', 'shippingWeight', 'stockCount'].each(function(field)
 		{
-			this.row.fieldCells[field].getElementsByTagName('input')[0].value = this.data[field];
+			if (this.data[field])
+			{
+				this.row.fieldCells[field].getElementsByTagName('input')[0].value = this.data[field];
+			}
 		}.bind(this));
 
 		var priceField = 'price_' + this.getEditor().currency;
