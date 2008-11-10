@@ -4,7 +4,7 @@
 
 {include file="user/userMenu.tpl" current="homeMenu"}
 
-<div id="userContent" class="left right">
+<div id="content">
 
 	<h1>{t _your_account} ({$user.fullName})</h1>
 

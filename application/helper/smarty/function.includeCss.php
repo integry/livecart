@@ -20,11 +20,16 @@ function smarty_function_includeCss($params, LiveCartSmarty $smarty)
 	$filePath = str_replace('\\', DIRECTORY_SEPARATOR, $filePath);
 	$filePath = str_replace('/', DIRECTORY_SEPARATOR, $filePath);
 
-	if(!is_file($filePath)) return;
+	if(!is_file($filePath) && !isset($params['external'])) return;
 
 	if(isset($params['inline']) && $params['inline'] == 'true')
 	{
-		return '<link href="stylesheet/' . str_replace(DIRECTORY_SEPARATOR, '/', $fileName) . '?' . filemtime($filePath) . '"" media="screen" rel="Stylesheet" type="text/css" />' . "\n";
+		$path = 'stylesheet/' . str_replace(DIRECTORY_SEPARATOR, '/', $fileName) . '?' . filemtime($filePath);
+		return '<link href="' . $path . '" media="screen" rel="Stylesheet" type="text/css" />' . "\n";
+	}
+	else if (isset($params['external']))
+	{
+		$smarty->_smarty_vars['INCLUDED_STYLESHEET_FILES_EXTERNAL'][] = $fileName;
 	}
 	else
 	{

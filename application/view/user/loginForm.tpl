@@ -9,15 +9,15 @@
 			<input type="password" class="text" id="password" name="password" />
 			<a href="{link controller=user action="remindPassword" query="return=$return"}" class="forgottenPassword">
 				{t _remind_password}
-			</a>			
+			</a>
 		</fieldset>
-	</p>	
+	</p>
 
-   	<p>
+   	<p class="submit">
 		<label></label>
 		<input type="submit" class="submit" value="{tn _login}" />
 	</p>
-	
-	<input type="hidden" name="return" value="{$return}" />	
-	
+
+	<input type="hidden" name="return" value="{$return}" />
+
 </form>

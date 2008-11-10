@@ -3,7 +3,7 @@
 {include file="user/layout.tpl"}
 
 {include file="user/userMenu.tpl" current="addressMenu"}
-<div id="userContent">
+<div id="content">
 
 	<h1>{t _manage_addresses}</h1>
 

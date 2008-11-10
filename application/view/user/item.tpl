@@ -3,7 +3,7 @@
 {include file="user/layout.tpl"}
 
 {include file="user/userMenu.tpl" current="homeMenu"}
-<div id="userContent">
+<div id="content">
 
 	<h1>{t _your_files}: {$item.Product.name_lang}</h1>
 

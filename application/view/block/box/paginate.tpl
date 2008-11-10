@@ -1,5 +1,5 @@
 {if $urls.previous}
-	<a class="page previous" href="{$urls.previous}">{t _previous}</a>
+	<a class="previous" href="{$urls.previous}">{t _previous}</a>
 {/if}
 
 {foreach $pages as $page}
@@ -17,5 +17,5 @@
 {/foreach}
 
 {if $urls.next}
-	<a class="page next" href="{$urls.next}">{t _next}</a>
+	<a class="next" href="{$urls.next}">{t _next}</a>
 {/if}

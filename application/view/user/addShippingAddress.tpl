@@ -5,7 +5,7 @@
 {include file="user/layout.tpl"}
 
 {include file="user/userMenu.tpl" current="addressMenu"}
-<div id="userContent">
+<div id="content">
 
 	<h1>{t _add_shipping_address}</h1>
 

@@ -35,6 +35,8 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 		uksort($includedStylesheetFiles, 'strnatcasecmp');
 	}
 
+	$out = '';
+
 	if(isset($params['glue']) && ($params['glue'] == true) && !$smarty->getApplication()->isDevMode() && !$smarty->getApplication()->isTranslationMode() && !$smarty->getApplication()->isCustomizationMode())
 	{
 		$request = $smarty->getApplication()->getRequest();
@@ -64,7 +66,7 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 		}
 		$compiledFileTimestamp = filemtime($compiledFilePath);
 
-		return '<link href="cache/stylesheet/' . $compiledFileName . '?' . $compiledFileTimestamp . '" media="screen" rel="Stylesheet" type="text/css"/>';
+		$out = '<link href="cache/stylesheet/' . $compiledFileName . '?' . $compiledFileTimestamp . '" media="screen" rel="Stylesheet" type="text/css"/>';
 	}
 	else if ($includedStylesheetFiles)
 	{
@@ -77,8 +79,18 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 			$includeString .= '<link href="' . $urlPath . '?' . filemtime($cssFile) . '" media="screen" rel="Stylesheet" type="text/css"/>' . "\n";
 		}
 
-		return $includeString;
+		$out = $includeString;
 	}
+
+	if ($externalFiles = $smarty->_smarty_vars["INCLUDED_STYLESHEET_FILES_EXTERNAL"])
+	{
+		foreach($externalFiles as $cssFile)
+		{
+			$out .= '<link href="' . $cssFile . '" media="screen" rel="Stylesheet" type="text/css"/>' . "\n";
+		}
+	}
+
+	return $out;
 }
 
 ?>

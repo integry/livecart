@@ -415,7 +415,7 @@ Order.AddressSelector = function(form)
 
 		var addressForm = $(radioButton).up('tr').down('td.address').down('.address');
 
-		radioButton.form.onchange = function()
+		onchange = function()
 		{
 			if (radioButton.checked)
 			{
@@ -427,14 +427,15 @@ Order.AddressSelector = function(form)
 			}
 		};
 
-		radioButton.form.onclick = radioButton.form.onchange;
+		Event.observe(radioButton.form, 'change', onchange);
+		Event.observe(radioButton.form, 'click', onchange);
 
-		radioButton.form.onchange();
+		onchange();
 	}
 
 	form = $(form);
-	new newAddressToggle(form.down('#billing_new'));
-	new newAddressToggle(form.down('#shipping_new'));
+	newAddressToggle(form.down('#billing_new'));
+	newAddressToggle(form.down('#shipping_new'));
 }
 
 /*****************************

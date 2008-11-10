@@ -5,7 +5,7 @@
 {include file="user/layout.tpl"}
 
 {include file="user/userMenu.tpl" current="passwordMenu"}
-<div id="userContent">
+<div id="content">
 
 	<h1>{t _change_pass}</h1>
 

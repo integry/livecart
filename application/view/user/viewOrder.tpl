@@ -5,7 +5,7 @@
 {include file="user/layout.tpl"}
 {include file="user/userMenu.tpl" current="ordersMenu"}
 
-<div id="userContent">
+<div id="content">
 
 	<h1>{t _view_order} #{$order.ID} ({$order.formatted_dateCompleted.date_long})</h1>
 

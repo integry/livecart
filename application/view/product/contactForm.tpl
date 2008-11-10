@@ -32,7 +32,7 @@
 	</p>
 
 	<p>
-		<label></label>
+		<label>&nbsp;</label>
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" class="submit" value="{t _form_submit}" />
 	</p>

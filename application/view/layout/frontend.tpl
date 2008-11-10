@@ -35,14 +35,18 @@
 		<link href="stylesheet/frontend/FrontendIE.css" rel="Stylesheet" type="text/css"/>
 	<![endif]-->
 
-	{includeCss file="custom/Custom.css"}
-
 	{* {includeCss file="backend/stat.css"} *}
 	{compiledCss}
 
 	<!-- JavaScript includes -->
 	{* <script type="text/javascript" src="firebug/firebug.js"></script> *}
 	{compiledJs glue=true nameMethod=hash}
+
+	{*
+	<!--[if lt IE 8]>
+		<script src="javascript/library/ie7/IE8.js" type="text/javascript"></script>
+	<![endif]-->
+	*}
 </head>
 
 <body class="{$request.controller}Con {$request.controller}-{$request.action}{if ($request.requestLanguage == 'he') || ($request.requestLanguage == 'ar')} rtl{/if}{if $bodyClass} {$bodyClass}{/if}">

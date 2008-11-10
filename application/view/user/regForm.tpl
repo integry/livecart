@@ -44,10 +44,12 @@
 
 	{include file="block/eav/fields.tpl" item=$user filter="isDisplayed"}
 
-	<label></label>
-	<input type="submit" class="submit" value="{tn _complete_reg}" />
-	{if $request.return}
-		<input type="hidden" name="return" value="{$request.return|escape}" />
-	{/if}
+	<p class="submit">
+		<label>&nbsp;</label>
+		<input type="submit" class="submit" value="{tn _complete_reg}" />
+		{if $request.return}
+			<input type="hidden" name="return" value="{$request.return|escape}" />
+		{/if}
+	</p>
 
 {/form}

@@ -5,7 +5,7 @@
 {include file="user/layout.tpl"}
 
 {include file="user/userMenu.tpl" current="emailMenu"}
-<div id="userContent" style="float: none;">
+<div id="content" style="float: none;">
 
 	<h1>{t _change_email}</h1>
 
