@@ -53,16 +53,17 @@ function smarty_function_compiledJs($params, LiveCartSmarty $smarty)
 				$compiledFilesList[] = basename($jsFile);
 			}
 
-//			$compiledFileContent .= "\n\n console.info('All javascript files were glued together successfully in following order:\\n  "
-//								 . implode("\\n  ", $compiledFilesList)
-//								 . "')\n";
-
 			file_put_contents($compiledFilePath, $compiledFileContent);
+
+			if (function_exists('gzencode'))
+			{
+				file_put_contents($compiledFilePath . '.gz', gzencode($compiledFileContent, 9));
+			}
 		}
 
 		$compiledFileTimestamp = filemtime($compiledFilePath);
 
-		return '<script src="cache/javascript/' . $compiledFileName . '?' . $compiledFileTimestamp . '" type="text/javascript"></script>';
+		return '<script src="gzip.php?file=' . $compiledFileName . '&time=' . $compiledFileTimestamp . '" type="text/javascript"></script>';
 	}
 	else if ($includedJavascriptFiles)
 	{
