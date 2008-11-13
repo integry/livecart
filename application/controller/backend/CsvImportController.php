@@ -130,7 +130,9 @@ class CsvImportController extends StoreManagementController
 		$response->set('preview', $preview);
 		$response->set('previewCount', count($preview));
 		$response->set('total', $csv->getRecordCount());
-
+		$response->set('currencies', $this->application->getCurrencyArray());
+		$response->set('languages', $this->application->getLanguageSetArray(true));
+		$response->set('groups', ActiveRecordModel::getRecordSetArray('UserGroup', new ARSelectFilter()));
 		$response->set('catPath', Category::getInstanceByID($this->request->get('category'), Category::LOAD_DATA)->getPathNodeArray(true));
 
 		return $response;
@@ -147,7 +149,6 @@ class CsvImportController extends StoreManagementController
 
 		$this->loadLanguageFile('backend/Product');
 
-		$fields = array('' => '');
 		$fields['Product.ID'] = $this->translate('Product.ID');
 
 		$productController = new ProductController($this->application);
@@ -156,27 +157,45 @@ class CsvImportController extends StoreManagementController
 			$fields[$key] = $this->translate($data['name']);
 		}
 
+		unset($fields['Product.reviewCount']);
 		unset($fields['hiddenType']);
 		unset($fields['ProductImage.url']);
 
-		$fields['ProductImage.mainurl'] = $this->translate('_main_image_location');
-
-		for ($k = 1; $k <= 3; $k++)
+		$groupedFields = array();
+		foreach ($fields as $field => $fieldName)
 		{
-			$fields['ProductAdditionalImage.' . $k] = $this->maketext('_additional_image_location', $k);
+			list($class, $field) = explode('.', $field, 2);
+			$groupedFields[$class][$class . '.' . $field] = $fieldName;
 		}
 
-		$fields['Category.ID'] = $this->translate('Category.ID');
+		// do not show manufacturer field in a separate group
+		$groupedFields['Product'] = array_merge($groupedFields['Product'], $groupedFields['Manufacturer']);
+		unset($groupedFields['Manufacturer']);
 
+		// image fields
+		$groupedFields['ProductImage']['ProductImage.mainurl'] = $this->translate('_main_image_location');
+		for ($k = 1; $k <= 3; $k++)
+		{
+			$groupedFields['ProductImage']['ProductAdditionalImage.' . $k] = $this->maketext('_additional_image_location', $k);
+		}
+
+		// category fields
+		$groupedFields['Category']['Category.ID'] = $this->translate('Category.ID');
 		for ($k = 1; $k <= 10; $k++)
 		{
-			$fields['Category.' . $k] = $this->maketext('_category_x', $k);
+			$groupedFields['Category']['Category.' . $k] = $this->maketext('_category_x', $k);
+		}
+
+		// price fields
+		for ($k = 1; $k <= 5; $k++)
+		{
+			$groupedFields['ProductPrice']['ProductPrice.' . $k] = $this->maketext('_quantity_level_x', $k);
 		}
 
 		$csv = new CsvFile($this->request->get('file'), $this->request->get('delimiter'));
 
 		$response = new ActionResponse('columns', $csv->getRecord());
-		$response->set('fields', $fields);
+		$response->set('fields', $groupedFields);
 		$response->set('form', $this->getFieldsForm());
 		return $response;
 	}
@@ -240,7 +259,9 @@ class CsvImportController extends StoreManagementController
 		$progress = 0;
 		$failed = 0;
 		$categories = array();
+		$request = $this->request->toArray();
 		$impReq = new Request();
+		$defLang = $this->application->getDefaultLanguageCode();
 
 		$references = array('DefaultImage' => 'ProductImage', 'Manufacturer');
 
@@ -376,23 +397,49 @@ class CsvImportController extends StoreManagementController
 
 				// product information
 				$impReq->clearData();
-				foreach ($fields['Product'] as $field => $csvIndex)
+				foreach ($this->request->get('column') as $csvIndex => $column)
 				{
-					$impReq->set($field, $record[$csvIndex]);
-				}
+					$value = $record[$csvIndex];
 
-				// manufacturer
-				if (isset($fields['Manufacturer']['name']))
-				{
-					$impReq->set('manufacturer', $record[$fields['Manufacturer']['name']]);
-				}
+					list($className, $field) = explode('.', $column, 2);
+					if (isset($request['language'][$csvIndex]))
+					{
+						$lang = $request['language'][$csvIndex];
+						if ($lang != $defLang)
+						{
+							$field .= '_' . $lang;
+						}
+					}
 
-				// price
-				if (isset($fields['ProductPrice']['price']))
-				{
-					$record[$fields['ProductPrice']['price']] = str_replace(',', '.', $record[$fields['ProductPrice']['price']]);
-					$record[$fields['ProductPrice']['price']] = preg_replace('/[^\.0-9]/', '', $record[$fields['ProductPrice']['price']]);
-					$impReq->set('price_' . $this->application->getDefaultCurrencyCode(), (float)$record[$fields['ProductPrice']['price']]);
+					if ('Product' == $className)
+					{
+						$impReq->set($field, $value);
+					}
+					else if ('Manufacturer' == $className)
+					{
+						$impReq->set('manufacturer', $value);
+					}
+					else if ('ProductPrice.price' == $column)
+					{
+						$value = (float)preg_replace('/[^\.0-9]/', '', str_replace(',', '.', $value));
+						$currency = $request['currency'][$csvIndex];
+						$quantityLevel = $request['quantityLevel'][$csvIndex];
+						$group = $request['group'][$csvIndex];
+
+						$price = $product->getPricingHandler()->getPriceByCurrencyCode($currency);
+						$product->getPricingHandler()->setPrice($price);
+
+						if ($group || $quantityLevel)
+						{
+							$quantity = $quantityLevel ? $fields['ProductPrice'][$quantityLevel] : 1;
+							$group = $group ? UserGroup::getInstanceByID($group) : null;
+							$price->setPriceRule($quantity, $group, $value);
+						}
+						else
+						{
+							$price->price->set($value);
+						}
+					}
 				}
 
 				// attributes

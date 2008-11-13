@@ -37,6 +37,18 @@ _additional_image_location=Additional image file path or URL [_1]
 _import=Import
 _continue=Continue
 
+_currency=Currency
+_group=User group
+_language=Language
+_quantity_level=Quantity level
+_quantity_level_x=Quantity level [_1]
+
+Product=Main product details
+ProductPrice=Prices
+specField=Attributes
+ProductImage=Images
+Category=Category
+
 _importing=Importing...
 _import_completed=CSV file imported successfully
 _import_cancelled=The import has been reverted sucessfully

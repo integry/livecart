@@ -5,6 +5,16 @@
 {foreach from=$columns key=index item=column}
 	<p id="column_select_{$index}">
 		<label><a href="#" onclick="Backend.CsvImport.showColumn({$index}); return false;">{$column}</a></label>
-		{selectfield name="column[`$index`]" options=$fields}
+		<select name="column[{$index}]">
+			<option></option>
+			{foreach from=$fields item=group key=groupName}
+				<optgroup label="{translate text="$groupName"|escape}">
+					{foreach from=$group key=field item=fieldName}
+						<option value="{$field}">{$fieldName}</option>
+					{/foreach}
+				</optgroup>
+			{/foreach}
+		</select>
+		<span class="fieldConfigContainer"></span>
 	</p>
 {/foreach}
