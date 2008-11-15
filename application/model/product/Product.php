@@ -588,48 +588,6 @@ class Product extends MultilingualObject
 
 			$this->updateTimeStamp('dateCreated', 'dateUpdated');
 
-			// generate SKU automatically if not set
-			if (!$this->sku->get())
-			{
-				ClassLoader::import('application.helper.check.IsUniqueSkuCheck');
-
-				if (!$this->parent->get())
-				{
-					$sku = $this->getID();
-
-					do
-					{
-						$check = new IsUniqueSkuCheck('', $this);
-						$exists = $check->isValid('SKU' . $sku);
-						if (!$exists)
-						{
-							$sku = '0' . $sku;
-						}
-					}
-					while (!$exists);
-
-					$sku = 'SKU' . $sku;
-				}
-				else
-				{
-					$sku = $this->parent->get()->sku->get() . '-';
-
-					$k = 0;
-					do
-					{
-						$k++;
-						$check = new IsUniqueSkuCheck('', $this);
-						$exists = $check->isValid($sku . $k);
-					}
-					while (!$exists);
-
-					$sku .= $k;
-				}
-
-				$this->sku->set($sku);
-				$this->save();
-			}
-
 			ActiveRecordModel::commit();
 		}
 		catch (Exception $e)
@@ -741,6 +699,48 @@ class Product extends MultilingualObject
 		}
 
 		parent::save($forceOperation);
+
+		// generate SKU automatically if not set
+		if (!$this->sku->get())
+		{
+			ClassLoader::import('application.helper.check.IsUniqueSkuCheck');
+
+			if (!$this->parent->get())
+			{
+				$sku = $this->getID();
+
+				do
+				{
+					$check = new IsUniqueSkuCheck('', $this);
+					$exists = $check->isValid('SKU' . $sku);
+					if (!$exists)
+					{
+						$sku = '0' . $sku;
+					}
+				}
+				while (!$exists);
+
+				$sku = 'SKU' . $sku;
+			}
+			else
+			{
+				$sku = $this->parent->get()->sku->get() . '-';
+
+				$k = 0;
+				do
+				{
+					$k++;
+					$check = new IsUniqueSkuCheck('', $this);
+					$exists = $check->isValid($sku . $k);
+				}
+				while (!$exists);
+
+				$sku .= $k;
+			}
+
+			$this->sku->set($sku);
+			parent::save();
+		}
 
 		$this->getSpecification()->save();
 		$this->getPricingHandler()->save();
@@ -1380,7 +1380,7 @@ class Product extends MultilingualObject
 		unset($this->specificationInstance);
 		unset($this->pricingHandlerInstance);
 
-		parent::destruct(array('defaultImageID'));
+		parent::destruct(array('defaultImageID', 'parentID'));
 	}
 }
 

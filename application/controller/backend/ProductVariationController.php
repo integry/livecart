@@ -182,6 +182,12 @@ class ProductVariationController extends StoreManagementController
 
 			$item->setChildSetting('weight', $request['shippingWeightType'][$index]);
 			$item->setChildSetting('price', $request['priceType'][$index]);
+
+			if (!strlen($request['priceType'][$index]))
+			{
+				$request['price'][$index] = '';
+			}
+
 			$item->setPrice($currency, $request['price'][$index]);
 
 			$item->save();

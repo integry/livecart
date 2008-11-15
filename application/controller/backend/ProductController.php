@@ -36,6 +36,67 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $response;
 	}
 
+	protected function getPreparedRecord($row, $displayedColumns)
+	{
+		$records = parent::getPreparedRecord($row, $displayedColumns);
+
+		$currencies = $this->application->getCurrencyArray();
+
+		if (!empty($row['children']))
+		{
+			foreach ($row['children'] as $child)
+			{
+				$priceSetting = $child['childSettings']['price'];
+				foreach ($currencies as $currency)
+				{
+					$priceField = 'price_' . $currency;
+					if (Product::CHILD_ADD == $priceSetting)
+					{
+						$child[$priceField] = '+' . ($child[$priceField] - $row[$priceField]);
+					}
+					else if (Product::CHILD_SUBSTRACT == $priceSetting)
+					{
+						$child[$priceField] = $child[$priceField] - $row[$priceField];
+					}
+
+					if (empty($child[$priceField]))
+					{
+						$child[$priceField] = '';
+					}
+				}
+
+				$weightSetting = $child['childSettings']['weight'];
+				if (Product::CHILD_ADD == $weightSetting)
+				{
+					$child['shippingWeight'] = '+' . ($child['shippingWeight'] + $row['shippingWeight']);
+				}
+				else if (Product::CHILD_SUBSTRACT == $weightSetting)
+				{
+					$child['shippingWeight'] = $row['shippingWeight'] - $child['shippingWeight'];
+				}
+
+				$records = array_merge($records, $this->getPreparedRecord($child, $displayedColumns));
+			}
+		}
+
+		return $records;
+	}
+
+	protected function getUserGroups()
+	{
+		if (!$this->userGroups)
+		{
+			$this->userGroups = array();
+			$groups = ActiveRecordModel::getRecordSetArray('UserGroup', new ARSelectFilter());
+			foreach ($groups as $group)
+			{
+				$this->userGroups[$group['ID']] = $group['name'];
+			}
+		}
+
+		return $this->userGroups;
+	}
+
 	public function changeColumns()
 	{
 		parent::changeColumns();
@@ -135,6 +196,25 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 		// load price data
 		ProductPrice::loadPricesForRecordSetArray($productArray);
+
+		// load child products
+		if (isset($displayedColumns['Product.parentID']))
+		{
+			ProductSet::loadVariationTypesForProductArray($productArray);
+			ProductSet::loadChildrenForProductArray($productArray);
+		}
+
+		$defCurrency = $this->application->getDefaultCurrencyCode();
+		foreach ($productArray as &$product)
+		{
+			foreach ($this->getUserGroups() as $groupID => $groupName)
+			{
+				if (isset($product['priceRules'][$defCurrency][1][$groupID]))
+				{
+					$product['GroupPrice'][$groupID] = $product['priceRules'][$defCurrency][1][$groupID];
+				}
+			}
+		}
 
 		return $productArray;
 	}
@@ -285,7 +365,36 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	protected function getExportColumns()
 	{
 		$category = Category::getInstanceByID($this->request->get('id'), Category::LOAD_DATA);
-		return $this->getDisplayedColumns($category);
+		$columns = $this->getAvailableColumns($category);
+
+		// prices
+		foreach ($this->application->getCurrencyArray(false) as $currency)
+		{
+			$columns['definedPrices.' . $currency] = array('name' => $this->translate('ProductPrice.price') . ' (' . $currency . ')' , 'type' => 'numeric');
+		}
+
+		// list prices
+		foreach ($this->application->getCurrencyArray(true) as $currency)
+		{
+			$columns['definedListPrices.' . $currency] = array('name' => $this->translate('ProductPrice.listPrice') . ' (' . $currency . ')' , 'type' => 'numeric');
+		}
+
+		// child products
+		$columns['Product.parentID'] = array('name' => $this->translate('Product.parentID'), 'type' => 'numeric');
+		for ($k = 0; $k <= 4; $k++)
+		{
+			$columns['variationTypes.' . $k . '.name'] = array('name' => $this->translate('ProductVariationType.name') . ' (' . ($k + 1) . ')', 'type' => 'string');
+		}
+
+		// group prices
+		foreach ($this->getUserGroups() as $groupID => $groupName)
+		{
+			$columns['GroupPrice.' . $groupID] = array('name' => $this->translate('ProductPrice.GroupPrice') . ' (' . $groupName . ') [' . $groupID . ']', 'type' => 'numeric');
+		}
+
+		//var_dump($columns); exit;
+
+		return $columns;
 	}
 
 	protected function getDisplayedColumns(Category $category)

@@ -34,6 +34,7 @@ Category.ID=Category ID
 _category_x=Category Name [_1]
 _main_image_location=Main product image file path or URL
 _additional_image_location=Additional image file path or URL [_1]
+Product.parentSKU=Parent product SKU
 _import=Import
 _continue=Continue
 
@@ -42,8 +43,10 @@ _group=User group
 _language=Language
 _quantity_level=Quantity level
 _quantity_level_x=Quantity level [_1]
+_variation_name=Variation name/value [_1]
 
 Product=Main product details
+ProductVariation=Variations
 ProductPrice=Prices
 specField=Attributes
 ProductImage=Images

@@ -208,6 +208,11 @@ ENABLE_CART=Enable shopping cart
 ENABLE_WISHLISTS=Enable wishlists
 ENABLE_MULTIADDRESS=Allow shipping to multiple addresses
 ENABLE_CHECKOUTDELIVERYSTEP=Enter billing and shipping addresses at separate checkout steps
+CHECKOUT_CUSTOM_FIELDS=Display custom fields at
+CART_PAGE=Shopping basket page
+BILLING_ADDRESS_STEP=Billing address entry step
+SHIPPING_ADDRESS_STEP=Shipping address entry step
+SHIPPING_METHOD_STEP=Shipping method selection step
 
 _shipping=Delivery Settings
 
