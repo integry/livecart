@@ -18,8 +18,8 @@ abstract class ActiveGridController extends StoreManagementController
 		$bufferCnt = ceil($count / self::EXPORT_BUFFER_ROW_COUNT);
 
 		// init file download
-		//header('Content-Disposition: attachment; filename="' . $this->getCSVFileName() . '"');
-		header('Content-Type: text/javascript');
+		header('Content-Disposition: attachment; filename="' . $this->getCSVFileName() . '"');
+		//header('Content-Type: text/javascript');
 		$out = fopen('php://output', 'w');
 
 		// header row

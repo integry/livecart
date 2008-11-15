@@ -138,7 +138,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 		$f->setOrder(new ARFieldHandle(get_class($this), 'position'), 'DESC');
 		$f->setLimit(1);
 		$rec = ActiveRecord::getRecordSetArray(get_class($this), $f);
-		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
+		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 0;
 
 		// default new language state
 		$this->position->set($position);
