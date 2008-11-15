@@ -77,6 +77,8 @@ if ($this->config->get('SSL_PAYMENT'))
 if ($this->config->get('SSL_CHECKOUT'))
 {
 	$this->router->setSslAction('checkout');
+	$this->router->setSslAction('order', 'index');
+	$this->router->setSslAction('order', 'multi');
 }
 
 if ($this->config->get('SSL_CUSTOMER'))
