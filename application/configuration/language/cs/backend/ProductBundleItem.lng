@@ -1,0 +1,3 @@
+_err_multiple=Tento produkt byl již přidán do balíku
+_err_add_to_itself=Nemohu přidat do balíku se stejným produktem
+_err_bundle_with_bundle=Produkty v balíku nemohou být přiány do jiného balíku

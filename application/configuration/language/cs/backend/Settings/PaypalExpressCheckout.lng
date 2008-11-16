@@ -1,0 +1,6 @@
+PaypalExpressCheckout_password=Heslo
+PaypalExpressCheckout_username=Meno používateľa
+PaypalExpressCheckout_signature=Podpis
+PaypalExpressCheckout=Paypal Expresná úhrada
+PaypalExpressCheckout_sandbox=Použiť sandbox (testovacie) prostredie
+PaypalExpressCheckout_AUTHONLY=Iba autorizuj platby, bez ich automatického zachytenia

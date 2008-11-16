@@ -1,0 +1,13 @@
+_manufacturers=Výrobci
+Manufacturer.name=Jméno výrobce
+_listing_manufacturers=Zobrazit výrobce $from - $to z $count
+_no_manufacturers=Nenalezen žádný výrobce
+_are_you_sure_you_want_to_delete_manufacturer=Skutečně smazat zvolené výrobce?
+_nothing_selected=Prosím zvolte alespoň jednoho výrobce
+_cancel_editing_manufacturer=Zrušit úpravu výrobce
+_manufacturer_info=Základní informace
+_manufacturer_images=Obrázky
+_manufacturer_was_successfully_saved=Výrobce uložen
+_could_not_save_manufacturer=Nemohu uložit výrobce
+_select_manufacturer=Zvolte výrobce
+_done_adding=Přidání výrobců dokončeno

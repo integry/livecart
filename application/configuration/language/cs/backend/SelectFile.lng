@@ -1,0 +1,10 @@
+_listing_files=Výpis souborů $from - $to z $count
+_select_file=Zvolte soubor
+_no_files_found=Nenalezeny žádné soubory
+fileName=Název
+fileType=Přípona
+fileSize=Velikost
+fileDate=Dautm úpravy
+filePermissions=Oprávnění
+fileOwner=Vlastník
+fileGroup=Skupina
