@@ -19,25 +19,31 @@
 
 	<div id="shippingSelect">
 
-	{form action="controller=checkout action=doSelectShippingMethod" method="POST" handle=$form}
-		{foreach from=$shipments key="key" item="shipment"}
+		{form action="controller=checkout action=doSelectShippingMethod" method="POST" handle=$form}
+			{foreach from=$shipments key="key" item="shipment"}
 
-			{if $order.isMultiAddress}
-				<h2>{$shipment.ShippingAddress.compact}</h2>
-			{/if}
+				{if $order.isMultiAddress}
+					<h2>{$shipment.ShippingAddress.compact}</h2>
+				{/if}
 
-			{include file="checkout/shipmentProductList.tpl"}
+				{include file="checkout/shipmentProductList.tpl"}
 
-			{if $shipment.isShippable}
-				{include file="checkout/shipmentSelectShipping.tpl"}
+				{if $shipment.isShippable}
+					{include file="checkout/shipmentSelectShipping.tpl"}
 
-			{/if}
+				{/if}
 
-		{/foreach}
+			{/foreach}
 
-	<input type="submit" class="submit" value="{tn _continue}" />
+		{if 'SHIPPING_METHOD_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config}
+			{include file="checkout/orderFields.tpl"}
+		{/if}
 
-	{/form}
+		<p>
+			<input type="submit" class="submit" value="{tn _continue}" />
+		</p>
+
+		{/form}
 
 	</div>
 

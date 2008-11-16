@@ -1180,8 +1180,8 @@ class UserController extends FrontendController
 		// validate contact info
 		$validator = new RequestValidator("registrationValidator", $this->request);
 
-		$this->validateEmail($validator);
 		$this->validateAddress($validator, 'billing_');
+		$this->validateEmail($validator);
 		$this->validateAddress($validator, 'shipping_', true);
 
 		SessionUser::getAnonymousUser()->getSpecification()->setValidation($validator);

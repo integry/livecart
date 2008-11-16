@@ -87,6 +87,11 @@
 		</tr>
 	{/foreach}
 
+	<tr>
+		<td colspan="4" rowspan="1"></td>
+		<td id="cartUpdate" rowspan="3"><input type="submit" class="submit" value="{tn _update}" /></td>
+	</tr>
+
 	{foreach from=$cart.discounts item=discount}
 		<tr>
 			<td colspan="3" class="subTotalCaption">{t _discount}: <span class="discountDesc">{$discount.description}</span></td>
@@ -94,6 +99,13 @@
 			<td></td>
 		</tr>
 	{/foreach}
+
+	{if $cart.shippingSubtotal}
+		<tr>
+			<td colspan="3" class="subTotalCaption">{t _shipping}:</td>
+			<td class="amount shippingAmount">{$cart.formatted_shippingSubtotal}</td>
+		</tr>
+	{/if}
 
 	{foreach $cart.taxes.$currency as $tax}
 		<tr>
@@ -105,7 +117,6 @@
 		<tr>
 			<td colspan="3" class="subTotalCaption">{t _subtotal}:</td>
 			<td class="subTotal">{$cart.formattedTotal.$currency}</td>
-			<td id="cartUpdate"><input type="submit" class="submit" value="{tn _update}" /></td>
 		</tr>
 
 		{if $isCouponCodes}

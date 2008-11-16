@@ -95,6 +95,11 @@ class ProductRatingType extends MultilingualObject
 
 	/*####################  Saving ####################*/
 
+	public function getCategory()
+	{
+		return $this->category->get();
+	}
+
 	protected function insert()
 	{
 		// get max position

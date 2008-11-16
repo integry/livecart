@@ -119,7 +119,7 @@
 
 	{/if}
 
-	{if 'shipping' == $step}
+	{if (('BILLING_ADDRESS_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config) && !$step) || (('SHIPPING_ADDRESS_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config) && (('shipping' == $step) || !'ENABLE_CHECKOUTDELIVERYSTEP'|config))}
 		{include file="checkout/orderFields.tpl"}
 	{/if}
 
@@ -131,8 +131,10 @@
 
 	<div class="clear"></div>
 
-	<input type="hidden" name="step" value="{$step}" />
-	<input type="submit" class="submit" value="{tn _continue}" />
+	<p>
+		<input type="hidden" name="step" value="{$step}" />
+		<input type="submit" class="submit" value="{tn _continue}" />
+	</p>
 
 	{/form}
 

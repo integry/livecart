@@ -179,15 +179,16 @@ function MaxValueCheck(element, constraint)
 
 function OrCheck(element, constraints)
 {
-	var form = element.form;
+	var form = element.form ? element.form : $A(element)[0].form;
+
 	var pass = false;
 	constraints.each(function(constraint)
 	{
 		var valFunc = eval(constraint[1]);
-		var el = constraint[0];
+		var el = form.elements.namedItem(constraint[0]);
 		var params = constraint[2];
 
-		if (valFunc(form.elements.namedItem(el, params)))
+		if (el && valFunc(el, params))
 		{
 			pass = true;
 		}

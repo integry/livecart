@@ -159,7 +159,18 @@ class UserControllerTest extends LiveCartTest implements ControllerTestCase
 		$this->assertEquals($user->defaultShippingAddress->get()->userAddress->get()->countryID->get(), 'LT');
 
 		// order address
-		$this->assertEquals($this->order->shippingAddress->get()->countryID->get(), 'LT');
+		ActiveRecord::clearPool();
+		$order = CustomerOrder::getInstanceByID($this->order->getID(), true);
+		$order->loadAll();
+		$this->assertEquals($order->shippingAddress->get()->countryID->get(), 'LT');
+
+	}
+
+	private function setUpController(FrontendController $controller)
+	{
+		$this->initOrder();
+		$controller->setOrder($this->order);
+		$controller->setUser($this->user);
 	}
 
 	private function reloadOrder(CustomerOrder $order)

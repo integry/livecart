@@ -375,7 +375,7 @@ class CheckoutController extends FrontendController
 
 		$form = $this->buildShippingForm($shipments);
 
-		$needSelecting = false;
+		$needSelecting = null;
 
 		foreach ($shipments as $key => $shipment)
 		{
@@ -412,13 +412,14 @@ class CheckoutController extends FrontendController
 			{
 				$download = $shipment;
 				$downloadIndex = $key;
+				$needSelecting = false;
 			}
 		}
 
 		SessionOrder::save($this->order);
 
 		// only one shipping method for each shipment, so we pre-select it automatically
-		if (!$needSelecting)
+		if (is_null($needSelecting) || !$this->config->get('SKIP_SHIPPING'))
 		{
 			$this->order->serializeShipments();
 			SessionOrder::save($this->order);
@@ -1001,7 +1002,14 @@ class CheckoutController extends FrontendController
 						  (('BILLING_ADDRESS_STEP' == $valStep) && (self::STEP_ADDRESS <= $step)) ||
 						  (('SHIPPING_ADDRESS_STEP' == $valStep) && ((self::STEP_ADDRESS == $step) && 'shipping' == $this->request->get('step')) || (self::STEP_ADDRESS < $step)) ||
 						  (('SHIPPING_METHOD_STEP' == $valStep) && (self::STEP_SHIPPING <= $step));
+
 		$isOrderable = $order->isOrderable(true, $validateFields);
+
+		// custom fields selected in cart page?
+		if (('CART_PAGE' == $valStep) && !$isOrderable)
+		{
+			return new ActionRedirectResponse('order', 'index');
+		}
 
 		// shipping address selected
 		if ($step >= self::STEP_SHIPPING)
@@ -1071,6 +1079,12 @@ class CheckoutController extends FrontendController
 				$validator->addCheck('shipping_' . $key, new IsNotEmptyCheck($this->translate('_err_select_shipping')));
 			}
 		}
+
+		if ($this->config->get('CHECKOUT_CUSTOM_FIELDS') == 'SHIPPING_METHOD_STEP')
+		{
+			$shipment->order->get()->getSpecification()->setValidation($validator);
+		}
+
 		return $validator;
 	}
 
@@ -1112,7 +1126,7 @@ class CheckoutController extends FrontendController
 		if ((($fieldStep == 'BILLING_ADDRESS_STEP') && (('billing' == $step) || !$step)) ||
 		   (($fieldStep == 'SHIPPING_ADDRESS_STEP') && (('shipping' == $step))))
 		{
-			$order->getSpecification()->setValidation($validator, true);
+			$order->getSpecification()->setValidation($validator);
 		}
 
 		return $validator;

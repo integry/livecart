@@ -1257,9 +1257,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		}
 
 		// payments
+		$currency = $this->currency->get();
 		if (isset($options['payments']))
 		{
-			$currency = $this->currency->get();
 			$array['amountPaid'] = $this->getPaidAmount();
 
 			$array['amountNotCaptured'] = $array['amountPaid'] - $array['capturedAmount'];
@@ -1273,24 +1273,27 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			{
 				$array['amountDue'] = 0;
 			}
+		}
 
-			// items subtotal
-			$array['itemSubtotal'] = 0;
-			foreach ($this->getOrderedItems() as $item)
-			{
-				$array['itemSubtotal'] += $item->getSubtotal($currency);
-			}
+		// items subtotal
+		$array['itemSubtotal'] = 0;
+		foreach ($this->getOrderedItems() as $item)
+		{
+			$array['itemSubtotal'] += $item->getSubtotal($currency);
+		}
 
-			// shipping subtotal
-			$array['shippingSubtotal'] = 0;
-			foreach ($this->shipments as $shipment)
-			{
-				$array['shippingSubtotal'] += $shipment->shippingAmount->get();
-			}
+		// shipping subtotal
+		$array['shippingSubtotal'] = 0;
+		foreach ($this->shipments as $shipment)
+		{
+			$array['shippingSubtotal'] += $shipment->shippingAmount->get();
+		}
 
-			$array['subtotalBeforeTaxes'] = $array['itemSubtotal'] + $array['shippingSubtotal'];
+		$array['subtotalBeforeTaxes'] = $array['itemSubtotal'] + $array['shippingSubtotal'];
 
-			foreach (array('amountPaid', 'amountNotCaptured', 'amountDue', 'itemSubtotal', 'shippingSubtotal', 'subtotalBeforeTaxes', 'totalAmount') as $key)
+		foreach (array('amountPaid', 'amountNotCaptured', 'amountDue', 'itemSubtotal', 'shippingSubtotal', 'subtotalBeforeTaxes', 'totalAmount') as $key)
+		{
+			if (isset($array[$key]))
 			{
 				$array['formatted_' . $key] = $currency->getFormattedPrice($array[$key]);
 			}
