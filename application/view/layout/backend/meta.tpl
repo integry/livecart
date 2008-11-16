@@ -20,6 +20,19 @@
 	{compiledCss glue=true nameMethod=hash}
 
 	{includeJs file=library/tinymce/tiny_mce.js inline=true}
+
+	{*
+	{includeJs file=library/tinymce/tiny_mce_gzip.js}
+	{includeJs file=library/tinymce/tiny_gz_start.js}
+	{includeJs file=library/tinymce/tiny_mce_src.js}
+	{includeJs file=library/tinymce/langs/en.js}
+	{includeJs file=library/tinymce/plugins/contextmenu/editor_plugin.js}
+	{includeJs file=library/tinymce/plugins/table/editor_plugin.js}
+	{includeJs file=library/tinymce/themes/advanced/editor_template.js}
+	{includeJs file=library/tinymce/themes/advanced/langs/en.js}
+	{includeJs file=library/tinymce/tiny_gz_end.js}
+	*}
+
 	{includeJs file=library/KeyboardEvent.js front=true}
 	{includeJs file=library/livecart.js front=true}
 	{includeJs file="backend/Backend.js" front=true}
