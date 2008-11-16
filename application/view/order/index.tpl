@@ -2,7 +2,7 @@
 
 {include file="checkout/layout.tpl"}
 
-<div id="content" class="left right orderIndex">
+<div id="content" class="left orderIndex">
 
 	<div class="checkoutHeader">
 		<h1>{t _your_basket}</h1>

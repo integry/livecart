@@ -1647,6 +1647,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		return $shippableCount;
 	}
 
+	public function loadRequestData(Request $request)
+	{
+		$this->getSpecification()->loadRequestData($request);
+	}
+
 	public function serialize()
 	{
 		return parent::serialize(array('userID'), array('orderedItems', 'shipments'));

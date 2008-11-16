@@ -243,6 +243,7 @@ class CheckoutController extends FrontendController
 		$response->set('billing_states', $this->getStateList($form->get('billing_country')));
 		$response->set('shipping_states', $this->getStateList($form->get('shipping_country')));
 		$response->set('step', $step);
+		$this->order->getSpecification()->setFormResponse($response, $form);
 
 		return $response;
 	}
@@ -330,6 +331,8 @@ class CheckoutController extends FrontendController
 			throw $e;
 			return new ActionRedirectResponse('checkout', 'selectAddress', array('query' => array('step' => $step)));
 		}
+
+		$this->order->loadRequestData($this->request);
 
 		SessionOrder::save($this->order);
 
@@ -443,6 +446,7 @@ class CheckoutController extends FrontendController
 		$response->set('currency', $this->getRequestCurrency());
 		$response->set('form', $form);
 		$response->set('order', $this->order->toArray());
+		$this->order->getSpecification()->setFormResponse($response, $form);
 
 		return $response;
 	}
@@ -486,6 +490,8 @@ class CheckoutController extends FrontendController
 		{
 			$this->order->serializeShipments();
 		}
+
+		$this->order->loadRequestData($this->request);
 
 		SessionOrder::save($this->order);
 
@@ -531,6 +537,7 @@ class CheckoutController extends FrontendController
 		$response->set('currency', $this->getRequestCurrency());
 
 		$this->setPaymentMethodResponse($response);
+		$this->order->getSpecification()->setFormResponse($response, $response->get('ccForm'));
 
 		$external = $this->application->getPaymentHandlerList(true);
 		// auto redirect to external payment page if only one handler is enabled
@@ -982,24 +989,31 @@ class CheckoutController extends FrontendController
 		}
 
 		// order is not orderable (too few/many items, etc.)
-		$isOrderable = $order->isOrderable(true, true);
+		$isOrderable = $order->isOrderable(true, false);
 
 		if (!$isOrderable || $isOrderable instanceof OrderException)
 		{
 			return new ActionRedirectResponse('order', 'index');
 		}
 
+		$valStep = $this->config->get('CHECKOUT_CUSTOM_FIELDS');
+		$validateFields = ('CART_PAGE' == $valStep) ||
+						  (('BILLING_ADDRESS_STEP' == $valStep) && (self::STEP_ADDRESS <= $step)) ||
+						  (('SHIPPING_ADDRESS_STEP' == $valStep) && ((self::STEP_ADDRESS == $step) && 'shipping' == $this->request->get('step')) || (self::STEP_ADDRESS < $step)) ||
+						  (('SHIPPING_METHOD_STEP' == $valStep) && (self::STEP_SHIPPING <= $step));
+		$isOrderable = $order->isOrderable(true, $validateFields);
+
 		// shipping address selected
 		if ($step >= self::STEP_SHIPPING)
 		{
-			if ((!$order->shippingAddress->get() && $order->isShippingRequired() && !$order->isMultiAddress->get()) || !$order->billingAddress->get())
+			if ((!$order->shippingAddress->get() && $order->isShippingRequired() && !$order->isMultiAddress->get()) || !$order->billingAddress->get() || !$isOrderable)
 			{
-				return new ActionRedirectResponse('checkout', 'selectAddress');
+				return new ActionRedirectResponse('checkout', 'selectAddress', $this->request->get('step') ? array('step' => $this->request->get('step')) : null);
 			}
 		}
 
 		// shipping method selected
-		if ($step >= self::STEP_PAYMENT && $order->isShippingRequired())
+		if (($step >= self::STEP_PAYMENT && $order->isShippingRequired()) || !$isOrderable)
 		{
 			foreach ($order->getShipments() as $shipment)
 			{
@@ -1092,6 +1106,13 @@ class CheckoutController extends FrontendController
 				$validator->addCheck('shippingAddress', new OrCheck(array('shippingAddress', 'sameAsBilling', 'shipping_address1'), array(new IsNotEmptyCheck($this->translate('_select_shipping_address')), new IsNotEmptyCheck(''), new IsNotEmptyCheck('')), $this->request));
 				$this->validateAddress($validator, 'shipping_', new CheckoutShippingAddressCheckCondition($this->request));
 			}
+		}
+
+		$fieldStep = $this->config->get('CHECKOUT_CUSTOM_FIELDS');
+		if ((($fieldStep == 'BILLING_ADDRESS_STEP') && (('billing' == $step) || !$step)) ||
+		   (($fieldStep == 'SHIPPING_ADDRESS_STEP') && (('shipping' == $step))))
+		{
+			$order->getSpecification()->setValidation($validator, true);
 		}
 
 		return $validator;

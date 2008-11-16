@@ -28,21 +28,21 @@
 			<h3>{t _contact_info}</h3>
 
 				<p class="required">
-					{err for="firstName"}
+					{err for="billing_firstName"}
 						{{label {t _your_first_name}:}}
 						{textfield class="text"}
 					{/err}
 				</p>
 
 				<p class="required">
-					{err for="lastName"}
+					{err for="billing_lastName"}
 						{{label {t _your_last_name}:}}
 						{textfield class="text"}
 					{/err}
 				</p>
 
 				<p>
-					{err for="companyName"}
+					{err for="billing_companyName"}
 						{{label {t _company_name}:}}
 						{textfield class="text"}
 					{/err}
@@ -55,8 +55,8 @@
 					{/err}
 				</p>
 
-				<p{if $form|isRequired:"phone"} class="required"{/if}>
-					{err for="phone"}
+				<p{if 'REQUIRE_PHONE'|config} class="required"{/if}>
+					{err for="billing_phone"}
 						{{label {t _your_phone}:}}
 						{textfield class="text"}
 					{/err}
@@ -125,59 +125,7 @@
 				</p>
 
 				<div id="shippingForm">
-
-					<p class="required">
-						{err for="shipping_address1"}
-							{{label {t _address}:}}
-							{textfield class="text"}
-						{/err}
-					</p>
-
-					<p>
-						<label for="shipping_address_2"></label>
-						{textfield name="shipping_address_2" class="text"}
-					</p>
-
-					<p class="required">
-						{err for="shipping_city"}
-							{{label {t _city}:}}
-							{textfield class="text"}
-						{/err}
-					</p>
-
-					<p class="required">
-						{err for="shipping_country"}
-							{{label {t _country}:}}
-							{selectfield options=$countries id="shipping_country"}
-							<span class="progressIndicator" style="display: none;"></span>
-						{/err}
-					</p>
-
-					{if !'DISABLE_STATE'|config}
-						<p class="required">
-							{err for="shipping_state_select"}
-								{{label {t _state}:}}
-								{selectfield style="display: none;" options=$states id="shipping_state_select"}
-								{textfield name="shipping_state_text" class="text" id="shipping_state_text"}
-							{/err}
-
-							{literal}
-							<script type="text/javascript">
-							{/literal}
-								new User.StateSwitcher($('shipping_country'), $('shipping_state_select'), $('shipping_state_text'),
-										'{link controller=user action=states}');
-								new User.ShippingFormToggler($('sameAsBilling'), $('shippingForm'));
-							</script>
-						</p>
-					{/if}
-
-					<p class="required">
-						{err for="shipping_zip"}
-							{{label {t _postal_code}:}}
-							{textfield class="text"}
-						{/err}
-					</p>
-
+					{include file="user/addressForm.tpl" prefix="shipping_" states=$shippingStates}
 				</div>
 
 				<p>
@@ -189,6 +137,12 @@
 	<div class="clear"></div>
 
 </div>
+
+{literal}
+<script type="text/javascript">
+	new User.ShippingFormToggler($('sameAsBilling'), $('shippingForm'));
+</script>
+{/literal}
 
 {include file="layout/frontend/footer.tpl"}
 

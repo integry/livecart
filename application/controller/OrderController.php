@@ -203,10 +203,10 @@ class OrderController extends FrontendController
 			return new ActionRedirectResponse('order', 'index');
 		}
 
+		$this->order->loadRequestData($this->request);
+
 		foreach ($this->order->getOrderedItems() as $item)
 		{
-			$this->order->loadRequestData($this->request);
-
 			if ($this->request->isValueSet('item_' . $item->getID()))
 			{
 				foreach ($item->product->get()->getOptions(true) as $option)
@@ -579,7 +579,10 @@ class OrderController extends FrontendController
 			$this->buildItemValidation($validator, $item, $options);
 		}
 
-		$order->getSpecification()->setValidation($validator, true);
+		if ($this->config->get('CHECKOUT_CUSTOM_FIELDS') == 'CART_PAGE')
+		{
+			$order->getSpecification()->setValidation($validator, true);
+		}
 
 		return $validator;
 	}

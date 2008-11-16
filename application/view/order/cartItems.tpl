@@ -118,6 +118,7 @@
 				<tr>
 		{/if}
 
+		{if 'CART_PAGE' == 'CHECKOUT_CUSTOM_FIELDS'|config}
 		{sect}
 			{header}
 				<tr id="cartFields">
@@ -137,6 +138,7 @@
 				</tr>
 			{/footer}
 		{/sect}
+		{/if}
 
 		<tr>
 			<td colspan="4"></td>

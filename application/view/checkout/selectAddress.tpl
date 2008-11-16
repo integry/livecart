@@ -119,6 +119,10 @@
 
 	{/if}
 
+	{if 'shipping' == $step}
+		{include file="checkout/orderFields.tpl"}
+	{/if}
+
 	{literal}
 	<script type="text/javascript">
 		new Order.AddressSelector($('content'));
