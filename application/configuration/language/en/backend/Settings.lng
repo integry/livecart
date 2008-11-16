@@ -16,7 +16,7 @@ TITLE_FORMAT=Title format
 NAME_FIRST=Store name first
 TITLE_FIRST=Page title first
 
-_display=Display
+_display=Display Preferences
 
 _layout=Appearance
 THEME=Design theme

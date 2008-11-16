@@ -20,6 +20,7 @@ class ShipmentController extends StoreManagementController
 	{
 		$order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);
 		$order->loadAll();
+		$order->getCoupons();
 		$form = $this->createShipmentForm();
 		$form->setData(array('orderID' => $order->getID()));
 		$shipments = $order->getShipments();

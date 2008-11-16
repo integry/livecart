@@ -320,7 +320,7 @@ class DeliveryZone extends MultilingualObject
 	/**
 	 * @return ARSet
 	 */
-	public function getStates($loadReferencedRecords = false)
+	public function getStates($loadReferencedRecords = array('State'))
 	{
 		return DeliveryZoneState::getRecordSetByZone($this, $loadReferencedRecords);
 	}

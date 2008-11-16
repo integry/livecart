@@ -1250,6 +1250,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		}
 		$array['formatted_discountAmount'] = $this->currency->get()->getFormattedPrice($array['discountAmount']);
 
+		// coupons
+		if (!is_null($this->coupons))
+		{
+			$array['coupons'] = $this->coupons->toArray();
+		}
+
 		// payments
 		if (isset($options['payments']))
 		{

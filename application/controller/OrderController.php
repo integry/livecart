@@ -190,6 +190,12 @@ class OrderController extends FrontendController
 				{
 					OrderCoupon::getNewInstance($this->order, $code)->save();
 				}
+
+				$this->setMessage($this->makeText('_coupon_added', array($code)));
+			}
+			else
+			{
+				$this->setErrorMessage($this->makeText('_coupon_not_found', array($code)));
 			}
 
 			$this->order->getCoupons(true);
