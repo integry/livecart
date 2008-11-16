@@ -42,6 +42,7 @@ _price=Total
 _subtotal_price=Subtotal
 _taxes=Taxes
 _discounts=Discounts
+_coupons=Coupons
 
 _shipping_price=Shipping
 _total_price=Total

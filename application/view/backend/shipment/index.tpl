@@ -73,9 +73,19 @@
 	</table>
 </fieldset>
 
-{if $order.discounts}
+{if $order.discounts || $order.coupons}
 	<fieldset class="discounts">
 		<legend>{t _discounts}</legend>
+
+		{if $order.coupons}
+			<div class="appliedCoupons">
+				{t _coupons}:
+				{foreach from=$order.coupons item=coupon name=coupons}
+					<strong>{$coupon.couponCode}</strong>{if !$smarty.foreach.coupons.last}, {/if}
+				{/foreach}
+			</div>
+		{/if}
+
 		<table class="discounts">
 			{foreach from=$order.discounts item=discount name=discounts}
 				<tr class="{zebra loop="discounts"}">
