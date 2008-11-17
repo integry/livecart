@@ -1,5 +1,8 @@
 {foreach from=$shipment.items item="item" name="shipment"}
 	<tr class="{zebra loop="shipment"}">
+		<td class="sku">
+			{$item.Product.sku}
+		</td>
 		<td class="productName">
 			<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
 
@@ -40,14 +43,14 @@
 
 {if $shipment.taxes && !$hideTaxes}
 	<tr>
-		<td colspan="3" class="subTotalCaption beforeTax">{t _subtotal_before_tax}:</td>
+		<td colspan="4" class="subTotalCaption beforeTax">{t _subtotal_before_tax}:</td>
 		<td class="amount">{$shipment.formatted_amount}</td>
 	</tr>
 {/if}
 
 {if $order.isShippingRequired && $shipment.isShippable && $shipment.ShippingService}
 	<tr class="overviewShippingInfo">
-		<td colspan="3" class="subTotalCaption">
+		<td colspan="4" class="subTotalCaption">
 			{t _shipping} ({$shipment.ShippingService.name_lang}):
 		</td>
 		<td>

@@ -4,6 +4,7 @@
 <table class="table shipment{if $order.isMultiAddress} multiAddress{/if}" id="payItems">
 	<thead>
 		<tr>
+			<th class="sku">{t _sku}</th>
 			<th class="productName">{t _product}</th>
 			<th>{t _price}</th>
 			<th>{t _quantity}</th>
