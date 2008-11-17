@@ -1284,9 +1284,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		// shipping subtotal
 		$array['shippingSubtotal'] = 0;
-		foreach ($this->shipments as $shipment)
+		if ($this->shipments)
 		{
-			$array['shippingSubtotal'] += $shipment->shippingAmount->get();
+			foreach ($this->shipments as $shipment)
+			{
+				$array['shippingSubtotal'] += $shipment->shippingAmount->get();
+			}
 		}
 
 		$array['subtotalBeforeTaxes'] = $array['itemSubtotal'] + $array['shippingSubtotal'];
