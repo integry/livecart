@@ -73,7 +73,7 @@
 {/if}
 
 <p class="required">
-	{{err for="`$prefix`zip"}}
+	{{err for="`$prefix`postalCode"}}
 		{{label {t _postal_code}:}}
 		{textfield class="text"}
 	{/err}

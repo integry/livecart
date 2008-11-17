@@ -804,8 +804,6 @@ class UserController extends FrontendController
 			$form->set('state_select', $address->state->get()->getID());
 		}
 
-		$form->set('zip', $address->postalCode->get());
-
 		$response = new ActionResponse();
 		$response->set('form', $form);
 		$response->set('return', $this->request->get('return'));
@@ -1213,7 +1211,7 @@ class UserController extends FrontendController
 		$validator->addCheck('email', new IsUniqueEmailCheck($emailErr));
 	}
 
-	private function validateAddress(RequestValidator $validator, $fieldPrefix = '', $orCheck = false)
+	public function validateAddress(RequestValidator $validator, $fieldPrefix = '', $orCheck = false)
 	{
 		$this->validateName($validator, $fieldPrefix, $orCheck);
 
@@ -1234,7 +1232,7 @@ class UserController extends FrontendController
 		$fields[] = $fieldPrefix . 'country';
 		$checks[] = new IsNotEmptyCheck($this->translate('_err_select_country'));
 
-		$fields[] = $fieldPrefix . 'zip';
+		$fields[] = $fieldPrefix . 'postalCode';
 		$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_zip'));
 
 		foreach ($fields as $key => $field)

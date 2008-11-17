@@ -19,7 +19,7 @@ class UserAddress extends ActiveRecordModel
 		$schema->setName($className);
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("stateID", "state", "ID", 'State', ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("stateID", "State", "ID", 'State', ARInteger::instance()));
 		$schema->registerField(new ARField("firstName", ARVarchar::instance(60)));
 		$schema->registerField(new ARField("lastName", ARVarchar::instance(60)));
 		$schema->registerField(new ARField("companyName", ARVarchar::instance(60)));
@@ -57,7 +57,7 @@ class UserAddress extends ActiveRecordModel
 	{
 		$array['countryName'] = self::getApplication()->getLocale()->info()->getCountryName($array['countryID']);
 		$array['fullName'] = $array['firstName'] . ' ' . $array['lastName'];
-		if (isset($array['State']))
+		if (!empty($array['State']))
 		{
 			$array['stateName'] = $array['State']['name'];
 		}

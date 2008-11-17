@@ -131,7 +131,6 @@ abstract class FrontendController extends BaseController
 	{
 		$address->loadRequestData($this->request, $prefix);
 		$address->countryID->set($this->request->get($prefix . 'country'));
-		$address->postalCode->set($this->request->get($prefix . 'zip'));
 		$address->stateName->set($this->request->get($prefix . 'state_text'));
 		if ($this->request->get($prefix . 'state_select'))
 		{
