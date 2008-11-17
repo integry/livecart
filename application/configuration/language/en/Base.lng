@@ -17,6 +17,7 @@ _this_year=This year
 _last_year=Last year
 
 _option_yes=Yes
+_sku=SKU
 
 # Order statuses
 _status_new=New
