@@ -30,9 +30,9 @@
 
 {literal}
 <script type="text/javascript">
-	var settings = new Backend.Settings({/literal}{$categories}{literal});
+	var settings = new Backend.Settings({/literal}{$categories}, {$settings}{literal});
 	settings.urls['edit'] = '{/literal}{link controller=backend.settings action=edit}?id=_id_{literal}';
-	Event.observe(window, 'load', function() {settings.activateCategory('00-store');})
+	Event.observe(window, 'load', function() {settings.init();})
 </script>
 {/literal}
 

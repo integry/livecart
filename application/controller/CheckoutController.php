@@ -278,7 +278,13 @@ class CheckoutController extends FrontendController
 		}
 
 		// create or edit addresses
-		foreach (array('billing', 'shipping') as $type)
+		$types = array('billing', 'shipping');
+		if ($this->request->get('sameAsBilling'))
+		{
+			unset($types[1]);
+		}
+
+		foreach ($types as $type)
 		{
 			if ((!$step || ($type == $step)) && !$this->request->get($type . 'Address'))
 			{

@@ -10,8 +10,12 @@ Backend.Settings.prototype =
 
   	urls: new Array(),
 
-	initialize: function(categories)
+	initialize: function(categories, settings)
 	{
+		Backend.Settings.prototype.instance = this;
+
+		this.settings = settings;
+
 		this.treeBrowser = new dhtmlXTreeObject("settingsBrowser","","", 0);
 		Backend.Breadcrumb.setTree(this.treeBrowser);
 
@@ -50,6 +54,43 @@ Backend.Settings.prototype =
 				}
 			}
 
+		this.treeBrowser.hideChildren =
+			function(itemId)
+			{
+				this.getAllSubItems(itemId).split(/,/).each(function(sub)
+				{
+					this.changeItemVisibility(sub, false);
+				}.bind(this));
+
+				this.showItemSign(itemId, false);
+				this._globalIdStorageFind(itemId).htmlNode.down('img', 2).src = 'image/backend/dhtmlxtree/leaf.gif';
+			}
+
+		this.treeBrowser.showChildren =
+			function(itemId)
+			{
+				this.showItemSign(itemId, true);
+			}
+
+		this.treeBrowser.changeItemVisibility =
+			function(id, state)
+			{
+				var item = $('tree_' + id);
+				if (item)
+				{
+					var row = item.up('table').up('tr');
+					if (state)
+					{
+						row.removeClassName('hidden');
+						return true;
+					}
+					else
+					{
+						row.addClassName('hidden');
+					}
+				}
+			},
+
 		this.insertTreeBranch(categories, 0);
 		this.treeBrowser.closeAllItems(0);
 
@@ -62,7 +103,7 @@ Backend.Settings.prototype =
 		{
 		  	if('function' != typeof treeBranch[k])
 		  	{
-				this.treeBrowser.insertNewItem(rootId, k, treeBranch[k].name, null, 0, 0, 0, '', 1);
+				this.treeBrowser.insertNewItem(rootId, k, '<span id="tree_' + k + '">' + treeBranch[k].name + '</span>', null, 0, 0, 0, '', 1);
 				this.treeBrowser.showItemSign(k, 1);
 
 				if (treeBranch[k].subs)
@@ -71,6 +112,15 @@ Backend.Settings.prototype =
 				}
 			}
 		}
+	},
+
+	init: function()
+	{
+		this.activateCategory('00-store');
+		this.updatePaymentProcessors();
+		this.updateShippingHandlers();
+		this.treeBrowser.closeAllItems('05-payment');
+		this.treeBrowser.closeAllItems('06-shipping');
 	},
 
 	activateCategory: function(id)
@@ -168,6 +218,121 @@ Backend.Settings.prototype =
 				images[k].src = value + '?' + (Math.random() * 100000);
 			}
 		}
+	},
+
+	updateSetting: function(key, subKey, value)
+	{
+		if (subKey != null)
+		{
+			if (typeof this.settings[key] != 'object')
+			{
+				this.settings[key] = {};
+			}
+
+			this.settings[key][subKey] = value;
+		}
+		else
+		{
+			this.settings[key] = value;
+		}
+	},
+
+	getSetting: function(key)
+	{
+		return this.settings[key];
+	},
+
+	observeValueChange: function(container, id, handler)
+	{
+		if (container.getElementsByClassName('multi').length)
+		{
+			$A(container.getElementsByTagName('input')).each(function(cb)
+			{
+				var subKey = cb.name.match(/\[([a-zA-Z0-9]*)\]/)[1];
+				cb.onchange = function()
+				{
+					this.updateSetting(id, subKey, cb.checked ? 1 : 0);
+					if (handler)
+					{
+						handler();
+					}
+				}.bind(this)
+			}.bind(this));
+		}
+		else if (container.getElementsByClassName('checkbox').length)
+		{
+			var cb = container.getElementsByTagName('input')[0];
+			cb.onchange =
+				function()
+				{
+					this.updateSetting(id, null, cb.checked ? 1 : 0);
+					if (handler)
+					{
+						handler();
+					}
+				}.bind(this)
+		}
+		else
+		{
+			var el = container.getElementsByTagName('input')[0] || container.getElementsByTagName('select')[0];
+			el.onchange =
+				function()
+				{
+					this.updateSetting(id, null, el.value);
+					if (handler)
+					{
+						handler();
+					}
+				}.bind(this)
+		}
+	},
+
+	updatePaymentProcessors: function()
+	{
+		var id = '05-payment';
+
+		this.treeBrowser.hideChildren(id);
+		var isVisible = this.treeBrowser.changeItemVisibility('payment.' + this.getSetting('CC_HANDLER'), true);
+
+		['EXPRESS_HANDLERS', 'PAYMENT_HANDLERS'].each(function(type)
+		{
+			if (this.setHandlerVisibility('payment', type))
+			{
+				isVisible = true;
+			}
+		}.bind(this));
+
+		if (isVisible)
+		{
+			this.treeBrowser.showChildren(id);
+		}
+	},
+
+	updateShippingHandlers: function()
+	{
+		var id = '06-shipping';
+
+		this.treeBrowser.hideChildren(id);
+
+		if (this.setHandlerVisibility('shipping', 'SHIPPING_HANDLERS'))
+		{
+			this.treeBrowser.showChildren(id);
+		}
+	},
+
+	setHandlerVisibility: function(prefix, id)
+	{
+		isVisible = false;
+
+		$H(this.getSetting(id)).each(function(val)
+		{
+			if (this.treeBrowser.changeItemVisibility(prefix + '.' + val[0], val[1] > 0))
+			{
+				isVisible = true;
+			}
+		}.bind(this));
+
+		return isVisible;
 	}
 }
 
@@ -367,6 +532,14 @@ Backend.Settings.Editor.prototype =
 			}
 	},
 
+	valueHandlers:
+	{
+		'CC_HANDLER': function() {this.owner.updatePaymentProcessors()},
+		'EXPRESS_HANDLERS': function() {this.owner.updatePaymentProcessors()},
+		'PAYMENT_HANDLERS': function() {this.owner.updatePaymentProcessors()},
+		'SHIPPING_HANDLERS': function() {this.owner.updateShippingHandlers()}
+	},
+
 	initialize: function(container, handler)
 	{
 		this.owner = handler;
@@ -378,6 +551,8 @@ Backend.Settings.Editor.prototype =
 			{
 				this.handlers[id].bind(this)();
 			}
+
+			this.owner.observeValueChange(settings[k], id, this.valueHandlers[id] ? this.valueHandlers[id].bind(this) : null);
 		}
 
 		ActiveForm.prototype.initTinyMceFields(container);
