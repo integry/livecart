@@ -63,7 +63,7 @@ class UserControllerTest extends LiveCartTest implements ControllerTestCase
 		$request->set('billing_state_text', 'State');
 		$request->set('billing_city', 'Some City');
 		$request->set('billing_country', 'LV');
-		$request->set('billing_zip', 'LV-1234');
+		$request->set('billing_postalCode', 'LV-1234');
 		$request->set('billing_phone', '1234');
 
 		$request->set('sameAsBilling', 'on');
@@ -117,7 +117,7 @@ class UserControllerTest extends LiveCartTest implements ControllerTestCase
 		$request->set('billing_state_text', 'State');
 		$request->set('billing_city', 'Some City');
 		$request->set('billing_country', 'LV');
-		$request->set('billing_zip', 'LV-1234');
+		$request->set('billing_postalCode', 'LV-1234');
 		$request->set('billing_phone', '1234');
 
 		$response = $this->controller->processCheckoutRegistration();
@@ -136,7 +136,7 @@ class UserControllerTest extends LiveCartTest implements ControllerTestCase
 		$request->set('shipping_city', 'Rec City');
 		$request->set('shipping_state_text', 'State');
 		$request->set('shipping_country', 'LT');
-		$request->set('shipping_zip', 'LT-4321');
+		$request->set('shipping_postalCode', 'LT-4321');
 		$request->set('shipping_phone', '4321');
 
 		$this->assertEqual($response->getControllerName(), 'user');

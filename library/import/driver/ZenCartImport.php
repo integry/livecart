@@ -17,10 +17,7 @@ class ZenCartImport extends OsCommerceImport
 			return true;
 		}
 
-		if (!parent::isPathValid())
-		{
-			return false;
-		}
+		return true;
 
 		return file_exists($this->path . '/admin/coupon_admin.php');
 	}

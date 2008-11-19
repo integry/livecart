@@ -26,27 +26,27 @@
 
 	{foreach from=$order.discounts item=discount}
 		<tr>
-			<td colspan="3" class="subTotalCaption">{t _discount}: <span class="discountDesc">{$discount.description}</span></td>
+			<td colspan="4" class="subTotalCaption">{t _discount}: <span class="discountDesc">{$discount.description}</span></td>
 			<td class="amount discountAmount">{$discount.formatted_amount}</td>
 		</tr>
 	{/foreach}
 
   	{if $order.taxes}
 		<tr>
-			<td colspan="3" class="tax">{t _total_before_tax}:</td>
+			<td colspan="4" class="tax">{t _total_before_tax}:</td>
 			<td>{$order.formattedTotalBeforeTax.$currency}</td>
 		</tr>
   	{/if}
 
 	{foreach from=$order.taxes.$currency item="tax"}
 		<tr>
-			<td colspan="3" class="tax">{$tax.name_lang}:</td>
+			<td colspan="4" class="tax">{$tax.name_lang}:</td>
 			<td>{$tax.formattedAmount}</td>
 		</tr>
 	{/foreach}
 
 	<tr>
-		<td colspan="3" class="subTotalCaption">{t _total}:</td>
+		<td colspan="4" class="subTotalCaption">{t _total}:</td>
 		<td class="subTotal">{$order.formattedTotal.$currency}</td>
 	</tr>
 

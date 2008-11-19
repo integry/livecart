@@ -196,7 +196,14 @@ _credit_card_options=Credit Card Options
 REQUIRE_CVV=Require Card Verification Code (CVV) to be entered
 
 _offline_payments=Offline Payments
-OFFLINE_PAYMENT=Allow offline payments
+OFFLINE_HANDLERS=Enabled offline payment methods
+OFFLINE1=Bank Wire Transfer
+OFFLINE2=Additional Offline Payment Method
+OFFLINE3=Another Offline Payment Method
+OFFLINE_NAME=Payment method name
+OFFLINE_LOGO=Logo image
+OFFLINE_DESCR=Description
+OFFLINE_INSTR=Payment instructions
 
 _purchase=Orders & Checkout
 _purchase_settings=Purchasing Settings

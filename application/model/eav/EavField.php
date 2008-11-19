@@ -25,6 +25,7 @@ class EavField extends EavFieldCommon
 	{
 		$schema = parent::defineSchema($className);
 		$schema->registerField(new ARField("classID", ARInteger::instance()));
+		$schema->registerField(new ARField("stringIdentifier", ARVarchar::instance(40)));
 	}
 
 	public function getClassID($className)
@@ -46,7 +47,8 @@ class EavField extends EavFieldCommon
 		}
 		else
 		{
-			throw new ApplicationException($className . ' is not a valid EAV class');
+			return 0;
+			//throw new ApplicationException($className . ' is not a valid EAV class');
 		}
 	}
 
@@ -58,11 +60,13 @@ class EavField extends EavFieldCommon
 	public function getEavClasses()
 	{
 		return array(
-					'Category' => 1,
 					'CustomerOrder'=> 2,
-					'Manufacturer' => 3,
 					'User' => 4,
+					'UserAddress' => 5,
+					'Manufacturer' => 3,
+					'Category' => 1,
 					'UserGroup' => 5,
+					'Transaction' => 0
 				);
 	}
 

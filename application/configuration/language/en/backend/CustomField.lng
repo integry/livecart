@@ -1,10 +1,12 @@
 _custom_fields=Custom Fields
+_offline_methods=Offline Payment Methods
 
 Category=Categories
 CustomerOrder=Orders
 Manufacturer=Manufacturers
 User=Users
 UserGroup=User groups
+UserAddress=Addresses
 
 _SpecField_displayed_on_front_page=Editable by customer
 _SpecField_displayed_in_product_list=Visible to customer

@@ -26,7 +26,6 @@ _will_ship_to=A rendelés a következő címre le szállítva
 _will_bill_to=A rendelés a következő címre lesz számlázva
 _change=Változtatok
 _pay_offline=Személyes fizetés
-_offline_instructions=A személyes fizetési instrukciók a fizetési oldalon vannak
 _offline_complete_payment=Személyesen fizetek
 _err_enter_cc_num=Kérünk add meg a hitelkártya számát
 _err_select_cc_type=Kérünk add meg a hitelkártya típusát

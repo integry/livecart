@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import("application.model.product.Product");
+ClassLoader::import("application.model.eav.EavAble");
 
 /**
  * Represents a financial/monetary transaction, which can be:
@@ -16,7 +17,7 @@ ClassLoader::import("application.model.product.Product");
  * @package application.model.order
  * @author Integry Systems <http://integry.com>
  */
-class Transaction extends ActiveRecordModel
+class Transaction extends ActiveRecordModel implements EavAble
 {
 	const TYPE_SALE = 0;
 	const TYPE_AUTH = 1;
@@ -68,6 +69,7 @@ class Transaction extends ActiveRecordModel
 		$schema->registerField(new ARField("ccType", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("ccName", ARVarchar::instance(100)));
 		$schema->registerField(new ARField("comment", ARText::instance()));
+		$schema->registerField(new ARField("serializedData", ARText::instance()));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -404,6 +406,18 @@ class Transaction extends ActiveRecordModel
 		$this->ccLastDigits->set(substr($this->ccLastDigits->get(), -1 * self::LAST_DIGIT_COUNT));
 	}
 
+	public function setOfflineHandler($method)
+	{
+		$this->setData('handler', OfflineTransactionHandler::getMethodName($method));
+	}
+
+	public function setData($key, $value)
+	{
+		$data = unserialize($this->serializedData->get());
+		$data[$key] = $value;
+		$this->serializedData->set(serialize($data));
+	}
+
 	/*####################  Data array transformation ####################*/
 
 	public static function transformArray($array, ARSchema $schema)
@@ -420,6 +434,7 @@ class Transaction extends ActiveRecordModel
 		}
 
 		$array['methodName'] = self::getApplication()->getLocale()->translator()->translate($array['method']);
+		$array['serializedData'] = unserialize($array['serializedData']);
 
 		return $array;
 	}

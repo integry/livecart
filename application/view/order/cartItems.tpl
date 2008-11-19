@@ -89,7 +89,7 @@
 
 	<tr>
 		<td colspan="4" rowspan="1"></td>
-		<td id="cartUpdate" rowspan="3"><input type="submit" class="submit" value="{tn _update}" /></td>
+		<td id="cartUpdate" rowspan="3" style="vertical-align: top;"><input type="submit" class="submit" value="{tn _update}" /></td>
 	</tr>
 
 	{foreach from=$cart.discounts item=discount}

@@ -74,7 +74,7 @@
 	<fieldset class="addForm" id="specField_group_new_{$categoryID}_form" class="specField_new_group" style="display: none;">
 		<legend>{t _add_new_group|capitalize}</legend>
 		<script type="text/javascript">
-		   new Backend.SpecFieldGroup($('specField_group_new_{$categoryID}_form'), {ldelim} Category: {ldelim} ID: {$categoryID} {rdelim} {rdelim});
+		   new Backend.SpecFieldGroup($('specField_group_new_{$categoryID}_form'), {ldelim} Category: {ldelim} ID: '{$categoryID}' {rdelim} {rdelim});
 		</script>
 	</fieldset>
 </div>
@@ -118,7 +118,7 @@
 
 
 <script type="text/javascript">
-	 var categoryID = {$categoryID};
+	 var categoryID = '{$categoryID}';
 
 	 Event.observe($("specField_item_new_"+categoryID+"_show"), "click", function(e)
 	 {ldelim}

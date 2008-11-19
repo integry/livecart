@@ -6,6 +6,8 @@ ClassLoader::import('application.model.order.ExpressCheckout');
 ClassLoader::import('application.model.order.Transaction');
 ClassLoader::import('application.model.order.LiveCartTransaction');
 ClassLoader::import('application.model.order.SessionOrder');
+ClassLoader::import('application.model.order.OfflineTransactionHandler');
+ClassLoader::import('application.model.eav.EavSpecificationManager');
 
 /**
  *  Handles order checkout process
@@ -558,12 +560,17 @@ class CheckoutController extends FrontendController
 		$response->set('order', $this->order->toArray());
 		$response->set('currency', $this->getRequestCurrency());
 
+		// offline payment methods
+		$offlineMethods = OfflineTransactionHandler::getEnabledMethods();
+		$response->set('offlineMethods', $offlineMethods);
+		$response->set('offlineForms', $this->getOfflinePaymentForms($response));
+
 		$this->setPaymentMethodResponse($response);
 		$this->order->getSpecification()->setFormResponse($response, $response->get('ccForm'));
 
 		$external = $this->application->getPaymentHandlerList(true);
 		// auto redirect to external payment page if only one handler is enabled
-		if (1 == count($external) && !$this->config->get('OFFLINE_PAYMENT') && !$this->config->get('CC_ENABLE') && !$response->get('ccForm')->getValidator()->getErrorList())
+		if (1 == count($external) && !$offlineMethods && !$this->config->get('CC_ENABLE') && !$response->get('ccForm')->getValidator()->getErrorList())
 		{
 			$this->request->set('id', $external[0]);
 			return $this->redirect();
@@ -595,6 +602,36 @@ class CheckoutController extends FrontendController
 		// other payment methods
 		$external = $this->application->getPaymentHandlerList(true);
 		$response->set('otherMethods', $external);
+	}
+
+	private function getOfflinePaymentForms(ActionResponse $response)
+	{
+		ClassLoader::import("framework.request.validator.Form");
+		$forms = array();
+		$offlineVars = array();
+		foreach (OfflineTransactionHandler::getEnabledMethods() as $method)
+		{
+			$forms[$method] = new Form($this->getOfflinePaymentValidator($method));
+			$eavManager = new EavSpecificationManager(EavObject::getInstanceByIdentifier($method));
+			$eavManager->setFormResponse($response, $forms[$method]);
+			foreach (array('groupClass', 'specFieldList') as $vars)
+			{
+				$offlineVars[$method][$vars] = $response->get($vars);
+			}
+		}
+
+		$response->set('offlineVars', $offlineVars);
+
+		return $forms;
+	}
+
+	private function getOfflinePaymentValidator($method)
+	{
+		ClassLoader::import("framework.request.validator.RequestValidator");
+		$validator = new RequestValidator($method, $this->request);
+		$eavManager = new EavSpecificationManager(EavObject::getInstanceByIdentifier($method));
+		$eavManager->setValidation($validator);
+		return $validator;
 	}
 
 	/**
@@ -686,12 +723,32 @@ class CheckoutController extends FrontendController
 	 */
 	public function payOffline()
 	{
-		if (!$this->config->get('OFFLINE_PAYMENT'))
+		ActiveRecordModel::beginTransaction();
+
+		$method = $this->request->get('id');
+
+		if (!OfflineTransactionHandler::isMethodEnabled($method) || !$this->getOfflinePaymentValidator($method)->isValid())
 		{
 			return new ActionRedirectResponse('checkout', 'pay');
 		}
 
-		return $this->finalizeOrder();
+		$order = $this->order;
+		$response = $this->finalizeOrder();
+
+		$transaction = Transaction::getNewOfflineTransactionInstance($order, 0);
+		$transaction->setOfflineHandler($method);
+		$transaction->save();
+
+		$eavObject = EavObject::getInstance($transaction);
+		$eavObject->setStringIdentifier($method);
+		$eavObject->save();
+
+		$transaction->getSpecification()->loadRequestData($this->request);
+		$transaction->save();
+
+		ActiveRecordModel::commit();
+
+		return $response;
 	}
 
 	/**
@@ -1021,8 +1078,8 @@ class CheckoutController extends FrontendController
 		$valStep = $this->config->get('CHECKOUT_CUSTOM_FIELDS');
 		$validateFields = ('CART_PAGE' == $valStep) ||
 						  (('BILLING_ADDRESS_STEP' == $valStep) && (self::STEP_ADDRESS <= $step)) ||
-						  (('SHIPPING_ADDRESS_STEP' == $valStep) && ((self::STEP_ADDRESS == $step) && 'shipping' == $this->request->get('step')) || (self::STEP_ADDRESS < $step)) ||
-						  (('SHIPPING_METHOD_STEP' == $valStep) && (self::STEP_SHIPPING <= $step));
+						  (('SHIPPING_ADDRESS_STEP' == $valStep) && (((self::STEP_ADDRESS == $step) && ('shipping' == $this->request->get('step'))) || (self::STEP_ADDRESS < $step))) ||
+						  (('SHIPPING_METHOD_STEP' == $valStep) && (self::STEP_SHIPPING < $step));
 
 		$isOrderable = $order->isOrderable(true, $validateFields);
 

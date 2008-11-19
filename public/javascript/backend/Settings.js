@@ -117,8 +117,18 @@ Backend.Settings.prototype =
 	init: function()
 	{
 		this.activateCategory('00-store');
+
+		var firstPaymentMethod = this.treeBrowser.getChildItemIdByIndex('05-payment', 0);
+		for (k = 1; k <= 3; k++)
+		{
+			var item = 'payment.OFFLINE' + k;
+			this.treeBrowser.moveItem(item, 'item_sibling', firstPaymentMethod);
+			this.treeBrowser.setItemText(item, '<span id="tree_payment.OFFLINE' + k + '">' + this.getSetting('OFFLINE_NAME_' + k)) + '</span>';
+		}
+
 		this.updatePaymentProcessors();
 		this.updateShippingHandlers();
+
 		this.treeBrowser.closeAllItems('05-payment');
 		this.treeBrowser.closeAllItems('06-shipping');
 	},
@@ -248,7 +258,7 @@ Backend.Settings.prototype =
 		{
 			$A(container.getElementsByTagName('input')).each(function(cb)
 			{
-				var subKey = cb.name.match(/\[([a-zA-Z0-9]*)\]/)[1];
+				var subKey = cb.name.match(/\[([a-zA-Z0-9_]*)\]/)[1];
 				cb.onchange = function()
 				{
 					this.updateSetting(id, subKey, cb.checked ? 1 : 0);
@@ -274,7 +284,8 @@ Backend.Settings.prototype =
 		}
 		else
 		{
-			var el = container.getElementsByTagName('input')[0] || container.getElementsByTagName('select')[0];
+			var el = container.getElementsByTagName('input')[0] || container.getElementsByTagName('select')[0] || container.getElementsByTagName('textarea')[0];
+
 			el.onchange =
 				function()
 				{
@@ -294,7 +305,7 @@ Backend.Settings.prototype =
 		this.treeBrowser.hideChildren(id);
 		var isVisible = this.treeBrowser.changeItemVisibility('payment.' + this.getSetting('CC_HANDLER'), true);
 
-		['EXPRESS_HANDLERS', 'PAYMENT_HANDLERS'].each(function(type)
+		['OFFLINE_HANDLERS', 'EXPRESS_HANDLERS', 'PAYMENT_HANDLERS'].each(function(type)
 		{
 			if (this.setHandlerVisibility('payment', type))
 			{
@@ -529,7 +540,34 @@ Backend.Settings.Editor.prototype =
 				var span = document.createElement('span');
 				span.innerHTML = '1 - ';
 				input.parentNode.insertBefore(span, input);
-			}
+			},
+
+		'OFFLINE_HANDLERS':
+			function()
+			{
+				$A($('setting_OFFLINE_HANDLERS').getElementsBySelector('label.checkbox')).each(function(label)
+				{
+					var key = label.getAttribute('for').match(/\[([a-zA-Z0-9_]*)\]/)[1];
+					if (key)
+					{
+						label.innerHTML = this.owner.getSetting(key.substr(0, key.length - 1) + '_NAME_' + key.substr(-1));
+					}
+				}.bind(this));
+			},
+
+		'OFFLINE_NAME_1':
+			function()
+			{
+				$A($('settings').getElementsByTagName('label')).each(function(label)
+				{
+					var key = label.getAttribute('for');
+					var key = key.substr(0, key.length - 2);
+					label.innerHTML = Backend.getTranslation(key) + ':';
+				});
+			},
+
+		'OFFLINE_NAME_2': function() { this.handlers.OFFLINE_NAME_1(); },
+		'OFFLINE_NAME_3': function() { this.handlers.OFFLINE_NAME_1(); }
 	},
 
 	valueHandlers:
@@ -537,6 +575,7 @@ Backend.Settings.Editor.prototype =
 		'CC_HANDLER': function() {this.owner.updatePaymentProcessors()},
 		'EXPRESS_HANDLERS': function() {this.owner.updatePaymentProcessors()},
 		'PAYMENT_HANDLERS': function() {this.owner.updatePaymentProcessors()},
+		'OFFLINE_HANDLERS': function() {this.owner.updatePaymentProcessors()},
 		'SHIPPING_HANDLERS': function() {this.owner.updateShippingHandlers()}
 	},
 

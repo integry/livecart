@@ -18,6 +18,7 @@ class PaymentController extends StoreManagementController
 		$order = CustomerOrder::getInstanceById($this->request->get('id'));
 
 		$transactions = $this->getTransactionArray($order);
+		ActiveRecordModel::addArrayToEavQueue('Transaction', $transactions);
 
 		foreach ($transactions as $id => $transaction)
 		{

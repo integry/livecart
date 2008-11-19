@@ -26,7 +26,6 @@ _will_ship_to=Levereras till
 _will_bill_to=Faktureras till
 _change=Ändra
 _pay_offline=Betala offline
-_offline_instructions=Betalningsinstruktioner visas på betalsidan.
 _offline_complete_payment=Betala offline
 _other_methods=Andra betalsätt
 _select_payment_method=Välj betalsätt
