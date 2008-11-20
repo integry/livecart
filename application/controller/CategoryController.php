@@ -239,7 +239,7 @@ class CategoryController extends FrontendController
 			}
 		}
 
-		ActiveRecordModel::addToEavQueue('Category', $categoryArray);
+//		ActiveRecordModel::addToEavQueue('Category', $categoryArray);
 
 		ActiveRecordModel::loadEav();
 
