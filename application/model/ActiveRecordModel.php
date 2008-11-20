@@ -20,6 +20,8 @@ abstract class ActiveRecordModel extends ActiveRecord
 
  	private static $eavQueue = array();
 
+ 	private static $isEav = array();
+
  	private $specificationInstance;
 
 	public static function setApplicationInstance(LiveCart $application)
@@ -187,6 +189,8 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 	protected static function transformArray($array, ARSchema $schema)
 	{
+		$schemaName = $schema->getName();
+
 		foreach ($schema->getFieldsByType('ARDateTime') as $name => $field)
 		{
 			if (isset($array[$name]))
@@ -209,9 +213,24 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 		$data = parent::transformArray($array, $schema);
 
-		self::executePlugins($data, 'array', $schema->getName());
+		if (self::isEav($schemaName))
+		{
+			self::addToEavQueue($schemaName, $data);
+		}
+
+		self::executePlugins($data, 'array', $schemaName);
 
 		return $data;
+	}
+
+	protected static function isEav($className)
+	{
+		if (!isset(self::$isEav[$className]))
+		{
+			self::$isEav[$className] = (array_search('EavAble', class_implements($className)) !== false);
+		}
+
+		return self::$isEav[$className];
 	}
 
 	public function toArray($force = false)
@@ -231,7 +250,14 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 	public static function addToEavQueue($className, &$record)
 	{
-		self::$eavQueue[$className][] =& $record;
+		if (!isset(self::$eavQueue[$className][$record['ID']]))
+		{
+			self::$eavQueue[$className][$record['ID']]['attributes'] = array();
+			self::$eavQueue[$className][$record['ID']]['byHandle'] = array();
+		}
+
+		$record['attributes'] =& self::$eavQueue[$className][$record['ID']]['attributes'];
+		$record['byHandle'] =& self::$eavQueue[$className][$record['ID']]['byHandle'];
 	}
 
 	public static function addArrayToEavQueue($className, &$array)
@@ -252,31 +278,10 @@ abstract class ActiveRecordModel extends ActiveRecord
 		ClassLoader::import('application.model.eav.EavObject');
 		ClassLoader::import('application.model.eav.EavSpecificationManager');
 
-		$map = array();
-
 		// build query for fetching EavObject gateway objects for all queued records
 		foreach (self::$eavQueue as $class => &$objects)
 		{
-			$ids = array();
-			foreach ($objects as &$object)
-			{
-				$ids[] = $object['ID'];
-
-				if (!isset($map[$class][$object['ID']]))
-				{
-					$map[$class][$object['ID']] = null;
-					$ref =& $map[$class][$object['ID']];
-					$ref['attributes'] = array();
-					$ref['byHandle'] = array();
-				}
-
-				$ref =& $map[$class][$object['ID']];
-
-				$object['attributes'] =& $ref['attributes'];
-				$object['byHandle'] =& $ref['byHandle'];
-			}
-
-			$c = new INCond(new ARFieldHandle('EavObject', EavObject::getClassField($class)), $ids);
+			$c = new INCond(new ARFieldHandle('EavObject', EavObject::getClassField($class)), array_keys($objects));
 			if (!isset($cond))
 			{
 				$cond = $c;
@@ -302,7 +307,11 @@ abstract class ActiveRecordModel extends ActiveRecord
 					$class = ucfirst(substr($field, 0, -2));
 					if (isset($entry['attributes']))
 					{
-						$map[$class][$refId]['attributes'] = $entry['attributes'];
+						self::$eavQueue[$class][$refId]['attributes'] = $entry['attributes'];
+						foreach ($entry['attributes'] as $attr)
+						{
+							self::$eavQueue[$class][$refId]['byHandle'][$attr['EavField']['handle']] = $attr;
+						}
 					}
 					break;
 				}
