@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2008-08-12 01:35                                #
-# Model version:         Version 2008-08-12                              #
+# Created on:            2008-10-12 19:02                                #
+# Model version:         Version 2008-10-12                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -70,6 +70,8 @@ CREATE INDEX IDX_Product_rating ON Product (rating);
 
 CREATE INDEX IDX_Product_salesRank ON Product (salesRank);
 
+CREATE INDEX IDX_Product_isEnabled_Category ON Product (categoryID,isEnabled);
+
 # ---------------------------------------------------------------------- #
 # Add table "Category"                                                   #
 # ---------------------------------------------------------------------- #
@@ -92,6 +94,10 @@ CREATE TABLE Category (
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE INDEX IDX_Category_1 ON Category (defaultImageID);
+
+CREATE INDEX IDX_Category_parentNode ON Category (parentNodeID);
+
+CREATE INDEX IDX_Category_lft ON Category (parentNodeID ASC,lft ASC);
 
 # ---------------------------------------------------------------------- #
 # Add table "Language"                                                   #
@@ -177,6 +183,7 @@ CREATE TABLE CustomerOrder (
     dateCompleted TIMESTAMP COMMENT 'The date the order was finalized (completed checkout)',
     totalAmount FLOAT COMMENT 'Order total amount, including taxes and shipping costs',
     capturedAmount FLOAT COMMENT 'The amount that is captured from customers credit card',
+    isMultiAddress BOOL NOT NULL,
     isFinalized BOOL NOT NULL COMMENT 'Determines if the order is completed (completed checkout)',
     isPaid BOOL NOT NULL COMMENT 'Determines if the order has been fully paid',
     isCancelled BOOL NOT NULL COMMENT 'Determines if the order is cancelled',
@@ -199,6 +206,7 @@ CREATE TABLE OrderedItem (
     productID INTEGER UNSIGNED NOT NULL COMMENT 'ID of ordered Product',
     customerOrderID INTEGER UNSIGNED NOT NULL COMMENT 'ID of order the item is assigned to',
     shipmentID INTEGER UNSIGNED COMMENT 'ID of the shipment the item is assigned to (when the order has been finalized)',
+    parentID INTEGER UNSIGNED,
     priceCurrencyID CHAR(3) COMMENT 'ID of the active currency at the time the customer added the product to shopping cart',
     count FLOAT COMMENT 'Amount of ordered Products',
     reservedProductCount FLOAT COMMENT 'Amount of reserved Products from inventory (stock)',
@@ -310,11 +318,14 @@ ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE ProductRelationship (
-    ProductID INTEGER UNSIGNED NOT NULL,
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    productID INTEGER UNSIGNED NOT NULL,
+    categoryID INTEGER UNSIGNED,
     relatedProductID INTEGER UNSIGNED NOT NULL COMMENT 'The Product the related Product is assigned to',
     productRelationshipGroupID INTEGER UNSIGNED COMMENT 'ID of the related Product',
+    type INTEGER NOT NULL COMMENT '0 - related product (cross-sell), 1 - up-sell',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'ID of the ProductRelationshipGroup - if the related product is assigned to one (grouped together with similar products)',
-    CONSTRAINT PK_ProductRelationship PRIMARY KEY (ProductID, relatedProductID)
+    CONSTRAINT PK_ProductRelationship PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -328,9 +339,12 @@ CREATE TABLE ProductPrice (
     recurringID INTEGER UNSIGNED,
     price NUMERIC(12,2) NOT NULL COMMENT 'The actual price value',
     listPrice NUMERIC(12,2),
+    serializedRules TEXT,
     CONSTRAINT PK_ProductPrice PRIMARY KEY (productID, currencyID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+CREATE INDEX IDX_ProductPrice_1 ON ProductPrice (productID,currencyID);
 
 # ---------------------------------------------------------------------- #
 # Add table "Currency"                                                   #
@@ -522,6 +536,8 @@ ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 CREATE TABLE ProductRelationshipGroup (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     ProductID INTEGER UNSIGNED,
+    categoryID INTEGER UNSIGNED,
+    type INTEGER NOT NULL COMMENT 'see ProductRelationship',
     position INTEGER UNSIGNED DEFAULT 0,
     name MEDIUMTEXT,
     CONSTRAINT PK_ProductRelationshipGroup PRIMARY KEY (ID)
@@ -640,6 +656,7 @@ CREATE TABLE Shipment (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     orderID INTEGER UNSIGNED NOT NULL COMMENT 'ID of order the shipment is assigned to',
     shippingServiceID INTEGER UNSIGNED COMMENT 'ID of the selected ShippingService for this item. In case a real-time shipping rate service is used, the value for this field would be NULL',
+    shippingAddressID INTEGER UNSIGNED,
     amount FLOAT COMMENT 'Total product price amount',
     shippingAmount FLOAT COMMENT 'Shipping price amount',
     taxAmount FLOAT COMMENT 'Total associated tax amount',
@@ -850,6 +867,7 @@ CREATE TABLE ShipmentTax (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     taxRateID INTEGER UNSIGNED COMMENT 'ID of the TaxRate that is being applied to the shipment',
     shipmentID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the shipment the tax is being applied to',
+    type TINYINT COMMENT 'applied to: NULL - total amount (deprecated), 1 - subtotal, 2 - shipping amount',
     amount FLOAT COMMENT 'Tax amount',
     CONSTRAINT PK_ShipmentTax PRIMARY KEY (ID)
 )
@@ -927,11 +945,14 @@ CREATE TABLE ProductOption (
     defaultChoiceID INTEGER UNSIGNED,
     name MEDIUMTEXT,
     description MEDIUMTEXT,
+    selectMessage MEDIUMTEXT,
     type TINYINT,
     isRequired BOOL,
     isDisplayed BOOL,
     isDisplayedInList BOOL,
     isDisplayedInCart BOOL,
+    isPriceIncluded BOOL COMMENT 'Include product price when displaying option price (base product price + option choice price = option display price)',
+    displayType INTEGER COMMENT '0 - select box, 1 - radio buttons',
     position INTEGER UNSIGNED DEFAULT 0,
     CONSTRAINT PK_ProductOption PRIMARY KEY (ID)
 )
@@ -1006,20 +1027,6 @@ CREATE TABLE CategoryPresentation (
     isSubcategories BOOL,
     theme VARCHAR(70),
     CONSTRAINT PK_CategoryPresentation PRIMARY KEY (ID)
-)
-ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
-
-# ---------------------------------------------------------------------- #
-# Add table "ProductPriceRule"                                           #
-# ---------------------------------------------------------------------- #
-
-CREATE TABLE ProductPriceRule (
-    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    productID INTEGER UNSIGNED,
-    userGroupID INTEGER UNSIGNED,
-    quantity INTEGER,
-    price NUMERIC(12,2),
-    CONSTRAINT PK_ProductPriceRule PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -1308,23 +1315,117 @@ ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE DiscountCondition (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    parentNodeID INTEGER,
+    parentNodeID INTEGER UNSIGNED,
     lft INTEGER,
     rgt INTEGER,
-    isAnyProduct BOOL,
-    isEnabled BOOL,
-    isValidByDate BOOL,
-    isAllSubconditions BOOL,
-    dateFrom TIMESTAMP,
-    dateTo TIMESTAMP,
+    isEnabled BOOL NOT NULL,
+    isAnyRecord BOOL NOT NULL,
+    isAllSubconditions BOOL NOT NULL,
+    isActionCondition BOOL NOT NULL,
+    recordCount INTEGER NOT NULL,
+    validFrom TIMESTAMP DEFAULT '0000-00-00',
+    validTo TIMESTAMP DEFAULT '0000-00-00',
     count FLOAT,
     subtotal FLOAT,
     comparisonType TINYINT COMMENT '0 - equal, 1 - less than or equal, 2 - greater than or equal, 3 - not equal',
     name MEDIUMTEXT,
     description MEDIUMTEXT,
-    couponCode VARCHAR(40),
+    couponCode VARCHAR(40) NOT NULL,
     serializedCondition TEXT,
+    position INTEGER UNSIGNED DEFAULT 0,
     CONSTRAINT PK_DiscountCondition PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+CREATE INDEX IDX_DiscountCondition_1 ON DiscountCondition (isEnabled,validFrom,validTo,isActionCondition);
+
+CREATE INDEX IDX_DiscountCondition_2 ON DiscountCondition (comparisonType);
+
+CREATE INDEX IDX_DiscountCondition_3 ON DiscountCondition (couponCode);
+
+# ---------------------------------------------------------------------- #
+# Add table "DiscountAction"                                             #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE DiscountAction (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    conditionID INTEGER UNSIGNED,
+    actionConditionID INTEGER UNSIGNED,
+    isEnabled BOOL NOT NULL,
+    type TINYINT NOT NULL,
+    amountMeasure TINYINT NOT NULL,
+    amount FLOAT,
+    position INTEGER UNSIGNED DEFAULT 0,
+    CONSTRAINT PK_DiscountAction PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+CREATE INDEX IDX_DiscountAction_1 ON DiscountAction (conditionID,isEnabled);
+
+CREATE INDEX IDX_DiscountAction_2 ON DiscountAction (isEnabled);
+
+# ---------------------------------------------------------------------- #
+# Add table "OrderDiscount"                                              #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE OrderDiscount (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    orderID INTEGER UNSIGNED,
+    amount FLOAT,
+    description MEDIUMTEXT,
+    CONSTRAINT PK_OrderDiscount PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "OrderCoupon"                                                #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE OrderCoupon (
+    ID INTEGER UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
+    orderID INTEGER UNSIGNED,
+    couponCode VARCHAR(255),
+    CONSTRAINT PK_OrderCoupon PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "DiscountConditionRecord"                                    #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE DiscountConditionRecord (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    conditionID INTEGER UNSIGNED,
+    productID INTEGER UNSIGNED,
+    categoryID INTEGER UNSIGNED,
+    manufacturerID INTEGER UNSIGNED,
+    userID INTEGER UNSIGNED,
+    userGroupID INTEGER UNSIGNED,
+    deliveryZoneID INTEGER UNSIGNED,
+    CONSTRAINT PK_DiscountConditionRecord PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "ProductBundle"                                              #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ProductBundle (
+    productID INTEGER UNSIGNED NOT NULL,
+    relatedProductID INTEGER UNSIGNED NOT NULL COMMENT 'The Product the related Product is assigned to',
+    position INTEGER UNSIGNED DEFAULT 0 COMMENT 'ID of the ProductRelationshipGroup - if the related product is assigned to one (grouped together with similar products)',
+    CONSTRAINT PK_ProductBundle PRIMARY KEY (productID, relatedProductID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "ProductCategory"                                            #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ProductCategory (
+    productID INTEGER UNSIGNED NOT NULL,
+    categoryID INTEGER UNSIGNED NOT NULL,
+    CONSTRAINT PK_ProductCategory PRIMARY KEY (productID, categoryID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -1386,6 +1487,9 @@ ALTER TABLE OrderedItem ADD CONSTRAINT CustomerOrder_OrderedItem
 ALTER TABLE OrderedItem ADD CONSTRAINT Shipment_OrderedItem 
     FOREIGN KEY (shipmentID) REFERENCES Shipment (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
+ALTER TABLE OrderedItem ADD CONSTRAINT OrderedItem_OrderedItem 
+    FOREIGN KEY (parentID) REFERENCES OrderedItem (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
 ALTER TABLE User ADD CONSTRAINT ShippingAddress_User 
     FOREIGN KEY (defaultShippingAddressID) REFERENCES ShippingAddress (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
@@ -1408,13 +1512,16 @@ ALTER TABLE FilterGroup ADD CONSTRAINT SpecField_FilterGroup
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductRelationship ADD CONSTRAINT Product_RelatedProduct_ 
-    FOREIGN KEY (ProductID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductRelationship ADD CONSTRAINT Product_ProductRelationship 
     FOREIGN KEY (relatedProductID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductRelationship ADD CONSTRAINT ProductRelationshipGroup_ProductRelationship 
     FOREIGN KEY (productRelationshipGroupID) REFERENCES ProductRelationshipGroup (ID) ON DELETE CASCADE;
+
+ALTER TABLE ProductRelationship ADD CONSTRAINT Category_ProductRelationship 
+    FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductPrice ADD CONSTRAINT Product_ProductPrice 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1467,6 +1574,9 @@ ALTER TABLE SpecFieldGroup ADD CONSTRAINT Category_SpecFieldGroup
 ALTER TABLE ProductRelationshipGroup ADD CONSTRAINT Product_ProductRelationshipGroup 
     FOREIGN KEY (ProductID) REFERENCES Product (ID) ON DELETE CASCADE;
 
+ALTER TABLE ProductRelationshipGroup ADD CONSTRAINT Category_ProductRelationshipGroup 
+    FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
 ALTER TABLE ProductReview ADD CONSTRAINT Product_ProductReview 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -1496,6 +1606,9 @@ ALTER TABLE Shipment ADD CONSTRAINT CustomerOrder_Shipment
 
 ALTER TABLE Shipment ADD CONSTRAINT ShippingService_Shipment 
     FOREIGN KEY (shippingServiceID) REFERENCES ShippingService (ID) ON DELETE SET NULL;
+
+ALTER TABLE Shipment ADD CONSTRAINT UserAddress_Shipment 
+    FOREIGN KEY (shippingAddressID) REFERENCES UserAddress (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE ShippingAddress ADD CONSTRAINT User_ShippingAddress 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1599,12 +1712,6 @@ ALTER TABLE ProductRating ADD CONSTRAINT User_ProductRating
 ALTER TABLE CategoryPresentation ADD CONSTRAINT Category_CategoryPresentation 
     FOREIGN KEY (ID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductPriceRule ADD CONSTRAINT Product_ProductPriceRule 
-    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE ProductPriceRule ADD CONSTRAINT UserGroup_ProductPriceRule 
-    FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID) ON DELETE CASCADE ON UPDATE CASCADE;
-
 ALTER TABLE ProductPresentation ADD CONSTRAINT Product_ProductPresentation 
     FOREIGN KEY (ID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -1684,4 +1791,52 @@ ALTER TABLE ProductListItem ADD CONSTRAINT ProductList_ProductListItem
     FOREIGN KEY (productListID) REFERENCES ProductList (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductListItem ADD CONSTRAINT Product_ProductListItem 
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE DiscountCondition ADD CONSTRAINT DiscountCondition_DiscountCondition 
+    FOREIGN KEY (parentNodeID) REFERENCES DiscountCondition (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE DiscountAction ADD CONSTRAINT DiscountCondition_DiscountAction 
+    FOREIGN KEY (conditionID) REFERENCES DiscountCondition (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE DiscountAction ADD CONSTRAINT DiscountCondition_DiscountAction_ActionCondition 
+    FOREIGN KEY (actionConditionID) REFERENCES DiscountCondition (ID) ON DELETE SET NULL ON UPDATE SET NULL;
+
+ALTER TABLE OrderDiscount ADD CONSTRAINT CustomerOrder_OrderDiscount 
+    FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE OrderCoupon ADD CONSTRAINT CustomerOrder_OrderCoupon 
+    FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE DiscountConditionRecord ADD CONSTRAINT DiscountCondition_DiscountConditionRecord 
+    FOREIGN KEY (conditionID) REFERENCES DiscountCondition (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE DiscountConditionRecord ADD CONSTRAINT DeliveryZone_DiscountConditionRecord 
+    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE DiscountConditionRecord ADD CONSTRAINT Product_DiscountConditionRecord 
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE DiscountConditionRecord ADD CONSTRAINT Manufacturer_DiscountConditionRecord 
+    FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE DiscountConditionRecord ADD CONSTRAINT Category_DiscountConditionRecord 
+    FOREIGN KEY (categoryID) REFERENCES Category (ID);
+
+ALTER TABLE DiscountConditionRecord ADD CONSTRAINT UserGroup_DiscountConditionRecord 
+    FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID);
+
+ALTER TABLE DiscountConditionRecord ADD CONSTRAINT User_DiscountConditionRecord 
+    FOREIGN KEY (userID) REFERENCES User (ID);
+
+ALTER TABLE ProductBundle ADD CONSTRAINT Product_ProductBundle 
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductBundle ADD CONSTRAINT Product_ProductBundle_Related 
+    FOREIGN KEY (relatedProductID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductCategory ADD CONSTRAINT Category_ProductCategory 
+    FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductCategory ADD CONSTRAINT Product_ProductCategory 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;

@@ -202,6 +202,7 @@ div.confirmationMsg div
 #content.right
 {
 	margin-right: 0;
+	padding-right: 0;
 }
 
 /*****************************
@@ -397,11 +398,10 @@ tr.even
 {
     list-style-type: none;
     margin-bottom: 7px;
-
     padding-left: 20px;
     background-image:url(../../image/silk/gif/bullet_arrow_left.gif);
     background-repeat: no-repeat;
-    background-position: center left;
+    background-position: left 2px;
 }
 
 .categories .count
@@ -1172,6 +1172,19 @@ table.quantityPrice
 	line-height: 2em;
 }
 
+.radioOptions
+{
+	padding: 0 0.5em;
+	border: 1px solid #aaa;
+}
+
+.productVariations label
+{
+	float: none;
+	display: block;
+	margin-bottom: 0;
+}
+
 #productSpecification table
 {
 	border: 1px solid #AAAAAA;
@@ -1306,7 +1319,6 @@ ul.attributeList.singleValue li
 
 .cartLinks .submit
 {
-    top: 5px;
     position: relative;
 }
 
@@ -1409,6 +1421,11 @@ div.review .ratingBreakdown
 	width: 150px;
 }
 
+#bundle .pricingInfo
+{
+	float: left;
+}
+
 .bundleList, .bundleInfo
 {
 	float: left;
@@ -1477,7 +1494,7 @@ div.checkout a
 
 #cart, #wishList
 {
-	width: 80%;
+	width: 700px;
 	margin-left:auto;
 	margin-right:auto;
 }
@@ -1567,6 +1584,20 @@ div.checkout a
     font-weight: bold;
 }
 
+.checkoutButtons
+{
+    float: right;
+    width: 400px;
+}
+
+.multiAddressCheckout
+{
+	clear: right;
+	display: block;
+	text-align: right;
+	padding-top: 1em;
+}
+
 .proceedToCheckout
 {
     background-color: #DDEEFF;
@@ -1574,9 +1605,14 @@ div.checkout a
     background-position: 97% center;
     background-repeat: no-repeat;
     border: 1px solid #DDDDDD;
-    float: right;
     font-weight: bold;
     padding: 5px 27px 5px 5px;
+    float: right;
+}
+
+select.multiAddress
+{
+	width: 100%;
 }
 
 .cartImage
@@ -1615,6 +1651,7 @@ div.checkout a
 {
 	background-color: #e8ffff;
 	padding-bottom: 0;
+	text-align: center;
 }
 
 .text.coupon
@@ -1676,6 +1713,7 @@ div.checkout a
 .progressPayment a,
 #progressCart,
 .progressShipping #progressAddress,
+.progressShipping #progressShippingAddress,
 .shippingSelected,
 .addressSelected
 {
@@ -1687,6 +1725,7 @@ div.checkout a
 .progressPayment #progressPayment,
 .progressCart #progressCart,
 .progressAddress #progressAddress,
+.progressShippingAddress #progressShippingAddress,
 .progressShipping #progressShipping
 {
     border: 3px solid #ADD8E6 !important;
@@ -1701,15 +1740,26 @@ div.checkout a
 
 /* Select address */
 
+table.addressSelector
+{
+	width: 100%;
+}
+
 .addressSelector .selector
 {
     vertical-align: middle;
     text-align: center;
 }
 
+.selector.addAddress
+{
+	vertical-align: top;
+	padding-top: 5px;
+}
+
 .addressSelector a
 {
-    float: right;
+    margin-left: 5px;
 }
 
 .addressSelector .address
@@ -1720,6 +1770,36 @@ div.checkout a
 .addressSelector .address p
 {
     margin: 3px;
+}
+
+#billingAddressColumn
+{
+	clear: left;
+	margin-right: 1%;
+}
+
+#billingAddressColumn,
+#shippingSelector
+{
+	float: left;
+	width: 49%;
+}
+
+.addAddress .address,
+.addAddress .addressBlock
+{
+	width: 97%;
+}
+
+.addAddress .addressBlock label
+{
+	width: 120px;
+}
+
+.addAddress .addressBlock input,
+.addAddress .addressBlock select
+{
+	width: 97%;
 }
 
 /* Shipping method */
@@ -1839,6 +1919,17 @@ a.cvv
 .user-pay .orderOverviewControls, .user-pay .addressContainer a
 {
 	display: none;
+}
+
+.multiAddress .shipmentAddress
+{
+	text-align: left;
+	font-weight: bold;
+}
+
+.multiAddress .overviewShippingInfo td
+{
+	padding-bottom: 1em;
 }
 
 #overviewAddresses
@@ -2012,6 +2103,12 @@ ul#userMenu
 /***************************
 	User addresses
 ***************************/
+div.address,
+div.addressBlock
+{
+    width: 230px;
+}
+
 div.addressBlock
 {
     border: 1px solid #DDDDDD;
@@ -2021,7 +2118,6 @@ div.addressBlock
     padding-top: 5px;
     padding-bottom: 5px;
     margin-top: 10px;
-    width: 230px;
     cursor: pointer;
 }
 
@@ -2087,17 +2183,23 @@ div.orderStatus
     padding: 6px;
 }
 
-a.invoice, a.viewOrder, a.messages
+a.invoice, a.viewOrder, a.reorder, a.messages
 {
 	padding-left: 22px;
 	background-image: url(../../image/silk/gif/printer.gif);
 	background-position: left center;
 	background-repeat: no-repeat;
+	margin-right: 1em;
 }
 
 a.viewOrder
 {
 	background-image: url(../../image/silk/gif/page_white_text.gif);
+}
+
+a.reorder
+{
+	background-image: url(../../image/silk/gif/cart_put.gif);
 }
 
 a.messages
@@ -2119,6 +2221,11 @@ p.messages
 .subItemList
 {
 	margin: 4px;
+}
+
+.shipmentAddress
+{
+	margin-bottom: 0.5em;
 }
 
 /***************************
@@ -2263,6 +2370,7 @@ td.amount
 #invoicePaymentInfo td.amount
 {
     width: auto;
+    text-align: right;
 }
 
 #invoicePaymentInfo .beforeTaxSubtotal td.amount
@@ -2468,7 +2576,7 @@ label
 	font-weight: bold;
 }
 
-.required label span
+.required label span.label
 {
 	background: url(../../image/required.gif) right center no-repeat;
 	padding-right:9px;
@@ -2745,7 +2853,7 @@ img.calendar_button_hover
 .compactProductList .productInfo
 {
 	float: left;
-	width: 100px;
+	width: 90px;
 	font-size: 0.85em;
 	overflow: hidden;
 }
@@ -2823,23 +2931,50 @@ img.calendar_button_hover
 	margin: 0;
 	list-style: none;
 	/* float : left; */
-	width : 142px;
+	/* width : 142px; */
 	z-index: 10;
 	position: relative;
+	background-color: #F6F6F6;
 }
 
 .dynamicMenu li { /* all list items */
 	position : relative;
 	/* float : left; */
 	margin: 0;
+	border-top: 1px solid #ddd;
 }
 
 .dynamicMenu li ul { /* second-level lists */
 	position : absolute;
 	left: -999em;
 	margin-left : 142px;
-	margin-top : -32px;
+	margin-top : -30px;
 	z-index: 10000;
+}
+
+.dynamicMenu ul ul
+{
+	padding-left: 0;
+	border: 1px solid #ddd;
+	border-top: 0;
+}
+
+.dynamicMenu li:hover a,
+.dynamicMenu li.sfhover a,
+.dynamicMenu li:hover li:hover a,
+.dynamicMenu li.sfhover li.sfhover a,
+.dynamicMenu li:hover li:hover li:hover a,
+.dynamicMenu li.sfhover li.sfhover li.sfhover a
+{
+	background-color: lightyellow;
+}
+
+.dynamicMenu li:hover li a,
+.dynamicMenu li.sfhover li a,
+.dynamicMenu li:hover li:hover li a,
+.dynamicMenu li.sfhover li:hover li a
+{
+	background-color: #F6F6F6;
 }
 
 .dynamicMenu li ul ul { /* third-and-above-level lists */
@@ -2853,20 +2988,35 @@ img.calendar_button_hover
 	display : block;
 	font-weight : bold;
 	text-decoration : none;
-	border-top: 1px solid #eee;
-	border-bottom: 1px solid #eee;
 	padding : 7px;
+	padding-right: 0;
 	margin-left: 0;
-}
-
-.dynamicMenu li li a
-{
-	background-color: #eee;
 }
 
 .dynamicMenu li.current a
 {
 	background-color: transparent;
+}
+
+.dynamicMenu li.current ul
+{
+	display: block;
+	margin-top: 0pt;
+	position: static;
+	border: 0;
+}
+
+.dynamicMenu li.current ul li
+{
+	margin-bottom: 0;
+	margin-left: 5px;
+	padding-left: 12px;
+	border: 0;
+}
+
+.dynamicMenu li.current ul li a
+{
+	padding: 3px;
 }
 
 .dynamicMenu li:hover ul ul, .dynamicMenu li:hover ul ul ul, .dynamicMenu li.sfhover ul ul, .dynamicMenu li.sfhover ul ul ul {

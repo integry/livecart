@@ -150,6 +150,7 @@ class TemplateController extends StoreManagementController
 	public function saveEmail()
 	{
 		$template = new EmailTemplate($this->request->get('file'));
+		$template = $template->getLangTemplate($this->application->getDefaultLanguageCode());
 		$template->setSubject($this->request->get('subject'));
 		$template->setBody($this->request->get('body'));
 		$res = $template->save();

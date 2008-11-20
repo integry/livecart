@@ -26,11 +26,11 @@
 </fieldset>
 
 <div class="newForm">
-	{include file="backend/productRelationshipGroup/form.tpl"}
+	{include file="backend/productRelationshipGroup/form.tpl" type=$type}
 </div>
 
 {* No group *}
-<ul id="noGroup{$productID}" class="noGroup subList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_subList">
+<ul id="noGroup_{$type}_{$productID}" class="noGroup subList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_subList">
 {foreach item="relationship" from=$relationshipsWithGroups}
 	{if $relationship.ProductRelationshipGroup.ID}{php}break;{/php}{/if}
 	{if $relationship.RelatedProduct.ID}
@@ -66,5 +66,5 @@
 <div class="blankItem" class="dom_template">{include file="backend/productRelationshipGroup/form.tpl"}</div>
 
 <script type="text/javascript">
-	Backend.RelatedProduct.Group.Controller.prototype.index({$productID});
+	Backend.RelatedProduct.Group.Controller.prototype.index({$productID}, {$type});
 </script>

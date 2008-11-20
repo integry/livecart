@@ -115,7 +115,7 @@ Backend.Template.prototype =
 				this.treeBrowser.insertNewItem(rootId, treeBranch[k].id, k, null, 0, 0, 0, '');
 				this.treeBrowser.setUserData(treeBranch[k].id, 'isCustom', treeBranch[k].isCustom);
 				//this.treeBrowser.lockItem(treeBranch[k].id);
-//console.log(this.treeBrowser._globalIdStorageFind(treeBranch[k].id));
+
 				if (treeBranch[k].subs)
 				{
 					this.insertTreeBranch(treeBranch[k].subs, treeBranch[k].id);

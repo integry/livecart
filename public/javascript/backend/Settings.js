@@ -152,7 +152,10 @@ Backend.Settings.prototype =
 
 	afterSave: function(result)
 	{
-		Backend.SaveConfirmationMessage.prototype.showMessage(result.responseData.message);
+		if (!result.channel)
+		{
+			Backend.SaveConfirmationMessage.prototype.showMessage(result.responseData.message);
+		}
 
 		// update image upload settings
 		var images = $('settingsContent').getElementsByClassName('settingImage');

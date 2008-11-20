@@ -59,7 +59,14 @@ class DeliveryZone extends MultilingualObject
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
 	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
+		if ((0 == $recordID) && $loadRecordData)
+		{
+			return self::getDefaultZoneInstance();
+		}
+		else
+		{
+			return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
+		}
 	}
 
 	public function isDefault()
@@ -122,7 +129,7 @@ class DeliveryZone extends MultilingualObject
 		{
 			$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('DeliveryZone', 'isEnabled'), true));
 			$f->setCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneCountry', 'countryCode'), $address->countryID->get()));
-			$s = ActiveRecordModel::getRecordSet('DeliveryZoneCountry', $f, ActiveRecordModel::LOAD_REFERENCES);
+			$s = ActiveRecordModel::getRecordSet('DeliveryZoneCountry', $f, array('DeliveryZone'));
 
 			foreach ($s as $zone)
 			{
@@ -297,7 +304,7 @@ class DeliveryZone extends MultilingualObject
 	{
 		if (!$this->taxRates)
 		{
-			$this->taxRates = TaxRate::getRecordSetByDeliveryZone($this, $includeDisabled, $loadReferencedRecords);
+			$this->taxRates = TaxRate::getRecordSetByDeliveryZone($this, $loadReferencedRecords);
 		}
 
 		return $this->taxRates;
@@ -314,7 +321,7 @@ class DeliveryZone extends MultilingualObject
 	/**
 	 * @return ARSet
 	 */
-	public function getStates($loadReferencedRecords = false)
+	public function getStates($loadReferencedRecords = array('State'))
 	{
 		return DeliveryZoneState::getRecordSetByZone($this, $loadReferencedRecords);
 	}

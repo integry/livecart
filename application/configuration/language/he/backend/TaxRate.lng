@@ -1,0 +1,14 @@
+_no_taxes=לא נוצרו מיסים עדיין
+_add_tax=הוסף מס חדש
+_tax_rate_has_been_successfully_saved=דירוג המס נשמר בהצלחה
+_could_not_save_tax_rate=לא יכולנו לדרג את המס
+_tax=מס
+_rate=דירוג מס
+_add_new_tax_rate=הוסף דירוג מס חדש
+_cancel_adding_new_tax_rate=בטל הוספת דירוג מס חדש
+_error_rate_should_not_be_empty=אנא הכנס דירוג מס
+_error_rate_should_be_numeric_value=דירוג המס צריך להיות במספרים
+_error_rate_should_be_greater_than_zero_and_less_than_hundred=הדירוג צריך להיות בין 0 ל 100
+_error_tax_should_not_be_empty=אנא הכנס את דירוג המס
+_more_taxes_can_be_added=תוכל להוסיף מיסים נוספים
+_here=כאן

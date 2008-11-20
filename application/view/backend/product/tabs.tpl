@@ -17,58 +17,15 @@
 			{tab id="tabProductBundle" help="categories" hidden=true}<a href="{link controller=backend.productBundle action=index id=_id_}">{t _bundled_products}</a>{/tab}
 			{tab id="tabProductDiscounts" help="products.edit.pricing"}<a href="{link controller=backend.productPrice action=index id=_id_}?categoryID=_categoryID_">{t _stock_pricing}</a>{/tab}
 			{tab id="tabProductImages" help="products.edit.images"}<a href="{link controller=backend.productImage action=index id=_id_}?categoryID=_categoryID_">{t _images}</a>{/tab}
-			{tab id="tabProductRelationship" help="products.edit.related"}<a href="{link controller=backend.productRelationship action=index id=_id_}?categoryID=_categoryID_">{t _related}</a>{/tab}
+			{tab id="tabProductVariations" help="products.edit"}<a href="{link controller=backend.productVariation action=index id=_id_}">{t _variations}</a>{/tab}
+			{tab id="tabProductRelationship" help="products.edit.related"}<a href="{link controller=backend.productRelationship action=index id=_id_}?categoryID=_categoryID_&type=0">{t _related}</a>{/tab}
+			{tab id="tabProductUpsell" help="products.edit.related"}<a href="{link controller=backend.productRelationship action=index id=_id_}?categoryID=_categoryID_&type=1">{t _upsell}</a>{/tab}
 			{tab id="tabProductFiles" help="products.edit.files" hidden=true}<a href="{link controller=backend.productFile action=index id=_id_}?categoryID=_categoryID_">{t _files}</a>{/tab}
 			{tab id="tabProductOptions" role="option" help="products.edit.options"}<a href="{link controller=backend.productOption action=index id=_id_}?categoryID=_categoryID_">{t _options}</a>{/tab}
 			{tab id="tabProductReviews" help="categories" hidden=true}<a href="{link controller=backend.review action=index id=_id_}">{t _reviews}</a>{/tab}
-			{tab id="tabInfo" help="products.edit.info"}<a href="{link controller=backend.product action=info id=_id_}?categoryID=_categoryID_">{t _info}</a>{/tab}
+			{tab id="tabProductCategories" help="products.edit.info"}<a href="{link controller=backend.productCategory action=index id=_id_}?categoryID=_categoryID_">{t _product_categories}</a>{/tab}
+			{tab id="tabInfo" help="products.edit"}<a href="{link controller=backend.product action=info id=_id_}?categoryID=_categoryID_">{t _info}</a>{/tab}
 		{/tabControl}
-
-		{*
-		<ul class="tabList tabs">
-			<li id="tabProductBasic" class="tab active">
-				<a href="{link controller=backend.product action=basicData id=_id_}?categoryID=_categoryID_}">{t _basic_data}</a>
-				<span class="tabHelp"></span>
-			</li>
-
-			<li id="tabProductDiscounts" class="tab inactive">
-				<a href="{link controller=backend.productPrice action=index id=_id_}?categoryID=_categoryID_">{t _stock_pricing}</a>
-				<span class="tabHelp">products.edit.pricing</span>
-			</li>
-
-			<li id="tabProductImages" class="tab inactive">
-				<a href="{link controller=backend.productImage action=index id=_id_}?categoryID=_categoryID_">{t _images}</a>
-				<span class="tabHelp">products.edit.images</span>
-			</li>
-
-			<li id="tabProductRelationship" class="tab inactive">
-				<a href="{link   controller=backend.productRelationship action=index id=_id_}?categoryID=_categoryID_">{t _related}</a>
-				<span class="tabHelp">products.edit.related</span>
-			</li>
-
-			<li id="tabProductFiles" class="tab inactive">
-				<a href="{link controller=backend.productFile action=index id=_id_}?categoryID=_categoryID_">{t _files}</a>
-				<span class="tabHelp">products.edit.files</span>
-			</li>
-
-			<li id="tabProductOptions" class="tab inactive" {denied role="option"}style="display:none;"{/denied}>
-				<a href="{link controller=backend.productOption action=index id=_id_}?categoryID=_categoryID_">{t _options}</a>
-				<span class="tabHelp">products.edit.options</span>
-			</li>
-
-			<li id="tabProductReviews" class="tab inactive" {denied role="option"}style="display:none;"{/denied}>
-				<a href="{link controller=backend.review action=index id=_id_}">{t _reviews}</a>
-				<span class="tabHelp">categories</span>
-			</li>
-
-			<li id="tabInfo" class="tab inactive">
-				<a href="{link controller=backend.product action=info id=_id_}?categoryID=_categoryID_">{t _info}</a>
-				<span class="tabHelp">products.edit.info</span>
-			</li>
-
-		</ul>
-
-		*}
 	</div>
 	<div class="sectionContainer maxHeight h--50"></div>
 </div>

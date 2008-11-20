@@ -55,7 +55,7 @@ class TaxRate extends MultilingualObject
 		}
 
 	  	$instance->tax->set($tax);
-	  	$instance->rate->set((int)$rate);
+	  	$instance->rate->set($rate);
 
 	  	return $instance;
 	}
@@ -70,6 +70,12 @@ class TaxRate extends MultilingualObject
 	 */
 	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
+		if (!$loadReferencedRecords)
+		{
+			$loadReferencedRecords = array('Tax');
+		}
+		$filter->setOrder(new ARFieldHandle('Tax', 'position'));
+
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
@@ -81,7 +87,7 @@ class TaxRate extends MultilingualObject
 	 *
 	 * @return ARSet
 	 */
-	public static function getRecordSetByDeliveryZone(DeliveryZone $deliveryZone = null, $includeDisabled = true, $loadReferencedRecords = array('Tax'))
+	public static function getRecordSetByDeliveryZone(DeliveryZone $deliveryZone = null, $loadReferencedRecords = array('Tax'))
 	{
  		$filter = new ARSelectFilter();
 

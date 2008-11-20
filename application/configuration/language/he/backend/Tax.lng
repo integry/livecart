@@ -1,0 +1,10 @@
+_tax_entry_was_successfully_saved=ערך המס נשמר בהצלחה
+_could_not_save_tax_entry=לא יכולנו לשמור את ערך המס
+_add_new_tax=הוסף מס חדש
+_cancel_adding_new_tax=בטל הוספת מס חדש
+_cancel_adding_new_tax_rate=בטל הוספת דירוג מס חדש
+_name=שם
+_manage=נהל
+_taxes=מיסים
+_error_the_name_should_not_be_empty=אנא הכנס שם
+_are_you_sure_you_want_to_remove_ths_tax=האם אתה בטוח שברצונך למחוק מס זה? יכול להיות שתצטרך להשתמש בו לכמה מאיזורי השליחה.

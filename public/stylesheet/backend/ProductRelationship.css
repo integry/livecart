@@ -1,14 +1,14 @@
-.tabProductRelationshipContent .addProduct
+#productManagerContainer .addProduct
 {
     background-image: url(../../image/silk/link_add.png);
 }
 
-.tabProductLists .addGroup, .tabProductRelationshipContent .addGroup
+.tabProductLists .addGroup, #productManagerContainer .addGroup
 {
     background-image: url(../../image/silk/table_add.png);
 }
 
-.tabProductLists .groupTitle, .tabProductRelationshipContent .groupTitle
+.tabProductLists .groupTitle, #productManagerContainer .groupTitle
 {
     color: grey;
     font-size: 250%;

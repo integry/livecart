@@ -159,6 +159,9 @@ LiveCart.AjaxRequest.prototype = {
 			url += '?' + urlParts.join('&');
 		}
 
+		// fix &amp;s
+		url = url.replace(/&amp;/, '&');
+
 		return url;
 	},
 

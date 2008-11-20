@@ -1,0 +1,18 @@
+FEATURED=מוצרים מומלצים
+SALES_RANK=המכירות הטובות ביותר
+PRODUCT_NAME_ASC=שם המוצר: א-ת
+PRODUCT_NAME_DESC=שם המוצר: ת-א
+PRICE_ASC=מחיר: מהנמוך לגבוה
+PRICE_DESC=מחיר: מהגבוה לנמוך
+NEWEST_ARRIVALS=ההופעה החדשה ביותר
+RATING=דירוג הלקוח
+_found_cats=מציאת קטגוריות
+_not_found=<span class='notFoundMain'>לא נמצאו מוצרים.</span> אנא נסה מילות מפתח אחרות לחיפוש שלך.
+_featured_products=מוצרים מומלצים
+_showing_products=מציג [_1] ל [_2] מתוך [_3] מוצרים שנמצאו
+_sort_by=מיין לפי
+_narrow_by_cat=מציג תוצאות לפי קטגוריה
+_more_subcats=עוד...
+_view_as_list=הצג כרשימה
+_view_as_grid=הצג כטבלה
+_all_categories=כל הקטגוריות

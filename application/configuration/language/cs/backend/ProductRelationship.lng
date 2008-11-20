@@ -1,0 +1,16 @@
+_a_relationship_between_products_was_successfully_created=Vztah mezi produktamy byl úspěšně vytvořený
+_could_not_create_product_relationship=Tento produkt už byl označený jako příbuzný
+_relationship_was_successfully_removed=Příbuzenstvý bylo úspěšně odstraněné
+_select_product=Přidat příbuzný produkt
+_add_new_group=Přidat novou skupinu
+_add_group_title=Pridat novou příbuznou skupinu produktů
+_done_adding=Přidávání příbuzných produktů je hotové
+_cancel_adding_new_related_product=Zrušit pridávání nového příbuzenství
+_cancel_adding_new_group=Zrušit přidávání nové skupiny
+_are_you_sure_you_want_to_delete_this_group=Skutečně chcete odstranit tuto příbuzenskou skupinu?
+_are_you_sure_you_want_to_delete_this_relation=Skutečně chcete odstranit toto příbuzenství?
+_product_relationship_group_title=Titulek
+_err_relationship_name_is_empty=Prosím vložte název skupiny
+_err_circular=Nepodařilo se přidat příbuzný produkt k tomu samému produktu
+_err_multiple=Tento produkt už byl označený jako příbuzný
+_msg_added=Příbuzný produkt byl úspěšně přidaný

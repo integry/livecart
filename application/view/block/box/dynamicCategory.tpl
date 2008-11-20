@@ -25,7 +25,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 				<li class="current{if $category.ID == $topCategoryId} topCategory{/if}">
 					<a class="currentName" href="{categoryUrl data=$category filters=$category.filters}">{$category.name_lang}</a>
 			{else}
-				<li{if $category.ID == $topCategoryId} class="topCategory"{/if}>
+				<li class="{if $category.ID == $topCategoryId}topCategory{/if} {if $category.lft < $currentCategory.lft && $category.rgt > $currentCategory.rgt} current{/if}">
 					<a href="{categoryUrl data=$category filters=$category.filters}">{$category.name_lang}</a>
 			{/if}
 					{if 'DISPLAY_NUM_CAT'|config}

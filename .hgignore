@@ -1,0 +1,12 @@
+syntax: regexp
+^storage\/(.*)
+
+syntax: glob
+.cache
+.project
+cache
+public/javascript/compiled/*.*
+public/stylesheet/compiled/*.*
+public/upload/*
+storage/*.*
+Thumbs.db

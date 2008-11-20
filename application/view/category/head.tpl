@@ -12,7 +12,7 @@
 			{/if}
 
 			{if $products.0.Manufacturer.DefaultImage.ID}
-				<img src="{$products.0.Manufacturer.DefaultImage.paths.3}" class="manufacturerImage" />
+				<img src="{$products.0.Manufacturer.DefaultImage.paths.3}" alt="{$products.0.Manufacturer.name_lang}" class="manufacturerImage" />
 			{/if}
 		</fieldset>
 	{/if}

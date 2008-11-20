@@ -28,7 +28,7 @@ class OsCommerceImport extends LiveCartImportDriver
 			return true;
 		}
 
-		foreach (array('images', 'address_book.php', 'checkout_process.php') as $file)
+		foreach (array('images', 'address_book.php') as $file)
 		{
 			if (!file_exists($this->path . '/' . $file))
 			{

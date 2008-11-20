@@ -95,6 +95,12 @@ div#footer
 {
 	float: left;
 	margin-top: 20px;
+	width: 500px;
+}
+
+#leftSide .informationMenu
+{
+	display: none;
 }
 
 #content
@@ -139,13 +145,13 @@ input.submit, input.text, input.date, input.password, select, textarea
 #header
 {
 	padding: 0;
+	border-bottom: 2px solid #0d3f64;
 }
 
 #headerSearchBar
 {
 	float: left;
 	height: 47px;
-	background-image: url(../image/headerTop.jpg);
 	width: 100%;
 }
 
@@ -167,7 +173,7 @@ input.submit, input.text, input.date, input.password, select, textarea
 
 #headerContent
 {
-	height: 93px;
+	height: 91px;
 	padding-left: 1em;
 	background-image: url(../image/headerContent.jpg);
 	position: relative;
@@ -816,15 +822,17 @@ a.proceedToCheckout span span span span
 }
 
 /* completed steps */
-#checkoutProgress a.completed, .progressPayment a, #progressCart, .progressShipping #progressAddress, .shippingSelected, .addressSelected
+#checkoutProgress a.completed, .progressPayment a, #progressCart, .progressShipping #progressAddress, .progressShipping #progressShippingAddress, .shippingSelected, .addressSelected
 {
 	background-color: #F3FFF3 !important;
+	border: 0 !important;
 }
 
 /* current step */
-.progressPayment #progressPayment, .progressCart #progressCart, .progressAddress #progressAddress, .progressShipping #progressShipping
+.progressPayment #progressPayment, .progressCart #progressCart, .progressAddress #progressAddress, .progressShippingAddress #progressShippingAddress, .progressShipping #progressShipping
 {
 	background-color: #dfd !important;
+	border: 0 !important;
 	font-weight: bold;
 }
 
@@ -879,8 +887,8 @@ a.proceedToCheckout span span span span
 {
     border-top: 0px solid #CCCCCC;
     border-bottom: 0px solid #DDDDDD;
-    background:none;
-    margin-bottom: 0px;
+    margin: 0 25px;
+	background-image: url(../image/headerTop.jpg);
 }
 
 #currency
@@ -1345,7 +1353,7 @@ body {
 .rootCategories li div.wrapper
 {
 	border: 1px solid #6e99ae;
-	border-top: 0;
+	border-top: 2px solid #0D3F64;
 	background: url(../image/bodyBackground.png);
 }
 
@@ -1394,12 +1402,10 @@ ul.productList .descr
 /*****************************
 	Information menu
 *****************************/
-.informationMenu ul li
+.informationMenu .infoLink
 {
-	list-style-type: none;
 	margin-bottom: 5px;
 	font-size: smaller;
-	display: inline;
 	margin-top: 20px;
 }
 
@@ -1558,11 +1564,6 @@ h3, h3 a
 	margin-left: 10px;
 }
 
-#largeImage
-{
-	border: 1px solid #cde;
-}
-
 #moreImages
 {
 	padding-top: 1em;
@@ -1573,7 +1574,9 @@ h3, h3 a
 	margin-left: 20px;
 }
 
-#mainInfo
+#mainInfo,
+.radioOptions,
+#largeImage
 {
 	border: 1px solid #cde;
 }

@@ -20,6 +20,13 @@ function smarty_function_productUrl($params, LiveCartSmarty $smarty)
 function createProductUrl($params, LiveCart $application)
 {
 	$product = $params['product'];
+
+	// use parent product data for child variations
+	if (isset($product['Parent']))
+	{
+		$product = $product['Parent'];
+	}
+
 	$handle = createHandleString($product['name_lang']);
 
 	$urlParams = array('controller' => 'product',

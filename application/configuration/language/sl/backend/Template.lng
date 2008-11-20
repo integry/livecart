@@ -1,0 +1,16 @@
+_edit_templates=Uredi Template
+_edit_template=Uredi dokument templata
+_please_select=Izberi dokument za urejanje
+_save_template=Shrani template
+_template_file_name=Ime dokumenta
+_save_for_theme=Shrani za specifično temo
+_create_template=Ustvari template dokument
+_delete_template=Izbriši template dokument
+_file_name_empty=Vpišite ime dokumenta
+_edit_email_templates=Uredi E-mail template
+_subject=Tema sporočila
+_body=Telo sporočila
+_confirm_template_delete=Zares želite izbrisati izbran dokument?
+_template_has_been_successfully_updated=Template uspešno shranjen
+_could_not_update_template=Template ni bilo mogoče shraniti
+_template_has_been_successfully_deleted=Template je uspešno izbrisan

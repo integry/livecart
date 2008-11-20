@@ -1,0 +1,17 @@
+UspsShipping=Pošta
+_USPS_API_ACCESS=Pošta - pošiljanje API način
+UspsShipping_userId=API uporabniškoime
+UspsShipping_apiUrl=USPS API URL
+_USPS_DOMESTIC_OPTS=Opcije za pošiljanje doma
+UspsShipping_domestic=Omogoči mailing usluge
+UspsShipping_priorityPackageType=Vrsta pakiranja prioriteta
+UspsShipping_isMachinable=Paket je mehanski
+UspsShipping_size=Velikost paketa
+_USPS_ITL_OPTS=Mednarodne opcije pošiljanja
+UspsShipping_international=Omogoči mednarodno mailing uslugo
+Express=Ekspres
+Priority=Prioriteta
+Parcel=Pošta
+Library=Knjižni mail
+BPM=Natisnjena omejitev
+Media=Media Mail

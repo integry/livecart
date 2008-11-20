@@ -1,0 +1,16 @@
+_filter_group_was_successfully_saved=הסינון נשמר בהצלחה
+_could_not_save_filter_group=לא יכולנו לשמור את הסינון
+_filter_group_was_successfully_removed=הסינון הוסר בהצלחה
+_could_not_remove_filter_group=לא יכולנו להסיר את הסינון
+_add_new_filter=הוסף סינון חדש
+_category_has_no_attr=לא נמצאו מאפייני סינון שנוצרה לקטגוריה זו עדיין
+_delete_field=מחק שדה
+_remove_filter_question=האם אתה בטוח שברצונך למחוק את הסנן הזה?
+_FilterGroup_remove_question=האם אתה בטוח שברצונך למחוק את הסנן הזה?
+_cancel_adding_new_filter=בטל הוספת סנן חדש
+_error_name_empty=אנא הכנס שם לסנן
+_error_filter_value_is_not_a_number=ערך הסנן חייב להיות מספרי
+_error_spec_field_is_not_selected=לא נבחר שדה ספציפי
+_error_illegal_date=תאריך לא חוקי
+_error_filter_name_empty=אנא הכנס שם לסנן
+_error_filter_handle_invalid=הקשר לא תקין

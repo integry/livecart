@@ -1,0 +1,6 @@
+PaypalDirectPayment_password=Heslo
+PaypalDirectPayment_cardTypes=Povolené typy kreditných kariet
+PaypalDirectPayment=Paypal Direct Payment
+PaypalDirectPayment_sandbox=Používať sandbox (testovacie prostredie)
+PaypalDirectPayment_username=Používateľské meno
+PaypalDirectPayment_signature=Podpis

@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.order.CustomerOrder');
+ClassLoader::import('application.model.order.SessionOrder');
 ClassLoader::import('application.model.discount.DiscountCondition');
 ClassLoader::import('application.model.Currency');
 ClassLoader::import('application.model.product.Product');
@@ -22,8 +23,43 @@ class OrderController extends FrontendController
 	 */
 	public function index()
 	{
-		$this->addBreadCrumb($this->translate('_my_session'), $this->router->createUrlFromRoute($this->request->get('return'), true));
+		if ($this->order->isMultiAddress->get())
+		{
+			return new ActionRedirectResponse('order', 'multi');
+		}
+
+		$response = $this->getCartPageResponse();
 		$this->addBreadCrumb($this->translate('_my_basket'), '');
+		return $response;
+	}
+
+	/**
+	 *	@role login
+	 */
+	public function multi()
+	{
+		if (!$this->order->isMultiAddress->get())
+		{
+			return new ActionRedirectResponse('order', 'index');
+		}
+
+		$response = $this->getCartPageResponse();
+
+		// we're loading through a set, because all referenced records need to be loaded before array transformation
+		$addresses = array();
+		foreach ($this->user->getShippingAddressSet()->toArray() as $address)
+		{
+			$addresses[$address['UserAddress']['ID']] = $address['UserAddress']['compact'];
+		}
+		$response->set('addresses', $addresses);
+
+		$this->addBreadCrumb($this->translate('_select_shipping_addresses'), '');
+		return $response;
+	}
+
+	private function getCartPageResponse()
+	{
+		$this->addBreadCrumb($this->translate('_my_session'), $this->router->createUrlFromRoute($this->request->get('return'), true));
 
 		$this->order->loadItemData();
 
@@ -121,7 +157,7 @@ class OrderController extends FrontendController
 			$arr['fieldName'] = $this->getFormFieldName($item, $option);
 
 			$invalid = !empty($_SESSION['optionError'][$item->getID()][$option->getID()]) && ('isDisplayedInCart' == $filter);
-//$invalid = false;
+
 			if (!$filter || $option->$filter->get() || $invalid)
 			{
 				$out[] = $arr;
@@ -156,6 +192,12 @@ class OrderController extends FrontendController
 				{
 					OrderCoupon::getNewInstance($this->order, $code)->save();
 				}
+
+				$this->setMessage($this->makeText('_coupon_added', array($code)));
+			}
+			else
+			{
+				$this->setErrorMessage($this->makeText('_coupon_not_found', array($code)));
 			}
 
 			$this->order->getCoupons(true);
@@ -169,10 +211,10 @@ class OrderController extends FrontendController
 			return new ActionRedirectResponse('order', 'index');
 		}
 
+		$this->order->loadRequestData($this->request);
+
 		foreach ($this->order->getOrderedItems() as $item)
 		{
-			$this->order->loadRequestData($this->request);
-
 			if ($this->request->isValueSet('item_' . $item->getID()))
 			{
 				foreach ($item->product->get()->getOptions(true) as $option)
@@ -183,6 +225,60 @@ class OrderController extends FrontendController
 				$item->save();
 
 				$this->order->updateCount($item, $this->request->get('item_' . $item->getID(), 0));
+			}
+		}
+
+		if ($this->order->isMultiAddress->get())
+		{
+			$addresses = $this->user->getShippingAddressSet();
+			$this->order->getShipments();
+
+			foreach ($this->order->getOrderedItems() as $item)
+			{
+				if ($addressId = $this->request->get('address_' . $item->getID()))
+				{
+					if (!$item->shipment->get() || !$item->shipment->get()->shippingAddress->get() || ($item->shipment->get()->shippingAddress->get()->getID() != $addressId))
+					{
+						foreach ($this->order->getShipments() as $shipment)
+						{
+							if ($shipment->shippingAddress->get() && ($shipment->shippingAddress->get()->getID() == $addressId))
+							{
+								if (!$item->shipment->get() || ($item->shipment->get()->getID() != $shipment->getID()))
+								{
+									if ($item->shipment->get())
+									{
+										$item->shipment->get()->removeItem($item);
+									}
+
+									$shipment->addItem($item);
+									break;
+								}
+							}
+
+							$shipment = null;
+						}
+
+						if (!isset($shipment) || !$shipment)
+						{
+							$address = ActiveRecordModel::getInstanceById('UserAddress', $addressId, true);
+
+							$shipment = Shipment::getNewInstance($this->order);
+							$shipment->shippingAddress->set($address);
+							$shipment->save();
+							$this->order->addShipment($shipment);
+
+							$shipment->addItem($item);
+						}
+
+						$item->save();
+					}
+				}
+
+				if ($item->shipment->get())
+				{
+					$item->shipment->get()->shippingServiceData->set(null);
+					$item->shipment->get()->save();
+				}
 			}
 		}
 
@@ -210,7 +306,9 @@ class OrderController extends FrontendController
 	 */
 	public function delete()
 	{
-		$this->order->removeItem(ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id')));
+		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id'), ActiveRecordModel::LOAD_DATA, array('Product'));
+		$this->setMessage($this->makeText('_removed_from_cart', array($item->product->get()->getName($this->getRequestLanguage()))));
+		$this->order->removeItem($item);
 		SessionOrder::save($this->order);
 
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
@@ -221,7 +319,7 @@ class OrderController extends FrontendController
 	 */
 	public function addToCart()
 	{
-		$product = Product::getInstanceByID($this->request->get('id'));
+		$product = Product::getInstanceByID($this->request->get('id'), true, array('Category'));
 
 		$productRedirect = new ActionRedirectResponse('product', 'index', array('id' => $product->getID(), 'query' => 'return=' . $this->request->get('return')));
 		if (!$product->isAvailable())
@@ -231,10 +329,29 @@ class OrderController extends FrontendController
 			return $productRedirect;
 		}
 
+		$variations = $product->getVariationData($this->application);
 		ClassLoader::import('application.controller.ProductController');
-		if (!ProductController::buildAddToCartValidator($product->getOptions(true)->toArray())->isValid())
+		if (!ProductController::buildAddToCartValidator($product->getOptions(true)->toArray(), $variations)->isValid())
 		{
 			return $productRedirect;
+		}
+
+		// check if a variation needs to be added to cart instead of a parent product
+		if ($variations)
+		{
+			$ids = array();
+			foreach ($variations['variations'] as $variation)
+			{
+				$ids[] = $this->request->get('variation_' . $variation['ID']);
+			}
+
+			$hash = implode('-', $ids);
+			if (!isset($variations['products'][$hash]))
+			{
+				return $productRedirect;
+			}
+
+			$product = Product::getInstanceByID($variations['products'][$hash]['ID'], Product::LOAD_DATA);
 		}
 
 		ActiveRecordModel::beginTransaction();
@@ -247,6 +364,11 @@ class OrderController extends FrontendController
 			{
 				$this->modifyItemOption($item, $option, $this->request, 'option_' . $option->getID());
 			}
+
+			if ($this->order->isMultiAddress->get())
+			{
+				$item->save();
+			}
 		}
 
 		$this->order->mergeItems();
@@ -254,7 +376,7 @@ class OrderController extends FrontendController
 
 		ActiveRecordModel::commit();
 
-		//$this->setMessage($this->makeText('_added_to_cart', array($product->getValueByLang('name', $this->getRequestLanguage()))));
+		$this->setMessage($this->makeText('_added_to_cart', array($product->getName($this->getRequestLanguage()))));
 
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
@@ -267,6 +389,8 @@ class OrderController extends FrontendController
 		$this->order->resetShipments();
 		SessionOrder::save($this->order);
 
+		$this->setMessage($this->makeText('_moved_to_cart', array($item->product->get()->getName('name', $this->getRequestLanguage()))));
+
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
 
@@ -277,6 +401,8 @@ class OrderController extends FrontendController
 		$this->order->mergeItems();
 		$this->order->resetShipments();
 		SessionOrder::save($this->order);
+
+		$this->setMessage($this->makeText('_moved_to_wishlist', array($item->product->get()->getName('name', $this->getRequestLanguage()))));
 
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
@@ -291,6 +417,8 @@ class OrderController extends FrontendController
 		$this->order->addToWishList($product);
 		$this->order->mergeItems();
 		SessionOrder::save($this->order);
+
+		$this->setMessage($this->makeText('_added_to_wishlist', array($product->getName($this->getRequestLanguage()))));
 
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
@@ -332,6 +460,54 @@ class OrderController extends FrontendController
 	}
 
 	/**
+	 *	@role login
+	 */
+	public function setMultiAddress()
+	{
+		if (!$this->config->get('ENABLE_MULTIADDRESS'))
+		{
+			return new ActionRedirectResponse('order', 'index');
+		}
+
+		$this->order->isMultiAddress->set(true);
+		$this->order->shippingAddress->set(null);
+
+		// split items
+		foreach ($this->order->getOrderedItems() as $item)
+		{
+			if ($item->count->get() > 1)
+			{
+				$count = $item->count->get();
+				$item->count->set(1);
+				for ($k = 1; $k < $count; $k++)
+				{
+					$this->order->addItem(clone $item);
+				}
+			}
+		}
+
+		$this->order->save();
+
+		return new ActionRedirectResponse('order', 'multi');
+	}
+
+	public function setSingleAddress()
+	{
+		$f = new ARUpdateFilter(new EqualsCond(new ARFieldHandle('OrderedItem', 'customerOrderID'), $this->order->getID()));
+		$f->addModifier('OrderedItem.shipmentID', new ARExpressionHandle('NULL'));
+		ActiveRecordModel::updateRecordSet('OrderedItem', $f);
+
+		$this->order->isMultiAddress->set(false);
+		$this->order->loadAll();
+		$this->order->mergeItems();
+		$this->order->resetShipments();
+
+		SessionOrder::save($this->order);
+		$this->order->deleteRelatedRecordSet('Shipment');
+		return new ActionRedirectResponse('order', 'index');
+	}
+
+	/**
 	 *	@todo Optimize loading of product options
 	 */
 	private function buildCartForm(CustomerOrder $order, $options)
@@ -343,6 +519,11 @@ class OrderController extends FrontendController
 		foreach ($order->getOrderedItems() as $item)
 		{
 			$this->setFormItem($item, $form);
+
+			if ($this->order->isMultiAddress->get() && $item->shipment->get() && $item->shipment->get()->shippingAddress->get())
+			{
+				$form->set('address_' . $item->getID(), $item->shipment->get()->shippingAddress->get()->getID());
+			}
 		}
 
 		return $form;
@@ -406,7 +587,10 @@ class OrderController extends FrontendController
 			$this->buildItemValidation($validator, $item, $options);
 		}
 
-		$order->getSpecification()->setValidation($validator, true);
+		if ($this->config->get('CHECKOUT_CUSTOM_FIELDS') == 'CART_PAGE')
+		{
+			$order->getSpecification()->setValidation($validator, true);
+		}
 
 		return $validator;
 	}

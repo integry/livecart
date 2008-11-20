@@ -1,0 +1,173 @@
+#productVariationTemplate
+{
+	display: none;
+}
+
+.productVariationTable input.text,
+.productVariationTable select
+{
+	font-size: smaller;
+}
+
+.productVariationTable input.text
+{
+	width: 90px;
+}
+
+.productVariationTable .stockCount input
+{
+	width: 60px;
+}
+
+.productVariationTable td,
+.productVariationTable th
+{
+	padding: 6px;
+}
+
+.productVariationTable
+{
+	border: 1px solid #ddd;
+}
+
+.productVariationTable thead
+{
+	background-color: #eef;
+}
+
+.productVariationTable td
+{
+	vertical-align: top;
+}
+
+.productVariationTable td.image,
+.productVariationTable th.image
+{
+	width: 230px;
+}
+
+.productVariationTable td.price,
+.productVariationTable th.price,
+.productVariationTable td.shippingWeight,
+.productVariationTable th.shippingWeight
+{
+	width: 90px;
+}
+
+.productVariationTable td.price select,
+.productVariationTable td.shippingWeight select
+{
+	width: 100%;
+	margin-bottom: 0;
+}
+
+.productVariationTable td.price input,
+.productVariationTable td.shippingWeight input
+{
+	width: 86px;
+}
+
+.productVariationTable td.variation
+{
+	width: 130px;
+}
+
+.productVariationTable td.variation span.name,
+.productVariationTable td.variation.input .variationInput
+{
+	display: inline;
+}
+
+.productVariationTable td.variation .variationInput
+{
+	display: none;
+	width: 100px;
+}
+
+.productVariationTable .addVariationContainer
+{
+	text-align: center;
+}
+
+.productVariationTable .addVariation
+{
+	font-weight: normal;
+	font-size: 12px;
+	background: url(../../image/silk/bullet_add.png) no-repeat center left;
+	padding-left: 16px;
+}
+
+.productVariationTable .deleteVariation,
+.productVariationTable .deleteVariationType
+{
+	display: block;
+	float: left;
+	width: 16px;
+	height: 16px;
+	margin-top: 8px;
+	margin-right: 4px;
+	opacity: 0.6;
+	background-image: url(../../image/silk/cancel.png);
+}
+
+.productVariationTable .deleteVariation:hover,
+.productVariationTable .deleteVariationType:hover
+{
+	opacity: 1;
+}
+
+.productVariationTable span.name
+{
+	margin-left: 20px;
+	line-height: 30px;
+}
+
+.productVariationTable td.isEnabled
+{
+	padding-top: 11px;
+	background-color: #ddd;
+}
+
+.productVariationTable td.price,
+.productVariationTable td.shippingWeight
+{
+	text-align: center;
+	padding-bottom: 0;
+}
+
+.productVariationTable td.price input,
+.productVariationTable td.shippingWeight input
+{
+	display: none;
+}
+
+.productVariationTable td.price.input input,
+.productVariationTable td.shippingWeight.input input
+{
+	display: block;
+	margin: 0 auto;
+}
+
+.productVariationTable td.isEnabled input.checkbox,
+.productVariationTable th.isEnabled input.checkbox
+{
+	float: none;
+	margin: 0;
+	margin-right: 0;
+	height: 20px;
+	width: 20px;
+	margin-top: 1px;
+}
+
+.productVariationTable td.image img
+{
+	vertical-align: middle;
+	cursor: -moz-zoom-in;
+}
+
+.productVariationTable td.image .imgContainer
+{
+	width: 50px;
+	min-height: 30px;
+	float: left;
+}

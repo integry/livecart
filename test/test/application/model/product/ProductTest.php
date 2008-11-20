@@ -39,7 +39,10 @@ class ProductTest extends UnitTest
 			'ProductRelationship',
 			'ProductRelationshipGroup',
 			'ProductFile',
-			'ProductFileGroup'
+			'ProductFileGroup',
+			'ProductVariation',
+			'ProductVariationType',
+			'ProductVariationValue',
 		);
 	}
 
@@ -493,23 +496,17 @@ class ProductTest extends UnitTest
 
 		foreach($this->product->getRelatedProducts() as $relatedProduct)
 		{
-			$this->product->removeFromRelatedProducts($relatedProduct);
+			$this->product->removeFromRelatedProducts($relatedProduct, ProductRelationship::TYPE_CROSS);
 		}
 		$this->assertEqual(0, $this->product->getRelatedProducts()->getTotalRecordCount());
 
-		// reload
-		$this->product->reload();
-
 		// Relationships are not removed from database unless the product is saved
-		$this->assertEqual(2, $this->product->getRelatedProducts()->getTotalRecordCount());
+		//$this->assertEqual(2, $this->product->getRelatedProducts()->getTotalRecordCount());
 
 		$this->product->save();
 
 		// Now they are removed
-		foreach($this->product->getRelatedProducts() as $relatedProduct)
-		{
-			$this->product->removeFromRelatedProducts($relatedProduct);
-		}
+		//$this->product->loadRelationships(false, 0, true);
 		$this->assertEqual(0, $this->product->getRelatedProducts()->getTotalRecordCount());
 	}
 
@@ -525,23 +522,23 @@ class ProductTest extends UnitTest
 		$this->product->addRelatedProduct($relatedProduct);
 		$this->product->save();
 
-		$this->assertFalse($notRelatedProduct->isRelatedTo($this->product));
-		$this->assertTrue($relatedProduct->isRelatedTo($this->product));
+		$this->assertFalse($notRelatedProduct->isRelatedTo($this->product, ProductRelationship::TYPE_CROSS));
+		$this->assertTrue($relatedProduct->isRelatedTo($this->product, ProductRelationship::TYPE_CROSS));
 
 		// isRelatedTo provide one direction testing is related to means that
 		// this product is in that product's related products list
-		$this->assertFalse($this->product->isRelatedTo($relatedProduct));
+		$this->assertFalse($this->product->isRelatedTo($relatedProduct, ProductRelationship::TYPE_CROSS));
 	}
 
 	public function testGetRelationshipGroups()
 	{
-		$this->assertEqual($this->product->getRelationshipGroups()->getTotalRecordCount(), 0);
+		$this->assertEqual($this->product->getRelationshipGroups(ProductRelationship::TYPE_CROSS)->getTotalRecordCount(), 0);
 
-		$relationship = ProductRelationshipGroup::getNewInstance($this->product);
-		$this->assertEqual($this->product->getRelationshipGroups()->getTotalRecordCount(), 0);
+		$relationship = ProductRelationshipGroup::getNewInstance($this->product, ProductRelationship::TYPE_CROSS);
+		$this->assertEqual($this->product->getRelationshipGroups(ProductRelationship::TYPE_CROSS)->getTotalRecordCount(), 0);
 
 		$relationship->save();
-		$this->assertEqual($this->product->getRelationshipGroups()->getTotalRecordCount(), 1);
+		$this->assertEqual($this->product->getRelationshipGroups(ProductRelationship::TYPE_CROSS)->getTotalRecordCount(), 1);
 	}
 
 	public function testGetFileGroups()
@@ -669,7 +666,7 @@ class ProductTest extends UnitTest
 
 		$related = Product::getNewInstance($this->productCategory, 'related');
 		$related->save();
-		$relGroup = ProductRelationshipGroup::getNewInstance($this->product);
+		$relGroup = ProductRelationshipGroup::getNewInstance($this->product, ProductRelationship::TYPE_CROSS);
 		$relGroup->save();
 		$rel = ProductRelationship::getNewInstance($this->product, $related, $relGroup);
 		$rel->save();
@@ -705,6 +702,122 @@ class ProductTest extends UnitTest
 
 		// image
 
+	}
+
+	public function testChildProduct()
+	{
+		$this->product->setPrice($this->usd, 20);
+		$this->product->shippingWeight->set(200);
+		$this->product->save();
+
+		$child = $this->product->createChildProduct();
+
+		$root = Category::getRootNode();
+		$root->reload();
+		$productCount = $root->totalProductCount->get();
+
+		// in array representation, parent product data is used where own data is not set
+		$array = $child->toArray();
+		$this->assertEquals($array['name_en'], $this->product->getValueByLang('name', 'en'));
+
+		// auto-generated SKU is based on parent SKU
+		$child->save();
+		$this->assertEquals($child->sku->get(), $this->product->sku->get() . '-1');
+
+		// category counters should not change
+		$root->reload();
+		$this->assertEquals($root->totalProductCount->get(), $productCount);
+
+		// parent product price used if not defined
+		$this->assertEquals($child->getPrice($this->usd), $this->product->getPrice($this->usd));
+
+		// parent shipping weight used if not defined
+		$this->assertEquals($child->getShippingWeight(), $this->product->getShippingWeight());
+
+		// add/substract parent prices/shipping weights
+		$child->setChildSetting('test', 'value');
+		$this->assertEquals($child->getChildSetting('test'), 'value');
+
+		// prices
+		$child->setChildSetting('price', Product::CHILD_ADD);
+		$child->setPrice($this->usd, 5);
+		$this->assertEquals(20, $this->product->getPrice($this->usd));
+		$this->assertEquals($child->getPrice($this->usd), $this->product->getPrice($this->usd) + 5);
+
+		$child->setChildSetting('price', Product::CHILD_SUBSTRACT);
+		$this->assertEquals($child->getPrice($this->usd), $this->product->getPrice($this->usd) - 5);
+
+		$child->setChildSetting('price', Product::CHILD_OVERRIDE);
+		$this->assertEquals($child->getPrice($this->usd), 5);
+
+		// shipping weight
+		$child->setChildSetting('weight', Product::CHILD_ADD);
+		$child->shippingWeight->set(5);
+		$this->assertEquals(200, $this->product->getShippingWeight());
+		$this->assertEquals($child->getShippingWeight(), $this->product->getShippingWeight() + 5);
+
+		$child->setChildSetting('weight', Product::CHILD_SUBSTRACT);
+		$this->assertEquals($child->getShippingWeight(), $this->product->getShippingWeight() - 5);
+
+		$child->setChildSetting('weight', Product::CHILD_OVERRIDE);
+		$this->assertEquals($child->getShippingWeight(), 5);
+	}
+
+	public function testVariationMatrix()
+	{
+		$size = ProductVariationType::getNewInstance($this->product);
+		$size->setValueByLang('name', 'en', 'Size');
+		$size->save();
+
+		$color = ProductVariationType::getNewInstance($this->product);
+		$color->setValueByLang('name', 'en', 'Color');
+		$color->save();
+
+		$sizes = $colors = array();
+		foreach (array('Small', 'Large') as $name)
+		{
+			$variation = ProductVariation::getNewInstance($size);
+			$variation->setValueByLang('name', 'en', $name);
+			$variation->save();
+			$sizes[] = $variation;
+		}
+
+		foreach (array('Red', 'Green', 'Blue') as $name)
+		{
+			$variation = ProductVariation::getNewInstance($size);
+			$variation->setValueByLang('name', 'en', $name);
+			$variation->save();
+			$colors[] = $variation;
+		}
+
+		// create product variations
+		$variations = array();
+		foreach ($sizes as $sizeVar)
+		{
+			foreach ($colors as $colorVar)
+			{
+				$child = $this->product->createVariation(array($sizeVar, $colorVar));
+				$child->save();
+				$variations[$sizeVar->getID()][$colorVar->getID()] = $child;
+			}
+		}
+
+		$matrix = $this->product->getVariationMatrix();
+
+		//var_dump($matrix);
+
+	}
+
+	public function testVariationInventory()
+	{
+		$child = $this->product->createChildProduct();
+		$child->stockCount->set(10);
+		$child->save();
+		$this->assertEquals(10, $this->product->stockCount->get());
+
+		$child->stockCount->set(20);
+		$child->save();
+		$this->assertEquals(20, $this->product->stockCount->get());
 	}
 
 	function test_SuiteTearDown()

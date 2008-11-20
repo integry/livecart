@@ -19,6 +19,7 @@ abstract class ActiveGridController extends StoreManagementController
 
 		// init file download
 		header('Content-Disposition: attachment; filename="' . $this->getCSVFileName() . '"');
+		//header('Content-Type: text/javascript');
 		$out = fopen('php://output', 'w');
 
 		// header row
@@ -26,7 +27,7 @@ abstract class ActiveGridController extends StoreManagementController
 		unset($columns['hiddenType']);
 		foreach ($columns as $column => $type)
 		{
-			$header[] = $this->translate($column);
+			$header[] = $type['name'];
 		}
 		fputcsv($out, $header);
 
@@ -68,19 +69,8 @@ abstract class ActiveGridController extends StoreManagementController
 
 		foreach ($productArray as &$row)
 		{
-			$record = array();
-			foreach ($displayedColumns as $column => $type)
-			{
-				$fieldData = explode('.', $column, 2);
-				$class = array_shift($fieldData);
-				$field = array_shift($fieldData);
-
-				$value = $this->getColumnValue($row, $class, $field);
-
-				$record[] = $this->formatValue($value, $type);
-			}
-
-			$data[] = $record;
+			//print_r($row); exit;
+			$data = array_merge($data, $this->getPreparedRecord($row, $displayedColumns));
 
 			// avoid possible memory leaks due to circular references (http://bugs.php.net/bug.php?id=33595)
 			// only do this for CSV export
@@ -113,7 +103,24 @@ abstract class ActiveGridController extends StoreManagementController
 		return new JSONResponse($return);
 	}
 
-	private function getListFilter()
+	protected function getPreparedRecord($row, $displayedColumns)
+	{
+		$record = array();
+		foreach ($displayedColumns as $column => $type)
+		{
+			$fieldData = explode('.', $column, 2);
+			$class = array_shift($fieldData);
+			$field = array_shift($fieldData);
+
+			$value = $this->getColumnValue($row, $class, $field);
+
+			$record[] = $this->formatValue($value, $type);
+		}
+
+		return array($record);
+	}
+
+	protected function getListFilter()
 	{
 		$filter = $this->getSelectFilter();
 		new ActiveGrid($this->application, $filter, $this->getClassName());
@@ -254,6 +261,14 @@ abstract class ActiveGridController extends StoreManagementController
 		else if (isset($record[$class][$field]))
 		{
 			return $record[$class][$field];
+		}
+		else if (strpos($field, '.'))
+		{
+			list ($field, $sub) = explode('.', $field, 2);
+			if (isset($record[$class][$field][$sub]))
+			{
+				return $record[$class][$field][$sub];
+			}
 		}
 		else
 		{

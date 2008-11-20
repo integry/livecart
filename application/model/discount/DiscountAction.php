@@ -63,6 +63,15 @@ class DiscountAction extends ActiveRecordModel
 
 		$actions = ActiveRecordModel::getRecordSet(__CLASS__, $f, array('DiscountCondition', 'DiscountCondition_ActionCondition'));
 
+		// @todo: actionConditions are not loaded
+		foreach ($actions as $action)
+		{
+			if ($action->actionCondition->get())
+			{
+				$action->actionCondition->get()->load();
+			}
+		}
+
 		// load records for action condition
 		$actionConditions = new ARSet();
 		foreach ($actions as $action)

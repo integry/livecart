@@ -63,6 +63,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$schema->registerField(new ARField("dateCompleted", ARDateTime::instance()));
 		$schema->registerField(new ARField("totalAmount", ARFloat::instance()));
 		$schema->registerField(new ARField("capturedAmount", ARFloat::instance()));
+		$schema->registerField(new ARField("isMultiAddress", ARBool::instance()));
 		$schema->registerField(new ARField("isFinalized", ARBool::instance()));
 		$schema->registerField(new ARField("isPaid", ARBool::instance()));
 		$schema->registerField(new ARField("isCancelled", ARBool::instance()));
@@ -103,11 +104,33 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			return false;
 		}
 
-		$this->orderedItems = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category', 'DefaultImage' => 'ProductImage'))->getData();
+		$itemSet = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category', 'DefaultImage' => 'ProductImage'));
+		$this->orderedItems = $itemSet->getData();
+
+		$products = $itemSet->extractReferencedItemSet('product');
+		ProductPrice::loadPricesForRecordSet($products);
+
+		$parentIDs = $products->extractReferencedItemSet('parent')->getRecordIDs();
+		if ($parentIDs)
+		{
+			ActiveRecordModel::getRecordSet('Product', new ARSelectFilter(new INCond(new ARFieldHandle('Product', 'ID'), $parentIDs)), array('Category', 'ProductImage'));
+		}
 
 		if ($this->orderedItems)
 		{
-			$this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter(), self::LOAD_REFERENCES);
+			if (!$this->shipments || !$this->shipments->size())
+			{
+				$this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter(), array('UserAddress', 'ShippingService'));
+
+				// @todo: should be loaded automatically
+				foreach ($this->shipments as $shipment)
+				{
+					if ($shipment->shippingAddress->get())
+					{
+						$shipment->shippingAddress->get()->load();
+					}
+				}
+			}
 
 			if (!$this->shipments->size() && !$this->isFinalized->get())
 			{
@@ -115,6 +138,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			}
 
 			OrderedItemOption::loadOptionsForItemSet(ARSet::buildFromArray($this->orderedItems));
+			ARSet::buildFromArray($this->orderedItems)->extractReferencedItemSet('product', 'ProductSet')->loadVariations();
 
 			foreach ($this->orderedItems as $key => $item)
 			{
@@ -124,6 +148,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 					unset($this->orderedItems[$key]);
 				}
 			}
+
+			Product::loadAdditionalCategoriesForSet(ARSet::buildFromArray($this->orderedItems)->extractReferencedItemSet('product'));
 		}
 	}
 
@@ -146,13 +172,17 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$this->loadItems();
 		$this->getShipments();
 		$this->getSpecification();
-		$this->fixedDiscounts = $this->getRelatedRecordSet('OrderDiscount')->getData();
+
+		if ($this->isExistingRecord())
+		{
+			$this->fixedDiscounts = $this->getRelatedRecordSet('OrderDiscount')->getData();
+		}
 	}
 
 	/**
 	 *  Add a product to shopping basket
 	 */
-	public function addProduct(Product $product, $count = 1, $ignoreAvailability = false)
+	public function addProduct(Product $product, $count = 1, $ignoreAvailability = false, Shipment $shipment = null)
 	{
 		if (0 >= $count)
 		{
@@ -171,10 +201,20 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			if (!$this->isFinalized->get() || !$this->shipments || !$this->shipments->size())
 			{
 				$this->orderedItems[] = $item;
+
+				if ($shipment)
+				{
+					$shipment->addItem($item);
+				}
 			}
 			else
 			{
-				$this->shipments->get(0)->addItem($item);
+				if (!$shipment)
+				{
+					$shipment = $this->shipments->get(0);
+				}
+
+				$shipment->addItem($item);
 			}
 		}
 
@@ -184,6 +224,15 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		{
 			return $item;
 		}
+	}
+
+	public function addShipment(Shipment $shipment)
+	{
+		$shipments = $this->getShipments();
+		$shipments->removeRecord($shipment);
+
+		$shipment->order->set($this);
+		$shipments->add($shipment);
 	}
 
 	public function updateCount(OrderedItem $item, $count)
@@ -324,13 +373,21 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		self::beginTransaction();
 
 		$this->currency->set($currency);
-
 		$this->loadAll();
+
 		foreach ($this->getShipments() as $shipment)
 		{
 			$shipment->amountCurrencyID->set($currency);
 			$shipment->order->set($this);
 			$shipment->save();
+
+			// clone shipping addresses
+			if ($shipment->shippingAddress->get())
+			{
+				$shippingAddress = clone $shipment->shippingAddress->get();
+				$shippingAddress->save();
+				$shipment->shippingAddress->set($shippingAddress);
+			}
 		}
 
 		$reserveProducts = self::getApplication()->getConfig()->get('INVENTORY_TRACKING') != 'DISABLE';
@@ -396,13 +453,19 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		// set order total
 		$this->totalAmount->set($this->getTotal($currency));
 
+		// save shipment taxes
+		foreach ($this->shipments as $shipment)
+		{
+			$shipment->save();
+		}
+
 		// save discounts
 		foreach ($this->orderDiscounts as $discount)
 		{
 			$discount->save();
 		}
 
-		if ($this->totalAmount->get() <= $this->getPaidAmount())
+		if (round($this->totalAmount->get(), 2) <= round($this->getPaidAmount(), 2))
 		{
 			$this->isPaid->set(true);
 		}
@@ -410,11 +473,16 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$this->dateCompleted->set(new ARSerializableDateTime());
 
 		$this->isFinalized->set(true);
+
+		// @todo: fix order total calculation
+		$shipments = $this->shipments;
 		unset($this->shipments);
 
 		$this->save();
-
 		self::commit();
+
+		// @todo: see above
+		$this->shipments = $shipments;
 
 		return $wishList;
 	}
@@ -429,37 +497,51 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	 */
 	public function mergeItems()
 	{
-		$byProduct = array();
+		$items = array($this->orderedItems);
 
-		foreach ($this->orderedItems as $item)
+		if ($this->isMultiAddress->get())
 		{
-			// do not merge items that are same product, but different options
-			$choiceHash = array();
-			foreach ($item->getOptions() as $choice)
+			$items = array();
+			foreach ($this->getShipments() as $shipment)
 			{
-				$choiceHash[] = md5($choice->choice->get()->getID() . '_' . $choice->optionText->get());
+				$items[] = $shipment->getItems();
 			}
-			$hash = $choiceHash ? '_' . md5(implode('', $choiceHash)) : '';
-
-			$byProduct[$item->product->get()->getID() . $hash][(int)$item->isSavedForLater->get()][] = $item;
 		}
 
-		foreach ($byProduct as $productID => $itemsByStatus)
+		foreach ($items as $itemSet)
 		{
-			foreach ($itemsByStatus as $status => $items)
+			$byProduct = array();
+
+			foreach ($itemSet as $item)
 			{
-				if (count($items) > 1)
+				// do not merge items that are same product, but different options
+				$choiceHash = array();
+				foreach ($item->getOptions() as $choice)
 				{
-					$mainItem = array_shift($items);
-					$count = $mainItem->count->get();
+					$choiceHash[] = md5($choice->choice->get()->getID() . '_' . $choice->optionText->get());
+				}
+				$hash = $choiceHash ? '_' . md5(implode('', $choiceHash)) : '';
 
-					foreach ($items as $item)
+				$byProduct[$item->product->get()->getID() . $hash][(int)$item->isSavedForLater->get()][] = $item;
+			}
+
+			foreach ($byProduct as $productID => $itemsByStatus)
+			{
+				foreach ($itemsByStatus as $status => $items)
+				{
+					if (count($items) > 1)
 					{
-						$count += $item->count->get();
-						$this->removeItem($item);
-					}
+						$mainItem = array_shift($items);
+						$count = $mainItem->count->get();
 
-					$mainItem->count->set($count);
+						foreach ($items as $item)
+						{
+							$count += $item->count->get();
+							$this->removeItem($item);
+						}
+
+						$mainItem->count->set($count);
+					}
 				}
 			}
 		}
@@ -563,7 +645,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		if ($this->isModified() || $isModified)
 		{
-			$this->shipping->set($this->isFinalized->get() ? '' : serialize($this->shipments));
+			$this->serializeShipments();
 		}
 
 		if (!$this->isFinalized->get() && !$this->orderedItems && !$allowEmpty)
@@ -578,6 +660,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	public function update($force = false)
 	{
 		return parent::update($force);
+	}
+
+	public function serializeShipments()
+	{
+		$this->shipping->set(($this->isFinalized->get() || $this->isMultiAddress->get()) ? '' : serialize($this->shipments));
 	}
 
 	public function setStatus($status)
@@ -687,7 +774,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		if ($this->isFinalized->get() && !$recalculateAmount)
 		{
 			$this->getTaxes($currency);
-			return $currency->convertAmount($this->currency->get(), $this->totalAmount->get());
+			return $currency->round($currency->convertAmount($this->currency->get(), $this->totalAmount->get()));
 		}
 		else
 		{
@@ -716,7 +803,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 				$total = 0;
 			}
 
-			return $total;
+			return $currency->round($total);
 		}
 	}
 
@@ -734,7 +821,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			{
 				if ($action->isOrderDiscount() && $action->isFixedAmount())
 				{
-					$discount = $action->amount->get();
+					$discount = $this->currency->get()->convertAmount(self::getApplication()->getDefaultCurrency(), $action->amount->get());
 					$amount += $discount;
 					$this->orderDiscounts[$id] = OrderDiscount::getNewInstance($this);
 					$this->orderDiscounts[$id]->amount->set($discount);
@@ -1061,11 +1148,6 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 					$products->unshift($item->product->get());
 				}
 			}
-
-			if (isset($products))
-			{
-				ProductPrice::loadPricesForRecordSet($products);
-			}
 		}
 
 		$array = parent::toArray();
@@ -1125,9 +1207,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 			foreach ($taxes as $taxId => $amount)
 			{
-				$taxAmount[$currencyId] += $amount;
-				$array['taxes'][$currencyId][$taxId] = Tax::getInstanceById($taxId)->toArray();
-				$array['taxes'][$currencyId][$taxId]['formattedAmount'] = $currency->getFormattedPrice($amount);
+				if ($amount > 0)
+				{
+					$taxAmount[$currencyId] += $amount;
+					$array['taxes'][$currencyId][$taxId] = Tax::getInstanceById($taxId)->toArray();
+					$array['taxes'][$currencyId][$taxId]['formattedAmount'] = $currency->getFormattedPrice($amount);
+				}
 			}
 		}
 
@@ -1166,10 +1251,16 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		}
 		$array['formatted_discountAmount'] = $this->currency->get()->getFormattedPrice($array['discountAmount']);
 
+		// coupons
+		if (!is_null($this->coupons))
+		{
+			$array['coupons'] = $this->coupons->toArray();
+		}
+
 		// payments
+		$currency = $this->currency->get();
 		if (isset($options['payments']))
 		{
-			$currency = $this->currency->get();
 			$array['amountPaid'] = $this->getPaidAmount();
 
 			$array['amountNotCaptured'] = $array['amountPaid'] - $array['capturedAmount'];
@@ -1183,24 +1274,30 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			{
 				$array['amountDue'] = 0;
 			}
+		}
 
-			// items subtotal
-			$array['itemSubtotal'] = 0;
-			foreach ($this->getOrderedItems() as $item)
-			{
-				$array['itemSubtotal'] += $item->getSubtotal($currency);
-			}
+		// items subtotal
+		$array['itemSubtotal'] = 0;
+		foreach ($this->getOrderedItems() as $item)
+		{
+			$array['itemSubtotal'] += $item->getSubtotal($currency);
+		}
 
-			// shipping subtotal
-			$array['shippingSubtotal'] = 0;
+		// shipping subtotal
+		$array['shippingSubtotal'] = 0;
+		if ($this->shipments)
+		{
 			foreach ($this->shipments as $shipment)
 			{
 				$array['shippingSubtotal'] += $shipment->shippingAmount->get();
 			}
+		}
 
-			$array['subtotalBeforeTaxes'] = $array['itemSubtotal'] + $array['shippingSubtotal'];
+		$array['subtotalBeforeTaxes'] = $array['itemSubtotal'] + $array['shippingSubtotal'];
 
-			foreach (array('amountPaid', 'amountNotCaptured', 'amountDue', 'itemSubtotal', 'shippingSubtotal', 'subtotalBeforeTaxes', 'totalAmount') as $key)
+		foreach (array('amountPaid', 'amountNotCaptured', 'amountDue', 'itemSubtotal', 'shippingSubtotal', 'subtotalBeforeTaxes', 'totalAmount') as $key)
+		{
+			if (isset($array[$key]))
 			{
 				$array['formatted_' . $key] = $currency->getFormattedPrice($array[$key]);
 			}
@@ -1343,44 +1440,23 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	 */
 	public function getShipments()
 	{
-		if ($this->isFinalized->get())
+		if (!$this->shipments || !$this->shipments->size())
 		{
-			$this->loadItems();
-
-			$filter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('Shipment', 'orderID'), $this->getID()));
-			$filter->setOrder(new ARFieldHandle('Shipment', 'status'));
-
-			$this->shipments = $this->getRelatedRecordSet('Shipment', $filter, array('ShippingService'));
-			foreach($this->shipments as $shipment)
+			if ($this->isFinalized->get() || $this->isMultiAddress->get())
 			{
-				$shipment->loadItems();
-			}
+				$this->loadItems();
 
-			/*
-			// get downloadable items
-			foreach ($this->getShoppingCartItems() as $item)
-			{
-				if ($item->product->get()->isDownloadable())
+				$filter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('Shipment', 'orderID'), $this->getID()));
+				$filter->setOrder(new ARFieldHandle('Shipment', 'status'));
+
+				$this->shipments = $this->getRelatedRecordSet('Shipment', $filter, array('ShippingService'));
+				foreach($this->shipments as $shipment)
 				{
-					if (!isset($downloadable))
-					{
-						$downloadable = Shipment::getNewInstance($this);
-						$this->shipments->add($downloadable);
-					}
-
-					$downloadable->addItem($item);
+					$shipment->loadItems();
 				}
-			}
-			*/
-		}
-		else
-		{
-			if (!$this->shipments || !$this->shipments->size())
-			{
-				ClassLoader::import("application.model.order.Shipment");
 
-				$this->shipments = new ARSet();
-
+				/*
+				// get downloadable items
 				foreach ($this->getShoppingCartItems() as $item)
 				{
 					if ($item->product->get()->isDownloadable())
@@ -1388,39 +1464,62 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 						if (!isset($downloadable))
 						{
 							$downloadable = Shipment::getNewInstance($this);
+							$this->shipments->add($downloadable);
 						}
 
 						$downloadable->addItem($item);
 					}
-					else if ($item->product->get()->isSeparateShipment->get())
-					{
-						$shipment = Shipment::getNewInstance($this);
-						$shipment->addItem($item);
-						$this->shipments->add($shipment);
-					}
-					else
-					{
-						if (!isset($main))
-						{
-							$main = Shipment::getNewInstance($this);
-						}
-						$main->addItem($item);
-					}
 				}
-
-				if (isset($main))
-				{
-					$this->shipments->unshift($main);
-				}
-
-				if (isset($downloadable))
-				{
-					$this->shipments->unshift($downloadable);
-				}
+				*/
 			}
+			else
+			{
+				if (!$this->shipments || !$this->shipments->size())
+				{
+					ClassLoader::import("application.model.order.Shipment");
 
+					$this->shipments = new ARSet();
 
-			$this->shipping->set(serialize($this->shipments));
+					foreach ($this->getShoppingCartItems() as $item)
+					{
+						if ($item->product->get()->isDownloadable())
+						{
+							if (!isset($downloadable))
+							{
+								$downloadable = Shipment::getNewInstance($this);
+							}
+
+							$downloadable->addItem($item);
+						}
+						else if ($item->product->get()->isSeparateShipment->get())
+						{
+							$shipment = Shipment::getNewInstance($this);
+							$shipment->addItem($item);
+							$this->shipments->add($shipment);
+						}
+						else
+						{
+							if (!isset($main))
+							{
+								$main = Shipment::getNewInstance($this);
+							}
+							$main->addItem($item);
+						}
+					}
+
+					if (isset($main))
+					{
+						$this->shipments->unshift($main);
+					}
+
+					if (isset($downloadable))
+					{
+						$this->shipments->unshift($downloadable);
+					}
+				}
+
+				$this->shipping->set(serialize($this->shipments));
+			}
 		}
 
 		return $this->shipments;
@@ -1446,6 +1545,24 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		}
 
 		return $this->discountActions;
+	}
+
+	public function loadItemCategories()
+	{
+		// load additional categories
+		$set = array();
+		foreach ($this->getShoppingCartItems() as $item)
+		{
+			$set[$item->product->get()->getID()][$item->getID()] = $item;
+		}
+
+		foreach (ActiveRecordModel::getRecordSet('ProductCategory', new ARSelectFilter(new INCond(new ARFieldHandle('ProductCategory', 'productID'), array_keys($set))), array('Category')) as $additional)
+		{
+			foreach ($set[$additional->product->get()->getID()] as $item)
+			{
+				$item->registerAdditionalCategory($additional->category->get());
+			}
+		}
 	}
 
 	public function getDeliveryZone()
@@ -1490,7 +1607,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 	public function resetShipments()
 	{
-		if (!$this->isFinalized->get())
+		if (!$this->isFinalized->get() && !$this->isMultiAddress->get())
 		{
 			$this->shipments = new ARSet();
 		}
@@ -1543,6 +1660,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		return $shippableCount;
 	}
 
+	public function loadRequestData(Request $request)
+	{
+		$this->getSpecification()->loadRequestData($request);
+	}
+
 	public function serialize()
 	{
 		return parent::serialize(array('userID'), array('orderedItems', 'shipments'));
@@ -1583,6 +1705,91 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			default:
 			break;
 		}
+	}
+
+	public function __clone()
+	{
+		parent::__clone();
+
+		$original = $this->originalRecord;
+
+		foreach ($original->getShipments() as $shipment)
+		{
+			$cloned = clone $shipment;
+			$cloned->order->set($this);
+			$this->addShipment($cloned);
+		}
+
+		$this->save();
+		foreach ($this->getShipments() as $shipment)
+		{
+			if ($shipment->shippingAddress->get())
+			{
+				$shipment->shippingAddress->set($this->getClonedAddress($shipment->shippingAddress->get(), false));
+			}
+			$shipment->save();
+
+			foreach ($shipment->getItems() as $item)
+			{
+				$item->shipment->set($shipment);
+				$item->save();
+			}
+		}
+
+		// addresses
+		if ($this->billingAddress->get())
+		{
+			$this->billingAddress->set($this->getClonedAddress($this->billingAddress->get(), true));
+		}
+
+		if ($this->shippingAddress->get())
+		{
+			$this->shippingAddress->set($this->getClonedAddress($this->shippingAddress->get(), false));
+		}
+
+		$this->save();
+
+		$this->isFinalized->set(false);
+		$this->isPaid->set(false);
+		$this->isCancelled->set(false);
+		$this->dateCompleted->set(null);
+
+		$this->save();
+	}
+
+	/**
+	 *  Try to match an order address to user address and return ID on success
+	 *
+	 *  Order addresses are stored in separate records after the order is completed,
+	 *  so that the user couldn't change them after finishing the order by editing his address book
+	 *
+	 *  @todo: why are the address reloads necessary?
+	 */
+	private function getClonedAddress($address, $isBilling)
+	{
+		$address = $address->toArray();
+		$addressString = $address['compact'];
+
+		$user = $this->user->get();
+		$addresses = $isBilling ? $user->getBillingAddressSet() : $user->getShippingAddressSet();
+
+		foreach ($addresses as $address)
+		{
+			$address->reload();
+			$address->userAddress->get()->reload();
+
+			if ($address->userAddress->get()->toString(", ") == $addressString)
+			{
+				return $address->userAddress->get();
+			}
+		}
+
+		if ($addresses->size())
+		{
+			return $addresses->get(0)->userAddress->get();
+		}
+
+		return null;
 	}
 
 	public function __destruct()

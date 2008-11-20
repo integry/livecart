@@ -1,7 +1,7 @@
 <div class="orderOverviewControls">
 	<a href="{link controller=order}">{t _any_changes}</a>
 </div>
-<table class="table shipment" id="payItems">
+<table class="table shipment{if $order.isMultiAddress} multiAddress{/if}" id="payItems">
 	<thead>
 		<tr>
 			<th class="productName">{t _product}</th>
@@ -13,6 +13,13 @@
 	<tbody>
 
 	{foreach from=$order.shipments key="key" item="shipment"}
+		{if $order.isMultiAddress}
+			<tr>
+				<td colspan="4" class="shipmentAddress">
+					{$shipment.ShippingAddress.compact}
+				</td>
+			</tr>
+		{/if}
 		{include file="order/orderTableDetails.tpl" hideTaxes=true}
 	{/foreach}
 

@@ -283,6 +283,8 @@ Backend.LangEdit.prototype =
 
 		form.handler = this;
 
+		$('addPhrase').onclick = this.showAddPhraseForm.bindAsEventListener(this);
+
 		this.activateCategory('Base.lng');
 		this.treeBrowser.selectItem('Base.lng');
 	},
@@ -317,6 +319,11 @@ Backend.LangEdit.prototype =
 		if (!path)
 		{
 			path = 0;
+		}
+
+		if ('Custom' == fileName)
+		{
+			fileName = '<span id="customFile">' + fileName + '</span>';
 		}
 
 		this.treeBrowser.insertNewItem(path, file, fileName, null, 0, 0, 0, '', 1);
@@ -508,7 +515,8 @@ Backend.LangEdit.prototype =
 				continue;
 			}
 
-			var value = this.translations[file][key];
+			var value = this.translations[file][key] || '';
+
 			input.value = value;
 			input.handler = this;
 			input.file = file;
@@ -568,5 +576,68 @@ Backend.LangEdit.prototype =
 		}
 
 		return textarea;
+	},
+
+	showAddPhraseForm: function(e)
+	{
+		Event.stop(e);
+		var form = $('addPhraseForm');
+
+		form.down('.cancel').onclick = this.cancelSaveAddPhrase.bind(this);
+
+		if (!form.initialized)
+		{
+			form.onsubmit = function(e)
+			{
+				Event.stop(e);
+
+				if (validateForm(form))
+				{
+					this.saveAddPhrase();
+				}
+			}.bind(this);
+			form.initialized = true;
+		}
+
+		form.show();
+	},
+
+	saveAddPhrase: function()
+	{
+		var form = $('addPhraseForm');
+		var key = form.elements.namedItem('key').value;
+		var value = form.elements.namedItem('value').value;
+
+		if (!this.english['Custom.lng'])
+		{
+			this.insertMenuItem('Custom.lng');
+		}
+
+		[this.english, this.translations, this.editedTranslations].each(function(container)
+		{
+			if (!container['Custom.lng'])
+			{
+				container['Custom.lng'] = {};
+			}
+
+			container['Custom.lng'][key] = value;
+		});
+
+		this.activateCategory('Custom.lng');
+		this.treeBrowser.selectItem('Custom.lng', false, false);
+		this.cancelSaveAddPhrase();
+	},
+
+	cancelSaveAddPhrase: function(e)
+	{
+		if (e)
+		{
+			Event.stop(e);
+		}
+
+		var form = $('addPhraseForm');
+		form.reset();
+		ActiveForm.prototype.resetErrorMessages(form);
+		form.hide();
 	}
 }

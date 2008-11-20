@@ -19,6 +19,8 @@ class OrderedItem extends ActiveRecordModel
 
 	protected $subItems = null;
 
+	protected $additionalCategories = array();
+
 	/**
 	 * Define database schema used by this active record instance
 	 *
@@ -322,6 +324,16 @@ class OrderedItem extends ActiveRecordModel
 		}
 
 		$this->subItems->add($item);
+	}
+
+	public function registerAdditionalCategory(Category $category)
+	{
+		$this->additionalCategories[$category->getID()] = $category;
+	}
+
+	public function getAdditionalCategories()
+	{
+		return $this->additionalCategories;
 	}
 
   	/*####################  Saving ####################*/

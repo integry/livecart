@@ -1,0 +1,10 @@
+_select_file=בחר קובץ
+_listing_files=רשימת קבצים $from - $to מתוך $count
+_no_files_found=לא נמצאו קבצים
+fileName=שם
+fileType=סיומת
+fileSize=גודל
+fileDate=תאריך שינוי
+filePermissions=הרשאות
+fileOwner=בעל הקובץ
+fileGroup=קבוצה

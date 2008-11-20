@@ -53,7 +53,7 @@ class CustomerOrderController extends ActiveGridController
 
 	protected function getReferencedData()
 	{
-		return array('User', 'Currency', 'ShippingAddress' => 'UserAddress');
+		return array('User', 'Currency', 'ShippingAddress' => 'UserAddress', 'State');
 	}
 
 	protected function getDefaultColumns()
@@ -142,7 +142,7 @@ class CustomerOrderController extends ActiveGridController
 		}
 
 		$addressOptions = array('' => '');
-		$addressOptions['optgroup_0'] = $this->translate('_shipping_addresses');
+		$addressOptions['optgroup_0'] = $this->translate('_billing_addresses');
 		$addresses = array();
 		foreach($user->getBillingAddressArray() as $address)
 		{
@@ -150,7 +150,7 @@ class CustomerOrderController extends ActiveGridController
 			$addresses[$address['ID']] = $address;
 		}
 
-		$addressOptions['optgroup_1'] = $this->translate('_billing_addresses');
+		$addressOptions['optgroup_1'] = $this->translate('_shipping_addresses');
 		foreach($user->getShippingAddressArray() as $address)
 		{
 			$addressOptions[$address['ID']] = $this->createAddressString($address);
@@ -387,8 +387,8 @@ class CustomerOrderController extends ActiveGridController
 		{
 			foreach ($data[$row[$index]] as $item)
 			{
-				//print_r($item);
 				$itemData = $row;
+				$item['OrderedItem'] =& $item;
 				foreach ($detailColumns as $column)
 				{
 					$value = $this->getColumnValue($item, $column[0], $column[1]);
@@ -566,14 +566,22 @@ class CustomerOrderController extends ActiveGridController
 				break;
 			case self::TYPE_CURRENT:
 				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1);
-				$cond2 = new NotEqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_SHIPPED);
-				$cond2->addOR(new NotEqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_RETURNED));
+				$cond2 = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_PROCESSING);
+
+				// @todo fix NEW status = NULL bug
+				$cond2->addOR(new IsNullCond(new ARFieldHandle('CustomerOrder', "status")));
+
+				$cond2->addOR(new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_AWAITING));
 				$cond2->addOR(new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_NEW));
-				$cond2->addAND($cond);
+				$cond->addAND($cond2);
 				break;
 			case self::TYPE_NEW:
-				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_NEW);
-				$cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
+				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1);
+				$cond2 = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_NEW);
+
+				// @todo fix NEW status = NULL bug
+				$cond2->addOR(new IsNullCond(new ARFieldHandle('CustomerOrder', "status")));
+				$cond->addAND($cond2);
 				break;
 			case self::TYPE_PROCESSING:
 				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_PROCESSING);
@@ -715,30 +723,7 @@ class CustomerOrderController extends ActiveGridController
 			$address = UserAddress::getInstanceByID('UserAddress', (int)$this->request->get('ID'), true, array('State'));
 
 			$history = new OrderHistory($order, $this->user);
-
-			$address->address1->set($this->request->get('address1'));
-			$address->address2->set($this->request->get('address2'));
-			$address->city->set($this->request->get('city'));
-
-
-			if($this->request->get('stateID'))
-			{
-				$address->state->set(State::getInstanceByID((int)$this->request->get('stateID'), true));
-				$address->stateName->set(null);
-			}
-			else
-			{
-				$address->stateName->set($this->request->get('stateName'));
-				$address->state->set(null);
-			}
-
-			$address->postalCode->set($this->request->get('postalCode'));
-			$address->countryID->set($this->request->get('countryID'));
-			$address->phone->set($this->request->get('phone'));
-			$address->companyName->set($this->request->get('companyName'));
-			$address->firstName->set($this->request->get('firstName'));
-			$address->lastName->set($this->request->get('lastName'));
-
+			$address->loadRequestData($this->request);
 			$address->save();
 			$history->saveLog();
 
@@ -901,7 +886,7 @@ class CustomerOrderController extends ActiveGridController
 	/**
 	 * @return RequestValidator
 	 */
-	private function createUserAddressFormValidator()
+	public function createUserAddressFormValidator()
 	{
 		$validator = new RequestValidator("userAddress", $this->request);
 
@@ -917,7 +902,7 @@ class CustomerOrderController extends ActiveGridController
 	/**
 	 * @return Form
 	 */
-	private function createUserAddressForm($addressArray = array())
+	public function createUserAddressForm($addressArray = array())
 	{
 		$form = new Form($this->createUserAddressFormValidator());
 

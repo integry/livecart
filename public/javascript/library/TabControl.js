@@ -197,8 +197,11 @@ TabControl.prototype = {
 
 		var self = this;
 		$A(this.nodes.tabListElements).each(function(tab) {
-			Element.removeClassName(tab, 'active');
-			Element.addClassName(tab, 'inactive');
+			if (tab.hasClassName('tab'))
+			{
+				Element.removeClassName(tab, 'active');
+				Element.addClassName(tab, 'inactive');
+			}
 		});
 
 		document.getElementsByClassName("tabPageContainer", this.nodes.sectionContainer).each(function(container) {

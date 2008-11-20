@@ -1,5 +1,6 @@
 <?php
 
+ClassLoader::import('application.model.product.ProductSet');
 ClassLoader::import('application.model.product.ProductSpecification');
 ClassLoader::import('application.model.product.ProductPricing');
 ClassLoader::import('application.model.product.ProductImage');
@@ -28,10 +29,12 @@ class Product extends MultilingualObject
 	const DO_NOT_RECALCULATE_PRICE = false;
 
 	const TYPE_TANGIBLE = 0;
-
 	const TYPE_DOWNLOADABLE = 1;
-
 	const TYPE_BUNDLE = 2;
+
+	const CHILD_OVERRIDE = 0;
+	const CHILD_ADD = 1;
+	const CHILD_SUBSTRACT = 2;
 
 	/**
 	 * Related products
@@ -47,6 +50,10 @@ class Product extends MultilingualObject
 
 	private $bundledProducts = null;
 
+	private $additionalCategories = null;
+
+	private $variations = array();
+
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -56,6 +63,7 @@ class Product extends MultilingualObject
 		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("manufacturerID", "Manufacturer", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("defaultImageID", "ProductImage", "ID", null, ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("parentID", "Product", "ID", null, ARInteger::instance()));
 
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
 		$schema->registerField(new ARField("sku", ARVarchar::instance(20)));
@@ -88,6 +96,7 @@ class Product extends MultilingualObject
 		$schema->registerField(new ArField("stockCount", ARFloat::instance(8)));
 		$schema->registerField(new ArField("reservedCount", ARFloat::instance(8)));
 		$schema->registerField(new ArField("salesRank", ARInteger::instance()));
+		$schema->registerField(new ArField("childSettings", ARText::instance()));
 	}
 
 	/**
@@ -160,14 +169,50 @@ class Product extends MultilingualObject
 
 	/*####################  Value retrieval and manipulation ####################*/
 
-	public function belongsTo(Category $category)
+	public function createChildProduct()
 	{
-		return $category->isAncestorOf($this->category->get());
+		$child = ActiveRecord::getNewInstance(__CLASS__);
+		$child->parent->set($this);
+		return $child;
 	}
 
-	public function isRelatedTo(Product $product)
+	public function getChildSetting($setting)
 	{
-		return ProductRelationship::hasRelationship($product, $this);
+		$settings = unserialize($this->childSettings->get());
+		if (isset($settings[$setting]))
+		{
+			return $settings[$setting];
+		}
+	}
+
+	public function setChildSetting($setting, $value)
+	{
+		$settings = unserialize($this->childSettings->get());
+		$settings[$setting] = $value;
+		$this->childSettings->set(serialize($settings));
+	}
+
+	public function belongsTo(Category $category)
+	{
+		$belongsTo = $category->isAncestorOf($this->getCategory());
+
+		if (!$belongsTo && $this->additionalCategories)
+		{
+			foreach ($this->additionalCategories as $cat)
+			{
+				if ($category->isAncestorOf($cat))
+				{
+					return true;
+				}
+			}
+		}
+
+		return $belongsTo;
+	}
+
+	public function isRelatedTo(Product $product, $type)
+	{
+		return ProductRelationship::hasRelationship($product, $this, $type);
 	}
 
 	/**
@@ -421,29 +466,30 @@ class Product extends MultilingualObject
 		}
 
 		$instance = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode);
-	  	if (!$instance->price->get() && $recalculate)
+	  	if (!$instance->getPrice() && $recalculate)
 	  	{
 	  		return $instance->reCalculatePrice();
 		}
 		else
 		{
-			return $instance->price->get();
+			return $instance->getPrice();
 		}
 	}
 
-	public function addRelatedProduct(Product $product)
+	public function addRelatedProduct(Product $product, $type = 0)
 	{
 		$relationship = ProductRelationship::getNewInstance($this, $product);
-		$this->getRelationships()->add($relationship);
+		$relationship->type->set($type);
+		$this->getRelationships($type)->add($relationship);
 		$this->getRemovedRelationships()->removeRecord($relationship);
 	}
 
-	public function removeFromRelatedProducts(Product $product)
+	public function removeFromRelatedProducts(Product $product, $type)
 	{
-		$this->getRelationships();
-		$relationship = ProductRelationship::getInstance($this, $product);
+		$this->getRelationships($type);
+		$relationship = ProductRelationship::getInstance($this, $product, $type);
 
-		$this->relationships->removeRecord($relationship);
+		$this->relationships[$type]->removeRecord($relationship);
 
 		$this->getRemovedRelationships()->add($relationship);
 	}
@@ -460,7 +506,31 @@ class Product extends MultilingualObject
 		{
 			if (!$this->isDownloadable())
 			{
-				return $this->shippingWeight->get();
+				if ($this->parent->get())
+				{
+					$parentWeight = $this->parent->get()->getShippingWeight();
+					$weight = $this->shippingWeight->get();
+
+					if ($this->getChildSetting('weight') == Product::CHILD_ADD)
+					{
+						return $parentWeight + $weight;
+					}
+					else if ($this->getChildSetting('weight') == Product::CHILD_SUBSTRACT)
+					{
+						return $parentWeight - $weight;
+					}
+					else if ($weight)
+					{
+						return $weight;
+					}
+					{
+						return $parentWeight;
+					}
+				}
+				else
+				{
+					return $this->shippingWeight->get();
+				}
 			}
 		}
 		else
@@ -477,6 +547,28 @@ class Product extends MultilingualObject
 
 	/*####################  Saving ####################*/
 
+	public function getCountUpdateFilter($isDeleting = false)
+	{
+		$sign = $isDeleting ? '-' : '+';
+
+		// update category product count numbers
+		$catUpdate = new ARUpdateFilter();
+
+		$catUpdate->addModifier('totalProductCount', new ARExpressionHandle('totalProductCount ' . $sign . ' 1'));
+
+		if ($this->isEnabled->get())
+		{
+			$catUpdate->addModifier('activeProductCount', new ARExpressionHandle('activeProductCount ' . $sign . ' 1'));
+
+			if ($this->stockCount->get() > 0)
+			{
+				$catUpdate->addModifier('availableProductCount', new ARExpressionHandle('availableProductCount ' . $sign . ' 1'));
+			}
+		}
+
+		return $catUpdate;
+	}
+
 	/**
 	 * Inserts new product record to a database
 	 *
@@ -489,45 +581,12 @@ class Product extends MultilingualObject
 		{
 			parent::insert();
 
-			// update category product count numbers
-			$catUpdate = new ARUpdateFilter();
-
-			$catUpdate->addModifier('totalProductCount', new ARExpressionHandle('totalProductCount + 1'));
-
-			if ($this->isEnabled->get())
+			if ($this->category->get())
 			{
-				$catUpdate->addModifier('activeProductCount', new ARExpressionHandle('activeProductCount + 1'));
-
-				if ($this->stockCount->get() > 0)
-				{
-					$catUpdate->addModifier('availableProductCount', new ARExpressionHandle('availableProductCount + 1'));
-				}
+				$this->updateCategoryCounters($this->getCountUpdateFilter(), $this->category->get());
 			}
 
-			$this->updateCategoryCounters($catUpdate);
 			$this->updateTimeStamp('dateCreated', 'dateUpdated');
-
-			// generate SKU automatically if not set
-			if (!$this->sku->get())
-			{
-				ClassLoader::import('application.helper.check.IsUniqueSkuCheck');
-
-				$sku = $this->getID();
-
-				do
-				{
-					$check = new IsUniqueSkuCheck('', $this);
-					$exists = $check->isValid('SKU' . $sku);
-					if (!$exists)
-					{
-						$sku = '0' . $sku;
-					}
-				}
-				while (!$exists);
-
-				$this->sku->set('SKU' . $sku);
-				$this->save();
-			}
 
 			ActiveRecordModel::commit();
 		}
@@ -594,7 +653,15 @@ class Product extends MultilingualObject
 
 			parent::update();
 
-			$this->updateCategoryCounters($catUpdate);
+			if (!$this->isLoaded())
+			{
+				$this->load(array('Category'));
+			}
+
+			if ($this->category->get())
+			{
+				$this->updateCategoryCounters($catUpdate, $this->category->get());
+			}
 
 			$update = new ARUpdateFilter();
 			$update->addModifier('dateUpdated', new ARExpressionHandle('NOW()'));
@@ -622,7 +689,58 @@ class Product extends MultilingualObject
 			$this->manufacturer->get()->save();
 		}
 
+		// update parent inventory counter
+		if ($this->stockCount->isModified() && $this->parent->get())
+		{
+			$stockDifference = $this->stockCount->get() - $this->stockCount->getInitialValue();
+
+			$this->parent->get()->stockCount->set($this->parent->get()->stockCount->get() + $stockDifference);
+			$this->parent->get()->save();
+		}
+
 		parent::save($forceOperation);
+
+		// generate SKU automatically if not set
+		if (!$this->sku->get())
+		{
+			ClassLoader::import('application.helper.check.IsUniqueSkuCheck');
+
+			if (!$this->parent->get())
+			{
+				$sku = $this->getID();
+
+				do
+				{
+					$check = new IsUniqueSkuCheck('', $this);
+					$exists = $check->isValid('SKU' . $sku);
+					if (!$exists)
+					{
+						$sku = '0' . $sku;
+					}
+				}
+				while (!$exists);
+
+				$sku = 'SKU' . $sku;
+			}
+			else
+			{
+				$sku = $this->parent->get()->sku->get() . '-';
+
+				$k = 0;
+				do
+				{
+					$k++;
+					$check = new IsUniqueSkuCheck('', $this);
+					$exists = $check->isValid($sku . $k);
+				}
+				while (!$exists);
+
+				$sku .= $k;
+			}
+
+			$this->sku->set($sku);
+			parent::save();
+		}
 
 		$this->getSpecification()->save();
 		$this->getPricingHandler()->save();
@@ -645,22 +763,13 @@ class Product extends MultilingualObject
 		{
 			$product = Product::getInstanceByID($recordID, Product::LOAD_DATA);
 
-			// modify product counters for categories
-			$catUpdate = new ARUpdateFilter();
+			$filter = $product->getCountUpdateFilter(true);
+			$product->updateCategoryCounters($filter, $product->category->get());
 
-			$catUpdate->addModifier('totalProductCount', new ARExpressionHandle('totalProductCount - 1'));
-
-			if ($product->isEnabled->get())
+			foreach ($product->getAdditionalCategories() as $category)
 			{
-				$catUpdate->addModifier('activeProductCount', new ARExpressionHandle('activeProductCount - 1'));
-
-				if ($product->stockCount->get() > 0)
-				{
-					$catUpdate->addModifier('availableProductCount', new ARExpressionHandle('availableProductCount -1'));
-				}
+				$product->updateCategoryCounters($filter, $category);
 			}
-
-			$product->updateCategoryCounters($catUpdate);
 
 			parent::deleteByID(__CLASS__, $recordID);
 			ActiveRecordModel::commit();
@@ -673,17 +782,22 @@ class Product extends MultilingualObject
 		}
 	}
 
-	protected function updateCategoryCounters(ARUpdateFilter $catUpdate)
+	public function delete()
+	{
+		return self::deleteByID($this->getID());
+	}
+
+	public function updateCategoryCounters(ARUpdateFilter $catUpdate, Category $category)
 	{
 		if ($catUpdate->isModifierSet())
 		{
-			$categoryPathNodes = $this->category->get()->getPathNodeArray(Category::INCLUDE_ROOT_NODE);
+			$categoryPathNodes = $category->getPathNodeArray(Category::INCLUDE_ROOT_NODE);
 			$catIDs = array();
 			foreach ($categoryPathNodes as $node)
 			{
 				$catIDs[] = $node['ID'];
 			}
-			$catIDs[] = $this->category->get()->getID();
+			$catIDs[] = $category->getID();
 
 			$catUpdate->setCondition(new INCond(new ARFieldHandle('Category', 'ID'), $catIDs));
 
@@ -693,19 +807,22 @@ class Product extends MultilingualObject
 
 	public function saveRelationships()
 	{
+		foreach($this->getRemovedRelationships() as $relationship)
+		{
+			$relationship->delete();
+		}
+
 		if (is_null($this->relationships))
 		{
 			return;
 		}
 
-		foreach($this->getRelationships() as $relationship)
+		foreach($this->relationships as $type => $relationships)
 		{
-			$relationship->save();
-		}
-
-		foreach($this->getRemovedRelationships() as $relationship)
-		{
-			$relationship->delete();
+			foreach ($relationships as $relationship)
+			{
+				$relationship->save();
+			}
 		}
 	}
 
@@ -724,6 +841,17 @@ class Product extends MultilingualObject
 			$array['attributes'] = $this->getSpecification()->toArray();
 			self::sortAttributesByHandle($array);
 			$array = array_merge($array, $this->getPricesFields());
+		}
+
+		if ($this->parent->get())
+		{
+			$parent = $this->parent->get()->toArray();
+			$array = array_merge($parent, $array);
+		}
+
+		foreach ($this->variations as $variation)
+		{
+			$array['variations'][$variation->getID()] = $variation->toArray();
 		}
 
 		$this->setArrayData($array);
@@ -754,10 +882,41 @@ class Product extends MultilingualObject
 			$array['isAvailable'] = false;
 		}
 
+		if ($array['childSettings'])
+		{
+			$array['childSettings'] = unserialize($array['childSettings']);
+		}
+
 		return $array;
 	}
 
 	/*####################  Get related objects ####################*/
+
+	public function getCategory()
+	{
+		$parent = $this->parent->get() ? $this->parent->get() : $this;
+
+		if (!$parent->isLoaded())
+		{
+			$parent->load(array('Category', 'ProductImage'));
+		}
+
+		return $parent->category->get();
+	}
+
+	public function getName($languageCode)
+	{
+		$parent = $this->parent->get() ? $this->parent->get() : $this;
+		$parent->load();
+
+		foreach (array($parent, $this) as $product)
+		{
+			if ($name = $product->getValueByLang('name', $languageCode))
+			{
+				return $name;
+			}
+		}
+	}
 
 	public function loadSpecification($specificationData = null)
 	{
@@ -819,42 +978,81 @@ class Product extends MultilingualObject
 		return $category->getProductSet(new ARSelectFilter(), false)->getTotalRecordCount();
 	}
 
-	private function loadRelationships($loadReferencedRecords)
+	public function loadRelationships($loadReferencedRecords = false, $type = 0)
 	{
 		ClassLoader::import('application.model.product.ProductRelationship');
-		$this->relationships = ProductRelationship::getRelationships($this, $loadReferencedRecords);
-	}
-
-	/**
-	 * @return ARSet
-	 */
-	public function getRelationships($loadReferencedRecords = array('RelatedProduct' => 'Product', 'DefaultImage' => 'ProductImage', 'Manufacturer', 'ProductRelationshipGroup'))
-	{
-		if(is_null($this->relationships))
+		if (empty($this->relationships[$type]))
 		{
-			$this->loadRelationships($loadReferencedRecords);
+			$this->relationships[$type] = ProductRelationship::getRelationships($this, $loadReferencedRecords, $type);
 		}
 
-		return $this->relationships;
+		return $this->relationships[$type];
 	}
 
 	/**
 	 * @return ARSet
 	 */
-	public function getRelationshipsArray($loadReferencedRecords = array('RelatedProduct' => 'Product', 'DefaultImage' => 'ProductImage', 'Manufacturer', 'ProductRelationshipGroup'))
+	public function getRelationships($type = 0, $loadReferencedRecords = array('RelatedProduct' => 'Product', 'DefaultImage' => 'ProductImage', 'Manufacturer', 'ProductRelationshipGroup'))
+	{
+		return $this->loadRelationships($loadReferencedRecords, $type);
+	}
+
+	public function getAdditionalCategories()
+	{
+		if (is_null($this->additionalCategories))
+		{
+			$this->additionalCategories = array();
+
+			ClassLoader::import('application.model.category.ProductCategory');
+
+			$categories = new ARSet();
+			$filter = new ARSelectFilter();
+			$filter->setOrder(new ARFieldHandle('Category', 'lft'));
+			foreach ($this->getRelatedRecordSet('ProductCategory', $filter, array('Category')) as $productCat)
+			{
+				$this->registerAdditionalCategory($productCat->category->get());
+			}
+		}
+
+		return $this->additionalCategories;
+	}
+
+	public function loadAdditionalCategoriesForSet(ARSet $set)
+	{
+		$map = $set->getIDMap();
+		foreach (ActiveRecordModel::getRecordSet('ProductCategory', new ARSelectFilter(new INCond(new ARFieldHandle('ProductCategory', 'productID'), $set->getRecordIDs())), array('Category')) as $additional)
+		{
+			$map[$additional->product->get()->getID()]->registerAdditionalCategory($additional->category->get());
+		}
+	}
+
+	public function registerAdditionalCategory(Category $category)
+	{
+		$this->additionalCategories[$category->getID()] = $category;
+	}
+
+	public function registerVariation(ProductVariation $variation)
+	{
+		$this->variations[$variation->getID()] = $variation;
+	}
+
+	/**
+	 * @return ARSet
+	 */
+	public function getRelationshipsArray($type, $loadReferencedRecords = array('RelatedProduct' => 'Product', 'DefaultImage' => 'ProductImage', 'Manufacturer', 'ProductRelationshipGroup'))
 	{
 		ClassLoader::import('application.model.product.ProductRelationship');
-		return ProductRelationship::getRelationshipsArray($this, $loadReferencedRecords);
+		return ProductRelationship::getRelationshipsArray($this, $loadReferencedRecords, $type);
 	}
 
 	/**
 	 * @return ARSet
 	 */
-	public function getRelatedProducts()
+	public function getRelatedProducts($type = 0)
 	{
 		$relatedProducts = new ARSet();
 
-		foreach($this->getRelationships() as $relationship)
+		foreach($this->getRelationships($type) as $relationship)
 		{
 			$relatedProducts->add($relationship->relatedProduct->get());
 		}
@@ -871,25 +1069,25 @@ class Product extends MultilingualObject
 	/**
 	 * @return ARSet
 	 */
-	public function getRelationshipGroups()
+	public function getRelationshipGroups($type)
 	{
 		ClassLoader::import('application.model.product.ProductRelationshipGroup');
-		return ProductRelationshipGroup::getProductGroups($this);
+		return ProductRelationshipGroup::getProductGroups($this, $type);
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getRelationshipGroupArray()
+	public function getRelationshipGroupArray($type = 0)
 	{
 		ClassLoader::import('application.model.product.ProductRelationshipGroup');
-		return ProductRelationshipGroup::getProductGroupArray($this);
+		return ProductRelationshipGroup::getProductGroupArray($this, $type);
 	}
 
-	public function getRelatedProductsWithGroupsArray()
+	public function getRelatedProductsWithGroupsArray($type = 0)
 	{
 		ClassLoader::import('application.model.product.ProductRelationshipGroup');
-		return ProductRelationshipGroup::mergeGroupsWithFields($this->getRelationshipGroupArray(), $this->getRelationshipsArray());
+		return ProductRelationshipGroup::mergeGroupsWithFields($this->getRelationshipGroupArray($type), $this->getRelationshipsArray($type));
 	}
 
 	/**
@@ -918,17 +1116,26 @@ class Product extends MultilingualObject
 
 	public function getOptions($includeInheritedOptions = false)
 	{
+		$parent = $this->parent->get() ? $this->parent->get() : $this;
 		ClassLoader::import('application.model.product.ProductOption');
 		$f = new ARSelectFilter();
 		$f->setOrder(new ARFieldHandle('ProductOption', 'position'), 'ASC');
-		$options = $this->getRelatedRecordSet('ProductOption', $f, array('DefaultChoice' => 'ProductOptionChoice'));
+		$options = $parent->getRelatedRecordSet('ProductOption', $f, array('DefaultChoice' => 'ProductOptionChoice'));
 
 		if ($includeInheritedOptions)
 		{
-			$options->merge($this->category->get()->getOptions(true));
-
+			$options->merge($parent->getCategory()->getOptions(true));
 			ProductOption::loadChoicesForRecordSet($options);
 		}
+
+		return $options;
+	}
+
+	public function getOptionsArray()
+	{
+		$parent = $this->parent->get() ? $this->parent->get() : $this;
+		$options = $parent->getOptions(true)->toArray();
+		ProductOption::includeProductPrice($parent, $options);
 
 		return $options;
 	}
@@ -1008,6 +1215,115 @@ class Product extends MultilingualObject
 		return $this->bundledProducts;
 	}
 
+	public function createVariation($variationArray)
+	{
+		ClassLoader::import('application.model.product.ProductVariationValue');
+
+		$child = $this->createChildProduct();
+		$child->save();
+
+		foreach ($variationArray as $variation)
+		{
+			ProductVariationValue::getNewInstance($child, $variation)->save();
+		}
+
+		return $child;
+	}
+
+	public function getVariationMatrix()
+	{
+		$children = $this->getRelatedRecordSetArray('Product', new ARSelectFilter(), array('ProductImage'));
+		if (!$children)
+		{
+			return array();
+		}
+
+		ProductPrice::loadPricesForRecordSetArray($children);
+
+		$ids = array();
+		foreach ($children as $child)
+		{
+			$ids[] = $child['ID'];
+			$products[$child['ID']] = $child;
+		}
+
+		$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductVariationValue', 'productID'), $ids));
+		$f->setOrder(new ARFieldHandle('ProductVariationType', 'position'));
+		$f->setOrder(new ARFieldHandle('ProductVariation', 'position'));
+
+		$productValues = array();
+		$variations = array();
+		$values = ActiveRecordModel::getRecordSetArray('ProductVariationValue', $f, array('ProductVariation', 'ProductVariationType'));
+		foreach ($values as &$value)
+		{
+			$type = $value['ProductVariationType'];
+			if (!isset($variations[$type['ID']]))
+			{
+				$variations[$type['ID']] = $type;
+				$variations[$type['ID']]['variations'] = array();
+			}
+			$variations[$type['ID']]['variations'][] = $value;
+
+			$productId = $value['productID'];
+			$productValues[$productId][$value['variationID']] =& $value;
+		}
+
+		$matrix = array();
+		foreach ($productValues as $product => &$values)
+		{
+			$matrix[implode('-', array_keys($values))] = $products[$product];
+		}
+
+		return array('products' => $matrix, 'variations' => $variations);
+	}
+
+	public function getVariationData(LiveCart $app)
+	{
+		$variations = $this->getVariationMatrix();
+
+		if (!$variations)
+		{
+			return null;
+		}
+
+		$trackInventory = $app->getConfig()->get('INVENTORY_TRACKING') != 'DISABLE';
+
+		// filter out unavailable products
+		foreach ($variations['products'] as $key => &$product)
+		{
+			if (!$product['isEnabled'] || ($trackInventory && ($product['stockCount'] <= 0)))
+			{
+				unset($variations['products'][$key]);
+			}
+		}
+
+		// get used variations
+		$usedVariations = array();
+		foreach ($variations['products'] as $key => &$product)
+		{
+			$usedVariations = array_merge($usedVariations, explode('-', $key));
+		}
+
+		$usedVariations = array_flip($usedVariations);
+
+		// prepare select options
+		foreach ($variations['variations'] as &$type)
+		{
+			$type['selectOptions'] = array();
+			foreach ($type['variations'] as $variation)
+			{
+				$var = $variation['Variation'];
+
+				if (isset($usedVariations[$var['ID']]))
+				{
+					$type['selectOptions'][$var['ID']] = $var['name_lang'];
+				}
+			}
+		}
+
+		return $variations;
+	}
+
 	public function serialize()
 	{
 		return parent::serialize(array('categoryID', 'Category', 'manufacturerID', 'defaultImageID'));
@@ -1064,7 +1380,7 @@ class Product extends MultilingualObject
 		unset($this->specificationInstance);
 		unset($this->pricingHandlerInstance);
 
-		parent::destruct(array('defaultImageID'));
+		parent::destruct(array('defaultImageID', 'parentID'));
 	}
 }
 

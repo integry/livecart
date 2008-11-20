@@ -4,3 +4,4 @@ public/upload
 /storage
 /test/report
 doc/db/alter.sql
+doc/db/drop.sql

@@ -325,10 +325,11 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 		this.nodes.addStateButton			 = this.nodes.root.down('.' + this.prefix + 'addState');
 		this.nodes.removeStateButton		  = this.nodes.root.down('.' + this.prefix + 'removeState');
 
-		this.nodes.inactiveCountries		  = this.nodes.root.down('.' + this.prefix + 'inactiveCountries');
+		this.nodes.inactiveCountries		= this.nodes.root.down('.' + this.prefix + 'inactiveCountries');
 		this.nodes.activeCountries			= this.nodes.root.down('.' + this.prefix + 'activeCountries');
-		this.nodes.inactiveStates			 = this.nodes.root.down('.' + this.prefix + 'inactiveStates');
-		this.nodes.activeStates			   = this.nodes.root.down('.' + this.prefix + 'activeStates');
+		this.nodes.inactiveStates			= this.nodes.root.down('.' + this.prefix + 'inactiveStates');
+		this.nodes.activeStates				= this.nodes.root.down('.' + this.prefix + 'activeStates');
+		this.nodes.countrySelector			= this.nodes.root.down('.stateListCountry');
 
 		this.nodes.cityMasks				  = this.nodes.root.down('.' + this.prefix + 'cityMasks');
 		this.nodes.cityMasksList			  = this.nodes.cityMasks.down('.' + this.prefix + 'cityMasksList');
@@ -460,6 +461,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 		Event.observe(this.nodes.zipMaskNewShowButton, 'click', function(e) { Event.stop(e); this.showNewMaskForm(this.nodes.zipMaskNewShowButton.up("fieldset")); }.bind(this));
 		Event.observe(this.nodes.addressMaskNewShowButton, 'click', function(e) { Event.stop(e); this.showNewMaskForm(this.nodes.addressMaskNewShowButton.up("fieldset")); }.bind(this));
 
+		Event.observe(this.nodes.countrySelector, 'change', this.reloadStateList.bind(this));
 
 		$A(this.nodes.zonesAndUnions).each(function(zoneOrUnion) {
 			Event.observe(zoneOrUnion, 'click', function(e) { Event.stop(e); this.selectZoneOrUnion(zoneOrUnion.hash.substring(0,1) == '#' ? zoneOrUnion.hash.substring(1) : zoneOrUnion.hash); }.bind(this));
@@ -721,14 +723,25 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 	{
 		this.moveSelectedOptions(this.nodes.activeStates, this.nodes.inactiveStates);
 		this.sendSelectsData(this.nodes.activeStates, this.nodes.inactiveStates, Backend.DeliveryZone.prototype.Links.saveStates);
+	},
+
+	reloadStateList: function()
+	{
+		var sel = this.nodes.countrySelector;
+		var url = Backend.Router.createUrl('backend.deliveryZone', 'loadStates', {id: this.zoneID, country: $F(sel)});
+		new LiveCart.AjaxRequest(url, sel.parentNode.down('.progressIndicator'), this.completeReloadStateList.bind(this));
+	},
+
+	completeReloadStateList: function(originalRequest)
+	{
+		var list = this.nodes.inactiveStates;
+		list.innerHTML = '';
+		$H(originalRequest.responseData).each(function(val)
+		{
+			list.innerHTML += '<option value="' + val[0] + '">' + val[1] + '</option>';
+		});
 	}
 }
-
-
-
-
-
-
 
 
 Backend.DeliveryZone.ShippingService = Class.create();

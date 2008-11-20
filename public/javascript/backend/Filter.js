@@ -12,12 +12,12 @@
  *		 'name': {'lt': 'Pagal dydi'}
  *		 'rootId': 'filter_item_new_41_form'
  *		 'categoryID': 41
- *		 'specFields: { // SpecFieldArray in json // } 
+ *		 'specFields: { // SpecFieldArray in json // }
  *	 });
  * </code>
  *
  * You should also modify prototype by passing settins to it
- * 
+ *
  * @example
  * <code>highli
  *   Backend.Filter.prototype.links = {};
@@ -27,7 +27,7 @@
  *   Backend.Filter.prototype.links.deleteFilter = '/en/backend.filter/deleteFilter/';
  *   Backend.Filter.prototype.links.sortFilter = '/en/backend.filter/sortFilter/';
  *   Backend.Filter.prototype.links.generateFilters = '/en/backend.filter/generateFilters/';
- *   
+ *
  *   Backend.Filter.prototype.languages = {"en":"English","lt":"Lithuanian","lv":"Latvian"};
  *   Backend.Filter.prototype.messages = {"deleteField":"delete field"};
  *   Backend.Filter.prototype.selectorValueTypes = [1,5];
@@ -48,13 +48,13 @@ Backend.Filter = Class.create();
 Backend.Filter.prototype = {
 	cssPrefix: "filter_",
 	countNewFilters: 0,
-	
+
 	activeListCallbacks: {
 		 beforeEdit:	 function(li)
 		 {
 			 var categoryID = this.getRecordId(li, 2);
 			 Backend.Filter.prototype.hideNewFilterAction(categoryID);
-			  
+
 			 if(this.isContainerEmpty(li, 'edit')) return Backend.Filter.prototype.links.editGroup + this.getRecordId(li) + "/?categoryID=" + categoryID
 			 else this.toggleContainer(li, 'edit');
 		 },
@@ -64,41 +64,41 @@ Backend.Filter.prototype = {
 			 new Backend.Filter(response);
 			 this.toggleContainer(li, 'edit');
 		 },
- 
+
 		 beforeDelete:   function(li)
 		 {
 			 if(confirm(Backend.Filter.prototype.msg.removeQuestion))  return Backend.Filter.prototype.links.deleteGroup + this.getRecordId(li)
 		 },
-   
+
 		 afterDelete:	function(li, response)
 		 {
-			 try 
-			 { 
-				 response = eval('(' + response + ')'); 
-			 } 
-			 catch(e) 
-			 { 
-				 return false; 
+			 try
+			 {
+				 response = eval('(' + response + ')');
 			 }
- 
-			 if(response.status == 'success') 
+			 catch(e)
+			 {
+				 return false;
+			 }
+
+			 if(response.status == 'success')
 			 {
 				 CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li, 2));
 				 return true;
 			 }
-		 
+
 			 return false;
-		 },   
+		 },
 
 		 beforeSort:	 function(li, order)
 		 {
 			 return Backend.Filter.prototype.links.sortGroup + '?target=' + "filter_items_list_" + this.getRecordId(li, 2) + "&" + order
 		 },
-	
+
 		 afterSort:	  function(li, response) { }
-	 }, 
-	
-	
+	 },
+
+
 	/**
 	 * Constructor
 	 *
@@ -110,11 +110,11 @@ Backend.Filter.prototype = {
 	initialize: function(filterJson, hash)
 	{
 		this.filter = !hash ? eval("(" + filterJson + ")" ) : filterJson;
-		
+
 		this.cloneForm('filter_item_blank', this.filter.rootId);
 
 		this.id = this.filter.ID;
-		
+
 		this.categoryID = this.filter.categoryID;
 		this.rootId = this.filter.rootId;
 		this.filtersCount = this.filter.filtersCount ? this.filter.filtersCount : 0;
@@ -129,7 +129,7 @@ Backend.Filter.prototype = {
 		new Backend.LanguageForm(this.nodes.form);
 		this.bindFields();
 		this.generateTitleFromSpecField();
-		
+
 		this.hideSpecField();
 		this.toggleFilters();
 	},
@@ -137,15 +137,15 @@ Backend.Filter.prototype = {
 	getSpecField: function()
 	{
 		var specField = {};
-		for(var k = 0; k < this.specFields.length; k++) 
+		for(var k = 0; k < this.specFields.length; k++)
 		{
-			if(this.specFields[k].ID == this.nodes.specFieldID.value) 
+			if(this.specFields[k].ID == this.nodes.specFieldID.value)
 			{
 				var specField = this.specFields[k];
 				break;
 			}
 		}
-		
+
 		return specField;
 	},
 
@@ -153,19 +153,19 @@ Backend.Filter.prototype = {
 	{
 		var specField = this.getSpecField();
 		var showFilters = this.selectorValueTypes.indexOf(specField.type) === -1;
-		
-		if(showFilters) 
+
+		if(showFilters)
 		{
-			this.nodes.stepFilters.show(); 
-			document.getElementsByClassName('filters_translations_fieldset', this.nodes.form).each(function(fieldset) 
+			this.nodes.stepFilters.show();
+			document.getElementsByClassName('filters_translations_fieldset', this.nodes.form).each(function(fieldset)
 			{
 				fieldset.show();
 			});
 		}
-		else 
+		else
 		{
-			this.nodes.stepFilters.hide(); 
-			document.getElementsByClassName('filters_translations_fieldset', this.nodes.form).each(function(fieldset) 
+			this.nodes.stepFilters.hide();
+			document.getElementsByClassName('filters_translations_fieldset', this.nodes.form).each(function(fieldset)
 			{
 				fieldset.hide();
 			});
@@ -187,15 +187,15 @@ Backend.Filter.prototype = {
 		{
 			if(el[1])
 			{
-				if(el[1].ul) 
+				if(el[1].ul)
 				{
 					ActiveList.prototype.destroy(el[1].ul.id);
 				}
-				
+
 				delete el[1];
 			}
 		});
-		
+
 		this.initialize(filterJson, true);
 	},
 
@@ -214,7 +214,7 @@ Backend.Filter.prototype = {
 		var blankFormFilters = blankForm.getElementsByTagName("*");
 
 		var root = ($(this.filter.rootId).tagName.toLowerCase() == 'li') ? ActiveList.prototype.getInstance("filter_items_list_" + this.filter.categoryID).getContainer($(this.filter.rootId), 'edit') : $(this.filter.rootId);
-		
+
 		for(var i = 0; i < blankFormFilters.length; i++)
 		{
 			if(blankFormFilters[i] && blankFormFilters[i].parentNode == blankForm)
@@ -244,11 +244,11 @@ Backend.Filter.prototype = {
 		this.nodes.specFieldID			= document.getElementsByClassName(this.cssPrefix + "form_specFieldID", this.nodes.parent)[0];
 		this.nodes.specFieldText		  = document.getElementsByClassName(this.cssPrefix + "form_specFieldText", this.nodes.parent)[0];
 		this.nodes.specFieldParagraph	 = document.getElementsByClassName(this.cssPrefix + "specField", this.nodes.parent)[0];
-			   
+
 		this.nodes.stepTranslations	   = document.getElementsByClassName(this.cssPrefix + "step_translations", this.nodes.parent)[0];
 		this.nodes.stepFiltersTranslations= document.getElementsByClassName(this.cssPrefix + "step_filters_translations", this.nodes.parent)[0];
 		this.nodes.stepFilters = document.getElementsByClassName(this.cssPrefix + "step_filters", this.nodes.parent)[0];
-		
+
 		this.nodes.filtersTranslationTemplate = this.nodes.stepTranslations.down("." + this.cssPrefix + "form_filters_value");
 		this.nodes.generateFiltersLink	= document.getElementsByClassName(this.cssPrefix + "generate_filters", this.nodes.parent)[0];
 		this.nodes.defaultFiltersList	 = document.getElementsByClassName(this.cssPrefix + "form_filters_value", this.nodes.filtersDefaultGroup);
@@ -266,27 +266,27 @@ Backend.Filter.prototype = {
 		this.nodes.translationsUl = {};
 		this.nodes.valuesTranslations = {};
 		this.nodes.translation_templates = {};
-		
+
 		this.nodes.filterTemplate = this.nodes.filtersDefaultGroup.down("." + this.cssPrefix + "form_filters_value");
 		this.nodes.filtersList = this.nodes.filtersDefaultGroup.down('ul');
-		
+
 		var ul = this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0];
 		ul.id = this.cssPrefix + "form_" + this.id + '_filters_' + this.languageCodes[0];
-		
+
 		var self = this;
-		this.nodes.labels = {};  
+		this.nodes.labels = {};
 		$A(['name', 'specFieldID']).each(function(field)
 		{
 			self.nodes.labels[field] = document.getElementsByClassName(self.cssPrefix + "form_" + field + "_label", self.nodes.parent)[0];
-		});  
+		});
 	},
 
 	hideSpecField: function()
 	{
-		if(!this.id.match(/new/)) 
+		if(!this.id.match(/new/))
 		{
 			var specField = this.getSpecField();
-			
+
 			this.nodes.specFieldID.hide();
 			this.nodes.specFieldText.update(specField.name_lang);
 			this.nodes.specFieldText.show();
@@ -317,16 +317,16 @@ Backend.Filter.prototype = {
 
 		Event.observe(this.nodes.name, "keyup", function(e) { self.generateTitleAction(e) });
 		Event.observe(this.nodes.addFilterLink, "click", function(e) { Event.stop(e); self.addFilterFieldAction(true); });
-		
-		Event.observe(this.nodes.specFieldID, "change", function(e) { Event.stop(e); self.specFieldIDWasChangedAction() });		
+
+		Event.observe(this.nodes.specFieldID, "change", function(e) { Event.stop(e); self.specFieldIDWasChangedAction() });
 		Event.observe(this.nodes.specFieldID, "change", function(e) { Event.stop(e); self.generateTitleFromSpecField() });
 		Event.observe(this.nodes.specFieldID, "change", function(e) { self.toggleFilters(); } );
-		
+
 		Event.observe(this.nodes.cancel, "click", function(e) { Event.stop(e); self.cancelAction() });
 		Event.observe(this.nodes.cancelNewItemLink, "click", function(e) { Event.stop(e); self.cancelAction(); });
-		
+
 		Event.observe(this.nodes.save, "click", function(e) { Event.stop(e); self.saveAction() });
-		
+
 		// Also some actions must be executed on load. Be aware of the order in which those actions are called
 		this.fillSpecFieldsSelect();
 		if(this.filter.SpecField) this.nodes.specFieldID.value = this.filter.SpecField.ID;
@@ -363,19 +363,19 @@ Backend.Filter.prototype = {
 		var self = this;
 		for(var i = 0; i < this.specFields.length; i++)
 		{
-			if(this.specFields[i].ID != this.nodes.specFieldID.value) 
+			if(this.specFields[i].ID != this.nodes.specFieldID.value)
 			{
-				continue;   
+				continue;
 			}
 			else if(self.selectorValueTypes.indexOf(this.specFields[i].type) !== -1)
 			{
 				return;
 			}
-			
+
 			var specField = this.specFields[i];
-		   
+
 			$A(this.nodes.filtersDefaultGroup.down('ul').getElementsByTagName("li")).each(function(li)
-			{					
+			{
 				if(specField.type == Backend.SpecField.prototype.TYPE_NUMBERS_SIMPLE)
 				{
 					li.down('.filter_range').show();
@@ -383,9 +383,9 @@ Backend.Filter.prototype = {
 				else
 				{
 					li.down('.filter_range').hide();
-				}					  
- 
-				if (specField.type == Backend.SpecField.prototype.TYPE_TEXT_DATE) 
+				}
+
+				if (specField.type == Backend.SpecField.prototype.TYPE_TEXT_DATE)
 				{
 					li.down('.filter_date_range').style.display = 'block';
 				}
@@ -398,20 +398,20 @@ Backend.Filter.prototype = {
 			return;
 		}
 	},
-	
-	
+
+
 	generateTitleFromSpecField: function()
-	{	
+	{
 		var self = this;
 		var newTitle = '';
 		var changeTitle = false;
-		
+
 		this.specFields.each(function(specField) {
 			if(self.nodes.name.value == specField.name_lang) changeTitle = true;
 			if(specField.ID == self.nodes.specFieldID.value) newTitle = specField.name_lang;
 		});
-		
-		if(changeTitle || self.nodes.name.value == '') 
+
+		if(changeTitle || self.nodes.name.value == '')
 		{
 			self.nodes.name.value = newTitle;
 			this.generateTitleAction();
@@ -438,19 +438,19 @@ Backend.Filter.prototype = {
 				{
 					var emptyFilters = true;
 					var inputValues = li.getElementsByTagName("input");
-					for(var i = 0; i < inputValues.length; i++) 
+					for(var i = 0; i < inputValues.length; i++)
 					{
 						if(!Element.hasClassName('dom_template', inputValues[i]) && inputValues[i].parentNode.style.display != 'none' && inputValues[i].type != 'hidden' && inputValues[i].value != '')
 						{
 							emptyFilters =  false;
 						}
 					}
-					
+
 					if(emptyFilters || confirm(self.messages.removeFilter))
 					{
 						self.deleteValueFieldAction(li, this);
 					}
-					
+
 				}
 				else if(confirm(self.messages.removeFilter))
 				{
@@ -458,22 +458,22 @@ Backend.Filter.prototype = {
 				}
 			},
 			afterDelete: function(li, response)
-			{ 
-				try 
-				{ 
-					response = eval('(' + response + ')'); 
-				} 
-				catch(e) 
-				{ 
-					return false; 
+			{
+				try
+				{
+					response = eval('(' + response + ')');
 				}
-				
+				catch(e)
+				{
+					return false;
+				}
+
 				self.deleteValueFieldAction(li, this)
 			}
 		}, this.activeListMessages);
 	},
-   
-	
+
+
 
 	/**
 	 * Check if range values are valid floats
@@ -515,7 +515,7 @@ Backend.Filter.prototype = {
 		{
 			if(this.nodes.filtersCount.firstChild) this.nodes.filtersCount.firstChild.nodeValue = "(" + this.filtersCount + ")";
 			else this.nodes.filtersCount.appendChild(document.createTextNode("(" + this.filtersCount + ")"));
-			
+
 			if(this.filtersCount == 0) Element.addClassName(this.nodes.parent, "filtergroup_has_no_filters");
 			else Element.removeClassName(this.nodes.parent, "filtergroup_has_no_filters");
 		}
@@ -531,8 +531,8 @@ Backend.Filter.prototype = {
 		// Default language
 		if(this.id) this.nodes.id.value = this.id;
 
-		this.nodes.name.value = this.filter.name_lang ? this.filter.name_lang : '';	 
-		this.nodes.name.name = "name[" + this.languageCodes[0] + "]";
+		this.nodes.name.value = this.filter.name_lang ? this.filter.name_lang : '';
+		//this.nodes.name.name = "name[" + this.languageCodes[0] + "]";
 		this.nodes.labels.name.onclick = function() { self.nodes.name.focus() };
 		this.nodes.labels.specFieldID.onclick = function() { self.nodes.specFieldID.focus() };
 
@@ -541,23 +541,23 @@ Backend.Filter.prototype = {
 
 		// Translations
 		var translations = this.nodes.stepTranslations.down("." + this.cssPrefix + "step_translations_language");
-		
+
 		// we should have a template to continue
 		var fields = ['name'];
 		for(var i = 1; i < this.languageCodes.length; i++)
 		{
-			for(var j = 0; j < fields.length; j++) 
+			for(var j = 0; j < fields.length; j++)
 			{
 				var field = this.nodes.form.elements.namedItem(fields[j] + '_' + this.languageCodes[i]);
 				var label = field.up('fieldset').down('label');
 				field.id = this.cssPrefix + this.categoryID + "_" + this.id + "_" + fields[j] + "_" + this.languageCodes[i];
 				label.forID = field.id;
-				
+
 				if(this.filter[fields[j] + '_' + this.languageCodes[i]]) field.value = this.filter[fields[j] + '_' + this.languageCodes[i]];
 				Event.observe(label, "click", function(e) { $(this.forID).focus(); });
 		   }
 		}
-	},  
+	},
 
 	/**
 	 * Create filters from json Object
@@ -568,10 +568,10 @@ Backend.Filter.prototype = {
 	loadValueFieldsAction: function()
 	{
 		var self = this;
-		
+
 		if(this.filters)
 		{
-		   
+
 			$H(this.filters).each(function(value) {
 				self.addFilter(value.value, value.key);
 			});
@@ -613,7 +613,7 @@ Backend.Filter.prototype = {
 		this.changeFiltersCount(this.filtersCount+1);
 		this.filtersList.touch();
 		this.bindDefaultFields();
-		
+
 		Backend.Filter.prototype.countNewFilters++;
 		return li;
 	},
@@ -684,7 +684,7 @@ Backend.Filter.prototype = {
 		if(!e.target) e.target = e.srcElement;
 
 		Event.stop(e);
-		
+
 		var li = e.target.up('li');
 		var splitedHref  = li.id.match(/(new)*(\d+)$/); //	splitedHref[splitedHref.length - 2] == 'new' ? true : false;
 		var id = splitedHref[0];
@@ -701,7 +701,7 @@ Backend.Filter.prototype = {
 	 * on the top of the form. Handle is actuali a stripped version of spec field name with all spec
 	 * symbols changed to "_" (underscope)
 	 *
-	 * @param Event e Event 
+	 * @param Event e Event
 	 *
 	 * @access private
 	 *
@@ -732,11 +732,11 @@ Backend.Filter.prototype = {
 	 *
 	 */
 	addFilter: function(value, id, generateTitle, touch)
-	{		
+	{
 		var self = this;
 		if(!value) value = {}
 		if(!this.filtersList) this.bindDefaultFields();
-		
+
 		var li = this.filtersList.addRecord(id, this.nodes.filterTemplate, touch);
 		Element.removeClassName(li, 'dom_template');
 		Element.addClassName(li, this.cssPrefix + "default_filter_li");
@@ -751,12 +751,12 @@ Backend.Filter.prototype = {
 		Event.observe(input, "keyup", function(e) {
 				if(!this.up('li').next() && this.value != '') self.addFilterFieldAction(false);
 			});
-		var label = filter_name_paragraph.down("label"); 
+		var label = filter_name_paragraph.down("label");
 		input.id = this.cssPrefix + "filter_filter_" + id + "_name";
 		label['for'] = input.id;
 		label.onclick = function() { $(this["for"]).focus() };
 
-		filter_name_paragraph.siblings().each(function(paragraph) 
+		filter_name_paragraph.siblings().each(function(paragraph)
 		{
 			var part = false;
 			if(Element.hasClassName(paragraph, 'filter_range'))
@@ -765,78 +765,78 @@ Backend.Filter.prototype = {
 				// Numeric range
 				var rangeStartInput = paragraph.down("input");
 				var rangeEndInput = rangeStartInput.next("input");
-				
+
 				rangeStartInput.name = "filters[" + id + "][rangeStart]";
 				rangeStartInput.value = (value.rangeStart) ? value.rangeStart : '' ;
-				
+
 				rangeEndInput.name = "filters[" + id + "][rangeEnd]";
 				rangeEndInput.value = (value.rangeEnd) ? value.rangeEnd : '' ;
-								
+
 				Event.observe(rangeStartInput, "focus", function(e) { this.hasFocus = true; });
 				Event.observe(rangeEndInput, "focus", function(e) { this.hasFocus = true; });
 
 				Event.observe(rangeStartInput, "blur", function(e) { self.switchRangeValues(rangeStartInput, rangeEndInput, e); });
 				Event.observe(rangeEndInput, "blur", function(e) { self.switchRangeValues(rangeStartInput, rangeEndInput, e); });
-								
+
 				Event.observe(rangeStartInput, "keyup", function(e) { self.rangeChangedAction(e) });
-				Event.observe(rangeEndInput, "keyup", function(e) { self.rangeChangedAction(e) });	  
+				Event.observe(rangeEndInput, "keyup", function(e) { self.rangeChangedAction(e) });
 			}
 			else if(Element.hasClassName(paragraph, 'filter_date_range'))
 			{
 				part = "date_range";
-				
+
 				// Date range
 				var rangeDateStart = paragraph.down("input");
-				var rangeDateEnd = rangeDateStart.next("input");				
-				
+				var rangeDateEnd = rangeDateStart.next("input");
+
 				var rangeDateStartButton = paragraph.down("img.calendar_button");
 				var rangeDateEndButton   = paragraph.down("img.calendar_button", 1);
-				
+
 				var rangeDateStartReal   = paragraph.down("input." + self.cssPrefix + "date_start_real");
 				var rangeDateEndReal	 = paragraph.down("input." + self.cssPrefix + "date_end_real");
-		
+
 				rangeDateStart.id		 = self.cssPrefix + "rangeDateStart_" + id;
 				rangeDateEnd.id		   = self.cssPrefix + "rangeDateEnd_" + id;
 				rangeDateStartReal.id	 = rangeDateStart.id + "_real";
 				rangeDateEndReal.id	   = rangeDateEnd.id + "_real";
 				rangeDateStartButton.id   = rangeDateStart.id + "_button";
-				rangeDateEndButton.id	 = rangeDateEnd.id + "_button";	  
-				
+				rangeDateEndButton.id	 = rangeDateEnd.id + "_button";
+
 				rangeDateStart.name	   = "filters[" + id + "][rangeDateStart_show]";
 				rangeDateEnd.name		 = "filters[" + id + "][rangeDateEnd_show]";
 				rangeDateStartReal.name   = "filters[" + id + "][rangeDateStart]";
 				rangeDateEndReal.name	 = "filters[" + id + "][rangeDateEnd]";
-						   
+
 				rangeDateStartButton.realInput  = rangeDateStart.realInput  = rangeDateStartReal;
 				rangeDateEndButton.realInput	= rangeDateEnd.realInput	= rangeDateEndReal;
 				rangeDateStartButton.showInput  = rangeDateStart.showInput  = rangeDateStart;
 				rangeDateEndButton.showInput	= rangeDateEnd.showInput	= rangeDateEnd;
-											   
+
 				rangeDateStartReal.value  = (value.rangeDateStart) ? value.rangeDateStart : ''; //(new Date()).print("%Y-%m-%d");
 				rangeDateEndReal.value	= (value.rangeDateEnd) ? value.rangeDateEnd : ''; //(new Date()).print("%y-%m-%d");
 				rangeDateStart.value  = rangeDateStartReal.value;
 				rangeDateEnd.value	= rangeDateEndReal.value ;
 				rangeDateStart.value = rangeDateStartReal.value ? Date.parseDate(rangeDateStartReal.value, "%y-%m-%d").print(self.dateFormat) : '';
 				rangeDateEnd.value = rangeDateEnd.value ? Date.parseDate(rangeDateEnd.value, "%y-%m-%d").print(self.dateFormat) : '';
-				  
+
 				Event.observe(rangeDateStart, 'change', function() {if (!this.value) rangeDateStartReal.value = ''});
 				Event.observe(rangeDateEnd, 'change', function() {if (!this.value) rangeDateEndReal.value = ''});
-													 
+
 				Event.observe(rangeDateStartButton, "mousedown", function(e){
-					if(!self.filterCalendars[rangeDateStart.id]) 
+					if(!self.filterCalendars[rangeDateStart.id])
 					{
 						self.filterCalendars[rangeDateStart.id] = true;
 						Calendar.setup( {
 							inputField:	   rangeDateStart.id,
 							inputFieldReal:   rangeDateStartReal.id,
-							ifFormat:		 self.dateFormat, 
+							ifFormat:		 self.dateFormat,
 							button:		   rangeDateStartButton.id,
 							eventName:		'mouseup',
 							cache: true
 						});
 					}
 				});
-		  
+
 				Event.observe(rangeDateEndButton, "mousedown", function(e){
 					if(!self.filterCalendars[rangeDateEnd.id])
 					{
@@ -844,26 +844,26 @@ Backend.Filter.prototype = {
 						Calendar.setup({
 							inputField:	   rangeDateEnd.id,
 							inputFieldReal:   rangeDateEndReal.id,
-							ifFormat:		 self.dateFormat, 
+							ifFormat:		 self.dateFormat,
 							button:		   rangeDateEndButton.id,
 							eventName:		'mouseup',
 							cache: true
 						});
 					}
-				});				
+				});
 			}
- 
+
 			if(part)
 			{
 				input = paragraph.down("input");
-				label = paragraph.down("label"); 
+				label = paragraph.down("label");
 				input.id = self.cssPrefix + "filter_filter_" + id + "_" + part;
 				label['for'] = input.id;
 				label.onclick = function() { $(this["for"]).focus() };
 			}
 		});
 
-					   
+
 		// now insert all translation fields
 		for(var i = 1; i < this.languageCodes.length; i++)
 		{
@@ -871,7 +871,7 @@ Backend.Filter.prototype = {
 			Element.removeClassName(newValueTranslation, "dom_template");
 			var translationsUl = this.nodes.form.down('.filters_translations_' + this.languageCodes[i]);
 			translationsUl.appendChild(newValueTranslation);
-			
+
 			var inputTranslation = newValueTranslation.down("input");
 
 			inputTranslation.name = "filters[" + id + "][name][" + this.languageCodes[i] + "]";
@@ -880,7 +880,7 @@ Backend.Filter.prototype = {
 			newValueTranslation.id = newValueTranslation.id + this.languageCodes[i] + "_" + id;
 			var translationLabel = newValueTranslation.down("label");
 			translationLabel.update(nameValue);
-			
+
 			inputTranslation.id = this.cssPrefix + "filter_filter_" + id + "_name_" + this.languageCodes[i];
 			translationLabel['for'] = inputTranslation.id;
 			translationLabel.onclick = function() { $(this['for']).focus(); }
@@ -890,7 +890,7 @@ Backend.Filter.prototype = {
 	},
 
 	switchRangeValues: function(start, end, e)
-	{		
+	{
 		Event.element(e).hasFocus = false;
 		if ((false == start.hasFocus) && (false == end.hasFocus))
 		{
@@ -923,7 +923,7 @@ Backend.Filter.prototype = {
 			this.changeMainTitleAction(this.nodes.name.value);
 			this.specFieldIDWasChangedAction();
 		}
-		
+
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 
 		// Use Active list toggleContainer() method if this filter is inside Active list
@@ -937,7 +937,7 @@ Backend.Filter.prototype = {
 		{
 			this.hideNewFilterAction(this.categoryID);
 		}
-		
+
 		this.saving = false;
 	},
 
@@ -958,7 +958,7 @@ Backend.Filter.prototype = {
 	{
 		if(this.saving) return false;
 		this.saving = true;
-		
+
 		// Toggle progress won't work on new form
 		try
 		{
@@ -969,20 +969,20 @@ Backend.Filter.prototype = {
 		}
 
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-		
+
 		var self = this;
-		
-		this.nodes.form.action = this.id.match(/new/) ? Backend.Filter.prototype.links.createGroup : Backend.Filter.prototype.links.updateGroup; 
+
+		this.nodes.form.action = this.id.match(/new/) ? Backend.Filter.prototype.links.createGroup : Backend.Filter.prototype.links.updateGroup;
 		new LiveCart.AjaxRequest(
 			this.nodes.form,
 			false,
-			function(param) 
+			function(param)
 			{
-				self.afterSaveAction(param.responseText) 
+				self.afterSaveAction(param.responseText)
 			}
-		);  
+		);
 	},
-	
+
 
 	/**
 	 * This action is executed after server response with possible errors in entered
@@ -998,7 +998,7 @@ Backend.Filter.prototype = {
 		if(jsonResponse.status == 'success')
 		{
 			ActiveForm.prototype.updateNewFields('filter_update', $H(jsonResponse.newIDs), this.nodes.parent)
-			
+
 			Form.backup(this.nodes.form);
 			this.backupName = this.nodes.name.value;
 
@@ -1020,11 +1020,11 @@ Backend.Filter.prototype = {
 				var div = document.createElement('span');
 				Element.addClassName(div, 'filter_title');
 				div.appendChild(document.createTextNode(this.nodes.name.value));
-				
+
 				var activeList = ActiveList.prototype.getInstance($(this.cssPrefix + "items_list_" + this.categoryID));
-			
+
 				var specField = this.getSpecField();
-				
+
 				var filterCount = 0;
 				if(this.selectorValueTypes.indexOf(specField.type) === -1)
 				{
@@ -1036,30 +1036,30 @@ Backend.Filter.prototype = {
 				{
 					filterCount = specField.values.length;
 				}
-								
+
 				var spanCount = document.createElement('span');
 				Element.addClassName(spanCount, this.cssPrefix + "count");
 				spanCount.update(" (" + filterCount + ")");
-				
+
 				var newRecord = document.createElement('div');
 				newRecord.appendChild(div);
 				newRecord.appendChild(spanCount);
-				
+
 				var li = activeList.addRecord(jsonResponse.id, newRecord);
 				if(0 == filterCount) Element.addClassName(li, 'filtergroup_has_no_filters');
 				activeList.touch();
-				
+
 				CategoryTabControl.prototype.resetTabItemsCount(this.categoryID);
-				
+
 				this.hideNewFilterAction(this.categoryID);
-				this.recreate(this.filter, true);   
+				this.recreate(this.filter, true);
 			}
 		}
 		else if(jsonResponse.errors)
 		{
 			ActiveForm.prototype.setErrorMessages(this.nodes.form, jsonResponse.errors);
 		}
-			
+
 		this.saving = false;
 
 		// Toggle progress won't work on new form
@@ -1070,7 +1070,7 @@ Backend.Filter.prototype = {
 		catch (e)
 		{
 		}
-		
+
 	},
 
 

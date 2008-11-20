@@ -19,12 +19,13 @@
 
    <div class="orderMenu">
 
-	   <ul>
-		   <li><a href="{link controller=user action=viewOrder id=$order.ID}" class="viewOrder">{t _view_details}</a></li>
-		   {if !$order.isCancelled}
-		   <li><a href="{link controller=user action=orderInvoice id=$order.ID}" class="invoice">{t _order_invoice}</a></li>
-		   {/if}
-	   </ul>
+		<ul>
+			<li><a href="{link controller=user action=viewOrder id=$order.ID}" class="viewOrder">{t _view_details}</a></li>
+			{if !$order.isCancelled}
+				<li><a href="{link controller=user action=orderInvoice id=$order.ID}" class="invoice">{t _order_invoice}</a></li>
+			{/if}
+			<li><a href="{link controller=user action=reorder id=$order.ID}" class="reorder">{t _reorder}</a></li>
+		</ul>
 
 	   <div>
 		   {t _order_id}: {$order.ID}

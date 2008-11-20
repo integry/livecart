@@ -1,3 +1,9 @@
+{if $order.isMultiAddress}
+	<div class="shipmentAddress">
+		<span class="shipmentAddressLabel">{t _shipment_shipped_to}:</span> {$shipment.ShippingAddress.compact}
+	</div>
+{/if}
+
 <table class="table shipment">
 
 	<thead>

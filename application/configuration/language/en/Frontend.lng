@@ -57,6 +57,8 @@ _cart=Cart
 _address=Address
 _shipping=Shipping
 _payment=Payment
+_billing_address=Billing Address
+_shipping_address=Shipping Address
 
 # Users
 _your_account=Your Account
@@ -66,11 +68,20 @@ _remind_password=I have forgotten my password
 _sale_items=Special Offer
 _newest_products=Newest Products
 
+# Custom pages
+_contact=Contact
+_manufacturers=Manufacturers
+_categories=Categories
+_all_products=All products
+
 # Common words
 _save=Save
 _or=or
 _cancel=Cancel
 _our_price=Our Price
+
+# Blocks
+_quick_nav=Quick Navigation
 
 _select_all=Select all
 _deselect_all=Deselect all

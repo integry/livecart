@@ -2,6 +2,13 @@
 	<tr class="{zebra loop="shipment"}">
 		<td class="productName">
 			<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
+
+			{if $item.Product.variations}
+				<span class="variations">
+					({include file="order/itemVariationsList.tpl"})
+				</span>
+			{/if}
+
 			{include file="user/itemOptions.tpl" options=$item.options}
 
 			{sect}
@@ -23,7 +30,9 @@
 				{/footer}
 			{/sect}
 		</td>
-		<td class="{if $item.formattedBasePrice != $item.formattedPrice}discount{/if}"><span class="basePrice">{$item.formattedBasePrice}</span><span class="actualPrice">{$item.formattedPrice}</span></td>
+		<td class="{if $item.itemBasePrice > $item.itemPrice}discount{/if}">
+			<span class="basePrice">{$item.formattedDisplayPrice}</span><span class="actualPrice">{$item.formattedPrice}</span>
+		</td>
 		<td>{$item.count}</td>
 		<td class="amount">{$item.formattedDisplaySubTotal}</td>
 	</tr>
@@ -37,7 +46,7 @@
 {/if}
 
 {if $order.isShippingRequired && $shipment.isShippable && $shipment.ShippingService}
-	<tr>
+	<tr class="overviewShippingInfo">
 		<td colspan="3" class="subTotalCaption">
 			{t _shipping} ({$shipment.ShippingService.name_lang}):
 		</td>

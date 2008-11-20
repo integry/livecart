@@ -1,0 +1,18 @@
+FEATURED=Podobné produkty
+SALES_RANK=Najprodávanější
+PRODUCT_NAME_ASC=Název produktu: A-Z
+PRODUCT_NAME_DESC=Název produktu: Z-A
+PRICE_ASC=Cena: od nejnižší po nejvyšší
+PRICE_DESC=Cena: od nejvyšší po nejnižší
+NEWEST_ARRIVALS=Nové produkty
+_found_cats=Naleznuté kategorie
+_not_found=<span class='notFoundMain'>Nebylo nalezeno žádné zboží.</span>Prosím, zkuste vyhledávání podle jiných klíčových slov.
+RATING=Hodnocení zákazníků
+_featured_products=Podobné produkty
+_more_subcats=více...
+_view_as_list=Zobrazit jako sezam
+_view_as_grid=Zobrazit jako tabulku
+_sort_by=Třídit dle
+_narrow_by_cat=Zúžit výběr podle kategorie
+_showing_products=Zobrazených [_1] až [_2] z [_3] nalezených produktů.
+_all_categories=Všechny kategorie

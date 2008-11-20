@@ -1,0 +1,13 @@
+_manufacturers=ספקים
+Manufacturer.name=שם הספק
+_listing_manufacturers=רשימת ספקים $from - $to מתוך $count
+_no_manufacturers=לא נמצאו ספקים
+_are_you_sure_you_want_to_delete_manufacturer=אתה באמת רוצה למחוק את הספקים שסימנת?
+_nothing_selected=אנא בחר לפחות את אחד מהספקים
+_cancel_editing_manufacturer=בטל עריכת ספק
+_manufacturer_info=מידע כללי
+_manufacturer_images=תמונות
+_manufacturer_was_successfully_saved=נתוני הספקים נשמרו בהצלחה
+_could_not_save_manufacturer=לא יכלנו לשמור את נתוני הספק
+_select_manufacturer=בחר ספק
+_done_adding=סיים את תהליך הוספת הספקים

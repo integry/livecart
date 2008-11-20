@@ -1,0 +1,16 @@
+_edit_templates=ערוך תבניות
+_edit_template=ערוך קובץ תבנית
+_please_select=בחר קובץ תבנית לעריכה
+_save_template=שמור תבנית
+_template_file_name=שם קובץ
+_save_for_theme=שמור רק לעיצוב הבסיסי
+_create_template=צור קובץ תבנית
+_delete_template=מחק קובץ תבנית
+_file_name_empty=אנא הכנס את שם הקובץ
+_edit_email_templates=ערוך תבניות אי-מייל
+_subject=נושא ההודעה
+_body=גוף ההודעה
+_confirm_template_delete=אתה באמת רוצה למחוק את קובץ התבנית המסומן?
+_template_has_been_successfully_updated=התבניות נשמרו בהצלחה
+_could_not_update_template=התבנית לא נשמרה
+_template_has_been_successfully_deleted=קובץ התבנית נמחקה בהצלחה

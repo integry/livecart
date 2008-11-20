@@ -74,14 +74,14 @@ class ProductRatingType extends MultilingualObject
 
 	private function getRatingTypeFilter(Product $product)
 	{
-		$path = $product->category->get()->getPathNodeSet(Category::INCLUDE_ROOT_NODE);
+		$path = $product->getCategory()->getPathNodeSet(Category::INCLUDE_ROOT_NODE);
 
 		$filter = new ARSelectFilter();
 
 		$filter->setOrder(new ARFieldHandle("Category", "lft"), 'ASC');
 		$filter->setOrder(new ARFieldHandle(__CLASS__, "position"), 'ASC');
 
-		$cond = new EqualsCond(new ARFieldHandle(__CLASS__, "categoryID"), $product->category->get()->getID());
+		$cond = new EqualsCond(new ARFieldHandle(__CLASS__, "categoryID"), $product->getCategory()->getID());
 
 		foreach ($path as $node)
 		{
@@ -95,10 +95,15 @@ class ProductRatingType extends MultilingualObject
 
 	/*####################  Saving ####################*/
 
+	public function getCategory()
+	{
+		return $this->category->get();
+	}
+
 	protected function insert()
 	{
 		// get max position
-	  	$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, 'categoryID'), $this->category->get()->getID()));
+	  	$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, 'categoryID'), $this->getCategory()->getID()));
 	  	$f->setOrder(new ARFieldHandle(get_class($this), 'position'), 'DESC');
 	  	$f->setLimit(1);
 	  	$rec = ActiveRecord::getRecordSetArray(get_class($this), $f);

@@ -1,0 +1,16 @@
+_filter_group_was_successfully_saved=Filtr byl úspěšně uložený
+_could_not_save_filter_group=Nepodařilo se uložit filtr
+_filter_group_was_successfully_removed=Filtr byl úspěšně odstraněný
+_could_not_remove_filter_group=Nepodařilo se odstranit filtr
+_add_new_filter=Přidat nový filtr
+_category_has_no_attr=Zatím nebyly vytvořeny žádné filtrovatelné vlastnosti pro tuto kategorii
+_delete_field=Smazat pole
+_remove_filter_question=Skutečně chcete odstranit tento filtr?
+_FilterGroup_remove_question=Skutečně chcete odstranit tento filtr?
+_cancel_adding_new_filter=Zrušit přidávání nového filtru
+_error_name_empty=Prosím, vložte název filtru
+_error_filter_value_is_not_a_number=Hodnota filtru by mělo být číslo
+_error_spec_field_is_not_selected=Není vybrané pole specifikace
+_error_illegal_date=Neplatný datum
+_error_filter_name_empty=Prosím, vložte název filtru
+_error_filter_handle_invalid=Identifikátor je neplatný

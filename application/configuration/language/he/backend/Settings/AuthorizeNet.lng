@@ -1,0 +1,4 @@
+AuthorizeNet=Authorize.net
+AuthorizeNet_login=מספר התחברות
+AuthorizeNet_transactionKey=מפתח עסקה
+AuthorizeNet_gateway=כתובת שער

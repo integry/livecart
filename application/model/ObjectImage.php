@@ -158,8 +158,6 @@ abstract class ObjectImage extends MultilingualObject
 			$originalPaths[$key] = $this->getPath($key);
 		}
 
-		print_r($originalPaths);
-
 		parent::__clone();
 
 		$originalPaths = array();
@@ -167,11 +165,6 @@ abstract class ObjectImage extends MultilingualObject
 	  	{
 			$originalPaths[$key] = $this->getPath($key);
 		}
-
-		print_r($originalPaths);
-
-
-		print_r($this->getImageSizes());
 
 		return;
 		foreach (1 as $key => $value)

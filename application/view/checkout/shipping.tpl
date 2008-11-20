@@ -11,7 +11,7 @@
 		{include file="checkout/checkoutProgress.tpl" progress="progressShipping"}
 	</div>
 
-	{if $shipments|@count > 1}
+	{if $shipments|@count > 1 && !$order.isMultiAddress}
 		<div class="message">
 			{t _info_multi_shipments}
 		</div>
@@ -19,21 +19,31 @@
 
 	<div id="shippingSelect">
 
-	{form action="controller=checkout action=doSelectShippingMethod" method="POST" handle=$form}
-		{foreach from=$shipments key="key" item="shipment"}
+		{form action="controller=checkout action=doSelectShippingMethod" method="POST" handle=$form}
+			{foreach from=$shipments key="key" item="shipment"}
 
-			{include file="checkout/shipmentProductList.tpl"}
+				{if $order.isMultiAddress}
+					<h2>{$shipment.ShippingAddress.compact}</h2>
+				{/if}
 
-			{if $shipment.isShippable}
-				{include file="checkout/shipmentSelectShipping.tpl"}
+				{include file="checkout/shipmentProductList.tpl"}
 
-			{/if}
+				{if $shipment.isShippable}
+					{include file="checkout/shipmentSelectShipping.tpl"}
 
-		{/foreach}
+				{/if}
 
-	<input type="submit" class="submit" value="{tn _continue}" />
+			{/foreach}
 
-	{/form}
+		{if 'SHIPPING_METHOD_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config}
+			{include file="checkout/orderFields.tpl"}
+		{/if}
+
+		<p>
+			<input type="submit" class="submit" value="{tn _continue}" />
+		</p>
+
+		{/form}
 
 	</div>
 

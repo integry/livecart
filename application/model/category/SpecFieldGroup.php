@@ -49,9 +49,14 @@ class SpecFieldGroup extends EavFieldGroupCommon
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
 	}
 
+	public function getCategory()
+	{
+		return $this->category->get();
+	}
+
 	protected function getParentCondition()
 	{
-		return new EqualsCond(new ARFieldHandle(get_class($this), 'categoryID'), $this->category->get()->getID());
+		return new EqualsCond(new ARFieldHandle(get_class($this), 'categoryID'), $this->getCategory()->getID());
 	}
 }
 

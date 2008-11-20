@@ -361,16 +361,8 @@ class UserController extends FrontendController
 	 */
 	public function viewOrder()
 	{
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->get('id')));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
-
-		$s = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
-		if ($s->size())
+		if ($order = $this->user->getOrder($this->request->get('id')))
 		{
-			$order = $s->get(0);
-			$order->loadAll();
-
 			$this->addAccountBreadcrumb();
 			$this->addBreadCrumb($this->translate('_your_orders'), $this->router->createUrl(array('controller' => 'user', 'action' => 'orders'), true));
 			$this->addBreadCrumb($order->getID(), '');
@@ -399,6 +391,28 @@ class UserController extends FrontendController
 		}
 	}
 
+	/**
+	 *	@role login
+	 */
+	public function reorder()
+	{
+		$order = $this->user->getOrder($this->request->get('id'));
+		if ($order)
+		{
+			ClassLoader::import('application.model.order.SessionOrder');
+			$newOrder = clone $order;
+			SessionOrder::save($newOrder);
+			return new ActionRedirectResponse('order', 'index');
+		}
+		else
+		{
+			return new ActionRedirectResponse('user', 'index');
+		}
+	}
+
+	/**
+	 *	@role login
+	 */
 	public function addNote()
 	{
 		ClassLoader::import('application.model.order.OrderNote');
@@ -471,11 +485,15 @@ class UserController extends FrontendController
 			return new ActionRedirectResponse('user', 'register');
 		}
 
-		$user = $this->createUser($this->request->get('password'));
+		$this->order;
 
-		if ($this->request->isValueSet('return'))
+		$user = $this->createUser($this->request->get('password'));
+		$this->user = $user;
+		$this->mergeOrder();
+
+		if ($this->request->get('return'))
 		{
-			return new RedirectResponse($this->router->createUrlFromRoute($this->request->get('return')));
+			return new RedirectResponse($this->request->get('return'));
 		}
 		else
 		{
@@ -495,6 +513,7 @@ class UserController extends FrontendController
 		$response->set('regForm', $form);
 		$response->set('email', $this->request->get('email'));
 		$response->set('failed', $this->request->get('failed'));
+		$response->set('return', $this->request->get('return'));
 
 		SessionUser::getAnonymousUser()->getSpecification()->setFormResponse($response, $form);
 
@@ -515,14 +534,29 @@ class UserController extends FrontendController
 		// login
 		SessionUser::setUser($user);
 
+		$this->user = $user;
+		$this->mergeOrder();
+
+		if ($return = $this->request->get('return'))
+		{
+			return new RedirectResponse($return);
+		}
+		else
+		{
+			return new ActionRedirectResponse('user', 'index');
+		}
+	}
+
+	private function mergeOrder()
+	{
 		// load the last un-finalized order by this user
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $user->getID()));
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
 		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
 		$f->setOrder(new ARFieldHandle('CustomerOrder', 'dateCreated'), 'DESC');
 		$f->setLimit(1);
 		$s = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
 
-		if (!$this->order->user->get() || $this->order->user->get()->getID() == $user->getID())
+		if (!$this->order->user->get() || $this->order->user->get()->getID() == $this->user->getID())
 		{
 			if ($s->size())
 			{
@@ -541,19 +575,10 @@ class UserController extends FrontendController
 			{
 				if ($this->order->getID())
 				{
-					$this->order->user->set($user);
+					$this->order->user->set($this->user);
 					SessionOrder::save($this->order);
 				}
 			}
-		}
-
-		if ($return = $this->request->get('return'))
-		{
-			return new RedirectResponse($return);
-		}
-		else
-		{
-			return new ActionRedirectResponse('user', 'index');
 		}
 	}
 
@@ -604,11 +629,13 @@ class UserController extends FrontendController
 		$form = $this->buildForm();
 
 		$form->set('billing_country', $this->config->get('DEF_COUNTRY'));
+		$form->set('shipping_country', $this->config->get('DEF_COUNTRY'));
 
 		$response = new ActionResponse();
 		$response->set('form', $form);
 		$response->set('countries', $this->getCountryList($form));
 		$response->set('states', $this->getStateList($form->get('billing_country')));
+		$response->set('shippingStates', $this->getStateList($form->get('shipping_country')));
 
 		SessionUser::getAnonymousUser()->getSpecification()->setFormResponse($response, $form);
 
@@ -626,62 +653,14 @@ class UserController extends FrontendController
 		}
 
 		// create user account
-		$user = $this->createUser();
+		$user = $this->createUser(null, 'billing_');
 
-		// get billing address state
-		if ($this->request->get('billing_state_select'))
-		{
-			try
-			{
-				$billingState = ActiveRecordModel::getInstanceByID('State', $this->request->get('billing_state_select'), ActiveRecordModel::LOAD_DATA);
-			}
-			catch (Exception $e)
-			{
-				throw new ApplicationException('State not found');
-			}
-
-			$billingCountry = $billingState->countryID->get();
-		}
-
-		// create user billing addresses
-		$address = UserAddress::getNewInstance();
-		$address->firstName->set($user->firstName->get());
-		$address->lastName->set($user->lastName->get());
-		$address->companyName->set($user->companyName->get());
-		$address->address1->set($this->request->get('billing_address1'));
-		$address->address2->set($this->request->get('billing_address2'));
-		$address->city->set($this->request->get('billing_city'));
-		$address->countryID->set($this->request->get('billing_country'));
-		$address->postalCode->set($this->request->get('billing_zip'));
-		$address->phone->set($this->request->get('phone'));
-		if (isset($billingState))
-		{
-			$address->state->set($billingState);
-		}
-		else
-		{
-			$address->stateName->set($this->request->get('billing_state_text'));
-		}
-		$address->save();
-
+		// create billing and shipping address
+		$address = $this->createAddress('billing_');
 		$billingAddress = BillingAddress::getNewInstance($user, $address);
 		$billingAddress->save();
 
-		// create user shipping address
-		if ($this->request->get('sameAsBilling'))
-		{
-			$address = clone $address;
-		}
-		else
-		{
-			$address = UserAddress::getNewInstance();
-			$address->name->set($user->name->get());
-			$address->address1->set($this->request->get('shipping_address1'));
-			$address->address2->set($this->request->get('shipping_address2'));
-		}
-
-		$address->save();
-		$shippingAddress = ShippingAddress::getNewInstance($user, $address);
+		$shippingAddress = ShippingAddress::getNewInstance($user, $this->request->get('sameAsBilling') ? clone $address : $this->createAddress('shipping_'));
 		$shippingAddress->save();
 
 		$user->defaultShippingAddress->set($shippingAddress);
@@ -697,6 +676,45 @@ class UserController extends FrontendController
 		ActiveRecordModel::commit();
 
 		return new ActionRedirectResponse('checkout', 'shipping');
+	}
+
+	private function createAddress($prefix)
+	{
+		// get address state
+		if ($this->request->get($prefix . 'state_select'))
+		{
+			try
+			{
+				$state = ActiveRecordModel::getInstanceByID('State', $this->request->get($prefix . 'state_select'), ActiveRecordModel::LOAD_DATA);
+			}
+			catch (Exception $e)
+			{
+				throw new ApplicationException('State not found');
+			}
+
+			$country = $state->countryID->get();
+		}
+		else
+		{
+			$country = $this->request->get($prefix . 'country');
+		}
+
+		$address = UserAddress::getNewInstance();
+		$address->loadRequestData($this->request, $prefix);
+
+		if (isset($state))
+		{
+			$address->state->set($state);
+		}
+		else
+		{
+			$address->stateName->set($this->request->get($prefix . 'state_text'));
+		}
+
+		$address->countryID->set($country);
+		$address->save();
+
+		return $address;
 	}
 
 	/**
@@ -961,6 +979,7 @@ class UserController extends FrontendController
 
 	/**
 	 *	Make payment for unpaid or partially paid order
+	 *	@role login
 	 */
 	public function pay()
 	{
@@ -988,12 +1007,12 @@ class UserController extends FrontendController
 	/**
 	 *	@return User
 	 */
-	private function createUser($password = '')
+	private function createUser($password = '', $prefix = '')
 	{
 		$user = User::getNewInstance($this->request->get('email'), $this->request->get('password'));
-		$user->firstName->set($this->request->get('firstName'));
-		$user->lastName->set($this->request->get('lastName'));
-		$user->companyName->set($this->request->get('companyName'));
+		$user->firstName->set($this->request->get($prefix . 'firstName'));
+		$user->lastName->set($this->request->get($prefix . 'lastName'));
+		$user->companyName->set($this->request->get($prefix . 'companyName'));
 		$user->email->set($this->request->get('email'));
 		$user->isEnabled->set(true);
 
@@ -1027,7 +1046,7 @@ class UserController extends FrontendController
 		if ($validator->isValid())
 		{
 			$address = UserAddress::getNewInstance();
-			$this->saveAddress($address);
+			$this->saveAddress($address, $prefix);
 
 			$addressType = call_user_func_array(array($addressClass, 'getNewInstance'), array($this->user, $address));
 			$addressType->save();
@@ -1047,53 +1066,6 @@ class UserController extends FrontendController
 		{
 			return $failureResponse;
 		}
-	}
-
-	private function saveAddress(UserAddress $address)
-	{
-		$address->loadRequestData($this->request);
-		$address->countryID->set($this->request->get('country'));
-		$address->postalCode->set($this->request->get('zip'));
-		$address->stateName->set($this->request->get('state_text'));
-		if ($this->request->get('state_select'))
-		{
-			$address->state->set(State::getStateByIDAndCountry($this->request->get('state_select'), $this->request->get('country')));
-		}
-		else
-		{
-			$address->state->set(null);
-		}
-		$address->save();
-	}
-
-	private function getCountryList(Form $form)
-	{
-		$defCountry = $this->config->get('DEF_COUNTRY');
-
-		$countries = $this->application->getEnabledCountries();
-		asort($countries);
-
-		// set default country first
-		if (isset($countries[$defCountry]))
-		{
-			$d = $countries[$defCountry];
-			unset($countries[$defCountry]);
-			$countries = array_merge(array($defCountry => $d), $countries);
-		}
-
-		return $countries;
-	}
-
-	private function getStateList($country)
-	{
-		$states = State::getStatesByCountry($country);
-
-		if ($states)
-		{
-			$states = array('' => '') + $states;
-		}
-
-		return $states;
 	}
 
 	/**************  VALIDATION ******************/
@@ -1207,31 +1179,26 @@ class UserController extends FrontendController
 
 		// validate contact info
 		$validator = new RequestValidator("registrationValidator", $this->request);
-		$this->validateEmail($validator);
 
-		// validate billing info
 		$this->validateAddress($validator, 'billing_');
-
-		// validate shipping address
-		$shippingCondition = new ShippingAddressCheckCondition($this->request);
-		$validator->addCheck('shipping_address1', new ConditionalCheck($shippingCondition, new IsNotEmptyCheck($this->translate('_err_enter_address'))));
-		$validator->addCheck('shipping_city', new ConditionalCheck($shippingCondition, new IsNotEmptyCheck($this->translate('_err_enter_city'))));
-		$validator->addCheck('shipping_country', new ConditionalCheck($shippingCondition, new IsNotEmptyCheck($this->translate('_err_select_country'))));
-		$validator->addCheck('shipping_zip', new ConditionalCheck($shippingCondition, new IsNotEmptyCheck($this->translate('_err_enter_zip'))));
-
-		$stateCheck = new OrCheck(array('shipping_state_select', 'shipping_state_text'), array(new IsNotEmptyCheck($this->translate('_err_select_state')), new IsNotEmptyCheck('')), $this->request);
-		$validator->addCheck('shipping_state_select', new ConditionalCheck($shippingCondition, $stateCheck));
-//		$validator->addCheck('billing_state_select', new IsValidStateCheck($this->translate('_err_select_state')));
+		$this->validateEmail($validator);
+		$this->validateAddress($validator, 'shipping_', true);
 
 		SessionUser::getAnonymousUser()->getSpecification()->setValidation($validator);
 
 		return $validator;
 	}
 
-	private function validateName(RequestValidator $validator)
+	private function validateName(RequestValidator $validator, $fieldPrefix = '', $orCheck = false)
 	{
-		$validator->addCheck('firstName', new IsNotEmptyCheck($this->translate('_err_enter_first_name')));
-		$validator->addCheck('lastName', new IsNotEmptyCheck($this->translate('_err_enter_last_name')));
+		foreach (array('firstName' => '_err_enter_first_name',
+						'lastName' => '_err_enter_last_name') as $field => $error)
+		{
+			$field = $fieldPrefix . $field;
+			$check = new IsNotEmptyCheck($this->translate($error));
+			$check = $orCheck ? new OrCheck(array($field, 'sameAsBilling'), array($check, new IsNotEmptyCheck('')), $this->request) : $check;
+			$validator->addCheck($field, $check);
+		}
 	}
 
 	private function validateEmail(RequestValidator $validator, $uniqueError = '_err_not_unique_email')
@@ -1246,23 +1213,48 @@ class UserController extends FrontendController
 		$validator->addCheck('email', new IsUniqueEmailCheck($emailErr));
 	}
 
-	private function validateAddress(RequestValidator $validator, $fieldPrefix = '')
+	private function validateAddress(RequestValidator $validator, $fieldPrefix = '', $orCheck = false)
 	{
-		$this->validateName($validator);
+		$this->validateName($validator, $fieldPrefix, $orCheck);
+
+		$fields = $checks = array();
 
 		if ($this->config->get('REQUIRE_PHONE'))
 		{
-			$validator->addCheck('phone', new IsNotEmptyCheck($this->translate('_err_enter_phone')));
+			$fields[] = $fieldPrefix . 'phone';
+			$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_phone'));
 		}
 
-		$validator->addCheck($fieldPrefix . 'address1', new IsNotEmptyCheck($this->translate('_err_enter_address')));
-		$validator->addCheck($fieldPrefix . 'city', new IsNotEmptyCheck($this->translate('_err_enter_city')));
-		$validator->addCheck($fieldPrefix . 'country', new IsNotEmptyCheck($this->translate('_err_select_country')));
-		$validator->addCheck($fieldPrefix . 'zip', new IsNotEmptyCheck($this->translate('_err_enter_zip')));
+		$fields[] = $fieldPrefix . 'address1';
+		$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_address'));
 
-		$stateCheck = new OrCheck(array($fieldPrefix . 'state_select', $fieldPrefix . 'state_text'), array(new IsNotEmptyCheck($this->translate('_err_select_state')), new IsNotEmptyCheck('')), $this->request);
-		$validator->addCheck($fieldPrefix . 'state_select', $stateCheck);
-//		$validator->addCheck('billing_state_select', new IsValidStateCheck($this->translate('_err_select_state')));
+		$fields[] = $fieldPrefix . 'city';
+		$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_city'));
+
+		$fields[] = $fieldPrefix . 'country';
+		$checks[] = new IsNotEmptyCheck($this->translate('_err_select_country'));
+
+		$fields[] = $fieldPrefix . 'zip';
+		$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_zip'));
+
+		foreach ($fields as $key => $field)
+		{
+			$check = $orCheck ? new OrCheck(array($field, 'sameAsBilling'), array($checks[$key], new IsNotEmptyCheck('')), $this->request) : $checks[$key];
+			$validator->addCheck($field, $check);
+		}
+
+		if (!$this->config->get('DISABLE_STATE'))
+		{
+			$fieldList = array($fieldPrefix . 'state_select', $fieldPrefix . 'state_text');
+			$checkList = array(new IsNotEmptyCheck($this->translate('_err_select_state')), new IsNotEmptyCheck(''));
+			if ($orCheck)
+			{
+				$fieldList[] = 'sameAsBilling';
+				$checkList[] = new IsNotEmptyCheck('');
+			}
+			$stateCheck = new OrCheck($fieldList, $checkList, $this->request);
+			$validator->addCheck($fieldPrefix . 'state_select', $stateCheck);
+		}
 	}
 
 	private function validatePassword(RequestValidator $validator)
@@ -1310,16 +1302,6 @@ class UserController extends FrontendController
 
 			return $order;
 		}
-	}
-}
-
-ClassLoader::import('framework.request.validator.check.CheckCondition');
-
-class ShippingAddressCheckCondition extends CheckCondition
-{
-	function isSatisfied()
-	{
-		return !$this->request->isValueSet('sameAsBilling');
 	}
 }
 

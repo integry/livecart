@@ -11,29 +11,40 @@ Backend.RelatedProduct =
 
 	itemController:  'backend.productRelationship',
 
-	getContainer: function(ownerID)
+	tabs: {0: 'tabProductRelationship', 1: 'tabProductUpsell'},
+
+	getType: function(tab)
 	{
-		return $('tabProductRelationship_' + ownerID + 'Content');
+		return {'tabProductRelationship' : 0, 'tabProductUpsell': 1}[tab];
+	},
+
+	getTab: function(type)
+	{
+		return this.tabs[type];
+	},
+
+	getContainer: function(ownerID, tab)
+	{
+		return $(tab + '_' + ownerID + 'Content');
 	}
 }
 
-Backend.RelatedProduct.activeListCallbacks = function(ownerID)
+Backend.RelatedProduct.activeListCallbacks = function(ownerID, tab)
 {
 	this.ownerID = ownerID;
 	this.controller = this.namespace.itemController;
+	this.tab = tab;
 }
 
 Backend.RelatedProduct.activeListCallbacks.methods =
 {
 	namespace: Backend.RelatedProduct,
 
-	tab: 'tabProductRelationship',
-
 	beforeDelete: function(li)
 	{
 		if(confirm(this.callbacks.namespace.messages.areYouSureYouWantToDelete))
 		{
-			return Backend.Router.createUrl(this.callbacks.controller, 'delete', {relatedownerID: this.getRecordId(li), id: this.callbacks.ownerID});
+			return Backend.Router.createUrl(this.callbacks.controller, 'delete', {type: this.callbacks.namespace.getType(this.callbacks.tab), relatedownerID: this.getRecordId(li), id: this.callbacks.ownerID});
 		}
 	},
 
@@ -62,11 +73,11 @@ Backend.RelatedProduct.activeListCallbacks.methods =
 
 Backend.RelatedProduct.activeListCallbacks.inheritsFrom(Backend.ProductListCommon.Product.activeListCallbacks);
 
-Backend.RelatedProduct.addProductToList = function(ownerID, relatedownerID, popup)
+Backend.RelatedProduct.addProductToList = function(ownerID, relatedownerID, popup, controller)
 {
 	var self = this;
 	new LiveCart.AjaxRequest(
-		Backend.Router.createUrl('backend.productRelationship', 'addRelated', {id: ownerID, relatedownerID: relatedownerID}),
+		Backend.Router.createUrl(controller.namespace.itemController, 'addRelated', {type: controller.namespace.getType(controller.tab), id: ownerID, relatedownerID: relatedownerID}),
 		false,
 		function(response)
 		{
@@ -82,11 +93,11 @@ Backend.RelatedProduct.addProductToList = function(ownerID, relatedownerID, popu
 			}
 			else
 			{
-				var relatedList = ActiveList.prototype.getInstance($("noGroup" + ownerID));
+				var relatedList = ActiveList.prototype.getInstance($("noGroup_" + controller.namespace.getType(controller.tab) + '_' + ownerID));
 				relatedList.addRecord(relatedownerID, response.responseText, true);
 
 				var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
-				tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') + 1);
+				tabControl.setCounter(controller.tab, tabControl.getCounter(controller.tab) + 1);
 
 				new Backend.SelectPopup.prototype.popup.Backend.SaveConfirmationMessage('productRelationshipCreated');
 				new Backend.SaveConfirmationMessage('productRelationshipCreated');
@@ -98,11 +109,12 @@ Backend.RelatedProduct.addProductToList = function(ownerID, relatedownerID, popu
 
 Backend.RelatedProduct.Group = {};
 
-Backend.RelatedProduct.Group.Callbacks = function(ownerID)
+Backend.RelatedProduct.Group.Callbacks = function(ownerID, tab)
 {
 	this.deleteMessage = this.namespace.Group.Messages.areYouSureYouWantToDelete;
 	this.controller = this.namespace.groupController;
 	this.ownerID = ownerID;
+	this.tab = tab;
 }
 
 Backend.RelatedProduct.Group.Callbacks.methods =
@@ -125,7 +137,7 @@ Backend.RelatedProduct.Group.Callbacks.methods =
 		if (!response.error)
 		{
 			var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
-			tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') - li.getElementsByTagName('li').length + 2);
+			tabControl.setCounter(this.callbacks.tab, tabControl.getCounter(this.callbacks.tab) - li.getElementsBySelector('li.activeList').length);
 
 			return true;
 		}
@@ -196,10 +208,10 @@ Backend.RelatedProduct.Group.Model.methods =
 
 Backend.RelatedProduct.Group.Model.inheritsFrom(MVC.Model);
 
-Backend.RelatedProduct.Group.Controller = function(root, model)
+Backend.RelatedProduct.Group.Controller = function(root, model, tab)
 {
 	this.model = model;
-	this.view = new this.namespace.Group.View(root, this.model.getOwnerID());
+	this.view = new this.namespace.Group.View(root, this.model.getOwnerID(), tab);
 	this.model.setController(this);
 
 	this.setDefaultValues();
@@ -218,15 +230,16 @@ Backend.RelatedProduct.Group.Controller.prototype =
 
 	namespace: Backend.RelatedProduct,
 
-	index: function(ownerID)
+	index: function(ownerID, type)
 	{
-		var container = this.container = this.namespace.getContainer(ownerID);
+		var tab = this.tab = this.namespace.getTab(type);
+		var container = this.container = this.namespace.getContainer(ownerID, this.tab);
 
 		var newFormElement = container.down('.newForm').down('.groupForm');
 		var modelParams = {};
 		modelParams[this.namespace.Group.Model.prototype.getOwnerClass()] = {ID: ownerID}
-		var emptyGroupModel = new this.namespace.Group.Model(modelParams);
-		var newForm = new this.namespace.Group.Controller(newFormElement, emptyGroupModel);
+		var emptyGroupModel = new this.namespace.Group.Model(modelParams, tab);
+		var newForm = new this.namespace.Group.Controller(newFormElement, emptyGroupModel, tab);
 
 		var addGroup = container.down('.addGroup');
 		if (addGroup)
@@ -241,6 +254,7 @@ Backend.RelatedProduct.Group.Controller.prototype =
 		var addProduct = container.down('.addProduct');
 		if (addProduct)
 		{
+			var controller = this;
 			Event.observe(addProduct.down('a'), 'click', function(e)
 			{
 				Event.stop(e);
@@ -249,7 +263,7 @@ Backend.RelatedProduct.Group.Controller.prototype =
 					this.namespace.links.selectProduct,
 					this.namespace.messages.selectProductTitle,
 					{
-						onObjectSelect: function() { self.namespace.addProductToList(ownerID, this.objectID, this.popup.document) }
+						onObjectSelect: function() { self.namespace.addProductToList(ownerID, this.objectID, this.popup.document, controller) }
 					}
 				);
 			}.bind(this));
@@ -259,14 +273,14 @@ Backend.RelatedProduct.Group.Controller.prototype =
 		var noGroup = container.down('.noGroup');
 		if (noGroup)
 		{
-			ActiveList.prototype.getInstance(noGroup, new this.namespace.activeListCallbacks(ownerID));
+			ActiveList.prototype.getInstance(noGroup, new this.namespace.activeListCallbacks(ownerID, tab));
 		}
 
 		// group list
 		var groupUl = container.down('.activeListGroup');
 		if (groupUl)
 		{
-			var groupList = ActiveList.prototype.getInstance(groupUl, new this.namespace.Group.Callbacks(ownerID));
+			var groupList = ActiveList.prototype.getInstance(groupUl, new this.namespace.Group.Callbacks(ownerID, tab));
 			newForm.view.setGroupList(groupList);
 
 			// each group
@@ -275,7 +289,7 @@ Backend.RelatedProduct.Group.Controller.prototype =
 				var group = ul.down('ul.subList');
 				if (group)
 				{
-					ActiveList.prototype.getInstance(group, new this.namespace.activeListCallbacks(ownerID));
+					ActiveList.prototype.getInstance(group, new this.namespace.activeListCallbacks(ownerID, tab));
 				}
 			}.bind(this));
 
@@ -385,9 +399,10 @@ Backend.RelatedProduct.Group.Controller.prototype =
 }
 
 
-Backend.RelatedProduct.Group.View = function(root, ownerID)
+Backend.RelatedProduct.Group.View = function(root, ownerID, tab)
 {
 	this.ownerID = ownerID;
+	this.tab = tab;
 	this.findNodes(root, ownerID);
 	this.clear();
 }
@@ -402,7 +417,7 @@ Backend.RelatedProduct.Group.View.methods =
 
 	findNodes: function(root, ownerID)
 	{
-		this.container = this.namespace.getContainer(ownerID);
+		this.container = this.namespace.getContainer(ownerID, this.tab);
 
 		this.nodes = {};
 		this.nodes.root = root;
@@ -445,7 +460,7 @@ Backend.RelatedProduct.Group.View.methods =
 		var li = this.groupList.addRecord(this.get('ID'), containerDiv);
 		Element.addClassName(li, 'groupContainer');
 
-		var newGroupProductsList = ActiveList.prototype.getInstance(li.down('.subList'), new this.namespace.activeListCallbacks(this.ownerID));
+		var newGroupProductsList = ActiveList.prototype.getInstance(li.down('.subList'), new this.namespace.activeListCallbacks(this.ownerID, this.tab));
 		ActiveList.prototype.recreateVisibleLists();
 
 		this.groupList.touch(true)

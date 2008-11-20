@@ -61,7 +61,7 @@ class TestCreditCard extends CreditCardPayment
 	 */
 	public function capture()
 	{
-		$result = $this->process('');
+		$result = $this->process('Capture');
 		if ($result instanceof TransactionResult)
 		{
 			$result->setTransactionType(TransactionResult::TYPE_CAPTURE);
@@ -120,7 +120,7 @@ class TestCreditCard extends CreditCardPayment
 
 	private function process($type)
 	{
-		if ($this->getCardCode() != '000' && 'Void' != $type)
+		if ($this->getCardCode() != '000' && 'Void' != $type && 'Capture' != $type)
 		{
 			return new TransactionError($this->details, '');
 		}

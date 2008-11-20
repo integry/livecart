@@ -34,7 +34,7 @@ class NetworkFetchTest extends UnitTest
 		$this->assertFalse($fetch->fetch());
 	}
 
-	function test404Fetch()
+	function xtest404Fetch()
 	{
 		$fetch = new NetworkFetch('http://example.com/test_404_does_not_e-x-i-s-t.jpg');
 		$this->assertFalse($fetch->fetch());

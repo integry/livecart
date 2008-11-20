@@ -36,6 +36,9 @@ _err_no_review_nickname=Please enter your name or nickname
 _err_no_review_summary=Please enter the review summary
 _err_no_review_text=Please enter the review text
 
+# variations
+_choose=Choose...
+
 # reviews
 _reviews_for=Customer Reviews for [_1]
 _showing_reviews=Showing [_1] to [_2] of [_3] reviews

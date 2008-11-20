@@ -20,6 +20,7 @@ class ShipmentController extends StoreManagementController
 	{
 		$order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);
 		$order->loadAll();
+		$order->getCoupons();
 		$form = $this->createShipmentForm();
 		$form->setData(array('orderID' => $order->getID()));
 		$shipments = $order->getShipments();
@@ -52,7 +53,10 @@ class ShipmentController extends StoreManagementController
 			{
 				$rate->setApplication($this->application);
 				$shipmentsArray[$shipment->getID()] = array_merge($shipmentsArray[$shipment->getID()], $rate->toArray());
-				$shipmentsArray[$shipment->getID()]['ShippingService']['ID'] = $shipmentsArray[$shipment->getID()]['serviceID'];
+				if (isset($shipmentsArray[$shipment->getID()]['serviceID']))
+				{
+					$shipmentsArray[$shipment->getID()]['ShippingService']['ID'] = $shipmentsArray[$shipment->getID()]['serviceID'];
+				}
 			}
 			else if($shipment->shippingService->get())
 			{
@@ -81,10 +85,10 @@ class ShipmentController extends StoreManagementController
 
 		if ($downloadable = $order->getDownloadShipment(false))
 		{
-			if (!isset($shipmentsArray[$downloadable->getID()]))
-			{
+//			if (!isset($shipmentsArray[$downloadable->getID()]))
+//			{
 				$response->set('downloadableShipment', $downloadable->toArray());
-			}
+//			}
 		}
 
 		$response->set('taxAmount', $taxAmount);
@@ -114,7 +118,7 @@ class ShipmentController extends StoreManagementController
 		$shipment->loadItems();
 		$order = $shipment->order->get();
 		$shipment->order->get()->loadAll();
-		$zone = $shipment->order->get()->getDeliveryZone();
+		$zone = $shipment->getDeliveryZone();
 		$shipmentRates = $zone->getShippingRates($shipment);
 
 		$shipment->setAvailableRates($shipmentRates);
@@ -176,7 +180,7 @@ class ShipmentController extends StoreManagementController
 		$shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->get('id'), true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
 		$shipment->loadItems();
 
-		$zone = $shipment->order->get()->getDeliveryZone();
+		$zone = $shipment->getDeliveryZone();
 		$shipmentRates = $zone->getShippingRates($shipment);
 		$shipment->setAvailableRates($shipmentRates);
 
@@ -207,10 +211,15 @@ class ShipmentController extends StoreManagementController
 	{
 		if($shipmentID = (int)$this->request->get('id'))
 		{
-			$shipment = Shipment::getInstanceByID('Shipment', $shipmentID, true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
+			$shipment = Shipment::getInstanceByID('Shipment', $shipmentID, true, array('Order' => 'CustomerOrder'));
 			$shipment->order->get()->loadAll();
 
-			$zone = $shipment->order->get()->getDeliveryZone();
+			if ($shipment->shippingAddress->get())
+			{
+				$shipment->shippingAddress->get()->load();
+			}
+
+			$zone = $shipment->getDeliveryZone();
 
 			$shipmentRates = $zone->getShippingRates($shipment);
 			$shipment->setAvailableRates($shipmentRates);
@@ -253,28 +262,71 @@ class ShipmentController extends StoreManagementController
 	{
 		$order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true, array('BillingAddress', 'ShippingAddress'));
 
-		/*
-		$order->loadAll();
-
-		// check if there are no empty shipments already created
-		foreach ($order->getShipments() as $shipment)
-		{
-			if ($shipment->isShippable() && !count($shipment->getItems()))
-			{
-				return $this->save($shipment);
-			}
-		}
-		*/
-
 		$shipment = Shipment::getNewInstance($order);
-
 		$history = new OrderHistory($order, $this->user);
-
 		$response = $this->save($shipment);
-
 		$history->saveLog();
 
 		return $response;
+	}
+
+	public function editAddress()
+	{
+		ClassLoader::import('application.controller.backend.CustomerOrderController');
+		$shipment = Shipment::getInstanceByID('Shipment', $this->request->get('id'), true, array('CustomerOrder', 'User'));
+
+		if (!$shipment->shippingAddress->get())
+		{
+			$shipment->shippingAddress->set(UserAddress::getNewInstance());
+			$shipment->shippingAddress->get()->save();
+		}
+
+		$shipment->shippingAddress->get()->load();
+		$address = $shipment->shippingAddress->get()->toArray();
+
+		$controller = new CustomerOrderController($this->application);
+		$form = $controller->createUserAddressForm($address);
+		$response = new ActionResponse('form', $form);
+		$response->set('countries', $this->application->getEnabledCountries());
+		$response->set('states', State::getStatesByCountry($address['countryID']));
+		$response->set('shipmentID', $shipment->getID());
+
+		foreach($shipment->order->get()->user->get()->getShippingAddressArray() as $address)
+		{
+			$addressOptions[$address['ID']] = $address['UserAddress']['compact'];
+			$addresses[$address['ID']] = $address;
+		}
+		$response->set('existingUserAddressOptions', $addressOptions);
+		$response->set('existingUserAddresses', $addresses);
+
+		return $response;
+	}
+
+	public function saveAddress()
+	{
+		ClassLoader::import('application.controller.backend.CustomerOrderController');
+		$shipment = Shipment::getInstanceByID('Shipment', $this->request->get('id'), true, array('CustomerOrder', 'User'));
+		$address = $shipment->shippingAddress->get();
+		$address->load();
+
+		$controller = new CustomerOrderController($this->application);
+		$validator = $controller->createUserAddressFormValidator();
+
+		if ($validator->isValid())
+		{
+			$address->loadRequestData($this->request);
+			$address->save();
+			return new JSONResponse($shipment->shippingAddress->get()->toArray(), 'success', $this->translate('_shipment_address_changed'));
+		}
+		else
+		{
+			return new JSONResponse(
+				array(
+					'errors' => $validator->getErrorList()
+				),
+				'failure'
+			);
+		}
 	}
 
 	/**
@@ -296,7 +348,7 @@ class ShipmentController extends StoreManagementController
 				$shippingService = ShippingService::getInstanceByID($shippingServiceID);
 
 				$shipment->shippingService->set($shippingService);
-				$shipment->setAvailableRates($shipment->order->get()->getDeliveryZone()->getShippingRates($shipment));
+				$shipment->setAvailableRates($shipment->getDeliveryZone()->getShippingRates($shipment));
 				$shipment->setRateId($shippingService->getID());
 			}
 			else

@@ -3,7 +3,7 @@
 -->
 
 {foreach from=$options[$item.ID] item=option}
-	{include file="product/optionItem.tpl selectedChoice=$item.options[$option.ID]}
+	{include file="product/optionItem.tpl" selectedChoice=$item.options[$option.ID]}
 {/foreach}
 
 <!--

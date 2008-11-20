@@ -101,7 +101,7 @@ class OrderedItemController extends StoreManagementController
 
 			if($shipment->getShippingService())
 			{
-				$shipmentRates = $shipment->order->get()->getDeliveryZone()->getShippingRates($shipment);
+				$shipmentRates = $shipment->getDeliveryZone()->getShippingRates($shipment);
 				$shipment->setAvailableRates($shipmentRates);
 				$shipment->setRateId($shipment->getShippingService()->getID());
 			}
@@ -231,7 +231,7 @@ class OrderedItemController extends StoreManagementController
 
 			if($shipment->getShippingService())
 			{
-				$shipmentRates = $shipment->order->get()->getDeliveryZone()->getShippingRates($shipment);
+				$shipmentRates = $shipment->getDeliveryZone()->getShippingRates($shipment);
 				$shipment->setAvailableRates($shipmentRates);
 				$shipment->setRateId($shipment->getShippingService()->getID());
 			}
@@ -282,7 +282,7 @@ class OrderedItemController extends StoreManagementController
 
 			$history = new OrderHistory($oldShipment->order->get(), $this->user);
 
-			$zone = $oldShipment->order->get()->getDeliveryZone();
+			$zone = $oldShipment->getDeliveryZone();
 
 			if($oldShipment !== $newShipment)
 			{
@@ -385,13 +385,14 @@ class OrderedItemController extends StoreManagementController
 
 			if($shipment->getShippingService())
 			{
-				$shipmentRates = $shipment->order->get()->getDeliveryZone()->getShippingRates($shipment);
+				$shipmentRates = $shipment->getDeliveryZone()->getShippingRates($shipment);
 				$shipment->setAvailableRates($shipmentRates);
 				$shipment->setRateId($shipment->getShippingService()->getID());
 			}
 
 			$shipment->recalculateAmounts();
 
+			$item->customerOrder->get()->save();
 			$item->save();
 			$shipment->save();
 

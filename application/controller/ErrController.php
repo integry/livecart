@@ -30,6 +30,8 @@ class ErrController extends FrontendController
 			$params['query'] = array('ajax' => 1);
 		}
 
+		$params['query'] = array('return' => $_SERVER['REQUEST_URI']);
+
 		switch($id)
 		{
 			case 401:

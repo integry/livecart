@@ -1,0 +1,8 @@
+_no_subscribers_found=Ni prijavljenih
+_listing_subscribers=Seznam prijavljenih $from - $to od $count
+_process=Proces
+_newsletter_delete_confirm=Želite zares izbrisati prijavljene na mailing listi?
+_nothing_selected=Prosimo izberite najmanj enega s seznama
+NewsletterSubscriber.ID=ID
+NewsletterSubscriber.isEnabled=je omogočen
+NewsletterSubscriber.email=E-mail

@@ -1,0 +1,17 @@
+UspsShipping=USPS
+_USPS_API_ACCESS=שליחת USPS API דרך Access
+UspsShipping_userId=שם המשתמש ל USPS API
+UspsShipping_apiUrl=כתובת ל USPS API
+_USPS_DOMESTIC_OPTS=אפשרויות משלוח בתוך אותה מדינה
+UspsShipping_domestic=הפעל שירותי דיוור
+UspsShipping_priorityPackageType=סוג חבילת סדר עדיפות הדיוור
+UspsShipping_isMachinable=חבילה מכנית
+UspsShipping_size=גודל החבילה
+_USPS_ITL_OPTS=אפשרויות משלוח בינלאומיות
+UspsShipping_international=הצג שירותי דיוור בינלאומיים
+Express=Express
+Priority=עדיפות
+Parcel=שליחת חבילה
+Library=ספריית דואר
+BPM=כרוכים דברי דפוס
+Media=דוא"ל מדיה

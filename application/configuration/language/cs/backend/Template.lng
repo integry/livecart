@@ -1,0 +1,16 @@
+_save_template=Uložit šablonu
+_could_not_update_template=Šablonu se nepodařilo uložit
+_edit_templates=Změnit šablony
+_edit_template=Změnit soubor šablony
+_please_select=K editaci vyberte prosím soubor se šablonou.
+_template_file_name=Název souboru
+_save_for_theme=Uložit pouze pro vybrané téma
+_create_template=Vytvořit soubor šablony
+_delete_template=Odstranit soubor šablony
+_file_name_empty=Prosím vložte název souboru
+_edit_email_templates=Změnit e-mailové šablony
+_subject=Předmět zprávy
+_body=Tělo zprávy
+_confirm_template_delete=Opravdu chcete vymazat vybraný soubor šablony?
+_template_has_been_successfully_updated=Šablona byla úspěšně uložena
+_template_has_been_successfully_deleted=Soubor šablony byl úspěšně odstraněný

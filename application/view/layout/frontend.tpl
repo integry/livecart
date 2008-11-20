@@ -9,13 +9,19 @@
 	<meta name="Description" content="{$metaDescription|escape}" />
 
 	<title>
-		{if $PAGE_TITLE}
-			{$PAGE_TITLE|@strip_tags}
-		{else}
-			{block BREADCRUMB_TITLE}
+		{if !$PAGE_TITLE}
+			{capture assign="PAGE_TITLE"}
+				{block BREADCRUMB_TITLE}
+			{/capture}
 		{/if}
-		- {'STORE_NAME'|config}
+
+		{if 'TITLE_FORMAT'|config == 'NAME_FIRST'}
+			{'STORE_NAME'|config} {'TITLE_SEPARATOR'|config} {$PAGE_TITLE|@strip_tags}
+		{else}
+			{$PAGE_TITLE|@strip_tags} {'TITLE_SEPARATOR'|config} {'STORE_NAME'|config}
+		{/if}
 	</title>
+
 	<base href="{baseUrl}"></base>
 	{liveCustomization}
 
@@ -24,15 +30,12 @@
 	{/if}
 
 	<!-- Css includes -->
-	<link href="stylesheet/frontend/Frontend.css" rel="Stylesheet" type="text/css"/>
+	{includeCss file="frontend/Frontend.css"}
+	{includeCss file="backend/stat.css"}
+	{compiledCss glue=true nameMethod=hash}
 	<!--[if IE]>
 		<link href="stylesheet/frontend/FrontendIE.css" rel="Stylesheet" type="text/css"/>
 	<![endif]-->
-
-	{includeCss file="custom/Custom.css"}
-
-	{* {includeCss file="backend/stat.css"} *}
-	{compiledCss}
 
 	<!-- JavaScript includes -->
 	{* <script type="text/javascript" src="firebug/firebug.js"></script> *}

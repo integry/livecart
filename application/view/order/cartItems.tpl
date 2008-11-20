@@ -31,10 +31,13 @@
 					<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
 					<small>({$item.Product.Category.name_lang})</small>
 				</div>
+
+				{include file="order/itemVariations.tpl"}
+
 				{if $options[$item.ID] || $moreOptions[$item.ID]}
 					<div class="productOptions">
 						{foreach from=$options[$item.ID] item=option}
-							{include file="product/optionItem.tpl selectedChoice=$item.options[$option.ID]}
+							{include file="product/optionItem.tpl" selectedChoice=$item.options[$option.ID]}
 						{/foreach}
 
 						{foreach from=$moreOptions[$item.ID] item=option}
@@ -64,14 +67,17 @@
 						{/if}
 					</div>
 				{/if}
+				{if $multi}
+					{include file="order/selectItemAddress.tpl" item=$item}
+				{/if}
 			</td>
-			<td class="cartPrice {if $item.formattedBasePrice != $item.formattedPrice}discount{/if}">
+			<td class="cartPrice {if $item.itemBasePrice > $item.itemPrice}discount{/if}">
 				{if $item.count == 1}
 					<span class="basePrice">{$item.formattedBasePrice}</span><span class="actualPrice">{$item.formattedPrice}</span>
 				{else}
 					{$item.formattedDisplaySubTotal}
 					<div class="subTotalCalc">
-						{$item.count} x <span class="basePrice">{$item.formattedBasePrice}</span><span class="actualPrice">{$item.formattedPrice}</span>
+						{$item.count} x <span class="basePrice">{$item.formattedDisplayPrice}</span><span class="actualPrice">{$item.formattedPrice}</span>
 					</div>
 				{/if}
 			</td>
@@ -81,30 +87,57 @@
 		</tr>
 	{/foreach}
 
+	<tr>
+		<td colspan="4" rowspan="1"></td>
+		<td id="cartUpdate" rowspan="3"><input type="submit" class="submit" value="{tn _update}" /></td>
+	</tr>
+
 	{foreach from=$cart.discounts item=discount}
-			<tr>
-				<td colspan="3" class="subTotalCaption">{t _discount}: <span class="discountDesc">{$discount.description}</span></td>
-				<td class="amount discountAmount">{$discount.formatted_amount}</td>
-				<td></td>
-			</tr>
+		<tr>
+			<td colspan="3" class="subTotalCaption">{t _discount}: <span class="discountDesc">{$discount.description}</span></td>
+			<td class="amount discountAmount">{$discount.formatted_amount}</td>
+			<td></td>
+		</tr>
 	{/foreach}
 
-			<tr>
-				<td colspan="3" class="subTotalCaption">{t _subtotal}:</td>
-				<td class="subTotal">{$cart.formattedTotal.$currency}</td>
-				<td id="cartUpdate"><input type="submit" class="submit" value="{tn _update}" /></td>
-			</tr>
+	{if $cart.shippingSubtotal}
+		<tr>
+			<td colspan="3" class="subTotalCaption">{t _shipping}:</td>
+			<td class="amount shippingAmount">{$cart.formatted_shippingSubtotal}</td>
+		</tr>
+	{/if}
+
+	{foreach $cart.taxes.$currency as $tax}
+		<tr>
+			<td colspan="3" class="subTotalCaption">{$tax.name_lang}:</td>
+			<td class="amount taxAmount">{$tax.formattedAmount}</td>
+		</tr>
+	{/foreach}
+
+		<tr>
+			<td colspan="3" class="subTotalCaption">{t _subtotal}:</td>
+			<td class="subTotal">{$cart.formattedTotal.$currency}</td>
+		</tr>
 
 		{if $isCouponCodes}
 				<tr id="couponCodes">
 					<td colspan="5">
 						<div class="container">
 							{t _have_coupon}: <input type="text" class="text coupon" name="coupon" /> <input type="submit" class="submit coupon" value="{tn _add_coupon}" />
+							{if $cart.coupons}
+								<div class="appliedCoupons">
+									{t _applied_coupons}:
+									{foreach from=$cart.coupons item=coupon name=coupons}
+										<strong>{$coupon.couponCode}</strong>{if !$smarty.foreach.coupons.last}, {/if}
+									{/foreach}
+								</div>
+							{/if}
 						</div>
 					</td>
 				<tr>
 		{/if}
 
+		{if 'CART_PAGE' == 'CHECKOUT_CUSTOM_FIELDS'|config}
 		{sect}
 			{header}
 				<tr id="cartFields">
@@ -124,6 +157,7 @@
 				</tr>
 			{/footer}
 		{/sect}
+		{/if}
 
 		<tr>
 			<td colspan="4"></td>
@@ -133,7 +167,17 @@
 			<td colspan="5">
 				<a href="{link route=$return}" class="continueShopping"><span><span><span><span>{t _continue_shopping}</span></span></span></span></a>
 				{if $cart.isOrderable}
-					<a href="{link controller=checkout}" class="proceedToCheckout" onclick="return Order.submitCartForm(this);"><span><span><span><span>{t _proceed_checkout}</span></span></span></span></a>
+					<div class="checkoutButtons">
+						<a href="{link controller=checkout}" class="proceedToCheckout" onclick="return Order.submitCartForm(this);"><span><span><span><span>{t _proceed_checkout}</span></span></span></span></a>
+
+						{if 'ENABLE_MULTIADDRESS'|config}
+							{if !$multi}
+								<a href="{link controller=order action=setMultiAddress}" class="multiAddressCheckout">{t _ship_to_multiple}</a>
+							{else}
+								<a href="{link controller=order action=setSingleAddress}" class="multiAddressCheckout">{t _ship_to_single}</a>
+							{/if}
+						{/if}
+					</div>
 				{/if}
 			</td>
 		</tr>
@@ -141,7 +185,7 @@
 </table>
 <input type="hidden" name="return" value="{$return}" />
 
-{if $expressMethods && $cart.isOrderable}
+{if $expressMethods && $cart.isOrderable && !$cart.isMultiAddress}
 	<div id="expressCheckoutMethods">
 		{foreach from=$expressMethods item=method}
 			<a href="{link controller=checkout action=express id=$method}"><img src="image/payment/{$method}.gif" /></a>

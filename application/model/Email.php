@@ -166,7 +166,11 @@ class Email
 				$smarty->assign($key, $value);
 			}
 
+			$router = $this->application->getRouter();
 			$html = $smarty->fetch($this->template);
+
+			// fix URLs
+			$html = str_replace('&amp;', '&', $html);
 
 			$parts = explode("\n", $html, 2);
 			$this->subject = array_shift($parts);

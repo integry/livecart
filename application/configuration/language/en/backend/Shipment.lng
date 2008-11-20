@@ -42,9 +42,13 @@ _price=Total
 _subtotal_price=Subtotal
 _taxes=Taxes
 _discounts=Discounts
+_coupons=Coupons
 
 _shipping_price=Shipping
 _total_price=Total
+
+_edit_address=Edit address
+_shipment_address_changed=Shipment delivery address has been changed
 
 _are_you_sure_you_want_to_change_shipment_status_to_returned=Are you sure you want to change shipment status to returned?
 _are_you_sure_you_want_to_change_shipment_status_to_awaiting=Are you sure you want to change shipment status to awaiting?

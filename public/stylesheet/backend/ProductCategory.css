@@ -1,0 +1,32 @@
+.addAdditionalCategory
+{
+	background-image: url(../../image/silk/folder_link.png);
+}
+
+.changeMainCategory
+{
+	background-image: url(../../image/silk/folder_edit.png);
+}
+
+.additionalCategories
+{
+	list-style-type: none;
+}
+
+.categoryName
+{
+	font-size: 0.85em;
+}
+
+.recordDelete
+{
+	opacity: 0.15;
+	vertical-align: middle;
+	margin: 0 7px;
+}
+
+.recordDelete:hover
+{
+	opacity: 1;
+	cursor: pointer;
+}

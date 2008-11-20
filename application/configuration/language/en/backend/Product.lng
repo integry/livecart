@@ -73,6 +73,10 @@ Product.shippingWeight=Shipping weight
 Product.isFractionalUnit=Is fractional unit
 Product.rating=Rating
 Product.ratingCount=Number of ratings
+Product.parentID=Parent product ID
+Product.reviewCount=Review count
+ProductPrice.GroupPrice=User group price
+ProductVariationType.name=Variation
 
 Manufacturer.name=Manufacturer
 ProductPrice.price=Price

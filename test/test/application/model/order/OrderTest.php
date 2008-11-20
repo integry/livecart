@@ -1,15 +1,6 @@
 <?php
 
-if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
-
-ClassLoader::import("application.model.category.*");
-ClassLoader::import("application.model.product.*");
-ClassLoader::import("application.model.discount.*");
-ClassLoader::import("application.model.order.*");
-ClassLoader::import("application.model.user.User");
-ClassLoader::import("application.model.user.*");
-ClassLoader::import("application.model.Currency");
-ClassLoader::import("library.payment.*");
+require_once dirname(__FILE__) . '/OrderTestCommon.php';
 
 /**
  *	Test Order model
@@ -17,104 +8,8 @@ ClassLoader::import("library.payment.*");
  *  @author Integry Systems
  *  @package test.model.order
  */
-class OrderTest extends UnitTest
+class OrderTest extends OrderTestCommon
 {
-	private $order;
-
-	private $products = array();
-
-	private $usd;
-
-	private $user;
-
-	public function setUp()
-	{
-		parent::setUp();
-
-		ActiveRecordModel::beginTransaction();
-
-		ActiveRecord::executeUpdate('DELETE FROM TaxRate');
-		ActiveRecord::executeUpdate('DELETE FROM Currency');
-		ActiveRecordModel::executeUpdate('DELETE FROM DeliveryZone');
-
-		// set up currency
-		if (ActiveRecord::objectExists('Currency', 'USD'))
-		{
-			$this->usd = Currency::getInstanceByID('USD', Currency::LOAD_DATA);
-		}
-		else
-		{
-			$this->usd = Currency::getNewInstance('USD');
-			$this->usd->setAsDefault();
-			$this->usd->save();
-		}
-
-		// initialize order
-		ActiveRecordModel::executeUpdate('DELETE FROM User WHERE email="test@test.com"');
-		$user = User::getNewInstance('test@test.com');
-		$user->save();
-		$this->user = $user;
-
-		$address = UserAddress::getNewInstance();
-		$address->countryID->set('US');
-		$state = State::getInstanceById(1, State::LOAD_DATA);
-		$address->state->set(State::getInstanceById(1));
-		$address->postalCode->set(90210);
-		$address->save();
-		$billing = BillingAddress::getNewInstance($user, $address);
-		$billing->save();
-
-		$address = clone $address;
-		$shipping = ShippingAddress::getNewInstance($user, $address);
-		$shipping->save();
-
-		$user->defaultBillingAddress->set($billing);
-		$user->defaultShippingAddress->set($shipping);
-		$user->save();
-
-		$this->order = CustomerOrder::getNewInstance($user);
-		$this->order->shippingAddress->set($shipping->userAddress->get());
-		$this->order->billingAddress->set($billing->userAddress->get());
-
-		// set up products
-		$product = Product::getNewInstance(Category::getInstanceById(Category::ROOT_ID), 'test1');
-		$product->save();
-		$product->setPrice('USD', 100);
-		$product->stockCount->set(20);
-		$product->isEnabled->set(1);
-		$product->save();
-		$this->products[] = $product;
-
-		$product = Product::getNewInstance(Category::getInstanceById(Category::ROOT_ID), 'test2');
-		$product->save();
-		$product->setPrice('USD', 200);
-		$product->stockCount->set(20);
-		$product->isEnabled->set(1);
-		$product->save();
-		$this->products[] = $product;
-
-		$product = Product::getNewInstance(Category::getInstanceById(Category::ROOT_ID), 'test3');
-		$product->save();
-		$product->setPrice('USD', 400);
-		$product->isSeparateShipment->set(true);
-		$product->stockCount->set(20);
-		$product->isEnabled->set(1);
-		$product->save();
-		$this->products[] = $product;
-	}
-
-	public function getUsedSchemas()
-	{
-		return array(
-			'CustomerOrder',
-			'OrderedItem',
-			'Shipment',
-			'DiscountAction',
-			'DiscountCondition',
-			'DiscountConditionRecord',
-		);
-	}
-
 	function testAddingToAndRemovingFromCart()
 	{
 		$this->order->addProduct($this->products[0], 1);
@@ -541,8 +436,8 @@ class OrderTest extends UnitTest
 
 		// mark order as shipped - the stock is gone
 		$this->assertNotEquals($order->status->get(), CustomerOrder::STATUS_SHIPPED);
-		$order->setStatus(CustomerOrder::STATUS_SHIPPED);
-		foreach ($order->getShipments() as $shipment)
+		$reloaded->setStatus(CustomerOrder::STATUS_SHIPPED);
+		foreach ($reloaded->getShipments() as $shipment)
 		{
 			$this->assertEqual($shipment->status->get(), Shipment::STATUS_SHIPPED);
 		}
@@ -1008,8 +903,8 @@ class OrderTest extends UnitTest
 		$action->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
 		$action->save();
 
-		$this->order->addProduct($this->products[0], 3);
-		$this->order->addProduct($newProduct, 2);
+		$this->order->addProduct($this->products[0], 3, true);
+		$this->order->addProduct($newProduct, 2, true);
 		$this->order->save();
 
 		$price0 = $this->products[0]->getPrice($this->usd);
@@ -1053,8 +948,8 @@ class OrderTest extends UnitTest
 		$action->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
 		$action->save();
 
-		$this->order->addProduct($this->products[0], 3);
-		$this->order->addProduct($newProduct, 2);
+		$this->order->addProduct($this->products[0], 3, true);
+		$this->order->addProduct($newProduct, 2, true);
 		$this->order->save();
 
 		$price0 = $this->products[0]->getPrice($this->usd);
@@ -1070,6 +965,52 @@ class OrderTest extends UnitTest
 
 		$this->assertEquals($this->order->getDiscountActions(true)->size(), 1);
 		$this->assertEquals($expectedTotal, $this->order->getTotal($this->usd));
+	}
+
+	public function testDiscountByAdditionalCategories()
+	{
+		$product = $this->products[1];
+
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->save();
+
+		$actionCondition = DiscountCondition::getNewInstance();
+		$actionCondition->isEnabled->set(true);
+		$actionCondition->save();
+
+		$action = DiscountAction::getNewInstance($condition);
+		$action->actionCondition->set($actionCondition);
+		$action->isEnabled->set(true);
+		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
+		$action->amount->set(10);
+		$action->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
+		$action->save();
+
+		$randomCategory = Category::getNewInstance(Category::getRootNode());
+		$randomCategory->save();
+		DiscountConditionRecord::getNewInstance($actionCondition, $randomCategory)->save();
+
+		$this->order->addProduct($product, 1, true);
+		$this->order->save();
+
+		$this->assertFalse($actionCondition->isProductMatching($product));
+
+		$customCategory = Category::getNewInstance(Category::getRootNode());
+		$customCategory->save();
+		ProductCategory::getNewInstance($product, $customCategory)->save();
+		DiscountConditionRecord::getNewInstance($actionCondition, $customCategory)->save();
+
+		$actionCondition->loadAll();
+		$this->assertTrue($actionCondition->isProductMatching($product));
+
+		$this->assertEquals($this->order->getDiscountActions(true)->size(), 1);
+		$this->assertEquals($this->products[1]->getPrice($this->usd) * 0.9, $this->order->getTotal($this->usd));
+
+		ActiveRecordModel::clearPool();
+		$order = CustomerOrder::getInstanceByID($this->order->getID());
+		$order->loadAll();
+		$this->assertEquals($this->products[1]->getPrice($this->usd) * 0.9, $this->order->getTotal($this->usd));
 	}
 
 	public function testQuantityPrices()
@@ -1118,6 +1059,224 @@ class OrderTest extends UnitTest
 
 		$price->setPriceRule(5, $group, 10);
 		$this->assertEquals($this->order->getTotal($this->usd), 50);
+
+		$price->setPriceRule(2, $group, 7);
+		$price->setPriceRule(3, $group, 8);
+		$price->setPriceRule(4, $group, 9);
+		$price->setPriceRule(6, $group, 11);
+		$this->assertEquals($this->order->getTotal($this->usd), 50);
+	}
+
+	public function testShippingToMultipleAddresses()
+	{
+		$address1 = UserAddress::getNewInstance();
+		$address1->countryID->set('US');
+		$address1->save();
+
+		$address2 = UserAddress::getNewInstance();
+		$address2->countryID->set('CA');
+		$address2->save();
+
+		// zones, taxes and shipping rates
+		$zone1 = DeliveryZone::getNewInstance();
+		$zone1->isEnabled->set(true);
+		$zone1->name->set('USA');
+		$zone1->save();
+		DeliveryZoneCountry::getNewInstance($zone1, 'US')->save();
+
+		$zone2 = DeliveryZone::getNewInstance();
+		$zone2->isEnabled->set(true);
+		$zone2->name->set('Canada');
+		$zone2->save();
+		DeliveryZoneCountry::getNewInstance($zone2, 'CA')->save();
+
+		$tax = Tax::getNewInstance('VAT');
+		$tax->save();
+
+		TaxRate::getNewInstance($zone1, $tax, 20)->save();
+		TaxRate::getNewInstance($zone2, $tax, 15)->save();
+
+		$service = ShippingService::getNewInstance($zone1, 'def1', ShippingService::SUBTOTAL_BASED);
+		$service->save();
+		$shippingRate = ShippingRate::getNewInstance($service, 0, 10000000);
+		$shippingRate->flatCharge->set(100);
+		$shippingRate->save();
+
+		$service = ShippingService::getNewInstance($zone2, 'def2', ShippingService::SUBTOTAL_BASED);
+		$service->save();
+		$shippingRate = ShippingRate::getNewInstance($service, 0, 10000000);
+		$shippingRate->flatCharge->set(78);
+		$shippingRate->save();
+
+		// set up order
+		$this->order->isMultiAddress->set(true);
+		$this->order->save(true);
+
+		$product = $this->products[0];
+
+		$shipment1 = Shipment::getNewInstance($this->order);
+		$shipment1->shippingAddress->set($address1);
+		$shipment1->save();
+
+		$shipment2 = Shipment::getNewInstance($this->order);
+		$shipment2->shippingAddress->set($address2);
+		$shipment2->save();
+
+		$this->order->addProduct($product, 1, true, $shipment1);
+		$item = $this->order->addProduct($product, 1, true, $shipment2);
+
+		// edit amount after saving just to make things more complicated
+		$this->order->save();
+		$item->count->set(2);
+
+		// shipments shouldn't be reset like for regular orders
+		$this->assertEquals($this->order->getShipments()->size(), 2);
+
+		$price = $product->getPrice($this->usd);
+		$this->assertEquals($this->order->getTotal($this->usd), ($price * 1.2) + ($price * 2 * 1.15));
+
+		// test if delivery zones are determined correctly
+		$this->assertEqual($shipment1->getDeliveryZone()->getID(), $zone1->getID());
+
+		// check if shipping rates are available
+		$this->assertEqual($shipment1->getShippingRates()->size(), 1);
+		$this->assertEqual($shipment1->getShippingRates()->get(0)->getCostAmount(), 100);
+		$this->assertEqual($shipment2->getShippingRates()->get(0)->getCostAmount(), 78);
+
+		foreach (array($shipment1, $shipment2) as $shipment)
+		{
+			$shipment->setRateId($shipment->getShippingRates()->get(0)->getServiceID());
+			$shipment->recalculateAmounts();
+			$shipment->save();
+		}
+
+		$this->order->save();
+		$this->order->finalize($this->usd);
+
+		// reload order
+		ActiveRecordModel::clearPool();
+		$order = CustomerOrder::getInstanceById($this->order->getID(), true);
+		$order->loadAll();
+
+		$this->assertEquals($order->getShipments()->size(), 2);
+		foreach ($order->getShipments() as $key => $shipment)
+		{
+			$this->assertEquals(count($shipment->getItems()), 1);
+			$this->assertEquals(array_shift($shipment->getItems())->count->get(), $key + 1);
+		}
+
+		// order total with taxes and shipping
+		$this->assertEqual($order->getTotal($this->usd), (($price + 100) * 1.2) + ((($price * 2) + 78) * 1.15));
+	}
+
+	public function testClone()
+	{
+		$this->order->isMultiAddress->set(true);
+		$this->order->save(true);
+
+		$shipment1 = Shipment::getNewInstance($this->order);
+		$shipment1->save();
+
+		$shipment2 = Shipment::getNewInstance($this->order);
+		$shipment2->save();
+
+		$this->order->addShipment($shipment1);
+		$this->order->addShipment($shipment2);
+
+		$this->order->addProduct($this->products[0], 1, true, $shipment1);
+		$this->order->addProduct($this->products[1], 3, true, $shipment2);
+		$this->assertEquals(2, $this->order->getShipments()->size());
+
+		foreach ($this->order->getShipments() as $shipment)
+		{
+			$shipment->shippingAddress->set($this->user->defaultShippingAddress->get()->userAddress->get());
+		}
+
+		$this->order->user->set($this->user);
+
+		$this->order->save();
+		$this->order->finalize($this->usd);
+
+		ActiveRecord::clearPool();
+		$reloaded = CustomerOrder::getInstanceByID($this->order->getID(), true);
+		$reloaded->loadAll();
+
+		$cloned = clone $reloaded;
+		$cloned->save();
+
+		$this->assertNotEquals($cloned->getID(), $this->order->getID());
+
+		ActiveRecord::clearPool();
+		$order = CustomerOrder::getInstanceByID($cloned->getID(), true);
+		$order->loadAll();
+		$order->currency->get()->load();
+
+		$this->user->reload();
+		$this->user->defaultBillingAddress->get()->reload('UserAddress');
+		$this->user->defaultShippingAddress->get()->reload('UserAddress');
+
+		$this->assertFalse((bool)$order->isFinalized->get());
+
+		$this->assertEquals($this->user->getID(), $order->user->get()->getID());
+		$this->assertEquals($order->billingAddress->get()->getID(), $this->user->defaultBillingAddress->get()->userAddress->get()->getID());
+		$this->assertEquals($order->shippingAddress->get()->getID(), $this->user->defaultShippingAddress->get()->userAddress->get()->getID());
+
+		foreach ($order->getShipments() as $shipment)
+		{
+			$this->assertEquals($shipment->shippingAddress->get()->getID(), $this->user->defaultShippingAddress->get()->userAddress->get()->getID());
+		}
+
+		$this->assertEquals(2, count($order->getOrderedItems()));
+		$this->assertEquals(2, $order->getShipments()->size());
+		$this->assertEquals(1, count($order->getShipments()->get(0)->getItems()));
+		$this->assertEquals(1, count($order->getShipments()->get(1)->getItems()));
+
+		$item = array_shift($order->getShipments()->get(1)->getItems());
+		$this->assertEquals(3, $item->count->get());
+		$this->assertEquals($this->products[1]->getID(), $item->product->get()->getID());
+	}
+
+	public function testVariationPricing()
+	{
+		$variation = $this->products[0]->createChildProduct();
+		$variation->isEnabled->set(true);
+		$variation->save();
+
+		$this->order->addProduct($variation, 1, true);
+
+		// override price
+		$variation->setPrice('USD', 1);
+		$this->assertEquals($this->order->getTotal($this->usd), 1);
+
+		// add to parent price
+		$variation->setChildSetting('price', Product::CHILD_ADD);
+		$this->assertEquals($this->order->getTotal($this->usd), 101);
+
+		// substract from parent price
+		$variation->setChildSetting('price', Product::CHILD_SUBSTRACT);
+		$this->assertEquals($this->order->getTotal($this->usd), 99);
+
+		// use parent price
+		$variation->setPrice('USD', 0);
+		$variation->setChildSetting('price', Product::CHILD_OVERRIDE);
+		$variation->save();
+		$this->assertEquals($this->order->getTotal($this->usd), 100);
+	}
+
+	public function testReloadedVariationPricing()
+	{
+		$variation = $this->products[0]->createChildProduct();
+		$variation->isEnabled->set(true);
+		$variation->setChildSetting('price', Product::CHILD_OVERRIDE);
+		$variation->setPrice('USD', 0);
+		$variation->save();
+
+		// clear pool and reload only variation instance
+		ActiveRecordModel::clearPool();
+		$reloadedVar = Product::getInstanceByID($variation->getID(), true);
+		$order = CustomerOrder::getNewInstance($this->user);
+		$order->addProduct($reloadedVar, 1, true);
+		$this->assertEquals($order->getTotal($this->usd), 100);
 	}
 
 	private function createOrderWithZone(DeliveryZone $zone = null)

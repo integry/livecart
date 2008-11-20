@@ -245,8 +245,8 @@ li.orderShipment:hover, .orderShippedShipments ul.activeList > li:hover, .downlo
     padding-top: 0.4em;
     padding-right: 0.4em;
     font-weight: bold;
+    width: auto;
 }
-
 
 .orderShipments .activeList_icons
 {
@@ -287,6 +287,11 @@ li.orderShipment:hover, .orderShippedShipments ul.activeList > li:hover, .downlo
     padding: 0 ! important;
 }
 
+.orderShipment_controls.multiAddress
+{
+	padding-top: 0.5em !important;
+}
+
 .downloadableShipment
 {
     margin-top: 15px;
@@ -319,4 +324,20 @@ li.orderShipment:hover, .orderShippedShipments ul.activeList > li:hover, .downlo
 table.discounts td
 {
 	padding: 4px;
+}
+
+fieldset.shipmentAddress
+{
+	background-color: #fff;
+	float: left;
+}
+
+.shipmentAddress legend
+{
+	font-size: smaller;
+}
+
+.shipmentAddress .menu
+{
+	margin-bottom: 0.5em;
 }

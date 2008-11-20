@@ -28,7 +28,7 @@ class NewsletterController extends ActiveGridController
 
 	protected function getDefaultColumns()
 	{
-		return array('NewsletterMessage.ID', 'NewsletterMessage.subject', 'NewsletterMessage.status', 'NewsletterMessage.time');
+		return array('NewsletterMessage.ID', 'NewsletterMessage.subject', 'NewsletterMessage.status'/*, 'NewsletterMessage.time'*/);
 	}
 
 	public function add()

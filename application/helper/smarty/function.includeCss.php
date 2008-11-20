@@ -51,7 +51,7 @@ function smarty_function_includeCss($params, LiveCartSmarty $smarty)
 		}
 		else if (isset($params['last']))
 		{
-			$includedStylesheetFiles['x' . (count($includedStylesheetFiles) + 200)] = $filePath;
+			$includedStylesheetFiles['x' . ((count($includedStylesheetFiles) + 200) * (int)$params['last'])] = $filePath;
 		}
 		else
 		{

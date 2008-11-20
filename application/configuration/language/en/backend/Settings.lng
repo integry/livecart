@@ -10,8 +10,13 @@ _err_not_positive=The value must be positive
 
 _main=Main
 STORE_NAME=Store name
+STORE_HEADLINE=Store headline
+TITLE_SEPARATOR=Title separator character
+TITLE_FORMAT=Title format
+NAME_FIRST=Store name first
+TITLE_FIRST=Page title first
 
-_display=Display
+_display=Display Preferences
 
 _layout=Appearance
 THEME=Design theme
@@ -194,14 +199,29 @@ _offline_payments=Offline Payments
 OFFLINE_PAYMENT=Allow offline payments
 
 _purchase=Orders
+_purchase_settings=Purchasing Settings
 MIN_TOTAL=Minimum order total
 MAX_TOTAL=Maximum order total (0 - no limit)
 MIN_QUANT=Minimum quantity of products per order
 MAX_QUANT=Maximum quantity of products per order (0 - no limit)
 ENABLE_CART=Enable shopping cart
 ENABLE_WISHLISTS=Enable wishlists
+ENABLE_MULTIADDRESS=Allow shipping to multiple addresses
+ENABLE_CHECKOUTDELIVERYSTEP=Enter billing and shipping addresses at separate checkout steps
+SKIP_SHIPPING=Skip shipping method selection step if only one shipping method is available (select it automatically)
+CHECKOUT_CUSTOM_FIELDS=Display custom fields at
+CART_PAGE=Shopping basket page
+BILLING_ADDRESS_STEP=Billing address entry step
+SHIPPING_ADDRESS_STEP=Shipping address entry step
+SHIPPING_METHOD_STEP=Shipping method selection step
 
-_shipping=Shipping Methods
+_shipping=Delivery Settings
+
+_delivery_tax_calculation=Tax Calculation For Shipping Costs
+DELIVERY_TAX=Delivery zone tax settings to use for calculating shipping cost taxes
+_tax_target_zone=Order target delivery zone
+_default_zone=Default zone
+
 _store_loc_add=Store Location Address
 STORE_COUNTRY=Store country
 STORE_STATE=Store state
@@ -262,9 +282,13 @@ CC_HANDLER=Credit card handler
 CC_AUTHONLY=Only authorize payments without capturing them automatically
 
 _customers=Customers
+_registration=Registration
 REQUIRE_PHONE=Require customers to enter phone number on registration
+DISABLE_STATE=Remove state field
 
 # Countries
+_countries=Countries
+PRIMARY_COUNTRIES=Countries to display first in the country list (2-letter country codes separated by commas)
 ENABLED_COUNTRIES=Enabled Countries
 
 # Backend Options

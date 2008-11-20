@@ -62,6 +62,7 @@ abstract class FrontendController extends BaseController
 		$this->addBlock('NEWSLETTER', 'boxNewsletterSubscribe', 'block/box/newsletterSubscribe');
 		$this->addBlock('TRACKING', 'tracking', 'block/tracking');
 		$this->addBlock('NEWS', 'latestNews', 'block/box/latestNews');
+		$this->addBlock('QUICKNAV', 'blockQuickNav', 'block/box/quickNav');
 	}
 
 	public function getRequestCurrency()
@@ -73,9 +74,74 @@ abstract class FrontendController extends BaseController
 		}
 	}
 
+	public function setOrder(CustomerOrder $order)
+	{
+		$this->order = $order;
+	}
+
 	protected function addBreadCrumb($title, $url)
 	{
 		$this->breadCrumb[] = array('title' => $title, 'url' => $url);
+	}
+
+	protected function getCountryList()
+	{
+		$primaryCountries = str_replace(' ', '', strtoupper($this->config->get('PRIMARY_COUNTRIES')));
+
+		if ($primaryCountries)
+		{
+			$defCountries = explode(',', $primaryCountries);
+		}
+		else
+		{
+			$defCountries = array($this->config->get('DEF_COUNTRY'));
+		}
+
+		$countries = $this->application->getEnabledCountries();
+		asort($countries);
+
+		// set default countries first
+		$defCountries = array_reverse($defCountries);
+		foreach ($defCountries as $country)
+		{
+			if (isset($countries[$country]))
+			{
+				$name = $countries[$country];
+				unset($countries[$country]);
+				$countries = array_merge(array($country => $name), $countries);
+			}
+		}
+
+		return $countries;
+	}
+
+	protected function getStateList($country)
+	{
+		$states = State::getStatesByCountry($country);
+
+		if ($states)
+		{
+			$states = array('' => '') + $states;
+		}
+
+		return $states;
+	}
+
+	protected function saveAddress(UserAddress $address, $prefix = '')
+	{
+		$address->loadRequestData($this->request, $prefix);
+		$address->countryID->set($this->request->get($prefix . 'country'));
+		$address->postalCode->set($this->request->get($prefix . 'zip'));
+		$address->stateName->set($this->request->get($prefix . 'state_text'));
+		if ($this->request->get($prefix . 'state_select'))
+		{
+			$address->state->set(State::getStateByIDAndCountry($this->request->get($prefix . 'state_select'), $this->request->get($prefix . 'country')));
+		}
+		else
+		{
+			$address->state->set(null);
+		}
+		$address->save();
 	}
 
 	protected function boxInformationMenuBlock()
@@ -259,7 +325,10 @@ abstract class FrontendController extends BaseController
 
 		foreach ($search as $cat)
 		{
-			$options[$cat['ID']] = $cat['name_lang'];
+			if ($cat['isEnabled'])
+			{
+				$options[$cat['ID']] = $cat['name_lang'];
+			}
 		}
 
 		ClassLoader::import("framework.request.validator.Form");
@@ -276,6 +345,8 @@ abstract class FrontendController extends BaseController
 
 	private function getTopCategories()
 	{
+		ClassLoader::import('application.model.category.Category');
+
 		if (!isset($this->topCategories))
 		{
 			$this->topCategories = Category::getInstanceByID(1)->getSubcategoryArray();
@@ -415,6 +486,7 @@ abstract class FrontendController extends BaseController
 		}
 
 		$response->set('currentId', $this->categoryID);
+		$response->set('currentCategory', Category::getInstanceByID($this->categoryID)->toArray());
 
 		return $response;
 	}
@@ -548,6 +620,24 @@ abstract class FrontendController extends BaseController
 
 		$response = new BlockResponse('news', $news);
 		$response->set('isNewsArchive', count($news) > $this->config->get('NUM_NEWS_INDEX'));
+		return $response;
+	}
+
+	public function blockQuickNavBlock()
+	{
+		$response = new BlockResponse();
+
+		// manufacturer list
+		ClassLoader::import('application.controller.ManufacturersController');
+		$controller = new ManufacturersController($this->application);
+		$man = $controller->index();
+		$response->set('manufacturers', $man->get('manufacturers'));
+		$response->set('rootCat', $man->get('rootCat'));
+
+		// category tree
+		$cat = $this->dynamicCategoryMenuBlock();
+		$response->set('categories', $cat->get('categories'));
+
 		return $response;
 	}
 

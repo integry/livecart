@@ -17,11 +17,11 @@ if (!defined('TEST_INITIALIZED'))
 	chdir('..');
 
 	include_once('application/Initialize.php');
-	
+
 	$arPath = realpath(getcwd() . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'activerecord' . DIRECTORY_SEPARATOR . 'ActiveRecord.php');
 	include_once($arPath);
 	ActiveRecord::setDSN('mysql://root@server/livecart');
-	
+
 	// set unittest and simpletest library root directory
 	$libDir = dirname(dirname(__FILE__)) . '/_library/';
 	ClassLoader::mountPath('phpunit', realpath($libDir . 'phpunit/'));
@@ -30,7 +30,7 @@ if (!defined('TEST_INITIALIZED'))
 	ClassLoader::import("phpunit.*");
 	ClassLoader::import("unittest.*");
 	ClassLoader::import("testdir.*");
-	
+
 	//ClassLoader::load('unit_tester');
 	//ClassLoader::load('mock_objects');
 	//ClassLoader::load('reporter');
@@ -51,5 +51,6 @@ ClassLoader::import('library.locale.Locale');
 ClassLoader::import('test.mock.Swift_Connection_Fake');
 
 require_once('UTStandalone.php');
+require_once('LiveCartTest.php');
 
 ?>

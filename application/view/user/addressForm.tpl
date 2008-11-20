@@ -1,78 +1,84 @@
-<input type="hidden" name="return" value="{$return}" />
-
 <p class="required">
-	{{err for="firstName"}}
+	{{err for="`$prefix`firstName"}}
 	   {{label {t _your_first_name}:}}
-	   {textfield class="text" id="firstName"}
+	   {textfield class="text"}
 	{/err}
 </p>
 
 <p class="required">
-	{{err for="lastName"}}
+	{{err for="`$prefix`lastName"}}
 		{{label {t _your_last_name}:}}
 		{textfield class="text"}
 	{/err}
 </p>
 
 <p>
-	{{err for="companyName"}}
+	{{err for="`$prefix`companyName"}}
 		{{label {t _company_name}:}}
 		{textfield class="text"}
 	{/err}
 </p>
 
-<p{if $form|isRequired:"phone"} class="required"{/if}>
-	{{err for="phone"}}
+<p{if 'REQUIRE_PHONE'|config} class="required"{/if}>
+	{{err for="`$prefix`phone"}}
 		{{label {t _your_phone}:}}
 		{textfield class="text"}
 	{/err}
 </p>
 
 <p class="required">
-	{{err for="address1"}}
+	{{err for="`$prefix`address1"}}
 		{{label {t _address}:}}
 		{textfield class="text"}
 	{/err}
 </p>
 
 <p>
-	<label></label>
-	{textfield name="address_2" class="text"}
+	<label>&nbsp;</label>
+	<fieldset class="error">
+		{textfield name="`$prefix`address2" class="text"}
+	</fieldset>
 </p>
 
 <p class="required">
-	{{err for="city"}}
+	{{err for="`$prefix`city"}}
 		{{label {t _city}:}}
 		{textfield class="text"}
 	{/err}
 </p>
 
 <p class="required">
-	{{err for="country"}}
+	{{err for="`$prefix`country"}}
 		{{label {t _country}:}}
-		{selectfield options=$countries id="country"}
+		{selectfield options=$countries id="{uniqid assign=id_country}"}
 		<span class="progressIndicator" style="display: none;"></span>
 	{/err}
 </p>
 
-<p class="required">
-	{{err for="state_select"}}
-		{{label {t _state}:}}
-		{selectfield style="display: none;" options=$states id="state_select"}
-		{textfield name="state_text" class="text" id="state_text"}
-	{/err}
+{if !'DISABLE_STATE'|config}
+	<p class="required">
+		{{err for="`$prefix`state_select"}}
+			{{label {t _state}:}}
+			{selectfield style="display: none;" options=$states id="{uniqid assign=id_state_select}"}
+			{textfield name="`$prefix`state_text" class="text" id="{uniqid assign=id_state_text}"}
+		{/err}
 
-	{literal}
-	<script type="text/javascript">
-	{/literal}
-		new User.StateSwitcher($('country'), $('state_select'), $('state_text'),
-				'{link controller=user action=states}');
-	</script>
-</p>
+		{literal}
+		<script type="text/javascript">
+		{/literal}
+			new User.StateSwitcher($('{$id_country}'), $('{$id_state_select}'), $('{$id_state_text}'),
+					'{link controller=user action=states}');
+		</script>
+	</p>
+{/if}
 
 <p class="required">
-	{{err for="zip"}}
+	{{err for="`$prefix`zip"}}
 		{{label {t _postal_code}:}}
 		{textfield class="text"}
 	{/err}
 </p>
+
+{if $return}
+	<input type="hidden" name="return" value="{$return}" />
+{/if}

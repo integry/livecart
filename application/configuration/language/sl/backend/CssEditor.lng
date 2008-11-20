@@ -1,0 +1,7 @@
+_common_css=Skupen (vse teme)
+_edit_css=Uredi CSS dokument
+_save_css=Shrani CSS
+_please_select=Prosimo izberite CSS dokument za urejanje. Za vsako temo obstaja drug dokument. Lahko tudi uredite enak dokument, ki velja za vse teme.
+_css_warn=POMNI: Izogibajte se urejanju8 CSS dokumentov direktno  ker spremembe pri nadgradnji lahko prepišejo star dokument. Lahkopa tudi kopirate in prilepite kompleten CSS dokument, katerega želite urediti.
+_css_file_has_been_successfully_updated=CSS dokument je uspešno shranjen
+_could_not_update_css_file=CSS dokumenta ni bilo mogoče shraniti

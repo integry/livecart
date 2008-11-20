@@ -19,6 +19,9 @@ class ProductOption extends MultilingualObject
 
 	const TYPE_TEXT = 2;
 
+	const DISPLAYTYPE_SELECTBOX = 0;
+	const DISPLAYTYPE_RADIO = 1;
+
 	protected $choices = array();
 
 	public static function defineSchema($className = __CLASS__)
@@ -34,12 +37,15 @@ class ProductOption extends MultilingualObject
 		$schema->registerField(new ARForeignKeyField("defaultChoiceID", "ProductOptionChoice", "ID", "ProductOptionChoice", ARInteger::instance()));
 
 		$schema->registerField(new ARField("name", ARArray::instance()));
+		$schema->registerField(new ARField("selectMessage", ARArray::instance()));
 		$schema->registerField(new ARField("description", ARArray::instance()));
 		$schema->registerField(new ARField("type", ARInteger::instance(4)));
+		$schema->registerField(new ARField("displayType", ARInteger::instance(4)));
 		$schema->registerField(new ARField("isRequired", ARBool::instance()));
 		$schema->registerField(new ARField("isDisplayed", ARBool::instance()));
 		$schema->registerField(new ARField("isDisplayedInList", ARBool::instance()));
 		$schema->registerField(new ARField("isDisplayedInCart", ARBool::instance()));
+		$schema->registerField(new ARField("isPriceIncluded", ARBool::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance(4)));
 	}
 
@@ -143,7 +149,7 @@ class ProductOption extends MultilingualObject
 		$categories = $productIDs = array();
 		foreach ($products as $product)
 		{
-			$categories[$product->category->get()->getID()] = $product->category->get();
+			$categories[$product->getCategory()->getID()] = $product->getCategory();
 			$productIDs[] = $product->getID();
 		}
 
@@ -232,6 +238,26 @@ class ProductOption extends MultilingualObject
 			foreach (ActiveRecordModel::getRecordSet('ProductOptionChoice', $f) as $choice)
 			{
 				$refs[$choice->option->get()->getID()]->addChoice($choice);
+			}
+		}
+	}
+
+	public static function includeProductPrice(Product $product, &$options)
+	{
+		$prices = $product->getPricingHandler()->toArray();
+		$prices = $prices['calculated'];
+		foreach ($options as &$option)
+		{
+			if (is_array($option['choices']))
+			{
+				foreach ($option['choices'] as &$choice)
+				{
+					foreach ($prices as $currency => $price)
+					{
+						$instance = Currency::getInstanceByID($currency);
+						$choice['formattedTotalPrice'][$currency] = $instance->getFormattedPrice($price + $instance->convertAmountFromDefaultCurrency($choice['priceDiff']));
+					}
+				}
 			}
 		}
 	}

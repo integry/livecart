@@ -30,11 +30,12 @@
 		<label class="text">{include file="user/orderStatus.tpl" order=$order}</label>
 		<div class="clear"></div>
 
-		{if !$order.isCancelled}
 		<p>
-			<a href="{link controller=user action=orderInvoice id=`$order.ID`}" target="_blank" class="invoice">{t _order_invoice}</a>
+			{if !$order.isCancelled}
+				<a href="{link controller=user action=orderInvoice id=`$order.ID`}" target="_blank" class="invoice">{t _order_invoice}</a>
+			{/if}
+			<a href="{link controller=user action=reorder id=`$order.ID`}" class="reorder">{t _reorder}</a>
 		</p>
-		{/if}
 
 		{foreach from=$order.shipments item="shipment" name="shipments"}
 
@@ -87,7 +88,7 @@
 
 		<div id="overviewAddresses">
 
-			{if $order.ShippingAddress}
+			{if $order.ShippingAddress && !$order.isMultiAddress}
 			<div class="addressContainer">
 				<h3>{t _is_shipped_to}:</h3>
 				{fun name="address" address=$order.ShippingAddress}

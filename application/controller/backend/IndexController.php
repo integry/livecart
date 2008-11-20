@@ -91,7 +91,6 @@ class IndexController extends StoreManagementController
 	{
 		$user = $this->user;
 		$user->setPreference($this->request->get('key'), $this->request->get('value'));
-		var_dump($user->preferences->isModified());
 		$user->save();
 	}
 

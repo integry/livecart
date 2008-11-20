@@ -1,0 +1,13 @@
+_add_new_file=הוסף קובץ חדש
+_add_new_group=הוסף קבוצה חדשה
+_cancel_adding_new_file=בטל הוספת קובץ חדש
+_cancel_adding_file_group=בטל הוספת קבוצה חדשה
+_are_you_sure_you_want_to_delete=אתה בטוח שברצונך למחוק קובץ זה?
+_are_you_sure_you_want_to_delete_group=אתה בטוח שברצונך למחוק קבוצה זו?
+_product_file_group_title=כותרת
+_add_new_file_group=ערוך את קבוצת הקובץ
+_err_file_title_is_empty=אנא הכנס את כותרת הקובץ
+_err_allow_download_days_should_be_a_number=מספר ימים אמור להיות סוג בעל תכנים מספריים
+_err_allow_download_days_is_empty=אנא הכנס מספר ימים להורדה
+_err_file_could_not_be_uploaded_to_the_server=הקובץ לא יכל להועלות לשרת
+_err_fileName_should_not_be_empty=אנא הכנס את שם הקובץ

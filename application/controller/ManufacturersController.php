@@ -28,6 +28,7 @@ class ManufacturersController extends FrontendController
 		}
 
 		$f = new ARSelectFilter(new InCond(new ARFieldHandle('Manufacturer', 'ID'), $ids));
+		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('Manufacturer', 'name'), ''));
 		$f->setOrder(new ARFieldHandle('Manufacturer', 'name'));
 		$manufacturers = ActiveRecordModel::getRecordSetArray('Manufacturer', $f);
 		ActiveRecordModel::addArrayToEavQueue('Manufacturer', $manufacturers);

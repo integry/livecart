@@ -387,6 +387,8 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 			}
 		}
 
+		$categoriesLoaded = false;
+
 		// filter out non-matching item count/subtotal conditions
 		foreach ($validConditions as $condKey => $condition)
 		{
@@ -413,13 +415,24 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 					}
 					elseif ($record['categoryID'])
 					{
+						// load additional categories
+						if (!$categoriesLoaded)
+						{
+							$order->loadItemCategories();
+							$categoriesLoaded = true;
+						}
+
 						foreach ($order->getShoppingCartItems() as $item)
 						{
-							$category = $item->product->get()->category->get();
+							$category = $item->product->get()->getCategory();
 
 							if (($category->lft->get() >= $record['Category']['lft']) && ($category->rgt->get() <= $record['Category']['rgt']))
 							{
 								$items[] = $item;
+							}
+							else
+							{
+								//foreach ($item->getAdditionalCategories() as $category)
 							}
 						}
 					}
@@ -540,10 +553,17 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 	private static function getOrderCategoryIDs(CustomerOrder $order)
 	{
 		$conditions = array();
+		$order->loadItemCategories();
 		foreach ($order->getOrderedItems() as $item)
 		{
-			$category = $item->product->get()->category->get();
+			$category = $item->product->get()->getCategory();
+			$category->load();
 			$conditions[$category->getID()] = $category->getPathNodeCondition();
+
+			foreach ($item->getAdditionalCategories() as $category)
+			{
+				$conditions[$category->getID()] = $category->getPathNodeCondition();
+			}
 		}
 
 		if (!$conditions)

@@ -91,6 +91,11 @@ label.radio {
     background-image: url(../../image/silk/compress.png);
 }
 
+.langAddPhrase
+{
+    background-image: url(../../image/silk/add.png);
+}
+
 #langPath
 {
     margin-bottom: 1.4em;
@@ -157,4 +162,20 @@ div.tip
 {
     display: block;
 	margin-bottom: 15px;
+}
+
+#addPhraseForm label
+{
+	display: block;
+	float: none;
+}
+
+#addPhraseForm input.text
+{
+	width: auto;
+}
+
+#customFile
+{
+	font-weight: bold;
 }

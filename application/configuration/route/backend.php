@@ -77,6 +77,8 @@ if ($this->config->get('SSL_PAYMENT'))
 if ($this->config->get('SSL_CHECKOUT'))
 {
 	$this->router->setSslAction('checkout');
+	$this->router->setSslAction('order', 'index');
+	$this->router->setSslAction('order', 'multi');
 }
 
 if ($this->config->get('SSL_CUSTOMER'))
@@ -86,6 +88,19 @@ if ($this->config->get('SSL_CUSTOMER'))
 
 if ($sslHost = $this->config->get('SSL_DOMAIN'))
 {
+	if (!$this->router->isHttps())
+	{
+		session_start();
+		$sslHost .= '?sid=' . session_id();
+	}
+	else
+	{
+		if ($this->request->get('sid'))
+		{
+			session_id($this->request->get('sid'));
+		}
+	}
+
 	$this->router->setSslHost($sslHost);
 }
 

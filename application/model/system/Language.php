@@ -102,7 +102,7 @@ class Language extends ActiveRecordModel
 
 	protected function insert()
 	{
-	  	$this->setLastPosition();
+		$this->setLastPosition();
 
 		parent::insert();
 	}

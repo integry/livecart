@@ -7,7 +7,6 @@
 
 	<div id="footerContent">
 		{block INFORMATION}
-
 		<div id="footerCopyright">
 
 			<span style="font-size: smaller;"><a href="{'POWERED_BY_URL'|config}" target="_blank">{'POWERED_BY_FRONTEND'|config}</a></span>

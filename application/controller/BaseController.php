@@ -232,6 +232,11 @@ abstract class BaseController extends Controller implements LCiTranslator
 		return $this->request->get('ajax');
 	}
 
+	protected function getRequestLanguage()
+	{
+		return $this->locale->getLocaleCode();
+	}
+
 	protected function setMessage($message)
 	{
 		$this->setSessionData('message', $message);

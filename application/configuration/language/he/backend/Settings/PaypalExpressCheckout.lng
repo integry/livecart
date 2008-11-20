@@ -1,0 +1,6 @@
+PaypalExpressCheckout=סיום רכישה עם Paypal Express
+PaypalExpressCheckout_sandbox=השתמש בתיבת הניסיון
+PaypalExpressCheckout_username=שם משתמש 
+PaypalExpressCheckout_password=סיסמא
+PaypalExpressCheckout_signature=חתימה
+PaypalExpressCheckout_AUTHONLY=רק תשלומים מאומתים ללא לכידה אוטומטית

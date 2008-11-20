@@ -43,26 +43,19 @@ class DeliveryZoneController extends StoreManagementController
 
 		$deliveryZone = DeliveryZone::getInstanceByID($id, true);
 		$localeInfo = $this->locale->info();
-		$allCountries = $localeInfo->getAllCountries();
+		$allCountries = $countries = $localeInfo->getAllCountries();
 
-		$allStates = array();
-		foreach(State::getAllStates()->toArray() as $state)
+		$stateCountry = $this->config->get('STORE_COUNTRY');
+		if (!isset($allCountries[$stateCountry]))
 		{
-			$allStates[$state['ID']] = $localeInfo->getCountryName($state['countryID']) . ":" . $state['name'];
+			$stateCountry = 'US';
 		}
 
 		$selectedCountries = array();
 		foreach($deliveryZone->getCountries()->toArray() as $country)
 		{
 			$selectedCountries[$country['countryCode']] = $allCountries[$country['countryCode']];
-			unset($allCountries[$country['countryCode']]);
-		}
-
-		$selectedStates = array();
-		foreach($deliveryZone->getStates()->toArray() as $state)
-		{
-			$selectedStates[$state['State']['ID']] = $allStates[$state['State']['ID']];
-			unset($allStates[$state['State']['ID']]);
+			unset($countries[$country['countryCode']]);
 		}
 
 		$alternativeLanguagesCodes = array();
@@ -73,15 +66,19 @@ class DeliveryZoneController extends StoreManagementController
 
 		$form = $this->createCountriesAndStatesForm($deliveryZone);
 		$form->setData($deliveryZone->toArray());
+		$form->set('stateListCountry', $stateCountry);
+
+		$states = $this->getStates($deliveryZone, $stateCountry);
 
 		$response = new ActionResponse();
 		$response->set('form', $form);
 		$response->set('zoneID', $id);
-		$response->set('states', $allStates);
-		$response->set('countries', $allCountries);
+		$response->set('states', $states['all']);
+		$response->set('allCountries', $allCountries);
+		$response->set('countries', $countries);
 		$response->set('countryGroups', $this->locale->info()->getCountryGroups());
 		$response->set('selectedCountries', $selectedCountries);
-		$response->set('selectedStates', $selectedStates);
+		$response->set('selectedStates', $states['selected']);
 		$response->set('zipMasks', $deliveryZone->getZipMasks()->toArray());
 		$response->set('cityMasks', $deliveryZone->getCityMasks()->toArray());
 		$response->set('addressMasks', $deliveryZone->getAddressMasks()->toArray());
@@ -89,6 +86,35 @@ class DeliveryZoneController extends StoreManagementController
 		$response->set('alternativeLanguagesCodes', $alternativeLanguagesCodes);
 
 		return $response;
+	}
+
+	public function loadStates()
+	{
+		$zone = DeliveryZone::getInstanceByID($this->request->get('id'), true);
+		$states = $this->getStates($zone, $this->request->get('country'));
+
+		return new JSONResponse($states['all']);
+	}
+
+	private function getStates(DeliveryZone $zone, $country)
+	{
+		$localeInfo = $this->locale->info();
+		$allCountries = $countries = $localeInfo->getAllCountries();
+
+		$allStates = array();
+		foreach(State::getStatesByCountry($country) as $stateID => $state)
+		{
+			$allStates[$stateID] = $localeInfo->getCountryName($country) . ": " . $state;
+		}
+
+		$selectedStates = array();
+		foreach($zone->getStates()->toArray() as $state)
+		{
+			$selectedStates[$state['State']['ID']] = $localeInfo->getCountryName($state['State']['countryID']) . ": " . $state['State']['name'];
+			unset($allStates[$state['State']['ID']]);
+		}
+
+		return array('all' => $allStates, 'selected' => $selectedStates);
 	}
 
 	/**

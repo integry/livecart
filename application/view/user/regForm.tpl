@@ -46,5 +46,8 @@
 
 	<label></label>
 	<input type="submit" class="submit" value="{tn _complete_reg}" />
+	{if $request.return}
+		<input type="hidden" name="return" value="{$request.return|escape}" />
+	{/if}
 
 {/form}

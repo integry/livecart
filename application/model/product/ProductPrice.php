@@ -70,12 +70,63 @@ class ProductPrice extends ActiveRecordModel
 
 	/*####################  Value retrieval and manipulation ####################*/
 
+	public function getPrice()
+	{
+		$price = $this->price->get();
+
+		if ($parent = $this->product->get()->parent->get())
+		{
+			$parentPrice = $parent->getPricingHandler()->getPrice($this->currency->get())->getPrice();
+			return $this->getChildPrice($parentPrice, $price, $this->product->get()->getChildSetting('price'));
+		}
+		else
+		{
+			return $price;
+		}
+	}
+
+	private function getChildPrice($parentPrice, $childPriceDiff, $setting)
+	{
+		if ($setting == Product::CHILD_ADD)
+		{
+			return $parentPrice + $childPriceDiff;
+		}
+		else if ($setting == Product::CHILD_SUBSTRACT)
+		{
+			return $parentPrice - $childPriceDiff;
+		}
+		else if ((float)$childPriceDiff)
+		{
+			return $childPriceDiff;
+		}
+		else
+		{
+			return $parentPrice;
+		}
+	}
+
 	public function getItemPrice(OrderedItem $item)
 	{
-		if ($this->price->get())
+		$price = $this->getPrice();
+
+		if ($parent = $this->product->get()->parent->get())
+		{
+			$priceSetting = $this->product->get()->getChildSetting('price');
+			$parentPrice = $parent->getPricingHandler()->getPrice($this->currency->get())->getItemPrice($item);
+
+			if ($priceSetting !== Product::CHILD_OVERRIDE)
+			{
+				return $this->getChildPrice($parentPrice, $this->price->get(), $priceSetting);
+			}
+			else
+			{
+				return $price;
+			}
+		}
+
+		if ($price)
 		{
 			$rules = unserialize($this->serializedRules->get());
-			$price = $this->price->get();
 
 			// quantity/group based prices
 			if ($rules)
@@ -95,11 +146,13 @@ class ProductPrice extends ActiveRecordModel
 
 			return $price;
 		}
-		else
+		else if ($this->currency->get()->getID() != self::getApplication()->getDefaultCurrencyCode())
 		{
 			$defaultCurrency = self::getApplication()->getDefaultCurrency();
 			return $this->convertFromDefaultCurrency($this->product->get()->getItemPrice($item, $defaultCurrency->getID()));
 		}
+
+		return 0;
 	}
 
 	private function getGroupPrice(OrderedItem $item, $groupID, $rules)
@@ -120,7 +173,7 @@ class ProductPrice extends ActiveRecordModel
 
 		for ($k = 0; $k < $cnt; $k++)
 		{
-			if ($quantities[$k] <= $itemCnt && (($k == $cnt - 1) || ($quantities[$k + 1] >= $itemCnt)))
+			if ($quantities[$k] <= $itemCnt && (($k == $cnt - 1) || ($quantities[$k + 1] > $itemCnt)))
 			{
 				return $found[$quantities[$k]];
 			}
@@ -171,7 +224,7 @@ class ProductPrice extends ActiveRecordModel
 		$this->setRules($rules);
 	}
 
-	public function getUserPrices(User $user)
+	public function getUserPrices(User $user = null)
 	{
 		$id = $this->getGroupId($user);
 		$rules = unserialize($this->serializedRules->get());
@@ -188,10 +241,15 @@ class ProductPrice extends ActiveRecordModel
 			}
 		}
 
+		if ($id > 0 && !$found)
+		{
+			return $this->getUserPrices(null);
+		}
+
 		return $found;
 	}
 
-	private function getGroupId(User $user)
+	private function getGroupId(User $user = null)
 	{
 		if (!$user)
 		{
@@ -249,11 +307,12 @@ class ProductPrice extends ActiveRecordModel
 		$prices = self::fetchPriceData(array_keys($ids));
 
 		// sort by product
-		$listPrice = $productPrices = array();
+		$listPrice = $productPrices = $priceRules = array();
 		foreach ($prices as $price)
 		{
 			$productPrices[$price['productID']][$price['currencyID']] = $price['price'];
 			$listPrices[$price['productID']][$price['currencyID']] = $price['listPrice'];
+			$productArray[$ids[$price['productID']]]['priceRules'][$price['currencyID']] = $price['serializedRules'];
 		}
 
 		self::getPricesFromArray($productArray, $productPrices, $ids, false);
@@ -273,6 +332,23 @@ class ProductPrice extends ActiveRecordModel
 
 		foreach ($priceArray as $product => $prices)
 		{
+			// look for a parent product
+			if (!empty($productArray[$ids[$product]]['parentID']))
+			{
+				$parent = Product::getInstanceByID($productArray[$ids[$product]]['parentID']);
+				$settings = $productArray[$ids[$product]]['childSettings'];
+				if (isset($settings['price']))
+				{
+					$priceSetting = $settings['price'];
+				}
+			}
+			else
+			{
+				$parent = null;
+			}
+
+			$productArray[$ids[$product]]['defined' . ($listPrice ? 'List' : '') . 'Prices'] = $prices;
+
 			foreach ($currencies as $id => $currency)
 			{
 				if (!isset($prices[$id]))
@@ -286,6 +362,12 @@ class ProductPrice extends ActiveRecordModel
 				if ((0 == $price) && $listPrice)
 				{
 					continue;
+				}
+
+				if ($parent && (($priceSetting != Product::CHILD_OVERRIDE) || !$price))
+				{
+					$parentPrice = $parent->getPrice($id);
+					$price = $parentPrice + ($price * (($priceSetting == Product::CHILD_ADD) ? 1 : -1));
 				}
 
 				$productArray[$ids[$product]][$priceField . '_' . $id] = $price;
@@ -316,8 +398,17 @@ class ProductPrice extends ActiveRecordModel
 	 */
 	public static function loadPricesForRecordSet(ARSet $products)
 	{
-		$ids = array();
+		$set = ARSet::buildFromArray($products->getData());
 		foreach ($products as $key => $product)
+	  	{
+			if ($product->parent->get())
+			{
+				$set->add($product->parent->get());
+			}
+		}
+
+		$ids = array();
+		foreach ($set as $key => $product)
 	  	{
 			$ids[$product->getID()] = $key;
 		}
@@ -332,7 +423,7 @@ class ProductPrice extends ActiveRecordModel
 
 		foreach ($pricing as $productID => $productPricing)
 		{
-			$product = $products->get($ids[$productID]);
+			$product = $set->get($ids[$productID]);
 			$product->loadPricing($productPricing);
 		}
 	}

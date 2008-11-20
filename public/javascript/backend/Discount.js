@@ -349,7 +349,7 @@ Backend.Discount.Condition.prototype =
 		if (recordClass)
 		{
 			this.selectRecordContainer.down('ul').innerHTML = '';
-			for (k = 0; k < this.records[recordClass].length; k++)
+			for (var k = 0; k < this.records[recordClass].length; k++)
 			{
 				var record = this.records[recordClass][k];
 				var instance = this.createSelectRecord(recordClass, record);

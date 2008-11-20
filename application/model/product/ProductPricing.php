@@ -171,6 +171,9 @@ class ProductPricing
 
 		$formattedPrice = $calculated = array();
 
+		$parent = $this->product->parent->get();
+		$setting = $this->product->getChildSetting('price');
+
 		foreach ($this->application->getCurrencySet() as $id => $currency)
 		{
 			if (!empty($defined[$id]))
@@ -185,6 +188,12 @@ class ProductPricing
 			if (!$calculated[$id] && $listPrice)
 			{
 				continue;
+			}
+
+			if ($parent && (($setting != Product::CHILD_OVERRIDE) || !$calculated[$id]))
+			{
+				$parentPrice = $parent->getPrice($id);
+				$calculated[$id] += $parentPrice * (($setting != Product::CHILD_ADD) ? 1 : -1);
 			}
 
 			$formattedPrice[$id] = $currency->getFormattedPrice($calculated[$id]);
@@ -202,7 +211,7 @@ class ProductPricing
 		}
 
 		$price = $this->getPrice($currency);
-		if (!$price->price->get())
+		if (!$price->getPrice())
 		{
 			$price = $this->getPriceByCurrencyCode($this->application->getDefaultCurrencyCode());
 		}
@@ -237,8 +246,8 @@ class ProductPricing
 		{
 			$this->prices[$k] = clone $price;
 		}
-	}	
-	
+	}
+
 	public function __destruct()
 	{
 		foreach ($this->prices as $k => $price)

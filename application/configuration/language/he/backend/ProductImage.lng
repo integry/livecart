@@ -1,0 +1,17 @@
+_cancel_new=בטל הוספת תמונה חדשה
+_add_new=הוסף תמונה חדשה
+_add_new_title=הוסף תמונה חדשה
+_delete_confirm=האם אתה בטוח שברצונך למחוק תמונה זו?
+_main_image=תמונה ראשית
+_supplemental_images=תמונות שלמות
+_no_images=עדיין לא נוספו תמונות למוצר זה
+_max_file_size=JPEG, GIF ו- PNG הינם קבצים שמותרים לשימוש. גודל ההעלאה המקסימלי הוא: [_1]
+_edit_image=ערוך את פרטי התמונה
+_image_title=הכנס את כותרת התמונה
+_image_file=בחר בקובץ תמונה
+_upload=הוסף תמונה
+_save=שמור
+_err_not_uploaded=בחר קובץ
+_err_not_image=זו לא תמונה תקינה
+_err_resize=שגיאה בעת צמצום התמונה
+_err_too_large=הקובץ גדול מדי

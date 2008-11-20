@@ -18,11 +18,8 @@
 
 ul.tabList
 {
-/*
-	padding-bottom: 0px;
 	position: relative;
 	z-index: 200;
-*/
 }
 
 ul.tabList li.inactive, ul.tabList li.hover
@@ -34,6 +31,7 @@ ul.tabList li.inactive, ul.tabList li.hover
 {
 	margin-right: 2px;
 	display: inline;
+	line-height: 20px;
 }
 
 .tabContainer ul li.inactive, .tabContainer ul li.active, .tabContainer ul li.hover

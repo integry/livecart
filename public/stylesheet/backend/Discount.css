@@ -190,6 +190,7 @@ a.subCondition
 .selectRecordContainer li, .recordContainer li
 {
 	list-style-type: none;
+	clear: both;
 }
 
 .recordTypeSep, .recordClass

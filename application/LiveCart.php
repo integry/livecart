@@ -271,7 +271,11 @@ class LiveCart extends Application
 
 		$editUrl = $this->getRouter()->createUrl(array('controller' => 'backend.template', 'action' => 'editPopup', 'query' => array('file' => $file)), true);
 
-		return '<span class="templateLocator" ondblclick="window.open(\'' . $editUrl . '\', \'template\', \'width=800,height=600,scrollbars=yes,resizable=yes\'); Event.stop(event); return false;" onmouseover="this.addClassName(\'activeTpl\'); Event.stop(event);" onmouseout="this.removeClassName(\'activeTpl\'); Event.stop(event);"><span class="templateName"><a onclick="window.open(\'' . $editUrl . '\', \'template\', \'width=800,height=600,scrollbars=yes,resizable=yes\'); return false;" href="#">' . $file  . '</a></span>' . $tplSource . '</span>';
+		// @todo: temp fix. for some reason /public/ was added seemingly randomly for some templates at one store
+		$editUrl = str_replace('/public/', '/', $editUrl);
+
+		return '<span class="templateLocator" ondblclick="window.open(\'' . $editUrl . '\', \'template\', \'width=800,height=600,scrollbars=yes,resizable=yes\'); Event.stop(event); return false;" onmouseover="this.addClassName(\'activeTpl\'); Event.stop(event);" onmouseout="this.removeClassName(\'activeTpl\'); Event.stop(event);"><span class="templateName"><a onclick="window.open(\'' .
+		$editUrl . '\', \'template\', \'width=800,height=600,scrollbars=yes,resizable=yes\'); return false;" href="#">' . $file  . '</a></span>' . $tplSource . '</span>';
 	}
 
 	/**
@@ -361,7 +365,9 @@ class LiveCart extends Application
 							case 'prepend':
 								$controllerInstance->addBlock($object, $command['action']['call'], $command['action']['view'], true);
 								break;
-
+							case 'theme':
+								$this->setTheme($command['action']['view']);
+								break;
 						}
 					}
 				}
@@ -951,6 +957,7 @@ class LiveCart extends Application
 	public function setTheme($theme)
 	{
 		$this->theme = $theme;
+		$this->getRenderer()->resetPaths();
 	}
 
 	public function clearCachedVars()

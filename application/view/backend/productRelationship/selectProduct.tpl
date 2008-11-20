@@ -105,7 +105,6 @@
 
 	Backend.Category.activeCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
 	Backend.Category.initPage();
-
 	Backend.Category.loadBookmarkedCategory();
 
 	{/literal}

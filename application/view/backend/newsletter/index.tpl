@@ -12,6 +12,12 @@
 {includeCss file="library/TabControl.css"}
 {includeCss file="backend/Newsletter.css"}
 
+{includeJs file="library/dhtmlCalendar/calendar.js"}
+{includeJs file="library/dhtmlCalendar/lang/calendar-en.js"}
+{includeJs file="library/dhtmlCalendar/lang/calendar-`$curLanguageCode`.js"}
+{includeJs file="library/dhtmlCalendar/calendar-setup.js"}
+{includeCss file="library/dhtmlCalendar/calendar-win2k-cold-2.css"}
+
 {pageTitle help="tools.newsletter"}{t _newsletters}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
@@ -77,6 +83,7 @@
 				totalCount=0
 				filters=$filters
 				container="tabMessages"
+				dataFormatter="Backend.Newsletter.GridFormatter"
 			}
 
 		</div>
@@ -99,7 +106,7 @@
 	<div class="tabContainer">
 		<ul class="tabList tabs">
 			<li id="tabMessageInfo" class="tab active">
-				<a href="{link controller=backend.newsletter action=edit id=_id_}}">{t _edit_message}</a>
+				<a href="{link controller=backend.newsletter action=edit id=_id_}">{t _edit_message}</a>
 				<span class="tabHelp">products.edit</span>
 			</li>
 

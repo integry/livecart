@@ -166,7 +166,7 @@ Backend.Product =
 			var tabControl = TabControl.prototype.getInstance('productManagerContainer', Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId, {
 				afterClick: function()
 				{
-					if (Backend.SelectPopup.prototype.popup)
+					if (Backend.SelectPopup.prototype.popup && Backend.SelectPopup.prototype.popup.opener)
 					{
 						Backend.SelectPopup.prototype.popup.opener.focus();
 						Backend.SelectPopup.prototype.popup.close();
@@ -543,12 +543,15 @@ Backend.Product.Editor.prototype =
 
 	hideCategoriesContainer: function(args)
 	{
+		Element.hide($("catgegoryContainer"));
 		Element.hide($("managerContainer"));
 		Element.show($("productManagerContainer"));
+		$('productManagerContainer').removeClassName('treeManagerContainer');
 	},
 
 	showCategoriesContainer: function(args)
 	{
+		Element.show($("catgegoryContainer"));
 		if($("productManagerContainer")) Element.hide($("productManagerContainer"));
 		if($("managerContainer")) Element.show($("managerContainer"));
 

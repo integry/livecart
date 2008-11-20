@@ -416,22 +416,27 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	public function getProductsFilter(ProductFilter $productFilter)
 	{
 		$filter = $productFilter->getSelectFilter();
+		$filter->mergeCondition($this->getProductCondition($productFilter->isSubcategories()));
+		$this->applyInventoryFilter($filter);
 
-		if ($productFilter->isSubcategories())
+		return $filter;
+	}
+
+	public function getProductCondition($includeSubcategories = false)
+	{
+		if ($includeSubcategories)
 		{
 			$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $this->lft->get());
 			$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $this->rgt->get()));
+			$cond->addOr(new INCond(new ARFieldHandle('Product', 'ID'), 'SELECT ProductCategory.productID FROM ProductCategory LEFT JOIN Category ON ProductCategory.categoryID=Category.ID WHERE Category.lft>=' . $this->lft->get() . ' AND Category.rgt<=' . $this->rgt->get()));
 		}
 		else
 		{
 			$cond = new EqualsCond(new ARFieldHandle('Product', 'categoryID'), $this->getID());
+			$cond->addOr(new INCond(new ARFieldHandle('Product', 'ID'), 'SELECT ProductCategory.productID FROM ProductCategory WHERE ProductCategory.categoryID=' . $this->getID()));
 		}
 
-		$filter->mergeCondition($cond);
-
-		$this->applyInventoryFilter($filter);
-
-		return $filter;
+		return $cond;
 	}
 
 	public function getProductFilter(ARSelectFilter $filter)
@@ -772,6 +777,12 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		$sql = 'UPDATE Category SET totalProductCount = (SELECT COUNT(*) FROM Product WHERE categoryID = Category.ID),
 									activeProductCount = (SELECT COUNT(*) FROM Product WHERE categoryID = Category.ID AND Product.isEnabled = 1),
 									availableProductCount = (SELECT COUNT(*) FROM Product WHERE categoryID = Category.ID AND Product.isEnabled = 1 AND (stockCount > 0 OR type = ' . Product::TYPE_DOWNLOADABLE .  '))';
+		self::getDBConnection()->executeUpdate($sql);
+
+		// additional categories
+		$sql = 'UPDATE Category SET totalProductCount = totalProductCount + (SELECT COUNT(*) FROM ProductCategory WHERE ProductCategory.categoryID = Category.ID),
+									activeProductCount = activeProductCount + (SELECT COUNT(*) FROM ProductCategory LEFT JOIN Product ON ProductCategory.productID=Product.ID WHERE ProductCategory.categoryID = Category.ID AND Product.isEnabled = 1),
+									availableProductCount = availableProductCount + (SELECT COUNT(*) FROM ProductCategory LEFT JOIN Product ON ProductCategory.productID=Product.ID WHERE ProductCategory.categoryID = Category.ID AND Product.isEnabled = 1 AND (stockCount > 0 OR type = ' . Product::TYPE_DOWNLOADABLE .  '))';
 		self::getDBConnection()->executeUpdate($sql);
 
 		//self::updateProductCount(Category::getInstanceByID(Category::ROOT_ID, Category::LOAD_DATA));

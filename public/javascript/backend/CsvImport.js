@@ -65,7 +65,7 @@ Backend.CsvImport =
 		if ($('delimiters').visible())
 		{
 			$('delimitersForm').action = $('fieldsUrl').innerHTML;
-			new LiveCart.AjaxUpdater($('delimitersForm'), $('fieldsContainer'), $('previewIndicator'), null, Backend.CsvImport.loadFields);
+			new LiveCart.AjaxUpdater($('delimitersForm'), $('fieldsContainer'), $('previewIndicator'), null, Backend.CsvImport.loadFields.bind(this));
 		}
 
 		// proceed with import
@@ -123,20 +123,69 @@ Backend.CsvImport =
 			)
 		}
 
+		var showConfigFields = function(select, inst)
+		{
+			if (select)
+			{
+				return function()
+				{
+					if (!select.configContainer)
+					{
+						select.configContainer = select.parentNode.down('.fieldConfigContainer');
+					}
+
+					select.configContainer.update('');
+					var columnIndex = select.name.match(/([0-9]+)/).pop();
+
+					var field = $F(select);
+					if (this.fieldConfig[field])
+					{
+						var clonedConfig = this.fieldConfig[field].cloneNode(true);
+						select.configContainer.appendChild(clonedConfig);
+						$A(clonedConfig.getElementsByTagName('select')).each(function(sel)
+						{
+							sel.name = sel.name + '[' + columnIndex + ']';
+						});
+					}
+				}.bind(inst)
+			}
+		}
+
 		var allSelects = $A($('columns').getElementsByTagName('select'));
 		allSelects.each
 		(
 			function(select)
 			{
 				Event.observe(select, 'change', selectChange);
+				Event.observe(select, 'change', showConfigFields(select, this));
 				select.allSelects = allSelects;
-			}
+			}.bind(this)
 		);
+
+		/* get field configurator containers */
+		this.fieldConfig = {};
+		$A($('fieldConfigTemplates').childNodes).each(function(container)
+		{
+			if (!container.tagName)
+			{
+				return;
+			}
+
+			container.className.split(/ /).each(function(className)
+			{
+				this.fieldConfig[className] = container;
+			}.bind(this));
+		}.bind(this));
 	},
 
 	toggleSelectValues: function(element, state)
 	{
 		var index = element.previousIndex;
+
+		if (this.fieldConfig[$F(element)])
+		{
+			return false;
+		}
 
 		if (!index)
 		{
@@ -205,6 +254,11 @@ Backend.CsvImport =
 
 		for (var k = 0; k < portions.length; k++)
 		{
+			if (0 == portions[k].length)
+			{
+				continue;
+			}
+
 			response = eval('(' + decode64(portions[k]) + ')');
 
 			// progress
@@ -217,6 +271,14 @@ Backend.CsvImport =
 
 	onComplete: function(originalRequest)
 	{
+		// sometimes the dataResponse() function is not called, so we have to double check if we're not done yet
+		var response = eval('(' + decode64(originalRequest.responseText.split('|').pop()) + ')');
+		if (0 == response.progress)
+		{
+			this.isCompleted = true;
+			this.setProgress(response);
+		}
+
 		if (this.isCancelled)
 		{
 			this.completeCancel(originalRequest);
