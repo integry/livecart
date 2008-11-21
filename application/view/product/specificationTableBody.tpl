@@ -6,7 +6,7 @@
 			<td class="value"></td>
 		</tr>
 	{/if}
-	<tr class="{zebra loop="attributes"} {if $smarty.foreach.attributes.first && !$attr.$field.$group.ID}first{/if}{if $smarty.foreach.attributes.last} last{/if}">
+	<tr class="{zebra loop="attributes"}">
 		<td class="param">{$attr.$field.name_lang}</td>
 		<td class="value">
 			{include file="product/attributeValue.tpl"}

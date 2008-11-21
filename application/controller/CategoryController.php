@@ -4,6 +4,7 @@ ClassLoader::import("application.controller.FrontendController");
 ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.filter.*');
 ClassLoader::import('application.model.product.Product');
+ClassLoader::import('application.model.product.Manufacturer');
 ClassLoader::import('application.model.product.ProductFilter');
 ClassLoader::import('application.model.product.ProductCount');
 

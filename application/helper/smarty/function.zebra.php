@@ -12,17 +12,29 @@
  */
 function smarty_function_zebra($params, LiveCartSmarty $smarty)
 {
-	if (!isset($smarty->_foreach[$params['loop']]))
+	$loop = $params['loop'];
+
+	if (!isset($smarty->_foreach[$loop]))
 	{
 		return false;
 	}
 
-	if (0 == $smarty->_foreach[$params['loop']]['iteration'] || !isset($smarty->zebra[$params['loop']]))
+	if (0 == $smarty->_foreach[$loop]['iteration'] || !isset($smarty->zebra[$loop]))
 	{
-		$smarty->zebra[$params['loop']] = 0;
+		$smarty->zebra[$loop] = 0;
 	}
 
-	return ++$smarty->zebra[$params['loop']] % 2 ? 'even' : 'odd';
+	$firstOrLast = '';
+	if (1 == $smarty->_foreach[$loop]['iteration'])
+	{
+		$firstOrLast = ' first';
+	}
+	if ($smarty->_foreach[$loop]['total'] == $smarty->_foreach[$loop]['iteration'])
+	{
+		$firstOrLast = ' last';
+	}
+
+	return (++$smarty->zebra[$loop] % 2 ? 'even' : 'odd') . $firstOrLast;
 }
 
 ?>

@@ -10,7 +10,7 @@
 	</thead>
 	<tbody>
 	{foreach from=$cart.cartItems item="item" name="cart"}
-		<tr class="{zebra loop="cart"}{if $smarty.foreach.cart.first} first{/if}{if $smarty.foreach.cart.last} last{/if}">
+		<tr class="{zebra loop="cart"}">
 			<td class="cartControl">
 				{if 'ENABLE_WISHLISTS'|config}
 					<a href="{link controller=order action=moveToWishList id=$item.ID query="return=`$return`"}">{t _move_to_wishlist}</a>

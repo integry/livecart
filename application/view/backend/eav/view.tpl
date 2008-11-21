@@ -9,7 +9,7 @@
 					<td class="value"></td>
 				</tr>
 			{/if}
-			<tr class="{zebra loop="attributes"} {if $smarty.foreach.attributes.first && !$attr.EavField.EavFieldGroup.ID}first{/if}{if $smarty.foreach.attributes.last} last{/if}">
+			<tr class="{zebra loop="attributes"}">
 				<td class="param">{$attr.EavField.name_lang}</td>
 				<td class="value">
 					{if $attr.values}
