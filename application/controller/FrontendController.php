@@ -164,7 +164,6 @@ abstract class FrontendController extends BaseController
 		}
 
 		ClassLoader::import('application.controller.NewsletterController');
-		ClassLoader::import('framework.request.validator.Form');
 		return new BlockResponse('form', new Form(NewsletterController::getSubscribeValidator()));
 	}
 
@@ -331,7 +330,6 @@ abstract class FrontendController extends BaseController
 			}
 		}
 
-		ClassLoader::import("framework.request.validator.Form");
 		$form = new Form(new RequestValidator("productSearch", $this->request));
 		$form->enableClientSideValidation(false);
 		$form->set('id', $this->categoryID);

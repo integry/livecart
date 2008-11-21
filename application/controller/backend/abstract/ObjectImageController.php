@@ -206,8 +206,6 @@ abstract class ObjectImageController extends StoreManagementController
 	 */
 	protected function buildValidator($catId)
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator($this->getModelClass() . "_" . $catId, $this->request);
 
 		$uploadCheck = new IsFileUploadedCheck($this->translate(!empty($_FILES['image']['name']) ? '_err_too_large' :'_err_not_uploaded'));
@@ -230,7 +228,6 @@ abstract class ObjectImageController extends StoreManagementController
 	 */
 	protected function buildForm($catId)
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildValidator($catId));
 	}
 }

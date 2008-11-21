@@ -1064,13 +1064,11 @@ class CheckoutController extends FrontendController
 
 	private function buildShippingForm(/*ARSet */$shipments)
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildShippingValidator($shipments));
 	}
 
 	private function buildShippingValidator(/*ARSet */$shipments)
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
 		$validator = new RequestValidator("shipping", $this->request);
 		foreach ($shipments as $key => $shipment)
 		{
@@ -1090,7 +1088,6 @@ class CheckoutController extends FrontendController
 
 	private function buildAddressSelectorForm(CustomerOrder $order, $step)
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		$validator = $this->buildAddressSelectorValidator($order, $step);
 
 		$form = new Form($validator);
@@ -1104,7 +1101,6 @@ class CheckoutController extends FrontendController
 	{
 		$this->loadLanguageFile('User');
 
-		ClassLoader::import("framework.request.validator.Form");
 		$validator = new RequestValidator("addressSelectorValidator", $this->request);
 
 		if (!$step || ('billing' == $step))
@@ -1155,7 +1151,6 @@ class CheckoutController extends FrontendController
 
 	public function buildCreditCardForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		$form = new Form($this->buildCreditCardValidator());
 		$form->set('ccExpiryMonth', date('n'));
 		$form->set('ccExpiryYear', date('Y'));
@@ -1164,7 +1159,6 @@ class CheckoutController extends FrontendController
 
 	private function buildCreditCardValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
 		$validator = new RequestValidator("creditCard", $this->request);
 		$validator->addCheck('ccNum', new IsNotEmptyCheck($this->translate('_err_enter_cc_num')));
 //		$validator->addCheck('ccType', new IsNotEmptyCheck($this->translate('_err_select_cc_type')));

@@ -377,8 +377,6 @@ class DiscountController extends ActiveGridController
 
 	private function buildValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator("discountCondition", $this->request);
 		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("_rule_name_empty")));
 
@@ -392,13 +390,11 @@ class DiscountController extends ActiveGridController
 	 */
 	private function buildForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildValidator());
 	}
 
 	private function buildConditionValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
 		return new RequestValidator("discountConditionRule", $this->request);
 	}
 
@@ -409,7 +405,6 @@ class DiscountController extends ActiveGridController
 	 */
 	private function buildConditionForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildConditionValidator());
 	}
 

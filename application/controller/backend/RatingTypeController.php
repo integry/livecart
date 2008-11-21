@@ -100,13 +100,11 @@ class RatingTypeController extends StoreManagementController
 
 	private function buildForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildValidator());
 	}
 
 	private function buildValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
 		$validator = new RequestValidator("ProductRatingType", $this->request);
 		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_enter_name')));
 

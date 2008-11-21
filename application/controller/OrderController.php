@@ -512,8 +512,6 @@ class OrderController extends FrontendController
 	 */
 	private function buildCartForm(CustomerOrder $order, $options)
 	{
-		ClassLoader::import("framework.request.validator.Form");
-
 		$form = new Form($this->buildCartValidator($order, $options));
 
 		foreach ($order->getOrderedItems() as $item)
@@ -531,8 +529,6 @@ class OrderController extends FrontendController
 
 	private function buildOptionsForm(OrderedItem $item, $options)
 	{
-		ClassLoader::import("framework.request.validator.Form");
-
 		$form = new Form($this->buildOptionsValidator($item, $options));
 		$this->setFormItem($item, $form);
 
@@ -578,8 +574,6 @@ class OrderController extends FrontendController
 	{
 		unset($_SESSION['optionError']);
 
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator("cartValidator", $this->request);
 
 		foreach ($order->getOrderedItems() as $item)
@@ -597,8 +591,6 @@ class OrderController extends FrontendController
 
 	private function buildOptionsValidator(OrderedItem $item, $options)
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator("optionValidator", $this->request);
 		$this->buildItemValidation($validator, $item, $options);
 

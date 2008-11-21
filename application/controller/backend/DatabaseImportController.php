@@ -138,13 +138,11 @@ echo '..';
 
 	private function getForm()
 	{
-		ClassLoader::import('framework.request.validator.Form');
 		return new Form($this->getValidator());
 	}
 
 	private function getValidator()
 	{
-		ClassLoader::import('framework.request.validator.RequestValidator');
 		ClassLoader::import('application.helper.filter.HandleFilter');
 
 		$val = new RequestValidator('databaseImport', $this->request);

@@ -77,7 +77,6 @@ class NewsletterController extends FrontendController
 	public function getSubscribeValidator()
 	{
 		$this->loadLanguageFile('Newsletter');
-		ClassLoader::import('framework.request.validator.RequestValidator');
 		$validator = new RequestValidator("newsletterSubscribe", $this->getRequest());
 		$validator->addCheck('email', new IsNotEmptyCheck($this->translate('_err_email_empty')));
 		$validator->addCheck('email', new IsValidEmailCheck($this->translate('_err_invalid_email')));

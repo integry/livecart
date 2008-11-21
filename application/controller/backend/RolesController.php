@@ -1,9 +1,6 @@
 <?php
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.tax.TaxRate");
-ClassLoader::import("framework.request.validator.RequestValidator");
-ClassLoader::import("framework.request.validator.Form");
-
 
 /**
  * Application settings management

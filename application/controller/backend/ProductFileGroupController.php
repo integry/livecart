@@ -11,7 +11,7 @@ ClassLoader::import("application.model.product.Product");
  * @author Integry Systems
  * @role product
  */
-class ProductFileGroupController extends StoreManagementController 
+class ProductFileGroupController extends StoreManagementController
 {
 	/**
 	 * @role update
@@ -22,7 +22,7 @@ class ProductFileGroupController extends StoreManagementController
 		$fileGroup = ProductFileGroup::getNewInstance($product);
 		return $this->save($fileGroup);
 	}
-	
+
 	/**
 	 * @role update
 	 */
@@ -31,12 +31,12 @@ class ProductFileGroupController extends StoreManagementController
 		$fileGroup = ProductFileGroup::getInstanceByID((int)$this->request->get('ID'));
 		return $this->save($fileGroup);
 	}
-	
+
 	private function save(ProductFileGroup $fileGroup)
 	{
 		$validator = $this->buildValidator();
 		if ($validator->isValid())
-		{   		
+		{
 			foreach ($this->application->getLanguageArray(true) as $lang)
 			{
 				if ($this->request->isValueSet('name_' . $lang))
@@ -44,9 +44,9 @@ class ProductFileGroupController extends StoreManagementController
 					$fileGroup->setValueByLang('name', $lang, $this->request->get('name_' . $lang));
 				}
 			}
-			
+
 			$fileGroup->save();
-			
+
 			return new JSONResponse(array('status' => "success", 'ID' => $fileGroup->getID()));
 		}
 		else
@@ -54,7 +54,7 @@ class ProductFileGroupController extends StoreManagementController
 			return new JSONResponse(array('status' => "failure", 'errors' => $validator->getErrorList()));
 		}
 	}
-	
+
 	/**
 	 * @role update
 	 */
@@ -72,31 +72,30 @@ class ProductFileGroupController extends StoreManagementController
 		foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
 		{
 			if(empty($key)) continue;
-			$fileGroup = ProductFileGroup::getInstanceByID((int)$key); 
+			$fileGroup = ProductFileGroup::getInstanceByID((int)$key);
 			$fileGroup->position->set((int)$position);
 			$fileGroup->save();
 		}
-		
+
 		return new JSONResponse(false, 'success');
 	}
 
 	public function edit()
 	{
 		$group = ProductFileGroup::getInstanceByID((int)$this->request->get('id'), true);
-		
+
 		return new JSONResponse($group->toArray());
 	}
-	
+
 	private function buildValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
 		$validator = new RequestValidator("productFileGroupValidator", $this->request);
 
 		$validator->addCheck('name_' . $this->application->getDefaultLanguageCode(), new IsNotEmptyCheck($this->translate('_err_group_name_is_empty')));
 
 		return $validator;
 	}
-	
+
 }
 
 ?>

@@ -877,13 +877,11 @@ class CsvImportController extends StoreManagementController
 
 	private function getForm()
 	{
-		ClassLoader::import('framework.request.validator.Form');
 		return new Form($this->getValidator());
 	}
 
 	private function getValidator()
 	{
-		ClassLoader::import('framework.request.validator.RequestValidator');
 		ClassLoader::import('application.helper.filter.HandleFilter');
 
 		return new RequestValidator('csvFile', $this->request);
@@ -891,13 +889,11 @@ class CsvImportController extends StoreManagementController
 
 	private function getDelimiterForm()
 	{
-		ClassLoader::import('framework.request.validator.Form');
 		return new Form($this->getDelimiterValidator());
 	}
 
 	private function getDelimiterValidator()
 	{
-		ClassLoader::import('framework.request.validator.RequestValidator');
 		ClassLoader::import('application.helper.filter.HandleFilter');
 
 		return new RequestValidator('csvDelimiters', $this->request);
@@ -905,13 +901,11 @@ class CsvImportController extends StoreManagementController
 
 	private function getFieldsForm()
 	{
-		ClassLoader::import('framework.request.validator.Form');
 		return new Form($this->getFieldsValidator());
 	}
 
 	private function getFieldsValidator()
 	{
-		ClassLoader::import('framework.request.validator.RequestValidator');
 		ClassLoader::import('application.helper.filter.HandleFilter');
 
 		return new RequestValidator('csvFields', $this->request);

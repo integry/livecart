@@ -35,14 +35,11 @@ class ContactFormController extends FrontendController
 
 	public function buildForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildValidator());
 	}
 
 	public function buildValidator(Request $request = null)
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$request = $request ? $request : $this->request;
 
 		$validator = new RequestValidator("contactForm", $request);

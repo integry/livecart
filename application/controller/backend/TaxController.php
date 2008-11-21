@@ -2,8 +2,6 @@
 
 ClassLoader::import("library.*");
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("framework.request.validator.Form");
-ClassLoader::import("framework.request.validator.RequestValidator");
 ClassLoader::import("application.model.tax.Tax");
 
 /**
@@ -21,40 +19,40 @@ class TaxController extends StoreManagementController
 	public function index()
 	{
 		$response = new ActionResponse();
-		
+
 		$taxesForms = array();
 		$taxes = array();
-		foreach(Tax::getAllTaxes() as $tax) 
+		foreach(Tax::getAllTaxes() as $tax)
 		{
 			$taxes[] = $tax->toArray();
 			$taxesForms[] = $this->createTaxForm($tax);
 		}
-		
+
 		$response->set("taxesForms", $taxesForms);
 		$response->set("taxes", $taxes);
-		
+
 		$newTax = Tax::getNewInstance('');
 		$response->set("newTaxForm", $this->createTaxForm($newTax));
 		$response->set("newTax", $newTax->toArray());
-		
+
 		return $response;
 	}
 
 	public function edit()
 	{
 		$tax = Tax::getInstanceByID((int)$this->request->get('id'), true);
-		
+
 		$form = $this->createTaxForm($tax);
 		$form->setData($tax->toArray());
-		
-		
+
+
 		$response = new ActionResponse();
 		$response->set('tax', $tax->toArray());
 		$response->set('taxForm', $form);
-		
+
 		return $response;
 	}
-	
+
 	/**
 	 * @role remove
 	 */
@@ -62,7 +60,7 @@ class TaxController extends StoreManagementController
 	{
 		$service = Tax::getInstanceByID((int)$this->request->get('id'));
 		$service->delete();
-		
+
 		return new JSONResponse(false, 'success');
 	}
 
@@ -72,7 +70,7 @@ class TaxController extends StoreManagementController
 	public function update()
 	{
 		$tax = Tax::getInstanceByID((int)$this->request->get('id'));
-		
+
 		return $this->saveTax($tax);
 	}
 
@@ -83,41 +81,41 @@ class TaxController extends StoreManagementController
 	{
 		$tax = Tax::getNewInstance($this->request->get('name'));
 		$tax->position->set(1000);
-		
+
 		return $this->saveTax($tax);
 	}
-	
+
 	private function saveTax(Tax $tax)
 	{
 		$validator = $this->createTaxFormValidator($tax);
-		
+
 		if($validator->isValid())
-		{			
-			$tax->setValueArrayByLang(array('name'), $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true, false), $this->request);	  
-			
+		{
+			$tax->setValueArrayByLang(array('name'), $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true, false), $this->request);
+
 			$tax->save();
-			
+
 			return new JSONResponse(array('tax' => $tax->toArray()), 'success');
 		}
 		else
 		{
-			
+
 			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_could_not_save_tax_entry'));
 		}
 	}
-	
+
 	/**
 	 * @return Form
 	 */
 	private function createTaxForm(Tax $tax)
 	{
 		$form = new Form($this->createTaxFormValidator($tax));
-		
+
 		$form->setData($tax->toArray());
-		
+
 		return $form;
 	}
-	
+
 	/**
 	 * @return RequestValidator
 	 */
@@ -125,7 +123,7 @@ class TaxController extends StoreManagementController
 	{
 		$validator = new RequestValidator("taxForm_" . $tax->isExistingRecord() ? $tax->getID() : '', $this->request);
 		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("_error_the_name_should_not_be_empty")));
-		
+
 		return $validator;
 	}
 

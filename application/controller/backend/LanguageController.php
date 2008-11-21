@@ -508,14 +508,11 @@ class LanguageController extends StoreManagementController
 
 	private function buildAddPhraseForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildAddPhraseValidator());
 	}
 
 	private function buildAddPhraseValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator("addLangPhrase", $this->request);
 		$validator->addCheck("key", new IsNotEmptyCheck($this->translate("_phrase_key_empty")));
 		$validator->addCheck("value", new IsNotEmptyCheck($this->translate("_phrase_value_empty")));

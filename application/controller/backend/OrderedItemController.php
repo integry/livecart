@@ -4,8 +4,6 @@ ClassLoader::import("application.model.order.*");
 ClassLoader::import("application.model.Currency");
 ClassLoader::import("application.model.product.*");
 ClassLoader::import("library.*");
-ClassLoader::import("framework.request.validator.RequestValidator");
-ClassLoader::import("framework.request.validator.Form");
 
 /**
  * ...

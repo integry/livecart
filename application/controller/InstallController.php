@@ -1,8 +1,6 @@
 <?php
 
 ClassLoader::import('application.model.system.Installer');
-ClassLoader::import("framework.request.validator.Form");
-ClassLoader::import("framework.request.validator.RequestValidator");
 
 /**
  * LiveCart installer

@@ -755,8 +755,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	 */
 	private function buildValidator(Product $product)
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator("productFormValidator", $this->request);
 
 		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name_empty')));
@@ -790,7 +788,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	private function buildForm(Product $product)
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildValidator($product));
 	}
 
