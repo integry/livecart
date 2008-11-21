@@ -60,7 +60,7 @@ function smarty_function_calendar($params, $smarty)
 <script type="text/javascript">
 	var visible = $("{$params['id']}");
 	var button = $("{$params['id']}_button");
-	var realInput = button.parentNode.down('.hidden');
+	var realInput = $(button.parentNode).down('.hidden');
 	button.realInput = realInput;
 
 	button.showInput = visible;
@@ -80,14 +80,17 @@ function smarty_function_calendar($params, $smarty)
 	Event.observe(button, "click", updateDate.bind(button));
 	Event.observe(visible, "blur", function() { if (!this.value) { this.realInput.value = ''; } });
 
-	Calendar.setup({
-		inputField:	 "{$params['id']}",
-		inputFieldReal: "{$params['id']}_real",
-		ifFormat:	   "{$format}",
-		button:		 "{$params['id']}_button",
-		align:		  "BR",
-		singleClick:	true
-	});
+	window.setTimeout(function()
+		{
+			Calendar.setup({
+				inputField:	 "{$params['id']}",
+				inputFieldReal: "{$params['id']}_real",
+				ifFormat:	   "{$format}",
+				button:		 "{$params['id']}_button",
+				align:		  "BR",
+				singleClick:	true
+			});
+		}, 200);
 
 	visible.ondblclick = button.onclick;
 </script>
