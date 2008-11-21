@@ -35,7 +35,6 @@ _select_addresses=Vybrať objednávacie adresy
 _total=Celková objednávka
 _checkout=Úhrada
 _pay_offline=Platiť offline
-_offline_instructions=Inštrukcie ohľadom offline platieb na stránke platby 
 _offline_complete_payment=Vykonať offline platbu
 _completed_not_paid=...vložte Vaše inštrukcie offline platby sem...
 _cvv_descr=3 alebo 4 číselný kód nasledujúci po # na zadnej strane karty

@@ -6,6 +6,8 @@ ClassLoader::import("application.helper.*");
 ClassLoader::import("application.model.system.Language");
 ClassLoader::import("library.locale.*");
 ClassLoader::import("library.locale.LCiTranslator");
+ClassLoader::import("framework.request.validator.Form");
+ClassLoader::import("framework.request.validator.RequestValidator");
 
 /**
  * Base controller for the whole application

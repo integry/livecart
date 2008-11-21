@@ -1,11 +1,11 @@
 <?php
 
-ClassLoader::import("application.model.system.MultilingualObject");
+ClassLoader::import('application.model.system.MultilingualObject');
 ClassLoader::import('application.model.filter.SpecificationFilterInterface');
 ClassLoader::import('application.model.filter.FilterGroup');
 ClassLoader::import('application.model.category.SpecField');
 ClassLoader::import('application.model.category.SpecFieldValue');
-ClassLoader::import('application.helper.CreateHandleString');
+ClassLoader::importNow('application.helper.CreateHandleString');
 
 /**
  * Filters allow to filter the product list by specific product attribute values.

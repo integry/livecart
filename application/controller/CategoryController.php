@@ -239,7 +239,7 @@ class CategoryController extends FrontendController
 			}
 		}
 
-		ActiveRecordModel::addToEavQueue('Category', $categoryArray);
+//		ActiveRecordModel::addToEavQueue('Category', $categoryArray);
 
 		ActiveRecordModel::loadEav();
 
@@ -547,7 +547,6 @@ class CategoryController extends FrontendController
 	 */
 	private function buildSortForm($order)
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		$form = new Form(new RequestValidator("productSort", $this->request));
 		$form->enableClientSideValidation(false);
 		$form->set('sort', $order);

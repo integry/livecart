@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import("application.model.eavcommon.EavSpecificationManagerCommon");
+ClassLoader::import("application.model.eav.EavField");
 ClassLoader::import("application.model.eav.EavItem");
 ClassLoader::import("application.model.eav.EavMultiValueItem");
 ClassLoader::import("application.model.eav.EavStringValue");
@@ -31,6 +32,11 @@ class EavSpecificationManager extends EavSpecificationManagerCommon
 	public function getSpecificationFieldSet($loadReferencedRecords = false)
 	{
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle($this->getFieldClass(), 'classID'), EavField::getClassID($this->owner)));
+		if ($this->owner->getStringIdentifier())
+		{
+			$f->mergeCondition(new EqualsCond(new ARFieldHandle('EavField', 'stringIdentifier'), $this->owner->getStringIdentifier()));
+		}
+
 		$f->setOrder(new ARFieldHandle($this->getFieldClass(), 'position'));
 		return ActiveRecordModel::getRecordSet($this->getFieldClass(), $f, $loadReferencedRecords);
 	}

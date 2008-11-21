@@ -51,7 +51,8 @@
 			{/err}
 		</p>
 
-		<p>
+		<p class="submit">
+			<label></label>
 			<input type="submit" class="submit" value="{tn _complete_now}" />
 		</p>
 

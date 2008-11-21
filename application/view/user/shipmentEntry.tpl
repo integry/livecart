@@ -8,6 +8,7 @@
 
 	<thead>
 		<tr>
+			<th class="sku">{t _sku}</th>
 			<th class="productName">{t _product}</th>
 			<th>{t _price}</th>
 			<th>{t _quantity}</th>
@@ -21,7 +22,7 @@
 
 		{foreach from=$shipment.taxes item="tax"}
 			<tr>
-				<td colspan="3" class="tax">{$tax.TaxRate.Tax.name_lang}:</td>
+				<td colspan="4" class="tax">{$tax.TaxRate.Tax.name_lang}:</td>
 				<td>{$tax.formattedAmount[$order.Currency.ID]}</td>
 			</tr>
 		{/foreach}
@@ -29,14 +30,14 @@
 		{if $smarty.foreach.shipments.iteration == 1}
 			{foreach from=$order.discounts item=discount}
 				<tr>
-					<td colspan="3" class="subTotalCaption">{t _discount}: <span class="discountDesc">{$discount.description}</span></td>
+					<td colspan="4" class="subTotalCaption">{t _discount}: <span class="discountDesc">{$discount.description}</span></td>
 					<td class="amount discountAmount">{$discount.formatted_amount}</td>
 				</tr>
 			{/foreach}
 		{/if}
 
 		<tr>
-			<td colspan="3" class="subTotalCaption">
+			<td colspan="4" class="subTotalCaption">
 				{if $smarty.foreach.shipments.total > 1}
 					{t _shipment_total}:
 				{else}

@@ -3,8 +3,6 @@
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.order.*");
 ClassLoader::import("application.model.Currency");
-ClassLoader::import("framework.request.validator.Form");
-ClassLoader::import("framework.request.validator.RequestValidator");
 
 /**
  * @package application.controller.backend
@@ -18,6 +16,7 @@ class PaymentController extends StoreManagementController
 		$order = CustomerOrder::getInstanceById($this->request->get('id'));
 
 		$transactions = $this->getTransactionArray($order);
+		ActiveRecordModel::addArrayToEavQueue('Transaction', $transactions);
 
 		foreach ($transactions as $id => $transaction)
 		{
@@ -305,14 +304,11 @@ class PaymentController extends StoreManagementController
 
 	private function buildCaptureForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildCaptureValidator());
 	}
 
 	private function buildCaptureValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator("paymentCapture", $this->request);
 		$validator->addCheck('amount', new IsNotEmptyCheck($this->translate('_err_enter_amount')));
 		$validator->addCheck('amount', new MinValueCheck($this->translate('_err_amount_not_positive'), 0.000001));
@@ -324,14 +320,11 @@ class PaymentController extends StoreManagementController
 
 	private function buildOfflinePaymentForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildOfflinePaymentValidator());
 	}
 
 	private function buildOfflinePaymentValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator("offlinePayment", $this->request);
 		$validator->addCheck('amount', new IsNotEmptyCheck($this->translate('_err_enter_amount')));
 		$validator->addCheck('amount', new MinValueCheck($this->translate('_err_amount_not_positive'), 0.01));
@@ -343,13 +336,11 @@ class PaymentController extends StoreManagementController
 
 	private function buildCreditCardForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildCreditCardValidator());
 	}
 
 	private function buildCreditCardValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
 		$validator = new RequestValidator("creditCard", $this->request);
 
 		$validator->addCheck('amount', new IsNotEmptyCheck($this->translate('_err_enter_amount')));

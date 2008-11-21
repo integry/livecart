@@ -4,6 +4,8 @@ ClassLoader::import('application.model.order.CustomerOrder');
 ClassLoader::import('application.model.order.SessionOrder');
 ClassLoader::import('application.model.discount.DiscountCondition');
 ClassLoader::import('application.model.Currency');
+ClassLoader::import('application.model.product.Product');
+ClassLoader::import('application.model.product.ProductOption');
 
 /**
  * @author Integry Systems
@@ -190,6 +192,12 @@ class OrderController extends FrontendController
 				{
 					OrderCoupon::getNewInstance($this->order, $code)->save();
 				}
+
+				$this->setMessage($this->makeText('_coupon_added', array($code)));
+			}
+			else
+			{
+				$this->setErrorMessage($this->makeText('_coupon_not_found', array($code)));
 			}
 
 			$this->order->getCoupons(true);
@@ -203,10 +211,10 @@ class OrderController extends FrontendController
 			return new ActionRedirectResponse('order', 'index');
 		}
 
+		$this->order->loadRequestData($this->request);
+
 		foreach ($this->order->getOrderedItems() as $item)
 		{
-			$this->order->loadRequestData($this->request);
-
 			if ($this->request->isValueSet('item_' . $item->getID()))
 			{
 				foreach ($item->product->get()->getOptions(true) as $option)
@@ -504,8 +512,6 @@ class OrderController extends FrontendController
 	 */
 	private function buildCartForm(CustomerOrder $order, $options)
 	{
-		ClassLoader::import("framework.request.validator.Form");
-
 		$form = new Form($this->buildCartValidator($order, $options));
 
 		foreach ($order->getOrderedItems() as $item)
@@ -523,8 +529,6 @@ class OrderController extends FrontendController
 
 	private function buildOptionsForm(OrderedItem $item, $options)
 	{
-		ClassLoader::import("framework.request.validator.Form");
-
 		$form = new Form($this->buildOptionsValidator($item, $options));
 		$this->setFormItem($item, $form);
 
@@ -570,8 +574,6 @@ class OrderController extends FrontendController
 	{
 		unset($_SESSION['optionError']);
 
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator("cartValidator", $this->request);
 
 		foreach ($order->getOrderedItems() as $item)
@@ -579,15 +581,16 @@ class OrderController extends FrontendController
 			$this->buildItemValidation($validator, $item, $options);
 		}
 
-		$order->getSpecification()->setValidation($validator, true);
+		if ($this->config->get('CHECKOUT_CUSTOM_FIELDS') == 'CART_PAGE')
+		{
+			$order->getSpecification()->setValidation($validator, true);
+		}
 
 		return $validator;
 	}
 
 	private function buildOptionsValidator(OrderedItem $item, $options)
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator("optionValidator", $this->request);
 		$this->buildItemValidation($validator, $item, $options);
 

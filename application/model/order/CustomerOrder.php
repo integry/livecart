@@ -2,6 +2,7 @@
 
 ClassLoader::import("application.model.Currency");
 ClassLoader::import("application.model.user.User");
+ClassLoader::import("application.model.user.UserAddress");
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.order.OrderCoupon");
 ClassLoader::import("application.model.order.OrderedItem");
@@ -1250,10 +1251,16 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		}
 		$array['formatted_discountAmount'] = $this->currency->get()->getFormattedPrice($array['discountAmount']);
 
+		// coupons
+		if (!is_null($this->coupons))
+		{
+			$array['coupons'] = $this->coupons->toArray();
+		}
+
 		// payments
+		$currency = $this->currency->get();
 		if (isset($options['payments']))
 		{
-			$currency = $this->currency->get();
 			$array['amountPaid'] = $this->getPaidAmount();
 
 			$array['amountNotCaptured'] = $array['amountPaid'] - $array['capturedAmount'];
@@ -1267,24 +1274,30 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			{
 				$array['amountDue'] = 0;
 			}
+		}
 
-			// items subtotal
-			$array['itemSubtotal'] = 0;
-			foreach ($this->getOrderedItems() as $item)
-			{
-				$array['itemSubtotal'] += $item->getSubtotal($currency);
-			}
+		// items subtotal
+		$array['itemSubtotal'] = 0;
+		foreach ($this->getOrderedItems() as $item)
+		{
+			$array['itemSubtotal'] += $item->getSubtotal($currency);
+		}
 
-			// shipping subtotal
-			$array['shippingSubtotal'] = 0;
+		// shipping subtotal
+		$array['shippingSubtotal'] = 0;
+		if ($this->shipments)
+		{
 			foreach ($this->shipments as $shipment)
 			{
 				$array['shippingSubtotal'] += $shipment->shippingAmount->get();
 			}
+		}
 
-			$array['subtotalBeforeTaxes'] = $array['itemSubtotal'] + $array['shippingSubtotal'];
+		$array['subtotalBeforeTaxes'] = $array['itemSubtotal'] + $array['shippingSubtotal'];
 
-			foreach (array('amountPaid', 'amountNotCaptured', 'amountDue', 'itemSubtotal', 'shippingSubtotal', 'subtotalBeforeTaxes', 'totalAmount') as $key)
+		foreach (array('amountPaid', 'amountNotCaptured', 'amountDue', 'itemSubtotal', 'shippingSubtotal', 'subtotalBeforeTaxes', 'totalAmount') as $key)
+		{
+			if (isset($array[$key]))
 			{
 				$array['formatted_' . $key] = $currency->getFormattedPrice($array[$key]);
 			}
@@ -1645,6 +1658,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		}
 
 		return $shippableCount;
+	}
+
+	public function loadRequestData(Request $request)
+	{
+		$this->getSpecification()->loadRequestData($request);
 	}
 
 	public function serialize()

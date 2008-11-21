@@ -17,9 +17,22 @@
 	{includeCss file="../javascript/library/tinymce/themes/advanced/css/editor_ui.css" front=true}
 	{includeCss file="backend/stat.css" front=true}
 	{includeCss file="backend/Backend.css" front=true}
-	{compiledCss glue=true}
+	{compiledCss glue=true nameMethod=hash}
 
 	{includeJs file=library/tinymce/tiny_mce.js inline=true}
+
+	{*
+	{includeJs file=library/tinymce/tiny_mce_gzip.js}
+	{includeJs file=library/tinymce/tiny_gz_start.js}
+	{includeJs file=library/tinymce/tiny_mce_src.js}
+	{includeJs file=library/tinymce/langs/en.js}
+	{includeJs file=library/tinymce/plugins/contextmenu/editor_plugin.js}
+	{includeJs file=library/tinymce/plugins/table/editor_plugin.js}
+	{includeJs file=library/tinymce/themes/advanced/editor_template.js}
+	{includeJs file=library/tinymce/themes/advanced/langs/en.js}
+	{includeJs file=library/tinymce/tiny_gz_end.js}
+	*}
+
 	{includeJs file=library/KeyboardEvent.js front=true}
 	{includeJs file=library/livecart.js front=true}
 	{includeJs file="backend/Backend.js" front=true}
@@ -31,7 +44,7 @@
 	{includeJs file="library/scriptaculous/effects.js" front=true}
 	{includeJs file="library/prototype/prototype.js" front=true}
 
-	{compiledJs glue=true}
+	{compiledJs glue=true nameMethod=hash}
 
 	{literal}
 	<script language="javascript" type="text/javascript">

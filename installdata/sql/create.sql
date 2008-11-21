@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2008-10-12 19:02                                #
-# Model version:         Version 2008-10-12                              #
+# Created on:            2008-11-19 23:00                                #
+# Model version:         Version 2008-11-19 2                            #
 # ---------------------------------------------------------------------- #
 
 
@@ -20,7 +20,7 @@
 
 CREATE TABLE Product (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Number of times product has been viewed by customers',
-    categoryID INTEGER UNSIGNED NOT NULL COMMENT 'The Category the product belongs to',
+    categoryID INTEGER UNSIGNED COMMENT 'The Category the product belongs to',
     manufacturerID INTEGER UNSIGNED COMMENT 'ID of the assigned manufacturer',
     defaultImageID INTEGER UNSIGNED COMMENT 'ID of ProductImage, which has been designated as the default image for the particular product',
     parentID INTEGER UNSIGNED,
@@ -52,6 +52,7 @@ CREATE TABLE Product (
     reservedCount FLOAT COMMENT 'Number of products that are reserved (ordered and in stock but not delivered yet)',
     salesRank INTEGER COMMENT 'Number of products sold',
     position INTEGER UNSIGNED DEFAULT 0,
+    childSettings TEXT COMMENT 'Determines price and shipping weight calculation for child products - whether to add/substract from parent or override completely',
     CONSTRAINT PK_Product PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -644,6 +645,7 @@ CREATE TABLE Transaction (
     ccType VARCHAR(40),
     ccName VARCHAR(100),
     comment TEXT,
+    serializedData TEXT,
     CONSTRAINT PK_Transaction PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -1202,6 +1204,7 @@ CREATE TABLE EavField (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     eavFieldGroupID INTEGER UNSIGNED COMMENT 'SpecFieldGroup ID if the attribute is being grouped together with other related attributes. If the attribute is not grouped, the value is NULL.',
     classID INTEGER COMMENT 'The Category the particular SpecField (attribute) belongs to',
+    stringIdentifier CHAR(40),
     name MEDIUMTEXT COMMENT 'Attribute name (translatable)',
     description MEDIUMTEXT COMMENT 'Attribute description / explanation (translatable)',
     type SMALLINT DEFAULT 1 COMMENT 'Field data type. Available types: 1. selector (numeric) 2. input (numeric) 3. input (text) 4. editor (text) 5. selector (text) 6. Date',
@@ -1227,6 +1230,7 @@ CREATE INDEX IDX_SpecField_1 ON EavField (classID);
 CREATE TABLE EavFieldGroup (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     classID INTEGER COMMENT 'The Category the particular SpecFieldGroup (attribute group) belongs to',
+    stringIdentifier CHAR(40),
     name MEDIUMTEXT COMMENT 'Group name (translatable)',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other groups',
     CONSTRAINT PK_EavFieldGroup PRIMARY KEY (ID)
@@ -1246,6 +1250,8 @@ CREATE TABLE EavObject (
     manufacturerID INTEGER UNSIGNED,
     userID INTEGER UNSIGNED,
     userGroupID INTEGER UNSIGNED,
+    userAddressID INTEGER UNSIGNED,
+    transactionID INTEGER UNSIGNED,
     classID TINYINT UNSIGNED,
     CONSTRAINT PK_EavObject PRIMARY KEY (ID)
 )
@@ -1426,6 +1432,56 @@ CREATE TABLE ProductCategory (
     productID INTEGER UNSIGNED NOT NULL,
     categoryID INTEGER UNSIGNED NOT NULL,
     CONSTRAINT PK_ProductCategory PRIMARY KEY (productID, categoryID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "ProductVariationTemplate"                                   #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ProductVariationTemplate (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    name MEDIUMTEXT,
+    CONSTRAINT PK_ProductVariationTemplate PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "ProductVariationType"                                       #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ProductVariationType (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    templateID INTEGER UNSIGNED,
+    productID INTEGER UNSIGNED,
+    position INTEGER UNSIGNED DEFAULT 0,
+    name MEDIUMTEXT,
+    CONSTRAINT PK_ProductVariationType PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "ProductVariation"                                           #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ProductVariation (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    typeID INTEGER UNSIGNED,
+    position INTEGER UNSIGNED DEFAULT 0,
+    name MEDIUMTEXT,
+    CONSTRAINT PK_ProductVariation PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "ProductVariationValue"                                      #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ProductVariationValue (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    productID INTEGER UNSIGNED,
+    variationID INTEGER UNSIGNED,
+    CONSTRAINT PK_ProductVariationValue PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -1775,6 +1831,12 @@ ALTER TABLE EavObject ADD CONSTRAINT Manufacturer_EavObject
 ALTER TABLE EavObject ADD CONSTRAINT CustomerOrder_EavObject 
     FOREIGN KEY (customerOrderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
+ALTER TABLE EavObject ADD CONSTRAINT UserAddress_EavObject 
+    FOREIGN KEY (userAddressID) REFERENCES UserAddress (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE EavObject ADD CONSTRAINT Transaction_EavObject 
+    FOREIGN KEY (transactionID) REFERENCES Transaction (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
 ALTER TABLE ManufacturerImage ADD CONSTRAINT Manufacturer_ManufacturerImage 
     FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -1812,22 +1874,22 @@ ALTER TABLE DiscountConditionRecord ADD CONSTRAINT DiscountCondition_DiscountCon
     FOREIGN KEY (conditionID) REFERENCES DiscountCondition (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE DiscountConditionRecord ADD CONSTRAINT DeliveryZone_DiscountConditionRecord 
-    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE DiscountConditionRecord ADD CONSTRAINT Product_DiscountConditionRecord 
-    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE DiscountConditionRecord ADD CONSTRAINT Manufacturer_DiscountConditionRecord 
-    FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+    FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE DiscountConditionRecord ADD CONSTRAINT Category_DiscountConditionRecord 
-    FOREIGN KEY (categoryID) REFERENCES Category (ID);
+    FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE DiscountConditionRecord ADD CONSTRAINT UserGroup_DiscountConditionRecord 
-    FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID);
+    FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE DiscountConditionRecord ADD CONSTRAINT User_DiscountConditionRecord 
-    FOREIGN KEY (userID) REFERENCES User (ID);
+    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE ProductBundle ADD CONSTRAINT Product_ProductBundle 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1840,3 +1902,18 @@ ALTER TABLE ProductCategory ADD CONSTRAINT Category_ProductCategory
 
 ALTER TABLE ProductCategory ADD CONSTRAINT Product_ProductCategory 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductVariationType ADD CONSTRAINT ProductVariationTemplate_ProductVariationType 
+    FOREIGN KEY (templateID) REFERENCES ProductVariationTemplate (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductVariationType ADD CONSTRAINT Product_ProductVariationType 
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductVariation ADD CONSTRAINT ProductVariationType_ProductVariation 
+    FOREIGN KEY (typeID) REFERENCES ProductVariationType (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductVariationValue ADD CONSTRAINT Product_ProductVariationValue 
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductVariationValue ADD CONSTRAINT ProductVariation_ProductVariationValue 
+    FOREIGN KEY (variationID) REFERENCES ProductVariation (ID) ON DELETE CASCADE ON UPDATE CASCADE;

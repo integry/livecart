@@ -844,6 +844,7 @@ Backend.ProductVariationItem.prototype =
 
 		editor.registerItem(this);
 		editor.syncRowspans();
+		this.initFields();
 	},
 
 	setData: function(data)
@@ -875,13 +876,16 @@ Backend.ProductVariationItem.prototype =
 
 		['sku', 'shippingWeight', 'stockCount'].each(function(field)
 		{
-			this.row.fieldCells[field].getElementsByTagName('input')[0].value = this.data[field];
+			if (this.data[field])
+			{
+				this.row.fieldCells[field].getElementsByTagName('input')[0].value = this.data[field];
+			}
 		}.bind(this));
 
-		var priceField = 'price_' + this.getEditor().currency;
-		if (this.data[priceField] && (this.data[priceField] != 0))
+		var currency = this.getEditor().currency;
+		if (this.data.definedPrices && (this.data.definedPrices[currency] != 0))
 		{
-			this.row.fieldCells['price'].getElementsByTagName('input')[0].value = this.data[priceField];
+			this.row.fieldCells['price'].getElementsByTagName('input')[0].value = this.data.definedPrices[currency];
 		}
 
 		var priceSelect = this.row.fieldCells['price'].getElementsByTagName('select')[0];
@@ -889,12 +893,12 @@ Backend.ProductVariationItem.prototype =
 
 		if (this.data.childSettings)
 		{
-			if (this.data.childSettings.price)
+			if (typeof this.data.childSettings.price == 'number')
 			{
 				priceSelect.value = this.data.childSettings.price;
 			}
 
-			if (this.data.childSettings.weight)
+			if (typeof this.data.childSettings.weight == 'number')
 			{
 				weightSelect.value = this.data.childSettings.weight;
 			}
@@ -1095,10 +1099,15 @@ Backend.ProductVariationItem.prototype =
 		if ($F(el))
 		{
 			cell.addClassName('input');
+			cell.inputField = cell.getElementsByTagName('input')[0];
 		}
 		else
 		{
 			cell.removeClassName('input');
+			if (cell.inputField)
+			{
+				cell.inputField.value = '';
+			}
 		}
 	},
 

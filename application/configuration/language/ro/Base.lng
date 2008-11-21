@@ -1,4 +1,5 @@
-_live_translate=Traducere 
+_sku=SKU
+_live_translate=Traducere
 _err_numeric=Indicele trebuie sa fie numeric
 _err_specfield_required=Rubrica obligatorie
 _err_negative=Indicele nu poate fi negativ

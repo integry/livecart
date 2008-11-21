@@ -2,7 +2,7 @@
 
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.staticpage.StaticPage");
-		
+
 /**
  * Static page management
  *
@@ -20,51 +20,51 @@ class StaticPageController extends StoreManagementController
 		$f = new ARSelectFilter();
 		$f->setOrder(new ARFieldHandle('StaticPage', 'position'));
 		$s = ActiveRecordModel::getRecordSetArray('StaticPage', $f);
-		
+
 		$pages = array();
 		foreach ($s as $page)
 		{
 			$pages[$page['ID']] = $page['title_lang'];
 		}
-		
+
 		$response = new ActionResponse();
 		$response->set('pages', json_encode($pages));
 		return $response;
 	}
-	
+
 	/**
 	 * @role create
 	 */
 	public function add()
 	{
-		$response = new ActionResponse();		
-		$response->set('form', $this->getForm());				
+		$response = new ActionResponse();
+		$response->set('form', $this->getForm());
 		return $response;
-	}	  
+	}
 
 	public function edit()
 	{
 		$page = StaticPage::getInstanceById($this->request->get('id'), StaticPage::LOAD_DATA)->toArray();
-		
+
 		$form = $this->getForm();
-				
-		$form->setData($page);		
-				
-		$response = new ActionResponse();				
+
+		$form->setData($page);
+
+		$response = new ActionResponse();
 		$response->set('form', $form);
 		$response->set('page', $page);
-		return $response;		
+		return $response;
 	}
-	
+
 	/**
 	 * Reorder pages
-	 * 
+	 *
 	 * @role sort
 	 */
 	public function reorder()
 	{
 		$inst = StaticPage::getInstanceById($this->request->get('id'), StaticPage::LOAD_DATA);
-		
+
 		$f = new ARSelectFilter();
 		$handle = new ARFieldHandle('StaticPage', 'position');
 		if ('down' == $this->request->get('order'))
@@ -75,12 +75,12 @@ class StaticPageController extends StoreManagementController
 		else
 		{
 			$f->setCondition(new LessThanCond($handle, $inst->position->get()));
-			$f->setOrder($handle, 'DESC');		
+			$f->setOrder($handle, 'DESC');
 		}
 		$f->setLimit(1);
-		
+
 		$s = ActiveRecordModel::getRecordSet('StaticPage', $f);
-		
+
 		if ($s->size())
 		{
 			$pos = $inst->position->get();
@@ -89,32 +89,32 @@ class StaticPageController extends StoreManagementController
 			$replace->position->set($pos);
 			$inst->save();
 			$replace->save();
-			
-			return new JSONResponse(array('id' => $inst->getID(), 'order' => $this->request->get('order')), 'success');	
+
+			return new JSONResponse(array('id' => $inst->getID(), 'order' => $this->request->get('order')), 'success');
 		}
 		else
 		{
-			return new JSONResponse(false, 'failure', $this->translate('_could_not_reorder_pages'));	
-		}	
-	}	
-	
+			return new JSONResponse(false, 'failure', $this->translate('_could_not_reorder_pages'));
+		}
+	}
+
 	/**
 	 * @role update
 	 */
 	public function update()
 	{
 		$page = StaticPage::getInstanceById((int)$this->request->get('id'), StaticPage::LOAD_DATA);
-		
+
 		return $this->save($page);
 	}
-	
+
 	/**
 	 * @role create
 	 */
 	public function create()
 	{
-		$page = StaticPage::getNewInstance();	
-		
+		$page = StaticPage::getNewInstance();
+
 		return $this->save($page);
 	}
 
@@ -125,49 +125,47 @@ class StaticPageController extends StoreManagementController
 	{
 		try
 		{
-			$inst = StaticPage::getInstanceById($this->request->get('id'), StaticPage::LOAD_DATA);	
-			
+			$inst = StaticPage::getInstanceById($this->request->get('id'), StaticPage::LOAD_DATA);
+
 			$inst->delete();
-				
+
 			return new JSONResponse(array('id' => $inst->getID()), 'success');
 		}
 		catch (Exception $e)
 		{
-			return new JSONResponse(false, 'failure');	
-		}		
+			return new JSONResponse(false, 'failure');
+		}
 	}
-	
+
 	public function emptyPage()
 	{
 		return new ActionResponse();
 	}
-	
+
 	private function save(StaticPage $page)
 	{
 		$page->loadRequestData($this->request);
 		$page->save();
-		
+
 		$arr = $page->toArray();
-		
+
 		return new JSONResponse(array('id' => $page->getID(), 'title' => $arr['title_lang']), 'success', $this->translate('_page_has_been_successfully_saved'));
 	}
-	
+
 	private function getForm()
 	{
-		ClassLoader::import('framework.request.validator.Form');
 		return new Form($this->getValidator());
 	}
 
 	private function getValidator()
-	{	
-		ClassLoader::import('framework.request.validator.RequestValidator');
+	{
 		ClassLoader::import('application.helper.filter.HandleFilter');
-				
+
 		$val = new RequestValidator('staticPage', $this->request);
 		$val->addCheck('title', new IsNotEmptyCheck($this->translate('_err_title_empty')));
 		$val->addCheck('text', new IsNotEmptyCheck($this->translate('_err_text_empty')));
 		$val->addFilter('handle', HandleFilter::create());
-				
+
 		return $val;
 	}
 }

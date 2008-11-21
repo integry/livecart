@@ -1,9 +1,7 @@
-<input type="hidden" name="return" value="{$return}" />
-
 <p class="required">
 	{{err for="`$prefix`firstName"}}
 	   {{label {t _your_first_name}:}}
-	   {textfield class="text" id="firstName"}
+	   {textfield class="text"}
 	{/err}
 </p>
 
@@ -75,8 +73,12 @@
 {/if}
 
 <p class="required">
-	{{err for="`$prefix`zip"}}
+	{{err for="`$prefix`postalCode"}}
 		{{label {t _postal_code}:}}
 		{textfield class="text"}
 	{/err}
 </p>
+
+{if $return}
+	<input type="hidden" name="return" value="{$return}" />
+{/if}

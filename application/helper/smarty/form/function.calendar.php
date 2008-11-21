@@ -49,50 +49,50 @@ function smarty_function_calendar($params, $smarty)
 
 	$params['class'] = !isset($params['class']) ? 'date' : $params['class']. ' date';
 
-	$output  = '<span><input type="text" value="'.$value.'" name="'.$params['id'].'_visible" ';
+	$output  = '<input type="text" value="'.$value.'" name="'.$params['id'].'_visible" ';
 	foreach ($params as $n => $v)
 		$output .= ' ' . $n . '="' . $v . '"';
 	$output .= "/>";
 
 	$output .= '<input type="hidden" class="hidden" class="calendar" name="'.$fieldName.'" value="'.$value.'" class="calendar-real" id="'.$params['id'].'_real" />';
-	$output .= '<img src="image/silk/calendar.png" id="'.$params['id'].'_button" class="calendar_button" title="Date selector" onmouseover="Element.addClassName(this, \'calendar_button_hover\');" onmouseout="Element.removeClassName(this, \'calendar_button_hover\');" /></span>';
+	$output .= '<img src="image/silk/calendar.png" id="'.$params['id'].'_button" class="calendar_button" title="Date selector" onmouseover="Element.addClassName(this, \'calendar_button_hover\');" onmouseout="Element.removeClassName(this, \'calendar_button_hover\');" />';
 	$output .= <<<JAVASCRIPT
 <script type="text/javascript">
-	Event.observe(window, 'load', function(){
-		var visible = $("{$params['id']}");
-		var button = $("{$params['id']}_button");
-		var realInput = $(button.parentNode).down('.hidden');
-		button.realInput = realInput;
+	var visible = $("{$params['id']}");
+	var button = $("{$params['id']}_button");
+	var realInput = $(button.parentNode).down('.hidden');
+	button.realInput = realInput;
 
-		button.showInput = visible;
-		visible.realInput = realInput;
-		visible.showInput = visible;
+	button.showInput = visible;
+	visible.realInput = realInput;
+	visible.showInput = visible;
 
-		var updateDate = function(e)
+	var updateDate = function(e)
+	{
+		Calendar.updateDate.bind(this)();
+		Event.stop(e);
+	};
+
+	Event.observe(visible, "dbclick", updateDate.bind(visible));
+	Event.observe(visible, "keyup",	 updateDate.bind(visible));
+	Event.observe(visible, "blur",	updateDate.bind(visible));
+	Event.observe(button, "mousedown", updateDate.bind(button));
+	Event.observe(button, "click", updateDate.bind(button));
+	Event.observe(visible, "blur", function() { if (!this.value) { this.realInput.value = ''; } });
+
+	window.setTimeout(function()
 		{
-			Calendar.updateDate.bind(this)();
-			Event.stop(e);
-		};
+			Calendar.setup({
+				inputField:	 "{$params['id']}",
+				inputFieldReal: "{$params['id']}_real",
+				ifFormat:	   "{$format}",
+				button:		 "{$params['id']}_button",
+				align:		  "BR",
+				singleClick:	true
+			});
+		}, 200);
 
-		Event.observe(visible, "dbclick", updateDate.bind(visible));
-		Event.observe(visible, "keyup",	 updateDate.bind(visible));
-		Event.observe(visible, "blur",	updateDate.bind(visible));
-		Event.observe(button, "mousedown", updateDate.bind(button));
-		Event.observe(button, "click", updateDate.bind(button));
-		Event.observe(visible, "blur", function() { if (!this.value) { this.realInput.value = ''; } }.bind(visible));
-
-		Calendar.setup({
-			inputField:	 "{$params['id']}",
-			inputFieldReal: "{$params['id']}_real",
-			ifFormat:	   "{$format}",
-			button:		 "{$params['id']}_button",
-			align:		  "BR",
-			singleClick:	true
-		});
-
-		visible.ondblclick = button.onclick;
-	});
-
+	visible.ondblclick = button.onclick;
 </script>
 JAVASCRIPT;
 

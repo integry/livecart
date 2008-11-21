@@ -165,9 +165,6 @@ class CurrencyController extends StoreManagementController
 	{
 		$currency = Currency::getInstanceByID($this->request->get('id'), Currency::LOAD_DATA);
 
-		ClassLoader::import("framework.request.validator.Form");
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$form = new Form($this->buildFormattingValidator());
 		$form->setData($currency->toArray());
 
@@ -218,7 +215,6 @@ class CurrencyController extends StoreManagementController
 	 */
 	public function options()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		$form = new Form($this->buildOptionsValidator());
 		$form->set('updateCb', $this->config->get('currencyAutoUpdate'));
 		$form->set('frequency', $this->config->get('currencyUpdateFrequency'));
@@ -342,13 +338,11 @@ class CurrencyController extends StoreManagementController
 
 	private function buildOptionsValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
 		return new RequestValidator("currencySettings", $this->request);
 	}
 
 	private function buildFormattingValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
 		$validator = new RequestValidator("priceFormatting", $this->request);
 		$validator->addFilter('decimalCount', new NumericFilter());
 		return $validator;
@@ -361,8 +355,6 @@ class CurrencyController extends StoreManagementController
 	 */
 	private function buildValidator($currencies)
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator("rate", $this->request);
 		foreach ($currencies as $currency)
 		{
@@ -382,7 +374,6 @@ class CurrencyController extends StoreManagementController
 	 */
 	private function buildForm($currencies)
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildValidator($currencies));
 	}
 }

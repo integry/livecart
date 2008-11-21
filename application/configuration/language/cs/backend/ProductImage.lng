@@ -1,0 +1,17 @@
+_cancel_new=Zrušit přidávání nového obrázku
+_add_new=Přidat nový obrázek
+_add_new_title=Přidat nový obrázek
+_delete_confirm=Skutečně chcete odstranit tento obrázek?
+_main_image=Hlavní obrázek
+_supplemental_images=Doplňkové obrázky
+_no_images=Tomuto produktu nebyly zatím přiřazeny žádné obrázky
+_max_file_size=Pouze JPEG, GIF a PNG soubory. Maximálnéí velikost: [_1]
+_edit_image=Změnit detaily obrázku
+_image_title=Přidat titulek obrázku
+_image_file=Vyberte si soubor obrázku
+_upload=Přidat obrázek
+_save=Uložit
+_err_not_uploaded=Prosím, vyberte soubor
+_err_not_image=Toto není platný obrázek
+_err_resize=Nepodařilo se změnit velikost obrázku
+_err_too_large=Příliš velký soubor

@@ -87,6 +87,11 @@
 		</tr>
 	{/foreach}
 
+	<tr>
+		<td colspan="4" rowspan="1"></td>
+		<td id="cartUpdate" rowspan="3" style="vertical-align: top;"><input type="submit" class="submit" value="{tn _update}" /></td>
+	</tr>
+
 	{foreach from=$cart.discounts item=discount}
 		<tr>
 			<td colspan="3" class="subTotalCaption">{t _discount}: <span class="discountDesc">{$discount.description}</span></td>
@@ -94,6 +99,13 @@
 			<td></td>
 		</tr>
 	{/foreach}
+
+	{if $cart.shippingSubtotal}
+		<tr>
+			<td colspan="3" class="subTotalCaption">{t _shipping}:</td>
+			<td class="amount shippingAmount">{$cart.formatted_shippingSubtotal}</td>
+		</tr>
+	{/if}
 
 	{foreach $cart.taxes.$currency as $tax}
 		<tr>
@@ -105,7 +117,6 @@
 		<tr>
 			<td colspan="3" class="subTotalCaption">{t _subtotal}:</td>
 			<td class="subTotal">{$cart.formattedTotal.$currency}</td>
-			<td id="cartUpdate"><input type="submit" class="submit" value="{tn _update}" /></td>
 		</tr>
 
 		{if $isCouponCodes}
@@ -113,11 +124,20 @@
 					<td colspan="5">
 						<div class="container">
 							{t _have_coupon}: <input type="text" class="text coupon" name="coupon" /> <input type="submit" class="submit coupon" value="{tn _add_coupon}" />
+							{if $cart.coupons}
+								<div class="appliedCoupons">
+									{t _applied_coupons}:
+									{foreach from=$cart.coupons item=coupon name=coupons}
+										<strong>{$coupon.couponCode}</strong>{if !$smarty.foreach.coupons.last}, {/if}
+									{/foreach}
+								</div>
+							{/if}
 						</div>
 					</td>
 				<tr>
 		{/if}
 
+		{if 'CART_PAGE' == 'CHECKOUT_CUSTOM_FIELDS'|config}
 		{sect}
 			{header}
 				<tr id="cartFields">
@@ -137,6 +157,7 @@
 				</tr>
 			{/footer}
 		{/sect}
+		{/if}
 
 		<tr>
 			<td colspan="4"></td>

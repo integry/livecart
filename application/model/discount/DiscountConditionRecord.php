@@ -48,6 +48,11 @@ class DiscountConditionRecord extends ActiveRecordModel
 		return $instance;
 	}
 
+	public static function getOwnerInstance($className, $id)
+	{
+		return ActiveRecordModel::getInstanceByID($className, $id, ActiveRecordModel::LOAD_DATA);
+	}
+
 	protected function insert()
 	{
 		parent::insert();

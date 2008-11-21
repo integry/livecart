@@ -1,6 +1,6 @@
 #import
 {
-	width: 600px;
+	width: 900px;
 }
 
 #targetCategory
@@ -122,6 +122,11 @@ label.wide
 	overflow: auto;
 }
 
+#fieldsContainer select
+{
+	float: left;
+}
+
 .progressBar
 {
 	float: left;
@@ -140,4 +145,32 @@ label.wide
 	font-size: smaller;
 	overflow: hidden;
 	padding-top: 1em;
+}
+
+span.config
+{
+	background-color: #ddd;
+	border: 1px solid #ccc;
+	display: block;
+	float: left;
+	padding: 0 0.5em;
+	margin: -1em 0 1.5em 1em;
+}
+
+span.config select
+{
+	width: auto;
+}
+
+span.config .block
+{
+	float: left;
+	display: block;
+	margin-left: 0.5em;
+}
+
+span.config .title
+{
+	font-size: 0.75em;
+	display: block;
 }

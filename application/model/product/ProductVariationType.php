@@ -37,7 +37,7 @@ class ProductVariationType extends MultilingualObject
 	{
 		if (is_null($this->position->get()))
 		{
-			$this->setLastPosition();
+			$this->setLastPosition('product');
 		}
 
 		parent::insert();

@@ -405,22 +405,22 @@ class User extends ActiveRecordModel implements EavAble
 
 	public function getBillingAddressArray($defaultFirst = true)
 	{
-		return ActiveRecordModel::getRecordSetArray('BillingAddress', $this->getBillingAddressFilter($defaultFirst), array('UserAddress', 'State'));
+		return ActiveRecordModel::getRecordSetArray('BillingAddress', $this->getBillingAddressFilter($defaultFirst), array('UserAddress'));
 	}
 
 	public function getBillingAddressSet($defaultFirst = true)
 	{
-		return ActiveRecordModel::getRecordSet('BillingAddress', $this->getBillingAddressFilter($defaultFirst), array('UserAddress', 'State'));
+		return ActiveRecordModel::getRecordSet('BillingAddress', $this->getBillingAddressFilter($defaultFirst), array('UserAddress'));
 	}
 
 	public function getShippingAddressArray($defaultFirst = true)
 	{
-		return ActiveRecordModel::getRecordSetArray('ShippingAddress', $this->getShippingAddressFilter($defaultFirst), array('UserAddress', 'State'));
+		return ActiveRecordModel::getRecordSetArray('ShippingAddress', $this->getShippingAddressFilter($defaultFirst), array('UserAddress'));
 	}
 
 	public function getShippingAddressSet($defaultFirst = true)
 	{
-		return ActiveRecordModel::getRecordSet('ShippingAddress', $this->getShippingAddressFilter($defaultFirst), array('UserAddress', 'State'));
+		return ActiveRecordModel::getRecordSet('ShippingAddress', $this->getShippingAddressFilter($defaultFirst), array('UserAddress'));
 	}
 
 	private function getShippingAddressFilter($defaultFirst = true)

@@ -16,7 +16,7 @@ TITLE_FORMAT=Title format
 NAME_FIRST=Store name first
 TITLE_FIRST=Page title first
 
-_display=Display
+_display=Display Preferences
 
 _layout=Appearance
 THEME=Design theme
@@ -196,9 +196,16 @@ _credit_card_options=Credit Card Options
 REQUIRE_CVV=Require Card Verification Code (CVV) to be entered
 
 _offline_payments=Offline Payments
-OFFLINE_PAYMENT=Allow offline payments
+OFFLINE_HANDLERS=Enabled offline payment methods
+OFFLINE1=Bank Wire Transfer
+OFFLINE2=Additional Offline Payment Method
+OFFLINE3=Another Offline Payment Method
+OFFLINE_NAME=Payment method name
+OFFLINE_LOGO=Logo image
+OFFLINE_DESCR=Description
+OFFLINE_INSTR=Payment instructions
 
-_purchase=Orders
+_purchase=Orders & Checkout
 _purchase_settings=Purchasing Settings
 MIN_TOTAL=Minimum order total
 MAX_TOTAL=Maximum order total (0 - no limit)
@@ -208,6 +215,12 @@ ENABLE_CART=Enable shopping cart
 ENABLE_WISHLISTS=Enable wishlists
 ENABLE_MULTIADDRESS=Allow shipping to multiple addresses
 ENABLE_CHECKOUTDELIVERYSTEP=Enter billing and shipping addresses at separate checkout steps
+SKIP_SHIPPING=Skip shipping method selection step if only one shipping method is available (select it automatically)
+CHECKOUT_CUSTOM_FIELDS=Display custom fields at
+CART_PAGE=Shopping basket page
+BILLING_ADDRESS_STEP=Billing address entry step
+SHIPPING_ADDRESS_STEP=Shipping address entry step
+SHIPPING_METHOD_STEP=Shipping method selection step
 
 _shipping=Delivery Settings
 
@@ -275,7 +288,7 @@ CC_ENABLE=Enable credit card payments
 CC_HANDLER=Credit card handler
 CC_AUTHONLY=Only authorize payments without capturing them automatically
 
-_customers=Customers
+_customers=Customers & Registration
 _registration=Registration
 REQUIRE_PHONE=Require customers to enter phone number on registration
 DISABLE_STATE=Remove state field

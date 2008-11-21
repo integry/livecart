@@ -20,6 +20,9 @@ _removed_from_cart=[_1] has been removed from shopping basket
 _added_to_wishlist=[_1] has been added to your wish list
 _moved_to_wishlist=[_1] has been moved to wish list
 _moved_to_cart=[_1] has been moved to shopping basket
+_coupon_added=Coupon "[_1]" has been added to your order
+_coupon_not_found=Coupon "[_1]" was not found
+_applied_coupons=Currently applied coupon(s)
 
 _have_coupon=Have a discount coupon? Enter coupon code
 _add_coupon=Add coupon

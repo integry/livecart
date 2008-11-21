@@ -26,7 +26,6 @@ _will_ship_to=Naročilo bo bilo poslano na
 _will_bill_to=Naročilo bo bilo zaračunano na
 _change=Spremeni
 _pay_offline=Kasnejše plačilo
-_offline_instructions=Navodila za plačilo na strani za način plačila
 _offline_complete_payment=Izvrši plačilo kasneje
 _err_enter_cc_num=Prosimo vpišite številko kreditne kartice
 _err_select_cc_type=Prosimo izberite vrsto kreditne kartice

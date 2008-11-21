@@ -3,8 +3,6 @@
 ClassLoader::import('application.controller.backend.abstract.ActiveGridController');
 ClassLoader::import("application.controller.backend.*");
 ClassLoader::import("application.model.user.*");
-ClassLoader::import("framework.request.validator.Form");
-ClassLoader::import("framework.request.validator.RequestValidator");
 
 /**
  * @package application.controller.backend
@@ -174,7 +172,13 @@ class UserGroupController extends ActiveGridController
 	{
 		$filter = new ARSelectFilter();
 
-		$id = (int)substr($this->request->get('id'), 6);
+		$id = $this->request->get('id');
+
+		if (!is_numeric($id))
+		{
+			$id = (int)substr($id, 6);
+		}
+
 		if($id > 0)
 		{
 			$filter->mergeCondition(new EqualsCond(new ARFieldHandle('User', 'userGroupID'), $id));
@@ -184,8 +188,6 @@ class UserGroupController extends ActiveGridController
 			// without group
 			$filter->mergeCondition(new IsNullCond(new ARFieldHandle('User', 'userGroupID')));
 		}
-
-		//$id = is_numeric($id) ? $id : substr($this->request->get("id"), 9);
 
 		return $filter;
 	}

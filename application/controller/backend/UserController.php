@@ -1,8 +1,6 @@
 <?php
 
 ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
-ClassLoader::import('framework.request.validator.RequestValidator');
-ClassLoader::import('framework.request.validator.Form');
 ClassLoader::import('application.controller.backend.*');
 ClassLoader::import('application.model.user.*');
 ClassLoader::import('application.helper.massAction.MassActionInterface');

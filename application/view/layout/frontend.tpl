@@ -30,13 +30,12 @@
 	{/if}
 
 	<!-- Css includes -->
-	<link href="stylesheet/frontend/Frontend.css" rel="Stylesheet" type="text/css"/>
+	{includeCss file="frontend/Frontend.css"}
+	{includeCss file="backend/stat.css"}
+	{compiledCss glue=true nameMethod=hash}
 	<!--[if IE]>
 		<link href="stylesheet/frontend/FrontendIE.css" rel="Stylesheet" type="text/css"/>
 	<![endif]-->
-
-	{* {includeCss file="backend/stat.css"} *}
-	{compiledCss}
 
 	<!-- JavaScript includes -->
 	{* <script type="text/javascript" src="firebug/firebug.js"></script> *}

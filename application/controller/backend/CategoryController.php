@@ -35,7 +35,6 @@ class CategoryController extends StoreManagementController
 	 */
 	public function form()
 	{
-		ClassLoader::import('framework.request.validator.Form');
 		ClassLoader::import('application.LiveCartRenderer');
 		ClassLoader::import('application.model.presentation.CategoryPresentation');
 
@@ -275,8 +274,6 @@ class CategoryController extends StoreManagementController
 	 */
 	private function buildValidator(Category $category)
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator("category", $this->request);
 		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("Category name should not be empty")));
 

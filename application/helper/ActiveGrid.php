@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import("application.helper.getDateFromString");
+ClassLoader::importNow("application.helper.getDateFromString");
 
 /**
  * @package application.helper

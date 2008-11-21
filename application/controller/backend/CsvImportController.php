@@ -130,7 +130,9 @@ class CsvImportController extends StoreManagementController
 		$response->set('preview', $preview);
 		$response->set('previewCount', count($preview));
 		$response->set('total', $csv->getRecordCount());
-
+		$response->set('currencies', $this->application->getCurrencyArray());
+		$response->set('languages', $this->application->getLanguageSetArray(true));
+		$response->set('groups', ActiveRecordModel::getRecordSetArray('UserGroup', new ARSelectFilter()));
 		$response->set('catPath', Category::getInstanceByID($this->request->get('category'), Category::LOAD_DATA)->getPathNodeArray(true));
 
 		return $response;
@@ -147,36 +149,61 @@ class CsvImportController extends StoreManagementController
 
 		$this->loadLanguageFile('backend/Product');
 
-		$fields = array('' => '');
 		$fields['Product.ID'] = $this->translate('Product.ID');
 
 		$productController = new ProductController($this->application);
-		foreach ($productController->getAvailableColumns(Category::getInstanceByID($this->request->get('category')), true) as $key => $data)
+		foreach ($productController->getAvailableColumns(Category::getInstanceByID($this->request->get('category'), true), true) as $key => $data)
 		{
 			$fields[$key] = $this->translate($data['name']);
 		}
 
+		unset($fields['Product.reviewCount']);
 		unset($fields['hiddenType']);
 		unset($fields['ProductImage.url']);
 
-		$fields['ProductImage.mainurl'] = $this->translate('_main_image_location');
-
-		for ($k = 1; $k <= 3; $k++)
+		$groupedFields = array();
+		foreach ($fields as $field => $fieldName)
 		{
-			$fields['ProductAdditionalImage.' . $k] = $this->maketext('_additional_image_location', $k);
+			list($class, $field) = explode('.', $field, 2);
+			$groupedFields[$class][$class . '.' . $field] = $fieldName;
 		}
 
-		$fields['Category.ID'] = $this->translate('Category.ID');
+		// do not show manufacturer field in a separate group
+		$groupedFields['Product'] = array_merge($groupedFields['Product'], $groupedFields['Manufacturer']);
+		unset($groupedFields['Manufacturer']);
 
+		// variations
+		$groupedFields['ProductVariation']['Product.parentID'] = $this->translate('Product.parentID');
+		$groupedFields['ProductVariation']['Parent.parentSKU'] = $this->translate('Product.parentSKU');
+		for ($k = 1; $k <= 5; $k++)
+		{
+			$groupedFields['ProductVariation']['ProductVariation.' . $k] = $this->maketext('_variation_name', $k);
+		}
+
+		// image fields
+		$groupedFields['ProductImage']['ProductImage.mainurl'] = $this->translate('_main_image_location');
+		for ($k = 1; $k <= 3; $k++)
+		{
+			$groupedFields['ProductImage']['ProductAdditionalImage.' . $k] = $this->maketext('_additional_image_location', $k);
+		}
+
+		// category fields
+		$groupedFields['Category']['Category.ID'] = $this->translate('Category.ID');
 		for ($k = 1; $k <= 10; $k++)
 		{
-			$fields['Category.' . $k] = $this->maketext('_category_x', $k);
+			$groupedFields['Category']['Category.' . $k] = $this->maketext('_category_x', $k);
+		}
+
+		// price fields
+		for ($k = 1; $k <= 5; $k++)
+		{
+			$groupedFields['ProductPrice']['ProductPrice.' . $k] = $this->maketext('_quantity_level_x', $k);
 		}
 
 		$csv = new CsvFile($this->request->get('file'), $this->request->get('delimiter'));
 
 		$response = new ActionResponse('columns', $csv->getRecord());
-		$response->set('fields', $fields);
+		$response->set('fields', $groupedFields);
 		$response->set('form', $this->getFieldsForm());
 		return $response;
 	}
@@ -240,7 +267,9 @@ class CsvImportController extends StoreManagementController
 		$progress = 0;
 		$failed = 0;
 		$categories = array();
+		$request = $this->request->toArray();
 		$impReq = new Request();
+		$defLang = $this->application->getDefaultLanguageCode();
 
 		$references = array('DefaultImage' => 'ProductImage', 'Manufacturer');
 
@@ -341,12 +370,20 @@ class CsvImportController extends StoreManagementController
 					$cat = Category::getInstanceByID($hashRoot);
 				}
 			}
+			else if (isset($fields['Product']['parentID']) && !empty($record[$fields['Product']['parentID']]))
+			{
+				$cat = Product::getInstanceByID($record[$fields['Product']['parentID']], true);
+			}
+			else if (isset($fields['Parent']['parentSKU']) && !empty($record[$fields['Parent']['parentSKU']]))
+			{
+				$cat = Product::getInstanceBySKU($record[$fields['Parent']['parentSKU']]);
+			}
 			else
 			{
 				$cat = $root;
 			}
 
-			if (isset($fields['Product']))
+			if (isset($fields['Product']) && $cat)
 			{
 				$product = null;
 
@@ -358,7 +395,7 @@ class CsvImportController extends StoreManagementController
 						$product = Product::getInstanceByID($id, Product::LOAD_DATA, $references);
 					}
 				}
-				else if (isset($fields['Product']['sku']))
+				else if (!empty($record[$fields['Product']['sku']]))
 				{
 					$product = Product::getInstanceBySku($record[$fields['Product']['sku']], $references);
 				}
@@ -370,29 +407,104 @@ class CsvImportController extends StoreManagementController
 				}
 				else
 				{
-					$product = Product::getNewInstance($cat);
+					if ($cat instanceof Category)
+					{
+						$product = Product::getNewInstance($cat);
+					}
+					else
+					{
+						$product = $cat->createChildProduct();
+					}
+
 					$product->isEnabled->set(true);
 				}
 
 				// product information
 				$impReq->clearData();
-				foreach ($fields['Product'] as $field => $csvIndex)
+				foreach ($this->request->get('column') as $csvIndex => $column)
 				{
-					$impReq->set($field, $record[$csvIndex]);
-				}
+					if (!isset($record[$csvIndex]))
+					{
+						continue;
+					}
 
-				// manufacturer
-				if (isset($fields['Manufacturer']['name']))
-				{
-					$impReq->set('manufacturer', $record[$fields['Manufacturer']['name']]);
-				}
+					$value = $record[$csvIndex];
 
-				// price
-				if (isset($fields['ProductPrice']['price']))
-				{
-					$record[$fields['ProductPrice']['price']] = str_replace(',', '.', $record[$fields['ProductPrice']['price']]);
-					$record[$fields['ProductPrice']['price']] = preg_replace('/[^\.0-9]/', '', $record[$fields['ProductPrice']['price']]);
-					$impReq->set('price_' . $this->application->getDefaultCurrencyCode(), (float)$record[$fields['ProductPrice']['price']]);
+					list($className, $field) = explode('.', $column, 2);
+					if (isset($request['language'][$csvIndex]))
+					{
+						$lang = $request['language'][$csvIndex];
+						if ($lang != $defLang)
+						{
+							$field .= '_' . $lang;
+						}
+					}
+
+					if ($value)
+					{
+						if ('Product.parentID' == $column)
+						{
+							$product->parent->set();
+							continue;
+						}
+
+						if ('Product.parentSKU' == $column)
+						{
+							$product->parent->set(Product::getInstanceBySKU($value));
+							continue;
+						}
+					}
+
+					if ('Product' == $className)
+					{
+						if (('shippingWeight' == $field) && ($product->parent->get()))
+						{
+							$value = $this->setChildSetting($product, 'weight', $value);
+						}
+
+						$impReq->set($field, $value);
+					}
+					else if ('Manufacturer' == $className)
+					{
+						$impReq->set('manufacturer', $value);
+					}
+					else if ('ProductPrice.price' == $column)
+					{
+						if ($product->parent->get())
+						{
+							$value = $this->setChildSetting($product, 'price', $value);
+						}
+
+						$value = (float)preg_replace('/[^\.0-9]/', '', str_replace(',', '.', $value));
+						$currency = $request['currency'][$csvIndex];
+						$quantityLevel = $request['quantityLevel'][$csvIndex];
+						$group = $request['group'][$csvIndex];
+
+						$price = $product->getPricingHandler()->getPriceByCurrencyCode($currency);
+						$product->getPricingHandler()->setPrice($price);
+
+						if ($group || $quantityLevel)
+						{
+							$quantity = $quantityLevel ? $fields['ProductPrice'][$quantityLevel] : 1;
+							$group = $group ? UserGroup::getInstanceByID($group) : null;
+							$price->setPriceRule($quantity, $group, $value);
+						}
+						else
+						{
+							$price->price->set($value);
+						}
+					}
+					else if ('ProductVariation' == $className)
+					{
+						if ($parent = $product->parent->get())
+						{
+							$this->importProductVariationValue($product, $field, $value);
+						}
+						else
+						{
+							$this->importVariationType($product, $field, $value);
+						}
+					}
 				}
 
 				// attributes
@@ -412,34 +524,55 @@ class CsvImportController extends StoreManagementController
 						}
 						else if ($attr->isSelector())
 						{
-							$f = new ARSelectFilter(
-									new EqualsCond(
-										SpecFieldValue::getLangSearchHandle(
-											new ARFieldHandle('SpecFieldValue', 'value'),
-											$this->application->getDefaultLanguageCode()
-										),
-										$record[$csvIndex]
-									)
-								);
-							$f->setLimit(1);
-
-							if (!$value = $attr->getRelatedRecordSet('SpecFieldValue', $f)->shift())
+							if ($attr->isMultiValue->get())
 							{
-								$value = SpecFieldValue::getNewInstance($attr);
+								$values = explode(',', $record[$csvIndex]);
+							}
+							else
+							{
+								$values = array($record[$csvIndex]);
+							}
 
-								if ($attr->type->get() == SpecField::TYPE_NUMBERS_SELECTOR)
+							foreach ($values as $fieldValue)
+							{
+								$fieldValue = trim($fieldValue);
+
+								$f = new ARSelectFilter(
+										new EqualsCond(
+											SpecFieldValue::getLangSearchHandle(
+												new ARFieldHandle('SpecFieldValue', 'value'),
+												$this->application->getDefaultLanguageCode()
+											),
+											$fieldValue
+										)
+									);
+								$f->setLimit(1);
+
+								if (!$value = $attr->getRelatedRecordSet('SpecFieldValue', $f)->shift())
 								{
-									$value->value->set($record[$csvIndex]);
+									$value = SpecFieldValue::getNewInstance($attr);
+
+									if ($attr->type->get() == SpecField::TYPE_NUMBERS_SELECTOR)
+									{
+										$value->value->set($fieldValue);
+									}
+									else
+									{
+										$value->setValueByLang('value', $this->application->getDefaultLanguageCode(), $fieldValue);
+									}
+
+									$value->save();
+								}
+
+								if (!$attr->isMultiValue->get())
+								{
+									$impReq->set($attr->getFormFieldName(), $value->getID());
 								}
 								else
 								{
-									$value->setValueByLang('value', $this->application->getDefaultLanguageCode(), $record[$csvIndex]);
+									$impReq->set($value->getFormFieldName(), true);
 								}
-
-								$value->save();
 							}
-
-							$impReq->set($attr->getFormFieldName(), $value->getID());
 						}
 
 						else
@@ -450,7 +583,6 @@ class CsvImportController extends StoreManagementController
 				}
 
 				$product->loadRequestData($impReq);
-
 				$product->save();
 
 				if (isset($fields['ProductImage']['mainurl']))
@@ -471,6 +603,12 @@ class CsvImportController extends StoreManagementController
 					{
 						$this->importImage(ProductImage::getNewInstance($product), $record[$index]);
 					}
+				}
+
+				// create variation by name
+				if ((isset($fields['Product']['parentID']) || isset($fields['Parent']['parentSKU'])) && !isset($fields['ProductVariation']) && $product->parent->get())
+				{
+					$this->importProductVariationValue($product, 1, $product->getValueByLang('name', 'en'));
 				}
 
 				$lastName = $product->getValueByLang('name', 'en');
@@ -517,6 +655,114 @@ class CsvImportController extends StoreManagementController
 		//echo '|' . round(memory_get_usage() / (1024*1024), 1);
 
 		exit;
+	}
+
+	private function setChildSetting(Product $product, $setting, $value)
+	{
+		$value = trim($value);
+
+		if (substr($value, 0, 1) == '+')
+		{
+			$product->setChildSetting($setting, Product::CHILD_ADD);
+			$value = substr($value, 1);
+		}
+		else if (substr($value, 0, 1) == '-')
+		{
+			$product->setChildSetting($setting, Product::CHILD_SUBSTRACT);
+			$value = substr($value, 1);
+		}
+		else if ($value)
+		{
+			$product->setChildSetting($setting, Product::CHILD_OVERRIDE);
+		}
+		else
+		{
+			$value = 0;
+			$product->setChildSetting($setting, '');
+		}
+
+		return $value;
+	}
+
+	private function importVariationType(Product $product, $index, $name)
+	{
+		$type = $this->getVariationTypeByIndex($product, $index);
+
+		if (!$product->getID())
+		{
+			$product->save();
+		}
+
+		$type->setValueByLang('name', null, $name);
+		$type->save();
+
+		return $type;
+	}
+
+	private function getVariationTypeByIndex(Product $product, $index)
+	{
+		$f = new ARSelectFilter();
+		$f->setOrder(new ARFieldHandle('ProductVariationType', 'position'));
+		$f->setLimit(1, $index - 1);
+
+		if ($product->getID())
+		{
+			$types = $product->getRelatedRecordSet('ProductVariationType', $f);
+		}
+
+		if (isset($types) && $types->size())
+		{
+			return $types->get(0);
+		}
+		else
+		{
+			$type = ProductVariationType::getNewInstance($product);
+		}
+
+		return $type;
+	}
+
+	private function importProductVariationValue(Product $product, $index, $name)
+	{
+		$parent = $product->parent->get();
+		$type = $this->getVariationTypeByIndex($parent, $index);
+		if (!$type->getID())
+		{
+			$type = $this->importVariationType($parent, $index, '');
+		}
+
+		$f = new ARSelectFilter();
+		$f->mergeCondition(
+			new EqualsCond(
+				MultiLingualObject::getLangSearchHandle(
+					new ARFieldHandle('ProductVariation', 'name'),
+					$this->application->getDefaultLanguageCode()
+				),
+				$name
+			)
+		);
+
+		$values = $type->getRelatedRecordSet('ProductVariation', $f);
+		if ($values->size())
+		{
+			$variation = $values->get(0);
+		}
+		else
+		{
+			$variation = ProductVariation::getNewInstance($type);
+			$variation->setValueByLang('name', null, $name);
+			$variation->save();
+		}
+
+		if (!$product->getID())
+		{
+			$product->save();
+		}
+//var_dump($type->toFlatArray());var_dump($variation->toFlatArray());
+		$f = new ARDeleteFilter(new EqualsCond(new ARFieldHandle('ProductVariation', 'typeID'), $type->getID()));
+		$product->deleteRelatedRecordSet('ProductVariationValue', $f, array('ProductVariation'));
+
+		ProductVariationValue::getNewInstance($product, $variation)->save();
 	}
 
 	private function importImage(ProductImage $image, $path)
@@ -631,13 +877,11 @@ class CsvImportController extends StoreManagementController
 
 	private function getForm()
 	{
-		ClassLoader::import('framework.request.validator.Form');
 		return new Form($this->getValidator());
 	}
 
 	private function getValidator()
 	{
-		ClassLoader::import('framework.request.validator.RequestValidator');
 		ClassLoader::import('application.helper.filter.HandleFilter');
 
 		return new RequestValidator('csvFile', $this->request);
@@ -645,13 +889,11 @@ class CsvImportController extends StoreManagementController
 
 	private function getDelimiterForm()
 	{
-		ClassLoader::import('framework.request.validator.Form');
 		return new Form($this->getDelimiterValidator());
 	}
 
 	private function getDelimiterValidator()
 	{
-		ClassLoader::import('framework.request.validator.RequestValidator');
 		ClassLoader::import('application.helper.filter.HandleFilter');
 
 		return new RequestValidator('csvDelimiters', $this->request);
@@ -659,13 +901,11 @@ class CsvImportController extends StoreManagementController
 
 	private function getFieldsForm()
 	{
-		ClassLoader::import('framework.request.validator.Form');
 		return new Form($this->getFieldsValidator());
 	}
 
 	private function getFieldsValidator()
 	{
-		ClassLoader::import('framework.request.validator.RequestValidator');
 		ClassLoader::import('application.helper.filter.HandleFilter');
 
 		return new RequestValidator('csvFields', $this->request);

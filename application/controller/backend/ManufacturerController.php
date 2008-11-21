@@ -107,8 +107,6 @@ class ManufacturerController extends ActiveGridController
 
 	private function buildValidator(Manufacturer $manufacturer)
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator("manufacturer", $this->request);
 		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("_manufacturer_name_empty")));
 
@@ -124,8 +122,6 @@ class ManufacturerController extends ActiveGridController
 	 */
 	private function buildForm(Manufacturer $manufacturer)
 	{
-		ClassLoader::import("framework.request.validator.Form");
-
 		return new Form($this->buildValidator($manufacturer));
 	}
 }

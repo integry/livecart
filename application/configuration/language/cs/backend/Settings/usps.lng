@@ -1,0 +1,17 @@
+UspsShipping=USPS
+_USPS_API_ACCESS=USPS Shipping API Prístup
+UspsShipping_userId=USPS API používateľské meno
+UspsShipping_apiUrl=USPS API URL
+_USPS_DOMESTIC_OPTS=Domáce Poštovné možnosti
+UspsShipping_size=Veľkosť balenia
+UspsShipping_isMachinable=Balenie je obrobiteľné
+_USPS_ITL_OPTS=Medzinárodné Poštovné možnosti
+Express=Express
+Priority=Prioritné
+UspsShipping_domestic=Zapnuté poštovné služby
+UspsShipping_international=Zapnuté medzinárodné poštovné služby
+UspsShipping_priorityPackageType=Typ prioritného balíčka
+Parcel=Malý balík
+Library=Library Mail
+BPM=Potrebné vytlačiť
+Media=Media Mail

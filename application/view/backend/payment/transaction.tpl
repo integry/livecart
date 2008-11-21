@@ -41,6 +41,12 @@
 			</div>
 		{/if}
 
+		{if $transaction.attributes}
+			<div class="overview">
+				{include file="backend/eav/view.tpl" item=$transaction}
+			</div>
+		{/if}
+
 	</div>
 
 	<div class="transactionDetails">
@@ -132,6 +138,8 @@
 
 			{if $transaction.methodName}
 				<legend>{$transaction.methodName}</legend>
+			{elseif $transaction.serializedData.handler}
+				<legend>{$transaction.serializedData.handler}</legend>
 			{/if}
 
 			{if $transaction.ccLastDigits}

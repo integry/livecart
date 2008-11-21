@@ -17,13 +17,13 @@ class SiteNewsController extends StoreManagementController
 		$response = new ActionResponse('newsList', ActiveRecordModel::getRecordSetArray('NewsPost', $f));
 		$response->set('form', $this->buildForm());
 		return $response;
-	}	
+	}
 
 	/**
 	 * @role update
 	 */
 	public function edit()
-	{		
+	{
 		$form = $this->buildForm();
 		$form->loadData(NewsPost::getInstanceById($this->request->get('id'), NewsPost::LOAD_DATA)->toArray());
 		return new ActionResponse('form', $form);
@@ -43,19 +43,19 @@ class SiteNewsController extends StoreManagementController
 		$post = $this->request->get('id') ? ActiveRecordModel::getInstanceById('NewsPost', $this->request->get('id'), ActiveRecordModel::LOAD_DATA) : ActiveRecordModel::getNewInstance('NewsPost');
 		$post->loadRequestData($this->request);
 		$post->save();
-		
+
 		return new JSONResponse($post->toArray());
-	}	
-	
+	}
+
 	/**
 	 * Create new record
 	 * @role create
 	 */
 	public function add()
-	{		
+	{
 		return $this->save();
-	}	
-	
+	}
+
 	/**
 	 * Remove a news entry
 	 *
@@ -63,18 +63,18 @@ class SiteNewsController extends StoreManagementController
 	 * @return JSONResponse
 	 */
 	public function delete()
-	{  	
+	{
 		try
 	  	{
-			ActiveRecordModel::deleteById('NewsPost', $this->request->get('id'));	
-			return new JSONResponse(false, 'success');		
+			ActiveRecordModel::deleteById('NewsPost', $this->request->get('id'));
+			return new JSONResponse(false, 'success');
 		}
 		catch (Exception $exc)
-		{			  	
+		{
 			return new JSONResponse(false, 'failure', $this->translate('_could_not_remove_news'));
 		}
 	}
-		
+
 	/**
 	 * Save news entry order
 	 * @role sort
@@ -89,14 +89,14 @@ class SiteNewsController extends StoreManagementController
 			$update = new ARUpdateFilter();
 			$update->setCondition(new EqualsCond(new ARFieldHandle('NewsPost', 'ID'), $value));
 			$update->addModifier('position', $key);
-			ActiveRecord::updateRecordSet('NewsPost', $update);  	
+			ActiveRecord::updateRecordSet('NewsPost', $update);
 		}
 
 		$resp = new RawResponse();
 	  	$resp->setContent($this->request->get('draggedId'));
-		return $resp;		  	
+		return $resp;
 	}
-	
+
 	/**
 	 * @role status
 	 * @return JSONResponse
@@ -106,22 +106,20 @@ class SiteNewsController extends StoreManagementController
 		$post = ActiveRecordModel::getInstanceById('NewsPost', $this->request->get('id'), NewsPost::LOAD_DATA);
 		$post->isEnabled->set($this->request->get("status"));
 		$post->save();
-		
+
 		return new JSONResponse($post->toArray());
 	}
-		
+
 	private function buildForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
-		return new Form($this->buildValidator());		
+		return new Form($this->buildValidator());
 	}
 
 	private function buildValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");		
 		$validator = new RequestValidator("newspost", $this->request);
 		$validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_enter_text')));
-	 
+
 		return $validator;
 	}
 }

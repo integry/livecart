@@ -1,7 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.filter.FilterInterface');
-ClassLoader::import('application.helper.CreateHandleString');
+ClassLoader::importNow('application.helper.CreateHandleString');
 
 /**
  * Filter product list by manufacturer. The manufacturer filters are generated automatically.

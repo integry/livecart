@@ -12,12 +12,19 @@ ClassLoader::import('application.model.eavcommon.iEavFieldManager');
 class EavFieldManager implements iEavFieldManager
 {
 	private $classID;
+	private $stringIdentifier;
 
 	public function __construct($classID)
 	{
 		if (!is_numeric($classID))
 		{
-			$classID = EavField::getClassID($classID);
+			$newID = EavField::getClassID($classID);
+			if (!$newID)
+			{
+				$this->stringIdentifier = $classID;
+			}
+
+			$classID = $newID;
 		}
 
 		$this->classID = $classID;
@@ -40,6 +47,16 @@ class EavFieldManager implements iEavFieldManager
 		return ActiveRecordGroup::mergeGroupsWithFields('EavFieldGroup', $groups, $fields);
 	}
 
+	public function setValidation(RequestValidator $validator)
+	{
+		EavSpecificationManagerCommon::setValidation($validator);
+	}
+
+	public function getSpecificationFieldSet()
+	{
+		return ActiveRecordModel::getRecordSet('EavField', $this->getFieldFilter(), array('EavFieldGroup'));
+	}
+
 	/**
 	 * Creates a select filter for custom fields
 	 *
@@ -49,6 +66,10 @@ class EavFieldManager implements iEavFieldManager
 	private function getFieldFilter()
 	{
 		$filter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('EavField', 'classID'), $this->classID));
+		if ($this->stringIdentifier)
+		{
+			$filter->mergeCondition(new EqualsCond(new ARFieldHandle('EavField', 'stringIdentifier'), $this->stringIdentifier));
+		}
 
 		$filter->setOrder(new ARFieldHandle('EavFieldGroup', 'position'));
 		$filter->setOrder(new ARFieldHandle('EavField', 'position'));
@@ -63,6 +84,11 @@ class EavFieldManager implements iEavFieldManager
 	private function getGroupFilter()
 	{
 		$filter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('EavFieldGroup', 'classID'), $this->classID));
+		if ($this->stringIdentifier)
+		{
+			$filter->mergeCondition(new EqualsCond(new ARFieldHandle('EavFieldGroup', 'stringIdentifier'), $this->stringIdentifier));
+		}
+
 		$filter->setOrder(new ARFieldHandle('EavFieldGroup', 'position'));
 
 		return $filter;

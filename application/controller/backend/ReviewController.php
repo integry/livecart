@@ -181,8 +181,6 @@ class ReviewController extends ActiveGridController
 
 	private function buildValidator(ProductReview $review)
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator("productRating", $this->getRequest());
 
 		// option validation
@@ -205,8 +203,6 @@ class ReviewController extends ActiveGridController
 	 */
 	private function buildForm(ProductReview $review)
 	{
-		ClassLoader::import("framework.request.validator.Form");
-
 		return new Form($this->buildValidator($review));
 	}
 }

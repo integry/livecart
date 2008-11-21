@@ -11,6 +11,57 @@
 
 {include file="layout/backend/header.tpl"}
 
+<div id="fieldConfigTemplates" class="hidden">
+	<span class="ProductPrice.price config">
+		<span class="block">
+			<span class="title">
+				{t _currency}
+			</span>
+			<select name="currency">
+				{foreach from=$currencies item=currency}
+					<option>{$currency}</option>
+				{/foreach}
+			</select>
+		</span>
+		<span class="block">
+			<span class="title">
+				{t _group}
+			</span>
+			<select name="group">
+				<option></option>
+				{foreach from=$groups item=group}
+					<option value="{$group.ID}">{$group.name}</option>
+				{/foreach}
+			</select>
+		</span>
+		<span class="block">
+			<span class="title">
+				{t _quantity_level}
+			</span>
+			<select name="quantityLevel">
+				<option></option>
+				<option>1</option>
+				<option>2</option>
+				<option>3</option>
+				<option>4</option>
+				<option>5</option>
+			</select>
+		</span>
+	</span>
+	<span class="Product.name Product.shortDescription Product.longDescription Product.keywords config">
+		<span class="block">
+			<span class="title">
+				{t _language}
+			</span>
+			<select name="language">
+				{foreach from=$languages item=language}
+					<option value="{$language.ID}">{$language.originalName} ({$language.name})</option>
+				{/foreach}
+			</select>
+		</span>
+	</span>
+</div>
+
 <div id="importDelimiters">
 
 {include file="backend/csvImport/wizardProgress.tpl" class="stepDelimiters"}

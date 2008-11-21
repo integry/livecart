@@ -77,23 +77,7 @@ class ProductPrice extends ActiveRecordModel
 		if ($parent = $this->product->get()->parent->get())
 		{
 			$parentPrice = $parent->getPricingHandler()->getPrice($this->currency->get())->getPrice();
-
-			if ($this->product->get()->getChildSetting('price') == Product::CHILD_ADD)
-			{
-				return $parentPrice + $price;
-			}
-			else if ($this->product->get()->getChildSetting('price') == Product::CHILD_SUBSTRACT)
-			{
-				return $parentPrice - $price;
-			}
-			else if ((float)$price)
-			{
-				return $price;
-			}
-			else
-			{
-				return $parentPrice;
-			}
+			return $this->getChildPrice($parentPrice, $price, $this->product->get()->getChildSetting('price'));
 		}
 		else
 		{
@@ -101,12 +85,48 @@ class ProductPrice extends ActiveRecordModel
 		}
 	}
 
+	private function getChildPrice($parentPrice, $childPriceDiff, $setting)
+	{
+		if ($setting == Product::CHILD_ADD)
+		{
+			return $parentPrice + $childPriceDiff;
+		}
+		else if ($setting == Product::CHILD_SUBSTRACT)
+		{
+			return $parentPrice - $childPriceDiff;
+		}
+		else if ((float)$childPriceDiff)
+		{
+			return $childPriceDiff;
+		}
+		else
+		{
+			return $parentPrice;
+		}
+	}
+
 	public function getItemPrice(OrderedItem $item)
 	{
-		if ($this->getPrice())
+		$price = $this->getPrice();
+
+		if ($parent = $this->product->get()->parent->get())
+		{
+			$priceSetting = $this->product->get()->getChildSetting('price');
+			$parentPrice = $parent->getPricingHandler()->getPrice($this->currency->get())->getItemPrice($item);
+
+			if ($priceSetting !== Product::CHILD_OVERRIDE)
+			{
+				return $this->getChildPrice($parentPrice, $this->price->get(), $priceSetting);
+			}
+			else
+			{
+				return $price;
+			}
+		}
+
+		if ($price)
 		{
 			$rules = unserialize($this->serializedRules->get());
-			$price = $this->getPrice();
 
 			// quantity/group based prices
 			if ($rules)
@@ -287,11 +307,12 @@ class ProductPrice extends ActiveRecordModel
 		$prices = self::fetchPriceData(array_keys($ids));
 
 		// sort by product
-		$listPrice = $productPrices = array();
+		$listPrice = $productPrices = $priceRules = array();
 		foreach ($prices as $price)
 		{
 			$productPrices[$price['productID']][$price['currencyID']] = $price['price'];
 			$listPrices[$price['productID']][$price['currencyID']] = $price['listPrice'];
+			$productArray[$ids[$price['productID']]]['priceRules'][$price['currencyID']] = $price['serializedRules'];
 		}
 
 		self::getPricesFromArray($productArray, $productPrices, $ids, false);
@@ -325,6 +346,8 @@ class ProductPrice extends ActiveRecordModel
 			{
 				$parent = null;
 			}
+
+			$productArray[$ids[$product]]['defined' . ($listPrice ? 'List' : '') . 'Prices'] = $prices;
 
 			foreach ($currencies as $id => $currency)
 			{

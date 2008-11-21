@@ -209,6 +209,7 @@ Product.Variations = function(container, variations, options)
 	}.bind(this));
 
 	this.selectFields[0].disabled = false;
+	this.updateVisibleOptions();
 }
 
 Product.Variations.prototype =

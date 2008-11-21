@@ -62,6 +62,7 @@ abstract class FrontendController extends BaseController
 		$this->addBlock('NEWSLETTER', 'boxNewsletterSubscribe', 'block/box/newsletterSubscribe');
 		$this->addBlock('TRACKING', 'tracking', 'block/tracking');
 		$this->addBlock('NEWS', 'latestNews', 'block/box/latestNews');
+		$this->addBlock('QUICKNAV', 'blockQuickNav', 'block/box/quickNav');
 	}
 
 	public function getRequestCurrency()
@@ -130,7 +131,6 @@ abstract class FrontendController extends BaseController
 	{
 		$address->loadRequestData($this->request, $prefix);
 		$address->countryID->set($this->request->get($prefix . 'country'));
-		$address->postalCode->set($this->request->get($prefix . 'zip'));
 		$address->stateName->set($this->request->get($prefix . 'state_text'));
 		if ($this->request->get($prefix . 'state_select'))
 		{
@@ -163,7 +163,6 @@ abstract class FrontendController extends BaseController
 		}
 
 		ClassLoader::import('application.controller.NewsletterController');
-		ClassLoader::import('framework.request.validator.Form');
 		return new BlockResponse('form', new Form(NewsletterController::getSubscribeValidator()));
 	}
 
@@ -330,7 +329,6 @@ abstract class FrontendController extends BaseController
 			}
 		}
 
-		ClassLoader::import("framework.request.validator.Form");
 		$form = new Form(new RequestValidator("productSearch", $this->request));
 		$form->enableClientSideValidation(false);
 		$form->set('id', $this->categoryID);
@@ -619,6 +617,24 @@ abstract class FrontendController extends BaseController
 
 		$response = new BlockResponse('news', $news);
 		$response->set('isNewsArchive', count($news) > $this->config->get('NUM_NEWS_INDEX'));
+		return $response;
+	}
+
+	public function blockQuickNavBlock()
+	{
+		$response = new BlockResponse();
+
+		// manufacturer list
+		ClassLoader::import('application.controller.ManufacturersController');
+		$controller = new ManufacturersController($this->application);
+		$man = $controller->index();
+		$response->set('manufacturers', $man->get('manufacturers'));
+		$response->set('rootCat', $man->get('rootCat'));
+
+		// category tree
+		$cat = $this->dynamicCategoryMenuBlock();
+		$response->set('categories', $cat->get('categories'));
+
 		return $response;
 	}
 

@@ -1,6 +1,7 @@
 <?php
 
-ClassLoader::import("application.model.delivery.*");
+ClassLoader::import('application.model.delivery.*');
+ClassLoader::import('application.model.tax.TaxRate');
 ClassLoader::import('library.shipping.ShippingRateSet');
 
 /**
@@ -320,7 +321,7 @@ class DeliveryZone extends MultilingualObject
 	/**
 	 * @return ARSet
 	 */
-	public function getStates($loadReferencedRecords = false)
+	public function getStates($loadReferencedRecords = array('State'))
 	{
 		return DeliveryZoneState::getRecordSetByZone($this, $loadReferencedRecords);
 	}

@@ -1,8 +1,6 @@
 <?php
 
 ClassLoader::import('application.model.system.Installer');
-ClassLoader::import("framework.request.validator.Form");
-ClassLoader::import("framework.request.validator.RequestValidator");
 
 /**
  * LiveCart installer
@@ -146,8 +144,8 @@ class InstallController extends FrontendController
 			// create root category
 			Installer::loadDatabaseDump(file_get_contents(ClassLoader::getRealPath('installdata.sql') . '/initialData.sql'));
 
-			// load US states
-			Installer::loadDatabaseDump(file_get_contents(ClassLoader::getRealPath('installdata.sql.state') . '/US.sql'));
+			// states
+			Installer::loadDatabaseDump(file_get_contents(ClassLoader::getRealPath('installdata.sql.state') . '/all.sql'));
 
 			ActiveRecord::commit();
 

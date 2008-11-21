@@ -29,6 +29,7 @@ Currency=Currencies
 Manufacturer=Manufacturers
 Category=Categories
 Product=Products
+UserGroup=User groups
 User=Users
 CustomerOrder=Orders
 BillingAddress=Customer addresses

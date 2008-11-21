@@ -2,8 +2,6 @@
 
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.system.Config");
-ClassLoader::import('framework.request.validator.RequestValidator');
-ClassLoader::import('framework.request.validator.Form');
 ClassLoader::import('framework.request.validator.check.*');
 ClassLoader::import('framework.request.validator.filter.*');
 
@@ -27,7 +25,9 @@ class SettingsController extends StoreManagementController
 			unset($tree['49-private-label']);
 		}
 
-		return new ActionResponse('categories', json_encode($tree));
+		$response = new ActionResponse('categories', json_encode($tree));
+		$response->set('settings', json_encode($this->config->toArray()));
+		return $response;
 	}
 
 	/**

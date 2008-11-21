@@ -30,7 +30,16 @@ class ProductSpecification extends EavSpecificationManagerCommon
 
 	public function getSpecificationFieldSet($loadReferencedRecords = false)
 	{
-		return $this->owner->getCategory()->getSpecificationFieldSet(Category::INCLUDE_PARENT, $loadReferencedRecords);
+		$category = $this->owner->getCategory();
+
+		if ($category)
+		{
+			return $category->getSpecificationFieldSet(Category::INCLUDE_PARENT, $loadReferencedRecords);
+		}
+		else
+		{
+			return array();
+		}
 	}
 
 	/**
