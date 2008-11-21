@@ -4,8 +4,6 @@ ClassLoader::import("application.controller.backend.abstract.StoreManagementCont
 ClassLoader::import("application.model.order.*");
 ClassLoader::import("application.model.delivery.*");
 ClassLoader::import("application.model.Currency");
-ClassLoader::import("framework.request.validator.RequestValidator");
-ClassLoader::import("framework.request.validator.Form");
 
 /**
  * Controller for handling product based actions performed by store administrators

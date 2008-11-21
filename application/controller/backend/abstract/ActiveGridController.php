@@ -303,14 +303,11 @@ abstract class ActiveGridController extends StoreManagementController
 
 	protected function getMassValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		return new RequestValidator(get_class($this) . "MassFormValidator", $this->request);
 	}
 
 	protected function getMassForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->getMassValidator());
 	}
 

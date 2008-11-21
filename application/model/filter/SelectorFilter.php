@@ -1,7 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.filter.SpecificationFilterInterface');
-ClassLoader::import('application.helper.CreateHandleString');
+ClassLoader::importNow('application.helper.CreateHandleString');
 
 /**
  * Filter product list by selector attribute value. SelectorFilters are being generated automatically based on
@@ -13,33 +13,33 @@ ClassLoader::import('application.helper.CreateHandleString');
 class SelectorFilter implements SpecificationFilterInterface
 {
 	private $specFieldValue;
-	
+
 	public function __construct(SpecFieldValue $specFieldValue)
 	{
 		$this->specFieldValue = $specFieldValue;
 	}
-	
+
 	public function getCondition()
 	{
-		return new EqualsCond(new ARExpressionHandle($this->getJoinAlias() . '.SpecFieldValueID'), $this->specFieldValue->getID());	
+		return new EqualsCond(new ARExpressionHandle($this->getJoinAlias() . '.SpecFieldValueID'), $this->specFieldValue->getID());
 	}
-	
+
 	/**
 	 *	Adds JOIN definition to ARSelectFilter to retrieve product attribute value for the particular SpecField
-	 *	
+	 *
 	 *	@param	ARSelectFilter	$filter	Filter instance
 	 */
 	public function defineJoin(ARSelectFilter $filter)
 	{
 		$table = $this->getJoinAlias();
-		$filter->joinTable('SpecificationItem', 'Product', 'productID AND ' . $table . '.SpecFieldValueID = ' . $this->specFieldValue->getID(), 'ID', $table);				  				  		  	
+		$filter->joinTable('SpecificationItem', 'Product', 'productID AND ' . $table . '.SpecFieldValueID = ' . $this->specFieldValue->getID(), 'ID', $table);
 	}
-	
+
 	public function getID()
 	{
 		return $this->specFieldValue->specField->get()->getID() . '_' . $this->specFieldValue->getID();
 	}
-	
+
 	public function toArray()
 	{
 		$array = $this->specFieldValue->toArray();
@@ -48,20 +48,20 @@ class SelectorFilter implements SpecificationFilterInterface
 		$array['ID'] = 'v' . $array['ID'];
 		if (!isset($array['FilterGroup']))
 		{
-			$array['FilterGroup']['SpecField'] = $array['SpecField'];	
-		}		
+			$array['FilterGroup']['SpecField'] = $array['SpecField'];
+		}
 		return $array;
 	}
-	
+
 	public function getSpecField()
 	{
 		return $this->specFieldValue->specField->get();
 	}
-	
+
 	protected function getJoinAlias()
 	{
-		return 'specFieldValue_' . $this->specFieldValue->getID();	  			 	  	
-	}	
+		return 'specFieldValue_' . $this->specFieldValue->getID();
+	}
 }
 
 ?>

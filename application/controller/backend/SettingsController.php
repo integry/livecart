@@ -2,8 +2,6 @@
 
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.system.Config");
-ClassLoader::import('framework.request.validator.RequestValidator');
-ClassLoader::import('framework.request.validator.Form');
 ClassLoader::import('framework.request.validator.check.*');
 ClassLoader::import('framework.request.validator.filter.*');
 

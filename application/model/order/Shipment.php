@@ -3,6 +3,7 @@
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.order.OrderedItem");
 ClassLoader::import("application.model.order.ShipmentTax");
+ClassLoader::import("application.model.delivery.ShippingService");
 
 /**
  * Represents a collection of ordered items that are shipped in the same package

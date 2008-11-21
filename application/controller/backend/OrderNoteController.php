@@ -2,8 +2,6 @@
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.order.CustomerOrder");
 ClassLoader::import("application.model.order.OrderNote");
-ClassLoader::import("framework.request.validator.RequestValidator");
-ClassLoader::import("framework.request.validator.Form");
 
 /**
  * Manage order notes (communication with customer)
@@ -18,7 +16,7 @@ class OrderNoteController extends StoreManagementController
 	public function index()
 	{
 		$order = CustomerOrder::getInstanceById($this->request->get('id'));
-		
+
 		$notes = $order->getNotes();
 		foreach ($notes as $note)
 		{
@@ -26,44 +24,44 @@ class OrderNoteController extends StoreManagementController
 			{
 				$note->isRead->set(true);
 				$note->save();
-			}			
-		}		
-		
+			}
+		}
+
 		$response = new ActionResponse();
 		$response->set('form', $this->buildOrderNoteForm());
 		$response->set('order', $order->toArray());
 		$response->set('notes', $notes->toArray());
 		return $response;
 	}
-	
+
 	public function view()
 	{
 		return new ActionResponse('note', ActiveRecordModel::getInstanceById('OrderNote', $this->request->get('id'), OrderNote::LOAD_DATA, OrderNote::LOAD_REFERENCES)->toArray());
 	}
-	
+
 	public function add()
 	{
 		if ($this->buildOrderNoteValidator()->isValid())
 		{
 			$order = CustomerOrder::getInstanceById($this->request->get('id'), CustomerOrder::LOAD_DATA);
-			
+
 			$note = OrderNote::getNewInstance($order, $this->user);
 			$note->isAdmin->set(true);
 			$note->text->set($this->request->get('comment'));
 			$note->save();
-			
+
 			if ($this->config->get('EMAIL_ORDERNOTE'))
 			{
 				$order->user->get()->load();
-	
+
 				$email = new Email($this->application);
 				$email->setUser($order->user->get());
 				$email->setTemplate('order.message');
 				$email->set('order', $order->toArray(array('payments' => true)));
 				$email->set('message', $note->toArray());
-				$email->send();			
-			}			
-			
+				$email->send();
+			}
+
 			return new ActionRedirectResponse('backend.orderNote', 'view', array('id' => $note->getID()));
 		}
 		else
@@ -71,21 +69,18 @@ class OrderNoteController extends StoreManagementController
 			return new RawResponse('invalid');
 		}
 	}
-	
+
 	private function buildOrderNoteForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildOrderNoteValidator());
 	}
 
 	private function buildOrderNoteValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");		
-
 		$validator = new RequestValidator("orderNote", $this->request);
-		$validator->addCheck('comment', new IsNotEmptyCheck($this->translate('_err_enter_text')));	   
+		$validator->addCheck('comment', new IsNotEmptyCheck($this->translate('_err_enter_text')));
 		return $validator;
-	}	 
+	}
 }
 
 ?>

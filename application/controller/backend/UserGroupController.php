@@ -3,8 +3,6 @@
 ClassLoader::import('application.controller.backend.abstract.ActiveGridController');
 ClassLoader::import("application.controller.backend.*");
 ClassLoader::import("application.model.user.*");
-ClassLoader::import("framework.request.validator.Form");
-ClassLoader::import("framework.request.validator.RequestValidator");
 
 /**
  * @package application.controller.backend

@@ -3,8 +3,6 @@
 ClassLoader::import('application.model.product.Product');
 ClassLoader::import('application.controller.FrontendController');
 ClassLoader::import('application.controller.CategoryController');
-ClassLoader::import('framework.request.validator.Form');
-ClassLoader::import('framework.request.validator.RequestValidator');
 ClassLoader::import('application.model.presentation.ProductPresentation');
 
 /**
@@ -488,7 +486,7 @@ class ProductController extends FrontendController
 
 		if ($isRating)
 		{
-			ClassLoader::import("application.helper.getDateFromString");
+			ClassLoader::importNow("application.helper.getDateFromString");
 
 			$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductRating', 'productID'), $product->getID()));
 			if (!$this->user->isAnonymous())
@@ -582,14 +580,12 @@ class ProductController extends FrontendController
 
 	private function buildContactForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildContactValidator());
 	}
 
 	public function buildContactValidator(Request $request = null)
 	{
 		$this->loadLanguageFile('ContactForm');
-		ClassLoader::import("framework.request.validator.RequestValidator");
 
 		$request = $request ? $request : $this->request;
 

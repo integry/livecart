@@ -3,9 +3,6 @@
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.delivery.DeliveryZone");
 ClassLoader::import("application.model.delivery.State");
-ClassLoader::import("framework.request.validator.RequestValidator");
-ClassLoader::import("framework.request.validator.Form");
-
 
 /**
  * Application settings management

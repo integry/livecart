@@ -4,8 +4,6 @@ ClassLoader::import('application.controller.backend.abstract.ActiveGridControlle
 ClassLoader::import('application.controller.backend.*');
 ClassLoader::import('application.model.order.*');
 ClassLoader::import('application.model.Currency');
-ClassLoader::import('framework.request.validator.Form');
-ClassLoader::import('framework.request.validator.RequestValidator');
 ClassLoader::import('application.helper.massAction.MassActionInterface');
 
 /**

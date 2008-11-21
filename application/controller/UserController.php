@@ -1069,7 +1069,6 @@ class UserController extends FrontendController
 	/**************  VALIDATION ******************/
 	private function buildPasswordReminderForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		$validator = new RequestValidator("emailChange", $this->request);
 		$this->validateEmail($validator, '_err_not_unique_email_for_change');
 
@@ -1078,14 +1077,11 @@ class UserController extends FrontendController
 
 	private function buildEmailChangeForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildEmailChangeValidator());
 	}
 
 	private function buildEmailChangeValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator("emailChange", $this->request);
 		$this->validateEmail($validator, '_err_not_unique_email_for_change');
 
@@ -1094,13 +1090,11 @@ class UserController extends FrontendController
 
 	private function buildPasswordChangeForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildPasswordChangeValidator());
 	}
 
 	private function buildPasswordChangeValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
 		ClassLoader::import("application.helper.check.IsPasswordCorrectCheck");
 
 		$validator = new RequestValidator("passwordChange", $this->request);
@@ -1114,7 +1108,6 @@ class UserController extends FrontendController
 
 	private function buildPersonalDataForm(User $user)
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		$form = new Form($this->buildPersonalDataValidator($user));
 		$form->setData($this->user->toArray());
 		return $form;
@@ -1122,8 +1115,6 @@ class UserController extends FrontendController
 
 	private function buildPersonalDataValidator(User $user)
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator("userData", $this->request);
 		$this->validateName($validator);
 		$user->getSpecification()->setValidation($validator);
@@ -1132,14 +1123,11 @@ class UserController extends FrontendController
 
 	private function buildRegForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildRegValidator());
 	}
 
 	private function buildRegValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator("userRegistration", $this->request);
 		$this->validateName($validator);
 		$this->validateEmail($validator);
@@ -1152,14 +1140,11 @@ class UserController extends FrontendController
 
 	private function buildAddressForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildAddressValidator());
 	}
 
 	private function buildAddressValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator("userAddress", $this->request);
 		$this->validateAddress($validator);
 		return $validator;
@@ -1167,14 +1152,11 @@ class UserController extends FrontendController
 
 	private function buildForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildValidator());
 	}
 
 	private function buildValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		// validate contact info
 		$validator = new RequestValidator("registrationValidator", $this->request);
 
@@ -1266,14 +1248,11 @@ class UserController extends FrontendController
 
 	private function buildNoteForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildNoteValidator());
 	}
 
 	private function buildNoteValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator("orderNote", $this->request);
 		$validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_enter_note')));
 		$validator->addFilter('text', new HtmlSpecialCharsFilter);

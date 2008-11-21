@@ -2,6 +2,8 @@
 
 ClassLoader::import("application.controller.backend.abstract.ActiveGridController");
 ClassLoader::import("application.model.discount.DiscountCondition");
+ClassLoader::import("application.model.discount.DiscountConditionRecord");
+ClassLoader::import("application.model.discount.DiscountAction");
 
 /**
  *
@@ -176,7 +178,7 @@ class DiscountController extends ActiveGridController
 	public function addRecord()
 	{
 		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA);
-		$object = ActiveRecordModel::getInstanceByID($this->request->get('class'), $this->request->get('recordID'), DiscountCondition::LOAD_DATA);
+		$object = DiscountConditionRecord::getOwnerInstance($this->request->get('class'), $this->request->get('recordID'));
 		$record = DiscountConditionRecord::getNewInstance($condition, $object);
 		$record->save();
 
@@ -375,8 +377,6 @@ class DiscountController extends ActiveGridController
 
 	private function buildValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator("discountCondition", $this->request);
 		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("_rule_name_empty")));
 
@@ -390,13 +390,11 @@ class DiscountController extends ActiveGridController
 	 */
 	private function buildForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildValidator());
 	}
 
 	private function buildConditionValidator()
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
 		return new RequestValidator("discountConditionRule", $this->request);
 	}
 
@@ -407,7 +405,6 @@ class DiscountController extends ActiveGridController
 	 */
 	private function buildConditionForm()
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildConditionValidator());
 	}
 

@@ -2,10 +2,7 @@
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.delivery.ShippingService");
 ClassLoader::import("application.model.delivery.ShippingRate");
-ClassLoader::import("framework.request.validator.RequestValidator");
-ClassLoader::import("framework.request.validator.Form");
-		
-		
+
 /**
  * Application settings management
  *
@@ -24,7 +21,7 @@ class ShippingRateController extends StoreManagementController
 		{
 			ShippingRate::getInstanceByID($id)->delete();
 		}
-		
+
 		return new JSONResponse(false, 'success');
 	}
 }

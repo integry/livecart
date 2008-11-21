@@ -4,7 +4,7 @@ ClassLoader::import("application.controller.backend.abstract.StoreManagementCont
 ClassLoader::import("application.model.order.CustomerOrder");
 ClassLoader::import("application.model.order.OrderNote");
 ClassLoader::import("application.model.category.Category");
-ClassLoader::import("application.helper.getDateFromString");
+ClassLoader::importNow("application.helper.getDateFromString");
 
 /**
  * Main backend controller which stands as an entry point to administration functionality

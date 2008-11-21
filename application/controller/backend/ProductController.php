@@ -7,6 +7,7 @@ ClassLoader::import('application.model.product.Product');
 ClassLoader::import('application.model.product.ProductSpecification');
 ClassLoader::import('application.helper.ActiveGrid');
 ClassLoader::import('application.helper.massAction.MassActionInterface');
+ClassLoader::import('application.model.order.OrderedItem');
 
 /**
  * Controller for handling product based actions performed by store administrators
@@ -582,8 +583,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	public function info()
 	{
-		ClassLoader::import("application.helper.getDateFromString");
-		ClassLoader::import("application.model.order.OrderedItem");
+		ClassLoader::importNow("application.helper.getDateFromString");
 
 		$product = Product::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
 
@@ -755,8 +755,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	 */
 	private function buildValidator(Product $product)
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
 		$validator = new RequestValidator("productFormValidator", $this->request);
 
 		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name_empty')));
@@ -790,7 +788,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	private function buildForm(Product $product)
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildValidator($product));
 	}
 
