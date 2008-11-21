@@ -227,6 +227,8 @@ class CheckoutController extends FrontendController
 			}
 		}
 
+		$response = new ActionResponse();
+
 		foreach (array('billing' => $this->user->getBillingAddressArray(),
 						'shipping' => $this->user->getShippingAddressArray()) as $type => $addresses)
 		{
@@ -252,7 +254,6 @@ class CheckoutController extends FrontendController
 			}
 		}
 
-		$response = new ActionResponse();
 		$response->set('form', $form);
 		$response->set('order', $this->order->toArray());
 		$response->set('countries', $this->getCountryList($form));

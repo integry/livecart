@@ -59,6 +59,11 @@ class OsCommerceImport extends LiveCartImportDriver
 		return true;
 	}
 
+	public function isUserGroup()
+	{
+		return true;
+	}
+
 	public function isCategory()
 	{
 		return true;
@@ -93,6 +98,7 @@ class OsCommerceImport extends LiveCartImportDriver
 				'Language' => $this->getTablePrefix() . 'languages',
 				'Manufacturer' => $this->getTablePrefix() . 'manufacturers',
 				'Product' => $this->getTablePrefix() . 'products',
+				'UserGroup' => $this->getTablePrefix() . 'customers_groups',
 				'User' => $this->getTablePrefix() . 'customers',
 				'BillingAddress' => array('SELECT COUNT(*) FROM ' . $this->getTablePrefix() . 'address_book LEFT JOIN ' . $this->getTablePrefix() . 'customers ON ' . $this->getTablePrefix() . 'address_book.customers_id=' . $this->getTablePrefix() . 'customers.customers_id WHERE ' . $this->getTablePrefix() . 'customers.customers_id IS NOT NULL' => $this->getTablePrefix() . 'address_book')
 			);
@@ -166,6 +172,18 @@ class OsCommerceImport extends LiveCartImportDriver
 		return $man;
 	}
 
+	public function getNextUserGroup()
+	{
+		if (!$data = $this->loadRecord('SELECT * FROM ' . $this->getTablePrefix() . 'customers_groups'))
+		{
+			return null;
+		}
+
+		$rec = UserGroup::getNewInstance($data['customers_group_name']);
+
+		return $rec;
+	}
+
 	public function getNextUser()
 	{
 		if (!$data = $this->loadRecord('SELECT * FROM ' . $this->getTablePrefix() . 'customers'))
@@ -173,7 +191,16 @@ class OsCommerceImport extends LiveCartImportDriver
 			return null;
 		}
 
-		$rec = User::getNewInstance($data['customers_email_address']);
+		if (!empty($data['customers_group_id']))
+		{
+			$group = UserGroup::getInstanceById($this->getRealId('UserGroup', $data['customers_group_id']));
+		}
+		else
+		{
+			$group = null;
+		}
+
+		$rec = User::getNewInstance($data['customers_email_address'], null, $group);
 		$rec->setID($data['customers_id']);
 		$rec->password->set($data['customers_password']);
 		$rec->firstName->set($data['customers_firstname']);
@@ -281,7 +308,7 @@ class OsCommerceImport extends LiveCartImportDriver
 				list($join[], $langs[]) = $this->joinProductFields($id, $code);
 			}
 
-			$this->productSql = 'SELECT *,' . implode(', ', $langs) . ' FROM ' . $this->getTablePrefix() . 'products ' . implode(' ', $join) . ' LEFT JOIN ' . $this->getTablePrefix() . 'products_to_categories ON ' . $this->getTablePrefix() . 'products.products_id=' . $this->getTablePrefix() . 'products_to_categories.products_id LEFT JOIN ' . $this->getTablePrefix() . 'categories ON ' . $this->getTablePrefix() . 'products_to_categories.categories_id=' . $this->getTablePrefix() . 'categories.categories_id  WHERE ' . $this->getTablePrefix() . 'categories.categories_id IS NOT NULL';
+			$this->productSql = 'SELECT *,' . implode(', ', $langs) . ' FROM ' . $this->getTablePrefix() . 'products ' . implode(' ', $join) . ' LEFT JOIN ' . $this->getTablePrefix() . 'products_to_categories ON ' . $this->getTablePrefix() . 'products.products_id=' . $this->getTablePrefix() . 'products_to_categories.products_id LEFT JOIN ' . $this->getTablePrefix() . 'categories ON ' . $this->getTablePrefix() . 'products_to_categories.categories_id=' . $this->getTablePrefix() . 'categories.categories_id  WHERE ' . $this->getTablePrefix() . 'categories.categories_id IS NOT NULL GROUP BY ' . $this->getTablePrefix() . 'products.products_id';
 		}
 
 		if (!$data = $this->loadRecord($this->productSql))
@@ -308,6 +335,7 @@ class OsCommerceImport extends LiveCartImportDriver
 		}
 
 		$rec->sku->set($data['products_model']);
+
 		$rec->URL->set($data['products_url']);
 		$rec->isEnabled->set((int)(1 == $data['products_status']));
 		$rec->shippingWeight->set($data['products_weight']);
@@ -336,7 +364,10 @@ class OsCommerceImport extends LiveCartImportDriver
 
 	public function getNextCustomerOrder()
 	{
-		if (!$data = $this->loadRecord('SELECT *, ' . $this->getTablePrefix() . 'orders.orders_id AS id, ' . $this->getTablePrefix() . 'orders_total.value FROM ' . $this->getTablePrefix() . 'orders LEFT JOIN ' . $this->getTablePrefix() . 'orders_total ON (' . $this->getTablePrefix() . 'orders.orders_id=' . $this->getTablePrefix() . 'orders_total.orders_id AND class="ot_shipping")'))
+		if (!$data = $this->loadRecord('SELECT *, ' . $this->getTablePrefix() . 'orders.orders_id AS id, ' . $this->getTablePrefix() . 'orders_total.value FROM ' . $this->getTablePrefix() . 'orders
+												LEFT JOIN ' . $this->getTablePrefix() . 'orders_total ON (' . $this->getTablePrefix() . 'orders.orders_id=' . $this->getTablePrefix() . 'orders_total.orders_id AND class="ot_shipping")
+												LEFT JOIN ' . $this->getTablePrefix() . 'customers ON (' . $this->getTablePrefix() . 'orders.customers_id=' . $this->getTablePrefix() . 'customers.customers_id)
+												WHERE ' . $this->getTablePrefix() . 'customers.customers_id IS NOT NULL'))
 		{
 			return null;
 		}
@@ -347,12 +378,16 @@ class OsCommerceImport extends LiveCartImportDriver
 
 		// products
 		$tax = 0;
-		foreach ($this->getDataBySql('SELECT * FROM ' . $this->getTablePrefix() . 'orders_products WHERE ' . $this->getTablePrefix() . 'orders_id=' . $data['id']) as $prod)
+		foreach ($this->getDataBySql('SELECT *, ' . $this->getTablePrefix() . 'orders_products.products_quantity AS quant FROM ' . $this->getTablePrefix() . 'orders_products LEFT JOIN ' . $this->getTablePrefix() . 'products ON (' . $this->getTablePrefix() . 'orders_products.products_id=' . $this->getTablePrefix() . 'products.products_id) WHERE ' . $this->getTablePrefix() . 'orders_id=' . $data['id'] . ' AND ' . $this->getTablePrefix() . 'products.products_id IS NOT NULL') as $prod)
 		{
 			$product = Product::getInstanceById($this->getRealId('Product', $prod['products_id']));
-			$order->addProduct($product, $prod['products_quantity'], true);
 
-			$item = array_shift($order->getItemsByProduct($product));
+			if (!$prod['quant'])
+			{
+				continue;
+			}
+
+			$item = $order->addProduct($product, $prod['quant'], true);
 			$item->price->set($prod['products_price']);
 			$tax += $prod['products_tax'];
 		}
@@ -445,19 +480,23 @@ class OsCommerceImport extends LiveCartImportDriver
 		$order->save();
 
 		$shipment = $order->getShipments()->get(0);
-		$shipment->shippingAmount->set($order->rawData['value']);
-		$shipment->save();
 
-		if ($order->rawData['taxAmount'] > 0)
+		if ($shipment)
 		{
-			$tax = ActiveRecordModel::getNewInstance('ShipmentTax');
-			$tax->shipment->set($shipment);
-			$tax->amount->set($order->rawData['taxAmount']);
-			$tax->save();
-
-			$shipment->addFixedTax($tax);
-			$shipment->status->set(Shipment::STATUS_SHIPPED);
+			$shipment->shippingAmount->set($order->rawData['value']);
 			$shipment->save();
+
+			if ($order->rawData['taxAmount'] > 0)
+			{
+				$tax = ActiveRecordModel::getNewInstance('ShipmentTax');
+				$tax->shipment->set($shipment);
+				$tax->amount->set($order->rawData['taxAmount']);
+				$tax->save();
+
+				$shipment->addFixedTax($tax);
+				$shipment->status->set(Shipment::STATUS_SHIPPED);
+				$shipment->save();
+			}
 		}
 
 		return parent::saveCustomerOrder($order);

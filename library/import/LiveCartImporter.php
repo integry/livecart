@@ -206,7 +206,22 @@ class LiveCartImporter
 				$f->setOrder(new ARFieldHandle($type, 'ID'), 'DESC');
 				$f->setLimit(1);
 				$record = array_shift(ActiveRecordModel::getRecordSetArray($type, $f));
+
+				if (!$record)
+				{
+					$record['ID'] = 0;
+				}
+
 				$offsets[$type] = $record['ID'];
+
+				try
+				{
+					ActiveRecordModel::executeUpdate('ALTER TABLE ' . $type . ' AUTO_INCREMENT = ' . ($offsets[$type] + 1));
+				}
+				catch (Exception $e)
+				{
+					// we don't care much if it didn't work (won't work with MySQL <5.0.3)
+				}
 			}
 
 			file_put_contents($file, '<?php return ' . var_export($offsets, true) . '; ?>');
@@ -225,6 +240,7 @@ class LiveCartImporter
 				'Category',
 				'SpecField',
 				'Product',
+				'UserGroup',
 				'User',
 				'CustomerOrder',
 				'BillingAddress',

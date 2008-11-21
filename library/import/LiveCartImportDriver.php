@@ -50,6 +50,11 @@ abstract class LiveCartImportDriver
 		$this->importer = $importer;
 	}
 
+	public function getDBInstance()
+	{
+		return $this->db;
+	}
+
 	public function isBillingAddress()
 	{
 		return false;
@@ -105,11 +110,15 @@ abstract class LiveCartImportDriver
 		return false;
 	}
 
-	public function isUser()
+	public function isUserGroup()
 	{
 		return false;
 	}
 
+	public function isUser()
+	{
+		return false;
+	}
 
 	public function isProductRelationship()
 	{
@@ -127,6 +136,11 @@ abstract class LiveCartImportDriver
 	}
 
 	public function getNextManufacturer()
+	{
+		return null;
+	}
+
+	public function getNextUserGroup()
 	{
 		return null;
 	}
@@ -404,6 +418,7 @@ abstract class LiveCartImportDriver
 
 	public function saveUser(User $user)
 	{
+		$this->setUniqueEmail($user);
 		$user->save(ActiveRecordModel::PERFORM_INSERT);
 
 		if ($user->defaultBillingAddress->get())
@@ -414,6 +429,20 @@ abstract class LiveCartImportDriver
 		if ($user->defaultShippingAddress->get())
 		{
 			$user->defaultShippingAddress->get()->save();
+		}
+	}
+
+	private function setUniqueEmail(User $user, $suffix = '')
+	{
+		$newEmail = $user->email->get() . $suffix;
+		$existing = User::getInstanceByEmail($newEmail);
+		if ($existing)
+		{
+			$this->setUniqueEmail($user, $suffix ? ++$suffix : 2);
+		}
+		else
+		{
+			$user->email->set($newEmail);
 		}
 	}
 }

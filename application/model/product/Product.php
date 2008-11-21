@@ -307,6 +307,18 @@ class Product extends MultilingualObject
 		}
 	}
 
+	public function getMaxOrderableCount()
+	{
+		$config = self::getApplication()->getConfig();
+
+		if (($config->get('INVENTORY_TRACKING') == 'DISABLE') || $type == Product::TYPE_DOWNLOADABLE || $this->isBackOrderable->get())
+		{
+			return null;
+		}
+
+		return $this->stockCount->get();
+	}
+
 	private function loadPricingFromRequest(Request $request, $listPrice = false)
 	{
 		$field = $listPrice ? 'listPrice' : 'price';

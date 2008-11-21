@@ -91,7 +91,10 @@ class ProductController extends FrontendController
 		$this->addBreadCrumb($productArray['name_lang'], createProductUrl(array('product' => $productArray), $this->application));
 
 		// allowed shopping cart quantities
-		$quantities = range(max($product->minimumQuantity->get(), 1), min($product->stockCount->get(), $product->minimumQuantity->get() + 30));
+		$maxOrderable = $product->getMaxOrderableCount();
+		$maxQuant = $product->minimumQuantity->get() + 20;
+		$maxOrderable = is_null($maxOrderable) ? $maxQuant : min($maxQuant, $maxOrderable);
+		$quantities = range(max($product->minimumQuantity->get(), 1), $maxOrderable);
 		$quantity = array_combine($quantities, $quantities);
 
 		// manufacturer filter
