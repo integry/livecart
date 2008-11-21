@@ -156,7 +156,14 @@ abstract class LiveCartImportDriver
 		if (isset($tableMap[$type]))
 		{
 			$sql = is_array($tableMap[$type]) ? key($tableMap[$type]) : 'SELECT COUNT(*) FROM `' . $tableMap[$type] . '`';
-			return array_shift(array_shift($this->getDataBySQL($sql)));
+			try
+			{
+				return array_shift(array_shift($this->getDataBySQL($sql)));
+			}
+			catch (Exception $e)
+			{
+				return 0;
+			}
 		}
 	}
 
@@ -174,12 +181,9 @@ abstract class LiveCartImportDriver
 			$tables[] = $table->getName();
 		}
 
-		foreach ($this->getTableMap() as $table)
+		foreach ($this->getVerificationTableNames() as $table)
 		{
-			if (is_array($table))
-			{
-				$table = array_shift($table);
-			}
+			$table = $this->getTablePrefix() . $table;
 
 			if (array_search($table, $tables) === false)
 			{
