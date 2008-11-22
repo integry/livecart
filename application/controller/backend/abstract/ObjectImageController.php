@@ -35,7 +35,6 @@ abstract class ObjectImageController extends StoreManagementController
 
 	public function upload()
 	{
-		echo 'test';
 		$ownerId = $this->request->get('ownerId');
 
 		$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), $ownerId);

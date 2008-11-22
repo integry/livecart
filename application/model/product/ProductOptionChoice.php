@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.product.ProductOption');
+ClassLoader::import('application.model.product.ProductPrice');
 
 /**
  * One of the main entities of the system - defines and handles product related logic.
