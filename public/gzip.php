@@ -22,7 +22,7 @@ if (!file_exists($file))
 	exit;
 }
 
-if ($_SERVER['HTTP_ACCEPT_ENCODING'] && file_exists($file . '.gz'))
+if ($_SERVER['HTTP_ACCEPT_ENCODING'] && (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false) && file_exists($file . '.gz'))
 {
 	$file = $file . '.gz';
 	header('Content-Encoding: gzip');
