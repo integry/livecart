@@ -200,8 +200,10 @@ Backend.CustomField = {
 	 *	 options - Advanced options
 	 *	 childrenCount - Indicates that this node has N childs
 	 */
-	addCategories: function(categories)
+	addCategories: function(categories, root)
 	{
+		root = root || 0;
+
 		$A(categories).each(function(category)
 		{
 			category.options = "";
@@ -210,7 +212,11 @@ Backend.CustomField = {
 			category.name = '<b>' + category.name + '</b>';
 			category.name = category.name.replace(/<(?:.|\s)*?>/g, "");
 
-			this.treeBrowser.insertNewItem(0,category.ID,category.name, null, 0, 0, 0, category.options, 0);
+			this.treeBrowser.insertNewItem(root,category.ID,category.name, null, 0, 0, 0, category.options, 0);
+			if (category.sub)
+			{
+				this.addCategories(category.sub, category.ID);
+			}
 		}.bind(this));
 	}
 }
@@ -363,7 +369,7 @@ CategoryTabControl.prototype = {
 			// temporary "content" to avoid the content to be loaded twice
 			$(containerId).update('&nbsp;');
 
-			Backend.CustomField.treeBrowser.showFeedback(parseInt(categoryId));
+			Backend.CustomField.treeBrowser.showFeedback(categoryId);
 			new LiveCart.AjaxUpdater(this.getTabUrl(tabId, categoryId),
 									 this.getContainerId(tabId, categoryId),
 									 this.getIndicatorId(tabId),

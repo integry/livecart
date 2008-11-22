@@ -28,7 +28,6 @@ _will_ship_to=ההזמנה נשלחה אל
 _will_bill_to=ההזמנה תחוייב ל
 _change=שנה
 _pay_offline=שלם במצב לא מקוון
-_offline_instructions=הוראות לתשלום לא מקוון בדף פירוט התשלום
 _offline_complete_payment=בצע תשלום במצב לא מקוון
 _err_enter_cc_num=אנא הכניסו את מספר כרטיס האשראי
 _err_select_cc_type=אנא בחרו את סוג כרטיס האשראי

@@ -11,7 +11,6 @@
 	<div class="returningCustomer">
 		<h2>{t _returning}</h2>
 
-		<fieldset class="container">
 		<p>
 			{if $failed}
 				<div class="errorMsg failed">
@@ -37,8 +36,6 @@
 	</div>
 
 	<div class="clear"></div>
-
-	</fieldset>
 
 </div>
 

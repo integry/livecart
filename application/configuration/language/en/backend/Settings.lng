@@ -196,9 +196,16 @@ _credit_card_options=Credit Card Options
 REQUIRE_CVV=Require Card Verification Code (CVV) to be entered
 
 _offline_payments=Offline Payments
-OFFLINE_PAYMENT=Allow offline payments
+OFFLINE_HANDLERS=Enabled offline payment methods
+OFFLINE1=Bank Wire Transfer
+OFFLINE2=Additional Offline Payment Method
+OFFLINE3=Another Offline Payment Method
+OFFLINE_NAME=Payment method name
+OFFLINE_LOGO=Logo image
+OFFLINE_DESCR=Description
+OFFLINE_INSTR=Payment instructions
 
-_purchase=Orders
+_purchase=Orders & Checkout
 _purchase_settings=Purchasing Settings
 MIN_TOTAL=Minimum order total
 MAX_TOTAL=Maximum order total (0 - no limit)
@@ -281,7 +288,7 @@ CC_ENABLE=Enable credit card payments
 CC_HANDLER=Credit card handler
 CC_AUTHONLY=Only authorize payments without capturing them automatically
 
-_customers=Customers
+_customers=Customers & Registration
 _registration=Registration
 REQUIRE_PHONE=Require customers to enter phone number on registration
 DISABLE_STATE=Remove state field

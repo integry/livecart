@@ -10,6 +10,7 @@
 	{/if}
 {/defun}
 
+{if $manufacturers || $categories}
 <div class="box">
 	<div class="title">
 		<div>{t _quick_nav}</div>
@@ -17,17 +18,22 @@
 
 	<div class="content">
 
-		<select onchange="window.location.href = this.value;" style="width: 100%;">
-			<option>{t _manufacturers}</option>
-			{foreach $manufacturers as $man}
-				<option value="{categoryUrl data=$rootCat addFilter=$man.filter}">{$man.name}</option>
-			{/foreach}
-		</select>
+		{if $manufacturers}
+			<select onchange="window.location.href = this.value;" style="width: 100%;">
+				<option>{t _manufacturers}</option>
+				{foreach $manufacturers as $man}
+					<option value="{categoryUrl data=$rootCat addFilter=$man.filter}">{$man.name}</option>
+				{/foreach}
+			</select>
+		{/if}
 
-		<select onchange="window.location.href = this.value;" style="width: 100%;">
-			<option>{t _categories}</option>
-			{fun name="dynamicCategoryTree" node=$categories}
-		</select>
+		{if $categories}
+			<select onchange="window.location.href = this.value;" style="width: 100%;">
+				<option>{t _categories}</option>
+				{fun name="dynamicCategoryTree" node=$categories}
+			</select>
+		{/if}
 
 	</div>
 </div>
+{/if}

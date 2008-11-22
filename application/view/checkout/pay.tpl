@@ -18,16 +18,7 @@
 	</div>
 
 	{include file="checkout/paymentMethods.tpl"}
-
-	{if 'OFFLINE_PAYMENT'|config}
-		<h2>{t _pay_offline}</h2>
-
-		{include file="checkout/offlinePaymentInfo.tpl"}
-
-		<form action="{link controller=checkout action=payOffline}" method="POST">
-			<input type="submit" value="{tn _offline_complete_payment}" />
-		</form>
-	{/if}
+	{include file="checkout/offlinePaymentMethods.tpl"}
 
 	<h2>{t _order_overview}</h2>
 

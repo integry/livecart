@@ -6,6 +6,8 @@ ClassLoader::import('application.model.order.ExpressCheckout');
 ClassLoader::import('application.model.order.Transaction');
 ClassLoader::import('application.model.order.LiveCartTransaction');
 ClassLoader::import('application.model.order.SessionOrder');
+ClassLoader::import('application.model.order.OfflineTransactionHandler');
+ClassLoader::import('application.model.eav.EavSpecificationManager');
 
 /**
  *  Handles order checkout process
@@ -216,27 +218,42 @@ class CheckoutController extends FrontendController
 			$form->set('sameAsBilling', (int)($form->get('billingAddress') == $form->get('shippingAddress') || !$this->user->defaultShippingAddress->get()));
 		}
 
-		$addressTypes = array('billing');
-		if (!$this->config->get('ENABLE_CHECKOUTDELIVERYSTEP'))
-		{
-			$addressTypes[] = 'shipping';
-		}
-
 		foreach (array('firstName', 'lastName') as $name)
 		{
-			foreach ($addressTypes as $type)
+			$var = 'billing_' . $name;
+			if (!$form->get($var))
 			{
-				$var = $type . '_' . $name;
-				if (!$form->get($var))
-				{
-					$form->set($var, $this->user->$name->get());
-				}
+				$form->set($var, $this->user->$name->get());
 			}
 		}
 
 		$response = new ActionResponse();
-		$response->set('billingAddresses', $this->user->getBillingAddressArray());
-		$response->set('shippingAddresses', $this->user->getShippingAddressArray());
+
+		foreach (array('billing' => $this->user->getBillingAddressArray(),
+						'shipping' => $this->user->getShippingAddressArray()) as $type => $addresses)
+		{
+			if (count($addresses) > 1)
+			{
+				$response->set($type . 'Addresses', $addresses);
+			}
+			else if (count($addresses) == 1)
+			{
+				$address = $addresses[0]['UserAddress'];
+				$address['country'] = $address['countryID'];
+				$address['state_select'] = $address['stateID'];
+				if (!empty($address['State']['name']))
+				{
+					$address['stateName'] = $address['State']['name'];
+				}
+				$address['state_text'] = $address['stateName'];
+
+				foreach ($address as $key => $value)
+				{
+					$form->set($type . '_' . $key, $value);
+				}
+			}
+		}
+
 		$response->set('form', $form);
 		$response->set('order', $this->order->toArray());
 		$response->set('countries', $this->getCountryList($form));
@@ -263,21 +280,28 @@ class CheckoutController extends FrontendController
 			return new ActionRedirectResponse('checkout', 'selectAddress', array('query' => array('step' => $step)));
 		}
 
-		// create a new billing address
-		if (!$step || ('billing' == $step))
+		// create or edit addresses
+		$types = array('billing', 'shipping');
+		if ($this->request->get('sameAsBilling'))
 		{
-			if (!$this->request->get('billingAddress'))
-			{
-				$this->request->set('billingAddress', $this->createAddress('BillingAddress', 'billing_')->userAddress->get()->getID());
-			}
+			unset($types[1]);
 		}
 
-		// create a new shipping address
-		if (!$step || ('shipping' == $step))
+		foreach ($types as $type)
 		{
-			if (!$this->request->get('shippingAddress') && !$this->request->get('sameAsBilling'))
+			if ((!$step || ($type == $step)) && !$this->request->get($type . 'Address'))
 			{
-				$this->request->set('shippingAddress', $this->createAddress('ShippingAddress', 'shipping_')->userAddress->get()->getID());
+				$addressField = 'default' . ucfirst($type). 'Address';
+				if ($address = $this->user->$addressField->get())
+				{
+					$this->saveAddress($address->userAddress->get(), $type . '_');
+				}
+				else
+				{
+					$address = $this->createAddress(ucfirst($type) . 'Address', $type . '_');
+				}
+
+				$this->request->set($type . 'Address', $address->userAddress->get()->getID());
 			}
 		}
 
@@ -537,12 +561,17 @@ class CheckoutController extends FrontendController
 		$response->set('order', $this->order->toArray());
 		$response->set('currency', $this->getRequestCurrency());
 
+		// offline payment methods
+		$offlineMethods = OfflineTransactionHandler::getEnabledMethods();
+		$response->set('offlineMethods', $offlineMethods);
+		$response->set('offlineForms', $this->getOfflinePaymentForms($response));
+
 		$this->setPaymentMethodResponse($response);
 		$this->order->getSpecification()->setFormResponse($response, $response->get('ccForm'));
 
 		$external = $this->application->getPaymentHandlerList(true);
 		// auto redirect to external payment page if only one handler is enabled
-		if (1 == count($external) && !$this->config->get('OFFLINE_PAYMENT') && !$this->config->get('CC_ENABLE') && !$response->get('ccForm')->getValidator()->getErrorList())
+		if (1 == count($external) && !$offlineMethods && !$this->config->get('CC_ENABLE') && !$response->get('ccForm')->getValidator()->getErrorList())
 		{
 			$this->request->set('id', $external[0]);
 			return $this->redirect();
@@ -574,6 +603,36 @@ class CheckoutController extends FrontendController
 		// other payment methods
 		$external = $this->application->getPaymentHandlerList(true);
 		$response->set('otherMethods', $external);
+	}
+
+	private function getOfflinePaymentForms(ActionResponse $response)
+	{
+		ClassLoader::import("framework.request.validator.Form");
+		$forms = array();
+		$offlineVars = array();
+		foreach (OfflineTransactionHandler::getEnabledMethods() as $method)
+		{
+			$forms[$method] = new Form($this->getOfflinePaymentValidator($method));
+			$eavManager = new EavSpecificationManager(EavObject::getInstanceByIdentifier($method));
+			$eavManager->setFormResponse($response, $forms[$method]);
+			foreach (array('groupClass', 'specFieldList') as $vars)
+			{
+				$offlineVars[$method][$vars] = $response->get($vars);
+			}
+		}
+
+		$response->set('offlineVars', $offlineVars);
+
+		return $forms;
+	}
+
+	private function getOfflinePaymentValidator($method)
+	{
+		ClassLoader::import("framework.request.validator.RequestValidator");
+		$validator = new RequestValidator($method, $this->request);
+		$eavManager = new EavSpecificationManager(EavObject::getInstanceByIdentifier($method));
+		$eavManager->setValidation($validator);
+		return $validator;
 	}
 
 	/**
@@ -665,12 +724,32 @@ class CheckoutController extends FrontendController
 	 */
 	public function payOffline()
 	{
-		if (!$this->config->get('OFFLINE_PAYMENT'))
+		ActiveRecordModel::beginTransaction();
+
+		$method = $this->request->get('id');
+
+		if (!OfflineTransactionHandler::isMethodEnabled($method) || !$this->getOfflinePaymentValidator($method)->isValid())
 		{
 			return new ActionRedirectResponse('checkout', 'pay');
 		}
 
-		return $this->finalizeOrder();
+		$order = $this->order;
+		$response = $this->finalizeOrder();
+
+		$transaction = Transaction::getNewOfflineTransactionInstance($order, 0);
+		$transaction->setOfflineHandler($method);
+		$transaction->save();
+
+		$eavObject = EavObject::getInstance($transaction);
+		$eavObject->setStringIdentifier($method);
+		$eavObject->save();
+
+		$transaction->getSpecification()->loadRequestData($this->request);
+		$transaction->save();
+
+		ActiveRecordModel::commit();
+
+		return $response;
 	}
 
 	/**
@@ -1000,8 +1079,8 @@ class CheckoutController extends FrontendController
 		$valStep = $this->config->get('CHECKOUT_CUSTOM_FIELDS');
 		$validateFields = ('CART_PAGE' == $valStep) ||
 						  (('BILLING_ADDRESS_STEP' == $valStep) && (self::STEP_ADDRESS <= $step)) ||
-						  (('SHIPPING_ADDRESS_STEP' == $valStep) && ((self::STEP_ADDRESS == $step) && 'shipping' == $this->request->get('step')) || (self::STEP_ADDRESS < $step)) ||
-						  (('SHIPPING_METHOD_STEP' == $valStep) && (self::STEP_SHIPPING <= $step));
+						  (('SHIPPING_ADDRESS_STEP' == $valStep) && (((self::STEP_ADDRESS == $step) && ('shipping' == $this->request->get('step'))) || (self::STEP_ADDRESS < $step))) ||
+						  (('SHIPPING_METHOD_STEP' == $valStep) && (self::STEP_SHIPPING < $step));
 
 		$isOrderable = $order->isOrderable(true, $validateFields);
 
@@ -1106,7 +1185,7 @@ class CheckoutController extends FrontendController
 		if (!$step || ('billing' == $step))
 		{
 			$validator->addCheck('billingAddress', new OrCheck(array('billingAddress', 'billing_address1'), array(new IsNotEmptyCheck($this->translate('_select_billing_address')), new IsNotEmptyCheck('')), $this->request));
-			$this->validateAddress($validator, 'billing_', new CheckoutBillingAddressCheckCondition($this->request));
+			$this->validateAddress($validator, 'billing_');
 		}
 
 		if (!$step || ('shipping' == $step))
@@ -1114,7 +1193,7 @@ class CheckoutController extends FrontendController
 			if ($order->isShippingRequired() && !$order->isMultiAddress->get())
 			{
 				$validator->addCheck('shippingAddress', new OrCheck(array('shippingAddress', 'sameAsBilling', 'shipping_address1'), array(new IsNotEmptyCheck($this->translate('_select_shipping_address')), new IsNotEmptyCheck(''), new IsNotEmptyCheck('')), $this->request));
-				$this->validateAddress($validator, 'shipping_', new CheckoutShippingAddressCheckCondition($this->request));
+				$this->validateAddress($validator, 'shipping_');
 			}
 		}
 
@@ -1128,25 +1207,22 @@ class CheckoutController extends FrontendController
 		return $validator;
 	}
 
-	private function validateAddress(RequestValidator $validator, $prefix, CheckCondition $condition)
+	protected function validateAddress(RequestValidator $validator, $prefix)
 	{
-		$validator->addCheck($prefix . 'firstName', new ConditionalCheck($condition, new IsNotEmptyCheck($this->translate('_err_enter_first_name'))));
-		$validator->addCheck($prefix . 'lastName', new ConditionalCheck($condition, new IsNotEmptyCheck($this->translate('_err_enter_last_name'))));
-		$validator->addCheck($prefix . 'address1', new ConditionalCheck($condition, new IsNotEmptyCheck($this->translate('_err_enter_address'))));
-		$validator->addCheck($prefix . 'city', new ConditionalCheck($condition, new IsNotEmptyCheck($this->translate('_err_enter_city'))));
-		$validator->addCheck($prefix . 'country', new ConditionalCheck($condition, new IsNotEmptyCheck($this->translate('_err_select_country'))));
-		$validator->addCheck($prefix . 'zip', new ConditionalCheck($condition, new IsNotEmptyCheck($this->translate('_err_enter_zip'))));
+		$someValidator = new RequestValidator('foo', $this->request);
+		ClassLoader::import('application.controller.UserController');
+		$con = new UserController($this->application);
+		$con->validateAddress($someValidator, $prefix, 'shipping_' == $prefix);
 
-		if (!$this->config->get('DISABLE_STATE'))
+		foreach ($someValidator->getValidatorVars() as $field => $var)
 		{
-			$stateCheck = new OrCheck(array($prefix . 'state_select', $prefix . 'state_text'), array(new IsNotEmptyCheck($this->translate('_err_select_state')), new IsNotEmptyCheck('')), $this->request);
-			$validator->addCheck($prefix . 'state_select', new ConditionalCheck($condition, $stateCheck));
+			foreach ($var->getChecks() as $check)
+			{
+				$validator->addCheck($field, new OrCheck(array($field, substr($prefix, 0, -1) . 'Address'), array($check, new IsNotEmptyCheck('')), $this->request));
+			}
 		}
 
-		if ($this->config->get('REQUIRE_PHONE'))
-		{
-			$validator->addCheck($prefix . 'phone', new ConditionalCheck($condition, new IsNotEmptyCheck($this->translate('_err_enter_phone'))));
-		}
+//		var_dump($validator->getValidatorVar('billing_firstName')->getChecks());
 	}
 
 	public function buildCreditCardForm()

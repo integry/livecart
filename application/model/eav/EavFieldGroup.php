@@ -16,6 +16,7 @@ class EavFieldGroup extends EavFieldGroupCommon
 	{
 		$schema = parent::defineSchema(__CLASS__);
 		$schema->registerField(new ARField("classID", ARInteger::instance()));
+		$schema->registerField(new ARField("stringIdentifier", ARVarchar::instance(40)));
 	}
 
 	/*####################  Static method implementations ####################*/

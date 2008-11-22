@@ -31,7 +31,9 @@ class CustomFieldControllerTest extends UnitTest implements BackendControllerTes
 		$this->assertIsA($response, 'ActionResponse');
 
 		$nodes = $response->get('nodes');
-		$this->assertEqual(count($nodes), count(EavField::getEavClasses()));
+
+		// +1 for offline methods
+		$this->assertEqual(count($nodes), count(EavField::getEavClasses()) + 1);
 	}
 }
 

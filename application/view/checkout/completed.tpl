@@ -11,7 +11,7 @@
 	{if $order.isPaid}
 		{t _completed_paid}
 	{else}
-		{include file="checkout/offlinePaymentInfo.tpl" completed=true}
+		{t _completed_offline}
 	{/if}
 
 </div>

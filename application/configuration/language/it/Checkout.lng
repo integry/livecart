@@ -39,6 +39,5 @@ _info_multi_shipments=Uno o più prodotti da te ordinati richiedono una spedizio
 _pay_offline=Paga Offline
 _any_changes=Devi modificare qualche dato?
 _select_addresses=Seleziona un Indirizzo per questo Ordine
-_offline_instructions=Le istruzioni per il pagamento offline saranno visibili nel riepilogo.
 _offline_complete_payment=Effettua un pagamento offline
 _checkout=Cassa
