@@ -1,10 +1,10 @@
 <?php
 
-ClassLoader::import('library.smarty.libs.Smarty');
-ClassLoader::import('library.swiftmailer.Swift');
-ClassLoader::import('library.swiftmailer.Swift.Connection.NativeMail');
-ClassLoader::import('library.swiftmailer.Swift.Connection.SMTP');
-ClassLoader::import('library.swiftmailer.Swift.Message');
+ClassLoader::import('library.smarty.libs.Smarty', true);
+ClassLoader::import('library.swiftmailer.Swift', true);
+ClassLoader::import('library.swiftmailer.Swift.Connection.NativeMail', true);
+ClassLoader::import('library.swiftmailer.Swift.Connection.SMTP', true);
+ClassLoader::import('library.swiftmailer.Swift.Message', true);
 
 /**
  * E-mail handler

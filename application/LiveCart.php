@@ -2,6 +2,7 @@
 
 ClassLoader::import('framework.Application');
 ClassLoader::import('framework.response.ActionResponse');
+ClassLoader::import('library.payment.TransactionDetails');
 
 /**
  *  Implements LiveCart-specific application flow logic

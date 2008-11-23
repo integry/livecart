@@ -10,6 +10,7 @@ ClassLoader::import("application.model.order.Shipment");
 ClassLoader::import("application.model.order.OrderDiscount");
 ClassLoader::import("application.model.delivery.ShipmentDeliveryRate");
 ClassLoader::import("application.model.eav.EavAble");
+ClassLoader::import("application.model.order.Transaction");
 
 /**
  * Represents customers order - products placed in shopping basket or wish list

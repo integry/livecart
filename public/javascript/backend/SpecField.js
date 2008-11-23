@@ -1306,7 +1306,7 @@ Backend.SpecField.prototype = {
 			Element.removeClassName(li, self.cssPrefix + "valueMergedWinner");
 			Element.removeClassName(li, self.cssPrefix + "valueMergedLooser");
 
-			if(self.mergedValues[self.fieldsList.getRecordId(li)])
+			if(self.fieldsList && self.mergedValues[self.fieldsList.getRecordId(li)])
 			{
 				if(!winner)
 				{
