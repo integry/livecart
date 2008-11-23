@@ -17,7 +17,7 @@
 .rtl #content
 {
 	margin-left: 0;
-	margin-right: 190px;
+	margin-right: 200px;
 }
 
 .rtl #content.left
@@ -28,6 +28,18 @@
 .rtl #content.right
 {
 	margin-left: 0;
+}
+
+body.threeColumn.rtl #content
+{
+	padding-right: 0;
+	padding-left: 240px;
+}
+
+.rtl #rightSide
+{
+	padding: 0;
+	width: 225px;
 }
 
 .rtl #topMenuContainer
