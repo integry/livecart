@@ -32,6 +32,11 @@
 	<!-- Css includes -->
 	{includeCss file="frontend/Frontend.css"}
 	{includeCss file="backend/stat.css"}
+
+	{if {isRTL}}
+		{includeCss file="frontend/FrontendRTL.css"}
+	{/if}
+
 	{compiledCss glue=true nameMethod=hash}
 	<!--[if IE]>
 		<link href="stylesheet/frontend/FrontendIE.css" rel="Stylesheet" type="text/css"/>

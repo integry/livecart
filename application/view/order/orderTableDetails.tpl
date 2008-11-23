@@ -8,7 +8,7 @@
 
 			{if $item.Product.variations}
 				<span class="variations">
-					({include file="order/itemVariationsList.tpl"})
+					(&rlm;{include file="order/itemVariationsList.tpl"})
 				</span>
 			{/if}
 

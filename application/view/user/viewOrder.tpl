@@ -114,11 +114,14 @@
 		{/if}
 
 		{form action="controller=user action=addNote id=`$order.ID`" method=POST id="noteForm" handle=$noteForm}
-		   {err for="text"}
-			   {{label {t _enter_question}:}}
-			   {textarea}
-		   {/err}
-		   <input type="submit" class="submit" value="{tn _submit_response}" />
+			{err for="text"}
+				{{label {t _enter_question}:}}
+				{textarea}
+			{/err}
+			<p class="submit">
+				<label></label>
+				<input type="submit" class="submit" value="{tn _submit_response}" />
+			</p>
 		{/form}
 
 		</fieldset>

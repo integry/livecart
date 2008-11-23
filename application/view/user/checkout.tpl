@@ -111,7 +111,7 @@
 				{/if}
 
 				<p class="required">
-					{err for="billing_zip"}
+					{err for="billing_postalCode"}
 						{{label {t _postal_code}:}}
 						{textfield class="text"}
 					{/err}

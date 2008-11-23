@@ -34,28 +34,29 @@
 	<p>
 		<input class="submit" type="submit" value="{tn _submit_rating}" /> <span class="progressIndicator" style="display: none;"></span>
 	</p>
+	<div class="clear"></div>
 {/if}
 
 {if 'ENABLE_REVIEWS'|config}
 	<div class="reviewForm">
-		<div{if $ratingForm|@isRequired:'nickname'} class="required"{/if}>
+		<p{if $ratingForm|@isRequired:'nickname'} class="required"{/if}>
 			{err for="nickname"}
-				{{label {t _nickname}: }}
+				<label class="wide">{t _nickname}:</label>
 				{textfield class="text wide"}
 			{/err}
-		</div>
-		<div{if $ratingForm|@isRequired:'title'} class="required"{/if}>
+		</p>
+		<p{if $ratingForm|@isRequired:'title'} class="required"{/if}>
 			{err for="title"}
-				{{label {t _summary}: }}
+				<label class="wide">{t _summary}:</label>
 				{textfield class="text wide"}
 			{/err}
-		</div>
-		<div{if $ratingForm|@isRequired:'text'} class="required"{/if}>
+		</p>
+		<p{if $ratingForm|@isRequired:'text'} class="required"{/if}>
 			{err for="text"}
-				{{label {t _review_text}: }}
+				<label class="wide">{t _review_text}:</label>
 				{textarea}
 			{/err}
-		</div>
+		</p>
 	</div>
 	<p>
 		<input class="submit" type="submit" value="{tn _submit_review}" /> <span class="progressIndicator" style="display: none;"></span>
