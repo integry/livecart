@@ -104,7 +104,7 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 
 		$out = $includeString;
 	}
-	
+
 	if ($externalFiles = $smarty->_smarty_vars["INCLUDED_STYLESHEET_FILES_EXTERNAL"])
 	{
 		foreach($externalFiles as $cssFile)

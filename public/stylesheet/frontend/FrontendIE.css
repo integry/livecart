@@ -27,8 +27,8 @@ legend {
 
 label.checkbox, label.radio
 {
-    margin: 0;
-  	margin-top: 6px;
+  	margin-top: 2px;
+  	padding-top: 3px;
 }
 
 /* select elements do not respect z-index in IE 6 */
@@ -40,4 +40,9 @@ label.checkbox, label.radio
 table.productGrid
 {
 	width: auto;
+}
+
+#userMenu li
+{
+    background-repeat: no-repeat;
 }

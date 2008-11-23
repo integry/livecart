@@ -1,8 +1,18 @@
 {if $products}
-	<fieldset class="container">
 	<div class="resultStats">
+		<fieldset class="container">
 		<div class="pagingInfo">
 			{maketext text=_showing_products params=$offsetStart,$offsetEnd,$count}
+		</div>
+
+		<div class="sortOptions">
+			{if $sortOptions && ($sortOptions|@count > 1)}
+				{t _sort_by}
+				{form handle=$sortForm action="self" method="get"}
+				{selectfield id="productSort" name="sort" options=$sortOptions onchange="this.form.submit();"}
+				{/form}
+			{/if}
+			&nbsp;
 		</div>
 
 		{if 'ALLOW_SWITCH_LAYOUT'|@config}
@@ -14,19 +24,8 @@
 				{/if}
 			</div>
 		{/if}
-
-		<div class="sortOptions">
-			{if $sortOptions && ($sortOptions|@count > 1)}
-				{t _sort_by}
-				{form handle=$sortForm action="self" method="get"}
-				{selectfield id="productSort" name="sort" options=$sortOptions onchange="this.form.submit();"}
-				{/form}
-			{/if}
-			&nbsp;
-		</div>
-		<div class="clear"></div>
+		</fieldset>
 	</div>
-	</fieldset>
 
 	{if 'GRID' == $layout}
 		{include file="category/productGrid.tpl" products=$products}

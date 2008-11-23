@@ -1,4 +1,4 @@
-<fieldset class="container">
+<fieldset class="container" style="position: relative;">
 
 	<div class="image">
 		<a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">
@@ -12,35 +12,32 @@
 
 	<div class="descr">
 
-		<div class="container">
-			<div class="title">
-				<a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">{$product.name_lang}</a>
-			</div>
+		<div class="pricingInfo"><div><div>
+			{if $product.isAvailable && 'ENABLE_CART'|config}
+				<a href="{link controller=order action=addToCart id=$product.ID returnPath=true}" rel="nofollow" class="addToCart">{t _add_to_cart}</a>
+			{/if}
 
-			<div class="pricingInfo"><div><div>
-				{if $product.isAvailable && 'ENABLE_CART'|config}
-					<a href="{link controller=order action=addToCart id=$product.ID returnPath=true}" rel="nofollow" class="addToCart">{t _add_to_cart}</a>
+			{if 'DISPLAY_PRICES'|config}
+			<span>{t _our_price}:</span>
+
+			<span class="price">
+				{$product.formattedPrice.$currency}
+				{if $product.formattedListPrice.$currency}
+						<span class="listPrice">
+							{$product.formattedListPrice.$currency}
+						</span>
 				{/if}
+			</span>
+			{/if}
 
-				{if 'DISPLAY_PRICES'|config}
-				<span>{t _our_price}:</span>
+			<br class="clear" />
+		</div></div></div>
 
-				<span class="price">
-					{$product.formattedPrice.$currency}
-					{if $product.formattedListPrice.$currency}
-							<span class="listPrice">
-								{$product.formattedListPrice.$currency}
-							</span>
-					{/if}
-				</span>
-				{/if}
-
-				<br class="clear" />
-			</div></div></div>
+		<div class="title">
+			<a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">{$product.name_lang}</a>
 		</div>
 
 		{if $product.attributes}
-			<fieldset class="container">
 			<div class="spec">
 				{foreach from=$product.attributes item="attr" name="attr"}
 					{if $attr.values}
@@ -61,7 +58,7 @@
 					{/if}
 				{/foreach}
 			</div>
-			</fieldset>
+			{* <div class="clear"></div> *}
 		{/if}
 
 		<div class="shortDescr">

@@ -35,6 +35,9 @@
 	{compiledCss glue=true nameMethod=hash}
 	<!--[if IE]>
 		<link href="stylesheet/frontend/FrontendIE.css" rel="Stylesheet" type="text/css"/>
+		{if $ieCss}
+			<link href="{$ieCss}" rel="Stylesheet" type="text/css"/>
+		{/if}
 	<![endif]-->
 
 	<!-- JavaScript includes -->

@@ -32,10 +32,11 @@ label
 	width: auto;
 }
 
-.descr ul li
+.descr li,
+#productDescription li
 {
 	list-style-type: disc;
-	padding-left: 12px;
+	margin-left: 1.5em;
 }
 
 /* 100% height layout start >> */
@@ -312,7 +313,6 @@ img.calendar_button
 .subCategories,
 .allFilters .filterGroup,
 .resultStats .pagingInfo, .categoryLayoutSwitch,
-ul.productList .spec,
 ul.productList .image,
 #productSummaryContainer,
 #ratingSummary,
@@ -835,6 +835,7 @@ ul.subSubCats
 .resultStats
 {
     margin-bottom: 15px;
+    padding-bottom: 4px;
     border-bottom-width: 1px;
     font-size: 120%;
     position: relative;
@@ -857,7 +858,9 @@ a.layoutSetGrid
 
 .categoryLayoutSwitch
 {
-	margin-left: 1em;
+	position: absolute;
+	right: 0;
+	top: -1.5em;
 }
 
 .category-allProducts .categoryLayoutSwitch
@@ -919,12 +922,17 @@ ul.productList .title
 
 ul.productList .spec
 {
-	margin: 2px 0 5px 0;
+	margin-top: 2px;
 }
 
 ul.productList .descr
 {
     margin-left: 120px;
+}
+
+ul.productList .shortDescr
+{
+	margin-top: 0.5em;
 }
 
 ul.productList .image
@@ -1161,11 +1169,6 @@ ul.attributeList.singleValue li
 	border: 1px solid black;
 	margin-right: 4px;
 	cursor: pointer;
-}
-
-.cartLinks select
-{
-    font-size: normal;
 }
 
 #rateProduct
@@ -2249,7 +2252,7 @@ img.calendar_button
 	overflow: hidden;
 }
 
-.compactProductList .pricingInfo
+.compactProductList .pricingInfo .price
 {
 	width: 70px;
 	font-size: 1em;

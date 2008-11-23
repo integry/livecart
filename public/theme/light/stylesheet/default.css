@@ -6,7 +6,7 @@ input.submit, input.text, input.password, select, textarea
 
 tr.last td
 {
-	border: 0;
+	border-bottom: 0;
 }
 
 #productSummaryContainer

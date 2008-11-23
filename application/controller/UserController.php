@@ -1044,7 +1044,7 @@ class UserController extends FrontendController
 		if ($validator->isValid())
 		{
 			$address = UserAddress::getNewInstance();
-			$this->saveAddress($address, $prefix);
+			$this->saveAddress($address);
 
 			$addressType = call_user_func_array(array($addressClass, 'getNewInstance'), array($this->user, $address));
 			$addressType->save();

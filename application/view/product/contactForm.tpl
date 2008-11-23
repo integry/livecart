@@ -2,7 +2,7 @@
 
 <div>
 {form action="controller=product action=sendContactForm" method="POST" handle=$contactForm id="productContactForm" onsubmit="new Product.ContactForm(this); return false;"}
-	<p>
+	<p class="required">
 		{err for="name"}
 			{{label {t _inquiry_name}:}}
 			{textfield class="text"}
@@ -17,14 +17,14 @@
 		{/err}
 	</div>
 
-	<p>
+	<p class="required">
 		{err for="email"}
 			{{label {t _inquiry_email}:}}
 			{textfield class="text"}
 		{/err}
 	</p>
 
-	<p>
+	<p class="required">
 		{err for="msg"}
 			{{label {t _inquiry_msg}:}}
 			{textarea}

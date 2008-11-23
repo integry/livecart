@@ -1,0 +1,97 @@
+* html a
+{
+	cursor: hand;
+}
+
+form p
+{
+	margin: 5px 0;
+}
+
+.productTable tr.first td
+{
+	background-color: #D2EEF2 !important;
+	background-image: none;
+}
+
+.subCategories.first
+{
+	padding-right: 15px;
+}
+
+* html #leftSide,
+* html #rightSide
+{
+	position: relative;
+}
+
+* html .quickSearch
+{
+	background: url(../image/headerTop.jpg);
+	height: 43px;
+}
+
+/* hide column borders for IE 6 */
+* html #contentWrapperLeft,
+* html #contentWrapperRight
+{
+	display: none;
+}
+
+* html .page_content_bg
+{
+	overflow: visible;
+	position: static;
+}
+
+* html #content,
+* html #leftSide,
+* html #rightSide
+{
+	background-color: #fff;
+}
+
+* html #rightSide li
+{
+	position: relative;
+}
+
+.cartLinks .submit
+{
+	padding-top: 6px;
+}
+
+#billingAddressColumn
+{
+	margin-top: -1em;
+}
+
+/* shipping address form overlaps billing address form in IE 6 & 7 */
+* html .step- #shippingSelector,
+*+html .step- #shippingSelector
+{
+	float: right;
+	margin-right: 1em;
+}
+
+* html .returningCustomer input.text
+{
+	width: 155px;
+}
+
+* html #footerContent
+{
+	margin: 0 20px;
+}
+
+* html #footerLeftCorner
+{
+	position: absolute;
+	left: 0;
+}
+
+* html #footerRightCorner
+{
+	position: absolute;
+	right: -1px;
+}

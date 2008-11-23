@@ -3,7 +3,7 @@
 
 {include file="checkout/layout.tpl"}
 
-<div id="content" class="left right">
+<div id="content" class="left right step-{$step}">
 
 	<div class="checkoutHeader">
 		<h1>{t _select_addresses}</h1>
@@ -15,12 +15,12 @@
 		{/if}
 	</div>
 
-	{form action="controller=checkout action=doSelectAddress" method="POST" handle=$form}
+	{form action="controller=checkout action=doSelectAddress" method="POST" handle=$form style="display: block;"}
 
 	{error for="selectedAddress"}<div><span class="errorText">{$msg}</span></div><div class="clear"></div>{/error}
 
 	{if !$step || ('billing' == $step)}
-		<div id="billingAddressColumn">
+		<fieldset class="container" id="billingAddressColumn">
 			<h2 id="billingAddress">{t _billing_address}</h2>
 
 			{if !$billingAddresses}
@@ -63,7 +63,7 @@
 				</p>
 			{/if}
 
-		</div>
+		</fieldset>
 	{/if}
 
 	{if ($order.isShippingRequired && !$order.isMultiAddress) && (!$step || ('shipping' == $step))}
@@ -72,12 +72,12 @@
 			<div class="clear"></div>
 		{/if}
 
-		<div id="shippingSelector">
+		<fieldset class="container" id="shippingSelector">
 
 			<h2 id="shippingAddress">{t _shipping_address}</h2>
 
 			{if !$shippingAddresses}
-				<div id="billingAddressForm">
+				<div id="shippingAddressForm">
 					{include file="user/addressForm.tpl" prefix="shipping_" states=$shipping_states}
 				</div>
 			{else}
@@ -109,7 +109,7 @@
 				</table>
 			{/if}
 
-		</div>
+		</fieldset>
 
 		{literal}
 		<script type="text/javascript">

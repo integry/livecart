@@ -1,4 +1,3 @@
-<div class="clear"></div>
 <h2>{t _wish_list_items}</h2>
 <fieldset class="container" id="wishList">
 <table>

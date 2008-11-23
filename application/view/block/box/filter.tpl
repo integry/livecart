@@ -29,10 +29,12 @@
 				<ul>
 					{foreach from=$manGroup.filters item="filter"}
 						<li>
-							<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a>
-							{if 'DISPLAY_NUM_FILTER'|config}
-								 <span class="count">(&rlm;{$filter.count})</span>
-							{/if}
+							<div>
+								<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a>
+								{if 'DISPLAY_NUM_FILTER'|config}
+									 <span class="count">(&rlm;{$filter.count})</span>
+								{/if}
+							</div>
 						</li>
 					{/foreach}
 
@@ -49,10 +51,12 @@
 				<ul>
 					{foreach from=$priceGroup.filters item="filter"}
 						<li>
-							<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a>
-							{if 'DISPLAY_NUM_FILTER'|config}
-								<span class="count">(&rlm;{$filter.count})</span>
-							{/if}
+							<div>
+								<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a>
+								{if 'DISPLAY_NUM_FILTER'|config}
+									<span class="count">(&rlm;{$filter.count})</span>
+								{/if}
+							</div>
 						</li>
 					{/foreach}
 				</ul>
@@ -65,10 +69,12 @@
 				<ul>
 					{foreach from=$group.filters item="filter"}
 						<li>
-							<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a>
-							{if 'DISPLAY_NUM_FILTER'|config}
-								 <span class="count">(&rlm;{$filter.count})</span>
-							{/if}
+							<div>
+								<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a>
+								{if 'DISPLAY_NUM_FILTER'|config}
+									 <span class="count">(&rlm;{$filter.count})</span>
+								{/if}
+							</div>
 						</li>
 					{/foreach}
 					{if $group.more}
