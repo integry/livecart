@@ -317,7 +317,15 @@ class CsvImportController extends StoreManagementController
 			}
 
 			// detect product category
-			if (isset($fields['Category']['ID']))
+			if (isset($fields['Product']['parentID']) && !empty($record[$fields['Product']['parentID']]))
+			{
+				$cat = Product::getInstanceByID($record[$fields['Product']['parentID']], true);
+			}
+			else if (isset($fields['Parent']['parentSKU']) && !empty($record[$fields['Parent']['parentSKU']]))
+			{
+				$cat = Product::getInstanceBySKU($record[$fields['Parent']['parentSKU']]);
+			}
+			else if (isset($fields['Category']['ID']))
 			{
 				try
 				{
@@ -370,14 +378,6 @@ class CsvImportController extends StoreManagementController
 					$hashRoot = $categories[$hash];
 					$cat = Category::getInstanceByID($hashRoot);
 				}
-			}
-			else if (isset($fields['Product']['parentID']) && !empty($record[$fields['Product']['parentID']]))
-			{
-				$cat = Product::getInstanceByID($record[$fields['Product']['parentID']], true);
-			}
-			else if (isset($fields['Parent']['parentSKU']) && !empty($record[$fields['Parent']['parentSKU']]))
-			{
-				$cat = Product::getInstanceBySKU($record[$fields['Parent']['parentSKU']]);
 			}
 			else
 			{
