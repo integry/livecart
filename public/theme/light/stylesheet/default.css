@@ -43,7 +43,9 @@ a.proceedToCheckout span,
 .subCategories .subCatContainer .subCatContainer,
 .pricingInfo div div,
 #productToWishList td.value,
+.rtl #productToWishList td.param,
 #productSpecification tr.last td.value,
+.rtl #productSpecification tr.last td.param,
 #cart .last .cartQuant, #wishList .last .cartPrice
 {
 	background-image: url(../image/cornerBottomRight.gif);
@@ -56,7 +58,9 @@ a.proceedToCheckout span span,
 .subCategories .subCatContainer,
 .pricingInfo div,
 #productToWishList td.param,
+.rtl #productToWishList td.value,
 #productSpecification tr.last td.param,
+.rtl #productSpecification tr.last td.value,
 #cart .last, #wishList .last
 {
 	background-image: url(../image/cornerBottomLeft.gif);
@@ -69,7 +73,9 @@ div.box .title,
 .subCategories td.details,
 .pricingInfo div div div,
 #productPrice td.param,
+.rtl #productPrice td.value,
 #productSpecification tr.first td.param,
+.rtl #productSpecification tr.first td.value,
 #cart .first .cartControl, #wishList .first .cartControl
 {
 	background-image: url(../image/cornerTopLeft.gif);
@@ -82,7 +88,9 @@ div.box .title div,
 .subCategories .subCatContainer .subCatContainer .subCatContainer,
 ul.productList .pricingInfo, .productGrid .pricingInfo,
 #productPrice td.value,
+.rtl #productPrice td.param,
 #productSpecification tr.first td.value,
+.rtl #productSpecification tr.first td.param,
 #cart .first .cartQuant, #wishList .first .cartPrice
 {
 	background-image: url(../image/cornerTopRight.gif);
@@ -393,4 +401,9 @@ a.proceedToCheckout span span span span
 {
 	background-image:url(../../../image/silk/gif/page_white_text.gif);
 	padding-top: 4px;
+}
+
+.rtl .subCatContainer table
+{
+	margin-right: 1em;
 }

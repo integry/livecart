@@ -23,9 +23,11 @@ form p
 * html #rightSide
 {
 	position: relative;
+	z-index: 2000;
 }
 
-* html .quickSearch
+* html .quickSearch,
+* html #searchContainer .wrapper
 {
 	background: url(../image/headerTop.jpg);
 	height: 43px;

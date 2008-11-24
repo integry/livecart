@@ -9,6 +9,7 @@
 .rtl #leftSide,
 .rtl .quickSearch,
 .rtl #logoContainer,
+.rtl #breadCrumbCaption,
 .rtl #breadCrumb li
 {
 	float: right;
@@ -53,7 +54,8 @@ body.threeColumn.rtl #content
 .rtl ul.productList a.addToCart,
 .rtl ul.productList .pricingInfo,
 .rtl ul.productList .orderingControls,
-.rtl .productGrid a.addToCart
+.rtl .productGrid a.addToCart,
+.rtl #checkoutProgress
 {
 	float: left;
 }

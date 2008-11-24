@@ -29,7 +29,7 @@
 			<td class="cartName">
 				<div>
 					<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
-					<small>({$item.Product.Category.name_lang})</small>
+					<small>(&rlm;{$item.Product.Category.name_lang})</small>
 				</div>
 
 				{include file="order/itemVariations.tpl"}

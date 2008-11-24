@@ -171,6 +171,7 @@ a.addToWishList,
 }
 
 .current ul li,
+.categories ul li,
 .subSubCats li
 {
 	padding-left: 10px;
@@ -240,6 +241,16 @@ ul.news li.newsEntry,
 h3 a
 {
 	text-decoration: none;
+}
+
+.newsReadMore a
+.current ul li,
+.subSubCats li,
+#smallCart a,
+#smallCart .menu_cartItemCount,
+#smallCart a.checkout
+{
+	background-position: left center;
 }
 
 h1, h2, h3, h4
@@ -548,11 +559,15 @@ ul.productList .pricingInfo span.price,
 	width: 100%;
 	font-size: 1.2em;
 	display: block;
-	color: #CC6600;
 	font-weight: bold;
 	position: absolute;
 	top: 0;
 	left: 0;
+}
+
+.price
+{
+	color: #CC6600;
 }
 
 .pricingInfo span
@@ -623,11 +638,16 @@ ul.productList .orderingControls
 	width: 90px;
 }
 
-.compactProductList .pricingInfo .price
+.compactProductList .pricingInfo
 {
 	display: block;
 	width: 64px;
 	font-size: 0.85em;
+}
+
+.compactProductList .pricingInfo .price
+{
+	display: inline;
 }
 
 /*
@@ -764,7 +784,6 @@ a.proceedToCheckout span span span span
 .newsReadMore a
 {
 	background-image: url(../../../image/silk/gif/page_white_text.gif);
-	background-position: left center;
 	padding-top: 4px;
 }
 
@@ -838,7 +857,6 @@ a.proceedToCheckout span span span span
 {
 	background-position: left 1px;
 	background-image: url(../image/leftmenu4.gif);
-	padding-left: 10px;
 	margin-left: 0;
 }
 
@@ -853,7 +871,6 @@ a.proceedToCheckout span span span span
 	font-size: 12px;
 	color: #168c9d;
 	background-image: url(../image/arrow.jpg);
-	background-position: left center;
 	text-indent: 0;
 }
 
@@ -1067,7 +1084,6 @@ li.moreSubCats, li.moreSubCats a
 {
 	font-size: 11px;
 	display: inline-block;
-	background-position: left center;
 	padding: 5px 0 5px 20px;
 	margin-left: 1.3em;
 }
@@ -1085,7 +1101,6 @@ li.moreSubCats, li.moreSubCats a
 #smallCart a.checkout
 {
 	background-image: url(../image/checkout.gif);
-	background-position: left center;
 	padding-right: 0;
 }
 
@@ -1241,4 +1256,98 @@ table.productGrid
 #userMenuContainer
 {
 	margin: 1em;
+}
+
+
+.rtl .newsReadMore a
+.rtl .current ul li,
+.rtl .subSubCats li,
+.rtl #smallCart a,
+.rtl #smallCart .menu_cartItemCount,
+.rtl .filterGroup ul li div,
+.rtl #smallCart a.checkout
+{
+	background-position: right center;
+}
+
+.rtl a.addToWishList,
+.rtl #productToWishList td.value a,
+.rtl .newsReadMore a,
+.rtl .returnToCategory
+{
+	padding-left: 0;
+	padding-right: 22px;
+	background-position: right center;
+}
+
+.rtl .current ul li,
+.rtl .categories ul li,
+.rtl #smallCart a,
+.rtl .subSubCats li
+{
+	padding-left: 0;
+	padding-right: 20px;
+	background-position: right 1px;
+}
+
+.rtl .expandResults .filterGroup ul li a,
+.rtl #smallCart .logout a
+{
+	padding-left: 0;
+	padding-right: 16px;
+	background-position: right center;
+}
+
+.rtl .categories .content
+{
+	padding: 0 !important;
+}
+
+.rtl .categories .content
+{
+	position: relative;
+}
+
+* html .rtl .categories li,
+*+html .rtl .categories li
+{
+	background: none;
+	padding-right: 0;
+}
+
+.rtl .filterGroup .showAll
+{
+	text-align: left;
+}
+
+.rtl div.box .title div
+{
+	text-align: right;
+}
+
+.rtl .addToCart
+{
+	padding: 0 !important;
+}
+
+.rtl ul.productList .orderingControls
+{
+	float: none;
+}
+
+.rtl #smallCart .menu_shoppingCart
+{
+	margin-left: 0;
+}
+
+body.threeColumn.rtl #contentWrapperRight
+{
+	left: 230px;
+	right: auto;
+}
+
+body.threeColumn.rtl #contentWrapperLeft
+{
+	left: auto;
+	right: 190px;
 }
