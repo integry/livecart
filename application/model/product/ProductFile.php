@@ -34,9 +34,9 @@ class ProductFile extends ObjectFile
 	 * @param string $fileName File name with extension. (image.jpg)
 	 * @return ActiveRecord
 	 */
-	public static function getNewInstance(Product $product, $filePath, $fileName)
+	public static function getNewInstance(Product $product, $filePath, $fileName, $pathOrUrl = null)
 	{
-		$productFileInstance = parent::getNewInstance(__CLASS__, $filePath, $fileName);
+		$productFileInstance = parent::getNewInstance(__CLASS__, $filePath, $fileName, $pathOrUrl);
 		$productFileInstance->product->set($product);
 
 		return $productFileInstance;

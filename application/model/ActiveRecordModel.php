@@ -296,26 +296,29 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 		// fetch EAV values
 		$eavObjects = ActiveRecordModel::getRecordSetArray('EavObject', new ARSelectFilter($cond));
-		EavSpecificationManager::loadSpecificationForRecordSetArray($eavObjects, true);
-
-		// assign attribute values to the respective records
-		foreach ($eavObjects as $entry)
+		if ($eavObjects)
 		{
-			unset($entry['ID']);
-			foreach ($entry as $field => $refId)
+			EavSpecificationManager::loadSpecificationForRecordSetArray($eavObjects, true);
+
+			// assign attribute values to the respective records
+			foreach ($eavObjects as $entry)
 			{
-				if ($refId)
+				unset($entry['ID']);
+				foreach ($entry as $field => $refId)
 				{
-					$class = ucfirst(substr($field, 0, -2));
-					if (isset($entry['attributes']))
+					if ($refId)
 					{
-						self::$eavQueue[$class][$refId]['attributes'] = $entry['attributes'];
-						foreach ($entry['attributes'] as $attr)
+						$class = ucfirst(substr($field, 0, -2));
+						if (isset($entry['attributes']))
 						{
-							self::$eavQueue[$class][$refId]['byHandle'][$attr['EavField']['handle']] = $attr;
+							self::$eavQueue[$class][$refId]['attributes'] = $entry['attributes'];
+							foreach ($entry['attributes'] as $attr)
+							{
+								self::$eavQueue[$class][$refId]['byHandle'][$attr['EavField']['handle']] = $attr;
+							}
 						}
+						break;
 					}
-					break;
 				}
 			}
 		}

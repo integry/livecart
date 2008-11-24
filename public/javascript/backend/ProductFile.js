@@ -198,6 +198,7 @@ Backend.ProductFile.Controller.prototype = {
 		this.view.assign('title', this.model.get('title_' + defaultLanguageID));
 		this.view.assign('description', this.model.get('description_' + defaultLanguageID));
 		this.view.assign('allowDownloadDays', this.model.get('allowDownloadDays'));
+		this.view.assign('filePath', this.model.get('filePath'));
 		this.view.assign('ID', this.model.get('ID', ''));
 		this.view.assign('productID', this.model.get('Product.ID', ''));
 		this.view.assign('isNew', this.model.isNew);
@@ -341,6 +342,7 @@ Backend.ProductFile.View.methods =
 		this.nodes.description = this.nodes.root.down('.' + this.prefix + 'description');
 		this.nodes.title = this.nodes.root.down('.' + this.prefix + 'title');
 		this.nodes.allowDownloadDays = this.nodes.root.down('.' + this.prefix + 'allowDownloadDays');
+		this.nodes.filePath = this.nodes.root.down('.' + this.prefix + 'filePath');
 		this.nodes.uploadFile = this.nodes.root.down('.' + this.prefix + 'uploadFile');
 
 		this.nodes.extension = this.nodes.root.down('.' + this.prefix + 'extension');
@@ -396,6 +398,7 @@ Backend.ProductFile.View.methods =
 		{
 			this.nodes.fileNameBlock.show();
 			this.nodes.fileName.value = this.get('fileName');
+			this.nodes.filePath.value = this.get('filePath');
 			this.nodes.extension.update('.' + this.get('extension'));
 		}
 

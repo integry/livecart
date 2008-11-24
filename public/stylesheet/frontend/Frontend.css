@@ -1830,8 +1830,8 @@ a.messages
 ***************************/
 ul.downloadFile li
 {
-    padding: 4px;
     background-image: url(../../image/silk/gif/disk.gif);
+    margin-bottom: 4px;
 }
 
 ul.downloadFile li.fileGroup

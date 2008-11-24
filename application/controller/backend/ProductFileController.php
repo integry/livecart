@@ -3,6 +3,7 @@
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.category.Category");
 ClassLoader::import("application.model.product.Product");
+ClassLoader::import("application.model.product.ProductFile");
 
 /**
  * Controller for handling product based actions performed by store administrators
@@ -35,6 +36,12 @@ class ProductFileController extends StoreManagementController
 	{
 		$productFile = ProductFile::getInstanceByID((int)$this->request->get('ID'), ActiveRecord::LOAD_DATA);
 		$productFile->fileName->set($this->request->get('fileName'));
+		$productFile->filePath->set($this->request->get('filePath'));
+
+		if ($productFile->filePath->get())
+		{
+			$productFile->extension->set(pathinfo($productFile->filePath->get(), PATHINFO_EXTENSION));
+		}
 
 		$uploadFile = $this->request->get('uploadFile');
 		if($this->request->isValueSet('uploadFile'))
@@ -51,9 +58,18 @@ class ProductFileController extends StoreManagementController
 	public function create()
 	{
 		$product = Product::getInstanceByID((int)$this->request->get('productID'));
-		$uploadFile = $this->request->get('uploadFile');
+		if ($uploadFile = $this->request->get('uploadFile'))
+		{
+			$tmpPath = $uploadFile['tmp_name'];
+			$name = $uploadFile['name'];
+		}
+		else
+		{
+			$tmpPath = null;
+			$name = basename($this->request->get('filePath'));
+		}
 
-		$productFile = ProductFile::getNewInstance($product, $uploadFile['tmp_name'], $uploadFile['name']);
+		$productFile = ProductFile::getNewInstance($product, $tmpPath, $name, $this->request->get('filePath'));
 		return $this->save($productFile);
 	}
 
@@ -158,7 +174,7 @@ class ProductFileController extends StoreManagementController
 		$validator->addCheck('title_' . $this->application->getDefaultLanguageCode(), new IsNotEmptyCheck($this->translate('_err_file_title_is_empty')));
 		$validator->addCheck('allowDownloadDays', new IsNumericCheck($this->translate('_err_allow_download_days_should_be_a_number')));
 		$validator->addCheck('allowDownloadDays', new IsNotEmptyCheck($this->translate('_err_allow_download_days_is_empty')));
-		if(!$existingProductFile) $validator->addCheck('uploadFile', new IsFileUploadedCheck($this->translate('_err_file_could_not_be_uploaded_to_the_server')));
+		if(!$existingProductFile && !$this->request->get('filePath')) $validator->addCheck('uploadFile', new IsFileUploadedCheck($this->translate('_err_file_could_not_be_uploaded_to_the_server')));
 		if($existingProductFile) $validator->addCheck('fileName', new IsNotEmptyCheck($this->translate('_err_fileName_should_not_be_empty')));
 
 		return $validator;

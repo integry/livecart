@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import('application.model.product.ProductSet');
+ClassLoader::import('application.model.product.ProductSet', true);
 ClassLoader::import('application.model.product.ProductSpecification');
 ClassLoader::import('application.model.product.ProductPricing');
 ClassLoader::import('application.model.product.ProductImage');
