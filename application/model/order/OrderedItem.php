@@ -21,6 +21,13 @@ class OrderedItem extends ActiveRecordModel
 
 	protected $additionalCategories = array();
 
+	/*
+	 *  Possible values for isSavedForLater field
+	 */
+	const CART = 0;
+	const WISHLIST = 1;
+	const OUT_OF_STOCK = 2;
+
 	/**
 	 * Define database schema used by this active record instance
 	 *
@@ -42,7 +49,7 @@ class OrderedItem extends ActiveRecordModel
 		$schema->registerField(new ARField("count", ARFloat::instance()));
 		$schema->registerField(new ARField("reservedProductCount", ARFloat::instance()));
 		$schema->registerField(new ARField("dateAdded", ARDateTime::instance()));
-		$schema->registerField(new ARField("isSavedForLater", ARBool::instance()));
+		$schema->registerField(new ARField("isSavedForLater", ARInteger::instance()));
 	}
 
 	/*####################  Static method implementations ####################*/

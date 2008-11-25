@@ -4,7 +4,7 @@
 
 {include file="layout/frontend/layout.tpl"}
 
-<div id="content" class="left right">
+<div id="content">
 
 	<h1>{t _order_completed}</h1>
 

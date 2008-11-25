@@ -22,7 +22,14 @@ _moved_to_wishlist=[_1] has been moved to wish list
 _moved_to_cart=[_1] has been moved to shopping basket
 _coupon_added=Coupon "[_1]" has been added to your order
 _coupon_not_found=Coupon "[_1]" was not found
-_applied_coupons=Currently applied coupon(s)
+_order_auto_changes_out=The following items are currently out of stock and have been moved to wishlist
+_order_auto_changes_in=The following items are back in stock and have been moved to shopping basket
+_order_auto_changes_count=The following items are low on stock and the order quantities have been adjusted
+_order_auto_changes_single_out=[_1] is currently out of stock and has been moved to wishlist
+_order_auto_changes_single_in=[_1] is back in stock and has been moved to shopping basket
+_order_auto_changes_single_count=[_1] is low on stock and the order quantity has been adjusted from [_2] to [_3]
+_order_quantity_change=from [_1] to [_2]
 
+_applied_coupons=Currently applied coupon(s)
 _have_coupon=Have a discount coupon? Enter coupon code
 _add_coupon=Add coupon

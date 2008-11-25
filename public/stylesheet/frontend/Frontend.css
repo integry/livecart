@@ -33,7 +33,8 @@ label
 }
 
 .descr li,
-#productDescription li
+#productDescription li,
+.message li
 {
 	list-style-type: disc;
 	margin-left: 1.5em;
@@ -2041,6 +2042,13 @@ span.templateLocator.activeTpl:hover > span.templateName:first-child
 	border: 1px solid #c00;
 	background-color: #fee;
 	background-image: url(../../image/silk/gif/cancel.gif);
+}
+
+.infoMessage
+{
+	border: 1px solid #FFF000;
+	background-color: #FFFCCC;
+	background-image: url(../../image/silk/gif/information.gif);
 }
 
 form

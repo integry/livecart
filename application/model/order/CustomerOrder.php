@@ -1116,7 +1116,57 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			return false;
 		}
 
+		if ($this->updateToStock(false))
+		{
+			return false;
+		}
+
 		return true;
+	}
+
+	public function updateToStock($save = true)
+	{
+		$result = array();
+
+		if (!self::getApplication()->isInventoryTracking())
+		{
+			return $result;
+		}
+
+		$this->loadItems();
+		foreach ($this->getOrderedItems() as $item)
+		{
+			$product = $item->product->get();
+
+			// previously out-of-stock item now back in stock
+			if ((OrderedItem::OUT_OF_STOCK == $item->isSavedForLater->get()) && $product->isAvailable())
+			{
+				$item->isSavedForLater->set(OrderedItem::CART);
+				$result['in'][] = array('id' => $item->getID());
+			}
+
+			if (!$product->isBackOrderable->get() && !$item->isSavedForLater->get())
+			{
+				if ($product->stockCount->get() <= 0)
+				{
+					$item->isSavedForLater->set(OrderedItem::OUT_OF_STOCK);
+					$result['out'][] = array('id' => $item->getID());
+				}
+				else if ($product->stockCount->get() < $item->count->get())
+				{
+					$count = $item->count->get();
+					$item->count->set($product->stockCount->get());
+					$result['count'][] = array('id' => $item->getID(), 'from' => $count, 'to' => $item->count->get());
+				}
+			}
+		}
+
+		if ($result && $save)
+		{
+			$this->save();
+		}
+
+		return $result;
 	}
 
 	/**

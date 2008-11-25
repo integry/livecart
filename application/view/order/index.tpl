@@ -13,6 +13,7 @@
 	</div>
 
 	{include file="block/message.tpl"}
+	{include file="order/changeMessages.tpl"}
 
 	{if !$cart.cartItems && !$cart.wishListItems}
 		<div style="clear: left;">

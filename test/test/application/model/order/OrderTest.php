@@ -510,6 +510,47 @@ class OrderTest extends OrderTestCommon
 		$this->assertEqual($second->reservedCount->get(), 0);
 	}
 
+	public function testUpdatingToStock()
+	{
+		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+
+		$product = $this->products[0];
+		$product->stockCount->set(2);
+		$product->save();
+
+		$second = $this->products[1];
+		$second->stockCount->set(2);
+		$second->save();
+
+		$order = CustomerOrder::getNewInstance($this->user);
+		$item = $order->addProduct($product, 2);
+		$item2 = $order->addProduct($second, 2);
+		$order->save();
+
+		// no changes made yet - return nothing
+		$this->assertEqual(count($order->updateToStock()), 0);
+
+		$product->stockCount->set(1);
+		$second->stockCount->set(0);
+		$result = $order->updateToStock();
+
+		// quantity of the first item should be reduced to 1 and the second item should be removed
+		$this->assertEqual(count($result), 2);
+		$this->assertEqual($item->count->get(), 1);
+		$this->assertEqual((int)$item->isSavedForLater->get(), OrderedItem::CART);
+		$this->assertEqual($item2->isSavedForLater->get(), OrderedItem::OUT_OF_STOCK);
+
+		// no changes made after update - return nothing
+		$this->assertEqual(count($order->updateToStock()), 0);
+
+		// second item back in stock
+		$second->stockCount->set(2);
+		$result = $order->updateToStock();
+		$this->assertEqual(count($result), 1);
+		$this->assertEqual((int)$item->isSavedForLater->get(), OrderedItem::CART);
+		$this->assertEqual($item2->isSavedForLater->get(), OrderedItem::CART);
+	}
+
 	public function testOrderingABundle()
 	{
 		$container = Product::getNewInstance(Category::getRootNode());

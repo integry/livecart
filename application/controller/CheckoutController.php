@@ -8,6 +8,7 @@ ClassLoader::import('application.model.order.LiveCartTransaction');
 ClassLoader::import('application.model.order.SessionOrder');
 ClassLoader::import('application.model.order.OfflineTransactionHandler');
 ClassLoader::import('application.model.eav.EavSpecificationManager');
+ClassLoader::import('application.model.eav.EavObject');
 
 /**
  *  Handles order checkout process
@@ -607,7 +608,6 @@ class CheckoutController extends FrontendController
 
 	private function getOfflinePaymentForms(ActionResponse $response)
 	{
-		ClassLoader::import("framework.request.validator.Form");
 		$forms = array();
 		$offlineVars = array();
 		foreach (OfflineTransactionHandler::getEnabledMethods() as $method)
@@ -628,7 +628,6 @@ class CheckoutController extends FrontendController
 
 	private function getOfflinePaymentValidator($method)
 	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
 		$validator = new RequestValidator($method, $this->request);
 		$eavManager = new EavSpecificationManager(EavObject::getInstanceByIdentifier($method));
 		$eavManager->setValidation($validator);
@@ -1001,6 +1000,11 @@ class CheckoutController extends FrontendController
 
 	private function finalizeOrder()
 	{
+		if (!count($this->order->getShipments()))
+		{
+			throw new ApplicationException();
+		}
+
 		$newOrder = $this->order->finalize(Currency::getValidInstanceById($this->getRequestCurrency()));
 
 		$orderArray = $this->order->toArray(array('payments' => true));

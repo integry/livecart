@@ -63,14 +63,33 @@ class OrderController extends FrontendController
 
 		$this->order->loadItemData();
 
+		$response = new ActionResponse();
+		if ($result = $this->order->updateToStock())
+		{
+			$response->set('changes', $result);
+		}
+
 		$options = $this->getItemOptions();
 
 		$currency = Currency::getValidInstanceByID($this->request->get('currency', $this->application->getDefaultCurrencyCode()), Currency::LOAD_DATA);
 
 		$form = $this->buildCartForm($this->order, $options);
 
-		$response = new ActionResponse();
-		$response->set('cart', $this->order->toArray());
+		$orderArray = $this->order->toArray();
+		$itemsById = array();
+		foreach (array('cartItems', 'wishListItems') as $type)
+		{
+			if (!empty($orderArray[$type]))
+			{
+				foreach ($orderArray[$type] as &$item)
+				{
+					$itemsById[$item['ID']] =& $item;
+				}
+			}
+		}
+
+		$response->set('cart', $orderArray);
+		$response->set('itemsById', $itemsById);
 		$response->set('form', $form);
 		$response->set('return', $this->request->get('return'));
 		$response->set('currency', $currency->getID());

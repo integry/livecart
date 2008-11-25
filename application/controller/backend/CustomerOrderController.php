@@ -310,7 +310,7 @@ class CustomerOrderController extends ActiveGridController
 			$email->setUser($order->user->get());
 			$email->setTemplate('order.status');
 			$email->set('order', $order->toArray(array('payments' => true)));
-			$email->set('shipments', $shipments->toArray());
+			$email->set('shipments', $order->getShipments()->toArray());
 			$email->send();
 		}
 	}
@@ -680,7 +680,7 @@ class CustomerOrderController extends ActiveGridController
 		//$isCancelled = (int)$this->request->get('isCancelled') ? true : false;
 		//$order->isCancelled->set($isCancelled);
 
-		$shipments = $order->updateShipmentStatuses();
+		$order->updateShipmentStatuses();
 		$response = $this->save($order);
 		$history->saveLog();
 
