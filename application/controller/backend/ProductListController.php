@@ -4,6 +4,7 @@ ClassLoader::import("application.controller.backend.abstract.ProductListControll
 ClassLoader::import("application.model.category.Category");
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.category.ProductList");
+ClassLoader::import("application.model.category.ProductListItem");
 
 /**
  * Product lists

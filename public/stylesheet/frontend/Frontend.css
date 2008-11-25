@@ -2012,7 +2012,7 @@ span.templateLocator span.templateName
 	left: 0px;
 	height: 15px;
 	padding: 3px;
-	z-index: 1;
+	z-index: 100;
 	padding-left: 25px;
 	background-image: url(../../image/silk/gif/layout_edit.gif);
 	background-position: 4px center;

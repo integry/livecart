@@ -1,5 +1,7 @@
 <?php
+
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
+ClassLoader::import("application.model.delivery.DeliveryZone");
 ClassLoader::import("application.model.delivery.ShippingService");
 ClassLoader::import("application.model.delivery.ShippingRate");
 

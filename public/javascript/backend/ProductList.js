@@ -11,6 +11,11 @@ Backend.ProductList =
 	getContainer: function(ownerID)
 	{
 		return $('tabProductListsContent_' + ownerID);
+	},
+
+	getTab: function()
+	{
+		return 'tabProductLists';
 	}
 }
 
