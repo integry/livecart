@@ -263,20 +263,20 @@ class CustomerOrderController extends ActiveGridController
 	public function switchCancelled()
 	{
 		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, true);
+
 		$history = new OrderHistory($order, $this->user);
-		$order->isCancelled->set(!$order->isCancelled->get());
-		$order->save();
+		if ($order->isCancelled->get())
+		{
+			$order->restore();
+		}
+		else
+		{
+			$order->cancel();
+		}
+
 		$history->saveLog();
 
-		if ($order->isCancelled->get() && $this->config->get('EMAIL_ORDER_CANCELLATION'))
-		{
-			$order->user->get()->load();
-			$email = new Email($this->application);
-			$email->setUser($order->user->get());
-			$email->setTemplate('order.cancel');
-			$email->set('order', $order->toArray(array('payments' => true)));
-			$email->send();
-		}
+		$this->sendCancelNotifyEmail($order);
 
 		return new JSONResponse(array(
 				'isCanceled' => $order->isCancelled->get(),
@@ -286,6 +286,33 @@ class CustomerOrderController extends ActiveGridController
 			'success',
 			$this->translate($order->isCancelled->get() ? '_order_is_canceled' : '_order_is_accepted')
 		);
+	}
+
+	public function sendCancelNotifyEmail(CustomerOrder $order)
+	{
+		if ($order->isCancelled->get() && $this->config->get('EMAIL_ORDER_CANCELLATION'))
+		{
+			$order->user->get()->load();
+			$email = new Email($this->application);
+			$email->setUser($order->user->get());
+			$email->setTemplate('order.cancel');
+			$email->set('order', $order->toArray(array('payments' => true)));
+			$email->send();
+		}
+	}
+
+	public function sendStatusNotifyEmail(CustomerOrder $order)
+	{
+		if ($this->config->get('EMAIL_STATUS_UPDATE'))
+		{
+			$order->user->get()->load();
+			$email = new Email($this->application);
+			$email->setUser($order->user->get());
+			$email->setTemplate('order.status');
+			$email->set('order', $order->toArray(array('payments' => true)));
+			$email->set('shipments', $shipments->toArray());
+			$email->send();
+		}
 	}
 
 	/**
@@ -301,7 +328,7 @@ class CustomerOrderController extends ActiveGridController
 		$this->applyFullNameFilter($typeCond);
 		$filter->mergeCondition($typeCond);
 
-		$mass = new OrderMassActionProcessor($grid);
+		$mass = new OrderMassActionProcessor($grid, array('controller' => $this));
 		$mass->setCompletionMessage($this->translate('_mass_action_succeed'));
 		return $mass->process(CustomerOrder::LOAD_REFERENCES);
 	}
@@ -650,23 +677,14 @@ class CustomerOrderController extends ActiveGridController
 
 		$status = (int)$this->request->get('status');
 		$order->status->set($status);
-		$isCancelled = (int)$this->request->get('isCancelled') ? true : false;
-		$order->isCancelled->set($isCancelled);
+		//$isCancelled = (int)$this->request->get('isCancelled') ? true : false;
+		//$order->isCancelled->set($isCancelled);
 
 		$shipments = $order->updateShipmentStatuses();
 		$response = $this->save($order);
 		$history->saveLog();
 
-		if ($this->config->get('EMAIL_STATUS_UPDATE'))
-		{
-			$order->user->get()->load();
-			$email = new Email($this->application);
-			$email->setUser($order->user->get());
-			$email->setTemplate('order.status');
-			$email->set('order', $order->toArray(array('payments' => true)));
-			$email->set('shipments', $shipments->toArray());
-			$email->send();
-		}
+		$this->sendStatusNotifyEmail($order);
 
 		return $response;
 	}

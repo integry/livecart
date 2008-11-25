@@ -941,6 +941,11 @@ class LiveCart extends Application
 		return $inst;
 	}
 
+	public function isInventoryTracking()
+	{
+		return $this->config->get('INVENTORY_TRACKING') != 'DISABLE';
+	}
+
 	public function getTheme()
 	{
 		if (is_null($this->theme))

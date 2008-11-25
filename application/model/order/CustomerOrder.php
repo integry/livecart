@@ -198,11 +198,10 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 			$count = $this->validateCount($product, $count);
 			$item = OrderedItem::getNewInstance($this, $product, $count);
+			$this->orderedItems[] = $item;
 
 			if (!$this->isFinalized->get() || !$this->shipments || !$this->shipments->size())
 			{
-				$this->orderedItems[] = $item;
-
 				if ($shipment)
 				{
 					$shipment->addItem($item);
@@ -391,7 +390,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			}
 		}
 
-		$reserveProducts = self::getApplication()->getConfig()->get('INVENTORY_TRACKING') != 'DISABLE';
+		$reserveProducts = self::getApplication()->isInventoryTracking();
 
 		foreach ($this->getShoppingCartItems() as $item)
 		{
@@ -486,6 +485,49 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$this->shipments = $shipments;
 
 		return $wishList;
+	}
+
+	public function cancel()
+	{
+		if ($this->isCancelled->get())
+		{
+			return;
+		}
+
+		$this->isCancelled->set(true);
+
+		foreach ($this->shipments as $shipment)
+		{
+			foreach ($shipment->getItems() as $item)
+			{
+				$item->unreserve();
+				$item->save();
+			}
+		}
+
+		$this->save();
+	}
+
+	public function restore()
+	{
+		if (!$this->isCancelled->get())
+		{
+			return;
+		}
+
+		$this->isCancelled->set(false);
+
+		foreach ($this->shipments as $shipment)
+		{
+			foreach ($shipment->getItems() as $item)
+			{
+				$item->reservedProductCount->set($item->count->get());
+				$item->reserve();
+				$item->save();
+			}
+		}
+
+		$this->save();
 	}
 
 	public function addCapturedAmount($amount)
@@ -656,11 +698,6 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		}
 
 		return parent::save();
-	}
-
-	public function update($force = false)
-	{
-		return parent::update($force);
 	}
 
 	public function serializeShipments()

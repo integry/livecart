@@ -143,19 +143,28 @@ class OrderedItem extends ActiveRecordModel
 		return $price;
 	}
 
-	public function reserve()
+	public function reserve($unreserve = false)
 	{
 		$product = $this->product->get();
 		if (!$product->isBundle())
 		{
-			$this->reservedProductCount->set($this->count->get());
-			$product->reservedCount->set($product->reservedCount->get() + $this->reservedProductCount->get());
+			$this->reservedProductCount->set($unreserve ? 0 : $this->count->get());
+			$multiplier = $unreserve ? -1 : 1;
+			$product->stockCount->set($product->stockCount->get() - ($this->count->get() * $multiplier));
+			$product->reservedCount->set($product->reservedCount->get() + ($this->count->get() * $multiplier));
 		}
 		else
 		{
 			foreach ($this->getSubItems() as $item)
 			{
-				$item->reserve();
+				if ($unreserve)
+				{
+					$item->unreserve();
+				}
+				else
+				{
+					$item->reserve();
+				}
 			}
 		}
 	}
@@ -166,7 +175,10 @@ class OrderedItem extends ActiveRecordModel
 	 */
 	public function unreserve()
 	{
-
+		if ($this->reservedProductCount->get() > 0)
+		{
+			$this->reserve(true);
+		}
 	}
 
 	/**
@@ -179,7 +191,6 @@ class OrderedItem extends ActiveRecordModel
 		if (!$product->isBundle())
 		{
 			$product->reservedCount->set($product->reservedCount->get() - $this->reservedProductCount->get());
-			$product->stockCount->set($product->stockCount->get() - $this->reservedProductCount->get());
 			$this->reservedProductCount->set(0);
 		}
 		else
@@ -340,7 +351,10 @@ class OrderedItem extends ActiveRecordModel
 
 	protected function insert()
 	{
-		$this->shipment->setNull();
+		if ($this->shipment->get() && !$this->shipment->get()->isExistingRecord())
+		{
+			$this->shipment->setNull();
+		}
 
 		$this->priceCurrencyID->set($this->customerOrder->get()->currency->get()->getID());
 		if (!$this->price->get())
@@ -353,6 +367,43 @@ class OrderedItem extends ActiveRecordModel
 
 	public function save($forceOperation = null)
 	{
+		// update inventory
+		$shipment = $this->shipment->get();
+		if (!$shipment && $this->parent->get())
+		{
+			$shipment = $this->parent->get()->shipment->get();
+		}
+
+		$order = $this->customerOrder->get();
+		//print_r($this->toFlatArray());
+		if ($shipment && $order->isFinalized->get() && !$order->isCancelled->get() && self::getApplication()->isInventoryTracking())
+		{
+			$product = $this->product->get();
+			if (($this->reservedProductCount->get() > 0) && ($shipment->status->get() == Shipment::STATUS_SHIPPED))
+			{
+				$this->removeFromInventory();
+			}
+			else if (0 == $this->reservedProductCount->get())
+			{
+				if ($shipment->status->get() == Shipment::STATUS_RETURNED)
+				{
+					$this->reservedProductCount->set($this->count->get());
+					$product->reservedCount->set($product->reservedCount->get() + $this->count->get());
+				}
+				else
+				{
+					$this->reserve();
+				}
+			}
+			else if ($this->count->isModified())
+			{
+				$delta = $this->count->get() - $this->reservedProductCount->get();
+				$this->reservedProductCount->set($this->count->get());
+				$product->reservedCount->set($product->reservedCount->get() + $delta);
+				$product->stockCount->set($product->stockCount->get() - $delta);
+			}
+		}
+
 		$ret = parent::save($forceOperation);
 
 		// save options
@@ -364,18 +415,6 @@ class OrderedItem extends ActiveRecordModel
 		foreach ($this->optionChoices as $choice)
 		{
 			$choice->save();
-		}
-
-		// update inventory
-		$shipment = $this->shipment->get();
-		if (!$shipment && $this->parent->get())
-		{
-			$shipment = $this->parent->get()->shipment->get();
-		}
-
-		if ($shipment && ($this->reservedProductCount->get() > 0) && $this->customerOrder->get()->isFinalized->get() && ($shipment->status->get() == Shipment::STATUS_SHIPPED))
-		{
-			$this->removeFromInventory();
 		}
 
 		// save sub-items for bundles

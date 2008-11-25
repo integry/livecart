@@ -1,5 +1,6 @@
 <?php
 
+ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
 ClassLoader::import('application.controller.backend.abstract.ActiveGridController');
 ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.filter.FilterGroup');

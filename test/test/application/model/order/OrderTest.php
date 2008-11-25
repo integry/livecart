@@ -373,6 +373,7 @@ class OrderTest extends OrderTestCommon
 		$order->finalize($this->usd);
 
 		$product->reload();
+		$this->assertEqual($product->stockCount->get(), 1);
 		$this->assertEqual($product->reservedCount->get(), 1);
 
 		// mark order as shipped - the stock is gone
@@ -383,6 +384,130 @@ class OrderTest extends OrderTestCommon
 		}
 
 		$this->assertEqual($product->stockCount->get(), 1);
+		$this->assertEqual($product->reservedCount->get(), 0);
+	}
+
+	public function testInventoryForCancelledOrder()
+	{
+		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+
+		$product = $this->products[0];
+		$product->stockCount->set(2);
+		$product->save();
+
+		$order = CustomerOrder::getNewInstance($this->user);
+		$order->addProduct($product, 1);
+		$order->save();
+		$order->finalize($this->usd);
+
+		$this->assertEqual($product->stockCount->get(), 1);
+		$order->cancel();
+
+		$product->reload();
+		$this->assertEqual($product->stockCount->get(), 2);
+		$this->assertEqual($product->reservedCount->get(), 0);
+	}
+
+	public function testInventoryForRestoredOrder()
+	{
+		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+
+		$product = $this->products[0];
+		$product->stockCount->set(2);
+		$product->save();
+
+		$order = CustomerOrder::getNewInstance($this->user);
+		$item = $order->addProduct($product, 1);
+		$order->save();
+		$order->finalize($this->usd);
+
+		$order->setStatus(CustomerOrder::STATUS_SHIPPED);
+		$product->reload();
+		$this->assertEqual($product->reservedCount->get(), 0);
+		$this->assertEqual($product->stockCount->get(), 1);
+
+		$order->setStatus(CustomerOrder::STATUS_RETURNED);
+		$product->reload();
+		$this->assertEqual($item->reservedProductCount->get(), 1);
+		$this->assertEqual($product->reservedCount->get(), 1);
+		$this->assertEqual($product->stockCount->get(), 1);
+
+		$order->cancel();
+		$product->reload();
+		$this->assertEqual($item->reservedProductCount->get(), 0);
+		$this->assertEqual($product->stockCount->get(), 2);
+		$this->assertEqual($product->reservedCount->get(), 0);
+	}
+
+	public function testInventoryForReturnedOrder()
+	{
+		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+
+		$product = $this->products[0];
+		$product->stockCount->set(2);
+		$product->save();
+
+		$order = CustomerOrder::getNewInstance($this->user);
+		$order->addProduct($product, 1);
+		$order->save();
+		$order->finalize($this->usd);
+
+		$order->cancel();
+		$order->restore();
+
+		$product->reload();
+		$this->assertEqual($product->stockCount->get(), 1);
+		$this->assertEqual($product->reservedCount->get(), 1);
+	}
+
+	public function testInventoryForChangedOrder()
+	{
+		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+
+		$product = $this->products[0];
+		$product->stockCount->set(2);
+		$product->save();
+
+		$second = $this->products[1];
+		$second->stockCount->set(2);
+		$second->save();
+
+		$order = CustomerOrder::getNewInstance($this->user);
+		$item = $order->addProduct($product, 1);
+		$order->save();
+		$order->finalize($this->usd);
+
+		$i = $order->addProduct($second, 1, null, $item->shipment->get());
+		$this->assertEqual($i->shipment->get()->getID(), $item->shipment->get()->getID());
+		$order->save();
+		$this->assertEqual($i->shipment->get()->getID(), $item->shipment->get()->getID());
+		$this->assertEqual(count($item->shipment->get()->getItems()), 2);
+
+		$second->reload();
+		$this->assertEqual($second->stockCount->get(), 1);
+		$this->assertEqual($second->reservedCount->get(), 1);
+
+		$i->count->set(2);
+		$i->save();
+		$this->assertEqual($second->stockCount->get(), 0);
+		$this->assertEqual($second->reservedCount->get(), 2);
+
+		$order->setStatus(CustomerOrder::STATUS_SHIPPED);
+		$this->assertEqual($second->stockCount->get(), 0);
+		$this->assertEqual($second->reservedCount->get(), 0);
+
+		$order->setStatus(CustomerOrder::STATUS_RETURNED);
+		$this->assertEqual($second->stockCount->get(), 0);
+		$this->assertEqual($second->reservedCount->get(), 2);
+
+		$order->setStatus(CustomerOrder::STATUS_SHIPPED);
+		$this->assertEqual($second->stockCount->get(), 0);
+		$this->assertEqual($second->reservedCount->get(), 0);
+
+		// stock levels won't change if a shipped order is cancelled
+		$order->cancel();
+		$this->assertEqual($second->stockCount->get(), 0);
+		$this->assertEqual($second->reservedCount->get(), 0);
 	}
 
 	public function testOrderingABundle()

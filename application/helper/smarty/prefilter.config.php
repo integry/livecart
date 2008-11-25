@@ -31,7 +31,7 @@ function smarty_prefilter_config($source, $smarty)
 		{/err}
 	*/
 
-	$source = preg_replace('/{err for="(.*)"}(.*)\<label(.*)\>(.*)\<\/label\>(.*){\/err}/msU', '{{err for="\\1"}}\\2<label\\3><span class="label">\\4</span></label>\\5{/err}', $source);
+	$source = preg_replace('/{err for="(.*)"}(^\/err)\<label(.*)\>(.*)\<\/label\>(.*){\/err}/msU', '{{err for="\\1"}}\\2<label\\3><span class="label">\\4</span></label>\\5{/err}', $source);
 	$source = preg_replace('/{{1,2}err for="(.*)"}{1,2}(.*)\{\{label (.*)\}\}(.*){\/err}/msU', '{{err for="\\1"}}\\2<label for="\\1"><span class="label">\\3</span></label>\\4{/err}', $source);
 
 	// @todo: user/checkout.tpl doesn't compile correctly
@@ -76,6 +76,13 @@ function smarty_prefilter_config($source, $smarty)
 	// help system
 	$source = preg_replace('/{help (.+?)}/', '{helpLink id=$1}', $source);
 	$source = preg_replace('/{see (.+?)}/', '{helpSeeAlsoItem id=$1}', $source);
+
+	/*
+	if (strpos($source, 'companyName') !== false)
+	{
+		nl2br(htmlspecialchars($source));
+	}
+	*/
 
 	return $source;
 }

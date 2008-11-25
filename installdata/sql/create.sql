@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2008-11-19 23:00                                #
-# Model version:         Version 2008-11-19 2                            #
+# Created on:            2008-11-24 21:58                                #
+# Model version:         Version 2008-11-24                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -406,6 +406,7 @@ CREATE TABLE ProductFile (
     description MEDIUMTEXT COMMENT 'File description (translatable)',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other ProductFiles that are assigned to the same product',
     allowDownloadDays INTEGER COMMENT 'Allow customer to download the product only for a certain number of days after placing the order',
+    filePath TEXT COMMENT 'Local file path or URL',
     CONSTRAINT PK_ProductFile PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;

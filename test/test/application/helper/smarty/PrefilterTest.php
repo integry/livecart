@@ -14,7 +14,7 @@ class PrefilterTest extends UnitTest
 	{
 		$code = '{err for="firstName"}{{label {t _your_first_name}:}}{textfield class="text"}{/err}';
 		$replaced = smarty_prefilter_config($code, null);
-		$expected = '<label for="firstName"><span>{translate text="_your_first_name"}:</span></label><fieldset class="error">{textfield name="firstName"  class="text"}
+		$expected = '<label for="firstName"><span class="label">{translate text="_your_first_name"}:</span></label><fieldset class="error">{textfield name="firstName"  class="text"}
 	<div class="errorText hidden{error for="firstName"} visible{/error}">{error for="firstName"}{$msg}{/error}</div>
 	</fieldset>';
 
@@ -25,7 +25,7 @@ class PrefilterTest extends UnitTest
 	{
 		$code = '{err for="firstName"}{label _your_first_name}{textfield class="text"}{/err}';
 		$replaced = smarty_prefilter_config($code, null);
-		$expected = '<label for="firstName"><span>{translate text="_your_first_name"}</span></label><fieldset class="error">{textfield name="firstName"  class="text"}
+		$expected = '<label for="firstName"><span class="label">{translate text="_your_first_name"}</span></label><fieldset class="error">{textfield name="firstName"  class="text"}
 	<div class="errorText hidden{error for="firstName"} visible{/error}">{error for="firstName"}{$msg}{/error}</div>
 	</fieldset>';
 

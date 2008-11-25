@@ -15,29 +15,35 @@ class OrderMassActionProcessor extends MassActionProcessor
 		switch($this->getAction())
 		{
 			case 'setNew':
-				$order->setStatus(CustomerOrder::STATUS_NEW);
+				$status = CustomerOrder::STATUS_NEW;
 				break;
 			case 'setProcessing':
-				$order->setStatus(CustomerOrder::STATUS_PROCESSING);
+				$status = CustomerOrder::STATUS_PROCESSING;
 				break;
 			case 'setAwaitingShipment':
-				$order->setStatus(CustomerOrder::STATUS_AWAITING);
+				$status = CustomerOrder::STATUS_AWAITING;
 				break;
 			case 'setShipped':
-				$order->setStatus(CustomerOrder::STATUS_SHIPPED);
+				$status = CustomerOrder::STATUS_SHIPPED;
 				break;
 			case 'setReturned':
-				$order->setStatus(CustomerOrder::STATUS_RETURNED);
+				$status = CustomerOrder::STATUS_RETURNED;
 				break;
 			case 'setFinalized':
-				$order->isFinalized->set(1);
+				$order->finalize();
 				break;
 			case 'setUnfinalized':
 				$order->isFinalized->set(0);
 				break;
 			case 'setCancel':
-				$order->isCancelled->set(true);
+				$order->cancel();
 				break;
+		}
+
+		if (isset($status))
+		{
+			$order->setStatus($status);
+			$this->params['controller']->sendStatusNotifyEmail($order);
 		}
 	}
 

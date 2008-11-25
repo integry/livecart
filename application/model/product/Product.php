@@ -311,7 +311,7 @@ class Product extends MultilingualObject
 	{
 		$config = self::getApplication()->getConfig();
 
-		if (($config->get('INVENTORY_TRACKING') == 'DISABLE') || $type == Product::TYPE_DOWNLOADABLE || $this->isBackOrderable->get())
+		if (($config->get('INVENTORY_TRACKING') == 'DISABLE') || $this->type->get() == Product::TYPE_DOWNLOADABLE || $this->isBackOrderable->get())
 		{
 			return null;
 		}

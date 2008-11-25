@@ -67,41 +67,44 @@ foreach ((array)glob($routeDir . '/*.php') as $file)
 	}
 }
 
-// SSL
-if ($this->config->get('SSL_PAYMENT'))
+if ($this->isInstalled)
 {
-	$this->router->setSslAction('checkout', 'pay');
-	$this->router->setSslAction('backend.payment', 'ccForm');
-}
-
-if ($this->config->get('SSL_CHECKOUT'))
-{
-	$this->router->setSslAction('checkout');
-	$this->router->setSslAction('order', 'index');
-	$this->router->setSslAction('order', 'multi');
-}
-
-if ($this->config->get('SSL_CUSTOMER'))
-{
-	$this->router->setSslAction('user');
-}
-
-if ($sslHost = $this->config->get('SSL_DOMAIN'))
-{
-	if (!$this->router->isHttps())
+	// SSL
+	if ($this->config->get('SSL_PAYMENT'))
 	{
-		session_start();
-		$sslHost .= '?sid=' . session_id();
+		$this->router->setSslAction('checkout', 'pay');
+		$this->router->setSslAction('backend.payment', 'ccForm');
 	}
-	else
+
+	if ($this->config->get('SSL_CHECKOUT'))
 	{
-		if ($this->request->get('sid'))
+		$this->router->setSslAction('checkout');
+		$this->router->setSslAction('order', 'index');
+		$this->router->setSslAction('order', 'multi');
+	}
+
+	if ($this->config->get('SSL_CUSTOMER'))
+	{
+		$this->router->setSslAction('user');
+	}
+
+	if ($sslHost = $this->config->get('SSL_DOMAIN'))
+	{
+		if (!$this->router->isHttps())
 		{
-			session_id($this->request->get('sid'));
+			session_start();
+			$sslHost .= '?sid=' . session_id();
 		}
-	}
+		else
+		{
+			if ($this->request->get('sid'))
+			{
+				session_id($this->request->get('sid'));
+			}
+		}
 
-	$this->router->setSslHost($sslHost);
+		$this->router->setSslHost($sslHost);
+	}
 }
 
 // language index page
