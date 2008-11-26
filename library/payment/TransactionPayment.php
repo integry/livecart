@@ -18,6 +18,8 @@ abstract class TransactionPayment
 
 	protected $application;
 
+	protected $order;
+
 	private $config = array();
 
 	public function __construct(TransactionDetails $transactionDetails = null)
@@ -60,6 +62,11 @@ abstract class TransactionPayment
 	public function setApplication(LiveCart $application)
 	{
 		$this->application = $application;
+	}
+
+	public function setOrder(CustomerOrder $order)
+	{
+		$this->order = $order;
 	}
 
 	/**

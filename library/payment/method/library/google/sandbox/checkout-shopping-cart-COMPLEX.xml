@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkout-shopping-cart xmlns="http://checkout.google.com/schema/2">
+	<shopping-cart>
+		<cart-expiration>
+			<good-until-date>2006-12-31T23:59:59</good-until-date>
+		</cart-expiration>
+		<items>
+			<item>
+				<item-name>Dry Food Pack AA1453</item-name>
+				<item-description>A pack of highly nutritious dried food for emergency - store in your garage for up to one year!!</item-description>
+				<quantity>1</quantity>
+				<tax-table-selector>food</tax-table-selector>
+				<unit-price currency="USD">35.00</unit-price>
+			</item>
+			<item>
+				<item-name>MegaSound 2GB MP3 Player</item-name>
+				<item-description>Portable MP3 player - stores 500 songs, easy-to-use interface, color display</item-description>
+				<quantity>1</quantity>
+				<unit-price currency="USD">178.00</unit-price>
+				<merchant-private-item-data>
+					<item-note>Popular item: Check inventory and order more if needed</item-note>
+				</merchant-private-item-data>
+			</item>
+		</items>
+		<merchant-private-data>
+			<merchant-note>My Order Number 9876543</merchant-note>
+		</merchant-private-data>
+	</shopping-cart>
+	<checkout-flow-support>
+		<merchant-checkout-flow-support>
+			<shipping-methods>
+				<merchant-calculated-shipping name="SuperShip">
+					<price currency="USD">10.00</price>
+					<shipping-restrictions>
+						<allowed-areas>
+							<us-country-area country-area="ALL"/>
+						</allowed-areas>
+						<excluded-areas>
+							<us-state-area>
+								<state>AL</state>
+							</us-state-area>
+							<us-state-area>
+								<state>MA</state>
+							</us-state-area>
+							<us-state-area>
+								<state>MT</state>
+							</us-state-area> 
+							<us-state-area>
+								<state>WA</state>
+							</us-state-area>
+						</excluded-areas>
+					</shipping-restrictions>
+				</merchant-calculated-shipping>
+				<merchant-calculated-shipping name="UPS Ground">
+					<price currency="USD">8.00</price>
+					<shipping-restrictions>
+						<allowed-areas>
+							<us-country-area country-area="CONTINENTAL_48"/>
+						</allowed-areas>
+					</shipping-restrictions>
+				</merchant-calculated-shipping>
+			</shipping-methods>
+			<edit-cart-url>http://www.example.com/shopping/edit</edit-cart-url>
+			<continue-shopping-url>http://www.example.com/shopping/continue</continue-shopping-url>
+			<merchant-calculations>
+				<merchant-calculations-url>http://www.example.com/shopping/merchantCalc</merchant-calculations-url>
+				<accept-merchant-coupons>true</accept-merchant-coupons>
+				<accept-gift-certificates>true</accept-gift-certificates>
+			</merchant-calculations>
+			<tax-tables merchant-calculated="true">
+				<default-tax-table>
+					<tax-rules>
+						<default-tax-rule>
+							<shipping-taxed>false</shipping-taxed>
+							<rate>0.0825</rate>
+							<tax-area>
+								<us-country-area country-area="CONTINENTAL_48"/>
+							</tax-area>
+						</default-tax-rule>
+						<default-tax-rule>
+							<shipping-taxed>true</shipping-taxed>
+							<rate>0.0800</rate>
+							<tax-area>
+								<us-state-area>
+									<state>NY</state>
+								</us-state-area>
+							</tax-area>
+						</default-tax-rule>
+					</tax-rules>
+				</default-tax-table>
+				<alternate-tax-tables>
+					<alternate-tax-table standalone="false" name="food">
+						<alternate-tax-rules>
+							<alternate-tax-rule>
+								<rate>0.0225</rate>
+								<tax-area>
+									<us-state-area>
+										<state>CA</state>
+									</us-state-area>
+								</tax-area>
+							</alternate-tax-rule>
+							<alternate-tax-rule>
+								<rate>0.0200</rate>
+								<tax-area>
+									<us-state-area>
+										<state>NY</state>
+									</us-state-area>
+								</tax-area>
+							</alternate-tax-rule>
+						</alternate-tax-rules>
+					</alternate-tax-table>
+					<alternate-tax-table standalone="true" name="drugs">
+						<alternate-tax-rules>
+							<alternate-tax-rule>
+								<rate>0.0500</rate>
+								<tax-area>
+									<us-country-area country-area="ALL"/>
+								</tax-area>
+							</alternate-tax-rule>
+						</alternate-tax-rules>
+					</alternate-tax-table>
+				</alternate-tax-tables>
+			</tax-tables>
+		</merchant-checkout-flow-support>
+	</checkout-flow-support>
+</checkout-shopping-cart>
