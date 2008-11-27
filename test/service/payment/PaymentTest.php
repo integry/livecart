@@ -14,7 +14,7 @@ ClassLoader::import('library.payment.TransactionDetails');
  * @package library.payment.test
  * @author Integry Systems
  */
-class PaymentTest extends UnitTest
+abstract class PaymentTest extends UnitTest
 {
 	public function tearDown()
 	{

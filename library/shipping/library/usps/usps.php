@@ -15,7 +15,7 @@ class USPSHandler {
 	var $size = "REGULAR";
 	var $machinable;
 	var $country = "USA";
-	
+
 	function setServer($server) {
 		$this->server = $server;
 	}
@@ -32,7 +32,7 @@ class USPSHandler {
 		/* Must be: Express, Priority, or Parcel */
 		$this->service = $service;
 	}
-	
+
 	function setDestZip($sending_zip) {
 		/* Must be 5 digit zip (No extension) */
 		$this->dest_zip = $sending_zip;
@@ -60,27 +60,29 @@ class USPSHandler {
 		/* Required for Parcel Post only, set to True or False */
 		$this->machinable = $mach;
 	}
-	
+
 	function setCountry($country) {
 		$this->country = $country;
 	}
-	
+
 	function getPrice() {
 		if($this->country=="USA"){
 			// may need to urlencode xml portion
 			$str = $this->server. "?API=RateV3&XML=<RateV3Request%20USERID=\"";
 			$str .= $this->user . "\"%20PASSWORD=\"" . $this->pass . "\"><Package%20ID=\"0\"><Service>";
-			$str .= $this->service . "</Service><ZipOrigination>" . $this->orig_zip . "</ZipOrigination>";
+			$str .= rawurlencode($this->service) . "</Service>";
+
+			if (strtolower($this->service) == 'first class')
+			{
+				$str .= "<FirstClassMailType>PARCEL</FirstClassMailType>";
+			}
+
+			$str .= "<ZipOrigination>" . $this->orig_zip . "</ZipOrigination>";
 			$str .= "<ZipDestination>" . $this->dest_zip . "</ZipDestination>";
 			$str .= "<Pounds>" . $this->pounds . "</Pounds><Ounces>" . $this->ounces . "</Ounces>";
 			$str .= "<Container>" . urlencode($this->container) . "</Container><Size>" . $this->size . "</Size>";
 			$str .= "<Machinable>" . $this->machinable . "</Machinable>";
-			
-			if (strtolower($this->service) == 'first class')
-			{
-				$str .= "<FirstClassMailType>PARCEL</FirstClassMailType>";				
-			}
-			
+
 			$str .= "</Package></RateV3Request>";
 		}
 		else {
@@ -123,7 +125,7 @@ class USPSHandler {
 			$error->description = $array['RATEV3RESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['DESCRIPTION'][0]['VALUE'];
 			$error->helpcontext = $array['RATEV3RESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['HELPCONTEXT'][0]['VALUE'];
 			$error->helpfile = $array['RATEV3RESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['HELPFILE'][0]['VALUE'];
-			$this->error = $error;		
+			$this->error = $error;
 		} else if(isset($array['INTLRATERESPONSE'][0]['PACKAGE'][0]['ERROR'])){ //if it is international shipping error
 			$error = new UspsError($array['INTLRATERESPONSE'][0]['PACKAGE'][0]['ERROR']);
 			$error->number = $array['INTLRATERESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['NUMBER'][0]['VALUE'];
@@ -156,13 +158,13 @@ class USPSHandler {
 				$price->maxweight = $value['MAXWEIGHT'][0]['VALUE'];
 				$this->list[] = $price;
 			}
-		
+
 		}
-		
+
 		//if (isset($error)) { echo '<pre>'; print_r($array); echo '</pre>';  }
-		
-		error_reporting($e);		
-		
+
+		error_reporting($e);
+
 		return $this;
 	}
 }

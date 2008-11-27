@@ -1,16 +1,14 @@
 <?php
 
-include_once(dirname(__file__) . '/../../payment/test/unittest/UTStandalone.php');
-
-include_once('ShippingTest.php');
-include_once(dirname(__file__) . '/../method/CanadaPostShipping.php');
+include_once('TestShipping.php');
+ClassLoader::import('library.shipping.method.CanadaPostShipping');
 
 /**
  *
  * @package library.shipping.test
  * @author Integry Systems
  */
-class TestCanadaPost extends ShippingTest
+class CanadaPostTest extends TestShipping
 {
 	public function setUp()
 	{

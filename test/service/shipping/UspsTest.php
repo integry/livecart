@@ -1,28 +1,33 @@
 <?php
 
-include_once(dirname(__file__) . '/../../payment/test/unittest/UTStandalone.php');
-
-include_once('ShippingTest.php');
-include_once(dirname(__file__) . '/../method/UspsShipping.php');
+include_once('TestShipping.php');
+ClassLoader::import('library.shipping.method.UspsShipping');
 
 /**
  *
  * @package library.shipping.test
  * @author Integry Systems
  */
-class TestUsps extends ShippingTest
+class UspsTest extends TestShipping
 {
 	function testDomesticRates()
 	{
 		$usps = new UspsShipping();
 		$usps->setUserId('550INTEG8147');
 		$usps->setSourceCountry('US');
-		$usps->setSourceZip('90210');
+		$usps->setSourceZip('44106');
 		$usps->setDestCountry('US');
-		$usps->setDestZip('20008');
-		$usps->setDestZip('20008');
+		$usps->setDestZip('20770');
 		$usps->setSize('REGULAR');
 		$usps->setMachinable(true);
+		$usps->setWeight(15);
+
+		// first class
+		$usps->setWeight(0.2);
+		$usps->setService('First Class');
+		$rates = $usps->getRates();
+		$this->assertTrue($rates instanceof ShippingRateSet);
+
 		$usps->setWeight(15);
 
 		// priority
@@ -41,13 +46,6 @@ class TestUsps extends ShippingTest
 		$rates = $usps->getRates();
 		$this->assertTrue($rates instanceof ShippingRateSet);
 
-		// first class
-/*
-		$usps->setService('First Class');
-		$rates = $usps->getRates();
-		$this->assertTrue($rates instanceof ShippingRateSet);
-		var_dump($rates);
-*/
 
 		// parcel post
 		$usps->setService('Parcel');
