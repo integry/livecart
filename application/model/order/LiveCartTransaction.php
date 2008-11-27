@@ -10,9 +10,13 @@ ClassLoader::import('library.payment.TransactionDetails');
  */
 class LiveCartTransaction extends TransactionDetails
 {
+	protected $order;
+
 	public function __construct(CustomerOrder $order, Currency $currency)
 	{
 		parent::__construct();
+
+		$this->order = $order;
 
 		$order->loadAll();
 
@@ -66,6 +70,11 @@ class LiveCartTransaction extends TransactionDetails
 			$this->email->set($order->user->get()->email->get());
 			$this->clientID->set($order->user->get()->getID());
 		}
+	}
+
+	public function getOrder()
+	{
+		return $this->order;
 	}
 
 	private function getStateValue(UserAddress $address)

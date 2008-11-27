@@ -90,7 +90,13 @@ class Currency extends ActiveRecordModel
 			$this->load();
 		}
 
-		return $this->pricePrefix->get() . number_format($price, $this->decimalCount->get(), $this->decimalSeparator->get(), $this->thousandSeparator->get()) . $this->priceSuffix->get();
+		$isNegative = ($price < 0);
+		if ($isNegative)
+		{
+			$price = abs($price);
+		}
+
+		return ($isNegative ? '-' : '') . $this->pricePrefix->get() . number_format($price, $this->decimalCount->get(), $this->decimalSeparator->get(), $this->thousandSeparator->get()) . $this->priceSuffix->get();
 	}
 
 	public function convertAmountFromDefaultCurrency($amount)

@@ -90,16 +90,18 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 		$currencies = $this->application->getCurrencySet();
 
 		// get and format prices
-		$prices = $formattedPrices = $taxPrices = array();
+		$prices = $formattedPrices = $taxPrices = $unformattedTaxPrices = array();
 
 		foreach ($currencies as $id => $currency)
 		{
 			$prices[$id] = $currency->convertAmount($amountCurrency, $array['costAmount']);
 			$formattedPrices[$id] = $currency->getFormattedPrice($prices[$id]);
-			$taxPrices[$id] = $currency->getFormattedPrice($currency->convertAmount($amountCurrency, $this->amountWithTax));
+			$unformattedTaxPrices[$id] = $currency->convertAmount($amountCurrency, $this->amountWithTax);
+			$taxPrices[$id] = $currency->getFormattedPrice($unformattedTaxPrices[$id]);
 		}
 
 		$array['price'] = $prices;
+		$array['priceWithTax'] = $unformattedTaxPrices;
 		$array['formattedPrice'] = $formattedPrices;
 		$array['taxPrice'] = $taxPrices;
 

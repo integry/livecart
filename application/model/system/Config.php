@@ -100,7 +100,7 @@ class Config
 	{
 		if (is_numeric($value))
 		{
-			$value = (float)$value;
+			//$value = (float)$value;
 		}
 
 		$this->values[$key] = $value;

@@ -120,6 +120,7 @@
 	{/if}
 
 	{if (('BILLING_ADDRESS_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config) && !$step) || (('SHIPPING_ADDRESS_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config) && (('shipping' == $step) || !'ENABLE_CHECKOUTDELIVERYSTEP'|config))}
+		<div class="clear"></div>
 		{include file="checkout/orderFields.tpl"}
 	{/if}
 

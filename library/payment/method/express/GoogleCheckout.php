@@ -14,32 +14,26 @@ class GoogleCheckout extends ExpressPayment
 
 	public function getInitUrl($returnUrl, $cancelUrl, $sale = true)
 	{
+		$router = ActiveRecordModel::getApplication()->getRouter();
+		$completeUrl = $router->createFullUrl($router->createUrl(array('controller' => 'checkout', 'action' => 'completeExternal', 'id' => $this->order->getID())));
+		$handler = $this->getHandler($cancelUrl, $completeUrl);
+
 		$sandbox = $this->getConfigValue('sandbox') ? 'sandbox.' : '';
-		$handler = $this->getHandler($returnUrl, $cancelUrl);
-
-		// add cart items
-		foreach ($this->order->getOrderedItems() as $item)
-		{
-			if (!$item->isSavedForLater->get())
-			{
-				$gItem = new gItem($item->product->get()->getValueByLang('name'), $item->product->get()->getValueByLang('shortDescription'), $item->count->get(), $item->price->get());
-
-				// set sku
-
-				$handler->addItems(array($gItem));
-			}
-		}
-
-		// add tax rates
-
-		// add discounts
-
 		$url = $sandbox ? 'https://sandbox.google.com/checkout/api/checkout/v2/merchantCheckout/Merchant/':
 						  'https://checkout.google.com/api/checkout/v2/merchantCheckout/Merchant/';
 		$parsed = new XML_Unserializer();
-		if (($response = $handler->_getCurlResponse($handler->getCart(), $url . $this->getConfigValue('merchant_id'))) && ($parsed->unserialize($response)))
+		$cart = $handler->getCart();
+		//echo $cart;
+		if (($response = $handler->_getCurlResponse($cart, $url . $this->getConfigValue('merchant_id'))) && ($parsed->unserialize($response)))
 		{
 			$array = $parsed->getUnserializedData();
+
+			if (empty($array['redirect-url']))
+			{
+				var_dump($array);
+				return false;
+			}
+
 			return $array['redirect-url'];
 		}
 		else
@@ -53,59 +47,6 @@ class GoogleCheckout extends ExpressPayment
 		$this->data = $data;
 	}
 
-	public function getTransactionDetails($request = null)
-	{
-		$paypal = $this->getHandler('GetExpressCheckoutDetails');
-		$paypal->setParams($request ? $request['token'] : $this->data['token']);
-		$paypal->execute();
-
-		$this->checkErrors($paypal);
-
-		$response = $paypal->getAPIResponse();
-		$info = $response->GetExpressCheckoutDetailsResponseDetails->PayerInfo;
-
-		$valueMap = array(
-
-				'firstName' => $info->PayerName->FirstName,
-				'lastName' => $info->PayerName->LastName,
-				'companyName' => isset($info->PayerBusiness) ? $info->PayerBusiness : '',
-
-				'address' => $info->Address->Street1 . (!empty($info->Address->Street2) ? ', ' . $info->Address->Street2 : ''),
-				'city' => $info->Address->CityName,
-				'state' => $info->Address->StateOrProvince,
-				'country' => $info->Address->Country,
-				'postalCode' => $info->Address->PostalCode,
-
-				'email' => $info->Payer,
-
-				// customer data
-				'clientID' => $info->PayerID,
-			);
-
-		foreach ($valueMap as $key => $value)
-		{
-			$this->details->$key->set($value);
-		}
-
-		return $this->details;
-	}
-
-	private function checkErrors($paypal)
-	{
-		if ($paypal->success())
-		{
-			$response = $paypal->getAPIResponse();
-			if (isset($response->Errors))
-			{
-				throw new PaymentException($response->Errors->LongMessage);
-			}
-		}
-		else
-		{
-			throw new PaymentException($paypal->getAPIException()->getMessage());
-		}
-	}
-
 	public function isCreditable()
 	{
 		return false;
@@ -113,12 +54,12 @@ class GoogleCheckout extends ExpressPayment
 
 	public function isVoidable()
 	{
-		return true;
+		return false;
 	}
 
 	public function isMultiCapture()
 	{
-		return true;
+		return false;
 	}
 
 	public function isCapturedVoidable()
@@ -134,7 +75,23 @@ class GoogleCheckout extends ExpressPayment
 
 	public static function getSupportedCurrencies()
 	{
-		return array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD');
+		return array('GBP', 'USD');
+	}
+
+	public function extractTransactionResult($array)
+	{
+		$result = new TransactionResult();
+
+		$result->gatewayTransactionID->set($array['GOOGLE-ORDER-NUMBER'][0]['VALUE']);
+		$total = $array['ORDER-TOTAL'][0];
+		$result->amount->set($total['VALUE']);
+		$result->currency->set($total['ATTRIBUTES']['CURRENCY']);
+
+		$result->rawResponse->set($array);
+
+		$result->setTransactionType(TransactionResult::TYPE_SALE);
+
+		return $result;
 	}
 
 	/**
@@ -169,84 +126,11 @@ class GoogleCheckout extends ExpressPayment
 		return $this->processAuth('DoExpressCheckoutPayment', 'Sale');
 	}
 
-	protected function processAuth($api, $type)
-	{
-		$paypal = $this->getHandler($api);
-
-		$address = PayPalTypes::AddressType(
-
-						$this->details->firstName->get() . ' ' . $this->details->lastName->get(),
-						$this->details->address->get(), '' /* address 2 */,
-						$this->details->city->get(), $this->details->state->get(),
-						$this->details->postalCode->get(), $this->details->country->get(),
-						$this->details->phone->get()
-
-					);
-
-		$personName = PayPalTypes::PersonNameType('', $this->details->firstName->get(), '', $this->details->lastName->get());
-
-		$payerInfo = PayPalTypes::PayerInfoType($this->details->email->get(), $this->details->clientID->get(), 'verified', $personName, $this->details->country->get(), '', $address);
-
-		$paymentDetails = PayPalTypes::PaymentDetailsType($this->details->amount->get(), $this->details->amount->get(), 0, 0, 0, $this->details->description->get(), $this->details->clientID->get(), $this->details->invoiceID->get(), '', 'ipn_notify.php', '', array(), $this->details->currency->get());
-
-		$paypal->setParams($type, $this->data['token'], $this->data['PayerID'], $paymentDetails);
-
-		$paypal->execute($api);
-
-		if ($paypal->success())
-		{
-			$response = $paypal->getAPIResponse();
-
-			if (isset($response->Errors))
-			{
-				$error = isset($response->Errors->LongMessage) ? $response->Errors : $error = $response->Errors[0];
-
-				return new TransactionError($error->LongMessage, $response);
-			}
-			else
-			{
-				$paymentInfo = $response->DoExpressCheckoutPaymentResponseDetails->PaymentInfo;
-
-				$result = new TransactionResult();
-
-				$result->gatewayTransactionID->set($paymentInfo->TransactionID);
-				$result->amount->set($paymentInfo->GrossAmount);
-				$result->currency->set($response->Currency);
-
-				$result->rawResponse->set($response);
-
-				if ('Sale' == $type)
-				{
-					$result->setTransactionType(TransactionResult::TYPE_SALE);
-				}
-				else
-				{
-					$result->setTransactionType(TransactionResult::TYPE_AUTH);
-				}
-
-				return $result;
-			}
-		}
-		else
-		{
-			return $paypal->getAPIException();
-		}
-	}
-
-	protected function processCapture()
-	{
-		return PaypalCommon::processCapture($this->details, $this->getHandler('DoCapture'));
-	}
-
-	protected function processVoid()
-	{
-		return PaypalCommon::processVoid($this);
-	}
-
 	public function getHandler($returnUrl = '', $cancelUrl = '')
 	{
+		$application = ActiveRecordModel::getApplication();
 		$GLOBALS['merchant_id'] = $this->getConfigValue('merchant_id');
-		if ($this->getConfigValue('sandbox'))
+		if ($this->getConfigValue('sandbox') && !defined('PHPGCHECKOUT_USE_SANDBOX'))
 		{
 			define('PHPGCHECKOUT_USE_SANDBOX', true);
 		}
@@ -256,9 +140,88 @@ class GoogleCheckout extends ExpressPayment
 		$handler = new gCart($this->getConfigValue('merchant_id'), $this->getConfigValue('merchant_key'));
 		$handler->setMerchantCheckoutFlowSupport($returnUrl, $cancelUrl, $this->application->getConfig()->get('REQUIRE_PHONE'));
 
-		return $handler;
+		// add cart items
+		if ($this->order)
+		{
+			$items = array();
+			foreach ($this->order->getOrderedItems() as $item)
+			{
+				if (!$item->isSavedForLater->get())
+				{
+					$gItem = new gItem($item->product->get()->getValueByLang('name'), $item->product->get()->getValueByLang('shortDescription'), $item->count->get(), $item->price->get());
+					$gItem->setPrivateItemData('<item-id>' . $item->getID() . '</item-id><order-id>' . $this->order->getID() . '</order-id>');
+					$items[] = $gItem;
+				}
 
-		//return PaypalCommon::getHandler($this, $api);
+				// add discounts
+				if ($discounts = $this->order->getFixedDiscountAmount())
+				{
+					$items[] = new gItem($application->translate('_discount'), '', 1, $discounts * -1);
+				}
+
+				$handler->addItems($items);
+			}
+
+			// get shipping rates for all zones - silly, eh?
+			if ($this->order->isShippingRequired())
+			{
+				$shipment = $this->order->getShipments()->get(0);
+				$zoneCountries = $zoneStates = $zoneZips = array();
+				foreach (DeliveryZone::getAll() as $zone)
+				{
+					$countries = $zone->getCountries()->extractField('countryCode');
+
+					$states = array();
+					foreach ($zone->getStates()->extractReferencedItemSet('state') as $state)
+					{
+						if ($state->countryID == 'US')
+						{
+							$states[] = $state->code->get();
+						}
+						else
+						{
+							$countries[] = $state->countryID->get();
+						}
+					}
+
+					$countries = array_unique($countries);
+
+					$zipMasks = $zone->getZipMasks()->extractField('mask');
+
+					foreach ($zone->getShippingRates($shipment)->toArray() as $rate)
+					{
+						$gRate = new gShipping($rate['serviceName'] ? $rate['serviceName'] : $rate['ShippingService']['name_lang'], round($rate['costAmount'], 2), 'merchant-calculated-shipping');
+						$gRate->addAllowedAreas($countries, $states, $zipMasks);
+						$shipping[] = $gRate;
+					}
+
+					$zoneCountries = array_merge($zoneCountries, $countries);
+					$zoneStates = array_merge($zoneStates, $states);
+					$zoneZips = array_merge($zoneZips, $zipMasks);
+				}
+
+				// default zone
+				$enabledCountries = array_keys($application->getConfig()->get('ENABLED_COUNTRIES'));
+				$defCountries = array_intersect($enabledCountries, $zoneCountries);
+
+				foreach (DeliveryZone::getDefaultZoneInstance()->getShippingRates($shipment)->toArray() as $rate)
+				{
+					$gRate = new gShipping($rate['serviceName'] ? $rate['serviceName'] : $rate['ShippingService']['name_lang'], round($rate['costAmount'], 2), 'merchant-calculated-shipping');
+					$gRate->addAllowedAreas($defCountries, array(), array());
+					$shipping[] = $gRate;
+				}
+
+				$handler->_setShipping($shipping);
+			}
+		}
+
+		// set merchant calculations
+		$router = CustomerOrder::getApplication()->getRouter();
+		$calcUrl = $router->createFullUrl($router->createUrl(array('controller' => 'googleCheckout', 'action' => 'index')), !$this->getConfigValue('sandbox'));
+		$handler->setMerchantCalculations(new gMerchantCalculations($calcUrl, $this->getConfigValue('coupons')));
+		$handler->setDefaultTaxTable(new gTaxTable('Tax', array(new gTaxRule(0))));
+
+		return $handler;
 	}
 }
 

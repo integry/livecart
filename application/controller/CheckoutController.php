@@ -119,6 +119,7 @@ class CheckoutController extends FrontendController
 		$class = $this->request->get('id');
 
 		$handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
+		$handler->setOrder($this->order);
 
 		$returnUrl = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'expressReturn', 'id' => $class), true));
 		$cancelUrl = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'order'), true));
@@ -133,6 +134,8 @@ class CheckoutController extends FrontendController
 		$class = $this->request->get('id');
 
 		$handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
+		$handler->setOrder($this->order);
+
 		$details = $handler->getTransactionDetails($this->request->toArray());
 
 		$address = UserAddress::getNewInstanceByTransaction($details);
@@ -989,7 +992,7 @@ class CheckoutController extends FrontendController
 		return $this->paymentOrder;
 	}
 
-	private function registerPayment(TransactionResult $result, TransactionPayment $handler)
+	protected function registerPayment(TransactionResult $result, TransactionPayment $handler)
 	{
 		$transaction = Transaction::getNewInstance($this->order, $result);
 		$transaction->setHandler($handler);
@@ -998,7 +1001,7 @@ class CheckoutController extends FrontendController
 		return $this->finalizeOrder();
 	}
 
-	private function finalizeOrder()
+	protected function finalizeOrder()
 	{
 		if (!count($this->order->getShipments()))
 		{
