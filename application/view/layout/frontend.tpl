@@ -6,7 +6,8 @@
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 	<meta name="Keywords" content="{$metaKeywords|escape}" />
-	<meta name="Description" content="{$metaDescription|@or:'DEFAULT_META_DESCR'|config|escape}" />
+	{assign var="defaultMeta" value='DEFAULT_META_DESCR'|config}
+	<meta name="Description" content="{$metaDescription|@or:$defaultMeta|escape}" />
 
 	<title>
 		{if !$PAGE_TITLE}
