@@ -339,6 +339,12 @@ class OrderController extends FrontendController
 	 */
 	public function addToCart()
 	{
+		// avoid search engines adding items to cart...
+		if ($this->request->get('csid') && ($this->request->get('csid') != session_id()))
+		{
+			return new RawResponse();
+		}
+
 		$product = Product::getInstanceByID($this->request->get('id'), true, array('Category'));
 
 		$productRedirect = new ActionRedirectResponse('product', 'index', array('id' => $product->getID(), 'query' => 'return=' . $this->request->get('return')));
@@ -437,6 +443,12 @@ class OrderController extends FrontendController
 	 */
 	public function addToWishList()
 	{
+		// avoid search engines adding items to cart...
+		if ($this->request->get('csid') && ($this->request->get('csid') != session_id()))
+		{
+			return new RawResponse();
+		}
+
 		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA);
 
 		$this->order->addToWishList($product);
