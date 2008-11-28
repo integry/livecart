@@ -376,9 +376,9 @@ class OrderController extends FrontendController
 		ActiveRecordModel::beginTransaction();
 
 		$count = $this->request->get('count', 1);
-		if (!$count)
+		if ($count < $product->getMinimumQuantity())
 		{
-			$count = 1;
+			$count = $product->getMinimumQuantity();
 		}
 		$item = $this->order->addProduct($product, $count);
 

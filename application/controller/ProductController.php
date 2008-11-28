@@ -90,9 +90,9 @@ class ProductController extends FrontendController
 
 		// allowed shopping cart quantities
 		$maxOrderable = $product->getMaxOrderableCount();
-		$maxQuant = $product->minimumQuantity->get() + 20;
+		$maxQuant = $product->getMinimumQuantity() + (19 * $product->getQuantityStep());
 		$maxOrderable = is_null($maxOrderable) ? $maxQuant : min($maxQuant, $maxOrderable);
-		$quantities = range(max($product->minimumQuantity->get(), 1), $maxOrderable);
+		$quantities = range($product->getMinimumQuantity(), $maxOrderable, max($product->fractionalStep->get(), 1));
 		$quantity = array_combine($quantities, $quantities);
 
 		// manufacturer filter

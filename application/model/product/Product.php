@@ -931,6 +931,38 @@ class Product extends MultilingualObject
 		}
 	}
 
+	public function getMinimumQuantity()
+	{
+		$quant = $this->minimumQuantity->get();
+		if ($step = $this->fractionalStep->get())
+		{
+			$quant = floor($quant / $step) * $step;
+			if (!$quant)
+			{
+				$quant = $step;
+			}
+		}
+
+		if (!$quant)
+		{
+			$quant = 1;
+		}
+
+		return $quant;
+	}
+
+	public function getQuantityStep()
+	{
+		if ($this->fractionalStep->get())
+		{
+			return $this->fractionalStep->get();
+		}
+		else
+		{
+			return 1;
+		}
+	}
+
 	public function loadSpecification($specificationData = null)
 	{
 	  	if ($this->specificationInstance)

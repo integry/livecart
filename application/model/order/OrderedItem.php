@@ -142,6 +142,11 @@ class OrderedItem extends ActiveRecordModel
 		return $price;
 	}
 
+	public function getDisplayPrice(Currency $currency)
+	{
+		return $this->getPrice($currency, !$this->customerOrder->get()->getDeliveryZone()->isDefault());
+	}
+
 	private function getItemPrice(Currency $currency, $includeTaxes = true)
 	{
 		$price = $this->product->get()->getItemPrice($this, $currency->getID());
@@ -485,7 +490,7 @@ class OrderedItem extends ActiveRecordModel
 			$currency = Currency::getInstanceByID($array['priceCurrencyID']);
 			$array['itemBasePrice'] = $this->getPrice($currency);
 			$array['itemSubTotal'] = $this->getSubTotal($currency);
-			$array['displayPrice'] = $this->getPrice($currency, !$this->customerOrder->get()->getDeliveryZone()->isDefault());
+			$array['displayPrice'] = $this->getDisplayPrice($currency);
 			$array['displaySubTotal'] = $this->getSubTotal($currency, !$this->customerOrder->get()->getDeliveryZone()->isDefault());
 			$array['itemPrice'] = $array['displaySubTotal'] / $array['count'];
 

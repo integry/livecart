@@ -1380,11 +1380,15 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		}
 
 		// items subtotal
-		$array['itemSubtotal'] = 0;
+		$array['itemSubtotal'] = $array['itemDisplayPriceTotal'] = 0;
 		foreach ($this->getOrderedItems() as $item)
 		{
 			$array['itemSubtotal'] += $item->getSubtotal($currency);
+			$array['itemDisplayPriceTotal'] += $item->getDisplayPrice($currency) * $item->count->get();
 		}
+
+		$array['itemDiscount'] = $array['itemDisplayPriceTotal'] - $array['itemSubtotal'];
+		$array['itemDiscountReverse'] = $array['itemDiscount'] * -1;
 
 		// shipping subtotal
 		$array['shippingSubtotal'] = 0;
@@ -1398,7 +1402,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		$array['subtotalBeforeTaxes'] = $array['itemSubtotal'] + $array['shippingSubtotal'];
 
-		foreach (array('amountPaid', 'amountNotCaptured', 'amountDue', 'itemSubtotal', 'shippingSubtotal', 'subtotalBeforeTaxes', 'totalAmount') as $key)
+		foreach (array('amountPaid', 'amountNotCaptured', 'amountDue', 'itemSubtotal', 'shippingSubtotal', 'subtotalBeforeTaxes', 'totalAmount', 'itemDiscountReverse', 'itemDiscount') as $key)
 		{
 			if (isset($array[$key]))
 			{

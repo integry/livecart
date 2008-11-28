@@ -100,6 +100,14 @@
 		</tr>
 	{/foreach}
 
+	{if $cart.itemDiscountReverse}
+		<tr>
+			<td colspan="3" class="subTotalCaption">{t _discount}:</td>
+			<td class="amount discountAmount">{$cart.formatted_itemDiscountReverse}</td>
+			<td></td>
+		</tr>
+	{/if}
+
 	{if $cart.shippingSubtotal}
 		<tr>
 			<td colspan="3" class="subTotalCaption">{t _shipping}:</td>
