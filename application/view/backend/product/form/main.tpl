@@ -74,10 +74,4 @@
 		<label for="product_{$cat}_{$product.ID}_isfeatured" class="acronym checkbox"><a>{t _mark_as_featured_product}<div>{t _hint_featured}</div></a></label>
 	</p>
 
-	<p>
-		<label></label>
-		{checkbox name="isFractionalUnit" class="checkbox" id="product_`$cat`_`$product.ID`_isFractionalUnit"}
-		<label for="product_{$cat}_{$product.ID}_isFractionalUnit" class="checkbox">{t _allow_fractional_quantities}</label>
-	</p>
-
 </fieldset>

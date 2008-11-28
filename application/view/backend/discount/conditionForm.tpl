@@ -1,3 +1,9 @@
+<p>
+	<label></label>
+	{checkbox name="isFinal" class="checkbox" id="isFinal_`$condition.ID`"}
+	<label for="isFinal_{$condition.ID}" class="checkbox">{t _stop_processing}</label>
+</p>
+
 <p class="required">
 	{err for="name"}
 		{label {t DiscountCondition.name}}

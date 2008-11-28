@@ -97,6 +97,7 @@ class Product extends MultilingualObject
 		$schema->registerField(new ArField("reservedCount", ARFloat::instance(8)));
 		$schema->registerField(new ArField("salesRank", ARInteger::instance()));
 		$schema->registerField(new ArField("childSettings", ARText::instance()));
+		$schema->registerField(new ArField("fractionalStep", ARFloat::instance(8)));
 	}
 
 	/**
@@ -927,6 +928,38 @@ class Product extends MultilingualObject
 			{
 				return $name;
 			}
+		}
+	}
+
+	public function getMinimumQuantity()
+	{
+		$quant = $this->minimumQuantity->get();
+		if ($step = $this->fractionalStep->get())
+		{
+			$quant = floor($quant / $step) * $step;
+			if (!$quant)
+			{
+				$quant = $step;
+			}
+		}
+
+		if (!$quant)
+		{
+			$quant = 1;
+		}
+
+		return $quant;
+	}
+
+	public function getQuantityStep()
+	{
+		if ($this->fractionalStep->get())
+		{
+			return $this->fractionalStep->get();
+		}
+		else
+		{
+			return 1;
 		}
 	}
 

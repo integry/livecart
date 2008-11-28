@@ -817,7 +817,7 @@ class LiveCart extends Application
 		}
 	}
 
-	public function getExpressPaymentHandler($handlerName, TransactionDetails $details = null)
+	public function getExpressPaymentHandler($handlerName, LiveCartTransaction $details = null)
 	{
 		if (!in_array($handlerName, $this->getExpressPaymentHandlerList(true)))
 		{
@@ -832,7 +832,7 @@ class LiveCart extends Application
 	/**
 	 * Returns an instance of the selected credit card handler
 	 */
-	public function getCreditCardHandler(TransactionDetails $details = null)
+	public function getCreditCardHandler(LiveCartTransaction $details = null)
 	{
 		$handler = $this->config->get('CC_HANDLER');
 
@@ -841,7 +841,7 @@ class LiveCart extends Application
 		return $this->getPaymentHandler($handler, $details);
 	}
 
-	public function getPaymentHandler($className, TransactionDetails $details = null)
+	public function getPaymentHandler($className, LiveCartTransaction $details = null)
 	{
 		if (!class_exists($className, false))
 		{
@@ -854,6 +854,11 @@ class LiveCart extends Application
 		}
 
 		$inst = new $className($details);
+
+		if ($details instanceof LiveCartTransaction)
+		{
+			$inst->setOrder($details->getOrder());
+		}
 
 		$c = $this->config->getSection('payment/' . $className);
 		foreach ($c as $key => $value)

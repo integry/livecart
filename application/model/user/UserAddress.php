@@ -72,6 +72,11 @@ class UserAddress extends ActiveRecordModel
 		return self::getAddressString($this->toArray(), $separator);
 	}
 
+	public function getFullName()
+	{
+		return $this->firstName->get() . ' ' . $this->lastName->get();
+	}
+
 	private static function getAddressString(array $addressArray, $separator)
 	{
 		$address = array();

@@ -578,6 +578,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			'tabProductOptions' => $product->getOptions()->getTotalRecordCount(),
 			'tabProductReviews' => $product->getRelatedRecordCount('ProductReview'),
 			'tabProductCategories' => $product->getRelatedRecordCount('ProductCategory') + 1,
+			'tabProductVariations' => $product->getRelatedRecordCount('Product', new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), true)))
 		));
 	}
 

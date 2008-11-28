@@ -34,7 +34,12 @@ function smarty_function_zebra($params, LiveCartSmarty $smarty)
 		$firstOrLast = ' last';
 	}
 
-	return (++$smarty->zebra[$loop] % 2 ? 'even' : 'odd') . $firstOrLast;
+	if (!isset($params['stop']))
+	{
+		++$smarty->zebra[$loop];
+	}
+
+	return ($smarty->zebra[$loop] % 2 ? 'even' : 'odd') . $firstOrLast;
 }
 
 ?>

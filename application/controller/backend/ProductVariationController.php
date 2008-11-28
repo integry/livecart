@@ -119,6 +119,15 @@ class ProductVariationController extends StoreManagementController
 			$type->setValueByLang('name', null, $request['variationType'][$index]);
 			$type->position->set($index);
 
+			if (!empty($request['typeLang_' . $id]))
+			{
+				foreach ($request['typeLang_' . $id] as $field => $value)
+				{
+					list($field, $lang) = explode('_', $field, 2);
+					$type->setValueByLang($field, $lang, $value);
+				}
+			}
+
 			$type->save();
 		}
 
@@ -144,6 +153,16 @@ class ProductVariationController extends StoreManagementController
 
 				$variation->position->set($index);
 				$variation->setValueByLang('name', null, $request['variation'][$id]);
+
+				if (!empty($request['variationLang_' . $id]))
+				{
+					foreach ($request['variationLang_' . $id] as $field => $value)
+					{
+						list($field, $lang) = explode('_', $field, 2);
+						$variation->setValueByLang($field, $lang, $value);
+					}
+				}
+
 				$variation->save();
 
 				$tree[$typeIndex][] = $variation;
@@ -249,6 +268,7 @@ class ProductVariationController extends StoreManagementController
 		$response = new ActionResponse('ids', $ids);
 		$response->set('parent', $parent->getID());
 		$response->set('images', $images);
+		$response->set('variationCount', $parent->getRelatedRecordCount('Product', new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), true))));
 		return $response;
 	}
 

@@ -117,7 +117,7 @@ class DiscountConditionTest extends UnitTest
 		$result = DiscountAction::getNewInstance($condition);
 		$result->isEnabled->set(true);
 		$result->type->set(DiscountAction::TYPE_ORDER_DISCOUNT);
-		$result->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
+		$result->actionType->set(DiscountAction::ACTION_PERCENT);
 		$result->amount->set(10);
 		$result->save();
 
@@ -391,6 +391,139 @@ class DiscountConditionTest extends UnitTest
 		$this->order->save();
 
 		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
+	}
+
+	public function testStopProcessing()
+	{
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->save();
+
+		$another = DiscountCondition::getNewInstance();
+		$another->isEnabled->set(true);
+		$another->save();
+
+		$this->order->addProduct($this->product1, 1, true);
+		$this->order->save();
+
+		$this->assertEquals(2, count($this->order->getDiscountConditions(true)));
+
+		$condition->isFinal->set(true);
+		$condition->save();
+		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
+	}
+
+	public function testDisableCheckout()
+	{
+		$this->order->addProduct($this->product1, 1, true);
+		$this->order->save();
+		$this->assertTrue($this->order->isOrderable());
+
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->save();
+
+		$action = DiscountAction::getNewInstance($condition);
+		$action->isEnabled->set(true);
+		$action->actionType->set(DiscountAction::ACTION_DISABLE_CHECKOUT);
+		$action->save();
+
+		$this->order->getDiscountActions(true);
+		$this->assertFalse($this->order->isOrderable());
+	}
+
+	public function testDiscountStep()
+	{
+		$this->order->addProduct($this->product1, 5, true);
+		$this->order->save();
+
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->save();
+
+		$action = DiscountAction::getNewInstance($condition);
+		$action->isEnabled->set(true);
+		$action->amount->set(10);
+		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
+		$action->save();
+
+		$this->order->getDiscountActions(true);
+		$this->assertEquals(45, $this->order->getTotal($this->usd));
+
+		// discount is applied to every other item
+		$action->discountStep->set(2);
+		$action->save();
+		$this->order->getDiscountActions(true);
+		$this->assertEquals(48, $this->order->getTotal($this->usd));
+	}
+
+	public function testDiscountLimit()
+	{
+		$this->order->addProduct($this->product1, 5, true);
+		$this->order->save();
+
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->save();
+
+		$action = DiscountAction::getNewInstance($condition);
+		$action->isEnabled->set(true);
+		$action->amount->set(10);
+		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
+		$action->save();
+
+		$this->order->getDiscountActions(true);
+		$this->assertEquals(45, $this->order->getTotal($this->usd));
+
+		// discount is applied to 3 items only
+		$action->discountLimit->set(3);
+		$action->save();
+		$this->order->getDiscountActions(true);
+		$this->assertEquals(47, $this->order->getTotal($this->usd));
+	}
+
+	public function testDivisable()
+	{
+		$this->order->addProduct($this->product1, 8, true);
+		$this->order->save();
+
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->comparisonType->set(DiscountCondition::COMPARE_DIV);
+
+		// test divisibility
+		$condition->count->set(3);
+		$condition->save();
+		$this->assertEquals(0, count($this->order->getDiscountConditions(true)));
+
+		$condition->count->set(2);
+		$condition->save();
+		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
+
+		$condition->count->set(5);
+		$condition->save();
+		$this->assertEquals(0, count($this->order->getDiscountConditions(true)));
+
+		$condition->count->set(4);
+		$condition->save();
+		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
+
+		$condition->count->set(8);
+		$condition->save();
+		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
+
+		// test non-divisibility
+		$condition->comparisonType->set(DiscountCondition::COMPARE_NDIV);
+		$condition->save();
+		$this->assertEquals(0, count($this->order->getDiscountConditions(true)));
+
+		$condition->count->set(5);
+		$condition->save();
+		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
+
+		$condition->count->set(2);
+		$condition->save();
+		$this->assertEquals(0, count($this->order->getDiscountConditions(true)));
 	}
 }
 

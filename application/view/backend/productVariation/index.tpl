@@ -60,7 +60,19 @@
 	<input type="hidden" name="types" />
 	<input type="hidden" name="variations" />
 	<div class="tableContainer"></div>
+
+	<p class="dom_template langTemplate">
+		<label></label>
+		<input type="text" class="text" />
+	</p>
+
+	{language}
+		<div class="types"></div>
+		<div class="variations"></div>
+	{/language}
+
 	<fieldset class="controls">
+		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" class="submit" value="{tn _save}" >
 		{t _or}
 		<a class="cancel" href="#">{t _cancel}</a>
@@ -71,3 +83,5 @@
 <script type="text/javascript">
 	new Backend.ProductVariation.Editor({$parent.ID}, {json array=$params});
 </script>
+
+{block TRANSLATIONS}

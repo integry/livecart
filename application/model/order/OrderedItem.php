@@ -83,9 +83,20 @@ class OrderedItem extends ActiveRecordModel
 
 		if ($applyDiscounts)
 		{
+			$count = $this->count->get();
 			foreach ($this->customerOrder->get()->getItemDiscountActions($this) as $action)
 			{
-				$subTotal -= $action->getDiscountAmount($subTotal);
+				$itemPrice = $subTotal / $count;
+				$discountPrice = $itemPrice - $action->getDiscountAmount($itemPrice);
+				$discountStep = max($action->discountStep->get(), 1);
+				$applicableCnt = floor($count / $discountStep);
+
+				if ($action->discountLimit->get())
+				{
+					$applicableCnt = min($action->discountLimit->get(), $applicableCnt);
+				}
+
+				$subTotal = ($applicableCnt * $discountPrice) + (($count - $applicableCnt) * $itemPrice);
 			}
 		}
 
@@ -129,6 +140,11 @@ class OrderedItem extends ActiveRecordModel
 		$price = $itemCurrency->convertAmount($currency, $price);
 
 		return $price;
+	}
+
+	public function getDisplayPrice(Currency $currency)
+	{
+		return $this->getPrice($currency, !$this->customerOrder->get()->getDeliveryZone()->isDefault());
 	}
 
 	private function getItemPrice(Currency $currency, $includeTaxes = true)
@@ -474,7 +490,7 @@ class OrderedItem extends ActiveRecordModel
 			$currency = Currency::getInstanceByID($array['priceCurrencyID']);
 			$array['itemBasePrice'] = $this->getPrice($currency);
 			$array['itemSubTotal'] = $this->getSubTotal($currency);
-			$array['displayPrice'] = $this->getPrice($currency, !$this->customerOrder->get()->getDeliveryZone()->isDefault());
+			$array['displayPrice'] = $this->getDisplayPrice($currency);
 			$array['displaySubTotal'] = $this->getSubTotal($currency, !$this->customerOrder->get()->getDeliveryZone()->isDefault());
 			$array['itemPrice'] = $array['displaySubTotal'] / $array['count'];
 

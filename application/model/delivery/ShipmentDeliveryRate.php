@@ -21,6 +21,8 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 	 */
 	private $application;
 
+	private $service;
+
 	public function setApplication($application)
 	{
 		$this->application = $application;
@@ -32,6 +34,7 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 		$inst->setServiceId($service->getID());
 		$inst->setApplication($service->getApplication());
 		$inst->setCost($cost, $service->getApplication()->getDefaultCurrencyCode());
+		$inst->setService($service);
 		return $inst;
 	}
 
@@ -42,11 +45,12 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 		$address = $shipment->order->get()->shippingAddress->get();
 
 		$handler->setDestCountry($address->countryID->get());
-		$handler->setDestState($address->state->get());
+		$handler->setDestState($address->state->get() ? $address->state->get()->code->get() : $address->stateName->get());
 		$handler->setDestZip($address->postalCode->get());
 		$config = $shipment->getApplication()->getConfig();
 		$handler->setSourceCountry($config->get('STORE_COUNTRY'));
 		$handler->setSourceZip($config->get('STORE_ZIP'));
+		$handler->setSourceState($config->get('STORE_STATE'));
 
 		$rates = new ShippingRateSet();
 
@@ -84,6 +88,16 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 		$this->amountWithTax = $amount;
 	}
 
+	public function setService(ShippingService $service)
+	{
+		$this->service = $service;
+	}
+
+	public function getService()
+	{
+		return $this->service;
+	}
+
 	public function toArray()
 	{
 		$array = parent::toArray();
@@ -91,16 +105,18 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 		$currencies = $this->application->getCurrencySet();
 
 		// get and format prices
-		$prices = $formattedPrices = $taxPrices = array();
+		$prices = $formattedPrices = $taxPrices = $unformattedTaxPrices = array();
 
 		foreach ($currencies as $id => $currency)
 		{
 			$prices[$id] = $currency->convertAmount($amountCurrency, $array['costAmount']);
 			$formattedPrices[$id] = $currency->getFormattedPrice($prices[$id]);
-			$taxPrices[$id] = $currency->getFormattedPrice($currency->convertAmount($amountCurrency, $this->amountWithTax));
+			$unformattedTaxPrices[$id] = $currency->convertAmount($amountCurrency, $this->amountWithTax);
+			$taxPrices[$id] = $currency->getFormattedPrice($unformattedTaxPrices[$id]);
 		}
 
 		$array['price'] = $prices;
+		$array['priceWithTax'] = $unformattedTaxPrices;
 		$array['formattedPrice'] = $formattedPrices;
 		$array['taxPrice'] = $taxPrices;
 
@@ -130,6 +146,7 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 	{
 		$vars = get_object_vars($this);
 		unset($vars['application']);
+		unset($vars['service']);
 
 		return serialize($vars);
 	}

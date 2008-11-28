@@ -715,7 +715,7 @@ class OrderTest extends OrderTestCommon
 		$action->isEnabled->set(true);
 		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 		$action->amount->set(10);
-		$action->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
+		$action->actionType->set(DiscountAction::ACTION_PERCENT);
 		$action->save();
 
 		$this->order->addProduct($this->products[0]);
@@ -750,7 +750,7 @@ class OrderTest extends OrderTestCommon
 			$action[$k]->isEnabled->set(true);
 			$action[$k]->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 			$action[$k]->amount->set(10 * $k);
-			$action[$k]->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
+			$action[$k]->actionType->set(DiscountAction::ACTION_PERCENT);
 			$action[$k]->save();
 		}
 
@@ -787,7 +787,7 @@ class OrderTest extends OrderTestCommon
 			$action[$k]->isEnabled->set(true);
 			$action[$k]->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 			$action[$k]->amount->set(10 * $k);
-			$action[$k]->amountMeasure->set(1 - ($k - 1)); // 0 - percent, 1 - amount
+			$action[$k]->actionType->set(1 - ($k - 1)); // 0 - percent, 1 - amount
 			$action[$k]->save();
 		}
 
@@ -825,7 +825,7 @@ class OrderTest extends OrderTestCommon
 			$action[$k]->isEnabled->set(true);
 			$action[$k]->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 			$action[$k]->amount->set(10 * $k);
-			$action[$k]->amountMeasure->set(1 - ($k - 1)); // 0 - percent, 1 - amount
+			$action[$k]->actionType->set(1 - ($k - 1)); // 0 - percent, 1 - amount
 			$action[$k]->save();
 		}
 
@@ -844,7 +844,7 @@ class OrderTest extends OrderTestCommon
 		$act->isEnabled->set(true);
 		$act->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 		$act->amount->set(30);
-		$act->amountMeasure->set(DiscountAction::MEASURE_AMOUNT); // 0 - percent, 1 - amount
+		$act->actionType->set(DiscountAction::ACTION_AMOUNT); // 0 - percent, 1 - amount
 		$act->save();
 		$cond[1]->loadAll();
 
@@ -870,7 +870,7 @@ class OrderTest extends OrderTestCommon
 		$action->isEnabled->set(true);
 		$action->type->set(DiscountAction::TYPE_ORDER_DISCOUNT);
 		$action->amount->set(10);
-		$action->amountMeasure->set(DiscountAction::MEASURE_AMOUNT);
+		$action->actionType->set(DiscountAction::ACTION_AMOUNT);
 		$action->save();
 
 		// item discount
@@ -886,7 +886,7 @@ class OrderTest extends OrderTestCommon
 		$action->isEnabled->set(true);
 		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 		$action->amount->set(10);
-		$action->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
+		$action->actionType->set(DiscountAction::ACTION_PERCENT);
 		$action->save();
 
 		$condition->loadAll();
@@ -927,7 +927,7 @@ class OrderTest extends OrderTestCommon
 		$action->isEnabled->set(true);
 		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 		$action->amount->set(10);
-		$action->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
+		$action->actionType->set(DiscountAction::ACTION_PERCENT);
 		$action->save();
 
 		$this->order->addProduct($this->products[0], 3);
@@ -1021,7 +1021,7 @@ class OrderTest extends OrderTestCommon
 		$action->isEnabled->set(true);
 		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 		$action->amount->set(10);
-		$action->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
+		$action->actionType->set(DiscountAction::ACTION_PERCENT);
 		$action->save();
 
 		$this->order->addProduct($this->products[0], 3);
@@ -1066,7 +1066,7 @@ class OrderTest extends OrderTestCommon
 		$action->isEnabled->set(true);
 		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 		$action->amount->set(10);
-		$action->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
+		$action->actionType->set(DiscountAction::ACTION_PERCENT);
 		$action->save();
 
 		$this->order->addProduct($this->products[0], 3, true);
@@ -1111,7 +1111,7 @@ class OrderTest extends OrderTestCommon
 		$action->isEnabled->set(true);
 		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 		$action->amount->set(10);
-		$action->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
+		$action->actionType->set(DiscountAction::ACTION_PERCENT);
 		$action->save();
 
 		$this->order->addProduct($this->products[0], 3, true);
@@ -1150,7 +1150,7 @@ class OrderTest extends OrderTestCommon
 		$action->isEnabled->set(true);
 		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 		$action->amount->set(10);
-		$action->amountMeasure->set(DiscountAction::MEASURE_PERCENT);
+		$action->actionType->set(DiscountAction::ACTION_PERCENT);
 		$action->save();
 
 		$randomCategory = Category::getNewInstance(Category::getRootNode());

@@ -30,9 +30,10 @@
 	border: 1px solid #ddd;
 }
 
-.productVariationTable thead
+.productVariationTable thead,
+.productVariationTable td.isEnabled
 {
-	background-color: #eef;
+	background-color: #fee !important;
 }
 
 .productVariationTable td
@@ -40,10 +41,29 @@
 	vertical-align: top;
 }
 
+.productVariationTable td,
+.productVariationTable th
+{
+	border-right: 1px solid #DDDDDD;
+}
+
+.productVariationTable td.variation
+{
+	background-color: #FDFDFD !important;
+	border: 0 !important;
+}
+
+.productVariationTable tr.even td
+{
+	background-color: #eee;
+	border-top: 1px solid #DDDDDD;
+	border-bottom: 1px solid #DDDDDD;
+}
+
 .productVariationTable td.image,
 .productVariationTable th.image
 {
-	width: 230px;
+	width: 280px;
 }
 
 .productVariationTable td.price,
@@ -89,6 +109,12 @@
 	text-align: center;
 }
 
+.tabProductVariationsContent .addType
+{
+	background: url(../../image/silk/add.png) no-repeat center left;
+	padding-left: 22px;
+}
+
 .productVariationTable .addVariation
 {
 	font-weight: normal;
@@ -125,7 +151,24 @@
 .productVariationTable td.isEnabled
 {
 	padding-top: 11px;
-	background-color: #ddd;
+	border: 0 !important;
+	border-left: 1px solid #DDDDDD !important;
+	border-right: 1px solid #DDDDDD !important;
+}
+
+.productVariationTable th
+{
+	border-bottom: 1px solid #DDDDDD;
+}
+
+.productVariationTable th.isEnabled
+{
+	border: 0;
+}
+
+.productVariationTable th.variationType
+{
+	border-right: 0;
 }
 
 .productVariationTable td.price,
@@ -170,4 +213,15 @@
 	width: 50px;
 	min-height: 30px;
 	float: left;
+}
+
+.productVariationTable tr.disabledItem input,
+.productVariationTable tr.disabledItem select
+{
+	color: #aaa;
+}
+
+.productVariationTable tr.disabledItem td.variation input
+{
+	color: black;
 }

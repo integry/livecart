@@ -6,7 +6,7 @@
 		<p>
 			<label></label>
 			{checkbox name="isEnabled" class="checkbox" id="isEnabled_`$condition.ID`"}
-			<label for="isEnabled_{$condition.ID}">{t _is_enabled}</label>
+			<label for="isEnabled_{$condition.ID}" class="checkbox">{t _is_enabled}</label>
 		</p>
 
 		{include file="backend/discount/conditionForm.tpl"}

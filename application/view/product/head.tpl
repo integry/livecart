@@ -112,7 +112,11 @@
 				<tr id="productToCart" class="cartLinks">
 					<td class="param">{t _quantity}:</td>
 					<td class="value">
-						{selectfield name="count" options=$quantity}
+						{if !$product.isFractionalUnit}
+							{selectfield name="count" options=$quantity}
+						{else}
+							{textfield name="count" class="text number"}
+						{/if}
 						<input type="submit" class="submit" value="{tn _add_to_cart}" />
 						{hidden name="return" value=$catRoute}
 					</td>

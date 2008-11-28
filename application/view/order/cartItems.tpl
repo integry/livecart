@@ -100,6 +100,14 @@
 		</tr>
 	{/foreach}
 
+	{if $cart.itemDiscountReverse}
+		<tr>
+			<td colspan="3" class="subTotalCaption">{t _discount}:</td>
+			<td class="amount discountAmount">{$cart.formatted_itemDiscountReverse}</td>
+			<td></td>
+		</tr>
+	{/if}
+
 	{if $cart.shippingSubtotal}
 		<tr>
 			<td colspan="3" class="subTotalCaption">{t _shipping}:</td>
@@ -125,12 +133,12 @@
 						<div class="container">
 							{t _have_coupon}: <input type="text" class="text coupon" name="coupon" /> <input type="submit" class="submit coupon" value="{tn _add_coupon}" />
 							{if $cart.coupons}
-								<div class="appliedCoupons">
+								<p class="appliedCoupons">
 									{t _applied_coupons}:
 									{foreach from=$cart.coupons item=coupon name=coupons}
 										<strong>{$coupon.couponCode}</strong>{if !$smarty.foreach.coupons.last}, {/if}
 									{/foreach}
-								</div>
+								</p>
 							{/if}
 						</div>
 					</td>

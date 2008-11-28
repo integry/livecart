@@ -190,11 +190,11 @@ Backend.Discount.Condition.prototype =
 		var recordClassName = '';
 
 		// determine condition type
-		if (this.condition.count != null && this.condition.recordCount == null)
+		if (this.condition.count != null && this.condition.recordCount < 1)
 		{
 			this.typeSel.value = this.TYPE_COUNT;
 		}
-		else if (this.condition.subTotal != null && this.condition.recordCount == null)
+		else if (this.condition.subTotal != null && this.condition.recordCount < 1)
 		{
 			this.typeSel.value = this.TYPE_TOTAL;
 		}
@@ -595,8 +595,8 @@ Backend.Discount.Action.prototype =
 	TYPE_ITEM_DISCOUNT: 1,
 	TYPE_CUSTOM_DISCOUNT: 5,
 
-	MEASURE_PERCENT: 0,
-	MEASURE_AMOUNT: 1,
+	ACTION_PERCENT: 0,
+	ACTION_AMOUNT: 1,
 
 	createAction: function(action)
 	{
@@ -624,19 +624,22 @@ Backend.Discount.Action.prototype =
 
 	findUsedNodes: function()
 	{
-		this.amountMeasure = this.node.down('.actionType');
+		this.actionType = this.node.down('.actionType');
 		this.amount = this.node.down('.comparisonValue');
+		this.discountStep = this.node.down('.discountStep');
+		this.discountLimit = this.node.down('.discountLimit');
 		this.type = this.node.down('.applyTo');
 		this.isEnabled = this.node.down('.isEnabled');
 		this.subConditionContainer = this.node.down('.conditionContainer');
 
 		this.percentSign = this.node.down('.percent');
 		this.currencySign = this.node.down('.currency');
+		this.amountFields = this.node.down('.amountFields');
 	},
 
 	bindEvents: function()
 	{
-		[this.amountMeasure, this.amount, this.type, this.isEnabled].each(function(field)
+		[this.actionType, this.amount, this.discountStep, this.discountLimit, this.type, this.isEnabled].each(function(field)
 		{
 			field.name += '_' + this.action.ID;
 			Event.observe(field, 'change', this.saveFieldChange.bind(this));
@@ -648,12 +651,12 @@ Backend.Discount.Action.prototype =
 		$(this.isEnabled.parentNode).down('label').setAttribute('for', 'isEnabled_' + this.action.ID);
 
 		Event.observe(this.type, 'change', this.changeType.bind(this));
-		Event.observe(this.amountMeasure, 'change', this.changeAmountMeasure.bind(this));
+		Event.observe(this.actionType, 'change', this.changediscountType.bind(this));
 	},
 
 	setValues: function()
 	{
-		this.amountMeasure.value = this.action.amountMeasure;
+		this.actionType.value = this.action.actionType;
 		this.amount.value = this.action.amount;
 
 		if (this.action.ActionCondition)
@@ -686,12 +689,21 @@ Backend.Discount.Action.prototype =
 		}
 	},
 
-	changeAmountMeasure: function()
+	changediscountType: function()
 	{
 		this.percentSign.hide();
 		this.currencySign.hide();
 
-		if (this.amountMeasure.value == this.MEASURE_PERCENT)
+		if ((this.actionType.value == this.ACTION_PERCENT) || (this.actionType.value == this.ACTION_AMOUNT))
+		{
+			this.amountFields.show();
+		}
+		else
+		{
+			this.amountFields.hide();
+		}
+
+		if (this.actionType.value == this.ACTION_PERCENT)
 		{
 			this.percentSign.show();
 		}
@@ -730,7 +742,7 @@ Backend.Discount.Action.prototype =
 		this.setValues();
 		this.bindEvents();
 		this.changeType(true);
-		this.changeAmountMeasure();
+		this.changediscountType();
 	},
 
 	saveFieldChange: function(e)
@@ -750,7 +762,7 @@ Backend.Discount.Action.prototype =
 			value = field.checked ? 1 : 0;
 		}
 
-		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.discount', 'updateActionField', {type: this.amountMeasure.value, field: field.name, value: value}), null, this.completeUpdateField.bind(this));
+		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.discount', 'updateActionField', {type: this.actionType.value, field: field.name, value: value}), null, this.completeUpdateField.bind(this));
 	},
 
 	addCondition: function(condition)

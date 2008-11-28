@@ -256,6 +256,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			$count = $product->minimumQuantity->get();
 		}
 
+		if ($step = $product->fractionalStep->get())
+		{
+			$count = floor($count / $step) * $step;
+		}
+
 		return $count;
 	}
 
@@ -1116,9 +1121,19 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			return false;
 		}
 
+		// contains more items than in stock
 		if ($this->updateToStock(false))
 		{
 			return false;
+		}
+
+		// checkout disabled from pricing rules
+		foreach ($this->getDiscountActions() as $action)
+		{
+			if (DiscountAction::ACTION_DISABLE_CHECKOUT == $action->actionType->get())
+			{
+				return false;
+			}
 		}
 
 		return true;
@@ -1365,11 +1380,15 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		}
 
 		// items subtotal
-		$array['itemSubtotal'] = 0;
+		$array['itemSubtotal'] = $array['itemDisplayPriceTotal'] = 0;
 		foreach ($this->getOrderedItems() as $item)
 		{
 			$array['itemSubtotal'] += $item->getSubtotal($currency);
+			$array['itemDisplayPriceTotal'] += $item->getDisplayPrice($currency) * $item->count->get();
 		}
+
+		$array['itemDiscount'] = $array['itemDisplayPriceTotal'] - $array['itemSubtotal'];
+		$array['itemDiscountReverse'] = $array['itemDiscount'] * -1;
 
 		// shipping subtotal
 		$array['shippingSubtotal'] = 0;
@@ -1383,7 +1402,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		$array['subtotalBeforeTaxes'] = $array['itemSubtotal'] + $array['shippingSubtotal'];
 
-		foreach (array('amountPaid', 'amountNotCaptured', 'amountDue', 'itemSubtotal', 'shippingSubtotal', 'subtotalBeforeTaxes', 'totalAmount') as $key)
+		foreach (array('amountPaid', 'amountNotCaptured', 'amountDue', 'itemSubtotal', 'shippingSubtotal', 'subtotalBeforeTaxes', 'totalAmount', 'itemDiscountReverse', 'itemDiscount') as $key)
 		{
 			if (isset($array[$key]))
 			{
@@ -1629,7 +1648,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		if (is_null($this->discountActions) || $reload)
 		{
 			ClassLoader::import('application.model.discount.DiscountAction');
-			$this->discountActions = DiscountAction::getByConditions($this->getDiscountConditions());
+			$this->discountActions = DiscountAction::getByConditions($this->getDiscountConditions($reload));
 		}
 
 		return $this->discountActions;

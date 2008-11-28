@@ -110,6 +110,8 @@ _keywords=Keywords
 _mark_as_featured_product=Mark as featured product
 _mark_as_sale_product=Mark as on-sale product
 _allow_fractional_quantities=Allow fractional quantities
+_fractionalStep=Quantity increment
+_hint_fractionalStep=Special quantity increments - for example, entering 0.2 would only allow ordering quanties of 0.2, 0.4, 0.6, etc.
 
 _presentation=Presentation
 _theme=Design theme
@@ -118,7 +120,7 @@ _theme=Design theme
 
 _pricing=Pricing
 _list_price=List price
-_shipping=Shipping
+_shipping=Ordering & Shipping
 _shipping_weight=Shipping weight
 
 _minimum_order_quantity=Minimum order quantity

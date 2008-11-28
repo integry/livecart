@@ -119,6 +119,7 @@ class CheckoutController extends FrontendController
 		$class = $this->request->get('id');
 
 		$handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
+		$handler->setOrder($this->order);
 
 		$returnUrl = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'expressReturn', 'id' => $class), true));
 		$cancelUrl = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'order'), true));
@@ -133,6 +134,8 @@ class CheckoutController extends FrontendController
 		$class = $this->request->get('id');
 
 		$handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
+		$handler->setOrder($this->order);
+
 		$details = $handler->getTransactionDetails($this->request->toArray());
 
 		$address = UserAddress::getNewInstanceByTransaction($details);
@@ -567,7 +570,7 @@ class CheckoutController extends FrontendController
 		$response->set('offlineMethods', $offlineMethods);
 		$response->set('offlineForms', $this->getOfflinePaymentForms($response));
 
-		$this->setPaymentMethodResponse($response);
+		$this->setPaymentMethodResponse($response, $this->order);
 		$this->order->getSpecification()->setFormResponse($response, $response->get('ccForm'));
 
 		$external = $this->application->getPaymentHandlerList(true);
@@ -581,10 +584,11 @@ class CheckoutController extends FrontendController
 		return $response;
 	}
 
-	public function setPaymentMethodResponse(ActionResponse $response)
+	public function setPaymentMethodResponse(ActionResponse $response, CustomerOrder $order)
 	{
 		$ccHandler = $this->application->getCreditCardHandler();
 		$ccForm = $this->buildCreditCardForm();
+		$ccForm->set('ccName', $order->billingAddress->get()->getFullName());
 		$response->set('ccForm', $ccForm);
 		if ($ccHandler)
 		{
@@ -665,7 +669,13 @@ class CheckoutController extends FrontendController
 		ActiveRecordModel::beginTransaction();
 
 		// process payment
-		$handler = $this->application->getCreditCardHandler($this->getTransaction());
+		$transaction = $this->getTransaction();
+		$names = explode(' ', $this->request->get('ccName'), 2);
+		$transaction->firstName->set(array_shift($names));
+		$transaction->lastName->set(array_shift($names));
+
+		$handler = $this->application->getCreditCardHandler($transaction);
+
 		if ($this->request->isValueSet('ccType'))
 		{
 			$handler->setCardType($this->request->get('ccType'));
@@ -939,6 +949,13 @@ class CheckoutController extends FrontendController
 		$response = new ActionResponse();
 		$response->set('order', $order->toArray());
 		$response->set('url', $this->router->createUrl(array('controller' => 'user', 'action' => 'viewOrder', 'id' => $this->session->get('completedOrderID')), true));
+
+		if (!$order->isPaid->get())
+		{
+			$transactions = $order->getTransactions()->toArray();
+			$response->set('transactions', $transactions);
+		}
+
 		return $response;
 	}
 
@@ -989,7 +1006,7 @@ class CheckoutController extends FrontendController
 		return $this->paymentOrder;
 	}
 
-	private function registerPayment(TransactionResult $result, TransactionPayment $handler)
+	protected function registerPayment(TransactionResult $result, TransactionPayment $handler)
 	{
 		$transaction = Transaction::getNewInstance($this->order, $result);
 		$transaction->setHandler($handler);
@@ -998,7 +1015,7 @@ class CheckoutController extends FrontendController
 		return $this->finalizeOrder();
 	}
 
-	private function finalizeOrder()
+	protected function finalizeOrder()
 	{
 		if (!count($this->order->getShipments()))
 		{
@@ -1240,6 +1257,7 @@ class CheckoutController extends FrontendController
 	private function buildCreditCardValidator()
 	{
 		$validator = new RequestValidator("creditCard", $this->request);
+		$validator->addCheck('ccName', new IsNotEmptyCheck($this->translate('_err_enter_cc_name')));
 		$validator->addCheck('ccNum', new IsNotEmptyCheck($this->translate('_err_enter_cc_num')));
 //		$validator->addCheck('ccType', new IsNotEmptyCheck($this->translate('_err_select_cc_type')));
 		$validator->addCheck('ccExpiryMonth', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_month')));

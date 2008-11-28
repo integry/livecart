@@ -999,7 +999,7 @@ class UserController extends FrontendController
 		$response->set('id', $order->getID());
 
 		$checkout = new CheckoutController($this->application);
-		$checkout->setPaymentMethodResponse($response);
+		$checkout->setPaymentMethodResponse($response, $order);
 
 		return $response;
 	}

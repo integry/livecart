@@ -10,8 +10,9 @@ class DiscountAction extends ActiveRecordModel
 	const TYPE_ITEM_DISCOUNT = 1;
 	const TYPE_CUSTOM_DISCOUNT = 5;
 
-	const MEASURE_PERCENT = 0;
-	const MEASURE_AMOUNT = 1;
+	const ACTION_PERCENT = 0;
+	const ACTION_AMOUNT = 1;
+	const ACTION_DISABLE_CHECKOUT = 2;
 
 	/**
 	 * Action for discount condition (define the actual discount)
@@ -31,8 +32,10 @@ class DiscountAction extends ActiveRecordModel
 		$schema->registerField(new ARField("type", ARInteger::instance()));
 
 		$schema->registerField(new ARField("position", ARInteger::instance()));
+		$schema->registerField(new ARField("discountStep", ARInteger::instance()));
+		$schema->registerField(new ARField("discountLimit", ARInteger::instance()));
 
-		$schema->registerField(new ARField("amountMeasure", ARInteger::instance()));
+		$schema->registerField(new ARField("actionType", ARInteger::instance()));
 		$schema->registerField(new ARField("amount", ARFloat::instance()));
 	}
 
@@ -97,12 +100,12 @@ class DiscountAction extends ActiveRecordModel
 
 	public function isItemDiscount()
 	{
-		return (self::TYPE_ITEM_DISCOUNT == $this->type->get()) || (self::MEASURE_PERCENT == $this->amountMeasure->get());
+		return (self::TYPE_ITEM_DISCOUNT == $this->type->get()) || (self::ACTION_PERCENT == $this->actionType->get());
 	}
 
 	public function isFixedAmount()
 	{
-		return self::MEASURE_AMOUNT == $this->amountMeasure->get();
+		return self::ACTION_AMOUNT == $this->actionType->get();
 	}
 
 	public function isItemApplicable(OrderedItem $item)
@@ -132,7 +135,7 @@ class DiscountAction extends ActiveRecordModel
 
 	public function getDiscountAmount($price)
 	{
-		return ($this->amountMeasure->get() == self::MEASURE_PERCENT) ? $price * ($this->amount->get() / 100) : $this->amount->get();
+		return ($this->actionType->get() == self::ACTION_PERCENT) ? $price * ($this->amount->get() / 100) : $this->amount->get();
 	}
 
 	protected function insert()

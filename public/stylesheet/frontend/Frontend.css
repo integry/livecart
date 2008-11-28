@@ -340,6 +340,7 @@ div.addressBlock,
 label,
 input.radio, input.checkbox,
 #cvvHelp,
+.paymentMethods,
 .compactProductList div
 {
 	float: left;
@@ -360,6 +361,7 @@ div.review .ratingBreakdown,
 #checkoutProgress,
 .returningCustomer,
 .noteDate,
+.checkout-pay .completeOverview,
 .manufacturerImage
 {
 	float: right;
@@ -1341,7 +1343,7 @@ div.review .ratingBreakdown
 
 .checkoutButtons
 {
-    width: 400px;
+    width: 300px;
 }
 
 .multiAddressCheckout
@@ -1578,11 +1580,6 @@ table.addressSelector
     margin-left: 22px;
 }
 
-.orderOverviewControls
-{
-    width: 70%;
-}
-
 .orderOverviewControls a
 {
     margin-bottom: -25px;
@@ -1627,19 +1624,39 @@ table.addressSelector
 
 #testHandlerWarning
 {
-    font-size: 90%;
-    width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    font-size: 0.85em;
+    margin: 1em auto;
     border: 1px solid yellow;
     padding: 5px;
-    margin-top: 15px;
-    margin-bottom: 15px;
+    text-align: center;
 }
 
 #paymentError .errorMsg
 {
     padding-top: 10px;
+}
+
+.checkout-pay .completeOverview
+{
+	width: 40%;
+	margin: 0 1%;
+	padding: 0 1%;
+	background-color: #F8F8F8;
+}
+
+.paymentMethods
+{
+	width: 53%;
+}
+
+tr.topLine td
+{
+	border-bottom-width: 0;
+}
+
+.completeOverview .shipment
+{
+	width: auto;
 }
 
 /***************************
