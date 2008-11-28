@@ -375,7 +375,12 @@ class OrderController extends FrontendController
 
 		ActiveRecordModel::beginTransaction();
 
-		$item = $this->order->addProduct($product, $this->request->get('count', 1));
+		$count = $this->request->get('count', 1);
+		if (!$count)
+		{
+			$count = 1;
+		}
+		$item = $this->order->addProduct($product, $count);
 
 		if ($item instanceof OrderedItem)
 		{

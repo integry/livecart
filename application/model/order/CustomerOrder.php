@@ -256,6 +256,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			$count = $product->minimumQuantity->get();
 		}
 
+		if ($step = $product->fractionalStep->get())
+		{
+			$count = floor($count / $step) * $step;
+		}
+
 		return $count;
 	}
 

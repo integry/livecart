@@ -400,6 +400,9 @@ class ProductController extends FrontendController
 			}
 		}
 
+		$validator->addCheck('count', new IsNumericCheck(''));
+		$validator->addFilter('count', new NumericFilter());
+
 		return $validator;
 	}
 
@@ -434,7 +437,6 @@ class ProductController extends FrontendController
 	private function buildAddToCartForm($options, $variations)
 	{
 		$form = new Form($this->buildAddToCartValidator($options, $variations));
-		$form->enableClientSideValidation(false);
 
 		return $form;
 	}

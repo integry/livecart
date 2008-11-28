@@ -97,6 +97,7 @@ class Product extends MultilingualObject
 		$schema->registerField(new ArField("reservedCount", ARFloat::instance(8)));
 		$schema->registerField(new ArField("salesRank", ARInteger::instance()));
 		$schema->registerField(new ArField("childSettings", ARText::instance()));
+		$schema->registerField(new ArField("fractionalStep", ARFloat::instance(8)));
 	}
 
 	/**
