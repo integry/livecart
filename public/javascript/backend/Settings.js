@@ -103,7 +103,7 @@ Backend.Settings.prototype =
 		{
 		  	if('function' != typeof treeBranch[k])
 		  	{
-				this.treeBrowser.insertNewItem(rootId, k, '<span id="tree_' + k + '">' + treeBranch[k].name + '</span>', null, 0, 0, 0, '', 1);
+				this.treeBrowser.insertNewItem(rootId, k, '<span id="tree_' + k + '">' + treeBranch[k].name + '</span>', null, 'leaf.gif', 'leaf.gif', 'leaf.gif', '', 1);
 				this.treeBrowser.showItemSign(k, 1);
 
 				if (treeBranch[k].subs)

@@ -45,6 +45,11 @@ abstract class ShippingRateCalculator
 		$this->sourceZip = $zip;
 	}
 
+	public function setSourceState($state)
+	{
+		$this->sourceState = $state;
+	}
+
 	public function setWeight($grams)
 	{
 		$this->weight = $grams;

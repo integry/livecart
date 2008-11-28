@@ -844,10 +844,13 @@ Backend.ProductVariationVar.prototype =
 	updateLangLabels: function()
 	{
 		var name = this.mainCell.nameInput.value;
-		this.languages.each(function(cont)
+		if (this.languages)
 		{
-			cont.label.innerHTML = name;
-		});
+			this.languages.each(function(cont)
+			{
+				cont.label.innerHTML = name;
+			});
+		}
 	},
 
 	setID: function(id)
