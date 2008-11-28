@@ -26,6 +26,7 @@ class ShippingService extends MultilingualObject
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("deliveryZoneID", "DeliveryZone", "ID", "DeliveryZone", ARInteger::instance()));
+		$schema->registerField(new ARField("isFinal", ARBool::instance()));
 		$schema->registerField(new ARField("name", ARArray::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance(10)));
 		$schema->registerField(new ARField("rangeType", ARInteger::instance(1)));

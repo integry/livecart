@@ -177,6 +177,7 @@ class ShippingServiceController extends StoreManagementController
 		if(!($errors = $this->isNotValid($this->request->get('name'), $ratesData)))
 		{
 			$shippingService->setValueArrayByLang(array('name'), $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true, false), $this->request);
+			$shippingService->isFinal->set($this->request->get('isFinal'));
 			$shippingService->save();
 
 			$shippingServiceArray = $shippingService->toArray();

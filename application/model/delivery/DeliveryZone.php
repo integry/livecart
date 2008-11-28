@@ -293,6 +293,20 @@ class DeliveryZone extends MultilingualObject
 			$rate->setAmountWithTax($amount);
 		}
 
+		// look for "override" rates
+		foreach ($defined as $rate)
+		{
+			if ($service = $rate->getService())
+			{
+				if ($service->isFinal->get())
+				{
+					$rates = new ShippingRateSet();
+					$rates->add($rate);
+					return $rates;
+				}
+			}
+		}
+
 		return $defined;
 	}
 

@@ -21,6 +21,7 @@ _subtotal_percent_charge=Subtotal percent charge
 _weight_range=Weight range
 _per_kg_charge=Per kg charge
 _name=Name
+_disable_other_services=Hide other services from selection if this one is available
 
 _weight_based_rates=weight based rates
 _subtotal_based_rates=subtotal based rates

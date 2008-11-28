@@ -75,7 +75,7 @@ class FedexShipping extends ShippingRateCalculator
 		$price = $fedex->getPrice();
 
 		// success
-		if (isset($price['FDXRATEAVAILABLESERVICESREPLY']))
+		if (isset($price['FDXRATEAVAILABLESERVICESREPLY'][0]['ENTRY']))
 		{
 			$rates = $price['FDXRATEAVAILABLESERVICESREPLY'][0]['ENTRY'];
 			$result = new ShippingRateSet();
@@ -103,7 +103,7 @@ class FedexShipping extends ShippingRateCalculator
 		// error
 		else
 		{
-			$result = new ShippingRateError($price);
+			$result = new ShippingRateError($price['FDXRATEAVAILABLESERVICESREPLY'][0]['ERROR']);
 		}
 
 		$result->setRawResponse($price);

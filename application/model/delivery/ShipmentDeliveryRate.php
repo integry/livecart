@@ -21,6 +21,8 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 	 */
 	private $application;
 
+	private $service;
+
 	public function setApplication($application)
 	{
 		$this->application = $application;
@@ -32,6 +34,7 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 		$inst->setServiceId($service->getID());
 		$inst->setApplication($service->getApplication());
 		$inst->setCost($cost, $service->getApplication()->getDefaultCurrencyCode());
+		$inst->setService($service);
 		return $inst;
 	}
 
@@ -84,6 +87,16 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 		$this->amountWithTax = $amount;
 	}
 
+	public function setService(ShippingService $service)
+	{
+		$this->service = $service;
+	}
+
+	public function getService()
+	{
+		return $this->service;
+	}
+
 	public function toArray()
 	{
 		$array = parent::toArray();
@@ -132,6 +145,7 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 	{
 		$vars = get_object_vars($this);
 		unset($vars['application']);
+		unset($vars['service']);
 
 		return serialize($vars);
 	}
