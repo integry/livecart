@@ -162,21 +162,32 @@
 
 			<p>
 				<label>{t _action}</label>
-				<span>{selectfield name="amountMeasure" class="actionType" options=$actionTypes}</span>
-			</p>
-			<p>
-				<label>{t _amount}</label>
-				<span>{textfield name="amount" class="number comparisonValue"}</span>
-				<span class="percent">%</span>
-				<span class="currency">{$currencyCode}</span>
-			</p>
-			<p>
-				<label>{t _apply_to}</label>
-				<span>{selectfield name="type" class="applyTo" options=$applyToChoices}</span>
+				<span>{selectfield name="actionType" class="actionType" options=$actionTypes}</span>
 			</p>
 
-			<div class="conditionContainer actionCondition">
-				<ul class="conditionContainer root" style="display: none;"></ul>
+			<div class="amountFields">
+				<p>
+					<label>{t _amount}</label>
+					<span>{textfield name="amount" class="number comparisonValue"}</span>
+					<span class="percent">%</span>
+					<span class="currency">{$currencyCode}</span>
+				</p>
+				<p>
+					<label class="acronym"><a>{t _discount_step}<div>{t _discount_step_descr}</div></a></label>
+					<span>{textfield name="discountStep" class="number discountStep"}</span>
+				</p>
+				<p>
+					<label class="acronym"><a>{t _discount_limit}<div>{t _discount_limit_descr}</div></a></label>
+					<span>{textfield name="discountLimit" class="number discountLimit"}</span>
+				</p>
+				<p>
+					<label>{t _apply_to}</label>
+					<span>{selectfield name="type" class="applyTo" options=$applyToChoices}</span>
+				</p>
+
+				<div class="conditionContainer actionCondition">
+					<ul class="conditionContainer root" style="display: none;"></ul>
+				</div>
 			</div>
 		</li>
 	{/form}

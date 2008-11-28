@@ -1116,9 +1116,19 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			return false;
 		}
 
+		// contains more items than in stock
 		if ($this->updateToStock(false))
 		{
 			return false;
+		}
+
+		// checkout disabled from pricing rules
+		foreach ($this->getDiscountActions() as $action)
+		{
+			if (DiscountAction::ACTION_DISABLE_CHECKOUT == $action->actionType->get())
+			{
+				return false;
+			}
 		}
 
 		return true;
@@ -1629,7 +1639,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		if (is_null($this->discountActions) || $reload)
 		{
 			ClassLoader::import('application.model.discount.DiscountAction');
-			$this->discountActions = DiscountAction::getByConditions($this->getDiscountConditions());
+			$this->discountActions = DiscountAction::getByConditions($this->getDiscountConditions($reload));
 		}
 
 		return $this->discountActions;

@@ -19,6 +19,12 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 	// not equal
 	const COMPARE_NE = 3;
 
+	// divisable
+	const COMPARE_DIV = 4;
+
+	// non-divisable
+	const COMPARE_NDIV = 5;
+
 	private $records = array();
 
 	private $subConditions = array();
@@ -38,6 +44,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		$schema->registerField(new ARField("isAnyRecord", ARBool::instance()));
 		$schema->registerField(new ARField("isAllSubconditions", ARBool::instance()));
 		$schema->registerField(new ARField("isActionCondition", ARBool::instance()));
+		$schema->registerField(new ARField("isFinal", ARBool::instance()));
 
 		$schema->registerField(new ARField("recordCount", ARInteger::instance()));
 
@@ -176,6 +183,20 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 			if (!self::hasAllSubConditions($condition))
 			{
 				unset($tree['sub'][$key]);
+			}
+		}
+
+		$stopProcessing = false;
+		foreach ($tree['sub'] as $key => $condition)
+		{
+			if ($stopProcessing)
+			{
+				unset($tree['sub'][$key]);
+			}
+
+			if ($condition['isFinal'])
+			{
+				$stopProcessing = true;
 			}
 		}
 
@@ -464,7 +485,9 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 				if ((($foundCount > $expCount) && (self::COMPARE_LTEQ == $compType)) ||
 					(($foundCount < $expCount) && (self::COMPARE_GTEQ == $compType)) ||
 					(($foundCount != $expCount) && (self::COMPARE_EQ == $compType)) ||
-					(($foundCount == $expCount) && (self::COMPARE_NE == $compType)))
+					(($foundCount == $expCount) && (self::COMPARE_NE == $compType)) ||
+					(($foundCount % $expCount) && (self::COMPARE_DIV == $compType)) ||
+					(!($foundCount % $expCount) && (self::COMPARE_NDIV == $compType)))
 				{
 					unset($validConditions[$condKey]);
 				}
@@ -647,6 +670,16 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 			$c->addAND(new OperatorCond($totalHandle, $amount, $operator));
 			$conditions[] = $c;
 		}
+
+		// check for divisibility
+		$c = new EqualsCond($compHandle, self::COMPARE_DIV);
+		$c->addAND(new EqualsCond(new ARExpressionHandle('(' . $amount . ' % ' .  __CLASS__ . '.' . $field . ')'), 0));
+		$conditions[] = $c;
+
+		// check for non-divisibility
+		$c = new EqualsCond($compHandle, self::COMPARE_NDIV);
+		$c->addAND(new MoreThanCond(new ARExpressionHandle('(' . $amount . ' % ' .  __CLASS__ . '.' . $field . ')'), 0));
+		$conditions[] = $c;
 
 		$conditions[] = new MoreThanCond(new ARFieldHandle(__CLASS__, 'recordCount'), 0);
 

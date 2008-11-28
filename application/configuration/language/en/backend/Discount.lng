@@ -52,6 +52,8 @@ _compare_eq=equal to
 _compare_lteq=less than or equal to
 _compare_gteq=more than or equal to
 _compare_ne=not equal to
+_compare_div=divisable with
+_compare_ndiv=not divisable with
 
 _with_count=with count
 _with_subTotal=with subtotal
@@ -59,17 +61,24 @@ _all_items_must_be_present=All items must be present in cart
 
 _add_new_action=Add new action
 
-_action=Discount type
+_action=Action type
 _amount=Discount amount
+_discount_step=Discount step
+_discount_step_descr=Apply discount to every X-th item. For example: buy X and get 1 free
+_discount_limit=Discount limit
+_discount_limit_descr=Max number of items to apply discount to
 _apply_to=Apply discount to
 
-_percentage_discount=Percentage discount
-_fixed_amount_discount=Fixed amount discount
+_percentage_discount=Apply percentage discount
+_fixed_amount_discount=Apply fixed amount discount
+_type_disable_checkout=Disable checkout
+
 _apply_order=Whole order
 _apply_matched_items=Matched items only
 _apply_custom_items=Items matched by a custom condition
 _confirm_action_delete=Really delete this action?
 _is_enabled=Enabled
+_stop_processing=Stop discount calculation after processing this rule
 
 _rule_was_successfully_saved=The pricing rule was successfully saved
 _rule_name_empty=Please enter the pricing rule name

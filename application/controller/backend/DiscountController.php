@@ -45,7 +45,10 @@ class DiscountController extends ActiveGridController
 						DiscountCondition::COMPARE_GTEQ => $this->translate('_compare_gteq'),
 						DiscountCondition::COMPARE_LTEQ => $this->translate('_compare_lteq'),
 						DiscountCondition::COMPARE_EQ => $this->translate('_compare_eq'),
-						DiscountCondition::COMPARE_NE => $this->translate('_compare_ne')));
+						DiscountCondition::COMPARE_NE => $this->translate('_compare_ne'),
+						DiscountCondition::COMPARE_DIV => $this->translate('_compare_div'),
+						DiscountCondition::COMPARE_NDIV => $this->translate('_compare_ndiv'),
+						));
 
 		$response->set('comparisonFields', array(
 						'count' => $this->translate('_with_count'),
@@ -53,8 +56,9 @@ class DiscountController extends ActiveGridController
 						));
 
 		$response->set('actionTypes', array(
-						DiscountAction::MEASURE_PERCENT => $this->translate('_percentage_discount'),
-						DiscountAction::MEASURE_AMOUNT => $this->translate('_fixed_amount_discount'),
+						DiscountAction::ACTION_PERCENT => $this->translate('_percentage_discount'),
+						DiscountAction::ACTION_AMOUNT => $this->translate('_fixed_amount_discount'),
+						DiscountAction::ACTION_DISABLE_CHECKOUT => $this->translate('_type_disable_checkout'),
 					  ));
 
 		$response->set('applyToChoices', array(

@@ -83,9 +83,20 @@ class OrderedItem extends ActiveRecordModel
 
 		if ($applyDiscounts)
 		{
+			$count = $this->count->get();
 			foreach ($this->customerOrder->get()->getItemDiscountActions($this) as $action)
 			{
-				$subTotal -= $action->getDiscountAmount($subTotal);
+				$itemPrice = $subTotal / $count;
+				$discountPrice = $itemPrice - $action->getDiscountAmount($itemPrice);
+				$discountStep = max($action->discountStep->get(), 1);
+				$applicableCnt = floor($count / $discountStep);
+
+				if ($action->discountLimit->get())
+				{
+					$applicableCnt = min($action->discountLimit->get(), $applicableCnt);
+				}
+
+				$subTotal = ($applicableCnt * $discountPrice) + (($count - $applicableCnt) * $itemPrice);
 			}
 		}
 
