@@ -67,7 +67,13 @@
 			<div class="errorText hidden"></div>
 		</fieldset>
 	</p>
-
+	<p>
+		<label for="product_{$cat}_{$product.ID}_position" class="acronym"><a>{t _sort_order}<div>{t _hint_sort_order}</div></a>:</label>
+		<fieldset class="error">
+			{textfield name="position" class="number" id="product_`$cat`_`$product.ID`_position"}
+			<div class="errorText hidden"></div>
+		</fieldset>
+	</p>
 	<p>
 		<label></label>
 		{checkbox name="isFeatured" class="checkbox" id="product_`$cat`_`$product.ID`_isfeatured"}
