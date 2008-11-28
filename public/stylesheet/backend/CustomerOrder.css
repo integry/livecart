@@ -42,20 +42,15 @@
     display: none;
 }
 
-/* no mass processing for shopping carts */
-#orders_8 .cell_cb
+#orderMass_8 option,
+#orderMass_8 optgroup
 {
     display: none;
 }
 
-#orderMass_8
+#orderMass_8 option.delete
 {
-    display: none;
-}
-
-#tabOrders_8Content .activeGridControls ul.menu
-{
-    margin-bottom: 1em;
+    display: block;
 }
 
 .activeGridcolumn_CustomerOrder_ID2
