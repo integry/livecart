@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.order.CustomerOrder');
+ClassLoader::import('application.model.order.OrderedItem');
 ClassLoader::import('application.model.order.SessionOrder');
 ClassLoader::import('application.model.discount.DiscountCondition');
 ClassLoader::import('application.model.Currency');
