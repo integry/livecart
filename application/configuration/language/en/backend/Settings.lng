@@ -15,6 +15,7 @@ TITLE_SEPARATOR=Title separator character
 TITLE_FORMAT=Title format
 NAME_FIRST=Store name first
 TITLE_FIRST=Page title first
+DEFAULT_META_DESCR=Default meta description
 
 _display=Display Preferences
 
