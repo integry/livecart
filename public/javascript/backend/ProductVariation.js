@@ -196,7 +196,7 @@ Backend.ProductVariation.Editor.prototype =
 
 						if (match)
 						{
-							otherItem.delete();
+							otherItem.remove();
 						}
 					}
 				});
@@ -281,10 +281,10 @@ Backend.ProductVariation.Editor.prototype =
 			if (!inst.isEnabled)
 			{
 				inst.isEnabled = inst.getRow().down('.isEnabled').down('input');
-				inst.statusChanged();
 			}
 
 			inst.isEnabled.checked = state;
+			inst.statusChanged();
 		});
 	},
 
@@ -584,7 +584,7 @@ Backend.ProductVariationType.prototype =
 		var headerCell = this.getHeaderCell();
 
 		headerCell.getElementsBySelector('.addVariation')[0].onclick = this.createNewVariation.bind(this);
-		headerCell.getElementsBySelector('.deleteVariationType')[0].onclick = this.delete.bind(this);
+		headerCell.getElementsBySelector('.deleteVariationType')[0].onclick = this.remove.bind(this);
 
 		if (this.data['name'])
 		{
@@ -678,7 +678,7 @@ Backend.ProductVariationType.prototype =
 		return true;
 	},
 
-	delete: function(e)
+	remove: function(e)
 	{
 		Event.stop(e);
 
@@ -896,7 +896,7 @@ Backend.ProductVariationVar.prototype =
 
 			this.mainCell.nameInput.onchange = this.changeName.bind(this);
 			this.mainCell.nameInput.onkeyup = this.changeName.bind(this);
-			this.mainCell.getElementsBySelector('.deleteVariation')[0].onclick = this.delete.bind(this);
+			this.mainCell.getElementsBySelector('.deleteVariation')[0].onclick = this.remove.bind(this);
 		}
 		else
 		{
@@ -942,13 +942,13 @@ Backend.ProductVariationVar.prototype =
 		return true;
 	},
 
-	delete: function(e)
+	remove: function(e)
 	{
 		Event.stop(e);
 
 		this.getItems().each(function(item)
 		{
-			item.delete();
+			item.remove();
 		});
 
 		this.type.unregisterVariation(this);
@@ -1278,7 +1278,7 @@ Backend.ProductVariationItem.prototype =
 		this.variations = this.getSortedVariations();
 	},
 
-	delete: function()
+	remove: function()
 	{
 		this.getEditor().unregisterItem(this);
 		this.row.parentNode.removeChild(this.row);

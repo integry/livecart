@@ -599,7 +599,6 @@ abstract class EavSpecificationManagerCommon
 			}
 
 			// groups
-			//if (!isset($spec[$groupColumn])) { var_dump($spec); exit; }
 			if ($spec[$fieldClass][$groupColumn])
 			{
 				$spec[$fieldClass][$groupClass] = array(

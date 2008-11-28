@@ -759,7 +759,7 @@ class CsvImportController extends StoreManagementController
 		{
 			$product->save();
 		}
-//var_dump($type->toFlatArray());var_dump($variation->toFlatArray());
+
 		$f = new ARDeleteFilter(new EqualsCond(new ARFieldHandle('ProductVariation', 'typeID'), $type->getID()));
 		$product->deleteRelatedRecordSet('ProductVariationValue', $f, array('ProductVariation'));
 

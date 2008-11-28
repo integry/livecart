@@ -896,7 +896,9 @@ Backend.Filter.prototype = {
 		{
 			if (parseInt(end.value) < parseInt(start.value))
 			{
-				[start.value, end.value] = [end.value, start.value];
+				var temp = start.value;
+				start.value = end.value;
+				end.value = temp;
 			}
 		}
 	},

@@ -52,8 +52,8 @@ _compare_eq=equal to
 _compare_lteq=less than or equal to
 _compare_gteq=more than or equal to
 _compare_ne=not equal to
-_compare_div=divisable with
-_compare_ndiv=not divisable with
+_compare_div=divisible with
+_compare_ndiv=not divisible with
 
 _with_count=with count
 _with_subTotal=with subtotal

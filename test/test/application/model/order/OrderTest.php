@@ -593,13 +593,16 @@ class OrderTest extends OrderTestCommon
 		$reloaded->loadItems();
 		$this->assertEqual(count($reloaded->getOrderedItems()), 1);
 
+/*
+		>> Inventory is now deducted on finalization instead of when an order is shipped <<
+
 		// check inventory
 		foreach ($this->products as $product)
 		{
 			$this->assertEqual($product->reservedCount->get(), 1);
 			$this->assertEqual($product->stockCount->get(), 2);
 		}
-
+*/
 		// mark order as shipped - the stock is gone
 		$this->assertNotEquals($order->status->get(), CustomerOrder::STATUS_SHIPPED);
 		$reloaded->setStatus(CustomerOrder::STATUS_SHIPPED);

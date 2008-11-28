@@ -93,7 +93,7 @@ a.proceedToCheckout span span,
 
 a.proceedToCheckout span span span,
 #checkoutProgress a span span span,
-#productSpecification tr.first td.param,
+#productSpecification tr.heading td.param,
 #cart .first .cartControl, #wishList .first .cartControl
 {
 	background-image: url(../../light/image/cornerTopLeft.gif);
@@ -103,7 +103,7 @@ a.proceedToCheckout span span span,
 a.proceedToCheckout span span span span,
 #checkoutProgress a span span span span,
 ul.productList .pricingInfo, .productGrid .pricingInfo,
-#productSpecification tr.first td.value,
+#productSpecification tr.heading td.value,
 #cart .first .cartQuant, #wishList .first .cartPrice
 {
 	background-image: url(../../light/image/cornerTopRight.gif);

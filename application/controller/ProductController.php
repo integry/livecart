@@ -507,7 +507,6 @@ class ProductController extends FrontendController
 			if (isset($cond))
 			{
 				$f->mergeCondition($cond);
-	//var_dump(ActiveRecordModel::getRecordSetArray('ProductRating', $f));
 				return ActiveRecordModel::getRecordCount('ProductRating', $f) > 0;
 			}
 		}

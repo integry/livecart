@@ -1242,8 +1242,6 @@ class CheckoutController extends FrontendController
 				$validator->addCheck($field, new OrCheck(array($field, substr($prefix, 0, -1) . 'Address'), array($check, new IsNotEmptyCheck('')), $this->request));
 			}
 		}
-
-//		var_dump($validator->getValidatorVar('billing_firstName')->getChecks());
 	}
 
 	public function buildCreditCardForm()

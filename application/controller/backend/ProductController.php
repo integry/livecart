@@ -393,8 +393,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$columns['GroupPrice.' . $groupID] = array('name' => $this->translate('ProductPrice.GroupPrice') . ' (' . $groupName . ') [' . $groupID . ']', 'type' => 'numeric');
 		}
 
-		//var_dump($columns); exit;
-
 		return $columns;
 	}
 

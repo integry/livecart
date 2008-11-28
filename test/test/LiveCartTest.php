@@ -1,5 +1,7 @@
 <?php
 
+ClassLoader::import('application.model.user.User');
+
 class LiveCartTest extends UnitTest
 {
 	protected function initOrder()

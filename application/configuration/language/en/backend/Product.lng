@@ -75,6 +75,8 @@ Product.rating=Rating
 Product.ratingCount=Number of ratings
 Product.parentID=Parent product ID
 Product.reviewCount=Review count
+Product.fractionalStep=Quantity increment
+Product.position=Sort order
 ProductPrice.GroupPrice=User group price
 ProductVariationType.name=Variation
 
