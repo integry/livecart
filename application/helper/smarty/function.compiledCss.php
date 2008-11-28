@@ -66,6 +66,7 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 			foreach($includedStylesheetFiles as $key => $cssFile)
 			{
 				$relPath = str_replace($publicDir, '', $cssFile);
+				$relPath = str_replace('\\', '/', $relPath);
 
 				$compiledFileContent .= "\n\n\n/***************************************************\n";
 				$compiledFileContent .= " * " . $relPath . "\n";
