@@ -15,8 +15,10 @@
 		{/error}
 
 		<p>
-			<label for="ccNum">{t _cc_name}:</label>
-			<label>{$order.BillingAddress.fullName}</label>
+			{err for="ccName"}
+				{{label {t _cc_name}:}}
+				{textfield class="text" autoComplete="off"}
+			{/err}
 		</p>
 
 		<p>

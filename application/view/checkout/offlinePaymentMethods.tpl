@@ -1,23 +1,7 @@
 {foreach from=$offlineMethods key="key" item="method"}
 	<h2>{"OFFLINE_NAME_`$key`"|config}</h2>
 
-	{if "OFFLINE_LOGO_`$key`"|config}
-		<p class="offlineMethodLogo">
-			<img src="{"OFFLINE_LOGO_`$key`"|config}" />
-		</p>
-	{/if}
-
-	{if "OFFLINE_DESCR_`$key`"|config}
-		<p class="offlineMethodDescr">
-			{"OFFLINE_DESCR_`$key`"|config}
-		</p>
-	{/if}
-
-	{if "OFFLINE_INSTR_`$key`"|config}
-		<p class="offlineMethodInstr">
-			{"OFFLINE_INSTR_`$key`"|config}
-		</p>
-	{/if}
+	{include file="checkout/offlineMethodInfo.tpl" method=$key}
 
 	{form action="controller=checkout action=payOffline query=id=$method" handle=$offlineForms[$method] method="POST"}
 		{include file="block/eav/fields.tpl" specFieldList=$offlineVars[$method].specFieldList}

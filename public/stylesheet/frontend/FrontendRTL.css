@@ -177,6 +177,7 @@ body.threeColumn.rtl #content
 .rtl .compactProductList .image,
 .rtl .compactProductList .productInfo,
 .rtl .compactProductList .pricingInfo .price,
+.rtl .paymentMethods,
 .rtl .continueShopping
 {
 	float: right;
@@ -197,6 +198,7 @@ body.threeColumn.rtl #content
 .rtl #rightSide,
 .rtl .proceedToCheckout,
 .rtl .resultStats .sortOptions,
+.rtl .checkout-pay .completeOverview,
 .rtl .noteDate
 {
     float: left;

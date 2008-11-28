@@ -409,6 +409,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 	public function setOfflineHandler($method)
 	{
 		$this->setData('handler', OfflineTransactionHandler::getMethodName($method));
+		$this->setData('handlerID', $method);
 	}
 
 	public function setData($key, $value)
