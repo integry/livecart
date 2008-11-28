@@ -242,9 +242,20 @@ class CustomerOrderController extends ActiveGridController
 
 	public function orders()
 	{
+		if (!$this->request->isValueSet('id'))
+		{
+			$this->request->set('id', 1);
+		}
+
 		$response = new ActionResponse();
 		$response->set("massForm", $this->getMassForm());
 		$response->set("orderGroupID", $this->request->get('id'));
+
+		if ($this->request->get('userOrderID'))
+		{
+			$order = CustomerOrder::getInstanceById($this->request->get('userOrderID'), true);
+			$this->request->set('userID', $order->user->get()->getID());
+		}
 
 		if ($this->request->get('userID'))
 		{

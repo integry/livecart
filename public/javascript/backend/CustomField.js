@@ -86,7 +86,7 @@ Backend.CustomField = {
 		// check for bookmark
 		if (Backend.getHash().length == 0)
 		{
-			window.location.hash = 'cat_1#tabFields__';
+			window.location.hash = 'cat_2#tabFields__';
 		}
 
 		Backend.CustomField.treeBrowser.showFeedback =

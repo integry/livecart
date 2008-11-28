@@ -57,6 +57,7 @@ _order_shipments=Products
 _order_payments=Payments
 _order_communication=Communication
 _order_log=Change History
+_previous_orders=Previous Orders
 
 _order_report=Report
 
