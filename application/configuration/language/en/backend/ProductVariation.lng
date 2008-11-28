@@ -12,4 +12,7 @@ _substract=Substract
 _fixed=Fixed
 _no_change=No change
 
+_err_type_name=Please enter the variation type name (for example, "Size")
+_err_variation_name=Please enter the variation name (for example, "Large")
+
 _variations_save_conf=Product variations successfully saved

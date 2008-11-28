@@ -83,6 +83,19 @@ Backend.ProductVariation.Editor.prototype =
 
 		table.id = '';
 
+		this.languages = $A(this.form.getElementsByClassName('languageFormContainer'));
+		this.languages.each(function(cont)
+		{
+			cont.lang = cont.className.match(/_([a-z]{2})/)[1];
+			cont.types = cont.getElementsByClassName('types')[0];
+			cont.variations = cont.getElementsByClassName('types')[0];
+		});
+
+		if (this.languages.length)
+		{
+			this.langTemplate = this.form.getElementsByClassName('langTemplate')[0];
+		}
+
 		if (0 == this.types.length)
 		{
 			// add default type and value
@@ -268,6 +281,7 @@ Backend.ProductVariation.Editor.prototype =
 			if (!inst.isEnabled)
 			{
 				inst.isEnabled = inst.getRow().down('.isEnabled').down('input');
+				inst.statusChanged();
 			}
 
 			inst.isEnabled.checked = state;
@@ -422,12 +436,29 @@ Backend.ProductVariation.Editor.prototype =
 	syncRowspans: function()
 	{
 		this.getTypeByIndex(this.getTypeCount() - 1).updateRowSpan();
+		this.setColors();
+	},
+
+	setColors: function()
+	{
+		for (var k = 0; k < this.table.tbody.rows.length; k++)
+		{
+			var row = this.table.tbody.rows[k];
+			if (1 == (k % 2))
+			{
+				row.addClassName('even');
+				row.removeClassName('odd');
+			}
+			else
+			{
+				row.addClassName('odd');
+				row.removeClassName('even');
+			}
+		}
 	},
 
 	save: function(e)
 	{
-		// validate
-
 		// enumerate rows
 		var rows = [];
 		$A(this.table.tbody.getElementsByTagName('tr')).each(function(row)
@@ -446,20 +477,52 @@ Backend.ProductVariation.Editor.prototype =
 			var type = this.getTypeByIndex(k);
 			types.push(type.getID());
 
+			if (!type.isValid())
+			{
+				Event.stop(e);
+				return false;
+			}
+
+			if (this.languages.length)
+			{
+				type.languages.each(function(cont)
+				{
+					cont.input.name = 'typeLang_' + type.getID() + '[name_' + cont.lang + ']';
+				});
+			}
+
 			variations[type.getID()] = [];
 			type.getVariations().each(function(variation)
 			{
-				variation.getMainCell().nameInput.name = 'variation[' + variation.getID() + ']';
-				variations[type.getID()].push(variation.getID());
-			});
+				if (!variation.isValid())
+				{
+					Event.stop(e);
+					return false;
+				}
+
+				var id = variation.getID();
+				variation.getMainCell().nameInput.name = 'variation[' + id + ']';
+				if (this.languages.length)
+				{
+					variation.languages.each(function(cont)
+					{
+						cont.input.name = 'variationLang_' + id + '[name_' + cont.lang + ']';
+					});
+				}
+				variations[type.getID()].push(id);
+			}.bind(this));
 		}
 
+		// type and variation order
 		this.form.elements.namedItem('types').value = Object.toJSON(types);
 		this.form.elements.namedItem('variations').value = Object.toJSON(variations);
+
+		this.form.down('fieldset.controls').down('.progressIndicator').show();
 	},
 
 	updateIDs: function(ids)
 	{
+		this.form.down('fieldset.controls').down('.progressIndicator').hide();
 		['variationInstances', 'typeInstances', 'itemInstances'].each(function(type)
 		{
 			$H(ids).each(function(val)
@@ -527,6 +590,30 @@ Backend.ProductVariationType.prototype =
 		{
 			headerCell.getElementsByTagName('input')[0].value = this.data['name'];
 		}
+
+		if (this.editor.languages.length)
+		{
+			this.languages = [];
+			this.editor.languages.each(function(cont)
+			{
+				var langEntry = this.editor.langTemplate.cloneNode(true);
+				langEntry.removeClassName('dom_template');
+				langEntry.label = langEntry.getElementsByTagName('label')[0];
+				langEntry.input = langEntry.getElementsByTagName('input')[0];
+				langEntry.lang = cont.lang;
+
+				if (this.data['name_' + cont.lang])
+				{
+					langEntry.input.value = this.data['name_' + cont.lang];
+				}
+
+				cont.types.appendChild(langEntry);
+				this.languages.push(langEntry);
+			}.bind(this));
+
+			this.getNameInputField().onchange = this.updateLangLabels.bind(this);
+			this.updateLangLabels();
+		}
 	},
 
 	getIndex: function()
@@ -578,6 +665,19 @@ Backend.ProductVariationType.prototype =
 		}
 	},
 
+	isValid: function()
+	{
+		var input = this.getNameInputField();
+		if (!input.value)
+		{
+			alert(Backend.getTranslation('_err_type_name'));
+			input.focus();
+			return false;
+		}
+
+		return true;
+	},
+
 	delete: function(e)
 	{
 		Event.stop(e);
@@ -604,6 +704,11 @@ Backend.ProductVariationType.prototype =
 
 		editor.removeType(this);
 		editor.mergeItems();
+
+		this.languages.each(function(cont)
+		{
+			cont.parentNode.removeChild(cont);
+		});
 	},
 
 	createNewVariation: function(e)
@@ -655,6 +760,20 @@ Backend.ProductVariationType.prototype =
 	getID: function()
 	{
 		return this.id;
+	},
+
+	getNameInputField: function()
+	{
+		return this.getHeaderCell().getElementsByTagName('input')[0];
+	},
+
+	updateLangLabels: function()
+	{
+		var name = this.getNameInputField().value;
+		this.languages.each(function(cont)
+		{
+			cont.label.innerHTML = name;
+		});
 	}
 }
 
@@ -696,6 +815,39 @@ Backend.ProductVariationVar.prototype =
 		{
 			this.type.getEditor().getTypeByIndex(this.type.getIndex() - 1).updateRowSpan();
 		}
+
+		var editor = this.type.getEditor();
+		if (editor.languages.length)
+		{
+			this.languages = [];
+			editor.languages.each(function(cont)
+			{
+				var langEntry = editor.langTemplate.cloneNode(true);
+				langEntry.removeClassName('dom_template');
+				langEntry.label = langEntry.getElementsByTagName('label')[0];
+				langEntry.input = langEntry.getElementsByTagName('input')[0];
+				langEntry.lang = cont.lang;
+
+				if (this.data['name_' + cont.lang])
+				{
+					langEntry.input.value = this.data['name_' + cont.lang];
+				}
+
+				cont.variations.appendChild(langEntry);
+				this.languages.push(langEntry);
+			}.bind(this));
+
+			this.updateLangLabels();
+		}
+	},
+
+	updateLangLabels: function()
+	{
+		var name = this.mainCell.nameInput.value;
+		this.languages.each(function(cont)
+		{
+			cont.label.innerHTML = name;
+		});
 	},
 
 	setID: function(id)
@@ -765,11 +917,26 @@ Backend.ProductVariationVar.prototype =
 
 			cell.nameElement.update(this.data.name);
 		}.bind(this));
+
+		this.updateLangLabels();
 	},
 
 	getMainCell: function()
 	{
 		return this.mainCell;
+	},
+
+	isValid: function()
+	{
+		var input = this.mainCell.nameInput;
+		if (!input.value)
+		{
+			alert(Backend.getTranslation('_err_variation_name'));
+			input.focus();
+			return false;
+		}
+
+		return true;
 	},
 
 	delete: function(e)
@@ -786,6 +953,11 @@ Backend.ProductVariationVar.prototype =
 		var editor = this.type.getEditor();
 		editor.recreateTypeCells();
 		editor.syncRowspans();
+
+		this.languages.each(function(cont)
+		{
+			cont.parentNode.removeChild(cont);
+		});
 	},
 
 	getItems: function()
@@ -913,6 +1085,23 @@ Backend.ProductVariationItem.prototype =
 		if (this.data.DefaultImage)
 		{
 			this.showImage(this.data.DefaultImage);
+		}
+
+		var isEnabledCell = this.row.fieldCells['isEnabled'];
+		isEnabledCell.input = isEnabledCell.getElementsByTagName('input')[0];
+		isEnabledCell.input.onchange = this.statusChanged.bind(this);
+		this.statusChanged();
+	},
+
+	statusChanged: function()
+	{
+		if (this.row.fieldCells['isEnabled'].input.checked)
+		{
+			this.row.removeClassName('disabledItem');
+		}
+		else
+		{
+			this.row.addClassName('disabledItem');
 		}
 	},
 

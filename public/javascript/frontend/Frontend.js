@@ -214,11 +214,6 @@ Product.Variations = function(container, variations, options)
 
 Product.Variations.prototype =
 {
-	bindEvents: function()
-	{
-
-	},
-
 	updateVisibleOptions: function(e)
 	{
 		var disable = false;
@@ -304,7 +299,15 @@ Product.Variations.prototype =
 
 					if (product)
 					{
-						var text = this.variationOptionTemplate.replace(/%price/, this.getProductPrice(product)).replace(/%name/, opt.originalText);
+						if (this.isPriceChanged(product))
+						{
+							var text = this.variationOptionTemplate.replace(/%price/, this.getProductPrice(product)).replace(/%name/, opt.originalText);
+						}
+						else
+						{
+							var text = opt.originalText;
+						}
+
 						opt.innerHTML = text;
 					}
 					else
@@ -318,20 +321,27 @@ Product.Variations.prototype =
 
 	displayVariationInfo: function(product)
 	{
+		this.showDefaultInfo();
+
+		if (this.isPriceChanged(product))
+		{
+			this.updatePrice(this.getProductPrice(product));
+		}
+
 		if (product.DefaultImage && product.DefaultImage.paths)
 		{
 			(new Product.ImageSwitcher(product.DefaultImage.ID, product.DefaultImage.paths, product.DefaultImage.name_lang)).switchImage();
-			this.updatePrice(this.getProductPrice(product));
-		}
-		else
-		{
-			this.showDefaultInfo();
 		}
 	},
 
 	getProductPrice: function(product)
 	{
 		return (product.formattedPrice && product.formattedPrice[this.options.currency]) ? product.formattedPrice[this.options.currency] : this.defaultPrice;
+	},
+
+	isPriceChanged: function(product)
+	{
+		return parseInt(product['price_' + this.options.currency]) > 0;
 	},
 
 	updatePrice: function(price)
