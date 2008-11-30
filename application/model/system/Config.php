@@ -98,9 +98,9 @@ class Config
 
 	public function set($key, $value)
 	{
-		if (is_numeric($value))
+		if (is_numeric($value) && ($value < 100000) /* do not touch very large values */)
 		{
-			//$value = (float)$value;
+			$value = (float)$value;
 		}
 
 		$this->values[$key] = $value;

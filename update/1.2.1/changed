@@ -387,6 +387,7 @@ library/payment/method/express/PaypalExpressCheckout.php
 library/payment/method/library/paypal/phppaypalpro/setexpresscheckout.php
 library/shipping/ShippingRateCalculator.php
 library/shipping/library/usps/usps.php
+library/shipping/method/UspsShipping.php
 public/image/silk/gif/delete.gif
 public/image/silk/gif/information.gif
 public/javascript/backend/Category.js
