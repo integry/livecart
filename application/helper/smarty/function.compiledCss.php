@@ -20,10 +20,11 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 			include_once('function.includeCss.php');
 		}
 
+		$last = 1000;
 		$files = array('common.css', $smarty->getApplication()->getTheme() . '.css');
 		foreach ($files as $file)
 		{
-			smarty_function_includeCss(array('file' => '/upload/css/' . $file), $smarty);
+			smarty_function_includeCss(array('file' => '/upload/css/' . $file, 'last' => ++$last), $smarty);
 		}
 	}
 

@@ -1,0 +1,8 @@
+application/configuration/registry/display/00-layout.ini
+application/view/checkout/offlinePaymentInfo.tpl
+installdata/sql/state/CA.sql
+installdata/sql/state/US.sql
+library/shipping/test/ShippingTest.php
+library/shipping/test/TestCanadaPost.php
+library/shipping/test/TestUsps.php
+status

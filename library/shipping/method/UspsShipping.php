@@ -128,7 +128,7 @@ class UspsShipping extends ShippingRateCalculator
 	{
 		$this->service = $service;
 
-		if ('Express' == $service)
+		if ('Express' == $service || 'Priority' == $service)
 		{
 			$this->setContainer('Flat Rate Envelope');
 		}
