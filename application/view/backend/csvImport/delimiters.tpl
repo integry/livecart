@@ -12,7 +12,7 @@
 {include file="layout/backend/header.tpl"}
 
 <div id="fieldConfigTemplates" class="hidden">
-	<span class="ProductPrice.price config">
+	<span class="ProductPrice.price ProductPrice.listPrice config">
 		<span class="block">
 			<span class="title">
 				{t _currency}
@@ -23,7 +23,7 @@
 				{/foreach}
 			</select>
 		</span>
-		<span class="block">
+		<span class="block priceGroup">
 			<span class="title">
 				{t _group}
 			</span>
@@ -34,7 +34,7 @@
 				{/foreach}
 			</select>
 		</span>
-		<span class="block">
+		<span class="block priceQuant">
 			<span class="title">
 				{t _quantity_level}
 			</span>

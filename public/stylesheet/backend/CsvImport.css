@@ -174,3 +174,9 @@ span.config .title
 	font-size: 0.75em;
 	display: block;
 }
+
+.ProductPrice-listPrice .priceGroup,
+.ProductPrice-listPrice .priceQuant
+{
+	display: none !important;
+}
