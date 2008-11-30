@@ -77,6 +77,9 @@ function smarty_prefilter_config($source, $smarty)
 	$source = preg_replace('/{help (.+?)}/', '{helpLink id=$1}', $source);
 	$source = preg_replace('/{see (.+?)}/', '{helpSeeAlsoItem id=$1}', $source);
 
+	// remove {fetch} tags
+	$source = preg_replace('/{fetch (.+?)}/', '', $source);
+
 	/*
 	if (strpos($source, 'companyName') !== false)
 	{

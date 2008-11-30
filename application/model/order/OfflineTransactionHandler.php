@@ -14,9 +14,14 @@ class OfflineTransactionHandler extends TransactionPayment
 	public function getEnabledMethods()
 	{
 		$handlers = array();
-		foreach (array_keys(ActiveRecordModel::getApplication()->getConfig()->get('OFFLINE_HANDLERS')) as $handler)
+		$availableHandlers = ActiveRecordModel::getApplication()->getConfig()->get('OFFLINE_HANDLERS');
+
+		if (is_array($availableHandlers))
 		{
-			$handlers[substr($handler, -1)] = $handler;
+			foreach (array_keys($availableHandlers) as $handler)
+			{
+				$handlers[substr($handler, -1)] = $handler;
+			}
 		}
 
 		return $handlers;
