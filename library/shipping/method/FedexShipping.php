@@ -60,7 +60,7 @@ class FedexShipping extends ShippingRateCalculator
 		$fedex->setOriginStateOrProvinceCode($this->sourceState);
 		$fedex->setOriginPostalCode($this->sourceZip);
 		$fedex->setOriginCountryCode($this->sourceCountry);
-		$fedex->setDestStateOrProvinceCode($this->destState);
+		$fedex->setDestStateOrProvinceCode(in_array($this->destCountry, array('US', 'CA')) ? $this->destState : '');
 		$fedex->setDestPostalCode($this->destZip);
 		$fedex->setDestCountryCode($this->destCountry);
 		$fedex->setPayorType('SENDER');
@@ -88,8 +88,13 @@ class FedexShipping extends ShippingRateCalculator
 				if (!is_array($enabledServices) || isset($enabledServices[$code]))
 				{
 					$name = self::$names[$code];
-					$date = $price['DELIVERYDATE'][0]['VALUE'];
-					$r->setServiceName($name . ' (' . $date . ')');
+					if (isset($price['DELIVERYDATE'][0]['VALUE']))
+					{
+						$date = $price['DELIVERYDATE'][0]['VALUE'];
+						$name = $name . ' (' . $date . ')';
+					}
+
+					$r->setServiceName($name);
 
 					$cost = $price['ESTIMATEDCHARGES'][0]['DISCOUNTEDCHARGES'][0]['NETCHARGE'][0]['VALUE'];
 					$currency = $price['ESTIMATEDCHARGES'][0]['CURRENCYCODE'][0]['VALUE'];
