@@ -1365,6 +1365,7 @@ class OrderTest extends OrderTestCommon
 
 		$this->order->save();
 		$this->order->finalize($this->usd);
+		$total = $this->order->getTotal($this->usd);
 
 		ActiveRecord::clearPool();
 		$reloaded = CustomerOrder::getInstanceByID($this->order->getID(), true);
@@ -1374,6 +1375,12 @@ class OrderTest extends OrderTestCommon
 		$cloned->save();
 
 		$this->assertNotEquals($cloned->getID(), $this->order->getID());
+
+		// check original order
+		$this->assertEquals(2, $reloaded->getShipments()->size());
+		$this->assertEquals(2, count($reloaded->getOrderedItems()));
+		$this->assertEquals(1, array_shift($reloaded->getItemsByProduct($this->products[0]))->count->get());
+		$this->assertEquals($total, $reloaded->getTotal($this->usd));
 
 		ActiveRecord::clearPool();
 		$order = CustomerOrder::getInstanceByID($cloned->getID(), true);
@@ -1403,6 +1410,12 @@ class OrderTest extends OrderTestCommon
 		$item = array_shift($order->getShipments()->get(1)->getItems());
 		$this->assertEquals(3, $item->count->get());
 		$this->assertEquals($this->products[1]->getID(), $item->product->get()->getID());
+
+		// check the total of the original order
+		ActiveRecord::clearPool();
+		$reloaded = CustomerOrder::getInstanceByID($this->order->getID(), true);
+		$reloaded->loadAll();
+		$this->assertEquals($total, $reloaded->getTotal($this->usd));
 	}
 
 	public function testVariationPricing()

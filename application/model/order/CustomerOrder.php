@@ -1820,6 +1820,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		$original = $this->originalRecord;
 
+		$this->shipments = new ARSet();
+		$this->orderedItems = array();
+
 		foreach ($original->getShipments() as $shipment)
 		{
 			$cloned = clone $shipment;

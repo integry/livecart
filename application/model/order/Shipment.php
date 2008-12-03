@@ -3,6 +3,7 @@
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.order.OrderedItem");
 ClassLoader::import("application.model.order.ShipmentTax");
+ClassLoader::import("application.model.delivery.DeliveryZone");
 ClassLoader::import("application.model.delivery.ShippingService");
 
 /**
@@ -855,6 +856,7 @@ class Shipment extends ActiveRecordModel
 
 		$original = $this->originalRecord;
 
+		$this->items = array();
 		foreach ($original->getItems() as $item)
 		{
 			$this->addItem(clone $item);
