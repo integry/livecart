@@ -97,3 +97,28 @@ form p
 	position: absolute;
 	right: -1px;
 }
+
+* html .productGrid .pricingInfo, *+html .productGrid .pricingInfo,
+* html .pricingInfo span.price, *+html .pricingInfo span.price,
+* html .pricingInfo a.addToCart, *+html .pricingInfo a.addToCart
+{
+	position: static;
+}
+
+.productGrid .pricingInfo,
+.pricingInfo span.price,
+.pricingInfo a.addToCart
+{
+	_position: static;
+}
+
+* html .productGrid span.price, *+html .productGrid span.price,
+{
+	position: static !important;
+	display: block;
+}
+
+* html .productGrid span.price
+{
+	position: fixed !important;
+}
