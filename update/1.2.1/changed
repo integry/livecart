@@ -120,6 +120,7 @@ application/helper/smarty/function.categoryUrl.php
 application/helper/smarty/function.compiledCss.php
 application/helper/smarty/function.compiledJs.php
 application/helper/smarty/function.includeCss.php
+application/helper/smarty/function.loadJs.php
 application/helper/smarty/function.newsUrl.php
 application/helper/smarty/function.paginate.php
 application/helper/smarty/function.productUrl.php

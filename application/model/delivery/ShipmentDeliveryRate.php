@@ -44,7 +44,16 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 
 		$handler->setWeight($shipment->getChargeableWeight());
 
-		$address = $shipment->order->get()->shippingAddress->get();
+		$order = $shipment->order->get();
+		if ($order->isMultiAddress->get())
+		{
+			$address = $shipment->shippingAddress->get();
+		}
+		else
+		{
+			$address = $order->shippingAddress->get();
+		}
+
 		if (!$address)
 		{
 			return $rates;

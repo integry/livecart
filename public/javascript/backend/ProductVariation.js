@@ -502,7 +502,7 @@ Backend.ProductVariation.Editor.prototype =
 
 				var id = variation.getID();
 				variation.getMainCell().nameInput.name = 'variation[' + id + ']';
-				if (this.languages.length)
+				if (variation.languages && variation.languages.length)
 				{
 					variation.languages.each(function(cont)
 					{

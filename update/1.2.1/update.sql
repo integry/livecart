@@ -314,7 +314,7 @@ CREATE INDEX IDX_OrderedItem_3 ON OrderedItem (isSavedForLater);
 
 ALTER TABLE ProductRelationship DROP PRIMARY KEY;
 
-ALTER TABLE ProductRelationship ADD COLUMN ID INTEGER UNSIGNED NOT NULL;
+ALTER TABLE ProductRelationship ADD ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY;
 
 ALTER TABLE ProductRelationship ADD COLUMN categoryID INTEGER UNSIGNED;
 
@@ -325,9 +325,6 @@ ALTER TABLE ProductRelationship CHANGE ProductID productID INTEGER UNSIGNED NOT 
 ALTER TABLE ProductRelationship MODIFY categoryID INTEGER UNSIGNED AFTER productID;
 
 ALTER TABLE ProductRelationship MODIFY type INTEGER NOT NULL COMMENT '0 - related product (cross-sell), 1 - up-sell' AFTER productRelationshipGroupID;
-
-ALTER TABLE ProductRelationship ADD CONSTRAINT PK_ProductRelationship
-    PRIMARY KEY (ID);
 
 ALTER TABLE ProductRelationship MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT FIRST;
 

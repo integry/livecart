@@ -533,10 +533,11 @@ class Product extends MultilingualObject
 					{
 						return $parentWeight - $weight;
 					}
-					else if ($weight)
+					else if ($weight > 0)
 					{
 						return $weight;
 					}
+					else
 					{
 						return $parentWeight;
 					}

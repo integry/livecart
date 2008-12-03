@@ -236,7 +236,8 @@ a.addToCart,
 .subTotalCalc,
 .fieldDescription,
 .progressOrder,
-a.cvv
+a.cvv,
+.multiAddress .shipmentAddress
 {
 	font-size: smaller;
 }

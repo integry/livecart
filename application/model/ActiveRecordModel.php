@@ -252,6 +252,11 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 	public static function addToEavQueue($className, &$record)
 	{
+		if (!$record['ID'] || isset($record['attributes']))
+		{
+			return false;
+		}
+
 		if (!isset(self::$eavQueue[$className][$record['ID']]))
 		{
 			self::$eavQueue[$className][$record['ID']]['attributes'] = array();

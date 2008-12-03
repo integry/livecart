@@ -60,7 +60,7 @@ class FedexShipping extends ShippingRateCalculator
 		$fedex->setOriginStateOrProvinceCode($this->sourceState);
 		$fedex->setOriginPostalCode($this->sourceZip);
 		$fedex->setOriginCountryCode($this->sourceCountry);
-		$fedex->setDestStateOrProvinceCode(in_array($this->destCountry, array('US', 'CA')) ? $this->destState : '');
+		$fedex->setDestStateOrProvinceCode(in_array($this->destCountry, array('US', 'CA', $this->sourceCountry)) ? $this->destState : '');
 		$fedex->setDestPostalCode($this->destZip);
 		$fedex->setDestCountryCode($this->destCountry);
 		$fedex->setPayorType('SENDER');
