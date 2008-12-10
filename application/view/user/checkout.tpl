@@ -117,6 +117,7 @@
 					{/err}
 				</p>
 
+			{if $order.isShippingRequired}
 			<h3>{t _shipping_address}</h3>
 
 				<p>
@@ -128,9 +129,12 @@
 					{include file="user/addressForm.tpl" prefix="shipping_" states=$shippingStates}
 				</div>
 
-				<p>
-					<input type="submit" class="submit" value="{tn _continue}" />
-				</p>
+			{/if}
+
+			<p>
+				<label class="submit"></label>
+				<input type="submit" class="submit" value="{tn _continue}" />
+			</p>
 
 		{/form}
 	</div>
