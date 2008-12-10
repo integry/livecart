@@ -7,6 +7,7 @@ ClassLoader::import('application.model.product.Product');
 ClassLoader::import('application.model.product.Manufacturer');
 ClassLoader::import('application.model.product.ProductFilter');
 ClassLoader::import('application.model.product.ProductCount');
+ClassLoader::import('application.model.product.ProductPrice');
 
 /**
  * Index controller for frontend
