@@ -122,3 +122,8 @@ form p
 {
 	position: fixed !important;
 }
+
+ul.productList .pricingInfo span.price
+{
+	margin-top: 30px;
+}
