@@ -151,6 +151,10 @@ class ProductOption extends MultilingualObject
 		{
 			$categories[$product->getCategory()->getID()] = $product->getCategory();
 			$productIDs[] = $product->getID();
+			if ($product->parent->get())
+			{
+				$productIDs[] = $product->parent->get()->getID();
+			}
 		}
 
 		foreach ($categories as $category)
@@ -196,16 +200,15 @@ class ProductOption extends MultilingualObject
 		{
 			foreach ($options as $index => $option)
 			{
-				if ($option->product->get() && ($option->product->get()->getID() == $product->getID()))
+				if ($option->product->get() && (($option->product->get()->getID() == $product->getID()) || ($option->product->get()->getID() == $product->parent->get()->getID())))
 				{
 					$sorted[$product->getID()][] = $option;
-					$options->remove($index);
 				}
 
 				if ($option->category->get())
 				{
 					$option->category->get()->load();
-					if ($option->category->get()->isAncestorOf($product->category->get()))
+					if ($option->category->get()->isAncestorOf($product->getCategory()))
 					{
 						$sorted[$product->getID()][] = $option;
 					}

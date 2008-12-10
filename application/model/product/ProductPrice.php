@@ -116,7 +116,7 @@ class ProductPrice extends ActiveRecordModel
 
 			if ($priceSetting !== Product::CHILD_OVERRIDE)
 			{
-				return $this->getChildPrice($parentPrice, $this->price->get(), $priceSetting);
+				$price = $this->getChildPrice($parentPrice, $this->price->get(), $priceSetting);
 			}
 			else
 			{
@@ -313,6 +313,7 @@ class ProductPrice extends ActiveRecordModel
 			$productPrices[$price['productID']][$price['currencyID']] = $price['price'];
 			$listPrices[$price['productID']][$price['currencyID']] = $price['listPrice'];
 			$productArray[$ids[$price['productID']]]['priceRules'][$price['currencyID']] = $price['serializedRules'];
+			$productArray[$ids[$price['productID']]]['prices'][$price['currencyID']] = $price;
 		}
 
 		self::getPricesFromArray($productArray, $productPrices, $ids, false);
@@ -461,6 +462,30 @@ class ProductPrice extends ActiveRecordModel
 	{
 		$array = parent::transformArray($array, $schema);
 		$array['serializedRules'] = unserialize($array['serializedRules']);
+
+		if ($array['serializedRules'])
+		{
+			$currency = Currency::getInstanceByID($array['currencyID']);
+			$quantities = array_keys($array['serializedRules']);
+			$nextQuant = array();
+			foreach ($quantities as $key => $quant)
+			{
+				$nextQuant[$quant] = isset($quantities[$key + 1]) ? $quantities[$key + 1] - 1 : null;
+			}
+			foreach ($array['serializedRules'] as $quantity => $prices)
+			{
+				foreach ($prices as $group => $price)
+				{
+					$array['quantityPrices'][$group][$quantity] = array(
+														'price' => $price,
+														'formattedPrice' => $currency->getFormattedPrice($price),
+														'from' => $quantity,
+														'to' => $nextQuant[$quantity]
+													);
+				}
+			}
+		}
+
 		return $array;
 	}
 }

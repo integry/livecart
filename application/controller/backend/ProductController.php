@@ -730,10 +730,10 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 		$response = new ActionResponse();
 		$product->getSpecification()->setFormResponse($response, $form);
-		$response->set("cat", $product->category->get()->getID());
+		$response->set("cat", $product->getCategory()->getID());
 		$response->set("hideFeedbackMessage", $this->request->get("afterAdding") == 'on');
 		$response->set("productForm", $form);
-		$response->set("path", $product->category->get()->getPathNodeArray(true));
+		$response->set("path", $product->getCategory()->getPathNodeArray(true));
 		$response->set("productTypes", $types);
 		$response->set("productStatuses", $status);
 		$response->set("baseCurrency", $this->application->getDefaultCurrency()->getID());

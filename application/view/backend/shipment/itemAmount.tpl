@@ -40,6 +40,11 @@
 						</div>
 					</div>
 				{/if}
+				{if $item.Product.variations}
+					<div class="productOptions">
+						{include file="order/itemVariations.tpl"}
+					</div>
+				{/if}
 			</div>
 		</td>
 		<td class="orderShipmentsItem_info_price_td">

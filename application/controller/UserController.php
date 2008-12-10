@@ -171,13 +171,14 @@ class UserController extends FrontendController
 	public function item()
 	{
 		$item = ActiveRecordModel::getInstanceById('OrderedItem', $this->request->get('id'), ActiveRecordModel::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
+		$item->customerOrder->get()->loadAll();
 		$item->loadOptions();
 		$subItems = $item->getSubitems();
 		$item = $item->toArray();
 
 		$this->addAccountBreadcrumb();
 		$this->addFilesBreadcrumb();
-		$this->addBreadCrumb($item['Product']['name_lang'], '');
+		$this->addBreadCrumb(isset($item['Product']['name_lang']) ? $item['Product']['name_lang'] : $item['Product']['Parent']['name_lang'], '');
 
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('OrderedItem', 'ID'), $item['ID']));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
@@ -1164,7 +1165,11 @@ class UserController extends FrontendController
 
 		$this->validateAddress($validator, 'billing_');
 		$this->validateEmail($validator);
-		$this->validateAddress($validator, 'shipping_', true);
+
+		if ($this->order->isShippingRequired())
+		{
+			$this->validateAddress($validator, 'shipping_', true);
+		}
 
 		SessionUser::getAnonymousUser()->getSpecification()->setValidation($validator);
 
