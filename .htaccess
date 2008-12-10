@@ -18,7 +18,7 @@ Options -Indexes
 </IfModule>
 
 # big crash from our front web controller
-ErrorDocument 500 "<h2>Application error</h2>Application failed to start properly"
+# ErrorDocument 500 "<h2>Application error</h2>Application failed to start properly"
 
 # Cache stylesheets and javascript
 # Add "LoadModule expires_module modules/mod_expires.so" to your httpd.conf to be able to use expires mode
