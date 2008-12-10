@@ -1,3 +1,4 @@
+.htaccess
 .version
 application/LiveCart.php
 application/LiveCartRenderer.php
@@ -186,6 +187,7 @@ application/view/backend/deliveryZone/countriesAndStates.tpl
 application/view/backend/discount/conditionForm.tpl
 application/view/backend/discount/edit.tpl
 application/view/backend/discount/index.tpl
+application/view/backend/eav/fields.tpl
 application/view/backend/eav/view.tpl
 application/view/backend/language/edit.tpl
 application/view/backend/payment/transaction.tpl
@@ -389,8 +391,10 @@ library/payment/method/library/paypal/phppaypalpro/setexpresscheckout.php
 library/shipping/ShippingRateCalculator.php
 library/shipping/library/usps/usps.php
 library/shipping/method/UspsShipping.php
+license.txt
 public/image/silk/gif/delete.gif
 public/image/silk/gif/information.gif
+public/index.php
 public/javascript/backend/Category.js
 public/javascript/backend/CsvImport.js
 public/javascript/backend/CustomField.js

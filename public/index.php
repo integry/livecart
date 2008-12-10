@@ -1,27 +1,29 @@
 <?php
 	/**
-	 * livecart front controller
+	 * LiveCart front controller
 	 *
 	 * @author Integry Systems
 	 * @package application
 	 */
 
-// @todo: remove
-function onShutDown()
-{
-	define('SHUTDOWN', true);
-}
-
-function logDestruct($obj, $details = '')
-{
-	if (defined('SHUTDOWN'))
+	// @todo: remove
+	/*
+	function onShutDown()
 	{
-		//var_dump($obj);
-		echo '! ' . get_class($obj) . ($details ? ' (' . $details . ')' : '') . "\n";
+		define('SHUTDOWN', true);
 	}
-}
 
-register_shutdown_function('onShutDown');
+	function logDestruct($obj, $details = '')
+	{
+		if (defined('SHUTDOWN'))
+		{
+			//var_dump($obj);
+			echo '! ' . get_class($obj) . ($details ? ' (' . $details . ')' : '') . "\n";
+		}
+	}
+
+	register_shutdown_function('onShutDown');
+	*/
 
 	// session cookie expires in 180 days
 	session_set_cookie_params(180 * 60 * 60 * 24);

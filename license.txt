@@ -16,7 +16,7 @@ The following are the terms and conditions upon which UAB "Integry Systems" will
 The Licensed Software and the Documentation remain at all times the sole and exclusive property of UAB "Integry Systems". In order to protect the rights of UAB "Integry Systems", the Client undertakes to comply with the following:
 (a) The Client shall not reproduce the Licensed Software beyond the number of permitted copies, nor shall the Client reproduce, distribute, transmit or provide access to the Licensed Software to or for the benefit of a third party;
 (b) The Client shall not sublicense, loan, sell, or otherwise transfer all or part of the Licensed Software or Documentation or any interest therein to or for the benefit of a third party;
-(c) The Client shall not remove, alter or obliterate any copyright notices found in the Licensed Software or its source code;  and
+(c) The Client shall not remove, alter or obliterate any copyright notices found in the source code of the Licensed Software;
 (d) The Client shall ensure that its personnel, including any consultants, comply with all of the terms and conditions of this License and shall be liable for any breaches thereof;
 (e) The Client shall use the Trial Version for the maximum of 15 days only. After 15 days the Client must stop using the Trial Version. It is strictly prohibited to alter the source code of the Trial Version to remove the 15 day expiration limit and any other limitations implemented in the Trial Version. It is also prohibited to alter the system time to extend the running of the Trial Version.
 
