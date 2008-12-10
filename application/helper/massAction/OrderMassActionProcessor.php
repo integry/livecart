@@ -40,7 +40,7 @@ class OrderMassActionProcessor extends MassActionProcessor
 				break;
 		}
 
-		if (isset($status))
+		if (isset($status) && ($status != $order->status->get()))
 		{
 			$order->setStatus($status);
 			$this->params['controller']->sendStatusNotifyEmail($order);
