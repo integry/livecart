@@ -741,6 +741,47 @@ class OrderTest extends OrderTestCommon
 		$this->assertEquals($this->order->getTotal($this->usd), $originalTotal * 0.9);
 	}
 
+	public function testDiscountFinalize()
+	{
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->save();
+
+		$record = DiscountConditionRecord::getNewInstance($condition, $this->products[0]);
+		$record->save();
+		$condition->loadAll();
+
+		$action = DiscountAction::getNewInstance($condition);
+		$action->isEnabled->set(true);
+		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
+		$action->amount->set(10);
+		$action->actionType->set(DiscountAction::ACTION_PERCENT);
+		$action->save();
+
+		$this->order->addProduct($this->products[0]);
+		$this->order->addProduct($this->products[1]);
+		$this->order->save();
+
+		$this->assertEquals(count($this->order->getDiscountActions()), 1);
+
+		// test order total
+		$total = $this->order->getTotal($this->usd);
+		$this->order->finalize($this->usd);
+		$this->assertEquals($this->order->getTotal($this->usd), $total);
+
+		ActiveRecordModel::clearPool();
+		$order = CustomerOrder::getInstanceById($this->order->getID(), true);
+		$order->loadAll();
+		$this->assertEquals($order->getTotal($this->usd), $total);
+		$this->assertEquals(count($order->getDiscountActions()), 1);
+
+		// test item prices
+		$item = array_shift($order->getItemsByProduct($this->products[0]));
+		var_dump($item->price->get());
+
+
+	}
+
 	public function testApplyingTwoDiscountsToOneItemAndOneToOther()
 	{
 		for ($k = 1; $k <= 2; $k++)

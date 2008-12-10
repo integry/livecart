@@ -1634,7 +1634,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 	public function getDiscountConditions()
 	{
-		if ($this->isFinalized->get() || !$this->orderedItems)
+		if (!$this->orderedItems)
 		{
 			return array();
 		}
