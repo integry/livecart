@@ -1,4 +1,5 @@
 <?php
+
 	/**
 	 * LiveCart front controller
 	 *

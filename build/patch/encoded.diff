@@ -1,10 +1,6 @@
 --- license.txt	2008-12-08 02:53:47.000000000 +0200
 +++ license.txt	2008-12-09 00:41:47.000000000 +0200
-@@ -16,9 +16,10 @@
- The Licensed Software and the Documentation remain at all times the sole and exclusive property of UAB "Integry Systems". In order to protect the rights of UAB "Integry Systems", the Client undertakes to comply with the following:
- (a) The Client shall not reproduce the Licensed Software beyond the number of permitted copies, nor shall the Client reproduce, distribute, transmit or provide access to the Licensed Software to or for the benefit of a third party;
- (b) The Client shall not sublicense, loan, sell, or otherwise transfer all or part of the Licensed Software or Documentation or any interest therein to or for the benefit of a third party;
- (c) The Client shall not remove, alter or obliterate any copyright notices found in the Licensed Software or its source code; including but not limited to "Powered by LiveCart", "Powered by LiveCart Shopping Cart Software", "UAB Integry Systems", etc.
+@@ -20,5 +20,6 @@
  (d) The Client shall ensure that its personnel, including any consultants, comply with all of the terms and conditions of this License and shall be liable for any breaches thereof;
 -(e) The Client shall use the Trial Version for the maximum of 15 days only. After 15 days the Client must stop using the Trial Version. It is strictly prohibited to alter the source code of the Trial Version to remove the 15 day expiration limit and any other limitations implemented in the Trial Version. It is also prohibited to alter the system time to extend the running of the Trial Version.
 +(e) The Client shall not disassemble the source code of the Licensed Software or replace the encoded source code with the original source code;
@@ -13,13 +9,39 @@
  3. MINIMUM CONFIGURATION
  The Client is responsible for ensuring that the computer systems onto which the Licensed Software is installed meet the minimal requirements prescribed from time to time by UAB "Integry Systems".
 
---- public/index.php	2008-12-08 21:11:01.000000000 +0200
-+++ public/index.php	2008-12-09 00:42:14.000000000 +0200
-@@ -1,1 +1,5 @@
--<?php
-+<?php if (isset($_REQUEST['checklicense']))
+--- public/index.php	2008-12-10 23:24:13.000000000 +0200
++++ public/index.php	2008-12-10 23:24:17.000000000 +0200
+@@ -31,6 +31,33 @@
+ 
+ 	include_once (include 'appdir.php') . '/application/Initialize.php';
+ 
++if (isset($_REQUEST['checklicense']))
 +{
++	function rscandir($base='', &$data=array())
++	{
++		$array = array_diff(scandir($base), array('.', '..'));
++		foreach($array as $value) { $f = $base.$value; if (is_dir($f)) { $data = rscandir($f.'/', $data); } elseif (is_file($f) && preg_match('/\.php$/', $f)) { $data[] = $f; } }
++		return $data;
++	}
++
++	echo '<!-- begin file check --><ul>';
++	foreach (array('application', 'public', 'framework', 'library') as $path)
++	{
++		foreach (rscandir(ClassLoader::getRealPath($path) . '/') as $file)
++		{
++			$cnt = @file_get_contents($file);
++			if (!preg_match('/ioncube\/ioncube_loader/', $cnt))
++			{
++				echo '<li>' . $file . '</li>';
++			}
++		}
++	}
++	echo '</ul><!-- end file check -->';
++
 +	phpinfo();
 +	exit;
 +}
-
++
+ 	ClassLoader::import('application.LiveCart');
+ 
+ 	$app = new LiveCart();

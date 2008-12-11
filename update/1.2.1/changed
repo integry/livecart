@@ -201,6 +201,7 @@ application/view/backend/productRelationship/selectProduct.tpl
 application/view/backend/productRelationshipGroup/form.tpl
 application/view/backend/settings/index.tpl
 application/view/backend/shipment/index.tpl
+application/view/backend/shipment/itemAmount.tpl
 application/view/backend/shipment/shipmentControls.tpl
 application/view/backend/shippingService/service.tpl
 application/view/backend/specField/index.tpl

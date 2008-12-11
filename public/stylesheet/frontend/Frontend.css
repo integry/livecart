@@ -1373,6 +1373,11 @@ select.multiAddress
     padding: 20px;
 }
 
+#expressCheckoutMethods img
+{
+	vertical-align: top;
+}
+
 #cartFields .container, #couponCodes .container
 {
 	padding: 0 1em 0.5em 0.5em;
@@ -2385,7 +2390,6 @@ img.calendar_button
 .dynamicMenu li a, .dynamicMenu li .currentName
 {
 	width: 140px;
-	/* w\idth : 10em; */
 	display : block;
 	font-weight : bold;
 	text-decoration : none;
