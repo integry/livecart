@@ -1,7 +1,6 @@
 <?php
 
 include_once(dirname(__file__) . '/../../abstract/ExpressPayment.php');
-include_once(dirname(__file__) . '/../../method/library/paypal/PaypalCommon.php');
 
 /**
  *

@@ -2,6 +2,7 @@
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
 ClassLoader::import("application.model.product.Product");
+ClassLoader::import("application.model.category.Category");
 ClassLoader::import("application.model.order.CustomerOrder");
 
 /**
@@ -96,6 +97,7 @@ class ProductBundleTest extends UnitTest
 
 	public function testAvailability()
 	{
+		$this->config->set('INVENTORY_TRACKING', 'DISABLE');
 		$product1 = Product::getNewInstance($this->root);
 		$product1->save();
 

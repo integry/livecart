@@ -1,0 +1,119 @@
+New payment modules:
+* Google Checkout (Level 2 integration)
+* DIBS FlexWin
+* Significant improvements to offline payments functionality. It is now possible to configure up to 3 offline payment methods, enter descriptions and payment instructions from backend (so it's no longer necessary to edit the templates) and configure data input fields for each payment method if it's necessary to collect any kind of extra information
+
+New real-time shipping rate calculator:
+* FedEx
+
+New translations:
+* Czech
+* Hebrew
+* Slovenian
+
+Major feature additions:
+* Product variations - ability to track inventory for each product variation, set their own SKU's, upload images, etc.
+* Ability to ship an order to multiple addresses
+* Ability to assign a product to multiple categories
+* Reorders - customers may replace their previous order with a couple of clicks
+
+Pricing rule improvements:
+* Ability to disable checkout if certain conditions are met
+* Step discounts - apply discounts only to every X-th item. For example - buy X, get 1 free (or a discount).
+* Discount limits - limit the number of items a discount can be applied to
+* Added ability to base rules on whether item count (or order total) is divisible (or not divisible) with a certain number. This can be useful for creating rules like allowing to order bottles of wine only in sets of 6 or 12, etc.
+
+Checkout and ordering improvements:
+* Editing shipping or billing address in checkout no longer takes customer to the user account and can be done directly within the checkout address entry/selection page (if the customer has only one shipping/billing addresses - the most common case)
+* Added configuration option for table rate shipping services to hide other services from selection if this service becomes available. This allows to create separate shipping methods for special conditions (for example, free shipping over certain order total) and have this shipping method selected automatically.
+* Improved the layout of the payment page: payment methods and order overview are now displayed side by side in two columns
+* Cardholder name is now editable in credit card details form, instead of fixing it to customer's name
+* Full order details overview is being displayed in the order confirmation page as well (shown after completing the order)
+* Added ability to put the custom order fields in any checkout step (not only the shopping cart page)
+* Display percentage discount total amount as a separate line item in shopping cart page
+* Improved client side validation for checkout forms
+* Added configuration option to not automatically skip the shipping method selection step if only one shipping method is available
+* Improved discount coupon handling - customers are given feedback whether adding a coupon to order was successful and what coupons have already beenadded.
+* The list of applied order coupons is displayed in the order management section in backend
+* Added configuration option to remove the state field from address forms
+* Added an option to allow splitting the billing and shipping address entry at checkout in two separate checkout steps
+* Added ability to move multiple countries to the beginning of the address country selection list (instead of only one country)
+* Added a database of states/provinces for 203 countries, so customers no longer have to enter them by hand as the states are predefined for almost every country.
+
+Inventory tracking improvements:
+* Stock levels are now decreased as soon as purchase is completed, instead of when the order is shipped
+* Order cancellations return the reserved stock to inventory
+* Out-of-stock items are automatically moved from cart to wish list
+* It is no longer possible to order more items than in stock (unless back-ordering is enabled for the particular product)
+
+Performance improvements:
+* Added a built-in gzip compression for CSS and JS files, which can be used if the compression is not available at server level (the compressed files are 4-5 times smaller)
+* Optimized CSS/JS file bundling - all JavaScript and CSS files are glued in one file respectively, to reduce the number of requests.
+* Improved the use of browser caching of CSS/JS files, so browser doesn't even check if the files have changed until they actually change (again less server requests to make
+* Pages are now gzip encoded even if gzip encoding is not configured at server level (usually reduces page HTML size by factor of 4-5)
+* Lazy loading of the PHP classes - memory consumption and number of PHP file includes per request are reduced by around 20-25% with slight improvements in execution time as well
+
+Frontend improvements:
+* Added a "Quick Navigation" side menu that contains select boxes of all manufacturers and categories in store
+* Product option improvements - define custom select message for select options (for example, "select color" or "select size"), ability to display select options either as a select box or radio buttons, and ability to display total product price including the option price near each option choice (configurable per option)
+* Added ability to manually change the product display order in product list
+* Added ability to set order quantity increment for every product. It can be less than 1 for fractional unit products, for example, 0.25 to only allow ordering a weighable product in increments of 0.25 kg (0.25, 0.50, 0.75, etc.) and it can be more for all products - for example, to make pins orderable only in quantities by 100
+* Fractional quantity products now have text input field for quantity entry instead of a select box
+* Custom field data is now loaded automatically and is readily available for use in templates for all applicable record types - orders, users,categories, manufacturers, etc.
+* Product SKUs are now displayed in invoices
+* Product file downloads now work with extremely large files as well
+
+SEO improvements:
+* Added ability to configure a store headline from settings and more customization options for page titles
+* Added ability to define default meta description value, which would be displayed in pages that do not have their own meta description available
+
+CSS and theme improvements:
+* Significant barebone theme improvements - CSS file has been cleaned up, optimized and reorganized. It is now much easier to build new themes upon the barebone theme, since it won't be necessary to override default settings as often as before.
+* Added Right-to-Left script support for the all themes (usable with Hebrew, Arabic, etc. scripts)
+* CSS files for all themes have been cleaned up optimized reducing CSS size by around 25%
+
+Backend improvements:
+* Added "Previous Orders" tab in customer's order management panel for ability to quickly access previous orders of the same customer
+* Changed the way product exporting to CSV works. Instead of exporting the data columns that are selected for the backend data grid, almost all possible data is exported. It is now also possible to export prices for all currencies, user group prices, product variations, etc.
+* Added ability to specify a local file path or URL for a product file instead of having to upload one
+* Improved state selector function in delivery zone configuration - the state list can now be filtered by country
+* Ability to add custom language strings/phrases from backend. This will make it easier to create customized multi-language stores.
+* Better compatibility for migration from different versions of other shopping cart programs - if some type of records is not available in the source database, it is skipped and the migration can continue as usual.
+* Additional fixes for the OsCommerce migration tool, which now works better when importing databases with orphan records, duplicate customer records, etc.* OsCommerce migration tool now also transfers the customer group data
+
+CSV importer improvements:
+* Ability to import product variations
+* Ability to import product data for multiple languages at once
+* Ability to import user group and quantity prices and prices for multiple currencies at once
+* Multi-select product attributes can now be imported from CSV (attribute values have to be separated by commas)
+
+Tax and shipping calculation fixes and improvements:
+* Added ability to apply different tax rates for shipping costs than for items themselves
+* Taxes were calculated incorrectly when there were 2 or more applicable tax rates (for example, Canadian stores)
+* Shipping rates that were defined in ranges of grams were sometimes not fetched correctly
+
+Frontend fixes:
+* Search engine hits to "Add to cart" and "Add to wishlist" links no longer create bogus shopping cart instances in database
+* Disabled categories were still available for selection in the search form
+* Date selector did not work in Internet Explorer
+* When there were multiple quantity prices defined for a product, the actual quantity thresholds were offset by 1
+* Shopping cart page was not SSL protected if SSL was turned on for checkout pages
+* Fixed session handling with shared SSL setups - the sessions are now carried over automatically
+* After trying to access a login-protected page, the user is redirected to this page after logging in, instead of being redirected to the account home page
+* When going to shopping cart from user area, the "Continue Shopping" link lead back to the shopping cart. Now it will only lead back to product and category pages
+
+Payment and shipping fixes:
+* PayPal Direct Payment didn't work with American Express cards
+* Paypal Express Checkout only worked with USD
+* First Class mail method was not available for USPS rate calculator
+
+Backend fixes:
+* Stock levels are now updated correctly when modifying an already completed order or creating a new order from backend
+* Stock levels were not changed when order statuses were changed using bulk processing
+* Order statuses were not updated when changing them in bulk (using mass action)
+* When viewing a user list for a particular group in backend, the list always included the users from all groups unless a search filter was applied
+* Site news and filter translations were not editable
+* Detailed order export did not export item count
+* After copying products the whole page had to be reloaded for the mass actions to work reliably
+* User accounts could not be moved to Customers group (removed from other groups)
+* Product option selection form templates were not editable

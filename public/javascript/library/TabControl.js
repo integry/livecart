@@ -314,7 +314,7 @@ TabControl.prototype = {
 
 		tab = $(tab);
 
-		if(!tab) throw new Error('Could not find tab!');
+		if(!tab) return; //throw new Error('Could not find tab!');
 
 		var counter = tab.down('.tabCounter');
 		if(false === value)

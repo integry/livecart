@@ -415,7 +415,7 @@ class CheckoutController extends FrontendController
 			}
 			else if (!$shipmentRates->size())
 			{
-				$validator = $this->buildAddressSelectorValidator($this->order);
+				$validator = $this->buildAddressSelectorValidator($this->order, 'shipping');
 				$validator->triggerError('selectedAddress', $this->translate('_err_no_rates_for_address'));
 				$validator->saveState();
 
@@ -447,7 +447,7 @@ class CheckoutController extends FrontendController
 		SessionOrder::save($this->order);
 
 		// only one shipping method for each shipment, so we pre-select it automatically
-		if (is_null($needSelecting) || !$this->config->get('SKIP_SHIPPING'))
+		if (is_null($needSelecting) && $this->config->get('SKIP_SHIPPING'))
 		{
 			$this->order->serializeShipments();
 			SessionOrder::save($this->order);
@@ -1197,7 +1197,7 @@ class CheckoutController extends FrontendController
 		return $form;
 	}
 
-	private function buildAddressSelectorValidator(CustomerOrder $order, $step)
+	private function buildAddressSelectorValidator(CustomerOrder $order, $step = null)
 	{
 		$this->loadLanguageFile('User');
 
@@ -1242,8 +1242,6 @@ class CheckoutController extends FrontendController
 				$validator->addCheck($field, new OrCheck(array($field, substr($prefix, 0, -1) . 'Address'), array($check, new IsNotEmptyCheck('')), $this->request));
 			}
 		}
-
-//		var_dump($validator->getValidatorVar('billing_firstName')->getChecks());
 	}
 
 	public function buildCreditCardForm()

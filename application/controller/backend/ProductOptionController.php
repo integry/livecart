@@ -166,7 +166,6 @@ class ProductOptionController extends StoreManagementController
 
 			// save specification field values in database
 			$newIDs = array();
-			//var_dump($productOption->isSelect(), $values);
 			if($productOption->isSelect() && is_array($values))
 			{
 				$position = 1;

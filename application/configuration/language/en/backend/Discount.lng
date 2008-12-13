@@ -52,8 +52,8 @@ _compare_eq=equal to
 _compare_lteq=less than or equal to
 _compare_gteq=more than or equal to
 _compare_ne=not equal to
-_compare_div=divisable with
-_compare_ndiv=not divisable with
+_compare_div=divisible with
+_compare_ndiv=not divisible with
 
 _with_count=with count
 _with_subTotal=with subtotal
@@ -64,9 +64,9 @@ _add_new_action=Add new action
 _action=Action type
 _amount=Discount amount
 _discount_step=Discount step
-_discount_step_descr=Apply discount to every X-th item. For example: buy X and get 1 free
+_discount_step_descr=Apply discount to every X-th item. For example: buy X and get 1 free.  The limit only applies to items of the same line item, not the whole order.
 _discount_limit=Discount limit
-_discount_limit_descr=Max number of items to apply discount to
+_discount_limit_descr=Max number of items to apply discount to. The limit only applies to items of the same line item, not the whole order.
 _apply_to=Apply discount to
 
 _percentage_discount=Apply percentage discount

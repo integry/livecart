@@ -75,6 +75,8 @@ Product.rating=Rating
 Product.ratingCount=Number of ratings
 Product.parentID=Parent product ID
 Product.reviewCount=Review count
+Product.fractionalStep=Quantity increment
+Product.position=Sort order
 ProductPrice.GroupPrice=User group price
 ProductVariationType.name=Variation
 
@@ -112,6 +114,8 @@ _mark_as_sale_product=Mark as on-sale product
 _allow_fractional_quantities=Allow fractional quantities
 _fractionalStep=Quantity increment
 _hint_fractionalStep=Special quantity increments - for example, entering 0.2 would only allow ordering quanties of 0.2, 0.4, 0.6, etc.
+_sort_order=Sort order
+_hint_sort_order=Change this to manually manipulate the display order of products. The bigger the number, the higher the product will be displayed in the product list.
 
 _presentation=Presentation
 _theme=Design theme

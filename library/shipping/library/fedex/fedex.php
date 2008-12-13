@@ -157,7 +157,6 @@ class Fedex {
             $xmlParser = new xmlparser();
             return $xmlParser->GetXMLTree($data);
 
-            print_r($array);
 
             //$xmlParser->printa($array);
             if(!empty($array['FDXRATEREPLY'][0]['ERROR'])) { // If it is error

@@ -388,6 +388,7 @@ class CategoryController extends FrontendController
 		{
 			$selectFilter->setOrder(new ARFieldHandle('Product', 'isFeatured'), 'DESC');
 			$selectFilter->setOrder(new ARFieldHandle('Product', 'salesRank'), 'DESC');
+			$selectFilter->setOrder(new ARFieldHandle('Product', 'position'), 'DESC');
 		}
 	}
 

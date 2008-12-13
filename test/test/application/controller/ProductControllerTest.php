@@ -54,7 +54,6 @@ class ProductControllerTest extends UnitTest implements ControllerTestCase
 	public function testSimpleRating()
 	{
 		$this->request->set('rating_', 4);
-		var_Dump(get_parent_class($this->controller));
 		$response = $this->controller->rate();
 
 		$this->product->reload();

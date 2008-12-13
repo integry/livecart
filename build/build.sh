@@ -44,7 +44,7 @@ VERSION=`head .version`
 # cp .version /home/livecart/public_html/update/.version
 
 # remove non-distributed files
-rm -rf build cache doc update .git* .snap test push
+rm -rf build cache doc update .git* .snap test push status
 rm -rf public/cache public/upload
 rm -rf storage/configuration/*.php
 rm -rf library/payment/test/simpletest

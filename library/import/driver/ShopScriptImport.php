@@ -464,7 +464,6 @@ class ShopScriptImport extends LiveCartImportDriver
 			$validCats = implode(',', $this->categoryIds);
 
 			$this->productSql = 'SELECT ' . implode(',', $fields) . ' FROM ' . $this->getTablePrefix() . 'products ' . implode(' ', $join) . ' LEFT JOIN ' . $this->getTablePrefix() . 'categories AS cat ON cat.categoryID=' . $this->getTablePrefix() . 'products.categoryID WHERE cat.categoryID IS NOT NULL AND cat.categoryID IN (' . $validCats . ')';
-			//var_dump('test');			echo $this->productSql; exit;
 		}
 
 		if (!$data = $this->loadRecord($this->productSql))
