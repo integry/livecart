@@ -51,7 +51,7 @@ class CustomerOrderController extends ActiveGridController
 
 	protected function getReferencedData()
 	{
-		return array('User', 'Currency', 'ShippingAddress' => 'UserAddress', 'State');
+		return array('User', 'Currency', 'ShippingAddress' => 'UserAddress', 'BillingAddress', 'State');
 	}
 
 	protected function getDefaultColumns()
@@ -120,7 +120,7 @@ class CustomerOrderController extends ActiveGridController
 			if ($order->user->get()->defaultBillingAddress->get())
 			{
 				$billingStates = State::getStatesByCountry($order->user->get()->defaultBillingAddress->get()->userAddress->get()->countryID->get());
-			   $orderArray['BillingAddress'] = $order->user->get()->defaultBillingAddress->get()->userAddress->get()->toArray();
+				$orderArray['BillingAddress'] = $order->user->get()->defaultBillingAddress->get()->userAddress->get()->toArray();
 			}
 
 			$billingStates[''] = '';
@@ -337,6 +337,7 @@ class CustomerOrderController extends ActiveGridController
 		$grid = new ActiveGrid($this->application, $filter, 'CustomerOrder');
 		$typeCond = $this->getTypeCondition($this->request->get('id'));
 		$this->applyFullNameFilter($typeCond);
+		$this->applyStateFilter($typeCond);
 		$filter->mergeCondition($typeCond);
 
 		$mass = new OrderMassActionProcessor($grid, array('controller' => $this));
@@ -461,12 +462,13 @@ class CustomerOrderController extends ActiveGridController
 
 		if($filters = $this->request->get('filters'))
 		{
-			if(isset($filters['CustomerOrder.ID2']))
+			if (isset($filters['CustomerOrder.ID2']))
 			{
 				$filters['CustomerOrder.ID'] = $filters['CustomerOrder.ID2'];
 				unset($filters['CustomerOrder.ID2']);
-				$this->request->set('filters', $filters);
 			}
+
+			$this->request->set('filters', $filters);
 		}
 
 		$id = $this->request->get('id');
@@ -477,6 +479,7 @@ class CustomerOrderController extends ActiveGridController
 		$cond = $this->getTypeCondition($id);
 
 		$this->applyFullNameFilter($cond);
+		$this->applyStateFilter($cond);
 
 		if($this->request->get('sort_col') == 'User.fullName')
 		{
@@ -563,6 +566,25 @@ class CustomerOrderController extends ActiveGridController
 		return $displayedColumns;
 	}
 
+	protected function getColumnValue($record, $class, $field)
+	{
+		if ('stateName' == $field)
+		{
+			if (isset($record['ShippingAddress']['State']['name']))
+			{
+				return $record['ShippingAddress']['State']['name'];
+			}
+			else
+			{
+				return $record['ShippingAddress']['stateName'];
+			}
+		}
+		else
+		{
+			return parent::getColumnValue($record, $class, $field);
+		}
+	}
+
 	private function applyFullNameFilter(Condition $cond)
 	{
 		$filters = $this->request->get('filters');
@@ -591,6 +613,27 @@ class CustomerOrderController extends ActiveGridController
 			$cond->addAND($firstNameCond);
 			$cond->addAND($lastNameCond);
 		 }
+	}
+
+	private function applyStateFilter(Condition $cond)
+	{
+		$filters = $this->request->get('filters');
+		if (!is_array($filters))
+		{
+			$filters = (array)json_decode($filters);
+		}
+
+		if (isset($filters['ShippingAddress.stateName']))
+		{
+			$value = $filters['ShippingAddress.stateName'];
+
+			$c = new LikeCond(new ARFieldHandle('UserAddress', "stateName"), '%' . $value . '%');
+			$c->addOR(new LikeCond(new ARFieldHandle('State', "name"), '%' . $value . '%'));
+
+			$cond->addAND($c);
+			unset($filters['ShippingAddress.stateName']);
+			$this->request->set('filters', $filters);
+		}
 	}
 
 	private function getTypeCondition($type)
@@ -881,11 +924,13 @@ class CustomerOrderController extends ActiveGridController
 
 		$availableColumns['CustomerOrder.status'] = 'text';
 
-		// Address
+		// Shipping address
 		$availableColumns['ShippingAddress.countryID'] = 'text';
+		$availableColumns['ShippingAddress.stateName'] = 'text';
 		$availableColumns['ShippingAddress.city'] = 'text';
 		$availableColumns['ShippingAddress.address1'] = 'text';
-		$availableColumns['ShippingAddress.postalCode'] = 'numeric';
+		$availableColumns['ShippingAddress.postalCode'] = 'text';
+		$availableColumns['ShippingAddress.phone'] = 'text';
 
 		// User
 		$availableColumns['User.firstName'] = 'text';

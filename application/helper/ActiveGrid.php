@@ -201,31 +201,58 @@ class ActiveGrid
 		return $this->filter;
 	}
 
-	private function getFieldInstance($fieldName)
+	private function getSchemaInstance($fieldName)
 	{
 		list($schemaName, $fieldName) = explode('.', $fieldName);
+
+		$possibleSchemas = ActiveRecordModel::getSchemaInstance($this->modelClass)->getDirectlyReferencedSchemas();
+		if (isset($possibleSchemas[$schemaName]))
+		{
+			$schema = $possibleSchemas[$schemaName];
+		}
+		else
+		{
+			foreach ($possibleSchemas as $name => $schemaArray)
+			{
+				$parts = explode('_', $name, 2);
+				if (isset($parts[1]) && ($parts[1] == $schemaName))
+				{
+					$schema = $schemaArray[0];
+					break;
+				}
+			}
+		}
+
+		if (!isset($schema))
+		{
+			$schema = ActiveRecordModel::getSchemaInstance($schemaName);
+		}
+
+		return $schema;
+	}
+
+	private function getFieldInstance($field)
+	{
+		list($schemaName, $fieldName) = explode('.', $field);
 
 		if ($schemaName)
 		{
-			$schema = ActiveRecordModel::getSchemaInstance($schemaName);
-
-			return $schema->getField($fieldName);
+			return $this->getSchemaInstance($field)->getField($fieldName);
 		}
 	}
 
-	private function getFieldHandle($fieldName, $handleType)
+	private function getFieldHandle($field, $handleType)
 	{
-		list($schemaName, $fieldName) = explode('.', $fieldName);
+		list($schemaName, $fieldName) = explode('.', $field);
 
 		$handle = null;
 
 		if ($schemaName)
 		{
-			$schema = ActiveRecordModel::getSchemaInstance($schemaName);
-
+			$schema = $this->getSchemaInstance($field);
 			if ($field = $schema->getField($fieldName))
 			{
-				$handle = new ARFieldHandle($schemaName, $fieldName);
+				$handle = $schema->getHandle($fieldName);
 
 				// language fields
 				if ($field->getDataType() instanceof ARArray)
