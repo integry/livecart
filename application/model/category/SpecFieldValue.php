@@ -1,5 +1,6 @@
 <?php
 
+ClassLoader::import('application.model.category.SpecField');
 ClassLoader::import('application.model.eavcommon.EavValueCommon');
 ClassLoader::import('application.model.specification.SpecificationItem');
 
