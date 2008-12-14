@@ -152,7 +152,9 @@ ActiveGrid.prototype =
 					{
 						data['data'][k][i] = data['data'][k][i].replace(new RegExp('(' + filter + ')', 'gi'), '<span class="activeGrid_searchHighlight">$1</span>');
 					}
-					data['data'][k][i] = '<span>' + this.dataFormatter.formatValue(data['columns'][i], data['data'][k][i], id) + '</span>';
+
+					var value = this.dataFormatter.formatValue(data['columns'][i], data['data'][k][i], id) || '';
+					data['data'][k][i] = '<span>' + value + '</span>';
 				}
 			}
 		}

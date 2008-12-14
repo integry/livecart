@@ -41,7 +41,7 @@
 	</script>
 	{/literal}
 
-	<span style="{if $orderGroupID == 8}visibility: hidden;{else}{denied role="order.mass"}visibility: hidden;{/denied}{/if}" id="orderMass_{$orderGroupID}" class="activeGridMass">
+	<span style="{denied role="order.mass"}visibility: hidden;{/denied}" id="orderMass_{$orderGroupID}" class="activeGridMass">
 
 		{form action="controller=backend.customerOrder action=processMass id=$orderGroupID" method="POST" handle=$massForm onsubmit="return false;"}
 
@@ -61,7 +61,7 @@
 				</optgroup>
 				<option value="setCancel" class="massCancel">{t _cancel}</option>
 			{/if}
-			<option value="delete">{t _delete}</option>
+			<option value="delete" class="delete" {if $orderGroupID == 8}selected="selected"{/if}>{t _delete}</option>
 		</select>
 
 		<span class="bulkValues" style="display: none;">
