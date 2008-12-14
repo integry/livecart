@@ -1,3 +1,14 @@
+{*nolive*}
+<div id="customizeMenu">
+	<span id="modeTitle">Live Customization Mode</span>
+	<ul>
+		<li id="modeTemplate" class="active"><a href="">Edit templates</a></li>
+		<li id="modeTranslation"><a href="">Edit translations</a></li>
+		<li id="modeCss"><a href="">Edit CSS</a></li>
+		<li id="modeExit"><a href="">Exit</a></li>
+	</ul>
+</div>
+
 <div id="transDialogBox" style="position: absolute;z-index: 10000; display: none;">
 	<div class="menuLoadIndicator" id="transDialogIndicator"></div>
 	<div id="transDialogContent">
