@@ -57,16 +57,23 @@ class EavFieldManager implements iEavFieldManager
 		return ActiveRecordModel::getRecordSet('EavField', $this->getFieldFilter(), array('EavFieldGroup'));
 	}
 
+	public static function getClassFieldSet($class)
+	{
+		return ActiveRecordModel::getRecordSet('EavField', self::getFieldFilter($class), array('EavFieldGroup'));
+	}
+
 	/**
 	 * Creates a select filter for custom fields
 	 *
 	 * @param bool $includeParentFields
 	 * @return ARSelectFilter
 	 */
-	private function getFieldFilter()
+	private function getFieldFilter($class = null)
 	{
-		$filter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('EavField', 'classID'), $this->classID));
-		if ($this->stringIdentifier)
+		$classID = $class ? EavField::getClassID($class) : $this->classID;
+
+		$filter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('EavField', 'classID'), $classID));
+		if (is_null($class) && $this->stringIdentifier)
 		{
 			$filter->mergeCondition(new EqualsCond(new ARFieldHandle('EavField', 'stringIdentifier'), $this->stringIdentifier));
 		}

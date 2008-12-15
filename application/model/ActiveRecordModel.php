@@ -225,7 +225,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 		return $data;
 	}
 
-	protected static function isEav($className)
+	public static function isEav($className)
 	{
 		if (!isset(self::$isEav[$className]))
 		{

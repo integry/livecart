@@ -155,6 +155,7 @@ class UserGroupController extends ActiveGridController
 		$availableColumns = parent::getAvailableColumns();
 		$availableColumns['UserGroup.name'] = array('type' => 'text', 'name' => $this->translate('UserGroup.name'));
 		unset($availableColumns['User.password']);
+		unset($availableColumns['User.preferences']);
 		return $availableColumns;
 	}
 
@@ -170,7 +171,7 @@ class UserGroupController extends ActiveGridController
 
 	protected function getSelectFilter()
 	{
-		$filter = new ARSelectFilter();
+		$filter = parent::getSelectFilter();
 
 		$id = $this->request->get('id');
 

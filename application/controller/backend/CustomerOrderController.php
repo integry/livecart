@@ -453,7 +453,7 @@ class CustomerOrderController extends ActiveGridController
 
 	protected function getSelectFilter()
 	{
-		$filter = new ARSelectFilter();
+		$filter = parent::getSelectFilter();
 
 		if($this->request->get('sort_col') == 'CustomerOrder.ID2')
 		{
@@ -503,6 +503,8 @@ class CustomerOrderController extends ActiveGridController
 
 	public function processDataArray($orders, $displayedColumns)
 	{
+		$orders = parent::processDataArray($orders, $displayedColumns);
+
 		foreach ($orders as &$order)
 		{
 			$order['ID2'] = $order['ID'];
@@ -900,27 +902,20 @@ class CustomerOrderController extends ActiveGridController
 	public function getAvailableColumns()
 	{
 		// get available columns
-		$availableColumns = array();
+		$availableColumns = parent::getAvailableColumns();
 
+		unset($availableColumns['CustomerOrder.shipping']);
+		unset($availableColumns['CustomerOrder.isFinalized']);
+
+		return $availableColumns;
+	}
+
+	protected function getCustomColumns()
+	{
 		$availableColumns['User.email'] = 'text';
 		$availableColumns['User.ID'] = 'text';
 		$availableColumns['CustomerOrder.ID2'] = 'numeric';
 		$availableColumns['User.fullName'] = 'text';
-
-		foreach (ActiveRecordModel::getSchemaInstance('CustomerOrder')->getFieldList() as $field)
-		{
-			$type = ActiveGrid::getFieldType($field);
-
-			if (!$type)
-			{
-				continue;
-			}
-
-			$availableColumns['CustomerOrder.' . $field->getName()] = $type;
-		}
-
-		unset($availableColumns['CustomerOrder.shipping']);
-		unset($availableColumns['CustomerOrder.isFinalized']);
 
 		$availableColumns['CustomerOrder.status'] = 'text';
 
@@ -936,14 +931,6 @@ class CustomerOrderController extends ActiveGridController
 		$availableColumns['User.firstName'] = 'text';
 		$availableColumns['User.lastName'] = 'text';
 		$availableColumns['User.companyName'] = 'text';
-
-		foreach ($availableColumns as $column => $type)
-		{
-			$availableColumns[$column] = array(
-				'name' => $this->translate($column),
-				'type' => $type
-			);
-		}
 
 		return $availableColumns;
 	}
