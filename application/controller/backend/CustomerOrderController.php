@@ -920,6 +920,8 @@ class CustomerOrderController extends ActiveGridController
 		$availableColumns['CustomerOrder.status'] = 'text';
 
 		// Shipping address
+		$availableColumns['ShippingAddress.firstName'] = 'text';
+		$availableColumns['ShippingAddress.lastName'] = 'text';
 		$availableColumns['ShippingAddress.countryID'] = 'text';
 		$availableColumns['ShippingAddress.stateName'] = 'text';
 		$availableColumns['ShippingAddress.city'] = 'text';
