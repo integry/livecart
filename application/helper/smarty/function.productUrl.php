@@ -41,6 +41,8 @@ function createProductUrl($params, LiveCart $application)
 		$url = $application->getRouter()->setUrlQueryParam($url, 'filters', $params['filterChainHandle']);
 	}
 
+	$application->getRouter()->setLangReplace($handle, 'name', $product);
+
 	return $url;
 }
 

@@ -2,6 +2,7 @@
 
 ClassLoader::import('framework.Application');
 ClassLoader::import('framework.response.ActionResponse');
+ClassLoader::import('application.LiveCartRouter');
 ClassLoader::import('library.payment.TransactionDetails');
 
 /**
@@ -12,6 +13,8 @@ ClassLoader::import('library.payment.TransactionDetails');
  */
 class LiveCart extends Application
 {
+	protected $routerClass = 'LiveCartRouter';
+
 	private static $pluginDirectories = array();
 
 	private $isBackend = false;

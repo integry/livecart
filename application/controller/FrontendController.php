@@ -231,7 +231,8 @@ abstract class FrontendController extends BaseController
 					$returnRoute = '';
 				}
 
-				$languages[$key]['url'] = $this->router->addQueryParams($this->router->createUrlFromRoute($lang['ID'] . '/' . $returnRoute, true));
+				$langRoute = ($lang['isDefault'] ? '' : $lang['ID'] . '/') . $returnRoute;
+				$languages[$key]['url'] = $this->router->addQueryParams($this->router->createUrlFromRoute($langRoute, true));
 			}
 		}
 
