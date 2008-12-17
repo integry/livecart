@@ -271,8 +271,14 @@ class CheckoutController extends FrontendController
 		{
 			if ($id = $form->get($type . 'Address'))
 			{
-				ActiveRecordModel::getInstanceByID('UserAddress', $id, true)->getSpecification()->setFormResponse($response, $form, $type . '_');
+				$address = ActiveRecordModel::getInstanceByID('UserAddress', $id, true);
 			}
+			else
+			{
+				$address = UserAddress::getNewInstance();
+			}
+
+			$address->getSpecification()->setFormResponse($response, $form, $type . '_');
 		}
 
 		return $response;

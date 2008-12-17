@@ -661,7 +661,7 @@ class Shipment extends ActiveRecordModel
 		$taxes = array();
 		foreach ($this->getTaxes() as $tax)
 		{
-			$taxes[$tax->taxRate->get()->getID()][] = $tax;
+			$taxes[$tax->taxRate->get()->tax->get()->getID()][] = $tax;
 		}
 
 		foreach ($taxes as $taxType)
