@@ -160,12 +160,12 @@ class CustomerOrderController extends ActiveGridController
 
 		if(isset($orderArray['ShippingAddress']))
 		{
-			$response->set('formShippingAddress', $this->createUserAddressForm($orderArray['ShippingAddress']));
+			$response->set('formShippingAddress', $this->createUserAddressForm($orderArray['ShippingAddress'], $response));
 		}
 
 		if(isset($orderArray['BillingAddress']))
 		{
-			$response->set('formBillingAddress', $this->createUserAddressForm($orderArray['BillingAddress']));
+			$response->set('formBillingAddress', $this->createUserAddressForm($orderArray['BillingAddress'], $response));
 		}
 
 		$shipableShipmentsCount = 0;
@@ -957,13 +957,15 @@ class CustomerOrderController extends ActiveGridController
 		$validator->addCheck('firstName', new IsNotEmptyCheck($this->translate('_first_name_is_empty')));
 		$validator->addCheck('lastName',  new IsNotEmptyCheck($this->translate('_last_name_is_empty')));
 
+		UserAddress::getNewInstance()->getSpecification()->setValidation($validator);
+
 		return $validator;
 	}
 
 	/**
 	 * @return Form
 	 */
-	public function createUserAddressForm($addressArray = array())
+	public function createUserAddressForm($addressArray = array(), ActionResponse $response)
 	{
 		$form = new Form($this->createUserAddressFormValidator());
 
@@ -976,6 +978,9 @@ class CustomerOrderController extends ActiveGridController
 
 			$form->setData($addressArray);
 		}
+
+		$address = !empty($addressArray['ID']) ? ActiveRecordModel::getInstanceByID('UserAddress', $addressArray['ID']) : UserAddress::getNewInstance();
+		$address->getSpecification()->setFormResponse($response, $form);
 
 		return $form;
 	}

@@ -282,9 +282,11 @@ class ShipmentController extends StoreManagementController
 		$shipment->shippingAddress->get()->load();
 		$address = $shipment->shippingAddress->get()->toArray();
 
-		$controller = new CustomerOrderController($this->application);
-		$form = $controller->createUserAddressForm($address);
 		$response = new ActionResponse('form', $form);
+
+		$controller = new CustomerOrderController($this->application);
+		$form = $controller->createUserAddressForm($address, $response);
+
 		$response->set('countries', $this->application->getEnabledCountries());
 		$response->set('states', State::getStatesByCountry($address['countryID']));
 		$response->set('shipmentID', $shipment->getID());

@@ -63,6 +63,7 @@
 				</p>
 
 				{include file="block/eav/fields.tpl" item=$user filter="isDisplayed"}
+				{include file="block/eav/fields.tpl" eavPrefix="billing_"}
 
 			<h3>{t _billing_address}</h3>
 
@@ -126,7 +127,7 @@
 				</p>
 
 				<div id="shippingForm">
-					{include file="user/addressForm.tpl" prefix="shipping_" states=$shippingStates}
+					{include file="user/addressForm.tpl" prefix="shipping_" eavPrefix="shipping_" states=$shippingStates}
 				</div>
 
 			{/if}

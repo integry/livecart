@@ -935,6 +935,14 @@ Backend.CustomerOrder.Address.prototype =
 				}
 			}.bind(this));
 
+			if (address.UserAddress.attributes)
+			{
+				$H(address.UserAddress.attributes).each(function(attr)
+				{
+					this.nodes.form.elements.namedItem('specField_' + attr[1].fieldID).value = attr[1].value;
+				}.bind(this));
+			}
+
 			this.stateSwitcher.updateStates(null, function(){ this.nodes.form.elements.namedItem('stateID').value = address.UserAddress.stateID; }.bind(this));
 		}
 	},

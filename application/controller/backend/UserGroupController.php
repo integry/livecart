@@ -61,7 +61,7 @@ class UserGroupController extends ActiveGridController
 			$availableUserGroups[$group->getID()] = $group->name->get();
 		}
 
-		$form = UserController::createUserForm($this, null);
+		$form = UserController::createUserForm($this, null, $response);
 
 		$form->setData(array_merge($form->getData(), array('UserGroup' => $id, 'ID' => 0, 'isEnabled' => 1)));
 
