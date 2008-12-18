@@ -9,6 +9,11 @@ Backend.ProductBundle =
 	getContainer: function(ownerID)
 	{
 		return $('tabProductBundle_' + ownerID + 'Content');
+	},
+
+	getTab: function()
+	{
+		return 'tabProductBundle';
 	}
 }
 
