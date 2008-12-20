@@ -26,6 +26,8 @@
 	{/err}
 </p>
 
+{include file="block/eav/fields.tpl" item=$address eavPrefix=$prefix}
+
 <p class="required">
 	{{err for="`$prefix`address1"}}
 		{{label {t _address}:}}

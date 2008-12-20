@@ -1,1 +1,1 @@
-{include file="backend/eav/fields.tpl" field=EavField disableNewOptionValues=true disableAutocomplete=true}
+{include file="backend/eav/fields.tpl" field=EavField specFieldList=$fieldList|@or:$specFieldList_prefix[$eavPrefix] disableNewOptionValues=true disableAutocomplete=true prefix=$eavPrefix}

@@ -88,9 +88,12 @@ class Email
 		$this->from = new Swift_Address($email, $name);
 	}
 
-	public function setTo($email, $name = null)
+	public function setTo($emailAddresses, $name = null)
 	{
-		$this->recipients->addTo($email, $name);
+		foreach(explode(',', $emailAddresses) as $email)
+		{
+			$this->recipients->addTo($email, $name);
+		}
 	}
 
 	public function setCc($email, $name)

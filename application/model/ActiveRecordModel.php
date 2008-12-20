@@ -91,7 +91,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 		if ($this instanceof EavAble)
 		{
-			$this->getSpecification()->loadRequestData($request);
+			$this->getSpecification()->loadRequestData($request, $prefix);
 		}
 	}
 
@@ -225,7 +225,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 		return $data;
 	}
 
-	protected static function isEav($className)
+	public static function isEav($className)
 	{
 		if (!isset(self::$isEav[$className]))
 		{
@@ -383,6 +383,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 		if (($this instanceof EavAble) && $this->specificationInstance)
 		{
+			$this->setID(null);
 			$this->specificationInstance = clone $this->specificationInstance;
 			$this->specificationInstance->setOwner(EavObject::getInstance($this));
 		}

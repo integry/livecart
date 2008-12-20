@@ -51,7 +51,7 @@ class CustomerOrderController extends ActiveGridController
 
 	protected function getReferencedData()
 	{
-		return array('User', 'Currency', 'ShippingAddress' => 'UserAddress', 'State');
+		return array('User', 'Currency', 'ShippingAddress' => 'UserAddress', 'BillingAddress', 'State');
 	}
 
 	protected function getDefaultColumns()
@@ -120,7 +120,7 @@ class CustomerOrderController extends ActiveGridController
 			if ($order->user->get()->defaultBillingAddress->get())
 			{
 				$billingStates = State::getStatesByCountry($order->user->get()->defaultBillingAddress->get()->userAddress->get()->countryID->get());
-			   $orderArray['BillingAddress'] = $order->user->get()->defaultBillingAddress->get()->userAddress->get()->toArray();
+				$orderArray['BillingAddress'] = $order->user->get()->defaultBillingAddress->get()->userAddress->get()->toArray();
 			}
 
 			$billingStates[''] = '';
@@ -160,12 +160,12 @@ class CustomerOrderController extends ActiveGridController
 
 		if(isset($orderArray['ShippingAddress']))
 		{
-			$response->set('formShippingAddress', $this->createUserAddressForm($orderArray['ShippingAddress']));
+			$response->set('formShippingAddress', $this->createUserAddressForm($orderArray['ShippingAddress'], $response));
 		}
 
 		if(isset($orderArray['BillingAddress']))
 		{
-			$response->set('formBillingAddress', $this->createUserAddressForm($orderArray['BillingAddress']));
+			$response->set('formBillingAddress', $this->createUserAddressForm($orderArray['BillingAddress'], $response));
 		}
 
 		$shipableShipmentsCount = 0;
@@ -337,6 +337,7 @@ class CustomerOrderController extends ActiveGridController
 		$grid = new ActiveGrid($this->application, $filter, 'CustomerOrder');
 		$typeCond = $this->getTypeCondition($this->request->get('id'));
 		$this->applyFullNameFilter($typeCond);
+		$this->applyStateFilter($typeCond);
 		$filter->mergeCondition($typeCond);
 
 		$mass = new OrderMassActionProcessor($grid, array('controller' => $this));
@@ -452,7 +453,7 @@ class CustomerOrderController extends ActiveGridController
 
 	protected function getSelectFilter()
 	{
-		$filter = new ARSelectFilter();
+		$filter = parent::getSelectFilter();
 
 		if($this->request->get('sort_col') == 'CustomerOrder.ID2')
 		{
@@ -461,12 +462,13 @@ class CustomerOrderController extends ActiveGridController
 
 		if($filters = $this->request->get('filters'))
 		{
-			if(isset($filters['CustomerOrder.ID2']))
+			if (isset($filters['CustomerOrder.ID2']))
 			{
 				$filters['CustomerOrder.ID'] = $filters['CustomerOrder.ID2'];
 				unset($filters['CustomerOrder.ID2']);
-				$this->request->set('filters', $filters);
 			}
+
+			$this->request->set('filters', $filters);
 		}
 
 		$id = $this->request->get('id');
@@ -477,6 +479,7 @@ class CustomerOrderController extends ActiveGridController
 		$cond = $this->getTypeCondition($id);
 
 		$this->applyFullNameFilter($cond);
+		$this->applyStateFilter($cond);
 
 		if($this->request->get('sort_col') == 'User.fullName')
 		{
@@ -500,6 +503,8 @@ class CustomerOrderController extends ActiveGridController
 
 	public function processDataArray($orders, $displayedColumns)
 	{
+		$orders = parent::processDataArray($orders, $displayedColumns);
+
 		foreach ($orders as &$order)
 		{
 			$order['ID2'] = $order['ID'];
@@ -563,6 +568,25 @@ class CustomerOrderController extends ActiveGridController
 		return $displayedColumns;
 	}
 
+	protected function getColumnValue($record, $class, $field)
+	{
+		if ('stateName' == $field)
+		{
+			if (isset($record['ShippingAddress']['State']['name']))
+			{
+				return $record['ShippingAddress']['State']['name'];
+			}
+			else
+			{
+				return $record['ShippingAddress']['stateName'];
+			}
+		}
+		else
+		{
+			return parent::getColumnValue($record, $class, $field);
+		}
+	}
+
 	private function applyFullNameFilter(Condition $cond)
 	{
 		$filters = $this->request->get('filters');
@@ -591,6 +615,27 @@ class CustomerOrderController extends ActiveGridController
 			$cond->addAND($firstNameCond);
 			$cond->addAND($lastNameCond);
 		 }
+	}
+
+	private function applyStateFilter(Condition $cond)
+	{
+		$filters = $this->request->get('filters');
+		if (!is_array($filters))
+		{
+			$filters = (array)json_decode($filters);
+		}
+
+		if (isset($filters['ShippingAddress.stateName']))
+		{
+			$value = $filters['ShippingAddress.stateName'];
+
+			$c = new LikeCond(new ARFieldHandle('UserAddress', "stateName"), '%' . $value . '%');
+			$c->addOR(new LikeCond(new ARFieldHandle('State', "name"), '%' . $value . '%'));
+
+			$cond->addAND($c);
+			unset($filters['ShippingAddress.stateName']);
+			$this->request->set('filters', $filters);
+		}
 	}
 
 	private function getTypeCondition($type)
@@ -857,48 +902,37 @@ class CustomerOrderController extends ActiveGridController
 	public function getAvailableColumns()
 	{
 		// get available columns
-		$availableColumns = array();
+		$availableColumns = parent::getAvailableColumns();
 
+		unset($availableColumns['CustomerOrder.shipping']);
+		unset($availableColumns['CustomerOrder.isFinalized']);
+
+		return $availableColumns;
+	}
+
+	protected function getCustomColumns()
+	{
 		$availableColumns['User.email'] = 'text';
 		$availableColumns['User.ID'] = 'text';
 		$availableColumns['CustomerOrder.ID2'] = 'numeric';
 		$availableColumns['User.fullName'] = 'text';
 
-		foreach (ActiveRecordModel::getSchemaInstance('CustomerOrder')->getFieldList() as $field)
-		{
-			$type = ActiveGrid::getFieldType($field);
-
-			if (!$type)
-			{
-				continue;
-			}
-
-			$availableColumns['CustomerOrder.' . $field->getName()] = $type;
-		}
-
-		unset($availableColumns['CustomerOrder.shipping']);
-		unset($availableColumns['CustomerOrder.isFinalized']);
-
 		$availableColumns['CustomerOrder.status'] = 'text';
 
-		// Address
+		// Shipping address
+		$availableColumns['ShippingAddress.firstName'] = 'text';
+		$availableColumns['ShippingAddress.lastName'] = 'text';
 		$availableColumns['ShippingAddress.countryID'] = 'text';
+		$availableColumns['ShippingAddress.stateName'] = 'text';
 		$availableColumns['ShippingAddress.city'] = 'text';
 		$availableColumns['ShippingAddress.address1'] = 'text';
-		$availableColumns['ShippingAddress.postalCode'] = 'numeric';
+		$availableColumns['ShippingAddress.postalCode'] = 'text';
+		$availableColumns['ShippingAddress.phone'] = 'text';
 
 		// User
 		$availableColumns['User.firstName'] = 'text';
 		$availableColumns['User.lastName'] = 'text';
 		$availableColumns['User.companyName'] = 'text';
-
-		foreach ($availableColumns as $column => $type)
-		{
-			$availableColumns[$column] = array(
-				'name' => $this->translate($column),
-				'type' => $type
-			);
-		}
 
 		return $availableColumns;
 	}
@@ -923,13 +957,15 @@ class CustomerOrderController extends ActiveGridController
 		$validator->addCheck('firstName', new IsNotEmptyCheck($this->translate('_first_name_is_empty')));
 		$validator->addCheck('lastName',  new IsNotEmptyCheck($this->translate('_last_name_is_empty')));
 
+		UserAddress::getNewInstance()->getSpecification()->setValidation($validator);
+
 		return $validator;
 	}
 
 	/**
 	 * @return Form
 	 */
-	public function createUserAddressForm($addressArray = array())
+	public function createUserAddressForm($addressArray = array(), ActionResponse $response)
 	{
 		$form = new Form($this->createUserAddressFormValidator());
 
@@ -942,6 +978,9 @@ class CustomerOrderController extends ActiveGridController
 
 			$form->setData($addressArray);
 		}
+
+		$address = !empty($addressArray['ID']) ? ActiveRecordModel::getInstanceByID('UserAddress', $addressArray['ID']) : UserAddress::getNewInstance();
+		$address->getSpecification()->setFormResponse($response, $form);
 
 		return $form;
 	}

@@ -84,6 +84,7 @@ function createCategoryUrl($params, LiveCart $application)
 	}
 
 	$url = $application->getRouter()->createUrl($urlParams, true);
+	$application->getRouter()->setLangReplace($urlParams['cathandle'], 'name', $category);
 
 	// remove empty search query parameter
 	return preg_replace('/[\?&]q=$/', '', $url);

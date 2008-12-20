@@ -153,7 +153,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	 *
 	 *	@return ARExpressionHandle
 	 */
-	public static function getLangOrderHandle(ARFieldHandle $field)
+	public static function getLangOrderHandle(ARFieldHandleInterface $field)
 	{
 		$currentLanguage = self::getApplication()->getLocaleCode();
 		$defaultLanguage = self::getApplication()->getDefaultLanguageCode();
@@ -199,7 +199,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	 *
 	 *	@return ARExpressionHandle
    	 */
-	public static function getLangSearchHandle(ARFieldHandle $field, $language)
+	public static function getLangSearchHandle(ARFieldHandleInterface $field, $language)
 	{
 		$expression = "
 			SUBSTRING(

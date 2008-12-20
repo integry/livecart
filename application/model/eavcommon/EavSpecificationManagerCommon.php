@@ -249,15 +249,15 @@ abstract class EavSpecificationManagerCommon
 		return ($a[$field][$fieldGroup]['position'] < $b[$field][$fieldGroup]['position']) ? -1 : 1;
 	}
 
-	public function loadRequestData(Request $request)
+	public function loadRequestData(Request $request, $prefix = '')
 	{
 		$fields = $this->getSpecificationFieldSet();
 		$application = ActiveRecordModel::getApplication();
 
 		// create new select values
-		if ($request->isValueSet('other'))
+		if ($request->isValueSet($prefix . 'other'))
 		{
-			foreach ($request->get('other') as $fieldID => $values)
+			foreach ($request->get($prefix . 'other') as $fieldID => $values)
 			{
 				$field = call_user_func_array(array($this->getFieldClass(), 'getInstanceByID'), array($fieldID, ActiveRecordModel::LOAD_DATA));
 
@@ -272,20 +272,20 @@ abstract class EavSpecificationManagerCommon
 							$fieldValue->setValueByLang('value', $application->getDefaultLanguageCode(), $value);
 							$fieldValue->save();
 
-							$request->set('specItem_' . $fieldValue->getID(), 'on');
+							$request->set($prefix . 'specItem_' . $fieldValue->getID(), 'on');
 						}
 					}
 				}
 				else
 				{
 					// single select
-					if ('other' == $request->get('specField_' . $fieldID))
+					if ('other' == $request->get($prefix . 'specField_' . $fieldID))
 					{
 						$fieldValue = $field->getNewValueInstance();
 						$fieldValue->setValueByLang('value', $application->getDefaultLanguageCode(), $values);
 						$fieldValue->save();
 
-						$request->set('specField_' . $fieldID, $fieldValue->getID());
+						$request->set($prefix . 'specField_' . $fieldID, $fieldValue->getID());
 					}
 				}
 			}
@@ -295,7 +295,7 @@ abstract class EavSpecificationManagerCommon
 
 		foreach ($fields as $field)
 		{
-			$fieldName = $field->getFormFieldName();
+			$fieldName = $prefix . $field->getFormFieldName();
 
 			if ($field->isSelector())
 			{
@@ -312,9 +312,9 @@ abstract class EavSpecificationManagerCommon
 
 					foreach ($values as $value)
 					{
-					  	if ($request->isValueSet($value->getFormFieldName()) || $request->isValueSet('checkbox_' . $value->getFormFieldName()))
+					  	if ($request->isValueSet($prefix . $value->getFormFieldName()) || $request->isValueSet($prefix . 'checkbox_' . $value->getFormFieldName()))
 					  	{
-						  	if ($request->get($value->getFormFieldName()))
+						  	if ($request->get($prefix . $value->getFormFieldName()))
 						  	{
 								$this->setAttributeValue($field, $value);
 							}
@@ -334,9 +334,9 @@ abstract class EavSpecificationManagerCommon
 					{
 						foreach ($languages as $language)
 						{
-						  	if ($request->isValueSet($field->getFormFieldName($language)))
-						  	{
-								$this->setAttributeValueByLang($field, $language, $request->get($field->getFormFieldName($language)));
+							if ($request->isValueSet($prefix . $field->getFormFieldName($language)))
+							{
+								$this->setAttributeValueByLang($field, $language, $request->get($prefix . $field->getFormFieldName($language)));
 							}
 						}
 					}
@@ -356,7 +356,7 @@ abstract class EavSpecificationManagerCommon
 		}
 	}
 
-	public function getFormData()
+	public function getFormData($prefix = '')
 	{
 		$selectorTypes = EavFieldCommon::getSelectorValueTypes();
 		$multiLingualTypes = EavFieldCommon::getMultilanguageTypes();
@@ -367,34 +367,36 @@ abstract class EavSpecificationManagerCommon
 
 		foreach($this->toArray() as $attr)
 		{
+			$fieldName = $prefix . $attr[$fieldClass]['fieldName'];
+
 			if(in_array($attr[$fieldClass]['type'], $selectorTypes))
 			{
 				if(1 == $attr[$fieldClass]['isMultiValue'])
 				{
 					foreach($attr['valueIDs'] as $valueID)
 					{
-						$formData['specItem_' . $valueID] = "on";
+						$formData[$prefix . 'specItem_' . $valueID] = "on";
 					}
 				}
 				else
 				{
-					$formData[$attr[$fieldClass]['fieldName']] = $attr['ID'];
+					$formData[$fieldName] = $attr['ID'];
 				}
 			}
 			else if(in_array($attr[$fieldClass]['type'], $multiLingualTypes))
 			{
-				$formData[$attr[$fieldClass]['fieldName']] = $attr['value'];
+				$formData[$fieldName] = $attr['value'];
 				foreach($languageArray as $lang)
 				{
 					if (isset($attr['value_' . $lang]))
 					{
-						$formData[$attr[$fieldClass]['fieldName'] . '_' . $lang] = $attr['value_' . $lang];
+						$formData[$fieldName . '_' . $lang] = $attr['value_' . $lang];
 					}
 				}
 			}
 			else
 			{
-				$formData[$attr[$fieldClass]['fieldName']] = $attr['value'];
+				$formData[$fieldName] = $attr['value'];
 			}
 		}
 
@@ -413,7 +415,7 @@ abstract class EavSpecificationManagerCommon
 		return $validator->isValid();
 	}
 
-	public function setFormResponse(ActionResponse $response, Form $form)
+	public function setFormResponse(ActionResponse $response, Form $form, $prefix = '')
 	{
 		$specFields = $this->owner->getSpecification()->getSpecificationFieldSet(ActiveRecordModel::LOAD_REFERENCES);
 		$specFieldArray = $specFields->toArray();
@@ -453,22 +455,39 @@ abstract class EavSpecificationManagerCommon
 		$multiLingualSpecFields = array();
 		foreach ($specFields as $key => $field)
 		{
-		  	if ($field->isTextField())
-		  	{
-		  		$multiLingualSpecFields[] = $field->toArray();
+			if ($field->isTextField())
+			{
+				$multiLingualSpecFields[] = $field->toArray();
 			}
 		}
 
+		if (!$prefix)
+		{
+			$response->set("specFieldList", $specFieldsByGroup);
+		}
+
 		$response->set("groupClass", $groupClass);
-		$response->set("specFieldList", $specFieldsByGroup);
 		$response->set("multiLingualSpecFieldss", $multiLingualSpecFields);
 
-		$form->setData($this->getFormData());
+		// set fields by prefix
+		$prefixed = $response->get("specFieldList_prefix", array());
+		$prefixed[$prefix] = $specFieldsByGroup;
+		$response->set("specFieldList_prefix", $prefixed);
+
+		// set fields by owner
+		if (($this->owner instanceof EavObject) && ($owner = $this->owner->getOwner()))
+		{
+			$byOwner = $response->get("specFieldListByOwner", array());
+			$byOwner[get_class($owner)][$owner->getID()] = $specFieldsByGroup;
+			$response->set("specFieldListByOwner", $byOwner);
+		}
+
+		$form->setData($this->getFormData($prefix));
 
 		//$this->setFormValidator($form->getValidator());
 	}
 
-	public function setValidation(RequestValidator $validator, $filtersOnly = false)
+	public function setValidation(RequestValidator $validator, $filtersOnly = false, $fieldPrefix = '')
 	{
 		$specFields = $this->getSpecificationFieldSet(ActiveRecordModel::LOAD_REFERENCES);
 
@@ -476,7 +495,7 @@ abstract class EavSpecificationManagerCommon
 
 		foreach ($specFields as $key => $field)
 		{
-			$fieldname = $field->getFormFieldName();
+			$fieldname = $fieldPrefix . $field->getFormFieldName();
 
 		  	// validate numeric values
 			if (EavFieldCommon::TYPE_NUMBERS_SIMPLE == $field->type->get())

@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import("application.model.delivery.State");
+ClassLoader::import("application.model.eav.EavAble");
 
 /**
  * Customer billing or shipping address
@@ -8,7 +9,7 @@ ClassLoader::import("application.model.delivery.State");
  * @package application.model.user
  * @author Integry Systems <http://integry.com>
  */
-class UserAddress extends ActiveRecordModel
+class UserAddress extends ActiveRecordModel implements EavAble
 {
 	/**
 	 * Define database schema
@@ -55,6 +56,8 @@ class UserAddress extends ActiveRecordModel
 
 	public static function transformArray($array, ARSchema $schema)
 	{
+		$array = parent::transformArray($array, $schema);
+
 		$array['countryName'] = self::getApplication()->getLocale()->info()->getCountryName($array['countryID']);
 		$array['fullName'] = $array['firstName'] . ' ' . $array['lastName'];
 		if (!empty($array['State']))

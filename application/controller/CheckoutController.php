@@ -264,7 +264,22 @@ class CheckoutController extends FrontendController
 		$response->set('billing_states', $this->getStateList($form->get('billing_country')));
 		$response->set('shipping_states', $this->getStateList($form->get('shipping_country')));
 		$response->set('step', $step);
+
 		$this->order->getSpecification()->setFormResponse($response, $form);
+
+		foreach (array('billing', 'shipping') as $type)
+		{
+			if ($id = $form->get($type . 'Address'))
+			{
+				$address = ActiveRecordModel::getInstanceByID('UserAddress', $id, true);
+			}
+			else
+			{
+				$address = UserAddress::getNewInstance();
+			}
+
+			$address->getSpecification()->setFormResponse($response, $form, $type . '_');
+		}
 
 		return $response;
 	}
@@ -1022,6 +1037,8 @@ class CheckoutController extends FrontendController
 			throw new ApplicationException();
 		}
 
+		$user = $this->order->user->get();
+		$user->load();
 		$newOrder = $this->order->finalize(Currency::getValidInstanceById($this->getRequestCurrency()));
 
 		$orderArray = $this->order->toArray(array('payments' => true));
@@ -1030,7 +1047,7 @@ class CheckoutController extends FrontendController
 		if ($this->config->get('EMAIL_NEW_ORDER'))
 		{
 			$email = new Email($this->application);
-			$email->setUser($this->user);
+			$email->setUser($user);
 			$email->setTemplate('order.new');
 			$email->set('order', $orderArray);
 			$email->send();
@@ -1043,7 +1060,7 @@ class CheckoutController extends FrontendController
 			$email->setTo($this->config->get('NOTIFICATION_EMAIL'), $this->config->get('STORE_NAME'));
 			$email->setTemplate('notify.order');
 			$email->set('order', $orderArray);
-			$email->set('user', $this->user->toArray());
+			$email->set('user', $user->toArray());
 			$email->send();
 		}
 

@@ -639,8 +639,11 @@ class UserController extends FrontendController
 		$response->set('countries', $this->getCountryList($form));
 		$response->set('states', $this->getStateList($form->get('billing_country')));
 		$response->set('shippingStates', $this->getStateList($form->get('shipping_country')));
+		$response->set('order', $this->order->toArray());
 
 		SessionUser::getAnonymousUser()->getSpecification()->setFormResponse($response, $form);
+		UserAddress::getNewInstance()->getSpecification()->setFormResponse($response, $form, 'billing_');
+		UserAddress::getNewInstance()->getSpecification()->setFormResponse($response, $form, 'shipping_');
 
 		return $response;
 	}
@@ -814,6 +817,9 @@ class UserController extends FrontendController
 		$response->set('states', $this->getStateList($form->get('country')));
 		$response->set('address', $address->toArray());
 		$response->set('addressType', $addressType->toArray());
+
+		$address->getSpecification()->setFormResponse($response, $form);
+
 		return $response;
 	}
 
@@ -1223,6 +1229,23 @@ class UserController extends FrontendController
 
 		$fields[] = $fieldPrefix . 'postalCode';
 		$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_zip'));
+
+		// custom field validation
+		$tempVal = new RequestValidator('tempVal', $this->request);
+		UserAddress::getNewInstance()->getSpecification()->setValidation($tempVal, null, $fieldPrefix);
+		foreach ($tempVal->getValidatorVars() as $var)
+		{
+			foreach ($var->getChecks() as $check)
+			{
+				$fields[] = $var->getName();
+				$checks[] = $check;
+			}
+
+			foreach ($var->getFilters() as $filter)
+			{
+				$validator->addFilter($var->getName(), $filter);
+			}
+		}
 
 		foreach ($fields as $key => $field)
 		{

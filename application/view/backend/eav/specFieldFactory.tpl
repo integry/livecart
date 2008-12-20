@@ -10,7 +10,7 @@
 		{foreach from=$field.values key="id" item="value"}
 			{if '' != $id}
 				<p>
-					{checkbox name="specItem_`$id`" class="checkbox" value="on" id="product_`$cat`_`$item.ID`_specItem_`$id`"}
+					{checkbox name="`$prefix`specItem_`$id`" class="checkbox" value="on" id="product_`$cat`_`$item.ID`_specItem_`$id`"}
 					<label class="checkbox" for="product_{$cat}_{$item.ID}_specItem_{$id}"> {$value}</label>
 				</p>
 			{/if}
@@ -20,7 +20,7 @@
 			<div class="other">
 				<p>
 					<label for="product_{$cat}_{$item.ID}_specItem_other_{$field.ID}"> {t _other}:</label>
-					{textfield name="other[`$field.ID`][]" id="product_`$cat`_`$item.ID`_specItem_other_`$field.ID`"}
+					{textfield name="`$prefix`other[`$field.ID`][]" id="product_`$cat`_`$item.ID`_specItem_other_`$field.ID`"}
 				</p>
 			</div>
 		{/if}
@@ -35,28 +35,28 @@
 		{if !$disableNewOptionValues}
 			{php}$field = $this->get_template_vars('field'); $field['values']['other'] = $this->getApplication()->translate('_enter_other'); $this->assign('field', $field);{/php}
 		{/if}
-		{selectfield id="product_`$cat`_`$item.ID`_`$fieldName`" name=$fieldName options=$field.values class="select"}
+		{selectfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" options=$field.values class="select"}
 		{if !$disableNewOptionValues}
-			{textfield name="other[`$field.ID`]" id="product_`$cat`_`$item.ID`_specItem_other_`$field.ID`" style="display: none" class="text wide"}
+			{textfield name="`$prefix`other[`$field.ID`]" id="product_`$cat`_`$item.ID`_specItem_other_`$field.ID`" style="display: none" class="text {$textFieldClass}"}
 		{/if}
 	{/if}
 
 {elseif $field.type == 2}
-	{$field.valuePrefix_lang}{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name=$fieldName class="text numeric"}{$field.valueSuffix_lang}
+	{$field.valuePrefix_lang}{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="text numeric"}{$field.valueSuffix_lang}
 
 {elseif $field.type == 3}
 	{if !$disableAutocomplete}
 		{assign var="autocompleteController" value=$autocompleteController|@or:'backend.product'}
 		{assign var="autocomplete" value="controller=`$autocompleteController` field=`$fieldName`"}
 	{/if}
-	{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name=$fieldName class="text wide" autocomplete=$autocomplete}
+	{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="text {$textFieldClass}" autocomplete=$autocomplete}
 
 {elseif $field.type == 4}
 	<div class="textarea" style="margin-left: 0;">
-		{textarea id="product_`$cat`_`$item.ID`_`$fieldName`" name=$fieldName class="tinyMCE"}
+		{textarea id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="tinyMCE"}
 		<div class="errorText hidden"></div>
 	</div>
 
 {elseif $field.type == 6}
-	{calendar id="product_`$cat`_`$item.ID`_`$fieldName`" name=$fieldName}
+	{calendar id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`"}
 {/if}
