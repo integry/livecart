@@ -140,7 +140,7 @@ abstract class ObjectImageController extends StoreManagementController
 		$this->setLayout('iframeJs');
 		$response->set('ownerId', $this->request->get('ownerId'));
 		$response->set('imageId', $this->request->get('imageId'));
-	  	$response->set('result', json_encode($result));
+	  	$response->set('result', @json_encode($result));
 		return $response;
 	}
 

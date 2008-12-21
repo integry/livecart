@@ -11,6 +11,7 @@ class ImageDriverGD extends ImageDriver
 		$quality = $image->getQuality();
 		$type = $image->getType();
 
+		$this->setMemoryForImage($path);
 		switch($type)
 		{
 			case IMAGETYPE_GIF:   $newimg = imagecreatefromgif($path); break;
@@ -23,7 +24,7 @@ class ImageDriverGD extends ImageDriver
 		{
 			// resize large images in two steps - first resample, then resize
 			// http://lt.php.net/manual/en/function.imagecopyresampled.php
-			if($width > 1500 || $height > 1200)
+			if ($width > 1500 || $height > 1200)
 			{
 				list($width, $height) = $this->resample($newimg, $image, $width, $height, 1024, 768, 0);
 			}
@@ -67,6 +68,40 @@ class ImageDriverGD extends ImageDriver
 	  				 2, /* JPEG */
 	  				 3  /* PNG */
 		  			 );
+	}
+
+	private function setMemoryForImage($filename)
+	{
+		$imageInfo = getimagesize($filename);
+		$MB = 1048576;
+		$K64 = 65536;
+		$TWEAKFACTOR = 1.8;
+		$memoryLimitMB = 8;
+		$memoryNeeded = round( ( $imageInfo[0] * $imageInfo[1]
+											   * $imageInfo['bits']
+											   * $imageInfo['channels'] / 8
+								 + $K64
+							   ) * $TWEAKFACTOR
+							 );
+
+		//ini_get('memory_limit') only works if compiled with "--enable-memory-limit" also
+		//Default memory limit is 8MB so well stick with that.
+		//To find out what yours is, view your php.ini file.
+		$memoryLimit = $memoryLimitMB * $MB;
+		if (function_exists('memory_get_usage') && (memory_get_usage() + $memoryNeeded > $memoryLimit))
+		{
+			$newLimit = $memoryLimitMB + ceil( ( memory_get_usage()
+												+ $memoryNeeded
+												- $memoryLimit
+												) / $MB
+											);
+			ini_set('memory_limit', $newLimit . 'M');
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	private function resample(&$img, ImageManipulator $source, $owdt, $ohgt, $maxwdt, $maxhgt, $quality = 1)
