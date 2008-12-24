@@ -54,14 +54,12 @@
 {literal}
 <script type="text/javascript">
 	window.ordersActiveGrid = {};
-	//new ActiveGridFilter($('filter_User_ID'), window.ordersActiveGrid);
 	Backend.showContainer("userGroupsManagerContainer");
 	{/literal}
 		{allowed role="order"}
 			Backend.CustomerOrder.prototype.ordersMiscPermission = true;
 		{/allowed}
 	{literal}
-
 
 	Backend.UserGroup.prototype.Messages.confirmUserDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_user}{literal}';
 	Backend.UserGroup.prototype.Messages.confirmUserGroupRemove = '{/literal}{t _are_you_sure_you_want_to_delete_this_user_group}{literal}';

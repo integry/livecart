@@ -2,11 +2,15 @@
 
 ClassLoader::import("application.controller.FrontendController");
 ClassLoader::import('application.model.category.Category');
+ClassLoader::import('application.model.category.ProductList');
+ClassLoader::import('application.model.category.ProductListItem');
 ClassLoader::import('application.model.filter.*');
 ClassLoader::import('application.model.product.Product');
 ClassLoader::import('application.model.product.Manufacturer');
 ClassLoader::import('application.model.product.ProductFilter');
 ClassLoader::import('application.model.product.ProductCount');
+ClassLoader::import('application.model.product.ProductPrice');
+ClassLoader::import('application.model.category.SpecFieldValue');
 
 /**
  * Index controller for frontend

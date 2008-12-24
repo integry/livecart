@@ -61,7 +61,7 @@ class UserGroupController extends ActiveGridController
 			$availableUserGroups[$group->getID()] = $group->name->get();
 		}
 
-		$form = UserController::createUserForm($this, null);
+		$form = UserController::createUserForm($this, null, $response);
 
 		$form->setData(array_merge($form->getData(), array('UserGroup' => $id, 'ID' => 0, 'isEnabled' => 1)));
 
@@ -155,6 +155,7 @@ class UserGroupController extends ActiveGridController
 		$availableColumns = parent::getAvailableColumns();
 		$availableColumns['UserGroup.name'] = array('type' => 'text', 'name' => $this->translate('UserGroup.name'));
 		unset($availableColumns['User.password']);
+		unset($availableColumns['User.preferences']);
 		return $availableColumns;
 	}
 
@@ -170,7 +171,7 @@ class UserGroupController extends ActiveGridController
 
 	protected function getSelectFilter()
 	{
-		$filter = new ARSelectFilter();
+		$filter = parent::getSelectFilter();
 
 		$id = $this->request->get('id');
 

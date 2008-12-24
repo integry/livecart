@@ -38,7 +38,7 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 
 	$out = '';
 
-	if(isset($params['glue']) && ($params['glue'] == true) && !$smarty->getApplication()->isDevMode() && !$smarty->getApplication()->isTranslationMode() && !$smarty->getApplication()->isCustomizationMode())
+	if(isset($params['glue']) && ($params['glue'] == true) && !$smarty->getApplication()->isDevMode() && !$smarty->getApplication()->isTemplateCustomizationMode())
 	{
 		$request = $smarty->getApplication()->getRequest();
 
@@ -76,6 +76,7 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 				$content = file_get_contents($cssFile);
 				$content = str_replace('url(..', 'url(' . dirname($relPath) . '/..', $content);
 				$content = str_replace('url(\'..', 'url(\'' . dirname($relPath) . '/..', $content);
+				$content = str_replace('url(\"..', 'url(\'' . dirname($relPath) . '/..', $content);
 
 				$compiledFileContent .= $content;
 			}

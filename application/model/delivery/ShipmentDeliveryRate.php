@@ -40,9 +40,24 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 
 	public static function getRealTimeRates(ShippingRateCalculator $handler, Shipment $shipment)
 	{
+		$rates = new ShippingRateSet();
+
 		$handler->setWeight($shipment->getChargeableWeight());
 
-		$address = $shipment->order->get()->shippingAddress->get();
+		$order = $shipment->order->get();
+		if ($order->isMultiAddress->get())
+		{
+			$address = $shipment->shippingAddress->get();
+		}
+		else
+		{
+			$address = $order->shippingAddress->get();
+		}
+
+		if (!$address)
+		{
+			return $rates;
+		}
 
 		$handler->setDestCountry($address->countryID->get());
 		$handler->setDestState($address->state->get() ? $address->state->get()->code->get() : $address->stateName->get());
@@ -52,7 +67,6 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 		$handler->setSourceZip($config->get('STORE_ZIP'));
 		$handler->setSourceState($config->get('STORE_STATE'));
 
-		$rates = new ShippingRateSet();
 
 		foreach ($handler->getAllRates() as $k => $rate)
 		{

@@ -87,16 +87,16 @@
 		</tr>
 	{/foreach}
 
-	<tr>
-		<td colspan="4" rowspan="1"></td>
-		<td id="cartUpdate" rowspan="3" style="vertical-align: top;"><input type="submit" class="submit" value="{tn _update}" /></td>
-	</tr>
+	{capture assign="cartUpdate"}
+		<td id="cartUpdate"><input type="submit" class="submit" value="{tn _update}" /></td>
+	{/capture}
+	{assign var="cartUpdate" value=$cartUpdate|@str_split:10000}
 
 	{foreach from=$cart.discounts item=discount}
 		<tr>
 			<td colspan="3" class="subTotalCaption">{t _discount}: <span class="discountDesc">{$discount.description}</span></td>
 			<td class="amount discountAmount">{$discount.formatted_amount}</td>
-			<td></td>
+			{$cartUpdate|@array_shift}
 		</tr>
 	{/foreach}
 
@@ -104,7 +104,7 @@
 		<tr>
 			<td colspan="3" class="subTotalCaption">{t _discount}:</td>
 			<td class="amount discountAmount">{$cart.formatted_itemDiscountReverse}</td>
-			<td></td>
+			{$cartUpdate|@array_shift}
 		</tr>
 	{/if}
 
@@ -112,6 +112,7 @@
 		<tr>
 			<td colspan="3" class="subTotalCaption">{t _shipping}:</td>
 			<td class="amount shippingAmount">{$cart.formatted_shippingSubtotal}</td>
+			{$cartUpdate|@array_shift}
 		</tr>
 	{/if}
 
@@ -119,12 +120,14 @@
 		<tr>
 			<td colspan="3" class="subTotalCaption">{$tax.name_lang}:</td>
 			<td class="amount taxAmount">{$tax.formattedAmount}</td>
+			{$cartUpdate|@array_shift}
 		</tr>
 	{/foreach}
 
 		<tr>
 			<td colspan="3" class="subTotalCaption">{t _subtotal}:</td>
 			<td class="subTotal">{$cart.formattedTotal.$currency}</td>
+			{$cartUpdate|@array_shift}
 		</tr>
 
 		{if $isCouponCodes}

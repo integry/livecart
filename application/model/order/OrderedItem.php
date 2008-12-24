@@ -313,6 +313,11 @@ class OrderedItem extends ActiveRecordModel
 		{
 			$this->optionChoices[$option->choice->get()->option->get()->getID()] = $option;
 		}
+
+		if ($this->product->get()->parent->get())
+		{
+			$this->product->get()->parent->get()->load();
+		}
 	}
 
 	public function getOptionChoice(ProductOption $option)

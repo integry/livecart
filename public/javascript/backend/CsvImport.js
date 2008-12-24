@@ -141,6 +141,7 @@ Backend.CsvImport =
 					if (this.fieldConfig[field])
 					{
 						var clonedConfig = this.fieldConfig[field].cloneNode(true);
+						clonedConfig.className = 'config ' + field.replace('.', '-', 'g');
 						select.configContainer.appendChild(clonedConfig);
 						$A(clonedConfig.getElementsByTagName('select')).each(function(sel)
 						{

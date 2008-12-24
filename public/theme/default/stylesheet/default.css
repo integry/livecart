@@ -340,12 +340,6 @@ div#footer
 	padding: 0 35px 0 10px;
 }
 
-.page_content_bg
-{
-	overflow: hidden;
-	position: relative;
-}
-
 #contentWrapperLeft
 {
 	left: 210px;
@@ -373,6 +367,8 @@ body
 
 .page_content_bg
 {
+	overflow: hidden;
+	position: relative;
 	background: url(../image/page_top.gif) #fff repeat-x;
 	border: 1px solid #e0f0fc;
 	border-width: 0 1px;
@@ -457,8 +453,9 @@ thead th, tr.heading td
 
 #breadCrumb
 {
-	font-size: smaller;
+	font-size: 11px;
 	padding: 10px 0 6px 25px;
+	color: #406883;
 }
 
 /*
@@ -685,11 +682,6 @@ ul.productList .orderingControls
 	margin-top: 0;
 }
 
-#productPurchaseLinks
-{
-	border-bottom: 1px solid #def;
-}
-
 #rateProduct .productTable
 {
 	margin-left: 0;
@@ -724,6 +716,8 @@ tr.odd
 
 .returnToCategory
 {
+	background-image: url(../image/back.jpg);
+    font-weight: bold;
 	line-height: 24px;
 	display: block;
 	color: #CC6600;
@@ -810,12 +804,6 @@ a.proceedToCheckout span span span span
 {
     margin: 0 25px;
 	background: url(../image/headerTop.jpg);
-}
-
-#breadCrumb
-{
-	font-size: 11px;
-	color: #406883;
 }
 
 /*****************************
@@ -1185,6 +1173,7 @@ h3, h3 a
 
 #productPurchaseLinks
 {
+	border-bottom: 1px solid #def;
 	background-image: url(../image/price_bg.gif);
 	background-repeat: repeat-x;
 	background-position: center top;
@@ -1201,12 +1190,6 @@ h3, h3 a
 #relatedProducts, #purchasedTogether
 {
 	margin-right: 20px;
-}
-
-.returnToCategory
-{
-	background-image: url(../image/back.jpg);
-    font-weight: bold;
 }
 
 .returnToCategory a
@@ -1302,10 +1285,6 @@ table.productGrid
 .rtl .categories .content
 {
 	padding: 0 !important;
-}
-
-.rtl .categories .content
-{
 	position: relative;
 }
 

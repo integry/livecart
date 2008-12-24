@@ -296,6 +296,7 @@ class OrderController extends FrontendController
 
 				if ($item->shipment->get())
 				{
+					$item->shipment->get()->shippingAmount->set(0);
 					$item->shipment->get()->shippingServiceData->set(null);
 					$item->shipment->get()->save();
 				}

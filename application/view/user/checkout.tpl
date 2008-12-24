@@ -63,6 +63,7 @@
 				</p>
 
 				{include file="block/eav/fields.tpl" item=$user filter="isDisplayed"}
+				{include file="block/eav/fields.tpl" eavPrefix="billing_"}
 
 			<h3>{t _billing_address}</h3>
 
@@ -117,6 +118,7 @@
 					{/err}
 				</p>
 
+			{if $order.isShippingRequired}
 			<h3>{t _shipping_address}</h3>
 
 				<p>
@@ -125,12 +127,15 @@
 				</p>
 
 				<div id="shippingForm">
-					{include file="user/addressForm.tpl" prefix="shipping_" states=$shippingStates}
+					{include file="user/addressForm.tpl" prefix="shipping_" eavPrefix="shipping_" states=$shippingStates}
 				</div>
 
-				<p>
-					<input type="submit" class="submit" value="{tn _continue}" />
-				</p>
+			{/if}
+
+			<p>
+				<label class="submit"></label>
+				<input type="submit" class="submit" value="{tn _continue}" />
+			</p>
 
 		{/form}
 	</div>

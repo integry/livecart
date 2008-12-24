@@ -43,7 +43,7 @@ function smarty_prefilter_config($source, $smarty)
 	// replace `backticks` to {curly braces} for <label>
 	$source = preg_replace_callback('|<label for="(.*)">|', 'labelVars', $source);
 
-	$source = preg_replace('/{{1,2}err for="(.*)"}{1,3}+(.*){(calendar|checkbox|filefield|password|radio|selectfield|textfield|textarea)(.*)}(.*){\/err}/msU', '\\2<fieldset class="error">{\\3 name="\\1" \\4}\\5
+	$source = preg_replace('/{{1,2}err for="(.*)"\}{1,}?(.*){(calendar|checkbox|filefield|password|radio|selectfield|textfield|textarea)(.*)}(.*){\/err}/msU', '\\2<fieldset class="error">{\\3 name="\\1" \\4}\\5
 	<div class="errorText hidden{error for="\\1"} visible{/error}">{error for="\\1"}{$msg}{/error}</div>
 	</fieldset>', $source);
 
@@ -76,6 +76,9 @@ function smarty_prefilter_config($source, $smarty)
 	// help system
 	$source = preg_replace('/{help (.+?)}/', '{helpLink id=$1}', $source);
 	$source = preg_replace('/{see (.+?)}/', '{helpSeeAlsoItem id=$1}', $source);
+
+	// remove {fetch} tags
+	$source = preg_replace('/{fetch (.+?)}/', '', $source);
 
 	/*
 	if (strpos($source, 'companyName') !== false)

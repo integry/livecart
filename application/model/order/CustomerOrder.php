@@ -433,18 +433,15 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		}
 
 		// clone billing/shipping addresses
-		if ($this->shippingAddress->get())
+		foreach (array('billingAddress', 'shippingAddress') as $address)
 		{
-			$shippingAddress = clone $this->shippingAddress->get();
-			$shippingAddress->save();
-			$this->shippingAddress->set($shippingAddress);
-		}
-
-		if ($this->billingAddress->get())
-		{
-			$billingAddress = clone $this->billingAddress->get();
-			$billingAddress->save();
-			$this->billingAddress->set($billingAddress);
+			if ($this->$address->get())
+			{
+				$this->$address->get()->getSpecification();
+				$cloned = clone $this->$address->get();
+				$cloned->save();
+				$this->$address->set($cloned);
+			}
 		}
 
 		// move wish list items to a separate order
@@ -1634,7 +1631,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 	public function getDiscountConditions()
 	{
-		if ($this->isFinalized->get() || !$this->orderedItems)
+		if (!$this->orderedItems)
 		{
 			return array();
 		}
@@ -1819,6 +1816,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		parent::__clone();
 
 		$original = $this->originalRecord;
+
+		$this->shipments = new ARSet();
+		$this->orderedItems = array();
 
 		foreach ($original->getShipments() as $shipment)
 		{

@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
+ClassLoader::import('application.model.eav.EavFieldManager');
 
 abstract class ActiveGridController extends StoreManagementController
 {
@@ -129,6 +130,21 @@ abstract class ActiveGridController extends StoreManagementController
 
 	protected function processDataArray($dataArray, $displayedColumns)
 	{
+		// load specification data
+		if ($this->isEav())
+		{
+			foreach ($displayedColumns as $column => $type)
+			{
+				list($class, $field) = explode('.', $column, 2);
+				if ('eavField' == $class)
+				{
+					ActiveRecordModel::addArrayToEavQueue($this->getClassName(), $dataArray);
+					ActiveRecordModel::loadEav();
+					break;
+				}
+			}
+		}
+
 		return $dataArray;
 	}
 
@@ -203,6 +219,31 @@ abstract class ActiveGridController extends StoreManagementController
 			$availableColumns[$column] = array('name' => $this->translate($column), 'type' => $type);
 		}
 
+		// specField columns
+		if ($this->isEav())
+		{
+			$fields = EavFieldManager::getClassFieldSet($this->getClassName());
+			foreach ($fields as $field)
+			{
+				$fieldArray = $field->toArray();
+
+				if ($field->isDate())
+				{
+					$type = 'date';
+				}
+				else
+				{
+					$type = $field->isSimpleNumbers() ? 'numeric' : 'text';
+				}
+
+				$availableColumns['eavField.' . $field->getID()] = array
+					(
+						'name' => $fieldArray['name_lang'],
+						'type' => $type
+					);
+			}
+		}
+
 		return $availableColumns;
 	}
 
@@ -270,15 +311,62 @@ abstract class ActiveGridController extends StoreManagementController
 				return $record[$class][$field][$sub];
 			}
 		}
-		else
+		else if ('eavField' == $class)
 		{
-			return '';
+			if (isset($record['attributes'][$field]))
+			{
+				$attr = $record['attributes'][$field];
+
+				if (isset($attr['values']))
+				{
+					$values = array();
+					foreach ($attr['values'] as $val)
+					{
+						$values[] = $val['value_lang'];
+					}
+
+					return implode(' / ', $values);
+				}
+
+				foreach (array('value_lang', 'value') as $valType)
+				{
+					if (isset($attr[$valType]))
+					{
+						return $attr[$valType];
+					}
+				}
+			}
 		}
+
+		return '';
 	}
 
 	protected function getSelectFilter()
 	{
-		return new ARSelectFilter();
+		$f = new ARSelectFilter();
+
+		// specField columns
+		if ($this->isEav())
+		{
+			$needsJoin = true;
+			$fields = EavFieldManager::getClassFieldSet($this->getClassName());
+
+			foreach ($fields as $field)
+			{
+				if (!$field->isMultiValue->get())
+				{
+					if ($needsJoin)
+					{
+						$f->joinTable('EavObject', $this->getClassName(), EavObject::getClassField($this->getClassName()), 'ID');
+						$needsJoin = false;
+					}
+
+					$field->defineJoin($f);
+				}
+			}
+		}
+
+		return $f;
 	}
 
 	protected function getRequestColumns()
@@ -332,6 +420,11 @@ abstract class ActiveGridController extends StoreManagementController
 	public static function isCallable()
 	{
 		return true;
+	}
+
+	protected function isEav()
+	{
+		return ActiveRecordModel::isEav($this->getClassName());
 	}
 }
 

@@ -2,6 +2,7 @@
 
 ClassLoader::import('framework.Application');
 ClassLoader::import('framework.response.ActionResponse');
+ClassLoader::import('application.LiveCartRouter');
 ClassLoader::import('library.payment.TransactionDetails');
 
 /**
@@ -12,6 +13,8 @@ ClassLoader::import('library.payment.TransactionDetails');
  */
 class LiveCart extends Application
 {
+	protected $routerClass = 'LiveCartRouter';
+
 	private static $pluginDirectories = array();
 
 	private $isBackend = false;
@@ -135,7 +138,7 @@ class LiveCart extends Application
 			ini_set('display_errors', 'On');
 		}
 
-		$compileDir = $this->isCustomizationMode() ? 'cache.templates_c.customize' : 'cache.templates_c';
+		$compileDir = $this->isTemplateCustomizationMode() ? 'cache.templates_c.customize' : 'cache.templates_c';
 		SmartyRenderer::setCompileDir(ClassLoader::getRealPath($compileDir));
 
 		// mod_rewrite disabled?
@@ -224,7 +227,7 @@ class LiveCart extends Application
 
 		$renderer = parent::getRenderer();
 
-		if ($this->isCustomizationMode() && !$this->isBackend)
+		if ($this->isTemplateCustomizationMode() && !$this->isBackend)
 		{
 			$this->renderer->getSmartyInstance()->register_prefilter(array($this, 'templateLocator'));
 		}
@@ -275,8 +278,15 @@ class LiveCart extends Application
 		// @todo: temp fix. for some reason /public/ was added seemingly randomly for some templates at one store
 		$editUrl = str_replace('/public/', '/', $editUrl);
 
-		return '<span class="templateLocator" ondblclick="window.open(\'' . $editUrl . '\', \'template\', \'width=800,height=600,scrollbars=yes,resizable=yes\'); Event.stop(event); return false;" onmouseover="this.addClassName(\'activeTpl\'); Event.stop(event);" onmouseout="this.removeClassName(\'activeTpl\'); Event.stop(event);"><span class="templateName"><a onclick="window.open(\'' .
+		if (strpos($tplSource, '{*nolive*}') === false)
+		{
+			return '<span class="templateLocator" ondblclick="window.open(\'' . $editUrl . '\', \'template\', \'width=800,height=600,scrollbars=yes,resizable=yes\'); Event.stop(event); return false;" onmouseover="this.addClassName(\'activeTpl\'); Event.stop(event);" onmouseout="this.removeClassName(\'activeTpl\'); Event.stop(event);"><span class="templateName"><a onclick="window.open(\'' .
 		$editUrl . '\', \'template\', \'width=800,height=600,scrollbars=yes,resizable=yes\'); return false;" href="#">' . $file  . '</a></span>' . $tplSource . '</span>';
+		}
+		else
+		{
+			return $tplSource;
+		}
 	}
 
 	/**
@@ -468,9 +478,19 @@ class LiveCart extends Application
 		return $this->session->get('customizationMode');
 	}
 
+	public function isTemplateCustomizationMode()
+	{
+		return $this->isCustomizationMode() && ('template' == $this->getCustomizationModeType());
+	}
+
 	public function isTranslationMode()
 	{
-		return $this->session->get('translationMode');
+		return $this->isCustomizationMode() && ('translate' == $this->getCustomizationModeType());
+	}
+
+	public function getCustomizationModeType()
+	{
+		return $this->session->get('customizationModeType');
 	}
 
 	private function loadSession()
@@ -923,7 +943,7 @@ class LiveCart extends Application
 	public function getEnabledRealTimeShippingServices()
 	{
 		$handlers = $this->config->get('SHIPPING_HANDLERS');
-		return is_array($handlers) ? array_flip($handlers) : array();
+		return is_array($handlers) ? array_keys($handlers) : array();
 	}
 
 	/**

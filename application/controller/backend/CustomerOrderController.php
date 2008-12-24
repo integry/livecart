@@ -160,12 +160,12 @@ class CustomerOrderController extends ActiveGridController
 
 		if(isset($orderArray['ShippingAddress']))
 		{
-			$response->set('formShippingAddress', $this->createUserAddressForm($orderArray['ShippingAddress']));
+			$response->set('formShippingAddress', $this->createUserAddressForm($orderArray['ShippingAddress'], $response));
 		}
 
 		if(isset($orderArray['BillingAddress']))
 		{
-			$response->set('formBillingAddress', $this->createUserAddressForm($orderArray['BillingAddress']));
+			$response->set('formBillingAddress', $this->createUserAddressForm($orderArray['BillingAddress'], $response));
 		}
 
 		$shipableShipmentsCount = 0;
@@ -453,7 +453,7 @@ class CustomerOrderController extends ActiveGridController
 
 	protected function getSelectFilter()
 	{
-		$filter = new ARSelectFilter();
+		$filter = parent::getSelectFilter();
 
 		if($this->request->get('sort_col') == 'CustomerOrder.ID2')
 		{
@@ -503,6 +503,8 @@ class CustomerOrderController extends ActiveGridController
 
 	public function processDataArray($orders, $displayedColumns)
 	{
+		$orders = parent::processDataArray($orders, $displayedColumns);
+
 		foreach ($orders as &$order)
 		{
 			$order['ID2'] = $order['ID'];
@@ -900,31 +902,26 @@ class CustomerOrderController extends ActiveGridController
 	public function getAvailableColumns()
 	{
 		// get available columns
-		$availableColumns = array();
+		$availableColumns = parent::getAvailableColumns();
 
+		unset($availableColumns['CustomerOrder.shipping']);
+		unset($availableColumns['CustomerOrder.isFinalized']);
+
+		return $availableColumns;
+	}
+
+	protected function getCustomColumns()
+	{
 		$availableColumns['User.email'] = 'text';
 		$availableColumns['User.ID'] = 'text';
 		$availableColumns['CustomerOrder.ID2'] = 'numeric';
 		$availableColumns['User.fullName'] = 'text';
 
-		foreach (ActiveRecordModel::getSchemaInstance('CustomerOrder')->getFieldList() as $field)
-		{
-			$type = ActiveGrid::getFieldType($field);
-
-			if (!$type)
-			{
-				continue;
-			}
-
-			$availableColumns['CustomerOrder.' . $field->getName()] = $type;
-		}
-
-		unset($availableColumns['CustomerOrder.shipping']);
-		unset($availableColumns['CustomerOrder.isFinalized']);
-
 		$availableColumns['CustomerOrder.status'] = 'text';
 
 		// Shipping address
+		$availableColumns['ShippingAddress.firstName'] = 'text';
+		$availableColumns['ShippingAddress.lastName'] = 'text';
 		$availableColumns['ShippingAddress.countryID'] = 'text';
 		$availableColumns['ShippingAddress.stateName'] = 'text';
 		$availableColumns['ShippingAddress.city'] = 'text';
@@ -936,14 +933,6 @@ class CustomerOrderController extends ActiveGridController
 		$availableColumns['User.firstName'] = 'text';
 		$availableColumns['User.lastName'] = 'text';
 		$availableColumns['User.companyName'] = 'text';
-
-		foreach ($availableColumns as $column => $type)
-		{
-			$availableColumns[$column] = array(
-				'name' => $this->translate($column),
-				'type' => $type
-			);
-		}
 
 		return $availableColumns;
 	}
@@ -968,13 +957,15 @@ class CustomerOrderController extends ActiveGridController
 		$validator->addCheck('firstName', new IsNotEmptyCheck($this->translate('_first_name_is_empty')));
 		$validator->addCheck('lastName',  new IsNotEmptyCheck($this->translate('_last_name_is_empty')));
 
+		UserAddress::getNewInstance()->getSpecification()->setValidation($validator);
+
 		return $validator;
 	}
 
 	/**
 	 * @return Form
 	 */
-	public function createUserAddressForm($addressArray = array())
+	public function createUserAddressForm($addressArray = array(), ActionResponse $response)
 	{
 		$form = new Form($this->createUserAddressFormValidator());
 
@@ -987,6 +978,9 @@ class CustomerOrderController extends ActiveGridController
 
 			$form->setData($addressArray);
 		}
+
+		$address = !empty($addressArray['ID']) ? ActiveRecordModel::getInstanceByID('UserAddress', $addressArray['ID']) : UserAddress::getNewInstance();
+		$address->getSpecification()->setFormResponse($response, $form);
 
 		return $form;
 	}

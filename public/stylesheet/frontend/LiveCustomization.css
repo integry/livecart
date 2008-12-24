@@ -1,8 +1,65 @@
+body
+{
+	margin-top: 30px !important;
+}
+
+#customizeMenu
+{
+	position: absolute;
+	top: 0;
+	background-color: #000;
+	color: #fff;
+	font-size: 14px;
+	height: 22px;
+	width: 100%;
+	padding: 4px;
+}
+
+.templateLocator.activeTpl #customizeMenu
+{
+	margin-top: -32px;
+	margin-left: -4px;
+}
+
+#customizeMenu ul
+{
+	display: inline;
+	margin-left: 2em;
+}
+
+#customizeMenu ul li
+{
+	display: inline;
+	padding: 1px 3px;
+	background-color: #444;
+	border: 1px solid #999;
+	margin-right: 1em;
+}
+
+#customizeMenu ul li a
+{
+	text-decoration: none;
+	color: #fff;
+	font-weight: bold;
+	font-size: 13px;
+}
+
+#customizeMenu li.active
+{
+	background-color: #999;
+	border: 1px solid #ddd;
+}
+
+#modeTitle
+{
+	font-weight: bold;
+}
+
 #translationDialog .container
 {
-	border: 1px solid #CCCCCC; 
-	background-color: #FFFFFF; 
-	padding: 10px; 
+	border: 1px solid #CCCCCC;
+	background-color: #FFFFFF;
+	padding: 10px;
 	width: 300px;
 }
 
@@ -13,7 +70,7 @@
 
 #defTrans
 {
-	font-size: smaller; 
+	font-size: smaller;
 	color: #CCCCCC;
 }
 

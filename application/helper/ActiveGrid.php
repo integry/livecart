@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::importNow("application.helper.getDateFromString");
+ClassLoader::importNow("application.model.eav.EavField");
 
 /**
  * @package application.helper
@@ -205,6 +206,21 @@ class ActiveGrid
 	{
 		list($schemaName, $fieldName) = explode('.', $fieldName);
 
+		if ('eavField' == $schemaName)
+		{
+			$eavField = EavField::getInstanceByID($fieldName, true);
+
+			if (!$eavField->isMultiValue->get())
+			{
+				$schemaName = $eavField->getValueTableName();
+			}
+			else
+			{
+				// intentionally return wrong schema for multi-select values as they cannot be sorted or searched
+				$schemaName = 'EavField';
+			}
+		}
+
 		$possibleSchemas = ActiveRecordModel::getSchemaInstance($this->modelClass)->getDirectlyReferencedSchemas();
 		if (isset($possibleSchemas[$schemaName]))
 		{
@@ -228,12 +244,22 @@ class ActiveGrid
 			$schema = ActiveRecordModel::getSchemaInstance($schemaName);
 		}
 
+		if ('EavItem' == $schema->getName())
+		{
+			$schema = ActiveRecordModel::getSchemaInstance('EavValue');
+		}
+
 		return $schema;
 	}
 
 	private function getFieldInstance($field)
 	{
 		list($schemaName, $fieldName) = explode('.', $field);
+
+		if ('eavField' == $schemaName)
+		{
+			$fieldName = 'value';
+		}
 
 		if ($schemaName)
 		{
@@ -245,14 +271,25 @@ class ActiveGrid
 	{
 		list($schemaName, $fieldName) = explode('.', $field);
 
-		$handle = null;
+		if ('eavField' == $schemaName)
+		{
+			$fieldID = $fieldName;
+			$fieldName = 'value';
+		}
 
+		$handle = null;
 		if ($schemaName)
 		{
 			$schema = $this->getSchemaInstance($field);
+
 			if ($field = $schema->getField($fieldName))
 			{
 				$handle = $schema->getHandle($fieldName);
+
+				if ('eavField' == $schemaName)
+				{
+					$handle->setTable('specField_' . $fieldID . ($schema->getName() == 'EavValue' ? '_value' : ''));
+				}
 
 				// language fields
 				if ($field->getDataType() instanceof ARArray)

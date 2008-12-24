@@ -12,7 +12,8 @@
  */
 function smarty_function_liveCustomization($params, LiveCartSmarty $smarty)
 {
-	if ($smarty->getApplication()->isTranslationMode() || $smarty->getApplication()->isCustomizationMode())
+	$app = $smarty->getApplication();
+	if ($app->isCustomizationMode())
 	{
 		if (!isset($params['action']))
 		{
@@ -29,6 +30,8 @@ function smarty_function_liveCustomization($params, LiveCartSmarty $smarty)
 		}
 		else
 		{
+			$smarty->assign('mode', $app->getCustomizationModeType());
+			$smarty->assign('theme', $app->getTheme());
 			return $smarty->fetch('customize/menu.tpl');
 		}
 	}

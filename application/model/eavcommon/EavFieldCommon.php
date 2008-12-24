@@ -277,6 +277,14 @@ abstract class EavFieldCommon extends MultilingualObject
 	{
 		$table = $this->getJoinAlias();
 		$filter->joinTable($this->getValueTableName(), $this->getOwnerClass(), $this->getObjectIDColumnName() . ' AND ' . $table . '.' . $this->getFieldIDColumnName() . ' = ' . $this->getID(), 'ID', $table);
+
+		if ($this->isSelector() && !$this->isMultiValue->get())
+		{
+			$itemClass = $this->getSelectValueClass();
+			$valueClass = call_user_func(array($itemClass, 'getValueClass'));
+			$valueField = call_user_func(array($itemClass, 'getValueIDColumnName'));
+			$filter->joinTable($valueClass, $table, 'ID', $valueField, $table . '_value');
+		}
 	}
 
 	/*####################  Saving ####################*/

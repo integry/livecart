@@ -25,15 +25,13 @@ class UserController extends StoreManagementController
 
 		$response = new ActionResponse();
 		$response->set('countries', array_merge(array('' => ''), $this->application->getEnabledCountries()));
-		$form = self::createUserForm($this, $user);
+		$form = self::createUserForm($this, $user, $response);
 		$response->set('form', $form);
 		$response->set('shippingAddressStates', State::getStatesByCountry($form->get('shippingAddress_countryID')));
 		$response->set('billingAddressStates', State::getStatesByCountry($form->get('billingAddress_countryID')));
 		$user->loadAddresses();
 		$response->set('someUser', $user->toArray());
 		$response->set('availableUserGroups', $availableUserGroups);
-
-		$user->getSpecification()->setFormResponse($response, $form);
 
 		return $response;
 	}
@@ -101,7 +99,7 @@ class UserController extends StoreManagementController
 	/**
 	 * @return Form
 	 */
-	public static function createUserForm(StoreManagementController $controller, User $user = null)
+	public static function createUserForm(StoreManagementController $controller, User $user = null, ActionResponse $response)
 	{
 		$form = new Form(self::createUserFormValidator($controller, $user));
 
@@ -112,54 +110,58 @@ class UserController extends StoreManagementController
 
 			$user->loadAddresses();
 
-			if($user->defaultShippingAddress->get())
+			foreach (array('defaultShippingAddress' => 'shippingAddress_', 'defaultBillingAddress' => 'billingAddress_') as $field => $prefix)
 			{
-				$user->defaultShippingAddress->get()->load(array('UserAddress'));
-				$shippingArray = $user->defaultShippingAddress->get()->userAddress->get()->toArray();
-				$shippingFlatArray = $user->defaultShippingAddress->get()->userAddress->get()->toFlatArray();
-				foreach($shippingFlatArray as $property => $value)
+				if ($user->$field->get())
 				{
-					if($property == 'State') $property = 'stateID';
-					$userArray["shippingAddress_" . $property] = $value;
-				}
-			}
+					$user->$field->get()->load(array('UserAddress'));
+					$address = $user->$field->get()->userAddress->get();
+					$addressArray = $address->toFlatArray();
+					$addresses[] = $addressArray;
+					foreach($addressArray as $property => $value)
+					{
+						if ($property == 'State')
+						{
+							$property = 'stateID';
+						}
 
-			if($user->defaultBillingAddress->get())
-			{
-				$user->defaultBillingAddress->get()->load(array('UserAddress'));
-				$billingArray = $user->defaultBillingAddress->get()->userAddress->get()->toArray();
-				$billingFlatArray = $user->defaultBillingAddress->get()->userAddress->get()->toFlatArray();
-				foreach($billingFlatArray as $property => $value)
+						$userArray[$prefix . $property] = $value;
+					}
+				}
+				else
 				{
-					if($property == 'State') $property = 'stateID';
-					$userArray["billingAddress_" . $property] = $value;
+					$addresses[] = array();
+					$address = UserAddress::getNewInstance();
 				}
-			}
 
-			if (!isset($shippingFlatArray))
-			{
-				$shippingFlatArray = array();
-			}
-
-			if (!isset($billingFlatArray))
-			{
-				$billingFlatArray = array();
+				$address->getSpecification()->setFormResponse($response, $form, $prefix);
 			}
 
 			if(!$user->defaultBillingAddress->get() ||
 			!$user->defaultBillingAddress->get() ||
-			(array_diff_key($shippingFlatArray, array('ID' => 0)) == array_diff_key($billingFlatArray, array('ID' => 0))))
+			(array_diff_key($addresses[0], array('ID' => 0)) == array_diff_key($addresses[1], array('ID' => 0))))
 			{
 				$userArray['sameAddresses'] = 1;
 			}
-
 		}
 		else
 		{
+			foreach (array('shippingAddress_', 'billingAddress_') as $prefix)
+			{
+				UserAddress::getNewInstance()->getSpecification()->setFormResponse($response, $form, $prefix);
+			}
+
 			$userArray['sameAddresses'] = 1;
 		}
 
 		$form->setData($userArray);
+
+		if (!$user)
+		{
+			$user = ActiveRecordModel::getNewInstance('User');
+		}
+		$user->getSpecification()->setFormResponse($response, $form);
+
 		return $form;
 	}
 

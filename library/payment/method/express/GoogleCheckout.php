@@ -33,7 +33,9 @@ class GoogleCheckout extends ExpressPayment
 				return false;
 			}
 
-			return $array['redirect-url'];
+			$url = $array['redirect-url'];
+			$url = str_replace('shoppingcartshoppingcart', 'shoppingcart&shoppingcart', $url);
+			return $url;
 		}
 		else
 		{

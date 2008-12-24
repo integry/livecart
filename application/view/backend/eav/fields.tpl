@@ -20,7 +20,7 @@
 						<fieldset class="error">
 							{include file="backend/eav/specFieldFactory.tpl" field=$field cat=$cat autocompleteController="backend.eavFieldValue"}
 							{if $field.description}
-								<div class="fieldDescription">{$field.description}</div>
+								<div class="fieldDescription">{$field.description_lang}</div>
 							{/if}
 							<div class="errorText hidden{error for=$field.fieldName} visible{/error}">{error for=$field.fieldName}{$msg}{/error}</div>
 						</fieldset>

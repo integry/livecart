@@ -143,8 +143,8 @@
 	margin-left: 1em;
 }
 
-.order_shippingAddress input,
-.order_billingAddress input,
+.order_shippingAddress input.text,
+.order_billingAddress input.text,
 .order_shippingAddress select,
 .order_billingAddress select,
 .order_status select

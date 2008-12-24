@@ -34,6 +34,18 @@ class FedexTest extends TestShipping
 		$this->assertTrue($rates instanceof ShippingRateSet);
 	}
 
+	function testInternationalRates()
+	{
+		$fedex = $this->getHandler();
+		$fedex->setDestCountry('LV');
+		$fedex->setDestState('RIX');
+		$fedex->setDestZip('2000');
+		$fedex->setWeight(1);
+
+		$rates = $fedex->getRates();
+		$this->assertTrue($rates instanceof ShippingRateSet);
+	}
+
 }
 
 ?>

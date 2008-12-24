@@ -1,3 +1,4 @@
+.htaccess
 .version
 application/LiveCart.php
 application/LiveCartRenderer.php
@@ -120,6 +121,7 @@ application/helper/smarty/function.categoryUrl.php
 application/helper/smarty/function.compiledCss.php
 application/helper/smarty/function.compiledJs.php
 application/helper/smarty/function.includeCss.php
+application/helper/smarty/function.loadJs.php
 application/helper/smarty/function.newsUrl.php
 application/helper/smarty/function.paginate.php
 application/helper/smarty/function.productUrl.php
@@ -185,6 +187,7 @@ application/view/backend/deliveryZone/countriesAndStates.tpl
 application/view/backend/discount/conditionForm.tpl
 application/view/backend/discount/edit.tpl
 application/view/backend/discount/index.tpl
+application/view/backend/eav/fields.tpl
 application/view/backend/eav/view.tpl
 application/view/backend/language/edit.tpl
 application/view/backend/payment/transaction.tpl
@@ -198,6 +201,7 @@ application/view/backend/productRelationship/selectProduct.tpl
 application/view/backend/productRelationshipGroup/form.tpl
 application/view/backend/settings/index.tpl
 application/view/backend/shipment/index.tpl
+application/view/backend/shipment/itemAmount.tpl
 application/view/backend/shipment/shipmentControls.tpl
 application/view/backend/shippingService/service.tpl
 application/view/backend/specField/index.tpl
@@ -388,8 +392,10 @@ library/payment/method/library/paypal/phppaypalpro/setexpresscheckout.php
 library/shipping/ShippingRateCalculator.php
 library/shipping/library/usps/usps.php
 library/shipping/method/UspsShipping.php
+license.txt
 public/image/silk/gif/delete.gif
 public/image/silk/gif/information.gif
+public/index.php
 public/javascript/backend/Category.js
 public/javascript/backend/CsvImport.js
 public/javascript/backend/CustomField.js

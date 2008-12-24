@@ -22,6 +22,7 @@ class EavObject extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField("customerOrderID", "CustomerOrder", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("manufacturerID", "Manufacturer", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("userID", "User", "ID", null, ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("userAddressID", "UserAddress", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("userGroupID", "UserGroup", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("transactionID", "Transaction", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARField("classID", ARInteger::instance(2)));
@@ -79,6 +80,17 @@ class EavObject extends ActiveRecordModel
 	public function getStringIdentifier()
 	{
 		return $this->stringIdentifier;
+	}
+
+	public function getOwner()
+	{
+		foreach ($this->getSchema()->getForeignKeyList() as $key => $field)
+		{
+			if ($this->data[$key]->get())
+			{
+				return $this->data[$key]->get();
+			}
+		}
 	}
 
 	private function getInstanceField(ActiveRecordModel $instance)

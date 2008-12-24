@@ -26,12 +26,6 @@ caption, th, td
 	font-weight: normal;
 }
 
-label
-{
-	display: block;
-	width: auto;
-}
-
 .descr li,
 #productDescription li,
 .message li
@@ -236,7 +230,8 @@ a.addToCart,
 .subTotalCalc,
 .fieldDescription,
 .progressOrder,
-a.cvv
+a.cvv,
+.multiAddress .shipmentAddress
 {
 	font-size: smaller;
 }
@@ -1372,6 +1367,11 @@ select.multiAddress
     padding: 20px;
 }
 
+#expressCheckoutMethods img
+{
+	vertical-align: top;
+}
+
 #cartFields .container, #couponCodes .container
 {
 	padding: 0 1em 0.5em 0.5em;
@@ -2098,6 +2098,7 @@ legend
 
 label
 {
+	display: block;
     width: 156px;
     cursor: pointer;
     padding-right: 6px;
@@ -2384,7 +2385,6 @@ img.calendar_button
 .dynamicMenu li a, .dynamicMenu li .currentName
 {
 	width: 140px;
-	/* w\idth : 10em; */
 	display : block;
 	font-weight : bold;
 	text-decoration : none;

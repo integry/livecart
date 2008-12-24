@@ -3,6 +3,7 @@
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.order.OrderedItem");
 ClassLoader::import("application.model.order.ShipmentTax");
+ClassLoader::import("application.model.delivery.DeliveryZone");
 ClassLoader::import("application.model.delivery.ShippingService");
 
 /**
@@ -660,7 +661,7 @@ class Shipment extends ActiveRecordModel
 		$taxes = array();
 		foreach ($this->getTaxes() as $tax)
 		{
-			$taxes[$tax->taxRate->get()->getID()][] = $tax;
+			$taxes[$tax->taxRate->get()->tax->get()->getID()][] = $tax;
 		}
 
 		foreach ($taxes as $taxType)
@@ -855,6 +856,7 @@ class Shipment extends ActiveRecordModel
 
 		$original = $this->originalRecord;
 
+		$this->items = array();
 		foreach ($original->getItems() as $item)
 		{
 			$this->addItem(clone $item);

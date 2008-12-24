@@ -1,0 +1,18 @@
+--- application/controller/backend/SettingsController.php	2008-12-09 00:12:28.000000000 +0200
++++ application/controller/backend/SettingsController.php	2008-12-09 00:10:41.000000000 +0200
+@@ -20,7 +20,7 @@
+ 	public function index()
+ 	{
+ 		$tree = $this->config->getTree();
++		if (true)
+-		if (file_exists($this->getPrivateLabelFile()))
+ 		{
+ 			unset($tree['49-private-label']);
+ 		}
+
+--- license.txt	2008-12-08 02:53:47.000000000 +0200
++++ license.txt	2008-12-09 00:27:16.000000000 +0200
+@@ -16,1 +16,1 @@
+-(c) The Client shall not remove, alter or obliterate any copyright notices found in the source code of the Licensed Software;
++(c) The Client shall not remove, alter or obliterate any copyright notices found in the Licensed Software or its source code; including but not limited to "Powered by LiveCart", "Powered by LiveCart Shopping Cart Software", "UAB Integry Systems", etc. The client is also not allowed to remove the LiveCart and UAB Integry Systems branding from the store back-end area.
+ 

@@ -3,12 +3,12 @@
  */
 
 var TranslationMenuEvent = Class.create();
-TranslationMenuEvent.prototype = 
-{  
+TranslationMenuEvent.prototype =
+{
   	element: false,
-  	
+
   	translationHandler: false,
-  	
+
 	initialize: function(element, translationHandler)
   	{
 		this.element = element;
@@ -16,7 +16,7 @@ TranslationMenuEvent.prototype =
 		this.eventMouseMove = this.move.bindAsEventListener(this);
 		Event.observe(this.element, 'mousemove', this.eventMouseMove);
 	},
-	
+
 	move: function(e)
 	{
 		this.translationHandler.showTranslationMenu(this.element, e);
@@ -24,35 +24,35 @@ TranslationMenuEvent.prototype =
 }
 
 Customize = Class.create();
-Customize.prototype = {		
-  
+Customize.prototype = {
+
 	actionUrl: false,
-	
+
 	currentElement: false,
-	
+
 	initialValue: null,
-	
+
 	currentId: false,
-	
+
 	initialize: function()
 	{
-	  
+
 	},
-	
+
 	setActionUrl: function(url)
 	{
-		this.actionUrl = url;  
+		this.actionUrl = url;
 	},
 
 	initLang: function()
 	{
-		elements = document.getElementsByClassName('transMode');  
+		elements = document.getElementsByClassName('transMode');
 		for (k in elements)
 		{
 		  	new TranslationMenuEvent(elements[k], this);
 		}
 	},
-	
+
 	showTranslationMenu: function(element, e)
 	{
 		if (element == this.currentElement)
@@ -63,50 +63,50 @@ Customize.prototype = {
 /*
 		xPos = Event.pointerX(e) - 5;
 		yPos = Event.pointerY(e) - 5;
-*/		
+*/
 		var pos = Position.cumulativeOffset(element);
-		
+
 		xPos = pos[0];
 		yPos = pos[1] - 23;
-		
-		var dialog = $('transDialogMenu');	
-		
+
+		var dialog = $('transDialogMenu');
+
 		// make sure the dialog is not being displayed outside window boundaries
 		mh = new PopupMenuHandler(xPos, yPos, 100, 30);
 		dialog.style.left = mh.x + 'px';
 		dialog.style.top = mh.y + 'px';
 		Element.show(dialog);
-		this.currentElement = element;			
+		this.currentElement = element;
 		Event.observe(document, 'click', this.hideTranslationMenu.bindAsEventListener(this), false);
 	},
-		
+
 	hideTranslationMenu: function()
-	{		
+	{
 		Element.hide($('transDialogMenu'));
-		
+
 		this.currentElement = null;
 	},
 
 	translationMenuClick: function(e)
 	{
 		e.stopPropagation();
-		this.showTranslationDialog(this.currentElement, e);  	
+		this.showTranslationDialog(this.currentElement, e);
 		this.hideTranslationMenu();
 		Event.stop(e);
 	},
-	
+
 	showTranslationDialog: function(element, e)
-	{		
+	{
 		this.initialValue = null;
-		
+
 		id = element.className.split(' ')[1];
 		id = id.substr(8, id.length);
-		
+
 		this.currentId = id;
 
 		file = element.className.split(' ')[2];
 		file = file.substr(6, file.length);
-	
+
 		url = this.actionUrl;
 		url = Backend.Router.setUrlQueryParam(url, 'id', id);
 		url = Backend.Router.setUrlQueryParam(url, 'file', file);
@@ -128,12 +128,12 @@ Customize.prototype = {
 		document.getElementById('transDialogIndicator').style.display = 'block';
 
 		new LiveCart.AjaxRequest(url, null, this.displayDialogContent.bind(this));
-		
+
 		this.bfx = this.cancelTransDialog.bind(this);
-		
+
 		Event.observe(document, 'mousedown', this.bfx, false);
 	},
-	
+
 	handleTransFieldClick: function(e)
 	{
 	 	e.stopPropagation();
@@ -144,14 +144,14 @@ Customize.prototype = {
 		window.req = originalRequest;
 
 		$('transDialogIndicator').hide();
-			
+
 		if (originalRequest.getResponseHeader('NeedLogin'))
 		{
 			$('transDialogContent').update('');
 			$('transDialogContent').hide();
 			return false;
 		}
-	
+
 		$('transDialogContent').update(originalRequest.responseText);
 		$('transDialogContent').show();
 		Event.observe($('trans'), 'mousedown', this.handleTransFieldClick.bindAsEventListener(this), true);
@@ -160,36 +160,36 @@ Customize.prototype = {
 	saveTranslationDialog: function(form)
 	{
 		form.elements.namedItem('translation').value = document.getElementById('trans').value;
-		this.showTranslationSaveIndicator(); 
+		this.showTranslationSaveIndicator();
 		this.updateDocumentTranslations(form.elements.namedItem('id').value, form.elements.namedItem('translation').value);
-		
-		new LiveCart.AjaxUpdater(form, 'translationDialog', 'transSaveIndicator'); 
+
+		new LiveCart.AjaxUpdater(form, 'translationDialog', 'transSaveIndicator');
 		Event.stopObserving(document, 'mousedown', this.bfx, false);
 	},
-	
+
 	showTranslationSaveIndicator: function()
 	{
 		indicator = document.getElementById('transSaveIndicator');
 		button = document.getElementById('transDialogSave');
 		button.parentNode.replaceChild(indicator, button);
 	},
-	
+
 	/**
 	 * @todo disable for IE (too slow)
 	 **/
 	previewTranslations: function(transKey, translation)
 	{
-		elements = document.getElementsByClassName('__trans_' + transKey);  		
+		elements = document.getElementsByClassName('__trans_' + transKey);
 		for (k = 0; k < elements.length; k++)
 	  	{
 			if (!this.initialValue)
 			{
 			  	this.initialValue = elements[k].innerHTML;
 			}
-			elements[k].innerHTML = translation;	
+			elements[k].innerHTML = translation;
 		}
 	},
-	
+
 	updateDocumentTranslations: function(transKey, translation)
 	{
 	  	elements = document.getElementsByClassName('__trans_' + transKey);
@@ -199,14 +199,14 @@ Customize.prototype = {
 			new Effect.Highlight(elements[k], {startcolor:'#FBFF85', endcolor:'#FFFFFF'})
 		}
 	},
-	
+
 	cancelTransDialog: function()
 	{
 	  	if (null != this.initialValue)
 	  	{
-			this.previewTranslations(this.currentId, this.initialValue);			
+			this.previewTranslations(this.currentId, this.initialValue);
 		}
-		
+
 		if ($('translationDialog'))
 		{
 			$('translationDialog').hide();
@@ -214,9 +214,321 @@ Customize.prototype = {
 
 		return false;
 	},
-	
+
 	stopTransCancel: function(e)
 	{
 		Event.stop(e);
-	}	
+	}
+}
+
+CssCustomize = function(theme)
+{
+	this.theme = theme;
+
+	this.initStylesheets();
+	this.findUsedNodes();
+	this.bindEvents();
+}
+
+CssCustomize.prototype =
+{
+	theme: null,
+
+	initStylesheets: function()
+	{
+		this.styleSheets = $A(document.styleSheets);
+		this.styleSheets.each(function(stylesheet)
+		{
+			stylesheet.originalRules = $A(stylesheet.cssRules);
+			$A(stylesheet.cssRules).each(function(rule)
+			{
+				rule.originalText = rule.cssText;
+			});
+		});
+	},
+
+	findUsedNodes: function()
+	{
+		this.mainMenu = $('customizeMenu');
+		this.saveButton = this.mainMenu.down('#cssSave');
+	},
+
+	bindEvents: function()
+	{
+		this.saveButton.onclick = this.saveChanges.bind(this);
+	},
+
+	saveChanges: function()
+	{
+		var changes = this.getChangedRules();
+		var propertyChanges = this.getPropertyChanges(changes);
+
+		var deleted = {};
+		changes.deleted.each(function(rule)
+		{
+			var file = rule.parentStyleSheet.href;
+			deleted[file] = deleted[file] || [];
+			deleted[file].push(rule.selectorText);
+		});
+
+		var result = {deletedRules: deleted, deletedProperties: propertyChanges.deleted, theme: this.theme, css: this.getCustomCss(changes, propertyChanges)};
+
+		console.log('result=' + Object.toJSON(result));
+		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.customize', 'saveCss'), null, this.saveComplete.bind(this), {parameters: 'result=' + escape(Object.toJSON(result))});
+	},
+
+	saveComplete: function(originalRequest)
+	{
+		console.log(originalRequest);
+	},
+
+	getCustomCss: function(changes, propertyChanges)
+	{
+		var sheet = this.getCustomStyleSheet();
+		console.log(sheet);
+
+		$H(propertyChanges.changed).each(function(rule)
+		{
+			var selector = rule[0];
+			var cssRule = sheet.getRule(selector, true) || sheet.insertRule(selector + '{}', sheet.cssRules.length);
+			if (!cssRule)
+			{
+				cssRule = sheet.getRule(selector);
+			}
+			$H(rule[1]).each(function(pair)
+			{
+				cssRule.setProperty(pair[0], pair[1]);
+			});
+		});
+
+		var rules = [];
+		$A(sheet.cssRules).each(function(rule)
+		{
+			rules.push(rule.cssText.replace(/\{/, "\n\{\n").replace(/\}/, "\n\}").replace(/;/, ";\n").replace(/\n /g, "\n\t").replace(/[\s]{2,}\n/g, "\n").replace(/[\n]{2,}/g, "\n").replace(/\s$/, ""));
+		});
+
+		return rules.join("\n\n");
+	},
+
+	getCustomStyleSheet: function()
+	{
+		var sheet = this.createStyleSheet(this.theme + '.css');
+		var current = this.getCurrentStyleSheet(this.theme, true);
+
+		// copy existing custom stylesheet
+		if (current)
+		{
+			$A(current.cssRules).each(function(rule)
+			{
+				sheet.createRule(rule);
+			});
+		}
+
+		return sheet;
+	},
+
+	createStyleSheet: function(name)
+	{
+		return new MockedStyleSheet();
+	},
+
+	getPropertyChanges: function(changes)
+	{
+		var deletedProps = {};
+		var changedProps = {};
+		changes.changed.each(function(rule)
+		{
+			var currentProps = this.getPropertiesFromText(rule.cssText);
+			var originalProps = this.getPropertiesFromText(rule.originalRule.originalText);
+			var file = rule.parentStyleSheet.href;
+			var selector = rule.selectorText;
+
+			$H(originalProps).each(function(prop)
+			{
+				if (!currentProps[prop[0]])
+				{
+					deletedProps[file] = deletedProps[file] || {};
+					deletedProps[file][selector] = deletedProps[file][selector] || {};
+					deletedProps[file][selector][prop[0]] = prop[1];
+				}
+			});
+
+			$H(currentProps).each(function(prop)
+			{
+				if (originalProps[prop[0]] != prop[1])
+				{
+					changedProps[selector] = changedProps[selector] || {};
+					changedProps[selector][prop[0]] = prop[1];
+				}
+			});
+		}.bind(this));
+
+		return {changed: changedProps, deleted: deletedProps};
+	},
+
+	getPropertiesFromText: function(cssText)
+	{
+		var props = {};
+		var ruleBody = cssText.match(/\{(.*)\}/);
+		if (!ruleBody)
+		{
+			return props;
+		}
+
+		ruleBody[1].split(/;/).each(function(pair)
+		{
+			var spl = pair.replace(/^\s+|\s+$/g, "").split(/: /);
+			if (spl[1])
+			{
+				props[spl[0]] = spl[1];
+			}
+		});
+
+		return props;
+	},
+
+	getChangedRules: function()
+	{
+		var newRules = [];
+		var deletedRules = [];
+		var changedRules = [];
+
+		this.styleSheets.each(function(stylesheet)
+		{
+			var currentSheet = this.getCurrentStyleSheet(stylesheet);
+			$A(stylesheet.originalRules).each(function(rule)
+			{
+				var currentRule = currentSheet.getRule(rule.selectorText);
+
+				if (currentRule && currentRule.parentStyleSheet.disabled)
+				{
+					currentRule = null;
+				}
+
+				if (!currentRule)
+				{
+					deletedRules.push(rule);
+				}
+				else
+				{
+					currentRule.originalRule = rule;
+					if (rule.originalText != currentRule.cssText)
+					{
+						changedRules.push(currentRule);
+					}
+				}
+			});
+
+			$A(currentSheet.cssRules).each(function(rule)
+			{
+				if (!rule.originalRule)
+				{
+					newRules.push(rule);
+				}
+			});
+
+		}.bind(this));
+
+		return {changed: changedRules, added: newRules, deleted: deletedRules};
+	},
+
+	getCurrentStyleSheet: function(stylesheet, isTheme)
+	{
+		for (var k = 0; k < document.styleSheets.length; k++)
+		{
+			if ((!isTheme && (document.styleSheets[k].href == stylesheet.href)) || (isTheme && document.styleSheets[k].href.match(new RegExp("css\/" + stylesheet  + "\.css"))))
+			{
+				var sheet = document.styleSheets[k];
+
+				// FireBug CSS editor compatibility
+				while (sheet.editStyleSheet)
+				{
+					sheet = sheet.editStyleSheet.sheet;
+				}
+
+				return sheet;
+			}
+		}
+	}
+}
+
+MockedStyleSheet = function()
+{
+	this.cssRules = [];
+}
+
+MockedStyleSheet.prototype =
+{
+	getRule: function(selector)
+	{
+		for (var k = 0; k < this.cssRules.length; k++)
+		{
+			if (selector == this.cssRules[k].selector)
+			{
+				return this.cssRules[k];
+			}
+		}
+	},
+
+	insertRule: function(cssText)
+	{
+		var selector = cssText.substr(0, cssText.length - 2);
+		var rule = new MockedCSSRule(selector);
+		this.cssRules.push(rule);
+		return rule;
+	},
+
+	createRule: function(cssRule)
+	{
+		var rule = this.insertRule(cssRule.selectorText + '{}');
+		$H(CssCustomize.prototype.getPropertiesFromText(cssRule.cssText)).each(function(prop)
+		{
+			rule.setProperty(prop[0], prop[1]);
+		});
+
+		return rule;
+	}
+}
+
+MockedCSSRule = function(selector)
+{
+	this.selectorText = selector;
+	this.properties = {};
+	this.cssText = selector + '{}';
+
+	this.style = this;
+}
+
+MockedCSSRule.prototype =
+{
+	setProperty: function(name, value)
+	{
+		this.properties[name] = value;
+		this.cssText = this.getCssText();
+	},
+
+	getCssText: function()
+	{
+		var text = this.selectorText + ' { ';
+		$H(this.properties).each(function(prop)
+		{
+			text += prop[0] + ': ' + prop[1] + '; '
+		});
+
+		text += ' } ';
+
+		return text;
+	}
+}
+
+StyleSheet.prototype.getRule = function(selector, debug)
+{
+	if (debug) console.log(this.cssRules);
+	for (var k = 0; k < this.cssRules.length; k++)
+	{
+		if (selector == this.cssRules[k].selectorText)
+		{
+			return this.cssRules[k];
+		}
+	}
 }

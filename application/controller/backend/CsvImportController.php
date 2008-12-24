@@ -196,6 +196,7 @@ class CsvImportController extends StoreManagementController
 		}
 
 		// price fields
+		$groupedFields['ProductPrice']['ProductPrice.listPrice'] = $this->translate('_list_price');
 		for ($k = 1; $k <= 5; $k++)
 		{
 			$groupedFields['ProductPrice']['ProductPrice.' . $k] = $this->maketext('_quantity_level_x', $k);
@@ -494,6 +495,14 @@ class CsvImportController extends StoreManagementController
 						{
 							$price->price->set($value);
 						}
+					}
+					else if ('ProductPrice.listPrice' == $column)
+					{
+						$value = (float)preg_replace('/[^\.0-9]/', '', str_replace(',', '.', $value));
+						$currency = $request['currency'][$csvIndex];
+						$price = $product->getPricingHandler()->getPriceByCurrencyCode($currency);
+						$price->listPrice->set($value);
+						$product->getPricingHandler()->setPrice($price);
 					}
 					else if ('ProductVariation' == $className)
 					{
