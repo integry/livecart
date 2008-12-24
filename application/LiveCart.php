@@ -138,7 +138,7 @@ class LiveCart extends Application
 			ini_set('display_errors', 'On');
 		}
 
-		$compileDir = $this->isCustomizationMode() ? 'cache.templates_c.customize' : 'cache.templates_c';
+		$compileDir = $this->isTemplateCustomizationMode() ? 'cache.templates_c.customize' : 'cache.templates_c';
 		SmartyRenderer::setCompileDir(ClassLoader::getRealPath($compileDir));
 
 		// mod_rewrite disabled?
@@ -227,7 +227,7 @@ class LiveCart extends Application
 
 		$renderer = parent::getRenderer();
 
-		if ($this->isCustomizationMode() && !$this->isBackend)
+		if ($this->isTemplateCustomizationMode() && !$this->isBackend)
 		{
 			$this->renderer->getSmartyInstance()->register_prefilter(array($this, 'templateLocator'));
 		}
@@ -478,9 +478,19 @@ class LiveCart extends Application
 		return $this->session->get('customizationMode');
 	}
 
+	public function isTemplateCustomizationMode()
+	{
+		return $this->isCustomizationMode() && ('template' == $this->getCustomizationModeType());
+	}
+
 	public function isTranslationMode()
 	{
-		return $this->session->get('translationMode');
+		return $this->isCustomizationMode() && ('translate' == $this->getCustomizationModeType());
+	}
+
+	public function getCustomizationModeType()
+	{
+		return $this->session->get('customizationModeType');
 	}
 
 	private function loadSession()

@@ -22,6 +22,15 @@ function smarty_function_includeCss($params, LiveCartSmarty $smarty)
 
 	if(!is_file($filePath) && !isset($params['external'])) return;
 
+	$css = CssFile::getInstanceFromPath($filePath);
+	var_dump($filePath);
+	var_dump($css, $css->isPatched());
+	if ($css->isPatched())
+	{
+		$filePath = $css->getPatchedFilePath();
+		$fileName = $css->getPatchedFileRelativePath();
+	}
+
 	if(isset($params['inline']) && $params['inline'] == 'true')
 	{
 		$path = 'stylesheet/' . str_replace(DIRECTORY_SEPARATOR, '/', $fileName) . '?' . filemtime($filePath);

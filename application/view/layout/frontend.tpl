@@ -58,10 +58,10 @@
 </head>
 
 <body class="{$request.controller}Con {$request.controller}-{$request.action}{if ($request.requestLanguage == 'he') || ($request.requestLanguage == 'ar')} rtl{/if}{if $bodyClass} {$bodyClass}{/if}">
-	{liveCustomization action="menu"}
 	<div id="container" class="lang_{localeCode}">
 		{$ACTION_VIEW}
 	</div>
+	{liveCustomization action="menu"}
 	{block TRACKING}
 </body>
 

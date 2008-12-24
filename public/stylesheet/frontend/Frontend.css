@@ -26,12 +26,6 @@ caption, th, td
 	font-weight: normal;
 }
 
-label
-{
-	display: block;
-	width: auto;
-}
-
 .descr li,
 #productDescription li,
 .message li
@@ -2104,6 +2098,7 @@ legend
 
 label
 {
+	display: block;
     width: 156px;
     cursor: pointer;
     padding-right: 6px;
