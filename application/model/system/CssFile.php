@@ -6,19 +6,43 @@ class CssFile
 
 	protected $rules = null;
 
-	public function __construct($relativePath)
+	protected $source = null;
+
+	protected $theme;
+
+	public function __construct($relativePath, $theme = null)
 	{
+		if (preg_match('/^upload\/css\/patched\//', $relativePath))
+		{
+			$data = include self::getPatchFile(basename($relativePath, '.css'));
+			$relativePath = $data['file'];
+		}
+
 		$this->relPath = $relativePath;
+		$this->theme = $theme;
 	}
 
-	public static function getInstanceFromUrl($url)
+	public function setSource($source)
 	{
-		return new CssFile(self::getStyleSheetRelativePath($url));
+		// remove empty selectors
+		$source = preg_replace('/[^\n]{1,}[\n]{0,}\{\s{0,}\}/msU', '', $source);
+
+		$this->source = $source;
 	}
 
-	public static function getInstanceFromPath($path)
+	public function getSource()
 	{
-		return new CssFile(self::getStyleSheetRelativePath($path));
+		return $this->source;
+	}
+
+	public static function getInstanceFromUrl($url, $theme = null)
+	{
+		return new CssFile(self::getStyleSheetRelativePath($url), $theme);
+	}
+
+	public static function getInstanceFromPath($path, $theme = null)
+	{
+		return new CssFile(self::getStyleSheetRelativePath($path), $theme);
 	}
 
 	private function getStyleSheetRelativePath($url)
@@ -34,13 +58,12 @@ class CssFile
 
 	public function getPatchedFilePath()
 	{
-		$path = ClassLoader::getRealPath('public.upload.css.patched.') . md5($this->relPath) . '.css';
-		return $path;
+		return ClassLoader::getRealPath('public.upload.css.patched.') . $this->theme . '-' . md5($this->relPath) . '.css';
 	}
 
 	public function getPatchedFileRelativePath()
 	{
-		return 'upload/css/patched/' . md5($this->relPath) . '.css';
+		return 'upload/css/patched/' . $this->theme . '-' . md5($this->relPath) . '.css';
 	}
 
 	public function getPatchRules()
@@ -69,15 +92,16 @@ class CssFile
 
 	public function save()
 	{
+		if (!is_null($this->source))
+		{
+			$this->saveFile(ClassLoader::getRealPath('public.') . $this->relPath, $this->source);
+			return true;
+		}
+
 		if ($this->rules)
 		{
-			$file = $this->getPatchFile();
-			if (!file_exists(dirname($file)))
-			{
-				mkdir(dirname($file), 0777, true);
-			}
-
-			file_put_contents($file, '<?php return ' . var_export($this->rules, true) . '; ?>');
+			$this->rules['file'] = $this->relPath;
+			$this->saveFile($this->getPatchFile(), '<?php return ' . var_export($this->rules, true) . '; ?>');
 		}
 
 		$patched = $orig = file_get_contents(ClassLoader::getRealPath('public.') . $this->relPath);
@@ -101,7 +125,13 @@ class CssFile
 			}
 		}
 
-		file_put_contents($this->getPatchFile(), $patched);
+		// background image paths
+		$relPath = $this->relPath;
+		$patched = str_replace('url(..', 'url(../../../' . dirname($relPath) . '/..', $patched);
+		$patched = str_replace('url(\'..', 'url(\'' . dirname($relPath) . '/..', $patched);
+		$patched = str_replace('url(\"..', 'url(\'' . dirname($relPath) . '/..', $patched);
+
+		$this->saveFile($this->getPatchedFilePath(), $patched);
 	}
 
 	private function pregEscape($string)
@@ -112,9 +142,19 @@ class CssFile
 		return $res;
 	}
 
-	public function getPatchFile()
+	public function saveFile($file, $contents)
 	{
-		return ClassLoader::getRealPath('public.upload.css.delete.') . md5($this->relPath) . '.php';
+		if (!file_exists(dirname($file)))
+		{
+			mkdir(dirname($file), 0777, true);
+		}
+
+		file_put_contents($file, $contents);
+	}
+
+	public function getPatchFile($patchedName = null)
+	{
+		return ClassLoader::getRealPath('public.upload.css.delete.') . ($patchedName ? $patchedName : $this->theme . '-' . md5($this->relPath)) . '.php';
 	}
 
 	public function clearPatchRules()

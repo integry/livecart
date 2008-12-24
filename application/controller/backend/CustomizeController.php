@@ -61,16 +61,18 @@ class CustomizeController extends StoreManagementController
 	{
 		//var_dump($this->request->toArray());
 		$params = json_decode($this->request->get('result'), true);
-		var_dump($params);
+
 		$theme = $params['theme'];
 
 		// save custom CSS
-		$css = ClassLoader::getRealPath('public.upload.css.') . $theme . '.css';
+		$css = new CssFile('upload/css/' . $theme . '.css');
+		$css->setSource($params['css']);
+		$css->save();
 
 		// deleted rules
 		foreach ($params['deletedRules'] as $file => $selectors)
 		{
-			$css = CssFile::getInstanceFromUrl($file);
+			$css = CssFile::getInstanceFromUrl($file, $theme);
 			foreach ($selectors as $selector)
 			{
 				$css->deleteSelector($selector);
@@ -82,7 +84,7 @@ class CustomizeController extends StoreManagementController
 		// deleted properties
 		foreach ($params['deletedProperties'] as $file => $selectors)
 		{
-			$css = CssFile::getInstanceFromUrl($file);
+			$css = CssFile::getInstanceFromUrl($file, $theme);
 			foreach ($selectors as $selector => $properties)
 			{
 				foreach ($properties as $property => $value)

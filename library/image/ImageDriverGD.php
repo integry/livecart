@@ -76,7 +76,7 @@ class ImageDriverGD extends ImageDriver
 		$MB = 1048576;
 		$K64 = 65536;
 		$TWEAKFACTOR = 1.8;
-		$memoryLimitMB = 8;
+		$memoryLimitMB = 32;
 		$memoryNeeded = round( ( $imageInfo[0] * $imageInfo[1]
 											   * $imageInfo['bits']
 											   * $imageInfo['channels'] / 8

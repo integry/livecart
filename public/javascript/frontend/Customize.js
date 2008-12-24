@@ -273,19 +273,17 @@ CssCustomize.prototype =
 
 		var result = {deletedRules: deleted, deletedProperties: propertyChanges.deleted, theme: this.theme, css: this.getCustomCss(changes, propertyChanges)};
 
-		console.log('result=' + Object.toJSON(result));
 		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.customize', 'saveCss'), null, this.saveComplete.bind(this), {parameters: 'result=' + escape(Object.toJSON(result))});
 	},
 
 	saveComplete: function(originalRequest)
 	{
-		console.log(originalRequest);
+
 	},
 
 	getCustomCss: function(changes, propertyChanges)
 	{
 		var sheet = this.getCustomStyleSheet();
-		console.log(sheet);
 
 		$H(propertyChanges.changed).each(function(rule)
 		{
@@ -436,17 +434,20 @@ CssCustomize.prototype =
 	{
 		for (var k = 0; k < document.styleSheets.length; k++)
 		{
-			if ((!isTheme && (document.styleSheets[k].href == stylesheet.href)) || (isTheme && document.styleSheets[k].href.match(new RegExp("css\/" + stylesheet  + "\.css"))))
+			if (document.styleSheets[k].href)
 			{
-				var sheet = document.styleSheets[k];
-
-				// FireBug CSS editor compatibility
-				while (sheet.editStyleSheet)
+				if ((!isTheme && (document.styleSheets[k].href == stylesheet.href)) || (isTheme && document.styleSheets[k].href.match(new RegExp("css\/" + stylesheet  + "\.css"))))
 				{
-					sheet = sheet.editStyleSheet.sheet;
-				}
+					var sheet = document.styleSheets[k];
 
-				return sheet;
+					// FireBug CSS editor compatibility
+					while (sheet.editStyleSheet)
+					{
+						sheet = sheet.editStyleSheet.sheet;
+					}
+
+					return sheet;
+				}
 			}
 		}
 	}
@@ -461,9 +462,10 @@ MockedStyleSheet.prototype =
 {
 	getRule: function(selector)
 	{
+		selector = selector.replace(/^\s+|\s+$/g, "");
 		for (var k = 0; k < this.cssRules.length; k++)
 		{
-			if (selector == this.cssRules[k].selector)
+			if (selector == this.cssRules[k].selectorText)
 			{
 				return this.cssRules[k];
 			}
@@ -492,7 +494,7 @@ MockedStyleSheet.prototype =
 
 MockedCSSRule = function(selector)
 {
-	this.selectorText = selector;
+	this.selectorText = selector.replace(/^\s+|\s+$/g, "");
 	this.properties = {};
 	this.cssText = selector + '{}';
 
@@ -503,6 +505,20 @@ MockedCSSRule.prototype =
 {
 	setProperty: function(name, value)
 	{
+		// replace rgb(1,2,3) to #hex
+		if (value.match(/rgb\(/))
+		{
+			var hex = [];
+			var rgb = value.match(/rgb\([ ,0-9]+\)/)[0];
+			rgb.match(/[0-9]+/g).each(function(val)
+			{
+				var h = parseInt(val).toString(16);
+				hex.push((1 == h.length) ? '0' + h : h);
+			});
+
+			value = value.replace(rgb, '#' + hex.join(''));
+		}
+
 		this.properties[name] = value;
 		this.cssText = this.getCssText();
 	},
@@ -523,7 +539,6 @@ MockedCSSRule.prototype =
 
 StyleSheet.prototype.getRule = function(selector, debug)
 {
-	if (debug) console.log(this.cssRules);
 	for (var k = 0; k < this.cssRules.length; k++)
 	{
 		if (selector == this.cssRules[k].selectorText)
