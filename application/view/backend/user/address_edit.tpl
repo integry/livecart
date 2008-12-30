@@ -27,7 +27,7 @@
 <fieldset class="error">
 	<label for="{$idPrefix}_stateID">{t _state}</label>
 	{selectfield name="`$namePrefix`stateID" options=$states id="`$idPrefix`_stateID" class="state"}
-	{textfield name="`$namePrefix`stateName" id="`$idPrefix`_stateName"}
+	{textfield name="`$namePrefix`stateName" id="`$idPrefix`_stateName" class="text"}
 </fieldset>
 
 <fieldset class="error">

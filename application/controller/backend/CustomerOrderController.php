@@ -158,14 +158,9 @@ class CustomerOrderController extends ActiveGridController
 		$response->set('existingUserAddressOptions', $addressOptions);
 		$response->set('existingUserAddresses', $addresses);
 
-		if(isset($orderArray['ShippingAddress']))
+		foreach (array('ShippingAddress', 'BillingAddress') as $type)
 		{
-			$response->set('formShippingAddress', $this->createUserAddressForm($orderArray['ShippingAddress'], $response));
-		}
-
-		if(isset($orderArray['BillingAddress']))
-		{
-			$response->set('formBillingAddress', $this->createUserAddressForm($orderArray['BillingAddress'], $response));
+			$response->set('form' . $type, $this->createUserAddressForm(isset($orderArray[$type]) ? $orderArray[$type] : array(), $response));
 		}
 
 		$shipableShipmentsCount = 0;
@@ -760,26 +755,18 @@ class CustomerOrderController extends ActiveGridController
 		$order->dateCompleted->set(new ARSerializableDateTime());
 		$order->currency->set($this->application->getDefaultCurrency());
 
-		if($user->defaultShippingAddress->get() && $user->defaultBillingAddress->get())
+		foreach (array('billingAddress' => 'defaultBillingAddress', 'shippingAddress' => 'defaultShippingAddress') as $orderField => $userField)
 		{
-			$user->defaultBillingAddress->get()->load(array('UserAddress'));
-			$user->defaultShippingAddress->get()->load(array('UserAddress'));
-
-			$billingAddress = clone $user->defaultBillingAddress->get()->userAddress->get();
-			$shippingAddress = clone $user->defaultShippingAddress->get()->userAddress->get();
-
-			$billingAddress->save();
-			$shippingAddress->save();
-
-			$order->billingAddress->set($billingAddress);
-			$order->shippingAddress->set($shippingAddress);
-
-			return $this->save($order);
+			if($user->$userField->get())
+			{
+				$user->$orderField->get()->load(array('UserAddress'));
+				$address = clone $user->$userField->get()->userAddress->get();
+				$address->save();
+				$order->$orderField->set($address);
+			}
 		}
-		else
-		{
-			return new JSONResponse(array('noaddress' => true), 'failure', $this->translate('_err_user_has_no_billing_or_shipping_address'));
-		}
+
+		return $this->save($order);
 	}
 
 	/**

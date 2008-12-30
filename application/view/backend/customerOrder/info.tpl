@@ -93,7 +93,7 @@
 </div>
 {/if}
 
-{if $formShippingAddress}
+{if $formShippingAddress || !$formBillingAddress}
 	{form handle=$formShippingAddress action="controller=backend.customerOrder action=updateAddress" id="orderInfo_`$order.ID`_shippingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
 		<fieldset class="order_shippingAddress">
 			<legend>{t _shipping_address}</legend>
@@ -103,7 +103,7 @@
 {/if}
 
 
-{if $formBillingAddress}
+{if $formBillingAddress || !$formShippingAddress}
 	{form handle=$formBillingAddress action="controller=backend.customerOrder action=updateAddress" id="orderInfo_`$order.ID`_billingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
 		<fieldset class="order_billingAddress">
 			<legend>{t _billing_address}</legend>
