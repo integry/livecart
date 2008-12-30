@@ -53,7 +53,15 @@ class CssFile
 
 	public function isPatched()
 	{
-		return file_exists($this->getPatchFile());
+		$isPatched = file_exists($this->getPatchFile());
+
+		if ($isPatched && !file_exists($this->getPatchedFilePath()))
+		{
+			$this->getPatchRules();
+			$this->save();
+		}
+
+		return $isPatched;
 	}
 
 	public function getPatchedFilePath()
@@ -98,6 +106,11 @@ class CssFile
 			return true;
 		}
 
+		if (preg_match('/upload\/css\//', $this->relPath))
+		{
+			return true;
+		}
+
 		if ($this->rules)
 		{
 			$this->rules['file'] = $this->relPath;
@@ -120,7 +133,9 @@ class CssFile
 			{
 				foreach ($rules as $rule => $value)
 				{
-					$patched = preg_replace('/' . $this->pregEscape($selector) . '(.*)\{(.*)\s{0,}' . $this->pregEscape($rule) . '[ ]{0,}:(.*)\n(.*)\}/msU', $selector . "\n{\\2\n\\4}", $patched);
+					$preg = '/' . $this->pregEscape($selector) . '(\s*)\{([^\{\}]*)\s*' . $this->pregEscape($rule) . '[ ]*:(.*)\n*([^\{\}]*)\}/msU';
+					$patched = preg_replace($preg, $selector . "\n{\\2\n\\4}", $patched, 1);
+//					var_dump(count(explode("\n", $patched)), $preg, '---------');
 				}
 			}
 		}
@@ -136,7 +151,13 @@ class CssFile
 
 	private function pregEscape($string)
 	{
-		$res = preg_replace('/[^a-zA-Z0-9]/', "_|_\\0", $string);
+		// characters to escape for preg_match
+		$res = preg_replace('/[^ ,a-zA-Z0-9]/', "_|_\\0", $string);
+
+		// Firebug removes the newlines for multi-line selectors
+		$res = str_replace(', ', ',\s{0,}', $res);
+
+		// err... how do you put a backslash in the replace :/
 		$res = str_replace('_|_', '\\', $res);
 
 		return $res;

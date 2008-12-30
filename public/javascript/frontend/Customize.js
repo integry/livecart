@@ -295,7 +295,7 @@ CssCustomize.prototype =
 			}
 			$H(rule[1]).each(function(pair)
 			{
-				cssRule.setProperty(pair[0], pair[1]);
+				cssRule.setProperty(pair[0], pair[1], 'getcustom');
 			});
 		});
 
@@ -394,6 +394,7 @@ CssCustomize.prototype =
 		this.styleSheets.each(function(stylesheet)
 		{
 			var currentSheet = this.getCurrentStyleSheet(stylesheet);
+
 			$A(stylesheet.originalRules).each(function(rule)
 			{
 				var currentRule = currentSheet.getRule(rule.selectorText);
@@ -485,7 +486,7 @@ MockedStyleSheet.prototype =
 		var rule = this.insertRule(cssRule.selectorText + '{}');
 		$H(CssCustomize.prototype.getPropertiesFromText(cssRule.cssText)).each(function(prop)
 		{
-			rule.setProperty(prop[0], prop[1]);
+			rule.setProperty(prop[0], prop[1], 'create');
 		});
 
 		return rule;
@@ -503,7 +504,7 @@ MockedCSSRule = function(selector)
 
 MockedCSSRule.prototype =
 {
-	setProperty: function(name, value)
+	setProperty: function(name, value, test)
 	{
 		// replace rgb(1,2,3) to #hex
 		if (value.match(/rgb\(/))
@@ -520,6 +521,7 @@ MockedCSSRule.prototype =
 		}
 
 		this.properties[name] = value;
+
 		this.cssText = this.getCssText();
 	},
 

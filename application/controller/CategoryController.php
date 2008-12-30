@@ -50,13 +50,8 @@ class CategoryController extends FrontendController
 
 		// pagination
 		$currentPage = $this->request->get('page', 1);
-		$listLayout = $this->request->get('layout') && $this->config->get('ALLOW_SWITCH_LAYOUT') ?
-						('grid' == $this->request->get('layout') ? 'GRID' : 'LIST') :
-						$this->config->get('LIST_LAYOUT');
-
-		$perPage = ('GRID' == $listLayout) ?
-						$this->config->get('LAYOUT_GRID_COLUMNS') * $this->config->get('LAYOUT_GRID_ROWS') :
-						$this->config->get('NUM_PRODUCTS_PER_CAT');
+		$listLayout = $this->getListLayout();
+		$perPage = $this->getProductLimitCount($listLayout);
 
 		$offsetStart = (($currentPage - 1) * $perPage) + 1;
 		$offsetEnd = $currentPage * $perPage;
@@ -540,7 +535,7 @@ class CategoryController extends FrontendController
 	{
 		$selFilter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isFeatured'), true));
 		$selFilter->setOrder(new ARExpressionHandle('RAND()'));
-		$selFilter->setLimit($this->config->get('NUM_PRODUCTS_PER_CAT'));
+		$selFilter->setLimit($this->getProductLimitCount($this->getListLayout()));
 
 		$featuredFilter = new ProductFilter($this->category, $selFilter);
 		$featuredFilter->includeSubcategories();
@@ -885,6 +880,20 @@ class CategoryController extends FrontendController
 	public function getProductFilter()
 	{
 		return $this->productFilter;
+	}
+
+	private function getProductLimitCount($listLayout)
+	{
+		return ('GRID' == $listLayout) ?
+						$this->config->get('LAYOUT_GRID_COLUMNS') * $this->config->get('LAYOUT_GRID_ROWS') :
+						$this->config->get('NUM_PRODUCTS_PER_CAT');
+	}
+
+	private function getListLayout()
+	{
+		return $this->request->get('layout') && $this->config->get('ALLOW_SWITCH_LAYOUT') ?
+						('grid' == $this->request->get('layout') ? 'GRID' : 'LIST') :
+						$this->config->get('LIST_LAYOUT');
 	}
 }
 

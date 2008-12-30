@@ -13,7 +13,7 @@
 	{if 0 == (($smarty.foreach.productList.index + 1) % 'LAYOUT_GRID_COLUMNS'|@config)}
 		</tr>
 	{elseif $smarty.foreach.productList.last}
-		<td class="last"></td>
+		<td class="last empty"></td>
 		</tr>
 	{/if}
 {/foreach}

@@ -51,6 +51,10 @@
 	{compiledJs glue=true nameMethod=hash}
 
 	{*
+	<!--[if lt IE 7]>
+		<script src="javascript/library/iepngfix/iepngfix_tilebg.js" type="text/javascript"></script>
+	<![endif]-->
+
 	<!--[if lt IE 8]>
 		<script src="javascript/library/ie7/IE8.js" type="text/javascript"></script>
 	<![endif]-->

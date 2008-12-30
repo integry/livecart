@@ -598,7 +598,7 @@ fieldset.container
     padding-left: 0 !important;
 }
 
-.current ul li, .subSubCats li
+.current ul li
 {
     padding-left: 20px;
 }

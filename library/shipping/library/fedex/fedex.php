@@ -144,7 +144,7 @@ class Fedex {
         //-------------------------
         curl_setopt($ch, CURLOPT_URL,$this->server);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 6);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST,'POST');
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 

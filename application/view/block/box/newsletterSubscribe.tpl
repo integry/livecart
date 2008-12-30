@@ -10,7 +10,7 @@
 
 	{form handle=$form action="controller=newsletter action=subscribe" method="POST"}
 		{{err for="email"}}
-			{textfield style="width: 130px;"}
+			{textfield class="text" style="width: 130px;"}
 			<input type="submit" class="submit" value="OK" style="width: 20%;" />
 		{/err}
 
