@@ -45,9 +45,15 @@
 					<div class="productOptions">
 						{include file="order/itemVariations.tpl"}
 						<div class="menu productOptionsMenu">
-							<a href="{link controller=backend.orderedItem action=variationForm id=$item.ID}" onclick="Backend.OrderedItem.loadOptionsForm(event);">{t _edit_variations}</a>
+							<a href="{link controller=backend.orderedItem action=variationForm id=$item.ID}" id="variationsMenuLink_{$item.ID}" onclick="Backend.OrderedItem.loadOptionsForm(event);">{t _edit_variations}</a>
 							<span class="progressIndicator" style="display: none;"></span>
 						</div>
+
+						{if !$item.Product.variations}
+							<script type="text/javascript">
+								Backend.OrderedItem.loadOptionsForm($("variationsMenuLink_{$item.ID}"));
+							</script>
+						{/if}
 					</div>
 				{/if}
 

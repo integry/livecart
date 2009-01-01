@@ -521,16 +521,12 @@ ActiveList.prototype = {
 
 		if(typeof dom == 'string')
 		{
-			li.innerHTML = dom;
+			li.update(dom);
 		}
 		else if (dom[0])
 		{
 			for(var i = 0; i < dom.length; i++)
 			{
-				// Sory for cloning, but JS just sucks hard at dom :''(
-				// I just hope that every boy will use it in such situations where cloning is OK
-				// Please forgive me if you will create links to elements you want to add and they will just not work
-				// My suggestion is to create those links after you have added new record to list
 				var cloned_dom = dom[i].cloneNode(true);
 				while(cloned_dom.childNodes.length > 0) li.appendChild(cloned_dom.childNodes[0]);
 			}

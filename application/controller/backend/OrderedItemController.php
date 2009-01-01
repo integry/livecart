@@ -69,11 +69,15 @@ class OrderedItemController extends StoreManagementController
 			$shipment->save();
 		}
 
+		$composite = new CompositeJSONResponse();
 		$response = $this->save($item, $shipment, $existingItem ? true : false );
+		$composite->addResponse('data', $response, $this, 'create');
+		$composite->addAction('html', 'backend.orderedItem', 'item');
+		$this->request->set('id', $item->getID());
 
 		$history->saveLog();
 
-		return $response;
+		return $composite;
 	}
 
 	public function update()
@@ -483,8 +487,17 @@ class OrderedItemController extends StoreManagementController
 		return $this->getItemResponse($item);
 	}
 
+	public function item()
+	{
+		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id'), OrderedItem::LOAD_DATA);
+		return $this->getItemResponse($item);
+	}
+
 	private function getItemResponse(OrderedItem $item)
 	{
+		$item->customerOrder->get()->load();
+		$item->customerOrder->get()->loadItems();
+
 		if ($image = $item->product->get()->defaultImage->get())
 		{
 			$image->load();
@@ -492,13 +505,11 @@ class OrderedItemController extends StoreManagementController
 
 		$this->application->getLocale()->translationManager()->loadFile('backend/Shipment');
 
-		// load variations
-		$item->customerOrder->get()->loadAll();
-
 		$response = new ActionResponse('item', $item->toArray());
 
-		// load product options
+		// load product options and variations
 		$response->set('allOptions', ProductOption::loadOptionsForProductSet($item->product->get()->getParent()->initSet()));
+		$response->set('variations', $item->product->get()->getParent()->initSet()->getVariationData($this->application));
 
 		return $response;
 	}

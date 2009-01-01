@@ -199,7 +199,7 @@ Backend.OrderedItem = {
 
 	loadOptionsForm: function(e)
 	{
-		var link = Event.element(e);
+		var link = (e instanceof Event) ? Event.element(e) : e;
 		var container = link.up('.productOptions');
 
 		container.itemHtml = container.innerHTML;
@@ -513,12 +513,19 @@ Backend.Shipment.prototype =
 			   {
 			   	   // Popup is being refreshed
 			   }
-			   if(response.status == 'success')
+			   if (response.data.status == 'success')
 			   {
-				   //var itemsList = ActiveList.prototype.getInstance($("orderShipmentsItems_list_" + this.orderID + "_" + this.ID));
-				   var listNode = $("orderShipments_list_" + this.orderID + "_" + this.ID).down('ul.orderShipmentsItem');
-				   var itemsList = ActiveList.prototype.getInstance(listNode);
-				   itemsList.id = "orderShipmentsItems_list_" + this.orderID + "_" + this.ID;
+					if (response.html)
+					{
+						var html = response.html;
+						var response = response.data;
+					}
+
+					Backend.SaveConfirmationMessage.prototype.showMessage(response.message);
+
+					var listNode = $("orderShipments_list_" + this.orderID + "_" + this.ID).down('ul.orderShipmentsItem');
+					var itemsList = ActiveList.prototype.getInstance(listNode);
+					itemsList.id = "orderShipmentsItems_list_" + this.orderID + "_" + this.ID;
 
 					if (!this.nodes.root.up(".shipmentCategoty"))
 					{
@@ -527,10 +534,9 @@ Backend.Shipment.prototype =
 
 					this.nodes.root.up(".shipmentCategoty").show();
 
-
 				   if(!response.item.isExisting)
 				   {
-					   var li = itemsList.addRecord(response.item.ID, $("orderShipmentItem_" + this.orderID + "_empty").innerHTML);
+					   var li = itemsList.addRecord(response.item.ID, html);
 				   }
 				   else
 				   {
