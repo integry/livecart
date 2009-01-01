@@ -91,7 +91,7 @@ class ProductSet extends ARSet
 
 		if (!$variations)
 		{
-			return null;
+			return array();
 		}
 
 		$trackInventory = $app->getConfig()->get('INVENTORY_TRACKING') != 'DISABLE';

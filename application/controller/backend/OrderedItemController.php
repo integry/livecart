@@ -37,7 +37,10 @@ class OrderedItemController extends StoreManagementController
 		{
 			if($item->product->get() === $product)
 			{
-				$existingItem = $item;
+				if (!$product->getOptions(true))
+				{
+					$existingItem = $item;
+				}
 				break;
 			}
 		}
