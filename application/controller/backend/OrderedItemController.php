@@ -1,5 +1,6 @@
 <?php
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
+ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
+ClassLoader::import('application.controller.OrderController');
 ClassLoader::import("application.model.order.*");
 ClassLoader::import("application.model.Currency");
 ClassLoader::import("application.model.product.*");
@@ -123,7 +124,8 @@ class OrderedItemController extends StoreManagementController
 					'count'		   => $item->count->get(),
 					'price'		   => $item->price->get(),
 					'priceCurrencyID' => $item->priceCurrencyID->get(),
-					'isExisting'	  => $existingItem
+					'isExisting'	  => $existingItem,
+					'variations' => $item->product->get()->getParent()->getVariationData($this->application),
 				)
 			), 'success', $this->translate('_item_has_been_successfuly_saved')
 			);
@@ -421,8 +423,6 @@ class OrderedItemController extends StoreManagementController
 
 	public function optionForm()
 	{
-		ClassLoader::import('application.controller.OrderController');
-
 		$item = ActiveRecordModel::getInstanceById('OrderedItem', $this->request->get('id'), true, true);
 		$item->customerOrder->get()->loadAll();
 
@@ -433,10 +433,23 @@ class OrderedItemController extends StoreManagementController
 		return $response;
 	}
 
+	public function variationForm()
+	{
+		$this->loadLanguageFile('Product');
+		$this->loadLanguageFile('backend/Shipment');
+		$item = ActiveRecordModel::getInstanceById('OrderedItem', $this->request->get('id'), true, true);
+		$item->customerOrder->get()->loadAll();
+
+		$c = new OrderController($this->application);
+
+		$response = $c->variationForm($item->customerOrder->get(), '');
+		$response->set('currency', $item->customerOrder->get()->currency->get()->getID());
+		$response->set('variations', $item->product->get()->getVariationData($this->application));
+		return $response;
+	}
+
 	public function saveOptions()
 	{
-		ClassLoader::import('application.controller.OrderController');
-
 		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id'), OrderedItem::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
 		$item->customerOrder->get()->loadAll();
 		foreach ($item->product->get()->getOptions(true) as $option)
@@ -447,14 +460,45 @@ class OrderedItemController extends StoreManagementController
 		$item->save();
 		$item->shipment->get()->save();
 
+		return $this->getItemResponse($item);
+	}
+
+	public function saveVariations()
+	{
+		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id'), OrderedItem::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
+		$variations = $item->product->get()->getVariationData($this->application);
+
+		$c = new OrderController($this->application);
+		if (!$c->buildVariationsValidator($item, $variations)->isValid())
+		{
+			return new RawResponse();
+		}
+
+		$product = $c->getVariationFromRequest($variations);
+		$item->product->set($product);
+
+		$item->save();
+		$item->shipment->get()->save();
+
+		return $this->getItemResponse($item);
+	}
+
+	private function getItemResponse(OrderedItem $item)
+	{
+		if ($image = $item->product->get()->defaultImage->get())
+		{
+			$image->load();
+		}
+
 		$this->application->getLocale()->translationManager()->loadFile('backend/Shipment');
+
+		// load variations
+		$item->customerOrder->get()->loadAll();
 
 		$response = new ActionResponse('item', $item->toArray());
 
 		// load product options
-		$products = new ARSet();
-		$products->add($item->product->get());
-		$response->set('allOptions', ProductOption::loadOptionsForProductSet($products));
+		$response->set('allOptions', ProductOption::loadOptionsForProductSet($item->product->get()->getParent()->initSet()));
 
 		return $response;
 	}

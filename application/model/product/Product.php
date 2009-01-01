@@ -907,9 +907,14 @@ class Product extends MultilingualObject
 
 	/*####################  Get related objects ####################*/
 
+	public function getParent()
+	{
+		return $this->parent->get() ? $this->parent->get() : $this;
+	}
+
 	public function getCategory()
 	{
-		$parent = $this->parent->get() ? $this->parent->get() : $this;
+		$parent = $this->getParent();
 
 		if (!$parent->isLoaded())
 		{
@@ -921,7 +926,7 @@ class Product extends MultilingualObject
 
 	public function getName($languageCode)
 	{
-		$parent = $this->parent->get() ? $this->parent->get() : $this;
+		$parent = $this->getParent();
 		$parent->load();
 
 		foreach (array($parent, $this) as $product)
@@ -1163,7 +1168,7 @@ class Product extends MultilingualObject
 
 	public function getOptions($includeInheritedOptions = false)
 	{
-		$parent = $this->parent->get() ? $this->parent->get() : $this;
+		$parent = $this->getParent();
 		ClassLoader::import('application.model.product.ProductOption');
 		$f = new ARSelectFilter();
 		$f->setOrder(new ARFieldHandle('ProductOption', 'position'), 'ASC');
@@ -1180,7 +1185,7 @@ class Product extends MultilingualObject
 
 	public function getOptionsArray()
 	{
-		$parent = $this->parent->get() ? $this->parent->get() : $this;
+		$parent = $this->getParent();
 		$options = $parent->getOptions(true)->toArray();
 		ProductOption::includeProductPrice($parent, $options);
 
@@ -1279,96 +1284,32 @@ class Product extends MultilingualObject
 
 	public function getVariationMatrix()
 	{
-		$children = $this->getRelatedRecordSetArray('Product', new ARSelectFilter(), array('ProductImage'));
-		if (!$children)
-		{
-			return array();
-		}
-
-		ProductPrice::loadPricesForRecordSetArray($children);
-
-		$ids = array();
-		foreach ($children as $child)
-		{
-			$ids[] = $child['ID'];
-			$products[$child['ID']] = $child;
-		}
-
-		$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductVariationValue', 'productID'), $ids));
-		$f->setOrder(new ARFieldHandle('ProductVariationType', 'position'));
-		$f->setOrder(new ARFieldHandle('ProductVariation', 'position'));
-
-		$productValues = array();
-		$variations = array();
-		$values = ActiveRecordModel::getRecordSetArray('ProductVariationValue', $f, array('ProductVariation', 'ProductVariationType'));
-		foreach ($values as &$value)
-		{
-			$type = $value['ProductVariationType'];
-			if (!isset($variations[$type['ID']]))
-			{
-				$variations[$type['ID']] = $type;
-				$variations[$type['ID']]['variations'] = array();
-			}
-			$variations[$type['ID']]['variations'][] = $value;
-
-			$productId = $value['productID'];
-			$productValues[$productId][$value['variationID']] =& $value;
-		}
-
 		$matrix = array();
-		foreach ($productValues as $product => &$values)
+		$id = $this->getParent()->getID();
+		foreach ($this->getParent()->initSet()->getVariationMatrix() as $type => $values)
 		{
-			$matrix[implode('-', array_keys($values))] = $products[$product];
+			if (isset($values[$id]))
+			{
+				$matrix[$type] = $values[$id];
+			}
 		}
 
-		return array('products' => $matrix, 'variations' => $variations);
+		return $matrix;
 	}
 
 	public function getVariationData(LiveCart $app)
 	{
-		$variations = $this->getVariationMatrix();
-
-		if (!$variations)
+		$id = $this->getParent()->getID();
+		$matrix = array();
+		foreach ($this->getParent()->initSet()->getVariationData($app) as $type => $values)
 		{
-			return null;
-		}
-
-		$trackInventory = $app->getConfig()->get('INVENTORY_TRACKING') != 'DISABLE';
-
-		// filter out unavailable products
-		foreach ($variations['products'] as $key => &$product)
-		{
-			if (!$product['isEnabled'] || ($trackInventory && ($product['stockCount'] <= 0)))
+			if (isset($values[$id]))
 			{
-				unset($variations['products'][$key]);
+				$matrix[$type] = $values[$id];
 			}
 		}
 
-		// get used variations
-		$usedVariations = array();
-		foreach ($variations['products'] as $key => &$product)
-		{
-			$usedVariations = array_merge($usedVariations, explode('-', $key));
-		}
-
-		$usedVariations = array_flip($usedVariations);
-
-		// prepare select options
-		foreach ($variations['variations'] as &$type)
-		{
-			$type['selectOptions'] = array();
-			foreach ($type['variations'] as $variation)
-			{
-				$var = $variation['Variation'];
-
-				if (isset($usedVariations[$var['ID']]))
-				{
-					$type['selectOptions'][$var['ID']] = $var['name_lang'];
-				}
-			}
-		}
-
-		return $variations;
+		return $matrix;
 	}
 
 	public function serialize()

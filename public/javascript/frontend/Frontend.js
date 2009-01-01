@@ -60,6 +60,11 @@ Product.ImageSwitcher.prototype =
 
 	switchImage: function()
 	{
+		if (!$('mainImage'))
+		{
+			return false;
+		}
+
 		$('mainImage').src = this.imageData[3];
 
 		if ($('imageDescr'))
@@ -182,8 +187,11 @@ Product.Variations = function(container, variations, options)
 	this.selectFields = [];
 	this.options = options;
 
-	this.priceContainer = $('productPrice').down('.price').down('.realPrice');
-	this.defaultPrice = this.priceContainer.innerHTML;
+	if ($('productPrice'))
+	{
+		this.priceContainer = $('productPrice').down('.price').down('.realPrice');
+		this.defaultPrice = this.priceContainer.innerHTML;
+	}
 
 	$H(this.variations.variations).each(function(value)
 	{
@@ -349,7 +357,10 @@ Product.Variations.prototype =
 
 	updatePrice: function(price)
 	{
-		this.priceContainer.innerHTML = price ? price : this.defaultPrice;
+		if (this.priceContainer)
+		{
+			this.priceContainer.innerHTML = price ? price : this.defaultPrice;
+		}
 	},
 
 	showDefaultInfo: function()

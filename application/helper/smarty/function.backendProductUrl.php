@@ -8,16 +8,16 @@
  * @return string
  *
  * @package application.helper.smarty
- * @author Integry Systems 
+ * @author Integry Systems
  */
 function smarty_function_backendProductUrl($params, LiveCartSmarty $smarty)
-{		
-	$product = $params['product'];	
-		
-	$urlParams = array('controller' => 'backend.category', 
+{
+	$product = $params['product'];
+
+	$urlParams = array('controller' => 'backend.category',
 					   'action' => 'index' );
-					   
-	return $smarty->getApplication()->getRouter()->createUrl($urlParams, true) . '#product_' . $product['ID'];
+
+	return $smarty->getApplication()->getRouter()->createUrl($urlParams, true) . '#product_' . (!empty($product['Parent']['ID']) ? $product['Parent']['ID'] : $product['ID']);
 }
 
 ?>

@@ -168,6 +168,22 @@ class OrderController extends FrontendController
 		return $response;
 	}
 
+	public function variationForm(CustomerOrder $order = null)
+	{
+		$order = $order ? $order : $this->order;
+
+		$item = $order->getItemByID($this->request->get('id'));
+		$variations = $item->product->get()->getVariationData($this->application);
+
+		$this->setLayout('empty');
+
+		$response = new ActionResponse();
+		$response->set('form', $this->buildVariationsForm($item, $variations));
+		$response->set('variations', $variations);
+		$response->set('item', $item->toArray());
+		return $response;
+	}
+
 	private function getOptionsArray($set, $item, $filter = 'isDisplayed')
 	{
 		$out = array();
@@ -366,19 +382,7 @@ class OrderController extends FrontendController
 		// check if a variation needs to be added to cart instead of a parent product
 		if ($variations)
 		{
-			$ids = array();
-			foreach ($variations['variations'] as $variation)
-			{
-				$ids[] = $this->request->get('variation_' . $variation['ID']);
-			}
-
-			$hash = implode('-', $ids);
-			if (!isset($variations['products'][$hash]))
-			{
-				return $productRedirect;
-			}
-
-			$product = Product::getInstanceByID($variations['products'][$hash]['ID'], Product::LOAD_DATA);
+			$product = $this->getVariationFromRequest($variations);
 		}
 
 		ActiveRecordModel::beginTransaction();
@@ -545,6 +549,23 @@ class OrderController extends FrontendController
 		return new ActionRedirectResponse('order', 'index');
 	}
 
+	public function getVariationFromRequest(array $variations)
+	{
+		$ids = array();
+		foreach ($variations['variations'] as $variation)
+		{
+			$ids[] = $this->request->get('variation_' . $variation['ID']);
+		}
+
+		$hash = implode('-', $ids);
+		if (!isset($variations['products'][$hash]))
+		{
+			return $productRedirect;
+		}
+
+		return Product::getInstanceByID($variations['products'][$hash]['ID'], Product::LOAD_DATA);
+	}
+
 	/**
 	 *	@todo Optimize loading of product options
 	 */
@@ -571,6 +592,11 @@ class OrderController extends FrontendController
 		$this->setFormItem($item, $form);
 
 		return $form;
+	}
+
+	private function buildVariationsForm(OrderedItem $item, $variations)
+	{
+		return new Form($this->buildVariationsValidator($item, $variations));
 	}
 
 	private function setFormItem(OrderedItem $item, Form $form)
@@ -631,6 +657,17 @@ class OrderController extends FrontendController
 	{
 		$validator = new RequestValidator("optionValidator", $this->request);
 		$this->buildItemValidation($validator, $item, $options);
+
+		return $validator;
+	}
+
+	public function buildVariationsValidator(OrderedItem $item, $variations)
+	{
+		$validator = new RequestValidator('variationValidator', $this->request);
+		foreach ($variations['variations'] as $variation)
+		{
+			$validator->addCheck('variation_' . $variation['ID'], new IsNotEmptyCheck($this->translate('_err_option_0')));
+		}
 
 		return $validator;
 	}

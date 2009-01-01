@@ -8,10 +8,15 @@
  */
 function smarty_block_error($params, $content, $smarty, &$repeat) {
 	$smarty->assign("msg", "");
-	
+
 	$formParams = $smarty->_tag_stack[0][1];
 	$formHandler = $formParams['handle'];
-	
+
+	if (!$formHandler)
+	{
+		return $content;
+	}
+
 	$validator = $formHandler->getValidator();
 	$errorMsg = "";
 	if (empty($params))
@@ -22,19 +27,19 @@ function smarty_block_error($params, $content, $smarty, &$repeat) {
 			$content = "";
 		}
 	}
-	
+
 	if (!empty($params['list']))
 	{
 		$smarty->assign($params['list'], $validator->getErrorList);
 	}
-	
+
 	if (!empty($params['for']))
 	{
 		$msgVarName = "msg";
 		$fieldName = $params['for'];
 		$errorList = $validator->getErrorList();
 		$errorMsg = "";
-		
+
 		if (!empty($params['msg']))
 		{
 			$msgVarName = $params['msg'];
@@ -50,7 +55,7 @@ function smarty_block_error($params, $content, $smarty, &$repeat) {
 			$smarty->assign($msgVarName, "");
 		}
 	}
-	
+
 	return $content;
 }
 

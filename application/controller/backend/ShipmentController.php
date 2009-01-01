@@ -4,6 +4,7 @@ ClassLoader::import("application.controller.backend.abstract.StoreManagementCont
 ClassLoader::import("application.model.order.*");
 ClassLoader::import("application.model.delivery.*");
 ClassLoader::import("application.model.Currency");
+ClassLoader::import("application.model.product.ProductSet");
 
 /**
  * Controller for handling product based actions performed by store administrators
@@ -19,6 +20,10 @@ class ShipmentController extends StoreManagementController
 		$order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);
 		$order->loadAll();
 		$order->getCoupons();
+
+		$products = ARSet::buildFromArray($order->getOrderedItems())->extractReferencedItemSet('product', 'ProductSet');
+		$variations = $products->getVariationMatrix();
+
 		$form = $this->createShipmentForm();
 		$form->setData(array('orderID' => $order->getID()));
 		$shipments = $order->getShipments();
@@ -80,6 +85,7 @@ class ShipmentController extends StoreManagementController
 		$response->set('shipments', $shipmentsArray);
 		$response->set('subtotalAmount', $subtotalAmount);
 		$response->set('shippingAmount', $shippingAmount);
+		$response->set('variations', $variations);
 
 		if ($downloadable = $order->getDownloadShipment(false))
 		{
@@ -99,12 +105,6 @@ class ShipmentController extends StoreManagementController
 		$response->set('newShipmentForm', $form);
 
 		// load product options
-		$products = new ARSet();
-		foreach ($order->getOrderedItems() as $item)
-		{
-			$products->add($item->product->get());
-		}
-
 		$response->set('allOptions', ProductOption::loadOptionsForProductSet($products));
 
 		return $response;

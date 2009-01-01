@@ -510,6 +510,36 @@ class OrderTest extends OrderTestCommon
 		$this->assertEqual($second->reservedCount->get(), 0);
 	}
 
+	public function testInventoryForChangedProduct()
+	{
+		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+
+		$product = $this->products[0];
+		$product->stockCount->set(2);
+		$product->save();
+
+		$second = $this->products[1];
+		$second->stockCount->set(2);
+		$second->save();
+
+		$order = CustomerOrder::getNewInstance($this->user);
+		$item = $order->addProduct($product, 1);
+		$order->save();
+		$order->finalize($this->usd);
+
+		$item->product->set($second);
+		$item->save();
+		$order->save();
+
+		$product->reload();
+		$this->assertEqual($product->stockCount->get(), 2);
+		$this->assertEqual($product->reservedCount->get(), 0);
+
+		$second->reload();
+		$this->assertEqual($second->stockCount->get(), 1);
+		$this->assertEqual($second->reservedCount->get(), 1);
+	}
+
 	public function testUpdatingToStock()
 	{
 		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');

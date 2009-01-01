@@ -166,9 +166,9 @@ class OrderedItem extends ActiveRecordModel
 		return $price;
 	}
 
-	public function reserve($unreserve = false)
+	public function reserve($unreserve = false, Product $product = null)
 	{
-		$product = $this->product->get();
+		$product = is_null($product) ? $this->product->get() : $product;
 		if (!$product->isBundle())
 		{
 			$this->reservedProductCount->set($unreserve ? 0 : $this->count->get());
@@ -194,7 +194,6 @@ class OrderedItem extends ActiveRecordModel
 
 	/**
 	 * Release reserved products back to inventory
-	 * @todo implement
 	 */
 	public function unreserve()
 	{
@@ -407,6 +406,19 @@ class OrderedItem extends ActiveRecordModel
 		if ($shipment && $order->isFinalized->get() && !$order->isCancelled->get() && self::getApplication()->isInventoryTracking())
 		{
 			$product = $this->product->get();
+
+			// changed product (usually a different variation)
+			if ($this->product->isModified())
+			{
+				// unreserve original item
+				$orig = $this->product->getInitialValue();
+				$this->reserve(true, $orig);
+				$orig->save();
+
+				// reserve new item
+				$this->reserve();
+			}
+
 			if (($this->reservedProductCount->get() > 0) && ($shipment->status->get() == Shipment::STATUS_SHIPPED))
 			{
 				$this->removeFromInventory();

@@ -14,5 +14,5 @@
 <span id="variationOptionTemplate" style="display: none;">%name (%price)</span>
 
 <script type="text/javascript">
-	new Product.Variations($('variations'), {json array=$variations}, {ldelim}currency: '{$currency}'{rdelim});
+	new Product.Variations($('{$container|@or:'variations'}'), {json array=$variations}, {ldelim}currency: '{$currency}'{rdelim});
 </script>

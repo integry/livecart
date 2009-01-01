@@ -40,11 +40,17 @@
 						</div>
 					</div>
 				{/if}
-				{if $item.Product.variations}
+
+				{if $item.Product.variations || $variations.variations[$item.Product.ID]}
 					<div class="productOptions">
 						{include file="order/itemVariations.tpl"}
+						<div class="menu productOptionsMenu">
+							<a href="{link controller=backend.orderedItem action=variationForm id=$item.ID}" onclick="Backend.OrderedItem.loadOptionsForm(event);">{t _edit_variations}</a>
+							<span class="progressIndicator" style="display: none;"></span>
+						</div>
 					</div>
 				{/if}
+
 			</div>
 		</td>
 		<td class="orderShipmentsItem_info_price_td">
