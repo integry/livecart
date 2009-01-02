@@ -7,8 +7,6 @@
 	<title>{'SOFT_NAME'|config} Admin - {$TITLE}</title>
 	<base href="{baseUrl}" />
 
-	{liveCustomization}
-
 	{if 'FAVICON'|config}
 		<link href="{'FAVICON'|config}" rel="shortcut icon" />
 	{/if}
