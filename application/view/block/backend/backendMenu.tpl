@@ -1,3 +1,5 @@
+<div id="menuDescription"></div>
+
 <ul style="display: none;">
 	<li id="navTopItem-template">
 		<div>
@@ -9,10 +11,10 @@
 				</div>
 			</div>
 		</div>
-	</li>		
+	</li>
 	<li id="navSubItem-template">
 		<a href=""></a>
-	</li>		
+	</li>
 </ul>
 
 <script type="text/javascript">

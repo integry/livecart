@@ -1,4 +1,5 @@
 <Menu>
 	<Title>_menu_tools</Title>
 	<Icon>image/silk/wrench.png</Icon>
+	<Descr>_menu_descr_tools</Descr>
 </Menu>

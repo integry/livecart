@@ -452,6 +452,16 @@ html, body{
 #nav li ul li:hover a, .menuCommandHover a {
 }
 
+#menuDescription
+{
+	position: absolute;
+	left: 200px;
+	top: 5px;
+	background: lightyellow;
+	padding: 0.5em;
+	font-size: smaller;
+}
+
 /***************************
 	Breadcrumb navigation
 ***************************/

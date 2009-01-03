@@ -17,7 +17,7 @@
 
 		<div id="topLogoImageContainer">
 			<a href="{link controller=backend.index action=index}">
-				{img src='BACKEND_LOGO'|config|@or:"image/promo/logoHeadline.gif" id="topLogoImage"}
+				{img src='BACKEND_LOGO_SMALL'|config|@or:"image/promo/transparentlogo_small.png" id="topLogoImage"}
 			</a>
 		</div>
 

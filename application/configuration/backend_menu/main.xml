@@ -10,46 +10,54 @@
         	<Action>index</Action>
         	<Role>category,product</Role>
         	<Icon>image/silk/package.png</Icon>
+        	<Descr>_menu_descr_products</Descr>
         </Menu>
         <Menu>
         	<Title>_menu_orders</Title>
         	<Controller>backend.customerOrder</Controller>
         	<Role>order</Role>
         	<Icon>image/silk/money.png</Icon>
+        	<Descr>_menu_descr_orders</Descr>
         </Menu>
         <Menu>
         	<Title>_menu_users</Title>
         	<Controller>backend.userGroup</Controller>
         	<Role>userGroup</Role>
         	<Icon>image/silk/group.png</Icon>
+        	<Descr>_menu_descr_users</Descr>
         </Menu>
         <Menu>
         	<Title>_menu_manage</Title>
         	<Role>page,news</Role>
         	<Icon>image/silk/pencil.png</Icon>
+        	<Descr>_menu_descr_manage</Descr>
         	<Items>
         		<Menu>
 		        	<Title>_menu_pricing_rules</Title>
 		        	<Controller>backend.discount</Controller>
 		        	<Icon>image/silk/calculator.png</Icon>
+        			<Descr>_menu_descr_pricing_rules</Descr>
 		        </Menu>
         		<Menu>
 		        	<Title>_menu_pages</Title>
 		        	<Controller>backend.staticPage</Controller>
 		        	<Role>page</Role>
 		        	<Icon>image/silk/page_white_text.png</Icon>
+		        	<Descr>_menu_descr_pages</Descr>
 		        </Menu>
         		<Menu>
 		        	<Title>_menu_news</Title>
 		        	<Controller>backend.siteNews</Controller>
 		        	<Role>news</Role>
 		        	<Icon>image/silk/newspaper.png</Icon>
+		        	<Descr>_menu_descr_news</Descr>
 		        </Menu>
         		<Menu>
 		        	<Title>_menu_manufacturers</Title>
 		        	<Controller>backend.manufacturer</Controller>
 		        	<Role>product</Role>
 		        	<Icon>image/silk/tag_blue.png</Icon>
+		        	<Descr>_menu_descr_manufacturers</Descr>
 		        </Menu>
 		    </Items>
         </Menu>
@@ -57,12 +65,14 @@
         	<Title>_menu_settings</Title>
         	<Role>settings,delivery,currency,language,delivery,taxes,update</Role>
         	<Icon>image/silk/cog.png</Icon>
+        	<Descr>_menu_descr_settings</Descr>
             <Items>
                 <Menu>
                 	<Title>_menu_configuration</Title>
                 	<Controller>backend.settings</Controller>
                 	<Role>settings</Role>
                 	<Icon>image/silk/wrench_orange.png</Icon>
+                	<Descr>_menu_descr_configuration</Descr>
                 </Menu>
                 <Menu>
                 	<Title>_menu_delivery_zones</Title>
@@ -70,11 +80,13 @@
                 	<Action>index</Action>
                 	<Role>delivery</Role>
                 	<Icon>image/silk/lorry.png</Icon>
+                	<Descr>_menu_descr_delivery_zones</Descr>
                 </Menu>
                 <Menu>
                 	<Title>_menu_custom_fields</Title>
                 	<Controller>backend.customField</Controller>
                 	<Icon>image/silk/textfield.png</Icon>
+                	<Descr>_menu_descr_custom_fields</Descr>
                 </Menu>
                 <Menu>
                 	<Title>_menu_tax</Title>
@@ -82,6 +94,7 @@
                 	<Action>index</Action>
                 	<Role>taxes</Role>
                 	<Icon>image/silk/coins.png</Icon>
+                	<Descr>_menu_descr_tax</Descr>
                 </Menu>
                 <Menu>
                 	<Title>_menu_currencies</Title>
@@ -89,6 +102,7 @@
                 	<Action>index</Action>
                 	<Role>currency</Role>
                 	<Icon>image/silk/money_euro.png</Icon>
+                	<Descr>_menu_descr_currencies</Descr>
                 </Menu>
                 <Menu>
                 	<Title>_menu_languages</Title>
@@ -96,6 +110,7 @@
                 	<Action>index</Action>
                 	<Role>language</Role>
                 	<Icon>image/silk/world.png</Icon>
+                	<Descr>_menu_descr_languages</Descr>
                 </Menu>
                 <Menu>
                 	<Title>_menu_update</Title>
@@ -103,6 +118,7 @@
                 	<Action>index</Action>
                 	<Role>update</Role>
                 	<Icon>image/silk/drive_web.png</Icon>
+                	<Descr>_menu_descr_update</Descr>
                 </Menu>
             </Items>
         </Menu>
@@ -110,18 +126,21 @@
         	<Title>_menu_customize</Title>
         	<Role>customize,template</Role>
         	<Icon>image/silk/wand.png</Icon>
+        	<Descr>_menu_descr_customize</Descr>
         	<Items>
         		<Menu>
         			<Title>_menu_customization_mode</Title>
         			<Controller>backend.customize</Controller>
                 	<Role>customize</Role>
                 	<Icon>image/silk/layout.png</Icon>
+                	<Descr>_menu_descr_customization_mode</Descr>
         		</Menu>
         		<Menu>
         			<Title>_menu_edit_templates</Title>
         			<Controller>backend.template</Controller>
                 	<Role>template</Role>
                 	<Icon>image/silk/html.png</Icon>
+                	<Descr>_menu_descr_edit_templates</Descr>
         		</Menu>
         		<Menu>
         			<Title>_menu_email_templates</Title>
@@ -129,12 +148,14 @@
         			<Action>email</Action>
                 	<Role>template</Role>
                 	<Icon>image/silk/email_edit.png</Icon>
+                	<Descr>_menu_descr_email_templates</Descr>
         		</Menu>
         		<Menu>
         			<Title>_menu_css_edit</Title>
         			<Controller>backend.cssEditor</Controller>
                 	<Role>template</Role>
                 	<Icon>image/silk/css.png</Icon>
+                	<Descr>_menu_descr_css_edit</Descr>
         		</Menu>
         	</Items>
         </Menu>

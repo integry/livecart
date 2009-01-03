@@ -13,10 +13,8 @@ _menu_manufacturers=Manufacturers
 _menu_settings=Settings
 _menu_configuration=Configuration
 _menu_custom_fields=Custom Fields
-_menu_payment_gateways=Payment Gateways
 _menu_delivery_zones=Delivery Zones
 _menu_tax=Taxes
-_menu_shipping_rate=Shipping Rate Calculators
 
 _menu_customize=Customize
 _menu_customization_mode=Live Customization
@@ -32,3 +30,33 @@ _menu_currencies=Currencies
 _menu_tools=Tools
 _menu_import_csv=Import CSV File
 _menu_newsletter=Newsletters
+
+_menu_descr_products=Manage your products, categories, variations, inventory, attributes, layered navigation, etc.
+_menu_descr_orders=View, modify, create and process orders and print invoices
+_menu_descr_users=Manage customer and admin accounts, edit account information, create user groups and set access permissions
+
+_menu_descr_manage=Manage promotions, discounts and site content like news posts and static pages
+_menu_descr_pricing_rules=Promotions, discounts, coupon codes, business rules and more
+_menu_descr_pages=Create and modify custom pages
+_menu_descr_news=Publish news posts
+_menu_descr_manufacturers=Manage brands/manufacturers details and images
+
+_menu_descr_settings=Configure LiveCart, including settings for payment processing and shipping rate calculation
+_menu_descr_configuration=Change LiveCart settings
+_menu_descr_custom_fields=Define custom fields for orders (for example, gift message or delivery date), customers (tax ID), etc.
+_menu_descr_delivery_zones=Define shipping rates
+_menu_descr_tax=Define what taxes will be used
+_menu_descr_languages=Enable additional languages and edit translations
+_menu_descr_update=Check for LiveCart version updates
+_menu_descr_currencies=Enable additional currencies and update exchange rates
+
+_menu_descr_customize=Customize the look and feel of your store
+_menu_descr_customization_mode=Real-time, point-and-click CSS, template and translation customization
+_menu_descr_edit_templates=Modify store page templates
+_menu_descr_email_templates=Modify e-mail message templates
+_menu_descr_css_edit=Define custom CSS rules to override base style
+
+_menu_descr_tools=Various handy tools to help manage your store
+_menu_descr_import_csv=Import products and categories from a CSV file
+_menu_descr_newsletter=Send newsletter messages to customers and newsletter subscribers
+_menu_descr_import=Migrate data from other shopping cart programs, like osCommerce or X-Cart

@@ -561,6 +561,7 @@ Backend.NavMenu.prototype =
 
 				var a = menuItem.getElementsByTagName('a')[0];
 				a.href = mItem['url'];
+				a.descr = mItem['descr'];
 				if(!mItem['url'])
 				{
 					a.onclick = function() { return false; }
@@ -603,6 +604,7 @@ Backend.NavMenu.prototype =
 
 							a.href = sub['url'];
 							a.innerHTML = sub['title'];
+							a.descr = sub['descr'];
 
 							if ((topIndex == index) && (subIndex == subItemIndex))
 							{
@@ -626,6 +628,9 @@ Backend.NavMenu.prototype =
 				}
 			}
 		}
+
+		Event.observe(navCont, 'mouseover', this.showDescription.bind(this));
+		Event.observe(navCont, 'mouseout', this.hideDescription.bind(this));
 	},
 
 	hideCurrentSubMenu: function()
@@ -642,6 +647,34 @@ Backend.NavMenu.prototype =
 		{
 			$('navSelected').getElementsByTagName('ul')[0].style.visibility = 'visible';
 		}
+	},
+
+	showDescription: function(e)
+	{
+		var a = Event.element(e);
+		if ((a.tagName != 'A') || !a.descr)
+		{
+			this.hideDescription();
+			return;
+		}
+
+		this.getDescrContainer().update(a.descr);
+		this.getDescrContainer().show();
+	},
+
+	hideDescription: function()
+	{
+		this.getDescrContainer().hide();
+	},
+
+	getDescrContainer: function()
+	{
+		if (!this.descrContainer)
+		{
+			this.descrContainer = $('menuDescription');
+		}
+
+		return this.descrContainer;
 	}
 }
 

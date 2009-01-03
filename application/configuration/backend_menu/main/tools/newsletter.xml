@@ -3,4 +3,5 @@
 	<Controller>backend.newsletter</Controller>
 	<Role>newsletter</Role>
 	<Icon>image/silk/email_go.png</Icon>
+	<Descr>_menu_descr_newsletter</Descr>
 </Menu>

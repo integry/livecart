@@ -36,7 +36,11 @@ function smarty_function_backendMenu($params, LiveCartSmarty $smarty)
 	 	}
 
 	 	$filteredValue = array();
-		$filteredValue['title'] = $smarty->branding($locale->translator()->translate($topValue['title']));
+		foreach (array('title', 'descr') as $field)
+		{
+			$filteredValue[$field] = $smarty->branding($locale->translator()->translate($topValue[$field]));
+		}
+
 		$filteredValue['controller'] = $topValue['controller'];
 		$filteredValue['action'] = $topValue['action'];
 		$filteredValue['icon'] = $topValue['icon'];
@@ -57,7 +61,11 @@ function smarty_function_backendMenu($params, LiveCartSmarty $smarty)
 		  		}
 
 		  		$filteredSubValue = array();
-				$filteredSubValue['title'] = $smarty->branding($locale->translator()->translate($subValue['title']));
+				foreach (array('title', 'descr') as $field)
+				{
+					$filteredSubValue[$field] = $smarty->branding($locale->translator()->translate($subValue[$field]));
+				}
+
 				$filteredSubValue['url'] = $router->createUrl(array('controller' => $subValue['controller'], 'action' => $subValue['action']), true);
 				$filteredSubValue['controller'] = $subValue['controller'];
 				$filteredSubValue['action'] = $subValue['action'];

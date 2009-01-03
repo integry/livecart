@@ -174,6 +174,7 @@ class MenuLoader {
 	  	$father_menu[$i]['action'] = (string)$struct->Action;
 	  	$father_menu[$i]['role'] = (string)$struct->Role;
 	  	$father_menu[$i]['icon'] = (string)$struct->Icon;
+	  	$father_menu[$i]['descr'] = (string)$struct->Descr;
 
 	  	if (empty($father_menu[$i]['action']))
 	  	{
