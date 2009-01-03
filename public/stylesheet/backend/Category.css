@@ -8,9 +8,9 @@
     overflow: hidden;
 }
 
-#categoryBrowserActions .addTreeNode
+#categoryBrowserActions .addTreeNode a
 {
-    background-image:url(../../image/silk/folder_add.png);
+    background-image: url(../../image/silk/folder_add.png);
 }
 
 #managerContainer

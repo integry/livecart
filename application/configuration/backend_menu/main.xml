@@ -9,111 +9,132 @@
         	<Controller>backend.category</Controller>
         	<Action>index</Action>
         	<Role>category,product</Role>
+        	<Icon>image/silk/package.png</Icon>
         </Menu>
         <Menu>
         	<Title>_menu_orders</Title>
         	<Controller>backend.customerOrder</Controller>
         	<Role>order</Role>
+        	<Icon>image/silk/money.png</Icon>
         </Menu>
         <Menu>
         	<Title>_menu_users</Title>
         	<Controller>backend.userGroup</Controller>
         	<Role>userGroup</Role>
+        	<Icon>image/silk/group.png</Icon>
         </Menu>
         <Menu>
         	<Title>_menu_manage</Title>
         	<Role>page,news</Role>
+        	<Icon>image/silk/pencil.png</Icon>
         	<Items>
         		<Menu>
 		        	<Title>_menu_pricing_rules</Title>
 		        	<Controller>backend.discount</Controller>
+		        	<Icon>image/silk/calculator.png</Icon>
 		        </Menu>
         		<Menu>
 		        	<Title>_menu_pages</Title>
 		        	<Controller>backend.staticPage</Controller>
 		        	<Role>page</Role>
+		        	<Icon>image/silk/page_white_text.png</Icon>
 		        </Menu>
         		<Menu>
 		        	<Title>_menu_news</Title>
 		        	<Controller>backend.siteNews</Controller>
 		        	<Role>news</Role>
+		        	<Icon>image/silk/newspaper.png</Icon>
 		        </Menu>
         		<Menu>
 		        	<Title>_menu_manufacturers</Title>
 		        	<Controller>backend.manufacturer</Controller>
 		        	<Role>product</Role>
+		        	<Icon>image/silk/tag_blue.png</Icon>
 		        </Menu>
 		    </Items>
         </Menu>
         <Menu>
         	<Title>_menu_settings</Title>
         	<Role>settings,delivery,currency,language,delivery,taxes,update</Role>
+        	<Icon>image/silk/cog.png</Icon>
             <Items>
                 <Menu>
                 	<Title>_menu_configuration</Title>
                 	<Controller>backend.settings</Controller>
                 	<Role>settings</Role>
+                	<Icon>image/silk/wrench_orange.png</Icon>
                 </Menu>
                 <Menu>
                 	<Title>_menu_delivery_zones</Title>
                 	<Controller>backend.deliveryZone</Controller>
                 	<Action>index</Action>
                 	<Role>delivery</Role>
+                	<Icon>image/silk/lorry.png</Icon>
                 </Menu>
                 <Menu>
                 	<Title>_menu_custom_fields</Title>
                 	<Controller>backend.customField</Controller>
+                	<Icon>image/silk/textfield.png</Icon>
                 </Menu>
                 <Menu>
                 	<Title>_menu_tax</Title>
                 	<Controller>backend.tax</Controller>
                 	<Action>index</Action>
                 	<Role>taxes</Role>
+                	<Icon>image/silk/coins.png</Icon>
                 </Menu>
                 <Menu>
                 	<Title>_menu_currencies</Title>
                 	<Controller>backend.currency</Controller>
                 	<Action>index</Action>
                 	<Role>currency</Role>
+                	<Icon>image/silk/money_euro.png</Icon>
                 </Menu>
                 <Menu>
                 	<Title>_menu_languages</Title>
                 	<Controller>backend.language</Controller>
                 	<Action>index</Action>
                 	<Role>language</Role>
+                	<Icon>image/silk/world.png</Icon>
                 </Menu>
                 <Menu>
                 	<Title>_menu_update</Title>
                 	<Controller>backend.update</Controller>
                 	<Action>index</Action>
                 	<Role>update</Role>
+                	<Icon>image/silk/drive_web.png</Icon>
                 </Menu>
             </Items>
         </Menu>
         <Menu>
         	<Title>_menu_customize</Title>
         	<Role>customize,template</Role>
+        	<Icon>image/silk/wand.png</Icon>
         	<Items>
         		<Menu>
         			<Title>_menu_customization_mode</Title>
         			<Controller>backend.customize</Controller>
                 	<Role>customize</Role>
+                	<Icon>image/silk/layout.png</Icon>
         		</Menu>
         		<Menu>
         			<Title>_menu_edit_templates</Title>
         			<Controller>backend.template</Controller>
                 	<Role>template</Role>
+                	<Icon>image/silk/html.png</Icon>
         		</Menu>
         		<Menu>
         			<Title>_menu_email_templates</Title>
         			<Controller>backend.template</Controller>
         			<Action>email</Action>
                 	<Role>template</Role>
+                	<Icon>image/silk/email_edit.png</Icon>
         		</Menu>
         		<Menu>
         			<Title>_menu_css_edit</Title>
         			<Controller>backend.cssEditor</Controller>
                 	<Role>template</Role>
+                	<Icon>image/silk/css.png</Icon>
         		</Menu>
         	</Items>
         </Menu>

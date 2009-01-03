@@ -14,12 +14,7 @@ body {
 	font-size: 1.4em;
 	color: #333;
 	margin: 0px;
-/*
-	background-color:#E6E6E6;
-*/
-	background-image:url(../../image/backend/layout/workarea_shade_vertical_wide.jpg);
-	background-position: right 200px;
-	background-repeat: repeat-y;
+	background-color: #f0f0f0;
 }
 
 table
@@ -164,16 +159,20 @@ html, body{
 }
 /* end hack */
 
-#pageContainer {
+#pageContainer
+{
 	position:relative; /* needed for footer positioning*/
 	overflow: hidden;  /* to avoid drag&drop items to be dragged out of page boundaries */
+	margin: 1em;
+	margin-top: 0;
+	border: 1px solid #ccc;
+	background-color: #fff;
 }
 
 
-#pageContentContainer {
+#pageContentContainer
+{
     position: relative;
-    margin: 0 19px 0 15px;
-    background: white;
 	min-height: 100%; /* needed for footer positioning*/
 }
 
@@ -189,82 +188,46 @@ html, body{
 /***************************
 	Page header
 ***************************/
-#pageHeader {
-  	background-color: #30a0f9;
-    height: 99px;
+#pageHeader
+{
     position: relative;
     z-index: 2000;
+    background: url(../../image/backend/layout/header_shade.png) repeat-x left bottom;
+    margin-right: 1px;
 }
-#headerContainer {
-  	height: 55px;
-}
+
 #topAuthInfo {
-  	color: #FFFFFF;
 	text-align: right;
-	padding-right: 20px;
+	padding-right: 32px;
 	font-size: 10px;
 }
 
 #topAuthInfo a
 {
-	color: #eef;
+	color: #666;
+	text-decoration: none;
 }
 
-#topBackground {
-	background-image: url(../../image/backend/layout/top_bg.jpg);
-    height: 60px;
-	width: 100%;
-	background-repeat: repeat-x;
-}
-#topBackgroundLeft {
-	background-image:url(../../image/backend/layout/top_bg_left.jpg);
-	height: 61px;
-	background-repeat: no-repeat;
-    width: 100%;
-}
-
-#topHomeContainer
+#topAuthInfo a:hover
 {
-    float: left;
+	text-decoration: underline;
 }
 
-#topLogoContainer {
-	float: right;
-	width: 200px;
-	height: 40px;
-	position: relative;
-	z-index: 1;
-}
 #topLogoImageContainer {
-    float: right;
+	float: left;
 }
 
 #topLogoImage {
-  	margin-right: 10px;
-  	margin-top: -5px;
-	position: absolute;
-	top: 15px;
-	left: 0;
+	margin: 8px 10px 0 5px;
 }
+
 #headerUserName {
   	font-weight: 900;
   	font-size: 11px;
 }
-#homeButtonWrapper {
-	vertical-align: middle;
-	text-align: left;
-	padding-left: 30px;
-	padding-top: 10px;
-	color: #FFFFFF;
-	font-size: 10px;
-	position: relative;
-	z-index: 1500;
-}
-#homeButton {
-	vertical-align:middle;
-}
+
 #systemMenu {
- 	font-size: 11px;
+ 	font-size: 12px;
 	text-align: right;
 	padding-top: 3px;
 	padding-right: 5px;
@@ -272,41 +235,37 @@ html, body{
 	z-index: 7000;
 	position: relative;
 	float: right;
-	margin-top: 3px;
+	margin-top: 7px;
 	margin-right: 10px;
+}
+
+#systemMenu a
+{
+	margin: 0 6px;
 }
 
 /***************************
 	Page footer
 ***************************/
-#footerContainer {
-  	width: 100%;
-	border-collapse: collapse;
-	height: 42px;
-	clear: both;
-}
-#footerLeft {
-  	width: 824px;
-	background-image:url(../../image/backend/layout/footer.png);
-	background-image:url(../../image/backend/layout/footer_stretch.png);
-	color: #FFFFFF;
-	font-size: x-small;
-	padding-left: 10px;
-	padding-bottom: 10px;
-	vertical-align: bottom;
-}
-#footerLeft a {
-	color: #FFFFFF;
-}
 #footerStretch {
     text-align: right;
 	padding-right: 15px;
-  	background-image:url(../../image/backend/layout/footer_stretch.png);
 }
 
-#pageFooter {
+#pageFooter
+{
 	position: relative;
-    background-color: #E6E6E6;
+	background: url(../../image/backend/layout/footer_stretch.png) repeat-x left top;
+	padding: 10px;
+	line-height: 19px;
+	margin-right: 1px;
+	border-top: 1px solid #D5E2FF;
+	font-size: 12px;
+}
+
+#pageFooter a
+{
+	color: #000;
 }
 
 #frontendLink
@@ -321,14 +280,14 @@ html, body{
 /***************************
  	Navigation menu
 ****************************/
-#navContainer {
-  	padding-left: 110px;
+#navContainer
+{
+	padding-top: 35px;
+	border-bottom: 3px solid #15367f;
 }
-
 #nav {
 	position: relative;
 	z-index: 1;
-	top: -2px;
 }
 
 #nav li ul, #nav { /* all lists */
@@ -362,9 +321,24 @@ html, body{
 	display: block;
 }
 
+#nav a
+{
+	padding-left: 20px;
+	margin-left: -5px;
+	margin-right: -5px;
+	background-position: left center;
+	background-repeat: no-repeat;
+}
+
+#nav ul a
+{
+	margin: 0;
+	line-height: 30px;
+}
+
 #nav a, #nav .topItem:hover {
   	text-decoration: none;
-  	color: #0000FF;
+  	color: #15367f;
   	font-weight: bold;
   	font-size: 15px;
   	display: block;
@@ -375,62 +349,60 @@ html, body{
 #nav li {
 	padding-left: 8px;
 	white-space: nowrap;
-	height: 19px;
 }
 
 #nav li div {
-  	background-image: url(../../image/backend/menu/menu_item_left.gif);
+  	background-image: url(../../image/backend/menu/menu_item_left.png);
   	background-repeat: no-repeat;
 	background-position: 0px 0px;
-	padding-left: 10px;
+	padding-left: 12px;
 }
 
 #nav li div div {
   	padding: 0px;
- 	background-image: url(../../image/backend/menu/menu_item_right.gif);
+ 	background-image: url(../../image/backend/menu/menu_item_right.png);
   	background-repeat: no-repeat;
 	background-position: top right;
 }
 
 #nav li div div div {
- 	background-image: url(../../image/backend/menu/menu_item_middle.jpg);
+ 	background-image: url(../../image/backend/menu/menu_item_middle.png);
 	background-repeat: repeat-x;
 	background-position: 0px 0px;
 	margin: 0px;
-	margin-right: 10px;
+	margin-right: 12px;
 	text-align: center;
-	padding: 2px 5px 0 5px;
-	line-height: 26px;
+	padding-top: 3px;
+	line-height: 35px;
 }
 
 #nav #navSelected div {
-  	background-image: url(../../image/backend/menu/menu_item_left_active.gif);
+  	background-image: url(../../image/backend/menu/menu_item_left_active.png);
 }
 
 #nav #navSelected div div {
-  	background-image: url(../../image/backend/menu/menu_item_right_active.gif);
+  	background-image: url(../../image/backend/menu/menu_item_right_active.png);
 }
 
 #nav #navSelected div div div {
-  	background-image: url(../../image/backend/menu/menu_item_middle_active.gif);
+  	background-image: url(../../image/backend/menu/menu_item_middle_active.png);
 }
 
 #navSelected li div {
   	background-image: none !important;
 }
 
-#navSelected div a {
-	color: #0093DD;
+#navSelected div > a
+{
+	color: #fff !important;
 }
 
 #nav li ul {
 
   	left: 8px;
-  	border: 1px solid #bbb;
-  	/* background-image: url(../../image/backend/menu/menu_commands_bg.jpg); */
-  	background-position: bottom left;
-  	background-repeat: repeat-x;
-  	background-color: #CDD9EE;
+  	border: 1px solid #d5e2ff;
+  	border-top: 3px solid #15367F;
+  	background-color: #f7f9ff;
   	line-height: 20px;
   	padding: 5px;
 }
@@ -500,13 +472,18 @@ html, body{
 /***************************
 	Language switch menu
 ***************************/
+#langSwitchLink.hasFlag
+{
+	background-repeat: no-repeat;
+	background-position: center left;
+	padding-left: 20px;
+}
+
 #langMenuContainer {
   	position: absolute;
 	display: none;
 	z-index: 20;
-	width: 110px;
 	padding-top: 6px;
-	left: -15px;
 	top: 13px;
 	overflow: hidden;
 	opacity: 0.9;
@@ -543,6 +520,11 @@ html, body{
   	cursor: pointer;
 }
 
+#langMenu div div span
+{
+	display: block;
+}
+
 .langMenuHover {
 	background: #58f;
 }
@@ -557,91 +539,34 @@ html, body{
 }
 
 /***************************
-	Work area styling
-***************************/
-#rightWorkareaShadeTop {
-	background-color: #E6E6E6;
-	margin-top: -3px;
-	height: 10px;
-}
-#workareaBottomShadeLeft {
-  	width: 30px;
-	height: 2px;
-}
-#workareaBottomShade {
-  	width: 100%;
-	background-image:url(../../image/backend/layout/workarea_shade_horizontal.jpg);
-	background-repeat: repeat-x;
-}
-#workareaShadeCorner {
-  	width: 20px;
-	vertical-align: top;
-	padding-right: 12px;
-}
-#workareaShadeCornerImage {
-	vertical-align: top;
-}
-#workareaBottomShadeContainer {
-  	width: 100%;
-}
-
-#topShadeContainer {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: white;
-}
-
-#topShadeContainerLeft {
-    float: left;
-    width: 15px;
-    height: 100%;
-    background-color: #E6E6E6;
-}
-
-#topShadeContainerRight {
-    float: right;
-    width: 20px;
-    height: 100%;
-    background-image:url(../../image/backend/layout/workarea_shade_vertical_wide.jpg);
-	background-position: -8px 0px;
-    background-repeat: repeat-y;
-    background-color: #E6E6E6;
-}
-
-#topShadeContainerRight div {
-    height:110px;
-    width: 20px;
-    background-color: #E6E6E6;
-}
-
-/***************************
 	Work area content
 ***************************/
 #pageTitleContainer
 {
 	height: 21px;
 	padding-top: 5px;
-	background-color: #E6E6E6;
 	position: relative;
 	width: 100%;
 	clear: both;
 }
 
-#pageTitle {
+#pageTitle
+{
   	font-weight: bold;
-	padding-left: 20px;
+  	font-family: "Trebuchet MS";
+  	font-size: 18px;
+	padding-left: 10px;
     float: left;
     overflow: hidden;
     white-space: nowrap;
 }
+
 #titleHelpButton {
 	position: relative;
 	top: 1px;
 	margin-left: 5px;
 }
 #workArea {
-  	background-color: #FFFFFF;
 	padding: 10px;
 }
 
@@ -706,13 +631,16 @@ ul.verticalMenu
 
 ul.verticalMenu li
 {
-	margin-bottom: 5px;
-	padding: 5px;
-	padding-left: 28px;
-	background-repeat: no-repeat;
-	background-position: 5px center;
-	border: 1px solid #ddd;
-	background-color: #ffe;
+	margin-bottom: -1px;
+	background: url(../../image/backend/verticalMenuBg.gif);
+	border: 1px solid #bcd2e6;
+	border-bottom-width: 0;
+	padding-left: 5px;
+}
+
+ul.verticalMenu li:hover
+{
+	background-position: 0 -32px;
 }
 
 ul.menu li.done
@@ -857,6 +785,7 @@ legend
 	padding-right: 10px;
 	background-color: #fff;
 	border: 1px solid #ddd;
+	font-family: "Trebuchet MS";
 }
 
 label
@@ -1326,6 +1255,14 @@ fieldset.group p
     font-size: smaller;
 }
 
+#discountManagerContainer .sectionContainer,
+#newsletterManagerContainer .sectionContainer
+{
+	padding: 0;
+	background: none;
+	border: 0;
+}
+
 /**************************
 	Translation tabs
 ***************************/
@@ -1666,28 +1603,41 @@ label.acronym a:hover div
 /***************************
  * Tree actions
  **************************/
-.addTreeNode
+ul.verticalMenu li a
 {
-	background-image: url('../../image/silk/add.png');
-	margin-bottom: 10px;
+	background-repeat: no-repeat;
+	background-position: left center;
+	color: #3688BA;
+	font-size: 13px;
+	font-weight: bold;
+	text-decoration: none;
+	padding-left: 20px;
+	padding-top: 2px;
+	display: block;
+	line-height: 30px;
 }
 
-.viewTreeNode
+.addTreeNode a
+{
+	background-image: url('../../image/silk/add.png');
+}
+
+.viewTreeNode a
 {
 	background-image: url('../../image/silk/page_white_code.png');
 }
 
-.moveUpTreeNode
+.moveUpTreeNode a
 {
 	background-image: url('../../image/silk/arrow_up.png');
 }
 
-.moveDownTreeNode
+.moveDownTreeNode a
 {
 	background-image: url('../../image/silk/arrow_down.png');
 }
 
-.removeTreeNode
+.removeTreeNode a
 {
 	background-image: url('../../image/silk/delete.png');
 }
@@ -1727,7 +1677,6 @@ label.acronym a:hover div
  * Rounded corners
  **************************/
 legend,
-ul.verticalMenu li,
 .activeGridColumnsSelect,
 .activeGrid_loadIndicator div,
 .activeGrid_massActionProgress .container,
@@ -1759,7 +1708,8 @@ ul.languageFormTabs li, .tabList li, .tabs li
 	-moz-border-radius-bottomright: 6px;
 }
 
-#loginContainer
+#loginContainer,
+#pageContainer
 {
 	-moz-border-radius: 1em;
 }

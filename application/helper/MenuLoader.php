@@ -35,7 +35,6 @@ class MenuLoader {
 		{
 			$this->mainMenu = unserialize(file_get_contents($cache_file));
 		}
-
 	}
 
 	/**
@@ -69,11 +68,8 @@ class MenuLoader {
 		$i = 0;
 		foreach ($this->mainMenu as $menu)
 		{
-		  	$array[$i]['title'] = $menu['title'];
-			$array[$i]['order'] = $menu['order'];
-			$array[$i]['controller'] = $menu['controller'];
-			$array[$i]['action'] = $menu['action'];
-			$i ++;
+		  	$array[$i] = $menu;
+			$i++;
 		}
 		return $array;
 	}
@@ -177,6 +173,7 @@ class MenuLoader {
 	  	$father_menu[$i]['controller'] = (string)$struct->Controller;
 	  	$father_menu[$i]['action'] = (string)$struct->Action;
 	  	$father_menu[$i]['role'] = (string)$struct->Role;
+	  	$father_menu[$i]['icon'] = (string)$struct->Icon;
 
 	  	if (empty($father_menu[$i]['action']))
 	  	{

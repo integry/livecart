@@ -4,41 +4,20 @@
 
 	</div>
 	<div id="pageFooter">
-
-		<table id="workareaBottomShadeContainer">
-			<tr>
-				<td>
-					{img src="image/backend/layout/spacer.gif" id="workareaBottomShadeLeft"}
-				</td>
-				<td id="workareaBottomShade">
-					&nbsp;
-				</td>
-				<td id="workareaShadeCorner">
-					{img src="image/backend/layout/workarea_shade_corner.jpg" id="workareaShadeCornerImage"}
-				</td>
-			</tr>
-		</table>
-		<table id="footerContainer">
-			<tr>
-				<td id="footerLeft">
-					<div style="float: left;">
-						{'POWERED_BY_BACKEND'|config}
-					</div>
-					{if 'BACKEND_SHOW_FOOTER_LINKS'|config}
-						<div id="supportLinks" style="float: left; padding-left: 50px;">
-							<a href="http://support.livecart.com" target="_blank">Customer Support</a>
-							/
-							<a href="http://forums.livecart.com" target="_blank">Forums</a>
-						</div>
-					{/if}
-				</td>
-				<td id="footerStretch">
-					&nbsp;
-					<a href="{link}" target="_blank" id="frontendLink">{t _frontend}</a>
-				</td>
-			</tr>
-		</table>
-
+		<div style="float: left;">
+			{'POWERED_BY_BACKEND'|config}
+		</div>
+		{if 'BACKEND_SHOW_FOOTER_LINKS'|config}
+			<div id="supportLinks" style="float: left; padding-left: 50px;">
+				<a href="http://support.livecart.com" target="_blank">Customer Support</a>
+				/
+				<a href="http://forums.livecart.com" target="_blank">Forums</a>
+			</div>
+		{/if}
+		<div id="footerStretch">
+			&nbsp;
+			<a href="{link}" target="_blank" id="frontendLink">{t _frontend}</a>
+		</div>
 	</div>
 </div>
 

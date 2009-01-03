@@ -2,4 +2,5 @@
 	<Title>_menu_import</Title>
 	<Controller>backend.databaseImport</Controller>
 	<Role>dbmigration</Role>
+	<Icon>image/silk/database_refresh.png</Icon>
 </Menu>

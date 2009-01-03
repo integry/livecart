@@ -5,17 +5,17 @@
 
 #loadingUser
 {
-	position: absolute; 
-	text-align: center; 
-	width: 100%; 
-	padding-top: 200px; 
-	z-index: 50000;	
+	position: absolute;
+	text-align: center;
+	width: 100%;
+	padding-top: 200px;
+	z-index: 50000;
 }
 
 #loadingUserMsg
 {
-	padding: 40px; 
-	background-color: white; 
+	padding: 40px;
+	background-color: white;
 	border: 1px solid black;
 }
 
@@ -24,17 +24,17 @@
     overflow: hidden;
 }
 
-#userGroupsWrapper .addTreeNode
+#userGroupsWrapper .addTreeNode a
 {
     background-image: url(../../image/silk/group_add.png) !important;
 }
 
 li.addUser
 {
-    background-image: url(../../image/silk/user_add.png) !important;    
+    background-image: url(../../image/silk/user_add.png) !important;
 }
 
-#userGroupsContent label.setting 
+#userGroupsContent label.setting
 {
 	display: block;
 	float: auto;
@@ -58,7 +58,7 @@ li.addUser
 	position: relative;
 }
 
-#userManagerContainer .activeList .errorText, #userGroupsManagerContainer .activeList .errorText 
+#userManagerContainer .activeList .errorText, #userGroupsManagerContainer .activeList .errorText
 {
     float: none;
 }
@@ -75,14 +75,14 @@ li.addUser
     width: 250px;
 }
 
-.cell_cb 
+.cell_cb
 {
     width:4%;
 }
 
 #userGroupsManagerContainer .containerTableStyle
 {
-    height: auto ! important; 
+    height: auto ! important;
 }
 
 .treeBrowser
@@ -99,7 +99,7 @@ li.addUser
 #fromUsersPage .orderList .cell_User_firstName,
 #fromUsersPage .orderList .cell_User_lastName,
 #fromUsersPage .orderList .cell_User_companyName,
-#fromUsersPage #orderColumnMenu_8 .column_User_ID, 
+#fromUsersPage #orderColumnMenu_8 .column_User_ID,
 #fromUsersPage #orderColumnMenu_8 .column_User_email,
 #fromUsersPage #orderColumnMenu_8 .column_CustomerOrder_viewOrder,
 #fromUsersPage #orderColumnMenu_8 .column_ShippingAddress_countryID,
@@ -125,7 +125,7 @@ li.addUser
 
 fieldset.showPassword
 {
-    margin-top: -0.4em; 
+    margin-top: -0.4em;
     margin-bottom: 1em;
 }
 
@@ -136,7 +136,7 @@ fieldset.showPassword
 
 .generatePasswordProgressIndicator
 {
-    position: absolute; 
-	margin: 0; 
+    position: absolute;
+	margin: 0;
 	padding: 0.6em 0;
 }

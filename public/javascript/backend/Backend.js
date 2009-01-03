@@ -568,6 +568,10 @@ Backend.NavMenu.prototype =
 				}
 				a.innerHTML = mItem['title'];
 				menuItem.style.display = 'block';
+				if ('' != mItem['icon'])
+				{
+					a.style.backgroundImage = 'url(' + mItem['icon'] + ')';
+				}
 
 				if (topIndex == index)
 				{
@@ -578,18 +582,6 @@ Backend.NavMenu.prototype =
 					Event.observe(menuItem, 'mouseover', this.hideCurrentSubMenu);
 					Event.observe(menuItem, 'mouseout', this.showCurrentSubMenu);
 				}
-
-				/* for IE >> */
-				if ('Explorer' == BrowserDetect.browser)
-				{
-					menuItem.onmouseover=function() {
-						this.className+=" over";
-					}
-					menuItem.onmouseout=function() {
-						this.className=this.className.replace(" over", "");
-					}
-				}
-				/* << IE */
 
 				// submenu container
 				ul = menuItem.getElementsByTagName('ul')[0];
@@ -603,9 +595,14 @@ Backend.NavMenu.prototype =
 						if ('object' == typeof sub)
 						{
 							subNode = subItem.cloneNode(true);
+							var a = subNode.getElementsByTagName('a')[0];
+							if ('' != sub['icon'])
+							{
+								a.style.backgroundImage = 'url(' + sub['icon'] + ')';
+							}
 
-							subNode.getElementsByTagName('a')[0].href = sub['url'];
-							subNode.getElementsByTagName('a')[0].innerHTML = sub['title'];
+							a.href = sub['url'];
+							a.innerHTML = sub['title'];
 
 							if ((topIndex == index) && (subIndex == subItemIndex))
 							{

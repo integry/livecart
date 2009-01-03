@@ -3,7 +3,7 @@
 {else}
 	<h1>{$page.title_lang}</h1>
 	<ul class="menu" id="staticPageMenu">
-		<li id="codeMenu" class="viewTreeNode">
+		<li id="codeMenu">
 			<a href="#" class="menu" onclick="pageHandler.showTemplateCode(); return false;">{t _show_template_code}</a>
 		</li>
 	</ul>
@@ -21,14 +21,14 @@
 {form action="controller=backend.staticPage action=save" handle=$form onsubmit="pageHandler.save(this); return false;" method="post" role="page.update(edit),page.create(add)"}
 
 <fieldset class="container" id="editContainer">
-	
+
 	<p>
 		<label for="title_{$page.ID}" class="wide">{t _title}:</label>
 		<fieldset class="error">
 			{if $page.ID}
 				{textfield name="title" class="wider" id="title_`$page.ID`"}
 			{else}
-				{textfield name="title" class="wider" id="title_`$page.ID`" onkeyup="$('handle').value = ActiveForm.prototype.generateHandle(this.value);"}			
+				{textfield name="title" class="wider" id="title_`$page.ID`" onkeyup="$('handle').value = ActiveForm.prototype.generateHandle(this.value);"}
 			{/if}
 			<div class="errorText hidden"></div>
 		</fieldset>
@@ -46,14 +46,14 @@
 			<div class="errorText hidden"></div>
 		</fieldset>
 	</p>
-	
+
 	<p>
 		<label for="text_{$page.ID}" class="wide">{t _text}:</label>
 		<fieldset class="error">
 			<div class="textarea" id="textContainer">
 				{textarea class="tinyMCE longDescr" name="text" id="text_`$page.ID`" style="width: 100%;"}
 				<div class="errorText hidden" style="margin-top: 5px;"></div>
-			</div>			
+			</div>
 		</fieldset>
 	</p>
 
@@ -65,14 +65,14 @@
 				<div class="errorText hidden"></div>
 			</fieldset>
 		</p>
-	
+
 		<p>
 			<label for="text_{$lang.ID}" class="wide">{t _text}:</label>
 			<fieldset class="error">
 				<div class="textarea" id="textContainer">
 					{textarea class="tinyMCE longDescr" name="text_`$lang.ID`" style="width: 100%;"}
 					<div class="errorText hidden" style="margin-top: 5px;"></div>
-				</div>			
+				</div>
 			</fieldset>
 		</p>
 	{/language}
@@ -82,8 +82,8 @@
 <input type="hidden" name="id" value="{$page.ID}" />
 <fieldset class="controls">
 	<span class="progressIndicator" id="saveIndicator" style="display: none;"></span>
-	<input type="submit" value="{tn _save}" class="submit" /> 
-	{t _or} 
+	<input type="submit" value="{tn _save}" class="submit" />
+	{t _or}
 	<a class="cancel" id="cancel" onclick="return false;" href="#">{t _cancel}</a>
 </fieldset>
 

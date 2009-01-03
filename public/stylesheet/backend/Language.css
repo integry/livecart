@@ -86,12 +86,12 @@ label.radio {
 }
 
 /* edit */
-.langExport
+.langExport a
 {
     background-image: url(../../image/silk/compress.png);
 }
 
-.langAddPhrase
+.langAddPhrase a
 {
     background-image: url(../../image/silk/add.png);
 }
