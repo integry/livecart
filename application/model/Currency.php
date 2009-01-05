@@ -146,6 +146,8 @@ class Currency extends ActiveRecordModel
 
 	public static function deleteById($id)
 	{
+		self::deleteCache();
+
 		// make sure the currency record exists
 		$inst = ActiveRecord::getInstanceById('Currency', $id, true);
 
@@ -161,6 +163,20 @@ class Currency extends ActiveRecordModel
 		}
 	}
 
+	public static function deleteCache()
+	{
+		$cacheFile = self::getCacheFile();
+		if (file_exists($cacheFile))
+		{
+			unlink($cacheFile);
+		}
+	}
+
+	public static function getCacheFile()
+	{
+		return ClassLoader::getRealPath('cache') . '/currencies.php';
+	}
+
 	public function save($forceOperation = 0)
 	{
 		// do not allow 0 rates
@@ -169,7 +185,7 @@ class Currency extends ActiveRecordModel
 			$this->rate->set(1);
 		}
 
-//		file_put_contents(ClassLoader::getRealPath('installdata.currency.test') . '.php', var_export($this->priceSuffix->get(), true));
+		self::deleteCache();
 
 		return parent::save($forceOperation);
 	}

@@ -18,7 +18,7 @@ class ProductController extends FrontendController
 
 	public function index()
 	{
-		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA, array('ProductImage', 'Manufacturer'));
+		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA, array('ProductImage', 'Manufacturer', 'Category'));
 
 		if (!$product->isEnabled->get() || $product->parent->get())
 		{
@@ -181,12 +181,6 @@ class ProductController extends FrontendController
 		if (isset($manFilter))
 		{
 			$response->set('manufacturerFilter', $manFilter);
-		}
-
-		// ratings
-		if ($this->config->get('ENABLE_RATINGS'))
-		{
-			$response->set('ratings', ProductRatingSummary::getProductRatingsArray($product));
 		}
 
 		// reviews

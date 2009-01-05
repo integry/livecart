@@ -3,6 +3,7 @@
 ClassLoader::import('framework.Application');
 ClassLoader::import('framework.response.ActionResponse');
 ClassLoader::import('application.LiveCartRouter');
+ClassLoader::import('application.model.Currency');
 ClassLoader::import('library.payment.TransactionDetails');
 
 /**
@@ -606,7 +607,7 @@ class LiveCart extends Application
 		{
 			ClassLoader::import("application.model.system.Language");
 
-			$langCache = ClassLoader::getRealPath('cache') . '/languages.php';
+			$langCache = Language::getCacheFile();
 
 			if (file_exists($langCache))
 			{
@@ -623,7 +624,8 @@ class LiveCart extends Application
 					{
 						throw new ApplicationException('No languages have been added');
 					}
-					file_put_contents($langCache, '<?php return unserialize(' . var_export(serialize($this->languageList), true) . '); ?>');
+
+					$this->languageList->saveToFile($langCache);
 				}
 				catch (Exception $e)
 				{
@@ -1009,23 +1011,33 @@ class LiveCart extends Application
 	 */
 	private function loadCurrencyData()
 	{
-		ClassLoader::import("application.model.Currency");
+		$cache = Currency::getCacheFile();
 
-	  	$filter = new ArSelectFilter();
-	  	$filter->setCondition(new EqualsCond(new ArFieldHandle('Currency', 'isEnabled'), 1));
-	  	$filter->setOrder(new ArFieldHandle('Currency', 'position'), 'ASC');
-	  	$currencies = ActiveRecord::getRecordSet('Currency', $filter);
-	  	$this->currencies = array();
-
-	  	foreach ($currencies as $currency)
-	  	{
-	  		if ($currency->isDefault())
-			{
-			  	$this->defaultCurrency = $currency;
-			}
-
-			$this->currencies[$currency->getID()] = $currency;
+		if (file_exists($cache) && 0)
+		{
+			$this->currencies = include $cache;
 		}
+		else
+		{
+			$filter = new ArSelectFilter();
+			$filter->setCondition(new EqualsCond(new ArFieldHandle('Currency', 'isEnabled'), 1));
+			$filter->setOrder(new ArFieldHandle('Currency', 'position'), 'ASC');
+			$currencies = ActiveRecord::getRecordSet('Currency', $filter);
+			$this->currencies = array();
+
+			foreach ($currencies as $currency)
+			{
+				if ($currency->isDefault())
+				{
+					$this->defaultCurrency = $currency;
+				}
+
+				$this->currencies[$currency->getID()] = $currency;
+			}
+/*
+			file_put_contents($cache, '<?php return unserialize(' . var_export(serialize($this->currencies), true) . '); ?>');
+
+*/		}
 	}
 
 	private function loadLanguageFiles()

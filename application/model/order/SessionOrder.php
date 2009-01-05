@@ -85,6 +85,18 @@ class SessionOrder
 	{
 		$session = new Session();
 		$session->set('CustomerOrder', $order->getID());
+
+		$orderArray = $order->toArray();
+		$orderData = array_intersect_key($orderArray, array_flip(array('total', 'formattedTotal', 'basketCount')));
+		$orderData['currencyID'] = $orderArray['Currency']['ID'];
+		$session->set('orderData', $orderData);
+	}
+
+	public static function getOrderData()
+	{
+		self::setOrder(self::getOrder());
+		$session = new Session();
+		return $session->get('orderData');
 	}
 
 	public static function save(CustomerOrder $order)

@@ -82,7 +82,7 @@ class User extends ActiveRecordModel implements EavAble
 	 *
 	 * @return User
 	 */
-	public static function getInstanceByID($recordID, $loadRecordData = true, $loadReferencedRecords = array('UserGroup'), $data = array())
+	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = array('UserGroup'), $data = array())
 	{
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}

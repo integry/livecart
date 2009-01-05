@@ -28,3 +28,9 @@
 	background-color: #ffffcc;
 	padding: 5px;
 }
+
+#statQueries li
+{
+	margin-bottom: 1em;
+	font-size: 0.85em;
+}

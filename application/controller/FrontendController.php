@@ -171,7 +171,13 @@ abstract class FrontendController extends BaseController
 		ClassLoader::import('application.model.order.CustomerOrder');
 		$response = new BlockResponse();
 
-		$response->set('order', $this->order->toArray());
+		$orderData = $this->session->get('orderData');
+		if (!$orderData && $this->session->get('CustomerOrder'))
+		{
+			$orderData = SessionOrder::getOrderData();
+		}
+
+		$response->set('order', );
 		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
 
 		return $response;

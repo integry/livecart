@@ -93,11 +93,16 @@ class Language extends ActiveRecordModel
 
 	public static function deleteCache()
 	{
-		$cacheFile = ClassLoader::getRealPath('cache') . '/languages.php';
+		$cacheFile = self::getCacheFile();
 		if (file_exists($cacheFile))
 		{
 			unlink($cacheFile);
 		}
+	}
+
+	public static function getCacheFile()
+	{
+		return ClassLoader::getRealPath('cache') . '/languages.php';
 	}
 
 	protected function insert()
