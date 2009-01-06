@@ -1011,9 +1011,10 @@ class LiveCart extends Application
 	 */
 	private function loadCurrencyData()
 	{
+		$useCache = true;
 		$cache = Currency::getCacheFile();
 
-		if (file_exists($cache) && 0)
+		if (file_exists($cache) && $useCache)
 		{
 			$this->currencies = include $cache;
 		}
@@ -1034,10 +1035,12 @@ class LiveCart extends Application
 
 				$this->currencies[$currency->getID()] = $currency;
 			}
-/*
-			file_put_contents($cache, '<?php return unserialize(' . var_export(serialize($this->currencies), true) . '); ?>');
 
-*/		}
+			if ($useCache)
+			{
+				file_put_contents($cache, '<?php return unserialize(' . var_export(serialize($this->currencies), true) . '); ?>');
+			}
+		}
 	}
 
 	private function loadLanguageFiles()
