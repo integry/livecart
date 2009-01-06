@@ -2,6 +2,7 @@
 
 ClassLoader::import("application.model.eavcommon.iEavFieldManager");
 ClassLoader::import("application.model.eav.EavAble");
+ClassLoader::import("application.model.eav.EavObject");
 ClassLoader::import("application.model.system.ActiveTreeNode");
 ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import("application.model.category.CategoryImage");
@@ -39,6 +40,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		parent::defineSchema($className);
 
 		$schema->registerField(new ARForeignKeyField("defaultImageID", "categoryImage", "ID", 'CategoryImage', ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
 		$schema->registerField(new ARField("name", ARArray::instance()));
 		$schema->registerField(new ARField("description", ARArray::instance()));
 		$schema->registerField(new ARField("keywords", ARArray::instance()));

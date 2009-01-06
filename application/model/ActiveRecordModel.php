@@ -109,11 +109,6 @@ abstract class ActiveRecordModel extends ActiveRecord
 	{
 		ClassLoader::import("application.model.eav.EavObject");
 
-	  	if ($this->specificationInstance)
-	  	{
-	  		return false;
-		}
-
 		if (!$this instanceof EavAble && !$this instanceof EavObject)
 		{
 			throw new ApplicationException(get_class($this) . ' does not support EAV');
@@ -166,7 +161,20 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 	public function save($forceOperation = null)
 	{
+		if (($this instanceof EavAble) && $this->eavObject->get() && !$this->eavObject->get()->getID())
+		{
+			$eavObject = $this->eavObject->get();
+			$this->eavObject->setNull();
+		}
+
 		$res = parent::save($forceOperation);
+
+		if (isset($eavObject))
+		{
+			$eavObject->save();
+			$this->eavObject->set($eavObject);
+			$this->save();
+		}
 
 		if ($this instanceof EavAble && $this->specificationInstance)
 		{
@@ -241,7 +249,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 		self::executePlugins($array, 'array', get_class($this));
 
-		if ($this->specificationInstance && !isset($array['attributes']))
+		if ($this->specificationInstance && (!isset($array['attributes']) || $force))
 		{
 			$array['attributes'] = $this->specificationInstance->toArray();
 			EavSpecificationManager::sortAttributesByHandle('EavSpecificationManager', $array);
@@ -252,15 +260,15 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 	public static function addToEavQueue($className, &$record)
 	{
-		if (!$record['ID'] || isset($record['attributes']))
+		if (!$record['ID'] || (empty($record['eavObjectID']) && empty($record['EavObject']['ID'])) || isset($record['attributes']))
 		{
 			return false;
 		}
 
 		if (!isset(self::$eavQueue[$className][$record['ID']]))
 		{
-			self::$eavQueue[$className][$record['ID']]['attributes'] = array();
-			self::$eavQueue[$className][$record['ID']]['byHandle'] = array();
+			$eavID = empty($record['eavObjectID']) ? $record['EavObject']['ID'] : $record['eavObjectID'];
+			self::$eavQueue[$className][$record['ID']] = array('attributes' => array(), 'byHandle' => array(), 'eavObjectID' => $eavID);
 		}
 
 		$record['attributes'] =& self::$eavQueue[$className][$record['ID']]['attributes'];
@@ -285,22 +293,19 @@ abstract class ActiveRecordModel extends ActiveRecord
 		ClassLoader::import('application.model.eav.EavObject');
 		ClassLoader::import('application.model.eav.EavSpecificationManager');
 
-		// build query for fetching EavObject gateway objects for all queued records
-		foreach (self::$eavQueue as $class => &$objects)
+		// create array of EavObject gateway objects for all queued records
+		$eavObjects = array();
+		foreach (self::$eavQueue as $class => &$records)
 		{
-			$c = new INCond(new ARFieldHandle('EavObject', EavObject::getClassField($class)), array_keys($objects));
-			if (!isset($cond))
+			$field = EavObject::getClassField($class);
+
+			foreach ($records as $id => $record)
 			{
-				$cond = $c;
-			}
-			else
-			{
-				$cond->addOr($c);
+				$eavObjects[] = array('ID' => $record['eavObjectID'], $field => $id);
 			}
 		}
 
 		// fetch EAV values
-		$eavObjects = ActiveRecordModel::getRecordSetArray('EavObject', new ARSelectFilter($cond));
 		if ($eavObjects)
 		{
 			EavSpecificationManager::loadSpecificationForRecordSetArray($eavObjects, true);
@@ -384,6 +389,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 		if (($this instanceof EavAble) && $this->specificationInstance)
 		{
 			$this->setID(null);
+			$this->eavObject->set(null);
 			$this->specificationInstance = clone $this->specificationInstance;
 			$this->specificationInstance->setOwner(EavObject::getInstance($this));
 		}

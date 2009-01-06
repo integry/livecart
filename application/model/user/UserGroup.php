@@ -3,6 +3,7 @@
 ClassLoader::import("application.model.ActiveRecordModel");
 ClassLoader::import("application.model.role.*");
 ClassLoader::import("application.model.eav.EavAble");
+ClassLoader::import("application.model.eav.EavObject");
 
 /**
  * All users can be assigned to a group. Assigning users to a group is necessary to provide admin
@@ -23,6 +24,7 @@ class UserGroup extends ActiveRecordModel implements EavAble
 
 		$schema->setName("UserGroup");
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
 		$schema->registerField(new ARField("name", ARVarchar::instance(60)));
 		$schema->registerField(new ARField("description", ARVarchar::instance(100)));
 	}

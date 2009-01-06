@@ -177,7 +177,7 @@ abstract class FrontendController extends BaseController
 			$orderData = SessionOrder::getOrderData();
 		}
 
-		$response->set('order', );
+		$response->set('order', $orderData);
 		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
 
 		return $response;

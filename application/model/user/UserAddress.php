@@ -2,6 +2,7 @@
 
 ClassLoader::import("application.model.delivery.State");
 ClassLoader::import("application.model.eav.EavAble");
+ClassLoader::import("application.model.eav.EavObject");
 
 /**
  * Customer billing or shipping address
@@ -21,6 +22,7 @@ class UserAddress extends ActiveRecordModel implements EavAble
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("stateID", "State", "ID", 'State', ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
 		$schema->registerField(new ARField("firstName", ARVarchar::instance(60)));
 		$schema->registerField(new ARField("lastName", ARVarchar::instance(60)));
 		$schema->registerField(new ARField("companyName", ARVarchar::instance(60)));

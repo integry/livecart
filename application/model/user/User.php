@@ -5,6 +5,7 @@ ClassLoader::import("application.model.user.BillingAddress");
 ClassLoader::import("application.model.user.ShippingAddress");
 ClassLoader::import("application.model.user.UserGroup");
 ClassLoader::import("application.model.eav.EavAble");
+ClassLoader::import("application.model.eav.EavObject");
 
 /**
  * Store user logic (including frontend and backend), including authorization and access control checking
@@ -31,6 +32,7 @@ class User extends ActiveRecordModel implements EavAble
 		$schema->registerField(new ARForeignKeyField("defaultShippingAddressID", "defaultShippingAddress", "ID", 'ShippingAddress', ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("defaultBillingAddressID", "defaultBillingAddress", "ID", 'BillingAddress', ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("userGroupID", "UserGroup", "ID", "UserGroup", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
 
 		$schema->registerField(new ARField("email", ARVarchar::instance(60)));
 		$schema->registerField(new ARField("password", ARVarchar::instance(32)));
@@ -270,6 +272,7 @@ class User extends ActiveRecordModel implements EavAble
 		}
 		else
 		{
+			$this->load(array('UserGroup'));
 			if (!$this->userGroup->get())
 			{
 				return false;

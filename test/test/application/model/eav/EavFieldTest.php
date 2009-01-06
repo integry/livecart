@@ -27,10 +27,12 @@ class EavFieldTest extends UnitTest
 	/**
 	 *	@expectedException ApplicationException
 	 */
+	/*
 	public function testCreatingFieldForNonEavClass()
 	{
 		EavField::getNewInstance('DUMMYCLASS');
 	}
+	*/
 
 	public function testCreatingField()
 	{

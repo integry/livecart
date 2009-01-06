@@ -11,6 +11,7 @@ ClassLoader::import('application.model.eav.EavField');
 class EavObject extends ActiveRecordModel
 {
 	private $stringIdentifier;
+	private $parent;
 
 	public static function defineSchema($className = __CLASS__)
 	{
@@ -18,13 +19,13 @@ class EavObject extends ActiveRecordModel
 		$schema->setName($className);
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("customerOrderID", "CustomerOrder", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("manufacturerID", "Manufacturer", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("userID", "User", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("userAddressID", "UserAddress", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("userGroupID", "UserGroup", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("transactionID", "Transaction", "ID", null, ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", null, ARInteger::instance()), false);
+		$schema->registerField(new ARForeignKeyField("customerOrderID", "CustomerOrder", "ID", null, ARInteger::instance()), false);
+		$schema->registerField(new ARForeignKeyField("manufacturerID", "Manufacturer", "ID", null, ARInteger::instance()), false);
+		$schema->registerField(new ARForeignKeyField("userID", "User", "ID", null, ARInteger::instance()), false);
+		$schema->registerField(new ARForeignKeyField("userAddressID", "UserAddress", "ID", null, ARInteger::instance()), false);
+		$schema->registerField(new ARForeignKeyField("userGroupID", "UserGroup", "ID", null, ARInteger::instance()), false);
+		$schema->registerField(new ARForeignKeyField("transactionID", "Transaction", "ID", null, ARInteger::instance()), false);
 		$schema->registerField(new ARField("classID", ARInteger::instance(2)));
 	}
 
@@ -38,10 +39,9 @@ class EavObject extends ActiveRecordModel
 			}
 		}
 
-		$s = self::getRecordSet(__CLASS__, new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, self::getInstanceField($parent)), $parent->getID())));
-		if ($s->size())
+		if ($parent->eavObject->get())
 		{
-			return $s->get(0);
+			return $parent->eavObject->get();
 		}
 		else
 		{
@@ -55,6 +55,9 @@ class EavObject extends ActiveRecordModel
 		$instance = parent::getNewInstance(__CLASS__);
 		$instance->$field->set($parent);
 		$instance->classID->set(EavField::getClassID($parent));
+
+		$instance->parent = $parent;
+		$parent->eavObject->set($instance);
 
 		return $instance;
 	}
@@ -91,6 +94,12 @@ class EavObject extends ActiveRecordModel
 				return $this->data[$key]->get();
 			}
 		}
+	}
+
+	protected function insert()
+	{
+		parent::insert();
+		$this->parent->save();
 	}
 
 	private function getInstanceField(ActiveRecordModel $instance)

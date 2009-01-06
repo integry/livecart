@@ -60,9 +60,11 @@ class EavSpecificationManagerTest extends UnitTest
 		$cloned = clone $user;
 		$cloned->email->set('cloneduser@test.com');
 		$cloned->save();
+		$this->assertNotSame($cloned->getSpecification(), $user->getSpecification());
+		$this->assertEquals($cloned->getSpecification()->getAttribute($text)->getValueByLang('value', 'en'), 'text');
 
 		ActiveRecordModel::clearPool();
-		$reloaded = ActiveRecordModel::getInstanceByID('User', $cloned->getID());
+		$reloaded = ActiveRecordModel::getInstanceByID('User', $cloned->getID(), true);
 		$this->assertEquals($reloaded->getSpecification()->getAttribute($text)->getValueByLang('value', 'en'), 'text');
 		$this->assertEquals($reloaded->getSpecification()->getAttribute($singleSel)->getValue()->get()->getID(), $value1->getID());
 	}

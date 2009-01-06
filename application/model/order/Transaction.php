@@ -2,6 +2,7 @@
 
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.eav.EavAble");
+ClassLoader::import("application.model.eav.EavObject");
 
 /**
  * Represents a financial/monetary transaction, which can be:
@@ -52,6 +53,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 		$schema->registerField(new ARForeignKeyField("currencyID", "currency", "ID", 'Currency', ARChar::instance(3)));
 		$schema->registerField(new ARForeignKeyField("realCurrencyID", "realCurrency", "ID", 'Currency', ARChar::instance(3)));
 		$schema->registerField(new ARForeignKeyField("userID", "user", "ID", 'User', ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
 
 		$schema->registerField(new ARField("amount", ARFloat::instance()));
 		$schema->registerField(new ARField("realAmount", ARFloat::instance()));
