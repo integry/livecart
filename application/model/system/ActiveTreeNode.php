@@ -719,7 +719,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	 */
 	public function getPathBranchesArray()
 	{
-		return $this->buildPathBranchesArray($this->getPathNodeSet()->toArray(), 0);
+		return $this->buildPathBranchesArray($this->getPathNodeArray(), 0);
 	}
 
 	private function buildPathBranchesArray($path, $level)

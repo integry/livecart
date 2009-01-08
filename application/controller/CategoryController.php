@@ -397,7 +397,7 @@ class CategoryController extends FrontendController
 	private function setUpBreadCrumbAndReturnFilterChainHandle($page)
 	{
 		// get category path for breadcrumb
-		$path = $this->category->getPathNodeSet()->toArray();
+		$path = $this->category->getPathNodeArray();
 
 		include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
 		foreach ($path as $nodeArray)

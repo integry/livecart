@@ -390,6 +390,22 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		return $filter;
 	}
 
+	public function getPathNodeArray($includeRootNode = false, $loadReferencedRecords = false)
+	{
+		if (is_null($this->pathNodeArray))
+		{
+			$this->pathNodeArray = parent::getPathNodeArray(true, $loadReferencedRecords);
+		}
+
+		$array = $this->pathNodeArray;
+		if (!$includeRootNode)
+		{
+			array_shift($array);
+		}
+
+		return $array;
+	}
+
 	/**
 	 * Gets a list of products assigned to this node
 	 *
@@ -709,7 +725,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	 */
 	private function getSpecificationFilter($includeParentFields)
 	{
-		$path = parent::getPathNodeSet(Category::INCLUDE_ROOT_NODE);
 		$filter = new ARSelectFilter();
 
 		$filter->setOrder(new ARFieldHandle("SpecFieldGroup", "position"), 'ASC');
@@ -719,9 +734,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 
 		if ($includeParentFields)
 		{
-			foreach ($path as $node)
+			foreach (self::getPathNodeArray(Category::INCLUDE_ROOT_NODE) as $node)
 			{
-				$cond->addOR(new EqualsCond(new ARFieldHandle("SpecField", "categoryID"), $node->getID()));
+				$cond->addOR(new EqualsCond(new ARFieldHandle("SpecField", "categoryID"), $node['ID']));
 			}
 		}
 		$filter->setCondition($cond);

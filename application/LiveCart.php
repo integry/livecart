@@ -1028,17 +1028,20 @@ class LiveCart extends Application
 
 			foreach ($currencies as $currency)
 			{
-				if ($currency->isDefault())
-				{
-					$this->defaultCurrency = $currency;
-				}
-
 				$this->currencies[$currency->getID()] = $currency;
 			}
 
 			if ($useCache)
 			{
 				file_put_contents($cache, '<?php return unserialize(' . var_export(serialize($this->currencies), true) . '); ?>');
+			}
+		}
+
+		foreach ($this->currencies as $currency)
+		{
+			if ($currency->isDefault())
+			{
+				$this->defaultCurrency = $currency;
 			}
 		}
 	}

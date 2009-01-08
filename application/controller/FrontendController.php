@@ -379,7 +379,7 @@ abstract class FrontendController extends BaseController
 			// get path of the current category (except for top categories)
 			if (!(1 == $currentCategory->getID()) && (1 < $currentCategory->parentNode->get()->getID()))
 			{
-				$path = $currentCategory->getPathNodeSet(false)->toArray();
+				$path = $currentCategory->getPathNodeArray();
 
 				$topCategoryId = $path[0]['ID'];
 				unset($path[0]);
@@ -483,7 +483,7 @@ abstract class FrontendController extends BaseController
 
 		$response = new BlockResponse('categories', $tree);
 
-		$path = Category::getInstanceById($this->categoryID)->getPathNodeSet(false)->toArray();
+		$path = Category::getInstanceById($this->categoryID)->getPathNodeArray();
 		if ($path)
 		{
 			$response->set('topCategoryId', $path[0]['ID']);

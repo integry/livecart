@@ -3,7 +3,7 @@
 ClassLoader::import('application.model.product.Product');
 ClassLoader::import('application.controller.FrontendController');
 ClassLoader::import('application.controller.CategoryController');
-ClassLoader::import('application.model.presentation.ProductPresentation');
+ClassLoader::import('application.model.presentation.ProductPresentation', true);
 
 /**
  *
@@ -14,11 +14,9 @@ class ProductController extends FrontendController
 {
 	public $filters = array();
 
-	const REVIEWS_PER_PAGE = 1;
-
 	public function index()
 	{
-		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA, array('ProductImage', 'Manufacturer', 'Category'));
+		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA, array('ProductImage', 'Manufacturer', 'Category'/*, 'ProductPresentation'*/));
 
 		if (!$product->isEnabled->get() || $product->parent->get())
 		{

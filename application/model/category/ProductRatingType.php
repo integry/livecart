@@ -74,7 +74,7 @@ class ProductRatingType extends MultilingualObject
 
 	private function getRatingTypeFilter(Product $product)
 	{
-		$path = $product->getCategory()->getPathNodeSet(Category::INCLUDE_ROOT_NODE);
+		$path = $product->getCategory()->getPathNodeArray(Category::INCLUDE_ROOT_NODE);
 
 		$filter = new ARSelectFilter();
 
@@ -85,7 +85,7 @@ class ProductRatingType extends MultilingualObject
 
 		foreach ($path as $node)
 		{
-			$cond->addOR(new EqualsCond(new ARFieldHandle(__CLASS__, "categoryID"), $node->getID()));
+			$cond->addOR(new EqualsCond(new ARFieldHandle(__CLASS__, "categoryID"), $node['ID']));
 		}
 
 		$filter->setCondition($cond);
