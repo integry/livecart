@@ -307,6 +307,25 @@ class LiveCart extends Application
 		return parent::getControllerInstance($controllerName);
 	}
 
+	protected function sendOutput($output)
+	{
+		if ($output)
+		{
+			if (!$this->isDevMode() && function_exists('gzencode') && !empty($_SERVER['HTTP_ACCEPT_ENCODING']) && (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false) && !headers_sent())
+			{
+				$output = gzencode($output, 9);
+				header('Content-Encoding: gzip');
+			}
+
+			if (!headers_sent() && !$this->isDevMode())
+			{
+				header('Content-Length: ' . strlen($output));
+			}
+
+			echo $output;
+		}
+	}
+
 	/**
 	 * Executes controllers action and returns response
 	 *

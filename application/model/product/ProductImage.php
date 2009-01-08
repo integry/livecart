@@ -10,6 +10,8 @@ ClassLoader::import('application.model.ObjectImage');
  */
 class ProductImage extends ObjectImage
 {
+	public static $imageSizes;
+
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = parent::defineSchema($className);
@@ -39,16 +41,21 @@ class ProductImage extends ObjectImage
 
 	public static function getImageSizes()
 	{
-		$config = self::getApplication()->getConfig();
-
-		$sizes = array();
-		$k = 0;
-		while ($config->isValueSet('IMG_P_W_' . ++$k))
+		if (!self::$imageSizes)
 		{
-			$sizes[$k] = array($config->get('IMG_P_W_' . $k), $config->get('IMG_P_H_' . $k));
+			$config = self::getApplication()->getConfig();
+
+			$sizes = array();
+			$k = 0;
+			while ($config->isValueSet('IMG_P_W_' . ++$k))
+			{
+				$sizes[$k] = array($config->get('IMG_P_W_' . $k), $config->get('IMG_P_H_' . $k));
+			}
+
+			self::$imageSizes = $sizes;
 		}
 
-		return $sizes;
+		return self::$imageSizes;
 	}
 
 	protected static function getImagePath($imageID, $productID, $size)

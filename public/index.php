@@ -26,6 +26,8 @@
 	register_shutdown_function('onShutDown');
 	*/
 
+	ob_start();
+
 	// session cookie expires in 180 days
 	session_set_cookie_params(180 * 60 * 60 * 24);
 

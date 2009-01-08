@@ -10,6 +10,8 @@ ClassLoader::import('application.model.ObjectImage');
  */
 class ManufacturerImage extends ObjectImage
 {
+	public static $imageSizes;
+
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = parent::defineSchema($className);
@@ -39,16 +41,21 @@ class ManufacturerImage extends ObjectImage
 
 	public static function getImageSizes()
 	{
-		$config = self::getApplication()->getConfig();
-
-		$sizes = array();
-		$k = 0;
-		while ($config->isValueSet('IMG_M_W_' . ++$k))
+		if (!self::$imageSizes)
 		{
-			$sizes[$k] = array($config->get('IMG_M_W_' . $k), $config->get('IMG_M_H_' . $k));
+			$config = self::getApplication()->getConfig();
+
+			$sizes = array();
+			$k = 0;
+			while ($config->isValueSet('IMG_M_W_' . ++$k))
+			{
+				$sizes[$k] = array($config->get('IMG_M_W_' . $k), $config->get('IMG_M_H_' . $k));
+			}
+
+			self::$imageSizes = $sizes;
 		}
 
-		return $sizes;
+		return self::$imageSizes;
 	}
 
 	protected static function getImagePath($imageID, $manufacturerID, $size)
@@ -72,6 +79,7 @@ class ManufacturerImage extends ObjectImage
 
 	public static function transformArray($array, ARSchema $schema)
 	{
+throw new ApplicationException('test');
 		$array = parent::transformArray($array, $schema);
 
 		$array['paths'] = $array['urls'] = array();

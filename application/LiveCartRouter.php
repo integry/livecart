@@ -12,11 +12,6 @@ class LiveCartRouter extends Router
 {
 	private $langReplaces = array();
 
-	public function createURL($URLParamList, $isXHtml = false)
-	{
-		return parent::createURL($URLParamList, $isXHtml);
-	}
-
 	public function createUrlFromRoute($route, $isXHtml = false)
 	{
 		preg_match('/^([a-z]{2})\//', $route, $match);
