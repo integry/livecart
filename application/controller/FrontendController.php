@@ -283,7 +283,6 @@ abstract class FrontendController extends BaseController
 		}
 
 		$category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
-		$subCategories = $category->getSubCategorySet();
 
 		$search = array();
 
@@ -302,6 +301,7 @@ abstract class FrontendController extends BaseController
 		}
 		while ($parent && ($parent->getID() > Category::ROOT_ID));
 
+		$subCategories = $category->getSubCategoryArray();
 		if ($subCategories)
 		{
 			if ($category->getID() != Category::ROOT_ID)
@@ -309,10 +309,7 @@ abstract class FrontendController extends BaseController
 				$search[] = $category->toArray();
 			}
 
-			foreach ($subCategories as $category)
-			{
-				$search[] = $category->toArray();
-			}
+			$search = array_merge($search, $subCategories);
 		}
 
 		if (!$search)

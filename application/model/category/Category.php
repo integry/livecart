@@ -294,7 +294,12 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	 */
 	public function getSubcategoryArray($loadReferencedRecords = false)
 	{
-	  	return ActiveRecord::getRecordSetArray('Category', $this->getSubcategoryFilter(), $loadReferencedRecords);
+	  	if (!$this->subCategoryArray || $loadReferencedRecords)
+	  	{
+	  		$this->subCategoryArray = ActiveRecord::getRecordSetArray('Category', $this->getSubcategoryFilter(), $loadReferencedRecords);
+		}
+
+		return $this->subCategoryArray;
 	}
 
 	public function getSubcategoryFilter($returnEmpty = false)
