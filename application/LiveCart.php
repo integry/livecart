@@ -365,7 +365,8 @@ class LiveCart extends Application
 	{
 		if ($output)
 		{
-			if (!$this->isDevMode() && function_exists('gzencode') && !empty($_SERVER['HTTP_ACCEPT_ENCODING']) && (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false) && !headers_sent())
+			$iniCompr = in_array(strtolower(ini_get('zlib.output_compression')), array('1', 'on'));
+			if (!$this->isDevMode() && function_exists('gzencode') && !empty($_SERVER['HTTP_ACCEPT_ENCODING']) && (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false) && !headers_sent() && !$iniCompr)
 			{
 				$output = gzencode($output, 9);
 				header('Content-Encoding: gzip');
