@@ -77,6 +77,6 @@ foreach ($routes as $route)
 	$this->router->connect(':requestLanguage/' . $route[0], $route[1], $route[2]);
 }
 
-file_put_contents($routeCache, '<?php return unserialize(' . var_export(serialize($this->router->getRoutes()), true) . '); ?>');
+file_put_contents($routeCache, '<?php return unserialize(\'' . str_replace("'", "\'", serialize($this->router->getRoutes())) . '\'); ?>');
 
 ?>

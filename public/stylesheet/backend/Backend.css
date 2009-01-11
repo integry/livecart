@@ -442,14 +442,13 @@ html, body{
 	color: #1249A4;
 }
 
-#nav li a:hover {
-	color: black;
+#nav li li:hover
+{
+	background-color: #15367F;
 }
 
-#nav li ul li:hover, .menuCommandHover {
-}
-
-#nav li ul li:hover a, .menuCommandHover a {
+#nav li li:hover a {
+	color: white;
 }
 
 #menuDescription

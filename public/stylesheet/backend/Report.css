@@ -1,0 +1,29 @@
+#menuSales a
+{
+	background-image: url(../../image/silk/money_dollar.png);
+}
+
+#menuBest a
+{
+	background-image: url(../../image/silk/medal_gold_1.png);
+}
+
+#menuCarts a
+{
+	background-image: url(../../image/silk/cart.png);
+}
+
+#menuSearch a
+{
+	background-image: url(../../image/silk/magnifier.png);
+}
+
+#menuCustomers a
+{
+	background-image: url(../../image/silk/user.png);
+}
+
+#menuPages a
+{
+	background-image: url(../../image/silk/page_white_text.png);
+}

@@ -60,3 +60,6 @@ _menu_descr_tools=Various handy tools to help manage your store
 _menu_descr_import_csv=Import products and categories from a CSV file
 _menu_descr_newsletter=Send newsletter messages to customers and newsletter subscribers
 _menu_descr_import=Migrate data from other shopping cart programs, like osCommerce or X-Cart
+
+_menu_reports=Reports
+_menu_descr_reports=Store activity reports and statistics

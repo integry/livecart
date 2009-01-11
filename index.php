@@ -16,6 +16,10 @@ $_GET['noRewrite'] = true;
 if (preg_match('/^Apache/', $_SERVER['SERVER_SOFTWARE']) && !NOREWRITE)
 {
 	$_GET['route'] = isset($_SERVER['PATH_INFO']) ? substr($_SERVER['PATH_INFO'], 1) : '';
+	if (substr($_GET['route'], 0, 10) == 'index.php/')
+	{
+		$_GET['route'] = substr($_GET['route'], 10);
+	}
 	$_SERVER['virtualBaseDir'] = $_SERVER['SCRIPT_NAME'] . '/';
 }
 

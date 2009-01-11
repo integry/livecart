@@ -1,0 +1,6 @@
+<Menu>
+	<Title>_menu_reports</Title>
+    <Controller>backend.report</Controller>
+	<Icon>image/silk/chart_bar.png</Icon>
+	<Descr>_menu_descr_reports</Descr>
+</Menu>
