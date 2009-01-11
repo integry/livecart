@@ -16,7 +16,7 @@
 		</a>
 
 		<div class="modeDescr">
-			{t _live_locate}
+			{t _live_custom_descr}
 		</div>
 
 		<a href="{link}" target="_blank" id="goToFrontend">{tn _go_frontend}</a>

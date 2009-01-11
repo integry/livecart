@@ -64,6 +64,11 @@ class CustomizeController extends StoreManagementController
 
 		$theme = $params['theme'];
 
+		if (!$theme)
+		{
+			$theme = 'barebone';
+		}
+
 		// save custom CSS
 		$css = new CssFile('upload/css/' . $theme . '.css');
 		$css->setSource($params['css']);

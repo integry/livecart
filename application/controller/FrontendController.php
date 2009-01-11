@@ -40,6 +40,11 @@ abstract class FrontendController extends BaseController
 		{
 			$this->request->remove('other');
 		}
+
+		if ($this->application->isCustomizationMode())
+		{
+			$this->loadLanguageFile('Customize');
+		}
 	}
 
 	public function init()

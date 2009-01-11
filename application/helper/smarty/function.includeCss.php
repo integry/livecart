@@ -1,4 +1,7 @@
 <?php
+
+ClassLoader::import('application.model.system.CssFile');
+
 /**
  * ...
  *

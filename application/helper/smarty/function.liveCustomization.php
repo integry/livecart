@@ -23,6 +23,8 @@ function smarty_function_liveCustomization($params, LiveCartSmarty $smarty)
 			smarty_function_includeJs(array('file' => "library/prototype/prototype.js"), $smarty);
 			smarty_function_includeJs(array('file' => "library/scriptaculous/scriptaculous.js"), $smarty);
 			smarty_function_includeJs(array('file' => "library/livecart.js"), $smarty);
+			smarty_function_includeJs(array('file' => "library/form/ActiveForm.js"), $smarty);
+			smarty_function_includeJs(array('file' => "library/form/Validator.js"), $smarty);
 			smarty_function_includeJs(array('file' => "backend/Backend.js"), $smarty);
 			smarty_function_includeJs(array('file' => "frontend/Customize.js"), $smarty);
 

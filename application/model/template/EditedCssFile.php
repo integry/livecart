@@ -1,6 +1,6 @@
 <?php
 
-class CssFile
+class EditedCssFile
 {
 	private $theme;
 

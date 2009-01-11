@@ -1,0 +1,21 @@
+_cust_mode=Live Customization Mode
+_templates=Templates
+_css=CSS
+_translations=Translations
+_exit=Exit
+
+_css_add=Add new rule
+_css_save=Save CSS changes
+_css_rule_sel=CSS rule selector
+_css_rule_text=CSS rule text
+_css_example=For example
+_css_add_rule=Add CSS rule
+
+_live_translate=Translate
+
+_css_err_selector=Please enter the CSS rule selector name
+_css_err_text=Please enter the CSS rule text
+_css_saving=Saving CSS changes. This may take a minute.
+_css_saved=CSS changes saved successfully
+_css_rule_added=CSS rule has been added
+

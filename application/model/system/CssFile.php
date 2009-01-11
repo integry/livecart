@@ -19,7 +19,8 @@ class CssFile
 		}
 
 		$this->relPath = $relativePath;
-		$this->theme = $theme;
+
+		$this->theme = self::getTheme($theme);
 	}
 
 	public function setSource($source)
@@ -35,14 +36,19 @@ class CssFile
 		return $this->source;
 	}
 
+	public static function getTheme($theme)
+	{
+		return $theme ? $theme : 'barebone';
+	}
+
 	public static function getInstanceFromUrl($url, $theme = null)
 	{
-		return new CssFile(self::getStyleSheetRelativePath($url), $theme);
+		return new CssFile(self::getStyleSheetRelativePath($url), self::getTheme($theme));
 	}
 
 	public static function getInstanceFromPath($path, $theme = null)
 	{
-		return new CssFile(self::getStyleSheetRelativePath($path), $theme);
+		return new CssFile(self::getStyleSheetRelativePath($path), self::getTheme($theme));
 	}
 
 	private function getStyleSheetRelativePath($url)

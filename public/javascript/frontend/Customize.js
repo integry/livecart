@@ -250,12 +250,46 @@ CssCustomize.prototype =
 	findUsedNodes: function()
 	{
 		this.mainMenu = $('customizeMenu');
+		this.msgContainer = $('customizeMsg').down('div');
 		this.saveButton = this.mainMenu.down('#cssSave');
+		this.newRuleButton = this.mainMenu.down('#cssNewRule');
+		this.newRuleSave = this.mainMenu.down('#cssNewRuleSave');
+		this.newRuleCancel = this.mainMenu.down('#cssNewRuleCancel');
+		this.newRuleForm = this.mainMenu.down('#newRuleMenu');
+		this.newRuleName = this.mainMenu.down('#cssNewRuleName');
+		this.newRuleText = this.mainMenu.down('#cssNewRuleText');
 	},
 
 	bindEvents: function()
 	{
 		this.saveButton.onclick = this.saveChanges.bind(this);
+		this.newRuleButton.onclick = function() { this.newRuleForm.show(); }.bind(this);
+		this.newRuleCancel.onclick = function(e) { Event.stop(e); this.newRuleForm.hide(); }.bind(this);
+		this.newRuleSave.onclick = this.addRule.bind(this);
+	},
+
+	addRule: function()
+	{
+		ActiveForm.prototype.resetErrorMessages(this.newRuleForm.down('form'));
+
+		var val = [[this.newRuleName, cust.errSelectorMsg], [this.newRuleText, cust.errTextMsg]];
+		for (var k = 0; k < val.length; k++)
+		{
+			if (!IsNotEmptyCheck(val[k][0]))
+			{
+				ActiveForm.prototype.setErrorMessage(val[k][0], val[k][1], true);
+				return;
+			}
+		};
+
+		var sheet = this.getCurrentStyleSheet(document.styleSheets[1]);
+		sheet.insertRule(this.newRuleName.value + '{' + this.newRuleText.value + '}', 0);
+
+		this.newRuleForm.hide();
+		this.newRuleName.value = '';
+		this.newRuleText.value = '';
+
+		this.showMessage(this.ruleAddedMsg);
 	},
 
 	saveChanges: function()
@@ -273,12 +307,12 @@ CssCustomize.prototype =
 
 		var result = {deletedRules: deleted, deletedProperties: propertyChanges.deleted, theme: this.theme, css: this.getCustomCss(changes, propertyChanges)};
 
-		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.customize', 'saveCss'), null, this.saveComplete.bind(this), {parameters: 'result=' + escape(Object.toJSON(result))});
+		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.customize', 'saveCss'), $('cssSaveIndicator'), this.saveComplete.bind(this), {parameters: 'result=' + escape(Object.toJSON(result))});
 	},
 
 	saveComplete: function(originalRequest)
 	{
-
+		this.showMessage(this.savedMsg);
 	},
 
 	getCustomCss: function(changes, propertyChanges)
@@ -297,6 +331,11 @@ CssCustomize.prototype =
 			{
 				cssRule.setProperty(pair[0], pair[1], 'getcustom');
 			});
+		});
+
+		changes.added.each(function(rule)
+		{
+			sheet.createRule(rule);
 		});
 
 		var rules = [];
@@ -450,6 +489,22 @@ CssCustomize.prototype =
 					return sheet;
 				}
 			}
+		}
+	},
+
+	showMessage: function(msg)
+	{
+		this.msgContainer.innerHTML = msg;
+		this.msgContainer.show();
+		window.setTimeout(function() { this.hideMessage(msg); }.bind(this), 5000);
+	},
+
+	hideMessage: function(msg)
+	{
+		if (this.msgContainer.innerHTML == msg)
+		{
+			this.msgContainer.innerHTML = '';
+			this.msgContainer.hide();
 		}
 	}
 }

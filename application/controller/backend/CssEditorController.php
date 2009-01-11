@@ -1,7 +1,7 @@
 <?php
 
 ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
-ClassLoader::import('application.model.template.CssFile');
+ClassLoader::import('application.model.template.EditedCssFile');
 
 /**
  * CSS file modification
@@ -20,7 +20,7 @@ class CssEditorController extends StoreManagementController
 		$files = array();
 		foreach (array_merge(array(''), $themes) as $theme)
 		{
-			$css = new CssFile($theme);
+			$css = new EditedCssFile($theme);
 			$arr = $css->toArray();
 			$files[$arr['id']] = $arr;
 		}
@@ -30,7 +30,7 @@ class CssEditorController extends StoreManagementController
 
 	public function edit()
 	{
-		$css = new CssFile($this->request->get('file'));
+		$css = new EditedCssFile($this->request->get('file'));
 
 		$response = new ActionResponse();
 	  	$response->set('id', $css->getFileName());
@@ -48,7 +48,7 @@ class CssEditorController extends StoreManagementController
 	{
 		$code = $this->request->get('code');
 
-		$css = new CssFile($this->request->get('file'));
+		$css = new EditedCssFile($this->request->get('file'));
 
 		$css->setCode($code);
 		$res = $css->save();
@@ -68,7 +68,7 @@ class CssEditorController extends StoreManagementController
 		return new ActionResponse();
 	}
 
-	private function getForm(CssFile $css)
+	private function getForm(EditedCssFile $css)
 	{
 		$form = new Form(new RequestValidator('cssFile', $this->request));
 		$form->setData($css->toArray());

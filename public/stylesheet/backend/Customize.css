@@ -1,12 +1,11 @@
 #customizeMenu
 {
-	width: 500px;
+	float: left;
 }
 
 #customizeMenu li
 {
 	list-style-type: none;
-	background-color: #F7F7F7;
 	border: 1px solid #B3D4EF;
 	margin: 20px;
 	padding: 5px;
@@ -17,7 +16,7 @@
 	border: 1px solid #58CB51;
 }
 
-.customizeControl 
+.customizeControl
 {
 	font-size: x-large;
 	font-weight: bold;
@@ -38,12 +37,13 @@
 .modeDescr
 {
 	margin-top: 10px;
+	padding: 10px;
 	clear: both;
 }
 
 #goToFrontend
 {
-	visibility: hidden;
+	display: none;
     float: right;
 	margin-top: 10px;
 	font-size: larger;
@@ -57,5 +57,5 @@
 
 .active #goToFrontend
 {
-    visibility: visible;
+    display: inline;
 }
