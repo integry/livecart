@@ -23,7 +23,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	const INCLUDE_PARENT = true;
 
 	private $specFieldArrayCache = array();
-	private $filterGroupArrayCache = array();
+	private $filterGroupArrayCache = null;
 	private $filterSetCache;
 	private $subCategorySetCache;
 
@@ -573,16 +573,18 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	 */
 	public function getFilterGroupArray()
 	{
-		if (!$this->filterGroupArrayCache)
+		if (null === $this->filterGroupArrayCache)
 		{
 		  	ClassLoader::import('application.model.filter.FilterGroup');
 			$filter = $this->getFilterGroupFilter();
 			if (!$filter)
 			{
-			  	return array();
+				$this->filterGroupArrayCache = array();
 			}
-
-			$this->filterGroupArrayCache = ActiveRecord::getRecordSetArray('FilterGroup', $filter, array('SpecField'));
+			else
+			{
+				$this->filterGroupArrayCache = ActiveRecord::getRecordSetArray('FilterGroup', $filter, array('SpecField'));
+			}
 		}
 
 		return $this->filterGroupArrayCache;

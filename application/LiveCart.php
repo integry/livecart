@@ -123,7 +123,7 @@ class LiveCart extends Application
 		}
 
 		// LiveCart request routing rules
-		include ClassLoader::getRealPath('application.configuration.route.backend') . '.php';
+		$this->initRouter();
 
 		ActiveRecordModel::setApplicationInstance($this);
 
@@ -146,6 +146,60 @@ class LiveCart extends Application
 		if ($this->request->get('noRewrite'))
 		{
 			$this->router->setBaseDir($_SERVER['baseDir'], $_SERVER['virtualBaseDir']);
+		}
+	}
+
+	private function initRouter()
+	{
+		if ($this->isInstalled)
+		{
+			// SSL
+			if ($this->config->get('SSL_PAYMENT'))
+			{
+				$this->router->setSslAction('checkout', 'pay');
+				$this->router->setSslAction('backend.payment', 'ccForm');
+			}
+
+			if ($this->config->get('SSL_CHECKOUT'))
+			{
+				$this->router->setSslAction('checkout');
+				$this->router->setSslAction('order', 'index');
+				$this->router->setSslAction('order', 'multi');
+			}
+
+			if ($this->config->get('SSL_CUSTOMER'))
+			{
+				$this->router->setSslAction('user');
+			}
+
+			if ($sslHost = $this->config->get('SSL_DOMAIN'))
+			{
+				if (!$this->router->isHttps())
+				{
+					session_start();
+					$sslHost .= '?sid=' . session_id();
+				}
+				else
+				{
+					if ($this->request->get('sid'))
+					{
+						session_id($this->request->get('sid'));
+					}
+				}
+
+				$this->router->setSslHost($sslHost);
+			}
+		}
+
+		$routeCache = ClassLoader::getRealPath('cache.') . 'routes.php';
+
+		if (file_exists($routeCache))
+		{
+			$this->router->loadRoutes(include $routeCache);
+		}
+		else
+		{
+			include ClassLoader::getRealPath('application.configuration.route.backend') . '.php';
 		}
 	}
 

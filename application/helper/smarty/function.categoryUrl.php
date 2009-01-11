@@ -19,6 +19,20 @@ function smarty_function_categoryUrl($params, LiveCartSmarty $smarty)
 
 function createCategoryUrl($params, LiveCart $application)
 {
+	static $simpleUrlTemplate = null;
+
+	// create URL template
+	$router = $application->getRouter();
+	if (!$simpleUrlTemplate)
+	{
+		$simpleUrlTemplate = $router->createUrl(array('controller' => 'category',
+								 'action' => 'index',
+								 'cathandle' => '---',
+								 'id' => 999,
+							));
+		$simpleUrlTemplate = strtr($simpleUrlTemplate, array(999 => '#', '---' => '|'));
+	}
+
 	$category = $params['data'];
 
 	if (!isset($category['ID']))
@@ -27,6 +41,15 @@ function createCategoryUrl($params, LiveCart $application)
 	}
 
 	$handle = isset($category['name_lang']) ? createHandleString($category['name_lang']) : '';
+
+	// category names to use in other language links
+	$router->setLangReplace($handle, 'name', $category);
+
+	// no extra params, so we don't need to call the router to build the URL
+	if (count($params) == 1)
+	{
+		return strtr($simpleUrlTemplate, array('#' => $category['ID'], '|' => $handle));
+	}
 
 	$filters = array();
 
@@ -80,11 +103,10 @@ function createCategoryUrl($params, LiveCart $application)
 
 	if ($filters)
 	{
-	  	$urlParams['filters'] = implode(',', $filters);
+		$urlParams['filters'] = implode(',', $filters);
 	}
 
 	$url = $application->getRouter()->createUrl($urlParams, true);
-	$application->getRouter()->setLangReplace($urlParams['cathandle'], 'name', $category);
 
 	// remove empty search query parameter
 	return preg_replace('/[\?&]q=$/', '', $url);

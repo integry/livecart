@@ -14,20 +14,15 @@
  */
 function createHandleString($str)
 {
-	if (is_array($str))
+	static $cache = array();
+
+	if (isset($cache[$str]))
 	{
-		$str = array_shift($str);
+		return $cache[$str];
 	}
 
-	$str = str_replace(array('$', '&', '+', '/', '\\', ':', ';', '=', '?', '@', '.', ' ', '"', "'", '#', '*', '>', '<', ','), '-', $str);
-
-	$str = preg_replace('/-{2,}/', '-', $str);
-	$str = preg_replace('/^-/', '', $str);
-	$str = preg_replace('/-$/', '', $str);
-
-	$str = urlencode($str);
-
-	return $str;
+	// optimized for performance
+	return $cache[$str] = urlencode(preg_replace('/ {1,}/', '-', trim(strtr($str, '$&+\/:;=?@."\'#*><-,', '                        '))));
 }
 
 ?>

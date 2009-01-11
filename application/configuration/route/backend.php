@@ -67,54 +67,16 @@ foreach ((array)glob($routeDir . '/*.php') as $file)
 	}
 }
 
-if ($this->isInstalled)
-{
-	// SSL
-	if ($this->config->get('SSL_PAYMENT'))
-	{
-		$this->router->setSslAction('checkout', 'pay');
-		$this->router->setSslAction('backend.payment', 'ccForm');
-	}
-
-	if ($this->config->get('SSL_CHECKOUT'))
-	{
-		$this->router->setSslAction('checkout');
-		$this->router->setSslAction('order', 'index');
-		$this->router->setSslAction('order', 'multi');
-	}
-
-	if ($this->config->get('SSL_CUSTOMER'))
-	{
-		$this->router->setSslAction('user');
-	}
-
-	if ($sslHost = $this->config->get('SSL_DOMAIN'))
-	{
-		if (!$this->router->isHttps())
-		{
-			session_start();
-			$sslHost .= '?sid=' . session_id();
-		}
-		else
-		{
-			if ($this->request->get('sid'))
-			{
-				session_id($this->request->get('sid'));
-			}
-		}
-
-		$this->router->setSslHost($sslHost);
-	}
-}
-
 // language index page
 $this->router->connect(':requestLanguage', array('controller' => 'index', 'action' => 'index'), array('requestLanguage' => "[a-zA-Z]{2}"));
 
 foreach ($routes as $route)
 {
 	$this->router->connect($route[0], $route[1], $route[2]);
-  	$route[2]['requestLanguage'] = "[a-zA-Z]{2}";
-  	$this->router->connect(':requestLanguage/' . $route[0], $route[1], $route[2]);
+	$route[2]['requestLanguage'] = "[a-zA-Z]{2}";
+	$this->router->connect(':requestLanguage/' . $route[0], $route[1], $route[2]);
 }
+
+file_put_contents($routeCache, '<?php return unserialize(' . var_export(serialize($this->router->getRoutes()), true) . '); ?>');
 
 ?>

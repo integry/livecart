@@ -23,7 +23,7 @@
 				<select onchange="window.location.href = this.value;" style="width: 100%;">
 					<option>{t _manufacturers}</option>
 					{foreach $manufacturers as $man}
-						<option value="{categoryUrl data=$rootCat addFilter=$man.filter}">{$man.name}</option>
+						<option value="{$man.url}">{$man.name}</option>
 					{/foreach}
 				</select>
 			</p>

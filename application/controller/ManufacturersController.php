@@ -31,11 +31,14 @@ class ManufacturersController extends FrontendController
 		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('Manufacturer', 'name'), ''));
 		$f->setOrder(new ARFieldHandle('Manufacturer', 'name'));
 		$manufacturers = ActiveRecordModel::getRecordSetArray('Manufacturer', $f);
-		ActiveRecordModel::addArrayToEavQueue('Manufacturer', $manufacturers);
+
+		$params = array('filters' => array(new ManufacturerFilter(999, '___')), 'data' => Category::getRootNode()->toArray());
+		$templateUrl = createCategoryUrl($params, $this->application);
+		$templateUrl = strtr($templateUrl, array(999 => '#', '___' => '|'));
 
 		foreach ($manufacturers as &$manufacturer)
 		{
-			$manufacturer['filter'] = new ManufacturerFilter($manufacturer['ID'], $manufacturer['name']);
+			$manufacturer['url'] = strtr($templateUrl, array('#' => $manufacturer['ID'], '|' => createHandleString($manufacturer['name'])));
 		}
 
 		$this->addBreadCrumb($this->translate('_manufacturers'), '');
