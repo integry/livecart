@@ -75,15 +75,15 @@ class LanguageController extends StoreManagementController
 		}
 
 		chdir($tempDir);
-		$zip = $tempDir . '/temp.zip';
+		$zip = dirname($tempDir) . '/temp_' . rand(1, 10000) . '.zip';
 		$archive = new PclZip($zip);
 		$archive->add($locale->getLocaleCode());
 
-		$file = ObjectFile::getNewInstance('ObjectFile', $zip, 'LiveCart-' . $locale->getLocaleCode() . '.zip');
-		$response = new ObjectFileResponse($file);
-
 		// remove the temp directory
 		$this->delTree($tempDir);
+
+		$response = new ObjectFileResponse(ObjectFile::getNewInstance('ObjectFile', $zip, 'LiveCart-' . $locale->getLocaleCode() . '.zip'));
+		$response->deleteFileOnComplete();
 
 		return $response;
 	}
