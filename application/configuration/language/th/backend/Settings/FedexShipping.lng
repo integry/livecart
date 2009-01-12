@@ -1,0 +1,7 @@
+FedexShipping=FedEx
+_FEDEX_API_ACCESS=API Access
+FedexShipping_accountNumber=หมายเลขบัญชี
+FedexShipping_meterNumber=Meter number
+FedexShipping_apiUrl=API URL
+_FEDEX_SERVICE_OPTS=ตัวเลือกบริการ
+FedexShipping_enabledServices=เปิดใช้งานบริการนี้

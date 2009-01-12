@@ -1,0 +1,18 @@
+FEATURED=สินค้าแนะนำ
+SALES_RANK=สินค้าขายดี
+PRODUCT_NAME_ASC=เรียงลำดับชื่อสินค้าจาก ก - ฮ
+PRODUCT_NAME_DESC=เรียงลำดับชื่อสินค้าจาก ฮ - ก
+PRICE_ASC=เรียงลำดับราคาจากน้อยไปหามาก
+PRICE_DESC=เรียงลำดับราคาจากมากไปหาน้อย
+NEWEST_ARRIVALS=สินค้ามาใหม่
+RATING=เรทติ้งจากลูกค้า
+_found_cats=ค้นพบหมวดหมู่
+_not_found=<span class='notFoundMain'>ไม่พบสิ่งที่คุณต้องการหา</span> กรุณาลองใหม่โดยใช้คำค้นอื่น
+_featured_products=สินค้าแนะนำ
+_showing_products=แสดงสินค้าลำดับที่ [_1] ถึง [_2] จาก [_3] ของจำนวนสินค้าที่พบ
+_sort_by=เรียงลำดับตาม
+_narrow_by_cat=ค้นหาโดยระบุหมวดหมู่สินค้า
+_more_subcats=ค้นหาต่อ...
+_view_as_list=ดูรายชื่อสินค้า
+_view_as_grid=ดูตารางสินค้า
+_all_categories=รวมทุกหมวดหมู่

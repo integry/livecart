@@ -1,0 +1,6 @@
+PaypalExpressCheckout_username=ชื่อสมาชิก
+PaypalExpressCheckout_password=รหัสผ่าน
+PaypalExpressCheckout_signature=Signature
+PaypalExpressCheckout_sandbox=ใช้ระบบทดลอง
+PaypalExpressCheckout=Paypal Express Checkout
+PaypalExpressCheckout_AUTHONLY=เฉพาะการจ่ายเงินที่ใช้ระบบตัดเงินอัตโนมัติเท่านั้น

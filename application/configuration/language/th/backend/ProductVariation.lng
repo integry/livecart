@@ -1,0 +1,14 @@
+_add_variation_type=เพิ่มประเภทของข้อมูล
+_add_variation=กำหนดข้อมูลเพิ่ม
+_sku=รายการสินค้า
+_price=ราคา
+_weight=น้ำหนัก
+_inventory=คลังสินค้า
+_image=รูปภาพ
+_add=เพิ่ม
+_substract=ลบ
+_fixed=กำหนดตายตัว
+_no_change=ไม่เปลี่ยนแปลง
+_err_type_name=กรุณาระบุค่าที่กำหนด เช่น ขนาด
+_err_variation_name=กรุณาระบุชื่อของค่าที่กำหนด เช่น ใหญ่, เล็ก
+_variations_save_conf=กำหนดค่าเรียบร้อยแล้ว

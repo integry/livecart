@@ -1,0 +1,16 @@
+_filter_group_was_successfully_saved=ฟิลเตอร์ได้ถูกเซฟไว้แล้ว
+_could_not_save_filter_group=ไม่สารถเซฟฟิลเตอร์ได้
+_filter_group_was_successfully_removed=ฟิลเตอร์ได้ถูกลบออกไปแล้ว
+_could_not_remove_filter_group=ไม่สามารถลบฟิลเตอร์ได้
+_add_new_filter=เพิ่มฟิลเตอร์ใหม่
+_category_has_no_attr=ยังไม่มีการสร้างฟิลเตอร์สำหรับหมวดหมู่นี้
+_delete_field=ลบช่อง
+_remove_filter_question=แน่ใจหรือว่าคุณต้องการลบฟิลเตอร์นี้?
+_cancel_adding_new_filter=ยกเลิกการเพิ่มฟิลเตอร์ใหม่
+_error_name_empty=กรุณาใส่ชื่อให้กับฟิลเตอร์นี้
+_error_filter_value_is_not_a_number=ค่าของฟิลเตอร์ควรเป็นตัวเลข
+_error_spec_field_is_not_selected=ช่องที่ระบุยังไม่ได้ถูกเลือก
+_error_illegal_date=วันที่ผิดพลาด
+_error_filter_handle_invalid=การจัดการผิดพลาด
+_FilterGroup_remove_question=คุณต้องการลบฟิลเตอร์นี้ออกใช่หรือไม่
+_error_filter_name_empty=กรุณาใส่ชื่อฟิลเตอร์

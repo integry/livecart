@@ -1,0 +1,10 @@
+_tax_entry_was_successfully_saved=ภาษีได้ถูกบันทึกเรียบร้อยแล้ว
+_could_not_save_tax_entry=ไม่สามารถบันทึกภาษีได้
+_add_new_tax=เพิ่มภาษีใหม่
+_cancel_adding_new_tax=ยกเลิกการเพิ่มภาษีใหม่
+_name=ชื่อ
+_manage=จัดการ
+_taxes=ภาษี
+_error_the_name_should_not_be_empty=กรุณาใส่ชื่อ
+_are_you_sure_you_want_to_remove_ths_tax=คุณต้องการลบภาษีนี้ใช่หรือไม่ (ภาษีนี้อาจใช้ในการคิดค่าบริการจัดส่งสำหรับเขตอื่นอยู่)
+_cancel_adding_new_tax_rate=ยกเลิกการเพิ่มอัตราภาษีใหม่

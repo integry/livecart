@@ -1,0 +1,10 @@
+_really_remove_product_list=คุณต้องการลบรายการสินค้านี้ใช่หรือไม่
+_really_remove_product_from_list=คุณต้องการย้ายสินค้านี้ออกจากรายการสินค้าใช่หรือไม่
+_added_to_product_list=สินค้าได้ถูกเพิ่มลงในรายการสินค้าเรียบร้อยแล้ว
+_select_product=เลือกสินค้า
+_add_new_list=เพิ่มลงในรายการสินค้า
+_cancel_adding_new_list=ยกเลิกการเพิ่มรายการสินค้าใหม่
+_add_product=เพิ่มสินค้าลงในรายการ
+_add_list_title=เพิ่มสินค้าใหม่ลงในรายการ
+_list_name=ลิสต์รายชื่อ
+_err_relationship_name_is_empty=กรุณาใส่รายชื่อลิสต์

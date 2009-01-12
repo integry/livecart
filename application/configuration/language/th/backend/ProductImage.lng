@@ -1,0 +1,17 @@
+_cancel_new=ยกเลิกการเพิ่มภาพใหม่
+_add_new=เพิ่มภาพใหม่
+_add_new_title=เพิ่มไตเติ้ลภาพใหม่
+_delete_confirm=คุณต้องการลบภาพนี้ใช่หรือไม่
+_main_image=ภาพหลัก
+_supplemental_images=ภาพเสริม
+_no_images=ยังไม่มีรูปสินค้า
+_max_file_size=เฉพาะไฟล์ JPEG, GIF และ PNG เท่านั้น ขนาดไฟล์ไม่เกิน: [_1] 
+_edit_image=แก้ไขรายละเอียดของภาพ
+_image_title=ใส่ไตเติ้ลภาพ
+_image_file=เลือกไฟล์ภาพ
+_upload=เพิ่มภาพ
+_save=บันทึก
+_err_not_uploaded=กรุณาเลือกไฟล์
+_err_not_image=ภาพไม่ถูกต้อง
+_err_resize=เกิดข้อผิดพลาดในการย่อขนาดภาพ
+_err_too_large=ไฟล์ใหญ่เกินไป

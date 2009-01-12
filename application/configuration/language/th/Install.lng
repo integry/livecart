@@ -1,0 +1,11 @@
+checkWritePermissions=การตั้งค่า permission แฟ้มต่าง ๆ
+_writePermissionsFix=<strong>คำแนะนำ:</strong> ใช้โปรแกรม FTP ในการเปลี่ยนค่า permission (chmod) แฟ้มเหล่านี้เป็น 777 ถ้าไม่พบแฟ้มเหล่านี้ ให้สร้างขึ้นใหม่แล้วตั้งค่าให้เรียบร้อย
+checkPHPVersion=PHP เวอร์ชั่น
+checkPHPVersion_error=<a href="http://php.net" target="_blank">PHP</a> เวอร์ชั่นต้องไม่ต่ำกว่า 5.2
+checkMySQL=เช็คดาต้าเบส
+checkMySQL_error=ต้องทำการลง <a href="http://php.net/mysqli" target="_blank">mysqli</a> หรือ <a href="http://php.net/mysqli" target="_blank">mysql</a> เพื่อใช้งาน PHP 
+checkGD=รองรับรูปภาพแบบ GD
+checkGD_error=ต้องทำการลง <a href="http://php.net/gd" target="_blank">GD</a> เพื่อใช้งาน PHP 
+checkSession=ตั้งค่า PHP
+checkSession_error=ไม่สามารถเซฟค่า PHP ได้ กรุณาตรวจเช็คให้แน่ใจว่า <a href="http://php.net/manual/en/ref.session.php#ini.session.save-path"><em>session.save_path</em></a> ได้ตั้งค่าถูกต้องแล้ว
+_err_innodb_not_available=<a href="http://dev.mysql.com/doc/refman/5.0/en/innodb-overview.html" target="_blank">InnoDB table storage engine</a> สำหรับ MySQLไม่ได้ enable กรุณาเช็คการตั้งค่าของระบบ MySQL ดาต้าเบสให้เรียบร้อยแล้วลองใหม่อีกครั้ง

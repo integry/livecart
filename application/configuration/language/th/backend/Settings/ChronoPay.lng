@@ -1,0 +1,5 @@
+ChronoPay_productid=ChronoPay product ID
+ChronoPay_currency=ChronoPay currency
+ChronoPayGateway_productid=ChronoPay product ID
+ChronoPayGateway_secret=Shared secret key
+ChronoPay_productname=สินค้าที่แสดงที่ ChronoPay

@@ -1,0 +1,8 @@
+_no_subscribers_found=ไม่พบผู้บอกรับจดหมายข่าว
+_listing_subscribers=รายชื่อผู้ต้องการรับจดหมายข่าวตั้งแต่  $from - $to จาก $count
+_process=ดำเนินการ
+_newsletter_delete_confirm=คุณต้องการลบบุคคลนี้ออกจากระบบจดหมายข่าวใช่หรือไม่
+_nothing_selected=กรุณาเลือกอย่างน้อย 1 คน
+NewsletterSubscriber.ID=ไอดี
+NewsletterSubscriber.isEnabled=ถูกเปิดใช้งาน
+NewsletterSubscriber.email=อีเมล์ 

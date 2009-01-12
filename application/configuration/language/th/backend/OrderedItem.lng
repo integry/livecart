@@ -1,0 +1,13 @@
+_shipment=การจัดส่งสินค้า
+_shipping_service_is_not_selected=ยังไม่ได้เลือกบริการจัดส่งสินค้า
+_select_shippment=เลือกการชำระเงิน
+_done_adding_products=เพิ่มสินค้าเรียบร้อยแล้ว
+_select_product=เพิ่มสินค้าลงในใบสั่งซื้อ
+_downloadable_item_already_exists_in_this_order=ไฟล์ดาวน์โหลดนี้มีอยู่ออเดอร์นี้แล้ว
+_error_removing_item_from_shipment=เกิดข้อความพลาดในการหยิบสินค้าออกจากระบบการจัดส่ง
+_item_was_successfully_removed_from_shipment=สินค้าถูกหยิบออกจากระบบการจัดส่งแล้ว
+_item_has_been_successfuly_saved=เพิ่มสินค้าลงในใบสั่งซื้อเรียบร้อยแล้ว
+_error_updating_item_quantity=เกิดข้อผิดพลาดในการอัพเดทจำนวนสินค้า
+_ordered_item_quantity_was_updated=จำนวนสินค้าอัพเดทเรียบร้อยแล้ว
+_this_shipping_service_has_no_available_rates=ไม่มีบริการนี้สำหรับโซนนี้และยอดสั่งซื้อเท่านี้
+_ordered_item_was_successfully_moved=สิน้คาได้ถูกหยิบออกไปไว้ยังระบบการจัดส่งอื่นแล้ว

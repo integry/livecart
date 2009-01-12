@@ -1,0 +1,14 @@
+_no_taxes=ยังไม่มีการสร้างอัตราภาษีเลย
+_add_tax=เพิ่มภาษีใหม่
+_tax_rate_has_been_successfully_saved=บันทึกอัตราภาษีเรียบร้อยแล้ว
+_could_not_save_tax_rate=ไม่สามารถบันทึกอัตราภาษีได้
+_tax=ภาษี
+_rate=อัตราภาษี
+_add_new_tax_rate=เพิ่มอัตราภาษีใหม่
+_cancel_adding_new_tax_rate=ยกเลิกการเพิ่มอัตราภาษีใหม่
+_error_rate_should_not_be_empty=กรุณาใส่อัตราภาษี
+_error_rate_should_be_numeric_value=อัตราภาษีจะต้องเป็นตัวเลขเท่านั้น
+_error_rate_should_be_greater_than_zero_and_less_than_hundred=อัตราควรอยู่ระหว่าง 0 - 100
+_error_tax_should_not_be_empty=กรุณาระบุอัตราภาษี
+_more_taxes_can_be_added=ยังเพิ่มภาษีอื่นได้อีก
+_here=ที่นี่

@@ -1,0 +1,14 @@
+_product_prices_were_successfully_updated=อัพเดทราคาสินค้าเรียบร้อยแล้ว
+_product_prices_could_not_be_updated=ไม่สามารถอัพเดทราคาสินค้าได้
+_inventory=คลังสินค้า
+_items_in_stock=จำนวนสินค้าในสต็อก
+_pricing=ราคา
+_shipping_weight=ค่าขนส่ง
+_set_quant=จำกัดจำนวน / ราคา
+_quantity=จำนวน
+_group=กลุ่มลูกค้า
+_minimum_order_quantity=ขั้นต่ำในการสั่งซื้อ
+_shipping_surcharge=บวกค่าส่งเพิ่ม
+_requires_separate_shipment=ต้องจ่ายค่าส่งต่างหาก
+_qualifies_for_free_shipping=ได้รับสิทธิ์ส่งฟรี
+_allow_back_ordering=สามารถสั่งจองล่วงหน้าได้

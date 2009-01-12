@@ -1,0 +1,11 @@
+_custom_fields=ช่องที่ต้องการเพิ่ม
+_offline_methods=การชำระเงินทางธนาคาร / ธนาณัติ / ตั๋วแลกเงิน
+Category=หมวดหมู่
+CustomerOrder=ออเดอร์
+Manufacturer=บริษัท
+User=ชื่อสมาชิก
+UserGroup=กลุ่มสมาชิก
+UserAddress=ที่อยู่
+_SpecField_displayed_on_front_page=ลูกค้าสามารถแก้ไขเองได้
+_SpecField_displayed_in_product_list=ลูกค้าสามารถมองเห็นได้
+_show_in_invoice=แสดงในใบเรียกเก็บเงิน

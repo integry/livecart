@@ -1,0 +1,7 @@
+_common_css=Common (ใช้กับธีมทั้งหมด)
+_edit_css=แก้ไข CSS Stylesheet
+_save_css=บันทึก CSS
+_please_select=กรุณาเลือก CSS Style sheet ที่ต้องการแก้ไข แต่ละธีมจะมี stylesheet ต่างหาก คุณยังสามารถแก้ไขไฟล์ Common ที่ใช้กับธีมทั้งหมดได้เช่นกัน
+_css_warn=หมายเหตุ: พยายามหลีกเลี่ยงการแก้ไขไฟล์ LiveCart CSS โดยตรง เพราะอาจมีปัญหาในการอัพเดทโปรแกรมในภายหน้าได้ ดังนั้น จึงควรแก้ไขเป็นธีม ๆ ไปหรือสร้าง stylesheet ขึ้นมาอีกชุดหนึ่งโดยการคัดลอกจากไฟล์เดิม
+_css_file_has_been_successfully_updated=ไฟล์ CSS ได้ถูกบันทึกไว้เรียบร้อยแล้ว
+_could_not_update_css_file=ไม่สามารถบันทึกไฟล์ CSS ได้

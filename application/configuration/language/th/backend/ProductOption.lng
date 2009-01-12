@@ -1,0 +1,7 @@
+_ProductOption_remove_question=คุณต้องการลบตัวเลือกของสินค้านี้ใช่หรือไม่
+_add_new_field=เพิ่มตัวเลือกใหม่
+_cancel_adding_new_field=ยกเลิกการเพิ่มตัวเลือกใหม่
+_error_name_empty=กรุณาใส่ชื่อตัวเลือกใหม่
+_error_record_id_is_not_valid=ไม่พบตัวเลือกสินค้านี้
+_could_not_remove_option=ไม่สามารถลบตัวเลือกนี้ได้
+_could_not_remove_option_choice=ไม่สามารถย้ายตัวเลือกนี้ได้

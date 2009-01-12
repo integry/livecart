@@ -1,0 +1,10 @@
+_order_overview=รายการสั่งซื้อสินค้า
+_inventory=คลังสินค้า
+_low_stock=เหลือสต็อกน้อย
+_out_stock=หมดสต็อก
+_overall=ภาพรวม
+_active_pr=สินค้าที่ยังมี
+_inactive_pr=สินค้าที่หมดแล้ว
+_total_orders=ยอดการสั่งซื้อทั้งหมด
+_unread_msg=ข้อความที่ยังไม่ได้อ่าน
+_livecart_backend=ระบบจัดการหลังร้าน

@@ -1,0 +1,10 @@
+_select_file=เลือกไฟล์
+_listing_files=รายการไฟล์ตั้งแต่ $from - $to จาก $count
+_no_files_found=ไม่พบไฟล์
+fileName=ชื่อ
+fileType=ชนิดของไฟล์
+fileSize=ขนาด
+fileDate=วันที่อัพเดทล่าสุด
+filePermissions=ค่า Permission ของไฟล์
+fileOwner=เจ้าของไฟล์
+fileGroup=กลุ่ม

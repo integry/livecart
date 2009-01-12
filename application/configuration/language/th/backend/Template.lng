@@ -1,0 +1,16 @@
+_edit_templates=แก้ไขเทมเพลท
+_edit_template=แก้ไขไฟล์ในเทมเพลท
+_please_select=กรุณาเลือกไฟล์เพื่อทำการแก้ไข
+_save_template=บันทึกเทมเพลท
+_template_file_name=ชื่อไฟล์
+_save_for_theme=บันทึกสำหรับธีมที่ระบุไว้เท่านั้น
+_create_template=สร้างไฟล์เทมเพลทใหม่
+_delete_template=ลบไฟล์เทมเพลท
+_file_name_empty=กรุณาใส่ชื่อไฟล์
+_edit_email_templates=แก้ไขอีเมล์เทมเพลท
+_subject=หัวข้อ
+_body=ข้อความ
+_confirm_template_delete=คุณต้องการลบไฟล์เทมเพลทนี้ใช่หรือไม่
+_template_has_been_successfully_updated=บันทึกเทมเพลทเรียบร้อยแล้ว
+_could_not_update_template=ไม่สามารถบันทึกเทมเพลทนี้ได้
+_template_has_been_successfully_deleted=ลบเทมเพลทนี้เรียบร้อยแล้ว

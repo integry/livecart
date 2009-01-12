@@ -1,0 +1,16 @@
+_a_relationship_between_products_was_successfully_created=เสร็จสิ้นการเชื่อมโยงระหว่างสินค้าเรียบร้อยแล้ว
+_could_not_create_product_relationship=สินค้าชิ้นนี้ได้ถูกเชื่อมโยงไปแล้ว
+_relationship_was_successfully_removed=การเชื่อมโยงได้ถูกลบออกแล้ว
+_select_product=เพิ่มสินค้าที่เกี่ยวข้อง
+_add_new_group=เพิ่มกลุ่มใหม่
+_add_group_title=เพิ่มกลุ่มสินค้าที่เกียวข้องใหม่
+_done_adding=เพิ่มสินค้าที่เกี่ยวข้องเรียบร้อยแล้ว
+_cancel_adding_new_related_product=ยกเลิกการเชื่อมโยงใหม่
+_cancel_adding_new_group=ยกเลิกการตั้งกลุ่มใหม่
+_are_you_sure_you_want_to_delete_this_group=คุณต้องการลบกลุ่มการเชื่อมโยงนี้ออกใช่หรือไม่
+_product_relationship_group_title=ไตเติ้ล
+_err_relationship_name_is_empty=กรุณาใส่ชื่อกลุ่ม
+_err_circular=ไม่สามารถเชื่อมโยงสินค้าตัวเดียวกันเข้าด้วยกันได้
+_err_multiple=สินค้าชิ้นนี้ได้ถูกเชื่อมโยงไปแล้ว
+_msg_added=สินค้าที่เกี่ยวข้องได้ถูกเพิ่มเรียบร้อยแล้ว
+_are_you_sure_you_want_to_delete_this_relation=คุณต้องการลบการเชื่อมโยงนี้ออกใช่หรือไม่

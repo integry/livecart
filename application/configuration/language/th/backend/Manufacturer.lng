@@ -1,0 +1,13 @@
+_manufacturers=บริษัท
+Manufacturer.name=ชื่อบริษัท
+_listing_manufacturers=รายชื่อบริษัทตั้งแต่ลำดับที่  $from - $to จาก $count
+_no_manufacturers=ไม่พบบริษัทใด ๆ
+_are_you_sure_you_want_to_delete_manufacturer=คุณต้องการลบบริษัทนี้ใช่หรือไม่
+_nothing_selected=กรุณาเลือกอย่างน้อย 1 บริษัท
+_cancel_editing_manufacturer=ยกเลิกการแก้ไขบริษัท
+_manufacturer_info=ข้อมูลทั่วไป
+_manufacturer_images=รูปภาพ
+_manufacturer_was_successfully_saved=ข้อมูลบริษัทได้ถูกบันทึกไว้เรียบร้อยแล้ว
+_could_not_save_manufacturer=ไม่สามารถบันทึกข้อมูลบริษัทได้
+_select_manufacturer=เลือกบริษัท
+_done_adding=เพิ่มบริษัทเรียบร้อยแล้ว

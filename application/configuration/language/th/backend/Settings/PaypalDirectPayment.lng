@@ -1,0 +1,6 @@
+PaypalDirectPayment_username=ชื่อสมาชิก
+PaypalDirectPayment_password=รหัสผ่าน
+PaypalDirectPayment_signature=Signature
+PaypalDirectPayment_cardTypes=เปิดใช้งานชนิดของบัตรเครดิต
+PaypalDirectPayment=Paypal Direct Payment
+PaypalDirectPayment_sandbox=ใช้ระบบทดลอง

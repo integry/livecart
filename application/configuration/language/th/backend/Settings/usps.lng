@@ -1,0 +1,17 @@
+UspsShipping=USPS
+_USPS_API_ACCESS=USPS Shipping API Access
+UspsShipping_userId=USPS API username
+UspsShipping_apiUrl=USPS API URL
+Media=Media Mail
+BPM=Bound Printed Matter
+Library=Library Mail
+Parcel=พัสดุไปรษณีย์
+Priority=ลำดับ
+Express=ด่วนพิเศษ
+UspsShipping_international=เปิดใช้งานระบบส่งสินค้านานาชาติ
+_USPS_ITL_OPTS=ตัวเลือกการส่งสินค้านานาชาติ
+UspsShipping_size=ขนาดพัสดุ
+UspsShipping_isMachinable=สินค้าเป็นเครื่องจักร
+UspsShipping_priorityPackageType=จำนวนพัสดุสินค้า
+_USPS_DOMESTIC_OPTS=ตัวเลือกการจัดส่งสินค้าในประเทศ
+UspsShipping_domestic=เปิดใช้งานบริการส่งเมล์
