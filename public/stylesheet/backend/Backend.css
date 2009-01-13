@@ -647,6 +647,11 @@ ul.verticalMenu li
 	padding-left: 5px;
 }
 
+ul.verticalMenu li a
+{
+	outline: none;
+}
+
 ul.verticalMenu li:hover
 {
 	background-position: 0 -32px;

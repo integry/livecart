@@ -5,3 +5,14 @@ _carts=Shopping Carts
 _search=Search Queries
 _customers=Customers
 _pages=Page Views
+
+_interval=Interval
+_daily=Daily
+_hourly=Hourly
+_weekly=Weekly
+_monthly=Monthly
+_yearly=Yearly
+
+_more_reports=More Reports
+_avg_order_total=Average order total
+_avg_items_per_order=Average items per order

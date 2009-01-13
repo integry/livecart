@@ -40,6 +40,8 @@ _grid_reload=Reload
 _today=Today
 _yesterday=Yesterday
 _last_7_days=Last 7 days
+_all_time=All time
+_grid_date_range=Custom date range
 
 # Tabs
 _more_tabs=More
