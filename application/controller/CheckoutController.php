@@ -126,6 +126,8 @@ class CheckoutController extends FrontendController
 
 		$url = $handler->getInitUrl($returnUrl, $cancelUrl, !$handler->getConfigValue('AUTHONLY'));
 
+		$this->order->setCheckoutStep(CustomerOrder::CHECKOUT_PAY);
+
 		return new RedirectResponse($url);
 	}
 
@@ -166,7 +168,7 @@ class CheckoutController extends FrontendController
 			}
 
 			SessionUser::setUser($user);
-			$order->user->set($user);
+			$order->setUser($user);
 		}
 
 		$order->billingAddress->set($address);
@@ -492,6 +494,8 @@ class CheckoutController extends FrontendController
 		$response->set('order', $this->order->toArray());
 		$this->order->getSpecification()->setFormResponse($response, $form);
 
+		$this->order->setCheckoutStep(CustomerOrder::CHECKOUT_ADDRESS);
+
 		return $response;
 	}
 
@@ -596,6 +600,8 @@ class CheckoutController extends FrontendController
 			return $this->redirect();
 		}
 
+		$this->order->setCheckoutStep(CustomerOrder::CHECKOUT_SHIPPING);
+
 		return $response;
 	}
 
@@ -682,6 +688,8 @@ class CheckoutController extends FrontendController
 		}
 
 		ActiveRecordModel::beginTransaction();
+
+		$this->order->setCheckoutStep(CustomerOrder::CHECKOUT_PAY);
 
 		// process payment
 		$transaction = $this->getTransaction();
@@ -864,6 +872,8 @@ class CheckoutController extends FrontendController
 		{
 			$this->finalizeOrder();
 		}
+
+		$this->order->setCheckoutStep(CustomerOrder::CHECKOUT_PAY);
 
 		if ($handler->isPostRedirect())
 		{

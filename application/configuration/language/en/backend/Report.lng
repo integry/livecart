@@ -1,7 +1,7 @@
 _reports=Reports & Statistics
 _sales=Sales
 _bestsellers=Bestsellers
-_carts=Shopping Carts
+_conversion=Conversion
 _search=Search Queries
 _customers=Customers
 _pages=Page Views
@@ -14,5 +14,31 @@ _monthly=Monthly
 _yearly=Yearly
 
 _more_reports=More Reports
-_avg_order_total=Average order total
-_avg_items_per_order=Average items per order
+
+# Y legends
+_ratio_percent=Percent
+_num_items=Number of Items
+_num_orders=Number of Orders
+_num_customers=Number of New Customers
+_conv_ratio=Completed Orders (%)
+_num_carts=Number of Carts
+
+# Sales
+_num_orders=Number of Orders
+_order_totals=Order Totals
+_items_sold=Number of Items Sold
+_avg_order_total=Average Order Total
+_avg_items_per_order=Average Items per Order
+_payment_methods=Payment Methods
+_currencies=Currencies
+_statuses=Order Status
+_cancelled_ratio=Cancelled Order Ratio
+_unpaid_ratio=Unpaid Order Ratio
+
+# Customers
+_registrations=User Registrations
+
+# Conversion
+_conversion_ratio=Cart Conversion Ratio
+_checkout_steps=Completed Checkout Steps
+_carts_created=New Carts Created

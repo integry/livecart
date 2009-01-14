@@ -371,7 +371,7 @@ LiveCart.AjaxUpdater.prototype = {
 	{
 		var url = "";
 		var method = "";
-		var params = options.parameters || "";
+		var params = options ? (options.parameters || '') : '';
 		this.onComplete = onComplete;
 
 		var containerId = $(container);

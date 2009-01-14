@@ -578,7 +578,7 @@ class UserController extends FrontendController
 			{
 				if ($this->order->getID())
 				{
-					$this->order->user->set($this->user);
+					$this->order->setUser($this->user);
 					SessionOrder::save($this->order);
 				}
 			}
@@ -676,7 +676,7 @@ class UserController extends FrontendController
 		// set order addresses
 		$this->order->billingAddress->set($billingAddress->userAddress->get());
 		$this->order->shippingAddress->set($shippingAddress->userAddress->get());
-		$this->order->user->set($user);
+		$this->order->setUser($user);
 		SessionOrder::save($this->order);
 
 		ActiveRecordModel::commit();

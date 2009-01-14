@@ -66,7 +66,7 @@ class SessionOrder
 
 		if (!$instance->user->get() && SessionUser::getUser()->getID() > 0)
 		{
-			$instance->user->set(SessionUser::getUser());
+			$instance->setUser(SessionUser::getUser());
 			$instance->save();
 		}
 

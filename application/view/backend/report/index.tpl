@@ -18,7 +18,7 @@
 				<a href="{link controller=backend.report action=bestsellers}">{t _bestsellers}</a>
 			</li>
 			<li id="menuCarts">
-				<a href="{link controller=backend.report action=carts}">{t _carts}</a>
+				<a href="{link controller=backend.report action=conversion}">{t _conversion}</a>
 			</li>
 			<li id="menuSearch">
 				<a href="{link controller=backend.report action=search}">{t _search}</a>

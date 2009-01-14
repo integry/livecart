@@ -163,3 +163,10 @@ _last_name_is_empty=Please enter the last name
 
 # Invoice
 _order_invoice=Invoice
+
+# Checkout progress
+_progress_0=Shopping cart page
+_progress_1=Registered user
+_progress_2=Address entered
+_progress_3=Shipping method selected
+_progress_4=Payment attempted

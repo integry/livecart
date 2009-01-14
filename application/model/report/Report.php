@@ -17,12 +17,20 @@ abstract class Report
 
 	protected $values;
 
+	protected $chart;
+
 	const LINE = 0;
 	const BAR = 1;
+	const PIE = 2;
 
 	protected abstract function getMainTable();
 
 	protected abstract function getDateHandle();
+
+	public function __construct()
+	{
+		$this->chart = new open_flash_chart();
+	}
 
 	public function setFrom($from)
 	{
@@ -54,9 +62,21 @@ abstract class Report
 		$this->chartType = $type;
 	}
 
+	public function getChartType()
+	{
+		return $this->chartType;
+	}
+
+	public function setYLegend($legend)
+	{
+		$leg = new y_legend($legend);
+		$leg->set_style( '{font-size: 22px; color: #778877}' );
+		$this->chart->set_y_legend($leg);
+	}
+
 	protected function getChartInstance()
 	{
-		$types = array(self::LINE => 'line_dot', self::BAR => 'bar');
+		$types = array(self::LINE => 'line_dot', self::BAR => 'bar', self::PIE => 'pie');
 		return new $types[$this->chartType]();
 	}
 
@@ -67,7 +87,8 @@ abstract class Report
 
 	protected function getReportData(ARSelectQueryBuilder $q)
 	{
-		$this->values = $this->getLineChartData(ActiveRecord::getDataByQuery($q));
+		$data = ActiveRecord::getDataByQuery($q);
+		$this->values = (self::PIE == $this->chartType) ? $this->getPieChartData($data) : $this->getLineChartData($data);
 	}
 
 	protected function getQuery($countSql = null)
@@ -93,7 +114,7 @@ abstract class Report
 	{
 		$values = $this->values;
 
-		$chart = new open_flash_chart();
+		$chart = $this->chart;
 
 		$line = self::getChartInstance();
 
@@ -103,6 +124,11 @@ abstract class Report
 		{
 			$line->set_halo_size(2);
 			$line->set_dot_size(2);
+		}
+
+		if (self::PIE == $this->chartType)
+		{
+			$line->set_animate(false);
 		}
 
 		$chart->add_element($line);
@@ -122,12 +148,33 @@ abstract class Report
 			$x_labels->set_steps(ceil(count($values['y']) / 13));
 		}
 
-		$line->set_tooltip('#x_label#: #val#');
+		if (self::PIE == $this->chartType)
+		{
+			$line->set_tooltip('#val# (#percent#)');
+
+			$line->set_colours(
+				array(
+					'#77CC6D',    // green
+        			'#FF5973',    // pink
+        			'#6D86CC',    // blue
+					'#848484',    // <-- grey
+					'#CACFBE',    // <-- green
+					'#1F8FA1',    // <-- blue
+				) );
+		}
+		else
+		{
+			$line->set_tooltip('#x_label#: #val#');
+		}
+
 		$x->set_labels( $x_labels );
 		$chart->set_x_axis( $x );
 
 		$y = new y_axis();
-		$y->set_range($values['min'], $values['max'], $values['step']);
+		if (isset($values['min']))
+		{
+			$y->set_range($values['min'], $values['max'], $values['step']);
+		}
 		$chart->add_y_axis( $y );
 
 		return $chart->toPrettyString();
@@ -195,8 +242,29 @@ abstract class Report
 	{
 		$f = $q->getFilter();
 		$q->addField(new ARExpressionHandle($sqlFunction), null, $alias);
-		$f->setGrouping(new ARExpressionHandle($alias));
+
+		if (self::PIE != $this->chartType)
+		{
+			$f->setGrouping(new ARExpressionHandle($alias));
+		}
+
 		$f->setOrder(new ARExpressionHandle($alias));
+	}
+
+	protected function getPieChartData($array)
+	{
+		$x = $y = array();
+
+		foreach ($array as $e)
+		{
+			$name = (string)$e['entry'];
+			$value = new pie_value((float)$e['cnt'], $name . ' (' . $e['cnt'] . ')');
+			$value->originalName = $name;
+			$x[] = $value;
+			$y[] = $name;
+		}
+
+		return array('x' => $x, 'y' => $y);
 	}
 
 	protected function getLineChartData($array)

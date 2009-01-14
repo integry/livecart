@@ -45,6 +45,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	const STATUS_SHIPPED = 3;
 	const STATUS_RETURNED = 4;
 
+	const CHECKOUT_CART = 0;
+	const CHECKOUT_USER = 1;
+	const CHECKOUT_ADDRESS = 2;
+	const CHECKOUT_SHIPPING = 3;
+	const CHECKOUT_PAY = 4;
+
 	/**
 	 * Define database schema used by this active record instance
 	 *
@@ -62,6 +68,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$schema->registerField(new ARForeignKeyField("currencyID", "currency", "ID", 'Currency', ARChar::instance(3)));
 		$schema->registerField(new ARForeignKeyField("eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
 
+		$schema->registerField(new ARField("checkoutStep", ARInteger::instance()));
 		$schema->registerField(new ARField("dateCreated", ARDateTime::instance()));
 		$schema->registerField(new ARField("dateCompleted", ARDateTime::instance()));
 		$schema->registerField(new ARField("totalAmount", ARFloat::instance()));
@@ -592,6 +599,23 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 				}
 			}
 		}
+	}
+
+	public function setUser(User $user)
+	{
+		$this->user->set($user);
+		$this->setCheckoutStep(self::CHECKOUT_USER);
+	}
+
+	public function setCheckoutStep($step)
+	{
+		if ($step < $this->checkoutStep->get())
+		{
+			return false;
+		}
+
+		$this->checkoutStep->set($step);
+		$this->save();
 	}
 
 	/*####################  Saving ####################*/
@@ -1930,6 +1954,21 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$this->shipments = array();
 
 		parent::destruct(array('userID', 'billingAddressID', 'shippingAddressID'));
+	}
+
+	public static function getStatusName($status)
+	{
+		$statuses = array(
+							-2 => '_status_canceled',
+							-1 => '_awaiting_payment',
+							self::STATUS_NEW => '_status_new',
+							self::STATUS_AWAITING => '_status_awaiting',
+							self::STATUS_SHIPPED => '_status_shipped',
+							self::STATUS_RETURNED => '_status_returned',
+							self::STATUS_PROCESSING => '_status_processing'
+						);
+
+		return isset($statuses[$status]) ? $statuses[$status] : '_status_processing';
 	}
 }
 

@@ -1120,7 +1120,7 @@ class LiveCart extends Application
 		}
 	}
 
-	private function loadLanguageFiles()
+	public function loadLanguageFiles()
 	{
 		foreach ($this->configFiles as $file)
 		{

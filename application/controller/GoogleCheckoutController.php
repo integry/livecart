@@ -165,7 +165,7 @@ class GoogleCheckoutController extends CheckoutController
 			$user->save();
 		}
 
-		$order->user->set($user);
+		$order->setUser($user);
 		$order->save();
 		$this->order = $order;
 
