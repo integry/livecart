@@ -315,6 +315,7 @@ class CheckoutController extends FrontendController
 				$addressField = 'default' . ucfirst($type). 'Address';
 				if ($address = $this->user->$addressField->get())
 				{
+					$address->load();
 					$this->saveAddress($address->userAddress->get(), $type . '_');
 				}
 				else
