@@ -106,6 +106,12 @@ class CategoryController extends FrontendController
 
 		// setup ProductFilter
 		$productFilter = new ProductFilter($this->category, $selectFilter);
+
+		if ($this->config->get('INCLUDE_SUBCATEGORY_PRODUCTS'))
+		{
+			$productFilter->includeSubcategories();
+		}
+
 		$this->productFilter = $productFilter;
 		foreach ($this->filters as $filter)
 		{
