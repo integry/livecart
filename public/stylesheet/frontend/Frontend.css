@@ -1549,6 +1549,11 @@ table.addressSelector
 }
 
 /* Payments */
+#ccForm
+{
+	width: 100%;
+}
+
 #ccCVV
 {
     width: 4em;

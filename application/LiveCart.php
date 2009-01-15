@@ -920,7 +920,7 @@ class LiveCart extends Application
 			throw new Exception('Invalid express checkout handler');
 		}
 
-		ClassLoader::import('library.payment.method.express.' . $handlerName);
+		ClassLoader::importNow('library.payment.method.express.' . $handlerName);
 
 		return $this->getPaymentHandler($handlerName, $details);
 	}
@@ -932,7 +932,7 @@ class LiveCart extends Application
 	{
 		$handler = $this->config->get('CC_HANDLER');
 
-		ClassLoader::import('library.payment.method.cc.' . $handler);
+		ClassLoader::importNow('library.payment.method.cc.' . $handler);
 
 		return $this->getPaymentHandler($handler, $details);
 	}

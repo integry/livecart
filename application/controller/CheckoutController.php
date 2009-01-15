@@ -593,11 +593,15 @@ class CheckoutController extends FrontendController
 		$this->order->getSpecification()->setFormResponse($response, $response->get('ccForm'));
 
 		$external = $this->application->getPaymentHandlerList(true);
+
 		// auto redirect to external payment page if only one handler is enabled
-		if (1 == count($external) && !$offlineMethods && !$this->config->get('CC_ENABLE') && !$response->get('ccForm')->getValidator()->getErrorList())
+		if ($this->config->get('SKIP_PAYMENT'))
 		{
-			$this->request->set('id', $external[0]);
-			return $this->redirect();
+			if (1 == count($external) && !$offlineMethods && !$this->config->get('CC_ENABLE') && !$response->get('ccForm')->getValidator()->getErrorList())
+			{
+				$this->request->set('id', $external[0]);
+				return $this->redirect();
+			}
 		}
 
 		$this->order->setCheckoutStep(CustomerOrder::CHECKOUT_SHIPPING);
