@@ -80,3 +80,14 @@
 	margin: 0;
 	width: auto;
 }
+
+table.report td, table.report th
+{
+	padding: 4px;
+	border-bottom: 1px solid #ddd;
+}
+
+table.report td.cnt
+{
+	text-align: center;
+}

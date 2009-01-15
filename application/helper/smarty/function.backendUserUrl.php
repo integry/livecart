@@ -8,13 +8,18 @@
  * @return string
  *
  * @package application.helper.smarty
- * @author Integry Systems 
+ * @author Integry Systems
  */
 function smarty_function_backendUserUrl($params, LiveCartSmarty $smarty)
-{		
-	$urlParams = array('controller' => 'backend.userGroup', 
+{
+	if (!isset($params['user']) && isset($params['id']))
+	{
+		$params['user'] = array('ID' => $params['id']);
+	}
+
+	$urlParams = array('controller' => 'backend.userGroup',
 					   'action' => 'index' );
-					   
+
 	return $smarty->getApplication()->getRouter()->createUrl($urlParams, true) . '#user_' . (isset($params['user']) ? $params['user']['ID'] : '');
 }
 

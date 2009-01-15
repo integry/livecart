@@ -78,7 +78,29 @@ class ReportController extends StoreManagementController
 				$report->setYLegend($this->translate('_ratio_percent') . ' (%)');
 				$report->getUnpaidRatio();
 				break;
+		}
 
+		$response = $this->getChartResponse($report);
+		$response->set('type', $type);
+		return $response;
+	}
+
+	public function bestsellers()
+	{
+		$report = new BestsellerReport();
+		$this->initReport($report);
+
+		$type = $this->getOption('bestsellers', 'number_items');
+
+		switch ($type)
+		{
+			case 'number_items':
+				$report->getBestsellersByCount();
+				break;
+			case 'total_items':
+				$report->getBestsellersByTotal();
+				$this->locale->translationManager()->setDefinition('_cnt', $this->translate('_total_amount') . ' (' . $this->application->getDefaultCurrencyCode() . ')');
+				break;
 		}
 
 		$response = $this->getChartResponse($report);
@@ -101,6 +123,10 @@ class ReportController extends StoreManagementController
 				break;
 			case 'countries':
 				$report->getCountries();
+				break;
+			case 'top_cust':
+				$this->locale->translationManager()->setDefinition('_cnt', $this->translate('_total_amount') . ' (' . $this->application->getDefaultCurrencyCode() . ')');
+				$report->getTopCustomers();
 				break;
 		}
 
@@ -141,7 +167,14 @@ class ReportController extends StoreManagementController
 	private function getChartResponse(Report $report)
 	{
 		$response = new ActionResponse();
-		$response->set('chart', $report->getChartDataString());
+		if (Report::TABLE != $report->getChartType())
+		{
+			$response->set('chart', $report->getChartDataString());
+		}
+		else
+		{
+			$response->set('reportData', $report->getValues());
+		}
 		$response->set('chartType', $report->getChartType());
 		return $response;
 	}

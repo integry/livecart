@@ -172,6 +172,18 @@ class ProductSet extends ARSet
 			$product =& $index[$value['productID']];
 			$product['variationTypes'][] = $value['ProductVariation'];
 		}
+
+		foreach ($array as &$product)
+		{
+			if (isset($product['variationTypes']))
+			{
+				$product['variationValues'] = array();
+				foreach ($product['variationTypes'] as $type)
+				{
+					$product['variationValues'][] = $type['name_lang'];
+				}
+			}
+		}
 	}
 
 	public static function loadChildrenForProductArray(&$array)

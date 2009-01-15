@@ -12,6 +12,11 @@
  */
 function smarty_function_backendProductUrl($params, LiveCartSmarty $smarty)
 {
+	if (!isset($params['product']) && isset($params['id']))
+	{
+		$params['product'] = array('ID' => $params['id']);
+	}
+
 	$product = $params['product'];
 
 	$urlParams = array('controller' => 'backend.category',

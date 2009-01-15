@@ -49,6 +49,42 @@ class CustomerReport extends Report
 		}
 	}
 
+	public function getTopCustomers()
+	{
+		$this->setChartType(self::TABLE);
+		$q = $this->getQuery('ROUND(SUM(CustomerOrder.totalAmount * ' . $this->getCurrencyMultiplier() . '), 2)');
+
+		$f = $q->getFilter();
+		$f->resetOrder();
+		$f->resetGrouping();
+		$f->setOrder(new ARExpressionHandle('cnt'), 'DESC');
+		$q->addField('userID');
+		$f->setGrouping(new ARExpressionHandle('userID'));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), 0));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isPaid'), 1));
+		$f->setLimit(self::TABLE_LIMIT);
+		$q->joinTable('CustomerOrder', 'User', 'userID', 'ID');
+
+		$this->getReportData($q);
+
+		$ids = array();
+		foreach ($this->values as $product)
+		{
+			$ids[$product['userID']] = $product['cnt'];
+		}
+
+		// fetch user details
+		$fields = array_flip(array('fullName', 'cnt'));
+		foreach (ActiveRecordModel::getRecordSetArray('User', new ARSelectFilter(new INCond(new ARFieldHandle('User', 'ID'), array_keys($ids)))) as $user)
+		{
+			$user['cnt'] = $ids[$user['ID']];
+			$ids[$user['ID']] = array_merge($fields, array_intersect_key($user, $fields));
+		}
+
+		$this->values = $ids;
+	}
+
 	public function getOrderedItemCounts()
 	{
 		$q = $this->getQuery('COUNT(OrderedItem.ID)');

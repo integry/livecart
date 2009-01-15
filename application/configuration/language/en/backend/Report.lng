@@ -35,8 +35,18 @@ _statuses=Order Status
 _cancelled_ratio=Cancelled Order Ratio
 _unpaid_ratio=Unpaid Order Ratio
 
+# Bestsellers
+_num_items=By Number of Products
+_item_totals=By Product Total Price
+_name=Product Name
+_cnt=Count
+_total_amount=Total Amount
+
 # Customers
 _registrations=User Registrations
+_countries=Countries
+_top_customers=Top Customers
+_fullName=Customer Name
 
 # Conversion
 _conversion_ratio=Cart Conversion Ratio

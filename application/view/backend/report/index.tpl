@@ -26,9 +26,11 @@
 			<li id="menuCustomers">
 				<a href="{link controller=backend.report action=customers}">{t _customers}</a>
 			</li>
+			{*
 			<li id="menuPages">
 				<a href="{link controller=backend.report action=pages}">{t _pages}</a>
 			</li>
+			*}
 		</ul>
 
 	</div>

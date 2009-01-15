@@ -22,6 +22,9 @@ abstract class Report
 	const LINE = 0;
 	const BAR = 1;
 	const PIE = 2;
+	const TABLE = 101;
+
+	const TABLE_LIMIT = 50;
 
 	protected abstract function getMainTable();
 
@@ -74,6 +77,11 @@ abstract class Report
 		$this->chart->set_y_legend($leg);
 	}
 
+	public function getValues()
+	{
+		return $this->values;
+	}
+
 	protected function getChartInstance()
 	{
 		$types = array(self::LINE => 'line_dot', self::BAR => 'bar', self::PIE => 'pie');
@@ -88,7 +96,19 @@ abstract class Report
 	protected function getReportData(ARSelectQueryBuilder $q)
 	{
 		$data = ActiveRecord::getDataByQuery($q);
-		$this->values = (self::PIE == $this->chartType) ? $this->getPieChartData($data) : $this->getLineChartData($data);
+
+		if (self::TABLE == $this->chartType)
+		{
+			$this->values = $data;
+		}
+		else if (self::PIE == $this->chartType)
+		{
+			$this->values = $this->getPieChartData($data);
+		}
+		else
+		{
+			$this->values = $this->getLineChartData($data);
+		}
 	}
 
 	protected function getQuery($countSql = null)
@@ -100,7 +120,7 @@ abstract class Report
 		$q->setFilter($f);
 
 		$this->setDateCondition($f, $this->getDateHandle());
-		$this->prepareDateQuery($this->getDateHandle()->getField()->getName(), $this->interval, $q);
+		$this->prepareDateQuery($this->getDateHandle()->toString(), $this->interval, $q);
 
 		if ($countSql)
 		{
