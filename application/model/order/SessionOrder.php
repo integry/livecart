@@ -86,9 +86,13 @@ class SessionOrder
 		$session = new Session();
 		$session->set('CustomerOrder', $order->getID());
 
-		$orderArray = $order->toArray();
-		$orderData = array_intersect_key($orderArray, array_flip(array('total', 'formattedTotal', 'basketCount')));
-		$orderData['currencyID'] = $orderArray['Currency']['ID'];
+		$currency = $order->currency->get();
+		$currID = $currency->getID();
+		$orderArray = array('total' => array($currID => $order->getTotal($currency)));
+		$orderArray['formattedTotal'] = array($currID => $currency->getFormattedPrice($orderArray['total'][$currID]));
+		$orderArray['basketCount'] = $order->getShoppingCartItemCount();
+		$orderData['currencyID'] = $currID;
+
 		$session->set('orderData', $orderData);
 	}
 

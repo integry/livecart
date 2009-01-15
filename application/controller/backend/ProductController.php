@@ -382,6 +382,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 		// child products
 		$columns['Product.parentID'] = array('name' => $this->translate('Product.parentID'), 'type' => 'numeric');
+		$columns['Parent.sku'] = array('name' => $this->translate('Parent.sku'), 'type' => 'string');
 		for ($k = 0; $k <= 4; $k++)
 		{
 			$columns['variationTypes.' . $k . '.name'] = array('name' => $this->translate('ProductVariationType.name') . ' (' . ($k + 1) . ')', 'type' => 'string');

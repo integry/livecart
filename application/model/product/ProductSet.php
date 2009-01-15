@@ -199,6 +199,7 @@ class ProductSet extends ARSet
 		foreach ($products as $product)
 		{
 			$parent =& $index[$product['parentID']];
+			$product['Parent'] =& $parent;
 			$parent['children'][] = $product;
 		}
 	}

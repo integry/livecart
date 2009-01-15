@@ -77,6 +77,8 @@ Product.parentID=Parent product ID
 Product.reviewCount=Review count
 Product.fractionalStep=Quantity increment
 Product.position=Sort order
+Product.pageTitle=Page title
+Parent.sku=Parent SKU
 ProductPrice.GroupPrice=User group price
 ProductVariationType.name=Variation
 

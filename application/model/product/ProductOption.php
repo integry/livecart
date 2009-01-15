@@ -200,7 +200,7 @@ class ProductOption extends MultilingualObject
 		{
 			foreach ($options as $index => $option)
 			{
-				if ($option->product->get() && (($option->product->get()->getID() == $product->getID()) || ($option->product->get()->getID() == $product->parent->get()->getID())))
+				if ($option->product->get() && (($option->product->get()->getID() == $product->getID()) || ($product->parent->get() && ($option->product->get()->getID() == $product->parent->get()->getID()))))
 				{
 					$sorted[$product->getID()][] = $option;
 				}

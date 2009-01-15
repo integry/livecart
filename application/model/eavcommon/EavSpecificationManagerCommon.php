@@ -424,8 +424,8 @@ abstract class EavSpecificationManagerCommon
 		$selectors = EavFieldCommon::getSelectorValueTypes();
 		foreach ($specFields as $key => $field)
 		{
-		  	if (in_array($field->type->get(), $selectors))
-		  	{
+			if (in_array($field->type->get(), $selectors))
+			{
 				$values = $field->getValuesSet()->toArray();
 				$specFieldArray[$key]['values'] = array('' => '');
 				foreach ($values as $value)

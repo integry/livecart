@@ -41,6 +41,7 @@ class EavObject extends ActiveRecordModel
 
 		if ($parent->eavObject->get())
 		{
+			$parent->eavObject->get()->classID->set(EavField::getClassID(get_class($parent)));
 			return $parent->eavObject->get();
 		}
 		else
