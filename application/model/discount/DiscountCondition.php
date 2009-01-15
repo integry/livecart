@@ -27,7 +27,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 
 	private $records = array();
 
-	private $subConditions = array();
+	private $subConditions = null;
 
 	/**
 	 * Define database schema for Category model
@@ -86,9 +86,14 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 	public function isProductMatching(Product $product)
 	{
 		// no records defined
-		if (!$this->recordCount->get())
+		if (!$this->recordCount->get() && !$this->hasSubConditions())
 		{
 			return true;
+		}
+
+		if ($this->recordCount->get() && !$this->records)
+		{
+			$this->loadAll();
 		}
 
 		$isMatching = false;
@@ -107,10 +112,9 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 
 		if ($this->hasSubConditions())
 		{
-			foreach ($this->subConditions as $subCondition)
+			foreach ($this->getSubConditions() as $subCondition)
 			{
 				$isMatching = $subCondition->isProductMatching($product);
-
 				if (!$isMatching && $this->isAllSubconditions->get())
 				{
 					return false;
@@ -253,6 +257,17 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		}
 
 		return $subConditions;
+	}
+
+	public function getSubConditions()
+	{
+		if (is_null($this->subConditions))
+		{
+			$this->subConditions = array();
+			self::loadSubConditions($this->initSet());
+		}
+
+		return $this->subConditions;
 	}
 
 	private static function hasAllSubConditions(array $condition)
