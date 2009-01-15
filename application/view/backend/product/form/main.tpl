@@ -68,6 +68,13 @@
 		</fieldset>
 	</p>
 	<p>
+		<label for="product_{$cat}_{$product.ID}_pageTitle" class="acronym"><a>{t _pageTitle}<div>{t _hint_pageTitle}</div></a>:</label>
+		<fieldset class="error">
+			{textfield name="pageTitle" class="wide" id="product_`$cat`_`$product.ID`_pageTitle" autocomplete="controller=backend.product field=pageTitle"}
+			<div class="errorText hidden"></div>
+		</fieldset>
+	</p>
+	<p>
 		<label for="product_{$cat}_{$product.ID}_position" class="acronym"><a>{t _sort_order}<div>{t _hint_sort_order}</div></a>:</label>
 		<fieldset class="error">
 			{textfield name="position" class="number" id="product_`$cat`_`$product.ID`_position"}

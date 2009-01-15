@@ -15,6 +15,10 @@
 			{textarea class="longDescr tinyMCE" name="longDescription_`$lang.ID`" id="product_`$cat`_`$product.ID`_longdes_`$lang.ID`"}
 		</div>
 	</p>
+	<p>
+		<label for="product_{$cat}_{$product.ID}_pageTitle_{$lang.ID}">{t _pageTitle}:</label>
+		{textfield name="pageTitle_`$lang.ID`" class="wide" id="product_`$cat`_`$product.ID`_pageTitle_`$lang.ID`"}
+	</p>
 
 	{if $multiLingualSpecFieldss}
 	<fieldset>

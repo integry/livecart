@@ -71,6 +71,7 @@ class Product extends MultilingualObject
 		$schema->registerField(new ARField("shortDescription", ARArray::instance()));
 		$schema->registerField(new ARField("longDescription", ARArray::instance()));
 		$schema->registerField(new ARField("keywords", ARText::instance()));
+		$schema->registerField(new ARField("pageTitle", ARArray::instance()));
 
 		$schema->registerField(new ARField("dateCreated", ARDateTime::instance()));
 		$schema->registerField(new ARField("dateUpdated", ARDateTime::instance()));

@@ -1,4 +1,4 @@
-{pageTitle}{$category.name_lang}{/pageTitle}
+{pageTitle}{$category.pageTitle_lang|default:$category.name_lang}{/pageTitle}
 {assign var="metaDescription" value=$category.description_lang}
 {assign var="metaKeywords" value=$category.keywords_lang}
 

@@ -21,6 +21,11 @@
 			{textarea name="keywords" id="keywords_$categoryId" class="categoryKeywords"}
 		</p>
 
+		<p>
+			<label for="pageTitle_{$categoryId}" class="acronym"><a>{t _pageTitle}<div>{t _hint_pageTitle}</div></a>:</label>
+			{textfield name="pageTitle" id="pageTitle_$categoryId" class="wide"}
+		</p>
+
 		{include file="backend/eav/fields.tpl" item=$category}
 
 		<fieldset>
@@ -54,6 +59,10 @@
 			<p>
 				<label>{t _keywords}:</label>
 				{textarea name="keywords_`$lang.ID`" class="categoryKeywords"}
+			</p>
+			<p>
+				<label>{t _pageTitle}:</label>
+				{textfield name="pageTitle_`$lang.ID`" class="wide"}
 			</p>
 
 			{include file="backend/eav/language.tpl" item=$category language=$lang.ID}

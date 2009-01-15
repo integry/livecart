@@ -157,6 +157,7 @@ _category_name=Category name
 _category_handle=Handle
 _descr=Description
 _keywords=Keywords
+_pageTitle=Page title
 _save=Save
 _cancel=Cancel
 _active=Enabled (visible)
@@ -164,3 +165,5 @@ _active=Enabled (visible)
 _presentation=Presentation
 _theme=Design theme
 _theme_subcategories=Apply for sub-categories
+
+_hint_pageTitle=Display different page title than category name for SEO purposes
