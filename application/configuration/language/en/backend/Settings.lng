@@ -54,6 +54,7 @@ DISPLAY_NUM_CAT=Display the number of products per category
 DISPLAY_NUM_FILTER=Display the number of products per filter
 DISPLAY_PRICES=Display product prices
 INCLUDE_SUBCATEGORY_PRODUCTS=Include sub-category products
+DISPLAY_CATEGORY_DESC=Display category description
 
 _product_list_layout=Product List Layout
 LIST_LAYOUT=Default list layout

@@ -84,4 +84,5 @@
 <script type="text/javascript">
 {/literal}
 	new Backend.ThemePreview($('categoryThemePreview_{$categoryId}'), $('theme_{$categoryId}'));
+	ActiveForm.prototype.initTinyMceFields("categoryForm_{$categoryId}");
 </script>

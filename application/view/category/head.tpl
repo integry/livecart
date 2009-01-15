@@ -19,3 +19,9 @@
 {else}
 	<h1>{$category.name_lang}{if $searchQuery} &gt;&gt; "<span class="keywords">{$searchQuery}</span>"{/if}</h1>
 {/if}
+
+{if 'DISPLAY_CATEGORY_DESC'|config && $category.description_lang}
+	<div class="descr categoryDescr">
+		{$category.description_lang}
+	</div>
+{/if}
