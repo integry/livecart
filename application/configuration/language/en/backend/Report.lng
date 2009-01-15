@@ -52,3 +52,6 @@ _fullName=Customer Name
 _conversion_ratio=Cart Conversion Ratio
 _checkout_steps=Completed Checkout Steps
 _carts_created=New Carts Created
+
+# Search
+_keywords=Keywords

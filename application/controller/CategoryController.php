@@ -11,6 +11,7 @@ ClassLoader::import('application.model.product.ProductFilter');
 ClassLoader::import('application.model.product.ProductCount');
 ClassLoader::import('application.model.product.ProductPrice');
 ClassLoader::import('application.model.category.SpecFieldValue');
+ClassLoader::import('application.model.category.SearchLog');
 
 /**
  * Index controller for frontend
@@ -63,7 +64,8 @@ class CategoryController extends FrontendController
 		$query = $this->request->get('q');
 		if ($query)
 	  	{
-			$this->filters[] = new SearchFilter($query);
+			$searchFilter = new SearchFilter($query);
+			$this->filters[] = $searchFilter;
 
 			// search by category names
 			$f = new ARSelectFilter();
@@ -78,6 +80,8 @@ class CategoryController extends FrontendController
 			{
 				$category->getPathNodeSet();
 			}
+
+			$this->logSearchQuery($searchFilter->getCleanedQuery($query));
 		}
 
 		// sorting
@@ -894,6 +898,21 @@ class CategoryController extends FrontendController
 		return $this->request->get('layout') && $this->config->get('ALLOW_SWITCH_LAYOUT') ?
 						('grid' == $this->request->get('layout') ? 'GRID' : 'LIST') :
 						$this->config->get('LIST_LAYOUT');
+	}
+
+	private function logSearchQuery($query)
+	{
+		$query = strtolower($query);
+		$searchLog = $this->session->get('searchLog', array());
+		if (!isset($searchLog[$query]))
+		{
+			$log = SearchLog::getNewInstance($query);
+			$log->ip->set($this->request->getIPLong());
+			$log->save();
+
+			$searchLog[$query] = true;
+			$this->session->set('searchLog', $searchLog);
+		}
 	}
 }
 

@@ -20,11 +20,11 @@
 			<li id="menuCarts">
 				<a href="{link controller=backend.report action=conversion}">{t _conversion}</a>
 			</li>
-			<li id="menuSearch">
-				<a href="{link controller=backend.report action=search}">{t _search}</a>
-			</li>
 			<li id="menuCustomers">
 				<a href="{link controller=backend.report action=customers}">{t _customers}</a>
+			</li>
+			<li id="menuSearch">
+				<a href="{link controller=backend.report action=search}">{t _search}</a>
 			</li>
 			{*
 			<li id="menuPages">

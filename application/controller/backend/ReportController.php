@@ -164,6 +164,25 @@ class ReportController extends StoreManagementController
 		return $response;
 	}
 
+	public function search()
+	{
+		$report = new SearchReport();
+		$this->initReport($report);
+
+		$type = $this->getOption('search', 'top');
+
+		switch ($type)
+		{
+			case 'top':
+				$report->getTopSearches();
+				break;
+		}
+
+		$response = $this->getChartResponse($report);
+		$response->set('type', $type);
+		return $response;
+	}
+
 	private function getChartResponse(Report $report)
 	{
 		$response = new ActionResponse();
