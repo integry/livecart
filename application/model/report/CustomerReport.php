@@ -51,6 +51,7 @@ class CustomerReport extends Report
 
 	public function getTopCustomers()
 	{
+		$this->setDateHandle(new ARFieldHandle('CustomerOrder', 'dateCompleted'));
 		$this->setChartType(self::TABLE);
 		$q = $this->getQuery('ROUND(SUM(CustomerOrder.totalAmount * ' . $this->getCurrencyMultiplier() . '), 2)');
 

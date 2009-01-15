@@ -19,6 +19,8 @@ abstract class Report
 
 	protected $chart;
 
+	private $dateHandle;
+
 	const LINE = 0;
 	const BAR = 1;
 	const PIE = 2;
@@ -58,6 +60,11 @@ abstract class Report
 	public function setInterval($interval)
 	{
 		$this->interval = $interval;
+	}
+
+	public function setDateHandle(ARFieldHandleInterface $handle)
+	{
+		$this->dateHandle = $handle;
 	}
 
 	public function setChartType($type)
@@ -119,8 +126,9 @@ abstract class Report
 		$f = new ARSelectFilter();
 		$q->setFilter($f);
 
-		$this->setDateCondition($f, $this->getDateHandle());
-		$this->prepareDateQuery($this->getDateHandle()->toString(), $this->interval, $q);
+		$dateHandle = $this->dateHandle ? $this->dateHandle : $this->getDateHandle();
+		$this->setDateCondition($f, $dateHandle);
+		$this->prepareDateQuery($dateHandle->toString(), $this->interval, $q);
 
 		if ($countSql)
 		{
