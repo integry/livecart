@@ -492,11 +492,15 @@ CssCustomize.prototype =
 		}
 	},
 
-	showMessage: function(msg)
+	showMessage: function(msg, noHide)
 	{
 		this.msgContainer.innerHTML = msg;
 		this.msgContainer.show();
-		window.setTimeout(function() { this.hideMessage(msg); }.bind(this), 5000);
+
+		if (!noHide)
+		{
+			window.setTimeout(function() { this.hideMessage(msg); }.bind(this), 5000);
+		}
 	},
 
 	hideMessage: function(msg)

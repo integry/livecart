@@ -65,5 +65,8 @@
 		cust.errTextMsg = '{t _css_err_text|escape}';
 		cust.ruleAddedMsg = '{t _css_rule_added|escape}';
 		cust.savedMsg = '{t _css_saved|escape}';
+		cust.firebugMsg = '{maketext text="_css_firebug" params='<a href="http://getfirebug.com" target="_blank">Firebug</a>'}';
+
+		cust.showMessage(cust.firebugMsg, true);
 	</script>
 {/if}

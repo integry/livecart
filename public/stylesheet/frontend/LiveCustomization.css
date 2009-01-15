@@ -38,6 +38,12 @@ body
 	border: 1px solid #444;
 }
 
+#customizeMsg a
+{
+	color: white;
+	font-weight: bold;
+}
+
 .templateLocator.activeTpl #customizeMenu
 {
 	margin-top: -32px;
