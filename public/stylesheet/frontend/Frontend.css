@@ -27,11 +27,20 @@ caption, th, td
 }
 
 .descr li,
+.newsEntry li,
 #productDescription li,
 .message li
 {
 	list-style-type: disc;
 	margin-left: 1.5em;
+}
+
+.descr ol li,
+.newsEntry ol li,
+#productDescription ol li,
+.message ol li
+{
+	list-style-type: decimal;
 }
 
 /* 100% height layout start >> */
