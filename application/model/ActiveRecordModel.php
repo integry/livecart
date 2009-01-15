@@ -184,19 +184,6 @@ abstract class ActiveRecordModel extends ActiveRecord
 		return $res;
 	}
 
-	public function updateTimeStamp()
-	{
-		$args = func_get_args();
-		$update = new ARUpdateFilter();
-
-		foreach ($args as $field)
-		{
-			$update->addModifier($field, new ARExpressionHandle('NOW()'));
-		}
-
-		return $this->updateRecord($update);
-	}
-
 	protected static function transformArray($array, ARSchema $schema)
 	{
 		$schemaName = $schema->getName();
@@ -386,9 +373,13 @@ abstract class ActiveRecordModel extends ActiveRecord
 	{
 		parent::__clone();
 
-		if (($this instanceof EavAble) && $this->specificationInstance)
+		if (count($this->getSchema()->getPrimaryKeyList()) == 1)
 		{
 			$this->setID(null);
+		}
+
+		if (($this instanceof EavAble) && $this->specificationInstance)
+		{
 			$this->eavObject->set(null);
 			$this->specificationInstance = clone $this->specificationInstance;
 			$this->specificationInstance->setOwner(EavObject::getInstance($this));

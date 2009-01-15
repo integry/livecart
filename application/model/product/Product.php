@@ -595,14 +595,15 @@ class Product extends MultilingualObject
 
 		try
 		{
+			$this->dateCreated->set(new ARSerializableDateTime());
+			$this->dateUpdated->set(new ARSerializableDateTime());
+
 			parent::insert();
 
 			if ($this->category->get())
 			{
 				$this->updateCategoryCounters($this->getCountUpdateFilter(), $this->category->get());
 			}
-
-			$this->updateTimeStamp('dateCreated', 'dateUpdated');
 
 			ActiveRecordModel::commit();
 		}
@@ -1322,8 +1323,9 @@ class Product extends MultilingualObject
 	{
 		parent::__clone();
 
-		$this->loadSpecification();
-		$this->specificationInstance = clone $this->specificationInstance;
+		$original = $this->originalRecord;
+		$original->loadSpecification();
+		$this->specificationInstance = clone $original->getSpecification();
 		$this->specificationInstance->setOwner($this);
 
 		$this->loadPricing();

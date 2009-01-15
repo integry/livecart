@@ -66,8 +66,8 @@ class ProductRating extends ActiveRecordModel
 	{
 		self::beginTransaction();
 
+		$this->dateCreated->set(new ARSerializableDateTime());
 		parent::insert();
-		$this->updateTimeStamp('dateCreated');
 
 		$summary = ProductRatingSummary::getInstance($this->product->get(), $this->ratingType->get());
 		$summary->save();

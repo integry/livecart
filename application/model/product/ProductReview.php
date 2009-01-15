@@ -66,9 +66,8 @@ class ProductReview extends ActiveRecordModel
 	protected function insert()
 	{
 		$this->updateProductCounter();
-		$res = parent::insert();
-		$this->updateTimeStamp('dateCreated');
-		return $res;
+		$this->dateCreated->set(new ARSerializableDateTime());
+		return parent::insert();
 	}
 
 	private function updateProductCounter($increase = true)
