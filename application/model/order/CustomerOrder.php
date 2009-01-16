@@ -1572,7 +1572,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	{
 		if (!$this->shipments || !$this->shipments->size())
 		{
-			if ($this->isFinalized->get() || $this->isMultiAddress->get())
+			if ($this->getID() && ($this->isFinalized->get() || $this->isMultiAddress->get()))
 			{
 				$this->loadItems();
 
@@ -1841,6 +1841,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	{
 		parent::__clone();
 
+		$this->isFinalized->set(false);
+		$this->isPaid->set(false);
+		$this->isCancelled->set(false);
+		$this->dateCompleted->set(null);
+
 		$original = $this->originalRecord;
 
 		$this->shipments = new ARSet();
@@ -1850,22 +1855,35 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		{
 			$cloned = clone $shipment;
 			$cloned->order->set($this);
-			$this->addShipment($cloned);
+
+			foreach ($cloned->getItems() as $item)
+			{
+				$this->addItem($item);
+			}
+
+			if ($this->isMultiAddress->get())
+			{
+				$this->addShipment($cloned);
+			}
 		}
 
-		$this->save();
-		foreach ($this->getShipments() as $shipment)
+		if ($this->isMultiAddress->get())
 		{
-			if ($shipment->shippingAddress->get())
-			{
-				$shipment->shippingAddress->set($this->getClonedAddress($shipment->shippingAddress->get(), false));
-			}
-			$shipment->save();
+			$this->save();
 
-			foreach ($shipment->getItems() as $item)
+			foreach ($this->getShipments() as $shipment)
 			{
-				$item->shipment->set($shipment);
-				$item->save();
+				if ($shipment->shippingAddress->get())
+				{
+					$shipment->shippingAddress->set($this->getClonedAddress($shipment->shippingAddress->get(), false));
+				}
+				$shipment->save();
+
+				foreach ($shipment->getItems() as $item)
+				{
+					$item->shipment->set($shipment);
+					$item->save();
+				}
 			}
 		}
 
@@ -1879,13 +1897,6 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		{
 			$this->shippingAddress->set($this->getClonedAddress($this->shippingAddress->get(), false));
 		}
-
-		$this->save();
-
-		$this->isFinalized->set(false);
-		$this->isPaid->set(false);
-		$this->isCancelled->set(false);
-		$this->dateCompleted->set(null);
 
 		$this->save();
 	}

@@ -412,7 +412,7 @@ class Shipment extends ActiveRecordModel
 		// total taxes
 		if ($calculateTax)
 		{
-			if ($this->isLoaded())
+			if ($this->getID())
 			{
 				$this->deleteRelatedRecordSet('ShipmentTax');
 				$this->taxes = null;
