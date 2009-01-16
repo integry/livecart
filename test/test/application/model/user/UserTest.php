@@ -89,7 +89,7 @@ class UserTest extends UnitTest
 		$user->save();
 
 		ActiveRecordModel::clearPool();
-		$reloaded = User::getInstanceByID($user->getID());
+		$reloaded = User::getInstanceByID($user->getID(), true);
 		$this->assertNotSame($user, $reloaded);
 		$this->assertEqual($reloaded->getPreference('test'), 'value');
 		$this->assertEqual($reloaded->getPreference('another'), 'check');

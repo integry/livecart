@@ -1,0 +1,59 @@
+New major features:
+* CSS styling can be edited and saved directly from Firebug, which allows to build CSS styling in real-time WYSIWYG mode
+* 20 customizable store activity reports and charts: sales activity, conversion analysis, best-selling item report, customer data analysis and top search query reports
+* Revamped backend area design
+* HTML e-mail support
+* Improved Live Customization mode interface to allow easy switching between customization tools
+
+New translations:
+* Thai
+
+General improvements:
+* Substantial general performance improvements
+* Added ability to assign custom fields to customer addresses
+
+E-mail improvements:
+* All messages can be sent as HTML as well as plain text
+* Separate message body template fields for HTML and plain text message versions
+* HTML e-mail message CSS styling can be edited from CSS editor
+* Message blocks (product tables, etc.) are now editable from backend
+
+Frontend improvements:
+* Added checkout configuration option to skip payment method selection if only one external payment method is available, and redirect to it automatically
+* Added configuration option for including products from subcategories in the category product list
+* Added ability to set different page titles for product and category pages by overriding their names to improve SEO
+* Added configuration option for displaying category descriptions in store pages
+* Useful improvement for multi-language stores - customer's language is now being recorded and system emails are sent in customer's prefered language instead of system's default language or administrator's current language
+
+Backend improvements:
+* Notification e-mail messages can now be sent to multiple e-mail addresses, by separating them with comma when entering in LiveCart settings
+* Order, user and manufacturer data grids in backend now have columns for custom field data, which are also sortable and filterable (with the exception of multiple select value fields)
+* Order list grid now contains columns for shipping address fields as well (country, state, city, street address, etc.)
+* Detailed product export now exports parent product SKU for product variations, making it possible to import the resulting CSV file
+* Category description input field is now formattable
+* It is possible to change ordered product variation from backend
+* Added recipient first and last name columns to order grid
+
+System fixes:
+* Applying a pricing rule discount action to matched items only did not work properly, as it applied the action to all items in the order instead
+* Fixed gzip encoding issues when gzip encoding was forced from php.ini
+* Large images couldn't be uploaded if the PHP memory_limit setting value was too low
+
+Frontend fixes:
+* Order confirmation emails were not sent to customer if the payment was made using Paypal Website Payments Standard or 2CheckOut
+* Fixed a potential duplicate content issue with multilanguage stores - the category and product names used in URL's are now always taken from the language of the target URL, instead of using the name of the currently active language in URL's for all languages (this mostly applies to language switch menu)
+* Reorder functionality had various quirks
+* Fixed minor presentation problems with unordered and ordered lists in product descriptions and site news posts
+* In case there were multiple rates of the same tax applied to the same order (for example, different tax rate for shipping costs), the tax amount for each rate was displayed separately in order invoices
+* The ordered product prices that were adjusted by pricing rules are now being displayed correctly in order invoices
+
+Backend fixes:
+* Copying products sometimes did not work properly
+* Language file export did not work
+* Product bundle management did not work
+* It is now possible to add the same product with different options to order from backend as well
+* It's no longer necessary to enter shipping/billing addresses for a customer before creating a new order from backend - the address information can now be entered at any time
+* Order status change notification email messages are no longer sent if the order status doesn't actually change after changing order statuses using the mass action (for example, if an already shipped order was marked as shipped again)
+
+Module fixes:
+* First Class mail international shipping option was not available in USPS rate calculator module

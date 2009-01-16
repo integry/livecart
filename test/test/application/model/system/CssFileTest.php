@@ -26,11 +26,11 @@ class CssFileTest extends UnitTest
 
 		$css->deleteSelector('#stat table');
 		$css->save();
-		$this->assertTrue(strpos(file_get_contents($css->getPatchFile()), '#stat table') == 0);
+		$this->assertTrue(strpos(file_get_contents($css->getPatchedFilePath()), '#stat table') == 0);
 
 		$css->deleteProperty('#stat .label', 'font-weight');
 		$css->save();
-		$this->assertTrue(strpos(file_get_contents($css->getPatchFile()), 'font-weight') == 0);
+		$this->assertTrue(strpos(file_get_contents($css->getPatchedFilePath()), 'font-weight') == 0);
 
 		$css->clearPatchRules();
 	}

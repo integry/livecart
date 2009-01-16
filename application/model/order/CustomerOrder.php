@@ -242,6 +242,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		$shipment->order->set($this);
 		$shipments->add($shipment);
+
+		foreach ($shipment->getItems() as $item)
+		{
+			$this->addItem($item);
+		}
 	}
 
 	public function updateCount(OrderedItem $item, $count)
@@ -1856,20 +1861,22 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			$cloned = clone $shipment;
 			$cloned->order->set($this);
 
-			foreach ($cloned->getItems() as $item)
-			{
-				$this->addItem($item);
-			}
-
 			if ($this->isMultiAddress->get())
 			{
 				$this->addShipment($cloned);
+			}
+			else
+			{
+				foreach ($cloned->getItems() as $item)
+				{
+					$this->addItem($item);
+				}
 			}
 		}
 
 		if ($this->isMultiAddress->get())
 		{
-			$this->save();
+			$this->save(true);
 
 			foreach ($this->getShipments() as $shipment)
 			{
@@ -1877,6 +1884,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 				{
 					$shipment->shippingAddress->set($this->getClonedAddress($shipment->shippingAddress->get(), false));
 				}
+
 				$shipment->save();
 
 				foreach ($shipment->getItems() as $item)

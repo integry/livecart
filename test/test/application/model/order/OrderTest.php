@@ -807,7 +807,7 @@ class OrderTest extends OrderTestCommon
 
 		// test item prices
 		$item = array_shift($order->getItemsByProduct($this->products[0]));
-		var_dump($item->price->get());
+		//var_dump($item->price->get());
 
 
 	}
@@ -1459,8 +1459,7 @@ class OrderTest extends OrderTestCommon
 		$order->currency->get()->load();
 
 		$this->user->reload();
-		$this->user->defaultBillingAddress->get()->reload('UserAddress');
-		$this->user->defaultShippingAddress->get()->reload('UserAddress');
+		$this->user->loadAddresses();
 
 		$this->assertFalse((bool)$order->isFinalized->get());
 
@@ -1470,7 +1469,8 @@ class OrderTest extends OrderTestCommon
 
 		foreach ($order->getShipments() as $shipment)
 		{
-			$this->assertEquals($shipment->shippingAddress->get()->getID(), $this->user->defaultShippingAddress->get()->userAddress->get()->getID());
+			$this->assertEquals($shipment->shippingAddress->get()->getID(),
+								$this->user->defaultShippingAddress->get()->userAddress->get()->getID());
 		}
 
 		$this->assertEquals(2, count($order->getOrderedItems()));

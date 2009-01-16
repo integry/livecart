@@ -197,7 +197,6 @@ class Email
 	public function setUser(User $user)
 	{
 		$array = $user->toArray();
-		var_dump($array);
 		$this->locale = $user->locale->get();
 		$this->set('user', $array);
 		$this->setTo($array['email'], $array['fullName']);

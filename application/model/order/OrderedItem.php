@@ -175,6 +175,7 @@ class OrderedItem extends ActiveRecordModel
 			$multiplier = $unreserve ? -1 : 1;
 			$product->stockCount->set($product->stockCount->get() - ($this->count->get() * $multiplier));
 			$product->reservedCount->set($product->reservedCount->get() + ($this->count->get() * $multiplier));
+			$product->save();
 		}
 		else
 		{
@@ -402,7 +403,7 @@ class OrderedItem extends ActiveRecordModel
 		}
 
 		$order = $this->customerOrder->get();
-		//print_r($this->toFlatArray());
+
 		if ($shipment && $order->isFinalized->get() && !$order->isCancelled->get() && self::getApplication()->isInventoryTracking())
 		{
 			$product = $this->product->get();
@@ -411,9 +412,11 @@ class OrderedItem extends ActiveRecordModel
 			if ($this->product->isModified())
 			{
 				// unreserve original item
-				$orig = $this->product->getInitialValue();
-				$this->reserve(true, $orig);
-				$orig->save();
+				if ($orig = $this->product->getInitialValue())
+				{
+					$this->reserve(true, $orig);
+					$orig->save();
+				}
 
 				// reserve new item
 				$this->reserve();

@@ -37,6 +37,8 @@ class UserControllerTest extends LiveCartTest implements ControllerTestCase
 	{
 		parent::setUp();
 
+		ActiveRecordModel::executeUpdate('DELETE FROM EavField');
+
 		$this->controller = new UserController(self::getApplication());
 		$this->initOrder();
 		$this->controller->setOrder($this->order);

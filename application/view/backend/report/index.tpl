@@ -48,7 +48,7 @@
 				<option value="{$lastMonth}-1 | {$thisMonth}/1">{tn _last_month}</option>
 				<option value="January 1 | now">{t _this_year}</option>
 				<option value="all">{t _all_time}</option>
-				<option value="range">{tn _grid_date_range}</option>
+				{* <option value="range">{tn _grid_date_range}</option> *}
 			</select>
 		</div>
 
