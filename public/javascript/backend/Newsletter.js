@@ -144,6 +144,21 @@ Backend.Newsletter =
 		}
 	 },
 
+	initForm: function(container)
+	{
+		$A(container.getElementsByTagName('textarea')).each(function(textarea)
+		{
+			editAreaLoader.init({
+				id : textarea.id,		// textarea id
+				syntax: "html",			// syntax to be uses for highgliting
+				start_highlight: true,		// to display with highlight mode on start-up
+				allow_toggle: false,
+				allow_resize: true
+				}
+			);
+		});
+	},
+
 	setPath: function(path)
 	{
 		this.categoryPaths = path;

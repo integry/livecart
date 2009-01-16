@@ -6,6 +6,7 @@
 {includeJs file="library/rico/ricobase.js"}
 {includeJs file="library/rico/ricoLiveGrid.js"}
 {includeJs file="library/ActiveGrid.js"}
+{includeJs file="library/editarea/edit_area_full.js"}
 {includeJs file="backend/Newsletter.js"}
 
 {includeCss file="library/ActiveGrid.css"}

@@ -7,6 +7,7 @@ _loading_newsletter=Loading message
 _cancel_create_newsletter=Cancel sending a new message
 _subject=Message subject
 _text=Message text
+_html_text=HTML version text
 _save_and_continue=Save and continue
 _save_message=Save message
 _send_message=Send message

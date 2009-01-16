@@ -15,3 +15,15 @@
 		</fieldset>
 	</div>
 </p>
+
+{*
+<p>
+	<label for="newsletter_{$cat}_{$newsletter.ID}_shortdes">{t _html_text}:</label>
+	<div class="textarea">
+		<fieldset class="error">
+			{textarea id="newsletter_`$cat`_`$newsletter.ID`_html" name="html"}
+			<div class="errorText hidden"></div>
+		</fieldset>
+	</div>
+</p>
+*}

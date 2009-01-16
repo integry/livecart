@@ -26,6 +26,7 @@ class NewsletterMessage extends ActiveRecordModel
 		$schema->registerField(new ARField("time", ARDateTime::instance()));
 		$schema->registerField(new ARField("subject", ARVarchar::instance(255)));
 		$schema->registerField(new ARField("text", ARText::instance()));
+		$schema->registerField(new ARField("html", ARText::instance()));
 	}
 
 	public function getSentCount()
