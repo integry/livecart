@@ -34,6 +34,7 @@ class User extends ActiveRecordModel implements EavAble
 		$schema->registerField(new ARForeignKeyField("userGroupID", "UserGroup", "ID", "UserGroup", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
 
+		$schema->registerField(new ARField("locale", ARVarchar::instance(4)));
 		$schema->registerField(new ARField("email", ARVarchar::instance(60)));
 		$schema->registerField(new ARField("password", ARVarchar::instance(32)));
 		$schema->registerField(new ARField("firstName", ARVarchar::instance(60)));

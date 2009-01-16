@@ -27,15 +27,23 @@ class SessionUser
 		}
 		else
 		{
-			try
+			$user = User::getInstanceById($id);
+			$app = ActiveRecordModel::getApplication();
+
+			// set user's prefered locale code
+			$reqLang = $app->getRequest()->get('requestLanguage');
+			$localeCode = $reqLang ? $reqLang : $app->getLocaleCode();
+
+			if ($session->get('userLocale') != $localeCode)
 			{
-				return User::getInstanceById($id);
+				$user->load();
+				$user->locale->set($localeCode);
+				$user->save();
+
+				$session->set('userLocale', $localeCode);
 			}
-			catch (ARNotFoundException $e)
-			{
-				$session->unsetValue('User');
-				return self::getAnonymousUser();
-			}
+
+			return $user;
 		}
 	}
 

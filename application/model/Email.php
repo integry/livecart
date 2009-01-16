@@ -33,13 +33,14 @@ class Email
 
 	private $application;
 
+	private $locale;
+
 	public function __construct(LiveCart $application)
 	{
 		$this->application = $application;
 		$this->set('request', $application->getRequest()->toArray());
 
 		$config = $this->application->getConfig();
-		$this->application->getLocale()->translationManager()->loadFile('User');
 
 		if ('SMTP' == $config->get('EMAIL_METHOD'))
 		{
@@ -157,7 +158,7 @@ class Email
 	{
 		if (!file_exists($templateFile))
 		{
-			$locale = $this->application->getLocale()->getLocaleCode();
+			$locale = $this->getLocale();
 
 			// find the email template file
 			$paths = array(
@@ -196,14 +197,27 @@ class Email
 	public function setUser(User $user)
 	{
 		$array = $user->toArray();
+		var_dump($array);
+		$this->locale = $user->locale->get();
 		$this->set('user', $array);
 		$this->setTo($array['email'], $array['fullName']);
+	}
+
+	public function getLocale()
+	{
+		return $this->locale ? $this->locale : $this->application->getLocaleCode();
 	}
 
 	public function send()
 	{
 		if ($this->template)
 		{
+			$originalLocale = $this->application->getLocale();
+			$emailLocale = Locale::getInstance($this->getLocale());
+			$this->application->setLocale($emailLocale);
+			$this->application->getLocale()->translationManager()->loadFile('User');
+			$this->application->loadLanguageFiles();
+
 			$smarty = $this->application->getRenderer()->getSmartyInstance();
 
 			foreach ($this->values as $key => $value)
@@ -236,6 +250,8 @@ class Email
 
 				$this->setHtml($html);
 			}
+
+			$this->application->setLocale($originalLocale);
 		}
 
 		$message = new Swift_Message($this->subject, $this->text);

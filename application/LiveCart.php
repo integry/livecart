@@ -660,6 +660,11 @@ class LiveCart extends Application
 	  	return $this->locale;
 	}
 
+	public function setLocale(Locale $locale)
+	{
+	  	$this->locale = $locale;
+	}
+
 	/**
 	 * Get config instance
 	 *
