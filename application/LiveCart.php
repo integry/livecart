@@ -193,14 +193,15 @@ class LiveCart extends Application
 
 		$routeCache = ClassLoader::getRealPath('cache.') . 'routes.php';
 
+/*
 		if (file_exists($routeCache))
 		{
 			$this->router->loadRoutes(include $routeCache);
 		}
 		else
 		{
-			include ClassLoader::getRealPath('application.configuration.route.backend') . '.php';
-		}
+*/
+		include ClassLoader::getRealPath('application.configuration.route.backend') . '.php';
 	}
 
 	public function setDevMode($devMode = true)

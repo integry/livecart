@@ -115,11 +115,15 @@ cp -r $MAIN/update/$VERSION /tmp/update/update/$VERSION
 
 cd $MAIN/update
 cp readme.txt /tmp/update/update/$VERSION
+cp readme.txt /tmp/update/
+
+cd $MAIN
+cp -r --parents license.txt application/controller/backend/SettingsController.php /tmp/update
 
 # create update package files
 cd /tmp/update
 FROMVERSION=`head /tmp/update/update/$VERSION/from.version`
-makePackages $PACKAGE/livecart-update-$FROMVERSION-to-$VERSION.tar
+makePackages $PACKAGE/livecart-update-$FROMVERSION-to-$VERSION
 
 rm -rf /tmp/update
 
