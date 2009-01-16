@@ -2,9 +2,9 @@
 Kedves {$user.fullName},
 
 {if $order.shipments|@count == 1}
-Rendelésed #{$order.ID} státusza megváltozott.
+Rendelésed <b class="orderID">#{$order.ID}</b> státusza megváltozott.
 {else}
-Rendelésed #{$order.ID}státusza egy vagy több szállítmányt illetően megváltozott.
+Rendelésed <b class="orderID">#{$order.ID}</b>státusza egy vagy több szállítmányt illetően megváltozott.
 {/if}
 
 Ha bármilyen kérdésed van a rendeléssel kapcsolatosan, azt felteheted az alábbi oldalon:

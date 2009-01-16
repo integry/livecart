@@ -1,7 +1,7 @@
 {'STORE_NAME'|config} Order Confirmation
 Gerbiama(-s) {$user.fullName},
 
-Dėkojame už Jūsų užsakymą iš {'STORE_NAME'|config}. Jei Jums reikia su mumis susisiekti, prašome naudoti šį užsakymo ID: #{$order.ID}.
+Dėkojame už Jūsų užsakymą iš {'STORE_NAME'|config}. Jei Jums reikia su mumis susisiekti, prašome naudoti šį užsakymo ID: <b class="orderID">#{$order.ID}</b>.
 
 Jūs galite sekti savo užsakymo būseną šiame puslapyje:
 {link controller=user action=viewOrder id=$order.ID url=true}

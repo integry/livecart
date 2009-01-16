@@ -1,5 +1,5 @@
 Naujo užsakymo pranešimas iš {'STORE_NAME'|config}
-Vartotojas parašė naują žinutę susijusią su užsakymu #{$order.ID}
+Vartotojas parašė naują žinutę susijusią su užsakymu <b class="orderID">#{$order.ID}</b>
 
 --------------------------------------------------
 {$message.text}

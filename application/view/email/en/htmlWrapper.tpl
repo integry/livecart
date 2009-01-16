@@ -1,0 +1,2 @@
+<style><!-- {literal}table { border-collapse: collapse; } td, th { border: 1px solid #888; } th { text-align: center; background-color: #eee; font-weight: bold;} {/literal} {$cssStyle} --></style>
+<div>{$messageHtml}<div>

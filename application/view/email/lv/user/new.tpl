@@ -3,8 +3,8 @@ Cien. {$user.fullName},
 
 Jūsu lietotāja konta pieejas informācija {'STORE_NAME'|config} ir sekojoša:
 
-E-pasts: {$user.email}
-Parole: {$user.newPassword}
+E-pasts: <b>{$user.email}</b>
+Parole: <b>{$user.newPassword}</b>
 
 No Jūsu lietotāja konta, varat sekot līdzi pasūtījuma statusam, apskatīt iepriekšējos pasūtījumus, lejupielādēt failus un nomainīt savu kontaktinformāciju.
 

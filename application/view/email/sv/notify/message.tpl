@@ -1,5 +1,5 @@
 Nytt meddelande angående order hos {'STORE_NAME'|config}
-En kund har lagt till ett nytt meddelande angående #{$order.ID}
+En kund har lagt till ett nytt meddelande angående <b class="orderID">#{$order.ID}</b>
 
 --------------------------------------------------
 {$message.text}

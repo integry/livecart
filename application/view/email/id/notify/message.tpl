@@ -1,5 +1,5 @@
 Pesan Baru Tentang Order di  {'STORE_NAME'|config}
-Seorang pelanggan mengirimkan pesan mengenai order #{$order.ID}
+Seorang pelanggan mengirimkan pesan mengenai order <b class="orderID">#{$order.ID}</b>
 
 --------------------------------------------------
 {$message.text}

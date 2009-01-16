@@ -4,7 +4,7 @@ Kjære {$user.fullName},
 {if $order.shipments|@count == 1}
 Status er oppdatert for bestillingsnr.{$order.ID}.
 {else}
-Status er oppdatert for en eller flere forsendelser av din bestillingsordre #{$order.ID}.
+Status er oppdatert for en eller flere forsendelser av din bestillingsordre <b class="orderID">#{$order.ID}</b>.
 {/if}
 
 Hvis du har spørsmål ang. denne bestillingen, kan du sende oss en mail eller kontakte oss på følgene link:

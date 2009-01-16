@@ -18,7 +18,7 @@ class CssEditorController extends StoreManagementController
 		$themes = $this->application->getRenderer()->getThemeList();
 
 		$files = array();
-		foreach (array_merge(array(''), $themes) as $theme)
+		foreach (array_merge(array(''), $themes, array('email')) as $theme)
 		{
 			$css = new EditedCssFile($theme);
 			$arr = $css->toArray();

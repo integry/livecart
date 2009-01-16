@@ -380,16 +380,16 @@ class User extends ActiveRecordModel implements EavAble
 	 */
 	public function loadAddresses()
 	{
+		$this->load();
+
 		if ($this->defaultBillingAddress->get())
 		{
 			$this->defaultBillingAddress->get()->load(array('UserAddress'));
-			$this->defaultBillingAddress->get()->userAddress->load();
 		}
 
 		if ($this->defaultShippingAddress->get())
 		{
 			$this->defaultShippingAddress->get()->load(array('UserAddress'));
-			$this->defaultShippingAddress->get()->userAddress->load();
 		}
 	}
 

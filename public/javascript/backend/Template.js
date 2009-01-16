@@ -272,14 +272,17 @@ Backend.EmailTemplateHandler.prototype =
 		this.form = form;
 		this.form.onsubmit = this.submit.bindAsEventListener(this);
 
-		editAreaLoader.init({
-			id : "body",		// textarea id
-			syntax: "html",			// syntax to be uses for highgliting
-			start_highlight: true,		// to display with highlight mode on start-up
-			allow_toggle: false,
-			allow_resize: true
-			}
-		);
+		['body', 'html'].each(function(name)
+		{
+			editAreaLoader.init({
+				id : name,		// textarea id
+				syntax: "html",			// syntax to be uses for highgliting
+				start_highlight: true,		// to display with highlight mode on start-up
+				allow_toggle: false,
+				allow_resize: true
+				}
+			);
+		});
 
 		// set cursor at the first line
 		editAreaLoader.setSelectionRange('body', 0, 0);
@@ -314,6 +317,7 @@ Backend.EmailTemplateHandler.prototype =
 	submit: function()
 	{
 		$('body').value = editAreaLoader.getValue('body');
+		$('html').value = editAreaLoader.getValue('html');
 
 		if ($('templateContent').down('.languageFormContent'))
 		{

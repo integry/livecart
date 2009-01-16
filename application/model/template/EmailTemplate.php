@@ -25,21 +25,53 @@ class EmailTemplate extends Template
 
 	protected $body;
 
+	protected $html;
+
 	public function getSubject()
 	{
 		return array_shift(explode("\n", $this->code, 2));
 	}
 
-	public function getBody()
+	private function load()
 	{
+		if (!$this->hasPlainText())
+		{
+			$this->body = $this->code;
+			$this->html = '';
+		}
+
 		if ($this->isFragment())
 		{
-			return $this->code;
+			$code = $this->code;
 		}
 		else
 		{
-			return array_pop(explode("\n", $this->code, 2));
+			$code = array_pop(explode("\n", $this->code, 2));
 		}
+
+		preg_match('/\{if \!\$html\}\s+(.*)\s+{\/if}\{\*html\*\}\s+{if \$html\}\s+(.*)\s+{\/if}\{\*html\*\}/msU', $code, $matches);
+
+		if ($matches)
+		{
+			$this->body = $matches[1];
+			$this->html = $matches[2];
+		}
+		else
+		{
+			$this->body = $code;
+		}
+	}
+
+	public function getBody()
+	{
+		$this->load();
+		return $this->body;
+	}
+
+	public function getHTML()
+	{
+		$this->load();
+		return $this->html;
 	}
 
 	public function setSubject($subj)
@@ -52,15 +84,29 @@ class EmailTemplate extends Template
 		$this->body = $body;
 	}
 
+	public function setHTML($html)
+	{
+		$this->html = $html;
+	}
+
 	public function save()
 	{
-		if ($this->isFragment())
+		if ($this->html)
 		{
-			$this->code = $this->body;
+			$body = '{if !$html}' . "\n" . $this->body . "\n" . '{/if}{*html*}' . "\n" . '{if $html}' . "\n" . $this->html . "\n" . '{/if}{*html*}';
 		}
 		else
 		{
-			$this->code = $this->subject . "\n" . $this->body;
+			$body = $this->body;
+		}
+
+		if ($this->isFragment())
+		{
+			$this->code = $body;
+		}
+		else
+		{
+			$this->code = $this->subject . "\n" . $body;
 		}
 
 		return parent::save();
@@ -71,7 +117,15 @@ class EmailTemplate extends Template
 	 */
 	public function isFragment()
 	{
-		if (preg_match('/signature\.tpl$/', $this->file))
+		if (preg_match('/(signature|htmlWrapper|block([a-zA-Z]+))\.tpl$/', $this->file))
+		{
+			return true;
+		}
+	}
+
+	public function hasPlainText()
+	{
+		if (!preg_match('/(htmlWrapper)\.tpl$/', $this->file))
 		{
 			return true;
 		}
@@ -101,16 +155,18 @@ class EmailTemplate extends Template
 
 	public function getLangTemplatePath($lang)
 	{
-		return 'email/' . $lang . '/' . substr($this->file, 9);
+		return (substr($this->file, 0, 11) == 'email/block') ? $this->file : 'email/' . $lang . '/' . substr($this->file, 9);
 	}
 
 	public function toArray()
 	{
 		$ret = parent::toArray();
 		$ret['subject'] = $this->getSubject();
-		$ret['body'] = $this->isFragment() ? $this->code : $this->getBody();
+		$ret['body'] = $this->getBody();
+		$ret['html'] = $this->getHTML();
 		$ret['bodyEncoded'] = base64_encode($ret['body']);
 		$ret['isFragment'] = $this->isFragment();
+		$ret['hasPlainText'] = $this->hasPlainText();
 		return $ret;
 	}
 }

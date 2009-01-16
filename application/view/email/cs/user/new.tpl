@@ -3,8 +3,8 @@ Vážený(á) {$user.fullName},
 
 zasíláme Vám přihlašovací údaje do našeho obchodu {'STORE_NAME'|config}:
 
-E-mail: {$user.email}
-Heslo: {$user.newPassword}
+E-mail: <b>{$user.email}</b>
+Heslo: <b>{$user.newPassword}</b>
 
 Zde můžete sledovat stav a historii Vašich objednávek, stahovat objednané soubory, měnit kontaktní údaje, atd.
 

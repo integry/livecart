@@ -82,7 +82,18 @@ class TemplateController extends StoreManagementController
 	public function email()
 	{
 		$files = Template::getTree();
+
+		$blocks = $files['email']['subs'];
+		foreach ($blocks as $key => $data)
+		{
+			if (substr($key, 0, 5) != 'block')
+			{
+				unset($blocks[$key]);
+			}
+		}
+
 		$files = $files['email']['subs']['en']['subs'];
+		$files['blocks'] = array('id' => '/', 'subs' => $blocks);
 
 		$response = new ActionResponse();
 		$response->set('categories', json_encode($files));
@@ -153,25 +164,30 @@ class TemplateController extends StoreManagementController
 		$template = $template->getLangTemplate($this->application->getDefaultLanguageCode());
 		$template->setSubject($this->request->get('subject'));
 		$template->setBody($this->request->get('body'));
+		$template->setHTML($this->request->get('html'));
 		$res = $template->save();
 
-		foreach ($this->application->getLanguageArray() as $lang)
+		if (substr($this->request->get('file'), 0, 11) != 'email/block')
 		{
-			$langTemplate = $template->getLangTemplate($lang);
+			foreach ($this->application->getLanguageArray() as $lang)
+			{
+				$langTemplate = $template->getLangTemplate($lang);
 
-			if ($this->request->get('body_' . $lang) || $this->request->get('subject_' . $lang))
-			{
-				$langTemplate->setSubject($this->request->get('subject_' . $lang, $this->request->get('subject')));
-				$langTemplate->setBody($this->request->get('body_' . $lang, $this->request->get('body')));
-				$langTemplate->save();
-			}
-			else
-			{
-				// remove language templates without content
-				$custPath = EmailTemplate::getCustomizedFilePath($langTemplate->getFileName());
-				if (file_exists($custPath))
+				if ($this->request->get('body_' . $lang) || $this->request->get('subject_' . $lang))
 				{
-					unlink($custPath);
+					$langTemplate->setSubject($this->request->get('subject_' . $lang, $this->request->get('subject')));
+					$langTemplate->setBody($this->request->get('body_' . $lang, $this->request->get('body')));
+					$langTemplate->setHTML($this->request->get('html_' . $lang));
+					$langTemplate->save();
+				}
+				else
+				{
+					// remove language templates without content
+					$custPath = EmailTemplate::getCustomizedFilePath($langTemplate->getFileName());
+					if (file_exists($custPath))
+					{
+						unlink($custPath);
+					}
 				}
 			}
 		}
@@ -209,6 +225,7 @@ class TemplateController extends StoreManagementController
 		foreach ($template->getOtherLanguages() as $lang => $temp)
 		{
 			$form->set('body_' . $lang, $temp->getBody());
+			$form->set('html_' . $lang, $temp->getHTML());
 			$form->set('subject_' . $lang, $temp->getSubject());
 		}
 

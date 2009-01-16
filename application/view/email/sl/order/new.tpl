@@ -1,7 +1,7 @@
 {'STORE_NAME'|config} Potrditev naročila
 Spoštovani/a {$user.fullName},
 
-Zahvaljujemo se vam za vaše naročilo, katero ste oddali na {'STORE_NAME'|config}. Če nas želite kontaktirati v zvezi tega naročila, prosimo vključite številko naročila #{$order.ID}.
+Zahvaljujemo se vam za vaše naročilo, katero ste oddali na {'STORE_NAME'|config}. Če nas želite kontaktirati v zvezi tega naročila, prosimo vključite številko naročila <b class="orderID">#{$order.ID}</b>.
 
 Status vašega naročila lahko spremljate na tej strani:
 {link controller=user action=viewOrder id=$order.ID url=true}

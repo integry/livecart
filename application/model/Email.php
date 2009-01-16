@@ -5,6 +5,7 @@ ClassLoader::import('library.swiftmailer.Swift', true);
 ClassLoader::import('library.swiftmailer.Swift.Connection.NativeMail', true);
 ClassLoader::import('library.swiftmailer.Swift.Connection.SMTP', true);
 ClassLoader::import('library.swiftmailer.Swift.Message', true);
+ClassLoader::import('application.model.template.EditedCssFile');
 
 /**
  * E-mail handler
@@ -29,8 +30,6 @@ class Email
 	private $from;
 
 	private $template;
-
-	private $isHtml = false;
 
 	private $application;
 
@@ -80,7 +79,47 @@ class Email
 
 	public function setText($text)
 	{
-		$this->text = $text;
+		$parts = explode('<html>', $text);
+
+		$this->text = array_shift($parts);
+		$this->text = str_replace("\r", "", $this->text);
+		$this->text = str_replace("\n\n\n", "\n\n", $this->text);
+
+		if ($html = array_shift($parts))
+		{
+			$this->setHTML($html);
+		}
+		else
+		{
+			$this->setHTML($this->text);
+		}
+
+		$this->text = strip_tags($this->text);
+	}
+
+	public function setHTML($html)
+	{
+		$lines = explode("\n", $html);
+		foreach ($lines as &$line)
+		{
+			if (ereg("[\"|'][[:alpha:]]+://", $line) === false)
+			{
+				$line = ereg_replace('([[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/])', '<a href="\\1">\\1</a>', $line);
+			}
+		}
+
+		$html = implode("\n", $lines);
+
+		// clean up whitespace between HTML tags
+		$html = preg_replace('/\>\s+\</', '><', $html);
+		$html = preg_replace('/td\>\s+/', 'td>', $html);
+
+		// reduce the number of newlines
+		$html = preg_replace('/\n{2,}/', "\n\n", $html);
+
+		$html = str_replace("\n", '<br>', $html);
+
+		$this->html = $html;
 	}
 
 	public function setFrom($email, $name)
@@ -106,12 +145,15 @@ class Email
 		$this->recipients->addBcc($email, $name);
 	}
 
-	public function setAsHtml()
+	public function setTemplate($templateFile)
 	{
-		$this->isHtml = true;
+		if ($templateFile = $this->getTemplatePath($templateFile))
+		{
+			$this->template = $templateFile;
+		}
 	}
 
-	public function setTemplate($templateFile)
+	protected function getTemplatePath($templateFile)
 	{
 		if (!file_exists($templateFile))
 		{
@@ -143,7 +185,7 @@ class Email
 			}
 		}
 
-		$this->template = $templateFile;
+		return $templateFile;
 	}
 
 	public function set($key, $value)
@@ -170,19 +212,39 @@ class Email
 			}
 
 			$router = $this->application->getRouter();
-			$html = $smarty->fetch($this->template);
+
+			$smarty->assign('html', false);
+			$text = $smarty->fetch($this->template);
+
+			$parts = explode("\n", $text, 2);
+			$this->subject = array_shift($parts);
+			$this->setText(array_shift($parts));
 
 			// fix URLs
-			$html = str_replace('&amp;', '&', $html);
+			$this->text = str_replace('&amp;', '&', $this->text);
 
-			$parts = explode("\n", $html, 2);
-			$this->subject = array_shift($parts);
-			$this->text = array_shift($parts);
+			if ($this->application->getConfig()->get('HTML_EMAIL'))
+			{
+				$smarty->assign('html', true);
+				$html = array_pop(explode("\n", $smarty->fetch($this->template), 2));
+
+				$css = new EditedCssFile('email');
+				$smarty->assign('cssStyle', str_replace("\n", ' ', $css->getCode()));
+
+				$smarty->assign('messageHtml', $html);
+				$html = $smarty->fetch($this->getTemplatePath('htmlWrapper'));
+
+				$this->setHtml($html);
+			}
 		}
 
-		$this->text = str_replace("\r", "", $this->text);
-		$this->text = str_replace("\n\n\n", "\n\n", $this->text);
 		$message = new Swift_Message($this->subject, $this->text);
+
+		if ($this->html)
+		{
+			$message->attach(new Swift_Message_Part($this->text));
+			$message->attach(new Swift_Message_Part($this->html, 'text/html'));
+		}
 
 		try
 		{

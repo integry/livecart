@@ -311,6 +311,8 @@ class CustomerOrderController extends ActiveGridController
 	{
 		if ($this->config->get('EMAIL_STATUS_UPDATE'))
 		{
+			$this->loadLanguageFile('Frontend');
+			$this->application->loadLanguageFiles();
 			$order->user->get()->load();
 			$email = new Email($this->application);
 			$email->setUser($order->user->get());

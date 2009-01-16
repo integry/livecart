@@ -1,10 +1,10 @@
 Your password at {'STORE_NAME'|config}!
 Dear {$user.fullName},
 
-Here are your customer account access information at {$config.STORE_NAME}:
+Here are your customer account access information at {'STORE_NAME'|config}:
 
-E-mail: {$user.email}
-Password: {$user.newPassword}
+E-mail: <strong><b>{$user.email}</b></strong>
+Password: <strong><b>{$user.newPassword}</b></strong>
 
 You can use this address to login into your account:
 {link controller=user action=login url=true}

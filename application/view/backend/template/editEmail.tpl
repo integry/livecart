@@ -1,43 +1,66 @@
-<h1>{$fileName|@substr:9}</h1>
+<h1>
+	{$fileName}|
+	{if $fileName|@substr:0:11 != 'email/block'}
+		{$fileName|@substr:9}
+	{else}
+		{$fileName|@substr:6}
+	{/if}
+</h1>
 
 {form handle=$form action="controller=backend.template action=saveEmail" method="POST" id="templateForm"}
 
 	{if !$template.isFragment}
 	<p>
 		<label class="wide">{t _subject}:</label>
-		{textfield name="subject" id="subject" class="text wide"}	
+		{textfield name="subject" id="subject" class="text wide"}
 	</p>
 	{/if}
-	
+
 	<p>
 		{if !$template.isFragment}
 			<label class="wide">{t _body}:</label>
 		{/if}
 		{textarea name="body" id="body" class="body"}
 	</p>
-	
-	{language}
-		{if !$template.isFragment}
-			<p>
-				<label class="wide">{t _subject}:</label>
-				{textfield name="subject_`$lang.ID`" class="text wide"}	
-			</p>
-		{/if}
-		
-		<p>
+
+	{if $template.hasPlainText}
+	<p>
+		<label class="wide">{t _html_version}:</label>
+		{textarea name="html" id="html" class="body"}
+	</p>
+	{/if}
+
+	{if $fileName|@substr:0:11 != 'email/block'}
+		{language}
 			{if !$template.isFragment}
-				<label class="wide">{t _body}:</label>
+				<p>
+					<label class="wide">{t _subject}:</label>
+					{textfield name="subject_`$lang.ID`" class="text wide"}
+				</p>
 			{/if}
-			{textarea name="body_`$lang.ID`" id="body_`$lang.ID`" class="body"}
-		</p>
-	{/language}
-	
+
+			<p>
+				{if !$template.isFragment}
+					<label class="wide">{t _body}:</label>
+				{/if}
+				{textarea name="body_`$lang.ID`" id="body_`$lang.ID`" class="body"}
+			</p>
+
+			{if $template.hasPlainText}
+			<p>
+				<label class="wide">{t _html_version}:</label>
+				{textarea name="html_`$lang.ID`" id="html_`$lang.ID`" class="body"}
+			</p>
+			{/if}
+		{/language}
+	{/if}
+
 	{hidden name="file" id="file"}
-		
+
 	<fieldset class="controls" {denied role="template.save"}style="display: none;"{/denied}>
 		<span class="progressIndicator" style="display: none;"></span>
-		<input type="submit" class="submit" value="{tn _save_template}" /> 
-		{t _or} 
+		<input type="submit" class="submit" value="{tn _save_template}" />
+		{t _or}
 		<a id="cancel" class="cancel" href="{link controller="backend.template"}">{t _cancel}</a>
 	</fieldset>
 {/form}

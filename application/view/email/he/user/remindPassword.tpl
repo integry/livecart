@@ -3,8 +3,8 @@
 
 כאן כלקוח אתה מקבל את נתוני הגישה ב {$config.STORE_NAME}:
 
-דוא''ל: {$user.email}
-סיסמתך: {$user.newPassword}
+דוא''ל: <b>{$user.email}</b>
+סיסמתך: <b>{$user.newPassword}</b>
 
 על מנת להתחבר לחשבון שלך , השתמש בכתובת שלהלן:
 {link controller=user action=login url=true}

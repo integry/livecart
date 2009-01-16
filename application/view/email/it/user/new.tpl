@@ -3,8 +3,8 @@ Gentile {$user.fullName},
 
 Queste sono i dati del tuo account presso il nostro negozio online {'STORE_NAME'|config}:
 
-E-mail: {$user.email}
-Password: {$user.newPassword}
+E-mail: <b>{$user.email}</b>
+Password: <b>{$user.newPassword}</b>
 
 Dal tuo pannello personalizzato potrai controllare lo stato dei tuoi ordini, controllare lo storico degli
 ordini, scaricare files e modificare le informazioni relative agli indirizzi di fatturazione e consegna della merce.

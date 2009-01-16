@@ -1,5 +1,5 @@
 Nuovo Messaggio da un utente {'STORE_NAME'|config}
-Un utente ha aggiunto un nuovo messaggio in merito all'ordine #{$order.ID}
+Un utente ha aggiunto un nuovo messaggio in merito all'ordine <b class="orderID">#{$order.ID}</b>
 
 --------------------------------------------------
 {$message.text}

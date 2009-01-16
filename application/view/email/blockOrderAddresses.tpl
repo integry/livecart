@@ -1,10 +1,10 @@
 
 {if $order.BillingAddress}
-{t _billing_address}:
+<br /><b>{t _billing_address}:</b>
 {include file="email/blockAddress.tpl" address=$order.BillingAddress}
 {/if}
 
 {if $order.ShippingAddress}
-{t _shipping_address}:
+<b>{t _shipping_address}:</b>
 {include file="email/blockAddress.tpl" address=$order.ShippingAddress}
 {/if}

@@ -1,7 +1,7 @@
 {'STORE_NAME'|config} pasūtījuma apstiprinājums
 Cien. {$user.fullName},
 
-Paldies par Jūsu {'STORE_NAME'|config} pasūtījumu. Ja nepieciešams griezties pie mums dēļ papildus informācijas sakarā ar šo pasūtījumus, lūdzu miniet pasūtījuma numuru #{$order.ID}.
+Paldies par Jūsu {'STORE_NAME'|config} pasūtījumu. Ja nepieciešams griezties pie mums dēļ papildus informācijas sakarā ar šo pasūtījumus, lūdzu miniet pasūtījuma numuru <b class="orderID">#{$order.ID}</b>.
 
 Jūs varat sekot līdzi pasūtījuma izpildes gaitai no šīs lapas:
 {link controller=user action=viewOrder id=$order.ID url=true}

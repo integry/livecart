@@ -2,9 +2,9 @@
 Kära {$user.fullName},
 
 {if $order.shipments|@count == 1}
-Status har uppdaterats fördin order #{$order.ID}.
+Status har uppdaterats fördin order <b class="orderID">#{$order.ID}</b>.
 {else}
-Status har uppdaterats för en eller flera leveranser av din #{$order.ID}.
+Status har uppdaterats för en eller flera leveranser av din <b class="orderID">#{$order.ID}</b>.
 {/if}
 
 Om du har frågor rörande din order kan du kontakta oss via följande länk:

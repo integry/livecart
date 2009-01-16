@@ -2,9 +2,9 @@ Jaunumi par {'STORE_NAME'|config} pasūtījumu
 Cien. {$user.fullName},
 
 {if $order.shipments|@count == 1}
-Atjaunots pasūtījuma #{$order.ID} statuss.
+Atjaunots pasūtījuma <b class="orderID">#{$order.ID}</b> statuss.
 {else}
-Atjaunots viena vai vairāku sūtījumu statuss pasūtījumam #{$order.ID}.
+Atjaunots viena vai vairāku sūtījumu statuss pasūtījumam <b class="orderID">#{$order.ID}</b>.
 {/if}
 
 Ja radušies kādi jautājumi par pasūtījumu, lūdzu sūtiet e-pastu vai izmantojiet kontaktu formu šajā lapā:

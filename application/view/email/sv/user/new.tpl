@@ -3,8 +3,8 @@ Kära {$user.fullName},
 
 Här kommer dina användaruppgifter hos {'STORE_NAME'|config}:
 
-E-mail: {$user.email}
-Password: {$user.newPassword}
+E-mail: <b>{$user.email}</b>
+Password: <b>{$user.newPassword}</b>
 
 Via ditt användarkonto kan du se status på din order, tidigare order, ladda ner filer (för nedladdningsbara produkter du köpt) och uppdatera din kontaktinformation.
 

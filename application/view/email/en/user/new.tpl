@@ -3,8 +3,8 @@ Dear {$user.fullName},
 
 Here are your customer account access information at {'STORE_NAME'|config}:
 
-E-mail: {$user.email}
-Password: {$user.newPassword}
+E-mail: <strong><b>{$user.email}</b></strong>
+Password: <strong><b>{$user.newPassword}</b></strong>
 
 From your customer account you can instantly see the status of your order, view past orders, download files (for digital item purchases) and change your contact information.
 

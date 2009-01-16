@@ -2,9 +2,9 @@
 Cher {$user.fullName},
 
 {if $order.shipments|@count == 1}
-Le statut de votre commande a été mis a jour #{$order.ID}.
+Le statut de votre commande a été mis a jour <b class="orderID">#{$order.ID}</b>.
 {else}
-Le statut a été mis a jour pour une ou plusieures livraisons de votre commande #{$order.ID}.
+Le statut a été mis a jour pour une ou plusieures livraisons de votre commande <b class="orderID">#{$order.ID}</b>.
 {/if}
 
 Si vous avez des questions a propos de cette commande, vous pouvez nous envoyer un courriel ou nous contacter a parti de la page suivante:

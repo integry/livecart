@@ -2,9 +2,9 @@
 Dear {$user.fullName},
 
 {if $order.shipments|@count == 1}
-Status has been updated for your order #{$order.ID}.
+Status has been updated for your order <b class="orderID">#{$order.ID}</b>.
 {else}
-Status has been updated for one or more shipments from your order #{$order.ID}.
+Status has been updated for one or more shipments from your order <b class="orderID">#{$order.ID}</b>.
 {/if}
 
 If you have any questions regarding this order, you can send us an email message or contact from the following page:

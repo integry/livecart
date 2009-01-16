@@ -3,8 +3,8 @@ Kedves {$user.fullName},
 
 Az alábiakban találod a bejelentkezési információkat a {'STORE_NAME'|config} virtuális üzlethez:
 
-E-mail: {$user.email}
-Jelszó: {$user.newPassword}
+E-mail: <b>{$user.email}</b>
+Jelszó: <b>{$user.newPassword}</b>
 
 Felhasználói felületedről láthatod: rendelésed aktuális státuszát, régebbi rendeléseid. Ugyanakkor innen töltheted le a megvásárolt digitális állományokat, és módosíthatod elérhetőséged is.
 

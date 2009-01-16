@@ -3,8 +3,8 @@ Cher {$user.fullName},
 
 Voici vos informations de connexion client sur {'STORE_NAME'|config}:
 
-E-mail: {$user.email}
-Mot de passe: {$user.newPassword}
+E-mail: <b>{$user.email}</b>
+Mot de passe: <b>{$user.newPassword}</b>
 
 A partir de votre compte client vous pouvez instantanément voir le statut de votre commande, voir vos anciennes commandes,télécharger des fichiers,et modifier vos informations de contact.
 

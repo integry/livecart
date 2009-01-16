@@ -1,7 +1,7 @@
 {'STORE_NAME'|config} Rendelés megerősítése
 Tisztelt {$user.fullName},
 
-Köszönjük rendelésedet, amelyet most adtál le a {'STORE_NAME'|config}virtuális üzletében. Ha kapcsolatba szeretnél lépni velünk a rendelés miatt, kérünk a következő rendelési azonosítót jegyezd meg: #{$order.ID}.
+Köszönjük rendelésedet, amelyet most adtál le a {'STORE_NAME'|config}virtuális üzletében. Ha kapcsolatba szeretnél lépni velünk a rendelés miatt, kérünk a következő rendelési azonosítót jegyezd meg: <b class="orderID">#{$order.ID}</b>.
 
 Rendelésed nyomon követhető a következő oldalon:
 {link controller=user action=viewOrder id=$order.ID url=true}

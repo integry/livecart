@@ -2,9 +2,9 @@
 Gentile {$user.fullName},
 
 {if $order.shipments|@count == 1}
-Abbiamo aggiornato lo stato del tuo ordine #{$order.ID}.
+Abbiamo aggiornato lo stato del tuo ordine <b class="orderID">#{$order.ID}</b>.
 {else}
-Abbiamo aggiornato lo stato di una o più spedizioni di prodotti riguardanti il tuo ordine #{$order.ID}.
+Abbiamo aggiornato lo stato di una o più spedizioni di prodotti riguardanti il tuo ordine <b class="orderID">#{$order.ID}</b>.
 {/if}
 
 Se avessi domande in merito a questo ordine, puoi inviarci una email o contattarci direttamente

@@ -3,8 +3,8 @@ Kära {$user.fullName},
 
 Här kommer dina inloggningsuppgifter hos {$config.STORE_NAME}:
 
-E-mail: {$user.email}
-Password: {$user.newPassword}
+E-mail: <b>{$user.email}</b>
+Password: <b>{$user.newPassword}</b>
 
 Du kan logga in direkt via den här länken:
 {link controller=user action=login url=true}

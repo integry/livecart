@@ -3,8 +3,8 @@ Kjære {$user.fullName},
 
 Her er din kontaktinformasjon som kunde hos {'STORE_NAME'|config}:
 
-E-mail: {$user.email}
-Passord: {$user.newPassword}
+E-mail: <b>{$user.email}</b>
+Passord: <b>{$user.newPassword}</b>
 
 Fra din kundeside kan du til enhver tid se status på dine bestillinger, se tidligere bestillinger, laste ned filer (kjøpte digitale produkter) og endre din kontaktinformasjon.
 
