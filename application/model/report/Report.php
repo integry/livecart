@@ -178,7 +178,7 @@ abstract class Report
 
 		if (self::PIE == $this->chartType)
 		{
-			$line->set_tooltip('#val# (#percent#)');
+			$line->set_tooltip('#label# (#percent#)');
 
 			$line->set_colours(
 				array(
@@ -245,8 +245,8 @@ abstract class Report
 		}
 		else if ('week' == $range)
 		{
-			$this->addDateFieldToQuery($q, 'WEEK(' . $field .')', 'week');
 			$this->addDateFieldToQuery($q, 'EXTRACT(YEAR FROM ' . $field .')', 'year');
+			$this->addDateFieldToQuery($q, 'WEEK(' . $field .')', 'week');
 		}
 		else
 		{
@@ -319,6 +319,10 @@ abstract class Report
 			{
 				$key = (string)($e['hour'] < 10 ? '0' . $e['hour'] : $e['hour']);
 			}
+			else if (isset($e['week']))
+			{
+				$key = $e['week'] . ', ' . $e['year'];
+			}
 			else
 			{
 				$key = (string)$e[key($e)];
@@ -353,6 +357,8 @@ abstract class Report
 
 		$first = $array[0];
 		$last = $array[count($array) - 1];
+
+		$res = array();
 
 		if (isset($first['month']))
 		{
@@ -410,9 +416,45 @@ abstract class Report
 				$res[$v['year'] . '-' . $v['month'] . (isset($v['day']) ? '-' . $v['day'] : '')]['cnt'] = $v['cnt'];
 			}
 		}
+		else if (isset($first['week']))
+		{
+			for ($k = 0; $k < count($array) - 1; $k++)
+			{
+				$curr = $array[$k];
+				$next = $array[$k + 1];
+
+				$res[] = $curr;
+				if (($next['year'] > $curr['year']) && ($curr['week'] < 52))
+				{
+					$fill = $curr;
+					$fill['cnt'] = 0;
+					for ($i = $curr['week']; $i <= 52; $i++)
+					{
+						$fill['week'] = $i;
+						$res[] = $fill;
+					}
+
+					$curr['year'] = $next['year'];
+					$curr['week'] = 0;
+				}
+
+				if ($next['week'] - $curr['week'] > 2)
+				{
+					$fill = $curr;
+					$fill['cnt'] = 0;
+					for ($i = $curr['week']; $i < $next['week']; $i++)
+					{
+						$fill['week'] = $i;
+						$res[] = $fill;
+					}
+				}
+			}
+
+			$res[] = array_pop($array);
+		}
 		else
 		{
-			// yearly, hourly, weekly, etc summaries
+			// yearly and hourly summaries
 			$key = key($first);
 			for ($k = $first[$key]; $k <= $last[$key]; $k++)
 			{
