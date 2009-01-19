@@ -9,7 +9,7 @@
 			<label for="isEnabled_{$condition.ID}" class="checkbox">{t _is_enabled}</label>
 		</p>
 
-		{include file="backend/discount/conditionForm.tpl"}
+		{include file="backend/discount/conditionForm.tpl" id="userInfo_`$condition.ID`_form"}
 
 		<fieldset class="controls">
 			<span class="progressIndicator" style="display: none;"></span>

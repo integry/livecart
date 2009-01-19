@@ -138,9 +138,19 @@ class Shipment extends ActiveRecordModel
 
 	public function getShippingAddress()
 	{
-		foreach (array($this->shippingAddress->get(), $this->order->get()->shippingAddress->get()) as $address)
+		foreach (array($this, $this->order->get()) as $parent)
 		{
-			if ($address)
+			if (!$parent)
+			{
+				continue;
+			}
+
+			if (!$parent->isLoaded())
+			{
+				$parent->load(array('ShippingAddress'));
+			}
+
+			if ($address = $parent->shippingAddress->get())
 			{
 				return $address;
 			}
@@ -837,12 +847,15 @@ class Shipment extends ActiveRecordModel
 			$this->items = array();
 			foreach ($this->itemIds as $id)
 			{
-				try
+				if ($id)
 				{
-					$this->items[] = ActiveRecordModel::getInstanceById('OrderedItem', $id, ActiveRecordModel::LOAD_DATA);
-				}
-				catch (ARNotFoundException $e)
-				{
+					try
+					{
+						$this->items[] = ActiveRecordModel::getInstanceById('OrderedItem', $id, ActiveRecordModel::LOAD_DATA);
+					}
+					catch (ARNotFoundException $e)
+					{
+					}
 				}
 			}
 

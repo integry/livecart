@@ -74,7 +74,9 @@ class DiscountController extends ActiveGridController
 
 	public function add()
 	{
-		return new ActionResponse('form', $this->buildForm());
+		$response = new ActionResponse('form', $this->buildForm());
+		$this->setEditResponse($response);
+		return $response;
 	}
 
 	public function edit()
@@ -113,7 +115,18 @@ class DiscountController extends ActiveGridController
 
 		$response->set('actions', $actions->toArray());
 
+		$this->setEditResponse($response);
+
 		return $response;
+	}
+
+	private function setEditResponse(ActionResponse $response)
+	{
+		$response->set('couponLimitTypes', array(
+						'' => $this->translate('_coupon_limit_none'),
+						DiscountCondition::COUPON_LIMIT_ALL => $this->translate('_coupon_limit_all'),
+						DiscountCondition::COUPON_LIMIT_USER => $this->translate('_coupon_limit_user'),
+					  ));
 	}
 
 	public function save()

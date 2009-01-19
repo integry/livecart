@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2009-01-16 09:54                                #
-# Model version:         Version 2009-01-16 2                            #
+# Created on:            2009-01-19 08:29                                #
+# Model version:         Version 2009-01-19 3                            #
 # ---------------------------------------------------------------------- #
 
 
@@ -1352,6 +1352,8 @@ CREATE TABLE DiscountCondition (
     name MEDIUMTEXT,
     description MEDIUMTEXT,
     couponCode VARCHAR(40) NOT NULL,
+    couponLimitCount INTEGER,
+    couponLimitType TINYINT COMMENT '0 - overall 1 - by user',
     serializedCondition TEXT,
     position INTEGER UNSIGNED DEFAULT 0,
     CONSTRAINT PK_DiscountCondition PRIMARY KEY (ID)
@@ -1407,10 +1409,13 @@ ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 CREATE TABLE OrderCoupon (
     ID INTEGER UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
     orderID INTEGER UNSIGNED,
+    discountConditionID INTEGER UNSIGNED,
     couponCode VARCHAR(255),
     CONSTRAINT PK_OrderCoupon PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+CREATE INDEX IDX_OrderCoupon_1 ON OrderCoupon (couponCode);
 
 # ---------------------------------------------------------------------- #
 # Add table "DiscountConditionRecord"                                    #
@@ -1907,6 +1912,9 @@ ALTER TABLE OrderDiscount ADD CONSTRAINT CustomerOrder_OrderDiscount
 
 ALTER TABLE OrderCoupon ADD CONSTRAINT CustomerOrder_OrderCoupon 
     FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE OrderCoupon ADD CONSTRAINT DiscountCondition_OrderCoupon 
+    FOREIGN KEY (discountConditionID) REFERENCES DiscountCondition (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE DiscountConditionRecord ADD CONSTRAINT DiscountCondition_DiscountConditionRecord 
     FOREIGN KEY (conditionID) REFERENCES DiscountCondition (ID) ON DELETE CASCADE ON UPDATE CASCADE;

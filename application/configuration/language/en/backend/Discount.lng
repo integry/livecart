@@ -7,10 +7,15 @@ DiscountCondition.couponCode=Coupon code
 DiscountCondition.position=Priority
 DiscountCondition.validFrom=Date valid from
 DiscountCondition.validTo=Date valid to
+DiscountCondition.couponLimitType=Limit coupon usage
+DiscountCondition.couponLimitCount=Max number of coupon uses
 _listing_rules=Listing pricing rules $from - $to of $count
 _no_rules=No pricing rules found
 _are_you_sure_you_want_to_delete_rule=Really delete selected pricing rules?
 _nothing_selected=Please select at least one pricing rule first
+_coupon_limit_none=No limit
+_coupon_limit_all=Among all customers
+_coupon_limit_user=By customer
 
 _create_rule=Add new rule
 

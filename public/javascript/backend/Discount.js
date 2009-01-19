@@ -86,6 +86,48 @@ Backend.Discount.Editor.methods =
 			this.cancelAdd();
 			Backend.Discount.Editor.prototype.open(response.condition.ID);
 		}
+	},
+
+	initDiscountForm: function(cont)
+	{
+		cont = $(cont);
+
+		var codeContainer = cont.down('.couponCode');
+		var typeContainer = cont.down('.couponLimitType');
+		var countContainer = cont.down('.couponLimitCount');
+
+		var codeField = codeContainer.down('input');
+		var typeField = typeContainer.down('select');
+
+		codeField.onchange = function()
+		{
+			if (this.value)
+			{
+				typeContainer.show();
+			}
+			else
+			{
+				typeContainer.hide();
+			}
+
+			typeField.onchange();
+		}
+
+		codeField.onkeyup = codeField.onchange;
+
+		typeField.onchange = function()
+		{
+			if (this.value != '')
+			{
+				countContainer.show();
+			}
+			else
+			{
+				countContainer.hide();
+			}
+		}
+
+		codeField.onchange();
 	}
 }
 

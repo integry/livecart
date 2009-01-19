@@ -23,7 +23,10 @@ function smarty_function_includeCss($params, LiveCartSmarty $smarty)
 	$filePath = str_replace('\\', DIRECTORY_SEPARATOR, $filePath);
 	$filePath = str_replace('/', DIRECTORY_SEPARATOR, $filePath);
 
-	if(!is_file($filePath) && !isset($params['external'])) return;
+	if((!is_file($filePath) && !isset($params['external']))  || (substr($filePath, -4) != '.css'))
+	{
+		return;
+	}
 
 	$css = CssFile::getInstanceFromPath($filePath, $smarty->getApplication()->getTheme());
 

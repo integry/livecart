@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.order.CustomerOrder');
+ClassLoader::import('application.model.discount.DiscountCondition');
 
 /**
  *
@@ -22,6 +23,7 @@ class OrderCoupon extends ActiveRecordModel
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("orderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("discountConditionID", "DiscountCondition", "ID", "DiscountCondition", ARInteger::instance()));
 		$schema->registerField(new ARField("couponCode", ARVarchar::instance(255)));
 	}
 
@@ -33,6 +35,30 @@ class OrderCoupon extends ActiveRecordModel
 		$instance->order->set($order);
 		$instance->couponCode->set($code);
 		return $instance;
+	}
+
+	public function isValid()
+	{
+		$cond = $this->discountCondition->get();
+		if (!$cond || !$cond->couponLimitCount->get())
+		{
+			return true;
+		}
+
+		return $this->getUseCount() < $cond->couponLimitCount->get();
+	}
+
+	public function getUseCount()
+	{
+		$cond = $this->discountCondition->get();
+
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+		if (($cond->couponLimitType->get() == DiscountCondition::COUPON_LIMIT_USER) && $this->order->get()->user->get())
+		{
+			$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->order->get()->user->get()->getID()));
+		}
+
+		return $cond->getRelatedRecordCount(__CLASS__, $f, array('CustomerOrder'));
 	}
 }
 

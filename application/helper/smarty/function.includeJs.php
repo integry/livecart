@@ -29,7 +29,10 @@ function smarty_function_includeJs($params, LiveCartSmarty $smarty)
 		$filePath = $params['path'];
 	}
 
-	if(!is_file($filePath)) return;
+	if(!is_file($filePath) || (substr($filePath, -3) != '.js'))
+	{
+		return;
+	}
 
 	if(isset($params['inline']) && $params['inline'] == 'true')
 	{

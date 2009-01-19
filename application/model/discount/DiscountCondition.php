@@ -25,6 +25,9 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 	// non-divisable
 	const COMPARE_NDIV = 5;
 
+	const COUPON_LIMIT_ALL = 0;
+	const COUPON_LIMIT_USER = 1;
+
 	private $records = array();
 
 	private $subConditions = null;
@@ -60,6 +63,8 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		$schema->registerField(new ARField("description", ARArray::instance()));
 
 		$schema->registerField(new ARField("couponCode", ARVarchar::instance(100)));
+		$schema->registerField(new ARField("couponLimitCount", ARInteger::instance()));
+		$schema->registerField(new ARField("couponLimitType", ARInteger::instance()));
 		$schema->registerField(new ARField("serializedCondition", ARText::instance()));
 	}
 
@@ -739,14 +744,20 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 	{
 		$array = parent::toArray();
 
-		foreach ($this->subConditions as $sub)
+		if ($this->subConditions)
 		{
-			$array['sub'][] = $sub->toArray();
+			foreach ($this->subConditions as $sub)
+			{
+				$array['sub'][] = $sub->toArray();
+			}
 		}
 
-		foreach ($this->records as $record)
+		if ($this->records)
 		{
-			$array['records'][] = $record->toArray();
+			foreach ($this->records as $record)
+			{
+				$array['records'][] = $record->toArray();
+			}
 		}
 
 		return $array;

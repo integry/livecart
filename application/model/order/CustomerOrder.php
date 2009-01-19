@@ -189,6 +189,27 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		}
 	}
 
+	public function validateCoupons()
+	{
+		if (!$this->isFinalized->get())
+		{
+			foreach ($this->getCoupons() as $coupon)
+			{
+				if (!$coupon->discountCondition->get())
+				{
+					$coupon->discountCondition->set(DiscountCondition::getInstanceByCoupon($coupon->couponCode->get()));
+					$coupon->save();
+				}
+
+				if (!$coupon->discountCondition->get() || ($coupon->discountCondition->get()->couponCode->get() != $coupon->couponCode->get()) || !$coupon->isValid())
+				{
+					$coupon->delete();
+					$this->getCoupons()->removeRecord($coupon);
+				}
+			}
+		}
+	}
+
 	/**
 	 *  Add a product to shopping basket
 	 */
@@ -933,6 +954,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			$this->getTaxes($currency);
 			foreach ($this->shipments as $shipment)
 			{
+				$shipment->order->set($this);
 				$total += $shipment->getTotal($recalculateAmounts);
 			}
 		}
@@ -957,10 +979,22 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		if ((is_null($this->coupons) || $reload))
 		{
-			$this->coupons = $this->getRelatedRecordSet('OrderCoupon');
+			$this->coupons = $this->getRelatedRecordSet('OrderCoupon', null, array('DiscountCondition'));
+			$this->validateCoupons();
 		}
 
 		return $this->coupons;
+	}
+
+	public function hasCoupon($code)
+	{
+		foreach ($this->getCoupons() as $coupon)
+		{
+			if ($coupon->couponCode->get() == $code)
+			{
+				return true;
+			}
+		}
 	}
 
 	public function getDiscounts()

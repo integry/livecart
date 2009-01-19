@@ -215,21 +215,18 @@ class OrderController extends FrontendController
 
 			if ($condition = DiscountCondition::getInstanceByCoupon($code))
 			{
-				$exists = false;
-				foreach ($this->order->getCoupons() as $coupon)
+				if (!$this->order->hasCoupon($code))
 				{
-					if ($coupon->couponCode->get() == $code)
+					$coupon = OrderCoupon::getNewInstance($this->order, $code);
+					$coupon->save();
+
+					$this->order->getCoupons(true);
+
+					if ($this->order->hasCoupon($code))
 					{
-						$exists = true;
+						$this->setMessage($this->makeText('_coupon_added', array($code)));
 					}
 				}
-
-				if (!$exists)
-				{
-					OrderCoupon::getNewInstance($this->order, $code)->save();
-				}
-
-				$this->setMessage($this->makeText('_coupon_added', array($code)));
 			}
 			else
 			{

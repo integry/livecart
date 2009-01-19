@@ -714,7 +714,7 @@ form
     display: none;
 }
 
-form p
+form p, form div.field
 {
     position: relative;
     clear: both;

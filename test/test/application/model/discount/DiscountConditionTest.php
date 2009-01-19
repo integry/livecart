@@ -371,6 +371,55 @@ class DiscountConditionTest extends UnitTest
 		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
 	}
 
+	public function testLimitedCoupon()
+	{
+		$code = 'unit test coupon';
+
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->couponCode->set($code);
+		$condition->couponLimitCount->set(1);
+		$condition->save();
+
+		$someUser = User::getNewInstance('discount...condition@test');
+		$someUser->save();
+
+		$this->order->addProduct($this->product1, 1, true);
+		$this->order->save();
+		OrderCoupon::getNewInstance($this->order, $code)->save();
+		$this->assertEquals(1, $this->order->getCoupons(true)->size());
+		$this->order->save();
+		$this->order->finalize($this->usd);
+
+		$newOrder = CustomerOrder::getNewInstance($someUser);
+		$newOrder->addProduct($this->product1, 1, true);
+		$newOrder->save();
+		OrderCoupon::getNewInstance($newOrder, $code)->save();
+		$newOrder->getCoupons(true);
+
+		$this->assertEquals(0, $newOrder->getCoupons(true)->size());
+
+		// increase limit - will pass
+		$condition->couponLimitCount->set(2);
+		OrderCoupon::getNewInstance($newOrder, $code)->save();
+		$this->assertEquals(1, $newOrder->getCoupons(true)->size());
+
+		// remove coupon
+		$condition->couponLimitCount->set(1);
+		$this->assertEquals(0, $newOrder->getCoupons(true)->size());
+
+		// change limit type to per user and change order user
+		$otherUser = User::getNewInstance('discount...otheruser@test');
+		$otherUser->save();
+		$newOrder->user->set($otherUser);
+
+		$condition->couponLimitCount->set(1);
+		$condition->couponLimitType->set(DiscountCondition::COUPON_LIMIT_USER);
+		OrderCoupon::getNewInstance($newOrder, $code)->save();
+
+		$this->assertEquals(1, $newOrder->getCoupons(true)->size());
+	}
+
 	public function testAdditionalCategories()
 	{
 		$customCategory = Category::getNewInstance(Category::getRootNode());
