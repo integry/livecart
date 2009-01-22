@@ -46,3 +46,9 @@ table.productGrid
 {
     background-repeat: no-repeat;
 }
+
+.checkoutHeader,
+.checkoutHeader h1
+{
+    line-height: 40px;
+}

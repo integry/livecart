@@ -15,7 +15,7 @@
 		{/if}
 	</div>
 
-	{form action="controller=checkout action=doSelectAddress" method="POST" handle=$form style="display: block;"}
+	{form action="controller=checkout action=doSelectAddress" method="POST" handle=$form style="display: block; width: 100%;"}
 
 	{error for="selectedAddress"}<div><span class="errorText">{$msg}</span></div><div class="clear"></div>{/error}
 

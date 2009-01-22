@@ -220,6 +220,7 @@ framework/request/Route.php
 framework/request/Router.php
 framework/response/CompositeJSONResponse.php
 framework/response/CompositeResponse.php
+framework/response/JSONResponse.php
 framework/response/ObjectFileResponse.php
 index.php
 installdata/sql/create.sql

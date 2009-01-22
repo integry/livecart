@@ -477,6 +477,7 @@ class CsvImportController extends StoreManagementController
 							$value = $this->setChildSetting($product, 'price', $value);
 						}
 
+						$value = preg_replace('/,([0-9]{3})/', '\\1', $value);
 						$value = (float)preg_replace('/[^\.0-9]/', '', str_replace(',', '.', $value));
 						$currency = $request['currency'][$csvIndex];
 						$quantityLevel = $request['quantityLevel'][$csvIndex];
