@@ -1,5 +1,5 @@
 {*nolive*}
-<div id="customizeMenu">
+<div id="customizeMenu" onmouseover="Event.stop(event);">
 	<div id="customizeMenuInner">
 		<span id="modeTitle">{t _cust_mode}</span>
 		<ul>

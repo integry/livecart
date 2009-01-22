@@ -9,6 +9,7 @@ application/configuration/language/en/Base.lng
 application/configuration/language/en/backend/Category.lng
 application/configuration/language/en/backend/CustomerOrder.lng
 application/configuration/language/en/backend/Customize.lng
+application/configuration/language/en/backend/Discount.lng
 application/configuration/language/en/backend/Newsletter.lng
 application/configuration/language/en/backend/Product.lng
 application/configuration/language/en/backend/Settings.lng
@@ -33,6 +34,7 @@ application/controller/UserController.php
 application/controller/backend/CssEditorController.php
 application/controller/backend/CustomerOrderController.php
 application/controller/backend/CustomizeController.php
+application/controller/backend/DiscountController.php
 application/controller/backend/LanguageController.php
 application/controller/backend/OrderedItemController.php
 application/controller/backend/ProductController.php
@@ -73,6 +75,7 @@ application/model/eavcommon/EavSpecificationManagerCommon.php
 application/model/filter/SearchFilter.php
 application/model/newsletter/NewsletterMessage.php
 application/model/order/CustomerOrder.php
+application/model/order/OrderCoupon.php
 application/model/order/OrderHistory.php
 application/model/order/OrderedItem.php
 application/model/order/SessionOrder.php
@@ -99,6 +102,9 @@ application/view/backend/customerOrder/index.tpl
 application/view/backend/customerOrder/info.tpl
 application/view/backend/customerOrder/orders.tpl
 application/view/backend/customize/index.tpl
+application/view/backend/discount/add.tpl
+application/view/backend/discount/conditionForm.tpl
+application/view/backend/discount/edit.tpl
 application/view/backend/eav/specFieldFactory.tpl
 application/view/backend/eav/view.tpl
 application/view/backend/language/langSwitchMenu.tpl
@@ -236,6 +242,7 @@ public/image/promo/transparentlogo.png
 public/index.php
 public/javascript/backend/Backend.js
 public/javascript/backend/CustomerOrder.js
+public/javascript/backend/Discount.js
 public/javascript/backend/Newsletter.js
 public/javascript/backend/ProductBundle.js
 public/javascript/backend/Shipment.js
