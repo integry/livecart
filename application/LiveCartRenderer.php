@@ -131,7 +131,12 @@ class LiveCartRenderer extends SmartyRenderer
 	{
 		if (!file_exists($view))
 		{
+			$original = $view;
 			$view = $this->getTemplatePath($view);
+			if (!$view)
+			{
+				throw new ViewNotFoundException($original);
+			}
 		}
 
 		$output = parent::render($view);

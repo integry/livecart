@@ -181,7 +181,9 @@ div.checkout a,
 #userMenu li.selected,
 .cancelled,
 #checkoutProgress a.active,
-ul.downloadFile li.fileGroup
+ul.downloadFile li.fileGroup,
+.compareData td.param,
+.compareData th a
 {
 	font-weight: bold;
 }
@@ -240,7 +242,8 @@ a.addToCart,
 .fieldDescription,
 .progressOrder,
 a.cvv,
-.multiAddress .shipmentAddress
+.multiAddress .shipmentAddress,
+.box.compare li a
 {
 	font-size: smaller;
 }
@@ -268,7 +271,8 @@ ul.productList .image,
 #invoiceHeader,
 td.amount,
 .compactProductList .image,
-.compactProductList .pricingInfo
+.compactProductList .pricingInfo,
+.compareBoxMenu
 {
 	text-align: center;
 }
@@ -373,7 +377,7 @@ div.review .ratingBreakdown,
 
 /* links/menus with background images */
 .resultPages .previous,
-ul.productList a.addToCart, .productGrid a.addToCart,
+a.addToCart,
 ul.attributeList li,
 .continueShopping,
 #userMenu li,
@@ -952,9 +956,10 @@ ul.productList .order
 	margin-top: 9px;
 }
 
-ul.productList a.addToCart, .productGrid a.addToCart
+a.addToCart
 {
     background-image:url(../../image/silk/gif/cart_add.gif);
+    white-space: nowrap;
 }
 
 .listPrice
@@ -971,6 +976,11 @@ ul.productList .pricingInfo
     margin-left: 1em;
 }
 
+.productGrid .pricingInfo
+{
+    line-height: 1.2em;
+}
+
 .shortDescr
 {
 	font-size: 90%;
@@ -985,6 +995,75 @@ ul.productList .pricingInfo
 .listItemSeparator
 {
 	color: #ccc;
+}
+
+.productListMenu
+{
+	margin-bottom: 1em;
+}
+
+.compare
+{
+	padding-top: 0.5em;
+}
+
+.compare .checkbox
+{
+	float: none;
+}
+
+.compare label
+{
+	display: inline;
+}
+
+.compareData .priceRow td.price
+{
+	text-align: center;
+	font-size: larger;
+}
+
+.compareData div.image
+{
+	padding: 1em;
+}
+
+.compareData td, .compareData th
+{
+	padding: 3px;
+	border-width: 2px;
+}
+
+.compareBoxMenu
+{
+	padding-top: 0.5em;
+	font-weight: bold;
+	font-size: 0.85em;
+}
+
+a.progressIndicator
+{
+	padding: 0;
+	padding-left: 16px;
+	background-position: center left;
+}
+
+.delete
+{
+	opacity: 0.5;
+}
+
+.delete:hover
+{
+	opacity: 1;
+}
+
+.delete
+{
+	background-image: url(../../image/silk/gif/cancel.gif);
+	padding: 8px;
+	margin-right: 4px;
+	vertical-align: middle;
 }
 
 /*****************************
@@ -1171,7 +1250,7 @@ ul.attributeList.singleValue li
 	height: auto;
 }
 
-#moreImages img
+#moreImages img, .compareData div.image img
 {
 	border: 1px solid black;
 	margin-right: 4px;
@@ -2172,6 +2251,7 @@ input.radio, input.checkbox
 {
     margin: 0 0.5em 0 0;
     cursor: pointer;
+    vertical-align: middle;
 }
 
 input:focus, textarea:focus, select:focus
@@ -2218,7 +2298,7 @@ fieldset.error, div.error, fieldset.container
 
 .progressIndicator
 {
-	padding: 15px;
+	padding: 8px;
 	width: 30px;
 	height: 20px;
 	background-image: url(../../image/indicator.gif);

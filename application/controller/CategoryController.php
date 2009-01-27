@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import("application.controller.FrontendController");
+ClassLoader::import('application.controller.FrontendController');
 ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.category.ProductList');
 ClassLoader::import('application.model.category.ProductListItem');
@@ -10,6 +10,7 @@ ClassLoader::import('application.model.product.Manufacturer');
 ClassLoader::import('application.model.product.ProductFilter');
 ClassLoader::import('application.model.product.ProductCount');
 ClassLoader::import('application.model.product.ProductPrice');
+ClassLoader::import('application.model.product.ProductCompare');
 ClassLoader::import('application.model.category.SpecFieldValue');
 ClassLoader::import('application.model.category.SearchLog');
 
@@ -335,6 +336,10 @@ class CategoryController extends FrontendController
 		$response->set('category', $category);
 
 		return $response;
+	}
+
+	public function listAction()
+	{
 	}
 
 	private function getCategoryPageUrl($params = array())

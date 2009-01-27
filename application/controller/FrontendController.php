@@ -68,6 +68,7 @@ abstract class FrontendController extends BaseController
 		$this->addBlock('TRACKING', 'tracking', 'block/tracking');
 		$this->addBlock('NEWS', 'latestNews', 'block/box/latestNews');
 		$this->addBlock('QUICKNAV', 'blockQuickNav', 'block/box/quickNav');
+		$this->addBlock('COMPARE', array('CompareController', 'compareMenu'));
 	}
 
 	public function getRequestCurrency()

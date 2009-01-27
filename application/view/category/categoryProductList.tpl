@@ -27,10 +27,14 @@
 		</fieldset>
 	</div>
 
-	{if 'GRID' == $layout}
-		{include file="category/productGrid.tpl" products=$products}
-	{else}
-		{include file="category/productList.tpl" products=$products}
+	{if $products}
+		<form action="{link controller=category action=listAction returnPath=true}" method="POST">
+			{if 'GRID' == $layout}
+				{include file="category/productGrid.tpl" products=$products}
+			{else}
+				{include file="category/productList.tpl" products=$products}
+			{/if}
+		</form>
 	{/if}
 
 	{if $count > $perPage}

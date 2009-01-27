@@ -32,6 +32,7 @@ application/controller/OrderController.php
 application/controller/ProductController.php
 application/controller/UserController.php
 application/controller/backend/CssEditorController.php
+application/controller/backend/CsvImportController.php
 application/controller/backend/CustomerOrderController.php
 application/controller/backend/CustomizeController.php
 application/controller/backend/DiscountController.php
@@ -130,6 +131,7 @@ application/view/category/head.tpl
 application/view/category/index.tpl
 application/view/category/productGrid.tpl
 application/view/checkout/offlinePaymentMethods.tpl
+application/view/checkout/selectAddress.tpl
 application/view/customize/menu.tpl
 application/view/email/blockItemHeader.tpl
 application/view/email/blockOrder.tpl
@@ -263,6 +265,7 @@ public/stylesheet/backend/StaticPage.css
 public/stylesheet/backend/User.css
 public/stylesheet/backend/stat.css
 public/stylesheet/frontend/Frontend.css
+public/stylesheet/frontend/FrontendIE.css
 public/stylesheet/frontend/LiveCustomization.css
 public/theme/default/stylesheet/default.css
 application/LiveCartRouter.php

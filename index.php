@@ -16,10 +16,17 @@ $_GET['noRewrite'] = true;
 if (preg_match('/^Apache/', $_SERVER['SERVER_SOFTWARE']) && !NOREWRITE)
 {
 	$_GET['route'] = isset($_SERVER['PATH_INFO']) ? substr($_SERVER['PATH_INFO'], 1) : '';
-	if (substr($_GET['route'], 0, 10) == 'index.php/')
+
+	if (substr($_GET['route'], 0, 9) == 'index.php')
 	{
-		$_GET['route'] = substr($_GET['route'], 10);
+		$_GET['route'] = substr($_GET['route'], 9);
 	}
+
+	if (substr($_GET['route'], 0, 1) == '/')
+	{
+		$_GET['route'] = substr($_GET['route'], 1);
+	}
+
 	$_SERVER['virtualBaseDir'] = $_SERVER['SCRIPT_NAME'] . '/';
 }
 

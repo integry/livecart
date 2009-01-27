@@ -464,6 +464,76 @@ Order.AddressSelector = function(form)
 }
 
 /*****************************
+	Product comparison
+*****************************/
+Compare = {}
+
+Compare.add = function(e)
+{
+	Event.stop(e);
+	var el = Event.element(e);
+	el.addClassName('progressIndicator');
+	new LiveCart.AjaxRequest(el.href, null, function(oR) { Compare.addComplete(oR, el); });
+}
+
+Compare.addComplete = function(origReq, el)
+{
+	el.blur();
+	new Effect.Highlight(el, { duration: 0.4 });
+	el.removeClassName('progressIndicator');
+	var menu = $('compareMenu');
+
+	if (!menu)
+	{
+		$('compareMenuContainer').update(origReq.responseText);
+		var menu = $('compareMenu');
+	}
+	else
+	{
+		menu.down('ul').innerHTML += origReq.responseText;
+	}
+
+	new Compare.Menu(menu);
+}
+
+Compare.Menu = function(container)
+{
+	this.container = container;
+	this.initEvents();
+}
+
+Compare.Menu.prototype =
+{
+	initEvents: function()
+	{
+		$A(document.getElementsByClassName('delete', this.container)).each(function(el)
+		{
+			el.onclick = function(e) { this.removeProduct(e, el) }.bind(this);
+		}.bind(this));
+	},
+
+	removeProduct: function(e, el)
+	{
+		Event.stop(e);
+		var li = el.up('li');
+		el.addClassName('progressIndicator');
+		new LiveCart.AjaxRequest(el.href, null, function() { this.removeComplete(li) }.bind(this));
+	},
+
+	removeComplete: function(li)
+	{
+		if (li.parentNode.getElementsByTagName('li').length < 2)
+		{
+			this.container.parentNode.removeChild(this.container);
+		}
+		else
+		{
+			li.parentNode.removeChild(li);
+		}
+	}
+}
+
+/*****************************
 	User related JS
 *****************************/
 User = {}

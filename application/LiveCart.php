@@ -574,6 +574,11 @@ class LiveCart extends Application
 		return $this->session->get('customizationModeType');
 	}
 
+	public function getSession()
+	{
+		return $this->loadSession();
+	}
+
 	private function loadSession()
 	{
 	  	ClassLoader::import("framework.request.Session");
