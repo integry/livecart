@@ -241,18 +241,11 @@ class CategoryController extends FrontendController
 			$this->application->setTheme($theme->getTheme());
 		}
 
-		// load EAV data
-		foreach ($products as $key => $product)
+		if ($this->config->get('DISPLAY_CATEGORY_FEATURED'))
 		{
-			if (isset($product['Manufacturer']))
-			{
-				ActiveRecordModel::addToEavQueue('Manufacturer', $products[$key]['Manufacturer']);
-			}
+			$this->getFeaturedMainCategoryProducts($subCategories);
+			$this->getFeaturedMainCategoryProducts($categoryNarrow);
 		}
-
-//		ActiveRecordModel::addToEavQueue('Category', $categoryArray);
-
-		ActiveRecordModel::loadEav();
 
 		$response = new ActionResponse();
 		$response->set('id', $this->categoryID);
@@ -548,9 +541,25 @@ class CategoryController extends FrontendController
 
 	private function getSubCatFeaturedProducts()
 	{
-		$selFilter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isFeatured'), true));
+		$count = $this->config->get('FEATURED_COUNT');
+		if ('GRID' == $this->getListLayout())
+		{
+			$row = $this->config->get('LAYOUT_GRID_COLUMNS');
+			$count = ceil($count / $row) * $row;
+		}
+
+		$selFilter = new ARSelectFilter();
+		if (!$this->config->get('FEATURED_RANDOM'))
+		{
+			$selFilter->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'isFeatured'), true));
+		}
+		else
+		{
+			$selFilter->setOrder(new ARExpressionHandle('Product.isFeatured=1'), 'DESC');
+		}
+
 		$selFilter->setOrder(new ARExpressionHandle('RAND()'));
-		$selFilter->setLimit($this->getProductLimitCount($this->getListLayout()));
+		$selFilter->setLimit($count);
 
 		$featuredFilter = new ProductFilter($this->category, $selFilter);
 		$featuredFilter->includeSubcategories();
@@ -923,6 +932,48 @@ class CategoryController extends FrontendController
 
 			$searchLog[$query] = true;
 			$this->session->set('searchLog', $searchLog);
+		}
+	}
+
+	private function getFeaturedMainCategoryProducts(&$categories)
+	{
+		$cache = $this->application->getCache();
+
+		$namespace = 'category_featured';
+		$products = array();
+		foreach ($categories as $category)
+		{
+			$key = $category['ID'];
+			if ($product = $cache->get($key, null, $namespace))
+			{
+				$products[] = $product;
+				continue;
+			}
+
+			$cat = Category::getInstanceByID($category['ID'], Category::LOAD_DATA);
+			$pf = new ProductFilter($cat, new ARSelectFilter());
+			$pf->includeSubcategories();
+			$f = $cat->getProductsFilter($pf);
+			$f->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'isFeatured'), true));
+			$f->setLimit(1);
+			$f->setOrder(new ARExpressionHandle('RAND()'));
+
+			$product = array_pop(ActiveRecordModel::getRecordSetArray('Product', $f, array('ProductImage', 'Category', 'Manufacturer')));
+			if (!$product)
+			{
+				$product = array('ID' => 0);
+			}
+
+			$cache->set($key, $product, 1800, $namespace);
+
+			$products[] = $product;
+		}
+
+		ProductPrice::loadPricesForRecordSetArray($products);
+
+		foreach ($products as $key => $product)
+		{
+			$categories[$key]['featuredProduct'] = $product;
 		}
 	}
 }

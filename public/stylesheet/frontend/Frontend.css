@@ -616,6 +616,11 @@ fieldset.container
     padding-left: 20px;
 }
 
+.noSubCats .subCatContainer table
+{
+	margin: 0 auto;
+}
+
 /*****************************
 	Filters
 *****************************/

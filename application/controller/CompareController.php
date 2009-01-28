@@ -36,7 +36,8 @@ class CompareController extends FrontendController
 		{
 			return new ActionResponse(
 					'products', $compare->getComparedProductInfo(),
-					'added', $added
+					'added', $added,
+					'return', $this->request->get('return')
 					);
 		}
 	}

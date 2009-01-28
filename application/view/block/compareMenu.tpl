@@ -13,7 +13,7 @@
 			</ul>
 
 			<div class="compareBoxMenu">
-				<a href="{link compare/index returnPath=true}">{t _view_comparison}</a>
+				<a href="{link compare/index returnPath=true query="return=$return"}">{t _view_comparison}</a>
 			</div>
 		</div>
 	</div>

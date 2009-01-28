@@ -13,6 +13,7 @@ class IndexController extends CategoryController
 {
 	public function index()
 	{
+		var_dump('check?');
 		ClassLoader::import('application.controller.CategoryController');
 
 		$this->request->set('id', Category::ROOT_ID);

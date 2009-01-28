@@ -7,7 +7,17 @@
 {/if}
 	<tr>
 		<td class="subCatImage">
-			{if $sub.DefaultImage.paths.1}
+			{if $sub.featuredProduct}
+				<div class="categoryFeaturedProduct">
+					<div class="price">
+						{include file="product/block/productPrice.tpl" product=$sub.featuredProduct}
+					</div>
+					<a href="{productUrl product=$sub.featuredProduct}">{$sub.featuredProduct.name_lang|truncate:25}</a>
+					{if $sub.featuredProduct.DefaultImage.ID}
+						{include file="product/block/smallImage.tpl" product=$sub.featuredProduct}
+					{/if}
+				</div>
+			{elseif $sub.DefaultImage.paths.1}
 				<a href="{categoryUrl data=$sub}">
 					{img src=$sub.DefaultImage.paths.1 alt=$sub.name_lang|escape}
 				</a>
