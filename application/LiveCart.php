@@ -94,6 +94,8 @@ class LiveCart extends Application
 	 */
 	private $theme = null;
 
+	private $cache;
+
 	const EXCLUDE_DEFAULT_CURRENCY = false;
 
 	const INCLUDE_DEFAULT = true;
@@ -1142,6 +1144,25 @@ class LiveCart extends Application
 		{
 			$this->locale->translationManager()->loadFile($file);
 		}
+	}
+
+	public function getCache()
+	{
+		if (!$this->cache)
+		{
+			$class = $this->config->get('CACHE_METHOD');
+			ClassLoader::import("application.model.cache." . $class);
+			$this->cache = new $class($this);
+
+			// default to file cache
+			if (!$this->cache->isValid())
+			{
+				ClassLoader::import("application.model.cache.FileCache");
+				$this->cache = new FileCache($this);
+			}
+		}
+
+		return $this->cache;
 	}
 
 	private function loadConfig()

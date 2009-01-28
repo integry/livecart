@@ -53,8 +53,13 @@ RATING=Customer Rating
 DISPLAY_NUM_CAT=Display the number of products per category
 DISPLAY_NUM_FILTER=Display the number of products per filter
 DISPLAY_PRICES=Display product prices
-INCLUDE_SUBCATEGORY_PRODUCTS=Include sub-category products
+INCLUDE_SUBCATEGORY_PRODUCTS=Include sub-category products in product list
 DISPLAY_CATEGORY_DESC=Display category description
+DISPLAY_CATEGORY_FEATURED=Display a featured product instead of category image
+
+_featured_products=Featured Products
+FEATURED_COUNT=Number of featured products to display
+FEATURED_RANDOM=Include random products in featured product list if there are not enough featured products to display
 
 _product_list_layout=Product List Layout
 LIST_LAYOUT=Default list layout
@@ -333,6 +338,8 @@ SSL_DOMAIN=Use a different domain name for secure pages (e.g. secure.mysite.com)
 
 # Technical
 _technical=Technical
+_cache=Caching
+CACHE_METHOD=Caching method
 _proxy=Use proxy server for outgoing connections
 PROXY_HOST=Proxy server host name
 PROXY_PORT=Proxy server port
