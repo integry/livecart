@@ -67,6 +67,7 @@ abstract class TransactionPayment
 	public function setOrder(CustomerOrder $order)
 	{
 		$this->order = $order;
+		$this->order->setPaymentMethod(get_class($this));
 	}
 
 	/**

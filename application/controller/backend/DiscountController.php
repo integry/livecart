@@ -10,6 +10,7 @@ ClassLoader::import("application.model.category.Category");
 ClassLoader::import("application.model.user.User");
 ClassLoader::import("application.model.user.UserGroup");
 ClassLoader::import("application.model.delivery.DeliveryZone");
+ClassLoader::import('application.model.order.OfflineTransactionHandler');
 
 /**
  *
@@ -25,6 +26,7 @@ class DiscountController extends ActiveGridController
 	const TYPE_USERGROUP = 3;
 	const TYPE_USER = 4;
 	const TYPE_DELIVERYZONE = 5;
+	const TYPE_PAYMENTMETHOD = 101;
 
 	public function index()
 	{
@@ -39,7 +41,9 @@ class DiscountController extends ActiveGridController
 						self::TYPE_ITEMS => $this->translate('_type_items_in_cart'),
 						self::TYPE_USERGROUP => $this->translate('_type_user_group'),
 						self::TYPE_USER => $this->translate('_type_user'),
-						self::TYPE_DELIVERYZONE => $this->translate('_type_delivery_zone')));
+						self::TYPE_DELIVERYZONE => $this->translate('_type_delivery_zone'),
+						self::TYPE_PAYMENTMETHOD => $this->translate('_type_payment_method'),
+						));
 
 		$response->set('comparisonTypes', array(
 						DiscountCondition::COMPARE_GTEQ => $this->translate('_compare_gteq'),
@@ -58,6 +62,8 @@ class DiscountController extends ActiveGridController
 		$response->set('actionTypes', array(
 						DiscountAction::ACTION_PERCENT => $this->translate('_percentage_discount'),
 						DiscountAction::ACTION_AMOUNT => $this->translate('_fixed_amount_discount'),
+						DiscountAction::ACTION_SURCHARGE_PERCENT => $this->translate('_percentage_surcharge'),
+						DiscountAction::ACTION_SURCHARGE_AMOUNT => $this->translate('_fixed_amount_surcharge'),
 						DiscountAction::ACTION_DISABLE_CHECKOUT => $this->translate('_type_disable_checkout'),
 					  ));
 
@@ -70,6 +76,25 @@ class DiscountController extends ActiveGridController
 		$response->set('currencyCode', $this->application->getDefaultCurrencyCode());
 
 		return $response;
+	}
+
+	private function getPaymentMethods()
+	{
+		$this->loadLanguageFile('backend/Settings');
+		$this->application->loadLanguageFiles();
+
+		$handlers = array();
+		foreach (array_merge($this->application->getPaymentHandlerList(true), array($this->config->get('CC_HANDLER')), $this->application->getExpressPaymentHandlerList(true)) as $class)
+		{
+			$handlers[$class] = $this->translate($class);
+		}
+
+		foreach (OfflineTransactionHandler::getEnabledMethods() as $offline)
+		{
+			$handlers[$offline] = OfflineTransactionHandler::getMethodName($offline);
+		}
+
+		return $handlers;
 	}
 
 	public function add()
@@ -95,6 +120,10 @@ class DiscountController extends ActiveGridController
 		$records['UserGroup'] = ActiveRecordModel::getRecordSetArray('UserGroup', new ARSelectFilter());
 
 		$response->set('records', $records);
+
+		$response->set('serializedValues', array(
+						self::TYPE_PAYMENTMETHOD => $this->getPaymentMethods(),
+						));
 
 		$form = $this->buildForm();
 		$form->setData($condition->toArray());
@@ -172,6 +201,7 @@ class DiscountController extends ActiveGridController
 		$field = 'comparisonValue' == $fieldName ? ($this->request->get('type') == self::TYPE_COUNT ? 'count' : 'subTotal') : $fieldName;
 
 		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $id, DiscountCondition::LOAD_DATA);
+		$condition->serializedCondition->setNull();
 
 		if ($this->request->get('type') == self::TYPE_ITEMS && 'comparisonValue' == $fieldName)
 		{
@@ -201,6 +231,8 @@ class DiscountController extends ActiveGridController
 	public function addRecord()
 	{
 		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA);
+		$condition->serializedCondition->setNull();
+
 		$object = DiscountConditionRecord::getOwnerInstance($this->request->get('class'), $this->request->get('recordID'));
 		$record = DiscountConditionRecord::getNewInstance($condition, $object);
 		$record->save();
@@ -221,6 +253,7 @@ class DiscountController extends ActiveGridController
 	public function saveSelectRecord()
 	{
 		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA);
+		$condition->serializedCondition->setNull();
 
 		// delete existing record
 		$record = ActiveRecordModel::getInstanceByID($this->request->get('class'), $this->request->get('recordID'));
@@ -237,6 +270,36 @@ class DiscountController extends ActiveGridController
 			$rec = DiscountConditionRecord::getNewInstance($condition, $record);
 			$rec->save();
 		}
+	}
+
+	public function saveSelectValue()
+	{
+		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA);
+
+		if ($condition->recordCount->get())
+		{
+			foreach ($condition->getRelatedRecordSet('DiscountConditionRecord') as $record)
+			{
+				$record->delete();
+			}
+		}
+
+		$condition->count->setNull();
+		$condition->subTotal->setNull();
+		$condition->comparisonType->setNull();
+
+		$condition->setType($this->request->get('type'));
+		$value = $this->request->get('value');
+		if ('true' == $this->request->get('state'))
+		{
+			$condition->addValue($value);
+		}
+		else
+		{
+			$condition->removeValue($value);
+		}
+
+		$condition->save();
 	}
 
 	private function deleteOtherTypeRecords(DiscountCondition $condition, ActiveRecordModel $record)

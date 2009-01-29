@@ -133,26 +133,22 @@ Backend.Discount.Editor.methods =
 
 Backend.Discount.Editor.inheritsFrom(Backend.MultiInstanceEditor);
 
-Backend.Discount.Condition = function(tree, records, container)
+Backend.Discount.Condition = function(tree, records, serializedValues, container)
 {
 	this.condition = tree;
 	this.container = container;
 	this.records = records;
+	this.serializedValues = serializedValues;
 
-	if (!this.namespace.prototype.template)
+	['conditionTemplate', 'recordTemplate', 'selectRecordTemplate'].each(function(cl)
 	{
-		this.namespace.prototype.template = $('conditionTemplate').down('li')
-	}
+		if (!this.namespace.prototype[cl])
+		{
+			this.namespace.prototype[cl] = $(cl).down('li')
+		}
+	}.bind(this));
 
-	if (!this.namespace.prototype.recordTemplate)
-	{
-		this.namespace.prototype.recordTemplate = $('recordTemplate').down('li')
-	}
-
-	if (!this.namespace.prototype.selectRecordTemplate)
-	{
-		this.namespace.prototype.selectRecordTemplate = $('selectRecordTemplate').down('li')
-	}
+	this.namespace.prototype.template = this.namespace.prototype.conditionTemplate;
 
 	this.createNode();
 }
@@ -181,6 +177,7 @@ Backend.Discount.Condition.prototype =
 		this.isAnyRecord = this.node.down('.isAnyRecord');
 		this.deleteIcon = this.node.down('.conditionDelete');
 		this.recordContainer = this.node.down('.recordContainer');
+		this.valueContainer = this.node.down('.valueContainer');
 		this.selectRecordContainer = this.node.down('.selectRecordContainer');
 		this.productFieldSel = this.node.down('.comparisonField');
 	},
@@ -232,7 +229,11 @@ Backend.Discount.Condition.prototype =
 		var recordClassName = '';
 
 		// determine condition type
-		if (this.condition.count != null && this.condition.recordCount < 1)
+		if (this.condition.serializedCondition)
+		{
+			this.typeSel.value = this.condition.serializedCondition.type;
+		}
+		else if (this.condition.count != null && this.condition.recordCount < 1)
 		{
 			this.typeSel.value = this.TYPE_COUNT;
 		}
@@ -256,7 +257,7 @@ Backend.Discount.Condition.prototype =
 
 		if (this.condition.sub)
 		{
-			this.condition.sub.each(function(sub) { new this.namespace(sub, this.records, this.subConditionContainer); }.bind(this));
+			this.condition.sub.each(function(sub) { new this.namespace(sub, this.records, this.serializedValues, this.subConditionContainer); }.bind(this));
 			this.toggleSubsContainer(true);
 		}
 
@@ -308,7 +309,7 @@ Backend.Discount.Condition.prototype =
 
 	completeAdd: function(originalRequest)
 	{
-		var cond = new this.namespace(originalRequest.responseData, this.records, this.subConditionContainer);
+		var cond = new this.namespace(originalRequest.responseData, this.records, this.serializedValues, this.subConditionContainer);
 		this.toggleSubsContainer(true);
 	},
 
@@ -360,16 +361,26 @@ Backend.Discount.Condition.prototype =
 			this.valueField.value = this.condition.subTotal;
 		}
 
-		if (type > this.TYPE_ITEMS)
+		// toggle container visibility depending on type
+		if (this.serializedValues[type])
 		{
 			this.compSel.hide();
 			this.valueField.hide();
+			this.recordContainer.hide();
+			this.valueContainer.show();
+		}
+		else if (type > this.TYPE_ITEMS)
+		{
+			this.compSel.hide();
+			this.valueField.hide();
+			this.valueContainer.hide();
 			this.recordContainer.show();
 		}
 		else
 		{
 			this.compSel.show();
 			this.valueField.show();
+			this.valueContainer.hide();
 			this.recordContainer.show();
 		}
 
@@ -378,6 +389,7 @@ Backend.Discount.Condition.prototype =
 			this.recordContainer.show();
 		}
 
+		// add selectable records to list
 		var recordClass = '';
 		if (type == this.TYPE_DELIVERYZONE)
 		{
@@ -398,7 +410,49 @@ Backend.Discount.Condition.prototype =
 			}
 		}
 
+		// add selectable values to list
+		if (this.serializedValues[type])
+		{
+			this.valueContainer.down('ul').innerHTML = '';
+			$H(this.serializedValues[type]).each(function(val)
+			{
+				this.createSelectValue(type, val[0], val[1]);
+			}.bind(this));
+		}
+
 		this.node.className = 'type_' + type;
+	},
+
+	createSelectValue: function(type, value, name)
+	{
+		var el = $(this.namespace.prototype.selectRecordTemplate.cloneNode(true));
+		this.valueContainer.down('ul').appendChild(el);
+
+		var id='serValue_' + Math.random();
+		var a = el.down('label');
+		a.innerHTML = name;
+		a.setAttribute('for', id);
+
+		var inp = el.down('input');
+		inp.id = id;
+		inp.onchange = this.saveSelectValue.bind(this);
+		inp.selectType = type;
+		inp.value = value;
+
+		var ser = this.condition.serializedCondition;
+		if (ser && ser['values'] && ser['values'][value])
+		{
+			inp.checked = true;
+		}
+
+		return el;
+	},
+
+	saveSelectValue: function(e)
+	{
+		var inp = Event.element(e);
+		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.discount', 'saveSelectValue', {id: this.condition.ID, type: inp.selectType, value: inp.value, state: inp.checked}), null, function (originalRequest) { this.completeSaveSelectRecord(originalRequest, inp); }.bind(this));
+		inp.parentNode.addClassName('selectRecordUpdating');
 	},
 
 	createSelectRecord: function(recordClass, data)
@@ -639,6 +693,8 @@ Backend.Discount.Action.prototype =
 
 	ACTION_PERCENT: 0,
 	ACTION_AMOUNT: 1,
+	ACTION_PERCENT_SURCHARGE: 3,
+	ACTION_AMOUNT_SURCHARGE: 4,
 
 	createAction: function(action)
 	{
@@ -736,7 +792,7 @@ Backend.Discount.Action.prototype =
 		this.percentSign.hide();
 		this.currencySign.hide();
 
-		if ((this.actionType.value == this.ACTION_PERCENT) || (this.actionType.value == this.ACTION_AMOUNT))
+		if (this.isPercent() || this.isAmount())
 		{
 			this.amountFields.show();
 		}
@@ -745,7 +801,7 @@ Backend.Discount.Action.prototype =
 			this.amountFields.hide();
 		}
 
-		if (this.actionType.value == this.ACTION_PERCENT)
+		if (this.isPercent())
 		{
 			this.percentSign.show();
 		}
@@ -753,6 +809,16 @@ Backend.Discount.Action.prototype =
 		{
 			this.currencySign.show();
 		}
+	},
+
+	isPercent: function()
+	{
+		return (this.actionType.value == this.ACTION_PERCENT) || (this.actionType.value == this.ACTION_PERCENT_SURCHARGE);
+	},
+
+	isAmount: function()
+	{
+		return (this.actionType.value == this.ACTION_AMOUNT) || (this.actionType.value == this.ACTION_AMOUNT_SURCHARGE);
 	},
 
 	addAction: function(e, id)
@@ -809,7 +875,7 @@ Backend.Discount.Action.prototype =
 
 	addCondition: function(condition)
 	{
-		var instance = new Backend.Discount.Condition(condition, [], this.subConditionContainer);
+		var instance = new Backend.Discount.Condition(condition, [], [], this.subConditionContainer);
 		if (instance.typeSel.value != instance.TYPE_ITEMS)
 		{
 			instance.typeSel.value = instance.TYPE_ITEMS;

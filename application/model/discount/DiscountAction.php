@@ -13,6 +13,8 @@ class DiscountAction extends ActiveRecordModel
 	const ACTION_PERCENT = 0;
 	const ACTION_AMOUNT = 1;
 	const ACTION_DISABLE_CHECKOUT = 2;
+	const ACTION_SURCHARGE_PERCENT = 3;
+	const ACTION_SURCHARGE_AMOUNT = 4;
 
 	/**
 	 * Action for discount condition (define the actual discount)
@@ -100,12 +102,12 @@ class DiscountAction extends ActiveRecordModel
 
 	public function isItemDiscount()
 	{
-		return (self::TYPE_ITEM_DISCOUNT == $this->type->get()) || (self::ACTION_PERCENT == $this->actionType->get());
+		return (self::TYPE_ITEM_DISCOUNT == $this->type->get()) || (self::ACTION_PERCENT == $this->actionType->get()) || (self::ACTION_SURCHARGE_PERCENT == $this->actionType->get());
 	}
 
 	public function isFixedAmount()
 	{
-		return self::ACTION_AMOUNT == $this->actionType->get();
+		return (self::ACTION_AMOUNT == $this->actionType->get()) || (self::ACTION_SURCHARGE_AMOUNT == $this->actionType->get());
 	}
 
 	public function isItemApplicable(OrderedItem $item)
@@ -135,7 +137,20 @@ class DiscountAction extends ActiveRecordModel
 
 	public function getDiscountAmount($price)
 	{
-		return ($this->actionType->get() == self::ACTION_PERCENT) ? $price * ($this->amount->get() / 100) : $this->amount->get();
+		switch ($this->actionType->get())
+		{
+			case self::ACTION_PERCENT:
+				return $price * ($this->amount->get() / 100);
+
+			case self::ACTION_SURCHARGE_PERCENT:
+				return $price * ($this->amount->get() / 100) * -1;
+
+			case self::ACTION_AMOUNT:
+				return $this->amount->get();
+
+			case self::ACTION_SURCHARGE_AMOUNT:
+				return $this->amount->get() * -1;
+		}
 	}
 
 	protected function insert()

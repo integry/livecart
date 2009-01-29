@@ -41,6 +41,7 @@ _quantity=Quantity
 _qty=Qty
 _product=Product
 _discount=Discount
+_surcharge=Surcharge
 
 # Product options
 _err_option_0=This option must be selected

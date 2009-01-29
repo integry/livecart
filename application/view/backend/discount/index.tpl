@@ -117,6 +117,11 @@
 				<div class="clear"></div>
 			</div>
 
+			<div class="valueContainer">
+				<ul></ul>
+				<div class="clear"></div>
+			</div>
+
 			<ul class="conditionContainer" style="display: none;">
 				<div class="allSubsMenu">
 					<span>

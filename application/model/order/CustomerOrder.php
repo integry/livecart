@@ -913,7 +913,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			{
 				if ($action->isOrderDiscount() && $action->isFixedAmount())
 				{
-					$discount = $this->currency->get()->convertAmount(self::getApplication()->getDefaultCurrency(), $action->amount->get());
+					$discount = $this->currency->get()->convertAmount(self::getApplication()->getDefaultCurrency(), $action->getDiscountAmount(0));
 					$amount += $discount;
 					$this->orderDiscounts[$id] = OrderDiscount::getNewInstance($this);
 					$this->orderDiscounts[$id]->amount->set($discount);
@@ -1274,11 +1274,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 	public function getPaidAmount()
 	{
-		ClassLoader::import('application.model.order.Transaction');
-		$filter = new ARSelectFilter(new InCond(new ARFieldHandle('Transaction', 'type'), array(Transaction::TYPE_AUTH, Transaction::TYPE_SALE)));
-		$filter->mergeCondition(new NotEqualsCond(new ARFieldHandle('Transaction', 'isVoided'), true));
-
-		$transactions = $this->getTransactions($filter);
+		$transactions = $this->getTransactions($this->getPaidTransactionFilter());
 		$paid = 0;
 		foreach ($transactions as $transaction)
 		{
@@ -1288,9 +1284,44 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		return $paid;
 	}
 
+	private function getPaidTransactionFilter()
+	{
+		$filter = new ARSelectFilter(new InCond(new ARFieldHandle('Transaction', 'type'), array(Transaction::TYPE_AUTH, Transaction::TYPE_SALE)));
+		$filter->mergeCondition(new NotEqualsCond(new ARFieldHandle('Transaction', 'isVoided'), true));
+		return $filter;
+	}
+
 	public function getDueAmount()
 	{
 		return $this->getTotal($this->currency->get()) - $this->getPaidAmount();
+	}
+
+	public function setPaymentMethod($method)
+	{
+		$this->paymentMethod = $method;
+		$this->getDiscountActions(true);
+	}
+
+	public function getPaymentMethod()
+	{
+		if ($this->isFinalized->get() && is_null($this->paymentMethod))
+		{
+			foreach ($this->getTransactions($this->getPaidTransactionFilter()) as $transaction)
+			{
+				if ($transaction->method->get())
+				{
+					$this->paymentMethod = $transaction->method->get();
+					break;
+				}
+			}
+		}
+
+		if (is_null($this->paymentMethod))
+		{
+			$this->paymentMethod = '';
+		}
+
+		return $this->paymentMethod;
 	}
 
 	/*####################  Data array transformation ####################*/

@@ -51,7 +51,7 @@
 </fieldset>
 
 <script type="text/javascript">
-	var inst = new Backend.Discount.Condition({json array=$condition}, {json array=$records}, $('condition_{$condition.ID}').down('.conditionContainer'));
+	var inst = new Backend.Discount.Condition({json array=$condition}, {json array=$records}, {json array=$serializedValues}, $('condition_{$condition.ID}').down('.conditionContainer'));
 	Event.observe($('addRootCondition_{$condition.ID}'), 'click', inst.createSubCondition.bind(inst));
 
 	var action = null;

@@ -32,6 +32,7 @@ a.subCondition
 {
 	font-size: smaller;
 	color: #f00;
+	white-space: nowrap;
 }
 
 .conditionContainer.root
@@ -116,7 +117,7 @@ a.subCondition
 	display: none;
 }
 
-.recordContainer, .selectRecordContainer
+.recordContainer, .selectRecordContainer, .valueContainer
 {
 	margin-left: 34px;
 	margin-bottom: 1em;
@@ -187,7 +188,7 @@ a.subCondition
 	display: block;
 }
 
-.selectRecordContainer li, .recordContainer li
+.selectRecordContainer li, .recordContainer li, .valueContainer li
 {
 	list-style-type: none;
 	clear: both;

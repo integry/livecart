@@ -28,6 +28,9 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 	const COUPON_LIMIT_ALL = 0;
 	const COUPON_LIMIT_USER = 1;
 
+	// custom types
+	const TYPE_PAYMENT_METHOD = 101;
+
 	private $records = array();
 
 	private $subConditions = null;
@@ -373,7 +376,35 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		self::applyConstraintConditions($cond, $order);
 		$filter = new ARSelectFilter($cond);
 		$filter->setOrder(new ARFieldHandle(__CLASS__, 'position'), 'ASC');
-		return ActiveRecordModel::getRecordSetArray(__CLASS__, $filter);
+		$conditions = ActiveRecordModel::getRecordSetArray(__CLASS__, $filter);
+
+		// evaluate serialized conditions
+		foreach ($conditions as $key => $cond)
+		{
+			if (!empty($cond['serializedCondition']))
+			{
+				$ser = $cond['serializedCondition'];
+				if (isset($ser['type']))
+				{
+					$valid = false;
+
+					switch ($ser['type'])
+					{
+						case self::TYPE_PAYMENT_METHOD:
+							$method = $order->getPaymentMethod();
+							$valid = $method && !empty($ser['values'][$method]);
+							break;
+					}
+
+					if (!$valid)
+					{
+						unset($conditions[$key]);
+					}
+				}
+			}
+		}
+
+		return $conditions;
 	}
 
 	private static function getRecordConditions(CustomerOrder $order)
@@ -724,6 +755,52 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		return MultiLingualObject::setValueArrayByLang($fieldNameArray, $defaultLangCode, $langCodeArray, $request);
 	}
 
+	private function getSerializedCond()
+	{
+		return unserialize($this->getFieldValue('serializedCondition'));
+	}
+
+	private function setSerializedCond($cond)
+	{
+		return $this->setFieldValue('serializedCondition', serialize($cond));
+	}
+
+	public function getType()
+	{
+		$ser = $this->getSerializedCond();
+		if (isset($ser['type']))
+		{
+			return $ser['type'];
+		}
+	}
+
+	public function setType($type)
+	{
+		$ser = $this->getSerializedCond();
+
+		if (isset($ser['type']) && ($ser['type'] != $type))
+		{
+			unset($ser['values']);
+		}
+
+		$ser['type'] = $type;
+		$this->setSerializedCond($ser);
+	}
+
+	public function addValue($value)
+	{
+		$ser = $this->getSerializedCond();
+		$ser['values'][$value] = true;
+		$this->setSerializedCond($ser);
+	}
+
+	public function removeValue($value)
+	{
+		$ser = $this->getSerializedCond();
+		unset($ser['values'][$value]);
+		$this->setSerializedCond($ser);
+	}
+
 	protected function insert()
 	{
 		$this->setLastPosition();
@@ -737,6 +814,11 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 	 */
 	protected static function transformArray($array, ARSchema $schema)
 	{
+		if (!empty($array['serializedCondition']))
+		{
+			$array['serializedCondition'] = unserialize($array['serializedCondition']);
+		}
+
 		return MultiLingualObject::transformArray($array, $schema);
 	}
 

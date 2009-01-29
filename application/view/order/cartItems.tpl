@@ -71,7 +71,7 @@
 					{include file="order/selectItemAddress.tpl" item=$item}
 				{/if}
 			</td>
-			<td class="cartPrice {if $item.itemBasePrice > $item.itemPrice}discount{/if}">
+			<td class="cartPrice {if $item.itemBasePrice != $item.itemPrice}discount{/if}">
 				{if $item.count == 1}
 					<span class="basePrice">{$item.formattedBasePrice}</span><span class="actualPrice">{$item.formattedPrice}</span>
 				{else}
@@ -94,7 +94,7 @@
 
 	{foreach from=$cart.discounts item=discount}
 		<tr>
-			<td colspan="3" class="subTotalCaption">{t _discount}: <span class="discountDesc">{$discount.description}</span></td>
+			<td colspan="3" class="subTotalCaption">{if $discount.amount < 0}{t _discount}{else}{t _surcharge}{/if}: <span class="discountDesc">{$discount.description}</span></td>
 			<td class="amount discountAmount">{$discount.formatted_amount}</td>
 			{$cartUpdate|@array_shift}
 		</tr>
@@ -102,7 +102,7 @@
 
 	{if $cart.itemDiscountReverse}
 		<tr>
-			<td colspan="3" class="subTotalCaption">{t _discount}:</td>
+			<td colspan="3" class="subTotalCaption">{if $cart.itemDiscountReverse < 0}{t _discount}{else}{t _surcharge}{/if}:</td>
 			<td class="amount discountAmount">{$cart.formatted_itemDiscountReverse}</td>
 			{$cartUpdate|@array_shift}
 		</tr>

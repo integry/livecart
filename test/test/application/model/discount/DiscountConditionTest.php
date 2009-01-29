@@ -574,6 +574,50 @@ class DiscountConditionTest extends UnitTest
 		$condition->save();
 		$this->assertEquals(0, count($this->order->getDiscountConditions(true)));
 	}
+
+	public function testPaymentMethod()
+	{
+		$this->order->addProduct($this->product1, 1, true);
+		$this->order->save();
+
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->setType(DiscountCondition::TYPE_PAYMENT_METHOD);
+		$condition->addValue('TESTING');
+		$condition->save();
+
+		$this->assertEquals(0, count($this->order->getDiscountConditions(true)));
+
+		$this->order->setPaymentMethod('TESTING');
+		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
+
+		$this->order->setPaymentMethod('AnotherOne');
+		$this->assertEquals(0, count($this->order->getDiscountConditions(true)));
+
+		// test finalized order
+		ClassLoader::import('library.payment.TransactionResult');
+		$transResult = new TransactionResult();
+		$transResult->setTransactionType(TransactionResult::TYPE_SALE);
+		$transResult->amount->set(10000);
+		$transResult->currency->set('USD');
+		$transaction = Transaction::getNewInstance($this->order, $transResult);
+		$transaction->method->set('TESTING');
+		$transaction->save();
+
+		$this->order->finalize($this->usd);
+
+		ActiveRecord::clearPool();
+
+		$reloaded = CustomerOrder::getInstanceById($this->order->getID(), true);
+		$reloaded->loadAll();
+
+		$this->assertEquals(1, count($reloaded->getDiscountConditions(true)));
+
+		$condition->removeValue('TESTING');
+		$condition->addValue('Whatever');
+		$condition->save();
+		$this->assertEquals(0, count($reloaded->getDiscountConditions(true)));
+	}
 }
 
 ?>

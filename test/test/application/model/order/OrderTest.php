@@ -1253,6 +1253,39 @@ class OrderTest extends OrderTestCommon
 		$this->assertEquals($this->products[1]->getPrice($this->usd) * 0.9, $this->order->getTotal($this->usd));
 	}
 
+	public function testPaymentMethodSurcharge()
+	{
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->setType(DiscountCondition::TYPE_PAYMENT_METHOD);
+		$condition->addValue('TESTING');
+		$condition->save();
+
+		$action = DiscountAction::getNewInstance($condition);
+		$action->actionCondition->set($condition);
+		$action->isEnabled->set(true);
+		$action->type->set(DiscountAction::TYPE_ORDER_DISCOUNT);
+		$action->amount->set(10);
+		$action->actionType->set(DiscountAction::ACTION_SURCHARGE_PERCENT);
+		$action->save();
+
+		$this->order->addProduct($this->products[1], 1, true);
+		$this->order->setPaymentMethod('TESTING');
+		$this->order->save();
+
+		$price = $this->products[1]->getPrice($this->usd);
+		$this->assertEquals((int)($price * 1.1), (int)$this->order->getTotal($this->usd));
+
+		$action->actionType->set(DiscountAction::ACTION_AMOUNT);
+		$this->assertEquals((int)($price - 10), (int)$this->order->getTotal($this->usd));
+
+		$action->actionType->set(DiscountAction::ACTION_SURCHARGE_AMOUNT);
+		$this->assertEquals((int)($price + 10), (int)$this->order->getTotal($this->usd));
+
+		$action->actionType->set(DiscountAction::ACTION_PERCENT);
+		$this->assertEquals((int)($price * 0.9), (int)$this->order->getTotal($this->usd));
+	}
+
 	public function testQuantityPrices()
 	{
 		$product = $this->products[0];

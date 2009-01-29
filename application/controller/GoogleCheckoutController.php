@@ -16,83 +16,8 @@ class GoogleCheckoutController extends CheckoutController
 {
 	public function index()
 	{
-		$input = '<new-order-notification xmlns="http://checkout.google.com/schema/2" serial-number="674859982453950-00001-7">
-  <timestamp>2008-11-27T20:58:43.928Z</timestamp>
-  <shopping-cart>
-    <items>
-      <item>
-        <item-name>Nokia 1600</item-name>
-        <item-description>The all new Nokia 1600 phone makes life so much easier! Put yourself centre-stage with the 65,536 colour screen and spice it up with the MP3 and 20-chord polyphonic ringing tones. With the speaking alarm and clock, youll never miss a party again. Break through your daily routine and enjoy more o...</item-description>
-        <quantity>1</quantity>
-        <unit-price currency="USD">79.04</unit-price>
-        <merchant-private-item-data>
-          <item-id>327</item-id>
-          <order-id>85</order-id>
-        </merchant-private-item-data>
-      </item>
-      <item>
-        <item-name>Nokia 7373</item-name>
-        <item-description>The Nokia 7373 is a fashion style leader with its swivel design and high-resolution 320x240, 262K color display. The Nokia 7373 GSM triple-band device features include a 2.0-megapixel camera with flash and 8x Zoom, video recorder, music player, Bluetooth 2.0 and Java MIDP 2.0.</item-description>
-        <quantity>1</quantity>
-        <unit-price currency="USD">364.88</unit-price>
-        <merchant-private-item-data>
-          <item-id>328</item-id>
-          <order-id>85</order-id>
-        </merchant-private-item-data>
-      </item>
-    </items>
-  </shopping-cart>
-  <order-adjustment>
-    <merchant-calculation-successful>true</merchant-calculation-successful>
-    <merchant-codes />
-    <total-tax currency="USD">56.91</total-tax>
-    <shipping>
-      <merchant-calculated-shipping-adjustment>
-        <shipping-name>American Rate By Weight</shipping-name>
-        <shipping-cost currency="USD">30.36</shipping-cost>
-      </merchant-calculated-shipping-adjustment>
-    </shipping>
-    <adjustment-total currency="USD">87.27</adjustment-total>
-  </order-adjustment>
-  <buyer-id>131641297972917</buyer-id>
-  <google-order-number>674859982453950</google-order-number>
-  <buyer-shipping-address>
-    <email>rinalds@integry.net</email>
-    <company-name></company-name>
-    <contact-name>Rinalds US</contact-name>
-    <phone></phone>
-    <fax></fax>
-    <address1>test</address1>
-    <address2></address2>
-    <country-code>US</country-code>
-    <city>test</city>
-    <region>CA</region>
-    <postal-code>90210</postal-code>
-  </buyer-shipping-address>
-  <buyer-billing-address>
-    <email>rinalds@integry.net</email>
-    <company-name></company-name>
-    <contact-name>Rinalds Uzkalns</contact-name>
-    <phone>+371-25977725</phone>
-    <fax></fax>
-    <address1>Stacijas 4a</address1>
-    <address2></address2>
-    <country-code>LV</country-code>
-    <city>Saulkrasti</city>
-    <region></region>
-    <postal-code>2610</postal-code>
-  </buyer-billing-address>
-  <buyer-marketing-preferences>
-    <email-allowed>true</email-allowed>
-  </buyer-marketing-preferences>
-  <order-total currency="USD">531.19</order-total>
-  <fulfillment-order-state>NEW</fulfillment-order-state>
-  <financial-order-state>REVIEWING</financial-order-state>
-</new-order-notification>';
-
 		$handler = $this->application->getPaymentHandler('GoogleCheckout')->getHandler();
-		$array = $origArray = $this->getArrayFromXML($input);
-		$array = $this->getPostData();
+		$array = $origArray = $this->getPostData();
 
 		$array = array_shift(array_shift($array));
 
@@ -282,6 +207,7 @@ class GoogleCheckoutController extends CheckoutController
 		}
 
 		$order = CustomerOrder::getInstanceByID($orderID, true);
+		$order->setPaymentMethod('GoogleCheckout');
 		$order->loadAll();
 
 		// remove items that are not in Google cart

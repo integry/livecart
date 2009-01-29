@@ -52,6 +52,7 @@ _type_items_in_cart=Selected products are present in cart
 _type_user_group=Customer belongs to selected user group
 _type_user=Customer is
 _type_delivery_zone=Order delivery zone is
+_type_payment_method=Payment method is
 
 _compare_eq=equal to
 _compare_lteq=less than or equal to
@@ -76,6 +77,8 @@ _apply_to=Apply discount to
 
 _percentage_discount=Apply percentage discount
 _fixed_amount_discount=Apply fixed amount discount
+_percentage_surcharge=Add percentage surcharge
+_fixed_amount_surcharge=Add fixed amount surcharge
 _type_disable_checkout=Disable checkout
 
 _apply_order=Whole order

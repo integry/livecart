@@ -117,6 +117,7 @@ class CheckoutController extends FrontendController
 	{
 		// redirect to external site
 		$class = $this->request->get('id');
+		$this->order->setPaymentMethod($class);
 
 		$handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
 		$handler->setOrder($this->order);
@@ -134,6 +135,7 @@ class CheckoutController extends FrontendController
 	public function expressReturn()
 	{
 		$class = $this->request->get('id');
+		$this->order->setPaymentMethod($class);
 
 		$handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
 		$handler->setOrder($this->order);
@@ -695,6 +697,7 @@ class CheckoutController extends FrontendController
 		ActiveRecordModel::beginTransaction();
 
 		$this->order->setCheckoutStep(CustomerOrder::CHECKOUT_PAY);
+		$this->order->setPaymentMethod($this->config->get('CC_HANDLER'));
 
 		// process payment
 		$transaction = $this->getTransaction();
@@ -771,6 +774,7 @@ class CheckoutController extends FrontendController
 		}
 
 		$order = $this->order;
+		$this->order->setPaymentMethod($method);
 		$response = $this->finalizeOrder();
 
 		$transaction = Transaction::getNewOfflineTransactionInstance($order, 0);
@@ -866,6 +870,8 @@ class CheckoutController extends FrontendController
 		$notifyParams = $this->request->isValueSet('order') ? array('order' => $this->request->get('order')) : array();
 
 		$class = $this->request->get('id');
+		$order->setPaymentMethod($class);
+
 		$handler = $this->application->getPaymentHandler($class, $this->getTransaction());
 		$handler->setNotifyUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'notify', 'id' => $class, 'query' => $notifyParams))));
 		$handler->setReturnUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'completeExternal', 'id' => $order->getID()))));
@@ -906,6 +912,7 @@ class CheckoutController extends FrontendController
 		}
 
 		$order = CustomerOrder::getInstanceById($orderId, CustomerOrder::LOAD_DATA);
+		$order->setPaymentMethod(get_class($handler));
 		$order->loadAll();
 		$this->order = $order;
 		$handler->setDetails($this->getTransaction());
@@ -1180,6 +1187,8 @@ class CheckoutController extends FrontendController
 		{
 			return new ActionRedirectResponse('order', 'index');
 		}
+
+		$this->order->setPaymentMethod(get_class($expressInstance));
 
 		try
 		{
