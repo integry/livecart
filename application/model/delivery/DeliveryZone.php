@@ -115,7 +115,7 @@ class DeliveryZone extends MultilingualObject
 		if ($address->state->get())
 		{
 			$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('DeliveryZone', 'isEnabled'), true));
-			$f->setCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneState', 'stateID'), $address->state->get()->getID()));
+			$f->mergeCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneState', 'stateID'), $address->state->get()->getID()));
 			$s = ActiveRecordModel::getRecordSet('DeliveryZoneState', $f, ActiveRecordModel::LOAD_REFERENCES);
 
 			foreach ($s as $zoneState)
@@ -128,7 +128,7 @@ class DeliveryZone extends MultilingualObject
 		if (!$zones)
 		{
 			$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('DeliveryZone', 'isEnabled'), true));
-			$f->setCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneCountry', 'countryCode'), $address->countryID->get()));
+			$f->mergeCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneCountry', 'countryCode'), $address->countryID->get()));
 			$s = ActiveRecordModel::getRecordSet('DeliveryZoneCountry', $f, array('DeliveryZone'));
 
 			foreach ($s as $zone)
