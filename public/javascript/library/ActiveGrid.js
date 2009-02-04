@@ -242,7 +242,7 @@ ActiveGrid.prototype =
 		{
 			if (k.substr(0, 7) == 'filter_')
 			{
-				this.ricoGrid.options.requestParameters[i++] = 'filters[' + k.substr(7, 1000) + ']' + '=' + this.filters[k];
+				this.ricoGrid.options.requestParameters[i++] = 'filters[' + k.substr(7, 1000) + ']' + '=' + encodeURIComponent(this.filters[k]);
 			}
 		}
 	},

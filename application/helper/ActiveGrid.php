@@ -80,6 +80,8 @@ class ActiveGrid
 				continue;
 			}
 
+			$value = urldecode($value);
+
 			$handle = $this->getFieldHandle($field, self::FILTER_HANDLE);
 
 			if (!is_array($handle) && !is_null($handle))
