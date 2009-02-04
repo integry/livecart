@@ -150,14 +150,14 @@ class ShippingService extends MultilingualObject
 		if (self::WEIGHT_BASED == $this->rangeType->get())
 		{
 			$weight = $shipment->getChargeableWeight($this->deliveryZone->get());
-			$cond = new EqualsOrLessCond(new ARFieldHandle('ShippingRate', 'weightRangeStart'), $weight);
-			$cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('ShippingRate', 'weightRangeEnd'), $weight));
+			$cond = new EqualsOrLessCond(new ARFieldHandle('ShippingRate', 'weightRangeStart'), $weight * 1.000001);
+			$cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('ShippingRate', 'weightRangeEnd'), $weight * 0.99999));
 		}
 		else
 		{
 			$total = $shipment->getSubTotal(self::getApplication()->getDefaultCurrency(), Shipment::WITHOUT_TAXES);
-			$cond = new EqualsOrLessCond(new ARFieldHandle('ShippingRate', 'subtotalRangeStart'), $total);
-			$cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('ShippingRate', 'subtotalRangeEnd'), $total));
+			$cond = new EqualsOrLessCond(new ARFieldHandle('ShippingRate', 'subtotalRangeStart'), $total * 1.000001);
+			$cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('ShippingRate', 'subtotalRangeEnd'), $total * 0.99999));
 		}
 
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ShippingRate', 'shippingServiceID'), $this->getID()));
