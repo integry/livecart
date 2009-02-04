@@ -174,7 +174,7 @@ abstract class FrontendController extends BaseController
 
 	protected function boxShoppingCartBlock()
 	{
-		ClassLoader::import('application.model.order.CustomerOrder');
+		ClassLoader::import('application.model.order.SessionOrder');
 		$response = new BlockResponse();
 
 		$orderData = $this->session->get('orderData');
@@ -504,7 +504,10 @@ abstract class FrontendController extends BaseController
 		$ids = array();
 		foreach ($topCategories as $cat)
 		{
-			$ids[] = $cat['ID'];
+			if ($cat['isEnabled'])
+			{
+				$ids[] = $cat['ID'];
+			}
 		}
 
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('Category', 'parentNodeID'), $ids));
@@ -514,7 +517,10 @@ abstract class FrontendController extends BaseController
 		$subCategories = array();
 		foreach (ActiveRecordModel::getRecordSetArray('Category', $f) as $cat)
 		{
-			$subCategories[$cat['parentNodeID']][] = $cat;
+			if ($cat['isEnabled'])
+			{
+				$subCategories[$cat['parentNodeID']][] = $cat;
+			}
 		}
 
 		$response = new BlockResponse();
@@ -523,7 +529,6 @@ abstract class FrontendController extends BaseController
 		$response->set('currentId', $this->getTopCategoryId());
 		return $response;
 	}
-
 	protected function saleItemsBlock($useRoot = false)
 	{
 		ClassLoader::import('application.model.product.ProductFilter');
