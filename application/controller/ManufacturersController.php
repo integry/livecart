@@ -33,6 +33,8 @@ class ManufacturersController extends FrontendController
 		$manufacturers = ActiveRecordModel::getRecordSetArray('Manufacturer', $f);
 
 		$params = array('filters' => array(new ManufacturerFilter(999, '___')), 'data' => Category::getRootNode()->toArray());
+
+		include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
 		$templateUrl = createCategoryUrl($params, $this->application);
 		$templateUrl = strtr($templateUrl, array(999 => '#', '___' => '|'));
 

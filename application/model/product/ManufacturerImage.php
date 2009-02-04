@@ -79,7 +79,6 @@ class ManufacturerImage extends ObjectImage
 
 	public static function transformArray($array, ARSchema $schema)
 	{
-throw new ApplicationException('test');
 		$array = parent::transformArray($array, $schema);
 
 		$array['paths'] = $array['urls'] = array();
