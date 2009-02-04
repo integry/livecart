@@ -76,7 +76,7 @@
 
 				<p>
 					<label></label>
-					{textfield name="billing_address_2" class="text"}
+					{textfield name="billing_address2" class="text"}
 				</p>
 
 				<p class="required">
