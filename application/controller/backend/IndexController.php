@@ -29,6 +29,7 @@ class IndexController extends StoreManagementController
 		{
 			$f = new ARSelectFilter($cond);
 			$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+			$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), false));
 			$orderCount[$key] = ActiveRecordModel::getRecordCount('CustomerOrder', $f);
 		}
 

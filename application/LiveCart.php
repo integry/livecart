@@ -676,6 +676,7 @@ class LiveCart extends Application
 	public function setLocale(Locale $locale)
 	{
 	  	$this->locale = $locale;
+	  	$this->localeName = $locale->getLocaleCode();
 	}
 
 	/**
@@ -831,8 +832,11 @@ class LiveCart extends Application
 
 	public function setRequestLanguage($langCode)
 	{
-	  	$this->requestLanguage = $langCode;
-	  	unset($this->locale, $this->localeName);
+	  	if ($langCode)
+	  	{
+			$this->requestLanguage = $langCode;
+			unset($this->locale, $this->localeName);
+		}
 	}
 
 	/**

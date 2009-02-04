@@ -100,7 +100,7 @@ class ProductCompare
 			}
 			else
 			{
-				$catID = Category::ROOT_ID;
+				$catID = isset($attrCats[$product['Category']['ID']]) ? $product['Category']['ID'] : Category::ROOT_ID;
 			}
 
 			$sorted[$catID]['products'][] =& $product;

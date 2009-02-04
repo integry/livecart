@@ -26,7 +26,6 @@ class FileCache
 		$file = $this->getCacheFile($key, $namespace);
 		if (!file_exists(dirname($file)))
 		{
-			var_dump(dirname($file));
 			mkdir(dirname($file), 0777, true);
 		}
 
