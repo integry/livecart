@@ -19,6 +19,16 @@ class UserController extends FrontendController
 
  	const COUNT_RECENT_FILES = 5;
 
+ 	public function init()
+ 	{
+ 		parent::init();
+
+ 		if ($this->user->getID())
+ 		{
+ 			$this->user->load();
+		}
+	}
+
 	private function addAccountBreadcrumb()
 	{
 		$this->addBreadCrumb($this->translate('_your_account'), $this->router->createUrl(array('controller' => 'user'), true));
