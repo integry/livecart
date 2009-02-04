@@ -25,7 +25,7 @@ class CategoryPresentation extends AbstractPresentation
 	public static function getNewInstance(Category $category)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->category->set($category);
+		$instance->setID($category->getID());
 		return $instance;
 	}
 

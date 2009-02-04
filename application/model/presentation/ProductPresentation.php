@@ -24,7 +24,7 @@ class ProductPresentation extends AbstractPresentation
 	public static function getNewInstance(Product $product)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->product->set($product);
+		$instance->setID($product->getID());
 		return $instance;
 	}
 
