@@ -364,10 +364,17 @@ abstract class LiveCartImportDriver
 		{
 			foreach ($product->importedImages as $imageFile)
 			{
-				$image = ProductImage::getNewInstance($product);
-				$image->save();
-				$image->setFile($imageFile);
-				$image->__destruct();
+				try
+				{
+					$image = ProductImage::getNewInstance($product);
+					$image->save();
+					$image->setFile($imageFile);
+					$image->__destruct();
+				}
+				catch (Exception $e)
+				{
+					// invalid image
+				}
 			}
 
 			unset($product->importedImages);
