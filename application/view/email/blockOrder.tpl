@@ -1,7 +1,7 @@
 {if !$html}
 {include file="email/blockOrderItems.tpl"}
 
-{t _subtotal|@str_pad_left:49}: {$order.formatted_itemSubtotal}
+{t _subtotal|@str_pad_left:49}: {$order.formatted_itemSubtotalWithoutTax}
 {if $order.shippingSubtotal}
 {t _shipping|@str_pad_left:49}: {$order.formatted_shippingSubtotal}
 {/if}
@@ -23,7 +23,7 @@
 <table border="1">
 {include file="email/blockOrderItems.tpl" noTable=true}
 
-<tr><td colspan="3">{t _subtotal}</td><td align="right">{$order.formatted_itemSubtotal}</td></tr>
+<tr><td colspan="3">{t _subtotal}</td><td align="right">{$order.formatted_itemSubtotalWithoutTax}</td></tr>
 {if $order.shippingSubtotal}
 <tr><td colspan="3">{t _shipping}</td><td align="right">{$order.formatted_shippingSubtotal}</td></tr>
 {/if}

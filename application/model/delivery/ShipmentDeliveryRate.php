@@ -112,9 +112,15 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 		return $this->service;
 	}
 
-	public function toArray()
+	public function toArray($amount = null)
 	{
 		$array = parent::toArray();
+
+		if (!is_null($amount))
+		{
+			$array['costAmount'] = $amount;
+		}
+
 		$amountCurrency = Currency::getInstanceById($array['costCurrency']);
 		$currencies = $this->application->getCurrencySet();
 

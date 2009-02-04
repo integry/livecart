@@ -88,7 +88,7 @@
 		<table id="invoicePaymentInfo">
 			<tr class="itemSubtotal">
 				<td>{t _item_subtotal}:</td>
-				<td class="amount">{$order.formatted_itemSubtotal}</td>
+				<td class="amount">{$order.formatted_itemSubtotalWithoutTax}</td>
 			</tr>
 			<tr class="shippingSubtotal">
 				<td>{t _shipping_handling}:</td>

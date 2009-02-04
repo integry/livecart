@@ -98,10 +98,10 @@ class ShipmentTax extends ActiveRecordModel
 		$this->amount->set($taxAmount);
 	}
 
-	public function getAmountByCurrency(Currency $currency)
+	public function getAmountByCurrency(Currency $currency, $amount = null)
 	{
 		$amountCurrency = $this->shipment->get()->amountCurrency->get();
-		return $currency->convertAmount($amountCurrency, $this->amount->get());
+		return $currency->convertAmount($amountCurrency, is_null($amount) ? $this->amount->get() : $amount);
 	}
 
 	public function isItemTax()
@@ -111,12 +111,6 @@ class ShipmentTax extends ActiveRecordModel
 
 	public function toArray($amount = null)
 	{
-		if (!is_null($amount))
-		{
-			$realAmount = $this->amount->get();
-			$this->amount->set($amount);
-		}
-
 		$array = parent::toArray();
 		$array['formattedAmount'] = array();
 
@@ -126,12 +120,12 @@ class ShipmentTax extends ActiveRecordModel
 		// get and format prices
 		foreach ($currencies as $id => $currency)
 		{
-			$array['formattedAmount'][$id] = $currency->getFormattedPrice($this->getAmountByCurrency($currency));
+			$array['formattedAmount'][$id] = $currency->getFormattedPrice($this->getAmountByCurrency($currency, $amount));
 		}
 
-		if (isset($realAmount))
+		if (!is_null($amount))
 		{
-			$this->amount->set($realAmount);
+			$array['amount'] = $amount;
 		}
 
 		return $array;

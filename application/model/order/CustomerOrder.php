@@ -962,7 +962,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		{
 			foreach ($this->getShoppingCartItems() as $item)
 			{
-				$total += $item->getSubTotal($currency);
+				$total += $item->getSubTotal($currency, false);
 			}
 			$total += $this->getTaxes($currency);
 		}
@@ -1473,10 +1473,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		}
 
 		// items subtotal
-		$array['itemSubtotal'] = $array['itemDisplayPriceTotal'] = 0;
+		$array['itemSubtotal'] = $array['itemDisplayPriceTotal'] = $array['itemSubtotalWithoutTax'] = 0;
 		foreach ($this->getOrderedItems() as $item)
 		{
-			$array['itemSubtotal'] += $item->getSubtotal($currency);
+			$array['itemSubtotal'] += $item->getSubtotal($currency, true);
+			$array['itemSubtotalWithoutTax'] += $item->getSubtotal($currency, false);
 			$array['itemDisplayPriceTotal'] += $item->getDisplayPrice($currency) * $item->count->get();
 		}
 
@@ -1493,9 +1494,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			}
 		}
 
-		$array['subtotalBeforeTaxes'] = $array['itemSubtotal'] + $array['shippingSubtotal'];
+		$array['subtotalBeforeTaxes'] = $array['itemSubtotalWithoutTax'] + $array['shippingSubtotal'];
 
-		foreach (array('amountPaid', 'amountNotCaptured', 'amountDue', 'itemSubtotal', 'shippingSubtotal', 'subtotalBeforeTaxes', 'totalAmount', 'itemDiscountReverse', 'itemDiscount') as $key)
+		foreach (array('amountPaid', 'amountNotCaptured', 'amountDue', 'itemSubtotal', 'shippingSubtotal', 'subtotalBeforeTaxes', 'totalAmount', 'itemDiscountReverse', 'itemDiscount', 'itemSubtotalWithoutTax') as $key)
 		{
 			if (isset($array[$key]))
 			{

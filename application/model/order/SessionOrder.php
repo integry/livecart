@@ -92,7 +92,9 @@ class SessionOrder
 		$orderArray['formattedTotal'] = array($currID => $currency->getFormattedPrice($orderArray['total'][$currID]));
 		$orderArray['basketCount'] = $order->getShoppingCartItemCount();
 		$orderArray['currencyID'] = $currID;
-		$orderArray['isOrderable'] = $order->isOrderable();
+
+		$isOrderable = $order->isOrderable();
+		$orderArray['isOrderable'] = is_bool($isOrderable) ? $isOrderable : false;
 
 		$session->set('orderData', $orderArray);
 	}

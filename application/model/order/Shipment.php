@@ -281,7 +281,7 @@ class Shipment extends ActiveRecordModel
 		{
 			if (!$item->isDeleted())
 			{
-				$subTotal += $item->getSubTotal($currency);
+				$subTotal += $item->getSubTotal($currency, false);
 			}
 		}
 
@@ -374,13 +374,13 @@ class Shipment extends ActiveRecordModel
 		}
 	}
 
-	public function applyTaxesToAmount($amount)
+	public function applyTaxesToAmount($amount, $type = ShipmentTax::TYPE_SUBTOTAL)
 	{
 		$taxAmount = 0;
 
 		foreach ($this->getTaxes() as $tax)
 		{
-			if ($tax->isItemTax())
+			if ($tax->type->get() == $type)
 			{
 				if ($tax->taxRate->get())
 				{
@@ -396,11 +396,14 @@ class Shipment extends ActiveRecordModel
 		return $amount + $taxAmount;
 	}
 
-	public function reduceTaxesFromAmount($amount)
+	public function reduceTaxesFromAmount($amount, $type = ShipmentTax::TYPE_SUBTOTAL)
 	{
 		foreach ($this->getTaxes() as $tax)
 		{
-			$amount  = $amount / (1 + ($tax->taxRate->get()->rate->get() / 100));
+			if ($tax->type->get() == $type)
+			{
+				$amount  = $amount / (1 + ($tax->taxRate->get()->rate->get() / 100));
+			}
 		}
 
 		return $amount;
@@ -442,9 +445,10 @@ class Shipment extends ActiveRecordModel
 		if (($rate = $this->getSelectedRate()) && $this->isShippable())
 		{
 			$amount = $rate->getAmountByCurrency($currency);
+
 			if ($this->getDeliveryZone()->isDefault())
 			{
-				$amount = $this->reduceTaxesFromAmount($amount);
+				$amount = $this->reduceTaxesFromAmount($amount, ShipmentTax::TYPE_SHIPPING);
 			}
 
 			$this->shippingAmount->set($amount);
@@ -644,7 +648,8 @@ class Shipment extends ActiveRecordModel
 		// selected shipping rate
 		if ($selected = $this->getSelectedRate())
 		{
-			$array['selectedRate'] = $selected->toArray();
+			$array['selectedRate'] = $selected->toArray($this->applyTaxesToAmount($selected->getCostAmount(), ShipmentTax::TYPE_SHIPPING));
+
 			if (!$array['selectedRate'])
 			{
 				unset($array['selectedRate']);
@@ -658,6 +663,7 @@ class Shipment extends ActiveRecordModel
 		// shipping rate for a saved shipment
 		if (!isset($array['selectedRate']) && isset($array['shippingAmount']))
 		{
+			$array['shippingAmount'] = $this->applyTaxesToAmount($array['shippingAmount'], ShipmentTax::TYPE_SHIPPING);
 			$currency = $this->order->get()->currency->get();
 			$array['selectedRate']['formattedPrice'] = array();
 			foreach ($currencies as $id => $currency)

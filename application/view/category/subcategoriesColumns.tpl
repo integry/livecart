@@ -7,7 +7,7 @@
 {/if}
 	<tr>
 		<td class="subCatImage">
-			{if $sub.featuredProduct}
+			{if $sub.featuredProduct.ID}
 				<div class="categoryFeaturedProduct">
 					<div class="price">
 						{include file="product/block/productPrice.tpl" product=$sub.featuredProduct}

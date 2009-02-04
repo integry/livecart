@@ -761,7 +761,7 @@ class CustomerOrderController extends ActiveGridController
 		{
 			if($user->$userField->get())
 			{
-				$user->$orderField->get()->load(array('UserAddress'));
+				$user->$userField->get()->load(array('UserAddress'));
 				$address = clone $user->$userField->get()->userAddress->get();
 				$address->save();
 				$order->$orderField->set($address);
