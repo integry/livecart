@@ -472,6 +472,11 @@ CssCustomize.prototype =
 
 	getCurrentStyleSheet: function(stylesheet, isTheme)
 	{
+		if (stylesheet.length == 0)
+		{
+			stylesheet = 'barebone';
+		}
+
 		for (var k = 0; k < document.styleSheets.length; k++)
 		{
 			if (document.styleSheets[k].href)

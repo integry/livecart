@@ -34,7 +34,15 @@ function smarty_function_liveCustomization($params, LiveCartSmarty $smarty)
 		{
 			$smarty->assign('mode', $app->getCustomizationModeType());
 			$smarty->assign('theme', $app->getTheme());
-			return $smarty->fetch('customize/menu.tpl');
+
+			if ('menu' == $params['action'])
+			{
+				return $smarty->fetch('customize/menu.tpl');
+			}
+			else if ('lang' == $params['action'])
+			{
+				return $smarty->fetch('customize/translate.tpl');
+			}
 		}
 	}
 }
