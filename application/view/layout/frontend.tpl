@@ -67,6 +67,7 @@
 		{$ACTION_VIEW}
 	</div>
 	{block TRACKING}
+	{liveCustomization action="lang"}
 </body>
 
 </html>
