@@ -58,9 +58,9 @@ class ManufacturerImage extends ObjectImage
 		return self::$imageSizes;
 	}
 
-	protected static function getImagePath($imageID, $manufacturerID, $size)
+	protected static function getImagePath($imageID, $productID, $size)
 	{
-		return 'upload/manufacturerimage/' . $manufacturerID. '-' . $imageID . '-' . $size . '.jpg';
+		return self::getImageRoot(__CLASS__) . $productID. '-' . $imageID . '-' . $size . '.jpg';
 	}
 
 	/*####################  Saving ####################*/
@@ -76,28 +76,9 @@ class ManufacturerImage extends ObjectImage
 	}
 
 	/*####################  Data array transformation ####################*/
-
 	public static function transformArray($array, ARSchema $schema)
 	{
-		$array = parent::transformArray($array, $schema);
-
-		$array['paths'] = $array['urls'] = array();
-		$baseUrl = self::getApplication()->getRouter()->getBaseUrl();
-
-		foreach (self::getImageSizes() as $key => $value)
-	  	{
-			$manufacturerID = isset($array['Manufacturer']['ID']) ? $array['Manufacturer']['ID'] : (isset($array['manufacturerID']) ? $array['manufacturerID'] : false);
-
-			if (!$manufacturerID)
-			{
-				break;
-			}
-
-			$array['paths'][$key] = self::getImagePath($array['ID'], $manufacturerID, $key);
-			$array['urls'][$key] = $baseUrl . $array['paths'][$key];
-		}
-
-		return $array;
+		return parent::transformArray($array, $schema, 'Manufacturer', 'manufacturerID');
 	}
 
 	/*####################  Get related objects ####################*/

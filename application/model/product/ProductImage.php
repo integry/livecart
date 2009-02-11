@@ -60,7 +60,7 @@ class ProductImage extends ObjectImage
 
 	protected static function getImagePath($imageID, $productID, $size)
 	{
-		return 'upload/productimage/' . $productID. '-' . $imageID . '-' . $size . '.jpg';
+		return self::getImageRoot(__CLASS__) . $productID. '-' . $imageID . '-' . $size . '.jpg';
 	}
 
 	/*####################  Saving ####################*/
@@ -76,33 +76,9 @@ class ProductImage extends ObjectImage
 	}
 
 	/*####################  Data array transformation ####################*/
-
 	public static function transformArray($array, ARSchema $schema)
 	{
-		$array = parent::transformArray($array, $schema);
-
-		if (!$array['ID'])
-		{
-			return $array;
-		}
-
-		$array['paths'] = $array['urls'] = array();
-		$baseUrl = self::getApplication()->getRouter()->getBaseUrl();
-
-		foreach (self::getImageSizes() as $key => $value)
-	  	{
-			$productID = isset($array['Product']['ID']) ? $array['Product']['ID'] : (isset($array['productID']) ? $array['productID'] : false);
-
-			if (!$productID)
-			{
-				break;
-			}
-
-			$array['paths'][$key] = self::getImagePath($array['ID'], $productID, $key);
-			$array['urls'][$key] = $baseUrl . $array['paths'][$key];
-		}
-
-		return $array;
+		return parent::transformArray($array, $schema, 'Product', 'productID');
 	}
 
 	/*####################  Get related objects ####################*/

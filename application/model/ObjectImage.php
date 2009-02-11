@@ -88,11 +88,9 @@ abstract class ObjectImage extends MultilingualObject
 
 	public function resizeImage(ImageManipulator $resizer)
 	{
-	  	$publicRoot = dirname(ClassLoader::getRealPath('public.upload')) . '/';
-
 		foreach ($this->getImageSizes() as $key => $size)
 	  	{
-			$filePath = $publicRoot . $this->getPath($key);
+			$filePath = $this->getPath($key);
 
 			if (!file_exists(dirname($filePath)))
 			{
@@ -133,6 +131,38 @@ abstract class ObjectImage extends MultilingualObject
 		return parent::insert();
 	}
 
+	protected static function getImageRoot($className)
+	{
+		return ClassLoader::getRealPath('public.upload.' . strtolower($className) . '.');
+	}
+
+	protected static function getRelativePath($path, &$urlPrefix = null)
+	{
+		$origPath = $path;
+
+		// path located within the /public directory - as default
+		$path = str_replace(ClassLoader::getRealPath('public.'), '', $path);
+		if ($path != $origPath)
+		{
+			$urlPrefix = '/public/';
+			return $path;
+		}
+
+		// path within application web root directory
+		$path = str_replace(ClassLoader::getRealPath('.'), '', $path);
+		if ($path != $origPath)
+		{
+			$path = self::getApplication()->getRouter()->getBaseDirFromUrl() . $path;
+			return $path;
+		}
+
+		// relative to document root
+		if (!empty($_SERVER['DOCUMENT_ROOT']))
+		{
+			return str_replace($_SERVER['DOCUMENT_ROOT'], '', '/' . $path);
+		}
+	}
+
 	public function save()
 	{
 		parent::save();
@@ -144,6 +174,36 @@ abstract class ObjectImage extends MultilingualObject
 			$owner->defaultImage->set($this);
 			$owner->save();
 		}
+	}
+
+	/*####################  Data array transformation ####################*/
+	public static function transformArray($array, ARSchema $schema, $ownerClass, $ownerField)
+	{
+		$array = parent::transformArray($array, $schema);
+
+		if (!$array['ID'])
+		{
+			return $array;
+		}
+
+		$array['paths'] = $array['urls'] = array();
+		$router = self::getApplication()->getRouter();
+
+		foreach (call_user_func(array($schema->getName(), 'getImageSizes')) as $key => $value)
+	  	{
+			$productID = isset($array[$ownerClass]['ID']) ? $array[$ownerClass]['ID'] : (isset($array[$ownerField]) ? $array[$ownerField] : false);
+
+			if (!$productID)
+			{
+				break;
+			}
+
+			$urlPrefix = null;
+			$array['paths'][$key] = self::getRelativePath(call_user_func_array(array($schema->getName(), 'getImagePath'), array($array['ID'], $productID, $key)), $urlPrefix);
+			$array['urls'][$key] = $router->createFullUrl($urlPrefix . $array['paths'][$key]);
+		}
+
+		return $array;
 	}
 
 	public function _clone(ActiveRecordModel $owner)
