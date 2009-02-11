@@ -400,6 +400,10 @@ class CsvImportController extends StoreManagementController
 				else if (!empty($record[$fields['Product']['sku']]))
 				{
 					$product = Product::getInstanceBySku($record[$fields['Product']['sku']], $references);
+					if ($product)
+					{
+						var_dump($record[$fields['Product']['sku']]);
+					}
 				}
 
 				if ($product)
@@ -423,14 +427,20 @@ class CsvImportController extends StoreManagementController
 
 				// product information
 				$impReq->clearData();
+
 				foreach ($this->request->get('column') as $csvIndex => $column)
 				{
-					if (!isset($record[$csvIndex]))
+					if (!isset($record[$csvIndex]) || empty($column))
 					{
 						continue;
 					}
 
 					$value = $record[$csvIndex];
+
+					if (!$this->isValidUTF8($value) && function_exists('utf8_encode'))
+					{
+						$value = utf8_encode($value);
+					}
 
 					list($className, $field) = explode('.', $column, 2);
 					if (isset($request['language'][$csvIndex]))
@@ -943,6 +953,61 @@ class CsvImportController extends StoreManagementController
 	private function getProgressFile()
 	{
 		return ClassLoader::getRealPath('cache.') . 'csvProgress';
+	}
+
+	private function isValidUTF8($str)
+	{
+		// values of -1 represent disalloweded values for the first bytes in current UTF-8
+		static $trailing_bytes = array (
+			0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+			-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+			2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+		);
+
+		$ups = unpack('C*', $str);
+		if (!($aCnt = count($ups))) return true; // Empty string *is* valid UTF-8
+		for ($i = 1; $i <= $aCnt;)
+		{
+			if (!($tbytes = $trailing_bytes[($b1 = $ups[$i++])])) continue;
+			if ($tbytes == -1) return false;
+
+			$first = true;
+			while ($tbytes > 0 && $i <= $aCnt)
+			{
+				$cbyte = $ups[$i++];
+				if (($cbyte & 0xC0) != 0x80) return false;
+
+				if ($first)
+				{
+					switch ($b1)
+					{
+						case 0xE0:
+							if ($cbyte < 0xA0) return false;
+							break;
+						case 0xED:
+							if ($cbyte > 0x9F) return false;
+							break;
+						case 0xF0:
+							if ($cbyte < 0x90) return false;
+							break;
+						case 0xF4:
+							if ($cbyte > 0x8F) return false;
+							break;
+						default:
+							break;
+					}
+					$first = false;
+				}
+				$tbytes--;
+			}
+			if ($tbytes) return false; // incomplete sequence at EOS
+		}
+		return true;
 	}
 }
 
