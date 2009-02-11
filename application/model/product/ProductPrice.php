@@ -288,6 +288,8 @@ class ProductPrice extends ActiveRecordModel
 			$price = 0;
 		}
 
+		$price = $currency->round($price);
+
 		return $price;
 	}
 

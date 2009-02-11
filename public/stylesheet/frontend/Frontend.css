@@ -1053,11 +1053,6 @@ a.progressIndicator
 	background-position: center left;
 }
 
-.delete
-{
-	opacity: 0.5;
-}
-
 .delete:hover
 {
 	opacity: 1;
@@ -1065,6 +1060,7 @@ a.progressIndicator
 
 .delete
 {
+	opacity: 0.5;
 	background-image: url(../../image/silk/gif/cancel.gif);
 	padding: 8px;
 	margin-right: 4px;

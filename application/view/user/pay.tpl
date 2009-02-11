@@ -13,19 +13,14 @@
 		</div>
 	</div>
 
-	{include file="checkout/paymentMethods.tpl"}
+	{include file="checkout/completeOverview.tpl" productsInSeparateLine=true}
 
-	{if 'OFFLINE_PAYMENT'|config}
-		<h2>{t _pay_offline}</h2>
+	<div class="paymentMethods">
+		{include file="checkout/paymentMethods.tpl"}
+		{include file="checkout/offlinePaymentMethods.tpl"}
+	</div>
 
-		{include file="checkout/offlinePaymentInfo.tpl"}
-
-	{/if}
-
-	<h2>{t _order_overview}</h2>
-
-	{include file="checkout/orderOverview.tpl"}
-
+	<div class="clear"></div>
 </div>
 
 {include file="layout/frontend/footer.tpl"}

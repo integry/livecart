@@ -80,16 +80,34 @@ class MultiLingualObjectTest extends UnitTest
 
 	function testSerializingUTF()
 	{
-		$utf = 'kvīīīāāāččččdddd';
+		$this->_testStringSerialize('kvīīīāāāččččdddd');
+	}
+
+	function testSerializingHighASCII()
+	{
+		$high = 'haha' . chr(128) . ' zzz ' . chr(200);
+		$this->_testStringSerialize($high, false);
+		$this->_testStringSerialize(ut8_encode($high));
+	}
+
+	private function _testStringSerialize($string, $equals = true)
+	{
 		$root = Category::getInstanceByID(1);
 		$new = Category::getNewInstance($root);
-		$new->setValueByLang('name', 'en', $utf);
+		$new->setValueByLang('name', 'en', $string);
 		$new->save();
 
 		ActiveRecordModel::clearPool();
 		$restored = Category::getInstanceByID($new->getID(), Category::LOAD_DATA);
 
-		$this->assertEqual($utf, $restored->getValueByLang('name', 'en'));
+		if ($equals)
+		{
+			$this->assertEqual($string, $restored->getValueByLang('name', 'en'));
+		}
+		else
+		{
+			$this->assertNotEquals($string, $restored->getValueByLang('name', 'en'));
+		}
 	}
 }
 
