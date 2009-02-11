@@ -96,10 +96,21 @@ class Currency extends ActiveRecordModel
 			$price = abs($price);
 		}
 
-
 		$number = number_format($price, !is_null($this->decimalCount->get()) ? $this->decimalCount->get() : 2, $this->decimalSeparator->get(), $this->thousandSeparator->get());
 
 		return ($isNegative ? '-' : '') . $this->pricePrefix->get() . $number . $this->priceSuffix->get();
+	}
+
+	public function round($price)
+	{
+		if (!$this->isLoaded())
+		{
+			$this->load();
+		}
+
+		$number = number_format($price, !is_null($this->decimalCount->get()) ? $this->decimalCount->get() : 2, $this->decimalSeparator->get(), $this->thousandSeparator->get());
+
+		return $number;
 	}
 
 	public function convertAmountFromDefaultCurrency($amount)
@@ -110,7 +121,7 @@ class Currency extends ActiveRecordModel
 		}
 
 		$rate = $this->rate->get();
-		return $amount / (empty($rate) ? 1 : $rate);
+		return $this->round($amount / (empty($rate) ? 1 : $rate));
 	}
 
 	public function convertAmountToDefaultCurrency($amount)
@@ -128,11 +139,6 @@ class Currency extends ActiveRecordModel
 	{
 		$amount = $currency->convertAmountToDefaultCurrency($amount);
 		return $this->convertAmountFromDefaultCurrency($amount);
-	}
-
-	public function round($amount)
-	{
-		return round($amount, $this->decimalCount->get() ? $this->decimalCount->get() : 2);
 	}
 
 	/*####################  Data array transformation ####################*/
