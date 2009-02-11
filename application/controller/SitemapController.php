@@ -6,9 +6,9 @@ ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.staticpage.StaticPage');
 ClassLoader::import('application.model.sitenews.NewsPost');
 
-ClassLoader::import('application.helper.smarty.function#categoryUrl');
-ClassLoader::import('application.helper.smarty.function#productUrl');
-ClassLoader::import('application.helper.smarty.function#newsUrl');
+ClassLoader::importNow('application.helper.smarty.function#categoryUrl');
+ClassLoader::importNow('application.helper.smarty.function#productUrl');
+ClassLoader::importNow('application.helper.smarty.function#newsUrl');
 
 ClassLoader::import('application.model.system.OutputCache');
 
