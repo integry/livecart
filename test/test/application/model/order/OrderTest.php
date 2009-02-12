@@ -314,6 +314,7 @@ class OrderTest extends OrderTestCommon
 	{
 		// create delivery zone/tax environment
 		$zone = DeliveryZone::getNewInstance();
+		$zone->isEnabled->set(true);
 		$this->createOrderWithZone($zone);
 
 		$this->order->addProduct($this->products[0]);
@@ -1573,6 +1574,7 @@ class OrderTest extends OrderTestCommon
 		}
 
 		$zone->name->set('Latvia');
+		$zone->isEnabled->set(true);
 		$zone->save();
 
 		$country = DeliveryZoneCountry::getNewInstance($zone, 'LV');

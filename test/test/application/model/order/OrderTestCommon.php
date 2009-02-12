@@ -9,6 +9,7 @@ ClassLoader::import("application.model.order.*");
 ClassLoader::import("application.model.user.User");
 ClassLoader::import("application.model.user.*");
 ClassLoader::import("application.model.Currency");
+ClassLoader::import("application.model.tax.*");
 ClassLoader::import("library.payment.*");
 
 /**

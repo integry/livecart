@@ -2,6 +2,7 @@
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
 ClassLoader::import("application.model.tax.Tax");
+ClassLoader::import("application.model.delivery.DeliveryZone");
 
 /**
  * @author Integry Systems
@@ -36,6 +37,7 @@ class TaxTest extends UnitTest
 
 		$this->deliveryZone = DeliveryZone::getNewInstance();
 		$this->deliveryZone->setValueByLang('name', 'en', 'test zone');
+		$this->deliveryZone->isEnabled->set(true);
 		$this->deliveryZone->save();
 	}
 

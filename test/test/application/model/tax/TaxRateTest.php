@@ -43,12 +43,33 @@ class TaxRateTest extends UnitTest
 	{
 		parent::setUp();
 
+		ActiveRecord::executeUpdate('DELETE FROM Tax');
+		ActiveRecord::executeUpdate('DELETE FROM DeliveryZone');
+
 		$this->deliveryZone = DeliveryZone::getNewInstance();
 		$this->deliveryZone->setValueByLang('name', 'en', 'test zone');
+		$this->deliveryZone->isEnabled->set(true);
 		$this->deliveryZone->save();
 
 		$this->tax = Tax::getNewInstance('test type');
 		$this->tax->save();
+
+		$this->currency = ActiveRecord::getInstanceByIdIfExists('Currency', 'USD');
+		$this->currency->isEnabled->set(true);
+		$this->currency->decimalCount->set(2);
+		$this->currency->save();
+
+		$this->product = Product::getNewInstance(Category::getRootNode());
+		$this->product->setPrice('USD', 100);
+		$this->product->isEnabled->set(true);
+		$this->product->save();
+
+		$this->user = User::getNewInstance('vat.test@tester.com');
+		$this->user->save();
+
+		$this->address = UserAddress::getNewInstance();
+		$this->address->countryID->set('US');
+		$this->address->save();
 	}
 
 	public function testCreateNewTaxRate()
@@ -63,49 +84,54 @@ class TaxRateTest extends UnitTest
 		$this->assertTrue($taxRate->tax->get() === $this->tax);
 	}
 
+	public function testSimpleTax()
+	{
+		TaxRate::getNewInstance($this->deliveryZone, $this->tax, 10)->save();
+		DeliveryZoneCountry::getNewInstance($this->deliveryZone, 'US')->save();
+
+		$order = CustomerOrder::getNewInstance($this->user);
+		$order->addProduct($this->product, 1, true);
+		$order->currency->set($this->currency);
+		$order->shippingAddress->set($this->address);
+		$order->save();
+
+		$this->assertSame($order->getDeliveryZone(), $this->deliveryZone);
+		$this->assertEqual($order->getTotal($this->currency), 110);
+		$order->finalize($this->currency);
+
+		ActiveRecord::clearPool();
+		$reloaded = CustomerOrder::getInstanceById($order->getID(), true);
+		$this->assertEqual($reloaded->getTotal($this->currency), 110);
+	}
+
 	public function testDefaultZoneVAT()
 	{
-		ActiveRecord::executeUpdate('DELETE FROM TaxRate');
-
 		$taxRate = TaxRate::getNewInstance(DeliveryZone::getDefaultZoneInstance(), $this->tax, 10);
 		$taxRate->save();
 
-		$currency = ActiveRecord::getInstanceByIdIfExists('Currency', 'USD');
-		$currency->isEnabled->set(true);
-		$currency->decimalCount->set(2);
-		$currency->save();
-
-		$product = Product::getNewInstance(Category::getRootNode());
-		$product->setPrice('USD', 100);
-		$product->isEnabled->set(true);
-		$product->save();
-
-		$user = User::getNewInstance('vat.test@tester.com');
-		$user->save();
-
-		$order = CustomerOrder::getNewInstance($user);
-		$order->addProduct($product, 1, true);
-		$order->currency->set($currency);
+		$order = CustomerOrder::getNewInstance($this->user);
+		$order->addProduct($this->product, 1, true);
+		$order->currency->set($this->currency);
 		$order->save();
 
-		$this->assertEqual($order->getTotal($currency), 100);
-		$order->finalize($currency);
+		$this->assertEqual($order->getTotal($this->currency), 100);
+		$order->finalize($this->currency);
 
-		$this->assertDefaultZoneOrder($order, $currency);
+		$this->assertDefaultZoneOrder($order, $this->currency);
 
 		ActiveRecord::clearPool();
 		$reloaded = CustomerOrder::getInstanceById($order->getID(), true);
 
-		$this->assertDefaultZoneOrder($reloaded, $currency);
+		$this->assertDefaultZoneOrder($reloaded, $this->currency);
 	}
 
 	private function assertDefaultZoneOrder(CustomerOrder $order, Currency $currency)
 	{
-		$this->assertEqual($order->getTotal($currency), 100);
+		$this->assertEqual($order->getTotal($this->currency), 100);
 
 		$shipment = $order->getShipments()->get(0);
-		$this->assertEqual($shipment->getSubTotal($currency, true), 100);
-		$this->assertEqual(round($shipment->getSubTotal($currency, false), 2), 90.91);
+		$this->assertEqual($shipment->getSubTotal($this->currency, true), 100);
+		$this->assertEqual(round($shipment->getSubTotal($this->currency, false), 2), 90.91);
 
 		$arr = $order->toArray();
 		$this->assertEqual($arr['cartItems'][0]['displayPrice'], 100);
@@ -115,45 +141,26 @@ class TaxRateTest extends UnitTest
 
 	public function testDefaultZoneVATWithAnotherZone()
 	{
-		ActiveRecord::executeUpdate('DELETE FROM TaxRate');
-
 		TaxRate::getNewInstance(DeliveryZone::getDefaultZoneInstance(), $this->tax, 10)->save();
 		TaxRate::getNewInstance($this->deliveryZone, $this->tax, 10)->save();
 
-		$currency = ActiveRecord::getInstanceByIdIfExists('Currency', 'USD');
-		$currency->isEnabled->set(true);
-		$currency->decimalCount->set(2);
-		$currency->save();
-
-		$product = Product::getNewInstance(Category::getRootNode());
-		$product->setPrice('USD', 100);
-		$product->isEnabled->set(true);
-		$product->save();
-
-		$user = User::getNewInstance('vat.test@tester.com');
-		$user->save();
-
-		$address = UserAddress::getNewInstance();
-		$address->countryID->set('US');
-		$address->save();
-
 		DeliveryZoneCountry::getNewInstance($this->deliveryZone, 'US')->save();
 
-		$order = CustomerOrder::getNewInstance($user);
-		$order->addProduct($product, 1, true);
-		$order->currency->set($currency);
-		$order->shippingAddress->set($address);
+		$order = CustomerOrder::getNewInstance($this->user);
+		$order->addProduct($this->product, 1, true);
+		$order->currency->set($this->currency);
+		$order->shippingAddress->set($this->address);
 		$order->save();
 
-		$this->assertEqual($order->getTotal($currency), 100);
-		$order->finalize($currency);
+		$this->assertEqual($order->getTotal($this->currency), 100);
+		$order->finalize($this->currency);
 
-		$this->assertDefaultZoneOrder($order, $currency);
+		$this->assertDefaultZoneOrder($order, $this->currency);
 
 		ActiveRecord::clearPool();
 		$reloaded = CustomerOrder::getInstanceById($order->getID(), true);
 
-		$this->assertDefaultZoneOrder($reloaded, $currency);
+		$this->assertDefaultZoneOrder($reloaded, $this->currency);
 	}
 }
 ?>

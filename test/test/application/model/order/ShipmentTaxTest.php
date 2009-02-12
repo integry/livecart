@@ -18,6 +18,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		// shipment delivery zone
 		$zone = DeliveryZone::getNewInstance();
 		$zone->name->set('USA');
+		$zone->isEnabled->set(true);
 		$zone->save();
 
 		$country = DeliveryZoneCountry::getNewInstance($zone, 'US');
@@ -32,6 +33,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		// shipping amount zone
 		$zone = DeliveryZone::getNewInstance();
 		$zone->name->set('Random');
+		$zone->isEnabled->set(true);
 		$zone->save();
 
 		$taxRate = TaxRate::getNewInstance($zone, $tax, 50);
@@ -68,6 +70,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		// shipment delivery zone
 		$zone = DeliveryZone::getNewInstance();
 		$zone->name->set('Canada');
+		$zone->isEnabled->set(true);
 		$zone->save();
 		$country = DeliveryZoneCountry::getNewInstance($zone, 'US');
 		$country->save();
@@ -107,6 +110,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		// shipment delivery zone
 		$zone = DeliveryZone::getNewInstance();
 		$zone->name->set('Canada');
+		$zone->isEnabled->set(true);
 		$zone->save();
 		$country = DeliveryZoneCountry::getNewInstance($zone, 'US');
 		$country->save();
@@ -167,6 +171,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		// shipment delivery zone
 		$zone = DeliveryZone::getNewInstance();
 		$zone->name->set('Canada');
+		$zone->isEnabled->set(true);
 		$zone->save();
 		DeliveryZoneCountry::getNewInstance($zone, 'US')->save();
 
@@ -215,6 +220,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		// shipment delivery zone
 		$zone = DeliveryZone::getNewInstance();
 		$zone->name->set('Quebec');
+		$zone->isEnabled->set(true);
 		$zone->save();
 
 		// two taxes are applied to delivery charge
@@ -228,6 +234,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		// shipping amount zone
 		$zone = DeliveryZone::getNewInstance();
 		$zone->name->set('Canada');
+		$zone->isEnabled->set(true);
 		$zone->save();
 
 		$service = ShippingService::getNewInstance($zone, 'def', ShippingService::SUBTOTAL_BASED);
@@ -269,6 +276,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		// shipment delivery zone
 		$zone = DeliveryZone::getNewInstance();
 		$zone->name->set('Quebec');
+		$zone->isEnabled->set(true);
 		$zone->save();
 
 		// two taxes are applied to delivery charge
@@ -282,6 +290,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		// shipping amount zone
 		$zone = DeliveryZone::getNewInstance();
 		$zone->name->set('Canada');
+		$zone->isEnabled->set(true);
 		$zone->save();
 
 		$service = ShippingService::getNewInstance($zone, 'def', ShippingService::SUBTOTAL_BASED);
