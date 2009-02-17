@@ -287,7 +287,6 @@ Backend.CurrencyRounding = function(container, rules)
 	this.findUsedNodes();
 	this.bindEvents();
 
-	console.log(this.rules);
 	this.rules.each(function(rule)
 	{
 		this.addRange(rule);

@@ -198,7 +198,10 @@ class ProductPricing
 
 			//$calculated[$id] = $currency->roundPrice($calculated[$id]);
 
-			$formattedPrice[$id] = $currency->getFormattedPrice($calculated[$id]);
+			if ((float)$calculated[$id] || !$listPrice)
+			{
+				$formattedPrice[$id] = $currency->getFormattedPrice($calculated[$id]);
+			}
 		}
 
 		$return = array('defined' => $defined, 'calculated' => $calculated, 'formattedPrice' => $formattedPrice);

@@ -199,6 +199,13 @@ class CurrencyTest extends LiveCartTest
 		$this->assertEquals($item->getSubTotal(), 1.26);
 		$this->assertEquals($order->getTotal(), 1.26);
 
+		// add rounding rules
+		$bgn->clearRoundingRules();
+		$bgn->setRoundingRule(0, Currency::TRIM, 0.07);
+		$this->assertEquals($product->getPrice($bgn), 0.67);
+		$this->assertEquals($item->getSubTotal(), 1.34);
+		$this->assertEquals($order->getTotal(), 1.34);
+
 	}
 
 }

@@ -196,7 +196,7 @@ class ProductPrice extends ActiveRecordModel
 	public function reCalculatePrice()
 	{
 		$defaultCurrency = self::getApplication()->getDefaultCurrency();
-		return $this->convertFromDefaultCurrency($this->product->get()->getPrice($defaultCurrency->getID(), Product::DO_NOT_RECALCULATE_PRICE));
+		return $this->currency->get()->roundPrice($this->convertFromDefaultCurrency($this->product->get()->getPrice($defaultCurrency->getID(), Product::DO_NOT_RECALCULATE_PRICE)));
 	}
 
 	private function convertFromDefaultCurrency($price)
@@ -299,7 +299,7 @@ class ProductPrice extends ActiveRecordModel
 			$price = 0;
 		}
 
-		$price = $currency->round($price);
+		$price = $currency->roundPrice($price);
 
 		return $price;
 	}
@@ -373,7 +373,7 @@ class ProductPrice extends ActiveRecordModel
 
 			foreach ($prices as $id => $price)
 			{
-				if ((0 == $price) && $listPrice)
+				if ((0 == (float)$price) && $listPrice)
 				{
 					continue;
 				}
