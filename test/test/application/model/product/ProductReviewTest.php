@@ -9,7 +9,7 @@ ClassLoader::import("application.model.category.Category");
  *  @author Integry Systems
  *  @package test.model.product
  */
-class ProductReviewTest extends UnitTest
+class ProductReviewTest extends LiveCartTest
 {
 	private $product;
 	private $user;

@@ -10,7 +10,7 @@ ClassLoader::import('application.model.user.User');
  * @author Integry Systems
  * @package test.model.system
  */
-class EmailTest extends UnitTest
+class EmailTest extends LiveCartTest
 {
 	public function __construct()
 	{

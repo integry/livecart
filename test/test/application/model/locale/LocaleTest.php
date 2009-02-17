@@ -7,7 +7,7 @@ ClassLoader::import('library.locale.Locale');
  * @author Integry Systems
  * @package test.model.locale
  */
-class LocaleTest extends UnitTest
+class LocaleTest extends LiveCartTest
 {
 	public function getUsedSchemas()
 	{

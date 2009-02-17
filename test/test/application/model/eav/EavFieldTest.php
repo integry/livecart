@@ -9,7 +9,7 @@ ClassLoader::import('application.model.eav.EavField');
  * @package test.model.eav
  * @author Integry Systems
  */
-class EavFieldTest extends UnitTest
+class EavFieldTest extends LiveCartTest
 {
 	public function getUsedSchemas()
 	{

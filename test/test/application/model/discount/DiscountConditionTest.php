@@ -12,7 +12,7 @@ ClassLoader::import("application.model.discount.DiscountCondition");
  * @package test.model.discount
  * @author Integry Systems
  */
-class DiscountConditionTest extends UnitTest
+class DiscountConditionTest extends LiveCartTest
 {
 	/**
 	 * Root category
@@ -33,8 +33,12 @@ class DiscountConditionTest extends UnitTest
 	public function setUp()
 	{
 		parent::setUp();
+		ActiveRecord::executeUpdate('DELETE FROM DeliveryZone');
+		ActiveRecord::executeUpdate('DELETE FROM Tax');
+		ActiveRecord::executeUpdate('DELETE FROM TaxRate');
 		ActiveRecord::executeUpdate('DELETE FROM DiscountCondition');
 		ActiveRecord::executeUpdate('DELETE FROM DiscountAction');
+		ActiveRecord::executeUpdate('DELETE FROM Currency');
 		$this->root = DiscountCondition::getRootNode();
 
 		$this->usd = ActiveRecordModel::getInstanceByIDIfExists('Currency', 'USD');
@@ -105,7 +109,7 @@ class DiscountConditionTest extends UnitTest
 		$this->order->addProduct($this->product2, 1, true);
 		$this->order->save();
 
-		$orderTotal = $this->order->getTotal($this->usd);
+		$orderTotal = $this->order->getTotal();
 
 		$condition = DiscountCondition::getNewInstance();
 		$condition->isEnabled->set(true);
@@ -127,7 +131,7 @@ class DiscountConditionTest extends UnitTest
 		$discounts = $this->order->getCalculatedDiscounts();
 		$this->assertEqual($discounts->size(), 1);
 
-		$newTotal = $this->order->getTotal($this->usd);
+		$newTotal = $this->order->getTotal();
 
 		// uuhh.. Failed asserting that <double:27> matches expected value <double:27>.
 		$this->assertEqual((string)($orderTotal * 0.9), (string)$newTotal);
@@ -497,13 +501,13 @@ class DiscountConditionTest extends UnitTest
 		$action->save();
 
 		$this->order->getDiscountActions(true);
-		$this->assertEquals(45, $this->order->getTotal($this->usd));
+		$this->assertEquals(45, $this->order->getTotal());
 
 		// discount is applied to every other item
 		$action->discountStep->set(2);
 		$action->save();
 		$this->order->getDiscountActions(true);
-		$this->assertEquals(48, $this->order->getTotal($this->usd));
+		$this->assertEquals(48, $this->order->getTotal());
 	}
 
 	public function testDiscountLimit()
@@ -522,13 +526,13 @@ class DiscountConditionTest extends UnitTest
 		$action->save();
 
 		$this->order->getDiscountActions(true);
-		$this->assertEquals(45, $this->order->getTotal($this->usd));
+		$this->assertEquals(45, $this->order->getTotal());
 
 		// discount is applied to 3 items only
 		$action->discountLimit->set(3);
 		$action->save();
 		$this->order->getDiscountActions(true);
-		$this->assertEquals(47, $this->order->getTotal($this->usd));
+		$this->assertEquals(47, $this->order->getTotal());
 	}
 
 	public function testDivisable()

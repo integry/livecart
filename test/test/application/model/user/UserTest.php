@@ -8,7 +8,7 @@ ClassLoader::import("application.model.user.User");
  * @author Integry Systems
  * @package test.model.user
  */
-class UserTest extends UnitTest
+class UserTest extends LiveCartTest
 {
 	/**
 	 * User group

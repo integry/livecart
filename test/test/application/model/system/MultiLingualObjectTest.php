@@ -12,7 +12,7 @@ ClassLoader::import('application.model.category.Category');
  * @author Integry Systems
  * @package test.model.system
  */
-class MultiLingualObjectTest extends UnitTest
+class MultiLingualObjectTest extends LiveCartTest
 {
 	public function __construct()
 	{
@@ -87,11 +87,12 @@ class MultiLingualObjectTest extends UnitTest
 	{
 		$high = 'haha' . chr(128) . ' zzz ' . chr(200);
 		$this->_testStringSerialize($high, false);
-		$this->_testStringSerialize(ut8_encode($high));
+		$this->_testStringSerialize(utf8_encode($high));
 	}
 
 	private function _testStringSerialize($string, $equals = true)
 	{
+		error_reporting(E_WARNING);
 		$root = Category::getInstanceByID(1);
 		$new = Category::getNewInstance($root);
 		$new->setValueByLang('name', 'en', $string);
@@ -108,6 +109,7 @@ class MultiLingualObjectTest extends UnitTest
 		{
 			$this->assertNotEquals($string, $restored->getValueByLang('name', 'en'));
 		}
+		error_reporting(E_ALL);
 	}
 }
 

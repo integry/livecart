@@ -9,7 +9,7 @@ ClassLoader::import("application.model.delivery.ShippingRate");
  * @package test.model.delivery
  * @author Integry Systems
  */
-class ShippingServiceTest extends UnitTest
+class ShippingServiceTest extends LiveCartTest
 {
 	/**
 	 * Delivery zone

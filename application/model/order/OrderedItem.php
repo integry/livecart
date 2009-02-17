@@ -45,7 +45,6 @@ class OrderedItem extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField("shipmentID", "Shipment", "ID", "Shipment", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("parentID", "OrderedItem", "ID", "OrderedItem", ARInteger::instance()));
 
-		$schema->registerField(new ARField("priceCurrencyID", ARChar::instance(3)));
 		$schema->registerField(new ARField("price", ARFloat::instance()));
 		$schema->registerField(new ARField("count", ARFloat::instance()));
 		$schema->registerField(new ARField("reservedProductCount", ARFloat::instance()));
@@ -64,7 +63,7 @@ class OrderedItem extends ActiveRecordModel
 
 		if ($order->isFinalized->get())
 		{
-			$instance->price->set($instance->getItemPrice($order->currency->get(), false));
+			$instance->price->set($instance->getItemPrice(false));
 		}
 
 		return $instance;
@@ -72,15 +71,22 @@ class OrderedItem extends ActiveRecordModel
 
 	/*####################  Value retrieval and manipulation ####################*/
 
-	public function getSubTotal(Currency $currency, $includeTaxes = true, $applyDiscounts = true)
+	public function getCurrency()
 	{
+		return $this->customerOrder->get()->getCurrency();
+	}
+
+	public function getSubTotal($includeTaxes = true, $applyDiscounts = true)
+	{
+		$currency = $this->getCurrency();
+
 		// bundle items do not affect order total - only the parent item has a set price
 		if ($this->parent->get())
 		{
 			return 0;
 		}
 
-		$subTotal = $this->getPrice($currency, $includeTaxes) * $this->count->get();
+		$subTotal = $this->getPrice($includeTaxes) * $this->count->get();
 
 		if ($applyDiscounts)
 		{
@@ -101,16 +107,32 @@ class OrderedItem extends ActiveRecordModel
 			}
 		}
 
-		return $subTotal;
+		return $this->getCurrency()->round($subTotal);
 	}
 
-	public function getPrice(Currency $currency, $includeTaxes = true)
+	public function getSubTotalBeforeTax()
+	{
+		return $this->getSubTotal(false, true);
+	}
+
+	public function getPrice($includeTaxes = true)
+	{
+		$price = $this->getPriceWithoutTax();
+
+		if ($includeTaxes)
+		{
+			$price += $this->getPriceTax();
+		}
+
+		return $includeTaxes ? $this->getCurrency()->roundPrice($price) : $price;
+	}
+
+	public function getPriceWithoutTax()
 	{
 		$isFinalized = $this->customerOrder->get()->isFinalized->get();
+		$currency = $this->getCurrency();
 
-		$itemCurrency = $this->priceCurrencyID->get() ? Currency::getInstanceById($this->priceCurrencyID->get()) : $currency;
-
-		$price = $this->getItemPrice($currency);
+		$price = $this->getItemPrice();
 
 		foreach ($this->optionChoices as $choice)
 		{
@@ -126,35 +148,58 @@ class OrderedItem extends ActiveRecordModel
 			$price += $optionPrice;
 		}
 
-		$price = $itemCurrency->convertAmount($currency, $price);
+		return $price;
+	}
 
-		if ($includeTaxes)
+	/**
+	 *	Total tax amount for all products in line item
+	 */
+	public function getTaxAmount()
+	{
+		return $this->getPriceTax() * $this->count->get();
+	}
+
+	/**
+	 *	Tax amount for one product
+	 */
+	public function getPriceTax($price = null)
+	{
+		if (is_null($price))
 		{
-			foreach ($this->customerOrder->get()->getDeliveryZone()->getTaxRates() as $rate)
-			{
-				$price = $price * (1 + ($rate->rate->get() / 100));
-			}
+			$price = $this->getPriceWithoutTax();
 		}
 
-		return $price;
+		$basePrice = $price;
+
+		foreach ($this->getTaxRates() as $rate)
+		{
+			$price = $price * (1 + ($rate->rate->get() / 100));
+		}
+
+		return $price - $basePrice;
+	}
+
+	public function getTaxRates()
+	{
+		return $this->customerOrder->get()->getDeliveryZone()->getTaxRates();
 	}
 
 	public function getDisplayPrice(Currency $currency)
 	{
-		return $this->getPrice($currency, true);
+		return $this->getPrice(true);
 	}
 
 	/**
 	 *	Get price without taxes
 	 */
-	private function getItemPrice(Currency $currency)
+	private function getItemPrice()
 	{
 		$isFinalized = $this->customerOrder->get()->isFinalized->get();
-		$price = $isFinalized ? $this->price->get() : $this->product->get()->getItemPrice($this, $currency->getID());
+		$price = $isFinalized ? $this->price->get() : $this->product->get()->getItemPrice($this);
 
 		foreach (DeliveryZone::getDefaultZoneInstance()->getTaxRates() as $rate)
 		{
-			$price = $price / (1 + ($rate->rate->get() / 100));
+			$price = $this->getCurrency()->round($price / (1 + ($rate->rate->get() / 100)));
 		}
 
 		return $price;
@@ -378,10 +423,9 @@ class OrderedItem extends ActiveRecordModel
 			$this->shipment->setNull();
 		}
 
-		$this->priceCurrencyID->set($this->customerOrder->get()->currency->get()->getID());
 		if (!$this->price->get())
 		{
-			$this->price->set($this->product->get()->getItemPrice($this, $this->priceCurrencyID->get()));
+			$this->price->set($this->product->get()->getItemPrice($this));
 		}
 
 		return parent::insert();
@@ -484,7 +528,7 @@ class OrderedItem extends ActiveRecordModel
 			{
 				$user->load();
 			}
-			$this->price->set($this->product->get()->getItemPrice($this, $this->customerOrder->get()->currency->get()));
+			$this->price->set($this->product->get()->getItemPrice($this));
 			return parent::update();
 		}
 		else
@@ -498,14 +542,15 @@ class OrderedItem extends ActiveRecordModel
 	public function toArray()
 	{
 		$array = parent::toArray();
+		$array['priceCurrencyID'] = $this->getCurrency()->getID();
 
-		if (isset($array['priceCurrencyID']))
+		if (isset($array['price']))
 		{
-			$currency = Currency::getInstanceByID($array['priceCurrencyID']);
-			$array['itemBasePrice'] = $this->getPrice($currency);
-			$array['itemSubTotal'] = $this->getSubTotal($currency, false);
+			$currency = $this->getCurrency();
+			$array['itemBasePrice'] = $this->getPrice();
+			$array['itemSubTotal'] = $this->getSubTotal(false);
 			$array['displayPrice'] = $this->getDisplayPrice($currency);
-			$array['displaySubTotal'] = $this->getSubTotal($currency, true);
+			$array['displaySubTotal'] = $this->getSubTotal(true);
 			$array['itemPrice'] = $array['displaySubTotal'] / $array['count'];
 
 			$array['formattedBasePrice'] = $currency->getFormattedPrice($array['price']);

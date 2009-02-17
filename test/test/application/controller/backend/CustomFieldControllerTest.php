@@ -8,7 +8,7 @@ ClassLoader::import("application.controller.backend.CustomFieldController");
  * @package test.controller.backend
  * @author Integry Systems
  */
-class CustomFieldControllerTest extends UnitTest implements BackendControllerTestCase
+class CustomFieldControllerTest extends LiveCartTest implements BackendControllerTestCase
 {
 	private $controller;
 

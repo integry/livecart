@@ -16,7 +16,7 @@ ClassLoader::import("application.model.tax.TaxRate");
  * @package test.model.delivery
  * @author Integry Systems
  */
-class DeliveryZoneTest extends UnitTest
+class DeliveryZoneTest extends LiveCartTest
 {
 	public function __construct()
 	{

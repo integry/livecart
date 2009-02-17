@@ -103,7 +103,7 @@
 			 {
 				 if(confirm('{/literal}{tn _confirm_delete}{literal}')) return '{/literal}{link controller=backend.currency action=delete}{literal}?id=' + this.getRecordId(li)
 			 },
-			 afterEdit:	  function(li, response) { document.getElementsByClassName('currEdit', li)[0].innerHTML = response; },
+			 afterEdit:	  function(li, response) { document.getElementsByClassName('currEdit', li)[0].update(response); },
 			 afterSort:	  function(li, response) { curr.resetRatesContainer(); },
 			 afterDelete:	function(li, response)  { curr.resetRatesContainer(); }
 		 }, messages);

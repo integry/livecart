@@ -8,7 +8,7 @@ ClassLoader::import("application.model.delivery.DeliveryZone");
  * @author Integry Systems
  * @package test.model.tax
  */
-class TaxTest extends UnitTest
+class TaxTest extends LiveCartTest
 {
 	/**
 	 * Delivery zone

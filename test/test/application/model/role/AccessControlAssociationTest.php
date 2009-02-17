@@ -9,7 +9,7 @@ ClassLoader::import("application.model.user.UserGroup");
  *  @author Integry Systems
  *  @package test.model.role
  */
-class AccessControlAssociationTest extends UnitTest
+class AccessControlAssociationTest extends LiveCartTest
 {
 	/**
 	 * @var Role

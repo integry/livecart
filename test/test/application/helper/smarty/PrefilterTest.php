@@ -8,7 +8,7 @@ ClassLoader::importNow("application.helper.smarty.prefilter#config");
  *  @author Integry Systems
  *  @package test.helper.smarty
  */
-class PrefilterTest extends UnitTest
+class PrefilterTest extends LiveCartTest
 {
 	public function testErrShorthand()
 	{

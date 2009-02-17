@@ -12,7 +12,7 @@ ClassLoader::import("application.model.product.Product");
  * @author Integry Systems
  * @package test.model.tax
  */
-class TaxRateTest extends UnitTest
+class TaxRateTest extends LiveCartTest
 {
 	/**
 	 * Delivery zone
@@ -45,6 +45,7 @@ class TaxRateTest extends UnitTest
 
 		ActiveRecord::executeUpdate('DELETE FROM Tax');
 		ActiveRecord::executeUpdate('DELETE FROM DeliveryZone');
+		ActiveRecord::executeUpdate('DELETE FROM Currency');
 
 		$this->deliveryZone = DeliveryZone::getNewInstance();
 		$this->deliveryZone->setValueByLang('name', 'en', 'test zone');
@@ -96,12 +97,12 @@ class TaxRateTest extends UnitTest
 		$order->save();
 
 		$this->assertSame($order->getDeliveryZone(), $this->deliveryZone);
-		$this->assertEqual($order->getTotal($this->currency), 110);
-		$order->finalize($this->currency);
+		$this->assertEqual($order->getTotal(), 110);
+		$order->finalize();
 
 		ActiveRecord::clearPool();
 		$reloaded = CustomerOrder::getInstanceById($order->getID(), true);
-		$this->assertEqual($reloaded->getTotal($this->currency), 110);
+		$this->assertEqual($reloaded->getTotal(), 110);
 	}
 
 	public function testDefaultZoneVAT()
@@ -114,8 +115,8 @@ class TaxRateTest extends UnitTest
 		$order->currency->set($this->currency);
 		$order->save();
 
-		$this->assertEqual($order->getTotal($this->currency), 100);
-		$order->finalize($this->currency);
+		$this->assertEqual($order->getTotal(), 100);
+		$order->finalize();
 
 		$this->assertDefaultZoneOrder($order, $this->currency);
 
@@ -127,11 +128,11 @@ class TaxRateTest extends UnitTest
 
 	private function assertDefaultZoneOrder(CustomerOrder $order, Currency $currency)
 	{
-		$this->assertEqual($order->getTotal($this->currency), 100);
+		$this->assertEqual($order->getTotal(), 100);
 
 		$shipment = $order->getShipments()->get(0);
-		$this->assertEqual($shipment->getSubTotal($this->currency, true), 100);
-		$this->assertEqual(round($shipment->getSubTotal($this->currency, false), 2), 90.91);
+		$this->assertEqual($shipment->getSubTotal(true), 100);
+		$this->assertEqual(round($shipment->getSubTotal(false), 2), 90.91);
 
 		$arr = $order->toArray();
 		$this->assertEqual($arr['cartItems'][0]['displayPrice'], 100);

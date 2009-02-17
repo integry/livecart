@@ -516,7 +516,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 					foreach ($items as $item)
 					{
 						$matchingItemCount[$item->getID()] = $item->count->get();
-						$matchingItemSubTotal[$item->getID()] = $item->getSubTotal($order->currency->get(), null, false);
+						$matchingItemSubTotal[$item->getID()] = $item->getSubTotal(null, false);
 					}
 				}
 
@@ -696,7 +696,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 
 	private static function applyOrderTotalCondition(CustomerOrder $order)
 	{
-		return self::applyRangeCondition($order, 'subTotal', $order->getSubTotal($order->currency->get(), false));
+		return self::applyRangeCondition($order, 'subTotal', $order->getSubTotal(false));
 	}
 
 	private static function applyOrderItemCountCondition(CustomerOrder $order)

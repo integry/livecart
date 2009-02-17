@@ -105,7 +105,12 @@ class TaxRate extends MultilingualObject
 
 	public function applyTax($amount)
 	{
-		return $amount + ($amount * ($this->rate->get() / 100));
+		return $amount + $this->getTaxAmount($amount);
+	}
+
+	public function getTaxAmount($amount)
+	{
+		return $amount * ($this->rate->get() / 100);
 	}
 
 	protected function insert()

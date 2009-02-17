@@ -8,7 +8,7 @@ ClassLoader::import("application.model.category.Category");
  *  @author Integry Systems
  *  @package test.model.product
  */
-class ProductRelationshipTest extends UnitTest
+class ProductRelationshipTest extends LiveCartTest
 {
 	/**
 	 * @var Product

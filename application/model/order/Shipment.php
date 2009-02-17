@@ -49,7 +49,6 @@ class Shipment extends ActiveRecordModel
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("orderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("amountCurrencyID", "Currency", "ID", "Currency", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("shippingServiceID", "ShippingService", "ID", "ShippingService", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("shippingAddressID", "shippingAddress", "ID", 'UserAddress', ARInteger::instance()));
 
@@ -274,23 +273,26 @@ class Shipment extends ActiveRecordModel
 		return true;
 	}
 
-	public function getSubTotal(Currency $currency, $applyTaxes = true)
+	public function getSubTotal($applyTaxes = true)
 	{
 		$subTotal = 0;
+		$taxes = 0;
+
 		foreach ($this->items as $item)
 		{
 			if (!$item->isDeleted())
 			{
-				$subTotal += $item->getSubTotal($currency, false);
+				$subTotal += $item->getSubTotal(false);
+				$taxes += $item->getTaxAmount();
 			}
 		}
 
 		if ($applyTaxes)
 		{
-			$subTotal = $this->applyTaxesToAmount($subTotal);
+			$subTotal += $taxes;
 		}
 
-		return $subTotal;
+		return $this->getCurrency()->round($subTotal);
 	}
 
 	public function getSubTotalBeforeTax()
@@ -303,6 +305,21 @@ class Shipment extends ActiveRecordModel
 	{
 		$this->recalculateAmounts(false);
 		return $this->shippingAmount->get();
+	}
+
+	public function getShippingTotalWithTax()
+	{
+		$this->recalculateAmounts(false);
+		$total = $this->shippingAmount->get();
+		foreach ($this->getTaxes() as $tax)
+		{
+			if ($tax->isShippingTax())
+			{
+				$total += $tax->getAmount();
+			}
+		}
+
+		return $total;
 	}
 
 	public function getTotalWithoutTax()
@@ -413,14 +430,9 @@ class Shipment extends ActiveRecordModel
 	{
 		$this->loadItems();
 
-		$currency = $this->order->get()->currency->get();
-		if (!$currency)
-		{
-			$currency = $this->getApplication()->getDefaultCurrency();
-		}
+		$currency = $this->order->get()->getCurrency();
 
-		$this->amountCurrency->set($currency);
-		$this->amount->set($this->getSubTotal($currency, self::WITHOUT_TAXES));
+		$this->amount->set($currency->round($this->getSubTotal(self::WITHOUT_TAXES)));
 
 		// total taxes
 		if ($calculateTax)
@@ -435,10 +447,10 @@ class Shipment extends ActiveRecordModel
 			foreach ($this->getTaxes() as $tax)
 			{
 				$tax->recalculateAmount(false);
-				$taxes += $tax->getAmountByCurrency($currency);
+				$taxes += $tax->getAmount();
 			}
 
-			$this->taxAmount->set($taxes);
+			$this->taxAmount->set($currency->round($taxes));
 		}
 
 		// shipping rate
@@ -451,7 +463,7 @@ class Shipment extends ActiveRecordModel
 				$amount = $this->reduceTaxesFromAmount($amount, ShipmentTax::TYPE_SHIPPING);
 			}
 
-			$this->shippingAmount->set($amount);
+			$this->shippingAmount->set($currency->round($amount));
 		}
 	}
 
@@ -613,6 +625,8 @@ class Shipment extends ActiveRecordModel
 	public function toArray()
 	{
 		$array = parent::toArray();
+		$currency = $this->getCurrency();
+		$id = $currency->getID();
 
 		// ordered items
 		$items = array();
@@ -624,12 +638,7 @@ class Shipment extends ActiveRecordModel
 
 		// subtotal
 		$currencies = self::getApplication()->getCurrencySet();
-		$subTotal = array();
-		foreach ($currencies as $id => $currency)
-		{
-			$subTotal[$id] = $this->getSubTotal($currency);
-		}
-		$array['subTotal'] = $subTotal;
+		$array['subTotal'][$id] = $this->getSubTotal();
 
 		// total amount
 		$array['totalAmount'] = $this->getTotal();
@@ -638,12 +647,8 @@ class Shipment extends ActiveRecordModel
 
 		// formatted subtotal
 		$array['formattedSubTotal'] = $array['formattedSubTotalBeforeTax'] = array();
-		foreach ($subTotal as $id => $price)
-		{
-			$currency = Currency::getInstanceById($id);
-			$array['formattedSubTotal'][$id] = $currency->getFormattedPrice($price);
-			$array['formattedSubTotalBeforeTax'][$id] = $currency->getFormattedPrice($price - $this->getTaxAmount($currency));
-		}
+		$array['formattedSubTotal'][$id] = $array['subTotal'][$id];
+		$array['formattedSubTotalBeforeTax'][$id] = $currency->getFormattedPrice($array['subTotal'][$id] - $this->getTaxAmount());
 
 		// selected shipping rate
 		if ($selected = $this->getSelectedRate())
@@ -705,10 +710,19 @@ class Shipment extends ActiveRecordModel
 		$array['isDelivered'] = (int)$this->isDelivered();
 		$array['isLost'] = (int)$this->isLost();
 
+		$array['AmountCurrency'] =& $array['Order']['Currency'];
+
 		return $array;
 	}
 
 	/*####################  Get related objects ####################*/
+
+	public function getCurrency()
+	{
+		$this->load();
+		$this->order->get()->load();
+		return $this->order->get()->getCurrency();
+	}
 
 	public function getSelectedRate()
 	{
@@ -790,13 +804,13 @@ class Shipment extends ActiveRecordModel
 		return $this->taxes;
 	}
 
-	public function getTaxAmount(Currency $currency)
+	public function getTaxAmount()
 	{
 		$amount = 0;
 
 		foreach ($this->getTaxes() as $tax)
 		{
-			$amount += $tax->getAmountByCurrency($currency);
+			$amount += $tax->getAmount();
 		}
 
 		return $amount;

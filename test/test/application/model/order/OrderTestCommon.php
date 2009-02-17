@@ -32,8 +32,6 @@ abstract class OrderTestCommon extends LiveCartTest
 	{
 		parent::setUp();
 
-		ActiveRecordModel::beginTransaction();
-
 		ActiveRecordModel::executeUpdate('DELETE FROM Tax');
 		ActiveRecordModel::executeUpdate('DELETE FROM TaxRate');
 		ActiveRecordModel::executeUpdate('DELETE FROM Currency');

@@ -162,8 +162,8 @@ class ShipmentController extends StoreManagementController
 					   'shippingAmount' => (float)$shipment->shippingAmount->get(),
 					   'taxAmount' => $shipment->taxAmount->get(),
 					   'total' => $shipment->shippingAmount->get() + $shipment->amount->get() + (float)$shipment->taxAmount->get(),
-					   'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
-					   'suffix' => $shipment->amountCurrency->get()->priceSuffix->get(),
+					   'prefix' => $shipment->getCurrency()->pricePrefix->get(),
+					   'suffix' => $shipment->getCurrency()->priceSuffix->get(),
 					   'ShippingService' => $shipmentArray['ShippingService']
 				   )
 			),
@@ -233,8 +233,8 @@ class ShipmentController extends StoreManagementController
 					'shippingAmount' => (float)$rateArray['costAmount'],
 					'taxAmount' => $shipment->taxAmount->get(),
 					'total' => (float)$shipment->taxAmount->get() + (float)$shipment->amount->get() + (float)$rateArray['costAmount'],
-					'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
-					'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
+					'prefix' => $shipment->getCurrency()->pricePrefix->get(),
+					'suffix' => $shipment->getCurrency()->priceSuffix->get()
 				);
 			}
 			return new JSONResponse(array( 'services' => $shippingRatesArray));
@@ -376,9 +376,9 @@ class ShipmentController extends StoreManagementController
 						'ShippingService' => array('ID' => ($shipment->shippingService->get() ? $shipment->shippingService->get()->getID() : 0) ),
 						'taxAmount' => $shipment->taxAmount->get(),
 						'total' => $shipment->shippingAmount->get() + $shipment->amount->get() + (float)$shipment->taxAmount->get(),
-						'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
+						'prefix' => $shipment->getCurrency()->pricePrefix->get(),
 						'status' => $shipment->status->get(),
-						'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
+						'suffix' => $shipment->getCurrency()->priceSuffix->get()
 					)
 				),
 				'success',

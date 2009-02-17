@@ -4,6 +4,25 @@ ClassLoader::import('application.model.user.User');
 
 class LiveCartTest extends UnitTest
 {
+	public function setUp()
+	{
+		parent::setUp();
+
+		ActiveRecordModel::executeUpdate('DELETE FROM Tax');
+		ActiveRecordModel::executeUpdate('DELETE FROM TaxRate');
+		ActiveRecordModel::executeUpdate('DELETE FROM Currency');
+		ActiveRecordModel::executeUpdate('DELETE FROM DiscountCondition');
+		ActiveRecordModel::executeUpdate('DELETE FROM DiscountAction');
+		ActiveRecordModel::executeUpdate('DELETE FROM DeliveryZone');
+	}
+
+	public function tearDown()
+	{
+		parent::tearDown();
+
+		@unlink(ClassLoader::getRealPath('cache.') . 'currencies.php');
+	}
+
 	protected function initOrder()
 	{
 		// set up currency
@@ -19,6 +38,7 @@ class LiveCartTest extends UnitTest
 		}
 
 		$this->usd->decimalCount->set(2);
+		$this->usd->clearRoundingRules();
 		$this->usd->save();
 
 		// initialize order

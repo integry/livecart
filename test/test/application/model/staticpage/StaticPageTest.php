@@ -9,7 +9,7 @@ ClassLoader::import("application.model.staticpage.StaticPage");
  * @author Integry Systems
  * @package test.model.staticpage
  */
-class StaticPageTest extends UnitTest
+class StaticPageTest extends LiveCartTest
 {
 	public function getUsedSchemas()
 	{

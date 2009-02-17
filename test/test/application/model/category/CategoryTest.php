@@ -8,7 +8,7 @@ ClassLoader::import("application.model.category.Category");
  * @package test.model.category
  * @author Integry Systems
  */
-class CategoryTest extends UnitTest
+class CategoryTest extends LiveCartTest
 {
 	/**
 	 * Root category

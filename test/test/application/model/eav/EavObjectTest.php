@@ -13,7 +13,7 @@ ClassLoader::import('application.model.user.User');
  * @package test.model.eav
  * @author Integry Systems
  */
-class EavObjectTest extends UnitTest
+class EavObjectTest extends LiveCartTest
 {
 	public function getUsedSchemas()
 	{

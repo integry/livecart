@@ -9,7 +9,7 @@ ClassLoader::import('application.controller.IndexController');
  * @package test.application
  * @author Integry Systems
  */
-class LiveCartRendererTest extends UnitTest
+class LiveCartRendererTest extends LiveCartTest
 {
 	/**
 	 * @var LiveCartRenderer

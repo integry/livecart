@@ -127,7 +127,7 @@ class DiscountAction extends ActiveRecordModel
 			return null;
 		}
 
-		$discountAmount = $this->getDiscountAmount($order->getSubTotal($order->currency->get()));
+		$discountAmount = $this->getDiscountAmount($order->getSubTotal());
 
 		$discount = OrderDiscount::getNewInstance($order);
 		$discount->amount->set($discountAmount);

@@ -1,6 +1,7 @@
 <?php
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
+ClassLoader::import("application.model.category.Category");
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.product.ProductPricing");
 
@@ -8,7 +9,7 @@ ClassLoader::import("application.model.product.ProductPricing");
  *  @author Integry Systems
  *  @package test.model.product
  */
-class ProductPricingTest extends UnitTest
+class ProductPricingTest extends LiveCartTest
 {
 	/**
 	 * Root category
@@ -48,6 +49,12 @@ class ProductPricingTest extends UnitTest
 		$this->product->setValueByLang("name", "en", "TEST_PRODUCT");
 		$this->product->save();
 		$this->productAutoIncrementNumber = $this->product->getID();
+
+		for ($k = 1; $k < 4; $k++)
+		{
+			$currency = Currency::getNewInstance($k . 'zz');
+			$currency->save();
+		}
 	}
 
 	public function testSave()

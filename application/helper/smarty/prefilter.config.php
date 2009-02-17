@@ -80,13 +80,6 @@ function smarty_prefilter_config($source, $smarty)
 	// remove {fetch} tags
 	$source = preg_replace('/{fetch (.+?)}/', '', $source);
 
-	/*
-	if (strpos($source, 'companyName') !== false)
-	{
-		nl2br(htmlspecialchars($source));
-	}
-	*/
-
 	return $source;
 }
 

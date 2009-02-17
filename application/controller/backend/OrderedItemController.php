@@ -27,7 +27,7 @@ class OrderedItemController extends StoreManagementController
 		}
 		else
 		{
-			$shipment = Shipment::getInstanceById('Shipment', (int)$this->request->get('shipmentID'), true, array('Order' => 'CustomerOrder', 'ShippingService', 'ShippingAddress' => 'UserAddress', 'AmountCurrency' => 'Currency'));
+			$shipment = Shipment::getInstanceById('Shipment', (int)$this->request->get('shipmentID'), true, array('Order' => 'CustomerOrder', 'ShippingService', 'ShippingAddress' => 'UserAddress', 'Currency'));
 		}
 
 		$history = new OrderHistory($shipment->order->get(), $this->user);
@@ -60,11 +60,10 @@ class OrderedItemController extends StoreManagementController
 		else
 		{
 			$order = $shipment->order->get();
-			$currency = $shipment->amountCurrency->get();
+			$currency = $shipment->getCurrency();
 
 			$item = OrderedItem::getNewInstance($order, $product);
 			$item->count->set(1);
-			$item->priceCurrencyID->set($currency->getID());
 			$item->price->set($product->getPrice($currency->getID()));
 
 			$order->addItem($item);
@@ -125,12 +124,12 @@ class OrderedItemController extends StoreManagementController
 											'shippingAmount' => (float)$shipment->shippingAmount->get(),
 											'taxAmount' => (float)$shipment->taxAmount->get(),
 											'total' => (float)$shipment->shippingAmount->get() + (float)$shipment->amount->get() + (float)$shipment->taxAmount->get(),
-											'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
-											'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
+											'prefix' => $shipment->getCurrency()->pricePrefix->get(),
+											'suffix' => $shipment->getCurrency()->priceSuffix->get()
 										 ),
 					'count'		   => $item->count->get(),
 					'price'		   => $item->price->get(),
-					'priceCurrencyID' => $item->priceCurrencyID->get(),
+					'priceCurrencyID' => $item->getCurrency()->getID(),
 					'isExisting'	  => $existingItem,
 					'variations' => $item->product->get()->getParent()->getVariationData($this->application),
 				)
@@ -257,12 +256,12 @@ class OrderedItemController extends StoreManagementController
 												'shippingAmount' => $shipment->shippingAmount->get(),
 												'taxAmount' => $shipment->taxAmount->get(),
 												'total' =>((float)$shipment->shippingAmount->get() + (float)$shipment->amount->get() + (float)$shipment->taxAmount->get()),
-												'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
-												'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
+												'prefix' => $shipment->getCurrency()->pricePrefix->get(),
+												'suffix' => $shipment->getCurrency()->priceSuffix->get()
 											 ),
 						'count'		   => $item->count->get(),
 						'price'		   => $item->price->get(),
-						'priceCurrencyID' => $item->priceCurrencyID->get(),
+						'priceCurrencyID' => $item->getCurrency()->getID(),
 						'downloadable' => $item->product->get()->isDownloadable()
 					)
 				),
@@ -340,8 +339,8 @@ class OrderedItemController extends StoreManagementController
 								'shippingAmount' => $oldShipment->shippingAmount->get(),
 								'taxAmount' => $oldShipment->taxAmount->get(),
 								'total' =>((float)$oldShipment->shippingAmount->get() + (float)$oldShipment->amount->get() + (float)$oldShipment->taxAmount->get()),
-								'prefix' => $oldShipment->amountCurrency->get()->pricePrefix->get(),
-								'suffix' => $oldShipment->amountCurrency->get()->priceSuffix->get()
+								'prefix' => $oldShipment->getCurrency()->pricePrefix->get(),
+								'suffix' => $oldShipment->getCurrency()->priceSuffix->get()
 							),
 							'newShipment' => array(
 								'ID' => $newShipment->getID(),
@@ -349,8 +348,8 @@ class OrderedItemController extends StoreManagementController
 								'shippingAmount' =>  $newShipment->shippingAmount->get(),
 								'taxAmount' => $newShipment->taxAmount->get(),
 								'total' => ((float)$newShipment->shippingAmount->get() + (float)$newShipment->amount->get() + (float)$newShipment->taxAmount->get()),
-								'prefix' => $newShipment->amountCurrency->get()->pricePrefix->get(),
-								'suffix' => $newShipment->amountCurrency->get()->priceSuffix->get()
+								'prefix' => $newShipment->getCurrency()->pricePrefix->get(),
+								'suffix' => $newShipment->getCurrency()->priceSuffix->get()
 							)
 						),
 						'success',
@@ -416,8 +415,8 @@ class OrderedItemController extends StoreManagementController
 					'shippingAmount' => $shipment->shippingAmount->get(),
 					'total' =>((float)$shipment->shippingAmount->get() + (float)$shipment->amount->get() + (float)$shipment->taxAmount->get()),
 					'taxAmount' => $shipment->taxAmount->get(),
-					'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
-					'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
+					'prefix' => $shipment->getCurrency()->pricePrefix->get(),
+					'suffix' => $shipment->getCurrency()->priceSuffix->get()
 				 )),
 				 'success'
 			 );

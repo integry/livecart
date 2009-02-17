@@ -408,16 +408,15 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	 *
 	 *  @return CustomerOrder New order instance containing wishlist items
 	 */
-	public function finalize(Currency $currency)
+	public function finalize()
 	{
 		self::beginTransaction();
 
-		$this->currency->set($currency);
+		$currency = $this->getCurrency();
 		$this->loadAll();
 
 		foreach ($this->getShipments() as $shipment)
 		{
-			$shipment->amountCurrencyID->set($currency);
 			$shipment->order->set($this);
 			$shipment->save();
 
@@ -434,8 +433,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		foreach ($this->getShoppingCartItems() as $item)
 		{
-			$item->priceCurrencyID->set($currency->getID());
-			$item->price->set($item->getSubTotal($currency, false) / $item->count->get());
+			$item->price->set($item->getSubTotal(false) / $item->count->get());
 			$item->save();
 
 			// create sub-items for bundled products
@@ -488,7 +486,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$wishList->save();
 
 		// set order total
-		$this->totalAmount->set($this->getTotal($currency));
+		$this->totalAmount->set($this->getTotal());
 
 		// save shipment taxes
 		foreach ($this->shipments as $shipment)
@@ -687,10 +685,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		if ($this->orderedItems)
 		{
-			if(!$this->currency->get())
-			{
-				$this->currency->set(self::getApplication()->getDefaultCurrency());
-			}
+			$this->getCurrency();
 
 			foreach ($this->orderedItems as $item)
 			{
@@ -729,15 +724,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		if ($isModified)
 		{
-			if (!$this->currency->get())
-			{
-				$this->currency->set(self::getApplication()->getDefaultCurrency());
-			}
+			$this->getCurrency();
 
 			// reorder shipments when cart items are modified
 			$this->resetShipments();
 
-			$this->totalAmount->set($this->getTotal($this->currency->get(), true));
+			$this->totalAmount->set($this->getTotal(true));
 		}
 
 		if ($this->isModified() || $isModified)
@@ -828,25 +820,40 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		return $this->status->get();
 	}
 
-	public function getSubTotal(Currency $currency, $applyDiscounts = true)
+	public function getSubTotalByCurrency(Currency $currency)
+	{
+		if ($this->getCurrency()->getID() != $currency->getID())
+		{
+			$current = $this->getCurrency();
+			$this->changeCurrency($currency);
+			$subtotal = $this->getSubTotal(false);
+			$this->changeCurrency($current);
+		}
+		else
+		{
+			return $this->getSubTotal(false);
+		}
+	}
+
+	public function getSubTotal($applyDiscounts = true)
 	{
 		$subTotal = 0;
 		foreach ($this->orderedItems as $item)
 		{
 			if (!$item->isSavedForLater->get())
 			{
-				$subTotal += $item->getSubTotal($currency, false, $applyDiscounts);
+				$subTotal += $item->getSubTotal(false, $applyDiscounts);
 			}
 		}
 
 		return $subTotal;
 	}
 
-	public function getSubTotalBeforeTax(Currency $currency)
+	public function getSubTotalBeforeTax()
 	{
 		if (!$this->shipments)
 		{
-			return $this->getSubTotal($currency);
+			return $this->getSubTotal();
 		}
 
 		$subTotal = 0;
@@ -861,18 +868,18 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	/**
 	 *  Get total amount for order, including shipping costs, discounts and taxes
 	 */
-	public function getTotal(Currency $currency, $recalculateAmount = false)
+	public function getTotal($recalculateAmount = false)
 	{
 		if ($this->isFinalized->get() && !$recalculateAmount)
 		{
-			$this->getTaxes($currency);
-			return $currency->round($currency->convertAmount($this->currency->get(), $this->totalAmount->get()));
+			$this->getTaxes();
+			$total = $this->totalAmount->get();
 		}
 		else
 		{
-			$total = $this->calculateTotal($currency);
+			$total = $this->calculateTotal();
 
-			if ($discountAmount = $this->getFixedDiscountAmount($currency))
+			if ($discountAmount = $this->getFixedDiscountAmount())
 			{
 				if ($this->shipments)
 				{
@@ -882,7 +889,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 					}
 				}
 
-				$total = $this->calculateTotal($currency, false);
+				$total = $this->calculateTotal(false);
 
 				if (!$this->shipments)
 				{
@@ -894,9 +901,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			{
 				$total = 0;
 			}
-
-			return $currency->round($total);
 		}
+
+		return $this->getCurrency()->round($total);
 	}
 
 	public function getFixedDiscountAmount()
@@ -913,7 +920,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			{
 				if ($action->isOrderDiscount() && $action->isFixedAmount())
 				{
-					$discount = $this->currency->get()->convertAmount(self::getApplication()->getDefaultCurrency(), $action->getDiscountAmount(0));
+					$discount = $this->getCurrency()->convertAmount(self::getApplication()->getDefaultCurrency(), $action->getDiscountAmount(0));
 					$amount += $discount;
 					$this->orderDiscounts[$id] = OrderDiscount::getNewInstance($this);
 					$this->orderDiscounts[$id]->amount->set($discount);
@@ -933,10 +940,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	/**
 	 *	Get full order total, including taxes and shipping, but excluding fixed discounts
 	 */
-	public function calculateTotal(Currency $currency, $recalculateAmounts = true)
+	public function calculateTotal($recalculateAmounts = true)
 	{
 		$total = 0;
-		$id = $currency->getID();
 
 		if (!$this->shipments)
 		{
@@ -951,7 +957,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		if ($this->shipments)
 		{
 			// @todo: the tax calculation is slightly off when it's calculated for the first time, so it has to be called twice
-			$this->getTaxes($currency);
+			$this->getTaxes();
 			foreach ($this->shipments as $shipment)
 			{
 				$shipment->order->set($this);
@@ -962,9 +968,10 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		{
 			foreach ($this->getShoppingCartItems() as $item)
 			{
-				$total += $item->getSubTotal($currency, false);
+				$total += $item->getSubTotal(false);
 			}
-			$total += $this->getTaxes($currency);
+
+			$total += $this->getTaxes();
 		}
 
 		return $total;
@@ -1038,11 +1045,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		return $actions;
 	}
 
-	private function getTaxes(Currency $currency)
+	private function getTaxes()
 	{
-		$id = $currency->getID();
-
-		$this->taxes[$id] = array();
+		$this->taxes = array();
 		$zone = $this->getDeliveryZone();
 		if ($this->shipments)
 		{
@@ -1058,22 +1063,22 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 				foreach ($shipment->getTaxes() as $tax)
 				{
 					$taxId = ($tax->taxRate->get() && $tax->taxRate->get()->tax->get()) ? $tax->taxRate->get()->tax->get()->getID() : 0;
-					if (!isset($this->taxes[$id][$taxId]))
+					if (!isset($this->taxes[$taxId]))
 					{
-						$this->taxes[$id][$taxId] = 0;
+						$this->taxes[$taxId] = 0;
 					}
 
-					$this->taxes[$id][$taxId] += $tax->getAmountByCurrency($currency);
+					$this->taxes[$taxId] += $tax->getAmount();
 				}
 			}
 		}
 
-		return array_sum($this->taxes[$id]);
+		return array_sum($this->taxes);
 	}
 
 	public function getTaxAmount()
 	{
-		return $this->getTaxes($this->currency->get());
+		return $this->getTaxes();
 	}
 
 	public function isProcessing()
@@ -1165,7 +1170,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		// check order total
 		$maxTotal = $c->get('MAX_TOTAL');
 		$minTotal = $c->get('MIN_TOTAL');
-		$total = $this->getSubTotal($this->getApplication()->getDefaultCurrency());
+		$total = $this->getSubTotalByCurrency($this->getApplication()->getDefaultCurrency());
 
 		if ($maxTotal && ($total > $maxTotal))
 		{
@@ -1265,7 +1270,6 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		foreach ($this->getOrderedItems() as $item)
 		{
 			$item->price->set($item->product->get()->getItemPrice($item, $currency));
-			$item->priceCurrencyID->set($currency->getID());
 			$item->save();
 		}
 
@@ -1293,7 +1297,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 	public function getDueAmount()
 	{
-		return $this->getTotal($this->currency->get()) - $this->getPaidAmount();
+		return $this->getTotal() - $this->getPaidAmount();
 	}
 
 	public function setPaymentMethod($method)
@@ -1324,6 +1328,16 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		return $this->paymentMethod;
 	}
 
+	public function getCurrency()
+	{
+		if(!$this->currency->get())
+		{
+			$this->currency->set(self::getApplication()->getDefaultCurrency());
+		}
+
+		return $this->currency->get();
+	}
+
 	/*####################  Data array transformation ####################*/
 
 	/**
@@ -1331,6 +1345,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	 */
 	public function toArray($options = array())
 	{
+		$currency = $this->getCurrency();
+		$id = $currency->getID();
+
 		if (is_array($this->orderedItems))
 		{
 			foreach ($this->orderedItems as $item)
@@ -1383,32 +1400,21 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		// total for all currencies
 		$total = array();
-		$currencies = self::getApplication()->getCurrencySet();
-
-		if (is_array($currencies))
-		{
-			foreach ($currencies as $id => $currency)
-			{
-				$total[$id] = $this->getTotal($currency);
-			}
-		}
+		$total[$id] = $this->getTotal();
 
 		// taxes
 		$array['taxes'] = $taxAmount = array();
-		foreach ($this->taxes as $currencyId => $taxes)
-		{
-			$taxAmount[$currencyId] = 0;
-			$array['taxes'][$currencyId] = array();
-			$currency = Currency::getInstanceById($currencyId);
+		$taxAmount[$id] = 0;
+		$array['taxes'][$id] = array();
 
-			foreach ($taxes as $taxId => $amount)
+		foreach ($this->taxes as $taxId => $amount)
+		{
+			if ($amount > 0)
 			{
-				if ($amount > 0)
-				{
-					$taxAmount[$currencyId] += $amount;
-					$array['taxes'][$currencyId][$taxId] = Tax::getInstanceById($taxId)->toArray();
-					$array['taxes'][$currencyId][$taxId]['formattedAmount'] = $currency->getFormattedPrice($amount);
-				}
+				$taxAmount[$id] += $amount;
+				$array['taxes'][$id][$taxId] = Tax::getInstanceById($taxId)->toArray();
+				$array['taxes'][$id][$taxId]['amount'] = $amount;
+				$array['taxes'][$id][$taxId]['formattedAmount'] = $currency->getFormattedPrice($amount);
 			}
 		}
 
@@ -1424,8 +1430,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 					$taxAmount[$id] = 0;
 				}
 
-				$array['formattedTotalBeforeTax'][$id] = $currencies[$id]->getFormattedPrice($amount - $taxAmount[$id]);
-				$array['formattedTotal'][$id] = $currencies[$id]->getFormattedPrice($amount);
+				$array['formattedTotalBeforeTax'][$id] = $currency->getFormattedPrice($amount - $taxAmount[$id]);
+				$array['formattedTotal'][$id] = $currency->getFormattedPrice($amount);
 			}
 		}
 
@@ -1445,7 +1451,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			$array['discounts'][$discount->getID() ? $discount->getID() : $key] = $discount->toArray();
 			$array['discountAmount'] -= $discount->amount->get();
 		}
-		$array['formatted_discountAmount'] = $this->currency->get()->getFormattedPrice($array['discountAmount']);
+		$array['formatted_discountAmount'] = $this->getCurrency()->getFormattedPrice($array['discountAmount']);
 
 		// coupons
 		if (!is_null($this->coupons))
@@ -1454,7 +1460,6 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		}
 
 		// payments
-		$currency = $this->currency->get();
 		if (isset($options['payments']))
 		{
 			$array['amountPaid'] = $this->getPaidAmount();
@@ -1476,8 +1481,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$array['itemSubtotal'] = $array['itemDisplayPriceTotal'] = $array['itemSubtotalWithoutTax'] = 0;
 		foreach ($this->getOrderedItems() as $item)
 		{
-			$array['itemSubtotal'] += $item->getSubtotal($currency, true);
-			$array['itemSubtotalWithoutTax'] += $item->getSubtotal($currency, false);
+			$array['itemSubtotal'] += $item->getSubtotal(true);
+			$array['itemSubtotalWithoutTax'] += $item->getSubtotal(false);
 			$array['itemDisplayPriceTotal'] += $item->getDisplayPrice($currency) * $item->count->get();
 		}
 
@@ -1490,7 +1495,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		{
 			foreach ($this->shipments as $shipment)
 			{
-				$array['shippingSubtotal'] += $shipment->shippingAmount->get();
+				$array['shippingSubtotal'] += $shipment->getShippingTotalBeforeTax();
 			}
 		}
 
@@ -1837,7 +1842,6 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		if ($createNew)
 		{
 			$shipment = Shipment::getNewInstance($this);
-			$shipment->amountCurrency->set($this->currency->get());
 			$shipment->save(true);
 
 			$this->shipments->add($shipment);

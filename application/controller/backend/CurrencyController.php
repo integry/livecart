@@ -171,6 +171,7 @@ class CurrencyController extends StoreManagementController
 		$response = new ActionResponse();
 		$response->set('form', $form);
 		$response->set('id', $this->request->get('id'));
+		$response->set('currency', $currency->toArray());
 		return $response;
 	}
 
@@ -181,6 +182,7 @@ class CurrencyController extends StoreManagementController
 	{
 		$currency = Currency::getInstanceByID($this->request->get('id'), Currency::LOAD_DATA);
 		$currency->loadRequestData($this->request);
+		$currency->rounding->set(serialize(json_decode($this->request->get('rounding'), true)));
 		$currency->save();
 
 		return new JSONResponse(false, 'success');

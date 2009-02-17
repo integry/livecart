@@ -70,19 +70,22 @@ class ProductPrice extends ActiveRecordModel
 
 	/*####################  Value retrieval and manipulation ####################*/
 
-	public function getPrice()
+	public function getPrice($applyRounding = true)
 	{
 		$price = $this->price->get();
 
 		if ($parent = $this->product->get()->parent->get())
 		{
 			$parentPrice = $parent->getPricingHandler()->getPrice($this->currency->get())->getPrice();
-			return $this->getChildPrice($parentPrice, $price, $this->product->get()->getChildSetting('price'));
+			$price = $this->getChildPrice($parentPrice, $price, $this->product->get()->getChildSetting('price'));
 		}
-		else
+
+		if (!$price)
 		{
-			return $price;
+			return null;
 		}
+
+		return $applyRounding ? $this->currency->get()->roundPrice($price) : $price;
 	}
 
 	private function getChildPrice($parentPrice, $childPriceDiff, $setting)
@@ -105,9 +108,10 @@ class ProductPrice extends ActiveRecordModel
 		}
 	}
 
-	public function getItemPrice(OrderedItem $item)
+	public function getItemPrice(OrderedItem $item, $applyRounding = true)
 	{
-		$price = $this->getPrice();
+		$price = $this->getPrice($applyRounding);
+		$applyDiscountRules = true;
 
 		if ($parent = $this->product->get()->parent->get())
 		{
@@ -120,11 +124,11 @@ class ProductPrice extends ActiveRecordModel
 			}
 			else
 			{
-				return $price;
+				$applyDiscountRules = false;
 			}
 		}
 
-		if ($price)
+		if ($price && $applyDiscountRules)
 		{
 			$rules = unserialize($this->serializedRules->get());
 
@@ -143,16 +147,23 @@ class ProductPrice extends ActiveRecordModel
 					}
 				}
 			}
-
-			return $price;
 		}
+
+		// convert from default currency
 		else if ($this->currency->get()->getID() != self::getApplication()->getDefaultCurrencyCode())
 		{
 			$defaultCurrency = self::getApplication()->getDefaultCurrency();
-			return $this->convertFromDefaultCurrency($this->product->get()->getItemPrice($item, $defaultCurrency->getID()));
+			$price = $this->convertFromDefaultCurrency($this->product->get()->getItemPrice($item, false, $defaultCurrency));
 		}
 
-		return 0;
+		if ($price)
+		{
+			return $applyRounding ? $this->currency->get()->roundPrice($price) : $price;
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	private function getGroupPrice(OrderedItem $item, $groupID, $rules)
@@ -312,7 +323,7 @@ class ProductPrice extends ActiveRecordModel
 		$listPrice = $productPrices = $priceRules = array();
 		foreach ($prices as $price)
 		{
-			$productPrices[$price['productID']][$price['currencyID']] = $price['price'];
+			$productPrices[$price['productID']][$price['currencyID']] = Currency::getInstanceByID($price['currencyID'])->roundPrice($price['price']);
 			$listPrices[$price['productID']][$price['currencyID']] = $price['listPrice'];
 			$productArray[$ids[$price['productID']]]['priceRules'][$price['currencyID']] = $price['serializedRules'];
 			$productArray[$ids[$price['productID']]]['prices'][$price['currencyID']] = $price;
@@ -463,11 +474,11 @@ class ProductPrice extends ActiveRecordModel
 	public static function transformArray($array, ARSchema $schema)
 	{
 		$array = parent::transformArray($array, $schema);
+		$currency = Currency::getInstanceByID($array['currencyID']);
 		$array['serializedRules'] = unserialize($array['serializedRules']);
 
 		if ($array['serializedRules'])
 		{
-			$currency = Currency::getInstanceByID($array['currencyID']);
 			$quantities = array_keys($array['serializedRules']);
 			$nextQuant = array();
 			foreach ($quantities as $key => $quant)
@@ -478,6 +489,7 @@ class ProductPrice extends ActiveRecordModel
 			{
 				foreach ($prices as $group => $price)
 				{
+					$price = $currency->roundPrice($price);
 					$array['quantityPrices'][$group][$quantity] = array(
 														'price' => $price,
 														'formattedPrice' => $currency->getFormattedPrice($price),

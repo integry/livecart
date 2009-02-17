@@ -9,7 +9,7 @@ ClassLoader::import('application.model.template.Template');
  * @author Integry Systems
  * @package test.model.template
  */
-class TemplateTest extends UnitTest
+class TemplateTest extends LiveCartTest
 {
 	function testRegularTemplate()
 	{

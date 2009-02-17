@@ -10,7 +10,7 @@ ClassLoader::import("application.model.role.AccessControlAssociation");
  * @author Integry Systems
  * @package test.model.user
  */
-class UserGroupTest extends UnitTest
+class UserGroupTest extends LiveCartTest
 {
 	public function __construct()
 	{

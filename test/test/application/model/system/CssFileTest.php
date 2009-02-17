@@ -8,7 +8,7 @@ ClassLoader::import('application.model.system.CssFile');
  * @author Integry Systems
  * @package test.model.system
  */
-class CssFileTest extends UnitTest
+class CssFileTest extends LiveCartTest
 {
 	public function getUsedSchemas()
 	{

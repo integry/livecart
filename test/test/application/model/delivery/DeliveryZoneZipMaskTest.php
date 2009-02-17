@@ -9,7 +9,7 @@ ClassLoader::import("application.model.delivery.DeliveryZoneZipMask");
  * @package test.model.delivery
  * @author Integry Systems
  */
-class DeliveryZoneZipMaskTest extends UnitTest
+class DeliveryZoneZipMaskTest extends LiveCartTest
 {
 	/**
 	 * @var DeliveryZone

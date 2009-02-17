@@ -8,7 +8,7 @@ ClassLoader::import("application.model.category.Category");
  *  @author Integry Systems
  *  @package test.model.product
  */
-class ProductRelationshipGroupTest extends UnitTest
+class ProductRelationshipGroupTest extends LiveCartTest
 {
 	private $groupAutoIncrementNumber = 0;
 	private $productAutoIncrementNumber = 0;

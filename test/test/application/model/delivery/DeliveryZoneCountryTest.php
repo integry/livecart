@@ -9,7 +9,7 @@ ClassLoader::import("application.model.delivery.DeliveryZoneCountry");
  * @package test.model.delivery
  * @author Integry Systems
  */
-class DeliveryZoneCountryTest extends UnitTest
+class DeliveryZoneCountryTest extends LiveCartTest
 {
 	/**
 	 * @var DeliveryZone

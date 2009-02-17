@@ -7,7 +7,7 @@ ClassLoader::import("application.model.role.Role");
  *  @author Integry Systems
  *  @package test.model.role
  */
-class RoleTest extends UnitTest
+class RoleTest extends LiveCartTest
 {
 	public function __construct()
 	{

@@ -96,7 +96,7 @@ class OrderController extends FrontendController
 		$response->set('currency', $currency->getID());
 		$response->set('options', $options['visible']);
 		$response->set('moreOptions', $options['more']);
-		$response->set('orderTotal', $currency->getFormattedPrice($this->order->getSubTotal($currency)));
+		$response->set('orderTotal', $currency->getFormattedPrice($this->order->getSubTotal()));
 		$response->set('expressMethods', $this->application->getExpressPaymentHandlerList(true));
 		$response->set('isCouponCodes', DiscountCondition::isCouponCodes());
 

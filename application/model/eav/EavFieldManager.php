@@ -2,6 +2,7 @@
 
 ClassLoader::import('application.model.eav.EavField');
 ClassLoader::import('application.model.eavcommon.iEavFieldManager');
+ClassLoader::import('application.model.eavcommon.EavSpecificationManagerCommon');
 
 /**
  * Custom field container for a particular EAV type (users, manufacturers, orders, etc)

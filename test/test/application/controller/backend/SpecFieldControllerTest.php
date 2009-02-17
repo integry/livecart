@@ -8,7 +8,7 @@ ClassLoader::import("application.controller.backend.SpecFieldController");
  * @package test.model.category
  * @author Integry Systems
  */
-class SpecFieldControllerTest extends UnitTest implements BackendControllerTestCase
+class SpecFieldControllerTest extends LiveCartTest implements BackendControllerTestCase
 {
 	/**
 	 * Root category

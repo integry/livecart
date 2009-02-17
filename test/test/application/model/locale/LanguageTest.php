@@ -9,7 +9,7 @@ ClassLoader::import('application.model.system.Language');
  * @author Integry Systems
  * @package test.model.locale
  */
-class LanguageTest extends UnitTest
+class LanguageTest extends LiveCartTest
 {
 	public function __construct()
 	{

@@ -3,11 +3,11 @@
 ************************/
 #currPageMenu li
 {
-    background-image: url(../../image/silk/money_dollar.png);    
+    background-image: url(../../image/silk/money_dollar.png);
 }
 
 #addCurr {
-	margin-bottom: 10px;  
+	margin-bottom: 10px;
 }
 
 #currAddMenuLoadIndicator, #addCurrIndicator
@@ -16,7 +16,7 @@
 }
 
 #currencyList {
-  	width: 30em;
+  	width: 40em;
 }
 
 #currencyList li {
@@ -41,8 +41,8 @@
 }
 
 #currencyList .checkbox {
-  	margin: 0; 
-	margin-left: 2px; 
+  	margin: 0;
+	margin-left: 2px;
 	float: none;
 }
 
@@ -59,11 +59,11 @@
   	display: none;
 }
 
-.setDefault, 
-.default .currDefault, 
-.disabled .currInactive 
+.setDefault,
+.default .currDefault,
+.disabled .currInactive
 {
-  	display: inline;  
+  	display: inline;
 }
 
 .default .setDefault,
@@ -76,11 +76,11 @@
 	Rates
 ************************/
 #rates, #saveRates {
-	width: 500px;  
+	width: 500px;
 }
 
 #currencyRateList {
-  	
+
 }
 
 #currencyRateList .title {
@@ -100,7 +100,7 @@
 }
 
 #rates .feedback {
-  	color: red;  	
+  	color: red;
 }
 
 .defaultCurrency {
@@ -113,11 +113,11 @@
 
 .currencyPriceFormatting
 {
-    width: 80%; 
+    width: 80%;
 	margin-top: 15px;
 }
 
-.currencyPriceSuffix, .currencyPricePrefix
+.currencyPriceFormatting input
 {
     width: 4em;
 }
@@ -126,7 +126,7 @@
 	Options
 ************************/
 #feedOptions {
-	margin-left: 30px;  
+	margin-left: 30px;
 }
 
 #feedOptions label {
@@ -149,22 +149,31 @@
 }
 
 #updateCb, #feedOptions .checkbox {
-	width: 20px; 
-	height: 20px; 
-	margin-right: 10px; 
-	vertical-align: middle;  
+	width: 20px;
+	height: 20px;
+	margin-right: 10px;
+	vertical-align: middle;
 }
 
 #updateLabel {
-  	 width: auto; 
+  	 width: auto;
 }
-
-
 
 #confirmations
 {
-    position: absolute; 
-    top: 45px; 
+    position: absolute;
+    top: 45px;
     right: 10px;
     width: 600px;
+}
+
+.rounding select
+{
+	width: 160px;
+}
+
+.rangeTo
+{
+	display: inline-block;
+	min-width: 100px;
 }

@@ -31,6 +31,18 @@ _pr_decimal_count=Decimal count
 
 _base_currency_warning=WARNING: the product prices for all your products will be 0.00 if the prices are not entered in the new base currency! Are you sure you wish to change the base currency for your store?
 
+# rounding
+_rounding=Rounding
+NO_ROUNDING=No rounding
+ROUND=Round to nearest
+ROUND_UP=Round up to nearest
+ROUND_DOWN=Round down to nearest
+TRIM=Trim to nearest
+TRIM_UP=Trim up to nearest
+TRIM_DOWN=Trim down to nearest
+_x_and_more=[_1] and more
+_and_more=and more
+
 # rates
 
 _err_empty=Please enter the currency exchange rate

@@ -463,14 +463,11 @@ class Product extends MultilingualObject
 		$this->getPricingHandler()->setPrice($instance);
 	}
 
-	public function getItemPrice(OrderedItem $item, $currencyCode)
+	public function getItemPrice(OrderedItem $item, $applyRounding = true, Currency $currency = null)
 	{
-	  	if ($currencyCode instanceof Currency)
-	  	{
-			$currencyCode = $currencyCode->getID();
-		}
-
-		return $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode)->getItemPrice($item);
+		$currency = $currency ? $currency : $item->getCurrency();
+		$currencyCode = $currency->getID();
+		return $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode)->getItemPrice($item, $applyRounding);
 	}
 
 	public function getPrice($currencyCode, $recalculate = true)
@@ -483,12 +480,14 @@ class Product extends MultilingualObject
 		$instance = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode);
 	  	if (!$instance->getPrice() && $recalculate)
 	  	{
-	  		return $instance->reCalculatePrice();
+	  		$price = $instance->reCalculatePrice();
 		}
 		else
 		{
-			return $instance->getPrice();
+			$price = $instance->getPrice($recalculate == true);
 		}
+
+		return $price;
 	}
 
 	public function addRelatedProduct(Product $product, $type = 0)

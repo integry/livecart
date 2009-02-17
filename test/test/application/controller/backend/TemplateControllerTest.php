@@ -8,7 +8,7 @@ ClassLoader::import("application.controller.backend.TemplateController");
  * @package test.model.category
  * @author Integry Systems
  */
-class TemplateControllerTest extends UnitTest implements BackendControllerTestCase
+class TemplateControllerTest extends LiveCartTest implements BackendControllerTestCase
 {
 	/**
 	 * Root category

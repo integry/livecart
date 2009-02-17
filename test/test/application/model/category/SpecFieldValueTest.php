@@ -11,7 +11,7 @@ ClassLoader::import("application.model.product.Product");
  * @package test.model.category
  * @author Integry Systems
  */
-class SpecFieldValueTest extends UnitTest
+class SpecFieldValueTest extends LiveCartTest
 {
 	/**
 	 * Root category
