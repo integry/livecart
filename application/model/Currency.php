@@ -332,8 +332,10 @@ class Currency extends ActiveRecordModel
 		}
 		else
 		{
-			$ceil = $nearest - substr($number, strlen($number) - strlen($nearest));
-			$floor = $nearest - substr($number, strlen($number) - strlen($nearest)) - pow(10, strlen($nearest));
+			if (!(float)$nearest)
+			{
+				$nearest = 1;
+			}
 
 			switch ($type)
 			{

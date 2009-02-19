@@ -31,6 +31,7 @@ class DibsFlexWin extends ExternalPayment
 		// The currency code of the payment amount.
 		$params['currency'] = $this->getCurrency($this->details->currency->get());
 
+		$this->notifyUrl = preg_replace('/currency\=[A-Z]{3}/', '', $this->notifyUrl);
 		$params['callbackurl'] = $this->notifyUrl;
 		$params['accepturl'] = $this->returnUrl;
 		$params['cancelurl'] = $this->siteUrl;
@@ -53,11 +54,17 @@ class DibsFlexWin extends ExternalPayment
 		$k1 = $this->getConfigValue('md51');
 		$k2 = $this->getConfigValue('md52');
 
+		if (!is_numeric($params['currency']))
+		{
+			$params['currency'] = $this->getCurrency($params['currency']);
+		}
+
 		return md5($k2 . md5($k1 . 'merchant=' . $params['merchant'] . '&orderid=' . $params['orderid'] . '&currency=' . $params['currency'] . '&amount=' . $params['amount']));
 	}
 
 	public function notify($requestArray)
 	{
+		file_put_contents(ClassLoader::getRealPath('cache.') . 'notify.php', var_export($requestArray, true));
 		if ($requestArray['md5key'] == $this->getMd5Key($requestArray))
 		{
 			$result = new TransactionResult();

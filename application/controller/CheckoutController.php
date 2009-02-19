@@ -583,8 +583,6 @@ class CheckoutController extends FrontendController
 
 		$currency = $this->request->get('currency', $this->application->getDefaultCurrencyCode());
 
-var_dump($this->order->toArray());
-
 		$response = new ActionResponse();
 		$response->set('order', $this->order->toArray());
 		$response->set('currency', $this->getRequestCurrency());
