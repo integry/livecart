@@ -133,28 +133,16 @@ class LiveCartSmarty extends Smarty
 
 	private function getPlugins($path)
 	{
-		$pluginPath = ClassLoader::getRealPath('plugin.view.' . $path);
-
-		if (!is_dir($pluginPath))
-		{
-			return array();
-		}
-
 		if (!class_exists('ViewPlugin', false))
 		{
 			ClassLoader::import('application.ViewPlugin');
 		}
 
 		$plugins = array();
-
-		foreach (new DirectoryIterator($pluginPath) as $plugin)
+		foreach ($this->getApplication()->getPlugins('view/' . $path) as $plugin)
 		{
-			if ($plugin->isFile() && ('php' == pathinfo($plugin->getFileName(), PATHINFO_EXTENSION)))
-			{
-				$className = basename($plugin->getFileName(), '.php');
-				ClassLoader::import('plugin.view.' . $path . '.' . $className);
-				$plugins[] = new $className($this, $this->application);
-			}
+			include_once $plugin['path'];
+			$plugins[] = new $plugin['class']($this, $this->application);
 		}
 
 		return $plugins;

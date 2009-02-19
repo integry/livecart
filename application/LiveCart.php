@@ -16,7 +16,7 @@ class LiveCart extends Application
 {
 	protected $routerClass = 'LiveCartRouter';
 
-	private static $pluginDirectories = array();
+	private $pluginDirectories = array();
 
 	private $isBackend = false;
 
@@ -95,6 +95,8 @@ class LiveCart extends Application
 	private $theme = null;
 
 	private $cache;
+
+	private $plugins = null;
 
 	const EXCLUDE_DEFAULT_CURRENCY = false;
 
@@ -226,9 +228,20 @@ class LiveCart extends Application
 	 *
 	 * @param string $dir Full plugin directory path
 	 */
-	public static function registerPluginDirectory($dir)
+	public function registerPluginDirectory($dir)
 	{
-		self::$pluginDirectories[$dir] = true;
+		$this->pluginDirectories[$dir] = true;
+	}
+
+	/**
+	 * Unregisters a plugin directory
+	 *
+	 * @param string $dir Full plugin directory path
+	 */
+	public function unregisterPluginDirectory($dir)
+	{
+		unset($this->pluginDirectories[$dir]);
+		$this->plugins = null;
 	}
 
 	/**
@@ -397,7 +410,7 @@ class LiveCart extends Application
 	 * @return Response
 	 * @throws ApplicationException if error situation occurs
 	 */
-	protected function execute($controllerInstance, $actionName)
+	public function execute($controllerInstance, $actionName)
 	{
 		$originalResponse = parent::execute($controllerInstance, $actionName);
 
@@ -407,7 +420,7 @@ class LiveCart extends Application
 			$originalResponse->setHeader('Content-type', 'text/html;charset=utf-8');
 		}
 
-		$response = $this->processActionPlugins($controllerInstance, $originalResponse);
+		$response = $this->processActionPlugins($controllerInstance, $originalResponse, $actionName);
 
 		if ($response !== $originalResponse)
 		{
@@ -480,16 +493,14 @@ class LiveCart extends Application
 	/**
  `	 * Execute response post-processor plugins
 	 */
-	private function processActionPlugins(Controller $controllerInstance, Response $response)
+	private function processActionPlugins(Controller $controllerInstance, Response $response, $actionName)
 	{
-		return $this->processPlugins($controllerInstance, $response, $controllerInstance->getRequest()->getActionName());
+		return $this->processPlugins($controllerInstance, $response, $actionName);
 	}
 
 	private function processPlugins(Controller $controllerInstance, Response $response, $action)
 	{
 		ClassLoader::import('application.ControllerPlugin');
-
-		$dirs = array_merge(array(ClassLoader::getRealPath('plugin') => 0), self::$pluginDirectories);
 
 		$parent = get_class($controllerInstance);
 		do
@@ -502,37 +513,71 @@ class LiveCart extends Application
 		$hierarchy[$controllerInstance->getControllerName()] = true;
 		$hierarchy = array_keys($hierarchy);
 
-		foreach ($dirs as $pluginRoot => $foo)
+		foreach ($hierarchy as $name)
 		{
-			foreach ($hierarchy as $name)
+			foreach ($this->getPlugins('controller/' . $name . '/' . $action) as $plugin)
 			{
-				$pluginDir = $pluginRoot . '/controller/' . $name . '/' . $action;
+				include_once($plugin['path']);
+				$plugin = new $plugin['class']($response, $controllerInstance);
+				$plugin->process();
 
-				if (!is_dir($pluginDir))
+				$response = $plugin->getResponse();
+				if ($plugin->isStopped())
 				{
-					continue;
-				}
-
-				foreach (new DirectoryIterator($pluginDir) as $file)
-				{
-					if (substr($file->getFileName(), -4) == '.php')
-					{
-						include_once($file->getPathname());
-						$class = substr($file->getFileName(), 0, -4);
-						$plugin = new $class($response, $controllerInstance);
-						$plugin->process();
-
-						$response = $plugin->getResponse();
-						if ($plugin->isStopped())
-						{
-							return $response;
-						}
-					}
+					return $response;
 				}
 			}
 		}
 
 		return $response;
+	}
+
+	public function getPlugins($path)
+	{
+		if (is_null($this->plugins))
+		{
+			$this->loadPlugins();
+		}
+
+		return isset($this->plugins[$path]) ? $this->plugins[$path] : array();
+	}
+
+	public function loadPlugins()
+	{
+		$dirs = array_merge(array(ClassLoader::getRealPath('plugin') => 0), $this->pluginDirectories);
+
+		$plugins = array();
+		foreach ($dirs as $pluginRoot => $foo)
+		{
+			$plugins = array_merge($plugins, $this->findPlugins($pluginRoot));
+		}
+//var_dump($plugins);
+		$this->plugins = $plugins;
+	}
+
+	private function findPlugins($dir, $root = '')
+	{
+		$plugins = array();
+
+		if (is_dir($dir))
+		{
+			foreach (new DirectoryIterator($dir) as $file)
+			{
+				if (!$file->isDot())
+				{
+					if ($file->isDir())
+					{
+						$plugins = array_merge($plugins, $this->findPlugins($file->getPathname(), $root . ($root ? '/' : '') . $file->getFileName()));
+					}
+					else if (substr($file->getFileName(), -4) == '.php')
+					{
+						$plugins[strtolower($root)][] = array('path' => $file->getPathname(), 'class' => substr($file->getFileName(), 0, -4));
+					}
+				}
+			}
+		}
+
+		return $plugins;
 	}
 
 	/**
