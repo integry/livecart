@@ -224,7 +224,7 @@ class OrderedItemController extends StoreManagementController
 	{
 		if($id = $this->request->get("id", false))
 		{
-			$item = OrderedItem::getInstanceByID('OrderedItem', (int)$id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'AmountCurrency' => 'Currency', 'ShippingAddress' => 'UserAddress', 'Product'));
+			$item = OrderedItem::getInstanceByID('OrderedItem', (int)$id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'Currency', 'ShippingAddress' => 'UserAddress', 'Product'));
 			$shipment = $item->shipment->get();
 			$order = $shipment->order->get();
 			$order->loadItems();
@@ -283,8 +283,8 @@ class OrderedItemController extends StoreManagementController
 		{
 			$item = OrderedItem::getInstanceByID('OrderedItem', $id, true, array('Product'));
 
-			$oldShipment = Shipment::getInstanceByID('Shipment', $fromID, true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress', 'AmountCurrency' => 'Currency'));
-			$newShipment = Shipment::getInstanceByID('Shipment', $toID, true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress', 'AmountCurrency' => 'Currency'));
+			$oldShipment = Shipment::getInstanceByID('Shipment', $fromID, true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress', 'Currency'));
+			$newShipment = Shipment::getInstanceByID('Shipment', $toID, true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress', 'Currency'));
 
 			$history = new OrderHistory($oldShipment->order->get(), $this->user);
 
@@ -380,7 +380,7 @@ class OrderedItemController extends StoreManagementController
 		if(($id = (int)$this->request->get("id", false)) )
 		{
 			$count = (int)$this->request->get("count");
-			$item = OrderedItem::getInstanceByID('OrderedItem', $id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'AmountCurrency' => 'Currency', 'ShippingAddress' => 'UserAddress', 'Product', 'Category'));
+			$item = OrderedItem::getInstanceByID('OrderedItem', $id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'Currency', 'ShippingAddress' => 'UserAddress', 'Product', 'Category'));
 			$item->customerOrder->get()->loadAll();
 			$history = new OrderHistory($item->customerOrder->get(), $this->user);
 

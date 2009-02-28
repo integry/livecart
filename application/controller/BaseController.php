@@ -115,6 +115,16 @@ abstract class BaseController extends Controller implements LCiTranslator
 		}
 	}
 
+	public function getBlockResponse($block)
+	{
+		if ('getGenericBlock' == $block['call'][1])
+		{
+			return $this->getGenericBlock();
+		}
+
+		return parent::getBlockResponse($block);
+	}
+
 	public function getGenericBlock()
 	{
 		return new BlockResponse();

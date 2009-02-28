@@ -101,7 +101,7 @@
 
 		<div class="clear"></div>
 
-		<h2 id="msg">{t _support}</h2>
+		<h2 id="m_s_g">{t _support}</h2>
 
 		<p class="noteAbout">{t _have_questions}</p>
 

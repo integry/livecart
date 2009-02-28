@@ -241,7 +241,7 @@ class ActiveGrid
 			}
 		}
 
-		if (!isset($schema))
+		if (!isset($schema) || !is_object($schema))
 		{
 			$schema = ActiveRecordModel::getSchemaInstance($schemaName);
 		}

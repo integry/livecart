@@ -44,11 +44,11 @@ class Installer
 			$testFile = $path . '/test.txt';
 
 			// try a couple of permissions
-			foreach (array(0, '0755', '0777') as $mode)
+			foreach (array(0, 755, 777) as $mode)
 			{
 				if ($mode)
 				{
-					@chmod($path, $mode);
+					@chmod($path, octdec($mode));
 				}
 
 				$res = @file_put_contents($testFile, 'test');

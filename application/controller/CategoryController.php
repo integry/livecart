@@ -85,6 +85,12 @@ class CategoryController extends FrontendController
 			$this->logSearchQuery($searchFilter->getCleanedQuery($query));
 		}
 
+		// root category?
+		if ($this->category->isRoot() && !$this->filters && !($this instanceof IndexController))
+		{
+			return new ActionRedirectResponse('index', 'index');
+		}
+
 		// sorting
 		$sort = array();
 		$opts = $this->config->get('ALLOWED_SORT_ORDER');

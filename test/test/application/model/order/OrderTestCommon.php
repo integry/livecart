@@ -55,6 +55,7 @@ abstract class OrderTestCommon extends LiveCartTest
 			'DiscountConditionRecord',
 			'DeliveryZone',
 			'Tax',
+			'User',
 		);
 	}
 }

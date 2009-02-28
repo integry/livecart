@@ -73,7 +73,15 @@ abstract class FrontendController extends BaseController
 
 	public function getRequestCurrency()
 	{
-		$currency = Currency::getValidInstanceById($this->request->get('currency', $this->application->getDefaultCurrencyCode()));
+		$currencyCode = $this->request->get('currency', $this->application->getDefaultCurrencyCode());
+
+		// currency variable is sometimes POST'ed from external services, like payment gateway notifications
+		if (!empty($_POST['currency']) && !empty($_GET['currency']))
+		{
+			$currencyCode = $_GET['currency'];
+		}
+
+		$currency = Currency::getValidInstanceById($currencyCode);
 		if ($currency)
 		{
 			return $currency->getID();
