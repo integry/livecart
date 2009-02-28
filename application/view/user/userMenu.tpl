@@ -10,6 +10,8 @@
 	   <li id="emailMenu" class="{if "emailMenu" == $current}selected{/if}"><a href="{link controller=user action=changeEmail}">{t _change_email_address}</a></li>
 	   <li id="passwordMenu" class="{if "passwordMenu" == $current}selected{/if}"><a href="{link controller=user action=changePassword}">{t _change_pass}</a></li>
 
+	   {block USER_MENU_ITEMS}
+
 	   <li id="signOutMenu" class="{if "signoutMenu" == $current}selected{/if}"><a href="{link controller=user action=logout}">{t _sign_out}</a></li>
 	</ul>
 </div>

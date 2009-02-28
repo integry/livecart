@@ -95,7 +95,7 @@ class ProductCount
 			{
 				$from = $config->get('PRICE_FILTER_FROM_' . $k);
 				$to = $config->get('PRICE_FILTER_TO_' . $k);
-				if ($from && $to)
+				if ($to)
 				{
 					$filters[$k] = array($from, $to);
 				}

@@ -12,10 +12,11 @@
 				<a href="{link controller=backend.user action=info id=_id_}"}">{t _user_info}</a>
 				<span class="tabHelp">users.edit</span>
 			</li>
-			<li id="tabOrdersList" class="tab active">
+			<li id="tabOrdersList" class="tab">
 				<a href="{link controller=backend.customerOrder action=orders id=1 query='userID=_id_'}">{t _orders}</a>
 				<span class="tabHelp">customerOrders.orders</span>
 			</li>
+			{block USER_TABS}
 		</ul>
 	</div>
 	<div class="sectionContainer maxHeight h--50"></div>

@@ -67,7 +67,7 @@ class LiveCartRenderer extends SmartyRenderer
 
 		foreach ($paths as &$path)
 		{
-			$path = $path . $template;
+			$path = $this->getPath($path, $template);
 		}
 
 		return $paths;
@@ -150,6 +150,7 @@ class LiveCartRenderer extends SmartyRenderer
 		{
 			$tplPath = $this->getRelativeTemplatePath($tplPath);
 		}
+
 		if ($conf = $this->getBlockConfiguration($tplPath))
 		{
 			foreach ($conf as $command)
@@ -171,12 +172,14 @@ class LiveCartRenderer extends SmartyRenderer
 	{
 		if (is_null($this->blockConfiguration) || $file)
 		{
-			if (!$file)
+			$files = $file ? array($file) : $this->getApplication()->getConfigContainer()->getBlockFiles();
+
+			$config = array();
+			foreach ($files as $file)
 			{
-				$file = $this->getTemplatePath('block.ini');
+				$config = array_merge($config, $this->parseConfigFile($file[0]));
 			}
 
-			$config = $this->parseConfigFile($file);
 			$request = $this->getApplication()->getRequest();
 			$controller = $request->getControllerName();
 			$validPairs = array(
@@ -387,6 +390,12 @@ class LiveCartRenderer extends SmartyRenderer
 
 	public function getRelativeTemplatePath($template)
 	{
+		if (strpos($template, '/module/'))
+		{
+			preg_match('/\/(module\/.*)/', $template, $match);
+			return str_replace('application/view/', '', $match[1]);
+		}
+
 		$template = str_replace('\\', '/', $template);
 		foreach (array('application.view', 'storage.customize.view') as $path)
 		{
@@ -398,6 +407,20 @@ class LiveCartRenderer extends SmartyRenderer
 				return substr($template, strlen($path) + 1);
 			}
 		}
+	}
+
+	private function getPath($root, $template)
+	{
+		if (substr($template, 0, 7) == 'module/')
+		{
+			if ($this->paths[count($this->paths) - 1] == $root)
+			{
+				$root = ClassLoader::getRealPath('.');
+				$template = preg_replace('/module\/([a-zA-Z0-9]+)\/(.*)/', 'module/\\1/application/view/\\2', $template);
+			}
+		}
+
+		return $root . '/' . $template;
 	}
 }
 

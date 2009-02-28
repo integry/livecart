@@ -1,0 +1,9 @@
+Frontend
+	Placeholders
+		USER_MENU_ITEMS
+			Insert new items in customer account menu
+
+Backend
+	Menus and tabs
+		USER_TABS
+			User account details tab menu

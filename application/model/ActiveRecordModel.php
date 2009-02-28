@@ -343,6 +343,11 @@ abstract class ActiveRecordModel extends ActiveRecord
 		}
 	}
 
+	protected function event($event)
+	{
+		$this->executePlugins($this, $event);
+	}
+
 	public function __clone()
 	{
 		parent::__clone();

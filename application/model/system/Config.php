@@ -19,6 +19,8 @@ class Config
 
 	private $application;
 
+	private $directories = array();
+
 	public function __construct(LiveCart $application)
 	{
 		$filePath = $this->getFilePath();
@@ -29,6 +31,8 @@ class Config
 		}
 
 		$this->application = $application;
+
+		$this->directories = $this->application->getConfigContainer()->getConfigDirectories();
 	}
 
 	public function isValueSet($key, $updateIfNotFound = false)
@@ -262,7 +266,14 @@ class Config
 	{
 	  	if (!$dir)
 	  	{
-			$dir = ClassLoader::getRealPath('application.configuration.registry') . '/';
+			$tree = array();
+
+			foreach ($this->directories as $directory)
+			{
+				$tree = array_merge($tree, $this->getTree($directory));
+			}
+
+			return $tree;
 		}
 
 		$res = array();
@@ -427,7 +438,14 @@ class Config
 
 	private function getSectionFile($sectionId)
 	{
-		return ClassLoader::getRealPath('application.configuration.registry.' . $sectionId) . '.ini';
+		foreach ($this->directories as $dir)
+		{
+			$path = $dir . '/' . str_replace('.', '/', $sectionId) . '.ini';
+			if (file_exists($path))
+			{
+				return $path;
+			}
+		}
 	}
 
 	private function getFilePath()

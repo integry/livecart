@@ -2,6 +2,7 @@
 
 ClassLoader::import('framework.Application');
 ClassLoader::import('framework.response.ActionResponse');
+ClassLoader::import('application.ConfigurationContainer');
 ClassLoader::import('application.LiveCartRouter');
 ClassLoader::import('application.model.Currency');
 ClassLoader::import('library.payment.TransactionDetails');
@@ -15,8 +16,6 @@ ClassLoader::import('library.payment.TransactionDetails');
 class LiveCart extends Application
 {
 	protected $routerClass = 'LiveCartRouter';
-
-	private $pluginDirectories = array();
 
 	private $isBackend = false;
 
@@ -224,27 +223,6 @@ class LiveCart extends Application
 	}
 
 	/**
-	 * Registers a new plugin directory (multiple plugin directories are supported)
-	 *
-	 * @param string $dir Full plugin directory path
-	 */
-	public function registerPluginDirectory($dir)
-	{
-		$this->pluginDirectories[$dir] = true;
-	}
-
-	/**
-	 * Unregisters a plugin directory
-	 *
-	 * @param string $dir Full plugin directory path
-	 */
-	public function unregisterPluginDirectory($dir)
-	{
-		unset($this->pluginDirectories[$dir]);
-		$this->plugins = null;
-	}
-
-	/**
 	 * Gets view path for specified controllers action
 	 *
 	 * @param string $controllerName Controller name
@@ -375,6 +353,11 @@ class LiveCart extends Application
 		}
 
 		return parent::getControllerInstance($controllerName);
+	}
+
+	protected function getControllerDirectories()
+	{
+		return $this->getConfigContainer()->getControllerDirectories();
 	}
 
 	protected function sendOutput($output)
@@ -544,14 +527,14 @@ class LiveCart extends Application
 
 	public function loadPlugins()
 	{
-		$dirs = array_merge(array(ClassLoader::getRealPath('plugin') => 0), $this->pluginDirectories);
+		$dirs = $this->getConfigContainer()->getPluginDirectories();
 
 		$plugins = array();
-		foreach ($dirs as $pluginRoot => $foo)
+		foreach ($dirs as $pluginRoot)
 		{
 			$plugins = array_merge($plugins, $this->findPlugins($pluginRoot));
 		}
-//var_dump($plugins);
+
 		$this->plugins = $plugins;
 	}
 
@@ -660,7 +643,12 @@ class LiveCart extends Application
 
 		$this->locale =	Locale::getInstance($this->localeName);
 		$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('storage.language'));
-		$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('application.configuration.language'));
+
+		foreach ($this->getConfigContainer()->getLanguageDirectories() as $dir)
+		{
+			$this->locale->translationManager()->setDefinitionFileDir($dir);
+		}
+
 		$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('storage.language'));
 		Locale::setCurrentLocale($this->localeName);
 
@@ -1191,6 +1179,7 @@ class LiveCart extends Application
 	{
 		foreach ($this->configFiles as $file)
 		{
+			//var_dump($file);
 			$this->locale->translationManager()->loadFile($file);
 		}
 	}
@@ -1219,6 +1208,27 @@ class LiveCart extends Application
 	  	ClassLoader::import("application.model.system.Config");
 		$this->config = new Config($this);
 		return $this->config;
+	}
+
+	public function getConfigContainer()
+	{
+		if (!$this->configContainer)
+		{
+			$this->configContainer = new ConfigurationContainer('.');
+		}
+
+		return $this->configContainer;
+	}
+
+	public function registerModule($module)
+	{
+		$this->getConfigContainer()->addModule($module);
+		$this->plugins = null;
+	}
+
+	public function getModules()
+	{
+
 	}
 }
 

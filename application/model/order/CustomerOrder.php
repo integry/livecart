@@ -114,6 +114,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			return false;
 		}
 
+		$this->event('before-load');
+
 		$itemSet = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category', 'DefaultImage' => 'ProductImage'));
 		$this->orderedItems = $itemSet->getData();
 
@@ -161,6 +163,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 			Product::loadAdditionalCategoriesForSet(ARSet::buildFromArray($this->orderedItems)->extractReferencedItemSet('product'));
 		}
+
+		$this->event('after-load');
 	}
 
 	public function loadAddresses()
@@ -185,7 +189,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		if ($this->isExistingRecord())
 		{
-			$this->fixedDiscounts = $this->getRelatedRecordSet('OrderDiscount')->getData();
+			$discounts = array_merge((array)$this->fixedDiscounts, $this->getRelatedRecordSet('OrderDiscount')->getData());
+			$this->fixedDiscounts = array();
+			foreach ($discounts as $discount)
+			{
+				$this->fixedDiscounts[$discount->getID()] = $discount;
+			}
 		}
 	}
 
@@ -412,6 +421,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	{
 		self::beginTransaction();
 
+		$this->event('before-finalize');
+
 		$currency = $this->getCurrency();
 		$this->loadAll();
 
@@ -514,6 +525,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		unset($this->shipments);
 
 		$this->save();
+
+		$this->event('after-finalize');
+
 		self::commit();
 
 		// @todo: see above
@@ -529,6 +543,10 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			return;
 		}
 
+		self::beginTransaction();
+
+		$this->event('before-cancel');
+
 		$this->isCancelled->set(true);
 
 		foreach ($this->shipments as $shipment)
@@ -541,6 +559,10 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		}
 
 		$this->save();
+
+		$this->event('after-cancel');
+
+		self::commit();
 	}
 
 	public function restore()

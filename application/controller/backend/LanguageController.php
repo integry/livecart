@@ -133,51 +133,63 @@ class LanguageController extends StoreManagementController
 		// get locale instance for the language being translated
 		$editLocaleName = $this->request->get('id');
 		$editLocale = Locale::getInstance($editLocaleName);
+		$editManager = $editLocale->translationManager();
 
 		// get all English configuration files
 		$enLocale = Locale::getInstance('en');
-		$files = array();
-		$fileDir = ClassLoader::getRealPath('application.configuration.language.en');
-		$files = $enLocale->translationManager()->getDefinitionFiles($fileDir);
+		$enManager = $enLocale->translationManager();
 
-		// get currently translated definitions
 		$translated = array();
 		$enDefs = array();
-		foreach ($files as $file)
+
+		foreach ($this->application->getConfigContainer()->getLanguageDirectories() as $fileDir)
 		{
-			$relPath = substr($file, strlen($fileDir) + 1);
+			$fileDir .= '/';
+			$files = $enManager->getDefinitionFiles($fileDir . $editLocaleName);
 
-			// get default English definitions (to get all definition keys)
-			$keys = $enLocale->translationManager()->getFileDefs($file);
-
-			$enDefs[$relPath] = $keys;
-
-			foreach ($enDefs[$relPath] as $key => $value)
+			// get currently translated definitions
+			foreach ($files as $file)
 			{
-				$enDefs[$relPath][$key] = htmlspecialchars($value);
+				$relPath = $enManager->getRelativePathFromFullPath($file);
+
+				// get default English definitions (to get all definition keys)
+				$keys = $enManager->getFileDefs($file);
+				$enDefs[$relPath] = $keys;
+
+				foreach ($enDefs[$relPath] as $key => $value)
+				{
+					$enDefs[$relPath][$key] = htmlspecialchars($value);
+				}
+
+				foreach ($keys as $key => $value)
+				{
+					$keys[$key] = '';
+				}
+
+				// get language default definitions
+						//			var_dump($relPath);
+				$default = $editManager->getFileDefs($relPath, true);
+
+				if (strpos($file, 'module'))
+				{
+					//var_dump($default);
+				}
+
+				if (!is_array($default))
+				{
+					$default = array();
+				}
+
+				// get translated definitions
+				$transl = $editManager->getCacheDefs($relPath, true);
+
+				// put all definitions together
+				$translated[$relPath] = array_merge($keys, $default, $transl);
 			}
-
-		  	foreach ($keys as $key => $value)
-		  	{
-				$keys[$key] = '';
-			}
-
-			// get language default definitions
-			$default = $editLocale->translationManager()->getFileDefs($relPath, true);
-			if (!is_array($default))
-			{
-				$default = array();
-			}
-
-			// get translated definitions
-			$transl = $editLocale->translationManager()->getCacheDefs($relPath, true);
-
-			// put all definitions together
-			$translated[$relPath] = array_merge($keys, $default, $transl);
 		}
 
-		$enDefs['Custom.lng'] = $enLocale->translationManager()->getCacheDefs('Custom.lng', true);
-		$translated['Custom.lng'] = $editLocale->translationManager()->getCacheDefs('Custom.lng', true);
+		$enDefs['Custom.lng'] = $enManager->getCacheDefs('Custom.lng', true);
+		$translated['Custom.lng'] = $editManager->getCacheDefs('Custom.lng', true);
 
 		if (!$enDefs['Custom.lng'])
 		{
