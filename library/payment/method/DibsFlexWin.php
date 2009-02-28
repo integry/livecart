@@ -31,7 +31,6 @@ class DibsFlexWin extends ExternalPayment
 		// The currency code of the payment amount.
 		$params['currency'] = $this->getCurrency($this->details->currency->get());
 
-		$this->notifyUrl = preg_replace('/currency\=[A-Z]{3}/', '', $this->notifyUrl);
 		$params['callbackurl'] = $this->notifyUrl;
 		$params['accepturl'] = $this->returnUrl;
 		$params['cancelurl'] = $this->siteUrl;

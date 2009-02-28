@@ -110,6 +110,11 @@ class Transaction extends ActiveRecordModel implements EavAble
 			$instance->isCompleted->set(true);
 		}
 
+		if ($result->details->get())
+		{
+			$instance->comment->set($result->details->get());
+		}
+
 		return $instance;
 	}
 

@@ -21,6 +21,8 @@ class TransactionResult
 
 	public $CVVmatch;
 
+	public $details;
+
 	public $rawResponse;
 
 	protected $isCaptured;
@@ -41,6 +43,7 @@ class TransactionResult
 		$this->AVSaddr = new TransactionValueMapper();
 		$this->AVSzip = new TransactionValueMapper();
 		$this->CVVmatch = new TransactionValueMapper();
+		$this->details = new TransactionValueMapper();
 		$this->rawResponse = new TransactionValueMapper();
 	}
 

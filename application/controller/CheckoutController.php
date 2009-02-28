@@ -603,7 +603,14 @@ class CheckoutController extends FrontendController
 			if (1 == count($external) && !$offlineMethods && !$this->config->get('CC_ENABLE') && !$response->get('ccForm')->getValidator()->getErrorList())
 			{
 				$this->request->set('id', $external[0]);
-				return $this->redirect();
+				$redirect = $this->redirect();
+
+				if ($redirect instanceof ActionResponse)
+				{
+					$redirect = new ActionRedirectResponse('checkout', 'redirect', array('id' => $external[0]));
+				}
+
+				return $redirect;
 			}
 		}
 

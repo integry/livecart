@@ -30,7 +30,7 @@ class ProtxForm extends ExternalPayment
 		$params = array();
 
 		// the total amount to be billed, in decimal form, without a currency symbol.
-		$params['Amount'] = $this->details->amount->get();
+		$params['Amount'] = number_format($this->details->amount->get(), 2, '.', '');
 		$params['Currency'] = $this->details->currency->get();
 
 		// This should be your own reference code to the transaction. Your site should
@@ -39,7 +39,7 @@ class ProtxForm extends ExternalPayment
 
 		$params['Description'] = $this->getConfigValue('description');
 
-		$params['FailureUrl'] = $this->siteUrl;
+		$params['FailureUrl'] = $this->cancelUrl;
 		$params['SuccessUrl'] = $this->notifyUrl;
 
 		// customer information
@@ -83,6 +83,14 @@ class ProtxForm extends ExternalPayment
 			$result->currency->set($currency);
 			$result->rawResponse->set($data);
 			$result->setTransactionType(TransactionResult::TYPE_SALE);
+
+			$checks = array();
+			foreach (array_intersect_key($data, array_flip(array('AVSCV2', 'AddressResult', 'PostCodeResult', 'CV2Result'))) as $check => $res)
+			{
+				$checks[] = $check . ': ' . $res;
+			}
+
+			$result->details->set(implode('<br>', $checks));
 		}
 		else
 		{
