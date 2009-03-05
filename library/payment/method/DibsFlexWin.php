@@ -31,6 +31,7 @@ class DibsFlexWin extends ExternalPayment
 		// The currency code of the payment amount.
 		$params['currency'] = $this->getCurrency($this->details->currency->get());
 
+		//$this->notifyUrl = preg_replace('/currency\=[A-Z]{3}/', '', $this->notifyUrl);
 		$params['callbackurl'] = $this->notifyUrl;
 		$params['accepturl'] = $this->returnUrl;
 		$params['cancelurl'] = $this->siteUrl;
@@ -63,15 +64,21 @@ class DibsFlexWin extends ExternalPayment
 
 	public function notify($requestArray)
 	{
-		file_put_contents(ClassLoader::getRealPath('cache.') . 'notify.php', var_export($requestArray, true));
+		//file_put_contents(ClassLoader::getRealPath('cache.') . 'notify.php', var_export($requestArray, true));
 		if ($requestArray['md5key'] == $this->getMd5Key($requestArray))
 		{
 			$result = new TransactionResult();
 			$result->gatewayTransactionID->set($requestArray['transact']);
 			$result->amount->set($requestArray['amount'] / 100);
-			$result->currency->set($this->getCurrency($requestArray['currency']));
 			$result->rawResponse->set($requestArray);
 			$result->setTransactionType(TransactionResult::TYPE_SALE);
+
+			$currency = $this->getCurrency($requestArray['currency']);
+			if (is_numeric($currency))
+			{
+				$currency = $this->getCurrency($currency);
+			}
+			$result->currency->set($currency);
 		}
 		else
 		{

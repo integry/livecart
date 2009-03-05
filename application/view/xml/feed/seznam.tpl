@@ -4,7 +4,7 @@
 		<SHOPITEM>
 			<PRODUCT><![CDATA[{$product.name_lang}]]></PRODUCT>
 			<DESCRIPTION><![CDATA[{$product.longDescription_lang}]]></DESCRIPTION>
-			<URL><![CDATA[{productUrl product=$product}]]></URL>
+			<URL><![CDATA[{productUrl product=$product full=true}]]></URL>
 
 			{if $product.DefaultImage.ID}
 			<IMGURL><![CDATA[{$product.DefaultImage.urls.1}]]></IMGURL>

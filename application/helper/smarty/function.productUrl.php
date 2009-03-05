@@ -36,6 +36,11 @@ function createProductUrl($params, LiveCart $application)
 
 	$url = $application->getRouter()->createUrl($urlParams, true);
 
+	if (!empty($params['full']))
+	{
+		$url = $application->getRouter()->createFullUrl($url);
+	}
+
 	if (!empty($params['filterChainHandle']))
 	{
 		$url = $application->getRouter()->setUrlQueryParam($url, 'filters', $params['filterChainHandle']);
