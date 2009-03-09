@@ -113,6 +113,14 @@
                 	<Descr>_menu_descr_languages</Descr>
                 </Menu>
                 <Menu>
+                	<Title>_menu_modules</Title>
+                	<Controller>backend.module</Controller>
+                	<Action>index</Action>
+                	<Role>settings</Role>
+                	<Icon>image/silk/plugin.png</Icon>
+                	<Descr>_menu_descr_modules</Descr>
+                </Menu>
+                <Menu>
                 	<Title>_menu_update</Title>
                 	<Controller>backend.update</Controller>
                 	<Action>index</Action>

@@ -42,7 +42,7 @@ class ContactFormController extends FrontendController
 	{
 		$request = $request ? $request : $this->request;
 
-		$validator = new RequestValidator("contactForm", $request);
+		$validator = $this->getValidator("contactForm", $request);
 		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name')));
 		$validator->addCheck('email', new IsNotEmptyCheck($this->translate('_err_email')));
 		$validator->addCheck('msg', new IsNotEmptyCheck($this->translate('_err_message')));

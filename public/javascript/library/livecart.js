@@ -106,11 +106,6 @@ LiveCart.AjaxRequest.prototype = {
 				{
 					indicatorId = form.down('.progressIndicator');
 				}
-
-				if (indicatorId && indicatorId.style.visibility == 'hidden')
-				{
-					this.adjustIndicatorVisibility = true;
-				}
 			}
 		}
 		else
@@ -121,10 +116,22 @@ LiveCart.AjaxRequest.prototype = {
 
 		url = this.fixUrl(url);
 
-		if (indicatorId)
+		if (indicatorId && $(indicatorId))
 		{
+			this.adjustIndicatorVisibility = ($(indicatorId).style.visibility == 'hidden');
+
+			if (('INPUT' == indicatorId.tagName) && ('checkbox' == indicatorId.type))
+			{
+				this.replacedIndicator = indicatorId;
+				indicatorId = document.createElement('span');
+				indicatorId.className = this.replacedIndicator.className;
+				indicatorId.id = this.replacedIndicator.id;
+				indicatorId.addClassName('checkbox');
+				this.replacedIndicator.parentNode.replaceChild(indicatorId, this.replacedIndicator);
+			}
+
 			this.indicatorContainerId = indicatorId;
-			Element.show(this.indicatorContainerId);
+			this.showIndicator();
 		}
 
 		if (!options)
@@ -207,16 +214,31 @@ LiveCart.AjaxRequest.prototype = {
 
 	hideIndicator: function()
 	{
-		if(this.indicatorContainerId)
+		if (!this.indicatorContainerId)
+		{
+			return;
+		}
+
+		if (this.replacedIndicator)
+		{
+			this.indicatorContainerId.parentNode.replaceChild(this.replacedIndicator, this.indicatorContainerId);
+			Element.show(this.replacedIndicator);
+			this.adjustIndicatorVisibility = true;
+		}
+
+		if (this.adjustIndicatorVisibility)
 		{
 			Element.hide(this.indicatorContainerId);
 		}
+
+		$(this.indicatorContainerId).removeClassName('progressIndicator');
 	},
 
 	showIndicator: function()
 	{
-		if(this.indicatorContainerId)
+		if (this.indicatorContainerId)
 		{
+			$(this.indicatorContainerId).addClassName('progressIndicator');
 			Element.show(this.indicatorContainerId);
 		}
 	},
@@ -473,16 +495,24 @@ LiveCart.AjaxUpdater.prototype = {
 
 	hideIndicator: function()
 	{
-		if (this.indicatorContainerId)
+		if (!this.indicatorContainerId)
+		{
+			return;
+		}
+
+		if (this.adjustIndicatorVisibility)
 		{
 			Element.hide(this.indicatorContainerId);
 		}
+
+		$(this.indicatorContainerId).removeClassName('progressIndicator');
 	},
 
 	showIndicator: function()
 	{
 		if (this.indicatorContainerId)
 		{
+			$(this.indicatorContainerId).addClassName('progressIndicator');
 			Element.show(this.indicatorContainerId);
 		}
 	},

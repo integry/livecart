@@ -1088,7 +1088,7 @@ class UserController extends FrontendController
 	/**************  VALIDATION ******************/
 	private function buildPasswordReminderForm()
 	{
-		$validator = new RequestValidator("emailChange", $this->request);
+		$validator = $this->getValidator("emailChange", $this->request);
 		$this->validateEmail($validator, '_err_not_unique_email_for_change');
 
 		return new Form($validator);
@@ -1101,7 +1101,7 @@ class UserController extends FrontendController
 
 	private function buildEmailChangeValidator()
 	{
-		$validator = new RequestValidator("emailChange", $this->request);
+		$validator = $this->getValidator("emailChange", $this->request);
 		$this->validateEmail($validator, '_err_not_unique_email_for_change');
 
 		return $validator;
@@ -1116,7 +1116,7 @@ class UserController extends FrontendController
 	{
 		ClassLoader::import("application.helper.check.IsPasswordCorrectCheck");
 
-		$validator = new RequestValidator("passwordChange", $this->request);
+		$validator = $this->getValidator("passwordChange", $this->request);
 		$validator->addCheck('currentpassword', new IsNotEmptyCheck($this->translate('_err_enter_current_password')));
 		$validator->addCheck('currentpassword', new IsPasswordCorrectCheck($this->translate('_err_incorrect_current_password'), $this->user));
 
@@ -1134,7 +1134,7 @@ class UserController extends FrontendController
 
 	private function buildPersonalDataValidator(User $user)
 	{
-		$validator = new RequestValidator("userData", $this->request);
+		$validator = $this->getValidator("userData", $this->request);
 		$this->validateName($validator);
 		$user->getSpecification()->setValidation($validator);
 		return $validator;
@@ -1147,7 +1147,7 @@ class UserController extends FrontendController
 
 	private function buildRegValidator()
 	{
-		$validator = new RequestValidator("userRegistration", $this->request);
+		$validator = $this->getValidator("userRegistration", $this->request);
 		$this->validateName($validator);
 		$this->validateEmail($validator);
 		$this->validatePassword($validator);
@@ -1164,7 +1164,7 @@ class UserController extends FrontendController
 
 	private function buildAddressValidator()
 	{
-		$validator = new RequestValidator("userAddress", $this->request);
+		$validator = $this->getValidator("userAddress", $this->request);
 		$this->validateAddress($validator);
 		return $validator;
 	}
@@ -1177,7 +1177,7 @@ class UserController extends FrontendController
 	private function buildValidator()
 	{
 		// validate contact info
-		$validator = new RequestValidator("registrationValidator", $this->request);
+		$validator = $this->getValidator("registrationValidator", $this->request);
 
 		$this->validateAddress($validator, 'billing_');
 		$this->validateEmail($validator);
@@ -1241,7 +1241,7 @@ class UserController extends FrontendController
 		$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_zip'));
 
 		// custom field validation
-		$tempVal = new RequestValidator('tempVal', $this->request);
+		$tempVal = $this->getValidator('tempVal', $this->request);
 		UserAddress::getNewInstance()->getSpecification()->setValidation($tempVal, null, $fieldPrefix);
 		foreach ($tempVal->getValidatorVars() as $var)
 		{
@@ -1293,7 +1293,7 @@ class UserController extends FrontendController
 
 	private function buildNoteValidator()
 	{
-		$validator = new RequestValidator("orderNote", $this->request);
+		$validator = $this->getValidator("orderNote", $this->request);
 		$validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_enter_note')));
 		$validator->addFilter('text', new HtmlSpecialCharsFilter);
 		return $validator;

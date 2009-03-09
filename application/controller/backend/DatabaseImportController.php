@@ -27,7 +27,7 @@ class DatabaseImportController extends StoreManagementController
 		//ignore_user_abort(true);
 		set_time_limit(0);
 
-		$validator = $this->getValidator();
+		$validator = $this->buildValidator();
 		if (!$validator->isValid())
 		{
 			return new JSONResponse(array('errors' => $validator->getErrorList()));
@@ -138,14 +138,14 @@ class DatabaseImportController extends StoreManagementController
 
 	private function getForm()
 	{
-		return new Form($this->getValidator());
+		return new Form($this->buildValidator());
 	}
 
-	private function getValidator()
+	private function buildValidator()
 	{
 		ClassLoader::import('application.helper.filter.HandleFilter');
 
-		$val = new RequestValidator('databaseImport', $this->request);
+		$val = $this->getValidator('databaseImport', $this->request);
 		$val->addCheck('cart', new IsNotEmptyCheck($this->translate('_err_no_cart_selected')));
 		$val->addCheck('dbServer', new IsNotEmptyCheck($this->translate('_err_no_database_server')));
 		$val->addCheck('dbType', new IsNotEmptyCheck($this->translate('_err_no_db_type')));

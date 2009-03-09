@@ -309,7 +309,7 @@ class PaymentController extends StoreManagementController
 
 	private function buildCaptureValidator()
 	{
-		$validator = new RequestValidator("paymentCapture", $this->request);
+		$validator = $this->getValidator("paymentCapture", $this->request);
 		$validator->addCheck('amount', new IsNotEmptyCheck($this->translate('_err_enter_amount')));
 		$validator->addCheck('amount', new MinValueCheck($this->translate('_err_amount_not_positive'), 0.000001));
 
@@ -325,7 +325,7 @@ class PaymentController extends StoreManagementController
 
 	private function buildOfflinePaymentValidator()
 	{
-		$validator = new RequestValidator("offlinePayment", $this->request);
+		$validator = $this->getValidator("offlinePayment", $this->request);
 		$validator->addCheck('amount', new IsNotEmptyCheck($this->translate('_err_enter_amount')));
 		$validator->addCheck('amount', new MinValueCheck($this->translate('_err_amount_not_positive'), 0.01));
 
@@ -341,7 +341,7 @@ class PaymentController extends StoreManagementController
 
 	private function buildCreditCardValidator()
 	{
-		$validator = new RequestValidator("creditCard", $this->request);
+		$validator = $this->getValidator("creditCard", $this->request);
 
 		$validator->addCheck('amount', new IsNotEmptyCheck($this->translate('_err_enter_amount')));
 		$validator->addCheck('amount', new MinValueCheck($this->translate('_err_amount_negative'), 0));

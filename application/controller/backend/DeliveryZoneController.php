@@ -312,7 +312,7 @@ class DeliveryZoneController extends StoreManagementController
 
 	private function createCountriesAndStatesFormValidator(DeliveryZone $zone)
 	{
-		$validator = new RequestValidator('countriesAndStates', $this->request);
+		$validator = $this->getValidator('countriesAndStates', $this->request);
 
 		return $validator;
 	}

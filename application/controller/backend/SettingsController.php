@@ -89,7 +89,7 @@ class SettingsController extends StoreManagementController
 	{
 		$values = $this->config->getSettingsBySection($this->request->get('id'));
 		$validation = $this->getValidationRules($values);
-		$validator = $this->getValidator($values, $validation);
+		$validator = $this->buildValidator($values, $validation);
 
 		if (!$validator->isValid())
 		{
@@ -171,7 +171,7 @@ class SettingsController extends StoreManagementController
 
 	private function getForm($settings, $validation)
 	{
-		$form = new Form($this->getValidator($settings, $validation));
+		$form = new Form($this->buildValidator($settings, $validation));
 
 		// set multi-select values
 		foreach ($settings as $key => $value)
@@ -193,9 +193,9 @@ class SettingsController extends StoreManagementController
 		return $form;
 	}
 
-	private function getValidator($settings, $validation)
+	private function buildValidator($settings, $validation)
 	{
-		$val = new RequestValidator('settings', $this->request);
+		$val = $this->getValidator('settings', $this->request);
 		foreach ($settings as $key => $value)
 		{
 			if (('num' == $value['type']) || ('float' == $value['type']))

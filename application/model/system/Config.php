@@ -31,8 +31,6 @@ class Config
 		}
 
 		$this->application = $application;
-
-		$this->directories = $this->application->getConfigContainer()->getConfigDirectories();
 	}
 
 	public function isValueSet($key, $updateIfNotFound = false)
@@ -268,7 +266,7 @@ class Config
 	  	{
 			$tree = array();
 
-			foreach ($this->directories as $directory)
+			foreach ($this->getDirectories() as $directory)
 			{
 				$tree = array_merge($tree, $this->getTree($directory));
 			}
@@ -438,7 +436,7 @@ class Config
 
 	private function getSectionFile($sectionId)
 	{
-		foreach ($this->directories as $dir)
+		foreach ($this->getDirectories() as $dir)
 		{
 			$path = $dir . '/' . str_replace('.', '/', $sectionId) . '.ini';
 			if (file_exists($path))
@@ -446,6 +444,16 @@ class Config
 				return $path;
 			}
 		}
+	}
+
+	private function getDirectories()
+	{
+		if (!$this->directories)
+		{
+			$this->directories = $this->application->getConfigContainer()->getConfigDirectories();
+		}
+
+		return $this->directories;
 	}
 
 	private function getFilePath()

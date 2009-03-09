@@ -15,17 +15,16 @@ _menu_configuration=Configuration
 _menu_custom_fields=Custom Fields
 _menu_delivery_zones=Delivery Zones
 _menu_tax=Taxes
+_menu_languages=Languages
+_menu_modules=Modules
+_menu_update=Update LiveCart
+_menu_currencies=Currencies
 
 _menu_customize=Customize
 _menu_customization_mode=Live Customization
 _menu_edit_templates=Edit Templates
 _menu_email_templates=Edit E-mail Templates
 _menu_css_edit=Edit CSS Stylesheets
-
-_menu_languages=Languages
-_menu_update=Update LiveCart
-
-_menu_currencies=Currencies
 
 _menu_tools=Tools
 _menu_import_csv=Import CSV File
@@ -49,6 +48,7 @@ _menu_descr_tax=Define what taxes will be used
 _menu_descr_languages=Enable additional languages and edit translations
 _menu_descr_update=Check for LiveCart version updates
 _menu_descr_currencies=Enable additional currencies and update exchange rates
+_menu_descr_modules=Install additional functions
 
 _menu_descr_customize=Customize the look and feel of your store
 _menu_descr_customization_mode=Real-time, point-and-click CSS, template and translation customization

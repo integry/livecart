@@ -169,7 +169,7 @@ class ProductFileController extends StoreManagementController
 	 */
 	private function buildValidator($existingProductFile = true)
 	{
-		$validator = new RequestValidator("productFileValidator", $this->request);
+		$validator = $this->getValidator("productFileValidator", $this->request);
 
 		$validator->addCheck('title_' . $this->application->getDefaultLanguageCode(), new IsNotEmptyCheck($this->translate('_err_file_title_is_empty')));
 		$validator->addCheck('allowDownloadDays', new IsNumericCheck($this->translate('_err_allow_download_days_should_be_a_number')));

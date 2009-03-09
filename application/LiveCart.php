@@ -345,7 +345,7 @@ class LiveCart extends Application
 	 * @return Controller
 	 * @throws ControllerNotFoundException if controller does not exist
 	 */
-	protected function getControllerInstance($controllerName)
+	public function getControllerInstance($controllerName)
 	{
 		if (substr($controllerName, 0, 8) == 'backend.')
 		{
@@ -521,6 +521,8 @@ class LiveCart extends Application
 		{
 			$this->loadPlugins();
 		}
+
+		$path = strtolower($path);
 
 		return isset($this->plugins[$path]) ? $this->plugins[$path] : array();
 	}
@@ -1214,7 +1216,7 @@ class LiveCart extends Application
 	{
 		if (!$this->configContainer)
 		{
-			$this->configContainer = new ConfigurationContainer('.');
+			$this->configContainer = new ConfigurationContainer('.', $this);
 		}
 
 		return $this->configContainer;

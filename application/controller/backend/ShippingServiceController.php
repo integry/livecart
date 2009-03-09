@@ -235,7 +235,7 @@ class ShippingServiceController extends StoreManagementController
 
 	private function createShippingServiceFormValidator()
 	{
-		$validator = new RequestValidator('shippingService', $this->request);
+		$validator = $this->getValidator('shippingService', $this->request);
 
 		return $validator;
 	}

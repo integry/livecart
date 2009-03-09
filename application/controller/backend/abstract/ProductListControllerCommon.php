@@ -74,7 +74,7 @@ abstract class ProductListControllerCommon extends StoreManagementController
 
 	protected function buildValidator()
 	{
-		$validator = new RequestValidator(get_class($this) . "Validator", $this->request);
+		$validator = $this->getValidator(get_class($this) . "Validator", $this->request);
 
 		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_relationship_name_is_empty')));
 

@@ -375,7 +375,7 @@ class InstallController extends FrontendController
 	 */
 	private function buildLicenseValidator()
 	{
-		$validator = new RequestValidator("license", $this->request);
+		$validator = $this->getValidator("license", $this->request);
 		$validator->addCheck("accept", new IsNotEmptyCheck($this->translate("You must accept the LiveCart license agreement to continue with the installation")));
 		return $validator;
 	}
@@ -393,7 +393,7 @@ class InstallController extends FrontendController
 	 */
 	private function buildDatabaseValidator()
 	{
-		$validator = new RequestValidator("database", $this->request);
+		$validator = $this->getValidator("database", $this->request);
 		$validator->addCheck("server", new IsNotEmptyCheck($this->translate("Please enter the database server host name")));
 		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("Please enter the database name")));
 		$validator->addCheck("username", new IsNotEmptyCheck($this->translate("Please enter the database user name")));
@@ -415,7 +415,7 @@ class InstallController extends FrontendController
 	{
 		ClassLoader::import('application.helper.check.IsUniqueEmailCheck');
 
-		$validator = new RequestValidator("createAdmin", $this->request);
+		$validator = $this->getValidator("createAdmin", $this->request);
 		$validator->addCheck("firstName", new IsNotEmptyCheck($this->translate("Please enter the admin first name")));
 		$validator->addCheck("lastName", new IsNotEmptyCheck($this->translate("Please enter the admin last name")));
 		$validator->addCheck("email", new IsNotEmptyCheck($this->translate("Please enter the admin e-mail address")));
@@ -439,7 +439,7 @@ class InstallController extends FrontendController
 	 */
 	private function buildConfigValidator()
 	{
-		$validator = new RequestValidator("installConfig", $this->request);
+		$validator = $this->getValidator("installConfig", $this->request);
 		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("Please enter the name of your store")));
 		$validator->addCheck("language", new IsNotEmptyCheck($this->translate("Please select the base language of your store")));
 		$validator->addCheck("curr", new IsNotEmptyCheck($this->translate("Please select the base currency of your store")));

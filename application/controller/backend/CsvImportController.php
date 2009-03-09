@@ -58,7 +58,7 @@ class CsvImportController extends StoreManagementController
 
 		if (empty($filePath))
 		{
-			$validator = $this->getValidator();
+			$validator = $this->buildValidator();
 			$validator->triggerError('atServer', $this->translate('_err_no_file'));
 			$validator->saveState();
 			return new ActionRedirectResponse('backend.csvImport', 'index');
@@ -898,14 +898,14 @@ class CsvImportController extends StoreManagementController
 
 	private function getForm()
 	{
-		return new Form($this->getValidator());
+		return new Form($this->buildValidator());
 	}
 
-	private function getValidator()
+	private function buildValidator()
 	{
 		ClassLoader::import('application.helper.filter.HandleFilter');
 
-		return new RequestValidator('csvFile', $this->request);
+		return $this->getValidator('csvFile', $this->request);
 	}
 
 	private function getDelimiterForm()
@@ -917,7 +917,7 @@ class CsvImportController extends StoreManagementController
 	{
 		ClassLoader::import('application.helper.filter.HandleFilter');
 
-		return new RequestValidator('csvDelimiters', $this->request);
+		return $this->getValidator('csvDelimiters', $this->request);
 	}
 
 	private function getFieldsForm()
@@ -929,7 +929,7 @@ class CsvImportController extends StoreManagementController
 	{
 		ClassLoader::import('application.helper.filter.HandleFilter');
 
-		return new RequestValidator('csvFields', $this->request);
+		return $this->getValidator('csvFields', $this->request);
 	}
 
 	private function setCacheProgress($index)

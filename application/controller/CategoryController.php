@@ -198,8 +198,8 @@ class CategoryController extends FrontendController
 			$subCatFeatured = $this->getSubCatFeaturedProducts();
 		}
 
-		// if there were no products found, include subcategories in filter counts
-		if (!$products)
+		// if there were no products found, include subcategories in filter counts... except home page
+		if (!$products || $this->category->isRoot())
 		{
 			$selectFilter->removeCondition(new EqualsCond(new ARFieldHandle('Product', 'categoryID'), $this->category->getID()));
 			$this->productFilter->includeSubcategories();
@@ -578,7 +578,7 @@ class CategoryController extends FrontendController
 	 */
 	private function buildSortForm($order)
 	{
-		$form = new Form(new RequestValidator("productSort", $this->request));
+		$form = new Form($this->getValidator("productSort", $this->request));
 		$form->enableClientSideValidation(false);
 		$form->set('sort', $order);
 		return $form;

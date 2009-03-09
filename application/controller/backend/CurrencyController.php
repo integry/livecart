@@ -340,12 +340,12 @@ class CurrencyController extends StoreManagementController
 
 	private function buildOptionsValidator()
 	{
-		return new RequestValidator("currencySettings", $this->request);
+		return $this->getValidator("currencySettings", $this->request);
 	}
 
 	private function buildFormattingValidator()
 	{
-		$validator = new RequestValidator("priceFormatting", $this->request);
+		$validator = $this->getValidator("priceFormatting", $this->request);
 		$validator->addFilter('decimalCount', new NumericFilter());
 		return $validator;
 	}
@@ -357,7 +357,7 @@ class CurrencyController extends StoreManagementController
 	 */
 	private function buildValidator($currencies)
 	{
-		$validator = new RequestValidator("rate", $this->request);
+		$validator = $this->getValidator("rate", $this->request);
 		foreach ($currencies as $currency)
 		{
 			$validator->addCheck('rate_' . $currency['ID'], new IsNotEmptyCheck($this->translate('_err_empty')));

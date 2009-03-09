@@ -161,7 +161,6 @@ class LiveCartRenderer extends SmartyRenderer
 						$output = '';
 					break;
 				}
-
 			}
 		}
 
@@ -177,7 +176,7 @@ class LiveCartRenderer extends SmartyRenderer
 			$config = array();
 			foreach ($files as $file)
 			{
-				$config = array_merge($config, $this->parseConfigFile($file[0]));
+				$config = array_merge_recursive($config, $this->parseConfigFile($file[0]));
 			}
 
 			$request = $this->getApplication()->getRequest();
@@ -375,14 +374,20 @@ class LiveCartRenderer extends SmartyRenderer
 
 		$res['view'] = array_shift($parts);
 
-		if ('.tpl' == substr($res['view'], -4))
+		if (strpos($res['view'], '->'))
+		{
+			list($controller, $action) = explode('->', $res['view'], 2);
+			$res['call'] = array($controller, $action);
+			$res['view'] = './block/' . $action;
+		}
+		else if ('.tpl' == substr($res['view'], -4))
 		{
 			$res['view'] = substr($res['view'], 0, -4);
 		}
 
 		if (empty($res['call']))
 		{
-			$res['call'] = array('BaseController', 'getGeneric');
+			$res['call'] = array('base', 'getGeneric');
 		}
 
 		return $res;

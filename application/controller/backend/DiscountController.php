@@ -463,7 +463,7 @@ class DiscountController extends ActiveGridController
 
 	private function buildValidator()
 	{
-		$validator = new RequestValidator("discountCondition", $this->request);
+		$validator = $this->getValidator("discountCondition", $this->request);
 		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("_rule_name_empty")));
 
 		return $validator;
@@ -481,7 +481,7 @@ class DiscountController extends ActiveGridController
 
 	private function buildConditionValidator()
 	{
-		return new RequestValidator("discountConditionRule", $this->request);
+		return $this->getValidator("discountConditionRule", $this->request);
 	}
 
 	/**

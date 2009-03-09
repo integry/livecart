@@ -913,7 +913,7 @@ input.reset {
 	color: #666;
 }
 
-input.radio, input.checkbox
+input.radio, input.checkbox, .progressIndicator.checkbox
 {
     float: left;
     margin-right: 0.5em;
@@ -981,6 +981,18 @@ a.cancel, a.menu
 	clear: none;
 }
 
+a.progressIndicator
+{
+	background-position: left center;
+	height: auto;
+}
+
+.checkbox.progressIndicator
+{
+	padding: 0;
+	width: 15px;
+	height: 15px;
+}
 
 /* textarea container */
 div.textarea

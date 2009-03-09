@@ -391,7 +391,7 @@ abstract class ActiveGridController extends StoreManagementController
 
 	protected function getMassValidator()
 	{
-		return new RequestValidator(get_class($this) . "MassFormValidator", $this->request);
+		return $this->getValidator(get_class($this) . "MassFormValidator", $this->request);
 	}
 
 	protected function getMassForm()

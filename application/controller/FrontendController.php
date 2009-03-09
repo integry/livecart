@@ -68,7 +68,7 @@ abstract class FrontendController extends BaseController
 		$this->addBlock('TRACKING', 'tracking', 'block/tracking');
 		$this->addBlock('NEWS', 'latestNews', 'block/box/latestNews');
 		$this->addBlock('QUICKNAV', 'blockQuickNav', 'block/box/quickNav');
-		$this->addBlock('COMPARE', array('CompareController', 'compareMenu'));
+		$this->addBlock('COMPARE', array('compare', 'compareMenu'));
 	}
 
 	public function getRequestCurrency()
@@ -347,7 +347,7 @@ abstract class FrontendController extends BaseController
 			}
 		}
 
-		$form = new Form(new RequestValidator("productSearch", $this->request));
+		$form = new Form($this->getValidator("productSearch", $this->request));
 		$form->enableClientSideValidation(false);
 		$form->set('id', $this->categoryID);
 		$form->set('q', $this->request->get('q'));

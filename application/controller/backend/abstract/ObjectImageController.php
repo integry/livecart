@@ -205,7 +205,7 @@ abstract class ObjectImageController extends StoreManagementController
 	 */
 	protected function buildValidator($catId)
 	{
-		$validator = new RequestValidator($this->getModelClass() . "_" . $catId, $this->request);
+		$validator = $this->getValidator($this->getModelClass() . "_" . $catId, $this->request);
 
 		$uploadCheck = new IsFileUploadedCheck($this->translate(!empty($_FILES['image']['name']) ? '_err_too_large' :'_err_not_uploaded'));
 		$uploadCheck->setFieldName('image');

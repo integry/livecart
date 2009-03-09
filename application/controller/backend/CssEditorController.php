@@ -70,7 +70,7 @@ class CssEditorController extends StoreManagementController
 
 	private function getForm(EditedCssFile $css)
 	{
-		$form = new Form(new RequestValidator('cssFile', $this->request));
+		$form = new Form($this->getValidator('cssFile', $this->request));
 		$form->setData($css->toArray());
 		$form->set('code', '');
 		$form->set('fileName', $css->getFileName());

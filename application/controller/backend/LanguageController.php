@@ -525,7 +525,7 @@ class LanguageController extends StoreManagementController
 
 	private function buildAddPhraseValidator()
 	{
-		$validator = new RequestValidator("addLangPhrase", $this->request);
+		$validator = $this->getValidator("addLangPhrase", $this->request);
 		$validator->addCheck("key", new IsNotEmptyCheck($this->translate("_phrase_key_empty")));
 		$validator->addCheck("value", new IsNotEmptyCheck($this->translate("_phrase_value_empty")));
 		$validator->addFilter("key", new RegexFilter('[^_a-zA-Z0-9]'));

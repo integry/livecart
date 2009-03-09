@@ -667,7 +667,7 @@ class CheckoutController extends FrontendController
 
 	private function getOfflinePaymentValidator($method)
 	{
-		$validator = new RequestValidator($method, $this->request);
+		$validator = $this->getValidator($method, $this->request);
 		$eavManager = new EavSpecificationManager(EavObject::getInstanceByIdentifier($method));
 		$eavManager->setValidation($validator);
 		return $validator;
@@ -1217,7 +1217,7 @@ class CheckoutController extends FrontendController
 
 	private function buildShippingValidator(/*ARSet */$shipments)
 	{
-		$validator = new RequestValidator("shipping", $this->request);
+		$validator = $this->getValidator("shipping", $this->request);
 		foreach ($shipments as $key => $shipment)
 		{
 			if ($shipment->isShippable())
@@ -1249,7 +1249,7 @@ class CheckoutController extends FrontendController
 	{
 		$this->loadLanguageFile('User');
 
-		$validator = new RequestValidator("addressSelectorValidator", $this->request);
+		$validator = $this->getValidator("addressSelectorValidator", $this->request);
 
 		if (!$step || ('billing' == $step))
 		{
@@ -1278,7 +1278,7 @@ class CheckoutController extends FrontendController
 
 	protected function validateAddress(RequestValidator $validator, $prefix)
 	{
-		$someValidator = new RequestValidator('foo', $this->request);
+		$someValidator = $this->getValidator('foo', $this->request);
 		ClassLoader::import('application.controller.UserController');
 		$con = new UserController($this->application);
 		$con->validateAddress($someValidator, $prefix, 'shipping_' == $prefix);
@@ -1302,7 +1302,7 @@ class CheckoutController extends FrontendController
 
 	private function buildCreditCardValidator()
 	{
-		$validator = new RequestValidator("creditCard", $this->request);
+		$validator = $this->getValidator("creditCard", $this->request);
 		$validator->addCheck('ccName', new IsNotEmptyCheck($this->translate('_err_enter_cc_name')));
 		$validator->addCheck('ccNum', new IsNotEmptyCheck($this->translate('_err_enter_cc_num')));
 //		$validator->addCheck('ccType', new IsNotEmptyCheck($this->translate('_err_select_cc_type')));

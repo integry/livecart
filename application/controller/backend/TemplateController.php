@@ -209,7 +209,7 @@ class TemplateController extends StoreManagementController
 
 	private function getTemplateForm(Template $template)
 	{
-		$form = new Form(new RequestValidator('template', $this->request));
+		$form = new Form($this->getValidator('template', $this->request));
 		$form->setData($template->toArray());
 		$form->set('code', '');
 		$form->set('fileName', $template->getFileName());
@@ -218,7 +218,7 @@ class TemplateController extends StoreManagementController
 
 	private function getEmailTemplateForm(EmailTemplate $template)
 	{
-		$form = new Form(new RequestValidator('template', $this->request));
+		$form = new Form($this->getValidator('template', $this->request));
 		$form->setData($template->toArray());
 		$form->set('code', '');
 

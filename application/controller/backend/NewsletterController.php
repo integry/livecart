@@ -142,7 +142,7 @@ class NewsletterController extends ActiveGridController
 
 	private function createValidator()
 	{
-		$validator = new RequestValidator('newsletter', $this->request);
+		$validator = $this->getValidator('newsletter', $this->request);
 		$validator->addCheck('subject', new IsNotEmptyCheck($this->translate('_err_title_empty')));
 		$validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_text_empty')));
 		return $validator;

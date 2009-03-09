@@ -1,0 +1,50 @@
+#moduleList
+{
+	list-style-type: none;
+}
+
+#moduleList li.module
+{
+	width: 400px;
+	overflow: hidden;
+}
+
+.moduleStatus
+{
+	top: -1px;
+	display: block;
+	position: relative;
+	float: left;
+}
+
+.moduleContent
+{
+	margin-left: 23px;
+}
+
+.moduleStatus .progressIndicator
+{
+	padding-top: 5px;
+}
+
+.moduleName
+{
+	font-size: larger;
+	font-weight: bold;
+}
+
+.installed_yes
+{
+	color: green;
+	font-weight: bold;
+}
+
+.installed_no
+{
+	color: #f77;
+}
+
+a.installAction
+{
+	color: red;
+}

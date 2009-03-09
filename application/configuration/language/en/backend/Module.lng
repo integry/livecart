@@ -1,0 +1,13 @@
+_modules=Modules
+_inactive=inactive
+_install=Install
+_deinstall=Deinstall
+_installed=Installed
+
+_confirm_deinstall=Are you sure you want to deinstall this module? ALL MODULE DATABASE TABLES AND DATA WILL BE DELETED!
+_confirm_install=Really install this module?
+
+_install_confirm=[_1] module has been installed
+_deinstall_confirm=[_1] module has been deinstalled
+_enable_confirm=[_1] module has been enabled
+_disable_confirm=[_1] module has been disabled

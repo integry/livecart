@@ -17,15 +17,19 @@ class ConfigurationContainer
 	protected $configDirectory;
 	protected $languageDirectory;
 	protected $controllerDirectory;
+	protected $viewDirectories = array();
 	protected $blockConfiguration = array();
 	protected $modules;
+	protected $enabledModules;
 	protected $info = array();
 	protected $enabled = false;
+	protected $application;
 
-	public function __construct($mountPath)
+	public function __construct($mountPath, LiveCart $application)
 	{
 		$this->mountPath = $mountPath;
 		$this->directory = ClassLoader::getRealPath($mountPath);
+		$this->application = $application;
 
 		foreach (array( 'configDirectory' => 'application.configuration.registry',
 						'languageDirectory' => 'application.configuration.language',
@@ -43,9 +47,21 @@ class ConfigurationContainer
 			{
 				$this->blockConfiguration[] = $path;
 			}
+
+			$this->viewDirectories[] = dirname($path);
 		}
 
 		$this->loadInfo();
+	}
+
+	public function saveToCache()
+	{
+		$this->application->getCache()->set('modules', serialize($this));
+	}
+
+	public function getMountPath()
+	{
+		return $this->mountPath;
 	}
 
 	public function getBlockFiles()
@@ -63,6 +79,11 @@ class ConfigurationContainer
 		return $this->findDirectories('controllerDirectory');
 	}
 
+	public function getViewDirectories()
+	{
+		return $this->findDirectories('viewDirectories');
+	}
+
 	public function getPluginDirectories()
 	{
 		return $this->findDirectories('pluginDirectory');
@@ -75,7 +96,7 @@ class ConfigurationContainer
 
 	private function findDirectories($variable)
 	{
-		$directories = array($this->$variable);
+		$directories = $this->$variable ? array($this->$variable) : array();
 		foreach ($this->getModules() as $module)
 		{
 			$directories = array_merge($directories, $module->findDirectories($variable));
@@ -89,37 +110,159 @@ class ConfigurationContainer
 		return $this->info;
 	}
 
+	public function getName()
+	{
+		$info = $this->getInfo();
+		return $info['Module']['name'];
+	}
+
+	public function getAvailableModules()
+	{
+		$modulePath = $this->mountPath . '.module';
+		$moduleDir = ClassLoader::getRealPath($modulePath);
+
+		$modules = array();
+		if (is_dir($moduleDir))
+		{
+			foreach (new DirectoryIterator($moduleDir) as $node)
+			{
+				if ($node->isDir() && !$node->isDot())
+				{
+					$module = new ConfigurationContainer($modulePath . '.' . $node->getFileName(), $this->application);
+					$modules[$module->getMountPath()] = $module;
+					$modules = array_merge($modules, $module->getAvailableModules());
+				}
+			}
+		}
+
+		return $modules;
+	}
+
 	public function getModules()
 	{
 		if (is_null($this->modules))
 		{
-			$modulePath = $this->mountPath . '.module';
-			$moduleDir = ClassLoader::getRealPath($modulePath);
-
-			$modules = array();
-			if (is_dir($moduleDir))
-			{
-				foreach (new DirectoryIterator($moduleDir) as $node)
-				{
-					if ($node->isDir() && !$node->isDot())
-					{
-						$module = new ConfigurationContainer($modulePath . '.' . $node->getFileName());
-						$modules[] = $module;
-						$modules = array_merge($modules, $module->getModules());
-					}
-				}
-			}
-
-			$this->modules = $modules;
+			$this->modules = $this->getAvailableModules();
 		}
 
-		return $this->modules;
+		if (is_null($this->enabledModules))
+		{
+			$modules = $this->modules;
+			$conf = $this->application->getConfig();
+			foreach (array('enabledModules', 'installedModules') as $var)
+			{
+				$confModules = $conf->isValueSet($var) ? $conf->get($var) : array();
+				$modules = array_intersect_key($modules, $confModules);
+			}
+
+			$this->enabledModules = $modules;
+		}
+
+		return $this->enabledModules;
+	}
+
+	public function getModule($mountPath)
+	{
+		if ($this->mountPath == $mountPath)
+		{
+			return $this;
+		}
+
+		foreach ($this->modules as $module)
+		{
+			if ($m = $module->getModule($mountPath))
+			{
+				return $m;
+			}
+		}
 	}
 
 	public function addModule($module)
 	{
 		$this->getModules();
-		$this->modules[] = new ConfigurationContainer($module);
+		$this->modules[] = new ConfigurationContainer($module, $this->application);
+	}
+
+	public function isEnabled()
+	{
+		return $this->getConfig('enabledModules') && $this->isInstalled();
+	}
+
+	public function isInstalled()
+	{
+		return $this->getConfig('installedModules');
+	}
+
+	public function setStatus($isActive)
+	{
+		$this->setConfig('enabledModules', $isActive);
+	}
+
+	public function install()
+	{
+		$this->installDatabase();
+		$this->setConfig('installedModules', true);
+	}
+
+	public function deinstall()
+	{
+		$this->deinstallDatabase();
+		$this->setConfig('installedModules', false);
+	}
+
+	protected function installDatabase()
+	{
+		$this->loadSQL($this->directory . '/installdata/sql/create.sql');
+	}
+
+	protected function deinstallDatabase()
+	{
+		$this->loadSQL($this->directory . '/installdata/sql/drop.sql');
+	}
+
+	protected function loadSQL($file)
+	{
+		ClassLoader::import('application.model.system.Installer');
+
+		if (file_exists($file))
+		{
+			Installer::loadDatabaseDump(file_get_contents($file));
+		}
+	}
+
+	private function getConfig($var)
+	{
+		$config = $this->application->getConfig();
+
+		$modules = $config->isValueSet($var) ? $config->get($var) : array();
+
+		if (!empty($modules[$this->mountPath]))
+		{
+			return $modules[$this->mountPath];
+		}
+		else
+		{
+			return array();
+		}
+	}
+
+	private function setConfig($var, $status)
+	{
+		$config = $this->application->getConfig();
+
+		$activeModules = $config->isValueSet($var) ? $config->get($var) : array();
+
+		if ($status)
+		{
+			$activeModules[$this->mountPath] = true;
+		}
+		else
+		{
+			unset($activeModules[$this->mountPath]);
+		}
+
+		$config->set($var, $activeModules);
+		$config->save();
 	}
 
 	public function getRoutes()
@@ -132,13 +275,15 @@ class ConfigurationContainer
 
 	}
 
-	protected function loadInfo()
+	public function loadInfo()
 	{
 		$iniPath = $this->directory . '/Module.ini';
 		if (file_exists($iniPath))
 		{
 			$this->info = parse_ini_file($iniPath, true);
 		}
+
+		$this->info['path'] = $this->mountPath;
 	}
 }
 

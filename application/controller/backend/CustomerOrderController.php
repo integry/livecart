@@ -928,7 +928,7 @@ class CustomerOrderController extends ActiveGridController
 
 	protected function getMassForm()
 	{
-		$validator = new RequestValidator("OrdersMassFormValidator", $this->request);
+		$validator = $this->getValidator("OrdersMassFormValidator", $this->request);
 
 		return new Form($validator);
 	}
@@ -938,7 +938,7 @@ class CustomerOrderController extends ActiveGridController
 	 */
 	public function createUserAddressFormValidator()
 	{
-		$validator = new RequestValidator("userAddress", $this->request);
+		$validator = $this->getValidator("userAddress", $this->request);
 
 		$validator->addCheck('countryID', new IsNotEmptyCheck($this->translate('_country_empty')));
 		$validator->addCheck('city',	  new IsNotEmptyCheck($this->translate('_city_empty')));
@@ -979,7 +979,7 @@ class CustomerOrderController extends ActiveGridController
 	 */
 	private function createOrderFormValidator()
 	{
-		$validator = new RequestValidator("CustomerOrder", $this->request);
+		$validator = $this->getValidator("CustomerOrder", $this->request);
 
 		$validator->addCheck('status', new MinValueCheck($this->translate('_invalid_status'), 0));
 		$validator->addCheck('status', new MaxValueCheck($this->translate('_invalid_status'), 4));
@@ -1003,7 +1003,7 @@ class CustomerOrderController extends ActiveGridController
 	 */
 	private function createFieldsFormValidator(CustomerOrder $order)
 	{
-		$validator = new RequestValidator("CustomerOrderFields", $this->request);
+		$validator = $this->getValidator("CustomerOrderFields", $this->request);
 		$order->getSpecification()->setValidation($validator);
 		return $validator;
 	}

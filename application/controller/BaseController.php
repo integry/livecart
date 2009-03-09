@@ -115,11 +115,11 @@ abstract class BaseController extends Controller implements LCiTranslator
 		}
 	}
 
-	public function getBlockResponse($block)
+	public function getBlockResponse(&$block)
 	{
 		if ('getGenericBlock' == $block['call'][1])
 		{
-			return $this->getGenericBlock();
+			$block['call'][0] = $this;
 		}
 
 		return parent::getBlockResponse($block);
@@ -259,6 +259,25 @@ abstract class BaseController extends Controller implements LCiTranslator
 		$msg = $this->getSessionData('message');
 		$this->setMessage('');
 		return $msg;
+	}
+
+	protected function getValidator($validatorName, Request $request = null)
+	{
+		$validator = new RequestValidator($validatorName, $request ? $request : $this->request);
+
+		foreach ($this->application->getPlugins('validator/' . $validatorName) as $plugin)
+		{
+			if (!class_exists('ValidatorPlugin', false))
+			{
+				ClassLoader::import('application.ValidatorPlugin');
+			}
+
+			include_once $plugin['path'];
+			$inst = new $plugin['class']($validator, $this->application);
+			$inst->process();
+		}
+
+		return $validator;
 	}
 
 	protected function setErrorMessage($message)

@@ -635,7 +635,7 @@ class OrderController extends FrontendController
 	{
 		unset($_SESSION['optionError']);
 
-		$validator = new RequestValidator("cartValidator", $this->request);
+		$validator = $this->getValidator("cartValidator", $this->request);
 
 		foreach ($order->getOrderedItems() as $item)
 		{
@@ -652,7 +652,7 @@ class OrderController extends FrontendController
 
 	private function buildOptionsValidator(OrderedItem $item, $options)
 	{
-		$validator = new RequestValidator("optionValidator", $this->request);
+		$validator = $this->getValidator("optionValidator", $this->request);
 		$this->buildItemValidation($validator, $item, $options);
 
 		return $validator;
@@ -660,7 +660,7 @@ class OrderController extends FrontendController
 
 	public function buildVariationsValidator(OrderedItem $item, $variations)
 	{
-		$validator = new RequestValidator('variationValidator', $this->request);
+		$validator = $this->getValidator('variationValidator', $this->request);
 		foreach ($variations['variations'] as $variation)
 		{
 			$validator->addCheck('variation_' . $variation['ID'], new IsNotEmptyCheck($this->translate('_err_option_0')));

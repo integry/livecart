@@ -107,7 +107,7 @@ class ManufacturerController extends ActiveGridController
 
 	private function buildValidator(Manufacturer $manufacturer)
 	{
-		$validator = new RequestValidator("manufacturer", $this->request);
+		$validator = $this->getValidator("manufacturer", $this->request);
 		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("_manufacturer_name_empty")));
 
 		$manufacturer->getSpecification()->setValidation($validator);

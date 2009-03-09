@@ -131,7 +131,7 @@ class TaxRateController extends StoreManagementController
 	 */
 	private function createTaxRateFormValidator()
 	{
-		$validator = new RequestValidator('shippingService', $this->request);
+		$validator = $this->getValidator('shippingService', $this->request);
 
 		$validator->addCheck("taxID", new IsNotEmptyCheck($this->translate("_error_tax_should_not_be_empty")));
 		$validator->addCheck("rate", new IsNotEmptyCheck($this->translate("_error_rate_should_not_be_empty")));

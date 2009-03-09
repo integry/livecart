@@ -181,7 +181,7 @@ class ReviewController extends ActiveGridController
 
 	private function buildValidator(ProductReview $review)
 	{
-		$validator = new RequestValidator("productRating", $this->getRequest());
+		$validator = $this->getValidator("productRating", $this->getRequest());
 
 		// option validation
 		foreach (ProductRatingType::getProductRatingTypes($review->product->get())->toArray() as $type)

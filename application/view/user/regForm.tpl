@@ -44,6 +44,8 @@
 
 	{include file="block/eav/fields.tpl" item=$user filter="isDisplayed"}
 
+	{block FORMSUBMITREGISTER}
+
 	<p class="submit">
 		<label>&nbsp;</label>
 		<input type="submit" class="submit" value="{tn _complete_reg}" />

@@ -208,7 +208,7 @@ class RolesController extends StoreManagementController
 
 	private function createRolesFormValidator(UserGroup $userGroup)
 	{
-		return new RequestValidator('roles_' . $userGroup->getID(), $this->request);
+		return $this->getValidator('roles_' . $userGroup->getID(), $this->request);
 	}
 
 }

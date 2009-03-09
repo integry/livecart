@@ -77,7 +77,7 @@ class OrderNoteController extends StoreManagementController
 
 	private function buildOrderNoteValidator()
 	{
-		$validator = new RequestValidator("orderNote", $this->request);
+		$validator = $this->getValidator("orderNote", $this->request);
 		$validator->addCheck('comment', new IsNotEmptyCheck($this->translate('_err_enter_text')));
 		return $validator;
 	}

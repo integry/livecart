@@ -132,6 +132,8 @@
 
 			{/if}
 
+			{block FORM-SUBMIT-REGISTER-CHECKOUT}
+
 			<p>
 				<label class="submit"></label>
 				<input type="submit" class="submit" value="{tn _continue}" />

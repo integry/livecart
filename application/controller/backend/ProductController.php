@@ -755,7 +755,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	 */
 	private function buildValidator(Product $product)
 	{
-		$validator = new RequestValidator("productFormValidator", $this->request);
+		$validator = $this->getValidator("productFormValidator", $this->request);
 
 		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name_empty')));
 

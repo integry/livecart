@@ -201,7 +201,7 @@ class ProductPriceController extends StoreManagementController
 
 	private function buildPricingFormValidator()
 	{
-		$validator = new RequestValidator("pricingFormValidator", $this->request);
+		$validator = $this->getValidator("pricingFormValidator", $this->request);
 
 		self::addPricesValidator($validator);
 		self::addShippingValidator($validator);

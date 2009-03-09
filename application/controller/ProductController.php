@@ -282,7 +282,7 @@ class ProductController extends FrontendController
 				$response = $redirect;
 			}
 
-			$response->setCookie('rating_' . $product->getID(), true, strtotime('+6 months'), $this->router->getBaseDirFromUrl());
+			$response->setCookie('rating_' . $product->getID(), true, strtotime('+' . $this->config->get('RATING_SAME_IP_TIME') . ' hours'), $this->router->getBaseDirFromUrl());
 			return $response;
 		}
 		else
@@ -373,7 +373,7 @@ class ProductController extends FrontendController
 
 	public function buildAddToCartValidator($options, $variations)
 	{
-		$validator = new RequestValidator("addToCart", $this->getRequest());
+		$validator = $this->getValidator("addToCart", $this->getRequest());
 
 		// option validation
 		foreach ($options as $option)
@@ -440,7 +440,7 @@ class ProductController extends FrontendController
 
 	private function buildRatingValidator($ratingTypes, Product $product, $isRating = false)
 	{
-		$validator = new RequestValidator("productRating", $this->getRequest());
+		$validator = $this->getValidator("productRating", $this->getRequest());
 
 		// option validation
 		foreach ($ratingTypes as $type)
@@ -582,7 +582,7 @@ class ProductController extends FrontendController
 
 		$request = $request ? $request : $this->request;
 
-		$validator = new RequestValidator("productContactForm", $request);
+		$validator = $this->getValidator("productContactForm", $request);
 		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name')));
 		$validator->addCheck('email', new IsNotEmptyCheck($this->translate('_err_email')));
 		$validator->addCheck('msg', new IsNotEmptyCheck($this->translate('_err_message')));
