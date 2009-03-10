@@ -174,9 +174,12 @@ class LiveCartRenderer extends SmartyRenderer
 			$files = $file ? array($file) : $this->getApplication()->getConfigContainer()->getBlockFiles();
 
 			$config = array();
-			foreach ($files as $file)
+			foreach ($files as $pluginFiles)
 			{
-				$config = array_merge_recursive($config, $this->parseConfigFile($file[0]));
+				foreach ($pluginFiles as $file)
+				{
+					$config = array_merge_recursive($config, $this->parseConfigFile($file));
+				}
 			}
 
 			$request = $this->getApplication()->getRequest();
@@ -276,7 +279,8 @@ class LiveCartRenderer extends SmartyRenderer
 	 */
 	private function parseConfigFile($file)
 	{
-		$config = parse_ini_file($file, true);
+		$config = substr($file, -3) == 'ini' ? parse_ini_file($file, true) : include $file;
+
 		$parsed = array();
 		foreach ($config as $file => $actions)
 		{

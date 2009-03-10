@@ -534,7 +534,13 @@ class LiveCart extends Application
 		$plugins = array();
 		foreach ($dirs as $pluginRoot)
 		{
-			$plugins = array_merge($plugins, $this->findPlugins($pluginRoot));
+			$plugins = array_merge_recursive($plugins, $this->findPlugins($pluginRoot));
+
+			$dynFile = $pluginRoot . '/dynamic.php';
+			if (file_exists($dynFile))
+			{
+				$plugins = array_merge_recursive($plugins, include $dynFile);
+			}
 		}
 
 		$this->plugins = $plugins;

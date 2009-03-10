@@ -44,7 +44,7 @@
 
 	{include file="block/eav/fields.tpl" item=$user filter="isDisplayed"}
 
-	{block FORMSUBMITREGISTER}
+	{block FORM-SUBMIT-REGISTER}
 
 	<p class="submit">
 		<label>&nbsp;</label>

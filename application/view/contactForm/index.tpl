@@ -37,6 +37,8 @@
 		{/err}
 	</p>
 
+	{block FORM-SUBMIT-CONTACT}
+
 	<p>
 		<label></label>
 		<input type="submit" class="submit" value="{t _form_submit}" />

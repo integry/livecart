@@ -42,10 +42,13 @@ class ConfigurationContainer
 
 		foreach (array('storage.customize.view', 'application.view') as $dir)
 		{
-			$path = ClassLoader::getRealPath($mountPath . '.' . $dir) . '/block.ini';
-			if (file_exists($path))
+			foreach (array('ini', 'php') as $ext)
 			{
-				$this->blockConfiguration[] = $path;
+				$path = ClassLoader::getRealPath($mountPath . '.' . $dir) . '/block.' . $ext;
+				if (file_exists($path))
+				{
+					$this->blockConfiguration[] = $path;
+				}
 			}
 
 			$this->viewDirectories[] = dirname($path);
