@@ -639,6 +639,11 @@ class UserController extends FrontendController
 
 	public function checkout()
 	{
+		if ($this->config->get('DISABLE_GUEST_CHECKOUT'))
+		{
+			return new ActionRedirectResponse('user', 'login', array('query' => array('return' => $this->router->createUrl(array('controller' => 'checkout', 'action' => 'pay')))));
+		}
+
 		$form = $this->buildForm();
 
 		$form->set('billing_country', $this->config->get('DEF_COUNTRY'));
