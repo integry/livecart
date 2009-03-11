@@ -61,7 +61,8 @@ class UserController extends StoreManagementController
 	 */
 	public static function createUserFormValidator(StoreManagementController $controller, $user = false)
 	{
-		$validator = $this->getValidator("UserForm", $controller->getRequest());
+		$inst = new UserController(ActiveRecordModel::getApplication());
+		$validator = $inst->getValidator("UserForm", $controller->getRequest());
 
 		$validator->addCheck('email', new IsNotEmptyCheck($controller->translate('_err_email_empty')));
 		$validator->addCheck('email', new IsValidEmailCheck($controller->translate('_err_invalid_email')));

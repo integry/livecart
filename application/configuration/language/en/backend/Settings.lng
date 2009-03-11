@@ -305,6 +305,7 @@ _customers=Customers & Registration
 _registration=Registration
 REQUIRE_PHONE=Require customers to enter phone number on registration
 DISABLE_STATE=Remove state field
+REG_EMAIL_CONFIRM=Require e-mail address confirmation
 
 # Countries
 _countries=Countries

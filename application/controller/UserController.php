@@ -504,14 +504,48 @@ class UserController extends FrontendController
 		$this->user = $user;
 		$this->mergeOrder();
 
-		if ($this->request->get('return'))
+		if (!$this->config->get('REG_EMAIL_CONFIRM'))
 		{
-			return new RedirectResponse($this->request->get('return'));
+			if ($this->request->get('return'))
+			{
+				return new RedirectResponse($this->request->get('return'));
+			}
+			else
+			{
+				return new ActionRedirectResponse('user', 'index');
+			}
 		}
 		else
 		{
-			return new ActionRedirectResponse('user', 'index');
+			return new ActionRedirectResponse('user', 'unconfirmed');
 		}
+	}
+
+	public function unconfirmed()
+	{
+		return new ActionResponse();
+	}
+
+	public function confirm()
+	{
+		$success = false;
+
+		$user = User::getInstanceByEmail($this->request->get('email'));
+		if ($user && !$user->isEnabled->get() && $user->getPreference('confirmation'))
+		{
+			if ($this->request->get('code') == $user->getPreference('confirmation'))
+			{
+				$user->setPreference('confirmation', null);
+				$user->isEnabled->set(true);
+				$user->save();
+
+				SessionUser::setUser($user);
+
+				$success = true;
+			}
+		}
+
+		return new ActionResponse('success', $success);
 	}
 
 	/**
@@ -1036,7 +1070,7 @@ class UserController extends FrontendController
 		$user->lastName->set($this->request->get($prefix . 'lastName'));
 		$user->companyName->set($this->request->get($prefix . 'companyName'));
 		$user->email->set($this->request->get('email'));
-		$user->isEnabled->set(true);
+		$user->isEnabled->set(!$this->config->get('REG_EMAIL_CONFIRM'));
 
 		// custom fields
 		$user->loadRequestData($this->request, array());
@@ -1048,14 +1082,29 @@ class UserController extends FrontendController
 
 		$user->save();
 
-		SessionUser::setUser($user);
-
-		// send welcome email with user account details
-		if ($this->config->get('EMAIL_NEW_USER'))
+		if (!$this->config->get('REG_EMAIL_CONFIRM'))
 		{
+			SessionUser::setUser($user);
+
+			// send welcome email with user account details
+			if ($this->config->get('EMAIL_NEW_USER'))
+			{
+				$email = new Email($this->application);
+				$email->setUser($user);
+				$email->setTemplate('user.new');
+				$email->send();
+			}
+		}
+		else
+		{
+			$code = rand(1, 10000000) . rand(1, 10000000);
+			$user->setPreference('confirmation', $code);
+			$user->save();
+
 			$email = new Email($this->application);
 			$email->setUser($user);
-			$email->setTemplate('user.new');
+			$email->set('code', $code);
+			$email->setTemplate('user.confirm');
 			$email->send();
 		}
 

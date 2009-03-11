@@ -29,6 +29,16 @@ _password=Enter password
 _conf_password=Re-enter password
 _complete_reg=Complete Registration
 
+# confirming
+_reg_complete_unconfirmed=Registration Completed - Awaiting E-mail Confirmation
+_confirm_info=Thank you! Your registration has been completed. To activate your account, please click the activation link in the e-mail we have just sent you.
+_reg_confirm=Account E-mail Confirmation
+_reg_confirm_success=Congratulations! Your account has been successfully activated.
+_reg_confirm_failure=Unfortunately your account could not be activated. Perhaps it has been done already?
+_reg_next_steps=Next steps
+_reg_next_steps_checkout=Proceed to checkout
+_reg_next_steps_account=Go to your customer account
+
 # errors
 _err_enter_first_name=Please enter your first name
 _err_enter_last_name=Please enter your last name
