@@ -384,6 +384,10 @@ class LiveCartRenderer extends SmartyRenderer
 			$res['call'] = array($controller, $action);
 			$res['view'] = './block/' . $action;
 		}
+		else if ($this->isBlock($res['view']))
+		{
+			$res['isDefinedBlock'] = true;
+		}
 		else if ('.tpl' == substr($res['view'], -4))
 		{
 			$res['view'] = substr($res['view'], 0, -4);

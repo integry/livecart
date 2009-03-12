@@ -444,19 +444,24 @@ class LiveCart extends Application
 				{
 					if ($renderer->isBlock($object))
 					{
-						switch ($command['action']['command'])
+						$action = $command['action'];
+						switch ($action['command'])
 						{
 							case 'append':
-								$controllerInstance->addBlock($object, $command['action']['call'], $command['action']['view']);
+							case 'prepend':
+								if (!empty($action['isDefinedBlock']))
+								{
+									$action = array_merge($action, array_shift($controllerInstance->getBlocks($action['view'])));
+								}
+								$controllerInstance->addBlock($object, $action['call'], $action['view'], $action['command'] == 'prepend');
 								break;
+
 							case 'remove':
 								$controllerInstance->removeBlock($object);
 								break;
-							case 'prepend':
-								$controllerInstance->addBlock($object, $command['action']['call'], $command['action']['view'], true);
-								break;
+
 							case 'theme':
-								$this->setTheme($command['action']['view']);
+								$this->setTheme($action['view']);
 								break;
 						}
 					}
