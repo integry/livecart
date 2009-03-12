@@ -451,7 +451,7 @@ class LiveCart extends Application
 							case 'prepend':
 								if (!empty($action['isDefinedBlock']))
 								{
-									$action = array_merge($action, array_shift($controllerInstance->getBlocks($action['view'])));
+									$action = array_merge($action, (array)array_shift($controllerInstance->getBlocks($action['view'])));
 								}
 								$controllerInstance->addBlock($object, $action['call'], $action['view'], $action['command'] == 'prepend');
 								break;

@@ -57,6 +57,7 @@ abstract class FrontendController extends BaseController
 		$this->addBlock('DYNAMIC_CATEGORIES', 'dynamicCategoryMenu', 'block/box/dynamicCategory');
 		$this->addBlock('SALE_ITEMS', 'saleItems', 'block/box/saleItems');
 		$this->addBlock('NEWEST_PRODUCTS', 'newestProducts', 'block/box/newestProducts');
+		$this->addBlock('BESTSELLING_PRODUCTS', 'bestsellingProducts', 'block/box/bestsellingProducts');
 		$this->addBlock('BREADCRUMB', 'boxBreadCrumb', 'block/box/breadcrumb');
 		$this->addBlock('BREADCRUMB_TITLE', 'boxBreadCrumbTitle', 'block/box/breadcrumbTitle');
 		$this->addBlock('LANGUAGE', 'boxLanguageSelect', 'block/box/language');
@@ -598,6 +599,61 @@ abstract class FrontendController extends BaseController
 		else if (!$category->isRoot())
 		{
 			return $this->newestProductsBlock(true);
+		}
+	}
+
+	public function bestsellingProductsBlock()
+	{
+		ClassLoader::import('application.model.product.ProductFilter');
+
+		if ($useRoot || $this->categoryID < 1)
+		{
+		  	$this->categoryID = Category::ROOT_ID;
+		}
+
+		$cache = $this->application->getCache();
+		$key = array('bestsellers', $this->categoryID . '_' . $days);
+
+		if (!$cache->get($key))
+		{
+			$category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
+			$filter = new ProductFilter($category, new ARSelectFilter());
+			$filter->includeSubcategories();
+			$filter->setEnabledOnly();
+
+			$selectFilter = $filter->getSelectFilter();
+			$selectFilter->setLimit($this->config->get('BESTSELLING_ITEMS_COUNT'));
+			$selectFilter->setOrder(new ARExpressionHandle('cnt'), 'DESC');
+
+			$q = new ARSelectQueryBuilder();
+			$q->includeTable('Product');
+			$q->joinTable('Category', 'Product', 'ID', 'categoryID');
+			$q->addField('Product.ID');
+			$q->addField(new ARExpressionHandle('(SELECT SUM(count) FROM OrderedItem LEFT JOIN CustomerOrder ON OrderedItem.customerOrderID=CustomerOrder.ID WHERE productID=Product.ID AND CustomerOrder.isPaid=1 AND CustomerOrder.dateCompleted > "' . ARSerializableDateTime::createFromTimeStamp(strtotime('-' . $this->config->get('BESTSELLING_ITEMS_DAYS') . ' days')) . '")'), null, 'cnt');
+			$q->setFilter($selectFilter);
+
+			$cache->set($key, ActiveRecord::getDataByQuery($q));
+		}
+
+		$products = $cache->get($key);
+
+		if (!$products)
+		{
+			return;
+		}
+
+		$ids = array();
+		foreach ($products as $id)
+		{
+			$ids[] = $id['ID'];
+		}
+
+		$products = ActiveRecord::getRecordSetArray('Product', select(IN('Product.ID', $ids)) , array('DefaultImage' => 'ProductImage'));
+		ProductPrice::loadPricesForRecordSetArray($products);
+
+		if ($products)
+		{
+			return new BlockResponse('products', $products);
 		}
 	}
 

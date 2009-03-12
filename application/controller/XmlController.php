@@ -34,8 +34,6 @@ class XmlController extends FrontendController
 		$this->setLayout('empty');
 		set_time_limit(0);
 
-		$cache = $this->application->getCache();
-
 		$cat = Category::getRootNode(true);
 		$filter = new ProductFilter($cat, new ARSelectFilter());
 		$filter->includeSubCategories();

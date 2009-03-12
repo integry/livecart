@@ -1,12 +1,14 @@
 <?php
 
+ClassLoader::import('application.model.cache.ValueCache');
+
 /**
  *
  *
  * @package application.model.cache
  * @author Integry Systems <http://integry.com>
  */
-class FileCache
+class FileCache extends ValueCache
 {
 	private $root;
 
@@ -15,7 +17,7 @@ class FileCache
 		return 'Files';
 	}
 
-	public function set($key, $value, $expiration = 0, $namespace = null)
+	protected function storeValue($key, $value, $expiration = 0, $namespace = null)
 	{
 		// check if relative time offset is passed for expiration
 		if (($expiration > 0) && ($expiration < time()))
@@ -33,7 +35,7 @@ class FileCache
 		touch($file, $expiration);
 	}
 
-	public function get($key, $defaultValue = null, $namespace = null)
+	protected function retrieveValue($key, $defaultValue = null, $namespace = null)
 	{
 		$file = $this->getCacheFile($key, $namespace);
 		if (!file_exists($file))

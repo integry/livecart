@@ -949,8 +949,8 @@ class CategoryController extends FrontendController
 		$products = array();
 		foreach ($categories as $category)
 		{
-			$key = $category['ID'];
-			if ($product = $cache->get($key, null, $namespace))
+			$key = array($namespace, $category['ID']);
+			if ($product = $cache->get($key))
 			{
 				$products[] = $product;
 				continue;
@@ -970,7 +970,7 @@ class CategoryController extends FrontendController
 				$product = array('ID' => 0);
 			}
 
-			$cache->set($key, $product, 1800, $namespace);
+			$cache->set($key, $product, 1800);
 
 			$products[] = $product;
 		}

@@ -14,14 +14,37 @@ abstract class ValueCache
 		$this->application = $application;
 	}
 
+	public function set($key, $value, $expiration = null)
+	{
+		return $this->storeValue($this->getKeyName($key), $value, $expiration, $this->getKeyNameSpace($key));
+	}
+
+	public function get($key, $defaultValue = null)
+	{
+		return $this->retrieveValue($this->getKeyName($key), $defaultValue, $this->getKeyNameSpace($key));
+	}
+
 	public abstract function getName();
-	public abstract function set($key, $value, $expiration = null, $namespace = null);
-	public abstract function get($key, $defaultValue = null, $namespace = null);
+	protected abstract function storeValue($key, $value, $expiration = null, $namespace = null);
+	protected abstract function retrieveValue($key, $defaultValue = null, $namespace = null);
 	public abstract function getNamespace($namespace);
 	public abstract function clear($key, $namespace = null);
 	public abstract function clearNamespace($namespace);
 	public abstract function gc();
 	public abstract function isValid();
+
+	private function getKeyNameSpace($key)
+	{
+		if (is_array($key))
+		{
+			return array_shift($key);
+		}
+	}
+
+	private function getKeyName($key)
+	{
+		return is_array($key) ? array_pop($key) : $key;
+	}
 
 	public static function getCacheMethods(LiveCart $application)
 	{
