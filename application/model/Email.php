@@ -25,6 +25,8 @@ class Email
 
 	private $text;
 
+	private $html;
+
 	private $recipients;
 
 	private $from;
@@ -161,14 +163,28 @@ class Email
 			$locale = $this->getLocale();
 
 			// find the email template file
-			$paths = array(
+			if (substr($templateFile, 0, 7) == 'module/')
+			{
+				$parts = explode('/', $templateFile, 3);
+				$module = $parts[1];
+				$path = $parts[2];
 
-							'storage.customize.view.email.' . $locale . '.' . $templateFile,
-							'application.view.email.' . $locale . '.' . $templateFile,
-							'storage.customize.view.email.en.' . $templateFile,
-							'application.view.email.en.' . $templateFile,
-
-						);
+				$paths = array(
+								'storage.customize.view.email.' . $locale . '.' . $templateFile,
+								'module.' . $module . '.application.view.email.' . $locale . '.' . $path,
+								'storage.customize.view.email.en.' . $templateFile,
+								'module.' . $module . '.application.view.email.en.' . $path,
+							);
+			}
+			else
+			{
+				$paths = array(
+								'storage.customize.view.email.' . $locale . '.' . $templateFile,
+								'application.view.email.' . $locale . '.' . $templateFile,
+								'storage.customize.view.email.en.' . $templateFile,
+								'application.view.email.en.' . $templateFile,
+							);
+			}
 
 			foreach ($paths as $path)
 			{
@@ -259,6 +275,11 @@ class Email
 		{
 			$message->attach(new Swift_Message_Part($this->text));
 			$message->attach(new Swift_Message_Part($this->html, 'text/html'));
+		}
+
+		if (!$this->text && !$this->html)
+		{
+			return false;
 		}
 
 		try

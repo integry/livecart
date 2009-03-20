@@ -6,12 +6,12 @@
  * @param array $params
  * @param Smarty $smarty
  * @return string
- * 
+ *
  * @package application.helper.smarty.form
  * @author Integry Systems
  */
-function smarty_function_checkbox($params, $smarty) 
-{	
+function smarty_function_checkbox($params, $smarty)
+{
 	$formParams = $smarty->_tag_stack[0][1];
 	$formHandler = $formParams['handle'];
 	if (!($formHandler instanceof Form))
@@ -19,25 +19,25 @@ function smarty_function_checkbox($params, $smarty)
 		throw new HelperException('Element must be placed in {form} block');
 	}
 	$fieldName = $params['name'];
-	
+
 	if (!isset($params['id']))
 	{
 	  	$params['id'] = $params['name'];
 	}
-	
-	if(!isset($params['value'])) 
+
+	if(!isset($params['value']))
 	{
-		$params['value'] = 1;	
-	}	
+		$params['value'] = 1;
+	}
 
 	// Check permissions
 	if($formParams['readonly'])
 	{
-		$params['disabled'] = 'disabled'; 
+		$params['disabled'] = 'disabled';
 	}
-	
+
 	$formValue = $formHandler->get($fieldName);
-		
+
 	// get checkbox state if the form has been submitted
 	if (1 == $formHandler->get('checkbox_' . $fieldName))
 	{
@@ -52,7 +52,12 @@ function smarty_function_checkbox($params, $smarty)
 	}
 	else if ($params['value'] == $formValue)
 	{
-		$params['checked'] = 'checked';		
+		$params['checked'] = 'checked';
+	}
+
+	if (empty($params['checked']))
+	{
+		unset($params['checked']);
 	}
 
 	$output = '<input type="checkbox"';
@@ -60,9 +65,9 @@ function smarty_function_checkbox($params, $smarty)
 	{
 		$output .= ' ' . $name . '="' . $value . '"';
 	}
-			
+
 	$output .= '/><input type="hidden" name="checkbox_' . $params['name'] . '" value="1" />';
-		
+
 	return $output;
 }
 

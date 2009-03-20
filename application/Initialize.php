@@ -23,5 +23,6 @@ ClassLoader::import('framework.response.*');
 ClassLoader::import('application.controller.*');
 ClassLoader::import('application.model.*');
 ClassLoader::import('application.model.system.*');
+ClassLoader::import('application.LiveCart');
 
 ?>

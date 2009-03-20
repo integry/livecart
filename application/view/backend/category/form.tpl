@@ -47,6 +47,8 @@
 			<div style="float: left;" id="categoryThemePreview_{$categoryId}"></div>
 		</fieldset>
 
+		{block FORM-CATEGORY-BOTTOM}
+
 		{language}
 			<p>
 				<label>{t _category_name}:</label>

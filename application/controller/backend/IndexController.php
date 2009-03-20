@@ -16,6 +16,8 @@ class IndexController extends StoreManagementController
 {
 	public function index()
 	{
+		$this->updateApplicationUri();
+
 		// order stats
 		$conditions = array(
 
@@ -98,6 +100,12 @@ class IndexController extends StoreManagementController
 	public function keepAlive()
 	{
 		return new RawResponse('OK');
+	}
+
+	private function updateApplicationUri()
+	{
+		$data = array('url' => $this->router->createFullUrl($this->router->createUrl(array())), 'rewrite' => $this->router->isURLRewriteEnabled());
+		file_put_contents(ClassLoader::getRealPath('storage.configuration.') . 'url.php', '<?php return ' . var_export($data, true) . '; ?>');
 	}
 }
 

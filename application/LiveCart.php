@@ -498,11 +498,15 @@ class LiveCart extends Application
 		}
 		while ($parent);
 
-		$hierarchy[$controllerInstance->getControllerName()] = true;
+		// remove the last controller (identified by it's path instead)
+		array_shift($hierarchy);
+
+		$hierarchy[str_replace('.', '/', $controllerInstance->getControllerName())] = true;
 		$hierarchy = array_keys($hierarchy);
 
 		foreach ($hierarchy as $name)
 		{
+			//var_dump($this->getPlugins('controller/' . $name . '/' . $action), $name, $action);
 			foreach ($this->getPlugins('controller/' . $name . '/' . $action) as $plugin)
 			{
 				include_once($plugin['path']);
@@ -1009,7 +1013,14 @@ class LiveCart extends Application
 	{
 		if (!class_exists($className, false))
 		{
-			ClassLoader::import('library.payment.method.' . $className);
+				if ('OfflineTransactionHandler' == $className)
+				{
+						ClassLoader::import('application.model.order.OfflineTransactionHandler');
+				}
+				else
+				{
+						ClassLoader::import('library.payment.method.' . $className);
+				}
 		}
 
 		if (is_null($details))
@@ -1192,7 +1203,6 @@ class LiveCart extends Application
 	{
 		foreach ($this->configFiles as $file)
 		{
-			//var_dump($file);
 			$this->locale->translationManager()->loadFile($file);
 		}
 	}
@@ -1214,6 +1224,18 @@ class LiveCart extends Application
 		}
 
 		return $this->cache;
+	}
+
+	public function getCron()
+	{
+		if (!$this->cron)
+		{
+			ClassLoader::import("application.model.system.Cron");
+
+			$this->cron = new Cron($this);
+		}
+
+		return $this->cron;
 	}
 
 	private function loadConfig()
