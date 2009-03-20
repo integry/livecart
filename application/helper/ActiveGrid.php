@@ -73,6 +73,12 @@ class ActiveGrid
 			$filters = (array)json_decode($request->get('filters'));
 		}
 
+		$conds = array();
+		if ($filter->getCondition())
+		{
+			$conds[] = $filter->getCondition();
+		}
+
 		foreach ($filters as $field => $value)
 		{
 			if (!strlen($value))
@@ -117,7 +123,7 @@ class ActiveGrid
 							continue;
 						}
 
-						$filter->mergeCondition(new OperatorCond($handle, $value, $operator));
+						$conds[] = new OperatorCond($handle, $value, $operator);
 					}
 				}
 				else if ($fieldInst->getDataType() instanceof ARPeriod)
@@ -131,11 +137,11 @@ class ActiveGrid
 						$cond->addAnd(new EqualsOrLessCond($handle, getDateFromString($to)));
 					}
 
-					$filter->mergeCondition($cond);
+					$conds[] = $cond;
 				}
 				else
 				{
-					$filter->mergeCondition(new LikeCond($handle, '%' . $value . '%'));
+					$conds[] = new LikeCond($handle, '%' . $value . '%');
 				}
 			}
 
@@ -156,7 +162,7 @@ class ActiveGrid
 					}
 				}
 
-				$filter->mergeCondition($cond);
+				$conds[] = $cond;
 			}
 		}
 
@@ -175,18 +181,22 @@ class ActiveGrid
 					$idcond = new INCond(new ARFieldHandle($modelClass, 'ID'), $selectedIDs);
 				}
 
-				$filter->mergeCondition($idcond);
+				$conds[] = $idcond;
 			}
 			else
 			{
 				if (!(bool)$request->get('isInverse'))
 				{
 					$idcond = new EqualsCond(new ARExpressionHandle(1), 2);
-					$filter->mergeCondition($idcond);
+					$conds[] = $idcond;
 				}
 			}
 		}
 
+		if ($conds)
+		{
+			$filter->setCondition(new AndChainCondition($conds));
+		}
 	}
 
 	public function getModelClass()
