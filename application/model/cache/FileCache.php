@@ -31,33 +31,52 @@ class FileCache extends ValueCache
 			mkdir(dirname($file), 0777, true);
 		}
 
-		file_put_contents($file, '<?php return ' . var_export(array(serialize($value), $expiration), true) . '; ?>');
+		file_put_contents($file, '<?php return ' . var_export(array(serialize($value), $expiration, $key), true) . '; ?>');
 		touch($file, $expiration);
 	}
 
 	protected function retrieveValue($key, $defaultValue = null, $namespace = null)
 	{
-		$file = $this->getCacheFile($key, $namespace);
-		if (!file_exists($file))
+		$value = array_shift($this->getValueFromFile($this->getCacheFile($key, $namespace), $namespace));
+		if (!$value)
 		{
-			return $defaultValue;
+			$value = $defaultValue;
 		}
 
-		list($value, $expiration) = include $file;
-		if ($expiration && ($expiration < time()))
-		{
-			$this->clear($key, $namespace);
-			return $defaultValue;
-		}
-		else
-		{
-			return unserialize($value);
-		}
+		return $value;
 	}
 
 	public function getNamespace($namespace)
 	{
+		$values = array();
+		foreach(glob($this->getNamespaceDir($namespace) . '*') as $file)
+		{
+			list($value, $key) = $this->getValueFromFile($file, $namespace);
+			$values[$key] = $value;
+		}
 
+		return $values;
+	}
+
+	private function getValueFromFile($file, $namespace)
+	{
+		if (!file_exists($file))
+		{
+			return array();
+		}
+
+		list($value, $expiration, $key) = include $file;
+		if ($expiration && ($expiration < time()))
+		{
+			$this->clear($key, $namespace);
+			$value = $defaultValue;
+		}
+		else
+		{
+			$value = unserialize($value);
+		}
+
+		return array($value, $key);
 	}
 
 	public function clear($key, $namespace = null)
@@ -69,9 +88,9 @@ class FileCache extends ValueCache
 		}
 	}
 
-	public function clearNamespace($key)
+	public function clearNamespace($namespace)
 	{
-
+		$this->rmdir_recurse($this->getNamespaceDir($namespace));
 	}
 
 	/* do nothing for now */
@@ -106,6 +125,29 @@ class FileCache extends ValueCache
 
 		return $this->root;
 	}
+
+	private function rmdir_recurse($path)
+	{
+		$path= rtrim($path, '/').'/';
+
+		if (!file_exists($path))
+		{
+			return;
+		}
+
+		$handle = opendir($path);
+		for (;false !== ($file = readdir($handle));)
+			if($file != "." and $file != ".." ) {
+				$fullpath= $path.$file;
+				if( is_dir($fullpath) ) {
+					$this->rmdir_recurse($fullpath);
+				} else {
+					unlink($fullpath);
+				}
+		}
+		closedir($handle);
+		rmdir($path);
+}
 }
 
 ?>
