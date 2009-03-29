@@ -177,6 +177,16 @@ function MaxValueCheck(element, constraint)
   	return element.value <= constraint.maxValue || element.value == '';
 }
 
+function IsEqualCheck(element, params)
+{
+	return (element.value == params.value);
+}
+
+function IsNotEqualCheck(element, params)
+{
+	return (element.value != params.value);
+}
+
 function OrCheck(element, constraints)
 {
 	var form = element.form ? element.form : $A(element)[0].form;
@@ -184,6 +194,12 @@ function OrCheck(element, constraints)
 	var pass = false;
 	constraints.each(function(constraint)
 	{
+		if (!window[constraint[1]])
+		{
+			pass = true;
+			return;
+		}
+
 		var valFunc = eval(constraint[1]);
 		var el = form.elements.namedItem(constraint[0]);
 		var params = constraint[2];
