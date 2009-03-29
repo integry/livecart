@@ -12,10 +12,13 @@ function smarty_block_tabControl($params, $content, LiveCartSmarty $smarty, &$re
 {
 	if (!$repeat)
 	{
-		$more = '<li class="moreTabs">
-					<a href="#" class="moreTabsLink"><span class="downArrow">&#9662; </span><span>' . strtolower($smarty->getApplication()->translate('_more_tabs')) . '</span></a>
-					<div class="moreTabsMenu" style="display: none;"></div>
-				</li>';
+		if (empty($params['noHidden']))
+		{
+			$more = '<li class="moreTabs">
+						<a href="#" class="moreTabsLink"><span class="downArrow">&#9662; </span><span>' . strtolower($smarty->getApplication()->translate('_more_tabs')) . '</span></a>
+						<div class="moreTabsMenu" style="display: none;"></div>
+					</li>';
+		}
 
 		$content = '<ul id="' . $params['id'] . '" class="tabList tabs">' . $more . $content . '</ul>';
 

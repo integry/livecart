@@ -180,7 +180,7 @@ TabControl.prototype = {
 
 		// get help context
 		var helpContext = document.getElementsByClassName('tabHelp', targetTab);
-		if (helpContext.length > 0)
+		if ((helpContext.length > 0) && helpContext[0].firstChild)
 		{
 			Backend.setHelpContext(helpContext[0].firstChild.nodeValue);
 		}
