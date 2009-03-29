@@ -174,7 +174,14 @@ class OsCommerceImport extends LiveCartImportDriver
 
 	public function getNextUserGroup()
 	{
-		if (!$data = $this->loadRecord('SELECT * FROM ' . $this->getTablePrefix() . 'customers_groups'))
+		try
+		{
+			if (!$data = $this->loadRecord('SELECT * FROM ' . $this->getTablePrefix() . 'customers_groups'))
+			{
+				return null;
+			}
+		}
+		catch (Exception $e)
 		{
 			return null;
 		}
@@ -331,7 +338,16 @@ class OsCommerceImport extends LiveCartImportDriver
 
 		if ($data['manufacturers_id'])
 		{
-			$rec->manufacturer->set(Manufacturer::getInstanceById($this->getRealId('Manufacturer', $data['manufacturers_id'])));
+			try
+			{
+				$man = Manufacturer::getInstanceById($this->getRealId('Manufacturer', $data['manufacturers_id']), true);
+				$man->load();
+				$rec->manufacturer->set($man);
+			}
+			catch (Exception $e)
+			{
+				// orphan data
+			}
 		}
 
 		$rec->sku->set($data['products_model']);

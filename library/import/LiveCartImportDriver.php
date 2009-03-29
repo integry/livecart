@@ -268,7 +268,15 @@ abstract class LiveCartImportDriver
 		if (empty($this->recordMap[$sql]))
 		{
 			$this->recordMapOffset[$sql] = isset($this->recordMapOffset[$sql]) ? $this->recordMapOffset[$sql] + self::MAP_SIZE : 0;
-			$this->recordMap[$sql] = $this->getDataBySQL($sql . ' LIMIT ' . $this->recordMapOffset[$sql] . ',' . self::MAP_SIZE);
+
+			try
+			{
+				$this->recordMap[$sql] = $this->getDataBySQL($sql . ' LIMIT ' . $this->recordMapOffset[$sql] . ',' . self::MAP_SIZE);
+			}
+			catch (SQLException $e)
+			{
+				return null;
+			}
 		}
 
 		if (!empty($this->recordMap[$sql]))
