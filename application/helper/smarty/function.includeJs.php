@@ -17,12 +17,16 @@ function smarty_function_includeJs($params, LiveCartSmarty $smarty)
 		$jsPath = ClassLoader::getRealPath('public.javascript.');
 	}
 
-	//  fix slashes
-	$fileName = str_replace('\\', DIRECTORY_SEPARATOR, $params['file']);
-	$fileName = str_replace('/', DIRECTORY_SEPARATOR, $fileName);
-	$filePath = $jsPath .  $fileName;
+	$fileName = $params['file'];
+	$filePath = substr($fileName, 0, 1) != '/' ?
+					$jsPath .  $fileName :
+					ClassLoader::getRealPath('public') .  $fileName;
 
-	$fileName = 'javascript/' . $fileName;
+	$fileName = substr($fileName, 0, 1) != '/' ? 'javascript/' . $fileName : substr($fileName, 1);
+
+	//  fix slashes
+	$filePath = str_replace('\\', DIRECTORY_SEPARATOR, $filePath);
+	$filePath = str_replace('/', DIRECTORY_SEPARATOR, $filePath);
 
 	if (isset($params['path']))
 	{
