@@ -139,8 +139,8 @@ class CssFile
 			{
 				foreach ($rules as $rule => $value)
 				{
-					$preg = '/' . $this->pregEscape($selector) . '(\s*)\{([^\{\}]*)\s*' . $this->pregEscape($rule) . '[ ]*:(.*)\n*([^\{\}]*)\}/msU';
-					$patched = preg_replace($preg, $selector . "\n{\\2\n\\4}", $patched, 1);
+					$preg = '/' . $this->pregEscape($selector) . '\s*\{([^\{\}]*)\s*' . $this->pregEscape($rule) . '\s*:\s*([^\n]+)[\n|\}]{1,}([^\{\}]*)\}/msU';
+					$patched = preg_replace($preg, $selector . "\n{\\1\n\\3}", $patched, 1);
 //					var_dump(count(explode("\n", $patched)), $preg, '---------');
 				}
 			}

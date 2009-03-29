@@ -30,8 +30,8 @@ class CssFileTest extends LiveCartTest
 
 		$css->deleteProperty('#stat .label', 'font-weight');
 		$css->save();
-		$this->assertTrue(strpos(file_get_contents($css->getPatchedFilePath()), 'font-weight') == 0);
 
+		$this->assertTrue(strpos(file_get_contents($css->getPatchedFilePath()), 'font-weight') == 0);
 		$css->clearPatchRules();
 	}
 
