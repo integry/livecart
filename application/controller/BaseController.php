@@ -298,7 +298,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 	 */
 	private function getConfigFiles()
 	{
-		$controllerRoot = Classloader::getRealPath('application.controller');
+		$controllerRoot = $this->application->getConfigContainer()->getControllerDirectories();
 
 		$files = array();
 
@@ -306,13 +306,25 @@ abstract class BaseController extends Controller implements LCiTranslator
 		$class = new ReflectionClass(get_class($this));
 		while ($class->getParentClass())
 		{
-			if (substr($class->getFileName(), 0, strlen($controllerRoot)) == $controllerRoot)
+			$fileName = $class->getFileName();
+			$controllerDir = null;
+
+			foreach ($controllerRoot as $dir)
 			{
-				$file = substr($class->getFileName(), strlen($controllerRoot) + 1);
+				if (substr($fileName, 0, strlen($dir)) == $dir)
+				{
+					$controllerDir = $dir;
+					break;
+				}
+			}
+
+			if ($controllerDir)
+			{
+				$file = substr($fileName, strlen($controllerDir) + 1);
 			}
 			else
 			{
-				$file = basename($class->getFileName());
+				$file = basename($fileName);
 			}
 
 			$files[] = substr($file, 0, -14);
