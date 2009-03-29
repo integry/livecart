@@ -56,6 +56,5 @@ Backend.Module.prototype =
 
 		// status message
 		Backend.SaveConfirmationMessage.prototype.showMessage(resp.status.status);
-		console.log(resp);
 	}
 }

@@ -1928,7 +1928,7 @@ Backend.MultiInstanceEditor.prototype =
 	cancelForm: function()
 	{
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-		Form.restore(this.nodes.form, false, false);
+		//Form.restore(this.nodes.form, false, false);
 
 		Backend.hideContainer(this.getMainContainerId());
 		this.getListContainer(this.owner).show();
@@ -2132,22 +2132,26 @@ TabCustomize.prototype =
 		}
 
 		this.moreTabs = tabList.parentNode.down('.moreTabs');
-		this.moreTabsMenu = this.moreTabs.down('.moreTabsMenu');
 
-		Event.observe(this.moreTabs, 'click', this.toggleMenu.bindAsEventListener(this));
+		if (this.moreTabs)
+		{
+			this.moreTabsMenu = this.moreTabs.down('.moreTabsMenu');
+			Event.observe(this.moreTabs, 'click', this.toggleMenu.bindAsEventListener(this));
+
+			// set background for moreTabs
+			var el = this.moreTabs.parentNode;
+			while (el && el.getStyle('background-color') == 'transparent')
+			{
+				el = el.parentNode;
+			}
+
+			if (el)
+			{
+				this.moreTabs.style.backgroundColor = el.getStyle('background-color');
+			}
+		}
+
 		this.setPrefsSaveUrl(Backend.Router.createUrl('backend.index', 'setUserPreference'));
-
-		// set background for moreTabs
-		var el = this.moreTabs.parentNode;
-		while (el && el.getStyle('background-color') == 'transparent')
-		{
-			el = el.parentNode;
-		}
-
-		if (el)
-		{
-			this.moreTabs.style.backgroundColor = el.getStyle('background-color');
-		}
 	},
 
 	setPrefsSaveUrl: function(url)

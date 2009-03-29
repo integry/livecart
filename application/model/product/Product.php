@@ -1092,7 +1092,7 @@ class Product extends MultilingualObject
 	/**
 	 * @return ARSet
 	 */
-	public function getRelationshipsArray($type, $loadReferencedRecords = array('RelatedProduct' => 'Product', 'DefaultImage' => 'ProductImage', 'Manufacturer', 'ProductRelationshipGroup'))
+	public function getRelationshipsArray($type, $loadReferencedRecords = array('RelatedProduct' => 'Product', 'DefaultImage' => 'ProductImage', 'Manufacturer', 'ProductRelationshipGroup', 'Category'))
 	{
 		ClassLoader::import('application.model.product.ProductRelationship');
 		return ProductRelationship::getRelationshipsArray($this, $loadReferencedRecords, $type);

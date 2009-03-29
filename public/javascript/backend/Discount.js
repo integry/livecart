@@ -159,6 +159,8 @@ Backend.Discount.Condition.prototype =
 
 	node: null,
 
+	controller: 'backend.discount',
+
 	TYPE_TOTAL: 0,
 	TYPE_COUNT: 1,
 	TYPE_ITEMS: 2,
@@ -281,7 +283,7 @@ Backend.Discount.Condition.prototype =
 			value = field.checked ? 1 : 0;
 		}
 
-		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.discount', 'updateConditionField', {type: this.typeSel.value, field: field.name, productField: this.productFieldSel.value, value: value, comparisonType: this.compSel.value}), null, this.completeUpdateField.bind(this));
+		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'updateConditionField', {type: this.typeSel.value, field: field.name, productField: this.productFieldSel.value, value: value, comparisonType: this.compSel.value}), null, this.completeUpdateField.bind(this));
 	},
 
 	completeUpdateField: function(originalRequest)
@@ -304,7 +306,7 @@ Backend.Discount.Condition.prototype =
 	{
 		var element = Event.element(e);
 		Event.stop(e);
-		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.discount', 'addCondition', {id: this.condition.ID}), element.parentNode.down('.progressIndicator'), this.completeAdd.bind(this));
+		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'addCondition', {id: this.condition.ID}), element.parentNode.down('.progressIndicator'), this.completeAdd.bind(this));
 	},
 
 	completeAdd: function(originalRequest)
@@ -330,7 +332,7 @@ Backend.Discount.Condition.prototype =
 		if (confirm(Backend.getTranslation('_confirm_condition_delete')))
 		{
 			$(this.deleteIcon).hide();
-			new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.discount', 'deleteCondition', {id: this.condition.ID}), this.deleteIcon.parentNode.down('.progressIndicator'), this.completeDelete.bind(this));
+			new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'deleteCondition', {id: this.condition.ID}), this.deleteIcon.parentNode.down('.progressIndicator'), this.completeDelete.bind(this));
 		}
 	},
 
@@ -451,7 +453,7 @@ Backend.Discount.Condition.prototype =
 	saveSelectValue: function(e)
 	{
 		var inp = Event.element(e);
-		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.discount', 'saveSelectValue', {id: this.condition.ID, type: inp.selectType, value: inp.value, state: inp.checked}), null, function (originalRequest) { this.completeSaveSelectRecord(originalRequest, inp); }.bind(this));
+		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'saveSelectValue', {id: this.condition.ID, type: inp.selectType, value: inp.value, state: inp.checked}), null, function (originalRequest) { this.completeSaveSelectRecord(originalRequest, inp); }.bind(this));
 		inp.parentNode.addClassName('selectRecordUpdating');
 	},
 
@@ -499,7 +501,7 @@ Backend.Discount.Condition.prototype =
 	{
 		var inp = Event.element(e);
 
-		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.discount', 'saveSelectRecord', {id: this.condition.ID, class: inp.data.className, recordID: inp.data.ID, state: inp.checked}), null, function (originalRequest) { this.completeSaveSelectRecord(originalRequest, inp); }.bind(this));
+		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'saveSelectRecord', {id: this.condition.ID, class: inp.data.className, recordID: inp.data.ID, state: inp.checked}), null, function (originalRequest) { this.completeSaveSelectRecord(originalRequest, inp); }.bind(this));
 
 		inp.parentNode.addClassName('selectRecordUpdating');
 	},
@@ -511,7 +513,7 @@ Backend.Discount.Condition.prototype =
 
 	addRecord: function(className, id, onComplete)
 	{
-		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.discount', 'addRecord', {id: this.condition.ID, class: className, recordID: id}), null, function (originalRequest) { this.completeAddRecord(originalRequest, onComplete); }.bind(this));
+		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'addRecord', {id: this.condition.ID, class: className, recordID: id}), null, function (originalRequest) { this.completeAddRecord(originalRequest, onComplete); }.bind(this));
 	},
 
 	completeAddRecord: function(originalRequest, onComplete)
@@ -591,7 +593,7 @@ Backend.Discount.Condition.prototype =
 	{
 		var element = Event.element(e);
 		var li = element.up('li');
-		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.discount', 'deleteRecord', {id: li.data.ID}), element.parentNode.down('.progressIndicator'), this.completeDeleteRecord.bind(li));
+		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'deleteRecord', {id: li.data.ID}), element.parentNode.down('.progressIndicator'), this.completeDeleteRecord.bind(li));
 	},
 
 	completeDeleteRecord: function()
@@ -696,6 +698,8 @@ Backend.Discount.Action.prototype =
 	ACTION_PERCENT_SURCHARGE: 3,
 	ACTION_AMOUNT_SURCHARGE: 4,
 
+	controller: 'backend.discount',
+
 	createAction: function(action)
 	{
 		return new Backend.Discount.Action(action, $('actionContainer_' + action.Condition.ID));
@@ -706,13 +710,13 @@ Backend.Discount.Action.prototype =
 		return ActiveList.prototype.getInstance($('actionContainer_' + this.action.Condition.ID), {
 			 beforeSort:	 function(li, order)
 			 {
-				return Backend.Router.createUrl('backend.discount', 'sortActions', {draggedId: this.getRecordId(li), conditionId: this.getRecordId(li.parentNode) }) + '&' + order;
+				return Backend.Router.createUrl(this.controller, 'sortActions', {draggedId: this.getRecordId(li), conditionId: this.getRecordId(li.parentNode) }) + '&' + order;
 			   },
 			 beforeDelete:   function(li)
 			 {
 				if(confirm(Backend.getTranslation('_confirm_action_delete')))
 				{
-					return Backend.Router.createUrl('backend.discount', 'deleteAction', {id:  this.getRecordId(li) });
+					return Backend.Router.createUrl(this.controller, 'deleteAction', {id:  this.getRecordId(li) });
 				}
 			 },
 			 afterSort:	  function(li, response) {  },
@@ -825,7 +829,7 @@ Backend.Discount.Action.prototype =
 	{
 		var element = Event.element(e);
 		Event.stop(e);
-		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.discount', 'addAction', {id: id}), element.parentNode.down('.progressIndicator'), this.completeAdd.bind(this));
+		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'addAction', {id: id}), element.parentNode.down('.progressIndicator'), this.completeAdd.bind(this));
 	},
 
 	completeAdd: function(originalRequest)
@@ -870,7 +874,7 @@ Backend.Discount.Action.prototype =
 			value = field.checked ? 1 : 0;
 		}
 
-		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.discount', 'updateActionField', {type: this.actionType.value, field: field.name, value: value}), null, this.completeUpdateField.bind(this));
+		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'updateActionField', {type: this.actionType.value, field: field.name, value: value}), null, this.completeUpdateField.bind(this));
 	},
 
 	addCondition: function(condition)

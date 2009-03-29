@@ -907,6 +907,11 @@ class CategoryController extends FrontendController
 		}
 	}
 
+	public function getCategoryId()
+	{
+		return $this->categoryID;
+	}
+
 	public function getProductFilter()
 	{
 		return $this->productFilter;

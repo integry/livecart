@@ -41,6 +41,11 @@ class ManufacturerFilter implements FilterInterface
 		return $this->manufacturerName;
 	}
 
+	public function getManufacturerID()
+	{
+		return $this->manufacturerID;
+	}
+
 	public function toArray()
 	{
 		$array = array();

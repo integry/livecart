@@ -438,6 +438,7 @@ LiveCart.AjaxUpdater.prototype = {
 		{
 			this.indicatorContainerId = indicatorId;
 			Element.show(this.indicatorContainerId);
+			this.adjustIndicatorVisibility = true;
 		}
 
 		if (!options)

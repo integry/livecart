@@ -133,6 +133,8 @@ class Installer
 				ActiveRecord::executeUpdate($query);
 			}
 		}
+
+		return true;
 	}
 
 	public function getUnwritableDirectories()

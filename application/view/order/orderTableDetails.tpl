@@ -7,7 +7,7 @@
 		</td>
 		{if !$productsInSeparateLine}
 			<td class="productName">
-				{include file="order/itemProductInfo.tpl}
+				{include file="order/itemProductInfo.tpl"}
 			</td>
 		{/if}
 		<td class="{if $item.itemBasePrice > $item.itemPrice}discount{/if}">
@@ -19,7 +19,7 @@
 	{if $productsInSeparateLine}
 		<tr class="{zebra loop="shipment" stop=true}">
 			<td class="productName" colspan="4">
-				{include file="order/itemProductInfo.tpl}
+				{include file="order/itemProductInfo.tpl"}
 			</td>
 		</tr>
 	{/if}
