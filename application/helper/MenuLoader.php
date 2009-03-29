@@ -2,38 +2,28 @@
 
 /**
  * Class for creating menu from backend_menu directory.
- * Also has static functions for creating js array of Tigra menu
  *
  * @package application.helper
  * @author Integry Systems
  */
-class MenuLoader {
-
+class MenuLoader
+{
 	private	$mainMenu = array();
-	private $currentTopKey;
-	private $indexTopKey;
-	private $reload = true;
 
 	/**
 	 * Reads menu structure from files of directorie or from cache. Store if neccesary structure in cache.
 	 */
-	public function __construct()
+	public function __construct(LiveCart $application)
 	{
-	  	$cache_file = ClassLoader::getRealPath("cache.configuration.backend_menu");
+		$this->application = $application;
 
-	  	if ($this->reload || !file_exists($cache_file))
+		foreach ($this->application->getConfigContainer()->getModuleDirectories() as $dir)
 		{
-		  	MenuLoader::createFromDir($this->mainMenu, ClassLoader::getRealPath("application.configuration.backend_menu"));
-//			$this->sortMenu();
-			if (!is_dir(dirname($cache_file)))
+			$dir .= '/application/configuration/backend_menu';
+			if (file_exists($dir))
 			{
-				mkdir(dirname($cache_file), 0777, true);
+				$this->createFromDir($this->mainMenu, $dir);
 			}
-			file_put_contents($cache_file, serialize($this->mainMenu));
-		}
-		else
-		{
-			$this->mainMenu = unserialize(file_get_contents($cache_file));
 		}
 	}
 
@@ -51,29 +41,6 @@ class MenuLoader {
 		}
 	}
 
-  	/**
-  	 * Returns all menu hierarchy.
-  	 */
-  	public function &getAllHierarchy()
-  	{
-		return $this->mainMenu;
-	}
-
-	/**
-	 *
-	 */
-  	public function getTopList()
-  	{
-		$array = array();
-		$i = 0;
-		foreach ($this->mainMenu as $menu)
-		{
-		  	$array[$i] = $menu;
-			$i++;
-		}
-		return $array;
-	}
-
 	/**
 	 * Returns second level menu hierarchy.
 	 * @param string $controller Name of controller
@@ -81,111 +48,31 @@ class MenuLoader {
 	 */
 	public function &getCurrentHierarchy($controller, $action)
 	{
-	  	if (!empty($this->currentTopKey))
-	  	{
-			unset($this->currentTopKey);
-		}
-
-		if (!empty($this->indexTopKey))
-		{
-			unset($this->indexTopKey);
-		}
-	  	$this->findCurrentHierarchy($controller, $action);
-		if (!empty($this->currentTopKey))
-		{
-			return $this->mainMenu[$this->currentTopKey];
-		}
-		else if($this->indexTopKey)
-		{
-	  		return $this->mainMenu[$this->indexTopKey];
-	  	}
-	  	else
-	  	{
-	  		return reset($this->mainMenu);
-	  	}
+	  	return $this->mainMenu;
 	}
 
-	private function findCurrentHierarchy($controller, $action, &$menu = null, $currentTop = 0)
-	{
-	  	if ($menu == null)
-	  	{
-			$menu = &$this->mainMenu;
-			$level = 1;
-		}
-
-	  	foreach ($menu as $key  => $child)
-	  	{
-	  	  	if (!empty($level))
-	  	  	{
-				$currentTop = $key;
-			}
-
-			if ($child['controller'] == $controller && $child['action'] == $action)
-			{
-				$this->currentTopKey = $currentTop;
-			}
-
-			if ($child['controller'] == $controller && $child['action'] == 'index')
-			{
-				$this->indexTopKey = $currentTop;
-			}
-
-			if (!empty($child['items']) && count($child['items']) > 0)
-			{
-				$this->findCurrentHierarchy($controller, $action, $child['items'], $currentTop);
-			}
-		}
-	}
-
-  	private static function createFromDir(&$father_menu, $path)
+  	private function createFromDir(&$father_menu, $path)
   	{
 		$iter = new DirectoryIterator($path);
 	  	$files = array();
 	  	foreach ($iter as $value)
 	  	{
-			if (($value->isFile()) && (".xml" == strtolower(substr($value->getFileName(), -4))))
+			if (($value->isFile()) && (".js" == strtolower(substr($value->getFileName(), -3))))
 			{
 				$files[] = $value->getFileName();
 			}
 		}
 
-		asort($files);
-
 	  	foreach ($files as $file)
 	  	{
 			// gets simple xml stucture
-			$struct = simplexml_load_file($path.'/'.$file);
-			MenuLoader::createFromXML($father_menu, $struct);
-			$subDir = $path.'/'.substr($file, 0, -4);
+			$struct = json_decode(file_get_contents($path.'/'.$file), true);
+			$father_menu = array_merge_recursive($father_menu, $struct);
+
+			$subDir = $path.'/'.substr($file, 0, -3);
 			if (file_exists($subDir))
 			{
-				MenuLoader::createFromDir($father_menu[count($father_menu)]['items'], $subDir);
-			}
-		}
-	}
-
-
-	private static function createFromXML(&$father_menu, $struct)
-	{
-	  	$i = count($father_menu) + 1;
-	  	$father_menu[$i]['title'] = (string)$struct->Title;
-	  	$father_menu[$i]['order'] = (string)$struct->Order;
-	  	$father_menu[$i]['controller'] = (string)$struct->Controller;
-	  	$father_menu[$i]['action'] = (string)$struct->Action;
-	  	$father_menu[$i]['role'] = (string)$struct->Role;
-	  	$father_menu[$i]['icon'] = (string)$struct->Icon;
-	  	$father_menu[$i]['descr'] = (string)$struct->Descr;
-
-	  	if (empty($father_menu[$i]['action']))
-	  	{
-			$father_menu[$i]['action'] = 'index';
-		}
-
-	  	if ($struct->Items)
-	  	{
-		  	foreach($struct->Items->Menu as $value)
-		  	{
-				MenuLoader::createFromXML($father_menu[$i]['items'], $value);
+				$this->createFromDir($father_menu[count($father_menu)]['items'], $subDir);
 			}
 		}
 	}

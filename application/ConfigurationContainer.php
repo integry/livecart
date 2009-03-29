@@ -37,7 +37,7 @@ class ConfigurationContainer
 						'pluginDirectory' => 'plugin') as $var => $path)
 		{
 			$dir = ClassLoader::getRealPath($mountPath . '.' . $path);
-			$this->$var = is_dir($dir) ? $dir : null;
+			$this->$var = is_dir($dir) ? realpath($dir) : null;
 		}
 
 		foreach (array('storage.customize.view', 'application.view') as $dir)
@@ -95,6 +95,11 @@ class ConfigurationContainer
 	public function getLanguageDirectories()
 	{
 		return $this->findDirectories('languageDirectory');
+	}
+
+	public function getModuleDirectories()
+	{
+		return $this->findDirectories('directory');
 	}
 
 	private function findDirectories($variable)
@@ -205,22 +210,43 @@ class ConfigurationContainer
 	{
 		$this->installDatabase();
 		$this->setConfig('installedModules', true);
+
+		$publicDir = $this->directory . '/public';
+		if (file_exists($publicDir))
+		{
+			if (!@symlink($publicDir, $this->getPublicDirectoryLink()))
+			{
+				return false;
+			}
+		}
 	}
 
 	public function deinstall()
 	{
 		$this->deinstallDatabase();
 		$this->setConfig('installedModules', false);
+
+		$symLink = $this->getPublicDirectoryLink();
+		if (file_exists($symLink))
+		{
+			unlink($symLink);
+		}
+	}
+
+	private function getPublicDirectoryLink()
+	{
+		return ClassLoader::getRealPath('public.module.') . basename($this->directory);
 	}
 
 	protected function installDatabase()
 	{
-		$this->loadSQL($this->directory . '/installdata/sql/create.sql');
+		return $this->loadSQL($this->directory . '/installdata/sql/create.sql') &&
+			   $this->loadSQL($this->directory . '/installdata/sql/initialData.sql');
 	}
 
 	protected function deinstallDatabase()
 	{
-		$this->loadSQL($this->directory . '/installdata/sql/drop.sql');
+		return $this->loadSQL($this->directory . '/installdata/sql/drop.sql');
 	}
 
 	protected function loadSQL($file)
@@ -229,7 +255,11 @@ class ConfigurationContainer
 
 		if (file_exists($file))
 		{
-			Installer::loadDatabaseDump(file_get_contents($file));
+			return Installer::loadDatabaseDump(file_get_contents($file));
+		}
+		else
+		{
+			return true;
 		}
 	}
 

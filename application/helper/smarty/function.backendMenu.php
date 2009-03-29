@@ -22,7 +22,7 @@ function smarty_function_backendMenu($params, LiveCartSmarty $smarty)
 	// load language file for menu
 	$locale->translationManager()->loadFile('backend/menu');
 
-	$menuLoader = new MenuLoader();
+	$menuLoader = new MenuLoader($smarty->getApplication());
 	$structure = $menuLoader->getCurrentHierarchy($controller, $action);
 	$router = $smarty->getApplication()->getRouter();
 
