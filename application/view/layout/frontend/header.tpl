@@ -12,6 +12,8 @@
 
 		<div class="clear"></div>
 
+		{block HEADER}
+
 		{block BREADCRUMB}
 
 	</fieldset>

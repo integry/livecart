@@ -2,6 +2,8 @@
 
 <div id="footer">
 
+	{block FOOTER}
+
 	<div style="float: left;">
 		<a href="{'POWERED_BY_URL'|config}" target="_blank">{'POWERED_BY_FRONTEND'|config}</a>
 	</div>

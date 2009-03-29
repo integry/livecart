@@ -6,6 +6,9 @@
 	<div id="footerRightCorner"></div>
 
 	<div id="footerContent">
+
+		{block FOOTER}
+
 		{block INFORMATION}
 		<div id="footerCopyright">
 

@@ -64,7 +64,9 @@
 <body class="{$request.controller}Con {$request.controller}-{$request.action}{if ($request.requestLanguage == 'he') || ($request.requestLanguage == 'ar')} rtl{/if}{if $bodyClass} {$bodyClass}{/if}">
 	{liveCustomization action="menu"}
 	<div id="container" class="lang_{localeCode}">
+		{block PAGE-TOP}
 		{$ACTION_VIEW}
+		{block PAGE-BOTTOM}
 	</div>
 	{block TRACKING}
 	{liveCustomization action="lang"}

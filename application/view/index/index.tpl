@@ -8,6 +8,8 @@
 
 <div id="content">
 
+	{block HOME-PAGE-TOP}
+
 	{include file="category/subcategoriesColumns.tpl"}
 
 	{if $news}

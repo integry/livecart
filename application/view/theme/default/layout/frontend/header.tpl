@@ -13,6 +13,8 @@
 
 		{block CART}
 
+		{block HEADER}
+
 		<div class="clear"></div>
 
 		{block ROOT_CATEGORIES}
