@@ -152,6 +152,15 @@ class LiveCart extends Application
 		}
 	}
 
+	public function run()
+	{
+		$this->processRuntimePlugins('startup');
+
+		$res = parent::run();
+
+		$this->processRuntimePlugins('shutdown');
+	}
+
 	private function initRouter()
 	{
 		if ($this->isInstalled)
@@ -522,6 +531,21 @@ class LiveCart extends Application
 		}
 
 		return $response;
+	}
+
+	public function processRuntimePlugins($path)
+	{
+		foreach($this->getPlugins($path) as $plugin)
+		{
+			if (!class_exists('ProcessPlugin', false))
+			{
+				ClassLoader::import('application.plugin.ProcessPlugin');
+			}
+
+			include_once $plugin['path'];
+			$inst = new $plugin['class']($this);
+			$inst->process();
+		}
 	}
 
 	public function getPlugins($path)
