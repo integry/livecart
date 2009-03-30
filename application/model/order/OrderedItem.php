@@ -210,11 +210,14 @@ class OrderedItem extends ActiveRecordModel
 		$product = is_null($product) ? $this->product->get() : $product;
 		if (!$product->isBundle())
 		{
-			$this->reservedProductCount->set($unreserve ? 0 : $this->count->get());
-			$multiplier = $unreserve ? -1 : 1;
-			$product->stockCount->set($product->stockCount->get() - ($this->count->get() * $multiplier));
-			$product->reservedCount->set($product->reservedCount->get() + ($this->count->get() * $multiplier));
-			$product->save();
+			if ($product->isInventoryTracked())
+			{
+				$this->reservedProductCount->set($unreserve ? 0 : $this->count->get());
+				$multiplier = $unreserve ? -1 : 1;
+				$product->stockCount->set($product->stockCount->get() - ($this->count->get() * $multiplier));
+				$product->reservedCount->set($product->reservedCount->get() + ($this->count->get() * $multiplier));
+				$product->save();
+			}
 		}
 		else
 		{

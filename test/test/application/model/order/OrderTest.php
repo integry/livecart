@@ -541,6 +541,67 @@ class OrderTest extends OrderTestCommon
 		$this->assertEqual($second->reservedCount->get(), 1);
 	}
 
+	public function testInventoryForDownloadableProducts()
+	{
+		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+		$this->config->set('INVENTORY_TRACKING_DOWNLOADABLE', false);
+
+		$product = $this->products[0];
+		$product->stockCount->set(2);
+		$product->type->set(Product::TYPE_DOWNLOADABLE);
+		$product->save();
+
+		$order = CustomerOrder::getNewInstance($this->user);
+		$order->addProduct($product, 1);
+		$order->save();
+		$order->finalize($this->usd);
+
+		$product->reload();
+		$this->assertEqual($product->stockCount->get(), 2);
+		$this->assertEqual((int)$product->reservedCount->get(), 0);
+
+		$order->setStatus(CustomerOrder::STATUS_SHIPPED);
+		foreach ($order->getShipments() as $shipment)
+		{
+			$this->assertEqual($shipment->status->get(), Shipment::STATUS_SHIPPED);
+		}
+
+		$this->assertEqual($product->stockCount->get(), 2);
+		$this->assertEqual((int)$product->reservedCount->get(), 0);
+	}
+
+	public function testEnabledInventoryTrackingForDownloadableProducts()
+	{
+		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+		$this->config->set('INVENTORY_TRACKING_DOWNLOADABLE', true);
+
+		$product = $this->products[0];
+		$product->stockCount->set(2);
+		$product->type->set(Product::TYPE_DOWNLOADABLE);
+		$product->save();
+
+		$order = CustomerOrder::getNewInstance($this->user);
+		$order->addProduct($product, 1);
+		$order->save();
+		$order->finalize($this->usd);
+
+		$product->reload();
+		$this->assertEqual($product->stockCount->get(), 1);
+		$this->assertEqual($product->reservedCount->get(), 1);
+
+		// mark order as shipped - the stock is gone
+		$order->setStatus(CustomerOrder::STATUS_SHIPPED);
+		foreach ($order->getShipments() as $shipment)
+		{
+			$this->assertEqual($shipment->status->get(), Shipment::STATUS_SHIPPED);
+		}
+
+		$this->assertEqual($product->stockCount->get(), 1);
+		$this->assertEqual($product->reservedCount->get(), 0);
+
+		$this->assertEqual($product->getMaxOrderableCount(), 1);
+	}
+
 	public function testUpdatingToStock()
 	{
 		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');

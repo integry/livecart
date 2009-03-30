@@ -251,6 +251,30 @@ class Product extends MultilingualObject
 		}
 	}
 
+	public function isInventoryTracked($type = null)
+	{
+		if (is_null($type) && !empty($this))
+		{
+			$type = $this->type->get();
+		}
+
+		$config = self::getApplication()->getConfig();
+
+		if ($config->get('INVENTORY_TRACKING') == 'DISABLE')
+		{
+			return true;
+		}
+
+		if ($type != self::TYPE_DOWNLOADABLE)
+		{
+			return true;
+		}
+		else
+		{
+			return $config->get('INVENTORY_TRACKING_DOWNLOADABLE');
+		}
+	}
+
 	/**
 	 *  Determines if the product is downloadable (digital file) - as opposed to shippable products
 	 */
@@ -290,7 +314,7 @@ class Product extends MultilingualObject
 		{
 			$config = self::getApplication()->getConfig();
 
-			if (($config->get('INVENTORY_TRACKING') == 'DISABLE') || $type == Product::TYPE_DOWNLOADABLE)
+			if (!self::isInventoryTracked($type))
 			{
 				return true;
 			}
@@ -314,7 +338,7 @@ class Product extends MultilingualObject
 	{
 		$config = self::getApplication()->getConfig();
 
-		if (($config->get('INVENTORY_TRACKING') == 'DISABLE') || $this->type->get() == Product::TYPE_DOWNLOADABLE || $this->isBackOrderable->get())
+		if (!$this->isInventoryTracked() || $this->isBackOrderable->get())
 		{
 			return null;
 		}

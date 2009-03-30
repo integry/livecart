@@ -57,6 +57,11 @@ class ConfigurationContainer
 		$this->loadInfo();
 	}
 
+	public function disableModules()
+	{
+		$this->modules = array();
+	}
+
 	public function saveToCache()
 	{
 		$this->application->getCache()->set('modules', serialize($this));
