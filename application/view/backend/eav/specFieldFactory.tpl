@@ -7,14 +7,17 @@
 {if $field.type == 1 || $field.type == 5}
 	{if $field.isMultiValue}
 		<fieldset class="container multiValueSelect{if $field.type == 1} multiValueNumeric{/if}">
-		{foreach from=$field.values key="id" item="value"}
-			{if '' != $id}
-				<p>
-					{checkbox name="`$prefix`specItem_`$id`" class="checkbox" value="on" id="product_`$cat`_`$item.ID`_specItem_`$id`"}
-					<label class="checkbox" for="product_{$cat}_{$item.ID}_specItem_{$id}"> {$value}</label>
-				</p>
-			{/if}
-		{/foreach}
+
+			<div class="eavCheckboxes">
+				{foreach from=$field.values key="id" item="value"}
+					{if '' != $id}
+						<p>
+							{checkbox name="`$prefix`specItem_`$id`" class="checkbox" value="on" id="product_`$cat`_`$item.ID`_specItem_`$id`"}
+							<label class="checkbox" for="product_{$cat}_{$item.ID}_specItem_{$id}"> {$value}</label>
+						</p>
+					{/if}
+				{/foreach}
+			</div>
 
 		{if !$disableNewOptionValues}
 			<div class="other">
@@ -26,7 +29,7 @@
 		{/if}
 
 		<p class="selectMenu">
-			<a href="#" class="eavSelectAll">{t _select_all}</a> | <a href="#" class="deselect eavDeselectAll">{t _deselect_all}</a>
+			<a href="#" class="eavSelectAll">{t _select_all}</a> | <a href="#" class="deselect eavDeselectAll">{t _deselect_all}</a> | <a class="eavSort" href="#">A-Z</a> | {t _eav_filter}: <input type="text" class="text filter" />
 		</p>
 
 		</fieldset>

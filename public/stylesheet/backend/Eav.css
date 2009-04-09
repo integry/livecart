@@ -10,9 +10,10 @@ fieldset.specification .numeric
 
 .multiValueSelect p.selectMenu
 {
-	clear: both;
-	margin-bottom: 10px;
+	clear: none;
+	margin: 10px 0 10px 20px;
 	font-size: smaller;
+	float: left;
 }
 
 fieldset.specification .notDisplayed
@@ -20,9 +21,9 @@ fieldset.specification .notDisplayed
 	color: #aaa;
 }
 
-.multiValueSelect label
+.multiValueSelect div.other
 {
-
+	float: left;
 }
 
 .multiValueSelect div.other label
@@ -35,4 +36,21 @@ fieldset.specification .notDisplayed
 .multiValueSelect div.other input, input.other
 {
   	width: 200px;
+  	font-size: smaller;
+}
+
+.multiValueSelect input.filter
+{
+	font-size: smaller;
+	width: 100px;
+	margin: 0;
+}
+
+.eavCheckboxes
+{
+	max-height: 200px;
+	overflow: auto;
+	border: 1px solid #ddd;
+	width: 570px;
+	padding: 0.5em;
 }

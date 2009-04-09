@@ -86,9 +86,12 @@ Backend.Eav.specFieldEntryMultiValue.prototype =
 	{
 		Event.observe(container.getElementsByClassName('deselect')[0], 'click', this.reset.bindAsEventListener(this));
 		Event.observe(container.getElementsByClassName('eavSelectAll')[0], 'click', this.selectAll.bindAsEventListener(this));
+		Event.observe(container.getElementsByClassName('eavSort')[0], 'click', this.sort.bindAsEventListener(this));
+		Event.observe(container.getElementsByClassName('filter')[0], 'keyup', this.filter.bindAsEventListener(this));
 
 		this.isNumeric = Element.hasClassName(container, 'multiValueNumeric');
 
+		this.checkBoxContainer = document.getElementsByClassName("eavCheckboxes", container.parentNode)[0];
 		this.fieldStatus = document.getElementsByClassName("fieldStatus", container.parentNode)[0];
 		this.mainContainer = container;
 		this.container = document.getElementsByClassName('other', container)[0];
@@ -109,12 +112,47 @@ Backend.Eav.specFieldEntryMultiValue.prototype =
 
 	toggleAll: function(state)
 	{
-		checkboxes = this.mainContainer.getElementsByTagName('input');
+		var checkboxes = this.mainContainer.getElementsByTagName('input');
 
 		for (k = 0; k < checkboxes.length; k++)
 		{
 		  	checkboxes[k].checked = state;
 		}
+	},
+
+	sort: function(e)
+	{
+		Event.stop(e);
+
+		var labels = $A(this.checkBoxContainer.getElementsByTagName('label')).sort(
+			function(a, b)
+			{
+				a = a.innerHTML.toLowerCase();
+				b = b.innerHTML.toLowerCase();
+				return a > b ? 1 : (a == b ? 0 : -1);
+			});
+
+		labels.each(function(label)
+		{
+			this.checkBoxContainer.appendChild(label.parentNode);
+		}.bind(this));
+	},
+
+	filter: function(e)
+	{
+		var str = Event.element(e).value.toLowerCase();
+		$A(this.checkBoxContainer.getElementsByTagName('label')).each(
+			function(l)
+			{
+				if (!str.length || (l.innerHTML.toLowerCase().indexOf(str) > -1))
+				{
+					Element.show(l.parentNode);
+				}
+				else
+				{
+					Element.hide(l.parentNode);
+				}
+			});
 	},
 
 	bindField: function(field)
