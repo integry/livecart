@@ -44,6 +44,7 @@ class TemplateController extends StoreManagementController
 	  	$response->set('code', base64_encode($template->getCode()));
 	  	$response->set('template', $template->toArray());
 	  	$response->set('themes', $this->application->getRenderer()->getThemeList());
+		$response->set('theme', $this->request->get('theme'));
 		return $response;
 	}
 

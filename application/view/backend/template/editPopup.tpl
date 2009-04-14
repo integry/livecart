@@ -25,17 +25,18 @@
 {form handle=$form action="controller=backend.template action=save" method="POST" id="templateForm"}
 
 	{textarea name="code" id="code"}
-	
+
 	<fieldset class="controls">
 		{hidden name="file" id="file"}
-				
+
 		<div style="float: left;{denied role="template.save"} display: none;{/denied}">
 			<span class="progressIndicator" style="display: none;"></span>
-			<input type="submit" class="submit" value="{tn _save_template}" /> 
-			{t _or} 
+			<input type="hidden" name="theme" value="{$theme}" />
+			<input type="submit" class="submit" value="{tn _save_template}" />
+			{t _or}
 			<a class="cancel" href="#" onclick="window.close();">{t _cancel}</a>
 		</div>
-		
+
 		<div style="float: right;">
 			<div class="yellowMessage" style="display: none;">
 				<div>
@@ -47,9 +48,9 @@
 					{t _could_not_update_template}
 				</div>
 			</div>
-		</div>		
+		</div>
 	</fieldset>
-	
+
 {/form}
 
 
