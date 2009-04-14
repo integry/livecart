@@ -145,22 +145,27 @@ abstract class ObjectImage extends MultilingualObject
 		if ($path != $origPath)
 		{
 			$urlPrefix = '/public/';
-			return $path;
+			return self::fixSlashes($path);
 		}
 
 		// path within application web root directory
 		$path = str_replace(ClassLoader::getRealPath('.'), '', $path);
 		if ($path != $origPath)
 		{
-			$path = self::getApplication()->getRouter()->getBaseDirFromUrl() . $path;
+			$path = self::getApplication()->getRouter()->getBaseDirFromUrl() . self::fixSlashes($path);
 			return $path;
 		}
 
 		// relative to document root
 		if (!empty($_SERVER['DOCUMENT_ROOT']))
 		{
-			return str_replace($_SERVER['DOCUMENT_ROOT'], '', '/' . $path);
+			return str_replace($_SERVER['DOCUMENT_ROOT'], '', '/' . self::fixSlashes($path));
 		}
+	}
+
+	private function fixSlashes($path)
+	{
+		return str_replace('\\', '/', $path);
 	}
 
 	public function save()

@@ -458,7 +458,7 @@ class Config
 
 	private function getFilePath()
 	{
-	  	return ClassLoader::getRealPath('storage.configuration') . '/settings.php';
+	  	return ClassLoader::getRealPath('storage.configuration.') . 'settings.php';
 	}
 
 }

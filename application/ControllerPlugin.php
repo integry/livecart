@@ -27,6 +27,8 @@ abstract class ControllerPlugin
 		$this->response = $response;
 		$this->controller = $controller;
 		$this->request = $controller->getRequest();
+		$this->application = $controller->getApplication();
+		$this->config = $this->application->getConfig();
 		$this->controllerName = $this->request->getControllerName();
 		$this->actionName = $this->request->getActionName();
 	}

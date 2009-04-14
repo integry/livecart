@@ -34,6 +34,16 @@ class LiveCartSmarty extends Smarty
 		return $this->application;
 	}
 
+	public function set($var, $value)
+	{
+		$this->assign($var, $value);
+	}
+
+	public function get($var)
+	{
+		return $this->get_template_vars($var);
+	}
+
 	/**
 	 *  Retrieve software configuration values from Smarty templates
 	 *

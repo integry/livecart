@@ -262,7 +262,7 @@ class Product extends MultilingualObject
 
 		if ($config->get('INVENTORY_TRACKING') == 'DISABLE')
 		{
-			return true;
+			return false;
 		}
 
 		if ($type != self::TYPE_DOWNLOADABLE)
