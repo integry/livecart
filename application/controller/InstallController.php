@@ -94,7 +94,9 @@ class InstallController extends FrontendController
 			return new ActionRedirectResponse('install', 'database');
 		}
 
-		$dsn = 'mysql://' .
+		$type = function_exists('mysql_connect') ? 'mysql' : 'mysqli';
+
+		$dsn = $type . '://' .
 				   $this->request->get('username') .
 				   		($this->request->get('password') ? ':' . $this->request->get('password') : '') .
 				   			'@' . $this->request->get('server') .
