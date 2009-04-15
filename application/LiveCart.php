@@ -213,7 +213,24 @@ class LiveCart extends Application
 		else
 		{
 */
-		include ClassLoader::getRealPath('application.configuration.route.backend') . '.php';
+		foreach ($this->getConfigContainer()->getRouteFiles() as $file)
+		{
+			$routes = array();
+			$ret = include $file;
+			if (is_array($ret))
+			{
+				$routes = $ret;
+			}
+
+			foreach ($routes as $route)
+			{
+				$this->router->connect($route[0], $route[1], $route[2]);
+				$route[2]['requestLanguage'] = "[a-zA-Z]{2}";
+				$this->router->connect(':requestLanguage/' . $route[0], $route[1], $route[2]);
+			}
+		}
+
+		//include ClassLoader::getRealPath('application.configuration.route.backend') . '.php';
 	}
 
 	public function setDevMode($devMode = true)
@@ -331,7 +348,7 @@ class LiveCart extends Application
 
 		$file = str_replace('\\', '/', $file);
 
-		$editUrl = $this->getRouter()->createUrl(array('controller' => 'backend.template', 'action' => 'editPopup', 'query' => array('file' => $file)), true);
+		$editUrl = $this->getRouter()->createUrl(array('controller' => 'backend.template', 'action' => 'editPopup', 'query' => array('file' => $file, 'theme' => $this->getTheme())), true);
 
 		// @todo: temp fix. for some reason /public/ was added seemingly randomly for some templates at one store
 		$editUrl = str_replace('/public/', '/', $editUrl);
@@ -404,13 +421,15 @@ class LiveCart extends Application
 	 */
 	public function execute($controllerInstance, $actionName)
 	{
-		$originalResponse = parent::execute($controllerInstance, $actionName);
-
-		// override Apache's AddDefaultCharset directive
-		if (get_class($originalResponse) ==  'ActionResponse')
+		if ($response = $this->processInitPlugins($controllerInstance, 'before-' . $actionName))
 		{
-			$originalResponse->setHeader('Content-type', 'text/html;charset=utf-8');
+			if (!($response instanceof RawResponse) || $response->getContent())
+			{
+				return $response;
+			}
 		}
+
+		$originalResponse = parent::execute($controllerInstance, $actionName);
 
 		$response = $this->processActionPlugins($controllerInstance, $originalResponse, $actionName);
 
@@ -482,9 +501,9 @@ class LiveCart extends Application
 	/**
  `	 * Execute controller initialization plugins
 	 */
-	public function processInitPlugins(Controller $controllerInstance)
+	public function processInitPlugins(Controller $controllerInstance, $action = 'init')
 	{
-		return $this->processPlugins($controllerInstance, new RawResponse, 'init');
+		return $this->processPlugins($controllerInstance, new RawResponse, $action);
 	}
 
 	/**

@@ -1,5 +1,4 @@
 <div id="mainInfo">
-	{$presentation|@var_Dump}
 	{if $presentation.isAllVariations}
 		{block PRODUCT-PURCHASE-VARIATIONS}
 	{else}

@@ -31,6 +31,8 @@ class ConfigurationContainer
 		$this->directory = ClassLoader::getRealPath($mountPath);
 		$this->application = $application;
 
+		$this->directory = preg_replace('/\\' . DIRECTORY_SEPARATOR . '{2,}/', DIRECTORY_SEPARATOR, $this->directory);
+
 		foreach (array( 'configDirectory' => 'application.configuration.registry',
 						'languageDirectory' => 'application.configuration.language',
 						'controllerDirectory' => 'application.controller',
@@ -181,7 +183,7 @@ class ConfigurationContainer
 			return $this;
 		}
 
-		foreach ($this->modules as $module)
+		foreach ((array)$this->modules as $module)
 		{
 			if ($m = $module->getModule($mountPath))
 			{
@@ -216,12 +218,26 @@ class ConfigurationContainer
 		$this->installDatabase();
 		$this->setConfig('installedModules', true);
 
-		$publicDir = $this->directory . '/public';
+		// custom installation procedures
+		$this->customInstall('install.php');
+
+		// set up symlink to public directory
+		$publicDir = $this->directory . DIRECTORY_SEPARATOR . 'public';
+
 		if (file_exists($publicDir))
 		{
-			if (!@symlink($publicDir, $this->getPublicDirectoryLink()))
+			if (function_exists('symlink'))
 			{
-				return false;
+				if (!@symlink($publicDir, $this->getPublicDirectoryLink()))
+				{
+					return false;
+				}
+			}
+
+			// Windows
+			else
+			{
+				full_copy($publicDir, $this->getPublicDirectoryLink());
 			}
 		}
 	}
@@ -231,10 +247,22 @@ class ConfigurationContainer
 		$this->deinstallDatabase();
 		$this->setConfig('installedModules', false);
 
+		// custom installation procedures
+		$this->customInstall('deinstall.php');
+
 		$symLink = $this->getPublicDirectoryLink();
 		if (file_exists($symLink))
 		{
 			unlink($symLink);
+		}
+	}
+
+	private function customInstall($file)
+	{
+		$filePath = $this->directory . '/installdata/' . $file;
+		if (file_exists($filePath))
+		{
+			include_once $filePath;
 		}
 	}
 
@@ -303,9 +331,16 @@ class ConfigurationContainer
 		$config->save();
 	}
 
-	public function getRoutes()
+	public function getRouteFiles()
 	{
+		$files = array();
+		foreach ($this->getConfigDirectories() as $dir)
+		{
+			$dir = dirname($dir) . '/route';
+			$files = array_merge($files, glob($dir . '/*.php'));
+		}
 
+		return $files;
 	}
 
 	public function getOverrideRoutes()
@@ -322,6 +357,37 @@ class ConfigurationContainer
 		}
 
 		$this->info['path'] = $this->mountPath;
+	}
+}
+
+function full_copy( $source, $target )
+{
+	if ( is_dir( $source ) )
+	{
+		@mkdir( $target );
+
+		$d = dir( $source );
+
+		while ( FALSE !== ( $entry = $d->read() ) )
+		{
+			if ( $entry == '.' || $entry == '..' )
+			{
+				continue;
+			}
+
+			$Entry = $source . '/' . $entry;
+			if ( is_dir( $Entry ) )
+			{
+				full_copy( $Entry, $target . '/' . $entry );
+				continue;
+			}
+			copy( $Entry, $target . '/' . $entry );
+		}
+
+		$d->close();
+	}else
+	{
+		copy( $source, $target );
 	}
 }
 

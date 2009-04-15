@@ -151,12 +151,34 @@ class LiveCartRenderer extends SmartyRenderer
 			$tplPath = $this->getRelativeTemplatePath($tplPath);
 		}
 
+		if ('/' == $tplPath[0])
+		{
+			$tplPath = substr($tplPath, 1);
+		}
+
 		if ($conf = $this->getBlockConfiguration($tplPath))
 		{
 			foreach ($conf as $command)
 			{
+				if (in_array($command['action']['command'], array('append', 'prepend', 'replace')))
+				{
+					$newOutput = $this->render($command['action']['view'] . '.tpl');
+				}
+
 				switch ($command['action']['command'])
 				{
+					case 'append':
+						$output .= $newOutput;
+					break;
+
+					case 'prepend':
+						$output = $newOutput . $output;
+					break;
+
+					case 'replace':
+						$output = $newOutput;
+					break;
+
 					case 'remove':
 						$output = '';
 					break;
@@ -233,6 +255,11 @@ class LiveCartRenderer extends SmartyRenderer
 		{
 			return $this->blockConfiguration;
 		}
+	}
+
+	public function sortBlocks($blocks)
+	{
+		return $blocks;
 	}
 
 	public function isBlock($objectName)
@@ -429,7 +456,7 @@ class LiveCartRenderer extends SmartyRenderer
 			if ($this->paths[count($this->paths) - 1] == $root)
 			{
 				$root = ClassLoader::getRealPath('.');
-				$template = preg_replace('/module\/([a-zA-Z0-9]+)\/(.*)/', 'module/\\1/application/view/\\2', $template);
+				$template = preg_replace('/module\/([-a-zA-Z0-9_]+)\/(.*)/', 'module/\\1/application/view/\\2', $template);
 			}
 		}
 

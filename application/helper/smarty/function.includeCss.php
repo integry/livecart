@@ -53,9 +53,16 @@ function smarty_function_includeCss($params, LiveCartSmarty $smarty)
 		   $includedStylesheetFiles = array();
 		}
 
-		if(isset($params['front']) && in_array($filePath, $includedStylesheetFiles))
+		if(in_array($filePath, $includedStylesheetFiles))
 		{
-			unset($includedStylesheetFiles[array_search($filePath, $includedStylesheetFiles)]);
+			if (isset($params['front']))
+			{
+				unset($includedStylesheetFiles[array_search($filePath, $includedStylesheetFiles)]);
+			}
+			else
+			{
+				return;
+			}
 		}
 
 		$fileMTime = filemtime($filePath);
