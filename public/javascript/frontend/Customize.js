@@ -341,7 +341,7 @@ CssCustomize.prototype =
 		var rules = [];
 		$A(sheet.cssRules).each(function(rule)
 		{
-			rules.push(rule.cssText.replace(/\{/, "\n\{\n").replace(/\}/, "\n\}").replace(/;/, ";\n").replace(/\n /g, "\n\t").replace(/[\s]{2,}\n/g, "\n").replace(/[\n]{2,}/g, "\n").replace(/\s$/, ""));
+			rules.push(rule.cssText.replace(/\{/, "\n\{\n").replace(/\}/, "\n\}").replace(/;/g, ";\n").replace(/\n /g, "\n\t").replace(/[\s]{2,}\n/g, "\n").replace(/[\n]{2,}/g, "\n").replace(/\s$/, ""));
 		});
 
 		return rules.join("\n\n");
@@ -570,6 +570,11 @@ MockedCSSRule.prototype =
 {
 	setProperty: function(name, value, test)
 	{
+		if (name.match(/-moz-background/))
+		{
+			return;
+		}
+
 		// replace rgb(1,2,3) to #hex
 		if (value.match(/rgb\(/))
 		{
