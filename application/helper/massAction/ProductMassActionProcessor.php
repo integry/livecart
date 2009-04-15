@@ -59,7 +59,7 @@ class ProductMassActionProcessor extends MassActionProcessor
 		}
 		else if ('theme' == $act)
 		{
-			$instance = ProductPresentation::getInstance($product);
+			$instance = CategoryPresentation::getInstance($product);
 			$instance->theme->set($this->params['theme']);
 			$instance->save();
 		}

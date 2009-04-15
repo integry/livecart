@@ -20,6 +20,14 @@
 		</div>
 
 		<div style="float: left;" id="productThemePreview_{$product.ID}"></div>
+		<div class="clear"></div>
+
+		<p>
+			<label></label>
+			{checkbox name="isAllVariations" class="checkbox" id="product_`$cat`_`$product.ID`_isAllVariations"}
+			<label for="product_{$cat}_{$product.ID}_isAllVariations" class="checkbox">{t _allow_all_variations}</label>
+		</p>
+
 	</fieldset>
 
 	{include file="backend/product/form/translations.tpl" product=$product cat=$cat multiLingualSpecFields=$multiLingualSpecFields }

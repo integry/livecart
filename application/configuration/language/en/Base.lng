@@ -23,3 +23,7 @@ _status_awaiting=Awaiting shipment
 _status_shipped=Shipped
 _status_canceled=Canceled
 _status_returned=Returned
+
+_select_all=Select all
+_deselect_all=Deselect all
+_eav_filter=Filter

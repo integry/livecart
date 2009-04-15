@@ -3,7 +3,7 @@
 ClassLoader::import('application.model.product.Product');
 ClassLoader::import('application.controller.FrontendController');
 ClassLoader::import('application.controller.CategoryController');
-ClassLoader::import('application.model.presentation.ProductPresentation', true);
+ClassLoader::import('application.model.presentation.CategoryPresentation', true);
 
 /**
  *
@@ -14,9 +14,34 @@ class ProductController extends FrontendController
 {
 	public $filters = array();
 
+	public function init()
+	{
+		parent::init();
+
+		$this->addBlock('PRODUCT-ATTRIBUTE-SUMMARY', 'attributeSummary', 'product/block/attributeSummary');
+		$this->addBlock('PRODUCT-PURCHASE', 'purchase', 'product/block/purchase');
+			$this->addBlock('PRODUCT-PRICE', 'price', 'product/block/price');
+			$this->addBlock('PRODUCT-OPTIONS', 'options', 'product/block/options');
+			$this->addBlock('PRODUCT-VARIATIONS', 'variations', 'product/block/variations');
+			$this->addBlock('PRODUCT-TO-CART', 'addToCart', 'product/block/toCart');
+			$this->addBlock('PRODUCT-ACTIONS', 'actions', 'product/block/actions');
+
+		$this->addBlock('PRODUCT-IMAGES', 'images', 'product/block/images');
+
+		$this->addBlock('PRODUCT-SUMMARY', 'summary', 'product/block/summary');
+			$this->addBlock('PRODUCT-MAININFO', 'mainInfo', 'product/block/mainInfo');
+			$this->addBlock('PRODUCT-OVERVIEW', 'overview', 'product/block/overview');
+			$this->addBlock('PRODUCT-RATING-SUMMARY', 'ratingSummary', 'product/ratingSummary');
+
+		$this->addBlock('PRODUCT-PURCHASE-VARIATIONS', 'purchaseVariations', 'product/block/purchaseVariations');
+
+
+	}
+
 	public function index()
 	{
-		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA, array('ProductImage', 'Manufacturer', 'Category'/*, 'ProductPresentation'*/));
+		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA, array('ProductImage', 'Manufacturer', 'Category'));
+		$this->product = $product;
 
 		if (!$product->isEnabled->get() || $product->parent->get())
 		{
@@ -86,13 +111,6 @@ class ProductController extends FrontendController
 		// add product title to breacrumb
 		$this->addBreadCrumb($productArray['name_lang'], createProductUrl(array('product' => $productArray), $this->application));
 
-		// allowed shopping cart quantities
-		$maxOrderable = $product->getMaxOrderableCount();
-		$maxQuant = $product->getMinimumQuantity() + (19 * $product->getQuantityStep());
-		$maxOrderable = is_null($maxOrderable) ? $maxQuant : min($maxQuant, $maxOrderable);
-		$quantities = range($product->getMinimumQuantity(), $maxOrderable, max($product->fractionalStep->get(), 1));
-		$quantity = array_combine($quantities, $quantities);
-
 		// manufacturer filter
 		if ($product->manufacturer->get())
 		{
@@ -108,22 +126,9 @@ class ProductController extends FrontendController
 		$response->set('product', $productArray);
 		$response->set('category', $productArray['Category']);
 		$response->set('images', $product->getImageArray());
-		$response->set('quantity', $quantity);
+		$response->set('quantity', $this->getQuantities($product));
 		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
 		$response->set('catRoute', $catRoute);
-
-		// product options
-		$options = $product->getOptionsArray();
-		$response->set('allOptions', $options);
-
-		foreach ($options as $key => $option)
-		{
-			if (!$option['isDisplayed'])
-			{
-				unset($options[$key]);
-			}
-		}
-		$response->set('options', $options);
 
 		// ratings
 		if ($this->config->get('ENABLE_RATINGS'))
@@ -144,12 +149,8 @@ class ProductController extends FrontendController
 			$response->set('isPurchaseRequiredToRate', $this->isPurchaseRequiredToRate($product));
 		}
 
-		// variations
-		$variations = $product->getVariationData($this->application);
-		$response->set('variations', $variations);
-
 		// add to cart form
-		$response->set('cartForm', $this->buildAddToCartForm($options, $variations));
+		$response->set('cartForm', $this->buildAddToCartForm($this->getOptions(), $this->getVariations()));
 
 		// related products
 		$related = $this->getRelatedProducts($product);
@@ -219,17 +220,141 @@ class ProductController extends FrontendController
 		}
 
 		// display theme
-		if ($theme = ProductPresentation::getThemeByProduct($product))
+		if ($theme = CategoryPresentation::getThemeByProduct($product))
 		{
 			$this->application->setTheme($theme->getTheme());
+			$response->set('presentation', $theme->toFlatArray());
 		}
 
 		// discounted pricing
 		$response->set('quantityPricing', $product->getPricingHandler()->getDiscountPrices($this->user, $this->getRequestCurrency()));
-
-		$this->product = $product;
+		$response->set('files', $this->getPublicFiles());
 
 		return $response;
+	}
+
+	public function priceBlock()
+	{
+		return new BlockResponse();
+	}
+
+	public function addToCartBlock()
+	{
+		return new BlockResponse();
+	}
+
+	public function optionsBlock()
+	{
+		$response = new BlockResponse();
+		$response->set('allOptions', $this->getOptions(true));
+		$response->set('options', $this->getOptions());
+		return $response;
+	}
+
+	public function variationsBlock()
+	{
+		return new BlockResponse('variations', $this->getVariations());
+	}
+
+	public function overviewBlock()
+	{
+		return new BlockResponse();
+	}
+
+	public function actionsBlock()
+	{
+		return new BlockResponse();
+	}
+
+	public function purchaseBlock()
+	{
+		return new BlockResponse();
+	}
+
+	public function imagesBlock()
+	{
+		return new BlockResponse();
+	}
+
+	public function summaryBlock()
+	{
+		return new BlockResponse();
+	}
+
+	public function mainInfoBlock()
+	{
+		return new BlockResponse();
+	}
+
+	public function ratingSummaryBlock()
+	{
+		return new BlockResponse();
+	}
+
+	public function attributeSummaryBlock()
+	{
+		return new BlockResponse();
+	}
+
+	public function purchaseVariationsBlock()
+	{
+		$variations = $this->getVariations();
+
+		$prefixes = $ids = array();
+		foreach ($variations['products'] as $product)
+		{
+			$prefixes[] = 'product_' . $product['ID'] . '_';
+			$ids[] = $product['ID'];
+		}
+
+		// load product instances
+		Product::getRecordSet(select(in('Product.ID', $ids)));
+		foreach ($variations['products'] as $product)
+		{
+			$quant = $this->getQuantities(Product::getInstanceByID($product['ID']));
+			$quant = array('' => '') + $quant;
+			$quantities[$product['ID']] = $quant;
+		}
+
+		$response = new BlockResponse('variations', $this->getVariations());
+		$response->set('cartForm', $this->buildAddToCartForm($this->getOptions(), array(), $prefixes));
+		$response->set('quantities', $quantities);
+		return $response;
+	}
+
+	private function getOptions($all = false)
+	{
+		if (!isset($this->allOptions))
+		{
+			$this->allOptions = $this->product->getOptionsArray();
+
+			$this->options = $this->allOptions;
+			foreach ($this->options as $key => $option)
+			{
+				if (!$option['isDisplayed'])
+				{
+					unset($this->options[$key]);
+				}
+			}
+		}
+
+		return $all ? $this->allOptions : $this->options;
+	}
+
+	public function getVariations()
+	{
+		// variations
+		if (!isset($this->variations))
+		{
+			$this->variations = $this->product->getVariationData($this->application);
+		}
+
+		return $this->variations;
+	}
+
+	public function publicFilesBlock()
+	{
+
 	}
 
 	public function rate()
@@ -371,31 +496,53 @@ class ProductController extends FrontendController
 		}
 	}
 
-	public function buildAddToCartValidator($options, $variations)
+	public function buildAddToCartValidator($options, $variations, $prefix = '')
 	{
 		$validator = $this->getValidator("addToCart", $this->getRequest());
 
+		$prefixes = (array)$prefix;
+
 		// option validation
-		foreach ($options as $option)
+		foreach ($prefixes as $prefix)
 		{
-			if ($option['isRequired'])
+			foreach ($options as $option)
 			{
-				$validator->addCheck('option_' . $option['ID'], new IsNotEmptyCheck($this->translate('_err_option_' . $option['type'])));
+				if ($option['isRequired'])
+				{
+					$optField = $prefix . 'option_' . $option['ID'];
+					$validator->addCheck($optField, new OrCheck(array($optField, $prefix . 'count'), array(new IsNotEmptyCheck($this->translate('_err_option_' . $option['type'])), new IsEmptyCheck('')), $this->request));
+					//$validator->addCheck($prefix . 'option_' . $option['ID'], new IsNotEmptyCheck($this->translate('_err_option_' . $option['type'])));
+				}
 			}
-		}
 
-		if (isset($variations['variations']))
-		{
-			foreach ($variations['variations'] as $variation)
+			if (isset($variations['variations']))
 			{
-				$validator->addCheck('variation_' . $variation['ID'], new IsNotEmptyCheck($this->translate('_err_option_0')));
+				foreach ($variations['variations'] as $variation)
+				{
+					$validator->addCheck($prefix . 'variation_' . $variation['ID'], new IsNotEmptyCheck($this->translate('_err_option_0')));
+				}
 			}
-		}
 
-		$validator->addCheck('count', new IsNumericCheck(''));
-		$validator->addFilter('count', new NumericFilter());
+			$validator->addCheck($prefix . 'count', new IsNumericCheck(''));
+			$validator->addFilter($prefix . 'count', new NumericFilter());
+		}
 
 		return $validator;
+	}
+
+	/**
+	 * Allowed shopping cart quantities
+	 */
+	private function getQuantities(Product $product)
+	{
+		$maxOrderable = $product->getMaxOrderableCount();
+		$maxQuant = $product->getMinimumQuantity() + (19 * $product->getQuantityStep());
+		$maxOrderable = is_null($maxOrderable) ? $maxQuant : min($maxQuant, $maxOrderable);
+
+		$fractionalStep = $this->product->getParentValue('fractionalStep');
+		$quantities = range($product->getMinimumQuantity(), $maxOrderable, max($fractionalStep, 1));
+
+		return array_combine($quantities, $quantities);
 	}
 
 	private function pullRatingDetailsForReviewArray(&$reviews)
@@ -426,11 +573,9 @@ class ProductController extends FrontendController
 	/**
 	 * @return Form
 	 */
-	private function buildAddToCartForm($options, $variations)
+	private function buildAddToCartForm($options, $variations, $prefix = '')
 	{
-		$form = new Form($this->buildAddToCartValidator($options, $variations));
-
-		return $form;
+		return new Form($this->buildAddToCartValidator($options, $variations, $prefix));
 	}
 
 	private function buildRatingForm($ratingTypes, Product $product)
@@ -569,6 +714,15 @@ class ProductController extends FrontendController
 		}
 
 		return $byGroup;
+	}
+
+	private function getPublicFiles()
+	{
+		$f = select(eq('ProductFile.isPublic', true));
+		$f->setOrder(f('ProductFileGroup.position'));
+		$f->setOrder(f('ProductFile.position'));
+
+		return ActiveRecordModel::getRecordSetArray('ProductFile', $f, array('ProductFileGroup'));
 	}
 
 	private function buildContactForm()

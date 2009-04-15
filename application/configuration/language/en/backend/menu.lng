@@ -24,6 +24,7 @@ _menu_customize=Customize
 _menu_customization_mode=Live Customization
 _menu_edit_templates=Edit Templates
 _menu_email_templates=Edit E-mail Templates
+_menu_theme=Manage Design Themes
 _menu_css_edit=Edit CSS Stylesheets
 
 _menu_tools=Tools
@@ -55,6 +56,7 @@ _menu_descr_customization_mode=Real-time, point-and-click CSS, template and tran
 _menu_descr_edit_templates=Modify store page templates
 _menu_descr_email_templates=Modify e-mail message templates
 _menu_descr_css_edit=Define custom CSS rules to override base style
+_menu_descr_theme=Create new themes and basic theme customization tools
 
 _menu_descr_tools=Various handy tools to help manage your store
 _menu_descr_import_csv=Import products and categories from a CSV file

@@ -31,20 +31,27 @@
 		<fieldset>
 			<legend>{t _presentation}</legend>
 
+			<p>
+				<label></label>
+				{checkbox name="isSubcategories" class="checkbox" id="isSubcategories_`$categoryId`"}
+				<label class="checkbox" for="isSubcategories_{$categoryId}">{t _theme_subcategories}</label>
+			</p>
+
+			<p>
+				<label></label>
+				{checkbox name="isAllVariations" class="checkbox" id="product_`$categoryId`_isAllVariations"}
+				<label for="product_{$categoryId}_isAllVariations" class="checkbox">{t _allow_all_variations}</label>
+			</p>
+
 			<div style="float: left; width: 550px;">
 				<p>
 					<label for="theme_{$categoryId}">{t _theme}:</label>
 					{selectfield name="theme" id="theme_`$categoryId`" options=$themes}
 				</p>
-
-				<p>
-					<label></label>
-					{checkbox name="isSubcategories" class="checkbox" id="isSubcategories_`$categoryId`"}
-					<label class="checkbox" for="isSubcategories_{$categoryId}">{t _theme_subcategories}</label>
-				</p>
 			</div>
 
 			<div style="float: left;" id="categoryThemePreview_{$categoryId}"></div>
+
 		</fieldset>
 
 		{block FORM-CATEGORY-BOTTOM}

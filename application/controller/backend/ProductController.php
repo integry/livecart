@@ -252,8 +252,8 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		// remove design themes
 		if (('theme' == $act) && !$this->request->get('theme'))
 		{
-			ClassLoader::import('application.model.presentation.ProductPresentation');
-			ActiveRecord::deleteRecordSet('ProductPresentation', new ARDeleteFilter($filter->getCondition()), null, array('Product', 'Category'));
+			ClassLoader::import('application.model.presentation.CategoryPresentation');
+			ActiveRecord::deleteRecordSet('CategoryPresentation', new ARDeleteFilter($filter->getCondition()), null, array('Product', 'Category'));
 
 			return new JSONResponse(array('act' => $this->request->get('act')), 'success', $this->translate('_themes_removed'));
 		}
@@ -283,7 +283,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		}
 		else if ('theme' == $act)
 		{
-			ClassLoader::import('application.model.presentation.ProductPresentation');
+			ClassLoader::import('application.model.presentation.CategoryPresentation');
 			$params['theme'] = $this->request->get('theme');
 		}
 
@@ -545,7 +545,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	public function basicData()
 	{
 		ClassLoader::import('application.LiveCartRenderer');
-		ClassLoader::import('application.model.presentation.ProductPresentation');
+		ClassLoader::import('application.model.presentation.CategoryPresentation');
 
 		$product = Product::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
 		$product->loadSpecification();
@@ -554,10 +554,10 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$response->set('counters', $this->countTabsItems()->getData());
 		$response->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
 
-		$set = $product->getRelatedRecordSet('ProductPresentation', new ARSelectFilter());
+		$set = $product->getRelatedRecordSet('CategoryPresentation', new ARSelectFilter());
 		if ($set->size())
 		{
-			$response->get('productForm')->set('theme', $set->get(0)->getTheme());
+			$response->get('productForm')->setData($set->get(0)->toArray());
 		}
 
 		return $response;
@@ -656,7 +656,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	private function save(Product $product)
 	{
-		ClassLoader::import('application.model.presentation.ProductPresentation');
+		ClassLoader::import('application.model.presentation.CategoryPresentation');
 		$validator = $this->buildValidator($product);
 		if ($validator->isValid())
 		{
@@ -666,13 +666,9 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			// presentation
 			if ($theme = $this->request->get('theme'))
 			{
-				$instance = ProductPresentation::getInstance($product);
+				$instance = CategoryPresentation::getInstance($product);
 				$instance->loadRequestData($this->request);
 				$instance->save();
-			}
-			else
-			{
-				ActiveRecord::deleteByID('ProductPresentation', $product->getID());
 			}
 
 			$response = $this->productForm($product);

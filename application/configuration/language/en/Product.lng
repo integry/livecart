@@ -55,3 +55,6 @@ _inquiry_name=Your name
 _inquiry_email=Your e-mail address
 _inquiry_msg=Your message
 _inquiry_form_sent=Your inquiry was received and we will get back to you as soon as possible.
+
+# files
+_preview_files=Preview Files

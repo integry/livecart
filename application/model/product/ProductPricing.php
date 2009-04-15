@@ -196,8 +196,6 @@ class ProductPricing
 				$calculated[$id] += $parentPrice * (($setting != Product::CHILD_ADD) ? 1 : -1);
 			}
 
-			//$calculated[$id] = $currency->roundPrice($calculated[$id]);
-
 			if ((float)$calculated[$id] || !$listPrice)
 			{
 				$formattedPrice[$id] = $currency->getFormattedPrice($calculated[$id]);

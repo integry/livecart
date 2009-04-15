@@ -58,14 +58,14 @@ _units_g=g
 _units_ounces=ounces
 _units_pounds=pounds
 
-_deselect_all=Deselect All
-_select_all=Select All
 _enable=Enable
 _disable=Disable
 _delete=Delete
 _columns=Columns
 
 _translate_to=Translate to
+
+_allow_all_variations=Allow purchasing multiple variations from product page
 
 #################################################
 # Addresses                                     #

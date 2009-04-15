@@ -10,6 +10,7 @@
 
 <div{if $option.isRequired} class="required"{/if} class="productOption">
 	{if $option.fieldName}{assign var=fieldName value=$option.fieldName}{else}{assign var=fieldName value="option_`$option.ID`"}{/if}
+	{assign var=fieldName value="`$optionPrefix``$fieldName`"}
 	{if 0 == $option.type}
 		{{err for="`$fieldName`"}}
 			{checkbox class="checkbox"}

@@ -949,6 +949,19 @@ class Product extends MultilingualObject
 		return $parent->category->get();
 	}
 
+	public function getParentValue($field)
+	{
+		foreach (array($this, $this->parent->get()) as $rec)
+		{
+			if ($rec && $rec->$field->get())
+			{
+				return $rec->$field->get();
+			}
+		}
+
+		return $this->$field->get();
+	}
+
 	public function getName($languageCode)
 	{
 		$parent = $this->getParent();

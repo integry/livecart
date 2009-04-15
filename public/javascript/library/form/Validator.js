@@ -89,7 +89,6 @@ function trim(strValue)
   	return strValue;
 }
 
-
 function IsNotEmptyCheck(element, params)
 {
 	// radio buttons
@@ -113,6 +112,11 @@ function IsNotEmptyCheck(element, params)
 
 		return (element.value.length > 0);
 	}
+}
+
+function IsEmptyCheck(element, params)
+{
+	return !IsNotEmptyCheck(element, params);
 }
 
 function MinLengthCheck(element, params)

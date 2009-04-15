@@ -108,6 +108,8 @@ _product_file_group_title=Title
 _add_new_file_group_title=Add New File Group
 _add_new_file_group=Add new file group
 _product_file_max_size=Max file size: [_1]
+_productFile_isPublic=Public file (downloadable without purchasing)
+_productFile_embedded=Embed media file in page (supported formats: [_1])
 
 # Product relationship
 _product_relationship_group_title=Title

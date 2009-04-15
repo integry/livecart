@@ -1174,6 +1174,22 @@ table.quantityPrice
 	border-width: 1px;
 }
 
+.purchaseVariations
+{
+	padding: 0.5em;
+	display: block;
+}
+
+.purchaseVariations .cartLinks
+{
+	padding: 1em 0;
+}
+
+.purchaseVariations .productOption
+{
+	margin: 5px 0;
+}
+
 #productSpecification td
 {
     padding: 5px 10px;

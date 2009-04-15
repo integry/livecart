@@ -30,10 +30,12 @@ class ProductSet extends ARSet
 
 	public function getVariationMatrix()
 	{
-		$ids = array();
+		$ids = $prices = array();
 		foreach ($this as $record)
 		{
-			$ids[] = $record->parent->get() ? $record->parent->get()->getID() : $record->getID();
+			$id = $record->getParent()->getID();
+			$ids[] = $id;
+			$prices[$id] = $record->getParent()->getPricingHandler()->toArray();
 		}
 
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('Product', 'parentID'), $ids));
@@ -46,10 +48,40 @@ class ProductSet extends ARSet
 		ProductPrice::loadPricesForRecordSetArray($children);
 
 		$ids = array();
-		foreach ($children as $child)
+		foreach ($children as &$child)
 		{
 			$ids[] = $child['ID'];
-			$products[$child['ID']] = $child;
+			$products[$child['ID']] =& $child;
+		}
+
+		// calculate final children prices
+		foreach ($children as &$child)
+		{
+			$setting = $child['childSettings']['price'];
+			$child['finalPrice'] = $child['finalFormattedPrice'] = array();
+			$parent = $prices[$child['parentID']];
+			foreach ($parent['calculated'] as $id => $price)
+			{
+				$currency = Currency::getInstanceByID($id);
+				$priceField = 'price_' . $id;
+				if ($parent && (($setting !== Product::CHILD_OVERRIDE) || !isset($child[$priceField])))
+				{
+					if (!isset($child[$priceField]))
+					{
+						$child[$priceField] = 0;
+					}
+
+					$parentPrice = $parent['calculated'][$id];
+					$child['finalPrice'][$id] = $child[$priceField] + ($parentPrice * (($setting != Product::CHILD_ADD) ? 1 : -1));
+				}
+				else
+				{
+					$child['finalPrice'][$id] = $child[$priceField];
+				}
+
+				$child['finalPrice'][$id] = $currency->roundPrice($child['finalPrice'][$id]);
+				$child['finalFormattedPrice'][$id] = $currency->getFormattedPrice($child['finalPrice'][$id]);
+			}
 		}
 
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductVariationValue', 'productID'), $ids));
@@ -98,6 +130,8 @@ class ProductSet extends ARSet
 
 		foreach ($variations['products'] as $parentID => $products)
 		{
+			$variations['options'][$parentID] = array();
+
 			// filter out unavailable products
 			foreach ($variations['products'][$parentID] as $key => &$product)
 			{
@@ -130,6 +164,14 @@ class ProductSet extends ARSet
 						$type['selectOptions'][$var['ID']] = $var['name_lang'];
 					}
 				}
+
+				$variations['options'][$parentID] = $variations['options'][$parentID] + $type['selectOptions'];
+			}
+
+			// set used variation names
+			foreach ($variations['products'][$parentID] as $key => &$product)
+			{
+				$product['variationNames'] = array_intersect_key($variations['options'][$parentID], array_flip(explode('-', $key)));
 			}
 		}
 

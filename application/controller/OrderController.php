@@ -359,7 +359,60 @@ class OrderController extends FrontendController
 			return new RawResponse();
 		}
 
-		$product = Product::getInstanceByID($this->request->get('id'), true, array('Category'));
+		ActiveRecordModel::beginTransaction();
+
+		if ($id = $this->request->get('id'))
+		{
+			$res = $this->addProductToCart($id);
+
+			if ($res instanceof ActionRedirectResponse)
+			{
+				return $res;
+			}
+
+			$this->setMessage($this->makeText('_added_to_cart', array(Product::getInstanceByID($id)->getName($this->getRequestLanguage()))));
+		}
+
+		if ($ids = $this->request->get('productIDs'))
+		{
+			$added = false;
+			foreach ($ids as $id)
+			{
+				$res = $this->addProductToCart($id, 'product_' . $id . '_');
+
+				if ($res instanceof ActionRedirectResponse)
+				{
+					return $res;
+				}
+
+				if ($res)
+				{
+					$added = true;
+				}
+			}
+
+			if ($added)
+			{
+				$this->setMessage($this->translate('_selected_to_cart'));
+			}
+		}
+
+		$this->order->mergeItems();
+		SessionOrder::save($this->order);
+
+		ActiveRecordModel::commit();
+
+		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
+	}
+
+	private function addProductToCart($id, $prefix = '')
+	{
+		if ($prefix && !$this->request->get($prefix . 'count'))
+		{
+			return '"';
+		}
+
+		$product = Product::getInstanceByID($id, true, array('Category'));
 
 		$productRedirect = new ActionRedirectResponse('product', 'index', array('id' => $product->getID(), 'query' => 'return=' . $this->request->get('return')));
 		if (!$product->isAvailable())
@@ -369,9 +422,10 @@ class OrderController extends FrontendController
 			return $productRedirect;
 		}
 
-		$variations = $product->getVariationData($this->application);
+		$variations = !$product->parent->get() ? $product->getVariationData($this->application) : array();
+
 		ClassLoader::import('application.controller.ProductController');
-		if (!ProductController::buildAddToCartValidator($product->getOptions(true)->toArray(), $variations)->isValid())
+		if (!ProductController::buildAddToCartValidator($product->getOptions(true)->toArray(), $variations, $prefix)->isValid())
 		{
 			return $productRedirect;
 		}
@@ -382,20 +436,18 @@ class OrderController extends FrontendController
 			$product = $this->getVariationFromRequest($variations);
 		}
 
-		ActiveRecordModel::beginTransaction();
-
-		$count = $this->request->get('count', 1);
+		$count = $this->request->get($prefix . 'count', 1);
 		if ($count < $product->getMinimumQuantity())
 		{
 			$count = $product->getMinimumQuantity();
 		}
-		$item = $this->order->addProduct($product, $count);
 
+		$item = $this->order->addProduct($product, $count);
 		if ($item instanceof OrderedItem)
 		{
 			foreach ($product->getOptions(true) as $option)
 			{
-				$this->modifyItemOption($item, $option, $this->request, 'option_' . $option->getID());
+				$this->modifyItemOption($item, $option, $this->request, $prefix . 'option_' . $option->getID());
 			}
 
 			if ($this->order->isMultiAddress->get())
@@ -403,15 +455,6 @@ class OrderController extends FrontendController
 				$item->save();
 			}
 		}
-
-		$this->order->mergeItems();
-		SessionOrder::save($this->order);
-
-		ActiveRecordModel::commit();
-
-		$this->setMessage($this->makeText('_added_to_cart', array($product->getName($this->getRequestLanguage()))));
-
-		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
 
 	public function moveToCart()

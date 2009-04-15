@@ -49,7 +49,7 @@ class CategoryController extends StoreManagementController
 		$set = $category->getRelatedRecordSet('CategoryPresentation', new ARSelectFilter());
 		if ($set->size())
 		{
-			$form->set('theme', $set->get(0)->getTheme());
+			$form->setData($set->get(0)->toFlatArray());
 		}
 
 		$response->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));

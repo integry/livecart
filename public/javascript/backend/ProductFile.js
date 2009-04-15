@@ -204,6 +204,8 @@ Backend.ProductFile.Controller.prototype = {
 		this.view.assign('isNew', this.model.isNew);
 		this.view.assign('fileName', this.model.get('fileName'));
 		this.view.assign('extension', this.model.get('extension'));
+		this.view.assign('isEmbedded', this.model.get('isEmbedded'));
+		this.view.assign('isPublic', this.model.get('isPublic'));
 
 		this.view.setDefaultLanguageValues();
 	},
@@ -344,6 +346,8 @@ Backend.ProductFile.View.methods =
 		this.nodes.allowDownloadDays = this.nodes.root.down('.' + this.prefix + 'allowDownloadDays');
 		this.nodes.filePath = this.nodes.root.down('.' + this.prefix + 'filePath');
 		this.nodes.uploadFile = this.nodes.root.down('.' + this.prefix + 'uploadFile');
+		this.nodes.isEmbedded = this.nodes.root.down('.' + this.prefix + 'isEmbedded');
+		this.nodes.isPublic = this.nodes.root.down('.' + this.prefix + 'isPublic');
 
 		this.nodes.extension = this.nodes.root.down('.' + this.prefix + 'extension');
 
@@ -358,6 +362,12 @@ Backend.ProductFile.View.methods =
 		this.nodes.downloadLink = this.nodes.root.down('.' + this.prefix + 'download_link');
 
 		this.nodes.newFileCancelLink = $(this.prefix + 'new_' + productID + '_cancel');
+
+		['isEmbedded', 'isPublic'].each(function(f)
+		{
+			this.nodes[f].id = this.nodes[f].className + '_' + Math.random();
+			this.nodes[f].parentNode.down('label').setAttribute('for', this.nodes[f].id);
+		}.bind(this));
 
 		new Backend.LanguageForm(root);
 	},
@@ -409,6 +419,8 @@ Backend.ProductFile.View.methods =
 		this.nodes.title.value = this.get('title', '');
 
 		this.nodes.allowDownloadDays.value = this.get('allowDownloadDays', 0);
+		this.nodes.isEmbedded.checked = this.get('isEmbedded', 0) == "1";
+		this.nodes.isPublic.checked = this.get('isPublic', 0) == "1";
 
 		this.nodes.form.action += "/" + this.get('ID', '');
 

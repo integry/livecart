@@ -29,6 +29,7 @@ _order_auto_changes_single_out=[_1] is currently out of stock and has been moved
 _order_auto_changes_single_in=[_1] is back in stock and has been moved to shopping basket
 _order_auto_changes_single_count=[_1] is low on stock and the order quantity has been adjusted from [_2] to [_3]
 _order_quantity_change=from [_1] to [_2]
+_selected_to_cart=Selected products have been added to cart
 
 _applied_coupons=Currently applied coupon(s)
 _have_coupon=Have a discount coupon? Enter coupon code

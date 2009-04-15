@@ -24,6 +24,8 @@
 			{include file="product/bundle.tpl"}
 		{/if}
 
+		{include file="product/files.tpl"}
+
 		{include file="product/details.tpl"}
 
 		{if 'PRODUCT_INQUIRY_FORM'|config}

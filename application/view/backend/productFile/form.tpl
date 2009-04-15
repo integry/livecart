@@ -65,6 +65,18 @@
 					<span class="errorText hidden"> </span>
 				</fieldset>
 			</p>
+
+			<p>
+				<label></label>
+				<input type="checkbox" name="isPublic" class="checkbox productFile_isPublic" {denied role="product.update"}readonly="readonly"{/denied} />
+				<label class="checkbox">{t _productFile_isPublic}</label>
+			</p>
+
+			<p>
+				<label></label>
+				<input type="checkbox" name="isEmbedded" class="checkbox productFile_isEmbedded" {denied role="product.update"}readonly="readonly"{/denied} />
+				<label class="checkbox">{maketext text=_productFile_embedded params="FLV; SWF"}</label>
+			</p>
 		</fieldset>
 
 			<!-- STEP 3 -->

@@ -99,6 +99,8 @@ class ProductFileController extends StoreManagementController
 	   		}
 
 	   		$productFile->allowDownloadDays->set((int)$this->request->get('allowDownloadDays'));
+	   		$productFile->isEmbedded->set($this->request->get('isEmbedded') != false);
+	   		$productFile->isPublic->set($this->request->get('isPublic') != false);
 
 	   		$productFile->save();
 			$response->set('status', 'success');
