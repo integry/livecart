@@ -1,6 +1,8 @@
 /cache
+/module
 /public/cache
 public/upload
+/public/module
 /storage
 /test/report
 doc/db/alter.sql
