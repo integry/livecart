@@ -12,6 +12,10 @@ class LiveCartRouter extends Router
 {
 	private $langReplaces = array();
 
+	private $langFields = array();
+
+	private $langIDs = array();
+
 	public function createUrlFromRoute($route, $isXHtml = false)
 	{
 		preg_match('/^([a-z]{2})\//', $route, $match);
@@ -35,7 +39,31 @@ class LiveCartRouter extends Router
 
 	public function setLangReplace($value, $field, $record)
 	{
-		$this->langReplaces[$value] = array('field' => $field, 'record' => $record);
+		$this->langReplaces[$value] = array('field' => $field, 'record' => array_intersect_key($record, $this->getLangFields($field)));
+	}
+
+	private function getLanguageIDs()
+	{
+		if (!$this->langIDs)
+		{
+			$this->langIDs = ActiveRecordModel::getApplication()->getLanguageArray(true);
+		}
+
+		return $this->langIDs;
+	}
+
+	private function getLangFields($field)
+	{
+		if (!isset($this->langFields[$field]))
+		{
+			$this->langFields[$field] = array();
+			foreach ($this->getLanguageIDs() as $id)
+			{
+				$this->langFields[$field][$field . '_' . $id] = true;
+			}
+		}
+
+		return $this->langFields[$field];
 	}
 }
 

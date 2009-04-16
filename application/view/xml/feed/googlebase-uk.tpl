@@ -1,0 +1,1 @@
+{include file="xml/feed/googlebase.tpl" priceCurrency="price_GBP"}

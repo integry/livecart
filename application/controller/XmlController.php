@@ -39,6 +39,8 @@ class XmlController extends FrontendController
 		$filter->includeSubCategories();
 
 		$feed = new ProductFeed($filter);
+		$feed->setFlush();
+
 		$response = new XMLResponse();
 		$response->set('feed', $feed);
 		$response->set('tpl', 'xml/feed/' . $this->request->get('module') . '.tpl');

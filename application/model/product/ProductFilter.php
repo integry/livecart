@@ -25,7 +25,8 @@ class ProductFilter
 	{
 		$this->category = $category;
 		$this->productFilter = $filter;
-		$this->selectFilter = $this->category->getProductFilter($filter);
+		$this->selectFilter = $filter;
+		$this->selectFilter = $this->category->getProductsFilter($this);
 	}
 
 	/**
@@ -51,7 +52,11 @@ class ProductFilter
 	public function getSelectFilter()
 	{
 		$selectFilter = new ARSelectFilter();
-		$selectFilter->merge($this->selectFilter);
+
+		if ($this->selectFilter)
+		{
+			$selectFilter->merge($this->selectFilter);
+		}
 
 		$cond = $selectFilter->getCondition();
 
@@ -105,6 +110,7 @@ class ProductFilter
 	public function includeSubcategories()
 	{
 		$this->includeSubcategories = true;
+		$this->selectFilter->removeCondition();
 		$this->selectFilter = $this->category->getProductsFilter($this);
 	}
 
