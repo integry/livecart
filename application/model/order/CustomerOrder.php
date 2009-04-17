@@ -1103,6 +1103,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		return $this->getTaxes();
 	}
 
+	public function getTaxBreakdown()
+	{
+		$this->getTaxes();
+		return $this->taxes;
+	}
+
 	public function isProcessing()
 	{
 		return $this->status->get() == self::STATUS_PROCESSING;

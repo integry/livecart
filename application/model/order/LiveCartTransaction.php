@@ -70,6 +70,31 @@ class LiveCartTransaction extends TransactionDetails
 			$this->email->set($order->user->get()->email->get());
 			$this->clientID->set($order->user->get()->getID());
 		}
+
+		// order details
+		foreach ($order->getShoppingCartItems() as $item)
+		{
+			$this->addLineItem($item->product->get()->getName(), $item->getPrice(false), $item->count->get(), $item->product->get()->sku->get());
+		}
+
+		foreach ($order->getShipments() as $shipment)
+		{
+			if ($rate = $shipment->getSelectedRate())
+			{
+				$rate = $rate->toArray();
+				$name = empty($rate['ShippingService']['name_lang']) ? $rate['serviceName'] : $rate['ShippingService']['name_lang'];
+				$this->addLineItem($name, $shipment->getShippingTotalBeforeTax(), 1, 'shipping');
+			}
+		}
+
+		if ($taxes = $order->getTaxBreakdown())
+		{
+			foreach ($taxes as $id => $amount)
+			{
+				$tax = Tax::getInstanceById($id, true);
+				$this->addLineItem($tax->getValueByLang('name', null), $amount, 1, 'tax');
+			}
+		}
 	}
 
 	public function getOrder()

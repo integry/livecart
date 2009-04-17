@@ -100,16 +100,9 @@ class CategoryController extends StoreManagementController
 			$categoryNode->save();
 
 			// presentation
-			if ($theme = $this->request->get('theme'))
-			{
-				$instance = CategoryPresentation::getInstance($categoryNode);
-				$instance->loadRequestData($this->request);
-				$instance->save();
-			}
-			else
-			{
-				ActiveRecord::deleteByID('CategoryPresentation', $categoryNode->getID());
-			}
+			$instance = CategoryPresentation::getInstance($categoryNode);
+			$instance->loadRequestData($this->request);
+			$instance->save();
 
 			return new JSONResponse($categoryNode->toFlatArray(), 'success', $this->translate('_category_succsessfully_saved'));
 		}

@@ -5,47 +5,49 @@ include_once('TransactionValueMapper.php');
 /**
  *
  * @package library.payment
- * @author Integry Systems 
+ * @author Integry Systems
  */
 class TransactionDetails
 {
+	protected $lineItems = array();
+
 	protected $data = array(
-		
+
 		// billing address data
 		'firstName' => null,
 		'lastName' => null,
 		'companyName' => null,
-		
+
 		'address' => null,
 		'city' => null,
 		'state' => null,
-		'country' => null,	
+		'country' => null,
 		'postalCode' => null,
-	
+
 		'phone' => null,
-		'email' => null,	
-		
+		'email' => null,
+
 		// shipping address data
 		'shippingFirstName' => null,
 		'shippingLastName' => null,
 		'shippingCompanyName' => null,
-		
+
 		'shippingAddress' => null,
 		'shippingCity' => null,
 		'shippingState' => null,
-		'shippingCountry' => null,	
+		'shippingCountry' => null,
 		'shippingPostalCode' => null,
-	
+
 		'shippingPhone' => null,
-		'shippingEmail' => null,	
-		
+		'shippingEmail' => null,
+
 		// customer data
 		'clientID' => null,
-		'ipAddress' => null,	
-		
+		'ipAddress' => null,
+
 		// merchant transaction data
-		'invoiceID' => null,	
-		
+		'invoiceID' => null,
+
 		// transaction data
 		'isCompleted' => null,
 		'amount' => null,
@@ -54,7 +56,7 @@ class TransactionDetails
 
 		'gatewayTransactionID' => null,
 	);
-	
+
 	public function __construct()
 	{
 		foreach ($this->data as $key => $value)
@@ -63,7 +65,7 @@ class TransactionDetails
 			$this->$key = $this->data[$key];
 		}
 	}
-	
+
 	public function get($key)
 	{
 		if (isset($this->data[$key]))
@@ -71,15 +73,25 @@ class TransactionDetails
 			return $this->data[$key]->get();
 		}
 	}
-	
+
 	public function getData()
 	{
 		return $this->data;
 	}
-	
+
 	public function getName()
 	{
 		return $this->firstName->get() . ' ' . $this->lastName->get();
+	}
+
+	public function addLineItem($name, $itemPrice, $quantity, $sku)
+	{
+		$this->lineItems[] = array('name' => $name, 'price' => $itemPrice, 'quantity' => $quantity, 'sku' => $sku);
+	}
+
+	public function getLineItems()
+	{
+		return $this->lineItems;
 	}
 }
 

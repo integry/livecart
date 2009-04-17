@@ -962,7 +962,7 @@ class Product extends MultilingualObject
 		return $this->$field->get();
 	}
 
-	public function getName($languageCode)
+	public function getName($languageCode = null)
 	{
 		$parent = $this->getParent();
 		$parent->load();
