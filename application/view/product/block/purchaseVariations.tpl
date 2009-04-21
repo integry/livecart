@@ -1,14 +1,28 @@
+{if $samePrice}
+	<p>
+		<label>{t _price}</label>
+		<span class="price">{$product.formattedPrice.$currency}</span>
+	</p>
+
+	{if $quantityPricing}
+		{include file="product/block/quantityPrice.tpl"}
+	{/if}
+{/if}
+
 {assign var="parentProduct" value=$product}
 {form action="controller=order action=addToCart" handle=$cartForm method="POST" class="purchaseVariations"}
 	{foreach $variations.products as $product}
 		<h3>{$product.variationNames|@implode:' / '}</h3>
-		<p>
-			<label>{t _price}</label>
-			<span class="price">{$product.finalFormattedPrice.$currency}</span>
-		</p>
 
-		{if $quantityPricing}
-			{include file="product/block/quantityPrice.tpl"}
+		{if !$samePrice}
+			<p>
+				<label>{t _price}</label>
+				<span class="price">{$product.finalFormattedPrice.$currency}</span>
+			</p>
+
+			{if $quantityPricing}
+				{include file="product/block/quantityPrice.tpl"}
+			{/if}
 		{/if}
 
 		<p>

@@ -622,6 +622,42 @@ class DiscountConditionTest extends LiveCartTest
 		$condition->save();
 		$this->assertEquals(0, count($reloaded->getDiscountConditions(true)));
 	}
+
+	public function testSumVariationQuantityDiscounts()
+	{
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->save();
+
+		$action = DiscountAction::getNewInstance($condition);
+		$action->actionType->set(DiscountAction::ACTION_SUM_VARIATIONS);
+		$action->isEnabled->set(false);
+		$action->save();
+
+		$price = $this->product1->getPricingHandler()->getPrice($this->usd);
+		$price->setPriceRule(3, null, 5);
+		$price->save();
+
+		$children = array();
+		for ($k = 0; $k <= 1; $k++)
+		{
+			$child = $this->product1->createChildProduct();
+			$child->save();
+			$children[] = $child;
+
+			$this->order->addProduct($child, 2, true);
+		}
+
+		$this->order->save();
+		$this->assertEquals(40, $this->order->getTotal());
+
+		$action->isEnabled->set(true);
+		$action->save();
+
+		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
+		$this->assertEquals(1, count($this->order->getDiscountActions(true)));
+		$this->assertEquals(20, $this->order->getTotal());
+	}
 }
 
 ?>

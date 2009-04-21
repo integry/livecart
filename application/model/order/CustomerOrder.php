@@ -12,6 +12,7 @@ ClassLoader::import("application.model.delivery.ShipmentDeliveryRate");
 ClassLoader::import("application.model.eav.EavAble");
 ClassLoader::import("application.model.eav.EavObject");
 ClassLoader::import("application.model.order.Transaction");
+ClassLoader::import("application.model.discount.DiscountActionSet");
 
 /**
  * Represents customers order - products placed in shopping basket or wish list
@@ -1054,13 +1055,13 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 	public function getItemDiscountActions(OrderedItem $item)
 	{
-		$actions = array();
+		$actions = new DiscountActionSet();
 
 		foreach ($this->getDiscountActions() as $action)
 		{
 			if ($action->isItemDiscount() && $action->isItemApplicable($item))
 			{
-				$actions[] = $action;
+				$actions->add($action);
 			}
 		}
 
@@ -1768,6 +1769,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		ClassLoader::import('application.model.discount.DiscountCondition');
 		return DiscountCondition::getOrderDiscountConditions($this);
+	}
+
+	public function isDiscountActionsLoaded()
+	{
+		return !is_null($this->discountActions);
 	}
 
 	public function getDiscountActions($reload = false)

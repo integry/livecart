@@ -80,6 +80,7 @@ _fixed_amount_discount=Apply fixed amount discount
 _percentage_surcharge=Add percentage surcharge
 _fixed_amount_surcharge=Add fixed amount surcharge
 _type_disable_checkout=Disable checkout
+_type_sum_variations=Sum product variations towards quantity discounts
 
 _apply_order=Whole order
 _apply_matched_items=Matched items only

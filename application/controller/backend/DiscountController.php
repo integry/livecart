@@ -65,6 +65,7 @@ class DiscountController extends ActiveGridController
 						DiscountAction::ACTION_SURCHARGE_PERCENT => $this->translate('_percentage_surcharge'),
 						DiscountAction::ACTION_SURCHARGE_AMOUNT => $this->translate('_fixed_amount_surcharge'),
 						DiscountAction::ACTION_DISABLE_CHECKOUT => $this->translate('_type_disable_checkout'),
+						DiscountAction::ACTION_SUM_VARIATIONS => $this->translate('_type_sum_variations'),
 					  ));
 
 		$response->set('applyToChoices', array(

@@ -2,6 +2,7 @@
 
 ClassLoader::import('application.model.ActiveRecordModel');
 ClassLoader::import('application.model.discount.DiscountCondition');
+ClassLoader::import('application.model.discount.DiscountActionSet');
 ClassLoader::import('application.model.order.OrderDiscount');
 
 class DiscountAction extends ActiveRecordModel
@@ -15,6 +16,7 @@ class DiscountAction extends ActiveRecordModel
 	const ACTION_DISABLE_CHECKOUT = 2;
 	const ACTION_SURCHARGE_PERCENT = 3;
 	const ACTION_SURCHARGE_AMOUNT = 4;
+	const ACTION_SUM_VARIATIONS = 5;
 
 	/**
 	 * Action for discount condition (define the actual discount)
@@ -102,7 +104,8 @@ class DiscountAction extends ActiveRecordModel
 
 	public function isItemDiscount()
 	{
-		return (self::TYPE_ITEM_DISCOUNT == $this->type->get()) || (self::ACTION_PERCENT == $this->actionType->get()) || (self::ACTION_SURCHARGE_PERCENT == $this->actionType->get());
+		return (self::TYPE_ITEM_DISCOUNT == $this->type->get()) ||
+				in_array($this->actionType->get(), array(self::ACTION_SUM_VARIATIONS, self::ACTION_PERCENT, self::ACTION_SURCHARGE_PERCENT));
 	}
 
 	public function isFixedAmount()

@@ -182,6 +182,24 @@ class ProductPrice extends ActiveRecordModel
 		$cnt = count($quantities);
 		$itemCnt = $item->count->get();
 
+		// include other variations of the same product?
+		if ($parent = $item->product->get()->parent->get())
+		{
+			$order = $item->customerOrder->get();
+			if ($order->isDiscountActionsLoaded() && $order->getItemDiscountActions($item)->getActionsByType(DiscountAction::ACTION_SUM_VARIATIONS)->size())
+			{
+				$itemCnt = 0;
+				foreach ($order->getShoppingCartItems() as $orderItem)
+				{
+					$orderProduct = $orderItem->product->get();
+					if ($orderProduct->parent->get() == $parent)
+					{
+						$itemCnt += $orderItem->count->get();
+					}
+				}
+			}
+		}
+
 		for ($k = 0; $k < $cnt; $k++)
 		{
 			if ($quantities[$k] <= $itemCnt && (($k == $cnt - 1) || ($quantities[$k + 1] > $itemCnt)))
