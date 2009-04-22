@@ -26,7 +26,11 @@ class Config
 		$filePath = $this->getFilePath();
 		if (file_exists($filePath))
 		{
-			include $filePath;
+			if (!include $filePath)
+			{
+				die('Cannot read configuration file');
+			}
+
 			$this->values = $config;
 		}
 

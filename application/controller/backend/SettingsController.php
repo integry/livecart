@@ -77,6 +77,7 @@ class SettingsController extends StoreManagementController
 		$response->set('values', $values);
 		$response->set('types', $types);
 		$response->set('id', $sectionId);
+		$response->set('sectionKey', array_pop(explode('.', $sectionId)));
 		$response->set('layout', $this->config->getSectionLayout($sectionId));
 		$response->set('multiLingualValues', $multiLingualValues);
 		return $response;

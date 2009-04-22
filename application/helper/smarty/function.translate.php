@@ -14,8 +14,19 @@ function smarty_function_translate($params, LiveCartSmarty $smarty)
 {
 	$application = $smarty->getApplication();
 
-	$translation = $application->translate(trim($params['text']));
+	$key = trim($params['text']);
+	$translation = $application->translate($key);
 	$translation = preg_replace('/%([a-zA-Z]*)/e', 'smarty_replace_translation_var(\'\\1\', $smarty)', $translation);
+
+	if (!empty($params['noDefault']) && ($translation == $key))
+	{
+		return '';
+	}
+
+	if (!empty($params['eval']))
+	{
+		$translation = $smarty->evalTpl($translation);
+	}
 
 	if ($application->isTranslationMode() && !isset($params['disableLiveTranslation']) && !$application->isBackend())
 	{
@@ -24,7 +35,6 @@ function smarty_function_translate($params, LiveCartSmarty $smarty)
 		$translation = '<span class="transMode __trans_' . $params['text'].' '. $file .'">'.$translation.'</span>';
 	}
 
-//	return '<span style="color: red; font-weight: bold; display: none;">' . $translation . '</span>';
 	return $translation;
 }
 
