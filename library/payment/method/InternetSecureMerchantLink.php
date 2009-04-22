@@ -13,7 +13,7 @@ class InternetSecureMerchantLink extends ExternalPayment
 	{
 		$params = array();
 
-		// your 2checkout vendor account number.
+		// vendor account number.
 		$params['GatewayID'] = $this->getConfigValue('account');
 
 		// a unique order id from your program. (128 characters max)
@@ -39,7 +39,7 @@ class InternetSecureMerchantLink extends ExternalPayment
 		$flags = '';
 		if ($this->getConfigValue('test'))
 		{
-			$flags .= '{TEST}{TESTD}';
+			$flags .= '{TEST}';
 		}
 
 		if ('USD' == $this->details->currency->get())

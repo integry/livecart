@@ -84,6 +84,11 @@ abstract class ExternalPayment extends OnlinePayment
 	{
 		return array();
 	}
+
+	protected function saveDebug($array)
+	{
+		file_put_contents('/tmp/' . get_class($this) . '.php', var_export($array, true));
+	}
 }
 
 ?>
