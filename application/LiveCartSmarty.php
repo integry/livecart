@@ -121,6 +121,18 @@ class LiveCartSmarty extends Smarty
                                          $this->_compile_id) . '.php';
     }
 
+    public function evalTpl($code)
+    {
+		$this->_compile_source('evaluated template', $code, $compiled);
+
+		ob_start();
+		$this->_eval('?>' . $compiled);
+		$_contents = ob_get_contents();
+		ob_end_clean();
+
+		return $_contents;
+	}
+
 	private function translatePath($path)
 	{
 		if (substr($path, 0, 7) == 'custom:')

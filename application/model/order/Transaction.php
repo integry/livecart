@@ -118,6 +118,11 @@ class Transaction extends ActiveRecordModel implements EavAble
 		return $instance;
 	}
 
+	public function getInstance(CustomerOrder $order, $gatewayTransactionID)
+	{
+		return $order->getRelatedRecordSet(__CLASS__, select(eq(__CLASS__ . '.gatewayTransactionID', $gatewayTransactionID)))->get(0);
+	}
+
 	public static function getNewSubTransaction(Transaction $transaction, TransactionResult $result)
 	{
 		$instance = self::getNewInstance($transaction->order->get(), $result);

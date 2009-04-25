@@ -95,3 +95,17 @@ div.multi
 {
 	margin-bottom: 0.5em;
 }
+
+.sectionHelp
+{
+	font-size: smaller;
+	background-color: lightyellow;
+	padding: 1em;
+	margin: 1em 0;
+}
+
+.sectionHelp ul,
+.sectionHelp ol
+{
+	margin: 1em;
+}

@@ -1052,6 +1052,13 @@ class CheckoutController extends FrontendController
 
 	protected function registerPayment(TransactionResult $result, TransactionPayment $handler)
 	{
+		// transaction already registered?
+		if (Transaction::getInstance($this->order, $result->gatewayTransactionID->get()))
+		{
+			$this->session->set('completedOrderID', $this->order->getID());
+			return new ActionRedirectResponse('checkout', 'completed');
+		}
+
 		$transaction = Transaction::getNewInstance($this->order, $result);
 		$transaction->setHandler($handler);
 		$transaction->save();
