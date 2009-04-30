@@ -24,7 +24,7 @@ class UspsShipping extends ShippingRateCalculator
 
 		if ('US' == $this->destCountry)
 		{
-			$services = array_keys($this->getConfigValue('domestic'));
+			$services = array_keys((array)$this->getConfigValue('domestic'));
 			foreach ($services as $service)
 			{
 				$this->setService($service);
@@ -39,7 +39,7 @@ class UspsShipping extends ShippingRateCalculator
 		else
 		{
 			$rates = $this->getRates();
-			$services = array_keys($this->getConfigValue('international'));
+			$services = array_keys((array)$this->getConfigValue('international'));
 
 			if ($rates instanceof ShippingRateSet)
 			{
