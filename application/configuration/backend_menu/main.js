@@ -189,6 +189,13 @@
                 	"role": "template",
                 	"icon": "image/silk/css.png",
                 	"descr": "_menu_descr_css_edit"
+        		},
+        		"theme":
+				{
+        			"title": "_menu_theme",
+        			"controller": "backend.theme",
+                	"icon": "image/silk/css.png",
+                	"descr": "_menu_descr_theme"
         		}
         	}
         },

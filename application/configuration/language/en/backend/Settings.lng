@@ -65,6 +65,7 @@ _product_list_layout=Product List Layout
 LIST_LAYOUT=Default list layout
 LIST=List
 GRID=Grid
+TABLE=Table
 LAYOUT_GRID_COLUMNS=Grid columns
 LAYOUT_GRID_ROWS=Grid rows
 ALLOW_SWITCH_LAYOUT=Allow user to switch list layout
@@ -144,6 +145,12 @@ _filters=Product Filters
 
 _general_filter=General Options
 MAX_FILTER_CRITERIA_COUNT=Max number of filter criterias to display without expanding
+
+_top_menu_filters=Top Menu Filters
+TOP_MENU_COMPACT=Compact display style (include filter names in drop-down menus)
+TOP_FILTER_PRICE=Display price filters in top menu
+TOP_FILTER_MANUFACTURER=Display manufacturer filters in top menu
+TOP_FILTER_CONTINUOS=Continuos filter selection (previous filters have to be selected for the further filters to become selectable)
 
 _price_filters=Price Filters
 _price_filter_1=Price Filter 1

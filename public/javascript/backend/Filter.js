@@ -244,6 +244,7 @@ Backend.Filter.prototype = {
 		this.nodes.specFieldID			= document.getElementsByClassName(this.cssPrefix + "form_specFieldID", this.nodes.parent)[0];
 		this.nodes.specFieldText		  = document.getElementsByClassName(this.cssPrefix + "form_specFieldText", this.nodes.parent)[0];
 		this.nodes.specFieldParagraph	 = document.getElementsByClassName(this.cssPrefix + "specField", this.nodes.parent)[0];
+		this.nodes.displayLocation	 = document.getElementsByClassName(this.cssPrefix + "form_displayLocation", this.nodes.parent)[0];
 
 		this.nodes.stepTranslations	   = document.getElementsByClassName(this.cssPrefix + "step_translations", this.nodes.parent)[0];
 		this.nodes.stepFiltersTranslations= document.getElementsByClassName(this.cssPrefix + "step_filters_translations", this.nodes.parent)[0];
@@ -532,7 +533,12 @@ Backend.Filter.prototype = {
 		if(this.id) this.nodes.id.value = this.id;
 
 		this.nodes.name.value = this.filter.name_lang ? this.filter.name_lang : '';
-		//this.nodes.name.name = "name[" + this.languageCodes[0] + "]";
+
+		if (this.filter.displayLocation)
+		{
+			this.nodes.displayLocation.value = this.filter.displayLocation;
+		}
+
 		this.nodes.labels.name.onclick = function() { self.nodes.name.focus() };
 		this.nodes.labels.specFieldID.onclick = function() { self.nodes.specFieldID.focus() };
 

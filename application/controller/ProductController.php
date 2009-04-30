@@ -182,6 +182,8 @@ class ProductController extends FrontendController
 			$response->set('manufacturerFilter', $manFilter);
 		}
 
+		$response->set('variations', $this->getVariations());
+
 		// reviews
 		if ($this->config->get('ENABLE_REVIEWS') && $product->reviewCount->get() && ($numReviews = $this->config->get('NUM_REVIEWS_IN_PRODUCT_PAGE')))
 		{
@@ -222,7 +224,11 @@ class ProductController extends FrontendController
 		// display theme
 		if ($theme = CategoryPresentation::getThemeByProduct($product))
 		{
-			$this->application->setTheme($theme->getTheme());
+			if ($theme->getTheme())
+			{
+				$this->application->setTheme($theme->getTheme());
+			}
+
 			$response->set('presentation', $theme->toFlatArray());
 		}
 
@@ -300,6 +306,11 @@ class ProductController extends FrontendController
 	{
 		$variations = $this->getVariations();
 
+		if (!$variations)
+		{
+			return null;
+		}
+
 		$prefixes = $ids = array();
 		foreach ($variations['products'] as $product)
 		{
@@ -312,13 +323,26 @@ class ProductController extends FrontendController
 		foreach ($variations['products'] as $product)
 		{
 			$quant = $this->getQuantities(Product::getInstanceByID($product['ID']));
-			$quant = array('' => '') + $quant;
+			$quant = array('' => 0) + $quant;
 			$quantities[$product['ID']] = $quant;
 		}
 
-		$response = new BlockResponse('variations', $this->getVariations());
+		// check if there price is the same for all variations
+		$curr = $this->getRequestCurrency();
+		$samePrice = true;
+		foreach ($variations['products'] as $product)
+		{
+			if (!empty($product['price_' . $curr]) && (0 != $product['price_' . $curr]))
+			{
+				$samePrice = false;
+				break;
+			}
+		}
+
+		$response = new BlockResponse('variations', $variations);
 		$response->set('cartForm', $this->buildAddToCartForm($this->getOptions(), array(), $prefixes));
 		$response->set('quantities', $quantities);
+		$response->set('samePrice', $samePrice);
 		return $response;
 	}
 

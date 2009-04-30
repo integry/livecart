@@ -1,5 +1,5 @@
 <div id="mainInfo">
-	{if $presentation.isAllVariations}
+	{if $presentation.isAllVariations && $variations}
 		{block PRODUCT-PURCHASE-VARIATIONS}
 	{else}
 		{blocks id="PRODUCT-MAININFO-CONTAINER" blocks="

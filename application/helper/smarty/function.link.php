@@ -54,6 +54,11 @@ function smarty_function_link($params, LiveCartSmarty $smarty)
 	if (isset($params['self']))
 	{
 		$result = $_SERVER['REQUEST_URI'];
+
+		foreach ($queryParams as $param => $value)
+		{
+			$result = $router->setUrlQueryParam($result, $param, $value);
+		}
 	}
 	else
 	{

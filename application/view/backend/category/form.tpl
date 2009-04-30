@@ -43,6 +43,11 @@
 				<label for="product_{$categoryId}_isAllVariations" class="checkbox">{t _allow_all_variations}</label>
 			</p>
 
+			<p>
+				<label for="listStyle_{$categoryId}">{t _list_style}:</label>
+				{selectfield name="listStyle" id="listStyle_`$categoryId`" options=$listStyles}
+			</p>
+
 			<div style="float: left; width: 550px;">
 				<p>
 					<label for="theme_{$categoryId}">{t _theme}:</label>

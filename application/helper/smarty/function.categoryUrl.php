@@ -65,6 +65,14 @@ function createCategoryUrl($params, LiveCart $application)
 		}
 	}
 
+	if (isset($params['removeFilters']))
+	{
+		foreach ($params['removeFilters'] as $filter)
+		{
+			unset($params['filters'][$filter['ID']]);
+		}
+	}
+
 	// get filters
 	if (isset($params['filters']))
 	{

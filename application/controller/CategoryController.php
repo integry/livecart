@@ -2,6 +2,7 @@
 
 ClassLoader::import('application.controller.FrontendController');
 ClassLoader::import('application.model.category.Category');
+ClassLoader::import('application.model.category.SpecField');
 ClassLoader::import('application.model.category.ProductList');
 ClassLoader::import('application.model.category.ProductListItem');
 ClassLoader::import('application.model.filter.*');
@@ -36,6 +37,7 @@ class CategoryController extends FrontendController
   	{
 	  	parent::init();
 	  	$this->addBlock('FILTER_BOX', 'boxFilter', 'block/box/filter');
+	  	$this->addBlock('FILTER_TOP', 'boxFilterTop', 'category/block/filterTop');
 	  	$this->addBlock('PRODUCT_LISTS', 'productList', 'block/productList');
 	}
 
@@ -49,6 +51,21 @@ class CategoryController extends FrontendController
 		$categoryArray = $this->category->toArray();
 
 		$this->getAppliedFilters();
+
+		// presentation
+		if ($theme = CategoryPresentation::getThemeByCategory($this->category))
+		{
+			if ($theme->getTheme())
+			{
+				$this->application->setTheme($theme->getTheme());
+			}
+
+			if ($layout = $theme->listStyle->get())
+			{
+				$this->request->set('layout', strtolower($layout));
+				$this->config->set('LIST_LAYOUT', $layout);
+			}
+		}
 
 		// pagination
 		$currentPage = $this->request->get('page', 1);
@@ -102,9 +119,19 @@ class CategoryController extends FrontendController
 			}
 		}
 
+		foreach ($this->category->getSpecificationFieldArray() as $field)
+		{
+			if ($field['isSortable'])
+			{
+				$sortName = $field['dataType'] == SpecField::DATATYPE_NUMBERS ? '_sort_num' : '_sort_text';
+				$sort[$field['ID'] . '-' . $field['handle'] . '_asc'] = $this->maketext($sortName . '_asc', $field['name_lang']);
+				$sort[$field['ID'] . '-' . $field['handle'] . '_desc'] = $this->maketext($sortName . '_desc', $field['name_lang']);
+			}
+		}
+
 		$order = $this->request->get('sort');
 		$defOrder = strtolower($this->config->get('SORT_ORDER'));
-		if (!$order || !isset($sort[$order]))
+		if (!$order || (!isset($sort[$order]) && !is_numeric(array_shift(explode('-', $order)))))
 		{
 			$order = $defOrder;
 		}
@@ -205,6 +232,7 @@ class CategoryController extends FrontendController
 			$this->productFilter->includeSubcategories();
 		}
 
+/*
 		// load filter data
 		$this->getFilterCounts();
 
@@ -226,6 +254,7 @@ class CategoryController extends FrontendController
 				}
 			}
 		}
+*/
 
 		// search redirects
 		// no products found, but found one category name - redirect to this category
@@ -239,12 +268,6 @@ class CategoryController extends FrontendController
 		foreach ($this->filters as $filter)
 		{
 			$filterArray[] = $filter->toArray();
-		}
-
-		// display theme
-		if ($theme = CategoryPresentation::getThemeByCategory($this->category))
-		{
-			$this->application->setTheme($theme->getTheme());
 		}
 
 		if ($this->config->get('DISPLAY_CATEGORY_FEATURED'))
@@ -268,12 +291,14 @@ class CategoryController extends FrontendController
 		$response->set('currency', $this->getRequestCurrency());
 		$response->set('sortOptions', $sort);
 		$response->set('sortForm', $this->buildSortForm($order));
+		$response->set('sortField', $order);
 		$response->set('categoryNarrow', $categoryNarrow);
 		$response->set('subCatFeatured', $subCatFeatured);
-		$response->set('allFilters', $filters);
-		$response->set('showAll', $showAll);
+		//$response->set('allFilters', $filters);
+		//$response->set('showAll', $showAll);
 		$response->set('appliedFilters', $filterArray);
 		$response->set('layout', $listLayout);
+		$response->set('listAttributes', $this->getListAttributes());
 
 		$filterChainHandle = $this->setUpBreadCrumbAndReturnFilterChainHandle($currentPage);
 		$response->set('url', $this->getCategoryPageUrl(array('page' => '_000_', 'filters' => $filterChainHandle)));
@@ -361,7 +386,7 @@ class CategoryController extends FrontendController
 	private function getProductsArray(ProductFilter $filter)
 	{
 		$products = $this->category->getProductArray($filter, array('Manufacturer', 'DefaultImage' => 'ProductImage', 'Category'));
-
+//var_dump($filter->getSelectFilter()->createString());
 		// get product specification and price data
 		ProductSpecification::loadSpecificationForRecordSetArray($products);
 		ProductPrice::loadPricesForRecordSetArray($products);
@@ -396,6 +421,22 @@ class CategoryController extends FrontendController
 		else if ('sales_rank' == $order)
 		{
 			$selectFilter->setOrder(new ARFieldHandle('Product', 'salesRank'), 'DESC');
+		}
+		else if (is_numeric($fieldID = array_shift(explode('-', $order))) && !SpecField::getInstanceByID($fieldID, true)->isMultiValue->get())
+		{
+			$field = SpecField::getInstanceByID($fieldID);
+			$field->defineJoin($selectFilter);
+			$f = $field->getJoinAlias() . ($field->isSelector() ? '_value' : '') . '.value';
+			$selectFilter->setOrder(new ARExpressionHandle($f . ' IS NOT NULL'), 'DESC');
+			$selectFilter->setOrder(new ARExpressionHandle($f . ' != ""'), 'DESC');
+
+			$f = new ARExpressionHandle($f);
+			if ($field->isSelector())
+			{
+				$f = MultiLingualObject::getLangOrderHandle($f);
+			}
+
+			$selectFilter->setOrder($f, array_pop(explode('_', $order)) == 'desc' ? 'DESC' : 'ASC');
 		}
 		else
 		{
@@ -615,11 +656,11 @@ class CategoryController extends FrontendController
 		return $response;
 	}
 
-	protected function boxFilterBlock()
+	protected function boxFilterBlock($includeAppliedFilters = true)
 	{
-		$filterGroups = $this->filterGroups;
+		$count = $this->getFilterCounts($includeAppliedFilters);
 
-	 	$response = new BlockResponse();
+		$filterGroups = $count['groups'];
 
 		// remove empty filter groups
 		$maxCriteria = $this->config->get('MAX_FILTER_CRITERIA_COUNT');
@@ -637,19 +678,17 @@ class CategoryController extends FrontendController
 			// hide excess criterias (by default only 5 per filter are displayed)
 			else if (($showAll != $grp['ID']) && (count($grp['filters']) > $maxCriteria) && ($maxCriteria > 0))
 			{
-				$chunks = array_chunk($grp['filters'], $maxCriteria);
-				$filterGroups[$key]['filters'] = $chunks[0];
 				$filterGroups[$key]['more'] = $this->router->setUrlQueryParam($url, 'showAll', $grp['ID']);
 			}
 		}
 
+	 	$response = new BlockResponse();
+
 		// filter by manufacturers
-		$manFilters = $this->manFilters;
+		$manFilters = $count['manufacturers'];
 
 		if (count($manFilters) > $maxCriteria && $showAll != 'brand' && $maxCriteria > 0)
 		{
-			$chunks = array_chunk($manFilters, $maxCriteria);
-			$manFilters = $chunks[0];
 			$response->set('allManufacturers', $this->router->setUrlQueryParam($url, 'showAll', 'brand'));
 		}
 
@@ -657,6 +696,20 @@ class CategoryController extends FrontendController
 		{
 			$this->category = Category::getRootNode();
 			$this->category->load();
+		}
+
+		$priceFilters = $count['prices'];
+
+		// hide price filters from side menu if a price filter is applied
+		if ($includeAppliedFilters)
+		{
+			foreach ($this->filters as $filter)
+			{
+				if ($filter instanceof PriceFilter)
+				{
+					$priceFilters = array();
+				}
+			}
 		}
 
 		// index page filters
@@ -669,7 +722,7 @@ class CategoryController extends FrontendController
 
 			if (!$this->config->get('INDEX_PRICE_FILTERS'))
 			{
-				$this->priceFilters = array();
+				$priceFilters = array();
 			}
 		}
 		// categories without own products
@@ -682,7 +735,7 @@ class CategoryController extends FrontendController
 
 			if (!$this->config->get('DISPLAY_CAT_PRICE_FILTERS'))
 			{
-				$this->priceFilters = array();
+				$priceFilters = array();
 			}
 		}
 
@@ -691,33 +744,199 @@ class CategoryController extends FrontendController
 		 	$response->set('manGroup', array('filters' => $manFilters));
 		}
 
-		if ($this->config->get('ENABLE_PRICE_FILTERS') && (count($this->priceFilters) > 1))
+		if ($this->config->get('ENABLE_PRICE_FILTERS') && (count($count['prices']) > 1))
 		{
-		 	$response->set('priceGroup', array('filters' => $this->priceFilters));
+		 	$response->set('priceGroup', array('filters' => $priceFilters));
 		}
 
-		$filterArray = array();
-		foreach ($this->filters as $filter)
-		{
-			$filterArray[] = $filter->toArray();
-		}
-
-		$response->set('filters', $filterArray);
+		$response->set('filters', $this->getAppliedFilterArray());
 	 	$response->set('category', $this->category->toArray());
 	 	$response->set('groups', $filterGroups);
 
 		return $response;
 	}
 
-	private function getFilterCounts()
+	private function getAppliedFilterArray()
 	{
+		$filterArray = array();
+		foreach ($this->filters as $filter)
+		{
+			$id = $filter->getID();
+			if (strpos($id, '_'))
+			{
+				$id = 'v' . array_pop(explode('_', $id));
+			}
+
+			$filterArray[$id] = $filter->toArray();
+		}
+
+		return $filterArray;
+	}
+
+	protected function boxFilterTopBlock()
+	{
+		if ($this->config->get('TOP_FILTER_CONTINUOS'))
+		{
+			$groups = $this->category->getFilterGroupSet()->filter('displayLocation', FilterGroup::LOC_TOP);
+
+			// find filters that will be included for selection automatically
+			$appliedFilters = array();
+			foreach($this->filters as $filter)
+			{
+				if (($filter instanceof PriceFilter && !$this->config->get('TOP_FILTER_PRICE')) ||
+					($filter instanceof ManufacturerFilter && !$this->config->get('TOP_FILTER_MANUFACTURER')) ||
+					($filter instanceof SearchFilter) ||
+					($filter instanceof SpecificationFilterInterface && ($filter->getFilterGroup()->displayLocation->get() != FilterGroup::LOC_TOP))
+					)
+				{
+					$appliedFilters[] = $filter;
+				}
+			}
+
+			$productFilter = clone $this->productFilter;
+			$productCount = new ProductCount($productFilter, $this->application);
+
+			if ($this->config->get('TOP_FILTER_PRICE'))
+			{
+				$productFilter->setFilters($appliedFilters);
+				$priceFilters = array(
+									'filters' => $this->removeEmptyFilters($this->createPriceFilterSet($productCount->getCountByPrices(true))),
+									'appliedFilters' => $this->transformToArray($appliedFilters)
+								);
+
+				foreach ($this->filters as $index => $filter)
+				{
+					if ($filter instanceof PriceFilter)
+					{
+						$appliedFilters[] = $filter;
+					}
+				}
+			}
+
+			if ($this->config->get('TOP_FILTER_MANUFACTURER'))
+			{
+				$productFilter->setFilters($appliedFilters);
+				$manFilters = array(
+								'filters' => $this->removeEmptyFilters($this->createManufacturerFilterSet($productCount->getCountByManufacturers(true))),
+								'appliedFilters' => $this->transformToArray($appliedFilters)
+								);
+
+				foreach ($this->filters as $index => $filter)
+				{
+					if ($filter instanceof ManufacturerFilter)
+					{
+						$appliedFilters[] = $filter;
+					}
+				}
+			}
+
+			$categoryFilters = $this->category->getFilterSet();
+
+			$filterGroups = $this->category->getFilterGroupSet()->filter('displayLocation', FilterGroup::LOC_TOP);
+			$groups = array();
+			foreach ($filterGroups as $group)
+			{
+				$appliedGroupFilter = $this->getFiltersByGroup($this->filters, $group);
+
+				$groups[$group->getID()] = $group->toArray();
+
+				if ($stop)
+				{
+					continue;
+				}
+
+				$productFilter->setFilters($appliedFilters);
+				$c = $productCount->getCountByFilterSet($this->getFiltersByGroup($categoryFilters, $group), true);
+				$groups[$group->getID()] = array_shift($this->createFilterGroupSet(array($groups[$group->getID()]), $c));
+				$groups[$group->getID()]['filters'] = $this->removeEmptyFilters($groups[$group->getID()]['filters']);
+				$groups[$group->getID()]['appliedFilters'] = $this->transformToArray($appliedFilters);
+
+				if (!$appliedGroupFilter)
+				{
+					$stop = true;
+				}
+				else
+				{
+					$appliedFilters[] = array_shift($appliedGroupFilter);
+				}
+			}
+
+			$response = new BlockResponse();
+			$response->set('manGroup', $manFilters);
+			$response->set('priceGroup', $priceFilters);
+
+			$response->set('filters', $this->getAppliedFilterArray());
+			$response->set('category', $this->category->toArray());
+			$response->set('groups', $groups);
+
+			return $response;
+		}
+		else
+		{
+			return $this->boxFilterBlock(false);
+		}
+	}
+
+	private function transformToArray($filters)
+	{
+		$res = array();
+
+		foreach ($filters as $filter)
+		{
+			$arr = $filter->toArray();
+			$res[$arr['ID']] = $arr;
+		}
+
+		return $res;
+	}
+
+	private function removeEmptyFilters($filterArray)
+	{
+		$res = array();
+		foreach ($filterArray as $filter)
+		{
+			if ($filter['count'])
+			{
+				$res[] = $filter;
+			}
+		}
+
+		return $res;
+	}
+
+	private function getFiltersByGroup($array, FilterGroup $group)
+	{
+		$res = array();
+		foreach ($array as $index => $filter)
+		{
+			if ($filter instanceof SpecificationFilterInterface)
+			{
+				if ($filter->getFilterGroup()->getID() === $group->getID())
+				{
+					$res[$index] = $filter;
+				}
+			}
+		}
+
+		return $res;
+	}
+
+	private function getFilterCounts($includeAppliedFilters)
+	{
+		$count = new ProductCount($this->productFilter, $this->application);
+
 		// get category filter groups
 		$filterGroups = $this->category->getFilterGroupArray();
+		$filterGroups = $this->createFilterGroupSet($filterGroups, $count->getCountByFilters($includeAppliedFilters));
 
-		// get counts by filters, categories, etc
-		$count = new ProductCount($this->productFilter, $this->application);
-		$filtercount = $count->getCountByFilters();
+		$manFilters = $this->createManufacturerFilterSet($count->getCountByManufacturers($includeAppliedFilters));
+		$priceFilters = $this->createPriceFilterSet($count->getCountByPrices($includeAppliedFilters));
 
+		return array('groups' => $filterGroups, 'prices' => $priceFilters, 'manufacturers' => $manFilters);
+	}
+
+	private function createFilterGroupSet($filterGroups, $filterArray)
+	{
 		// get group filters
 		if ($filterGroups)
 		{
@@ -727,8 +946,8 @@ class CategoryController extends FrontendController
 			$sorted = array();
 			foreach ($filters as $filter)
 			{
-				$cnt = isset($filtercount[$filter->getID()]) ? $filtercount[$filter->getID()] : 0;
-				if (!$cnt || $cnt == $this->totalCount)
+				$cnt = isset($filterArray[$filter->getID()]) ? $filterArray[$filter->getID()] : 0;
+				if ((!$cnt || $cnt == $this->totalCount) && $filter->getFilterGroup()->displayLocation->get() == FilterGroup::LOC_SIDE)
 				{
 					continue;
 				}
@@ -743,55 +962,54 @@ class CategoryController extends FrontendController
 			// assign sorted filters to group arrays
 			foreach ($filterGroups as $key => $group)
 			{
-			  	if (isset($sorted[$group['specFieldID']]))
-			  	{
+				if (isset($sorted[$group['SpecField']['ID']]))
+				{
+					$sorted[$group['specFieldID']] = $sorted[$group['SpecField']['ID']];
+				}
+
+				if (isset($sorted[$group['specFieldID']]))
+				{
 					$filterGroups[$key]['filters'] = $sorted[$group['specFieldID']];
 				}
 			}
 		}
 
-		$this->filterGroups = $filterGroups;
+		return $filterGroups;
+	}
 
-		// filter by manufacturers
-		$isManufacturerFiltered = false;
-		foreach ($this->filters as $filter)
-		{
-			if ($filter instanceof ManufacturerFilter)
-			{
-				$isManufacturerFiltered = true;
-			}
-		}
-
+	private function createManufacturerFilterSet($filterArray)
+	{
 		$manFilters = array();
 
-		// check for filter counts only if the manufacturer filter hasn't been applied already
-		if (!$isManufacturerFiltered)
+		foreach ((array)$filterArray as $filterData)
 		{
-			foreach ($count->getCountByManufacturers() as $filterData)
-			{
-				$mFilter = new ManufacturerFilter($filterData['ID'], $filterData['name']);
-				$manFilter = $mFilter->toArray();
-				$manFilter['count'] = $filterData['cnt'];
-				$manFilters[] = $manFilter;
-			}
+			$mFilter = new ManufacturerFilter($filterData['ID'], $filterData['name']);
+			$manFilter = $mFilter->toArray();
+			$manFilter['count'] = $filterData['cnt'];
+			$manFilters[] = $manFilter;
 		}
 
-		$this->manFilters = $manFilters;
+		return $manFilters;
+	}
 
-		// filter by prices
+	private function createPriceFilterSet($filterArray)
+	{
 		$priceFilters = array();
-		foreach ($count->getCountByPrices() as $filterId => $count)
+
+		foreach ((array)$filterArray as $filterId => $count)
 		{
 			$pFilter = new PriceFilter($filterId, $this->application);
 			$priceFilter = $pFilter->toArray();
-			$priceFilter['count'] = $count;
-			if ($count && $count != $this->totalCount)
+			if ($count && $count == $this->totalCount)
 			{
-				$priceFilters[] = $priceFilter;
+				//$count = 0;
 			}
+			$priceFilter['count'] = $count;
+
+			$priceFilters[] = $priceFilter;
 		}
 
-		$this->priceFilters = $priceFilters;
+		return $priceFilters;
 	}
 
 	public function getAppliedFilters(FrontendController $controller = null)
@@ -811,6 +1029,8 @@ class CategoryController extends FrontendController
 
 		if ($request->get('filters'))
 		{
+			$filterGroups = $this->category->getFilterGroupSet();
+
 			$valueFilterIds = array();
 			$selectorFilterIds = array();
 			$manufacturerFilterIds = array();
@@ -870,10 +1090,10 @@ class CategoryController extends FrontendController
 				$f = new ARSelectFilter();
 				$c = new INCond(new ARFieldHandle('SpecFieldValue', 'ID'), $selectorFilterIds);
 				$f->setCondition($c);
-				$filters = ActiveRecordModel::getRecordSet('SpecFieldValue', $f, array('SpecField', 'Category'));
-				foreach ($filters as $filter)
+				$filterValues = ActiveRecordModel::getRecordSet('SpecFieldValue', $f, array('SpecField', 'Category'));
+				foreach ($filterValues as $value)
 				{
-					$this->filters[] = new SelectorFilter($filter);
+					$this->filters[] = new SelectorFilter($value, $filterGroups->filter('specField', $value->specField->get())->get(0));
 				}
 			}
 
@@ -926,8 +1146,9 @@ class CategoryController extends FrontendController
 
 	private function getListLayout()
 	{
-		return $this->request->get('layout') && $this->config->get('ALLOW_SWITCH_LAYOUT') ?
-						('grid' == $this->request->get('layout') ? 'GRID' : 'LIST') :
+		$layout = $this->request->get('layout');
+		return $layout && $this->config->get('ALLOW_SWITCH_LAYOUT') ?
+						(in_array($layout, array('grid', 'list', 'table')) ? strtoupper($layout) : 'LIST') :
 						$this->config->get('LIST_LAYOUT');
 	}
 
@@ -985,6 +1206,31 @@ class CategoryController extends FrontendController
 		foreach ($products as $key => $product)
 		{
 			$categories[$key]['featuredProduct'] = $product;
+		}
+	}
+
+	private function getListAttributes()
+	{
+		$res = array();
+		foreach ($this->category->getSpecificationFieldArray() as $field)
+		{
+			if ($field['isDisplayedInList'])
+			{
+				$res[] = $field;
+			}
+		}
+
+		return $res;
+	}
+}
+
+function hasFilters($array)
+{
+	foreach ((array)$array as $filter)
+	{
+		if (!empty($filter['count']))
+		{
+			return true;
 		}
 	}
 }

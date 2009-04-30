@@ -32,7 +32,7 @@
 /*************************
 	Product form
 *************************/
-.productForm.intangible .shipping, .productForm.intangible .inventory
+.productForm.intangible .shipping/*, .productForm.intangible .inventory */
 {
     display: none;
 }

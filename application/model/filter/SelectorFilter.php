@@ -13,10 +13,12 @@ ClassLoader::importNow('application.helper.CreateHandleString');
 class SelectorFilter implements SpecificationFilterInterface
 {
 	private $specFieldValue;
+	private $filterGroup;
 
-	public function __construct(SpecFieldValue $specFieldValue)
+	public function __construct(SpecFieldValue $specFieldValue, FilterGroup $group = null)
 	{
 		$this->specFieldValue = $specFieldValue;
+		$this->filterGroup = $group;
 	}
 
 	public function getCondition()
@@ -56,6 +58,11 @@ class SelectorFilter implements SpecificationFilterInterface
 	public function getSpecField()
 	{
 		return $this->specFieldValue->specField->get();
+	}
+
+	public function getFilterGroup()
+	{
+		return $this->filterGroup;
 	}
 
 	protected function getJoinAlias()

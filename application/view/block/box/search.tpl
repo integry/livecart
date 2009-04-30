@@ -1,3 +1,4 @@
+{assign var=foo value=$categories|@array_shift}
 <div id="searchContainer">
 	<div class="wrapper">
 		{capture assign="searchUrl"}{categoryUrl data=$category}{/capture}

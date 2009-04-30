@@ -165,6 +165,11 @@ class Filter extends MultilingualObject implements SpecificationFilterInterface
 		return $this->filterGroup->get()->specField->get();
 	}
 
+	public function getFilterGroup()
+	{
+		return $this->filterGroup->get();
+	}
+
 	/*####################  Saving ####################*/
 
 	protected function insert()

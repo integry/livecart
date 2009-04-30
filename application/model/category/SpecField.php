@@ -25,6 +25,7 @@ class SpecField extends EavFieldCommon
 	{
 		$schema = parent::defineSchema($className);
 		$schema->registerField(new ARForeignKeyField('categoryID', 'Category', 'ID', 'Category', ARInteger::instance()));
+		$schema->registerField(new ARField('isSortable', ARBool::instance()));
 	}
 
 	public function getOwnerClass()

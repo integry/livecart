@@ -1,12 +1,14 @@
 <?php
 
-ClassLoader::import("application.model.eavcommon.iEavFieldManager");
-ClassLoader::import("application.model.eav.EavAble");
-ClassLoader::import("application.model.eav.EavObject");
-ClassLoader::import("application.model.system.ActiveTreeNode");
-ClassLoader::import("application.model.system.MultilingualObject");
-ClassLoader::import("application.model.category.CategoryImage");
-ClassLoader::import("application.model.filter.*");
+ClassLoader::import('application.model.category.SpecField');
+ClassLoader::import('application.model.category.SpecFieldGroup');
+ClassLoader::import('application.model.eavcommon.iEavFieldManager');
+ClassLoader::import('application.model.eav.EavAble');
+ClassLoader::import('application.model.eav.EavObject');
+ClassLoader::import('application.model.system.ActiveTreeNode');
+ClassLoader::import('application.model.system.MultilingualObject');
+ClassLoader::import('application.model.category.CategoryImage');
+ClassLoader::import('application.model.filter.*');
 
 /**
  * Hierarchial product category structure.
@@ -420,7 +422,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	 */
 	public function getProductArray(ProductFilter $productFilter, $loadReferencedRecords = false)
 	{
-		return ActiveRecordModel::getRecordSetArray('Product', $this->getProductsFilter($productFilter), $loadReferencedRecords);
+		return ActiveRecordModel::getRecordSetArray('Product', $productFilter->getSelectFilter(), $loadReferencedRecords);
 	}
 
 	/**
@@ -439,8 +441,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	 */
 	public function getProductsFilter(ProductFilter $productFilter)
 	{
-		$filter = $productFilter->getSelectFilter();
-		$filter->mergeCondition($this->getProductCondition($productFilter->isSubcategories()));
+		$filter = new ARSelectFilter($this->getProductCondition($productFilter->isSubcategories()));
 		$this->applyInventoryFilter($filter);
 
 		return $filter;
@@ -494,16 +495,19 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		Classloader::import('application.model.filter.SelectorFilter');
 
 		// get filter groups
-	  	$groups = $this->getFilterGroupArray();
+		$groups = $this->getFilterGroupArray();
 
 		$ids = array();
 		$specFields = array();
+		$filterGroups = array();
 		foreach ($groups as $group)
 		{
 			if (in_array($group['SpecField']['type'],
 			  			 array(SpecField::TYPE_NUMBERS_SELECTOR, SpecField::TYPE_TEXT_SELECTOR)))
-		  	{
+			{
 				$specFields[] = $group['SpecField']['ID'];
+				$filterGroups[$group['SpecField']['ID']] = $group['ID'];
+				$ids[] = $group['ID'];
 			}
 			else
 			{
@@ -540,7 +544,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 			$specFieldValues = ActiveRecord::getRecordSet('SpecFieldValue', $selectFilter);
 			foreach ($specFieldValues as $value)
 			{
-				$ret[] = new SelectorFilter($value);
+				$ret[] = new SelectorFilter($value, FilterGroup::getInstanceByID($filterGroups[$value->specField->get()->getID()]));
 			}
 		}
 
@@ -563,7 +567,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		{
 		  	return new ARSet(null);
 		}
-		return ActiveRecord::getRecordSet('FilterGroup', $filter, array('SpecField'));
+		return ActiveRecord::getRecordSet('FilterGroup', $filter, array('SpecField', 'SpecFieldGroup'));
 	}
 
 	/**

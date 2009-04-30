@@ -12,6 +12,11 @@ ClassLoader::import("application.model.system.MultilingualObject");
  */
 class FilterGroup extends MultilingualObject
 {
+	const STYLE_LINKS = 0;
+	const STYLE_DROPDOWN = 1;
+	const LOC_SIDE = 0;
+	const LOC_TOP = 1;
+
 	/**
 	 * Define FilterGroup database schema
 	 */
@@ -25,9 +30,11 @@ class FilterGroup extends MultilingualObject
 		$schema->registerField(new ARField("name", ARArray::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance()));
 		$schema->registerField(new ARField("isEnabled", ARInteger::instance(1)));
+		$schema->registerField(new ARField("displayStyle", ARInteger::instance()));
+		$schema->registerField(new ARField("displayLocation", ARInteger::instance()));
 	}
 
-	/*####################  Static method implementations ####################*/	
+	/*####################  Static method implementations ####################*/
 
 	/**
 	 * Get new instance of FilterGroup record
@@ -64,9 +71,9 @@ class FilterGroup extends MultilingualObject
 	{
 		return parent::deleteByID(__CLASS__, $id);
 	}
-	
+
 	/**
-	 * Get record set of filter groups using select filter 
+	 * Get record set of filter groups using select filter
 	 *
 	 * @param ARSelectFilter $filter
 	 * @return ARSet
@@ -77,7 +84,7 @@ class FilterGroup extends MultilingualObject
 	}
 
 	/**
-	 * Get record set as array of filter groups using select filter 
+	 * Get record set as array of filter groups using select filter
 	 *
 	 * @param ARSelectFilter $filter
 	 * @return array
@@ -86,9 +93,9 @@ class FilterGroup extends MultilingualObject
 	{
 		return parent::getRecordSet(__CLASS__, $filter);
 	}
-	
-	/*####################  Value retrieval and manipulation ####################*/	
-	
+
+	/*####################  Value retrieval and manipulation ####################*/
+
 	/**
 	 * Add new filter to filter group
 	 *
@@ -98,8 +105,8 @@ class FilterGroup extends MultilingualObject
 	{
 		$filter->filterGroup->set($this);
 		$filter->save();
-	}	
-	
+	}
+
 	/**
 	 * This method is checking if SpecField record with passed id exist in the database
 	 *
@@ -111,28 +118,28 @@ class FilterGroup extends MultilingualObject
 		return ActiveRecord::objectExists(__CLASS__, (int)$id);
 	}
 
-	/*####################  Saving ####################*/	
-	
+	/*####################  Saving ####################*/
+
 	/**
 	 * Save group filters in database
 	 *
 	 * @param array $filters
-	 * @param int $specFieldType 
+	 * @param int $specFieldType
 	 * @param array $languages
 	 */
-	public function saveFilters($filters, $specFieldType, $languageCodes) 
+	public function saveFilters($filters, $specFieldType, $languageCodes)
 	{
 		$position = 1;
 		$filtersCount = count($filters);
 		$i = 0;
-			
+
 		$newIDs = array();
 		foreach ($filters as $key => $value)
 		{
 			// Ignore last new empty filter
 			$i++;
 			if($filtersCount == $i && $value['name'][$languageCodes[0]] == '' && preg_match("/new/", $key)) continue;
-			
+
 			if(preg_match('/^new/', $key))
 			{
 				$filter = Filter::getNewInstance($this);
@@ -143,7 +150,7 @@ class FilterGroup extends MultilingualObject
 			}
 
 			$filter->setLanguageField('name', $value['name'], $languageCodes);
-			
+
 			if($specFieldType == SpecField::TYPE_TEXT_DATE)
 			{
 				$filter->rangeDateStart->set($value['rangeDateStart']);
@@ -158,27 +165,27 @@ class FilterGroup extends MultilingualObject
 				$filter->rangeStart->set($value['rangeStart']);
 				$filter->rangeEnd->set($value['rangeEnd']);
 			}
-			
+
 			$filter->filterGroup->set($this);
 			$filter->position->set($position++);
 			$filter->save();
-			
+
 			if(preg_match('/^new/', $key))
 			{
 				$newIDs[$filter->getID()] = $key;
 			}
-				
+
 		}
-		
+
 		return $newIDs;
 	}
 
 	protected function insert()
 	{
-		$this->position->set(100000);  			
+		$this->setLastPosition();
 		return parent::insert();
-	}	
-	
+	}
+
 	/*####################  Get related objects ####################*/
 
 	/**
@@ -193,7 +200,7 @@ class FilterGroup extends MultilingualObject
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("Filter", "filterGroupID"), $this->getID()));
 
 		return Filter::getRecordSet($filter);
-	}	
+	}
 }
 
 ?>

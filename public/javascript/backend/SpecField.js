@@ -60,6 +60,8 @@ Backend.SpecField.prototype = {
 
 	cssPrefix: "specField_",
 
+	boolFields: ['isMultiValue', 'isRequired', 'isDisplayed', 'isDisplayedInList', 'isSortable'],
+
 	callbacks: {
 		beforeEdit:	 function(li) {
 			Backend.SpecField.prototype.hideNewSpecFieldAction(this.getRecordId(li, 3));
@@ -141,10 +143,10 @@ Backend.SpecField.prototype = {
 		this.description		   = this.specField.description;
 
 		this.handle				= this.specField.handle;
-		this.isMultiValue		  = this.specField.isMultiValue == 1 ? true : false;
-		this.isRequired			= this.specField.isRequired == 1 ? true : false;
-		this.isDisplayed		   = this.specField.isDisplayed == 1 ? true : false;
-		this.isDisplayedInList	 = this.specField.isDisplayedInList == 1 ? true : false;
+		this.boolFields.each(function(field)
+		{
+			this[field] = this.specField[field] == 1 ? true : false;
+		}.bind(this));
 
 		this.loadLanguagesAction();
 		this.findUsedNodes();
@@ -252,7 +254,7 @@ Backend.SpecField.prototype = {
 
 		var self = this;
 		this.nodes.labels = {};
-		$A(['description', 'handle', 'type', 'name', 'valuePrefix', 'valueSuffix', 'advancedText', 'multipleSelector', 'isRequired', 'isDisplayed', 'isDisplayedInList']).each(function(field)
+		$A(['description', 'handle', 'type', 'name', 'valuePrefix', 'valueSuffix', 'advancedText', 'multipleSelector'].concat(this.boolFields)).each(function(field)
 		{
 			this.nodes.labels[field] = document.getElementsByClassName(self.cssPrefix + "form_" + field + "_label", this.nodes.parent)[0];
 		}.bind(this));
@@ -266,6 +268,7 @@ Backend.SpecField.prototype = {
 		this.nodes.isRequired		  	= document.getElementsByClassName(this.cssPrefix + "form_isRequired", this.nodes.parent)[0];
 		this.nodes.isDisplayed		  = document.getElementsByClassName(this.cssPrefix + "form_isDisplayed", this.nodes.parent)[0];
 		this.nodes.isDisplayedInList	= document.getElementsByClassName(this.cssPrefix + "form_isDisplayedInList", this.nodes.parent)[0];
+		this.nodes.isSortable	= document.getElementsByClassName(this.cssPrefix + "form_isSortable", this.nodes.parent)[0];
 
 		this.nodes.handle 				= document.getElementsByClassName(this.cssPrefix + "form_handle", this.nodes.parent)[0];
 		this.nodes.name 				= document.getElementsByClassName(this.cssPrefix + "form_name", this.nodes.parent)[0];
@@ -544,15 +547,17 @@ Backend.SpecField.prototype = {
 		this.nodes.isRequired.checked = this.isRequired;
 		this.nodes.isDisplayed.checked = this.isDisplayed;
 		this.nodes.isDisplayedInList.checked = this.isDisplayedInList;
+		this.nodes.isSortable.checked = this.isSortable;
 
 		this.nodes.multipleSelector.id	 = this.cssPrefix + this.categoryID + "_" + this.id + "_multipleSelector";
 		this.nodes.isRequired.id		   = this.cssPrefix + this.categoryID + "_" + this.id + "_isRequired";
 		this.nodes.isDisplayed.id		  = this.cssPrefix + this.categoryID + "_" + this.id + "_isDisplayed";
 		this.nodes.isDisplayedInList.id	= this.cssPrefix + this.categoryID + "_" + this.id + "_isDisplayedInList";
+		this.nodes.isSortable.id	= this.cssPrefix + this.categoryID + "_" + this.id + "_isSortable";
 
 		$A(['name', 'valuePrefix', 'valueSuffix', 'handle',
 			'multipleSelector', 'isRequired',  'isDisplayed',
-			'isDisplayedInList', 'type', 'description', 'advancedText']).each(function(fieldName)
+			'isDisplayedInList', 'isSortable', 'type', 'description', 'advancedText']).each(function(fieldName)
 		{
 			var input = this.nodes[fieldName];
 

@@ -23,7 +23,7 @@ class ProductCount
 		$this->application = $application;
   	}
 
-	public function getCountByFilters()
+	public function getCountByFilters($includeAppliedFilters)
 	{
 		$filters = $this->productFilter->getCategory()->getFilterSet();
 
@@ -37,7 +37,7 @@ class ProductCount
 				{
 					if ($filter->getID() == $appliedFilter->getID())
 					{
-						unset($filters[$key]);
+						//unset($filters[$key]);
 					}
 				}
 
@@ -46,7 +46,7 @@ class ProductCount
 				{
 					if ($filter->filterGroup->get() === $appliedFilter->filterGroup->get())
 					{
-						unset($filters[$key]);
+						//unset($filters[$key]);
 					}
 				}
 			}
@@ -64,7 +64,7 @@ class ProductCount
 		$ret = array();
 		foreach ($filterSets as $set)
 		{
-			$cnt = $this->getCountByFilterSet($set);
+			$cnt = $this->getCountByFilterSet($set, $includeAppliedFilters);
 
 			// array_merge would reindex the numeric keys
 			foreach ($cnt as $key => $value)
@@ -83,7 +83,7 @@ class ProductCount
 		return ActiveRecordModel::getRecordCount('Product', $filter);
 	}
 
-	public function getCountByPrices()
+	public function getCountByPrices($includeAppliedFilters)
 	{
 		// get price filters
 		$k = 0;
@@ -108,7 +108,7 @@ class ProductCount
 		}
 
 		// get product counts
-		$selectFilter = $this->productFilter->getSelectFilter();
+		$selectFilter = $this->productFilter->getSelectFilter(!$includeAppliedFilters);
 		$selectFilter->removeFieldList();
 		$selectFilter->setLimit(0);
 
@@ -125,14 +125,13 @@ class ProductCount
 		$query->setFilter($selectFilter);
 
 		$data = ActiveRecordModel::getDataBySQL($query->getPreparedStatement(ActiveRecordModel::getDBConnection()));
-		$data = array_diff($data[0], array(0));
-
-		return $data;
+		//$data = array_diff($data[0], array(0));
+		return $data[0];
 	}
 
-	public function getCountByManufacturers()
+	public function getCountByManufacturers($includeAppliedFilters)
 	{
-		$selectFilter = $this->productFilter->getSelectFilter();
+		$selectFilter = $this->productFilter->getSelectFilter(!$includeAppliedFilters);
 		$selectFilter->removeFieldList();
 		$selectFilter->setLimit(0);
 		$selectFilter->setOrder(new ARExpressionHandle('cnt'), 'DESC');
@@ -156,9 +155,14 @@ class ProductCount
 		return $data;
 	}
 
-	private function getCountByFilterSet($filters)
+	public function getCountByFilterSet($filters, $includeAppliedFilters)
 	{
-		$selectFilter = $this->productFilter->getSelectFilter();
+		if (!$filters)
+		{
+			return array();
+		}
+
+		$selectFilter = $this->productFilter->getSelectFilter(!$includeAppliedFilters);
 		$selectFilter->removeFieldList();
 		$selectFilter->setLimit(0);
 

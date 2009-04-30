@@ -38,6 +38,8 @@ class CategoryController extends StoreManagementController
 		ClassLoader::import('application.LiveCartRenderer');
 		ClassLoader::import('application.model.presentation.CategoryPresentation');
 
+		$this->loadLanguageFile('backend/Settings');
+
 		$category = Category::getInstanceByID($this->request->get("id"), Category::LOAD_DATA);
 		$form = $this->buildForm($category);
 		$response = new ActionResponse("catalogForm", $form);
@@ -53,6 +55,13 @@ class CategoryController extends StoreManagementController
 		}
 
 		$response->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
+
+		$listStyles = array();
+		foreach (array('LIST', 'GRID', 'TABLE') as $style)
+		{
+			$listStyles[$style] = $this->translate($style);
+		}
+		$response->set('listStyles', array_merge(array(''), $listStyles));
 
 		$category->getSpecification()->setFormResponse($response, $form);
 

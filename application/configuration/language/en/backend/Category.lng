@@ -65,6 +65,7 @@ _SpecField_type_formatted_text=Advanced
 _SpecField_type_text_selector=Options
 _SpecField_type_date=Date
 
+_SpecField_sortable=Allow sorting products by attribute value
 _SpecField_displayed_on_front_page=Display attribute in product page
 _SpecField_displayed_in_product_list=Display attribute in product list
 _SpecField_valuePrefix=Value prefix
@@ -82,6 +83,9 @@ _Filter_add_filter=Add filter
 _Filter_value=Value
 _Filter_date_range=Date between
 _Filter_handle=Handle
+_Filter_displayLocation=Display location
+_side_menu=Side menu
+_top_menu=Top menu
 
 # Product
 _product_information_was_saved=Product information was saved successfuly

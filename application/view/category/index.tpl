@@ -14,6 +14,8 @@
 		{include file="category/allFilters.tpl"}
 	{/if}
 
+	{block FILTER_TOP}
+
 	{if $foundCategories}
 		{include file="category/foundCategories.tpl"}
 	{/if}
@@ -30,6 +32,12 @@
 		</p>
 	{/if}
 
+	{if $appliedFilters && !$products}
+		<p class="notFound">
+			<span class='notFoundMain'>{t _no_products}</span>
+		</p>
+	{/if}
+
 	{if !$searchQuery && 1 == $currentPage}
 		{block PRODUCT_LISTS}
 	{/if}
@@ -37,11 +45,7 @@
 	{if $subCatFeatured}
 		<h2>{t _featured_products}</h2>
 
-		{if 'GRID' == $layout}
-			{include file="category/productGrid.tpl" products=$subCatFeatured}
-		{else}
-			{include file="category/productList.tpl" products=$subCatFeatured}
-		{/if}
+		{include file="category/productListLayout.tpl" products=$subCatFeatured}
 	{/if}
 
 	{include file="category/categoryProductList.tpl"}

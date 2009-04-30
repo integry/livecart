@@ -205,6 +205,11 @@ abstract class EavFieldCommon extends MultilingualObject
 		return $this->type->get() == self::TYPE_NUMBERS_SIMPLE;
 	}
 
+	public function isNumeric()
+	{
+		return $this->dataType->get() == self::DATATYPE_NUMBERS;
+	}
+
 	/**
 	 * Check if current specification field type is date
 	 *
@@ -253,7 +258,7 @@ abstract class EavFieldCommon extends MultilingualObject
 		else return self::DATATYPE_NUMBERS;
 	}
 
-	protected function getJoinAlias()
+	public function getJoinAlias()
 	{
 		return 'specField_' . $this->getID();
 	}

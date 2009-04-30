@@ -6,9 +6,14 @@ PRICE_ASC=Price: Low to High
 PRICE_DESC=Price: High to Low
 NEWEST_ARRIVALS=Newest Arrivals
 RATING=Customer Rating
+_sort_num_asc=[_1]: Low to High
+_sort_num_desc=[_1]: High to Low
+_sort_text_asc=[_1]: A-Z
+_sort_text_desc=[_1]: Z-A
 
 _found_cats=Found categories
 _not_found=<span class='notFoundMain'>No products were found.</span> Please try different keywords for your search query.
+_no_products=No products were found matching this search condition.
 _featured_products=Featured Products
 
 _showing_products=Showing [_1] to [_2] of [_3] found products
@@ -22,3 +27,8 @@ _view_as_grid=View as grid
 
 _all_categories=All Categories
 _compare_selected=Compare selected products
+
+# Product table
+_name=Name
+_image=Image
+_view_details=View Details

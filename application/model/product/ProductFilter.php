@@ -25,8 +25,6 @@ class ProductFilter
 	{
 		$this->category = $category;
 		$this->productFilter = $filter;
-		$this->selectFilter = $filter;
-		$this->selectFilter = $this->category->getProductsFilter($this);
 	}
 
 	/**
@@ -49,18 +47,14 @@ class ProductFilter
 		return count($this->filters);
 	}
 
-	public function getSelectFilter()
+	public function getSelectFilter($disableFilters = false)
 	{
-		$selectFilter = new ARSelectFilter();
+		$selectFilter = $this->category->getProductsFilter($this, false);
+		$selectFilter->merge($this->productFilter);
 
-		if ($this->selectFilter)
-		{
-			$selectFilter->merge($this->selectFilter);
-		}
-
-		$cond = $selectFilter->getCondition();
-
-		foreach ($this->filters as $filter)
+		//$cond = $selectFilter->getCondition();
+		$cond = null;
+		foreach ($disableFilters ? array() : $this->filters as $filter)
 		{
 			if (!$cond)
 			{
@@ -80,15 +74,15 @@ class ProductFilter
 
 		if ($cond)
 		{
+			if ($fCond = $selectFilter->getCondition())
+			{
+				$cond->addAND($fCond);
+			}
+
 			$selectFilter->setCondition($cond);
 		}
 
 	  	return $selectFilter;
-	}
-
-	public function getSelectFilterInstance()
-	{
-		return $this->selectFilter;
 	}
 
 	public function orderByPrice(Currency $currency, $direction = 'ASC')
@@ -110,18 +104,21 @@ class ProductFilter
 	public function includeSubcategories()
 	{
 		$this->includeSubcategories = true;
-		$this->selectFilter->removeCondition();
-		$this->selectFilter = $this->category->getProductsFilter($this);
 	}
 
 	public function setEnabledOnly()
 	{
-		$this->selectFilter->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), true));
+		$this->productFilter->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), true));
 	}
 
 	public function isSubcategories()
 	{
 		return $this->includeSubcategories;
+	}
+
+	public function setFilters($filters)
+	{
+		$this->filters = $filters;
 	}
 }
 

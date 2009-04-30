@@ -99,6 +99,11 @@
 			<label class="specField_form_isDisplayedInList_label">{t _SpecField_displayed_in_product_list}</label>
 		</p>
 
+		<p class="checkbox isSortable">
+			<input type="checkbox" value="1" name="isSortable" class="checkbox specField_form_isSortable" {denied role="category.update"}disabled="disabled"{/denied} />
+			<label class="specField_form_isSortable_label">{t _SpecField_sortable}</label>
+		</p>
+
 		<div class="clear"></div>
 
 		{language}

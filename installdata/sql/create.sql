@@ -1,12 +1,12 @@
 # ---------------------------------------------------------------------- #
-# Script generated with: DeZign for Databases v5.2.0                     #
+# Script generated with: DeZign for Databases v5.2.2                     #
 # Target DBMS:           MySQL 4                                         #
 # Project file:          LiveCart.dez                                    #
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2009-01-19 08:29                                #
-# Model version:         Version 2009-01-19 3                            #
+# Created on:            2009-04-20 23:19                                #
+# Model version:         Version 2009-04-20                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -214,7 +214,6 @@ CREATE TABLE OrderedItem (
     customerOrderID INTEGER UNSIGNED NOT NULL COMMENT 'ID of order the item is assigned to',
     shipmentID INTEGER UNSIGNED COMMENT 'ID of the shipment the item is assigned to (when the order has been finalized)',
     parentID INTEGER UNSIGNED,
-    priceCurrencyID CHAR(3) COMMENT 'ID of the active currency at the time the customer added the product to shopping cart',
     count FLOAT COMMENT 'Amount of ordered Products',
     reservedProductCount FLOAT COMMENT 'Amount of reserved Products from inventory (stock)',
     dateAdded TIMESTAMP COMMENT 'Date when the product was added to shopping cart',
@@ -372,6 +371,7 @@ CREATE TABLE Currency (
     decimalSeparator CHAR(3) DEFAULT '.',
     thousandSeparator CHAR(3),
     decimalCount INTEGER DEFAULT 2,
+    rounding TEXT,
     CONSTRAINT PK_Currency PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -410,6 +410,8 @@ CREATE TABLE ProductFile (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     productID INTEGER UNSIGNED COMMENT 'The Product the particular file belongs to',
     productFileGroupID INTEGER UNSIGNED COMMENT 'ID of the ProductFileGroup - if the product is assigned to one (grouped together with related files)',
+    isPublic BOOL,
+    isEmbedded BOOL,
     fileName VARCHAR(255) COMMENT 'File name (the actual filename)',
     extension VARCHAR(20) COMMENT 'File type (for example, zip, mp3, exe, etc.)',
     title MEDIUMTEXT COMMENT 'File title (short description, translatable)',
@@ -675,7 +677,6 @@ CREATE TABLE Shipment (
     amount FLOAT COMMENT 'Total product price amount',
     shippingAmount FLOAT COMMENT 'Shipping price amount',
     taxAmount FLOAT COMMENT 'Total associated tax amount',
-    amountCurrencyID CHAR(3) COMMENT 'ID of the currency the shipment amounts are refered to',
     status TINYINT COMMENT '0 - new 1 - pending 2 - awaiting shipment 3 - shipped 4 - confirmed as delivered 5 - confirmed as lost',
     dateShipped TIMESTAMP COMMENT 'Date the product was shipped to customer',
     trackingCode VARCHAR(100) COMMENT 'Online tracking code for this shipment',
@@ -1039,8 +1040,11 @@ CREATE INDEX IP_address ON ProductRating (ip);
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE CategoryPresentation (
-    ID INTEGER UNSIGNED NOT NULL,
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    categoryID INTEGER UNSIGNED,
+    productID INTEGER UNSIGNED,
     isSubcategories BOOL,
+    isAllVariations BOOL,
     theme VARCHAR(70),
     CONSTRAINT PK_CategoryPresentation PRIMARY KEY (ID)
 )
@@ -1052,6 +1056,7 @@ ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE ProductPresentation (
     ID INTEGER UNSIGNED NOT NULL,
+    isAllVariations BOOL,
     theme VARCHAR(70),
     CONSTRAINT PK_ProductPresentation PRIMARY KEY (ID)
 )
@@ -1809,7 +1814,10 @@ ALTER TABLE ProductRating ADD CONSTRAINT User_ProductRating
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE CategoryPresentation ADD CONSTRAINT Category_CategoryPresentation 
-    FOREIGN KEY (ID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+    FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE CategoryPresentation ADD CONSTRAINT Product_CategoryPresentation 
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductPresentation ADD CONSTRAINT Product_ProductPresentation 
     FOREIGN KEY (ID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;

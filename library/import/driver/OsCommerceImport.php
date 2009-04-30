@@ -186,9 +186,16 @@ class OsCommerceImport extends LiveCartImportDriver
 			return null;
 		}
 
-		$rec = UserGroup::getNewInstance($data['customers_group_name']);
+		$name = null;
+		foreach (array('customers_group_name', 'customer_group_name') as $key)
+		{
+			if (!empty($data[$key]))
+			{
+				return UserGroup::getNewInstance($data[$key]);
+			}
+		}
 
-		return $rec;
+		return null;
 	}
 
 	public function getNextUser()

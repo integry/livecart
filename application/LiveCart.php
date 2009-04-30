@@ -348,7 +348,8 @@ class LiveCart extends Application
 
 		$file = str_replace('\\', '/', $file);
 
-		$editUrl = $this->getRouter()->createUrl(array('controller' => 'backend.template', 'action' => 'editPopup', 'query' => array('file' => $file, 'theme' => $this->getTheme())), true);
+		$editUrl = $this->getRouter()->createUrl(array('controller' => 'backend.template', 'action' => 'editPopup', 'query' => array('file' => $file, 'theme' => '__theme__')), true);
+		$editUrl = str_replace('__theme__', '{theme}', $editUrl);
 
 		// @todo: temp fix. for some reason /public/ was added seemingly randomly for some templates at one store
 		$editUrl = str_replace('/public/', '/', $editUrl);

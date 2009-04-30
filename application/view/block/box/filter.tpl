@@ -15,74 +15,25 @@
 </div>
 {/if}
 
-{if $groups || $manGroup || $priceGroup}
+{sect}{header}
 <div class="box narrowResults">
 	<div class="title">
 		<div>{t _narrow_results}</div>
 	</div>
 
 	<div class="content">
+{/header}{content}
 
-		{if $manGroup}
-			<div class="filterGroup">
-				<h4>{t _by_brand}</h4>
-				<ul>
-					{foreach from=$manGroup.filters item="filter"}
-						<li>
-							<div>
-								<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a>
-								{if 'DISPLAY_NUM_FILTER'|config}
-									 <span class="count">(&rlm;{$filter.count})</span>
-								{/if}
-							</div>
-						</li>
-					{/foreach}
-
-					{if $allManufacturers}
-						<li class="showAll"><a href="{$allManufacturers}">{t _show_all_brands}</a></li>
-					{/if}
-				</ul>
-			</div>
-		{/if}
-
-		{if $priceGroup}
-			<div class="filterGroup">
-				<h4>{t _by_price}</h4>
-				<ul>
-					{foreach from=$priceGroup.filters item="filter"}
-						<li>
-							<div>
-								<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a>
-								{if 'DISPLAY_NUM_FILTER'|config}
-									<span class="count">(&rlm;{$filter.count})</span>
-								{/if}
-							</div>
-						</li>
-					{/foreach}
-				</ul>
-			</div>
-		{/if}
+		{include file="category/block/filterLinks.tpl" sectionFilters=$manGroup title=_by_brand allLink=$allManufacturers allTitle=_show_all_brands}
+		{include file="category/block/filterLinks.tpl" sectionFilters=$priceGroup title=_by_price}
 
 		{foreach from=$groups item="group"}
-			<div class="filterGroup">
-				<h4>{$group.name_lang}</h4>
-				<ul>
-					{foreach from=$group.filters item="filter"}
-						<li>
-							<div>
-								<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a>
-								{if 'DISPLAY_NUM_FILTER'|config}
-									 <span class="count">(&rlm;{$filter.count})</span>
-								{/if}
-							</div>
-						</li>
-					{/foreach}
-					{if $group.more}
-						<li class="showAll"><a href="{$group.more}">{t _show_all}</a></li>
-					{/if}
-				</ul>
-			</div>
+			{if $group.displayLocation == 0}
+				{include file="category/block/filterLinks.tpl" sectionFilters=$group title=$group.name_lang allLink=$group.more allTitle=_show_all}
+			{/if}
 		{/foreach}
+
+{/content}{footer}
 	</div>
 </div>
-{/if}
+{/footer}{/sect}

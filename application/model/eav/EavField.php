@@ -18,6 +18,8 @@ ClassLoader::import('application.model.eav.*');
  */
 class EavField extends EavFieldCommon
 {
+	private static $eavClasses = null;
+
 	/**
 	 * Define database schema
 	 */
@@ -59,7 +61,9 @@ class EavField extends EavFieldCommon
 
 	public function getEavClasses()
 	{
-		return array(
+		if (!self::$eavClasses)
+		{
+			self::$eavClasses = array(
 					'CustomerOrder'=> 2,
 					'User' => 4,
 					'UserAddress' => 5,
@@ -68,6 +72,18 @@ class EavField extends EavFieldCommon
 					'UserGroup' => 5,
 					'Transaction' => 0
 				);
+		}
+
+		return self::$eavClasses;
+	}
+
+	public function registerClass($className, $id)
+	{
+		self::getEavClasses();
+		self::$eavClasses[$className] = $id;
+
+		$schema = self::getSchemaInstance('EavObject');
+		$schema->registerField(new ARForeignKeyField(EavObject::getClassField($className), $className, "ID", null, ARInteger::instance()), false);
 	}
 
 	public function getOwnerClass()

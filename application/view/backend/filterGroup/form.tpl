@@ -13,7 +13,7 @@
 				<span class="errorText hidden"> </span>
 			</fieldset>
 		</p>
-		
+
 		<p class="required">
 			<label class="filter_form_name_label">{t _Filter_name}</label>
 			<fieldset class="error">
@@ -21,7 +21,18 @@
 				<span class="errorText hidden"> </span>
 			</fieldset>
 		</p>
-		
+
+		<p class="required">
+			<label class="filter_form_displayLocation_label">{t _Filter_displayLocation}</label>
+			<fieldset class="error">
+				<select name="displayLocation" class="filter_form_displayLocation" {denied role="category.update"}readonly="readonly"{/denied}>
+					<option value="0">{t _side_menu}</option>
+					<option value="1">{t _top_menu}</option>
+				</select>
+				<span class="errorText hidden"> </span>
+			</fieldset>
+		</p>
+
 		<!-- STEP 2 -->
 		<fieldset class="filter_step_lev1 filter_step_filters error">
 		<legend>{t _filters}</legend>
@@ -48,22 +59,22 @@
 											<span class="errorText hidden"> </span>
 										</fieldset>
 									</span>
-	
+
 									<span class="filter_date_range">
 										<label class="filter_update">{t _Filter_date_range}</label>
 										<fieldset class="error">
-											<input type="text" class="filter_update" {denied role="category.update"}readonly="readonly"{/denied} /> 
+											<input type="text" class="filter_update" {denied role="category.update"}readonly="readonly"{/denied} />
 											<span {denied role="category.update"}style="display: none"{/denied}>
 												{img src="image/silk/calendar.png" class="calendar_button filter_update"}
 											</span>
-											
-											- 
-											
-											<input type="text" class="filter_update"  {denied role="category.update"}readonly="readonly"{/denied} /> 
+
+											-
+
+											<input type="text" class="filter_update"  {denied role="category.update"}readonly="readonly"{/denied} />
 											<span {denied role="category.update"}style="display: none"{/denied}>
 												{img src="image/silk/calendar.png" class="calendar_button"}
 											</span>
-											
+
 											<input type="hidden" class="hidden filter_date_start_real filter_update"  {denied role="category.update"}readonly="readonly"{/denied} />
 											<input type="hidden" class="hidden filter_date_end_real filter_update"  {denied role="category.update"}readonly="readonly"{/denied} />
 											<span class="errorText hidden"> </span>
@@ -75,15 +86,15 @@
 						</ul>
 					</p>
 					<p class="filter_crate_filters">
-						<a href="#add" class="filter_add_filter menu" {denied role="category.update"}style="display: none"{/denied}>{t _Filter_add_filter}</a> 
+						<a href="#add" class="filter_add_filter menu" {denied role="category.update"}style="display: none"{/denied}>{t _Filter_add_filter}</a>
 					</p>
 				</div>
-	
+
 				<br class="clear" />
 			</fieldset>
 			</p>
 		</fieldset>
-		
+
 		<!-- STEP 3 -->
 		<fieldset class="filter_step_translations container">
 		{language}
@@ -93,7 +104,7 @@
 					<input type="text" name="name_{$lang.ID}" {denied role="category.update"}readonly="readonly"{/denied} />
 				</fieldset>
 			</fieldset>
-			
+
 			<h5 class="filter_filters_title">{t _Filter_filters}:</h5>
 			<fieldset class="filters_translations_fieldset">
 				<ul class="filters_translations_{$lang.ID}">
