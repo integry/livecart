@@ -24,6 +24,7 @@ class CategoryPresentation extends ActiveRecordModel
 		$schema->registerField(new ARField("isSubcategories", ARBool::instance()));
 		$schema->registerField(new ARField("isAllVariations", ARBool::instance(20)));
 		$schema->registerField(new ARField("theme", ARVarchar::instance(20)));
+		$schema->registerField(new ARField("listStyle", ARVarchar::instance(20)));
 
 		return $schema;
 	}
@@ -66,13 +67,9 @@ class CategoryPresentation extends ActiveRecordModel
 	{
 		$f = new ARSelectFilter(self::getCategoryCondition($category));
 		self::setCategoryOrder($category, $f);
-		$f->setLimit(1);
 
 		$set = ActiveRecordModel::getRecordSet(__CLASS__, $f, array('Category'));
-		if ($set->size())
-		{
-			return $set->get(0);
-		}
+		return self::getInheritedConfig($set);
 	}
 
 	public static function getThemeByProduct(Product $product)
@@ -82,26 +79,28 @@ class CategoryPresentation extends ActiveRecordModel
 		$f = select($c);
 		$f->setOrder(new ARExpressionHandle('CategoryPresentation.productID=' . $product->getID()), 'DESC');
 		self::setCategoryOrder($product->getCategory(), $f);
-		$f->setLimit(2);
 
 		// check if a theme is defined for this product particularly
 		$set = ActiveRecordModel::getRecordSet(__CLASS__, $f, array('Category'));
+		return self::getInheritedConfig($set);
+	}
+
+	private function getInheritedConfig(ARSet $set)
+	{
 		if ($set->size())
 		{
 			// category level configuration?
-			$prod = $set->get(0);
-			if (!$prod->product->get() || (1 == $set->size()))
-			{
-				return $prod;
-			}
+			$prod = $set->shift();
 
 			// fill missing product level settings with category level settings
-			$cat = $set->get(1);
-			foreach (array('theme', 'isAllVariations') as $field)
+			foreach ($set as $cat)
 			{
-				if (!$prod->$field->get())
+				foreach (array('theme', 'isAllVariations', 'listStyle') as $field)
 				{
-					$prod->$field->set($cat->$field->get());
+					if (!$prod->$field->get())
+					{
+						$prod->$field->set($cat->$field->get());
+					}
 				}
 			}
 
@@ -111,7 +110,7 @@ class CategoryPresentation extends ActiveRecordModel
 
 	private static function getCategoryCondition(Category $category)
 	{
-		$own = new EqualsCond(new ARFieldHandle(__CLASS__, 'ID'), $category->getID());
+		$own = new EqualsCond(new ARFieldHandle(__CLASS__, 'categoryID'), $category->getID());
 		$parent = new EqualsOrLessCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
 		$parent->addAND(new EqualsOrMoreCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
 		$parent->addAND(new EqualsCond(new ARFieldHandle(__CLASS__, 'isSubcategories'), true));
