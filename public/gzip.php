@@ -17,6 +17,11 @@ else
 	exit;
 }
 
+if (file_exists('appdir.php'))
+{
+	$file = (include('appdir.php')) . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $file;
+}
+
 if (!file_exists($file))
 {
 	exit;
