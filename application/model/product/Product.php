@@ -885,8 +885,7 @@ class Product extends MultilingualObject
 
 		if ($this->parent->get())
 		{
-			$parent = $this->parent->get()->toArray();
-			$array = array_merge($parent, $array);
+			$array = array_merge($this->parent->get()->toArray(), array_filter($array));
 		}
 
 		foreach ($this->variations as $variation)
@@ -1087,6 +1086,22 @@ class Product extends MultilingualObject
 		return $this->loadRelationships($loadReferencedRecords, $type);
 	}
 
+	public function getAllCategories()
+	{
+		$set = new ARSet();
+		$set->add($this->getCategory());
+
+		if ($additional = $this->getAdditionalCategories())
+		{
+			foreach ($additional as $cat)
+			{
+				$set->add($cat);
+			}
+		}
+
+		return $set;
+	}
+
 	public function getAdditionalCategories()
 	{
 		if (is_null($this->additionalCategories))
@@ -1098,7 +1113,8 @@ class Product extends MultilingualObject
 			$categories = new ARSet();
 			$filter = new ARSelectFilter();
 			$filter->setOrder(new ARFieldHandle('Category', 'lft'));
-			foreach ($this->getRelatedRecordSet('ProductCategory', $filter, array('Category')) as $productCat)
+
+			foreach ($this->getParent()->getRelatedRecordSet('ProductCategory', $filter, array('Category')) as $productCat)
 			{
 				$this->registerAdditionalCategory($productCat->category->get());
 			}
@@ -1215,6 +1231,12 @@ class Product extends MultilingualObject
 		if ($includeInheritedOptions)
 		{
 			$options->merge($parent->getCategory()->getOptions(true));
+
+			foreach ($parent->getAdditionalCategories() as $cat)
+			{
+				$options->merge($cat->getOptions(true));
+			}
+
 			ProductOption::loadChoicesForRecordSet($options);
 		}
 

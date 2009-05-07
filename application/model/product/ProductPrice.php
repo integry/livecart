@@ -90,6 +90,11 @@ class ProductPrice extends ActiveRecordModel
 
 	private function getChildPrice($parentPrice, $childPriceDiff, $setting)
 	{
+		if ($parentPrice && !$childPriceDiff)
+		{
+			var_dump($parentPrice . ' - ' . $childPriceDiff);
+			throw new ApplicationException();
+		}
 		if ($setting == Product::CHILD_ADD)
 		{
 			return $parentPrice + $childPriceDiff;
@@ -120,7 +125,7 @@ class ProductPrice extends ActiveRecordModel
 
 			if ($priceSetting !== Product::CHILD_OVERRIDE)
 			{
-				$price = $this->getChildPrice($parentPrice, $this->price->get(), $priceSetting);
+				$price = $this->getChildPrice($parentPrice, $this->recalculatePrice(), $priceSetting);
 			}
 			else
 			{
@@ -192,7 +197,7 @@ class ProductPrice extends ActiveRecordModel
 				foreach ($order->getShoppingCartItems() as $orderItem)
 				{
 					$orderProduct = $orderItem->product->get();
-					if ($orderProduct->parent->get() == $parent)
+					if ($orderProduct->parent->get()->getID() == $parent->getID())
 					{
 						$itemCnt += $orderItem->count->get();
 					}
