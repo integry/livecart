@@ -145,7 +145,7 @@ class LanguageController extends StoreManagementController
 		foreach ($this->application->getConfigContainer()->getLanguageDirectories() as $fileDir)
 		{
 			$fileDir .= '/';
-			$files = $enManager->getDefinitionFiles($fileDir . $editLocaleName);
+			$files = $enManager->getDefinitionFiles($fileDir . 'en');
 
 			// get currently translated definitions
 			foreach ($files as $file)
@@ -167,13 +167,7 @@ class LanguageController extends StoreManagementController
 				}
 
 				// get language default definitions
-						//			var_dump($relPath);
 				$default = $editManager->getFileDefs($relPath, true);
-
-				if (strpos($file, 'module'))
-				{
-					//var_dump($default);
-				}
 
 				if (!is_array($default))
 				{

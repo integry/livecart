@@ -70,6 +70,14 @@ LAYOUT_GRID_COLUMNS=Grid columns
 LAYOUT_GRID_ROWS=Grid rows
 ALLOW_SWITCH_LAYOUT=Allow user to switch list layout
 
+_product_table_view=Table Layout
+TABLE_VIEW_COLUMNS=Displayed columns
+IMAGE=Image
+SKU=SKU
+NAME=Name
+PRICE=Price
+DETAILS=Link to detail page
+
 _category_filters=Category Page Filters
 ENABLE_MAN_FILTERS=Enable manufacturer filters
 ENABLE_PRICE_FILTERS=Enable price filters

@@ -217,9 +217,9 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 			$values = $this->request->get('values');
 
 			$specField->loadRequestData($this->request);
-			$specField->setFieldValue('isRequired', $this->request->get('isRequired'));
-			$specField->setFieldValue('isDisplayed', $this->request->get('isDisplayed'));
-			$specField->setFieldValue('isDisplayedInList', $this->request->get('isDisplayedInList'));
+			$specField->setFieldValue('isRequired', $this->request->get('isRequired', 0));
+			$specField->setFieldValue('isDisplayed', $this->request->get('isDisplayed', 0));
+			$specField->setFieldValue('isDisplayedInList', $this->request->get('isDisplayedInList', 0));
 			$specField->setFieldValue('dataType', $dataType);
 			$specField->setFieldValue('type', $type);
 

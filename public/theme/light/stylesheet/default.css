@@ -407,3 +407,6 @@ a.proceedToCheckout span span span span
 {
 	margin-right: 1em;
 }
+
+/* IE */
+.compactProductList li { position: static !important; }

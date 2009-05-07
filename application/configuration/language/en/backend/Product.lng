@@ -25,6 +25,7 @@ _set_keywords=Set keywords
 _set_website_address=Set website address
 _set_price=Set price
 _set_stock=Set stock
+_set_shipping_weight=Set shipping weight (kg)
 _set_minimum_quantity=Set minimum order quantity
 _set_shipping_surcharge=Set shipping surcharge
 _set_as_featured_product=Set as featured product

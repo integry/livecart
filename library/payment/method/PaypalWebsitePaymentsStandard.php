@@ -81,14 +81,14 @@ class PaypalWebsitePaymentsStandard extends ExternalPayment
 			{
 				$res = fgets ($fp, 1024);
 
-				if (strcmp ($res, "VERIFIED") == 0)
+				if (is_numeric(strrpos($res, "VERIFIED")))
 				{
 					if (($paymentStatus != 'Completed') && !$this->getConfigValue('SANDBOX'))
 					{
 						throw new PaymentException('Payment is not completed');
 					}
 				}
-				else if (strcmp ($res, "INVALID") == 0)
+				else if (is_numeric(strrpos($res, "INVALID")))
 				{
 					throw new PaymentException('Invalid response from PayPal');
 				}

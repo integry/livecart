@@ -64,9 +64,8 @@
 		{literal}
 		<script type="text/javascript">
 		   var newSpecFieldForm = new Backend.SpecField('{/literal}{json array=$specFieldsList}{literal}');
-		   newSpecFieldForm.addField(null, "new" + Backend.SpecField.prototype.countNewFilters, true);
+		   newSpecFieldForm.addField(null, "new" + Backend.SpecField.prototype.incValueCounter(), true);
 		   newSpecFieldForm.bindDefaultFields();
-		   Backend.SpecField.prototype.countNewFilters++;
 		</script>
 		{/literal}
 	</fieldset>

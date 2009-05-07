@@ -58,6 +58,8 @@ Backend.SpecField.prototype = {
 	TYPE_TEXT_SELECTOR: 5,
 	TYPE_TEXT_DATE: 6,
 
+	countNewValues: 0,
+
 	cssPrefix: "specField_",
 
 	boolFields: ['isMultiValue', 'isRequired', 'isDisplayed', 'isDisplayedInList', 'isSortable'],
@@ -174,7 +176,7 @@ Backend.SpecField.prototype = {
 		   }
 		}.bind(this));
 
-		this.addField(null, "new" + Backend.SpecField.prototype.countNewValues, false);
+		this.addField(null, "new" + this.incValueCounter(), false);
 		this.fieldsList.touch(true);
 
 		this.bindDefaultFields();
@@ -183,8 +185,6 @@ Backend.SpecField.prototype = {
 
 		$('specField_step_lev1_specField_step_main_' + this.categoryID + '_new').show();
 		$('specField_step_lev1_specField_step_values_' + this.categoryID + '_new').hide();
-
-		Backend.SpecField.prototype.countNewValues++;
 
 		Form.restore(this.nodes.form, ['type']);
 	},
@@ -664,11 +664,14 @@ Backend.SpecField.prototype = {
 	 */
 	addValueFieldAction: function()
 	{
-		this.addField(null, "new" + Backend.SpecField.prototype.countNewValues, false);
+		this.addField(null, "new" + this.incValueCounter(), false);
 		this.bindDefaultFields();
-		Backend.SpecField.prototype.countNewValues++;
 	},
 
+	incValueCounter: function()
+	{
+		return ++Backend.SpecField.prototype.countNewValues;
+	},
 
 	/**
 	 * This one is easy. When we click on delete value from "Values" step we delete the value and it's
@@ -1086,9 +1089,13 @@ Backend.SpecField.prototype = {
 					var tc = Backend.Category.tabControl;
 
 					var tabContent = $(tc.getContainerId('tabFilters', tc.treeBrowser.getSelectedItemId()));
-					$A(tabContent.getElementsByTagName("ul")).each(function(ul) {
-						try{ ActiveList.prototype.destroy(ul); } catch(e){ }
-					});
+
+					if (tabContent)
+					{
+						$A(tabContent.getElementsByTagName("ul")).each(function(ul) {
+							try{ ActiveList.prototype.destroy(ul); } catch(e){ }
+						});
+					}
 
 					Element.remove(tabContent);
 				} catch (e){

@@ -56,6 +56,7 @@
 			</optgroup>
 
 			<optgroup label="{t _shipping_opts}">
+				<option value="set_shippingWeight">{t _set_shipping_weight}</option>
 				<option value="set_minimumQuantity">{t _set_minimum_quantity}</option>
 				<option value="set_shippingSurchargeAmount">{t _set_shipping_surcharge}</option>
 				<option value="enable_isFreeShipping">{t _enable_free_shipping}</option>

@@ -131,7 +131,7 @@ class CategoryController extends FrontendController
 
 		$order = $this->request->get('sort');
 		$defOrder = strtolower($this->config->get('SORT_ORDER'));
-		if (!$order || (!isset($sort[$order]) && !is_numeric(array_shift(explode('-', $order)))))
+		if (!$order)
 		{
 			$order = $defOrder;
 		}
@@ -399,14 +399,19 @@ class CategoryController extends FrontendController
 	 */
 	private function applySortOrder(ARSelectFilter $selectFilter, $order)
 	{
+		$dir = array_pop(explode('_', $order)) == 'asc' ? 'ASC' : 'DESC';
+
 		if (substr($order, 0, 12) == 'product_name')
 		{
-			$dir = array_pop(explode('_', $order)) == 'asc' ? 'ASC' : 'DESC';
 			$selectFilter->setOrder(Product::getLangOrderHandle(new ARFieldHandle('Product', 'name')), $dir);
 		}
 		else if (substr($order, 0, 5) == 'price')
 		{
-			$dir = array_pop(explode('_', $order)) == 'asc' ? 'ASC' : 'DESC';
+			$selectFilter->setOrder(new ARFieldHandle('ProductPrice', 'price'), $dir);
+			$selectFilter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
+		}
+		else if (substr($order, 0, 3) == 'sku')
+		{
 			$selectFilter->setOrder(new ARFieldHandle('ProductPrice', 'price'), $dir);
 			$selectFilter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
 		}
@@ -414,9 +419,9 @@ class CategoryController extends FrontendController
 		{
 			$selectFilter->setOrder(new ARFieldHandle('Product', 'dateCreated'), 'DESC');
 		}
-		else if ('rating' == $order)
+		else if (in_array($order, array('rating', 'sku')))
 		{
-			$selectFilter->setOrder(new ARFieldHandle('Product', 'rating'), 'DESC');
+			$selectFilter->setOrder(new ARFieldHandle('Product', $order), $dir);
 		}
 		else if ('sales_rank' == $order)
 		{

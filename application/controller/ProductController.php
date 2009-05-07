@@ -212,7 +212,7 @@ class ProductController extends FrontendController
 
 			$saving = $total - $product->getPrice($currency);
 			$response->set('bundleSavingTotal', $currency->getFormattedPrice($saving));
-			$response->set('bundleSavingPercent', round(($saving / $total) * 100));
+			$response->set('bundleSavingPercent', $total ? round(($saving / $total) * 100) : 0);
 		}
 
 		// contact form
