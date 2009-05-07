@@ -476,7 +476,7 @@ Backend.Category = {
 
 			if(!alreadyLoaded)
 			{
-				Backend.Category.treeBrowser.loadXML(Backend.Category.links.categoryRecursiveAutoloading + "?id=" + match[1], function() { this.activeCategoryId = null; this.activateCategory(match[1]);}.bind(this));
+				Backend.Category.treeBrowser.loadXML(Backend.Router.setUrlQueryParam(Backend.Category.links.categoryRecursiveAutoloading, "id", match[1]), function() { this.activeCategoryId = null; this.activateCategory(match[1]);}.bind(this));
 			}
 		}
 	},
