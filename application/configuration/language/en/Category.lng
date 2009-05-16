@@ -16,6 +16,11 @@ _not_found=<span class='notFoundMain'>No products were found.</span> Please try 
 _no_products=No products were found matching this search condition.
 _featured_products=Featured Products
 
+_found_x=Found [_1]
+_all_results=View all [_1] results
+NewsPost=news entries
+StaticPage=pages
+
 _showing_products=Showing [_1] to [_2] of [_3] found products
 _sort_by=Sort by
 

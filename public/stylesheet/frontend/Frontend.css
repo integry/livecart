@@ -15,6 +15,11 @@ ul, ul li
 	list-style: none;
 }
 
+ol
+{
+	margin-left: 2em;
+}
+
 table
 {
     border-spacing: 0;
@@ -785,15 +790,21 @@ tr.separator div
     font-weight: normal;
 }
 
-.narrowByCat .subCategories td.details
-{
-    height: auto;
-}
-
 ul.subSubCats
 {
     margin: 6px;
     margin-top: 12px;
+}
+
+.modelSearchResults
+{
+	margin-bottom: 1em;
+}
+
+.allResults
+{
+	font-size: smaller;
+	margin-top: 0.5em;
 }
 
 /*****************************

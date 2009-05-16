@@ -99,7 +99,8 @@ class CategoryController extends FrontendController
 				$category->getPathNodeSet();
 			}
 
-			$this->logSearchQuery($searchFilter->getCleanedQuery($query));
+			$cleanedQuery = $searchFilter->getCleanedQuery($query);
+			$this->logSearchQuery($cleanedQuery);
 		}
 
 		// root category?
@@ -322,6 +323,12 @@ class CategoryController extends FrontendController
 			{
 				$response->set('manufacturerFilter', $filter->toArray());
 			}
+		}
+
+		if ((1 == $currentPage) && $query)
+		{
+			$searchCon = new SearchController($this->application);
+			$response->set('modelSearch', $searchCon->searchAll($cleanedQuery));
 		}
 
 		return $response;

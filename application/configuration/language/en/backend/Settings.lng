@@ -209,6 +209,12 @@ INVOICE_SELLER_INFO=Seller contact information in invoice
 _invoice_preferences=Invoice Options
 INVOICE_SHOW_PAYMENT_INFO=Show payments
 
+_searching=Searching
+_search_types=Additionally Searchable Data
+SEARCH_MODELS=Searchable data
+SEARCH_MODEL_PREVIEW=Number of preview results to display in common search results pages
+SEARCH_MODEL_PER_PAGE=Search results per page
+
 _users=User Accounts
 USER_COUNT_RECENT_ORDERS=Number of recent orders to display in account homepage
 USER_ORDERS_PER_PAGE=Number of orders per page

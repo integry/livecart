@@ -299,9 +299,13 @@ abstract class ActiveGridController extends StoreManagementController
 		{
 			return $record[$field];
 		}
-		else if (isset($record[$class][$field]))
+		else if (isset($record[$class][$field]) && $field)
 		{
 			return $record[$class][$field];
+		}
+		else if (isset($record[$class]) && !is_array($record[$class]))
+		{
+			return $record[$class];
 		}
 		else if (strpos($field, '.'))
 		{

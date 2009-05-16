@@ -281,6 +281,12 @@ class ActiveGrid
 
 	private function getFieldHandle($field, $handleType)
 	{
+		// aliases
+		if (!strpos($field, '.'))
+		{
+			return f($field);
+		}
+
 		list($schemaName, $fieldName) = explode('.', $field);
 
 		if ('eavField' == $schemaName)

@@ -14,10 +14,12 @@
 		{include file="category/allFilters.tpl"}
 	{/if}
 
-	{block FILTER_TOP}
-
 	{if $foundCategories}
 		{include file="category/foundCategories.tpl"}
+	{/if}
+
+	{if $modelSearch}
+		{include file="search/block/allResults.tpl"}
 	{/if}
 
 	{if $categoryNarrow}
@@ -47,6 +49,8 @@
 
 		{include file="category/productListLayout.tpl" products=$subCatFeatured}
 	{/if}
+
+	{block FILTER_TOP}
 
 	{include file="category/categoryProductList.tpl"}
 

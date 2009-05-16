@@ -40,9 +40,11 @@ class RolesController extends StoreManagementController
 			}
 		}
 
-		$menu = new MenuLoader();
-		$menuItems = array_shift($menu->getAllHierarchy());
+		$menu = new MenuLoader($this->application);
+		$menuItems = $menu->getCurrentHierarchy('', '');
+		//print_r($menuItems);
 		$menuItems = $menuItems['items'];
+
 		foreach ($menuItems as $topLevel)
 		{
 			if (isset($topLevel['items']))

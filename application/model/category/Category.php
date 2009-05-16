@@ -808,12 +808,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 									availableProductCount = (SELECT COUNT(*) FROM Product WHERE categoryID = Category.ID AND Product.isEnabled = 1 AND (stockCount > 0 OR type = ' . Product::TYPE_DOWNLOADABLE .  '))';
 		self::getDBConnection()->executeUpdate($sql);
 
-		// additional categories
-		$sql = 'UPDATE Category SET totalProductCount = totalProductCount + (SELECT COUNT(*) FROM ProductCategory WHERE ProductCategory.categoryID = Category.ID),
-									activeProductCount = activeProductCount + (SELECT COUNT(*) FROM ProductCategory LEFT JOIN Product ON ProductCategory.productID=Product.ID WHERE ProductCategory.categoryID = Category.ID AND Product.isEnabled = 1),
-									availableProductCount = availableProductCount + (SELECT COUNT(*) FROM ProductCategory LEFT JOIN Product ON ProductCategory.productID=Product.ID WHERE ProductCategory.categoryID = Category.ID AND Product.isEnabled = 1 AND (stockCount > 0 OR type = ' . Product::TYPE_DOWNLOADABLE .  '))';
-		self::getDBConnection()->executeUpdate($sql);
-
 		//self::updateProductCount(Category::getInstanceByID(Category::ROOT_ID, Category::LOAD_DATA));
 
 		// add subcategory counts to parent categories
@@ -831,6 +825,27 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 
 		$sql .= ' FROM Category';
 
+		self::getDBConnection()->executeUpdate($sql);
+
+		// additional categories
+		$q = 'SELECT
+				COUNT(DISTINCT productID)
+				FROM ProductCategory
+				LEFT JOIN Category AS jCat ON ProductCategory.categoryID=jCat.ID
+				LEFT JOIN Product ON Product.ID=ProductCategory.productID
+				LEFT JOIN Category AS mainCat ON Product.categoryID=mainCat.ID
+				WHERE
+					NOT (mainCat.lft >= Category.lft
+					AND
+					mainCat.rgt <= Category.rgt)
+					AND
+					jCat.lft >= Category.lft
+					AND
+					jCat.rgt <= Category.rgt';
+
+		$sql = 'UPDATE CategoryCount LEFT JOIN Category ON CategoryCount.ID=Category.ID SET CategoryCount.totalProductCount = CategoryCount.totalProductCount + (' . $q . '),
+									CategoryCount.activeProductCount = CategoryCount.activeProductCount + (' . $q . ' AND Product.isEnabled = 1),
+									CategoryCount.availableProductCount = CategoryCount.availableProductCount + (' . $q . ' AND Product.isEnabled = 1 AND (stockCount > 0 OR type = ' . Product::TYPE_DOWNLOADABLE .  '))';
 		self::getDBConnection()->executeUpdate($sql);
 
 		$sql = 'UPDATE Category LEFT JOIN CategoryCount ON Category.ID=CategoryCount.ID SET ';

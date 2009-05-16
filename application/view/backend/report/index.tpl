@@ -38,6 +38,7 @@
 	<div class="treeManagerContainer maxHeight h--100">
 		<div id="reportDateRange">
 			Report period:
+			{block backend.components/DATE_RANGE_SELECTOR class="reportDateSelector"}
 			<select class="reportDateSelector">
 				<option value="-30 days | now">{maketext text=_last_days params=30}</option>
 				<option value="-24 hours | now">{maketext text=_last_hours params=24}</option>
