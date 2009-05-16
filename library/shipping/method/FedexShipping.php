@@ -54,7 +54,7 @@ class FedexShipping extends ShippingRateCalculator
 
 		$fedex->setAccountNumber($this->getConfigValue('accountNumber'));
 		$fedex->setMeterNumber($this->getConfigValue('meterNumber'));
-		$fedex->setCarrierCode('FDXE');
+		$fedex->setCarrierCode('FDXG');
 		$fedex->setDropoffType('REGULARPICKUP');
 		$fedex->setPackaging('YOURPACKAGING');
 		$fedex->setOriginStateOrProvinceCode($this->sourceState);
@@ -71,10 +71,32 @@ class FedexShipping extends ShippingRateCalculator
 		$fedex->setWeightUnits('LBS');
 		$fedex->setWeight($pounds);
 
+		foreach (array('FDXG', 'FDXE') as $type)
+		{
+			$result = $this->getRatesByType($fedex, $type);
+			if ($result instanceof ShippingRateSet)
+			{
+				if (!isset($results))
+				{
+					$results = $result;
+				}
+				else
+				{
+					$results->merge($result);
+				}
+			}
+		}
+
+		return isset($results) ? $results : array_shift($result);
+	}
+
+	private function getRatesByType(Fedex $fedex, $type)
+	{
+		$fedex->setCarrierCode($type);
+
 		$enabledServices = $this->getConfigValue('enabledServices', null);
 		$price = $fedex->getPrice();
 
-		// success
 		if (isset($price['FDXRATEAVAILABLESERVICESREPLY'][0]['ENTRY']))
 		{
 			$rates = $price['FDXRATEAVAILABLESERVICESREPLY'][0]['ENTRY'];
@@ -97,7 +119,8 @@ class FedexShipping extends ShippingRateCalculator
 					$r->setServiceName($name);
 
 					$cost = $price['ESTIMATEDCHARGES'][0]['DISCOUNTEDCHARGES'][0]['NETCHARGE'][0]['VALUE'];
-					$currency = $price['ESTIMATEDCHARGES'][0]['CURRENCYCODE'][0]['VALUE'];
+					$currency = isset($price['ESTIMATEDCHARGES'][0]['CURRENCYCODE'][0]['VALUE'])?
+								$price['ESTIMATEDCHARGES'][0]['CURRENCYCODE'][0]['VALUE'] : 'USD';
 					$r->setCost($cost, $currency);
 					$r->setClassName(get_class($this));
 					$r->setProviderName($this->getProviderName());
@@ -108,11 +131,12 @@ class FedexShipping extends ShippingRateCalculator
 		// error
 		else
 		{
-			$result = new ShippingRateError($price['FDXRATEAVAILABLESERVICESREPLY'][0]['ERROR']);
+			$price = $price['FDXRATEAVAILABLESERVICESREPLY'][0];
+			$msg = isset($price['ERROR']) ? $price['ERROR'] : $price['SOFTERROR'][0]['MESSAGE'];
+			$result = new ShippingRateError($msg);
 		}
 
 		$result->setRawResponse($price);
-
 		return $result;
 	}
 }
