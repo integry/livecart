@@ -74,6 +74,7 @@ Backend.Product =
 		this.toggleSkuField(container.down('form').elements.namedItem('autosku'));
 
 		this.initSpecFieldControls(0);
+		this.initInventoryControls(container.down('.inventory'));
 
 		// init type selector logic
 		var typeSel = container.down('select.productType');
@@ -111,6 +112,35 @@ Backend.Product =
 	{
 		var container = (0 == categoryID) ? $('addProductContainer') : $('tabProductsContent_' + categoryID);
 		new Backend.Eav(container);
+	},
+
+	initInventoryControls: function(container)
+	{
+	  	var stockCountContainer = container.down('div.stockCount');
+	  	var stockCountField = stockCountContainer.down('input');
+	  	var unlimitedCb = container.down('input.isUnlimitedStock');
+
+	  	var onchange = function()
+	  	{
+			if (unlimitedCb.checked)
+			{
+				stockCountField._backedUpValue = stockCountField.value;
+				stockCountField.value = '1';
+				$(stockCountContainer).hide();
+			}
+			else
+			{
+				if (stockCountField._backedUpValue)
+				{
+					stockCountField.value = stockCountField._backedUpValue;
+				}
+
+				$(stockCountContainer).show();
+			}
+		}
+
+		onchange();
+		unlimitedCb.onchange = onchange;
 	},
 
 	toggleSkuField: function(checkbox)
@@ -613,6 +643,8 @@ Backend.Product.Prices.prototype =
 
 			price.onchange();
 		});
+
+		Backend.Product.initInventoryControls(this.nodes.form.down('.inventory'));
 
 		Form.State.backup(this.nodes.form);
 	},

@@ -1,5 +1,5 @@
 {sect}{header}
-<div class="filterTop">
+<div class="filterTop" id="filterTop_{uniqid}">
 {/header}{content}
 
 	{if 'TOP_FILTER_PRICE'|config}
@@ -18,4 +18,8 @@
 
 {/content}{footer}
 </div>
+
+<script type="text/javascript">
+	var filters = new Filter.AjaxPopulate("filterTop_{uniqid last=true}");
+</script>
 {/footer}{/sect}

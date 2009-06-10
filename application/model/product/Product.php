@@ -91,6 +91,7 @@ class Product extends MultilingualObject
 		$schema->registerField(new ArField("isFreeShipping", ARBool::instance()));
 		$schema->registerField(new ArField("isBackOrderable", ARBool::instance()));
 		$schema->registerField(new ArField("isFractionalUnit", ARBool::instance()));
+		$schema->registerField(new ArField("isUnlimitedStock", ARBool::instance()));
 
 		$schema->registerField(new ArField("shippingWeight", ARFloat::instance(8)));
 
@@ -230,7 +231,7 @@ class Product extends MultilingualObject
 
 		if (!$this->isBundle())
 		{
-			return self::isAvailableForOrdering($this->isEnabled->get() || !$requireEnabled, $this->stockCount->get(), $this->isBackOrderable->get(), $this->type->get());
+			return self::isAvailableForOrdering($this->isEnabled->get() || !$requireEnabled, $this->stockCount->get(), $this->isBackOrderable->get(),  $this->isUnlimitedStock->get(), $this->type->get());
 		}
 		else
 		{
@@ -251,16 +252,22 @@ class Product extends MultilingualObject
 		}
 	}
 
-	public function isInventoryTracked($type = null)
+	public function isInventoryTracked($type = null, $isUnlimitedStock = null)
 	{
-		if (is_null($type) && !empty($this))
+		if (!empty($this))
 		{
-			$type = $this->type->get();
+			foreach (array('type', 'isUnlimitedStock') as $var)
+			{
+				if (is_null($$var))
+				{
+					$$var = $this->$var->get();
+				}
+			}
 		}
 
 		$config = self::getApplication()->getConfig();
 
-		if ($config->get('INVENTORY_TRACKING') == 'DISABLE')
+		if ($isUnlimitedStock || ($config->get('INVENTORY_TRACKING') == 'DISABLE'))
 		{
 			return false;
 		}
@@ -308,13 +315,13 @@ class Product extends MultilingualObject
 		return $this->type->get() == self::TYPE_BUNDLE;
 	}
 
-	protected static function isAvailableForOrdering($isEnabled, $stockCount, $isBackOrderable, $type)
+	protected static function isAvailableForOrdering($isEnabled, $stockCount, $isBackOrderable, $isUnlimitedStock, $type)
 	{
 		if ($isEnabled)
 		{
 			$config = self::getApplication()->getConfig();
 
-			if (!self::isInventoryTracked($type))
+			if (!self::isInventoryTracked($type, $isUnlimitedStock))
 			{
 				return true;
 			}
@@ -904,6 +911,7 @@ class Product extends MultilingualObject
 
 		$array['isTangible'] = $array['type'] == self::TYPE_TANGIBLE;
 		$array['isDownloadable'] = $array['type'] == self::TYPE_DOWNLOADABLE;
+		$array['isInventoryTracked'] = self::isInventoryTracked($array['type'], $array['isUnlimitedStock']);
 
 		if ($array['isEnabled'])
 		{
@@ -913,7 +921,7 @@ class Product extends MultilingualObject
 			}
 			else
 			{
-				$array['isAvailable'] = self::isAvailableForOrdering($array['isEnabled'], $array['stockCount'], $array['isBackOrderable'], $array['type']);
+				$array['isAvailable'] = self::isAvailableForOrdering($array['isEnabled'], $array['stockCount'], $array['isBackOrderable'], $array['isUnlimitedStock'], $array['type']);
 			}
 		}
 		else

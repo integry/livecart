@@ -32,9 +32,14 @@
 /*************************
 	Product form
 *************************/
-.productForm.intangible .shipping/*, .productForm.intangible .inventory */
+.productForm.intangible .shipping, .productForm.intangible .inventory
 {
     display: none;
+}
+
+.productForm.intangible .inventory.downloadableInventory
+{
+	display: block;
 }
 
 .autoSKU

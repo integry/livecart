@@ -137,6 +137,7 @@ _shipping_surcharge=Shipping surcharge
 _requires_separate_shipment=Requires separate shipment
 _qualifies_for_free_shipping=Qualifies for free shipping
 _allow_back_ordering=Allow back-ordering
+_unlimited_stock=Unlimited inventory
 
 _all_customers=All customers
 
