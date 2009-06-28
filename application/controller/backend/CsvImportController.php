@@ -4,6 +4,7 @@ ClassLoader::import("application.controller.backend.abstract.StoreManagementCont
 ClassLoader::import("application.model.parser.CsvFile");
 ClassLoader::import("application.model.category.Category");
 ClassLoader::import("application.model.product.Product");
+ClassLoader::import("application.model.category.SpecField");
 
 /**
  * Handles product importing through a CSV file
