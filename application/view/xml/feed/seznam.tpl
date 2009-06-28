@@ -7,7 +7,7 @@
 			<URL><![CDATA[{productUrl product=$product full=true}]]></URL>
 
 			{if $product.DefaultImage.ID}
-			<IMGURL><![CDATA[{$product.DefaultImage.urls.1}]]></IMGURL>
+			<IMGURL><![CDATA[{$product.DefaultImage.urls.4}]]></IMGURL>
 			{/if}
 			<PRICE_VAT><![CDATA[{$product.price_CZK|default:$product.price_EUR}]]></PRICE_VAT>
 		</SHOPITEM>
