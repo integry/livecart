@@ -1983,7 +1983,7 @@ Backend.MultiInstanceEditor.prototype =
 			progressIndicator.show();
 		}
 
-		if (window.opener)
+		if (window.opener && window.opener.selectProductPopup)
 		{
 			window.opener.selectProductPopup.getSelectedObject(id);
 			return;
