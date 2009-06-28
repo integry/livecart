@@ -62,7 +62,9 @@
 	tinyMCE.init({
 		theme : "advanced",
 		mode : "exact",
-		plugins: "table,contextmenu",
+		plugins: "table,contextmenu,paste",
+        paste_insert_word_content_callback : "convertWord",
+        paste_auto_cleanup_on_paste : true,
 		elements : "",
 		auto_reset_designmode : true,
 		theme_advanced_resizing_use_cookie : false,
@@ -77,7 +79,8 @@
 		content_css: "{/literal}{baseUrl}{literal}stylesheet/library/TinyMCE.css",
 		forced_root_block : '',
 		relative_urls : true,
-		extended_valid_elements : 'iframe[src|width|height|name|align|frameborder|scrolling|marginheight|marginwidth]'
+		extended_valid_elements : 'iframe[src|width|height|name|align|frameborder|scrolling|marginheight|marginwidth]',
+		entities: ''
 	});
 
 	function onLoad()
