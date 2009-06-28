@@ -224,9 +224,10 @@ class LiveCart extends Application
 
 			foreach ($routes as $route)
 			{
-				$this->router->connect($route[0], $route[1], $route[2]);
+				$method = empty($route[3]) ? 'connect' : 'connectPriority';
+				$this->router->$method($route[0], $route[1], $route[2]);
 				$route[2]['requestLanguage'] = "[a-zA-Z]{2}";
-				$this->router->connect(':requestLanguage/' . $route[0], $route[1], $route[2]);
+				$this->router->$method(':requestLanguage/' . $route[0], $route[1], $route[2]);
 			}
 		}
 
@@ -420,7 +421,7 @@ class LiveCart extends Application
 	 * @return Response
 	 * @throws ApplicationException if error situation occurs
 	 */
-	public function execute($controllerInstance, $actionName)
+	public function execute($controllerInstance, $actionName, $isBlock = false)
 	{
 		if ($response = $this->processInitPlugins($controllerInstance, 'before-' . $actionName))
 		{
@@ -430,7 +431,18 @@ class LiveCart extends Application
 			}
 		}
 
-		$originalResponse = parent::execute($controllerInstance, $actionName);
+		if (!$isBlock)
+		{
+			$originalResponse = parent::execute($controllerInstance, $actionName);
+		}
+		else
+		{
+			$originalResponse = $controllerInstance->executeBlock($actionName);
+			if (!$originalResponse)
+			{
+				return null;
+			}
+		}
 
 		$response = $this->processActionPlugins($controllerInstance, $originalResponse, $actionName);
 
@@ -700,35 +712,41 @@ class LiveCart extends Application
 
 	private function loadLocale()
 	{
-		ClassLoader::import('library.locale.Locale');
-
-		$this->locale =	Locale::getInstance($this->localeName);
-		$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('storage.language'));
-
-		foreach ($this->getConfigContainer()->getLanguageDirectories() as $dir)
+		if (empty($this->locale))
 		{
-			$this->locale->translationManager()->setDefinitionFileDir($dir);
+			ClassLoader::import('library.locale.Locale');
+
+			$this->locale =	Locale::getInstance($this->localeName);
+			$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('storage.language'));
+
+			foreach ($this->getConfigContainer()->getLanguageDirectories() as $dir)
+			{
+				$this->locale->translationManager()->setDefinitionFileDir($dir);
+			}
+
+			$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('storage.language'));
+			Locale::setCurrentLocale($this->localeName);
+
+			$this->loadLanguageFiles();
 		}
-
-		$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('storage.language'));
-		Locale::setCurrentLocale($this->localeName);
-
-		$this->loadLanguageFiles();
 
 		return $this->locale;
 	}
 
 	private function loadLocaleName()
 	{
-		ClassLoader::import('library.locale.Locale');
+		if (empty($this->localeName))
+		{
+			ClassLoader::import('library.locale.Locale');
 
-		if ($this->requestLanguage)
-		{
-			$this->localeName = $this->requestLanguage;
-		}
-		else
-		{
-	  		$this->localeName = $this->getDefaultLanguageCode();
+			if ($this->requestLanguage)
+			{
+				$this->localeName = $this->requestLanguage;
+			}
+			else
+			{
+				$this->localeName = $this->getDefaultLanguageCode();
+			}
 		}
 
 		return $this->localeName;
