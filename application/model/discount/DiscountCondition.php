@@ -5,6 +5,11 @@ ClassLoader::import('application.model.system.MultilingualObject');
 ClassLoader::import('application.model.discount.DiscountAction');
 ClassLoader::import('application.model.discount.DiscountConditionRecord');
 
+/**
+ *
+ * @author Integry Systems
+ * @package application.model.discount
+ */
 class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInterface
 {
 	// equal
@@ -69,6 +74,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		$schema->registerField(new ARField("couponLimitCount", ARInteger::instance()));
 		$schema->registerField(new ARField("couponLimitType", ARInteger::instance()));
 		$schema->registerField(new ARField("serializedCondition", ARText::instance()));
+		$schema->registerField(new ARField("conditionClass", ARVarchar::instance(80)));
 	}
 
 	public function loadAll()
@@ -91,6 +97,9 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		$this->subConditions[$condition->getID()] = $condition;
 	}
 
+	/**
+	 * Used for action conditions only
+	 */
 	public function isProductMatching(Product $product)
 	{
 		// no records defined
@@ -133,7 +142,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		return $isMatching;
 	}
 
-	public function hasSubConditions()
+	private function hasSubConditions()
 	{
 		return ($this->rgt->get() - $this->lft->get()) > 1;
 	}
@@ -551,9 +560,6 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 	private static function getRecordCondition(CustomerOrder $order)
 	{
 		$records = array(
-			'productID' => self::getOrderProductIDs($order),
-			'categoryID' => self::getOrderCategoryIDs($order),
-			'manufacturerID' => self::getOrderManufacturerIDs($order),
 			'userID' => $order->user->get() ? $order->user->get()->getID() : null,
 			'deliveryZoneID' => $order->getDeliveryZone()->getID(),
 		);
@@ -596,68 +602,6 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		return $cond;
 	}
 
-	private static function getOrderProductIDs(CustomerOrder $order)
-	{
-		$ids = array();
-
-		foreach ($order->getOrderedItems() as $item)
-		{
-			$ids[] = $item->product->get()->getID();
-		}
-
-		return $ids;
-	}
-
-	private static function getOrderManufacturerIDs(CustomerOrder $order)
-	{
-		$ids = array();
-
-		foreach ($order->getOrderedItems() as $item)
-		{
-			$manufacturer = $item->product->get()->manufacturer->get();
-			if ($manufacturer)
-			{
-				$ids[$manufacturer->getID()] = true;
-			}
-		}
-
-		return array_keys($ids);
-	}
-
-	private static function getOrderCategoryIDs(CustomerOrder $order)
-	{
-		$conditions = array();
-		$order->loadItemCategories();
-		foreach ($order->getOrderedItems() as $item)
-		{
-			$category = $item->product->get()->getCategory();
-			if (!$category)
-			{
-				return;
-			}
-
-			$category->load();
-			$conditions[$category->getID()] = $category->getPathNodeCondition();
-
-			foreach ($item->getAdditionalCategories() as $category)
-			{
-				$conditions[$category->getID()] = $category->getPathNodeCondition();
-			}
-		}
-
-		if (!$conditions)
-		{
-			return array();
-		}
-
-		$query = new ARSelectQueryBuilder();
-		$query->includeTable('Category');
-		$query->addField('ID');
-		$query->setFilter(new ARSelectFilter(Condition::mergeFromArray($conditions, true)));
-
-		return $query;
-	}
-
 	private static function applyConstraintConditions(Condition $cond, CustomerOrder $order)
 	{
 		$cond->addAND(new EqualsCond(new ARFieldHandle(__CLASS__, 'isEnabled'), true));
@@ -697,52 +641,6 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		$couponCond->addOr(new EqualsCond($handle, ''));
 
 		$cond->addAND($couponCond);
-	}
-
-	private static function applyOrderTotalCondition(CustomerOrder $order)
-	{
-		return self::applyRangeCondition($order, 'subTotal', $order->getSubTotal(false));
-	}
-
-	private static function applyOrderItemCountCondition(CustomerOrder $order)
-	{
-		return self::applyRangeCondition($order, 'count', $order->getShoppingCartItemCount());
-	}
-
-	private static function applyRangeCondition(CustomerOrder $order, $field, $amount)
-	{
-		$operators = array( '=' => self::COMPARE_EQ,
-							'<=' => self::COMPARE_GTEQ,
-							'>=' => self::COMPARE_LTEQ,
-							'!=' => self::COMPARE_NE);
-
-		$compHandle = new ARFieldHandle(__CLASS__, 'comparisonType');
-		$totalHandle = new ARFieldHandle(__CLASS__, $field);
-
-		$conditions = array();
-		foreach ($operators as $operator => $code)
-		{
-			$c = new EqualsCond($compHandle, $code);
-			$c->addAND(new OperatorCond($totalHandle, $amount, $operator));
-			$conditions[] = $c;
-		}
-
-		// check for divisibility
-		$c = new EqualsCond($compHandle, self::COMPARE_DIV);
-		$c->addAND(new EqualsCond(new ARExpressionHandle('(' . $amount . ' % ' .  __CLASS__ . '.' . $field . ')'), 0));
-		$conditions[] = $c;
-
-		// check for non-divisibility
-		$c = new EqualsCond($compHandle, self::COMPARE_NDIV);
-		$c->addAND(new MoreThanCond(new ARExpressionHandle('(' . $amount . ' % ' .  __CLASS__ . '.' . $field . ')'), 0));
-		$conditions[] = $c;
-
-		$conditions[] = new MoreThanCond(new ARFieldHandle(__CLASS__, 'recordCount'), 0);
-
-		$nullCond = new IsNullCond($compHandle);
-		$nullCond->addOR(new OrChainCondition($conditions));
-
-		return $nullCond;
 	}
 
 	public function setValueByLang($fieldName, $langCode, $value)

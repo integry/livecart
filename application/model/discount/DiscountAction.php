@@ -4,19 +4,18 @@ ClassLoader::import('application.model.ActiveRecordModel');
 ClassLoader::import('application.model.discount.DiscountCondition');
 ClassLoader::import('application.model.discount.DiscountActionSet');
 ClassLoader::import('application.model.order.OrderDiscount');
+ClassLoader::import('application.model.businessrule.interface.*');
 
+/**
+ *
+ * @author Integry Systems
+ * @package application.model.discount
+ */
 class DiscountAction extends ActiveRecordModel
 {
 	const TYPE_ORDER_DISCOUNT = 0;
 	const TYPE_ITEM_DISCOUNT = 1;
 	const TYPE_CUSTOM_DISCOUNT = 5;
-
-	const ACTION_PERCENT = 0;
-	const ACTION_AMOUNT = 1;
-	const ACTION_DISABLE_CHECKOUT = 2;
-	const ACTION_SURCHARGE_PERCENT = 3;
-	const ACTION_SURCHARGE_AMOUNT = 4;
-	const ACTION_SUM_VARIATIONS = 5;
 
 	/**
 	 * Action for discount condition (define the actual discount)
@@ -39,14 +38,15 @@ class DiscountAction extends ActiveRecordModel
 		$schema->registerField(new ARField("discountStep", ARInteger::instance()));
 		$schema->registerField(new ARField("discountLimit", ARInteger::instance()));
 
-		$schema->registerField(new ARField("actionType", ARInteger::instance()));
 		$schema->registerField(new ARField("amount", ARFloat::instance()));
+		$schema->registerField(new ARField("actionClass", ARVarchar::instance(80)));
 	}
 
-	public static function getNewInstance(DiscountCondition $condition)
+	public static function getNewInstance(DiscountCondition $condition, $className = 'RuleActionPercentageDiscount')
 	{
 		$instance = parent::getNewInstance(__CLASS__);
 		$instance->condition->set($condition);
+		$instance->actionClass->set($className);
 
 		return $instance;
 	}
@@ -97,20 +97,39 @@ class DiscountAction extends ActiveRecordModel
 		return $actions;
 	}
 
+	public function getActionClass()
+	{
+		$class = $this->actionClass->get();
+		if (!class_exists($class, false))
+		{
+			$this->loadActionRuleClass($class);
+		}
+
+		return $class;
+	}
+
+	private function loadActionRuleClass($className)
+	{
+		ClassLoader::import('application.model.businessrule.action.' . $className);
+		if (!class_exists($className, false))
+		{
+			foreach (self::getApplication()->getPlugins('businessrule/action/' . $className) as $plugin)
+			{
+				include_once $plugin['path'];
+			}
+		}
+
+		return $className;
+	}
+
 	public function isOrderDiscount()
 	{
-		return self::TYPE_ORDER_DISCOUNT == $this->type->get();
+		return (self::TYPE_ORDER_DISCOUNT == $this->type->get()) && !$this->getRuleAction()->isItemDiscount();
 	}
 
 	public function isItemDiscount()
 	{
-		return (self::TYPE_ITEM_DISCOUNT == $this->type->get()) ||
-				in_array($this->actionType->get(), array(self::ACTION_SUM_VARIATIONS, self::ACTION_PERCENT, self::ACTION_SURCHARGE_PERCENT));
-	}
-
-	public function isFixedAmount()
-	{
-		return (self::ACTION_AMOUNT == $this->actionType->get()) || (self::ACTION_SURCHARGE_AMOUNT == $this->actionType->get());
+		return (self::TYPE_ITEM_DISCOUNT == $this->type->get()) || $this->getRuleAction()->isItemDiscount();
 	}
 
 	public function isItemApplicable(OrderedItem $item)
@@ -123,42 +142,20 @@ class DiscountAction extends ActiveRecordModel
 		return $this->actionCondition->get()->isProductMatching($item->product->get());
 	}
 
-	public function getOrderDiscount(CustomerOrder $order)
+	public function getRuleAction()
 	{
-		if (!$this->isOrderDiscount())
+		if (is_null($this->ruleAction))
 		{
-			return null;
+			$class = $this->getActionClass();
+			$this->ruleAction = new $class($this);
 		}
 
-		$discountAmount = $this->getDiscountAmount($order->getSubTotal());
-
-		$discount = OrderDiscount::getNewInstance($order);
-		$discount->amount->set($discountAmount);
-
-		return $discount;
-	}
-
-	public function getDiscountAmount($price)
-	{
-		switch ($this->actionType->get())
-		{
-			case self::ACTION_PERCENT:
-				return $price * ($this->amount->get() / 100);
-
-			case self::ACTION_SURCHARGE_PERCENT:
-				return $price * ($this->amount->get() / 100) * -1;
-
-			case self::ACTION_AMOUNT:
-				return $this->amount->get();
-
-			case self::ACTION_SURCHARGE_AMOUNT:
-				return $this->amount->get() * -1;
-		}
+		return $this->ruleAction;
 	}
 
 	protected function insert()
 	{
-	  	$this->setLastPosition();
+		$this->setLastPosition();
 		return parent::insert();
 	}
 }

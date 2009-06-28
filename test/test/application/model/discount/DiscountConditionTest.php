@@ -121,15 +121,15 @@ class DiscountConditionTest extends LiveCartTest
 		$result = DiscountAction::getNewInstance($condition);
 		$result->isEnabled->set(true);
 		$result->type->set(DiscountAction::TYPE_ORDER_DISCOUNT);
-		$result->actionType->set(DiscountAction::ACTION_PERCENT);
+		$result->actionClass->set('RuleActionPercentDiscount');
 		$result->amount->set(10);
 		$result->save();
 
 		$actions = $this->order->getDiscountActions(true);
 		$this->assertEqual($actions->get(0)->getID(), $result->getID());
 
-		$discounts = $this->order->getCalculatedDiscounts();
-		$this->assertEqual($discounts->size(), 1);
+		$discounts = $this->order->getOrderDiscounts();
+		$this->assertEqual(count($discounts), 1);
 
 		$newTotal = $this->order->getTotal();
 
@@ -478,7 +478,7 @@ class DiscountConditionTest extends LiveCartTest
 
 		$action = DiscountAction::getNewInstance($condition);
 		$action->isEnabled->set(true);
-		$action->actionType->set(DiscountAction::ACTION_DISABLE_CHECKOUT);
+		$action->actionClass->set('RuleActionDisableCheckout');
 		$action->save();
 
 		$this->order->getDiscountActions(true);
@@ -630,7 +630,7 @@ class DiscountConditionTest extends LiveCartTest
 		$condition->save();
 
 		$action = DiscountAction::getNewInstance($condition);
-		$action->actionType->set(DiscountAction::ACTION_SUM_VARIATIONS);
+		$action->actionClass->set('RuleActionSumVariations');
 		$action->isEnabled->set(false);
 		$action->save();
 
@@ -656,7 +656,7 @@ class DiscountConditionTest extends LiveCartTest
 
 		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
 		$this->assertEquals(1, count($this->order->getDiscountActions(true)));
-		$this->assertEquals(20, $this->order->getTotal());
+		$this->assertEquals(20, $this->order->getTotal(true));
 	}
 }
 
