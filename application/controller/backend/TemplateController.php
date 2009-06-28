@@ -161,14 +161,15 @@ class TemplateController extends StoreManagementController
 	 */
 	public function saveEmail()
 	{
-		$template = new EmailTemplate($this->request->get('file'));
+		$file = str_replace('\\', '/', $this->request->get('file'));
+		$template = new EmailTemplate($file);
 		$template = $template->getLangTemplate($this->application->getDefaultLanguageCode());
 		$template->setSubject($this->request->get('subject'));
 		$template->setBody($this->request->get('body'));
 		$template->setHTML($this->request->get('html'));
 		$res = $template->save();
 
-		if (substr($this->request->get('file'), 0, 11) != 'email/block')
+		if (substr($file, 0, 11) != 'email/block')
 		{
 			foreach ($this->application->getLanguageArray() as $lang)
 			{
