@@ -430,13 +430,13 @@ class LiveCartRenderer extends SmartyRenderer
 
 	public function getRelativeTemplatePath($template)
 	{
+		$template = str_replace('\\', '/', $template);
 		if (strpos($template, '/module/'))
 		{
 			preg_match('/\/(module\/.*)/', $template, $match);
 			return str_replace('application/view/', '', $match[1]);
 		}
 
-		$template = str_replace('\\', '/', $template);
 		foreach (array('application.view', 'storage.customize.view') as $path)
 		{
 			$path = ClassLoader::getRealPath($path);

@@ -160,6 +160,11 @@ class LiveCartSmarty extends Smarty
 			ClassLoader::import('application.ViewPlugin');
 		}
 
+		if ('/' == $path[0])
+		{
+			$path = substr($path, 1);
+		}
+
 		$plugins = array();
 		foreach ($this->getApplication()->getPlugins('view/' . $path) as $plugin)
 		{

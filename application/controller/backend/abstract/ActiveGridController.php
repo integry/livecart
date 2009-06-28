@@ -20,7 +20,7 @@ abstract class ActiveGridController extends StoreManagementController
 
 		// init file download
 		header('Content-Disposition: attachment; filename="' . $this->getCSVFileName() . '"');
-		//header('Content-Type: text/javascript');
+		header('Content-Type: text/csv');
 		$out = fopen('php://output', 'w');
 
 		// header row

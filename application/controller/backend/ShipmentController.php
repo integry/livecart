@@ -136,6 +136,7 @@ class ShipmentController extends StoreManagementController
 		$shipment->setRateId($this->request->get('serviceID'));
 
 		$shipment->recalculateAmounts();
+		$order->save();
 		$shipment->save(ActiveRecord::PERFORM_UPDATE);
 
 		/*
@@ -350,10 +351,6 @@ class ShipmentController extends StoreManagementController
 				$shipment->shippingService->set($shippingService);
 				$shipment->setAvailableRates($shipment->getDeliveryZone()->getShippingRates($shipment));
 				$shipment->setRateId($shippingService->getID());
-			}
-			else
-			{
-				$shipment->amountCurrency->set($shipment->order->get()->currency->get());
 			}
 
 			if($this->request->get('noStatus'))

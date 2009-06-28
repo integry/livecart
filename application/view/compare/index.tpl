@@ -43,6 +43,7 @@
 				{/if}
 
 				{foreach from=$group.attributes item=attr name="attributes"}
+					{if $attr.isDisplayed}
 					<tr class="{zebra loop="attributes"}">
 						<td class="param">{$attr.name_lang}</td>
 						{foreach from=$category.products item="product"}
@@ -51,6 +52,7 @@
 							</td>
 						{/foreach}
 					</tr>
+					{/if}
 				{/foreach}
 			{/foreach}
 		</tbody>

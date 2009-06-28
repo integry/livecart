@@ -21,7 +21,7 @@
 			<h2>{$manufacturer.name.0}</h2>
 		{/if}
 		<ul>
-			<li><a href="{categoryUrl data=$rootCat addFilter=$manufacturer.filter}">{$manufacturer.name}</a> <span class="count">(&rlm;{$counts[$manufacturer.ID]})</span></li>
+			<li><a href="{$manufacturer.url}">{$manufacturer.name}</a> <span class="count">(&rlm;{$counts[$manufacturer.ID]})</span></li>
 		</ul>
 		{assign var=lastLetter value=$manufacturer.name.0|@capitalize}
 	{/foreach}
