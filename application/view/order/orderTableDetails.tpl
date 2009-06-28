@@ -38,7 +38,7 @@
 			{t _shipping} ({$shipment.ShippingService.name_lang}):
 		</td>
 		<td>
-			{$shipment.selectedRate.formattedPrice[$order.Currency.ID]}
+			{$shipment.selectedRate.taxPrice[$order.Currency.ID]}
 		</td>
 	</tr>
 {/if}
