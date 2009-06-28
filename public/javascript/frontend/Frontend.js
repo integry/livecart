@@ -534,6 +534,33 @@ Compare.Menu.prototype =
 }
 
 /*****************************
+	Product filters
+*****************************/
+Filter = {}
+
+Filter.SelectorMenu = function(container, isPageReload)
+{
+	$A(container.getElementsByTagName('select')).each(function(el)
+	{
+		el.onchange = function()
+		{
+			if (!isPageReload)
+			{
+				new LiveCart.AjaxUpdater(this.value, container, null, null,
+					function()
+					{
+						container.parentNode.replaceChild(container.down('div'), container);
+					});
+			}
+			else
+			{
+				window.location.href = this.value;
+			}
+		}
+	});
+}
+
+/*****************************
 	User related JS
 *****************************/
 User = {}
