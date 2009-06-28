@@ -1,0 +1,8 @@
+CyberMUT_TPE=Number of the merchant's virtual EPT
+CyberMUT_societe=Website idenfitication code (societe)
+CyberMUT_MAC=Seal from data certification (MAC)
+CyberMUT_bank=Acquiring bank
+CyberMUT_CM=Banks and federations of Crédit Mutuel
+CyberMUT_CIC=Banks of the CIC group
+CyberMUT_OBC=OBC bank
+CyberMUT_test=Test mode
