@@ -88,6 +88,41 @@ class SitemapController extends FrontendController
 		return new ActionResponse('entries', $entries);
 	}
 
+	public function full()
+	{
+		$languages = $this->application->getLanguageArray(true);
+		$defaultLanguage = $this->application->getDefaultLanguageCode();
+		$class = $this->request->get('type');
+		$page = $this->request->get('id', 0);
+
+		$entries = array();
+		foreach ($this->getSupportedTypes() as $type)
+		{
+			for ($k = 0; $k < $this->getPageCount($type, $this->getSelectFilter($type)); $k++)
+			{
+				$f = $this->getSelectFilter($type);
+				foreach ($this->getPage($type, $page, $f, $this->getClassFields($type)) as $row)
+				{
+					foreach ($languages as $lang)
+					{
+						if ($lang != $defaultLanguage)
+						{
+							$this->router->setAutoAppendVariables(array('requestLanguage' => $lang));
+						}
+						else
+						{
+							$this->router->removeAutoAppendVariable('requestLanguage');
+						}
+
+						$entries[] = $this->getEntryData($type, $row);
+					}
+				}
+			}
+		}
+
+		return new ActionResponse('entries', $entries);
+	}
+
 	public function ping()
 	{
 		if (!$this->user->hasBackendAccess())
@@ -99,7 +134,7 @@ class SitemapController extends FrontendController
 		$ping = array(
 			'Google' => 'http://www.google.com/webmasters/tools/ping?sitemap=' . $url,
 			'Yahoo' => 'http://search.yahooapis.com/SiteExplorerService/V1/updateNotification?appid=YahooDemo&url=' . $url,
-			'MSN Live' => 'http://webmaster.live.com/ping.aspx?siteMap=' . $url,
+			'MSN Live' => 'http://www.bing.com/webmaster/ping.aspx?siteMap=' . $url,
 			'Ask' => 'http://submissions.ask.com/ping?sitemap=' . $url,
 			'Moreover' => 'http://api.moreover.com/ping?u=' . $url,
 			);
@@ -118,45 +153,47 @@ class SitemapController extends FrontendController
 		return array('Category', 'Product', 'NewsPost', 'StaticPage');
 	}
 
-	private function getEntryData($class, $row)
+	private function getEntryData($class, $row, $params = array())
 	{
 		switch ($class)
 		{
 			case 'StaticPage':
-				return $this->getStaticPageEntry($row);
+				return $this->getStaticPageEntry($row, $params);
 
 			case 'NewsPost':
-				return $this->getNewsPostEntry($row);
+				return $this->getNewsPostEntry($row, $params);
 
 			case 'Product':
-				return $this->getProductEntry($row);
+				return $this->getProductEntry($row, $params);
 
 			case 'Category':
-				return $this->getCategoryEntry($row);
+				return $this->getCategoryEntry($row, $params);
 		}
 	}
 
-	private function getStaticPageEntry($row)
+	private function getStaticPageEntry($row, $params)
 	{
 		$urlParams = array('controller' => 'staticPage',
 						   'action' => 'view',
 						   'handle' => $row['handle'],
 						   );
 
+		$urlParams = array_merge($urlParams, $params);
+
 		$router = $this->application->getRouter();
 
 		return array('loc' => $router->createFullUrl($router->createUrl($urlParams, true)));
 	}
 
-	private function getCategoryEntry($row)
+	private function getCategoryEntry($row, $params)
 	{
 		$row['name'] = unserialize($row['name']);
 		$row = MultilingualObject::transformArray($row, ActiveRecord::getSchemaInstance('Category'));
 
-		return array('loc' => $this->router->createFullUrl(createCategoryUrl(array('data' => $row), $this->application)));
+		return array('loc' => $this->router->createFullUrl(createCategoryUrl(array('data' => $row, 'params' => $params), $this->application)));
 	}
 
-	private function getProductEntry($row)
+	private function getProductEntry($row, $params)
 	{
 		$row['name'] = unserialize($row['name']);
 		$row = MultilingualObject::transformArray($row, ActiveRecord::getSchemaInstance('Product'));
@@ -164,7 +201,7 @@ class SitemapController extends FrontendController
 		return array('loc' => $this->router->createFullUrl(createProductUrl(array('product' => $row), $this->application)));
 	}
 
-	private function getNewsPostEntry($row)
+	private function getNewsPostEntry($row, $params)
 	{
 		$row['title'] = unserialize($row['title']);
 		$row = MultilingualObject::transformArray($row, ActiveRecord::getSchemaInstance('NewsPost'));
@@ -191,7 +228,12 @@ class SitemapController extends FrontendController
 	{
 		if ('Product' == $class)
 		{
-			return Category::getRootNode()->getProductFilter(new ARSelectFilter());
+			$cat = Category::getRootNode();
+			$f = $cat->getProductFilter(new ARSelectFilter());
+			$f->mergeCondition($cat->getProductCondition(true));
+			$f->joinTable('Category', 'Product', 'ID', 'categoryID');
+
+			return $f;
 		}
 
 		$f = new ARSelectFilter();
@@ -218,8 +260,10 @@ class SitemapController extends FrontendController
 				return array('ID', 'handle');
 
 			case 'Category':
-			case 'Product':
 				return array('ID', 'name');
+
+			case 'Product':
+				return array('Product.ID AS ID', 'Product.name AS name');
 
 			case 'NewsPost':
 				return array('ID', 'title');
