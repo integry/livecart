@@ -136,6 +136,11 @@ abstract class EavFieldCommon extends MultilingualObject
 	 */
 	public function getValueTableName()
 	{
+		if (!$this->isLoaded())
+		{
+			$this->load();
+		}
+
 		switch ($this->type->get())
 		{
 		  	case self::TYPE_NUMBERS_SELECTOR:
@@ -157,6 +162,7 @@ abstract class EavFieldCommon extends MultilingualObject
 				break;
 
 			default:
+			print_r($this->toArray());exit;
 				throw new Exception('Invalid field type: ' . $this->type->get());
 		}
 	}
