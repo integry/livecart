@@ -29,18 +29,18 @@ class ImageDriverGD extends ImageDriver
 				list($width, $height) = $this->resample($newimg, $image, $width, $height, 1024, 768, 0);
 			}
 
-			$this->resample($newimg, $image, $width, $height, $newWidth, $newHeight);
+			$resized = $this->resample($newimg, $image, $width, $height, $newWidth, $newHeight);
 
 			if(!is_dir(dirname($newPath)))
 			{
 				mkdir(dirname($newPath), 0777, true);
 			}
 
-			$pathInfo = pathinfo($newPath);
-			$ext = strtolower($pathInfo['extension']);
-			if ($ext == 'jpg')
+			// simply copy images that do not need to be resized
+			if (!$resized)
 			{
-			  	$ext = 'jpeg';
+				copy($path, $newPath);
+				return true;
 			}
 
 			switch($type)
@@ -143,6 +143,12 @@ class ImageDriverGD extends ImageDriver
 			$newwdt = round($owdt/$divhgt);
 		}
 
+		// return same image if resizing is not necessary
+		if (($newwdt == $owdt) && ($newhgt == $ohgt))
+		{
+			return false;
+		}
+
 		$tn = imagecreatetruecolor($newwdt, $newhgt);
 
 		if (in_array($source->getType(), array(IMAGETYPE_GIF, IMAGETYPE_PNG)))
@@ -188,7 +194,7 @@ class ImageDriverGD extends ImageDriver
 		}
 		else
 		{
-		   imagecopyresized($tn,$img,0,0,0,0,$newwdt,$newhgt,$owdt,$ohgt);
+			imagecopyresized($tn,$img,0,0,0,0,$newwdt,$newhgt,$owdt,$ohgt);
 		}
 
 		imagedestroy($img);
