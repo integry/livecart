@@ -38,6 +38,7 @@ abstract class OrderTestCommon extends LiveCartTest
 		ActiveRecordModel::executeUpdate('DELETE FROM DiscountCondition');
 		ActiveRecordModel::executeUpdate('DELETE FROM DiscountAction');
 		ActiveRecordModel::executeUpdate('DELETE FROM DeliveryZone');
+		ActiveRecordModel::executeUpdate('DELETE FROM ShippingService');
 
 		$this->initOrder();
 

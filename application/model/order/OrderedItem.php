@@ -22,6 +22,8 @@ class OrderedItem extends ActiveRecordModel
 
 	protected $additionalCategories = array();
 
+	protected $isVariationDiscountsSummed = false;
+
 	/*
 	 *  Possible values for isSavedForLater field
 	 */
@@ -86,8 +88,9 @@ class OrderedItem extends ActiveRecordModel
 			return 0;
 		}
 
-		$subTotal = $this->getPrice($includeTaxes) * $this->count->get();
+		$subTotal = $this->getPrice($includeTaxes, false) * $this->count->get();
 
+/*
 		if ($applyDiscounts)
 		{
 			$count = $this->count->get();
@@ -106,8 +109,16 @@ class OrderedItem extends ActiveRecordModel
 				$subTotal = ($applicableCnt * $discountPrice) + (($count - $applicableCnt) * $itemPrice);
 			}
 		}
+*/
 
-		return $this->getCurrency()->round($subTotal);
+		if ($includeTaxes)
+		{
+			return $this->getCurrency()->round($subTotal);
+		}
+		else
+		{
+			return $subTotal;
+		}
 	}
 
 	public function getSubTotalBeforeTax()
@@ -115,7 +126,7 @@ class OrderedItem extends ActiveRecordModel
 		return $this->getSubTotal(false, true);
 	}
 
-	public function getPrice($includeTaxes = true)
+	public function getPrice($includeTaxes = true, $round = true)
 	{
 		$price = $this->getPriceWithoutTax();
 
@@ -124,31 +135,45 @@ class OrderedItem extends ActiveRecordModel
 			$price += $this->getPriceTax();
 		}
 
-		return $includeTaxes ? $this->getCurrency()->roundPrice($price) : $price;
+		return $includeTaxes && $round ? $this->getCurrency()->roundPrice($price) : $price;
 	}
 
 	public function getPriceWithoutTax()
 	{
-		$isFinalized = $this->customerOrder->get()->isFinalized->get();
-		$currency = $this->getCurrency();
-
-		$price = $this->getItemPrice();
-
-		foreach ($this->optionChoices as $choice)
+		if (is_null($this->itemPrice))
 		{
-			if ($isFinalized)
+			$isFinalized = $this->customerOrder->get()->isFinalized->get();
+			$currency = $this->getCurrency();
+
+			$price = $this->getItemPrice();
+			foreach ($this->optionChoices as $choice)
 			{
-				$optionPrice = $choice->priceDiff->get();
-			}
-			else
-			{
-				$optionPrice = $choice->choice->get()->getPriceDiff($currency->getID());
+				if ($isFinalized)
+				{
+					$optionPrice = $choice->priceDiff->get();
+				}
+				else
+				{
+					$optionPrice = $choice->choice->get()->getPriceDiff($currency->getID());
+				}
+
+				$price += $optionPrice;
 			}
 
-			$price += $optionPrice;
+			$this->itemPrice = $price;
 		}
 
-		return $price;
+		return $this->itemPrice;
+	}
+
+	public function setItemPrice($price)
+	{
+		$this->itemPrice = $price;
+	}
+
+	public function reset()
+	{
+		$this->itemPrice = null;
 	}
 
 	/**
@@ -199,7 +224,8 @@ class OrderedItem extends ActiveRecordModel
 
 		foreach (DeliveryZone::getDefaultZoneInstance()->getTaxRates() as $rate)
 		{
-			$price = $this->getCurrency()->round($price / (1 + ($rate->rate->get() / 100)));
+			//$price = $this->getCurrency()->round($price / (1 + ($rate->rate->get() / 100)));
+			$price = $price / (1 + ($rate->rate->get() / 100));
 		}
 
 		return $price;
@@ -415,6 +441,19 @@ class OrderedItem extends ActiveRecordModel
 	public function getAdditionalCategories()
 	{
 		return $this->additionalCategories;
+	}
+
+	/**
+	 *	Include other variations of the same parent product when determining the quantity price level
+	 */
+	public function setSumVariationDiscounts($sum = true)
+	{
+		$this->isVariationDiscountsSummed = $sum;
+	}
+
+	public function isVariationDiscountsSummed()
+	{
+		return $this->isVariationDiscountsSummed;
 	}
 
   	/*####################  Saving ####################*/

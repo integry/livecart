@@ -463,7 +463,7 @@ class Shipment extends ActiveRecordModel
 				$amount = $this->reduceTaxesFromAmount($amount, ShipmentTax::TYPE_SHIPPING);
 			}
 
-			$this->shippingAmount->set($currency->round($amount));
+			$this->shippingAmount->set($calculateTax ? $currency->round($amount) : $amount);
 		}
 	}
 
@@ -744,6 +744,12 @@ class Shipment extends ActiveRecordModel
 		return $this->availableShippingRates->getByServiceId($this->selectedRateId);
 	}
 
+	public function getShippingTaxZone()
+	{
+		$shippingTaxZoneId = self::getApplication()->getConfig()->get('DELIVERY_TAX');
+		return !is_numeric($shippingTaxZoneId) ? $this->getDeliveryZone() : DeliveryZone::getInstanceById($shippingTaxZoneId, DeliveryZone::LOAD_DATA);
+	}
+
 	public function getTaxes()
 	{
 		// no taxes are calculated for downloadable products
@@ -778,8 +784,7 @@ class Shipment extends ActiveRecordModel
 				}
 
 				// shipping amount tax rates
-				$shippingTaxZoneId = self::getApplication()->getConfig()->get('DELIVERY_TAX');
-				$shippingTaxZone = !is_numeric($shippingTaxZoneId) ? $zone : DeliveryZone::getInstanceById($shippingTaxZoneId, DeliveryZone::LOAD_DATA);
+				$shippingTaxZone = $this->getShippingTaxZone();
 
 				foreach ($shippingTaxZone->getTaxRates(DeliveryZone::ENABLED_TAXES) as $rate)
 				{

@@ -90,11 +90,6 @@ class ProductPrice extends ActiveRecordModel
 
 	private function getChildPrice($parentPrice, $childPriceDiff, $setting)
 	{
-		if ($parentPrice && !$childPriceDiff)
-		{
-			var_dump($parentPrice . ' - ' . $childPriceDiff);
-			throw new ApplicationException();
-		}
 		if ($setting == Product::CHILD_ADD)
 		{
 			return $parentPrice + $childPriceDiff;
@@ -191,15 +186,18 @@ class ProductPrice extends ActiveRecordModel
 		if ($parent = $item->product->get()->parent->get())
 		{
 			$order = $item->customerOrder->get();
-			if ($order->isDiscountActionsLoaded() && $order->getItemDiscountActions($item)->getActionsByType(DiscountAction::ACTION_SUM_VARIATIONS)->size())
+			if ($order->isDiscountActionsLoaded())
 			{
 				$itemCnt = 0;
 				foreach ($order->getShoppingCartItems() as $orderItem)
 				{
-					$orderProduct = $orderItem->product->get();
-					if ($orderProduct->parent->get()->getID() == $parent->getID())
+					if ($orderItem->isVariationDiscountsSummed())
 					{
-						$itemCnt += $orderItem->count->get();
+						$orderProduct = $orderItem->product->get();
+						if ($orderProduct->parent->get()->getID() == $parent->getID())
+						{
+							$itemCnt += $orderItem->count->get();
+						}
 					}
 				}
 			}

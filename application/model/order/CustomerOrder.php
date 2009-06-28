@@ -40,6 +40,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 	private $coupons = null;
 
+	private $isOrderable = null;
+
 	const STATUS_NEW = 0;
 	const STATUS_PROCESSING = 1;
 	const STATUS_AWAITING = 2;
@@ -498,7 +500,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$wishList->save();
 
 		// set order total
-		$this->totalAmount->set($this->getTotal());
+		$this->totalAmount->set($this->getTotal(true));
 
 		// save shipment taxes
 		foreach ($this->shipments as $shipment)
@@ -869,6 +871,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			}
 		}
 
+		$subTotal = $this->getCurrency()->round($subTotal);
+
 		return $subTotal;
 	}
 
@@ -893,40 +897,59 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	 */
 	public function getTotal($recalculateAmount = false)
 	{
-		if ($this->isFinalized->get() && !$recalculateAmount)
+		if (is_null($this->orderTotal) || $recalculateAmount)
 		{
-			$this->getTaxes();
-			$total = $this->totalAmount->get();
-		}
-		else
-		{
-			$total = $this->calculateTotal();
+			$this->reset();
+			$this->applyDiscountActions();
 
-			if ($discountAmount = $this->getFixedDiscountAmount())
+			if ($this->isFinalized->get() && !$recalculateAmount)
 			{
-				if ($this->shipments)
+				$this->getTaxes();
+				$total = $this->totalAmount->get();
+			}
+			else
+			{
+				$total = $this->calculateTotal();
+
+				if ($discountAmount = $this->getFixedDiscountAmount())
 				{
-					foreach ($this->shipments as $shipment)
+					if ($this->shipments)
 					{
-						$shipment->applyFixedDiscount($total, $discountAmount);
+						foreach ($this->shipments as $shipment)
+						{
+							$shipment->applyFixedDiscount($total, $discountAmount);
+						}
+					}
+
+					$total = $this->calculateTotal(false);
+
+					if (!$this->shipments)
+					{
+						$total -= $discountAmount;
 					}
 				}
 
-				$total = $this->calculateTotal(false);
-
-				if (!$this->shipments)
+				if ($total < 0)
 				{
-					$total -= $discountAmount;
+					$total = 0;
 				}
 			}
 
-			if ($total < 0)
-			{
-				$total = 0;
-			}
+			$this->orderTotal = $total;
 		}
 
-		return $this->getCurrency()->round($total);
+		return $this->getCurrency()->round($this->orderTotal);
+	}
+
+	public function reset()
+	{
+		$this->orderTotal = null;
+		$this->orderDiscounts = array();
+
+		foreach ($this->getShoppingCartItems() as $item)
+		{
+			$item->reset();
+		}
 	}
 
 	public function getFixedDiscountAmount()
@@ -937,19 +960,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			$amount += $discount->amount->get();
 		}
 
-		if (!$this->isFinalized->get())
+		foreach ($this->orderDiscounts as $discount)
 		{
-			foreach ($this->getDiscountActions() as $id => $action)
-			{
-				if ($action->isOrderDiscount() && $action->isFixedAmount())
-				{
-					$discount = $this->getCurrency()->convertAmount(self::getApplication()->getDefaultCurrency(), $action->getDiscountAmount(0));
-					$amount += $discount;
-					$this->orderDiscounts[$id] = OrderDiscount::getNewInstance($this);
-					$this->orderDiscounts[$id]->amount->set($discount);
-					$this->orderDiscounts[$id]->description->set($action->condition->get()->getValueByLang('name'));
-				}
-			}
+			$amount += $discount->amount->get();
 		}
 
 		return $amount;
@@ -958,6 +971,16 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	public function registerFixedDiscount(OrderDiscount $discount)
 	{
 		$this->fixedDiscounts[$discount->getID()] = $discount;
+	}
+
+	public function registerOrderDiscount(OrderDiscount $discount)
+	{
+		$this->orderDiscounts[] = $discount;
+	}
+
+	public function getOrderDiscounts()
+	{
+		return array_merge($this->fixedDiscounts, $this->orderDiscounts);
 	}
 
 	/**
@@ -1027,30 +1050,30 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		}
 	}
 
-	public function getDiscounts()
+	public function applyDiscountActions()
 	{
-		if ($this->isFinalized->get())
-		{
-			return $this->getRelatedRecordSet('OrderDiscount');
-		}
-		else
-		{
-			return $this->getCalculatedDiscounts();
-		}
-	}
+		return false;
 
-	public function getCalculatedDiscounts()
-	{
-		$discounts = new ARSet();
 		foreach ($this->getDiscountActions() as $action)
 		{
-			if ($discount = $action->getOrderDiscount($this))
+			$class = $action->getActionClass();
+			$ruleAction = new $class($action);
+
+			if ($action->isOrderDiscount())
 			{
-				$discounts->add($discount);
+				$ruleAction->applyToOrder($this);
+			}
+			else
+			{
+				foreach ($this->getShoppingCartItems() as $item)
+				{
+					if ($action->isItemApplicable($item))
+					{
+						$ruleAction->applyToItem($item);
+					}
+				}
 			}
 		}
-
-		return $discounts;
 	}
 
 	public function getItemDiscountActions(OrderedItem $item)
@@ -1078,8 +1101,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			{
 				if ($shipment->getShippingService())
 				{
-					$shipmentRates = $zone->getShippingRates($shipment);
-					$shipment->setAvailableRates($shipmentRates);
+					$shipment->getAvailableRates();
 					$shipment->setRateId($shipment->getShippingService()->getID());
 				}
 
@@ -1176,6 +1198,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$app = $this->getApplication();
 		$c = $app->getConfig();
 
+		if (!is_null($this->isOrderable) && !$this->isOrderable)
+		{
+			return false;
+		}
+
 		// check product quantity
 		$maxQuant = $c->get('MAX_QUANT');
 		$minQuant = $c->get('MIN_QUANT');
@@ -1223,16 +1250,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			return false;
 		}
 
-		// checkout disabled from pricing rules
-		foreach ($this->getDiscountActions() as $action)
-		{
-			if (DiscountAction::ACTION_DISABLE_CHECKOUT == $action->actionType->get())
-			{
-				return false;
-			}
-		}
-
 		return true;
+	}
+
+	public function setOrderable($isOrderable)
+	{
+		$this->isOrderable = $isOrderable;
 	}
 
 	public function updateToStock($save = true)
@@ -1778,6 +1801,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 	public function getDiscountActions($reload = false)
 	{
+		return false;
+
 		if (is_null($this->discountActions) || $reload)
 		{
 			ClassLoader::import('application.model.discount.DiscountAction');

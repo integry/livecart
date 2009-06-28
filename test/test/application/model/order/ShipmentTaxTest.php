@@ -366,6 +366,43 @@ class ShipmentTaxTest extends OrderTestCommon
 		$this->assertEquals($this->order->getTotal(), 100 + 100);
 	}
 
+	public function testNetherlandsTax()
+	{
+		$tax = Tax::getNewInstance('VAT');
+		$tax->save();
+
+		// shipment delivery zone
+		$zone = DeliveryZone::getDefaultZoneInstance();
+
+		$taxRate = TaxRate::getNewInstance($zone, $tax, 21);
+		$taxRate->save();
+
+		$service = ShippingService::getNewInstance($zone, 'def', ShippingService::SUBTOTAL_BASED);
+		$service->save();
+
+		$shippingRate = ShippingRate::getNewInstance($service, 0, 10000000);
+		$shippingRate->flatCharge->set(6);
+		$shippingRate->save();
+
+		$product = $this->products[0];
+		$product->setPrice('USD', 24.70);
+		$product->save();
+
+		$this->order->addProduct($product, 4, false);
+		$this->order->save();
+
+		// set shipping rate
+		$shipment = $this->order->getShipments()->get(0);
+		$rates = $this->order->getDeliveryZone()->getShippingRates($shipment);
+
+		$shipment->setAvailableRates($rates);
+		$shipment->setRateId($rates->get(0)->getServiceID());
+		$shipment->save();
+
+		$this->order->finalize($this->usd);
+		$this->assertEquals($this->order->getTotal(), 104.80);
+	}
+
 	public function testTaxRounding()
 	{
 		$tax = Tax::getNewInstance('VAT');

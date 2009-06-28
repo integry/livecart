@@ -85,7 +85,7 @@ class OrderTest extends OrderTestCommon
 		$this->order->save();
 
 		$this->order->finalize($this->usd);
-		$total = $this->order->getTotal();
+		$total = $this->order->getTotal(true);
 
 		// the sum of all shipments amounts should be equal to the order amount
 		$sum = 0;
@@ -101,7 +101,7 @@ class OrderTest extends OrderTestCommon
 		// reload the whole order data - the calculated total should still match
 		$order = CustomerOrder::getInstanceById($this->order->getID(), true);
 		$order->loadAll();
-		$this->assertEqual($total, $order->getTotal());
+		$this->assertEqual($total, $order->getTotal(true));
 
 		// change price for one product...
 		foreach ($order->getShoppingCartItems() as $item)
@@ -124,10 +124,10 @@ class OrderTest extends OrderTestCommon
 			break;
 		}
 
-//		var_dump($order->getTotal());
+//		var_dump($order->getTotal(true));
 
 		// ...so the new total calculated total would be different
-		// $this->assertNotEqual($total, $order->getTotal());
+		// $this->assertNotEqual($total, $order->getTotal(true));
 
 		// however the "closed" price should still be the same as this order is already finalized
 		$this->assertEqual($total, $order->totalAmount->get());
@@ -331,7 +331,7 @@ class OrderTest extends OrderTestCommon
 		$tax = 40; // (100 + 100) * 0.2
 
 		$shipment = $this->order->getShipments()->get(0);
-		$this->assertEqual($shipment->getTotal(), $itemPriceWithTax);
+		$this->assertEqual($shipment->getTotal(true), $itemPriceWithTax);
 
 		$rates = $zone->getShippingRates($shipment);
 		$shipment->setAvailableRates($rates);
@@ -339,7 +339,7 @@ class OrderTest extends OrderTestCommon
 		$shipment->save();
 
 		$this->assertEqual($this->order->getSubTotalBeforeTax($this->usd), $total - $tax);
-		$this->assertEqual($this->order->getTotal(), $total);
+		$this->assertEqual($this->order->getTotal(true), $total);
 		$this->order->save();
 
 		ActiveRecord::clearPool();
@@ -352,12 +352,12 @@ class OrderTest extends OrderTestCommon
 
 		$this->assertEqual($order->getShipments()->get(0)->getTaxAmount($this->usd), $tax);
 
-		$this->assertEqual($order->getTotal(), $total);
+		$this->assertEqual($order->getTotal(true), $total);
 
 		ActiveRecord::clearPool();
 		$order = CustomerOrder::getInstanceByID($this->order->getID());
 		$order->loadAll();
-		$this->assertEqual($order->getTotal(), $total);
+		$this->assertEqual($order->getTotal(true), $total);
 	}
 
 	public function testInventory()
@@ -671,7 +671,7 @@ class OrderTest extends OrderTestCommon
 		$order->save();
 		$order->finalize($this->usd);
 
-		$this->assertEqual($order->getTotal(), 100);
+		$this->assertEqual($order->getTotal(true), 100);
 
 		$containerItem = array_shift($order->getItemsByProduct($container));
 		$this->assertSame($containerItem->product->get(), $container);
@@ -743,30 +743,30 @@ class OrderTest extends OrderTestCommon
 		$this->order->save();
 
 		// before finalizing
-		$total = $this->order->getTotal();
+		$total = $this->order->getTotal(true);
 
 		$discount = OrderDiscount::getNewInstance($this->order);
 		$discount->amount->set(10);
 		$discount->save();
 
-		$this->assertEquals($this->order->getTotal(), $total - 10);
+		$this->assertEquals($this->order->getTotal(true), $total - 10);
 		$this->order->save();
 
 		// finalized
 		$this->order->finalize($this->usd);
-		$this->assertEquals($this->order->getTotal(), $total - 10);
+		$this->assertEquals($this->order->getTotal(true), $total - 10);
 
 		// reload order
 		ActiveRecordModel::clearPool();
 		$order = CustomerOrder::getInstanceByID($this->order->getID());
 		$order->loadAll();
-		$this->assertEquals($order->getTotal(), $total - 10);
+		$this->assertEquals($order->getTotal(true), $total - 10);
 
 		// modify reloaded order
 		$newTotal = $this->products[0]->getPrice($this->usd) + $this->products[1]->getPrice($this->usd);
 		$order->addProduct($this->products[1]);
 		$order->save();
-		$this->assertEquals($order->getTotal(), $newTotal - 10);
+		$this->assertEquals($order->getTotal(true), $newTotal - 10);
 	}
 
 	public function testFixedDiscountWithTaxesAndDeliveryZone()
@@ -782,14 +782,14 @@ class OrderTest extends OrderTestCommon
 		$shipment->setRateId($rates->get(0)->getServiceID());
 		$shipment->save();
 
-		$initTotal = $this->order->getTotal();
+		$initTotal = $this->order->getTotal(true);
 		$initTax = $this->order->getTaxAmount();
 
 		$discount = OrderDiscount::getNewInstance($this->order);
 		$discount->amount->set(10);
 		$discount->save();
 
-		$this->assertEquals((int)$this->order->getTotal(), (int)($initTotal - 10));
+		$this->assertEquals((int)$this->order->getTotal(true), (int)($initTotal - 10));
 		$tax = $this->order->getTaxAmount();
 
 		$expectedTax = (110 / 6) + 20;
@@ -806,11 +806,10 @@ class OrderTest extends OrderTestCommon
 		$record->save();
 		$condition->loadAll();
 
-		$action = DiscountAction::getNewInstance($condition);
+		$action = DiscountAction::getNewInstance($condition, 'RuleActionPercentageDiscount');
 		$action->isEnabled->set(true);
 		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 		$action->amount->set(10);
-		$action->actionType->set(DiscountAction::ACTION_PERCENT);
 		$action->save();
 
 		$this->order->addProduct($this->products[0]);
@@ -819,18 +818,18 @@ class OrderTest extends OrderTestCommon
 
 		// order wide 10% discount on all items
 		$originalTotal = $this->products[0]->getPrice($this->usd) + $this->products[1]->getPrice($this->usd);
-		$this->assertEquals($this->order->getTotal(), $originalTotal * 0.9);
+		$this->assertEquals($this->order->getTotal(true), $originalTotal * 0.9);
 
 		// discount applied on the same items that matched the rules
 		$action->actionCondition->set($condition);
 		$expectedTotal = ($this->products[0]->getPrice($this->usd) * 0.9) + $this->products[1]->getPrice($this->usd);
-		$this->assertEquals($this->order->getTotal(), $expectedTotal);
+		$this->assertEquals($this->order->getTotal(true), $expectedTotal);
 
 		// apply discount to the second item as well
 		$record = DiscountConditionRecord::getNewInstance($condition, $this->products[1]);
 		$record->save();
 		$condition->loadAll();
-		$this->assertEquals($this->order->getTotal(), $originalTotal * 0.9);
+		$this->assertEquals($this->order->getTotal(true), $originalTotal * 0.9);
 	}
 
 	public function testDiscountFinalize()
@@ -847,7 +846,7 @@ class OrderTest extends OrderTestCommon
 		$action->isEnabled->set(true);
 		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 		$action->amount->set(10);
-		$action->actionType->set(DiscountAction::ACTION_PERCENT);
+		$action->actionClass->set('RuleActionPercentageDiscount');
 		$action->save();
 
 		$this->order->addProduct($this->products[0]);
@@ -857,14 +856,14 @@ class OrderTest extends OrderTestCommon
 		$this->assertEquals(count($this->order->getDiscountActions()), 1);
 
 		// test order total
-		$total = $this->order->getTotal();
+		$total = $this->order->getTotal(true);
 		$this->order->finalize($this->usd);
-		$this->assertEquals($this->order->getTotal(), $total);
+		$this->assertEquals($this->order->getTotal(true), $total);
 
 		ActiveRecordModel::clearPool();
 		$order = CustomerOrder::getInstanceById($this->order->getID(), true);
 		$order->loadAll();
-		$this->assertEquals($order->getTotal(), $total);
+		$this->assertEquals($order->getTotal(true), $total);
 		$this->assertEquals(count($order->getDiscountActions()), 1);
 
 		// test item prices
@@ -886,7 +885,7 @@ class OrderTest extends OrderTestCommon
 			$action[$k]->isEnabled->set(true);
 			$action[$k]->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 			$action[$k]->amount->set(10 * $k);
-			$action[$k]->actionType->set(DiscountAction::ACTION_PERCENT);
+			$action[$k]->actionClass->set('RuleActionPercentageDiscount');
 			$action[$k]->save();
 		}
 
@@ -896,7 +895,7 @@ class OrderTest extends OrderTestCommon
 
 		// order wide 28% discount (cumulative 10% and 20% discount) on all items
 		$originalTotal = $this->products[0]->getPrice($this->usd) + $this->products[1]->getPrice($this->usd);
-		$this->assertEquals($this->order->getTotal(), $originalTotal * 0.72);
+		$this->assertEquals($this->order->getTotal(true), $originalTotal * 0.72);
 
 		// apply 20% discount to both items, and 10% discount to first item only
 		$record = DiscountConditionRecord::getNewInstance($cond[1], $this->products[0]);
@@ -908,12 +907,12 @@ class OrderTest extends OrderTestCommon
 		$action[1]->save();
 
 		$expectedTotal = ($this->products[0]->getPrice($this->usd) * 0.9 * 0.8) + ($this->products[1]->getPrice($this->usd) * 0.8);
-		$this->assertEquals($this->order->getTotal(), $expectedTotal);
+		$this->assertEquals($this->order->getTotal(true), $expectedTotal);
 	}
 
 	public function testDiscountPriority()
 	{
-		for ($k = 1; $k <= 2; $k++)
+		foreach (array('RuleActionFixedDiscount' => 1, 'RuleActionPercentageDiscount' => 2) as $class => $k)
 		{
 			$cond[$k] = DiscountCondition::getNewInstance();
 			$cond[$k]->isEnabled->set(true);
@@ -923,7 +922,7 @@ class OrderTest extends OrderTestCommon
 			$action[$k]->isEnabled->set(true);
 			$action[$k]->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 			$action[$k]->amount->set(10 * $k);
-			$action[$k]->actionType->set(1 - ($k - 1)); // 0 - percent, 1 - amount
+			$action[$k]->actionClass->set($class);
 			$action[$k]->save();
 		}
 
@@ -936,7 +935,7 @@ class OrderTest extends OrderTestCommon
 		$this->order->save();
 
 		$expectedTotal = (($price0 - 10) * 0.8) + (($price1 - 10) * 0.8);
-		$this->assertEquals($this->order->getTotal(), $expectedTotal);
+		$this->assertEquals($this->order->getTotal(true), $expectedTotal);
 
 		// switch priorities
 		$action[1]->position->set(1);
@@ -946,12 +945,12 @@ class OrderTest extends OrderTestCommon
 
 		$this->order->getDiscountActions(true);
 		$expectedTotal = (($price0 * 0.8) - 10) + (($price1 * 0.8) - 10);
-		$this->assertEquals($this->order->getTotal(), $expectedTotal);
+		$this->assertEquals($this->order->getTotal(true), $expectedTotal);
 	}
 
 	public function testDisabledDiscountConditions()
 	{
-		for ($k = 1; $k <= 2; $k++)
+		foreach (array('RuleActionFixedDiscount' => 1, 'RuleActionPercentageDiscount' => 2) as $class => $k)
 		{
 			$cond[$k] = DiscountCondition::getNewInstance();
 			$cond[$k]->isEnabled->set($k == 1);
@@ -961,7 +960,7 @@ class OrderTest extends OrderTestCommon
 			$action[$k]->isEnabled->set(true);
 			$action[$k]->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 			$action[$k]->amount->set(10 * $k);
-			$action[$k]->actionType->set(1 - ($k - 1)); // 0 - percent, 1 - amount
+			$action[$k]->actionClass->set($class);
 			$action[$k]->save();
 		}
 
@@ -973,26 +972,26 @@ class OrderTest extends OrderTestCommon
 		$this->order->addProduct($this->products[1]);
 		$this->order->save();
 
-		$this->assertEquals($this->order->getTotal(), $total - 20);
+		$this->assertEquals($this->order->getTotal(true), $total - 20);
 
 		// add a second action
 		$act = DiscountAction::getNewInstance($cond[1]);
 		$act->isEnabled->set(true);
 		$act->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 		$act->amount->set(30);
-		$act->actionType->set(DiscountAction::ACTION_AMOUNT); // 0 - percent, 1 - amount
+		$act->actionClass->set('RuleActionFixedDiscount'); // 0 - percent, 1 - amount
 		$act->save();
 		$cond[1]->loadAll();
 
 		$this->order->getDiscountActions(true);
-		$this->assertEquals($this->order->getTotal(), $total - 20 - 60);
+		$this->assertEquals($this->order->getTotal(true), $total - 20 - 60);
 
 		// and disable it
 		$act->isEnabled->set(false);
 		$act->save();
 
 		$this->order->getDiscountActions(true);
-		$this->assertEquals($this->order->getTotal(), $total - 20);
+		$this->assertEquals($this->order->getTotal(true), $total - 20);
 	}
 
 	public function testFixedDiscountWithItemDiscount()
@@ -1006,7 +1005,7 @@ class OrderTest extends OrderTestCommon
 		$action->isEnabled->set(true);
 		$action->type->set(DiscountAction::TYPE_ORDER_DISCOUNT);
 		$action->amount->set(10);
-		$action->actionType->set(DiscountAction::ACTION_AMOUNT);
+		$action->actionClass->set('RuleActionFixedDiscount');
 		$action->save();
 
 		// item discount
@@ -1022,7 +1021,7 @@ class OrderTest extends OrderTestCommon
 		$action->isEnabled->set(true);
 		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 		$action->amount->set(10);
-		$action->actionType->set(DiscountAction::ACTION_PERCENT);
+		$action->actionClass->set('RuleActionPercentageDiscount');
 		$action->save();
 
 		$condition->loadAll();
@@ -1035,10 +1034,11 @@ class OrderTest extends OrderTestCommon
 		$this->assertEquals($this->order->getDiscountActions(true)->size(), 2);
 
 		$expectedTotal = ($this->products[0]->getPrice($this->usd) * 0.9) + $this->products[1]->getPrice($this->usd) - 10;
-		$this->assertEquals($this->order->getTotal(), $expectedTotal);
+		$this->assertEquals($this->order->getTotal(true), $expectedTotal);
 
 		$this->order->finalize($this->usd);
 		$this->assertEquals($this->order->getTotal(), $expectedTotal);
+		$this->assertEquals($this->order->getTotal(true), $expectedTotal);
 	}
 
 	public function testDiscountForSomeItemsIfCertainNumberOfOtherItemsAreInCart()
@@ -1063,7 +1063,7 @@ class OrderTest extends OrderTestCommon
 		$action->isEnabled->set(true);
 		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 		$action->amount->set(10);
-		$action->actionType->set(DiscountAction::ACTION_PERCENT);
+		$action->actionClass->set('RuleActionPercentageDiscount');
 		$action->save();
 
 		$this->order->addProduct($this->products[0], 3);
@@ -1077,7 +1077,7 @@ class OrderTest extends OrderTestCommon
 		$price1 = $this->products[1]->getPrice($this->usd);
 
 		$expectedTotal = ($price1 * 0.9 * 2) + ($price0 * 3);
-		$this->assertEquals($expectedTotal, $this->order->getTotal());
+		$this->assertEquals($expectedTotal, $this->order->getTotal(true));
 
 		// require at least 4 items of products[0], but we have only 3 in cart, so no discount
 		$condition->comparisonType->set(DiscountCondition::COMPARE_GTEQ);
@@ -1085,55 +1085,55 @@ class OrderTest extends OrderTestCommon
 		$condition->save();
 		$this->order->getDiscountActions(true);
 		$normalPrice = ($price1 * 2) + ($price0 * 3);
-		$this->assertEquals($normalPrice, $this->order->getTotal());
+		$this->assertEquals($normalPrice, $this->order->getTotal(true));
 
 		// require at least 3 items of products[0], so this should pass
 		$condition->count->set(3);
 		$condition->save();
 		$this->order->getDiscountActions(true);
-		$this->assertEquals($expectedTotal, $this->order->getTotal());
+		$this->assertEquals($expectedTotal, $this->order->getTotal(true));
 
 		// require less than 5 items of products[0] - pass
 		$condition->count->set(5);
 		$condition->comparisonType->set(DiscountCondition::COMPARE_LTEQ);
 		$condition->save();
 		$this->order->getDiscountActions(true);
-		$this->assertEquals($expectedTotal, $this->order->getTotal());
+		$this->assertEquals($expectedTotal, $this->order->getTotal(true));
 
 		// require less than 2 items of products[0] - no discount
 		$condition->count->set(2);
 		$condition->comparisonType->set(DiscountCondition::COMPARE_LTEQ);
 		$condition->save();
 		$this->order->getDiscountActions(true);
-		$this->assertEquals($normalPrice, $this->order->getTotal());
+		$this->assertEquals($normalPrice, $this->order->getTotal(true));
 
 		// require exactly 7 items of products[0] - no discount
 		$condition->count->set(7);
 		$condition->comparisonType->set(DiscountCondition::COMPARE_EQ);
 		$condition->save();
 		$this->assertEquals($this->order->getDiscountActions(true)->size(), 0);
-		$this->assertEquals($normalPrice, $this->order->getTotal());
+		$this->assertEquals($normalPrice, $this->order->getTotal(true));
 
 		// require exactly 3 items of products[0] - pass
 		$condition->count->set(3);
 		$condition->comparisonType->set(DiscountCondition::COMPARE_EQ);
 		$condition->save();
 		$this->assertEquals($this->order->getDiscountActions(true)->size(), 1);
-		$this->assertEquals($expectedTotal, $this->order->getTotal());
+		$this->assertEquals($expectedTotal, $this->order->getTotal(true));
 
 		// require count other than 2 items of products[0] - pass
 		$condition->count->set(2);
 		$condition->comparisonType->set(DiscountCondition::COMPARE_NE);
 		$condition->save();
 		$this->order->getDiscountActions(true);
-		$this->assertEquals($expectedTotal, $this->order->getTotal());
+		$this->assertEquals($expectedTotal, $this->order->getTotal(true));
 
 		// require count other than 3 items of products[0] - no discount
 		$condition->count->set(3);
 		$condition->comparisonType->set(DiscountCondition::COMPARE_NE);
 		$condition->save();
 		$this->assertEquals($this->order->getDiscountActions(true)->size(), 0);
-		$this->assertEquals($normalPrice, $this->order->getTotal());
+		$this->assertEquals($normalPrice, $this->order->getTotal(true));
 	}
 
 	public function testDiscountForManufacturerProducts()
@@ -1157,7 +1157,7 @@ class OrderTest extends OrderTestCommon
 		$action->isEnabled->set(true);
 		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 		$action->amount->set(10);
-		$action->actionType->set(DiscountAction::ACTION_PERCENT);
+		$action->actionClass->set('RuleActionPercentageDiscount');
 		$action->save();
 
 		$this->order->addProduct($this->products[0], 3);
@@ -1169,14 +1169,14 @@ class OrderTest extends OrderTestCommon
 		$expectedTotal = ($price1 * 2) + ($price0 * 0.9 * 3);
 		$normalPrice = ($price1 * 2) + ($price0 * 3);
 
-		$this->assertEquals($normalPrice, $this->order->getTotal());
+		$this->assertEquals($normalPrice, $this->order->getTotal(true));
 
 		// require only 3 items of this manufacturer
 		$condition->count->set(3);
 		$condition->save();
 
 		$this->assertEquals($this->order->getDiscountActions(true)->size(), 1);
-		$this->assertEquals($expectedTotal, $this->order->getTotal());
+		$this->assertEquals($expectedTotal, $this->order->getTotal(true));
 	}
 
 	public function testDiscountForCategoryProducts()
@@ -1202,7 +1202,7 @@ class OrderTest extends OrderTestCommon
 		$action->isEnabled->set(true);
 		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 		$action->amount->set(10);
-		$action->actionType->set(DiscountAction::ACTION_PERCENT);
+		$action->actionClass->set('RuleActionPercentageDiscount');
 		$action->save();
 
 		$this->order->addProduct($this->products[0], 3, true);
@@ -1214,14 +1214,14 @@ class OrderTest extends OrderTestCommon
 		$expectedTotal = ($price0 * 3) + ($price1 * 0.9 * 2);
 		$normalPrice = ($price0 * 3) + ($price1 * 2);
 
-		$this->assertEquals($normalPrice, $this->order->getTotal());
+		$this->assertEquals($normalPrice, $this->order->getTotal(true));
 
 		// require only 2 items of this category
 		$condition->count->set(2);
 		$condition->save();
 
 		$this->assertEquals($this->order->getDiscountActions(true)->size(), 1);
-		$this->assertEquals($expectedTotal, $this->order->getTotal());
+		$this->assertEquals($expectedTotal, $this->order->getTotal(true));
 	}
 
 	public function testDiscountForCategoryProductsBySubTotal()
@@ -1247,7 +1247,7 @@ class OrderTest extends OrderTestCommon
 		$action->isEnabled->set(true);
 		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 		$action->amount->set(10);
-		$action->actionType->set(DiscountAction::ACTION_PERCENT);
+		$action->actionClass->set('RuleActionPercentageDiscount');
 		$action->save();
 
 		$this->order->addProduct($this->products[0], 3, true);
@@ -1259,14 +1259,14 @@ class OrderTest extends OrderTestCommon
 		$expectedTotal = ($price0 * 3) + ($price1 * 0.9 * 2);
 		$normalPrice = ($price0 * 3) + ($price1 * 2);
 
-		$this->assertEquals($normalPrice, $this->order->getTotal());
+		$this->assertEquals($normalPrice, $this->order->getTotal(true));
 
 		// require subtotal to be at least 150 (we have 200)
 		$condition->subTotal->set(150);
 		$condition->save();
 
 		$this->assertEquals($this->order->getDiscountActions(true)->size(), 1);
-		$this->assertEquals($expectedTotal, $this->order->getTotal());
+		$this->assertEquals($expectedTotal, $this->order->getTotal(true));
 	}
 
 	public function testDiscountByAdditionalCategories()
@@ -1286,7 +1286,7 @@ class OrderTest extends OrderTestCommon
 		$action->isEnabled->set(true);
 		$action->type->set(DiscountAction::TYPE_ITEM_DISCOUNT);
 		$action->amount->set(10);
-		$action->actionType->set(DiscountAction::ACTION_PERCENT);
+		$action->actionClass->set('RuleActionPercentageDiscount');
 		$action->save();
 
 		$randomCategory = Category::getNewInstance(Category::getRootNode());
@@ -1307,12 +1307,12 @@ class OrderTest extends OrderTestCommon
 		$this->assertTrue($actionCondition->isProductMatching($product));
 
 		$this->assertEquals($this->order->getDiscountActions(true)->size(), 1);
-		$this->assertEquals($this->products[1]->getPrice($this->usd) * 0.9, $this->order->getTotal());
+		$this->assertEquals($this->products[1]->getPrice($this->usd) * 0.9, $this->order->getTotal(true));
 
 		ActiveRecordModel::clearPool();
 		$order = CustomerOrder::getInstanceByID($this->order->getID());
 		$order->loadAll();
-		$this->assertEquals($this->products[1]->getPrice($this->usd) * 0.9, $this->order->getTotal());
+		$this->assertEquals($this->products[1]->getPrice($this->usd) * 0.9, $this->order->getTotal(true));
 	}
 
 	public function testPaymentMethodSurcharge()
@@ -1323,12 +1323,11 @@ class OrderTest extends OrderTestCommon
 		$condition->addValue('TESTING');
 		$condition->save();
 
-		$action = DiscountAction::getNewInstance($condition);
+		$action = DiscountAction::getNewInstance($condition, 'RuleActionPercentageSurcharge');
 		$action->actionCondition->set($condition);
 		$action->isEnabled->set(true);
 		$action->type->set(DiscountAction::TYPE_ORDER_DISCOUNT);
 		$action->amount->set(10);
-		$action->actionType->set(DiscountAction::ACTION_SURCHARGE_PERCENT);
 		$action->save();
 
 		$this->order->addProduct($this->products[1], 1, true);
@@ -1336,16 +1335,16 @@ class OrderTest extends OrderTestCommon
 		$this->order->save();
 
 		$price = $this->products[1]->getPrice($this->usd);
-		$this->assertEquals((int)($price * 1.1), (int)$this->order->getTotal());
+		$this->assertEquals((int)($price * 1.1), (int)$this->order->getTotal(true));
 
-		$action->actionType->set(DiscountAction::ACTION_AMOUNT);
-		$this->assertEquals((int)($price - 10), (int)$this->order->getTotal());
+		$action->actionClass->set('RuleActionFixedDiscount');
+		$this->assertEquals((int)($price - 10), (int)$this->order->getTotal(true));
 
-		$action->actionType->set(DiscountAction::ACTION_SURCHARGE_AMOUNT);
-		$this->assertEquals((int)($price + 10), (int)$this->order->getTotal());
+		$action->actionClass->set('RuleActionFixedSurcharge');
+		$this->assertEquals((int)($price + 10), (int)$this->order->getTotal(true));
 
-		$action->actionType->set(DiscountAction::ACTION_PERCENT);
-		$this->assertEquals((int)($price * 0.9), (int)$this->order->getTotal());
+		$action->actionClass->set('RuleActionPercentageDiscount');
+		$this->assertEquals((int)($price * 0.9), (int)$this->order->getTotal(true));
 	}
 
 	public function testQuantityPrices()
@@ -1357,20 +1356,20 @@ class OrderTest extends OrderTestCommon
 		$this->assertIsA($price, 'ProductPrice');
 
 		$price->setPriceRule(5, null, 15);
-		$this->assertEquals($this->order->getTotal(), 75);
+		$this->assertEquals($this->order->getTotal(true), 75);
 
 		$price->removePriceRule(5, null);
-		$this->assertEquals($this->order->getTotal(), 500);
+		$this->assertEquals($this->order->getTotal(true), 500);
 
 		$price->setPriceRule(4, null, 15);
-		$this->assertEquals($this->order->getTotal(), 75);
+		$this->assertEquals($this->order->getTotal(true), 75);
 
 		$price->removePriceRule(4, null);
 		$price->setPriceRule(6, null, 15);
-		$this->assertEquals($this->order->getTotal(), 500);
+		$this->assertEquals($this->order->getTotal(true), 500);
 
 		$price->setPriceRule(9, null, 15);
-		$this->assertEquals($this->order->getTotal(), 500);
+		$this->assertEquals($this->order->getTotal(true), 500);
 
 		// user group pricing
 		$group = UserGroup::getNewInstance('test');
@@ -1378,28 +1377,28 @@ class OrderTest extends OrderTestCommon
 
 		$price->setPriceRule(4, null, 15);
 		$price->setPriceRule(4, $group, 10);
-		$this->assertEquals($this->order->getTotal(), 75);
+		$this->assertEquals($this->order->getTotal(true), 75);
 
 		$user = $this->order->user->get();
 		$user->userGroup->set($group);
 		$user->save();
-		$this->assertEquals($this->order->getTotal(), 50);
+		$this->assertEquals($this->order->getTotal(true), 50);
 
 		$price->removePriceRule(4, null);
 		$price->removePriceRule(4, $group);
 
 		$price->setPriceRule(4, null, 15);
 		$price->setPriceRule(6, $group, 10);
-		$this->assertEquals($this->order->getTotal(), 75);
+		$this->assertEquals($this->order->getTotal(true), 75);
 
 		$price->setPriceRule(5, $group, 10);
-		$this->assertEquals($this->order->getTotal(), 50);
+		$this->assertEquals($this->order->getTotal(true), 50);
 
 		$price->setPriceRule(2, $group, 7);
 		$price->setPriceRule(3, $group, 8);
 		$price->setPriceRule(4, $group, 9);
 		$price->setPriceRule(6, $group, 11);
-		$this->assertEquals($this->order->getTotal(), 50);
+		$this->assertEquals($this->order->getTotal(true), 50);
 	}
 
 	public function testShippingToMultipleAddresses()
@@ -1468,7 +1467,7 @@ class OrderTest extends OrderTestCommon
 		$this->assertEquals($this->order->getShipments()->size(), 2);
 
 		$price = $product->getPrice($this->usd);
-		$this->assertEquals($this->order->getTotal(), ($price * 1.2) + ($price * 2 * 1.15));
+		$this->assertEquals($this->order->getTotal(true), ($price * 1.2) + ($price * 2 * 1.15));
 
 		// test if delivery zones are determined correctly
 		$this->assertEqual($shipment1->getDeliveryZone()->getID(), $zone1->getID());
@@ -1501,7 +1500,7 @@ class OrderTest extends OrderTestCommon
 		}
 
 		// order total with taxes and shipping
-		$this->assertEqual($order->getTotal(), (($price + 100) * 1.2) + ((($price * 2) + 78) * 1.15));
+		$this->assertEqual($order->getTotal(true), (($price + 100) * 1.2) + ((($price * 2) + 78) * 1.15));
 	}
 
 	public function testClone()
@@ -1531,7 +1530,7 @@ class OrderTest extends OrderTestCommon
 
 		$this->order->save();
 		$this->order->finalize($this->usd);
-		$total = $this->order->getTotal();
+		$total = $this->order->getTotal(true);
 
 		ActiveRecord::clearPool();
 		$reloaded = CustomerOrder::getInstanceByID($this->order->getID(), true);
@@ -1546,7 +1545,7 @@ class OrderTest extends OrderTestCommon
 		$this->assertEquals(2, $reloaded->getShipments()->size());
 		$this->assertEquals(2, count($reloaded->getOrderedItems()));
 		$this->assertEquals(1, array_shift($reloaded->getItemsByProduct($this->products[0]))->count->get());
-		$this->assertEquals($total, $reloaded->getTotal());
+		$this->assertEquals($total, $reloaded->getTotal(true));
 
 		ActiveRecord::clearPool();
 		$order = CustomerOrder::getInstanceByID($cloned->getID(), true);
@@ -1581,7 +1580,7 @@ class OrderTest extends OrderTestCommon
 		ActiveRecord::clearPool();
 		$reloaded = CustomerOrder::getInstanceByID($this->order->getID(), true);
 		$reloaded->loadAll();
-		$this->assertEquals($total, $reloaded->getTotal());
+		$this->assertEquals($total, $reloaded->getTotal(true));
 	}
 
 	public function testVariationPricing()
@@ -1594,21 +1593,21 @@ class OrderTest extends OrderTestCommon
 
 		// override price
 		$variation->setPrice('USD', 1);
-		$this->assertEquals($this->order->getTotal(), 1);
+		$this->assertEquals($this->order->getTotal(true), 1);
 
 		// add to parent price
 		$variation->setChildSetting('price', Product::CHILD_ADD);
-		$this->assertEquals($this->order->getTotal(), 101);
+		$this->assertEquals($this->order->getTotal(true), 101);
 
 		// substract from parent price
 		$variation->setChildSetting('price', Product::CHILD_SUBSTRACT);
-		$this->assertEquals($this->order->getTotal(), 99);
+		$this->assertEquals($this->order->getTotal(true), 99);
 
 		// use parent price
 		$variation->setPrice('USD', 0);
 		$variation->setChildSetting('price', Product::CHILD_OVERRIDE);
 		$variation->save();
-		$this->assertEquals($this->order->getTotal(), 100);
+		$this->assertEquals($this->order->getTotal(true), 100);
 	}
 
 	public function testReloadedVariationPricing()
@@ -1624,7 +1623,7 @@ class OrderTest extends OrderTestCommon
 		$reloadedVar = Product::getInstanceByID($variation->getID(), true);
 		$order = CustomerOrder::getNewInstance($this->user);
 		$order->addProduct($reloadedVar, 1, true);
-		$this->assertEquals($order->getTotal(), 100);
+		$this->assertEquals($order->getTotal(true), 100);
 	}
 
 	private function createOrderWithZone(DeliveryZone $zone = null)
