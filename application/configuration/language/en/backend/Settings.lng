@@ -159,6 +159,7 @@ TOP_MENU_COMPACT=Compact display style (include filter names in drop-down menus)
 TOP_FILTER_PRICE=Display price filters in top menu
 TOP_FILTER_MANUFACTURER=Display manufacturer filters in top menu
 TOP_FILTER_CONTINUOS=Continuos filter selection (previous filters have to be selected for the further filters to become selectable)
+TOP_FILTER_RELOAD=Reload page after selecting a filter
 
 _price_filters=Price Filters
 _price_filter_1=Price Filter 1

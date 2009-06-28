@@ -207,6 +207,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 		}
 
 		$data = parent::transformArray($array, $schema);
+		$data['__class__'] = $schemaName;
 
 		if (self::isEav($schemaName))
 		{
@@ -241,6 +242,11 @@ abstract class ActiveRecordModel extends ActiveRecord
 		}
 
 		return $array;
+	}
+
+	public function processBusinessRules(BusinessRuleManager $manager)
+	{
+		$manager->processInstanceActions($this);
 	}
 
 	public static function addToEavQueue($className, &$record)

@@ -768,6 +768,11 @@ class ProductController extends FrontendController
 
 		return $validator;
 	}
+
+	public function getCategory()
+	{
+		return $this->category;
+	}
 }
 
 ?>
