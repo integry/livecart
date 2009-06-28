@@ -1,0 +1,5 @@
+GoogleCheckout=Πληρωμή Google
+GoogleCheckout_sandbox=Χρήση περιβάλλοντος sandbox(test)
+GoogleCheckout_merchant_id=Κωδικός Εμπόρου
+GoogleCheckout_merchant_key=Κλειδί Εμπόρου
+GoogleCheckout_coupons=Επιτρέπει εισαγωγή κωδικών κουπονιού στην πληρωμή Google

@@ -1,0 +1,6 @@
+PaypalDirectPayment=Άμεση Πληρωμή Paypal
+PaypalDirectPayment_sandbox=Χρήση περιβάλλοντος sandbox(test)
+PaypalDirectPayment_username=Όνομα χρήστη
+PaypalDirectPayment_password=Κωδικός πρόσβασης
+PaypalDirectPayment_signature=Υπογραφή
+PaypalDirectPayment_cardTypes=Ορατοί(enabled) τύποι πιστωτικής κάρτας

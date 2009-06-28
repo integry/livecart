@@ -1,0 +1,17 @@
+_edit_templates=Επεξεργασία Προτύπων
+_edit_template=Επεξεργασία Αρχείου Προτύπου
+_please_select=Παρακαλούμε επιλέξτε ένα αρχείο προτύπου για επεξεργασία
+_save_template=Αποθήκευση Προτύπου
+_template_file_name=Όνομα αρχείου
+_save_for_theme=Αποθήκευση μόνο για συγκεκριμένο θέμα
+_create_template=Δημιουργία αρχείου προτύπου
+_delete_template=Διαγραφή αρχείου προτύπου
+_file_name_empty=Παρακαλούμε εισάγετε όνομα αρχείου
+_edit_email_templates=Επεξεργασία Προτύπων E-mail
+_subject=Θέμα μηνύματος
+_body=Σώμα Μηνύματος
+_html_version=HTML Version
+_confirm_template_delete=Πραγματικά διαγραφή του επιλεγμένου αρχείου προτύπου?
+_template_has_been_successfully_updated=Το πρότυπο αποθηκεύθηκε επιτυχώς
+_could_not_update_template=Το πρότυπο δεν μπόρεσε να αποθηκευθεί
+_template_has_been_successfully_deleted=Το αρχείο προτύπου έχει διαγραφεί επιτυχώς

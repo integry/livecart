@@ -1,0 +1,5 @@
+ChronoPay_productid=Κωδικός προιόντος ChronoPay
+ChronoPay_productname=Παρουσίαση είδους κάρτας αγορών για παρουσίαση στη ChronoPay
+ChronoPay_currency=Συνάλλαγμα ChronoPay
+ChronoPayGateway_productid=Κωδικός προιόντος ChronoPay
+ChronoPayGateway_secret=Μετοχικό μυστικό κλειδί(Shared secret key)

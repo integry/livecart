@@ -1,0 +1,6 @@
+PaypalExpressCheckout=Πληρωμή PayPal Express
+PaypalExpressCheckout_sandbox=Χρήση περιβάλλοντος sandbox(test)
+PaypalExpressCheckout_username=Όνομα χρήστη
+PaypalExpressCheckout_password=Κωδικός πρόσβασης
+PaypalExpressCheckout_signature=Υπογραφή
+PaypalExpressCheckout_AUTHONLY=Μόνο εξουσιοδοτημένες πληρωμές χωρίς σύλληψη αυτών αυτομάτως
