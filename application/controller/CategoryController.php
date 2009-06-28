@@ -37,7 +37,7 @@ class CategoryController extends FrontendController
   	{
 	  	parent::init();
 	  	$this->addBlock('FILTER_BOX', 'boxFilter', 'block/box/filter');
-	  	$this->addBlock('FILTER_TOP', 'boxFilterTop', 'category/block/filterTop');
+	  	$this->addBlock('FILTER_TOP', 'boxFilterTop', 'category/boxFilterTopBlock');
 	  	$this->addBlock('PRODUCT_LISTS', 'productList', 'block/productList');
 	}
 
@@ -45,15 +45,10 @@ class CategoryController extends FrontendController
 	{
 		ClassLoader::import('application.model.presentation.CategoryPresentation');
 
-		// get category instance
-		$this->categoryID = $this->request->get('id');
-		$this->category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
-		$categoryArray = $this->category->toArray();
-
 		$this->getAppliedFilters();
 
 		// presentation
-		if ($theme = CategoryPresentation::getThemeByCategory($this->category))
+		if ($theme = CategoryPresentation::getThemeByCategory($this->getCategory()))
 		{
 			if ($theme->getTheme())
 			{
@@ -104,7 +99,7 @@ class CategoryController extends FrontendController
 		}
 
 		// root category?
-		if ($this->category->isRoot() && !$this->filters && !($this instanceof IndexController))
+		if ($this->getCategory()->isRoot() && !$this->filters && !($this instanceof IndexController) && !$this->request->get('includeSub'))
 		{
 			return new ActionRedirectResponse('index', 'index');
 		}
@@ -120,7 +115,7 @@ class CategoryController extends FrontendController
 			}
 		}
 
-		foreach ($this->category->getSpecificationFieldArray() as $field)
+		foreach ($this->getCategory()->getSpecificationFieldArray() as $field)
 		{
 			if ($field['isSortable'])
 			{
@@ -140,7 +135,7 @@ class CategoryController extends FrontendController
 		$this->applySortOrder($selectFilter, $order);
 
 		// setup ProductFilter
-		$productFilter = new ProductFilter($this->category, $selectFilter);
+		$productFilter = new ProductFilter($this->getCategory(), $selectFilter);
 
 		if ($this->config->get('INCLUDE_SUBCATEGORY_PRODUCTS'))
 		{
@@ -159,7 +154,7 @@ class CategoryController extends FrontendController
 			}
 		}
 
-		if (($this->category->isRoot() && $this->filters) || $this->filters || $this->request->get('includeSub'))
+		if (($this->getCategory()->isRoot() && $this->filters) || $this->filters || $this->request->get('includeSub'))
 		{
 			$productFilter->includeSubcategories();
 		}
@@ -174,13 +169,15 @@ class CategoryController extends FrontendController
 		$this->totalCount = $totalCount;
 
 		// narrow by subcategories
-		$subCategories = $this->category->getSubCategoryArray(Category::LOAD_REFERENCES);
+		$subCategories = $this->getCategory()->getSubCategoryArray(Category::LOAD_REFERENCES);
 
 		$categoryNarrow = array();
-		if ((!empty($searchQuery) || $this->category->isRoot() || $this->filters) && $products)
+		if ((!empty($searchQuery) || $this->getCategory()->isRoot() || $this->filters) && $products)
 		{
 			$categoryNarrow = $this->getSubCategoriesBySearchQuery($selectFilter, $subCategories);
 		}
+
+		$categoryArray = $this->getCategory()->toArray();
 
 		// if all the results come from one category, redirect to this category
 		if ((count($categoryNarrow) == 1) && (count($this->filters) == 1))
@@ -189,7 +186,7 @@ class CategoryController extends FrontendController
 
 			foreach ($products as $product)
 			{
-				if ($product['Category']['ID'] == $this->categoryID)
+				if ($product['Category']['ID'] == $this->getCategoryId())
 				{
 					$canNarrow = false;
 				}
@@ -200,7 +197,7 @@ class CategoryController extends FrontendController
 				while (count($categoryNarrow) == 1)
 				{
 					$this->category = Category::getInstanceByID($categoryNarrow[0]['ID'], Category::LOAD_DATA);
-					$subCategories = $this->category->getSubCategoryArray(Category::LOAD_REFERENCES);
+					$subCategories = $this->getCategory()->getSubCategoryArray(Category::LOAD_REFERENCES);
 					if ($subCategories)
 					{
 						$subCategories[] = $categoryArray;
@@ -209,7 +206,7 @@ class CategoryController extends FrontendController
 				}
 
 				include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
-				return new RedirectResponse(createCategoryUrl(array('data' => $this->category->toArray(), 'filters' => $this->filters), $this->application));
+				return new RedirectResponse(createCategoryUrl(array('data' => $this->getCategory()->toArray(), 'filters' => $this->filters), $this->application));
 			}
 		}
 
@@ -227,9 +224,9 @@ class CategoryController extends FrontendController
 		}
 
 		// if there were no products found, include subcategories in filter counts... except home page
-		if (!$products || $this->category->isRoot())
+		if (!$products || $this->getCategory()->isRoot())
 		{
-			$selectFilter->removeCondition(new EqualsCond(new ARFieldHandle('Product', 'categoryID'), $this->category->getID()));
+			$selectFilter->removeCondition(new EqualsCond(new ARFieldHandle('Product', 'categoryID'), $this->getCategory()->getID()));
 			$this->productFilter->includeSubcategories();
 		}
 
@@ -278,7 +275,7 @@ class CategoryController extends FrontendController
 		}
 
 		$response = new ActionResponse();
-		$response->set('id', $this->categoryID);
+		$response->set('id', $this->getCategoryId());
 
 		$response->set('products', $products);
 		$response->set('count', $totalCount);
@@ -358,6 +355,7 @@ class CategoryController extends FrontendController
 		$this->removeBlock('PRODUCT_LISTS');
 
 		$response = $this->index();
+
 		$response->set('subCategories', array());
 		$response->set('categoryNarrow', array());
 		$response->set('url', $this->router->createUrl(array('controller' => 'category', 'action' => 'allProducts', 'id' => 0)));
@@ -392,7 +390,7 @@ class CategoryController extends FrontendController
 
 	private function getProductsArray(ProductFilter $filter)
 	{
-		$products = $this->category->getProductArray($filter, array('Manufacturer', 'DefaultImage' => 'ProductImage', 'Category'));
+		$products = $this->getCategory()->getProductArray($filter, array('Manufacturer', 'DefaultImage' => 'ProductImage', 'Category'));
 //var_dump($filter->getSelectFilter()->createString());
 		// get product specification and price data
 		ProductSpecification::loadSpecificationForRecordSetArray($products);
@@ -464,7 +462,7 @@ class CategoryController extends FrontendController
 	private function setUpBreadCrumbAndReturnFilterChainHandle($page)
 	{
 		// get category path for breadcrumb
-		$path = $this->category->getPathNodeArray();
+		$path = $this->getCategory()->getPathNodeArray();
 
 		include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
 		foreach ($path as $nodeArray)
@@ -476,7 +474,7 @@ class CategoryController extends FrontendController
 		// add filters to breadcrumb
 		if (!isset($nodeArray))
 		{
-			$nodeArray = $this->category->toArray();
+			$nodeArray = $this->getCategory()->toArray();
 		}
 
 		$params = array('data' => $nodeArray, 'filters' => array());
@@ -620,7 +618,7 @@ class CategoryController extends FrontendController
 		$selFilter->setOrder(new ARExpressionHandle('RAND()'));
 		$selFilter->setLimit($count);
 
-		$featuredFilter = new ProductFilter($this->category, $selFilter);
+		$featuredFilter = new ProductFilter($this->getCategory(), $selFilter);
 		$featuredFilter->includeSubcategories();
 
 		return $this->getProductsArray($featuredFilter);
@@ -640,7 +638,7 @@ class CategoryController extends FrontendController
 	protected function productListBlock()
 	{
 		// get list items
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductList', 'categoryID'), $this->category->getID()));
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductList', 'categoryID'), $this->getCategory()->getID()));
 		$f->setOrder(new ARFieldHandle('ProductList', 'position'));
 		$f->setOrder(new ARFieldHandle('ProductListItem', 'productListID'));
 		$f->setOrder(new ARFieldHandle('ProductListItem', 'position'));
@@ -704,7 +702,7 @@ class CategoryController extends FrontendController
 			$response->set('allManufacturers', $this->router->setUrlQueryParam($url, 'showAll', 'brand'));
 		}
 
-		if (!$this->category)
+		if (!$this->getCategory())
 		{
 			$this->category = Category::getRootNode();
 			$this->category->load();
@@ -725,7 +723,7 @@ class CategoryController extends FrontendController
 		}
 
 		// index page filters
-		if ($this->category->isRoot())
+		if ($this->getCategory()->isRoot())
 		{
 			if (!$this->config->get('INDEX_MAN_FILTERS'))
 			{
@@ -762,7 +760,7 @@ class CategoryController extends FrontendController
 		}
 
 		$response->set('filters', $this->getAppliedFilterArray());
-	 	$response->set('category', $this->category->toArray());
+	 	$response->set('category', $this->getCategory()->toArray());
 	 	$response->set('groups', $filterGroups);
 
 		return $response;
@@ -785,11 +783,16 @@ class CategoryController extends FrontendController
 		return $filterArray;
 	}
 
-	protected function boxFilterTopBlock()
+	public function boxFilterTopBlock()
 	{
+		if (!$this->productFilter)
+		{
+			$this->index();
+		}
+
 		if ($this->config->get('TOP_FILTER_CONTINUOS'))
 		{
-			$groups = $this->category->getFilterGroupSet()->filter('displayLocation', FilterGroup::LOC_TOP);
+			$groups = $this->getCategory()->getFilterGroupSet()->filter('displayLocation', FilterGroup::LOC_TOP);
 
 			// find filters that will be included for selection automatically
 			$appliedFilters = array();
@@ -842,9 +845,9 @@ class CategoryController extends FrontendController
 				}
 			}
 
-			$categoryFilters = $this->category->getFilterSet();
+			$categoryFilters = $this->getCategory()->getFilterSet();
 
-			$filterGroups = $this->category->getFilterGroupSet()->filter('displayLocation', FilterGroup::LOC_TOP);
+			$filterGroups = $this->getCategory()->getFilterGroupSet()->filter('displayLocation', FilterGroup::LOC_TOP);
 			$groups = array();
 			foreach ($filterGroups as $group)
 			{
@@ -852,7 +855,7 @@ class CategoryController extends FrontendController
 
 				$groups[$group->getID()] = $group->toArray();
 
-				if ($stop)
+				if (isset($stop))
 				{
 					continue;
 				}
@@ -874,11 +877,19 @@ class CategoryController extends FrontendController
 			}
 
 			$response = new BlockResponse();
-			$response->set('manGroup', $manFilters);
-			$response->set('priceGroup', $priceFilters);
+
+			if (isset($manFilters))
+			{
+				$response->set('manGroup', $manFilters);
+			}
+
+			if (isset($priceFilters))
+			{
+				$response->set('priceGroup', $priceFilters);
+			}
 
 			$response->set('filters', $this->getAppliedFilterArray());
-			$response->set('category', $this->category->toArray());
+			$response->set('category', $this->getCategory()->toArray());
 			$response->set('groups', $groups);
 
 			return $response;
@@ -938,7 +949,7 @@ class CategoryController extends FrontendController
 		$count = new ProductCount($this->productFilter, $this->application);
 
 		// get category filter groups
-		$filterGroups = $this->category->getFilterGroupArray();
+		$filterGroups = $this->getCategory()->getFilterGroupArray();
 		$filterGroups = $this->createFilterGroupSet($filterGroups, $count->getCountByFilters($includeAppliedFilters));
 
 		$manFilters = $this->createManufacturerFilterSet($count->getCountByManufacturers($includeAppliedFilters));
@@ -952,7 +963,7 @@ class CategoryController extends FrontendController
 		// get group filters
 		if ($filterGroups)
 		{
-			$filters = $this->category->getFilterSet();
+			$filters = $this->getCategory()->getFilterSet();
 
 			// sort filters by group
 			$sorted = array();
@@ -976,7 +987,7 @@ class CategoryController extends FrontendController
 			{
 				if (isset($sorted[$group['SpecField']['ID']]))
 				{
-					$sorted[$group['specFieldID']] = $sorted[$group['SpecField']['ID']];
+					$group['specFieldID'] = $group['SpecField']['ID'];
 				}
 
 				if (isset($sorted[$group['specFieldID']]))
@@ -1041,7 +1052,7 @@ class CategoryController extends FrontendController
 
 		if ($request->get('filters'))
 		{
-			$filterGroups = $this->category->getFilterGroupSet();
+			$filterGroups = $this->getCategory()->getFilterGroupSet();
 
 			$valueFilterIds = array();
 			$selectorFilterIds = array();
@@ -1141,7 +1152,7 @@ class CategoryController extends FrontendController
 
 	public function getCategoryId()
 	{
-		return $this->categoryID;
+		return $this->getCategory()->getID();
 	}
 
 	public function getProductFilter()
@@ -1224,7 +1235,7 @@ class CategoryController extends FrontendController
 	private function getListAttributes()
 	{
 		$res = array();
-		foreach ($this->category->getSpecificationFieldArray() as $field)
+		foreach ($this->getCategory()->getSpecificationFieldArray() as $field)
 		{
 			if ($field['isDisplayedInList'])
 			{
@@ -1233,6 +1244,16 @@ class CategoryController extends FrontendController
 		}
 
 		return $res;
+	}
+
+	private function getCategory()
+	{
+		if (!$this->category)
+		{
+			$this->category = Category::getInstanceById($this->request->get('id'), Category::LOAD_DATA);
+		}
+
+		return $this->category;
 	}
 }
 
