@@ -1,4 +1,4 @@
-{form action="controller=order action=update" method="POST" handle=$form id="cartItems"}
+{form action="controller=order action=update" method="POST" enctype="multipart/form-data" handle=$form id="cartItems"}
 <h2>{t _cart_items}</h2>
 <table id="cart">
 	<thead>
@@ -38,6 +38,9 @@
 					<div class="productOptions">
 						{foreach from=$options[$item.ID] item=option}
 							{include file="product/optionItem.tpl" selectedChoice=$item.options[$option.ID]}
+							{if 3 == $option.type}
+								<a href="{link controller=order action=downloadOptionFile id=$item.ID query="option=`$option.ID`"}">{$item.options[$option.ID].fileName}</a>
+							{/if}
 						{/foreach}
 
 						{foreach from=$moreOptions[$item.ID] item=option}
@@ -48,6 +51,13 @@
 										{t _option_yes}
 									{elseif 1 == $option.type}
 										{$item.options[$option.ID].Choice.name_lang}
+									{elseif 3 == $option.type}
+										<a href="{link controller=order action=downloadOptionFile id=$item.ID query="option=`$option.ID`"}">{$item.options[$option.ID].fileName}</a>
+										{if $item.options[$option.ID].small_url}
+											<div class="optionImage">
+												<a href="{$item.options[$option.ID].large_url}" rel="lightbox"><img src="{$item.options[$option.ID].small_url}" /></a>
+											</div>
+										{/if}
 									{else}
 										{$item.options[$option.ID].optionText|@htmlspecialchars}
 									{/if}

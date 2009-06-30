@@ -191,6 +191,17 @@ function IsNotEqualCheck(element, params)
 	return (element.value != params.value);
 }
 
+function IsFileTypeValidCheck(element, params)
+{
+	if (!element.value)
+	{
+		return true;
+	}
+
+	var ext = element.value.split(/\./).pop().toLowerCase();
+	return params.extensions.indexOf(ext) > -1;
+}
+
 function OrCheck(element, constraints)
 {
 	var form = element.form ? element.form : $A(element)[0].form;

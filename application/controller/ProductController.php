@@ -534,7 +534,8 @@ class ProductController extends FrontendController
 				if ($option['isRequired'])
 				{
 					$optField = $prefix . 'option_' . $option['ID'];
-					$validator->addCheck($optField, new OrCheck(array($optField, $prefix . 'count'), array(new IsNotEmptyCheck($this->translate('_err_option_' . $option['type'])), new IsEmptyCheck('')), $this->request));
+					OrderController::addOptionValidation($validator, $option, $optField);
+					//$validator->addCheck($optField, new OrCheck(array($optField, $prefix . 'count'), array(new IsNotEmptyCheck($this->translate('_err_option_' . $option['type'])), new IsEmptyCheck('')), $this->request));
 					//$validator->addCheck($prefix . 'option_' . $option['ID'], new IsNotEmptyCheck($this->translate('_err_option_' . $option['type'])));
 				}
 			}

@@ -11,22 +11,22 @@
  * @param array $params
  * @param Smarty $smarty
  * @return string
- * 
+ *
  * @package application.helper.smarty
- * @author Integry Systems 
+ * @author Integry Systems
  */
-function smarty_function_maketext($params, LiveCartSmarty $smarty) 
-{	
+function smarty_function_maketext($params, LiveCartSmarty $smarty)
+{
 	$application = $smarty->getApplication();
-	$translation = $application->makeText($params['text'], $params['params']);
-	
+	$translation = $application->makeText($params['text'], explode(',', $params['params']));
+
 	if ($application->isTranslationMode() && !isset($params['disableLiveTranslation']))
 	{
 		$file = $application->getLocale()->translationManager()->getFileByDefKey($params['text']);
 		$file = '__file_'.base64_encode($file);
 		$translation = '<span class="transMode __trans_' . $params['text'].' '. $file .'">'.$translation.'</span>';
 	}
-	
+
 	return $translation;
 }
 

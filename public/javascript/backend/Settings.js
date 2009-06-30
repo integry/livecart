@@ -507,13 +507,19 @@ Backend.Settings.Editor.prototype =
 				var sizeCapt = wCapt + ' x ' + hCapt + ':';
 				var qualityCapt = Backend.getTranslation('IMG_P_Q_1')  + ':';
 
-				var prefixes = ['P', 'C', 'M'];
+				var prefixes = ['P', 'C', 'M', 'O'];
 				for (var k = 0; k < prefixes.length; k++)
 				{
 					var prefix = prefixes[k];
 					for (var size = 1; size <= 4; size++)
 					{
 						var width = $('setting_IMG_' + prefix + '_W_' + size);
+
+						if (!width)
+						{
+							break;
+						}
+
 						var height = $('setting_IMG_' + prefix + '_H_' + size);
 						var quality = $('setting_IMG_' + prefix + '_Q_' + size);
 
