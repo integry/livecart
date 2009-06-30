@@ -24,6 +24,12 @@
 
 		<p>
 			<label></label>
+			{checkbox name="isVariationImages" class="checkbox" id="product_`$cat`_`$product.ID`_isVariationImages"}
+			<label for="product_{$cat}_{$product.ID}_isVariationImages" class="checkbox">{t _show_variation_images}</label>
+		</p>
+
+		<p>
+			<label></label>
 			{checkbox name="isAllVariations" class="checkbox" id="product_`$cat`_`$product.ID`_isAllVariations"}
 			<label for="product_{$cat}_{$product.ID}_isAllVariations" class="checkbox">{t _allow_all_variations}</label>
 		</p>

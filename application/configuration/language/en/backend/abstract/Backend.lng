@@ -66,6 +66,8 @@ _columns=Columns
 _translate_to=Translate to
 
 _allow_all_variations=Allow purchasing multiple variations from product page
+_show_variation_images=Show variation images in main product page
+_list_style=Product list style
 
 #################################################
 # Addresses                                     #

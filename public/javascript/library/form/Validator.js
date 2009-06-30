@@ -202,6 +202,14 @@ function IsFileTypeValidCheck(element, params)
 	return params.extensions.indexOf(ext) > -1;
 }
 
+function IsFileUploadedCheck(element, params)
+{
+	if (element.value.length > 0)
+	{
+		return true;
+	}
+}
+
 function OrCheck(element, constraints)
 {
 	var form = element.form ? element.form : $A(element)[0].form;
