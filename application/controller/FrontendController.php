@@ -215,11 +215,16 @@ abstract class FrontendController extends BaseController
 				$currencyArray[$currency->getID()] = $currency->toArray();
 				$currencyArray[$currency->getID()]['url'] = str_replace('_curr_', $currency->getID(), $returnRoute);
 			}
+			else
+			{
+				$currentCurrency = $currency->toArray();
+			}
 		}
 
 		$response = new BlockResponse();
 		$response->set('currencies', $currencyArray);
 		$response->set('current', $current);
+		$response->set('currentCurrency', $currentCurrency);
 		return $response;
 	}
 
