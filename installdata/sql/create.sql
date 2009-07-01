@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2009-04-20 23:19                                #
-# Model version:         Version 2009-04-20                              #
+# Created on:            2009-06-30 05:20                                #
+# Model version:         Version 2009-06-30 1                            #
 # ---------------------------------------------------------------------- #
 
 
@@ -31,6 +31,7 @@ CREATE TABLE Product (
     isFreeShipping BOOL NOT NULL COMMENT 'Determines if free shipping is available for this product',
     isBackOrderable BOOL NOT NULL COMMENT 'Determines if this product is available for backordering. If backordering is enabled, customers can order the product even if it is out of stock',
     isFractionalUnit BOOL NOT NULL,
+    isUnlimitedStock BOOL NOT NULL,
     sku VARCHAR(20) NOT NULL COMMENT 'Product stock keeping unit code',
     name MEDIUMTEXT COMMENT 'Product name (translatable)',
     shortDescription MEDIUMTEXT COMMENT 'A shorter description of the product (translatable). The short description is usually displayed in the category product list',
@@ -147,10 +148,11 @@ CREATE TABLE SpecField (
     dataType SMALLINT DEFAULT 0 COMMENT '1. text 2. numeric',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Order number (position relative to other fields)',
     handle VARCHAR(40),
-    isMultiValue BOOL COMMENT 'Determines if multiple values can be selected for selector attributes',
-    isRequired BOOL COMMENT 'Determines if a value has to be provided/entered for this attribute when creating or updating product information',
-    isDisplayed BOOL COMMENT 'Determines if the attribute value is displayed in product page',
-    isDisplayedInList BOOL COMMENT 'Determines if the attribute value is displayed in a category/search page (attribute summary)',
+    isMultiValue BOOL NOT NULL COMMENT 'Determines if multiple values can be selected for selector attributes',
+    isRequired BOOL NOT NULL COMMENT 'Determines if a value has to be provided/entered for this attribute when creating or updating product information',
+    isDisplayed BOOL NOT NULL COMMENT 'Determines if the attribute value is displayed in product page',
+    isDisplayedInList BOOL NOT NULL COMMENT 'Determines if the attribute value is displayed in a category/search page (attribute summary)',
+    isSortable BOOL NOT NULL,
     valuePrefix MEDIUMTEXT COMMENT 'Fixed prefix for all numeric values',
     valueSuffix MEDIUMTEXT COMMENT 'Fixed suffix for all numeric values (for example, sec, kg, px, etc.)',
     CONSTRAINT PK_SpecField PRIMARY KEY (ID)
@@ -307,6 +309,8 @@ CREATE TABLE FilterGroup (
     name MEDIUMTEXT COMMENT 'FilterGroup name (translatable)',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other FilterGroups',
     isEnabled BOOL COMMENT 'Determine if the FilterGroup is active',
+    displayStyle INTEGER UNSIGNED NOT NULL,
+    displayLocation INTEGER UNSIGNED NOT NULL,
     CONSTRAINT PK_FilterGroup PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -971,6 +975,8 @@ CREATE TABLE ProductOption (
     isPriceIncluded BOOL COMMENT 'Include product price when displaying option price (base product price + option choice price = option display price)',
     displayType INTEGER COMMENT '0 - select box, 1 - radio buttons',
     position INTEGER UNSIGNED DEFAULT 0,
+    maxFileSize INTEGER,
+    fileExtensions VARCHAR(100),
     CONSTRAINT PK_ProductOption PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -1045,20 +1051,10 @@ CREATE TABLE CategoryPresentation (
     productID INTEGER UNSIGNED,
     isSubcategories BOOL,
     isAllVariations BOOL,
+    isVariationImages BOOL,
     theme VARCHAR(70),
+    listStyle VARCHAR(20),
     CONSTRAINT PK_CategoryPresentation PRIMARY KEY (ID)
-)
-ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
-
-# ---------------------------------------------------------------------- #
-# Add table "ProductPresentation"                                        #
-# ---------------------------------------------------------------------- #
-
-CREATE TABLE ProductPresentation (
-    ID INTEGER UNSIGNED NOT NULL,
-    isAllVariations BOOL,
-    theme VARCHAR(70),
-    CONSTRAINT PK_ProductPresentation PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -1361,6 +1357,7 @@ CREATE TABLE DiscountCondition (
     couponLimitType TINYINT COMMENT '0 - overall 1 - by user',
     serializedCondition TEXT,
     position INTEGER UNSIGNED DEFAULT 0,
+    conditionClass VARCHAR(80),
     CONSTRAINT PK_DiscountCondition PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -1386,6 +1383,7 @@ CREATE TABLE DiscountAction (
     discountStep INTEGER,
     discountLimit INTEGER,
     position INTEGER UNSIGNED DEFAULT 0,
+    actionClass VARCHAR(80),
     CONSTRAINT PK_DiscountAction PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -1435,6 +1433,8 @@ CREATE TABLE DiscountConditionRecord (
     userID INTEGER UNSIGNED,
     userGroupID INTEGER UNSIGNED,
     deliveryZoneID INTEGER UNSIGNED,
+    categoryLft INTEGER,
+    categoryRgt INTEGER,
     CONSTRAINT PK_DiscountConditionRecord PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -1818,9 +1818,6 @@ ALTER TABLE CategoryPresentation ADD CONSTRAINT Category_CategoryPresentation
 
 ALTER TABLE CategoryPresentation ADD CONSTRAINT Product_CategoryPresentation 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE ProductPresentation ADD CONSTRAINT Product_ProductPresentation 
-    FOREIGN KEY (ID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE NewsletterSubscriber ADD CONSTRAINT User_NewsletterSubscriber 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;

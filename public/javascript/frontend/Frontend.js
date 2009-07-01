@@ -24,11 +24,11 @@ Product = {}
 Product.ImageHandler = Class.create();
 Product.ImageHandler.prototype =
 {
-	initialize: function(imageData, imageDescr)
+	initialize: function(imageData, imageDescr, imageProducts)
 	{
 		imageData.each(function(pair)
 		{
-			var inst = new Product.ImageSwitcher(pair.key, pair.value, imageDescr[pair.key]);
+			var inst = new Product.ImageSwitcher(pair.key, pair.value, imageDescr[pair.key], imageProducts[pair.key]);
 			if (!window.defaultImageHandler)
 			{
 				window.defaultImageHandler = inst;
@@ -45,9 +45,10 @@ Product.ImageSwitcher.prototype =
 	imageData: null,
 	imageDescr: null,
 
-	initialize: function(id, imageData, imageDescr)
+	initialize: function(id, imageData, imageDescr, productID)
 	{
 		this.id = id;
+		this.productID = productID;
 		this.imageData = imageData;
 		this.imageDescr = imageDescr;
 
@@ -58,7 +59,7 @@ Product.ImageSwitcher.prototype =
 		}
 	},
 
-	switchImage: function()
+	switchImage: function(e)
 	{
 		if (!$('mainImage'))
 		{
@@ -77,6 +78,11 @@ Product.ImageSwitcher.prototype =
 		{
 			lightBox.href = this.imageData[4];
 			lightBox.title = this.imageDescr ? this.imageDescr : '';
+		}
+
+		if (window.productVariationHandler && e)
+		{
+			window.productVariationHandler.setVariation(this.productID);
 		}
 	}
 }
@@ -221,6 +227,8 @@ Product.Variations = function(container, variations, options)
 
 	this.selectFields[0].disabled = false;
 	this.updateVisibleOptions();
+
+	window.productVariationHandler = this;
 }
 
 Product.Variations.prototype =
@@ -341,8 +349,28 @@ Product.Variations.prototype =
 
 		if (product.DefaultImage && product.DefaultImage.paths)
 		{
-			(new Product.ImageSwitcher(product.DefaultImage.ID, product.DefaultImage.paths, product.DefaultImage.name_lang)).switchImage();
+			(new Product.ImageSwitcher(product.DefaultImage.ID, product.DefaultImage.paths, product.DefaultImage.name_lang, product.ID)).switchImage();
 		}
+	},
+
+	setVariation: function(productID)
+	{
+		$H(this.variations.products).each(function(product)
+		{
+			var ids = product[0].split(/-/);
+			var product = product[1];
+
+			if (product.ID == productID)
+			{
+				for (var k = 0; k < this.selectFields.length; k++)
+				{
+					this.selectFields[k].value = ids[k];
+				}
+
+				this.displayVariationInfo(product);
+				this.updateVisibleOptions();
+			}
+		}.bind(this));
 	},
 
 	getProductPrice: function(product)

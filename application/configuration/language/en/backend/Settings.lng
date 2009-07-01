@@ -113,6 +113,10 @@ _m_thumb=Thumbnail
 _m_medium=Medium
 _m_large=Large
 
+_option_image=Customer File Upload Preview
+_o_small=Thumbnail images
+_o_large=Enlarged preview
+
 _content_blocks=Content blocks
 _sale_items=On-sale Products
 SALE_ITEMS_COUNT=Number of on-sale products to display per block

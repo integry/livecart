@@ -664,12 +664,9 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$product->save();
 
 			// presentation
-			if ($theme = $this->request->get('theme'))
-			{
-				$instance = CategoryPresentation::getInstance($product);
-				$instance->loadRequestData($this->request);
-				$instance->save();
-			}
+			$instance = CategoryPresentation::getInstance($product);
+			$instance->loadRequestData($this->request);
+			$instance->save();
 
 			$response = $this->productForm($product);
 

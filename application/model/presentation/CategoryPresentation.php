@@ -22,7 +22,8 @@ class CategoryPresentation extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", null, ARInteger::instance()));
 
 		$schema->registerField(new ARField("isSubcategories", ARBool::instance()));
-		$schema->registerField(new ARField("isAllVariations", ARBool::instance(20)));
+		$schema->registerField(new ARField("isVariationImages", ARBool::instance()));
+		$schema->registerField(new ARField("isAllVariations", ARBool::instance()));
 		$schema->registerField(new ARField("theme", ARVarchar::instance(20)));
 		$schema->registerField(new ARField("listStyle", ARVarchar::instance(20)));
 
@@ -95,7 +96,7 @@ class CategoryPresentation extends ActiveRecordModel
 			// fill missing product level settings with category level settings
 			foreach ($set as $cat)
 			{
-				foreach (array('theme', 'isAllVariations', 'listStyle') as $field)
+				foreach (array('theme', 'isAllVariations', 'isVariationImages', 'listStyle') as $field)
 				{
 					if (!$prod->$field->get())
 					{
