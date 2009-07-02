@@ -134,6 +134,8 @@ class CustomerOrderController extends ActiveGridController
 
 		$user = $order->user->get();
 
+		$response->setStatusCode(200);
+
 		if (!$user)
 		{
 			return $response;
