@@ -235,12 +235,14 @@ class ProductController extends FrontendController
 		$images = $product->getImageArray();
 		if ($theme && $theme->isVariationImages->get())
 		{
-			$variations = $this->getVariations();
-			foreach ($variations['products'] as $prod)
+			if ($variations = $this->getVariations())
 			{
-				if (!empty($prod['DefaultImage']))
+				foreach ($variations['products'] as $prod)
 				{
-					$images[] = $prod['DefaultImage'];
+					if (!empty($prod['DefaultImage']))
+					{
+						$images[] = $prod['DefaultImage'];
+					}
 				}
 			}
 		}
