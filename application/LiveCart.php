@@ -335,6 +335,7 @@ class LiveCart extends Application
 			$file = $this->getRenderer()->getTemplatePath($file);
 		}
 
+/*
 		$paths = array(ClassLoader::getRealPath('storage.customize.view'),
 					   ClassLoader::getRealPath('application.view'));
 
@@ -348,6 +349,8 @@ class LiveCart extends Application
 		}
 
 		$file = str_replace('\\', '/', $file);
+*/
+		$file = $this->getRenderer()->getRelativeTemplatePath($file);
 
 		$editUrl = $this->getRouter()->createUrl(array('controller' => 'backend.template', 'action' => 'editPopup', 'query' => array('file' => $file, 'theme' => '__theme__')), true);
 		$editUrl = str_replace('__theme__', '{theme}', $editUrl);
