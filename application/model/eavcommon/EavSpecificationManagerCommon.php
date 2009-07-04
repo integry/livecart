@@ -165,6 +165,17 @@ abstract class EavSpecificationManagerCommon
 		return $this->attributes[$field->getID()];
 	}
 
+	public function getAttributeByHandle($handle)
+	{
+		foreach ($this->attributes as $attribute)
+		{
+			if ($attribute->getField()->get()->handle->get() == $handle)
+			{
+				return $attribute;
+			}
+		}
+	}
+
 	/**
 	 * Sets specification attribute value
 	 *

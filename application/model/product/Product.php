@@ -1246,6 +1246,17 @@ class Product extends MultilingualObject
 			}
 
 			ProductOption::loadChoicesForRecordSet($options);
+
+			foreach ($options as $mainIndex => $mainOption)
+			{
+				for ($k = $mainIndex + 1; $k <= $options->size(); $k++)
+				{
+					if ($options->get($k) && ($mainOption->getID() == $options->get($k)->getID()))
+					{
+						$options->remove($k);
+					}
+				}
+			}
 		}
 
 		return $options;

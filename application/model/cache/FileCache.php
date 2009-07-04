@@ -37,7 +37,7 @@ class FileCache extends ValueCache
 
 	protected function retrieveValue($key, $defaultValue = null, $namespace = null)
 	{
-		$value = array_shift($this->getValueFromFile($this->getCacheFile($key, $namespace), $namespace));
+		$value = array_shift($this->getValueFromFile($this->getCacheFile($key, $namespace), $namespace, $defaultValue));
 		if (!$value)
 		{
 			$value = $defaultValue;
@@ -58,7 +58,7 @@ class FileCache extends ValueCache
 		return $values;
 	}
 
-	private function getValueFromFile($file, $namespace)
+	private function getValueFromFile($file, $namespace, $defaultValue = null)
 	{
 		if (!file_exists($file))
 		{

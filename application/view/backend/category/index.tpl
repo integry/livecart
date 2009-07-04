@@ -48,6 +48,7 @@
 {includeCss file="backend/RatingType.css"}
 {includeCss file="backend/Review.css"}
 {includeCss file="library/TabControl.css"}
+{includeCss file="backend/Eav.css"}
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 {includeCss file="library/lightbox/lightbox.css"}
 

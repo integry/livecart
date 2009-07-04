@@ -18,6 +18,33 @@ class TemplateController extends StoreManagementController
 	{
 		$files = Template::getTree();
 
+		$dirs = $this->application->getConfigContainer()->getViewDirectories();
+		array_shift($dirs);
+		foreach ($dirs as $d)
+		{
+			$d = $d[1];
+			$rel = $this->application->getRenderer()->getRelativeTemplatePath($d);
+			$rel = str_replace('application/view', '', $rel);
+
+			$root = array();
+			$f =& $root;
+			$ids = array();
+			foreach (explode('/', $rel) as $part)
+			{
+				if ($part)
+				{
+					$ids[] = $part;
+					$root[$part] = array('id' => implode('/', $ids), 'subs' => array());
+					$root =& $root[$part]['subs'];
+				}
+			}
+
+			$root = Template::getTree($d, null, $rel);
+			$files = array_merge_recursive($files, $f);
+
+			unset($root, $f);
+		}
+
 		unset($files['install'], $files['email']);
 
 		if (!$this->config->get('SHOW_BACKEND_TEMPLATE_FILES'))

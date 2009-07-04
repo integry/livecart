@@ -531,7 +531,7 @@ Backend.Discount.Condition.prototype =
 		var className = '';
 		Object.keys(data).each(function(key)
 		{
-			if (key != 'ID' && key != 'Condition')
+			if ((key != 'ID') && (key != 'Condition') && (key != '__class__'))
 			{
 				className = key;
 			}

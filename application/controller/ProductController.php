@@ -125,7 +125,6 @@ class ProductController extends FrontendController
 		$response = new ActionResponse();
 		$response->set('product', $productArray);
 		$response->set('category', $productArray['Category']);
-		$response->set('images', $product->getImageArray());
 		$response->set('quantity', $this->getQuantities($product));
 		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
 		$response->set('catRoute', $catRoute);
@@ -231,6 +230,23 @@ class ProductController extends FrontendController
 
 			$response->set('presentation', $theme->toFlatArray());
 		}
+
+		// product images
+		$images = $product->getImageArray();
+		if ($theme && $theme->isVariationImages->get())
+		{
+			if ($variations = $this->getVariations())
+			{
+				foreach ($variations['products'] as $prod)
+				{
+					if (!empty($prod['DefaultImage']))
+					{
+						$images[] = $prod['DefaultImage'];
+					}
+				}
+			}
+		}
+		$response->set('images', $images);
 
 		// discounted pricing
 		$response->set('quantityPricing', $product->getPricingHandler()->getDiscountPrices($this->user, $this->getRequestCurrency()));
@@ -534,8 +550,7 @@ class ProductController extends FrontendController
 				if ($option['isRequired'])
 				{
 					$optField = $prefix . 'option_' . $option['ID'];
-					$validator->addCheck($optField, new OrCheck(array($optField, $prefix . 'count'), array(new IsNotEmptyCheck($this->translate('_err_option_' . $option['type'])), new IsEmptyCheck('')), $this->request));
-					//$validator->addCheck($prefix . 'option_' . $option['ID'], new IsNotEmptyCheck($this->translate('_err_option_' . $option['type'])));
+					OrderController::addOptionValidation($validator, $option, $optField);
 				}
 			}
 
@@ -772,6 +787,11 @@ class ProductController extends FrontendController
 	public function getCategory()
 	{
 		return $this->category;
+	}
+
+	public function getProduct()
+	{
+		return $this->product;
 	}
 }
 
