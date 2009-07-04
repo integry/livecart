@@ -1246,7 +1246,7 @@ class CategoryController extends FrontendController
 		return $res;
 	}
 
-	private function getCategory()
+	protected function getCategory()
 	{
 		if (!$this->category)
 		{

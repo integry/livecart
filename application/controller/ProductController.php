@@ -788,6 +788,11 @@ class ProductController extends FrontendController
 	{
 		return $this->category;
 	}
+
+	public function getProduct()
+	{
+		return $this->product;
+	}
 }
 
 ?>
