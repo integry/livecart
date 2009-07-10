@@ -120,7 +120,8 @@ class ProductPrice extends ActiveRecordModel
 
 			if ($priceSetting !== Product::CHILD_OVERRIDE)
 			{
-				$price = $this->getChildPrice($parentPrice, $this->recalculatePrice(), $priceSetting);
+				//$price = $this->getChildPrice($parentPrice, $this->recalculatePrice(), $priceSetting);
+				$price = $this->recalculatePrice();
 			}
 			else
 			{
@@ -186,18 +187,16 @@ class ProductPrice extends ActiveRecordModel
 		if ($parent = $item->product->get()->parent->get())
 		{
 			$order = $item->customerOrder->get();
-			if ($order->isDiscountActionsLoaded())
+
+			$itemCnt = 0;
+			foreach ($order->getShoppingCartItems() as $orderItem)
 			{
-				$itemCnt = 0;
-				foreach ($order->getShoppingCartItems() as $orderItem)
+				if ($orderItem->isVariationDiscountsSummed())
 				{
-					if ($orderItem->isVariationDiscountsSummed())
+					$orderProduct = $orderItem->product->get()->getParent();
+					if ($orderProduct->getID() == $parent->getID())
 					{
-						$orderProduct = $orderItem->product->get();
-						if ($orderProduct->parent->get()->getID() == $parent->getID())
-						{
-							$itemCnt += $orderItem->count->get();
-						}
+						$itemCnt += $orderItem->count->get();
 					}
 				}
 			}

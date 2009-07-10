@@ -87,7 +87,7 @@
 				{else}
 					{$item.formattedDisplaySubTotal}
 					<div class="subTotalCalc">
-						{$item.count} x <span class="basePrice">{$item.formattedDisplayPrice}</span><span class="actualPrice">{$item.formattedPrice}</span>
+						{$item.count} x <span class="basePrice">{$item.formattedBasePrice}</span><span class="actualPrice">{$item.formattedPrice}</span>
 					</div>
 				{/if}
 			</td>

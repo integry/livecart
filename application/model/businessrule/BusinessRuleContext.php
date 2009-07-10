@@ -24,6 +24,11 @@ class BusinessRuleContext
 	{
 		$this->user = $user;
 	}
+
+	public function getOrder()
+	{
+		return $this->order;
+	}
 }
 
 ?>

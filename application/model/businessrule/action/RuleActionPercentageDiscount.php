@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.businessrule.RuleAction');
+ClassLoader::import('application.model.businessrule.interface.RuleItemAction');
 
 /**
  *
@@ -13,14 +14,13 @@ class RuleActionPercentageDiscount extends RuleAction implements RuleItemAction
 	{
 		$count = $item->count->get();
 		$itemPrice = $item->getPriceWithoutTax();
-
 		$discountPrice = $itemPrice - $this->getDiscountAmount($itemPrice);
-		$discountStep = max($this->action->discountStep->get(), 1);
+		$discountStep = max($this->getParam('discountStep'), 1);
 		$applicableCnt = floor($count / $discountStep);
 
-		if ($this->action->discountLimit->get())
+		if ($limit = $this->getParam('discountLimit'))
 		{
-			$applicableCnt = min($action->discountLimit->get(), $applicableCnt);
+			$applicableCnt = min($limit, $applicableCnt);
 		}
 
 		$subTotal = ($applicableCnt * $discountPrice) + (($count - $applicableCnt) * $itemPrice);
@@ -29,7 +29,12 @@ class RuleActionPercentageDiscount extends RuleAction implements RuleItemAction
 
 	protected function getDiscountAmount($price)
 	{
-		return $price * ($this->action->amount->get() / 100);
+		return $price * ($this->getParam('amount', 100) / 100);
+	}
+
+	public static function getSortOrder()
+	{
+		return 1;
 	}
 }
 

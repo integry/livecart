@@ -1,6 +1,8 @@
 <?php
 
 ClassLoader::import('application.model.discount.DiscountCondition');
+ClassLoader::import('application.model.businessrule.RuleAction');
+ClassLoader::import('application.model.businessrule.condition.*');
 
 /**
  *
@@ -9,9 +11,10 @@ ClassLoader::import('application.model.discount.DiscountCondition');
  */
 abstract class RuleCondition
 {
-	protected $records;
-	protected $conditions;
-	protected $actions;
+	protected $records = array();
+	protected $conditions = array();
+	protected $actions = array();
+	protected $params = array();
 
 	protected $controller;
 
@@ -30,14 +33,45 @@ abstract class RuleCondition
 		}
 	}
 
-	protected function getController()
+	public function getController()
 	{
 		return $this->controller;
 	}
 
-	protected function getContext()
+	public function getContext()
 	{
-		return $this->controller;
+		return $this->controller->getContext();
+	}
+
+	protected function getOrder()
+	{
+		return $this->getContext()->getOrder();
+	}
+
+	public function getConditions()
+	{
+		return $this->conditions;
+	}
+
+	public function getActions()
+	{
+		$actions = array();
+
+		foreach ($this->actions as $action)
+		{
+			if ($action->getParam('isEnabled'))
+			{
+				$action->setParentCondition($this);
+				$actions[] = $action;
+			}
+		}
+
+		return $actions;
+	}
+
+	public function getParam($key, $defaultValue = null)
+	{
+		return isset($this->params[$key]) ? $this->params[$key] : $defaultValue;
 	}
 
 	/**
@@ -54,21 +88,50 @@ abstract class RuleCondition
 		{
 			return true;
 		}
-
-		$isValid = false;
-		foreach ($this->conditions as $condition)
+		else
 		{
-			if ($condition->isValid($instance))
+			$isValid = false;
+			foreach ($this->conditions as $condition)
 			{
-				$isValid = true;
-			}
-			else if ($this->params['isAllSubconditions'])
-			{
-				return false;
+				if ($condition->isValid($instance))
+				{
+					$isValid = true;
+				}
+				else if ($this->params['isAllSubconditions'])
+				{
+					return false;
+				}
 			}
 		}
 
 		return $isValid;
+	}
+
+	/**
+	 * Used for action conditions only
+	 */
+	public function isProductMatching(Product $product)
+	{
+		$isMatching = $this->isProductApplicable($product);
+
+		if ($this->hasSubConditions())
+		{
+			foreach ($this->conditions as $subCondition)
+			{
+				$isMatching = $subCondition->isProductMatching($product);
+				if (!$isMatching && $this->getParam('isAllSubconditions'))
+				{
+					return false;
+				}
+			}
+		}
+
+		return $isMatching;
+	}
+
+	protected function isProductApplicable()
+	{
+		return true;
 	}
 
 	public function applyActions($instance)
@@ -88,8 +151,8 @@ abstract class RuleCondition
 	{
 		$compType = $this->params['comparisonType'];
 
-		if ((($actualValue < $constraintValue) && (DiscountCondition::COMPARE_LTEQ == $compType)) ||
-			(($actualValue > $constraintValue) && (DiscountCondition::COMPARE_GTEQ == $compType)) ||
+		if ((($actualValue <= $constraintValue) && (DiscountCondition::COMPARE_LTEQ == $compType)) ||
+			(($actualValue >= $constraintValue) && (DiscountCondition::COMPARE_GTEQ == $compType)) ||
 			(($actualValue == $constraintValue) && (DiscountCondition::COMPARE_EQ == $compType)) ||
 			(($actualValue != $constraintValue) && (DiscountCondition::COMPARE_NE == $compType)) ||
 			(!($actualValue % $constraintValue) && (DiscountCondition::COMPARE_DIV == $compType)) ||
@@ -99,7 +162,7 @@ abstract class RuleCondition
 		}
 	}
 
-	public static function createFromArray($array)
+	public static function createFromArray(&$array, $skipActions = false)
 	{
 		if (empty($array['conditionClass']))
 		{
@@ -107,39 +170,71 @@ abstract class RuleCondition
 		}
 
 		$inst = new $array['conditionClass'];
+		$array['instance'] = $inst;
 
 		if (!empty($array['records']))
 		{
 			$inst->registerRecords($array['records']);
 		}
 
-		if (!empty($array['actions']))
+		if (!empty($array['actions']) && !$skipActions)
 		{
 			foreach ($array['actions'] as $action)
 			{
 				$inst->addAction(RuleAction::createFromArray($action));
 			}
-
-			$inst->registerRecords($array['records']);
 		}
 
-		if (!empty($array['conditions']))
+		if (!empty($array['sub']))
 		{
-			foreach ($array['conditions'] as $sub)
+			foreach ($array['sub'] as $sub)
 			{
 				$inst->addSubCondition(self::createFromArray($sub));
 			}
 		}
 
-		unset($array['conditions'], $array['records'], $array['actions']);
+		foreach (array('validFrom', 'validTo') as $key)
+		{
+			if (isset($array[$key]) && (substr($array[$key], 0, 4) == '0000'))
+			{
+				unset($array[$key]);
+			}
+		}
+
+		unset($array['sub'], $array['records'], $array['actions']);
 		$inst->initConstraints($array);
 
 		return $inst;
 	}
 
+	public static function create(DiscountCondition $condition)
+	{
+		return self::createFromArray($condition->toArray());
+	}
+
 	protected function registerRecords(array $records)
 	{
-		$this->records = $record;
+		$fields = array_flip(array('ID', 'lft', 'rgt'));
+		foreach ($records as $record)
+		{
+			unset($record['ID'], $record['Condition'], $record['__class__'], $record['conditionID'], $record['categoryID']);
+
+			$record = array_filter($record);
+			if (count($record) > 1)
+			{
+				$class = substr(ucfirst(array_shift(array_keys($record))), 0, -2);
+				$data = array('ID' => reset($record));
+			}
+			else
+			{
+				$class = array_shift(array_keys($record));
+				$data = array_intersect_key(array_shift($record), $fields);
+			}
+
+			$data['class'] = $class;
+
+			$this->records[] = $data;
+		}
 	}
 
 	protected function addSubCondition(RuleCondition $condition)
@@ -150,6 +245,16 @@ abstract class RuleCondition
 	protected function addAction(RuleAction $action)
 	{
 		$this->actions[] = $action;
+	}
+
+	private function hasSubConditions()
+	{
+		return count($this->conditions) > 0;
+	}
+
+	public static function getSortOrder()
+	{
+		return 999;
 	}
 }
 

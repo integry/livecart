@@ -9,8 +9,9 @@ ClassLoader::import('application.model.businessrule.RuleCondition');
  */
 class RuleConditionDeliveryZoneIs extends RuleCondition
 {
-	public function getFilterCondition()
+	public function isApplicable()
 	{
+		die(__CLASS__ . ' not implemented');
 		return new EqualsCond(new ARFieldHandle('DiscountConditionRecord', 'deliveryZoneID'), $order->getDeliveryZone()->getID());
 	}
 }

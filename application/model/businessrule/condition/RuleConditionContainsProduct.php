@@ -1,18 +1,24 @@
 <?php
 
 ClassLoader::import('application.model.businessrule.RuleCondition');
+ClassLoader::import('application.model.businessrule.interface.RuleOrderCondition');
 
 /**
  *
  * @author Integry Systems
  * @package application.model.businessrule.condition
  */
-class RuleConditionContainsProduct extends RuleCondition
+class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCondition
 {
-	private $containedProducts
+	private $containedProducts;
 
 	public function isApplicable($instance = null)
 	{
+		if (!$this->records)
+		{
+			return true;
+		}
+
 		$isApplicable = false;
 
 		$order = $this->getContext()->getOrder();
@@ -31,40 +37,7 @@ class RuleConditionContainsProduct extends RuleCondition
 
 				foreach ($instances as $item)
 				{
-					if ($item instanceof OrderedItem)
-					{
-						$product = $item->product->get();
-					}
-					else if ($item instanceof Product)
-					{
-						$product = $item;
-					}
-
-					if (is_object($product))
-					{
-						$productID = $product->getID();
-						$parentID = $product->getParent()->getID();
-						$manufacturerID = $product->manufacturer->get()->getID();
-					}
-					else if (is_array($product))
-					{
-						$productID = $product['ID'];
-						$parentID = isset($product['Parent']) ? $product['Parent']['ID'] : null;
-						$manufacturerID = isset($product['Manufacturer']) ? $product['Manufacturer']['ID'] : null;
-					}
-
-					if (!empty($record['productID']))
-					{
-						$match = in_array($record['productID'], array($productID, $parentID));
-					}
-					else if (!empty($record['manufacturerID']))
-					{
-						$match = ($manufacturerID == $record['manufacturerID']);
-					}
-					else if (!empty($record['categoryID']))
-					{
-						// @todo ...
-					}
+					$match = $this->isInstanceApplicable($item, $record);
 
 					if ($match)
 					{
@@ -91,12 +64,85 @@ class RuleConditionContainsProduct extends RuleCondition
 
 			if (!is_null($amount))
 			{
-				$compare = is_null($this->params['count']) ? $this->params['count'] : $this->params['subTotal'];
-				$isMatching = $this->compareValues($amount, $compare, $this->params['comparisonType']);
+				$compare = !is_null($this->params['count']) ? $this->params['count'] : $this->params['subTotal'];
+				$isApplicable = $this->compareValues($amount, $compare, $this->params['comparisonType']);
 			}
 
-			return $isMatching;
+			return $isApplicable;
 		}
+	}
+
+	public function isProductApplicable($product)
+	{
+		foreach ($this->records as $record)
+		{
+			if ($this->isInstanceApplicable($product, $record))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private function isInstanceApplicable($item, $record)
+	{
+		if ($item instanceof OrderedItem)
+		{
+			$product = $item->product->get();
+		}
+		else if ($item instanceof Product)
+		{
+			$product = $item;
+		}
+
+		if (is_object($product))
+		{
+			$productID = $product->getID();
+			$parentID = $product->getParent()->getID();
+			$manufacturerID = $product->manufacturer->get() ? $product->manufacturer->get()->getID() : null;
+
+			$category = $product->getCategory();
+			$lft = $category->lft->get();
+			$rgt = $category->rgt->get();
+		}
+		else if (is_array($product))
+		{
+			$productID = $product['ID'];
+			$parentID = isset($product['Parent']) ? $product['Parent']['ID'] : null;
+			$manufacturerID = isset($product['Manufacturer']) ? $product['Manufacturer']['ID'] : null;
+
+			$parent = isset($product['Parent']) ? $product['Parent'] : $parent;
+			if (isset($parent['Category']))
+			{
+				$lft = $parent['Category']['lft'];
+				$rgt = $parent['Category']['rgt'];
+			}
+		}
+
+		$match = false;
+
+		switch ($record['class'])
+		{
+			case 'Product':
+				$match = in_array($record['ID'], array($productID, $parentID));
+				break;
+
+			case 'Manufacturer':
+				$match = ($manufacturerID == $record['ID']);
+				break;
+
+			case 'Category':
+				$match = ($lft >= $record['lft']) && ($rgt <= $record['rgt']);
+				break;
+		}
+
+		return $match;
+	}
+
+	public static function getSortOrder()
+	{
+		return 1;
 	}
 }
 

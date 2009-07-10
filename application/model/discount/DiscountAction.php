@@ -5,6 +5,7 @@ ClassLoader::import('application.model.discount.DiscountCondition');
 ClassLoader::import('application.model.discount.DiscountActionSet');
 ClassLoader::import('application.model.order.OrderDiscount');
 ClassLoader::import('application.model.businessrule.interface.*');
+ClassLoader::import('application.model.businessrule.BusinessRuleController');
 
 /**
  *
@@ -51,63 +52,6 @@ class DiscountAction extends ActiveRecordModel
 		return $instance;
 	}
 
-	public static function getByConditions(array $conditions)
-	{
-		$ids = array();
-		foreach ($conditions as $condition)
-		{
-			$ids[] = $condition['ID'];
-		}
-
-		if (!$ids)
-		{
-			return new ARSet();
-		}
-
-		$f = new ARSelectFilter(new INCond(new ARFieldHandle(__CLASS__, 'conditionID'), $ids));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'isEnabled'), true));
-		$f->setOrder(new ARFieldHandle(__CLASS__, 'position'));
-
-		$actions = ActiveRecordModel::getRecordSet(__CLASS__, $f, array('DiscountCondition', 'DiscountCondition_ActionCondition'));
-
-		// @todo: actionConditions are not loaded
-		foreach ($actions as $action)
-		{
-			if ($action->actionCondition->get())
-			{
-				$action->actionCondition->get()->load();
-			}
-		}
-
-		// load records for action condition
-		$actionConditions = new ARSet();
-		foreach ($actions as $action)
-		{
-			if ($action->actionCondition->get())
-			{
-				$actionConditions->add($action->actionCondition->get());
-			}
-		}
-
-		if ($actionConditions->size())
-		{
-			DiscountCondition::loadConditionRecords($actionConditions);
-		}
-
-		return $actions;
-	}
-
-	public function getActionClass()
-	{
-		$class = $this->actionClass->get();
-		if (!class_exists($class, false))
-		{
-			$this->loadActionRuleClass($class);
-		}
-
-		return $class;
-	}
-
 	private function loadActionRuleClass($className)
 	{
 		ClassLoader::import('application.model.businessrule.action.' . $className);
@@ -122,35 +66,10 @@ class DiscountAction extends ActiveRecordModel
 		return $className;
 	}
 
-	public function isOrderDiscount()
+	public function save()
 	{
-		return (self::TYPE_ORDER_DISCOUNT == $this->type->get()) && !$this->getRuleAction()->isItemDiscount();
-	}
-
-	public function isItemDiscount()
-	{
-		return (self::TYPE_ITEM_DISCOUNT == $this->type->get()) || $this->getRuleAction()->isItemDiscount();
-	}
-
-	public function isItemApplicable(OrderedItem $item)
-	{
-		if (!$this->actionCondition->get())
-		{
-			return true;
-		}
-
-		return $this->actionCondition->get()->isProductMatching($item->product->get());
-	}
-
-	public function getRuleAction()
-	{
-		if (is_null($this->ruleAction))
-		{
-			$class = $this->getActionClass();
-			$this->ruleAction = new $class($this);
-		}
-
-		return $this->ruleAction;
+		BusinessRuleController::clearCache();
+		return parent::save();
 	}
 
 	protected function insert()

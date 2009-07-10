@@ -90,27 +90,6 @@ class OrderedItem extends ActiveRecordModel
 
 		$subTotal = $this->getPrice($includeTaxes, false) * $this->count->get();
 
-/*
-		if ($applyDiscounts)
-		{
-			$count = $this->count->get();
-			foreach ($this->customerOrder->get()->getItemDiscountActions($this) as $action)
-			{
-				$itemPrice = $subTotal / $count;
-				$discountPrice = $itemPrice - $action->getDiscountAmount($itemPrice);
-				$discountStep = max($action->discountStep->get(), 1);
-				$applicableCnt = floor($count / $discountStep);
-
-				if ($action->discountLimit->get())
-				{
-					$applicableCnt = min($action->discountLimit->get(), $applicableCnt);
-				}
-
-				$subTotal = ($applicableCnt * $discountPrice) + (($count - $applicableCnt) * $itemPrice);
-			}
-		}
-*/
-
 		if ($includeTaxes)
 		{
 			return $this->getCurrency()->round($subTotal);
@@ -168,7 +147,10 @@ class OrderedItem extends ActiveRecordModel
 
 	public function setItemPrice($price)
 	{
-		$this->itemPrice = $price;
+		if (!$this->customerOrder->get()->isFinalized->get() || !$this->itemPrice)
+		{
+			$this->itemPrice = $price;
+		}
 	}
 
 	public function reset()
@@ -222,10 +204,12 @@ class OrderedItem extends ActiveRecordModel
 		$isFinalized = $this->customerOrder->get()->isFinalized->get();
 		$price = $isFinalized ? $this->price->get() : $this->product->get()->getItemPrice($this);
 
-		foreach (DeliveryZone::getDefaultZoneInstance()->getTaxRates() as $rate)
+		if (!$isFinalized)
 		{
-			//$price = $this->getCurrency()->round($price / (1 + ($rate->rate->get() / 100)));
-			$price = $price / (1 + ($rate->rate->get() / 100));
+			foreach (DeliveryZone::getDefaultZoneInstance()->getTaxRates() as $rate)
+			{
+				$price = $price / (1 + ($rate->rate->get() / 100));
+			}
 		}
 
 		return $price;
@@ -570,7 +554,12 @@ class OrderedItem extends ActiveRecordModel
 			{
 				$user->load();
 			}
-			$this->price->set($this->product->get()->getItemPrice($this));
+
+			if ($this->price->isNull())
+			{
+				$this->price->set($this->product->get()->getItemPrice($this));
+			}
+
 			return parent::update();
 		}
 		else
@@ -589,7 +578,9 @@ class OrderedItem extends ActiveRecordModel
 		if (isset($array['price']))
 		{
 			$currency = $this->getCurrency();
-			$array['itemBasePrice'] = $this->getPrice();
+
+			//$array['itemBasePrice'] = $this->getPrice();
+			$array['itemBasePrice'] = $array['price'];
 			$array['itemSubTotal'] = $this->getSubTotal(false);
 			$array['displayPrice'] = $this->getDisplayPrice($currency);
 			$array['displaySubTotal'] = $this->getSubTotal(true);

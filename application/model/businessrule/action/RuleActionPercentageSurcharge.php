@@ -13,6 +13,11 @@ class RuleActionPercentageSurcharge extends RuleActionPercentageDiscount
 	{
 		return parent::getDiscountAmount($price) * -1;
 	}
+
+	public static function getSortOrder()
+	{
+		return 3;
+	}
 }
 
 ?>

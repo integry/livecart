@@ -14,6 +14,9 @@ ClassLoader::import("application.model.eav.EavObject");
 ClassLoader::import("application.model.order.Transaction");
 ClassLoader::import("application.model.discount.DiscountActionSet");
 
+ClassLoader::import("application.model.businessrule.BusinessRuleController");
+ClassLoader::import("application.model.businessrule.BusinessRuleContext");
+
 /**
  * Represents customers order - products placed in shopping basket or wish list
  *
@@ -41,6 +44,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	private $coupons = null;
 
 	private $isOrderable = null;
+
+	private $isRulesProcessed;
 
 	const STATUS_NEW = 0;
 	const STATUS_PROCESSING = 1;
@@ -91,6 +96,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$instance = parent::getNewInstance(__CLASS__);
 		$instance->user->set($user);
 		$instance->currency->set(self::getApplication()->getDefaultCurrency());
+
+		if ($user->getID())
+		{
+			$instance->setUser($user);
+		}
 
 		return $instance;
 	}
@@ -654,6 +664,16 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	{
 		$this->user->set($user);
 		$this->setCheckoutStep(self::CHECKOUT_USER);
+
+		foreach (array('defaultBillingAddress' => 'billingAddress',
+					   'defaultShippingAddress' => 'shippingAddress') as $userAd => $orderAd)
+		{
+			if ($user->$userAd->get())
+			{
+				$user->$userAd->get()->load();
+				$this->$orderAd->set($user->$userAd->get()->userAddress->get());
+			}
+		}
 	}
 
 	public function setCheckoutStep($step)
@@ -899,9 +919,6 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	{
 		if (is_null($this->orderTotal) || $recalculateAmount)
 		{
-			$this->reset();
-			$this->applyDiscountActions();
-
 			if ($this->isFinalized->get() && !$recalculateAmount)
 			{
 				$this->getTaxes();
@@ -909,6 +926,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			}
 			else
 			{
+				$this->reset();
+				$this->processBusinessRules();
+
 				$total = $this->calculateTotal();
 
 				if ($discountAmount = $this->getFixedDiscountAmount())
@@ -990,14 +1010,14 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	{
 		$total = 0;
 
-		if (!$this->shipments)
-		{
-			$this->getShipments();
-		}
-
 		if ($this->shipments instanceof ARSet && !$this->shipments->size())
 		{
 			$this->shipments = null;
+		}
+
+		if (!$this->shipments)
+		{
+			$this->getShipments();
 		}
 
 		if ($this->shipments)
@@ -1048,47 +1068,6 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 				return true;
 			}
 		}
-	}
-
-	public function applyDiscountActions()
-	{
-		return false;
-
-		foreach ($this->getDiscountActions() as $action)
-		{
-			$class = $action->getActionClass();
-			$ruleAction = new $class($action);
-
-			if ($action->isOrderDiscount())
-			{
-				$ruleAction->applyToOrder($this);
-			}
-			else
-			{
-				foreach ($this->getShoppingCartItems() as $item)
-				{
-					if ($action->isItemApplicable($item))
-					{
-						$ruleAction->applyToItem($item);
-					}
-				}
-			}
-		}
-	}
-
-	public function getItemDiscountActions(OrderedItem $item)
-	{
-		$actions = new DiscountActionSet();
-
-		foreach ($this->getDiscountActions() as $action)
-		{
-			if ($action->isItemDiscount() && $action->isItemApplicable($item))
-			{
-				$actions->add($action);
-			}
-		}
-
-		return $actions;
 	}
 
 	private function getTaxes()
@@ -1193,6 +1172,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	 */
 	public function isOrderable($setErrorMessages = false, $checkFields = false)
 	{
+		if (!$this->isRulesProcessed)
+		{
+			$this->processBusinessRules();
+		}
+
 		ClassLoader::import('application.model.order.OrderException');
 
 		$app = $this->getApplication();
@@ -1355,7 +1339,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	public function setPaymentMethod($method)
 	{
 		$this->paymentMethod = $method;
-		$this->getDiscountActions(true);
+		$this->getDiscountActions();
 	}
 
 	public function getPaymentMethod()
@@ -1783,33 +1767,71 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		return $this->shipments;
 	}
 
-	public function getDiscountConditions()
+	public function getDiscountConditions($reload = false)
 	{
+		if ($reload)
+		{
+			BusinessRuleController::clearCache();
+		}
+
 		if (!$this->orderedItems)
 		{
 			return array();
 		}
 
-		ClassLoader::import('application.model.discount.DiscountCondition');
-		return DiscountCondition::getOrderDiscountConditions($this);
+		$controller = new BusinessRuleController($this->getBusinessRuleContext());
+		return $controller->getValidConditions();
 	}
 
-	public function isDiscountActionsLoaded()
+	private function getBusinessRuleContext()
 	{
-		return !is_null($this->discountActions);
+		$context = new BusinessRuleContext();
+		$context->setOrder($this);
+		if ($this->user->get())
+		{
+			$context->setUser($this->user->get());
+		}
+
+		return $context;
 	}
 
 	public function getDiscountActions($reload = false)
 	{
-		return false;
-
-		if (is_null($this->discountActions) || $reload)
+		if ($reload)
 		{
-			ClassLoader::import('application.model.discount.DiscountAction');
-			$this->discountActions = DiscountAction::getByConditions($this->getDiscountConditions($reload));
+			BusinessRuleController::clearCache();
 		}
 
-		return $this->discountActions;
+		if (!$this->orderedItems)
+		{
+			return array();
+		}
+
+		$controller = new BusinessRuleController($this->getBusinessRuleContext());
+		return $controller->getActions();
+	}
+
+	public function processBusinessRules($reload = false)
+	{
+		foreach ($this->getDiscountActions($reload) as $ruleAction)
+		{
+			if ($ruleAction->isOrderAction())
+			{
+				$ruleAction->applyToOrder($this);
+			}
+			else
+			{
+				foreach ($this->getShoppingCartItems() as $item)
+				{
+					if ($ruleAction->isItemApplicable($item))
+					{
+						$ruleAction->applyToItem($item);
+					}
+				}
+			}
+		}
+
+		$this->isRulesProcessed = true;
 	}
 
 	public function loadItemCategories()

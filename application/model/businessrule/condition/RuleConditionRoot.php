@@ -8,11 +8,11 @@ ClassLoader::import('application.model.businessrule.RuleCondition');
  * @author Integry Systems
  * @package application.model.businessrule.condition
  */
-class RuleRootCondition extends RuleCondition
+class RuleConditionRoot extends RuleCondition
 {
 	public function isApplicable()
 	{
-		if (!$this->params['isEnabled'])
+		if (empty($this->params['isEnabled']))
 		{
 			return false;
 		}

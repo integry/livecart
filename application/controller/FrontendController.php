@@ -522,7 +522,7 @@ abstract class FrontendController extends BaseController
 	{
 		ClassLoader::import('application.model.product.ProductFilter');
 
-		$category = $useRoot ? Category::getRoot() : $this->getCategory();
+		$category = $useRoot ? Category::getRootNode() : $this->getCategory();
 		$filter = new ProductFilter($category, new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isFeatured'), true)));
 		$filter->includeSubcategories();
 		$filter->setEnabledOnly();
@@ -549,7 +549,7 @@ abstract class FrontendController extends BaseController
 	{
 		ClassLoader::import('application.model.product.ProductFilter');
 
-		$category = $useRoot ? Category::getRoot() : $this->getCategory();
+		$category = $useRoot ? Category::getRootNode() : $this->getCategory();
 		$filter = new ProductFilter($category, new ARSelectFilter());
 		$filter->includeSubcategories();
 		$filter->setEnabledOnly();
@@ -713,7 +713,7 @@ abstract class FrontendController extends BaseController
 
 	protected function getCategory()
 	{
-		return Category::getRoot();
+		return Category::getRootNode();
 	}
 
 	protected function __get($name)

@@ -292,6 +292,7 @@ class Shipment extends ActiveRecordModel
 			$subTotal += $taxes;
 		}
 
+		//return $subTotal;
 		return $this->getCurrency()->round($subTotal);
 	}
 
@@ -432,7 +433,9 @@ class Shipment extends ActiveRecordModel
 
 		$currency = $this->order->get()->getCurrency();
 
-		$this->amount->set($currency->round($this->getSubTotal(self::WITHOUT_TAXES)));
+		$itemAmount = $this->getSubTotal(self::WITHOUT_TAXES);
+
+		$this->amount->set($itemAmount);
 
 		// total taxes
 		if ($calculateTax)
@@ -465,6 +468,8 @@ class Shipment extends ActiveRecordModel
 
 			$this->shippingAmount->set($calculateTax ? $currency->round($amount) : $amount);
 		}
+
+		$this->amount->set($currency->round($itemAmount));
 	}
 
 	public function addFixedTax(ShipmentTax $tax)

@@ -2,6 +2,10 @@
 
 ClassLoader::import('application.model.order.CustomerOrder');
 ClassLoader::import('application.model.user.User');
+ClassLoader::import('application.model.businessrule.RuleCondition');
+ClassLoader::import('application.model.businessrule.condition.*');
+ClassLoader::import('application.model.businessrule.action.*');
+ClassLoader::import('application.model.businessrule.interface.*');
 
 /**
  * Determines which rules and actions are applicable
@@ -42,7 +46,7 @@ class BusinessRuleController
 				$this->updateRuleCache();
 			}
 
-			$this->conditions = include $file;
+			$this->conditions = unserialize(include $file);
 
 			foreach ($this->conditions as $condition)
 			{
@@ -53,6 +57,41 @@ class BusinessRuleController
 		return $this->conditions;
 	}
 
+	public function getValidConditions()
+	{
+		$valid = array();
+		foreach ($this->getConditions() as $condition)
+		{
+			if ($condition->isValid())
+			{
+				$valid[] = $condition;
+
+				if ($condition->getParam('isFinal'))
+				{
+					break;
+				}
+			}
+		}
+
+		return $valid;
+	}
+
+	public function getActions()
+	{
+		$actions = array();
+		foreach ($this->getValidConditions() as $condition)
+		{
+			$actions = array_merge($actions, $condition->getActions());
+		}
+
+		return $actions;
+	}
+
+	public function getContext()
+	{
+		return $this->context;
+	}
+
 	public static function clearCache()
 	{
 		@unlink(self::getRuleFile());
@@ -60,7 +99,9 @@ class BusinessRuleController
 
 	private function updateRuleCache()
 	{
-		$conditions = ActiveRecord::getRecordSetArray('DiscountCondition', select());
+		$f = select();
+		$f->setOrder(f('DiscountCondition.position'));
+		$conditions = ActiveRecord::getRecordSetArray('DiscountCondition', $f);
 
 		$idMap = array();
 		foreach ($conditions as &$condition)
@@ -69,17 +110,19 @@ class BusinessRuleController
 		}
 
 		// get condition records
-		foreach (ActiveRecord::getRecordSetArray('DiscountConditionRecord', select() as $record)
+		foreach (ActiveRecord::getRecordSetArray('DiscountConditionRecord', select(), array('Category')) as $record)
 		{
 			$idMap[$record['conditionID']]['records'][] = $record;
 		}
 
 		// get actions
-		foreach (ActiveRecord::getRecordSetArray('DiscountAction', select() as $action)
+		$f = select();
+		$f->setOrder(f('DiscountAction.position'));
+		foreach (ActiveRecord::getRecordSetArray('DiscountAction', $f) as $action)
 		{
 			if (!empty($action['actionConditionID']))
 			{
-				$action['condition'] =& $idMap[$action['actionConditionID']]
+				$action['condition'] =& $idMap[$action['actionConditionID']];
 			}
 
 			$idMap[$action['conditionID']]['actions'][] = $action;
@@ -87,7 +130,7 @@ class BusinessRuleController
 
 		foreach ($conditions as &$condition)
 		{
-			if (!$condition['parentNodeID'] || !isset($idMap[$condition['parentNodeID']]))
+			if (!$condition['parentNodeID'] || !isset($idMap[$condition['parentNodeID']]) || !empty($condition['isActionCondition']))
 			{
 				continue;
 			}
@@ -96,8 +139,7 @@ class BusinessRuleController
 		}
 
 		$rootCond = RuleCondition::createFromArray($idMap[DiscountCondition::ROOT_ID]);
-
-		file_put_contents(self::getRuleFile(), '<?php return ' . var_export($rootCond->getConditions(), true) . '; ?>');
+		file_put_contents(self::getRuleFile(), '<?php return ' . var_export(serialize($rootCond->getConditions()), true) . '; ?>');
 	}
 
 	private function getRuleFile()

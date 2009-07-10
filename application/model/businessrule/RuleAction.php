@@ -1,7 +1,9 @@
 <?php
 
-ClassLoader::import('application.model.businessrule.RuleOrderAction');
-ClassLoader::import('application.model.businessrule.RuleItemAction');
+ClassLoader::import('application.model.businessrule.interface.RuleOrderAction');
+ClassLoader::import('application.model.businessrule.interface.RuleItemAction');
+ClassLoader::import('application.model.businessrule.action.*');
+ClassLoader::import('application.model.discount.DiscountAction');
 
 /**
  *
@@ -11,10 +13,17 @@ ClassLoader::import('application.model.businessrule.RuleItemAction');
 abstract class RuleAction
 {
 	protected $condition;
+	protected $parentCondition;
+	protected $params = array();
 
-	public function initConstraints($dbArray)
+	public function setParams($dbArray)
 	{
+		$this->params = $dbArray;
+	}
 
+	public function getParam($key, $defaultValue = null)
+	{
+		return isset($this->params[$key]) ? $this->params[$key] : $defaultValue;
 	}
 
 	public static function createFromArray(array $array)
@@ -22,8 +31,13 @@ abstract class RuleAction
 		$inst = new $array['actionClass'];
 		if (!empty($array['condition']))
 		{
-			$inst->setCondition(RuleCondition::createFromArray($array['condition']));
+			$condition = isset($array['instance']) ? $array['instance'] : RuleCondition::createFromArray($array['condition'], true);
+			$inst->setCondition($condition);
 		}
+
+		unset($array['condition']);
+
+		$inst->setParams($array);
 
 		return $inst;
 	}
@@ -33,9 +47,40 @@ abstract class RuleAction
 		$this->condition = $condition;
 	}
 
-	public function isItemDiscount()
+	public function setParentCondition(RuleCondition $condition)
 	{
-		return $this instanceof RuleItemAction;
+		$this->parentCondition = $condition;
+		if ($this->condition)
+		{
+			$this->condition->setController($this->parentCondition->getController());
+		}
+	}
+
+	public function isItemAction()
+	{
+		//return $this instanceof RuleItemAction;
+		return (DiscountAction::TYPE_ITEM_DISCOUNT == $this->getParam('type')) && ($this instanceof RuleItemAction);
+	}
+
+	public function isOrderAction()
+	{
+		//return $this instanceof RuleOrderAction && !$this->isItemAction();
+		return (DiscountAction::TYPE_ORDER_DISCOUNT == $this->getParam('type')) && ($this instanceof RuleOrderAction);
+	}
+
+	public function isItemApplicable(OrderedItem $item)
+	{
+		if (!$this->condition)
+		{
+			return true;
+		}
+
+		return $this->condition->isProductMatching($item->product->get());
+	}
+
+	public static function getSortOrder()
+	{
+		return 999;
 	}
 }
 

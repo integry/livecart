@@ -1,6 +1,8 @@
 <?php
 
 ClassLoader::import('application.model.businessrule.action.RuleActionPercentageDiscount');
+ClassLoader::import('application.model.businessrule.interface.RuleItemAction');
+ClassLoader::import('application.model.businessrule.interface.RuleOrderAction');
 
 /**
  *
@@ -14,13 +16,18 @@ class RuleActionFixedDiscount extends RuleActionPercentageDiscount implements Ru
 		$amount = $order->getCurrency()->convertAmount(CustomerOrder::getApplication()->getDefaultCurrency(), $this->getDiscountAmount(0));
 		$orderDiscount = OrderDiscount::getNewInstance($order);
 		$orderDiscount->amount->set($amount);
-		$orderDiscount->description->set($this->action->condition->get()->getValueByLang('name'));
+		$orderDiscount->description->set($this->parentCondition->getParam('name_lang'));
 		$order->registerOrderDiscount($orderDiscount);
 	}
 
 	protected function getDiscountAmount($price)
 	{
-		return $this->action->amount->get();
+		return $this->getParam('amount');
+	}
+
+	public static function getSortOrder()
+	{
+		return 2;
 	}
 }
 

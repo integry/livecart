@@ -13,6 +13,11 @@ class RuleActionDisableCheckout extends RuleAction implements RuleOrderAction
 	{
 		$order->setOrderable(false);
 	}
+
+	public static function getSortOrder()
+	{
+		return 5;
+	}
 }
 
 ?>

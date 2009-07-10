@@ -5,6 +5,8 @@
 {include file="user/userMenu.tpl" current="addressMenu"}
 <div id="content">
 
+	{include file="block/message.tpl"}
+
 	<h1>{t _manage_addresses}</h1>
 
 	<fieldset class="container">
