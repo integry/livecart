@@ -54,6 +54,11 @@ class OrderController extends FrontendController
 		}
 		$response->set('addresses', $addresses);
 
+		if (!$addresses)
+		{
+			return new ActionRedirectResponse('user', 'addShippingAddress', array('returnPath' => true));
+		}
+
 		$this->addBreadCrumb($this->translate('_select_shipping_addresses'), '');
 		return $response;
 	}
