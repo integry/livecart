@@ -152,17 +152,6 @@ Backend.CsvImport =
 			}
 		}
 
-		var allSelects = $A($('columns').getElementsByTagName('select'));
-		allSelects.each
-		(
-			function(select)
-			{
-				Event.observe(select, 'change', selectChange);
-				Event.observe(select, 'change', showConfigFields(select, this));
-				select.allSelects = allSelects;
-			}.bind(this)
-		);
-
 		/* get field configurator containers */
 		this.fieldConfig = {};
 		$A($('fieldConfigTemplates').childNodes).each(function(container)
@@ -177,6 +166,29 @@ Backend.CsvImport =
 				this.fieldConfig[className] = container;
 			}.bind(this));
 		}.bind(this));
+
+		var allSelects = $A($('columns').getElementsByTagName('select'));
+		allSelects.each
+		(
+			function(select)
+			{
+				select.allSelects = allSelects;
+
+				var colName = select.parentNode.down('label').down('a').innerHTML.toLowerCase();
+				$A(select.options).each(function(opt)
+				{
+					if (colName == opt.innerHTML.toLowerCase())
+					{
+						select.value = opt.value;
+						selectChange.bind(select)();
+						showConfigFields(select, this)();
+					}
+				}.bind(this));
+
+				Event.observe(select, 'change', selectChange);
+				Event.observe(select, 'change', showConfigFields(select, this));
+			}.bind(this)
+		);
 	},
 
 	toggleSelectValues: function(element, state)
