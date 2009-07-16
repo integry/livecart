@@ -89,9 +89,10 @@
 	{liveCustomization action="lang"}
 
 	{if !'DISABLE_AJAX'|config}
-	<script type="text/javascript">
-		new Frontend.AjaxInit(document.body);
-	</script>
+		<script type="text/javascript">
+			new Frontend.AjaxInit(document.body);
+			{loadJs}
+		</script>
 	{/if}
 </body>
 

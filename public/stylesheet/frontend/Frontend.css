@@ -1267,6 +1267,12 @@ a.progressIndicator
 	color: #a52a2a;
 }
 
+.price.progressIndicator
+{
+	padding: 0 0 0 16px;
+	background-position: center left;
+}
+
 #mainInfo .price
 {
 	font-size: larger;

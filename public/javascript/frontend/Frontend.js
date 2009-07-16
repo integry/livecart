@@ -1248,9 +1248,7 @@ Frontend.Ajax.AddToCart = function(container)
 	{
 		Event.stop(e);
 		var button = Event.element(e);
-		var a = document.createElement('a');
-		button.parentNode.appendChild(a);
-		new LiveCart.AjaxRequest(button.href, a, function () { a.parentNode.removeChild(a); new Effect.Highlight(button); });
+		new LiveCart.AjaxRequest(button.href, button.parentNode.down('.price'), function () { new Effect.DropOut(button); });
 	}
 
 	$A($(container).getElementsBySelector('a.addToCart')).each(function(button)
