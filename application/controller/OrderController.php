@@ -29,6 +29,22 @@ class OrderController extends FrontendController
 			return new ActionRedirectResponse('order', 'multi');
 		}
 
+		if (!$this->user->isAnonymous())
+		{
+			$this->order->setUser($this->user);
+
+			if ($this->order->isModified())
+			{
+				$this->order->save();
+			}
+		}
+		else if ($this->config->get('DISABLE_GUEST_CART'))
+		{
+			return new ActionRedirectResponse('user', 'login', array('returnPath' => true));
+		}
+
+		$this->order->getTotal(true);
+
 		$response = $this->getCartPageResponse();
 		$this->addBreadCrumb($this->translate('_my_basket'), '');
 		return $response;
@@ -67,6 +83,7 @@ class OrderController extends FrontendController
 	{
 		$this->addBreadCrumb($this->translate('_my_session'), $this->router->createUrlFromRoute($this->request->get('return'), true));
 
+		$this->order->setUser($this->user);
 		$this->order->loadItemData();
 
 		$response = new ActionResponse();
@@ -82,6 +99,7 @@ class OrderController extends FrontendController
 		$form = $this->buildCartForm($this->order, $options);
 
 		$orderArray = $this->order->toArray();
+
 		$itemsById = array();
 		foreach (array('cartItems', 'wishListItems') as $type)
 		{
@@ -400,6 +418,11 @@ class OrderController extends FrontendController
 			{
 				$this->setMessage($this->translate('_selected_to_cart'));
 			}
+		}
+
+		if (!$this->user->isAnonymous())
+		{
+			$this->order->setUser($this->user);
 		}
 
 		$this->order->mergeItems();
