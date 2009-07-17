@@ -9,9 +9,12 @@ ClassLoader::import('application.model.businessrule.RuleAction');
  */
 class RuleActionSumVariations extends RuleAction implements RuleItemAction
 {
-	public function applyToItem(OrderedItem $item)
+	public function applyToItem(BusinessRuleProductInterface $item)
 	{
-		$item->setSumVariationDiscounts(true);
+		if ($item instanceof OrderedItem)
+		{
+			$item->setSumVariationDiscounts(true);
+		}
 	}
 }
 

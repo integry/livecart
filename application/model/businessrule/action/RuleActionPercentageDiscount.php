@@ -10,9 +10,9 @@ ClassLoader::import('application.model.businessrule.interface.RuleItemAction');
  */
 class RuleActionPercentageDiscount extends RuleAction implements RuleItemAction
 {
-	public function applyToItem(OrderedItem $item)
+	public function applyToItem(BusinessRuleProductInterface $item)
 	{
-		$count = $item->count->get();
+		$count = $item->getCount();
 		$itemPrice = $item->getPriceWithoutTax();
 		$discountPrice = $itemPrice - $this->getDiscountAmount($itemPrice);
 		$discountStep = max($this->getParam('discountStep'), 1);
@@ -35,6 +35,16 @@ class RuleActionPercentageDiscount extends RuleAction implements RuleItemAction
 	public static function getSortOrder()
 	{
 		return 1;
+	}
+
+	public function isItemAction()
+	{
+		return true;
+	}
+
+	public function isOrderAction()
+	{
+		return false;
 	}
 }
 

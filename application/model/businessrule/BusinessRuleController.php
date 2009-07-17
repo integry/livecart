@@ -2,6 +2,8 @@
 
 ClassLoader::import('application.model.order.CustomerOrder');
 ClassLoader::import('application.model.user.User');
+ClassLoader::import('application.model.discount.DiscountCondition');
+ClassLoader::import('application.model.discount.DiscountAction');
 ClassLoader::import('application.model.businessrule.RuleCondition');
 ClassLoader::import('application.model.businessrule.condition.*');
 ClassLoader::import('application.model.businessrule.action.*');
@@ -19,6 +21,8 @@ class BusinessRuleController
 
 	private $conditions;
 
+	private $disableDisplayDiscounts = false;
+
 	public function __construct(BusinessRuleContext $context)
 	{
 		$this->context = $context;
@@ -28,9 +32,18 @@ class BusinessRuleController
 	{
 		foreach ($this->getConditions() as $condition)
 		{
-			if ($condition->isApplicable($instance))
+			if ($condition->isValid($instance))
 			{
-				$condition->applyActions($instance);
+				foreach ($condition->getActions() as $action)
+				{
+					if ($action->isItemAction())
+					{
+						if ($action->isItemApplicable($instance))
+						{
+							$action->applyToItem($instance);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -85,6 +98,29 @@ class BusinessRuleController
 		}
 
 		return $actions;
+	}
+
+	public function getProductPrice($product, $basePrice)
+	{
+		if ($this->disableDisplayDiscounts)
+		{
+			return $basePrice;
+		}
+
+		$item = $this->getContext()->addProduct($product);
+		$item->setItemPrice($basePrice);
+		$this->apply($item);
+		$this->getContext()->removeLastProduct();
+
+		return $item->getPriceWithoutTax();
+	}
+
+	/**
+	 *  Do not include discounts in product display prices (for example, in backend)
+	 */
+	public function disableDisplayDiscounts()
+	{
+		$this->disableDisplayDiscounts = true;
 	}
 
 	public function getContext()

@@ -5,6 +5,7 @@ ClassLoader::import("application.model.order.CustomerOrder");
 ClassLoader::import("application.model.order.Shipment");
 ClassLoader::import('application.model.order.OrderedItemOption');
 ClassLoader::import('application.model.delivery.DeliveryZone');
+ClassLoader::import('application.model.businessrule.interface.BusinessRuleProductInterface');
 
 /**
  * Represents a shopping basket item (one or more instances of the same product)
@@ -12,7 +13,7 @@ ClassLoader::import('application.model.delivery.DeliveryZone');
  * @package application.model.order
  * @author Integry Systems <http://integry.com>
  */
-class OrderedItem extends ActiveRecordModel
+class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterface
 {
 	protected $optionChoices = array();
 
@@ -383,6 +384,16 @@ class OrderedItem extends ActiveRecordModel
 		}
 	}
 
+	public function getProduct()
+	{
+		return $this->product->get();
+	}
+
+	public function getCount()
+	{
+		return $this->count->get();
+	}
+
 	public function getSubItems()
 	{
 		if (!$this->product->get()->isBundle())
@@ -584,7 +595,7 @@ class OrderedItem extends ActiveRecordModel
 			$array['itemSubTotal'] = $this->getSubTotal(false);
 			$array['displayPrice'] = $this->getDisplayPrice($currency);
 			$array['displaySubTotal'] = $this->getSubTotal(true);
-			$array['itemPrice'] = $array['displaySubTotal'] / $array['count'];
+			$array['itemPrice'] = $array['itemSubTotal'] / $array['count'];
 
 			$array['formattedBasePrice'] = $currency->getFormattedPrice($array['price']);
 			$array['formattedPrice'] = $currency->getFormattedPrice($array['itemPrice']);

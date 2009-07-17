@@ -23,23 +23,22 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 
 		$order = $this->getContext()->getOrder();
 
-		if ($order)
+		$instances = $order ? $order->getShoppingCartItems() : array();
+		$instances = array_merge($instances, $this->getContext()->getProducts());
+		if ($instance)
+		{
+			$instances[] = $instance;
+		}
+
+		if ($instances)
 		{
 			$amount = null;
 
 			foreach ($this->records as $record)
 			{
-				$instances = $order->getShoppingCartItems();
-				if ($instance)
-				{
-					$instances[] = $instance;
-				}
-
 				foreach ($instances as $item)
 				{
-					$match = $this->isInstanceApplicable($item, $record);
-
-					if ($match)
+					if ($this->isInstanceApplicable($item, $record))
 					{
 						$isApplicable = true;
 
@@ -49,16 +48,14 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 						}
 						else if (!is_null($this->params['count']))
 						{
-							$amount += $item->count->get();
+							$amount += $item->getCount();
 						}
 					}
-					else
-					{
-						if (!$this->params['isAnyRecord'])
-						{
-							return false;
-						}
-					}
+				}
+
+				if (!$isApplicable && !$this->params['isAnyRecord'])
+				{
+					return false;
 				}
 			}
 
@@ -95,6 +92,14 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 		{
 			$product = $item;
 		}
+		else if ($item instanceof RuleProductContainer)
+		{
+			$product = $item->getProduct();
+		}
+		else
+		{
+			$product = $item;
+		}
 
 		if (is_object($product))
 		{
@@ -112,13 +117,13 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 			$parentID = isset($product['Parent']) ? $product['Parent']['ID'] : null;
 			$manufacturerID = isset($product['Manufacturer']) ? $product['Manufacturer']['ID'] : null;
 
-			$parent = isset($product['Parent']) ? $product['Parent'] : $parent;
+			$parent = isset($product['Parent']) ? $product['Parent'] : $product;
 			if (isset($parent['Category']))
 			{
 				$lft = $parent['Category']['lft'];
 				$rgt = $parent['Category']['rgt'];
 			}
-		}
+		} else { var_dump($product); exit; }
 
 		$match = false;
 

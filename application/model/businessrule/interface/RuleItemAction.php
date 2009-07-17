@@ -7,7 +7,7 @@
  */
 interface RuleItemAction
 {
-	public function applyToItem(OrderedItem $item);
+	public function applyToItem(BusinessRuleProductInterface $item);
 }
 
 ?>

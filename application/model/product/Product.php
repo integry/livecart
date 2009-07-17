@@ -501,7 +501,7 @@ class Product extends MultilingualObject
 		return $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode)->getItemPrice($item, $applyRounding);
 	}
 
-	public function getPrice($currencyCode, $recalculate = true)
+	public function getPrice($currencyCode, $recalculate = true, $includeDiscounts = false)
 	{
 	  	if ($currencyCode instanceof Currency)
 	  	{
@@ -515,7 +515,7 @@ class Product extends MultilingualObject
 		}
 		else
 		{
-			$price = $instance->getPrice($recalculate == true);
+			$price = $instance->getPrice($recalculate == true, $includeDiscounts);
 		}
 
 		return $price;

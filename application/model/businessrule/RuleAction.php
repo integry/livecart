@@ -68,14 +68,14 @@ abstract class RuleAction
 		return (DiscountAction::TYPE_ORDER_DISCOUNT == $this->getParam('type')) && ($this instanceof RuleOrderAction);
 	}
 
-	public function isItemApplicable(OrderedItem $item)
+	public function isItemApplicable(BusinessRuleProductInterface $item)
 	{
 		if (!$this->condition)
 		{
 			return true;
 		}
 
-		return $this->condition->isProductMatching($item->product->get());
+		return $this->condition->isProductMatching($item->getProduct());
 	}
 
 	public static function getSortOrder()

@@ -90,6 +90,11 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		$this->records[$record->getID()] = $record;
 	}
 
+	public function getRecords()
+	{
+		return $this->records;
+	}
+
 	public function registerSubCondition(DiscountCondition $condition)
 	{
 		$this->subConditions[$condition->getID()] = $condition;

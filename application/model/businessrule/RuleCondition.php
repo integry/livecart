@@ -110,7 +110,7 @@ abstract class RuleCondition
 	/**
 	 * Used for action conditions only
 	 */
-	public function isProductMatching(Product $product)
+	public function isProductMatching($product)
 	{
 		$isMatching = $this->isProductApplicable($product);
 

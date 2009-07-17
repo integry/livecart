@@ -29,6 +29,16 @@ class RuleActionFixedDiscount extends RuleActionPercentageDiscount implements Ru
 	{
 		return 2;
 	}
+
+	public function isItemAction()
+	{
+		return DiscountAction::TYPE_ORDER_DISCOUNT != $this->getParam('type');
+	}
+
+	public function isOrderAction()
+	{
+		return DiscountAction::TYPE_ORDER_DISCOUNT == $this->getParam('type');
+	}
 }
 
 ?>

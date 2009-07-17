@@ -6,6 +6,10 @@ ClassLoader::import('application.ConfigurationContainer');
 ClassLoader::import('application.LiveCartRouter');
 ClassLoader::import('application.model.Currency');
 ClassLoader::import('library.payment.TransactionDetails');
+ClassLoader::import('application.model.businessrule.BusinessRuleContext');
+ClassLoader::import('application.model.businessrule.BusinessRuleController');
+ClassLoader::import('application.model.order.SessionOrder');
+ClassLoader::import('application.model.user.SessionUser');
 
 /**
  *  Implements LiveCart-specific application flow logic
@@ -1209,6 +1213,35 @@ class LiveCart extends Application
 	{
 		$this->theme = $theme;
 		$this->getRenderer()->resetPaths();
+	}
+
+	public function getBusinessRuleController()
+	{
+		if (!$this->businessRuleController)
+		{
+			$context = new BusinessRuleContext();
+
+			/*
+			if (SessionOrder::getOrderData())
+			{
+				//$context->setOrder(SessionOrder::getOrder());
+			}
+			*/
+
+			if (SessionUser::getUser())
+			{
+				$context->setUser(SessionUser::getUser());
+			}
+
+			$this->businessRuleController = new BusinessRuleController($context);
+
+			if ($this->isBackend())
+			{
+				$this->businessRuleController->disableDisplayDiscounts();
+			}
+		}
+
+		return $this->businessRuleController;
 	}
 
 	public function clearCachedVars()
