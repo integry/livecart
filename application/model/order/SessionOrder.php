@@ -2,6 +2,7 @@
 
 ClassLoader::import('application.model.user.SessionUser');
 ClassLoader::import('application.model.order.CustomerOrder');
+ClassLoader::import('application.model.user.UserAddress');
 
 /**
  *
@@ -104,6 +105,52 @@ class SessionOrder
 		self::setOrder(self::getOrder());
 		$session = new Session();
 		return $session->get('orderData');
+	}
+
+	public static function getEstimateAddress()
+	{
+		$session = new Session();
+
+		if ($address = $session->get('shippingEstimateAddress'))
+		{
+			return $address;
+		}
+		else
+		{
+			$order = self::getOrder();
+			if ($order->shippingAddress->get())
+			{
+				return $order->shippingAddress->get();
+			}
+
+			$user = $order->user->get();
+			if (!$user->isAnonymous())
+			{
+				$user->load(true);
+				foreach (array('defaultShippingAddress', 'defaultBillingAddress') as $key)
+				{
+					if ($address = $user->$key->get())
+					{
+						$address->load(array('UserAddress'));
+						$address->userAddress->get()->load();
+						return $address->userAddress->get();
+					}
+				}
+			}
+		}
+
+		$config = ActiveRecordModel::getApplication()->getConfig();
+		$address = UserAddress::getNewInstance();
+		$address->countryID->set($config->get('DEF_COUNTRY'));
+
+		return $address;
+	}
+
+	public static function setEstimateAddress(UserAddress $address)
+	{
+		$order = self::getOrder();
+		$session = new Session();
+		$session->set('shippingEstimateAddress', $address);
 	}
 
 	public static function save(CustomerOrder $order)

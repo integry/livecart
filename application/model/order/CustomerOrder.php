@@ -665,15 +665,22 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$this->user->set($user);
 		$this->setCheckoutStep(self::CHECKOUT_USER);
 
-		foreach (array('defaultBillingAddress' => 'billingAddress',
-					   'defaultShippingAddress' => 'shippingAddress') as $userAd => $orderAd)
+		foreach (array(array('defaultBillingAddress' => 'billingAddress'),
+					   array('defaultShippingAddress' => 'shippingAddress'),
+					   array('defaultBillingAddress' => 'shippingAddress'),
+					   ) as $pair)
 		{
+			$userAd = array_shift(array_keys($pair));
+			$orderAd = reset($pair);
 			if ($user->$userAd->get())
 			{
 				$user->$userAd->get()->load();
 				$this->$orderAd->set($user->$userAd->get()->userAddress->get());
 			}
 		}
+
+		$this->resetShipments();
+		$this->getShipments();
 	}
 
 	public function setCheckoutStep($step)
@@ -1531,7 +1538,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		{
 			foreach ($this->shipments as $shipment)
 			{
-				$array['shippingSubtotal'] += $shipment->getShippingTotalBeforeTax();
+				$array['shippingSubtotal'] += $shipment->getShippingTotalWithTax();
 			}
 		}
 
@@ -2100,6 +2107,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		foreach ($this->orderedItems as $item)
 		{
 			$item->__destruct();
+			$item->destruct();
 		}
 
 		$this->orderedItems = array();
@@ -2107,6 +2115,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		foreach ($this->removedItems as $item)
 		{
 			$item->__destruct();
+			$item->destruct();
 		}
 
 		$this->removedItems = array();
@@ -2118,6 +2127,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			foreach ($this->shipments as $shipment)
 			{
 				$shipment->__destruct();
+				$shipment->destruct();
 			}
 		}
 

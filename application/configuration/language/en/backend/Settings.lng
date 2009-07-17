@@ -339,6 +339,18 @@ REQUIRE_REG_ADDRESS=Require address entry on registration
 DISABLE_STATE=Remove state field
 REG_EMAIL_CONFIRM=Require e-mail address confirmation
 
+_shipping_estimation=Shipping Cost Estimation
+ENABLE_SHIPPING_ESTIMATE=Enable shipping cost estimation in shopping cart page
+SHIP_ESTIMATE_HIDE_ENTRY=Hide address entry for
+UNREGISTERED=Unregistered customers (use store default address)
+ALL_REGISTERED=All registered customers (use store default address or customer address if entered)
+REGISTERED_WITH_ADDRESS=Registered customers that have previously entered an address
+SHIP_ESTIMATE_FIELDS=Address entry fields
+COUNTRY=Country
+STATE=State
+CITY=City
+POSTALCODE=Postal (ZIP) code
+
 # Countries
 _countries=Countries
 PRIMARY_COUNTRIES=Countries to display first in the country list (2-letter country codes separated by commas)

@@ -174,7 +174,7 @@ class CategoryController extends FrontendController
 		$categoryNarrow = array();
 		if ((!empty($searchQuery) || $this->getCategory()->isRoot() || $this->filters) && $products)
 		{
-			$categoryNarrow = $this->getSubCategoriesBySearchQuery($selectFilter, $subCategories);
+			$categoryNarrow = $this->getSubCategoriesBySearchQuery($productFilter->getSelectFilter(), $subCategories);
 		}
 
 		$categoryArray = $this->getCategory()->toArray();

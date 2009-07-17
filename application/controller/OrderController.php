@@ -92,6 +92,12 @@ class OrderController extends FrontendController
 			$response->set('changes', $result);
 		}
 
+		if ($this->estimateShippingCost())
+		{
+			$this->order->getTotal(true);
+			$response->set('isShippingEstimated', true);
+		}
+
 		$options = $this->getItemOptions();
 
 		$currency = Currency::getValidInstanceByID($this->request->get('currency', $this->application->getDefaultCurrencyCode()), Currency::LOAD_DATA);
@@ -126,6 +132,43 @@ class OrderController extends FrontendController
 		$this->order->getSpecification()->setFormResponse($response, $form);
 
 		return $response;
+	}
+
+	private function estimateShippingCost()
+	{
+		if (!$this->config->get('ENABLE_SHIPPING_ESTIMATE'))
+		{
+			return false;
+		}
+
+		$estimateAddress = SessionOrder::getEstimateAddress();
+		$this->order->shippingAddress->set($estimateAddress);
+
+		$isShippingEstimated = false;
+		foreach ($this->order->getShipments() as $shipment)
+		{
+			if (!$shipment->getSelectedRate())
+			{
+				$cheapest = $cheapestRate = null;
+				foreach ($shipment->getShippingRates() as $rate)
+				{
+					$price = $rate->getAmountByCurrency($this->order->getCurrency());
+					if (!$cheapestRate || ($price < $cheapest))
+					{
+						$cheapestRate = $rate;
+						$cheapest = $price;
+					}
+				}
+
+				if ($cheapestRate)
+				{
+					$shipment->setRateId($cheapestRate->getServiceID());
+					$isShippingEstimated = true;
+				}
+			}
+		}
+
+		return $isShippingEstimated;
 	}
 
 	private function getItemOptions()

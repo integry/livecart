@@ -486,11 +486,14 @@ class CsvImportController extends StoreManagementController
 						$price = $product->getPricingHandler()->getPriceByCurrencyCode($currency);
 						$product->getPricingHandler()->setPrice($price);
 
-						if (($group || $quantityLevel) && $value)
+						if ($group || $quantityLevel)
 						{
-							$quantity = $quantityLevel ? $record[$fields['ProductPrice'][$quantityLevel]] : 1;
-							$group = $group ? UserGroup::getInstanceByID($group) : null;
-							$price->setPriceRule($quantity, $group, $value);
+							if ($value > 0)
+							{
+								$quantity = $quantityLevel ? $record[$fields['ProductPrice'][$quantityLevel]] : 1;
+								$group = $group ? UserGroup::getInstanceByID($group) : null;
+								$price->setPriceRule($quantity, $group, $value);
+							}
 						}
 						else
 						{
