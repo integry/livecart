@@ -410,16 +410,26 @@ class ShipmentTaxTest extends OrderTestCommon
 
 		TaxRate::getNewInstance(DeliveryZone::getDefaultZoneInstance(), $tax, 19)->save();
 
-		foreach (array(635.99, 228.69, 61.59) as $key => $price)
+		foreach (array(2 => true, 1 => false) as $shipments => $isSeparate)
 		{
-			$this->products[$key]->setPrice('USD', $price);
-			$this->order->addProduct($this->products[$key], 1, false);
+			$this->initOrder();
+			foreach (array(635.99, 228.69, 61.59) as $key => $price)
+			{
+				$this->products[$key]->setPrice('USD', $price);
+
+				if (!$isSeparate)
+				{
+					$this->products[$key]->isSeparateShipment->set(false);
+				}
+
+				$this->order->addProduct($this->products[$key], 1, false);
+			}
+
+			$this->order->save();
+
+			$this->assertEquals(count($this->order->getShipments()), $shipments);
+			$this->assertEquals($this->order->getTotal(), 926.27);
 		}
-
-		$this->order->save();
-
-		// @todo: one extra penny appears after rounding
-		$this->assertEquals($this->order->getTotal(), 926.27 + 0.01);
 	}
 }
 

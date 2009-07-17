@@ -29,6 +29,22 @@ class OrderController extends FrontendController
 			return new ActionRedirectResponse('order', 'multi');
 		}
 
+		if (!$this->user->isAnonymous())
+		{
+			$this->order->setUser($this->user);
+
+			if ($this->order->isModified())
+			{
+				$this->order->save();
+			}
+		}
+		else if ($this->config->get('DISABLE_GUEST_CART'))
+		{
+			return new ActionRedirectResponse('user', 'login', array('returnPath' => true));
+		}
+
+		$this->order->getTotal(true);
+
 		$response = $this->getCartPageResponse();
 		$this->addBreadCrumb($this->translate('_my_basket'), '');
 		return $response;
@@ -54,6 +70,11 @@ class OrderController extends FrontendController
 		}
 		$response->set('addresses', $addresses);
 
+		if (!$addresses)
+		{
+			return new ActionRedirectResponse('user', 'addShippingAddress', array('returnPath' => true));
+		}
+
 		$this->addBreadCrumb($this->translate('_select_shipping_addresses'), '');
 		return $response;
 	}
@@ -62,12 +83,19 @@ class OrderController extends FrontendController
 	{
 		$this->addBreadCrumb($this->translate('_my_session'), $this->router->createUrlFromRoute($this->request->get('return'), true));
 
+		$this->order->setUser($this->user);
 		$this->order->loadItemData();
 
 		$response = new ActionResponse();
 		if ($result = $this->order->updateToStock())
 		{
 			$response->set('changes', $result);
+		}
+
+		if ($this->estimateShippingCost())
+		{
+			$this->order->getTotal(true);
+			$response->set('isShippingEstimated', true);
 		}
 
 		$options = $this->getItemOptions();
@@ -77,6 +105,7 @@ class OrderController extends FrontendController
 		$form = $this->buildCartForm($this->order, $options);
 
 		$orderArray = $this->order->toArray();
+
 		$itemsById = array();
 		foreach (array('cartItems', 'wishListItems') as $type)
 		{
@@ -103,6 +132,43 @@ class OrderController extends FrontendController
 		$this->order->getSpecification()->setFormResponse($response, $form);
 
 		return $response;
+	}
+
+	private function estimateShippingCost()
+	{
+		if (!$this->config->get('ENABLE_SHIPPING_ESTIMATE'))
+		{
+			return false;
+		}
+
+		$estimateAddress = SessionOrder::getEstimateAddress();
+		$this->order->shippingAddress->set($estimateAddress);
+
+		$isShippingEstimated = false;
+		foreach ($this->order->getShipments() as $shipment)
+		{
+			if (!$shipment->getSelectedRate())
+			{
+				$cheapest = $cheapestRate = null;
+				foreach ($shipment->getShippingRates() as $rate)
+				{
+					$price = $rate->getAmountByCurrency($this->order->getCurrency());
+					if (!$cheapestRate || ($price < $cheapest))
+					{
+						$cheapestRate = $rate;
+						$cheapest = $price;
+					}
+				}
+
+				if ($cheapestRate)
+				{
+					$shipment->setRateId($cheapestRate->getServiceID());
+					$isShippingEstimated = true;
+				}
+			}
+		}
+
+		return $isShippingEstimated;
 	}
 
 	private function getItemOptions()
@@ -395,6 +461,11 @@ class OrderController extends FrontendController
 			{
 				$this->setMessage($this->translate('_selected_to_cart'));
 			}
+		}
+
+		if (!$this->user->isAnonymous())
+		{
+			$this->order->setUser($this->user);
 		}
 
 		$this->order->mergeItems();

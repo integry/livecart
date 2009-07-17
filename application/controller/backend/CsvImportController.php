@@ -19,6 +19,8 @@ class CsvImportController extends StoreManagementController
 
 	const PROGRESS_FLUSH_INTERVAL = 5;
 
+	private $categories = array();
+
 	private $delimiters = array(
 									'_del_comma' => ',',
 									'_del_semicolon' => ';',
@@ -188,6 +190,7 @@ class CsvImportController extends StoreManagementController
 		{
 			$groupedFields['ProductImage']['ProductAdditionalImage.' . $k] = $this->maketext('_additional_image_location', $k);
 		}
+		$groupedFields['ProductImage']['ProductImage.Images'] = $this->translate('_images');
 
 		// category fields
 		$groupedFields['Category']['Category.ID'] = $this->translate('Category.ID');
@@ -195,6 +198,9 @@ class CsvImportController extends StoreManagementController
 		{
 			$groupedFields['Category']['Category.' . $k] = $this->maketext('_category_x', $k);
 		}
+
+		$groupedFields['Category']['Categories.Categories'] = $this->translate('_categories');
+		$groupedFields['Category']['Categories.ExtraCategories'] = $this->translate('_extra_categories');
 
 		// price fields
 		$groupedFields['ProductPrice']['ProductPrice.listPrice'] = $this->translate('_list_price');
@@ -245,7 +251,7 @@ class CsvImportController extends StoreManagementController
 		}
 
 		// get import root category
-		$root = Category::getInstanceById($this->request->get('category'), Category::LOAD_DATA);
+		$this->root = Category::getInstanceById($this->request->get('category'), Category::LOAD_DATA);
 
 		// pre-load attributes
 		if (isset($fields['specField']))
@@ -318,6 +324,8 @@ class CsvImportController extends StoreManagementController
 				$cell = trim($cell);
 			}
 
+			$extraCategories = null;
+
 			// detect product category
 			if (isset($fields['Product']['parentID']) && !empty($record[$fields['Product']['parentID']]))
 			{
@@ -339,51 +347,36 @@ class CsvImportController extends StoreManagementController
 					continue;
 				}
 			}
+			else if (isset($fields['Categories']['Categories']))
+			{
+				$index = $fields['Categories']['Categories'];
+
+				$categories = explode('; ', $record[$index]);
+				$cat = $this->getCategoryByPath(array_shift($categories));
+
+				$extraCategories = $categories;
+			}
 			else if (isset($fields['Category']))
 			{
-				$hash = '';
-				$hashRoot = $root->getID();
+				$path = array();
 				foreach ($fields['Category'] as $level => $csvIndex)
 				{
-					if (!$record[$csvIndex])
+					if ($record[$csvIndex])
 					{
-						continue;
+						$path[] = $record[$csvIndex];
 					}
-
-					$hash .= "\n" . $record[$csvIndex];
-
-					if (!isset($categories[$hash]))
-					{
-						$f = Category::getInstanceByID($hashRoot)->getSubcategoryFilter();
-						$f->mergeCondition(
-								new EqualsCond(
-									MultiLingualObject::getLangSearchHandle(
-										new ARFieldHandle('Category', 'name'),
-										$this->application->getDefaultLanguageCode()
-									),
-									$record[$csvIndex]
-								)
-							);
-
-						$cat = ActiveRecordModel::getRecordSet('Category', $f)->get(0);
-						if (!$cat)
-						{
-							$cat = Category::getNewInstance(Category::getInstanceByID($hashRoot));
-							$cat->isEnabled->set(true);
-							$cat->setValueByLang('name', $this->application->getDefaultLanguageCode(), $record[$csvIndex]);
-							$cat->save();
-						}
-
-						$categories[$hash] = $cat->getID();
-					}
-
-					$hashRoot = $categories[$hash];
-					$cat = Category::getInstanceByID($hashRoot);
 				}
+
+				$cat = $this->getCategoryByPath($path);
 			}
 			else
 			{
-				$cat = $root;
+				$cat = $this->root;
+			}
+
+			if (isset($fields['Categories']['ExtraCategories']))
+			{
+				$extraCategories = explode('; ', $record[$fields['Categories']['ExtraCategories']]);
 			}
 
 			if (isset($fields['Product']) && $cat)
@@ -401,10 +394,6 @@ class CsvImportController extends StoreManagementController
 				else if (!empty($record[$fields['Product']['sku']]))
 				{
 					$product = Product::getInstanceBySku($record[$fields['Product']['sku']], $references);
-					if ($product)
-					{
-						var_dump($record[$fields['Product']['sku']]);
-					}
 				}
 
 				if ($product)
@@ -499,9 +488,12 @@ class CsvImportController extends StoreManagementController
 
 						if ($group || $quantityLevel)
 						{
-							$quantity = $quantityLevel ? $fields['ProductPrice'][$quantityLevel] : 1;
-							$group = $group ? UserGroup::getInstanceByID($group) : null;
-							$price->setPriceRule($quantity, $group, $value);
+							if ($value > 0)
+							{
+								$quantity = $quantityLevel ? $record[$fields['ProductPrice'][$quantityLevel]] : 1;
+								$group = $group ? UserGroup::getInstanceByID($group) : null;
+								$price->setPriceRule($quantity, $group, $value);
+							}
 						}
 						else
 						{
@@ -627,10 +619,32 @@ class CsvImportController extends StoreManagementController
 					}
 				}
 
+				if (isset($fields['ProductImage']['Images']))
+				{
+					$images = explode('; ', $record[$fields['ProductImage']['Images']]);
+
+					if ($images)
+					{
+						$product->deleteRelatedRecordSet('ProductImage');
+						foreach ($images as $path)
+						{
+							$image = ProductImage::getNewInstance($product);
+							$this->importImage($image, $path);
+							unset($image);
+						}
+					}
+				}
+
 				// create variation by name
 				if ((isset($fields['Product']['parentID']) || isset($fields['Parent']['parentSKU'])) && !isset($fields['ProductVariation']) && $product->parent->get())
 				{
 					$this->importProductVariationValue($product, 1, $product->getValueByLang('name', 'en'));
+				}
+
+				// additional categories
+				if (is_array($extraCategories))
+				{
+					$this->importAdditionalCategories($product, $extraCategories);
 				}
 
 				$lastName = $product->getValueByLang('name', 'en');
@@ -645,7 +659,7 @@ class CsvImportController extends StoreManagementController
 			if ($progress % self::PROGRESS_FLUSH_INTERVAL == 0 || ($total == $progress))
 			{
 				$response->flush($this->getResponse(array('progress' => $progress, 'total' => $total, 'lastName' => $lastName)));
-//				echo '|' . round(memory_get_usage() / (1024*1024), 1) . '|' . count($categories) . "\n";
+				//echo '|' . round(memory_get_usage() / (1024*1024), 1) . '|' . count($categories) . "\n";
 			}
 
 			// test non-transactional mode
@@ -679,6 +693,52 @@ class CsvImportController extends StoreManagementController
 		exit;
 	}
 
+	private function getCategoryByPath($names)
+	{
+		if (!is_array($names))
+		{
+			$names = explode(' / ', $names);
+		}
+
+		$hash = '';
+		$hashRoot = $this->root->getID();
+
+		foreach ($names as $name)
+		{
+			$hash .= "\n" . $name;
+
+			if (!isset($categories[$hash]))
+			{
+				$f = Category::getInstanceByID($hashRoot)->getSubcategoryFilter();
+				$f->mergeCondition(
+						new EqualsCond(
+							MultiLingualObject::getLangSearchHandle(
+								new ARFieldHandle('Category', 'name'),
+								$this->application->getDefaultLanguageCode()
+							),
+							$name
+						)
+					);
+
+				$cat = ActiveRecordModel::getRecordSet('Category', $f)->get(0);
+				if (!$cat)
+				{
+					$cat = Category::getNewInstance(Category::getInstanceByID($hashRoot));
+					$cat->isEnabled->set(true);
+					$cat->setValueByLang('name', $this->application->getDefaultLanguageCode(), $name);
+					$cat->save();
+				}
+
+				$this->categories[$hash] = $cat->getID();
+			}
+
+			$hashRoot = $this->categories[$hash];
+			$cat = Category::getInstanceByID($hashRoot, true);
+		}
+
+		return $cat;
+	}
+
 	private function setChildSetting(Product $product, $setting, $value)
 	{
 		$value = trim($value);
@@ -704,6 +764,15 @@ class CsvImportController extends StoreManagementController
 		}
 
 		return $value;
+	}
+
+	private function importAdditionalCategories(Product $product, array $extraCategories)
+	{
+		$product->deleteRelatedRecordSet('ProductCategory');
+		foreach ($extraCategories as $names)
+		{
+			ProductCategory::getNewInstance($product, $this->getCategoryByPath($names))->save();
+		}
 	}
 
 	private function importVariationType(Product $product, $index, $name)
@@ -906,7 +975,7 @@ class CsvImportController extends StoreManagementController
 	{
 		ClassLoader::import('application.helper.filter.HandleFilter');
 
-		return $this->getValidator('csvFile', $this->request);
+		return new RequestValidator('csvFile', $this->request);
 	}
 
 	private function getDelimiterForm()
@@ -918,7 +987,7 @@ class CsvImportController extends StoreManagementController
 	{
 		ClassLoader::import('application.helper.filter.HandleFilter');
 
-		return $this->getValidator('csvDelimiters', $this->request);
+		return new RequestValidator('csvDelimiters', $this->request);
 	}
 
 	private function getFieldsForm()
@@ -930,7 +999,7 @@ class CsvImportController extends StoreManagementController
 	{
 		ClassLoader::import('application.helper.filter.HandleFilter');
 
-		return $this->getValidator('csvFields', $this->request);
+		return new RequestValidator('csvFields', $this->request);
 	}
 
 	private function setCacheProgress($index)

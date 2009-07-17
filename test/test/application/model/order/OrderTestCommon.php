@@ -10,6 +10,7 @@ ClassLoader::import("application.model.user.User");
 ClassLoader::import("application.model.user.*");
 ClassLoader::import("application.model.Currency");
 ClassLoader::import("application.model.tax.*");
+ClassLoader::import("application.model.businessrule.BusinessRuleController");
 ClassLoader::import("library.payment.*");
 
 /**
@@ -39,6 +40,8 @@ abstract class OrderTestCommon extends LiveCartTest
 		ActiveRecordModel::executeUpdate('DELETE FROM DiscountAction');
 		ActiveRecordModel::executeUpdate('DELETE FROM DeliveryZone');
 		ActiveRecordModel::executeUpdate('DELETE FROM ShippingService');
+
+		BusinessRuleController::clearCache();
 
 		$this->initOrder();
 

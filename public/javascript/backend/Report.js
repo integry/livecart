@@ -37,6 +37,11 @@ Backend.Report.Controller.prototype =
 
 	setReportType: function(type)
 	{
+		if (!type)
+		{
+			return;
+		}
+
 		if (this.type)
 		{
 			this.type.removeClassName('active');

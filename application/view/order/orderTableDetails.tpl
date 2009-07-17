@@ -10,8 +10,9 @@
 				{include file="order/itemProductInfo.tpl"}
 			</td>
 		{/if}
-		<td class="{if $item.itemBasePrice > $item.itemPrice}discount{/if}">
-			<span class="basePrice">{$item.formattedDisplayPrice}</span><span class="actualPrice">{$item.formattedPrice}</span>
+
+		<td class="{if $item.itemBasePrice != $item.itemPrice}discount{/if}">
+			<span class="basePrice">{$item.formattedBasePrice}</span><span class="actualPrice">{$item.formattedPrice}</span>
 		</td>
 		<td>{$item.count}</td>
 		<td class="amount">{$item.formattedDisplaySubTotal}</td>

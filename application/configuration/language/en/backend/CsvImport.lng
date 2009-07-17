@@ -44,6 +44,9 @@ _language=Language
 _quantity_level=Quantity level
 _quantity_level_x=Quantity level [_1]
 _variation_name=Variation name/value [_1]
+_categories=Categories
+_extra_categories=Additional categories
+_images=Images
 
 Product=Main product details
 ProductVariation=Variations

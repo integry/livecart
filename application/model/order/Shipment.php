@@ -27,6 +27,8 @@ class Shipment extends ActiveRecordModel
 
 	protected $fixedTaxes = array();
 
+	private $deliveryZones = array();
+
 	const STATUS_NEW = 0;
 	const STATUS_PROCESSING = 1;
 	const STATUS_AWAITING = 2;
@@ -158,19 +160,22 @@ class Shipment extends ActiveRecordModel
 
 	public function getDeliveryZone()
 	{
-		if (!$this->deliveryZone)
+		$address = $this->getShippingAddress();
+		$addressID = $address ? $address->getID() : 0;
+
+		if (!isset($this->deliveryZones[$addressID]))
 		{
-			if ($address = $this->getShippingAddress())
+			if ($address)
 			{
-				$this->deliveryZone = DeliveryZone::getZoneByAddress($address);
+				$this->deliveryZones[$addressID] = DeliveryZone::getZoneByAddress($address);
 			}
 			else
 			{
-				$this->deliveryZone = DeliveryZone::getDefaultZoneInstance();
+				$this->deliveryZones[$addressID] = DeliveryZone::getDefaultZoneInstance();
 			}
 		}
 
-		return $this->deliveryZone;
+		return $this->deliveryZones[$addressID];
 	}
 
 	public function getChargeableWeight(DeliveryZone $zone = null)
@@ -292,6 +297,7 @@ class Shipment extends ActiveRecordModel
 			$subTotal += $taxes;
 		}
 
+		//return $subTotal;
 		return $this->getCurrency()->round($subTotal);
 	}
 
@@ -432,7 +438,9 @@ class Shipment extends ActiveRecordModel
 
 		$currency = $this->order->get()->getCurrency();
 
-		$this->amount->set($currency->round($this->getSubTotal(self::WITHOUT_TAXES)));
+		$itemAmount = $this->getSubTotal(self::WITHOUT_TAXES);
+
+		$this->amount->set($itemAmount);
 
 		// total taxes
 		if ($calculateTax)
@@ -465,6 +473,8 @@ class Shipment extends ActiveRecordModel
 
 			$this->shippingAmount->set($calculateTax ? $currency->round($amount) : $amount);
 		}
+
+		$this->amount->set($currency->round($itemAmount));
 	}
 
 	public function addFixedTax(ShipmentTax $tax)
@@ -899,6 +909,15 @@ class Shipment extends ActiveRecordModel
 		{
 			$this->addItem(clone $item);
 		}
+	}
+
+	public function __destruct()
+	{
+		$this->taxes = null;
+		$this->fixedTaxes = null;
+		$this->items = null;
+
+		parent::__destruct();
 	}
 }
 

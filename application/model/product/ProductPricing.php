@@ -24,6 +24,8 @@ class ProductPricing
 
 	private $removedPrices = array();
 
+	private $listPrices = array();
+
 	private $application;
 
 	public function __construct(Product $product, $prices = null, LiveCart $application)
@@ -166,6 +168,11 @@ class ProductPricing
 			$defined[$inst->currency->get()->getID()] = $inst->$field->get();
 		}
 
+		if ($listPrice)
+		{
+			$defined = array_merge($defined, $this->listPrices);
+		}
+
 		$baseCurrency = $this->application->getDefaultCurrencyCode();
 		$basePrice = isset($defined[$baseCurrency]) ? $defined[$baseCurrency] : 0;
 
@@ -174,6 +181,7 @@ class ProductPricing
 		$parent = $this->product->parent->get();
 		$setting = $this->product->getChildSetting('price');
 
+		$ruleController = $this->application->getBusinessRuleController();
 		foreach ($this->application->getCurrencySet() as $id => $currency)
 		{
 			if (!empty($defined[$id]))
@@ -196,6 +204,16 @@ class ProductPricing
 				$calculated[$id] += $parentPrice * (($setting != Product::CHILD_ADD) ? 1 : -1);
 			}
 
+			if (!$listPrice)
+			{
+				$discountedPrice = $ruleController->getProductPrice($this->product, $calculated[$id], $currency->getID());
+				if ($discountedPrice != $calculated[$id])
+				{
+					$this->setListPrice($currency->getID(), $calculated[$id]);
+					$calculated[$id] = $discountedPrice;
+				}
+			}
+
 			if ((float)$calculated[$id] || !$listPrice)
 			{
 				$formattedPrice[$id] = $currency->getFormattedPrice($calculated[$id]);
@@ -204,6 +222,11 @@ class ProductPricing
 
 		$return = array('defined' => $defined, 'calculated' => $calculated, 'formattedPrice' => $formattedPrice);
 		return ('both' == $part) ? $return : $return[$part];
+	}
+
+	private function setListPrice($currencyID, $price)
+	{
+		$this->listPrices[$currencyID] = $price;
 	}
 
 	public function getDiscountPrices(User $user, $currency)

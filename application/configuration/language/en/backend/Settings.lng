@@ -255,6 +255,7 @@ MAX_QUANT=Maximum quantity of products per order (0 - no limit)
 ENABLE_CART=Enable shopping cart
 ENABLE_WISHLISTS=Enable wishlists
 DISABLE_GUEST_CHECKOUT=Disable guest checkout
+DISABLE_GUEST_CART=Require registration to access shopping cart
 ENABLE_MULTIADDRESS=Allow shipping to multiple addresses
 ENABLE_CHECKOUTDELIVERYSTEP=Enter billing and shipping addresses at separate checkout steps
 SKIP_SHIPPING=Skip shipping method selection step if only one shipping method is available (select it automatically)
@@ -334,8 +335,21 @@ CC_AUTHONLY=Only authorize payments without capturing them automatically
 _customers=Customers & Registration
 _registration=Registration
 REQUIRE_PHONE=Require customers to enter phone number on registration
+REQUIRE_REG_ADDRESS=Require address entry on registration
 DISABLE_STATE=Remove state field
 REG_EMAIL_CONFIRM=Require e-mail address confirmation
+
+_shipping_estimation=Shipping Cost Estimation
+ENABLE_SHIPPING_ESTIMATE=Enable shipping cost estimation in shopping cart page
+SHIP_ESTIMATE_HIDE_ENTRY=Hide address entry for
+UNREGISTERED=Unregistered customers (use store default address)
+ALL_REGISTERED=All registered customers (use store default address or customer address if entered)
+REGISTERED_WITH_ADDRESS=Registered customers that have previously entered an address
+SHIP_ESTIMATE_FIELDS=Address entry fields
+COUNTRY=Country
+STATE=State
+CITY=City
+POSTALCODE=Postal (ZIP) code
 
 # Countries
 _countries=Countries
