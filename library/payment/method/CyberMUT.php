@@ -41,7 +41,8 @@ class CyberMUT extends ExternalPayment
 		$params['lgue'] = 'EN';
 		$params['societe'] = $this->getConfigValue('societe');
 
-		$params['MAC'] = hash_hmac('sha1', implode('*', $params) . '*', $this->getConfigValue('MAC'));
+		$fields = implode('*', $params) . '*';
+		$params['MAC'] = $this->CMCIC_hmac($fields);
 
 		$params['url_retour'] = $this->cancelUrl;
 		$params['url_retour_err'] = $this->cancelUrl;
@@ -110,6 +111,43 @@ class CyberMUT extends ExternalPayment
 	public function void()
 	{
 		return false;
+	}
+
+	private function CMCIC_hmac($data="")
+	{
+		$pass = "Ix5mi6wmjaULCBDgVUco";
+
+		$k1 = pack("H*",sha1($pass));
+		$l1 = strlen($k1);
+
+		$k2 = pack("H*", $this->getConfigValue('MAC'));
+		$l2 = strlen($k2);
+		if ($l1 > $l2):
+			$k2 = str_pad($k2, $l1, chr(0x00));
+		elseif ($l2 > $l1):
+			$k1 = str_pad($k1, $l2, chr(0x00));
+		endif;
+
+		if ($data==""):
+			$d = "CtlHmac"."1.2open".$this->getConfigValue('TPE');
+		else:
+			$d = $data;
+		endif;
+
+		return strtolower($this->hmac_sha1($k1 ^ $k2, $d));
+	}
+
+	private function hmac_sha1($key, $data)
+	{
+		$length = 64; // block length for SHA1
+		if (strlen($key) > $length) { $key = pack("H*",sha1($key)); }
+		$key  = str_pad($key, $length, chr(0x00));
+		$ipad = str_pad('', $length, chr(0x36));
+		$opad = str_pad('', $length, chr(0x5c));
+		$k_ipad = $key ^ $ipad ;
+		$k_opad = $key ^ $opad;
+
+		return sha1($k_opad  . pack("H*",sha1($k_ipad . $data)));
 	}
 }
 
