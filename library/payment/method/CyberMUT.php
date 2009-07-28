@@ -59,37 +59,44 @@ class CyberMUT extends ExternalPayment
 	public function notify($requestArray)
 	{
 		$this->saveDebug($requestArray);
-		exit;
 
-		// check for secret word
-		if ($secretWord = $this->getConfigValue('secretWord'))
+		$requestArray['version'] = '1.2open';
+		$keys = array('TPE', 'date', 'montant', 'reference', 'texte-libre', 'version', 'code-retour');
+		$values = array();
+		foreach (array('TPE', 'date', 'montant', 'reference', 'texte-libre', 'version', 'code-retour') as $key)
 		{
-			$orderNum = 'Y' == $requestArray['demo'] ? 1 : $requestArray['order_number'];
-			$expected = $secretWord . $requestArray['sid'] . $orderNum . $requestArray['total'];
-			if ($requestArray['key'] != strtoupper(md5($expected)))
-			{
-				return new TransactionError('Invalid 2Checkout secret word', $requestArray);
-			}
+			$values[$key] = $requestArray[$key];
 		}
 
-		$result = new TransactionResult();
-		$result->gatewayTransactionID->set($requestArray['order_number']);
-		$result->amount->set($requestArray['total']);
-		$result->currency->set($this->get2CoCurrency());
-		$result->rawResponse->set($requestArray);
-		$result->setTransactionType(TransactionResult::TYPE_SALE);
+		$macParams = array_combine($keys, $values);
+		$mac = $requestArray['retourPLUS'] . implode('+', $macParams) . '+';
+		$hash = strtoupper($this->CMCIC_hmac($mac));
 
-		return $result;
+		ob_end_clean();
+
+		if ($hash == $requestArray['MAC'])
+		{
+			$result = new TransactionResult();
+			$result->gatewayTransactionID->set($requestArray['reference']);
+			$result->amount->set(substr($requestArray['montant'], 0, -3));
+			$result->currency->set(substr($requestArray['montant'], -3));
+			$result->rawResponse->set($requestArray);
+			$result->setTransactionType(TransactionResult::TYPE_SALE);
+
+			printf("Pragma: no-cache \nContent-type: text/plain \nVersion: 1 %s", 'OK');
+
+			return $result;
+		}
+		else
+		{
+			printf("Pragma: no-cache \nContent-type: text/plain \nVersion: 1 %s", 'Document falsifie');
+			exit;
+		}
 	}
 
 	public function getOrderIdFromRequest($requestArray)
 	{
-		return $requestArray['merchant_order_id'];
-	}
-
-	public function getReturnUrlFromRequest($requestArray)
-	{
-		return $requestArray['complete_url'];
+		return $requestArray['reference'];
 	}
 
 	public function isHtmlResponse()
@@ -115,12 +122,10 @@ class CyberMUT extends ExternalPayment
 
 	private function CMCIC_hmac($data="")
 	{
-		$pass = "Ix5mi6wmjaULCBDgVUco";
-
-		$k1 = pack("H*",sha1($pass));
+		$k1 = pack("H*", $this->getConfigValue('key1'));
 		$l1 = strlen($k1);
 
-		$k2 = pack("H*", $this->getConfigValue('MAC'));
+		$k2 = pack("H*", $this->getConfigValue('key2'));
 		$l2 = strlen($k2);
 		if ($l1 > $l2):
 			$k2 = str_pad($k2, $l1, chr(0x00));
