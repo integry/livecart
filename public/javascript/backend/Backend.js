@@ -448,7 +448,7 @@ Backend.Breadcrumb =
 
 				if(Backend.Breadcrumb.treeBrowser.getIndexById(this.catId) == null)
 				{
-					Backend.Category.treeBrowser.loadXML(Backend.Category.links.categoryRecursiveAutoloading + "?id=" + this.catId);
+					Backend.Category.treeBrowser.loadXML(Backend.Router.setUrlQueryParam(Backend.Category.links.categoryRecursiveAutoloading, "id", this.catId));
 				}
 				else
 				{
