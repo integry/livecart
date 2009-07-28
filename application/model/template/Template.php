@@ -46,7 +46,7 @@ class Template
 			$this->code = file_get_contents($path);
 		}
 
-		$this->file = $fileName;
+		$this->file = str_replace('\\', '/', $fileName);
 	}
 
 	public static function getTree($dir = null, $root = null, $idPrefix = '')
@@ -57,6 +57,11 @@ class Template
 
 			// get user created template files
 			$customFiles = self::getTree(ClassLoader::getRealPath('storage.customize.view.'));
+		}
+
+		if (!file_exists(realpath($dir)))
+		{
+			return array();
 		}
 
 		$dir = realpath($dir) . DIRECTORY_SEPARATOR;

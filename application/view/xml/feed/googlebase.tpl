@@ -29,6 +29,7 @@
 				{/if}
 				<g:condition>new</g:condition>
 				<g:product_type><![CDATA[{$product.Category.name_lang|@htmlentities}]]></g:product_type>
+
 			</item>
 		{/foreach}
 

@@ -153,6 +153,7 @@ class LiveCart extends Application
 		if ($this->request->get('noRewrite'))
 		{
 			$this->router->setBaseDir($_SERVER['baseDir'], $_SERVER['virtualBaseDir']);
+			//$this->router->enableURLRewrite(false);
 		}
 	}
 

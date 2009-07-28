@@ -173,9 +173,19 @@ class Shipment extends ActiveRecordModel
 			{
 				$this->deliveryZones[$addressID] = DeliveryZone::getDefaultZoneInstance();
 			}
+
+			$this->event('getDeliveryZone');
 		}
 
 		return $this->deliveryZones[$addressID];
+	}
+
+	public function setDeliveryZone(DeliveryZone $zone)
+	{
+		$address = $this->getShippingAddress();
+		$addressID = $address ? $address->getID() : 0;
+
+		$this->deliveryZones[$addressID] = $zone;
 	}
 
 	public function getChargeableWeight(DeliveryZone $zone = null)

@@ -408,6 +408,7 @@ class ProductPrice extends ActiveRecordModel
 			{
 				$product[$key] = array();
 			}
+			$product['original' . $key] = $prices;
 			$product[$key] = array_merge($prices, $product[$key]);
 
 			$prices =& $product[$key];
