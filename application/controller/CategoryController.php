@@ -1196,7 +1196,7 @@ class CategoryController extends FrontendController
 
 		$namespace = 'category_featured';
 		$products = array();
-		foreach ($categories as $category)
+		foreach ((array)$categories as $category)
 		{
 			$key = array($namespace, $category['ID']);
 			if ($product = $cache->get($key))

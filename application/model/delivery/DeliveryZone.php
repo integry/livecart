@@ -104,6 +104,12 @@ class DeliveryZone extends MultilingualObject
 	 */
 	public static function getZoneByAddress(UserAddress $address)
 	{
+		$zones = self::getAllZonesByAddress($address);
+		return $zones ? array_shift($zones) : DeliveryZone::getDefaultZoneInstance();
+	}
+
+	public static function getAllZonesByAddress(UserAddress $address)
+	{
 		if (!$address->isLoaded())
 		{
 			$address->load();
@@ -155,12 +161,11 @@ class DeliveryZone extends MultilingualObject
 
 		if ($maskPoints)
 		{
-			asort($maskPoints);
-			end($maskPoints);
-			return $zones[key($maskPoints)];
+			arsort($maskPoints);
+			return array_combine(array_keys($maskPoints), $zones);
 		}
 
-		return $zones ? array_shift($zones) : DeliveryZone::getDefaultZoneInstance();
+		return $zones;
 	}
 
 	/**

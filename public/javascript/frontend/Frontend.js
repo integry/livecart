@@ -26,6 +26,11 @@ Product.ImageHandler.prototype =
 {
 	initialize: function(imageData, imageDescr, imageProducts)
 	{
+		if (!imageProducts)
+		{
+			imageProducts = [];
+		}
+
 		imageData.each(function(pair)
 		{
 			var inst = new Product.ImageSwitcher(pair.key, pair.value, imageDescr[pair.key], imageProducts[pair.key]);
@@ -55,7 +60,7 @@ Product.ImageSwitcher.prototype =
 		var thumbnail = $('img_' + id);
 		if (thumbnail)
 		{
-			thumbnail.onclick = this.switchImage.bind(this);
+			thumbnail.onclick = this.switchImage.bindAsEventListener(this);
 		}
 	},
 
@@ -619,7 +624,7 @@ User.StateSwitcher.prototype =
 
 	updateStates: function(e)
 	{
-		var url = this.url + '/?country=' + this.countrySelector.value;
+		var url = this.url + (this.url.indexOf('?') == -1 ? '?' : '&') + 'country=' + this.countrySelector.value;
 		new Ajax.Request(url, {onComplete: this.updateStatesComplete.bind(this)});
 
 		var indicator = document.getElementsByClassName('progressIndicator', this.countrySelector.parentNode);

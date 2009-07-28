@@ -137,7 +137,7 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 					$optionPrice = $choice->choice->get()->getPriceDiff($currency->getID());
 				}
 
-				$price += $optionPrice;
+				$price += $this->reduceBaseTaxes($optionPrice);
 			}
 
 			$this->itemPrice = $price;
@@ -207,10 +207,17 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 
 		if (!$isFinalized)
 		{
-			foreach (DeliveryZone::getDefaultZoneInstance()->getTaxRates() as $rate)
-			{
-				$price = $price / (1 + ($rate->rate->get() / 100));
-			}
+			$price = $this->reduceBaseTaxes($price);
+		}
+
+		return $price;
+	}
+
+	private function reduceBaseTaxes($price)
+	{
+		foreach (DeliveryZone::getDefaultZoneInstance()->getTaxRates() as $rate)
+		{
+			$price = $price / (1 + ($rate->rate->get() / 100));
 		}
 
 		return $price;
@@ -228,6 +235,8 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 				$product->stockCount->set($product->stockCount->get() - ($this->count->get() * $multiplier));
 				$product->reservedCount->set($product->reservedCount->get() + ($this->count->get() * $multiplier));
 				$product->save();
+
+				$this->event('reserve');
 			}
 		}
 		else
@@ -259,7 +268,6 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 
 	/**
 	 * Remove reserved products from inventory (i.e. the products are shipped)
-	 * @todo implement
 	 */
 	public function removeFromInventory()
 	{
@@ -268,6 +276,7 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 		{
 			$product->reservedCount->set($product->reservedCount->get() - $this->reservedProductCount->get());
 			$this->reservedProductCount->set(0);
+			$this->event('removeFromInventory');
 		}
 		else
 		{

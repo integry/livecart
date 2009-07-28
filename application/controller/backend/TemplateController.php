@@ -16,34 +16,7 @@ class TemplateController extends StoreManagementController
 {
 	public function index()
 	{
-		$files = Template::getTree();
-
-		$dirs = $this->application->getConfigContainer()->getViewDirectories();
-		array_shift($dirs);
-		foreach ($dirs as $d)
-		{
-			$d = $d[1];
-			$rel = $this->application->getRenderer()->getRelativeTemplatePath($d);
-			$rel = str_replace('application/view', '', $rel);
-
-			$root = array();
-			$f =& $root;
-			$ids = array();
-			foreach (explode('/', $rel) as $part)
-			{
-				if ($part)
-				{
-					$ids[] = $part;
-					$root[$part] = array('id' => implode('/', $ids), 'subs' => array());
-					$root =& $root[$part]['subs'];
-				}
-			}
-
-			$root = Template::getTree($d, null, $rel);
-			$files = array_merge_recursive($files, $f);
-
-			unset($root, $f);
-		}
+		$files = $this->getFiles();
 
 		unset($files['install'], $files['email']);
 
@@ -95,10 +68,22 @@ class TemplateController extends StoreManagementController
 
 		$template->getOtherLanguages();
 
+		$fileName = $template->getFileName();
 		$response = new ActionResponse();
-	  	$response->set('fileName', $template->getFileName());
+	  	$response->set('fileName', $fileName);
 	  	$response->set('form', $this->getEmailTemplateForm($template));
 	  	$response->set('template', $template->toArray());
+
+	  	if (substr($fileName, 0, 11) == 'email/block')
+	  	{
+	  		$fileName = 'blocks/' . substr($fileName, 6);
+		}
+		else
+		{
+			$fileName = preg_replace('/email\/[a-z]{2}\//', '', $fileName);
+		}
+		$response->set('displayFileName', $fileName);
+
 		return $response;
 	}
 
@@ -109,7 +94,7 @@ class TemplateController extends StoreManagementController
 
 	public function email()
 	{
-		$files = Template::getTree();
+		$files = $this->getFiles();
 
 		$blocks = $files['email']['subs'];
 		foreach ($blocks as $key => $data)
@@ -120,9 +105,29 @@ class TemplateController extends StoreManagementController
 			}
 		}
 
+		$modules = array();
+
+		if (isset($files['module']))
+		{
+			foreach ($files['module']['subs'] as $name => $module)
+			{
+				if (isset($module['subs']['email']))
+				{
+					$subs = $module['subs']['email']['subs'];
+					$modules[$name] = array('id' => 'module/' . $name, 'subs' => $subs['en']['subs']);
+				}
+			}
+		}
+
 		$files = $files['email']['subs']['en']['subs'];
 		$files['blocks'] = array('id' => '/', 'subs' => $blocks);
 
+		if ($modules)
+		{
+			$files['module'] = array('id' => 'module', 'subs' => $modules);
+		}
+//var_Dump($files['contactForm']);
+//var_Dump($files['module']['subs']);
 		$response = new ActionResponse();
 		$response->set('categories', json_encode($files));
 		return $response;
@@ -234,6 +239,40 @@ class TemplateController extends StoreManagementController
 	public function emptyPage()
 	{
 		return new ActionResponse();
+	}
+
+	private function getFiles()
+	{
+		$files = Template::getTree();
+
+		$dirs = $this->application->getConfigContainer()->getViewDirectories();
+		array_shift($dirs);
+		foreach ($dirs as $d)
+		{
+			$d = $d[1];
+			$rel = $this->application->getRenderer()->getRelativeTemplatePath($d);
+			$rel = str_replace('application/view', '', $rel);
+
+			$root = array();
+			$f =& $root;
+			$ids = array();
+			foreach (explode('/', $rel) as $part)
+			{
+				if ($part)
+				{
+					$ids[] = $part;
+					$root[$part] = array('id' => implode('/', $ids), 'subs' => array());
+					$root =& $root[$part]['subs'];
+				}
+			}
+
+			$root = Template::getTree($d, null, $rel);
+			$files = array_merge_recursive($files, $f);
+
+			unset($root, $f);
+		}
+
+		return $files;
 	}
 
 	private function getTemplateForm(Template $template)

@@ -366,7 +366,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	}
 
 	/**
-	 *  Remove a shipment from order
+	 *  Remove a shipment from order (including order items)
 	 */
 	public function removeShipment(Shipment $removedShipment)
 	{
@@ -385,6 +385,21 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 				$this->shipments->remove($key);
 
 				$this->resetShipments();
+				break;
+			}
+		}
+	}
+
+	/**
+	 *  Remove a shipment from order, but leave items in order
+	 */
+	public function unsetShipment(Shipment $removedShipment)
+	{
+		foreach ($this->shipments as $key => $shipment)
+		{
+			if ($removedShipment === $shipment)
+			{
+				$this->shipments->remove($key);
 				break;
 			}
 		}
@@ -1766,6 +1781,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 						$this->shipments->unshift($downloadable);
 					}
 				}
+
+				$this->event('getShipments');
 
 				$this->shipping->set(serialize($this->shipments));
 			}

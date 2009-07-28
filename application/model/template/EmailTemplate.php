@@ -117,7 +117,12 @@ class EmailTemplate extends Template
 	 */
 	public function isFragment()
 	{
-		if (preg_match('/(signature|htmlWrapper|block([a-zA-Z]+))\.tpl$/', $this->file))
+		if (preg_match('/(signature|htmlWrapper|block([\/a-zA-Z]+))\.tpl$/', $this->file))
+		{
+			return true;
+		}
+
+		if ($this->getSubject() == '{if !$html}')
 		{
 			return true;
 		}
@@ -155,7 +160,14 @@ class EmailTemplate extends Template
 
 	public function getLangTemplatePath($lang)
 	{
-		return (substr($this->file, 0, 11) == 'email/block') ? $this->file : 'email/' . $lang . '/' . substr($this->file, 9);
+		if (substr($this->file, 0, 11) == 'email/block')
+		{
+			return $this->file;
+		}
+		else
+		{
+			return preg_replace('/email\/[a-z]{2}/', 'email/' . $lang, $this->file);
+		}
 	}
 
 	public function toArray()

@@ -491,7 +491,7 @@ Backend.Discount.Condition.prototype =
 
 	addRecord: function(className, id, onComplete)
 	{
-		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'addRecord', {id: this.condition.ID, class: className, recordID: id, type: this.typeSel.value}), null, function (originalRequest) { this.completeAddRecord(originalRequest, onComplete); }.bind(this));
+		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'addRecord', {id: this.condition.ID, class: className, recordID: id, type: this.typeSel ? this.typeSel.value : null}), null, function (originalRequest) { this.completeAddRecord(originalRequest, onComplete); }.bind(this));
 	},
 
 	completeAddRecord: function(originalRequest, onComplete)

@@ -244,7 +244,8 @@ Backend.ProductFile.Controller.prototype = {
 
 	onSave: function()
 	{
-		this.view.nodes.form.action = (this.model.isNew ? Backend.ProductFile.Links.create : Backend.ProductFile.Links.update) + "/?random=" + Math.random() * 100000;
+		var url = this.model.isNew ? Backend.ProductFile.Links.create : Backend.ProductFile.Links.update;
+		this.view.nodes.form.action = Backend.Router.setUrlQueryParam(url, "random", Math.random() * 100000);
 		Element.saveTinyMceFields(this.view.nodes.form);
 	},
 
