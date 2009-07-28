@@ -252,6 +252,46 @@ class ProductController extends FrontendController
 		$response->set('quantityPricing', $product->getPricingHandler()->getDiscountPrices($this->user, $this->getRequestCurrency()));
 		$response->set('files', $this->getPublicFiles());
 
+		// additional categories
+		$f = new ARSelectFilter();
+		$f->setOrder(new ARFieldHandle('Category', 'lft'));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('Category', 'isEnabled') , true));
+
+		$pathC = new OrChainCondition();
+		$pathF = new ARSelectFilter($pathC);
+		$categories = array();
+		foreach ($product->getRelatedRecordSetArray('ProductCategory', $f, array('Category')) as $cat)
+		{
+			$categories[] = array($cat['Category']);
+
+			$cond = new OperatorCond(new ARFieldHandle('Category', 'lft'), $cat['Category']['lft'], "<");
+			$cond->addAND(new OperatorCond(new ARFieldHandle('Category', 'rgt'), $cat['Category']['rgt'], ">"));
+			$pathC->addAnd($cond);
+		}
+
+		if ($categories)
+		{
+			$pathF->setOrder(new ARFieldHandle('Category', 'lft') , 'DESC');
+			$pathF->mergeCondition(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), true));
+			foreach (ActiveRecordModel::getRecordSetArray('Category', $pathF, array('Category')) as $parent)
+			{
+				foreach ($categories as &$cat)
+				{
+					if (($cat[0]['lft'] > $parent['lft']) && ($cat[0]['rgt'] < $parent['rgt']) && ($parent['ID'] > Category::ROOT_ID))
+					{
+						$cat[] = $parent;
+					}
+				}
+			}
+
+			foreach ($categories as &$cat)
+			{
+				$cat = array_reverse($cat);
+			}
+
+			$response->set('additionalCategories', $categories);
+		}
+
 		return $response;
 	}
 
