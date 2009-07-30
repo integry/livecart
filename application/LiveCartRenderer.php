@@ -377,12 +377,12 @@ class LiveCartRenderer extends SmartyRenderer
 		{
 			if (is_numeric($pair))
 			{
-				$res['id'] = $pair;
+				$res['variables']['id'] = $pair;
 			}
-			else if (strpos($pair, '='))
+			else if (strpos($pair, '_'))
 			{
-				list($key, $value) = explode('=', $pair, 2);
-				$res[$key] = $value;
+				list($key, $value) = explode('_', $pair, 2);
+				$res['variables'][$key] = $value;
 			}
 		}
 

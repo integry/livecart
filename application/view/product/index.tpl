@@ -1,6 +1,4 @@
 {loadJs form=true}
-{includeJs file="library/lightbox/lightbox.js"}
-{includeCss file="library/lightbox/lightbox.css"}
 
 {assign var="metaDescription" value=$product.shortDescription_lang|@strip_tags}
 {assign var="metaKeywords" value=$product.keywords}

@@ -240,7 +240,7 @@ class ActiveGrid
 		}
 		else
 		{
-			foreach ($possibleSchemas as $name => $schemaArray)
+			foreach ((array)$possibleSchemas as $name => $schemaArray)
 			{
 				$parts = explode('_', $name, 2);
 				if (isset($parts[1]) && ($parts[1] == $schemaName))

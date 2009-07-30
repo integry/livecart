@@ -501,7 +501,7 @@ class Product extends MultilingualObject
 		return $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode)->getItemPrice($item, $applyRounding);
 	}
 
-	public function getPrice($currencyCode, $recalculate = true)
+	public function getPrice($currencyCode, $recalculate = true, $includeDiscounts = false)
 	{
 	  	if ($currencyCode instanceof Currency)
 	  	{
@@ -515,7 +515,7 @@ class Product extends MultilingualObject
 		}
 		else
 		{
-			$price = $instance->getPrice($recalculate == true);
+			$price = $instance->getPrice($recalculate == true, $includeDiscounts);
 		}
 
 		return $price;
@@ -1246,6 +1246,17 @@ class Product extends MultilingualObject
 			}
 
 			ProductOption::loadChoicesForRecordSet($options);
+
+			foreach ($options as $mainIndex => $mainOption)
+			{
+				for ($k = $mainIndex + 1; $k <= $options->size(); $k++)
+				{
+					if ($options->get($k) && ($mainOption->getID() == $options->get($k)->getID()))
+					{
+						$options->remove($k);
+					}
+				}
+			}
 		}
 
 		return $options;

@@ -146,7 +146,8 @@ Backend.Currency.prototype =
 		var p = node.up('li');
 		var currId = p.id.substr(p.id.length - 3, 3);
 
-		var url = this.statusUrl + "?id=" + currId + "&status=" + (node.checked - 1 + 1);
+		var url = Backend.Router.setUrlQueryParam(this.statusUrl, "id", currId);
+		var url = Backend.Router.setUrlQueryParam(url, "status", (node.checked - 1 + 1));
 
 		var img = document.createElement('img');
 		img.src = 'image/indicator.gif';

@@ -48,6 +48,7 @@
 					<option value="0">{t _ProductOption_type_bool}</option>
 					<option value="1">{t _ProductOption_type_select}</option>
 					<option value="2">{t _ProductOption_type_text}</option>
+					<option value="3">{t _ProductOption_type_file}</option>
 				</select>
 				<span class="errorText hidden"> </span>
 			</fieldset>
@@ -79,6 +80,34 @@
 				<label class="productOption_form_selectMessage_label">{t _ProductOption_selectMessage}</label>
 				<fieldset class="error">
 					<input type="text" name="selectMessage" class="productOption_form_selectMessage"  />
+					<span class="errorText hidden"> </span>
+				</fieldset>
+			</p>
+		</div>
+
+		<div class="optionFile">
+			<p>
+				<label class="productOption_form_fileExtensions_label acronym">
+					<a>
+						{t _ProductOption_fileExtensions}
+						<div>{t _ProductOption_fileExtensions_help}</div>
+					</a>
+				</label>
+				<fieldset class="error">
+					<input type="text" name="fileExtensions" class="productOption_form_fileExtensions"  />
+					<span class="errorText hidden"> </span>
+				</fieldset>
+			</p>
+
+			<p>
+				<label class="productOption_form_maxFileSize_label acronym">
+					<a>
+						{t _ProductOption_maxFileSize}
+						<div>{maketext text=_ProductOption_maxFileSize_help params=$maxUploadSize}</div>
+					</a>
+				</label>
+				<fieldset class="error">
+					<input type="text" name="maxFileSize" class="number productOption_form_maxFileSize"  /> {t _ProductOption_megabytes}
 					<span class="errorText hidden"> </span>
 				</fieldset>
 			</p>

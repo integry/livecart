@@ -14,10 +14,9 @@ ClassLoader::import('application.model.product.ProductOptionChoice');
 class ProductOption extends MultilingualObject
 {
 	const TYPE_BOOL = 0;
-
 	const TYPE_SELECT = 1;
-
 	const TYPE_TEXT = 2;
+	const TYPE_FILE = 3;
 
 	const DISPLAYTYPE_SELECTBOX = 0;
 	const DISPLAYTYPE_RADIO = 1;
@@ -37,7 +36,6 @@ class ProductOption extends MultilingualObject
 		$schema->registerField(new ARForeignKeyField("defaultChoiceID", "ProductOptionChoice", "ID", "ProductOptionChoice", ARInteger::instance()));
 
 		$schema->registerField(new ARField("name", ARArray::instance()));
-		$schema->registerField(new ARField("selectMessage", ARArray::instance()));
 		$schema->registerField(new ARField("description", ARArray::instance()));
 		$schema->registerField(new ARField("type", ARInteger::instance(4)));
 		$schema->registerField(new ARField("displayType", ARInteger::instance(4)));
@@ -47,6 +45,8 @@ class ProductOption extends MultilingualObject
 		$schema->registerField(new ARField("isDisplayedInCart", ARBool::instance()));
 		$schema->registerField(new ARField("isPriceIncluded", ARBool::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance(4)));
+		$schema->registerField(new ARField("maxFileSize", ARInteger::instance(4)));
+		$schema->registerField(new ARField("fileExtensions", ARVarchar::instance(100)));
 	}
 
 	/**
@@ -118,6 +118,11 @@ class ProductOption extends MultilingualObject
 	public function isSelect()
 	{
 		return $this->type->get() == self::TYPE_SELECT;
+	}
+
+	public function isFile()
+	{
+		return $this->type->get() == self::TYPE_FILE;
 	}
 
 	public function addChoice(ProductOptionChoice $choice)
@@ -271,6 +276,18 @@ class ProductOption extends MultilingualObject
 				}
 			}
 		}
+	}
+
+	public static function getFileExtensions($extensionString)
+	{
+		$s = trim(preg_replace('/[^ a-z0-9]/', '', strtolower($extensionString)));
+		$extensions = array();
+		foreach (explode(' ', $s) as $ext)
+		{
+			$extensions[] = trim($ext);
+		}
+
+		return $extensions;
 	}
 
 	/*####################  Saving ####################*/

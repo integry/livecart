@@ -134,6 +134,8 @@
 
 			{block FORM-SUBMIT-REGISTER-CHECKOUT}
 
+			{hidden name="return"}
+
 			<p>
 				<label class="submit"></label>
 				<input type="submit" class="submit" value="{tn _continue}" />

@@ -14,6 +14,7 @@ Backend.ProductOption.prototype =
 	TYPE_BOOL: 0,
 	TYPE_SELECT: 1,
 	TYPE_TEXT: 2,
+	TYPE_FILE: 3,
 
 	cssPrefix: "productOption_",
 
@@ -208,7 +209,7 @@ Backend.ProductOption.prototype =
 
 		var self = this;
 		this.nodes.labels = {};
-		$A(['type', 'name', 'isRequired', 'isDisplayed', 'isDisplayedInList', 'isDisplayedInCart', 'isPriceIncluded']).each(function(field)
+		$A(['type', 'name', 'fileExtensions', 'maxFileSize', 'isRequired', 'isDisplayed', 'isDisplayedInList', 'isDisplayedInCart', 'isPriceIncluded']).each(function(field)
 		{
 			this.nodes.labels[field] = document.getElementsByClassName(self.cssPrefix + "form_" + field + "_label", this.nodes.parent)[0];
 		}.bind(this));
@@ -224,9 +225,12 @@ Backend.ProductOption.prototype =
 
 		this.nodes.name 				= document.getElementsByClassName(this.cssPrefix + "form_name", this.nodes.parent)[0];
 		this.nodes.description			= document.getElementsByClassName(this.cssPrefix + "form_description", this.nodes.parent)[0];
-		this.nodes.selectMessage		= document.getElementsByClassName(this.cssPrefix + "form_selectMessage", this.nodes.parent)[0];
+		this.nodes.maxFileSize		= document.getElementsByClassName(this.cssPrefix + "form_maxFileSize", this.nodes.parent)[0];
+		this.nodes.fileExtensions		= document.getElementsByClassName(this.cssPrefix + "form_fileExtensions", this.nodes.parent)[0];
 		this.nodes.price 				= document.getElementsByClassName(this.cssPrefix + "form_priceDiff", this.nodes.parent)[0];
 		this.nodes.optionPriceContainer = document.getElementsByClassName("optionPriceContainer", this.nodes.parent)[0];
+		this.nodes.optionSelectMessage = document.getElementsByClassName("optionSelectMessage", this.nodes.parent)[0];
+		this.nodes.optionFile = document.getElementsByClassName("optionFile", this.nodes.parent)[0];
 
 		this.nodes.valuesDefaultGroup 	= document.getElementsByClassName(this.cssPrefix + "form_values_group", this.nodes.parent)[0];
 
@@ -324,23 +328,32 @@ Backend.ProductOption.prototype =
 		this.nodes.type.realIndex	  = this.nodes.type.selectedIndex;
 
 		// if selected type is a selector type then show selector options fields (aka step 2)
-		if(this.type == this.TYPE_SELECT)
+		if (this.type == this.TYPE_SELECT)
 		{
 			this.nodes.tabsContainer.show();
 			this.nodes.optionPriceContainer.hide();
-			this.toggleSelectMessageFields(true);
+			this.nodes.optionSelectMessage.show();
 		}
 		else
 		{
 			this.nodes.tabsContainer.hide();
 			this.nodes.optionPriceContainer.show();
-			this.toggleSelectMessageFields(false);
+			this.nodes.optionSelectMessage.hide();
+		}
+
+		if (this.type == this.TYPE_FILE)
+		{
+			this.nodes.optionFile.show();
+		}
+		else
+		{
+			this.nodes.optionFile.hide();
 		}
 	},
 
-	toggleSelectMessageFields: function(isDisplayed)
+	togglemaxFileSizeFields: function(isDisplayed)
 	{
-		$A(this.nodes.parent.getElementsByClassName('optionSelectMessage')).each(
+		$A(this.nodes.parent.getElementsByClassName('optionmaxFileSize')).each(
 			function(node)
 			{
 				if (isDisplayed)
@@ -449,7 +462,8 @@ Backend.ProductOption.prototype =
 
 		this.nodes.name.value = this.productOption.name_lang ? this.productOption.name_lang : '';
 		this.nodes.description.value = this.productOption.description_lang ? this.productOption.description_lang : '';
-		this.nodes.selectMessage.value = this.productOption.selectMessage_lang ? this.productOption.selectMessage_lang : '';
+		this.nodes.maxFileSize.value = this.productOption.maxFileSize ? this.productOption.maxFileSize : '';
+		this.nodes.fileExtensions.value = this.productOption.fileExtensions ? this.productOption.fileExtensions : '';
 		this.nodes.displayType.value = this.productOption.displayType;
 
 		if (this.productOption.DefaultChoice)
@@ -469,7 +483,7 @@ Backend.ProductOption.prototype =
 		Event.observe(this.nodes.price, "input", function(e) { new NumericFilter(this); }, false);
 
 		$A(['name',
-			'isRequired',  'isDisplayed', 'isDisplayedInList', 'isDisplayedInCart', 'isPriceIncluded',
+			'isRequired', 'maxFileSize', 'fileExtensions', 'isDisplayed', 'isDisplayedInList', 'isDisplayedInCart', 'isPriceIncluded',
 			'type']).each(function(fieldName)
 		{
 			this.nodes.labels[fieldName].onclick = function() {

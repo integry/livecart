@@ -22,8 +22,11 @@ function smarty_function_selectfield($params, $smarty)
 	}
 	unset($params['options']);
 
+	$before = $params['before'];
+	$after = $params['after'];
+
 	$defaultValue = $params['value'];
-	unset($params['value']);
+	unset($params['value'], $params['before'], $params['after']);
 
 	// Check permissions
 	if($formParams['readonly'])
@@ -41,6 +44,8 @@ function smarty_function_selectfield($params, $smarty)
 	{
 		$content .= '<option></option>';
 	}
+
+	$content .= $before;
 
 	if ($formHandler)
 	{
@@ -69,6 +74,8 @@ function smarty_function_selectfield($params, $smarty)
 			}
 		}
 	}
+
+	$content .= $after;
 	$content .= "</select>";
 
 	return $content;

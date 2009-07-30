@@ -475,7 +475,7 @@ class CheckoutController extends FrontendController
 		}
 
 		$rateArray = array();
-		foreach ($rates as $key => $rate)
+		foreach ((array)$rates as $key => $rate)
 		{
 			$rateArray[$key] = $rate->toArray();
 		}

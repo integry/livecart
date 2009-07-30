@@ -215,11 +215,16 @@ abstract class FrontendController extends BaseController
 				$currencyArray[$currency->getID()] = $currency->toArray();
 				$currencyArray[$currency->getID()]['url'] = str_replace('_curr_', $currency->getID(), $returnRoute);
 			}
+			else
+			{
+				$currentCurrency = $currency->toArray();
+			}
 		}
 
 		$response = new BlockResponse();
 		$response->set('currencies', $currencyArray);
 		$response->set('current', $current);
+		$response->set('currentCurrency', $currentCurrency);
 		return $response;
 	}
 
@@ -297,29 +302,8 @@ abstract class FrontendController extends BaseController
 	{
 		ClassLoader::import('application.model.category.Category');
 
-		if ($this->categoryID < 1)
-		{
-		  	$this->categoryID = Category::ROOT_ID;
-		}
-
-		$category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
-
-		$search = array();
-
-		do
-		{
-			if (isset($parent))
-			{
-				$search[] = $parent->toArray();
-			}
-			else
-			{
-				$parent = $category;
-			}
-
-			$parent = $parent->parentNode->get();
-		}
-		while ($parent && ($parent->getID() > Category::ROOT_ID));
+		$category = $this->getCategory();
+		$search = $this->getCategory()->getPathNodeArray();
 
 		$subCategories = $category->getSubCategoryArray();
 		if ($subCategories)
@@ -355,7 +339,7 @@ abstract class FrontendController extends BaseController
 
 		$form = new Form($this->getValidator("productSearch", $this->request));
 		$form->enableClientSideValidation(false);
-		$form->set('id', $this->categoryID);
+		$form->set('id', $this->getCategory()->getID());
 		$form->set('q', $this->request->get('q'));
 
 		$response = new BlockResponse();
@@ -386,12 +370,7 @@ abstract class FrontendController extends BaseController
 	{
 		if (!isset($this->currentCategoryPath))
 		{
-			if ($this->categoryID < 1)
-			{
-				$this->categoryID = 1;
-			}
-
-			$currentCategory = Category::getInstanceByID($this->categoryID, Category::LOAD_DATA);
+			$currentCategory = $this->getCategory();
 
 			// get path of the current category (except for top categories)
 			if (!(1 == $currentCategory->getID()) && (1 < $currentCategory->parentNode->get()->getID()))
@@ -403,7 +382,7 @@ abstract class FrontendController extends BaseController
 			}
 			else
 			{
-				$topCategoryId = $this->categoryID;
+				$topCategoryId = $this->getCategory()->getID();
 			}
 
 			$this->topCategoryId = $topCategoryId;
@@ -429,7 +408,7 @@ abstract class FrontendController extends BaseController
 			}
 		}
 
-		$currentCategory = Category::getInstanceByID($this->categoryID, Category::LOAD_DATA);
+		$currentCategory = $this->getCategory();
 
 		// get sibling (same-level) categories (except for top categories)
 		if (!(1 == $currentCategory->getID()) && (1 < $currentCategory->parentNode->get()->getID()))
@@ -438,7 +417,7 @@ abstract class FrontendController extends BaseController
 
 			foreach ($path as &$node)
 			{
-			  	if ($node['ID'] != $this->categoryID)
+			  	if ($node['ID'] != $this->getCategory()->getID())
 			  	{
 					$current['subCategories'] = array(0 => &$node);
 				  	$current =& $node;
@@ -448,7 +427,7 @@ abstract class FrontendController extends BaseController
 					$current['subCategories'] =& $siblings;
 					foreach ($current['subCategories'] as &$sib)
 					{
-					  	if ($sib['ID'] == $this->categoryID)
+					  	if ($sib['ID'] == $this->getCategory()->getID())
 					  	{
 							$current =& $sib;
 						}
@@ -458,7 +437,7 @@ abstract class FrontendController extends BaseController
 		}
 
 		// get subcategories of the current category (except for the root category)
-		if ($this->categoryID > 1)
+		if ($this->getCategory()->getID() > 1)
 		{
 			$subcategories = $currentCategory->getSubcategorySet()->toArray();
 
@@ -470,7 +449,7 @@ abstract class FrontendController extends BaseController
 
 		$response = new BlockResponse();
 		$response->set('categories', $topCategories);
-		$response->set('currentId', $this->categoryID);
+		$response->set('currentId', $this->getCategory()->getID());
 		$response->set('lang', 'en');
 		return $response;
 	}
@@ -493,21 +472,16 @@ abstract class FrontendController extends BaseController
 
 		$tree = $tree[1]['subCategories'];
 
-		if ($this->categoryID < 1)
-		{
-		  	$this->categoryID = 1;
-		}
-
 		$response = new BlockResponse('categories', $tree);
 
-		$path = Category::getInstanceById($this->categoryID)->getPathNodeArray();
+		$path = $this->getCategory()->getPathNodeArray();
 		if ($path)
 		{
 			$response->set('topCategoryId', $path[0]['ID']);
 		}
 
-		$response->set('currentId', $this->categoryID);
-		$response->set('currentCategory', Category::getInstanceByID($this->categoryID)->toArray());
+		$response->set('currentId', $this->getCategory()->getID());
+		$response->set('currentCategory', $this->getCategory()->toArray());
 
 		return $response;
 	}
@@ -543,16 +517,12 @@ abstract class FrontendController extends BaseController
 		$response->set('currentId', $this->getTopCategoryId());
 		return $response;
 	}
+
 	protected function saleItemsBlock($useRoot = false)
 	{
 		ClassLoader::import('application.model.product.ProductFilter');
 
-		if ($useRoot || $this->categoryID < 1)
-		{
-		  	$this->categoryID = Category::ROOT_ID;
-		}
-
-		$category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
+		$category = $useRoot ? Category::getRootNode() : $this->getCategory();
 		$filter = new ProductFilter($category, new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isFeatured'), true)));
 		$filter->includeSubcategories();
 		$filter->setEnabledOnly();
@@ -579,12 +549,7 @@ abstract class FrontendController extends BaseController
 	{
 		ClassLoader::import('application.model.product.ProductFilter');
 
-		if ($useRoot || $this->categoryID < 1)
-		{
-		  	$this->categoryID = Category::ROOT_ID;
-		}
-
-		$category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
+		$category = $useRoot ? Category::getRootNode() : $this->getCategory();
 		$filter = new ProductFilter($category, new ARSelectFilter());
 		$filter->includeSubcategories();
 		$filter->setEnabledOnly();
@@ -611,17 +576,12 @@ abstract class FrontendController extends BaseController
 	{
 		ClassLoader::import('application.model.product.ProductFilter');
 
-		if ($useRoot || $this->categoryID < 1)
-		{
-		  	$this->categoryID = Category::ROOT_ID;
-		}
-
 		$cache = $this->application->getCache();
-		$key = array('bestsellers', $this->categoryID . '_' . $days);
+		$key = array('bestsellers', $this->getCategory()->getID() . '_' . $days);
 
 		if (!$cache->get($key))
 		{
-			$category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
+			$category = $this->getCategory();
 			$filter = new ProductFilter($category, new ARSelectFilter());
 			$filter->includeSubcategories();
 			$filter->setEnabledOnly();
@@ -749,6 +709,11 @@ abstract class FrontendController extends BaseController
 			  	$this->applyFilters($category['subCategories'], $categoryFilters);
 			}
 		}
+	}
+
+	protected function getCategory()
+	{
+		return Category::getRootNode();
 	}
 
 	protected function __get($name)

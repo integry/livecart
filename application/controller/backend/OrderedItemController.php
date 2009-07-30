@@ -495,6 +495,20 @@ class OrderedItemController extends StoreManagementController
 		return $this->getItemResponse($item);
 	}
 
+	public function downloadOptionFile()
+	{
+		ClassLoader::import('application.model.product.ProductOptionChoice');
+
+		$f = select(eq('OrderedItem.ID', $this->request->get('id')),
+					eq('ProductOptionChoice.optionID', $this->request->get('option')));
+
+		$set = ActiveRecordModel::getRecordSet('OrderedItemOption', $f, array('CustomerOrder', 'OrderedItem', 'ProductOptionChoice'));
+		if ($set->size())
+		{
+			return new ObjectFileResponse($set->get(0)->getFile());
+		}
+	}
+
 	private function getItemResponse(OrderedItem $item)
 	{
 		$item->customerOrder->get()->load();
