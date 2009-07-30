@@ -625,6 +625,20 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	 */
 	public function mergeItems()
 	{
+		$existing = array();
+		foreach ($this->orderedItems as $key => $item)
+		{
+			foreach ($existing as $eItem)
+			{
+				if ($item === $eItem)
+				{
+					unset($this->orderedItems[$key]);
+				}
+			}
+
+			$existing[] = $item;
+		}
+
 		$items = array($this->orderedItems);
 
 		if ($this->isMultiAddress->get())

@@ -975,7 +975,7 @@ class CsvImportController extends StoreManagementController
 	{
 		ClassLoader::import('application.helper.filter.HandleFilter');
 
-		return new RequestValidator('csvFile', $this->request);
+		return $this->getValidator('csvFile', $this->request);
 	}
 
 	private function getDelimiterForm()
