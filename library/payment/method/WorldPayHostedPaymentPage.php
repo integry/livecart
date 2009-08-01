@@ -71,17 +71,17 @@ class WorldPayHostedPaymentPage extends ExternalPayment
 
 	public function getOrderIdFromRequest($requestArray)
 	{
-		return $requestArray['merchant_order_id'];
+		return $requestArray['cartId'];
 	}
 
 	public function getReturnUrlFromRequest($requestArray)
 	{
-		return $requestArray['complete_url'];
+		return '';
 	}
 
 	public function isHtmlResponse()
 	{
-		return false;
+		return true;
 	}
 
 	public function getValidCurrency($currentCurrencyCode)
