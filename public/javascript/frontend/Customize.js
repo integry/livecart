@@ -481,7 +481,7 @@ CssCustomize.prototype =
 		{
 			if (document.styleSheets[k].href)
 			{
-				if ((!isTheme && (document.styleSheets[k].href == stylesheet.href)) || (isTheme && document.styleSheets[k].href.match(new RegExp("css\/" + stylesheet  + "\.css"))))
+				if (((!isTheme && (document.styleSheets[k].href == stylesheet.href)) || (isTheme && document.styleSheets[k].href.match(new RegExp("css\/" + stylesheet  + "\.css")))))
 				{
 					var sheet = document.styleSheets[k];
 

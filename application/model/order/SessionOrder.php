@@ -124,7 +124,7 @@ class SessionOrder
 			}
 
 			$user = $order->user->get();
-			if (!$user->isAnonymous())
+			if ($user && !$user->isAnonymous())
 			{
 				$user->load(true);
 				foreach (array('defaultShippingAddress', 'defaultBillingAddress') as $key)
