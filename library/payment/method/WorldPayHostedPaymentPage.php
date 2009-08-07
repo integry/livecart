@@ -45,24 +45,10 @@ class WorldPayHostedPaymentPage extends ExternalPayment
 
 	public function notify($requestArray)
 	{
-		$this->saveDebug($requestArray);
-		exit;
-
-		// check for secret word
-		if ($secretWord = $this->getConfigValue('secretWord'))
-		{
-			$orderNum = 'Y' == $requestArray['demo'] ? 1 : $requestArray['order_number'];
-			$expected = $secretWord . $requestArray['sid'] . $orderNum . $requestArray['total'];
-			if ($requestArray['key'] != strtoupper(md5($expected)))
-			{
-				return new TransactionError('Invalid 2Checkout secret word', $requestArray);
-			}
-		}
-
 		$result = new TransactionResult();
-		$result->gatewayTransactionID->set($requestArray['order_number']);
-		$result->amount->set($requestArray['total']);
-		$result->currency->set($this->get2CoCurrency());
+		$result->gatewayTransactionID->set($requestArray['cartId']);
+		$result->amount->set($requestArray['cost']);
+		$result->currency->set($requestArray['currency']);
 		$result->rawResponse->set($requestArray);
 		$result->setTransactionType(TransactionResult::TYPE_SALE);
 

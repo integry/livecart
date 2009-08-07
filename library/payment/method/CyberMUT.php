@@ -122,7 +122,7 @@ class CyberMUT extends ExternalPayment
 
 	private function CMCIC_hmac($data="")
 	{
-		$k1 = pack("H*", $this->getConfigValue('key1'));
+		$k1 = pack("H*", sha1($this->getConfigValue('key1')));
 		$l1 = strlen($k1);
 
 		$k2 = pack("H*", $this->getConfigValue('key2'));
