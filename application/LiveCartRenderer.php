@@ -121,8 +121,8 @@ class LiveCartRenderer extends SmartyRenderer
 			}
 		}
 
-		ksort($otherThemes);
-		return array_merge($themes, $otherThemes);
+		$themes = array_merge($themes, $otherThemes);
+		ksort($themes);
 
 		return $themes;
 	}
@@ -267,7 +267,7 @@ class LiveCartRenderer extends SmartyRenderer
 		return '.tpl' != strtolower(substr($objectName, -4));
 	}
 
-	private function getThemePaths($theme)
+	private function getThemePaths($theme, $includedThemes = array())
 	{
 		$paths = $inheritConf = array();
 		$paths[] = ClassLoader::getRealPath('storage.customize.view.theme.' . $theme . '.');
@@ -294,7 +294,11 @@ class LiveCartRenderer extends SmartyRenderer
 
 			foreach ($inherited as $parent)
 			{
-				$paths = array_merge($paths, $this->getThemePaths($parent));
+				if (empty($includedThemes[$parent]))
+				{
+					$includedThemes[$parent] = true;
+					$paths = array_merge($paths, $this->getThemePaths($parent, $includedThemes));
+				}
 			}
 		}
 

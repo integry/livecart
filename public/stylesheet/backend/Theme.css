@@ -1,0 +1,25 @@
+input.themeName
+{
+	width: 100%;
+	margin-left: -5px;
+}
+
+#addForm label
+{
+	float: none;
+}
+
+input.color
+{
+	width: 100px;
+}
+
+.sizeEntry select
+{
+	width: auto;
+}
+
+.sizeEntry input
+{
+	width: 60px;
+}

@@ -1,0 +1,56 @@
+_themes=Themes
+_settings=Settings
+_colors=Colors
+_files=Files
+_css=CSS Stylesheet
+
+_add_new=Add new theme
+_remove=Delete selected theme
+_export=Export
+_import=Import
+
+_parent_themes=Parent Theme(s)
+_parent_theme_x=Parent theme [_1]
+_theme_name=Theme name
+_err_theme_name_empty=Please enter the theme name
+_err_theme_exists=This theme already exists
+_theme_created=Theme created successfully
+_theme_saved=The theme was saved successfully
+
+_confirm_theme_del=Really delete the selected theme?
+_err_cannot_delete_core_theme=This is a core theme which cannot be deleted
+_theme_deleted=Theme [_1] has been deleted
+
+BACKGROUND=Page background
+BG_IMAGE=Background image
+BG_COLOR=Background color
+
+LAYOUT=Page layout
+CONTAINER_WIDTH=Page container width
+CONTAINER_BG_IMAGE=Container background image
+CONTAINER_BG_COLOR=Container background color
+
+TEXT=Text
+TEXT_COLOR=Text color
+TEXT_FONT=Font face
+
+CONTENT=Content area
+CONTENT_BG_IMAGE=Background image
+CONTENT_BG_COLOR=Background color
+
+HEADER=Header
+HEADER_IMAGE=Background image
+HEADER_COLOR=Background color
+HEADER_TEXT_COLOR=Text color
+HEADER_HEIGHT=Height
+
+FOOTER=Footer
+FOOTER_IMAGE=Background image
+FOOTER_COLOR=Background color
+FOOTER_TEXT_COLOR=Text color
+FOOTER_HEIGHT=Height
+
+BOXES=Menu boxes
+BOX_BG_IMAGE=Box background image
+BOX_BG_COLOR=Box background color
+BOX_BORDER=Box outer border

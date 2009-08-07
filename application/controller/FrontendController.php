@@ -373,7 +373,7 @@ abstract class FrontendController extends BaseController
 			$currentCategory = $this->getCategory();
 
 			// get path of the current category (except for top categories)
-			if (!(1 == $currentCategory->getID()) && (1 < $currentCategory->parentNode->get()->getID()))
+			if (!(1 == $currentCategory->getID()) && ($currentCategory->parentNode->get() && (1 < $currentCategory->parentNode->get()->getID())))
 			{
 				$path = $currentCategory->getPathNodeArray();
 
@@ -411,7 +411,7 @@ abstract class FrontendController extends BaseController
 		$currentCategory = $this->getCategory();
 
 		// get sibling (same-level) categories (except for top categories)
-		if (!(1 == $currentCategory->getID()) && (1 < $currentCategory->parentNode->get()->getID()))
+		if (!(1 == $currentCategory->getID()) && ($currentCategory->parentNode->get() && (1 < $currentCategory->parentNode->get()->getID())))
 		{
 			$siblings = $currentCategory->getSiblingArray();
 
@@ -713,7 +713,9 @@ abstract class FrontendController extends BaseController
 
 	protected function getCategory()
 	{
-		return Category::getRootNode();
+		$cat = Category::getRootNode();
+		$cat->load();
+		return $cat;
 	}
 
 	protected function __get($name)
