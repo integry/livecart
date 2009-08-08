@@ -801,7 +801,7 @@ class ProductController extends FrontendController
 		$f->setOrder(f('ProductFileGroup.position'));
 		$f->setOrder(f('ProductFile.position'));
 
-		return ActiveRecordModel::getRecordSetArray('ProductFile', $f, array('ProductFileGroup'));
+		return $this->product->getRelatedRecordSetArray('ProductFile', $f, array('ProductFileGroup'));
 	}
 
 	private function buildContactForm()
