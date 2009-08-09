@@ -36,6 +36,8 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 
 			foreach ($this->records as $record)
 			{
+				$isApplicable = false;
+
 				foreach ($instances as $item)
 				{
 					if ($this->isInstanceApplicable($item, $record))
