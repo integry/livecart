@@ -338,6 +338,11 @@ CssCustomize.prototype =
 			sheet.createRule(rule);
 		});
 
+		return this.getStyleSheetText(sheet);
+	},
+
+	getStyleSheetText: function(sheet)
+	{
 		var rules = [];
 		$A(sheet.cssRules).each(function(rule)
 		{
@@ -568,7 +573,7 @@ MockedCSSRule = function(selector)
 
 MockedCSSRule.prototype =
 {
-	setProperty: function(name, value, test)
+	setProperty: function(name, value)
 	{
 		if (name.match(/-moz-background/))
 		{
@@ -618,3 +623,5 @@ StyleSheet.prototype.getRule = function(selector, debug)
 		}
 	}
 }
+
+CSSStyleSheet.prototype.getRule = StyleSheet.prototype.getRule;

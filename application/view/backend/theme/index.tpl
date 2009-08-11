@@ -4,6 +4,7 @@
 {includeJs file="library/form/ActiveForm.js"}
 {includeJs file="library/TabControl.js"}
 {includeJs file="library/jscolor/jscolor.js"}
+{includeJs file="frontend/Customize.js"}
 {includeJs file="backend/Theme.js"}
 
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
@@ -36,8 +37,10 @@
 			</fieldset>
 
 			<li id="removeMenu" class="removeTreeNode"><a href="" onclick="pageHandler.deleteSelected(); return false;">{t _remove}</a></li>
+<div style="display: none;">
 			<li id="exportMenu" class="exportTreeNode"><a href="" onclick="pageHandler.showAddForm(); return false;">{t _export}</a></li>
 			<li id="importMenu" class="importTreeNode"><a href="" onclick="pageHandler.deleteSelected(); return false;">{t _import}</a></li>
+</div>
 		</ul>
 	</div>
 
@@ -51,12 +54,16 @@
 					<li id="tabColors" class="tab">
 						<a href="{link controller=backend.theme action=colors query='id=_id_'}">{t _colors}</a>
 					</li>
+
+<div style="display: none;">
 					<li id="tabCss" class="tab">
 						<a href="{link controller=backend.theme action=css query='id=_id_'}">{t _css}</a>
 					</li>
 					<li id="tabFiles" class="tab">
 						<a href="{link controller=backend.theme action=files query='id=_id_'}">{t _files}</a>
 					</li>
+</div>
+
 					{block THEME_TABS}
 				</ul>
 			</div>

@@ -1,6 +1,6 @@
 _themes=Themes
 _settings=Settings
-_colors=Colors
+_colors=Colors & Style
 _files=Files
 _css=CSS Stylesheet
 
@@ -20,10 +20,16 @@ _theme_saved=The theme was saved successfully
 _confirm_theme_del=Really delete the selected theme?
 _err_cannot_delete_core_theme=This is a core theme which cannot be deleted
 _theme_deleted=Theme [_1] has been deleted
+_colors_saved=Theme style has been updated successfully
 
+COLOR_SCHEME=Color scheme
+BACKGROUND_COLOR_1=Background color 1
+BACKGROUND_COLOR_2=Background color 2
+HEADING_COLOR=Table heading color
 BACKGROUND=Page background
 BG_IMAGE=Background image
-BG_COLOR=Background color
+BG_COLOR=Page background color
+BORDER_COLOR=Border color
 
 LAYOUT=Page layout
 CONTAINER_WIDTH=Page container width
@@ -32,11 +38,15 @@ CONTAINER_BG_COLOR=Container background color
 
 TEXT=Text
 TEXT_COLOR=Text color
+LINK_COLOR=Link color
+LINK_HOVER_COLOR=Link hover color
+LINK_STYLE=Link decoration
+LINK_HOVER_STYLE=Link hover decoration
 TEXT_FONT=Font face
 
 CONTENT=Content area
-CONTENT_BG_IMAGE=Background image
-CONTENT_BG_COLOR=Background color
+CONTENT_BG_IMAGE=Content background image
+CONTENT_BG_COLOR=Content background color
 
 HEADER=Header
 HEADER_IMAGE=Background image
@@ -51,6 +61,10 @@ FOOTER_TEXT_COLOR=Text color
 FOOTER_HEIGHT=Height
 
 BOXES=Menu boxes
-BOX_BG_IMAGE=Box background image
-BOX_BG_COLOR=Box background color
+BOX_BG_IMAGE=Box content background image
+BOX_BG_COLOR=Box content background color
 BOX_BORDER=Box outer border
+BOX_TITLE_COLOR=Box title color
+BOX_TITLE_IMAGE=Box title background image
+BOX_TITLE_BGCOLOR=Box title background color
+BOX_TITLE_BORDER=Box title bottom border

@@ -157,6 +157,13 @@
         	"descr": "_menu_descr_customize",
         	"items":
 			{
+        		"theme":
+				{
+        			"title": "_menu_theme",
+        			"controller": "backend.theme",
+                	"icon": "image/silk/color_wheel.png",
+                	"descr": "_menu_descr_theme"
+        		},
         		"live":
 				{
         			"title": "_menu_customization_mode",
@@ -189,13 +196,6 @@
                 	"role": "template",
                 	"icon": "image/silk/css.png",
                 	"descr": "_menu_descr_css_edit"
-        		},
-        		"theme":
-				{
-        			"title": "_menu_theme",
-        			"controller": "backend.theme",
-                	"icon": "image/silk/css.png",
-                	"descr": "_menu_descr_theme"
         		}
         	}
         },

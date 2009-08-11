@@ -1,5 +1,5 @@
 /* resets */
-html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, /*strong, */sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, /*strong, */sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, #border-color-var
 {
 	margin: 0; padding: 0; border: 0 solid; font-weight: inherit; font-style: inherit; font-size: 100%; font-family: inherit; vertical-align: baseline; background-repeat: no-repeat; background-position: center left;
 	border-color: #ddd;
@@ -51,12 +51,12 @@ caption, th, td
 }
 
 /* 100% height layout start >> */
-html, body
+html.height, html.height body
 {
 	height: 100%;
 }
 
-div#container
+html.height div#container
 {
 	position: relative; /* needed for footer positioning*/
 	height: auto !important; /* real browsers */
@@ -64,16 +64,16 @@ div#container
 	min-height: 100%; /* real browsers */
 }
 
-div#footer
+html.height div#footer
 {
 	position: absolute;
 	width: 100%;
 	bottom: 0; /* stick to bottom */
 }
 
-div#content
+html.height div#content
 {
-    padding-bottom: 150px;
+    margin-bottom: 75px;
 }
 /* << 100% height layout end */
 
@@ -420,19 +420,22 @@ div.addressBlock,
 .dynamicMenu li:hover li a,
 .dynamicMenu li.sfhover li a,
 .dynamicMenu li:hover li:hover li a,
-.dynamicMenu li.sfhover li:hover li a
+.dynamicMenu li.sfhover li:hover li a,
+#background-color1-var
 {
     background-color: #F9F9F9;
 }
 
 thead,
-tr.heading td
+tr.heading td,
+#heading-color-var
 {
     background-color: #ddd;
 }
 
 tr.even td,
-div.box .title
+div.box .title,
+#background-color2-var
 {
     background-color: #eee;
 }
@@ -491,6 +494,7 @@ tr.odd td, tr.even td
 {
 	margin-left: 190px;
 	padding: 0 10px;
+	padding-bottom: 10px;
 }
 
 #content.left
@@ -510,6 +514,13 @@ body.threeColumn #content
 	padding-right: 240px;
 }
 
+#content,
+#leftSide,
+#rightSide
+{
+	padding-top: 10px;
+}
+
 /*****************************
 	Header
 *****************************/
@@ -521,9 +532,19 @@ body.threeColumn #content
 	width: 100%;
 }
 
+#topMenuContainer
+{
+	margin-right: 1em;
+}
+
 #smallCart a.checkout
 {
 	background-image: url(../../image/silk/gif/cart_go.gif) center right no-repeat;
+}
+
+#logoContainer
+{
+	padding: 8px;
 }
 
 /*****************************
@@ -580,7 +601,6 @@ fieldset.container
 {
     border-top-width: 1px;
     border-bottom-width: 1px;
-    margin-bottom: 10px;
     padding: 3px 1em;
 }
 

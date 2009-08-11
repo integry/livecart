@@ -2,6 +2,7 @@
 
 ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
 ClassLoader::import('application.model.template.Theme');
+ClassLoader::import('application.model.template.EditedCssFile');
 
 /**
  * Manage design themes
@@ -102,12 +103,66 @@ class ThemeController extends StoreManagementController
 		$inst = new Theme($this->request->get('id'), $this->application);
 
 		$measurements = array('', 'auto', 'px', '%', 'em');
-		$measurements = array_combine($measurements, $measurements);
+		$borderStyles = array('', 'hidden', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset');
+		$textStyles = array('', 'none', 'underline');
 
 		$response = new ActionResponse();
 		$response->set('config', $this->getParsedStyleConfig($inst));
 		$response->set('form', $this->buildColorsForm($inst));
-		$response->set('measurements', $measurements);
+		$response->set('measurements', array_combine($measurements, $measurements));
+		$response->set('borderStyles', array_combine($borderStyles, $borderStyles));
+		$response->set('textStyles', array_combine($textStyles, $textStyles));
+		$response->set('theme', $this->request->get('id'));
+		return $response;
+	}
+
+	public function saveColors()
+	{
+		$theme = $this->request->get('id');
+		$css = new EditedCssFile($theme);
+		$code = $this->request->get('css');
+
+		// process uploaded files
+		$filePath = ClassLoader::getRealPath('public.upload.theme.' . $theme . '.');
+		if (!file_exists($filePath))
+		{
+			mkdir($filePath, 0777, true);
+		}
+
+		foreach ($_FILES as $var => $file)
+		{
+			if (!$file['name'])
+			{
+				continue;
+			}
+
+			$name = $var . '_' . $file['name'];
+			move_uploaded_file($file['tmp_name'], $filePath . $name);
+			$code = str_replace('url(' . $var . ')', 'url(\'../theme/' . $theme .'/' . $name . '\')', $code);
+		}
+
+		$css->setCode($code);
+		$res = $css->save();
+
+		return new ActionRedirectResponse('backend.theme', 'cssIframe', array('query' => array('theme' => $theme, 'saved' => true)));
+	}
+
+	public function cssIframe()
+	{
+		$this->setLayout('empty');
+
+		$theme = $this->request->get('theme');
+		$css = new EditedCssFile($theme);
+
+		if (!$css->getCode())
+		{
+			$css->setCode(' ');
+			$css->save();
+		}
+
+		$response = new ActionResponse();
+		$response->set('theme', $theme);
+		$response->set('file', $css->getFileName());
 		return $response;
 	}
 
