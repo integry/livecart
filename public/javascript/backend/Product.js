@@ -69,7 +69,11 @@ Backend.Product =
 		Element.hide($('categoryTabs'));
 		Element.show(container);
 
-		tinyMCE.idCounter = 0;
+		if (window.tinyMCE)
+		{
+			tinyMCE.idCounter = 0;
+		}
+
 		ActiveForm.prototype.initTinyMceFields(container);
 		this.toggleSkuField(container.down('form').elements.namedItem('autosku'));
 

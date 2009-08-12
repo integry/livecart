@@ -371,6 +371,9 @@ SHOW_BACKEND_LANG_FILES=Allow to edit store back-end language files
 _template_management=Template Management
 SHOW_BACKEND_TEMPLATE_FILES=Allow to edit store back-end template files
 
+_admin_misc=Miscellaneous Options
+DISABLE_WYSIWYG=Disable WYSIWYG editors
+
 # SSL options
 _ssl_opts=Security
 _secure_urls=Use https URLs for

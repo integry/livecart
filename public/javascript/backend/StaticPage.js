@@ -60,7 +60,11 @@ Backend.StaticPage.prototype =
 
 	initForm: function()
 	{
-		tinyMCE.idCounter = 0;
+		if (window.tinyMCE)
+		{
+			tinyMCE.idCounter = 0;
+		}
+
 		ActiveForm.prototype.initTinyMceFields($('editContainer'));
 	},
 
@@ -118,7 +122,11 @@ Backend.StaticPage.prototype =
 
 	displayPage: function(response)
 	{
-		tinyMCE.idCounter = 0;
+		if (window.tinyMCE)
+		{
+			tinyMCE.idCounter = 0;
+		}
+
 		this.treeBrowser.hideFeedback();
 		this.initForm();
 		Event.observe($('cancel'), 'click', this.cancel.bindAsEventListener(this));

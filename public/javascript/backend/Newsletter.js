@@ -88,7 +88,11 @@ Backend.Newsletter =
 		Element.hide($('newsletterTabContainer'));
 		Element.show(container);
 
-		tinyMCE.idCounter = 0;
+		if (window.tinyMCE)
+		{
+			tinyMCE.idCounter = 0;
+		}
+
 		ActiveForm.prototype.initTinyMceFields(container);
 
 		this.reInitAddForm();

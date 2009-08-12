@@ -58,8 +58,6 @@ class CyberMUT extends ExternalPayment
 
 	public function notify($requestArray)
 	{
-		$this->saveDebug($requestArray);
-
 		$requestArray['version'] = '1.2open';
 		$keys = array('TPE', 'date', 'montant', 'reference', 'texte-libre', 'version', 'code-retour');
 		$values = array();
