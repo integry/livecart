@@ -6,7 +6,7 @@
 				{img src=$product.DefaultImage.paths.3 alt=$product.DefaultImage.title_lang|escape id="mainImage"}
 			</a>
 		{else}
-			{img src="image/missing_large.jpg" alt="" id="mainImage"}
+			{img src='MISSING_IMG_LARGE'|config alt="" id="mainImage"}
 		{/if}
 	</div>
 	{if $images|@count > 1}

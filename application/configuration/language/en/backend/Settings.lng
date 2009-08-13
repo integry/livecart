@@ -78,6 +78,11 @@ NAME=Name
 PRICE=Price
 DETAILS=Link to detail page
 
+_missing_images=Missing Product Images
+MISSING_IMG_THUMB=Thumbnails (side menus, etc.)
+MISSING_IMG_SMALL=Small images (product lists in categories)
+MISSING_IMG_LARGE=Large images (product page)
+
 _category_filters=Category Page Filters
 ENABLE_MAN_FILTERS=Enable manufacturer filters
 ENABLE_PRICE_FILTERS=Enable price filters
