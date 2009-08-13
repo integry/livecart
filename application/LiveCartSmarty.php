@@ -133,6 +133,25 @@ class LiveCartSmarty extends Smarty
 		return $_contents;
 	}
 
+	public function disableTemplateLocator()
+	{
+		if (!empty($this->_plugins['prefilter']['templateLocator']))
+		{
+			$this->isTemplateLocator = true;
+			$this->unregister_prefilter('templateLocator');
+			unset($this->_plugins['prefilter']['templateLocator']);
+		}
+	}
+
+	public function enableTemplateLocator()
+	{
+		if (!empty($this->templateLocator))
+		{
+			$this->_plugins['prefilter']['templateLocator'] = $this->templateLocator;
+			unset($this->templateLocator);
+		}
+	}
+
 	private function translatePath($path)
 	{
 		if (substr($path, 0, 7) == 'custom:')

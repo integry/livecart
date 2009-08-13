@@ -304,16 +304,14 @@ class LiveCart extends Application
 		{
 			ClassLoader::import('application.LiveCartRenderer');
 			$this->renderer = new LiveCartRenderer($this);
+
+			if ($this->isTemplateCustomizationMode() && !$this->isBackend)
+			{
+				$this->renderer->getSmartyInstance()->register_prefilter(array($this, 'templateLocator'));
+			}
 		}
 
-		$renderer = parent::getRenderer();
-
-		if ($this->isTemplateCustomizationMode() && !$this->isBackend)
-		{
-			$this->renderer->getSmartyInstance()->register_prefilter(array($this, 'templateLocator'));
-		}
-
-		return $renderer;
+		return $this->renderer;
 	}
 
 	public function isBackend()
