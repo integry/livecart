@@ -16,7 +16,7 @@
 
 	<div class="clear"></div>
 
-	<form action="{link controller=checkout action=payExpressComplete}" method="POST" id="expressComplete">
+	<form action="{link controller=checkout action=payExpressComplete}" method="post" id="expressComplete">
 
 		<input type="submit" class="submit" value="{tn Complete Your Order}" />
 

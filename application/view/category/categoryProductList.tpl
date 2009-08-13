@@ -28,7 +28,7 @@
 	</div>
 
 	{if $products}
-		<form action="{link controller=category action=listAction returnPath=true}" method="POST">
+		<form action="{link controller=category action=listAction returnPath=true}" method="post">
 			{include file="category/productListLayout.tpl" products=$products}
 		</form>
 	{/if}

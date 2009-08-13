@@ -6,7 +6,6 @@
 				{fun name="dynamicCategoryTree" node=$category.subCategories level=$level+1}
 			{/if}
 		{/foreach}
-		</ul>
 	{/if}
 {/defun}
 
