@@ -21,7 +21,7 @@
 
 		<ul>
 			<li><a href="{link controller=user action=viewOrder id=$order.ID}" class="viewOrder">{t _view_details}</a></li>
-			{if !$order.isCancelled}
+			{if !$order.isCancelled && !'DISABLE_INVOICES'|config}
 				<li><a href="{link controller=user action=orderInvoice id=$order.ID}" class="invoice">{t _order_invoice}</a></li>
 			{/if}
 			<li><a href="{link controller=user action=reorder id=$order.ID}" class="reorder">{t _reorder}</a></li>

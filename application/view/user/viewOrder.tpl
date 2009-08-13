@@ -28,7 +28,7 @@
 		<div class="clear"></div>
 
 		<p>
-			{if !$order.isCancelled}
+			{if !$order.isCancelled && !'DISABLE_INVOICES'|config}
 				<a href="{link controller=user action=orderInvoice id=`$order.ID`}" target="_blank" class="invoice">{t _order_invoice}</a>
 			{/if}
 			<a href="{link controller=user action=reorder id=`$order.ID`}" class="reorder">{t _reorder}</a>
