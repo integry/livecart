@@ -6,6 +6,8 @@
 {includeJs file="library/jscolor/jscolor.js"}
 {includeJs file="frontend/Customize.js"}
 {includeJs file="backend/Theme.js"}
+{includeJs file="library/editarea/edit_area_full.js"}
+{includeJs file="backend/CssEditor.js"}
 
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 {includeCss file="library/TabControl.css"}
@@ -57,8 +59,9 @@
 
 <div style="display: none;">
 					<li id="tabCss" class="tab">
-						<a href="{link controller=backend.theme action=css query='id=_id_'}">{t _css}</a>
+						<a href="{link controller=backend.cssEditor action=edit query='file=_id_'}">{t _css}</a>
 					</li>
+
 					<li id="tabFiles" class="tab">
 						<a href="{link controller=backend.theme action=files query='id=_id_'}">{t _files}</a>
 					</li>

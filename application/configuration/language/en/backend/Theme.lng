@@ -22,6 +22,14 @@ _err_cannot_delete_core_theme=This is a core theme which cannot be deleted
 _theme_deleted=Theme [_1] has been deleted
 _colors_saved=Theme style has been updated successfully
 
+_repeat=Repeat image
+no-repeat=None
+repeat=Horizontally and vertically
+repeat-x=Horizontally
+repeat-y=Vertically
+
+_position=Background position
+
 COLOR_SCHEME=Color scheme
 BACKGROUND_COLOR_1=Background color 1
 BACKGROUND_COLOR_2=Background color 2

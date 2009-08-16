@@ -191,6 +191,11 @@ Backend.Theme.prototype =
 
 Backend.ThemeColor = function(theme)
 {
+	if (!theme)
+	{
+		theme = 'barebone';
+	}
+
 	this.iframe = $('iframe_' + theme);
 	this.form = $('colors_' + theme);
 	this.styleSheet = this.iframe.contentDocument.styleSheets[0];
@@ -258,6 +263,12 @@ Backend.ThemeColorProperty = function(manager, element, selector, property, type
 	this.findUsedNodes();
 	this.bindEvents();
 	this.displayCurrentValue();
+
+	if ('upload' == this.type)
+	{
+		this.repeat = new Backend.ThemeColorProperty(manager, this.nodes.repeat, selector, 'background-repeat', '');
+		this.position = new Backend.ThemeColorProperty(manager, this.nodes.position, selector, 'background-position', '');
+	}
 }
 
 Backend.ThemeColorProperty.prototype =
@@ -279,6 +290,8 @@ Backend.ThemeColorProperty.prototype =
 		{
 			this.nodes.upload = this.element.down('input.file');
 			this.nodes.url = this.element.down('input.text');
+			this.nodes.repeat = this.element.down('div.repeat');
+			this.nodes.position = this.element.down('div.position');
 		}
 		else
 		{
@@ -332,6 +345,12 @@ Backend.ThemeColorProperty.prototype =
 		});
 
 		rule.style.cssText = text;
+
+		if (('upload' == this.type) && properties[this.property])
+		{
+			this.repeat.updateCSSValue();
+			this.position.updateCSSValue();
+		}
 	},
 
 	displayCurrentValue: function()
@@ -406,7 +425,7 @@ Backend.ThemeColorProperty.prototype =
 			}
 			else
 			{
-				if (this.nodes.url.value.substring(0, 4) != 'url(')
+				if (this.nodes.url.value.length && (this.nodes.url.value.substring(0, 4) != 'url('))
 				{
 					this.nodes.url.value = 'url(\'' + this.nodes.url.value + '\')';
 				}

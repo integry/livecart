@@ -102,18 +102,27 @@ class ThemeController extends StoreManagementController
 	{
 		$inst = new Theme($this->request->get('id'), $this->application);
 
-		$measurements = array('', 'auto', 'px', '%', 'em');
-		$borderStyles = array('', 'hidden', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset');
-		$textStyles = array('', 'none', 'underline');
-
 		$response = new ActionResponse();
 		$response->set('config', $this->getParsedStyleConfig($inst));
 		$response->set('form', $this->buildColorsForm($inst));
-		$response->set('measurements', array_combine($measurements, $measurements));
-		$response->set('borderStyles', array_combine($borderStyles, $borderStyles));
-		$response->set('textStyles', array_combine($textStyles, $textStyles));
+		$response->set('measurements', $this->getSelectOptions(array('', 'auto', 'px', '%', 'em')));
+		$response->set('borderStyles', $this->getSelectOptions(array('', 'hidden', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset')));
+		$response->set('textStyles', $this->getSelectOptions(array('', 'none', 'underline')));
+		$response->set('bgRepeat', $this->getSelectOptions(array('repeat', 'no-repeat', 'repeat-x', 'repeat-y')));
+		$response->set('bgPosition', $this->getSelectOptions(array('left top', 'left center', 'left bottom', 'center top', 'center center', 'center bottom', 'right top', 'right center', 'right bottom')));
 		$response->set('theme', $this->request->get('id'));
 		return $response;
+	}
+
+	private function getSelectOptions($options)
+	{
+		$out = array();
+		foreach ($options as $opt)
+		{
+			$out[$opt] = $this->translate($opt);
+		}
+
+		return $out;
 	}
 
 	public function saveColors()
@@ -127,6 +136,7 @@ class ThemeController extends StoreManagementController
 		if (!file_exists($filePath))
 		{
 			mkdir($filePath, 0777, true);
+			chmod($filePath, 0777);
 		}
 
 		foreach ($_FILES as $var => $file)

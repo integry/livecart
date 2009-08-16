@@ -10,6 +10,10 @@
 						{filefield name=$property.var class="file"}
 						- {t _or} -
 						{textfield class="text"}
+						<div class="imageOptions">
+							<div class="repeat">{t _repeat}: {selectfield class="repeat" options=$bgRepeat}</div>
+							<div class="position">{t _position}: {selectfield class="position" options=$bgPosition}</div>
+						</div>
 					{elseif 'color' == $property.type}
 						{textfield id=$property.id class="text color"}
 						<script type="text/javascript">
