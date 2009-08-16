@@ -112,7 +112,7 @@ class PaypalExpressCheckout extends ExpressPayment
 
 	public static function getSupportedCurrencies()
 	{
-		return array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD');
+		return array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD', 'NZD', 'CHF', 'HKD', 'SGD', 'SEK', 'DKK', 'PLN', 'NOK', 'HUF', 'CZK');
 	}
 
 	/**
