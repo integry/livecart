@@ -49,15 +49,26 @@ class SessionUser
 
 	public static function setUser(User $user)
 	{
+		$app = ActiveRecordModel::getApplication();
+
+		$app->processRuntimePlugins('session/before-login');
+
 		$session = new Session();
 		$session->set('User', $user->getID());
+
+		$app->processRuntimePlugins('session/login');
 	}
 
 	public static function destroy()
 	{
+		$app = ActiveRecordModel::getApplication();
+		$app->processRuntimePlugins('session/before-logout');
+
 		$session = new Session();
 		$session->unsetValue('User');
 		$session->unsetValue('CustomerOrder');
+
+		$app->processRuntimePlugins('session/logout');
 	}
 
 	/**

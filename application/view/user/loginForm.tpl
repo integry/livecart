@@ -1,4 +1,4 @@
-<form action="{link controller=user action=doLogin}" method="post" />
+<form action="{link controller=user action=doLogin}" method="post" id="loginForm" />
 	<p>
 	   <label for="email">{t _your_email}:</label>
 	   <input type="text" class="text" id="email" name="email" value="{$email|escape}" />
