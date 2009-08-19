@@ -1,0 +1,17 @@
+UspsShipping_size=Pakkestørrelse
+UspsShipping_apiUrl=USPS API URL
+UspsShipping_userId=USPS API brugernavn
+UspsShipping=USPS
+UspsShipping_isMachinable=Pakke er maskinsorterbar
+_USPS_ITL_OPTS=Internationale forsendelsesmuligheder
+UspsShipping_priorityPackageType=Prioritets pakke
+UspsShipping_international=Tilkoblet internationale postservices
+_USPS_DOMESTIC_OPTS=Indenrigs forsendelsesmuligheder
+UspsShipping_domestic=Tilkoblet postservices
+_USPS_API_ACCESS=USPS forsendelses API adgang
+Priority=Prioritet
+Express=Ekspres
+Parcel=Parcel Post
+Library=Library Mail
+BPM=Bound Printed Metter
+Media=Media Mail

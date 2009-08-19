@@ -1,0 +1,11 @@
+_offline_methods=Offline betalingsmåder
+Category=Kategorier
+CustomerOrder=Ordre
+Manufacturer=Producenter
+User=Brugere
+UserGroup=Brugergrupper
+UserAddress=Adresser
+_SpecField_displayed_in_product_list=Synlig for kunde
+_custom_fields=Brugerfelt
+_show_in_invoice=Vis på faktura
+_SpecField_displayed_on_front_page=Redigerbar for kunde

@@ -1,0 +1,13 @@
+_shipment=Forsendelse
+_shipping_service_is_not_selected=Forsendelsesmåde er ikke valgt
+_select_shippment=Vælg forsendelsesmåde
+_done_adding_products=Færdig med at tilføje produkter
+_select_product=Tilføj produkter til ordre
+_downloadable_item_already_exists_in_this_order=Denne enhed til download eksisterer allerede i denne ordre
+_error_removing_item_from_shipment=Fejl ved fjernelse af enhed fra forsendelse
+_item_was_successfully_removed_from_shipment=Enheden blev fjernet succesfuldt fra forsendelsen
+_item_has_been_successfuly_saved=Enheden blev tilføjet succesfuldt til ordren
+_error_updating_item_quantity=Fejl ved opdatering af enhedskvalitet
+_ordered_item_quantity_was_updated=Enhedskvalitet blev opdateret
+_this_shipping_service_has_no_available_rates=Denne service ikke ikke tilgængelig for brugerzone og ordrepris
+_ordered_item_was_successfully_moved=Produktet blev succesfuldt flyttet til en anden forsendelse

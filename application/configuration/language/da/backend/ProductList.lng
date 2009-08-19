@@ -1,0 +1,10 @@
+_select_product=Vælg et produkt
+_add_new_list=Tilføj produktliste
+_cancel_adding_new_list=Annuller tilføjelse af ny produktliste
+_add_product=Tilføj produkt til liste
+_add_list_title=Tilføj ny produktliste
+_list_name=Listenavn
+_err_relationship_name_is_empty=Venligst indtast listenavnet
+_really_remove_product_list=Ønsker du virkeligt at slette denne produktliste?
+_really_remove_product_from_list=Ønsker du virkeligt at fjerne dette produkt fra listen?
+_added_to_product_list=Produktet er blevet tilføjet til listen
