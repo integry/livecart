@@ -1,5 +1,5 @@
 {form action="controller=product action=rate id=`$product.ID`" handle=$ratingForm method="POST" onsubmit="new Product.Rating(this); return false;" onchange="Product.Rating.prototype.updatePreview(event);"}
-<table class="productTable">
+<table class="productDetailsTable">
 	<tr class="first heading">
 		<td class="param"></td>
 		{section start=0 loop='RATING_SCALE'|config name=rate}

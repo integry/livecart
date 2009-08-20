@@ -70,6 +70,7 @@ abstract class FrontendController extends BaseController
 		$this->addBlock('NEWS', 'latestNews', 'block/box/latestNews');
 		$this->addBlock('QUICKNAV', 'blockQuickNav', 'block/box/quickNav');
 		$this->addBlock('COMPARE', array('compare', 'compareMenu'));
+		$this->addBlock('MINI_CART', array('order', 'miniCart'), 'order/miniCartBlock');
 	}
 
 	public function getRequestCurrency()
@@ -744,6 +745,23 @@ abstract class FrontendController extends BaseController
 			  	$this->applyFilters($category['subCategories'], $categoryFilters);
 			}
 		}
+	}
+
+	protected function ajaxResponse(CompositeJSONResponse $response)
+	{
+		$response->set('orderSummary', SessionOrder::getOrderData());
+
+		if ($msg = $this->getMessage())
+		{
+			$response->set('successMessage', $msg);
+		}
+
+		if ($error = $this->getErrorMessage())
+		{
+			$response->set('errorMessage', $error);
+		}
+
+		return $response;
 	}
 
 	protected function __get($name)

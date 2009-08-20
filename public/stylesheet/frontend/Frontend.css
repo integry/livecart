@@ -1352,7 +1352,7 @@ ul.attributeList.singleValue li
 	padding: 4px;
 }
 
-#rateProduct .productTable .errorText
+#rateProduct table .errorText
 {
 	position: relative;
 	white-space: nowrap;
@@ -1831,6 +1831,25 @@ tr.topLine td
 .completeOverview .shipment
 {
 	width: auto;
+}
+
+#miniCartContents
+{
+	padding-bottom: 0.5em;
+	font-size: 85%;
+}
+
+.miniCartCount,
+.miniCartTotalAmount
+{
+	font-weight: bold;
+}
+
+.miniCartTotal
+{
+	border-top-width: 1px;
+	text-align: center;
+	padding: 0.5em;
 }
 
 /***************************
@@ -2463,6 +2482,22 @@ img.calendar_button
 .compactProductList li
 {
 	margin-bottom: 7px;
+}
+
+/*************************
+	AJAX
+*************************/
+#ajaxMessage
+{
+	position: fixed;
+	top: 1em;
+	right: 1em;
+	z-index: 1000;
+}
+
+#ajaxMessage.success
+{
+
 }
 
 /*************************

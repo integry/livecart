@@ -262,6 +262,13 @@ LiveCart.AjaxRequest.prototype = {
 				// IE 6 won't let add new properties to the request object
 				response = { responseData: responseData }
 			}
+
+			if (responseData.__redirect)
+			{
+				window.location.href = responseData.__redirect;
+			}
+
+			Observer.processArray(responseData);
 		}
 
 		if (contentType && contentType.match(/text\/javascript/) && $('confirmations'))
@@ -533,6 +540,42 @@ LiveCart.AjaxUpdater.prototype = {
 	reportError: function(response)
 	{
 		alert('Error!\n\n' + response.responseText);
+	}
+}
+
+Observer =
+{
+	observers: {},
+
+	add: function(key, method, params)
+	{
+		if (!this.observers[key])
+		{
+			this.observers[key] = [];
+		}
+
+		this.observers[key].push([method, params]);
+	},
+
+	process: function(key, value)
+	{
+		if (!this.observers[key])
+		{
+			return;
+		}
+
+		$A(this.observers[key]).each(function(observer)
+		{
+			observer[0](value, observer[1]);
+		});
+	},
+
+	processArray: function(responseData)
+	{
+		$H(responseData).each(function(v)
+		{
+			this.process(v[0], v[1]);
+		}.bind(this));
 	}
 }
 

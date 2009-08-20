@@ -361,6 +361,11 @@ class OrderController extends FrontendController
 
 		ActiveRecordModel::beginTransaction();
 
+		if (!$this->request->get('count'))
+		{
+			$this->request->set('count', 1);
+		}
+
 		if ($id = $this->request->get('id'))
 		{
 			$res = $this->addProductToCart($id);
@@ -402,7 +407,28 @@ class OrderController extends FrontendController
 
 		ActiveRecordModel::commit();
 
-		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
+		if (!$this->isAjax())
+		{
+			return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
+		}
+		else
+		{
+			return $this->cartUpdate();
+		}
+	}
+
+	public function cartUpdate()
+	{
+		$response = new CompositeJSONResponse();
+		$response->addAction('miniCart', 'order', 'miniCartBlock');
+		return $this->ajaxResponse($response);
+	}
+
+	public function miniCartBlock()
+	{
+		$this->order->loadAll();
+		$this->order->getTotal(true);
+		return new BlockResponse('order', $this->order->toArray());
 	}
 
 	private function addProductToCart($id, $prefix = '')
@@ -425,7 +451,9 @@ class OrderController extends FrontendController
 		$variations = !$product->parent->get() ? $product->getVariationData($this->application) : array();
 
 		ClassLoader::import('application.controller.ProductController');
-		if (!ProductController::buildAddToCartValidator($product->getOptions(true)->toArray(), $variations, $prefix)->isValid())
+
+		$validator = ProductController::buildAddToCartValidator($product->getOptions(true)->toArray(), $variations, $prefix);
+		if (!$validator->isValid())
 		{
 			return $productRedirect;
 		}
@@ -502,7 +530,15 @@ class OrderController extends FrontendController
 
 		$this->setMessage($this->makeText('_added_to_wishlist', array($product->getName($this->getRequestLanguage()))));
 
-		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
+		if (!$this->isAjax())
+		{
+			return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
+		}
+		else
+		{
+			$response = new CompositeJSONResponse();
+			return $this->ajaxResponse($response);
+		}
 	}
 
 	public function modifyItemOption(OrderedItem $item, ProductOption $option, Request $request, $varName)

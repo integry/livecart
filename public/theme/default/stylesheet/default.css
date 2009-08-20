@@ -573,6 +573,14 @@ ul.productList .pricingInfo span.price,
 	display: none;
 }
 
+.pricingInfo .progressIndicator
+{
+	position: absolute;
+	display: block;
+	top: 0;
+	left: 0;
+}
+
 .pricingInfo span.listPrice
 {
 	display: inline;
@@ -590,6 +598,14 @@ ul.productList .pricingInfo span.price,
 	top: 30px;
 	left: 0;
 	text-align: center;
+}
+
+.addToCart .progressIndicator
+{
+	position: absolute;
+	left: 5px;
+	top: 5px;
+	z-index: 5000;
 }
 
 ul.productList .image

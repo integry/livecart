@@ -534,6 +534,33 @@ Compare.Menu.prototype =
 }
 
 /*****************************
+	Product filters
+*****************************/
+Filter = {}
+
+Filter.SelectorMenu = function(container, isPageReload)
+{
+	$A(container.getElementsByTagName('select')).each(function(el)
+	{
+		el.onchange = function()
+		{
+			if (!isPageReload)
+			{
+				new LiveCart.AjaxUpdater(this.value, container, null, null,
+					function()
+					{
+						container.parentNode.replaceChild(container.down('div'), container);
+					});
+			}
+			else
+			{
+				window.location.href = this.value;
+			}
+		}
+	});
+}
+
+/*****************************
 	User related JS
 *****************************/
 User = {}
@@ -643,4 +670,204 @@ User.ShippingFormToggler.prototype =
 			Element.show(this.container);
 		}
 	}
+}
+
+Frontend = {}
+
+Frontend.PopupCart =
+{
+
+}
+
+Frontend.AddToCartPopup =
+{
+
+}
+
+Frontend.OnePageCheckout = function(url)
+{
+	this.data = {};
+	this.load(url);
+}
+
+Frontend.OnePageCheckout.prototype =
+{
+	load: function()
+	{
+		new LiveCart.AjaxRequest(url, null, this.loaded.bind(this));
+	},
+
+	loaded: function(originalRequest)
+	{
+		console.log(originalRequest);
+		this.show(originalRequest.responseData.html);
+	},
+
+	show: function(html)
+	{
+		var container = this.getContainer();
+		container.update(html);
+		container.show();
+	},
+
+	showNavigation: function()
+	{
+
+	},
+
+	hideNavigation: function()
+	{
+
+	},
+
+	loadStep: function()
+	{
+
+	},
+
+	switchStep: function()
+	{
+
+	},
+
+	close: function()
+	{
+		$('onePageCheckout').hide();
+	},
+
+	complete: function()
+	{
+
+	},
+
+	getContainer: function()
+	{
+		var container = $('onePageCheckout');
+		if (!container)
+		{
+			container = document.createElement('div');
+			document.body.appendChild(container);
+		}
+
+		return container;
+	}
+}
+
+Frontend.SmallCart = function(value, params)
+{
+	var container = $(params);
+	var basketCount = container.down('.menu_cartItemCount');
+	if (basketCount)
+	{
+		(basketCount.down('strong') || basketCount.down('span')).update(value.basketCount);
+		if (value.basketCount > 0)
+		{
+			basketCount.show();
+		}
+		else
+		{
+			basketCount.hide();
+		}
+	}
+
+	var isOrderable = container.down('.menu_isOrderable');
+	if (isOrderable)
+	{
+		if (value.isOrderable)
+		{
+			isOrderable.show();
+		}
+		else
+		{
+			isOrderable.hide();
+		}
+	}
+}
+
+Frontend.MiniCart = function(value, params)
+{
+	$(params).update(value);
+	var fc = $(params).down('#miniCart');
+	$(params).parentNode.replaceChild(fc, $(params));
+	new Effect.Highlight(fc);
+}
+
+Frontend.Message = function(value, params)
+{
+	var container = $(params);
+
+}
+
+Frontend.Message.root = document.body;
+
+Frontend.Ajax = {}
+
+Frontend.Ajax.Message = function(container)
+{
+	var showMessage = function(value, container)
+	{
+		container.update(value);
+		new Effect.Appear(msgContainer);
+		window.setTimeout(function() { new Effect.Fade(msgContainer); }, 5000);
+	}
+
+	var msgContainer = $(document.createElement('div'));
+	msgContainer.hide();
+	msgContainer.id = 'ajaxMessage';
+	msgContainer.className = 'confirmationMessage';
+	$('container').appendChild(msgContainer);
+	Observer.add('successMessage', showMessage, msgContainer);
+}
+
+Frontend.Ajax.AddToCart = function(container)
+{
+	var handleClick = function(e)
+	{
+		Event.stop(e);
+		var button = Event.element(e);
+		var a = document.createElement('a');
+		button.parentNode.appendChild(a);
+		new LiveCart.AjaxRequest(button.href, a, function () { a.parentNode.removeChild(a); new Effect.Highlight(button); });
+	}
+
+	$A($(container).getElementsBySelector('a.addToCart')).each(function(button)
+	{
+		Event.observe(button, 'click', handleClick);
+	});
+}
+
+Frontend.Ajax.AddToWishList = function(container)
+{
+	var handleClick = function(e)
+	{
+		Event.stop(e);
+		var a = Event.element(e);
+		new LiveCart.AjaxRequest(a.href, a, function () { new Effect.Highlight(a); });
+	}
+
+	$A($(container).getElementsBySelector('a.addToWishList')).each(function(button)
+	{
+		Event.observe(button, 'click', handleClick);
+	});
+
+	$A($(container).getElementsBySelector('td.addToWishList a')).each(function(button)
+	{
+		Event.observe(button, 'click', handleClick);
+	});
+}
+
+Frontend.Ajax.AddToCompare = function(container)
+{
+	$A($(container).getElementsBySelector('a.addToCompare')).each(function(button)
+	{
+		Event.observe(button, 'click', Compare.add);
+	});
+}
+
+Frontend.AjaxInit = function(container)
+{
+	$H(Frontend.Ajax).each(function(v)
+	{
+		new Frontend.Ajax[v[0]](container);
+	});
 }

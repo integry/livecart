@@ -12,7 +12,7 @@
 {if $product.attributes}
 <h2>{t _spec}</h2>
 <div id="productSpecification">
-	<table class="productTable">
+	<table class="productDetailsTable">
 		{include file="product/specificationTableBody.tpl" attributes=$product.attributes field=SpecField group=SpecFieldGroup}
 	</table>
 </div>

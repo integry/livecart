@@ -305,7 +305,7 @@ class CheckoutController extends FrontendController
 
 		// create or edit addresses
 		$types = array('billing', 'shipping');
-		if ($this->request->get('sameAsBilling'))
+		if ($this->request->get('sameAsBilling') || $this->order->isMultiAddress->get())
 		{
 			unset($types[1]);
 		}

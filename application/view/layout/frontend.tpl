@@ -39,7 +39,7 @@
 	{/if}
 
 	{compiledCss glue=true nameMethod=hash}
-	<!--[if IE]>
+	<!--[if lt IE 8]>
 		<link href="stylesheet/frontend/FrontendIE.css" rel="Stylesheet" type="text/css"/>
 		{if $ieCss}
 			<link href="{$ieCss}" rel="Stylesheet" type="text/css"/>
@@ -73,3 +73,7 @@
 </body>
 
 </html>
+
+<script type="text/javascript">
+	new Frontend.AjaxInit(document.body);
+</script>
