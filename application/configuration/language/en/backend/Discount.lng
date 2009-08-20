@@ -46,13 +46,13 @@ User=Customer
 UserGroup=User group
 DeliveryZone=Delivery Zone
 
-_type_order_total=Order subtotal is
-_type_order_count=Total number of items in cart is
-_type_items_in_cart=Selected products are present in cart
-_type_user_group=Customer belongs to selected user group
-_type_user=Customer is
-_type_delivery_zone=Order delivery zone is
-_type_payment_method=Payment method is
+RuleConditionOrderTotal=Order subtotal is
+RuleConditionOrderItemCount=Total number of items in cart is
+RuleConditionContainsProduct=Selected products are present in cart
+RuleConditionUserGroupIs=Customer belongs to selected user group
+RuleConditionCustomerIs=Customer is
+RuleConditionDeliveryZoneIs=Order delivery zone is
+RuleConditionPaymentMethodIs=Payment method is
 
 _compare_eq=equal to
 _compare_lteq=less than or equal to
@@ -75,12 +75,12 @@ _discount_limit=Discount limit
 _discount_limit_descr=Max number of items to apply discount to. The limit only applies to items of the same line item, not the whole order.
 _apply_to=Apply discount to
 
-_percentage_discount=Apply percentage discount
-_fixed_amount_discount=Apply fixed amount discount
-_percentage_surcharge=Add percentage surcharge
-_fixed_amount_surcharge=Add fixed amount surcharge
-_type_disable_checkout=Disable checkout
-_type_sum_variations=Sum product variations towards quantity discounts
+RuleActionPercentageDiscount=Apply percentage discount
+RuleActionFixedDiscount=Apply fixed amount discount
+RuleActionPercentageSurcharge=Add percentage surcharge
+RuleActionFixedSurcharge=Add fixed amount surcharge
+RuleActionDisableCheckout=Disable checkout
+RuleActionSumVariations=Sum product variations towards quantity discounts
 
 _apply_order=Whole order
 _apply_matched_items=Matched items only

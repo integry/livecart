@@ -17,7 +17,9 @@
 	{includeCss file="backend/Backend.css" front=true}
 	{compiledCss glue=true nameMethod=hash}
 
-	{includeJs file=library/tinymce/tiny_mce.js inline=true}
+	{if !'DISABLE_WYSIWYG'|config}
+		{includeJs file=library/tinymce/tiny_mce.js inline=true}
+	{/if}
 
 	{*
 	{includeJs file=library/tinymce/tiny_mce_gzip.js}
@@ -59,26 +61,32 @@
 	   }
 	}
 
-	tinyMCE.init({
-		theme : "advanced",
-		mode : "exact",
-		plugins: "table,contextmenu",
-		elements : "",
-		auto_reset_designmode : true,
-		theme_advanced_resizing_use_cookie : false,
-		theme_advanced_toolbar_location : "top",
-		theme_advanced_resizing : true,
-		theme_advanced_path_location : "bottom",
-		document_base_url : "{/literal}{baseUrl}{literal}",
-		remove_script_host : "true",
-		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,fontselect,fontsizeselect,formatselect,separator,forecolor,backcolor",
-		theme_advanced_buttons2 : "bullist,numlist,separator,outdent,indent,separator,undo,redo,separator,link,unlink,anchor,image,cleanup,separator,code,separator,table,separator,sub,sup,separator,charmap",
-		theme_advanced_buttons3 : "",
-		content_css: "{/literal}{baseUrl}{literal}stylesheet/library/TinyMCE.css",
-		forced_root_block : '',
-		relative_urls : true,
-		extended_valid_elements : 'iframe[src|width|height|name|align|frameborder|scrolling|marginheight|marginwidth]'
-	});
+	if (window.tinyMCE)
+	{
+		tinyMCE.init({
+			theme : "advanced",
+			mode : "exact",
+			plugins: "table,contextmenu,paste",
+			paste_insert_word_content_callback : "convertWord",
+			paste_auto_cleanup_on_paste : true,
+			elements : "",
+			auto_reset_designmode : true,
+			theme_advanced_resizing_use_cookie : false,
+			theme_advanced_toolbar_location : "top",
+			theme_advanced_resizing : true,
+			theme_advanced_path_location : "bottom",
+			document_base_url : "{/literal}{baseUrl}{literal}",
+			remove_script_host : "true",
+			theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,fontselect,fontsizeselect,formatselect,separator,forecolor,backcolor",
+			theme_advanced_buttons2 : "bullist,numlist,separator,outdent,indent,separator,undo,redo,separator,link,unlink,anchor,image,cleanup,separator,code,separator,table,separator,sub,sup,separator,charmap",
+			theme_advanced_buttons3 : "",
+			content_css: "{/literal}{baseUrl}{literal}stylesheet/library/TinyMCE.css",
+			forced_root_block : '',
+			relative_urls : true,
+			extended_valid_elements : 'iframe[src|width|height|name|align|frameborder|scrolling|marginheight|marginwidth]',
+			entities: ''
+		});
+	}
 
 	function onLoad()
 	{

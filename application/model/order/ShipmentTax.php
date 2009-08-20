@@ -102,11 +102,11 @@ class ShipmentTax extends ActiveRecordModel
 				{
 					if ($tax->includesTax($taxRate->tax->get()))
 					{
-						$otherTaxes += $currency->round($taxRate->getTaxAmount($itemTotal + $otherTaxes));
+						$otherTaxes += $taxRate->getTaxAmount($itemTotal + $otherTaxes);
 					}
 				}
 
-				$res = $currency->round($this->taxRate->get()->getTaxAmount($itemTotal + $otherTaxes));
+				$res = $this->taxRate->get()->getTaxAmount($itemTotal + $otherTaxes);
 				$taxAmount += $res;
 			}
 		}

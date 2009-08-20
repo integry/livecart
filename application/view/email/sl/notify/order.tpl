@@ -1,5 +1,5 @@
 Novo naročilo na {'STORE_NAME'|config}
-ID Naročila: {$order.ID}
+ID Naročila: {$order.invoiceNumber}
 
 Administracija Naročila:
 {backendOrderUrl order=$order url=true}

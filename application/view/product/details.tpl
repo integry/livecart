@@ -35,6 +35,10 @@
 </div>
 {/if}
 
+{if $additionalCategories}
+	{include file="product/block/additionalCategories.tpl"}
+{/if}
+
 {if $together}
 <h2>{t _purchased_together}</h2>
 <div id="purchasedTogether">

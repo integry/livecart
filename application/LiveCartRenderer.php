@@ -121,8 +121,8 @@ class LiveCartRenderer extends SmartyRenderer
 			}
 		}
 
-		ksort($otherThemes);
-		return array_merge($themes, $otherThemes);
+		$themes = array_merge($themes, $otherThemes);
+		ksort($themes);
 
 		return $themes;
 	}
@@ -267,7 +267,7 @@ class LiveCartRenderer extends SmartyRenderer
 		return '.tpl' != strtolower(substr($objectName, -4));
 	}
 
-	private function getThemePaths($theme)
+	private function getThemePaths($theme, $includedThemes = array())
 	{
 		$paths = $inheritConf = array();
 		$paths[] = ClassLoader::getRealPath('storage.customize.view.theme.' . $theme . '.');
@@ -294,7 +294,11 @@ class LiveCartRenderer extends SmartyRenderer
 
 			foreach ($inherited as $parent)
 			{
-				$paths = array_merge($paths, $this->getThemePaths($parent));
+				if (empty($includedThemes[$parent]))
+				{
+					$includedThemes[$parent] = true;
+					$paths = array_merge($paths, $this->getThemePaths($parent, $includedThemes));
+				}
 			}
 		}
 
@@ -377,12 +381,12 @@ class LiveCartRenderer extends SmartyRenderer
 		{
 			if (is_numeric($pair))
 			{
-				$res['id'] = $pair;
+				$res['variables']['id'] = $pair;
 			}
-			else if (strpos($pair, '='))
+			else if (strpos($pair, '_'))
 			{
-				list($key, $value) = explode('=', $pair, 2);
-				$res[$key] = $value;
+				list($key, $value) = explode('_', $pair, 2);
+				$res['variables'][$key] = $value;
 			}
 		}
 
@@ -430,13 +434,13 @@ class LiveCartRenderer extends SmartyRenderer
 
 	public function getRelativeTemplatePath($template)
 	{
+		$template = str_replace('\\', '/', $template);
 		if (strpos($template, '/module/'))
 		{
 			preg_match('/\/(module\/.*)/', $template, $match);
 			return str_replace('application/view/', '', $match[1]);
 		}
 
-		$template = str_replace('\\', '/', $template);
 		foreach (array('application.view', 'storage.customize.view') as $path)
 		{
 			$path = ClassLoader::getRealPath($path);

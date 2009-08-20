@@ -109,6 +109,24 @@ class ConfigurationContainer
 		return $this->findDirectories('directory');
 	}
 
+	public function getDirectoriesByMountPath($mountPath)
+	{
+		$directories = array();
+
+		$dir = ClassLoader::getRealPath($this->mountPath . '.' . $mountPath);
+		if (file_exists($dir))
+		{
+			$directories[] = $dir;
+		}
+
+		foreach ($this->getModules() as $module)
+		{
+			$directories = array_merge($directories, $module->getDirectoriesByMountPath($mountPath));
+		}
+
+		return $directories;
+	}
+
 	private function findDirectories($variable)
 	{
 		$directories = $this->$variable ? array($this->$variable) : array();

@@ -1,4 +1,4 @@
-{form action="controller=product action=rate id=`$product.ID`" handle=$ratingForm method="POST" onsubmit="new Product.Rating(this); return false;" onchange="Product.Rating.prototype.updatePreview(event);"}
+{form action="controller=product action=rate id=`$product.ID`" handle=$ratingForm method="POST" onsubmit="new Product.Rating(this); return false;"}
 <table class="productDetailsTable">
 	<tr class="first heading">
 		<td class="param"></td>
@@ -16,13 +16,13 @@
 		{section start=0 loop='RATING_SCALE'|config name=rate}
 			{assign var=index value=$smarty.section.rate.index+1}
 			<td class="{if $smarty.section.rate.last}value{/if}">
-				{radio name="rating_`$type.ID`" value=$index}
+				{radio name="rating_`$type.ID`" value=$index onchange="Product.Rating.prototype.updatePreview(event);"}
 				{if $smarty.section.rate.last}
 					<div class="errorText hidden">{error for="rating_`$type.ID`"}{/error}</div>
 				{/if}
 			</td>
 		{/section}
-			<td class="ratingPreview"><img src="" style="display: none;" /></td>
+			<td class="ratingPreview"><img src="" style="display: none;" alt="Rating" /></td>
 	</tr>
 {/foreach}
 </table>

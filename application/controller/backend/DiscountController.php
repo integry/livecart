@@ -20,14 +20,6 @@ ClassLoader::import('application.model.order.OfflineTransactionHandler');
  */
 class DiscountController extends ActiveGridController
 {
-	const TYPE_TOTAL = 0;
-	const TYPE_COUNT = 1;
-	const TYPE_ITEMS = 2;
-	const TYPE_USERGROUP = 3;
-	const TYPE_USER = 4;
-	const TYPE_DELIVERYZONE = 5;
-	const TYPE_PAYMENTMETHOD = 101;
-
 	public function index()
 	{
 		$response = $this->getGridResponse();
@@ -35,15 +27,6 @@ class DiscountController extends ActiveGridController
 		$response->set('form', $this->buildForm());
 
 		$response->set('conditionForm', $this->buildConditionForm());
-
-		$response->set('conditionTypes', array( self::TYPE_TOTAL => $this->translate('_type_order_total'),
-						self::TYPE_COUNT => $this->translate('_type_order_count'),
-						self::TYPE_ITEMS => $this->translate('_type_items_in_cart'),
-						self::TYPE_USERGROUP => $this->translate('_type_user_group'),
-						self::TYPE_USER => $this->translate('_type_user'),
-						self::TYPE_DELIVERYZONE => $this->translate('_type_delivery_zone'),
-						self::TYPE_PAYMENTMETHOD => $this->translate('_type_payment_method'),
-						));
 
 		$response->set('comparisonTypes', array(
 						DiscountCondition::COMPARE_GTEQ => $this->translate('_compare_gteq'),
@@ -59,14 +42,10 @@ class DiscountController extends ActiveGridController
 						'subTotal' => $this->translate('_with_subTotal'),
 						));
 
-		$response->set('actionTypes', array(
-						DiscountAction::ACTION_PERCENT => $this->translate('_percentage_discount'),
-						DiscountAction::ACTION_AMOUNT => $this->translate('_fixed_amount_discount'),
-						DiscountAction::ACTION_SURCHARGE_PERCENT => $this->translate('_percentage_surcharge'),
-						DiscountAction::ACTION_SURCHARGE_AMOUNT => $this->translate('_fixed_amount_surcharge'),
-						DiscountAction::ACTION_DISABLE_CHECKOUT => $this->translate('_type_disable_checkout'),
-						DiscountAction::ACTION_SUM_VARIATIONS => $this->translate('_type_sum_variations'),
-					  ));
+		$conditions = $this->getClasses(ClassLoader::getRealPath('application.model.businessrule.condition'));
+		unset($conditions['RuleConditionRoot']);
+		$response->set('conditionTypes', $conditions);
+		$response->set('actionTypes', $this->getClasses(ClassLoader::getRealPath('application.model.businessrule.action')));
 
 		$response->set('applyToChoices', array(
 						DiscountAction::TYPE_ORDER_DISCOUNT => $this->translate('_apply_order'),
@@ -123,7 +102,7 @@ class DiscountController extends ActiveGridController
 		$response->set('records', $records);
 
 		$response->set('serializedValues', array(
-						self::TYPE_PAYMENTMETHOD => $this->getPaymentMethods(),
+						'RuleConditionPaymentMethodIs' => $this->getPaymentMethods(),
 						));
 
 		$form = $this->buildForm();
@@ -167,6 +146,7 @@ class DiscountController extends ActiveGridController
 		{
 			$instance = ($id = $this->request->get('id')) ? ActiveRecordModel::getInstanceByID('DiscountCondition', $id, ActiveRecordModel::LOAD_REFERENCES) : DiscountCondition::getNewInstance();
 			$instance->loadRequestData($this->request);
+			$instance->conditionClass->setNull();
 			$instance->save();
 
 			return new JSONResponse(array('condition' => $instance->toFlatArray()), 'success', $this->translate('_rule_was_successfully_saved'));
@@ -199,12 +179,18 @@ class DiscountController extends ActiveGridController
 	{
 		list($fieldName, $id) = explode('_', $this->request->get('field'));
 
-		$field = 'comparisonValue' == $fieldName ? ($this->request->get('type') == self::TYPE_COUNT ? 'count' : 'subTotal') : $fieldName;
+		$field = 'comparisonValue' == $fieldName ? ($this->request->get('type') == 'RuleConditionOrderItemCount' ? 'count' : 'subTotal') : $fieldName;
 
 		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $id, DiscountCondition::LOAD_DATA);
+
+		if ('isAllSubconditions' != $fieldName)
+		{
+			$condition->conditionClass->set($this->request->get('type'));
+		}
+
 		$condition->serializedCondition->setNull();
 
-		if ($this->request->get('type') == self::TYPE_ITEMS && 'comparisonValue' == $fieldName)
+		if ($this->request->get('type') == 'RuleConditionContainsProduct' && 'comparisonValue' == $fieldName)
 		{
 			$field = $this->request->get('productField');
 		}
@@ -232,7 +218,9 @@ class DiscountController extends ActiveGridController
 	public function addRecord()
 	{
 		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA);
+		$condition->conditionClass->set($this->request->get('type'));
 		$condition->serializedCondition->setNull();
+		$condition->save();
 
 		$object = DiscountConditionRecord::getOwnerInstance($this->request->get('class'), $this->request->get('recordID'));
 		$record = DiscountConditionRecord::getNewInstance($condition, $object);
@@ -255,6 +243,8 @@ class DiscountController extends ActiveGridController
 	{
 		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA);
 		$condition->serializedCondition->setNull();
+		$condition->conditionClass->set($this->request->get('type'));
+		$condition->save();
 
 		// delete existing record
 		$record = ActiveRecordModel::getInstanceByID($this->request->get('class'), $this->request->get('recordID'));
@@ -276,6 +266,8 @@ class DiscountController extends ActiveGridController
 	public function saveSelectValue()
 	{
 		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA);
+		$condition->conditionClass->set($this->request->get('type'));
+		$condition->save();
 
 		if ($condition->recordCount->get())
 		{
@@ -376,6 +368,7 @@ class DiscountController extends ActiveGridController
 					$newCondition = DiscountCondition::getNewInstance();
 					$newCondition->isEnabled->set(true);
 					$newCondition->isActionCondition->set(true);
+					$newCondition->isAnyRecord->set(true);
 					$newCondition->save();
 
 					$action->actionCondition->set($newCondition);
@@ -459,7 +452,12 @@ class DiscountController extends ActiveGridController
 
 	protected function setDefaultSortOrder(ARSelectFilter $filter)
 	{
-		$filter->setOrder(new ARFieldHandle($this->getClassName(), 'position'), 'ASC');
+		$handle = new ARFieldHandle($this->getClassName(), 'position');
+
+		if (!$filter->isSortedBy($handle))
+		{
+			$filter->setOrder($handle, 'ASC');
+		}
 	}
 
 	private function buildValidator()
@@ -495,6 +493,25 @@ class DiscountController extends ActiveGridController
 		return new Form($this->buildConditionValidator());
 	}
 
+	private function getClasses($dir)
+	{
+		$classes = $order = array();
+		foreach(glob($dir . '/*') as $file)
+		{
+			include_once $file;
+			$class = basename($file, '.php');
+			if ($class)
+			{
+				$classes[$class] = $this->translate($class);
+				$order[$class] = call_user_func(array($class, 'getSortOrder'));
+			}
+		}
+
+		asort($order);
+		$classes = array_merge($order, $classes);
+
+		return $classes;
+	}
 }
 
 ?>

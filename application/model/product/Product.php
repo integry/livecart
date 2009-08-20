@@ -501,7 +501,7 @@ class Product extends MultilingualObject
 		return $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode)->getItemPrice($item, $applyRounding);
 	}
 
-	public function getPrice($currencyCode, $recalculate = true)
+	public function getPrice($currencyCode, $recalculate = true, $includeDiscounts = false)
 	{
 	  	if ($currencyCode instanceof Currency)
 	  	{
@@ -515,7 +515,7 @@ class Product extends MultilingualObject
 		}
 		else
 		{
-			$price = $instance->getPrice($recalculate == true);
+			$price = $instance->getPrice($recalculate == true, $includeDiscounts);
 		}
 
 		return $price;
@@ -1057,11 +1057,16 @@ class Product extends MultilingualObject
 	 */
 	public function getImageArray()
 	{
+		return ActiveRecordModel::getRecordSetArray('ProductImage', $this->getImageFilter());
+	}
+
+	private function getImageFilter()
+	{
 		$f = new ARSelectFilter();
 		$f->setCondition(new EqualsCond(new ARFieldHandle('ProductImage', 'productID'), $this->getID()));
 		$f->setOrder(new ARFieldHandle('ProductImage', 'position'));
 
-		return ActiveRecordModel::getRecordSetArray('ProductImage', $f);
+		return $f;
 	}
 
 	/**
@@ -1246,6 +1251,17 @@ class Product extends MultilingualObject
 			}
 
 			ProductOption::loadChoicesForRecordSet($options);
+
+			foreach ($options as $mainIndex => $mainOption)
+			{
+				for ($k = $mainIndex + 1; $k <= $options->size(); $k++)
+				{
+					if ($options->get($k) && ($mainOption->getID() == $options->get($k)->getID()))
+					{
+						$options->remove($k);
+					}
+				}
+			}
 		}
 
 		return $options;
@@ -1394,20 +1410,25 @@ class Product extends MultilingualObject
 		$this->specificationInstance = clone $original->getSpecification();
 		$this->specificationInstance->setOwner($this);
 
-		$this->loadPricing();
-		$this->pricingHandlerInstance = clone $this->pricingHandlerInstance;
+		$original->loadPricing();
+		$this->pricingHandlerInstance = clone $original->pricingHandlerInstance;
 		$this->pricingHandlerInstance->setProduct($this);
-
-		// images
-		if ($this->defaultImage->get())
-		{
-			$this->defaultImage->set(clone $this->defaultImage->get());
-		}
 
 		$this->save();
 
+		// images
+		if ($original->defaultImage->get())
+		{
+			foreach ($original->getRelatedRecordSet('ProductImage', $original->getImageFilter()) as $image)
+			{
+				$clonedImage = clone $image;
+				$clonedImage->product->set($this);
+				$clonedImage->save();
+			}
+		}
+
 		// options
-		foreach (ProductOption::getProductOptions($this->originalRecord) as $option)
+		foreach (ProductOption::getProductOptions($original) as $option)
 		{
 			$clonedOpt = clone $option;
 			$clonedOpt->product->set($this);
@@ -1416,7 +1437,7 @@ class Product extends MultilingualObject
 
 		// related products
 		$groups[] = array();
-		foreach ($this->originalRecord->getRelationships() as $relationship)
+		foreach ($original->getRelationships() as $relationship)
 		{
 			$group = $relationship->productRelationshipGroup->get();
 			$id = $group ? $group->getID() : null;

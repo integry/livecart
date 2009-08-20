@@ -1,5 +1,5 @@
 Novo sporočilo za naročilo na {'STORE_NAME'|config}
-Stranka je dodala novo sporočilo glede naročila <b class="orderID">#{$order.ID}</b>
+Stranka je dodala novo sporočilo glede naročila <b class="orderID">#{$order.invoiceNumber}</b>
 
 --------------------------------------------------
 {$message.text}

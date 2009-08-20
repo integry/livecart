@@ -54,6 +54,12 @@ abstract class SearchableModel
 		}
 
 		chdir($cd);
+
+		foreach (ActiveRecordModel::getApplication()->getPlugins('searchable') as $plugin)
+		{
+			$ret[] = $plugin['path'];
+		}
+
 		return $ret;
 	}
 

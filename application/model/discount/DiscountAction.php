@@ -4,19 +4,19 @@ ClassLoader::import('application.model.ActiveRecordModel');
 ClassLoader::import('application.model.discount.DiscountCondition');
 ClassLoader::import('application.model.discount.DiscountActionSet');
 ClassLoader::import('application.model.order.OrderDiscount');
+ClassLoader::import('application.model.businessrule.interface.*');
+ClassLoader::import('application.model.businessrule.BusinessRuleController');
 
+/**
+ *
+ * @author Integry Systems
+ * @package application.model.discount
+ */
 class DiscountAction extends ActiveRecordModel
 {
 	const TYPE_ORDER_DISCOUNT = 0;
 	const TYPE_ITEM_DISCOUNT = 1;
 	const TYPE_CUSTOM_DISCOUNT = 5;
-
-	const ACTION_PERCENT = 0;
-	const ACTION_AMOUNT = 1;
-	const ACTION_DISABLE_CHECKOUT = 2;
-	const ACTION_SURCHARGE_PERCENT = 3;
-	const ACTION_SURCHARGE_AMOUNT = 4;
-	const ACTION_SUM_VARIATIONS = 5;
 
 	/**
 	 * Action for discount condition (define the actual discount)
@@ -39,126 +39,42 @@ class DiscountAction extends ActiveRecordModel
 		$schema->registerField(new ARField("discountStep", ARInteger::instance()));
 		$schema->registerField(new ARField("discountLimit", ARInteger::instance()));
 
-		$schema->registerField(new ARField("actionType", ARInteger::instance()));
 		$schema->registerField(new ARField("amount", ARFloat::instance()));
+		$schema->registerField(new ARField("actionClass", ARVarchar::instance(80)));
 	}
 
-	public static function getNewInstance(DiscountCondition $condition)
+	public static function getNewInstance(DiscountCondition $condition, $className = 'RuleActionPercentageDiscount')
 	{
 		$instance = parent::getNewInstance(__CLASS__);
 		$instance->condition->set($condition);
+		$instance->actionClass->set($className);
 
 		return $instance;
 	}
 
-	public static function getByConditions(array $conditions)
+	private function loadActionRuleClass($className)
 	{
-		$ids = array();
-		foreach ($conditions as $condition)
+		ClassLoader::import('application.model.businessrule.action.' . $className);
+		if (!class_exists($className, false))
 		{
-			$ids[] = $condition['ID'];
-		}
-
-		if (!$ids)
-		{
-			return new ARSet();
-		}
-
-		$f = new ARSelectFilter(new INCond(new ARFieldHandle(__CLASS__, 'conditionID'), $ids));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'isEnabled'), true));
-		$f->setOrder(new ARFieldHandle(__CLASS__, 'position'));
-
-		$actions = ActiveRecordModel::getRecordSet(__CLASS__, $f, array('DiscountCondition', 'DiscountCondition_ActionCondition'));
-
-		// @todo: actionConditions are not loaded
-		foreach ($actions as $action)
-		{
-			if ($action->actionCondition->get())
+			foreach (self::getApplication()->getPlugins('businessrule/action/' . $className) as $plugin)
 			{
-				$action->actionCondition->get()->load();
+				include_once $plugin['path'];
 			}
 		}
 
-		// load records for action condition
-		$actionConditions = new ARSet();
-		foreach ($actions as $action)
-		{
-			if ($action->actionCondition->get())
-			{
-				$actionConditions->add($action->actionCondition->get());
-			}
-		}
-
-		if ($actionConditions->size())
-		{
-			DiscountCondition::loadConditionRecords($actionConditions);
-		}
-
-		return $actions;
+		return $className;
 	}
 
-	public function isOrderDiscount()
+	public function save()
 	{
-		return self::TYPE_ORDER_DISCOUNT == $this->type->get();
-	}
-
-	public function isItemDiscount()
-	{
-		return (self::TYPE_ITEM_DISCOUNT == $this->type->get()) ||
-				in_array($this->actionType->get(), array(self::ACTION_SUM_VARIATIONS, self::ACTION_PERCENT, self::ACTION_SURCHARGE_PERCENT));
-	}
-
-	public function isFixedAmount()
-	{
-		return (self::ACTION_AMOUNT == $this->actionType->get()) || (self::ACTION_SURCHARGE_AMOUNT == $this->actionType->get());
-	}
-
-	public function isItemApplicable(OrderedItem $item)
-	{
-		if (!$this->actionCondition->get())
-		{
-			return true;
-		}
-
-		return $this->actionCondition->get()->isProductMatching($item->product->get());
-	}
-
-	public function getOrderDiscount(CustomerOrder $order)
-	{
-		if (!$this->isOrderDiscount())
-		{
-			return null;
-		}
-
-		$discountAmount = $this->getDiscountAmount($order->getSubTotal());
-
-		$discount = OrderDiscount::getNewInstance($order);
-		$discount->amount->set($discountAmount);
-
-		return $discount;
-	}
-
-	public function getDiscountAmount($price)
-	{
-		switch ($this->actionType->get())
-		{
-			case self::ACTION_PERCENT:
-				return $price * ($this->amount->get() / 100);
-
-			case self::ACTION_SURCHARGE_PERCENT:
-				return $price * ($this->amount->get() / 100) * -1;
-
-			case self::ACTION_AMOUNT:
-				return $this->amount->get();
-
-			case self::ACTION_SURCHARGE_AMOUNT:
-				return $this->amount->get() * -1;
-		}
+		BusinessRuleController::clearCache();
+		return parent::save();
 	}
 
 	protected function insert()
 	{
-	  	$this->setLastPosition();
+		$this->setLastPosition();
 		return parent::insert();
 	}
 }

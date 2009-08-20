@@ -11,6 +11,19 @@ ClassLoader::import("application.controller.backend.abstract.StoreManagementCont
  */
 class ModuleController extends StoreManagementController
 {
+	public function init()
+	{
+		$conf = $this->application->getConfigContainer();
+		foreach ($conf->getAvailableModules() as $module)
+		{
+			$this->locale->translationManager()->setDefinitionFileDir(array_shift($module->getLanguageDirectories()));
+		}
+
+		$this->locale->translationManager()->reloadFile('Base');
+
+		parent::init();
+	}
+
 	/**
 	 * Main settings page
 	 */

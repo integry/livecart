@@ -1,0 +1,16 @@
+_filter_group_was_successfully_saved=Το φίλτρο αποθηκεύθηκε επιτυχώς
+_could_not_save_filter_group=Δεν μπορείτε να αποθηκεύσετε το φίλτρο
+_filter_group_was_successfully_removed=Το φίλτρο απομακρύνθηκε επιτυχώς
+_could_not_remove_filter_group=Δεν μπορείτε να απομακρύνετε το φίλτρο
+_add_new_filter=Προσθήκη νέου φίλτρου
+_category_has_no_attr=Δεν έχουν δημιουργηθεί ακόμη μη-φιλτραρισμένα χαρακτηριστικά γνωρίσματα γι' αυτή την κατηγορία
+_delete_field=Διαγραφή πεδίου
+_remove_filter_question=Είσθε σίγουρος/η ότι θέλετε να διαγράψετε αυτό το φίλτρο?
+_FilterGroup_remove_question=Είσθε σίγουρος/η ότι θέλετε να απομακρύνετε αυτό το φίλτρο?
+_cancel_adding_new_filter=Ακύρωση προσθήκης νέου φίλτρου
+_error_name_empty=Παρακαλούμε εισάγετε όνομα φίλτρου
+_error_filter_value_is_not_a_number=Η αξία του φίλτρου πρέπει να είναι ένας αριθμός
+_error_spec_field_is_not_selected=Δεν επιλέχθηκε πεδίο προδιαγραφής
+_error_illegal_date=Παράνομη ημέρα
+_error_filter_name_empty=Παρακαλούμε εισάγετε όνομα φίλτρου
+_error_filter_handle_invalid=Ο τίτλος είναι άκυρος

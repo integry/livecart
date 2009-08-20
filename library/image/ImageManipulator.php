@@ -48,6 +48,11 @@ class ImageManipulator
 		}
 	}
 
+	public function setQuality($quality)
+	{
+		$this->quality = $quality;
+	}
+
 	public function resize($width, $height, $newPath)
 	{
 		if (!$this->imagePath)

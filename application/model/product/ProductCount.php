@@ -52,28 +52,7 @@ class ProductCount
 			}
 		}
 
-		// slice the filters array in separate sets
-		// MySQL only allows 31 or 61 joins in a single query (depending on whether it's a 32 or 64 bit system)
-		// so sometimes the counts cannot be retrieved via single query if there are many filters
-		$filterSets = array();
-		for ($k = 0; $k < count($filters); $k+=30)
-		{
-			$filterSets[] = array_slice($filters, $k, 30);
-		}
-
-		$ret = array();
-		foreach ($filterSets as $set)
-		{
-			$cnt = $this->getCountByFilterSet($set, $includeAppliedFilters);
-
-			// array_merge would reindex the numeric keys
-			foreach ($cnt as $key => $value)
-			{
-				$ret[$key] = $value;
-			}
-		}
-
-		return $ret;
+		return $this->getCountByFilterSet($filters, $includeAppliedFilters);
 	}
 
 	public function getCategoryProductCount()
@@ -162,6 +141,32 @@ class ProductCount
 			return array();
 		}
 
+		// slice the filters array in separate sets
+		// MySQL only allows 31 or 61 joins in a single query (depending on whether it's a 32 or 64 bit system)
+		// so sometimes the counts cannot be retrieved via single query if there are many filters
+		$filterSets = array();
+		for ($k = 0; $k < count($filters); $k+=30)
+		{
+			$filterSets[] = array_slice($filters, $k, 30);
+		}
+
+		$ret = array();
+		foreach ($filterSets as $set)
+		{
+			$cnt = $this->getCountByFilterSubSet($set, $includeAppliedFilters);
+
+			// array_merge would reindex the numeric keys
+			foreach ($cnt as $key => $value)
+			{
+				$ret[$key] = $value;
+			}
+		}
+
+		return $ret;
+	}
+
+	private function getCountByFilterSubSet($filters, $includeAppliedFilters)
+	{
 		$selectFilter = $this->productFilter->getSelectFilter(!$includeAppliedFilters);
 		$selectFilter->removeFieldList();
 		$selectFilter->setLimit(0);

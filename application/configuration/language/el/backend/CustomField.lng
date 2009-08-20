@@ -1,0 +1,11 @@
+_custom_fields=Πεδία Πελάτου
+_offline_methods=Μέθοδοι Πληρωμής Εκτός Δικτύου(Offline)
+Category=Κατηγορίες
+CustomerOrder=Παραγγελίες
+Manufacturer=Κατασκευαστές
+User=Χρήστες
+UserGroup=Ομάδες Χρηστών
+UserAddress=Διευθύνσεις
+_SpecField_displayed_on_front_page=Επεξεργάσιμο ανά πελάτη
+_SpecField_displayed_in_product_list=Ορατό στον πελάτη
+_show_in_invoice=Παρουσίαση σε τιμολόγιο

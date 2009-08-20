@@ -2,9 +2,9 @@
 Vážený(á) {$user.fullName},
 
 {if $order.shipments|@count == 1}
-Stav Vaší objednávky č.: {$order.ID} byl změněn.
+Stav Vaší objednávky č.: {$order.invoiceNumber} byl změněn.
 {else}
-Stav jedné nebo víve zásilek z Vaší objednávky č.: {$order.ID} byl změněn.
+Stav jedné nebo víve zásilek z Vaší objednávky č.: {$order.invoiceNumber} byl změněn.
 {/if}
 
 Pokud k této objednávce máte nějaké dotazy, můžete nám poslat email nebo použít následující odkaz:

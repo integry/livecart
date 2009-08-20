@@ -170,7 +170,11 @@ Backend.SiteNews.PostEntry.prototype =
 			singleClick:	true
 		});
 
-		tinyMCE.idCounter = 0;
+		if (window.tinyMCE)
+		{
+			tinyMCE.idCounter = 0;
+		}
+
 		ActiveForm.prototype.initTinyMceFields(this.node.down('div.formContainer'));
 
 		form.down('a.cancel').onclick = this.cancelEditForm.bindAsEventListener(this);

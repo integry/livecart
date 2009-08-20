@@ -1,0 +1,45 @@
+input.themeName
+{
+	width: 100%;
+	margin-left: -5px;
+}
+
+#addForm label
+{
+	float: none;
+}
+
+input.color
+{
+	width: 100px;
+	border: 1px solid black;
+}
+
+.sizeEntry select
+{
+	width: auto;
+}
+
+.sizeEntry input
+{
+	width: 60px;
+}
+
+.imageOptions
+{
+	padding-left: 170px;
+	margin-top: -7px;
+	margin-bottom: 7px;
+}
+
+.imageOptions, .imageOptions select
+{
+	font-size: smaller;
+	width: auto;
+}
+
+div.repeat
+{
+	float: left;
+	margin-right: 2em;
+}

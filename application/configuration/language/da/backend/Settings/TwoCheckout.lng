@@ -1,0 +1,5 @@
+TwoCheckout=2Checkout
+TwoCheckout_account=Konto ID
+TwoCheckout_currency=Konto valuta
+TwoCheckout_secretWord=Hemmeligt ord <a href="https://www.2checkout.com/2co/admin/look_and_feel" target="_blank">(?)</a> 
+TwoCheckout_test=Test (demo) mode

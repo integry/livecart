@@ -1,0 +1,11 @@
+CyberMUT_help=<h2>Additional Setup Instructions</h2>Please enter the following for the payment confirmation URL at CyberMUT: <em><strong>{link controller=checkout action=notify id=CyberMUT url=true}</strong></em>
+
+CyberMUT_TPE=Number of the merchant's virtual EPT
+CyberMUT_societe=Website idenfitication code (societe)
+CyberMUT_key1=HMAC key 1 (20 characters)
+CyberMUT_key2=HMAC key 2 (40 characters)
+CyberMUT_bank=Acquiring bank
+CyberMUT_CM=Banks and federations of Crédit Mutuel
+CyberMUT_CIC=Banks of the CIC group
+CyberMUT_OBC=OBC bank
+CyberMUT_test=Test mode

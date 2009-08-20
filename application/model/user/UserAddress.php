@@ -69,6 +69,11 @@ class UserAddress extends ActiveRecordModel implements EavAble
 
 		$array['compact'] = self::getAddressString($array, ', ');
 
+		if (!isset($array['stateID']) && isset($array['State']['ID']))
+		{
+			$array['stateID'] = $array['State']['ID'];
+		}
+
 		return $array;
 	}
 

@@ -125,7 +125,6 @@ class ProductController extends FrontendController
 		$response = new ActionResponse();
 		$response->set('product', $productArray);
 		$response->set('category', $productArray['Category']);
-		$response->set('images', $product->getImageArray());
 		$response->set('quantity', $this->getQuantities($product));
 		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
 		$response->set('catRoute', $catRoute);
@@ -232,9 +231,66 @@ class ProductController extends FrontendController
 			$response->set('presentation', $theme->toFlatArray());
 		}
 
+		// product images
+		$images = $product->getImageArray();
+		if ($theme && $theme->isVariationImages->get())
+		{
+			if ($variations = $this->getVariations())
+			{
+				foreach ($variations['products'] as $prod)
+				{
+					if (!empty($prod['DefaultImage']))
+					{
+						$images[] = $prod['DefaultImage'];
+					}
+				}
+			}
+		}
+		$response->set('images', $images);
+
 		// discounted pricing
 		$response->set('quantityPricing', $product->getPricingHandler()->getDiscountPrices($this->user, $this->getRequestCurrency()));
 		$response->set('files', $this->getPublicFiles());
+
+		// additional categories
+		$f = new ARSelectFilter();
+		$f->setOrder(new ARFieldHandle('Category', 'lft'));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('Category', 'isEnabled') , true));
+
+		$pathC = new OrChainCondition();
+		$pathF = new ARSelectFilter($pathC);
+		$categories = array();
+		foreach ($product->getRelatedRecordSetArray('ProductCategory', $f, array('Category')) as $cat)
+		{
+			$categories[] = array($cat['Category']);
+
+			$cond = new OperatorCond(new ARFieldHandle('Category', 'lft'), $cat['Category']['lft'], "<");
+			$cond->addAND(new OperatorCond(new ARFieldHandle('Category', 'rgt'), $cat['Category']['rgt'], ">"));
+			$pathC->addAnd($cond);
+		}
+
+		if ($categories)
+		{
+			$pathF->setOrder(new ARFieldHandle('Category', 'lft') , 'DESC');
+			$pathF->mergeCondition(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), true));
+			foreach (ActiveRecordModel::getRecordSetArray('Category', $pathF, array('Category')) as $parent)
+			{
+				foreach ($categories as &$cat)
+				{
+					if (($cat[0]['lft'] > $parent['lft']) && ($cat[0]['rgt'] < $parent['rgt']) && ($parent['ID'] > Category::ROOT_ID))
+					{
+						$cat[] = $parent;
+					}
+				}
+			}
+
+			foreach ($categories as &$cat)
+			{
+				$cat = array_reverse($cat);
+			}
+
+			$response->set('additionalCategories', $categories);
+		}
 
 		return $response;
 	}
@@ -534,8 +590,7 @@ class ProductController extends FrontendController
 				if ($option['isRequired'])
 				{
 					$optField = $prefix . 'option_' . $option['ID'];
-					$validator->addCheck($optField, new OrCheck(array($optField, $prefix . 'count'), array(new IsNotEmptyCheck($this->translate('_err_option_' . $option['type'])), new IsEmptyCheck('')), $this->request));
-					//$validator->addCheck($prefix . 'option_' . $option['ID'], new IsNotEmptyCheck($this->translate('_err_option_' . $option['type'])));
+					OrderController::addOptionValidation($validator, $option, $optField);
 				}
 			}
 
@@ -746,7 +801,7 @@ class ProductController extends FrontendController
 		$f->setOrder(f('ProductFileGroup.position'));
 		$f->setOrder(f('ProductFile.position'));
 
-		return ActiveRecordModel::getRecordSetArray('ProductFile', $f, array('ProductFileGroup'));
+		return $this->product->getRelatedRecordSetArray('ProductFile', $f, array('ProductFileGroup'));
 	}
 
 	private function buildContactForm()
@@ -772,6 +827,11 @@ class ProductController extends FrontendController
 	public function getCategory()
 	{
 		return $this->category;
+	}
+
+	public function getProduct()
+	{
+		return $this->product;
 	}
 }
 

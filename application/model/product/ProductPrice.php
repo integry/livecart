@@ -70,7 +70,7 @@ class ProductPrice extends ActiveRecordModel
 
 	/*####################  Value retrieval and manipulation ####################*/
 
-	public function getPrice($applyRounding = true)
+	public function getPrice($applyRounding = true, $includeDiscounts = false)
 	{
 		$price = $this->price->get();
 
@@ -78,6 +78,11 @@ class ProductPrice extends ActiveRecordModel
 		{
 			$parentPrice = $parent->getPricingHandler()->getPrice($this->currency->get())->getPrice();
 			$price = $this->getChildPrice($parentPrice, $price, $this->product->get()->getChildSetting('price'));
+		}
+
+		if ($includeDiscounts)
+		{
+			$price = self::getApplication()->getBusinessRuleController()->getProductPrice($this->product->get(), $price);
 		}
 
 		if (!$price)
@@ -90,11 +95,6 @@ class ProductPrice extends ActiveRecordModel
 
 	private function getChildPrice($parentPrice, $childPriceDiff, $setting)
 	{
-		if ($parentPrice && !$childPriceDiff)
-		{
-			var_dump($parentPrice . ' - ' . $childPriceDiff);
-			throw new ApplicationException();
-		}
 		if ($setting == Product::CHILD_ADD)
 		{
 			return $parentPrice + $childPriceDiff;
@@ -125,7 +125,8 @@ class ProductPrice extends ActiveRecordModel
 
 			if ($priceSetting !== Product::CHILD_OVERRIDE)
 			{
-				$price = $this->getChildPrice($parentPrice, $this->recalculatePrice(), $priceSetting);
+				//$price = $this->getChildPrice($parentPrice, $this->recalculatePrice(), $priceSetting);
+				$price = $this->recalculatePrice();
 			}
 			else
 			{
@@ -191,13 +192,14 @@ class ProductPrice extends ActiveRecordModel
 		if ($parent = $item->product->get()->parent->get())
 		{
 			$order = $item->customerOrder->get();
-			if ($order->isDiscountActionsLoaded() && $order->getItemDiscountActions($item)->getActionsByType(DiscountAction::ACTION_SUM_VARIATIONS)->size())
+
+			$itemCnt = 0;
+			foreach ($order->getShoppingCartItems() as $orderItem)
 			{
-				$itemCnt = 0;
-				foreach ($order->getShoppingCartItems() as $orderItem)
+				if ($orderItem->isVariationDiscountsSummed())
 				{
-					$orderProduct = $orderItem->product->get();
-					if ($orderProduct->parent->get()->getID() == $parent->getID())
+					$orderProduct = $orderItem->product->get()->getParent();
+					if ($orderProduct->getID() == $parent->getID())
 					{
 						$itemCnt += $orderItem->count->get();
 					}
@@ -367,13 +369,15 @@ class ProductPrice extends ActiveRecordModel
 		$priceField = $listPrice ? 'listPrice' : 'price';
 		$formattedPriceField = $listPrice ? 'formattedListPrice' : 'formattedPrice';
 
-		foreach ($priceArray as $product => $prices)
+		foreach ($priceArray as $productId => $prices)
 		{
+			$product =& $productArray[$ids[$productId]];
+
 			// look for a parent product
-			if (!empty($productArray[$ids[$product]]['parentID']))
+			if (!empty($product['parentID']))
 			{
-				$parent = Product::getInstanceByID($productArray[$ids[$product]]['parentID']);
-				$settings = $productArray[$ids[$product]]['childSettings'];
+				$parent = Product::getInstanceByID($product['parentID']);
+				$settings = $product['childSettings'];
 				if (isset($settings['price']))
 				{
 					$priceSetting = $settings['price'];
@@ -384,7 +388,30 @@ class ProductPrice extends ActiveRecordModel
 				$parent = null;
 			}
 
-			$productArray[$ids[$product]]['defined' . ($listPrice ? 'List' : '') . 'Prices'] = $prices;
+			// apply discounts to display prices
+			if (!$listPrice)
+			{
+				$ruleController = self::getApplication()->getBusinessRuleController();
+				foreach ($prices as $currency => $price)
+				{
+					$discountedPrice = $ruleController->getProductPrice($product, $price, $currency);
+					if ($discountedPrice != $price)
+					{
+						$product['definedListPrices'][$currency] = $price;
+						$prices[$currency] = $discountedPrice;
+					}
+				}
+			}
+
+			$key = 'defined' . ($listPrice ? 'List' : '') . 'Prices';
+			if (empty($product[$key]))
+			{
+				$product[$key] = array();
+			}
+			$product['original' . $key] = $prices;
+			$product[$key] = array_merge($prices, $product[$key]);
+
+			$prices =& $product[$key];
 
 			foreach ($currencies as $id => $currency)
 			{
@@ -407,10 +434,10 @@ class ProductPrice extends ActiveRecordModel
 					$price = $parentPrice + ($price * (($priceSetting == Product::CHILD_ADD) ? 1 : -1));
 				}
 
-				$productArray[$ids[$product]][$priceField . '_' . $id] = $price;
+				$product[$priceField . '_' . $id] = $price;
 				if (isset($currencies[$id]))
 				{
-					$productArray[$ids[$product]][$formattedPriceField][$id] = $currencies[$id]->getFormattedPrice($price);
+					$product[$formattedPriceField][$id] = $currencies[$id]->getFormattedPrice($price);
 				}
 			}
 		}

@@ -1,0 +1,4 @@
+AuthorizeNet=Authorize.net
+AuthorizeNet_login=Κωδικός εισόδου(Login ID)
+AuthorizeNet_transactionKey=Κλειδί συναλλαγής
+AuthorizeNet_gateway=URL Εισόδου

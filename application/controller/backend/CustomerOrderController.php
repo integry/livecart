@@ -56,7 +56,7 @@ class CustomerOrderController extends ActiveGridController
 
 	protected function getDefaultColumns()
 	{
-		return array('CustomerOrder.ID2', 'User.fullName', 'User.email', 'CustomerOrder.dateCompleted', 'CustomerOrder.totalAmount', 'CustomerOrder.status', 'User.ID');
+		return array('CustomerOrder.invoiceNumber', 'User.fullName', 'User.email', 'CustomerOrder.dateCompleted', 'CustomerOrder.totalAmount', 'CustomerOrder.status', 'User.ID');
 	}
 
 	public function info()
@@ -133,6 +133,8 @@ class CustomerOrderController extends ActiveGridController
 		$response->set('form', $this->createOrderForm($orderArray));
 
 		$user = $order->user->get();
+
+		$response->setStatusCode(200);
 
 		if (!$user)
 		{
@@ -395,7 +397,7 @@ class CustomerOrderController extends ActiveGridController
 		foreach ($columns as $col => $type)
 		{
 			$index++;
-			if ('CustomerOrder.ID2' == $col)
+			if ('CustomerOrder.ID' == $col)
 			{
 				break;
 			}
@@ -452,22 +454,6 @@ class CustomerOrderController extends ActiveGridController
 	{
 		$filter = parent::getSelectFilter();
 
-		if($this->request->get('sort_col') == 'CustomerOrder.ID2')
-		{
-			$this->request->set('sort_col', 'CustomerOrder.ID');
-		}
-
-		if($filters = $this->request->get('filters'))
-		{
-			if (isset($filters['CustomerOrder.ID2']))
-			{
-				$filters['CustomerOrder.ID'] = $filters['CustomerOrder.ID2'];
-				unset($filters['CustomerOrder.ID2']);
-			}
-
-			$this->request->set('filters', $filters);
-		}
-
 		$id = $this->request->get('id');
 		if (!is_numeric($id))
 		{
@@ -504,8 +490,6 @@ class CustomerOrderController extends ActiveGridController
 
 		foreach ($orders as &$order)
 		{
-			$order['ID2'] = $order['ID'];
-
 			foreach ($order as $field => &$value)
 			{
 				if('status' == $field)
@@ -560,9 +544,7 @@ class CustomerOrderController extends ActiveGridController
 
 	protected function getExportColumns()
 	{
-		$displayedColumns = $this->getDisplayedColumns();
-		unset($displayedColumns['CustomerOrder.ID2']);
-		return $displayedColumns;
+		return $this->getDisplayedColumns();
 	}
 
 	protected function getColumnValue($record, $class, $field)
@@ -903,7 +885,6 @@ class CustomerOrderController extends ActiveGridController
 	{
 		$availableColumns['User.email'] = 'text';
 		$availableColumns['User.ID'] = 'text';
-		$availableColumns['CustomerOrder.ID2'] = 'numeric';
 		$availableColumns['User.fullName'] = 'text';
 
 		$availableColumns['CustomerOrder.status'] = 'text';

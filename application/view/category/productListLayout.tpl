@@ -1,6 +1,6 @@
 {if 'GRID' == $layout}
 	{include file="category/productGrid.tpl" products=$products}
-{elseif 'TABLE' == $layout}
+{elseif $layout == 'TABLE'}
 	{include file="category/productTable.tpl" products=$products}
 {else}
 	{include file="category/productList.tpl" products=$products}

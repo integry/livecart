@@ -2,9 +2,9 @@
 Gerbiama(-s) {$user.fullName},
 
 {if $order.shipments|@count == 1}
-Pasikeitė Jūsų užsakymo <b class="orderID">#{$order.ID}</b> būsena.
+Pasikeitė Jūsų užsakymo <b class="orderID">#{$order.invoiceNumber}</b> būsena.
 {else}
-Būsena pakito vienam ar daugiau Jūsų užsakymo <b class="orderID">#{$order.ID}</b> siuntinių.
+Būsena pakito vienam ar daugiau Jūsų užsakymo <b class="orderID">#{$order.invoiceNumber}</b> siuntinių.
 {/if}
 
 Jei turite klausimų, susijusių su šiuo užsakymu, galite siųsti laišką ar susisiekti su mumis iš šio puslapio:

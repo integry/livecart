@@ -1,0 +1,13 @@
+_add_new_file=Προσθήκη νέου αρχείου
+_add_new_group=Προσθήκη νεας ομάδος
+_cancel_adding_new_file=Ακύρωση προσθήκης νέου αρχείου
+_cancel_adding_file_group=Ακύρωση προσθήκης νέας ομάδος
+_are_you_sure_you_want_to_delete=Είσθε σίγουρος/η ότι επιθυμείτε την διαγραφή αυτού του αρχείου
+_are_you_sure_you_want_to_delete_group=Είσθε σίγουρος/η ότι επιθυμείτε τη διαγραφή αυτής της ομάδος
+_product_file_group_title=Τίτλος
+_add_new_file_group=Επεξεργασία αρχείου ομάδος
+_err_file_title_is_empty=Παρακαλούμε εισάγετε τίτλο αρχείου
+_err_allow_download_days_should_be_a_number=Ο αριθμός των ημερών πρέπει να είναι αριθμητικός τύπος
+_err_allow_download_days_is_empty=Παρακαλούμε εισάγετε τον αριθμό των ημερών προς κατέβασμα(download)
+_err_file_could_not_be_uploaded_to_the_server=Το αρχείο δεν μπόρεσε να φορτωθεί στο server
+_err_fileName_should_not_be_empty=Παρακαλούμε εισάγετε όνομα αρχείου

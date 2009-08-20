@@ -1,0 +1,14 @@
+_add_tax=Tilføj ny moms
+_tax_rate_has_been_successfully_saved=Momssatsen er gemt succesfuldt
+_could_not_save_tax_rate=Kunne ikke gemme momssats
+_tax=Moms
+_rate=Momssats
+_add_new_tax_rate=Tilføj ny momssats
+_error_tax_should_not_be_empty=Venligst indtast momssats
+_more_taxes_can_be_added=Flere momssatser kan tilføjes
+_here=her
+_error_rate_should_be_greater_than_zero_and_less_than_hundred=Sats skal være mellem 0 og 100
+_error_rate_should_be_numeric_value=Momssats skal være en numerisk værdi
+_error_rate_should_not_be_empty=Venligst indtast momssats
+_cancel_adding_new_tax_rate=Annuller tilføjelse af ny momssats
+_no_taxes=Ingen momssatser er endnu tilføjet

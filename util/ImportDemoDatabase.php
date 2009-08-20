@@ -8,6 +8,7 @@ ClassLoader::import('application.model.product.Product');
 ClassLoader::import('application.model.system.Installer');
 
 $file = ClassLoader::getRealPath('installdata.demo') . '.sql';
+//$file = 'alter.sql';
 
 if (!file_exists($file))
 {
@@ -37,8 +38,5 @@ foreach ($queries as $query)
 		ActiveRecord::executeUpdate($query);
 	}
 }
-
-//echo strlen(file_get_contents($file));
-//Installer::loadDatabaseDump(file_get_contents($file));
 
 ?>

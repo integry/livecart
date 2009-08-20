@@ -1,0 +1,16 @@
+_a_relationship_between_products_was_successfully_created=Μια συνάφεια μεταξύ των προιόντων δημιουργήθηκε επιτυχώς
+_could_not_create_product_relationship=Αυτό το προιόν ήδη έχει ορισθεί ως σχετιζόμενο
+_relationship_was_successfully_removed=Συνάφεια απομακρύνθηκε επιτυχώς
+_select_product=Προσθήκη σχετιζόμενου προιόντος
+_add_new_group=Προσθήκη νέας ομάδος
+_add_group_title=Προσθήκη Νέας Σχετιζόμενης Ομάδος Προιόντων
+_done_adding=Έγινε προσθήκη σχετιζόμενων προιόντων
+_cancel_adding_new_related_product=Ακύρωση προσθήκης νέας συνάφειας προιόντων
+_cancel_adding_new_group=Ακύρωση προσθήκης νέας ομάδος
+_are_you_sure_you_want_to_delete_this_group=Είσθε σίγουρος/η ότι επιθυμείτε τη διαγραφή αυτής της συναφούς ομάδος?
+_are_you_sure_you_want_to_delete_this_relation=Είσθε σίγουρος/η ότι επιθυμείτε τη διαγραφή αυτής της συνάφειας?
+_product_relationship_group_title=Τίτλος
+_err_relationship_name_is_empty=Παρακαλούμε εισάγετε όνομα ομάδος
+_err_circular=Δεν μπορείτε να προσθέσετε ένα σχετιζόμενο προιόν σε ένα ίδιο προιόν
+_err_multiple=Αυτό το προιόν ήδη έχει ορισθεί ως σχετιζόμενο
+_msg_added=Σχετιζόμενα προιόντα προστέθηκαν επιτυχώς

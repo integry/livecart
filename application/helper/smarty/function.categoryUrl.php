@@ -83,7 +83,7 @@ function createCategoryUrl($params, LiveCart $application)
 	}
 
 	// apply new filter (narrow search)
-	if (isset($params['addFilter']))
+	if (!empty($params['addFilter']))
 	{
 	  	$filters[] = filterHandle($params['addFilter']);
 	}
@@ -94,7 +94,7 @@ function createCategoryUrl($params, LiveCart $application)
 	}
 
 	$urlParams = array('controller' => 'category',
-					   'action' => 'index',
+					   'action' => empty($params['action']) ? 'index' : $params['action'],
 					   'cathandle' => $handle,
 					   'id' => $category['ID'],
 					   );
@@ -112,6 +112,16 @@ function createCategoryUrl($params, LiveCart $application)
 	if ($filters)
 	{
 		$urlParams['filters'] = implode(',', $filters);
+	}
+
+	if ('index' != $urlParams['action'])
+	{
+		unset($urlParams['cathandle']);
+		if (isset($urlParams['filters']))
+		{
+			$urlParams['query'] = 'filters=' . $urlParams['filters'];
+			unset($urlParams['filters']);
+		}
 	}
 
 	$url = $application->getRouter()->createUrl($urlParams, true);

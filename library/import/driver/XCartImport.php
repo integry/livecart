@@ -218,7 +218,7 @@ class XCartImport extends LiveCartImportDriver
 			}
 
 			// get all categories
-			$sql = 'SELECT ' . $this->getTablePrefix() . 'categories.*, ' . implode(', ', $langs) . ' FROM ' . $this->getTablePrefix() . 'categories ' . implode(' ', $join) . ' ORDER BY order_by ASC';
+			$sql = 'SELECT ' . $this->getTablePrefix() . 'categories.* ' . ($langs ? ',' : '') . implode(', ', $langs) . ' FROM ' . $this->getTablePrefix() . 'categories ' . implode(' ', $join) . ' ORDER BY order_by ASC';
 			foreach ($this->getDataBySQL($sql) as $category)
 			{
 				$this->categoryMap[$category['categoryid']] = $category;
@@ -284,7 +284,7 @@ class XCartImport extends LiveCartImportDriver
 		}
 
 		//images
-		$images = $this->getDataBySQL('SELECT * FROM ' . $this->getTablePrefix() . 'images_C WHERE id=' . $data['categoryid'] . ' ORDER BY orderby ASC');
+		$images = $this->getDataBySQL('SELECT * FROM ' . $this->getTablePrefix() . 'images_c WHERE id=' . $data['categoryid'] . ' ORDER BY orderby ASC');
 		foreach ($images as $image)
 		{
 			$this->importCategoryImage($rec, $this->path . '/' . $image['image_path']);
@@ -313,7 +313,7 @@ class XCartImport extends LiveCartImportDriver
 			}
 
 			// get all categories
-			$this->specFieldSql = 'SELECT ' . $this->getTablePrefix() . 'extra_fields.*, ' . implode(', ', $langs) . ' FROM ' . $this->getTablePrefix() . 'extra_fields ' . implode(' ', $join) . ' ORDER BY orderby ASC';
+			$this->specFieldSql = 'SELECT ' . $this->getTablePrefix() . 'extra_fields.* ' . ($langs ? ',' : '') . implode(', ', $langs) . ' FROM ' . $this->getTablePrefix() . 'extra_fields ' . implode(' ', $join) . ' ORDER BY orderby ASC';
 		}
 
 		if (!$data = $this->loadRecord($this->specFieldSql))
@@ -359,7 +359,7 @@ class XCartImport extends LiveCartImportDriver
 				$langs[] = 'extra_' . $attr['fieldid'] . '.value AS extrafield_' . $attr['fieldid'];
 			}
 
-			$this->productSql = 'SELECT ' . $this->getTablePrefix() . 'products.*, ' . $this->getTablePrefix() . 'products_categories.categoryid, ' . implode(', ', $langs) . ', (SELECT price FROM ' . $this->getTablePrefix() . 'pricing WHERE ' . $this->getTablePrefix() . 'pricing.productid=' . $this->getTablePrefix() . 'products.productid ORDER BY quantity ASC LIMIT 1) AS price FROM ' . $this->getTablePrefix() . 'products ' . implode(' ', $join) . ' LEFT JOIN ' . $this->getTablePrefix() . 'products_categories ON (' . $this->getTablePrefix() . 'products.productid=' . $this->getTablePrefix() . 'products_categories.productid AND ' . $this->getTablePrefix() . 'products_categories.main="Y")';
+			$this->productSql = 'SELECT ' . $this->getTablePrefix() . 'products.*, ' . $this->getTablePrefix() . 'products_categories.categoryid ' . ($langs ? ',' : '') . implode(', ', $langs) . ', (SELECT price FROM ' . $this->getTablePrefix() . 'pricing WHERE ' . $this->getTablePrefix() . 'pricing.productid=' . $this->getTablePrefix() . 'products.productid ORDER BY quantity ASC LIMIT 1) AS price FROM ' . $this->getTablePrefix() . 'products ' . implode(' ', $join) . ' LEFT JOIN ' . $this->getTablePrefix() . 'products_categories ON (' . $this->getTablePrefix() . 'products.productid=' . $this->getTablePrefix() . 'products_categories.productid AND ' . $this->getTablePrefix() . 'products_categories.main="Y")';
 		}
 
 		if (!$data = $this->loadRecord($this->productSql))
@@ -414,10 +414,10 @@ class XCartImport extends LiveCartImportDriver
 		//images
 		$images = array_merge(
 			// main thumbnail
-			$this->getDataBySQL('SELECT * FROM ' . $this->getTablePrefix() . 'images_T WHERE id=' . $data['productid'] . ' ORDER BY orderby ASC'),
+			$this->getDataBySQL('SELECT * FROM ' . $this->getTablePrefix() . 'images_t WHERE id=' . $data['productid'] . ' ORDER BY orderby ASC'),
 
 			// additional large size images
-			$this->getDataBySQL('SELECT * FROM ' . $this->getTablePrefix() . 'images_D WHERE id=' . $data['productid'] . ' ORDER BY orderby ASC')
+			$this->getDataBySQL('SELECT * FROM ' . $this->getTablePrefix() . 'images_d WHERE id=' . $data['productid'] . ' ORDER BY orderby ASC')
 			);
 
 		foreach ($images as $image)
@@ -456,11 +456,17 @@ class XCartImport extends LiveCartImportDriver
 		// products
 		foreach ($this->getDataBySql('SELECT * FROM ' . $this->getTablePrefix() . 'order_details WHERE orderid=' . $data['orderid']) as $prod)
 		{
-			$product = Product::getInstanceById($this->getRealId('Product', $prod['productid']));
-			$order->addProduct($product, $prod['amount'], true);
-
-			$item = array_shift($order->getItemsByProduct($product));
-			$item->price->set($prod['price']);
+			try
+			{
+				$product = Product::getInstanceById($this->getRealId('Product', $prod['productid']), true);
+				$order->addProduct($product, $prod['amount'], true);
+				$item = array_shift($order->getItemsByProduct($product));
+				$item->price->set($prod['price']);
+			}
+			catch (ARNotFoundException $e)
+			{
+				// the product no longer exists
+			}
 		}
 
 		// addresses

@@ -1,0 +1,7 @@
+FedexShipping=FedEx
+_FEDEX_API_ACCESS=Πρόσβαση API
+FedexShipping_accountNumber=Αριθμός λογαριασμού
+FedexShipping_meterNumber=Μετρικός αριθμός(Meter number)
+FedexShipping_apiUrl=API URL
+_FEDEX_SERVICE_OPTS=Επιλογές Υπηρεσίας
+FedexShipping_enabledServices=Ορατές(enabled) υπηρεσίες

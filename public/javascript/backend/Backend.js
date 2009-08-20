@@ -448,7 +448,7 @@ Backend.Breadcrumb =
 
 				if(Backend.Breadcrumb.treeBrowser.getIndexById(this.catId) == null)
 				{
-					Backend.Category.treeBrowser.loadXML(Backend.Category.links.categoryRecursiveAutoloading + "?id=" + this.catId);
+					Backend.Category.treeBrowser.loadXML(Backend.Router.setUrlQueryParam(Backend.Category.links.categoryRecursiveAutoloading, "id", this.catId));
 				}
 				else
 				{
@@ -1983,7 +1983,7 @@ Backend.MultiInstanceEditor.prototype =
 			progressIndicator.show();
 		}
 
-		if (window.opener)
+		if (window.opener && window.opener.selectProductPopup)
 		{
 			window.opener.selectProductPopup.getSelectedObject(id);
 			return;
@@ -2090,7 +2090,11 @@ Backend.MultiInstanceEditor.prototype =
 		Element.hide(this.getListContainer());
 		Element.show(container);
 
-		tinyMCE.idCounter = 0;
+		if (window.tinyMCE)
+		{
+			tinyMCE.idCounter = 0;
+		}
+
 		ActiveForm.prototype.initTinyMceFields(container);
 
 		this.reInitAddForm();

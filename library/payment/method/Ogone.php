@@ -17,7 +17,7 @@ class Ogone extends ExternalPayment
 		$params['PSPID'] = $this->getConfigValue('pspid');
 
 		// a unique order id from your program. (128 characters max)
-		$params['orderID'] = $this->details->invoiceID->get();
+		$params['orderID'] = $this->details->invoiceID->get() . '_' . time();
 
 		// the total amount to be billed, in decimal form, without a currency symbol.
 		$params['amount'] = $this->details->amount->get() * 100;
@@ -43,6 +43,13 @@ class Ogone extends ExternalPayment
 		$params['EMAIL'] = $this->details->email->get();
 		$params['ownertelno'] = $this->details->phone->get();
 
+		$params['language'] = ActiveRecordModel::getApplication()->getLocaleCode() . '_BE';
+
+		if ($secretWord = $this->getConfigValue('secretWord'))
+		{
+			$params['SHASign'] = strtoupper(sha1($params['orderID'] . $params['amount'] . $params['currency'] . $params['PSPID'] .$secretWord));
+		}
+
 		$pairs = array();
 		foreach ($params as $key => $value)
 		{
@@ -54,7 +61,6 @@ class Ogone extends ExternalPayment
 
 	public function notify($requestArray)
 	{
-		$this->saveDebug($requestArray);
 		if ($secretWord = $this->getConfigValue('secretWord'))
 		{
 			// Check the SHA1 signature
@@ -102,7 +108,7 @@ class Ogone extends ExternalPayment
 
 	public function getOrderIdFromRequest($requestArray)
 	{
-		return $requestArray['orderID'];
+		return array_shift(explode('_', $requestArray['orderID']));
 	}
 
 	public function getReturnUrlFromRequest($requestArray)

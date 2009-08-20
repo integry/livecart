@@ -41,7 +41,7 @@ $routes = array(
 					array("manufacturer/:handle-:id", array('controller' => 'manufacturers', 'action' => 'view'), array("handle" => $handle, "id" => "[0-9]+")),
 
 					// xml export
-					array("xml/:module", array('controller' => 'xml', 'action' => 'export'), array("module" => '[a-zA-Z0-9]+')),
+					array("xml/:module.xml", array('controller' => 'xml', 'action' => 'export'), array("module" => '[a-zA-Z0-9]+')),
 
 					// default rules
 					array("", array("controller" => "index", "action" => "index"), array()),

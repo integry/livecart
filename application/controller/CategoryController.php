@@ -174,7 +174,7 @@ class CategoryController extends FrontendController
 		$categoryNarrow = array();
 		if ((!empty($searchQuery) || $this->getCategory()->isRoot() || $this->filters) && $products)
 		{
-			$categoryNarrow = $this->getSubCategoriesBySearchQuery($selectFilter, $subCategories);
+			$categoryNarrow = $this->getSubCategoriesBySearchQuery($productFilter->getSelectFilter(), $subCategories);
 		}
 
 		$categoryArray = $this->getCategory()->toArray();
@@ -1196,7 +1196,7 @@ class CategoryController extends FrontendController
 
 		$namespace = 'category_featured';
 		$products = array();
-		foreach ($categories as $category)
+		foreach ((array)$categories as $category)
 		{
 			$key = array($namespace, $category['ID']);
 			if ($product = $cache->get($key))
@@ -1246,7 +1246,7 @@ class CategoryController extends FrontendController
 		return $res;
 	}
 
-	private function getCategory()
+	protected function getCategory()
 	{
 		if (!$this->category)
 		{

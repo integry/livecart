@@ -49,7 +49,7 @@ class CsvFile implements Iterator
 		$count = 0;
 		while (!feof($f))
 		{
-			$s = trim(fgets($f));
+			$s = fgetcsv($f);
 			if (!empty($s))
 			{
 				$count++;

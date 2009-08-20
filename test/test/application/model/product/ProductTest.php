@@ -701,7 +701,8 @@ class ProductTest extends LiveCartTest
 		$this->assertEquals(1, $clonedOpts->size());
 
 		// image
-
+		$this->assertTrue(is_object($reloaded->defaultImage->get()));
+		$this->assertNotEquals($reloaded->defaultImage->get()->getID(), $this->product->defaultImage->get()->getID());
 	}
 
 	public function testChildProduct()

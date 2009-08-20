@@ -1,0 +1,10 @@
+_select_file=Επιλέξτε ένα Αρχείο
+_listing_files=Ταξινόμηση αρχείων $από - $μέχρι από$λογαριασμό
+_no_files_found=Δεν βρέθηκαν αρχεία
+fileName=Όνομα αρχείου
+fileType=Επέκταση αρχείου
+fileSize=Μέγεθος
+fileDate=Ημερομηνία τροποποίησης
+filePermissions=Άδειες
+fileOwner=Ιδιοκτήτης
+fileGroup=Ομάδα

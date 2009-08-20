@@ -79,7 +79,7 @@
 					<span class="progressIndicator" style="display: none;"></span>
 				</span>
 
-				<span>{selectfield name="type" class="conditionType" options=$conditionTypes}</span>
+				<span>{selectfield name="conditionClass" class="conditionClass" options=$conditionTypes}</span>
 				<span>{selectfield name="productComparisonField" class="comparisonField" options=$comparisonFields}</span>
 				<span>{selectfield name="comparisonType" class="comparisonType" options=$comparisonTypes}</span>
 				<span>{textfield name="comparisonValue" class="number comparisonValue"}</span>
@@ -167,7 +167,7 @@
 
 			<p>
 				<label>{t _action}</label>
-				<span>{selectfield name="actionType" class="actionType" options=$actionTypes}</span>
+				<span>{selectfield name="actionClass" class="actionClass" options=$actionTypes}</span>
 			</p>
 
 			<div class="amountFields">

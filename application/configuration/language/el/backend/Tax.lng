@@ -1,0 +1,10 @@
+_tax_entry_was_successfully_saved=Η καταχώρηση φόρου αποθηκεύθηκε επιτυχώς
+_could_not_save_tax_entry=Δεν μπορέσατε να αποθηκεύσετε την καταχώρηση φόρου
+_add_new_tax=Προσθήκη νέου φόρου
+_cancel_adding_new_tax=Ακύρωση προσθήκης νέου φόρου
+_cancel_adding_new_tax_rate=Ακύρωση προσθήκης νέας τιμής φόρου
+_name=Όνομα
+_manage=Διαχείριση
+_taxes=Φόροι
+_error_the_name_should_not_be_empty=Παρακαλούμε εισάγετε όνομα
+_are_you_sure_you_want_to_remove_ths_tax=Είσθε σίγουρος/η ότι θέλετε να αφαιρέσετε αυτό το φόρο? Μπορεί να χρησιμοποιείται σε ορισμένες ζώνες διανομής.

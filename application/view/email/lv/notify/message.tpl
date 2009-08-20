@@ -1,5 +1,5 @@
 {'STORE_NAME'|config} jauns klienta paziņojums sakarā ar pasūtījumu
-Klients ir pievienojis jaunu paziņojumu pie pasūtījuma <b class="orderID">#{$order.ID}</b>
+Klients ir pievienojis jaunu paziņojumu pie pasūtījuma <b class="orderID">#{$order.invoiceNumber}</b>
 
 --------------------------------------------------
 {$message.text}

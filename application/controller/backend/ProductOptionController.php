@@ -75,6 +75,7 @@ class ProductOptionController extends StoreManagementController
 		}
 
 		$productOptionList = $option->toArray();
+		unset($productOptionList['DefaultChoice']);
 
 		foreach($option->getChoiceSet()->toArray() as $value)
 		{

@@ -78,6 +78,11 @@ NAME=Name
 PRICE=Price
 DETAILS=Link to detail page
 
+_missing_images=Missing Product Images
+MISSING_IMG_THUMB=Thumbnails (side menus, etc.)
+MISSING_IMG_SMALL=Small images (product lists in categories)
+MISSING_IMG_LARGE=Large images (product page)
+
 _category_filters=Category Page Filters
 ENABLE_MAN_FILTERS=Enable manufacturer filters
 ENABLE_PRICE_FILTERS=Enable price filters
@@ -112,6 +117,10 @@ _m_small=Small
 _m_thumb=Thumbnail
 _m_medium=Medium
 _m_large=Large
+
+_option_image=Customer File Upload Preview
+_o_small=Thumbnail images
+_o_large=Enlarged preview
 
 _content_blocks=Content blocks
 _sale_items=On-sale Products
@@ -159,6 +168,7 @@ TOP_MENU_COMPACT=Compact display style (include filter names in drop-down menus)
 TOP_FILTER_PRICE=Display price filters in top menu
 TOP_FILTER_MANUFACTURER=Display manufacturer filters in top menu
 TOP_FILTER_CONTINUOS=Continuos filter selection (previous filters have to be selected for the further filters to become selectable)
+TOP_FILTER_RELOAD=Reload page after selecting a filter
 
 _price_filters=Price Filters
 _price_filter_1=Price Filter 1
@@ -204,6 +214,7 @@ PRICE_FILTER_TO_10=Price To
 
 _invoice=Invoices
 _seller_info=Seller Information
+DISABLE_INVOICES=Disable invoices
 INVOICE_SELLER_INFO=Seller contact information in invoice
 
 _invoice_preferences=Invoice Options
@@ -250,6 +261,7 @@ MAX_QUANT=Maximum quantity of products per order (0 - no limit)
 ENABLE_CART=Enable shopping cart
 ENABLE_WISHLISTS=Enable wishlists
 DISABLE_GUEST_CHECKOUT=Disable guest checkout
+DISABLE_GUEST_CART=Require registration to access shopping cart
 ENABLE_MULTIADDRESS=Allow shipping to multiple addresses
 ENABLE_CHECKOUTDELIVERYSTEP=Enter billing and shipping addresses at separate checkout steps
 SKIP_SHIPPING=Skip shipping method selection step if only one shipping method is available (select it automatically)
@@ -329,8 +341,30 @@ CC_AUTHONLY=Only authorize payments without capturing them automatically
 _customers=Customers & Registration
 _registration=Registration
 REQUIRE_PHONE=Require customers to enter phone number on registration
+REQUIRE_REG_ADDRESS=Require address entry on registration
 DISABLE_STATE=Remove state field
 REG_EMAIL_CONFIRM=Require e-mail address confirmation
+
+_invoice_numbers=Invoice Numbers
+INVOICE_NUMBER_GENERATOR=Invoice number scheme
+SequentialInvoiceNumber=Numeric and sequential
+SequentialInvoiceNumber_START_AT=Start invoice numbers from
+SequentialInvoiceNumber_STEP=Number increase step
+SequentialInvoiceNumber_MIN_LENGTH=Minimum number length (padded with zeros if shorter)
+SequentialInvoiceNumber_PREFIX=Number prefix
+SequentialInvoiceNumber_SUFFIX=Number suffix
+
+_shipping_estimation=Shipping Cost Estimation
+ENABLE_SHIPPING_ESTIMATE=Enable shipping cost estimation in shopping cart page
+SHIP_ESTIMATE_HIDE_ENTRY=Hide address entry for
+UNREGISTERED=Unregistered customers (use store default address)
+ALL_REGISTERED=All registered customers (use store default address or customer address if entered)
+REGISTERED_WITH_ADDRESS=Registered customers that have previously entered an address
+SHIP_ESTIMATE_FIELDS=Address entry fields
+COUNTRY=Country
+STATE=State
+CITY=City
+POSTALCODE=Postal (ZIP) code
 
 # Countries
 _countries=Countries
@@ -351,6 +385,9 @@ SHOW_BACKEND_LANG_FILES=Allow to edit store back-end language files
 
 _template_management=Template Management
 SHOW_BACKEND_TEMPLATE_FILES=Allow to edit store back-end template files
+
+_admin_misc=Miscellaneous Options
+DISABLE_WYSIWYG=Disable WYSIWYG editors
 
 # SSL options
 _ssl_opts=Security

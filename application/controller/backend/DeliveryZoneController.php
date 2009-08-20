@@ -122,7 +122,7 @@ class DeliveryZoneController extends StoreManagementController
 		$zone = DeliveryZone::getInstanceByID((int)$this->request->get('id'));
 		DeliveryZoneState::removeByZone($zone);
 
-		foreach($this->request->get('active') as $activeStateID)
+		foreach((array)$this->request->get('active') as $activeStateID)
 		{
 			$state = State::getInstanceByID((int)$activeStateID);
 			$deliveryZoneState = DeliveryZoneState::getNewInstance($zone, $state);

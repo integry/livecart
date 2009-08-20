@@ -1,0 +1,4 @@
+PaypalWebsitePaymentsStandard=Σταθερές Πληρωμές PayPal Website
+PaypalWebsitePaymentsStandard_EMAIL=Ηλεκτρονική διεύθυνση επιχείρησης
+PaypalWebsitePaymentsStandard_SANDBOX=Χρήση PayPal Sandbox (περιβάλλοντος ελέγχου)
+PaypalWebsitePaymentsStandard_ITEM_NAME=Περιγραφή είδους κάρτας αγορών για παρουσίαση στο Paypal

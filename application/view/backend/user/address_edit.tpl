@@ -1,5 +1,6 @@
 {hidden name="`$namePrefix`ID"}
 
+{if !$hideName}
 <fieldset class="error">
 	<label for="{$idPrefix}_firstName">{t _first_name}</label>
 	{textfield name="`$namePrefix`firstName" id="`$idPrefix`_firstName" class="text"}
@@ -17,6 +18,7 @@
 	{textfield name="`$namePrefix`companyName" id="`$idPrefix`_companyName" class="text"}
 	<div class="errorText" style="display: none" ></div>
 </fieldset>
+{/if}
 
 <fieldset class="error">
 	<label for="{$idPrefix}_countryID">{t _country}</label>

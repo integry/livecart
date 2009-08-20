@@ -1,0 +1,17 @@
+UspsShipping=USPS
+_USPS_API_ACCESS=USPS Shipping API Access
+UspsShipping_userId=Όνομα χρήστη USPS API 
+UspsShipping_apiUrl=USPS API URL
+_USPS_DOMESTIC_OPTS=Επιλογές Αποστολών Εσωτερικού
+UspsShipping_domestic=Ορατές(enabled) υπηρεσίες mailing
+UspsShipping_priorityPackageType=Τύπος πακέτου mail προτεραιότητας
+UspsShipping_isMachinable=Το πακέτο είναι μηχανοποιημένο
+UspsShipping_size=Μέγεθος πακέτου
+_USPS_ITL_OPTS=Επιλογές Διεθνούς Αποστολής
+UspsShipping_international=Ορατές(enabled) διεθνείς υπηρεσίες mailing
+Express=Express
+Priority=Προτεραιότητα
+Parcel=Ταχυδρομικό Δέμα
+Library=Library Mail
+BPM=Συνδεδεμένο Τυπωμένο Υλικό
+Media=Media Mail

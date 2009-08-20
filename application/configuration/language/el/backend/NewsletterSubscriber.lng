@@ -1,0 +1,8 @@
+_no_subscribers_found=Δεν βρέθηκαν συνδρομητές
+_listing_subscribers=Ταξινόμηση συνδρομητών $από - $μέχρι από $λογαριασμό
+_process=Εξέλιξη
+_newsletter_delete_confirm=Πραγματικά να απομακρυνθούν οι επιλεγμένοι συνδρομητές του Newsletter?
+_nothing_selected=Παρακαλούμε πρώτα επιλέξτε τουλάχιστον ένα συνδρομητή
+NewsletterSubscriber.ID=ID
+NewsletterSubscriber.isEnabled=Ορατός(enabled)
+NewsletterSubscriber.email=E-mail

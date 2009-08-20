@@ -366,6 +366,43 @@ class ShipmentTaxTest extends OrderTestCommon
 		$this->assertEquals($this->order->getTotal(), 100 + 100);
 	}
 
+	public function testNetherlandsTax()
+	{
+		$tax = Tax::getNewInstance('VAT');
+		$tax->save();
+
+		// shipment delivery zone
+		$zone = DeliveryZone::getDefaultZoneInstance();
+
+		$taxRate = TaxRate::getNewInstance($zone, $tax, 21);
+		$taxRate->save();
+
+		$service = ShippingService::getNewInstance($zone, 'def', ShippingService::SUBTOTAL_BASED);
+		$service->save();
+
+		$shippingRate = ShippingRate::getNewInstance($service, 0, 10000000);
+		$shippingRate->flatCharge->set(6);
+		$shippingRate->save();
+
+		$product = $this->products[0];
+		$product->setPrice('USD', 24.70);
+		$product->save();
+
+		$this->order->addProduct($product, 4, false);
+		$this->order->save();
+
+		// set shipping rate
+		$shipment = $this->order->getShipments()->get(0);
+		$rates = $this->order->getDeliveryZone()->getShippingRates($shipment);
+
+		$shipment->setAvailableRates($rates);
+		$shipment->setRateId($rates->get(0)->getServiceID());
+		$shipment->save();
+
+		$this->order->finalize($this->usd);
+		$this->assertEquals($this->order->getTotal(), 104.80);
+	}
+
 	public function testTaxRounding()
 	{
 		$tax = Tax::getNewInstance('VAT');
@@ -373,16 +410,26 @@ class ShipmentTaxTest extends OrderTestCommon
 
 		TaxRate::getNewInstance(DeliveryZone::getDefaultZoneInstance(), $tax, 19)->save();
 
-		foreach (array(635.99, 228.69, 61.59) as $key => $price)
+		foreach (array(2 => true, 1 => false) as $shipments => $isSeparate)
 		{
-			$this->products[$key]->setPrice('USD', $price);
-			$this->order->addProduct($this->products[$key], 1, false);
+			$this->initOrder();
+			foreach (array(635.99, 228.69, 61.59) as $key => $price)
+			{
+				$this->products[$key]->setPrice('USD', $price);
+
+				if (!$isSeparate)
+				{
+					$this->products[$key]->isSeparateShipment->set(false);
+				}
+
+				$this->order->addProduct($this->products[$key], 1, false);
+			}
+
+			$this->order->save();
+
+			$this->assertEquals(count($this->order->getShipments()), $shipments);
+			$this->assertEquals($this->order->getTotal(), 926.27);
 		}
-
-		$this->order->save();
-
-		// @todo: one extra penny appears after rounding
-		$this->assertEquals($this->order->getTotal(), 926.27 + 0.01);
 	}
 }
 

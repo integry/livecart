@@ -1,0 +1,14 @@
+_no_taxes=Νέοι φόροι δεν έχουν δημιουργηθεί ακόμη.
+_add_tax=Προσθήκη νέου φόρου
+_tax_rate_has_been_successfully_saved=Η τιμή φόρου αποθηκεύθηκε επιτυχώς
+_could_not_save_tax_rate=Δεν μπορέσατε να αποθηκεύσετε την τιμή φόρου
+_tax=Φόρος
+_rate=Τιμή φόρου
+_add_new_tax_rate=Προσθήκη νέας τιμής φόρου
+_cancel_adding_new_tax_rate=Ακύρωση προσθήκης νέας τιμής φόρου
+_error_rate_should_not_be_empty=Παρακαλούμε εισάγετε τιμή φόρου
+_error_rate_should_be_numeric_value=Η τιμή φόρου πρέπει να είναι μια αριθμητική αξία
+_error_rate_should_be_greater_than_zero_and_less_than_hundred=Η τιμή πρέπει να είναι μεταξύ 0 και 100
+_error_tax_should_not_be_empty=Παρακαλούμε εισάγετε την τιμή φόρου
+_more_taxes_can_be_added=Περισσότεροι φόροι μπορούν να προστεθούν
+_here=εδώ

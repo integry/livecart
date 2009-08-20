@@ -165,6 +165,17 @@ abstract class EavSpecificationManagerCommon
 		return $this->attributes[$field->getID()];
 	}
 
+	public function getAttributeByHandle($handle)
+	{
+		foreach ($this->attributes as $attribute)
+		{
+			if ($attribute->getField()->get()->handle->get() == $handle)
+			{
+				return $attribute;
+			}
+		}
+	}
+
 	/**
 	 * Sets specification attribute value
 	 *
@@ -301,9 +312,16 @@ abstract class EavSpecificationManagerCommon
 			{
 				if (!$field->isMultiValue->get())
 				{
-					if ($request->isValueSet($fieldName) && !in_array($request->get($fieldName), array('other', '')))
+					if ($request->isValueSet($fieldName) && !in_array($request->get($fieldName), array('other')))
 				  	{
-				  		$this->setAttributeValue($field, $field->getValueInstanceByID($request->get($fieldName), ActiveRecordModel::LOAD_DATA));
+				  		if ($request->get($fieldName))
+				  		{
+				  			$this->setAttributeValue($field, $field->getValueInstanceByID($request->get($fieldName), ActiveRecordModel::LOAD_DATA));
+				  		}
+				  		else
+				  		{
+				  			$this->removeAttribute($field);
+						}
 				  	}
 				}
 				else
@@ -793,6 +811,11 @@ abstract class EavSpecificationManagerCommon
 		// selectors
 		foreach ($selectors as $specFieldId => $value)
 		{
+			if (!isset($specFields[$specFieldId]))
+			{
+				continue;
+			}
+
 			$specField = $specFields[$specFieldId];
 		  	if ($specField->isMultiValue->get())
 		  	{

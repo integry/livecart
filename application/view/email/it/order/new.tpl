@@ -4,7 +4,7 @@ Gentile {$user.fullName},
 Ti ringraziamo per il tuo ordine, che hai effettuato presso {'STORE_NAME'|config}.
 
 Se volessi contattarci in merito a questo ordine, ti preghiamo di fare riferimento
-a questo numero identificativo: Ordine numero {$order.ID}.
+a questo numero identificativo: Ordine numero {$order.invoiceNumber}.
 
 Potrai tracciare lo stato del tuo ordine direttamente da questa pagina:
 {link controller=user action=viewOrder id=$order.ID url=true}

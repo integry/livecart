@@ -1,0 +1,13 @@
+_ordered_item_was_successfully_moved=Το προιόν μετακινήθηκε επιτυχώς σε μια άλλη αποστολή
+_this_shipping_service_has_no_available_rates=Αυτή η υπηρεσία δεν διατίθεται για τη ζώνη του χρήστη και τιμή παραγγελίας
+_ordered_item_quantity_was_updated=Η ποσότητα είδους ενημερώθηκε
+_error_updating_item_quantity=Σφάλμα ενημέρωσης ποσότητας είδους
+_item_has_been_successfuly_saved=Το προιόν προστέθηκε επιτυχώς στην παραγγελία
+_item_was_successfully_removed_from_shipment=Το προιόν απομακρύνθηκε επιτυχώς από την αποστολή
+_error_removing_item_from_shipment=Σφάλμα συνέβη κατά την απομάκρυνση προιόντος από την αποστολή
+_downloadable_item_already_exists_in_this_order=Αυτό το φορτώσιμο είδος ήδη υπάρχει στην παραγγελία
+_select_product=Προσθήκη προιόντων στην παραγγελία
+_done_adding_products=Η προσθήκη προιόντων ολοκληρώθηκε
+_select_shippment=Επιλογή αποστολής:
+_shipping_service_is_not_selected=Η υπηρεσία αποστολής δεν επιλέχθηκε
+_shipment=Αποστολή

@@ -77,6 +77,11 @@ class LiveCartTransaction extends TransactionDetails
 			$this->addLineItem($item->product->get()->getName(), $item->getPrice(false), $item->count->get(), $item->product->get()->sku->get());
 		}
 
+		if ($discount = $order->getFixedDiscountAmount())
+		{
+			$this->addLineItem(CustomerOrder::getApplication()->translate('_discount'), $discount * -1, 1, 'discount');
+		}
+
 		foreach ($order->getShipments() as $shipment)
 		{
 			if ($rate = $shipment->getSelectedRate())

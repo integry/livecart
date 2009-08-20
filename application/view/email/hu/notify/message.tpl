@@ -1,5 +1,5 @@
 Új üzenet rendelés mellé{'STORE_NAME'|config}
-Egy vásárló üzenete írt az egyik rendelésseé kapcsolatosan <b class="orderID">#{$order.ID}</b>
+Egy vásárló üzenete írt az egyik rendelésseé kapcsolatosan <b class="orderID">#{$order.invoiceNumber}</b>
 
 --------------------------------------------------
 {$message.text}

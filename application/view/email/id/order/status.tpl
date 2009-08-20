@@ -2,9 +2,9 @@
 Yth. Bapak/Ibu {$user.fullName},
 
 {if $order.shipments|@count == 1}
-Status order Anda yaitu order <b class="orderID">#{$order.ID}</b> telah diubah.
+Status order Anda yaitu order <b class="orderID">#{$order.invoiceNumber}</b> telah diubah.
 {else}
-Status dari satu atau beberapa pengiriman order Anda yaitu order <b class="orderID">#{$order.ID}</b> telah diubah.
+Status dari satu atau beberapa pengiriman order Anda yaitu order <b class="orderID">#{$order.invoiceNumber}</b> telah diubah.
 {/if}
 
 Jika Anda memiliki pertanyaan seputar order anda, maka Anda dapat mengirimkan e-mail kepada kami atau hubungi kami melalui halaman berikut::

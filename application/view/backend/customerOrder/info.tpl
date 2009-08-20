@@ -10,7 +10,7 @@
 
 	<p>
 		<label>{t _order_id}</label>
-		<label>{$order.ID}</label>
+		<label>{$order.invoiceNumber}</label>
 	</p>
 
 	{if $order.User}
@@ -119,7 +119,7 @@
 
 	Backend.CustomerOrder.Editor.prototype.existingUserAddresses = {json array=$existingUserAddresses}
 	{literal}
-	var status = Backend.CustomerOrder.Editor.prototype.getInstance({/literal}{$order.ID}, true, {json array=$hideShipped}, {$order.isCancelled}, {$order.isFinalized}{literal});
+	var status = Backend.CustomerOrder.Editor.prototype.getInstance({/literal}{$order.ID}, true, {json array=$hideShipped}, {$order.isCancelled}, {$order.isFinalized}, {json array=$order.invoiceNumber}{literal});
 
 	{/literal}{if $formShippingAddress}{literal}
 		var shippingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_{$order.ID}_shippingAddress_form{literal}'), 'shippingAddress');

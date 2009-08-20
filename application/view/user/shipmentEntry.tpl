@@ -29,10 +29,12 @@
 
 		{if $smarty.foreach.shipments.iteration == 1}
 			{foreach from=$order.discounts item=discount}
-				<tr>
-					<td colspan="4" class="subTotalCaption">{if $discount.amount > 0}{t _discount}{else}{t _surcharge}{/if}: <span class="discountDesc">{$discount.description}</span></td>
-					<td class="amount discountAmount">{$discount.formatted_amount}</td>
-				</tr>
+				{if $discount.amount != 0}
+					<tr>
+						<td colspan="4" class="subTotalCaption">{if $discount.amount > 0}{t _discount}{else}{t _surcharge}{/if}: <span class="discountDesc">{$discount.description}</span></td>
+						<td class="amount discountAmount">{$discount.formatted_amount}</td>
+					</tr>
+				{/if}
 			{/foreach}
 		{/if}
 

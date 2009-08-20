@@ -1,0 +1,16 @@
+_filter_group_was_successfully_saved=Filtret blev succesfuldt fjernet
+_error_illegal_date=Ugyldig dato
+_delete_field=Slet felt
+_error_filter_name_empty=Venligst indtast filternavn
+_could_not_save_filter_group=Kunne ikke gemme filter
+_filter_group_was_successfully_removed=Filter blev fjernet succesfuldt
+_could_not_remove_filter_group=Ikke ikke fjerne filter
+_add_new_filter=Tilføj nyt filter
+_cancel_adding_new_filter=Annuller tilføjelse af nyt filter
+_error_name_empty=Venligst indtast filter-navn
+_error_filter_value_is_not_a_number=Filterværdi skal være numerisk
+_error_filter_handle_invalid=Handling er ugyldig
+_FilterGroup_remove_question=Er du sikker på, at du ønsker at fjerne dette filter?
+_remove_filter_question=Er du sikker på, at du ønsker at fjerne dette filter?
+_error_spec_field_is_not_selected=Specifikation for dette felt er ikke valgt
+_category_has_no_attr=Ingen filtrerbare egenskaber er endnu blevet oprettet for denne kategori

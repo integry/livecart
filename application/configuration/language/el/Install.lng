@@ -1,0 +1,11 @@
+_err_innodb_not_available=<a href="http://dev.mysql.com/doc/refman/5.0/en/innodb-overview.html" target="_blank">η μηχανή αποθήκευσης πίνακα InnoDB</a> δεν είναι ορατή(enabled) για την MySQL.Παρακαλούμε ελέξτε τις ρυθμίσεις του server της βάσης σας δεδομένων MySQL και προσπαθήστε ξανά.
+checkWritePermissions=Γραπτές άδειες Καταλόγου
+_writePermissionsFix=<strong>Συνιστώμενη ενέργεια:</strong>χρησιμοποιώντας ένα πρωτόκολλο μεταφοράς αρχείων(FTP),αλλάξτε τις άδειες πρόσβασης(chmod) γι' αυτούς τους καταλόγους σε 777 (πλήρης πρόσβαση εγγραφής). Εάν αυτός ο κατάλογος δεν υπάρχει ήδη,παρακαλούμε δημιουργήστε αυτόν.
+checkPHPVersion=Έκδοση PHP
+checkPHPVersion_error=<a href="http://php.net" target="_blank">Η PHP</a>έκδοση πρέπει να είναι τουλάχιστον 5.2
+checkMySQL=Υποστήριξη Βάσης Δεδομένων
+checkMySQL_error=<a href="http://php.net/mysqli" target="_blank">mysqli</a> ή <a href="http://php.net/mysqli" target="_blank">mysql</a> επέκταση πρέπει να είναι εγκατεστημένη για PHP
+checkGD=Υποστήριξη χειρισμού εικόνας
+checkGD_error=<a href="http://php.net/gd" target="_blank">GD</a> επέκταση πρέπει να είναι εγκατεστειμένη για PHP
+checkSession=Διαμόρφωση PHP session
+checkSession_error=Η PHP session δεν αποθηκεύθηκε.Παρακαλούμε βεβαιωθείτε ότι η <a href="http://php.net/manual/en/ref.session.php#ini.session.save-path"><em>session.save_path</em></a>τιμή διαμόρφωσης PHP ρυθμίσθηκε σωστά.

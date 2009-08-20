@@ -1,5 +1,5 @@
 הודעה על הזמנה חדשה ב {'STORE_NAME'|config}
-הלקוח הוסיף הודעה חדשה המתייחסת להזמנה <b class="orderID">#{$order.ID}</b>
+הלקוח הוסיף הודעה חדשה המתייחסת להזמנה <b class="orderID">#{$order.invoiceNumber}</b>
 
 --------------------------------------------------
 {$message.text}

@@ -1,0 +1,13 @@
+_manufacturers=Κατασκευαστές
+Manufacturer.name=Όνομα κατασκευαστού
+_listing_manufacturers=Λίστα κατασκευαστών $από - $μέχρι από $λογαριασμό
+_no_manufacturers=Δεν βρέθηκαν κατασκευαστές
+_are_you_sure_you_want_to_delete_manufacturer=Πράγματι διαγραφή των επιλεγμένων κατασκευαστών?
+_nothing_selected=Παρακαλούμε επιλέξτε πρώτα τουλάχιστον ένα κατασκευαστή
+_cancel_editing_manufacturer=Ακύρωση επεξεργασίας κατασκευαστού
+_manufacturer_info=Γενικές πληροφορίες
+_manufacturer_images=Εικόνες
+_manufacturer_was_successfully_saved=Οι πληροφορίες του κατασκευαστού αποθηκεύθηκαν επιτυχώς
+_could_not_save_manufacturer=Δεν μπορείτε να αποθηκεύσετε τις πληροφορίες κατασκευαστού
+_select_manufacturer=Επιλέξτε ένα κατασκευαστή
+_done_adding=Έγινε προσθήκη κατασκευαστών

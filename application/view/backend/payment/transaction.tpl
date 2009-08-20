@@ -73,7 +73,7 @@
 		<div class="clear"></div>
 
 		<div class="transactionForm voidForm" style="display: none;">
-			<form action="{link controller=backend.payment action=void id=$transaction.ID}" method="POST" onsubmit="Backend.Payment.voidTransaction({$transaction.ID}, this, event);">
+			<form action="{link controller=backend.payment action=void id=$transaction.ID}" method="post" onsubmit="Backend.Payment.voidTransaction({$transaction.ID}, this, event);">
 
 				<span class="confirmation" style="display: none">{t _void_conf}</span>
 

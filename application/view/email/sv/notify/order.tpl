@@ -1,5 +1,5 @@
 Ny order hos  {'STORE_NAME'|config}
-Order ID: {$order.ID}
+Order ID: {$order.invoiceNumber}
 
 Orderadministration:
 {backendOrderUrl order=$order url=true}

@@ -6,6 +6,10 @@ ClassLoader::import('application.ConfigurationContainer');
 ClassLoader::import('application.LiveCartRouter');
 ClassLoader::import('application.model.Currency');
 ClassLoader::import('library.payment.TransactionDetails');
+ClassLoader::import('application.model.businessrule.BusinessRuleContext');
+ClassLoader::import('application.model.businessrule.BusinessRuleController');
+ClassLoader::import('application.model.order.SessionOrder');
+ClassLoader::import('application.model.user.SessionUser');
 
 /**
  *  Implements LiveCart-specific application flow logic
@@ -149,6 +153,7 @@ class LiveCart extends Application
 		if ($this->request->get('noRewrite'))
 		{
 			$this->router->setBaseDir($_SERVER['baseDir'], $_SERVER['virtualBaseDir']);
+			//$this->router->enableURLRewrite(false);
 		}
 	}
 
@@ -224,9 +229,10 @@ class LiveCart extends Application
 
 			foreach ($routes as $route)
 			{
-				$this->router->connect($route[0], $route[1], $route[2]);
+				$method = empty($route[3]) ? 'connect' : 'connectPriority';
+				$this->router->$method($route[0], $route[1], $route[2]);
 				$route[2]['requestLanguage'] = "[a-zA-Z]{2}";
-				$this->router->connect(':requestLanguage/' . $route[0], $route[1], $route[2]);
+				$this->router->$method(':requestLanguage/' . $route[0], $route[1], $route[2]);
 			}
 		}
 
@@ -298,16 +304,14 @@ class LiveCart extends Application
 		{
 			ClassLoader::import('application.LiveCartRenderer');
 			$this->renderer = new LiveCartRenderer($this);
+
+			if ($this->isTemplateCustomizationMode() && !$this->isBackend)
+			{
+				$this->renderer->getSmartyInstance()->register_prefilter(array($this, 'templateLocator'));
+			}
 		}
 
-		$renderer = parent::getRenderer();
-
-		if ($this->isTemplateCustomizationMode() && !$this->isBackend)
-		{
-			$this->renderer->getSmartyInstance()->register_prefilter(array($this, 'templateLocator'));
-		}
-
-		return $renderer;
+		return $this->renderer;
 	}
 
 	public function isBackend()
@@ -334,6 +338,7 @@ class LiveCart extends Application
 			$file = $this->getRenderer()->getTemplatePath($file);
 		}
 
+/*
 		$paths = array(ClassLoader::getRealPath('storage.customize.view'),
 					   ClassLoader::getRealPath('application.view'));
 
@@ -347,6 +352,8 @@ class LiveCart extends Application
 		}
 
 		$file = str_replace('\\', '/', $file);
+*/
+		$file = $this->getRenderer()->getRelativeTemplatePath($file);
 
 		$editUrl = $this->getRouter()->createUrl(array('controller' => 'backend.template', 'action' => 'editPopup', 'query' => array('file' => $file, 'theme' => '__theme__')), true);
 		$editUrl = str_replace('__theme__', '{theme}', $editUrl);
@@ -420,7 +427,7 @@ class LiveCart extends Application
 	 * @return Response
 	 * @throws ApplicationException if error situation occurs
 	 */
-	public function execute($controllerInstance, $actionName)
+	public function execute($controllerInstance, $actionName, $isBlock = false)
 	{
 		if ($response = $this->processInitPlugins($controllerInstance, 'before-' . $actionName))
 		{
@@ -430,7 +437,18 @@ class LiveCart extends Application
 			}
 		}
 
-		$originalResponse = parent::execute($controllerInstance, $actionName);
+		if (!$isBlock)
+		{
+			$originalResponse = parent::execute($controllerInstance, $actionName);
+		}
+		else
+		{
+			$originalResponse = $controllerInstance->executeBlock($actionName);
+			if (!$originalResponse)
+			{
+				return null;
+			}
+		}
 
 		$response = $this->processActionPlugins($controllerInstance, $originalResponse, $actionName);
 
@@ -700,35 +718,41 @@ class LiveCart extends Application
 
 	private function loadLocale()
 	{
-		ClassLoader::import('library.locale.Locale');
-
-		$this->locale =	Locale::getInstance($this->localeName);
-		$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('storage.language'));
-
-		foreach ($this->getConfigContainer()->getLanguageDirectories() as $dir)
+		if (empty($this->locale))
 		{
-			$this->locale->translationManager()->setDefinitionFileDir($dir);
+			ClassLoader::import('library.locale.Locale');
+
+			$this->locale =	Locale::getInstance($this->localeName);
+			$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('storage.language'));
+
+			foreach ($this->getConfigContainer()->getLanguageDirectories() as $dir)
+			{
+				$this->locale->translationManager()->setDefinitionFileDir($dir);
+			}
+
+			$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('storage.language'));
+			Locale::setCurrentLocale($this->localeName);
+
+			$this->loadLanguageFiles();
 		}
-
-		$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('storage.language'));
-		Locale::setCurrentLocale($this->localeName);
-
-		$this->loadLanguageFiles();
 
 		return $this->locale;
 	}
 
 	private function loadLocaleName()
 	{
-		ClassLoader::import('library.locale.Locale');
+		if (empty($this->localeName))
+		{
+			ClassLoader::import('library.locale.Locale');
 
-		if ($this->requestLanguage)
-		{
-			$this->localeName = $this->requestLanguage;
-		}
-		else
-		{
-	  		$this->localeName = $this->getDefaultLanguageCode();
+			if ($this->requestLanguage)
+			{
+				$this->localeName = $this->requestLanguage;
+			}
+			else
+			{
+				$this->localeName = $this->getDefaultLanguageCode();
+			}
 		}
 
 		return $this->localeName;
@@ -1188,6 +1212,35 @@ class LiveCart extends Application
 	{
 		$this->theme = $theme;
 		$this->getRenderer()->resetPaths();
+	}
+
+	public function getBusinessRuleController()
+	{
+		if (!$this->businessRuleController)
+		{
+			$context = new BusinessRuleContext();
+
+			/*
+			if (SessionOrder::getOrderData())
+			{
+				//$context->setOrder(SessionOrder::getOrder());
+			}
+			*/
+
+			if (SessionUser::getUser())
+			{
+				$context->setUser(SessionUser::getUser());
+			}
+
+			$this->businessRuleController = new BusinessRuleController($context);
+
+			if ($this->isBackend())
+			{
+				$this->businessRuleController->disableDisplayDiscounts();
+			}
+		}
+
+		return $this->businessRuleController;
 	}
 
 	public function clearCachedVars()

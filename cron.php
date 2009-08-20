@@ -20,11 +20,17 @@ else
 	$_SERVER['REWRITE'] = $url['rewrite'];
 }
 
+if (isset($_SERVER['rewrite']) && !$_SERVER['rewrite'])
+{
+	$this->request->set('noRewrite', true);
+//	$app->getRouter()->enableURLRewrite($_SERVER['rewrite']);
+}
+
 include dirname(__file__) . '/application/Initialize.php';
 $app = new LiveCart();
 if (isset($_SERVER['rewrite']))
 {
-	$app->getRouter()->enableURLRewrite($_SERVER['rewrite']);
+//	$app->getRouter()->enableURLRewrite($_SERVER['rewrite']);
 }
 $app->getCron()->process();
 
