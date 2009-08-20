@@ -365,6 +365,11 @@ abstract class BaseController extends Controller implements LCiTranslator
 		}
 	}
 
+	public function recheckAccess(LiveCart $application)
+	{
+		$this->checkAccess();
+	}
+
 	private function checkAccess()
 	{
 		// If backend controller is being used then we should

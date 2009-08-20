@@ -63,7 +63,7 @@ _order_report=Report
 
 # Grid columns
 CustomerOrder.ID=ID
-CustomerOrder.ID2=Order ID
+CustomerOrder.invoiceNumber=Order ID
 CustomerOrder.status=Status
 CustomerOrder.totalAmount=Order total
 CustomerOrder.capturedAmount=Captured amount

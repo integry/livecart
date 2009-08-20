@@ -12,6 +12,7 @@ ClassLoader::import("application.model.delivery.ShipmentDeliveryRate");
 ClassLoader::import("application.model.eav.EavAble");
 ClassLoader::import("application.model.eav.EavObject");
 ClassLoader::import("application.model.order.Transaction");
+ClassLoader::import("application.model.order.InvoiceNumberGenerator");
 ClassLoader::import("application.model.discount.DiscountActionSet");
 
 ClassLoader::import("application.model.businessrule.BusinessRuleController");
@@ -76,6 +77,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$schema->registerField(new ARForeignKeyField("currencyID", "currency", "ID", 'Currency', ARChar::instance(3)));
 		$schema->registerField(new ARForeignKeyField("eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
 
+		$schema->registerField(new ARField("invoiceNumber", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("checkoutStep", ARInteger::instance()));
 		$schema->registerField(new ARField("dateCreated", ARDateTime::instance()));
 		$schema->registerField(new ARField("dateCompleted", ARDateTime::instance()));
@@ -552,7 +554,20 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$shipments = $this->shipments;
 		unset($this->shipments);
 
-		$this->save();
+		$generator = InvoiceNumberGenerator::getGenerator($this);
+		$saved = false;
+		while (!$saved)
+		{
+			try
+			{
+				$this->invoiceNumber->set($generator->getNumber());
+				$this->save();
+				$saved = true;
+			}
+			catch (SQLException $e)
+			{
+			}
+		}
 
 		$this->event('after-finalize');
 
@@ -2039,6 +2054,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$this->isPaid->set(false);
 		$this->isCancelled->set(false);
 		$this->dateCompleted->set(null);
+		$this->invoiceNumber->set(null);
 
 		$original = $this->originalRecord;
 

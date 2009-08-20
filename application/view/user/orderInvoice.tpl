@@ -1,4 +1,4 @@
-{pageTitle}{t _invoice} #{$order.ID}{/pageTitle}
+{pageTitle}{t _invoice} {$order.invoiceNumber}{/pageTitle}
 <div class="userOrderInvoice">
 
 {defun name="address"}
@@ -35,7 +35,7 @@
 
 			{img src='LOGO'|config id="invoiceLogo" alt="Invoice Logo"}
 
-			<h1>{t _invoice} #{$order.ID}</h1>
+			<h1>{t _invoice} {$order.invoiceNumber}</h1>
 			<div id="invoiceDate">{$order.formatted_dateCompleted.date_long}</div>
 
 		</div>

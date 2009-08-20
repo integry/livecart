@@ -28,7 +28,7 @@
 		</ul>
 
 	   <div>
-		   {t _order_id}: {$order.ID}
+		   {t _order_id}: {$order.invoiceNumber}
 	   </div>
 
 	   {if $order.ShippingAddress}

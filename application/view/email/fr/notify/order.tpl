@@ -1,5 +1,5 @@
 Nouvelle commande placée sur {'STORE_NAME'|config}
-Commande ID: {$order.ID}
+Commande ID: {$order.invoiceNumber}
 
 Administration de la commande:
 {backendOrderUrl order=$order url=true}

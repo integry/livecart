@@ -345,6 +345,15 @@ REQUIRE_REG_ADDRESS=Require address entry on registration
 DISABLE_STATE=Remove state field
 REG_EMAIL_CONFIRM=Require e-mail address confirmation
 
+_invoice_numbers=Invoice Numbers
+INVOICE_NUMBER_GENERATOR=Invoice number scheme
+SequentialInvoiceNumber=Numeric and sequential
+SequentialInvoiceNumber_START_AT=Start invoice numbers from
+SequentialInvoiceNumber_STEP=Number increase step
+SequentialInvoiceNumber_MIN_LENGTH=Minimum number length (padded with zeros if shorter)
+SequentialInvoiceNumber_PREFIX=Number prefix
+SequentialInvoiceNumber_SUFFIX=Number suffix
+
 _shipping_estimation=Shipping Cost Estimation
 ENABLE_SHIPPING_ESTIMATE=Enable shipping cost estimation in shopping cart page
 SHIP_ESTIMATE_HIDE_ENTRY=Hide address entry for

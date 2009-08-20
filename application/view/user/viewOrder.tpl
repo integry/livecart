@@ -1,4 +1,4 @@
-{pageTitle}{t _view_order} #{$order.ID}{/pageTitle}
+{pageTitle}{t _view_order} #{$order.invoiceNumber}{/pageTitle}
 {loadJs form=true}
 <div class="userViewOrder">
 
@@ -7,12 +7,12 @@
 
 <div id="content">
 
-	<h1>{t _view_order} #{$order.ID} ({$order.formatted_dateCompleted.date_long})</h1>
+	<h1>{t _view_order} {$order.invoiceNumber} ({$order.formatted_dateCompleted.date_long})</h1>
 
 		<fieldset class="container">
 
 		<label class="title">{t _order_id}:</label>
-		<label class="text">{$order.ID}</label>
+		<label class="text">{$order.invoiceNumber}</label>
 		<div class="clear"></div>
 
 		<label class="title">{t _placed}:</label>

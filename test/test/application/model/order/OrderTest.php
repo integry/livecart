@@ -1669,6 +1669,71 @@ class OrderTest extends OrderTestCommon
 		$this->assertEquals($order->getTotal(true), 100);
 	}
 
+	public function testInvoiceNumbers()
+	{
+		$config = self::getApplication()->getConfig();
+		$config->set('INVOICE_NUMBER_GENERATOR', 'SequentialInvoiceNumber');
+		$config->set('SequentialInvoiceNumber_START_AT', '0');
+		$config->set('SequentialInvoiceNumber_STEP', '1');
+		$config->set('SequentialInvoiceNumber_MIN_LENGTH', '5');
+		$config->set('SequentialInvoiceNumber_PREFIX', '');
+		$config->set('SequentialInvoiceNumber_SUFFIX', '');
+
+		$cart = clone $this->order;
+		$second = clone $this->order;
+
+		$this->order->addProduct($this->products[0], 1);
+		$this->order->save();
+		$this->order->finalize();
+
+		$firstID = $this->order->invoiceNumber->get();
+		$this->assertTrue(is_numeric($firstID));
+
+		// create an unfinished order between two finished orders
+		$cart->addProduct($this->products[0], 1);
+		$cart->save();
+		$this->assertNull($cart->invoiceNumber->get());
+
+		$second->addProduct($this->products[0], 1);
+		$second->save();
+		$second->finalize();
+		$this->assertEquals($firstID + 1, $second->invoiceNumber->get());
+		$this->assertEquals($this->order->getID() + 2, $second->getID());
+	}
+
+	public function testInvoiceNumbersWithPrefixes()
+	{
+		$config = self::getApplication()->getConfig();
+		$config->set('INVOICE_NUMBER_GENERATOR', 'SequentialInvoiceNumber');
+		$config->set('SequentialInvoiceNumber_START_AT', '40000');
+		$config->set('SequentialInvoiceNumber_STEP', '5');
+		$config->set('SequentialInvoiceNumber_MIN_LENGTH', '7');
+		$config->set('SequentialInvoiceNumber_PREFIX', 'INT');
+		$config->set('SequentialInvoiceNumber_SUFFIX', '/2009');
+
+		$cart = clone $this->order;
+		$second = clone $this->order;
+
+		$this->order->addProduct($this->products[0], 1);
+		$this->order->save();
+		$this->order->finalize();
+
+		$firstID = $this->order->invoiceNumber->get();
+		$this->assertEquals($firstID, 'INT0040005/2009');
+
+		// create an unfinished order between two finished orders
+		$cart->addProduct($this->products[0], 1);
+		$cart->save();
+		$this->assertNull($cart->invoiceNumber->get());
+
+		$second->addProduct($this->products[0], 1);
+		$second->save();
+		$second->finalize();
+		$this->assertEquals($this->order->getID() + 2, $second->getID());
+		$this->assertNotEquals($second->invoiceNumber->get(), $firstID);
+		$this->assertEquals($second->invoiceNumber->get(), 'INT0040010/2009');
+	}
+
 	private function createOrderWithZone(DeliveryZone $zone = null)
 	{
 		if (is_null($zone))

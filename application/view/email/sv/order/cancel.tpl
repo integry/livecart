@@ -1,7 +1,7 @@
 {'STORE_NAME'|config} Order anullerad
 Kära {$user.fullName},
 
-Din order <b class="orderID">#{$order.ID}</b>, hos {'STORE_NAME'|config}, har annullerats.
+Din order <b class="orderID">#{$order.invoiceNumber}</b>, hos {'STORE_NAME'|config}, har annullerats.
 
 Om du har några frågor om ordern kan du sända oss ett e-mail eller kontakta oss via följande länk:
 {link controller=user action=viewOrder id=$order.ID url=true}

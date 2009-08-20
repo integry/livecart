@@ -102,6 +102,15 @@
                 	"icon": "image/silk/textfield.png",
                 	"descr": "_menu_descr_custom_fields"
                 },
+                "modules":
+				{
+                	"title": "_menu_modules",
+                	"controller": "backend.module",
+                	"action": "index",
+                	"role": "settings",
+                	"icon": "image/silk/plugin.png",
+                	"descr": "_menu_descr_modules"
+                },
                 "taxes":
 				{
                 	"title": "_menu_tax",
@@ -128,15 +137,6 @@
                 	"role": "language",
                 	"icon": "image/silk/world.png",
                 	"descr": "_menu_descr_languages"
-                },
-                "modules":
-				{
-                	"title": "_menu_modules",
-                	"controller": "backend.module",
-                	"action": "index",
-                	"role": "settings",
-                	"icon": "image/silk/plugin.png",
-                	"descr": "_menu_descr_modules"
                 },
                 "update":
 				{
