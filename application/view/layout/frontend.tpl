@@ -30,6 +30,12 @@
 		<link href="{'FAVICON'|config}" rel="shortcut icon" />
 	{/if}
 
+	{if !$CANONICAL}
+		{canonical}{self}{/canonical}
+	{/if}
+
+	<link rel="canonical" href="{$CANONICAL}" />
+
 	<!-- Css includes -->
 	{includeCss file="frontend/Frontend.css"}
 	{includeCss file="backend/stat.css"}

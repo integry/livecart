@@ -2,7 +2,7 @@
 
 {assign var="metaDescription" value=$product.shortDescription_lang|@strip_tags}
 {assign var="metaKeywords" value=$product.keywords}
-
+{canonical}{productUrl product=$product}{/canonical}
 {pageTitle}{$product.pageTitle_lang|default:$product.name_lang}{/pageTitle}
 
 <div class="productIndex productCategory_{$product.Category.ID} product_{$product.ID}">
