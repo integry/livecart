@@ -1297,12 +1297,23 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	{
 		$result = array();
 
+		$this->loadItems();
+
+		// remove disabled items
+		foreach ($this->getOrderedItems() as $item)
+		{
+			$product = $item->product->get();
+			if (!$product->isEnabled->get() || !$product->getParent()->isEnabled->get())
+			{
+				$this->removeItem($item);
+			}
+		}
+
 		if (!self::getApplication()->isInventoryTracking())
 		{
 			return $result;
 		}
 
-		$this->loadItems();
 		foreach ($this->getOrderedItems() as $item)
 		{
 			$product = $item->product->get();
