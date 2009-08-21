@@ -914,6 +914,12 @@ input.reset {
 	color: #666;
 }
 
+input.text.progressIndicator
+{
+	padding: 2px;
+	background-position: center right;
+}
+
 input.radio, input.checkbox, .progressIndicator.checkbox
 {
     float: left;

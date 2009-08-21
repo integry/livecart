@@ -228,7 +228,7 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 		$product = is_null($product) ? $this->product->get() : $product;
 		if (!$product->isBundle())
 		{
-			if ($product->isInventoryTracked())
+			if ($product->isInventoryTracked() && !(!$unreserve && $this->reservedProductCount->get()))
 			{
 				$this->reservedProductCount->set($unreserve ? 0 : $this->count->get());
 				$multiplier = $unreserve ? -1 : 1;

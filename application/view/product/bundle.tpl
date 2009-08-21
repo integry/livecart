@@ -1,8 +1,14 @@
-{if $bundledProducts}
+{if $bundleData}
 <div id="bundle">
 	<h2>{t _bundle_includes}:</h2>
 	<div class="bundleList">
-		{include file="block/box/menuProductList.tpl" products=$bundledProducts}
+		<ul class="compactProductList">
+			{foreach from=$bundleData item=item}
+				<li>
+					{include file="block/box/menuProductListItem.tpl" product=$item.RelatedProduct productInfoTemplate="product/block/bundleCount.tpl"}
+				</li>
+			{/foreach}
+		</ul>
 	</div>
 	<div class="highlight bundleInfo">
 		<p>

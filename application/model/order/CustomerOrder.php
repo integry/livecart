@@ -482,7 +482,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			{
 				foreach ($item->product->get()->getBundledProducts() as $bundled)
 				{
-					$bundledItem = OrderedItem::getNewInstance($this, $bundled->relatedProduct->get(), 1);
+					$bundledItem = OrderedItem::getNewInstance($this, $bundled->relatedProduct->get(), $bundled->getCount());
 					$bundledItem->parent->set($item);
 					$bundledItem->save();
 				}

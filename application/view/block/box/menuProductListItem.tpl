@@ -9,6 +9,9 @@
 </div>
 
 <div class="productInfo">
+	{if $productInfoTemplate}
+		{include file=$productInfoTemplate}
+	{/if}
 	<a href="{productUrl product=$product}" class="productName">{$product.name_lang}</a>
 </div>
 

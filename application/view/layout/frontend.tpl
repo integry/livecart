@@ -48,6 +48,7 @@
 
 	<!-- JavaScript includes -->
 	{* <script type="text/javascript" src="firebug/firebug.js"></script> *}
+	{loadJs}
 	{compiledJs glue=true nameMethod=hash}
 
 	{*

@@ -651,16 +651,18 @@ class OrderTest extends OrderTestCommon
 		$container->setPrice($this->usd, 100);
 		$container->save();
 
-		foreach ($this->products as $product)
+		foreach ($this->products as $key => $product)
 		{
-			ProductBundle::getNewInstance($container, $product)->save();
+			$inst = ProductBundle::getNewInstance($container, $product);
+			$inst->count->set($key + 1);
+			$inst->save();
 		}
 
 		$this->assertTrue($container->isAvailable());
 
-		foreach ($this->products as $product)
+		foreach ($this->products as $key => $product)
 		{
-			$product->stockCount->set(2);
+			$product->stockCount->set($key + 2);
 			$product->save();
 		}
 
@@ -684,6 +686,7 @@ class OrderTest extends OrderTestCommon
 		$reloaded = CustomerOrder::getInstanceByID($order->getID());
 		$reloaded->loadItems();
 		$this->assertEqual(count($reloaded->getOrderedItems()), 1);
+		$this->assertEqual(count(array_shift($reloaded->getOrderedItems())->getSubItems()), 3);
 
 /*
 		>> Inventory is now deducted on finalization instead of when an order is shipped <<
@@ -697,13 +700,15 @@ class OrderTest extends OrderTestCommon
 */
 		// mark order as shipped - the stock is gone
 		$this->assertNotEquals($order->status->get(), CustomerOrder::STATUS_SHIPPED);
+
 		$reloaded->setStatus(CustomerOrder::STATUS_SHIPPED);
+
 		foreach ($reloaded->getShipments() as $shipment)
 		{
 			$this->assertEqual($shipment->status->get(), Shipment::STATUS_SHIPPED);
 		}
 
-		foreach ($this->products as $product)
+		foreach ($this->products as $key => $product)
 		{
 			$product->reload();
 			$this->assertEqual($product->reservedCount->get(), 0);

@@ -18,6 +18,7 @@ class ProductBundle extends ActiveRecordModel
 		$schema->registerField(new ARPrimaryForeignKeyField("productID", "Product", "ID", "Product", ARInteger::instance()));
 		$schema->registerField(new ARPrimaryForeignKeyField("relatedProductID", "Product", "ID", "Product", ARInteger::instance()));
 		$schema->registerField(new ARField("position",  ARInteger::instance()));
+		$schema->registerField(new ARField("count",  ARFloat::instance()));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -107,6 +108,11 @@ class ProductBundle extends ActiveRecordModel
 		return false;
 	}
 
+	public function getCount()
+	{
+		return $this->count->get() ? $this->count->get() : 1;
+	}
+
 	/*####################  Saving ####################*/
 
 	protected function insert()
@@ -149,16 +155,18 @@ class ProductBundle extends ActiveRecordModel
 	public static function getTotalBundlePrice(Product $product, Currency $currency)
 	{
 		$products = new ARSet();
-		foreach (self::getBundledProductSet($product) as $item)
+		$bundle = self::getBundledProductSet($product);
+		foreach ($bundle as $item)
 		{
 			$products->add($item->relatedProduct->get());
 		}
 		ProductPrice::loadPricesForRecordSet($products);
 
 		$total = 0;
-		foreach ($products as $item)
+		foreach ($bundle as $item)
 		{
-			$total += $item->getPrice($currency);
+			$itemTotal = $item->relatedProduct->get()->getPrice($currency) * $item->getCount();
+			$total += $itemTotal;
 		}
 
 		return $total;

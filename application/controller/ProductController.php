@@ -196,14 +196,15 @@ class ProductController extends FrontendController
 		// bundled products
 		if ($product->isBundle())
 		{
+			$bundleData = ProductBundle::getBundledProductArray($product);
 			$bundledProducts = array();
-			foreach (ProductBundle::getBundledProductArray($product) as $bundled)
+			foreach ($bundleData as &$bundled)
 			{
-				$bundledProducts[] = $bundled['RelatedProduct'];
+				$bundledProducts[] =& $bundled['RelatedProduct'];
 			}
 
 			ProductPrice::loadPricesForRecordSetArray($bundledProducts);
-			$response->set('bundledProducts', $bundledProducts);
+			$response->set('bundleData', $bundleData);
 
 			$currency = Currency::getInstanceByID($this->getRequestCurrency());
 			$total = ProductBundle::getTotalBundlePrice($product, $currency);
