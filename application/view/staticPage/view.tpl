@@ -1,4 +1,5 @@
 {pageTitle}{$page.title_lang}{/pageTitle}
+{assign var="metaDescription" value=$page.metaDescription_lang|@strip_tags}
 
 <div class="staticPageView staticPage_{$page.ID}">
 
