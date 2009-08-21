@@ -132,6 +132,10 @@ BESTSELLING_ITEMS_COUNT=Number of bestselling products to display
 BESTSELLING_ITEMS_DAYS=Number of last days to include sales data from
 
 _product_page=Products
+
+_product_display_options=Product Display Options
+SHOW_PRODUCT_WEIGHT=Display product weight
+
 _inventory_status=Inventory Status
 PRODUCT_DISPLAY_STOCK=Display the amount of products in stock
 PRODUCT_DISPLAY_LOW_STOCK=Display low-stock warning
@@ -225,6 +229,8 @@ _search_types=Additionally Searchable Data
 SEARCH_MODELS=Searchable data
 SEARCH_MODEL_PREVIEW=Number of preview results to display in common search results pages
 SEARCH_MODEL_PER_PAGE=Search results per page
+NewsPost=News posts
+StaticPage=Pages
 
 _users=User Accounts
 USER_COUNT_RECENT_ORDERS=Number of recent orders to display in account homepage

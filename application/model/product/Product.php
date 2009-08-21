@@ -934,6 +934,25 @@ class Product extends MultilingualObject
 			$array['childSettings'] = unserialize($array['childSettings']);
 		}
 
+		if ($array['shippingWeight'])
+		{
+			$lb = 0.45359237;
+			$oz = 0.0283495231;
+			$weight = array();
+			$weight['lbs'] = floor($array['shippingWeight'] / $lb);
+			$weight['oz'] = ceil(($array['shippingWeight'] - ($weight['lbs'] * $lb)) / $oz);
+			$weight = array_filter($weight);
+
+			$array['shippingWeight_english_values'] = $weight;
+
+			foreach ($weight as $unit => $w)
+			{
+				$weight[$unit] = $w . ' ' . $unit;
+			}
+
+			$array['shippingWeight_english'] = implode(' ', $weight);
+		}
+
 		return $array;
 	}
 
@@ -1289,13 +1308,15 @@ class Product extends MultilingualObject
 		}
 
 		$sql = 'SELECT
-					COUNT(*) AS cnt, OtherItem.productID AS ID FROM OrderedItem
+					COUNT(*) AS cnt, COALESCE(ParentProduct.ID, OtherItem.productID) AS ID FROM OrderedItem
 				LEFT JOIN
 					CustomerOrder ON OrderedItem.customerOrderID=CustomerOrder.ID
 				LEFT JOIN
 					OrderedItem AS OtherItem ON OtherItem.customerOrderID=CustomerOrder.ID
 				LEFT JOIN
 					Product ON OtherItem.productID=Product.ID
+				LEFT JOIN
+					Product AS ParentProduct ON Product.parentID=ParentProduct.ID
 				WHERE
 					CustomerOrder.isFinalized=1 AND OrderedItem.productID=' . $this->getID() . ' AND OtherItem.productID!=' . $this->getID() . ($enabledOnly? ' AND Product.isEnabled=1' : '') . '
 				GROUP
@@ -1308,10 +1329,11 @@ class Product extends MultilingualObject
 
 		$ids = array();
 		$cnt = array();
-		foreach ($products as $prod)
+
+		foreach ($products as $key => $prod)
 		{
 			$ids[] = $prod['ID'];
-			$cnt[$prod['ID']] = $prod['cnt'];
+			$cnt[$prod['ID']] = empty($cnt[$prod['ID']]) ? $prod['cnt'] : $prod['cnt'] + $cnt[$prod['ID']];
 		}
 
 		$products = array();

@@ -6,6 +6,19 @@
 	</tr>
 	{/if}
 
+	{if 'SHOW_PRODUCT_WEIGHT'|config}
+	<tr>
+		<td class="param">{t _weight}:</td>
+		<td class="value">
+			{if 'METRIC' == 'UNIT_SYSTEM'|config}
+				{$product.shippingWeight} {t _kg}
+			{else}
+				{$product.shippingWeight_english}
+			{/if}
+		</td>
+	</tr>
+	{/if}
+
 	{if $product.sku}
 	<tr>
 		<td class="param">{t _sku}:</td>
@@ -20,7 +33,7 @@
 	</tr>
 	{/if}
 
-	{if !$product.isDownloadable}
+	{if !$product.isDownloadable || 'INVENTORY_TRACKING_DOWNLOADABLE'|config}
 		{if !$product.stockCount && 'PRODUCT_DISPLAY_NO_STOCK'|config}
 		<tr>
 			<td colspan="2" class="noStock"><span>{t _no_stock}</span></td>
