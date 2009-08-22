@@ -1570,3 +1570,23 @@ Backend.DeliveryZone.TaxRate.prototype =
 	}
 }
 
+Backend.DeliveryZone.lookupAddress = function(form, e)
+{
+	Event.stop(e);
+	new LiveCart.AjaxRequest(form, null, function(req)
+	{
+		var zone = req.responseData;
+		var cont = $('zoneLookupResult').down('span');
+		if (zone.ID)
+		{
+			cont.update(zone.name);
+		}
+		else
+		{
+			cont.update(Backend.getTranslation('_default_zone'));
+		}
+
+		cont.parentNode.show();
+		new Effect.Highlight(cont);
+	});
+}
