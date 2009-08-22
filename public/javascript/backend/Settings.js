@@ -119,7 +119,7 @@ Backend.Settings.prototype =
 		this.activateCategory('00-store');
 
 		var firstPaymentMethod = this.treeBrowser.getChildItemIdByIndex('05-payment', 0);
-		for (k = 1; k <= 3; k++)
+		for (k = 1; k <= 6; k++)
 		{
 			var item = 'payment.OFFLINE' + k;
 			this.treeBrowser.moveItem(item, 'item_sibling', firstPaymentMethod);
@@ -573,7 +573,10 @@ Backend.Settings.Editor.prototype =
 			},
 
 		'OFFLINE_NAME_2': function() { this.handlers.OFFLINE_NAME_1(); },
-		'OFFLINE_NAME_3': function() { this.handlers.OFFLINE_NAME_1(); }
+		'OFFLINE_NAME_3': function() { this.handlers.OFFLINE_NAME_1(); },
+		'OFFLINE_NAME_4': function() { this.handlers.OFFLINE_NAME_1(); },
+		'OFFLINE_NAME_5': function() { this.handlers.OFFLINE_NAME_1(); },
+		'OFFLINE_NAME_6': function() { this.handlers.OFFLINE_NAME_1(); }
 	},
 
 	valueHandlers:
