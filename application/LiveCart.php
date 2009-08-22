@@ -1087,7 +1087,9 @@ class LiveCart extends Application
 				}
 				else
 				{
-						ClassLoader::import('library.payment.method.' . $className);
+					ClassLoader::importNow('library.payment.method.*');
+					ClassLoader::importNow('library.payment.method.cc.*');
+					ClassLoader::importNow('library.payment.method.express.*');
 				}
 		}
 
