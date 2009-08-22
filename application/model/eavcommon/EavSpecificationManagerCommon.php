@@ -492,6 +492,8 @@ abstract class EavSpecificationManagerCommon
 		$prefixed[$prefix] = $specFieldsByGroup;
 		$response->set("specFieldList_prefix", $prefixed);
 
+		$this->owner->load();
+
 		// set fields by owner
 		if (($this->owner instanceof EavObject) && ($owner = $this->owner->getOwner()))
 		{

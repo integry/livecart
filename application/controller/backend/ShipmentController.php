@@ -211,7 +211,7 @@ class ShipmentController extends StoreManagementController
 		if($shipmentID = (int)$this->request->get('id'))
 		{
 			$shipment = Shipment::getInstanceByID('Shipment', $shipmentID, true, array('Order' => 'CustomerOrder'));
-			$shipment->order->get()->loadAll();
+			$shipment->loadItems();
 
 			if ($shipment->shippingAddress->get())
 			{
@@ -238,6 +238,7 @@ class ShipmentController extends StoreManagementController
 					'suffix' => $shipment->getCurrency()->priceSuffix->get()
 				);
 			}
+
 			return new JSONResponse(array( 'services' => $shippingRatesArray));
 		}
 	}

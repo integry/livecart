@@ -750,7 +750,9 @@ class CustomerOrderController extends ActiveGridController
 			}
 		}
 
-		return $this->save($order);
+		$response = $this->save($order);
+		$order->finalize();
+		return $response;
 	}
 
 	/**
@@ -949,7 +951,7 @@ class CustomerOrderController extends ActiveGridController
 			$form->setData($addressArray);
 		}
 
-		$address = !empty($addressArray['ID']) ? ActiveRecordModel::getInstanceByID('UserAddress', $addressArray['ID']) : UserAddress::getNewInstance();
+		$address = !empty($addressArray['ID']) ? ActiveRecordModel::getInstanceByID('UserAddress', $addressArray['ID'], true) : UserAddress::getNewInstance();
 		$address->getSpecification()->setFormResponse($response, $form);
 
 		return $form;
