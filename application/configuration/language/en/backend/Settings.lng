@@ -135,6 +135,9 @@ _product_page=Products
 
 _product_display_options=Product Display Options
 SHOW_PRODUCT_WEIGHT=Display product weight
+QUANT_FIELD_TYPE=Purchase quantity selection field type
+QUANT_SELECT=Select box
+QUANT_INPUT=Input field
 
 _inventory_status=Inventory Status
 PRODUCT_DISPLAY_STOCK=Display the amount of products in stock

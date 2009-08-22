@@ -1190,6 +1190,11 @@ a.progressIndicator
     margin: 1em;
 }
 
+#productToCart input.number
+{
+	width: 3em;
+}
+
 #ratingSummary
 {
 	width: 250px;
