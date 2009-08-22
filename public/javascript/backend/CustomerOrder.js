@@ -300,8 +300,8 @@ Backend.CustomerOrder.GridFormatter =
 			'<span>' +
 			'	<span class="progressIndicator" id="orderIndicator_' + id + '" style="visibility: hidden;"></span>' +
 			'</span>' +
-			'<a href="' + this.orderUrl + id + '#tabOrderInfo__" id="order_' + id + '" onclick="Backend.CustomerOrder.prototype.openOrder(' + id + ', event); return false;">' +
-				 displayedID +
+			'<a href="' + this.orderUrl + id + '#tabOrderInfo__" id="order_' + id + '" onclick="Backend.CustomerOrder.prototype.openOrder(' + id + ', event);">' +
+				 displayedID
 			'</a>'
 		}
 		else if ('CustomerOrder.invoiceNumber' == field && Backend.CustomerOrder.prototype.ordersMiscPermission)
