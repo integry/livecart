@@ -464,7 +464,7 @@ CssCustomize.prototype =
 
 			$A(currentSheet.cssRules).each(function(rule)
 			{
-				if (!rule.originalRule)
+				if (!rule.originalRule && !rule.originalText)
 				{
 					newRules.push(rule);
 				}
