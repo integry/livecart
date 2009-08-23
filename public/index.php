@@ -154,4 +154,6 @@
 		exit;
 	}
 
+	session_write_close();
+
 ?>

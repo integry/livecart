@@ -10,6 +10,7 @@ ClassLoader::import('application.model.businessrule.BusinessRuleContext');
 ClassLoader::import('application.model.businessrule.BusinessRuleController');
 ClassLoader::import('application.model.order.SessionOrder');
 ClassLoader::import('application.model.user.SessionUser');
+ClassLoader::import('application.model.session.DatabaseSessionHandler');
 
 /**
  *  Implements LiveCart-specific application flow logic
@@ -127,6 +128,8 @@ class LiveCart extends Application
 		if ($this->isInstalled)
 		{
 			ActiveRecordModel::setDSN(include $dsnPath);
+			$session = new DatabaseSessionHandler();
+			$session->setHandlerInstance();
 		}
 
 		// LiveCart request routing rules

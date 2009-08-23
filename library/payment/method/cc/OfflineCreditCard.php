@@ -26,7 +26,7 @@ class OfflineCreditCard extends CreditCardPayment
 
 	public function isVoidable()
 	{
-		return false;
+		return true;
 	}
 
 	public function isMultiCapture()

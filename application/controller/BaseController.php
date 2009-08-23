@@ -251,7 +251,14 @@ abstract class BaseController extends Controller implements LCiTranslator
 
 	protected function setMessage($message)
 	{
-		$this->session->set('controllerMessage', $message);
+		if ($message)
+		{
+			$this->session->set('controllerMessage', $message);
+		}
+		else
+		{
+			$this->session->unsetValue('controllerMessage');
+		}
 	}
 
 	public function getMessage()
@@ -282,7 +289,14 @@ abstract class BaseController extends Controller implements LCiTranslator
 
 	protected function setErrorMessage($message)
 	{
-		$this->setSessionData('errorMessage', $message);
+		if ($message)
+		{
+			$this->setSessionData('errorMessage', $message);
+		}
+		else
+		{
+			$this->session->unsetValue('errorMessage');
+		}
 	}
 
 	public function getErrorMessage()
