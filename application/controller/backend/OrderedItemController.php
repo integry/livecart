@@ -159,22 +159,37 @@ class OrderedItemController extends StoreManagementController
 		$response->set("categoryList", $categoryList->toArray($this->application->getDefaultLanguageCode()));
 
 		$order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);
-		$downloadable = $order->getDownloadShipment(false);
+
+		$response->set("order", $order->toFlatArray());
+		$response->set("shipments", $this->getOrderShipments($order));
+
+		var_dump(count($response->get("shipments")));
+
+		return $response;
+	}
+
+	public function shipments()
+	{
+		$order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);
+		return new ActionResponse("shipments", $this->getOrderShipments($order));
+	}
+
+	private function getOrderShipments(CustomerOrder $order)
+	{
 		$order->loadItems();
 		$shipments = $order->getShipments();
+		$downloadable = $order->getDownloadShipment(false);
 
-		// has downloadable group?
-		$downloadableGroup = null;
-		foreach($shipments as $key => $shipment)
+		if (count($shipments) == 1 && !count($downloadable->getItems()))
 		{
-			if(!$shipment->isShippable()) $downloadableGroup = $shipment;
+			$downloadable = null;
 		}
 
 		$shipmentsArray = array();
 		foreach($shipments as $key => $shipment)
 		{
 			// one shipment is reserved for downloadable items
-			if($shipment === $downloadable || $shipment->isShipped())
+			if ($shipment === $downloadable || $shipment->isShipped())
 			{
 				continue;
 			}
@@ -194,10 +209,7 @@ class OrderedItemController extends StoreManagementController
 			}
 		}
 
-		$response->set("order", $order->toFlatArray());
-		$response->set("shipments", $shipmentsArray);
-
-		return $response;
+		return $shipmentsArray;
 	}
 
 	/**
