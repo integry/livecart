@@ -725,6 +725,16 @@ class CustomerOrderController extends ActiveGridController
 	}
 
 	/**
+	 * @role update
+	 */
+	public function setMultiAddress()
+	{
+		$order = CustomerOrder::getInstanceByID((int)$this->request->get('id'), true);
+		$order->isMultiAddress->set($this->request->get('status'));
+		$order->save();
+	}
+
+	/**
 	 * @role create
 	 */
 	public function create()

@@ -163,8 +163,6 @@ class OrderedItemController extends StoreManagementController
 		$response->set("order", $order->toFlatArray());
 		$response->set("shipments", $this->getOrderShipments($order));
 
-		var_dump(count($response->get("shipments")));
-
 		return $response;
 	}
 
@@ -180,7 +178,7 @@ class OrderedItemController extends StoreManagementController
 		$shipments = $order->getShipments();
 		$downloadable = $order->getDownloadShipment(false);
 
-		if (count($shipments) == 1 && !count($downloadable->getItems()))
+		if ($downloadable && count($shipments) == 1 && !count($downloadable->getItems()))
 		{
 			$downloadable = null;
 		}
@@ -453,6 +451,7 @@ class OrderedItemController extends StoreManagementController
 
 	public function variationForm()
 	{
+		$this->loadLanguageFile('Frontend');
 		$this->loadLanguageFile('Product');
 		$this->loadLanguageFile('backend/Shipment');
 		$item = ActiveRecordModel::getInstanceById('OrderedItem', $this->request->get('id'), true, true);

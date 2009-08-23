@@ -69,6 +69,7 @@ CustomerOrder.totalAmount=Order total
 CustomerOrder.capturedAmount=Captured amount
 CustomerOrder.isFinalized=Finalized
 CustomerOrder.isPaid=Paid
+CustomerOrder.isMultiAddress=Shipped to multiple addresses
 CustomerOrder.isCanceled=Cancelled
 CustomerOrder.dateCreated=Created
 CustomerOrder.dateCompleted=Completed

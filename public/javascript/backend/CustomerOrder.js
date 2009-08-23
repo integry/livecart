@@ -257,15 +257,7 @@ Backend.CustomerOrder.prototype =
 
 	updateLog: function(orderID)
 	{
-		var url = $("tabOrderLog").down('a').href.replace(/_id_/, orderID);
-		var container = "tabOrderLog_" + orderID + "Content";
-		var identificator = url + container;
-
-		if($(container))
-		{
-			$(container).remove();
-			TabControl.prototype.getInstance("orderManagerContainer").loadedContents[identificator] = false;
-		}
+		this.resetTab("tabOrderLog", orderID);
 	},
 
 	changePaidStatus: function(select, url)
@@ -278,6 +270,28 @@ Backend.CustomerOrder.prototype =
 
 		url = url.replace(/_stat_/, select.value);
 		new LiveCart.AjaxRequest(url, select.parentNode.down('.progressIndicator'));
+	},
+
+	setMultiAddress: function(select, url, orderID)
+	{
+		url = url.replace(/_stat_/, select.value);
+		new LiveCart.AjaxRequest(url, select.parentNode.down('.progressIndicator'), function()
+		{
+			this.resetTab('tabOrderProducts', orderID);
+		}.bind(this));
+	},
+
+	resetTab: function(tab, orderID)
+	{
+		var url = $(tab).down('a').href.replace(/_id_/, orderID);
+		var container = tab + "_" + orderID + "Content";
+		var identificator = url + container;
+
+		if($(container))
+		{
+			$(container).remove();
+			TabControl.prototype.getInstance("orderManagerContainer").loadedContents[identificator] = false;
+		}
 	}
 }
 

@@ -49,6 +49,13 @@
 		<select style="width: auto; float: left;" onchange="Backend.CustomerOrder.prototype.changePaidStatus(this, '{link controller=backend.payment action=changeOrderPaidStatus id=$order.ID query='status=_stat_'}');"><option value=0>{t _no}</option><option value=1{if $order.isPaid} selected="selected"{/if}>{t _yes}</option></select>
 		<span class="progressIndicator" style="display: none; float: left; padding-top: 0; padding-left: 0;"></span>
 	</p>
+
+	<div class="clear"></div>
+	<p>
+		<label for="order_{$order.ID})_isMultiAddress">{t CustomerOrder.isMultiAddress}</label>
+		<select style="width: auto; float: left;" onchange="Backend.CustomerOrder.prototype.setMultiAddress(this, '{link controller=backend.customerOrder action=setMultiAddress id=$order.ID query='status=_stat_'}', {$order.ID});"><option value=0>{t _no}</option><option value=1{if $order.isMultiAddress} selected="selected"{/if}>{t _yes}</option></select>
+		<span class="progressIndicator" style="display: none; float: left; padding-top: 0; padding-left: 0;"></span>
+	</p>
 </fieldset>
 
 <fieldset class="order_status">
