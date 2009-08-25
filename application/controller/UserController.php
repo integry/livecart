@@ -378,7 +378,7 @@ class UserController extends FrontendController
 		{
 			$this->addAccountBreadcrumb();
 			$this->addBreadCrumb($this->translate('_your_orders'), $this->router->createUrl(array('controller' => 'user', 'action' => 'orders'), true));
-			$this->addBreadCrumb($order->getID(), '');
+			$this->addBreadCrumb($order->invoiceNumber->get(), '');
 
 			// mark all notes as read
 			$notes = $order->getNotes();

@@ -289,7 +289,7 @@ class Product extends MultilingualObject
 	{
 		if (!$this->isBundle())
 		{
-			return $this->type->get() == self::TYPE_DOWNLOADABLE;
+			return $this->getParent()->type->get() == self::TYPE_DOWNLOADABLE;
 		}
 		else
 		{
@@ -1172,6 +1172,11 @@ class Product extends MultilingualObject
 	public function registerVariation(ProductVariation $variation)
 	{
 		$this->variations[$variation->getID()] = $variation;
+	}
+
+	public function getRegisteredVariations()
+	{
+		return $this->variations;
 	}
 
 	/**

@@ -6,7 +6,7 @@
 	</tr>
 	{/if}
 
-	{if 'SHOW_PRODUCT_WEIGHT'|config}
+	{if 'SHOW_PRODUCT_WEIGHT'|config && $product.shippingWeight}
 	<tr>
 		<td class="param">{t _weight}:</td>
 		<td class="value">

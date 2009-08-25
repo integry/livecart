@@ -240,7 +240,7 @@ class ProductController extends FrontendController
 			{
 				foreach ($variations['products'] as $prod)
 				{
-					if (!empty($prod['DefaultImage']))
+					if (!empty($prod['DefaultImage']['ID']))
 					{
 						$images[] = $prod['DefaultImage'];
 					}

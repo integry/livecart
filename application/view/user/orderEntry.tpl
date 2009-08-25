@@ -27,12 +27,12 @@
 			<li><a href="{link controller=user action=reorder id=$order.ID}" class="reorder">{t _reorder}</a></li>
 		</ul>
 
-	   <div>
+	   <div class="orderID">
 		   {t _order_id}: {$order.invoiceNumber}
 	   </div>
 
 	   {if $order.ShippingAddress}
-		   <div>
+		   <div class="orderRecipient">
 			   {t _recipient}: {$order.ShippingAddress.fullName}
 		   </div>
 	   {/if}

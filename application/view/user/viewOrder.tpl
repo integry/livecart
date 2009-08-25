@@ -49,7 +49,7 @@
 					<h2>{t _ordered_products}</h2>
 				{/if}
 
-				{include file="user/shipmentEntry.tpl"}
+				{include file="user/shipmentEntry.tpl" downloadLinks=true}
 
 			{/if}
 
