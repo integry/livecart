@@ -946,7 +946,13 @@ class CategoryController extends FrontendController
 
 	private function getFilterCounts($includeAppliedFilters)
 	{
-		$count = new ProductCount($this->productFilter, $this->application);
+		$productFilter = $this->getProductFilter();
+		if (!$productFilter)
+		{
+			$productFilter = new ProductFilter($this->getCategory(), new ARSelectFilter());
+		}
+
+		$count = new ProductCount($productFilter, $this->application);
 
 		// get category filter groups
 		$filterGroups = $this->getCategory()->getFilterGroupArray();
@@ -1250,7 +1256,7 @@ class CategoryController extends FrontendController
 	{
 		if (!$this->category)
 		{
-			$this->category = Category::getInstanceById($this->request->get('id'), Category::LOAD_DATA);
+			$this->category = Category::getInstanceById($this->request->get('id', 1), Category::LOAD_DATA);
 		}
 
 		return $this->category;

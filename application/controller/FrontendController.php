@@ -62,6 +62,7 @@ abstract class FrontendController extends BaseController
 		$this->addBlock('BREADCRUMB_TITLE', 'boxBreadCrumbTitle', 'block/box/breadcrumbTitle');
 		$this->addBlock('LANGUAGE', 'boxLanguageSelect', 'block/box/language');
 		$this->addBlock('CURRENCY', 'boxSwitchCurrency', 'block/box/currency');
+		$this->addBlock('CURRENCY_MENU', 'boxSwitchCurrencyMenu', 'block/box/currencyMenu');
 		$this->addBlock('CART', 'boxShoppingCart', 'block/box/shoppingCart');
 		$this->addBlock('SEARCH', 'boxSearch', 'block/box/search');
 		$this->addBlock('INFORMATION', 'boxInformationMenu', 'block/box/informationMenu');
@@ -211,22 +212,26 @@ abstract class FrontendController extends BaseController
 		$currencyArray = array();
 		foreach ($currencies as $currency)
 		{
-			if ($currency->getID() != $current)
-			{
-				$currencyArray[$currency->getID()] = $currency->toArray();
-				$currencyArray[$currency->getID()]['url'] = str_replace('_curr_', $currency->getID(), $returnRoute);
-			}
-			else
+			$currencyArray[$currency->getID()] = $currency->toArray();
+			$currencyArray[$currency->getID()]['url'] = str_replace('_curr_', $currency->getID(), $returnRoute);
+
+			if ($currency->getID() == $current)
 			{
 				$currentCurrency = $currency->toArray();
 			}
 		}
 
 		$response = new BlockResponse();
-		$response->set('currencies', $currencyArray);
+		$response->set('allCurrencies', $currencyArray);
+		$response->set('currencies', array_diff_key($currencyArray, array($current => '')));
 		$response->set('current', $current);
 		$response->set('currentCurrency', $currentCurrency);
 		return $response;
+	}
+
+	protected function boxSwitchCurrencyMenuBlock()
+	{
+		return $this->boxSwitchCurrencyBlock();
 	}
 
 	protected function boxLanguageSelectBlock()

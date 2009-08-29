@@ -542,6 +542,8 @@ class UserController extends FrontendController
 				SessionUser::setUser($user);
 
 				$success = true;
+
+				$this->sendWelcomeEmail($user);
 			}
 		}
 
@@ -1098,6 +1100,7 @@ class UserController extends FrontendController
 
 		if ($password)
 		{
+			$this->session->set('password', $password);
 			$user->setPassword($password);
 		}
 
@@ -1106,15 +1109,7 @@ class UserController extends FrontendController
 		if (!$this->config->get('REG_EMAIL_CONFIRM'))
 		{
 			SessionUser::setUser($user);
-
-			// send welcome email with user account details
-			if ($this->config->get('EMAIL_NEW_USER'))
-			{
-				$email = new Email($this->application);
-				$email->setUser($user);
-				$email->setTemplate('user.new');
-				$email->send();
-			}
+			$this->sendWelcomeEmail($user);
 		}
 		else
 		{
@@ -1130,6 +1125,19 @@ class UserController extends FrontendController
 		}
 
 		return $user;
+	}
+
+	private function sendWelcomeEmail(User $user)
+	{
+		// send welcome email with user account details
+		if ($this->config->get('EMAIL_NEW_USER'))
+		{
+			$user->setPassword($this->session->get('password'));
+			$email = new Email($this->application);
+			$email->setUser($user);
+			$email->setTemplate('user.new');
+			$email->send();
+		}
 	}
 
 	private function doAddAddress($addressClass, Response $failureResponse)
