@@ -114,7 +114,7 @@ class Installer
 		return 1 == version_compare($mainVersion . '.' . $minorVersion . '.' . $subVersion, '4.1', '>=');
 	}
 
-	public function loadDatabaseDump($dump)
+	public function loadDatabaseDump($dump, $flush = false)
 	{
 		// newlines
 		$dump = str_replace("\r", '', $dump);
@@ -125,12 +125,24 @@ class Installer
 		// get queries
 		$queries = preg_split('/;\n/', $dump);
 
+		if ($flush && ob_get_length())
+		{
+			ob_flush();
+			ob_end_clean();
+		}
+
 		foreach ($queries as $query)
 		{
 			$query = trim($query);
 			if (!empty($query))
 			{
 				ActiveRecord::executeUpdate($query);
+			}
+
+			if ($flush)
+			{
+				echo '.';
+				flush();
 			}
 		}
 
