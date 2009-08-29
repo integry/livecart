@@ -286,15 +286,18 @@ Backend.Settings.prototype =
 		{
 			var el = container.getElementsByTagName('input')[0] || container.getElementsByTagName('select')[0] || container.getElementsByTagName('textarea')[0];
 
-			el.onchange =
-				function()
-				{
-					this.updateSetting(id, null, el.value);
-					if (handler)
+			if (el)
+			{
+				el.onchange =
+					function()
 					{
-						handler();
-					}
-				}.bind(this)
+						this.updateSetting(id, null, el.value);
+						if (handler)
+						{
+							handler();
+						}
+					}.bind(this)
+			}
 		}
 	},
 
@@ -511,6 +514,26 @@ Backend.Settings.Editor.prototype =
 				for (var k = 0; k < prefixes.length; k++)
 				{
 					var prefix = prefixes[k];
+
+					if (prefix != 'O')
+					{
+						var leg = $('setting_IMG_' + prefix + '_W_1').up('fieldset').up('fieldset').down('legend');
+						var menu = document.createElement('div');
+						menu.innerHTML = '<a href="#">' + Backend.getTranslation('_resize_images') + '</a>';
+						leg.appendChild(menu);
+
+						var a = menu.down('a');
+						a.onclick = function(k, a)
+						{
+							return function(e)
+							{
+								var prefix = prefixes[k];
+								new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.' + {P: 'product', C: 'category', M: 'manufacturer'}[prefix] + 'Image', 'resizeImages', {id: prefix}), a, function(oReq) { this.resizeImages(oReq, a); }.bind(this));
+								Event.stop(e);
+							}.bind(this);
+						}.bind(this)(k, a);
+					}
+
 					for (var size = 1; size <= 4; size++)
 					{
 						var width = $('setting_IMG_' + prefix + '_W_' + size);
@@ -604,6 +627,11 @@ Backend.Settings.Editor.prototype =
 		}
 
 		ActiveForm.prototype.initTinyMceFields(container);
+	},
+
+	resizeImages: function(oReq, a)
+	{
+		Backend.SaveConfirmationMessage.prototype.showMessage(Backend.getTranslation('_image_resize_success'));
 	}
 }
 

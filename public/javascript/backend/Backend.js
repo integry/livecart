@@ -1724,11 +1724,22 @@ Backend.ProgressBar.prototype =
 	initialize: function(container)
 	{
 		this.container = container;
+
+		if (!container.down('.progressCount'))
+		{
+			this.createHTML();
+		}
+
 		this.counter = container.down('.progressCount');
 		this.total = container.down('.progressTotal');
 		this.progressBar = container.down('.progressBar');
 		this.progressBarIndicator = container.down('.progressBarIndicator');
 		this.update(0, 0);
+	},
+
+	createHTML: function()
+	{
+		this.container.innerHTML = '<div class="progressBarIndicator"></div><div class="progressBar"><span class="progressCount"></span><span class="progressSeparator"> / </span><span class="progressTotal"></span></div>';
 	},
 
 	update: function(progress, total)

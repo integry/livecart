@@ -41,6 +41,11 @@ class ManufacturerImageController extends ObjectImageController
 		return parent::save();
 	}
 
+	public function resizeImages()
+	{
+		return parent::resizeImages();
+	}
+
 	/**
 	 * @role update
 	 */

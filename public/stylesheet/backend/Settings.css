@@ -81,6 +81,20 @@ div.multi
 	white-space: normal;
 }
 
+.imageSettings fieldset.settings legend div
+{
+	display: inline;
+	margin-left: 1em;
+	top: -3px;
+	position: relative;
+}
+
+.imageSettings fieldset.settings legend a
+{
+	color: red;
+	font-size: 13px;
+}
+
 #upload
 {
 	display: none;
