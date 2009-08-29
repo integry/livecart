@@ -138,7 +138,7 @@ class PaypalWebsitePaymentsStandard extends ExternalPayment
 
 	public static function getSupportedCurrencies()
 	{
-		return array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD', 'NZD', 'CHF', 'HKD', 'SGD', 'SEK', 'DKK', 'PLN', 'NOK', 'HUF', 'CZK');
+		return array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD', 'NZD', 'CHF', 'HKD', 'SGD', 'SEK', 'DKK', 'PLN', 'NOK', 'HUF', 'CZK', 'MXN', 'ILS');
 	}
 
 	public function isVoidable()
