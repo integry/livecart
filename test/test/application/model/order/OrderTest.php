@@ -360,6 +360,53 @@ class OrderTest extends OrderTestCommon
 		$this->assertEqual($order->getTotal(true), $total);
 	}
 
+	public function testShippingClasses()
+	{
+		// set up classes
+		$books = ShippingClass::getNewInstance('Books');
+		$books->save();
+
+		$cds = ShippingClass::getNewInstance('CDs');
+		$cds->save();
+
+		$shoes = ShippingClass::getNewInstance('Shoes');
+		$shoes->save();
+
+		$zone = DeliveryZone::getDefaultZoneInstance();
+
+		$service = ShippingService::getNewInstance($zone, 'def', ShippingService::SUBTOTAL_BASED);
+		$service->save();
+
+		$shippingRate = ShippingRate::getNewInstance($service, 0, 10000000);
+
+		// no rate is being set for the Shoes class, so it should use the default one
+		$shippingRate->perItemCharge->set(100);
+		$shippingRate->setClassItemCharge($books, 10);
+		$shippingRate->setClassItemCharge($cds, 5);
+		$shippingRate->save();
+
+		$this->products[0]->shippingClass->set($shoes);
+		$this->products[1]->shippingClass->set($books);
+		$this->products[2]->shippingClass->set($cds);
+
+		for ($k = 0; $k <= 2; $k++)
+		{
+			$this->products[$k]->isSeparateShipment->set(false);
+			$this->order->addProduct($this->products[$k], 1, false);
+		}
+
+		$this->order->save();
+
+		// set shipping rate
+		$shipment = $this->order->getShipments()->get(0);
+		$rates = $this->order->getDeliveryZone()->getShippingRates($shipment);
+		$shipment->setAvailableRates($rates);
+		$shipment->setRateId($rates->get(0)->getServiceID());
+		$shipment->save();
+
+		$this->assertEquals($rates->get(0)->getAmountByCurrency($this->usd), 115);
+	}
+
 	public function testInventory()
 	{
 		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');

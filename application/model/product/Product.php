@@ -10,6 +10,7 @@ ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import("application.model.category.*");
 ClassLoader::import("application.model.specification.*");
 ClassLoader::import("application.model.product.*");
+ClassLoader::import("application.model.delivery.ShippingClass");
 
 /**
  * One of the main entities of the system - defines and handles product related logic.
@@ -64,6 +65,8 @@ class Product extends MultilingualObject
 		$schema->registerField(new ARForeignKeyField("manufacturerID", "Manufacturer", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("defaultImageID", "ProductImage", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("parentID", "Product", "ID", null, ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("shippingClassID", "ShippingClass", "ID", null, ARInteger::instance()));
+		//$schema->registerField(new ARForeignKeyField("taxClassID", "TaxClass", "ID", null, ARInteger::instance()));
 
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
 		$schema->registerField(new ARField("sku", ARVarchar::instance(20)));

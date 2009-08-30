@@ -120,6 +120,15 @@
                 	"icon": "image/silk/coins.png",
                 	"descr": "_menu_descr_tax"
                 },
+                "shippingClasses":
+				{
+                	"title": "_menu_shipping_class",
+                	"controller": "backend.shippingClass",
+                	"action": "index",
+                	"role": "taxes",
+                	"icon": "image/silk/lorry_flatbed.png",
+                	"descr": "_menu_descr_shipping_class"
+                },
                 "currencies":
 				{
                 	"title": "_menu_currencies",
@@ -161,7 +170,7 @@
 				{
         			"title": "_menu_theme",
         			"controller": "backend.theme",
-                	"icon": "image/silk/color_wheel.png",
+                	"icon": "image/silk/color_swatch.png",
                 	"descr": "_menu_descr_theme"
         		},
         		"live":

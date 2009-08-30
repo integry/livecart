@@ -156,6 +156,11 @@ ul.menu li.addNewRate
     padding: 5px 0pt 12px 0pt ! important;
 }
 
+.shippingClassRates label
+{
+	width: 100px;
+}
+
 .tabDeliveryZoneCountryContent ul.activeList
 {
 	min-height: 0;

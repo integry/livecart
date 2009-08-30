@@ -3,6 +3,7 @@
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
 ClassLoader::import("application.model.category.*");
+ClassLoader::import("application.model.delivery.*");
 ClassLoader::import("application.model.product.*");
 ClassLoader::import("application.model.discount.*");
 ClassLoader::import("application.model.order.*");

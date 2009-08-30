@@ -183,7 +183,12 @@ class ShippingService extends MultilingualObject
 
 			foreach ($rates as $rate)
 			{
-				$charge = $rate->flatCharge->get() + ($itemCount * $rate->perItemCharge->get());
+				$charge = $rate->flatCharge->get();
+
+				foreach ($shipment->getItems() as $item)
+				{
+					$charge += $rate->getItemCharge($item);
+				}
 
 				if (self::WEIGHT_BASED == $this->rangeType->get())
 				{
