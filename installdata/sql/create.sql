@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2009-08-28 19:22                                #
-# Model version:         Version 2009-08-28                              #
+# Created on:            2009-09-01 00:46                                #
+# Model version:         Version 2009-09-01 1                            #
 # ---------------------------------------------------------------------- #
 
 
@@ -24,6 +24,8 @@ CREATE TABLE Product (
     manufacturerID INTEGER UNSIGNED COMMENT 'ID of the assigned manufacturer',
     defaultImageID INTEGER UNSIGNED COMMENT 'ID of ProductImage, which has been designated as the default image for the particular product',
     parentID INTEGER UNSIGNED,
+    shippingClassID INTEGER UNSIGNED,
+    taxClassID INTEGER UNSIGNED,
     isEnabled BOOL NOT NULL DEFAULT 0 COMMENT 'Determines if the Product is enabled (visible and available in the store frontend) 0- not available 1- available 2- disabled (not visble)',
     isRecurring BOOL,
     isFeatured BOOL NOT NULL DEFAULT 0 COMMENT 'Determines if the product has been marked as featured product',
@@ -813,6 +815,7 @@ ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 CREATE TABLE TaxRate (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     taxID INTEGER UNSIGNED COMMENT 'ID of the referenced Tax',
+    taxClassID INTEGER UNSIGNED,
     deliveryZoneID INTEGER UNSIGNED COMMENT 'ID of the referenced DeliveryZone',
     rate FLOAT COMMENT 'Tax rate. For example, 20, to set a 20% rate.',
     CONSTRAINT PK_TaxRate PRIMARY KEY (ID),
@@ -835,6 +838,7 @@ CREATE TABLE ShippingRate (
     perItemCharge FLOAT COMMENT 'Fixed charge per each item (in base Currency)',
     subtotalPercentCharge FLOAT COMMENT 'Fee calculation as a percentage of a subtotal',
     perKgCharge FLOAT COMMENT 'Charge per each kg of weight',
+    perItemChargeClass TEXT,
     CONSTRAINT PK_ShippingRate PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -978,7 +982,7 @@ CREATE TABLE ProductOption (
     isPriceIncluded BOOL COMMENT 'Include product price when displaying option price (base product price + option choice price = option display price)',
     displayType INTEGER COMMENT '0 - select box, 1 - radio buttons',
     position INTEGER UNSIGNED DEFAULT 0,
-    settings TEXT DEFAULT '0',
+    settings TEXT,
     maxFileSize INTEGER,
     fileExtensions VARCHAR(100),
     CONSTRAINT PK_ProductOption PRIMARY KEY (ID)
@@ -1532,6 +1536,30 @@ CREATE TABLE SessionData (
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
+# Add table "ShippingClass"                                              #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ShippingClass (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    name MEDIUMTEXT,
+    position INTEGER UNSIGNED DEFAULT 0,
+    CONSTRAINT PK_ShippingClass PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "TaxClass"                                                   #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE TaxClass (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    name MEDIUMTEXT,
+    position INTEGER UNSIGNED DEFAULT 0,
+    CONSTRAINT PK_TaxClass PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
 # Foreign key constraints                                                #
 # ---------------------------------------------------------------------- #
 
@@ -1546,6 +1574,12 @@ ALTER TABLE Product ADD CONSTRAINT ProductImage_Product
 
 ALTER TABLE Product ADD CONSTRAINT Product_Product 
     FOREIGN KEY (parentID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE Product ADD CONSTRAINT ShippingClass_Product 
+    FOREIGN KEY (shippingClassID) REFERENCES ShippingClass (ID) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE Product ADD CONSTRAINT TaxClass_Product 
+    FOREIGN KEY (taxClassID) REFERENCES TaxClass (ID) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE Category ADD CONSTRAINT Category_Category 
     FOREIGN KEY (parentNodeID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1768,6 +1802,9 @@ ALTER TABLE TaxRate ADD CONSTRAINT Tax_TaxRate
 
 ALTER TABLE TaxRate ADD CONSTRAINT DeliveryZone_TaxRate 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE TaxRate ADD CONSTRAINT TaxClass_TaxRate 
+    FOREIGN KEY (taxClassID) REFERENCES TaxClass (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ShippingRate ADD CONSTRAINT ShippingService_ShippingRate 
     FOREIGN KEY (shippingServiceID) REFERENCES ShippingService (ID) ON DELETE CASCADE ON UPDATE CASCADE;
