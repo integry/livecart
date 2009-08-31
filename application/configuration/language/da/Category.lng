@@ -1,0 +1,18 @@
+FEATURED=Fokusprodukter
+SALES_RANK=Bedst sælgende
+PRODUCT_NAME_ASC=Produktnavn: A - Z
+PRODUCT_NAME_DESC=Produktnavn: Z - A
+PRICE_ASC=Pris: Lav til høj
+PRICE_DESC=Pris: Høj til lav
+NEWEST_ARRIVALS=Seneste nyheder
+_showing_products=Viser [_1] til [_2] af [_3] fundne produkter
+_sort_by=Sorteret af
+_more_subcats=flere...
+_view_as_list=Vis som liste
+_view_as_grid=Vis som tabel
+_all_categories=Alle kategorier
+_narrow_by_cat=Begræns søgning af kategori
+_not_found=<span class='notFoundMain'>Fandt ingen produkter.</span> Indtast venligst et andet søgeord.
+RATING=Kunde bedømmelse
+_found_cats=Fundne kategorier
+_featured_products=Fokusprodukter

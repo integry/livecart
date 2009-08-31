@@ -427,6 +427,14 @@ class CheckoutController extends FrontendController
 
 		foreach ($shipments as $key => $shipment)
 		{
+			if (!$shipment->isShippable())
+			{
+				$download = $shipment;
+				$downloadIndex = $key;
+				$needSelecting = false;
+				continue;
+			}
+
 			$shipmentRates = $shipment->getAvailableRates();
 
 			if ($shipmentRates->size() > 1)
@@ -455,13 +463,6 @@ class CheckoutController extends FrontendController
 			{
 				$form->set('shipping_' . $key, $shipment->getSelectedRate()->getServiceID());
 			}
-
-			if (!$shipment->isShippable())
-			{
-				$download = $shipment;
-				$downloadIndex = $key;
-				$needSelecting = false;
-			}
 		}
 
 		SessionOrder::save($this->order);
@@ -475,7 +476,7 @@ class CheckoutController extends FrontendController
 		}
 
 		$rateArray = array();
-		foreach ($rates as $key => $rate)
+		foreach ((array)$rates as $key => $rate)
 		{
 			$rateArray[$key] = $rate->toArray();
 		}

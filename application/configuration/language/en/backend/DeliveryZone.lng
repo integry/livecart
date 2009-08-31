@@ -34,6 +34,10 @@ _add_mask=Add
 _add_new_mask=Add new mask
 _new_delivery_zone=New delivery zone
 _example=Example
+_test_address=Test address matching
+_test_which_zone=Which zone matches the address?
+_lookup_zone=Lookup zone
+_matched_zone=Matched zone
 
 _is_enabled=Enabled
 _is_free_shipping=Free shipping

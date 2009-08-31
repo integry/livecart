@@ -21,6 +21,7 @@ class StaticPage extends MultilingualObject
 		$schema->registerField(new ARField("handle", ARVarchar::instance(255)));
 		$schema->registerField(new ARField("title", ARArray::instance()));
 		$schema->registerField(new ARField("text", ARArray::instance()));
+		$schema->registerField(new ARField("metaDescription", ARArray::instance()));
 		$schema->registerField(new ARField("isInformationBox", ARBool::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance()));
 	}

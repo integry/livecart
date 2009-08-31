@@ -19,6 +19,7 @@ _with_selected=With selected
 _new_product=New Product
 
 _move_to_category=Move to other category
+_add_to_category=Add to additional category
 _copy_to_category=Copy to other category
 _set_manufacter=Set manufacturer
 _set_keywords=Set keywords
@@ -108,6 +109,7 @@ _sku_code=SKU (code)
 _generate_sku=Generate SKU automatically
 _short_description=Short description
 _long_description=Long description
+_shippingClass=Shipping class
 _product_type=Product type
 _website_address=Website address
 _manufacturer=Manufacturer

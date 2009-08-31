@@ -1,0 +1,8 @@
+NewsletterSubscriber.email=E-mail
+NewsletterSubscriber.isEnabled=Er tilkoblet
+NewsletterSubscriber.ID=ID
+_nothing_selected=Venligst vælg mindst een abonnent først
+_newsletter_delete_confirm=Ønsker du virkeligt at slette valgte nyhedsbrevsabonnenter?
+_process=Bearbejde
+_listing_subscribers=Vis abonnenter $from - $to af $count
+_no_subscribers_found=Ingen abonnenter fundet

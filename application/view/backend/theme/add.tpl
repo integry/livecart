@@ -1,0 +1,1 @@
+{include file="backend/staticPage/edit.tpl"}

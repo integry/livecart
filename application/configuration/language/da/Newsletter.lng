@@ -1,0 +1,13 @@
+_subscribe_to_newsletter=Vores nyhedsbrev
+_enter_your_email_to_subscribe=Venligst indtast din E-mail adresse for at abonnere på vores nyhedsbrev
+_already_subscribed_info=Du har allerede abonnement på vores nyhedsbrev
+_already_subscribed=Du har allerede abonnement
+_unsubscribe_sucessful=Din afmeldelse af vores nyhedsbrev er registreret succesfuldt
+_unsubscribe=Afmeld vores nyhedsbrev
+_confirm_successful=Din E-mail adresse er blevet bekræftet
+_confirming_email=Bekræftelse af E-mail adresse
+_err_invalid_email=Dette er ikke en gyldig E-mail adresse
+_confirm_unsuccessful=Vi kunne ikke bekræfte din E-mail adresse. Venligst kontroller, at du har overført linket korrekt til browserens adresselinie.
+_confirm_subscription=Venligst bekræft din E-mail adresse
+_confirm_instructions=Vi har fremsendt en E-mail til den adresse, du har indtastet. Venligst bekræft den indtastede adresse ved at følge linket i den fremsendte nyhedsbrevstilmelding.
+_err_email_empty=Venligst indtast din E-mail adresse

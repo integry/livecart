@@ -2,9 +2,9 @@
 Spoštovani/a {$user.fullName},
 
 {if $order.shipments|@count == 1}
-Status vašega naročila <b class="orderID">#{$order.ID}</b> je bil obnovljen.
+Status vašega naročila <b class="orderID">#{$order.invoiceNumber}</b> je bil obnovljen.
 {else}
-Status vašega naročila za eno ali več pošiljk je bil obnovljen <b class="orderID">#{$order.ID}</b>.
+Status vašega naročila za eno ali več pošiljk je bil obnovljen <b class="orderID">#{$order.invoiceNumber}</b>.
 {/if}
 
 Če imate kakršna koli vprašanja glede tega naročila nam lahko pošljete email ali nas kontaktirate s naslednje strani:

@@ -1,0 +1,23 @@
+.addClass
+{
+    background-image: url(../../image/silk/lorry_add.png);
+}
+
+#class_new_form
+{
+    width: 500px;
+}
+
+#class_classesList li.activeList_odd,
+#class_classesList li.activeList_even
+{
+    margin: 5px;
+  	width: 30em;
+}
+
+#confirmations
+{
+    position: absolute;
+    right: 0px;
+    width: 600px;
+}

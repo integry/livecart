@@ -338,6 +338,11 @@ CssCustomize.prototype =
 			sheet.createRule(rule);
 		});
 
+		return this.getStyleSheetText(sheet);
+	},
+
+	getStyleSheetText: function(sheet)
+	{
 		var rules = [];
 		$A(sheet.cssRules).each(function(rule)
 		{
@@ -459,7 +464,7 @@ CssCustomize.prototype =
 
 			$A(currentSheet.cssRules).each(function(rule)
 			{
-				if (!rule.originalRule)
+				if (!rule.originalRule && !rule.originalText)
 				{
 					newRules.push(rule);
 				}
@@ -481,7 +486,7 @@ CssCustomize.prototype =
 		{
 			if (document.styleSheets[k].href)
 			{
-				if ((!isTheme && (document.styleSheets[k].href == stylesheet.href)) || (isTheme && document.styleSheets[k].href.match(new RegExp("css\/" + stylesheet  + "\.css"))))
+				if (((!isTheme && (document.styleSheets[k].href == stylesheet.href)) || (isTheme && document.styleSheets[k].href.match(new RegExp("css\/" + stylesheet  + "\.css")))))
 				{
 					var sheet = document.styleSheets[k];
 
@@ -568,7 +573,7 @@ MockedCSSRule = function(selector)
 
 MockedCSSRule.prototype =
 {
-	setProperty: function(name, value, test)
+	setProperty: function(name, value)
 	{
 		if (name.match(/-moz-background/))
 		{
@@ -618,3 +623,5 @@ StyleSheet.prototype.getRule = function(selector, debug)
 		}
 	}
 }
+
+CSSStyleSheet.prototype.getRule = StyleSheet.prototype.getRule;

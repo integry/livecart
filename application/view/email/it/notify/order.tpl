@@ -1,5 +1,5 @@
 Nuovo Ordine ricevuto da {'STORE_NAME'|config}
-Numero Ordine: {$order.ID}
+Numero Ordine: {$order.invoiceNumber}
 
 Pannello di Amministrazione Ordine:
 {backendOrderUrl order=$order url=true}

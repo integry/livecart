@@ -78,6 +78,11 @@ NAME=Name
 PRICE=Price
 DETAILS=Link to detail page
 
+_missing_images=Missing Product Images
+MISSING_IMG_THUMB=Thumbnails (side menus, etc.)
+MISSING_IMG_SMALL=Small images (product lists in categories)
+MISSING_IMG_LARGE=Large images (product page)
+
 _category_filters=Category Page Filters
 ENABLE_MAN_FILTERS=Enable manufacturer filters
 ENABLE_PRICE_FILTERS=Enable price filters
@@ -91,6 +96,8 @@ METRIC=Metric
 ENGLISH=English
 
 _images=Images
+_resize_images=Resize existing images
+_image_resize_success=Images resized successfully
 _product_image=Product Image Sizes
 _p_small=Product Page Thumbnail
 _p_thumb=Product List Thumbnail
@@ -113,6 +120,10 @@ _m_thumb=Thumbnail
 _m_medium=Medium
 _m_large=Large
 
+_option_image=Customer File Upload Preview
+_o_small=Thumbnail images
+_o_large=Enlarged preview
+
 _content_blocks=Content blocks
 _sale_items=On-sale Products
 SALE_ITEMS_COUNT=Number of on-sale products to display per block
@@ -123,6 +134,14 @@ BESTSELLING_ITEMS_COUNT=Number of bestselling products to display
 BESTSELLING_ITEMS_DAYS=Number of last days to include sales data from
 
 _product_page=Products
+
+_product_display_options=Product Display Options
+INCLUDE_BASE_TAXES=Include base (default delivery zone) tax rates in product display prices
+SHOW_PRODUCT_WEIGHT=Display product weight
+QUANT_FIELD_TYPE=Purchase quantity selection field type
+QUANT_SELECT=Select box
+QUANT_INPUT=Input field
+
 _inventory_status=Inventory Status
 PRODUCT_DISPLAY_STOCK=Display the amount of products in stock
 PRODUCT_DISPLAY_LOW_STOCK=Display low-stock warning
@@ -205,6 +224,7 @@ PRICE_FILTER_TO_10=Price To
 
 _invoice=Invoices
 _seller_info=Seller Information
+DISABLE_INVOICES=Disable invoices
 INVOICE_SELLER_INFO=Seller contact information in invoice
 
 _invoice_preferences=Invoice Options
@@ -215,6 +235,8 @@ _search_types=Additionally Searchable Data
 SEARCH_MODELS=Searchable data
 SEARCH_MODEL_PREVIEW=Number of preview results to display in common search results pages
 SEARCH_MODEL_PER_PAGE=Search results per page
+NewsPost=News posts
+StaticPage=Pages
 
 _users=User Accounts
 USER_COUNT_RECENT_ORDERS=Number of recent orders to display in account homepage
@@ -234,9 +256,6 @@ REQUIRE_CVV=Require Card Verification Code (CVV) to be entered
 
 _offline_payments=Offline Payments
 OFFLINE_HANDLERS=Enabled offline payment methods
-OFFLINE1=Bank Wire Transfer
-OFFLINE2=Additional Offline Payment Method
-OFFLINE3=Another Offline Payment Method
 OFFLINE_NAME=Payment method name
 OFFLINE_LOGO=Logo image
 OFFLINE_DESCR=Description
@@ -251,6 +270,7 @@ MAX_QUANT=Maximum quantity of products per order (0 - no limit)
 ENABLE_CART=Enable shopping cart
 ENABLE_WISHLISTS=Enable wishlists
 DISABLE_GUEST_CHECKOUT=Disable guest checkout
+DISABLE_GUEST_CART=Require registration to access shopping cart
 ENABLE_MULTIADDRESS=Allow shipping to multiple addresses
 ENABLE_CHECKOUTDELIVERYSTEP=Enter billing and shipping addresses at separate checkout steps
 SKIP_SHIPPING=Skip shipping method selection step if only one shipping method is available (select it automatically)
@@ -330,8 +350,30 @@ CC_AUTHONLY=Only authorize payments without capturing them automatically
 _customers=Customers & Registration
 _registration=Registration
 REQUIRE_PHONE=Require customers to enter phone number on registration
+REQUIRE_REG_ADDRESS=Require address entry on registration
 DISABLE_STATE=Remove state field
 REG_EMAIL_CONFIRM=Require e-mail address confirmation
+
+_invoice_numbers=Invoice Numbers
+INVOICE_NUMBER_GENERATOR=Invoice number scheme
+SequentialInvoiceNumber=Numeric and sequential
+SequentialInvoiceNumber_START_AT=Start invoice numbers from
+SequentialInvoiceNumber_STEP=Number increase step
+SequentialInvoiceNumber_MIN_LENGTH=Minimum number length (padded with zeros if shorter)
+SequentialInvoiceNumber_PREFIX=Number prefix
+SequentialInvoiceNumber_SUFFIX=Number suffix
+
+_shipping_estimation=Shipping Cost Estimation
+ENABLE_SHIPPING_ESTIMATE=Enable shipping cost estimation in shopping cart page
+SHIP_ESTIMATE_HIDE_ENTRY=Hide address entry for
+UNREGISTERED=Unregistered customers (use store default address)
+ALL_REGISTERED=All registered customers (use store default address or customer address if entered)
+REGISTERED_WITH_ADDRESS=Registered customers that have previously entered an address
+SHIP_ESTIMATE_FIELDS=Address entry fields
+COUNTRY=Country
+STATE=State
+CITY=City
+POSTALCODE=Postal (ZIP) code
 
 # Countries
 _countries=Countries
@@ -352,6 +394,9 @@ SHOW_BACKEND_LANG_FILES=Allow to edit store back-end language files
 
 _template_management=Template Management
 SHOW_BACKEND_TEMPLATE_FILES=Allow to edit store back-end template files
+
+_admin_misc=Miscellaneous Options
+DISABLE_WYSIWYG=Disable WYSIWYG editors
 
 # SSL options
 _ssl_opts=Security

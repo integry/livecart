@@ -1,5 +1,5 @@
 Nový vzkaz k objednávce na {'STORE_NAME'|config}
-Zákazník poslal vzkaz k objednávce č.: {$order.ID}
+Zákazník poslal vzkaz k objednávce č.: {$order.invoiceNumber}
 
 --------------------------------------------------
 {$message.text}

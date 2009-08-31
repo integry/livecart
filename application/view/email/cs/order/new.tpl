@@ -1,8 +1,8 @@
 {'STORE_NAME'|config} Potvrzení objednávky
 Vážený(á) {$user.fullName},
 
-Děkujeme za objednávku v našem obchodě {'STORE_NAME'|config}. 
-Pokud nás ohledně této objednávky chcete kontaktovat, uvádějte její číslo: {$order.ID}.
+Děkujeme za objednávku v našem obchodě {'STORE_NAME'|config}.
+Pokud nás ohledně této objednávky chcete kontaktovat, uvádějte její číslo: {$order.invoiceNumber}.
 
 Stav objednávky můžete sledovat zde:
 {link controller=user action=viewOrder id=$order.ID url=true}

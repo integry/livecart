@@ -10,6 +10,7 @@ ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import("application.model.category.*");
 ClassLoader::import("application.model.specification.*");
 ClassLoader::import("application.model.product.*");
+ClassLoader::import("application.model.delivery.ShippingClass");
 
 /**
  * One of the main entities of the system - defines and handles product related logic.
@@ -64,6 +65,8 @@ class Product extends MultilingualObject
 		$schema->registerField(new ARForeignKeyField("manufacturerID", "Manufacturer", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("defaultImageID", "ProductImage", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("parentID", "Product", "ID", null, ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("shippingClassID", "ShippingClass", "ID", null, ARInteger::instance()));
+		//$schema->registerField(new ARForeignKeyField("taxClassID", "TaxClass", "ID", null, ARInteger::instance()));
 
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
 		$schema->registerField(new ARField("sku", ARVarchar::instance(20)));
@@ -289,7 +292,7 @@ class Product extends MultilingualObject
 	{
 		if (!$this->isBundle())
 		{
-			return $this->type->get() == self::TYPE_DOWNLOADABLE;
+			return $this->getParent()->type->get() == self::TYPE_DOWNLOADABLE;
 		}
 		else
 		{
@@ -501,7 +504,7 @@ class Product extends MultilingualObject
 		return $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode)->getItemPrice($item, $applyRounding);
 	}
 
-	public function getPrice($currencyCode, $recalculate = true)
+	public function getPrice($currencyCode, $recalculate = true, $includeDiscounts = false)
 	{
 	  	if ($currencyCode instanceof Currency)
 	  	{
@@ -515,7 +518,7 @@ class Product extends MultilingualObject
 		}
 		else
 		{
-			$price = $instance->getPrice($recalculate == true);
+			$price = $instance->getPrice($recalculate == true, $includeDiscounts);
 		}
 
 		return $price;
@@ -934,6 +937,25 @@ class Product extends MultilingualObject
 			$array['childSettings'] = unserialize($array['childSettings']);
 		}
 
+		if ($array['shippingWeight'])
+		{
+			$lb = 0.45359237;
+			$oz = 0.0283495231;
+			$weight = array();
+			$weight['lbs'] = floor($array['shippingWeight'] / $lb);
+			$weight['oz'] = ceil(($array['shippingWeight'] - ($weight['lbs'] * $lb)) / $oz);
+			$weight = array_filter($weight);
+
+			$array['shippingWeight_english_values'] = $weight;
+
+			foreach ($weight as $unit => $w)
+			{
+				$weight[$unit] = $w . ' ' . $unit;
+			}
+
+			$array['shippingWeight_english'] = implode(' ', $weight);
+		}
+
 		return $array;
 	}
 
@@ -1057,11 +1079,16 @@ class Product extends MultilingualObject
 	 */
 	public function getImageArray()
 	{
+		return ActiveRecordModel::getRecordSetArray('ProductImage', $this->getImageFilter());
+	}
+
+	private function getImageFilter()
+	{
 		$f = new ARSelectFilter();
 		$f->setCondition(new EqualsCond(new ARFieldHandle('ProductImage', 'productID'), $this->getID()));
 		$f->setOrder(new ARFieldHandle('ProductImage', 'position'));
 
-		return ActiveRecordModel::getRecordSetArray('ProductImage', $f);
+		return $f;
 	}
 
 	/**
@@ -1148,6 +1175,11 @@ class Product extends MultilingualObject
 	public function registerVariation(ProductVariation $variation)
 	{
 		$this->variations[$variation->getID()] = $variation;
+	}
+
+	public function getRegisteredVariations()
+	{
+		return $this->variations;
 	}
 
 	/**
@@ -1246,6 +1278,17 @@ class Product extends MultilingualObject
 			}
 
 			ProductOption::loadChoicesForRecordSet($options);
+
+			foreach ($options as $mainIndex => $mainOption)
+			{
+				for ($k = $mainIndex + 1; $k <= $options->size(); $k++)
+				{
+					if ($options->get($k) && ($mainOption->getID() == $options->get($k)->getID()))
+					{
+						$options->remove($k);
+					}
+				}
+			}
 		}
 
 		return $options;
@@ -1273,13 +1316,15 @@ class Product extends MultilingualObject
 		}
 
 		$sql = 'SELECT
-					COUNT(*) AS cnt, OtherItem.productID AS ID FROM OrderedItem
+					COUNT(*) AS cnt, COALESCE(ParentProduct.ID, OtherItem.productID) AS ID FROM OrderedItem
 				LEFT JOIN
 					CustomerOrder ON OrderedItem.customerOrderID=CustomerOrder.ID
 				LEFT JOIN
 					OrderedItem AS OtherItem ON OtherItem.customerOrderID=CustomerOrder.ID
 				LEFT JOIN
 					Product ON OtherItem.productID=Product.ID
+				LEFT JOIN
+					Product AS ParentProduct ON Product.parentID=ParentProduct.ID
 				WHERE
 					CustomerOrder.isFinalized=1 AND OrderedItem.productID=' . $this->getID() . ' AND OtherItem.productID!=' . $this->getID() . ($enabledOnly? ' AND Product.isEnabled=1' : '') . '
 				GROUP
@@ -1292,10 +1337,11 @@ class Product extends MultilingualObject
 
 		$ids = array();
 		$cnt = array();
-		foreach ($products as $prod)
+
+		foreach ($products as $key => $prod)
 		{
 			$ids[] = $prod['ID'];
-			$cnt[$prod['ID']] = $prod['cnt'];
+			$cnt[$prod['ID']] = empty($cnt[$prod['ID']]) ? $prod['cnt'] : $prod['cnt'] + $cnt[$prod['ID']];
 		}
 
 		$products = array();
@@ -1394,20 +1440,25 @@ class Product extends MultilingualObject
 		$this->specificationInstance = clone $original->getSpecification();
 		$this->specificationInstance->setOwner($this);
 
-		$this->loadPricing();
-		$this->pricingHandlerInstance = clone $this->pricingHandlerInstance;
+		$original->loadPricing();
+		$this->pricingHandlerInstance = clone $original->pricingHandlerInstance;
 		$this->pricingHandlerInstance->setProduct($this);
-
-		// images
-		if ($this->defaultImage->get())
-		{
-			$this->defaultImage->set(clone $this->defaultImage->get());
-		}
 
 		$this->save();
 
+		// images
+		if ($original->defaultImage->get())
+		{
+			foreach ($original->getRelatedRecordSet('ProductImage', $original->getImageFilter()) as $image)
+			{
+				$clonedImage = clone $image;
+				$clonedImage->product->set($this);
+				$clonedImage->save();
+			}
+		}
+
 		// options
-		foreach (ProductOption::getProductOptions($this->originalRecord) as $option)
+		foreach (ProductOption::getProductOptions($original) as $option)
 		{
 			$clonedOpt = clone $option;
 			$clonedOpt->product->set($this);
@@ -1416,7 +1467,7 @@ class Product extends MultilingualObject
 
 		// related products
 		$groups[] = array();
-		foreach ($this->originalRecord->getRelationships() as $relationship)
+		foreach ($original->getRelationships() as $relationship)
 		{
 			$group = $relationship->productRelationshipGroup->get();
 			$id = $group ? $group->getID() : null;

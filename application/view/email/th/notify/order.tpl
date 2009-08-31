@@ -1,5 +1,5 @@
 มีผู้สั่งซื้อสินค้าเข้ามาใหม่ที่ {'STORE_NAME'|config}
-ใบสั่งซื้อเลขที่: {$order.ID}
+ใบสั่งซื้อเลขที่: {$order.invoiceNumber}
 
 การจัดการออเดอร์:
 {backendOrderUrl order=$order url=true}

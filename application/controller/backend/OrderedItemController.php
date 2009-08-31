@@ -159,22 +159,35 @@ class OrderedItemController extends StoreManagementController
 		$response->set("categoryList", $categoryList->toArray($this->application->getDefaultLanguageCode()));
 
 		$order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);
-		$downloadable = $order->getDownloadShipment(false);
+
+		$response->set("order", $order->toFlatArray());
+		$response->set("shipments", $this->getOrderShipments($order));
+
+		return $response;
+	}
+
+	public function shipments()
+	{
+		$order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);
+		return new ActionResponse("shipments", $this->getOrderShipments($order));
+	}
+
+	private function getOrderShipments(CustomerOrder $order)
+	{
 		$order->loadItems();
 		$shipments = $order->getShipments();
+		$downloadable = $order->getDownloadShipment(false);
 
-		// has downloadable group?
-		$downloadableGroup = null;
-		foreach($shipments as $key => $shipment)
+		if ($downloadable && count($shipments) == 1 && !count($downloadable->getItems()))
 		{
-			if(!$shipment->isShippable()) $downloadableGroup = $shipment;
+			$downloadable = null;
 		}
 
 		$shipmentsArray = array();
 		foreach($shipments as $key => $shipment)
 		{
 			// one shipment is reserved for downloadable items
-			if($shipment === $downloadable || $shipment->isShipped())
+			if ($shipment === $downloadable || $shipment->isShipped())
 			{
 				continue;
 			}
@@ -194,10 +207,7 @@ class OrderedItemController extends StoreManagementController
 			}
 		}
 
-		$response->set("order", $order->toFlatArray());
-		$response->set("shipments", $shipmentsArray);
-
-		return $response;
+		return $shipmentsArray;
 	}
 
 	/**
@@ -441,6 +451,7 @@ class OrderedItemController extends StoreManagementController
 
 	public function variationForm()
 	{
+		$this->loadLanguageFile('Frontend');
 		$this->loadLanguageFile('Product');
 		$this->loadLanguageFile('backend/Shipment');
 		$item = ActiveRecordModel::getInstanceById('OrderedItem', $this->request->get('id'), true, true);
@@ -493,6 +504,20 @@ class OrderedItemController extends StoreManagementController
 	{
 		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id'), OrderedItem::LOAD_DATA);
 		return $this->getItemResponse($item);
+	}
+
+	public function downloadOptionFile()
+	{
+		ClassLoader::import('application.model.product.ProductOptionChoice');
+
+		$f = select(eq('OrderedItem.ID', $this->request->get('id')),
+					eq('ProductOptionChoice.optionID', $this->request->get('option')));
+
+		$set = ActiveRecordModel::getRecordSet('OrderedItemOption', $f, array('CustomerOrder', 'OrderedItem', 'ProductOptionChoice'));
+		if ($set->size())
+		{
+			return new ObjectFileResponse($set->get(0)->getFile());
+		}
 	}
 
 	private function getItemResponse(OrderedItem $item)

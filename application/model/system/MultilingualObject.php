@@ -118,6 +118,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 			if (!empty($array[$fieldName]))
 			{
 				$data = $array[$fieldName];
+				$array[$fieldName . 'Data'] = $data;
 
 				if (!is_array($data))
 				{

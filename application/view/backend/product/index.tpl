@@ -37,6 +37,7 @@
 			<option value="enable_isEnabled">{t _enable}</option>
 			<option value="disable_isEnabled">{t _disable}</option>
 			<option value="move">{t _move_to_category}</option>
+			<option value="addCat">{t _add_to_category}</option>
 			<option value="copy">{t _copy_to_category}</option>
 			<option value="delete">{t _delete}</option>
 

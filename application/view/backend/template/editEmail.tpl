@@ -1,10 +1,5 @@
 <h1>
-	{$fileName}|
-	{if $fileName|@substr:0:11 != 'email/block'}
-		{$fileName|@substr:9}
-	{else}
-		{$fileName|@substr:6}
-	{/if}
+	{$displayFileName}
 </h1>
 
 {form handle=$form action="controller=backend.template action=saveEmail" method="POST" id="templateForm"}

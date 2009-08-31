@@ -143,6 +143,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 	protected function insert()
 	{
+		$this->executePlugins($this, 'before-insert');
 		$res = parent::insert();
 		$this->executePlugins($this, 'insert');
 		$this->executePlugins($this, 'save');
@@ -159,6 +160,8 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 	public function save($forceOperation = null)
 	{
+		$this->executePlugins($this, 'before-save');
+
 		if (($this instanceof EavAble) && $this->eavObject->get() && !$this->eavObject->get()->getID())
 		{
 			$eavObject = $this->eavObject->get();
@@ -178,6 +181,8 @@ abstract class ActiveRecordModel extends ActiveRecord
 		{
 			$this->specificationInstance->save();
 		}
+
+		$this->executePlugins($this, 'after-save');
 
 		return $res;
 	}

@@ -1,0 +1,17 @@
+_edit_templates=Rediger skabelon
+_edit_template=Rediger skabelonfil
+_please_select=Venligst vælg en skabelonfil, der skal redigeres
+_save_template=Gem skabelon
+_template_file_name=Fornavn
+_html_version=HTML version
+_confirm_template_delete=Ønsker du virkeligt at slette den valgte skabelonfil
+_template_has_been_successfully_updated=Skabelon gemt succesfuldt 
+_could_not_update_template=Skabelon kunne ikke gemmes
+_template_has_been_successfully_deleted=Skabelonfilen blev slettet succesfuldt
+_edit_email_templates=Rediger E-mail skabelon
+_delete_template=Slet skabelonfil
+_file_name_empty=Venligst indtast filnavnet
+_subject=Emne
+_body=Besked
+_create_template=Opret skabelonfil
+_save_for_theme=Gem for specielt tema

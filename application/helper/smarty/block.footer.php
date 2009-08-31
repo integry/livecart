@@ -30,8 +30,9 @@ function smarty_block_footer($params, $content, LiveCartSmarty $smarty, &$repeat
 {
 	if (!$repeat)
 	{
+		$counter = $smarty->get_template_vars('sectCounter');
 		$blocks = $smarty->get_template_vars('sect');
-		$blocks['footer'] = $content;
+		$blocks[$counter]['footer'] = $content;
 		$smarty->assign('sect', $blocks);
 	}
 }

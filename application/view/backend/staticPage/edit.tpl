@@ -57,6 +57,14 @@
 		</fieldset>
 	</p>
 
+	<p>
+		<label for="metaDecription_{$page.ID}" class="wide">{t _meta_description}:</label>
+		<fieldset class="error">
+			{textarea class="longDescr" name="metaDescription" id="metaDecription_`$page.ID`" style="width: 100%; height: 4em;"}
+			<div class="errorText hidden" style="margin-top: 5px;"></div>
+		</fieldset>
+	</p>
+
 	{language}
 		<p>
 			<label for="title_{$lang.ID}" class="wide">{t _title}:</label>
@@ -75,6 +83,15 @@
 				</div>
 			</fieldset>
 		</p>
+
+		<p>
+			<label for="metaDecription_{$page.ID}_{$lang.ID}" class="wide">{t _meta_description}:</label>
+			<fieldset class="error">
+				{textarea class="longDescr" name="metaDescription_`{$lang.ID}`" id="metaDecription_`$page.ID`_`$lang.ID`" style="width: 100%; height: 4em;"}
+				<div class="errorText hidden" style="margin-top: 5px;"></div>
+			</fieldset>
+		</p>
+
 	{/language}
 
 </fieldset>

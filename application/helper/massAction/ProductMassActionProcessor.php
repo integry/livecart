@@ -57,6 +57,15 @@ class ProductMassActionProcessor extends MassActionProcessor
 			$cloned->category->set($this->params['category']);
 			$cloned->save();
 		}
+		else if ('addCat' == $act)
+		{
+			// check if the product is not assigned to this category already
+			$relation = ActiveRecordModel::getInstanceByIdIfExists('ProductCategory', array('productID' => $product->getID(), 'categoryID' => $this->params['category']->getID()));
+			if (!$relation->isExistingRecord() && ($product->category->get() !== $category))
+			{
+				$relation->save();
+			}
+		}
 		else if ('theme' == $act)
 		{
 			$instance = CategoryPresentation::getInstance($product);

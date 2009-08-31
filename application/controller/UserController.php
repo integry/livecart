@@ -217,7 +217,7 @@ class UserController extends FrontendController
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), 0));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isPaid'), true));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'type'), Product::TYPE_DOWNLOADABLE));
+		//$f->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'type'), Product::TYPE_DOWNLOADABLE));
 		$f->setOrder(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
 
 		$downloadable = ActiveRecordModel::getRecordSet('OrderedItem', $f, array('Product', 'CustomerOrder'));
@@ -378,7 +378,7 @@ class UserController extends FrontendController
 		{
 			$this->addAccountBreadcrumb();
 			$this->addBreadCrumb($this->translate('_your_orders'), $this->router->createUrl(array('controller' => 'user', 'action' => 'orders'), true));
-			$this->addBreadCrumb($order->getID(), '');
+			$this->addBreadCrumb($order->invoiceNumber->get(), '');
 
 			// mark all notes as read
 			$notes = $order->getNotes();
@@ -483,6 +483,11 @@ class UserController extends FrontendController
 
 	public function register()
 	{
+		if ($this->config->get('REQUIRE_REG_ADDRESS'))
+		{
+			return new ActionRedirectResponse('user', 'checkout', array('query' => array('return' => $this->request->get('return'))));
+		}
+
 		$form = $this->buildRegForm();
 		$response = new ActionResponse('regForm', $form);
 
@@ -542,6 +547,8 @@ class UserController extends FrontendController
 				SessionUser::setUser($user);
 
 				$success = true;
+
+				$this->sendWelcomeEmail($user);
 			}
 		}
 
@@ -553,6 +560,11 @@ class UserController extends FrontendController
 	 */
 	public function login()
 	{
+		if ($this->config->get('REQUIRE_REG_ADDRESS'))
+		{
+			return new ActionRedirectResponse('user', 'checkout', array('query' => array('return' => $this->request->get('return'))));
+		}
+
 		$this->addBreadCrumb($this->translate('_login'), $this->router->createUrl(array('controller' => 'user', 'action' => 'login'), true));
 
 		$form = $this->buildRegForm();
@@ -586,6 +598,11 @@ class UserController extends FrontendController
 
 		if ($return = $this->request->get('return'))
 		{
+			if (substr($return, 0, 1) != '/')
+			{
+				$return = $this->router->createUrlFromRoute($return);
+			}
+
 			return new RedirectResponse($return);
 		}
 		else
@@ -673,7 +690,7 @@ class UserController extends FrontendController
 
 	public function checkout()
 	{
-		if ($this->config->get('DISABLE_GUEST_CHECKOUT'))
+		if ($this->config->get('DISABLE_GUEST_CHECKOUT') && !$this->config->get('REQUIRE_REG_ADDRESS'))
 		{
 			return new ActionRedirectResponse('user', 'login', array('query' => array('return' => $this->router->createUrl(array('controller' => 'checkout', 'action' => 'pay')))));
 		}
@@ -682,6 +699,7 @@ class UserController extends FrontendController
 
 		$form->set('billing_country', $this->config->get('DEF_COUNTRY'));
 		$form->set('shipping_country', $this->config->get('DEF_COUNTRY'));
+		$form->set('return', $this->request->get('return'));
 
 		$response = new ActionResponse();
 		$response->set('form', $form);
@@ -704,7 +722,7 @@ class UserController extends FrontendController
 		$validator = $this->buildValidator();
 		if (!$validator->isValid())
 		{
-			return new ActionRedirectResponse('user', 'checkout');
+			return new ActionRedirectResponse('user', 'checkout', array('query' => array('return' => $this->request->get('return'))));
 		}
 
 		// create user account
@@ -730,7 +748,14 @@ class UserController extends FrontendController
 
 		ActiveRecordModel::commit();
 
-		return new ActionRedirectResponse('checkout', 'shipping');
+		if ($return = $this->request->get('return'))
+		{
+			return new RedirectResponse($this->router->createUrlFromRoute($return));
+		}
+		else
+		{
+			return new ActionRedirectResponse('checkout', 'shipping');
+		}
 	}
 
 	private function createAddress($prefix)
@@ -955,6 +980,9 @@ class UserController extends FrontendController
 		$response->set('return', $this->request->get('return'));
 		$response->set('countries', $this->getCountryList($form));
 		$response->set('states', $this->getStateList($form->get('country')));
+
+		UserAddress::getNewInstance()->getSpecification()->setFormResponse($response, $form, '');
+
 		return $response;
 	}
 
@@ -1077,6 +1105,7 @@ class UserController extends FrontendController
 
 		if ($password)
 		{
+			$this->session->set('password', $password);
 			$user->setPassword($password);
 		}
 
@@ -1085,15 +1114,7 @@ class UserController extends FrontendController
 		if (!$this->config->get('REG_EMAIL_CONFIRM'))
 		{
 			SessionUser::setUser($user);
-
-			// send welcome email with user account details
-			if ($this->config->get('EMAIL_NEW_USER'))
-			{
-				$email = new Email($this->application);
-				$email->setUser($user);
-				$email->setTemplate('user.new');
-				$email->send();
-			}
+			$this->sendWelcomeEmail($user);
 		}
 		else
 		{
@@ -1109,6 +1130,19 @@ class UserController extends FrontendController
 		}
 
 		return $user;
+	}
+
+	private function sendWelcomeEmail(User $user)
+	{
+		// send welcome email with user account details
+		if ($this->config->get('EMAIL_NEW_USER'))
+		{
+			$user->setPassword($this->session->get('password'));
+			$email = new Email($this->application);
+			$email->setUser($user);
+			$email->setTemplate('user.new');
+			$email->send();
+		}
 	}
 
 	private function doAddAddress($addressClass, Response $failureResponse)
@@ -1135,6 +1169,7 @@ class UserController extends FrontendController
 		}
 		else
 		{
+			var_dump($validator); exit;
 			return $failureResponse;
 		}
 	}

@@ -1,18 +1,18 @@
 <fieldset class="error shippingService_subtotalRange">
 	<label class="observe" for="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_subtotalRangeStart">{t _subtotal_range}</label>
 	<b>{t _from}</b>
-	<input type="text" name="rate__subtotalRangeStart" value="{$rate.subtotalRangeStart|default:0}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_subtotalRangeStart" class="shippingService_subtotalRangeStart shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} /> 
+	<input type="text" name="rate__subtotalRangeStart" value="{$rate.subtotalRangeStart|default:0}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_subtotalRangeStart" class="shippingService_subtotalRangeStart shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} />
 
 	<b>{t _to}</b>
 	<input type="text" name="rate__subtotalRangeEnd" value="{$rate.subtotalRangeEnd|default:0}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_subtotalRangeEnd" class="shippingService_subtotalRangeEnd shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} /> {$defaultCurrencyCode}
-	
+
 	<br />
 	<span class="errorText hidden"> </span>
 </fieldset>
 
 <fieldset class="error shippingService_weightRange">
 	<label class="observe" for="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_weightRangeStart">{t _weight_range}</label>
-	
+
 	<div class="weightRange">
 		<div class="weightRangeStart">
 			<b>{t _from}</b>
@@ -22,7 +22,7 @@
 			<b>{t _to}</b>
 			{metricsfield name="rate__weightRangeEnd" value=$rate.weightRangeEnd|default:0 id="shippingService_`$rate.ShippingService.DeliveryZone.ID`_`$rate.ShippingService.ID`_`$rate.ID`_weightRangeEnd" class="shippingService_weightRangeEnd"}
 		</div>
-	
+
 		<br />
 		<span class="errorText hidden"> </span>
 	</div>
@@ -39,12 +39,22 @@
 
 <fieldset class="error">
 	<label for="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_perItemCharge">{t _per_item_charge}</label>
-	<input type="text" name="rate__perItemCharge" value="{$rate.perItemCharge|default:0}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_perItemCharge" class="shippingService_perItemCharge shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} />
-	{$defaultCurrencyCode}
+	<fieldset class="container shippingClassRates">
+		<input type="text" name="rate__perItemCharge" value="{$rate.perItemCharge|default:0}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_perItemCharge" class="shippingService_perItemCharge shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} />
+		{$defaultCurrencyCode}
+
+		{foreach from=$shippingClasses item=name key=classID}
+			<p>
+				<label>{$name}</label>
+				<input type="text" name="rate__perItemChargeClass[{$classID}]" value="{$rate.perItemChargeClassData[$classID]|default:''}" class="shippingService_perItemChargeClass shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} />
+				{$defaultCurrencyCode}
+			</p>
+		{/foreach}
+	</fieldset>
 	<br />
 	<span class="errorText hidden"> </span>
 </fieldset>
-	
+
 <fieldset class="error">
 	<label for="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_subtotalPercentCharge">{t _subtotal_percent_charge}</label>
 	<input type="text" name="rate__subtotalPercentCharge" value="{$rate.subtotalPercentCharge|default:0}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_subtotalPercentCharge" class="shippingService_subtotalPercentCharge shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} /> %

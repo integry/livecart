@@ -1,7 +1,7 @@
 {*
 	<dl class="{if $order.ID !== $otherOrder.ID}logValueChanged{/if}">
 		<dt>{t _order_id}:</dt>
-		<dd>{$order.ID}</dd>
+		<dd>{$order.invoiceNumber}</dd>
 	</dl>
 *}
 
@@ -13,7 +13,7 @@
 			{elseif $order.status == 1}{t _shipment_pending}
 			{elseif $order.status == 2}{t _shipment_awaiting}
 			{elseif $order.status == 3}{t _shipment_shipped}
-			{elseif $order.status == 4}{t _shipment_returned}{/if} 
+			{elseif $order.status == 4}{t _shipment_returned}{/if}
 		</dd>
 	</dl>
 {/if}

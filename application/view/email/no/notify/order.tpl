@@ -1,5 +1,5 @@
 Ny bestilling hos {'STORE_NAME'|config}
-Bestillingsnr: {$order.ID}
+Bestillingsnr: {$order.invoiceNumber}
 
 Order administration:
 {backendOrderUrl order=$order url=true}

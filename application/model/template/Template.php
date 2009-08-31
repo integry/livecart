@@ -46,17 +46,29 @@ class Template
 			$this->code = file_get_contents($path);
 		}
 
-		$this->file = $fileName;
+		$this->file = str_replace('\\', '/', $fileName);
 	}
 
-	public static function getTree($dir = null, $isCustom = null)
+	public static function getTree($dir = null, $root = null, $idPrefix = '')
 	{
 	  	if (!$dir)
 	  	{
 			$dir = ClassLoader::getRealPath('application.view.');
 
 			// get user created template files
-			$customFiles = self::getTree(ClassLoader::getRealPath('storage.customize.view.'), true);
+			$customFiles = self::getTree(ClassLoader::getRealPath('storage.customize.view.'));
+		}
+
+		if (!file_exists(realpath($dir)))
+		{
+			return array();
+		}
+
+		$dir = realpath($dir) . DIRECTORY_SEPARATOR;
+
+		if (!$root)
+		{
+			$root = $dir;
 		}
 
 		if (!file_exists($dir))
@@ -64,7 +76,7 @@ class Template
 			return array();
 		}
 
-		$rootLn = strlen(ClassLoader::getRealPath($isCustom ? 'storage.customize.view.' : 'application.view.'));
+		$rootLn = strlen($root);
 
 		$res = array();
 		$d = new DirectoryIterator($dir);
@@ -77,17 +89,22 @@ class Template
 
 				if ($file->isDir())
 				{
-					$dir = self::getTree($file->getPathName(), $isCustom);
+					$dir = self::getTree($file->getPathName(), $root, $idPrefix);
 					if ($dir)
 					{
-						$res[$file->getFileName()]['id'] = $id;
+						$res[$file->getFileName()]['id'] = $idPrefix . $id;
 						$res[$file->getFileName()]['subs'] = $dir;
 					}
 				}
 				else //if (substr($file->getFileName(), -4) == '.tpl')
 				{
-					$res[$file->getFileName()]['id'] = $id;
+					$res[$file->getFileName()]['id'] = $idPrefix . $id;
 					$res[$file->getFileName()]['isCustom'] = !file_exists(self::getOriginalFilePath($id));
+
+					if (substr($id, 0, 7) == 'module/')
+					{
+						$res[$file->getFileName()]['isCustom'] = false;
+					}
 				}
 			}
 		}
@@ -104,17 +121,7 @@ class Template
 
 	public static function getRealFilePath($fileName)
 	{
-		$paths = array();
-		$paths[] = self::getCustomizedFilePath($fileName);
-		$paths[] = self::getOriginalFilePath($fileName);
-
-		foreach ($paths as $path)
-		{
-			if (file_exists($path))
-			{
-				return $path;
-			}
-		}
+		return ActiveRecordModel::getApplication()->getRenderer()->getTemplatePath($fileName);
 	}
 
 	public static function getOriginalFilePath($fileName)
@@ -212,7 +219,7 @@ class Template
 
 	public function isCustomFile()
 	{
-		return !file_exists(self::getOriginalFilePath($this->file));
+		return !file_exists(self::getOriginalFilePath($this->file)) && (substr($this->file, 0, 7) != 'module/');
 	}
 
 	public function toArray()

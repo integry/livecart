@@ -891,7 +891,7 @@ textarea, .disabledTextarea
    line-height: 10em;
 }
 
-input.radio, input.checkbox, input.submit, input.button, input.reset
+input.radio, input.checkbox, input.submit, input.button, input.reset, input.file, input.upload
 {
     width: auto;
     vertical-align: middle;
@@ -912,6 +912,12 @@ input.submit {
 input.reset {
 	background-color: #ddd;
 	color: #666;
+}
+
+input.text.progressIndicator
+{
+	padding: 2px;
+	background-position: center right;
 }
 
 input.radio, input.checkbox, .progressIndicator.checkbox

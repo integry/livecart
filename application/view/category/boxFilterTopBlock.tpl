@@ -1,7 +1,7 @@
 {loadJs}
 {sect}{header}
 <div class="filterTop" id="filterTop_{uniqid}">
-<form action="{categoryUrl data=$category filters=$filters}" method="POST" id="{uniqid last=true}">
+<form action="{categoryUrl data=$category filters=$filters}" method="post" id="{uniqid last=true}">
 {/header}{content}
 
 	{if 'TOP_FILTER_PRICE'|config}

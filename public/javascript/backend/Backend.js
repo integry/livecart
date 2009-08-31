@@ -448,7 +448,7 @@ Backend.Breadcrumb =
 
 				if(Backend.Breadcrumb.treeBrowser.getIndexById(this.catId) == null)
 				{
-					Backend.Category.treeBrowser.loadXML(Backend.Category.links.categoryRecursiveAutoloading + "?id=" + this.catId);
+					Backend.Category.treeBrowser.loadXML(Backend.Router.setUrlQueryParam(Backend.Category.links.categoryRecursiveAutoloading, "id", this.catId));
 				}
 				else
 				{
@@ -1724,11 +1724,22 @@ Backend.ProgressBar.prototype =
 	initialize: function(container)
 	{
 		this.container = container;
+
+		if (!container.down('.progressCount'))
+		{
+			this.createHTML();
+		}
+
 		this.counter = container.down('.progressCount');
 		this.total = container.down('.progressTotal');
 		this.progressBar = container.down('.progressBar');
 		this.progressBarIndicator = container.down('.progressBarIndicator');
 		this.update(0, 0);
+	},
+
+	createHTML: function()
+	{
+		this.container.innerHTML = '<div class="progressBarIndicator"></div><div class="progressBar"><span class="progressCount"></span><span class="progressSeparator"> / </span><span class="progressTotal"></span></div>';
 	},
 
 	update: function(progress, total)
@@ -2090,7 +2101,11 @@ Backend.MultiInstanceEditor.prototype =
 		Element.hide(this.getListContainer());
 		Element.show(container);
 
-		tinyMCE.idCounter = 0;
+		if (window.tinyMCE)
+		{
+			tinyMCE.idCounter = 0;
+		}
+
 		ActiveForm.prototype.initTinyMceFields(container);
 
 		this.reInitAddForm();

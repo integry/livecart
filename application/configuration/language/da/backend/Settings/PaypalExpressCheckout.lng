@@ -1,0 +1,6 @@
+PaypalExpressCheckout_username=Brugernavn
+PaypalExpressCheckout_password=Password
+PaypalExpressCheckout_signature=Underskrift
+PaypalExpressCheckout_sandbox=Brug Sandbox (testområde)
+PaypalExpressCheckout_AUTHONLY=Kun autoriseret betaling uden automatisk binding
+PaypalExpressCheckout=Paypal Express Checkout

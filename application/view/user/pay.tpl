@@ -5,7 +5,7 @@
 
 <div id="content" class="left right">
 
-	<h1>{t _pay} #{$order.ID} ({$order.formatted_dateCompleted.date_long})</h1>
+	<h1>{t _pay} #{$order.invoiceNumber} ({$order.formatted_dateCompleted.date_long})</h1>
 
 	<div id="payTotal">
 		<div>

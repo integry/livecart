@@ -24,4 +24,6 @@
 		</fieldset>
    {/if}
 
+   {block SHIPMENT-CONTROLS}
+
 </fieldset>

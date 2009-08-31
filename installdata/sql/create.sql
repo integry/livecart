@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2009-04-20 23:19                                #
-# Model version:         Version 2009-04-20                              #
+# Created on:            2009-08-28 19:22                                #
+# Model version:         Version 2009-08-28                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -31,6 +31,7 @@ CREATE TABLE Product (
     isFreeShipping BOOL NOT NULL COMMENT 'Determines if free shipping is available for this product',
     isBackOrderable BOOL NOT NULL COMMENT 'Determines if this product is available for backordering. If backordering is enabled, customers can order the product even if it is out of stock',
     isFractionalUnit BOOL NOT NULL,
+    isUnlimitedStock BOOL NOT NULL,
     sku VARCHAR(20) NOT NULL COMMENT 'Product stock keeping unit code',
     name MEDIUMTEXT COMMENT 'Product name (translatable)',
     shortDescription MEDIUMTEXT COMMENT 'A shorter description of the product (translatable). The short description is usually displayed in the category product list',
@@ -147,10 +148,11 @@ CREATE TABLE SpecField (
     dataType SMALLINT DEFAULT 0 COMMENT '1. text 2. numeric',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Order number (position relative to other fields)',
     handle VARCHAR(40),
-    isMultiValue BOOL COMMENT 'Determines if multiple values can be selected for selector attributes',
-    isRequired BOOL COMMENT 'Determines if a value has to be provided/entered for this attribute when creating or updating product information',
-    isDisplayed BOOL COMMENT 'Determines if the attribute value is displayed in product page',
-    isDisplayedInList BOOL COMMENT 'Determines if the attribute value is displayed in a category/search page (attribute summary)',
+    isMultiValue BOOL NOT NULL COMMENT 'Determines if multiple values can be selected for selector attributes',
+    isRequired BOOL NOT NULL COMMENT 'Determines if a value has to be provided/entered for this attribute when creating or updating product information',
+    isDisplayed BOOL NOT NULL COMMENT 'Determines if the attribute value is displayed in product page',
+    isDisplayedInList BOOL NOT NULL COMMENT 'Determines if the attribute value is displayed in a category/search page (attribute summary)',
+    isSortable BOOL NOT NULL,
     valuePrefix MEDIUMTEXT COMMENT 'Fixed prefix for all numeric values',
     valueSuffix MEDIUMTEXT COMMENT 'Fixed suffix for all numeric values (for example, sec, kg, px, etc.)',
     CONSTRAINT PK_SpecField PRIMARY KEY (ID)
@@ -185,6 +187,7 @@ CREATE TABLE CustomerOrder (
     shippingAddressID INTEGER UNSIGNED COMMENT 'ID of order shipping address',
     eavObjectID INTEGER UNSIGNED,
     currencyID CHAR(3) COMMENT 'ID of currency used to finalize the order',
+    invoiceNumber VARCHAR(40),
     checkoutStep TINYINT UNSIGNED NOT NULL COMMENT '0 - cart 1 - registered 2 - selected address 3 - selected shipping method 4 - attempted payment',
     dateCreated TIMESTAMP NOT NULL COMMENT 'Initial order creation date',
     dateCompleted TIMESTAMP COMMENT 'The date the order was finalized (completed checkout)',
@@ -196,7 +199,8 @@ CREATE TABLE CustomerOrder (
     isCancelled BOOL NOT NULL COMMENT 'Determines if the order is cancelled',
     status TINYINT COMMENT '1 - backordered 2 - awaiting shipment 3 - shipped 4 - returned',
     shipping TEXT COMMENT 'serialized PHP shipping rate data',
-    CONSTRAINT PK_CustomerOrder PRIMARY KEY (ID)
+    CONSTRAINT PK_CustomerOrder PRIMARY KEY (ID),
+    CONSTRAINT TUC_CustomerOrder_1 UNIQUE (invoiceNumber)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -241,7 +245,7 @@ CREATE TABLE User (
     eavObjectID INTEGER UNSIGNED,
     locale CHAR(4),
     email VARCHAR(60) COMMENT 'Users e-mail address. E-mail address must be unique and it is used for authorization (instead of a login name).',
-    password CHAR(32) NOT NULL COMMENT 'Users password, encoded with MD5',
+    password VARCHAR(100) NOT NULL COMMENT 'Users password, encoded with MD5',
     firstName VARCHAR(60) COMMENT 'First name',
     lastName VARCHAR(60) COMMENT 'Last name',
     companyName VARCHAR(60) COMMENT 'Users company name',
@@ -307,6 +311,8 @@ CREATE TABLE FilterGroup (
     name MEDIUMTEXT COMMENT 'FilterGroup name (translatable)',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other FilterGroups',
     isEnabled BOOL COMMENT 'Determine if the FilterGroup is active',
+    displayStyle INTEGER UNSIGNED NOT NULL,
+    displayLocation INTEGER UNSIGNED NOT NULL,
     CONSTRAINT PK_FilterGroup PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -870,6 +876,7 @@ CREATE TABLE StaticPage (
     handle VARCHAR(40) COMMENT 'URL slug. For example, for Terms Of Service page it could be "terms.of.service"',
     title MEDIUMTEXT COMMENT 'Page title (translatable)',
     text MEDIUMTEXT COMMENT 'Page text (translatable)',
+    metaDescription MEDIUMTEXT,
     isInformationBox BOOL NOT NULL COMMENT 'Determines if a link to the page is being displayed in the "Information Box" menu',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other StaticPages',
     CONSTRAINT PK_StaticPage PRIMARY KEY (ID)
@@ -971,6 +978,9 @@ CREATE TABLE ProductOption (
     isPriceIncluded BOOL COMMENT 'Include product price when displaying option price (base product price + option choice price = option display price)',
     displayType INTEGER COMMENT '0 - select box, 1 - radio buttons',
     position INTEGER UNSIGNED DEFAULT 0,
+    settings TEXT DEFAULT '0',
+    maxFileSize INTEGER,
+    fileExtensions VARCHAR(100),
     CONSTRAINT PK_ProductOption PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -1045,20 +1055,10 @@ CREATE TABLE CategoryPresentation (
     productID INTEGER UNSIGNED,
     isSubcategories BOOL,
     isAllVariations BOOL,
+    isVariationImages BOOL,
     theme VARCHAR(70),
+    listStyle VARCHAR(20),
     CONSTRAINT PK_CategoryPresentation PRIMARY KEY (ID)
-)
-ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
-
-# ---------------------------------------------------------------------- #
-# Add table "ProductPresentation"                                        #
-# ---------------------------------------------------------------------- #
-
-CREATE TABLE ProductPresentation (
-    ID INTEGER UNSIGNED NOT NULL,
-    isAllVariations BOOL,
-    theme VARCHAR(70),
-    CONSTRAINT PK_ProductPresentation PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -1361,6 +1361,7 @@ CREATE TABLE DiscountCondition (
     couponLimitType TINYINT COMMENT '0 - overall 1 - by user',
     serializedCondition TEXT,
     position INTEGER UNSIGNED DEFAULT 0,
+    conditionClass VARCHAR(80),
     CONSTRAINT PK_DiscountCondition PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -1386,6 +1387,7 @@ CREATE TABLE DiscountAction (
     discountStep INTEGER,
     discountLimit INTEGER,
     position INTEGER UNSIGNED DEFAULT 0,
+    actionClass VARCHAR(80),
     CONSTRAINT PK_DiscountAction PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -1435,6 +1437,8 @@ CREATE TABLE DiscountConditionRecord (
     userID INTEGER UNSIGNED,
     userGroupID INTEGER UNSIGNED,
     deliveryZoneID INTEGER UNSIGNED,
+    categoryLft INTEGER,
+    categoryRgt INTEGER,
     CONSTRAINT PK_DiscountConditionRecord PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -1447,6 +1451,7 @@ CREATE TABLE ProductBundle (
     productID INTEGER UNSIGNED NOT NULL,
     relatedProductID INTEGER UNSIGNED NOT NULL COMMENT 'The Product the related Product is assigned to',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'ID of the ProductRelationshipGroup - if the related product is assigned to one (grouped together with similar products)',
+    count FLOAT,
     CONSTRAINT PK_ProductBundle PRIMARY KEY (productID, relatedProductID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -1509,6 +1514,20 @@ CREATE TABLE ProductVariationValue (
     productID INTEGER UNSIGNED,
     variationID INTEGER UNSIGNED,
     CONSTRAINT PK_ProductVariationValue PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "SessionData"                                                #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE SessionData (
+    ID CHAR(32) NOT NULL,
+    userID INTEGER UNSIGNED,
+    lastUpdated INTEGER,
+    cacheUpdated INTEGER,
+    data BLOB,
+    CONSTRAINT PK_SessionData PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -1819,9 +1838,6 @@ ALTER TABLE CategoryPresentation ADD CONSTRAINT Category_CategoryPresentation
 ALTER TABLE CategoryPresentation ADD CONSTRAINT Product_CategoryPresentation 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductPresentation ADD CONSTRAINT Product_ProductPresentation 
-    FOREIGN KEY (ID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
-
 ALTER TABLE NewsletterSubscriber ADD CONSTRAINT User_NewsletterSubscriber 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -1971,3 +1987,6 @@ ALTER TABLE ProductVariationValue ADD CONSTRAINT Product_ProductVariationValue
 
 ALTER TABLE ProductVariationValue ADD CONSTRAINT ProductVariation_ProductVariationValue 
     FOREIGN KEY (variationID) REFERENCES ProductVariation (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE SessionData ADD CONSTRAINT User_SessionData 
+    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;

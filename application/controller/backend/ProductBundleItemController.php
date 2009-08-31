@@ -70,6 +70,27 @@ class ProductBundleItemController extends StoreManagementController
 	/**
 	 * @role update
 	 */
+	public function setCount()
+	{
+		$productID = (int)$this->request->get('id');
+		$relatedProductID = (int)$this->request->get('relatedownerID');
+
+		$item = ActiveRecordModel::getInstanceByID('ProductBundle', array('productID' => $productID, 'relatedProductID' => $relatedProductID), ActiveRecordModel::LOAD_DATA);
+
+		$count = $this->request->get('count');
+		if ($count < 0 || !$count)
+		{
+			$count = 1;
+		}
+		$item->count->set($count);
+		$item->save();
+
+		return new JSONResponse(array('count' => $count, 'total' => $this->getTotal($item->product->get())), 'success');
+	}
+
+	/**
+	 * @role update
+	 */
 	public function sort()
 	{
 		$target = $this->request->get('target');

@@ -211,7 +211,7 @@ class ShipmentController extends StoreManagementController
 		if($shipmentID = (int)$this->request->get('id'))
 		{
 			$shipment = Shipment::getInstanceByID('Shipment', $shipmentID, true, array('Order' => 'CustomerOrder'));
-			$shipment->order->get()->loadAll();
+			$shipment->loadItems();
 
 			if ($shipment->shippingAddress->get())
 			{
@@ -238,6 +238,7 @@ class ShipmentController extends StoreManagementController
 					'suffix' => $shipment->getCurrency()->priceSuffix->get()
 				);
 			}
+
 			return new JSONResponse(array( 'services' => $shippingRatesArray));
 		}
 	}
@@ -271,6 +272,8 @@ class ShipmentController extends StoreManagementController
 
 	public function editAddress()
 	{
+		$this->loadLanguageFile('backend/CustomerOrder');
+
 		ClassLoader::import('application.controller.backend.CustomerOrderController');
 		$shipment = Shipment::getInstanceByID('Shipment', $this->request->get('id'), true, array('CustomerOrder', 'User'));
 
@@ -283,15 +286,15 @@ class ShipmentController extends StoreManagementController
 		$shipment->shippingAddress->get()->load();
 		$address = $shipment->shippingAddress->get()->toArray();
 
-		$response = new ActionResponse('form', $form);
-
+		$response = new ActionResponse();
 		$controller = new CustomerOrderController($this->application);
-		$form = $controller->createUserAddressForm($address, $response);
+		$response->set('form', $controller->createUserAddressForm($address, $response));
 
 		$response->set('countries', $this->application->getEnabledCountries());
 		$response->set('states', State::getStatesByCountry($address['countryID']));
 		$response->set('shipmentID', $shipment->getID());
 
+		$addressOptions = array('' => '');
 		foreach($shipment->order->get()->user->get()->getShippingAddressArray() as $address)
 		{
 			$addressOptions[$address['ID']] = $address['UserAddress']['compact'];
@@ -308,7 +311,18 @@ class ShipmentController extends StoreManagementController
 		ClassLoader::import('application.controller.backend.CustomerOrderController');
 		$shipment = Shipment::getInstanceByID('Shipment', $this->request->get('id'), true, array('CustomerOrder', 'User'));
 		$address = $shipment->shippingAddress->get();
-		$address->load();
+
+		if (!$address)
+		{
+			$address = UserAddress::getNewInstance();
+			$address->save();
+			$shipment->shippingAddress->set($address);
+			$shipment->save();
+		}
+		else
+		{
+			$address->load();
+		}
 
 		$controller = new CustomerOrderController($this->application);
 		$validator = $controller->createUserAddressFormValidator();

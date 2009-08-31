@@ -1,0 +1,13 @@
+_add_new_file=Tilføj ny fil
+_add_new_group=Tilføj ny gruppe
+_cancel_adding_new_file=Annuller tilføjelse af ny fil
+_cancel_adding_file_group=Annuller tilføjelse af ny gruppe
+_are_you_sure_you_want_to_delete=Er du sikker på, at du ønsker at slette denne fil?
+_are_you_sure_you_want_to_delete_group=Er du sikker på, at du ønsker at slette denne gruppe?
+_product_file_group_title=Titel
+_add_new_file_group=Rediger filgruppe
+_err_file_title_is_empty=Venligst indtast filtitel
+_err_fileName_should_not_be_empty=Venligst indtast filnavn
+_err_file_could_not_be_uploaded_to_the_server=Filen kunne ikke uploades til serveren
+_err_allow_download_days_is_empty=Venligst indtast antal dage til download
+_err_allow_download_days_should_be_a_number=Antal dage skal være en numerisk indtastning

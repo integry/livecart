@@ -165,6 +165,17 @@ abstract class EavSpecificationManagerCommon
 		return $this->attributes[$field->getID()];
 	}
 
+	public function getAttributeByHandle($handle)
+	{
+		foreach ($this->attributes as $attribute)
+		{
+			if ($attribute->getField()->get()->handle->get() == $handle)
+			{
+				return $attribute;
+			}
+		}
+	}
+
 	/**
 	 * Sets specification attribute value
 	 *
@@ -480,6 +491,8 @@ abstract class EavSpecificationManagerCommon
 		$prefixed = $response->get("specFieldList_prefix", array());
 		$prefixed[$prefix] = $specFieldsByGroup;
 		$response->set("specFieldList_prefix", $prefixed);
+
+		$this->owner->load();
 
 		// set fields by owner
 		if (($this->owner instanceof EavObject) && ($owner = $this->owner->getOwner()))

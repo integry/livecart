@@ -243,7 +243,10 @@ class Email
 			$router = $this->application->getRouter();
 
 			$smarty->assign('html', false);
+
+			$smarty->disableTemplateLocator();
 			$text = $smarty->fetch($this->template);
+			$smarty->enableTemplateLocator();
 
 			$parts = explode("\n", $text, 2);
 			$this->subject = array_shift($parts);

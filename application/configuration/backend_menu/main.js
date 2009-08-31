@@ -102,6 +102,15 @@
                 	"icon": "image/silk/textfield.png",
                 	"descr": "_menu_descr_custom_fields"
                 },
+                "modules":
+				{
+                	"title": "_menu_modules",
+                	"controller": "backend.module",
+                	"action": "index",
+                	"role": "settings",
+                	"icon": "image/silk/plugin.png",
+                	"descr": "_menu_descr_modules"
+                },
                 "taxes":
 				{
                 	"title": "_menu_tax",
@@ -110,6 +119,15 @@
                 	"role": "taxes",
                 	"icon": "image/silk/coins.png",
                 	"descr": "_menu_descr_tax"
+                },
+                "shippingClasses":
+				{
+                	"title": "_menu_shipping_class",
+                	"controller": "backend.shippingClass",
+                	"action": "index",
+                	"role": "taxes",
+                	"icon": "image/silk/lorry_flatbed.png",
+                	"descr": "_menu_descr_shipping_class"
                 },
                 "currencies":
 				{
@@ -128,15 +146,6 @@
                 	"role": "language",
                 	"icon": "image/silk/world.png",
                 	"descr": "_menu_descr_languages"
-                },
-                "modules":
-				{
-                	"title": "_menu_modules",
-                	"controller": "backend.module",
-                	"action": "index",
-                	"role": "settings",
-                	"icon": "image/silk/plugin.png",
-                	"descr": "_menu_descr_modules"
                 },
                 "update":
 				{
@@ -157,6 +166,13 @@
         	"descr": "_menu_descr_customize",
         	"items":
 			{
+        		"theme":
+				{
+        			"title": "_menu_theme",
+        			"controller": "backend.theme",
+                	"icon": "image/silk/color_swatch.png",
+                	"descr": "_menu_descr_theme"
+        		},
         		"live":
 				{
         			"title": "_menu_customization_mode",
@@ -189,13 +205,6 @@
                 	"role": "template",
                 	"icon": "image/silk/css.png",
                 	"descr": "_menu_descr_css_edit"
-        		},
-        		"theme":
-				{
-        			"title": "_menu_theme",
-        			"controller": "backend.theme",
-                	"icon": "image/silk/css.png",
-                	"descr": "_menu_descr_theme"
         		}
         	}
         },

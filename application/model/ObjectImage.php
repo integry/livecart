@@ -83,13 +83,17 @@ abstract class ObjectImage extends MultilingualObject
 			$file = $this->cacheFile;
 		}
 
+		// keep original image as well for future resizing, etc
+		$path = $this->getPath('original');
+		copy($file, $path);
+
 		return $this->resizeImage(new ImageManipulator($file));
 	}
 
 	public function resizeImage(ImageManipulator $resizer)
 	{
 		foreach ($this->getImageSizes() as $key => $size)
-	  	{
+		{
 			$filePath = $this->getPath($key);
 
 			if (!file_exists(dirname($filePath)))
@@ -100,7 +104,7 @@ abstract class ObjectImage extends MultilingualObject
 			$res = $resizer->resize($size[0], $size[1], $filePath);
 			if (!$res)
 			{
-			  	break;
+				break;
 			}
 		}
 
@@ -205,7 +209,7 @@ abstract class ObjectImage extends MultilingualObject
 
 			$urlPrefix = null;
 			$array['paths'][$key] = self::getRelativePath(call_user_func_array(array($schema->getName(), 'getImagePath'), array($array['ID'], $productID, $key)), $urlPrefix);
-			$array['urls'][$key] = $router->createFullUrl($urlPrefix . $array['paths'][$key]);
+			$array['urls'][$key] = $router->createFullUrl($urlPrefix . $array['paths'][$key], null, true);
 		}
 
 		return $array;

@@ -24,11 +24,16 @@ Product = {}
 Product.ImageHandler = Class.create();
 Product.ImageHandler.prototype =
 {
-	initialize: function(imageData, imageDescr)
+	initialize: function(imageData, imageDescr, imageProducts)
 	{
+		if (!imageProducts)
+		{
+			imageProducts = [];
+		}
+
 		imageData.each(function(pair)
 		{
-			var inst = new Product.ImageSwitcher(pair.key, pair.value, imageDescr[pair.key]);
+			var inst = new Product.ImageSwitcher(pair.key, pair.value, imageDescr[pair.key], imageProducts[pair.key]);
 			if (!window.defaultImageHandler)
 			{
 				window.defaultImageHandler = inst;
@@ -45,20 +50,21 @@ Product.ImageSwitcher.prototype =
 	imageData: null,
 	imageDescr: null,
 
-	initialize: function(id, imageData, imageDescr)
+	initialize: function(id, imageData, imageDescr, productID)
 	{
 		this.id = id;
+		this.productID = productID;
 		this.imageData = imageData;
 		this.imageDescr = imageDescr;
 
 		var thumbnail = $('img_' + id);
 		if (thumbnail)
 		{
-			thumbnail.onclick = this.switchImage.bind(this);
+			thumbnail.onclick = this.switchImage.bindAsEventListener(this);
 		}
 	},
 
-	switchImage: function()
+	switchImage: function(e)
 	{
 		if (!$('mainImage'))
 		{
@@ -77,6 +83,11 @@ Product.ImageSwitcher.prototype =
 		{
 			lightBox.href = this.imageData[4];
 			lightBox.title = this.imageDescr ? this.imageDescr : '';
+		}
+
+		if (window.productVariationHandler && e)
+		{
+			window.productVariationHandler.setVariation(this.productID);
 		}
 	}
 }
@@ -221,6 +232,8 @@ Product.Variations = function(container, variations, options)
 
 	this.selectFields[0].disabled = false;
 	this.updateVisibleOptions();
+
+	window.productVariationHandler = this;
 }
 
 Product.Variations.prototype =
@@ -341,8 +354,28 @@ Product.Variations.prototype =
 
 		if (product.DefaultImage && product.DefaultImage.paths)
 		{
-			(new Product.ImageSwitcher(product.DefaultImage.ID, product.DefaultImage.paths, product.DefaultImage.name_lang)).switchImage();
+			(new Product.ImageSwitcher(product.DefaultImage.ID, product.DefaultImage.paths, product.DefaultImage.name_lang, product.ID)).switchImage();
 		}
+	},
+
+	setVariation: function(productID)
+	{
+		$H(this.variations.products).each(function(product)
+		{
+			var ids = product[0].split(/-/);
+			var product = product[1];
+
+			if (product.ID == productID)
+			{
+				for (var k = 0; k < this.selectFields.length; k++)
+				{
+					this.selectFields[k].value = ids[k];
+				}
+
+				this.displayVariationInfo(product);
+				this.updateVisibleOptions();
+			}
+		}.bind(this));
 	},
 
 	getProductPrice: function(product)
@@ -591,7 +624,7 @@ User.StateSwitcher.prototype =
 
 	updateStates: function(e)
 	{
-		var url = this.url + '/?country=' + this.countrySelector.value;
+		var url = this.url + (this.url.indexOf('?') == -1 ? '?' : '&') + 'country=' + this.countrySelector.value;
 		new Ajax.Request(url, {onComplete: this.updateStatesComplete.bind(this)});
 
 		var indicator = document.getElementsByClassName('progressIndicator', this.countrySelector.parentNode);
@@ -670,4 +703,204 @@ User.ShippingFormToggler.prototype =
 			Element.show(this.container);
 		}
 	}
+}
+
+Frontend = {}
+
+Frontend.PopupCart =
+{
+
+}
+
+Frontend.AddToCartPopup =
+{
+
+}
+
+Frontend.OnePageCheckout = function(url)
+{
+	this.data = {};
+	this.load(url);
+}
+
+Frontend.OnePageCheckout.prototype =
+{
+	load: function()
+	{
+		new LiveCart.AjaxRequest(url, null, this.loaded.bind(this));
+	},
+
+	loaded: function(originalRequest)
+	{
+		console.log(originalRequest);
+		this.show(originalRequest.responseData.html);
+	},
+
+	show: function(html)
+	{
+		var container = this.getContainer();
+		container.update(html);
+		container.show();
+	},
+
+	showNavigation: function()
+	{
+
+	},
+
+	hideNavigation: function()
+	{
+
+	},
+
+	loadStep: function()
+	{
+
+	},
+
+	switchStep: function()
+	{
+
+	},
+
+	close: function()
+	{
+		$('onePageCheckout').hide();
+	},
+
+	complete: function()
+	{
+
+	},
+
+	getContainer: function()
+	{
+		var container = $('onePageCheckout');
+		if (!container)
+		{
+			container = document.createElement('div');
+			document.body.appendChild(container);
+		}
+
+		return container;
+	}
+}
+
+Frontend.SmallCart = function(value, params)
+{
+	var container = $(params);
+	var basketCount = container.down('.menu_cartItemCount');
+	if (basketCount)
+	{
+		(basketCount.down('strong') || basketCount.down('span')).update(value.basketCount);
+		if (value.basketCount > 0)
+		{
+			basketCount.show();
+		}
+		else
+		{
+			basketCount.hide();
+		}
+	}
+
+	var isOrderable = container.down('.menu_isOrderable');
+	if (isOrderable)
+	{
+		if (value.isOrderable)
+		{
+			isOrderable.show();
+		}
+		else
+		{
+			isOrderable.hide();
+		}
+	}
+}
+
+Frontend.MiniCart = function(value, params)
+{
+	$(params).update(value);
+	var fc = $(params).down('#miniCart');
+	$(params).parentNode.replaceChild(fc, $(params));
+	new Effect.Highlight(fc);
+}
+
+Frontend.Message = function(value, params)
+{
+	var container = $(params);
+
+}
+
+Frontend.Message.root = document.body;
+
+Frontend.Ajax = {}
+
+Frontend.Ajax.Message = function(container)
+{
+	var showMessage = function(value, container)
+	{
+		container.update(value);
+		new Effect.Appear(msgContainer);
+		window.setTimeout(function() { new Effect.Fade(msgContainer); }, 5000);
+	}
+
+	var msgContainer = $(document.createElement('div'));
+	msgContainer.hide();
+	msgContainer.id = 'ajaxMessage';
+	msgContainer.className = 'confirmationMessage';
+	$('container').appendChild(msgContainer);
+	Observer.add('successMessage', showMessage, msgContainer);
+}
+
+Frontend.Ajax.AddToCart = function(container)
+{
+	var handleClick = function(e)
+	{
+		Event.stop(e);
+		var button = Event.element(e);
+		var a = document.createElement('a');
+		button.parentNode.appendChild(a);
+		new LiveCart.AjaxRequest(button.href, a, function () { a.parentNode.removeChild(a); new Effect.Highlight(button); });
+	}
+
+	$A($(container).getElementsBySelector('a.addToCart')).each(function(button)
+	{
+		Event.observe(button, 'click', handleClick);
+	});
+}
+
+Frontend.Ajax.AddToWishList = function(container)
+{
+	var handleClick = function(e)
+	{
+		Event.stop(e);
+		var a = Event.element(e);
+		new LiveCart.AjaxRequest(a.href, a, function () { new Effect.Highlight(a); });
+	}
+
+	$A($(container).getElementsBySelector('a.addToWishList')).each(function(button)
+	{
+		Event.observe(button, 'click', handleClick);
+	});
+
+	$A($(container).getElementsBySelector('td.addToWishList a')).each(function(button)
+	{
+		Event.observe(button, 'click', handleClick);
+	});
+}
+
+Frontend.Ajax.AddToCompare = function(container)
+{
+	$A($(container).getElementsBySelector('a.addToCompare')).each(function(button)
+	{
+		Event.observe(button, 'click', Compare.add);
+	});
+}
+
+Frontend.AjaxInit = function(container)
+{
+	$H(Frontend.Ajax).each(function(v)
+	{
+		new Frontend.Ajax[v[0]](container);
+	});
 }

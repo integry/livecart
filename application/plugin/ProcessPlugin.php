@@ -15,6 +15,11 @@ abstract class ProcessPlugin
 		$this->application = $application;
 	}
 
+	public function getApplication()
+	{
+		return $this->application;
+	}
+
 	abstract public function process();
 }
 

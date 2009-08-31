@@ -1,0 +1,13 @@
+_manufacturers=Producenter
+Manufacturer.name=Producent navn
+_listing_manufacturers=Vis producenter $from - $to af $count
+_no_manufacturers=Ingen producenter fundet
+_are_you_sure_you_want_to_delete_manufacturer=Er du sikker på, at du ønsker at slette valgte producenter
+_nothing_selected=Venligst vælg mindst een producent først
+_cancel_editing_manufacturer=Annuller redigering af producent
+_could_not_save_manufacturer=Kunne ikke gemme producentinformation
+_select_manufacturer=Vælg en producent
+_done_adding=Afslut tilføjelse af producenter
+_manufacturer_was_successfully_saved=Producentinformation blev gemt succesfuldt
+_manufacturer_images=Billeder
+_manufacturer_info=Generel information

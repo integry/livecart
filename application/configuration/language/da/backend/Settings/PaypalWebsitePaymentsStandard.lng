@@ -1,0 +1,4 @@
+PaypalWebsitePaymentsStandard_EMAIL=Forretnings E-mail adresse
+PaypalWebsitePaymentsStandard_ITEM_NAME=Indkøbskurv beskrivelse for visning på PayPal
+PaypalWebsitePaymentsStandard_SANDBOX=Brug PayPal Sandbox (testenhed)
+PaypalWebsitePaymentsStandard=Paypal Website Payments Standard 

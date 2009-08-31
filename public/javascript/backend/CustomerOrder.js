@@ -257,15 +257,7 @@ Backend.CustomerOrder.prototype =
 
 	updateLog: function(orderID)
 	{
-		var url = $("tabOrderLog").down('a').href.replace(/_id_/, orderID);
-		var container = "tabOrderLog_" + orderID + "Content";
-		var identificator = url + container;
-
-		if($(container))
-		{
-			$(container).remove();
-			TabControl.prototype.getInstance("orderManagerContainer").loadedContents[identificator] = false;
-		}
+		this.resetTab("tabOrderLog", orderID);
 	},
 
 	changePaidStatus: function(select, url)
@@ -278,6 +270,28 @@ Backend.CustomerOrder.prototype =
 
 		url = url.replace(/_stat_/, select.value);
 		new LiveCart.AjaxRequest(url, select.parentNode.down('.progressIndicator'));
+	},
+
+	setMultiAddress: function(select, url, orderID)
+	{
+		url = url.replace(/_stat_/, select.value);
+		new LiveCart.AjaxRequest(url, select.parentNode.down('.progressIndicator'), function()
+		{
+			this.resetTab('tabOrderProducts', orderID);
+		}.bind(this));
+	},
+
+	resetTab: function(tab, orderID)
+	{
+		var url = $(tab).down('a').href.replace(/_id_/, orderID);
+		var container = tab + "_" + orderID + "Content";
+		var identificator = url + container;
+
+		if($(container))
+		{
+			$(container).remove();
+			TabControl.prototype.getInstance("orderManagerContainer").loadedContents[identificator] = false;
+		}
 	}
 }
 
@@ -292,24 +306,19 @@ Backend.CustomerOrder.GridFormatter =
 
 	formatValue: function(field, value, id)
 	{
-		if ('CustomerOrder.ID2' == field && Backend.CustomerOrder.prototype.ordersMiscPermission)
+		if ('CustomerOrder.invoiceNumber' == field && Backend.CustomerOrder.prototype.ordersMiscPermission)
 		{
-			var displayedID = id;
-
-			while (displayedID.length < 4)
-			{
-				displayedID = '0' + displayedID;
-			}
+			var displayedID = value;
 
 			value =
 			'<span>' +
 			'	<span class="progressIndicator" id="orderIndicator_' + id + '" style="visibility: hidden;"></span>' +
 			'</span>' +
-			'<a href="' + this.orderUrl + id + '#tabOrderInfo__" id="order_' + id + '" onclick="Backend.CustomerOrder.prototype.openOrder(' + id + ', event); return false;">' +
-				 displayedID +
+			'<a href="' + this.orderUrl + id + '#tabOrderInfo__" id="order_' + id + '" onclick="Backend.CustomerOrder.prototype.openOrder(' + id + ', event);">' +
+				 displayedID
 			'</a>'
 		}
-		else if ('CustomerOrder.ID2' == field && Backend.CustomerOrder.prototype.ordersMiscPermission)
+		else if ('CustomerOrder.invoiceNumber' == field && Backend.CustomerOrder.prototype.ordersMiscPermission)
 		{
 			value = id;
 		}
@@ -337,14 +346,9 @@ Backend.User.OrderGridFormatter.parentFormatValue = Backend.User.OrderGridFormat
 Backend.User.OrderGridFormatter.formatValue =
 	function(field, value, id)
 	{
-		if ('CustomerOrder.ID2' == field)
+		if ('CustomerOrder.invoiceNumber' == field)
 		{
-			var displayedID = id;
-
-			while (displayedID.length < 4)
-			{
-				displayedID = '0' + displayedID;
-			}
+			var displayedID = value;
 
 			return '<a href="' + this.orderUrl + id + '#tabOrderInfo__">' + displayedID + '</a>';
 		}
@@ -409,11 +413,11 @@ Backend.CustomerOrder.Editor.prototype =
 		return tabId + '_' +  Backend.CustomerOrder.Editor.prototype.getCurrentId() + 'Content'
 	},
 
-	getInstance: function(id, doInit, hideShipped, isCancelled, isFinalized)
+	getInstance: function(id, doInit, hideShipped, isCancelled, isFinalized, invoiceNumber)
 	{
 		if(!Backend.CustomerOrder.Editor.prototype.Instances[id])
 		{
-			Backend.CustomerOrder.Editor.prototype.Instances[id] = new Backend.CustomerOrder.Editor(id, hideShipped, isCancelled, isFinalized);
+			Backend.CustomerOrder.Editor.prototype.Instances[id] = new Backend.CustomerOrder.Editor(id, hideShipped, isCancelled, isFinalized, invoiceNumber);
 		}
 
 		if (Backend.CustomerOrder.Editor.prototype.Instances[id].isCancelled)
@@ -444,12 +448,13 @@ Backend.CustomerOrder.Editor.prototype =
 		return this.Instances[id] ? true : false;
 	},
 
-	initialize: function(id, hideShipped, isCancelled, isFinalized)
+	initialize: function(id, hideShipped, isCancelled, isFinalized, invoiceNumber)
   	{
 		this.id = id ? id : '';
 		this.hideShipped = hideShipped;
 		this.isCancelled = isCancelled;
 		this.isFinalized = isFinalized;
+		this.invoiceNumber = invoiceNumber;
 
 		this.findUsedNodes();
 		this.bindEvents();
@@ -615,7 +620,7 @@ Backend.CustomerOrder.Editor.prototype =
 					   }.bind(this), 20);
 
 					}.bind(currentUser)],
-					Backend.CustomerOrder.Editor.prototype.Messages.orderNum + this.id
+					Backend.CustomerOrder.Editor.prototype.Messages.orderNum + this.invoiceNumber
 				]
 
 			);
@@ -624,7 +629,7 @@ Backend.CustomerOrder.Editor.prototype =
 		{
 			Backend.Breadcrumb.display(
 				Backend.Breadcrumb.treeBrowser.getSelectedItemId(),
-				Backend.CustomerOrder.Editor.prototype.Messages.orderNum + this.id
+				Backend.CustomerOrder.Editor.prototype.Messages.orderNum + this.invoiceNumber
 			);
 		}
 	},

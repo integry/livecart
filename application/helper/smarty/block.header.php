@@ -30,8 +30,9 @@ function smarty_block_header($params, $content, LiveCartSmarty $smarty, &$repeat
 {
 	if (!$repeat)
 	{
+		$counter = $smarty->get_template_vars('sectCounter');
 		$blocks = $smarty->get_template_vars('sect');
-		$blocks['header'] = $content;
+		$blocks[$counter]['header'] = $content;
 		$smarty->assign('sect', $blocks);
 	}
 }

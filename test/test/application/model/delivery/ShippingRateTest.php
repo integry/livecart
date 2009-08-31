@@ -88,4 +88,5 @@ class ShippingRateTest extends LiveCartTest
 		$this->assertTrue($rate2 === $rates->get(1));
 	}
 }
+
 ?>

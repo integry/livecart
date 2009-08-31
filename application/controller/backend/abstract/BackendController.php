@@ -35,7 +35,18 @@ abstract class BackendController extends BaseController
 		if (!$this->user->hasBackendAccess() && !($this instanceof SessionController))
 		{
 			SessionUser::destroy();
-			header('Location: ' . $this->router->createUrl(array('controller' => 'backend.session', 'action' => 'index')));
+
+			$url = $this->router->createUrl(array('controller' => 'backend.session', 'action' => 'index'));
+			if (!$this->isAjax())
+			{
+				header('Location: ' . $url);
+			}
+			else
+			{
+				header('Content-type: text/javascript');
+				echo json_encode(array('__redirect' => $url));
+			}
+
 			exit;
 		}
 	}

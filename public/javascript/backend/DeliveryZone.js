@@ -1125,6 +1125,12 @@ Backend.DeliveryZone.ShippingRate.prototype =
 			this.nodes.perItemCharge.name = 'rate_' + this.rate.ID + '_perItemCharge';
 			this.nodes.subtotalPercentCharge.name = 'rate_' + this.rate.ID + '_subtotalPercentCharge';
 			this.nodes.perKgCharge.name = 'rate_' + this.rate.ID + '_perKgCharge';
+
+			this.nodes.perItemChargeClass.each(function(node)
+			{
+				var classID = node.name.match(/\[([0-9]+)\]/).pop();
+				node.name = 'rate_' + this.rate.ID + '_perItemChargeClass[' + classID + ']';
+			}.bind(this));
 		}
 	},
 
@@ -1168,6 +1174,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
 		this.nodes.subtotalRangeEnd = this.nodes.root.down('.' + this.prefix + 'subtotalRangeEnd');
 		this.nodes.flatCharge = this.nodes.root.down('.' + this.prefix + 'flatCharge');
 		this.nodes.perItemCharge = this.nodes.root.down('.' + this.prefix + 'perItemCharge');
+		this.nodes.perItemChargeClass = $A(this.nodes.root.getElementsBySelector('.' + this.prefix + 'perItemChargeClass'));
 		this.nodes.subtotalPercentCharge = this.nodes.root.down('.' + this.prefix + 'subtotalPercentCharge');
 		this.nodes.perKgCharge = this.nodes.root.down('.' + this.prefix + 'perKgCharge');
 	},
@@ -1267,6 +1274,11 @@ Backend.DeliveryZone.ShippingRate.prototype =
 			this.nodes.perItemCharge.value = '0';
 			this.nodes.subtotalPercentCharge.value = '0';
 			this.nodes.perKgCharge.value = '0';
+
+			this.nodes.perItemChargeClass.each(function(node)
+			{
+				node.value = '';
+			}.bind(this));
 
 			Backend.DeliveryZone.ShippingRate.prototype.newRateLastId++;
 
@@ -1570,3 +1582,23 @@ Backend.DeliveryZone.TaxRate.prototype =
 	}
 }
 
+Backend.DeliveryZone.lookupAddress = function(form, e)
+{
+	Event.stop(e);
+	new LiveCart.AjaxRequest(form, null, function(req)
+	{
+		var zone = req.responseData;
+		var cont = $('zoneLookupResult').down('span');
+		if (zone.ID)
+		{
+			cont.update(zone.name);
+		}
+		else
+		{
+			cont.update(Backend.getTranslation('_default_zone'));
+		}
+
+		cont.parentNode.show();
+		new Effect.Highlight(cont);
+	});
+}

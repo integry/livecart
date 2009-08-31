@@ -104,7 +104,7 @@ class IndexController extends StoreManagementController
 
 	private function updateApplicationUri()
 	{
-		$data = array('url' => $this->router->createFullUrl($this->router->createUrl(array())), 'rewrite' => $this->router->isURLRewriteEnabled());
+		$data = array('url' => $this->router->createFullUrl($this->router->createUrl(array())), 'rewrite' => !$this->request->get('noRewrite', false));
 		file_put_contents(ClassLoader::getRealPath('storage.configuration.') . 'url.php', '<?php return ' . var_export($data, true) . '; ?>');
 	}
 }

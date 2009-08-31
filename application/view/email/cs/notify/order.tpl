@@ -1,5 +1,5 @@
 Přijata nová objednávka na {'STORE_NAME'|config}
-Objednávka č.: {$order.ID}
+Objednávka č.: {$order.invoiceNumber}
 
 Manažer objednávky:
 {backendOrderUrl order=$order url=true}

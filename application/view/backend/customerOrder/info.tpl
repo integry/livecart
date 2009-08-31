@@ -10,7 +10,7 @@
 
 	<p>
 		<label>{t _order_id}</label>
-		<label>{$order.ID}</label>
+		<label>{$order.invoiceNumber}</label>
 	</p>
 
 	{if $order.User}
@@ -47,6 +47,13 @@
 	<p>
 		<label for="order_{$order.ID})_isPaid">{t _is_paid}</label>
 		<select style="width: auto; float: left;" onchange="Backend.CustomerOrder.prototype.changePaidStatus(this, '{link controller=backend.payment action=changeOrderPaidStatus id=$order.ID query='status=_stat_'}');"><option value=0>{t _no}</option><option value=1{if $order.isPaid} selected="selected"{/if}>{t _yes}</option></select>
+		<span class="progressIndicator" style="display: none; float: left; padding-top: 0; padding-left: 0;"></span>
+	</p>
+
+	<div class="clear"></div>
+	<p>
+		<label for="order_{$order.ID})_isMultiAddress">{t CustomerOrder.isMultiAddress}</label>
+		<select style="width: auto; float: left;" onchange="Backend.CustomerOrder.prototype.setMultiAddress(this, '{link controller=backend.customerOrder action=setMultiAddress id=$order.ID query='status=_stat_'}', {$order.ID});"><option value=0>{t _no}</option><option value=1{if $order.isMultiAddress} selected="selected"{/if}>{t _yes}</option></select>
 		<span class="progressIndicator" style="display: none; float: left; padding-top: 0; padding-left: 0;"></span>
 	</p>
 </fieldset>
@@ -119,7 +126,7 @@
 
 	Backend.CustomerOrder.Editor.prototype.existingUserAddresses = {json array=$existingUserAddresses}
 	{literal}
-	var status = Backend.CustomerOrder.Editor.prototype.getInstance({/literal}{$order.ID}, true, {json array=$hideShipped}, {$order.isCancelled}, {$order.isFinalized}{literal});
+	var status = Backend.CustomerOrder.Editor.prototype.getInstance({/literal}{$order.ID}, true, {json array=$hideShipped}, {$order.isCancelled}, {$order.isFinalized}, {json array=$order.invoiceNumber}{literal});
 
 	{/literal}{if $formShippingAddress}{literal}
 		var shippingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_{$order.ID}_shippingAddress_form{literal}'), 'shippingAddress');

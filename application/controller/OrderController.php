@@ -29,6 +29,22 @@ class OrderController extends FrontendController
 			return new ActionRedirectResponse('order', 'multi');
 		}
 
+		if (!$this->user->isAnonymous())
+		{
+			$this->order->setUser($this->user);
+
+			if ($this->order->isModified())
+			{
+				$this->order->save();
+			}
+		}
+		else if ($this->config->get('DISABLE_GUEST_CART'))
+		{
+			return new ActionRedirectResponse('user', 'login', array('returnPath' => true));
+		}
+
+		$this->order->getTotal(true);
+
 		$response = $this->getCartPageResponse();
 		$this->addBreadCrumb($this->translate('_my_basket'), '');
 		return $response;
@@ -54,6 +70,11 @@ class OrderController extends FrontendController
 		}
 		$response->set('addresses', $addresses);
 
+		if (!$addresses)
+		{
+			return new ActionRedirectResponse('user', 'addShippingAddress', array('returnPath' => true));
+		}
+
 		$this->addBreadCrumb($this->translate('_select_shipping_addresses'), '');
 		return $response;
 	}
@@ -62,12 +83,19 @@ class OrderController extends FrontendController
 	{
 		$this->addBreadCrumb($this->translate('_my_session'), $this->router->createUrlFromRoute($this->request->get('return'), true));
 
+		$this->order->setUser($this->user);
 		$this->order->loadItemData();
 
 		$response = new ActionResponse();
 		if ($result = $this->order->updateToStock())
 		{
 			$response->set('changes', $result);
+		}
+
+		if ($this->estimateShippingCost())
+		{
+			$this->order->getTotal(true);
+			$response->set('isShippingEstimated', true);
 		}
 
 		$options = $this->getItemOptions();
@@ -77,6 +105,7 @@ class OrderController extends FrontendController
 		$form = $this->buildCartForm($this->order, $options);
 
 		$orderArray = $this->order->toArray();
+
 		$itemsById = array();
 		foreach (array('cartItems', 'wishListItems') as $type)
 		{
@@ -103,6 +132,43 @@ class OrderController extends FrontendController
 		$this->order->getSpecification()->setFormResponse($response, $form);
 
 		return $response;
+	}
+
+	private function estimateShippingCost()
+	{
+		if (!$this->config->get('ENABLE_SHIPPING_ESTIMATE'))
+		{
+			return false;
+		}
+
+		$estimateAddress = SessionOrder::getEstimateAddress();
+		$this->order->shippingAddress->set($estimateAddress);
+
+		$isShippingEstimated = false;
+		foreach ($this->order->getShipments() as $shipment)
+		{
+			if (!$shipment->getSelectedRate())
+			{
+				$cheapest = $cheapestRate = null;
+				foreach ($shipment->getShippingRates() as $rate)
+				{
+					$price = $rate->getAmountByCurrency($this->order->getCurrency());
+					if (!$cheapestRate || ($price < $cheapest))
+					{
+						$cheapestRate = $rate;
+						$cheapest = $price;
+					}
+				}
+
+				if ($cheapestRate)
+				{
+					$shipment->setRateId($cheapestRate->getServiceID());
+					$isShippingEstimated = true;
+				}
+			}
+		}
+
+		return $isShippingEstimated;
 	}
 
 	private function getItemOptions()
@@ -361,6 +427,11 @@ class OrderController extends FrontendController
 
 		ActiveRecordModel::beginTransaction();
 
+		if (!$this->request->get('count'))
+		{
+			$this->request->set('count', 1);
+		}
+
 		if ($id = $this->request->get('id'))
 		{
 			$res = $this->addProductToCart($id);
@@ -397,12 +468,38 @@ class OrderController extends FrontendController
 			}
 		}
 
+		if (!$this->user->isAnonymous())
+		{
+			$this->order->setUser($this->user);
+		}
+
 		$this->order->mergeItems();
 		SessionOrder::save($this->order);
 
 		ActiveRecordModel::commit();
 
-		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
+		if (!$this->isAjax())
+		{
+			return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
+		}
+		else
+		{
+			return $this->cartUpdate();
+		}
+	}
+
+	public function cartUpdate()
+	{
+		$response = new CompositeJSONResponse();
+		$response->addAction('miniCart', 'order', 'miniCartBlock');
+		return $this->ajaxResponse($response);
+	}
+
+	public function miniCartBlock()
+	{
+		$this->order->loadAll();
+		$this->order->getTotal(true);
+		return new BlockResponse('order', $this->order->toArray());
 	}
 
 	private function addProductToCart($id, $prefix = '')
@@ -425,7 +522,9 @@ class OrderController extends FrontendController
 		$variations = !$product->parent->get() ? $product->getVariationData($this->application) : array();
 
 		ClassLoader::import('application.controller.ProductController');
-		if (!ProductController::buildAddToCartValidator($product->getOptions(true)->toArray(), $variations, $prefix)->isValid())
+
+		$validator = ProductController::buildAddToCartValidator($product->getOptions(true)->toArray(), $variations, $prefix);
+		if (!$validator->isValid())
 		{
 			return $productRedirect;
 		}
@@ -502,7 +601,15 @@ class OrderController extends FrontendController
 
 		$this->setMessage($this->makeText('_added_to_wishlist', array($product->getName($this->getRequestLanguage()))));
 
-		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
+		if (!$this->isAjax())
+		{
+			return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
+		}
+		else
+		{
+			$response = new CompositeJSONResponse();
+			return $this->ajaxResponse($response);
+		}
 	}
 
 	public function modifyItemOption(OrderedItem $item, ProductOption $option, Request $request, $varName)
@@ -516,6 +623,19 @@ class OrderController extends FrontendController
 			else
 			{
 				$item->removeOption($option);
+			}
+		}
+		else if ($option->isFile())
+		{
+			if (isset($_FILES['upload_' . $varName]))
+			{
+				$file = $_FILES['upload_' . $varName];
+				if (!empty($file['name']))
+				{
+					$item->removeOption($option);
+					$choice = $item->addOptionChoice($option->defaultChoice->get());
+					$choice->setFile($_FILES['upload_' . $varName]);
+				}
 			}
 		}
 		else if ($request->get($varName))
@@ -606,6 +726,21 @@ class OrderController extends FrontendController
 		return Product::getInstanceByID($variations['products'][$hash]['ID'], Product::LOAD_DATA);
 	}
 
+	public function downloadOptionFile()
+	{
+		ClassLoader::import('application.model.product.ProductOptionChoice');
+
+		$f = select(eq('CustomerOrder.userID', $this->user->getID()),
+					eq('OrderedItem.ID', $this->request->get('id')),
+					eq('ProductOptionChoice.optionID', $this->request->get('option')));
+
+		$set = ActiveRecordModel::getRecordSet('OrderedItemOption', $f, array('CustomerOrder', 'OrderedItem', 'ProductOptionChoice'));
+		if ($set->size())
+		{
+			return new ObjectFileResponse($set->get(0)->getFile());
+		}
+	}
+
 	/**
 	 *	@todo Optimize loading of product options
 	 */
@@ -660,6 +795,10 @@ class OrderController extends FrontendController
 			{
 				$value = $option->choice->get()->getID();
 			}
+			else if ($productOption->isFile())
+			{
+				$value = $option->optionText->get();
+			}
 
 			$form->set($this->getFormFieldName($item, $productOption), $value);
 		}
@@ -679,10 +818,9 @@ class OrderController extends FrontendController
 		unset($_SESSION['optionError']);
 
 		$validator = $this->getValidator("cartValidator", $this->request);
-
 		foreach ($order->getOrderedItems() as $item)
 		{
-			$this->buildItemValidation($validator, $item, $options);
+			$this->buildItemValidation($validator, $item, $options, $item->getID());
 		}
 
 		if ($this->config->get('CHECKOUT_CUSTOM_FIELDS') == 'CART_PAGE')
@@ -712,13 +850,13 @@ class OrderController extends FrontendController
 		return $validator;
 	}
 
-	private function buildItemValidation(RequestValidator $validator, $item, $options)
+	private function buildItemValidation(RequestValidator $validator, $item, $options, $id = null)
 	{
 		$name = 'item_' . $item->getID();
 		$validator->addCheck($name, new IsNumericCheck($this->translate('_err_not_numeric')));
 		$validator->addFilter($name, new NumericFilter());
 
-		$productID = $item->product->get()->getID();
+		$productID = $id ? $id : $item->product->get()->getID();
 
 		if (isset($options['visible'][$productID]))
 		{
@@ -726,7 +864,8 @@ class OrderController extends FrontendController
 			{
 				if ($option['isRequired'])
 				{
-					$validator->addCheck($this->getFormFieldName($item, $option), new IsNotEmptyCheck($this->translate('_err_option_' . $option['type'])));
+					$fieldName = $this->getFormFieldName($item, $option);
+					$this->addOptionValidation($validator, $option, $fieldName);
 				}
 			}
 		}
@@ -740,7 +879,10 @@ class OrderController extends FrontendController
 					$field = $this->getFormFieldName($item, $option);
 					if ($this->request->isValueSet($field) || $this->request->isValueSet('checkbox_' . $field))
 					{
+						$this->addOptionValidation($validator, $option, $field);
+						/*
 						$validator->addCheck($field, new IsNotEmptyCheck($this->translate('_err_option_' . $option['type'])));
+						*/
 						if (!$this->request->get($field))
 						{
 							$_SESSION['optionError'][$item->getID()][$option['ID']] = true;
@@ -748,6 +890,30 @@ class OrderController extends FrontendController
 					}
 				}
 			}
+		}
+	}
+
+	public static function addOptionValidation(RequestValidator $validator, $option, $fieldName)
+	{
+		$app = ActiveRecordModel::getApplication();
+		if (ProductOption::TYPE_FILE == $option['type'])
+		{
+			$checks = array(new IsFileUploadedCheck($app->translate('_err_option_upload')),
+							new IsNotEmptyCheck($app->translate('_err_option_upload')),
+							);
+
+			$validator->addCheck($fieldName, new OrCheck(array('upload_' . $fieldName, $fieldName), $checks, $validator->getRequest()));
+
+			if ($types = ProductOption::getFileExtensions($option['fileExtensions']))
+			{
+				$validator->addCheck('upload_' . $fieldName, new IsFileTypeValidCheck($app->maketext('_err_option_filetype', implode(', ', $types)), $types));
+			}
+
+			$validator->addCheck('upload_' . $fieldName, new MaxFileSizeCheck($app->maketext('_err_option_filesize', $option['maxFileSize']), $option['maxFileSize']));
+		}
+		else
+		{
+			$validator->addCheck($fieldName, new IsNotEmptyCheck($app->translate('_err_option_' . $option['type'])));
 		}
 	}
 }
