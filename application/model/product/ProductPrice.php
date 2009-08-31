@@ -82,6 +82,7 @@ class ProductPrice extends ActiveRecordModel
 
 		if ($includeDiscounts)
 		{
+			$price = self::getApplication()->getDisplayTaxPrice($price, $product);
 			$price = self::getApplication()->getBusinessRuleController()->getProductPrice($this->product->get(), $price);
 		}
 
@@ -392,8 +393,9 @@ class ProductPrice extends ActiveRecordModel
 			if (!$listPrice)
 			{
 				$ruleController = self::getApplication()->getBusinessRuleController();
-				foreach ($prices as $currency => $price)
+				foreach ($prices as $currency => &$price)
 				{
+					$price = self::getApplication()->getDisplayTaxPrice($price, $product);
 					$discountedPrice = $ruleController->getProductPrice($product, $price, $currency);
 					if ($discountedPrice != $price)
 					{

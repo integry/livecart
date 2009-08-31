@@ -213,7 +213,7 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 		return $price;
 	}
 
-	private function reduceBaseTaxes($price)
+	public function reduceBaseTaxes($price)
 	{
 		foreach (DeliveryZone::getDefaultZoneInstance()->getTaxRates() as $rate)
 		{

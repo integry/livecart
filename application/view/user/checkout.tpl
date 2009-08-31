@@ -27,6 +27,8 @@
 
 			<h3>{t _contact_info}</h3>
 
+				{block FORM-NEW-CUSTOMER-TOP}
+
 				<p class="required">
 					{err for="billing_firstName"}
 						{{label {t _your_first_name}:}}

@@ -136,6 +136,7 @@ BESTSELLING_ITEMS_DAYS=Number of last days to include sales data from
 _product_page=Products
 
 _product_display_options=Product Display Options
+INCLUDE_BASE_TAXES=Include base (default delivery zone) tax rates in product display prices
 SHOW_PRODUCT_WEIGHT=Display product weight
 QUANT_FIELD_TYPE=Purchase quantity selection field type
 QUANT_SELECT=Select box

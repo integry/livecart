@@ -17,7 +17,7 @@
 				{/header}
 				{content}
 					{foreach from=$fieldList item=field}
-						{if !$filter || ($filter && $field[$filter])}
+						{if !$filter || ($filter && ($field[$filter] || ($field.handle == $filter)))}
 							<p class="{if $field.isRequired}required{/if} {if !$field.isDisplayed}notDisplayed{/if}">
 								<label for="product_{$cat}_{$product.ID}_{$field.fieldName}"><span>{$field.name_lang}:</span></label>
 								<fieldset class="error">

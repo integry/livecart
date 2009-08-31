@@ -1,5 +1,7 @@
 {form action="controller=user action=doRegister" method="POST" handle=$regForm}
 
+	{* field required=true name="firstName" label=_your_first_name type=textfield *}
+
 	<p class="required">
 		{err for="firstName"}
 			{{label {t _your_first_name}:}}

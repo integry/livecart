@@ -483,6 +483,11 @@ class UserController extends FrontendController
 
 	public function register()
 	{
+		if ($this->config->get('REQUIRE_REG_ADDRESS'))
+		{
+			return new ActionRedirectResponse('user', 'checkout', array('query' => array('return' => $this->request->get('return'))));
+		}
+
 		$form = $this->buildRegForm();
 		$response = new ActionResponse('regForm', $form);
 

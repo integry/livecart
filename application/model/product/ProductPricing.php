@@ -206,6 +206,7 @@ class ProductPricing
 
 			if (!$listPrice)
 			{
+				$calculated[$id] = $this->application->getDisplayTaxPrice($calculated[$id], $this->product);
 				$discountedPrice = $ruleController->getProductPrice($this->product, $calculated[$id], $currency->getID());
 				if ($discountedPrice != $calculated[$id])
 				{
