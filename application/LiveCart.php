@@ -11,6 +11,7 @@ ClassLoader::import('application.model.businessrule.BusinessRuleController');
 ClassLoader::import('application.model.order.SessionOrder');
 ClassLoader::import('application.model.user.SessionUser');
 ClassLoader::import('application.model.session.DatabaseSessionHandler');
+ClassLoader::import('application.model.system.Cron');
 
 /**
  *  Implements LiveCart-specific application flow logic
@@ -167,6 +168,12 @@ class LiveCart extends Application
 		$res = parent::run();
 
 		$this->processRuntimePlugins('shutdown');
+
+		$cron = new Cron($this);
+		if ($cron->isExecutable())
+		{
+			$cron->process();
+		}
 	}
 
 	private function initRouter()
@@ -1029,6 +1036,17 @@ class LiveCart extends Application
 		}
 
 		return $currArray;
+	}
+
+	public function getDisplayTaxPrice($price, $product)
+	{
+		if (!$this->config->get('INCLUDE_BASE_TAXES'))
+		{
+			ClassLoader::import('application.model.order.OrderedItem');
+			$price = OrderedItem::reduceBaseTaxes($price);
+		}
+
+		return $price;
 	}
 
 	/**
