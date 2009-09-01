@@ -198,7 +198,7 @@ class LiveCartRenderer extends SmartyRenderer
 			$config = array();
 			foreach ($files as $pluginFiles)
 			{
-				foreach ($pluginFiles as $file)
+				foreach ((array)$pluginFiles as $file)
 				{
 					$config = array_merge_recursive($config, $this->parseConfigFile($file));
 				}

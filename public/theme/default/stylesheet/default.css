@@ -621,6 +621,11 @@ ul.productList .addToWishList, #productToWishList td.value a, .productGrid .addT
 	padding-bottom: 3px;
 }
 
+a.addToCompare
+{
+	background-image: none !important;
+}
+
 .productListRating
 {
 	padding-bottom: 3px;

@@ -1,4 +1,4 @@
-_pricing_rules=Pricing Rules
+_pricing_rules=Business Rules
 
 # grid
 DiscountCondition.name=Name
@@ -9,10 +9,10 @@ DiscountCondition.validFrom=Date valid from
 DiscountCondition.validTo=Date valid to
 DiscountCondition.couponLimitType=Limit coupon usage
 DiscountCondition.couponLimitCount=Max number of coupon uses
-_listing_rules=Listing pricing rules $from - $to of $count
-_no_rules=No pricing rules found
-_are_you_sure_you_want_to_delete_rule=Really delete selected pricing rules?
-_nothing_selected=Please select at least one pricing rule first
+_listing_rules=Listing rules $from - $to of $count
+_no_rules=No business rules found
+_are_you_sure_you_want_to_delete_rule=Really delete selected business rules?
+_nothing_selected=Please select at least one rule first
 _coupon_limit_none=No limit
 _coupon_limit_all=Among all customers
 _coupon_limit_user=By customer
@@ -20,8 +20,8 @@ _coupon_limit_user=By customer
 _create_rule=Add new rule
 
 # editor
-_cancel_editing_discount=Cancel editing pricing rule
-_cancel_adding_rule=Cancel adding pricing rule
+_cancel_editing_discount=Cancel editing business rule
+_cancel_adding_rule=Cancel adding business rule
 _save_and_continue=Save and continue
 
 _main_info=Main Information
@@ -89,5 +89,5 @@ _confirm_action_delete=Really delete this action?
 _is_enabled=Enabled
 _stop_processing=Stop discount calculation after processing this rule
 
-_rule_was_successfully_saved=The pricing rule was successfully saved
-_rule_name_empty=Please enter the pricing rule name
+_rule_was_successfully_saved=The business rule was successfully saved
+_rule_name_empty=Please enter the business rule name
