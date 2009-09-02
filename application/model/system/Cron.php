@@ -29,7 +29,6 @@ class Cron
 
 	public function process()
 	{
-		var_dump('EXEC!!!');
 		$standard = array('minute' => 60,
 						  'hourly' => 3600,
 						  'daily' => 3600 * 24,

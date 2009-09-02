@@ -153,7 +153,7 @@ class Installer
 	{
 		// check writability of temporary directories
 		$writeFail = array();
-		foreach (array('cache', 'storage', 'public.cache', 'public.upload') as $dir)
+		foreach (array('cache', 'storage', 'public.cache', 'public.upload', 'public.module') as $dir)
 		{
 			$file = ClassLoader::getRealPath($dir) . '/.writeTest';
 			if (!file_exists($file))
