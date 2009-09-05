@@ -219,9 +219,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 
 	public function loadLanguageFile($langFile)
 	{
-		$this->locale->translationManager()->loadFile($langFile);
-		$this->configFiles[] = $langFile;
-		$this->application->setConfigFiles($this->configFiles);
+		$this->application->loadLanguageFile($langFile);
 	}
 
 	public function getApplication()

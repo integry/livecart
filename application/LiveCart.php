@@ -1045,6 +1045,10 @@ class LiveCart extends Application
 			ClassLoader::import('application.model.order.OrderedItem');
 			$price = OrderedItem::reduceBaseTaxes($price);
 		}
+		else
+		{
+			$price = $price * 1.25;
+		}
 
 		return $price;
 	}
@@ -1317,6 +1321,12 @@ class LiveCart extends Application
 				$this->defaultCurrency = $currency;
 			}
 		}
+	}
+
+	public function loadLanguageFile($langFile)
+	{
+		$this->locale->translationManager()->loadFile($langFile);
+		$this->configFiles[] = $langFile;
 	}
 
 	public function loadLanguageFiles()
