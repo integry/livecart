@@ -893,7 +893,7 @@ Frontend.Ajax.AddToCompare = function(container)
 {
 	$A($(container).getElementsBySelector('a.addToCompare')).each(function(button)
 	{
-		Event.observe(button, 'click', Compare.add);
+		button.onclick = Compare.add;
 	});
 }
 
