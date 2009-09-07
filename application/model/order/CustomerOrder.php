@@ -1129,11 +1129,13 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		{
 			foreach ($this->shipments as $shipment)
 			{
+				/*
 				if ($shipment->getShippingService())
 				{
 					$shipment->getAvailableRates();
 					$shipment->setRateId($shipment->getShippingService()->getID());
 				}
+				*/
 
 				foreach ($shipment->getTaxes() as $tax)
 				{
