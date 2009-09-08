@@ -10,3 +10,12 @@ UPDATE DiscountAction SET actionClass = 'RuleActionSumVariations' WHERE type=5;
 UPDATE CustomerOrder SET invoiceNumber = ID WHERE isFinalized=1;
 
 ALTER TABLE CustomerOrder ADD CONSTRAINT TUC_CustomerOrder_1 UNIQUE (invoiceNumber);
+
+UPDATE Product
+	LEFT JOIN (
+		SELECT productID, GROUP_CONCAT(CONCAT(lft,'-',rgt) SEPARATOR ',') AS intervals
+			FROM ProductCategory
+			LEFT JOIN Category ON categoryID=ID GROUP BY productID) AS intv
+		ON productID=ID
+	LEFT JOIN Category ON Product.categoryID=Category.ID
+	SET categoryIntervalCache=CONCAT(Category.lft,'-',Category.rgt,',',COALESCE(intervals,''));

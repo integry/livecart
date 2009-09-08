@@ -858,7 +858,22 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		self::getDBConnection()->executeUpdate($sql);
 		self::getDBConnection()->executeUpdate('DROP TEMPORARY TABLE CategoryCount');
 
+		self::updateCategoryIntervals();
+
 		self::commit();
+	}
+
+	private static function updateCategoryIntervals()
+	{
+		$sql = "UPDATE Product
+					LEFT JOIN (
+						SELECT productID, GROUP_CONCAT(CONCAT(lft,'-',rgt) SEPARATOR ',') AS intervals
+							FROM ProductCategory
+							LEFT JOIN Category ON categoryID=ID GROUP BY productID) AS intv
+						ON productID=ID
+					LEFT JOIN Category ON Product.categoryID=Category.ID
+					SET categoryIntervalCache=CONCAT(Category.lft,'-',Category.rgt,',',COALESCE(intervals,''))";
+		self::getDBConnection()->executeUpdate($sql);
 	}
 
 	// subcategory counts

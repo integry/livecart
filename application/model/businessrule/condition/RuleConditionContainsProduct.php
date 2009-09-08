@@ -109,9 +109,7 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 			$parentID = $product->getParent()->getID();
 			$manufacturerID = $product->manufacturer->get() ? $product->manufacturer->get()->getID() : null;
 
-			$category = $product->getCategory();
-			$lft = $category->lft->get();
-			$rgt = $category->rgt->get();
+			$categoryIntervals = $product->getParent()->categoryIntervalCache->get();
 		}
 		else if (is_array($product))
 		{
@@ -120,11 +118,7 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 			$manufacturerID = isset($product['Manufacturer']) ? $product['Manufacturer']['ID'] : null;
 
 			$parent = isset($product['Parent']) ? $product['Parent'] : $product;
-			if (isset($parent['Category']))
-			{
-				$lft = $parent['Category']['lft'];
-				$rgt = $parent['Category']['rgt'];
-			}
+			$categoryIntervals = $parent['categoryIntervalCache'];
 		} else { var_dump($product); exit; }
 
 		$match = false;
@@ -140,7 +134,15 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 				break;
 
 			case 'Category':
-				$match = ($lft >= $record['lft']) && ($rgt <= $record['rgt']);
+				foreach (array_filter(explode(',', $categoryIntervals)) as $interval)
+				{
+					list($lft, $rgt) = explode('-', $interval);
+					if (($lft >= $record['lft']) && ($rgt <= $record['rgt']))
+					{
+						$match = true;
+						break;
+					}
+				}
 				break;
 		}
 
