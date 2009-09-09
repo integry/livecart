@@ -45,6 +45,8 @@ class BusinessRuleContext
 
 	public function addProduct($product)
 	{
+		static $calls = 0;
+
 		$item = new RuleProductContainer($product);
 		$this->products[] = $item;
 		return $item;

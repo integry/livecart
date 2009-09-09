@@ -157,7 +157,6 @@
 <div id="actionTemplate">
 	{form handle=$conditionForm}
 		<li>
-
 			<label style="width: 80px;"></label>
 			<span>
 				<input type="checkbox" class="checkbox isEnabled" name="isEnabled" />
@@ -185,6 +184,14 @@
 					<label class="acronym"><a>{t _discount_limit}<div>{t _discount_limit_descr}</div></a></label>
 					<span>{textfield name="discountLimit" class="number discountLimit"}</span>
 				</p>
+
+				<label></label>
+				<span>
+					<input type="checkbox" class="checkbox isOrderLevel" name="isOrderLevel" />
+					<label class="checkbox acronym"><a>{t _is_order_level}<div>{t _discount_isOrderLevel_descr}</div></a></label>
+				</span>
+				<div class="clear"></div>
+
 				<p>
 					<label>{t _apply_to}</label>
 					<span>{selectfield name="type" class="applyTo" options=$applyToChoices}</span>

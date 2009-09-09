@@ -70,9 +70,11 @@ _add_new_action=Add new action
 _action=Action type
 _amount=Discount amount
 _discount_step=Discount step
-_discount_step_descr=Apply discount to every X-th item. For example: buy X and get 1 free.  The limit only applies to items of the same line item, not the whole order.
+_discount_step_descr=Apply discount to every X-th item. For example: buy X and get 1 free.
 _discount_limit=Discount limit
-_discount_limit_descr=Max number of items to apply discount to. The limit only applies to items of the same line item, not the whole order.
+_discount_limit_descr=Max number of items to apply discount to.
+_is_order_level=Apply limit and step order-wide
+_discount_isOrderLevel_descr=The limits and steps by default only apply to products within the same line item. Mark this checkbox to apply limits and steps order-wide (in order from the lowest to highest priced products). This allows to create promotions like, "Buy 3 of X and get the cheapest one free".
 _apply_to=Apply discount to
 
 RuleActionPercentageDiscount=Apply percentage discount

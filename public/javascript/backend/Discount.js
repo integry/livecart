@@ -705,6 +705,7 @@ Backend.Discount.Action.prototype =
 		this.discountLimit = this.node.down('.discountLimit');
 		this.type = this.node.down('.applyTo');
 		this.isEnabled = this.node.down('.isEnabled');
+		this.isOrderLevel = this.node.down('.isOrderLevel');
 		this.subConditionContainer = this.node.down('.conditionContainer');
 
 		this.percentSign = this.node.down('.percent');
@@ -714,7 +715,7 @@ Backend.Discount.Action.prototype =
 
 	bindEvents: function()
 	{
-		[this.actionClass, this.amount, this.discountStep, this.discountLimit, this.type, this.isEnabled].each(function(field)
+		[this.actionClass, this.amount, this.discountStep, this.discountLimit, this.type, this.isEnabled, this.isOrderLevel].each(function(field)
 		{
 			field.name += '_' + this.action.ID;
 			Event.observe(field, 'change', this.saveFieldChange.bind(this));
@@ -722,8 +723,11 @@ Backend.Discount.Action.prototype =
 
 		Event.observe(this.addAction, 'click', this.addAction.bind(this));
 
-		this.isEnabled.id = 'isEnabled_' + this.action.ID;
-		$(this.isEnabled.parentNode).down('label').setAttribute('for', 'isEnabled_' + this.action.ID);
+		['isOrderLevel', 'isEnabled'].each(function(field)
+		{
+			this[field].id = field + '_' + this.action.ID;
+			$(this[field].parentNode).down('label').setAttribute('for', field + '_' + this.action.ID);
+		}.bind(this));
 
 		Event.observe(this.type, 'change', this.changeType.bind(this));
 		Event.observe(this.actionClass, 'change', this.changediscountType.bind(this));
@@ -749,6 +753,7 @@ Backend.Discount.Action.prototype =
 		}
 
 		this.isEnabled.checked = this.action.isEnabled == 1;
+		this.isOrderLevel.checked = this.action.isOrderLevel == 1;
 	},
 
 	changeType: function()

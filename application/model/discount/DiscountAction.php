@@ -33,6 +33,7 @@ class DiscountAction extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField("actionConditionID", "DiscountCondition", "ID", "DiscountCondition", ARInteger::instance()));
 
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
+		$schema->registerField(new ARField("isOrderLevel", ARBool::instance()));
 		$schema->registerField(new ARField("type", ARInteger::instance()));
 
 		$schema->registerField(new ARField("position", ARInteger::instance()));

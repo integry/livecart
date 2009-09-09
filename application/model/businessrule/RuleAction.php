@@ -82,6 +82,11 @@ abstract class RuleAction
 	{
 		return 999;
 	}
+
+	public function getContext()
+	{
+		return $this->condition->getContext();
+	}
 }
 
 ?>
