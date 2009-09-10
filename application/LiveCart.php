@@ -103,6 +103,8 @@ class LiveCart extends Application
 
 	private $plugins = null;
 
+	private $sessionHandler;
+
 	const EXCLUDE_DEFAULT_CURRENCY = false;
 
 	const INCLUDE_DEFAULT = true;
@@ -131,6 +133,7 @@ class LiveCart extends Application
 			ActiveRecordModel::setDSN(include $dsnPath);
 			$session = new DatabaseSessionHandler();
 			$session->setHandlerInstance();
+			$this->sessionHandler = $session;
 		}
 
 		// LiveCart request routing rules
@@ -691,6 +694,11 @@ class LiveCart extends Application
 	public function getCustomizationModeType()
 	{
 		return $this->session->get('customizationModeType');
+	}
+
+	public function getSessionHandler()
+	{
+		return $this->sessionHandler;
 	}
 
 	public function getSession()

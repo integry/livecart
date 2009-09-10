@@ -1,5 +1,7 @@
 <?php
 
+ClassLoader::import("application.model.user.User");
+
 /**
  * Handles session data storage in database
  *
@@ -14,6 +16,7 @@ class SessionData extends ActiveRecordModel
 		$schema->setName($className);
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ArChar::instance(32)));
+		$schema->registerField(new ARForeignKeyField("userID", "User", "ID", "User", ARInteger::instance()));
 		$schema->registerField(new ARField("lastUpdated", ArInteger::instance(12)));
 		$schema->registerField(new ARField("cacheUpdated", ArInteger::instance(12)));
 		$schema->registerField(new ARField("data", ArBinary::instance(0)));
@@ -21,15 +24,15 @@ class SessionData extends ActiveRecordModel
 
 	/*####################  Static method implementations ####################*/
 
-	public static function updateData($id, $data, $db)
+	public static function updateData($id, $data, $userID, $cacheUpdated, $db)
 	{
-		$sql = 'UPDATE SessionData SET data="' . addslashes($data) . '", lastUpdated=' . time() . ' WHERE ID="' . $id .'"';
+		$sql = 'UPDATE SessionData SET ' . self::enumerateUpdateFields($data, $userID, $cacheUpdated) . ' WHERE ID="' . $id .'"';
 		$db->executeQuery($sql);
 	}
 
-	public static function insertData($id, $data, $db)
+	public static function insertData($id, $data, $userID, $cacheUpdated, $db)
 	{
-		$sql = 'INSERT INTO SessionData SET ID="' . $id .'", data="' . addslashes($data) . '", lastUpdated=' . time();
+		$sql = 'INSERT INTO SessionData SET ID="' . $id .'", ' . self::enumerateUpdateFields($data, $userID, $cacheUpdated);
 		try
 		{
 			$db->executeQuery($sql);
@@ -38,6 +41,11 @@ class SessionData extends ActiveRecordModel
 		{
 			self::updateData($id, $data, $db);
 		}
+	}
+
+	private static function enumerateUpdateFields($data, $userID, $cacheUpdated)
+	{
+		return 'data="' . addslashes($data) . '", userID="' . $userID . '", cacheUpdated="' . $cacheUpdated . '", lastUpdated=' . time();
 	}
 
 	public static function deleteSessions($max)

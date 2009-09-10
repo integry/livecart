@@ -839,6 +839,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			return false;
 		}
 
+		if ($this->user->get())
+		{
+			$this->user->get()->invalidateSessionCache();
+		}
+
 		return parent::save();
 	}
 
