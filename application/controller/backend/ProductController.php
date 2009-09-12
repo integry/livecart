@@ -9,6 +9,7 @@ ClassLoader::import('application.helper.ActiveGrid');
 ClassLoader::import('application.helper.massAction.MassActionInterface');
 ClassLoader::import('application.model.order.OrderedItem');
 ClassLoader::import('application.model.delivery.ShippingClass');
+ClassLoader::import('application.model.tax.TaxClass');
 
 /**
  * Controller for handling product based actions performed by store administrators
@@ -663,7 +664,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		{
 			$product->loadRequestData($this->request);
 
-			foreach (array('ShippingClass' => 'shippingClassID'/*, 'TaxClass' => 'taxClassID'*/) as $class => $field)
+			foreach (array('ShippingClass' => 'shippingClassID', 'TaxClass' => 'taxClassID') as $class => $field)
 			{
 				$value = $this->request->get($field, null);
 				$instance = $value ? ActiveRecordModel::getInstanceByID($class, $value) : null;
@@ -742,6 +743,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$response->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
 		$response->set("otherCurrencies", $this->application->getCurrencyArray(LiveCart::EXCLUDE_DEFAULT_CURRENCY));
 		$response->set("shippingClasses", $this->getSelectOptionsFromSet(ShippingClass::getAllClasses()));
+		$response->set("taxClasses", $this->getSelectOptionsFromSet(TaxClass::getAllClasses()));
 
 		$productData = $product->toArray();
 		if (empty($productData['ID']))
@@ -755,6 +757,11 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	private function getSelectOptionsFromSet(ARSet $set)
 	{
+		if (!$set->size())
+		{
+			return array();
+		}
+
 		$options = array('' => '');
 
 		foreach ($set as $record)

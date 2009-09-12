@@ -1,20 +1,17 @@
 <?php
 
-ClassLoader::import("application.model.tax.*");
-ClassLoader::import("application.model.delivery.*");
-
 /**
- * Defines a tax. Actual tax rates have to be defined for each DeliveryZone separately.
+ * Defines a tax class
  *
- * @package application.model.tax
+ * @package application.model.delivery
  * @author Integry Systems <http://integry.com>
  */
-class Tax extends MultilingualObject
+class TaxClass extends MultilingualObject
 {
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
-		$schema->setName("Tax");
+		$schema->setName($className);
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARField("name", ARArray::instance()));
@@ -28,7 +25,7 @@ class Tax extends MultilingualObject
 	 * @param bool $loadReferencedRecords
 	 * @param array $data	Record data array (may include referenced record data)
 	 *
-	 * @return Tax
+	 * @return TaxClass
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
 	{
@@ -36,10 +33,10 @@ class Tax extends MultilingualObject
 	}
 
 	/**
-	 * Create new tax
+	 * Create new shipping class
 	 *
 	 * @param string $$defaultLanguageName Type name spelled in default language
-	 * @return Tax
+	 * @return TaxClass
 	 */
 	public static function getNewInstance($defaultLanguageName)
 	{
@@ -50,7 +47,7 @@ class Tax extends MultilingualObject
 	}
 
 	/**
-	 * Load taxes record set
+	 * Load record set
 	 *
 	 * @param ARSelectFilter $filter
 	 * @param bool $loadReferencedRecords
@@ -64,51 +61,18 @@ class Tax extends MultilingualObject
 	}
 
 	/**
-	 * Get a list of existing taxes
-	 *
-	 * @param boolean $includeDisabled Include disabled taxes in this list
-	 * @param TaxRate $doNotBelongToRate Don not belong to specified rate
-	 * @param boolean $loadReferencedRecords Load referenced records
-	 *
-	 * @return ARSet
-	 */
-	public static function getTaxes(DeliveryZone $notUsedInThisZone = null, $loadReferencedRecords = false)
-	{
-		$filter = new ARSelectFilter();
-		$rates = TaxRate::getRecordSetByDeliveryZone($notUsedInThisZone);
-
-		if($rates->getTotalRecordCount() > 0)
-		{
-			$zoneRatesIDs = array();
-			foreach($rates as $rate)
-			{
-				$taxIDs[] = $rate->tax->get()->getID();
-			}
-
-			$notInCond = new NotINCond(new ARFieldHandle(__CLASS__, "ID"), $taxIDs);
-			$filter->setCondition($notInCond);
-		}
-
-		return self::getRecordSet($filter, $loadReferencedRecords);
-	}
-
-	/**
-	 * Get a list of all existing taxes
+	 * Get a list of all existing classes
 	 *
 	 * @param boolean $loadReferencedRecords Load referenced records
 	 *
 	 * @return ARSet
 	 */
-	public static function getAllTaxes($loadReferencedRecords = false)
+	public static function getAllClasses($loadReferencedRecords = false)
 	{
 		$f = select();
-		$f->setOrder(f('Tax.position'));
-		return self::getRecordSet($f, $loadReferencedRecords);
-	}
+		$f->setOrder(f('TaxClass.position'));
 
-	public function includesTax(Tax $tax)
-	{
-		return $tax->position->get() < $this->position->get();
+		return self::getRecordSet($f, $loadReferencedRecords);
 	}
 
 	protected function insert()

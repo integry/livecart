@@ -2,7 +2,7 @@
 
 ClassLoader::import("library.*");
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.delivery.ShippingClass");
+ClassLoader::import("application.model.tax.TaxClass");
 
 /**
  *
@@ -10,7 +10,7 @@ ClassLoader::import("application.model.delivery.ShippingClass");
  * @author	Integry Systems
  * @role delivery
  */
-class ShippingClassController extends StoreManagementController
+class TaxClassController extends StoreManagementController
 {
 	/**
 	 * List all system currencies
@@ -22,7 +22,7 @@ class ShippingClassController extends StoreManagementController
 
 		$classesForms = array();
 		$classes = array();
-		foreach(ShippingClass::getAllClasses() as $class)
+		foreach(TaxClass::getAllClasses() as $class)
 		{
 			$classes[] = $class->toArray();
 			$classesForms[] = $this->createClassForm($class);
@@ -31,7 +31,7 @@ class ShippingClassController extends StoreManagementController
 		$response->set("classesForms", $classesForms);
 		$response->set("classes", $classes);
 
-		$newClass = ShippingClass::getNewInstance('');
+		$newClass = TaxClass::getNewInstance('');
 		$response->set("newClassForm", $this->createClassForm($newClass));
 		$response->set("newClass", $newClass->toArray());
 
@@ -40,7 +40,7 @@ class ShippingClassController extends StoreManagementController
 
 	public function edit()
 	{
-		$class = ShippingClass::getInstanceByID((int)$this->request->get('id'), true);
+		$class = TaxClass::getInstanceByID((int)$this->request->get('id'), true);
 
 		$form = $this->createClassForm($class);
 		$form->setData($class->toArray());
@@ -57,7 +57,7 @@ class ShippingClassController extends StoreManagementController
 	 */
 	public function delete()
 	{
-		$service = ShippingClass::getInstanceByID((int)$this->request->get('id'));
+		$service = TaxClass::getInstanceByID((int)$this->request->get('id'));
 		$service->delete();
 
 		return new JSONResponse(false, 'success');
@@ -68,7 +68,7 @@ class ShippingClassController extends StoreManagementController
 	 */
 	public function update()
 	{
-		$class = ShippingClass::getInstanceByID((int)$this->request->get('id'));
+		$class = TaxClass::getInstanceByID((int)$this->request->get('id'));
 
 		return $this->saveClass($class);
 	}
@@ -78,13 +78,13 @@ class ShippingClassController extends StoreManagementController
 	 */
 	public function create()
 	{
-		$class = ShippingClass::getNewInstance($this->request->get('name'));
+		$class = TaxClass::getNewInstance($this->request->get('name'));
 		$class->position->set(1000);
 
 		return $this->saveClass($class);
 	}
 
-	private function saveClass(ShippingClass $class)
+	private function saveClass(TaxClass $class)
 	{
 		$validator = $this->createClassFormValidator($class);
 
@@ -106,7 +106,7 @@ class ShippingClassController extends StoreManagementController
 	/**
 	 * @return Form
 	 */
-	private function createClassForm(ShippingClass $class)
+	private function createClassForm(TaxClass $class)
 	{
 		$form = new Form($this->createClassFormValidator($class));
 
@@ -118,7 +118,7 @@ class ShippingClassController extends StoreManagementController
 	/**
 	 * @return RequestValidator
 	 */
-	public function createClassFormValidator(ShippingClass $class)
+	public function createClassFormValidator(TaxClass $class)
 	{
 		$validator = $this->getValidator("classForm_" . $class->isExistingRecord() ? $class->getID() : '', $this->request);
 		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("_error_the_name_should_not_be_empty")));
@@ -133,7 +133,7 @@ class ShippingClassController extends StoreManagementController
 	{
 		foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
 		{
-		   $class = ShippingClass::getInstanceByID((int)$key);
+		   $class = TaxClass::getInstanceByID((int)$key);
 		   $class->position->set((int)$position);
 		   $class->save();
 		}

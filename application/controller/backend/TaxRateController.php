@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
+ClassLoader::import("application.model.tax.Tax");
 ClassLoader::import("application.model.tax.TaxRate");
 ClassLoader::import("application.model.delivery.DeliveryZone");
 
@@ -18,103 +19,84 @@ class TaxRateController extends StoreManagementController
 		if(($zoneID = (int)$this->request->get('id')) <= 0)
 		{
 			$deliveryZone = null;
-			$deliveryZoneArray = array('ID' => '');
-			$taxRatesArray = TaxRate::getRecordSetByDeliveryZone($deliveryZone)->toArray();
+			$deliveryZoneArray = array('ID' => '-1');
+			$taxRates = TaxRate::getRecordSetByDeliveryZone($deliveryZone);
 		}
 		else
 		{
 			$deliveryZone = DeliveryZone::getInstanceByID($zoneID, true);
 			$deliveryZoneArray = $deliveryZone->toArray();
-			$taxRatesArray = $deliveryZone->getTaxRates()->toArray();
+			$taxRates = $deliveryZone->getTaxRates();
 		}
 
+		$taxes = Tax::getAllTaxes()->toArray();
+		$classes = TaxClass::getAllClasses()->toArray();
 
 		$form = $this->createTaxRateForm();
-		$enabledTaxes = array();
-		foreach(Tax::getTaxes($deliveryZone)->toArray() as $tax)
+		foreach($taxRates as $tax)
 		{
-			$enabledTaxes[$tax['ID']] = $tax['name'];
+			$form->set($this->getFieldName($tax->tax->get(), $tax->taxClass->get()), $tax->rate->get());
 		}
 
-
 		$response = new ActionResponse();
-		$response->set('enabledTaxes', $enabledTaxes);
-		$response->set('taxRates', $taxRatesArray);
-		$response->set('newTaxRate', array('ID' => '', 'DeliveryZone' => $deliveryZoneArray));
 		$response->set('deliveryZone', $deliveryZoneArray);
 		$response->set('form', $form);
+		$response->set('taxes', $taxes);
+		$response->set('classes', $classes);
 		return $response;
 	}
 
 	/**
 	 * @role update
 	 */
-	public function delete()
+	public function save()
 	{
-		$taxRate = TaxRate::getInstanceByID((int)$this->request->get('id'), true, array('Tax'));
-		$tax = $taxRate->tax->get();
-		$taxRate->delete();
+		$taxes = Tax::getAllTaxes();
+		$classes = TaxClass::getAllClasses();
 
-		return new JSONResponse(array('tax' => $tax->toArray()), 'success');
-	}
-
-	public function edit()
-	{
-		$rate = TaxRate::getInstanceByID((int)$this->request->get('id'), true, array('Tax'));
-
-		$form = $this->createTaxRateForm();
-		$form->setData($rate->toArray());
-
-		$response = new ActionResponse();
-		$response->set('taxRate', $rate->toArray());
-		$response->set('form', $form);
-
-		return $response;
-	}
-
-	/**
-	 * @role update
-	 */
-	public function create()
-	{
-		if(($deliveryZoneId = (int)$this->request->get('deliveryZoneID')) > 0)
+		if(($zoneID = (int)$this->request->get('id')) <= 0)
 		{
-			$deliveryZone = DeliveryZone::getInstanceByID($deliveryZoneId, true);
+			$taxRates = TaxRate::getRecordSetByDeliveryZone(null);
+			$deliveryZone = DeliveryZone::getDefaultZoneInstance();
 		}
 		else
 		{
-			$deliveryZone = null;
+			$deliveryZone = DeliveryZone::getInstanceByID($zoneID, true);
+			$taxRates = $deliveryZone->getTaxRates();
 		}
 
-		$taxRate = TaxRate::getNewInstance($deliveryZone, Tax::getInstanceByID((int)$this->request->get('taxID'), true), (float)$this->request->get('rate'));
+		ActiveRecord::beginTransaction();
 
-		return $this->save($taxRate);
-	}
-
-	/**
-	 * @role update
-	 */
-	public function update()
-	{
-		return $this->save(TaxRate::getInstanceByID((int)$this->request->get('taxRateID'), true));
-	}
-
-	/**
-	 * @role update
-	 */
-	public function save(TaxRate $taxRate)
-	{
-		$validator = $this->createTaxRateFormValidator();
-		if($validator->isValid())
+		// delete all rates
+		foreach ($taxRates as $rate)
 		{
-			$taxRate->loadRequestData($this->request);
+			$rate->delete();
+		}
+
+		foreach ($taxes as $tax)
+		{
+			$this->saveRate($deliveryZone, $tax, null);
+
+			foreach ($classes as $class)
+			{
+				$this->saveRate($deliveryZone, $tax, $class);
+			}
+		}
+
+		ActiveRecord::commit();
+
+		return new JSONResponse(false, 'success', $this->translate('_tax_rates_have_been_successfully_saved'));
+	}
+
+	private function saveRate(DeliveryZone $zone, Tax $tax, TaxClass $class = null)
+	{
+		$value = $this->request->get($this->getFieldName($tax, $class));
+		if (!is_null($value) && ($value !== ''))
+		{
+			$taxRate = TaxRate::getNewInstance($zone, $tax, $value);
+			$taxRate->taxClass->set($class);
 			$taxRate->save();
-
-			return new JSONResponse(array('rate' => $taxRate->toArray()), 'success', $this->translate('_tax_rate_has_been_successfully_saved'));
-		}
-		else
-		{
-			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_could_not_save_tax_rate'));
+			return $taxRate;
 		}
 	}
 
@@ -133,14 +115,33 @@ class TaxRateController extends StoreManagementController
 	{
 		$validator = $this->getValidator('shippingService', $this->request);
 
-		$validator->addCheck("taxID", new IsNotEmptyCheck($this->translate("_error_tax_should_not_be_empty")));
-		$validator->addCheck("rate", new IsNotEmptyCheck($this->translate("_error_rate_should_not_be_empty")));
-		$validator->addCheck("rate", new IsNumericCheck($this->translate("_error_rate_should_be_numeric_value")));
-		$validator->addCheck("rate", new MinValueCheck($this->translate("_error_rate_should_be_greater_than_zero_and_less_than_hundred"), 0));
-		$validator->addCheck("rate", new MaxValueCheck($this->translate("_error_rate_should_be_greater_than_zero_and_less_than_hundred"), 100));
+		$taxes = Tax::getAllTaxes();
+		$classes = TaxClass::getAllClasses();
+		foreach ($taxes as $tax)
+		{
+			$this->setFieldValidation($validator, $tax, null);
+			foreach ($classes as $class)
+			{
+				$this->setFieldValidation($validator, $tax, $class);
+			}
+		}
 
 		return $validator;
 	}
 
+	private function setFieldValidation(RequestValidator $validator, Tax $tax, TaxClass $class = null)
+	{
+		$field = $this->getFieldName($tax, $class);
+		$validator->addCheck($field, new IsNumericCheck($this->translate("_error_rate_should_be_numeric_value")));
+		$validator->addCheck($field, new MinValueCheck($this->translate("_error_rate_should_be_greater_than_zero"), 0));
+		$validator->addFilter($field, new NumericFilter());
+	}
+
+	private function getFieldName(Tax $tax, TaxClass $class = null)
+	{
+		$classID = $class ? $class->getID() : '';
+		return 'tax_' . $tax->getID() . '_' . $classID;
+	}
 }
+
 ?>

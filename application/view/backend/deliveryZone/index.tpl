@@ -86,7 +86,6 @@
 	Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmZipDelete = Backend.getTranslation('_are_you_sure_you_want_to_delete_this_zip_mask');
 	Backend.DeliveryZone.ShippingService.prototype.Messages.confirmDelete = Backend.getTranslation('_are_you_sure_you_want_to_delete_this_service');
 	Backend.DeliveryZone.ShippingRate.prototype.Messages.confirmDelete = Backend.getTranslation('_are_you_sure_you_want_to_delete_this_rate');
-	Backend.DeliveryZone.TaxRate.prototype.Messages.confirmDelete = Backend.getTranslation('_are_you_sure_you_want_to_delete_this_tax_rate');
 
 	Backend.DeliveryZone.prototype.Links.edit = '{/literal}{link controller=backend.deliveryZone action=edit}?id=_id_{literal}';
 	Backend.DeliveryZone.prototype.Links.remove = '{/literal}{link controller=backend.deliveryZone action=delete}{literal}';
@@ -109,11 +108,6 @@
 	Backend.DeliveryZone.ShippingService.prototype.Links.update = '{/literal}{link controller=backend.shippingService action=update}{literal}';
 	Backend.DeliveryZone.ShippingService.prototype.Links.create = '{/literal}{link controller=backend.shippingService action=create}{literal}';
 	Backend.DeliveryZone.ShippingService.prototype.Links.validateRates = '{/literal}{link controller=backend.shippingService action=validateRates}{literal}';
-
-	Backend.DeliveryZone.TaxRate.prototype.Links.update = '{/literal}{link controller=backend.taxRate action=update}{literal}';
-	Backend.DeliveryZone.TaxRate.prototype.Links.create = '{/literal}{link controller=backend.taxRate action=create}{literal}';
-	Backend.DeliveryZone.TaxRate.prototype.Links.remove = '{/literal}{link controller=backend.taxRate action=delete}{literal}';
-	Backend.DeliveryZone.TaxRate.prototype.Links.edit = '{/literal}{link controller=backend.taxRate action=edit}{literal}';
 
 	var zones = new Backend.DeliveryZone({/literal}{$zones}{literal});
 
