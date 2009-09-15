@@ -84,6 +84,30 @@
 				<span>{selectfield name="comparisonType" class="comparisonType" options=$comparisonTypes}</span>
 				<span>{textfield name="comparisonValue" class="number comparisonValue"}</span>
 
+				{block BUSINESS-RULE-CONDITION-PARAMS}
+
+				<span class="conditionTime">
+					{t _include_orders_time}
+					<select name="conditionTime" class="value">
+						<option value="before">{t _condition_time_before}</option>
+						<option value="range">{t _condition_time_range}</option>
+					</select>
+
+					<span class="conditionTimeBefore">
+						<input name="min" type="text" class="minutes text number value" /> {t _minutes}
+						<input name="hr" type="text" class="hours text number value" /> {t _hours}
+						<input name="day" type="text" class="days text number value" /> {t _days}
+						<input name="year" type="text" class="years text number value" /> {t _years}
+					</span>
+
+					<span class="conditionTimeRange">
+						{calendar name="from" id="from"}
+						{calendar name="to" id="to"}
+					</span>
+
+					<span class="progressIndicator" style="display: none;"></span>
+				</span>
+
 				<span class="subConditionMenu">
 					<a href="#" class="subCondition">{t _add_subcondition}</a>
 					<span class="progressIndicator" style="display: none;"></span>

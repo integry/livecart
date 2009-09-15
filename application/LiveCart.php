@@ -12,6 +12,7 @@ ClassLoader::import('application.model.order.SessionOrder');
 ClassLoader::import('application.model.user.SessionUser');
 ClassLoader::import('application.model.session.DatabaseSessionHandler');
 ClassLoader::import('application.model.system.Cron');
+ClassLoader::import('application.model.businessrule.RuleOrderContainer');
 
 /**
  *  Implements LiveCart-specific application flow logic

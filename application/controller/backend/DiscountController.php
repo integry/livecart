@@ -295,6 +295,17 @@ class DiscountController extends ActiveGridController
 		$condition->save();
 	}
 
+	public function setSerializedValue()
+	{
+		list($type, $key) = explode('_', $this->request->get('field'));
+		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA);
+		$condition->conditionClass->set($this->request->get('type'));
+		$condition->setSerializedValue($type, $key, $this->request->get('value'));
+		$condition->save();
+
+		return new JSONResponse($this->request->get('field'));
+	}
+
 	private function deleteOtherTypeRecords(DiscountCondition $condition, ActiveRecordModel $record)
 	{
 		if (in_array(get_class($record), array('Manufacturer', 'Category', 'Product')))

@@ -39,7 +39,7 @@ class SessionData extends ActiveRecordModel
 		}
 		catch (Exception $e)
 		{
-			self::updateData($id, $data, $db);
+			self::updateData($id, $data, $userID, $cacheUpdated, $db);
 		}
 	}
 

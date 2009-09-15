@@ -199,7 +199,8 @@ a.subCondition
 	display: none;
 }
 
-.type_RuleConditionContainsProduct > .recordContainer .recordTypeSep, .type_RuleConditionContainsProduct > .recordContainer .recordClass
+.type_RuleConditionContainsProduct > .recordContainer .recordTypeSep,
+.type_RuleConditionContainsProduct > .recordContainer .recordClass
 {
 	display: inline;
 }
@@ -227,6 +228,23 @@ a.subCondition
 .addConditionUser
 {
 	background-image: url(../../image/silk/user_add.png);
+}
+
+.conditionTime
+{
+	display: block;
+	margin-left: 35px;
+}
+
+.conditionTime .number
+{
+	width: 3em;
+	margin-left: 5px;
+}
+
+.type_RuleConditionPastOrderContainsProduct > .conditionInfo > .subConditionMenu
+{
+	float: right;
 }
 
 .addAction

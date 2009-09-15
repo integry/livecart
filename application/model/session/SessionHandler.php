@@ -45,6 +45,11 @@ abstract class SessionHandler
 		$this->cacheUpdated = time();
 		$this->forceUpdate = true;
 	}
+
+	public function getCacheUpdateTime()
+	{
+		return $this->cacheUpdated;
+	}
 }
 
 ?>

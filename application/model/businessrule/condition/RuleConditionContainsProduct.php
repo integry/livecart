@@ -10,8 +10,6 @@ ClassLoader::import('application.model.businessrule.interface.RuleOrderCondition
  */
 class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCondition
 {
-	private $containedProducts;
-
 	public function isApplicable($instance = null)
 	{
 		if (!$this->records)
@@ -21,10 +19,13 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 
 		$isApplicable = false;
 
-		$order = $this->getContext()->getOrder();
-
-		$instances = $order ? $order->getShoppingCartItems() : array();
+		$instances = array();
+		foreach ($this->getOrders() as $order)
+		{
+			$instances = array_merge($instances, $order->getPurchasedItems());
+		}
 		$instances = array_merge($instances, $this->getContext()->getProducts());
+
 		if ($instance)
 		{
 			$instances[] = $instance;
@@ -82,6 +83,12 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 		}
 
 		return false;
+	}
+
+	protected function getOrders()
+	{
+		$order = $this->getContext()->getOrder();
+		return $order ? array($order) : array();
 	}
 
 	private function isInstanceApplicable($item, $record)

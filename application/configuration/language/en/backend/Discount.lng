@@ -53,6 +53,7 @@ RuleConditionUserGroupIs=Customer belongs to selected user group
 RuleConditionCustomerIs=Customer is
 RuleConditionDeliveryZoneIs=Order delivery zone is
 RuleConditionPaymentMethodIs=Payment method is
+RuleConditionPastOrderContainsProduct=Past orders contain selected products
 
 _compare_eq=equal to
 _compare_lteq=less than or equal to
@@ -65,6 +66,14 @@ _with_count=with count
 _with_subTotal=with subtotal
 _all_items_must_be_present=All items must be present in cart
 
+_include_orders_time=Include orders
+_condition_time_before=within the last
+_condition_time_range=between the selected dates
+_minutes=minutes
+_hours=hours
+_days=days
+_years=years
+
 _add_new_action=Add new action
 
 _action=Action type
@@ -74,7 +83,7 @@ _discount_step_descr=Apply discount to every X-th item. For example: buy X and g
 _discount_limit=Discount limit
 _discount_limit_descr=Max number of items to apply discount to.
 _is_order_level=Apply limit and step order-wide
-_discount_isOrderLevel_descr=The limits and steps by default only apply to products within the same line item. Mark this checkbox to apply limits and steps order-wide (in order from the lowest to highest priced products). This allows to create promotions like, "Buy 3 of X and get the cheapest one free".
+_discount_isOrderLevel_descr=The limits and steps by default only apply to products within the same line item. Mark this checkbox to apply limits and steps order-wide (in order from the lowest to highest priced products). This allows to create promotions like "Buy 3 different CD's and get the cheapest one free".
 _apply_to=Apply discount to
 
 RuleActionPercentageDiscount=Apply percentage discount

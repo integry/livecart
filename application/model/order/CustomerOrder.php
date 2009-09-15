@@ -1651,6 +1651,14 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		return $items;
 	}
 
+	/**
+	 * alias for getShoppingCartItems()
+	 */
+	public function getPurchasedItems()
+	{
+		return $this->getShoppingCartItems();
+	}
+
 	public function getWishListItems()
 	{
 		$items = array();

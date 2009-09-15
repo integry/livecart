@@ -175,6 +175,11 @@ Backend.Discount.Condition.prototype =
 		this.valueContainer = this.node.down('.valueContainer');
 		this.selectRecordContainer = this.node.down('.selectRecordContainer');
 		this.productFieldSel = this.node.down('.comparisonField');
+		this.timeRangeSelector = this.node.down('.conditionTime');
+
+ 		this.conditionTime = this.timeRangeSelector.down('select');
+		this.conditionTimeBefore = this.timeRangeSelector.down('.conditionTimeBefore');
+		this.conditionTimeRange = this.timeRangeSelector.down('.conditionTimeRange');
 	},
 
 	bindEvents: function()
@@ -195,6 +200,19 @@ Backend.Discount.Condition.prototype =
 		Event.observe(this.deleteIcon, 'click', this.remove.bind(this));
 
 		Event.observe(this.typeSel, 'change', this.changeType.bind(this));
+		Event.observe(this.conditionTime, 'change', this.changeDateRangeType.bind(this));
+
+		this.timeRangeSelector.getElementsBySelector('.value', 'input[type=hidden]').each(function(field)
+		{
+			var c = this.condition.serializedCondition;
+			if (c && c.time && c.time[field.name])
+			{
+				field.value = c.time[field.name];
+			}
+
+			field.name = 'time_' + field.name;
+			field.onchange = this.saveParamChange.bind(this);
+		}.bind(this));
 
 		// add records
 		Event.observe(this.recordContainer.down('.addConditionCategory'), 'click', this.addCategory.bind(this));
@@ -261,6 +279,24 @@ Backend.Discount.Condition.prototype =
 		}
 
 		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'updateConditionField', {type: this.typeSel.value, field: field.name, productField: this.productFieldSel.value, value: value, comparisonType: this.compSel.value}), null, this.completeUpdateField.bind(this));
+	},
+
+	saveParamChange: function(e)
+	{
+		var field = e instanceof Event ? Event.element(e) : e;
+
+		$(field.parentNode).addClassName('fieldUpdating');
+
+		var value = field.value;
+		if ('checkbox' == field.type)
+		{
+			value = field.checked ? 1 : 0;
+		}
+
+		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'setSerializedValue', {type: this.typeSel.value, field: field.name, value: value, id: this.condition.ID}), null, function()
+		{
+			$(field.parentNode).removeClassName('fieldUpdating');
+		});
 	},
 
 	completeUpdateField: function(originalRequest)
@@ -363,6 +399,16 @@ Backend.Discount.Condition.prototype =
 			this.recordContainer.show();
 		}
 
+		if ('RuleConditionPastOrderContainsProduct' == type)
+		{
+			this.timeRangeSelector.show();
+			this.changeDateRangeType();
+		}
+		else
+		{
+			this.timeRangeSelector.hide();
+		}
+
 		if (['RuleConditionDeliveryZoneIs', 'RuleConditionUserGroupIs'].indexOf(type) > -1)
 		{
 			this.compSel.hide();
@@ -401,6 +447,56 @@ Backend.Discount.Condition.prototype =
 		}
 
 		this.node.className = 'type_' + type;
+
+		if ('RuleConditionPastOrderContainsProduct' == type)
+		{
+			this.node.className += ' type_RuleConditionContainsProduct';
+		}
+	},
+
+	changeDateRangeType: function()
+	{
+		if ('before' == this.conditionTime.value)
+		{
+			this.conditionTimeBefore.show();
+			this.conditionTimeRange.hide();
+		}
+		else
+		{
+			this.conditionTimeBefore.hide();
+			this.conditionTimeRange.show();
+			this.setupCalendar('from');
+			this.setupCalendar('to');
+		}
+	},
+
+	setupCalendar: function(id)
+	{
+		// set up calendar field
+		var time = this.conditionTimeRange.down('#' + id);
+		var time_real = this.conditionTimeRange.down('#' + id + '_real');
+		var time_button = this.conditionTimeRange.down('#' + id + '_button');
+
+		time.onchange = function() { time_real.onchange(time_real); }
+
+		time_button.realInput = time_real;
+		time_button.showInput = time;
+
+		time.realInput = time_real;
+		time.showInput = time;
+
+		Event.observe(time,		"keyup",	 Calendar.updateDate );
+		Event.observe(time,		"blur",	  Calendar.updateDate );
+		Event.observe(time_button, "mousedown", Calendar.updateDate );
+
+		Calendar.setup({
+			inputField:	 time,
+			inputFieldReal: time_real,
+			ifFormat:	   "%d-%b-%Y",
+			button:		 time_button,
+			align:		  "BR",
+			singleClick:	true
+		});
 	},
 
 	createSelectValue: function(type, value, name)

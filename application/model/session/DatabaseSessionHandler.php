@@ -21,6 +21,7 @@ class DatabaseSessionHandler extends SessionHandler
 	public function open()
 	{
 		$this->db = ActiveRecordModel::getDBConnection();
+		$this->db->sessionHandler = $this;
 		return true;
 	}
 
