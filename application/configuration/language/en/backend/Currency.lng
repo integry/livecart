@@ -51,7 +51,7 @@ _err_negative=Currency exchange rate cannot be negative
 
 # options
 
-_opts_save_conf=Currency options were saved successfuly
+_opts_save_conf=Currency options were saved successfully
 
 _update_auto=Update currency exchange rates automatically using currency data feeds
 _update_freq=Update frequency

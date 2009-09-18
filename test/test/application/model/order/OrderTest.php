@@ -1277,6 +1277,9 @@ class OrderTest extends OrderTestCommon
 		$newProduct->setPrice($this->usd, 100);
 		$newProduct->save();
 
+		Category::recalculateProductsCount();
+		$newProduct->reload();
+
 		// order condition
 		$condition = DiscountCondition::getNewInstance();
 		$condition->isEnabled->set(true);
@@ -1322,6 +1325,9 @@ class OrderTest extends OrderTestCommon
 		$newProduct->isEnabled->set(true);
 		$newProduct->setPrice($this->usd, 100);
 		$newProduct->save();
+
+		Category::recalculateProductsCount();
+		$newProduct->reload();
 
 		// order condition
 		$condition = DiscountCondition::getNewInstance();
@@ -1388,12 +1394,17 @@ class OrderTest extends OrderTestCommon
 		$this->order->addProduct($product, 1, true);
 		$this->order->save();
 
+		Category::recalculateProductsCount();
+		$product->reload();
 		$this->assertFalse(RuleCondition::create($actionCondition)->isProductMatching($product));
 
 		$customCategory = Category::getNewInstance(Category::getRootNode());
 		$customCategory->save();
 		ProductCategory::getNewInstance($product, $customCategory)->save();
 		DiscountConditionRecord::getNewInstance($actionCondition, $customCategory)->save();
+
+		Category::recalculateProductsCount();
+		$product->reload();
 
 		$actionCondition->loadAll();
 		$this->assertTrue(RuleCondition::create($actionCondition)->isProductMatching($product));

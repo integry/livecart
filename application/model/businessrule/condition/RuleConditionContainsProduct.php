@@ -10,8 +10,6 @@ ClassLoader::import('application.model.businessrule.interface.RuleOrderCondition
  */
 class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCondition
 {
-	private $containedProducts;
-
 	public function isApplicable($instance = null)
 	{
 		if (!$this->records)
@@ -21,10 +19,13 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 
 		$isApplicable = false;
 
-		$order = $this->getContext()->getOrder();
-
-		$instances = $order ? $order->getShoppingCartItems() : array();
+		$instances = array();
+		foreach ($this->getOrders() as $order)
+		{
+			$instances = array_merge($instances, $order->getPurchasedItems());
+		}
 		$instances = array_merge($instances, $this->getContext()->getProducts());
+
 		if ($instance)
 		{
 			$instances[] = $instance;
@@ -84,6 +85,12 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 		return false;
 	}
 
+	protected function getOrders()
+	{
+		$order = $this->getContext()->getOrder();
+		return $order ? array($order) : array();
+	}
+
 	private function isInstanceApplicable($item, $record)
 	{
 		if ($item instanceof OrderedItem)
@@ -109,9 +116,7 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 			$parentID = $product->getParent()->getID();
 			$manufacturerID = $product->manufacturer->get() ? $product->manufacturer->get()->getID() : null;
 
-			$category = $product->getCategory();
-			$lft = $category->lft->get();
-			$rgt = $category->rgt->get();
+			$categoryIntervals = $product->getParent()->categoryIntervalCache->get();
 		}
 		else if (is_array($product))
 		{
@@ -120,11 +125,7 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 			$manufacturerID = isset($product['Manufacturer']) ? $product['Manufacturer']['ID'] : null;
 
 			$parent = isset($product['Parent']) ? $product['Parent'] : $product;
-			if (isset($parent['Category']))
-			{
-				$lft = $parent['Category']['lft'];
-				$rgt = $parent['Category']['rgt'];
-			}
+			$categoryIntervals = $parent['categoryIntervalCache'];
 		} else { var_dump($product); exit; }
 
 		$match = false;
@@ -140,7 +141,15 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 				break;
 
 			case 'Category':
-				$match = ($lft >= $record['lft']) && ($rgt <= $record['rgt']);
+				foreach (array_filter(explode(',', $categoryIntervals)) as $interval)
+				{
+					list($lft, $rgt) = explode('-', $interval);
+					if (($lft >= $record['lft']) && ($rgt <= $record['rgt']))
+					{
+						$match = true;
+						break;
+					}
+				}
 				break;
 		}
 

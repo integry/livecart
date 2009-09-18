@@ -104,6 +104,7 @@ class Product extends MultilingualObject
 		$schema->registerField(new ArField("childSettings", ARText::instance()));
 		$schema->registerField(new ArField("fractionalStep", ARFloat::instance(8)));
 		$schema->registerField(new ArField("position", ARInteger::instance()));
+		$schema->registerField(new ArField("categoryIntervalCache", ARText::instance()));
 	}
 
 	/**

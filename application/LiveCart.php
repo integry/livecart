@@ -12,6 +12,7 @@ ClassLoader::import('application.model.order.SessionOrder');
 ClassLoader::import('application.model.user.SessionUser');
 ClassLoader::import('application.model.session.DatabaseSessionHandler');
 ClassLoader::import('application.model.system.Cron');
+ClassLoader::import('application.model.businessrule.RuleOrderContainer');
 
 /**
  *  Implements LiveCart-specific application flow logic
@@ -103,6 +104,8 @@ class LiveCart extends Application
 
 	private $plugins = null;
 
+	private $sessionHandler;
+
 	const EXCLUDE_DEFAULT_CURRENCY = false;
 
 	const INCLUDE_DEFAULT = true;
@@ -131,6 +134,7 @@ class LiveCart extends Application
 			ActiveRecordModel::setDSN(include $dsnPath);
 			$session = new DatabaseSessionHandler();
 			$session->setHandlerInstance();
+			$this->sessionHandler = $session;
 		}
 
 		// LiveCart request routing rules
@@ -691,6 +695,11 @@ class LiveCart extends Application
 	public function getCustomizationModeType()
 	{
 		return $this->session->get('customizationModeType');
+	}
+
+	public function getSessionHandler()
+	{
+		return $this->sessionHandler;
 	}
 
 	public function getSession()

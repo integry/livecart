@@ -1,5 +1,7 @@
 <?php
 
+ini_set('memory_limit', '128M');
+
 ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.product.ProductFilter');
 ClassLoader::import('application.model.feed.ProductFeed');
@@ -44,6 +46,7 @@ class XmlController extends FrontendController
 		$response = new XMLResponse();
 		$response->set('feed', $feed);
 		$response->set('tpl', 'xml/feed/' . $this->request->get('module') . '.tpl');
+
 		return $response;
 	}
 }

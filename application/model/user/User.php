@@ -343,6 +343,13 @@ class User extends ActiveRecordModel implements EavAble
 		return $this->firstName->get() . ' ' . $this->lastName->get();
 	}
 
+	public function invalidateSessionCache()
+	{
+		$f = new ARUpdateFilter(eq(f('SessionData.userID'), $this->getID()));
+		$f->addModifier('cacheUpdated', 0);
+		self::updateRecordSet('SessionData', $f);
+	}
+
 	/*####################  Saving ####################*/
 
 	public function loadRequestData(Request $request)

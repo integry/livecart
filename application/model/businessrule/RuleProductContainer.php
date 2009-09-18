@@ -12,6 +12,7 @@ class RuleProductContainer implements BusinessRuleProductInterface
 {
 	private $price;
 	private $product;
+	private $count = 1;
 
 	public function __construct($product)
 	{
@@ -33,9 +34,19 @@ class RuleProductContainer implements BusinessRuleProductInterface
 		return $this->price;
 	}
 
+	public function setCount($count)
+	{
+		$this->count = 1;
+	}
+
 	public function getCount()
 	{
-		return 1;
+		return $this->count;
+	}
+
+	public function getSubTotal()
+	{
+		return $this->getPriceWithoutTax() * $this->getCount();
 	}
 }
 

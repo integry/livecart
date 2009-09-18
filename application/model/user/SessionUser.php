@@ -20,15 +20,15 @@ class SessionUser
 		$session = new Session();
 
 		$id = $session->get('User');
+		$app = ActiveRecordModel::getApplication();
 
 		if (!$id)
 		{
-			return self::getAnonymousUser();
+			$user = self::getAnonymousUser();
 		}
 		else
 		{
 			$user = User::getInstanceById($id);
-			$app = ActiveRecordModel::getApplication();
 
 			// set user's prefered locale code
 			$reqLang = $app->getRequest()->get('requestLanguage');
@@ -42,9 +42,10 @@ class SessionUser
 
 				$session->set('userLocale', $localeCode);
 			}
-
-			return $user;
 		}
+
+		$app->getSessionHandler()->setUser($user);
+		return $user;
 	}
 
 	public static function setUser(User $user)
