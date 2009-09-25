@@ -1,9 +1,9 @@
 <ul class="rootCategories{if $currentId == $categories.0.ID} firstActive{/if}" id="rootCategories">
 	{foreach $categories as $category}
-		<li class="top {if $category.ID == $currentId}current{/if}"><a href="{categoryUrl data=$category}"><span>{$category.name_lang}</span>
+		<li class="top {if $category.ID == $currentId}current{/if}"><a href="{categoryUrl data=$category}"><span class="name">{$category.name_lang}</span>
 		{if $subCategories[$category.ID]}
 			<div class="wrapper">
-				<div><div>
+				<div class="block"><div class="block">
 					<ul>
 						{foreach $subCategories[$category.ID] as $category}
 							<li><a href="{categoryUrl data=$category}"><span>{$category.name_lang}</span></a></li>
@@ -14,6 +14,7 @@
 		{/if}
 		</a></li>
 	{/foreach}
+	<div class="clear"></div>
 </ul>
 
 {literal}

@@ -974,6 +974,12 @@ li.moreSubCats, li.moreSubCats a
 	padding: 0 10px 0 15px;
 }
 
+.rootCategories
+{
+	background-color: transparent;
+	height: auto;
+}
+
 .rootCategories li
 {
 	margin-right: 2px;
@@ -984,7 +990,7 @@ li.moreSubCats, li.moreSubCats a
 	height: 27px;
 }
 
-.rootCategories li span
+.rootCategories li span.name
 {
 	display: block;
 	background-image: url(../image/tab_btn_08.gif);
@@ -999,6 +1005,7 @@ li.moreSubCats, li.moreSubCats a
 	background-image: url(../image/tab_btn_11.gif);
 	background-position: right bottom;
 	font-size: 11px;
+	padding: 0;
 	padding-right: 8px;
 }
 
@@ -1020,7 +1027,7 @@ li.moreSubCats, li.moreSubCats a
 	font-size: 11px;
 }
 
-.rootCategories li.current span
+.rootCategories li.current span.name
 {
 	background-image: url(../image/tab_btn_03.gif);
 	background-position: left bottom;
@@ -1037,7 +1044,7 @@ li.moreSubCats, li.moreSubCats a
 	padding-right: 8px;
 }
 
-.rootCategories li div.wrapper
+.rootCategories li .wrapper
 {
 	border: 1px solid #6e99ae;
 	border-top: 0;
@@ -1060,6 +1067,16 @@ li.moreSubCats, li.moreSubCats a
 .rootCategories li.hover li a
 {
 	width: 220px;
+}
+
+.rootCategories li ul li a,
+.rootCategories li ul li span,
+.rootCategories li:hover ul li a,
+.rootCategories li:hover ul li span,
+.rootCategories li.hover ul li a,
+.rootCategories li.hover ul li span
+{
+	background: none;
 }
 
 /*************************
