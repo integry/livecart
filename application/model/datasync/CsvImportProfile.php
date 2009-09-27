@@ -28,32 +28,18 @@ class CsvImportProfile
 			return null;
 		}
 
-		$data = parse_ini_file($fileName);
+		$data = parse_ini_file($fileName, true);
 		$className = __CLASS__;
 		$instance = new $className($data['className']);
+		$instance->setParams($data['params']);
 
-		if (isset($data['isHead']))
+		unset($data['params']);
+		foreach ($data as $k => $entry)
 		{
-			$instance->setIsHead($data['isHead']);
+			$name = $entry['name'];
+			unset($entry['name']);
+			$instance->setField($k, $name, $entry);
 		}
-
-		if (isset($data['params']))
-		{
-			$instance->setParams($data['params']);
-		}
-
-		$k = 0;
-		do
-		{
-			++$k;
-			if (isset($data[$k]))
-			{
-				$name = $data[$k]['name'];
-				unset($data[$k]['name']);
-				$this->setField($k, $name, $data[$k]);
-			}
-		}
-		while (isset($data[$k]));
 
 		return $instance;
 	}
@@ -85,18 +71,14 @@ class CsvImportProfile
 
 	public function save()
 	{
-		$data = array('className' => $this->className,
-					  'isHead' => $this->isHead,
-					  'params' => $this->params);
+		$data = $this->toArray();
 
-		$data = array_merge($data, $this->fields);
-
-		if (!file_exists(dirname($filename)))
+		if (!file_exists(dirname($this->fileName)))
 		{
-			mkdir(dirname($filename));
+			mkdir(dirname($this->fileName), 0777, true);
 		}
 
-		$this->write_ini_file($data, $this->fileName);
+		$this->write_ini_file($data, $this->fileName, true);
 	}
 
 	public function setName($name)
@@ -129,9 +111,28 @@ class CsvImportProfile
 		$this->params[$key] = $value;
 	}
 
+	public function setParams(array $params)
+	{
+		$this->params = $params;
+	}
+
 	public function getCsvFile($filePath)
 	{
 		return new CsvFile($filePath, $this->getParam('delimiter', ';'));
+	}
+
+	public function toArray()
+	{
+		$data = array('params' => $this->params);
+
+		foreach ($this->fields as $key => $field)
+		{
+			$field = array_merge($field, $field['params']);
+			unset($field['params']);
+			$data[$key] = $field;
+		}
+
+		return $data;
 	}
 
     private function write_ini_file($assoc_arr, $path, $has_sections=FALSE)

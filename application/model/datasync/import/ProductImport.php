@@ -174,6 +174,7 @@ class ProductImport extends DataImport
 				$value = $record[$csvIndex];
 
 				list($className, $field) = explode('.', $column, 2);
+
 				if (isset($params['language']))
 				{
 					$lang = $params['language'];

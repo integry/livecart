@@ -104,7 +104,7 @@ abstract class DataImport
 	{
 		$processed = 0;
 
-		foreach ($csv as $record)
+		foreach ($file as $record)
 		{
 			if (!is_array($record))
 			{
@@ -115,6 +115,8 @@ abstract class DataImport
 			{
 				continue;
 			}
+
+			return;
 		}
 	}
 
@@ -125,7 +127,7 @@ abstract class DataImport
 
 	public function isCompleted(CsvFile $file)
 	{
-		return $file->valid();
+		return !$file->valid();
 	}
 
 	public function getClassName()

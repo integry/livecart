@@ -5,6 +5,20 @@ _select_file=Select a File
 _delimiters=Set delimiters
 _arrange=Arrange fields
 
+# Data types
+_data_type=Select Type Of Data To Import
+ProductImport=Products
+CustomerOrderImport=Orders
+OrderedItemImport=Orders
+UserImport=Users
+NewsletterSubscriberImport=Newsletter subscribers
+ManufacturerImport=Manufacturers
+SiteNewsImport=News posts
+CurrencyImport=Currencies
+ShippingClassImport=Shipping Classes
+TaxImport=Taxes
+DeliveryZoneImport=Delivery Zones
+
 # Start
 _upload_file=Upload file
 _select_at_server=Select at server
@@ -26,6 +40,12 @@ _del_comma=Comma (,)
 _del_semicolon=Semicolon (;)
 _del_pipe=Pipe (|)
 _del_tab=Tab character
+
+# Profiles
+_use_profile=Use a saved profile
+_save_profile=Save import profile
+_confirm_profile_delete=Really delete the selected import profile?
+_profile_deleted=The selected profile has been deleted successfully
 
 # Field mapping
 _map_data=Map CSV Columns to LiveCart Fields

@@ -656,6 +656,44 @@ class LiveCart extends Application
 		return $plugins;
 	}
 
+	public function getPluginClasses($mountPath)
+	{
+		if (substr($mountPath, -1) != '.')
+		{
+			$mountPath .= '.';
+		}
+
+		$classes = array();
+		foreach ($this->configContainer->getDirectoriesByMountPath($mountPath) as $dir)
+		{
+			foreach (glob($dir . '*.php') as $file)
+			{
+				$file = basename($file, '.php');
+				$classes[] = $file;
+			}
+		}
+
+		return $classes;
+	}
+
+	public function loadPluginClass($mountPath, $class)
+	{
+		if (substr($mountPath, -1) != '.')
+		{
+			$mountPath .= '.';
+		}
+
+		foreach ($this->configContainer->getDirectoriesByMountPath($mountPath) as $dir)
+		{
+			$path = $dir . $class . '.php';
+			if (file_exists($path))
+			{
+				include_once($path);
+				return;
+			}
+		}
+	}
+
 	/**
 	 * Renders response from controller action
 	 *

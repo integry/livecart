@@ -31,6 +31,14 @@ class CsvImportController extends StoreManagementController
 
 	public function index()
 	{
+		$classes = array_diff($this->application->getPluginClasses('application.model.datasync.import'), array('ProductImport'));
+		$classes = array_merge(array('ProductImport'), $classes);
+		$types = array();
+		foreach ($classes as $class)
+		{
+			$types[$class] = $this->translate($class);
+		}
+
 		$form = $this->getForm();
 		$root = Category::getInstanceByID($this->request->isValueSet('category') ? $this->request->get('category') : Category::ROOT_ID, Category::LOAD_DATA);
 		$form->set('category', $root->getID());
@@ -39,6 +47,7 @@ class CsvImportController extends StoreManagementController
 		$response = new ActionResponse();
 		$response->set('form', $form);
 		$response->set('catPath', $root->getPathNodeArray(true));
+		$response->set('types', $types);
 		return $response;
 	}
 
@@ -68,7 +77,7 @@ class CsvImportController extends StoreManagementController
 			return new ActionRedirectResponse('backend.csvImport', 'index');
 		}
 
-		return new ActionRedirectResponse('backend.csvImport', 'delimiters', array('query' => 'file=' . $filePath . '&category=' . $this->request->get('category')));
+		return new ActionRedirectResponse('backend.csvImport', 'delimiters', array('query' => 'file=' . $filePath . '&category=' . $this->request->get('category') . '&type=' . $this->request->get('type')));
 	}
 
 	public function delimiters()
@@ -116,6 +125,7 @@ class CsvImportController extends StoreManagementController
 		$form = $this->getDelimiterForm();
 		$form->set('delimiter', $delimiter);
 		$form->set('file', $file);
+		$form->set('type', $this->request->get('type'));
 		$form->set('category', $this->request->get('category'));
 
 		$response = new ActionResponse();
@@ -132,6 +142,7 @@ class CsvImportController extends StoreManagementController
 
 		$csv = new CsvFile($file, $delimiter);
 		$preview = $this->getPreview($csv);
+		$response->set('type', $this->request->get('type'));
 		$response->set('preview', $preview);
 		$response->set('previewCount', count($preview));
 		$response->set('total', $csv->getRecordCount());
@@ -139,6 +150,14 @@ class CsvImportController extends StoreManagementController
 		$response->set('languages', $this->application->getLanguageSetArray(true));
 		$response->set('groups', ActiveRecordModel::getRecordSetArray('UserGroup', new ARSelectFilter()));
 		$response->set('catPath', Category::getInstanceByID($this->request->get('category'), Category::LOAD_DATA)->getPathNodeArray(true));
+
+		$profiles = array('' => '');
+		foreach (glob($this->getProfileDirectory($this->getImportInstance()) . '*.ini') as $path)
+		{
+			$profile = basename($path, '.ini');
+			$profiles[$profile] = $profile;
+		}
+		$response->set('profiles', $profiles);
 
 		return $response;
 	}
@@ -157,7 +176,25 @@ class CsvImportController extends StoreManagementController
 		$response = new ActionResponse('columns', $csv->getRecord());
 		$response->set('fields', $import->getFields());
 		$response->set('form', $this->getFieldsForm());
+		$response->set('type', $this->request->get('type'));
 		return $response;
+	}
+
+	public function loadProfile()
+	{
+		$import = $this->getImportInstance();
+		$file = $this->getProfileDirectory($import) . $this->request->get('profile') . '.ini';
+		$profile = CsvImportProfile::load($file);
+		return new JSONResponse($profile->toArray());
+	}
+
+	public function deleteProfile()
+	{
+		$import = $this->getImportInstance();
+		$file = $this->getProfileDirectory($import) . $this->request->get('profile') . '.ini';
+		//unlink($file);
+
+		return new JSONResponse(array('profile' => $this->request->get('profile')), 'success', $this->translate('_profile_deleted'));
 	}
 
 	public function import()
@@ -182,16 +219,30 @@ class CsvImportController extends StoreManagementController
 		$profile = new CsvImportProfile($import->getClassName());
 
 		// map CSV fields to LiveCart fields
+		$params = $this->request->get('params');
 		foreach ($this->request->get('column') as $key => $value)
 		{
 			if ($value)
 			{
-				$profile->setField($key, $value);
+				$fieldParams = !empty($params[$key]) ? $params[$key] : array();
+				$profile->setField($key, $value, array_filter($fieldParams));
 			}
 		}
 
+		$profile->setParam('isHead', $this->request->get('firstHeader'));
+
+		if ($this->request->get('saveProfile'))
+		{
+			$path = $this->getProfileDirectory($import) . $this->request->get('profileName') . '.ini';
+			$profile->setFileName($path);
+			$profile->save();
+		}
+
 		// get import root category
-		$this->root = Category::getInstanceById($this->request->get('category'), Category::LOAD_DATA);
+		if ($import->isRootCategory())
+		{
+			$profile->setParam('category', $this->request->get('category'));
+		}
 
 		$import->beforeImport($profile);
 
@@ -295,8 +346,9 @@ class CsvImportController extends StoreManagementController
 	{
 		if (!$this->importInstance)
 		{
-			ClassLoader::import('application.model.datasync.import.ProductImport');
-			$this->importInstance = new ProductImport($this->application);
+			$class = $this->request->get('type');
+			$this->application->loadPluginClass('application.model.datasync.import', $class);
+			$this->importInstance = new $class($this->application);
 		}
 
 		return $this->importInstance;
@@ -402,6 +454,11 @@ class CsvImportController extends StoreManagementController
 	private function getProgressFile()
 	{
 		return ClassLoader::getRealPath('cache.') . 'csvProgress';
+	}
+
+	private function getProfileDirectory(DataImport $import)
+	{
+		return ClassLoader::getRealPath('storage.importProfiles.' . get_class($import) . '.');
 	}
 }
 

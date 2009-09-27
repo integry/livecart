@@ -20,6 +20,12 @@
 {form action="controller=backend.csvImport action=setFile" method="POST" handle=$form}
 
 	<fieldset>
+		<legend>{t _data_type}</legend>
+		<label></label>
+		{selectfield name="type" options=$types}
+	</fieldset>
+
+	<fieldset>
 		<legend>{t _select_file}</legend>
 
 		<p class="required">
