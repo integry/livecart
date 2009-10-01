@@ -24,6 +24,7 @@ class UserGroupController extends ActiveGridController
 		{
 			$userGroups[] = array('ID' => $group['ID'], 'name' => $group['name'], 'rootID' => -2);
 		}
+		$userGroups[] = array('ID' => -3, 'name' => $this->translate('_online_users'), 'rootID' => 0);
 
 		return new ActionResponse('userGroups', $userGroups);
 	}
@@ -154,6 +155,21 @@ class UserGroupController extends ActiveGridController
 	{
 		$availableColumns = parent::getAvailableColumns();
 		$availableColumns['UserGroup.name'] = array('type' => 'text', 'name' => $this->translate('UserGroup.name'));
+		$availableColumns['isOnline'] = array('type' => 'bool', 'name' => $this->translate('User.isOnline'));
+
+		$addressFields = parent::getAvailableColumns('UserAddress');
+		$availableColumns = array_merge($availableColumns, $addressFields);
+/*
+		foreach (array('BillingAddress', 'ShippingAddress') as $type)
+		{
+			foreach ($addressFields as $field => $fieldData)
+			{
+				$fieldData['name'] = $this->translate($type) . ': ' . $fieldData['name'];
+				$field = str_replace('UserAddress', $type, $field);
+				$availableColumns[$field] = $fieldData;
+			}
+		}
+*/
 		unset($availableColumns['User.password']);
 		unset($availableColumns['User.preferences']);
 		return $availableColumns;
@@ -189,13 +205,20 @@ class UserGroupController extends ActiveGridController
 			// without group
 			$filter->mergeCondition(new IsNullCond(new ARFieldHandle('User', 'userGroupID')));
 		}
+		else if($id == -3)
+		{
+			// online
+			$filter->mergeHavingCondition(new EqualsOrMoreCond(f('isOnline'), 1));
+		}
+
+		$filter->addField('(SELECT COUNT(*) > 0 From SessionData WHERE userID=User.ID)', '', 'isOnline');
 
 		return $filter;
 	}
 
 	protected function getReferencedData()
 	{
-		return array('UserGroup');
+		return array('UserGroup', 'BillingAddress', 'UserAddress');
 	}
 
 	protected function getDefaultColumns()

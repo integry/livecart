@@ -70,7 +70,6 @@ abstract class ActiveGridController extends StoreManagementController
 
 		foreach ($productArray as &$row)
 		{
-			//print_r($row); exit;
 			$data = array_merge($data, $this->getPreparedRecord($row, $displayedColumns));
 
 			// avoid possible memory leaks due to circular references (http://bugs.php.net/bug.php?id=33595)
@@ -200,9 +199,10 @@ abstract class ActiveGridController extends StoreManagementController
 		return $displayedColumns;
 	}
 
-	public function getAvailableColumns()
+	public function getAvailableColumns($schemaName = null)
 	{
-		$productSchema = ActiveRecordModel::getSchemaInstance($this->getClassName());
+		$schemaName = $schemaName ? $schemaName : $this->getClassName();
+		$productSchema = ActiveRecordModel::getSchemaInstance($schemaName);
 
 		$availableColumns = array();
 		foreach ($productSchema->getFieldList() as $field)
@@ -214,7 +214,7 @@ abstract class ActiveGridController extends StoreManagementController
 				continue;
 			}
 
-			$availableColumns[$this->getClassName() . '.' . $field->getName()] = $type;
+			$availableColumns[$schemaName . '.' . $field->getName()] = $type;
 		}
 
 		$availableColumns = array_merge($availableColumns, $this->getCustomColumns());
@@ -225,9 +225,9 @@ abstract class ActiveGridController extends StoreManagementController
 		}
 
 		// specField columns
-		if ($this->isEav())
+		if ($this->isEav($schemaName))
 		{
-			$fields = EavFieldManager::getClassFieldSet($this->getClassName());
+			$fields = EavFieldManager::getClassFieldSet($schemaName);
 			foreach ($fields as $field)
 			{
 				$fieldArray = $field->toArray();
@@ -443,9 +443,10 @@ abstract class ActiveGridController extends StoreManagementController
 		return true;
 	}
 
-	protected function isEav()
+	protected function isEav($className = null)
 	{
-		return ActiveRecordModel::isEav($this->getClassName());
+		$className = $className ? $className : $this->getClassName();
+		return ActiveRecordModel::isEav($className);
 	}
 }
 

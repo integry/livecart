@@ -49,6 +49,7 @@ _default_user_group=Customers
 _all_users=All users
 _add_group=Add user group
 _delete_group=Remove
+_online_users=Online users
 
 _err_email_empty=Please enter e-mail
 _err_invalid_email=Invalid e-mail
@@ -73,7 +74,22 @@ User.lastName=Last Name
 User.companyName=Company Name
 User.dateCreated=Date Created
 User.isEnabled=Enabled
+isOnline=Online
+User.locale=Prefered language
 UserGroup.name=Group Name
+
+UserAddress.firstName=First name
+UserAddress.lastName=Last name
+UserAddress.companyName=Company name
+UserAddress.address1=Address
+UserAddress.address2=Address 2
+UserAddress.city=City
+UserAddress.stateName=State
+UserAddress.postalCode=Postal code
+UserAddress.countryID=Country
+UserAddress.phone=Phone
+BillingAddress=Billing
+ShippingAddress=Shipping
 
 _no_users=No users found
 _listing_users=Listing users $from - $to of $count

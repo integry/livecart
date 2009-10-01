@@ -90,7 +90,7 @@ class ActiveGrid
 
 			$handle = $this->getFieldHandle($field, self::FILTER_HANDLE);
 
-			if (!is_array($handle) && !is_null($handle))
+			if (!is_array($handle) && !is_null($handle) && !($handle instanceof ARExpressionHandle))
 			{
 				$fieldInst = $this->getFieldInstance($field);
 
@@ -126,7 +126,7 @@ class ActiveGrid
 						$conds[] = new OperatorCond($handle, $value, $operator);
 					}
 				}
-				else if ($fieldInst->getDataType() instanceof ARPeriod)
+				else if ($fieldInst && ($fieldInst->getDataType() instanceof ARPeriod))
 				{
 					list($from, $to) = explode(' | ', $value);
 
@@ -164,6 +164,11 @@ class ActiveGrid
 
 				$conds[] = $cond;
 			}
+
+			else
+			{
+				$having[] = eq(new ARExpressionHandle($field), $value);
+			}
 		}
 
 		// apply IDs to filter
@@ -196,6 +201,11 @@ class ActiveGrid
 		if ($conds)
 		{
 			$filter->setCondition(new AndChainCondition($conds));
+		}
+
+		if (!empty($having))
+		{
+			$filter->setHavingCondition(new AndChainCondition($having));
 		}
 	}
 
@@ -266,6 +276,12 @@ class ActiveGrid
 
 	private function getFieldInstance($field)
 	{
+		// check if expression
+		if (!strpos($field, '.'))
+		{
+			return null;
+		}
+
 		list($schemaName, $fieldName) = explode('.', $field);
 
 		if ('eavField' == $schemaName)
