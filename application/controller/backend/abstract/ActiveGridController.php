@@ -135,6 +135,11 @@ abstract class ActiveGridController extends StoreManagementController
 		{
 			foreach ($displayedColumns as $column => $type)
 			{
+				if (!strpos($column, '.'))
+				{
+					continue;
+				}
+
 				list($class, $field) = explode('.', $column, 2);
 				if ('eavField' == $class)
 				{
@@ -243,6 +248,18 @@ abstract class ActiveGridController extends StoreManagementController
 					);
 			}
 		}
+
+		// sort available columns by placing the default columns first
+		$default = array();
+		foreach ($this->getDefaultColumns() as $column)
+		{
+			if (isset($availableColumns[$column]))
+			{
+				$default[$column] = $availableColumns[$column];
+				unset($availableColumns[$column]);
+			}
+		}
+		$availableColumns = array_merge($default, $availableColumns);
 
 		return $availableColumns;
 	}
