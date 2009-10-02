@@ -14,7 +14,6 @@ abstract class ActiveGridController extends StoreManagementController
 	public function export()
 	{
 		@set_time_limit(0);
-
 		$count = ActiveRecordModel::getRecordCount($this->getClassName(), $this->getListFilter(), $this->getReferencedData());
 		$bufferCnt = ceil($count / self::EXPORT_BUFFER_ROW_COUNT);
 
@@ -26,11 +25,7 @@ abstract class ActiveGridController extends StoreManagementController
 		// header row
 		$columns = $this->getExportColumns();
 		unset($columns['hiddenType']);
-		foreach ($columns as $column => $type)
-		{
-			$header[] = $type['name'];
-		}
-		fputcsv($out, $header);
+		fputcsv($out, $columns);
 
 		// data
 		for ($bufferIndex = 1; $bufferIndex <= $bufferCnt; $bufferIndex++)
@@ -271,7 +266,21 @@ abstract class ActiveGridController extends StoreManagementController
 
 	protected function getExportColumns()
 	{
-		return $this->getDisplayedColumns();
+		$available = $this->getAvailableRequestColumns();
+		$columns = array();
+		foreach ($this->getDisplayedColumns() as $column => $type)
+		{
+			if (isset($available[$column]))
+			{
+				$columns[$column] = $available[$column]['name'];
+			}
+			else
+			{
+				$columns[$column] = $this->translate($column);
+			}
+		}
+
+		return $columns;
 	}
 
 	protected function setGridResponse(ActionResponse $response)

@@ -367,32 +367,44 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	protected function getExportColumns()
 	{
 		$category = Category::getInstanceByID($this->request->get('id'), Category::LOAD_DATA);
-		$columns = $this->getAvailableColumns($category);
+		$columns = array();
+		$available = $this->getAvailableColumns($category);
+		foreach ($this->getDisplayedColumns($category) as $column => $data)
+		{
+			if (isset($available[$column]))
+			{
+				$columns[$column] = $available[$column]['name'];
+			}
+			else
+			{
+				$columns[$column] = $this->translate($column);
+			}
+		}
 
 		// prices
 		foreach ($this->application->getCurrencyArray(false) as $currency)
 		{
-			$columns['definedPrices.' . $currency] = array('name' => $this->translate('ProductPrice.price') . ' (' . $currency . ')' , 'type' => 'numeric');
+			$columns['definedPrices.' . $currency] = $this->translate('ProductPrice.price') . ' (' . $currency . ')';
 		}
 
 		// list prices
 		foreach ($this->application->getCurrencyArray(true) as $currency)
 		{
-			$columns['definedListPrices.' . $currency] = array('name' => $this->translate('ProductPrice.listPrice') . ' (' . $currency . ')' , 'type' => 'numeric');
+			$columns['definedListPrices.' . $currency] = $this->translate('ProductPrice.listPrice') . ' (' . $currency . ')';
 		}
 
 		// child products
-		$columns['Product.parentID'] = array('name' => $this->translate('Product.parentID'), 'type' => 'numeric');
-		$columns['Parent.sku'] = array('name' => $this->translate('Parent.sku'), 'type' => 'string');
+		$columns['Product.parentID'] = $this->translate('Product.parentID');
+		$columns['Parent.sku'] = $this->translate('Parent.sku');
 		for ($k = 0; $k <= 4; $k++)
 		{
-			$columns['variationTypes.' . $k . '.name'] = array('name' => $this->translate('ProductVariationType.name') . ' (' . ($k + 1) . ')', 'type' => 'string');
+			$columns['variationTypes.' . $k . '.name'] = $this->translate('ProductVariationType.name') . ' (' . ($k + 1) . ')';
 		}
 
 		// group prices
 		foreach ($this->getUserGroups() as $groupID => $groupName)
 		{
-			$columns['GroupPrice.' . $groupID] = array('name' => $this->translate('ProductPrice.GroupPrice') . ' (' . $groupName . ') [' . $groupID . ']', 'type' => 'numeric');
+			$columns['GroupPrice.' . $groupID] = $this->translate('ProductPrice.GroupPrice') . ' (' . $groupName . ') [' . $groupID . ']';
 		}
 
 		return $columns;
