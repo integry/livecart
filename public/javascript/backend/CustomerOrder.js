@@ -308,7 +308,7 @@ Backend.CustomerOrder.GridFormatter =
 	{
 		if ('CustomerOrder.invoiceNumber' == field && Backend.CustomerOrder.prototype.ordersMiscPermission)
 		{
-			var displayedID = value;
+			var displayedID = value ? value : id;
 
 			value =
 			'<span>' +
@@ -320,7 +320,7 @@ Backend.CustomerOrder.GridFormatter =
 		}
 		else if ('CustomerOrder.invoiceNumber' == field && Backend.CustomerOrder.prototype.ordersMiscPermission)
 		{
-			value = id;
+			value = value ? value : id;
 		}
 		else if('User.ID' == field)
 		{
@@ -454,7 +454,7 @@ Backend.CustomerOrder.Editor.prototype =
 		this.hideShipped = hideShipped;
 		this.isCancelled = isCancelled;
 		this.isFinalized = isFinalized;
-		this.invoiceNumber = invoiceNumber;
+		this.invoiceNumber = invoiceNumber ? invoiceNumber : '(' + id + ')';
 
 		this.findUsedNodes();
 		this.bindEvents();

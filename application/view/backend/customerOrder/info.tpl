@@ -10,7 +10,7 @@
 
 	<p>
 		<label>{t _order_id}</label>
-		<label>{$order.invoiceNumber}</label>
+		<label>{$order.invoiceNumber|default:$order.ID}</label>
 	</p>
 
 	{if $order.User}
