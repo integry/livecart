@@ -110,6 +110,7 @@ _set_processing=Processing
 _set_awaiting_shipment=Awaiting shipment
 _set_shipped=Shipped
 _set_returned=Returned
+_mark_completed=Mark as completed order
 _process=Save
 
 # Order summary

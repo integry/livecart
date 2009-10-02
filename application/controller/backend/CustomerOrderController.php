@@ -486,6 +486,11 @@ class CustomerOrderController extends ActiveGridController
 		return $filter;
 	}
 
+	protected function setDefaultSortOrder(ARSelectFilter $filter)
+	{
+		$filter->setOrder(new ARFieldHandle($this->getClassName(), 'dateCompleted'), 'DESC');
+	}
+
 	public function processDataArray($orders, $displayedColumns)
 	{
 		$orders = parent::processDataArray($orders, $displayedColumns);

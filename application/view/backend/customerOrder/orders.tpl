@@ -51,7 +51,10 @@
 
 		{t _with_selected}:
 		<select name="act" class="select">
-			{if $orderGroupID != 9}
+			{if $orderGroupID == 8}
+				<option value="setFinalized">{t _mark_completed}</option>
+			{/if}
+			{if $orderGroupID < 8}
 				<optgroup label="{t _order_status}" class="massStatus">
 					<option value="setNew">{t _set_new}</option>
 					<option value="setProcessing">{t _set_processing}</option>
@@ -61,7 +64,7 @@
 				</optgroup>
 				<option value="setCancel" class="massCancel">{t _cancel}</option>
 			{/if}
-			<option value="delete" class="delete" {if $orderGroupID == 8}selected="selected"{/if}>{t _delete}</option>
+			<option value="delete" class="delete">{t _delete}</option>
 		</select>
 
 		<span class="bulkValues" style="display: none;">
