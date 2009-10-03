@@ -194,9 +194,8 @@ abstract class ActiveGridController extends StoreManagementController
 		return $displayedColumns;
 	}
 
-	public function getAvailableColumns($schemaName = null)
+	public static function getSchemaColumns($schemaName, LiveCart $application, $customColumns = array())
 	{
-		$schemaName = $schemaName ? $schemaName : $this->getClassName();
 		$productSchema = ActiveRecordModel::getSchemaInstance($schemaName);
 
 		$availableColumns = array();
@@ -212,15 +211,15 @@ abstract class ActiveGridController extends StoreManagementController
 			$availableColumns[$schemaName . '.' . $field->getName()] = $type;
 		}
 
-		$availableColumns = array_merge($availableColumns, $this->getCustomColumns());
+		$availableColumns = array_merge($availableColumns, $customColumns);
 
 		foreach ($availableColumns as $column => $type)
 		{
-			$availableColumns[$column] = array('name' => $this->translate($column), 'type' => $type);
+			$availableColumns[$column] = array('name' => $application->translate($column), 'type' => $type);
 		}
 
 		// specField columns
-		if ($this->isEav($schemaName))
+		if (self::isEav($schemaName))
 		{
 			$fields = EavFieldManager::getClassFieldSet($schemaName);
 			foreach ($fields as $field)
@@ -244,6 +243,15 @@ abstract class ActiveGridController extends StoreManagementController
 			}
 		}
 
+		return $availableColumns;
+	}
+
+	public function getAvailableColumns($schemaName = null)
+	{
+		$schemaName = $schemaName ? $schemaName : $this->getClassName();
+
+		$availableColumns = self::getSchemaColumns($schemaName, $this->application, $this->getCustomColumns());
+
 		// sort available columns by placing the default columns first
 		$default = array();
 		foreach ($this->getDefaultColumns() as $column)
@@ -254,6 +262,7 @@ abstract class ActiveGridController extends StoreManagementController
 				unset($availableColumns[$column]);
 			}
 		}
+
 		$availableColumns = array_merge($default, $availableColumns);
 
 		return $availableColumns;

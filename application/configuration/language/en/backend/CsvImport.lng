@@ -14,10 +14,12 @@ UserImport=Users
 NewsletterSubscriberImport=Newsletter subscribers
 ManufacturerImport=Manufacturers
 SiteNewsImport=News posts
+ProductReviewImport=Product reviews
 CurrencyImport=Currencies
 ShippingClassImport=Shipping Classes
 TaxImport=Taxes
 DeliveryZoneImport=Delivery Zones
+UserAddressImport=User Addresses
 
 # Start
 _upload_file=Upload file
@@ -57,6 +59,7 @@ _additional_image_location=Additional image file path or URL [_1]
 Product.parentSKU=Parent product SKU
 _import=Import
 _continue=Continue
+eavField=Attributes
 
 _currency=Currency
 _group=User group
@@ -81,3 +84,15 @@ _import_cancelled=The import has been reverted sucessfully
 _import_cancel_failed=Could not cancel import procedure
 
 _timeout_error=Server timeout detected. Restarting import in non-transactional mode (cannot be reverted).
+
+# User import
+User=User data
+UserGroup=User group
+ShippingAddress=Shipping Address
+BillingAddress=Billing Address
+UserAddress=Address
+AddressUser=Identification
+AddressUser.ID=User ID
+AddressUser.email=User e-mail address
+AddressUser.isDefault=Is default address (Y/N)
+AddressUser.isShipping=Is shipping address (Y/N)

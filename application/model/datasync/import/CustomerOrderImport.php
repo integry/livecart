@@ -4,6 +4,11 @@ ClassLoader::import('application.model.datasync.DataImport');
 ClassLoader::import('application.model.order.CustomerOrder');
 ClassLoader::import('application.model.product.Product');
 
+/**
+ *
+ *  @package application.model.datasync.import
+ *  @author Integry Systems
+ */
 class CustomerOrderImport extends DataImport
 {
 	public function getFields()
@@ -33,80 +38,52 @@ class CustomerOrderImport extends DataImport
 		return false;
 	}
 
-	public function importInstance($record, CsvImportProfile $profile)
+	protected function getInstance($record, CsvImportProfile $profile)
 	{
-		$impReq = new Request();
-		$defLang = $this->application->getDefaultLanguageCode();
-		$references = array('DefaultImage' => 'ProductImage', 'Manufacturer');
 		$fields = $profile->getSortedFields();
-
 		if (isset($fields['CustomerOrder']['ID']))
 		{
 			$id = $record[$fields['CustomerOrder']['ID']];
-			$instance = CustomerOrder::getInstanceByID($id, true);
+			$this->setLastImportedRecordName($id);
+			return CustomerOrder::getInstanceByID($id, true);
 		}
 		else
 		{
-			die('wat');
-			return;
+			return null;
 		}
+	}
 
-		foreach ($profile->getFields() as $csvIndex => $field)
+	public function set_status($instance, $value)
+	{
+		if (!is_numeric($value))
 		{
-			$column = $field['name'];
-			$params = $field['params'];
-
-			if (!isset($record[$csvIndex]) || empty($column))
+			switch (strtolower($value))
 			{
-				continue;
-			}
-
-			$value = $record[$csvIndex];
-
-			list($className, $field) = explode('.', $column, 2);
-
-			if ('status' == $field)
-			{
-				if (!is_numeric($value))
-				{
-					switch (strtolower($value))
-					{
-						case 'new':
-							$value = CustomerOrder::STATUS_NEW;
-							break;
-						case 'processing':
-							$value = CustomerOrder::STATUS_PROCESSING;
-							break;
-						case 'awaiting':
-						case 'awaiting shipment':
-							$value = CustomerOrder::STATUS_AWAITING;
-							break;
-						case 'shipped':
-							$value = CustomerOrder::STATUS_SHIPPED;
-							break;
-						case 'returned':
-							$value = CustomerOrder::STATUS_RETURNED;
-							break;
-						default:
-							$value = null;
-					}
-				}
-
-				if (strlen($value))
-				{
-					$instance->setStatus($value);
-				}
+				case 'new':
+					$value = CustomerOrder::STATUS_NEW;
+					break;
+				case 'processing':
+					$value = CustomerOrder::STATUS_PROCESSING;
+					break;
+				case 'awaiting':
+				case 'awaiting shipment':
+					$value = CustomerOrder::STATUS_AWAITING;
+					break;
+				case 'shipped':
+					$value = CustomerOrder::STATUS_SHIPPED;
+					break;
+				case 'returned':
+					$value = CustomerOrder::STATUS_RETURNED;
+					break;
+				default:
+					$value = null;
 			}
 		}
 
-		$instance->save();
-
-		$instance->__destruct();
-		$instance->destruct(true);
-
-		ActiveRecord::clearPool();
-
-		return true;
+		if (strlen($value))
+		{
+			$instance->setStatus($value);
+		}
 	}
 }
 

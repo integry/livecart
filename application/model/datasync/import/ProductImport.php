@@ -5,6 +5,12 @@ ClassLoader::import('application.model.datasync.DataImport');
 ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.product.Product');
 
+/**
+ *  Handles product import logic
+ *
+ *  @package application.model.datasync.import
+ *  @author Integry Systems
+ */
 class ProductImport extends DataImport
 {
 	public function getFields()
@@ -103,6 +109,11 @@ class ProductImport extends DataImport
 											)
 											);
 		}
+	}
+
+	protected function getInstance($record, CsvImportProfile $profile)
+	{
+		return false;
 	}
 
 	public function importInstance($record, CsvImportProfile $profile)
@@ -264,82 +275,10 @@ class ProductImport extends DataImport
 				}
 			}
 
-			// attributes
-			if (isset($fields['specField']))
-			{
-				foreach ($fields['specField'] as $specFieldID => $csvIndex)
-				{
-					if (empty($record[$csvIndex]))
-					{
-						continue;
-					}
-
-					$attr = SpecField::getInstanceByID($specFieldID, SpecField::LOAD_DATA);
-					if ($attr->isSimpleNumbers())
-					{
-						$impReq->set($attr->getFormFieldName(), (float)$record[$csvIndex]);
-					}
-					else if ($attr->isSelector())
-					{
-						if ($attr->isMultiValue->get())
-						{
-							$values = explode(',', $record[$csvIndex]);
-						}
-						else
-						{
-							$values = array($record[$csvIndex]);
-						}
-
-						foreach ($values as $fieldValue)
-						{
-							$fieldValue = trim($fieldValue);
-
-							$f = new ARSelectFilter(
-									new EqualsCond(
-										SpecFieldValue::getLangSearchHandle(
-											new ARFieldHandle('SpecFieldValue', 'value'),
-											$this->application->getDefaultLanguageCode()
-										),
-										$fieldValue
-									)
-								);
-							$f->setLimit(1);
-
-							if (!$value = $attr->getRelatedRecordSet('SpecFieldValue', $f)->shift())
-							{
-								$value = SpecFieldValue::getNewInstance($attr);
-
-								if ($attr->type->get() == SpecField::TYPE_NUMBERS_SELECTOR)
-								{
-									$value->value->set($fieldValue);
-								}
-								else
-								{
-									$value->setValueByLang('value', $this->application->getDefaultLanguageCode(), $fieldValue);
-								}
-
-								$value->save();
-							}
-
-							if (!$attr->isMultiValue->get())
-							{
-								$impReq->set($attr->getFormFieldName(), $value->getID());
-							}
-							else
-							{
-								$impReq->set($value->getFormFieldName(), true);
-							}
-						}
-					}
-					else
-					{
-						$impReq->set($attr->getFormFieldName(), $record[$csvIndex]);
-					}
-				}
-			}
-
 			$product->loadRequestData($impReq);
 			$product->save();
+
+			$this->importAttributes($product, $record, $fields, 'specField');
 
 			$this->setLastImportedRecordName($product->getValueByLang('name'));
 

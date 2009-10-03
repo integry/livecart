@@ -54,6 +54,24 @@ class CsvImportProfile
 		return $this->fields;
 	}
 
+	public function getColumnIndex($name)
+	{
+		foreach ($this->fields as $index => $field)
+		{
+			if ($name == $field['name'])
+			{
+				return $index;
+			}
+		}
+
+		return null;
+	}
+
+	public function isColumnSet($name)
+	{
+		return !is_null($this->getColumnIndex($name));
+	}
+
 	public function getSortedFields()
 	{
 		$fields = array();
@@ -119,6 +137,22 @@ class CsvImportProfile
 	public function getCsvFile($filePath)
 	{
 		return new CsvFile($filePath, $this->getParam('delimiter', ';'));
+	}
+
+	public function extractSection($section)
+	{
+		$profile = new CsvImportProfile($section);
+		$sorted = $this->getSortedFields();
+		if (isset($sorted[$section]))
+		{
+			foreach ($sorted[$section] as $column => $key)
+			{
+				$field = $this->fields[$key];
+				$profile->setField($key, $field['name'], $field['params']);
+			}
+		}
+
+		return $profile;
 	}
 
 	public function toArray()

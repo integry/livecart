@@ -1,5 +1,7 @@
 <?php
 
+ClassLoader::import('application.controller.backend.abstract.ActiveGridController');
+
 abstract class DataImport
 {
 	protected $application;
@@ -7,13 +9,78 @@ abstract class DataImport
 	private $lastImportName;
 	private $flushMessage;
 
-	public function __construct(LiveCart $application)
+	public final function __construct(LiveCart $application)
 	{
 		$this->application = $application;
 	}
 
 	abstract public function getFields();
-	abstract public function importInstance($record, CsvImportProfile $profile);
+	abstract protected function getInstance($record, CsvImportProfile $profile);
+
+	public function importInstance($record, CsvImportProfile $profile, $instance = null)
+	{
+		$instance = is_null($instance) ? $this->getInstance($record, $profile) : $instance;
+		if (is_null($instance))
+		{
+			return;
+		}
+
+		foreach ($profile->getFields() as $csvIndex => $field)
+		{
+			$column = $field['name'];
+			$params = $field['params'];
+
+			if (!isset($record[$csvIndex]) || empty($column))
+			{
+				continue;
+			}
+
+			$value = $record[$csvIndex];
+
+			list($className, $field) = explode('.', $column, 2);
+			if (method_exists($this, 'set_' . $field))
+			{
+				$method = 'set_' . $field;
+				$this->$method($instance, $value);
+			}
+			else if (isset($instance->$field) && ($instance->$field instanceof ARValueMapper))
+			{
+				$instance->$field->set($value);
+			}
+		}
+
+		$instance->save();
+
+		$this->importAttributes($instance, $record, $profile->getSortedFields());
+
+		foreach ($this->getReferencedData() as $section)
+		{
+			$method = 'import_' . $section;
+			if (method_exists($this, $method))
+			{
+				$this->$method($instance, $record, $profile->extractSection($section));
+			}
+		}
+
+		$this->afterSave($instance, $record);
+
+		$id = $instance->getID();
+
+		$instance->__destruct();
+		$instance->destruct(true);
+
+		ActiveRecord::clearPool();
+
+		return $id;
+	}
+
+	public function importRelatedRecord($type, ActiveRecordModel $instance, $record, CsvImportProfile $profile)
+	{
+		$class = $type . 'Import';
+		$this->application->loadPluginClass('application.model.datasync', $class);
+		$import = new $class($this->application);
+		return $import->importInstance($record, $profile, $instance);
+	}
 
 	public function isRootCategory()
 	{
@@ -40,9 +107,14 @@ abstract class DataImport
 
 	}
 
-	public function afterSave(ActiveRecordModel $instance, $record)
+	protected function afterSave(ActiveRecordModel $instance, $record)
 	{
 
+	}
+
+	protected function getReferencedData()
+	{
+		return array();
 	}
 
 	public function importFile(CsvFile $file, CsvImportProfile $profile)
@@ -63,13 +135,13 @@ abstract class DataImport
 	{
 		$processed = null;
 
-		do
+		while ($file->valid())
 		{
-			$file->next();
 			$record = $file->current();
 
 			if (!is_array($record))
 			{
+				$file->next();
 				continue;
 			}
 
@@ -84,6 +156,8 @@ abstract class DataImport
 
 			$status = $this->importInstance($record, $profile);
 
+			$file->next();
+
 			if ($this->flushMessage)
 			{
 				echo $this->flushMessage;
@@ -95,7 +169,6 @@ abstract class DataImport
 				break;
 			}
 		}
-		while ($file->valid());
 
 		return $processed;
 	}
@@ -118,6 +191,104 @@ abstract class DataImport
 
 			return;
 		}
+	}
+
+	protected function importAttributes(ActiveRecordModel $instance, $record, $fields, $attrIdentifier = 'eavField')
+	{
+		if (isset($fields[$attrIdentifier]))
+		{
+			$impReq = new Request();
+			$fieldClass = ucfirst($attrIdentifier);
+			$valueClass = $fieldClass . 'Value';
+
+			foreach ($fields[$attrIdentifier] as $specFieldID => $csvIndex)
+			{
+				if (empty($record[$csvIndex]))
+				{
+					continue;
+				}
+
+				$attr = ActiveRecordModel::getInstanceByID($fieldClass, $specFieldID, ActiveRecord::LOAD_DATA);
+				if ($attr->isSimpleNumbers())
+				{
+					$impReq->set($attr->getFormFieldName(), (float)$record[$csvIndex]);
+				}
+				else if ($attr->isSelector())
+				{
+					if ($attr->isMultiValue->get())
+					{
+						$values = explode(',', $record[$csvIndex]);
+					}
+					else
+					{
+						$values = array($record[$csvIndex]);
+					}
+
+					foreach ($values as $fieldValue)
+					{
+						$fieldValue = trim($fieldValue);
+
+						$f = new ARSelectFilter(
+								new EqualsCond(
+									MultilingualObject::getLangSearchHandle(
+										new ARFieldHandle($valueClass, 'value'),
+										$this->application->getDefaultLanguageCode()
+									),
+									$fieldValue
+								)
+							);
+						$f->setLimit(1);
+
+						if (!$value = $attr->getRelatedRecordSet($valueClass, $f)->shift())
+						{
+							$value = call_user_func(array($valueClass, 'getNewInstance'), array($attr));
+
+							if ($attr->type->get() == EavFieldCommon::TYPE_NUMBERS_SELECTOR)
+							{
+								$value->value->set($fieldValue);
+							}
+							else
+							{
+								$value->setValueByLang('value', $this->application->getDefaultLanguageCode(), $fieldValue);
+							}
+
+							$value->save();
+						}
+
+						if (!$attr->isMultiValue->get())
+						{
+							$impReq->set($attr->getFormFieldName(), $value->getID());
+						}
+						else
+						{
+							$impReq->set($value->getFormFieldName(), true);
+						}
+					}
+				}
+				else
+				{
+					$impReq->set($attr->getFormFieldName(), $record[$csvIndex]);
+				}
+			}
+
+			$instance->loadRequestData($impReq);
+			$instance->save();
+		}
+	}
+
+	public function getGroupedFields($fields)
+	{
+		$groupedFields = array();
+		foreach ($fields as $field => $fieldName)
+		{
+			if (strpos($field, '.'))
+			{
+				list($class, $field) = explode('.', $field, 2);
+				$groupedFields[$class][$class . '.' . $field] = $fieldName;
+			}
+		}
+
+		return $groupedFields;
 	}
 
 	public function skipHeader(CsvFile $file)
@@ -154,6 +325,11 @@ abstract class DataImport
 	protected function loadLanguageFile($file)
 	{
 		$this->application->loadLanguageFile($file);
+	}
+
+	protected function evalBool($value)
+	{
+		return !(!$value || in_array(strtolower($value), array('no', 'n', 'false', '0')));
 	}
 
 	protected function isValidUTF8($str)

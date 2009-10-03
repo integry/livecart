@@ -258,7 +258,7 @@ class CsvImportController extends StoreManagementController
 		$processed = 0;
 		if ($this->request->get('continue'))
 		{
-			$import->setImportPosition($this->getCacheProgress() + 1);
+			$import->setImportPosition($csv, $this->getCacheProgress() + 1);
 		}
 		else
 		{
