@@ -184,7 +184,7 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 	/**
 	 *	Tax amount for one product
 	 */
-	public function getPriceTax($price = null)
+	private function getPriceTax($price = null)
 	{
 		if (is_null($price))
 		{
@@ -203,7 +203,17 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 
 	public function getTaxRates()
 	{
-		return $this->customerOrder->get()->getDeliveryZone()->getTaxRates();
+		$class = $this->getProduct()->getParent()->taxClass->get();
+		$rates = array();
+		foreach ($this->customerOrder->get()->getDeliveryZone()->getTaxRates() as $rate)
+		{
+			if ($rate->taxClass->get() === $class)
+			{
+				$rates[] = $rate;
+			}
+		}
+
+		return $rates;
 	}
 
 	public function getDisplayPrice(Currency $currency)
@@ -227,11 +237,15 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 		return $price;
 	}
 
-	public function reduceBaseTaxes($price)
+	private function reduceBaseTaxes($price)
 	{
+		$class = $this->getProduct()->getParent()->taxClass->get();
 		foreach (DeliveryZone::getDefaultZoneInstance()->getTaxRates() as $rate)
 		{
-			$price = $price / (1 + ($rate->rate->get() / 100));
+			if ($rate->taxClass->get() === $class)
+			{
+				$price = $price / (1 + ($rate->rate->get() / 100));
+			}
 		}
 
 		return $price;
@@ -608,23 +622,21 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 	{
 		$array = parent::toArray();
 		$array['priceCurrencyID'] = $this->getCurrency()->getID();
+		$isTaxIncludedInPrice = $this->customerOrder->get()->getDeliveryZone()->isDefault();
 
 		if (isset($array['price']))
 		{
 			$currency = $this->getCurrency();
 
-			//$array['itemBasePrice'] = $this->getPrice();
 			$array['itemBasePrice'] = $array['price'];
-			$array['itemSubTotal'] = $this->getSubTotal(false);
 			$array['displayPrice'] = $this->getDisplayPrice($currency);
-			$array['displaySubTotal'] = $this->getSubTotal(true);
-			$array['itemPrice'] = $array['itemSubTotal'] / $array['count'];
+			$array['displaySubTotal'] = $this->getSubTotal($isTaxIncludedInPrice);
+			$array['itemPrice'] = $array['displaySubTotal'] / $array['count'];
 
 			$array['formattedBasePrice'] = $currency->getFormattedPrice($array['price']);
 			$array['formattedPrice'] = $currency->getFormattedPrice($array['itemPrice']);
 			$array['formattedDisplayPrice'] = $currency->getFormattedPrice($array['displayPrice']);
 			$array['formattedDisplaySubTotal'] = $currency->getFormattedPrice($array['displaySubTotal']);
-			$array['formattedSubTotal'] = $currency->getFormattedPrice($array['itemSubTotal']);
 		}
 
 		$array['options'] = array();
@@ -647,6 +659,7 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 		return $array;
 	}
 
+/*
 	public static function transformArray($array, ARSchema $schema)
 	{
 		$array = parent::transformArray($array, $schema);
@@ -655,7 +668,7 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 
 		return $array;
 	}
-
+*/
 	/*####################  Get related objects ####################*/
 
 	/**

@@ -285,7 +285,9 @@ _shipping=Delivery Settings
 
 _delivery_tax_calculation=Tax Calculation For Shipping Costs
 DELIVERY_TAX=Delivery zone tax settings to use for calculating shipping cost taxes
+DELIVERY_TAX_CLASS=Tax class for shipping costs
 _tax_target_zone=Order target delivery zone
+_base_tax_rate=Use base tax rate
 _default_zone=Default zone
 
 _store_loc_add=Store Location Address

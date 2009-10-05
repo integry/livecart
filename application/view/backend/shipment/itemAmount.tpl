@@ -83,7 +83,7 @@
 		<td class="orderShipmentsItem_info_total_td ">
 			<div class="orderShipmentsItem_info_total item_subtotal">
 				<span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
-				<span class="price">{$item.itemSubTotal|string_format:"%.2f"}</span>
+				<span class="price">{$item.displaySubTotal|string_format:"%.2f"}</span>
 				<span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
 			</div>
 		</td>

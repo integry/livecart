@@ -295,7 +295,7 @@ class DeliveryZone extends MultilingualObject
 		foreach ($defined as $rate)
 		{
 			$zone = $shipment->getShippingTaxZone();
-			$amount = !$zone->isDefault() ? $shipment->applyTaxesToAmount($rate->getCostAmount(), ShipmentTax::TYPE_SHIPPING) : $rate->getCostAmount();
+			$amount = !$zone->isDefault() ? $shipment->applyTaxesToShippingAmount($rate->getCostAmount()) : $rate->getCostAmount();
 			$rate->setAmountWithTax($amount);
 		}
 

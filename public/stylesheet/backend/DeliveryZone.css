@@ -63,22 +63,6 @@ fieldset.checkbox .progressIndicator
     color: red;
 }
 
-.addNewTaxRate
-{
-    background-image: url(../../image/silk/add.png);
-}
-
-.taxRate_taxRatesList .activeList_editContainer
-{
-     padding: 10px;
-}
-
-.taxRate_taxIDFieldset
-{
-    border: 0 none;
-    padding: 10px 0;
-}
-
 .countriesAndStates_regionsAndUnions
 {
     width: 20em;
@@ -205,4 +189,26 @@ li.testAdress a
 #zoneLookupResult span
 {
 	font-weight: bold;
+}
+
+.taxName
+{
+	padding-right: 20px;
+	font-weight: bold;
+}
+
+.taxes input
+{
+	width: 2em;
+}
+
+.taxClassName,
+.classes input
+{
+	font-size: smaller;
+}
+
+.classes.last td
+{
+	border-bottom: 1px solid #ccc;
 }

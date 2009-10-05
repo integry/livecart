@@ -20,9 +20,6 @@
 {/foreach}
 </ul>
 
-
-
-
 {literal}
 <script type="text/javascript">
 	Event.observe($("tax_new_show"), "click", function(e)

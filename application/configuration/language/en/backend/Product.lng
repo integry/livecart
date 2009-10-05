@@ -110,6 +110,7 @@ _generate_sku=Generate SKU automatically
 _short_description=Short description
 _long_description=Long description
 _shippingClass=Shipping class
+_taxClass=Tax class
 _product_type=Product type
 _website_address=Website address
 _manufacturer=Manufacturer

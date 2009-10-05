@@ -208,8 +208,8 @@ class ShipmentTaxTest extends OrderTestCommon
 
 		$this->assertEquals($this->order->shipments->get(0)->shippingAmount->get(), 16.95);
 
-		$expectedTotal = round(round(50 * 1.05, 2) * 1.075, 2) + round(round(16.95 * 1.05, 2) * 1.075, 2);
-		$this->assertEquals($this->order->getTotal(), $expectedTotal);
+		$expectedTotal = round(50 * 1.05 * 1.075, 2) + round(16.95 * 1.05 * 1.075, 2);
+		$this->assertEquals($this->order->getTotal(true), $expectedTotal);
 
 		// sum taxes with base prices
 		$orderArray = $this->order->toArray();
@@ -275,7 +275,7 @@ class ShipmentTaxTest extends OrderTestCommon
 
 		$this->order->finalize($this->usd);
 		$this->assertSame($this->order->getDeliveryZone(), $zone);
-		$this->assertEquals($this->order->getTotal(), 71.64);
+		$this->assertEquals($this->order->getTotal(), 71.63);
 	}
 
 	public function testQuebecToUSATaxes()
@@ -328,7 +328,7 @@ class ShipmentTaxTest extends OrderTestCommon
 
 		$this->order->finalize($this->usd);
 		$this->assertSame($this->order->getDeliveryZone(), $zone);
-		$this->assertEquals($this->order->getTotal(), 69.14);
+		$this->assertEquals($this->order->getTotal(), 69.13);
 	}
 
 	public function testDefaultZoneShipping()
@@ -361,7 +361,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->save();
 
 		$this->order->finalize($this->usd);
-		$this->assertEquals($this->order->getSubTotal(), round(100 / 1.19, 2));
+		$this->assertEquals(round($this->order->getSubTotal(), 2), round(100 / 1.19, 2));
 		$this->assertEquals($this->order->getShipments()->get(0)->getTotal(), 100 + 100);
 		$this->assertEquals($this->order->getTotal(), 100 + 100);
 	}

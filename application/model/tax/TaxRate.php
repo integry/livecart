@@ -1,7 +1,8 @@
 <?php
 
-ClassLoader::import("application.model.delivery.*");
-ClassLoader::import("application.model.tax.*");
+ClassLoader::import("application.model.delivery.DeliveryZone");
+ClassLoader::import("application.model.tax.Tax");
+ClassLoader::import("application.model.tax.TaxClass");
 
 /**
  * Defines a tax rate for a DeliveryZone. Tax rates are applied to order totals and shipping charges as well.
@@ -19,8 +20,10 @@ class TaxRate extends MultilingualObject
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("deliveryZoneID", "DeliveryZone", "ID", "DeliveryZone", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("taxID", "Tax", "ID", "Tax", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("taxClassID", "TaxClass", "ID", "TaxClass", ARInteger::instance()));
 
 		$schema->registerField(new ARField("rate", ARFloat::instance()));
+		$schema->registerAutoReference('taxClassID');
 	}
 
 	/**
@@ -111,6 +114,17 @@ class TaxRate extends MultilingualObject
 	public function getTaxAmount($amount)
 	{
 		return $amount * ($this->rate->get() / 100);
+	}
+
+	public function getPosition()
+	{
+		$position = $this->tax->get()->position->get() * 10000;
+		if ($class = $this->taxClass->get())
+		{
+			$position += $class->position->get() + 1;
+		}
+
+		return $position;
 	}
 
 	protected function insert()

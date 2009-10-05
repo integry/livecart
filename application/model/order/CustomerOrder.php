@@ -947,7 +947,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			}
 		}
 
-		$subTotal = $this->getCurrency()->round($subTotal);
+		//$subTotal = $this->getCurrency()->round($subTotal);
 
 		return $subTotal;
 	}
@@ -1517,9 +1517,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			if ($amount > 0)
 			{
 				$taxAmount[$id] += $amount;
-				$array['taxes'][$id][$taxId] = Tax::getInstanceById($taxId)->toArray();
-				$array['taxes'][$id][$taxId]['amount'] = $amount;
-				$array['taxes'][$id][$taxId]['formattedAmount'] = $currency->getFormattedPrice($amount);
+
+				$tax = Tax::getInstanceById($taxId)->toArray();
+				$tax['amount'] = $amount;
+				$tax['formattedAmount'] = $currency->getFormattedPrice($amount);
+				$array['taxes'][$id][] = $tax;
 			}
 		}
 
