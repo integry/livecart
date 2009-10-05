@@ -307,8 +307,8 @@ class Shipment extends ActiveRecordModel
 			$subTotal += $taxes;
 		}
 
-		//return $subTotal;
-		return $this->getCurrency()->round($subTotal);
+		return $subTotal;
+		//return $this->getCurrency()->round($subTotal);
 	}
 
 	public function getSubTotalBeforeTax()
@@ -407,13 +407,13 @@ class Shipment extends ActiveRecordModel
 		}
 	}
 
-	public function applyTaxesToAmount($amount, $type = ShipmentTax::TYPE_SUBTOTAL)
+	public function applyTaxesToShippingAmount($amount)
 	{
 		$taxAmount = 0;
 
 		foreach ($this->getTaxes() as $tax)
 		{
-			if ($tax->type->get() == $type)
+			if ($tax->type->get() == ShipmentTax::TYPE_SHIPPING)
 			{
 				if ($tax->taxRate->get())
 				{
@@ -429,11 +429,11 @@ class Shipment extends ActiveRecordModel
 		return $amount + $taxAmount;
 	}
 
-	public function reduceTaxesFromAmount($amount, $type = ShipmentTax::TYPE_SUBTOTAL)
+	public function reduceTaxesFromShippingAmount($amount)
 	{
 		foreach ($this->getTaxes() as $tax)
 		{
-			if ($tax->type->get() == $type)
+			if ($tax->type->get() == ShipmentTax::TYPE_SHIPPING)
 			{
 				$amount  = $amount / (1 + ($tax->taxRate->get()->rate->get() / 100));
 			}
@@ -461,14 +461,54 @@ class Shipment extends ActiveRecordModel
 				$this->taxes = null;
 			}
 
-			$taxes = 0;
+			$roundedTaxAmount = $taxes = array(ShipmentTax::TYPE_SUBTOTAL => 0, ShipmentTax::TYPE_SHIPPING => 0);
 			foreach ($this->getTaxes() as $tax)
 			{
 				$tax->recalculateAmount(false);
-				$taxes += $tax->getAmount();
+				$amount = $tax->getAmount();
+				$taxes[$tax->type->get()] += $amount;
+				$roundedTaxAmount[$tax->type->get()] += $currency->round($amount);
 			}
 
-			$this->taxAmount->set($currency->round($taxes));
+			// correct rounding sum errors (offsets by 0.01, etc)
+			foreach ($taxes as $type => $taxAmount)
+			{
+				foreach ($this->getTaxes() as $tax)
+				{
+					if ($tax->type->get() != $type)
+					{
+						continue;
+					}
+
+					$diff = $roundedTaxAmount[$type] - $currency->round($taxes[$type]);
+					if (!$diff || (abs($diff) < 0.01))
+					{
+						break;
+					}
+
+					$amount = $tax->getAmount();
+					if ($diff > 0)
+					{
+						$tax->amount->set(floor($amount * 100) / 100);
+						$roundedTaxAmount[$type] -= 0.01;
+					}
+					else
+					{
+						$tax->amount->set(ceil($amount * 100) / 100);
+						$roundedTaxAmount[$type] += 0.01;
+					}
+				}
+			}
+
+			// round individual tax amounts
+			$totalTaxes = 0;
+			foreach ($this->getTaxes() as $tax)
+			{
+				$tax->amount->set($currency->round($tax->getAmount()));
+				$totalTaxes += $tax->getAmount();
+			}
+
+			$this->taxAmount->set($totalTaxes);
 		}
 
 		// shipping rate
@@ -478,7 +518,7 @@ class Shipment extends ActiveRecordModel
 
 			if ($this->getDeliveryZone()->isDefault())
 			{
-				$amount = $this->reduceTaxesFromAmount($amount, ShipmentTax::TYPE_SHIPPING);
+				$amount = $this->reduceTaxesFromShippingAmount($amount);
 			}
 
 			$this->shippingAmount->set($calculateTax ? $currency->round($amount) : $amount);
@@ -673,7 +713,7 @@ class Shipment extends ActiveRecordModel
 		// selected shipping rate
 		if ($selected = $this->getSelectedRate())
 		{
-			$array['selectedRate'] = $selected->toArray($this->applyTaxesToAmount($selected->getCostAmount(), ShipmentTax::TYPE_SHIPPING));
+			$array['selectedRate'] = $selected->toArray($this->applyTaxesToShippingAmount($selected->getCostAmount()));
 
 			if (!$array['selectedRate'])
 			{
@@ -688,7 +728,7 @@ class Shipment extends ActiveRecordModel
 		// shipping rate for a saved shipment
 		if (!isset($array['selectedRate']) && isset($array['shippingAmount']))
 		{
-			$array['shippingAmount'] = $this->applyTaxesToAmount($array['shippingAmount'], ShipmentTax::TYPE_SHIPPING);
+			$array['shippingAmount'] = $this->applyTaxesToShippingAmount($array['shippingAmount']);
 			$currency = $this->order->get()->currency->get();
 			$array['selectedRate']['formattedPrice'] = array();
 			foreach ($currencies as $id => $currency)
@@ -770,14 +810,14 @@ class Shipment extends ActiveRecordModel
 		return !is_numeric($shippingTaxZoneId) ? $this->getDeliveryZone() : DeliveryZone::getInstanceById($shippingTaxZoneId, DeliveryZone::LOAD_DATA);
 	}
 
+	public function getShippingTaxClass()
+	{
+		$shippingTaxClassId = self::getApplication()->getConfig()->get('DELIVERY_TAX_CLASS');
+		return !is_numeric($shippingTaxClassId) ? null : TaxClass::getInstanceById($shippingTaxClassId, TaxClass::LOAD_DATA);
+	}
+
 	public function getTaxes()
 	{
-		// no taxes are calculated for downloadable products
-		if (!$this->isShippable())
-		{
-			//return new ARSet();
-		}
-
 		if (!$this->taxes)
 		{
 			$this->load();
@@ -800,15 +840,18 @@ class Shipment extends ActiveRecordModel
 				$zone = $this->getDeliveryZone();
 				foreach ($zone->getTaxRates(DeliveryZone::ENABLED_TAXES) as $rate)
 				{
-					$taxes[$rate->tax->get()->position->get()][ShipmentTax::TYPE_SUBTOTAL] = $rate;
+					$taxes[$rate->getPosition()][ShipmentTax::TYPE_SUBTOTAL] = $rate;
 				}
 
 				// shipping amount tax rates
 				$shippingTaxZone = $this->getShippingTaxZone();
-
+				$shippingTaxClass = $this->getShippingTaxClass();
 				foreach ($shippingTaxZone->getTaxRates(DeliveryZone::ENABLED_TAXES) as $rate)
 				{
-					$taxes[$rate->tax->get()->position->get()][ShipmentTax::TYPE_SHIPPING] = $rate;
+					if ($rate->taxClass->get() === $shippingTaxClass)
+					{
+						$taxes[$rate->getPosition()][ShipmentTax::TYPE_SHIPPING] = $rate;
+					}
 				}
 
 				foreach ($taxes as $taxRates)

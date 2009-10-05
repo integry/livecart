@@ -23,6 +23,7 @@ class TaxRate extends MultilingualObject
 		$schema->registerField(new ARForeignKeyField("taxClassID", "TaxClass", "ID", "TaxClass", ARInteger::instance()));
 
 		$schema->registerField(new ARField("rate", ARFloat::instance()));
+		$schema->registerAutoReference('taxClassID');
 	}
 
 	/**
@@ -113,6 +114,17 @@ class TaxRate extends MultilingualObject
 	public function getTaxAmount($amount)
 	{
 		return $amount * ($this->rate->get() / 100);
+	}
+
+	public function getPosition()
+	{
+		$position = $this->tax->get()->position->get() * 10000;
+		if ($class = $this->taxClass->get())
+		{
+			$position += $class->position->get() + 1;
+		}
+
+		return $position;
 	}
 
 	protected function insert()

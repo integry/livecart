@@ -96,6 +96,12 @@ class ShipmentTax extends ActiveRecordModel
 
 			foreach ($shipment->getItems() as $item)
 			{
+				$class = $item->getProduct()->getTaxClass();
+				if ($class !== $this->taxRate->get()->taxClass->get())
+				{
+					continue;
+				}
+
 				$itemTotal = $item->getSubTotalBeforeTax();
 				$otherTaxes = 0;
 				foreach ($item->getTaxRates() as $taxRate)
@@ -111,7 +117,7 @@ class ShipmentTax extends ActiveRecordModel
 			}
 		}
 
-		$this->amount->set($currency->round($taxAmount));
+		$this->amount->set($taxAmount);
 	}
 
 	public function getAmount($amount = null)
