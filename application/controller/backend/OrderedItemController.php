@@ -35,7 +35,7 @@ class OrderedItemController extends StoreManagementController
 		$existingItem = false;
 		foreach($shipment->getItems() as $item)
 		{
-			if($item->product->get() === $product)
+			if($item->getProduct() === $product)
 			{
 				if (!$product->getOptions(true))
 				{
@@ -117,7 +117,7 @@ class OrderedItemController extends StoreManagementController
 			return new JSONResponse(array(
 				'item' => array(
 					'ID'			  => $item->getID(),
-					'Product'		 => $item->product->get()->toArray(),
+					'Product'		 => $item->getProduct()->toArray(),
 					'Shipment'		=> array(
 											'ID' => $shipment->getID(),
 											'amount' => (float)$shipment->amount->get(),
@@ -131,7 +131,7 @@ class OrderedItemController extends StoreManagementController
 					'price'		   => $item->price->get(),
 					'priceCurrencyID' => $item->getCurrency()->getID(),
 					'isExisting'	  => $existingItem,
-					'variations' => $item->product->get()->getParent()->getVariationData($this->application),
+					'variations' => $item->getProduct()->getParent()->getVariationData($this->application),
 				)
 			), 'success', $this->translate('_item_has_been_successfuly_saved')
 			);
@@ -272,7 +272,7 @@ class OrderedItemController extends StoreManagementController
 						'count'		   => $item->count->get(),
 						'price'		   => $item->price->get(),
 						'priceCurrencyID' => $item->getCurrency()->getID(),
-						'downloadable' => $item->product->get()->isDownloadable()
+						'downloadable' => $item->getProduct()->isDownloadable()
 					)
 				),
 				'success'
@@ -461,7 +461,7 @@ class OrderedItemController extends StoreManagementController
 
 		$response = $c->variationForm($item->customerOrder->get(), '');
 		$response->set('currency', $item->customerOrder->get()->currency->get()->getID());
-		$response->set('variations', $item->product->get()->getVariationData($this->application));
+		$response->set('variations', $item->getProduct()->getVariationData($this->application));
 		return $response;
 	}
 
@@ -469,7 +469,7 @@ class OrderedItemController extends StoreManagementController
 	{
 		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id'), OrderedItem::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
 		$item->customerOrder->get()->loadAll();
-		foreach ($item->product->get()->getOptions(true) as $option)
+		foreach ($item->getProduct()->getOptions(true) as $option)
 		{
 			OrderController::modifyItemOption($item, $option, $this->request, OrderController::getFormFieldName($item, $option));
 		}
@@ -483,7 +483,7 @@ class OrderedItemController extends StoreManagementController
 	public function saveVariations()
 	{
 		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id'), OrderedItem::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
-		$variations = $item->product->get()->getVariationData($this->application);
+		$variations = $item->getProduct()->getVariationData($this->application);
 
 		$c = new OrderController($this->application);
 		if (!$c->buildVariationsValidator($item, $variations)->isValid())
@@ -525,7 +525,7 @@ class OrderedItemController extends StoreManagementController
 		$item->customerOrder->get()->load();
 		$item->customerOrder->get()->loadItems();
 
-		if ($image = $item->product->get()->defaultImage->get())
+		if ($image = $item->getProduct()->defaultImage->get())
 		{
 			$image->load();
 		}
@@ -535,8 +535,8 @@ class OrderedItemController extends StoreManagementController
 		$response = new ActionResponse('item', $item->toArray());
 
 		// load product options and variations
-		$response->set('allOptions', ProductOption::loadOptionsForProductSet($item->product->get()->getParent()->initSet()));
-		$response->set('variations', $item->product->get()->getParent()->initSet()->getVariationData($this->application));
+		$response->set('allOptions', ProductOption::loadOptionsForProductSet($item->getProduct()->getParent()->initSet()));
+		$response->set('variations', $item->getProduct()->getParent()->initSet()->getVariationData($this->application));
 
 		return $response;
 	}

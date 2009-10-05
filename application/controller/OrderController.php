@@ -177,7 +177,7 @@ class OrderController extends FrontendController
 		$products = array();
 		foreach ($this->order->getOrderedItems() as $item)
 		{
-			$products[$item->product->get()->getID()] = $item->product->get();
+			$products[$item->getProduct()->getID()] = $item->getProduct();
 		}
 
 		$options = ProductOption::loadOptionsForProductSet(ARSet::buildFromArray($products));
@@ -185,7 +185,7 @@ class OrderController extends FrontendController
 		$moreOptions = $optionsArray = array();
 		foreach ($this->order->getOrderedItems() as $item)
 		{
-			$productID = $item->product->get()->getID();
+			$productID = $item->getProduct()->getID();
 			if (isset($options[$productID]))
 			{
 				$optionsArray[$item->getID()] = $this->getOptionsArray($options[$productID], $item, 'isDisplayedInCart');
@@ -221,7 +221,7 @@ class OrderController extends FrontendController
 
 		$item = $order->getItemByID($this->request->get('id'));
 		$options = $optionsArray = array();
-		$product = $item->product->get();
+		$product = $item->getProduct();
 		$options[$product->getID()] = $product->getOptions(true);
 		$optionsArray[$item->getID()] = $this->getOptionsArray($options[$product->getID()], $item, $filter);
 
@@ -239,7 +239,7 @@ class OrderController extends FrontendController
 		$order = $order ? $order : $this->order;
 
 		$item = $order->getItemByID($this->request->get('id'));
-		$variations = $item->product->get()->getVariationData($this->application);
+		$variations = $item->getProduct()->getVariationData($this->application);
 
 		$this->setLayout('empty');
 
@@ -316,7 +316,7 @@ class OrderController extends FrontendController
 		{
 			if ($this->request->isValueSet('item_' . $item->getID()))
 			{
-				foreach ($item->product->get()->getOptions(true) as $option)
+				foreach ($item->getProduct()->getOptions(true) as $option)
 				{
 					$this->modifyItemOption($item, $option, $this->request, $this->getFormFieldName($item, $option));
 				}
@@ -407,7 +407,7 @@ class OrderController extends FrontendController
 	public function delete()
 	{
 		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id'), ActiveRecordModel::LOAD_DATA, array('Product'));
-		$this->setMessage($this->makeText('_removed_from_cart', array($item->product->get()->getName($this->getRequestLanguage()))));
+		$this->setMessage($this->makeText('_removed_from_cart', array($item->getProduct()->getName($this->getRequestLanguage()))));
 		$this->order->removeItem($item);
 		SessionOrder::save($this->order);
 
@@ -564,7 +564,7 @@ class OrderController extends FrontendController
 		$this->order->resetShipments();
 		SessionOrder::save($this->order);
 
-		$this->setMessage($this->makeText('_moved_to_cart', array($item->product->get()->getName('name', $this->getRequestLanguage()))));
+		$this->setMessage($this->makeText('_moved_to_cart', array($item->getProduct()->getName('name', $this->getRequestLanguage()))));
 
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
@@ -577,7 +577,7 @@ class OrderController extends FrontendController
 		$this->order->resetShipments();
 		SessionOrder::save($this->order);
 
-		$this->setMessage($this->makeText('_moved_to_wishlist', array($item->product->get()->getName('name', $this->getRequestLanguage()))));
+		$this->setMessage($this->makeText('_moved_to_wishlist', array($item->getProduct()->getName('name', $this->getRequestLanguage()))));
 
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
@@ -856,7 +856,7 @@ class OrderController extends FrontendController
 		$validator->addCheck($name, new IsNumericCheck($this->translate('_err_not_numeric')));
 		$validator->addFilter($name, new NumericFilter());
 
-		$productID = $id ? $id : $item->product->get()->getID();
+		$productID = $id ? $id : $item->getProduct()->getID();
 
 		if (isset($options['visible'][$productID]))
 		{

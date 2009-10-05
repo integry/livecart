@@ -2,7 +2,14 @@
 
 	<dl class="{if $orderedItem.Product.ID !== $otherOrderedItem.Product.ID}logValueChanged{/if}">
 		<dt>{t _product_name}:</dt>
-		<dd><a href="{backendProductUrl product=$orderedItem.Product}">{$orderedItem.Product.name}</a> ({$orderedItem.Product.sku})&nbsp;</dd>
+		<dd>
+			{if $orderedItem.Product.ID}
+				<a href="{backendProductUrl product=$orderedItem.Product}">{$orderedItem.Product.name}</a>
+			{else}
+				{$orderedItem.Product.name}
+			{/if}
+			({$orderedItem.Product.sku})&nbsp;
+		</dd>
 	</dl>
 
 	{if $orderedItem.price !== $otherOrderedItem.price}

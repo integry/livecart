@@ -74,7 +74,7 @@ class LiveCartTransaction extends TransactionDetails
 		// order details
 		foreach ($order->getShoppingCartItems() as $item)
 		{
-			$this->addLineItem($item->product->get()->getName(), $item->getPrice(false), $item->count->get(), $item->product->get()->sku->get());
+			$this->addLineItem($item->getProduct()->getName(), $item->getPrice(false), $item->count->get(), $item->getProduct()->sku->get());
 		}
 
 		if ($discount = $order->getFixedDiscountAmount())

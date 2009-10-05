@@ -224,7 +224,7 @@ class UserController extends FrontendController
 		$fileArray = array();
 		foreach ($downloadable as &$item)
 		{
-			$files = $item->product->get()->getFiles();
+			$files = $item->getProduct()->getFiles();
 			$itemFiles = array();
 			foreach ($files as $file)
 			{
@@ -240,7 +240,7 @@ class UserController extends FrontendController
 			}
 
 			$array = $item->toArray();
-			$array['Product']['Files'] = ProductFileGroup::mergeGroupsWithFields($item->product->get()->getFileGroups()->toArray(), $itemFiles);
+			$array['Product']['Files'] = ProductFileGroup::mergeGroupsWithFields($item->getProduct()->getFileGroups()->toArray(), $itemFiles);
 
 			foreach ($array['Product']['Files'] as $key => $file)
 			{
@@ -1178,7 +1178,6 @@ class UserController extends FrontendController
 		}
 		else
 		{
-			var_dump($validator); exit;
 			return $failureResponse;
 		}
 	}

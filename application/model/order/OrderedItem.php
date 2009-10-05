@@ -6,6 +6,7 @@ ClassLoader::import("application.model.order.Shipment");
 ClassLoader::import('application.model.order.OrderedItemOption');
 ClassLoader::import('application.model.delivery.DeliveryZone');
 ClassLoader::import('application.model.businessrule.interface.BusinessRuleProductInterface');
+ClassLoader::import("application.model.system.MultilingualObject");
 
 /**
  * Represents a shopping basket item (one or more instances of the same product)
@@ -13,7 +14,7 @@ ClassLoader::import('application.model.businessrule.interface.BusinessRuleProduc
  * @package application.model.order
  * @author Integry Systems <http://integry.com>
  */
-class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterface
+class OrderedItem extends MultilingualObject implements BusinessRuleProductInterface
 {
 	protected $optionChoices = array();
 
@@ -55,6 +56,7 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 		$schema->registerField(new ARField("reservedProductCount", ARFloat::instance()));
 		$schema->registerField(new ARField("dateAdded", ARDateTime::instance()));
 		$schema->registerField(new ARField("isSavedForLater", ARInteger::instance()));
+		$schema->registerField(new ARField("name", ARArray::instance()));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -227,7 +229,7 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 	public function getItemPrice()
 	{
 		$isFinalized = $this->customerOrder->get()->isFinalized->get();
-		$price = $isFinalized ? $this->price->get() : $this->product->get()->getItemPrice($this);
+		$price = $isFinalized ? $this->price->get() : $this->getProduct()->getItemPrice($this);
 
 		if (!$isFinalized)
 		{
@@ -253,7 +255,7 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 
 	public function reserve($unreserve = false, Product $product = null)
 	{
-		$product = is_null($product) ? $this->product->get() : $product;
+		$product = is_null($product) ? $this->getProduct() : $product;
 		if (!$product->isBundle())
 		{
 			if ($product->isInventoryTracked() && !(!$unreserve && $this->reservedProductCount->get()))
@@ -299,7 +301,7 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 	 */
 	public function removeFromInventory()
 	{
-		$product = $this->product->get();
+		$product = $this->getProduct();
 		if (!$product->isBundle())
 		{
 			$product->reservedCount->set($product->reservedCount->get() - $this->reservedProductCount->get());
@@ -404,9 +406,9 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 			$this->optionChoices[$option->choice->get()->option->get()->getID()] = $option;
 		}
 
-		if ($this->product->get()->parent->get())
+		if ($this->getProduct()->parent->get())
 		{
-			$this->product->get()->parent->get()->load();
+			$this->getProduct()->parent->get()->load();
 		}
 	}
 
@@ -423,7 +425,15 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 
 	public function getProduct()
 	{
-		return $this->product->get();
+		$product = $this->product->get();
+		if (!$product)
+		{
+			$product = ActiveRecordModel::getNewInstance('Product');
+			$product->setID(0);
+			$product->markAsLoaded();
+		}
+
+		return $product;
 	}
 
 	public function getCount()
@@ -433,7 +443,7 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 
 	public function getSubItems()
 	{
-		if (!$this->product->get()->isBundle())
+		if (!$this->getProduct()->isBundle())
 		{
 			return null;
 		}
@@ -499,7 +509,7 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 
 		if (!$this->price->get())
 		{
-			$this->price->set($this->product->get()->getItemPrice($this));
+			$this->price->set($this->getProduct()->getItemPrice($this));
 		}
 
 		return parent::insert();
@@ -518,7 +528,7 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 
 		if ($shipment && $order->isFinalized->get() && !$order->isCancelled->get() && self::getApplication()->isInventoryTracking())
 		{
-			$product = $this->product->get();
+			$product = $this->getProduct();
 
 			// changed product (usually a different variation)
 			if ($this->product->isModified())
@@ -573,7 +583,7 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 		}
 
 		// save sub-items for bundles
-		if ($this->product->get()->isBundle())
+		if ($this->getProduct()->isBundle())
 		{
 			foreach ($this->getSubItems() as $item)
 			{
@@ -581,7 +591,7 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 			}
 		}
 
-		$this->product->get()->save();
+		$this->getProduct()->save();
 		$this->subItems = null;
 
 		return $ret;
@@ -605,7 +615,7 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 
 			if ($this->price->isNull())
 			{
-				$this->price->set($this->product->get()->getItemPrice($this));
+				$this->price->set($this->getProduct()->getItemPrice($this));
 			}
 
 			return parent::update();
@@ -659,16 +669,22 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 		return $array;
 	}
 
-/*
 	public static function transformArray($array, ARSchema $schema)
 	{
 		$array = parent::transformArray($array, $schema);
 
-		$array['itemSubtotal'] = $array['count'] * $array['price'];
+		// deleted product
+		if (!isset($array['Product']))
+		{
+			$array['Product']['name'] = $array['name'];
+			$array['Product']['name_lang'] = $array['name_lang'];
+			$array['Product']['nameData'] = $array['nameData'];
+			$array['Product']['sku'] = $array['nameData']['sku'];
+		}
 
 		return $array;
 	}
-*/
+
 	/*####################  Get related objects ####################*/
 
 	/**

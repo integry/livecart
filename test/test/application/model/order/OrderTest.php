@@ -1797,6 +1797,56 @@ class OrderTest extends OrderTestCommon
 		$this->assertEquals($second->invoiceNumber->get(), 'INT0040010/2009');
 	}
 
+	public function testDeletedProductsInLiveOrders()
+	{
+		$this->order->addProduct($this->products[0], 1);
+		$this->order->addProduct($this->products[1], 1);
+		$this->order->save();
+
+		$this->products[0]->delete();
+		ActiveRecord::clearPool();
+
+		$order = CustomerOrder::getInstanceByID($this->order->getID());
+		$order->loadAll();
+
+		$this->assertEqual($order->getShoppingCartItemCount(), 1);
+	}
+
+	public function testDeletedProductsInCompletedOrders()
+	{
+		$this->products[0]->setValueByLang('name', 'xx', 'test');
+		$this->products[0]->save();
+		$sku = $this->products[0]->sku->get();
+
+		$this->order->addProduct($this->products[0], 1);
+		$this->order->addProduct($this->products[1], 1);
+		$this->order->save();
+		$this->order->finalize();
+		$total = $this->order->getTotal();
+		$this->assertEqual($total, 300);
+
+		$this->products[0]->delete();
+		ActiveRecord::clearPool();
+
+		$order = CustomerOrder::getInstanceByID($this->order->getID());
+		$order->loadAll();
+
+		$this->assertEqual($order->getShoppingCartItemCount(), 2);
+		$this->assertEqual($total, $order->getTotal());
+
+		$deletedItem = array_shift($order->getShoppingCartItems());
+		$deleted = $deletedItem->toArray();
+		$this->assertEqual($deleted['Product']['nameData']['xx'], 'test');
+		$this->assertEqual($deleted['Product']['sku'], $sku);
+
+		// change quantities
+		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+		$deletedItem->count->set(2);
+		$order->save();
+
+		$this->assertEqual(400, $order->getTotal());
+	}
+
 	private function createOrderWithZone(DeliveryZone $zone = null)
 	{
 		if (is_null($zone))

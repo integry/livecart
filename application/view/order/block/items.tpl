@@ -17,7 +17,11 @@
 
 		<td class="cartName">
 			<div>
-				<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
+				{if $item.Product.ID}
+					<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
+				{else}
+					<span>{$item.Product.name_lang}</span>
+				{/if}
 				<small>(&rlm;{$item.Product.Category.name_lang})</small>
 			</div>
 

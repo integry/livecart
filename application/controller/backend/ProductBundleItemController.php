@@ -64,7 +64,7 @@ class ProductBundleItemController extends StoreManagementController
 		$item = ActiveRecordModel::getInstanceByID('ProductBundle', array('productID' => $productID, 'relatedProductID' => $relatedProductID), ActiveRecordModel::LOAD_DATA);
 		$item->delete();
 
-		return new JSONResponse(array('total' => $this->getTotal($item->product->get())), 'success');
+		return new JSONResponse(array('total' => $this->getTotal($item->getProduct())), 'success');
 	}
 
 	/**
@@ -85,7 +85,7 @@ class ProductBundleItemController extends StoreManagementController
 		$item->count->set($count);
 		$item->save();
 
-		return new JSONResponse(array('count' => $count, 'total' => $this->getTotal($item->product->get())), 'success');
+		return new JSONResponse(array('count' => $count, 'total' => $this->getTotal($item->getProduct())), 'success');
 	}
 
 	/**

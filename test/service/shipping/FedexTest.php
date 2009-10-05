@@ -15,6 +15,10 @@ class FedexTest extends TestShipping
 		$fedex = new FedexShipping();
 		$fedex->setConfigValue('accountNumber', '510087941');
 		$fedex->setConfigValue('meterNumber', '1250347');
+
+//		$fedex->setConfigValue('accountNumber', '236800164');
+//		$fedex->setConfigValue('meterNumber', '101180614');
+
 		$fedex->setSourceCountry('US');
 		$fedex->setSourceState('OH');
 		$fedex->setSourceZip('44333');

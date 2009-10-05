@@ -11,7 +11,11 @@
 		{foreach from=$shipment.items item="item" name="shipment"}
 			<tr class="{zebra loop="shipment"}">
 				<td class="productName">
-					<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
+					{if $item.Product.ID}
+						<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
+					{else}
+						<span>{$item.Product.name_lang}</span>
+					{/if}
 					{if $item.Product.variations}
 						<span class="variations">
 							({include file="order/itemVariationsList.tpl"})

@@ -11,7 +11,11 @@
 		</td>
 		<td class="orderShipmentsItem_info_name_td">
 			<div class="orderShipmentsItem_info_name">
-				<a href="{backendProductUrl product=$item.Product}">{$item.Product.name_lang}</a>
+				{if $item.Product.ID}
+					<a href="{backendProductUrl product=$item.Product}">{$item.Product.name_lang}</a>
+				{else}
+					<span>{$item.Product.name_lang}</span>
+				{/if}
 				{if $allOptions[$item.Product.ID] || $item.options}
 					({$item.formattedBasePrice})
 					<div class="productOptions">

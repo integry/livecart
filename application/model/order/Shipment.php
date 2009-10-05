@@ -199,9 +199,9 @@ class Shipment extends ActiveRecordModel
 
 		foreach ($this->items as $item)
 		{
-			if (!$item->product->get()->isFreeShipping->get() || !$zone->isFreeShipping->get())
+			if (!$item->getProduct()->isFreeShipping->get() || !$zone->isFreeShipping->get())
 			{
-				$weight += ($item->product->get()->getShippingWeight() * $item->count->get());
+				$weight += ($item->getProduct()->getShippingWeight() * $item->count->get());
 			}
 		}
 
@@ -214,7 +214,7 @@ class Shipment extends ActiveRecordModel
 
 		foreach ($this->items as $item)
 		{
-			if (!$item->product->get()->isFreeShipping->get() || !$zone->isFreeShipping->get())
+			if (!$item->getProduct()->isFreeShipping->get() || !$zone->isFreeShipping->get())
 			{
 				$count += $item->count->get();
 			}
@@ -279,7 +279,7 @@ class Shipment extends ActiveRecordModel
 				continue;
 			}
 
-			if ($item->product->get()->isDownloadable())
+			if ($item->getProduct()->isDownloadable())
 			{
 				return false;
 			}

@@ -190,7 +190,7 @@ class ProductPrice extends ActiveRecordModel
 		$itemCnt = $item->count->get();
 
 		// include other variations of the same product?
-		if ($parent = $item->product->get()->parent->get())
+		if ($parent = $item->getProduct()->parent->get())
 		{
 			$order = $item->customerOrder->get();
 

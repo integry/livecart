@@ -95,7 +95,7 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 	{
 		if ($item instanceof OrderedItem)
 		{
-			$product = $item->product->get();
+			$product = $item->getProduct();
 		}
 		else if ($item instanceof Product)
 		{
@@ -126,7 +126,10 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 
 			$parent = isset($product['Parent']) ? $product['Parent'] : $product;
 			$categoryIntervals = $parent['categoryIntervalCache'];
-		} else { var_dump($product); exit; }
+		} else
+		{
+			return false;
+		}
 
 		$match = false;
 

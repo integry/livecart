@@ -179,6 +179,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			Product::loadAdditionalCategoriesForSet(ARSet::buildFromArray($this->orderedItems)->extractReferencedItemSet('product'));
 		}
 
+		if (!$this->isFinalized->get())
+		{
+			$this->updateToStock();
+		}
+
 		$this->event('after-load');
 	}
 
@@ -296,7 +301,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 	public function updateCount(OrderedItem $item, $count)
 	{
-		$item->count->set($this->validateCount($item->product->get(), $count));
+		$item->count->set($this->validateCount($item->getProduct(), $count));
 	}
 
 	private function validateCount(Product $product, $count)
@@ -342,7 +347,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		foreach ($this->orderedItems as $key => $item)
 		{
-			if ($item->product->get()->getID() == $id)
+			if ($item->getProduct()->getID() == $id)
 			{
 				$this->removeItem($item);
 			}
@@ -475,12 +480,14 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		foreach ($this->getShoppingCartItems() as $item)
 		{
 			$item->price->set($item->getSubTotal(false) / $item->count->get());
+			$item->name->set($item->getProduct()->getParent()->name->get());
+			$item->setValueByLang('name', 'sku', $item->getProduct()->sku->get());
 			$item->save();
 
 			// create sub-items for bundled products
-			if ($item->product->get()->isBundle())
+			if ($item->getProduct()->isBundle())
 			{
-				foreach ($item->product->get()->getBundledProducts() as $bundled)
+				foreach ($item->getProduct()->getBundledProducts() as $bundled)
 				{
 					$bundledItem = OrderedItem::getNewInstance($this, $bundled->relatedProduct->get(), $bundled->getCount());
 					$bundledItem->parent->set($item);
@@ -679,7 +686,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 				}
 				$hash = $choiceHash ? '_' . md5(implode('', $choiceHash)) : '';
 
-				$byProduct[$item->product->get()->getID() . $hash][(int)$item->isSavedForLater->get()][] = $item;
+				$byProduct[$item->getProduct()->getID() . $hash][(int)$item->isSavedForLater->get()][] = $item;
 			}
 
 			foreach ($byProduct as $productID => $itemsByStatus)
@@ -1196,7 +1203,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	{
 		foreach ($this->getShoppingCartItems() as $item)
 		{
-			if (!$item->product->get()->isDownloadable())
+			if (!$item->getProduct()->isDownloadable())
 			{
 				return true;
 			}
@@ -1304,13 +1311,20 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 	{
 		$result = array();
 
-		$this->loadItems();
+		if (!$this->orderedItems)
+		{
+			$this->loadItems();
+		}
 
 		// remove disabled items
 		foreach ($this->getOrderedItems() as $item)
 		{
-			$product = $item->product->get();
-			if (!$product->isEnabled->get() || !$product->getParent()->isEnabled->get())
+			$product = $item->getProduct();
+			if (!$product)
+			{
+				$this->removeItem($item);
+			}
+			else if (!$product->isEnabled->get() || !$product->getParent()->isEnabled->get())
 			{
 				$this->removeItem($item);
 			}
@@ -1323,7 +1337,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		foreach ($this->getOrderedItems() as $item)
 		{
-			$product = $item->product->get();
+			$product = $item->getProduct();
 
 			// previously out-of-stock item now back in stock
 			if ((OrderedItem::OUT_OF_STOCK == $item->isSavedForLater->get()) && $product->isAvailable())
@@ -1374,7 +1388,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$this->currency->set($currency);
 		foreach ($this->getOrderedItems() as $item)
 		{
-			$item->price->set($item->product->get()->getItemPrice($item, $currency));
+			$item->price->set($item->getProduct()->getItemPrice($item, $currency));
 			$item->save();
 		}
 
@@ -1457,13 +1471,13 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		{
 			foreach ($this->orderedItems as $item)
 			{
-				if (!$item->product->get()->isPricingLoaded())
+				if (!$item->getProduct()->isPricingLoaded())
 				{
 					if (!isset($products))
 					{
 						$products = new ARSet();
 					}
-					$products->unshift($item->product->get());
+					$products->unshift($item->getProduct());
 				}
 			}
 		}
@@ -1702,7 +1716,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$items = array();
 		foreach ($this->orderedItems as $item)
 		{
-			if ($item->product->get()->getID() == $product->getID())
+			if ($item->getProduct()->getID() == $product->getID())
 			{
 				$items[] = $item;
 			}
@@ -1734,14 +1748,14 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		foreach ($this->orderedItems as $item)
 		{
-			$productIDs[] = $item->product->get()->getID();
+			$productIDs[] = $item->getProduct()->getID();
 		}
 
 		$products = ActiveRecordModel::getInstanceArray('Product', $productIDs);
 
 		foreach ($this->orderedItems as $item)
 		{
-			$id = $item->product->get()->getID();
+			$id = $item->getProduct()->getID();
 
 			if (isset($products[$id]))
 			{
@@ -1749,7 +1763,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			}
 			else
 			{
-				$this->removeProduct($item->product->get());
+				$this->removeProduct($item->getProduct());
 			}
 		}
 	}
@@ -1780,7 +1794,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 				// get downloadable items
 				foreach ($this->getShoppingCartItems() as $item)
 				{
-					if ($item->product->get()->isDownloadable())
+					if ($item->getProduct()->isDownloadable())
 					{
 						if (!isset($downloadable))
 						{
@@ -1803,7 +1817,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 					foreach ($this->getShoppingCartItems() as $item)
 					{
-						if ($item->product->get()->isDownloadable())
+						if ($item->getProduct()->isDownloadable())
 						{
 							if (!isset($downloadable))
 							{
@@ -1812,7 +1826,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 							$downloadable->addItem($item);
 						}
-						else if ($item->product->get()->isSeparateShipment->get())
+						else if ($item->getProduct()->isSeparateShipment->get())
 						{
 							$shipment = Shipment::getNewInstance($this);
 							$shipment->addItem($item);
@@ -1921,7 +1935,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$set = array();
 		foreach ($this->getShoppingCartItems() as $item)
 		{
-			$set[$item->product->get()->getID()][$item->getID()] = $item;
+			$set[$item->getProduct()->getID()][$item->getID()] = $item;
 		}
 
 		foreach (ActiveRecordModel::getRecordSet('ProductCategory', new ARSelectFilter(new INCond(new ARFieldHandle('ProductCategory', 'productID'), array_keys($set))), array('Category')) as $additional)
@@ -2045,7 +2059,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		$productIds = array();
 		foreach ($this->orderedItems as $item)
 		{
-			$productIds[] = $item->product->get()->getID();
+			$productIds[] = $item->getProduct()->getID();
 		}
 
 		$products = ActiveRecordModel::getInstanceArray('Product', $productIds, Product::LOAD_REFERENCES);

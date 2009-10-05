@@ -280,7 +280,7 @@ class DeliveryZone extends MultilingualObject
 		$surcharge = 0;
 		foreach ($shipment->getItems() as $item)
 		{
-			$surcharge += $item->product->get()->shippingSurchargeAmount->get();
+			$surcharge += $item->getProduct()->shippingSurchargeAmount->get();
 		}
 
 		$currency = self::getApplication()->getDefaultCurrency();
