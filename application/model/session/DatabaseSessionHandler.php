@@ -20,9 +20,16 @@ class DatabaseSessionHandler extends SessionHandler
 
 	public function open()
 	{
-		$this->db = ActiveRecordModel::getDBConnection();
-		$this->db->sessionHandler = $this;
-		return true;
+		try
+		{
+			$this->db = ActiveRecordModel::getDBConnection();
+			$this->db->sessionHandler = $this;
+			return true;
+		}
+		catch (SQLException $e)
+		{
+			return false;
+		}
 	}
 
 	public function close()
@@ -32,6 +39,11 @@ class DatabaseSessionHandler extends SessionHandler
 
 	public function read($id)
 	{
+		if (!$this->db)
+		{
+			return;
+		}
+
 		$data = ActiveRecordModel::getRecordSetArray('SessionData', select(eq('SessionData.ID', $id)));
 		$this->isExistingSession = count($data) > 0;
 

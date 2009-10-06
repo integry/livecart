@@ -27,7 +27,7 @@ class SessionData extends ActiveRecordModel
 	public static function updateData($id, $data, $userID, $cacheUpdated, $db)
 	{
 		$sql = 'UPDATE SessionData SET ' . self::enumerateUpdateFields($data, $userID, $cacheUpdated) . ' WHERE ID="' . $id .'"';
-		$db->executeQuery($sql);
+		self::executeQuery($db, $sql);
 	}
 
 	public static function insertData($id, $data, $userID, $cacheUpdated, $db)
@@ -35,7 +35,7 @@ class SessionData extends ActiveRecordModel
 		$sql = 'INSERT INTO SessionData SET ID="' . $id .'", ' . self::enumerateUpdateFields($data, $userID, $cacheUpdated);
 		try
 		{
-			$db->executeQuery($sql);
+			self::executeQuery($db, $sql);
 		}
 		catch (Exception $e)
 		{
@@ -51,12 +51,32 @@ class SessionData extends ActiveRecordModel
 	public static function deleteSessions($max)
 	{
 		$sql = 'DELETE FROM SessionData WHERE lastUpdated < ' . (time() - $max);
-		$db->executeQuery($sql);
+		self::executeQuery($db, $sql);
 	}
 
 	public static function transformArray($array)
 	{
 		return $array;
+	}
+
+	private function executeQuery($db, $sql)
+	{
+		if (!$db)
+		{
+			try
+			{
+				$db = ActiveRecord::getDBConnection();
+			}
+			catch (SQLException $e)
+			{
+				$db = null;
+			}
+		}
+
+		if ($db)
+		{
+			$db->executeQuery($sql);
+		}
 	}
 }
 
