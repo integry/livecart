@@ -503,7 +503,8 @@ class Product extends MultilingualObject
 	{
 		$currency = $currency ? $currency : $item->getCurrency();
 		$currencyCode = $currency->getID();
-		return $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode)->getItemPrice($item, $applyRounding);
+		$price = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode)->getItemPrice($item, $applyRounding);
+		return $price;
 	}
 
 	public function getPrice($currencyCode, $recalculate = true, $includeDiscounts = false)
@@ -797,6 +798,8 @@ class Product extends MultilingualObject
 		$this->getSpecification()->save();
 		$this->getPricingHandler()->save();
 		$this->saveRelationships();
+
+		Category::updateCategoryIntervals($this->getID());
 
 		self::commit();
 	}

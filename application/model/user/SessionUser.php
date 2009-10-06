@@ -42,6 +42,14 @@ class SessionUser
 
 				$session->set('userLocale', $localeCode);
 			}
+
+			if (!$session->isValueSet('UserGroup'))
+			{
+				$user->load();
+				$session->set('UserGroup', $user->userGroup->get()->getID());
+			}
+
+			$user->userGroup->set(UserGroup::getInstanceByID($session->get('UserGroup')));
 		}
 
 		$app->getSessionHandler()->setUser($user);

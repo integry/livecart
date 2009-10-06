@@ -449,7 +449,6 @@ class Shipment extends ActiveRecordModel
 		$currency = $this->order->get()->getCurrency();
 
 		$itemAmount = $this->getSubTotal(self::WITHOUT_TAXES);
-
 		$this->amount->set($itemAmount);
 
 		// total taxes

@@ -239,9 +239,10 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		return $price;
 	}
 
-	private function reduceBaseTaxes($price)
+	private function reduceBaseTaxes($price, $product = null)
 	{
-		$class = $this->getProduct()->getParent()->taxClass->get();
+		$product = $product ? $product : $this->getProduct();
+		$class = $product->getParent()->taxClass->get();
 		foreach (DeliveryZone::getDefaultZoneInstance()->getTaxRates() as $rate)
 		{
 			if ($rate->taxClass->get() === $class)
@@ -674,7 +675,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		$array = parent::transformArray($array, $schema);
 
 		// deleted product
-		if (!isset($array['Product']))
+		if (!isset($array['Product']) && isset($array['name_lang']))
 		{
 			$array['Product']['name'] = $array['name'];
 			$array['Product']['name_lang'] = $array['name_lang'];

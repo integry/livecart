@@ -48,6 +48,26 @@ class RuleProductContainer implements BusinessRuleProductInterface
 	{
 		return $this->getPriceWithoutTax() * $this->getCount();
 	}
+
+	public static function createFromArray($product)
+	{
+		$product = array_intersect_key($product, array_flip(array('ID', 'sku', 'manufacturerID', 'categoryID', 'categoryIntervalCache')));
+		return new RuleProductContainer($product);
+	}
+
+	public static function createFromOrderedItem(OrderedItem $item)
+	{
+		if (!$product = $item->getProduct())
+		{
+			return;
+		}
+
+		$instance = self::createFromArray($product->toArray());
+		$instance->setCount($item->getCount());
+		$instance->setItemPrice($item->getPrice());
+
+		return $instance;
+	}
 }
 
 ?>

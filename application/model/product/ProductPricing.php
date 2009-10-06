@@ -162,10 +162,25 @@ class ProductPricing
 
 		$field = $listPrice ? 'listPrice' : 'price';
 
+		$ruleController = $this->application->getBusinessRuleController();
+
 		$defined = array();
 		foreach ($this->prices as $inst)
 		{
-			$defined[$inst->currency->get()->getID()] = $inst->$field->get();
+			$defPrice = $inst->$field->get();
+			$curr = $inst->currency->get()->getID();
+			if ('price' == $field)
+			{
+				$defined[$curr] = $inst->getPriceByGroup($ruleController->getContext()->getUserGroupID());
+				if ($defined[$curr] != $defPrice)
+				{
+					$this->setListPrice($curr, $defPrice);
+				}
+			}
+			else
+			{
+				$defined[$curr] = $defPrice;
+			}
 		}
 
 		if ($listPrice)
@@ -181,7 +196,6 @@ class ProductPricing
 		$parent = $this->product->parent->get();
 		$setting = $this->product->getChildSetting('price');
 
-		$ruleController = $this->application->getBusinessRuleController();
 		foreach ($this->application->getCurrencySet() as $id => $currency)
 		{
 			if (!empty($defined[$id]))

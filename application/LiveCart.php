@@ -1090,12 +1090,14 @@ class LiveCart extends Application
 		if (!$this->config->get('INCLUDE_BASE_TAXES'))
 		{
 			ClassLoader::import('application.model.order.OrderedItem');
-			$price = OrderedItem::reduceBaseTaxes($price);
+			$price = OrderedItem::reduceBaseTaxes($price, $product);
 		}
+		/*
 		else
 		{
 			$price = $price * 1.25;
 		}
+		*/
 
 		return $price;
 	}
@@ -1294,12 +1296,10 @@ class LiveCart extends Application
 		{
 			$context = new BusinessRuleContext();
 
-			/*
-			if (SessionOrder::getOrderData())
+			if ($items = SessionOrder::getOrderItems())
 			{
-				//$context->setOrder(SessionOrder::getOrder());
+				$context->setOrder($items);
 			}
-			*/
 
 			if (SessionUser::getUser())
 			{

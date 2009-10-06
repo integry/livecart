@@ -117,28 +117,26 @@ class ProductPrice extends ActiveRecordModel
 	public function getItemPrice(OrderedItem $item, $applyRounding = true)
 	{
 		$price = $this->getPrice($applyRounding);
-		$applyDiscountRules = true;
+		$rules = unserialize($this->serializedRules->get());
 
 		if ($parent = $this->product->get()->parent->get())
 		{
 			$priceSetting = $this->product->get()->getChildSetting('price');
-			$parentPrice = $parent->getPricingHandler()->getPrice($this->currency->get())->getItemPrice($item);
+			$parentPrice = $parent->getPricingHandler()->getPrice($this->currency->get());
+
+			if (!$rules)
+			{
+				$rules = unserialize($parentPrice->serializedRules->get());
+			}
 
 			if ($priceSetting !== Product::CHILD_OVERRIDE)
 			{
-				//$price = $this->getChildPrice($parentPrice, $this->recalculatePrice(), $priceSetting);
 				$price = $this->recalculatePrice();
-			}
-			else
-			{
-				$applyDiscountRules = false;
 			}
 		}
 
-		if ($price && $applyDiscountRules)
+		if ($price)
 		{
-			$rules = unserialize($this->serializedRules->get());
-
 			// quantity/group based prices
 			if ($rules)
 			{
@@ -148,6 +146,7 @@ class ProductPrice extends ActiveRecordModel
 				foreach (array($groupID, 0) as $group)
 				{
 					$p = $this->getGroupPrice($item, $group, $rules);
+
 					if (!is_null($p))
 					{
 						return $p;
@@ -175,20 +174,6 @@ class ProductPrice extends ActiveRecordModel
 
 	private function getGroupPrice(OrderedItem $item, $groupID, $rules)
 	{
-		$found = array();
-		foreach ($rules as $quant => $prices)
-		{
-			if (isset($prices[$groupID]))
-			{
-				$found[$quant] = $prices[$groupID];
-			}
-		}
-
-		$quantities = array_keys($found);
-		sort($quantities);
-		$cnt = count($quantities);
-		$itemCnt = $item->count->get();
-
 		// include other variations of the same product?
 		if ($parent = $item->getProduct()->parent->get())
 		{
@@ -207,6 +192,48 @@ class ProductPrice extends ActiveRecordModel
 				}
 			}
 		}
+		else
+		{
+			$itemCnt = $item->count->get();
+		}
+
+		// include past orders
+
+
+		return self::getProductGroupPrice($groupID, $rules, $itemCnt);
+	}
+
+	public function getPriceByGroup($groupID, $itemCnt = 1)
+	{
+		$rules = unserialize($this->serializedRules->get());
+		if (!$rules)
+		{
+			return $this->price->get();
+		}
+
+		$groupPrice = self::getProductGroupPrice($groupID, $rules, $itemCnt);
+		return is_null($groupPrice) ? $this->price->get() : $groupPrice;
+	}
+
+	public static function getProductGroupPrice($groupID, $rules, $itemCnt)
+	{
+		if (!$rules)
+		{
+			return;
+		}
+
+		$found = array();
+		foreach ($rules as $quant => $prices)
+		{
+			if (isset($prices[$groupID]))
+			{
+				$found[$quant] = $prices[$groupID];
+			}
+		}
+
+		$quantities = array_keys($found);
+		sort($quantities);
+		$cnt = count($quantities);
 
 		for ($k = 0; $k < $cnt; $k++)
 		{
@@ -373,6 +400,7 @@ class ProductPrice extends ActiveRecordModel
 		foreach ($priceArray as $productId => $prices)
 		{
 			$product =& $productArray[$ids[$productId]];
+			$rules = $product['priceRules'];
 
 			// look for a parent product
 			if (!empty($product['parentID']))
@@ -395,11 +423,14 @@ class ProductPrice extends ActiveRecordModel
 				$ruleController = self::getApplication()->getBusinessRuleController();
 				foreach ($prices as $currency => &$price)
 				{
+					$maxPrice = $price;
+					$groupPrice = self::getProductGroupPrice($ruleController->getContext()->getUserGroupID(), $rules[$currency], 1);
+					$price = is_null($groupPrice) ? $price : $groupPrice;
 					$price = self::getApplication()->getDisplayTaxPrice($price, $product);
 					$discountedPrice = $ruleController->getProductPrice($product, $price, $currency);
-					if ($discountedPrice != $price)
+					if ($discountedPrice != $maxPrice)
 					{
-						$product['definedListPrices'][$currency] = $price;
+						$product['definedListPrices'][$currency] = $maxPrice;
 						$prices[$currency] = $discountedPrice;
 					}
 				}

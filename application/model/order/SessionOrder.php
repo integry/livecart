@@ -3,6 +3,7 @@
 ClassLoader::import('application.model.user.SessionUser');
 ClassLoader::import('application.model.order.CustomerOrder');
 ClassLoader::import('application.model.user.UserAddress');
+ClassLoader::import('application.model.businessrule.RuleProductContainer');
 
 /**
  *
@@ -98,7 +99,25 @@ class SessionOrder
 		$isOrderable = $order->isOrderable();
 		$orderArray['isOrderable'] = is_bool($isOrderable) ? $isOrderable : false;
 
+		$items = array();
+		foreach ($order->getPurchasedItems() as $item)
+		{
+			$items[] = $item->toArray();
+		}
+
+		$orderArray['items'] = new RuleOrderContainer($items);
+
 		$session->set('orderData', $orderArray);
+	}
+
+	public static function getOrderItems()
+	{
+		$session = new Session();
+		$data = $session->get('orderData');
+		if (isset($data['items']))
+		{
+			return $data['items'];
+		}
 	}
 
 	public static function getOrderData()

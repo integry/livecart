@@ -500,7 +500,14 @@ class OrderTest extends OrderTestCommon
 		$order->save();
 		$order->finalize($this->usd);
 
+		$product->reload();
+		$this->assertEqual($product->stockCount->get(), 1);
+
 		$order->cancel();
+
+		$product->reload();
+		$this->assertEqual($product->stockCount->get(), 2);
+
 		$order->restore();
 
 		$product->reload();
@@ -715,11 +722,19 @@ class OrderTest extends OrderTestCommon
 
 		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
 
+		$this->assertTrue($container->isAvailable());
+
 		$order = CustomerOrder::getNewInstance($this->user);
 		$order->addProduct($container, 1);
 		$order->save();
+
+		$this->assertEqual($order->getShoppingCartItemCount(), 1);
+
 		$order->finalize($this->usd);
 
+		$this->assertEqual(count($order->getOrderedItems()), 1);
+		$this->assertEqual(count($order->getShoppingCartItems()), 1);
+		$this->assertEqual($order->getShoppingCartItemCount(), 1);
 		$this->assertEqual($order->getTotal(true), 100);
 
 		$containerItem = array_shift($order->getItemsByProduct($container));

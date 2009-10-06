@@ -223,6 +223,7 @@ class DiscountConditionTest extends LiveCartTest
 
 		$newProduct = Product::getNewInstance($newSubCategory);
 		$newProduct->save();
+		$newProduct->reload();
 
 		$record = DiscountConditionRecord::getNewInstance($condition, $newCategory);
 		$record->save();
@@ -236,6 +237,7 @@ class DiscountConditionTest extends LiveCartTest
 		// sub-condition
 		$sub = DiscountCondition::getNewInstance($condition);
 		$sub->isEnabled->set(true);
+		$sub->conditionClass->set('RuleConditionContainsProduct');
 		$sub->save();
 
 		$condition->isAllSubconditions->set(true);
@@ -267,6 +269,7 @@ class DiscountConditionTest extends LiveCartTest
 		{
 			$subs[$k] = DiscountCondition::getNewInstance($sub);
 			$subs[$k]->isEnabled->set(true);
+			$subs[$k]->conditionClass->set('RuleConditionContainsProduct');
 		}
 
 		// false
@@ -635,8 +638,18 @@ class DiscountConditionTest extends LiveCartTest
 
 	public function testPaymentMethod()
 	{
-		$this->order->addProduct($this->product1, 1, true);
+		ActiveRecordModel::getApplication()->getConfig()->set('INVENTORY_TRACKING', 'DISABLE');
+
+		$this->product1->isEnabled->set(true);
+		$this->product1->save();
+		$this->order->addProduct($this->product1, 1);
 		$this->order->save();
+
+		ActiveRecord::clearPool();
+
+		$this->order = CustomerOrder::getInstanceById($this->order->getID(), true);
+		$this->order->loadAll();
+		$this->assertEquals(1, $this->order->getShoppingCartItemCount());
 
 		$condition = DiscountCondition::getNewInstance();
 		$condition->isEnabled->set(true);
@@ -658,17 +671,20 @@ class DiscountConditionTest extends LiveCartTest
 		$transResult->setTransactionType(TransactionResult::TYPE_SALE);
 		$transResult->amount->set(10000);
 		$transResult->currency->set('USD');
+
 		$transaction = Transaction::getNewInstance($this->order, $transResult);
 		$transaction->method->set('TESTING');
 		$transaction->save();
 
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 
 		ActiveRecord::clearPool();
 
 		$reloaded = CustomerOrder::getInstanceById($this->order->getID(), true);
 		$reloaded->loadAll();
 
+		$this->assertTrue($reloaded->isExistingRecord());
+		$this->assertEquals(1, $reloaded->getShoppingCartItemCount());
 		$this->assertEquals(1, count($reloaded->getDiscountConditions(true)));
 
 		$condition->removeValue('TESTING');
@@ -688,6 +704,7 @@ class DiscountConditionTest extends LiveCartTest
 		$action->isEnabled->set(false);
 		$action->save();
 
+		// price = 10
 		$price = $this->product1->getPricingHandler()->getPrice($this->usd);
 		$price->setPriceRule(3, null, 5);
 		$price->save();
@@ -712,6 +729,8 @@ class DiscountConditionTest extends LiveCartTest
 		$this->assertEquals(1, count($this->order->getDiscountActions(true)));
 
 		$this->order->reset();
+		$this->assertEquals(1, count($this->order->getDiscountConditions(true)));
+		$this->assertEquals(1, count($this->order->getDiscountActions(true)));
 		$this->assertEquals(20, $this->order->getTotal(true));
 	}
 }

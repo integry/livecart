@@ -863,7 +863,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		self::commit();
 	}
 
-	private static function updateCategoryIntervals()
+	public static function updateCategoryIntervals($productID = null)
 	{
 		$sql = "UPDATE Product
 					LEFT JOIN (
@@ -873,6 +873,12 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 						ON productID=ID
 					LEFT JOIN Category ON Product.categoryID=Category.ID
 					SET categoryIntervalCache=CONCAT(Category.lft,'-',Category.rgt,',',COALESCE(intervals,''))";
+
+		if ($productID)
+		{
+			$sql .= ' WHERE Product.ID=' . $productID;
+		}
+
 		self::getDBConnection()->executeUpdate($sql);
 	}
 

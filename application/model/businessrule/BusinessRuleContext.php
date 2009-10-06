@@ -21,7 +21,7 @@ class BusinessRuleContext
 
 	private $pastOrders = null;
 
-	public function setOrder(CustomerOrder $order)
+	public function setOrder(BusinessRuleOrderInterface $order)
 	{
 		$this->order = $order;
 	}
@@ -150,6 +150,16 @@ class BusinessRuleContext
 		$this->pastOrders = $pastOrders;
 
 		return $this->pastOrders;
+	}
+
+	public function getUserGroupID()
+	{
+		if (!$this->user)
+		{
+			return 0;
+		}
+
+		return is_null($this->user->userGroup->get()) ? 0 : $this->user->userGroup->get()->getID();
 	}
 
 	private function isSessionCacheUsable()

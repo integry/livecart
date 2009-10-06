@@ -1,22 +1,23 @@
 <?php
 
-ClassLoader::import("application.model.Currency");
-ClassLoader::import("application.model.user.User");
-ClassLoader::import("application.model.user.UserAddress");
-ClassLoader::import("application.model.product.Product");
-ClassLoader::import("application.model.order.OrderCoupon");
-ClassLoader::import("application.model.order.OrderedItem");
-ClassLoader::import("application.model.order.Shipment");
-ClassLoader::import("application.model.order.OrderDiscount");
-ClassLoader::import("application.model.delivery.ShipmentDeliveryRate");
-ClassLoader::import("application.model.eav.EavAble");
-ClassLoader::import("application.model.eav.EavObject");
-ClassLoader::import("application.model.order.Transaction");
-ClassLoader::import("application.model.order.InvoiceNumberGenerator");
-ClassLoader::import("application.model.discount.DiscountActionSet");
+ClassLoader::import('application.model.Currency');
+ClassLoader::import('application.model.user.User');
+ClassLoader::import('application.model.user.UserAddress');
+ClassLoader::import('application.model.product.Product');
+ClassLoader::import('application.model.order.OrderCoupon');
+ClassLoader::import('application.model.order.OrderedItem');
+ClassLoader::import('application.model.order.Shipment');
+ClassLoader::import('application.model.order.OrderDiscount');
+ClassLoader::import('application.model.delivery.ShipmentDeliveryRate');
+ClassLoader::import('application.model.eav.EavAble');
+ClassLoader::import('application.model.eav.EavObject');
+ClassLoader::import('application.model.order.Transaction');
+ClassLoader::import('application.model.order.InvoiceNumberGenerator');
+ClassLoader::import('application.model.discount.DiscountActionSet');
 
-ClassLoader::import("application.model.businessrule.BusinessRuleController");
-ClassLoader::import("application.model.businessrule.BusinessRuleContext");
+ClassLoader::import('application.model.businessrule.BusinessRuleController');
+ClassLoader::import('application.model.businessrule.BusinessRuleContext');
+ClassLoader::import('application.model.businessrule.interface.BusinessRuleOrderInterface');
 
 /**
  * Represents customers order - products placed in shopping basket or wish list
@@ -24,7 +25,7 @@ ClassLoader::import("application.model.businessrule.BusinessRuleContext");
  * @package application.model.order
  * @author Integry Systems <http://integry.com>
  */
-class CustomerOrder extends ActiveRecordModel implements EavAble
+class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOrderInterface
 {
 	public $orderedItems = array();
 
@@ -133,7 +134,6 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 
 		$itemSet = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category', 'DefaultImage' => 'ProductImage'));
 		$this->orderedItems = $itemSet->getData();
-
 		$products = $itemSet->extractReferencedItemSet('product');
 		ProductPrice::loadPricesForRecordSet($products);
 
@@ -179,7 +179,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			Product::loadAdditionalCategoriesForSet(ARSet::buildFromArray($this->orderedItems)->extractReferencedItemSet('product'));
 		}
 
-		if (!$this->isFinalized->get())
+		if (!$this->isFinalized->get() && $this->orderedItems)
 		{
 			$this->updateToStock();
 		}
@@ -628,7 +628,6 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		{
 			foreach ($shipment->getItems() as $item)
 			{
-				$item->reservedProductCount->set($item->count->get());
 				$item->reserve();
 				$item->save();
 			}
@@ -1346,7 +1345,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 				$result['in'][] = array('id' => $item->getID());
 			}
 
-			if (!$product->isBackOrderable->get() && !$item->isSavedForLater->get())
+			if (!$product->isBackOrderable->get() && !$item->isSavedForLater->get() && !$product->isBundle())
 			{
 				if ($product->stockCount->get() <= 0)
 				{
@@ -1455,6 +1454,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		}
 
 		return $this->currency->get();
+	}
+
+	public function getCompletionDate()
+	{
+		return $this->dateCompleted->get();
 	}
 
 	/*####################  Data array transformation ####################*/
@@ -1869,7 +1873,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			BusinessRuleController::clearCache();
 		}
 
-		if (!$this->orderedItems)
+		if (!$this->getShoppingCartItemCount())
 		{
 			return array();
 		}

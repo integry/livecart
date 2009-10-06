@@ -2,6 +2,7 @@
 
 ClassLoader::import('application.model.businessrule.interface.BusinessRuleProductInterface');
 ClassLoader::import('application.model.businessrule.RuleProductContainer');
+ClassLoader::import('application.model.businessrule.interface.BusinessRuleOrderInterface');
 
 /**
  * Implements setItemPrice and getItemPrice methods of OrderedItem
@@ -9,7 +10,7 @@ ClassLoader::import('application.model.businessrule.RuleProductContainer');
  * @author Integry Systems
  * @package application.model.businessrule
  */
-class RuleOrderContainer/* implements BusinessRuleOrderInterface*/
+class RuleOrderContainer implements BusinessRuleOrderInterface
 {
 	private $total;
 	private $currency;
@@ -30,8 +31,7 @@ class RuleOrderContainer/* implements BusinessRuleOrderInterface*/
 			}
 
 			// only keep the essential fields
-			$product = array_intersect_key($product, array_flip(array('ID', 'sku', 'manufacturerID', 'categoryID', 'categoryIntervalCache')));
-			$orderItem = new RuleProductContainer($product);
+			$orderItem = RuleProductContainer::createFromArray($product);
 			$orderItem->setCount($item['count']);
 			$orderItem->setItemPrice($item['price']);
 			$this->items[] = $orderItem;

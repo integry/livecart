@@ -131,6 +131,13 @@
 			exit;
 		}
 
+		catch (SQLException $e)
+		{
+			$_REQUEST['exception'] = $e;
+			$app->getRouter()->setRequestedRoute('err/database');
+			runApp($app);
+		}
+
 		catch (Exception $e)
 		{
 			$route = 'err/redirect/500';
