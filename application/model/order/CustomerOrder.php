@@ -1882,16 +1882,21 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		return $controller->getValidConditions();
 	}
 
-	private function getBusinessRuleContext()
+	public function getBusinessRuleContext()
 	{
-		$context = new BusinessRuleContext();
-		$context->setOrder($this);
-		if ($this->user->get())
+		if (!$this->businessRuleContext)
 		{
-			$context->setUser($this->user->get());
+			$context = new BusinessRuleContext();
+			$context->setOrder($this);
+			if ($this->user->get())
+			{
+				$context->setUser($this->user->get());
+			}
+
+			$this->businessRuleContext = $context;
 		}
 
-		return $context;
+		return $this->businessRuleContext;
 	}
 
 	public function getDiscountActions($reload = false)

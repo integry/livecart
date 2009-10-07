@@ -198,7 +198,25 @@ class ProductPrice extends ActiveRecordModel
 		}
 
 		// include past orders
+		$dateRange = $item->isPastOrdersInQuantityPrices();
+		if (!is_null($dateRange))
+		{
+			$from = $dateRange ? strtotime('now -' . (int)$dateRange . ' days') : 0;
+			$orders = $item->customerOrder->get()->getBusinessRuleContext()->getPastOrdersBetween($from, time());
+			$id = $item->getProduct()->getID();
 
+			foreach ($orders as $order)
+			{
+				foreach ($order->getPurchasedItems() as $i)
+				{
+					$product = $i->getProduct();
+					if ($id == $product['ID'])
+					{
+						$itemCnt += $i->getCount();
+					}
+				}
+			}
+		}
 
 		return self::getProductGroupPrice($groupID, $rules, $itemCnt);
 	}

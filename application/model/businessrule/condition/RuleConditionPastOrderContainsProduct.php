@@ -12,9 +12,6 @@ class RuleConditionPastOrderContainsProduct extends RuleConditionContainsProduct
 {
 	protected function getOrders()
 	{
-		$pastOrders = $this->getContext()->getPastOrders();
-		$pastOrders = $pastOrders ? $pastOrders['orders'] : array();
-
 		$ser = $this->params['serializedCondition'];
 		if (!empty($ser['time']))
 		{
@@ -44,14 +41,7 @@ class RuleConditionPastOrderContainsProduct extends RuleConditionContainsProduct
 				}
 			}
 
-			foreach ($pastOrders as $key => $order)
-			{
-				$completed = strtotime($order->getCompletionDate());
-				if ($completed < $timeFrom || $completed > $timeTo)
-				{
-					unset($pastOrders[$key]);
-				}
-			}
+			$pastOrders = $this->getContext()->getPastOrdersBetween($timeFrom, $timeTo);
 		}
 
 		return $pastOrders;

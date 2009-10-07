@@ -42,6 +42,7 @@ class DiscountAction extends ActiveRecordModel
 
 		$schema->registerField(new ARField("amount", ARFloat::instance()));
 		$schema->registerField(new ARField("actionClass", ARVarchar::instance(80)));
+		$schema->registerField(new ARField("serializedData", ARText::instance()));
 	}
 
 	public static function getNewInstance(DiscountCondition $condition, $className = 'RuleActionPercentageDiscount')
@@ -67,6 +68,13 @@ class DiscountAction extends ActiveRecordModel
 		return $className;
 	}
 
+	public function setParamValue($key, $value)
+	{
+		$params = unserialize($this->serializedData->get());
+		$params[$key] = $value;
+		$this->serializedData->set(serialize($params));
+	}
+
 	public function save()
 	{
 		BusinessRuleController::clearCache();
@@ -77,6 +85,21 @@ class DiscountAction extends ActiveRecordModel
 	{
 		$this->setLastPosition();
 		return parent::insert();
+	}
+
+	/**
+	 * Creates array representation
+	 *
+	 * @return array
+	 */
+	protected static function transformArray($array, ARSchema $schema)
+	{
+		if (!empty($array['serializedData']))
+		{
+			$array['serializedData'] = unserialize($array['serializedData']);
+		}
+
+		return parent::transformArray($array, $schema);
 	}
 }
 

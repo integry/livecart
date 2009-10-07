@@ -36,7 +36,7 @@ class RuleProductContainer implements BusinessRuleProductInterface
 
 	public function setCount($count)
 	{
-		$this->count = 1;
+		$this->count = $count;
 	}
 
 	public function getCount()

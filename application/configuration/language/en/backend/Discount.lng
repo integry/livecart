@@ -84,7 +84,7 @@ _discount_limit=Discount limit
 _discount_limit_descr=Max number of items to apply discount to.
 _is_order_level=Apply limit and step order-wide
 _discount_isOrderLevel_descr=The limits and steps by default only apply to products within the same line item. Mark this checkbox to apply limits and steps order-wide (in order from the lowest to highest priced products). This allows to create promotions like "Buy 3 different CD's and get the cheapest one free".
-_apply_to=Apply discount to
+_apply_to=Apply to
 
 RuleActionPercentageDiscount=Apply percentage discount
 RuleActionFixedDiscount=Apply fixed amount discount
@@ -92,6 +92,7 @@ RuleActionPercentageSurcharge=Add percentage surcharge
 RuleActionFixedSurcharge=Add fixed amount surcharge
 RuleActionDisableCheckout=Disable checkout
 RuleActionSumVariations=Sum product variations towards quantity discounts
+RuleActionIncludePastOrdersInQuantityPrices=Count past orders towards quantity prices
 
 _apply_order=Whole order
 _apply_matched_items=Matched items only
@@ -99,6 +100,8 @@ _apply_custom_items=Items matched by a custom condition
 _confirm_action_delete=Really delete this action?
 _is_enabled=Enabled
 _stop_processing=Stop discount calculation after processing this rule
+
+_orders_from_past_x_days=Orders from the past .. days
 
 _rule_was_successfully_saved=The business rule was successfully saved
 _rule_name_empty=Please enter the business rule name

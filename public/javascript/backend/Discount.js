@@ -807,6 +807,8 @@ Backend.Discount.Action.prototype =
 		this.percentSign = this.node.down('.percent');
 		this.currencySign = this.node.down('.currency');
 		this.amountFields = this.node.down('.amountFields');
+		this.classFields = $A(this.node.getElementsByClassName('classContainer'));
+		this.applyTo = this.node.down('.applyTo');
 	},
 
 	bindEvents: function()
@@ -823,6 +825,20 @@ Backend.Discount.Action.prototype =
 		{
 			this[field].id = field + '_' + this.action.ID;
 			$(this[field].parentNode).down('label').setAttribute('for', field + '_' + this.action.ID);
+		}.bind(this));
+
+		// custom fields
+		$A(this.node.down('.actionFields').getElementsByClassName('actionField')).each(function(field)
+		{
+			var serialized = this.action.serializedData;
+			if (serialized && (undefined != serialized[field.name]))
+			{
+				field.value = serialized[field.name];
+			}
+
+			field.name += '_' + this.action.ID;
+			field.id = field.name;
+			Event.observe(field, 'change', this.saveFieldChange.bind(this));
 		}.bind(this));
 
 		Event.observe(this.type, 'change', this.changeType.bind(this));
@@ -867,8 +883,10 @@ Backend.Discount.Action.prototype =
 
 	changediscountType: function()
 	{
+		this.classFields.invoke('hide');
 		this.percentSign.hide();
 		this.currencySign.hide();
+		this.applyTo.hide();
 
 		if (this.isPercent() || this.isAmount())
 		{
@@ -886,6 +904,19 @@ Backend.Discount.Action.prototype =
 		else
 		{
 			this.currencySign.show();
+		}
+
+		this.classFields.each(function(container)
+		{
+			if (container.hasClassName(this.actionClass.value))
+			{
+				container.show();
+			}
+		}.bind(this));
+
+		if (Backend.Discount.Action.prototype.itemActions[this.actionClass.value])
+		{
+			this.applyTo.show();
 		}
 	},
 
@@ -948,7 +979,7 @@ Backend.Discount.Action.prototype =
 			value = field.checked ? 1 : 0;
 		}
 
-		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'updateActionField', {type: this.actionClass.value, field: field.name, value: value}), null, this.completeUpdateField.bind(this));
+		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'updateActionField', {type: this.actionClass.value, field: field.name, value: value, isParam: field.hasClassName('actionField')}), null, this.completeUpdateField.bind(this));
 	},
 
 	addCondition: function(condition)
@@ -974,6 +1005,8 @@ Backend.Discount.Action.prototype =
 			var field = originalRequest.responseData;
 		}
 
-		$(this[field]).parentNode.removeClassName('fieldUpdating');
+		field = this[field] ? this[field] : field;
+
+		$(field).parentNode.removeClassName('fieldUpdating');
 	}
 }

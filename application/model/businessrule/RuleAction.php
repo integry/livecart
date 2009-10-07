@@ -26,6 +26,14 @@ abstract class RuleAction
 		return isset($this->params[$key]) ? $this->params[$key] : $defaultValue;
 	}
 
+	public function getFieldValue($key)
+	{
+		if (isset($this->params['serializedData'][$key]))
+		{
+			return $this->params['serializedData'][$key];
+		}
+	}
+
 	public static function createFromArray(array $array)
 	{
 		$inst = new $array['actionClass'];
@@ -86,6 +94,11 @@ abstract class RuleAction
 	public function getContext()
 	{
 		return $this->condition->getContext();
+	}
+
+	public function getFields()
+	{
+		return array();
 	}
 }
 

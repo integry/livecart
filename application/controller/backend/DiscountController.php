@@ -55,6 +55,17 @@ class DiscountController extends ActiveGridController
 
 		$response->set('currencyCode', $this->application->getDefaultCurrencyCode());
 
+		$actionFields = $itemActions = array();
+		foreach ($response->get('actionTypes') as $class => $name)
+		{
+			$actionFields[$class] = call_user_func(array($class, 'getFields'));
+			$reflection = new ReflectionClass($class);
+			$itemActions[$class] = $reflection->implementsInterface('RuleItemAction');
+		}
+
+		$response->set('actionFields', array_filter($actionFields));
+		$response->set('itemActions', $itemActions);
+
 		return $response;
 	}
 
@@ -393,7 +404,15 @@ class DiscountController extends ActiveGridController
 		}
 		else
 		{
-			$action->$fieldName->set($value);
+			if ($this->request->get('isParam'))
+			{
+				$action->setParamValue($fieldName, $value);
+				$fieldName .= '_' . $action->getID();
+			}
+			else
+			{
+				$action->$fieldName->set($value);
+			}
 		}
 
 		$action->save();

@@ -499,6 +499,24 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		return $this->isVariationDiscountsSummed;
 	}
 
+	/**
+	 *	Include past orders in quantity prices
+	 */
+	public function setPastOrdersInQuantityPrices($dateRange)
+	{
+		if (!$dateRange)
+		{
+			$dateRange = '';
+		}
+
+		$this->pastOrdersInQuantityPrices = $dateRange;
+	}
+
+	public function isPastOrdersInQuantityPrices()
+	{
+		return $this->pastOrdersInQuantityPrices;
+	}
+
   	/*####################  Saving ####################*/
 
 	protected function insert()

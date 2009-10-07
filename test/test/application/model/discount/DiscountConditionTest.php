@@ -733,6 +733,76 @@ class DiscountConditionTest extends LiveCartTest
 		$this->assertEquals(1, count($this->order->getDiscountActions(true)));
 		$this->assertEquals(20, $this->order->getTotal(true));
 	}
+
+	public function testPastOrdersInQuantityPrices()
+	{
+		ActiveRecordModel::getApplication()->getConfig()->set('INVENTORY_TRACKING', 'DISABLE');
+
+		$condition = DiscountCondition::getNewInstance();
+		$condition->isEnabled->set(true);
+		$condition->save();
+
+		$action = DiscountAction::getNewInstance($condition);
+		$action->actionClass->set('RuleActionIncludePastOrdersInQuantityPrices');
+		$action->isEnabled->set(true);
+		$action->save();
+
+		$this->product1->isEnabled->set(true);
+		$this->product1->stockCount->set(10);
+		$this->product1->save();
+
+		// price = 10
+		$price = $this->product1->getPricingHandler()->getPrice($this->usd);
+		$price->setPriceRule(3, null, 5);
+		$price->setPriceRule(4, null, 4);
+		$price->save();
+
+		$this->order->addProduct($this->product1, 2, true);
+		$this->order->save();
+		$this->assertEquals(20, $this->order->getTotal(true));
+		$this->order->finalize();
+		$this->order->isPaid->set(true);
+		$this->order->save();
+		$this->order->reload();
+
+		ActiveRecord::clearPool();
+
+		// new order, purchase 1 item, but receive discount like for 3 items
+		$this->validatePastOrderQtPriceOrderTotal(1, 5);
+		$this->validatePastOrderQtPriceOrderTotal(2, 8);
+
+		// test with date range
+		$action->setParamValue('days', 3);
+		$action->save();
+		$this->order->dateCompleted->set(strtotime('now -4 days'));
+		$this->order->save();
+		$this->validatePastOrderQtPriceOrderTotal(1, 10);
+
+		$action->setParamValue('days', 4);
+		$action->save();
+		$this->validatePastOrderQtPriceOrderTotal(1, 5);
+
+		$this->order->dateCompleted->set(strtotime('now -2 days'));
+		$this->order->save();
+		$action->save();
+		$this->validatePastOrderQtPriceOrderTotal(1, 5);
+
+		$this->order->dateCompleted->set(strtotime('now -20 days'));
+		$this->order->save();
+		$action->save();
+		$this->validatePastOrderQtPriceOrderTotal(1, 10);
+	}
+
+	private function validatePastOrderQtPriceOrderTotal($cnt, $total)
+	{
+		$order = CustomerOrder::getNewInstance($this->user);
+		$pastOrders = $order->getBusinessRuleContext()->getPastOrders();
+		$this->assertEquals(1, count($pastOrders['orders']));
+		$this->assertEquals(1, count($order->getBusinessRuleContext()->getPastOrdersBetween(0, time())));
+		$order->addProduct($this->product1, $cnt, true);
+
+		$this->assertEquals($total, $order->getTotal(true));
+	}
 }
 
 ?>

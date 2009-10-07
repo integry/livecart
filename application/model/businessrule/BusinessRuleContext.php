@@ -94,7 +94,7 @@ class BusinessRuleContext
 
 		if (empty($pastOrders))
 		{
-			$f = select(eq('CustomerOrder.userID', $this->user->getID()), eq('CustomerOrder.isFinalized', true), eq('CustomerOrder.isCancelled', false), eq('CustomerOrder.isPaid', true));
+			$f = select(eq('CustomerOrder.userID', $this->user->getID()), eq('CustomerOrder.isFinalized', true), eq('CustomerOrder.isCancelled', 0), eq('CustomerOrder.isPaid', true));
 			$f->setOrder(f('OrderedItem.customerOrderID'), 'DESC');
 			$records = ActiveRecordModel::getRecordSetArray('OrderedItem', $f, array('CustomerOrder', 'Product'));
 
@@ -150,6 +150,23 @@ class BusinessRuleContext
 		$this->pastOrders = $pastOrders;
 
 		return $this->pastOrders;
+	}
+
+	public function getPastOrdersBetween($timeFrom, $timeTo)
+	{
+		$pastOrders = $this->getPastOrders();
+		$pastOrders = $pastOrders ? $pastOrders['orders'] : array();
+
+		foreach ($pastOrders as $key => $order)
+		{
+			$completed = strtotime($order->getCompletionDate());
+			if ($completed < $timeFrom || $completed > $timeTo)
+			{
+				unset($pastOrders[$key]);
+			}
+		}
+
+		return $pastOrders;
 	}
 
 	public function getUserGroupID()

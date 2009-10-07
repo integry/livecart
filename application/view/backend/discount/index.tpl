@@ -60,6 +60,7 @@
 	{literal}
 	<script type="text/javascript">
 		Backend.Discount.Editor.prototype.Links.add = Backend.Router.createUrl('backend.discount', 'add');
+		Backend.Discount.Action.prototype.itemActions = {/literal}{json array=$itemActions}{literal};
 		Event.observe($("cancel_user_edit"), "click", function(e) {
 			Event.stop(e);
 			var editor = Backend.Discount.Editor.prototype.getInstance(Backend.Discount.Editor.prototype.getCurrentId(), false);
@@ -215,7 +216,31 @@
 					<label class="checkbox acronym"><a>{t _is_order_level}<div>{t _discount_isOrderLevel_descr}</div></a></label>
 				</span>
 				<div class="clear"></div>
+			</div>
 
+			<div class="actionFields">
+				{foreach from=$actionFields key=actionClass item=fields}
+					{if $fields}
+						<div class="classContainer {$actionClass}">
+							{foreach from=$fields item=field}
+								<p>
+									<label>{translate text=$field.label}</label>
+									<span>
+										{if $field.type == 'number'}
+											{textfield class="text number actionField `$field.name`" name=$field.name}
+										{/if}
+										<span class="progressIndicator" style="display: none;"></span>
+									</span>
+								</p>
+							{/foreach}
+						</div>
+					{/if}
+				{/foreach}
+			</div>
+
+			<div class="clear"></div>
+
+			<div class="applyTo">
 				<p>
 					<label>{t _apply_to}</label>
 					<span>{selectfield name="type" class="applyTo" options=$applyToChoices}</span>
