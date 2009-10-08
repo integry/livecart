@@ -55,6 +55,7 @@
 				<option value="setFinalized">{t _mark_completed}</option>
 			{/if}
 			{if $orderGroupID < 8}
+				<option value="printLabels" rel="blank">{t _print_shipping_labels}</option>
 				<optgroup label="{t _order_status}" class="massStatus">
 					<option value="setNew">{t _set_new}</option>
 					<option value="setProcessing">{t _set_processing}</option>

@@ -52,6 +52,11 @@
 	background-image: url('../../image/silk/table_save.png');
 }
 
+.tabOrdersContent .activeGridMass select
+{
+	width: auto;
+}
+
 /******************
     overview
 ******************/

@@ -222,13 +222,18 @@ PRICE_FILTER_TO_8=Price To
 PRICE_FILTER_TO_9=Price To
 PRICE_FILTER_TO_10=Price To
 
-_invoice=Invoices
+_invoices_labels=Invoices & Labels
 _seller_info=Seller Information
-DISABLE_INVOICES=Disable invoices
 INVOICE_SELLER_INFO=Seller contact information in invoice
 
 _invoice_preferences=Invoice Options
+DISABLE_INVOICES=Disable invoices
 INVOICE_SHOW_PAYMENT_INFO=Show payments
+
+_shipping_labels=Shipping Labels
+SHIP_LABELS_PER_ROW=Number of labels per row
+SHIP_LABELS_REPEAT=Times to repeat each label
+SHIP_LABELS_COPIES=Number of copies to print
 
 _searching=Searching
 _search_types=Additionally Searchable Data

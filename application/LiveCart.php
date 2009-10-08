@@ -165,11 +165,11 @@ class LiveCart extends Application
 		}
 	}
 
-	public function run()
+	public function run($redirect = false)
 	{
 		$this->processRuntimePlugins('startup');
 
-		$res = parent::run();
+		$res = parent::run($redirect);
 
 		$this->processRuntimePlugins('shutdown');
 

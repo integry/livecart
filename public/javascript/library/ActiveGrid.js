@@ -757,6 +757,14 @@ ActiveGrid.MassActionHandler.prototype =
 		}
 
 		this.formerLength = 0;
+
+		if ('blank' == this.actionSelector.options[this.actionSelector.selectedIndex].getAttribute('rel'))
+		{
+			this.form.target = '_blank';
+			this.form.submit();
+			return;
+		}
+
 		this.request = new LiveCart.AjaxRequest(this.form, indicator , this.dataResponse.bind(this),  {onInteractive: this.dataResponse.bind(this) });
 
 		this.progressBarContainer = this.handlerMenu.up('div').down('.activeGrid_massActionProgress');

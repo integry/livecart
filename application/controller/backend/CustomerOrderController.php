@@ -331,6 +331,7 @@ class CustomerOrderController extends ActiveGridController
 	public function processMass()
 	{
 		ClassLoader::import('application.helper.massAction.OrderMassActionProcessor');
+		ClassLoader::import('application.model.feed.ShipmentFeed');
 
 		$filter = new ARSelectFilter();
 		$grid = new ActiveGrid($this->application, $filter, 'CustomerOrder');
@@ -339,9 +340,23 @@ class CustomerOrderController extends ActiveGridController
 		$this->applyStateFilter($typeCond);
 		$filter->mergeCondition($typeCond);
 
-		$mass = new OrderMassActionProcessor($grid, array('controller' => $this));
-		$mass->setCompletionMessage($this->translate('_mass_action_succeed'));
-		return $mass->process(CustomerOrder::LOAD_REFERENCES);
+		if ('printLabels' == $this->request->get('act'))
+		{
+			$GLOBALS['filter'] = $filter;
+			return new InternalRedirectResponse('backend.customerOrder', 'printLabels');
+		}
+		else
+		{
+			$mass = new OrderMassActionProcessor($grid, array('controller' => $this));
+			$mass->setCompletionMessage($this->translate('_mass_action_succeed'));
+			return $mass->process(CustomerOrder::LOAD_REFERENCES);
+		}
+	}
+
+	public function printLabels()
+	{
+		$filter = $GLOBALS['filter'];
+		return new ActionResponse('feed', new ShipmentFeed($filter));
 	}
 
 	public function isMassCancelled()
