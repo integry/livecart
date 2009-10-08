@@ -133,7 +133,7 @@ class SessionOrder
 
 		if ($address = $session->get('shippingEstimateAddress'))
 		{
-			return $address;
+			return unserialize($address);
 		}
 		else
 		{

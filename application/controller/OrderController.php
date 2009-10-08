@@ -92,17 +92,43 @@ class OrderController extends FrontendController
 			$response->set('changes', $result);
 		}
 
-		if ($this->estimateShippingCost())
-		{
-			$this->order->getTotal(true);
-			$response->set('isShippingEstimated', true);
-		}
-
 		$options = $this->getItemOptions();
-
 		$currency = Currency::getValidInstanceByID($this->request->get('currency', $this->application->getDefaultCurrencyCode()), Currency::LOAD_DATA);
-
 		$form = $this->buildCartForm($this->order, $options);
+
+		if ($this->config->get('ENABLE_SHIPPING_ESTIMATE'))
+		{
+			$this->loadLanguageFile('User');
+
+			if ($this->estimateShippingCost())
+			{
+				$this->order->getTotal(true);
+				$response->set('isShippingEstimated', true);
+			}
+
+			$address = $this->order->shippingAddress->get();
+			foreach (array('countryID' => 'country', 'stateName' => 'state_text', 'postalCode' => 'postalCode', 'city' => 'city') as $addressKey => $formKey)
+			{
+				$form->set('estimate_' . $formKey, $address->$addressKey->get());
+			}
+
+			if ($address->state->get() && $address->state->get()->getID())
+			{
+				$form->set('estimate_state_select', $address->state->get()->getID());
+			}
+
+			$response->set('countries', $this->getCountryList($form));
+			$response->set('states', $this->getStateList($form->get('estimate_country')));
+
+			$hideConf = (array)$this->config->get('SHIP_ESTIMATE_HIDE_ENTRY');
+			$hideForm = !empty($hideConf['UNREGISTERED']) && $this->user->isAnonymous() ||
+						!empty($hideConf['ALL_REGISTERED']) && !$this->user->isAnonymous() ||
+						!empty($hideConf['REGISTERED_WITH_ADDRESS']) && !$this->user->defaultBillingAddress->get() ||
+						!$this->order->isShippingRequired() ||
+						$this->order->isMultiAddress->get();
+
+			$response->set('hideShippingEstimationForm', $hideForm);
+		}
 
 		$orderArray = $this->order->toArray();
 
@@ -150,7 +176,8 @@ class OrderController extends FrontendController
 			if (!$shipment->getSelectedRate())
 			{
 				$cheapest = $cheapestRate = null;
-				foreach ($shipment->getShippingRates() as $rate)
+				$rates = $shipment->getShippingRates();
+				foreach ($rates as $rate)
 				{
 					$price = $rate->getAmountByCurrency($this->order->getCurrency());
 					if (!$cheapestRate || ($price < $cheapest))
@@ -302,6 +329,8 @@ class OrderController extends FrontendController
 			$this->order->getCoupons(true);
 		}
 
+		$this->updateEstimateAddress();
+
 		$this->order->loadItemData();
 		$validator = $this->buildCartValidator($this->order, $this->getItemOptions());
 
@@ -399,6 +428,34 @@ class OrderController extends FrontendController
 		}
 
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
+	}
+
+	private function updateEstimateAddress()
+	{
+		if ($this->config->get('ENABLE_SHIPPING_ESTIMATE'))
+		{
+			if ($this->request->get('estimate_state_select'))
+			{
+				$this->request->set('estimate_stateID', $this->request->get('estimate_state_select'));
+			}
+
+			if ($this->request->get('estimate_state_text'))
+			{
+				$this->request->set('estimate_stateName', $this->request->get('estimate_state_text'));
+			}
+
+			$address = SessionOrder::getEstimateAddress();
+			$address->loadRequestData($this->request, 'estimate_');
+
+			if ($country = $this->request->get('estimate_country'))
+			{
+				$address->countryID->set($country);
+			}
+
+			$address->save();
+
+			SessionOrder::setEstimateAddress($address);
+		}
 	}
 
 	/**

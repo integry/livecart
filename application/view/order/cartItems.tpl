@@ -21,8 +21,9 @@
 		{include file="order/block/shipping.tpl"}
 		{include file="order/block/taxes.tpl"}
 		{include file="order/block/total.tpl"}
-		{include file="order/block/coupons.tpl"}
 		{include file="order/block/customFields.tpl"}
+		{include file="order/block/shippingEstimation.tpl"}
+		{include file="order/block/coupons.tpl"}
 		{include file="order/block/navigation.tpl"}
 
 	</tbody>
