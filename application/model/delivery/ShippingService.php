@@ -146,6 +146,8 @@ class ShippingService extends MultilingualObject
 	 */
 	public function getDeliveryRate(Shipment $shipment)
 	{
+		$hasFreeShipping = false;
+
 		// get applicable rates
 		if (self::WEIGHT_BASED == $this->rangeType->get())
 		{
@@ -172,37 +174,29 @@ class ShippingService extends MultilingualObject
 
 		$itemCount = $shipment->getChargeableItemCount($this->deliveryZone->get());
 
-		if (!$itemCount && $this->deliveryZone->get()->isFreeShipping->get())
-		{
-			// free shipping
-			$maxRate = 0;
-		}
-		else
-		{
-			$maxRate = 0;
+		$maxRate = 0;
 
-			foreach ($rates as $rate)
+		foreach ($rates as $rate)
+		{
+			$charge = $rate->flatCharge->get();
+
+			foreach ($shipment->getItems() as $item)
 			{
-				$charge = $rate->flatCharge->get();
+				$charge += $rate->getItemCharge($item);
+			}
 
-				foreach ($shipment->getItems() as $item)
-				{
-					$charge += $rate->getItemCharge($item);
-				}
+			if (self::WEIGHT_BASED == $this->rangeType->get())
+			{
+				$charge += ($rate->perKgCharge->get() * $weight);
+			}
+			else
+			{
+				$charge += ($rate->subtotalPercentCharge->get() / 100) * $total;
+			}
 
-				if (self::WEIGHT_BASED == $this->rangeType->get())
-				{
-					$charge += ($rate->perKgCharge->get() * $weight);
-				}
-				else
-				{
-					$charge += ($rate->subtotalPercentCharge->get() / 100) * $total;
-				}
-
-				if ($charge > $maxRate)
-				{
-					$maxRate = $charge;
-				}
+			if ($charge > $maxRate)
+			{
+				$maxRate = $charge;
 			}
 		}
 

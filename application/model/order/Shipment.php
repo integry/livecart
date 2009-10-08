@@ -706,7 +706,7 @@ class Shipment extends ActiveRecordModel
 
 		// formatted subtotal
 		$array['formattedSubTotal'] = $array['formattedSubTotalBeforeTax'] = array();
-		$array['formattedSubTotal'][$id] = $array['subTotal'][$id];
+		$array['formattedSubTotal'][$id] = $currency->getFormattedPrice($array['subTotal'][$id]);
 		$array['formattedSubTotalBeforeTax'][$id] = $currency->getFormattedPrice($array['subTotal'][$id] - $this->getTaxAmount());
 
 		// selected shipping rate
@@ -789,7 +789,7 @@ class Shipment extends ActiveRecordModel
 		{
 			$rate->setApplication($this->getApplication());
 
-			if($this->getRateId() == $rate->getServiceId())
+			if (($this->getRateId() == $rate->getServiceId()) || ($this->order->get()->isFinalized->get()))
 			{
 				return $rate;
 			}

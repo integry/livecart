@@ -208,6 +208,8 @@ class ShipmentController extends StoreManagementController
 
 	public function getAvailableServices()
 	{
+		$this->loadLanguageFile('Checkout');
+
 		if($shipmentID = (int)$this->request->get('id'))
 		{
 			$shipment = Shipment::getInstanceByID('Shipment', $shipmentID, true, array('Order' => 'CustomerOrder'));

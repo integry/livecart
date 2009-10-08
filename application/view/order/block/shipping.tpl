@@ -1,4 +1,4 @@
-{if $cart.shippingSubtotal}
+{if $cart.formatted_shippingSubtotal}
 	<tr>
 		<td colspan="3" class="subTotalCaption">
 			{if $isShippingEstimated}

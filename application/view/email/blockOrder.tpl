@@ -2,7 +2,7 @@
 {include file="email/blockOrderItems.tpl"}
 
 {t _subtotal|@str_pad_left:49}: {$order.formatted_itemSubtotalWithoutTax}
-{if $order.shippingSubtotal}
+{if $order.formatted_shippingSubtotal}
 {t _shipping|@str_pad_left:49}: {$order.formatted_shippingSubtotal}
 {/if}
 {if $order.taxes[$order.Currency.ID]}
@@ -24,7 +24,7 @@
 {include file="email/blockOrderItems.tpl" noTable=true}
 
 <tr><td colspan="3">{t _subtotal}</td><td align="right">{$order.formatted_itemSubtotalWithoutTax}</td></tr>
-{if $order.shippingSubtotal}
+{if $order.formatted_shippingSubtotal}
 	{if $order.shipments|@count == 1}
 		{include file="email/blockShippingCost.tpl" shipment=$order.shipments.0}
 	{else}

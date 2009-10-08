@@ -1862,6 +1862,29 @@ class OrderTest extends OrderTestCommon
 		$this->assertEqual(400, $order->getTotal());
 	}
 
+	public function testFreeShipping()
+	{
+		$this->createOrderWithZone();
+		$this->newRate->delete();
+
+		$product = $this->products[0];
+		$product->isFreeShipping->set(true);
+		$this->order->addProduct($product, 1);
+
+		$this->assertSame($this->order->getDeliveryZone(), $this->newZone);
+
+		$shipment = $this->order->getShipments()->get(0);
+
+		$rates = $shipment->getShippingRates();
+		$this->assertEqual($rates->size(), 0);
+
+		$this->newZone->isFreeShipping->set(true);
+		$this->assertEqual($shipment->getChargeableWeight(), 0);
+		$rates = $shipment->getShippingRates();
+		$this->assertEqual($rates->size(), 1);
+
+	}
+
 	private function createOrderWithZone(DeliveryZone $zone = null)
 	{
 		if (is_null($zone))
@@ -1872,6 +1895,7 @@ class OrderTest extends OrderTestCommon
 		$zone->name->set('Latvia');
 		$zone->isEnabled->set(true);
 		$zone->save();
+		$this->newZone = $zone;
 
 		$country = DeliveryZoneCountry::getNewInstance($zone, 'LV');
 		$country->save();
@@ -1884,10 +1908,12 @@ class OrderTest extends OrderTestCommon
 
 		$service = ShippingService::getNewInstance($zone, 'def', ShippingService::SUBTOTAL_BASED);
 		$service->save();
+		$this->newService = $service;
 
 		$shippingRate = ShippingRate::getNewInstance($service, 0, 10000000);
 		$shippingRate->flatCharge->set(100);
 		$shippingRate->save();
+		$this->newRate = $shippingRate;
 
 		// user address
 		$address = UserAddress::getNewInstance();

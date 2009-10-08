@@ -35,6 +35,7 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 		$inst->setApplication($service->getApplication());
 		$inst->setCost($cost, $service->getApplication()->getDefaultCurrencyCode());
 		$inst->setService($service);
+		$inst->setServiceName($service->getValueByLang('name'));
 		return $inst;
 	}
 

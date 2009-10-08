@@ -242,6 +242,19 @@ class DeliveryZone extends MultilingualObject
 			}
 		}
 
+		if (!$shipment->getChargeableItemCount($this))
+		{
+			$app = self::getApplication();
+
+			if ($app->getConfig()->get('FREE_SHIPPING_AUTO_RATE'))
+			{
+				$freeService = ShippingService::getNewInstance($this, $app->translate('_free_shipping'), ShippingService::WEIGHT_BASED);
+				$freeRate = ShipmentDeliveryRate::getNewInstance($freeService, 0);
+				$freeRate->setServiceID('FREE');
+				$rates->add($freeRate);
+			}
+		}
+
 		return $rates;
 	}
 

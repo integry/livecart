@@ -22,6 +22,7 @@ _err_no_rates_for_address=No shipping rates are available for the selected addre
 _select_shipping=Select shipping method
 _err_select_shipping=Please select a shipping method for this shipment
 _info_multi_shipments=One or more of your ordered products requires a separate shipment.
+_free_shipping=Free shipping
 
 ########################
 # Pay

@@ -290,6 +290,9 @@ _tax_target_zone=Order target delivery zone
 _base_tax_rate=Use base tax rate
 _default_zone=Default zone
 
+_free_shipping=Free Shipping
+FREE_SHIPPING_AUTO_RATE=Provide a default free shipping rate when applicable
+
 _store_loc_add=Store Location Address
 STORE_COUNTRY=Store country
 STORE_STATE=Store state
