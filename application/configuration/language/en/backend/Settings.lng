@@ -444,3 +444,7 @@ BACKEND_LOGIN_LOGO=Login page logo image
 _backend_options=Display Options
 BACKEND_SHOW_HELP=Display help link
 BACKEND_SHOW_FOOTER_LINKS=Display footer links
+
+_seo=Search Engine Optimization
+URL_REPLACE_SPECIAL_CHARS=Replace special/diacritic characters (for example, äåæ) in URLs
+URL_301_AUTO_REDIRECT=Create a permanent 301 redirect to the new URL if category or product page URL changes

@@ -4,6 +4,7 @@ ClassLoader::import('application.model.product.Product');
 ClassLoader::import('application.controller.FrontendController');
 ClassLoader::import('application.controller.CategoryController');
 ClassLoader::import('application.model.presentation.CategoryPresentation', true);
+ClassLoader::importNow('application.helper.CreateHandleString');
 
 /**
  *
@@ -82,6 +83,7 @@ class ProductController extends FrontendController
 		}
 
 		$productArray = $product->toArray();
+		$this->redirect301($this->request->get('producthandle'), createHandleString($productArray['name_lang']));
 		//ProductSpecification::loadSpecificationForProductArray($productArray);
 
 		// filter empty attributes

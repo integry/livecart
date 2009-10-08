@@ -14,6 +14,7 @@ ClassLoader::import('application.model.product.ProductPrice');
 ClassLoader::import('application.model.product.ProductCompare');
 ClassLoader::import('application.model.category.SpecFieldValue');
 ClassLoader::import('application.model.category.SearchLog');
+ClassLoader::importNow('application.helper.CreateHandleString');
 
 /**
  * Index controller for frontend
@@ -178,6 +179,11 @@ class CategoryController extends FrontendController
 		}
 
 		$categoryArray = $this->getCategory()->toArray();
+
+		if (!$this->getCategory()->isRoot())
+		{
+			$this->redirect301($this->request->get('cathandle'), createHandleString($categoryArray['name_lang']));
+		}
 
 		// if all the results come from one category, redirect to this category
 		if ((count($categoryNarrow) == 1) && (count($this->filters) == 1))

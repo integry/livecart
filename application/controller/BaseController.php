@@ -382,6 +382,21 @@ abstract class BaseController extends Controller implements LCiTranslator
 		$this->checkAccess();
 	}
 
+	/**
+	 *  Permanent redirect for URLs changed with category/product names
+	 */
+	public function redirect301($oldHandle, $newHandle)
+	{
+		$oldHandle = urlencode($oldHandle);
+		$newHandle = urlencode($newHandle);
+		if (($oldHandle != $newHandle) && $this->config->get('URL_301_AUTO_REDIRECT'))
+		{
+			header('HTTP/1.1 301 Moved Permanently');
+			header('Location: ' . str_replace($oldHandle, $newHandle, $_SERVER['REQUEST_URI']));
+			exit;
+		}
+	}
+
 	private function checkAccess()
 	{
 		// If backend controller is being used then we should
