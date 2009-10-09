@@ -57,6 +57,8 @@
 			</optgroup>
 
 			<optgroup label="{t _shipping_opts}">
+				<option value="shippingClass">{t _set_shipping_class}</option>
+				<option value="taxClass">{t _set_tax_class}</option>
 				<option value="set_shippingWeight">{t _set_shipping_weight}</option>
 				<option value="set_minimumQuantity">{t _set_minimum_quantity}</option>
 				<option value="set_shippingSurchargeAmount">{t _set_shipping_surcharge}</option>
@@ -92,6 +94,8 @@
 			{textfield id="massForm_set_keywords_`$categoryID`" name="set_keywords" class="text" id="set_keywords_`$categoryID`" autocomplete="controller=backend.product field=keywords"}
 			{textfield id="massForm_set_URL_`$categoryID`" name="set_URL" class="text" id="set_url_`$categoryID`" autocomplete="controller=backend.product field=URL"}
 			{selectfield id="massForm_theme_`$categoryID`" name="theme" options=$themes}
+			{selectfield id="massForm_shippingClass_`$categoryID`" name="shippingClass" options=$shippingClasses}
+			{selectfield id="massForm_taxClass_`$categoryID`" name="taxClass" options=$taxClasses}
 		</span>
 
 		<input type="submit" value="{tn _process}" class="submit" />

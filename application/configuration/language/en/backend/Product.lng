@@ -31,6 +31,8 @@ _set_minimum_quantity=Set minimum order quantity
 _set_shipping_surcharge=Set shipping surcharge
 _set_as_featured_product=Set as featured product
 _set_attribute_value=Set Attribute Value
+_set_tax_class=Set tax class
+_set_shipping_class=Set shipping class
 _clear_attribute_value=Clear Attribute Value
 _add_related_product=Add related product
 _increase_price=Increase price (percent)
@@ -88,6 +90,9 @@ Manufacturer.name=Manufacturer
 ProductPrice.price=Price
 ProductPrice.listPrice=List price
 ProductImage.url=Image URL
+
+Product.shippingClass=Shipping class
+Product.taxClass=Tax class
 
 # Main form
 

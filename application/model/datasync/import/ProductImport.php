@@ -26,6 +26,8 @@ class ProductImport extends DataImport
 		}
 
 		unset($fields['Product.reviewCount']);
+		unset($fields['ShippingClass.name']);
+		unset($fields['TaxClass.name']);
 		unset($fields['hiddenType']);
 		unset($fields['ProductImage.url']);
 
@@ -35,6 +37,9 @@ class ProductImport extends DataImport
 			list($class, $field) = explode('.', $field, 2);
 			$groupedFields[$class][$class . '.' . $field] = $fieldName;
 		}
+
+		$groupedFields['Product']['Product.shippingClass'] = $this->translate('Product.shippingClass');
+		$groupedFields['Product']['Product.taxClass'] = $this->translate('Product.taxClass');
 
 		// do not show manufacturer field in a separate group
 		$groupedFields['Product'] = array_merge($groupedFields['Product'], $groupedFields['Manufacturer']);
@@ -120,7 +125,7 @@ class ProductImport extends DataImport
 	{
 		$impReq = new Request();
 		$defLang = $this->application->getDefaultLanguageCode();
-		$references = array('DefaultImage' => 'ProductImage', 'Manufacturer');
+		$references = array('DefaultImage' => 'ProductImage', 'Manufacturer', 'ShippingClass', 'TaxClass');
 
 		$cat = $this->getCategory($profile, $record);
 
@@ -208,6 +213,16 @@ class ProductImport extends DataImport
 						$product->parent->set(Product::getInstanceBySKU($value));
 						continue;
 					}
+				}
+
+				if ('Product.taxClass' == $column)
+				{
+					$product->taxClass->set(TaxClass::findByName($value));
+				}
+
+				if ('Product.shippingClass' == $column)
+				{
+					$product->shippingClass->set(ShippingClass::findByName($value));
 				}
 
 				if ('Product' == $className)

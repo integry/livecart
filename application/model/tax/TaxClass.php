@@ -75,6 +75,21 @@ class TaxClass extends MultilingualObject
 		return self::getRecordSet($f, $loadReferencedRecords);
 	}
 
+	public static function findByName($name)
+	{
+		$f = select(
+				new EqualsCond(
+					MultiLingualObject::getLangSearchHandle(
+						new ARFieldHandle('TaxClass', 'name'),
+						self::getApplication()->getDefaultLanguageCode()
+					),
+					$name
+				)
+			);
+
+		return ActiveRecordModel::getRecordSet('TaxClass', $f)->get(0);
+	}
+
 	protected function insert()
 	{
 	  	$this->setLastPosition();

@@ -72,6 +72,14 @@ class ProductMassActionProcessor extends MassActionProcessor
 			$instance->theme->set($this->params['theme']);
 			$instance->save();
 		}
+		else if ('shippingClass' == $act)
+		{
+			$product->shippingClass->set(ActiveRecordModel::getInstanceByIDIfExists('ShippingClass', $this->params['shippingClass'], false));
+		}
+		else if ('taxClass' == $act)
+		{
+			$product->taxClass->set(ActiveRecordModel::getInstanceByIDIfExists('TaxClass', $this->params['taxClass'], false));
+		}
 		else
 		{
 			parent::processRecord($product);

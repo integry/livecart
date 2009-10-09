@@ -72,6 +72,21 @@ class ShippingClass extends MultilingualObject
 		return self::getRecordSet(new ARSelectFilter(), $loadReferencedRecords);
 	}
 
+	public static function findByName($name)
+	{
+		$f = select(
+				new EqualsCond(
+					MultiLingualObject::getLangSearchHandle(
+						new ARFieldHandle('ShippingClass', 'name'),
+						self::getApplication()->getDefaultLanguageCode()
+					),
+					$name
+				)
+			);
+
+		return ActiveRecordModel::getRecordSet('ShippingClass', $f)->get(0);
+	}
+
 	protected function insert()
 	{
 	  	$this->setLastPosition();

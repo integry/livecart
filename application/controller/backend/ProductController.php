@@ -30,6 +30,8 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$response->set('categoryID', $category->getID());
 		$response->set('currency', $this->application->getDefaultCurrency()->getID());
 		$response->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
+		$response->set('shippingClasses', $this->getSelectOptionsFromSet(ShippingClass::getAllClasses()));
+		$response->set('taxClasses', $this->getSelectOptionsFromSet(TaxClass::getAllClasses()));
 
 		$this->setGridResponse($response);
 
@@ -129,7 +131,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	protected function getReferencedData()
 	{
-		return array('Category', 'Manufacturer', 'DefaultImage' => 'ProductImage');
+		return array('Category', 'Manufacturer', 'DefaultImage' => 'ProductImage', 'TaxClass', 'ShippingClass');
 	}
 
 	protected function getColumnValue($product, $class, $field)
@@ -288,6 +290,14 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			ClassLoader::import('application.model.presentation.CategoryPresentation');
 			$params['theme'] = $this->request->get('theme');
 		}
+		else if ('shippingClass' == $act)
+		{
+			$params['shippingClass'] = $this->request->get('shippingClass');
+		}
+		else if ('taxClass' == $act)
+		{
+			$params['taxClass'] = $this->request->get('taxClass');
+		}
 
 		$response = parent::processMass($params);
 
@@ -346,6 +356,18 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$availableColumns['ProductImage.url'] = array
 			(
 				'name' => $this->translate('ProductImage.url'),
+				'type' => 'text'
+			);
+
+		$availableColumns['ShippingClass.name'] = array
+			(
+				'name' => $this->translate('Product.shippingClass'),
+				'type' => 'text'
+			);
+
+		$availableColumns['TaxClass.name'] = array
+			(
+				'name' => $this->translate('Product.taxClass'),
 				'type' => 'text'
 			);
 
