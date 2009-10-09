@@ -26,7 +26,9 @@
 	{/if}
 
 	{if $cart.wishListItems && 'ENABLE_WISHLISTS'|config}
-		{include file="order/wishList.tpl"}
+		<div style="clear: left;">
+			{include file="order/wishList.tpl"}
+		</div>
 	{/if}
 
 	{/if}

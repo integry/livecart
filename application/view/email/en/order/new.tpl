@@ -8,7 +8,7 @@ You will be able to track the progress of your order at this page:
 
 If you have any questions regarding this order, you can send us a message from the above page as well.
 
-We remind that the following items have been ordered:
+We remind you that the following items have been ordered:
 {include file="email/blockOrder.tpl"}
 
 {include file="email/blockOrderAddresses.tpl"}

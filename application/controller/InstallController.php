@@ -235,9 +235,15 @@ class InstallController extends FrontendController
 		$languages = $this->locale->info()->getAllLanguages();
 		asort($languages);
 
+		$currencies = $this->locale->info()->getAllCurrencies();
+		foreach ($currencies as $key => $currency)
+		{
+			$currencies[$key] = $key . ' - ' . $currency;
+		}
+
 		$response = new ActionResponse('form', $form);
 		$response->set('languages', $languages);
-		$response->set('currencies', $this->locale->info()->getAllCurrencies());
+		$response->set('currencies', $currencies);
 		return $response;
 	}
 

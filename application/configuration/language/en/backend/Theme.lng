@@ -76,3 +76,12 @@ BOX_TITLE_COLOR=Box title color
 BOX_TITLE_IMAGE=Box title background image
 BOX_TITLE_BGCOLOR=Box title background color
 BOX_TITLE_BORDER=Box title bottom border
+
+TOP_MENU=Top Category Menu
+TOP_MENU_COLOR=Text color
+TOP_MENU_HOVER-COLOR=Hover text color
+TOP_MENU_BGCOLOR=Background color
+TOP_MENU_BGIMAGE=Background image
+TOP_MENU_ACTIVE_COLOR=Active item color
+TOP_MENU_ACTIVE_BGCOLOR=Active item background color
+TOP_MENU_ACTIVE_BGIMAGE=Active item background image
