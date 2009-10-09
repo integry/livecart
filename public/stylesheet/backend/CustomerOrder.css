@@ -42,17 +42,6 @@
     display: none;
 }
 
-#orderMass_8 option,
-#orderMass_8 optgroup
-{
-    display: none;
-}
-
-#orderMass_8 option.delete
-{
-    display: block;
-}
-
 .activeGridcolumn_CustomerOrder_ID2
 {
     display: none;

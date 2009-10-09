@@ -3,6 +3,7 @@
 ClassLoader::import('application.model.order.CustomerOrder');
 ClassLoader::import('application.model.user.User');
 ClassLoader::import('application.model.businessrule.RuleProductContainer');
+ClassLoader::import('application.model.businessrule.RuleOrderContainer');
 
 /**
  * Defines context for evaluating business rules
@@ -17,6 +18,8 @@ class BusinessRuleContext
 	private $user;
 
 	private $products = array();
+
+	private $pastOrders = null;
 
 	public function setOrder(CustomerOrder $order)
 	{
@@ -45,6 +48,8 @@ class BusinessRuleContext
 
 	public function addProduct($product)
 	{
+		static $calls = 0;
+
 		$item = new RuleProductContainer($product);
 		$this->products[] = $item;
 		return $item;
@@ -61,6 +66,100 @@ class BusinessRuleContext
 		{
 			$this->addProduct($product);
 		}
+	}
+
+	public function getPastOrders()
+	{
+		if (!is_null($this->pastOrders))
+		{
+			return $this->pastOrders;
+		}
+
+		if (!$this->user)
+		{
+			return array();
+		}
+
+		$sessionUser = SessionUser::getUser();
+		if ($this->isSessionCacheUsable())
+		{
+			$session = new Session();
+			$sessionHandler = ActiveRecordModel::getApplication()->getSessionHandler();
+			$pastOrders = $session->get('pastOrders');
+			if (!$pastOrders || ($pastOrders['cacheUpdated'] != $sessionHandler->getCacheUpdateTime()))
+			{
+				unset($pastOrders);
+			}
+		}
+
+		if (empty($pastOrders))
+		{
+			$f = select(eq('CustomerOrder.userID', $this->user->getID()), eq('CustomerOrder.isFinalized', true), eq('CustomerOrder.isCancelled', false), eq('CustomerOrder.isPaid', true));
+			$f->setOrder(f('OrderedItem.customerOrderID'), 'DESC');
+			$records = ActiveRecordModel::getRecordSetArray('OrderedItem', $f, array('CustomerOrder', 'Product'));
+
+			// load variation parent products separately
+			$parentIDs = array();
+			foreach ($records as $record)
+			{
+				if ($record['Product']['parentID'])
+				{
+					$parentIDs[$record['Product']['parentID']] = true;
+				}
+			}
+
+			if ($parentIDs)
+			{
+				$parents = array();
+				foreach (ActiveRecordModel::getRecordSetArray('Product', select(in('Product.ID', array_keys($parentIDs)))) as $parent)
+				{
+					$parents[$parent['ID']] = $parent;
+				}
+
+				foreach ($records as &$record)
+				{
+					if ($record['Product']['parentID'])
+					{
+						$record['Product']['Parent'] = $parents[$record['Product']['parentID']];
+					}
+				}
+			}
+
+			// split records by orders
+			$orders = array();
+			foreach ($records as $record)
+			{
+				$orders[$record['customerOrderID']][] = $record;
+			}
+
+			$pastOrders = array();
+			foreach ($orders as $order)
+			{
+				$pastOrders[] = new RuleOrderContainer($order);
+			}
+
+			$pastOrders = array('cacheUpdated' => time(), 'orders' => $pastOrders);
+		}
+
+		if ($this->isSessionCacheUsable())
+		{
+			$session->set('pastOrders', $pastOrders);
+			$sessionHandler->updateCacheTimestamp();
+		}
+
+		$this->pastOrders = $pastOrders;
+
+		return $this->pastOrders;
+	}
+
+	private function isSessionCacheUsable()
+	{
+		if (!$this->user)
+		{
+			return false;
+		}
+
+		return $this->user->getID() == SessionUser::getUser()->getID();
 	}
 }
 

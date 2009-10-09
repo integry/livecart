@@ -839,6 +839,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 			return false;
 		}
 
+		if ($this->user->get())
+		{
+			$this->user->get()->invalidateSessionCache();
+		}
+
 		return parent::save();
 	}
 
@@ -1129,11 +1134,13 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		{
 			foreach ($this->shipments as $shipment)
 			{
+				/*
 				if ($shipment->getShippingService())
 				{
 					$shipment->getAvailableRates();
 					$shipment->setRateId($shipment->getShippingService()->getID());
 				}
+				*/
 
 				foreach ($shipment->getTaxes() as $tax)
 				{
@@ -1644,6 +1651,14 @@ class CustomerOrder extends ActiveRecordModel implements EavAble
 		}
 
 		return $items;
+	}
+
+	/**
+	 * alias for getShoppingCartItems()
+	 */
+	public function getPurchasedItems()
+	{
+		return $this->getShoppingCartItems();
 	}
 
 	public function getWishListItems()

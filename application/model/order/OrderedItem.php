@@ -25,6 +25,8 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 
 	protected $isVariationDiscountsSummed = false;
 
+	protected $originalPrice = null;
+
 	/*
 	 *  Possible values for isSavedForLater field
 	 */
@@ -126,6 +128,8 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 			$currency = $this->getCurrency();
 
 			$price = $this->getItemPrice();
+			$this->originalPrice = $price;
+
 			foreach ($this->optionChoices as $choice)
 			{
 				if ($isFinalized)
@@ -144,6 +148,16 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 		}
 
 		return $this->itemPrice;
+	}
+
+	public function getOriginalPrice()
+	{
+		if (is_null($this->originalPrice))
+		{
+			$this->getPriceWithoutTax();
+		}
+
+		return $this->originalPrice;
 	}
 
 	public function setItemPrice($price)
@@ -210,7 +224,7 @@ class OrderedItem extends ActiveRecordModel implements BusinessRuleProductInterf
 	/**
 	 *	Get price without taxes
 	 */
-	private function getItemPrice()
+	public function getItemPrice()
 	{
 		$isFinalized = $this->customerOrder->get()->isFinalized->get();
 		$price = $isFinalized ? $this->price->get() : $this->product->get()->getItemPrice($this);

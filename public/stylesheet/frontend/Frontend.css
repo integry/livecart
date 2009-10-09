@@ -421,6 +421,8 @@ div.addressBlock,
 .dynamicMenu li.sfhover li a,
 .dynamicMenu li:hover li:hover li a,
 .dynamicMenu li.sfhover li:hover li a,
+.rootCategories,
+.rootCategories .wrapper,
 #background-color1-var
 {
     background-color: #F9F9F9;
@@ -435,6 +437,9 @@ tr.heading td,
 
 tr.even td,
 div.box .title,
+.rootCategories li.current,
+.rootCategories li:hover,
+.rootCategories li.hover,
 #background-color2-var
 {
     background-color: #eee;
@@ -638,7 +643,7 @@ fieldset.container
     padding-left: 0 !important;
 }
 
-.current ul li
+.categories .current ul li
 {
     padding-left: 20px;
 }
@@ -2530,15 +2535,54 @@ img.calendar_button
 /*************************
 	Top root category menu
 *************************/
-.rootCategories li div.wrapper
+.rootCategories
+{
+	width: 100%;
+}
+
+.rootCategories li
+{
+	float: left;
+	line-height: 25px;
+}
+
+.rootCategories li.current
+{
+	font-weight: bold;
+}
+
+.rootCategories li.current li
+{
+	font-weight: normal;
+}
+
+.rootCategories li a
+{
+	color: black;
+	text-decoration: none;
+	padding: 0 1em;
+}
+
+.rootCategories li .wrapper a
+{
+	padding: 0;
+	padding-left: 1em;
+}
+
+.rootCategories li li
+{
+	float: none;
+}
+
+.rootCategories .wrapper
 {
 	display: none;
 	position: absolute;
 	z-index: 10;
 }
 
-.rootCategories li:hover div.wrapper,
-.rootCategories li.hover div.wrapper
+.rootCategories li:hover .wrapper,
+.rootCategories li.hover .wrapper
 {
 	display: block;
 }
@@ -2559,8 +2603,22 @@ img.calendar_button
 .rootCategories li ul li a
 {
 	display: block;
+	padding-right: 8px !important;
 }
 
+/* for Firefox */
+.rootCategories li.top div > a,
+.rootCategories li.top ul > a
+{
+	display: none !important;
+}
+
+.rootCategories span.block
+{
+	display: block;
+}
+
+/*
 .rootCategories li ul li a,
 .rootCategories li ul li span,
 .rootCategories li:hover ul li a,
@@ -2570,6 +2628,7 @@ img.calendar_button
 {
 	background: none;
 }
+*/
 
 /*************************
 	Dynamic menu

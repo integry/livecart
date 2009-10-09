@@ -12,6 +12,7 @@ ClassLoader::import('application.model.order.SessionOrder');
 ClassLoader::import('application.model.user.SessionUser');
 ClassLoader::import('application.model.session.DatabaseSessionHandler');
 ClassLoader::import('application.model.system.Cron');
+ClassLoader::import('application.model.businessrule.RuleOrderContainer');
 
 /**
  *  Implements LiveCart-specific application flow logic
@@ -103,6 +104,8 @@ class LiveCart extends Application
 
 	private $plugins = null;
 
+	private $sessionHandler;
+
 	const EXCLUDE_DEFAULT_CURRENCY = false;
 
 	const INCLUDE_DEFAULT = true;
@@ -131,6 +134,7 @@ class LiveCart extends Application
 			ActiveRecordModel::setDSN(include $dsnPath);
 			$session = new DatabaseSessionHandler();
 			$session->setHandlerInstance();
+			$this->sessionHandler = $session;
 		}
 
 		// LiveCart request routing rules
@@ -652,6 +656,44 @@ class LiveCart extends Application
 		return $plugins;
 	}
 
+	public function getPluginClasses($mountPath)
+	{
+		if (substr($mountPath, -1) != '.')
+		{
+			$mountPath .= '.';
+		}
+
+		$classes = array();
+		foreach ($this->configContainer->getDirectoriesByMountPath($mountPath) as $dir)
+		{
+			foreach (glob($dir . '*.php') as $file)
+			{
+				$file = basename($file, '.php');
+				$classes[] = $file;
+			}
+		}
+
+		return $classes;
+	}
+
+	public function loadPluginClass($mountPath, $class)
+	{
+		if (substr($mountPath, -1) != '.')
+		{
+			$mountPath .= '.';
+		}
+
+		foreach ($this->configContainer->getDirectoriesByMountPath($mountPath) as $dir)
+		{
+			$path = $dir . $class . '.php';
+			if (file_exists($path))
+			{
+				include_once($path);
+				return;
+			}
+		}
+	}
+
 	/**
 	 * Renders response from controller action
 	 *
@@ -691,6 +733,11 @@ class LiveCart extends Application
 	public function getCustomizationModeType()
 	{
 		return $this->session->get('customizationModeType');
+	}
+
+	public function getSessionHandler()
+	{
+		return $this->sessionHandler;
 	}
 
 	public function getSession()
@@ -1045,6 +1092,10 @@ class LiveCart extends Application
 			ClassLoader::import('application.model.order.OrderedItem');
 			$price = OrderedItem::reduceBaseTaxes($price);
 		}
+		else
+		{
+			$price = $price * 1.25;
+		}
 
 		return $price;
 	}
@@ -1317,6 +1368,12 @@ class LiveCart extends Application
 				$this->defaultCurrency = $currency;
 			}
 		}
+	}
+
+	public function loadLanguageFile($langFile)
+	{
+		$this->locale->translationManager()->loadFile($langFile);
+		$this->configFiles[] = $langFile;
 	}
 
 	public function loadLanguageFiles()

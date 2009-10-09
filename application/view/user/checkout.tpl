@@ -7,14 +7,20 @@
 
 <div id="content" class="left right">
 
-	<h1>{t _order_checkout}</h1>
+	{if $request.action == 'checkout'}
+		<h1>{t _order_checkout}</h1>
+	{else}
+		<h1>{t _user_registration}</h1>
+	{/if}
 
 	<div class="returningCustomer">
 		<h2>{t _returning}</h2>
 
+		{if $request.action == 'checkout'}
 		<p>
 			{t _please_login}
 		</p>
+		{/if}
 
 		{capture assign="return"}{link controller=checkout action=selectAddress}{/capture}
 		{include file="user/loginForm.tpl" return=$return}
@@ -137,6 +143,7 @@
 			{block FORM-SUBMIT-REGISTER-CHECKOUT}
 
 			{hidden name="return"}
+			{hidden name="regType"}
 
 			<p>
 				<label class="submit"></label>

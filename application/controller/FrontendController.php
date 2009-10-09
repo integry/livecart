@@ -301,7 +301,7 @@ abstract class FrontendController extends BaseController
 	{
 		$breadCrumbCopy = $this->breadCrumb;
 		$last = array_pop($breadCrumbCopy);
-		return new BlockResponse('breacCrumb', $last);
+		return new BlockResponse('breadCrumb', $last);
 	}
 
 	protected function boxSearchBlock()

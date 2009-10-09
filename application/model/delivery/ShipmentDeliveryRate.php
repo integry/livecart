@@ -121,6 +121,11 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 			$array['costAmount'] = $amount;
 		}
 
+		if (!$this->application)
+		{
+			$this->application = ActiveRecordModel::getApplication();
+		}
+
 		$amountCurrency = Currency::getInstanceById($array['costCurrency']);
 		$currencies = $this->application->getCurrencySet();
 

@@ -335,7 +335,7 @@ class Shipment extends ActiveRecordModel
 			}
 		}
 
-		return $total;
+		return $this->getCurrency()->round($total);
 	}
 
 	public function getTotalWithoutTax()

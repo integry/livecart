@@ -69,6 +69,7 @@ class CsvFile implements Iterator
 
 	public function rewind()
 	{
+		$this->isValid = true;
 		rewind($this->getFileHandle());
 		$this->iteratorKey = 0;
 		$this->iteratorValue = $this->getRecord();

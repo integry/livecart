@@ -17,15 +17,11 @@ class DatabaseSessionHandler extends SessionHandler
 	protected $isExistingSession;
 	protected $id;
 	protected $originalData;
-	protected $forceUpdate;
-
-	public function __construct()
-	{
-	}
 
 	public function open()
 	{
 		$this->db = ActiveRecordModel::getDBConnection();
+		$this->db->sessionHandler = $this;
 		return true;
 	}
 
@@ -50,6 +46,8 @@ class DatabaseSessionHandler extends SessionHandler
 			}
 
 			$this->id = $data['ID'];
+			$this->userID = $data['userID'];
+			$this->cacheUpdated = $data['cacheUpdated'];
 
 			return $data['data'];
 		}
@@ -65,12 +63,12 @@ class DatabaseSessionHandler extends SessionHandler
 			{
 				if (($this->originalData != $data) || $this->forceUpdate)
 				{
-					SessionData::updateData($id, $data, $this->db);
+					SessionData::updateData($id, $data, $this->userID, $this->cacheUpdated, $this->db);
 				}
 			}
 			else
 			{
-				SessionData::insertData($id, $data, $this->db);
+				SessionData::insertData($id, $data,  $this->userID, $this->cacheUpdated, $this->db);
 			}
 
 			return true;

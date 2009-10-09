@@ -72,6 +72,7 @@
 
 	{hidden name="file"}
 	{hidden name="category"}
+	{hidden name="type"}
 	{hidden name="continue"}
 
 	<span style="display: none;">
@@ -87,6 +88,7 @@
 				<label class="wide">{$file}</label>
 			</p>
 
+			{if 'ProductImport' == $type}
 			<p>
 				<label>{t _import_category}</label>
 				<label class="wide">
@@ -98,6 +100,8 @@
 					{/foreach}
 				</label>
 			</p>
+			{/if}
+
 		</form>
 	</fieldset>
 
@@ -132,6 +136,10 @@
 	<fieldset id="columns" style="display: none;">
 		<legend>{t _map_data|branding}</legend>
 
+		<div id="importProfiles">
+			{include file="backend/csvImport/profiles.tpl"}
+		</div>
+
 		<div id="fieldsContainer"></div>
 		<div class="clear"></div>
 
@@ -144,6 +152,11 @@
 	<div class="clear"></div>
 
 	<fieldset class="controls" id="importControls">
+		<p class="saveProfile" style="display: none;">
+			<input type="checkbox" class="checkbox" name="saveProfile" id="saveProfile" />
+			<label for="saveProfile" class="checkbox" style="margin-right: 1em;">{t _save_profile}:</label>
+			<input type="text" class="text" name="profileName" id="profileName" disabled="disabled" />
+		</p>
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" class="submit" value="{tn _continue}" />
 		{t _or}

@@ -56,7 +56,7 @@ class CustomerOrderController extends ActiveGridController
 
 	protected function getDefaultColumns()
 	{
-		return array('CustomerOrder.invoiceNumber', 'User.fullName', 'User.email', 'CustomerOrder.dateCompleted', 'CustomerOrder.totalAmount', 'CustomerOrder.status', 'User.ID');
+		return array('CustomerOrder.ID', 'CustomerOrder.invoiceNumber', 'User.fullName', 'User.email', 'CustomerOrder.dateCompleted', 'CustomerOrder.totalAmount', 'CustomerOrder.status', 'User.ID');
 	}
 
 	public function info()
@@ -371,6 +371,7 @@ class CustomerOrderController extends ActiveGridController
 
 		// header row
 		$columns = array_intersect_key($this->getAvailableColumns(), array_flip($this->getDefaultColumns()));
+		$columns = array_merge(array('CustomerOrder.ID' => 'numeric'), $columns);
 		$detailColumns = array(array('Product', 'sku'), array('Product', 'name_lang'), array('Product', 'Manufacturer', 'name'), array('OrderedItem', 'count'), array('OrderedItem', 'price'), array('OrderedItem', 'priceCurrencyID'), array('OrderedItem', 'itemSubtotal'), array('ShippingAddress', 'phone'), array('ShippingAddress', 'companyName'), array('ShippingAddress', 'address1'), array('ShippingAddress', 'address2'), array('ShippingAddress', 'city'), array('ShippingAddress', 'stateName'), array('ShippingAddress', 'postalCode'), array('ShippingAddress', 'countryName'));
 		unset($columns['hiddenType']);
 
@@ -405,9 +406,9 @@ class CustomerOrderController extends ActiveGridController
 
 		// collect order ID's
 		$ids = array();
-		foreach ($this->lists(true, $columns) as $row)
+		foreach ($this->lists(true, array('CustomerOrder.ID' => 'numeric')) as $row)
 		{
-			$ids[] = $row[$index];
+			$ids[] = $row[0];
 		}
 
 		// fetch detailed data
@@ -419,6 +420,7 @@ class CustomerOrderController extends ActiveGridController
 		}
 
 		// columns
+		$index = 0;
 		foreach ($this->lists(true, $columns) as $row)
 		{
 			foreach ($data[$row[$index]] as $item)
@@ -484,6 +486,12 @@ class CustomerOrderController extends ActiveGridController
 		return $filter;
 	}
 
+	protected function setDefaultSortOrder(ARSelectFilter $filter)
+	{
+		$filter->setOrder(new ARFieldHandle($this->getClassName(), 'dateCompleted'), 'DESC');
+		$filter->setOrder(new ARFieldHandle($this->getClassName(), 'ID'), 'DESC');
+	}
+
 	public function processDataArray($orders, $displayedColumns)
 	{
 		$orders = parent::processDataArray($orders, $displayedColumns);
@@ -540,11 +548,6 @@ class CustomerOrderController extends ActiveGridController
 	protected function getCSVFileName()
 	{
 		return 'orders.csv';
-	}
-
-	protected function getExportColumns()
-	{
-		return $this->getDisplayedColumns();
 	}
 
 	protected function getColumnValue($record, $class, $field)

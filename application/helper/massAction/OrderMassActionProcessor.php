@@ -29,14 +29,17 @@ class OrderMassActionProcessor extends MassActionProcessor
 			case 'setReturned':
 				$status = CustomerOrder::STATUS_RETURNED;
 				break;
-			case 'setFinalized':
-				$order->finalize();
-				break;
 			case 'setUnfinalized':
 				$order->isFinalized->set(0);
 				break;
 			case 'setCancel':
 				$order->cancel();
+				break;
+			case 'setFinalized':
+				if (!$order->isFinalized->get() && $order->user->get())
+				{
+					$order->finalize();
+				}
 				break;
 		}
 
@@ -50,7 +53,7 @@ class OrderMassActionProcessor extends MassActionProcessor
 	protected function saveRecord(CustomerOrder $order)
 	{
 		parent::saveRecord($order);
-		if($this->getAction() != 'delete')
+		if (!in_array($this->getAction(), array('setFinalized', 'delete')))
 		{
 			$order->processMass_history->saveLog();
 			unset($order->processMass_history);

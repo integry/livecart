@@ -485,7 +485,7 @@ class UserController extends FrontendController
 	{
 		if ($this->config->get('REQUIRE_REG_ADDRESS'))
 		{
-			return new ActionRedirectResponse('user', 'checkout', array('query' => array('return' => $this->request->get('return'))));
+			return new ActionRedirectResponse('user', 'registerAddress');
 		}
 
 		$form = $this->buildRegForm();
@@ -493,6 +493,14 @@ class UserController extends FrontendController
 
 		SessionUser::getAnonymousUser()->getSpecification()->setFormResponse($response, $form);
 
+		return $response;
+	}
+
+	public function registerAddress()
+	{
+		$this->request->set('return', $this->router->createUrl(array('controller' => 'user', 'action' => 'index')));
+		$response = $this->checkout();
+		$response->get('form')->set('regType', 'register');
 		return $response;
 	}
 
@@ -562,7 +570,7 @@ class UserController extends FrontendController
 	{
 		if ($this->config->get('REQUIRE_REG_ADDRESS'))
 		{
-			return new ActionRedirectResponse('user', 'checkout', array('query' => array('return' => $this->request->get('return'))));
+			return new ActionRedirectResponse('user', 'registerAddress');
 		}
 
 		$this->addBreadCrumb($this->translate('_login'), $this->router->createUrl(array('controller' => 'user', 'action' => 'login'), true));
@@ -722,7 +730,8 @@ class UserController extends FrontendController
 		$validator = $this->buildValidator();
 		if (!$validator->isValid())
 		{
-			return new ActionRedirectResponse('user', 'checkout', array('query' => array('return' => $this->request->get('return'))));
+			$action = $this->request->get('regType') == 'register' ? 'registerAddress' : 'checkout';
+			return new ActionRedirectResponse('user', $action, array('query' => array('return' => $this->request->get('return'))));
 		}
 
 		// create user account
