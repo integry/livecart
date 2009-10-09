@@ -68,6 +68,11 @@ class OrderController extends FrontendController
 		{
 			$addresses[$address['UserAddress']['ID']] = $address['UserAddress']['compact'];
 		}
+		foreach ($this->user->getBillingAddressSet()->toArray() as $address)
+		{
+			$addresses[$address['UserAddress']['ID']] = $address['UserAddress']['compact'];
+		}
+
 		$response->set('addresses', $addresses);
 
 		if (!$addresses)
