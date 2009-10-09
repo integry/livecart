@@ -174,12 +174,13 @@ class ProductPrice extends ActiveRecordModel
 
 	private function getGroupPrice(OrderedItem $item, $groupID, $rules)
 	{
+		$itemCnt = 0;
+
 		// include other variations of the same product?
 		if ($parent = $item->getProduct()->parent->get())
 		{
 			$order = $item->customerOrder->get();
 
-			$itemCnt = 0;
 			foreach ($order->getShoppingCartItems() as $orderItem)
 			{
 				if ($orderItem->isVariationDiscountsSummed())
@@ -192,7 +193,8 @@ class ProductPrice extends ActiveRecordModel
 				}
 			}
 		}
-		else
+
+		if (!$itemCnt)
 		{
 			$itemCnt = $item->count->get();
 		}
@@ -210,6 +212,7 @@ class ProductPrice extends ActiveRecordModel
 				foreach ($order->getPurchasedItems() as $i)
 				{
 					$product = $i->getProduct();
+
 					if ($id == $product['ID'])
 					{
 						$itemCnt += $i->getCount();
@@ -237,7 +240,7 @@ class ProductPrice extends ActiveRecordModel
 	{
 		if (!$rules)
 		{
-			return;
+			return null;
 		}
 
 		$found = array();

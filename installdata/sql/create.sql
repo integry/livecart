@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2009-09-01 00:46                                #
-# Model version:         Version 2009-09-01 1                            #
+# Created on:            2009-10-09 08:45                                #
+# Model version:         Version 2009-10-09                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -58,6 +58,7 @@ CREATE TABLE Product (
     position INTEGER UNSIGNED DEFAULT 0,
     childSettings TEXT COMMENT 'Determines price and shipping weight calculation for child products - whether to add/substract from parent or override completely',
     fractionalStep FLOAT,
+    categoryIntervalCache TEXT,
     CONSTRAINT PK_Product PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -216,7 +217,7 @@ CREATE INDEX IDX_CustomerOrder_2 ON CustomerOrder (isFinalized);
 
 CREATE TABLE OrderedItem (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    productID INTEGER UNSIGNED NOT NULL COMMENT 'ID of ordered Product',
+    productID INTEGER UNSIGNED COMMENT 'ID of ordered Product',
     customerOrderID INTEGER UNSIGNED NOT NULL COMMENT 'ID of order the item is assigned to',
     shipmentID INTEGER UNSIGNED COMMENT 'ID of the shipment the item is assigned to (when the order has been finalized)',
     parentID INTEGER UNSIGNED,
@@ -225,6 +226,7 @@ CREATE TABLE OrderedItem (
     dateAdded TIMESTAMP COMMENT 'Date when the product was added to shopping cart',
     price FLOAT COMMENT 'Product item price at the time the product was added to shopping cart',
     isSavedForLater TINYINT COMMENT 'Determines if the product has been added to shopping cart or to a wish list',
+    name MEDIUMTEXT,
     CONSTRAINT PK_OrderedItem PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -819,7 +821,7 @@ CREATE TABLE TaxRate (
     deliveryZoneID INTEGER UNSIGNED COMMENT 'ID of the referenced DeliveryZone',
     rate FLOAT COMMENT 'Tax rate. For example, 20, to set a 20% rate.',
     CONSTRAINT PK_TaxRate PRIMARY KEY (ID),
-    CONSTRAINT TUC_TaxRate_DeliveryZone_Tax UNIQUE (deliveryZoneID, taxID)
+    CONSTRAINT TUC_TaxRate_DeliveryZone_Tax UNIQUE (deliveryZoneID, taxID, taxClassID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -1385,6 +1387,7 @@ CREATE TABLE DiscountAction (
     conditionID INTEGER UNSIGNED,
     actionConditionID INTEGER UNSIGNED,
     isEnabled BOOL NOT NULL,
+    isOrderLevel BOOL NOT NULL,
     type TINYINT NOT NULL,
     actionType TINYINT NOT NULL,
     amount FLOAT,
@@ -1392,6 +1395,7 @@ CREATE TABLE DiscountAction (
     discountLimit INTEGER,
     position INTEGER UNSIGNED DEFAULT 0,
     actionClass VARCHAR(80),
+    serializedData TEXT,
     CONSTRAINT PK_DiscountAction PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -1621,7 +1625,7 @@ ALTER TABLE CustomerOrder ADD CONSTRAINT EavObject_CustomerOrder
     FOREIGN KEY (eavObjectID) REFERENCES EavObject (ID) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE OrderedItem ADD CONSTRAINT Product_OrderedItem 
-    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE OrderedItem ADD CONSTRAINT CustomerOrder_OrderedItem 
     FOREIGN KEY (customerOrderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;

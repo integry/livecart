@@ -104,7 +104,7 @@ class BusinessRuleContext
 			{
 				if ($record['Product']['parentID'])
 				{
-					$parentIDs[$record['Product']['parentID']] = true;
+					//$parentIDs[$record['Product']['parentID']] = true;
 				}
 			}
 

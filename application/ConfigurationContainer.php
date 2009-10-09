@@ -152,8 +152,9 @@ class ConfigurationContainer
 	public function getAvailableModules()
 	{
 		$modulePath = $this->mountPath . '.module';
-		$moduleDir = ClassLoader::getRealPath($modulePath);
+		$modulePath = preg_replace('/^\.+/', '', $modulePath);
 
+		$moduleDir = ClassLoader::getRealPath($modulePath);
 		$modules = array();
 		if (is_dir($moduleDir))
 		{

@@ -404,7 +404,7 @@ class DiscountController extends ActiveGridController
 		}
 		else
 		{
-			if ($this->request->get('isParam'))
+			if ($this->request->get('isParam') != 'false')
 			{
 				$action->setParamValue($fieldName, $value);
 				$fieldName .= '_' . $action->getID();

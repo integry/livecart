@@ -391,9 +391,14 @@ abstract class BaseController extends Controller implements LCiTranslator
 		$newHandle = urlencode($newHandle);
 		if (($oldHandle != $newHandle) && $this->config->get('URL_301_AUTO_REDIRECT'))
 		{
-			header('HTTP/1.1 301 Moved Permanently');
-			header('Location: ' . str_replace($oldHandle, $newHandle, $_SERVER['REQUEST_URI']));
-			exit;
+			$oldUri = $_SERVER['REQUEST_URI'];
+			$newUri = str_replace($oldHandle, $newHandle, $oldUri);
+			if ($newUri != $oldUri)
+			{
+				header('HTTP/1.1 301 Moved Permanently');
+				header('Location: ' . $newUri);
+				exit;
+			}
 		}
 	}
 
