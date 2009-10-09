@@ -96,3 +96,20 @@ AddressUser.ID=User ID
 AddressUser.email=User e-mail address
 AddressUser.isDefault=Is default address (Y/N)
 AddressUser.isShipping=Is shipping address (Y/N)
+
+# Currencies
+Currency.ID=Currency code
+Currency.rate=Exchange rate with default currency
+Currency.isDefault=Is default
+Currency.isEnabled=Is enabled
+Currency.pricePrefix=Price prefix
+Currency.priceSuffix=Price suffix
+Currency.decimalSeparator=Decimal separator
+Currency.thousandSeparator=Thousands separator
+Currency.decimalCount=Decimal count
+
+# Product reviews
+ProductReview=Review
+
+# Orders
+CustomerOrder=Order

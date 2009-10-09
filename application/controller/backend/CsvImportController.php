@@ -34,6 +34,7 @@ class CsvImportController extends StoreManagementController
 		$classes = array_diff($this->application->getPluginClasses('application.model.datasync.import'), array('ProductImport'));
 		$classes = array_merge(array('ProductImport'), $classes);
 		$types = array();
+
 		foreach ($classes as $class)
 		{
 			$types[$class] = $this->translate($class);

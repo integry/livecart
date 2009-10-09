@@ -65,7 +65,7 @@ class UserImport extends DataImport
 			$instance = User::getInstanceByEmail($record[$fields['User']['email']]);
 		}
 
-		if (!$instance)
+		if (empty($instance))
 		{
 			$instance = User::getNewInstance('');
 		}

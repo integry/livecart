@@ -36,6 +36,8 @@ class ReviewController extends ActiveGridController
 			$form->set('rating_' . $rating['ratingTypeID'], $rating['rating']);
 		}
 
+		$form->set('rating_', $review->rating->get());
+
 		//$manufacturer->getSpecification()->setFormResponse($response, $form);
 		$response->set('form', $form);
 		$response->set('ratingTypes', ProductRatingType::getProductRatingTypes($review->product->get())->toArray());

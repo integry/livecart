@@ -19,7 +19,15 @@ abstract class DataImport
 
 	public function importInstance($record, CsvImportProfile $profile, $instance = null)
 	{
-		$instance = is_null($instance) ? $this->getInstance($record, $profile) : $instance;
+		try
+		{
+			$instance = is_null($instance) ? $this->getInstance($record, $profile) : $instance;
+		}
+		catch (ARNotFoundException $e)
+		{
+			$instance = null;
+		}
+
 		if (is_null($instance))
 		{
 			return;

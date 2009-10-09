@@ -203,7 +203,7 @@ abstract class ActiveGridController extends StoreManagementController
 		{
 			$type = ActiveGrid::getFieldType($field);
 
-			if (!$type)
+			if (!$type && ('ID' != $field->getName()))
 			{
 				continue;
 			}
