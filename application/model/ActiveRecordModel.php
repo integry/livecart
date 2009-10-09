@@ -89,8 +89,24 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 		if ($this instanceof EavAble)
 		{
+			$hasSpecification = $this->isSpecificationLoaded();
 			$this->getSpecification()->loadRequestData($request, $prefix);
+			if (!$hasSpecification && !$this->getSpecification()->hasValues())
+			{
+				$this->removeSpecification();
+			}
 		}
+	}
+
+	public function isSpecificationLoaded()
+	{
+		return !empty($this->specificationInstance);
+	}
+
+	public function removeSpecification()
+	{
+		$this->eavObject->setNull();
+		unset($this->specificationInstance);
 	}
 
 	public function getSpecification()
@@ -162,7 +178,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 	{
 		$this->executePlugins($this, 'before-save');
 
-		if (($this instanceof EavAble) && $this->eavObject->get() && !$this->eavObject->get()->getID())
+		if (($this instanceof EavAble) && $this->eavObject->get() && !$this->eavObject->get()->getID() && $this->isSpecificationLoaded() && $this->getSpecification()->hasValues())
 		{
 			$eavObject = $this->eavObject->get();
 			$this->eavObject->setNull();
@@ -177,7 +193,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 			$this->save();
 		}
 
-		if ($this instanceof EavAble && $this->specificationInstance)
+		if ($this instanceof EavAble && $this->specificationInstance && $this->eavObject->get())
 		{
 			$this->specificationInstance->save();
 		}

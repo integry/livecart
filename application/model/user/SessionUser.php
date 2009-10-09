@@ -46,7 +46,8 @@ class SessionUser
 			if (!$session->isValueSet('UserGroup'))
 			{
 				$user->load();
-				$session->set('UserGroup', $user->userGroup->get()->getID());
+				$group = $user->userGroup->get() ? $user->userGroup->get()->getID() : 0;
+				$session->set('UserGroup', $group);
 			}
 
 			$user->userGroup->set(UserGroup::getInstanceByID($session->get('UserGroup')));

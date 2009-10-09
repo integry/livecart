@@ -364,6 +364,11 @@ REQUIRE_REG_ADDRESS=Require address entry on registration
 DISABLE_STATE=Remove state field
 REG_EMAIL_CONFIRM=Require e-mail address confirmation
 
+PASSWORD_GENERATION=User password creation
+PASSWORD_AUTO=Generate automatically (no password entry fields displayed)
+PASSWORD_OPTIONAL=Optional entry
+PASSWORD_REQUIRE=Required entry
+
 _invoice_numbers=Invoice Numbers
 INVOICE_NUMBER_GENERATOR=Invoice number scheme
 SequentialInvoiceNumber=Numeric and sequential

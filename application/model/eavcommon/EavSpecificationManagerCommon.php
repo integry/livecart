@@ -224,6 +224,11 @@ abstract class EavSpecificationManagerCommon
 		}
 	}
 
+	public function hasValues()
+	{
+		return !empty($this->attributes);
+	}
+
 	public function toArray()
 	{
 		$arr = array();

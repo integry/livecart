@@ -69,6 +69,7 @@ class DatabaseSessionHandler extends SessionHandler
 
 	public function write($id, $data)
 	{
+		//die($data);
 		try
 		{
 			if ($this->isExistingSession)

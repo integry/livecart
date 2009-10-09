@@ -745,6 +745,11 @@ class UserController extends FrontendController
 		$shippingAddress = ShippingAddress::getNewInstance($user, $this->request->get('sameAsBilling') ? clone $address : $this->createAddress('shipping_'));
 		$shippingAddress->save();
 
+		if ($this->request->get('password'))
+		{
+			$user->setPassword($this->request->get('password'));
+		}
+
 		$user->defaultShippingAddress->set($shippingAddress);
 		$user->defaultBillingAddress->set($billingAddress);
 		$user->save();
@@ -1278,6 +1283,11 @@ class UserController extends FrontendController
 
 		$this->validateAddress($validator, 'billing_');
 		$this->validateEmail($validator);
+
+		if (($this->config->get('PASSWORD_GENERATION') == 'PASSWORD_REQUIRE') || $this->request->get('password'))
+		{
+			$this->validatePassword($validator);
+		}
 
 		if ($this->order->isShippingRequired())
 		{

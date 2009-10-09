@@ -345,6 +345,11 @@ class User extends ActiveRecordModel implements EavAble
 
 	public function invalidateSessionCache()
 	{
+		if ($this->isAnonymous())
+		{
+			return;
+		}
+
 		$f = new ARUpdateFilter(eq(f('SessionData.userID'), $this->getID()));
 		$f->addModifier('cacheUpdated', 0);
 		self::updateRecordSet('SessionData', $f);

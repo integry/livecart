@@ -45,7 +45,7 @@ class SessionData extends ActiveRecordModel
 
 	private static function enumerateUpdateFields($data, $userID, $cacheUpdated)
 	{
-		return 'data="' . addslashes($data) . '", userID="' . $userID . '", cacheUpdated="' . $cacheUpdated . '", lastUpdated=' . time();
+		return 'data="' . addslashes($data) . ($userID ? '", userID="' . $userID : '') . '", cacheUpdated="' . $cacheUpdated . '", lastUpdated=' . time();
 	}
 
 	public static function deleteSessions($max)
@@ -76,6 +76,7 @@ class SessionData extends ActiveRecordModel
 		if ($db)
 		{
 			$db->executeQuery($sql);
+			ActiveRecord::commit();
 		}
 	}
 }

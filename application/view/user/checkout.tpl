@@ -70,6 +70,13 @@
 					{/err}
 				</p>
 
+				{if 'PASSWORD_GENERATION'|config != 'PASSWORD_AUTO'}
+					{if 'PASSWORD_GENERATION'|config == 'PASSWORD_REQUIRE'}
+						{assign var="passRequired" value=true}
+					{/if}
+					{include file="user/block/passwordFields.tpl" required=$passRequired}
+				{/if}
+
 				{include file="block/eav/fields.tpl" item=$user filter="isDisplayed"}
 				{include file="block/eav/fields.tpl" eavPrefix="billing_"}
 
