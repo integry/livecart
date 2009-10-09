@@ -227,6 +227,14 @@ class ProductImport extends DataImport
 
 				if ('Product' == $className)
 				{
+					if ('shippingWeight' == $field)
+					{
+						if ($this->application->getConfig()->get('UNIT_SYSTEM') == 'ENGLISH')
+						{
+							$value = $value / 0.45359237;
+						}
+					}
+
 					if (('shippingWeight' == $field) && ($product->parent->get()))
 					{
 						$value = $this->setChildSetting($product, 'weight', $value);
