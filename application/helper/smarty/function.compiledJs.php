@@ -63,7 +63,7 @@ function smarty_function_compiledJs($params, LiveCartSmarty $smarty)
 
 		$compiledFileTimestamp = filemtime($compiledFilePath);
 
-		return '<script src="gzip.php?file=' . $compiledFileName . '&time=' . $compiledFileTimestamp . '" type="text/javascript"></script>';
+		return '<script src="gzip.php?file=' . $compiledFileName . '&amp;time=' . $compiledFileTimestamp . '" type="text/javascript"></script>';
 	}
 	else if ($includedJavascriptFiles)
 	{

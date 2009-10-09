@@ -979,6 +979,12 @@ li.moreSubCats, li.moreSubCats a
 {
 	background-color: transparent;
 	height: auto;
+	width: auto !important;
+}
+
+.rootCategories .clear
+{
+	display: none;
 }
 
 .rootCategories li

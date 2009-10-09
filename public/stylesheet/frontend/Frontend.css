@@ -544,7 +544,7 @@ body.threeColumn #content
 
 #smallCart a.checkout
 {
-	background-image: url(../../image/silk/gif/cart_go.gif) center right no-repeat;
+	background: url(../../image/silk/gif/cart_go.gif) center right no-repeat;
 }
 
 #logoContainer
@@ -1043,6 +1043,7 @@ ul.productList .pricingInfo
 .productTable
 {
 	width: 100%;
+	margin-bottom: 2em;
 }
 
 .productTable td,

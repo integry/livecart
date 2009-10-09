@@ -95,7 +95,7 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 		}
 		$compiledFileTimestamp = filemtime($compiledFilePath);
 
-		$out = '<link href="gzip.php?file=' . $compiledFileName . '&time=' . $compiledFileTimestamp . '" rel="Stylesheet" type="text/css"/>';
+		$out = '<link href="gzip.php?file=' . $compiledFileName . '&amp;time=' . $compiledFileTimestamp . '" rel="Stylesheet" type="text/css"/>';
 	}
 	else if ($includedStylesheetFiles)
 	{
