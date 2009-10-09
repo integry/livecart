@@ -27,6 +27,7 @@ LANG_SELECTION=Display language selection menu as
 LANG_NAMES=Language names as links
 LANG_FLAGS=Flags
 LANG_DROPDOWN=Language names as a drop-down list
+DISABLE_AJAX=Disable AJAX features in store frontend
 
 _homepage=Home Page
 _homepage_display=Display Configuration

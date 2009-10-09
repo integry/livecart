@@ -624,6 +624,7 @@ ul.productList .addToWishList, #productToWishList td.value a, .productGrid .addT
 a.addToCompare
 {
 	background-image: none !important;
+	font-size: smaller;
 }
 
 .productListRating

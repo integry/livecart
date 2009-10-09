@@ -81,6 +81,8 @@
 
 </html>
 
+{if !'DISABLE_AJAX'|config}
 <script type="text/javascript">
 	new Frontend.AjaxInit(document.body);
 </script>
+{/if}
