@@ -132,9 +132,13 @@ class LiveCart extends Application
 		if ($this->isInstalled)
 		{
 			ActiveRecordModel::setDSN(include $dsnPath);
-			$session = new DatabaseSessionHandler();
-			$session->setHandlerInstance();
-			$this->sessionHandler = $session;
+
+			if (!session_id())
+			{
+				$session = new DatabaseSessionHandler();
+				$session->setHandlerInstance();
+				$this->sessionHandler = $session;
+			}
 		}
 
 		// LiveCart request routing rules

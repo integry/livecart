@@ -127,6 +127,11 @@ class Email
 
 	public function setFrom($email, $name)
 	{
+		if ($name)
+		{
+			$name = '"' . $name . '"';
+		}
+
 		$this->from = new Swift_Address($email, $name);
 	}
 
@@ -134,6 +139,11 @@ class Email
 	{
 		foreach(explode(',', $emailAddresses) as $email)
 		{
+			if ($name)
+			{
+				$name = '"' . $name . '"';
+			}
+
 			$this->recipients->addTo($email, $name);
 		}
 	}

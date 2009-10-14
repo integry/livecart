@@ -78,6 +78,9 @@ rm -rf public/cache public/upload
 rm -rf storage/configuration/*.php
 rm -rf library/payment/test/simpletest
 rm -rf library/payment/test/unittest
+rm -rf public/module
+rm -rf import* output*
+ls module | grep -v ads | grep -v captcha | xargs rm -rf
 
 # commit changes
 hg add
@@ -97,7 +100,7 @@ cd $TMP
 
 # remove Mercurial files
 rm -rf .hg* .snap storage
-mkdir cache storage public/cache public/upload
+mkdir cache storage public/cache public/upload public/module
 
 # create package files
 makePackages $PACKAGE/livecart-$VERSION
@@ -116,6 +119,7 @@ cp -r $MAIN/update/$VERSION /tmp/update/update/$VERSION
 cd $MAIN/update
 cp readme.txt /tmp/update/update/$VERSION
 cp readme.txt /tmp/update/
+cp update.php /tmp/update/
 
 cd $MAIN
 cp -r --parents license.txt application/controller/backend/SettingsController.php /tmp/update

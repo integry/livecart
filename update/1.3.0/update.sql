@@ -512,7 +512,9 @@ ALTER TABLE CategoryPresentation DROP PRIMARY KEY;
 
 ALTER TABLE CategoryPresentation CHANGE ID categoryID INTEGER UNSIGNED;
 
-ALTER TABLE CategoryPresentation ADD COLUMN ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE CategoryPresentation ADD COLUMN ID INTEGER UNSIGNED NOT NULL;
+
+ALTER TABLE CategoryPresentation ADD CONSTRAINT PK_CategoryPresentation PRIMARY KEY (ID);
 
 ALTER TABLE CategoryPresentation ADD COLUMN productID INTEGER UNSIGNED;
 
@@ -531,9 +533,6 @@ ALTER TABLE CategoryPresentation MODIFY productID INTEGER UNSIGNED AFTER categor
 ALTER TABLE CategoryPresentation MODIFY isAllVariations BOOL AFTER isSubcategories;
 
 ALTER TABLE CategoryPresentation MODIFY isVariationImages BOOL AFTER isAllVariations;
-
-ALTER TABLE CategoryPresentation ADD CONSTRAINT PK_CategoryPresentation
-    PRIMARY KEY (ID);
 
 INSERT INTO CategoryPresentation (productID, theme) SELECT ID, theme FROM `ProductPresentation`;
 

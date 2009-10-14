@@ -272,6 +272,11 @@ class User extends ActiveRecordModel implements EavAble
 		}
 	}
 
+	public function allowBackendAccess()
+	{
+		$this->hasBackendAccess = true;
+	}
+
 	/**
 	 * Determine if the user is allowed to access the admin backend (has at least one permission)
 	 *
@@ -279,6 +284,11 @@ class User extends ActiveRecordModel implements EavAble
 	 */
 	public function hasBackendAccess()
 	{
+		if ($this->hasBackendAccess)
+		{
+			return true;
+		}
+
 		if ($this->isAnonymous())
 		{
 			return false;

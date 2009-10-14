@@ -44,7 +44,15 @@ class DatabaseSessionHandler extends SessionHandler
 			return;
 		}
 
-		$data = ActiveRecordModel::getRecordSetArray('SessionData', select(eq('SessionData.ID', $id)));
+		try
+		{
+			$data = ActiveRecordModel::getRecordSetArray('SessionData', select(eq('SessionData.ID', $id)));
+		}
+		catch (SQLException $e)
+		{
+			return '';
+		}
+
 		$this->isExistingSession = count($data) > 0;
 
 		if ($data)
