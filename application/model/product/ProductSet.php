@@ -36,6 +36,7 @@ class ProductSet extends ARSet
 			$id = $record->getParent()->getID();
 			$ids[] = $id;
 			$prices[$id] = $record->getParent()->getPricingHandler()->toArray();
+			$parents[$id] = $record->getParent()->toArray();
 		}
 
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('Product', 'parentID'), $ids));
@@ -43,6 +44,11 @@ class ProductSet extends ARSet
 		if (!$children)
 		{
 			return array();
+		}
+
+		foreach ($children as &$child)
+		{
+			$child['Parent'] = $parents[$child['parentID']];
 		}
 
 		ProductPrice::loadPricesForRecordSetArray($children);

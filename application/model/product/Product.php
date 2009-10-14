@@ -236,7 +236,7 @@ class Product extends MultilingualObject
 
 		if (!$this->isBundle())
 		{
-			return self::isAvailableForOrdering($this->isEnabled->get() || !$requireEnabled, $this->stockCount->get(), $this->isBackOrderable->get(),  $this->isUnlimitedStock->get(), $this->type->get());
+			return self::isAvailableForOrdering($this->isEnabled->get() || $this->getParent()->isEnabled->get() || !$requireEnabled, $this->stockCount->get(), $this->getParent()->isBackOrderable->get(),  $this->getParent()->isUnlimitedStock->get(), $this->getParent()->type->get());
 		}
 		else
 		{
@@ -265,7 +265,7 @@ class Product extends MultilingualObject
 			{
 				if (is_null($$var))
 				{
-					$$var = $this->$var->get();
+					$$var = $this->getParent()->$var->get();
 				}
 			}
 		}
@@ -916,6 +916,12 @@ class Product extends MultilingualObject
 	public static function transformArray($array, ARSchema $schema)
 	{
 		$array = parent::transformArray($array, $schema);
+
+		if (isset($array['Parent']) && isset($array['Parent']['type']))
+		{
+			$array['type'] = $array['Parent']['type'];
+			$array['isUnlimitedStock'] = $array['Parent']['isUnlimitedStock'];
+		}
 
 		$array['isTangible'] = $array['type'] == self::TYPE_TANGIBLE;
 		$array['isDownloadable'] = $array['type'] == self::TYPE_DOWNLOADABLE;

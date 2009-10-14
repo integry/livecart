@@ -82,7 +82,7 @@ class ProductPrice extends ActiveRecordModel
 
 		if ($includeDiscounts)
 		{
-			$price = self::getApplication()->getDisplayTaxPrice($price, $product);
+			$price = self::getApplication()->getDisplayTaxPrice($price, $this->product->get());
 			$price = self::getApplication()->getBusinessRuleController()->getProductPrice($this->product->get(), $price);
 		}
 
@@ -285,10 +285,29 @@ class ProductPrice extends ActiveRecordModel
 		}
 	}
 
-	public function increasePriceByPercent($percentIncrease)
+	public function increasePriceByPercent($percentIncrease, $increaseQuantPrices = false)
 	{
 		$multiply = (100 + $percentIncrease) / 100;
 		$this->price->set($this->price->get() * $multiply);
+
+		if ($increaseQuantPrices)
+		{
+			$rules = unserialize($this->serializedRules->get());
+			if (!$rules)
+			{
+				return;
+			}
+
+			foreach ($rules as &$groups)
+			{
+				foreach ($groups as &$price)
+				{
+					$price *= $multiply;
+				}
+			}
+
+			$this->setRules($rules);
+		}
 	}
 
 	public function setPriceRule($quantity, UserGroup $group = null, $price)
@@ -442,12 +461,13 @@ class ProductPrice extends ActiveRecordModel
 			if (!$listPrice)
 			{
 				$ruleController = self::getApplication()->getBusinessRuleController();
-				foreach ($prices as $currency => &$price)
+				foreach ($prices as $currency => $price)
 				{
 					$maxPrice = $price;
 					$groupPrice = self::getProductGroupPrice($ruleController->getContext()->getUserGroupID(), $rules[$currency], 1);
 					$price = is_null($groupPrice) ? $price : $groupPrice;
 					$price = self::getApplication()->getDisplayTaxPrice($price, $product);
+					$prices[$currency] = $price;
 					$discountedPrice = $ruleController->getProductPrice($product, $price, $currency);
 					if ($discountedPrice != $maxPrice)
 					{
@@ -589,11 +609,22 @@ class ProductPrice extends ActiveRecordModel
 			{
 				$nextQuant[$quant] = isset($quantities[$key + 1]) ? $quantities[$key + 1] - 1 : null;
 			}
+
+			if ($array['serializedRules'])
+			{
+				$product = Product::getInstanceById($array['productID']);
+			}
+
 			foreach ($array['serializedRules'] as $quantity => $prices)
 			{
 				foreach ($prices as $group => $price)
 				{
 					$price = $currency->roundPrice($price);
+					if (!empty($product))
+					{
+
+					}
+
 					$array['quantityPrices'][$group][$quantity] = array(
 														'price' => $price,
 														'formattedPrice' => $currency->getFormattedPrice($price),

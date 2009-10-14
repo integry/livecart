@@ -1068,12 +1068,12 @@ Backend.ProductVariationItem.prototype =
 
 		if (this.data.childSettings)
 		{
-			if (typeof this.data.childSettings.price == 'number')
+			if (this.data.childSettings.price != '')
 			{
 				priceSelect.value = this.data.childSettings.price;
 			}
 
-			if (typeof this.data.childSettings.weight == 'number')
+			if (this.data.childSettings.weight != '')
 			{
 				weightSelect.value = this.data.childSettings.weight;
 			}
