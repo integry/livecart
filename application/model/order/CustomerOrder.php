@@ -583,6 +583,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		// @todo: see above
 		$this->shipments = $shipments;
 
+		// force updating array representation
+		$this->resetArrayData();
+
 		return $wishList;
 	}
 
@@ -1615,12 +1618,16 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$array['itemDiscountReverse'] = $array['itemDiscount'] * -1;
 
 		// shipping subtotal
-		$array['shippingSubtotal'] = 0;
+		$array['shippingSubtotal'] = null;
 		if ($this->shipments)
 		{
 			foreach ($this->shipments as $shipment)
 			{
-				$array['shippingSubtotal'] += $shipment->getShippingTotalWithTax();
+				$shipmentShipping = $shipment->getShippingTotalWithTax();
+				if (!is_null($shipmentShipping))
+				{
+					$array['shippingSubtotal'] += $shipment->getShippingTotalWithTax();
+				}
 			}
 		}
 

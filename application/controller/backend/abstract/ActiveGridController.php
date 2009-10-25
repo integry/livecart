@@ -58,7 +58,6 @@ abstract class ActiveGridController extends StoreManagementController
 		}
 
 		$productArray = ActiveRecordModel::getRecordSetArray($this->getClassName(), $filter, $this->getReferencedData(), $recordCount);
-
 		$productArray = $this->processDataArray($productArray, $displayedColumns);
 
 		$data = array();
@@ -396,7 +395,7 @@ abstract class ActiveGridController extends StoreManagementController
 				{
 					if ($needsJoin)
 					{
-						$f->joinTable('EavObject', $this->getClassName(), EavObject::getClassField($this->getClassName()), 'ID');
+						$f->joinTable('EavObject', $this->getClassName(), 'ID', 'eavObjectID');
 						$needsJoin = false;
 					}
 

@@ -92,7 +92,7 @@ class RuleActionPercentageDiscount extends RuleAction implements RuleItemAction
 
 	protected function getDiscountAmount($price)
 	{
-		return $price * ($this->getParam('amount', 100) / 100);
+		return $price * ($this->getParam('amount', 0) / 100);
 	}
 
 	public static function getSortOrder()

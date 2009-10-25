@@ -1,4 +1,4 @@
-{if !$hideShippingEstimationForm}
+{if !$hideShippingEstimationForm && 'ENABLE_SHIPPING_ESTIMATE'|config}
 <tr id="shippingEstimation">
 	<td colspan="5">
 		<div class="container">

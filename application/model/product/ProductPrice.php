@@ -514,6 +514,8 @@ class ProductPrice extends ActiveRecordModel
 					$product[$formattedPriceField][$id] = $currencies[$id]->getFormattedPrice($price);
 				}
 			}
+
+			unset($prices);
 		}
 	}
 

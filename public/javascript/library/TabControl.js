@@ -324,6 +324,11 @@ TabControl.prototype = {
 		}
 		else
 		{
+			if (null == value)
+			{
+				value = 0;
+			}
+
 			counter.update("(" + value + ")");
 			this.countersCache[hashId][tab.id] = value;
 		}

@@ -39,7 +39,8 @@ class ProductMassActionProcessor extends MassActionProcessor
 				if ($pricing->isPriceSet($currency))
 				{
 					$p = $pricing->getPrice($currency);
-					$p->increasePriceByPercent($this->params['price']);
+					$p->increasePriceByPercent($this->params['inc_price_value'], $this->params['inc_quant_price']);
+					$p->save();
 				}
 			}
 		}

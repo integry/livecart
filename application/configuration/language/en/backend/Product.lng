@@ -36,6 +36,7 @@ _set_shipping_class=Set shipping class
 _clear_attribute_value=Clear Attribute Value
 _add_related_product=Add related product
 _increase_price=Increase price (percent)
+_inc_quant_prices=Increase quantity/group prices
 _increase_stock=Increase stock (count)
 _unset_featured_product=Unset featured product
 _inventory_and_pricing=Inventory &amp; Pricing

@@ -106,6 +106,7 @@ class SessionOrder
 		}
 
 		$orderArray['items'] = new RuleOrderContainer($items);
+		$orderArray['items']->setCoupons($order->getCoupons());
 
 		$session->set('orderData', $orderArray);
 	}

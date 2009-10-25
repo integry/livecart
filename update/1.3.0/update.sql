@@ -512,9 +512,7 @@ ALTER TABLE CategoryPresentation DROP PRIMARY KEY;
 
 ALTER TABLE CategoryPresentation CHANGE ID categoryID INTEGER UNSIGNED;
 
-ALTER TABLE CategoryPresentation ADD COLUMN ID INTEGER UNSIGNED NOT NULL;
-
-ALTER TABLE CategoryPresentation ADD CONSTRAINT PK_CategoryPresentation PRIMARY KEY (ID);
+ALTER TABLE CategoryPresentation ADD ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY;
 
 ALTER TABLE CategoryPresentation ADD COLUMN productID INTEGER UNSIGNED;
 
@@ -1108,7 +1106,7 @@ ALTER TABLE SessionData ADD CONSTRAINT User_SessionData
 
 
 UPDATE DiscountAction SET actionClass = 'RuleActionPercentageDiscount' WHERE type=0;
-UPDATE DiscountAction SET actionClass = 'RuleActionAmountDiscount' WHERE type=1;
+UPDATE DiscountAction SET actionClass = 'RuleActionFixedDiscount' WHERE type=1;
 UPDATE DiscountAction SET actionClass = 'RuleActionDisableCheckout' WHERE type=2;
 UPDATE DiscountAction SET actionClass = 'RuleActionPercentageSurcharge' WHERE type=3;
 UPDATE DiscountAction SET actionClass = 'RuleActionAmountSurcharge' WHERE type=4;

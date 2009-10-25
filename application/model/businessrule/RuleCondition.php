@@ -79,6 +79,11 @@ abstract class RuleCondition
 	 */
 	public function isValid($instance = null)
 	{
+		if (($this instanceof RuleOrderCondition) && !$this->getOrder())
+		{
+			return false;
+		}
+
 		if (!$this->isApplicable($instance))
 		{
 			return false;

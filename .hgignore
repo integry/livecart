@@ -1,12 +1,13 @@
 syntax: regexp
 ^storage\/(.*)
+^cache\/(.*)
 
 syntax: glob
 .cache
 .project
-cache
 public/javascript/compiled/*.*
 public/stylesheet/compiled/*.*
 public/upload/*
+public/cache/*
 storage/*.*
 Thumbs.db

@@ -105,8 +105,8 @@ class Currency extends ActiveRecordModel
 			$price = abs($price);
 		}
 
-		//$number = number_format($price, !is_null($this->decimalCount->get()) ? $this->decimalCount->get() : 2, $this->decimalSeparator->get(), $this->thousandSeparator->get());
 		$number = $this->round($price);
+		$number = number_format($number, !is_null($this->decimalCount->get()) ? $this->decimalCount->get() : 2, $this->decimalSeparator->get(), $this->thousandSeparator->get());
 
 		return ($isNegative ? '-' : '') . $this->pricePrefix->get() . $number . $this->priceSuffix->get();
 	}

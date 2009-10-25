@@ -51,6 +51,11 @@ class RuleOrderContainer implements BusinessRuleOrderInterface
 		return $this->items;
 	}
 
+	public function getShoppingCartItems()
+	{
+		return $this->getPurchasedItems();
+	}
+
 	public function getCompletionDate()
 	{
 		return $this->dateCompleted;
@@ -59,6 +64,30 @@ class RuleOrderContainer implements BusinessRuleOrderInterface
 	public function getTotal()
 	{
 		return $this->total;
+	}
+
+	public function getSubTotal()
+	{
+		return $this->getTotal();
+	}
+
+	public function getPaymentMethod()
+	{
+		return '';
+	}
+
+	public function setCoupons(ARSet $coupons)
+	{
+		$this->coupons = array();
+		foreach ($coupons as $coupon)
+		{
+			$this->coupons[$coupon->couponCode->get()] = true;
+		}
+	}
+
+	public function hasCoupon($code)
+	{
+		return !empty($this->coupons[$code]);
 	}
 
 	public function getCurrency()

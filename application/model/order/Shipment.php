@@ -327,6 +327,12 @@ class Shipment extends ActiveRecordModel
 	{
 		$this->recalculateAmounts(false);
 		$total = $this->shippingAmount->get();
+
+		if (is_null($total))
+		{
+			return null;
+		}
+
 		foreach ($this->getTaxes() as $tax)
 		{
 			if ($tax->isShippingTax())

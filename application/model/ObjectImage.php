@@ -154,6 +154,7 @@ abstract class ObjectImage extends MultilingualObject
 
 		// path within application web root directory
 		$path = str_replace(ClassLoader::getRealPath('.'), '', $path);
+		$path = self::fixSlashes($path);
 		if ($path != $origPath)
 		{
 			$path = self::getApplication()->getRouter()->getBaseDirFromUrl() . self::fixSlashes($path);
@@ -163,12 +164,21 @@ abstract class ObjectImage extends MultilingualObject
 		// relative to document root
 		if (!empty($_SERVER['DOCUMENT_ROOT']))
 		{
-			return str_replace($_SERVER['DOCUMENT_ROOT'], '', '/' . self::fixSlashes($path));
+			$path = str_replace($_SERVER['DOCUMENT_ROOT'], '', '/' . self::fixSlashes($path));
 		}
+
+		$path = self::fixSlashes($path);
+		if ($path == $origPath)
+		{
+			$path = substr($path, strpos($path, '/public/') + 8);
+		}
+
+		return $path;
 	}
 
 	private function fixSlashes($path)
 	{
+		$path = str_replace('//', '/', $path);
 		return str_replace('\\', '/', $path);
 	}
 

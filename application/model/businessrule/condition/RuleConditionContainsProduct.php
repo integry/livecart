@@ -35,16 +35,17 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 		{
 			$amount = null;
 
-			foreach ($this->records as $record)
+			$isAnyApplicable = false;
+
+			foreach ($instances as $item)
 			{
 				$isApplicable = false;
 
-				foreach ($instances as $item)
+				foreach ($this->records as $record)
 				{
 					if ($this->isInstanceApplicable($item, $record))
 					{
-						$isApplicable = true;
-
+						$isApplicable = $isAnyApplicable = true;
 						if (!is_null($this->params['subTotal']))
 						{
 							$amount += $item->getSubTotal();
@@ -60,6 +61,15 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 				{
 					return false;
 				}
+			}
+
+			if (!$isAnyApplicable)
+			{
+				return false;
+			}
+			else
+			{
+				$isApplicable = true;
 			}
 
 			if (!is_null($amount))

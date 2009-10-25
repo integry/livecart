@@ -1236,10 +1236,10 @@ Backend.DeliveryZone.ShippingRate.prototype =
 
 			var idStart = this.prefix + this.deliveryZoneId + '_' + this.rate.ShippingService.ID + "_";
 			var idStartRegexp = new RegExp(idStart);
-			document.getElementsByClassName(this.prefix + 'rateFloatValue', li).each(function(input) {
+			$A(document.getElementsByClassName(this.prefix + 'rateFloatValue', li)).each(function(input) {
 				Event.observe(input, "keyup", function(e){ NumericFilter(this) });
 				input.id = input.id.replace(idStartRegexp, idStart + 'new' + newId);
-				Event.observe(input.up().down('label'), 'click', function(e) { Event.stop(e); input.focus(); });
+				Event.observe(input.up('fieldset.error').down('label'), 'click', function(e) { Event.stop(e); input.focus(); });
 			}.bind(this));
 
 			document.getElementsByClassName('UnitConventer_Root', li).each(function(el) {

@@ -356,7 +356,7 @@ class ConfigurationContainer
 		foreach ($this->getConfigDirectories() as $dir)
 		{
 			$dir = dirname($dir) . '/route';
-			$files = array_merge($files, glob($dir . '/*.php'));
+			$files = array_merge($files, (array)glob($dir . '/*.php'));
 		}
 
 		return $files;

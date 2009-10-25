@@ -870,7 +870,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 						SELECT productID, GROUP_CONCAT(CONCAT(lft,'-',rgt) SEPARATOR ',') AS intervals
 							FROM ProductCategory
 							LEFT JOIN Category ON categoryID=ID GROUP BY productID) AS intv
-						ON productID=ID
+						ON productID=Product.ID
 					LEFT JOIN Category ON Product.categoryID=Category.ID
 					SET categoryIntervalCache=CONCAT(Category.lft,'-',Category.rgt,',',COALESCE(intervals,''))";
 

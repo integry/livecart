@@ -735,7 +735,7 @@ class UserController extends FrontendController
 		}
 
 		// create user account
-		$user = $this->createUser(null, 'billing_');
+		$user = $this->createUser($this->request->get('password'), 'billing_');
 
 		// create billing and shipping address
 		$address = $this->createAddress('billing_');
@@ -744,11 +744,6 @@ class UserController extends FrontendController
 
 		$shippingAddress = ShippingAddress::getNewInstance($user, $this->request->get('sameAsBilling') ? clone $address : $this->createAddress('shipping_'));
 		$shippingAddress->save();
-
-		if ($this->request->get('password'))
-		{
-			$user->setPassword($this->request->get('password'));
-		}
 
 		$user->defaultShippingAddress->set($shippingAddress);
 		$user->defaultBillingAddress->set($billingAddress);
@@ -1151,7 +1146,11 @@ class UserController extends FrontendController
 		// send welcome email with user account details
 		if ($this->config->get('EMAIL_NEW_USER'))
 		{
-			$user->setPassword($this->session->get('password'));
+			if ($this->session->get('password'))
+			{
+				$user->setPassword($this->session->get('password'));
+			}
+
 			$email = new Email($this->application);
 			$email->setUser($user);
 			$email->setTemplate('user.new');

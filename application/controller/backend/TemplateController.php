@@ -155,7 +155,7 @@ class TemplateController extends StoreManagementController
 		}
 
 		$origPath = $this->request->get('file');
-		if ($template->isCustomFile() && !$this->request->get('new') && ($template->getFileName() != $origPath))
+		if ($template->isCustomFile() && !$this->request->get('new') && ($template->getFileName() != $origPath) && !$this->request->get('theme'))
 		{
 			$origPath = Template::getCustomizedFilePath($origPath);
 			if (file_exists($origPath))

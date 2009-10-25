@@ -84,7 +84,12 @@
 				<input type="hidden" name="categoryID" />
 			</span>
 
-			{textfield id="massForm_inc_price_`$categoryID`" class="text number" name="inc_price"}
+			<span class="inc_price">
+				{textfield id="inc_price_`$categoryID`" class="text number" name="inc_price_value"}%
+				{checkbox id="inc_quant_price_`$categoryID`" name="inc_quant_price"}
+				<label for="inc_quant_price_{$categoryID}" style="float: none;">{t _inc_quant_prices}</label>
+			</span>
+
 			{textfield id="massForm_inc_stock_`$categoryID`" class="text number" name="inc_stock"}
 			{textfield id="massForm_set_stockCount_`$categoryID`" class="text number" name="set_stockCount"}
 			{textfield id="massForm_price_`$categoryID`" class="text number" name="price"}

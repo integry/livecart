@@ -33,6 +33,7 @@ if (!empty($_SERVER['HTTP_ACCEPT_ENCODING']) && (strpos($_SERVER['HTTP_ACCEPT_EN
 	header('Content-Encoding: gzip');
 }
 
+
 header('Cache-Control: public; max-age=' . (3600 * 24 * 366));
 header('Content-Length: ' . filesize($file));
 

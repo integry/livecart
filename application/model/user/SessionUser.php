@@ -43,7 +43,7 @@ class SessionUser
 				$session->set('userLocale', $localeCode);
 			}
 
-			if (!$session->isValueSet('UserGroup'))
+			if (!$session->isValueSet('UserGroup') || is_null($session->get('UserGroup')))
 			{
 				$user->load();
 				$group = $user->userGroup->get() ? $user->userGroup->get()->getID() : 0;
@@ -53,7 +53,11 @@ class SessionUser
 			$user->userGroup->set(UserGroup::getInstanceByID($session->get('UserGroup')));
 		}
 
-		$app->getSessionHandler()->setUser($user);
+		if ($app->getSessionHandler())
+		{
+			$app->getSessionHandler()->setUser($user);
+		}
+
 		return $user;
 	}
 

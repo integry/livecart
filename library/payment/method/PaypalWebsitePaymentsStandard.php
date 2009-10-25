@@ -52,7 +52,7 @@ class PaypalWebsitePaymentsStandard extends ExternalPayment
 		}
 
 		// check that receiver_email is your Primary PayPal email
-		if ($receiverEmail != $this->getConfigValue('EMAIL'))
+		if (strtolower($receiverEmail) != strtolower($this->getConfigValue('EMAIL')))
 		{
 			throw new PaymentException('Invalid PayPal receiver e-mail');
 		}

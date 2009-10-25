@@ -80,7 +80,10 @@ rm -rf library/payment/test/simpletest
 rm -rf library/payment/test/unittest
 rm -rf public/module
 rm -rf import* output*
-ls module | grep -v ads | grep -v captcha | xargs rm -rf
+
+cd module
+ls | grep -v ads | grep -v captcha | xargs rm -rf
+cd ..
 
 # commit changes
 hg add
@@ -118,8 +121,8 @@ cp -r $MAIN/update/$VERSION /tmp/update/update/$VERSION
 
 cd $MAIN/update
 cp readme.txt /tmp/update/update/$VERSION
-cp readme.txt /tmp/update/
-cp update.php /tmp/update/
+cp readme.txt /tmp/update/update
+cp update.php /tmp/update/update
 
 cd $MAIN
 cp -r --parents license.txt application/controller/backend/SettingsController.php /tmp/update

@@ -87,7 +87,7 @@ class FedexShipping extends ShippingRateCalculator
 			}
 		}
 
-		return isset($results) ? $results : array_shift($result);
+		return isset($results) ? $results : $result;
 	}
 
 	private function getRatesByType(Fedex $fedex, $type)

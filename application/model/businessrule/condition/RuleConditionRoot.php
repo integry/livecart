@@ -19,7 +19,7 @@ class RuleConditionRoot extends RuleCondition
 
 		if (!empty($this->params['couponCode']))
 		{
-			if (!$this->getContext()->getOrder()->hasCoupon($this->params['couponCode']))
+			if (!$this->getContext()->getOrder() || !$this->getContext()->getOrder()->hasCoupon($this->params['couponCode']))
 			{
 				return false;
 			}

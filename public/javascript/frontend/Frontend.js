@@ -732,7 +732,6 @@ Frontend.OnePageCheckout.prototype =
 
 	loaded: function(originalRequest)
 	{
-		console.log(originalRequest);
 		this.show(originalRequest.responseData.html);
 	},
 

@@ -67,6 +67,8 @@ abstract class ValueCache
 			}
 		}
 
+		$ret = array_merge(array('FileCache'), array_diff($ret, array('FileCache')));
+
 		return $ret;
 	}
 }

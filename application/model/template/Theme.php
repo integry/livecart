@@ -19,6 +19,11 @@ class Theme
 
 	public function setParentThemes(array $themes)
 	{
+		if ('barebone' == $this->name)
+		{
+			$themes = array();
+		}
+
 		$this->parentThemes = $themes;
 	}
 

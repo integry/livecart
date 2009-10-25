@@ -36,6 +36,11 @@ class BusinessRuleContext
 		return $this->order;
 	}
 
+	public function getUser()
+	{
+		return $this->user;
+	}
+
 	public function getProducts()
 	{
 		return $this->products;

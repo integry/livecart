@@ -239,10 +239,19 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		return $price;
 	}
 
-	private function reduceBaseTaxes($price, $product = null)
+	public function reduceBaseTaxes($price, $product = null)
 	{
 		$product = $product ? $product : $this->getProduct();
-		$class = $product->getParent()->taxClass->get();
+		if (!is_array($product))
+		{
+			$class = $product->getParent()->taxClass->get();
+		}
+		else
+		{
+			$product = empty($product['Parent']) ? $product : $product['Parent'];
+			$class = empty($product['taxClassID']) ? null: ActiveRecordModel::getInstanceById('TaxClass', $product['taxClassID']);
+		}
+
 		foreach (DeliveryZone::getDefaultZoneInstance()->getTaxRates() as $rate)
 		{
 			if ($rate->taxClass->get() === $class)
@@ -661,6 +670,19 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 			$array['displayPrice'] = $this->getDisplayPrice($currency);
 			$array['displaySubTotal'] = $this->getSubTotal($isTaxIncludedInPrice);
 			$array['itemPrice'] = $array['displaySubTotal'] / $array['count'];
+
+			$isTaxIncludedInPrice = $isTaxIncludedInPrice || (($array['itemPrice'] != $array['itemBasePrice']) && ($array['itemPrice'] == $this->getSubTotal(false)) && ($array['itemBasePrice'] == $this->getSubTotal(true)));
+
+			// display price changed by tax exclusion
+			if (($array['itemPrice'] != $array['itemBasePrice']) && ($array['itemPrice'] == $this->getSubTotal(false)) && ($array['itemBasePrice'] == $this->getSubTotal(true)))
+			{
+				$array['itemPrice'] = $array['itemBasePrice'];
+			}
+
+			if ($this->optionChoices)
+			{
+				$array['itemBasePrice'] = $array['itemPrice'];
+			}
 
 			$array['formattedBasePrice'] = $currency->getFormattedPrice($array['price']);
 			$array['formattedPrice'] = $currency->getFormattedPrice($array['itemPrice']);
