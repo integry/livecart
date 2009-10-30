@@ -74,6 +74,45 @@ class DeliveryZone extends MultilingualObject
 		return 0 == $this->getID();
 	}
 
+	public function isTaxIncludedInPrice()
+	{
+		return $this->isDefault() || $this->hasSameTaxRatesAsDefaultZone();
+	}
+
+	public function hasSameTaxRatesAsDefaultZone()
+	{
+		$defaultZoneRates = self::getDefaultZoneInstance()->getTaxRates();
+		$ownRates = $this->getTaxRates();
+
+		if (!$ownRates->size() || !$defaultZoneRates->size())
+		{
+			return false;
+		}
+
+		foreach ($ownRates as $rate)
+		{
+			foreach ($defaultZoneRates as $dzRate)
+			{
+				$found = false;
+				if (($dzRate->tax->get() == $rate->tax->get()) && ($dzRate->taxClass->get() == $rate->taxClass->get()))
+				{
+					$found = true;
+					if ($dzRate->rate->get() != $rate->rate->get())
+					{
+						return false;
+					}
+				}
+
+				if (!$found)
+				{
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
 	/*####################  Instance retrieval ####################*/
 
 	/**
@@ -293,7 +332,7 @@ class DeliveryZone extends MultilingualObject
 		$surcharge = 0;
 		foreach ($shipment->getItems() as $item)
 		{
-			$surcharge += $item->getProduct()->getParent()->shippingSurchargeAmount->get();
+			$surcharge += ($item->getProduct()->getParent()->shippingSurchargeAmount->get() * $item->getCount());
 		}
 
 		$currency = self::getApplication()->getDefaultCurrency();

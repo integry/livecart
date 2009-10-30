@@ -135,7 +135,7 @@ class BusinessRuleController
 
 	private function updateRuleCache()
 	{
-		$f = select();
+		$f = select(eq('DiscountCondition.isEnabled', true));
 		$f->setOrder(f('DiscountCondition.position'));
 		$conditions = ActiveRecord::getRecordSetArray('DiscountCondition', $f);
 
@@ -175,7 +175,7 @@ class BusinessRuleController
 		}
 
 		$rootCond = RuleCondition::createFromArray($idMap[DiscountCondition::ROOT_ID]);
-		file_put_contents(self::getRuleFile(), '<?php return ' . var_export(serialize($rootCond->getConditions()), true) . '; ?>');
+		file_put_contents(self::getRuleFile(), '<?php return "' . addslashes(serialize($rootCond->getConditions())) . '"; ?>');
 	}
 
 	private function getRuleFile()

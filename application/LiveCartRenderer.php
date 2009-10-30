@@ -80,13 +80,24 @@ class LiveCartRenderer extends SmartyRenderer
 
 	public function getTemplatePath($template)
 	{
-		foreach ($this->getTemplatePaths($template) as $path)
+		if (!isset($this->cachedTemplatePath[$template]))
 		{
-			if (is_readable($path))
+			foreach ($this->getTemplatePaths($template) as $path)
 			{
-				return $path;
+				if (is_readable($path))
+				{
+					$this->cachedTemplatePath[$template] = $path;
+					break;
+				}
+			}
+
+			if (!isset($this->cachedTemplatePath[$template]))
+			{
+				$this->cachedTemplatePath[$template] = null;
 			}
 		}
+
+		return $this->cachedTemplatePath[$template];
 	}
 
 	public function getBaseTemplatePath($tplName)

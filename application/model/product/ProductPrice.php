@@ -612,20 +612,11 @@ class ProductPrice extends ActiveRecordModel
 				$nextQuant[$quant] = isset($quantities[$key + 1]) ? $quantities[$key + 1] - 1 : null;
 			}
 
-			if ($array['serializedRules'])
-			{
-				$product = Product::getInstanceById($array['productID']);
-			}
-
 			foreach ($array['serializedRules'] as $quantity => $prices)
 			{
 				foreach ($prices as $group => $price)
 				{
 					$price = $currency->roundPrice($price);
-					if (!empty($product))
-					{
-
-					}
 
 					$array['quantityPrices'][$group][$quantity] = array(
 														'price' => $price,

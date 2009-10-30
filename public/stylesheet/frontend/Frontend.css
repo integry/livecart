@@ -2230,6 +2230,7 @@ ul.notes li.responder_1 .noteText
 {
 	width: 500px;
 	height: 200px;
+	min-width: 500px;
 }
 
 /***************************
@@ -2374,6 +2375,7 @@ textarea
 {
     padding: 2px;
     width: 40em;
+    min-width: 40em;
     height: 10em;
     font-size: 14px;
     color: #333;

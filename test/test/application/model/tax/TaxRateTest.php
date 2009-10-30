@@ -106,6 +106,27 @@ class TaxRateTest extends LiveCartTest
 		$this->assertEqual($reloaded->getTotal(), 110);
 	}
 
+	public function testShipmentTax()
+	{
+		TaxRate::getNewInstance(DeliveryZone::getDefaultZoneInstance(), $this->tax, 10)->save();
+		TaxRate::getNewInstance($this->deliveryZone, $this->tax, 10)->save();
+		DeliveryZoneCountry::getNewInstance($this->deliveryZone, 'US')->save();
+
+		$order = CustomerOrder::getNewInstance($this->user);
+		$order->addProduct($this->product, 1, true);
+		$order->currency->set($this->currency);
+		$order->shippingAddress->set($this->address);
+		$order->save();
+
+		$this->assertSame($order->getDeliveryZone(), $this->deliveryZone);
+		$this->assertEqual($order->getTotal(), 100);
+		$order->finalize();
+
+		ActiveRecord::clearPool();
+		$reloaded = CustomerOrder::getInstanceById($order->getID(), true);
+		$this->assertEqual($reloaded->getShipments()->get(0)->getRelatedRecordSet('ShipmentTax')->size(), 1);
+	}
+
 	public function testDefaultZoneVAT()
 	{
 		$taxRate = TaxRate::getNewInstance(DeliveryZone::getDefaultZoneInstance(), $this->tax, 10);

@@ -479,7 +479,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		foreach ($this->getShoppingCartItems() as $item)
 		{
-			$item->price->set($item->getSubTotal(false) / $item->count->get());
+			$item->price->set($item->getItemPrice());
 			$item->name->set($item->getProduct()->getParent()->name->get());
 			$item->setValueByLang('name', 'sku', $item->getProduct()->sku->get());
 			$item->save();

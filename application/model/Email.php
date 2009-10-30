@@ -198,7 +198,7 @@ class Email
 
 			foreach ($paths as $path)
 			{
-				$templateFile = ClassLoader::getRealPath($path) . '.tpl';
+				$templateFile = array_shift(ClassLoader::mapToMountPoint($path)) . '.tpl';
 
 				if (file_exists($templateFile))
 				{

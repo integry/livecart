@@ -218,9 +218,9 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		return $rates;
 	}
 
-	public function getDisplayPrice(Currency $currency)
+	public function getDisplayPrice(Currency $currency, $includeTaxes = true)
 	{
-		return $this->getPrice(true);
+		return $this->getPrice($includeTaxes);
 	}
 
 	/**
@@ -660,14 +660,14 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 	{
 		$array = parent::toArray();
 		$array['priceCurrencyID'] = $this->getCurrency()->getID();
-		$isTaxIncludedInPrice = $this->customerOrder->get()->getDeliveryZone()->isDefault();
+		$isTaxIncludedInPrice = $this->customerOrder->get()->getDeliveryZone()->isTaxIncludedInPrice();
 
 		if (isset($array['price']))
 		{
 			$currency = $this->getCurrency();
 
 			$array['itemBasePrice'] = $array['price'];
-			$array['displayPrice'] = $this->getDisplayPrice($currency);
+			$array['displayPrice'] = $this->getDisplayPrice($currency, $isTaxIncludedInPrice);
 			$array['displaySubTotal'] = $this->getSubTotal($isTaxIncludedInPrice);
 			$array['itemPrice'] = $array['displaySubTotal'] / $array['count'];
 

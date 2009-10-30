@@ -350,7 +350,7 @@ class Shipment extends ActiveRecordModel
 		return $this->amount->get() + $this->shippingAmount->get();
 	}
 
-	public function getTotal($recalculate = true)
+	public function getTotal($recalculate = false)
 	{
 		if ($recalculate)
 		{
@@ -457,13 +457,17 @@ class Shipment extends ActiveRecordModel
 		$itemAmount = $this->getSubTotal(self::WITHOUT_TAXES);
 		$this->amount->set($itemAmount);
 
+
 		// total taxes
 		if ($calculateTax)
 		{
-			if ($this->getID())
+			$deleted = false;
+
+			if ($this->order->get()->isFinalized->get())
 			{
 				$this->deleteRelatedRecordSet('ShipmentTax');
 				$this->taxes = null;
+				$deleted = true;
 			}
 
 			$roundedTaxAmount = $taxes = array(ShipmentTax::TYPE_SUBTOTAL => 0, ShipmentTax::TYPE_SHIPPING => 0);
@@ -473,6 +477,10 @@ class Shipment extends ActiveRecordModel
 				$amount = $tax->getAmount();
 				$taxes[$tax->type->get()] += $amount;
 				$roundedTaxAmount[$tax->type->get()] += $currency->round($amount);
+				if ($deleted)
+				{
+					$tax->save();
+				}
 			}
 
 			// correct rounding sum errors (offsets by 0.01, etc)
@@ -863,7 +871,8 @@ class Shipment extends ActiveRecordModel
 				{
 					foreach ($taxRates as $type => $rate)
 					{
-						$this->taxes->add(ShipmentTax::getNewInstance($rate, $this, $type));
+						$shipmentTax = ShipmentTax::getNewInstance($rate, $this, $type);
+						$this->taxes->add($shipmentTax);
 					}
 				}
 			}

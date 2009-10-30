@@ -45,6 +45,7 @@ application/configuration/language/it/backend/CustomerOrder.lng
 application/configuration/language/lt/backend/CustomerOrder.lng
 application/configuration/language/lv/backend/CustomerOrder.lng
 application/configuration/language/no/backend/CustomerOrder.lng
+application/configuration/language/ro/backend/Category.lng
 application/configuration/language/ro/backend/CustomerOrder.lng
 application/configuration/language/sk/backend/CustomerOrder.lng
 application/configuration/language/sl/backend/CustomerOrder.lng
