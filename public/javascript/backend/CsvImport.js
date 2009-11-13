@@ -193,6 +193,7 @@ Backend.CsvImport =
 						select.value = opt.value;
 						selectChange.bind(select)();
 						showConfigFields(select, this)();
+						throw $break;
 					}
 				}.bind(this));
 

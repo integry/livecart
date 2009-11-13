@@ -457,7 +457,6 @@ class Shipment extends ActiveRecordModel
 		$itemAmount = $this->getSubTotal(self::WITHOUT_TAXES);
 		$this->amount->set($itemAmount);
 
-
 		// total taxes
 		if ($calculateTax)
 		{
@@ -465,7 +464,11 @@ class Shipment extends ActiveRecordModel
 
 			if ($this->order->get()->isFinalized->get())
 			{
-				$this->deleteRelatedRecordSet('ShipmentTax');
+				if ($this->isExistingRecord())
+				{
+					$this->deleteRelatedRecordSet('ShipmentTax');
+				}
+
 				$this->taxes = null;
 				$deleted = true;
 			}

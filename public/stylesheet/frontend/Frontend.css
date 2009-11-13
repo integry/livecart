@@ -210,7 +210,7 @@ a.cancel,
 .quickSearch select,
 #language select,
 #productSort,
-.cartLinks select,
+.cartLinks select, select.quantity,
 #ccExpiryMonth, #ccExpiryYear, #ccType
 {
 	width: auto;

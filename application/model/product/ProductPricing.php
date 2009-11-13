@@ -261,6 +261,7 @@ class ProductPricing
 		foreach ($price->getUserPrices($user) as $quant => $pr)
 		{
 			$pr = $currency->convertAmount($price->currency->get(), $pr);
+			$pr = $this->application->getDisplayTaxPrice($pr, $this->product);
 			$prices[$quant] = array(
 								'price' => $pr,
 								'formattedPrice' => $currency->getFormattedPrice($pr),

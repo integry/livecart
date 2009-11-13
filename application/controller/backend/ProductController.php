@@ -812,7 +812,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	/**
 	 * @return RequestValidator
 	 */
-	private function buildValidator(Product $product)
+	public function buildValidator(Product $product)
 	{
 		$validator = $this->getValidator("productFormValidator", $this->request);
 

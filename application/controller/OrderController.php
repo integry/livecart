@@ -500,7 +500,14 @@ class OrderController extends FrontendController
 
 			if ($res instanceof ActionRedirectResponse)
 			{
-				return $res;
+				if ($this->isAjax())
+				{
+					return new JSONResponse(array('__redirect' => $this->application->getActionRedirectResponseUrl($res)));
+				}
+				else
+				{
+					return $res;
+				}
 			}
 
 			$this->setMessage($this->makeText('_added_to_cart', array(Product::getInstanceByID($id)->getName($this->getRequestLanguage()))));

@@ -106,7 +106,10 @@ class UserAddressImport extends DataImport
 
 	protected function afterSave(UserAddress $instance, $record)
 	{
-		$instance->addressType->save();
+		if ($instance->addressType)
+		{
+			$instance->addressType->save();
+		}
 	}
 }
 

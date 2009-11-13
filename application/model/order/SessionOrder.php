@@ -91,7 +91,8 @@ class SessionOrder
 		$currency = $order->getCurrency();
 		$currID = $currency->getID();
 
-		$orderArray = array('total' => array($currID => $order->getTotal()));
+		$total = $order->getTotal();
+		$orderArray = array('total' => array($currID => $total));
 		$orderArray['formattedTotal'] = array($currID => $currency->getFormattedPrice($orderArray['total'][$currID]));
 		$orderArray['basketCount'] = $order->getShoppingCartItemCount();
 		$orderArray['currencyID'] = $currID;
@@ -107,6 +108,7 @@ class SessionOrder
 
 		$orderArray['items'] = new RuleOrderContainer($items);
 		$orderArray['items']->setCoupons($order->getCoupons());
+		$orderArray['items']->setTotal($total);
 
 		$session->set('orderData', $orderArray);
 	}

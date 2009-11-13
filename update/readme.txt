@@ -18,4 +18,4 @@ If the update was successful, you should receive a confirmation message. If you 
 
 If you encounter any problems when updating your LiveCart installation please contact the support team (http://support.livecart.com).
 
-For an updated version of these instructions, please visit http://doc.livecart.com/install/update
+For an updated version of these instructions, please visit http://doc.livecart.com/install

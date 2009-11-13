@@ -498,7 +498,7 @@ class UserController extends FrontendController
 
 	public function registerAddress()
 	{
-		$this->request->set('return', $this->router->createUrl(array('controller' => 'user', 'action' => 'index')));
+		$this->request->set('return', 'user/index');
 		$response = $this->checkout();
 		$response->get('form')->set('regType', 'register');
 		return $response;

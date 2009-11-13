@@ -13,13 +13,19 @@ class RuleConditionCustomerIs extends RuleCondition implements RuleOrderConditio
 	public function isApplicable()
 	{
 		$user = $this->getContext()->getUser();
+
+		if (!$user)
+		{
+			return;
+		}
+
 		$userGroup = $user->userGroup->get();
 		$userID = $user->getID();
 		$userGroupID = $userGroup ? $userGroup->getID() : null;
 
 		foreach ($this->records as $record)
 		{
-			if (($record['userID'] == $userID) || ($record['userGroupID'] == $userGroupID))
+			if ((!empty($record['userID']) && ($record['userID'] == $userID)) || (!empty($record['userGroupID']) && ($record['userGroupID'] == $userGroupID)))
 			{
 				return true;
 			}

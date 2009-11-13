@@ -59,14 +59,27 @@ class ConfigurationContainer
 		$this->loadInfo();
 	}
 
+	public function setApplication(LiveCart $application)
+	{
+		$this->application = $application;
+		foreach ($this->getModules() as $module)
+		{
+			$module->setApplication($application);
+		}
+	}
+
 	public function disableModules()
 	{
 		$this->modules = array();
 	}
 
-	public function saveToCache()
+	public function clearCache()
 	{
-		$this->application->getCache()->set('modules', serialize($this));
+		$path = ClassLoader::getRealPath('cache.configurationContainer') . '.php';
+		if (file_exists($path))
+		{
+			unlink($path);
+		}
 	}
 
 	public function getMountPath()
@@ -182,7 +195,7 @@ class ConfigurationContainer
 		if (is_null($this->enabledModules))
 		{
 			$modules = $this->modules;
-			$conf = $this->application->getConfig();
+			$conf = $this->getApplication()->getConfig();
 			foreach (array('enabledModules', 'installedModules') as $var)
 			{
 				$confModules = $conf->isValueSet($var) ? $conf->get($var) : array();
@@ -230,10 +243,13 @@ class ConfigurationContainer
 	public function setStatus($isActive)
 	{
 		$this->setConfig('enabledModules', $isActive);
+		$this->clearCache();
 	}
 
-	public function install()
+	public function install(LiveCart $application)
 	{
+		$this->application = $application;
+
 		$this->installDatabase();
 		$this->setConfig('installedModules', true);
 
@@ -259,10 +275,14 @@ class ConfigurationContainer
 				full_copy($publicDir, $this->getPublicDirectoryLink());
 			}
 		}
+
+		$this->clearCache();
 	}
 
-	public function deinstall()
+	public function deinstall(LiveCart $application)
 	{
+		$this->application = $application;
+
 		$this->deinstallDatabase();
 		$this->setConfig('installedModules', false);
 
@@ -274,6 +294,8 @@ class ConfigurationContainer
 		{
 			unlink($symLink);
 		}
+
+		$this->clearCache();
 	}
 
 	private function customInstall($file)
@@ -317,7 +339,7 @@ class ConfigurationContainer
 
 	private function getConfig($var)
 	{
-		$config = $this->application->getConfig();
+		$config = $this->getApplication()->getConfig();
 
 		$modules = $config->isValueSet($var) ? $config->get($var) : array();
 
@@ -333,7 +355,7 @@ class ConfigurationContainer
 
 	private function setConfig($var, $status)
 	{
-		$config = $this->application->getConfig();
+		$config = $this->getApplication()->getConfig();
 
 		$activeModules = $config->isValueSet($var) ? $config->get($var) : array();
 
@@ -376,6 +398,11 @@ class ConfigurationContainer
 		}
 
 		$this->info['path'] = $this->mountPath;
+	}
+
+	public function getApplication()
+	{
+		return $this->application ? $this->application : ActiveRecordModel::getApplication();
 	}
 }
 

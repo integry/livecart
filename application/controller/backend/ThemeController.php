@@ -16,6 +16,8 @@ class ThemeController extends StoreManagementController
 	{
 		$themes = array_merge(array('barebone' => 'barebone'), array_diff($this->application->getRenderer()->getThemeList(), array('barebone')));
 
+		unset($themes['default'], $themes['default-3column'], $themes['light'], $themes['light-3column']);
+
 		$response = new ActionResponse();
 		$response->set('themes', json_encode($themes));
 		$response->set('addForm', $this->buildForm());

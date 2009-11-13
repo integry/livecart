@@ -160,8 +160,8 @@ abstract class RuleCondition
 			(($actualValue >= $constraintValue) && (DiscountCondition::COMPARE_GTEQ == $compType)) ||
 			(($actualValue == $constraintValue) && (DiscountCondition::COMPARE_EQ == $compType)) ||
 			(($actualValue != $constraintValue) && (DiscountCondition::COMPARE_NE == $compType)) ||
-			(!($actualValue % $constraintValue) && (DiscountCondition::COMPARE_DIV == $compType)) ||
-			(($actualValue % $constraintValue) && (DiscountCondition::COMPARE_NDIV == $compType)))
+			($actualValue && !($actualValue % $constraintValue) && (DiscountCondition::COMPARE_DIV == $compType)) ||
+			($actualValue && ($actualValue % $constraintValue) && (DiscountCondition::COMPARE_NDIV == $compType)))
 		{
 			return true;
 		}

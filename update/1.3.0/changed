@@ -67,6 +67,7 @@ application/configuration/registry/display/04-filtering.ini
 application/configuration/registry/display/06-image.ini
 application/configuration/registry/display/07-contentblocks.ini
 application/configuration/registry/display/08-invoice.ini
+application/configuration/registry/shipping/UspsShipping.ini
 application/configuration/route/backend.php
 application/controller/BaseController.php
 application/controller/CategoryController.php
@@ -710,6 +711,7 @@ library/shipping/ShippingRateError.php
 library/shipping/ShippingRateResult.php
 library/shipping/ShippingRateSet.php
 library/shipping/ShippingResultInterface.php
+library/shipping/library/usps/usps.php
 library/shipping/method/CanadaPostShipping.php
 library/shipping/method/FedexShipping.php
 library/shipping/method/UspsShipping.php
@@ -1277,6 +1279,10 @@ application/view/search/block/result_StaticPage.tpl
 application/view/search/index.tpl
 application/view/sitemap/full.tpl
 application/view/theme/barebone/.theme/style.ini
+application/view/theme/default-3column/.theme/style.ini
+application/view/theme/default/.theme/style.ini
+application/view/theme/light-3column/.theme/style.ini
+application/view/theme/light/.theme/style.ini
 application/view/user/addressFormState.tpl
 application/view/user/block/passwordFields.tpl
 application/view/user/confirm.tpl

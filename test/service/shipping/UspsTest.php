@@ -33,6 +33,10 @@ class UspsTest extends TestShipping
 		// priority
 		$usps->setService('Priority');
 
+		$usps->setContainer('');
+		$rates = $usps->getRates();
+		$this->assertTrue($rates instanceof ShippingRateSet);
+
 		$usps->setContainer('Flat Rate Envelope');
 		$rates = $usps->getRates();
 		$this->assertTrue($rates instanceof ShippingRateSet);
@@ -45,7 +49,6 @@ class UspsTest extends TestShipping
 		$usps->setService('Express');
 		$rates = $usps->getRates();
 		$this->assertTrue($rates instanceof ShippingRateSet);
-
 
 		// parcel post
 		$usps->setService('Parcel');

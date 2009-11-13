@@ -66,7 +66,7 @@ class TaxRateTest extends LiveCartTest
 		$this->product->isEnabled->set(true);
 		$this->product->save();
 
-		$this->user = User::getNewInstance('vat.test@tester.com');
+		$this->user = User::getNewInstance('vat.test2@tester.com');
 		$this->user->save();
 
 		$this->address = UserAddress::getNewInstance();
@@ -124,6 +124,7 @@ class TaxRateTest extends LiveCartTest
 
 		ActiveRecord::clearPool();
 		$reloaded = CustomerOrder::getInstanceById($order->getID(), true);
+		$this->assertTrue($reloaded->getShipments()->get(0)->isExistingRecord());
 		$this->assertEqual($reloaded->getShipments()->get(0)->getRelatedRecordSet('ShipmentTax')->size(), 1);
 	}
 

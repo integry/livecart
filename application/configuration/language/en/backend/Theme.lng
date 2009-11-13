@@ -16,6 +16,7 @@ _err_theme_name_empty=Please enter the theme name
 _err_theme_exists=This theme already exists
 _theme_created=Theme created successfully
 _theme_saved=The theme was saved successfully
+_colors_not_editable=Colors & style are not editable for this theme yet
 
 _confirm_theme_del=Really delete the selected theme?
 _err_cannot_delete_core_theme=This is a core theme which cannot be deleted

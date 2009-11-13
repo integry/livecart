@@ -21,7 +21,7 @@ class RuleOrderContainer implements BusinessRuleOrderInterface
 	{
 		if (empty($dbData[0]['CustomerOrder']['dateCompleted']))
 		{
-			return;
+			//return;
 		}
 
 		$this->currency = $dbData[0]['CustomerOrder']['currencyID'];
@@ -56,9 +56,25 @@ class RuleOrderContainer implements BusinessRuleOrderInterface
 		return $this->getPurchasedItems();
 	}
 
+	public function getShoppingCartItemCount()
+	{
+		$count = 0;
+		foreach ($this->getPurchasedItems() as $item)
+		{
+			$count += $item->getCount();
+		}
+
+		return $count;
+	}
+
 	public function getCompletionDate()
 	{
 		return $this->dateCompleted;
+	}
+
+	public function setTotal($total)
+	{
+		$this->total = $total;
 	}
 
 	public function getTotal()

@@ -15,9 +15,14 @@ class RuleConditionUserGroupIs extends RuleCondition
 		$userGroup = $user->userGroup->get();
 		$userGroupID = $userGroup ? $userGroup->getID() : null;
 
+		if (!$userGroupID)
+		{
+			return null;
+		}
+
 		foreach ($this->records as $record)
 		{
-			if ($record['userGroupID'] == $userGroupID)
+			if ($record['ID'] == $userGroupID)
 			{
 				return true;
 			}

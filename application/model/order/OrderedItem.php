@@ -681,10 +681,13 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 
 			if ($this->optionChoices)
 			{
-				$array['itemBasePrice'] = $array['itemPrice'];
+				foreach ($this->optionChoices as $choice)
+				{
+					$array['itemBasePrice'] += $choice->choice->get()->getPriceDiff($this->getCurrency());
+				}
 			}
 
-			$array['formattedBasePrice'] = $currency->getFormattedPrice($array['price']);
+			$array['formattedBasePrice'] = $currency->getFormattedPrice($array['itemBasePrice']);
 			$array['formattedPrice'] = $currency->getFormattedPrice($array['itemPrice']);
 			$array['formattedDisplayPrice'] = $currency->getFormattedPrice($array['displayPrice']);
 			$array['formattedDisplaySubTotal'] = $currency->getFormattedPrice($array['displaySubTotal']);

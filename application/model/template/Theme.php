@@ -115,7 +115,8 @@ class Theme
 		$path = $this->application->getRenderer()->getTemplatePath('theme/'. $this->name . '/.theme/style.ini');
 		if ($path)
 		{
-			$conf = $this->array_merge_recursive_distinct($conf, parse_ini_file($path, true));
+			//$conf = $this->array_merge_recursive_distinct($conf, parse_ini_file($path, true));
+			$conf = parse_ini_file($path, true);
 		}
 
 		return $conf;

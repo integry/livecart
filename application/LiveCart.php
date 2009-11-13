@@ -20,7 +20,7 @@ ClassLoader::import('application.model.businessrule.RuleOrderContainer');
  *  @package application
  *  @author Integry Systems
  */
-class LiveCart extends Application
+class LiveCart extends Application implements Serializable
 {
 	protected $routerClass = 'LiveCartRouter';
 
@@ -512,6 +512,10 @@ class LiveCart extends Application
 						$action = $command['action'];
 						switch ($action['command'])
 						{
+							case 'replace':
+								$action['command'] = 'append';
+								$controllerInstance->removeBlock($object);
+
 							case 'append':
 							case 'prepend':
 								if (!empty($action['isDefinedBlock']))
@@ -1430,7 +1434,20 @@ class LiveCart extends Application
 	{
 		if (!$this->configContainer)
 		{
-			$this->configContainer = new ConfigurationContainer('.', $this);
+			$path = ClassLoader::getRealPath('cache.configurationContainer') . '.php';
+			if (file_exists($path))
+			{
+				$this->configContainer = include $path;
+				$this->configContainer->setApplication($this);
+			}
+			else
+			{
+				$this->configContainer = new ConfigurationContainer('.', $this);
+				$this->configContainer->getModules();
+				$serialized = serialize($this->configContainer);
+
+				file_put_contents($path, '<?php return unserialize("' . addslashes($serialized) . '"); ?>');
+			}
 		}
 
 		return $this->configContainer;
@@ -1445,6 +1462,16 @@ class LiveCart extends Application
 	public function getModules()
 	{
 
+	}
+
+	public function serialize()
+	{
+		return null;
+	}
+
+	public function unserialize($serializedData)
+	{
+		return null;
 	}
 }
 

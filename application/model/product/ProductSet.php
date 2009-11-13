@@ -70,21 +70,13 @@ class ProductSet extends ARSet
 			{
 				$currency = Currency::getInstanceByID($id);
 				$priceField = 'price_' . $id;
-				if ($parent && (($setting !== Product::CHILD_OVERRIDE) || !isset($child[$priceField])))
-				{
-					if (!isset($child[$priceField]))
-					{
-						$child[$priceField] = 0;
-					}
 
-					$parentPrice = $parent['calculated'][$id];
-					$child['finalPrice'][$id] = $child[$priceField] + ($parentPrice * (($setting != Product::CHILD_ADD) ? 1 : -1));
-				}
-				else
+				if (!isset($child[$priceField]))
 				{
-					$child['finalPrice'][$id] = $child[$priceField];
+					$child[$priceField] = 0;
 				}
 
+				$child['finalPrice'][$id] = $child[$priceField];
 				$child['finalPrice'][$id] = $currency->roundPrice($child['finalPrice'][$id]);
 				$child['finalFormattedPrice'][$id] = $currency->getFormattedPrice($child['finalPrice'][$id]);
 			}

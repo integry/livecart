@@ -66,7 +66,11 @@ abstract class DataImport
 			$method = 'import_' . $section;
 			if (method_exists($this, $method))
 			{
-				$this->$method($instance, $record, $profile->extractSection($section));
+				$subProfile = $profile->extractSection($section);
+				if ($subProfile->getFields())
+				{
+					$this->$method($instance, $record, $subProfile);
+				}
 			}
 		}
 

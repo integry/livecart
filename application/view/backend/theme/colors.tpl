@@ -1,3 +1,7 @@
+{if !$config}
+	<div class="warning">{t _colors_not_editable}</div>
+{/if}
+
 {form action="controller=backend.theme action=saveColors" method="POST" enctype="multipart/form-data" handle=$form id="colors_`$theme`" target="iframe_`$theme`"}
 	{foreach from=$config item=section}
 		<fieldset>

@@ -56,11 +56,12 @@ class UserImport extends DataImport
 	protected function getInstance($record, CsvImportProfile $profile)
 	{
 		$fields = $profile->getSortedFields();
-		if (isset($fields['User']['ID']))
+
+		if (!empty($fields['User']['ID']))
 		{
 			$instance = User::getInstanceByID($record[$fields['User']['ID']], true);
 		}
-		else if (isset($fields['User']['email']))
+		else if (!empty($fields['User']['email']))
 		{
 			$instance = User::getInstanceByEmail($record[$fields['User']['email']]);
 		}
@@ -106,9 +107,11 @@ class UserImport extends DataImport
 		$instance->loadAddresses();
 		if (!$instance->$field->get())
 		{
-			$shippingAddress = call_user_func(array($type, 'getNewInstance'), $instance);
-			$address = UserAddress::getNewInstance($shippingAddress);
-			$shippingAddress->userAddress->set($address);
+			$address = UserAddress::getNewInstance();
+			$address->firstName->setAsModified();
+			$address->save();
+			$shippingAddress = call_user_func(array($type, 'getNewInstance'), $instance, $address);
+			$shippingAddress->save();
 		}
 		else
 		{

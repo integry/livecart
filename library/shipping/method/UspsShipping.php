@@ -86,7 +86,7 @@ class UspsShipping extends ShippingRateCalculator
 		$usps->setService($this->service);
 		$usps->setSize($this->getConfigValue('size', 'Regular'));
 
-		if ($this->container)
+		if (!empty($this->container))
 		{
 			$usps->setContainer($this->container);
 		}
@@ -128,9 +128,16 @@ class UspsShipping extends ShippingRateCalculator
 	{
 		$this->service = $service;
 
-		if ('Express' == $service || 'Priority' == $service)
+		if ('Express' == $service)
 		{
 			$this->setContainer('Flat Rate Envelope');
+		}
+		else if ('Priority' == $service)
+		{
+			$size = $this->getConfigValue('size');
+			$package = $this->getConfigValue('priorityPackageType');
+
+			$this->setContainer($package);
 		}
 	}
 
@@ -142,6 +149,11 @@ class UspsShipping extends ShippingRateCalculator
 	public function setContainer($container)
 	{
 		$this->container = $container;
+
+		if (!$container)
+		{
+			$this->container = null;
+		}
 	}
 
 	public function setSize($size)
