@@ -167,7 +167,7 @@ abstract class FrontendController extends BaseController
 		$f->setOrder(new ARFieldHandle('StaticPage', 'position'));
 
 		$response = new BlockResponse();
-		$response->set('pages', ActiveRecordModel::getRecordSetArray('StaticPage', $f));
+		$response->set('pages', StaticPage::createTree(ActiveRecordModel::getRecordSetArray('StaticPage', $f)));
 		unset($f);
 		return $response;
 	}
