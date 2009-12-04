@@ -8,6 +8,13 @@
 		<ul>
 		{foreach from=$pages item=page}
 			<li id="static_{$page.ID}"><a href="{pageUrl data=$page}">{$page.title_lang}</a></li>
+			{if $page.children}
+				<ul>
+					{foreach from=$page.children item=page}
+						<li id="static_{$page.ID}"><a href="{pageUrl data=$page}">{$page.title_lang}</a></li>
+					{/foreach}
+				</ul>
+			{/if}
 		{/foreach}
 		</ul>
 	</div>

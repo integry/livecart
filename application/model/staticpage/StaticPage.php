@@ -16,8 +16,9 @@ class StaticPage extends MultilingualObject
 	{
 		$schema = self::getSchemaInstance($className);
 		$schema->setName($className);
-
+		$schema->registerField(new ARForeignKeyField("parentID", "StaticPage", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
+		$schema->registerField(new ARField("handle", ARVarchar::instance(255)));
 		$schema->registerField(new ARField("handle", ARVarchar::instance(255)));
 		$schema->registerField(new ARField("title", ARArray::instance()));
 		$schema->registerField(new ARField("text", ARArray::instance()));
@@ -105,6 +106,26 @@ class StaticPage extends MultilingualObject
 		}
 
 		return $array;
+	}
+
+	public static function createTree(array $pages)
+	{
+		$index = array();
+		foreach ($pages as &$page)
+		{
+			$index[$page['ID']] =& $page;
+		}
+
+		foreach ($pages as $key => &$page)
+		{
+			if ($page['parentID'] && isset($index[$page['parentID']]))
+			{
+				$index[$page['parentID']]['children'][] =& $page;
+				unset($pages[$key]);
+			}
+		}
+
+		return $pages;
 	}
 
 	protected function insert()

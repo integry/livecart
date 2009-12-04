@@ -20,6 +20,8 @@ Backend.StaticPage.prototype =
 
 		this.treeBrowser.setImagePath("image/backend/dhtmlxtree/");
 		this.treeBrowser.setOnClickHandler(this.activateCategory.bind(this));
+		this.treeBrowser.setDragHandler(this.reorderCategory);
+		this.treeBrowser.enableDragAndDrop(1);
 
 		this.treeBrowser.showFeedback =
 			function(itemId)
@@ -75,7 +77,7 @@ Backend.StaticPage.prototype =
 		{
 		  	if('function' != typeof treeBranch[k])
 		  	{
-				this.treeBrowser.insertNewItem(rootId, k, treeBranch[k], null, 0, 0, 0, '', 1);
+				this.treeBrowser.insertNewItem(treeBranch[k].parent || rootId, k, treeBranch[k].title, null, 0, 0, 0, '', 1);
 				this.treeBrowser.showItemSign(k, 0);
 			}
 		}
@@ -107,17 +109,12 @@ Backend.StaticPage.prototype =
 
 	activateCategory: function(id)
 	{
-//		Backend.Breadcrumb.display(id);
+		this.treeBrowser.showFeedback(id);
+		var url = this.urls['edit'].replace('_id_', id);
+		var upd = new LiveCart.AjaxUpdater(url, 'pageContent', 'settingsIndicator', null, null, {onLoaded: function() { ActiveForm.prototype.destroyTinyMceFields($('pageContent')); }} );
+		upd.onComplete = this.displayPage.bind(this);
 
-		if (!this.treeBrowser.hasChildren(id))
-		{
-			this.treeBrowser.showFeedback(id);
-			var url = this.urls['edit'].replace('_id_', id);
-			var upd = new LiveCart.AjaxUpdater(url, 'pageContent', 'settingsIndicator', null, null, {onLoaded: function() { ActiveForm.prototype.destroyTinyMceFields($('pageContent')); }} );
-			upd.onComplete = this.displayPage.bind(this);
-
-			this.showControls()
-		}
+		this.showControls()
 	},
 
 	displayPage: function(response)
@@ -211,6 +208,13 @@ Backend.StaticPage.prototype =
 			Element.show($('templateCode'));
 			Element.hide($('staticPageMenu'));
 		}
+	},
+
+	reorderCategory: function(targetId, parentId, siblingNodeId)
+	{
+		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.staticPage', 'move', {id: targetId, parent: parentId}));
+
+		return true;
 	},
 
 	showControls: function()
