@@ -8,6 +8,7 @@
 	<meta name="Keywords" content="{$metaKeywords|escape}" />
 	{assign var="defaultMeta" value='DEFAULT_META_DESCR'|config}
 	<meta name="Description" content="{$metaDescription|@or:$defaultMeta|escape}" />
+	<meta http-equiv="X-UA-Compatible" content="IE=100" />
 
 	<title>
 		{if !$PAGE_TITLE}
@@ -71,9 +72,15 @@
 <body class="{$request.controller}Con {$request.controller}-{$request.action}{if ($request.requestLanguage == 'he') || ($request.requestLanguage == 'ar')} rtl{/if}{if $bodyClass} {$bodyClass}{/if}">
 	{liveCustomization action="menu"}
 	<div id="container" class="lang_{localeCode}">
-		{block PAGE-TOP}
-		{$ACTION_VIEW}
-		{block PAGE-BOTTOM}
+		<div id="containerWrapper1">
+		<div id="containerWrapper2">
+		<div id="containerWrapper3">
+			{block PAGE-TOP}
+			{$ACTION_VIEW}
+			{block PAGE-BOTTOM}
+		</div>
+		</div>
+		</div>
 	</div>
 	{block TRACKING}
 	{liveCustomization action="lang"}

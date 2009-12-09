@@ -12,6 +12,12 @@ class RuleConditionUserGroupIs extends RuleCondition
 	public function isApplicable()
 	{
 		$user = $this->getContext()->getUser();
+
+		if (!$user)
+		{
+			return null;
+		}
+
 		$userGroup = $user->userGroup->get();
 		$userGroupID = $userGroup ? $userGroup->getID() : null;
 

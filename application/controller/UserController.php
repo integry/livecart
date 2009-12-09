@@ -606,7 +606,7 @@ class UserController extends FrontendController
 
 		if ($return = $this->request->get('return'))
 		{
-			if (substr($return, 0, 1) != '/')
+			if ((substr($return, 0, 1) != '/') && (!strpos($return, ':')))
 			{
 				$return = $this->router->createUrlFromRoute($return);
 			}

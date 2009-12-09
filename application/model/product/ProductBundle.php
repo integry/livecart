@@ -113,6 +113,11 @@ class ProductBundle extends ActiveRecordModel
 		return $this->count->get() ? $this->count->get() : 1;
 	}
 
+	public function getProduct()
+	{
+		return $this->product->get();
+	}
+
 	/*####################  Saving ####################*/
 
 	protected function insert()

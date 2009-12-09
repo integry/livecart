@@ -74,6 +74,8 @@ class CategoryController extends FrontendController
 		$selectFilter = new ARSelectFilter();
 		$selectFilter->setLimit($perPage, $offsetStart - 1);
 
+		$this->application->processInstancePlugins('productFilter', $selectFilter);
+
 	  	// create new search filter
 		$query = $this->request->get('q');
 		if ($query)

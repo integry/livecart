@@ -200,7 +200,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		}
 
 		// load price data
-		ProductPrice::loadPricesForRecordSetArray($productArray);
+		ProductPrice::loadPricesForRecordSetArray($productArray, false);
 
 		// load child products
 		if (isset($displayedColumns['Product.parentID']))

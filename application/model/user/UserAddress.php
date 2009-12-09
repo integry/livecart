@@ -62,14 +62,14 @@ class UserAddress extends ActiveRecordModel implements EavAble
 
 		$array['countryName'] = self::getApplication()->getLocale()->info()->getCountryName($array['countryID']);
 		$array['fullName'] = $array['firstName'] . ' ' . $array['lastName'];
-		if (!empty($array['State']))
+		if (!empty($array['State']) && is_array($array['State']))
 		{
 			$array['stateName'] = $array['State']['name'];
 		}
 
 		$array['compact'] = self::getAddressString($array, ', ');
 
-		if (!isset($array['stateID']) && isset($array['State']['ID']))
+		if (!isset($array['stateID']) && isset($array['State']) && is_array($array['State']) && array_key_exists('ID', $array['State']))
 		{
 			$array['stateID'] = $array['State']['ID'];
 		}

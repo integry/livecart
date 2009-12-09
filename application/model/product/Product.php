@@ -819,7 +819,11 @@ class Product extends MultilingualObject
 			$product = Product::getInstanceByID($recordID, Product::LOAD_DATA);
 
 			$filter = $product->getCountUpdateFilter(true);
-			$product->updateCategoryCounters($filter, $product->category->get());
+
+			if ($product->category->get())
+			{
+				$product->updateCategoryCounters($filter, $product->category->get());
+			}
 
 			foreach ($product->getAdditionalCategories() as $category)
 			{

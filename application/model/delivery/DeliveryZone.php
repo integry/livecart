@@ -188,6 +188,7 @@ class DeliveryZone extends MultilingualObject
 		foreach ($zones as $key => $zone)
 		{
 			$match = $zone->getMaskMatch($address);
+
 			if (!$match)
 			{
 				unset($zones[$key]);
@@ -201,7 +202,14 @@ class DeliveryZone extends MultilingualObject
 		if ($maskPoints)
 		{
 			arsort($maskPoints);
-			return array_combine(array_keys($maskPoints), $zones);
+			// this should really be a one-liner, but not today
+			$ret = array();
+			foreach (array_keys($maskPoints) as $key)
+			{
+				$ret[] = $zones[$key];
+			}
+
+			return $ret;
 		}
 
 		return $zones;

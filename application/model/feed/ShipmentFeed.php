@@ -13,9 +13,9 @@ class ShipmentFeed extends ARFeed
 {
 	protected $productFilter;
 
-	public function __construct(ARSelectFilter $filter)
+	public function __construct(ARSelectFilter $filter, $referencedRecords = array())
 	{
-		parent::__construct($filter, 'Shipment', array('CustomerOrder'));
+		parent::__construct($filter, 'Shipment', array_merge($referencedRecords, array('CustomerOrder')));
 	}
 
 	protected function postProcessData()

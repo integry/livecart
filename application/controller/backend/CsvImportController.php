@@ -193,7 +193,7 @@ class CsvImportController extends StoreManagementController
 	{
 		$import = $this->getImportInstance();
 		$file = $this->getProfileDirectory($import) . $this->request->get('profile') . '.ini';
-		//unlink($file);
+		unlink($file);
 
 		return new JSONResponse(array('profile' => $this->request->get('profile')), 'success', $this->translate('_profile_deleted'));
 	}

@@ -356,7 +356,11 @@ class CustomerOrderController extends ActiveGridController
 	public function printLabels()
 	{
 		$filter = $GLOBALS['filter'];
-		return new ActionResponse('feed', new ShipmentFeed($filter));
+
+		// HAVING User.fullName >> causes problems
+		$filter->setHavingCondition(eq(new ARExpressionHandle('1'), 1));
+
+		return new ActionResponse('feed', new ShipmentFeed($filter, array('User')));
 	}
 
 	public function isMassCancelled()
@@ -757,6 +761,7 @@ class CustomerOrderController extends ActiveGridController
 	 */
 	public function create()
 	{
+		ActiveRecord::beginTransaction();
 		$user = User::getInstanceByID((int)$this->request->get('customerID'), true, true);
 		$order = CustomerOrder::getNewInstance($user);
 		$status = CustomerOrder::STATUS_NEW;
@@ -780,6 +785,7 @@ class CustomerOrderController extends ActiveGridController
 
 		$response = $this->save($order);
 		$order->finalize();
+		ActiveRecord::commit();
 		return $response;
 	}
 

@@ -141,10 +141,10 @@ class LiveCart extends Application implements Serializable
 			}
 		}
 
+		ActiveRecordModel::setApplicationInstance($this);
+
 		// LiveCart request routing rules
 		$this->initRouter();
-
-		ActiveRecordModel::setApplicationInstance($this);
 
 		if (file_exists(ClassLoader::getRealPath('cache.dev')))
 		{
@@ -604,6 +604,21 @@ class LiveCart extends Application implements Serializable
 
 			include_once $plugin['path'];
 			$inst = new $plugin['class']($this);
+			$inst->process();
+		}
+	}
+
+	public function processInstancePlugins($path, $instance, $params = null)
+	{
+		foreach($this->getPlugins('instance/' . $path) as $plugin)
+		{
+			if (!class_exists('InstancePlugin', false))
+			{
+				ClassLoader::import('application.plugin.InstancePlugin');
+			}
+
+			include_once $plugin['path'];
+			$inst = new $plugin['class']($this, $instance, $params);
 			$inst->process();
 		}
 	}

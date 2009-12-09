@@ -24,8 +24,11 @@ class RuleOrderContainer implements BusinessRuleOrderInterface
 			//return;
 		}
 
-		$this->currency = $dbData[0]['CustomerOrder']['currencyID'];
-		$this->dateCompleted = $dbData[0]['CustomerOrder']['dateCompleted'];
+		if (!empty($dbData[0]['CustomerOrder']['dateCompleted']))
+		{
+			$this->currency = $dbData[0]['CustomerOrder']['currencyID'];
+			$this->dateCompleted = $dbData[0]['CustomerOrder']['dateCompleted'];
+		}
 
 		foreach ($dbData as $item)
 		{

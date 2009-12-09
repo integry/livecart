@@ -733,7 +733,7 @@ fieldset.error, div.error, fieldset.container
 .errorText
 {
 	background-color: red;
-	float: left;
+/*	float: left; */
 	width: auto;
 	margin-bottom: 4px;
 	margin-top: -3px;

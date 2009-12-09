@@ -1656,6 +1656,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			$array['isAddressSelected'] = ($this->shippingAddress->get() && $this->billingAddress->get());
 		}
 
+		// otherwise left empty on payment page for some reason...
+		if ($this->billingAddress->get())
+		{
+			$array['BillingAddress'] = $this->billingAddress->get()->toArray();
+		}
+
 		$this->setArrayData($array);
 
 		return $array;

@@ -2,7 +2,7 @@
 	<div id="largeImage" class="{if $images|@count == 0}missingImage{/if} {if $images|@count > 1}multipleImages{/if}">
 		{if $product.DefaultImage.paths.3}
 
-			<a rel="lightbox" href="{$product.DefaultImage.paths.4}" title="{$product.DefaultImage.title_lang|escape}">
+			<a rel="lightbox" href="{$product.DefaultImage.paths.4}" title="{$product.DefaultImage.title_lang|escape}" target="_blank">
 				{img src=$product.DefaultImage.paths.3 alt=$product.DefaultImage.title_lang|escape id="mainImage"}
 			</a>
 		{else}
@@ -12,7 +12,7 @@
 	{if $images|@count > 1}
 		<div id="moreImages">
 			{foreach from=$images item="image"}
-				{img src=$image.paths.1 id="img_`$image.ID`" alt=$image.name_lang|escape onclick="return false;"}
+				<a href="{$image.paths.4}" target="_blank" onclick="return false;">{img src=$image.paths.1 id="img_`$image.ID`" alt=$image.name_lang|escape onclick="return false;"}</a>
 			{/foreach}
 		</div>
 	{/if}

@@ -402,7 +402,7 @@ class ProductPrice extends ActiveRecordModel
 	/**
 	 * Load product pricing data for a whole array of products at once
 	 */
-	public static function loadPricesForRecordSetArray(&$productArray)
+	public static function loadPricesForRecordSetArray(&$productArray, $applyBusinessRules = true)
 	{
 		$ids = array();
 		foreach ($productArray as $key => $product)
@@ -422,20 +422,21 @@ class ProductPrice extends ActiveRecordModel
 			$productArray[$ids[$price['productID']]]['prices'][$price['currencyID']] = $price;
 		}
 
-		self::getPricesFromArray($productArray, $productPrices, $ids, false);
+		self::getPricesFromArray($productArray, $productPrices, $ids, false, $applyBusinessRules);
 		if (isset($listPrices))
 		{
 			self::getPricesFromArray($productArray, $listPrices, $ids, true);
 		}
 	}
 
-	private static function getPricesFromArray(&$productArray, $priceArray, $ids, $listPrice = false)
+	private static function getPricesFromArray(&$productArray, $priceArray, $ids, $listPrice = false, $applyBusinessRules = true)
 	{
 		$baseCurrency = self::getApplication()->getDefaultCurrencyCode();
 		$currencies = self::getApplication()->getCurrencySet();
 
 		$priceField = $listPrice ? 'listPrice' : 'price';
 		$formattedPriceField = $listPrice ? 'formattedListPrice' : 'formattedPrice';
+		$priceSetting = null;
 
 		foreach ($priceArray as $productId => $prices)
 		{
@@ -458,7 +459,7 @@ class ProductPrice extends ActiveRecordModel
 			}
 
 			// apply discounts to display prices
-			if (!$listPrice)
+			if (!$listPrice && $applyBusinessRules)
 			{
 				$ruleController = self::getApplication()->getBusinessRuleController();
 				foreach ($prices as $currency => $price)
@@ -605,6 +606,7 @@ class ProductPrice extends ActiveRecordModel
 
 		if ($array['serializedRules'])
 		{
+			$ruleController = self::getApplication()->getBusinessRuleController();
 			$quantities = array_keys($array['serializedRules']);
 			$nextQuant = array();
 			foreach ($quantities as $key => $quant)
@@ -616,10 +618,14 @@ class ProductPrice extends ActiveRecordModel
 			{
 				foreach ($prices as $group => $price)
 				{
-					$price = $currency->roundPrice($price);
+					$originalPrice = $currency->roundPrice($price);
+					$product = isset($array['Product']) ? $array['Product'] : Product::getInstanceByID($array['productID']);
+					$price = $ruleController->getProductPrice($product, $originalPrice);
 
 					$array['quantityPrices'][$group][$quantity] = array(
+														'originalPrice' => $originalPrice,
 														'price' => $price,
+														'originalFormattedPrice' => $currency->getFormattedPrice($originalPrice),
 														'formattedPrice' => $currency->getFormattedPrice($price),
 														'from' => $quantity,
 														'to' => $nextQuant[$quantity]

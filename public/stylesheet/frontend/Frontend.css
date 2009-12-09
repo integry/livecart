@@ -2519,6 +2519,11 @@ img.calendar_button
 	margin-bottom: 7px;
 }
 
+.compactProductList div
+{
+	position: relative;
+}
+
 /*************************
 	AJAX
 *************************/
@@ -2547,6 +2552,7 @@ img.calendar_button
 {
 	float: left;
 	line-height: 25px;
+	position: relative;
 }
 
 .rootCategories li.current
@@ -2564,6 +2570,8 @@ img.calendar_button
 	color: black;
 	text-decoration: none;
 	padding: 0 1em;
+	float: left;
+	clear: left;
 }
 
 .rootCategories li .wrapper a
@@ -2582,6 +2590,8 @@ img.calendar_button
 	display: none;
 	position: absolute;
 	z-index: 10;
+	left: 0;
+	top: 100%;
 }
 
 .rootCategories li:hover .wrapper,

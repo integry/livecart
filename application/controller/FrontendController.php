@@ -1,7 +1,8 @@
 <?php
 
-ClassLoader::import("application.controller.BaseController");
-ClassLoader::import("application.model.Currency");
+ClassLoader::import('application.controller.BaseController');
+ClassLoader::import('application.model.Currency');
+ClassLoader::import('application.model.category.Category');
 
 /**
  * Base class for all front-end related controllers
@@ -96,7 +97,7 @@ abstract class FrontendController extends BaseController
 		$this->order = $order;
 	}
 
-	protected function addBreadCrumb($title, $url)
+	public function addBreadCrumb($title, $url)
 	{
 		$this->breadCrumb[] = array('title' => $title, 'url' => $url);
 	}

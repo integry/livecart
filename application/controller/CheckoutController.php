@@ -558,6 +558,7 @@ class CheckoutController extends FrontendController
 	{
 		$this->order->loadAll();
 		$this->order->getSpecification();
+		$this->order->getTotal(true);
 
 		// @todo: variation prices appear as 0.00 without the extra toArray() call :/
 		$this->order->toArray();
@@ -757,7 +758,7 @@ class CheckoutController extends FrontendController
 
 	private function getPaymentPageRedirect()
 	{
-		if ($id = $this->request->get('id'))
+		if (is_numeric($this->request->get('id')))
 		{
 			return new ActionRedirectResponse('user', 'pay', array('id' => $id));
 		}
@@ -879,6 +880,7 @@ class CheckoutController extends FrontendController
 
 		$class = $this->request->get('id');
 		$order->setPaymentMethod($class);
+		$this->order = $order;
 
 		$handler = $this->application->getPaymentHandler($class, $this->getTransaction());
 		$handler->setNotifyUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'notify', 'id' => $class, 'query' => $notifyParams))));
@@ -1111,6 +1113,7 @@ class CheckoutController extends FrontendController
 	private function getTransaction()
 	{
 		$this->order->loadAll();
+		$this->order->getTotal(true);
 		return new LiveCartTransaction($this->order, Currency::getValidInstanceById($this->getRequestCurrency()));
 	}
 
