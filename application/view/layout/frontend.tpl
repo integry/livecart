@@ -67,6 +67,9 @@
 		<script src="javascript/library/ie7/IE8.js" type="text/javascript"></script>
 	<![endif]-->
 	*}
+	<script type="text/javascript">
+		Router.setUrlTemplate('{link controller=controller action=action}');
+	</script>
 </head>
 
 <body class="{$request.controller}Con {$request.controller}-{$request.action}{if ($request.requestLanguage == 'he') || ($request.requestLanguage == 'ar')} rtl{/if}{if $bodyClass} {$bodyClass}{/if}">

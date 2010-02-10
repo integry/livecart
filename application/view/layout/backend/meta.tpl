@@ -34,8 +34,8 @@
 	*}
 
 	{includeJs file=library/KeyboardEvent.js front=true}
-	{includeJs file=library/livecart.js front=true}
 	{includeJs file="backend/Backend.js" front=true}
+	{includeJs file=library/livecart.js front=true}
 	{includeJs file=library/dhtmlHistory/dhtmlHistory.js}
 	{includeJs file="library/scriptaculous/dragdrop.js" front=true}
 	{includeJs file="library/scriptaculous/slider.js" front=true}
@@ -98,7 +98,7 @@
 
 	window.onload = onLoad;
 
-	Backend.Router.setUrlTemplate('{link controller=controller action=action}');
+	Router.setUrlTemplate('{link controller=controller action=action}');
 	</script>
 
 	{block TRANSLATIONS}
