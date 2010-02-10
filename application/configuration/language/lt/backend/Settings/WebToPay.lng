@@ -1,0 +1,6 @@
+WebToPay=WebToPay
+WebToPay_merchantid=Mokėjimai.lt vartotojo ID
+WebToPay_projectid=Projekto ID (naujai mokejimai.lt sistemai)
+WebToPay_signaturepassword=Parašo slaptažodis
+WebToPay_country=Šalis (LT, LV, EE ..)
+WebToPay_test=Testavimas
