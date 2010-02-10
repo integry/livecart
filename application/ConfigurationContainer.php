@@ -140,6 +140,37 @@ class ConfigurationContainer
 		return $directories;
 	}
 
+	public function getFilesByRelativePath($path, $publicDir = false)
+	{
+		$files = array();
+		
+		if ($publicDir)
+		{
+			if (substr($path, 0, 6) == 'public')
+			{
+				$path = substr($path, 7);
+			}
+			
+			$file = $this->getPublicDirectoryLink() . DIRECTORY_SEPARATOR . $path;
+		}
+		else
+		{
+			$file = $this->directory . DIRECTORY_SEPARATOR . $path;
+		}
+
+		if (file_exists($file))
+		{
+			$files[] = $file;
+		}
+
+		foreach ($this->getModules() as $module)
+		{
+			$files = array_merge($files, $module->getFilesByRelativePath($path, $publicDir));
+		}
+
+		return $files;
+	}
+
 	private function findDirectories($variable)
 	{
 		$directories = $this->$variable ? array($this->$variable) : array();

@@ -34,6 +34,17 @@ function smarty_function_selectfield($params, $smarty)
 	   $params['disabled'] = 'disabled';
 	}
 
+	if ($formHandler)
+	{
+		$fieldValue = $formHandler->get($params['name']);
+		if (is_null($fieldValue))
+		{
+			$fieldValue = $defaultValue;
+		}
+		
+		$params['initialValue'] = $fieldValue;
+	}
+
 	$content = '<select';
 	foreach ($params as $name => $param) {
 		$content .= ' ' . $name . '="' . $param . '"';
@@ -46,15 +57,6 @@ function smarty_function_selectfield($params, $smarty)
 	}
 
 	$content .= $before;
-
-	if ($formHandler)
-	{
-		$fieldValue = $formHandler->get($params['name']);
-		if (is_null($fieldValue))
-		{
-			$fieldValue = $defaultValue;
-		}
-	}
 
 	foreach ($options as $value => $title)
 	{

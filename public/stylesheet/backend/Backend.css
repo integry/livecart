@@ -282,11 +282,12 @@ html, body{
 ****************************/
 #navContainer
 {
-	padding-top: 35px;
 	border-bottom: 3px solid #15367f;
 }
 #nav {
-	position: relative;
+	position: absolute;
+	bottom: 3px;
+	left: 210px;
 	z-index: 1;
 }
 

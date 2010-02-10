@@ -18,7 +18,7 @@ class AuthorizeNetTest extends PaymentTest
 		$payment->setConfigValue('transactionKey', '623P88zxd6Pj3Pz6');
 		$payment->setConfigValue('gateway', 'https://test.authorize.net/gateway/transact.dll');
 
-		$payment->setCardData('4007000000027', '12', '2008', '000');
+		$payment->setCardData('4007000000027', '12', '2010', '000');
 		$payment->setCardType('Visa');
 
 		return $payment;
@@ -27,7 +27,7 @@ class AuthorizeNetTest extends PaymentTest
 	function testInvalidCard()
 	{
 		$payment = $this->getPaymentHandler();
-		$payment->setCardData('5522219712684510', '12', '2008', '000');
+		$payment->setCardData('5522219712684510', '12', '2010', '000');
 		$payment->setCardType('Visa');
 
 		$result = $payment->authorizeAndCapture();
