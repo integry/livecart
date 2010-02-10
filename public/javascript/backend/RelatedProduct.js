@@ -434,7 +434,10 @@ Backend.RelatedProduct.Group.View.methods =
 
 		this.nodes.title = this.nodes.root.previous('.groupTitle');
 
-		this.nodes.newGroupCancelLink = this.container.down('.addCancel');
+		if (this.container)
+		{
+			this.nodes.newGroupCancelLink = this.container.down('.addCancel');
+		}
 
 		this.bindForm(this.nodes.form);
 		this.bindVariable(this.nodes.title, 'name');
