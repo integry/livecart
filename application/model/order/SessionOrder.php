@@ -162,6 +162,11 @@ class SessionOrder
 			}
 		}
 
+		return self::getDefaultEstimateAddress();
+	}
+	
+	public static function getDefaultEstimateAddress()
+	{
 		$config = ActiveRecordModel::getApplication()->getConfig();
 		$address = UserAddress::getNewInstance();
 		$address->countryID->set($config->get('DEF_COUNTRY'));

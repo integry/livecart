@@ -370,6 +370,7 @@ class CheckoutController extends FrontendController
 				}
 
 				$this->order->shippingAddress->set($shipping->userAddress->get());
+				SessionOrder::setEstimateAddress($shipping->userAddress->get());
 			}
 
 			$this->order->resetShipments();
@@ -468,7 +469,7 @@ class CheckoutController extends FrontendController
 		SessionOrder::save($this->order);
 
 		// only one shipping method for each shipment, so we pre-select it automatically
-		if (is_null($needSelecting) && $this->config->get('SKIP_SHIPPING'))
+		if (is_null($needSelecting) && $this->config->get('SKIP_SHIPPING') && ($this->config->get('CHECKOUT_CUSTOM_FIELDS') != 'SHIPPING_METHOD_STEP'))
 		{
 			$this->order->serializeShipments();
 			SessionOrder::save($this->order);
@@ -945,7 +946,7 @@ class CheckoutController extends FrontendController
 
 		// determine if the notification URL is called by payment gateway or the customer himself
 		// this shouldn't usually happen though as the payment notifications should be sent by gateway
-		if ($order->user->get() == $this->user)
+		if (($order->user->get() == $this->user) && 0)
 		{
 			$this->request->set('id', $this->order->getID());
 			return $this->completeExternal();
@@ -959,7 +960,9 @@ class CheckoutController extends FrontendController
 			if (!$returnUrl)
 			{
 				$returnUrl = $this->router->createUrl(array('controller' => 'checkout', 'action' => 'completed', 'query' => array('id' => $this->order->getID())));
+				$returnUrl = $this->router->createFullUrl($returnUrl);
 			}
+			
 			$response = new ActionResponse('order', $order->toArray());
 			$response->set('returnUrl', $returnUrl);
 			return $response;
@@ -991,6 +994,11 @@ class CheckoutController extends FrontendController
 	 */
 	public function completed()
 	{
+		if ($this->request->isValueSet('id'))
+		{
+			return new ActionRedirectResponse('checkout', 'completeExternal', array('id' => $this->request->get('id')));
+		}
+		
 		$order = CustomerOrder::getInstanceByID((int)$this->session->get('completedOrderID'), CustomerOrder::LOAD_DATA);
 		$order->loadAll();
 		$response = new ActionResponse();

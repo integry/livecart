@@ -126,9 +126,9 @@ class OrderController extends FrontendController
 			$response->set('states', $this->getStateList($form->get('estimate_country')));
 
 			$hideConf = (array)$this->config->get('SHIP_ESTIMATE_HIDE_ENTRY');
-			$hideForm = !empty($hideConf['UNREGISTERED']) && $this->user->isAnonymous() ||
-						!empty($hideConf['ALL_REGISTERED']) && !$this->user->isAnonymous() ||
-						!empty($hideConf['REGISTERED_WITH_ADDRESS']) && !$this->user->defaultBillingAddress->get() ||
+			$hideForm = (!empty($hideConf['UNREGISTERED']) && $this->user->isAnonymous()) ||
+						(!empty($hideConf['ALL_REGISTERED']) && !$this->user->isAnonymous()) ||
+						(!empty($hideConf['REGISTERED_WITH_ADDRESS']) && !$this->user->isAnonymous() && !$this->user->defaultBillingAddress->get()) ||
 						!$this->order->isShippingRequired() ||
 						$this->order->isMultiAddress->get();
 
@@ -449,15 +449,13 @@ class OrderController extends FrontendController
 				$this->request->set('estimate_stateName', $this->request->get('estimate_state_text'));
 			}
 
-			$address = SessionOrder::getEstimateAddress();
+			$address = SessionOrder::getDefaultEstimateAddress();
 			$address->loadRequestData($this->request, 'estimate_');
 
 			if ($country = $this->request->get('estimate_country'))
 			{
 				$address->countryID->set($country);
 			}
-
-			$address->save();
 
 			SessionOrder::setEstimateAddress($address);
 		}
