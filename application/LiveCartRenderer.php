@@ -140,6 +140,11 @@ class LiveCartRenderer extends SmartyRenderer
 
 	public function render($view)
 	{
+		if (file_exists($view))
+		{
+			$view = $this->getRelativeTemplatePath($view);
+		}
+		
 		if (!file_exists($view))
 		{
 			$original = $view;
@@ -446,7 +451,7 @@ class LiveCartRenderer extends SmartyRenderer
 	public function getRelativeTemplatePath($template)
 	{
 		$template = str_replace('\\', '/', $template);
-		if (strpos($template, '/module/'))
+		if (preg_match('/\/(module\/.*\/.*)/', $template, $match))
 		{
 			preg_match('/\/(module\/.*)/', $template, $match);
 			return str_replace('application/view/', '', $match[1]);
