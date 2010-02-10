@@ -688,11 +688,18 @@ class CategoryController extends FrontendController
 		$url = $this->router->addQueryParams($url);
 		foreach ((array)$filterGroups as $key => $grp)
 		{
+			foreach ((array)$grp['filters'] as $k => $f)
+			{
+				if (!$f['count'])
+				{
+					unset($filterGroups[$key]['filters'][$k]);
+				}
+			}
+			
 			if (empty($grp['filters']))
 			{
 				unset($filterGroups[$key]);
 			}
-
 			// hide excess criterias (by default only 5 per filter are displayed)
 			else if (($showAll != $grp['ID']) && (count($grp['filters']) > $maxCriteria) && ($maxCriteria > 0))
 			{
@@ -764,6 +771,14 @@ class CategoryController extends FrontendController
 
 		if ($this->config->get('ENABLE_PRICE_FILTERS') && (count($count['prices']) > 1))
 		{
+		 	foreach ($priceFilters as $key => $filter)
+		 	{
+		 		if (!$filter['count'])
+		 		{
+		 			unset($priceFilters[$key]);
+				}
+			}
+			
 		 	$response->set('priceGroup', array('filters' => $priceFilters));
 		}
 

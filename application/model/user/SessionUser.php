@@ -69,6 +69,7 @@ class SessionUser
 
 		$session = new Session();
 		$session->set('User', $user->getID());
+		$session->set('UserGroup', $user->userGroup->get() ? $user->userGroup->get()->getID() : 0);
 
 		$app->processRuntimePlugins('session/login');
 	}
