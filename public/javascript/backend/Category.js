@@ -331,7 +331,7 @@ Backend.Category = {
 		}
 		else
 		{
-			 this.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, null, 0, 0, 0, '', 1);
+			 this.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name_lang, null, 0, 0, 0, '', 1);
 			 this.treeBrowser.showItemSign(newCategory.ID, 0);
 			 this.treeBrowser.selectItem(newCategory.ID, true);
 			 this.tabControl.activateTab("tabMainDetails", newCategory.ID);
@@ -359,7 +359,7 @@ Backend.Category = {
 	{
 		var categoryData = eval('(' + response.responseText + ')');
 
-		Backend.Category.treeBrowser.setItemText(categoryData.ID, categoryData.name);
+		Backend.Category.treeBrowser.setItemText(categoryData.ID, categoryData.name_lang);
 		Backend.Category.treeBrowser.setCategoryStyle(categoryData);
 	},
 
@@ -446,7 +446,7 @@ Backend.Category = {
 			}
 
 			// strip HTML
-			category.name = '<b>' + category.name + '</b>';
+			category.name = '<b>' + category.name_lang + '</b>';
 			category.name = category.name.replace(/<(?:.|\s)*?>/g, "");
 
 			Backend.Category.treeBrowser.insertNewItem(category.parent,category.ID,category.name, null, 0, 0, 0, category.options, !category.childrenCount ? 0 : category.childrenCount);
