@@ -467,7 +467,10 @@ class ProductPrice extends ActiveRecordModel
 					$maxPrice = $price;
 					$groupPrice = self::getProductGroupPrice($ruleController->getContext()->getUserGroupID(), $rules[$currency], 1);
 					$price = is_null($groupPrice) ? $price : $groupPrice;
+					
 					$price = self::getApplication()->getDisplayTaxPrice($price, $product);
+					$maxPrice = self::getApplication()->getDisplayTaxPrice($maxPrice, $product);
+					
 					$prices[$currency] = $price;
 					$discountedPrice = $ruleController->getProductPrice($product, $price, $currency);
 					if ($discountedPrice != $maxPrice)
