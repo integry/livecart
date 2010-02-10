@@ -6,6 +6,7 @@ PRICE_ASC=Price: Low to High
 PRICE_DESC=Price: High to Low
 NEWEST_ARRIVALS=Newest Arrivals
 RATING=Customer Rating
+SKU_ASC=SKU
 _sort_num_asc=[_1]: Low to High
 _sort_num_desc=[_1]: High to Low
 _sort_text_asc=[_1]: A-Z
