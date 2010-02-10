@@ -153,7 +153,7 @@ class CsvImportController extends StoreManagementController
 		$response->set('catPath', Category::getInstanceByID($this->request->get('category'), Category::LOAD_DATA)->getPathNodeArray(true));
 
 		$profiles = array('' => '');
-		foreach (glob($this->getProfileDirectory($this->getImportInstance()) . '*.ini') as $path)
+		foreach ((array)glob($this->getProfileDirectory($this->getImportInstance()) . '*.ini') as $path)
 		{
 			$profile = basename($path, '.ini');
 			$profiles[$profile] = $profile;
@@ -254,9 +254,15 @@ class CsvImportController extends StoreManagementController
 			$total -= 1;
 		}
 
-		$progress = 0;
+		if ($this->request->get('firstHeader'))
+		{
+			$import->skipHeader($csv);
+			$import->skipHeader($csv);
+		}
 
+		$progress = 0;
 		$processed = 0;
+
 		if ($this->request->get('continue'))
 		{
 			$import->setImportPosition($csv, $this->getCacheProgress() + 1);
@@ -264,11 +270,6 @@ class CsvImportController extends StoreManagementController
 		else
 		{
 			ActiveRecord::beginTransaction();
-		}
-
-		if ($this->request->get('firstHeader'))
-		{
-			$import->skipHeader($csv);
 		}
 
 		do
