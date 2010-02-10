@@ -23,7 +23,7 @@
 	</div>
 
 	<div class="labelState">
-		{$address.stateName}{if $address.postalCode}, {$address.postalCode}{/if}
+		{$address.stateName|default:$address.State.name}{if $address.postalCode}, {$address.postalCode}{/if}
 	</div>
 
 	<div class="labelCountry">
