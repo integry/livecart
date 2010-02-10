@@ -437,9 +437,10 @@ tr.heading td,
 
 tr.even td,
 div.box .title,
-.rootCategories li.current,
+.rootCategories .current,
 .rootCategories li:hover,
-.rootCategories li.hover,
+.rootCategories .li:hover,
+.rootCategories .hover,
 #background-color2-var
 {
     background-color: #eee;
@@ -2548,24 +2549,26 @@ img.calendar_button
 	width: 100%;
 }
 
-.rootCategories li
+.rootCategories li,
+.rootCategories .li
 {
 	float: left;
 	line-height: 25px;
 	position: relative;
 }
 
-.rootCategories li.current
+.rootCategories .current
 {
 	font-weight: bold;
 }
 
-.rootCategories li.current li
+.rootCategories .current li,
+.rootCategories .current .li
 {
 	font-weight: normal;
 }
 
-.rootCategories li a
+.rootCategories a
 {
 	color: black;
 	text-decoration: none;
@@ -2574,13 +2577,14 @@ img.calendar_button
 	clear: left;
 }
 
-.rootCategories li .wrapper a
+.rootCategories .wrapper a
 {
 	padding: 0;
 	padding-left: 1em;
 }
 
 .rootCategories li li
+.rootCategories .li .li
 {
 	float: none;
 }
@@ -2595,17 +2599,20 @@ img.calendar_button
 }
 
 .rootCategories li:hover .wrapper,
-.rootCategories li.hover .wrapper
+.rootCategories .li:hover .wrapper,
+.rootCategories .hover .wrapper
 {
-	display: block;
+	display: block !important;
 }
 
-.rootCategories li ul
+.rootCategories ul,
+.rootCategories .ul
 {
 	display: table;
 }
 
-.rootCategories li ul li
+.rootCategories ul li,
+.rootCategories .ul .li
 {
 	float: none;
 	background: none;
@@ -2613,17 +2620,11 @@ img.calendar_button
 	white-space: nowrap;
 }
 
-.rootCategories li ul li a
+.rootCategories ul a,
+.rootCategories .ul a
 {
 	display: block;
 	padding-right: 8px !important;
-}
-
-/* for Firefox */
-.rootCategories li.top div > a,
-.rootCategories li.top ul > a
-{
-	display: none !important;
 }
 
 .rootCategories span.block
