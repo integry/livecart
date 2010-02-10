@@ -142,7 +142,7 @@ class ProductImport extends DataImport
 		{
 			$product = null;
 
-			if (isset($fields['Product']['ID']))
+			if (isset($fields['Product']['ID']) && !empty($record[$fields['Product']['ID']]))
 			{
 				$id = $record[$fields['Product']['ID']];
 				if (ActiveRecord::objectExists('Product', $id))
