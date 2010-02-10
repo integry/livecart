@@ -429,6 +429,7 @@ application/view/backend/user/address_edit.tpl
 application/view/backend/userGroup/userContainer.tpl
 application/view/block/activeGrid/gridTable.tpl
 application/view/block/box/breadcrumbTitle.tpl
+application/view/block/box/dynamicCategory.tpl
 application/view/block/box/filter.tpl
 application/view/block/box/language.tpl
 application/view/block/box/menuProductListItem.tpl
@@ -438,6 +439,7 @@ application/view/block/box/shoppingCart.tpl
 application/view/category/categoryProductList.tpl
 application/view/category/foundCategories.tpl
 application/view/category/index.tpl
+application/view/category/productGrid.tpl
 application/view/category/productGridItem.tpl
 application/view/category/productListItem.tpl
 application/view/category/subcategoriesColumns.tpl
@@ -718,6 +720,7 @@ library/shipping/method/UspsShipping.php
 library/stat/Stat.php
 library/text/Password.php
 public/gzip.php
+public/image/promo/transparentlogo_small.png
 public/index.php
 public/javascript/backend/Backend.js
 public/javascript/backend/Category.js
@@ -791,6 +794,7 @@ public/javascript/library/form/State.js
 public/javascript/library/form/Validator.js
 public/javascript/library/lightbox/lightbox.js
 public/javascript/library/livecart.js
+public/javascript/library/rico/ricoLiveGrid.js
 public/javascript/library/tinymce/plugins/advhr/editor_plugin.js
 public/javascript/library/tinymce/plugins/advhr/rule.htm
 public/javascript/library/tinymce/plugins/advimage/editor_plugin.js
@@ -1181,6 +1185,7 @@ application/model/session/SessionHandler.php
 application/model/system/Cron.php
 application/model/tax/TaxClass.php
 application/model/template/Theme.php
+application/plugin/InstancePlugin.php
 application/plugin/ProcessPlugin.php
 application/view/backend/csvImport/profiles.tpl
 application/view/backend/customerOrder/block/shippingLabel.tpl
@@ -1300,9 +1305,11 @@ framework/request/validator/check/IsFileTypeValidCheck.php
 framework/request/validator/check/IsNotEqualCheck.php
 framework/request/validator/check/MaxFileSizeCheck.php
 library/activerecord/ARFeed.php
+library/activerecord/ARInstanceFeed.php
 library/activerecord/ARShortHand.php
 library/activerecord/test/MemoryUsageTest.php
 library/payment/method/CCAvenue.php
+library/payment/method/CCNow.php
 library/payment/method/CyberMUT.php
 library/payment/method/GTBill.php
 library/payment/method/InternetSecureMerchantLink.php

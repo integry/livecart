@@ -66,6 +66,7 @@ class LiveCartTransaction extends TransactionDetails
 		// customer identification
 		if ($order->user->get())
 		{
+			$order->user->get()->load();
 			$this->shippingEmail->set($order->user->get()->email->get());
 			$this->email->set($order->user->get()->email->get());
 			$this->clientID->set($order->user->get()->getID());

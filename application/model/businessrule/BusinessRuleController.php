@@ -44,6 +44,11 @@ class BusinessRuleController
 						}
 					}
 				}
+
+				if ($condition->getParam('isFinal'))
+				{
+					break;
+				}
 			}
 		}
 	}

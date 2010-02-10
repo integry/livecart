@@ -1677,37 +1677,7 @@ Backend.SelectPopup.prototype = {
 /********************************************************************
  * Router / Url manipulator
  ********************************************************************/
-Backend.Router =
-{
-	urlTemplate: '',
-
-	setUrlTemplate: function(url)
-	{
-		url = url.replace(/controller/, '__c__');
-		this.urlTemplate = url.replace(/action/, '__a__');
-	},
-
-	createUrl: function(controller, action, params)
-	{
-		var url = this.urlTemplate.replace(/__c__/, controller);
-		url = url.replace(/__a__/, action);
-
-		if (params)
-		{
-			$H(params).each(function(param)
-			{
-				url = this.setUrlQueryParam(url, param[0], param[1])
-			}.bind(this));
-		}
-
-		return url;
-	},
-
-	setUrlQueryParam: function(url, key, value)
-	{
-		return url + (url.match(/\?/) ? '&' : '?') + key + '=' + value;
-	}
-}
+Backend.Router = Router;
 
 /********************************************************************
  * Progress bar

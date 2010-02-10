@@ -666,17 +666,24 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		{
 			$currency = $this->getCurrency();
 
-			$array['itemBasePrice'] = $array['price'];
+			$array['itemBasePrice'] = self::getApplication()->getDisplayTaxPrice($array['price'], $array['Product']);;
 			$array['displayPrice'] = $this->getDisplayPrice($currency, $isTaxIncludedInPrice);
 			$array['displaySubTotal'] = $this->getSubTotal($isTaxIncludedInPrice);
 			$array['itemPrice'] = $array['displaySubTotal'] / $array['count'];
 
+			//var_dump($isTaxIncludedInPrice, $array['displayPrice'], $array['itemPrice'], $array['itemBasePrice'], '----');
 			$isTaxIncludedInPrice = $isTaxIncludedInPrice || (($array['itemPrice'] != $array['itemBasePrice']) && ($array['itemPrice'] == $this->getSubTotal(false)) && ($array['itemBasePrice'] == $this->getSubTotal(true)));
 
 			// display price changed by tax exclusion
-			if (($array['itemPrice'] != $array['itemBasePrice']) && ($array['itemPrice'] == $this->getSubTotal(false)) && ($array['itemBasePrice'] == $this->getSubTotal(true)))
+			if (((string)$array['itemPrice'] != (string)$array['itemBasePrice']) && ((string)$array['itemPrice'] == (string)($this->getSubTotal(false) / $array['count'])) && ((string)$array['itemBasePrice'] == (string)($this->getSubTotal(true) / $array['count'])))
 			{
 				$array['itemPrice'] = $array['itemBasePrice'];
+			}
+
+			// kind of a workaround for completed orders that have default zone taxes, could be a better fix
+			if (((string)($this->getSubTotal(false) / $array['count']) == (string)$array['itemBasePrice']) && ((string)($this->getSubTotal(true) / $array['count']) == (string)$array['itemPrice']))
+			{
+				$array['itemBasePrice'] = $array['itemPrice'];
 			}
 
 			if ($this->optionChoices)

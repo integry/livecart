@@ -79,5 +79,18 @@ function smarty_function_includeJs($params, LiveCartSmarty $smarty)
 
 		$smarty->_smarty_vars['INCLUDED_JAVASCRIPT_FILES'] = $includedJavascriptFiles;
 	}
+	
+	foreach ($smarty->getApplication()->getConfigContainer()->getFilesByRelativePath('public/' . $fileName, true) as $file)
+	{
+		if (realpath($file) == realpath($filePath))
+		{
+			continue;
+		}
+		
+		$file = substr($file, strlen(ClassLoader::getRealPath('public')));
+		$params['file'] = $file;
+		smarty_function_includeJs($params, $smarty);
+	}
 }
+
 ?>

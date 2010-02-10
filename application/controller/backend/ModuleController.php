@@ -14,6 +14,7 @@ class ModuleController extends StoreManagementController
 	public function init()
 	{
 		$conf = $this->application->getConfigContainer();
+		$conf->clearCache();
 		foreach ($conf->getAvailableModules() as $module)
 		{
 			$this->locale->translationManager()->setDefinitionFileDir(array_shift($module->getLanguageDirectories()));

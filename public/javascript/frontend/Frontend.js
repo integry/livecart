@@ -270,10 +270,39 @@ Product.Variations.prototype =
 				}
 				else if (nextField)
 				{
+					if (!nextField.originalOptions)
+					{
+						nextField.originalOptions = $A(nextField.options);
+					}
+					
+					var index = nextField.selectedIndex;
 					$A(nextField.options).each(function(opt)
 					{
-						opt.style.display = (root[value][opt.value] || !opt.value) ? '' : 'none';
+						opt.parentNode.removeChild(opt);
 					});
+
+					$A(nextField.originalOptions).each(function(opt)
+					{
+						nextField.appendChild(opt);
+					});
+					
+					$A(nextField.options).each(function(opt)
+					{
+						if (!(root[value][opt.value] || !opt.value))
+						{
+							opt.parentNode.removeChild(opt);
+						}
+						//opt.style.display = (root[value][opt.value] || !opt.value) ? '' : 'none';
+					});
+					
+					try
+					{
+						nextField.selectedIndex = index;
+					}
+					catch (e) 
+					{
+						nextField.selectedIndex = 0;
+					}
 
 					root = root[value];
 				}

@@ -479,7 +479,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		foreach ($this->getShoppingCartItems() as $item)
 		{
-			$item->price->set($item->getItemPrice());
+			$item->price->set($item->getSubTotalBeforeTax() / $item->getCount());
 			$item->name->set($item->getProduct()->getParent()->name->get());
 			$item->setValueByLang('name', 'sku', $item->getProduct()->sku->get());
 			$item->save();
@@ -547,7 +547,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		{
 			$discount->save();
 		}
-
+		
 		if (round($this->totalAmount->get(), 2) <= round($this->getPaidAmount(), 2))
 		{
 			$this->isPaid->set(true);
@@ -1619,6 +1619,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		// shipping subtotal
 		$array['shippingSubtotal'] = null;
+		$array['shippingSubtotalWithoutTax'] = null;
 		if ($this->shipments)
 		{
 			foreach ($this->shipments as $shipment)
@@ -1627,11 +1628,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 				if (!is_null($shipmentShipping))
 				{
 					$array['shippingSubtotal'] += $shipment->getShippingTotalWithTax();
+					$array['shippingSubtotalWithoutTax'] += $shipment->getShippingTotalBeforeTax();
 				}
 			}
 		}
 
-		$array['subtotalBeforeTaxes'] = $array['itemSubtotalWithoutTax'] + $array['shippingSubtotal'];
+		$array['subtotalBeforeTaxes'] = $array['itemSubtotalWithoutTax'] + $array['shippingSubtotalWithoutTax'];
 
 		foreach (array('amountPaid', 'amountNotCaptured', 'amountDue', 'itemSubtotal', 'shippingSubtotal', 'subtotalBeforeTaxes', 'totalAmount', 'itemDiscountReverse', 'itemDiscount', 'itemSubtotalWithoutTax') as $key)
 		{
@@ -1643,6 +1645,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		if (!$array['isFinalized'])
 		{
+			$this->isRulesProcessed = false;
 			$isOrderable = $this->isOrderable();
 			if ($isOrderable instanceof OrderException)
 			{
@@ -1651,7 +1654,6 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 			$array['isOrderable'] = !($isOrderable instanceof OrderException) && $isOrderable;
 
-			$array['isShippingSelected'] = $this->isShippingSelected();
 			$array['isShippingSelected'] = $this->isShippingSelected();
 			$array['isAddressSelected'] = ($this->shippingAddress->get() && $this->billingAddress->get());
 		}
@@ -1930,6 +1932,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function processBusinessRules($reload = false)
 	{
+		if ($this->isFinalized->get())
+		{
+			return;
+		}
+		
 		foreach ($this->getDiscountActions($reload) as $ruleAction)
 		{
 			if ($ruleAction->isOrderAction())

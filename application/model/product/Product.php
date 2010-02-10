@@ -1186,6 +1186,38 @@ class Product extends MultilingualObject
 			$map[$additional->product->get()->getID()]->registerAdditionalCategory($additional->category->get());
 		}
 	}
+	
+	public static function loadCategoryPathsForArray(&$productArray)
+	{
+		foreach ($productArray as $product)
+		{
+			$cond = lte('Category.lft', $product['Category']['lft']);
+			$cond->addAnd(gte('Category.rgt', $product['Category']['rgt']));
+			$conditions[] = $cond;
+		}
+
+		$filter = select(Condition::mergeFromArray($conditions, true));
+		$filter->setOrder(f('Category.lft'));
+		$categories = ActiveRecord::getRecordSetArray('Category', $filter);
+		foreach ($productArray as &$product)
+		{
+			$product['Categories'] = array();
+			$names = array();
+			foreach ($categories as &$category)
+			{
+				if (($category['lft'] <= $product['Category']['lft']) && 
+					($category['rgt'] >= $product['Category']['rgt']))
+				{
+					$product['Categories'][] =& $category;
+					$names[] = $category['name_lang'];
+				}
+			}
+			
+			array_shift($names);
+			$product['category_path'] = implode(' > ', $names);
+			$product['category_path_slash'] = implode(' / ', $names);
+		}
+	}
 
 	public function registerAdditionalCategory(Category $category)
 	{
@@ -1471,9 +1503,7 @@ class Product extends MultilingualObject
 		{
 			foreach ($original->getRelatedRecordSet('ProductImage', $original->getImageFilter()) as $image)
 			{
-				$clonedImage = clone $image;
-				$clonedImage->product->set($this);
-				$clonedImage->save();
+				$image->_clone($this);
 			}
 		}
 

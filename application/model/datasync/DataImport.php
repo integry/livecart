@@ -46,12 +46,17 @@ abstract class DataImport
 			$value = $record[$csvIndex];
 
 			list($className, $field) = explode('.', $column, 2);
-			if (method_exists($this, 'set_' . $field))
+			if (method_exists($this, 'set_' . $className . '_' . $field))
+			{
+				$method = 'set_' . $className . '_' . $field;
+				$this->$method($instance, $value);
+			}
+			else if (method_exists($this, 'set_' . $field))
 			{
 				$method = 'set_' . $field;
 				$this->$method($instance, $value);
 			}
-			else if (isset($instance->$field) && ($instance->$field instanceof ARValueMapper))
+			else if (isset($instance->$field) && ($instance->$field instanceof ARValueMapper) && ($className == $this->getClassName()))
 			{
 				$instance->$field->set($value);
 			}
@@ -253,7 +258,7 @@ abstract class DataImport
 
 						if (!$value = $attr->getRelatedRecordSet($valueClass, $f)->shift())
 						{
-							$value = call_user_func(array($valueClass, 'getNewInstance'), array($attr));
+							$value = call_user_func_array(array($valueClass, 'getNewInstance'), array($attr));
 
 							if ($attr->type->get() == EavFieldCommon::TYPE_NUMBERS_SELECTOR)
 							{
@@ -305,7 +310,8 @@ abstract class DataImport
 
 	public function skipHeader(CsvFile $file)
 	{
-		$this->setImportPosition($file, 1);
+		$record = $file->current();
+		$file->next();
 	}
 
 	public function isCompleted(CsvFile $file)
