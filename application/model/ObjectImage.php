@@ -233,26 +233,10 @@ abstract class ObjectImage extends MultilingualObject
 
 		foreach ($this->getImageSizes() as $key => $value)
 	  	{
-			$p = $this->getPath($key);
-			$originalPaths[$key] = $this->getPath($key);
+			copy($this->getPath($key), $cloned->getPath($key));
 		}
 
-		parent::__clone();
-
-		$originalPaths = array();
-		foreach ($this->getImageSizes() as $key => $value)
-	  	{
-			$originalPaths[$key] = $this->getPath($key);
-		}
-
-		return;
-		foreach (1 as $key => $value)
-	  	{
-	  		if(is_file($this->getPath($key)))
-	  		{
-			   unlink($this->getPath($key));
-	  		}
-		}
+		return $cloned;
 	}
 
 	public function __destruct()
