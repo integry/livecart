@@ -277,6 +277,7 @@ ENABLE_CART=Enable shopping cart
 ENABLE_WISHLISTS=Enable wishlists
 DISABLE_GUEST_CHECKOUT=Disable guest checkout
 DISABLE_GUEST_CART=Require registration to access shopping cart
+DISABLE_CHECKOUT_ADDRESS_STEP=Disable checkout address selection step
 ENABLE_MULTIADDRESS=Allow shipping to multiple addresses
 ENABLE_CHECKOUTDELIVERYSTEP=Enter billing and shipping addresses at separate checkout steps
 SKIP_SHIPPING=Skip shipping method selection step if only one shipping method is available (select it automatically)
@@ -369,6 +370,15 @@ PASSWORD_GENERATION=User password creation
 PASSWORD_AUTO=Generate automatically (no password entry fields displayed)
 PASSWORD_OPTIONAL=Optional entry
 PASSWORD_REQUIRE=Required entry
+
+_fields=Fields
+USER_FIELDS=Displayed address/profile form fields
+FIRSTNAME=First name
+LASTNAME=Last name
+COMPANYNAME=Company name
+PHONE=Phone number
+ADDRESS1=Address line 1
+ADDRESS2=Address line 2
 
 _invoice_numbers=Invoice Numbers
 INVOICE_NUMBER_GENERATOR=Invoice number scheme

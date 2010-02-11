@@ -11,15 +11,15 @@
 			</td>
 		{/if}
 
-		<td class="{if $item.itemBasePrice != $item.itemPrice}discount{/if}">
+		<td class="itemPrice {if $item.itemBasePrice != $item.itemPrice}discount{/if}">
 			<span class="basePrice">{$item.formattedBasePrice}</span><span class="actualPrice">{$item.formattedPrice}</span>
 		</td>
-		<td>{$item.count}</td>
+		<td class="itemCount">{$item.count}</td>
 		<td class="amount">{$item.formattedDisplaySubTotal}</td>
 	</tr>
 	{if $productsInSeparateLine}
 		<tr class="{zebra loop="shipment" stop=true}">
-			<td class="productName" colspan="4">
+			<td class="productName" colspan="{$colspan}">
 				{include file="order/itemProductInfo.tpl"}
 			</td>
 		</tr>

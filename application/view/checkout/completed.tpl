@@ -19,6 +19,7 @@
 	{/if}
 
 	{include file="checkout/completeOverview.tpl" nochanges=true}
+	{include file="checkout/orderDownloads.tpl"}
 
 </div>
 

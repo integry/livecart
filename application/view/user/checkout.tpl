@@ -1,3 +1,5 @@
+{assign var="fields" value='USER_FIELDS'|config}
+
 {loadJs form=true}
 {pageTitle}{t _order_checkout}{/pageTitle}
 
@@ -35,26 +37,32 @@
 
 				{block FORM-NEW-CUSTOMER-TOP}
 
+				{if $fields.FIRSTNAME}
 				<p class="required">
 					{err for="billing_firstName"}
 						{{label {t _your_first_name}:}}
 						{textfield class="text"}
 					{/err}
 				</p>
+				{/if}
 
+				{if $fields.LASTNAME}
 				<p class="required">
 					{err for="billing_lastName"}
 						{{label {t _your_last_name}:}}
 						{textfield class="text"}
 					{/err}
 				</p>
+				{/if}
 
+				{if $fields.COMPANYNAME}
 				<p>
 					{err for="billing_companyName"}
 						{{label {t _company_name}:}}
 						{textfield class="text"}
 					{/err}
 				</p>
+				{/if}
 
 				<p class="required">
 					{err for="email"}
@@ -63,12 +71,14 @@
 					{/err}
 				</p>
 
+				{if $fields.PHONE}
 				<p{if 'REQUIRE_PHONE'|config} class="required"{/if}>
 					{err for="billing_phone"}
 						{{label {t _your_phone}:}}
 						{textfield class="text"}
 					{/err}
 				</p>
+				{/if}
 
 				{if 'PASSWORD_GENERATION'|config != 'PASSWORD_AUTO'}
 					{if 'PASSWORD_GENERATION'|config == 'PASSWORD_REQUIRE'}
@@ -82,25 +92,32 @@
 
 			<h3>{t _billing_address}</h3>
 
+				{if $fields.ADDRESS1}
 				<p class="required">
 					{err for="billing_address1"}
 						{{label {t _address}:}}
 						{textfield class="text"}
 					{/err}
 				</p>
+				{/if}
 
+				{if $fields.ADDRESS2}
 				<p>
 					<label></label>
 					{textfield name="billing_address2" class="text"}
 				</p>
+				{/if}
 
+				{if $fields.CITY}
 				<p class="required">
 					{err for="billing_city"}
 						{{label {t _city}:}}
 						{textfield class="text"}
 					{/err}
 				</p>
+				{/if}
 
+				{if $fields.COUNTRY}
 				<p class="required">
 					{err for="billing_country"}
 						{{label {t _country}:}}
@@ -108,7 +125,9 @@
 						<span class="progressIndicator" style="display: none;"></span>
 					{/err}
 				</p>
+				{/if}
 
+				{if $fields.STATE}
 				{if !'DISABLE_STATE'|config}
 					<p class="required">
 						{err for="billing_state_select"}
@@ -125,13 +144,16 @@
 						</script>
 					</p>
 				{/if}
+				{/if}
 
+				{if $fields.POSTALCODE}
 				<p class="required">
 					{err for="billing_postalCode"}
 						{{label {t _postal_code}:}}
 						{textfield class="text"}
 					{/err}
 				</p>
+				{/if}
 
 			{if $order.isShippingRequired}
 			<h3>{t _shipping_address}</h3>

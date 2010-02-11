@@ -214,46 +214,8 @@ class UserController extends FrontendController
 
 	private function loadDownloadableItems(ARSelectFilter $f)
 	{
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), 0));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isPaid'), true));
-		//$f->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'type'), Product::TYPE_DOWNLOADABLE));
-		$f->setOrder(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
-
-		$downloadable = ActiveRecordModel::getRecordSet('OrderedItem', $f, array('Product', 'CustomerOrder'));
-		$fileArray = array();
-		foreach ($downloadable as &$item)
-		{
-			$files = $item->getProduct()->getFiles();
-			$itemFiles = array();
-			foreach ($files as $file)
-			{
-				if ($item->isDownloadable($file))
-				{
-					$itemFiles[] = $file->toArray();
-				}
-			}
-
-			if (!$itemFiles)
-			{
-				continue;
-			}
-
-			$array = $item->toArray();
-			$array['Product']['Files'] = ProductFileGroup::mergeGroupsWithFields($item->getProduct()->getFileGroups()->toArray(), $itemFiles);
-
-			foreach ($array['Product']['Files'] as $key => $file)
-			{
-				if (!isset($file['ID']))
-				{
-					unset($array['Product']['Files'][$key]);
-				}
-			}
-
-			$fileArray[] = $array;
-		}
-
-		return $fileArray;
+		ClassLoader::import('application.model.product.ProductFile');
+		return ProductFile::getOrderFiles($f);
 	}
 
 	/**
@@ -751,7 +713,12 @@ class UserController extends FrontendController
 
 		// set order addresses
 		$this->order->billingAddress->set($billingAddress->userAddress->get());
-		$this->order->shippingAddress->set($shippingAddress->userAddress->get());
+
+		if ($this->order->isShippingRequired())
+		{
+			$this->order->shippingAddress->set($shippingAddress->userAddress->get());
+		}
+
 		$this->order->setUser($user);
 		SessionOrder::save($this->order);
 
@@ -1328,23 +1295,37 @@ class UserController extends FrontendController
 
 		$fields = $checks = array();
 
-		if ($this->config->get('REQUIRE_PHONE'))
+		$displayedFields = $this->config->get('USER_FIELDS');
+
+		if ($this->config->get('REQUIRE_PHONE') && !empty($displayedFields['PHONE']))
 		{
 			$fields[] = $fieldPrefix . 'phone';
 			$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_phone'));
 		}
 
-		$fields[] = $fieldPrefix . 'address1';
-		$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_address'));
+		if (!empty($displayedFields['ADDRESS1']))
+		{
+			$fields[] = $fieldPrefix . 'address1';
+			$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_address'));
+		}
 
-		$fields[] = $fieldPrefix . 'city';
-		$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_city'));
+		if (!empty($displayedFields['CITY']))
+		{
+			$fields[] = $fieldPrefix . 'city';
+			$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_city'));
+		}
 
-		$fields[] = $fieldPrefix . 'country';
-		$checks[] = new IsNotEmptyCheck($this->translate('_err_select_country'));
+		if (!empty($displayedFields['COUNTRY']))
+		{
+			$fields[] = $fieldPrefix . 'country';
+			$checks[] = new IsNotEmptyCheck($this->translate('_err_select_country'));
+		}
 
-		$fields[] = $fieldPrefix . 'postalCode';
-		$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_zip'));
+		if (!empty($displayedFields['POSTALCODE']))
+		{
+			$fields[] = $fieldPrefix . 'postalCode';
+			$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_zip'));
+		}
 
 		// custom field validation
 		$tempVal = $this->getValidator('tempVal', $this->request);
@@ -1369,7 +1350,7 @@ class UserController extends FrontendController
 			$validator->addCheck($field, $check);
 		}
 
-		if (!$this->config->get('DISABLE_STATE'))
+		if (!empty($displayedFields['STATE']))
 		{
 			$fieldList = array($fieldPrefix . 'state_select', $fieldPrefix . 'state_text');
 			$checkList = array(new IsNotEmptyCheck($this->translate('_err_select_state')), new IsNotEmptyCheck(''));

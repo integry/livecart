@@ -503,7 +503,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			}
 		}
 
-		if (!$this->shippingAddress->get() && $this->user->get()->defaultShippingAddress->get())
+		if (!$this->shippingAddress->get() && $this->user->get()->defaultShippingAddress->get() && $this->isShippingRequired())
 		{
 			$this->shippingAddress->set($this->user->get()->defaultShippingAddress->get()->userAddress->get());
 		}
@@ -547,7 +547,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		{
 			$discount->save();
 		}
-		
+
 		if (round($this->totalAmount->get(), 2) <= round($this->getPaidAmount(), 2))
 		{
 			$this->isPaid->set(true);
@@ -1936,7 +1936,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		{
 			return;
 		}
-		
+
 		foreach ($this->getDiscountActions($reload) as $ruleAction)
 		{
 			if ($ruleAction->isOrderAction())

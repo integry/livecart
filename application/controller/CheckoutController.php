@@ -174,7 +174,12 @@ class CheckoutController extends FrontendController
 		}
 
 		$order->billingAddress->set($address);
-		$order->shippingAddress->set($address);
+
+		if ($order->isShippingRequired())
+		{
+			$order->shippingAddress->set($address);
+		}
+
 		$order->save();
 
 		return new ActionRedirectResponse('checkout', 'shipping');
@@ -187,6 +192,24 @@ class CheckoutController extends FrontendController
 	public function selectAddress()
 	{
 		$this->user->loadAddresses();
+
+		// address step disabled?
+		if ($this->config->get('DISABLE_CHECKOUT_ADDRESS_STEP'))
+		{
+			if ($this->user->defaultBillingAddress->get())
+			{
+				$this->order->billingAddress->set($this->user->defaultBillingAddress->get()->userAddress->get());
+			}
+
+			if ($this->user->defaultShippingAddress->get() && $this->order->isShippingRequired())
+			{
+				$this->order->shippingAddress->set($this->user->defaultShippingAddress->get()->userAddress->get());
+			}
+
+			$this->order->save();
+
+			return new ActionRedirectResponse('checkout', 'pay');
+		}
 
 		if ($redirect = $this->validateOrder($this->order))
 		{
@@ -962,7 +985,7 @@ class CheckoutController extends FrontendController
 				$returnUrl = $this->router->createUrl(array('controller' => 'checkout', 'action' => 'completed', 'query' => array('id' => $this->order->getID())));
 				$returnUrl = $this->router->createFullUrl($returnUrl);
 			}
-			
+
 			$response = new ActionResponse('order', $order->toArray());
 			$response->set('returnUrl', $returnUrl);
 			return $response;
@@ -998,7 +1021,7 @@ class CheckoutController extends FrontendController
 		{
 			return new ActionRedirectResponse('checkout', 'completeExternal', array('id' => $this->request->get('id')));
 		}
-		
+
 		$order = CustomerOrder::getInstanceByID((int)$this->session->get('completedOrderID'), CustomerOrder::LOAD_DATA);
 		$order->loadAll();
 		$response = new ActionResponse();
@@ -1009,6 +1032,10 @@ class CheckoutController extends FrontendController
 		{
 			$transactions = $order->getTransactions()->toArray();
 			$response->set('transactions', $transactions);
+		}
+		else
+		{
+			$response->set('files', ProductFile::getOrderFiles(select(eq('CustomerOrder.ID', $order->getID()))));
 		}
 
 		return $response;
