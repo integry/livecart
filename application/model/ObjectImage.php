@@ -219,7 +219,11 @@ abstract class ObjectImage extends MultilingualObject
 
 			$urlPrefix = null;
 			$array['paths'][$key] = self::getRelativePath(call_user_func_array(array($schema->getName(), 'getImagePath'), array($array['ID'], $productID, $key)), $urlPrefix);
-			$array['urls'][$key] = $router->createFullUrl($urlPrefix . $array['paths'][$key], null, true);
+
+			$url = $router->createFullUrl($urlPrefix . $array['paths'][$key], null, true);
+			$url = str_replace('//', '/', $url);
+			$url = str_replace('/public/public/', '/public/', $url);
+			$array['urls'][$key] = $url;
 		}
 
 		return $array;
