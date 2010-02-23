@@ -193,6 +193,8 @@ class CheckoutController extends FrontendController
 	{
 		$this->user->loadAddresses();
 
+		$step = $this->config->get('ENABLE_CHECKOUTDELIVERYSTEP') ? $this->request->get('step', 'billing') : null;
+
 		// address step disabled?
 		if ($this->config->get('DISABLE_CHECKOUT_ADDRESS_STEP'))
 		{
@@ -208,15 +210,20 @@ class CheckoutController extends FrontendController
 
 			$this->order->save();
 
-			return new ActionRedirectResponse('checkout', 'pay');
+			if (!$this->order->shippingAddress->get() && $this->order->isShippingRequired())
+			{
+				$step = 'shipping';
+			}
+			else
+			{
+				return new ActionRedirectResponse('checkout', 'pay');
+			}
 		}
 
 		if ($redirect = $this->validateOrder($this->order))
 		{
 			return $redirect;
 		}
-
-		$step = $this->config->get('ENABLE_CHECKOUTDELIVERYSTEP') ? $this->request->get('step', 'billing') : null;
 
 		$form = $this->buildAddressSelectorForm($this->order, $step);
 
