@@ -1267,8 +1267,21 @@ class UserController extends FrontendController
 
 	private function validateName(RequestValidator $validator, $fieldPrefix = '', $orCheck = false)
 	{
-		foreach (array('firstName' => '_err_enter_first_name',
-						'lastName' => '_err_enter_last_name') as $field => $error)
+		$validation = array('firstName' => '_err_enter_first_name',
+						'lastName' => '_err_enter_last_name');
+
+		$displayedFields = $this->config->get('USER_FIELDS');
+
+		if (empty($displayedFields['FIRSTNAME']))
+		{
+			unset($validation['firstName']);
+		}
+		if (empty($displayedFields['LASTNAME']))
+		{
+			unset($validation['lastName']);
+		}
+
+		foreach ($validation as $field => $error)
 		{
 			$field = $fieldPrefix . $field;
 			$check = new IsNotEmptyCheck($this->translate($error));
