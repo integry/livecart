@@ -76,7 +76,7 @@
 					<h2>{t _shipment} #{$smarty.foreach.shipments.iteration}</h2>
 				{/if}
 
-				{include file="user/shipmentEntry.tpl" sku=true}
+				{include file="user/shipmentEntry.tpl" sku=true showTaxes=true}
 
 			{/if}
 

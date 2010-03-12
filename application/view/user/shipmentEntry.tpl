@@ -20,12 +20,14 @@
 
 		{include file="order/orderTableDetails.tpl"}
 
-		{foreach from=$shipment.taxes item="tax"}
-			<tr>
-				<td colspan="4" class="tax">{$tax.TaxRate.Tax.name_lang}:</td>
-				<td>{$tax.formattedAmount[$order.Currency.ID]}</td>
-			</tr>
-		{/foreach}
+		{if !'HIDE_TAXES'|config || $showTaxes}
+			{foreach from=$shipment.taxes item="tax"}
+				<tr>
+					<td colspan="4" class="tax">{$tax.TaxRate.Tax.name_lang}:</td>
+					<td>{$tax.formattedAmount[$order.Currency.ID]}</td>
+				</tr>
+			{/foreach}
+		{/if}
 
 		{if $smarty.foreach.shipments.iteration == 1}
 			{foreach from=$order.discounts item=discount}

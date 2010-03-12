@@ -26,7 +26,7 @@
 	{/if}
 {/foreach}
 
-{if $shipment.taxes && !$hideTaxes}
+{if $shipment.taxes && !$hideTaxes && (!'HIDE_TAXES'|config || $showTaxes)}
 	<tr>
 		<td colspan="{$colspan}" class="subTotalCaption beforeTax">{t _subtotal_before_tax}:</td>
 		<td class="amount">{$shipment.formatted_amount}</td>

@@ -288,6 +288,9 @@ BILLING_ADDRESS_STEP=Billing address entry step
 SHIPPING_ADDRESS_STEP=Shipping address entry step
 SHIPPING_METHOD_STEP=Shipping method selection step
 
+_taxes=Taxes
+HIDE_TAXES=Hide taxes to customers
+
 _shipping=Delivery Settings
 
 _delivery_tax_calculation=Tax Calculation For Shipping Costs

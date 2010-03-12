@@ -19,7 +19,11 @@
 		{include file="order/block/items.tpl"}
 		{include file="order/block/discounts.tpl"}
 		{include file="order/block/shipping.tpl"}
-		{include file="order/block/taxes.tpl"}
+
+		{if !'HIDE_TAXES'|config}
+			{include file="order/block/taxes.tpl"}
+		{/if}
+
 		{include file="order/block/total.tpl"}
 		{include file="order/block/customFields.tpl"}
 		{include file="order/block/shippingEstimation.tpl"}
