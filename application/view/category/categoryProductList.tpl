@@ -15,15 +15,7 @@
 			&nbsp;
 		</div>
 
-		{if 'ALLOW_SWITCH_LAYOUT'|@config}
-			<div class="categoryLayoutSwitch">
-				{if 'GRID' == $layout}
-					<a class="layoutSetList" href="{$layoutUrl}">{t _view_as_list}</a>
-				{else}
-					<a class="layoutSetGrid" href="{$layoutUrl}">{t _view_as_grid}</a>
-				{/if}
-			</div>
-		{/if}
+		{include file="category/block/switchListLayout.tpl"}
 		</fieldset>
 	</div>
 

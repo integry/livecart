@@ -308,7 +308,7 @@ class CategoryController extends FrontendController
 
 		$filterChainHandle = $this->setUpBreadCrumbAndReturnFilterChainHandle($currentPage);
 		$response->set('url', $this->getCategoryPageUrl(array('page' => '_000_', 'filters' => $filterChainHandle)));
-		$response->set('layoutUrl', $this->getCategoryPageUrl(array('filters' => $filterChainHandle, 'query' => array('layout' => ('GRID' == $listLayout) ? 'list' : 'grid'))));
+		$response->set('layoutUrl', $this->getCategoryPageUrl(array('filters' => $filterChainHandle, 'query' => array('layout' => ''))));
 		$response->set('filterChainHandle', $filterChainHandle);
 
 		if (isset($searchQuery))
@@ -695,7 +695,7 @@ class CategoryController extends FrontendController
 					unset($filterGroups[$key]['filters'][$k]);
 				}
 			}
-			
+
 			if (empty($grp['filters']))
 			{
 				unset($filterGroups[$key]);
@@ -778,7 +778,7 @@ class CategoryController extends FrontendController
 		 			unset($priceFilters[$key]);
 				}
 			}
-			
+
 		 	$response->set('priceGroup', array('filters' => $priceFilters));
 		}
 

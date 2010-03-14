@@ -64,6 +64,7 @@ FEATURED_RANDOM=Include random products in featured product list if there are no
 
 _product_list_layout=Product List Layout
 LIST_LAYOUT=Default list layout
+ENABLED_LIST_LAYOUTS=Enabled layouts
 LIST=List
 GRID=Grid
 TABLE=Table

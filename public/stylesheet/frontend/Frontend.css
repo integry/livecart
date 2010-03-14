@@ -455,6 +455,7 @@ span.templateLocator span.templateName,
 #payTotal div,
 #testHandlerWarning,
 #checkoutProgress a.active,
+.categoryLayoutSwitch a.active,
 .specSummary
 {
 	background-color: #fffccc;
@@ -912,9 +913,16 @@ ul.subSubCats
     position: relative;
 }
 
-a.layoutSetList, a.layoutSetGrid
+.categoryLayoutSwitch a
 {
-	padding: 0 0 0 20px;
+	width: 16px;
+	height: 16px;
+	padding: 5px;
+	border-width: 2px;
+	background-position: center center;
+	display: block;
+	float: left;
+	margin-left: 4px;
 }
 
 a.layoutSetList
@@ -925,6 +933,11 @@ a.layoutSetList
 a.layoutSetGrid
 {
 	background-image: url(../../image/silk/gif/application_view_tile.gif);
+}
+
+a.layoutSetTable
+{
+	background-image: url(../../image/silk/gif/table.gif);
 }
 
 .categoryLayoutSwitch
