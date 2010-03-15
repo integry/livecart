@@ -189,6 +189,7 @@ _submit_response=Submit response
 _files_found=[quant,_1,file,files] found
 _your_files=Download Files
 _no_files_found=No files found
+_download_limit_reached=You have already reached the limit for downloading this file
 
 ########################
 # Shipment statuses

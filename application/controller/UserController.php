@@ -3,6 +3,7 @@
 ClassLoader::import('application.model.order.CustomerOrder');
 ClassLoader::import('application.model.order.OrderedItem');
 ClassLoader::import('application.model.order.OrderNote');
+ClassLoader::import('application.model.order.OrderedFile');
 ClassLoader::import('application.model.Currency');
 ClassLoader::import('application.model.delivery.State');
 ClassLoader::import('application.model.user.*');
@@ -1028,10 +1029,13 @@ class UserController extends FrontendController
 			return new ActionRedirectResponse('user', 'index');
 		}
 
+		OrderedFile::getInstance($item, $file)->registerDownload();
+
 		// download expired
 		if (!$item->isDownloadable($file))
 		{
-			return new ActionRedirectResponse('user', 'downloadExpired', array('id' => $item->getID(), 'query' => array('fileID' => $file->getID())));
+			$this->setMessage($this->translate('_download_limit_reached'));
+			return new ActionRedirectResponse('user', 'index');
 		}
 
 		return new ObjectFileResponse($file);

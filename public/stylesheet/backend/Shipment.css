@@ -195,7 +195,8 @@ li.orderShipment:hover, .orderShippedShipments ul.activeList > li:hover, .downlo
     display: block !important;
 }
 
-.orderShipmentsItem_info .productOptions
+.orderShipmentsItem_info .productOptions,
+.orderShipmentsItem_info .itemDownloadStats
 {
 	background-color: #fff;
 	border: 1px solid #ccc;
@@ -205,7 +206,8 @@ li.orderShipment:hover, .orderShippedShipments ul.activeList > li:hover, .downlo
 	overflow: hidden;
 }
 
-.orderShipmentsItem_info .itemOptions
+.orderShipmentsItem_info .itemOptions,
+.orderShipmentsItem_info .itemDownloadStats
 {
 	font-size: smaller;
 	list-style-type: none;

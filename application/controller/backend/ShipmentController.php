@@ -40,7 +40,7 @@ class ShipmentController extends StoreManagementController
 		$subtotalAmount = 0;
 		$shippingAmount = 0;
 		$taxAmount = 0;
-		$shipmentsArray = array();
+		$itemIDs = $shipmentsArray = array();
 
 		$shipableShipmentsCount = 0;
 		foreach($shipments as $shipment)
@@ -74,6 +74,11 @@ class ShipmentController extends StoreManagementController
 			{
 				$shipableShipmentsCount++;
 			}
+
+			foreach ($shipment->getItems() as $item)
+			{
+				$itemIDs[] = $item->getID();
+			}
 		}
 
 		$totalAmount = $subtotalAmount + $shippingAmount + $taxAmount;
@@ -89,10 +94,8 @@ class ShipmentController extends StoreManagementController
 
 		if ($downloadable = $order->getDownloadShipment(false))
 		{
-//			if (!isset($shipmentsArray[$downloadable->getID()]))
-//			{
-				$response->set('downloadableShipment', $downloadable->toArray());
-//			}
+
+			$response->set('downloadableShipment', $downloadable->toArray());
 		}
 
 		$response->set('taxAmount', $taxAmount);
@@ -103,6 +106,7 @@ class ShipmentController extends StoreManagementController
 		unset($statuses[3]);
 		$response->set('statusesWithoutShipped', $statuses);
 		$response->set('newShipmentForm', $form);
+		$response->set('downloadCount', $this->getDownloadCounts($itemIDs));
 
 		// load product options
 		$response->set('allOptions', ProductOption::loadOptionsForProductSet($products));
@@ -435,6 +439,18 @@ class ShipmentController extends StoreManagementController
 		$history->saveLog();
 
 		return new JSONResponse(array('deleted' => true), 'success');
+	}
+
+	protected function getDownloadCounts($itemIDs)
+	{
+		$sql = 'SELECT orderedItemID, SUM(timesDownloaded) AS cnt FROM OrderedFile WHERE orderedItemID IN (' . implode(',', $itemIDs) . ') GROUP BY orderedItemID';
+		$out = array();
+		foreach (ActiveRecordModel::getDataBySQL($sql) as $item)
+		{
+			$out[$item['orderedItemID']] = $item['cnt'];
+		}
+
+		return $out;
 	}
 }
 

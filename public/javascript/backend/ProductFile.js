@@ -198,6 +198,7 @@ Backend.ProductFile.Controller.prototype = {
 		this.view.assign('title', this.model.get('title_' + defaultLanguageID));
 		this.view.assign('description', this.model.get('description_' + defaultLanguageID));
 		this.view.assign('allowDownloadDays', this.model.get('allowDownloadDays'));
+		this.view.assign('allowDownloadCount', this.model.get('allowDownloadCount'));
 		this.view.assign('filePath', this.model.get('filePath'));
 		this.view.assign('ID', this.model.get('ID', ''));
 		this.view.assign('productID', this.model.get('Product.ID', ''));
@@ -345,6 +346,7 @@ Backend.ProductFile.View.methods =
 		this.nodes.description = this.nodes.root.down('.' + this.prefix + 'description');
 		this.nodes.title = this.nodes.root.down('.' + this.prefix + 'title');
 		this.nodes.allowDownloadDays = this.nodes.root.down('.' + this.prefix + 'allowDownloadDays');
+		this.nodes.allowDownloadCount = this.nodes.root.down('.' + this.prefix + 'allowDownloadCount');
 		this.nodes.filePath = this.nodes.root.down('.' + this.prefix + 'filePath');
 		this.nodes.uploadFile = this.nodes.root.down('.' + this.prefix + 'uploadFile');
 		this.nodes.isEmbedded = this.nodes.root.down('.' + this.prefix + 'isEmbedded');
@@ -420,6 +422,7 @@ Backend.ProductFile.View.methods =
 		this.nodes.title.value = this.get('title', '');
 
 		this.nodes.allowDownloadDays.value = this.get('allowDownloadDays', 0);
+		this.nodes.allowDownloadCount.value = this.get('allowDownloadCount', 0);
 		this.nodes.isEmbedded.checked = this.get('isEmbedded', 0) == "1";
 		this.nodes.isPublic.checked = this.get('isPublic', 0) == "1";
 

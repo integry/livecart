@@ -3,6 +3,7 @@
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.order.CustomerOrder");
 ClassLoader::import("application.model.order.Shipment");
+ClassLoader::import("application.model.order.OrderedFile");
 ClassLoader::import('application.model.order.OrderedItemOption');
 ClassLoader::import('application.model.delivery.DeliveryZone');
 ClassLoader::import('application.model.businessrule.interface.BusinessRuleProductInterface');
@@ -334,10 +335,27 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 	 */
 	public function isDownloadable(ProductFile $file)
 	{
-		$orderDate = $this->customerOrder->get()->dateCompleted->get();
+		$allow = true;
+		if ($file->allowDownloadDays->get())
+		{
+			$orderDate = $this->customerOrder->get()->dateCompleted->get();
+			if (!((abs($orderDate->getDayDifference(new DateTime())) <= $file->allowDownloadDays->get()) ||
+				!$file->allowDownloadDays->get()))
+			{
+				$allow = false;
+			}
+		}
 
-		return (abs($orderDate->getDayDifference(new DateTime())) <= $file->allowDownloadDays->get()) ||
-				!$file->allowDownloadDays->get();
+		if ($file->allowDownloadCount->get())
+		{
+			$orderFile = OrderedFile::getInstance($this, $file);
+			if ($orderFile->timesDownloaded->get() > $file->allowDownloadCount->get() + 1)
+			{
+				$allow = false;
+			}
+		}
+
+		return $allow;
 	}
 
 	public function removeOption(ProductOption $option)

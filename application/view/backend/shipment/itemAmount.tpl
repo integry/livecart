@@ -68,6 +68,12 @@
 					</div>
 				{/if}
 
+				{if $downloadCount[$item.ID]}
+					<div class="itemDownloadStats">
+						{t _times_downloaded}: {$downloadCount[$item.ID]}
+					</div>
+				{/if}
+
 			</div>
 		</td>
 		<td class="orderShipmentsItem_info_price_td">
