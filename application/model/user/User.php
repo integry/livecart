@@ -239,6 +239,11 @@ class User extends ActiveRecordModel implements EavAble
 	 */
 	public function hasAccess($roleName)
 	{
+		if ($this->hasBackendAccess)
+		{
+			return true;
+		}
+
 		// no role provided
 		if (!$roleName)
 		{

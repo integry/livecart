@@ -1995,6 +1995,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		return $this->deliveryZone;
 	}
 
+	public function setDeliveryZone(DeliveryZone $zone)
+	{
+		$this->deliveryZone = $zone;
+	}
+
 	/**
 	 *  Return all transactions that are related to this order
 	 */
