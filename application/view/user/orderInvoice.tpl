@@ -33,7 +33,8 @@
 
 		<div id="invoiceHeader">
 
-			{img src='LOGO'|config id="invoiceLogo" alt="Invoice Logo"}
+			{assign var="logo" value='LOGO'|config}
+			{img src='INVOICE_LOGO'|config|default:$logo id="invoiceLogo" alt="Invoice Logo"}
 
 			<h1>{t _invoice} {$order.invoiceNumber}</h1>
 			<div id="invoiceDate">{$order.formatted_dateCompleted.date_long}</div>
