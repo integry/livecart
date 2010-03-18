@@ -1041,17 +1041,6 @@ class UserController extends FrontendController
 		return new ObjectFileResponse($file);
 	}
 
-	public function quickLoginBlock()
-	{
-		if (!$this->user->isAnonymous())
-		{
-			return;
-		}
-
-		$this->loadLanguageFile('User');
-		return new BlockResponse('return', $_SERVER['REQUEST_URI']);
-	}
-
 	/**
 	 *	Make payment for unpaid or partially paid order
 	 *	@role login

@@ -73,7 +73,7 @@ abstract class FrontendController extends BaseController
 		$this->addBlock('QUICKNAV', 'blockQuickNav', 'block/box/quickNav');
 		$this->addBlock('COMPARE', array('compare', 'compareMenu'));
 		$this->addBlock('MINI_CART', array('order', 'miniCart'), 'order/miniCartBlock');
-		$this->addBlock('QUICK_LOGIN', array('user', 'quickLogin'), 'user/block/quickLoginBlock');
+		$this->addBlock('QUICK_LOGIN', 'quickLogin', 'user/block/quickLoginBlock');
 	}
 
 	public function getRequestCurrency()
@@ -160,6 +160,17 @@ abstract class FrontendController extends BaseController
 			$address->state->set(null);
 		}
 		$address->save();
+	}
+
+	public function quickLoginBlock()
+	{
+		if (!$this->user->isAnonymous())
+		{
+			return;
+		}
+
+		$this->loadLanguageFile('User');
+		return new BlockResponse('return', $_SERVER['REQUEST_URI']);
 	}
 
 	protected function boxInformationMenuBlock()
