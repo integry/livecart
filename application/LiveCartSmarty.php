@@ -71,6 +71,7 @@ class LiveCartSmarty extends Smarty
 		$path = str_replace('\\', '/', $path);
 
 		$path = $this->translatePath($path);
+		$path = preg_replace('/^\/*/', '', $path);
 
 		foreach ($this->getPlugins($path) as $plugin)
 		{

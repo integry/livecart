@@ -39,8 +39,8 @@ class BestsellerReport extends Report
 		$f->resetOrder();
 		$f->resetGrouping();
 		$f->setOrder(new ARExpressionHandle('cnt'), $order);
-		$q->addField('productID');
-		$f->setGrouping(new ARExpressionHandle('productID'));
+		$q->addField('OrderedItem.productID');
+		$f->setGrouping(new ARExpressionHandle('OrderedItem.productID'));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
 		$f->setLimit(self::TABLE_LIMIT);
 		$q->joinTable('CustomerOrder', 'OrderedItem', 'ID', 'customerOrderID');
