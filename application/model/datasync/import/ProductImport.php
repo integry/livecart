@@ -40,6 +40,7 @@ class ProductImport extends DataImport
 
 		$groupedFields['Product']['Product.shippingClass'] = $this->translate('Product.shippingClass');
 		$groupedFields['Product']['Product.taxClass'] = $this->translate('Product.taxClass');
+		$groupedFields['ProductOption']['ProductOption.options'] = $this->translate('ProductOption.options');
 
 		// do not show manufacturer field in a separate group
 		$groupedFields['Product'] = array_merge($groupedFields['Product'], $groupedFields['Manufacturer']);
@@ -337,6 +338,37 @@ class ProductImport extends DataImport
 						$image = ProductImage::getNewInstance($product);
 						$this->importImage($image, $path);
 						unset($image);
+					}
+				}
+			}
+
+			if (isset($fields['ProductOption']['options']))
+			{
+				$options = explode('; ', $record[$fields['ProductOption']['options']]);
+
+				if ($options)
+				{
+					$product->deleteRelatedRecordSet('ProductOption');
+					foreach ($options as $option)
+					{
+						$parts = explode(':', $option, 2);
+						if (count($parts) < 2)
+						{
+							continue;
+						}
+
+						$optionInstance = ProductOption::getNewInstance($product);
+						$optionInstance->setValueByLang('name', null, trim($parts[0]));
+						$optionInstance->type->set(ProductOption::TYPE_SELECT);
+						$optionInstance->isDisplayed->set(true);
+						$optionInstance->save();
+
+						foreach (explode(',', $parts[1]) as $choice)
+						{
+							$choiceInstance = ProductOptionChoice::getNewInstance($optionInstance);
+							$choiceInstance->setValueByLang('name', null, trim($choice));
+							$choiceInstance->save();
+						}
 					}
 				}
 			}
