@@ -60,6 +60,7 @@ class CategoryController extends FrontendController
 			{
 				$this->request->set('layout', strtolower($layout));
 				$this->config->set('LIST_LAYOUT', $layout);
+				$this->config->set('ALLOW_SWITCH_LAYOUT', false);
 			}
 		}
 
