@@ -43,7 +43,7 @@
 		</tr>
 		{/if}
 
-		{if $product.stockCount && 'PRODUCT_DISPLAY_LOW_STOCK'|config}
+		{if ($product.stockCount <= 'LOW_STOCK'|config) && 'PRODUCT_DISPLAY_LOW_STOCK'|config}
 		<tr>
 			<td colspan="2" class="lowStock"><span>{t _low_stock}</span></td>
 		</tr>
