@@ -179,6 +179,7 @@ abstract class ObjectImage extends MultilingualObject
 	private function fixSlashes($path)
 	{
 		$path = str_replace('//', '/', $path);
+		$path = str_replace('http:/', 'http://', $path);
 		return str_replace('\\', '/', $path);
 	}
 
