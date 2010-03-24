@@ -73,9 +73,32 @@ class LiveCartTransaction extends TransactionDetails
 		}
 
 		// order details
+
+		// load variation data
+		$variations = new ProductSet();
 		foreach ($order->getShoppingCartItems() as $item)
 		{
-			$this->addLineItem($item->getProduct()->getName(), $item->getPrice(false), $item->count->get(), $item->getProduct()->sku->get());
+			if ($item->product->get()->parent->get())
+			{
+				$variations->unshift($item->product->get());
+			}
+		}
+
+		if ($variations->size())
+		{
+			$variations->loadVariations();
+		}
+
+		foreach ($order->getShoppingCartItems() as $item)
+		{
+			$product = $item->getProduct();
+			$variations = array();
+			foreach ($product->getRegisteredVariations() as $variation)
+			{
+				$variations[] = $variation->getValueByLang('name');
+			}
+
+			$this->addLineItem($product->getName() . ($variations ? ' (' . implode(' / ', $variations) . ')' : ''), $item->getPrice(false), $item->count->get(), $product->sku->get());
 		}
 
 		if ($discount = $order->getFixedDiscountAmount())
