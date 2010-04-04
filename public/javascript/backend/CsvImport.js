@@ -11,6 +11,8 @@ Backend.CsvImport =
 {
 	isCompleted: false,
 
+	uid: null,
+
 	showCategorySelector: function(current)
 	{
 		new Backend.Category.PopupSelector(
@@ -88,7 +90,7 @@ Backend.CsvImport =
 
 	getImportRequest: function()
 	{
-		return new LiveCart.AjaxRequest($('delimitersForm'), $('previewIndicator'), this.onComplete.bind(this),  {onInteractive: this.dataResponse.bind(this), onSuccess: this.onComplete.bind(this) });
+		return new LiveCart.AjaxRequest($('delimitersForm'), $('previewIndicator'), this.onComplete.bind(this),  {onInteractive: this.dataResponse.bind(this), onSuccess: this.onComplete.bind(this)});
 	},
 
 	loadFields: function()
@@ -372,6 +374,12 @@ Backend.CsvImport =
 			{
 				this.setProgress(response);
 			}
+
+			if (response.uid != undefined)
+			{
+				this.uid = response.uid;
+				console.log(this.uid);
+			}
 		}
 	},
 
@@ -399,6 +407,7 @@ Backend.CsvImport =
 			}
 
 			$('delimitersForm').elements.namedItem('continue').value = true;
+			$('delimitersForm').elements.namedItem('uid').value = this.uid;
 			this.isCancelled = false;
 			this.request = this.getImportRequest();
 			this.nonTransactional = true;

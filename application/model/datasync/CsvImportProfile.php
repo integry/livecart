@@ -21,6 +21,11 @@ class CsvImportProfile
 		$this->className = $className;
 	}
 
+	public function getClassName()
+	{
+		return $this->className;
+	}
+
 	public static function load($fileName)
 	{
 		if (!file_exists($fileName))

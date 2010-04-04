@@ -6,12 +6,16 @@ abstract class DataImport
 {
 	protected $application;
 	protected $fields;
+	protected $options;
+	protected $uid;
+	protected $className;
 	private $lastImportName;
 	private $flushMessage;
 
 	public final function __construct(LiveCart $application)
 	{
 		$this->application = $application;
+		$this->uid = uniqid('csv_');
 	}
 
 	abstract public function getFields();
@@ -31,6 +35,19 @@ abstract class DataImport
 		if (is_null($instance))
 		{
 			return;
+		}
+
+		$this->className = get_class($instance);
+
+		if ($instance->getID())
+		{
+			$this->registerImportedID($instance->getID());
+		}
+
+		if ((!$instance->isExistingRecord() && ('update' == $this->options['action']))
+			|| ($instance->isExistingRecord() && ('add' == $this->options['action'])))
+		{
+			return false;
 		}
 
 		foreach ($profile->getFields() as $csvIndex => $field)
@@ -99,6 +116,22 @@ abstract class DataImport
 		return $import->importInstance($record, $profile, $instance);
 	}
 
+	public function disableRecords(ARSelectFilter $filter)
+	{
+		if ($disable = $this->getDisableFieldHandle())
+		{
+			$update = new ARUpdateFilter($filter->getCondition());
+			$update->addModifier($disable->toString(), 0);
+			ActiveRecordModel::updateRecordSet($this->className, $update, $this->getReferencedData());
+		}
+	}
+
+	public function deleteRecords(ARSelectFilter $filter)
+	{
+		$del = new ARDeleteFilter($filter->getCondition());
+		ActiveRecordModel::deleteRecordSet($this->className, $del, $this->getReferencedData());
+	}
+
 	public function isRootCategory()
 	{
 		return false;
@@ -114,6 +147,16 @@ abstract class DataImport
 		$this->lastImportName = $name;
 	}
 
+	public function getUID()
+	{
+		return $this->uid;
+	}
+
+	public function setUID($uid)
+	{
+		$this->uid = $uid;
+	}
+
 	public function beforeImport()
 	{
 
@@ -125,6 +168,11 @@ abstract class DataImport
 	}
 
 	protected function afterSave(ActiveRecordModel $instance, $record)
+	{
+
+	}
+
+	protected function getDisableFieldHandle()
 	{
 
 	}
@@ -208,6 +256,48 @@ abstract class DataImport
 
 			return;
 		}
+	}
+
+	public function setOptions($options)
+	{
+		$this->options = $options;
+	}
+
+	public function registerImportedID($id)
+	{
+		file_put_contents($this->getImportIDFileName(), $id . "\n", FILE_APPEND);
+	}
+
+	public function getImportedIDs()
+	{
+		$file = $this->getImportIDFileName();
+		$res = file_exists($file) ? array_filter(explode("\n", file_get_contents($file))) : array();
+		return $res;
+	}
+
+	public function getImportIDFileName()
+	{
+		$path = ClassLoader::getRealPath('cache.csvImport.') . $this->uid;
+		if (!file_exists(dirname($path)))
+		{
+			mkdir(dirname($path));
+		}
+
+		return $path;
+	}
+
+	public function deletedImportIDFile()
+	{
+		$file = $this->getImportIDFileName();
+		if (file_exists($file))
+		{
+			unlink($file);
+		}
+	}
+
+	public function getMissingRecordFilter(CsvImportProfile $profile)
+	{
+		return new ARSelectFilter(new NotInCond(f($this->className . '.ID'), $this->getImportedIDs()));
 	}
 
 	protected function importAttributes(ActiveRecordModel $instance, $record, $fields, $attrIdentifier = 'eavField')
@@ -403,6 +493,11 @@ abstract class DataImport
 			if ($tbytes) return false; // incomplete sequence at EOS
 		}
 		return true;
+	}
+
+	public function __destruct()
+	{
+		$this->deletedImportIDFile();
 	}
 }
 

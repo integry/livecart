@@ -124,6 +124,8 @@ class ProductImport extends DataImport
 
 	public function importInstance($record, CsvImportProfile $profile)
 	{
+		$this->className = 'Product';
+
 		$impReq = new Request();
 		$defLang = $this->application->getDefaultLanguageCode();
 		$references = array('DefaultImage' => 'ProductImage', 'Manufacturer', 'ShippingClass', 'TaxClass');
@@ -154,6 +156,17 @@ class ProductImport extends DataImport
 			else if (isset($fields['Product']['sku']) && !empty($record[$fields['Product']['sku']]))
 			{
 				$product = Product::getInstanceBySku($record[$fields['Product']['sku']], $references);
+			}
+
+			if ($product->getID())
+			{
+				$this->registerImportedID($product->getID());
+			}
+
+			if ((!$product && ('update' == $this->options['action']))
+				|| ($product && ('add' == $this->options['action'])))
+			{
+				return false;
 			}
 
 			if ($product)
@@ -392,6 +405,13 @@ class ProductImport extends DataImport
 
 			return true;
 		}
+	}
+
+	public function getMissingRecordFilter(CsvImportProfile $profile)
+	{
+		$filter = parent::getMissingRecordFilter($profile);
+		$filter->mergeCondition($this->getRoot($profile)->getProductCondition(true));
+		return $filter;
 	}
 
 	private function getCategory(CsvImportProfile $profile, $record)
@@ -667,6 +687,16 @@ class ProductImport extends DataImport
 	public function afterImport()
 	{
 		Category::recalculateProductsCount();
+	}
+
+	protected function getReferencedData()
+	{
+		return array('Category');
+	}
+
+	protected function getDisableFieldHandle()
+	{
+		return f('Product.isEnabled');
 	}
 }
 
