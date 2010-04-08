@@ -3,6 +3,7 @@
 ClassLoader::import('application.controller.FrontendController');
 ClassLoader::import('application.model.product.Manufacturer');
 ClassLoader::import('application.model.product.ProductFilter');
+ClassLoader::import('application.model.filter.ManufacturerFilter');
 ClassLoader::import('application.model.category.Category');
 
 /**
@@ -32,15 +33,9 @@ class ManufacturersController extends FrontendController
 		$f->setOrder(new ARFieldHandle('Manufacturer', 'name'));
 		$manufacturers = ActiveRecordModel::getRecordSetArray('Manufacturer', $f);
 
-		$params = array('filters' => array(new ManufacturerFilter(999, '___')), 'data' => Category::getRootNode()->toArray());
-
-		include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
-		$templateUrl = createCategoryUrl($params, $this->application);
-		$templateUrl = strtr($templateUrl, array(999 => '#', '___' => '|'));
-
 		foreach ($manufacturers as &$manufacturer)
 		{
-			$manufacturer['url'] = strtr($templateUrl, array('#' => $manufacturer['ID'], '|' => createHandleString($manufacturer['name'])));
+			$manufacturer['url'] = $this->getManufacturerFilterUrl($manufacturer);
 		}
 
 		$this->addBreadCrumb($this->translate('_manufacturers'), '');
@@ -50,5 +45,32 @@ class ManufacturersController extends FrontendController
 		$response->set('counts', $counts);
 		$response->set('rootCat', $rootCat->toArray());
 		return $response;
+	}
+
+	public function view()
+	{
+		$manufacturer = Manufacturer::getInstanceByID($this->request->get('id'), true);
+		$manufacturer->load();
+		return new RedirectResponse($this->getManufacturerFilterUrl($manufacturer->toArray()));
+	}
+
+	private function getManufacturerFilterUrl($manufacturerArray)
+	{
+		static $templateUrl;
+
+		if (!$templateUrl)
+		{
+			$templateUrl = $this->getFilterUrlTemplate();
+		}
+
+		return strtr($templateUrl, array('#' => $manufacturerArray['ID'], '|' => createHandleString($manufacturerArray['name'])));
+	}
+
+	private function getFilterUrlTemplate()
+	{
+		include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
+		$params = array('filters' => array(new ManufacturerFilter(999, '___')), 'data' => Category::getRootNode()->toArray());
+		$templateUrl = createCategoryUrl($params, $this->application);
+		return strtr($templateUrl, array(999 => '#', '___' => '|'));
 	}
 }
