@@ -684,7 +684,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		{
 			$currency = $this->getCurrency();
 
-			$array['itemBasePrice'] = self::getApplication()->getDisplayTaxPrice($array['price'], $array['Product']);;
+			$array['itemBasePrice'] = self::getApplication()->getDisplayTaxPrice($array['price'], isset($array['Product']) ? $array['Product'] : array());;
 			$array['displayPrice'] = $this->getDisplayPrice($currency, $isTaxIncludedInPrice);
 			$array['displaySubTotal'] = $this->getSubTotal($isTaxIncludedInPrice);
 			$array['itemPrice'] = $array['displaySubTotal'] / $array['count'];
