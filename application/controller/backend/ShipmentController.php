@@ -443,6 +443,11 @@ class ShipmentController extends StoreManagementController
 
 	protected function getDownloadCounts($itemIDs)
 	{
+		if (!$itemIDs)
+		{
+			return array();
+		}
+
 		$sql = 'SELECT orderedItemID, SUM(timesDownloaded) AS cnt FROM OrderedFile WHERE orderedItemID IN (' . implode(',', $itemIDs) . ') GROUP BY orderedItemID';
 		$out = array();
 		foreach (ActiveRecordModel::getDataBySQL($sql) as $item)
