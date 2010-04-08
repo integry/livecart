@@ -1937,6 +1937,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			return;
 		}
 
+		foreach ($this->getShoppingCartItems() as $item)
+		{
+			$item->reset();
+		}
+
 		foreach ($this->getDiscountActions($reload) as $ruleAction)
 		{
 			if ($ruleAction->isOrderAction())
