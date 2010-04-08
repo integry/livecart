@@ -361,6 +361,17 @@ abstract class FrontendController extends BaseController
 		$form->set('id', $this->getCategory()->getID());
 		$form->set('q', $this->request->get('q'));
 
+		if ($this->filters && is_array($this->filters))
+		{
+			foreach ($this->filters as $filter)
+			{
+				if ($filter instanceof SearchFilter)
+				{
+					$form->set('q', $filter->getKeywords());
+				}
+			}
+		}
+
 		$response = new BlockResponse();
 		$response->set('categories', $options);
 		$response->set('form', $form);

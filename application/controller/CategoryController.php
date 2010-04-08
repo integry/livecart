@@ -205,6 +205,11 @@ class CategoryController extends FrontendController
 			{
 				while (count($categoryNarrow) == 1)
 				{
+					if ($categoryNarrow[0]['searchCount'] != $totalCount)
+					{
+						break;
+					}
+
 					$this->category = Category::getInstanceByID($categoryNarrow[0]['ID'], Category::LOAD_DATA);
 					$subCategories = $this->getCategory()->getSubCategoryArray(Category::LOAD_REFERENCES);
 					if ($subCategories)

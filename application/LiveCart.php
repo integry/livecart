@@ -451,6 +451,7 @@ class LiveCart extends Application implements Serializable
 		{
 			if (!($response instanceof RawResponse) || $response->getContent())
 			{
+				$this->processResponse($response);
 				return $response;
 			}
 		}
