@@ -170,6 +170,7 @@ Backend.Discount.Condition.prototype =
 		this.subConditionContainer = this.node.down('.conditionContainer');
 		this.isAllSubconditions = this.node.down('.isAllSubconditions');
 		this.isAnyRecord = this.node.down('.isAnyRecord');
+		this.isReverse = this.node.down('.isReverse');
 		this.deleteIcon = this.node.down('.conditionDelete');
 		this.recordContainer = this.node.down('.recordContainer');
 		this.valueContainer = this.node.down('.valueContainer');
@@ -184,17 +185,22 @@ Backend.Discount.Condition.prototype =
 
 	bindEvents: function()
 	{
-		[this.compSel, this.valueField, this.isAllSubconditions, this.isAnyRecord, this.productFieldSel].each(function(field)
+		[this.compSel, this.valueField, this.isAllSubconditions, this.isAnyRecord, this.isReverse, this.productFieldSel].each(function(field)
 		{
 			field.name += '_' + this.condition.ID;
 			Event.observe(field, 'change', this.saveFieldChange.bind(this));
 		}.bind(this));
 
-		this.isAllSubconditions.id += '_' + this.condition.ID;
-		$(this.isAllSubconditions.parentNode).down('label').setAttribute('for', 'isAllSubconditions_' + this.condition.ID);
+		['isAllSubconditions', 'isAnyRecord', 'isReverse'].each(function(name)
+		{
+			this[name].id += '_' + this.condition.ID;
+			$(this[name].parentNode).down('label').setAttribute('for', name + '_' + this.condition.ID);
+		}.bind(this));
 
+/*
 		this.isAnyRecord.id += '_' + this.condition.ID;
 		$(this.isAnyRecord.parentNode).down('label').setAttribute('for', 'isAnyRecord_' + this.condition.ID);
+*/
 
 		Event.observe(this.subCondition, 'click', this.createSubCondition.bind(this));
 		Event.observe(this.deleteIcon, 'click', this.remove.bind(this));
@@ -226,6 +232,7 @@ Backend.Discount.Condition.prototype =
 		this.compSel.value = this.condition.comparisonType;
 		this.valueField.value = this.condition.count != null ? this.condition.count : this.condition.subTotal;
 		this.isAllSubconditions.checked = this.condition.isAllSubconditions == 1;
+		this.isReverse.checked = this.condition.isReverse == 1;
 
 		// value is reversed in user interface
 		this.isAnyRecord.checked = this.condition.isAnyRecord == 0;
@@ -303,13 +310,9 @@ Backend.Discount.Condition.prototype =
 	{
 		var updated = originalRequest.responseData;
 		var field = updated == 'comparisonValue' ? this.valueField : this.compSel;
-		if ('isAllSubconditions' == updated)
+		if (this[updated] && this[updated].getAttribute && (this[updated].getAttribute('type') == 'checkbox'))
 		{
-			field = this.isAllSubconditions;
-		}
-		if ('isAnyRecord' == updated)
-		{
-			field = this.isAnyRecord;
+			field = this[updated];
 		}
 
 		$(field.parentNode).removeClassName('fieldUpdating');

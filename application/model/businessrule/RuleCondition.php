@@ -84,7 +84,7 @@ abstract class RuleCondition
 			return false;
 		}
 
-		if (!$this->isApplicable($instance))
+		if (!$this->isApplicable($instance) xor $this->getParam('isReverse'))
 		{
 			return false;
 		}
@@ -109,7 +109,7 @@ abstract class RuleCondition
 			}
 		}
 
-		return $isValid;
+		return $isValid xor $this->getParam('isReverse');
 	}
 
 	/**
@@ -131,7 +131,7 @@ abstract class RuleCondition
 			}
 		}
 
-		return $isMatching;
+		return $isMatching xor $this->getParam('isReverse');
 	}
 
 	protected function isProductApplicable()
