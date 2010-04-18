@@ -67,6 +67,8 @@ class CheckoutController extends FrontendController
 
 	public function init()
 	{
+		$this->loadLanguageFile('User');
+
 		parent::init();
 		$this->addBreadCrumb($this->translate('_checkout'), $this->router->createUrl(array('controller' => 'order', 'action' => 'index'), true));
 
