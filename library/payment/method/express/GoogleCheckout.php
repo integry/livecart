@@ -149,7 +149,7 @@ class GoogleCheckout extends ExpressPayment
 			{
 				if (!$item->isSavedForLater->get())
 				{
-					$gItem = new gItem($item->product->get()->getValueByLang('name'), $item->product->get()->getValueByLang('shortDescription'), $item->count->get(), $item->price->get());
+					$gItem = new gItem(htmlspecialchars($item->product->get()->getValueByLang('name')), htmlspecialchars($item->product->get()->getValueByLang('shortDescription')), $item->count->get(), $item->price->get());
 					$gItem->setPrivateItemData('<item-id>' . $item->getID() . '</item-id><order-id>' . $this->order->getID() . '</order-id>');
 					$items[] = $gItem;
 				}
@@ -191,9 +191,10 @@ class GoogleCheckout extends ExpressPayment
 
 					foreach ($zone->getShippingRates($shipment)->toArray() as $rate)
 					{
-						$gRate = new gShipping($rate['serviceName'] ? $rate['serviceName'] : $rate['ShippingService']['name_lang'], round($rate['costAmount'], 2), 'merchant-calculated-shipping');
+						$name = $rate['serviceName'] ? $rate['serviceName'] : $rate['ShippingService']['name_lang'];
+						$gRate = new gShipping($name, round($rate['costAmount'], 2), 'merchant-calculated-shipping');
 						$gRate->addAllowedAreas($countries, $states, $zipMasks);
-						$shipping[] = $gRate;
+						$shipping[$name] = $gRate;
 					}
 
 					$zoneCountries = array_merge($zoneCountries, $countries);
@@ -215,7 +216,7 @@ class GoogleCheckout extends ExpressPayment
 				$handler->_setShipping($shipping);
 			}
 		}
-
+var_dump($shipping);
 		// set merchant calculations
 		$router = CustomerOrder::getApplication()->getRouter();
 		$calcUrl = $router->createFullUrl($router->createUrl(array('controller' => 'googleCheckout', 'action' => 'index')), !$this->getConfigValue('sandbox'));
