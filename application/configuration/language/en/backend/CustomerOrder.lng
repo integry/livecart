@@ -74,6 +74,7 @@ CustomerOrder.isCanceled=Cancelled
 CustomerOrder.dateCreated=Created
 CustomerOrder.dateCompleted=Completed
 CustomerOrder.isCancelled=Is cancelled
+CustomerOrder.taxAmount=Tax amount
 ShippingAddress.firstName=Recipient first name
 ShippingAddress.lastName=Recipient last name
 ShippingAddress.countryID=Country

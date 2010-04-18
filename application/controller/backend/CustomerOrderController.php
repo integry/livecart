@@ -514,9 +514,12 @@ class CustomerOrderController extends ActiveGridController
 	public function processDataArray($orders, $displayedColumns)
 	{
 		$orders = parent::processDataArray($orders, $displayedColumns);
+		$ids = array();
 
 		foreach ($orders as &$order)
 		{
+			$ids[$order['ID']] =& $order;
+
 			foreach ($order as $field => &$value)
 			{
 				if('status' == $field)
@@ -558,6 +561,15 @@ class CustomerOrderController extends ActiveGridController
 				{
 					$value = '-';
 				}
+			}
+		}
+
+		if ($orders && (isset($displayedColumns['CustomerOrder.taxAmount']) || 1))
+		{
+			$sql = 'SELECT SUM(ShipmentTax.amount) AS taxAmount, Shipment.orderID AS orderID FROM ShipmentTax LEFT JOIN Shipment ON ShipmentTax.shipmentID=Shipment.ID WHERE Shipment.orderID IN(' . implode(', ', array_keys($ids)) .') GROUP BY Shipment.orderID';
+			foreach (ActiveRecord::getDataBySQL($sql) as $row)
+			{
+				$ids[$row['orderID']]['taxAmount'] = round($row['taxAmount'], 2);
 			}
 		}
 
@@ -913,6 +925,7 @@ class CustomerOrderController extends ActiveGridController
 
 		unset($availableColumns['CustomerOrder.shipping']);
 		unset($availableColumns['CustomerOrder.isFinalized']);
+		unset($availableColumns['CustomerOrder.checkoutStep']);
 
 		return $availableColumns;
 	}
@@ -924,6 +937,7 @@ class CustomerOrderController extends ActiveGridController
 		$availableColumns['User.fullName'] = 'text';
 
 		$availableColumns['CustomerOrder.status'] = 'text';
+		$availableColumns['CustomerOrder.taxAmount'] = 'number';
 
 		// Shipping address
 		$availableColumns['ShippingAddress.firstName'] = 'text';
