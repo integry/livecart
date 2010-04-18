@@ -160,6 +160,16 @@
 				{$transaction.formatted_time.date_full} {$transaction.formatted_time.time_full}
 			</div>
 
+			{if $transaction.serializedData}
+			<div class="extraData">
+				{foreach from=$transaction.serializedData key=key item=value}
+					<div>
+						{$key}: {$value}
+					</div>
+				{/foreach}
+			</div>
+			{/if}
+
 		</fieldset>
 
 	</div>
