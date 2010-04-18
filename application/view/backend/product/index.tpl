@@ -95,6 +95,7 @@
 			{textfield id="massForm_price_`$categoryID`" class="text number" name="price"}
 			{textfield id="massForm_set_minimumQuantity_`$categoryID`" class="text number" name="set_minimumQuantity"}
 			{textfield id="massForm_shippingSurchargeAmount_`$categoryID`" class="text number" name="set_shippingSurchargeAmount"}
+			{textfield id="massForm_shippingWeight_`$categoryID`" class="text number" name="set_shippingWeight"}
    			{textfield id="massForm_manufacturer_`$categoryID`" name="manufacturer" class="text" autocomplete="controller=backend.manufacturer field=manufacturer" id="set_manufacturer_`$categoryID`"}
 			{textfield id="massForm_set_keywords_`$categoryID`" name="set_keywords" class="text" id="set_keywords_`$categoryID`" autocomplete="controller=backend.product field=keywords"}
 			{textfield id="massForm_set_URL_`$categoryID`" name="set_URL" class="text" id="set_url_`$categoryID`" autocomplete="controller=backend.product field=URL"}
