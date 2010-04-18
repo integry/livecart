@@ -18,7 +18,7 @@
 			{/foreach}
 			<div class="li" style="width: 1px;">&nbsp;</div>
 			<div class="clear"></div>
-		</ul>
+		</div>
 	</div>
 </div>
 
