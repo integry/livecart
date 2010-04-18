@@ -140,7 +140,7 @@ class LiveCartTransaction extends TransactionDetails
 				$state->load();
 			}
 
-			if ($state->code->get())
+			if ($state->code->get() && !is_numeric($state->code->get()))
 			{
 				return $state->code->get();
 			}
