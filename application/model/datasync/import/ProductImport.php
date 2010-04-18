@@ -158,7 +158,7 @@ class ProductImport extends DataImport
 				$product = Product::getInstanceBySku($record[$fields['Product']['sku']], $references);
 			}
 
-			if ($product->getID())
+			if ($product && $product->getID())
 			{
 				$this->registerImportedID($product->getID());
 			}
@@ -485,6 +485,8 @@ class ProductImport extends DataImport
 
 		$hash = '';
 		$hashRoot = $this->getRoot($profile)->getID();
+
+		$cat = null;
 
 		foreach ($names as $name)
 		{
