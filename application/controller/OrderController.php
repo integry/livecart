@@ -564,6 +564,7 @@ class OrderController extends FrontendController
 
 	public function miniCartBlock()
 	{
+		$this->loadLanguageFile('Order');
 		$this->order->loadAll();
 		$this->order->getTotal(true);
 		return new BlockResponse('order', $this->order->toArray());
