@@ -532,6 +532,7 @@ Backend.CustomerOrder.Editor.prototype =
 		this.nodes.acceptanceStatusValue = $("order_acceptanceStatusValue_" + this.id);
 		this.nodes.status = this.nodes.form.down('select.status');
 		this.nodes.orderStatus = this.nodes.parent.down('.order_status');
+		this.nodes.finalize = this.nodes.parent.down('.order_unfinalized');
 	},
 
 	bindEvents: function(args)

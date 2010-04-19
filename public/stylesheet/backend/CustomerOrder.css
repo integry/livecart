@@ -103,6 +103,12 @@
 	background-image: url(../../image/silk/cancel.png);
 }
 
+.order_unfinalized
+{
+	background-image: url(../../image/silk/basket_go.png);
+	font-weight: bold;
+}
+
 .order_addShipment
 {
 	background-image: url(../../image/silk/package_add.png);
@@ -194,7 +200,6 @@
 #orderManagerContainer.unfinalized #tabOrderCommunication,
 #orderManagerContainer.unfinalized #tabOrderLog,
 #orderManagerContainer.unfinalized .order_status,
-#orderManagerContainer.unfinalized .sectionContainer .menu,
 #orderManagerContainer.unfinalized .tabOrderProductsContent .orderShipment_report,
 #orderManagerContainer.unfinalized .tabOrderProductsContent h2,
 #orderManagerContainer.unfinalized .tabOrderProductsContent .shipmentContainer legend,
@@ -202,12 +207,12 @@
 #orderManagerContainer.unfinalized .tabOrderProductsContent .orderShipment_controls,
 #orderManagerContainer.unfinalized .tabOrderProductsContent .orderShipmentsItem_count
 {
-    display: none;
+    /* display: none; */
 }
 
 #orderManagerContainer.unfinalized .tabOrderProductsContent .itemCountText
 {
-    display: block;
+    /* display: block; */
 }
 
 #orderManagerContainer.unfinalized .tabOrderProductsContent .orderShipmentsItem_info_count

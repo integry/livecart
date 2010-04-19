@@ -16,6 +16,12 @@ ClassLoader::import("library.*");
  */
 class OrderedItemController extends StoreManagementController
 {
+	public function init()
+	{
+		parent::init();
+		CustomerOrder::allowEmpty();
+	}
+
 	public function create()
 	{
 		$product = Product::getInstanceById((int)$this->request->get('productID'), true);
@@ -408,7 +414,7 @@ class OrderedItemController extends StoreManagementController
 
 			$shipment->recalculateAmounts();
 
-			$item->customerOrder->get()->save();
+			$item->customerOrder->get()->save(true);
 			$item->save();
 			$shipment->save();
 
