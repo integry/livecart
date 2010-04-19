@@ -23,6 +23,12 @@ class CustomerOrderController extends ActiveGridController
 	const TYPE_CARTS = 8;
 	const TYPE_CANCELLED = 9;
 
+	public function init()
+	{
+		parent::init();
+		CustomerOrder::allowEmpty();
+	}
+
 	/**
 	 * Action shows filters and datagrid.
 	 * @return ActionResponse
@@ -294,6 +300,18 @@ class CustomerOrderController extends ActiveGridController
 			'success',
 			$this->translate($order->isCancelled->get() ? '_order_is_canceled' : '_order_is_accepted')
 		);
+	}
+
+	/**
+	 * @role update
+	 */
+	public function finalize()
+	{
+		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, true);
+		$order->finalize();
+
+		$url = $this->router->createUrl(array('controller' => 'backend.customerOrder', 'action' => 'index')) . '#order_' . $order->getID();
+		return new RedirectResponse($url);
 	}
 
 	public function sendCancelNotifyEmail(CustomerOrder $order)
@@ -723,7 +741,7 @@ class CustomerOrderController extends ActiveGridController
 		if ($this->createFieldsFormValidator($order)->isValid())
 		{
 			$order->loadRequestData($this->request);
-			$order->save();
+			$order->save(true);
 
 			$response = new ActionResponse('order', $order->toArray());
 			$form = $this->createFieldsForm($order);
@@ -765,7 +783,7 @@ class CustomerOrderController extends ActiveGridController
 	{
 		$order = CustomerOrder::getInstanceByID((int)$this->request->get('id'), true);
 		$order->isMultiAddress->set($this->request->get('status'));
-		$order->save();
+		$order->save(true);
 	}
 
 	/**
@@ -778,7 +796,7 @@ class CustomerOrderController extends ActiveGridController
 		$order = CustomerOrder::getNewInstance($user);
 		$status = CustomerOrder::STATUS_NEW;
 		$order->status->set($status);
-		$order->isFinalized->set(1);
+		$order->isFinalized->set(0);
 		$order->capturedAmount->set(0);
 		$order->totalAmount->set(0);
 		$order->dateCompleted->set(new ARSerializableDateTime());
@@ -796,7 +814,6 @@ class CustomerOrderController extends ActiveGridController
 		}
 
 		$response = $this->save($order);
-		$order->finalize();
 		ActiveRecord::commit();
 		return $response;
 	}
@@ -840,7 +857,7 @@ class CustomerOrderController extends ActiveGridController
 		}
 
 		$order->updateStatusFromShipments();
-		$order->save();
+		$order->save(true);
 
 		return new RawResponse();
 	}
@@ -869,7 +886,7 @@ class CustomerOrderController extends ActiveGridController
 		if ($validator->isValid())
 		{
 			$existingRecord = $order->isExistingRecord();
-			$order->save();
+			$order->save(true);
 
 			return new JSONResponse(
 			   array('order' => array( 'ID' => $order->getID())),

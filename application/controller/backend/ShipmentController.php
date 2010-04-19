@@ -15,6 +15,12 @@ ClassLoader::import("application.model.product.ProductSet");
  */
 class ShipmentController extends StoreManagementController
 {
+	public function init()
+	{
+		parent::init();
+		CustomerOrder::allowEmpty();
+	}
+
 	public function index()
 	{
 		$order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);

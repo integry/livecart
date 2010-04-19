@@ -33,6 +33,9 @@ _accept_order=Accept order
 _cancel_order=Cancel order
 _this_order_is=This order is
 
+_finalize=Finalize order
+_order_is_finalized=The order has been finalized
+
 # Tree
 _all_orders=All Orders
 _current_orders=Current

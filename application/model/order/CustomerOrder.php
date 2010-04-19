@@ -49,6 +49,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	private $isRulesProcessed;
 
+	private static $isEmptyAllowed = false;
+
 	const STATUS_NEW = 0;
 	const STATUS_PROCESSING = 1;
 	const STATUS_AWAITING = 2;
@@ -747,6 +749,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$this->save();
 	}
 
+	public static function allowEmpty($allow = true)
+	{
+		self::$isEmptyAllowed = $allow;
+	}
+
 	/*####################  Saving ####################*/
 
 	public function save($allowEmpty = false)
@@ -842,7 +849,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			$this->serializeShipments();
 		}
 
-		if (!$this->isFinalized->get() && !$this->orderedItems && !$allowEmpty)
+		if (!$this->isFinalized->get() && !$this->orderedItems && !$allowEmpty && !self::$isEmptyAllowed)
 		{
 			$this->delete();
 			return false;
