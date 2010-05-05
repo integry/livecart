@@ -39,9 +39,21 @@ Backend.Manufacturer.Editor.methods =
 		return 'manufacturerManagerContainer';
 	},
 
+	getAddContainerId: function()
+	{
+		return 'addManufacturer';
+	},
+
 	getInstanceContainer: function(id)
 	{
-		return $("tabUserInfo_" + id + "Content");
+		if (id)
+		{
+			return $("tabUserInfo_" + id + "Content");
+		}
+		else
+		{
+			return $('addManufacturer');
+		}
 	},
 
 	getListContainer: function()
@@ -57,7 +69,25 @@ Backend.Manufacturer.Editor.methods =
 	getActiveGrid: function()
 	{
 		return window.activeGrids["manufacturer_0"];
+	},
+
+
+	afterSubmitForm: function(response)
+	{
+		Backend.MultiInstanceEditor.prototype.afterSubmitForm.bind(this)(response);
+
+		if(response.status == 'success')
+		{
+			this.hideAddForm();
+			this.open(response.manufacturer.ID);
+		}
 	}
 }
 
 Backend.Manufacturer.Editor.inheritsFrom(Backend.MultiInstanceEditor);
+
+Event.observe(window, 'load',
+	function()
+	{
+		Backend.Manufacturer.Editor.prototype.Links = {add: Router.createUrl('backend.manufacturer', 'add')}
+	});

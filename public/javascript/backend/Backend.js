@@ -2028,6 +2028,7 @@ Backend.MultiInstanceEditor.prototype =
 		else
 		{
 			var url = this.Links.add;
+			console.log('test', this.Links);
 			new LiveCart.AjaxUpdater(url, container, caller.up('.menu').down('.progressIndicator'), null, this.initAddForm.bind(this));
 		}
 	},
@@ -2078,9 +2079,15 @@ Backend.MultiInstanceEditor.prototype =
 
 		ActiveForm.prototype.initTinyMceFields(container);
 
-		this.reInitAddForm();
+		this.reInitAddForm(container);
 
 		ActiveForm.prototype.resetErrorMessages(container.down('form'));
+
+		var cancel = container.down('a.cancel');
+		if (cancel)
+		{
+			Event.observe(cancel, 'click', function(e) { this.cancelAdd(); Event.stop(e); }.bind(this));
+		}
 	},
 
 	saveAdd: function(e)
@@ -2091,7 +2098,7 @@ Backend.MultiInstanceEditor.prototype =
 		return instance;
 	},
 
-	reInitAddForm: function()
+	reInitAddForm: function(container)
 	{
 	}
 }
