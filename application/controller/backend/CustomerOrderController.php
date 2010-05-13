@@ -69,6 +69,7 @@ class CustomerOrderController extends ActiveGridController
 	{
 		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('ShippingAddress' => 'UserAddress', 'BillingAddress' => 'UserAddress', 'State', 'User', 'Currency'));
 		$order->getSpecification();
+		$order->loadAddresses();
 
 		$response = new ActionResponse();
 		$response->set('statuses', array(
@@ -115,15 +116,15 @@ class CustomerOrderController extends ActiveGridController
 		{
 			$order->user->get()->loadAddresses();
 
-			if ($order->user->get()->defaultShippingAddress->get())
+			if (!$order->shippingAddress->get() && $order->user->get()->defaultShippingAddress->get())
 			{
 				$shippingStates = State::getStatesByCountry($order->user->get()->defaultShippingAddress->get()->userAddress->get()->countryID->get());
-			   $orderArray['ShippingAddress'] = $order->user->get()->defaultShippingAddress->get()->userAddress->get()->toArray();
+				$orderArray['ShippingAddress'] = $order->user->get()->defaultShippingAddress->get()->userAddress->get()->toArray();
 			}
 
 			$shippingStates[''] = '';
 
-			if ($order->user->get()->defaultBillingAddress->get())
+			if (!$order->billingAddress->get() && $order->user->get()->defaultBillingAddress->get())
 			{
 				$billingStates = State::getStatesByCountry($order->user->get()->defaultBillingAddress->get()->userAddress->get()->countryID->get());
 				$orderArray['BillingAddress'] = $order->user->get()->defaultBillingAddress->get()->userAddress->get()->toArray();
@@ -308,6 +309,8 @@ class CustomerOrderController extends ActiveGridController
 	public function finalize()
 	{
 		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, true);
+		$order->loadAll();
+
 		$order->finalize();
 
 		$url = $this->router->createUrl(array('controller' => 'backend.customerOrder', 'action' => 'index')) . '#order_' . $order->getID();
@@ -460,7 +463,7 @@ class CustomerOrderController extends ActiveGridController
 		$index = 0;
 		foreach ($this->lists(true, $columns) as $row)
 		{
-			foreach ($data[$row[$index]] as $item)
+			foreach ((array)$data[$row[$index]] as $item)
 			{
 				$itemData = $row;
 				$item['OrderedItem'] =& $item;
@@ -793,6 +796,8 @@ class CustomerOrderController extends ActiveGridController
 	{
 		ActiveRecord::beginTransaction();
 		$user = User::getInstanceByID((int)$this->request->get('customerID'), true, true);
+		$user->loadAddresses();
+
 		$order = CustomerOrder::getNewInstance($user);
 		$status = CustomerOrder::STATUS_NEW;
 		$order->status->set($status);
@@ -806,7 +811,7 @@ class CustomerOrderController extends ActiveGridController
 		{
 			if($user->$userField->get())
 			{
-				$user->$userField->get()->load(array('UserAddress'));
+				$user->$userField->get()->userAddress->get()->load();
 				$address = clone $user->$userField->get()->userAddress->get();
 				$address->save();
 				$order->$orderField->set($address);
@@ -814,6 +819,7 @@ class CustomerOrderController extends ActiveGridController
 		}
 
 		$response = $this->save($order);
+
 		ActiveRecord::commit();
 		return $response;
 	}
@@ -834,6 +840,21 @@ class CustomerOrderController extends ActiveGridController
 			$address->loadRequestData($this->request);
 			$address->save();
 			$history->saveLog();
+
+			if (!$this->request->get('ID'))
+			{
+				if (!$order->billingAddress->get())
+				{
+					$order->billingAddress->set($address);
+				}
+
+				if (!$order->shippingAddress->get())
+				{
+					$order->shippingAddress->set($address);
+				}
+
+				$order->save();
+			}
 
 			return new JSONResponse(array('address' => $address->toArray()), 'success', $this->translate('_order_address_was_successfully_updated'));
 		}
