@@ -1,0 +1,17 @@
+--- application/controller/backend/SettingsController.php	2008-12-09 00:12:28.000000000 +0200
++++ application/controller/backend/SettingsController.php	2008-12-09 00:10:41.000000000 +0200
+@@ -20,7 +20,7 @@
+ 	public function index()
+ 	{
+ 		$tree = $this->config->getTree();
++		if (true)
+-		if (file_exists($this->getPrivateLabelFile()))
+ 		{
+ 			unset($tree['49-private-label']);
+ 		}
+
+--- application/view/layout/frontend.tpl	2008-12-09 00:12:28.000000000 +0200
++++ application/view/layout/frontend.tpl	2008-12-09 00:10:41.000000000 +0200
+@@ -20,7 +20,7 @@
++	(Powered by LiveCart)</title>
+-	</title>

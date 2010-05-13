@@ -4,13 +4,13 @@ set -e
 
 function makePackages
 {
+	mv license-free.txt /tmp
 	createArchive $1
 
-	applyPatch branded
-	createArchive $1-branded
-
-	applyPatch encoded
-	createArchive $1-encoded
+	mv license.txt /tmp
+	mv /tmp/license-free.txt .
+	applyPatch community
+	createArchive $1-community
 
 	applyPatch encoded -R
 	applyPatch branded -R
