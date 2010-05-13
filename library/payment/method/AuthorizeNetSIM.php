@@ -65,13 +65,23 @@ class AuthorizeNetSIM extends ExternalPayment
 
 	public function notify($requestArray)
 	{
-		$this->saveDebug($requestArray);
-		$result = new TransactionResult();
-		$result->gatewayTransactionID->set($requestArray['x_trans_id']);
-		$result->amount->set($requestArray['x_amount']);
-		$result->currency->set('USD');
-		$result->rawResponse->set($requestArray);
-		$result->setTransactionType(TransactionResult::TYPE_SALE);
+		if (1 == $requestArray['x_response_code'])
+		{
+			$result = new TransactionResult();
+			$result->gatewayTransactionID->set($requestArray['x_trans_id']);
+			$result->amount->set($requestArray['x_amount']);
+			$result->currency->set('USD');
+			$result->rawResponse->set($requestArray);
+			$result->setTransactionType(TransactionResult::TYPE_SALE);
+		}
+		else
+		{
+			$result = new TransactionError($requestArray['x_response_reason_text'], $requestArray);
+			$url = ActiveRecordModel::getApplication()->getRouter()->createUrl(array('controller' => 'checkout', 'action' => 'pay', 'query' => array('error' => $requestArray['x_response_reason_text'])));
+			ob_clean();
+			echo '<html><head><meta http-equiv="REFRESH" content="0;url=' . $url . '"></HEAD></html>';
+			exit;
+		}
 
 		return $result;
 	}
