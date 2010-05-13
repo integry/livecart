@@ -621,6 +621,7 @@ class CheckoutController extends FrontendController
 		$response = new ActionResponse();
 		$response->set('order', $this->order->toArray());
 		$response->set('currency', $this->getRequestCurrency());
+		$response->set('error', strip_tags($this->request->get('error')));
 
 		// offline payment methods
 		$offlineMethods = OfflineTransactionHandler::getEnabledMethods();
