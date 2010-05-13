@@ -628,10 +628,20 @@ class CategoryController extends FrontendController
 			$selFilter->setOrder(new ARExpressionHandle('Product.isFeatured=1'), 'DESC');
 		}
 
+		$featuredFilter = new ProductFilter($this->getCategory(), $selFilter);
+		$featuredFilter->includeSubcategories();
+
 		$selFilter->setOrder(new ARExpressionHandle('RAND()'));
 		$selFilter->setLimit($count);
 
-		$featuredFilter = new ProductFilter($this->getCategory(), $selFilter);
+		$ids = ActiveRecord::getRecordSetFields('Product', $featuredFilter->getSelectFilter(), array('Product.ID'), array('Category', 'Manufacturer'));
+		$rand = array();
+		foreach ($ids as $id)
+		{
+			$rand[] = $id['ID'];
+		}
+
+		$featuredFilter = new ProductFilter(Category::getRootNode(), select(in('Product.ID', $rand)));
 		$featuredFilter->includeSubcategories();
 
 		return $this->getProductsArray($featuredFilter);
