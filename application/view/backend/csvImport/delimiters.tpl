@@ -48,7 +48,7 @@
 			</select>
 		</span>
 	</span>
-	<span class="Product.name Product.shortDescription Product.longDescription Product.keywords config">
+	<span class="Product.name Product.shortDescription Product.longDescription Product.keywords NewsPost.text NewsPost.moreText config">
 		<span class="block">
 			<span class="title">
 				{t _language}

@@ -38,6 +38,7 @@ abstract class DataImport
 		}
 
 		$this->className = get_class($instance);
+		$defLang = $this->application->getDefaultLanguageCode();
 
 		if ($instance->getID())
 		{
@@ -54,6 +55,12 @@ abstract class DataImport
 		{
 			$column = $field['name'];
 			$params = $field['params'];
+
+			$lang = null;
+			if (isset($params['language']))
+			{
+				$lang = $params['language'];
+			}
 
 			if (!isset($record[$csvIndex]) || empty($column))
 			{
@@ -75,7 +82,14 @@ abstract class DataImport
 			}
 			else if (isset($instance->$field) && ($instance->$field instanceof ARValueMapper) && ($className == $this->getClassName()))
 			{
-				$instance->$field->set($value);
+				if (!$lang)
+				{
+					$instance->$field->set($value);
+				}
+				else
+				{
+					$instance->setValueByLang($field, $lang, $value);
+				}
 			}
 		}
 
@@ -336,17 +350,19 @@ abstract class DataImport
 						$fieldValue = trim($fieldValue);
 
 						$f = new ARSelectFilter(
-								new EqualsCond(
+								new LikeCond(
 									MultilingualObject::getLangSearchHandle(
 										new ARFieldHandle($valueClass, 'value'),
 										$this->application->getDefaultLanguageCode()
 									),
-									$fieldValue
+									$fieldValue . '%'
 								)
 							);
 						$f->setLimit(1);
 
-						if (!$value = $attr->getRelatedRecordSet($valueClass, $f)->shift())
+						var_dump($f->createString()); exit;
+
+						if (!($value = $attr->getRelatedRecordSet($valueClass, $f)->shift()))
 						{
 							$value = call_user_func_array(array($valueClass, 'getNewInstance'), array($attr));
 
