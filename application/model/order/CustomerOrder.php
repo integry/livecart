@@ -456,6 +456,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	 */
 	public function finalize()
 	{
+		if ($this->isFinalized->get())
+		{
+			return;
+		}
+
 		self::beginTransaction();
 
 		$this->event('before-finalize');
@@ -465,6 +470,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		foreach ($this->getShipments() as $shipment)
 		{
+			if ($shipment->isExistingRecord())
+			{
+				$shipment->deleteRecordSet('ShipmentTax', new ARDeleteFilter());
+			}
+
 			$shipment->order->set($this);
 			$shipment->save();
 
