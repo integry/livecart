@@ -2,6 +2,7 @@
 
 ClassLoader::import('application.model.category.SpecField');
 ClassLoader::import('application.model.category.SpecFieldGroup');
+ClassLoader::import('application.model.category.ProductCategory');
 ClassLoader::import('application.model.eavcommon.iEavFieldManager');
 ClassLoader::import('application.model.eav.EavAble');
 ClassLoader::import('application.model.eav.EavObject');
@@ -452,17 +453,42 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	{
 		if ($includeSubcategories)
 		{
-			$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $this->lft->get());
-			$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $this->rgt->get()));
-			$cond->addOr(new INCond(new ARFieldHandle('Product', 'ID'), 'SELECT ProductCategory.productID FROM ProductCategory LEFT JOIN Category ON ProductCategory.categoryID=Category.ID WHERE Category.lft>=' . $this->lft->get() . ' AND Category.rgt<=' . $this->rgt->get()));
+			if (!$this->isRoot())
+			{
+				$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $this->lft->get());
+				$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $this->rgt->get()));
+
+				if ($this->hasProductsAsSecondaryCategory())
+				{
+					$cond->addOr(new INCond(new ARFieldHandle('Product', 'ID'), 'SELECT ProductCategory.productID FROM ProductCategory LEFT JOIN Category ON ProductCategory.categoryID=Category.ID WHERE Category.lft>=' . $this->lft->get() . ' AND Category.rgt<=' . $this->rgt->get()));
+				}
+			}
+			else
+			{
+				$cond = new IsNotNullCond(new ARFieldHandle('Product', 'categoryID'));
+			}
 		}
 		else
 		{
 			$cond = new EqualsCond(new ARFieldHandle('Product', 'categoryID'), $this->getID());
-			$cond->addOr(new INCond(new ARFieldHandle('Product', 'ID'), 'SELECT ProductCategory.productID FROM ProductCategory WHERE ProductCategory.categoryID=' . $this->getID()));
+
+			if ($this->hasProductsAsSecondaryCategory())
+			{
+				$cond->addOr(new INCond(new ARFieldHandle('Product', 'ID'), 'SELECT ProductCategory.productID FROM ProductCategory WHERE ProductCategory.categoryID=' . $this->getID()));
+			}
 		}
 
 		return $cond;
+	}
+
+	private function hasProductsAsSecondaryCategory()
+	{
+		if (!isset($this->hasAsSecondary))
+		{
+			$this->hasAsSecondary = $this->getRelatedRecordCount('ProductCategory');
+		}
+
+		return $this->hasAsSecondary;
 	}
 
 	public function getProductFilter(ARSelectFilter $filter)
