@@ -609,7 +609,7 @@ class LiveCart extends Application implements Serializable
 		}
 	}
 
-	public function processInstancePlugins($path, $instance, $params = null)
+	public function processInstancePlugins($path, &$instance, $params = null)
 	{
 		foreach($this->getPlugins('instance/' . $path) as $plugin)
 		{
@@ -735,6 +735,23 @@ class LiveCart extends Application implements Serializable
 			$cache->setData($output);
 			$cache->save();
 		}
+
+		return $output;
+	}
+
+	protected function renderBlock($block, Controller $controllerInstance)
+	{
+		$this->processInstancePlugins('outputBlock', $block);
+
+		if (is_string($block))
+		{
+			return $block;
+		}
+
+		$output = parent::renderBlock($block, $controllerInstance);
+
+		$params = array('block' => $block, 'output' => &$output);
+		$this->processInstancePlugins('outputBlockAfter', $params);
 
 		return $output;
 	}

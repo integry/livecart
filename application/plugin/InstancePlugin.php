@@ -18,7 +18,7 @@ abstract class InstancePlugin
 	public function __construct($application, &$instance, $params = null)
 	{
 		$this->application = $application;
-		$this->instance = $instance;
+		$this->instance =& $instance;
 		$this->params = $params;
 
 		$this->request = $this->application->getRequest();
