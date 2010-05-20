@@ -42,11 +42,10 @@ class UserApi extends ModelApi
 
 	public function updateCallback($record, $updated)
 	{
-		echo '[update callback]';
-		echo $updated ? 'update existing' : 'created new';
-		print_r($record->getID());
-		
-		$this->importedIDs[] = $record;
+		// echo '[update callback]';
+		// echo $updated ? 'update existing' : 'created new';
+		// print_r($record->getID());
+		$this->importedIDs[] = $record->getID();
 	}
 
 	public function getApiActionName()
@@ -62,15 +61,12 @@ class UserApi extends ModelApi
 			if($firstCustomerNodeChild)
 			{
 				$apiActionName = $firstCustomerNodeChild->getName();
-				$this->setApiActionName(canParse
-					array_key_exists($apiActionName,$xmlKeyToApiActionMapping)?$xmlKeyToApiActionMapping[$apiActionName]:$apiActionName
-				);
+				$this->setApiActionName(array_key_exists($apiActionName,$xmlKeyToApiActionMapping)?$xmlKeyToApiActionMapping[$apiActionName]:$apiActionName);
 			}
 		}
 		return parent::getApiActionName();
 	}
 
-	// -------------------
 	public function filter()
 	{
 		$customers = User::getRecordSet($this->getARSelectFilter());
@@ -113,38 +109,20 @@ class UserApi extends ModelApi
 		$updater = new ApiUserImport($this->application);
 		$updater->allowOnlyUpdate();
 		$profile = new CsvImportProfile('User');
-
 		$reader = $this->getUpdateIterator($this->application->getRequest()->get('userApiXmlData'), $updater, $profile);
-		
-		
-
 		$updater->setCallback(array($this, 'updateCallback'));
 		$updater->importFile($reader, $profile);
 
-		// print_r($updater->getFields());
-		exit;
-			
-		// 
-		$user = User::getInstanceByEmail($u['email']);
-		if($user == null)
+		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
+		foreach($this->importedIDs as $id)
 		{
-			throw new Exception('User does not exists');
+			$response->addChild('updated', $id);
 		}
-		
-		$u = $request->getUserData();
-		$user->loadRequestData($request->getUpdateRequest());
-		$user->firstName->set($u['firstName']);
-		$user->lastName->set($u['lastName']);
-		$user->companyName->set($u['companyName']);
-		// $user->isEnabled->set(TRUE);
-		$user->save();
-		$response->addChild('updated', $user->getID());
 		return new SimpleXMLResponse($response);
 	}
 
 	public function getUpdateIterator($xml, $updater, $profile)
 	{
-
 		// todo: multiple customers
 		$iterator = new UpdateIterator();
 		$item = array('ID'=>null, 'email'=>null);
