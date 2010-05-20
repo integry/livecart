@@ -16,7 +16,8 @@ class CsvImportProfile
 	protected $fields = array();
 	protected $params = array();
 
-	public function __construction($className)
+	//public function __construction($className)
+	public function __construct($className)
 	{
 		$this->className = $className;
 	}

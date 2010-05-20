@@ -9,6 +9,7 @@ abstract class DataImport
 	protected $options;
 	protected $uid;
 	protected $className;
+	protected $callback;
 	private $lastImportName;
 	private $flushMessage;
 
@@ -78,7 +79,7 @@ abstract class DataImport
 				$instance->$field->set($value);
 			}
 		}
-
+		$idBeforeSave = $instance->getID();
 		$instance->save();
 
 		$this->importAttributes($instance, $record, $profile->getSortedFields());
@@ -97,8 +98,13 @@ abstract class DataImport
 		}
 
 		$this->afterSave($instance, $record);
-
+	
 		$id = $instance->getID();
+
+		if ($this->callback)
+		{
+			call_user_func($this->callback, $instance, $idBeforeSave == $id);
+		}
 
 		$instance->__destruct();
 		$instance->destruct(true);
@@ -182,7 +188,7 @@ abstract class DataImport
 		return array();
 	}
 
-	public function importFile(CsvFile $file, CsvImportProfile $profile)
+	public function importFile(Iterator $file, CsvImportProfile $profile)
 	{
 		$total = 0;
 
@@ -196,7 +202,7 @@ abstract class DataImport
 		return $total;
 	}
 
-	public function importFileChunk(CsvFile $file, CsvImportProfile $profile, $count)
+	public function importFileChunk(Iterator $file, CsvImportProfile $profile, $count)
 	{
 		$processed = null;
 
@@ -218,7 +224,6 @@ abstract class DataImport
 					$cell = utf8_encode($cell);
 				}
 			}
-
 			$status = $this->importInstance($record, $profile);
 
 			$file->next();
@@ -418,6 +423,11 @@ abstract class DataImport
 	public function setFlushMessage($msg)
 	{
 		$this->flushMessage = $msg;
+	}
+	
+	public function setCallback($function)
+	{
+		$this->callback = $function;
 	}
 
 	protected function translate($key)
