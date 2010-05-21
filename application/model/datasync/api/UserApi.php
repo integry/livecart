@@ -42,11 +42,6 @@ class UserApi extends ModelApi
 		$this->importedIDs[] = $record->getID();
 	}
 
-	public function getApiActionName()
-	{
-		return $this->getParser()->getApiActionName();
-	}
-
 	public function filter()
 	{
 		$parser = $this->getParser();
@@ -124,8 +119,10 @@ class UserApi extends ModelApi
 		$updater->allowOnlyUpdate(); // throws exception, if record does not exists.
 		$profile = new CsvImportProfile('User');
 		$reader = $this->getDataImportIterator($updater, $profile);
-		$updater->getInstance($reader->current(), $profile)->delete();
-		return new SimpleXMLResponse(new SimpleXMLElement('<response datetime="'.date('c').'">its gone</response>'));
+		$user = $updater->getInstance($reader->current(), $profile);
+		$id = $user->getID();
+		$user->delete();
+		return new SimpleXMLResponse(new SimpleXMLElement('<response datetime="'.date('c').'"><deleted>'.$id.'</deleted></response>'));
 	}
 
 	private function getDataImportIterator($updater, $profile)
@@ -184,12 +181,23 @@ class ApiUserImport extends UserImport
 class UserApiReader implements Iterator {
 	protected $iteratorKey = 0;
 	protected $content;
+	private $apiActionName;
+	
+	public function getApiActionName()
+	{
+		return $this->apiActionName;
+	}
+	
+	public function setApiActionName($apiActionName)
+	{
+		$this->apiActionName=$apiActionName;
+	}
 
 	public function addItem($item)
 	{
 		$this->content[] = $item;
 	}
-
+	// --
 	public function rewind()
 	{
 		$this->iteratorKey = 0;
@@ -221,7 +229,9 @@ class XmlUserApiReader extends UserApiReader
 	const HANDLE = 0;
 	const CONDITION = 1;
 	const ALL_KEYS = -1;
-	
+	private $xmlKeyToApiActionMapping = array(
+		// 'filter' => 'list' filter is better than list, because list is keyword.
+	);
 	private $apiActionName;
 	private $listFilterMapping;
 
@@ -405,15 +415,12 @@ class XmlUserApiReader extends UserApiReader
 
 	private function findApiActionName($xml)
 	{
-		$xmlKeyToApiActionMapping = array(
-			// 'filter' => 'list' filter is better than list, because list is keyword.
-		);
 		$customerNodeChilds = $xml->xpath('//customer/*');
 		$firstCustomerNodeChild = array_shift($customerNodeChilds);
 		if($firstCustomerNodeChild)
 		{
 			$apiActionName = $firstCustomerNodeChild->getName();
-			$this->apiActionName = array_key_exists($apiActionName,$xmlKeyToApiActionMapping)?$xmlKeyToApiActionMapping[$apiActionName]:$apiActionName;
+			$this->apiActionName = array_key_exists($apiActionName,$this->xmlKeyToApiActionMapping)?$this->xmlKeyToApiActionMapping[$apiActionName]:$apiActionName;
 		}
 		return null;
 	}

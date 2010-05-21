@@ -5,28 +5,18 @@ ClassLoader::import("application.model.ActiveRecordModel");
 
 abstract class ModelApi
 {
-	// @deprecated
-	const HANDLE = 0;
-	// @deprecated
-	const CONDITION = 1;
-	// @deprecated
-	const ALL_KEYS = -1;
-	
 	private $className;
 	private $apiActionName = null;
 	private $parserClassName;
 	private $parser;
-
-	public static function canParse(Request $request)
-	{
-		return false; // this is abstract 'API thing', can't parse anything.
-	}
 
 	public function __construct($className)
 	{
 		$this->className = $className;
 	}
 
+	abstract static function canParse(Request $request);
+	
 	public function getClassName()
 	{
 		return $this->className;
@@ -40,16 +30,6 @@ abstract class ModelApi
 	public function getActions()
 	{
 		return $this->getDefaultActions();
-	}
-
-	public function getApiActionName()
-	{
-		return $this->apiActionName;
-	}
-	
-	public function setApiActionName($apiActionName)
-	{
-		$this->apiActionName=$apiActionName;
 	}
 
 	public function respondsToApiAction($apiAction)
@@ -151,4 +131,10 @@ abstract class ModelApi
 	{
 		return $this->parser;
 	}
+	
+	public function getApiActionName()
+	{
+		return $this->getParser()->getApiActionName();
+	}
+
 }

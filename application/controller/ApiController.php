@@ -21,6 +21,73 @@ class ApiController extends BaseController
 	
 	private $modelApi = null;
 
+	public function index()
+	{
+		try {
+			return new RawResponse('index done');
+		} catch(Exception $e) {
+			return new RawResponse('err');
+		}
+	}
+
+	public function xml()
+	{
+		try {
+	
+			$model = $this->loadModelApi();
+			$apiActionName = $model->getApiActionName();
+			if($model->respondsToApiAction($apiActionName))
+			{
+				//echo '<br />[executing '.$model->getClassName().'Api->'.$apiActionName.'()]<br />';
+				return $model->$apiActionName();
+				// return $r;
+				return new RawResponse('..');
+				
+			} else {
+				throw new Exception('Model '.$model->getClassName().' does not support '.$apiActionName);
+			}
+
+		} catch(Exception $e) {
+			$xml = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
+			$xml->addChild('error', $e->getMessage());
+			if($this->application->isDevMode())
+			{
+				$xmlTrace = $xml->addChild('trace');
+				foreach($e->getTrace() as $row)
+				{
+					$line = array();
+					if(isset($row['line']))
+					{
+						$line[] = '['.$row['line'].']';
+					} else {
+						$line[] = '[ - ]';
+					}
+
+					if(isset($row['file']))
+					{
+						$line[] = '['.$row['file'].']';
+					} else {
+						$line[] = '[ - ]';
+					}
+
+					$line[] = ' [';
+					if(isset($row['class']))
+					{
+						$line[] = $row['class'].'::';
+					}
+					if(isset($row['function']))
+					{
+						$line[] = $row['function'].'(..)';
+					}
+					$line[] = ']';
+					$xmlTrace->addChild('r',  implode(' ',$line));	
+				}
+			}
+			return new SimpleXMLResponse($xml);
+			//return new RawResponse($e->getMessage());
+		}
+	}		
+
 	private function setModelApi(ModelApi $clazz)
 	{
 		$this->modelApi = $clazz;
@@ -58,7 +125,6 @@ class ApiController extends BaseController
 						}
 						
 						if(call_user_func_array(array($modelApiClassName, "canParse"), array($request)))
-						//if(call_user_method('canParse', $modelApiClassName, $request))
 						{
 							$this->setModelApi(new $modelApiClassName($this->application));
 							break 2; // stop foreach($modelFilenames..) and foreach($this->loadModelsFrom..
@@ -70,91 +136,6 @@ class ApiController extends BaseController
 		}
 		return $this->getModelApi();
 	}
-
-	public function xml()
-	{
-		try {
-	
-			$model = $this->loadModelApi();
-			$apiActionName = $model->getApiActionName();
-			if($model->respondsToApiAction($apiActionName))
-			{
-				//echo '<br />[executing '.$model->getClassName().'Api->'.$apiActionName.'()]<br />';
-				return $model->$apiActionName();
-				// return $r;
-				return new RawResponse('..');
-				
-			} else {
-				throw new Exception('Model '.$model->getClassName().' does not support '.$apiActionName);
-			}
-
-		} catch(Exception $e) {
-			$xml = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
-			$xml->addChild('error', $e->getMessage());
-
-			$xmlTrace = $xml->addChild('trace');
-			foreach($e->getTrace() as $row)
-			{
-				$line = array();
-				if(isset($row['line']))
-				{
-					$line[] = '['.$row['line'].']';
-				} else {
-					$line[] = '[ - ]';
-				}
-
-				if(isset($row['file']))
-				{
-					$line[] = '['.$row['file'].']';
-				} else {
-					$line[] = '[ - ]';
-				}
-
-				$line[] = ' [';
-				if(isset($row['class']))
-				{
-					$line[] = $row['class'].'::';
-				}
-				if(isset($row['function']))
-				{
-					$line[] = $row['function'].'(..)';
-				}
-				$line[] = ']';
-				$xmlTrace->addChild('r',  implode(' ',$line));	
-			}
-			return new SimpleXMLResponse($xml);
-			//return new RawResponse($e->getMessage());
-		}
-	}		
-
-	public function index()
-	{
-		try {
-			return new RawResponse('index done');
-		} catch(Exception $e) {
-			return new RawResponse('err');
-		}
-	}
-	
-	// @deprecated
-	private function userCreate(ApiRequest $request, /*ApiResponse*/ $response)
-	{
-		$u = $request->getUserData();
-		$user = User::getInstanceByEmail($u['email']);
-		if($user != null)
-		{
-			throw new Exception('User exists');
-		}
-		$user = User::getNewInstance($u['email']);
-		$user->firstName->set($u['firstName']);
-		$user->lastName->set($u['lastName']);
-		$user->companyName->set($u['companyName']);
-		// $user->isEnabled->set(TRUE);
-		$user->save();
-		$response->addChild('created', $user->getID());
-		return new SimpleXMLResponse($response);
-	}
-
 }
 
 ?>
