@@ -109,7 +109,7 @@ class UserApi extends ModelApi
 		$updater->allowOnlyCreate();
 		$profile = new CsvImportProfile('User');
 		$reader = $this->getDataImportIterator($updater, $profile);
-		$updater->setCallback(array($this, 'updateCallback'));
+		$updater->setCallback(array($this, 'userImportCallback'));
 		$updater->importFile($reader, $profile);
 		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
 		foreach($this->importedIDs as $id)
@@ -121,16 +121,21 @@ class UserApi extends ModelApi
 
 	public function delete()
 	{
-		$parser = $this->getParser();
-		$parser->getDeleteFilter();
+		ClassLoader::import("application/model.datasync.CsvImportProfile");
+		$updater = new ApiUserImport($this->application);
+		$updater->allowOnlyUpdate(); // throws exception, if record does not exists.
+		$profile = new CsvImportProfile('User');
+		$reader = $this->getDataImportIterator($updater, $profile);
+		$updater->getInstance($reader->current(), $profile)->delete();
 		return new SimpleXMLResponse(new SimpleXMLElement('<response datetime="'.date('c').'">its gone</response>'));
 	}
 
 	private function getDataImportIterator($updater, $profile)
 	{
 		// parser can act as DataImport::importFile() iterator
-		$this->parser->populate($updater, $profile);
-		return $this->parser;
+		$parser = $this->getParser();
+		$parser->populate($updater, $profile);
+		return $parser;
 	}
 }
 
@@ -160,17 +165,18 @@ class ApiUserImport extends UserImport
 		$this->allowOnly = self::CREATE;
 	}
 
-	protected function getInstance($record, CsvImportProfile $profile)
+	public // one (bad) implementation of delete() action calls this method, therefore public
+	function getInstance($record, CsvImportProfile $profile)
 	{
 		$instance = parent::getInstance($record, $profile);
 		$id = $instance->getID();
 		if($this->allowOnly == self::CREATE && $id > 0) 
 		{
-			throw new Exception('Cannot create, record exists');
+			throw new Exception('Record exists');
 		}
 		if($this->allowOnly == self::UPDATE && $id == 0) 
 		{
-			throw new Exception('Cannot update, record not found');
+			throw new Exception('Record not found');
 		}
 		return $instance;
 	}
