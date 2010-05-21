@@ -10,6 +10,7 @@ abstract class ModelApi
 	const ALL_KEYS = -1;
 	private $className;
 	private $apiActionName = null;
+	private $parserClassName;
 	
 	public static function canParse(Request $request)
 	{
@@ -157,20 +158,14 @@ abstract class ModelApi
 	protected function afterListItems()
 	{
 	}
-
-	protected function getSanitizedSimpleXml($xmlString)
+	
+	protected function setParserClassName($className)
 	{
-		try {
-			$xmlRequest = @simplexml_load_string($xmlString);
-			if(!is_object($xmlRequest) || $xmlRequest->getName() != 'request') {
-				$xmlRequest = @simplexml_load_string('<request>'.$xmlString.'</request>');
-			}
-		} catch(Exception $e) {
-			$xmlRequest = null;
-		}
-		if(!is_object($xmlRequest) || $xmlRequest->getName() != 'request') { // still nothing?
-			throw new Exception('Bad request');
-		}
-		return $xmlRequest;
+		$this->parserClassName = $className;
+	}
+	
+	public function getParserClassName()
+	{
+		return $this->parserClassName;
 	}
 }

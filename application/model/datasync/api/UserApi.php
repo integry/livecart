@@ -13,58 +13,38 @@ ClassLoader::import("application.model.datasync.ModelApi");
 class UserApi extends ModelApi
 {
 	private $listFilterMapping = null;
-
 	protected $importedIDs = array();
 	protected $application;
 
 	public static function canParse(Request $request)
 	{
-		$get = $request->getRawGet();
-		if(array_key_exists('xml',$get))
+		if(XmlUserApiReader::canParse($request))
 		{
-			$xml = self::getSanitizedSimpleXml($get['xml']);
-			if($xml != null)
-			{
-				if(count($xml->xpath('/request/customer')) == 1)
-				{
-					$request->set('userApiXmlData',$xml);
-					return true; // yes, can parse
-				}
-			}
+			return true;
 		}
+		return false;
 	}
 
 	public function __construct(LiveCart $application)
 	{
 		$this->application = $application;
+		$request = $this->application->getRequest();
+		// ---
+		$this->setParserClassName($request->get('_ApiParserClassName'));
+		$cn = $this->getParserClassName();
+		$this->parser = new $cn($request->get('_ApiParserData'));
+		// --
 		parent::__construct('User');
 	}
 
-	public function updateCallback($record, $updated)
+	public function userImportCallback($record, $updated)
 	{
-		// echo '[update callback]';
-		// echo $updated ? 'update existing' : 'created new';
-		// print_r($record->getID());
 		$this->importedIDs[] = $record->getID();
 	}
 
 	public function getApiActionName()
 	{
-		if(parent::getApiActionName() == null)
-		{
-			$xmlKeyToApiActionMapping = array(
-				// 'filter' => 'list' filter is better than list, because list is keyword.
-			);
-			$xml = $this->application->getRequest()->get('userApiXmlData');
-			$customerNodeChilds = $xml->xpath('//customer/*');
-			$firstCustomerNodeChild = array_shift($customerNodeChilds);
-			if($firstCustomerNodeChild)
-			{
-				$apiActionName = $firstCustomerNodeChild->getName();
-				$this->setApiActionName(array_key_exists($apiActionName,$xmlKeyToApiActionMapping)?$xmlKeyToApiActionMapping[$apiActionName]:$apiActionName);
-			}
-		}
-		return parent::getApiActionName();
+		return $this->parser->getApiActionName();
 	}
 
 	public function filter()
@@ -104,18 +84,13 @@ class UserApi extends ModelApi
 
 	public function update()
 	{
-		// echo '<hr /><pre>';
-		// echo '[UserApi::update()]<br />';
-		// debug_print_backtrace();
-		// return;
-
 		ClassLoader::import("application/model.datasync.CsvImportProfile");
 
 		$updater = new ApiUserImport($this->application);
 		$updater->allowOnlyUpdate();
 		$profile = new CsvImportProfile('User');
-		$reader = $this->getUpdateIterator($this->application->getRequest()->get('userApiXmlData'), $updater, $profile);
-		$updater->setCallback(array($this, 'updateCallback'));
+		$reader = $this->getUpdateIterator($updater, $profile);
+		$updater->setCallback(array($this, 'userImportCallback'));
 		$updater->importFile($reader, $profile);
 
 		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
@@ -126,7 +101,6 @@ class UserApi extends ModelApi
 		return new SimpleXMLResponse($response);
 	}
 
-
 	public function create()
 	{
 		ClassLoader::import("application/model.datasync.CsvImportProfile");
@@ -134,7 +108,7 @@ class UserApi extends ModelApi
 		$updater = new ApiUserImport($this->application);
 		$updater->allowOnlyCreate();
 		$profile = new CsvImportProfile('User');
-		$reader = $this->getCreateIterator($this->application->getRequest()->get('userApiXmlData'), $updater, $profile);
+		$reader = $this->getCreateIterator($updater, $profile);
 
 		$updater->setCallback(array($this, 'updateCallback'));
 		$updater->importFile($reader, $profile);
@@ -147,63 +121,16 @@ class UserApi extends ModelApi
 		return new SimpleXMLResponse($response);
 	}
 
-	public function getCreateIterator($xml, $updater, $profile)
+	public function getCreateIterator($updater, $profile)
 	{
-		$iterator = new UpdateIterator();
-		$item = array('ID'=>null, 'email'=>null);
-		foreach ($updater->getFields() as $group => $fields)
-		{
-			foreach ($fields as $field => $name)
-			{
-				list($class, $fieldName) = explode('.', $field);
-				if ($class != $profile->getClassName())
-				{
-					$fieldName = $class . '_' . $fieldName;
-				}
-				$v = $xml->xpath('/request/customer/create/'.$fieldName);
-				if(count($v) > 0)
-				{
-					$item[$fieldName] = (string)$v[0];
-					$profile->setField($fieldName, $field);
-				}
-			}
-		}
-
-		if($item['ID'] || $item['email'])
-		{
-			$iterator->addItem($item);
-		}
-		return $iterator;		
+		$this->parser->populate($updater, $profile);
+		return $this->parser;
 	}
 
-	public function getUpdateIterator($xml, $updater, $profile)
+	public function getUpdateIterator($updater, $profile)
 	{
-		// todo: multiple customers
-		$iterator = new UpdateIterator();
-		$item = array('ID'=>null, 'email'=>null);
-		foreach ($updater->getFields() as $group => $fields)
-		{
-			foreach ($fields as $field => $name)
-			{
-				list($class, $fieldName) = explode('.', $field);
-				if ($class != $profile->getClassName())
-				{
-					$fieldName = $class . '_' . $fieldName;
-				}
-				$v = $xml->xpath('/request/customer/update/'.$fieldName);
-				if(count($v) > 0)
-				{
-					$item[$fieldName] = (string)$v[0];
-					$profile->setField($fieldName, $field);
-				}
-			}
-		}
-
-		if($item['ID'] || $item['email'])
-		{
-			$iterator->addItem($item);
-		}
-		return $iterator;
+		$this->parser->populate($updater, $profile);
+		return $this->parser;
 	}
 
 	public function getListFilterMapping()
@@ -279,7 +206,6 @@ class UserApi extends ModelApi
 }
 
 // misc things
-// thingies.. 
 
 ClassLoader::import("application.model.datasync.import.UserImport");
 
@@ -322,17 +248,7 @@ class ApiUserImport extends UserImport
 }
 
 
-
-/**
- * Update iterator for data import
- *
- * @see DataImport
- * @package application.model.datasync
- * @author Integry Systems <http://integry.com>
- */
-
-class UpdateIterator implements Iterator
-{
+class UserApiReader implements Iterator {
 	protected $iteratorKey = 0;
 	protected $content;
 
@@ -364,6 +280,101 @@ class UpdateIterator implements Iterator
 	public function current()
 	{
 		return $this->content[$this->iteratorKey];
+	}
+}
+
+class XmlUserApiReader extends UserApiReader
+{
+	private $apiActionName;
+
+	public static function canParse(Request $request)
+	{
+		$get = $request->getRawGet();
+		if(array_key_exists('xml',$get))
+		{
+			$xml = self::getSanitizedSimpleXml($get['xml']);
+			if($xml != null)
+			{
+				if(count($xml->xpath('/request/customer')) == 1)
+				{
+					$request->set('_ApiParserData',$xml);
+					$request->set('_ApiParserClassName', 'XmlUserApiReader');
+					return true; // yes, can parse
+				}
+			}
+		}
+	}
+
+	protected static function getSanitizedSimpleXml($xmlString)
+	{
+		try {
+			$xmlRequest = @simplexml_load_string($xmlString);
+			if(!is_object($xmlRequest) || $xmlRequest->getName() != 'request') {
+				$xmlRequest = @simplexml_load_string('<request>'.$xmlString.'</request>');
+			}
+		} catch(Exception $e) {
+			$xmlRequest = null;
+		}
+		if(!is_object($xmlRequest) || $xmlRequest->getName() != 'request') { // still nothing?
+			throw new Exception('Bad request');
+		}
+		return $xmlRequest;
+	}
+
+	public function __construct($xml)
+	{
+		// todo: multiple customers
+		$this->xml = $xml;
+		$this->findApiActionName($xml);
+		$apiActionName = $this->getApiActionName();
+	}
+	
+	public function populate($updater, $profile)
+	{
+		$item = array('ID'=>null, 'email'=>null);
+		$apiActionName = $this->getApiActionName();
+		foreach ($updater->getFields() as $group => $fields)
+		{
+			foreach ($fields as $field => $name)
+			{
+				list($class, $fieldName) = explode('.', $field);
+				if ($class != $profile->getClassName())
+				{
+					$fieldName = $class . '_' . $fieldName;
+				}
+				$v = $this->xml->xpath('/request/customer/'.$apiActionName.'/'.$fieldName);
+				if(count($v) > 0)
+				{
+					$item[$fieldName] = (string)$v[0];
+					$profile->setField($fieldName, $field);
+				}
+			}
+		}
+		if($item['ID'] || $item['email'])
+		{
+			$this->addItem($item);
+		}
+	}
+
+	public function getApiActionName()
+	{
+		return $this->apiActionName;
+	}
+
+	private function findApiActionName($xml)
+	{
+		$xmlKeyToApiActionMapping = array(
+			// 'filter' => 'list' filter is better than list, because list is keyword.
+		);
+
+		$customerNodeChilds = $xml->xpath('//customer/*');
+		$firstCustomerNodeChild = array_shift($customerNodeChilds);
+		if($firstCustomerNodeChild)
+		{
+			$apiActionName = $firstCustomerNodeChild->getName();
+			$this->apiActionName = array_key_exists($apiActionName,$xmlKeyToApiActionMapping)?$xmlKeyToApiActionMapping[$apiActionName]:$apiActionName;
+		}
+		return null;
 	}
 }
 
