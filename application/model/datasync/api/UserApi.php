@@ -104,6 +104,11 @@ class UserApi extends ModelApi
 
 	public function update()
 	{
+		// echo '<hr /><pre>';
+		// echo '[UserApi::update()]<br />';
+		// debug_print_backtrace();
+		// return;
+
 		ClassLoader::import("application/model.datasync.CsvImportProfile");
 
 		$updater = new ApiUserImport($this->application);
@@ -119,6 +124,56 @@ class UserApi extends ModelApi
 			$response->addChild('updated', $id);
 		}
 		return new SimpleXMLResponse($response);
+	}
+
+
+	public function create()
+	{
+		ClassLoader::import("application/model.datasync.CsvImportProfile");
+
+		$updater = new ApiUserImport($this->application);
+		$updater->allowOnlyCreate();
+		$profile = new CsvImportProfile('User');
+		$reader = $this->getCreateIterator($this->application->getRequest()->get('userApiXmlData'), $updater, $profile);
+
+		$updater->setCallback(array($this, 'updateCallback'));
+		$updater->importFile($reader, $profile);
+
+		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
+		foreach($this->importedIDs as $id)
+		{
+			$response->addChild('created', $id);
+		}
+		return new SimpleXMLResponse($response);
+	}
+
+	public function getCreateIterator($xml, $updater, $profile)
+	{
+		$iterator = new UpdateIterator();
+		$item = array('ID'=>null, 'email'=>null);
+		foreach ($updater->getFields() as $group => $fields)
+		{
+			foreach ($fields as $field => $name)
+			{
+				list($class, $fieldName) = explode('.', $field);
+				if ($class != $profile->getClassName())
+				{
+					$fieldName = $class . '_' . $fieldName;
+				}
+				$v = $xml->xpath('/request/customer/create/'.$fieldName);
+				if(count($v) > 0)
+				{
+					$item[$fieldName] = (string)$v[0];
+					$profile->setField($fieldName, $field);
+				}
+			}
+		}
+
+		if($item['ID'] || $item['email'])
+		{
+			$iterator->addItem($item);
+		}
+		return $iterator;		
 	}
 
 	public function getUpdateIterator($xml, $updater, $profile)
@@ -238,6 +293,11 @@ class ApiUserImport extends UserImport
 	public function allowOnlyUpdate()
 	{
 		$this->allowOnly = self::UPDATE;
+	}
+
+	public function getClassName()  // because dataImport::getClassName() will return ApiUser, not User.
+	{
+		return 'User';
 	}
 
 	public function allowOnlyCreate()

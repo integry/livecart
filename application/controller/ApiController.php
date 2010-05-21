@@ -72,12 +72,16 @@ class ApiController extends BaseController
 	public function xml()
 	{
 		try {
+	
 			$model = $this->loadModelApi();
 			$apiActionName = $model->getApiActionName();
 			if($model->respondsToApiAction($apiActionName))
 			{
 				//echo '<br />[executing '.$model->getClassName().'Api->'.$apiActionName.'()]<br />';
 				return $model->$apiActionName();
+				// return $r;
+				return new RawResponse('..');
+				
 			} else {
 				throw new Exception('Model '.$model->getClassName().' does not support '.$apiActionName);
 			}
@@ -117,12 +121,17 @@ class ApiController extends BaseController
 				$xmlTrace->addChild('r',  implode(' ',$line));	
 			}
 			return new SimpleXMLResponse($xml);
+			//return new RawResponse($e->getMessage());
 		}
 	}		
 
 	public function index()
 	{
-		return new SimpleXMLResponse($this->responseElement());
+		try {
+			return new RawResponse('index done');
+		} catch(Exception $e) {
+			return new RawResponse('err');
+		}
 	}
 	
 	// @deprecated
