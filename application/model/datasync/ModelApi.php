@@ -5,13 +5,18 @@ ClassLoader::import("application.model.ActiveRecordModel");
 
 abstract class ModelApi
 {
+	// @deprecated
 	const HANDLE = 0;
+	// @deprecated
 	const CONDITION = 1;
+	// @deprecated
 	const ALL_KEYS = -1;
+	
 	private $className;
 	private $apiActionName = null;
 	private $parserClassName;
-	
+	private $parser;
+
 	public static function canParse(Request $request)
 	{
 		return false; // this is abstract 'API thing', can't parse anything.
@@ -50,38 +55,6 @@ abstract class ModelApi
 	public function respondsToApiAction($apiAction)
 	{
 		return in_array($apiAction, $this->getActions());
-	}
-
-	public function getListFilterConditionAndARHandle($key)
-	{
-		$mapping = $this->getListFilterMapping();
-		if(array_key_exists($key, $mapping) == false || array_key_exists(self::CONDITION, $mapping[$key]) == false)
-		{
-			throw new Exception('Condition for key ['.$key.'] not found in mapping');
-		}
-		if(array_key_exists($key, $mapping) == false || array_key_exists(self::HANDLE, $mapping[$key]) == false)
-		{
-			throw new Exception('Handle for key ['.$key.'] not found in mapping');
-		}
-
-		return $mapping[$key];
-	}
-	
-	public function getListFilterCondition($key)
-	{
-		$r = $this->getListFilterConditionAndARHandle($key);
-		return $r[$key][self::CONDITION];
-	}
-	
-	public function getListFilterARHandle($key)
-	{
-		$r = $this->getListFilterConditionAndARHandle($key);
-		return $r[$key][self::HANDLE];
-	}
-
-	public function getListFilterKeys()
-	{
-		return array_keys($this->getListFilterMapping());
 	}
 
 	public function update()
@@ -167,5 +140,15 @@ abstract class ModelApi
 	public function getParserClassName()
 	{
 		return $this->parserClassName;
+	}
+	
+	protected function setParser($parser)
+	{
+		$this->parser = $parser;
+	}
+
+	public function getParser()
+	{
+		return $this->parser;
 	}
 }

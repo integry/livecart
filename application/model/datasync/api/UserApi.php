@@ -32,7 +32,7 @@ class UserApi extends ModelApi
 		// ---
 		$this->setParserClassName($request->get('_ApiParserClassName'));
 		$cn = $this->getParserClassName();
-		$this->parser = new $cn($request->get('_ApiParserData'));
+		$this->setParser(new $cn($request->get('_ApiParserData')));
 		// --
 		parent::__construct('User');
 	}
@@ -44,12 +44,12 @@ class UserApi extends ModelApi
 
 	public function getApiActionName()
 	{
-		return $this->parser->getApiActionName();
+		return $this->getParser()->getApiActionName();
 	}
 
 	public function filter()
 	{
-		$customers = User::getRecordSet($this->getARSelectFilter());
+		$customers = User::getRecordSet($this->getParser()->getARSelectFilter());
 
 		// request
 		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
@@ -89,7 +89,7 @@ class UserApi extends ModelApi
 		$updater = new ApiUserImport($this->application);
 		$updater->allowOnlyUpdate();
 		$profile = new CsvImportProfile('User');
-		$reader = $this->getUpdateIterator($updater, $profile);
+		$reader = $this->getDataImportIterator($updater, $profile);
 		$updater->setCallback(array($this, 'userImportCallback'));
 		$updater->importFile($reader, $profile);
 
@@ -108,11 +108,9 @@ class UserApi extends ModelApi
 		$updater = new ApiUserImport($this->application);
 		$updater->allowOnlyCreate();
 		$profile = new CsvImportProfile('User');
-		$reader = $this->getCreateIterator($updater, $profile);
-
+		$reader = $this->getDataImportIterator($updater, $profile);
 		$updater->setCallback(array($this, 'updateCallback'));
 		$updater->importFile($reader, $profile);
-
 		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
 		foreach($this->importedIDs as $id)
 		{
@@ -121,87 +119,18 @@ class UserApi extends ModelApi
 		return new SimpleXMLResponse($response);
 	}
 
-	public function getCreateIterator($updater, $profile)
+	public function delete()
 	{
+		$parser = $this->getParser();
+		$parser->getDeleteFilter();
+		return new SimpleXMLResponse(new SimpleXMLElement('<response datetime="'.date('c').'">its gone</response>'));
+	}
+
+	private function getDataImportIterator($updater, $profile)
+	{
+		// parser can act as DataImport::importFile() iterator
 		$this->parser->populate($updater, $profile);
 		return $this->parser;
-	}
-
-	public function getUpdateIterator($updater, $profile)
-	{
-		$this->parser->populate($updater, $profile);
-		return $this->parser;
-	}
-
-	public function getListFilterMapping()
-	{
-		if($this->listFilterMapping == null)
-		{
-			$cn = $this->getClassName();
-			$this->listFilterMapping = array(
-				'id' => array(
-					self::HANDLE => new ARFieldHandle($cn, 'ID'),
-					self::CONDITION => 'EqualsCond'),
-				'name' => array(
-					self::HANDLE => new ARExpressionHandle("CONCAT(".$cn.".firstName,' ',".$cn.".lastName)"),
-					self::CONDITION => 'LikeCond'),
-				'first_name' => array(
-					self::HANDLE => new ARFieldHandle($cn, 'firstName'),
-					self::CONDITION => 'LikeCond'),
-				'last_name' => array(
-					self::HANDLE => new ARFieldHandle($cn, 'lastName'),
-					self::CONDITION => 'LikeCond'),
-				'company_name' => array(
-					self::HANDLE => new ARFieldHandle($cn, 'companyName'),
-					self::CONDITION => 'LikeCond'),
-				'email' => array(
-					self::HANDLE => new ARFieldHandle($cn, 'email'),
-					self::CONDITION => 'LikeCond'),
-				'created' => array(
-					self::HANDLE => new ARFieldHandle($cn, 'dateCreated'),
-					self::CONDITION => 'EqualsCond'),
-				'enabled' => array(
-					self::HANDLE => new ARFieldHandle($cn, 'isEnabled'),
-					self::CONDITION => 'EqualsCond')
-			);
-		}
-		return $this->listFilterMapping;
-	}
-
-	public function sanitizeFilterField($name, &$value)
-	{
-		switch($name)
-		{
-			case 'enabled':
-				$value = in_array(strtolower($value), array('y','t','yes','true','1')) ? true : false;
-				break;
-		}
-		return $value;
-	}
-
-	public function getARSelectFilter()
-	{
-		$arsf = new ARSelectFilter();
-		$xml = $this->application->getRequest()->get('userApiXmlData');
-		$ormClassName = $this->getClassName();
-		$filterKeys = $this->getListFilterKeys();
-
-		foreach($filterKeys as $key)
-		{
-			$data = $xml->xpath('//filter/'.$key);
-			while(count($data) > 0)
-			{
-				$z  = $this->getListFilterConditionAndARHandle($key);
-				$value = (string)array_shift($data);
-				$arsf->mergeCondition(
-					new $z[self::CONDITION](
-						$z[self::HANDLE],						
-						$this->sanitizeFilterField($key, $value)
-					)
-				);
-			}
-		}
-		return $arsf;
 	}
 }
 
@@ -285,7 +214,12 @@ class UserApiReader implements Iterator {
 
 class XmlUserApiReader extends UserApiReader
 {
+	const HANDLE = 0;
+	const CONDITION = 1;
+	const ALL_KEYS = -1;
+	
 	private $apiActionName;
+	private $listFilterMapping;
 
 	public static function canParse(Request $request)
 	{
@@ -354,6 +288,110 @@ class XmlUserApiReader extends UserApiReader
 		{
 			$this->addItem($item);
 		}
+	}
+	
+	public function getARSelectFilter()
+	{
+		$arsf = new ARSelectFilter();
+		
+		$ormClassName = 'User';
+		$filterKeys = $this->getListFilterKeys();
+
+		foreach($filterKeys as $key)
+		{
+			$data = $this->xml->xpath('//filter/'.$key);
+			while(count($data) > 0)
+			{
+				$z  = $this->getListFilterConditionAndARHandle($key);
+				$value = (string)array_shift($data);
+				$arsf->mergeCondition(
+					new $z[self::CONDITION](
+						$z[self::HANDLE],						
+						$this->sanitizeFilterField($key, $value)
+					)
+				);
+			}
+		}
+		return $arsf;
+	}
+	
+	public function getListFilterMapping()
+	{
+		if($this->listFilterMapping == null)
+		{
+			$cn = 'User';
+			$this->listFilterMapping = array(
+				'id' => array(
+					self::HANDLE => new ARFieldHandle($cn, 'ID'),
+					self::CONDITION => 'EqualsCond'),
+				'name' => array(
+					self::HANDLE => new ARExpressionHandle("CONCAT(".$cn.".firstName,' ',".$cn.".lastName)"),
+					self::CONDITION => 'LikeCond'),
+				'first_name' => array(
+					self::HANDLE => new ARFieldHandle($cn, 'firstName'),
+					self::CONDITION => 'LikeCond'),
+				'last_name' => array(
+					self::HANDLE => new ARFieldHandle($cn, 'lastName'),
+					self::CONDITION => 'LikeCond'),
+				'company_name' => array(
+					self::HANDLE => new ARFieldHandle($cn, 'companyName'),
+					self::CONDITION => 'LikeCond'),
+				'email' => array(
+					self::HANDLE => new ARFieldHandle($cn, 'email'),
+					self::CONDITION => 'LikeCond'),
+				'created' => array(
+					self::HANDLE => new ARFieldHandle($cn, 'dateCreated'),
+					self::CONDITION => 'EqualsCond'),
+				'enabled' => array(
+					self::HANDLE => new ARFieldHandle($cn, 'isEnabled'),
+					self::CONDITION => 'EqualsCond')
+			);
+		}
+		return $this->listFilterMapping;
+	}
+	
+	
+	public function getListFilterConditionAndARHandle($key)
+	{
+		$mapping = $this->getListFilterMapping();
+		if(array_key_exists($key, $mapping) == false || array_key_exists(self::CONDITION, $mapping[$key]) == false)
+		{
+			throw new Exception('Condition for key ['.$key.'] not found in mapping');
+		}
+		if(array_key_exists($key, $mapping) == false || array_key_exists(self::HANDLE, $mapping[$key]) == false)
+		{
+			throw new Exception('Handle for key ['.$key.'] not found in mapping');
+		}
+
+		return $mapping[$key];
+	}
+	
+	public function getListFilterCondition($key)
+	{
+		$r = $this->getListFilterConditionAndARHandle($key);
+		return $r[$key][self::CONDITION];
+	}
+	
+	public function getListFilterARHandle($key)
+	{
+		$r = $this->getListFilterConditionAndARHandle($key);
+		return $r[$key][self::HANDLE];
+	}
+
+	public function getListFilterKeys()
+	{
+		return array_keys($this->getListFilterMapping());
+	}
+
+	public function sanitizeFilterField($name, &$value)
+	{
+		switch($name)
+		{
+			case 'enabled':
+				$value = in_array(strtolower($value), array('y','t','yes','true','1')) ? true : false;
+				break;
+		}
+		return $value;
 	}
 
 	public function getApiActionName()
