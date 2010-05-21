@@ -49,15 +49,13 @@ class UserApi extends ModelApi
 
 	public function filter()
 	{
-		$customers = User::getRecordSet($this->getParser()->getARSelectFilter());
-
-		// request
+		$parser = $this->getParser();
+		$customers = User::getRecordSet($parser->getARSelectFilter());
 		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
 		while($customer = $customers->shift())
 		{
 			$customerNode = $response->addChild('customer');
 			$customerNode->addChild('custno', $customer->getID());
-			
 			$ormXmlAddressMapping = array(
 				'address1'=>'address_1',
 				'address2'=>'address_2',
@@ -410,7 +408,6 @@ class XmlUserApiReader extends UserApiReader
 		$xmlKeyToApiActionMapping = array(
 			// 'filter' => 'list' filter is better than list, because list is keyword.
 		);
-
 		$customerNodeChilds = $xml->xpath('//customer/*');
 		$firstCustomerNodeChild = array_shift($customerNodeChilds);
 		if($firstCustomerNodeChild)
@@ -421,5 +418,4 @@ class XmlUserApiReader extends UserApiReader
 		return null;
 	}
 }
-
 ?>

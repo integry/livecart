@@ -56,7 +56,9 @@ class ApiController extends BaseController
 						{
 							continue;
 						}
-						if(call_user_method('canParse', $modelApiClassName, $request))
+						
+						if(call_user_func_array(array($modelApiClassName, "canParse"), array($request)))
+						//if(call_user_method('canParse', $modelApiClassName, $request))
 						{
 							$this->setModelApi(new $modelApiClassName($this->application));
 							break 2; // stop foreach($modelFilenames..) and foreach($this->loadModelsFrom..
