@@ -18,6 +18,11 @@ class RuleConditionUserGroupIs extends RuleCondition
 			return null;
 		}
 
+		if (!$user->isLoaded())
+		{
+			$user->load();
+		}
+
 		$userGroup = $user->userGroup->get();
 		$userGroupID = $userGroup ? $userGroup->getID() : null;
 

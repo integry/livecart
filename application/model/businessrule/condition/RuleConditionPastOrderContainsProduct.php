@@ -40,9 +40,14 @@ class RuleConditionPastOrderContainsProduct extends RuleConditionContainsProduct
 					$timeTo = strtotime($t['to']);
 				}
 			}
-
-			$pastOrders = $this->getContext()->getPastOrdersBetween($timeFrom, $timeTo);
 		}
+		else
+		{
+			$timeTo = time();
+			$timeFrom = 0;
+		}
+
+		$pastOrders = $this->getContext()->getPastOrdersBetween($timeFrom, $timeTo);
 
 		return $pastOrders;
 	}
