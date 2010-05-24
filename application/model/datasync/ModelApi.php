@@ -146,5 +146,21 @@ abstract class ModelApi
 	{
 		return $this->getParser()->getApiActionName();
 	}
+	
+	protected function statusResponse($ids, $status)
+	{
+		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
+		if(is_array($ids) == false)
+		{
+			$ids = array($ids);
+		}
+		
+		foreach($ids as $id)
+		{
+			$response->addChild($status, $id);
+		}
+		return new SimpleXMLResponse($response);
+	}
+
 
 }

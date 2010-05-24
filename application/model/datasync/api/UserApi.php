@@ -1,7 +1,8 @@
 <?php
 ClassLoader::import('application.model.datasync.ModelApi');
 ClassLoader::import('application.model.datasync.api.reader.XmlUserApiReader');
-
+ClassLoader::import('application/model.datasync.CsvImportProfile');
+		
 /**
  * Web service access layer for User model
  *
@@ -30,11 +31,46 @@ class UserApi extends ModelApi
 		parent::__construct($application, 'User');
 	}
 
-	public function userImportCallback($record, $updated)
+	// ------ 
+
+	public function create()
 	{
-		$this->importedIDs[] = $record->getID();
+		$updater = new ApiUserImport($this->application);
+		$updater->allowOnlyCreate();
+		$profile = new CsvImportProfile('User');
+		$reader = $this->getDataImportIterator($updater, $profile);
+		$updater->setCallback(array($this, 'userImportCallback'));
+		$updater->importFile($reader, $profile);
+
+		return $this->statusResponse($this->importedIDs, 'created');
+	}
+	
+	public function update()
+	{
+		$updater = new ApiUserImport($this->application);
+		$updater->allowOnlyUpdate();
+		$profile = new CsvImportProfile('User');
+		$reader = $this->getDataImportIterator($updater, $profile);
+		$updater->setCallback(array($this, 'userImportCallback'));
+		$updater->importFile($reader, $profile);
+
+		return $this->statusResponse($this->importedIDs, 'updated');
 	}
 
+	public function delete()
+	{
+		$updater = new ApiUserImport($this->application);
+		$updater->allowOnlyUpdate(); // throws exception, if record does not exists.
+		$profile = new CsvImportProfile('User');
+		$reader = $this->getDataImportIterator($updater, $profile);
+		$user = $updater->getInstance($reader->current(), $profile);
+		$id = $user->getID();
+		$user->delete();
+
+		return $this->statusResponse($id, 'deleted');
+	}
+	
+	
 	public function filter()
 	{
 		$parser = $this->getParser();
@@ -68,54 +104,11 @@ class UserApi extends ModelApi
 		return new SimpleXMLResponse($response);
 	}
 
-	public function update()
+	// ------ 
+	
+	public function userImportCallback($record, $updated)
 	{
-		ClassLoader::import("application/model.datasync.CsvImportProfile");
-
-		$updater = new ApiUserImport($this->application);
-		$updater->allowOnlyUpdate();
-		$profile = new CsvImportProfile('User');
-		$reader = $this->getDataImportIterator($updater, $profile);
-		$updater->setCallback(array($this, 'userImportCallback'));
-		$updater->importFile($reader, $profile);
-
-		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
-		foreach($this->importedIDs as $id)
-		{
-			$response->addChild('updated', $id);
-		}
-		return new SimpleXMLResponse($response);
-	}
-
-	public function create()
-	{
-		ClassLoader::import("application/model.datasync.CsvImportProfile");
-
-		$updater = new ApiUserImport($this->application);
-		$updater->allowOnlyCreate();
-		$profile = new CsvImportProfile('User');
-		$reader = $this->getDataImportIterator($updater, $profile);
-		$updater->setCallback(array($this, 'userImportCallback'));
-		$updater->importFile($reader, $profile);
-		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
-		foreach($this->importedIDs as $id)
-		{
-			$response->addChild('created', $id);
-		}
-		return new SimpleXMLResponse($response);
-	}
-
-	public function delete()
-	{
-		ClassLoader::import("application/model.datasync.CsvImportProfile");
-		$updater = new ApiUserImport($this->application);
-		$updater->allowOnlyUpdate(); // throws exception, if record does not exists.
-		$profile = new CsvImportProfile('User');
-		$reader = $this->getDataImportIterator($updater, $profile);
-		$user = $updater->getInstance($reader->current(), $profile);
-		$id = $user->getID();
-		$user->delete();
-		return new SimpleXMLResponse(new SimpleXMLElement('<response datetime="'.date('c').'"><deleted>'.$id.'</deleted></response>'));
+		$this->importedIDs[] = $record->getID();
 	}
 
 	private function getDataImportIterator($updater, $profile)
