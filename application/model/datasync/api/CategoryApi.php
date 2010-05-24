@@ -43,9 +43,9 @@ class CategoryApi extends ModelApi
 		$category->loadRequestData($parser->loadDataInRequest(
 			$this->application->getRequest()
 		));	
-		$category->save();
-
-		return $this->_statusResponse($category->getID(), 'created');
+		$this->_attachCategoryToParentNode($category)->save();
+		
+		return $this->statusResponse($category->getID(), 'created');
 	}
 
 	public function update()
@@ -55,8 +55,7 @@ class CategoryApi extends ModelApi
 		$parser->loadDataInRequest($request);
 		$category = $this->_getCategoryById($request->get('ID'));
 		$category->loadRequestData($request);
-		$category->save();
-
+		$this->_attachCategoryToParentNode($category)->save();
 		return $this->statusResponse($category->getID(), 'updated');
 	}
 
@@ -104,6 +103,18 @@ class CategoryApi extends ModelApi
 	}
 
 	// ------ 
+	
+	private function _attachCategoryToParentNode($category)
+	{
+		$request =  $this->application->getRequest();
+		$parentId = $request->get(Category::PARENT_NODE_FIELD_NAME);
+		if(intval($parentId) > 0) {
+			$parentCategory = $this->_getCategoryById($parentId);
+			$category->setParentNode($parentCategory);
+			// $request->remove(Category::PARENT_NODE_FIELD_NAME);
+		}
+		return $category;
+	}
 
 	private function _getCategoryById($id)
 	{
