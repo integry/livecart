@@ -1,0 +1,58 @@
+<?php
+
+ClassLoader::import('application.model.datasync.api.reader.CategoryApiReader');
+
+/**
+ * Category model API XML format request parsing (reading/routing)
+ *
+ * @package application.model.datasync
+ * @author Integry Systems <http://integry.com>
+ */
+
+class XmlCategoryApiReader extends CategoryApiReader
+{
+	private $apiActionName;
+	private $listFilterMapping;
+
+	public static function canParse(Request $request)
+	{
+		$get = $request->getRawGet();
+		if(array_key_exists('xml',$get))
+		{
+			$xml = self::getSanitizedSimpleXml($get['xml']);
+			if($xml != null)
+			{
+				if(count($xml->xpath('/request/category')) == 1)
+				{
+					$request->set('_ApiParserData',$xml);
+					$request->set('_ApiParserClassName', 'XmlCategoryApiReader');
+					return true; // yes, can parse
+				}
+			}
+		}
+	}
+
+	public function __construct($xml)
+	{
+		$this->xml = $xml;
+		$this->findApiActionName($xml);
+		$apiActionName = $this->getApiActionName();
+	}
+	
+	public function getApiActionName()
+	{
+		return $this->apiActionName;
+	}
+
+	protected function findApiActionName($xml)
+	{
+		$customerNodeChilds = $xml->xpath('//customer/*');
+		$firstCustomerNodeChild = array_shift($customerNodeChilds);
+		if($firstCustomerNodeChild)
+		{
+			$apiActionName = $firstCustomerNodeChild->getName();
+			$this->apiActionName = array_key_exists($apiActionName,$this->xmlKeyToApiActionMapping)?$this->xmlKeyToApiActionMapping[$apiActionName]:$apiActionName;
+		}
+		return null;
+	}
+}

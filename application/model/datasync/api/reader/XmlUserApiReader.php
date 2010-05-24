@@ -38,22 +38,6 @@ class XmlUserApiReader extends UserApiReader
 		}
 	}
 
-	protected static function getSanitizedSimpleXml($xmlString)
-	{
-		try {
-			$xmlRequest = @simplexml_load_string($xmlString);
-			if(!is_object($xmlRequest) || $xmlRequest->getName() != 'request') {
-				$xmlRequest = @simplexml_load_string('<request>'.$xmlString.'</request>');
-			}
-		} catch(Exception $e) {
-			$xmlRequest = null;
-		}
-		if(!is_object($xmlRequest) || $xmlRequest->getName() != 'request') { // still nothing?
-			throw new Exception('Bad request');
-		}
-		return $xmlRequest;
-	}
-
 	public function __construct($xml)
 	{
 		// todo: multiple customers

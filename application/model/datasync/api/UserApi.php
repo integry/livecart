@@ -5,7 +5,7 @@ ClassLoader::import('application.model.datasync.api.reader.XmlUserApiReader');
 /**
  * Web service access layer for User model
  *
- * @package application.model.datasync.api
+ * @package application.model.datasync
  * @author Integry Systems <http://integry.com>
  * 
  */
