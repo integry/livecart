@@ -11,8 +11,20 @@ class ApiReader implements Iterator
 {
 	protected $iteratorKey = 0;
 	protected $content;
-	private $apiActionName;
 	protected $xmlKeyToApiActionMapping = array();
+	
+	private $apiActionName;
+	private $fieldNames = array();
+	
+	public function setApiFieldNames($fieldNames)
+	{
+		$this->fieldNames = $fieldNames;
+	}
+
+	public function getApiFieldNames()
+	{
+		return $this->fieldNames;
+	}
 	
 	public function getApiActionName()
 	{
@@ -71,7 +83,6 @@ class ApiReader implements Iterator
 		}
 		return $xmlRequest;
 	}
-
 
 	/*abstract?*/ protected function findApiActionName($dataHandler)
 	{

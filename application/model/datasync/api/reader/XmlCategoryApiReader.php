@@ -13,7 +13,7 @@ class XmlCategoryApiReader extends CategoryApiReader
 {
 	private $apiActionName;
 	private $listFilterMapping;
-	private $fieldNames;
+	
 
 	public static function canParse(Request $request)
 	{
@@ -35,9 +35,10 @@ class XmlCategoryApiReader extends CategoryApiReader
 
 	public function __construct($xml, $fieldNames)
 	{
-		$this->xml = $xml;
+		$this->xml = $xml; // $this->setDataResource(); // or smth.
+		
+		$this->setApiFieldNames($fieldNames);
 		$this->findApiActionName($xml);
-		$this->fieldNames = $fieldNames;
 	}
 	
 	public function getApiActionName()
@@ -47,14 +48,17 @@ class XmlCategoryApiReader extends CategoryApiReader
 
 	protected function findApiActionName($xml)
 	{
-		$childs = $xml->xpath('//category/*');
-		$firstChildNode = array_shift($childs);
-		if($firstChildNode)
+		$apiActionName = null; // not known
+		foreach($xml->xpath('/request/category') as $k=>$v) // iterate over category elements
 		{
-			$apiActionName = $firstChildNode->getName();
-			$this->apiActionName = array_key_exists($apiActionName,$this->xmlKeyToApiActionMapping)?$this->xmlKeyToApiActionMapping[$apiActionName]:$apiActionName;
+			foreach($v as $k2 => $v2) // with each category element
+			{
+				$apiActionName = $k2; // first element name is action name!
+				break 2;
+			}
 		}
-		return null;
+		$this->apiActionName = array_key_exists($apiActionName,$this->xmlKeyToApiActionMapping)?$this->xmlKeyToApiActionMapping[$apiActionName]:$apiActionName;
+		return $apiActionName;
 	}
 
 	public function loadDataInRequest($request)

@@ -14,8 +14,7 @@ ClassLoader::import('application.model.category.Category');
 class CategoryApi extends ModelApi
 {
 	private $root = null;
-	private $apiFieldNames = null;
-	
+
 	public static function canParse(Request $request)
 	{
 		if(XmlCategoryApiReader::canParse($request))
@@ -50,21 +49,24 @@ class CategoryApi extends ModelApi
 	public function create()
 	{
 		$parser = $this->getParser();
-		$request=$this->application->getRequest();
-		$category=Category::getNewInstance($this->root);
-		
-		$category->loadRequestData($parser->loadDataInRequest($request));
+		$category=Category::getNewInstance($this->root);		
+		$category->loadRequestData($parser->loadDataInRequest(
+			$this->application->getRequest()
+		));	
 		$category->save();
 	}
 	
 	public function filter()
 	{
 		$root = Category::getRootNode();
-		$f = new ARSelectFilter(new MoreThanCond(new ARFieldHandle('Category', $root->getProductCountField()), 0));
+		
+		$f = new ARSelectFilter();
 		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('Category', 'ID'), $root->getID()));
 		$f->setOrder(MultiLingualObject::getLangOrderHandle(new ARFieldHandle('Category', 'name')));
 
 		// return new ActionResponse('categories', );
+		
+		$apiFieldNames = $this->getParser()->getApiFieldNames();
 		$categories = ActiveRecordModel::getRecordSetArray('Category', $f);
 		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
 		while($category = array_shift($categories))
@@ -72,10 +74,12 @@ class CategoryApi extends ModelApi
 			$xmlCategory = $response->addChild('category');
 			foreach($category as $k => $v)
 			{
-				if(substr($k, 0, 2) != '__' && is_string($v)) // show every string whoes key does not start with __ (like __class__)
+				// if(substr($k, 0, 2) != '__' && is_string($v)) // show every string whoes key does not start with __ (like __class__)
+				                                                 // or maybe
+				if(in_array($k, $apiFieldNames))                 // those who are allowed fields ($this->apiFieldNames) ?
 				{
 					// todo: how to escape in simplexml, cdata? create cdata or what?
-					$xmlCategory->addChild($k, htmlentities($v,'utf-8'));
+					$xmlCategory->addChild($k, htmlentities($v));
 				}
 			}
 		}
