@@ -21,18 +21,10 @@ class CategoryApi extends ModelApi
 		}
 		return false;
 	}
-	
+
 	public function __construct(LiveCart $application)
 	{
-		$this->application = $application;
-		$request = $this->application->getRequest();
-		// ---
-		$this->setParserClassName($request->get('_ApiParserClassName'));
-		$cn = $this->getParserClassName();
-		$this->setParser(new $cn($request->get('_ApiParserData')));
-		// --
-		parent::__construct('Category');
-	
+		parent::__construct($application, 'Category');
 	}
 }
 ?>

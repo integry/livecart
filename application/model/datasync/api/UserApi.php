@@ -27,14 +27,7 @@ class UserApi extends ModelApi
 
 	public function __construct(LiveCart $application)
 	{
-		$this->application = $application;
-		$request = $this->application->getRequest();
-		// ---
-		$this->setParserClassName($request->get('_ApiParserClassName'));
-		$cn = $this->getParserClassName();
-		$this->setParser(new $cn($request->get('_ApiParserData')));
-		// --
-		parent::__construct('User');
+		parent::__construct($application, 'User');
 	}
 
 	public function userImportCallback($record, $updated)

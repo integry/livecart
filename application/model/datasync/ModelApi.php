@@ -10,9 +10,19 @@ abstract class ModelApi
 	private $parserClassName;
 	private $parser;
 
-	public function __construct($className)
+	protected function __construct(LiveCart $application, $className)
 	{
+		$this->application = $application;
 		$this->className = $className;
+
+		$request = $this->application->getRequest();
+		$cn = $request->get('_ApiParserClassName');
+		if($cn == null || class_exists($cn) == false)
+		{
+			throw new Exception('Parser '.$cn.' not found');
+		}
+		$this->setParserClassName($cn);
+		$this->setParser(new $cn($request->get('_ApiParserData')));
 	}
 
 	abstract static function canParse(Request $request);
