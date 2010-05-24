@@ -35,6 +35,18 @@ class CategoryApi extends ModelApi
 		);
 	}
 	
+	
+	public function update()
+	{
+		$parser = $this->getParser();
+		$request = $this->application->getRequest();
+		$parser->loadDataInRequest($request);
+		$category = Category::getInstanceByID($request->get('ID'));
+		$category->loadRequestData($request);
+		$category->save();
+	}
+	
+	
 	public function create()
 	{
 		$parser = $this->getParser();
