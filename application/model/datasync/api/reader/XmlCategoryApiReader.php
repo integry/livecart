@@ -13,6 +13,7 @@ class XmlCategoryApiReader extends CategoryApiReader
 {
 	private $apiActionName;
 	private $listFilterMapping;
+	private $fieldNames;
 
 	public static function canParse(Request $request)
 	{
@@ -32,11 +33,11 @@ class XmlCategoryApiReader extends CategoryApiReader
 		}
 	}
 
-	public function __construct($xml)
+	public function __construct($xml, $fieldNames)
 	{
 		$this->xml = $xml;
 		$this->findApiActionName($xml);
-		$apiActionName = $this->getApiActionName();
+		$this->fieldNames = $fieldNames;
 	}
 	
 	public function getApiActionName()
@@ -54,5 +55,10 @@ class XmlCategoryApiReader extends CategoryApiReader
 			$this->apiActionName = array_key_exists($apiActionName,$this->xmlKeyToApiActionMapping)?$this->xmlKeyToApiActionMapping[$apiActionName]:$apiActionName;
 		}
 		return null;
+	}
+
+	public function loadDataInRequest($request)
+	{
+		return parent::loadDataInRequest($request, '/request/category//', $this->fieldNames);
 	}
 }

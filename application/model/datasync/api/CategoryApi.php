@@ -13,6 +13,9 @@ ClassLoader::import('application.model.category.Category');
  */
 class CategoryApi extends ModelApi
 {
+	private $root = null;
+	private $apiFieldNames = null;
+	
 	public static function canParse(Request $request)
 	{
 		if(XmlCategoryApiReader::canParse($request))
@@ -24,9 +27,23 @@ class CategoryApi extends ModelApi
 
 	public function __construct(LiveCart $application)
 	{
-		parent::__construct($application, 'Category');
+		$this->root = Category::getRootNode();
+		parent::__construct(
+			$application,
+			'Category',
+			array_keys($this->root->getSchema()->getFieldList()) // field names, (this line means all that are in Category model).
+		);
 	}
 	
+	public function create()
+	{
+		$parser = $this->getParser();
+		$request=$this->application->getRequest();
+		$category=Category::getNewInstance($this->root);
+		
+		$category->loadRequestData($parser->loadDataInRequest($request));
+		$category->save();
+	}
 	
 	public function filter()
 	{
@@ -45,8 +62,7 @@ class CategoryApi extends ModelApi
 			{
 				if(substr($k, 0, 2) != '__' && is_string($v)) // show every string whoes key does not start with __ (like __class__)
 				{
-					// todo: how to escape in simplexml, cdata? create cdata or what is was
-					//       need manual :)
+					// todo: how to escape in simplexml, cdata? create cdata or what?
 					$xmlCategory->addChild($k, htmlentities($v,'utf-8'));
 				}
 			}

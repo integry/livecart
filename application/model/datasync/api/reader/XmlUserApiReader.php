@@ -14,9 +14,9 @@ class XmlUserApiReader extends UserApiReader
 	const HANDLE = 0;
 	const CONDITION = 1;
 	const ALL_KEYS = -1;
-	private $xmlKeyToApiActionMapping = array(
+	//protected $xmlKeyToApiActionMapping = array(
 		// 'filter' => 'list' filter is better than list, because list is keyword.
-	);
+	//);
 	private $apiActionName;
 	private $listFilterMapping;
 
@@ -182,7 +182,7 @@ class XmlUserApiReader extends UserApiReader
 		return $this->apiActionName;
 	}
 
-	private function findApiActionName($xml)
+	protected function findApiActionName($xml)
 	{
 		$customerNodeChilds = $xml->xpath('//customer/*');
 		$firstCustomerNodeChild = array_shift($customerNodeChilds);
