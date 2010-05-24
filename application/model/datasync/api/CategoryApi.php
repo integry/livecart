@@ -34,26 +34,30 @@ class CategoryApi extends ModelApi
 		);
 	}
 
+	private function _getCategoryById($id)
+	{
+		if($id == $this->root->getID())
+		{
+			throw new Exception('Cannot change root level category.');
+		}
+		
+		$category = Category::getInstanceByID($id, true);
+		// if id is not integer getInstanceByID() will not throw exception?
+		
+		if(false == ($category->getID() > 0))
+		{
+			throw new Exception('Bad ID field value.');
+		}
+		return $category;
+	}
+	
 	public function delete()
 	{
 		$parser = $this->getParser();
 		$request = $this->application->getRequest();
 		$parser->loadDataInRequest($request);
-		$id = $request->get('ID');
-		if($id == $this->root->getID())
-		{
-			throw new Exception('Cannot delete root level category');
-		}
-		if(false == (intval($id) > 0))
-		{
-			throw new Exception('Category not found');
-		}
-		$category = Category::getInstanceByID($id);
-		if(false == ($category->getID() > 0))
-		{
-			throw new Exception('Category not found');
-		}
-		$category->delete();
+
+		$this->_getCategoryById($request->get('ID'))->delete();
 	}
 	
 	
@@ -62,7 +66,7 @@ class CategoryApi extends ModelApi
 		$parser = $this->getParser();
 		$request = $this->application->getRequest();
 		$parser->loadDataInRequest($request);
-		$category = Category::getInstanceByID($request->get('ID'));
+		$category = $this->_getCategoryById($request->get('ID'));
 		$category->loadRequestData($request);
 		$category->save();
 	}
@@ -80,13 +84,23 @@ class CategoryApi extends ModelApi
 	
 	public function filter()
 	{
-		$root = Category::getRootNode();
+		$request = $this->application->getRequest();
+		$parser = $this->getParser();
+		$apiFieldNames = $parser->getApiFieldNames();
+		$parser->loadDataInRequest($request);
 
 		$f = new ARSelectFilter();
-		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('Category', 'ID'), $root->getID()));
-		$f->setOrder(MultiLingualObject::getLangOrderHandle(new ARFieldHandle('Category', 'name')));
+//		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('Category', 'ID'), $this->root->getID()));
 
-		$apiFieldNames = $this->getParser()->getApiFieldNames();
+		// get action
+		$id = $request->get('ID');
+		if(intval($id) > 0)
+		{
+			$f->mergeCondition(new EqualsCond(new ARFieldHandle('Category', 'ID'), $id));
+		}
+		
+		$f->setOrder(MultiLingualObject::getLangOrderHandle(new ARFieldHandle('Category', 'name')));
+	
 		$categories = ActiveRecordModel::getRecordSetArray('Category', $f);
 		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
 		while($category = array_shift($categories))
