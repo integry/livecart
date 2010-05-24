@@ -2130,7 +2130,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		ProductPrice::loadPricesForRecordSet($set);
 	}
 
-	protected function __get($name)
+	public function __get($name)
 	{
 		switch ($name)
 		{
