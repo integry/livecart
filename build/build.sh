@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -x
 
 function makePackages
 {
@@ -8,12 +9,12 @@ function makePackages
 	createArchive $1
 
 	mv license.txt /tmp
-	mv /tmp/license-free.txt .
+	mv /tmp/license-free.txt license.txt
+head -30 application/controller/backend/SettingsController.php
 	applyPatch community
 	createArchive $1-community
 
-	applyPatch encoded -R
-	applyPatch branded -R
+	applyPatch community -R
 }
 
 function createArchive
