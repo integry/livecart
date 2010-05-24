@@ -46,11 +46,11 @@ class XmlCategoryApiReader extends CategoryApiReader
 
 	protected function findApiActionName($xml)
 	{
-		$customerNodeChilds = $xml->xpath('//customer/*');
-		$firstCustomerNodeChild = array_shift($customerNodeChilds);
-		if($firstCustomerNodeChild)
+		$childs = $xml->xpath('//category/*');
+		$firstChildNode = array_shift($childs);
+		if($firstChildNode)
 		{
-			$apiActionName = $firstCustomerNodeChild->getName();
+			$apiActionName = $firstChildNode->getName();
 			$this->apiActionName = array_key_exists($apiActionName,$this->xmlKeyToApiActionMapping)?$this->xmlKeyToApiActionMapping[$apiActionName]:$apiActionName;
 		}
 		return null;

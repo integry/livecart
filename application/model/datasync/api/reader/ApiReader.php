@@ -12,7 +12,8 @@ class ApiReader implements Iterator
 	protected $iteratorKey = 0;
 	protected $content;
 	private $apiActionName;
-	
+	protected $xmlKeyToApiActionMapping = array();
+
 	public function getApiActionName()
 	{
 		return $this->apiActionName;

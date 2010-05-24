@@ -75,11 +75,11 @@ abstract class ModelApi
 		$this->afterGet();
 	}
 	
-	public function listItems() // because list() is keyword.
+	public function filter() // because list() is keyword.
 	{
-		$this->beforeListItems();
+		$this->beforeFilter();
 		// ..
-		$this->afterListItems();		
+		$this->afterFilter();		
 	}
 	
 	protected function beforeUpdate()
@@ -114,11 +114,11 @@ abstract class ModelApi
 	{
 	}
 
-	protected function beforeListItems()
+	protected function beforeFilter()
 	{
 	}
 
-	protected function afterListItems()
+	protected function afterFilter()
 	{
 	}
 	
