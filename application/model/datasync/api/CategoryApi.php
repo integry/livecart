@@ -33,6 +33,28 @@ class CategoryApi extends ModelApi
 			array_keys($this->root->getSchema()->getFieldList()) // field names, (this line means all that are in Category model).
 		);
 	}
+
+	public function delete()
+	{
+		$parser = $this->getParser();
+		$request = $this->application->getRequest();
+		$parser->loadDataInRequest($request);
+		$id = $request->get('ID');
+		if($id == $this->root->getID())
+		{
+			throw new Exception('Cannot delete root level category');
+		}
+		if(false == (intval($id) > 0))
+		{
+			throw new Exception('Category not found');
+		}
+		$category = Category::getInstanceByID($id);
+		if(false == ($category->getID() > 0))
+		{
+			throw new Exception('Category not found');
+		}
+		$category->delete();
+	}
 	
 	
 	public function update()
@@ -59,13 +81,11 @@ class CategoryApi extends ModelApi
 	public function filter()
 	{
 		$root = Category::getRootNode();
-		
+
 		$f = new ARSelectFilter();
 		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('Category', 'ID'), $root->getID()));
 		$f->setOrder(MultiLingualObject::getLangOrderHandle(new ARFieldHandle('Category', 'name')));
 
-		// return new ActionResponse('categories', );
-		
 		$apiFieldNames = $this->getParser()->getApiFieldNames();
 		$categories = ActiveRecordModel::getRecordSetArray('Category', $f);
 		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');

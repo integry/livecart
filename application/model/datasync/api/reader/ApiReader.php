@@ -96,9 +96,25 @@ class ApiReader implements Iterator
 			$d = $this->xml->xpath($xpathPrefix.$fieldName);
 			if(count($d) == 1)
 			{
-				$request->set($fieldName, (string)array_shift($d));
+				$v = (string)array_shift($d);
+				$request->set($fieldName, $this->sanitizeField($fieldName, $v));
 			}
 		}
 		return $request;
+	}
+
+	protected function sanitizeField($fieldName, &$value)
+	{
+		// switch($fieldName)
+		// {
+		//	case 'ID': // lets make ID always numeric (and -1 if invalid value).
+		//		$value = intval($value);
+		//		if(($value > 0) == false)
+		//		{
+		//			$value = -1;
+		//		}
+		//		break;
+		// }
+		return $value;
 	}
 }

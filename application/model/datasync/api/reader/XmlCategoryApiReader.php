@@ -63,6 +63,6 @@ class XmlCategoryApiReader extends CategoryApiReader
 
 	public function loadDataInRequest($request)
 	{
-		return parent::loadDataInRequest($request, '/request/category//', $this->fieldNames);
+		return parent::loadDataInRequest($request, '/request/category//', $this->getApiFieldNames());
 	}
 }
