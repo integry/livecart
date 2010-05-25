@@ -1,7 +1,6 @@
 <?php
 
 ClassLoader::import('application.model.datasync.ModelApi');
-
 ClassLoader::import('application.model.category.Category');
 
 /**
@@ -33,19 +32,54 @@ class CategoryApi extends ModelApi
 	// ------
 	public function get()
 	{
-		$this->getParser()->loadDataInRequest($this->application->getRequest());
-		return $this->filter(/*emptyListIsException*/ true);
+		$request = $this->application->getRequest();
+		$parser = $this->getParser();
+		$parser->loadDataInRequest($request);
+
+		$id = $request->get('ID');
+		if(false == is_numeric($id))
+		{
+			throw new Exception('Bad ID field value.');
+		}
+		$categories = ActiveRecordModel::getRecordSetArray('Category',
+			select(eq(f('Category.ID'), $request->get('ID')))
+		);
+		if(count($categories) == 0)
+		{
+			throw new Exception('Category not found');
+		}
+		$apiFieldNames = $parser->getApiFieldNames();
+
+		// --
+		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
+		$responseCategory = $response->addChild('category');
+		while($category = array_shift($categories))
+		{
+			foreach($category as $k => $v)
+			{
+				if(in_array($k, $apiFieldNames))
+				{
+					$responseCategory->addChild($k, $v);
+				}
+			}
+		}
+		return new SimpleXMLResponse($response);
 	}
 	
 	public function create()
 	{
 		$parser = $this->getParser();
-		$category=Category::getNewInstance($this->root);		
-		$category->loadRequestData($parser->loadDataInRequest(
-			$this->application->getRequest()
-		));	
-		$this->_attachCategoryToParentNode($category)->save();
-		
+		$request = $this->application->getRequest();
+		$parser->loadDataInRequest($request);
+
+		$parentId = $request->get(Category::PARENT_NODE_FIELD_NAME);
+		$parentCategory = $parentId > 0
+			? $this->_getCategoryById($parentId, true)
+			: $this->root;
+		$category = Category::getNewInstance($parentCategory);
+		$category->loadRequestData($request);
+		$category->save();
+
 		return $this->statusResponse($category->getID(), 'created');
 	}
 
@@ -57,6 +91,7 @@ class CategoryApi extends ModelApi
 		$category = $this->_getCategoryById($request->get('ID'));
 		$category->loadRequestData($request);
 		$this->_attachCategoryToParentNode($category)->save();
+
 		return $this->statusResponse($category->getID(), 'updated');
 	}
 
@@ -95,8 +130,6 @@ class CategoryApi extends ModelApi
 			$xmlCategory = $response->addChild('category');
 			foreach($category as $k => $v)
 			{
-				// if(substr($k, 0, 2) != '__' && is_string($v)) // show every string whoes key does not start with __ (like __class__)
-				                                                 // or maybe
 				if(in_array($k, $apiFieldNames))                 // those who are allowed fields ($this->apiFieldNames) ?
 				{
 					// todo: how to escape in simplexml, cdata? create cdata or what?
