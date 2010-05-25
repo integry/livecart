@@ -32,9 +32,8 @@ class ProductApi extends ModelApi
 	public function get()
 	{
 		$request = $this->application->getRequest();
-
 		$parser = $this->getParser();
-		$parser->loadDataInRequest($request);
+
 		$products = ActiveRecordModel::getRecordSetArray('Product',
 			select(eq(f('Product.sku'), $request->get('SKU')))
 		);
@@ -59,7 +58,22 @@ class ProductApi extends ModelApi
 		}
 		return new SimpleXMLResponse($response);
 	}
-	
+
+	public function delete()
+	{
+		$request = $this->getApplication()->getRequest();
+		$instance = Product::getInstanceBySKU($request->get('sku'));
+		if(!$instance)
+		{
+			throw new Exception('Record not found');
+		}		
+		$id = $instance->getID();
+		$instance->delete();
+			
+		return $this->statusResponse($id, 'created');
+	}
+
+
 	public function create()
 	{
 		$updater = new ApiProductImport($this->application);

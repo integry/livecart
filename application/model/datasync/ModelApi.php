@@ -35,6 +35,9 @@ abstract class ModelApi
 		}
 		$this->setParserClassName($cn);
 		$this->setParser(new $cn($request->get(ApiReader::API_PARSER_DATA), $fieldNames));
+
+		// --
+		$this->getParser()->loadDataInRequest($this->application->getRequest());
 	}
 
 	public function setApplication($application)

@@ -60,7 +60,9 @@ class UserApi extends ModelApi
 		$updater->allowOnlyUpdate(); // throws exception, if record does not exists.
 		$profile = new CsvImportProfile('User');
 		$reader = $this->getDataImportIterator($updater, $profile);
-		$user = $updater->getInstance($reader->current(), $profile);
+		
+		$user = $updater->getInstance($reader->current(), $profile); // not working on ProductImport
+		
 		$id = $user->getID();
 		$user->delete();
 
