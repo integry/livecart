@@ -4,9 +4,10 @@ ClassLoader::import("application.model.ActiveRecordModel");
 
 abstract class ModelApi
 {
-	private $className;
-	private $parserClassName;
-	private $parser;
+	public $className;
+	public $parserClassName;
+	public $parser;	
+	public $importedIDs = array(); // used in models that are using csv 'importers'
 
 	public static function canParse(Request $request, $parserClassNames=array())
 	{

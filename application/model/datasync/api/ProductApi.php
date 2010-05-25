@@ -43,6 +43,7 @@ class ProductApi extends ModelApi
 			throw new Exception('Product not found');
 		}
 		$apiFieldNames = $parser->getApiFieldNames();
+
 		// --
 		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
 		$responseProduct = $response->addChild('product');
@@ -93,13 +94,13 @@ class ProductApi extends ModelApi
 		return $parser;
 	}
 
-	public function productImportCallback($record, $updated)
+	public function productImportCallback($record)
 	{
-		$this->importedIDs[] = $record->getID();
+		//$this->importedIDs[] = array('id'=>$record->getID(), 'sku'=>$record->sku->get());
+		
+		$this->importedIDs[] = $record->sku->get();
 	}
 }
-
-
 
 ClassLoader::import('application.model.datasync.import.ProductImport');
 ClassLoader::import('application/model.datasync.CsvImportProfile');
@@ -127,20 +128,28 @@ class ApiProductImport extends ProductImport
 		$this->allowOnly = self::CREATE;
 	}
 
-	public // one (bad) implementation of delete() action calls this method, therefore public
-	function getInstance($record, CsvImportProfile $profile)
+	// UserImport does not use getInstance(), will append onlyCreate(), onlyUpdate() constraints to importInstance()
+	public function importInstance($record, CsvImportProfile $profile)
 	{
-		$instance = parent::getInstance($record, $profile);
-		$id = $instance->getID();
-		if($this->allowOnly == self::CREATE && $id > 0) 
+		if(array_key_exists('sku', $record))
 		{
-			throw new Exception('Record exists');
+			$instance = Product::getInstanceBySKU($record['sku']);
+			$id = $instance ? $instance->getID() : 0;
+			
+			if($this->allowOnly == self::CREATE && $id > 0) 
+			{
+				throw new Exception('Record exists');
+			}
+			if($this->allowOnly == self::UPDATE && $id == 0) 
+			{
+				throw new Exception('Record not found');
+			}
+		} else {
+			// if identified by smth else what then?
 		}
-		if($this->allowOnly == self::UPDATE && $id == 0) 
-		{
-			throw new Exception('Record not found');
-		}
-		return $instance;
+		
+		return parent::importInstance($record, $profile);
 	}
+
 }
 ?>

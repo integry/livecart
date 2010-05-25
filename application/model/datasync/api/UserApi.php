@@ -103,7 +103,7 @@ class UserApi extends ModelApi
 
 	// ------ 
 	
-	public function userImportCallback($record, $updated)
+	public function userImportCallback($record)
 	{
 		$this->importedIDs[] = $record->getID();
 	}
@@ -142,10 +142,14 @@ class ApiUserImport extends UserImport
 		$this->allowOnly = self::CREATE;
 	}
 
+
+
 	public // one (bad) implementation of delete() action calls this method, therefore public
 	function getInstance($record, CsvImportProfile $profile)
 	{
 		$instance = parent::getInstance($record, $profile);
+		
+		
 		$id = $instance->getID();
 		if($this->allowOnly == self::CREATE && $id > 0) 
 		{
@@ -157,5 +161,6 @@ class ApiUserImport extends UserImport
 		}
 		return $instance;
 	}
+
 }
 ?>

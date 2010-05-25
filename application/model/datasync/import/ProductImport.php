@@ -398,6 +398,11 @@ class ProductImport extends DataImport
 				$this->importAdditionalCategories($profile, $product, $extraCategories);
 			}
 
+			if ($this->callback)
+			{
+				call_user_func($this->callback, $product);
+			}
+
 			$product->__destruct();
 			$product->destruct(true);
 
