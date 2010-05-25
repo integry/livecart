@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.datasync.ModelAPIDescriptor");
 ClassLoader::import("application.model.ActiveRecordModel");
 
 abstract class ModelApi
@@ -9,6 +8,19 @@ abstract class ModelApi
 	private $parserClassName;
 	private $parser;
 
+	public static function canParse(Request $request, $parserClassNames=array())
+	{
+		foreach($parserClassNames as $parserClassName)
+		{
+			ClassLoader::import('application.model.datasync.api.reader.'.$parserClassName);
+			if(call_user_func_array(array($parserClassName, "canParse"), array($request)))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	protected function __construct(LiveCart $application, $className, $fieldNames=array())
 	{
 		$this->application = $application;
@@ -24,8 +36,6 @@ abstract class ModelApi
 		$this->setParser(new $cn($request->get('_ApiParserData'), $fieldNames));
 	}
 
-	abstract static function canParse(Request $request);
-	
 	public function getClassName()
 	{
 		return $this->className;

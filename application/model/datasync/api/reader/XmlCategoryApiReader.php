@@ -40,19 +40,7 @@ class XmlCategoryApiReader extends ApiReader
 
 	protected function findApiActionName($xml)
 	{
-		$apiActionName = null; // not known
-		foreach($xml->xpath('/request/category') as $k=>$v) // iterate over category elements
-		{
-			foreach($v as $k2 => $v2) // with each category element
-			{
-				$apiActionName = $k2; // first element name is action name!
-				break 2;
-			}
-		}
-		$apiActionName = array_key_exists($apiActionName,$this->xmlKeyToApiActionMapping)?$this->xmlKeyToApiActionMapping[$apiActionName]:$apiActionName;
-		$this->setApiActionName($apiActionName);
-
-		return $this->getApiActionName(); // just to test that it is set!
+		return parent::findApiActionNameFromXml($xml, '/request/category');
 	}
 
 	public function loadDataInRequest($request)

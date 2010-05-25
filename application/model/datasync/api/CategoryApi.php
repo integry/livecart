@@ -1,7 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.datasync.ModelApi');
-ClassLoader::import('application.model.datasync.api.reader.XmlCategoryApiReader');
+
 ClassLoader::import('application.model.category.Category');
 
 /**
@@ -17,11 +17,7 @@ class CategoryApi extends ModelApi
 
 	public static function canParse(Request $request)
 	{
-		if(XmlCategoryApiReader::canParse($request))
-		{
-			return true;
-		}
-		return false;
+		return parent::canParse($request, array('XmlCategoryApiReader'));
 	}
 
 	public function __construct(LiveCart $application)

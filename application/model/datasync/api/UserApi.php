@@ -17,13 +17,10 @@ class UserApi extends ModelApi
 	protected $importedIDs = array();
 	protected $application;
 
+
 	public static function canParse(Request $request)
 	{
-		if(XmlUserApiReader::canParse($request))
-		{
-			return true;
-		}
-		return false;
+		return parent::canParse($request, array('XmlUserApiReader'));
 	}
 
 	public function __construct(LiveCart $application)

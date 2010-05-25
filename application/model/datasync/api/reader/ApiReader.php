@@ -84,9 +84,23 @@ class ApiReader implements Iterator
 		return $xmlRequest;
 	}
 
-	/*abstract?*/ protected function findApiActionName($dataHandler)
+	//
+	// this method really does not bellong here, but at this point, there is no better place.
+	protected function findApiActionNameFromXml($xml, $xpath)
 	{
-		
+		$apiActionName = null; // not known
+		foreach($xml->xpath($xpath) as $k=>$v) // iterate over category,user,product etc elements
+		{
+			foreach($v as $k2 => $v2) // with each element
+			{
+				$apiActionName = $k2; // first element name is action name!
+				break 2;
+			}
+		}
+		$apiActionName = array_key_exists($apiActionName,$this->xmlKeyToApiActionMapping)?$this->xmlKeyToApiActionMapping[$apiActionName]:$apiActionName;
+		$this->setApiActionName($apiActionName);
+
+		return $this->getApiActionName();
 	}
 
 	public function loadDataInRequest($request, $xpathPrefix, $fieldNames)

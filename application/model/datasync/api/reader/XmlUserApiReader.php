@@ -179,13 +179,6 @@ class XmlUserApiReader extends ApiReader
 
 	protected function findApiActionName($xml)
 	{
-		$customerNodeChilds = $xml->xpath('//customer/*');
-		$firstCustomerNodeChild = array_shift($customerNodeChilds);
-		if($firstCustomerNodeChild)
-		{
-			$apiActionName = $firstCustomerNodeChild->getName();
-			$this->apiActionName = array_key_exists($apiActionName,$this->xmlKeyToApiActionMapping)?$this->xmlKeyToApiActionMapping[$apiActionName]:$apiActionName;
-		}
-		return null;
+		return parent::findApiActionNameFromXml($xml, '/request/customer');
 	}
 }
