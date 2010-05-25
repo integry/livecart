@@ -30,12 +30,13 @@ class XmlUserApiReader extends ApiReader
 			{
 				if(count($xml->xpath('/request/customer')) == 1)
 				{
-					$request->set('_ApiParserData',$xml);
-					$request->set('_ApiParserClassName', 'XmlUserApiReader');
-					return true; // yes, can parse
+					$request->set(ApiReader::API_PARSER_DATA ,$xml);
+					$request->set(ApiReader::API_PARSER_CLASS_NAME, __CLASS__);
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 
 	public function __construct($xml)

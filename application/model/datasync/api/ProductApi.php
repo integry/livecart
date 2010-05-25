@@ -6,7 +6,7 @@ class ProductApi extends ModelApi
 {
 	public static function canParse(Request $request)
 	{
-		return false;
+		return parent::canParse($request, array('XmlProductApiReader'));
 	}
 }
 ?>

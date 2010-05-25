@@ -9,6 +9,9 @@
 
 class ApiReader implements Iterator
 {
+	const API_PARSER_DATA = '__api_reader_parser_data_key__';
+	const API_PARSER_CLASS_NAME = '__api_reader_parser_class_name_key__';
+
 	protected $iteratorKey = 0;
 	protected $content;
 	protected $xmlKeyToApiActionMapping = array();

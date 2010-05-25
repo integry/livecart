@@ -23,11 +23,7 @@ class ApiController extends BaseController
 
 	public function index()
 	{
-		try {
-			return new RawResponse('index done');
-		} catch(Exception $e) {
-			return new RawResponse('err');
-		}
+
 	}
 
 	public function xml()
@@ -40,9 +36,6 @@ class ApiController extends BaseController
 			{
 				//echo '<br />[executing '.$model->getClassName().'Api->'.$apiActionName.'()]<br />';
 				return $model->$apiActionName();
-				// return $r;
-				return new RawResponse('..');
-				
 			} else {
 				if($apiActionName == '')
 				{
@@ -128,7 +121,6 @@ class ApiController extends BaseController
 						{
 							continue;
 						}
-						
 						if(call_user_func_array(array($modelApiClassName, "canParse"), array($request)))
 						{
 							$this->setModelApi(new $modelApiClassName($this->application));

@@ -22,14 +22,15 @@ class XmlProductApiReader extends ApiReader
 			$xml = self::getSanitizedSimpleXml($get['xml']);
 			if($xml != null)
 			{
-				if(count($xml->xpath('/request/category')) == 1)
+				if(count($xml->xpath('/request/product')) == 1)
 				{
-					$request->set('_ApiParserData',$xml);
-					$request->set('_ApiParserClassName', 'XmlCategoryApiReader');
-					return true; // yes, can parse
+					$request->set(ApiReader::API_PARSER_DATA ,$xml);
+					$request->set(ApiReader::API_PARSER_CLASS_NAME, __CLASS__);
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 
 	public function __construct($xml, $fieldNames)
