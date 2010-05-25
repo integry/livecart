@@ -14,7 +14,6 @@ ClassLoader::import('application/model.datasync.CsvImportProfile');
 class UserApi extends ModelApi
 {
 	private $listFilterMapping = null;
-	protected $importedIDs = array();
 	protected $application;
 
 
@@ -25,7 +24,11 @@ class UserApi extends ModelApi
 
 	public function __construct(LiveCart $application)
 	{
-		parent::__construct($application, 'User');
+		parent::__construct(
+			$application,
+			'User',
+			array_keys(User::getNewInstance('')->getSchema()->getFieldList())
+		);
 	}
 
 	// ------ 
@@ -56,20 +59,42 @@ class UserApi extends ModelApi
 
 	public function delete()
 	{
-		$updater = new ApiUserImport($this->application);
-		$updater->allowOnlyUpdate(); // throws exception, if record does not exists.
-		$profile = new CsvImportProfile('User');
-		$reader = $this->getDataImportIterator($updater, $profile);
-		
-		$user = $updater->getInstance($reader->current(), $profile); // not working on ProductImport
-		
-		$id = $user->getID();
-		$user->delete();
-
+		$request = $this->getApplication()->getRequest();
+		$id = $this->getRequestID();
+		$instance = User::getInstanceByID($id, true);
+		$instance->delete();
 		return $this->statusResponse($id, 'deleted');
 	}
-	
-	
+
+	public function get()
+	{
+		$request = $this->application->getRequest();
+		$parser = $this->getParser();
+		$users = ActiveRecordModel::getRecordSetArray('User',
+			select(eq(f('User.ID'), $this->getRequestID()))
+		);
+		if(count($users) == 0)
+		{
+			throw new Exception('User not found');
+		}
+		$apiFieldNames = $parser->getApiFieldNames();
+
+		// --
+		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
+		$responseCustomer = $response->addChild('customer');
+		while($user = array_shift($users))
+		{
+			foreach($user as $k => $v)
+			{
+				if(in_array($k, $apiFieldNames))
+				{
+					$responseCustomer->addChild($k, $v);
+				}
+			}
+		}
+		return new SimpleXMLResponse($response);
+	}
+
 	public function filter()
 	{
 		$parser = $this->getParser();

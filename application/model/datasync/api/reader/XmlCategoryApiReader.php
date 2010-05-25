@@ -30,14 +30,6 @@ class XmlCategoryApiReader extends ApiReader
 		}
 	}
 
-	public function __construct($xml, $fieldNames)
-	{
-		$this->xml = $xml; // $this->setDataResource(); // or smth.
-		
-		$this->setApiFieldNames($fieldNames);
-		$this->findApiActionName($xml);
-	}
-
 	protected function findApiActionName($xml)
 	{
 		return parent::findApiActionNameFromXml($xml, '/request/category');
@@ -45,12 +37,13 @@ class XmlCategoryApiReader extends ApiReader
 
 	public function loadDataInRequest($request)
 	{
-		if($this->getApiActionName() == 'get')
+		$apiActionName = $this->getApiActionName();
+		$shortFormatActions = array('get','delete');
+		if(in_array($apiActionName, $shortFormatActions))
 		{
-			$request = parent::loadDataInRequest($request, '//', array('get'));
-			// for get request <category><get>[ID]</get></category> rename content in node <get> to ID
-			$request->set('ID',$request->get('get'));
-			$request->remove('get');
+			$request = parent::loadDataInRequest($request, '//', $shortFormatActions);
+			$request->set('ID',$request->get($apiActionName));
+			$request->remove($apiActionName);
 		} else {
 			$request = parent::loadDataInRequest($request, '/request/category//', $this->getApiFieldNames());
 		}

@@ -32,17 +32,10 @@ class CategoryApi extends ModelApi
 	// ------
 	public function get()
 	{
-		$request = $this->application->getRequest();
 		$parser = $this->getParser();
-		$parser->loadDataInRequest($request);
-
-		$id = $request->get('ID');
-		if(false == is_numeric($id))
-		{
-			throw new Exception('Bad ID field value.');
-		}
+		$id = $this->getRequestID();
 		$categories = ActiveRecordModel::getRecordSetArray('Category',
-			select(eq(f('Category.ID'), $request->get('ID')))
+			select(eq(f('Category.ID'), $id))
 		);
 		if(count($categories) == 0)
 		{
@@ -95,16 +88,15 @@ class CategoryApi extends ModelApi
 		return $this->statusResponse($category->getID(), 'updated');
 	}
 
+
 	public function delete()
 	{
-		$parser = $this->getParser();
-		$request = $this->application->getRequest();
-		$parser->loadDataInRequest($request);
-		$id = $request->get('ID');
+		
+		$id = $this->getRequestID();
 		$this->_getCategoryById($id)->delete();
-
 		return $this->statusResponse($id, 'deleted');
 	}
+
 
 	public function filter($emptyListIsException = false)
 	{
@@ -173,7 +165,8 @@ class CategoryApi extends ModelApi
 		
 		$category = Category::getInstanceByID($id, true);
 		// if id is not integer getInstanceByID() will not throw exception?
-		
+
+		// could remove next 3 lines, if all ID come from ModelApi::getRequestID(), but they not (parent node id, for example)
 		if(false == ($category->getID() > 0))
 		{
 			throw new Exception('Bad ID field value.');

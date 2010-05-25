@@ -18,6 +18,15 @@ abstract class ApiReader implements Iterator
 	
 	private $apiActionName;
 	private $fieldNames = array();
+
+
+	public function __construct($xml, $fieldNames)
+	{
+		$this->xml = $xml; // $this->setDataResource(); // or smth.
+		
+		$this->setApiFieldNames($fieldNames);
+		$this->findApiActionName($xml);
+	}
 	
 	public function setApiFieldNames($fieldNames)
 	{
@@ -108,8 +117,13 @@ abstract class ApiReader implements Iterator
 		return $this->getApiActionName();
 	}
 
-	public function loadDataInRequest($request, $xpathPrefix, $fieldNames)
+	public function loadDataInRequest($request, $xpathPrefix=null, $fieldNames=null)
 	{
+		if(func_num_args() < 3)
+		{
+			throw new Exception('ApiReader->loadDataInRequest(): please implement loadDataInRequest() in your ApiReader (parser) or pass 3 arguments');
+		}
+	
 		foreach($fieldNames as $fieldName)
 		{
 			$d = $this->xml->xpath($xpathPrefix.$fieldName);

@@ -33,14 +33,6 @@ class XmlProductApiReader extends ApiReader
 		return false;
 	}
 
-	public function __construct($xml, $fieldNames)
-	{
-		$this->xml = $xml; // $this->setDataResource(); // or smth.
-		
-		$this->setApiFieldNames($fieldNames);
-		$this->findApiActionName($xml);
-	}
-	
 	protected function findApiActionName($xml)
 	{
 		return parent::findApiActionNameFromXml($xml, '/request/product');
@@ -48,11 +40,13 @@ class XmlProductApiReader extends ApiReader
 
 	public function loadDataInRequest($request)
 	{
-		if($this->getApiActionName() == 'get')
+		$apiActionName = $this->getApiActionName();
+		$shortFormatActions = array('get','delete');
+		if(in_array($apiActionName, $shortFormatActions))
 		{
-			$request = parent::loadDataInRequest($request, '//', array('get'));
-			$request->set('SKU',$request->get('get'));
-			$request->remove('get');
+			$request = parent::loadDataInRequest($request, '//', $shortFormatActions);
+			$request->set('SKU',$request->get($apiActionName));
+			$request->remove($apiActionName);
 		} else {
 			$request = parent::loadDataInRequest($request, '/request/product//', $this->getApiFieldNames());
 		}

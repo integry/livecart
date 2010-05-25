@@ -39,14 +39,6 @@ class XmlUserApiReader extends ApiReader
 		return false;
 	}
 
-	public function __construct($xml)
-	{
-		// todo: multiple customers
-		$this->xml = $xml;
-		$this->findApiActionName($xml);
-		$apiActionName = $this->getApiActionName();
-	}
-
 	public function populate($updater, $profile)
 	{
 		parent::populate($updater, $profile, $this->xml, 
@@ -160,5 +152,20 @@ class XmlUserApiReader extends ApiReader
 	protected function findApiActionName($xml)
 	{
 		return parent::findApiActionNameFromXml($xml, '/request/customer');
+	}
+
+	public function loadDataInRequest($request)
+	{
+		$apiActionName = $this->getApiActionName();
+		$shortFormatActions = array('get','delete'); // like <customer><delete>[customer id]</delete></customer>
+		if(in_array($apiActionName, $shortFormatActions))
+		{
+			$request = parent::loadDataInRequest($request, '//', $shortFormatActions);
+			$request->set('ID',$request->get($apiActionName));
+			$request->remove($apiActionName);
+		} else {
+			$request = parent::loadDataInRequest($request, '/request/customer//', $this->getApiFieldNames());
+		}
+		return $request;
 	}
 }

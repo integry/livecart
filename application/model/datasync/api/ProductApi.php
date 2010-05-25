@@ -62,15 +62,15 @@ class ProductApi extends ModelApi
 	public function delete()
 	{
 		$request = $this->getApplication()->getRequest();
-		$instance = Product::getInstanceBySKU($request->get('sku'));
+		$instance = Product::getInstanceBySKU($request->get('SKU'));
 		if(!$instance)
 		{
-			throw new Exception('Record not found');
+			throw new Exception('Product not found');
 		}		
-		$id = $instance->getID();
+		$id = $instance->sku->get(); // SKU of deleted record, not SKU of requested to delete record (if finding item by SKU fails or smth)
 		$instance->delete();
-			
-		return $this->statusResponse($id, 'created');
+
+		return $this->statusResponse($id, 'deleted');
 	}
 
 

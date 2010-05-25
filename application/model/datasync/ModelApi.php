@@ -37,7 +37,7 @@ abstract class ModelApi
 		$this->setParser(new $cn($request->get(ApiReader::API_PARSER_DATA), $fieldNames));
 
 		// --
-		$this->getParser()->loadDataInRequest($this->application->getRequest());
+		$this->getParser()->loadDataInRequest($this->getApplication()->getRequest());
 	}
 
 	public function setApplication($application)
@@ -191,4 +191,18 @@ abstract class ModelApi
 	}
 
 
+	protected function getRequestID()
+	{
+		$request = $this->getApplication()->getRequest();
+		$id = $request->get('ID');
+		if(false == is_numeric($id))
+		{
+			$id = $request->get('id');
+		}
+		if(false == is_numeric($id))
+		{
+			throw new Exception('+ Bad ID field value.');
+		}
+		return $id;
+	}
 }
