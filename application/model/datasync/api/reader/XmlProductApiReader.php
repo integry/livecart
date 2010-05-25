@@ -43,17 +43,7 @@ class XmlProductApiReader extends ApiReader
 	
 	protected function findApiActionName($xml)
 	{
-		$apiActionName = null; // not known
-		foreach($xml->xpath('/request/category') as $k=>$v) // iterate over category elements
-		{
-			foreach($v as $k2 => $v2) // with each category element
-			{
-				$apiActionName = $k2; // first element name is action name!
-				break 2;
-			}
-		}
-		$this->apiActionName = array_key_exists($apiActionName,$this->xmlKeyToApiActionMapping)?$this->xmlKeyToApiActionMapping[$apiActionName]:$apiActionName;
-		return $apiActionName;
+		return parent::findApiActionNameFromXml($xml, '/request/product');
 	}
 
 	public function loadDataInRequest($request)
@@ -61,11 +51,10 @@ class XmlProductApiReader extends ApiReader
 		if($this->getApiActionName() == 'get')
 		{
 			$request = parent::loadDataInRequest($request, '//', array('get'));
-			// for get request <category><get>[ID]</get></category> rename content in node <get> to ID
-			$request->set('ID',$request->get('get'));
+			$request->set('SKU',$request->get('get'));
 			$request->remove('get');
 		} else {
-			$request = parent::loadDataInRequest($request, '/request/category//', $this->getApiFieldNames());
+			$request = parent::loadDataInRequest($request, '/request/product//', $this->getApiFieldNames());
 		}
 		return $request;
 	}

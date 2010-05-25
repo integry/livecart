@@ -7,7 +7,7 @@
  * @author Integry Systems <http://integry.com>
  */
 
-class ApiReader implements Iterator
+abstract class ApiReader implements Iterator
 {
 	const API_PARSER_DATA = '__api_reader_parser_data_key__';
 	const API_PARSER_CLASS_NAME = '__api_reader_parser_class_name_key__';
@@ -86,6 +86,8 @@ class ApiReader implements Iterator
 		}
 		return $xmlRequest;
 	}
+
+	abstract protected function findApiActionName($dataHandler);
 
 	//
 	// this method really does not bellong here, but at this point, there is no better place.
