@@ -35,6 +35,11 @@ class CategoryApi extends ModelApi
 	}
 	
 	// ------
+	public function get()
+	{
+		$this->getParser()->loadDataInRequest($this->application->getRequest());
+		return $this->filter(/*emptyListIsException*/ true);
+	}
 
 	public function create()
 	{
@@ -70,7 +75,7 @@ class CategoryApi extends ModelApi
 		return $this->statusResponse($id, 'deleted');
 	}
 
-	public function filter()
+	public function filter($emptyListIsException = false)
 	{
 		$request = $this->application->getRequest();
 		$parser = $this->getParser();
@@ -85,6 +90,10 @@ class CategoryApi extends ModelApi
 		$f->setOrder(MultiLingualObject::getLangOrderHandle(new ARFieldHandle('Category', 'name')));
 		$categories = ActiveRecordModel::getRecordSetArray('Category', $f);
 		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
+		if($emptyListIsException && count($categories) == 0)
+		{
+			throw new Exception('Category not found');
+		}
 		while($category = array_shift($categories))
 		{
 			$xmlCategory = $response->addChild('category');
