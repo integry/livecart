@@ -44,7 +44,12 @@ class ApiController extends BaseController
 				return new RawResponse('..');
 				
 			} else {
-				throw new Exception('Model '.$model->getClassName().' does not support '.$apiActionName);
+				if($apiActionName == '')
+				{
+					throw new Exception('Failed to detect model API action name');
+				} else {
+					throw new Exception('Model '.$model->getClassName().' does not support '.$apiActionName);
+				}
 			}
 
 		} catch(Exception $e) {
