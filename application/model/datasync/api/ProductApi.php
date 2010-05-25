@@ -1,8 +1,16 @@
 <?php
 
-ClassLoader::import("application.model.datasync.ModelApi");
-ClassLoader::import("application.model.product.Product");
-ClassLoader::import("application.model.category.Category");
+ClassLoader::import('application.model.datasync.ModelApi');
+ClassLoader::import('application.model.product.Product');
+ClassLoader::import('application.model.category.Category');
+
+/**
+ * Web service access layer for Product model
+ *
+ * @package application.model.datasync
+ * @author Integry Systems <http://integry.com>
+ * 
+ */
 
 class ProductApi extends ModelApi
 {
@@ -20,23 +28,23 @@ class ProductApi extends ModelApi
 		);
 	}
 
-
-
 	public function get()
 	{
 		$request = $this->application->getRequest();
-		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
+
 		$parser = $this->getParser();
 		$parser->loadDataInRequest($request);
-		$apiFieldNames = $parser->getApiFieldNames();
-		$f = new ARSelectFilter();
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'sku'), $request->get('SKU')));
-		$products = ActiveRecordModel::getRecordSetArray('Product', $f);
-		$responseProduct = $response->addChild('product');
+		$products = ActiveRecordModel::getRecordSetArray('Product',
+			select(eq(f('Product.sku'), $request->get('SKU')))
+		);
 		if(count($products) == 0)
 		{
 			throw new Exception('Product not found');
 		}
+
+		// --
+		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
+		$responseProduct = $response->addChild('product');
 		while($product = array_shift($products))
 		{
 			foreach($product as $k => $v)
@@ -49,31 +57,6 @@ class ProductApi extends ModelApi
 		}
 		return new SimpleXMLResponse($response);
 	}
-
-	public function __get_Object()
-	{
-		$request = $this->application->getRequest();
-		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
-		$parser = $this->getParser();
-		$parser->loadDataInRequest($request);
-		$product = Product::getInstanceBySKU($request->get('SKU'));
-		$apiFieldNames = $parser->getApiFieldNames();
-		$responseProduct = $response->addChild('product');
-		foreach($product as $k => $v)
-		{
-			if(in_array($k, $apiFieldNames))
-			{
-				// todo: how to escape in simplexml, cdata? create cdata or what?
-				$v = $product->$k->get();
-				if(is_string($v))
-				{
-					$responseProduct->addChild($k, $v);
-				} else {
-					// ..
-				}
-			}
-		}
-		return new SimpleXMLResponse($response);
-	}
+	
 }
 ?>
