@@ -11,7 +11,6 @@ ClassLoader::import('application.model.category.Category');
  * @author Integry Systems <http://integry.com>
  * 
  */
-
 class ProductApi extends ModelApi
 {
 	public static function canParse(Request $request)
@@ -28,6 +27,8 @@ class ProductApi extends ModelApi
 		);
 	}
 
+	// ------ 
+
 	public function get()
 	{
 		$request = $this->application->getRequest();
@@ -41,7 +42,7 @@ class ProductApi extends ModelApi
 		{
 			throw new Exception('Product not found');
 		}
-
+		$apiFieldNames = $parser->getApiFieldNames();
 		// --
 		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
 		$responseProduct = $response->addChild('product');
@@ -58,5 +59,88 @@ class ProductApi extends ModelApi
 		return new SimpleXMLResponse($response);
 	}
 	
+	public function create()
+	{
+		$updater = new ApiProductImport($this->application);
+		$updater->allowOnlyCreate();
+		$profile = new CsvImportProfile('Product');
+		$reader = $this->getDataImportIterator($updater, $profile);
+		$updater->setCallback(array($this, 'productImportCallback'));
+		$updater->importFile($reader, $profile);
+
+		return $this->statusResponse($this->importedIDs, 'created');
+	}
+	
+	public function update()
+	{
+		die('---');
+		$updater = new ApiUserImport($this->application);
+		$updater->allowOnlyUpdate();
+		$profile = new CsvImportProfile('User');
+		$reader = $this->getDataImportIterator($updater, $profile);
+		$updater->setCallback(array($this, 'userImportCallback'));
+		$updater->importFile($reader, $profile);
+
+		return $this->statusResponse($this->importedIDs, 'updated');
+	}
+	
+	
+	private function getDataImportIterator($updater, $profile)
+	{
+		// parser can act as DataImport::importFile() iterator
+		$parser = $this->getParser();
+		$parser->populate($updater, $profile);
+		return $parser;
+	}
+
+	public function productImportCallback($record, $updated)
+	{
+		$this->importedIDs[] = $record->getID();
+	}
+}
+
+
+
+ClassLoader::import('application.model.datasync.import.ProductImport');
+ClassLoader::import('application/model.datasync.CsvImportProfile');
+// misc things
+// @todo: in seperate file!
+class ApiProductImport extends ProductImport
+{
+	const CREATE = 1;
+	const UPDATE = 2;
+	
+	private $allowOnly = null;
+
+	public function allowOnlyUpdate()
+	{
+		$this->allowOnly = self::UPDATE;
+	}
+
+	public function getClassName()  // because dataImport::getClassName() will return ApiUser, not User.
+	{
+		return 'Product';
+	}
+
+	public function allowOnlyCreate()
+	{
+		$this->allowOnly = self::CREATE;
+	}
+
+	public // one (bad) implementation of delete() action calls this method, therefore public
+	function getInstance($record, CsvImportProfile $profile)
+	{
+		$instance = parent::getInstance($record, $profile);
+		$id = $instance->getID();
+		if($this->allowOnly == self::CREATE && $id > 0) 
+		{
+			throw new Exception('Record exists');
+		}
+		if($this->allowOnly == self::UPDATE && $id == 0) 
+		{
+			throw new Exception('Record not found');
+		}
+		return $instance;
+	}
 }
 ?>

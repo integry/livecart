@@ -58,4 +58,10 @@ class XmlProductApiReader extends ApiReader
 		}
 		return $request;
 	}
+
+	public function populate($updater, $profile)
+	{
+		parent::populate( $updater, $profile, $this->xml,
+			'/request/product/[[API_ACTION_NAME]]/[[API_FIELD_NAME]]', array('sku'));
+	}
 }

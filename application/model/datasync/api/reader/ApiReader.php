@@ -136,4 +136,51 @@ abstract class ApiReader implements Iterator
 		// }
 		return $value;
 	}
+
+
+	public function populate($updater, $profile, $xml, $xpathTemplate, $identificatorFieldNames = array())
+	{
+		foreach($identificatorFieldNames as $fieldName)
+		{
+			$item[$fieldName] = null; //?
+		}
+		$apiActionName = $this->getApiActionName();
+		foreach ($updater->getFields() as $group => $fields)
+		{
+			foreach ($fields as $field => $name)
+			{
+				list($class, $fieldName) = explode('.', $field);
+				if ($class != $profile->getClassName())
+				{
+					$fieldName = $class . '_' . $fieldName;
+				}
+				$xpath = str_replace(
+					array('[[API_ACTION_NAME]]','[[API_FIELD_NAME]]'),
+					array($apiActionName, $fieldName),
+					$xpathTemplate
+				);
+				$v = $xml->xpath($xpath);
+				if(count($v) > 0)
+				{
+					$item[$fieldName] = (string)$v[0];
+					$profile->setField($fieldName, $field);
+				}
+			}
+		}
+		
+		if(count($identificatorFieldNames) == 0)
+		{
+			$this->addItem($item);
+		} else {
+			foreach($identificatorFieldNames as $fieldName)
+			{
+				if($item[$fieldName] != null)
+				{
+					$this->addItem($item);
+					break;
+				}
+			}
+		}
+	}
 }
+
