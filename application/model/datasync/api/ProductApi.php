@@ -71,21 +71,19 @@ class ProductApi extends ModelApi
 
 		return $this->statusResponse($this->importedIDs, 'created');
 	}
-	
+
 	public function update()
 	{
-		die('---');
-		$updater = new ApiUserImport($this->application);
+		$updater = new ApiProductImport($this->application);
 		$updater->allowOnlyUpdate();
-		$profile = new CsvImportProfile('User');
+		$profile = new CsvImportProfile('Product');
 		$reader = $this->getDataImportIterator($updater, $profile);
-		$updater->setCallback(array($this, 'userImportCallback'));
+		$updater->setCallback(array($this, 'productImportCallback'));
 		$updater->importFile($reader, $profile);
 
 		return $this->statusResponse($this->importedIDs, 'updated');
 	}
-	
-	
+
 	private function getDataImportIterator($updater, $profile)
 	{
 		// parser can act as DataImport::importFile() iterator
