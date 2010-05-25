@@ -9,12 +9,11 @@ ClassLoader::import('application.model.datasync.api.reader.ApiReader');
  * @author Integry Systems <http://integry.com>
  */
 
-class XmlCategoryApiReader extends ApiReader
+class XmlProductApiReader extends ApiReader
 {
 	private $apiActionName;
 	private $listFilterMapping;
 	
-
 	public static function canParse(Request $request)
 	{
 		$get = $request->getRawGet();
@@ -40,7 +39,7 @@ class XmlCategoryApiReader extends ApiReader
 		$this->setApiFieldNames($fieldNames);
 		$this->findApiActionName($xml);
 	}
-
+	
 	protected function findApiActionName($xml)
 	{
 		$apiActionName = null; // not known

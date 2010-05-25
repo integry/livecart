@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import('application.model.datasync.api.reader.UserApiReader');
+ClassLoader::import('application.model.datasync.api.reader.ApiReader');
 
 /**
  * User model API XML format request parsing (reading/routing)
@@ -9,7 +9,7 @@ ClassLoader::import('application.model.datasync.api.reader.UserApiReader');
  * @author Integry Systems <http://integry.com>
  */
 
-class XmlUserApiReader extends UserApiReader
+class XmlUserApiReader extends ApiReader
 {
 	const HANDLE = 0;
 	const CONDITION = 1;
@@ -175,11 +175,6 @@ class XmlUserApiReader extends UserApiReader
 				break;
 		}
 		return $value;
-	}
-
-	public function getApiActionName()
-	{
-		return $this->apiActionName;
 	}
 
 	protected function findApiActionName($xml)
