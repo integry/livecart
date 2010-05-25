@@ -103,22 +103,27 @@ class CategoryApi extends ModelApi
 	}
 
 	// ------ 
-	
+
 	private function _attachCategoryToParentNode($category)
 	{
 		$request =  $this->application->getRequest();
 		$parentId = $request->get(Category::PARENT_NODE_FIELD_NAME);
 		if(intval($parentId) > 0) {
-			$parentCategory = $this->_getCategoryById($parentId);
-			$category->setParentNode($parentCategory);
+			$parentCategory = $this->_getCategoryById($parentId, /* don't throw exception, i promise, i will not change root node, honestly! */ true);
+			if($category->getID() > 0)
+			{
+				$category->moveTo($parentCategory);
+			} else {
+				$category->setParentNode($parentCategory);
+			}
 			// $request->remove(Category::PARENT_NODE_FIELD_NAME);
 		}
 		return $category;
 	}
 
-	private function _getCategoryById($id)
+	private function _getCategoryById($id, $includeRootNode = false)
 	{
-		if($id == $this->root->getID())
+		if($includeRootNode == false && $id == $this->root->getID())
 		{
 			throw new Exception('Cannot change root level category.');
 		}
