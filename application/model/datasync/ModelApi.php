@@ -6,7 +6,6 @@ ClassLoader::import("application.model.ActiveRecordModel");
 abstract class ModelApi
 {
 	private $className;
-	private $apiActionName = null;
 	private $parserClassName;
 	private $parser;
 

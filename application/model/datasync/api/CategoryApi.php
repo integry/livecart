@@ -40,7 +40,7 @@ class CategoryApi extends ModelApi
 		$this->getParser()->loadDataInRequest($this->application->getRequest());
 		return $this->filter(/*emptyListIsException*/ true);
 	}
-
+	
 	public function create()
 	{
 		$parser = $this->getParser();
@@ -117,10 +117,15 @@ class CategoryApi extends ModelApi
 	{
 		$request =  $this->application->getRequest();
 		$parentId = $request->get(Category::PARENT_NODE_FIELD_NAME);
+		$id = $category->getID();
 		if(intval($parentId) > 0) {
 			$parentCategory = $this->_getCategoryById($parentId, /* don't throw exception, i promise, i will not change root node, honestly! */ true);
-			if($category->getID() > 0)
+			if($id > 0)
 			{
+				if($id == $parentId)
+				{
+					throw new Exception('Parent node ID cannot be equal to node ID');
+				}
 				$category->moveTo($parentCategory);
 			} else {
 				$category->setParentNode($parentCategory);

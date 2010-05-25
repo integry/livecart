@@ -11,10 +11,7 @@ ClassLoader::import('application.model.datasync.api.reader.ApiReader');
 
 class XmlCategoryApiReader extends ApiReader
 {
-	private $apiActionName;
 	private $listFilterMapping;
-	
-
 	public static function canParse(Request $request)
 	{
 		$get = $request->getRawGet();
@@ -52,8 +49,10 @@ class XmlCategoryApiReader extends ApiReader
 				break 2;
 			}
 		}
-		$this->apiActionName = array_key_exists($apiActionName,$this->xmlKeyToApiActionMapping)?$this->xmlKeyToApiActionMapping[$apiActionName]:$apiActionName;
-		return $apiActionName;
+		$apiActionName = array_key_exists($apiActionName,$this->xmlKeyToApiActionMapping)?$this->xmlKeyToApiActionMapping[$apiActionName]:$apiActionName;
+		$this->setApiActionName($apiActionName);
+
+		return $this->getApiActionName(); // just to test that it is set!
 	}
 
 	public function loadDataInRequest($request)
