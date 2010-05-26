@@ -60,14 +60,14 @@ class CustomerOrderApi extends ModelApi
 		$apiFieldNames = $parser->getApiFieldNames();
 		// --
 		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
-		$responseCategory = $response->addChild('order');
-		while($category = array_shift($customerOrders))
+		$responseItem = $response->addChild('order');
+		while($item = array_shift($customerOrders))
 		{
-			foreach($category as $k => $v)
+			foreach($item as $k => $v)
 			{
 				if(in_array($k, $apiFieldNames))
 				{
-					$responseCategory->addChild($k, $v);
+					$responseItem->addChild($k, $v);
 				}
 			}
 		}
@@ -76,8 +76,26 @@ class CustomerOrderApi extends ModelApi
 
 	public function filter()
 	{
-		pp('filter');
-		die('filter');
+		$request = $this->application->getRequest();
+		$parser = $this->getParser();
+		$apiFieldNames = $parser->getApiFieldNames();
+		$customerOrders = ActiveRecordModel::getRecordSetArray('CustomerOrder',
+			select()
+		);
+		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
+		while($item = array_shift($customerOrders))
+		{
+			$xmlItem = $response->addChild('order');
+			foreach($item as $k => $v)
+			{
+				if(in_array($k, $apiFieldNames))
+				{
+					// todo: how to escape in simplexml, cdata? create cdata or what?
+					$xmlItem->addChild($k, htmlentities($v));
+				}
+			}
+		}
+		return new SimpleXMLResponse($response);
 	}
 
 
