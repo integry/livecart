@@ -15,9 +15,9 @@ class XmlCustomerOrderApiReader extends ApiReader
 	const CONDITION = 1;
 	const ALL_KEYS = -1;
 
-	//protected $xmlKeyToApiActionMapping = array(
-		// 'filter' => 'list' filter is better than list, because list is keyword.
-	//);
+	protected $xmlKeyToApiActionMapping = array(
+		'list' => 'filter'
+	);
 	
 	private $apiActionName;
 	private $listFilterMapping;

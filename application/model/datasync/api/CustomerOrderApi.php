@@ -3,7 +3,7 @@ ClassLoader::import('application.model.datasync.ModelApi');
 ClassLoader::import('application.model.datasync.api.reader.XmlCustomerOrderApiReader');
 ClassLoader::import('application/model.datasync.CsvImportProfile');
 ClassLoader::import('application/model.order.CustomerOrder');
-		
+
 /**
  * Web service access layer for CustomerOrder model
  *
@@ -50,13 +50,36 @@ class CustomerOrderApi extends ModelApi
 
 	public function get()
 	{
-		die('get');
+		$request = $this->getApplication()->getRequest();
+		$id = $request->get('ID');
+		$customerOrders = ActiveRecordModel::getRecordSetArray('CustomerOrder',
+			select(eq(f(is_numeric($id)?'CustomerOrder.ID':'CustomerOrder.invoiceNumber'), $id))
+		);
+
+		$parser = $this->getParser();
+		$apiFieldNames = $parser->getApiFieldNames();
+		// --
+		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
+		$responseCategory = $response->addChild('order');
+		while($category = array_shift($customerOrders))
+		{
+			foreach($category as $k => $v)
+			{
+				if(in_array($k, $apiFieldNames))
+				{
+					$responseCategory->addChild($k, $v);
+				}
+			}
+		}
+		return new SimpleXMLResponse($response);
 	}
 
 	public function filter()
 	{
+		pp('filter');
 		die('filter');
 	}
+
 
 	// ------ 
 	
@@ -104,8 +127,6 @@ class ApiOrderImport extends UserImport
 	function getInstance($record, CsvImportProfile $profile)
 	{
 		$instance = parent::getInstance($record, $profile);
-		
-		
 		$id = $instance->getID();
 		if($this->allowOnly == self::CREATE && $id > 0) 
 		{
