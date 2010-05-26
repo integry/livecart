@@ -98,35 +98,36 @@ class UserApi extends ModelApi
 		return new SimpleXMLResponse($response);
 	}
 
-	public function filter()
+	public function filter() // synonym to list method
 	{
-		$parser = $this->getParser();
-		
-		$customers = User::getRecordSet($parser->getARSelectFilter());
-		
-		
 		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
-		while($customer = $customers->shift())
+		$parser = $this->getParser();
+		$customers = User::getRecordSetArray('User',$parser->getARSelectFilter(), true);
+
+		// $addressFieldNames = array_keys(ActiveRecordModel::getSchemaInstance('UserAddress')->getFieldList());
+		$addressFieldNames = array('address1', 'address2', 'city', 'stateName', 'postalCode', 'phone');
+		$userFieldNames = $parser->getApiFieldNames();
+
+		foreach($customers as $customer)
 		{
 			$customerNode = $response->addChild('customer');
-			$customerNode->addChild('custno', $customer->getID());
-			$ormXmlAddressMapping = array(
-				'address1'=>'address_1',
-				'address2'=>'address_2',
-				'city'=>'city',
-				'stateName'=>'state_name',
-				'postalCode'=>'postal_code',
-				'phone'=>'phone'
-			);
-			$customerNode->addChild('name', $customer->firstName->get(),' '.$customer->lastName->get());
-			foreach(array('billing', 'shipping') as $z)
+			foreach($userFieldNames as $fieldName)
 			{
-				$mn = 'get'.ucfirst($z).'AddressArray'; // getBillingAddressArray() or getShippingAddressArray()
-				foreach($customer->$mn() as $a)
+				$customerNode->addChild($fieldName, is_string($customer[$fieldName])? $customer[$fieldName] : '');
+			}
+
+			// todo: join? how?? m?!
+			$u = User::getInstanceByID($customer['ID']);	
+			$u->loadAddresses();
+			// default billing and shipping addreses
+			foreach(array('defaultShippingAddress', 'defaultBillingAddress') as $addressType)
+			{
+				if(is_numeric($customer[$addressType.'ID']))
 				{
-					foreach($ormXmlAddressMapping as $addressOrmKey=>$addressXmlKey)
+					$address = $u->defaultBillingAddress->get()->userAddressID->get();
+					foreach($addressFieldNames as $addressFieldName)
 					{
-						$customerNode->addChild($z.'_'.$addressXmlKey,$a['UserAddress'][$addressOrmKey]);
+						$customerNode->addChild($addressType.'_'.$addressFieldName, $address->$addressFieldName->get());
 					}
 				}
 			}

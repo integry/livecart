@@ -43,35 +43,10 @@ class XmlUserApiReader extends ApiReader
 	
 	public function getARSelectFilter()
 	{
-		$ormClassName = 'User';
-		$ormFieldNames = $this->getApiFieldNames();
-		foreach($ormFieldNames as $fieldName)
-		{
-			$list[$fieldName] = array(
-				self::AR_FIELD_HANDLE => new ARFieldHandle($ormClassName, $fieldName),
-				self::AR_CONDITION => 'LikeCond'
-			);
-		}
-		$list = array_merge($list, $this->getExtraFilteringMapping());
-		$arsf = new ARSelectFilter();
-		$filterKeys = array_keys($list);
-		foreach($filterKeys as $key)
-		{
-			$data = $this->xml->xpath('//filter/'.$key);
-			while(count($data) > 0)
-			{
-				$value = (string)array_shift($data);
-				$arsf->mergeCondition(
-					new $list[$key][self::AR_CONDITION](
-						$list[$key][self::AR_FIELD_HANDLE],						
-						$this->sanitizeFilterField($key, $value)
-					)
-				);
-			}
-		}
-		return $arsf;
+		return parent::getARSelectFilter('User');
 	}
 	
+
 	public function getExtraFilteringMapping()
 	{
 		if(count($this->extraFilteringMapping) == 0)
