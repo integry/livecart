@@ -1,4 +1,7 @@
 <?php
+
+// id - 582
+
 ClassLoader::import('application.model.datasync.ModelApi');
 ClassLoader::import('application.model.datasync.api.reader.XmlUserApiReader');
 ClassLoader::import('application/model.datasync.CsvImportProfile');
@@ -98,7 +101,10 @@ class UserApi extends ModelApi
 	public function filter()
 	{
 		$parser = $this->getParser();
+		
 		$customers = User::getRecordSet($parser->getARSelectFilter());
+		
+		
 		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
 		while($customer = $customers->shift())
 		{

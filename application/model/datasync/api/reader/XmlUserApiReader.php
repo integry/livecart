@@ -11,14 +11,10 @@ ClassLoader::import('application.model.datasync.api.reader.ApiReader');
 
 class XmlUserApiReader extends ApiReader
 {
-	const HANDLE = 0;
-	const CONDITION = 1;
-	const ALL_KEYS = -1;
-	//protected $xmlKeyToApiActionMapping = array(
-		// 'filter' => 'list' filter is better than list, because list is keyword.
-	//);
-	private $apiActionName;
-	private $listFilterMapping;
+	protected $xmlKeyToApiActionMapping = array
+	(
+		'list' => 'filter'
+	);
 
 	public static function canParse(Request $request)
 	{
@@ -47,21 +43,27 @@ class XmlUserApiReader extends ApiReader
 	
 	public function getARSelectFilter()
 	{
-		$arsf = new ARSelectFilter();
-		
 		$ormClassName = 'User';
-		$filterKeys = $this->getListFilterKeys();
-
+		$ormFieldNames = $this->getApiFieldNames();
+		foreach($ormFieldNames as $fieldName)
+		{
+			$list[$fieldName] = array(
+				self::AR_FIELD_HANDLE => new ARFieldHandle($ormClassName, $fieldName),
+				self::AR_CONDITION => 'LikeCond'
+			);
+		}
+		$list = array_merge($list, $this->getExtraFilteringMapping());
+		$arsf = new ARSelectFilter();
+		$filterKeys = array_keys($list);
 		foreach($filterKeys as $key)
 		{
 			$data = $this->xml->xpath('//filter/'.$key);
 			while(count($data) > 0)
 			{
-				$z  = $this->getListFilterConditionAndARHandle($key);
 				$value = (string)array_shift($data);
 				$arsf->mergeCondition(
-					new $z[self::CONDITION](
-						$z[self::HANDLE],						
+					new $list[$key][self::AR_CONDITION](
+						$list[$key][self::AR_FIELD_HANDLE],						
 						$this->sanitizeFilterField($key, $value)
 					)
 				);
@@ -70,72 +72,20 @@ class XmlUserApiReader extends ApiReader
 		return $arsf;
 	}
 	
-	public function getListFilterMapping()
+	public function getExtraFilteringMapping()
 	{
-		if($this->listFilterMapping == null)
+		if(count($this->extraFilteringMapping) == 0)
 		{
-			$cn = 'User';
-			$this->listFilterMapping = array(
-				'id' => array(
-					self::HANDLE => new ARFieldHandle($cn, 'ID'),
-					self::CONDITION => 'EqualsCond'),
+			$this->extraFilteringMapping = array(
+				'id' => array(self::AR_FIELD_HANDLE=>f('User.ID'), self::AR_CONDITION=>'EqualsCond'),
 				'name' => array(
-					self::HANDLE => new ARExpressionHandle("CONCAT(".$cn.".firstName,' ',".$cn.".lastName)"),
-					self::CONDITION => 'LikeCond'),
-				'first_name' => array(
-					self::HANDLE => new ARFieldHandle($cn, 'firstName'),
-					self::CONDITION => 'LikeCond'),
-				'last_name' => array(
-					self::HANDLE => new ARFieldHandle($cn, 'lastName'),
-					self::CONDITION => 'LikeCond'),
-				'company_name' => array(
-					self::HANDLE => new ARFieldHandle($cn, 'companyName'),
-					self::CONDITION => 'LikeCond'),
-				'email' => array(
-					self::HANDLE => new ARFieldHandle($cn, 'email'),
-					self::CONDITION => 'LikeCond'),
-				'created' => array(
-					self::HANDLE => new ARFieldHandle($cn, 'dateCreated'),
-					self::CONDITION => 'EqualsCond'),
-				'enabled' => array(
-					self::HANDLE => new ARFieldHandle($cn, 'isEnabled'),
-					self::CONDITION => 'EqualsCond')
+					self::AR_FIELD_HANDLE => new ARExpressionHandle("CONCAT(User.firstName,' ',User.lastName)"),
+					self::AR_CONDITION => 'LikeCond'),
+				'created' => array(self::AR_FIELD_HANDLE => f('User.dateCreated'), self::AR_CONDITION => 'EqualsCond'),
+				'enabled' => array(self::AR_FIELD_HANDLE => f('User.isEnabled'), self::AR_CONDITION => 'EqualsCond')
 			);
 		}
-		return $this->listFilterMapping;
-	}
-	
-	
-	public function getListFilterConditionAndARHandle($key)
-	{
-		$mapping = $this->getListFilterMapping();
-		if(array_key_exists($key, $mapping) == false || array_key_exists(self::CONDITION, $mapping[$key]) == false)
-		{
-			throw new Exception('Condition for key ['.$key.'] not found in mapping');
-		}
-		if(array_key_exists($key, $mapping) == false || array_key_exists(self::HANDLE, $mapping[$key]) == false)
-		{
-			throw new Exception('Handle for key ['.$key.'] not found in mapping');
-		}
-
-		return $mapping[$key];
-	}
-	
-	public function getListFilterCondition($key)
-	{
-		$r = $this->getListFilterConditionAndARHandle($key);
-		return $r[$key][self::CONDITION];
-	}
-	
-	public function getListFilterARHandle($key)
-	{
-		$r = $this->getListFilterConditionAndARHandle($key);
-		return $r[$key][self::HANDLE];
-	}
-
-	public function getListFilterKeys()
-	{
-		return array_keys($this->getListFilterMapping());
+		return $this->extraFilteringMapping;
 	}
 
 	public function sanitizeFilterField($name, &$value)

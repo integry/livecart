@@ -11,14 +11,21 @@ abstract class ApiReader implements Iterator
 {
 	const API_PARSER_DATA = '__api_reader_parser_data_key__';
 	const API_PARSER_CLASS_NAME = '__api_reader_parser_class_name_key__';
+	const AR_FIELD_HANDLE = 0;
+	const AR_CONDITION = 1;
+	const ALL_KEYS = -1;
 
 	protected $iteratorKey = 0;
 	protected $content;
-	protected $xmlKeyToApiActionMapping = array();
 	
+	protected $xmlKeyToApiActionMapping = array(); //? deprecated
+	protected $extraFilteringMapping = array();
+	protected $apiFields;
+		
 	private $apiActionName;
 	private $fieldNames = array();
 
+	
 
 	public function __construct($xml, $fieldNames)
 	{
@@ -27,7 +34,17 @@ abstract class ApiReader implements Iterator
 		$this->setApiFieldNames($fieldNames);
 		$this->findApiActionName($xml);
 	}
+
+	public function setApiFields($fieldNames)
+	{
+		$this->apiFields = $fieldNames;
+	}
 	
+	public function getApiFields()
+	{
+		return $this->apiFields;
+	}
+
 	public function setApiFieldNames($fieldNames)
 	{
 		$this->fieldNames = $fieldNames;
