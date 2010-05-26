@@ -27,7 +27,7 @@ class UserApi extends ModelApi
 		parent::__construct(
 			$application,
 			'User',
-			array_keys(User::getNewInstance('')->getSchema()->getFieldList())
+			array() // fields to ignore in User model
 		);
 	}
 

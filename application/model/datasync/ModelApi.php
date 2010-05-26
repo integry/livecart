@@ -22,7 +22,7 @@ abstract class ModelApi
 		return false;
 	}
 	
-	protected function __construct(LiveCart $application, $className, $fieldNames=array())
+	protected function __construct(LiveCart $application, $className, $ignoreFieldNames = array())
 	{
 		$this->setClassName($className);
 		$this->setApplication($application);
@@ -33,10 +33,15 @@ abstract class ModelApi
 		{
 			throw new Exception('Parser '.$cn.' not found');
 		}
-		$this->setParserClassName($cn);
-		$this->setParser(new $cn($request->get(ApiReader::API_PARSER_DATA), $fieldNames));
 
-		// --
+		$modelFieldNames = array_keys(ActiveRecordModel::getSchemaInstance($className)->getFieldList());
+
+		// $modelFieldNames - $ignoreFieldNames
+		$modelFieldNames = array_diff($modelFieldNames,is_array($ignoreFieldNames)?$ignoreFieldNames:array($ignoreFieldNames));
+		$this->setParserClassName($cn);
+		$this->setParser(new $cn($request->get(ApiReader::API_PARSER_DATA), $modelFieldNames));
+
+		// read and put data from api request format (that could be wahatever custom parser can read) in  Requst object as key=>value pairs.
 		$this->getParser()->loadDataInRequest($this->getApplication()->getRequest());
 	}
 

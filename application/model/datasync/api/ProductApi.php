@@ -23,7 +23,7 @@ class ProductApi extends ModelApi
 		parent::__construct(
 			$application,
 			'Product',
-			array_keys(Product::getNewInstance(Category::getRootNode())->getSchema()->getFieldList())
+			array() // fields to ignore in Product model
 		);
 	}
 
@@ -76,11 +76,16 @@ class ProductApi extends ModelApi
 
 	public function create()
 	{
+		//$this->getApplication()->getRequest()->set('category', 136); // debug..
+				
 		$updater = new ApiProductImport($this->application);
 		$updater->allowOnlyCreate();
 		$profile = new CsvImportProfile('Product');
 		$reader = $this->getDataImportIterator($updater, $profile);
 		$updater->setCallback(array($this, 'productImportCallback'));
+
+
+
 		$updater->importFile($reader, $profile);
 
 		return $this->statusResponse($this->importedIDs, 'created');

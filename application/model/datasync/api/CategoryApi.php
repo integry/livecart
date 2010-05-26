@@ -25,7 +25,7 @@ class CategoryApi extends ModelApi
 		parent::__construct(
 			$application,
 			'Category',
-			array_keys($this->root->getSchema()->getFieldList()) // field names, (this line means all that are in Category model).
+			array() // fields to ignore in Category model
 		);
 	}
 	
