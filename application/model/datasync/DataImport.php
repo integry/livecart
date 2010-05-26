@@ -64,6 +64,7 @@ abstract class DataImport
 			$value = $record[$csvIndex];
 
 			list($className, $field) = explode('.', $column, 2);
+			
 			if (method_exists($this, 'set_' . $className . '_' . $field))
 			{
 				$method = 'set_' . $className . '_' . $field;
@@ -74,7 +75,7 @@ abstract class DataImport
 				$method = 'set_' . $field;
 				$this->$method($instance, $value);
 			}
-			else if (isset($instance->$field) && ($instance->$field instanceof ARValueMapper) && ($className == $this->getClassName()))
+			else if (isset($instance->$field) && ($instance->$field instanceof ARValueMapper) && ($className == $this->getClassName($className, $this->className)))
 			{
 				$instance->$field->set($value);
 			}

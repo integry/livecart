@@ -11,9 +11,10 @@ ClassLoader::import('application.model.datasync.api.reader.ApiReader');
 
 class XmlProductApiReader extends ApiReader
 {
-	private $apiActionName;
-	private $listFilterMapping;
-	
+	protected $xmlKeyToApiActionMapping = array
+	(
+		'list' => 'filter'
+	);
 	public static function canParse(Request $request)
 	{
 		$get = $request->getRawGet();

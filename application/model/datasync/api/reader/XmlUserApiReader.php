@@ -15,7 +15,6 @@ class XmlUserApiReader extends ApiReader
 	(
 		'list' => 'filter'
 	);
-
 	public static function canParse(Request $request)
 	{
 		$get = $request->getRawGet();

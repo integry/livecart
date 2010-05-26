@@ -105,7 +105,7 @@ class UserApi extends ModelApi
 		$customers = User::getRecordSetArray('User',$parser->getARSelectFilter(), true);
 
 		// $addressFieldNames = array_keys(ActiveRecordModel::getSchemaInstance('UserAddress')->getFieldList());
-		$addressFieldNames = array('address1', 'address2', 'city', 'stateName', 'postalCode', 'phone');
+		$addressFieldNames = array('firstName', 'lastName', 'address1', 'address2', 'city', 'stateName', 'postalCode', 'phone');
 		$userFieldNames = $parser->getApiFieldNames();
 
 		foreach($customers as $customer)
@@ -154,6 +154,7 @@ class UserApi extends ModelApi
 ClassLoader::import("application.model.datasync.import.UserImport");
 // misc things
 // @todo: in seperate file!
+
 class ApiUserImport extends UserImport
 {
 	const CREATE = 1;
@@ -166,9 +167,16 @@ class ApiUserImport extends UserImport
 		$this->allowOnly = self::UPDATE;
 	}
 
-	public function getClassName()  // because dataImport::getClassName() will return ApiUser, not User.
+	public function getClassName($classNameToCompare=null, $instanceClassName=null)  // because dataImport::getClassName() will return ApiUser, not User.
 	{
-		return 'User';
+		echo $instanceClassName;
+		if($instanceClassName == 'userAddress')
+		{
+			
+			echo 1111;
+			return $classNameToCompare;
+		}
+		return substr(parent::getClassName(),3); // cut off Api from class name
 	}
 
 	public function allowOnlyCreate()

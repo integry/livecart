@@ -25,8 +25,6 @@ abstract class ApiReader implements Iterator
 	private $apiActionName;
 	private $fieldNames = array();
 
-	
-
 	public function __construct($xml, $fieldNames)
 	{
 		$this->xml = $xml; // $this->setDataResource(); // or smth.
