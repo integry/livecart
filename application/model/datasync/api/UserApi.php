@@ -28,7 +28,7 @@ class UserApi extends ModelApi
 		parent::__construct(
 			$application,
 			'User',
-			array() // fields to ignore in User model
+			array('eavObjectID', 'preferences') // fields to ignore in User model
 		);
 	}
 
@@ -79,6 +79,7 @@ class UserApi extends ModelApi
 			throw new Exception('User not found');
 		}
 		$apiFieldNames = $parser->getApiFieldNames();
+		$addressFieldNames = array('firstName', 'lastName', 'address1', 'address2', 'city', 'stateName', 'postalCode', 'phone');
 
 		// --
 		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
@@ -92,6 +93,26 @@ class UserApi extends ModelApi
 					$responseCustomer->addChild($k, $v);
 				}
 			}
+			
+			
+			
+			// todo: join? how?? m?!
+			$u = User::getInstanceByID($user['ID']);	
+			$u->loadAddresses();
+			// default billing and shipping addreses
+			foreach(array('defaultShippingAddress', 'defaultBillingAddress') as $addressType)
+			{
+				if(is_numeric($user[$addressType.'ID']))
+				{
+					$address = $u->defaultBillingAddress->get()->userAddressID->get();
+					foreach($addressFieldNames as $addressFieldName)
+					{
+						$responseCustomer->addChild($addressType.'_'.$addressFieldName, $address->$addressFieldName->get());
+					}
+				}
+			}
+			
+			
 		}
 		return new SimpleXMLResponse($response);
 	}

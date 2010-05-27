@@ -109,18 +109,22 @@ abstract class ApiReader implements Iterator
 		$list = array_merge($list, $this->getExtraFilteringMapping());
 		$arsf = new ARSelectFilter();
 		$filterKeys = array_keys($list);
-		foreach($filterKeys as $key)
+		
+		foreach(array('//filter/', '//list/') as $xpathPrefix) // todo: pass in xpath prefixes
 		{
-			$data = $this->xml->xpath('//filter/'.$key);
-			while(count($data) > 0)
+			foreach($filterKeys as $key)
 			{
-				$value = (string)array_shift($data);
-				$arsf->mergeCondition(
-					new $list[$key][self::AR_CONDITION](
-						$list[$key][self::AR_FIELD_HANDLE],						
-						$this->sanitizeFilterField($key, $value)
-					)
-				);
+				$data = $this->xml->xpath($xpathPrefix.$key);
+				while(count($data) > 0)
+				{
+					$value = (string)array_shift($data);
+					$arsf->mergeCondition(
+						new $list[$key][self::AR_CONDITION](
+							$list[$key][self::AR_FIELD_HANDLE],						
+							$this->sanitizeFilterField($key, $value)
+						)
+					);
+				}
 			}
 		}
 		return $arsf;
