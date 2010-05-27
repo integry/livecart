@@ -1,6 +1,4 @@
 <?php
-//
-// todo: changing email address for not existing user does not return error.
 
 ClassLoader::import('application.model.datasync.ModelApi');
 ClassLoader::import('application.model.datasync.api.reader.XmlUserApiReader');
@@ -18,7 +16,6 @@ class UserApi extends ModelApi
 {
 	private $listFilterMapping = null;
 	protected $application;
-
 
 	public static function canParse(Request $request)
 	{
@@ -196,7 +193,6 @@ class ApiUserImport extends UserImport
 	const UPDATE = 2;
 	
 	private $allowOnly = null;
-	private $parser = null; 
 	public function allowOnlyUpdate()
 	{
 		// todo: use options add, create
@@ -218,7 +214,7 @@ class ApiUserImport extends UserImport
 	function getInstance($record, CsvImportProfile $profile)
 	{
 		$instance = parent::getInstance($record, $profile);
-		
+
 		$e = $instance->isExistingRecord();
 		if($this->allowOnly == self::CREATE && $e == true) 
 		{
@@ -229,11 +225,6 @@ class ApiUserImport extends UserImport
 			throw new Exception('Record not found');
 		}
 		return $instance;
-	}
-
-	public function setParser($parser)
-	{
-		$this->parser = $parser;
 	}
 }
 

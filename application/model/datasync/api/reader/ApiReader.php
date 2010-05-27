@@ -247,6 +247,16 @@ abstract class ApiReader implements Iterator
 			}
 		}
 	}
+	
+	protected function sanitizeFilterField($field, &$value)
+	{
+		return $value;
+	}
+	
+	protected function getExtraFilteringMapping()
+	{
+		return array();
+	}
 }
 
 ?>

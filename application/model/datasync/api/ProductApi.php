@@ -59,6 +59,23 @@ class ProductApi extends ModelApi
 		return new SimpleXMLResponse($response);
 	}
 
+	public function filter()
+	{
+		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
+		$parser = $this->getParser();
+		$products = User::getRecordSetArray('Product', $parser->getARSelectFilter(), true);
+		$fieldNames = $parser->getApiFieldNames();
+		foreach($products as $product)
+		{
+			$productNode = $response->addChild('product');
+			foreach($fieldNames as $fieldName)
+			{
+				$productNode->addChild($fieldName, is_string($product[$fieldName])? $product[$fieldName] : '');
+			}
+		}
+		return new SimpleXMLResponse($response);
+	}
+	
 	public function delete()
 	{
 		$request = $this->getApplication()->getRequest();

@@ -59,6 +59,12 @@ class XmlProductApiReader extends ApiReader
 		parent::populate( $updater, $profile, $this->xml,
 			'/request/product/[[API_ACTION_NAME]]/[[API_FIELD_NAME]]', array('sku'));
 	}
+	
+	public function getARSelectFilter()
+	{
+		return parent::getARSelectFilter('Product');
+	}
+
 }
 
 ?>
