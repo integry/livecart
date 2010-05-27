@@ -78,7 +78,6 @@ class ProductImport extends DataImport
 		{
 			$groupedFields['ProductPrice']['ProductPrice.' . $k] = $this->maketext('_quantity_level_x', $k);
 		}
-
 		return $groupedFields;
 	}
 
@@ -325,6 +324,8 @@ class ProductImport extends DataImport
 				{
 					$image = ProductImage::getNewInstance($product);
 				}
+
+				$image->setOwner($product); // this is needed when ProductApi imports default ProductImage.
 
 				$this->importImage($image, $record[$fields['ProductImage']['mainurl']]);
 

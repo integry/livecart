@@ -103,7 +103,7 @@ class ProductApi extends ModelApi
 		// manufacturer
 		if(array_key_exists('Manufacturer',$product))
 		{
-			$responseProduct->addChild('manufacturerName', $product['Manufacturer']['name']);
+			$responseProduct->addChild('Manufacturer_name', $product['Manufacturer']['name']);
 		}
 
 		// category
