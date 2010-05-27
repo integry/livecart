@@ -68,7 +68,6 @@ class UserImport extends DataImport
 		{
 			$instance = User::getNewInstance('');
 		}
-
 		$this->setLastImportedRecordName($instance->email->get());
 		return $instance;
 	}

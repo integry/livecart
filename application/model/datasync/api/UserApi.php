@@ -1,4 +1,6 @@
 <?php
+//
+// todo: changing email address for not existing user does not return error.
 
 ClassLoader::import('application.model.datasync.ModelApi');
 ClassLoader::import('application.model.datasync.api.reader.XmlUserApiReader');
@@ -48,6 +50,24 @@ class UserApi extends ModelApi
 	
 	public function update()
 	{
+		//
+		// DataImport will find user by id, if not found by email, if not found then create new
+		// if requesting to change user email (provaiding ID and new email),
+		// 
+		// threrefore check if user exists here.
+		//
+		$request = $this->application->getRequest();
+		$id = $this->getRequestID();
+		if($id != '' && $request->get('email') != '')
+		{
+			$users = ActiveRecordModel::getRecordSetArray('User',
+				select(eq(f('User.ID'), $id))
+			);
+			if(count($users) == 0)
+			{
+				throw new Exception('User not found');
+			}
+		}
 		$updater = new ApiUserImport($this->application);
 		$updater->allowOnlyUpdate();
 		$profile = new CsvImportProfile('User');
@@ -93,9 +113,7 @@ class UserApi extends ModelApi
 					$responseCustomer->addChild($k, $v);
 				}
 			}
-			
-			
-			
+					
 			// todo: join? how?? m?!
 			$u = User::getInstanceByID($user['ID']);	
 			$u->loadAddresses();
@@ -111,8 +129,6 @@ class UserApi extends ModelApi
 					}
 				}
 			}
-			
-			
 		}
 		return new SimpleXMLResponse($response);
 	}
@@ -180,7 +196,7 @@ class ApiUserImport extends UserImport
 	const UPDATE = 2;
 	
 	private $allowOnly = null;
-
+	private $parser = null; 
 	public function allowOnlyUpdate()
 	{
 		// todo: use options add, create
@@ -203,19 +219,22 @@ class ApiUserImport extends UserImport
 	{
 		$instance = parent::getInstance($record, $profile);
 		
-		
-		$id = $instance->getID();
-		if($this->allowOnly == self::CREATE && $id > 0) 
+		$e = $instance->isExistingRecord();
+		if($this->allowOnly == self::CREATE && $e == true) 
 		{
 			throw new Exception('Record exists');
 		}
-		if($this->allowOnly == self::UPDATE && $id == 0) 
+		if($this->allowOnly == self::UPDATE && $e == false) 
 		{
 			throw new Exception('Record not found');
 		}
 		return $instance;
 	}
 
+	public function setParser($parser)
+	{
+		$this->parser = $parser;
+	}
 }
 
 ?>

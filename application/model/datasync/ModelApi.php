@@ -90,22 +90,27 @@ abstract class ModelApi
 
 	public function update()
 	{
+		throw new Exception('Action not implement');
 	}
 
 	public function create()
 	{
+		throw new Exception('Action not implement');
 	}
 	
 	public function delete()
 	{
+		throw new Exception('Action not implement');
 	}
 	
 	public function get()
 	{
+		throw new Exception('Action not implement');
 	}
 	
 	public function filter() // because list() is keyword.
 	{
+		throw new Exception('Action not implement');
 	}
 	
 	protected function setParserClassName($className)
@@ -157,7 +162,7 @@ abstract class ModelApi
 		}
 		if(false == is_numeric($id))
 		{
-			throw new Exception('+ Bad ID field value.');
+			throw new Exception('Bad ID field value.');
 		}
 		return $id;
 	}
