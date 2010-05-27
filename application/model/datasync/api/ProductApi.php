@@ -35,7 +35,7 @@ class ProductApi extends ModelApi
 		$parser = $this->getParser();
 
 		$products = ActiveRecordModel::getRecordSetArray('Product',
-			select(eq(f('Product.sku'), $request->get('SKU')))
+			select(eq(f('Product.sku'), $request->get('SKU'))), array('Category', 'Manufacturer', 'ProductImage')
 		);
 		if(count($products) == 0)
 		{
@@ -43,7 +43,7 @@ class ProductApi extends ModelApi
 		}
 		$apiFieldNames = $parser->getApiFieldNames();
 
-		// --
+	// --
 		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
 		$responseProduct = $response->addChild('product');
 		while($product = array_shift($products))
@@ -53,6 +53,45 @@ class ProductApi extends ModelApi
 				if(in_array($k, $apiFieldNames))
 				{
 					$responseProduct->addChild($k, $v);
+				}
+			}
+			
+			// product image
+			if(array_key_exists('ProductImage', $product))
+			{
+				foreach($product['ProductImage'] as $k => $v)
+				{
+					if($k == 'title' || substr($k, 0, 6) == 'title_')
+					{
+						$responseProduct->addChild('ProductDefaultImage_'.$k, $v);
+					}
+				}
+				if(array_key_exists('urls', $product['ProductImage']) && is_array($product['ProductImage']['urls']))
+				{
+					end($product['ProductImage']['urls']);
+					$url = current($product['ProductImage']['urls']);
+					reset($product['ProductImage']['urls']);
+					$responseProduct->addChild('ProductDefaultImage_URL', $url);
+				}
+			}
+			
+			// manufacturer
+			if(array_key_exists('Manufacturer',$product))
+			{
+				$responseProduct->addChild('manufacturerName', $product['Manufacturer']['name']);
+			}
+
+			// category
+			if(array_key_exists('Category', $product))
+			{
+				$ignoreCategoryFieldNames = array('lft','rght','eavObjectID','__class__');
+				
+				foreach($product['Category'] as $k => $v)
+				{
+					if(is_string($v) && in_array($k,$ignoreCategoryFieldNames) == false)
+					{
+						$responseProduct->addChild('Category_'.$k, $v);
+					}
 				}
 			}
 		}

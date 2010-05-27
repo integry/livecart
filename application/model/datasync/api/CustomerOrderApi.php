@@ -76,15 +76,21 @@ class CustomerOrderApi extends ModelApi
 
 	public function filter()
 	{
+		set_time_limit(0);
 		$request = $this->application->getRequest();
 		$parser = $this->getParser();
 		$apiFieldNames = $parser->getApiFieldNames();
-		$customerOrders = ActiveRecordModel::getRecordSetArray('CustomerOrder',
+		$customerOrders = ActiveRecordModel::getRecordSet('CustomerOrder',
 			select()
 		);
 		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
-		while($item = array_shift($customerOrders))
+		foreach ($customerOrders as $order)
 		{
+			$order->loadAll();
+			$transactions = $order->getTransactions;
+			$item = $order->toArray();
+
+			//pp($apiFieldNames, $item);
 			$xmlItem = $response->addChild('order');
 			foreach($item as $k => $v)
 			{
@@ -94,10 +100,11 @@ class CustomerOrderApi extends ModelApi
 					$xmlItem->addChild($k, htmlentities($v));
 				}
 			}
+			unset($order);
+			ActiveRecord::clearPool();
 		}
 		return new SimpleXMLResponse($response);
 	}
-
 
 	// ------ 
 	

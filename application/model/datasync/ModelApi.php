@@ -2,7 +2,6 @@
 
 ClassLoader::import('application.model.ActiveRecordModel');
 
-
 /**
  * Web service access layer model base
  *
@@ -165,6 +164,59 @@ abstract class ModelApi
 			throw new Exception('Bad ID field value.');
 		}
 		return $id;
+	}
+
+	//
+	// todo:
+	//    * detect 'cyclic' recursions
+	//    * some sort of filtering mechanism
+	public function mapToSimpleXMLElement(SimpleXMLElement $xml, $array, $prefix = '')
+	{
+		if(is_array($array) == false)
+		{
+			return $xml;
+		}
+		foreach($array as $key=>$value)
+		{
+			if($prefix)
+			{
+				$key = $prefix.'_'.$key;
+			}
+
+			// cast value to string
+			if(is_object($value))
+			{
+				if(method_exists($value, 'toArray'))
+				{
+					$value = $value->toArray();
+				}
+				elseif (method_exists($value, '__toArray'))
+				{
+					$value = $value->__toArray();
+				}
+				elseif(method_exists($value, '__toString'))
+				{
+					$value = (string)$value;
+				}
+			}
+			elseif (is_bool($value))
+			{
+				$value = $value ? 'TRUE' : 'FALSE';
+			}
+			elseif (is_numeric($value))
+			{
+				$value = (string)$value;
+			}
+
+			// value was cast to string
+			if(is_string($value))
+			{
+				$xml->addChild($key, $value);
+			} else {
+				$xml = self::mapToSimpleXMLElement($xml, $value, $key);
+			}
+		}
+		return $xml;
 	}
 }
 

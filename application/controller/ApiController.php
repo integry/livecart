@@ -149,4 +149,10 @@ function pp()
 	exit;
 }
 
+function ff()
+{
+	$args = func_get_args();
+	echo '<pre>', implode('<hr />', array_map('pp_map', $args)),'<pre>';
+}
+
 ?>
