@@ -23,7 +23,7 @@ class ProductApi extends ModelApi
 		parent::__construct(
 			$application,
 			'Product',
-			array() // fields to ignore in Product model
+			array('childSettings') // fields to ignore in Product model
 		);
 	}
 
@@ -32,8 +32,6 @@ class ProductApi extends ModelApi
 	public function get()
 	{
 		$request = $this->application->getRequest();
-		$parser = $this->getParser();
-
 		$products = ActiveRecordModel::getRecordSetArray('Product',
 			select(eq(f('Product.sku'), $request->get('SKU'))), array('Category', 'Manufacturer', 'ProductImage')
 		);
@@ -41,80 +39,88 @@ class ProductApi extends ModelApi
 		{
 			throw new Exception('Product not found');
 		}
-		$apiFieldNames = $parser->getApiFieldNames();
-
-	// --
+		// --
 		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
 		$responseProduct = $response->addChild('product');
 		while($product = array_shift($products))
 		{
-			foreach($product as $k => $v)
-			{
-				if(in_array($k, $apiFieldNames))
-				{
-					$responseProduct->addChild($k, $v);
-				}
-			}
-			
-			// product image
-			if(array_key_exists('ProductImage', $product))
-			{
-				foreach($product['ProductImage'] as $k => $v)
-				{
-					if($k == 'title' || substr($k, 0, 6) == 'title_')
-					{
-						$responseProduct->addChild('ProductDefaultImage_'.$k, $v);
-					}
-				}
-				if(array_key_exists('urls', $product['ProductImage']) && is_array($product['ProductImage']['urls']))
-				{
-					end($product['ProductImage']['urls']);
-					$url = current($product['ProductImage']['urls']);
-					reset($product['ProductImage']['urls']);
-					$responseProduct->addChild('ProductDefaultImage_URL', $url);
-				}
-			}
-			
-			// manufacturer
-			if(array_key_exists('Manufacturer',$product))
-			{
-				$responseProduct->addChild('manufacturerName', $product['Manufacturer']['name']);
-			}
-
-			// category
-			if(array_key_exists('Category', $product))
-			{
-				$ignoreCategoryFieldNames = array('lft','rght','eavObjectID','__class__');
-				
-				foreach($product['Category'] as $k => $v)
-				{
-					if(is_string($v) && in_array($k,$ignoreCategoryFieldNames) == false)
-					{
-						$responseProduct->addChild('Category_'.$k, $v);
-					}
-				}
-			}
+			$this->fillResponseItem($responseProduct, $product);
 		}
 		return new SimpleXMLResponse($response);
 	}
 
 	public function filter()
 	{
+		$parser = $this->getParser();		
+		$request = $this->getApplication()->getRequest();
+		$name = $request->get('name');
+		$request->set('name','%'.serialize($name).'%');
 		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
-		$parser = $this->getParser();
-		$products = User::getRecordSetArray('Product', $parser->getARSelectFilter(), true);
-		$fieldNames = $parser->getApiFieldNames();
+		$products = Product::getRecordSetArray(
+			'Product',
+			$parser->getARSelectFilter(), 
+			array('Category', 'Manufacturer', 'ProductImage')
+		);
+		// $fieldNames = $parser->getApiFieldNames();
 		foreach($products as $product)
 		{
-			$productNode = $response->addChild('product');
-			foreach($fieldNames as $fieldName)
-			{
-				$productNode->addChild($fieldName, is_string($product[$fieldName])? $product[$fieldName] : '');
-			}
+			$this->fillResponseItem($response->addChild('product'), $product);
 		}
 		return new SimpleXMLResponse($response);
 	}
 	
+	private function fillResponseItem($responseProduct, $product)
+	{
+		$parser = $this->getParser();
+		$apiFieldNames = $parser->getApiFieldNames();
+		foreach($product as $k => $v)
+		{
+			if(in_array($k, $apiFieldNames))
+			{
+				$responseProduct->addChild($k, (string)$v);
+			}
+		}
+	
+		// product image
+		if(array_key_exists('ProductImage', $product))
+		{
+			foreach($product['ProductImage'] as $k => $v)
+			{
+				if($k == 'title' || (substr($k, 0, 6) == 'title_' && $v))
+				{
+					$responseProduct->addChild('ProductDefaultImage_'.$k, $v);
+				}
+			}
+			if(array_key_exists('urls', $product['ProductImage']) && is_array($product['ProductImage']['urls']))
+			{
+				end($product['ProductImage']['urls']);
+				$url = current($product['ProductImage']['urls']);
+				reset($product['ProductImage']['urls']);
+				$responseProduct->addChild('ProductDefaultImage_URL', $url);
+			}
+		}
+			
+		// manufacturer
+		if(array_key_exists('Manufacturer',$product))
+		{
+			$responseProduct->addChild('manufacturerName', $product['Manufacturer']['name']);
+		}
+
+		// category
+		if(array_key_exists('Category', $product))
+		{
+			$categoryFieldNames = array('name');
+			foreach($product['Category'] as $k => $v)
+			{
+				if(is_string($v) && in_array($k,$categoryFieldNames))
+				{
+					$responseProduct->addChild('Category_'.$k, $v);
+				}
+			}
+		}
+		return $responseProduct;
+	}
+
 	public function delete()
 	{
 		$request = $this->getApplication()->getRequest();

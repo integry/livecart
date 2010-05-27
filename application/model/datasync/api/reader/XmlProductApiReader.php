@@ -65,6 +65,14 @@ class XmlProductApiReader extends ApiReader
 		return parent::getARSelectFilter('Product');
 	}
 
+	public function sanitizeFilterField($fieldName, &$value)
+	{
+		if(in_array($fieldName, array('name', 'shortDescription', 'longDescription', 'pageTitle')))
+		{
+			$value = '%:"%'.$value.'%"%'; // lets try to find value in serialized array.
+		}
+		return $value;
+	}
 }
 
 ?>
