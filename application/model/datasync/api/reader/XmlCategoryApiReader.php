@@ -53,3 +53,5 @@ class XmlCategoryApiReader extends ApiReader
 		return $request;
 	}
 }
+
+?>

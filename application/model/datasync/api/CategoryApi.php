@@ -91,7 +91,6 @@ class CategoryApi extends ModelApi
 
 	public function delete()
 	{
-		
 		$id = $this->getRequestID();
 		$this->_getCategoryById($id)->delete();
 		return $this->statusResponse($id, 'deleted');
@@ -174,4 +173,5 @@ class CategoryApi extends ModelApi
 		return $category;
 	}
 }
+
 ?>

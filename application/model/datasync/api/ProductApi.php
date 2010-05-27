@@ -76,16 +76,11 @@ class ProductApi extends ModelApi
 
 	public function create()
 	{
-		//$this->getApplication()->getRequest()->set('category', 136); // debug..
-				
 		$updater = new ApiProductImport($this->application);
 		$updater->allowOnlyCreate();
 		$profile = new CsvImportProfile('Product');
 		$reader = $this->getDataImportIterator($updater, $profile);
 		$updater->setCallback(array($this, 'productImportCallback'));
-
-
-
 		$updater->importFile($reader, $profile);
 
 		return $this->statusResponse($this->importedIDs, 'created');
@@ -113,8 +108,6 @@ class ProductApi extends ModelApi
 
 	public function productImportCallback($record)
 	{
-		//$this->importedIDs[] = array('id'=>$record->getID(), 'sku'=>$record->sku->get());
-		
 		$this->importedIDs[] = $record->sku->get();
 	}
 }
@@ -167,6 +160,6 @@ class ApiProductImport extends ProductImport
 		
 		return parent::importInstance($record, $profile);
 	}
-
 }
+
 ?>

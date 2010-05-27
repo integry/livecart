@@ -245,3 +245,4 @@ abstract class ApiReader implements Iterator
 	}
 }
 
+?>

@@ -1,6 +1,15 @@
 <?php
 
-ClassLoader::import("application.model.ActiveRecordModel");
+ClassLoader::import('application.model.ActiveRecordModel');
+
+
+/**
+ * Web service access layer model base
+ *
+ * @package application.model.datasync
+ * @author Integry Systems <http://integry.com>
+ * 
+ */
 
 abstract class ModelApi
 {
@@ -21,7 +30,7 @@ abstract class ModelApi
 		}
 		return false;
 	}
-	
+
 	protected function __construct(LiveCart $application, $className, $ignoreFieldNames = array())
 	{
 		$this->setClassName($className);
@@ -36,14 +45,6 @@ abstract class ModelApi
 		$modelFields = ActiveRecordModel::getSchemaInstance($className)->getFieldList();
 		// $modelFieldNames - $ignoreFieldNames
 		$modelFieldNames = array_diff(array_keys($modelFields),is_array($ignoreFieldNames)?$ignoreFieldNames:array($ignoreFieldNames));
-
-		// $z=array();
-		// foreach($modelFieldNames as $name)
-		// {
-		//	$z[] = array($className, $name);
-		// }
-		// $modelFields = $z;
-		
 
 		$this->setParserClassName($cn);
 		$this->setParser(new $cn($request->get(ApiReader::API_PARSER_DATA), $modelFieldNames));
@@ -89,76 +90,21 @@ abstract class ModelApi
 
 	public function update()
 	{
-		$this->beforeUpdate();
-		// ..
-		$this->afterUpdate();
 	}
 
 	public function create()
 	{
-		$this->beforeCreate();
-		// ..
-		$this->afterCreate();
 	}
 	
 	public function delete()
 	{
-		$this->beforeDelete();
-		// ..
-		$this->afterDelete();
 	}
 	
 	public function get()
 	{
-		$this->beforeGet();
-		// ..
-		$this->afterGet();
 	}
 	
 	public function filter() // because list() is keyword.
-	{
-		$this->beforeFilter();
-		// ..
-		$this->afterFilter();		
-	}
-	
-	protected function beforeUpdate()
-	{
-	}
-
-	protected function afterUpdate()
-	{
-	}
-
-	protected function beforeCreate()
-	{
-	}
-
-	protected function afterCreate()
-	{
-	}
-
-	protected function beforeDelete()
-	{
-	}
-
-	protected function afterDelete()
-	{
-	}
-
-	protected function beforeGet()
-	{
-	}
-
-	protected function afterGet()
-	{
-	}
-
-	protected function beforeFilter()
-	{
-	}
-
-	protected function afterFilter()
 	{
 	}
 	
@@ -194,14 +140,12 @@ abstract class ModelApi
 		{
 			$ids = array($ids);
 		}
-		
 		foreach($ids as $id)
 		{
 			$response->addChild($status, $id);
 		}
 		return new SimpleXMLResponse($response);
 	}
-
 
 	protected function getRequestID()
 	{
@@ -218,3 +162,5 @@ abstract class ModelApi
 		return $id;
 	}
 }
+
+?>

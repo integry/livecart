@@ -72,3 +72,5 @@ class XmlCustomerOrderApiReader extends ApiReader
 		return $request;
 	}
 }
+
+?>

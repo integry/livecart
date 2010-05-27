@@ -1,7 +1,5 @@
 <?php
 
-// id - 582
-
 ClassLoader::import('application.model.datasync.ModelApi');
 ClassLoader::import('application.model.datasync.api.reader.XmlUserApiReader');
 ClassLoader::import('application/model.datasync.CsvImportProfile');
@@ -164,27 +162,20 @@ class ApiUserImport extends UserImport
 
 	public function allowOnlyUpdate()
 	{
+		// todo: use options add, create
 		$this->allowOnly = self::UPDATE;
-	}
-
-	public function getClassName($classNameToCompare=null, $instanceClassName=null)  // because dataImport::getClassName() will return ApiUser, not User.
-	{
-		echo $instanceClassName;
-		if($instanceClassName == 'userAddress')
-		{
-			
-			echo 1111;
-			return $classNameToCompare;
-		}
-		return substr(parent::getClassName(),3); // cut off Api from class name
 	}
 
 	public function allowOnlyCreate()
 	{
+		// todo: use options add, create
 		$this->allowOnly = self::CREATE;
 	}
 
-
+	public function getClassName()  // because dataImport::getClassName() will return ApiUser, not User.
+	{
+		return substr(parent::getClassName(),3); // cut off Api from class name
+	}
 
 	public // one (bad) implementation of delete() action calls this method, therefore public
 	function getInstance($record, CsvImportProfile $profile)
@@ -205,4 +196,5 @@ class ApiUserImport extends UserImport
 	}
 
 }
+
 ?>

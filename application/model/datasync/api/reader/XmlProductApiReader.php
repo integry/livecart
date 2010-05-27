@@ -60,3 +60,5 @@ class XmlProductApiReader extends ApiReader
 			'/request/product/[[API_ACTION_NAME]]/[[API_FIELD_NAME]]', array('sku'));
 	}
 }
+
+?>

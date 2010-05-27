@@ -93,3 +93,5 @@ class XmlUserApiReader extends ApiReader
 		return $request;
 	}
 }
+
+?>
