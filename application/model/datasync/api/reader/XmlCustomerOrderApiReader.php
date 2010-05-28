@@ -46,7 +46,7 @@ class XmlCustomerOrderApiReader extends ApiReader
 	public function loadDataInRequest($request)
 	{
 		$apiActionName = $this->getApiActionName();
-		$shortFormatActions = array('get','invoice', 'delete'); // like <customer><delete>[customer id]</delete></customer>
+		$shortFormatActions = array('get','invoice', 'delete', 'capture', 'cancel'); // like <customer><delete>[customer id]</delete></customer>
 		if(in_array($apiActionName, $shortFormatActions))
 		{
 			$request = parent::loadDataInRequest($request, '//', $shortFormatActions);
