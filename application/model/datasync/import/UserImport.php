@@ -55,6 +55,7 @@ class UserImport extends DataImport
 	protected function getInstance($record, CsvImportProfile $profile)
 	{
 		$fields = $profile->getSortedFields();
+		
 		if (!empty($fields['User']['ID']))
 		{
 			$instance = User::getInstanceByID($record[$fields['User']['ID']], true);
@@ -67,6 +68,7 @@ class UserImport extends DataImport
 		if (empty($instance))
 		{
 			$instance = User::getNewInstance('');
+			$instance->isEnabled->set(true);
 		}
 		$this->setLastImportedRecordName($instance->email->get());
 		return $instance;
