@@ -170,6 +170,21 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 			$this->itemPrice = $price;
 		}
 	}
+	
+	/**
+	 *  Avoid CustomerOrder::finalize function overriding the item price
+	 *  Usually necessary for creating/updating orders via API, etc.
+	 */
+	public function setCustomPrice($price)
+	{
+		$this->isCustomPrice = true;
+		$this->price->set($price);
+	}
+	
+	public function isCustomPrice()
+	{
+		return $this->isCustomPrice;
+	}
 
 	public function reset()
 	{

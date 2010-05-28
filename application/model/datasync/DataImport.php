@@ -9,6 +9,7 @@ abstract class DataImport
 	protected $options;
 	protected $uid;
 	protected $className;
+	protected $callback;
 	private $lastImportName;
 	private $flushMessage;
 
@@ -66,19 +67,19 @@ abstract class DataImport
 			if (method_exists($this, 'set_' . $className . '_' . $field))
 			{
 				$method = 'set_' . $className . '_' . $field;
-				$this->$method($instance, $value);
+				$this->$method($instance, $value, $record, $profile);
 			}
 			else if (method_exists($this, 'set_' . $field))
 			{
 				$method = 'set_' . $field;
-				$this->$method($instance, $value);
+				$this->$method($instance, $value, $record, $profile);
 			}
 			else if (isset($instance->$field) && ($instance->$field instanceof ARValueMapper) && ($className == $this->getClassName()))
 			{
 				$instance->$field->set($value);
 			}
 		}
-
+		$idBeforeSave = $instance->getID();
 		$instance->save();
 
 		$this->importAttributes($instance, $record, $profile->getSortedFields());
@@ -86,6 +87,7 @@ abstract class DataImport
 		foreach ($this->getReferencedData() as $section)
 		{
 			$method = 'import_' . $section;
+
 			if (method_exists($this, $method))
 			{
 				$subProfile = $profile->extractSection($section);
@@ -97,8 +99,13 @@ abstract class DataImport
 		}
 
 		$this->afterSave($instance, $record);
-
+	
 		$id = $instance->getID();
+
+		if ($this->callback)
+		{
+			call_user_func($this->callback, $instance, $idBeforeSave == $id);
+		}
 
 		$instance->__destruct();
 		$instance->destruct(true);
@@ -108,12 +115,16 @@ abstract class DataImport
 		return $id;
 	}
 
-	public function importRelatedRecord($type, ActiveRecordModel $instance, $record, CsvImportProfile $profile)
+	protected function getImporterInstance($type)
 	{
 		$class = $type . 'Import';
-		$this->application->loadPluginClass('application.model.datasync', $class);
-		$import = new $class($this->application);
-		return $import->importInstance($record, $profile, $instance);
+		$this->application->loadPluginClass('application.model.datasync.import', $class);
+		return new $class($this->application);		
+	}
+	
+	public function importRelatedRecord($type, ActiveRecordModel $instance, $record, CsvImportProfile $profile)
+	{
+		return $this->getImporterInstance($type)->importInstance($record, $profile, $instance);
 	}
 
 	public function disableRecords(ARSelectFilter $filter)
@@ -182,7 +193,7 @@ abstract class DataImport
 		return array();
 	}
 
-	public function importFile(CsvFile $file, CsvImportProfile $profile)
+	public function importFile(Iterator $file, CsvImportProfile $profile)
 	{
 		$total = 0;
 
@@ -196,7 +207,7 @@ abstract class DataImport
 		return $total;
 	}
 
-	public function importFileChunk(CsvFile $file, CsvImportProfile $profile, $count)
+	public function importFileChunk(Iterator $file, CsvImportProfile $profile, $count)
 	{
 		$processed = null;
 
@@ -218,7 +229,6 @@ abstract class DataImport
 					$cell = utf8_encode($cell);
 				}
 			}
-
 			$status = $this->importInstance($record, $profile);
 
 			$file->next();
@@ -414,10 +424,23 @@ abstract class DataImport
 		preg_match('/(.*)Import/', get_class($this), $match);
 		return array_pop($match);
 	}
+	
+	public function getColumnValue($record, CsvImportProfile $profile, $fieldName)
+	{
+		if ($profile->isColumnSet($fieldName))
+		{
+			return $record[$profile->getColumnIndex($fieldName)];
+		}
+	}
 
 	public function setFlushMessage($msg)
 	{
 		$this->flushMessage = $msg;
+	}
+	
+	public function setCallback($function)
+	{
+		$this->callback = $function;
 	}
 
 	protected function translate($key)

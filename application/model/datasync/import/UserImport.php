@@ -23,7 +23,6 @@ class UserImport extends DataImport
 		{
 			$fields[$key] = $this->translate($data['name']);
 		}
-
 		unset($fields['User.isOnline']);
 		$fields['User.password'] = $this->translate('_password');
 		$fields['User.group'] = $this->translate('_user_group');
@@ -56,7 +55,7 @@ class UserImport extends DataImport
 	protected function getInstance($record, CsvImportProfile $profile)
 	{
 		$fields = $profile->getSortedFields();
-
+		
 		if (!empty($fields['User']['ID']))
 		{
 			$instance = User::getInstanceByID($record[$fields['User']['ID']], true);
@@ -69,6 +68,7 @@ class UserImport extends DataImport
 		if (empty($instance))
 		{
 			$instance = User::getNewInstance('');
+			$instance->isEnabled->set(true);
 		}
 
 		$this->setLastImportedRecordName($instance->email->get());
