@@ -2,8 +2,10 @@
 
 ClassLoader::import('application.model.datasync.ModelApi');
 ClassLoader::import('application.model.datasync.api.reader.XmlCustomerOrderApiReader');
+ClassLoader::import('application.model.datasync.import.CustomerOrderImport');
 ClassLoader::import('application/model.datasync.CsvImportProfile');
 ClassLoader::import('application/model.order.CustomerOrder');
+ClassLoader::import('application.helper.LiveCartSimpleXMLElement');
 
 /**
  * Web service access layer for CustomerOrder model
@@ -63,6 +65,24 @@ class CustomerOrderApi extends ModelApi
 		return $this->statusResponse($id, 'deleted');
 	}
 	
+	
+	public function create()
+	{
+		$updater = new ApiCustomerOrderImport($this->application);
+		$updater->allowOnlyCreate();
+		$profile = new CsvImportProfile('CustomerOrder');
+		
+		$reader = $this->getDataImportIterator($updater, $profile);
+		
+		pp($profile);
+		
+		$updater->setCallback(array($this, 'userImportCallback'));
+		$updater->importFile($reader, $profile);
+
+		return $this->statusResponse($this->importedIDs, 'created');
+	
+	}
+	
 	// --
 	private function fillResponseItem($xml, $item)
 	{
@@ -96,9 +116,10 @@ class CustomerOrderApi extends ModelApi
 		// cart itmes
 		if(array_key_exists('cartItems', $item))
 		{
+			$xmlProducts = $xml->addChild('Products');
 			foreach($item['cartItems'] as $cartItem)
 			{
-				$ci = $xml->addChild('CartItem');
+				$ci = $xmlProducts->addChild('Product');
 				$ci->addChild('sku', isset($cartItem['nameData'], $cartItem['nameData']['sku']) ? $cartItem['nameData']['sku'] : '');
 				foreach($cartItemFieldNames as $fieldName)
 				{
@@ -120,7 +141,7 @@ class CustomerOrderApi extends ModelApi
 		{
 			throw new Exception('Order not found');
 		}
-		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
+		$response = new LiveCartSimpleXMLElement('<response datetime="'.date('c').'"></response>');
 		foreach($customerOrders as $order)
 		{
 			$order->loadAll();
@@ -131,6 +152,27 @@ class CustomerOrderApi extends ModelApi
 			ActiveRecord::clearPool();
 		}
 		return new SimpleXMLResponse($response);
+	}
+}
+
+
+// misc things
+ClassLoader::import("application.model.datasync.import.UserImport");
+
+class ApiCustomerOrderImport extends CustomerOrderImport
+{
+	const CREATE = 1;
+	const UPDATE = 2;
+
+	private $allowOnly = null;
+	public function allowOnlyUpdate()
+	{
+		$this->allowOnly = self::UPDATE;
+	}
+
+	public function allowOnlyCreate()
+	{
+		$this->allowOnly = self::CREATE;
 	}
 }
 

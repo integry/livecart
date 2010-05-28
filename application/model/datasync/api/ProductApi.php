@@ -3,6 +3,7 @@
 ClassLoader::import('application.model.datasync.ModelApi');
 ClassLoader::import('application.model.product.Product');
 ClassLoader::import('application.model.category.Category');
+ClassLoader::import('application.helper.LiveCartSimpleXMLElement');
 
 /**
  * Web service access layer for Product model
@@ -40,7 +41,7 @@ class ProductApi extends ModelApi
 			throw new Exception('Product not found');
 		}
 		// --
-		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
+		$response = new LiveCartSimpleXMLElement('<response datetime="'.date('c').'"></response>');
 		$responseProduct = $response->addChild('product');
 		while($product = array_shift($products))
 		{
@@ -55,7 +56,7 @@ class ProductApi extends ModelApi
 		$request = $this->getApplication()->getRequest();
 		$name = $request->get('name');
 		$request->set('name','%'.serialize($name).'%');
-		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
+		$response = new LiveCartSimpleXMLElement('<response datetime="'.date('c').'"></response>');
 		$products = Product::getRecordSetArray(
 			'Product',
 			$parser->getARSelectFilter(), 

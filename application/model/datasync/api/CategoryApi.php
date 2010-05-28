@@ -2,6 +2,7 @@
 
 ClassLoader::import('application.model.datasync.ModelApi');
 ClassLoader::import('application.model.category.Category');
+ClassLoader::import('application.helper.LiveCartSimpleXMLElement');
 
 /**
  * Web service access layer for Category model
@@ -44,7 +45,7 @@ class CategoryApi extends ModelApi
 		$apiFieldNames = $parser->getApiFieldNames();
 
 		// --
-		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
+		$response = new LiveCartSimpleXMLElement('<response datetime="'.date('c').'"></response>');
 		$responseCategory = $response->addChild('category');
 		while($category = array_shift($categories))
 		{
@@ -111,7 +112,7 @@ class CategoryApi extends ModelApi
 		}
 		$f->setOrder(MultiLingualObject::getLangOrderHandle(new ARFieldHandle('Category', 'name')));
 		$categories = ActiveRecordModel::getRecordSetArray('Category', $f);
-		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
+		$response = new LiveCartSimpleXMLElement('<response datetime="'.date('c').'"></response>');
 		if($emptyListIsException && count($categories) == 0)
 		{
 			throw new Exception('Category not found');

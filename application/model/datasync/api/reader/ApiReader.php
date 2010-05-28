@@ -257,7 +257,7 @@ abstract class ApiReader implements Iterator
 	{
 		return array();
 	}
-	
+
 	protected static function canParseXml(Request $request, $lookForXpath, $parserClassName)
 	{
 		$requestData = $request->getRawRequest();
