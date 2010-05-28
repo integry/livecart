@@ -115,6 +115,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		return parent::getInstanceById('CustomerOrder', $id, $loadData, $loadReferencedRecords);
 	}
 
+	public static function getInstanceByInvoiceNumber($id, $loadReferencedRecords = false)
+	{
+		return self::getRecordSet(select(eq(f('CustomerOrder.invoiceNumber'), $id)), $loadReferencedRecords)->shift();		
+	}
+
 	/**
 	 * @return ARSet
 	 */
@@ -454,9 +459,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	 *
 	 *  @return CustomerOrder New order instance containing wishlist items
 	 */
-	public function finalize()
+	public function finalize($options = array())
 	{
-		if ($this->isFinalized->get())
+		if ($this->isFinalized->get() && empty($options['allowRefinalize']))
 		{
 			return;
 		}
@@ -491,7 +496,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		foreach ($this->getShoppingCartItems() as $item)
 		{
-			$item->price->set($item->getSubTotalBeforeTax() / $item->getCount());
+			if (!empty($options['customPrice']))
+			{
+				$item->price->set($item->getSubTotalBeforeTax() / $item->getCount());
+			}
+			
 			$item->name->set($item->getProduct()->getParent()->name->get());
 			$item->setValueByLang('name', 'sku', $item->getProduct()->sku->get());
 			$item->save();
@@ -515,12 +524,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			}
 		}
 
-		if (!$this->shippingAddress->get() && $this->user->get()->defaultShippingAddress->get() && $this->isShippingRequired())
+		if (!$this->shippingAddress->get() && $this->user->get() && $this->user->get()->defaultShippingAddress->get() && $this->isShippingRequired())
 		{
 			$this->shippingAddress->set($this->user->get()->defaultShippingAddress->get()->userAddress->get());
 		}
 
-		if (!$this->billingAddress->get() && $this->user->get()->defaultBillingAddress->get())
+		if (!$this->billingAddress->get() && $this->user->get() && $this->user->get()->defaultBillingAddress->get())
 		{
 			$this->billingAddress->set($this->user->get()->defaultBillingAddress->get()->userAddress->get());
 		}
@@ -538,12 +547,19 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		}
 
 		// move wish list items to a separate order
-		$wishList = CustomerOrder::getNewInstance($this->user->get());
-		foreach ($this->getWishListItems() as $item)
+		if ($this->getWishListItems())
 		{
-			$wishList->addItem($item);
+			$wishList = CustomerOrder::getNewInstance($this->user->get());
+			foreach ($this->getWishListItems() as $item)
+			{
+				$wishList->addItem($item);
+			}
+			$wishList->save();
 		}
-		$wishList->save();
+		else
+		{
+			$wishList = null;
+		}
 
 		// set order total
 		$this->totalAmount->set($this->getTotal(true));
@@ -573,18 +589,21 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$shipments = $this->shipments;
 		unset($this->shipments);
 
-		$generator = InvoiceNumberGenerator::getGenerator($this);
-		$saved = false;
-		while (!$saved)
+		if (!$this->invoiceNumber->get())
 		{
-			try
+			$generator = InvoiceNumberGenerator::getGenerator($this);
+			$saved = false;
+			while (!$saved)
 			{
-				$this->invoiceNumber->set($generator->getNumber());
-				$this->save();
-				$saved = true;
-			}
-			catch (SQLException $e)
-			{
+				try
+				{
+					$this->invoiceNumber->set($generator->getNumber());
+					$this->save();
+					$saved = true;
+				}
+				catch (SQLException $e)
+				{
+				}
 			}
 		}
 
