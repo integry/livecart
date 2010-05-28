@@ -1,0 +1,43 @@
+Customer:
+
+	List - http://localhost/copy/index.php/api/xml?xml=<customer><list/></customer>
+	       http://localhost/copy/index.php/api/xml?xml=<customer><list><email>%.com</email></list></customer>
+	       http://localhost/copy/index.php/api/xml?xml=<customer><filter><email>%.com</email></filter></customer>
+
+	Get  - http://localhost/copy/index.php/api/xml?xml=<customer><get>1</get></customer>
+
+	Create - http://localhost/copy/index.php/api/xml?xml=<customer><create><email>just.created@customer.kom</email><name>Just created Customer</name></create></customer>
+
+	Update - http://localhost/copy/index.php/api/xml?xml=<customer><update><email>just.created@customer.kom</email><ShippingAddress_companyName>Shipping address company name</ShippingAddress_companyName></update></customer>
+	Update - http://localhost/copy/index.php/api/xml?xml=<customer><update><ID>579<ID><email>new@email.kom</email></update></customer> (change email)
+
+	Delete - http://localhost/copy/index.php/api/xml?xml=<customer><delete>579</delete></customer>
+
+Category:
+	List   - http://localhost/copy/index.php/api/xml?xml=<category><filter/></category>
+
+	Get    - http://localhost/copy/index.php/api/xml?xml=<category><get>1</get></category> (error if not found)
+                 http://localhost/copy/index.php/api/xml?xml=<category><filter><ID>1</ID></filter></category> (empty list if not found)
+
+	Create - http://localhost/copy/index.php/api/xml?xml=<category><create><name>Just created category</name></create></category>
+
+	Update - http://localhost/copy/index.php/api/xml?xml=<category><update><activeProductCount>123</activeProductCount><ID>136</ID></update></category>
+		 http://localhost/copy/index.php/api/xml?xml=<category><update><ID>136</ID><parentNodeID>8</parentNodeID></update></category>
+		 (or any combination of Category model fields)
+
+	Delete - http://localhost/copy/index.php/api/xml?xml=<category><delete><ID>127</ID></delete></category>
+
+
+Product:
+	List  -  http://localhost/copy/index.php/api/xml?xml=<product><list/></product>
+		 http://localhost/copy/index.php/api/xml?xml=<product><list><isFeatured>1</isFeatured></list></product>
+
+	Get    - http://localhost/copy/index.php/api/xml?xml=<product><get>ESKU44912</get></product>
+
+		http://localhost/copy/index.php/api/xml?xml=<order><invoice>INT-40058/2009</invoice></order>
+
+	Create - http://localhost/copy/index.php/api/xml?xml=<product><create><sku>FOOBAR1</sku><name>D</name></create></product>
+
+	UPDATE - http://localhost/copy/index.php/api/xml?xml=<product><update><sku>FOOBAR1</sku><name>renamed from D</name></update></product>
+
+	DELETE - http://localhost/copy/index.php/api/xml?xml=<product><delete><sku>FOOBAR1</sku></delete></product>
