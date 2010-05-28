@@ -84,6 +84,14 @@ class ApiController extends BaseController
 			//return new RawResponse($e->getMessage());
 		}
 	}		
+	
+	public function doc()
+	{
+		$classes = $this->getApiClasses();
+		$response = new ActionResponse('classes', $classes);
+		
+		return $response;		
+	}
 
 	private function setModelApi(ModelApi $clazz)
 	{
@@ -98,6 +106,26 @@ class ApiController extends BaseController
 		}
 		return $this->modelApi;
 	}
+	
+	private function getApiClasses()
+	{
+		$classes = array();
+		foreach($this->loadModelsFrom as $classLoaderPath)
+		{
+			$modelFilenames = glob(ClassLoader::getRealPath($classLoaderPath.'.').'*Api.php');
+
+			foreach($modelFilenames as $modelFilename)
+			{
+				preg_match('/([a-z0-9]+Api)\.php$/i', $modelFilename, $match);
+				if(count($match) == 2)
+				{
+					$classes[$match[1]] = $modelFilename;
+				}
+			}
+		}
+		
+		return $classes;
+	}
 
 	private function loadModelApi()
 	{
@@ -105,27 +133,19 @@ class ApiController extends BaseController
 		if(!$triedToLoadModel)
 		{
 			$request = $this->getRequest();	
-			// load found API models and ask if it can parse Request.
-			foreach($this->loadModelsFrom as $classLoaderPath)
+			foreach ($this->getApiClasses() as $modelApiClassName => $path)
 			{
-				$modelFilenames = glob(ClassLoader::getRealPath($classLoaderPath.'.').'*Api.php');
-				foreach($modelFilenames as $modelFilename)
+				include_once $path;
+				
+				if (!class_exists($modelApiClassName, false))
 				{
-					preg_match('/([a-z0-9]+Api)\.php$/i', $modelFilename, $match);
-					if(count($match) == 2)
-					{
-						$modelApiClassName = $match[1];
-						ClassLoader::import($classLoaderPath.'.'.$modelApiClassName);
-						if(!class_exists($modelApiClassName))
-						{
-							continue;
-						}
-						if(call_user_func_array(array($modelApiClassName, "canParse"), array($request)))
-						{
-							$this->setModelApi(new $modelApiClassName($this->application));
-							break 2; // stop foreach($modelFilenames..) and foreach($this->loadModelsFrom..
-						}
-					}
+					continue;
+				}
+				
+				if (call_user_func_array(array($modelApiClassName, "canParse"), array($request)))
+				{
+					$this->setModelApi(new $modelApiClassName($this->application));
+					break;
 				}
 			}
 			$triedToLoadModel = true;
