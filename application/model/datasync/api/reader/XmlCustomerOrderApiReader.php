@@ -24,7 +24,7 @@ class XmlCustomerOrderApiReader extends ApiReader
 
 	public static function canParse(Request $request)
 	{
-		$get = $request->getRawGet();
+		$get = $request->getRawRequest();
 		if(array_key_exists('xml',$get))
 		{
 			$xml = self::getSanitizedSimpleXml($get['xml']);

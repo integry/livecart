@@ -55,6 +55,14 @@ class CustomerOrderApi extends ModelApi
 		return $this->apiActionGetOrdersBySelectFilter($this->getParser()->getARSelectFilter(), true);
 	}
 	
+	public function delete()
+	{
+		$order = CustomerOrder::getInstanceByID($this->getRequestID());
+		$id = $order->getID();
+		$order->delete();
+		return $this->statusResponse($id, 'deleted');
+	}
+	
 	// --
 	private function fillResponseItem($xml, $item)
 	{
