@@ -36,7 +36,8 @@ class CsvImportProfile
 
 		$data = parse_ini_file($fileName, true);
 		$className = __CLASS__;
-		$instance = new $className($data['className']);
+		
+		$instance = new $className(isset($data['className']) ? $data['className'] : '');
 		$instance->setParams($data['params']);
 
 		unset($data['params']);
@@ -138,6 +139,18 @@ class CsvImportProfile
 	public function setParams(array $params)
 	{
 		$this->params = $params;
+	}
+	
+	public function renameType($from, $to)
+	{
+		foreach ($this->fields as &$field)
+		{
+			list($type, $column) = explode('.', $field['name'], 2);
+			if ($from == $type)
+			{
+				$field['name'] = $to . '.' . $column;
+			}
+		}
 	}
 
 	public function getCsvFile($filePath)
