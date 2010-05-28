@@ -16,6 +16,20 @@ abstract class ModelApi
 	public $parserClassName;
 	public $parser;	
 	public $importedIDs = array(); // used in models that are using csv 'importers'
+	protected $supportedApiActionNames = array();
+
+	public function addSupportedApiActionName($apiActionName)
+	{
+		if(in_array($apiActionName, $this->supportedApiActionNames) == false)
+		{
+			$this->supportedApiActionNames[] = $apiActionName;
+		}
+	}
+
+	public function removeSupportedApiActionName($apiActionName)
+	{
+		$this->supportedApiActionNames = array_diff($this->supportedApiActionNames, array($apiActionName));
+	}
 
 	public static function canParse(Request $request, $parserClassNames=array())
 	{
@@ -50,6 +64,14 @@ abstract class ModelApi
 
 		// read and put data from api request format (that could be wahatever custom parser can read) in  Requst object as key=>value pairs.
 		$this->getParser()->loadDataInRequest($this->getApplication()->getRequest());
+
+		// default acions for all models.
+		// use $this->addSupportedApiActionName() or $this->removeSupportedApiActionName()
+		// in your 'api model' to modify this list. Don't change it here!
+		foreach(array('create', 'filter', 'update', 'delete', 'get') as $apiActionName)
+		{
+			$this->addSupportedApiActionName($apiActionName);
+		}
 	}
 
 	public function setApplication($application)
@@ -72,14 +94,9 @@ abstract class ModelApi
 		return $this->className;
 	}
 
-	public function getDefaultActions()
-	{
-		return array('create', 'filter', 'update', 'delete', 'get');
-	}
-
 	public function getActions()
 	{
-		return $this->getDefaultActions();
+		return $this->supportedApiActionNames;
 	}
 
 	public function respondsToApiAction($apiAction)

@@ -32,7 +32,7 @@ class CustomerOrderApi extends ModelApi
 	}
 
 	// ------ 
-
+/*
 	public function create()
 	{
 		die('create');
@@ -47,14 +47,48 @@ class CustomerOrderApi extends ModelApi
 	{
 		die('delete');
 	}
+*/
+
+	public function invoice()
+	{
+		$request = $this->getApplication()->getRequest();
+		$id = $request->get('ID');
+		$customerOrders = ActiveRecordModel::getRecordSetArray('CustomerOrder',
+			select(eq(f('CustomerOrder.invoiceNumber'), $id))
+		);
+
+		$parser = $this->getParser();
+		$apiFieldNames = $parser->getApiFieldNames();
+		// --
+		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
+		$responseItem = $response->addChild('order');
+		while($item = array_shift($customerOrders))
+		{
+			foreach($item as $k => $v)
+			{
+				if(in_array($k, $apiFieldNames))
+				{
+					$responseItem->addChild($k, $v);
+				}
+			}
+		}
+		return new SimpleXMLResponse($response);
+	}
+
+
 
 	public function get()
 	{
 		$request = $this->getApplication()->getRequest();
 		$id = $request->get('ID');
 		$customerOrders = ActiveRecordModel::getRecordSetArray('CustomerOrder',
-			select(eq(f(is_numeric($id)?'CustomerOrder.ID':'CustomerOrder.invoiceNumber'), $id))
+			select(eq(f('CustomerOrder.ID'), $id))
 		);
+
+		if(count($customerOrders) == 0)
+		{
+			throw new Exception('Order not found');
+		}
 
 		$parser = $this->getParser();
 		$apiFieldNames = $parser->getApiFieldNames();
