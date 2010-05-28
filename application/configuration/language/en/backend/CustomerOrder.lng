@@ -66,7 +66,7 @@ _order_report=Report
 
 # Grid columns
 CustomerOrder.ID=ID
-CustomerOrder.invoiceNumber=Order ID
+CustomerOrder.invoiceNumber=Invoice number
 CustomerOrder.status=Status
 CustomerOrder.totalAmount=Order total
 CustomerOrder.capturedAmount=Captured amount
@@ -99,6 +99,8 @@ OrderedItem.count=Count
 OrderedItem.price=Unit price
 OrderedItem.priceCurrencyID=Currency
 OrderedItem.itemSubtotal=Item subtotal
+OrderedItem=Ordered product
+OrderedItem.shipment=Shipment number
 
 _listing_orders=Listing orders $from - $to of $count
 _no_orders=No orders found
