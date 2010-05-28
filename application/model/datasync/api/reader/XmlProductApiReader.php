@@ -17,21 +17,7 @@ class XmlProductApiReader extends ApiReader
 	);
 	public static function canParse(Request $request)
 	{
-		$get = $request->getRawRequest();
-		if(array_key_exists('xml',$get))
-		{
-			$xml = self::getSanitizedSimpleXml($get['xml']);
-			if($xml != null)
-			{
-				if(count($xml->xpath('/request/product')) == 1)
-				{
-					$request->set(ApiReader::API_PARSER_DATA ,$xml);
-					$request->set(ApiReader::API_PARSER_CLASS_NAME, __CLASS__);
-					return true;
-				}
-			}
-		}
-		return false;
+		return self::canParseXml($request, '/request/product', __CLASS__);
 	}
 
 	protected function findApiActionName($xml)

@@ -15,22 +15,10 @@ class XmlCategoryApiReader extends ApiReader
 	(
 		'list' => 'filter'
 	);
+
 	public static function canParse(Request $request)
 	{
-		$get = $request->getRawRequest();
-		if(array_key_exists('xml',$get))
-		{
-			$xml = self::getSanitizedSimpleXml($get['xml']);
-			if($xml != null)
-			{
-				if(count($xml->xpath('/request/category')) == 1)
-				{
-					$request->set(ApiReader::API_PARSER_DATA ,$xml);
-					$request->set(ApiReader::API_PARSER_CLASS_NAME, __CLASS__);
-					return true;
-				}
-			}
-		}
+		return self::canParseXml($request, '/request/category', __CLASS__);
 	}
 
 	protected function findApiActionName($xml)

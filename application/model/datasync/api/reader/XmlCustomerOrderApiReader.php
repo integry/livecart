@@ -24,21 +24,7 @@ class XmlCustomerOrderApiReader extends ApiReader
 
 	public static function canParse(Request $request)
 	{
-		$get = $request->getRawRequest();
-		if(array_key_exists('xml',$get))
-		{
-			$xml = self::getSanitizedSimpleXml($get['xml']);
-			if($xml != null)
-			{
-				if(count($xml->xpath('/request/order')) == 1)
-				{
-					$request->set(ApiReader::API_PARSER_DATA ,$xml);
-					$request->set(ApiReader::API_PARSER_CLASS_NAME, __CLASS__);
-					return true;
-				}
-			}
-		}
-		return false;
+		return self::canParseXml($request, '/request/order', __CLASS__);
 	}
 
 	public function populate($updater, $profile)

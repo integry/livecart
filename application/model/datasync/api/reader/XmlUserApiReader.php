@@ -15,23 +15,10 @@ class XmlUserApiReader extends ApiReader
 	(
 		'list' => 'filter'
 	);
+
 	public static function canParse(Request $request)
 	{
-		$get = $request->getRawRequest();
-		if(array_key_exists('xml',$get))
-		{
-			$xml = self::getSanitizedSimpleXml($get['xml']);
-			if($xml != null)
-			{
-				if(count($xml->xpath('/request/customer')) == 1)
-				{
-					$request->set(ApiReader::API_PARSER_DATA ,$xml);
-					$request->set(ApiReader::API_PARSER_CLASS_NAME, __CLASS__);
-					return true;
-				}
-			}
-		}
-		return false;
+		return self::canParseXml($request, '/request/customer', __CLASS__);
 	}
 
 	public function populate($updater, $profile)
