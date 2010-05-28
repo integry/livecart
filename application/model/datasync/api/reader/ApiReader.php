@@ -257,6 +257,26 @@ abstract class ApiReader implements Iterator
 	{
 		return array();
 	}
+	
+	protected static function canParseXml(Request $request, $lookForXpath, $parserClassName)
+	{
+		$requestData = $request->getRawRequest();
+
+		if(array_key_exists('xml',$requestData))
+		{
+			$xml = self::getSanitizedSimpleXml($requestData['xml']);
+			if($xml != null)
+			{
+				if(count($xml->xpath($lookForXpath)) == 1)
+				{
+					$request->set(ApiReader::API_PARSER_DATA ,$xml);
+					$request->set(ApiReader::API_PARSER_CLASS_NAME, $parserClassName);
+					return true;
+				}
+			}
+		}
+	}
+	
 }
 
 ?>
