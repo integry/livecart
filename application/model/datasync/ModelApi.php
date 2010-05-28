@@ -182,6 +182,20 @@ abstract class ModelApi
 		}
 		return $id;
 	}
+	
+	
+	protected function fillSimpleXmlResponseItem($simpleXmlElement, $item)
+	{
+		$parser = $this->getParser();
+		$apiFieldNames = $parser->getApiFieldNames();
+		foreach($item as $key => $value)
+		{
+			if(in_array($key, $apiFieldNames))
+			{
+				$simpleXmlElement->addChild($key, $value);
+			}
+		}
+	}
 
 	//
 	// todo:

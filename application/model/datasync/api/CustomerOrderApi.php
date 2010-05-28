@@ -1,4 +1,5 @@
 <?php
+
 ClassLoader::import('application.model.datasync.ModelApi');
 ClassLoader::import('application.model.datasync.api.reader.XmlCustomerOrderApiReader');
 ClassLoader::import('application/model.datasync.CsvImportProfile');
@@ -29,175 +30,100 @@ class CustomerOrderApi extends ModelApi
 			'CustomerOrder',
 			array() // fields to ignore in CustomerOrder model
 		);
-	}
 
-	// ------ 
-/*
-	public function create()
-	{
-		die('create');
+		$this->addSupportedApiActionName('invoice');
 	}
-	
-	public function update()
-	{
-		die('update');
-	}
-
-	public function delete()
-	{
-		die('delete');
-	}
-*/
 
 	public function invoice()
 	{
-		$request = $this->getApplication()->getRequest();
-		$id = $request->get('ID');
-		$customerOrders = ActiveRecordModel::getRecordSetArray('CustomerOrder',
-			select(eq(f('CustomerOrder.invoiceNumber'), $id))
-		);
-
-		$parser = $this->getParser();
-		$apiFieldNames = $parser->getApiFieldNames();
-		// --
-		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
-		$responseItem = $response->addChild('order');
-		while($item = array_shift($customerOrders))
-		{
-			foreach($item as $k => $v)
-			{
-				if(in_array($k, $apiFieldNames))
-				{
-					$responseItem->addChild($k, $v);
-				}
-			}
-		}
-		return new SimpleXMLResponse($response);
+		return $this->apiActionGetOrdersBySelectFilter(
+			select(eq(
+				f('CustomerOrder.invoiceNumber'),
+				$this->getApplication()->getRequest()->get('ID'))));
 	}
-
-
 
 	public function get()
 	{
-		$request = $this->getApplication()->getRequest();
-		$id = $request->get('ID');
-		$customerOrders = ActiveRecordModel::getRecordSetArray('CustomerOrder',
-			select(eq(f('CustomerOrder.ID'), $id))
-		);
-
-		if(count($customerOrders) == 0)
-		{
-			throw new Exception('Order not found');
-		}
-
-		$parser = $this->getParser();
-		$apiFieldNames = $parser->getApiFieldNames();
-		// --
-		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
-		$responseItem = $response->addChild('order');
-		while($item = array_shift($customerOrders))
-		{
-			foreach($item as $k => $v)
-			{
-				if(in_array($k, $apiFieldNames))
-				{
-					$responseItem->addChild($k, $v);
-				}
-			}
-		}
-		return new SimpleXMLResponse($response);
+		return $this->apiActionGetOrdersBySelectFilter(
+			select(eq(
+				f('CustomerOrder.ID'),
+				$this->getApplication()->getRequest()->get('ID'))));
 	}
 
 	public function filter()
 	{
-		set_time_limit(0);
-		$request = $this->application->getRequest();
-		$parser = $this->getParser();
-		$apiFieldNames = $parser->getApiFieldNames();
-		$customerOrders = ActiveRecordModel::getRecordSet('CustomerOrder',
-			select()
-		);
-		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
-		foreach ($customerOrders as $order)
-		{
-			$order->loadAll();
-			$transactions = $order->getTransactions;
-			$item = $order->toArray();
+		return $this->apiActionGetOrdersBySelectFilter($this->getParser()->getARSelectFilter(), true);
+	}
+	
+	// --
+	private function fillResponseItem($xml, $item)
+	{
+		parent::fillSimpleXmlResponseItem($xml, $item);
+	
+		$userFieldNames = array('userGroupID','email', 'firstName','lastName','companyName','isEnabled');
+		$addressFieldNames = array('stateID','phone', 'firstName','lastName','companyName','phone', 'address1', 'address2', 'city', 'stateName', 'postalCode', 'countryID', 'countryName', 'fullName', 'compact');
+		$cartItemFieldNames = array('name', 'customerOrderID', 'shipmentID', 'price', 'count', 'reservedProductCount',  'dateAdded', 'isSavedForLater');
 
-			//pp($apiFieldNames, $item);
-			$xmlItem = $response->addChild('order');
-			foreach($item as $k => $v)
+		// User
+		if(array_key_exists('User', $item))
+		{
+			foreach($userFieldNames as $fieldName)
 			{
-				if(in_array($k, $apiFieldNames))
+				$xml->addChild('User_'.$fieldName, isset($item['User'][$fieldName]) ? $item['User'][$fieldName] : '');
+			}
+		}
+
+		// Shipping and billing addresses
+		foreach(array('ShippingAddress','BillingAddress') as $addressType)
+		{
+			if(array_key_exists($addressType, $item))
+			{
+				foreach($addressFieldNames as $fieldName)
 				{
-					// todo: how to escape in simplexml, cdata? create cdata or what?
-					$xmlItem->addChild($k, htmlentities($v));
+					$xml->addChild($addressType.'_'.$fieldName, isset($item[$addressType], $item[$addressType][$fieldName]) ? $item[$addressType][$fieldName] : '');
 				}
 			}
+		}
+		
+		// cart itmes
+		if(array_key_exists('cartItems', $item))
+		{
+			foreach($item['cartItems'] as $cartItem)
+			{
+				$ci = $xml->addChild('CartItem');
+				$ci->addChild('sku', isset($cartItem['nameData'], $cartItem['nameData']['sku']) ? $cartItem['nameData']['sku'] : '');
+				foreach($cartItemFieldNames as $fieldName)
+				{
+					$ci->addChild($fieldName, isset($cartItem[$fieldName]) ? $cartItem[$fieldName] : '');
+				}
+			}
+		}
+
+		// more?
+	}
+
+	// this one handles list(), filter(), get() and invoice() actions
+	private function apiActionGetOrdersBySelectFilter($ARSelectFilter, $allowEmptyResponse=false)
+	{
+		set_time_limit(0);
+
+		$customerOrders = ActiveRecordModel::getRecordSet('CustomerOrder', $ARSelectFilter, array('User'));
+		if($allowEmptyResponse == false && count($customerOrders) == 0)
+		{
+			throw new Exception('Order not found');
+		}
+		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
+		foreach($customerOrders as $order)
+		{
+			$order->loadAll();
+			$transactions = $order->getTransactions();
+			$this->fillResponseItem($response->addChild('order'), $order->toArray());
+			
 			unset($order);
 			ActiveRecord::clearPool();
 		}
 		return new SimpleXMLResponse($response);
 	}
-
-	// ------ 
-	
-	public function userImportCallback($record)
-	{
-		$this->importedIDs[] = $record->getID();
-	}
-
-	private function getDataImportIterator($updater, $profile)
-	{
-		// parser can act as DataImport::importFile() iterator
-		$parser = $this->getParser();
-		$parser->populate($updater, $profile);
-		return $parser;
-	}
-}
-
-ClassLoader::import("application.model.datasync.import.UserImport");
-
-// misc things
-// @todo: in seperate file!
-class ApiOrderImport extends UserImport
-{
-	const CREATE = 1;
-	const UPDATE = 2;
-	
-	private $allowOnly = null;
-
-	public function allowOnlyUpdate()
-	{
-		$this->allowOnly = self::UPDATE;
-	}
-
-	public function getClassName()  // because dataImport::getClassName() will return ApiUser, not User.
-	{
-		return 'Order';
-	}
-
-	public function allowOnlyCreate()
-	{
-		$this->allowOnly = self::CREATE;
-	}
-
-	public // one (bad) implementation of delete() action calls this method, therefore public
-	function getInstance($record, CsvImportProfile $profile)
-	{
-		$instance = parent::getInstance($record, $profile);
-		$id = $instance->getID();
-		if($this->allowOnly == self::CREATE && $id > 0) 
-		{
-			throw new Exception('Record exists');
-		}
-		if($this->allowOnly == self::UPDATE && $id == 0) 
-		{
-			throw new Exception('Record not found');
-		}
-		return $instance;
-	}
-
 }
 
 ?>
