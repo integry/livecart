@@ -32,6 +32,8 @@ class CustomerOrderApi extends ModelApi
 		);
 
 		$this->addSupportedApiActionName('invoice');
+		$this->addSupportedApiActionName('capture');
+		$this->addSupportedApiActionName('cancel');
 	}
 
 	public function invoice()
@@ -61,6 +63,25 @@ class CustomerOrderApi extends ModelApi
 		$id = $order->getID();
 		$order->delete();
 		return $this->statusResponse($id, 'deleted');
+	}
+
+	public function capture()
+	{
+		$order = CustomerOrder::getInstanceByID($this->getRequestID());
+		foreach ($order->getTransactions() as $transaction)
+		{
+			$transaction->capture($transaction->amount->get());
+		}
+
+		return $this->statusResponse($order->getID(), 'captured');
+	}
+	
+	public function cancel()
+	{
+		$order = CustomerOrder::getInstanceByID($this->getRequestID());
+		$order->cancel();
+
+		return $this->statusResponse($order->getID(), 'canceled');
 	}
 	
 	// --
