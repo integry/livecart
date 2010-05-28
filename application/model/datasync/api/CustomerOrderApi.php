@@ -71,19 +71,27 @@ class CustomerOrderApi extends ModelApi
 		$updater = new ApiCustomerOrderImport($this->application);
 		$updater->allowOnlyCreate();
 		$profile = new CsvImportProfile('CustomerOrder');
-		
 		$reader = $this->getDataImportIterator($updater, $profile);
-		
-		pp($profile);
-		
-		$updater->setCallback(array($this, 'userImportCallback'));
+		$updater->setCallback(array($this, 'importCallback'));
 		$updater->importFile($reader, $profile);
-
+		
 		return $this->statusResponse($this->importedIDs, 'created');
-	
+	}
+
+	public function update()
+	{
+		$updater = new ApiCustomerOrderImport($this->application);
+		$updater->allowOnlyUpdate();
+		$profile = new CsvImportProfile('CustomerOrder');
+		$reader = $this->getDataImportIterator($updater, $profile);
+		$updater->setCallback(array($this, 'importCallback'));
+		$updater->importFile($reader, $profile);
+		
+		return $this->statusResponse($this->importedIDs, 'updated');
 	}
 	
 	// --
+	
 	private function fillResponseItem($xml, $item)
 	{
 		parent::fillSimpleXmlResponseItem($xml, $item);
@@ -173,6 +181,12 @@ class ApiCustomerOrderImport extends CustomerOrderImport
 	public function allowOnlyCreate()
 	{
 		$this->allowOnly = self::CREATE;
+	}
+	
+	
+	public function getClassName()
+	{	
+		return str_replace('Api', '', parent::getClassName());
 	}
 }
 

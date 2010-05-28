@@ -40,7 +40,7 @@ class UserApi extends ModelApi
 		$updater->allowOnlyCreate();
 		$profile = new CsvImportProfile('User');
 		$reader = $this->getDataImportIterator($updater, $profile);
-		$updater->setCallback(array($this, 'userImportCallback'));
+		$updater->setCallback(array($this, 'importCallback'));
 		$updater->importFile($reader, $profile);
 
 		return $this->statusResponse($this->importedIDs, 'created');
@@ -70,7 +70,7 @@ class UserApi extends ModelApi
 		$updater->allowOnlyUpdate();
 		$profile = new CsvImportProfile('User');
 		$reader = $this->getDataImportIterator($updater, $profile);
-		$updater->setCallback(array($this, 'userImportCallback'));
+		$updater->setCallback(array($this, 'importCallback'));
 		$updater->importFile($reader, $profile);
 
 		return $this->statusResponse($this->importedIDs, 'updated');
@@ -166,21 +166,6 @@ class UserApi extends ModelApi
 			}
 		}
 		return new SimpleXMLResponse($response);
-	}
-
-	// ------ 
-	
-	public function userImportCallback($record)
-	{
-		$this->importedIDs[] = $record->getID();
-	}
-
-	private function getDataImportIterator($updater, $profile)
-	{
-		// parser can act as DataImport::importFile() iterator
-		$parser = $this->getParser();
-		$parser->populate($updater, $profile);
-		return $parser;
 	}
 }
 

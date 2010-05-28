@@ -51,6 +51,7 @@ abstract class DataImport
 			return false;
 		}
 
+
 		foreach ($profile->getFields() as $csvIndex => $field)
 		{
 			$column = $field['name'];
@@ -60,7 +61,6 @@ abstract class DataImport
 			{
 				continue;
 			}
-
 			$value = $record[$csvIndex];
 
 			list($className, $field) = explode('.', $column, 2);
@@ -80,6 +80,7 @@ abstract class DataImport
 				$instance->$field->set($value);
 			}
 		}
+
 		$idBeforeSave = $instance->getID();
 		$instance->save();
 
@@ -105,7 +106,7 @@ abstract class DataImport
 
 		if ($this->callback)
 		{
-			call_user_func($this->callback, $instance, $idBeforeSave == $id);
+			call_user_func($this->callback, $instance);
 		}
 
 		$instance->__destruct();

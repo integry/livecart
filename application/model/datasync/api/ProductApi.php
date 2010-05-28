@@ -143,7 +143,7 @@ class ProductApi extends ModelApi
 		$updater->allowOnlyCreate();
 		$profile = new CsvImportProfile('Product');
 		$reader = $this->getDataImportIterator($updater, $profile);
-		$updater->setCallback(array($this, 'productImportCallback'));
+		$updater->setCallback(array($this, 'importCallback'));
 		$updater->importFile($reader, $profile);
 
 		return $this->statusResponse($this->importedIDs, 'created');
@@ -155,7 +155,7 @@ class ProductApi extends ModelApi
 		$updater->allowOnlyUpdate();
 		$profile = new CsvImportProfile('Product');
 		$reader = $this->getDataImportIterator($updater, $profile);
-		$updater->setCallback(array($this, 'productImportCallback'));
+		$updater->setCallback(array($this, 'importCallback'));
 		$updater->importFile($reader, $profile);
 
 		return $this->statusResponse($this->importedIDs, 'updated');
@@ -169,7 +169,7 @@ class ProductApi extends ModelApi
 		return $parser;
 	}
 
-	public function productImportCallback($record)
+	public function importCallback($record)
 	{
 		$this->importedIDs[] = $record->sku->get();
 	}

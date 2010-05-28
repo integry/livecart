@@ -196,6 +196,24 @@ abstract class ModelApi
 			}
 		}
 	}
+	
+	public function importCallback($record)
+	{
+		if(is_object($record) && method_exists($record, 'getID'))
+		{
+			$this->importedIDs[] = $record->getID();
+		}
+	}
+	
+	protected function getDataImportIterator($updater, $profile)
+	{
+		// parser can act as DataImport::importFile() iterator
+		$parser = $this->getParser();
+		$parser->populate($updater, $profile);
+		return $parser;
+	}
+
+
 
 	//
 	// todo:
