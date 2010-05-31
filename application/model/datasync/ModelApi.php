@@ -18,17 +18,22 @@ abstract class ModelApi
 	public $importedIDs = array(); // used in models that are using csv 'importers'
 	protected $supportedApiActionNames = array();
 
-	public function addSupportedApiActionName($apiActionName)
+	public function addSupportedApiActionName()
 	{
-		if(in_array($apiActionName, $this->supportedApiActionNames) == false)
+		$apiActionNames = func_get_args();
+		foreach($apiActionNames as $apiActionName)
 		{
-			$this->supportedApiActionNames[] = $apiActionName;
+			if(in_array($apiActionName, $this->supportedApiActionNames) == false)
+			{
+				$this->supportedApiActionNames[] = $apiActionName;
+			}
 		}
 	}
 
-	public function removeSupportedApiActionName($apiActionName)
+	public function removeSupportedApiActionName()
 	{
-		$this->supportedApiActionNames = array_diff($this->supportedApiActionNames, array($apiActionName));
+		$apiActionNames = func_get_args();
+		$this->supportedApiActionNames = array_diff($this->supportedApiActionNames, $apiActionNames);
 	}
 
 	public static function canParse(Request $request, $parserClassNames=array())
@@ -68,10 +73,7 @@ abstract class ModelApi
 		// default acions for all models.
 		// use $this->addSupportedApiActionName() or $this->removeSupportedApiActionName()
 		// in your 'api model' to modify this list. Don't change it here!
-		foreach(array('create', 'filter', 'update', 'delete', 'get') as $apiActionName)
-		{
-			$this->addSupportedApiActionName($apiActionName);
-		}
+		$this->addSupportedApiActionName('create', 'filter', 'update', 'delete', 'get');
 	}
 
 	public function setApplication($application)
