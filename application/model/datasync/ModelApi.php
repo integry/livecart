@@ -60,10 +60,13 @@ abstract class ModelApi
 		{
 			throw new Exception('Parser '.$cn.' not found');
 		}
-		$modelFields = ActiveRecordModel::getSchemaInstance($className)->getFieldList();
-		// $modelFieldNames - $ignoreFieldNames
-		$modelFieldNames = array_diff(array_keys($modelFields),is_array($ignoreFieldNames)?$ignoreFieldNames:array($ignoreFieldNames));
-
+		$modelFields = $modelFieldNames = array();
+		if($className)
+		{
+			$modelFields = ActiveRecordModel::getSchemaInstance($className)->getFieldList();
+			// $modelFieldNames - $ignoreFieldNames
+			$modelFieldNames = array_diff(array_keys($modelFields),is_array($ignoreFieldNames)?$ignoreFieldNames:array($ignoreFieldNames));
+		}
 		$this->setParserClassName($cn);
 		$this->setParser(new $cn($request->get(ApiReader::API_PARSER_DATA), $modelFieldNames));
 
