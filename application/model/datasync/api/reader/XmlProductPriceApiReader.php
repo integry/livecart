@@ -24,14 +24,35 @@ class XmlProductPriceApiReader extends ApiReader
 	public function loadDataInRequest($request)
 	{
 		$apiActionName = $this->getApiActionName();
-		$shortFormatActions = array('get');
-		if(in_array($apiActionName, $shortFormatActions))
+		switch($apiActionName)
 		{
-			$request = parent::loadDataInRequest($request, '//', $shortFormatActions);
-			$request->set('SKU',$request->get($apiActionName));
-			$request->remove($apiActionName);
-		} else {
-			$request = parent::loadDataInRequest($request, '/request/customer//', $this->getApiFieldNames());
+			case 'get':
+				$request = parent::loadDataInRequest($request, '//', array($apiActionName));
+				// rename get to SKU
+				$request->set('SKU',$request->get($apiActionName));
+				$request->remove($apiActionName);			
+				break;
+
+			case 'set':
+				// 'flat' fields
+				$request = parent::loadDataInRequest($request,
+					'/request/price/set/',
+					array('sku','currency','definedPrice','definedListPrice')
+				);
+
+				// quantity prices
+				$quantityPrices = array();
+				foreach($this->xml->xpath('/request/price/set/quantityPrices/quantityPrice') as $quantityPrice)
+				{
+					$quantityPrices[] = array(
+						'quantity'=>(string)$quantityPrice->quantity,
+						'price'=>(string)$quantityPrice->price,
+						'group'=>(string)$quantityPrice->group,
+						'currency'=>(string)$quantityPrice->currency
+					);
+				}
+				$request->set('quantityPrices', $quantityPrices);
+				break;
 		}
 		return $request;
 	}

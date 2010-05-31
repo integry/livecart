@@ -174,7 +174,7 @@ abstract class ApiReader implements Iterator
 		{
 			throw new Exception('ApiReader->loadDataInRequest(): please implement loadDataInRequest() in your ApiReader (parser) or pass 3 arguments');
 		}
-	
+
 		foreach($fieldNames as $fieldName)
 		{
 			$d = $this->xml->xpath($xpathPrefix.$fieldName);

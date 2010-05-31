@@ -48,3 +48,14 @@ CustomerOrder:
      Invoice: - /api/xml/?xml=<order><invoice>INT-40046/2009</invoice></order>
 
        Delete - /api/xml/?xml=<order><delete>123</delete></order>
+
+
+
+
+ProductPrice:
+	Get - /api/xml/?xml=<price><get>SKU123</get></price>
+
+	Set - /api/xml/?xml=<price><set><sku>SKU123</sku><currency>USD</currency><definedPrice>555<definedPrice></set></price>
+              /api/xml/?xml=<price><set><sku>SKU123</sku><currency>USD</currency><definedListPrice>555<definedListPrice></set></price>
+              /api/xml/?xml=<price><set><sku>SKU44939</sku><currency>USD</currency><quantityPrices><quantityPrice><quantity>5</quantity><price>55.98</price><group>1</group></quantityPrice><quantityPrice><quantity>5</quantity><price>22.98</price><currency>EUR</currency><group>1</group></quantityPrice></quantityPrices></set></price>
+
