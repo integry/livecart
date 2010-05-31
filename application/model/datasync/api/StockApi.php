@@ -39,12 +39,21 @@ class StockApi extends ModelApi
 	{
 		$request = $this->getApplication()->getRequest();
 		$sku = $request->get('sku');
-
-
+		$quantity = $request->get('quantity');
+		if(is_numeric($quantity) == false)
+		{
+			throw new Exception('Stock quantity must be numeric');
+		}
+		$product = Product::getInstanceBySKU($sku);
+		if($product == null)
+		{
+			throw new Exception('Product not found');
+		}
+		$product->stockCount->set($quantity);
+		$product->save();
 		return $this->statusResponse($sku, 'updated');
 	}
-
-
+	
 	public function get()
 	{
 		$request = $this->getApplication()->getRequest();
@@ -55,10 +64,7 @@ class StockApi extends ModelApi
 		}
 		$response = new LiveCartSimpleXMLElement('<response datetime="'.date('c').'"></response>');		
 		$product = $product->toArray();		
-		if(!$product['stockCount'])
-		{
-			$product['stockCount'] = '0';
-		}
+		$product['quantity'] = is_numeric($product['stockCount']) == false ? '0' : $product['stockCount'];
 		$this->fillSimpleXmlResponseItem($response, $product);
 		return new SimpleXMLResponse($response);
 	}
@@ -66,7 +72,7 @@ class StockApi extends ModelApi
 	public function fillSimpleXmlResponseItem($xml, $product)
 	{
 		//pp($product);
-		$fieldNames = array('sku','stockCount');
+		$fieldNames = array('sku','quantity');
 		foreach($fieldNames as $fieldName)
 		{
 			$xml->addChild($fieldName, $product[$fieldName]);
