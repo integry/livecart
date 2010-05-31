@@ -415,6 +415,7 @@ application/view/backend/settings/edit.tpl
 application/view/backend/shipment/editAddress.tpl
 application/view/backend/shipment/itemAmount.tpl
 application/view/backend/shipment/shipmentControls.tpl
+application/view/backend/shipment/shipmentTotal.tpl
 application/view/backend/shippingService/index.tpl
 application/view/backend/shippingService/rate.tpl
 application/view/backend/specField/form.tpl
@@ -523,6 +524,7 @@ application/view/layout/frontend/footer.tpl
 application/view/layout/frontend/header.tpl
 application/view/layout/frontend/leftSide.tpl
 application/view/layout/frontend/rightSide.tpl
+application/view/layout/install.tpl
 application/view/manufacturers/index.tpl
 application/view/news/index.tpl
 application/view/news/newsEntry.tpl
@@ -1309,7 +1311,6 @@ library/activerecord/ARInstanceFeed.php
 library/activerecord/ARShortHand.php
 library/activerecord/test/MemoryUsageTest.php
 library/payment/method/CCAvenue.php
-library/payment/method/CCNow.php
 library/payment/method/CyberMUT.php
 library/payment/method/GTBill.php
 library/payment/method/InternetSecureMerchantLink.php
@@ -1320,6 +1321,7 @@ library/payment/method/WorldPayHostedPaymentPage.php
 library/shipping/DummyShipping.php
 library/shipping/library/ups/upsRate.php
 library/shipping/method/UpsShipping.php
+license-free.txt
 module/ads/Module.ini
 module/ads/application/configuration/backend_menu/ads.js
 module/ads/application/configuration/language/en/Base.lng
@@ -1435,6 +1437,10 @@ module/captcha/library/securimage/words/.htaccess
 module/captcha/library/securimage/words/words.txt
 module/captcha/plugin/CaptchaValidation.php
 module/captcha/plugin/dynamic.php
+module/customization-headset-no/Module.ini
+module/customization-headset-no/application/controller/HeadsetContactFormController.php
+module/customization-headset-no/application/view/email/en/contactForm.tpl
+plugin/controller/index/init/ChangeHomePageCategory.php
 public/image/payment/CCAvenue.gif
 public/image/payment/CyberMUT.gif
 public/image/payment/GTBill.gif
@@ -1463,6 +1469,7 @@ public/stylesheet/backend/Module.css
 public/stylesheet/backend/ShippingClass.css
 public/stylesheet/backend/TaxClass.css
 public/stylesheet/backend/Theme.css
+util/Login.php
 util/Logout.php
 util/RepairLanguageFiles.php
 util/ResetRoles.php
