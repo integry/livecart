@@ -161,7 +161,7 @@ class ProductApi extends ModelApi
 		return $this->statusResponse($this->importedIDs, 'updated');
 	}
 
-	private function getDataImportIterator($updater, $profile)
+	protected function getDataImportIterator($updater, $profile)
 	{
 		// parser can act as DataImport::importFile() iterator
 		$parser = $this->getParser();
