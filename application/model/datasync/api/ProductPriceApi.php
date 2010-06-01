@@ -32,11 +32,21 @@ class ProductPriceApi extends ModelApi
 			array()
 		);
 		$this->removeSupportedApiActionName('create','update','list', 'filter', 'delete');
-		$this->addSupportedApiActionName('set');
+		$this->addSupportedApiActionName('set', 'replace');
 	}
 
-	// ------ 
+	
 	public function set()
+	{
+		return $this->updatePrice(false);
+	}
+	
+	public function replace()
+	{
+		return $this->updatePrice(true);
+	}
+
+	private function updatePrice($replaceQuantityPrices) // update is action name in parent class, cant make it private.
 	{
 		$request = $this->getApplication()->getRequest();
 		$sku = $request->get('sku');
@@ -46,9 +56,11 @@ class ProductPriceApi extends ModelApi
 		{
 			throw new Exception('Product not found');
 		}
-
 		$currency = $request->get('currency');
-		
+		if($currency == '')
+		{
+			$currency = $this->getApplication()->getDefaultCurrency()->getID();
+		}
 		$price=$request->get('definedPrice');
 		if(is_numeric($price))
 		{
@@ -77,14 +89,20 @@ class ProductPriceApi extends ModelApi
 			}
 			$groupedQuantityPrices[$item['currency']][$item['quantity']][$item['group']] = $item['price'];
 		}
+		
+		
 
 		foreach ($product->getRelatedRecordSet('ProductPrice', new ARSelectFilter()) as $productPrice)
 		{
+			if($replaceQuantityPrices == true)
+			{
+				$productPrice->serializedRules->set(serialize(array()));
+			}
 			$currencyID = $productPrice->currency->get()->getID();
 			if(array_key_exists($currencyID, $groupedQuantityPrices))
 			{
-				// todo: append or rewrite here?
 				$rules = unserialize($productPrice->serializedRules->get());
+				
 				if(!is_array($rules))
 				{
 					$rules = array();

@@ -154,25 +154,4 @@ class ApiController extends BaseController
 	}
 }
 
-
-// just a tmp debug thing
-// todo: delete me!
-function pp_map($v)
-{
-	return print_r($v, true);
-}
-
-function pp()
-{
-	$args = func_get_args();
-	echo '<pre>', implode('<hr />', array_map('pp_map', $args)),'<pre>';
-	exit;
-}
-
-function ff()
-{
-	$args = func_get_args();
-	echo '<pre>', implode('<hr />', array_map('pp_map', $args)),'<pre>';
-}
-
 ?>

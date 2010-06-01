@@ -33,16 +33,17 @@ class XmlProductPriceApiReader extends ApiReader
 				$request->remove($apiActionName);			
 				break;
 
+			case 'replace':
 			case 'set':
 				// 'flat' fields
 				$request = parent::loadDataInRequest($request,
-					'/request/price/set/',
+					'/request/price/'.$apiActionName.'/',
 					array('sku','currency','definedPrice','definedListPrice')
 				);
 
 				// quantity prices
 				$quantityPrices = array();
-				foreach($this->xml->xpath('/request/price/set/quantityPrices/quantityPrice') as $quantityPrice)
+				foreach($this->xml->xpath('/request/price/'.$apiActionName.'/quantityPrices/quantityPrice') as $quantityPrice)
 				{
 					$quantityPrices[] = array(
 						'quantity'=>(string)$quantityPrice->quantity,
