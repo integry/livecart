@@ -48,3 +48,21 @@ CustomerOrder:
      Invoice: - /api/xml/?xml=<order><invoice>INT-40046/2009</invoice></order>
 
        Delete - /api/xml/?xml=<order><delete>123</delete></order>
+
+Stock:
+        Get - /api/xml/?xml=<stock><get>SKU44939</get></stock>
+        Set - /api/xml/?xml=<stock><sku>SKU44939</sku><quantity>98</quantity></stock>
+
+
+ProductPrice:
+
+	Get - /api/xml/?xml=<price><get>SKU123</get></price>
+
+	Set - /api/xml/?xml=<price><set><sku>SKU44939</sku><currency>USD</currency><definedPrice>555</definedPrice></set></price>
+          /api/xml/?xml=<price><set><sku>SKU44940</sku><currency>EUR</currency><definedListPrice>555</definedListPrice></set></price>
+		  /api/xml/?xml=<price><set><sku>SKU44939</sku><currency>USD</currency><quantityPrices><quantityPrice><quantity>5</quantity><price>55.98</price><group>1</group></quantityPrice><quantityPrice><quantity>5</quantity><price>22.98</price><currency>EUR</currency><group>1</group></quantityPrice></quantityPrices></set></price>
+
+Replace - (work as set, only removes existing quantityPrices and replaces with given.)
+          /api/xml/?xml=<price><replace><sku>SKU44939</sku><quantityPrices><quantityPrice><quantity>5</quantity><price>55.98</price></quantityPrice></quantityPrices></replace></price>
+          /api/xml/?xml=<price><replace><sku>SKU44939</sku></replace></price> -- removes all quantity prices
+
