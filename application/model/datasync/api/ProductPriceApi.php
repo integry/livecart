@@ -60,8 +60,7 @@ class ProductPriceApi extends ModelApi
 		{
 			$product->setPrice($currency, $price, true);
 		}
-		
-		
+	
 		$quantityPrices = $request->get('quantityPrices');
 		$groupedQuantityPrices = array();
 		
@@ -115,6 +114,8 @@ class ProductPriceApi extends ModelApi
 				$productPrice->save();
 			}
 		}
+		
+		$product->save();
 
 		return $this->statusResponse($sku, 'updated');
 	}
