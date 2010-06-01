@@ -1,0 +1,6 @@
+_api=API
+_api_auth=Authorization
+API_AUTH_METHODS=Authorization methods
+ApiAuthKey=Secret key
+ApiAuthTest=Test (no authorization required)
+API_SECRET_KEY_SERVER=Server key

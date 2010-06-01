@@ -184,6 +184,7 @@ abstract class ApiReader implements Iterator
 				$request->set($fieldName, $this->sanitizeField($fieldName, $v));
 			}
 		}
+
 		return $request;
 	}
 
@@ -277,6 +278,18 @@ abstract class ApiReader implements Iterator
 		}
 	}
 	
+	public function getAuthCredentials(Request $request, $lookForXpath)
+	{
+		$xml = $request->get(ApiReader::API_PARSER_DATA);
+		if($xml != null)
+		{
+			$auth = array_shift($xml->xpath($lookForXpath . '/auth'));
+			if(count($auth) > 0)
+			{
+				return LiveCartSimpleXMLElement::Xml2SimpleArray($auth);
+			}
+		}
+	}
 }
 
 ?>

@@ -1,8 +1,10 @@
+To enable testing without authorization, open Settings -> Configuration -> API and enable Test authorization method
+
 Customer:
 
-          List - /api/xml?xml=<customer><list/></customer>
-	         /api/xml?xml=<customer><list><email>%.com</email></list></customer>
-	         /api/xml?xml=<customer><filter><email>%.com</email></filter></customer>
+	List -	/api/xml?xml=<customer><list/></customer>
+			/api/xml?xml=<customer><list><email>%.com</email></list></customer>
+			/api/xml?xml=<customer><filter><email>%.com</email></filter></customer>
 
 	  Get  - /api/xml?xml=<customer><get>1</get></customer>
 
@@ -65,4 +67,9 @@ ProductPrice:
 Replace - (work as set, only removes existing quantityPrices and replaces with given.)
           /api/xml/?xml=<price><replace><sku>SKU44939</sku><quantityPrices><quantityPrice><quantity>5</quantity><price>55.98</price></quantityPrice></quantityPrices></replace></price>
           /api/xml/?xml=<price><replace><sku>SKU44939</sku></replace></price> -- removes all quantity prices
+          
+Secret key authorization:
+			server key = testing
+			hash = md5('testing' . '|' . '1234')
+			/api/xml/?xml=<price><get>SKU3554</get><auth><key><client>1234</client><hash>1031e447b1c76d98122eff5068c69ca5</hash></key></auth></price>
 
