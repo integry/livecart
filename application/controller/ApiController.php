@@ -33,6 +33,11 @@ class ApiController extends BaseController
 			$apiActionName = $model->getApiActionName();
 			if($model->respondsToApiAction($apiActionName))
 			{
+				if (0 && !$model->isAuthorized())
+				{
+					throw new Exception('Unauthorized');
+				}
+				
 				//echo '<br />[executing '.$model->getClassName().'Api->'.$apiActionName.'()]<br />';
 				return $model->$apiActionName();
 			} else {
