@@ -89,8 +89,6 @@ class ProductPriceApi extends ModelApi
 			}
 			$groupedQuantityPrices[$item['currency']][$item['quantity']][$item['group']] = $item['price'];
 		}
-		
-		
 
 		foreach ($product->getRelatedRecordSet('ProductPrice', new ARSelectFilter()) as $productPrice)
 		{
@@ -101,20 +99,15 @@ class ProductPriceApi extends ModelApi
 			$currencyID = $productPrice->currency->get()->getID();
 			if(array_key_exists($currencyID, $groupedQuantityPrices))
 			{
-				$rules = unserialize($productPrice->serializedRules->get());
-				
-				if(!is_array($rules))
-				{
-					$rules = array();
-				}
 				foreach($groupedQuantityPrices[$currencyID] as $quanty => $qItem)
 				{
 					foreach($qItem as $group => $price)
 					{
-						$rules[$quanty][$group] = $price;
+						$group = !$group ? null : UserGroup::getInstanceByID($group);
+						$productPrice->setPriceRule($quanty, $group, $price);
 					}
 				}
-				$productPrice->serializedRules->set(serialize($rules));
+
 				$productPrice->save();
 				unset($groupedQuantityPrices[$currencyID]); // for this currency saved
 			}
