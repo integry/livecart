@@ -11,14 +11,9 @@ ClassLoader::import('application.model.datasync.api.reader.ApiReader');
 
 class XmlProductPriceApiReader extends ApiReader
 {
-	public static function canParse(Request $request)
+	public static function getXMLPath()
 	{
-		return self::canParseXml($request, '/request/price', __CLASS__);
-	}
-
-	protected function findApiActionName($xml)
-	{
-		return parent::findApiActionNameFromXml($xml, '/request/price');
+		return '/request/price';
 	}
 
 	public function loadDataInRequest($request)
@@ -37,7 +32,7 @@ class XmlProductPriceApiReader extends ApiReader
 			case 'set':
 				// 'flat' fields
 				$request = parent::loadDataInRequest($request,
-					'/request/price/'.$apiActionName.'/',
+					self::getXMLPath().'/'.$apiActionName.'/',
 					array('sku','currency','definedPrice','definedListPrice')
 				);
 

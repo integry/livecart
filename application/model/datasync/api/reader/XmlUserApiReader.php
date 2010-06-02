@@ -16,22 +16,21 @@ class XmlUserApiReader extends ApiReader
 		'list' => 'filter'
 	);
 
-	public static function canParse(Request $request)
+	public static function getXMLPath()
 	{
-		return self::canParseXml($request, '/request/customer', __CLASS__);
+		return '/request/customer';
 	}
 
 	public function populate($updater, $profile)
 	{
 		parent::populate($updater, $profile, $this->xml, 
-			'/request/customer/[[API_ACTION_NAME]]/[[API_FIELD_NAME]]', array('ID','email'));
+			self::getXMLPath().'/[[API_ACTION_NAME]]/[[API_FIELD_NAME]]', array('ID','email'));
 	}
-	
+
 	public function getARSelectFilter()
 	{
 		return parent::getARSelectFilter('User');
 	}
-	
 
 	public function getExtraFilteringMapping()
 	{
@@ -49,22 +48,6 @@ class XmlUserApiReader extends ApiReader
 		return $this->extraFilteringMapping;
 	}
 
-	public function sanitizeFilterField($name, &$value)
-	{
-		switch($name)
-		{
-			case 'enabled':
-				$value = in_array(strtolower($value), array('y','t','yes','true','1')) ? true : false;
-				break;
-		}
-		return $value;
-	}
-
-	protected function findApiActionName($xml)
-	{
-		return parent::findApiActionNameFromXml($xml, '/request/customer');
-	}
-
 	public function loadDataInRequest($request)
 	{
 		$apiActionName = $this->getApiActionName();
@@ -75,10 +58,20 @@ class XmlUserApiReader extends ApiReader
 			$request->set('ID',$request->get($apiActionName));
 			$request->remove($apiActionName);
 		} else {
-			$request = parent::loadDataInRequest($request, '/request/customer//', $this->getApiFieldNames());
+			$request = parent::loadDataInRequest($request, self::getXMLPath().'//', $this->getApiFieldNames());
 		}
 		return $request;
 	}
-}
 
+	public function sanitizeFilterField($name, &$value)
+	{
+		switch($name)
+		{
+			case 'enabled':
+				$value = in_array(strtolower($value), array('y','t','yes','true','1')) ? true : false;
+				break;
+		}
+		return $value;
+	}
+}
 ?>

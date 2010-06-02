@@ -15,14 +15,10 @@ class XmlProductApiReader extends ApiReader
 	(
 		'list' => 'filter'
 	);
-	public static function canParse(Request $request)
+	
+	public static function getXMLPath()
 	{
-		return self::canParseXml($request, '/request/product', __CLASS__);
-	}
-
-	protected function findApiActionName($xml)
-	{
-		return parent::findApiActionNameFromXml($xml, '/request/product');
+		return '/request/product';
 	}
 
 	public function loadDataInRequest($request)
@@ -35,7 +31,7 @@ class XmlProductApiReader extends ApiReader
 			$request->set('SKU',$request->get($apiActionName));
 			$request->remove($apiActionName);
 		} else {
-			$request = parent::loadDataInRequest($request, '/request/product//', $this->getApiFieldNames());
+			$request = parent::loadDataInRequest($request, self::getXMLPath().'//', $this->getApiFieldNames());
 		}
 		return $request;
 	}
@@ -43,7 +39,7 @@ class XmlProductApiReader extends ApiReader
 	public function populate($updater, $profile)
 	{
 		parent::populate( $updater, $profile, $this->xml,
-			'/request/product/[[API_ACTION_NAME]]/[[API_FIELD_NAME]]', array('sku'));
+			self::getXMLPath().'/[[API_ACTION_NAME]]/[[API_FIELD_NAME]]', array('sku'));
 	}
 	
 	public function getARSelectFilter()
