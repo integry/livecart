@@ -9,6 +9,9 @@
 
 abstract class ApiReader implements Iterator
 {
+
+	abstract public static function getXMLPath();
+
 	const API_PARSER_DATA = '__api_reader_parser_data_key__';
 	const API_PARSER_CLASS_NAME = '__api_reader_parser_class_name_key__';
 	const AR_FIELD_HANDLE = 0;
@@ -17,18 +20,20 @@ abstract class ApiReader implements Iterator
 
 	protected $iteratorKey = 0;
 	protected $content;
-	
 	protected $xmlKeyToApiActionMapping = array(); //? deprecated
 	protected $extraFilteringMapping = array();
 	protected $apiFields;
-		
 	private $apiActionName;
 	private $fieldNames = array();
 
+	public static function canParse(Request $request, $parserClassName)
+	{
+		return self::canParseXml($request, $parserClassName::getXMLPath(), $parserClassName);
+	}
+	
 	public function __construct($xml, $fieldNames)
 	{
 		$this->xml = $xml; // $this->setDataResource(); // or smth.
-		
 		$this->setApiFieldNames($fieldNames);
 		$this->findApiActionName($xml);
 	}
@@ -147,7 +152,10 @@ abstract class ApiReader implements Iterator
 		return $xmlRequest;
 	}
 
-	abstract protected function findApiActionName($dataHandler);
+	protected function findApiActionName($dataHandler)
+	{
+		return self::findApiActionNameFromXml($dataHandler, $this->getXMLPath());
+	}
 
 	//
 	// this method really does not bellong here, but at this point, there is no better place.
@@ -258,7 +266,7 @@ abstract class ApiReader implements Iterator
 	{
 		return array();
 	}
-
+	
 	protected static function canParseXml(Request $request, $lookForXpath, $parserClassName)
 	{
 		$requestData = $request->getRawRequest();

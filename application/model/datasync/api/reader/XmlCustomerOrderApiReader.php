@@ -22,25 +22,16 @@ class XmlCustomerOrderApiReader extends ApiReader
 	private $apiActionName;
 	private $listFilterMapping;
 
-	public static function canParse(Request $request)
+
+	public static function getXMLPath()
 	{
-		return self::canParseXml($request, '/request/order', __CLASS__);
+		return '/request/order';
 	}
 
 	public function populate($updater, $profile)
 	{
 		parent::populate($updater, $profile, $this->xml, 
-			'/request/order/[[API_ACTION_NAME]]/[[API_FIELD_NAME]]', array('ID'));
-	}
-	
-	public function sanitizeFilterField($name, &$value)
-	{
-		return $value;
-	}
-
-	protected function findApiActionName($xml)
-	{
-		return parent::findApiActionNameFromXml($xml, '/request/order');
+			self::getXMLPath().'/[[API_ACTION_NAME]]/[[API_FIELD_NAME]]', array('ID'));
 	}
 
 	public function loadDataInRequest($request)
@@ -53,7 +44,7 @@ class XmlCustomerOrderApiReader extends ApiReader
 			$request->set('ID',$request->get($apiActionName));
 			$request->remove($apiActionName);
 		} else {
-			$request = parent::loadDataInRequest($request, '/request/order//', $this->getApiFieldNames());
+			$request = parent::loadDataInRequest($request, self::getXMLPath().'//', $this->getApiFieldNames());
 		}
 		return $request;
 	}

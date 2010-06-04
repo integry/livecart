@@ -15,15 +15,10 @@ class XmlCategoryApiReader extends ApiReader
 	(
 		'list' => 'filter'
 	);
-
-	public static function canParse(Request $request)
+	
+	public static function getXMLPath()
 	{
-		return self::canParseXml($request, '/request/category', __CLASS__);
-	}
-
-	protected function findApiActionName($xml)
-	{
-		return parent::findApiActionNameFromXml($xml, '/request/category');
+		return '/request/category';
 	}
 
 	public function loadDataInRequest($request)
@@ -36,7 +31,7 @@ class XmlCategoryApiReader extends ApiReader
 			$request->set('ID',$request->get($apiActionName));
 			$request->remove($apiActionName);
 		} else {
-			$request = parent::loadDataInRequest($request, '/request/category//', $this->getApiFieldNames());
+			$request = parent::loadDataInRequest($request, self::getXMLPath().'//', $this->getApiFieldNames());
 		}
 		return $request;
 	}

@@ -11,14 +11,9 @@ ClassLoader::import('application.model.datasync.api.reader.ApiReader');
 
 class XmlStockApiReader extends ApiReader
 {
-	public static function canParse(Request $request)
+	public static function getXMLPath()
 	{
-		return self::canParseXml($request, '/request/stock', __CLASS__);
-	}
-
-	protected function findApiActionName($xml)
-	{
-		return parent::findApiActionNameFromXml($xml, '/request/stock');
+		return '/request/stock';
 	}
 
 	public function loadDataInRequest($request)
@@ -36,7 +31,7 @@ class XmlStockApiReader extends ApiReader
 			case 'set':
 				// 'flat' fields
 				$request = parent::loadDataInRequest($request,
-					'/request/stock/set/',
+					self::getXMLPath().'/'.$apiActionName.'/',
 					array('sku','quantity')
 				);
 				break;
