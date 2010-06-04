@@ -17,5 +17,22 @@ class LiveCartSimpleXMLElement extends SimpleXMLElement
 		}
 		return $child;
 	}
+	
+	function Xml2SimpleArray($xml)
+	{
+        foreach($xml->children() as $b)
+        {
+                $a = $b->getName();
+                if(!$b->children())
+                {
+                        $arr[$a] = trim($b[0]);
+                }
+                else{
+                        $arr[$a] = self::Xml2SimpleArray($b);
+                }
+        }
+        
+        return $arr;
+	} 
 }
 ?>

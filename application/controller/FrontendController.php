@@ -765,7 +765,7 @@ abstract class FrontendController extends BaseController
 		return $cat;
 	}
 
-	protected function __get($name)
+	public function __get($name)
 	{
 		if ($inst = parent::__get($name))
 		{

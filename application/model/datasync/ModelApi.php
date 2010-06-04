@@ -80,6 +80,35 @@ abstract class ModelApi
 		// in your 'api model' to modify this list. Don't change it here!
 		$this->addSupportedApiActionName('create', 'filter', 'update', 'delete', 'get');
 	}
+	
+	public function isAuthorized()
+	{
+		$auth = $this->getParser()->getAuthCredentials($this->getApplication()->getRequest(), '/request/price');
+		$allowedAuthMethods = $this->getApplication()->getConfig()->get('API_AUTH_METHODS');
+		
+		$method = key($auth);
+		
+		if (!$method)
+		{
+			$method = 'test';
+		}
+		
+		$authClass = 'ApiAuth' . ucfirst($method);
+		if (!isset($allowedAuthMethods[$authClass]))
+		{
+			throw new Exception('Unknown authorization method "' . $method . '"');
+		}
+		
+		$this->getApplication()->loadPluginClass('application.model.datasync.api.auth', $authClass);
+		$inst = new $authClass($this->getApplication(), $auth);
+		
+		return $inst->isAuthorized();
+	}
+	
+	public static function getAuthMethods(LiveCart $application)
+	{
+		return $application->getPluginClasses('application.model.datasync.api.auth');
+	}
 
 	public function setApplication($application)
 	{
