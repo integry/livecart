@@ -83,7 +83,7 @@ abstract class ModelApi
 	
 	public function isAuthorized()
 	{
-		$auth = $this->getParser()->getAuthCredentials($this->getApplication()->getRequest(), '/request/price');
+		$auth = $this->getParser()->getAuthCredentials($this->getApplication()->getRequest());
 		$allowedAuthMethods = $this->getApplication()->getConfig()->get('API_AUTH_METHODS');
 		
 		$method = key($auth);
