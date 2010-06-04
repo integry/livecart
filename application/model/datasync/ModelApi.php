@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.ActiveRecordModel');
+ClassLoader::import('application.model.datasync.api.reader.ApiReader');
 
 /**
  * Web service access layer model base
@@ -56,6 +57,14 @@ abstract class ModelApi
 		$this->setClassName($className);
 		$this->setApplication($application);
 
+		// default acions for all models.
+		// use $this->addSupportedApiActionName() or $this->removeSupportedApiActionName()
+		// in your 'api model' to modify this list. Don't change it here!
+		$this->addSupportedApiActionName('create', 'filter', 'update', 'delete', 'get');
+	}
+	
+	protected function loadRequest()
+	{
 		$request = $this->getApplication()->getRequest();
 		$cn = $request->get(ApiReader::API_PARSER_CLASS_NAME);
 		if($cn == null || class_exists($cn) == false)
@@ -74,11 +83,6 @@ abstract class ModelApi
 
 		// read and put data from api request format (that could be wahatever custom parser can read) in  Requst object as key=>value pairs.
 		$this->getParser()->loadDataInRequest($this->getApplication()->getRequest());
-
-		// default acions for all models.
-		// use $this->addSupportedApiActionName() or $this->removeSupportedApiActionName()
-		// in your 'api model' to modify this list. Don't change it here!
-		$this->addSupportedApiActionName('create', 'filter', 'update', 'delete', 'get');
 	}
 	
 	public function isAuthorized()

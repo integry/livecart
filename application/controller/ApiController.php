@@ -93,14 +93,24 @@ class ApiController extends BaseController
 	public function doc()
 	{
 		$classes = $this->getApiClasses();
+		$methods = array();
+		
+		foreach ($classes as $class => $file)
+		{
+			include_once $file;
+			$inst = new $class($this->application);
+			var_dump($inst->getActions());
+		}
+		
 		$response = new ActionResponse('classes', $classes);
 		
 		return $response;		
 	}
 
-	private function setModelApi(ModelApi $clazz)
+	private function setModelApi(ModelApi $apiInst)
 	{
-		$this->modelApi = $clazz;
+		$this->modelApi = $apiInst;
+		$this->modelApi->loadRequest();
 	}
 
 	private function getModelApi()
