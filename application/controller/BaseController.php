@@ -348,7 +348,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 		return $files;
 	}
 
-	protected function __get($name)
+	public function __get($name)
 	{
 		switch ($name)
 	  	{

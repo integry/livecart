@@ -856,7 +856,7 @@ class LiveCart extends Application implements Serializable
 		return $this->localeName;
 	}
 
-	private function __get($name)
+	public function __get($name)
 	{
 		switch ($name)
 	  	{
