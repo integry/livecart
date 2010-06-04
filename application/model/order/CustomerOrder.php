@@ -188,7 +188,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		if (!$this->isFinalized->get() && $this->orderedItems)
 		{
-			$this->updateToStock();
+			return $this->updateToStock();
 		}
 
 		$this->event('after-load');
@@ -878,6 +878,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			$this->serializeShipments();
 		}
 
+
 		if (!$this->isFinalized->get() && !$this->orderedItems && !$allowEmpty && !self::$isEmptyAllowed)
 		{
 			$this->delete();
@@ -1358,13 +1359,10 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		foreach ($this->getOrderedItems() as $item)
 		{
 			$product = $item->getProduct();
-			if (!$product)
+			if (!$product || (!$product->isEnabled->get() || !$product->getParent()->isEnabled->get()))
 			{
 				$this->removeItem($item);
-			}
-			else if (!$product->isEnabled->get() || !$product->getParent()->isEnabled->get())
-			{
-				$this->removeItem($item);
+				$result['delete'][] = $item->toArray();
 			}
 		}
 
@@ -2178,23 +2176,33 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$this->shipments = new ARSet();
 		$this->orderedItems = array();
 
-		foreach ($original->getShipments() as $shipment)
-		{
-			$cloned = clone $shipment;
-			$cloned->order->set($this);
+		if ($original->isFinalized->get())
+        {
+                foreach ($original->getShipments() as $shipment)
+                {
+                        $cloned = clone $shipment;
+                        $cloned->order->set($this);
 
-			if ($this->isMultiAddress->get())
-			{
-				$this->addShipment($cloned);
-			}
-			else
-			{
-				foreach ($cloned->getItems() as $item)
-				{
-					$this->addItem($item);
-				}
-			}
-		}
+                        if ($this->isMultiAddress->get())
+                        {
+                                $this->addShipment($cloned);
+                        }
+                        else
+                        {
+                                foreach ($cloned->getItems() as $item)
+                                {
+                                        $this->addItem($item);
+                                }
+                        }
+                }
+        }
+        else
+        {
+                foreach ($original->getOrderedItems() as $item)
+                {
+                        $this->addItem(clone $item);
+                }
+        }
 
 		if ($this->isMultiAddress->get())
 		{
@@ -2227,7 +2235,6 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		{
 			$this->shippingAddress->set($this->getClonedAddress($this->shippingAddress->get(), false));
 		}
-
 		$this->save();
 	}
 
