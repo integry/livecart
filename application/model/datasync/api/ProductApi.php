@@ -139,7 +139,7 @@ class ProductApi extends ModelApi
 
 	public function create()
 	{
-		$updater = new ApiProductImport($this->application);
+		$updater = $this->getImportHandler();
 		$updater->allowOnlyCreate();
 		$profile = new CsvImportProfile('Product');
 		$reader = $this->getDataImportIterator($updater, $profile);

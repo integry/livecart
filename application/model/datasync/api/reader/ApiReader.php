@@ -35,7 +35,10 @@ abstract class ApiReader implements Iterator
 	{
 		$this->xml = $xml; // $this->setDataResource(); // or smth.
 		$this->setApiFieldNames($fieldNames);
-		$this->findApiActionName($xml);
+		if ($xml)
+		{
+			$this->findApiActionName($xml);
+		}
 	}
 
 	public function setApiFields($fieldNames)
@@ -100,8 +103,7 @@ abstract class ApiReader implements Iterator
 	}
 	// --
 	
-	
-	public function getARSelectFilter($ormClassName)
+	public function getValidSearchFields($ormClassName)
 	{
 		$ormFieldNames = $this->getApiFieldNames();
 		foreach($ormFieldNames as $fieldName)
@@ -111,7 +113,13 @@ abstract class ApiReader implements Iterator
 				self::AR_CONDITION => 'LikeCond'
 			);
 		}
-		$list = array_merge($list, $this->getExtraFilteringMapping());
+		
+		return array_merge($list, $this->getExtraFilteringMapping());
+	}
+	
+	public function getARSelectFilter($ormClassName)
+	{
+		$list = $this->getValidSearchFields($ormClassName);
 		$arsf = new ARSelectFilter();
 		$filterKeys = array_keys($list);
 		
@@ -233,7 +241,9 @@ abstract class ApiReader implements Iterator
 					array($apiActionName, $fieldName),
 					$xpathTemplate
 				);
+
 				$v = $xml->xpath($xpath);
+
 				if(count($v) > 0)
 				{
 					$item[$fieldName] = (string)$v[0];
@@ -242,6 +252,10 @@ abstract class ApiReader implements Iterator
 			}
 		}
 		
+		// need to import a new order without ID, lets see how this works without checks
+		$this->addItem($item);
+		
+		/*
 		if(count($identificatorFieldNames) == 0)
 		{
 			$this->addItem($item);
@@ -255,6 +269,7 @@ abstract class ApiReader implements Iterator
 				}
 			}
 		}
+		*/
 	}
 	
 	protected function sanitizeFilterField($field, &$value)

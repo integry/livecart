@@ -89,7 +89,7 @@ class CustomerOrderApi extends ModelApi
 	
 	public function create()
 	{
-		$updater = new ApiCustomerOrderImport($this->application);
+		$updater = $this->getImportHandler();
 		$updater->allowOnlyCreate();
 		$profile = new CsvImportProfile('CustomerOrder');
 		$reader = $this->getDataImportIterator($updater, $profile);

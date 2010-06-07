@@ -41,6 +41,9 @@ class ProductPriceApi extends ModelApi
 		return $this->updatePrice(false);
 	}
 	
+	/*
+	 * Works just like set, only removes existing quantityPrices and replaces with given.
+	 */
 	public function replace()
 	{
 		return $this->updatePrice(true);

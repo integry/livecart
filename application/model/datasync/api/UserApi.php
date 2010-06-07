@@ -36,7 +36,7 @@ class UserApi extends ModelApi
 
 	public function create()
 	{
-		$updater = new ApiUserImport($this->application);
+		$updater = $this->getImportHandler();
 		$updater->allowOnlyCreate();
 		$profile = new CsvImportProfile('User');
 		$reader = $this->getDataImportIterator($updater, $profile);

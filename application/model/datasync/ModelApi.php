@@ -61,28 +61,48 @@ abstract class ModelApi
 		// use $this->addSupportedApiActionName() or $this->removeSupportedApiActionName()
 		// in your 'api model' to modify this list. Don't change it here!
 		$this->addSupportedApiActionName('create', 'filter', 'update', 'delete', 'get');
+		$this->ignoreFieldNames = $ignoreFieldNames;
 	}
 	
-	protected function loadRequest()
+	public function getImportHandler()
+	{
+		$class = 'Api' . $this->getClassName() . 'Import';
+		if (!class_exists($class, false))
+		{
+			$this->application->loadPluginClass('application.model.datasync.api.import', $class);
+		}
+		
+		if (class_exists($class, false))
+		{
+			return new $class($this->application);
+		}
+	}
+	
+	public function loadRequest($loadData = true)
 	{
 		$request = $this->getApplication()->getRequest();
 		$cn = $request->get(ApiReader::API_PARSER_CLASS_NAME);
+
 		if($cn == null || class_exists($cn) == false)
 		{
 			throw new Exception('Parser '.$cn.' not found');
 		}
 		$modelFields = $modelFieldNames = array();
-		if($className)
+		if($this->className)
 		{
-			$modelFields = ActiveRecordModel::getSchemaInstance($className)->getFieldList();
+			$modelFields = ActiveRecordModel::getSchemaInstance($this->className)->getFieldList();
 			// $modelFieldNames - $ignoreFieldNames
-			$modelFieldNames = array_diff(array_keys($modelFields),is_array($ignoreFieldNames)?$ignoreFieldNames:array($ignoreFieldNames));
+			$modelFieldNames = array_diff(array_keys($modelFields),is_array($this->ignoreFieldNames)?$this->ignoreFieldNames:array($this->ignoreFieldNames));
 		}
 		$this->setParserClassName($cn);
+
 		$this->setParser(new $cn($request->get(ApiReader::API_PARSER_DATA), $modelFieldNames));
 
 		// read and put data from api request format (that could be wahatever custom parser can read) in  Requst object as key=>value pairs.
-		$this->getParser()->loadDataInRequest($this->getApplication()->getRequest());
+		if ($loadData)
+		{
+			$this->getParser()->loadDataInRequest($this->getApplication()->getRequest());
+		}
 	}
 	
 	public function isAuthorized()
@@ -90,7 +110,7 @@ abstract class ModelApi
 		$auth = $this->getParser()->getAuthCredentials($this->getApplication()->getRequest());
 		$allowedAuthMethods = $this->getApplication()->getConfig()->get('API_AUTH_METHODS');
 		
-		$method = key($auth);
+		$method = key((array)$auth);
 		
 		if (!$method)
 		{
