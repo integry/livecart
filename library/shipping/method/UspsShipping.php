@@ -243,7 +243,7 @@ class UspsShipping extends ShippingRateCalculator
 		'FR' => 'France',
 		'FX' => 'Metropolitan France',
 		'GA' => 'Gabon',
-		'GB' => 'United Kingdom',
+		'GB' => 'Great Britain and Northern Ireland',
 		'GD' => 'Grenada',
 		'GE' => 'Georgia',
 		'GF' => 'French Guiana',
