@@ -88,7 +88,7 @@ function build
 	rm -rf library/payment/test/simpletest
 	rm -rf library/payment/test/unittest
 	rm -rf public/module
-	rm -rf import* output*
+	rm -rf import* output* plugin
 
 	cd module
 	ls | grep -v ads | grep -v captcha | xargs rm -rf
