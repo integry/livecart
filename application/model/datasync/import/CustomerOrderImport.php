@@ -137,6 +137,7 @@ class CustomerOrderImport extends DataImport
 		$profile->renameType(ucfirst($type), 'UserAddress');
 		$id = $this->importRelatedRecord('UserAddress', $address, $record, $profile);
 		$address = ActiveRecordModel::getInstanceByID('UserAddress', $id, true);
+		$address->save();
 		
 		$instance->$type->set($address);
 		
@@ -170,8 +171,12 @@ class CustomerOrderImport extends DataImport
 			$this->set_OrderedItem_sku($instance, $item[0], $item, $productProfile);
 		}
 		
+		ActiveRecordModel::clearPool();
+		$instance = CustomerOrder::getInstanceByID($instance->getID());
 		$instance->loadAll();
+		$instance->isFinalized->set(false);
 		$instance->finalize(array('customPrice' => true, 'allowRefinalize' => true));
+		$instance->save();
 	}
 	
 	/**
@@ -294,7 +299,7 @@ class CustomerOrderImport extends DataImport
 					$value = CustomerOrder::STATUS_RETURNED;
 					break;
 				default:
-					$value = null;
+					$value = (int)$value;
 			}
 		}
 
