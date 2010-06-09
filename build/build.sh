@@ -5,8 +5,9 @@ set -x
 
 function makeProfessional
 {
-	rm license-free.txt
+	mv license-free.txt /tmp
 	createArchive $1
+	mv /tmp/license-free.txt .
 }
 
 function makeCommunity
@@ -32,12 +33,18 @@ function createArchive
 
 function applyPatch
 {
+	dos2unix $MAIN/build/patch/$1.diff
+	dos2unix application/controller/backend/SettingsController.php
+	dos2unix application/view/layout/frontend.tpl
+
 	patch -p0 $2 < $MAIN/build/patch/$1.diff
 	find . -name '*.orig' | xargs rm
 }
 
 function build
 {
+	set -e
+
 	BUILD=$1
 	PACKAGE=$2
 	BRANCH=$3
@@ -57,7 +64,12 @@ function build
 
 	# copy all files to build repo
 	mv $BUILD/.hg $TMP/.hg
-	mv $BUILD/.hgtags $TMP/.hgtags
+
+	if [ -e $BUILD/.hgtags ]
+	then
+		mv $BUILD/.hgtags $TMP/.hgtags
+	fi
+
 	rm -rf $BUILD
 	mv $TMP $BUILD
 	cd $BUILD
@@ -80,6 +92,10 @@ function build
 
 	cd module
 	ls | grep -v ads | grep -v captcha | xargs rm -rf
+
+	# @todo: headset-no module still not deleted (he*ads*et)
+	rm -rf customization*
+
 	cd ..
 
 	# commit changes
@@ -126,13 +142,24 @@ function build
 
 	# create update package files
 	cd /tmp/update
+	rm -rf module
 	FROMVERSION=`head /tmp/update/update/$VERSION/from.version`
 	$MAKEFUNC $PACKAGE/livecart-update-$FROMVERSION-to-$VERSION
 
 	rm -rf /tmp/update
 }
 
+DIR=`pwd`
+
+git stash save build
+
 build /home/mercurial/repo/build /var/db/livecart stable makeProfessional
 build /home/mercurial/repo/build-community /var/db/livecart/community community makeCommunity
+
+cd $DIR
+
+git reset --hard
+git checkout master
+git stash pop build
 
 echo 'Build process completed successfuly'
