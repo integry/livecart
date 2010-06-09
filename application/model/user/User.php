@@ -259,6 +259,11 @@ class User extends ActiveRecordModel implements EavAble
 		{
 			return $this->getID() > 0;
 		}
+		else if ('backend' == $roleName)
+		{
+			return $this->hasBackendAccess();
+		}
+
 
 		if ($this->isAnonymous())
 		{
