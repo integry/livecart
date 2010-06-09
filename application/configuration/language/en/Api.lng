@@ -10,3 +10,5 @@ _api_create_fields=Create/update fields
 
 _api_field=API field
 _api_field_descr=Description
+
+_no_auth_methods=No authorization methods are enabled

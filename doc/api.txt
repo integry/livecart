@@ -68,6 +68,9 @@ order
 	create
 		/api/xml/?xml=<order><create><invoiceNumber>test</invoiceNumber><email>info@livecart.com</email><ShippingAddress_firstName>John</ShippingAddress_firstName><ShippingAddress_lastName>Doe</ShippingAddress_lastName><ShippingAddress_countryID>US</ShippingAddress_countryID><ShippingAddress_stateName>CA</ShippingAddress_stateName><ShippingAddress_city>Beverly Hills</ShippingAddress_city><ShippingAddress_address1>Test Street 1800</ShippingAddress_address1><ShippingAddress_postalCode>90210</ShippingAddress_postalCode><ShippingAddress_phone>555-5555</ShippingAddress_phone><items><item><OrderedItem_sku>SKU3551</OrderedItem_sku></item><item><OrderedItem_sku>SKU3549</OrderedItem_sku><OrderedItem_count>2</OrderedItem_count></item></items></create></order>
 
+	update
+		/api/xml/?xml=<order><update><invoiceNumber>test</invoiceNumber><status>new</status></update></order> | Valid status values: new, processing, awaiting shipment, shipped, returned
+
 stock
 	get
 		/api/xml/?xml=<stock><get>SKU44939</get></stock>
@@ -87,9 +90,3 @@ price
 	replace
 		/api/xml/?xml=<price><replace><sku>SKU44939</sku><quantityPrices><quantityPrice><quantity>5</quantity><price>55.98</price></quantityPrice></quantityPrices></replace></price>
 		/api/xml/?xml=<price><replace><sku>SKU44939</sku></replace></price> | removes all quantity prices
-          
-Secret key authorization:
-			server key = testing
-			hash = md5('testing' . '|' . '1234')
-			/api/xml/?xml=<price><get>SKU3554</get><auth><key><client>1234</client><hash>1031e447b1c76d98122eff5068c69ca5</hash></key></auth></price>
-

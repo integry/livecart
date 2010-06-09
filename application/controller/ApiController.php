@@ -90,11 +90,22 @@ class ApiController extends BaseController
 		}
 	}		
 	
+	/**
+	 *	@role backend
+	 */
 	public function doc()
 	{
-		return new ActionResponse('classes', $this->getDocInfo());
+		$this->loadLanguageFile('backend/Settings/API');
+		
+		$response = new ActionResponse();
+		$response->set('classes', $this->getDocInfo());
+		$response->set('authMethods', ModelApi::getAuthMethods($this->application));
+		return $response;
 	}
 	
+	/**
+	 *	@role backend
+	 */
 	public function docview()
 	{
 		$docinfo = $this->getDocInfo();
@@ -190,6 +201,25 @@ class ApiController extends BaseController
 
 		$response->set('action', $action);
 		return $response;
+	}
+	
+	public function docAuth()
+	{
+		$this->loadLanguageFile('backend/Settings/API');
+		
+		$class = $this->request->get('class');
+		$this->application->loadPluginClass('application.model.datasync.api.auth', $class);
+		
+		$reflection = new ReflectionClass($class);
+		$comment = $reflection->getDocComment();
+		
+		$expr = "/\/\*\*|\s\*\s|@.*\n|\*\//";
+        $comment = htmlspecialchars(trim(preg_replace($expr, '', $comment))); 
+        
+        $response = new ActionResponse('class', $class);
+        $response->set('comment', $comment);
+        
+        return $response;
 	}
 	
 	private function formatXmlString($xml) 
