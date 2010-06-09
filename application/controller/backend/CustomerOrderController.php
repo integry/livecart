@@ -67,10 +67,10 @@ class CustomerOrderController extends ActiveGridController
 
 	public function info()
 	{
-		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('ShippingAddress' => 'UserAddress', 'BillingAddress' => 'UserAddress', 'State', 'User', 'Currency'));
+		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('User', 'Currency'));
 		$order->getSpecification();
 		$order->loadAddresses();
-
+		
 		$response = new ActionResponse();
 		$response->set('statuses', array(
 										CustomerOrder::STATUS_NEW => $this->translate('_status_new'),
@@ -143,29 +143,27 @@ class CustomerOrderController extends ActiveGridController
 
 		$response->setStatusCode(200);
 
-		if (!$user)
+		if ($user)
 		{
-			return $response;
-		}
+			$addressOptions = array('' => '');
+			$addressOptions['optgroup_0'] = $this->translate('_billing_addresses');
+			$addresses = array();
+			foreach($user->getBillingAddressArray() as $address)
+			{
+				$addressOptions[$address['ID']] = $this->createAddressString($address);
+				$addresses[$address['ID']] = $address;
+			}
 
-		$addressOptions = array('' => '');
-		$addressOptions['optgroup_0'] = $this->translate('_billing_addresses');
-		$addresses = array();
-		foreach($user->getBillingAddressArray() as $address)
-		{
-			$addressOptions[$address['ID']] = $this->createAddressString($address);
-			$addresses[$address['ID']] = $address;
-		}
+			$addressOptions['optgroup_1'] = $this->translate('_shipping_addresses');
+			foreach($user->getShippingAddressArray() as $address)
+			{
+				$addressOptions[$address['ID']] = $this->createAddressString($address);
+				$addresses[$address['ID']] = $address;
+			}
 
-		$addressOptions['optgroup_1'] = $this->translate('_shipping_addresses');
-		foreach($user->getShippingAddressArray() as $address)
-		{
-			$addressOptions[$address['ID']] = $this->createAddressString($address);
-			$addresses[$address['ID']] = $address;
+			$response->set('existingUserAddressOptions', $addressOptions);
+			$response->set('existingUserAddresses', $addresses);
 		}
-
-		$response->set('existingUserAddressOptions', $addressOptions);
-		$response->set('existingUserAddresses', $addresses);
 
 		foreach (array('ShippingAddress', 'BillingAddress') as $type)
 		{

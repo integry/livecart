@@ -39,6 +39,7 @@ class CustomerOrderImport extends DataImport
 		$fields['OrderedItem.count'] = $this->translate('OrderedItem.count');
 		$fields['OrderedItem.price'] = $this->translate('OrderedItem.price');
 		$fields['OrderedItem.shipment'] = $this->translate('OrderedItem.shipment');
+		$fields['OrderedItem.products'] = $this->translate('OrderedItem.products');
 		
 		$groupedFields = array();
 		foreach ($fields as $field => $fieldName)
@@ -136,6 +137,7 @@ class CustomerOrderImport extends DataImport
 		$profile->renameType(ucfirst($type), 'UserAddress');
 		$id = $this->importRelatedRecord('UserAddress', $address, $record, $profile);
 		$address = ActiveRecordModel::getInstanceByID('UserAddress', $id, true);
+		$address->save();
 		
 		$instance->$type->set($address);
 		
@@ -148,6 +150,32 @@ class CustomerOrderImport extends DataImport
 			$instance->$otherType->set($clone);
 		}
 		
+		$instance->save();
+	}
+	
+	protected function set_OrderedItem_products($instance, $value, $record, CsvImportProfile $profile)
+	{
+		if (!$value)
+		{
+			return;
+		}
+
+		$productProfile = new CsvImportProfile('OrderedItem');
+		$productProfile->setField(0, 'OrderedItem.sku');
+		$productProfile->setField(1, 'OrderedItem.count');
+		$productProfile->setField(2, 'OrderedItem.price');
+		$productProfile->setField(3, 'OrderedItem.shipment');
+		foreach (explode(';', $value) as $product)
+		{
+			$item = explode(':', $product);
+			$this->set_OrderedItem_sku($instance, $item[0], $item, $productProfile);
+		}
+		
+		ActiveRecordModel::clearPool();
+		$instance = CustomerOrder::getInstanceByID($instance->getID());
+		$instance->loadAll();
+		$instance->isFinalized->set(false);
+		$instance->finalize(array('customPrice' => true, 'allowRefinalize' => true));
 		$instance->save();
 	}
 	
@@ -183,31 +211,34 @@ class CustomerOrderImport extends DataImport
 			// internal indexes are 0-based, but the import references are 1-based
 			$shipmentNo = $this->getColumnValue($record, $profile, 'OrderedItem.shipment') - 1;
 			
-			foreach ($instance->getShipments() as $key => $shipment)
+			if (is_numeric($this->getColumnValue($record, $profile, 'OrderedItem.shipment')))
 			{
-				if ($key == $shipmentNo)
+				foreach ($instance->getShipments() as $key => $shipment)
 				{
-					break;
+					if ($key == $shipmentNo)
+					{
+						break;
+					}
+					
+					$shipment = null;
 				}
 				
-				$shipment = null;
-			}
-			
-			// create a new shipment
-			if (!$shipment)
-			{
-				$shipment = Shipment::getNewInstance($instance);
-				$shipment->save();
-			}
-			
-			foreach ($items as $item)
-			{
-				if ($item->shipment->get() == $shipment)
+				// create a new shipment
+				if (!$shipment)
 				{
-					break;
+					$shipment = Shipment::getNewInstance($instance);
+					$shipment->save();
 				}
 				
-				unset($item);
+				foreach ($items as $item)
+				{
+					if ($item->shipment->get() == $shipment)
+					{
+						break;
+					}
+					
+					unset($item);
+				}
 			}
 		}
 		
@@ -268,7 +299,7 @@ class CustomerOrderImport extends DataImport
 					$value = CustomerOrder::STATUS_RETURNED;
 					break;
 				default:
-					$value = null;
+					$value = (int)$value;
 			}
 		}
 
