@@ -83,6 +83,7 @@
 			content_css: "{/literal}{baseUrl}{literal}stylesheet/library/TinyMCE.css",
 			forced_root_block : '',
 			relative_urls : true,
+			remove_linebreaks : false,
 			extended_valid_elements : 'iframe[src|width|height|name|align|frameborder|scrolling|marginheight|marginwidth]',
 			entities: ''
 		});

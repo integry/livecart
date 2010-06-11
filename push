@@ -2,4 +2,4 @@
 
 # Check modification status for all submodules
 
-find . -name '.git' -execdir git  push ';'
+find . -name '.git' -execdir git push ';'

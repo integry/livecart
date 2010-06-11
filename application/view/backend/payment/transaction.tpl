@@ -146,6 +146,9 @@
 				<div class="ccDetails">
 					<div>{$transaction.ccName}</div>
 					<div>{$transaction.ccType} <span class="ccNum">{if $transaction.hasFullNumber} / {else}...{/if}{$transaction.ccLastDigits}</span></div>
+					{if $transaction.ccCVV} 
+						<div>{$transaction.ccCVV}<div>
+					{/if}
 					<div>{$transaction.ccExpiryMonth} / {$transaction.ccExpiryYear}</div>
 				</div>
 			{/if}

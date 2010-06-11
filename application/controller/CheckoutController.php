@@ -1123,7 +1123,7 @@ class CheckoutController extends FrontendController
 
 		$user = $this->order->user->get();
 		$user->load();
-		$newOrder = $this->order->finalize(Currency::getValidInstanceById($this->getRequestCurrency()));
+		$newOrder = $this->order->finalize();
 
 		$orderArray = $this->order->toArray(array('payments' => true));
 
