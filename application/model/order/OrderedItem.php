@@ -763,7 +763,10 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 			$array['Product']['name'] = $array['name'];
 			$array['Product']['name_lang'] = $array['name_lang'];
 			$array['Product']['nameData'] = $array['nameData'];
-			$array['Product']['sku'] = $array['nameData']['sku'];
+			if (isset($array['nameData']['sku']))
+			{
+				$array['Product']['sku'] = $array['nameData']['sku'];
+			}
 		}
 
 		return $array;
