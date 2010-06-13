@@ -28,9 +28,9 @@ abstract class ApiReader implements Iterator
 
 	public static function canParse(Request $request, $parserClassName)
 	{
-		return self::canParseXml($request, $parserClassName::getXMLPath(), $parserClassName);
+		return self::canParseXml($request, call_user_func(array($parserClassName, 'getXMLPath')), $parserClassName);
 	}
-	
+
 	public function __construct($xml, $fieldNames)
 	{
 		$this->xml = $xml; // $this->setDataResource(); // or smth.
@@ -45,7 +45,7 @@ abstract class ApiReader implements Iterator
 	{
 		$this->apiFields = $fieldNames;
 	}
-	
+
 	public function getApiFields()
 	{
 		return $this->apiFields;
@@ -60,12 +60,12 @@ abstract class ApiReader implements Iterator
 	{
 		return $this->fieldNames;
 	}
-	
+
 	public function getApiActionName()
 	{
 		return $this->apiActionName;
 	}
-	
+
 	public function setApiActionName($apiActionName)
 	{
 		$this->apiActionName=$apiActionName;
@@ -102,7 +102,7 @@ abstract class ApiReader implements Iterator
 		return $this->content[$this->iteratorKey];
 	}
 	// --
-	
+
 	public function getValidSearchFields($ormClassName)
 	{
 		$ormFieldNames = $this->getApiFieldNames();
@@ -113,16 +113,16 @@ abstract class ApiReader implements Iterator
 				self::AR_CONDITION => 'LikeCond'
 			);
 		}
-		
+
 		return array_merge($list, $this->getExtraFilteringMapping());
 	}
-	
+
 	public function getARSelectFilter($ormClassName)
 	{
 		$list = $this->getValidSearchFields($ormClassName);
 		$arsf = new ARSelectFilter();
 		$filterKeys = array_keys($list);
-		
+
 		foreach(array('//filter/', '//list/') as $xpathPrefix) // todo: pass in xpath prefixes
 		{
 			foreach($filterKeys as $key)
@@ -133,7 +133,7 @@ abstract class ApiReader implements Iterator
 					$value = (string)array_shift($data);
 					$arsf->mergeCondition(
 						new $list[$key][self::AR_CONDITION](
-							$list[$key][self::AR_FIELD_HANDLE],						
+							$list[$key][self::AR_FIELD_HANDLE],
 							$this->sanitizeFilterField($key, $value)
 						)
 					);
@@ -142,7 +142,7 @@ abstract class ApiReader implements Iterator
 		}
 		return $arsf;
 	}
-	
+
 
 	protected static function getSanitizedSimpleXml($xmlString)
 	{
@@ -251,10 +251,10 @@ abstract class ApiReader implements Iterator
 				}
 			}
 		}
-		
+
 		// need to import a new order without ID, lets see how this works without checks
 		$this->addItem($item);
-		
+
 		/*
 		if(count($identificatorFieldNames) == 0)
 		{
@@ -271,17 +271,17 @@ abstract class ApiReader implements Iterator
 		}
 		*/
 	}
-	
+
 	protected function sanitizeFilterField($field, &$value)
 	{
 		return $value;
 	}
-	
+
 	protected function getExtraFilteringMapping()
 	{
 		return array();
 	}
-	
+
 	protected static function canParseXml(Request $request, $lookForXpath, $parserClassName)
 	{
 		$requestData = $request->getRawRequest();
@@ -300,7 +300,7 @@ abstract class ApiReader implements Iterator
 			}
 		}
 	}
-	
+
 	public function getAuthCredentials(Request $request)
 	{
 		$xml = $request->get(ApiReader::API_PARSER_DATA);
