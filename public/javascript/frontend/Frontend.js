@@ -626,7 +626,6 @@ Filter.reset = function()
 {
 	var
 		f = $("multipleChoiceFilterForm");
-	f.action = $("formActionWithoutFilters").value;
 	$A(f.getElementsByTagName("input")).each(function(node)
 	{
 		if("checkbox" == node.type.toLowerCase() && node.checked==true)

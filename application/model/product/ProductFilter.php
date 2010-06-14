@@ -66,12 +66,11 @@ class ProductFilter
 			{
 				$filterGroup = new OrChainCondition($filterGroup);
 			}
-			$cond = new AndChainCondition($list); // all OrChainConditions merged with and
 			if ($fCond = $selectFilter->getCondition())
 			{
-				$cond->addAND($fCond);
+				$list[] = $fCond;
 			}
-			$selectFilter->setCondition($cond);
+			$selectFilter->setCondition(new AndChainCondition($list)); // all merged with and
 		}
 	  	return $selectFilter;
 	}

@@ -692,11 +692,11 @@ class CategoryController extends FrontendController
 		$response->set('lists', $lists);
 		return $response;
 	}
-
+	
 	protected function boxFilterBlock($includeAppliedFilters = true)
 	{
 		$filterStyle = $this->config->get('FILTER_STYLE');
-		if($filterStyle == 'FILTER_STYLE_CHECKBOXES')
+		if('FILTER_STYLE_CHECKBOXES' == $filterStyle)
 		{
 			$includeAppliedFilters = false;
 		}
@@ -806,10 +806,9 @@ class CategoryController extends FrontendController
 		 	$response->set('priceGroup', array('filters' => $priceFilters));
 		}
 
-
 		$appliedFilterArray = $this->getAppliedFilterArray();
 		$response->set('filters', $appliedFilterArray);
-		if($filterStyle == 'FILTER_STYLE_CHECKBOXES')
+		if('FILTER_STYLE_CHECKBOXES' == $filterStyle)
 		{
 			$IDs = array();
 			foreach($appliedFilterArray as $item)
@@ -1013,6 +1012,7 @@ class CategoryController extends FrontendController
 
 		// get category filter groups
 		$filterGroups = $this->getCategory()->getFilterGroupArray();
+
 		$filterGroups = $this->createFilterGroupSet($filterGroups, $count->getCountByFilters($includeAppliedFilters));
 
 		$manFilters = $this->createManufacturerFilterSet($count->getCountByManufacturers($includeAppliedFilters));
@@ -1026,8 +1026,9 @@ class CategoryController extends FrontendController
 		// get group filters
 		if ($filterGroups)
 		{
+			$filterStyle = $this->config->get('FILTER_STYLE');
 			$filters = $this->getCategory()->getFilterSet();
-
+			
 			// sort filters by group
 			$sorted = array();
 			foreach ($filters as $filter)
@@ -1035,7 +1036,12 @@ class CategoryController extends FrontendController
 				$cnt = isset($filterArray[$filter->getID()]) ? $filterArray[$filter->getID()] : 0;
 				if ((!$cnt || $cnt == $this->totalCount) && $filter->getFilterGroup()->displayLocation->get() == FilterGroup::LOC_SIDE)
 				{
-					continue;
+					// when filter style is set to checkboxes and filtering by only one selector filter
+					// this continue removes (ignores here) selected filter from side menu.
+					if ('FILTER_STYLE_CHECKBOXES' !=  $filterStyle)
+					{
+						continue;
+					}
 				}
 
 				$array = $filter->toArray();
@@ -1059,7 +1065,7 @@ class CategoryController extends FrontendController
 				}
 			}
 		}
-
+		
 		return $filterGroups;
 	}
 

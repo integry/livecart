@@ -2,10 +2,10 @@
 
 {if 'FILTER_STYLE_CHECKBOXES' == $FILTER_STYLE}
 	{assign var=FILTER_STYLE_TEMPLATE value='category/block/filterCheckboxes.tpl'}
+	{literal}<script type="text/javascript">var _checkboxFilterLoadHookObserved = false;</script>{/literal}
 {else}
 	{assign var=FILTER_STYLE_TEMPLATE value='category/block/filterLinks.tpl'}
 {/if}
-
 
 {if $filters && $FILTER_STYLE == 'FILTER_STYLE_LINKS'}
 	<div class="box expandResults">
@@ -24,8 +24,6 @@
 	</div>
 {/if}
 
-
-
 {sect}{header}
 <div class="box narrowResults">
 	<div class="title">
@@ -38,10 +36,10 @@
 	{if 'FILTER_STYLE_CHECKBOXES' == $FILTER_STYLE}
 		<form id='multipleChoiceFilterForm' action="{categoryUrl data=$category}" method="post">
 
-		<input type="hidden" value="{categoryUrl data=$category}" id="formActionWithoutFilters" /> {* for Filter.reset() *}
-		
-		<input type="submit" value="{t _filter}" />
-		<a href="javascript:void(0);" onclick="Filter.reset();" class="cancel">{t _clear}</a>
+		<div id="multipleChoiceFilter_top" class="hidden">
+			<input type="submit" value="{t _filter}" />
+			<a href="javascript:void(0);" onclick="Filter.reset();" class="cancel">{t _clear}</a>
+		</div>
 		
 	{/if}
 		{include file=$FILTER_STYLE_TEMPLATE sectionFilters=$manGroup title=_by_brand allLink=$allManufacturers allTitle=_show_all_brands}
@@ -55,9 +53,10 @@
 
 	{if 'FILTER_STYLE_CHECKBOXES' == $FILTER_STYLE}
 	
-		<input type="submit" value="{t _filter}" />
-		<a href="javascript:void(0);" onclick="Filter.reset();" class="cancel">{t _clear}</a>
-
+		<div id="multipleChoiceFilter_bottom" class="hidden">
+			<input type="submit" value="{t _filter}" />
+			<a href="javascript:void(0);" onclick="Filter.reset();" class="cancel">{t _clear}</a>
+		</div>
 		</form>
 	{/if}
 	
