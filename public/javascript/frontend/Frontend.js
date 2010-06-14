@@ -622,6 +622,19 @@ Filter.SelectorMenu = function(container, isPageReload)
 	});
 }
 
+Filter.reset = function()
+{
+	var
+		f = $("multipleChoiceFilterForm");
+	f.action = $("formActionWithoutFilters").value;
+	$A(f.getElementsByTagName("input")).each(function(node)
+	{
+		if("checkbox" == node.type.toLowerCase() && node.checked==true)
+		{
+			node.checked=false;
+		}
+	});
+}
 /*****************************
 	User related JS
 *****************************/
