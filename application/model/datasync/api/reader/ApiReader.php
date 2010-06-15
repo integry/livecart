@@ -28,7 +28,7 @@ abstract class ApiReader implements Iterator
 
 	public static function canParse(Request $request, $parserClassName)
 	{
-		return self::canParseXml($request, $parserClassName::getXMLPath(), $parserClassName);
+		return self::canParseXml($request, call_user_func(array($parserClassName, 'getXMLPath')), $parserClassName);
 	}
 	
 	public function __construct($xml, $fieldNames)

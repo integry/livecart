@@ -59,7 +59,7 @@
 			<div class="xmlSample">
 				<pre>{$sample.formatted|htmlspecialchars}</pre>
 			</div>
-			<a class="sampleTest" href="{link controller=api action=xml query="xml="}{$sample.xml}">test</a>
+			<a class="sampleTest" href="{link controller=api action=xml query="xml="}{$sample.xml|urlencode}">test</a>
 		</div>
 	{/foreach}
 {/if}
