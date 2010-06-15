@@ -30,31 +30,34 @@ class XmlCustomerOrderApiReader extends ApiReader
 
 	public function populate($updater, $profile)
 	{
-		$root = isset($this->xml->order->create) ? $this->xml->order->create : $this->xml->order->update;
+		$type = isset($this->xml->order->create) ? 'create' : 'update';
 		
-		if ($root->items->item)
+		foreach ($this->xml->xpath($this->getXMLPath() . '/' . $type) as $root)
 		{
-			$details = array();
-			foreach ($root->items->item as $item)
+			if ($root->items->item)
 			{
-				if (!empty($item->OrderedItem_sku[0]))
+				$details = array();
+				foreach ($root->items->item as $item)
 				{
-					$prod = array();
-					$prod[] = $item->OrderedItem_sku[0];
-					
-					foreach (array('OrderedItem_count', 'OrderedItem_price', 'OrderedItem_shipment') as $field)
+					if (!empty($item->OrderedItem_sku[0]))
 					{
-						$prod[] = (string)$item->$field ? (string)$item->$field : '';
+						$prod = array();
+						$prod[] = $item->OrderedItem_sku[0];
+						
+						foreach (array('OrderedItem_count', 'OrderedItem_price', 'OrderedItem_shipment') as $field)
+						{
+							$prod[] = (string)$item->$field ? (string)$item->$field : '';
+						}
+						
+						$details[] = implode(':', $prod);
 					}
 					
-					$details[] = implode(':', $prod);
 				}
-				
-			}
 
-			if ($details)
-			{
-				$root->addChild('OrderedItem_products', implode(';', $details));
+				if ($details)
+				{
+					$root->addChild('OrderedItem_products', implode(';', $details));
+				}
 			}
 		}
 		

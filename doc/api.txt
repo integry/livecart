@@ -48,6 +48,7 @@ product
 
 	update
 		/api/xml?xml=<product><update><sku>FOOBAR1</sku><name>renamed from D</name></update></product>
+		/api/xml?xml=<product><update><sku>FOOBAR1</sku><name>renamed from D</name></update><update><sku>FOOBAR2</sku><name>renamed</name><name lang="de">umbenannt</name></update></product> | Update multiple products. You can pass a "lang" attribute to language specific fields to import a value in particular language.
 
 	delete
 		/api/xml?xml=<product><delete><sku>FOOBAR1</sku></delete></product>
@@ -76,7 +77,7 @@ stock
 		/api/xml/?xml=<stock><get>SKU44939</get></stock>
     
 	set
-		/api/xml/?xml=<stock><sku>SKU44939</sku><quantity>98</quantity></stock>
+		/api/xml/?xml=<stock><set><sku>SKU44939</sku><quantity>98</quantity></set></stock>
 
 price
 	get

@@ -222,38 +222,66 @@ abstract class ApiReader implements Iterator
 
 	public function populate($updater, $profile, $xml, $xpathTemplate, $identificatorFieldNames = array())
 	{
+		$emptyItem = $items = array();
 		foreach($identificatorFieldNames as $fieldName)
 		{
-			$item[$fieldName] = null; //?
-		}
-		$apiActionName = $this->getApiActionName();
-		foreach ($updater->getFields() as $group => $fields)
-		{
-			foreach ($fields as $field => $name)
-			{
-				list($class, $fieldName) = explode('.', $field);
-				if ($class != $profile->getClassName())
-				{
-					$fieldName = $class . '_' . $fieldName;
-				}
-				$xpath = str_replace(
-					array('[[API_ACTION_NAME]]','[[API_FIELD_NAME]]'),
-					array($apiActionName, $fieldName),
-					$xpathTemplate
-				);
-
-				$v = $xml->xpath($xpath);
-
-				if(count($v) > 0)
-				{
-					$item[$fieldName] = (string)$v[0];
-					$profile->setField($fieldName, $field);
-				}
-			}
+			$emptyItem[$fieldName] = null;
 		}
 		
-		// need to import a new order without ID, lets see how this works without checks
-		$this->addItem($item);
+		$apiActionName = $this->getApiActionName();
+		
+		$xpath = str_replace(
+			array('[[API_ACTION_NAME]]','/[[API_FIELD_NAME]]'),
+			array($apiActionName, ''),
+			$xpathTemplate);
+		
+		foreach ($xml->xpath($xpath) as $xml)
+		{
+			$item = $emptyItem;
+			
+			foreach ($updater->getFields() as $group => $fields)
+			{
+				foreach ($fields as $field => $name)
+				{
+					list($class, $fieldName) = explode('.', $field);
+					if ($class != $profile->getClassName())
+					{
+						$fieldName = $class . '_' . $fieldName;
+					}
+					
+					$xpath = str_replace(
+						array('[[API_ACTION_NAME]]','[[API_FIELD_NAME]]'),
+						array($apiActionName, $fieldName),
+						$xpathTemplate
+					);
+
+					$v = $xml->xpath($xpath);
+
+					if (count($v) > 0)
+					{
+						foreach ($v as $index => $value)
+						{
+							$lang = null;
+							$origFieldName = $fieldName;
+							if ($value->attributes()->lang)
+							{
+								$lang = (string)$value->attributes()->lang;
+								$fieldName .= '_' . $lang;
+							}
+							
+							$options = $lang ? array('language' => $lang) : array();
+							$profile->setField($fieldName, $field, $options);
+
+							$item[$fieldName] = (string)$value;
+							$fieldName = $origFieldName;
+						}
+					}
+				}
+			}
+			
+			// need to import a new order without ID, lets see how this works without checks
+			$this->addItem($item);
+		}
 		
 		/*
 		if(count($identificatorFieldNames) == 0)
