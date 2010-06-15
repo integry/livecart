@@ -4,6 +4,7 @@ ClassLoader::import('application.controller.backend.abstract.ActiveGridControlle
 ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.filter.FilterGroup');
 ClassLoader::import('application.model.product.Product');
+ClassLoader::import('application.model.category.ProductCategory');
 ClassLoader::import('application.model.product.ProductSpecification');
 ClassLoader::import('application.helper.ActiveGrid');
 ClassLoader::import('application.helper.massAction.MassActionInterface');
