@@ -526,7 +526,8 @@ Backend.CustomerOrder.Editor.prototype =
 	{
 		this.nodes = {};
 		this.nodes.parent = $("tabOrderInfo_" + this.id + "Content");
-		this.nodes.form = this.nodes.parent.down("form");
+		// this.nodes.form = this.nodes.parent.down("form");
+		this.nodes.form = $A(this.nodes.parent.getElementsByTagName("form")).find(function(f){return f.id != "calendarForm";});
 		this.nodes.isCanceled = $("order_" + this.id + "_isCanceled");
 		this.nodes.isCanceledIndicator = $("order_" + this.id + "_isCanceledIndicator");
 		this.nodes.acceptanceStatusValue = $("order_acceptanceStatusValue_" + this.id);
@@ -539,7 +540,10 @@ Backend.CustomerOrder.Editor.prototype =
 	{
 		Event.observe(this.nodes.isCanceled, 'click', function(e) { Event.stop(e); this.switchCancelled(); }.bind(this));
 		Event.observe(this.nodes.status, 'change', function(e) { Event.stop(e); this.submitForm(); }.bind(this));
+		
 	},
+
+	
 
 	switchCancelled: function()
 	{
@@ -1073,5 +1077,82 @@ Backend.CustomerOrder.CustomFields.prototype =
 	submitComplete: function()
 	{
 		this.container.removeClassName('editing');
+	}
+}
+
+Backend.CustomerOrder.DateCompletedEditor = Class.create();
+Backend.CustomerOrder.DateCompletedEditor.prototype =
+{
+	VIEW : 0,
+	EDIT: 1,
+
+	initialize: function()
+	{
+		this.viewContainer = $("dateCreatedLabel");
+		this.editContainer = $("calendarForm");
+
+		Event.observe($('editDateCompleted'), "click", function(e) {
+			Event.stop(e);
+			this.toggle(this.EDIT);
+		}.bind(this));
+
+		Event.observe($('cancelDateCompleted'), "click", function(e) {
+			Event.stop(e);
+			this.toggle(this.VIEW);
+		}.bind(this));
+
+		Event.observe($('saveDateCompleted'), "click", function(e) {
+			Event.stop(e);
+			new LiveCart.AjaxRequest(
+				this.editContainer.action,
+				$("indicatorDateCompleted"),
+				this.ajaxResponse.bind(this),
+				this.collectParameters()
+			);
+		}.bind(this));
+	},
+
+	ajaxResponse: function(transport)
+	{
+		try {
+			if(transport.responseData.status == "saved")
+			{
+				var dateField = $("dateCreatedVisible");
+				dateField.innerHTML = transport.responseData.date;
+				this.toggle(this.VIEW);
+				new Effect.Highlight($(dateField.parentNode) );
+				return;
+			}
+			throw "err";
+		}
+		catch(e)
+		{
+			// status not saved or response is corrupted.
+		}
+	},
+
+	collectParameters: function()
+	{
+		return {
+			parameters:$H({
+				dateCompleted:$('dateCompleted_real').value,
+				orderID: $A(document.getElementsByName("orderID")).shift().value
+				}).toQueryString()
+			};
+	},
+
+	toggle: function(type)
+	{
+		switch(type)
+		{
+			case this.EDIT:
+				this.viewContainer.addClassName("hidden");
+				this.editContainer.removeClassName("hidden");
+				break;
+			case this.VIEW:
+				this.viewContainer.removeClassName("hidden");
+				this.editContainer.addClassName("hidden");
+				break;
+		}
 	}
 }
