@@ -82,6 +82,8 @@ class ConfigurationContainer
 		{
 			unlink($path);
 		}
+		
+		$this->application->rmdir_recurse(ClassLoader::getRealPath('cache.templates_c'));
 	}
 
 	public function getMountPath()

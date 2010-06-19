@@ -1506,6 +1506,29 @@ class LiveCart extends Application implements Serializable
 	{
 		return null;
 	}
+	
+	private function rmdir_recurse($path)
+	{
+		$path= rtrim($path, '/').'/';
+
+		if (!file_exists($path))
+		{
+			return;
+		}
+
+		$handle = opendir($path);
+		for (;false !== ($file = readdir($handle));)
+			if($file != "." and $file != ".." ) {
+				$fullpath= $path.$file;
+				if( is_dir($fullpath) ) {
+					$this->rmdir_recurse($fullpath);
+				} else {
+					unlink($fullpath);
+				}
+		}
+		closedir($handle);
+		rmdir($path);
+	}
 }
 
 ?>
