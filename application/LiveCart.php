@@ -1128,6 +1128,11 @@ class LiveCart extends Application implements Serializable
 
 	public function getDisplayTaxPrice($price, $product)
 	{
+		if (!$product)
+		{
+			return $price;
+		}
+
 		if (!$this->config->get('INCLUDE_BASE_TAXES'))
 		{
 			ClassLoader::import('application.model.order.OrderedItem');
