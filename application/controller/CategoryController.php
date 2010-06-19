@@ -47,6 +47,7 @@ class CategoryController extends FrontendController
 		ClassLoader::import('application.model.presentation.CategoryPresentation');
 
 		$this->getAppliedFilters();
+		
 
 		// presentation
 		if ($theme = CategoryPresentation::getThemeByCategory($this->getCategory()))
@@ -341,7 +342,6 @@ class CategoryController extends FrontendController
 			$searchCon = new SearchController($this->application);
 			$response->set('modelSearch', $searchCon->searchAll($cleanedQuery));
 		}
-
 		return $response;
 	}
 
@@ -482,7 +482,10 @@ class CategoryController extends FrontendController
 		foreach ($path as $nodeArray)
 		{
 			$url = createCategoryUrl(array('data' => $nodeArray), $this->application);
-			$this->addBreadCrumb($nodeArray['name_lang'], $url);
+			if(array_key_exists('name_lang', $nodeArray))
+			{
+				$this->addBreadCrumb($nodeArray['name_lang'], $url);
+			}
 		}
 
 		// add filters to breadcrumb
@@ -689,9 +692,14 @@ class CategoryController extends FrontendController
 		$response->set('lists', $lists);
 		return $response;
 	}
-
+	
 	protected function boxFilterBlock($includeAppliedFilters = true)
 	{
+		$filterStyle = $this->config->get('FILTER_STYLE');
+		if('FILTER_STYLE_CHECKBOXES' == $filterStyle)
+		{
+			$includeAppliedFilters = false;
+		}
 		$count = $this->getFilterCounts($includeAppliedFilters);
 
 		$filterGroups = $count['groups'];
@@ -780,7 +788,7 @@ class CategoryController extends FrontendController
 			}
 		}
 
-		if ($this->config->get('ENABLE_MAN_FILTERS') && (count($manFilters) > 1))
+		if ($this->config->get('ENABLE_MAN_FILTERS') && count($manFilters) > 1)
 		{
 		 	$response->set('manGroup', array('filters' => $manFilters));
 		}
@@ -798,10 +806,19 @@ class CategoryController extends FrontendController
 		 	$response->set('priceGroup', array('filters' => $priceFilters));
 		}
 
-		$response->set('filters', $this->getAppliedFilterArray());
+		$appliedFilterArray = $this->getAppliedFilterArray();
+		$response->set('filters', $appliedFilterArray);
+		if('FILTER_STYLE_CHECKBOXES' == $filterStyle)
+		{
+			$IDs = array();
+			foreach($appliedFilterArray as $item)
+			{
+				$IDs[] = $item['ID'];
+			}
+			$response->set('filtersIDs', $IDs);
+		}
 	 	$response->set('category', $this->getCategory()->toArray());
 	 	$response->set('groups', $filterGroups);
-
 		return $response;
 	}
 
@@ -995,6 +1012,7 @@ class CategoryController extends FrontendController
 
 		// get category filter groups
 		$filterGroups = $this->getCategory()->getFilterGroupArray();
+
 		$filterGroups = $this->createFilterGroupSet($filterGroups, $count->getCountByFilters($includeAppliedFilters));
 
 		$manFilters = $this->createManufacturerFilterSet($count->getCountByManufacturers($includeAppliedFilters));
@@ -1008,8 +1026,9 @@ class CategoryController extends FrontendController
 		// get group filters
 		if ($filterGroups)
 		{
+			$filterStyle = $this->config->get('FILTER_STYLE');
 			$filters = $this->getCategory()->getFilterSet();
-
+			
 			// sort filters by group
 			$sorted = array();
 			foreach ($filters as $filter)
@@ -1017,7 +1036,12 @@ class CategoryController extends FrontendController
 				$cnt = isset($filterArray[$filter->getID()]) ? $filterArray[$filter->getID()] : 0;
 				if ((!$cnt || $cnt == $this->totalCount) && $filter->getFilterGroup()->displayLocation->get() == FilterGroup::LOC_SIDE)
 				{
-					continue;
+					// when filter style is set to checkboxes and filtering by only one selector filter
+					// this continue removes (ignores here) selected filter from side menu.
+					if ('FILTER_STYLE_CHECKBOXES' !=  $filterStyle)
+					{
+						continue;
+					}
 				}
 
 				$array = $filter->toArray();
@@ -1041,7 +1065,7 @@ class CategoryController extends FrontendController
 				}
 			}
 		}
-
+		
 		return $filterGroups;
 	}
 
@@ -1094,6 +1118,20 @@ class CategoryController extends FrontendController
 
 		$request = $controller->getRequest();
 		$app = $controller->getApplication();
+
+		if($controller->config->get('FILTER_STYLE') == 'FILTER_STYLE_CHECKBOXES')
+		{
+			$delimiter = ',';
+			$filters = explode($delimiter, $request->get('filters'));
+			foreach($request->getRawRequest() as $key=>$value)
+			{
+				if(strtolower($value) == 'on') // could be a filter
+				{
+					$filters[] = $key;
+				}
+			}
+			$request->set('filters', implode($delimiter, array_filter($filters)));
+		}
 
 		if ($request->get('filters'))
 		{
