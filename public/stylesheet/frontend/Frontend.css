@@ -2769,3 +2769,11 @@ img.calendar_button
 .dynamicMenu li:hover ul, .dynamicMenu li li:hover ul, .dynamicMenu li li li:hover ul, .dynamicMenu li.sfhover ul, .dynamicMenu li li.sfhover ul, .dynamicMenu li li li.sfhover ul { /* lists nested under hovered list items */
 	left: auto;
 }
+
+/*************************
+	One page checkout
+*************************/
+.one-page-checkout-login-field
+{
+	float: left;
+}

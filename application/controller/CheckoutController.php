@@ -1171,7 +1171,7 @@ class CheckoutController extends FrontendController
 	 *	@return ActionRedirectResponse
 	 *	@return false
 	 */
-	private function validateOrder(CustomerOrder $order, $step = 0)
+	protected function validateOrder(CustomerOrder $order, $step = 0)
 	{
 		if ($order->isFinalized->get())
 		{

@@ -22,39 +22,8 @@
 	{if !$step || ('billing' == $step)}
 		<fieldset class="container" id="billingAddressColumn">
 			<h2 id="billingAddress">{t _billing_address}</h2>
-
-			{if !$billingAddresses}
-				<div id="billingAddressForm">
-					{include file="user/addressForm.tpl" prefix="billing_" states=$billing_states}
-				</div>
-			{else}
-				<table class="addressSelector">
-					{foreach from=$billingAddresses item="item"}
-						<tr>
-							<td class="selector">
-								{radio class="radio" name="billingAddress" id="billing_`$item.UserAddress.ID`" value=$item.UserAddress.ID}
-							</td>
-							<td class="address" onclick="$('billing_{$item.UserAddress.ID}').checked = true; $('billing_{$item.UserAddress.ID}').form.onchange();">
-									{include file="user/address.tpl"}
-									<a href="{link controller=user action=editBillingAddress id=$item.ID returnPath=true}">{t _edit_address}</a>
-							</td>
-						</tr>
-					{/foreach}
-					<tr>
-						<td class="selector addAddress">
-							{radio class="radio" name="billingAddress" id="billing_new" value=""}
-						</td>
-						<td class="address addAddress">
-							<label for="billing_new" class="radio">{t _new_billing_address}</label>
-							<div class="address">
-								<div class="addressBlock">
-									{include file="user/addressForm.tpl" prefix="billing_" states=$billing_states}
-								</div>
-							</div>
-						</td>
-					</tr>
-				</table>
-			{/if}
+			
+			{include file="checkout/block/selectAddress.tpl" addresses=$billingAddresses prefix="billing" states=$billing_states}
 
 			{if $order.isShippingRequired && !$order.isMultiAddress && !$step}
 				<p>
@@ -75,39 +44,8 @@
 		<fieldset class="container" id="shippingSelector">
 
 			<h2 id="shippingAddress">{t _shipping_address}</h2>
-
-			{if !$shippingAddresses}
-				<div id="shippingAddressForm">
-					{include file="user/addressForm.tpl" prefix="shipping_" states=$shipping_states}
-				</div>
-			{else}
-				<table class="addressSelector">
-					{foreach from=$shippingAddresses item="item"}
-						<tr>
-							<td class="selector">
-								{radio class="radio" name="shippingAddress" id="shipping_`$item.UserAddress.ID`" value=$item.UserAddress.ID}
-							</td>
-							<td class="address" onclick="$('shipping_{$item.UserAddress.ID}').checked = true;">
-								{include file="user/address.tpl"}
-								<a href="{link controller=user action=editShippingAddress id=$item.ID returnPath=true}">{t _edit_address}</a>
-							</td>
-						</tr>
-					{/foreach}
-					<tr>
-						<td class="selector addAddress">
-							{radio class="radio" name="shippingAddress" id="shipping_new" value=""}
-						</td>
-						<td class="address addAddress">
-							<label for="shipping_new" class="radio">{t _new_shipping_address}</label>
-							<div class="address">
-								<div class="addressBlock">
-									{include file="user/addressForm.tpl" prefix="shipping_" states=$shipping_states}
-								</div>
-							</div>
-						</td>
-					</tr>
-				</table>
-			{/if}
+			
+			{include file="checkout/block/selectAddress.tpl" addresses=$shippingAddresses prefix="shipping" states=$shipping_states}
 
 		</fieldset>
 

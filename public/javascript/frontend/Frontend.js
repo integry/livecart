@@ -758,72 +758,39 @@ Frontend.AddToCartPopup =
 
 }
 
-Frontend.OnePageCheckout = function(url)
+Frontend.OnePageCheckout = function()
 {
-	this.data = {};
-	this.load(url);
+	this.nodes = {}
+	this.findUsedNodes();
+	this.bindEvents();
 }
 
 Frontend.OnePageCheckout.prototype =
 {
-	load: function()
+	findUsedNodes: function()
 	{
-		new LiveCart.AjaxRequest(url, null, this.loaded.bind(this));
+		this.nodes.login = $('checkout-login');
+		this.nodes.shipping = $('checkout-shipping');
+		this.nodes.billing = $('checkout-billing');
+		this.nodes.payment = $('checkout-payment');
+		this.nodes.cart = $('checkout-cart');
 	},
-
-	loaded: function(originalRequest)
+	
+	bindEvents: function()
 	{
-		this.show(originalRequest.responseData.html);
+		Observer.add('order', this.updateShippingOptions);
+		Observer.add('user', this.updateShippingOptions);
 	},
-
-	show: function(html)
+	
+	updateShippingAddress: function()
 	{
-		var container = this.getContainer();
-		container.update(html);
-		container.show();
+		
 	},
-
-	showNavigation: function()
+	
+	updateShippingOptions: function()
 	{
-
+		
 	},
-
-	hideNavigation: function()
-	{
-
-	},
-
-	loadStep: function()
-	{
-
-	},
-
-	switchStep: function()
-	{
-
-	},
-
-	close: function()
-	{
-		$('onePageCheckout').hide();
-	},
-
-	complete: function()
-	{
-
-	},
-
-	getContainer: function()
-	{
-		var container = $('onePageCheckout');
-		if (!container)
-		{
-			container = document.createElement('div');
-			document.body.appendChild(container);
-		}
-
-		return container;
-	}
 }
 
 Frontend.SmallCart = function(value, params)
