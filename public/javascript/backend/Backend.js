@@ -2028,7 +2028,6 @@ Backend.MultiInstanceEditor.prototype =
 		else
 		{
 			var url = this.Links.add;
-			console.log('test', this.Links);
 			new LiveCart.AjaxUpdater(url, container, caller.up('.menu').down('.progressIndicator'), null, this.initAddForm.bind(this));
 		}
 	},
