@@ -679,6 +679,20 @@ fieldset.container
 	background-image: url(../../image/silk/gif/tag_yellow.gif);
 }
 
+.filterGroup.filterTypeCheckbox li div
+{
+	background-image:none;
+}
+.filterGroup.filterTypeCheckbox li div input.checkbox
+{
+	margin:0;
+}
+
+.filterGroup.filterTypeCheckbox li div
+{
+	padding: 4px 0 0 0;
+}
+
 .filterTop
 {
 	padding: 0.5em 0;

@@ -125,6 +125,10 @@ function createCategoryUrl($params, LiveCart $application)
 	}
 
 	$url = $application->getRouter()->createUrl($urlParams, true);
+	if (!empty($params['full']))
+	{
+		$url = $application->getRouter()->createFullUrl($url);
+	}
 
 	// remove empty search query parameter
 	return preg_replace('/[\?&]q=$/', '', $url);

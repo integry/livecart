@@ -72,8 +72,22 @@ class LiveCartSmarty extends Smarty
 
 		$path = $this->translatePath($path);
 		$path = preg_replace('/^\/*/', '', $path);
+		$path = preg_replace('/\/{2,}/', '/', $path);
+		
+		if (substr($path, 0, 6) == 'theme/')
+		{
+			$themePath = $path;
+			preg_match('/^theme\/.*\/(.*)$/U', $path, $res);
+			$path = preg_replace('/^\/*/', '', array_pop($res));
+		}
 
-		foreach ($this->getPlugins($path) as $plugin)
+		$plugins = $this->getPlugins($path);
+		if (isset($themePath))
+		{
+			$plugins = array_merge($plugins, $this->getPlugins($themePath));
+		}
+		
+		foreach ($plugins as $plugin)
 		{
 			$output = $plugin->process($output);
 		}

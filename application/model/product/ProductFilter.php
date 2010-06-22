@@ -51,37 +51,27 @@ class ProductFilter
 	{
 		$selectFilter = $this->category->getProductsFilter($this, false);
 		$selectFilter->merge($this->productFilter);
-
-		//$cond = $selectFilter->getCondition();
 		$cond = null;
-		foreach ($disableFilters ? array() : $this->filters as $filter)
+		if ($disableFilters == false)
 		{
-			if (!$cond)
+			$list = array();
+			// group filters by class
+			foreach ($this->filters as $filter)
 			{
-			  	$cond = $filter->getCondition();
+				$list[get_class($filter)][] = $filter->getCondition();
+				$filter->defineJoin($selectFilter);
 			}
-			else
+			// convert filter group to OrChainCondition
+			foreach ($list as &$filterGroup)
 			{
-			  	$filterCond = $filter->getCondition();
-			  	if ($filterCond)
-			  	{
-					$cond->addAND($filterCond);
-				}
+				$filterGroup = new OrChainCondition($filterGroup);
 			}
-
-			$filter->defineJoin($selectFilter);
-		}
-
-		if ($cond)
-		{
 			if ($fCond = $selectFilter->getCondition())
 			{
-				$cond->addAND($fCond);
+				$list[] = $fCond;
 			}
-
-			$selectFilter->setCondition($cond);
+			$selectFilter->setCondition(new AndChainCondition($list)); // all merged with and
 		}
-
 	  	return $selectFilter;
 	}
 

@@ -46,7 +46,6 @@ class CustomerOrderController extends ActiveGridController
 				array('ID' => self::TYPE_CANCELLED, 'name' => $this->translate('_cancelled_orders'), 'rootID' => 1),
 			array('ID' => self::TYPE_CARTS, 'name' => $this->translate('_shopping_carts'), 'rootID' => 0),
 		);
-
 		return new ActionResponse('orderGroups', $orderGroups);
 	}
 
@@ -200,9 +199,58 @@ class CustomerOrderController extends ActiveGridController
 		$form = $this->createFieldsForm($order);
 		$order->getSpecification()->setFormResponse($response, $form);
 		$response->set('fieldsForm', $form);
-
+		$this->appendCalendarForm($response);
 		return $response;
 	}
+
+	public function updateDate()
+	{
+		$request = $this->getRequest();
+		
+		$validator = $this->getDateCompletedValidator($request);
+		if($validator->isValid() == false)
+		{
+			$errors = $validator->getErrorList();
+			return new JSONResponse(array('errors'=>$errors), 'validationError');
+		}
+		
+		$order = CustomerOrder::getInstanceById($request->get('orderID'));
+		$newDate =  $request->get('dateCompleted');
+		if(strpos($newDate, ':') === false)
+		{
+			list($oldDate, $oldTime) = explode(' ',(string)$order->dateCompleted->get());
+			$newDate .= ' '.$oldTime; 
+		}
+		$order->dateCompleted->set($newDate);
+		$order->save();
+		$order->reload();
+		return new JSONResponse(array('date'=>(string)$order->dateCompleted->get()), 'saved');
+	}
+
+	private function appendCalendarForm($response)
+	{
+		$dateForm = new Form($this->getDateCompletedValidator($this->getRequest()));
+		$order = $response->get('order');
+		foreach(array('dateCompleted', 'dateCreated') as $key)
+		{
+			if(isset($order[$key]))
+			{
+				$dateForm->set($key, $order[$key]);	
+			}
+		}
+		$response->set('dateForm', $dateForm);
+	}
+
+	private function getDateCompletedValidator(Request $request)
+	{
+		$validator = $this->getValidator('dateCreatedValidator', $request);
+		$validator->addCheck('dateCompleted', new IsNotEmptyCheck($this->translate('_err_date_cannot_be_empty')));
+		$validator->addCheck('dateCompleted', new RegExpCheck($this->translate('_err_unknown_date_format'), '/^\d{4}\-\d{1,2}\-\d{1,2}$/'));
+
+		return $validator;
+	}
+
+
 
 	private function getOrderType(CustomerOrder $order)
 	{

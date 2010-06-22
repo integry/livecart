@@ -24,7 +24,7 @@ class ProductFeed extends ARFeed
 	{
 		ProductPrice::loadPricesForRecordSetArray($this->data);
 		ProductSpecification::loadSpecificationForRecordSetArray($this->data, true);
-		//Product::loadCategoryPathsForArray($this->data);
+		Product::loadCategoryPathsForArray($this->data);
 
 		foreach ($this->data as $key => $product)
 		{
