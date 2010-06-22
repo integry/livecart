@@ -5,6 +5,14 @@
 <div id="content" class="left orderIndex">
 	<h1>{t _checkout}</h1>
 
+	<div id="checkout-cart">
+		{$cart}
+	</div>
+
+	<div id="checkout-overview">
+		{$overview}
+	</div>
+
 	<div id="checkout-login">
 		{$login}
 	</div>
@@ -23,11 +31,7 @@
 	</div>
 
 	<div id="checkout-payment">
-	
-	</div>
 
-	<div id="checkout-cart">
-	
 	</div>
 
 </div>

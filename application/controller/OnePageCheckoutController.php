@@ -17,12 +17,12 @@ class OnePageCheckoutController extends CheckoutController
 		$this->loadLanguageFile('Order');
 		$this->loadLanguageFile('User');
 	}
-	
+
 	public function index()
 	{
 		$response = new CompositeActionResponse();
-		
-		$blocks = array('login', 'shippingAddress', 'billingAddress', 'shippingMethods');
+
+		$blocks = array('login', 'shippingAddress', 'billingAddress', 'shippingMethods', 'cart');
 		foreach ($blocks as $block)
 		{
 			$blockResponse = $this->$block();
@@ -32,20 +32,20 @@ class OnePageCheckoutController extends CheckoutController
 				$response->addResponse($block, $blockResponse, $this, $block);
 			}
 		}
-		
+
 		return $response;
 	}
 
 	public function login()
 	{
-		if ($this->user->isAnonymous())
+		if (!$this->user->isAnonymous())
 		{
 			return;
 		}
 
 		return new ActionResponse();
 	}
-	
+
 	public function shippingAddress()
 	{
 		if ($this->user->isAnonymous())
@@ -57,10 +57,10 @@ class OnePageCheckoutController extends CheckoutController
 			$this->request->set('step', 'shipping');
 			$this->config->set('ENABLE_CHECKOUTDELIVERYSTEP', true);
 			$this->config->set('DISABLE_CHECKOUT_ADDRESS_STEP', false);
-			
+
 			$response = parent::selectAddress();
 		}
-		
+
 		return $response;
 	}
 
@@ -70,41 +70,58 @@ class OnePageCheckoutController extends CheckoutController
 		{
 			return null;
 		}
-		
+
 		$this->request->set('step', 'billing');
 		$this->config->set('ENABLE_CHECKOUTDELIVERYSTEP', true);
 		$this->config->set('DISABLE_CHECKOUT_ADDRESS_STEP', false);
 
 		$response = parent::selectAddress();
-		
+
 		return $response;
 	}
-	
+
 	public function shippingMethods()
 	{
 		$response = $this->shipping();
-		
+
 		//var_dump(array_keys($response->getData()));
-		
+
 		return $response;
 	}
-	
+
+	public function cart()
+	{
+		$response = $this->getOrderController()->index();
+
+		return $response;
+	}
+
+	public function overview()
+	{
+
+	}
+
 	public function doLogin()
 	{
-		
+
 	}
-	
+
 	protected function getUserController()
 	{
 		return new UserController($this->application);
 	}
-	
+
+	protected function getOrderController()
+	{
+		return new OrderController($this->application);
+	}
+
 	/**
 	 *  Overrides for parent controller
 	 */
 	protected function validateOrder(CustomerOrder $order, $step = 0)
 	{
-		
+
 	}
 }
 

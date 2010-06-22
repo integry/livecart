@@ -22,7 +22,7 @@
 				{else}
 					<span>{$item.Product.name_lang}</span>
 				{/if}
-				<small>(&rlm;{$item.Product.Category.name_lang})</small>
+				<small class="categoryName">(&rlm;{$item.Product.Category.name_lang})</small>
 			</div>
 
 			{include file="order/itemVariations.tpl"}

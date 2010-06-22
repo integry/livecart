@@ -2776,4 +2776,55 @@ img.calendar_button
 .one-page-checkout-login-field
 {
 	float: left;
+	margin-right: 1em;
+}
+
+.one-page-checkout-login-field input.text
+{
+	width: 12em;
+}
+
+.one-page-checkout-login-field label
+{
+	display: block;
+	float: none;
+	width: auto;
+}
+
+#checkout-login,
+#checkout-shipping,
+#checkout-billing,
+#checkout-payment
+{
+	float: left;
+	width: 55%;
+}
+
+#checkout-cart
+{
+	float: right;
+}
+
+#checkout-cart,
+#checkout-overview
+{
+	width: 43%;
+	padding-left: 2%;
+}
+
+#checkout-cart #cart
+{
+	width: auto;
+}
+
+#checkout-cart .cartControl *,
+#checkout-cart .categoryName
+{
+	display: none;
+}
+
+#checkout-cart .cartControl
+{
+	width: 0px;
+	padding: 0;
 }
