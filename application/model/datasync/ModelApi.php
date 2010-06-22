@@ -273,8 +273,6 @@ abstract class ModelApi
 		return $parser;
 	}
 
-
-
 	//
 	// todo:
 	//    * detect 'cyclic' recursions
