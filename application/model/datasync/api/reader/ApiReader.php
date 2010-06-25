@@ -223,7 +223,7 @@ abstract class ApiReader implements Iterator
 
 	public function populate($updater, $profile, $xml, $xpathTemplate, $identificatorFieldNames = array())
 	{
-		$emptyItem = $items = array();
+		$emptyItem = array();
 		foreach($identificatorFieldNames as $fieldName)
 		{
 			$emptyItem[$fieldName] = null;
@@ -236,7 +236,7 @@ abstract class ApiReader implements Iterator
 			array($apiActionName, ''),
 			$xpathTemplate);
 
-		foreach ($xml->xpath($xpath) as $xml)
+		foreach ($xml->xpath($xpath) as $itemXml)
 		{
 			$item = $emptyItem;
 
@@ -256,7 +256,10 @@ abstract class ApiReader implements Iterator
 						$xpathTemplate
 					);
 
-					$v = $xml->xpath($xpath);
+					$xpath = $fieldName;
+
+					$itemXml = clone $itemXml;
+					$v = $itemXml->xpath($xpath);
 
 					if (count($v) > 0)
 					{

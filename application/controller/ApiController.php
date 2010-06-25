@@ -28,6 +28,8 @@ class ApiController extends BaseController
 
 	public function xml()
 	{
+		$this->user->allowBackendAccess();
+
 		try {
 			$model = $this->loadModelApi();
 			$apiActionName = $model->getApiActionName();

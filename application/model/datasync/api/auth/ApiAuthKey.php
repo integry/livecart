@@ -9,7 +9,7 @@ ClassLoader::import('application.model.datasync.api.ApiAuthorization');
  * For example:
  * $serverKey = 'secretKey'; // as defined in LiveCart configuration and known to client
  * $clientKey = '1234'; // client can use any string
- * $hash = md5($clientKey . '|' . $secretKey); // $hash = '1031e447b1c76d98122eff5068c69ca5';
+ * $hash = md5($clientKey . '|' . $serverKey); // $hash = '1031e447b1c76d98122eff5068c69ca5';
  *
  * Example XML:
  *
