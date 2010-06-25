@@ -274,7 +274,7 @@ Product.Variations.prototype =
 					{
 						nextField.originalOptions = $A(nextField.options);
 					}
-					
+
 					var index = nextField.selectedIndex;
 					$A(nextField.options).each(function(opt)
 					{
@@ -285,7 +285,7 @@ Product.Variations.prototype =
 					{
 						nextField.appendChild(opt);
 					});
-					
+
 					$A(nextField.options).each(function(opt)
 					{
 						if (!(root[value][opt.value] || !opt.value))
@@ -294,12 +294,12 @@ Product.Variations.prototype =
 						}
 						//opt.style.display = (root[value][opt.value] || !opt.value) ? '' : 'none';
 					});
-					
+
 					try
 					{
 						nextField.selectedIndex = index;
 					}
-					catch (e) 
+					catch (e)
 					{
 						nextField.selectedIndex = 0;
 					}
@@ -771,26 +771,49 @@ Frontend.OnePageCheckout.prototype =
 	{
 		this.nodes.login = $('checkout-login');
 		this.nodes.shipping = $('checkout-shipping');
+		this.nodes.shippingAddress = this.nodes.shipping.down('#checkout-shipping-address');
+		this.nodes.shippingMethods = this.nodes.shipping.down('#checkout-shipping-method');
 		this.nodes.billing = $('checkout-billing');
 		this.nodes.payment = $('checkout-payment');
 		this.nodes.cart = $('checkout-cart');
 	},
-	
+
 	bindEvents: function()
 	{
 		Observer.add('order', this.updateShippingOptions);
 		Observer.add('user', this.updateShippingOptions);
+
+		this.initShippingOptions();
 	},
-	
+
 	updateShippingAddress: function()
 	{
-		
+
 	},
-	
+
 	updateShippingOptions: function()
 	{
-		
+
 	},
+
+	initShippingOptions: function()
+	{
+		this.formOnChange(this.nodes.shippingMethods.down('form'), this.updateShippingOptions.bind(this));
+		//this.nodes.shippingMethods.down('form').onchange = function(e) { console.log('test'); Event.stop(e); }
+	},
+
+	formOnChange: function(form, func)
+	{
+		$A(['input', 'select', 'textarea']).each(function(tag)
+		{
+			alert(tag);
+			$A(form.getElementsByTagName(tag)).each(function(el)
+			{
+				alert(el);
+			});
+		});
+
+	}
 }
 
 Frontend.SmallCart = function(value, params)
