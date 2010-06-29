@@ -20,7 +20,7 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 		$isApplicable = false;
 
 		$instances = array();
-		foreach ($this->getOrders() as $order)
+		foreach ((array)$this->getOrders() as $order)
 		{
 			$instances = array_merge($instances, $order->getPurchasedItems());
 		}

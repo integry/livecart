@@ -535,14 +535,18 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		}
 
 		// clone billing/shipping addresses
-		foreach (array('billingAddress', 'shippingAddress') as $address)
+		if (!$this->isFinalized->get())
 		{
-			if ($this->$address->get())
+			foreach (array('billingAddress', 'shippingAddress') as $address)
 			{
-				$this->$address->get()->getSpecification();
-				$cloned = clone $this->$address->get();
-				$cloned->save();
-				$this->$address->set($cloned);
+				if ($this->$address->get())
+				{
+					$this->$address->get()->load();
+					$this->$address->get()->getSpecification();
+					$cloned = clone $this->$address->get();
+					$cloned->save();
+					$this->$address->set($cloned);
+				}
 			}
 		}
 

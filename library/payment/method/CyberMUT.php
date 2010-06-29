@@ -72,7 +72,12 @@ class CyberMUT extends ExternalPayment
 
 		ob_end_clean();
 
-		if ($hash == $requestArray['MAC'])
+		file_put_contents(ClassLoader::getRealPath('cache.') . get_class($this) . '.php', var_export($requestArray, true));
+		if ('annulation' == strtolower($requestArray['code-retour']))
+		{
+			printf("Pragma: no-cache \nContent-type: text/plain \nVersion: 1 %s", 'Annulation');
+		}
+		else if ($hash == $requestArray['MAC'])
 		{
 			$result = new TransactionResult();
 			$result->gatewayTransactionID->set($requestArray['reference']);

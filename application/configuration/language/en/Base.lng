@@ -27,3 +27,6 @@ _status_returned=Returned
 _select_all=Select all
 _deselect_all=Deselect all
 _eav_filter=Filter
+
+_filter=Filter
+_clear=Clear

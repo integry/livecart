@@ -101,6 +101,7 @@ OrderedItem.priceCurrencyID=Currency
 OrderedItem.itemSubtotal=Item subtotal
 OrderedItem=Ordered product
 OrderedItem.shipment=Shipment number
+OrderedItem.products=List of ordered products
 
 _listing_orders=Listing orders $from - $to of $count
 _no_orders=No orders found
