@@ -26,6 +26,7 @@ class ProductApi extends ModelApi
 			'Product',
 			array('childSettings') // fields to ignore in Product model
 		);
+		$this->addSupportedApiActionName('import');
 	}
 
 	// ------ 
@@ -136,7 +137,17 @@ class ProductApi extends ModelApi
 		return $this->statusResponse($id, 'deleted');
 	}
 
+	public function import()
+	{
+		$updater = new ApiProductImport($this->application);
+		$profile = new CsvImportProfile('Product');
+		$reader = $this->getDataImportIterator($updater, $profile);
+		$updater->setCallback(array($this, 'importCallback'));
+		$updater->importFile($reader, $profile);
 
+		return $this->statusResponse($this->importedIDs, 'imported');
+	}
+	
 	public function create()
 	{
 		$updater = new ApiProductImport($this->application);

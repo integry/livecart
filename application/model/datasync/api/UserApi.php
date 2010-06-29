@@ -30,9 +30,22 @@ class UserApi extends ModelApi
 			'User',
 			array('eavObjectID', 'preferences') // fields to ignore in User model
 		);
+		$this->addSupportedApiActionName('import');
 	}
 
 	// ------ 
+	
+	public function import()
+	{
+		$updater = new ApiUserImport($this->application);
+		$profile = new CsvImportProfile('User');
+		$reader = $this->getDataImportIterator($updater, $profile);
+		$updater->setCallback(array($this, 'importCallback'));
+		$updater->importFile($reader, $profile);
+
+		return $this->statusResponse($this->importedIDs, 'imported');
+	}
+	
 
 	public function create()
 	{

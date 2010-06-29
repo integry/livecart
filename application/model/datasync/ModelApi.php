@@ -42,7 +42,6 @@ abstract class ModelApi
 		{
 			ClassLoader::import('application.model.datasync.api.reader.'.$parserClassName);
 			
-			
 			if(call_user_func_array(array($parserClassName, "canParse"), array($request, $parserClassName)))
 			{
 				return true;
@@ -85,9 +84,7 @@ abstract class ModelApi
 	{
 		$auth = $this->getParser()->getAuthCredentials($this->getApplication()->getRequest(), '/request/price');
 		$allowedAuthMethods = $this->getApplication()->getConfig()->get('API_AUTH_METHODS');
-		
-		$method = key($auth);
-		
+		$method = is_array($auth) ? key($auth) : null;
 		if (!$method)
 		{
 			$method = 'test';

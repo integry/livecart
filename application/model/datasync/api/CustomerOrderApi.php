@@ -36,6 +36,7 @@ class CustomerOrderApi extends ModelApi
 		$this->addSupportedApiActionName('invoice');
 		$this->addSupportedApiActionName('capture');
 		$this->addSupportedApiActionName('cancel');
+		$this->addSupportedApiActionName('import');
 	}
 
 	public function invoice()
@@ -86,7 +87,17 @@ class CustomerOrderApi extends ModelApi
 		return $this->statusResponse($order->getID(), 'canceled');
 	}
 	
-	
+	public function import()
+	{
+		$updater = new ApiCustomerOrderImport($this->application);
+		$profile = new CsvImportProfile('CustomerOrder');
+		$reader = $this->getDataImportIterator($updater, $profile);
+		$updater->setCallback(array($this, 'importCallback'));
+		$updater->importFile($reader, $profile);
+		
+		return $this->statusResponse($this->importedIDs, 'imported');
+	}
+
 	public function create()
 	{
 		$updater = new ApiCustomerOrderImport($this->application);
