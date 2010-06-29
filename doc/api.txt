@@ -1,17 +1,18 @@
 To enable testing without authorization, open Settings -> Configuration -> API and enable Test authorization method
 
 Customer:
-
 	List -	/api/xml?xml=<customer><list/></customer>
 			/api/xml?xml=<customer><list><email>%.com</email></list></customer>
 			/api/xml?xml=<customer><filter><email>%.com</email></filter></customer>
 
 	  Get  - /api/xml?xml=<customer><get>1</get></customer>
 
-	Create - /api/xml?xml=<customer><create><email>just.created@customer.kom</email><name>Just created Customer</name></create></customer>
+	Create - /api/xml?xml=<customer><create><email>just.created@customer.kom</email><firstName>Just created</firstName><lastName>Customer</lastName></create></customer>
 
 	Update - /api/xml?xml=<customer><update><email>just.created@customer.kom</email><ShippingAddress_companyName>Shipping address company name</ShippingAddress_companyName></update></customer>
-	Update - /api/xml?xml=<customer><update><ID>579<ID><email>new@email.kom</email></update></customer> (change email)
+		/api/xml?xml=<customer><update><ID>579<ID><email>new@email.kom</email></update></customer> (change email)
+
+	Import - /api/xml?xml=<customer><import><email>just.imported@customer.kom</email><firstName>Imported</firstName></import><lastName>Customer</lastName></customer>
 
 	Delete - /api/xml?xml=<customer><delete>579</delete></customer>
 
@@ -39,14 +40,17 @@ Product:
 
 	Update - /api/xml?xml=<product><update><sku>FOOBAR1</sku><name>renamed from D</name></update></product>
 
+	Import - /api/xml/?xml=<product><import><sku>SKU6388</sku><name>Super mobile phpne</name></import></product>
+
 	Delete - /api/xml?xml=<product><delete><sku>FOOBAR1</sku></delete></product>
 
-
 CustomerOrder:
+	Import - /api/xml/?xml=<order><import><totalAmount>24</totalAmount><ID>1234607</ID></import></order>
 
 	List  - /api/xml/?xml=<order><list><userID>1</userID></list></order>
 
 	Get   - /api/xml/?xml=<order><get>123</get></order>
+
      Invoice: - /api/xml/?xml=<order><invoice>INT-40046/2009</invoice></order>
 
        Delete - /api/xml/?xml=<order><delete>123</delete></order>
@@ -67,6 +71,7 @@ ProductPrice:
 Replace - (work as set, only removes existing quantityPrices and replaces with given.)
           /api/xml/?xml=<price><replace><sku>SKU44939</sku><quantityPrices><quantityPrice><quantity>5</quantity><price>55.98</price></quantityPrice></quantityPrices></replace></price>
           /api/xml/?xml=<price><replace><sku>SKU44939</sku></replace></price> -- removes all quantity prices
+
           
 Secret key authorization:
 			server key = testing
