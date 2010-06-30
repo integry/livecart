@@ -199,6 +199,16 @@ Backend.Newsletter =
 	{
 		var form = element.form;
 		var container = form.down('.recipientCount');
+		$("userGroupIDs").value = $A($(form).getElementsByClassName("userGroupCheckbox")).inject([], function(r, item) {
+			var v;
+			if(item.checked)
+			{
+				v = item.name.split("_").pop();
+				r.push(v ? v : "null");
+			}
+			return r;
+		}).join(",");
+
 		new LiveCart.AjaxRequest(Backend.Newsletter.links.recipientCount, container.down('.progressIndicator'),
 			function(originalRequest)
 			{
