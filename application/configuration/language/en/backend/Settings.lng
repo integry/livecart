@@ -472,3 +472,11 @@ BACKEND_SHOW_FOOTER_LINKS=Display footer links
 _seo=Search Engine Optimization
 URL_REPLACE_SPECIAL_CHARS=Replace special/diacritic characters (for example, äåæ) in URLs
 URL_301_AUTO_REDIRECT=Create a permanent 301 redirect to the new URL if category or product page URL changes
+
+_rssfeeds=RSS Feeds
+NUMBER_OF_PRODUCTS_TO_INCLUDE=Number of products to include in a feed
+NUMBER_OF_NEWS_POSTS_TO_INCLUDE=Number of news posts to include in a feed
+ENABLED_FEEDS=Enabled feeds
+ALL_PRODUCTS=All products
+CATEGORY_PRODUCTS=Category products
+NEWS_POSTS=News posts
