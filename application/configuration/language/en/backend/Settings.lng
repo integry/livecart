@@ -110,6 +110,11 @@ IMG_P_W_1=Width (pixels)
 IMG_P_H_1=Height (pixels)
 IMG_P_Q_1=Quality (0 - 100)
 
+_display=Display
+_ENLARGE_PRODUCT_THUMBNAILS_ON=Enlarge product thumbnails on
+P_THUMB_ENLARGE_CLICK=mouse click
+P_THUMB_ENLARGE_MOUSEOVER=mouse over
+
 _category_image=Category Image Sizes
 _c_small=Small
 _c_thumb=Thumbnail
