@@ -209,3 +209,56 @@ Backend.Payment.TransactionAction.prototype =
 		new Effect.Highlight(newChild, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
 	}
 }
+
+Backend.Payment.OfflinePaymentMethodEditor =
+{
+	toggleEditMode: function(node /*is link*/)
+	{
+		node = $(node);
+		node.addClassName("hidden");
+		node = node.up("span");
+		node.down("select").removeClassName("hidden");
+		node.down("span").addClassName("hidden");
+		node.down("select").focus();
+		return false;
+	},
+	
+	toggleViewMode: function(node /*is dropdown*/)
+	{
+		node = $(node);
+		node.addClassName("hidden");
+		node = node.up("span");
+		node.down("a").removeClassName("hidden");
+		node.down("span").removeClassName("hidden");
+	},
+
+	changed: function(node /*is dropdown*/)
+	{
+		node = $(node);
+		this.highlightNode=node.up("legend");
+		new LiveCart.AjaxRequest(node.up("span").down("input").value,
+			node.up("span").down("span").next(),
+			function(transport)
+			{
+				try{
+					if(transport.responseData.status == "saved")
+					{
+						this.highlightNode.down("span").down("span").innerHTML = transport.responseData.name;
+						new Effect.Highlight(this.highlightNode);
+					}
+					if(transport.responseData.handlerID)
+					{
+						this.highlightNode.down("select").value=transport.responseData.handlerID;
+					}
+				}
+				catch(e) { }
+				finally
+				{
+					this.toggleViewMode(this.highlightNode.down("select"));
+				}
+			}.bind(this),
+			{parameters:$H({handlerID:node.value}).toQueryString()}
+		);
+		
+	}
+}
