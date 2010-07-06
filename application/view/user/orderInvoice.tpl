@@ -24,6 +24,9 @@
 	<p>
 		{$address.countryName}
 	</p>
+	<p>
+		{include file="order/addressFieldValues.tpl" showLabels=false}
+	</p>
 {/if}
 {/defun}
 
@@ -64,8 +67,9 @@
 			</div>
 
 		</div>
-
 		<div class="clear"></div>
+
+{include file="order/orderFieldValues.tpl"}
 
 		{foreach from=$order.shipments item="shipment" name="shipments"}
 
