@@ -378,7 +378,25 @@ class CustomerOrderController extends ActiveGridController
 
 	public function sendStatusNotifyEmail(CustomerOrder $order)
 	{
-		if ($this->config->get('EMAIL_STATUS_UPDATE'))
+		$status = $order->status->get();
+		$enabledStatuses = $this->config->get('EMAIL_STATUS_UPDATE_STATUSES');
+		$m = array(	
+			'EMAIL_STATUS_UPDATE_NEW'=>CustomerOrder::STATUS_NEW,
+			'EMAIL_STATUS_UPDATE_PROCESSING'=>CustomerOrder::STATUS_PROCESSING,
+			'EMAIL_STATUS_UPDATE_AWAITING_SHIPMENT'=>CustomerOrder::STATUS_AWAITING,
+			'EMAIL_STATUS_UPDATE_SHIPPED'=> CustomerOrder::STATUS_SHIPPED
+		);
+
+		$sendEmail = false;
+		foreach($m as $configKey => $constValue)
+		{
+			if($status == $constValue && array_key_exists($configKey, $enabledStatuses))
+			{
+				$sendEmail = true;
+			}
+		}
+
+		if ($this->config->get('EMAIL_STATUS_UPDATE') || $sendEmail)
 		{
 			$this->loadLanguageFile('Frontend');
 			$this->application->loadLanguageFiles();
