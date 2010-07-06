@@ -39,3 +39,7 @@ _compare_selected=Compare selected products
 _name=Name
 _image=Image
 _view_details=View Details
+
+#price filters
+_to [_1]=to
+_more_than [_1]=more than
