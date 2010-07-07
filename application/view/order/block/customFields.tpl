@@ -2,7 +2,7 @@
 {sect}
 	{header}
 		<tr id="cartFields">
-			<td colspan="5">
+			<td colspan="{math equation="$extraColspanSize + 5"}">
 				<div class="container">
 	{/header}
 	{content}

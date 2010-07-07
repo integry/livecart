@@ -1,6 +1,6 @@
 {if !$hideShippingEstimationForm && 'ENABLE_SHIPPING_ESTIMATE'|config}
 <tr id="shippingEstimation">
-	<td colspan="5">
+	<td colspan="{math equation="$extraColspanSize + 5"}">
 		<div class="container">
 			<h2>{t _estimate_shipping}</h2>
 
