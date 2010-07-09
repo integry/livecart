@@ -2,6 +2,8 @@
 
 ClassLoader::import('application.controller.backend.abstract.ActiveGridController');
 ClassLoader::import("application.model.newsletter.*");
+ClassLoader::import("application.helper.HtmlToText");
+
 
 /**
  * Manage and send newsletters
@@ -13,6 +15,11 @@ ClassLoader::import("application.model.newsletter.*");
 class NewsletterController extends ActiveGridController
 {
 	const PROGRESS_FLUSH_INTERVAL = 10;
+
+	const FORMAT_HTML_AUTO_TEXT = 1;
+	const FORMAT_HTML_TEXT = 2;
+	const FORMAT_HTML = 3;
+	const FORMAT_TEXT = 4;
 
 	public function index()
 	{
@@ -42,20 +49,36 @@ class NewsletterController extends ActiveGridController
 	public function edit()
 	{
 		$newsletter = ActiveRecordModel::getInstanceById('NewsletterMessage', $this->request->get('id'), ActiveRecordModel::LOAD_DATA);
+
 		$form = $this->getForm();
 		$form->setData($newsletter->toArray());
 		$form->set('users', 1);
 		$form->set('subscribers', 1);
-
 		$response = new ActionResponse('form', $form);
-
 		$groupsArray = array_merge(
 			ActiveRecord::getRecordSetArray('UserGroup', select()),
 			array(array('ID' => null,'name' => $this->translate('Customers')))
 		);
+
         usort($groupsArray, array($this, 'sortGroups'));
 		$response->set('groupsArray', $groupsArray);
-		$response->set('newsletter', $newsletter->toArray());
+		
+		$newsletterArray = $newsletter->toArray();
+		$text = strlen($newsletterArray['text']);
+		$html =strlen($newsletterArray['html']);
+		if($text && $html)
+		{
+			$newsletterArray['format'] = self::FORMAT_HTML_TEXT;
+		}
+		else if($text)
+		{
+			$newsletterArray['format'] = self::FORMAT_TEXT;
+		}
+		else if($html)
+		{
+			$newsletterArray['format'] = self::FORMAT_HTML;
+		}
+		$response->set('newsletter', $newsletterArray);
 		$response->set('sentCount', $newsletter->getSentCount());
 		$response->set('recipientCount', $this->getRecipientCount($form->getData()));
 		return $response;
@@ -81,6 +104,16 @@ class NewsletterController extends ActiveGridController
 		else
 		{
 			$newsletter = ActiveRecordModel::getNewInstance('NewsletterMessage');
+		}
+		
+		$format = $this->request->get('newsletter_'.$id.'_format');
+		if($format == self::FORMAT_TEXT)
+		{
+			$this->request->set('html', '');
+		}
+		else if($format == self::FORMAT_HTML)
+		{
+			$this->request->set('text', '');
 		}
 
 		$newsletter->loadRequestData($this->request);
@@ -156,7 +189,20 @@ class NewsletterController extends ActiveGridController
 	{
 		$validator = $this->getValidator('newsletter', $this->request);
 		$validator->addCheck('subject', new IsNotEmptyCheck($this->translate('_err_title_empty')));
-		$validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_text_empty')));
+		// $validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_text_empty')));
+		
+		
+		$validator->addCheck('text', 
+			new OrCheck(
+				array('text', 'html'), 
+				array(
+					new IsNotEmptyCheck($this->translate('_err_text_empty')),
+					new IsNotEmptyCheck($this->translate('_err_text_empty'))
+				),
+				$this->request
+			)
+		);
+		
 		return $validator;
 	}
 
@@ -221,7 +267,16 @@ class NewsletterController extends ActiveGridController
 		return implode(' UNION ', $queries);
 	}
 	
-	
+	public function plaintext()
+	{
+		$h2t = new HtmlToText(
+			$this->getRequest()->get('html'),
+			array('enableInlineLinks'=>true, 'enableLinkList'=>false)
+		);
+		return new JSONResponse(array('plaintext' =>$h2t->get_text()), 'ok');
+	}
 }
+
+
 
 ?>

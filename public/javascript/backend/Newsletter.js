@@ -98,6 +98,40 @@ Backend.Newsletter =
 		this.reInitAddForm();
 
 		ActiveForm.prototype.resetErrorMessages(container.down('form'));
+
+		this.nodes = {};
+		this.nodes.format = $("newsletter__format");
+		this.nodes.form = $("newsletter__format").up("form");
+		this.nodes.mceID = $(this.nodes.form).getElementsBySelector('textarea.tinyMCE')[0].id;
+		this.nodes.shortdes = $($A(this.nodes.form.getElementsByClassName("textarea")).pop()).down("textarea");
+
+		self = this;
+		Event.observe(this.nodes.format, 'change', function(e) { Event.stop(e); self.formatChanged();});
+		Event.observe(this.nodes.shortdes, 'change', function(e) { 
+			if(self.nodes.format.value==1)
+			{
+				Event.stop(e);
+				self.nodes.format.value=2;
+				self.formatChanged();
+			}
+		});
+		this.tinyMCEChanged=Backend.Newsletter.Commons.tinyMCEChanged.bind({
+			nodes: {
+				format: this.nodes.format,
+				shortdes: this.nodes.shortdes,
+				form:this.nodes.form
+			}
+		});
+		this.formatChanged = Backend.Newsletter.Commons.formatChanged.bind({
+			nodes: {
+				form: this.nodes.form,
+				format: this.nodes.format
+			},
+			tinyMCEChanged:this.tinyMCEChanged,
+			id:this.id
+		});
+		
+		Backend.Newsletter.Commons.reconfigureTinyMCE(this);
 	},
 
 	reInitAddForm: function()
@@ -155,7 +189,7 @@ Backend.Newsletter =
 			editAreaLoader.init({
 				id : textarea.id,		// textarea id
 				syntax: "html",			// syntax to be uses for highgliting
-				start_highlight: true,		// to display with highlight mode on start-up
+				start_highlight: true,	// to display with highlight mode on start-up
 				allow_toggle: false,
 				allow_resize: true
 				}
@@ -338,6 +372,7 @@ Backend.Newsletter.Editor.prototype =
 	initialize: function(id, path)
   	{
 		this.id = id;
+
 		this.path = path;
 
 		this.__nodes__();
@@ -346,6 +381,7 @@ Backend.Newsletter.Editor.prototype =
 		Form.State.backup(this.nodes.form);
 
 		var self = this;
+
 	},
 
 	__nodes__: function()
@@ -355,29 +391,55 @@ Backend.Newsletter.Editor.prototype =
 		this.nodes.form = this.nodes.parent.down("form");
 		this.nodes.cancel = this.nodes.form.down('a.cancel');
 		this.nodes.submit = this.nodes.form.down('input.submit');
+
+		this.nodes.format = $("newsletter_"+this.id+"_format");
+		this.nodes.mceID = $(this.nodes.form).getElementsBySelector('textarea.tinyMCE')[0].id;
+		this.nodes.shortdes = $($A(this.nodes.form.getElementsByClassName("textarea")).pop()).down("textarea");
 	},
 
 	__bind__: function(args)
 	{
 		var self = this;
+
 		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
+		Event.observe(this.nodes.format, 'change', function(e) { Event.stop(e); self.formatChanged();});
+		Event.observe(this.nodes.shortdes, 'change', function(e) { 
+			if(self.nodes.format.value==1)
+			{
+				Event.stop(e);
+				self.nodes.format.value=2;
+				self.formatChanged();
+			}
+		});
+		this.tinyMCEChanged=Backend.Newsletter.Commons.tinyMCEChanged.bind({
+			nodes: {
+				format: this.nodes.format,
+				shortdes: this.nodes.shortdes,
+				form:this.nodes.form
+			}
+		});
+		this.formatChanged = Backend.Newsletter.Commons.formatChanged.bind({
+			nodes: {
+				form: this.nodes.form,
+				format: this.nodes.format
+			},
+			tinyMCEChanged:this.tinyMCEChanged,
+			id:this.id
+		});
 	},
 
 	__init__: function(tabs)
 	{
 		Backend.Newsletter.Editor.prototype.setCurrentId(this.id);
-
 		if ($('newsletterIndicator_' + this.id))
 		{
 			Element.hide($('newsletterIndicator_' + this.id));
 		}
-
 		this.showProductForm();
 		this.tabControl = TabControl.prototype.getInstance("newsletterManagerContainer", false);
-
 		this.setPath();
-
 		this.addTinyMce();
+		this.formatChanged(); // update visibility
 	},
 
 	setPath: function() {
@@ -490,6 +552,8 @@ Backend.Newsletter.Editor.prototype =
 	addTinyMce: function()
 	{
 		ActiveForm.prototype.initTinyMceFields(this.nodes.parent);
+		Backend.Newsletter.Commons.reconfigureTinyMCE(this);
+		this.formatChanged(); // update visibility
 	}
 }
 
@@ -520,5 +584,95 @@ Backend.Newsletter.GridFormatter =
 		}
 
 		return value;
+	}
+}
+
+
+Backend.Newsletter.Commons =
+{
+	formatChanged: function()
+	{
+		// this.nodes.form
+		// this.nodes.format
+		// this.tinyMCEChanged
+		// this.id
+
+		var
+			blocks = $(this.nodes.form).getElementsByClassName("textarea"),
+			HTML = 0,
+			TEXT = 1,
+			i,
+			toggleFieldAndLabel = function(block, method)
+			{
+				block[method]();
+				$(block.previous())[method]();
+			}
+
+		for (i = 0; i<2; i++)
+		{
+			blocks[i] = $(blocks[i]);
+		}
+
+		switch(parseInt(this.nodes.format.value,10))
+		{
+			case 1:
+				toggleFieldAndLabel(blocks[HTML], "show");
+				toggleFieldAndLabel(blocks[TEXT], "show");
+				this.tinyMCEChanged({}, {content: tinyMCE.getInstanceById("newsletter__"+this.id+"_html").getContent()}); 				// trigger change event with fake arguments
+				break;
+				
+			case 2:
+				toggleFieldAndLabel(blocks[HTML], "show");
+				toggleFieldAndLabel(blocks[TEXT], "show");
+				break;
+
+			case 3:  // html only
+				toggleFieldAndLabel(blocks[HTML], "show");
+				toggleFieldAndLabel(blocks[TEXT], "hide");
+				break;
+
+			case 4: // plaintext only
+				toggleFieldAndLabel(blocks[HTML], "hide");
+				toggleFieldAndLabel(blocks[TEXT], "show");
+				break;
+		}
+	},
+
+	tinyMCEChanged: function(ed, l)
+	{
+		// this.nodes.format
+		// this.nodes.shortdes
+		// this.nodes.form
+		if(parseInt(this.nodes.format.value,10) == 1)
+		{
+			$(this.nodes.form).getElementsByClassName("tinyMCE")[0].value = l.content;
+			new LiveCart.AjaxRequest(Backend.Newsletter.links.plaintext, null,function(transport) {
+				var
+					responseObject = eval("(" + transport.responseText + ")");
+				this.nodes.shortdes.value=responseObject.plaintext;
+				}.bind(this),
+				{parameters: Form.serialize(this.nodes.form)}
+			);
+		}
+	},
+
+	reconfigureTinyMCE: function(obj)
+	{
+		var addOnchangeEvent = function()
+		{
+			mce = tinyMCE.getInstanceById(this.nodes.mceID);
+			if(mce)
+			{
+				mce.onChange.add(this.tinyMCEChanged.bind(this));
+				mce.settings.relative_urls = false;
+				mce.settings.convert_urls = false;
+			}
+			else
+			{
+				window.setTimeout(addOnchangeEvent.bind(this), 1000);
+			}
+		}.bind(obj);
+		
+		addOnchangeEvent();
 	}
 }
