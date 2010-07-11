@@ -33,7 +33,7 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 		$inst = new ShipmentDeliveryRate();
 		$inst->setServiceId($service->getID());
 		$inst->setApplication($service->getApplication());
-		$inst->setCost($cost, $service->getApplication()->getDefaultCurrencyCode());
+		$inst->setCost((string)round($cost, 3), $service->getApplication()->getDefaultCurrencyCode());
 		$inst->setService($service);
 		$inst->setServiceName($service->getValueByLang('name'));
 		return $inst;
@@ -100,7 +100,7 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 
 	public function setAmountWithTax($amount)
 	{
-		$this->amountWithTax = $amount;
+		$this->amountWithTax = (string)round($amount, 3);
 	}
 
 	public function setService(ShippingService $service)

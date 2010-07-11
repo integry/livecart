@@ -520,7 +520,7 @@ class LiveCart extends Application implements Serializable
 
 	protected function postProcessResponse(Response $response, Controller $controllerInstance)
 	{
-		if (!$response instanceof ActionResponse || !$this->isInstalled())
+		if (!$response instanceof Renderable || !$this->isInstalled())
 		{
 			return false;
 		}
@@ -1553,7 +1553,7 @@ class LiveCart extends Application implements Serializable
 	{
 		return null;
 	}
-	
+
 	private function rmdir_recurse($path)
 	{
 		$path= rtrim($path, '/').'/';
