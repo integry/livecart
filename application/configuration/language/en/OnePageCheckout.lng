@@ -1,0 +1,11 @@
+_will_ship_to=Shipped to
+_will_bill_to=Billed to
+_no_shipping_address_provided=Please enter the shipping address above to see the available shipping methods
+_payment_not_ready=Please complete the steps above to proceed with the payment
+_payment_info=Payment Information
+_place_order=Place Order
+_credit_card=Credit card
+_select_payment_method=Please select a payment method
+_the_same_as_shipping_address=My billing address is the same as my shipping address
+_return_to_overview=Return to overview
+_no_payment_method_selected=Please select a payment method

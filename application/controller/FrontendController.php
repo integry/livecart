@@ -796,7 +796,7 @@ abstract class FrontendController extends BaseController
 	{
 		if (isset($this->order))
 		{
-			$this->order->__destruct();
+			//$this->order->__destruct();
 			unset($this->order);
 		}
 	}

@@ -22,7 +22,7 @@
 	{if !$step || ('billing' == $step)}
 		<fieldset class="container" id="billingAddressColumn">
 			<h2 id="billingAddress">{t _billing_address}</h2>
-			
+
 			{include file="checkout/block/selectAddress.tpl" addresses=$billingAddresses prefix="billing" states=$billing_states}
 
 			{if $order.isShippingRequired && !$order.isMultiAddress && !$step}
@@ -44,7 +44,7 @@
 		<fieldset class="container" id="shippingSelector">
 
 			<h2 id="shippingAddress">{t _shipping_address}</h2>
-			
+
 			{include file="checkout/block/selectAddress.tpl" addresses=$shippingAddresses prefix="shipping" states=$shipping_states}
 
 		</fieldset>

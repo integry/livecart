@@ -41,6 +41,7 @@
 	</div>
 	{/if}
 
+	{if $order.BillingAddress}
 	<div class="addressContainer">
 		<h3>{t _will_bill_to}:</h3>
 		{fun name="address" address=$order.BillingAddress}
@@ -48,6 +49,7 @@
 			<a href="{link controller=checkout action=selectAddress}">{t _change}</a>
 		{/if}
 	</div>
+	{/if}
 
 	<div class="clear"></div>
 

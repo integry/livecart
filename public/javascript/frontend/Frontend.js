@@ -748,71 +748,351 @@ User.ShippingFormToggler.prototype =
 
 Frontend = {}
 
-Frontend.PopupCart =
-{
-
-}
-
-Frontend.AddToCartPopup =
-{
-
-}
-
 Frontend.OnePageCheckout = function()
 {
 	this.nodes = {}
 	this.findUsedNodes();
 	this.bindEvents();
+
+	this.showOverview();
 }
 
 Frontend.OnePageCheckout.prototype =
 {
 	findUsedNodes: function()
 	{
+		this.nodes.root = $('content');
 		this.nodes.login = $('checkout-login');
 		this.nodes.shipping = $('checkout-shipping');
 		this.nodes.shippingAddress = this.nodes.shipping.down('#checkout-shipping-address');
-		this.nodes.shippingMethods = this.nodes.shipping.down('#checkout-shipping-method');
-		this.nodes.billing = $('checkout-billing');
+		this.nodes.shippingMethod = this.nodes.shipping.down('#checkout-shipping-method');
+		this.nodes.billingAddress = $('checkout-billing');
 		this.nodes.payment = $('checkout-payment');
 		this.nodes.cart = $('checkout-cart');
+		this.nodes.overview = $('checkout-overview');
 	},
 
 	bindEvents: function()
 	{
-		Observer.add('order', this.updateShippingOptions);
-		Observer.add('user', this.updateShippingOptions);
+		Observer.add('order', this.updateOrderTotals.bind(this));
+		Observer.add('cart', this.updateCartHTML.bind(this));
+		Observer.add('shippingMethods', this.updateShippingMethodsHTML.bind(this));
+		Observer.add('user', this.updateShippingOptions.bind(this));
+		Observer.add('overview', this.updateOverviewHTML.bind(this));
+		Observer.add('completedSteps', this.updateCompletedSteps.bind(this));
+		Observer.add('editableSteps', this.updateEditableSteps.bind(this));
 
 		this.initShippingOptions();
+		this.initShippingAddressForm();
+		this.initBillingAddressForm();
+		this.initCartForm();
+		this.initOverview();
+		this.initPaymentForm();
 	},
 
-	updateShippingAddress: function()
+	updateShippingOptions: function(e)
 	{
-
+		var el = e ? Event.element(e) : null;
+		new LiveCart.AjaxRequest(this.nodes.shippingMethod.down('form'), el);
 	},
 
-	updateShippingOptions: function()
+	updateShippingAddress: function(e)
 	{
+		var el = e ? Event.element(e) : null;
+		var form = this.nodes.shippingAddress.down('form');
+		new LiveCart.AjaxRequest(form, el, this.handleFormRequest(form));
+	},
 
+	updateBillingAddress: function(e)
+	{
+		var el = e ? Event.element(e) : null;
+		new LiveCart.AjaxRequest(this.nodes.billingAddress.down('form'), el);
+	},
+
+	updateCart: function(e)
+	{
+		if (e)
+		{
+			Event.stop(e);
+		}
+
+		var el = e ? Event.element(e) : null;
+		var form = this.nodes.cart.down('form');
+
+		// file uploads cannot be handled via AJAX
+		var hasFile = false;
+		$A(form.getElementsByTagName('input')).each(function(el)
+		{
+			if (el.getAttribute('type').toLowerCase() == 'file')
+			{
+				hasFile = true;
+			}
+		});
+
+		if (!hasFile)
+		{
+			var onComplete = el == form ? this.showOverview.bind(this) : null;
+			new LiveCart.AjaxRequest(form, el, onComplete);
+		}
+		else
+		{
+			form.submit();
+		}
+	},
+
+	setPaymentMethod: function(e)
+	{
+		this.nodes.noMethodSelectedMsg.addClassName('hidden');
+		var el = e ? Event.element(e) : null;
+		new LiveCart.AjaxRequest(this.nodes.payment.down('form'), el);
+	},
+
+	submitOrder: function(e)
+	{
+		Event.stop(e);
+
+		var form = this.nodes.paymentDetailsForm.down('form');
+		if (!form)
+		{
+			this.nodes.noMethodSelectedMsg.removeClassName('hidden');
+		}
+		else if (validateForm(form))
+		{
+			form.submit();
+		}
 	},
 
 	initShippingOptions: function()
 	{
-		this.formOnChange(this.nodes.shippingMethods.down('form'), this.updateShippingOptions.bind(this));
-		//this.nodes.shippingMethods.down('form').onchange = function(e) { console.log('test'); Event.stop(e); }
+		this.formOnChange(this.nodes.shippingMethod.down('form'), this.updateShippingOptions.bind(this));
+	},
+
+	initShippingAddressForm: function()
+	{
+		this.formOnChange(this.nodes.shippingAddress.down('form'), this.updateShippingAddress.bind(this));
+	},
+
+	initBillingAddressForm: function()
+	{
+		this.formOnChange(this.nodes.billingAddress.down('form'), this.updateBillingAddress.bind(this));
+	},
+
+	initCartForm: function()
+	{
+		var form = this.nodes.cart.down('form');
+		this.formOnChange(form, this.updateCart.bind(this));
+		Event.observe(form, 'submit', this.updateCart.bindAsEventListener(this));
+		Event.observe(this.nodes.cart.down('#checkout-return-to-overview'), 'click', this.showOverview.bindAsEventListener(this));
+	},
+
+	initPaymentForm: function()
+	{
+		var form = this.nodes.payment.down('form');
+		Event.observe(form, 'submit', Event.stop);
+
+		this.nodes.paymentDetailsForm = this.nodes.payment.down('#paymentForm');
+		this.nodes.noMethodSelectedMsg = this.nodes.payment.down('#no-payment-method-selected');
+
+		var paymentMethods = form.getElementsBySelector('input.radio');
+		$A(paymentMethods).each(function(el)
+		{
+			if (el.value.substr(0, 1) == '/')
+			{
+				el.onchange =
+					function()
+					{
+						window.location.href = el.value;
+					}
+			}
+			else
+			{
+				el.onchange =
+					function(noHighlight)
+					{
+						this.showPaymentDetailsForm(el, noHighlight);
+					}.bind(this)
+
+				if (1 == paymentMethods.length)
+				{
+					el.onchange(true);
+					this.nodes.payment.addClassName('singleMethod');
+				}
+
+			}
+		}.bind(this));
+
+		this.formOnChange(form, this.setPaymentMethod.bind(this));
+
+		Event.observe(this.nodes.payment.down('#submitOrder'), 'click', this.submitOrder.bind(this));
+	},
+
+	showPaymentDetailsForm: function(el, noHighlight)
+	{
+		this.updateElement(this.nodes.paymentDetailsForm, this.nodes.payment.down('#payForm_' + el.value).innerHTML, noHighlight);
+	},
+
+	initOverview: function()
+	{
+		Event.observe(this.nodes.overview.down('.orderOverviewControls').down('a'), 'click', this.showCart.bindAsEventListener(this));
+	},
+
+	showCart: function(e)
+	{
+		if (e)
+		{
+			Event.stop(e);
+		}
+
+		this.nodes.cart.show();
+		this.nodes.overview.hide();
+	},
+
+	showOverview: function(e)
+	{
+		if (e)
+		{
+			Event.stop(e);
+		}
+
+		this.nodes.cart.hide();
+		this.nodes.overview.show();
+	},
+
+	updateCartHTML: function(params)
+	{
+		this.updateElement(this.nodes.cart, params);
+		this.initCartForm();
+	},
+
+	updateShippingMethodsHTML: function(params)
+	{
+		this.updateElement(this.nodes.shippingMethod, params);
+		this.initShippingOptions();
+	},
+
+	updateOverviewHTML: function(params)
+	{
+		this.updateElement(this.nodes.overview, params);
+		this.initOverview();
+	},
+
+	updateCompletedSteps: function(steps)
+	{
+		return this.updateStepStatus(steps, 'step-incomplete');
+	},
+
+	updateEditableSteps: function(steps)
+	{
+		return this.updateStepStatus(steps, 'step-disabled');
+	},
+
+	updateStepStatus: function(steps, className)
+	{
+		$H(steps).each(function(value)
+		{
+			var step = value[0];
+			var status = value[1];
+			var node = this.nodes[step];
+
+			if (status)
+			{
+				node.removeClassName(className);
+			}
+			else
+			{
+				node.addClassName(className);
+			}
+		}.bind(this));
+	},
+
+	updateOrderTotals: function(order)
+	{
+		$A(this.nodes.root.getElementsByClassName('orderTotal')).each(function(el)
+		{
+			//el.innerHTML = order.formattedTotal;
+			this.updateElement(el, order.formattedTotal);
+		}.bind(this));
 	},
 
 	formOnChange: function(form, func)
 	{
+		ActiveForm.prototype.resetErrorMessages(form);
+
 		$A(['input', 'select', 'textarea']).each(function(tag)
 		{
-			alert(tag);
 			$A(form.getElementsByTagName(tag)).each(function(el)
 			{
-				alert(el);
-			});
-		});
+				Event.observe(el, 'focus', function() { window.focusedInput = el; });
+				Event.observe(el, 'change', this.fieldOnChangeCommon(form, func.bindAsEventListener(this)));
+				Event.observe(el, 'blur', this.fieldBlurCommon(form, el));
+			}.bind(this));
+		}.bind(this));
+	},
 
+	fieldOnChangeCommon: function(form, func)
+	{
+		return function(e)
+		{
+			ActiveForm.prototype.resetErrorMessage(Event.element(e));
+			func(e);
+		}.bind(this);
+	},
+
+	fieldBlurCommon: function(form, el)
+	{
+		return function(e)
+		{
+			window.focusedInput = null;
+
+			window.setTimeout(
+			function()
+			{
+				if (form.errorList && (!window.focusedInput || (window.focusedInput.up('form') != form)))
+				{
+					this.showErrorMessages(form);
+				}
+			}.bind(this), 200);
+
+		}.bind(this);
+	},
+
+	handleFormRequest: function(form)
+	{
+		return function(originalRequest)
+		{
+			form.errorList = {};
+
+			if (originalRequest.responseData.errorList)
+			{
+				form.errorList = originalRequest.responseData.errorList;
+
+				if (!window.focusedInput || (window.focusedInput.up('form') != form))
+				{
+					this.showErrorMessages(form);
+				}
+			}
+		}.bind(this);
+	},
+
+	showErrorMessages: function(form)
+	{
+		ActiveForm.prototype.resetErrorMessages(form);
+		ActiveForm.prototype.setErrorMessages(form, form.errorList);
+	},
+
+	updateElement: function(element, html, noHighlight)
+	{
+		if (element.innerHTML == html)
+		{
+			noHighlight = true;
+		}
+
+		element.update(html);
+
+		if (!noHighlight)
+		{
+			new Effect.Highlight(element);
+		}
 	}
 }
 

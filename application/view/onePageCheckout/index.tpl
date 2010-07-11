@@ -5,12 +5,14 @@
 <div id="content" class="left orderIndex">
 	<h1>{t _checkout}</h1>
 
-	<div id="checkout-cart">
-		{$cart}
-	</div>
+	<div id="checkout-right">
+		<div id="checkout-cart">
+			{$cart}
+		</div>
 
-	<div id="checkout-overview">
-		{$overview}
+		<div id="checkout-overview">
+			{$overview}
+		</div>
 	</div>
 
 	<div id="checkout-login">
@@ -31,9 +33,17 @@
 	</div>
 
 	<div id="checkout-payment">
-
+		{$payment}
 	</div>
 
 </div>
+	<script type="text/javascript">
+		var checkout = new Frontend.OnePageCheckout();
+		checkout.updateCompletedSteps({json array=$completedSteps});
+		checkout.updateEditableSteps({json array=$editableSteps});
+{literal}
+		new User.ShippingFormToggler($('sameAsShipping'), $('billingAddressForm'));
+	</script>
+{/literal}
 
 {include file="layout/frontend/footer.tpl"}

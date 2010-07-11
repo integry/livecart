@@ -343,6 +343,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 			$class = $class->getParentClass();
 		}
 
+		$files = array_reverse($files);
 		$files[] = 'Custom';
 
 		return $files;
@@ -402,7 +403,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 		}
 	}
 
-	private function checkAccess()
+	protected function checkAccess()
 	{
 		// If backend controller is being used then we should
 		// check for user permissions to use role assigned to current controller and action

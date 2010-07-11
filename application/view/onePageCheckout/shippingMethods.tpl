@@ -1,5 +1,5 @@
-<h2>{t _select_shipping}</h2>
-{form action="controller=checkout action=doSelectShippingMethod" method="POST" handle=$form}
+<h2><span class="step">{$steps.shippingMethod}</span>{t _select_shipping}</h2>
+{form action="controller=onePageCheckout action=doSelectShippingMethod" method="POST" handle=$form}
 	{foreach from=$shipments key="key" item="shipment"}
 
 		{if $shipment.isShippable}
@@ -11,9 +11,19 @@
 				{include file="checkout/shipmentProductList.tpl"}
 			{/if}
 
-			{include file="checkout/block/shipmentSelectShippingRateFields.tpl"}
+			{if $rates.$key}
+				{include file="checkout/block/shipmentSelectShippingRateFields.tpl"}
+			{else}
+				<span class="errorText">{t _err_no_rates_for_address}</span>
+			{/if}
 		{/if}
-
 	{/foreach}
 
+	{if !$shipments}
+		<span class="errorText">{t _err_no_rates_for_address}</span>
+	{/if}
 {/form}
+
+<div class="notAvailable">
+	<p>{t _no_shipping_address_provided}</p>
+</div>

@@ -1,10 +1,10 @@
-<h2>{t _billing_address}</h2>
+<h2><span class="step">{$steps.billingAddress}</span>{t _billing_address}</h2>
 
 {form action="controller=onePageCheckout action=doSelectBillingAddress" method="POST" handle=$form}
 	{if !$order.isMultiAddress}
 		<p>
-			{checkbox name="sameAsBilling" class="checkbox"}
-			<label for="sameAsBilling" class="checkbox">{t _the_same_as_shipping_address}</label>
+			{checkbox name="sameAsShipping" class="checkbox"}
+			<label for="sameAsShipping" class="checkbox">{t _the_same_as_shipping_address}</label>
 		</p>
 	{/if}
 
