@@ -196,14 +196,18 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function loadAddresses()
 	{
-		if ($this->billingAddress->get())
+		$billingAddress = $this->billingAddress->get();
+		if ($billingAddress)
 		{
-			$this->billingAddress->get()->load(self::LOAD_REFERENCES);
+			$billingAddress->load(self::LOAD_REFERENCES);
+			$billingAddress->getSpecification(); // todo: why EavObject not loaded automaticaly?
 		}
-
-		if ($this->shippingAddress->get())
+		
+		$shippingAddress = $this->shippingAddress->get();
+		if ($shippingAddress)
 		{
-			$this->shippingAddress->get()->load(self::LOAD_REFERENCES);
+			$shippingAddress->load(self::LOAD_REFERENCES);
+			$shippingAddress->getSpecification();
 		}
 	}
 
@@ -545,6 +549,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 					$this->$address->get()->getSpecification();
 					$cloned = clone $this->$address->get();
 					$cloned->save();
+					$cloned->loadEav();
 					$this->$address->set($cloned);
 				}
 			}

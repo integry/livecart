@@ -73,3 +73,8 @@
 	line-height: 30px;
 	margin-left: 1em;
 }
+
+fieldset.error select
+{
+	width:100%;
+}

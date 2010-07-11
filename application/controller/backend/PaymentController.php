@@ -14,8 +14,7 @@ class PaymentController extends StoreManagementController
 	public function index()
 	{
 		$order = CustomerOrder::getInstanceById($this->request->get('id'));
-
-		$transactions = $this->getTransactionArray($order);
+		$transactions = $this->appendOfflineTransactionData($this->getTransactionArray($order));
 		ActiveRecordModel::addArrayToEavQueue('Transaction', $transactions);
 
 		foreach ($transactions as $id => $transaction)
@@ -35,6 +34,7 @@ class PaymentController extends StoreManagementController
 		$response->set('order', $orderArray);
 		$response->set('offlinePaymentForm', $this->buildOfflinePaymentForm());
 		$response->set('capture', $captureForm);
+
 		return $response;
 	}
 
@@ -272,6 +272,25 @@ class PaymentController extends StoreManagementController
 
 		return new RawResponse();
 	}
+	
+	public function changeOfflinePaymentMethod()
+	{
+		try {
+			$request = $this->getRequest();
+			$transaction = Transaction::getInstanceById($request->get('id'));
+			$handlerID = $request->get('handlerID');
+			$transaction->setOfflineHandler($handlerID);
+			$transaction->save();
+			return new JSONResponse(
+				array('handlerID' => $handlerID,
+					  'name' => OfflineTransactionHandler::getMethodName($handlerID)),
+				'saved');
+		}
+			catch(Exception $e)
+		{
+			return new JSONResponse(null, 'error');
+		}
+	}
 
 	private function getTransactionUpdateResponse()
 	{
@@ -291,6 +310,7 @@ class PaymentController extends StoreManagementController
 		$transactions = array();
 		foreach ($order->getTransactions()->toArray() as $transaction)
 		{
+			
 			$transactions[$transaction['ID']] = $transaction;
 			if (isset($transaction['ParentTransaction']))
 			{
@@ -298,7 +318,6 @@ class PaymentController extends StoreManagementController
 				$transactions[$parent]['transactions'][] =& $transactions[$transaction['ID']];
 			}
 		}
-
 		return $transactions;
 	}
 
@@ -357,6 +376,33 @@ class PaymentController extends StoreManagementController
 
 		return $validator;
 	}
+	
+	private $availableOfflinePaymentMethods = null;
+
+	private function appendOfflineTransactionData($transactions)
+	{
+		foreach($transactions as &$transaction)
+		{
+			if($transaction['methodType'] == Transaction::METHOD_OFFLINE)
+			{
+				if($this->availableOfflinePaymentMethods === null)
+				{
+					$this->availableOfflinePaymentMethods = array();
+					foreach(OfflineTransactionHandler::getEnabledMethods() as $methodID)
+					{
+						$this->availableOfflinePaymentMethods[] = array('ID'=>$methodID, 'name'=>OfflineTransactionHandler::getMethodName($methodID));
+					}
+				}
+				if(isset($transaction['serializedData'], $transaction['serializedData']['handlerID']))
+				{
+					$transaction['handlerID'] = $transaction['serializedData']['handlerID'];
+				}
+				$transaction['availableOfflinePaymentMethods'] = $this->availableOfflinePaymentMethods;
+			}
+		}
+		return $transactions;
+	}
+
 }
 
 ?>

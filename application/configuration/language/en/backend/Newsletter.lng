@@ -42,3 +42,10 @@ _sending=Sending
 
 _message_successfully_saved=Message was saved successfully
 _message_successfully_sent=Newsletter messages have been sent successfully
+
+_message_format=Message format
+_html_with_auto_generated_plaintext_version=HTML with auto-generated plain-text version
+_html_with_manualy_edited_plaintext_version=HTML with manually edited plain-text version
+_html_only=HTML only
+_plaintext_only=Plain-text only
+_message_text_html=HTML version

@@ -200,7 +200,24 @@ class ShipmentController extends StoreManagementController
 
 		$history->saveLog();
 
-		if ($this->config->get('EMAIL_STATUS_UPDATE'))
+		$status = $shipment->status->get();
+		$enabledStatuses = $this->config->get('EMAIL_STATUS_UPDATE_STATUSES');
+		$m = array(	
+			'EMAIL_STATUS_UPDATE_NEW'=>Shipment::STATUS_NEW,
+			'EMAIL_STATUS_UPDATE_PROCESSING'=>Shipment::STATUS_PROCESSING,
+			'EMAIL_STATUS_UPDATE_AWAITING_SHIPMENT'=>Shipment::STATUS_AWAITING,
+			'EMAIL_STATUS_UPDATE_SHIPPED'=> Shipment::STATUS_SHIPPED
+		);
+		$sendEmail = false;
+		foreach($m as $configKey => $constValue)
+		{
+			if($status == $constValue && array_key_exists($configKey, $enabledStatuses))
+			{
+				$sendEmail = true;
+			}
+		}
+
+		if ($sendEmail || $this->config->get('EMAIL_STATUS_UPDATE'))
 		{
 			$user = $shipment->order->get()->user->get();
 			$user->load();
