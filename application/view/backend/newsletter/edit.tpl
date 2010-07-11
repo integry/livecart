@@ -35,6 +35,13 @@
 		<p>
 			<label class="sendLabel">{t _send_to}:</label>
 			<div style="float: left;">
+				{foreach from=$groupsArray item=groupItem}
+					<p>
+						{checkbox class="checkbox userGroupCheckbox" name="group" name="group_{$groupItem.ID}" onchange="Backend.Newsletter.updateRecipientCount(this)"}
+						<label class="checkbox" for="group_{$groupItem.ID}">{$groupItem.name|escape}</label>
+					</p>
+				{/foreach}
+				<input type="hidden" value="" name="userGroupIDs" id="userGroupIDs" />
 				<p>
 					{checkbox class="checkbox" name="users" onchange="Backend.Newsletter.updateRecipientCount(this)"}
 					<label class="checkbox" for="users">{t _all_users}</label>
@@ -43,7 +50,6 @@
 					{checkbox class="checkbox" name="subscribers" onchange="Backend.Newsletter.updateRecipientCount(this)"}
 					<label class="checkbox" for="subscribers">{t _all_subscribers}</label>
 				<p>
-
 				<fieldset class="container">
 					<p class="recipientCount">
 						{include file="backend/newsletter/recipientCount.tpl" count=$recipientCount}

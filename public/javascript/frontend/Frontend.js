@@ -24,7 +24,7 @@ Product = {}
 Product.ImageHandler = Class.create();
 Product.ImageHandler.prototype =
 {
-	initialize: function(imageData, imageDescr, imageProducts)
+	initialize: function(imageData, imageDescr, imageProducts, enlargeOnMouseOver)
 	{
 		if (!imageProducts)
 		{
@@ -33,7 +33,7 @@ Product.ImageHandler.prototype =
 
 		imageData.each(function(pair)
 		{
-			var inst = new Product.ImageSwitcher(pair.key, pair.value, imageDescr[pair.key], imageProducts[pair.key]);
+			var inst = new Product.ImageSwitcher(pair.key, pair.value, imageDescr[pair.key], imageProducts[pair.key], enlargeOnMouseOver);
 			if (!window.defaultImageHandler)
 			{
 				window.defaultImageHandler = inst;
@@ -50,7 +50,7 @@ Product.ImageSwitcher.prototype =
 	imageData: null,
 	imageDescr: null,
 
-	initialize: function(id, imageData, imageDescr, productID)
+	initialize: function(id, imageData, imageDescr, productID, enlargeOnMouseOver)
 	{
 		this.id = id;
 		this.productID = productID;
@@ -60,7 +60,14 @@ Product.ImageSwitcher.prototype =
 		var thumbnail = $('img_' + id);
 		if (thumbnail)
 		{
-			thumbnail.onclick = this.switchImage.bindAsEventListener(this);
+			if(enlargeOnMouseOver)
+			{
+				thumbnail.onmouseover = this.switchImage.bindAsEventListener(this);
+			}
+			else
+			{
+				thumbnail.onclick = this.switchImage.bindAsEventListener(this);
+			}
 		}
 	},
 
@@ -88,6 +95,23 @@ Product.ImageSwitcher.prototype =
 		if (window.productVariationHandler && e)
 		{
 			window.productVariationHandler.setVariation(this.productID);
+		}
+	}
+}
+
+Product.Lightbox2Gallery = 
+{
+	start : function(a)
+	{
+		var
+			lightboxATag;
+
+		lightboxATag = $A(document.getElementsByTagName("a")).find(function(a) {
+			return  a.rel && a.href == this.a.href;
+		}.bind({a:a}));
+		if(lightboxATag)
+		{
+			$(lightboxATag).simulate('click');
 		}
 	}
 }

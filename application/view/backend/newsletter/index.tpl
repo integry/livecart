@@ -136,6 +136,7 @@
 	{
 		add: '{/literal}{link controller=backend.newsletter action=add}{literal}',
 		recipientCount: '{/literal}{link controller=backend.newsletter action=recipientCount}{literal}',
+		plaintext: '{/literal}{link controller=backend.newsletter action=plaintext}{literal}',
 	}
 
 {/literal}
