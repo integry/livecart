@@ -143,6 +143,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 		parent::init();
 
 		$this->application->processInitPlugins($this);
+		$this->application->logStat('Init BaseController');
 	}
 
 	protected function setCache(OutputCache $cache)

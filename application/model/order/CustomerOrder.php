@@ -117,7 +117,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public static function getInstanceByInvoiceNumber($id, $loadReferencedRecords = false)
 	{
-		return self::getRecordSet(select(eq(f('CustomerOrder.invoiceNumber'), $id)), $loadReferencedRecords)->shift();		
+		return self::getRecordSet(select(eq(f('CustomerOrder.invoiceNumber'), $id)), $loadReferencedRecords)->shift();
 	}
 
 	/**
@@ -500,7 +500,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			{
 				$item->price->set($item->getSubTotalBeforeTax() / $item->getCount());
 			}
-			
+
 			$item->name->set($item->getProduct()->getParent()->name->get());
 			$item->setValueByLang('name', 'sku', $item->getProduct()->sku->get());
 			$item->save();
@@ -750,6 +750,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function setUser(User $user)
 	{
+		if ($this->user->get() && ($this->user->get()->getID() == $user->getID()))
+		{
+			return;
+		}
+
 		$this->user->set($user);
 		$this->setCheckoutStep(self::CHECKOUT_USER);
 
@@ -773,7 +778,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function setCheckoutStep($step)
 	{
-		if ($step < $this->checkoutStep->get())
+		if ($step <= $this->checkoutStep->get())
 		{
 			return false;
 		}
@@ -1388,16 +1393,19 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 			if (!$product->isBackOrderable->get() && !$item->isSavedForLater->get() && !$product->isBundle())
 			{
-				if ($product->stockCount->get() <= 0)
+				if (!$product->isDownloadable() || $product->isInventoryTracked())
 				{
-					$item->isSavedForLater->set(OrderedItem::OUT_OF_STOCK);
-					$result['out'][] = array('id' => $item->getID());
-				}
-				else if ($product->stockCount->get() < $item->count->get())
-				{
-					$count = $item->count->get();
-					$item->count->set($product->stockCount->get());
-					$result['count'][] = array('id' => $item->getID(), 'from' => $count, 'to' => $item->count->get());
+					if (($product->stockCount->get() <= 0))
+					{
+						$item->isSavedForLater->set(OrderedItem::OUT_OF_STOCK);
+						$result['out'][] = array('id' => $item->getID());
+					}
+					else if ($product->stockCount->get() < $item->count->get())
+					{
+						$count = $item->count->get();
+						$item->count->set($product->stockCount->get());
+						$result['count'][] = array('id' => $item->getID(), 'from' => $count, 'to' => $item->count->get());
+					}
 				}
 			}
 		}

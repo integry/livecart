@@ -37,6 +37,12 @@
 
 	$app = new LiveCart();
 
+	if (isset($stat))
+	{
+		$app->setStatHandler($stat);
+		$stat->logStep('Initialization');
+	}
+
 	// Custom initialization tasks
 	$custom = ClassLoader::getRealPath('storage.configuration.CustomInitialize') . '.php';
 	if (file_exists($custom))

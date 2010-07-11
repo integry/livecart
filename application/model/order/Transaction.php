@@ -101,6 +101,17 @@ class Transaction extends ActiveRecordModel implements EavAble
 		{
 			$instance->amount->set($order->currency->get()->convertAmount($instance->realCurrency->get(), $instance->realAmount->get()));
 			$instance->currency->set($order->currency->get());
+
+			// test if some amount is not missing due to currency conversion rounding (a difference of 0.01, etc)
+			$total = $order->totalAmount->get();
+			if ($instance->amount->get() < $total)
+			{
+				$largerAmount = $order->currency->get()->convertAmount($instance->realCurrency->get(), 0.01 + $instance->realAmount->get());
+				if ($largerAmount >= $total)
+				{
+					$instance->amount->set($total);
+				}
+			}
 		}
 
 		// transaction type
@@ -380,7 +391,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 
 	protected function insert()
 	{
-		
+
 		if (self::TYPE_CAPTURE == $this->type->get() || self::TYPE_SALE == $this->type->get())
 		{
 			$this->order->get()->addCapturedAmount($this->amount->get());
