@@ -74,6 +74,28 @@ class UspsTest extends TestShipping
 		$this->assertTrue($rates instanceof ShippingRateError);
 	}
 
+	function testPriorityNonFlatRate()
+	{
+		$usps = new UspsShipping();
+		$usps->setUserId('550INTEG8147');
+		$usps->setSourceCountry('US');
+		$usps->setSourceZip('44106');
+		$usps->setDestCountry('US');
+		$usps->setDestZip('20770');
+		$usps->setSize('REGULAR');
+		$usps->setMachinable(true);
+		$usps->setWeight(0.2);
+		$usps->setService('Priority');
+
+		// non-flat rate container
+		$usps->setContainer('Variable');
+		$this->assertTrue($usps->getRates() instanceof ShippingRateError);
+
+		// no container at all
+		$usps->setContainer('');
+		$this->assertTrue($usps->getRates() instanceof ShippingRateSet);
+	}
+
 	public function testInternational()
 	{
 		$usps = new UspsShipping();
