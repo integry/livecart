@@ -120,7 +120,25 @@ LiveCart.AjaxRequest.prototype = {
 		{
 			this.adjustIndicatorVisibility = ($(indicatorId).style.visibility == 'hidden');
 
-			if (('INPUT' == indicatorId.tagName) && ('checkbox' == indicatorId.type))
+			if ('SELECT' == indicatorId.tagName)
+			{
+				var selectIndicator = document.createElement('span');
+				selectIndicator.className = 'progressIndicator';
+				var nextSibling = indicatorId.nextSibling;
+				if (nextSibling)
+				{
+					nextSibling.parentNode.insertBefore(selectIndicator, nextSibling);
+				}
+				else
+				{
+					indicatorId.parentNode.appendChild(selectIndicator);
+				}
+
+				indicatorId = selectIndicator;
+
+				this.adjustIndicatorVisibility = true;
+			}
+			else if (('INPUT' == indicatorId.tagName) && (('checkbox' == indicatorId.type) || ('radio' == indicatorId.type)))
 			{
 				this.replacedIndicator = indicatorId;
 				indicatorId = document.createElement('span');

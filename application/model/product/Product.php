@@ -24,7 +24,7 @@ class Product extends MultilingualObject
 {
 	private static $multilingualFields = array("name", "shortDescription", "longDescription");
 
-	private $specificationInstance = null;
+	protected $specificationInstance = null;
 
 	private $pricingHandlerInstance = null;
 
