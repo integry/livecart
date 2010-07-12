@@ -2869,6 +2869,11 @@ img.calendar_button
 	display: none;
 }
 
+.onePageCheckout-index .downloadable #checkout-shipping-method
+{
+	display: none;
+}
+
 .onePageCheckout-index .step-disabled .notAvailable
 {
 	display: block;
