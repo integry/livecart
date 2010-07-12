@@ -99,7 +99,7 @@ Product.ImageSwitcher.prototype =
 	}
 }
 
-Product.Lightbox2Gallery = 
+Product.Lightbox2Gallery =
 {
 	start : function(a)
 	{
@@ -799,6 +799,7 @@ Frontend.OnePageCheckout.prototype =
 	bindEvents: function()
 	{
 		Observer.add('order', this.updateOrderTotals.bind(this));
+		Observer.add('order', this.updateOrderStatus.bind(this));
 		Observer.add('cart', this.updateCartHTML.bind(this));
 		Observer.add('shippingMethods', this.updateShippingMethodsHTML.bind(this));
 		Observer.add('user', this.updateShippingOptions.bind(this));
@@ -1038,8 +1039,19 @@ Frontend.OnePageCheckout.prototype =
 		}.bind(this));
 	},
 
+	updateOrderStatus: function(order)
+	{
+		this.nodes.root[['addClassName', 'removeClassName'][1 - order.isShippingRequired]]('shippable');
+		this.nodes.root[['removeClassName', 'addClassName'][1 - order.isShippingRequired]]('downloadable');
+	},
+
 	formOnChange: function(form, func)
 	{
+		if (!form)
+		{
+			return;
+		}
+
 		ActiveForm.prototype.resetErrorMessages(form);
 
 		$A(['input', 'select', 'textarea']).each(function(tag)
