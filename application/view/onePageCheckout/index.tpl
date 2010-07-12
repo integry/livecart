@@ -40,7 +40,9 @@
 	<script type="text/javascript">
 		var checkout = new Frontend.OnePageCheckout();
 		checkout.updateCompletedSteps({json array=$completedSteps});
+		checkout.updateCompletedSteps({json array=$completedSteps});
 		checkout.updateEditableSteps({json array=$editableSteps});
+		Observer.process('order', {json array=$orderValues});
 {literal}
 		new User.ShippingFormToggler($('sameAsShipping'), $('billingAddressForm'));
 	</script>

@@ -202,7 +202,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			$billingAddress->load(self::LOAD_REFERENCES);
 			$billingAddress->getSpecification(); // todo: why EavObject not loaded automaticaly?
 		}
-		
+
 		$shippingAddress = $this->shippingAddress->get();
 		if ($shippingAddress)
 		{
@@ -886,12 +886,18 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 			$this->totalAmount->set($this->getTotal(true));
 		}
+		else
+		{
+			if (!$this->isShippingRequired())
+			{
+				//$this->shippingAddress->setNull();
+			}
+		}
 
 		if ($this->isModified() || $isModified)
 		{
 			$this->serializeShipments();
 		}
-
 
 		if (!$this->isFinalized->get() && !$this->orderedItems && !$allowEmpty && !self::$isEmptyAllowed)
 		{

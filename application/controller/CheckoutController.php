@@ -1187,6 +1187,10 @@ class CheckoutController extends FrontendController
 		{
 			SessionOrder::save($newOrder);
 		}
+		else
+		{
+			SessionOrder::destroy();
+		}
 
 		return new ActionRedirectResponse('checkout', 'completed');
 	}
@@ -1360,7 +1364,7 @@ class CheckoutController extends FrontendController
 		}
 
 		$fieldStep = $this->config->get('CHECKOUT_CUSTOM_FIELDS');
-		if ((($fieldStep == 'BILLING_ADDRESS_STEP') && (('billing' == $step) || !$step)) ||
+		if ((($fieldStep == 'BILLING_ADDRESS_STEP') && (('billing' == $step) || !$step || !$order->isShippingRequired())) ||
 		   (($fieldStep == 'SHIPPING_ADDRESS_STEP') && (('shipping' == $step))))
 		{
 			$order->getSpecification()->setValidation($validator);

@@ -196,6 +196,7 @@ class SessionOrder
 	{
 		$session = new Session();
 		$session->unsetValue('CustomerOrder');
+		$session->unsetValue('orderData');
 	}
 }
 

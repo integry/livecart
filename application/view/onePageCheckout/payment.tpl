@@ -23,7 +23,7 @@
 			{foreach from=$otherMethods item=method}
 				<tr>
 					<td style="vertical-align: middle;">
-						<input type="radio" class="radio" name="payMethod" value="{link controller=onePageCheckout action=redirect id=$method query=$query}" id="{$method}" />
+						<input type="radio" class="radio" name="payMethod" value="{link controller=onePageCheckout action=redirect query="id=`$method`"}" id="{$method}" />
 					</td>
 					<td>
 						<label class="radio" for="{$method}">

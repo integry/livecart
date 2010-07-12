@@ -21,6 +21,7 @@ class OnePageCheckoutController extends CheckoutController
 		$this->config->set('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
 		$this->config->set('ENABLE_CHECKOUTDELIVERYSTEP', true);
 		$this->config->set('DISABLE_CHECKOUT_ADDRESS_STEP', false);
+		$this->config->set('ENABLE_SHIPPING_ESTIMATE', false);
 		$this->config->set('SKIP_SHIPPING', false);
 		$this->config->set('SKIP_PAYMENT', false);
 		$this->config->set('REG_EMAIL_CONFIRM', false);
@@ -48,7 +49,7 @@ class OnePageCheckoutController extends CheckoutController
 
 			$this->user->grantAccess('login');
 
-			if ($this->user->defaultShippingAddress->get())
+			if ($this->user->defaultShippingAddress->get() && $this->order->isShippingRequired())
 			{
 				$address = $this->user->defaultShippingAddress->get()->userAddress->get();
 				$this->order->shippingAddress->set($address);
@@ -62,7 +63,7 @@ class OnePageCheckoutController extends CheckoutController
 				if ($address)
 				{
 					$this->order->billingAddress->set($address);
-					if (!$this->order->shippingAddress->get())
+					if (!$this->order->shippingAddress->get() && $this->order->isShippingRequired())
 					{
 						$this->order->shippingAddress->set($address);
 					}
@@ -80,7 +81,12 @@ class OnePageCheckoutController extends CheckoutController
 			$this->user->loadAddresses();
 
 			$address = $this->user->defaultShippingAddress->get();
-			if (!$this->order->shippingAddress->get() && $address)
+			if (!$address)
+			{
+				$address = $this->user->defaultBillingAddress->get();
+			}
+
+			if (!$this->order->shippingAddress->get() && $address && $this->order->isShippingRequired())
 			{
 				$userAddress = $address->userAddress->get();
 				$this->order->shippingAddress->set($userAddress);
@@ -118,6 +124,8 @@ class OnePageCheckoutController extends CheckoutController
 				$response->addResponse($block, $blockResponse, $this, $block);
 			}
 		}
+
+		$response->set('orderValues', $this->getOrderValues($this->order));
 
 		return $response;
 	}
@@ -184,6 +192,13 @@ class OnePageCheckoutController extends CheckoutController
 			$this->request->set('step', 'shipping');
 			$response = parent::selectAddress();
 			$response->set('step', 'shipping');
+
+			if (!$this->order->isShippingRequired())
+			{
+				$form = $response->get('form');
+				$formData = $this->switchArrayPrefixes($form->getData(), 'billing_', 'shipping_');
+				$form->setData($formData);
+			}
 		}
 
 		return $this->postProcessResponse($response);
@@ -216,6 +231,8 @@ class OnePageCheckoutController extends CheckoutController
 		$this->config->set('CHECKOUT_CUSTOM_FIELDS', 'SHIPPING_METHOD_STEP');
 
 		$response = $this->shipping();
+		$this->order->serializeShipments();
+		$this->order->save();
 
 		$this->config->set('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
 
@@ -229,6 +246,11 @@ class OnePageCheckoutController extends CheckoutController
 
 	public function overview()
 	{
+		if (!$this->order->isShippingRequired())
+		{
+			$this->order->shippingAddress->setNull();
+		}
+
 		$this->order->resetArrayData();
 		return $this->postProcessResponse(new ActionResponse('order', $this->order->toArray()));
 	}
@@ -403,6 +425,9 @@ class OnePageCheckoutController extends CheckoutController
 			$this->saveAnonUser($this->user);
 		}
 
+		// attempt to pre-select a shipping method
+		$this->shippingMethods();
+
 		return $this->getUpdateResponse('shippingMethods');
 	}
 
@@ -442,22 +467,31 @@ class OnePageCheckoutController extends CheckoutController
 
 	public function payCreditCard()
 	{
-		$this->registerAnonUser();
+		$this->beforePayment();
 		return parent::payCreditCard();
 	}
 
 	public function redirect()
 	{
-		$this->registerAnonUser();
+		$this->beforePayment();
 		return parent::redirect();
 	}
 
 	public function payOffline()
 	{
-		$this->registerAnonUser();
+		$this->beforePayment();
 		return parent::payOffline();
 	}
 
+	protected function beforePayment()
+	{
+		if (!$this->order->isShippingRequired())
+		{
+			$this->order->shippingAddress->setNull();
+		}
+
+		$this->registerAnonUser();
+	}
 
 	protected function getUserController()
 	{
@@ -487,7 +521,7 @@ class OnePageCheckoutController extends CheckoutController
 
 		$this->config->set('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
 
-		if (!$order->shippingAddress->get())
+		if (!$order->shippingAddress->get() && $this->order->isShippingRequired())
 		{
 			if ($isCompleted)
 			{
@@ -535,6 +569,7 @@ class OnePageCheckoutController extends CheckoutController
 
 		$isOrderable = $order->isOrderable();
 		$orderArray['isOrderable'] = is_bool($isOrderable) ? $isOrderable : false;
+		$orderArray['isShippingRequired'] = $order->isShippingRequired();
 
 		return $orderArray;
 	}
@@ -646,8 +681,13 @@ class OnePageCheckoutController extends CheckoutController
 			}
 
 			$this->order->resetArrayData();
-			var_dump($this->user->toArray());
-			var_dump($this->order->toArray());
+
+			// shipping and billing addresses the same? save only the billing address
+			if ($this->order->shippingAddress->get() && ($this->order->billingAddress->get()->toString() == $this->order->shippingAddress->get()->toString()))
+			{
+				$this->user->defaultShippingAddress->get()->delete();
+				$this->user->defaultShippingAddress->setNull();
+			}
 
 			$this->user->save();
 
