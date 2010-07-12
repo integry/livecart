@@ -56,7 +56,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->setRateId($rates->get(0)->getServiceID());
 		$shipment->save();
 
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 		$this->assertEquals($this->order->getTotal(), (100 * 1.2) + (100 * 1.5));
 	}
 
@@ -98,7 +98,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->setRateId($rates->get(0)->getServiceID());
 		$shipment->save();
 
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 		$this->assertEquals($this->order->getTotal(), 200 * 1.10 * 1.15);
 	}
 
@@ -150,7 +150,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->recalculateAmounts();
 		$shipment->save();
 		$order->save();
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 
 		$this->assertEqual($shipment->getRelatedRecordSet('ShipmentTax')->size(), 1);
 		$this->assertEqual($shipment->getRelatedRecordSet('ShipmentTax')->get(0)->amount->get(), 40);
@@ -204,7 +204,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->setRateId($rates->get(0)->getServiceID());
 		$shipment->save();
 
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 
 		$this->assertEquals($this->order->shipments->get(0)->shippingAmount->get(), 16.95);
 
@@ -273,7 +273,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->setRateId($rates->get(0)->getServiceID());
 		$shipment->save();
 
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 		$this->assertSame($this->order->getDeliveryZone(), $zone);
 		$this->assertEquals($this->order->getTotal(), 71.63);
 	}
@@ -326,7 +326,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->setRateId($rates->get(0)->getServiceID());
 		$shipment->save();
 
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 		$this->assertSame($this->order->getDeliveryZone(), $zone);
 		$this->assertEquals($this->order->getTotal(), 69.13);
 	}
@@ -360,7 +360,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->setRateId($rates->get(0)->getServiceID());
 		$shipment->save();
 
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 		$this->assertEquals(round($this->order->getSubTotal(), 2), round(100 / 1.19, 2));
 		$this->assertEquals($this->order->getShipments()->get(0)->getTotal(), 100 + 100);
 		$this->assertEquals($this->order->getTotal(), 100 + 100);
@@ -399,7 +399,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->setRateId($rates->get(0)->getServiceID());
 		$shipment->save();
 
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 		$this->assertEquals($this->order->getTotal(), 104.80);
 	}
 
