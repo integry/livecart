@@ -18,6 +18,8 @@ abstract class ApiReader implements Iterator
 	const AR_CONDITION = 1;
 	const ALL_KEYS = -1;
 
+	protected static $availableActionAtributeNames = array('start','offset', 'limit', 'max');
+	
 	protected $iteratorKey = 0;
 	protected $content;
 	protected $xmlKeyToApiActionMapping = array(); //? deprecated
@@ -25,7 +27,8 @@ abstract class ApiReader implements Iterator
 	protected $apiFields;
 	private $apiActionName;
 	private $fieldNames = array();
-
+	private $actionAtributes;
+	
 	public static function canParse(Request $request, $parserClassName)
 	{
 		return self::canParseXml($request, $parserClassName::getXMLPath(), $parserClassName);
@@ -132,12 +135,28 @@ abstract class ApiReader implements Iterator
 				}
 			}
 		}
+
+		$limit = $this->getActionAtribute('limit', 999999999999999999); // mysql does not have offset, should use limit <offset>, <some large number>
+		if($limit>-1)
+		{
+			$arsf->setLimit($limit, (integer)$this->getActionAtribute('offset', 0));
+		}
 		return $arsf;
 	}
 	
 
 	protected static function getSanitizedSimpleXml($xmlString)
 	{
+		// sanitize list tag atributes - remove slashes (if any) and add quotes.
+		foreach(self::$availableActionAtributeNames as $atributeName)
+		{
+			if(preg_match('/\<list.+('.$atributeName.'=[\s\\\\\'\\\\"]*(\d+)[\s\\\\\'\\\\"]*)/', $xmlString, $m))
+			{
+				$xmlString = str_replace($m[1], ' '. $atributeName.'="'.$m[2].'" ', $xmlString);
+			}
+		}
+		//--
+
 		try {
 			$xmlRequest = @simplexml_load_string($xmlString);
 			if(!is_object($xmlRequest) || $xmlRequest->getName() != 'request') {
@@ -166,16 +185,30 @@ abstract class ApiReader implements Iterator
 		{
 			foreach($v as $k2 => $v2) // with each element
 			{
+				foreach($v2->attributes() as $attributeName=>$attributeValue)
+				{
+					$this->setActionAtribute($attributeName, $attributeValue);
+				}
 				$apiActionName = $k2; // first element name is action name!
 				break 2;
 			}
 		}
 		$apiActionName = array_key_exists($apiActionName,$this->xmlKeyToApiActionMapping)?$this->xmlKeyToApiActionMapping[$apiActionName]:$apiActionName;
 		$this->setApiActionName($apiActionName);
-
 		return $this->getApiActionName();
 	}
 
+	public function setActionAtribute($key, $value)
+	{
+		$aliases = array('start'=>'offset', 'max'=>'limit');
+		$this->actionAtributes[array_key_exists($key, $aliases) ? $aliases[$key] : $key] = (string)$value;
+	}
+	
+	public function getActionAtribute($key, $defaultValue=null)
+	{
+		return isset($this->actionAtributes[$key]) ? $this->actionAtributes[$key] : $defaultValue;
+	}
+	
 	public function loadDataInRequest($request, $xpathPrefix=null, $fieldNames=null)
 	{
 		if(func_num_args() < 3)
@@ -192,7 +225,6 @@ abstract class ApiReader implements Iterator
 				$request->set($fieldName, $this->sanitizeField($fieldName, $v));
 			}
 		}
-
 		return $request;
 	}
 
@@ -269,6 +301,7 @@ abstract class ApiReader implements Iterator
 	
 	protected static function canParseXml(Request $request, $lookForXpath, $parserClassName)
 	{
+		
 		$requestData = $request->getRawRequest();
 
 		if(array_key_exists('xml',$requestData))

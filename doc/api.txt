@@ -72,7 +72,18 @@ Replace - (work as set, only removes existing quantityPrices and replaces with g
           /api/xml/?xml=<price><replace><sku>SKU44939</sku><quantityPrices><quantityPrice><quantity>5</quantity><price>55.98</price></quantityPrice></quantityPrices></replace></price>
           /api/xml/?xml=<price><replace><sku>SKU44939</sku></replace></price> -- removes all quantity prices
 
-          
+
+All List actions have atributes:
+	limit - positive integer, optional, how much records to return, default 999999999999999999
+	offset- positive integer, optional, from which record start return, default 0
+	start - same as limit
+	max   - same as offset
+
+	examples:
+		<customer><list limit="10" offset="10"/></customer>
+        <order><list max=5 start=10></list></order>
+
+
 Secret key authorization:
 			server key = testing
 			hash = md5('testing' . '|' . '1234')

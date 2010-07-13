@@ -124,7 +124,6 @@ class CategoryApi extends ModelApi
 			{
 				if(in_array($k, $apiFieldNames))                 // those who are allowed fields ($this->apiFieldNames) ?
 				{
-					// todo: how to escape in simplexml, cdata? create cdata or what?
 					$xmlCategory->addChild($k, htmlentities($v));
 				}
 			}

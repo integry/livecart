@@ -28,7 +28,7 @@ class UserApi extends ModelApi
 		parent::__construct(
 			$application,
 			'User',
-			array('eavObjectID', 'preferences') // fields to ignore in User model
+			array('preferences') // fields to ignore in User model
 		);
 		$this->addSupportedApiActionName('import');
 	}
@@ -140,6 +140,8 @@ class UserApi extends ModelApi
 					}
 				}
 			}
+			$this->mergeUserEavFields($responseCustomer, $u);
+			$this->clear($u);
 		}
 		return new SimpleXMLResponse($response);
 	}
@@ -163,7 +165,7 @@ class UserApi extends ModelApi
 			}
 
 			// todo: join? how?? m?!
-			$u = User::getInstanceByID($customer['ID']);	
+			$u = User::getInstanceByID($customer['ID'], true);
 			$u->loadAddresses();
 			// default billing and shipping addreses
 			foreach(array('defaultShippingAddress', 'defaultBillingAddress') as $addressType)
@@ -177,8 +179,63 @@ class UserApi extends ModelApi
 					}
 				}
 			}
+			$this->mergeUserEavFields($customerNode, $u);
+			$this->clear($u);
 		}
 		return new SimpleXMLResponse($response);
+	}
+	
+	private function mergeUserEavFields($customerNode, $u)
+	{
+		$eavFieldsNode = $customerNode->addChild('EavFields');
+		if($u->eavObjectID->get())
+		{
+			$u->getSpecification();
+			$userArray = $u->toArray();
+			$attributes = array();
+			foreach($userArray['attributes'] as $attr)
+			{
+				$attrData = array(
+					'ID' => $attr['EavField']['ID'],
+					'handle' => $attr['EavField']['handle'],
+					'name' => $attr['EavField']['name'],
+					'value' => '');
+				if ($attr['EavField'] && (isset($attr['values']) || isset($attr['value']) || isset($attr['value_lang'])))
+				{
+					if (isset($attr['values']))
+					{
+						foreach ($attr['values'] as  $value)
+						{
+							$attrData['value'][] = $value['value_lang'];
+						}
+					} else if (isset($attr['value_lang'])) {
+						$attrData['value'] = $attr['value_lang'];
+					} else if(isset($attr['value'])) {
+						$attrData['value'] = $attr['EavField']['valuePrefix_lang'] . $attr['value'] . $attr['EavField']['valueSuffix_lang'];
+					}
+				}
+				$attributes[] = $attrData;
+			}
+			foreach($attributes as $attr)
+			{
+				$eavFieldNode = $eavFieldsNode->addChild('EavField');
+				foreach($attr as $key => $value)
+				{
+					if(is_array($value))
+					{
+						$node = $eavFieldNode->addChild($key.'s');
+						foreach($value as $v)
+						{
+							$node->addChild($key, $v);
+						}
+					}
+					else
+					{
+						$eavFieldNode->addChild($key, $value);
+					}
+				}
+			}
+		}
 	}
 }
 

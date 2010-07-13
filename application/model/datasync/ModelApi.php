@@ -300,6 +300,19 @@ abstract class ModelApi
 		}
 		return $xml;
 	}
+
+	protected function clear($instance)
+	{
+		if(method_exists($instance, '__destruct'))
+		{
+			$instance->__destruct();
+		}
+		if(method_exists($instance, 'destruct'))
+		{
+			$instance->destruct(true);
+		}	
+		ActiveRecord::clearPool();
+	}
 }
 
 ?>
