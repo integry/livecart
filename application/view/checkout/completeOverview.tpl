@@ -26,19 +26,21 @@
 		<p>
 			{$address.countryName}
 		</p>
+		<p>
+			{include file="order/addressFieldValues.tpl" showLabels=true}
+		</p>
 	{/if}
 {/defun}
 
 <div id="overviewAddresses">
-
 	{if $order.ShippingAddress && !$order.isMultiAddress}
-	<div class="addressContainer">
-		<h3>{t _will_ship_to}:</h3>
-		{fun name="address" address=$order.ShippingAddress}
-		{if !$nochanges}
-			<a href="{link controller=checkout action=selectAddress}">{t _change}</a>
-		{/if}
-	</div>
+		<div class="addressContainer">
+			<h3>{t _will_ship_to}:</h3>
+			{fun name="address" address=$order.ShippingAddress}
+			{if !$nochanges}
+				<a href="{link controller=checkout action=selectAddress}">{t _change}</a>
+			{/if}
+		</div>
 	{/if}
 
 	<div class="addressContainer">
@@ -50,7 +52,6 @@
 	</div>
 
 	<div class="clear"></div>
-
 </div>
 
 </fieldset>

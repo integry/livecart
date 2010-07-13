@@ -15,6 +15,11 @@
 			{/if}
 		</td>
 
+		{if 'SHOW_SKU_CART'|config}
+		
+			<td>{$item.Product.sku|escape}</td>
+		{/if}
+
 		<td class="cartName">
 			<div>
 				{if $item.Product.ID}

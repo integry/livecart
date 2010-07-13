@@ -294,6 +294,8 @@ class ProductController extends FrontendController
 
 			$response->set('additionalCategories', $categories);
 		}
+		$response->set('enlargeProductThumbnailOnMouseOver', 
+			$this->config->get('_ENLARGE_PRODUCT_THUMBNAILS_ON') == 'P_THUMB_ENLARGE_MOUSEOVER');
 
 		return $response;
 	}

@@ -1150,7 +1150,10 @@ class CheckoutController extends FrontendController
 
 		$this->session->set('completedOrderID', $this->order->getID());
 
-		SessionOrder::save($newOrder);
+		if($newOrder instanceof CustomerOrder) // if user hasn't wish list items order->finalize() will return null, saving null with SessionOrder causes fatal error!
+		{
+			SessionOrder::save($newOrder);
+		}
 
 		return new ActionRedirectResponse('checkout', 'completed');
 	}

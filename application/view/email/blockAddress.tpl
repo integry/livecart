@@ -17,4 +17,5 @@
 {if $address.countryName}
 {$address.countryName}
 {/if}
+{include file="order/addressFieldValues.tpl" showLabels=false}
 {/if}
