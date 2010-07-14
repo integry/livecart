@@ -119,7 +119,7 @@ class NewsletterController extends ActiveGridController
 		$newsletter->loadRequestData($this->request);
 		$newsletter->save();
 
-		if ($this->request->isValueSet('send'))
+		if ($this->request->get('sendFlag'))
 		{
 			return $this->send($newsletter);
 		}

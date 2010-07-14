@@ -13,7 +13,7 @@
 		<input type="checkbox" name="afterAdding" value="new" style="display: none;" />
 
 		<span class="progressIndicator" style="display: none;"></span>
-		<input type="submit" name="save" class="submit" value="{t _save_message}" />
+		<input type="submit" name="save" class="submit" value="{t _save_message}" onclick="this.form.elements.namedItem('sendFlag').value = '';" />
 		{t _or} <a class="cancel" href="#" onclick="Backend.Newsletter.cancelAdd(); return false;">{t _cancel}</a>
 
 	</fieldset>
@@ -56,7 +56,7 @@
 					</p>
 				</fieldset>
 
-				<input type="submit" name="send" class="submit" value="{t _send_message}" />
+				<input type="submit" name="send" class="submit" value="{t _send_message}"  onclick="this.form.elements.namedItem('sendFlag').value = 'send';" />
 			</div>
 		</p>
 	</fieldset>
@@ -88,6 +88,8 @@
 		<a class="cancel" href="#" onclick="Backend.Newsletter.cancel(this); return false;">{t _cancel}</a>
 	</fieldset>
 </div>
+
+<input type="hidden" name="sendFlag" value="" />
 
 {/form}
 

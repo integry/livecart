@@ -439,7 +439,7 @@ class DiscountConditionTest extends LiveCartTest
 		OrderCoupon::getNewInstance($this->order, $code)->save();
 		$this->assertEquals(1, $this->order->getCoupons(true)->size());
 		$this->order->save();
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 
 		$newOrder = CustomerOrder::getNewInstance($someUser);
 		$newOrder->addProduct($this->product1, 1, true);

@@ -74,6 +74,8 @@ abstract class FrontendController extends BaseController
 		$this->addBlock('COMPARE', array('compare', 'compareMenu'));
 		$this->addBlock('MINI_CART', array('order', 'miniCart'), 'order/miniCartBlock');
 		$this->addBlock('QUICK_LOGIN', 'quickLogin', 'user/block/quickLoginBlock');
+
+		$this->application->logStat('Init FrontendController');
 	}
 
 	public function getRequestCurrency()
@@ -683,14 +685,22 @@ abstract class FrontendController extends BaseController
 
 	public function latestNewsBlock()
 	{
+		$this->application->logStat('Starting latestNewsBlock');
 		ClassLoader::import('application.model.sitenews.NewsPost');
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
 		$f->setOrder(new ARFieldHandle('NewsPost', 'position'), 'DESC');
 		$f->setLimit($this->config->get('NUM_NEWS_INDEX') + 1);
+
+		$this->application->logStat('Before fetching news from DB');
+		$news = array();
 		$news = ActiveRecordModel::getRecordSetArray('NewsPost', $f);
+
+		$this->application->logStat('Fetched news from DB');
 
 		$response = new BlockResponse('news', $news);
 		$response->set('isNewsArchive', count($news) > $this->config->get('NUM_NEWS_INDEX'));
+
+		$this->application->logStat('Finished latestNewsBlock');
 		return $response;
 	}
 

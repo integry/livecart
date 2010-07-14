@@ -124,6 +124,12 @@ class UserAddress extends ActiveRecordModel implements EavAble
 		}
 	}
 
+	public function serialize($skippedRelations = array(), $properties = array())
+	{
+		$properties[] = 'specificationInstance';
+		return parent::serialize($skippedRelations, $properties);
+	}
+
 	public function __destruct()
 	{
 		parent::destruct(array('stateID'));
