@@ -1087,10 +1087,15 @@ Frontend.OnePageCheckout.prototype =
 				// change event doesn't fire on radio buttons at IE until they're blurred
 				if ('radio' == el.getAttribute('type'))
 				{
-					Event.observe(el, 'click', function(e) { this.fieldOnChangeCommon(form, func.bindAsEventListener(this))(e);}.bind(this));
+					Event.observe(el, 'click', function(e) { Event.stop(e); this.fieldOnChangeCommon(form, func.bindAsEventListener(this))(e);}.bind(this));
 				}
 			}.bind(this));
 		}.bind(this));
+
+		if (!form.onchange)
+		{
+			form.onchange = function() {}
+		}
 	},
 
 	fieldOnChangeCommon: function(form, func)
@@ -1167,7 +1172,6 @@ Frontend.OnePageCheckout.prototype =
 
 		if (!noHighlight)
 		{
-			console.log(element);
 			new Effect.Highlight(element);
 		}
 	}

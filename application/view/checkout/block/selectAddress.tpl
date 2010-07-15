@@ -9,7 +9,7 @@
 				<td class="selector">
 					{radio class="radio" name="`$prefix`Address" id="`$prefix`_`$item.UserAddress.ID`" value=$item.UserAddress.ID}
 				</td>
-				<td class="address" onclick="$('{$prefix}_{$item.UserAddress.ID}').checked = true; $('{$prefix}_{$item.UserAddress.ID}').form.onchange();">
+				<td class="address" onclick="var el = $('{$prefix}_{$item.UserAddress.ID}'); el.checked = true; el.form.onchange(); fireEvent(el, 'change'); ">
 						{include file="user/address.tpl"}
 						<a href="{link controller=user action=edit`$prefix|@ucfirst`Address id=$item.ID returnPath=true}">{t _edit_address}</a>
 				</td>
