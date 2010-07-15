@@ -127,3 +127,13 @@ ProductReview=Review
 
 # Orders
 CustomerOrder=Order
+
+# News
+NewsPostImport=News posts
+NewsPost.ID=ID
+NewsPost.isEnabled=Is visible
+NewsPost.position=Sort order
+NewsPost.title=Title
+NewsPost.text=First paragraph
+NewsPost.moreText=Remaining text
+NewsPost.time=Date
