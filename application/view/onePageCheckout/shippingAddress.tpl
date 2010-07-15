@@ -8,8 +8,8 @@
 	{form action="controller=onePageCheckout action=doSelectShippingAddress" method="POST" handle=$form}
 		{include file="checkout/block/selectAddress.tpl" addresses=$shippingAddresses prefix="shipping" states=$shipping_states}
 		{include file="checkout/orderFields.tpl"}
+		<input type="hidden" name="sameAsShipping" />
 	{/form}
 {else}
 	{include file="onePageCheckout/register.tpl"}
-
 {/if}

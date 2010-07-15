@@ -4,6 +4,9 @@
 		{t _login_failed}
 	</div>
 {/if}
+<p id="login-msg">
+	{t _opc_login_msg}
+</p>
 <form method="POST" action="{link controller=onePageCheckout action=doLogin}">
 	<div class="one-page-checkout-login-field">
 		<label>{t _your_email}:</label>

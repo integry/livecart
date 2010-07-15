@@ -825,13 +825,15 @@ Frontend.OnePageCheckout.prototype =
 	{
 		var el = e ? Event.element(e) : null;
 		var form = this.nodes.shippingAddress.down('form');
+		form.elements.namedItem('sameAsShipping').value = (this.nodes.billingAddress.down('form').elements.namedItem('sameAsShipping').checked ? 'on' : '');
 		new LiveCart.AjaxRequest(form, el, this.handleFormRequest(form));
 	},
 
 	updateBillingAddress: function(e)
 	{
 		var el = e ? Event.element(e) : null;
-		new LiveCart.AjaxRequest(this.nodes.billingAddress.down('form'), el);
+		var form = this.nodes.billingAddress.down('form');
+		new LiveCart.AjaxRequest(form, el, this.handleFormRequest(form));
 	},
 
 	updateCart: function(e)
@@ -876,7 +878,13 @@ Frontend.OnePageCheckout.prototype =
 	{
 		Event.stop(e);
 
-		var form = this.nodes.paymentDetailsForm.down('form');
+		var form = this.nodes.paymentDetailsForm;
+		var form = $('paymentForm').down('form');
+		if ('form' != form.tagName.toLowerCase())
+		{
+			var form = this.nodes.paymentDetailsForm.down('form');
+		}
+
 		if (!form)
 		{
 			this.nodes.noMethodSelectedMsg.removeClassName('hidden');
@@ -934,8 +942,21 @@ Frontend.OnePageCheckout.prototype =
 				el.onchange =
 					function(noHighlight)
 					{
+						el.blur();
 						this.showPaymentDetailsForm(el, noHighlight);
 					}.bind(this)
+
+				el.onclick = function(e) { Event.stop(e); el.onchange() };
+
+				var tr = $(el).up('tr');
+				if (tr)
+				{
+					var logoImg = tr.down('.paymentLogo');
+					if (logoImg)
+					{
+						logoImg.onclick = function() { el.onclick(); }
+					}
+				}
 
 				if (1 == paymentMethods.length)
 				{
@@ -953,7 +974,9 @@ Frontend.OnePageCheckout.prototype =
 
 	showPaymentDetailsForm: function(el, noHighlight)
 	{
-		this.updateElement(this.nodes.paymentDetailsForm, this.nodes.payment.down('#payForm_' + el.value).innerHTML, noHighlight);
+		var form = this.nodes.paymentDetailsForm;
+		this.updateElement(form, this.nodes.payment.down('#payForm_' + el.value).innerHTML, noHighlight);
+		(form.down('input.text') || form.down('textarea') || form.down('select') || form).focus();
 	},
 
 	initOverview: function()
@@ -1034,7 +1057,6 @@ Frontend.OnePageCheckout.prototype =
 	{
 		$A(this.nodes.root.getElementsByClassName('orderTotal')).each(function(el)
 		{
-			//el.innerHTML = order.formattedTotal;
 			this.updateElement(el, order.formattedTotal);
 		}.bind(this));
 	},
@@ -1061,6 +1083,12 @@ Frontend.OnePageCheckout.prototype =
 				Event.observe(el, 'focus', function() { window.focusedInput = el; });
 				Event.observe(el, 'change', this.fieldOnChangeCommon(form, func.bindAsEventListener(this)));
 				Event.observe(el, 'blur', this.fieldBlurCommon(form, el));
+
+				// change event doesn't fire on radio buttons at IE until they're blurred
+				if ('radio' == el.getAttribute('type'))
+				{
+					Event.observe(el, 'click', function(e) { this.fieldOnChangeCommon(form, func.bindAsEventListener(this))(e);}.bind(this));
+				}
 			}.bind(this));
 		}.bind(this));
 	},
@@ -1069,7 +1097,19 @@ Frontend.OnePageCheckout.prototype =
 	{
 		return function(e)
 		{
-			ActiveForm.prototype.resetErrorMessage(Event.element(e));
+			var el = Event.element(e);
+
+			if ('radio' == el.getAttribute('type'))
+			{
+				el.blur();
+			}
+
+			if (form.errorList)
+			{
+				delete form.errorList[el.name];
+			}
+
+			ActiveForm.prototype.resetErrorMessage(el);
 			func(e);
 		}.bind(this);
 	},
@@ -1127,6 +1167,7 @@ Frontend.OnePageCheckout.prototype =
 
 		if (!noHighlight)
 		{
+			console.log(element);
 			new Effect.Highlight(element);
 		}
 	}

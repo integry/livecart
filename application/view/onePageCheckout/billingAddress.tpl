@@ -10,3 +10,7 @@
 
 	{include file="checkout/block/selectAddress.tpl" addresses=$billingAddresses prefix="billing" states=$billing_states}
 {/form}
+
+<div class="notAvailable">
+	<p>{t _please_enter_shipping_address}</p>
+</div>

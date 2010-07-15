@@ -1,5 +1,16 @@
 {loadJs form=true}
 
+<noscript>
+	<meta http-equiv="refresh" content="0;{link controller=onePageCheckout action=fallback}" />
+</noscript>
+
+<script type="text/javascript">
+	if (Prototype.Browser.IE6)
+	{ldelim}
+		window.location.href = '{link controller=onePageCheckout action=fallback}';
+	{rdelim}
+</script>
+
 {include file="checkout/layout.tpl"}
 
 <div id="content" class="left orderIndex">

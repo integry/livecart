@@ -67,6 +67,17 @@ class CheckoutController extends FrontendController
 
 	public function init()
 	{
+		if ('CheckoutController' == get_class($this) && ($this->config->get('CHECKOUT_METHOD') == 'CHECKOUT_ONEPAGE'))
+		{
+			if (in_array($this->request->getActionName(), array('index', 'selectAddress', 'shipping', 'pay')))
+			{
+				if (!$this->order->isMultiAddress->get() && !$this->session->get('noJS'))
+				{
+					return new ActionRedirectResponse('onePageCheckout', 'index');
+				}
+			}
+		}
+
 		$this->loadLanguageFile('User');
 
 		parent::init();

@@ -2884,9 +2884,10 @@ img.calendar_button
 	padding: 0.5em 0;
 }
 
-.onePageCheckout-index #checkout-payment form .submit
+.onePageCheckout-index #checkout-payment form .submit,
+.onePageCheckout-index #ccForm .submit
 {
-	display: none;
+	display: none !important;
 }
 
 #checkout-return-to-overview

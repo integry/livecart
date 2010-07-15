@@ -17,6 +17,11 @@ class OnePageCheckoutController extends CheckoutController
 
 	public function init()
 	{
+		if ($this->config->get('CHECKOUT_METHOD') == 'CHECKOUT_MULTISTEP')
+		{
+			return new ActionRedirectResponse('checkout', 'index');
+		}
+
 		parent::init();
 		$this->config->set('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
 		$this->config->set('ENABLE_CHECKOUTDELIVERYSTEP', true);
@@ -149,12 +154,6 @@ class OnePageCheckoutController extends CheckoutController
 	{
 		if ($this->user->isAnonymous())
 		{
-			if ($this->user->defaultBillingAddress->get() && !$this->user->defaultShippingAddress->get())
-			{
-				$shipping = ShippingAddress::getNewInstance($this->user, clone $this->user->defaultBillingAddress->get()->userAddress->get());
-				$this->user->defaultShippingAddress->set($shipping);
-			}
-
 			$response = $this->getUserController()->checkout();
 			$form = $response->get('form');
 
@@ -189,16 +188,24 @@ class OnePageCheckoutController extends CheckoutController
 		}
 		else
 		{
+			/*
+			if ($this->order->shippingAddress->get() && !$this->user->defaultShippingAddress->get())
+			{
+				$this->user->defaultShippingAddress->set(ShippingAddress::getNewInstance(clone $this->order->shippingAddress->get(), $this->user));
+				$this->user->defaultShippingAddress->get()->save();
+			}
+			*/
+
 			$this->request->set('step', 'shipping');
 			$response = parent::selectAddress();
 			$response->set('step', 'shipping');
 
-			if (!$this->order->isShippingRequired())
-			{
+			//if (!$this->order->isShippingRequired())
+			//{
 				$form = $response->get('form');
 				$formData = $this->switchArrayPrefixes($form->getData(), 'billing_', 'shipping_');
 				$form->setData($formData);
-			}
+			//}
 		}
 
 		return $this->postProcessResponse($response);
@@ -308,7 +315,7 @@ class OnePageCheckoutController extends CheckoutController
 			$response = $controller->processCheckoutRegistration();
 
 			$user = $controller->getUser();
-			if ($billingAddress)
+			if ($billingAddress && !$this->request->get('sameAsShipping'))
 			{
 				$this->order->billingAddress->set($billingAddress);
 				$this->order->billingAddress->resetModifiedStatus();
@@ -342,6 +349,7 @@ class OnePageCheckoutController extends CheckoutController
 		}
 		else
 		{
+			$this->separateBillingAndShippingAddresses();
 			$parentResponse = parent::doSelectAddress();
 		}
 
@@ -349,6 +357,15 @@ class OnePageCheckoutController extends CheckoutController
 		$this->shippingMethods();
 
 		return $this->getUpdateResponse('shippingMethods', 'billingAddress');
+	}
+
+	private function separateBillingAndShippingAddresses()
+	{
+		if (!$this->request->get('sameAsShipping') && $this->order->shippingAddress->get() && $this->order->billingAddress->get() && ($this->order->shippingAddress->get()->getID() == $this->order->billingAddress->get()->getID()) && !$this->user->defaultShippingAddress->get())
+		{
+			$this->user->defaultShippingAddress->set(ShippingAddress::getNewInstance($this->user, clone $this->order->shippingAddress->get()));
+			$this->user->defaultShippingAddress->get()->save();
+		}
 	}
 
 	private function switchArrayPrefixes($array, $from, $to)
@@ -372,6 +389,11 @@ class OnePageCheckoutController extends CheckoutController
 		$this->initAnonUser();
 
 		$shipments = $this->order->getShipments();
+
+		if (!$this->user->isAnonymous())
+		{
+			$this->separateBillingAndShippingAddresses();
+		}
 
 		if (!$this->request->get('sameAsShipping') && $this->order->shippingAddress->get() && $this->order->billingAddress->get() && ($this->order->billingAddress->get()->getID() == $this->order->shippingAddress->get()->getID()))
 		{
@@ -448,6 +470,12 @@ class OnePageCheckoutController extends CheckoutController
 		return $response;
 	}
 
+	public function fallback()
+	{
+		$this->session->set('noJS', true);
+		return new ActionRedirectResponse('checkout', 'index');
+	}
+
 	public function setPaymentMethod()
 	{
 		$this->order->loadAll();
@@ -485,12 +513,12 @@ class OnePageCheckoutController extends CheckoutController
 
 	protected function beforePayment()
 	{
+		$this->registerAnonUser();
+
 		if (!$this->order->isShippingRequired())
 		{
 			$this->order->shippingAddress->setNull();
 		}
-
-		$this->registerAnonUser();
 	}
 
 	protected function getUserController()
@@ -597,6 +625,8 @@ class OnePageCheckoutController extends CheckoutController
 			$response->addAction($arg, 'onePageCheckout', $arg);
 		}
 
+		$this->session->unsetValue('noJS');
+
 		return $this->postProcessResponse($response);
 	}
 
@@ -690,13 +720,15 @@ class OnePageCheckoutController extends CheckoutController
 			}
 
 			$this->user->save();
+			$this->order->user->set($this->user);
+			$this->order->user->setAsModified();
+
+			SessionUser::setUser($this->user);
+			$this->session->set('checkoutUser', null);
 
 			ActiveRecord::commit();
 
 			$this->getUserController()->sendWelcomeEmail($this->user);
-
-			SessionUser::setUser($this->user);
-			$this->session->set('checkoutUser', null);
 		}
 	}
 }

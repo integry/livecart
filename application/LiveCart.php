@@ -1554,7 +1554,7 @@ class LiveCart extends Application implements Serializable
 		return null;
 	}
 
-	private function rmdir_recurse($path)
+	public function rmdir_recurse($path)
 	{
 		$path= rtrim($path, '/').'/';
 
