@@ -61,7 +61,11 @@ class LiveCartTransaction extends TransactionDetails
 
 		// transaction identification
 		$this->invoiceID->set($order->getID());
-		$this->ipAddress->set($_SERVER['REMOTE_ADDR']);
+
+		if (isset($_SERVER['REMOTE_ADDR']))
+		{
+			$this->ipAddress->set($_SERVER['REMOTE_ADDR']);
+		}
 
 		// customer identification
 		if ($order->user->get())

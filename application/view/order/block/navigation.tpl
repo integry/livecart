@@ -1,9 +1,9 @@
 <tr>
-	<td colspan="4"></td>
+	<td colspan="{math equation="$extraColspanSize + 4"}"></td>
 	<td class="cartQuant"></td>
 </tr>
 <tr>
-	<td colspan="5">
+	<td colspan="{math equation="$extraColspanSize + 5"}">
 		<a href="{link route=$return}" class="continueShopping"><span><span><span><span>{t _continue_shopping}</span></span></span></span></a>
 		{if $cart.isOrderable}
 			<div class="checkoutButtons">

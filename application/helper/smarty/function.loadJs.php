@@ -17,8 +17,8 @@ function smarty_function_loadJs($params, LiveCartSmarty $smarty)
 	include_once('function.includeJs.php');
 
 	$files = array("library/prototype/prototype.js", "library/livecart.js", "frontend/Frontend.js", "library/lightbox/lightbox.js");
-
-	if (isset($params['form']) || true)
+	
+	if (isset($params['form']))
 	{
 		$files[] = "library/scriptaculous/scriptaculous.js";
 		$files[] = "library/scriptaculous/builder.js";

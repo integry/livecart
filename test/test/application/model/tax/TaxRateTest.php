@@ -177,7 +177,7 @@ class TaxRateTest extends LiveCartTest
 		$order->save();
 
 		$this->assertEqual($order->getTotal($this->currency), 100);
-		$order->finalize($this->currency);
+		$order->finalize();
 
 		$this->assertDefaultZoneOrder($order, $this->currency);
 

@@ -19,12 +19,17 @@ class ProductFeed extends ARFeed
 
 		parent::__construct($filter->getSelectFilter(), 'Product', array('Category', 'ProductImage', 'Manufacturer'));
 	}
+	
+	public function setLimit($size)
+	{
+		$this->size = $size;
+	}
 
 	protected function postProcessData()
 	{
 		ProductPrice::loadPricesForRecordSetArray($this->data);
 		ProductSpecification::loadSpecificationForRecordSetArray($this->data, true);
-		//Product::loadCategoryPathsForArray($this->data);
+		Product::loadCategoryPathsForArray($this->data);
 
 		foreach ($this->data as $key => $product)
 		{

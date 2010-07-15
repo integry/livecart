@@ -25,6 +25,7 @@ _product_categories=Categories
 # Confirmations
 _new_category_was_successfully_created=New category was successfully created
 _could_not_create_a_category=Could not create a category
+_confirm_remove_category_with_products=This category contains products that would be permanently deleted together with the category. Really delete this category?
 _category_was_successfully_removed=Category was successfully removed
 _could_not_remove_category=Could not remove selected category
 _categories_tree_was_reordered=Categories tree was reordered

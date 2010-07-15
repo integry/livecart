@@ -26,7 +26,7 @@ class UserController extends FrontendController
 
  		if ($this->user->getID())
  		{
- 			$this->user->load();
+			$this->user->load();
 		}
 	}
 
@@ -1112,7 +1112,7 @@ class UserController extends FrontendController
 		return $user;
 	}
 
-	private function sendWelcomeEmail(User $user)
+	public function sendWelcomeEmail(User $user)
 	{
 		// send welcome email with user account details
 		if ($this->config->get('EMAIL_NEW_USER'))

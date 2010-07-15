@@ -137,15 +137,33 @@
 		<fieldset class="transactionMethod">
 
 			{if $transaction.methodName}
-				<legend>{$transaction.methodName}</legend>
+				{assign var=transactionMethodName value=$transaction.methodName}
 			{elseif $transaction.serializedData.handler}
-				<legend>{$transaction.serializedData.handler}</legend>
+				{assign var=transactionMethodName value=$transaction.serializedData.handler}
+			{/if}
+
+			{if $transactionMethodName}
+				<legend>
+					{if $transaction.availableOfflinePaymentMethods}
+						{include file="backend/payment/editOfflineMethod.tpl"
+							ID=$transaction.ID
+							methods=$transaction.availableOfflinePaymentMethods
+							name=$transactionMethodName
+							handlerID=$transaction.handlerID
+						}
+					{else}
+						{$transaction.methodName}
+					{/if}
+				</legend>
 			{/if}
 
 			{if $transaction.ccLastDigits}
 				<div class="ccDetails">
 					<div>{$transaction.ccName}</div>
 					<div>{$transaction.ccType} <span class="ccNum">{if $transaction.hasFullNumber} / {else}...{/if}{$transaction.ccLastDigits}</span></div>
+					{if $transaction.ccCVV} 
+						<div>{$transaction.ccCVV}<div>
+					{/if}
 					<div>{$transaction.ccExpiryMonth} / {$transaction.ccExpiryYear}</div>
 				</div>
 			{/if}

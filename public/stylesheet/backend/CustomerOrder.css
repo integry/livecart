@@ -88,6 +88,19 @@
     font-weight: bold;
 }
 
+#dateCreatedLabel
+{
+width:190px;
+}
+.orderDate
+{
+	background-position:left center;
+	background-repeat:no-repeat;
+	padding-left:22px;
+	display:block;
+	float:right;
+}
+
 .order_editAddress, .order_editFields
 {
 	background-image: url(../../image/silk/pencil.png);
@@ -118,6 +131,12 @@
 {
 	background-image: url(../../image/silk/cart_put.png);
 }
+
+.orderDate ul.menu
+{
+	border-bottom:0 ;
+}
+
 
 .customFields form,
 .customFields .order_cancelEditFields,

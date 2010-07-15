@@ -438,6 +438,25 @@ Backend.Settings.Editor.prototype =
 				}
 			},
 
+		'EMAIL_STATUS_UPDATE':
+			function()
+			{
+				var change = function() {
+					var checked = $('EMAIL_STATUS_UPDATE').checked;
+					$("setting_EMAIL_STATUS_UPDATE_STATUSES")[checked ? 'hide' : 'show']();
+					if(checked)
+					{
+						$A($("setting_EMAIL_STATUS_UPDATE_STATUSES").getElementsByClassName("checkbox")).each(
+							function(element) {
+								element.checked = true;
+							}
+						);
+					}
+					return change; // !					
+				};
+				Event.observe($('EMAIL_STATUS_UPDATE'), 'change', change());
+			},
+
 		'EMAIL_METHOD':
 			function()
 			{

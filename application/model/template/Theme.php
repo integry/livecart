@@ -93,7 +93,7 @@ class Theme
 	{
 		foreach ($this->getThemeDirectories() as $dir)
 		{
-			$this->rmdir_recurse($dir);
+			$this->application->rmdir_recurse($dir);
 		}
 	}
 
@@ -127,29 +127,6 @@ class Theme
 		return array('name' => $this->name,
 					 'isCore' => $this->isCoreTheme(),
 					 'parents' => $this->getParentThemes());
-	}
-
-	private function rmdir_recurse($path)
-	{
-		$path= rtrim($path, '/').'/';
-
-		if (!file_exists($path))
-		{
-			return;
-		}
-
-		$handle = opendir($path);
-		for (;false !== ($file = readdir($handle));)
-			if($file != "." and $file != ".." ) {
-				$fullpath= $path.$file;
-				if( is_dir($fullpath) ) {
-					$this->rmdir_recurse($fullpath);
-				} else {
-					unlink($fullpath);
-				}
-		}
-		closedir($handle);
-		rmdir($path);
 	}
 
 	private function array_merge_recursive_distinct ( array &$array1, array &$array2 )

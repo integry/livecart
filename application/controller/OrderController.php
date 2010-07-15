@@ -31,10 +31,9 @@ class OrderController extends FrontendController
 
 		if (!$this->user->isAnonymous())
 		{
-			$this->order->setUser($this->user);
-
-			if ($this->order->isModified())
+			if (!$this->order->user->get() || ($this->order->user->get()->getID() != $this->user->getID()))
 			{
+				$this->order->setUser($this->user);
 				$this->order->save();
 			}
 		}
@@ -46,6 +45,7 @@ class OrderController extends FrontendController
 		$this->order->getTotal(true);
 
 		$response = $this->getCartPageResponse();
+
 		$this->addBreadCrumb($this->translate('_my_basket'), '');
 		return $response;
 	}
@@ -161,6 +161,8 @@ class OrderController extends FrontendController
 		$response->set('isCouponCodes', DiscountCondition::isCouponCodes());
 
 		$this->order->getSpecification()->setFormResponse($response, $form);
+
+		SessionOrder::getOrder()->getShoppingCartItems();
 
 		return $response;
 	}

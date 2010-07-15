@@ -14,14 +14,21 @@ class PaypalWebsitePaymentsStandard extends ExternalPayment
 		$url = 'https://www.' . ($this->getConfigValue('SANDBOX') ? 'sandbox.' : '') . 'paypal.com/cgi-bin/webscr';
 
 		$params = array();
-		$params['cmd'] = '_xclick';
 		$params['business'] = $this->getConfigValue('EMAIL');
-		$params['item_name'] = $this->getConfigValue('ITEM_NAME');
-		$params['amount'] = $this->details->amount->get();
+		$nr = 1;
+		foreach ($this->details->getLineItems() as $item)
+		{
+			$name = array();
+			$params['item_name_'.$nr] = (isset($item['sku']) && strlen($item['sku']) > 0 ? $item['sku'] . ' ' : ''). $item['name'];
+			$params['quantity_'.$nr] = $item['quantity'];
+			$params['amount_'.$nr++] = number_format($item['price'], 2, '.', '');
+		}
 		$params['currency_code'] = $this->details->currency->get();
 		$params['custom'] = $this->details->invoiceID->get();
 		$params['return'] = $this->returnUrl;
 		$params['notify_url'] = $this->notifyUrl;
+		$params['upload'] = 1; // Indicates the use of third party shopping cart
+		$params['cmd'] = '_cart'; // for passing individual item details to PayPal set the cmd variable to _cart.
 
 		$pairs = array();
 		foreach ($params as $key => $value)
@@ -47,6 +54,11 @@ class PaypalWebsitePaymentsStandard extends ExternalPayment
 
 		foreach ($requestArray as $key => $value)
 		{
+			if (is_array($value))
+			{
+				continue;
+			}
+
 			$value = urlencode(stripslashes($value));
 			$req .= "&".$key."=".$value;
 		}
@@ -55,12 +67,6 @@ class PaypalWebsitePaymentsStandard extends ExternalPayment
 		if (strtolower($receiverEmail) != strtolower($this->getConfigValue('EMAIL')))
 		{
 			throw new PaymentException('Invalid PayPal receiver e-mail');
-		}
-
-		// check that payment_amount/payment_currency are correct
-		if ($paymentCurrency != $this->details->currency->get())
-		{
-			throw new PaymentException('Payment currency does not match order currency');
 		}
 
 		// post back to PayPal system to validate
@@ -133,12 +139,17 @@ class PaypalWebsitePaymentsStandard extends ExternalPayment
 	public function getValidCurrency($currentCurrencyCode)
 	{
 		$currentCurrencyCode = strtoupper($currentCurrencyCode);
-		return in_array($currentCurrencyCode, self::getSupportedCurrencies()) ? $currentCurrencyCode : 'USD';
+		$defCurrency = $this->getConfigValue('DEF_CURRENCY');
+		if (!$defCurrency)
+		{
+			$defCurrency = 'USD';
+		}
+		return in_array($currentCurrencyCode, self::getSupportedCurrencies()) ? $currentCurrencyCode : $defCurrency;
 	}
 
 	public static function getSupportedCurrencies()
 	{
-		return array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD', 'NZD', 'CHF', 'HKD', 'SGD', 'SEK', 'DKK', 'PLN', 'NOK', 'HUF', 'CZK', 'MXN', 'ILS');
+		return array('USD', 'CAD', 'EUR', 'GBP', 'JPY', 'AUD', 'NZD', 'CHF', 'HKD', 'SGD', 'SEK', 'DKK', 'PLN', 'NOK', 'HUF', 'CZK', 'MXN', 'ILS');
 	}
 
 	public function isVoidable()

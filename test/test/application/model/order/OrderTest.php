@@ -84,7 +84,7 @@ class OrderTest extends OrderTestCommon
 		$this->order->addProduct($this->products[1], 1);
 		$this->order->save();
 
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 		$total = $this->order->getTotal(true);
 
 		// the sum of all shipments amounts should be equal to the order amount
@@ -139,7 +139,7 @@ class OrderTest extends OrderTestCommon
 		$this->order->addProduct($this->products[1], 1);
 		$this->order->save();
 
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 
 		$result = new TransactionResult();
 		$result->amount->set($this->order->totalAmount->get());
@@ -166,7 +166,7 @@ class OrderTest extends OrderTestCommon
 		$this->assertEqual(count($order->getOrderedItems()), 2);
 
 		$order->save();
-		$order->finalize($this->usd);
+		$order->finalize();
 
 		$second->save();
 
@@ -265,7 +265,7 @@ class OrderTest extends OrderTestCommon
 
 		$this->assertEqual($order->getSubTotal($this->usd), $price);
 
-		$order->finalize($this->usd);
+		$order->finalize();
 		$this->assertEqual($order->getSubTotal($this->usd), $price);
 
 		ActiveRecord::clearPool();
@@ -273,6 +273,10 @@ class OrderTest extends OrderTestCommon
 		$loadedOrder = CustomerOrder::getInstanceById($order->getID());
 		$loadedOrder->loadAll();
 		$this->assertEqual($loadedOrder->getSubTotal($this->usd), $price);
+
+		// check created shipments
+		$this->assertEqual($loadedOrder->getShipments()->size(), 1);
+		$this->assertTrue($loadedOrder->getShipments()->get(0)->getID() > 0);
 	}
 
 	function testDigitalItemsAddedThroughShipment()
@@ -299,7 +303,7 @@ class OrderTest extends OrderTestCommon
 		$shipment->recalculateAmounts();
 		$shipment->save();
 		$order->save();
-		$order->finalize($this->usd);
+		$order->finalize();
 
 		$this->assertEqual($order->getSubTotal($this->usd), $price);
 
@@ -348,7 +352,7 @@ class OrderTest extends OrderTestCommon
 
 		$this->assertEqual($order->getShipments()->get(0)->getTaxAmount($this->usd), $tax);
 
-		$order->finalize($this->usd);
+		$order->finalize();
 
 		$this->assertEqual($order->getShipments()->get(0)->getTaxAmount($this->usd), $tax);
 
@@ -418,7 +422,7 @@ class OrderTest extends OrderTestCommon
 		$order = CustomerOrder::getNewInstance($this->user);
 		$order->addProduct($product, 1);
 		$order->save();
-		$order->finalize($this->usd);
+		$order->finalize();
 
 		$product->reload();
 		$this->assertEqual($product->stockCount->get(), 1);
@@ -446,7 +450,7 @@ class OrderTest extends OrderTestCommon
 		$order = CustomerOrder::getNewInstance($this->user);
 		$order->addProduct($product, 1);
 		$order->save();
-		$order->finalize($this->usd);
+		$order->finalize();
 
 		$this->assertEqual($product->stockCount->get(), 1);
 		$order->cancel();
@@ -467,7 +471,7 @@ class OrderTest extends OrderTestCommon
 		$order = CustomerOrder::getNewInstance($this->user);
 		$item = $order->addProduct($product, 1);
 		$order->save();
-		$order->finalize($this->usd);
+		$order->finalize();
 
 		$order->setStatus(CustomerOrder::STATUS_SHIPPED);
 		$product->reload();
@@ -498,7 +502,7 @@ class OrderTest extends OrderTestCommon
 		$order = CustomerOrder::getNewInstance($this->user);
 		$order->addProduct($product, 1);
 		$order->save();
-		$order->finalize($this->usd);
+		$order->finalize();
 
 		$product->reload();
 		$this->assertEqual($product->stockCount->get(), 1);
@@ -530,7 +534,7 @@ class OrderTest extends OrderTestCommon
 		$order = CustomerOrder::getNewInstance($this->user);
 		$item = $order->addProduct($product, 1);
 		$order->save();
-		$order->finalize($this->usd);
+		$order->finalize();
 
 		$i = $order->addProduct($second, 1, null, $item->shipment->get());
 		$this->assertEqual($i->shipment->get()->getID(), $item->shipment->get()->getID());
@@ -580,7 +584,7 @@ class OrderTest extends OrderTestCommon
 		$order = CustomerOrder::getNewInstance($this->user);
 		$item = $order->addProduct($product, 1);
 		$order->save();
-		$order->finalize($this->usd);
+		$order->finalize();
 
 		$item->product->set($second);
 		$item->save();
@@ -608,7 +612,7 @@ class OrderTest extends OrderTestCommon
 		$order = CustomerOrder::getNewInstance($this->user);
 		$order->addProduct($product, 1);
 		$order->save();
-		$order->finalize($this->usd);
+		$order->finalize();
 
 		$product->reload();
 		$this->assertEqual($product->stockCount->get(), 2);
@@ -637,7 +641,7 @@ class OrderTest extends OrderTestCommon
 		$order = CustomerOrder::getNewInstance($this->user);
 		$order->addProduct($product, 1);
 		$order->save();
-		$order->finalize($this->usd);
+		$order->finalize();
 
 		$product->reload();
 		$this->assertEqual($product->stockCount->get(), 1);
@@ -730,7 +734,7 @@ class OrderTest extends OrderTestCommon
 
 		$this->assertEqual($order->getShoppingCartItemCount(), 1);
 
-		$order->finalize($this->usd);
+		$order->finalize();
 
 		$this->assertEqual(count($order->getOrderedItems()), 1);
 		$this->assertEqual(count($order->getShoppingCartItems()), 1);
@@ -797,7 +801,7 @@ class OrderTest extends OrderTestCommon
 		$order = CustomerOrder::getNewInstance($this->user);
 		$order->addProduct($container, 1);
 		$order->save();
-		$order->finalize($this->usd);
+		$order->finalize();
 
 		$this->assertEqual($order->getShipments()->size(), 1);
 		$this->assertFalse($order->getShipments()->get(0)->isShippable());
@@ -820,7 +824,7 @@ class OrderTest extends OrderTestCommon
 		$this->order->save();
 
 		// finalized
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 		$this->assertEquals($this->order->getTotal(true), $total - 10);
 
 		// reload order
@@ -932,7 +936,7 @@ class OrderTest extends OrderTestCommon
 
 		// test order total
 		$total = $this->order->getTotal(true);
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 		$this->assertEquals($this->order->getTotal(), $total);
 
 		ActiveRecordModel::clearPool();
@@ -1135,7 +1139,7 @@ class OrderTest extends OrderTestCommon
 		$expectedTotal = ($this->products[0]->getPrice($this->usd) * 0.9) + $this->products[1]->getPrice($this->usd) - 10;
 		$this->assertEquals($this->order->getTotal(true), $expectedTotal);
 
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 		$this->assertEquals($this->order->getTotal(), $expectedTotal);
 //		$this->assertEquals($this->order->getTotal(true), $expectedTotal);
 	}
@@ -1606,7 +1610,7 @@ class OrderTest extends OrderTestCommon
 		}
 
 		$this->order->save();
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 
 		// reload order
 		ActiveRecordModel::clearPool();
@@ -1650,7 +1654,7 @@ class OrderTest extends OrderTestCommon
 		$this->order->user->set($this->user);
 
 		$this->order->save();
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 		$total = $this->order->getTotal(true);
 
 		ActiveRecord::clearPool();

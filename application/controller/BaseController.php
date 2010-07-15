@@ -143,6 +143,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 		parent::init();
 
 		$this->application->processInitPlugins($this);
+		$this->application->logStat('Init BaseController');
 	}
 
 	protected function setCache(OutputCache $cache)
@@ -343,12 +344,13 @@ abstract class BaseController extends Controller implements LCiTranslator
 			$class = $class->getParentClass();
 		}
 
+		$files = array_reverse($files);
 		$files[] = 'Custom';
 
 		return $files;
 	}
 
-	protected function __get($name)
+	public function __get($name)
 	{
 		switch ($name)
 	  	{
@@ -402,7 +404,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 		}
 	}
 
-	private function checkAccess()
+	protected function checkAccess()
 	{
 		// If backend controller is being used then we should
 		// check for user permissions to use role assigned to current controller and action

@@ -78,6 +78,9 @@
 				<p>
 					{$address.countryName}
 				</p>
+				<p>
+					{include file="order/addressFieldValues.tpl" showLabels=false}
+				</p>
 			{/if}
 		{/defun}
 
