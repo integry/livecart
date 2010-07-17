@@ -351,6 +351,13 @@ class OnePageCheckoutController extends CheckoutController
 		{
 			$this->separateBillingAndShippingAddresses();
 			$parentResponse = parent::doSelectAddress();
+
+			if ($this->request->get('sameAsShipping') && ($this->order->billingAddress->get()->toString() != $this->order->shippingAddress->get()->toString()))
+			{
+				$this->order->billingAddress->set(clone $this->order->shippingAddress->get());
+				$this->order->billingAddress->get()->save();
+				$this->order->save();
+			}
 		}
 
 		// attempt to pre-select a shipping method
