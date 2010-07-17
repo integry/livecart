@@ -7,38 +7,38 @@
 		border: 1px solid #ccc;
 		padding: 0.5em;
 	}
-	
+
 	.xmlSampleBlock
 	{
 		margin-bottom: 2em;
 		width: 600px;
 	}
-	
+
 	.sampleTest
 	{
 		float: right;
 	}
-	
+
 	.xmlSampleComment
 	{
 		color: #666;
 		font-size: smaller;
 		padding: 6px 0;
 	}
-	
+
 	.apiFields
 	{
 		border-spacing: 0;
 		border-collapse: collapse;
 	}
-	
+
 	.apiFields td
 	{
 		font-size: smaller;
 		padding: 4px;
 		border: 1px solid #ddd;
 	}
-	
+
 	.fieldGroup td
 	{
 		background-color: #ddd;
@@ -50,7 +50,7 @@
 
 {if $xmlSamples}
 	<h2>{t _api_xml_samples}</h2>
-	
+
 	{foreach from=$xmlSamples item=sample}
 		<div class="xmlSampleBlock">
 			{if $sample.comments}
@@ -66,7 +66,7 @@
 
 {if $searchFields}
 	<h2>{t _api_search_fields}</h2>
-	
+
 	<table class="apiFields">
 		<thead>
 			<tr>
@@ -87,7 +87,7 @@
 
 {if $createFields}
 	<h2>{t _api_create_fields}</h2>
-	
+
 	<table class="apiFields">
 		<thead>
 			<tr>
@@ -110,4 +110,19 @@
 			{/foreach}
 		</tbody>
 	</table>
+{/if}
+
+{if 'list' == $action}
+<h2>{t _api_limiting_results}</h2>
+<pre>
+All List actions have atributes:
+	limit - positive integer, optional, how much records to return, default 999999999999999999
+	offset- positive integer, optional, from which record start return, default 0
+	start - same as limit
+	max   - same as offset
+
+	examples:
+		&lt;customer&gt;&lt;list limit="10" offset="10"/&gt;&lt;/customer&gt;
+		&lt;order&gt;&lt;list max=5 start=10&gt;&lt;/list&gt;&lt;/order&gt;
+</pre>
 {/if}

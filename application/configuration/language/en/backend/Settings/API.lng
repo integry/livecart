@@ -4,3 +4,4 @@ API_AUTH_METHODS=Authorization methods
 ApiAuthKey=Secret key
 ApiAuthTest=Test (no authorization required)
 API_SECRET_KEY_SERVER=Server key
+api_help=<a href="{link controller=api}">Click here to see LiveCart API documentation</a>
