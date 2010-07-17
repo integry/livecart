@@ -30,6 +30,37 @@ class XmlCustomerOrderApiReader extends ApiReader
 
 	public function populate($updater, $profile)
 	{
+		$type = isset($this->xml->order->create) ? 'create' : 'update';
+		
+		foreach ($this->xml->xpath($this->getXMLPath() . '/' . $type) as $root)
+		{
+			if ($root->items->item)
+			{
+				$details = array();
+				foreach ($root->items->item as $item)
+				{
+					if (!empty($item->OrderedItem_sku[0]))
+					{
+						$prod = array();
+						$prod[] = $item->OrderedItem_sku[0];
+						
+						foreach (array('OrderedItem_count', 'OrderedItem_price', 'OrderedItem_shipment') as $field)
+						{
+							$prod[] = (string)$item->$field ? (string)$item->$field : '';
+						}
+						
+						$details[] = implode(':', $prod);
+					}
+					
+				}
+
+				if ($details)
+				{
+					$root->addChild('OrderedItem_products', implode(';', $details));
+				}
+			}
+		}
+		
 		parent::populate($updater, $profile, $this->xml, 
 			self::getXMLPath().'/[[API_ACTION_NAME]]/[[API_FIELD_NAME]]', array('ID'));
 	}

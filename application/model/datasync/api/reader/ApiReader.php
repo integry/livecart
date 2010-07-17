@@ -31,21 +31,24 @@ abstract class ApiReader implements Iterator
 	
 	public static function canParse(Request $request, $parserClassName)
 	{
-		return self::canParseXml($request, $parserClassName::getXMLPath(), $parserClassName);
+		return self::canParseXml($request, call_user_func(array($parserClassName, 'getXMLPath')), $parserClassName);
 	}
-	
+
 	public function __construct($xml, $fieldNames)
 	{
 		$this->xml = $xml; // $this->setDataResource(); // or smth.
 		$this->setApiFieldNames($fieldNames);
-		$this->findApiActionName($xml);
+		if ($xml)
+		{
+			$this->findApiActionName($xml);
+		}
 	}
 
 	public function setApiFields($fieldNames)
 	{
 		$this->apiFields = $fieldNames;
 	}
-	
+
 	public function getApiFields()
 	{
 		return $this->apiFields;
@@ -60,12 +63,12 @@ abstract class ApiReader implements Iterator
 	{
 		return $this->fieldNames;
 	}
-	
+
 	public function getApiActionName()
 	{
 		return $this->apiActionName;
 	}
-	
+
 	public function setApiActionName($apiActionName)
 	{
 		$this->apiActionName=$apiActionName;
@@ -102,9 +105,8 @@ abstract class ApiReader implements Iterator
 		return $this->content[$this->iteratorKey];
 	}
 	// --
-	
-	
-	public function getARSelectFilter($ormClassName)
+
+	public function getValidSearchFields($ormClassName)
 	{
 		$ormFieldNames = $this->getApiFieldNames();
 		foreach($ormFieldNames as $fieldName)
@@ -114,10 +116,16 @@ abstract class ApiReader implements Iterator
 				self::AR_CONDITION => 'LikeCond'
 			);
 		}
-		$list = array_merge($list, $this->getExtraFilteringMapping());
+
+		return array_merge($list, $this->getExtraFilteringMapping());
+	}
+
+	public function getARSelectFilter($ormClassName)
+	{
+		$list = $this->getValidSearchFields($ormClassName);
 		$arsf = new ARSelectFilter();
 		$filterKeys = array_keys($list);
-		
+
 		foreach(array('//filter/', '//list/') as $xpathPrefix) // todo: pass in xpath prefixes
 		{
 			foreach($filterKeys as $key)
@@ -128,7 +136,7 @@ abstract class ApiReader implements Iterator
 					$value = (string)array_shift($data);
 					$arsf->mergeCondition(
 						new $list[$key][self::AR_CONDITION](
-							$list[$key][self::AR_FIELD_HANDLE],						
+							$list[$key][self::AR_FIELD_HANDLE],
 							$this->sanitizeFilterField($key, $value)
 						)
 					);
@@ -143,7 +151,7 @@ abstract class ApiReader implements Iterator
 		}
 		return $arsf;
 	}
-	
+
 
 	protected static function getSanitizedSimpleXml($xmlString)
 	{
@@ -158,6 +166,7 @@ abstract class ApiReader implements Iterator
 		//--
 
 		try {
+			$xmlString = stripslashes($xmlString);
 			$xmlRequest = @simplexml_load_string($xmlString);
 			if(!is_object($xmlRequest) || $xmlRequest->getName() != 'request') {
 				$xmlRequest = @simplexml_load_string('<request>'.$xmlString.'</request>');
@@ -246,34 +255,71 @@ abstract class ApiReader implements Iterator
 
 	public function populate($updater, $profile, $xml, $xpathTemplate, $identificatorFieldNames = array())
 	{
+		$emptyItem = array();
 		foreach($identificatorFieldNames as $fieldName)
 		{
-			$item[$fieldName] = null; //?
+			$emptyItem[$fieldName] = null;
 		}
+
 		$apiActionName = $this->getApiActionName();
-		foreach ($updater->getFields() as $group => $fields)
+
+		$xpath = str_replace(
+			array('[[API_ACTION_NAME]]','/[[API_FIELD_NAME]]'),
+			array($apiActionName, ''),
+			$xpathTemplate);
+
+		foreach ($xml->xpath($xpath) as $itemXml)
 		{
-			foreach ($fields as $field => $name)
+			$item = $emptyItem;
+
+			foreach ($updater->getFields() as $group => $fields)
 			{
-				list($class, $fieldName) = explode('.', $field);
-				if ($class != $profile->getClassName())
+				foreach ($fields as $field => $name)
 				{
-					$fieldName = $class . '_' . $fieldName;
-				}
-				$xpath = str_replace(
-					array('[[API_ACTION_NAME]]','[[API_FIELD_NAME]]'),
-					array($apiActionName, $fieldName),
-					$xpathTemplate
-				);
-				$v = $xml->xpath($xpath);
-				if(count($v) > 0)
-				{
-					$item[$fieldName] = (string)$v[0];
-					$profile->setField($fieldName, $field);
+					list($class, $fieldName) = explode('.', $field);
+					if ($class != $profile->getClassName())
+					{
+						$fieldName = $class . '_' . $fieldName;
+					}
+
+					$xpath = str_replace(
+						array('[[API_ACTION_NAME]]','[[API_FIELD_NAME]]'),
+						array($apiActionName, $fieldName),
+						$xpathTemplate
+					);
+
+					$xpath = $fieldName;
+
+					$itemXml = clone $itemXml;
+					$v = $itemXml->xpath($xpath);
+
+					if (count($v) > 0)
+					{
+						foreach ($v as $index => $value)
+						{
+							$lang = null;
+							$origFieldName = $fieldName;
+							if ($value->attributes()->lang)
+							{
+								$lang = (string)$value->attributes()->lang;
+								$fieldName .= '_' . $lang;
+							}
+
+							$options = $lang ? array('language' => $lang) : array();
+							$profile->setField($fieldName, $field, $options);
+
+							$item[$fieldName] = (string)$value;
+							$fieldName = $origFieldName;
+						}
+					}
 				}
 			}
+
+			// need to import a new order without ID, lets see how this works without checks
+			$this->addItem($item);
 		}
-		
+
+		/*
 		if(count($identificatorFieldNames) == 0)
 		{
 			$this->addItem($item);
@@ -287,18 +333,19 @@ abstract class ApiReader implements Iterator
 				}
 			}
 		}
+		*/
 	}
-	
+
 	protected function sanitizeFilterField($field, &$value)
 	{
 		return $value;
 	}
-	
+
 	protected function getExtraFilteringMapping()
 	{
 		return array();
 	}
-	
+
 	protected static function canParseXml(Request $request, $lookForXpath, $parserClassName)
 	{
 		
@@ -318,13 +365,13 @@ abstract class ApiReader implements Iterator
 			}
 		}
 	}
-	
-	public function getAuthCredentials(Request $request, $lookForXpath)
+
+	public function getAuthCredentials(Request $request)
 	{
 		$xml = $request->get(ApiReader::API_PARSER_DATA);
 		if($xml != null)
 		{
-			$auth = array_shift($xml->xpath($lookForXpath . '/auth'));
+			$auth = array_shift($xml->xpath($this->getXMLPath() . '/auth'));
 			if(count($auth) > 0)
 			{
 				return LiveCartSimpleXMLElement::Xml2SimpleArray($auth);

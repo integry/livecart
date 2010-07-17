@@ -93,8 +93,13 @@ class SessionUser
 	 */
 	public function getAnonymousUser()
 	{
-		$instance = ActiveRecordModel::getNewInstance('User');
-		$instance->setID(User::ANONYMOUS_USER_ID);
+		static $instance;
+
+		if (!$instance)
+		{
+			$instance = ActiveRecordModel::getNewInstance('User');
+			$instance->setID(User::ANONYMOUS_USER_ID);
+		}
 
 		return $instance;
 	}

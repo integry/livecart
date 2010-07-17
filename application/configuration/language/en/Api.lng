@@ -1,0 +1,14 @@
+_livecart_api=LiveCart API documentation
+_api_sections=API sections
+_api_auth=Authorization methods
+_api_actions=Available actions
+_api_xml_samples=XML examples
+
+_api_testing_info=To enable testing without authorization, open Settings -> Configuration -> API and enable Test authorization method
+_api_search_fields=Available search/filter fields
+_api_create_fields=Create/update fields
+
+_api_field=API field
+_api_field_descr=Description
+
+_no_auth_methods=No authorization methods are enabled
