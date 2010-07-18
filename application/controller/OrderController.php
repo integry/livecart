@@ -159,6 +159,7 @@ class OrderController extends FrontendController
 		$response->set('orderTotal', $currency->getFormattedPrice($this->order->getTotal()));
 		$response->set('expressMethods', $this->application->getExpressPaymentHandlerList(true));
 		$response->set('isCouponCodes', DiscountCondition::isCouponCodes());
+		$response->set('isOnePageCheckout', ($this->config->get('CHECKOUT_METHOD') == 'CHECKOUT_ONEPAGE') && !$this->order->isMultiAddress->get() && !$this->session->get('noJS'));
 
 		$this->order->getSpecification()->setFormResponse($response, $form);
 
