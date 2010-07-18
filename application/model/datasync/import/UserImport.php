@@ -70,7 +70,6 @@ class UserImport extends DataImport
 			$instance = User::getNewInstance('');
 			$instance->isEnabled->set(true);
 		}
-
 		$this->setLastImportedRecordName($instance->email->get());
 		return $instance;
 	}
@@ -117,7 +116,6 @@ class UserImport extends DataImport
 		{
 			$address = $instance->$field->get()->userAddress->get();
 		}
-
 		$id = $this->importRelatedRecord('UserAddress', $address, $record, $profile);
 		$related = ActiveRecordModel::getInstanceByID('UserAddress', $id, true);
 		foreach (array('firstName', 'lastName', 'companyName') as $field)

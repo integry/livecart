@@ -78,7 +78,6 @@ class ProductImport extends DataImport
 		{
 			$groupedFields['ProductPrice']['ProductPrice.' . $k] = $this->maketext('_quantity_level_x', $k);
 		}
-
 		return $groupedFields;
 	}
 
@@ -326,6 +325,8 @@ class ProductImport extends DataImport
 					$image = ProductImage::getNewInstance($product);
 				}
 
+				$image->setOwner($product); // this is needed when ProductApi imports default ProductImage.
+
 				$this->importImage($image, $record[$fields['ProductImage']['mainurl']]);
 
 				unset($image);
@@ -396,6 +397,11 @@ class ProductImport extends DataImport
 			if (is_array($extraCategories))
 			{
 				$this->importAdditionalCategories($profile, $product, $extraCategories);
+			}
+
+			if ($this->callback)
+			{
+				call_user_func($this->callback, $product);
 			}
 
 			$product->__destruct();

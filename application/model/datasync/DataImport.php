@@ -52,6 +52,7 @@ abstract class DataImport
 			return false;
 		}
 
+
 		foreach ($profile->getFields() as $csvIndex => $field)
 		{
 			$column = $field['name'];
@@ -67,10 +68,10 @@ abstract class DataImport
 			{
 				continue;
 			}
-
 			$value = $record[$csvIndex];
 
 			list($className, $field) = explode('.', $column, 2);
+			
 			if (method_exists($this, 'set_' . $className . '_' . $field))
 			{
 				$method = 'set_' . $className . '_' . $field;
@@ -81,7 +82,7 @@ abstract class DataImport
 				$method = 'set_' . $field;
 				$this->$method($instance, $value, $record, $profile);
 			}
-			else if (isset($instance->$field) && ($instance->$field instanceof ARValueMapper) && ($className == $this->getClassName()))
+			else if (isset($instance->$field) && ($instance->$field instanceof ARValueMapper) && ($className == $this->getClassName($className, $this->className)))
 			{
 				if (!$lang)
 				{
@@ -93,6 +94,7 @@ abstract class DataImport
 				}
 			}
 		}
+
 		$idBeforeSave = $instance->getID();
 		$instance->save();
 
@@ -118,7 +120,7 @@ abstract class DataImport
 
 		if ($this->callback)
 		{
-			call_user_func($this->callback, $instance, $idBeforeSave == $id);
+			call_user_func($this->callback, $instance);
 		}
 
 		$instance->__destruct();
