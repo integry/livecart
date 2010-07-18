@@ -452,7 +452,7 @@ Backend.Settings.Editor.prototype =
 							}
 						);
 					}
-					return change; // !					
+					return change; // !
 				};
 				Event.observe($('EMAIL_STATUS_UPDATE'), 'change', change());
 			},
@@ -653,12 +653,3 @@ Backend.Settings.Editor.prototype =
 		Backend.SaveConfirmationMessage.prototype.showMessage(Backend.getTranslation('_image_resize_success'));
 	}
 }
-
-Event.observe(window, 'load',
-	function()
-	{
-		window.loadingImage = 'image/loading.gif';
-		window.closeButton = 'image/silk/gif/cross.gif';
-		initLightbox();
-	}
-);

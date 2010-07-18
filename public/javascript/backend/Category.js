@@ -2,18 +2,6 @@
  *	@author Integry Systems
  */
 
-Event.observe(window, 'load',
-	function()
-	{
-		window.loadingImage = 'image/loading.gif';
-		window.closeButton = 'image/silk/gif/cross.gif';
-		if (window.initLightbox)
-		{
-			initLightbox();
-		}
-	}
-);
-
 if (Backend == undefined)
 {
 	var Backend = {}
@@ -402,7 +390,7 @@ Backend.Category = {
 	{
 		var nodeIdToRemove = this.treeBrowser.getSelectedItemId();
 		var parentNodeId = this.treeBrowser.getParentId(nodeIdToRemove);
-	
+
 		new LiveCart.AjaxRequest(this.getUrlForNodeRemoval(nodeIdToRemove), null,
 			function(transport)
 			{
@@ -413,14 +401,14 @@ Backend.Category = {
 						{
 							if(transport.responseData.status == "success")
 							{
-								this.successCallback();	
-							}	
+								this.successCallback();
+							}
 						}.bind(this)
 					);
 				}
 				else if(transport.responseData.status == "success")
 				{
-					this.successCallback();	
+					this.successCallback();
 				}
 			}.bind({
 				successCallback:function(nodeIdToRemove, parentNodeId)
@@ -433,7 +421,7 @@ Backend.Category = {
 			})
 		);
 	},
-	
+
 	removeBranchSuccess: function(nodeIdToRemove, parentNodeId)
 	{
 		this.activateCategory(parentNodeId);

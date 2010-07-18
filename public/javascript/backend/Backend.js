@@ -708,7 +708,8 @@ Backend.ThemePreview.prototype =
 				img.onclick =
 					function()
 					{
-						showLightbox(this);
+						img.rel = 'lightbox';
+						Lightbox.prototype.getInstance().start(img.href);
 					}
 
 				img.onload =
