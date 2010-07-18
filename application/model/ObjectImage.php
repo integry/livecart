@@ -179,6 +179,7 @@ abstract class ObjectImage extends MultilingualObject
 	private function fixSlashes($path)
 	{
 		$path = str_replace('//', '/', $path);
+		$path = str_replace('http:/', 'http://', $path);
 		return str_replace('\\', '/', $path);
 	}
 
@@ -221,8 +222,8 @@ abstract class ObjectImage extends MultilingualObject
 			$array['paths'][$key] = self::getRelativePath(call_user_func_array(array($schema->getName(), 'getImagePath'), array($array['ID'], $productID, $key)), $urlPrefix);
 
 			$url = $router->createFullUrl($urlPrefix . $array['paths'][$key], null, true);
-			$url = str_replace('//', '/', $url);
-			$url = str_replace('/public/public/', '/public/', $url);
+			//$url = str_replace('//', '/', $url);
+			$url = str_replace('/public//public/', '/public/', $url);
 			$array['urls'][$key] = $url;
 		}
 

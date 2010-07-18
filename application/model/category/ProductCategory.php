@@ -52,7 +52,9 @@ class ProductCategory extends ActiveRecordModel
 	{
 		$this->product->get()->updateCategoryCounters($this->product->get()->getCountUpdateFilter(), $this->category->get());
 		$this->product->get()->registerAdditionalCategory($this->category->get());
-		return parent::insert();
+		$insertResult = parent::insert();
+		Category::updateCategoryIntervals($this->product->get());
+		return $insertResult;
 	}
 
 }

@@ -88,6 +88,19 @@
     font-weight: bold;
 }
 
+#dateCreatedLabel
+{
+width:190px;
+}
+.orderDate
+{
+	background-position:left center;
+	background-repeat:no-repeat;
+	padding-left:22px;
+	display:block;
+	float:right;
+}
+
 .order_editAddress, .order_editFields
 {
 	background-image: url(../../image/silk/pencil.png);
@@ -103,6 +116,12 @@
 	background-image: url(../../image/silk/cancel.png);
 }
 
+.order_unfinalized
+{
+	background-image: url(../../image/silk/basket_go.png);
+	font-weight: bold;
+}
+
 .order_addShipment
 {
 	background-image: url(../../image/silk/package_add.png);
@@ -112,6 +131,12 @@
 {
 	background-image: url(../../image/silk/cart_put.png);
 }
+
+.orderDate ul.menu
+{
+	border-bottom:0 ;
+}
+
 
 .customFields form,
 .customFields .order_cancelEditFields,
@@ -194,7 +219,6 @@
 #orderManagerContainer.unfinalized #tabOrderCommunication,
 #orderManagerContainer.unfinalized #tabOrderLog,
 #orderManagerContainer.unfinalized .order_status,
-#orderManagerContainer.unfinalized .sectionContainer .menu,
 #orderManagerContainer.unfinalized .tabOrderProductsContent .orderShipment_report,
 #orderManagerContainer.unfinalized .tabOrderProductsContent h2,
 #orderManagerContainer.unfinalized .tabOrderProductsContent .shipmentContainer legend,
@@ -202,12 +226,12 @@
 #orderManagerContainer.unfinalized .tabOrderProductsContent .orderShipment_controls,
 #orderManagerContainer.unfinalized .tabOrderProductsContent .orderShipmentsItem_count
 {
-    display: none;
+    /* display: none; */
 }
 
 #orderManagerContainer.unfinalized .tabOrderProductsContent .itemCountText
 {
-    display: block;
+    /* display: block; */
 }
 
 #orderManagerContainer.unfinalized .tabOrderProductsContent .orderShipmentsItem_info_count

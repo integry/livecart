@@ -1,6 +1,6 @@
 {if $isCouponCodes}
 	<tr id="couponCodes">
-		<td colspan="5">
+		<td colspan="{math equation="$extraColspanSize + 5"}">
 			<div class="container">
 				{t _have_coupon}: <input type="text" class="text coupon" name="coupon" /> <input type="submit" class="submit coupon" value="{tn _add_coupon}" />
 				{if $cart.coupons}

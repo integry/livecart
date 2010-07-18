@@ -29,6 +29,18 @@ _err_no_file=Please select a file
 
 _options=Import Options
 _target_category=Target category
+_import_action=Import action
+_add_and_update=Add and update
+_add_only=Add only
+_update_only=Update only
+
+_import_missing_products=Unlisted products
+_keep_intact=Keep intact
+_disable=Disable
+_delete=Delete
+
+_enclose_transaction=Enclose import in a transaction
+_transaction_descr=The whole import is cancelled in case of an import failure. Not recommended for importing very large files, because the import process is automatically timed out by some servers and the import has to be restarted in non-transactional mode.
 
 # Delimiters
 _import_file=File
@@ -57,6 +69,8 @@ _category_x=Category Name [_1]
 _main_image_location=Main product image file path or URL
 _additional_image_location=Additional image file path or URL [_1]
 Product.parentSKU=Parent product SKU
+ProductOption=Product Options
+ProductOption.options=Options
 _import=Import
 _continue=Continue
 eavField=Attributes
@@ -113,3 +127,13 @@ ProductReview=Review
 
 # Orders
 CustomerOrder=Order
+
+# News
+NewsPostImport=News posts
+NewsPost.ID=ID
+NewsPost.isEnabled=Is visible
+NewsPost.position=Sort order
+NewsPost.title=Title
+NewsPost.text=First paragraph
+NewsPost.moreText=Remaining text
+NewsPost.time=Date

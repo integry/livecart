@@ -63,7 +63,13 @@ ActiveForm.prototype = {
 	resetErrorMessage: function(formElement)
 	{
 		formElement.removeClassName('hasError');
-		var errorText = formElement.up().down(".errorText");
+		var parent = $(formElement).up();
+		if (!parent)
+		{
+			return;
+		}
+
+		var errorText = parent.down(".errorText");
 
 		if (errorText)
 		{

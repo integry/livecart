@@ -1,0 +1,1 @@
+{include file="backend/manufacturer/edit.tpl" add=true}

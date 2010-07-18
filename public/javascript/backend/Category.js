@@ -2,18 +2,6 @@
  *	@author Integry Systems
  */
 
-Event.observe(window, 'load',
-	function()
-	{
-		window.loadingImage = 'image/loading.gif';
-		window.closeButton = 'image/silk/gif/cross.gif';
-		if (window.initLightbox)
-		{
-			initLightbox();
-		}
-	}
-);
-
 if (Backend == undefined)
 {
 	var Backend = {}
@@ -403,8 +391,39 @@ Backend.Category = {
 		var nodeIdToRemove = this.treeBrowser.getSelectedItemId();
 		var parentNodeId = this.treeBrowser.getParentId(nodeIdToRemove);
 
-		new LiveCart.AjaxRequest(this.getUrlForNodeRemoval(nodeIdToRemove));
+		new LiveCart.AjaxRequest(this.getUrlForNodeRemoval(nodeIdToRemove), null,
+			function(transport)
+			{
+				if(transport.responseData.status == "confirm" && confirm(transport.responseData.confirmMessage))
+				{
+					new LiveCart.AjaxRequest(transport.responseData.url, null,
+						function(transport)
+						{
+							if(transport.responseData.status == "success")
+							{
+								this.successCallback();
+							}
+						}.bind(this)
+					);
+				}
+				else if(transport.responseData.status == "success")
+				{
+					this.successCallback();
+				}
+			}.bind({
+				successCallback:function(nodeIdToRemove, parentNodeId)
+				{
+					return function()
+					{
+						this.removeBranchSuccess(nodeIdToRemove, parentNodeId)
+					}.bind(this);
+				}.bind(this)(nodeIdToRemove, parentNodeId)
+			})
+		);
+	},
 
+	removeBranchSuccess: function(nodeIdToRemove, parentNodeId)
+	{
 		this.activateCategory(parentNodeId);
 		this.tabControl.activateTab($('tabProducts'), parentNodeId);
 		this.treeBrowser.deleteItem(nodeIdToRemove, true);

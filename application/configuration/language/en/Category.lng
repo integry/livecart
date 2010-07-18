@@ -20,6 +20,7 @@ _featured_products=Featured Products
 _found_x=Found [_1]
 _all_results=View all [_1] results
 NewsPost=news entries
+Manufacturer=manufacturers
 StaticPage=pages
 
 _showing_products=Showing [_1] to [_2] of [_3] found products
@@ -38,3 +39,7 @@ _compare_selected=Compare selected products
 _name=Name
 _image=Image
 _view_details=View Details
+
+#price filters
+_to [_1]=to
+_more_than [_1]=more than

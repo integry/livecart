@@ -80,32 +80,12 @@ class LanguageController extends StoreManagementController
 		$archive->add($locale->getLocaleCode());
 
 		// remove the temp directory
-		$this->delTree($tempDir);
+		$this->application->rmdir_recurse($tempDir);
 
 		$response = new ObjectFileResponse(ObjectFile::getNewInstance('ObjectFile', $zip, 'LiveCart-' . $locale->getLocaleCode() . '.zip'));
 		$response->deleteFileOnComplete();
 
 		return $response;
-	}
-
-	private function delTree($path)
-	{
-		if (is_dir($path))
-		{
-			$entries = scandir($path);
-			foreach ($entries as $entry)
-			{
-				if ($entry != '.' && $entry != '..')
-				{
-					$this->delTree($path . DIRECTORY_SEPARATOR . $entry);
-				}
-			}
-			rmdir($path);
-		}
-		else
-		{
-			unlink($path);
-		}
 	}
 
 	/**

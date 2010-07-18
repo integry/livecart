@@ -150,7 +150,7 @@ class ThemeController extends StoreManagementController
 
 			$name = $var . '_' . $file['name'];
 			move_uploaded_file($file['tmp_name'], $filePath . $name);
-			$code = str_replace('url(' . $var . ')', 'url(\'../theme/' . $theme .'/' . $name . '\')', $code);
+			$code = str_replace('url("' . $var . '")', 'url(\'../theme/' . $theme .'/' . $name . '\')', $code);
 		}
 
 		$css->setCode($code);

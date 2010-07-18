@@ -61,7 +61,11 @@ class LiveCartTransaction extends TransactionDetails
 
 		// transaction identification
 		$this->invoiceID->set($order->getID());
-		$this->ipAddress->set($_SERVER['REMOTE_ADDR']);
+
+		if (isset($_SERVER['REMOTE_ADDR']))
+		{
+			$this->ipAddress->set($_SERVER['REMOTE_ADDR']);
+		}
 
 		// customer identification
 		if ($order->user->get())
@@ -73,9 +77,32 @@ class LiveCartTransaction extends TransactionDetails
 		}
 
 		// order details
+
+		// load variation data
+		$variations = new ProductSet();
 		foreach ($order->getShoppingCartItems() as $item)
 		{
-			$this->addLineItem($item->getProduct()->getName(), $item->getPrice(false), $item->count->get(), $item->getProduct()->sku->get());
+			if ($item->product->get()->parent->get())
+			{
+				$variations->unshift($item->product->get());
+			}
+		}
+
+		if ($variations->size())
+		{
+			$variations->loadVariations();
+		}
+
+		foreach ($order->getShoppingCartItems() as $item)
+		{
+			$product = $item->getProduct();
+			$variations = array();
+			foreach ($product->getRegisteredVariations() as $variation)
+			{
+				$variations[] = $variation->getValueByLang('name');
+			}
+
+			$this->addLineItem($product->getName() . ($variations ? ' (' . implode(' / ', $variations) . ')' : ''), $item->getPrice(false), $item->count->get(), $product->sku->get());
 		}
 
 		if ($discount = $order->getFixedDiscountAmount())
@@ -117,7 +144,7 @@ class LiveCartTransaction extends TransactionDetails
 				$state->load();
 			}
 
-			if ($state->code->get())
+			if ($state->code->get() && !is_numeric($state->code->get()))
 			{
 				return $state->code->get();
 			}

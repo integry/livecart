@@ -110,6 +110,12 @@
 				</span>
 
 				<span class="subConditionMenu">
+
+					<span class="isReverseContainer">
+						<input type="checkbox" class="checkbox isReverse" name="isReverse" id="isReverse">
+						<label class="checkbox acronym"><a>{t _isReverse}<div>{t _isReverse_help}</div></a></label>
+					</span>
+
 					<a href="#" class="subCondition">{t _add_subcondition}</a>
 					<span class="progressIndicator" style="display: none;"></span>
 				</span>
@@ -228,6 +234,10 @@
 									<span>
 										{if $field.type == 'number'}
 											{textfield class="text number actionField `$field.name`" name=$field.name}
+										{elseif $field.type == 'text'}
+											{textfield class="text wide actionField `$field.name`" name=$field.name}
+										{elseif $field.type == 'select'}
+											{selectfield class="actionField `$field.name`" name=$field.name options=$field.options}
 										{/if}
 										<span class="progressIndicator" style="display: none;"></span>
 									</span>

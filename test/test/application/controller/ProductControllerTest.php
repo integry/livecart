@@ -164,7 +164,7 @@ class ProductControllerTest extends LiveCartTest implements ControllerTestCase
 		$this->assertRatingError();
 
 		// order finalized - now works
-		$order->finalize($usd);
+		$order->finalize();
 		$id = $this->product->getID();
 		$this->setUp();
 		$this->controller->setUser($user);

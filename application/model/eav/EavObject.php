@@ -97,6 +97,16 @@ class EavObject extends ActiveRecordModel
 		}
 	}
 
+	public function serialize($skippedRelations = array(), $properties = array())
+	{
+		if ($this->getOwner())
+		{
+			$skippedRelations[] = $this->getInstanceField($this->getOwner());
+		}
+
+		return parent::serialize($skippedRelations, $properties);
+	}
+
 	protected function insert()
 	{
 		parent::insert();

@@ -25,8 +25,21 @@
 
 <div class="manufacturerGrid" id="manufacturerGrid" class="maxHeight h--50">
 
+	<ul class="menu" id="addMenu">
+		<li class="addManufacturerMenu">
+			<a href="#" onclick="Backend.Manufacturer.Editor.prototype.showAddForm(this); return false;">
+				{t _add_manufacturer}
+			</a>
+			<span class="progressIndicator" id="currAddMenuLoadIndicator" style="display: none;"></span>
+		</li>
+	</ul>
+
 	{include file="backend/manufacturer/grid.tpl"}
 
+</div>
+
+<div id="addManufacturer" style="display: none;">
+	TEST
 </div>
 
 {* Editors *}

@@ -17,6 +17,7 @@ class ConfigurationContainer
 	protected $configDirectory;
 	protected $languageDirectory;
 	protected $controllerDirectory;
+	protected $routeDirectory;
 	protected $viewDirectories = array();
 	protected $blockConfiguration = array();
 	protected $modules;
@@ -34,6 +35,7 @@ class ConfigurationContainer
 		$this->directory = preg_replace('/\\' . DIRECTORY_SEPARATOR . '{2,}/', DIRECTORY_SEPARATOR, $this->directory);
 
 		foreach (array( 'configDirectory' => 'application.configuration.registry',
+		 				'routeDirectory' => 'application.configuration.route',
 						'languageDirectory' => 'application.configuration.language',
 						'controllerDirectory' => 'application.controller',
 						'pluginDirectory' => 'plugin') as $var => $path)
@@ -80,6 +82,11 @@ class ConfigurationContainer
 		{
 			unlink($path);
 		}
+
+		$tplDir = ClassLoader::getRealPath('cache.templates_c');
+		$this->application->rmdir_recurse($tplDir);
+		mkdir($tplDir, 0777);
+		chmod($tplDir, 0777);
 	}
 
 	public function getMountPath()
@@ -95,6 +102,11 @@ class ConfigurationContainer
 	public function getConfigDirectories()
 	{
 		return $this->findDirectories('configDirectory');
+	}
+
+	public function getRouteDirectories()
+	{
+		return $this->findDirectories('routeDirectory');
 	}
 
 	public function getControllerDirectories()
@@ -143,14 +155,14 @@ class ConfigurationContainer
 	public function getFilesByRelativePath($path, $publicDir = false)
 	{
 		$files = array();
-		
+
 		if ($publicDir)
 		{
 			if (substr($path, 0, 6) == 'public')
 			{
 				$path = substr($path, 7);
 			}
-			
+
 			$file = $this->getPublicDirectoryLink() . DIRECTORY_SEPARATOR . $path;
 		}
 		else
@@ -406,9 +418,8 @@ class ConfigurationContainer
 	public function getRouteFiles()
 	{
 		$files = array();
-		foreach ($this->getConfigDirectories() as $dir)
+		foreach ($this->getRouteDirectories() as $dir)
 		{
-			$dir = dirname($dir) . '/route';
 			$files = array_merge($files, (array)glob($dir . '/*.php'));
 		}
 

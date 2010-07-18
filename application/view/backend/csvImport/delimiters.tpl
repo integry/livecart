@@ -48,7 +48,7 @@
 			</select>
 		</span>
 	</span>
-	<span class="Product.name Product.shortDescription Product.longDescription Product.keywords config">
+	<span class="Product.name Product.shortDescription Product.longDescription Product.keywords NewsPost.text NewsPost.moreText config">
 		<span class="block">
 			<span class="title">
 				{t _language}
@@ -74,6 +74,8 @@
 	{hidden name="category"}
 	{hidden name="type"}
 	{hidden name="continue"}
+	{hidden name="uid"}
+	{hidden name="options"}
 
 	<span style="display: none;">
 		<span id="fieldsUrl">{link controller=backend.csvImport action=fields}</span>

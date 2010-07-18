@@ -3,6 +3,7 @@
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.order.CustomerOrder");
 ClassLoader::import("application.model.order.Shipment");
+ClassLoader::import("application.model.order.OrderedFile");
 ClassLoader::import('application.model.order.OrderedItemOption');
 ClassLoader::import('application.model.delivery.DeliveryZone');
 ClassLoader::import('application.model.businessrule.interface.BusinessRuleProductInterface');
@@ -169,6 +170,21 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 			$this->itemPrice = $price;
 		}
 	}
+	
+	/**
+	 *  Avoid CustomerOrder::finalize function overriding the item price
+	 *  Usually necessary for creating/updating orders via API, etc.
+	 */
+	public function setCustomPrice($price)
+	{
+		$this->isCustomPrice = true;
+		$this->price->set($price);
+	}
+	
+	public function isCustomPrice()
+	{
+		return $this->isCustomPrice;
+	}
 
 	public function reset()
 	{
@@ -334,10 +350,27 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 	 */
 	public function isDownloadable(ProductFile $file)
 	{
-		$orderDate = $this->customerOrder->get()->dateCompleted->get();
+		$allow = true;
+		if ($file->allowDownloadDays->get())
+		{
+			$orderDate = $this->customerOrder->get()->dateCompleted->get();
+			if (!((abs($orderDate->getDayDifference(new DateTime())) <= $file->allowDownloadDays->get()) ||
+				!$file->allowDownloadDays->get()))
+			{
+				$allow = false;
+			}
+		}
 
-		return (abs($orderDate->getDayDifference(new DateTime())) <= $file->allowDownloadDays->get()) ||
-				!$file->allowDownloadDays->get();
+		if ($file->allowDownloadCount->get())
+		{
+			$orderFile = OrderedFile::getInstance($this, $file);
+			if ($orderFile->timesDownloaded->get() > $file->allowDownloadCount->get() + 1)
+			{
+				$allow = false;
+			}
+		}
+
+		return $allow;
 	}
 
 	public function removeOption(ProductOption $option)
@@ -666,9 +699,9 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		{
 			$currency = $this->getCurrency();
 
-			$array['itemBasePrice'] = self::getApplication()->getDisplayTaxPrice($array['price'], $array['Product']);;
-			$array['displayPrice'] = $this->getDisplayPrice($currency, $isTaxIncludedInPrice);
-			$array['displaySubTotal'] = $this->getSubTotal($isTaxIncludedInPrice);
+			$array['itemBasePrice'] = (float)self::getApplication()->getDisplayTaxPrice($array['price'], isset($array['Product']) ? $array['Product'] : array());;
+			$array['displayPrice'] = (float)$this->getDisplayPrice($currency, $isTaxIncludedInPrice);
+			$array['displaySubTotal'] = (float)$this->getSubTotal($isTaxIncludedInPrice);
 			$array['itemPrice'] = $array['displaySubTotal'] / $array['count'];
 
 			//var_dump($isTaxIncludedInPrice, $array['displayPrice'], $array['itemPrice'], $array['itemBasePrice'], '----');
@@ -730,7 +763,10 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 			$array['Product']['name'] = $array['name'];
 			$array['Product']['name_lang'] = $array['name_lang'];
 			$array['Product']['nameData'] = $array['nameData'];
-			$array['Product']['sku'] = $array['nameData']['sku'];
+			if (isset($array['nameData']['sku']))
+			{
+				$array['Product']['sku'] = $array['nameData']['sku'];
+			}
 		}
 
 		return $array;

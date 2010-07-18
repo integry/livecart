@@ -67,8 +67,10 @@ class NewsletterMessage extends ActiveRecordModel
 		$email = new Email($application);
 		$email->setTemplate('newsletter/template');
 		$email->set('subject', $this->subject->get());
+		$email->set('htmlMessage', $this->html->get());
 		$email->set('text', $this->text->get());
 		$email->set('email', $this->text->get());
+		
 		$email->setFrom($config->get('NEWSLETTER_EMAIL') ? $config->get('NEWSLETTER_EMAIL') : $config->get('MAIN_EMAIL'), $config->get('STORE_NAME'));
 
 		if ($user = $sent->user->get())

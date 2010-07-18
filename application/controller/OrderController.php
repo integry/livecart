@@ -31,10 +31,9 @@ class OrderController extends FrontendController
 
 		if (!$this->user->isAnonymous())
 		{
-			$this->order->setUser($this->user);
-
-			if ($this->order->isModified())
+			if (!$this->order->user->get() || ($this->order->user->get()->getID() != $this->user->getID()))
 			{
+				$this->order->setUser($this->user);
 				$this->order->save();
 			}
 		}
@@ -46,6 +45,7 @@ class OrderController extends FrontendController
 		$this->order->getTotal(true);
 
 		$response = $this->getCartPageResponse();
+
 		$this->addBreadCrumb($this->translate('_my_basket'), '');
 		return $response;
 	}
@@ -159,8 +159,11 @@ class OrderController extends FrontendController
 		$response->set('orderTotal', $currency->getFormattedPrice($this->order->getTotal()));
 		$response->set('expressMethods', $this->application->getExpressPaymentHandlerList(true));
 		$response->set('isCouponCodes', DiscountCondition::isCouponCodes());
+		$response->set('isOnePageCheckout', ($this->config->get('CHECKOUT_METHOD') == 'CHECKOUT_ONEPAGE') && !$this->order->isMultiAddress->get() && !$this->session->get('noJS'));
 
 		$this->order->getSpecification()->setFormResponse($response, $form);
+
+		SessionOrder::getOrder()->getShoppingCartItems();
 
 		return $response;
 	}
@@ -564,6 +567,7 @@ class OrderController extends FrontendController
 
 	public function miniCartBlock()
 	{
+		$this->loadLanguageFile('Order');
 		$this->order->loadAll();
 		$this->order->getTotal(true);
 		return new BlockResponse('order', $this->order->toArray());

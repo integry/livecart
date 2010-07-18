@@ -12,7 +12,7 @@
 			{foreach from=$row item=value key=key}
 				<td class="{$key}">
 					{if $key == $format}
-						{include file=$template}
+						{include file="$template"}
 					{else}
 						{$value}
 					{/if}

@@ -6,12 +6,17 @@ abstract class DataImport
 {
 	protected $application;
 	protected $fields;
+	protected $options;
+	protected $uid;
+	protected $className;
+	protected $callback;
 	private $lastImportName;
 	private $flushMessage;
 
 	public final function __construct(LiveCart $application)
 	{
 		$this->application = $application;
+		$this->uid = uniqid('csv_');
 	}
 
 	abstract public function getFields();
@@ -33,35 +38,64 @@ abstract class DataImport
 			return;
 		}
 
+		$this->className = get_class($instance);
+		$defLang = $this->application->getDefaultLanguageCode();
+
+		if ($instance->getID())
+		{
+			$this->registerImportedID($instance->getID());
+		}
+
+		if ((!$instance->isExistingRecord() && ('update' == $this->options['action']))
+			|| ($instance->isExistingRecord() && ('add' == $this->options['action'])))
+		{
+			return false;
+		}
+
+
 		foreach ($profile->getFields() as $csvIndex => $field)
 		{
 			$column = $field['name'];
 			$params = $field['params'];
 
+			$lang = null;
+			if (isset($params['language']))
+			{
+				$lang = $params['language'];
+			}
+
 			if (!isset($record[$csvIndex]) || empty($column))
 			{
 				continue;
 			}
-
 			$value = $record[$csvIndex];
 
 			list($className, $field) = explode('.', $column, 2);
+			
 			if (method_exists($this, 'set_' . $className . '_' . $field))
 			{
 				$method = 'set_' . $className . '_' . $field;
-				$this->$method($instance, $value);
+				$this->$method($instance, $value, $record, $profile);
 			}
 			else if (method_exists($this, 'set_' . $field))
 			{
 				$method = 'set_' . $field;
-				$this->$method($instance, $value);
+				$this->$method($instance, $value, $record, $profile);
 			}
-			else if (isset($instance->$field) && ($instance->$field instanceof ARValueMapper) && ($className == $this->getClassName()))
+			else if (isset($instance->$field) && ($instance->$field instanceof ARValueMapper) && ($className == $this->getClassName($className, $this->className)))
 			{
-				$instance->$field->set($value);
+				if (!$lang)
+				{
+					$instance->$field->set($value);
+				}
+				else
+				{
+					$instance->setValueByLang($field, $lang, $value);
+				}
 			}
 		}
 
+		$idBeforeSave = $instance->getID();
 		$instance->save();
 
 		$this->importAttributes($instance, $record, $profile->getSortedFields());
@@ -69,6 +103,7 @@ abstract class DataImport
 		foreach ($this->getReferencedData() as $section)
 		{
 			$method = 'import_' . $section;
+
 			if (method_exists($this, $method))
 			{
 				$subProfile = $profile->extractSection($section);
@@ -80,8 +115,13 @@ abstract class DataImport
 		}
 
 		$this->afterSave($instance, $record);
-
+	
 		$id = $instance->getID();
+
+		if ($this->callback)
+		{
+			call_user_func($this->callback, $instance);
+		}
 
 		$instance->__destruct();
 		$instance->destruct(true);
@@ -91,12 +131,32 @@ abstract class DataImport
 		return $id;
 	}
 
-	public function importRelatedRecord($type, ActiveRecordModel $instance, $record, CsvImportProfile $profile)
+	protected function getImporterInstance($type)
 	{
 		$class = $type . 'Import';
-		$this->application->loadPluginClass('application.model.datasync', $class);
-		$import = new $class($this->application);
-		return $import->importInstance($record, $profile, $instance);
+		$this->application->loadPluginClass('application.model.datasync.import', $class);
+		return new $class($this->application);		
+	}
+	
+	public function importRelatedRecord($type, ActiveRecordModel $instance, $record, CsvImportProfile $profile)
+	{
+		return $this->getImporterInstance($type)->importInstance($record, $profile, $instance);
+	}
+
+	public function disableRecords(ARSelectFilter $filter)
+	{
+		if ($disable = $this->getDisableFieldHandle())
+		{
+			$update = new ARUpdateFilter($filter->getCondition());
+			$update->addModifier($disable->toString(), 0);
+			ActiveRecordModel::updateRecordSet($this->className, $update, $this->getReferencedData());
+		}
+	}
+
+	public function deleteRecords(ARSelectFilter $filter)
+	{
+		$del = new ARDeleteFilter($filter->getCondition());
+		ActiveRecordModel::deleteRecordSet($this->className, $del, $this->getReferencedData());
 	}
 
 	public function isRootCategory()
@@ -114,6 +174,16 @@ abstract class DataImport
 		$this->lastImportName = $name;
 	}
 
+	public function getUID()
+	{
+		return $this->uid;
+	}
+
+	public function setUID($uid)
+	{
+		$this->uid = $uid;
+	}
+
 	public function beforeImport()
 	{
 
@@ -129,12 +199,17 @@ abstract class DataImport
 
 	}
 
+	protected function getDisableFieldHandle()
+	{
+
+	}
+
 	protected function getReferencedData()
 	{
 		return array();
 	}
 
-	public function importFile(CsvFile $file, CsvImportProfile $profile)
+	public function importFile(Iterator $file, CsvImportProfile $profile)
 	{
 		$total = 0;
 
@@ -148,7 +223,7 @@ abstract class DataImport
 		return $total;
 	}
 
-	public function importFileChunk(CsvFile $file, CsvImportProfile $profile, $count)
+	public function importFileChunk(Iterator $file, CsvImportProfile $profile, $count)
 	{
 		$processed = null;
 
@@ -170,7 +245,6 @@ abstract class DataImport
 					$cell = utf8_encode($cell);
 				}
 			}
-
 			$status = $this->importInstance($record, $profile);
 
 			$file->next();
@@ -210,6 +284,48 @@ abstract class DataImport
 		}
 	}
 
+	public function setOptions($options)
+	{
+		$this->options = $options;
+	}
+
+	public function registerImportedID($id)
+	{
+		file_put_contents($this->getImportIDFileName(), $id . "\n", FILE_APPEND);
+	}
+
+	public function getImportedIDs()
+	{
+		$file = $this->getImportIDFileName();
+		$res = file_exists($file) ? array_filter(explode("\n", file_get_contents($file))) : array();
+		return $res;
+	}
+
+	public function getImportIDFileName()
+	{
+		$path = ClassLoader::getRealPath('cache.csvImport.') . $this->uid;
+		if (!file_exists(dirname($path)))
+		{
+			mkdir(dirname($path));
+		}
+
+		return $path;
+	}
+
+	public function deletedImportIDFile()
+	{
+		$file = $this->getImportIDFileName();
+		if (file_exists($file))
+		{
+			unlink($file);
+		}
+	}
+
+	public function getMissingRecordFilter(CsvImportProfile $profile)
+	{
+		return new ARSelectFilter(new NotInCond(f($this->className . '.ID'), $this->getImportedIDs()));
+	}
+
 	protected function importAttributes(ActiveRecordModel $instance, $record, $fields, $attrIdentifier = 'eavField')
 	{
 		if (isset($fields[$attrIdentifier]))
@@ -246,17 +362,19 @@ abstract class DataImport
 						$fieldValue = trim($fieldValue);
 
 						$f = new ARSelectFilter(
-								new EqualsCond(
+								new LikeCond(
 									MultilingualObject::getLangSearchHandle(
 										new ARFieldHandle($valueClass, 'value'),
 										$this->application->getDefaultLanguageCode()
 									),
-									$fieldValue
+									$fieldValue . '%'
 								)
 							);
 						$f->setLimit(1);
 
-						if (!$value = $attr->getRelatedRecordSet($valueClass, $f)->shift())
+						var_dump($f->createString()); exit;
+
+						if (!($value = $attr->getRelatedRecordSet($valueClass, $f)->shift()))
 						{
 							$value = call_user_func_array(array($valueClass, 'getNewInstance'), array($attr));
 
@@ -324,10 +442,23 @@ abstract class DataImport
 		preg_match('/(.*)Import/', get_class($this), $match);
 		return array_pop($match);
 	}
+	
+	public function getColumnValue($record, CsvImportProfile $profile, $fieldName)
+	{
+		if ($profile->isColumnSet($fieldName))
+		{
+			return $record[$profile->getColumnIndex($fieldName)];
+		}
+	}
 
 	public function setFlushMessage($msg)
 	{
 		$this->flushMessage = $msg;
+	}
+	
+	public function setCallback($function)
+	{
+		$this->callback = $function;
 	}
 
 	protected function translate($key)
@@ -403,6 +534,11 @@ abstract class DataImport
 			if ($tbytes) return false; // incomplete sequence at EOS
 		}
 		return true;
+	}
+
+	public function __destruct()
+	{
+		$this->deletedImportIDFile();
 	}
 }
 

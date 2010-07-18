@@ -26,6 +26,7 @@ class ProductFile extends ObjectFile
 		$schema->registerField(new ARField("description", ARArray::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance()));
 		$schema->registerField(new ARField("allowDownloadDays", ARInteger::instance()));
+		$schema->registerField(new ARField("allowDownloadCount", ARInteger::instance()));
 	}
 
 	/**

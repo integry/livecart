@@ -5,6 +5,7 @@
 {includeJs file="library/dhtmlCalendar/calendar-setup.js"}
 {includeCss file="library/dhtmlCalendar/calendar-win2k-cold-2.css"}
 
+{includeJs file="library/prototype/prototype.js"}
 {includeJs file="library/livecart.js"}
 {includeJs file="library/form/Validator.js"}
 {includeJs file="library/form/ActiveForm.js"}

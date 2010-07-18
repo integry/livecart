@@ -679,6 +679,20 @@ fieldset.container
 	background-image: url(../../image/silk/gif/tag_yellow.gif);
 }
 
+.filterGroup.filterTypeCheckbox li div
+{
+	background-image:none;
+}
+.filterGroup.filterTypeCheckbox li div input.checkbox
+{
+	margin:0;
+}
+
+.filterGroup.filterTypeCheckbox li div
+{
+	padding: 4px 0 0 0;
+}
+
 .filterTop
 {
 	padding: 0.5em 0;
@@ -1251,6 +1265,12 @@ a.progressIndicator
 .price
 {
 	color: #a52a2a;
+}
+
+.price.progressIndicator
+{
+	padding: 0 0 0 16px;
+	background-position: center left;
 }
 
 #mainInfo .price
@@ -1982,6 +2002,11 @@ tr.topLine td
     width: 170px;
 }
 
+.quickLogin input.text
+{
+	width: 100%;
+}
+
 /***************************
 	User addresses
 ***************************/
@@ -2452,12 +2477,26 @@ fieldset.error, div.error, fieldset.container
 
 .progressIndicator
 {
-	padding: 8px;
-	width: 30px;
-	height: 20px;
 	background-image: url(../../image/indicator.gif);
 	background-position: center center;
+	background-repeat: no-repeat;
 	clear: none;
+}
+
+span.progressIndicator
+{
+	padding: 8px;
+}
+
+input.progressIndicator.text
+{
+	background-position: right center;
+}
+
+.progressIndicator.checkbox
+{
+	float: left;
+	margin-right: 5px;
 }
 
 label.text
@@ -2749,4 +2788,133 @@ img.calendar_button
 
 .dynamicMenu li:hover ul, .dynamicMenu li li:hover ul, .dynamicMenu li li li:hover ul, .dynamicMenu li.sfhover ul, .dynamicMenu li li.sfhover ul, .dynamicMenu li li li.sfhover ul { /* lists nested under hovered list items */
 	left: auto;
+}
+
+/*************************
+	One page checkout
+*************************/
+.one-page-checkout-login-field
+{
+	float: left;
+	margin-right: 1em;
+}
+
+.one-page-checkout-login-field input.text
+{
+	width: 12em;
+}
+
+.one-page-checkout-login-field label
+{
+	display: block;
+	float: none;
+	width: auto;
+}
+
+#checkout-login,
+#checkout-shipping,
+#checkout-billing,
+#checkout-payment
+{
+	float: left;
+	width: 55%;
+}
+
+#checkout-right
+{
+	float: right;
+	width: 43%;
+	padding-left: 2%;
+}
+
+#checkout-cart #cart
+{
+	width: auto;
+}
+
+#checkout-cart .cartControl *,
+#checkout-cart .categoryName
+{
+	display: none;
+}
+
+#checkout-cart .cartControl
+{
+	width: 0px;
+	padding: 0;
+}
+
+#checkout-overview .addressContainer a
+{
+	display: none;
+}
+
+#checkout-payment.singleMethod #checkout-select-payment-method
+{
+	display: none;
+}
+
+.onePageCheckout-index h2 .step
+{
+	border-width: 1px;
+	padding: 5px;
+	margin-right: 7px;
+	background-color: green;
+	color: white;
+}
+
+.onePageCheckout-index .step-incomplete h2 .step
+{
+	background-color: red;
+}
+
+.onePageCheckout-index .step-disabled form,
+.onePageCheckout-index .step-disabled .form,
+.onePageCheckout-index .notAvailable
+{
+	display: none;
+}
+
+.onePageCheckout-index .downloadable #checkout-shipping-method
+{
+	display: none;
+}
+
+.onePageCheckout-index .step-disabled .notAvailable
+{
+	display: block;
+}
+
+.checkout-otherMethods td
+{
+	padding: 0.5em 0;
+}
+
+.onePageCheckout-index #checkout-payment form .submit,
+.onePageCheckout-index #ccForm .submit
+{
+	display: none !important;
+}
+
+#checkout-return-to-overview
+{
+	float: right;
+	margin-bottom: 5px;
+}
+
+.grandTotal
+{
+	font-size: larger;
+}
+
+.grandTotal .orderTotal
+{
+	font-weight: bold;
+}
+
+#checkout-place-order
+{
+	border-top-width: 1px;
+	margin: 1em 0;
+	padding-top: 1em;
 }

@@ -35,6 +35,33 @@ a.subCondition
 	white-space: nowrap;
 }
 
+.subConditionMenu label,
+.subConditionMenu input
+{
+	float: none;
+	font-size: smaller;
+	vertical-align: middle;
+}
+
+.subConditionMenu input
+{
+	margin-right: 2px;
+}
+
+.isReverseContainer
+{
+	border: 1px solid #888;
+	background-color: white;
+	padding: 2px;
+	margin-right: 1em;
+	vertical-align: middle;
+}
+
+.isReverseContainer .acronym div
+{
+	width: 250px !important;
+}
+
 .conditionContainer.root
 {
 	float: left;

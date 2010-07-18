@@ -8,11 +8,13 @@ _are_you_sure_you_want_to_delete_manufacturer=Really delete selected manufacture
 _nothing_selected=Please select at least one manufacturer first
 
 # editor
+_add_manufacturer=Add new manufacturer
 _cancel_editing_manufacturer=Cancel editing manufacturer
 _manufacturer_info=General information
 _manufacturer_images=Images
 _manufacturer_was_successfully_saved=Manufacturer information was successfully saved
 _could_not_save_manufacturer=Could not save manufacturer information
+_manufacturer_name_empty=Please enter manufacturer name
 
 # selector
 _select_manufacturer=Select a manufacturer

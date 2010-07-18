@@ -262,6 +262,19 @@ class LiveCart extends Application implements Serializable
 		$this->isDevMode = $devMode;
 	}
 
+	public function setStatHandler(Stat $statHandler)
+	{
+		$this->statHandler = $statHandler;
+	}
+
+	public function logStat($step)
+	{
+		if (!empty($this->statHandler))
+		{
+			$this->statHandler->logStep($step);
+		}
+	}
+
 	public function isDevMode()
 	{
 		return $this->isDevMode;
@@ -327,6 +340,7 @@ class LiveCart extends Application implements Serializable
 			{
 				$this->renderer->getSmartyInstance()->register_prefilter(array($this, 'templateLocator'));
 			}
+			$this->logStat('Init renderer');
 		}
 
 		return $this->renderer;
@@ -447,10 +461,25 @@ class LiveCart extends Application implements Serializable
 	 */
 	public function execute($controllerInstance, $actionName, $isBlock = false)
 	{
+		if ($this->isDevMode() && $isBlock && !empty($_REQUEST['noblock']))
+		{
+			return null;
+		}
+
+		if (!$isBlock)
+		{
+			$this->logStat('Before executing controller action');
+		}
+		else
+		{
+			$this->logStat('Before executing block: ' . $actionName);
+		}
+
 		if ($response = $this->processInitPlugins($controllerInstance, 'before-' . $actionName))
 		{
 			if (!($response instanceof RawResponse) || $response->getContent())
 			{
+				$this->processResponse($response);
 				return $response;
 			}
 		}
@@ -458,10 +487,12 @@ class LiveCart extends Application implements Serializable
 		if (!$isBlock)
 		{
 			$originalResponse = parent::execute($controllerInstance, $actionName);
+			$this->logStat('Execute controller action');
 		}
 		else
 		{
 			$originalResponse = $controllerInstance->executeBlock($actionName);
+			$this->logStat('Executed block: ' . $actionName);
 			if (!$originalResponse)
 			{
 				return null;
@@ -475,12 +506,21 @@ class LiveCart extends Application implements Serializable
 			$this->processResponse($response);
 		}
 
+		if (!$isBlock)
+		{
+			$this->logStat('Finish executing controller action (plugins, etc.)');
+		}
+		else
+		{
+			$this->logStat('Finished executing block plugins: ' . $actionName);
+		}
+
 		return $response;
 	}
 
 	protected function postProcessResponse(Response $response, Controller $controllerInstance)
 	{
-		if (!$response instanceof ActionResponse || !$this->isInstalled())
+		if (!$response instanceof Renderable || !$this->isInstalled())
 		{
 			return false;
 		}
@@ -608,7 +648,7 @@ class LiveCart extends Application implements Serializable
 		}
 	}
 
-	public function processInstancePlugins($path, $instance, $params = null)
+	public function processInstancePlugins($path, &$instance, $params = null)
 	{
 		foreach($this->getPlugins('instance/' . $path) as $plugin)
 		{
@@ -727,6 +767,7 @@ class LiveCart extends Application implements Serializable
 	 */
 	protected function render(Controller $controllerInstance, Response $response, $actionName = null)
 	{
+		$this->logStat('Before page rendering');
 		$output = parent::render($controllerInstance, $response, $actionName);
 
 		if ($cache = $controllerInstance->getCacheHandler())
@@ -734,6 +775,25 @@ class LiveCart extends Application implements Serializable
 			$cache->setData($output);
 			$cache->save();
 		}
+		$this->logStat('Finished page rendering');
+		return $output;
+	}
+
+	protected function renderBlock($block, Controller $controllerInstance)
+	{
+		$this->processInstancePlugins('outputBlock', $block);
+
+		if (is_string($block))
+		{
+			return $block;
+		}
+
+		$output = parent::renderBlock($block, $controllerInstance);
+
+		$params = array('block' => $block, 'output' => &$output);
+		$this->processInstancePlugins('outputBlockAfter', $params);
+
+		$this->logStat('Render ' . $block['container']);
 
 		return $output;
 	}
@@ -838,7 +898,7 @@ class LiveCart extends Application implements Serializable
 		return $this->localeName;
 	}
 
-	private function __get($name)
+	public function __get($name)
 	{
 		switch ($name)
 	  	{
@@ -1110,6 +1170,11 @@ class LiveCart extends Application implements Serializable
 
 	public function getDisplayTaxPrice($price, $product)
 	{
+		if (!$product)
+		{
+			return $price;
+		}
+
 		if (!$this->config->get('INCLUDE_BASE_TAXES'))
 		{
 			ClassLoader::import('application.model.order.OrderedItem');
@@ -1487,6 +1552,29 @@ class LiveCart extends Application implements Serializable
 	public function unserialize($serializedData)
 	{
 		return null;
+	}
+
+	public function rmdir_recurse($path)
+	{
+		$path= rtrim($path, '/').'/';
+
+		if (!file_exists($path))
+		{
+			return;
+		}
+
+		$handle = opendir($path);
+		for (;false !== ($file = readdir($handle));)
+			if($file != "." and $file != ".." ) {
+				$fullpath= $path.$file;
+				if( is_dir($fullpath) ) {
+					$this->rmdir_recurse($fullpath);
+				} else {
+					unlink($fullpath);
+				}
+		}
+		closedir($handle);
+		rmdir($path);
 	}
 }
 

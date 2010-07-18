@@ -56,6 +56,7 @@ class LiveCartRenderer extends SmartyRenderer
 
 			$this->paths[] = ClassLoader::getRealPath('storage.customize.view.');
 			$this->paths[] = ClassLoader::getRealPath('application.view.');
+			$this->paths[] = dirname(ClassLoader::getRealPath('module'));
 		}
 
 		if (!$template)
@@ -144,7 +145,7 @@ class LiveCartRenderer extends SmartyRenderer
 		{
 			$view = $this->getRelativeTemplatePath($view);
 		}
-		
+
 		if (!file_exists($view))
 		{
 			$original = $view;
@@ -475,7 +476,7 @@ class LiveCartRenderer extends SmartyRenderer
 		{
 			if ($this->paths[count($this->paths) - 1] == $root)
 			{
-				$root = ClassLoader::getRealPath('.');
+				$root = dirname(ClassLoader::getRealPath('module'));
 				$template = preg_replace('/module\/([-a-zA-Z0-9_]+)\/(.*)/', 'module/\\1/application/view/\\2', $template);
 			}
 		}
