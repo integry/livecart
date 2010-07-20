@@ -22,14 +22,13 @@ class GoogleCheckout extends ExpressPayment
 						  'https://checkout.google.com/api/checkout/v2/merchantCheckout/Merchant/';
 		$parsed = new XML_Unserializer();
 		$cart = $handler->getCart();
-		echo $cart;
+
 		if (($response = $handler->_getCurlResponse($cart, $url . $this->getConfigValue('merchant_id'))) && ($parsed->unserialize($response)))
 		{
 			$array = $parsed->getUnserializedData();
 
 			if (empty($array['redirect-url']))
 			{
-				var_dump($array);
 				return false;
 			}
 
@@ -71,13 +70,12 @@ class GoogleCheckout extends ExpressPayment
 	public function getValidCurrency($currentCurrencyCode)
 	{
 		$currentCurrencyCode = strtoupper($currentCurrencyCode);
-		return in_array($currentCurrencyCode, self::getSupportedCurrencies()) ? $currentCurrencyCode : 'GBP';
 		return in_array($currentCurrencyCode, self::getSupportedCurrencies()) ? $currentCurrencyCode : 'USD';
 	}
 
 	public static function getSupportedCurrencies()
 	{
-		return array('GBP'/*, 'USD'*/);
+		return array('GBP', 'USD');
 	}
 
 	public function extractTransactionResult($array)
@@ -139,8 +137,10 @@ class GoogleCheckout extends ExpressPayment
 
 		include_once dirname(dirname(__file__)) . '/library/google/config.php';
 
-		$GLOBALS['GCheckout_currency'] = $this->getValidCurrency('GBP');
-		$GLOBALS['GCheckout_currency'] = 'GBP';
+		if ($this->order)
+		{
+			$GLOBALS['GCheckout_currency'] = $this->getValidCurrency($this->order->getCurrency()->getID());
+		}
 
 		$handler = new gCart($this->getConfigValue('merchant_id'), $this->getConfigValue('merchant_key'));
 		$handler->setMerchantCheckoutFlowSupport($returnUrl, $cancelUrl, $this->application->getConfig()->get('REQUIRE_PHONE'));
@@ -148,7 +148,6 @@ class GoogleCheckout extends ExpressPayment
 		// add cart items
 		if ($this->order)
 		{
-			$this->order->changeCurrency(Currency::getInstanceById('GBP'));
 			$items = array();
 			foreach ($this->order->getOrderedItems() as $item)
 			{
