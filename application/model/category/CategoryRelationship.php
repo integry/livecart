@@ -16,8 +16,8 @@ class CategoryRelationship extends ActiveRecordModel
 		$schema->setName($className);
 
 		$schema->registerField(new ARPrimaryKeyField('ID', ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField('categoryID', 'Category', 'ID', null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField('relatedCategoryID', 'Category', 'ID', null, ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField('categoryID', 'Category', 'ID', null, ARInteger::instance()));
 		$schema->registerField(new ARField('position', ARInteger::instance()));
 	}
 
