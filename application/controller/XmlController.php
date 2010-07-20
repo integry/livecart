@@ -1,6 +1,7 @@
 <?php
 
 ini_set('memory_limit', '128M');
+set_time_limit(0);
 
 ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.product.ProductFilter');
