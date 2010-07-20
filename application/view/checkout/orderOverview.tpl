@@ -41,19 +41,21 @@
 		</tr>
 	{/foreach}
 
-  	{if $order.taxes}
-		<tr>
-			<td colspan="{$colspan}" class="tax">{t _total_before_tax}:</td>
-			<td>{$order.formattedTotalBeforeTax.$currency}</td>
-		</tr>
-  	{/if}
+  	{if !'HIDE_TAXES'|config}
+		{if $order.taxes}
+			<tr>
+				<td colspan="{$colspan}" class="tax">{t _total_before_tax}:</td>
+				<td>{$order.formattedTotalBeforeTax.$currency}</td>
+			</tr>
+		{/if}
 
-	{foreach from=$order.taxes.$currency item="tax"}
-		<tr>
-			<td colspan="{$colspan}" class="tax">{$tax.name_lang}:</td>
-			<td>{$tax.formattedAmount}</td>
-		</tr>
-	{/foreach}
+		{foreach from=$order.taxes.$currency item="tax"}
+			<tr>
+				<td colspan="{$colspan}" class="tax">{$tax.name_lang}:</td>
+				<td>{$tax.formattedAmount}</td>
+			</tr>
+		{/foreach}
+	{/if}
 
 	<tr>
 		<td colspan="{$colspan}" class="subTotalCaption">{t _total}:</td>

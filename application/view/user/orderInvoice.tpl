@@ -1,4 +1,4 @@
-{pageTitle}{t _invoice} #{$order.ID}{/pageTitle}
+{pageTitle}{t _invoice} {$order.invoiceNumber}{/pageTitle}
 <div class="userOrderInvoice">
 
 {defun name="address"}
@@ -24,6 +24,9 @@
 	<p>
 		{$address.countryName}
 	</p>
+	<p>
+		{include file="order/addressFieldValues.tpl" showLabels=false}
+	</p>
 {/if}
 {/defun}
 
@@ -33,9 +36,10 @@
 
 		<div id="invoiceHeader">
 
-			{img src="image/promo/logo_small.jpg" id="invoiceLogo"}
+			{assign var="logo" value='LOGO'|config}
+			{img src='INVOICE_LOGO'|config|default:$logo id="invoiceLogo" alt="Invoice Logo"}
 
-			<h1>{t _invoice} #{$order.ID}</h1>
+			<h1>{t _invoice} {$order.invoiceNumber}</h1>
 			<div id="invoiceDate">{$order.formatted_dateCompleted.date_long}</div>
 
 		</div>
@@ -63,8 +67,9 @@
 			</div>
 
 		</div>
-
 		<div class="clear"></div>
+
+{include file="order/orderFieldValues.tpl"}
 
 		{foreach from=$order.shipments item="shipment" name="shipments"}
 
@@ -76,7 +81,7 @@
 					<h2>{t _shipment} #{$smarty.foreach.shipments.iteration}</h2>
 				{/if}
 
-				{include file="user/shipmentEntry.tpl" sku=true}
+				{include file="user/shipmentEntry.tpl" sku=true showTaxes=true}
 
 			{/if}
 

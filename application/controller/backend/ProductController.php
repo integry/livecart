@@ -4,10 +4,13 @@ ClassLoader::import('application.controller.backend.abstract.ActiveGridControlle
 ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.filter.FilterGroup');
 ClassLoader::import('application.model.product.Product');
+ClassLoader::import('application.model.category.ProductCategory');
 ClassLoader::import('application.model.product.ProductSpecification');
 ClassLoader::import('application.helper.ActiveGrid');
 ClassLoader::import('application.helper.massAction.MassActionInterface');
 ClassLoader::import('application.model.order.OrderedItem');
+ClassLoader::import('application.model.delivery.ShippingClass');
+ClassLoader::import('application.model.tax.TaxClass');
 
 /**
  * Controller for handling product based actions performed by store administrators
@@ -28,6 +31,8 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$response->set('categoryID', $category->getID());
 		$response->set('currency', $this->application->getDefaultCurrency()->getID());
 		$response->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
+		$response->set('shippingClasses', $this->getSelectOptionsFromSet(ShippingClass::getAllClasses()));
+		$response->set('taxClasses', $this->getSelectOptionsFromSet(TaxClass::getAllClasses()));
 
 		$this->setGridResponse($response);
 
@@ -127,7 +132,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	protected function getReferencedData()
 	{
-		return array('Category', 'Manufacturer', 'DefaultImage' => 'ProductImage');
+		return array('Category', 'Manufacturer', 'DefaultImage' => 'ProductImage', 'TaxClass', 'ShippingClass');
 	}
 
 	protected function getColumnValue($product, $class, $field)
@@ -196,7 +201,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		}
 
 		// load price data
-		ProductPrice::loadPricesForRecordSetArray($productArray);
+		ProductPrice::loadPricesForRecordSetArray($productArray, false);
 
 		// load child products
 		if (isset($displayedColumns['Product.parentID']))
@@ -268,6 +273,8 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$params['baseCurrency'] = $this->application->getDefaultCurrencyCode();
 			$params['price'] = $this->request->get($act);
 			$params['currencies'] = $this->application->getCurrencySet();
+			$params['inc_price_value'] = $this->request->get('inc_price_value');
+			$params['inc_quant_price'] = $this->request->get('inc_quant_price');
 		}
 		else if ('addRelated' == $act)
 		{
@@ -277,7 +284,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 				return new JSONResponse(0);
 			}
 		}
-		else if ('copy' == $act)
+		else if ($this->request->get('categoryID'))
 		{
 			$params['category'] = Category::getInstanceById($this->request->get('categoryID'), Category::LOAD_DATA);
 		}
@@ -286,10 +293,18 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			ClassLoader::import('application.model.presentation.CategoryPresentation');
 			$params['theme'] = $this->request->get('theme');
 		}
+		else if ('shippingClass' == $act)
+		{
+			$params['shippingClass'] = $this->request->get('shippingClass');
+		}
+		else if ('taxClass' == $act)
+		{
+			$params['taxClass'] = $this->request->get('taxClass');
+		}
 
 		$response = parent::processMass($params);
 
-		if ('delete' == $act || 'copy' == $act)
+		if ($this->request->get('categoryID'))
 		{
 			Category::recalculateProductsCount();
 		}
@@ -347,6 +362,18 @@ class ProductController extends ActiveGridController implements MassActionInterf
 				'type' => 'text'
 			);
 
+		$availableColumns['ShippingClass.name'] = array
+			(
+				'name' => $this->translate('Product.shippingClass'),
+				'type' => 'text'
+			);
+
+		$availableColumns['TaxClass.name'] = array
+			(
+				'name' => $this->translate('Product.taxClass'),
+				'type' => 'text'
+			);
+
 		unset($availableColumns['Product.childSettings']);
 		unset($availableColumns['Product.ratingSum']);
 		unset($availableColumns['Product.salesRank']);
@@ -366,32 +393,44 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	protected function getExportColumns()
 	{
 		$category = Category::getInstanceByID($this->request->get('id'), Category::LOAD_DATA);
-		$columns = $this->getAvailableColumns($category);
+		$columns = array();
+		$available = $this->getAvailableColumns($category);
+		foreach ($this->getDisplayedColumns($category) as $column => $data)
+		{
+			if (isset($available[$column]))
+			{
+				$columns[$column] = $available[$column]['name'];
+			}
+			else
+			{
+				$columns[$column] = $this->translate($column);
+			}
+		}
 
 		// prices
 		foreach ($this->application->getCurrencyArray(false) as $currency)
 		{
-			$columns['definedPrices.' . $currency] = array('name' => $this->translate('ProductPrice.price') . ' (' . $currency . ')' , 'type' => 'numeric');
+			$columns['definedPrices.' . $currency] = $this->translate('ProductPrice.price') . ' (' . $currency . ')';
 		}
 
 		// list prices
 		foreach ($this->application->getCurrencyArray(true) as $currency)
 		{
-			$columns['definedListPrices.' . $currency] = array('name' => $this->translate('ProductPrice.listPrice') . ' (' . $currency . ')' , 'type' => 'numeric');
+			$columns['definedListPrices.' . $currency] = $this->translate('ProductPrice.listPrice') . ' (' . $currency . ')';
 		}
 
 		// child products
-		$columns['Product.parentID'] = array('name' => $this->translate('Product.parentID'), 'type' => 'numeric');
-		$columns['Parent.sku'] = array('name' => $this->translate('Parent.sku'), 'type' => 'string');
+		$columns['Product.parentID'] = $this->translate('Product.parentID');
+		$columns['Parent.sku'] = $this->translate('Parent.sku');
 		for ($k = 0; $k <= 4; $k++)
 		{
-			$columns['variationTypes.' . $k . '.name'] = array('name' => $this->translate('ProductVariationType.name') . ' (' . ($k + 1) . ')', 'type' => 'string');
+			$columns['variationTypes.' . $k . '.name'] = $this->translate('ProductVariationType.name') . ' (' . ($k + 1) . ')';
 		}
 
 		// group prices
 		foreach ($this->getUserGroups() as $groupID => $groupName)
 		{
-			$columns['GroupPrice.' . $groupID] = array('name' => $this->translate('ProductPrice.GroupPrice') . ' (' . $groupName . ') [' . $groupID . ']', 'type' => 'numeric');
+			$columns['GroupPrice.' . $groupID] = $this->translate('ProductPrice.GroupPrice') . ' (' . $groupName . ') [' . $groupID . ']';
 		}
 
 		return $columns;
@@ -661,15 +700,20 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		if ($validator->isValid())
 		{
 			$product->loadRequestData($this->request);
+
+			foreach (array('ShippingClass' => 'shippingClassID', 'TaxClass' => 'taxClassID') as $class => $field)
+			{
+				$value = $this->request->get($field, null);
+				$instance = $value ? ActiveRecordModel::getInstanceByID($class, $value) : null;
+				$product->setFieldValue($field, $instance);
+			}
+
 			$product->save();
 
 			// presentation
-			if ($theme = $this->request->get('theme'))
-			{
-				$instance = CategoryPresentation::getInstance($product);
-				$instance->loadRequestData($this->request);
-				$instance->save();
-			}
+			$instance = CategoryPresentation::getInstance($product);
+			$instance->loadRequestData($this->request);
+			$instance->save();
 
 			$response = $this->productForm($product);
 
@@ -735,6 +779,8 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$response->set("productStatuses", $status);
 		$response->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
 		$response->set("otherCurrencies", $this->application->getCurrencyArray(LiveCart::EXCLUDE_DEFAULT_CURRENCY));
+		$response->set("shippingClasses", $this->getSelectOptionsFromSet(ShippingClass::getAllClasses()));
+		$response->set("taxClasses", $this->getSelectOptionsFromSet(TaxClass::getAllClasses()));
 
 		$productData = $product->toArray();
 		if (empty($productData['ID']))
@@ -746,10 +792,28 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $response;
 	}
 
+	private function getSelectOptionsFromSet(ARSet $set)
+	{
+		if (!$set->size())
+		{
+			return array();
+		}
+
+		$options = array('' => '');
+
+		foreach ($set as $record)
+		{
+			$arr = $record->toArray();
+			$options[$record->getID()] = $arr['name_lang'];
+		}
+
+		return $options;
+	}
+
 	/**
 	 * @return RequestValidator
 	 */
-	private function buildValidator(Product $product)
+	public function buildValidator(Product $product)
 	{
 		$validator = $this->getValidator("productFormValidator", $this->request);
 

@@ -24,7 +24,7 @@ class StaticPageController extends StoreManagementController
 		$pages = array();
 		foreach ($s as $page)
 		{
-			$pages[$page['ID']] = $page['title_lang'];
+			$pages[$page['ID']] = array('title' => $page['title_lang'], 'parent' => $page['parentID']);
 		}
 
 		$response = new ActionResponse();
@@ -104,6 +104,27 @@ class StaticPageController extends StoreManagementController
 	public function update()
 	{
 		$page = StaticPage::getInstanceById((int)$this->request->get('id'), StaticPage::LOAD_DATA);
+
+		return $this->save($page);
+	}
+
+	/**
+	 * @role update
+	 */
+	public function move()
+	{
+		$page = StaticPage::getInstanceById((int)$this->request->get('id'), StaticPage::LOAD_DATA);
+
+		if ($this->request->get('parent'))
+		{
+			$parent = StaticPage::getInstanceById((int)$this->request->get('parent'), StaticPage::LOAD_DATA);
+		}
+		else
+		{
+			$parent = null;
+		}
+
+		$page->parent->set($parent);
 
 		return $this->save($page);
 	}

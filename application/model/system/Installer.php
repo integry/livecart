@@ -114,7 +114,7 @@ class Installer
 		return 1 == version_compare($mainVersion . '.' . $minorVersion . '.' . $subVersion, '4.1', '>=');
 	}
 
-	public function loadDatabaseDump($dump)
+	public function loadDatabaseDump($dump, $flush = false, $force = false)
 	{
 		// newlines
 		$dump = str_replace("\r", '', $dump);
@@ -125,12 +125,34 @@ class Installer
 		// get queries
 		$queries = preg_split('/;\n/', $dump);
 
+		if ($flush && ob_get_length())
+		{
+			ob_flush();
+			ob_end_clean();
+		}
+
 		foreach ($queries as $query)
 		{
 			$query = trim($query);
 			if (!empty($query))
 			{
-				ActiveRecord::executeUpdate($query);
+				try
+				{
+					ActiveRecord::executeUpdate($query);
+				}
+				catch (Exception $e)
+				{
+					if (!$force)
+					{
+						throw $e;
+					}
+				}
+			}
+
+			if ($flush)
+			{
+				echo '.';
+				flush();
 			}
 		}
 
@@ -141,7 +163,7 @@ class Installer
 	{
 		// check writability of temporary directories
 		$writeFail = array();
-		foreach (array('cache', 'storage', 'public.cache', 'public.upload') as $dir)
+		foreach (array('cache', 'storage', 'public.cache', 'public.upload', 'public.module') as $dir)
 		{
 			$file = ClassLoader::getRealPath($dir) . '/.writeTest';
 			if (!file_exists($file))

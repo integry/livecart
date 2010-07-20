@@ -33,7 +33,15 @@ class ErrController extends BackendController
 		switch($id)
 		{
 			case 401:
-				return new ActionRedirectResponse('backend.session', 'index', $params);
+				$response = new ActionRedirectResponse('backend.session', 'index', $params);
+				if ($this->isAjax())
+				{
+					return new JSONResponse(array('__redirect' => $response->getUrl($this->router)));
+				}
+				else
+				{
+					return $response;
+				}
 			case 403:
 			case 404:
 				$params['id'] = $id;

@@ -226,9 +226,6 @@ Backend.TemplateHandler.prototype =
 			allow_resize: true
 			}
 		);
-
-		// set cursor at the first line
-		editAreaLoader.setSelectionRange('code', 0, 0);
 	},
 
 	submit: function(e)
@@ -335,4 +332,11 @@ Backend.EmailTemplateHandler.prototype =
 	saveComplete: function(originalRequest)
 	{
 	}
+}
+
+function isIE(){
+	if(navigator.appName.indexOf("Microsoft")!=-1)
+        if (navigator.userAgent.indexOf('Opera') == -1)
+    		return true;
+	return false;
 }

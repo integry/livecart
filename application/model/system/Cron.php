@@ -8,11 +8,23 @@
  */
 class Cron
 {
+	const CRON_INTERVAL = 60;
+
 	private $application;
 
 	public function __construct(LiveCart $application)
 	{
 		$this->application = $application;
+	}
+
+	public function isExecutable()
+	{
+		if (!file_exists($this->getCronFile()))
+		{
+			$this->setLastExecTime(0);
+		}
+
+		return time() - self::CRON_INTERVAL > (include $this->getCronFile());
 	}
 
 	public function process()
@@ -26,6 +38,8 @@ class Cron
 		{
 			$this->processBatch($this->application->getPlugins('cron/' . $type), $interval);
 		}
+
+		$this->setLastExecTime(time());
 	}
 
 	private function processBatch($plugins, $interval = null)
@@ -46,6 +60,16 @@ class Cron
 				$inst->markCompletedExecution();
 			}
 		}
+	}
+
+	private function setLastExecTime($time)
+	{
+		file_put_contents($this->getCronFile(), '<?php return ' . $time . '; ?>');
+	}
+
+	private function getCronFile()
+	{
+		return ClassLoader::getRealPath('cache.cronExecTime') . '.php';
 	}
 }
 

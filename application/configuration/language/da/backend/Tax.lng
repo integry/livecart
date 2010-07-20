@@ -1,0 +1,10 @@
+_error_the_name_should_not_be_empty=Venligst indtast navn
+_are_you_sure_you_want_to_remove_ths_tax=Er du sikker på, at du ønsker at slette denne momssats? Den bruges muligvis en nogle leveringszoner.
+_taxes=Moms
+_name=Navn
+_cancel_adding_new_tax_rate=Annuller tilføjelse af ny momssats
+_add_new_tax=Tilføj ny momssats
+_tax_entry_was_successfully_saved=Momssats blev gemt succesfuldt 
+_could_not_save_tax_entry=Kunne ikke gemme momssats
+_cancel_adding_new_tax=Annuller tilføjelse af momssats
+_manage=Behandle

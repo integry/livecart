@@ -24,6 +24,10 @@ class OrderLogController extends StoreManagementController
 			{
 				$entry['oldValue'] = array();
 			}
+			if (!$entry['newValue'])
+			{
+				$entry['newValue'] = array();
+			}
 
 			if($entry['action'] != OrderLog::ACTION_REMOVED_WITH_SHIPMENT)
 			{

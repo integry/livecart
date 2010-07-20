@@ -74,6 +74,27 @@
 			<div class="errorText hidden"></div>
 		</fieldset>
 	</p>
+
+	{if $shippingClasses}
+	<p>
+		<label for="product_{$cat}_{$product.ID}_shippingClassID">{t _shippingClass}:</label>
+		<fieldset class="error">
+			{selectfield options=$shippingClasses name="shippingClassID" id="product_`$cat`_`$product.ID`_shippingClassID" class="shippingClassID"}
+			<div class="errorText hidden"></div>
+		</fieldset>
+	</p>
+	{/if}
+
+	{if $taxClasses}
+	<p>
+		<label for="product_{$cat}_{$product.ID}_taxClassID">{t _taxClass}:</label>
+		<fieldset class="error">
+			{selectfield options=$taxClasses name="taxClassID" id="product_`$cat`_`$product.ID`_taxClassID" class="taxClassID"}
+			<div class="errorText hidden"></div>
+		</fieldset>
+	</p>
+	{/if}
+
 	<p>
 		<label for="product_{$cat}_{$product.ID}_position" class="acronym"><a>{t _sort_order}<div>{t _hint_sort_order}</div></a>:</label>
 		<fieldset class="error">

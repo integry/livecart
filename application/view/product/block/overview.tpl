@@ -1,8 +1,24 @@
 <table id="productMainDetails">
+
+	{block PRODUCT-OVERVIEW-BEFORE}
+
 	{if $product.Manufacturer.name}
 	<tr>
 		<td class="param">{t _manufacturer}:</td>
 		<td class="value"><a href="{categoryUrl data=$product.Category addFilter=$manufacturerFilter}">{$product.Manufacturer.name}</a></td>
+	</tr>
+	{/if}
+
+	{if 'SHOW_PRODUCT_WEIGHT'|config && $product.shippingWeight}
+	<tr>
+		<td class="param">{t _weight}:</td>
+		<td class="value">
+			{if 'METRIC' == 'UNIT_SYSTEM'|config}
+				{$product.shippingWeight} {t _kg}
+			{else}
+				{$product.shippingWeight_english}
+			{/if}
+		</td>
 	</tr>
 	{/if}
 
@@ -20,14 +36,14 @@
 	</tr>
 	{/if}
 
-	{if !$product.isDownloadable}
+	{if !$product.isDownloadable || 'INVENTORY_TRACKING_DOWNLOADABLE'|config}
 		{if !$product.stockCount && 'PRODUCT_DISPLAY_NO_STOCK'|config}
 		<tr>
 			<td colspan="2" class="noStock"><span>{t _no_stock}</span></td>
 		</tr>
 		{/if}
 
-		{if $product.stockCount && 'PRODUCT_DISPLAY_LOW_STOCK'|config}
+		{if ($product.stockCount <= 'LOW_STOCK'|config) && 'PRODUCT_DISPLAY_LOW_STOCK'|config}
 		<tr>
 			<td colspan="2" class="lowStock"><span>{t _low_stock}</span></td>
 		</tr>
@@ -39,5 +55,7 @@
 		<td colspan="2" class="websiteUrl"><a href="{$product.URL}" target="_blank">{t _product_website}</a></td>
 	</tr>
 	{/if}
+
+	{block PRODUCT-OVERVIEW-AFTER}
 
 </table>

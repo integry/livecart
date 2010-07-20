@@ -37,6 +37,7 @@
 			<option value="enable_isEnabled">{t _enable}</option>
 			<option value="disable_isEnabled">{t _disable}</option>
 			<option value="move">{t _move_to_category}</option>
+			<option value="addCat">{t _add_to_category}</option>
 			<option value="copy">{t _copy_to_category}</option>
 			<option value="delete">{t _delete}</option>
 
@@ -56,6 +57,8 @@
 			</optgroup>
 
 			<optgroup label="{t _shipping_opts}">
+				<option value="shippingClass">{t _set_shipping_class}</option>
+				<option value="taxClass">{t _set_tax_class}</option>
 				<option value="set_shippingWeight">{t _set_shipping_weight}</option>
 				<option value="set_minimumQuantity">{t _set_minimum_quantity}</option>
 				<option value="set_shippingSurchargeAmount">{t _set_shipping_surcharge}</option>
@@ -81,16 +84,24 @@
 				<input type="hidden" name="categoryID" />
 			</span>
 
-			{textfield id="massForm_inc_price_`$categoryID`" class="text number" name="inc_price"}
+			<span class="inc_price">
+				{textfield id="inc_price_`$categoryID`" class="text number" name="inc_price_value"}%
+				{checkbox id="inc_quant_price_`$categoryID`" name="inc_quant_price"}
+				<label for="inc_quant_price_{$categoryID}" style="float: none;">{t _inc_quant_prices}</label>
+			</span>
+
 			{textfield id="massForm_inc_stock_`$categoryID`" class="text number" name="inc_stock"}
 			{textfield id="massForm_set_stockCount_`$categoryID`" class="text number" name="set_stockCount"}
 			{textfield id="massForm_price_`$categoryID`" class="text number" name="price"}
 			{textfield id="massForm_set_minimumQuantity_`$categoryID`" class="text number" name="set_minimumQuantity"}
 			{textfield id="massForm_shippingSurchargeAmount_`$categoryID`" class="text number" name="set_shippingSurchargeAmount"}
+			{textfield id="massForm_shippingWeight_`$categoryID`" class="text number" name="set_shippingWeight"}
    			{textfield id="massForm_manufacturer_`$categoryID`" name="manufacturer" class="text" autocomplete="controller=backend.manufacturer field=manufacturer" id="set_manufacturer_`$categoryID`"}
 			{textfield id="massForm_set_keywords_`$categoryID`" name="set_keywords" class="text" id="set_keywords_`$categoryID`" autocomplete="controller=backend.product field=keywords"}
 			{textfield id="massForm_set_URL_`$categoryID`" name="set_URL" class="text" id="set_url_`$categoryID`" autocomplete="controller=backend.product field=URL"}
 			{selectfield id="massForm_theme_`$categoryID`" name="theme" options=$themes}
+			{selectfield id="massForm_shippingClass_`$categoryID`" name="shippingClass" options=$shippingClasses}
+			{selectfield id="massForm_taxClass_`$categoryID`" name="taxClass" options=$taxClasses}
 		</span>
 
 		<input type="submit" value="{tn _process}" class="submit" />

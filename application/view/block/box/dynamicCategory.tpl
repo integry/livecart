@@ -46,7 +46,9 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 	</div>
 
 	<div class="content">
+		<fieldset class="container">
 		{fun name="dynamicCategoryTree" node=$categories}
+		</fieldset>
 	</div>
 
 	<div class="clear"></div>

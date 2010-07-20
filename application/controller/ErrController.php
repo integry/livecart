@@ -8,6 +8,12 @@ ClassLoader::import("application.controller.FrontendController");
  */
 class ErrController extends FrontendController
 {
+	public function init()
+	{
+		parent::init();
+		$this->loadLanguageFile('Err');
+	}
+
 	public function index()
 	{
 		$response = new ActionResponse();
@@ -47,6 +53,12 @@ class ErrController extends FrontendController
 	public function backendBrowser()
 	{
 		return new ActionResponse();
+	}
+
+	public function database()
+	{
+		$this->setLayout('empty');
+		return new ActionResponse('error', $_REQUEST['exception']->getMessage());
 	}
 }
 

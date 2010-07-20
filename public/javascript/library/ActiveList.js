@@ -597,6 +597,10 @@ ActiveList.prototype = {
 	   }.bind(this, li), 600);
 	},
 
+	getRecordById: function(id)
+	{
+		return this.ul.down('#' + this.ul.id + '_' + id);
+	},
 
 	/***************************************************************************
 	 *		   Private methods											   *

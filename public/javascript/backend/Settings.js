@@ -119,7 +119,7 @@ Backend.Settings.prototype =
 		this.activateCategory('00-store');
 
 		var firstPaymentMethod = this.treeBrowser.getChildItemIdByIndex('05-payment', 0);
-		for (k = 1; k <= 3; k++)
+		for (k = 1; k <= 6; k++)
 		{
 			var item = 'payment.OFFLINE' + k;
 			this.treeBrowser.moveItem(item, 'item_sibling', firstPaymentMethod);
@@ -286,15 +286,18 @@ Backend.Settings.prototype =
 		{
 			var el = container.getElementsByTagName('input')[0] || container.getElementsByTagName('select')[0] || container.getElementsByTagName('textarea')[0];
 
-			el.onchange =
-				function()
-				{
-					this.updateSetting(id, null, el.value);
-					if (handler)
+			if (el)
+			{
+				el.onchange =
+					function()
 					{
-						handler();
-					}
-				}.bind(this)
+						this.updateSetting(id, null, el.value);
+						if (handler)
+						{
+							handler();
+						}
+					}.bind(this)
+			}
 		}
 	},
 
@@ -435,6 +438,25 @@ Backend.Settings.Editor.prototype =
 				}
 			},
 
+		'EMAIL_STATUS_UPDATE':
+			function()
+			{
+				var change = function() {
+					var checked = $('EMAIL_STATUS_UPDATE').checked;
+					$("setting_EMAIL_STATUS_UPDATE_STATUSES")[checked ? 'hide' : 'show']();
+					if(checked)
+					{
+						$A($("setting_EMAIL_STATUS_UPDATE_STATUSES").getElementsByClassName("checkbox")).each(
+							function(element) {
+								element.checked = true;
+							}
+						);
+					}
+					return change; // !
+				};
+				Event.observe($('EMAIL_STATUS_UPDATE'), 'change', change());
+			},
+
 		'EMAIL_METHOD':
 			function()
 			{
@@ -507,13 +529,39 @@ Backend.Settings.Editor.prototype =
 				var sizeCapt = wCapt + ' x ' + hCapt + ':';
 				var qualityCapt = Backend.getTranslation('IMG_P_Q_1')  + ':';
 
-				var prefixes = ['P', 'C', 'M'];
+				var prefixes = ['P', 'C', 'M', 'O'];
 				for (var k = 0; k < prefixes.length; k++)
 				{
 					var prefix = prefixes[k];
+
+					if (prefix != 'O')
+					{
+						var leg = $('setting_IMG_' + prefix + '_W_1').up('fieldset').up('fieldset').down('legend');
+						var menu = document.createElement('div');
+						menu.innerHTML = '<a href="#">' + Backend.getTranslation('_resize_images') + '</a>';
+						leg.appendChild(menu);
+
+						var a = menu.down('a');
+						a.onclick = function(k, a)
+						{
+							return function(e)
+							{
+								var prefix = prefixes[k];
+								new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.' + {P: 'product', C: 'category', M: 'manufacturer'}[prefix] + 'Image', 'resizeImages', {id: prefix}), a, function(oReq) { this.resizeImages(oReq, a); }.bind(this));
+								Event.stop(e);
+							}.bind(this);
+						}.bind(this)(k, a);
+					}
+
 					for (var size = 1; size <= 4; size++)
 					{
 						var width = $('setting_IMG_' + prefix + '_W_' + size);
+
+						if (!width)
+						{
+							break;
+						}
+
 						var height = $('setting_IMG_' + prefix + '_H_' + size);
 						var quality = $('setting_IMG_' + prefix + '_Q_' + size);
 
@@ -567,7 +615,10 @@ Backend.Settings.Editor.prototype =
 			},
 
 		'OFFLINE_NAME_2': function() { this.handlers.OFFLINE_NAME_1(); },
-		'OFFLINE_NAME_3': function() { this.handlers.OFFLINE_NAME_1(); }
+		'OFFLINE_NAME_3': function() { this.handlers.OFFLINE_NAME_1(); },
+		'OFFLINE_NAME_4': function() { this.handlers.OFFLINE_NAME_1(); },
+		'OFFLINE_NAME_5': function() { this.handlers.OFFLINE_NAME_1(); },
+		'OFFLINE_NAME_6': function() { this.handlers.OFFLINE_NAME_1(); }
 	},
 
 	valueHandlers:
@@ -595,14 +646,10 @@ Backend.Settings.Editor.prototype =
 		}
 
 		ActiveForm.prototype.initTinyMceFields(container);
+	},
+
+	resizeImages: function(oReq, a)
+	{
+		Backend.SaveConfirmationMessage.prototype.showMessage(Backend.getTranslation('_image_resize_success'));
 	}
 }
-
-Event.observe(window, 'load',
-	function()
-	{
-		window.loadingImage = 'image/loading.gif';
-		window.closeButton = 'image/silk/gif/cross.gif';
-		initLightbox();
-	}
-);

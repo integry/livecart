@@ -1,0 +1,11 @@
+checkPHPVersion=PHP version
+checkMySQL=Database support
+checkPHPVersion_error= <a href="http://php.net" target="_blank">PHP</a> version skal være mindst 5.2
+checkGD=Billedmanipulation support
+checkSession=PHP sessionkonfiguration
+checkGD_error=<a href="http://php.net/gd" target="_blank">GD</a> udvidelse skal være installeret for PHP
+checkWritePermissions=Mappe skrivetilladelser
+_err_innodb_not_available=<a href="http://dev.mysql.com/doc/refman/5.0/en/innodb-overview.html" target="_blank">InnoDB table storage engine</a> er ikke tilkoblet for MySQL. Venligst kontroller opsætningen af din MySQL database server, og forsøg igen.
+_writePermissionsFix=<strong>Anbefalet handling:</strong> brug en FTP klient, ændre adgangen (chmod) for disse mapper til 777 (fulde skrivetilladelser). Hvis mappen ikke eksisterer, venligst opret den.
+checkMySQL_error=<a href="http://php.net/mysqli" target="_blank">mysqli</a> or <a href="http://php.net/mysqli" target="_blank">mysql</a> udvidelse skal være installeret for PHP
+checkSession_error= PHP sessions er ikke gemt. Venligst sikre dig, at <a href="http://php.net/manual/en/ref.session.php#ini.session.save-path"><em>session.save_path</em></a> værdierne for PHP konfigurationen er opsat korrekt.

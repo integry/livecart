@@ -1,5 +1,5 @@
 Order Baru Dibuat di {'STORE_NAME'|config}
-No. Order: {$order.ID}
+No. Order: {$order.invoiceNumber}
 
 Administrasi order:
 {backendOrderUrl order=$order url=true}

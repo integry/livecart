@@ -16,6 +16,18 @@ class ManufacturerController extends ActiveGridController
 		return $this->getGridResponse();
 	}
 
+	public function add()
+	{
+		$manufacturer = Manufacturer::getNewInstance('test');
+
+		$response = new ActionResponse();
+		$form = $this->buildForm($manufacturer);
+		$manufacturer->getSpecification()->setFormResponse($response, $form);
+		$response->set('form', $form);
+
+		return $response;
+	}
+
 	public function edit()
 	{
 		$manufacturer = ActiveRecordModel::getInstanceById('Manufacturer', $this->request->get('id'), Manufacturer::LOAD_DATA, Manufacturer::LOAD_REFERENCES);
@@ -31,9 +43,18 @@ class ManufacturerController extends ActiveGridController
 		return $response;
 	}
 
+	public function create()
+	{
+		return $this->save(Manufacturer::getNewInstance(''));
+	}
+
 	public function update()
 	{
-		$manufacturer = ActiveRecordModel::getInstanceById('Manufacturer', $this->request->get('id'), Manufacturer::LOAD_DATA, Manufacturer::LOAD_REFERENCES);
+		return $this->save(ActiveRecordModel::getInstanceById('Manufacturer', $this->request->get('id'), Manufacturer::LOAD_DATA, Manufacturer::LOAD_REFERENCES));
+	}
+
+	protected function save(Manufacturer $manufacturer)
+	{
 		$validator = $this->buildValidator($manufacturer);
 
 		if ($validator->isValid())

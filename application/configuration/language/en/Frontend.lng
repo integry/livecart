@@ -47,6 +47,9 @@ _surcharge=Surcharge
 _err_option_0=This option must be selected
 _err_option_1=Please select an option
 _err_option_2=This field cannot be left blank
+_err_option_upload=Please upload a file
+_err_option_filetype=Uploaded file type is not valid.<br />Accepted file types are: [_1]
+_err_option_filesize=The uploaded file is too large.<br />The largest allowed file size is [_1] MB
 
 # Checkout
 _checkout=Checkout
@@ -81,6 +84,8 @@ _save=Save
 _or=or
 _cancel=Cancel
 _our_price=Our Price
+_weight=Weight
+_kg=kg
 
 # Blocks
 _quick_nav=Quick Navigation
@@ -96,3 +101,8 @@ _previous=Previous
 _add_compare=Add to Compare
 _compared_products=Compared Products
 _view_comparison=View Comparison
+
+# RSS feeds
+_news_posts_feed=News feed
+_category_products_feed=Category products feed
+_all_products_feed=All products feed

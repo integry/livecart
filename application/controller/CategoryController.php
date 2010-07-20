@@ -14,6 +14,7 @@ ClassLoader::import('application.model.product.ProductPrice');
 ClassLoader::import('application.model.product.ProductCompare');
 ClassLoader::import('application.model.category.SpecFieldValue');
 ClassLoader::import('application.model.category.SearchLog');
+ClassLoader::importNow('application.helper.CreateHandleString');
 
 /**
  * Index controller for frontend
@@ -39,6 +40,7 @@ class CategoryController extends FrontendController
 	  	$this->addBlock('FILTER_BOX', 'boxFilter', 'block/box/filter');
 	  	$this->addBlock('FILTER_TOP', 'boxFilterTop', 'category/boxFilterTopBlock');
 	  	$this->addBlock('PRODUCT_LISTS', 'productList', 'block/productList');
+	  	$this->addBlock('RELATED_CATEGORIES', 'relatedCategories', 'category/block/relatedCategories');
 	}
 
 	public function index()
@@ -46,6 +48,7 @@ class CategoryController extends FrontendController
 		ClassLoader::import('application.model.presentation.CategoryPresentation');
 
 		$this->getAppliedFilters();
+
 
 		// presentation
 		if ($theme = CategoryPresentation::getThemeByCategory($this->getCategory()))
@@ -59,6 +62,7 @@ class CategoryController extends FrontendController
 			{
 				$this->request->set('layout', strtolower($layout));
 				$this->config->set('LIST_LAYOUT', $layout);
+				$this->config->set('ALLOW_SWITCH_LAYOUT', false);
 			}
 		}
 
@@ -72,6 +76,8 @@ class CategoryController extends FrontendController
 
 		$selectFilter = new ARSelectFilter();
 		$selectFilter->setLimit($perPage, $offsetStart - 1);
+
+		$this->application->processInstancePlugins('productFilter', $selectFilter);
 
 	  	// create new search filter
 		$query = $this->request->get('q');
@@ -99,7 +105,7 @@ class CategoryController extends FrontendController
 		}
 
 		// root category?
-		if ($this->getCategory()->isRoot() && !$this->filters && !($this instanceof IndexController) && !$this->request->get('includeSub'))
+		if ($this->getCategory()->isRoot() && !$this->filters && !($this instanceof IndexController) && !$this->request->get('includeSub') && ($currentPage > 1))
 		{
 			return new ActionRedirectResponse('index', 'index');
 		}
@@ -174,10 +180,15 @@ class CategoryController extends FrontendController
 		$categoryNarrow = array();
 		if ((!empty($searchQuery) || $this->getCategory()->isRoot() || $this->filters) && $products)
 		{
-			$categoryNarrow = $this->getSubCategoriesBySearchQuery($selectFilter, $subCategories);
+			$categoryNarrow = $this->getSubCategoriesBySearchQuery($productFilter->getSelectFilter(), $subCategories);
 		}
 
 		$categoryArray = $this->getCategory()->toArray();
+
+		if (!$this->getCategory()->isRoot())
+		{
+			$this->redirect301($this->request->get('cathandle'), createHandleString($categoryArray['name_lang']));
+		}
 
 		// if all the results come from one category, redirect to this category
 		if ((count($categoryNarrow) == 1) && (count($this->filters) == 1))
@@ -196,6 +207,11 @@ class CategoryController extends FrontendController
 			{
 				while (count($categoryNarrow) == 1)
 				{
+					if ($categoryNarrow[0]['searchCount'] != $totalCount)
+					{
+						break;
+					}
+
 					$this->category = Category::getInstanceByID($categoryNarrow[0]['ID'], Category::LOAD_DATA);
 					$subCategories = $this->getCategory()->getSubCategoryArray(Category::LOAD_REFERENCES);
 					if ($subCategories)
@@ -229,30 +245,6 @@ class CategoryController extends FrontendController
 			$selectFilter->removeCondition(new EqualsCond(new ARFieldHandle('Product', 'categoryID'), $this->getCategory()->getID()));
 			$this->productFilter->includeSubcategories();
 		}
-
-/*
-		// load filter data
-		$this->getFilterCounts();
-
-		$filters = array();
-		if ($showAll = $this->request->get('showAll'))
-		{
-			if ('brand' == $showAll)
-			{
-				$filters = array('filters' => $this->manFilters);
-			}
-			else
-			{
-				foreach ($this->filterGroups as $filterGroup)
-				{
-					if ($filterGroup['ID'] == $showAll)
-					{
-						$filters = $filterGroup;
-					}
-				}
-			}
-		}
-*/
 
 		// search redirects
 		// no products found, but found one category name - redirect to this category
@@ -300,7 +292,7 @@ class CategoryController extends FrontendController
 
 		$filterChainHandle = $this->setUpBreadCrumbAndReturnFilterChainHandle($currentPage);
 		$response->set('url', $this->getCategoryPageUrl(array('page' => '_000_', 'filters' => $filterChainHandle)));
-		$response->set('layoutUrl', $this->getCategoryPageUrl(array('filters' => $filterChainHandle, 'query' => array('layout' => ('GRID' == $listLayout) ? 'list' : 'grid'))));
+		$response->set('layoutUrl', $this->getCategoryPageUrl(array('filters' => $filterChainHandle, 'query' => array('layout' => ''))));
 		$response->set('filterChainHandle', $filterChainHandle);
 
 		if (isset($searchQuery))
@@ -468,7 +460,10 @@ class CategoryController extends FrontendController
 		foreach ($path as $nodeArray)
 		{
 			$url = createCategoryUrl(array('data' => $nodeArray), $this->application);
-			$this->addBreadCrumb($nodeArray['name_lang'], $url);
+			if(array_key_exists('name_lang', $nodeArray))
+			{
+				$this->addBreadCrumb($nodeArray['name_lang'], $url);
+			}
 		}
 
 		// add filters to breadcrumb
@@ -615,10 +610,20 @@ class CategoryController extends FrontendController
 			$selFilter->setOrder(new ARExpressionHandle('Product.isFeatured=1'), 'DESC');
 		}
 
+		$featuredFilter = new ProductFilter($this->getCategory(), $selFilter);
+		$featuredFilter->includeSubcategories();
+
 		$selFilter->setOrder(new ARExpressionHandle('RAND()'));
 		$selFilter->setLimit($count);
 
-		$featuredFilter = new ProductFilter($this->getCategory(), $selFilter);
+		$ids = ActiveRecord::getRecordSetFields('Product', $featuredFilter->getSelectFilter(), array('Product.ID'), array('Category', 'Manufacturer'));
+		$rand = array();
+		foreach ($ids as $id)
+		{
+			$rand[] = $id['ID'];
+		}
+
+		$featuredFilter = new ProductFilter(Category::getRootNode(), select(in('Product.ID', $rand)));
 		$featuredFilter->includeSubcategories();
 
 		return $this->getProductsArray($featuredFilter);
@@ -633,6 +638,24 @@ class CategoryController extends FrontendController
 		$form->enableClientSideValidation(false);
 		$form->set('sort', $order);
 		return $form;
+	}
+
+	protected function relatedCategoriesBlock()
+	{
+		$f = select(eq('CategoryRelationship.categoryID', $this->getCategory()->getID()));
+		$f->setOrder(f('CategoryRelationship.position'));
+		$categories = array();
+		foreach (ActiveRecordModel::getRecordSet('CategoryRelationship', $f, array('Category')) as $rel)
+		{
+			$category = $rel->relatedCategory->get();
+			$category->getPathNodeSet();
+			$categories[] = $category->toArray();
+		}
+
+		if ($categories)
+		{
+			return new BlockResponse('categories', $categories);
+		}
 	}
 
 	protected function productListBlock()
@@ -668,6 +691,11 @@ class CategoryController extends FrontendController
 
 	protected function boxFilterBlock($includeAppliedFilters = true)
 	{
+		$filterStyle = $this->config->get('FILTER_STYLE');
+		if('FILTER_STYLE_CHECKBOXES' == $filterStyle)
+		{
+			$includeAppliedFilters = false;
+		}
 		$count = $this->getFilterCounts($includeAppliedFilters);
 
 		$filterGroups = $count['groups'];
@@ -680,11 +708,18 @@ class CategoryController extends FrontendController
 		$url = $this->router->addQueryParams($url);
 		foreach ((array)$filterGroups as $key => $grp)
 		{
+			foreach ((array)$grp['filters'] as $k => $f)
+			{
+				if (!$f['count'])
+				{
+					unset($filterGroups[$key]['filters'][$k]);
+				}
+			}
+
 			if (empty($grp['filters']))
 			{
 				unset($filterGroups[$key]);
 			}
-
 			// hide excess criterias (by default only 5 per filter are displayed)
 			else if (($showAll != $grp['ID']) && (count($grp['filters']) > $maxCriteria) && ($maxCriteria > 0))
 			{
@@ -749,20 +784,37 @@ class CategoryController extends FrontendController
 			}
 		}
 
-		if ($this->config->get('ENABLE_MAN_FILTERS') && (count($manFilters) > 1))
+		if ($this->config->get('ENABLE_MAN_FILTERS') && count($manFilters) > 1)
 		{
 		 	$response->set('manGroup', array('filters' => $manFilters));
 		}
 
 		if ($this->config->get('ENABLE_PRICE_FILTERS') && (count($count['prices']) > 1))
 		{
+		 	foreach ($priceFilters as $key => $filter)
+		 	{
+		 		if (!$filter['count'])
+		 		{
+		 			unset($priceFilters[$key]);
+				}
+			}
+
 		 	$response->set('priceGroup', array('filters' => $priceFilters));
 		}
 
-		$response->set('filters', $this->getAppliedFilterArray());
+		$appliedFilterArray = $this->getAppliedFilterArray();
+		$response->set('filters', $appliedFilterArray);
+		if('FILTER_STYLE_CHECKBOXES' == $filterStyle)
+		{
+			$IDs = array();
+			foreach($appliedFilterArray as $item)
+			{
+				$IDs[] = $item['ID'];
+			}
+			$response->set('filtersIDs', $IDs);
+		}
 	 	$response->set('category', $this->getCategory()->toArray());
 	 	$response->set('groups', $filterGroups);
-
 		return $response;
 	}
 
@@ -946,10 +998,17 @@ class CategoryController extends FrontendController
 
 	private function getFilterCounts($includeAppliedFilters)
 	{
-		$count = new ProductCount($this->productFilter, $this->application);
+		$productFilter = $this->getProductFilter();
+		if (!$productFilter)
+		{
+			$productFilter = new ProductFilter($this->getCategory(), new ARSelectFilter());
+		}
+
+		$count = new ProductCount($productFilter, $this->application);
 
 		// get category filter groups
 		$filterGroups = $this->getCategory()->getFilterGroupArray();
+
 		$filterGroups = $this->createFilterGroupSet($filterGroups, $count->getCountByFilters($includeAppliedFilters));
 
 		$manFilters = $this->createManufacturerFilterSet($count->getCountByManufacturers($includeAppliedFilters));
@@ -963,6 +1022,7 @@ class CategoryController extends FrontendController
 		// get group filters
 		if ($filterGroups)
 		{
+			$filterStyle = $this->config->get('FILTER_STYLE');
 			$filters = $this->getCategory()->getFilterSet();
 
 			// sort filters by group
@@ -972,7 +1032,12 @@ class CategoryController extends FrontendController
 				$cnt = isset($filterArray[$filter->getID()]) ? $filterArray[$filter->getID()] : 0;
 				if ((!$cnt || $cnt == $this->totalCount) && $filter->getFilterGroup()->displayLocation->get() == FilterGroup::LOC_SIDE)
 				{
-					continue;
+					// when filter style is set to checkboxes and filtering by only one selector filter
+					// this continue removes (ignores here) selected filter from side menu.
+					if ('FILTER_STYLE_CHECKBOXES' !=  $filterStyle)
+					{
+						continue;
+					}
 				}
 
 				$array = $filter->toArray();
@@ -1049,6 +1114,20 @@ class CategoryController extends FrontendController
 
 		$request = $controller->getRequest();
 		$app = $controller->getApplication();
+
+		if($controller->config->get('FILTER_STYLE') == 'FILTER_STYLE_CHECKBOXES')
+		{
+			$delimiter = ',';
+			$filters = explode($delimiter, $request->get('filters'));
+			foreach($request->getRawRequest() as $key=>$value)
+			{
+				if(strtolower($value) == 'on') // could be a filter
+				{
+					$filters[] = $key;
+				}
+			}
+			$request->set('filters', implode($delimiter, array_filter($filters)));
+		}
 
 		if ($request->get('filters'))
 		{
@@ -1196,7 +1275,7 @@ class CategoryController extends FrontendController
 
 		$namespace = 'category_featured';
 		$products = array();
-		foreach ($categories as $category)
+		foreach ((array)$categories as $category)
 		{
 			$key = array($namespace, $category['ID']);
 			if ($product = $cache->get($key))
@@ -1246,11 +1325,11 @@ class CategoryController extends FrontendController
 		return $res;
 	}
 
-	private function getCategory()
+	protected function getCategory()
 	{
 		if (!$this->category)
 		{
-			$this->category = Category::getInstanceById($this->request->get('id'), Category::LOAD_DATA);
+			$this->category = Category::getInstanceById($this->request->get('id', 1), Category::LOAD_DATA);
 		}
 
 		return $this->category;

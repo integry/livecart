@@ -18,7 +18,8 @@ function smarty_function_uniqid($params, LiveCartSmarty $smarty)
 	}
 	else
 	{
-		$id = uniqid();
+		// start with a letter for XHTML id attribute value compatibility
+		$id = 'a' . uniqid();
 		$smarty->assign('lastUniqId', $id);
 
 		if (isset($params['assign']))

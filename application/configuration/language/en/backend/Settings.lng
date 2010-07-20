@@ -3,7 +3,7 @@ _could_note_save_section=Could not save section
 
 _livecart_settings=LiveCart Settings
 
-_save_conf=Settings successfuly saved
+_save_conf=Settings successfully saved
 _err_not_positive=The value must be positive
 
 ################ Individual settings #################
@@ -27,6 +27,7 @@ LANG_SELECTION=Display language selection menu as
 LANG_NAMES=Language names as links
 LANG_FLAGS=Flags
 LANG_DROPDOWN=Language names as a drop-down list
+DISABLE_AJAX=Disable AJAX features in store frontend
 
 _homepage=Home Page
 _homepage_display=Display Configuration
@@ -63,6 +64,7 @@ FEATURED_RANDOM=Include random products in featured product list if there are no
 
 _product_list_layout=Product List Layout
 LIST_LAYOUT=Default list layout
+ENABLED_LIST_LAYOUTS=Enabled layouts
 LIST=List
 GRID=Grid
 TABLE=Table
@@ -78,6 +80,11 @@ NAME=Name
 PRICE=Price
 DETAILS=Link to detail page
 
+_missing_images=Missing Product Images
+MISSING_IMG_THUMB=Thumbnails (side menus, etc.)
+MISSING_IMG_SMALL=Small images (product lists in categories)
+MISSING_IMG_LARGE=Large images (product page)
+
 _category_filters=Category Page Filters
 ENABLE_MAN_FILTERS=Enable manufacturer filters
 ENABLE_PRICE_FILTERS=Enable price filters
@@ -91,6 +98,8 @@ METRIC=Metric
 ENGLISH=English
 
 _images=Images
+_resize_images=Resize existing images
+_image_resize_success=Images resized successfully
 _product_image=Product Image Sizes
 _p_small=Product Page Thumbnail
 _p_thumb=Product List Thumbnail
@@ -100,6 +109,11 @@ _p_large=Enlarged Product Page Image
 IMG_P_W_1=Width (pixels)
 IMG_P_H_1=Height (pixels)
 IMG_P_Q_1=Quality (0 - 100)
+
+_display=Display
+_ENLARGE_PRODUCT_THUMBNAILS_ON=Enlarge product thumbnails on
+P_THUMB_ENLARGE_CLICK=mouse click
+P_THUMB_ENLARGE_MOUSEOVER=mouse over
 
 _category_image=Category Image Sizes
 _c_small=Small
@@ -113,6 +127,10 @@ _m_thumb=Thumbnail
 _m_medium=Medium
 _m_large=Large
 
+_option_image=Customer File Upload Preview
+_o_small=Thumbnail images
+_o_large=Enlarged preview
+
 _content_blocks=Content blocks
 _sale_items=On-sale Products
 SALE_ITEMS_COUNT=Number of on-sale products to display per block
@@ -123,6 +141,16 @@ BESTSELLING_ITEMS_COUNT=Number of bestselling products to display
 BESTSELLING_ITEMS_DAYS=Number of last days to include sales data from
 
 _product_page=Products
+
+_product_display_options=Product Display Options
+INCLUDE_BASE_TAXES=Include base (default delivery zone) tax rates in product display prices
+SHOW_PRODUCT_WEIGHT=Display product weight
+SHOW_SKU_CART=Display product SKU in shopping cart page
+SHOW_SKU_EMAIL=Display product SKU in order e-mail messages
+QUANT_FIELD_TYPE=Purchase quantity selection field type
+QUANT_SELECT=Select box
+QUANT_INPUT=Input field
+
 _inventory_status=Inventory Status
 PRODUCT_DISPLAY_STOCK=Display the amount of products in stock
 PRODUCT_DISPLAY_LOW_STOCK=Display low-stock warning
@@ -153,6 +181,9 @@ _filters=Product Filters
 
 _general_filter=General Options
 MAX_FILTER_CRITERIA_COUNT=Max number of filter criterias to display without expanding
+FILTER_STYLE=Filter style
+FILTER_STYLE_LINKS=Links (select one choice per filter)
+FILTER_STYLE_CHECKBOXES=Checkboxes (select multiple choices per filter)
 
 _top_menu_filters=Top Menu Filters
 TOP_MENU_COMPACT=Compact display style (include filter names in drop-down menus)
@@ -203,18 +234,27 @@ PRICE_FILTER_TO_8=Price To
 PRICE_FILTER_TO_9=Price To
 PRICE_FILTER_TO_10=Price To
 
-_invoice=Invoices
+_invoices_labels=Invoices & Labels
 _seller_info=Seller Information
 INVOICE_SELLER_INFO=Seller contact information in invoice
 
 _invoice_preferences=Invoice Options
+DISABLE_INVOICES=Disable invoices
 INVOICE_SHOW_PAYMENT_INFO=Show payments
+INVOICE_LOGO=Invoice logo
+
+_shipping_labels=Shipping Labels
+SHIP_LABELS_PER_ROW=Number of labels per row
+SHIP_LABELS_REPEAT=Times to repeat each label
+SHIP_LABELS_COPIES=Number of copies to print
 
 _searching=Searching
 _search_types=Additionally Searchable Data
 SEARCH_MODELS=Searchable data
 SEARCH_MODEL_PREVIEW=Number of preview results to display in common search results pages
 SEARCH_MODEL_PER_PAGE=Search results per page
+NewsPost=News posts
+StaticPage=Pages
 
 _users=User Accounts
 USER_COUNT_RECENT_ORDERS=Number of recent orders to display in account homepage
@@ -234,9 +274,6 @@ REQUIRE_CVV=Require Card Verification Code (CVV) to be entered
 
 _offline_payments=Offline Payments
 OFFLINE_HANDLERS=Enabled offline payment methods
-OFFLINE1=Bank Wire Transfer
-OFFLINE2=Additional Offline Payment Method
-OFFLINE3=Another Offline Payment Method
 OFFLINE_NAME=Payment method name
 OFFLINE_LOGO=Logo image
 OFFLINE_DESCR=Description
@@ -251,8 +288,13 @@ MAX_QUANT=Maximum quantity of products per order (0 - no limit)
 ENABLE_CART=Enable shopping cart
 ENABLE_WISHLISTS=Enable wishlists
 DISABLE_GUEST_CHECKOUT=Disable guest checkout
+DISABLE_GUEST_CART=Require registration to access shopping cart
+DISABLE_CHECKOUT_ADDRESS_STEP=Disable checkout address selection step
 ENABLE_MULTIADDRESS=Allow shipping to multiple addresses
 ENABLE_CHECKOUTDELIVERYSTEP=Enter billing and shipping addresses at separate checkout steps
+CHECKOUT_METHOD=Checkout method
+CHECKOUT_ONEPAGE=One page checkout (interactive)
+CHECKOUT_MULTISTEP=Multiple page checkout (classic)
 SKIP_SHIPPING=Skip shipping method selection step if only one shipping method is available (select it automatically)
 SKIP_PAYMENT=Skip payment method selection step if only one payment method is available (redirect automatically)
 CHECKOUT_CUSTOM_FIELDS=Display custom fields at
@@ -261,12 +303,20 @@ BILLING_ADDRESS_STEP=Billing address entry step
 SHIPPING_ADDRESS_STEP=Shipping address entry step
 SHIPPING_METHOD_STEP=Shipping method selection step
 
+_taxes=Taxes
+HIDE_TAXES=Hide taxes to customers
+
 _shipping=Delivery Settings
 
 _delivery_tax_calculation=Tax Calculation For Shipping Costs
 DELIVERY_TAX=Delivery zone tax settings to use for calculating shipping cost taxes
+DELIVERY_TAX_CLASS=Tax class for shipping costs
 _tax_target_zone=Order target delivery zone
+_base_tax_rate=Use base tax rate
 _default_zone=Default zone
+
+_free_shipping=Free Shipping
+FREE_SHIPPING_AUTO_RATE=Provide a default free shipping rate when applicable
 
 _store_loc_add=Store Location Address
 STORE_COUNTRY=Store country
@@ -303,6 +353,11 @@ _email_customer=Send E-mail Message to Customer when:
 EMAIL_NEW_USER=a new user account registration is completed
 EMAIL_NEW_ORDER=order checkout is completed (new order received)
 EMAIL_STATUS_UPDATE=order status is updated
+EMAIL_STATUS_UPDATE_NEW=new
+EMAIL_STATUS_UPDATE_PROCESSING=processing
+EMAIL_STATUS_UPDATE_AWAITING_SHIPMENT=awaiting shipment
+EMAIL_STATUS_UPDATE_SHIPPED=shipped
+EMAIL_STATUS_UPDATE_STATUSES=order status updated to
 EMAIL_ORDER_CANCELLATION=order is cancelled
 EMAIL_ORDERNOTE=a new message is added to order
 MAIN_EMAIL=Store e-mail address (all outgoing messages will be sent from this address)
@@ -330,8 +385,44 @@ CC_AUTHONLY=Only authorize payments without capturing them automatically
 _customers=Customers & Registration
 _registration=Registration
 REQUIRE_PHONE=Require customers to enter phone number on registration
+REQUIRE_REG_ADDRESS=Require address entry on registration
 DISABLE_STATE=Remove state field
 REG_EMAIL_CONFIRM=Require e-mail address confirmation
+
+PASSWORD_GENERATION=User password creation
+PASSWORD_AUTO=Generate automatically (no password entry fields displayed)
+PASSWORD_OPTIONAL=Optional entry
+PASSWORD_REQUIRE=Required entry
+
+_fields=Fields
+USER_FIELDS=Displayed address/profile form fields
+FIRSTNAME=First name
+LASTNAME=Last name
+COMPANYNAME=Company name
+PHONE=Phone number
+ADDRESS1=Address line 1
+ADDRESS2=Address line 2
+
+_invoice_numbers=Invoice Numbers
+INVOICE_NUMBER_GENERATOR=Invoice number scheme
+SequentialInvoiceNumber=Numeric and sequential
+SequentialInvoiceNumber_START_AT=Start invoice numbers from
+SequentialInvoiceNumber_STEP=Number increase step
+SequentialInvoiceNumber_MIN_LENGTH=Minimum number length (padded with zeros if shorter)
+SequentialInvoiceNumber_PREFIX=Number prefix
+SequentialInvoiceNumber_SUFFIX=Number suffix
+
+_shipping_estimation=Shipping Cost Estimation
+ENABLE_SHIPPING_ESTIMATE=Enable shipping cost estimation in shopping cart page
+SHIP_ESTIMATE_HIDE_ENTRY=Hide address entry for
+UNREGISTERED=Unregistered customers (use store default address)
+ALL_REGISTERED=All registered customers (use store default address or customer address if entered)
+REGISTERED_WITH_ADDRESS=Registered customers that have previously entered an address
+SHIP_ESTIMATE_FIELDS=Address entry fields
+COUNTRY=Country
+STATE=State
+CITY=City
+POSTALCODE=Postal (ZIP) code
 
 # Countries
 _countries=Countries
@@ -352,6 +443,9 @@ SHOW_BACKEND_LANG_FILES=Allow to edit store back-end language files
 
 _template_management=Template Management
 SHOW_BACKEND_TEMPLATE_FILES=Allow to edit store back-end template files
+
+_admin_misc=Miscellaneous Options
+DISABLE_WYSIWYG=Disable WYSIWYG editors
 
 # SSL options
 _ssl_opts=Security
@@ -389,3 +483,15 @@ BACKEND_LOGIN_LOGO=Login page logo image
 _backend_options=Display Options
 BACKEND_SHOW_HELP=Display help link
 BACKEND_SHOW_FOOTER_LINKS=Display footer links
+
+_seo=Search Engine Optimization
+URL_REPLACE_SPECIAL_CHARS=Replace special/diacritic characters (for example, äåæ) in URLs
+URL_301_AUTO_REDIRECT=Create a permanent 301 redirect to the new URL if category or product page URL changes
+
+_rssfeeds=RSS Feeds
+NUMBER_OF_PRODUCTS_TO_INCLUDE=Number of products to include in a feed
+NUMBER_OF_NEWS_POSTS_TO_INCLUDE=Number of news posts to include in a feed
+ENABLED_FEEDS=Enabled feeds
+ALL_PRODUCTS=All products
+CATEGORY_PRODUCTS=Category products
+NEWS_POSTS=News posts

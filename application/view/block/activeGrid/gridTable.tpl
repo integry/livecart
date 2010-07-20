@@ -156,7 +156,7 @@
 
 	<ul class="menu" style="float: right;">
 		<li class="export">
-			<a href="#" onclick="window.location.href='{link controller=$controller action=export}?' + window.activeGrids['{$prefix}_{$id}'].ricoGrid.getQueryString(); return false;">{t _grid_export}</a>
+			<a href="#" onclick="var grid = window.activeGrids['{$prefix}_{$id}']; window.location.href='{link controller=$controller action=export}?' + grid.ricoGrid.getQueryString() + '&selectedIDs=' + grid.getSelectedIDs().toJSON() + '&isInverse=' + (grid.isInverseSelection() ? 1 : 0); return false;">{t _grid_export}</a>
 		</li>
 		<li class="selectColumns">
 		   <a href="#" onclick="Element.show($('{$prefix}ColumnMenu_{$id}')); return false;">{t _columns}</a>
@@ -167,7 +167,7 @@
 </div>
 
 <div id="{$prefix}ColumnMenu_{$id}" class="activeGridColumnsRoot" style="display: none; position: relative;">
-  <form action="{link controller=$controller action=changeColumns}" onsubmit="new LiveCart.AjaxUpdater(this, this.up('.{$container}'), document.getElementsByClassName('progressIndicator', this)[0]); return false;" method="POST">
+  <form action="{link controller=$controller action=changeColumns}" onsubmit="new LiveCart.AjaxUpdater(this, this.up('.{$container}'), document.getElementsByClassName('progressIndicator', this)[0]); return false;" method="post">
 
 	<input type="hidden" name="id" value="{$id}" />
 

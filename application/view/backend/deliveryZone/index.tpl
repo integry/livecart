@@ -4,8 +4,10 @@
 {includeJs file="library/form/ActiveForm.js"}
 {includeJs file="library/form/State.js"}
 {includeJs file="library/TabControl.js"}
+{includeJs file="library/ActiveGrid.js"}
 {includeJs file="library/ActiveList.js"}
 {includeJs file="backend/DeliveryZone.js"}
+{includeJs file="backend/User.js"}
 
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 {includeCss file="library/TabControl.css"}
@@ -26,7 +28,28 @@
 			<ul class="verticalMenu">
 				<li class="addTreeNode"><a id="newZoneInputButton" href="#add" {denied role='delivery.create'}style="display: none"{/denied}>{t _add_new_delivery_zone}</a></li>
 				<li class="removeTreeNode"><a id="deliveryZone_delete" href="#delete" {denied role='delivery.remove'}style="display: none"{/denied}>{t _remove}</a></li>
+				<li class="testAdress"><a id="deliveryZone_testAddress" href="#testAddress" onclick="$('testAddressForm').show(); return false;">{t _test_address}</a></li>
 			</ul>
+		</div>
+
+		<div id="testAddressForm" style="display: none;">
+			<fieldset>
+				<legend>{t _test_which_zone}</legend>
+				{form action="controller=backend.deliveryZone action=testAddress" method="post" handle=$testAddress onsubmit="Backend.DeliveryZone.lookupAddress(this, event);"}
+					{include file="backend/user/address_edit.tpl" hideName=true}
+
+					<div>
+						<input type="submit" class="submit" value="{tn _lookup_zone}" />
+						<span class="progressIndicator" style="display: none;"></span>
+						{t _or}
+						<a href="#cancel" class="cancel" onclick="$('testAddressForm').hide(); return false;">{t _cancel}</a>
+					</div>
+
+					<div id="zoneLookupResult" style="display: none;">
+						{t _matched_zone}: <span></span>
+					</div>
+				{/form}
+			</fieldset>
 		</div>
 	</div>
 
@@ -63,7 +86,6 @@
 	Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmZipDelete = Backend.getTranslation('_are_you_sure_you_want_to_delete_this_zip_mask');
 	Backend.DeliveryZone.ShippingService.prototype.Messages.confirmDelete = Backend.getTranslation('_are_you_sure_you_want_to_delete_this_service');
 	Backend.DeliveryZone.ShippingRate.prototype.Messages.confirmDelete = Backend.getTranslation('_are_you_sure_you_want_to_delete_this_rate');
-	Backend.DeliveryZone.TaxRate.prototype.Messages.confirmDelete = Backend.getTranslation('_are_you_sure_you_want_to_delete_this_tax_rate');
 
 	Backend.DeliveryZone.prototype.Links.edit = '{/literal}{link controller=backend.deliveryZone action=edit}?id=_id_{literal}';
 	Backend.DeliveryZone.prototype.Links.remove = '{/literal}{link controller=backend.deliveryZone action=delete}{literal}';
@@ -86,11 +108,6 @@
 	Backend.DeliveryZone.ShippingService.prototype.Links.update = '{/literal}{link controller=backend.shippingService action=update}{literal}';
 	Backend.DeliveryZone.ShippingService.prototype.Links.create = '{/literal}{link controller=backend.shippingService action=create}{literal}';
 	Backend.DeliveryZone.ShippingService.prototype.Links.validateRates = '{/literal}{link controller=backend.shippingService action=validateRates}{literal}';
-
-	Backend.DeliveryZone.TaxRate.prototype.Links.update = '{/literal}{link controller=backend.taxRate action=update}{literal}';
-	Backend.DeliveryZone.TaxRate.prototype.Links.create = '{/literal}{link controller=backend.taxRate action=create}{literal}';
-	Backend.DeliveryZone.TaxRate.prototype.Links.remove = '{/literal}{link controller=backend.taxRate action=delete}{literal}';
-	Backend.DeliveryZone.TaxRate.prototype.Links.edit = '{/literal}{link controller=backend.taxRate action=edit}{literal}';
 
 	var zones = new Backend.DeliveryZone({/literal}{$zones}{literal});
 

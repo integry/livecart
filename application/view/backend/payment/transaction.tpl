@@ -73,7 +73,7 @@
 		<div class="clear"></div>
 
 		<div class="transactionForm voidForm" style="display: none;">
-			<form action="{link controller=backend.payment action=void id=$transaction.ID}" method="POST" onsubmit="Backend.Payment.voidTransaction({$transaction.ID}, this, event);">
+			<form action="{link controller=backend.payment action=void id=$transaction.ID}" method="post" onsubmit="Backend.Payment.voidTransaction({$transaction.ID}, this, event);">
 
 				<span class="confirmation" style="display: none">{t _void_conf}</span>
 
@@ -137,15 +137,33 @@
 		<fieldset class="transactionMethod">
 
 			{if $transaction.methodName}
-				<legend>{$transaction.methodName}</legend>
+				{assign var=transactionMethodName value=$transaction.methodName}
 			{elseif $transaction.serializedData.handler}
-				<legend>{$transaction.serializedData.handler}</legend>
+				{assign var=transactionMethodName value=$transaction.serializedData.handler}
+			{/if}
+
+			{if $transactionMethodName}
+				<legend>
+					{if $transaction.availableOfflinePaymentMethods}
+						{include file="backend/payment/editOfflineMethod.tpl"
+							ID=$transaction.ID
+							methods=$transaction.availableOfflinePaymentMethods
+							name=$transactionMethodName
+							handlerID=$transaction.handlerID
+						}
+					{else}
+						{$transaction.methodName}
+					{/if}
+				</legend>
 			{/if}
 
 			{if $transaction.ccLastDigits}
 				<div class="ccDetails">
 					<div>{$transaction.ccName}</div>
 					<div>{$transaction.ccType} <span class="ccNum">{if $transaction.hasFullNumber} / {else}...{/if}{$transaction.ccLastDigits}</span></div>
+					{if $transaction.ccCVV} 
+						<div>{$transaction.ccCVV}<div>
+					{/if}
 					<div>{$transaction.ccExpiryMonth} / {$transaction.ccExpiryYear}</div>
 				</div>
 			{/if}
@@ -159,6 +177,16 @@
 			<div class="transactionTime">
 				{$transaction.formatted_time.date_full} {$transaction.formatted_time.time_full}
 			</div>
+
+			{if $transaction.serializedData}
+			<div class="extraData">
+				{foreach from=$transaction.serializedData key=key item=value}
+					<div>
+						{$key}: {$value}
+					</div>
+				{/foreach}
+			</div>
+			{/if}
 
 		</fieldset>
 

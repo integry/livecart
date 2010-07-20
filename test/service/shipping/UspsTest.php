@@ -33,6 +33,10 @@ class UspsTest extends TestShipping
 		// priority
 		$usps->setService('Priority');
 
+		$usps->setContainer('');
+		$rates = $usps->getRates();
+		$this->assertTrue($rates instanceof ShippingRateSet);
+
 		$usps->setContainer('Flat Rate Envelope');
 		$rates = $usps->getRates();
 		$this->assertTrue($rates instanceof ShippingRateSet);
@@ -45,7 +49,6 @@ class UspsTest extends TestShipping
 		$usps->setService('Express');
 		$rates = $usps->getRates();
 		$this->assertTrue($rates instanceof ShippingRateSet);
-
 
 		// parcel post
 		$usps->setService('Parcel');
@@ -69,6 +72,28 @@ class UspsTest extends TestShipping
 		$usps->setService('Media');
 		$rates = $usps->getRates();
 		$this->assertTrue($rates instanceof ShippingRateError);
+	}
+
+	function testPriorityNonFlatRate()
+	{
+		$usps = new UspsShipping();
+		$usps->setUserId('550INTEG8147');
+		$usps->setSourceCountry('US');
+		$usps->setSourceZip('44106');
+		$usps->setDestCountry('US');
+		$usps->setDestZip('20770');
+		$usps->setSize('REGULAR');
+		$usps->setMachinable(true);
+		$usps->setWeight(0.2);
+		$usps->setService('Priority');
+
+		// non-flat rate container
+		$usps->setContainer('Variable');
+		$this->assertTrue($usps->getRates() instanceof ShippingRateError);
+
+		// no container at all
+		$usps->setContainer('');
+		$this->assertTrue($usps->getRates() instanceof ShippingRateSet);
 	}
 
 	public function testInternational()

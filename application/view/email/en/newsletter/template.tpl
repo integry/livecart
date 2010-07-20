@@ -1,5 +1,6 @@
 {$subject}
-{$text}
+{if $html}{$htmlMessage}
+{else}{$text}{/if}
 
 {include file="email/en/signature.tpl"}
 

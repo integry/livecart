@@ -49,18 +49,18 @@
 						{if $product.DefaultImage.ID}
 							{img src=$product.DefaultImage.paths.1 alt=$product.name_lang|escape}
 						{else}
-							{img src=image/missing_mini.jpg alt=$product.name_lang|escape}
+							{img src='MISSING_IMG_THUMB'|config alt=$product.name_lang|escape}
 						{/if}
 						</a>
 					</td>
 				{/if}
 
 				{if $columns.SKU}
-					<td class="productSku text"><a href="{productUrl product=$product}">{$product.sku}</a></td>
+					<td class="productSku text"><a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">{$product.sku}</a></td>
 				{/if}
 
 				{if $columns.NAME}
-					<td class="productName text"><a href="{productUrl product=$product}">{$product.name_lang}</a></td>
+					<td class="productName text"><a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">{$product.name_lang}</a></td>
 				{/if}
 
 				{foreach from=$listAttributes item=attribute}
@@ -72,7 +72,7 @@
 				{/if}
 
 				{if $columns.DETAILS}
-					<td class="productDetails"><a href="{productUrl product=$product}">{t _view_details}</a></td>
+					<td class="productDetails"><a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">{t _view_details}</a></td>
 				{/if}
 			</tr>
 		{/foreach}

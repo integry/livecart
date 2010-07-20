@@ -86,5 +86,17 @@ function smarty_function_includeCss($params, LiveCartSmarty $smarty)
 
 		$smarty->_smarty_vars['INCLUDED_STYLESHEET_FILES'] = $includedStylesheetFiles;
 	}
+
+	foreach ($smarty->getApplication()->getConfigContainer()->getFilesByRelativePath('public/stylesheet/' . $fileName, true) as $file)
+	{
+		if (realpath($file) == realpath($filePath))
+		{
+			continue;
+		}
+
+		$file = substr($file, strlen(ClassLoader::getRealPath('public')));
+		$params['file'] = $file;
+		smarty_function_includeCss($params, $smarty);
+	}
 }
 ?>

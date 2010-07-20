@@ -5,7 +5,7 @@ _menu_orders=Orders
 _menu_users=Users
 
 _menu_manage=Manage
-_menu_pricing_rules=Pricing Rules
+_menu_pricing_rules=Business Rules
 _menu_pages=Pages
 _menu_news=Site News
 _menu_manufacturers=Manufacturers
@@ -19,6 +19,7 @@ _menu_languages=Languages
 _menu_modules=Modules
 _menu_update=Update LiveCart
 _menu_currencies=Currencies
+_menu_shipping_class=Shipping Classes
 
 _menu_customize=Customize
 _menu_customization_mode=Live Customization
@@ -50,6 +51,7 @@ _menu_descr_languages=Enable additional languages and edit translations
 _menu_descr_update=Check for LiveCart version updates
 _menu_descr_currencies=Enable additional currencies and update exchange rates
 _menu_descr_modules=Install additional functions
+_menu_descr_shipping_class=Shipping classes allow to differentiate shipping rates for different types of products
 
 _menu_descr_customize=Customize the look and feel of your store
 _menu_descr_customization_mode=Real-time, point-and-click CSS, template and translation customization

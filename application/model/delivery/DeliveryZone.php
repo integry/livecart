@@ -74,6 +74,45 @@ class DeliveryZone extends MultilingualObject
 		return 0 == $this->getID();
 	}
 
+	public function isTaxIncludedInPrice()
+	{
+		return $this->isDefault() || $this->hasSameTaxRatesAsDefaultZone();
+	}
+
+	public function hasSameTaxRatesAsDefaultZone()
+	{
+		$defaultZoneRates = self::getDefaultZoneInstance()->getTaxRates();
+		$ownRates = $this->getTaxRates();
+
+		if (!$ownRates->size() || !$defaultZoneRates->size())
+		{
+			return false;
+		}
+
+		foreach ($ownRates as $rate)
+		{
+			foreach ($defaultZoneRates as $dzRate)
+			{
+				$found = false;
+				if (($dzRate->tax->get() == $rate->tax->get()) && ($dzRate->taxClass->get() == $rate->taxClass->get()))
+				{
+					$found = true;
+					if ($dzRate->rate->get() != $rate->rate->get())
+					{
+						return false;
+					}
+				}
+
+				if (!$found)
+				{
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
 	/*####################  Instance retrieval ####################*/
 
 	/**
@@ -103,6 +142,12 @@ class DeliveryZone extends MultilingualObject
 	 * @todo implement
 	 */
 	public static function getZoneByAddress(UserAddress $address)
+	{
+		$zones = self::getAllZonesByAddress($address);
+		return $zones ? array_shift($zones) : DeliveryZone::getDefaultZoneInstance();
+	}
+
+	public static function getAllZonesByAddress(UserAddress $address)
 	{
 		if (!$address->isLoaded())
 		{
@@ -143,6 +188,7 @@ class DeliveryZone extends MultilingualObject
 		foreach ($zones as $key => $zone)
 		{
 			$match = $zone->getMaskMatch($address);
+
 			if (!$match)
 			{
 				unset($zones[$key]);
@@ -155,12 +201,18 @@ class DeliveryZone extends MultilingualObject
 
 		if ($maskPoints)
 		{
-			asort($maskPoints);
-			end($maskPoints);
-			return $zones[key($maskPoints)];
+			arsort($maskPoints);
+			// this should really be a one-liner, but not today
+			$ret = array();
+			foreach (array_keys($maskPoints) as $key)
+			{
+				$ret[] = $zones[$key];
+			}
+
+			return $ret;
 		}
 
-		return $zones ? array_shift($zones) : DeliveryZone::getDefaultZoneInstance();
+		return $zones;
 	}
 
 	/**
@@ -237,6 +289,19 @@ class DeliveryZone extends MultilingualObject
 			}
 		}
 
+		if (!$shipment->getChargeableItemCount($this))
+		{
+			$app = self::getApplication();
+
+			if ($app->getConfig()->get('FREE_SHIPPING_AUTO_RATE'))
+			{
+				$freeService = ShippingService::getNewInstance($this, $app->translate('_free_shipping'), ShippingService::WEIGHT_BASED);
+				$freeRate = ShipmentDeliveryRate::getNewInstance($freeService, 0);
+				$freeRate->setServiceID('FREE');
+				$rates->add($freeRate);
+			}
+		}
+
 		return $rates;
 	}
 
@@ -275,7 +340,7 @@ class DeliveryZone extends MultilingualObject
 		$surcharge = 0;
 		foreach ($shipment->getItems() as $item)
 		{
-			$surcharge += $item->product->get()->shippingSurchargeAmount->get();
+			$surcharge += ($item->getProduct()->getParent()->shippingSurchargeAmount->get() * $item->getCount());
 		}
 
 		$currency = self::getApplication()->getDefaultCurrency();
@@ -290,7 +355,7 @@ class DeliveryZone extends MultilingualObject
 		foreach ($defined as $rate)
 		{
 			$zone = $shipment->getShippingTaxZone();
-			$amount = !$zone->isDefault() ? $shipment->applyTaxesToAmount($rate->getCostAmount(), ShipmentTax::TYPE_SHIPPING) : $rate->getCostAmount();
+			$amount = !$zone->isDefault() ? $shipment->applyTaxesToShippingAmount($rate->getCostAmount()) : $rate->getCostAmount();
 			$rate->setAmountWithTax($amount);
 		}
 

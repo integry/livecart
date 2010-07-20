@@ -20,6 +20,12 @@
 {form action="controller=backend.csvImport action=setFile" method="POST" handle=$form}
 
 	<fieldset>
+		<legend>{t _data_type}</legend>
+		<label></label>
+		{selectfield name="type" options=$types}
+	</fieldset>
+
+	<fieldset>
 		<legend>{t _select_file}</legend>
 
 		<p class="required">
@@ -57,6 +63,30 @@
 			</label>
 			{hidden id="categoryID" name="category"}
 		</p>
+
+		<div class="options">
+			<p>
+				<label>{t _import_action}</label>
+				<select name="options[action]">
+					<option value="both">{t _add_and_update}</option>
+					<option value="add">{t _add_only}</option>
+					<option value="update">{t _update_only}</option>
+				</select>
+			</p>
+			<p>
+				<label>{t _import_missing_products}</label>
+				<select name="options[missing]">
+					<option value="keep">{t _keep_intact}</option>
+					<option value="disable">{t _disable}</option>
+					<option value="delete">{t _delete}</option>
+				</select>
+			</p>
+			<p>
+				<label></label>
+				{checkbox name="options[transaction]" id="options_transaction" class="checkbox"}
+				<label class="checkbox acronym" for="options_transaction"><a>{t _enclose_transaction}<div>{t _transaction_descr}</div></a></label>
+			</p>
+		</div>
 
 	</fieldset>
 

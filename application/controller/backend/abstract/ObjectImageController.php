@@ -199,6 +199,48 @@ abstract class ObjectImageController extends StoreManagementController
 		return trim($item);
 	}
 
+	public function resizeImages()
+	{
+		set_time_limit(0);
+
+		$class = $this->getModelClass();
+		$f = select();
+		$count = ActiveRecord::getRecordCount($class, $f);
+		$offset = 0;
+		$chunk = 100;
+
+		ob_flush();
+		ob_end_clean();
+
+		do
+		{
+			$f->setLimit($chunk, $offset);
+			$set = ActiveRecordModel::getRecordSet($class, $f);
+			foreach ($set as $image)
+			{
+				foreach (array($image->getPath('original'), $image->getPath(4)) as $path)
+				{
+					if (file_exists($path))
+					{
+						$image->setFile($path);
+						echo $image->getID() . '|';
+						flush();
+						break;
+					}
+				}
+			}
+
+			$offset += $chunk;
+			ActiveRecord::clearPool();
+		}
+		while ($set->size() > 0);
+	}
+
+	private function getFlushResponse($data)
+	{
+		return '|' . base64_encode(json_encode($data));
+	}
+
 	/**
 	 * Builds an image upload form validator
 	 *

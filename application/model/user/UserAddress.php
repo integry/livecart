@@ -62,12 +62,17 @@ class UserAddress extends ActiveRecordModel implements EavAble
 
 		$array['countryName'] = self::getApplication()->getLocale()->info()->getCountryName($array['countryID']);
 		$array['fullName'] = $array['firstName'] . ' ' . $array['lastName'];
-		if (!empty($array['State']))
+		if (!empty($array['State']) && is_array($array['State']))
 		{
 			$array['stateName'] = $array['State']['name'];
 		}
 
 		$array['compact'] = self::getAddressString($array, ', ');
+
+		if (!isset($array['stateID']) && isset($array['State']) && is_array($array['State']) && array_key_exists('ID', $array['State']))
+		{
+			$array['stateID'] = $array['State']['ID'];
+		}
 
 		return $array;
 	}
@@ -107,16 +112,22 @@ class UserAddress extends ActiveRecordModel implements EavAble
 	{
 		parent::loadRequestData($request, $prefix);
 
-		if($request->get($prefix . 'stateID'))
+		if ($request->get($prefix . 'stateID'))
 		{
 			$this->state->set(State::getInstanceByID((int)$request->get($prefix . 'stateID'), true));
 			$this->stateName->set(null);
 		}
-		else
+		else if ($request->isValueSet($prefix . 'stateName'))
 		{
 			$this->stateName->set($request->get($prefix . 'stateName'));
 			$this->state->set(null);
 		}
+	}
+
+	public function serialize($skippedRelations = array(), $properties = array())
+	{
+		$properties[] = 'specificationInstance';
+		return parent::serialize($skippedRelations, $properties);
 	}
 
 	public function __destruct()

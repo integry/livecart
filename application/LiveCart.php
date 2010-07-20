@@ -6,6 +6,13 @@ ClassLoader::import('application.ConfigurationContainer');
 ClassLoader::import('application.LiveCartRouter');
 ClassLoader::import('application.model.Currency');
 ClassLoader::import('library.payment.TransactionDetails');
+ClassLoader::import('application.model.businessrule.BusinessRuleContext');
+ClassLoader::import('application.model.businessrule.BusinessRuleController');
+ClassLoader::import('application.model.order.SessionOrder');
+ClassLoader::import('application.model.user.SessionUser');
+ClassLoader::import('application.model.session.DatabaseSessionHandler');
+ClassLoader::import('application.model.system.Cron');
+ClassLoader::import('application.model.businessrule.RuleOrderContainer');
 
 /**
  *  Implements LiveCart-specific application flow logic
@@ -13,7 +20,7 @@ ClassLoader::import('library.payment.TransactionDetails');
  *  @package application
  *  @author Integry Systems
  */
-class LiveCart extends Application
+class LiveCart extends Application implements Serializable
 {
 	protected $routerClass = 'LiveCartRouter';
 
@@ -97,6 +104,8 @@ class LiveCart extends Application
 
 	private $plugins = null;
 
+	private $sessionHandler;
+
 	const EXCLUDE_DEFAULT_CURRENCY = false;
 
 	const INCLUDE_DEFAULT = true;
@@ -123,12 +132,19 @@ class LiveCart extends Application
 		if ($this->isInstalled)
 		{
 			ActiveRecordModel::setDSN(include $dsnPath);
+
+			if (!session_id())
+			{
+				$session = new DatabaseSessionHandler();
+				$session->setHandlerInstance();
+				$this->sessionHandler = $session;
+			}
 		}
+
+		ActiveRecordModel::setApplicationInstance($this);
 
 		// LiveCart request routing rules
 		$this->initRouter();
-
-		ActiveRecordModel::setApplicationInstance($this);
 
 		if (file_exists(ClassLoader::getRealPath('cache.dev')))
 		{
@@ -149,16 +165,23 @@ class LiveCart extends Application
 		if ($this->request->get('noRewrite'))
 		{
 			$this->router->setBaseDir($_SERVER['baseDir'], $_SERVER['virtualBaseDir']);
+			//$this->router->enableURLRewrite(false);
 		}
 	}
 
-	public function run()
+	public function run($redirect = false)
 	{
 		$this->processRuntimePlugins('startup');
 
-		$res = parent::run();
+		$res = parent::run($redirect);
 
 		$this->processRuntimePlugins('shutdown');
+
+		$cron = new Cron($this);
+		if ($cron->isExecutable())
+		{
+			$cron->process();
+		}
 	}
 
 	private function initRouter()
@@ -239,6 +262,19 @@ class LiveCart extends Application
 		$this->isDevMode = $devMode;
 	}
 
+	public function setStatHandler(Stat $statHandler)
+	{
+		$this->statHandler = $statHandler;
+	}
+
+	public function logStat($step)
+	{
+		if (!empty($this->statHandler))
+		{
+			$this->statHandler->logStep($step);
+		}
+	}
+
 	public function isDevMode()
 	{
 		return $this->isDevMode;
@@ -299,16 +335,15 @@ class LiveCart extends Application
 		{
 			ClassLoader::import('application.LiveCartRenderer');
 			$this->renderer = new LiveCartRenderer($this);
+
+			if ($this->isTemplateCustomizationMode() && !$this->isBackend)
+			{
+				$this->renderer->getSmartyInstance()->register_prefilter(array($this, 'templateLocator'));
+			}
+			$this->logStat('Init renderer');
 		}
 
-		$renderer = parent::getRenderer();
-
-		if ($this->isTemplateCustomizationMode() && !$this->isBackend)
-		{
-			$this->renderer->getSmartyInstance()->register_prefilter(array($this, 'templateLocator'));
-		}
-
-		return $renderer;
+		return $this->renderer;
 	}
 
 	public function isBackend()
@@ -335,6 +370,7 @@ class LiveCart extends Application
 			$file = $this->getRenderer()->getTemplatePath($file);
 		}
 
+/*
 		$paths = array(ClassLoader::getRealPath('storage.customize.view'),
 					   ClassLoader::getRealPath('application.view'));
 
@@ -348,6 +384,8 @@ class LiveCart extends Application
 		}
 
 		$file = str_replace('\\', '/', $file);
+*/
+		$file = $this->getRenderer()->getRelativeTemplatePath($file);
 
 		$editUrl = $this->getRouter()->createUrl(array('controller' => 'backend.template', 'action' => 'editPopup', 'query' => array('file' => $file, 'theme' => '__theme__')), true);
 		$editUrl = str_replace('__theme__', '{theme}', $editUrl);
@@ -423,10 +461,25 @@ class LiveCart extends Application
 	 */
 	public function execute($controllerInstance, $actionName, $isBlock = false)
 	{
+		if ($this->isDevMode() && $isBlock && !empty($_REQUEST['noblock']))
+		{
+			return null;
+		}
+
+		if (!$isBlock)
+		{
+			$this->logStat('Before executing controller action');
+		}
+		else
+		{
+			$this->logStat('Before executing block: ' . $actionName);
+		}
+
 		if ($response = $this->processInitPlugins($controllerInstance, 'before-' . $actionName))
 		{
 			if (!($response instanceof RawResponse) || $response->getContent())
 			{
+				$this->processResponse($response);
 				return $response;
 			}
 		}
@@ -434,10 +487,12 @@ class LiveCart extends Application
 		if (!$isBlock)
 		{
 			$originalResponse = parent::execute($controllerInstance, $actionName);
+			$this->logStat('Execute controller action');
 		}
 		else
 		{
 			$originalResponse = $controllerInstance->executeBlock($actionName);
+			$this->logStat('Executed block: ' . $actionName);
 			if (!$originalResponse)
 			{
 				return null;
@@ -451,12 +506,21 @@ class LiveCart extends Application
 			$this->processResponse($response);
 		}
 
+		if (!$isBlock)
+		{
+			$this->logStat('Finish executing controller action (plugins, etc.)');
+		}
+		else
+		{
+			$this->logStat('Finished executing block plugins: ' . $actionName);
+		}
+
 		return $response;
 	}
 
 	protected function postProcessResponse(Response $response, Controller $controllerInstance)
 	{
-		if (!$response instanceof ActionResponse || !$this->isInstalled())
+		if (!$response instanceof Renderable || !$this->isInstalled())
 		{
 			return false;
 		}
@@ -488,6 +552,10 @@ class LiveCart extends Application
 						$action = $command['action'];
 						switch ($action['command'])
 						{
+							case 'replace':
+								$action['command'] = 'append';
+								$controllerInstance->removeBlock($object);
+
 							case 'append':
 							case 'prepend':
 								if (!empty($action['isDefinedBlock']))
@@ -580,6 +648,21 @@ class LiveCart extends Application
 		}
 	}
 
+	public function processInstancePlugins($path, &$instance, $params = null)
+	{
+		foreach($this->getPlugins('instance/' . $path) as $plugin)
+		{
+			if (!class_exists('InstancePlugin', false))
+			{
+				ClassLoader::import('application.plugin.InstancePlugin');
+			}
+
+			include_once $plugin['path'];
+			$inst = new $plugin['class']($this, $instance, $params);
+			$inst->process();
+		}
+	}
+
 	public function getPlugins($path)
 	{
 		if (is_null($this->plugins))
@@ -636,6 +719,44 @@ class LiveCart extends Application
 		return $plugins;
 	}
 
+	public function getPluginClasses($mountPath)
+	{
+		if (substr($mountPath, -1) != '.')
+		{
+			$mountPath .= '.';
+		}
+
+		$classes = array();
+		foreach ($this->configContainer->getDirectoriesByMountPath($mountPath) as $dir)
+		{
+			foreach (glob($dir . '*.php') as $file)
+			{
+				$file = basename($file, '.php');
+				$classes[] = $file;
+			}
+		}
+
+		return $classes;
+	}
+
+	public function loadPluginClass($mountPath, $class)
+	{
+		if (substr($mountPath, -1) != '.')
+		{
+			$mountPath .= '.';
+		}
+
+		foreach ($this->configContainer->getDirectoriesByMountPath($mountPath) as $dir)
+		{
+			$path = $dir . $class . '.php';
+			if (file_exists($path))
+			{
+				include_once($path);
+				return;
+			}
+		}
+	}
+
 	/**
 	 * Renders response from controller action
 	 *
@@ -646,6 +767,7 @@ class LiveCart extends Application
 	 */
 	protected function render(Controller $controllerInstance, Response $response, $actionName = null)
 	{
+		$this->logStat('Before page rendering');
 		$output = parent::render($controllerInstance, $response, $actionName);
 
 		if ($cache = $controllerInstance->getCacheHandler())
@@ -653,6 +775,25 @@ class LiveCart extends Application
 			$cache->setData($output);
 			$cache->save();
 		}
+		$this->logStat('Finished page rendering');
+		return $output;
+	}
+
+	protected function renderBlock($block, Controller $controllerInstance)
+	{
+		$this->processInstancePlugins('outputBlock', $block);
+
+		if (is_string($block))
+		{
+			return $block;
+		}
+
+		$output = parent::renderBlock($block, $controllerInstance);
+
+		$params = array('block' => $block, 'output' => &$output);
+		$this->processInstancePlugins('outputBlockAfter', $params);
+
+		$this->logStat('Render ' . $block['container']);
 
 		return $output;
 	}
@@ -675,6 +816,11 @@ class LiveCart extends Application
 	public function getCustomizationModeType()
 	{
 		return $this->session->get('customizationModeType');
+	}
+
+	public function getSessionHandler()
+	{
+		return $this->sessionHandler;
 	}
 
 	public function getSession()
@@ -752,7 +898,7 @@ class LiveCart extends Application
 		return $this->localeName;
 	}
 
-	private function __get($name)
+	public function __get($name)
 	{
 		switch ($name)
 	  	{
@@ -1022,6 +1168,28 @@ class LiveCart extends Application
 		return $currArray;
 	}
 
+	public function getDisplayTaxPrice($price, $product)
+	{
+		if (!$product)
+		{
+			return $price;
+		}
+
+		if (!$this->config->get('INCLUDE_BASE_TAXES'))
+		{
+			ClassLoader::import('application.model.order.OrderedItem');
+			$price = OrderedItem::reduceBaseTaxes($price, $product);
+		}
+		/*
+		else
+		{
+			$price = $price * 1.25;
+		}
+		*/
+
+		return $price;
+	}
+
 	/**
 	 * Returns an array of available credit card handlers
 	 */
@@ -1081,7 +1249,9 @@ class LiveCart extends Application
 				}
 				else
 				{
-						ClassLoader::import('library.payment.method.' . $className);
+					ClassLoader::importNow('library.payment.method.*');
+					ClassLoader::importNow('library.payment.method.cc.*');
+					ClassLoader::importNow('library.payment.method.express.*');
 				}
 		}
 
@@ -1208,6 +1378,33 @@ class LiveCart extends Application
 		$this->getRenderer()->resetPaths();
 	}
 
+	public function getBusinessRuleController()
+	{
+		if (!$this->businessRuleController)
+		{
+			$context = new BusinessRuleContext();
+
+			if ($items = SessionOrder::getOrderItems())
+			{
+				$context->setOrder($items);
+			}
+
+			if (SessionUser::getUser())
+			{
+				$context->setUser(SessionUser::getUser());
+			}
+
+			$this->businessRuleController = new BusinessRuleController($context);
+
+			if ($this->isBackend())
+			{
+				$this->businessRuleController->disableDisplayDiscounts();
+			}
+		}
+
+		return $this->businessRuleController;
+	}
+
 	public function clearCachedVars()
 	{
 		$this->defaultLanguageID = null;
@@ -1261,6 +1458,12 @@ class LiveCart extends Application
 		}
 	}
 
+	public function loadLanguageFile($langFile)
+	{
+		$this->locale->translationManager()->loadFile($langFile);
+		$this->configFiles[] = $langFile;
+	}
+
 	public function loadLanguageFiles()
 	{
 		foreach ($this->configFiles as $file)
@@ -1311,7 +1514,20 @@ class LiveCart extends Application
 	{
 		if (!$this->configContainer)
 		{
-			$this->configContainer = new ConfigurationContainer('.', $this);
+			$path = ClassLoader::getRealPath('cache.configurationContainer') . '.php';
+			if (file_exists($path))
+			{
+				$this->configContainer = include $path;
+				$this->configContainer->setApplication($this);
+			}
+			else
+			{
+				$this->configContainer = new ConfigurationContainer('.', $this);
+				$this->configContainer->getModules();
+				$serialized = serialize($this->configContainer);
+
+				file_put_contents($path, '<?php return unserialize("' . addslashes($serialized) . '"); ?>');
+			}
 		}
 
 		return $this->configContainer;
@@ -1326,6 +1542,39 @@ class LiveCart extends Application
 	public function getModules()
 	{
 
+	}
+
+	public function serialize()
+	{
+		return null;
+	}
+
+	public function unserialize($serializedData)
+	{
+		return null;
+	}
+
+	public function rmdir_recurse($path)
+	{
+		$path= rtrim($path, '/').'/';
+
+		if (!file_exists($path))
+		{
+			return;
+		}
+
+		$handle = opendir($path);
+		for (;false !== ($file = readdir($handle));)
+			if($file != "." and $file != ".." ) {
+				$fullpath= $path.$file;
+				if( is_dir($fullpath) ) {
+					$this->rmdir_recurse($fullpath);
+				} else {
+					unlink($fullpath);
+				}
+		}
+		closedir($handle);
+		rmdir($path);
 	}
 }
 

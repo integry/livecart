@@ -69,7 +69,11 @@ Backend.Product =
 		Element.hide($('categoryTabs'));
 		Element.show(container);
 
-		tinyMCE.idCounter = 0;
+		if (window.tinyMCE)
+		{
+			tinyMCE.idCounter = 0;
+		}
+
 		ActiveForm.prototype.initTinyMceFields(container);
 		this.toggleSkuField(container.down('form').elements.namedItem('autosku'));
 
@@ -245,14 +249,14 @@ Backend.Product =
 
 	massActionChanged: function(element)
 	{
-		if ('move' == element.value || 'copy' == element.value)
+		if ('move' == element.value || 'copy' == element.value || 'addCat' == element.value)
 		{
 			var moveElement = element.up('form').down('.move');
 			new Backend.Category.PopupSelector(
 				function(categoryID, pathAsText, path)
 				{
-					var conf = 'move' == element.value ? Backend.Category.messages._confirm_move : Backend.getTranslation('_copy_conf');
-					if (!confirm(conf + "\n\n" + pathAsText))
+					var conf = 'move' == element.value ? Backend.Category.messages._confirm_move : '';
+					if (conf && !confirm(conf + "\n\n" + pathAsText))
 					{
 						return false;
 					}
@@ -581,7 +585,14 @@ Backend.Product.Editor.prototype =
 
 	showCategoriesContainer: function(args)
 	{
-		Element.show($("catgegoryContainer"));
+		var container = $("catgegoryContainer");
+		if (!container)
+		{
+			return;
+		}
+
+		Element.show(container);
+
 		if($("productManagerContainer")) Element.hide($("productManagerContainer"));
 		if($("managerContainer")) Element.show($("managerContainer"));
 

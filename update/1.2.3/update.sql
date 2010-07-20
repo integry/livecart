@@ -1,1 +1,0 @@
-INSERT INTO CategoryPresentation (productID, theme) SELECT ID, theme FROM `ProductPresentation`;

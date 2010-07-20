@@ -49,6 +49,8 @@ class ProductPriceController extends StoreManagementController
 		foreach ($product->getRelatedRecordSetArray('ProductPrice', new ARSelectFilter()) as $price)
 		{
 			$prices[$price['currencyID']] = $price;
+			$pricingForm->set('price_' . $price['currencyID'], $price['price']);
+			$pricingForm->set('listPrice_' . $price['currencyID'], $price['listPrice']);
 		}
 
 		$response->set('prices', $prices);

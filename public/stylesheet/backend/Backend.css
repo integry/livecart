@@ -282,11 +282,12 @@ html, body{
 ****************************/
 #navContainer
 {
-	padding-top: 35px;
 	border-bottom: 3px solid #15367f;
 }
 #nav {
-	position: relative;
+	position: absolute;
+	bottom: 3px;
+	left: 210px;
 	z-index: 1;
 }
 
@@ -733,7 +734,7 @@ fieldset.error, div.error, fieldset.container
 .errorText
 {
 	background-color: red;
-	float: left;
+/*	float: left; */
 	width: auto;
 	margin-bottom: 4px;
 	margin-top: -3px;
@@ -891,7 +892,7 @@ textarea, .disabledTextarea
    line-height: 10em;
 }
 
-input.radio, input.checkbox, input.submit, input.button, input.reset
+input.radio, input.checkbox, input.submit, input.button, input.reset, input.file, input.upload
 {
     width: auto;
     vertical-align: middle;
@@ -912,6 +913,12 @@ input.submit {
 input.reset {
 	background-color: #ddd;
 	color: #666;
+}
+
+input.text.progressIndicator
+{
+	padding: 2px;
+	background-position: center right;
 }
 
 input.radio, input.checkbox, .progressIndicator.checkbox
@@ -1608,7 +1615,7 @@ label.acronym a:hover div
     padding: 5px;
     left: 0px;
     color: black;
-	width: 400px;
+	width: 600px;
 	z-index: 10000;
 }
 

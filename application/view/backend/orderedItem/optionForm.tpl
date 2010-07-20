@@ -1,4 +1,4 @@
-{form action="controller=backend.orderedItem action=saveOptions" method="POST" handle=$form onsubmit="Backend.OrderedItem.saveOptions(event)"}
+{form action="controller=backend.orderedItem action=saveOptions" method="post" handle=$form onsubmit="Backend.OrderedItem.saveOptions(event)"}
 
 <div class="optionFormContainer">
 	<fieldset>

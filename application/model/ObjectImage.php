@@ -83,13 +83,17 @@ abstract class ObjectImage extends MultilingualObject
 			$file = $this->cacheFile;
 		}
 
+		// keep original image as well for future resizing, etc
+		$path = $this->getPath('original');
+		copy($file, $path);
+
 		return $this->resizeImage(new ImageManipulator($file));
 	}
 
 	public function resizeImage(ImageManipulator $resizer)
 	{
 		foreach ($this->getImageSizes() as $key => $size)
-	  	{
+		{
 			$filePath = $this->getPath($key);
 
 			if (!file_exists(dirname($filePath)))
@@ -100,7 +104,7 @@ abstract class ObjectImage extends MultilingualObject
 			$res = $resizer->resize($size[0], $size[1], $filePath);
 			if (!$res)
 			{
-			  	break;
+				break;
 			}
 		}
 
@@ -150,6 +154,7 @@ abstract class ObjectImage extends MultilingualObject
 
 		// path within application web root directory
 		$path = str_replace(ClassLoader::getRealPath('.'), '', $path);
+		$path = self::fixSlashes($path);
 		if ($path != $origPath)
 		{
 			$path = self::getApplication()->getRouter()->getBaseDirFromUrl() . self::fixSlashes($path);
@@ -159,12 +164,22 @@ abstract class ObjectImage extends MultilingualObject
 		// relative to document root
 		if (!empty($_SERVER['DOCUMENT_ROOT']))
 		{
-			return str_replace($_SERVER['DOCUMENT_ROOT'], '', '/' . self::fixSlashes($path));
+			$path = str_replace($_SERVER['DOCUMENT_ROOT'], '', '/' . self::fixSlashes($path));
 		}
+
+		$path = self::fixSlashes($path);
+		if ($path == $origPath)
+		{
+			$path = substr($path, strpos($path, '/public/') + 8);
+		}
+
+		return $path;
 	}
 
 	private function fixSlashes($path)
 	{
+		$path = str_replace('//', '/', $path);
+		$path = str_replace('http:/', 'http://', $path);
 		return str_replace('\\', '/', $path);
 	}
 
@@ -205,7 +220,11 @@ abstract class ObjectImage extends MultilingualObject
 
 			$urlPrefix = null;
 			$array['paths'][$key] = self::getRelativePath(call_user_func_array(array($schema->getName(), 'getImagePath'), array($array['ID'], $productID, $key)), $urlPrefix);
-			$array['urls'][$key] = $router->createFullUrl($urlPrefix . $array['paths'][$key]);
+
+			$url = $router->createFullUrl($urlPrefix . $array['paths'][$key], null, true);
+			//$url = str_replace('//', '/', $url);
+			$url = str_replace('/public//public/', '/public/', $url);
+			$array['urls'][$key] = $url;
 		}
 
 		return $array;
@@ -219,26 +238,10 @@ abstract class ObjectImage extends MultilingualObject
 
 		foreach ($this->getImageSizes() as $key => $value)
 	  	{
-			$p = $this->getPath($key);
-			$originalPaths[$key] = $this->getPath($key);
+			copy($this->getPath($key), $cloned->getPath($key));
 		}
 
-		parent::__clone();
-
-		$originalPaths = array();
-		foreach ($this->getImageSizes() as $key => $value)
-	  	{
-			$originalPaths[$key] = $this->getPath($key);
-		}
-
-		return;
-		foreach (1 as $key => $value)
-	  	{
-	  		if(is_file($this->getPath($key)))
-	  		{
-			   unlink($this->getPath($key));
-	  		}
-		}
+		return $cloned;
 	}
 
 	public function __destruct()

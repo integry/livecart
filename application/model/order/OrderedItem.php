@@ -3,8 +3,11 @@
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.order.CustomerOrder");
 ClassLoader::import("application.model.order.Shipment");
+ClassLoader::import("application.model.order.OrderedFile");
 ClassLoader::import('application.model.order.OrderedItemOption');
 ClassLoader::import('application.model.delivery.DeliveryZone');
+ClassLoader::import('application.model.businessrule.interface.BusinessRuleProductInterface');
+ClassLoader::import("application.model.system.MultilingualObject");
 
 /**
  * Represents a shopping basket item (one or more instances of the same product)
@@ -12,7 +15,7 @@ ClassLoader::import('application.model.delivery.DeliveryZone');
  * @package application.model.order
  * @author Integry Systems <http://integry.com>
  */
-class OrderedItem extends ActiveRecordModel
+class OrderedItem extends MultilingualObject implements BusinessRuleProductInterface
 {
 	protected $optionChoices = array();
 
@@ -23,6 +26,8 @@ class OrderedItem extends ActiveRecordModel
 	protected $additionalCategories = array();
 
 	protected $isVariationDiscountsSummed = false;
+
+	protected $originalPrice = null;
 
 	/*
 	 *  Possible values for isSavedForLater field
@@ -52,6 +57,7 @@ class OrderedItem extends ActiveRecordModel
 		$schema->registerField(new ARField("reservedProductCount", ARFloat::instance()));
 		$schema->registerField(new ARField("dateAdded", ARDateTime::instance()));
 		$schema->registerField(new ARField("isSavedForLater", ARInteger::instance()));
+		$schema->registerField(new ARField("name", ARArray::instance()));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -90,27 +96,6 @@ class OrderedItem extends ActiveRecordModel
 
 		$subTotal = $this->getPrice($includeTaxes, false) * $this->count->get();
 
-/*
-		if ($applyDiscounts)
-		{
-			$count = $this->count->get();
-			foreach ($this->customerOrder->get()->getItemDiscountActions($this) as $action)
-			{
-				$itemPrice = $subTotal / $count;
-				$discountPrice = $itemPrice - $action->getDiscountAmount($itemPrice);
-				$discountStep = max($action->discountStep->get(), 1);
-				$applicableCnt = floor($count / $discountStep);
-
-				if ($action->discountLimit->get())
-				{
-					$applicableCnt = min($action->discountLimit->get(), $applicableCnt);
-				}
-
-				$subTotal = ($applicableCnt * $discountPrice) + (($count - $applicableCnt) * $itemPrice);
-			}
-		}
-*/
-
 		if ($includeTaxes)
 		{
 			return $this->getCurrency()->round($subTotal);
@@ -146,6 +131,8 @@ class OrderedItem extends ActiveRecordModel
 			$currency = $this->getCurrency();
 
 			$price = $this->getItemPrice();
+			$this->originalPrice = $price;
+
 			foreach ($this->optionChoices as $choice)
 			{
 				if ($isFinalized)
@@ -157,7 +144,7 @@ class OrderedItem extends ActiveRecordModel
 					$optionPrice = $choice->choice->get()->getPriceDiff($currency->getID());
 				}
 
-				$price += $optionPrice;
+				$price += $this->reduceBaseTaxes($optionPrice);
 			}
 
 			$this->itemPrice = $price;
@@ -166,9 +153,37 @@ class OrderedItem extends ActiveRecordModel
 		return $this->itemPrice;
 	}
 
+	public function getOriginalPrice()
+	{
+		if (is_null($this->originalPrice))
+		{
+			$this->getPriceWithoutTax();
+		}
+
+		return $this->originalPrice;
+	}
+
 	public function setItemPrice($price)
 	{
-		$this->itemPrice = $price;
+		if (!$this->customerOrder->get()->isFinalized->get() || !$this->itemPrice)
+		{
+			$this->itemPrice = $price;
+		}
+	}
+	
+	/**
+	 *  Avoid CustomerOrder::finalize function overriding the item price
+	 *  Usually necessary for creating/updating orders via API, etc.
+	 */
+	public function setCustomPrice($price)
+	{
+		$this->isCustomPrice = true;
+		$this->price->set($price);
+	}
+	
+	public function isCustomPrice()
+	{
+		return $this->isCustomPrice;
 	}
 
 	public function reset()
@@ -187,7 +202,7 @@ class OrderedItem extends ActiveRecordModel
 	/**
 	 *	Tax amount for one product
 	 */
-	public function getPriceTax($price = null)
+	private function getPriceTax($price = null)
 	{
 		if (is_null($price))
 		{
@@ -206,26 +221,59 @@ class OrderedItem extends ActiveRecordModel
 
 	public function getTaxRates()
 	{
-		return $this->customerOrder->get()->getDeliveryZone()->getTaxRates();
+		$class = $this->getProduct()->getParent()->taxClass->get();
+		$rates = array();
+		foreach ($this->customerOrder->get()->getDeliveryZone()->getTaxRates() as $rate)
+		{
+			if ($rate->taxClass->get() === $class)
+			{
+				$rates[] = $rate;
+			}
+		}
+
+		return $rates;
 	}
 
-	public function getDisplayPrice(Currency $currency)
+	public function getDisplayPrice(Currency $currency, $includeTaxes = true)
 	{
-		return $this->getPrice(true);
+		return $this->getPrice($includeTaxes);
 	}
 
 	/**
 	 *	Get price without taxes
 	 */
-	private function getItemPrice()
+	public function getItemPrice()
 	{
 		$isFinalized = $this->customerOrder->get()->isFinalized->get();
-		$price = $isFinalized ? $this->price->get() : $this->product->get()->getItemPrice($this);
+		$price = $isFinalized ? $this->price->get() : $this->getProduct()->getItemPrice($this);
+
+		if (!$isFinalized)
+		{
+			$price = $this->reduceBaseTaxes($price);
+		}
+
+		return $price;
+	}
+
+	public function reduceBaseTaxes($price, $product = null)
+	{
+		$product = $product ? $product : $this->getProduct();
+		if (!is_array($product))
+		{
+			$class = $product->getParent()->taxClass->get();
+		}
+		else
+		{
+			$product = empty($product['Parent']) ? $product : $product['Parent'];
+			$class = empty($product['taxClassID']) ? null: ActiveRecordModel::getInstanceById('TaxClass', $product['taxClassID']);
+		}
 
 		foreach (DeliveryZone::getDefaultZoneInstance()->getTaxRates() as $rate)
 		{
-			//$price = $this->getCurrency()->round($price / (1 + ($rate->rate->get() / 100)));
-			$price = $price / (1 + ($rate->rate->get() / 100));
+			if ($rate->taxClass->get() === $class)
+			{
+				$price = $price / (1 + ($rate->rate->get() / 100));
+			}
 		}
 
 		return $price;
@@ -233,16 +281,18 @@ class OrderedItem extends ActiveRecordModel
 
 	public function reserve($unreserve = false, Product $product = null)
 	{
-		$product = is_null($product) ? $this->product->get() : $product;
+		$product = is_null($product) ? $this->getProduct() : $product;
 		if (!$product->isBundle())
 		{
-			if ($product->isInventoryTracked())
+			if ($product->isInventoryTracked() && !(!$unreserve && $this->reservedProductCount->get()))
 			{
 				$this->reservedProductCount->set($unreserve ? 0 : $this->count->get());
 				$multiplier = $unreserve ? -1 : 1;
 				$product->stockCount->set($product->stockCount->get() - ($this->count->get() * $multiplier));
 				$product->reservedCount->set($product->reservedCount->get() + ($this->count->get() * $multiplier));
 				$product->save();
+
+				$this->event('reserve');
 			}
 		}
 		else
@@ -274,15 +324,15 @@ class OrderedItem extends ActiveRecordModel
 
 	/**
 	 * Remove reserved products from inventory (i.e. the products are shipped)
-	 * @todo implement
 	 */
 	public function removeFromInventory()
 	{
-		$product = $this->product->get();
+		$product = $this->getProduct();
 		if (!$product->isBundle())
 		{
 			$product->reservedCount->set($product->reservedCount->get() - $this->reservedProductCount->get());
 			$this->reservedProductCount->set(0);
+			$this->event('removeFromInventory');
 		}
 		else
 		{
@@ -300,10 +350,27 @@ class OrderedItem extends ActiveRecordModel
 	 */
 	public function isDownloadable(ProductFile $file)
 	{
-		$orderDate = $this->customerOrder->get()->dateCompleted->get();
+		$allow = true;
+		if ($file->allowDownloadDays->get())
+		{
+			$orderDate = $this->customerOrder->get()->dateCompleted->get();
+			if (!((abs($orderDate->getDayDifference(new DateTime())) <= $file->allowDownloadDays->get()) ||
+				!$file->allowDownloadDays->get()))
+			{
+				$allow = false;
+			}
+		}
 
-		return (abs($orderDate->getDayDifference(new DateTime())) <= $file->allowDownloadDays->get()) ||
-				!$file->allowDownloadDays->get();
+		if ($file->allowDownloadCount->get())
+		{
+			$orderFile = OrderedFile::getInstance($this, $file);
+			if ($orderFile->timesDownloaded->get() > $file->allowDownloadCount->get() + 1)
+			{
+				$allow = false;
+			}
+		}
+
+		return $allow;
 	}
 
 	public function removeOption(ProductOption $option)
@@ -382,9 +449,9 @@ class OrderedItem extends ActiveRecordModel
 			$this->optionChoices[$option->choice->get()->option->get()->getID()] = $option;
 		}
 
-		if ($this->product->get()->parent->get())
+		if ($this->getProduct()->parent->get())
 		{
-			$this->product->get()->parent->get()->load();
+			$this->getProduct()->parent->get()->load();
 		}
 	}
 
@@ -399,9 +466,27 @@ class OrderedItem extends ActiveRecordModel
 		}
 	}
 
+	public function getProduct()
+	{
+		$product = $this->product->get();
+		if (!$product)
+		{
+			$product = ActiveRecordModel::getNewInstance('Product');
+			$product->setID(0);
+			$product->markAsLoaded();
+		}
+
+		return $product;
+	}
+
+	public function getCount()
+	{
+		return $this->count->get();
+	}
+
 	public function getSubItems()
 	{
-		if (!$this->product->get()->isBundle())
+		if (!$this->getProduct()->isBundle())
 		{
 			return null;
 		}
@@ -456,6 +541,24 @@ class OrderedItem extends ActiveRecordModel
 		return $this->isVariationDiscountsSummed;
 	}
 
+	/**
+	 *	Include past orders in quantity prices
+	 */
+	public function setPastOrdersInQuantityPrices($dateRange)
+	{
+		if (!$dateRange)
+		{
+			$dateRange = '';
+		}
+
+		$this->pastOrdersInQuantityPrices = $dateRange;
+	}
+
+	public function isPastOrdersInQuantityPrices()
+	{
+		return $this->pastOrdersInQuantityPrices;
+	}
+
   	/*####################  Saving ####################*/
 
 	protected function insert()
@@ -467,7 +570,7 @@ class OrderedItem extends ActiveRecordModel
 
 		if (!$this->price->get())
 		{
-			$this->price->set($this->product->get()->getItemPrice($this));
+			$this->price->set($this->getProduct()->getItemPrice($this));
 		}
 
 		return parent::insert();
@@ -486,7 +589,7 @@ class OrderedItem extends ActiveRecordModel
 
 		if ($shipment && $order->isFinalized->get() && !$order->isCancelled->get() && self::getApplication()->isInventoryTracking())
 		{
-			$product = $this->product->get();
+			$product = $this->getProduct();
 
 			// changed product (usually a different variation)
 			if ($this->product->isModified())
@@ -541,7 +644,7 @@ class OrderedItem extends ActiveRecordModel
 		}
 
 		// save sub-items for bundles
-		if ($this->product->get()->isBundle())
+		if ($this->getProduct()->isBundle())
 		{
 			foreach ($this->getSubItems() as $item)
 			{
@@ -549,7 +652,7 @@ class OrderedItem extends ActiveRecordModel
 			}
 		}
 
-		$this->product->get()->save();
+		$this->getProduct()->save();
 		$this->subItems = null;
 
 		return $ret;
@@ -570,7 +673,12 @@ class OrderedItem extends ActiveRecordModel
 			{
 				$user->load();
 			}
-			$this->price->set($this->product->get()->getItemPrice($this));
+
+			if ($this->price->isNull())
+			{
+				$this->price->set($this->getProduct()->getItemPrice($this));
+			}
+
 			return parent::update();
 		}
 		else
@@ -585,21 +693,44 @@ class OrderedItem extends ActiveRecordModel
 	{
 		$array = parent::toArray();
 		$array['priceCurrencyID'] = $this->getCurrency()->getID();
+		$isTaxIncludedInPrice = $this->customerOrder->get()->getDeliveryZone()->isTaxIncludedInPrice();
 
 		if (isset($array['price']))
 		{
 			$currency = $this->getCurrency();
-			$array['itemBasePrice'] = $this->getPrice();
-			$array['itemSubTotal'] = $this->getSubTotal(false);
-			$array['displayPrice'] = $this->getDisplayPrice($currency);
-			$array['displaySubTotal'] = $this->getSubTotal(true);
+
+			$array['itemBasePrice'] = (float)self::getApplication()->getDisplayTaxPrice($array['price'], isset($array['Product']) ? $array['Product'] : array());;
+			$array['displayPrice'] = (float)$this->getDisplayPrice($currency, $isTaxIncludedInPrice);
+			$array['displaySubTotal'] = (float)$this->getSubTotal($isTaxIncludedInPrice);
 			$array['itemPrice'] = $array['displaySubTotal'] / $array['count'];
 
-			$array['formattedBasePrice'] = $currency->getFormattedPrice($array['price']);
+			//var_dump($isTaxIncludedInPrice, $array['displayPrice'], $array['itemPrice'], $array['itemBasePrice'], '----');
+			$isTaxIncludedInPrice = $isTaxIncludedInPrice || (($array['itemPrice'] != $array['itemBasePrice']) && ($array['itemPrice'] == $this->getSubTotal(false)) && ($array['itemBasePrice'] == $this->getSubTotal(true)));
+
+			// display price changed by tax exclusion
+			if (((string)$array['itemPrice'] != (string)$array['itemBasePrice']) && ((string)$array['itemPrice'] == (string)($this->getSubTotal(false) / $array['count'])) && ((string)$array['itemBasePrice'] == (string)($this->getSubTotal(true) / $array['count'])))
+			{
+				$array['itemPrice'] = $array['itemBasePrice'];
+			}
+
+			// kind of a workaround for completed orders that have default zone taxes, could be a better fix
+			if (((string)($this->getSubTotal(false) / $array['count']) == (string)$array['itemBasePrice']) && ((string)($this->getSubTotal(true) / $array['count']) == (string)$array['itemPrice']))
+			{
+				$array['itemBasePrice'] = $array['itemPrice'];
+			}
+
+			if ($this->optionChoices)
+			{
+				foreach ($this->optionChoices as $choice)
+				{
+					$array['itemBasePrice'] += $choice->choice->get()->getPriceDiff($this->getCurrency());
+				}
+			}
+
+			$array['formattedBasePrice'] = $currency->getFormattedPrice($array['itemBasePrice']);
 			$array['formattedPrice'] = $currency->getFormattedPrice($array['itemPrice']);
 			$array['formattedDisplayPrice'] = $currency->getFormattedPrice($array['displayPrice']);
 			$array['formattedDisplaySubTotal'] = $currency->getFormattedPrice($array['displaySubTotal']);
-			$array['formattedSubTotal'] = $currency->getFormattedPrice($array['itemSubTotal']);
 		}
 
 		$array['options'] = array();
@@ -626,7 +757,17 @@ class OrderedItem extends ActiveRecordModel
 	{
 		$array = parent::transformArray($array, $schema);
 
-		$array['itemSubtotal'] = $array['count'] * $array['price'];
+		// deleted product
+		if (!isset($array['Product']) && isset($array['name_lang']))
+		{
+			$array['Product']['name'] = $array['name'];
+			$array['Product']['name_lang'] = $array['name_lang'];
+			$array['Product']['nameData'] = $array['nameData'];
+			if (isset($array['nameData']['sku']))
+			{
+				$array['Product']['sku'] = $array['nameData']['sku'];
+			}
+		}
 
 		return $array;
 	}

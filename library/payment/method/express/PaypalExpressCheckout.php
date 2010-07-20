@@ -112,7 +112,7 @@ class PaypalExpressCheckout extends ExpressPayment
 
 	public static function getSupportedCurrencies()
 	{
-		return array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD');
+		return array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD', 'NZD', 'CHF', 'HKD', 'SGD', 'SEK', 'DKK', 'PLN', 'NOK', 'HUF', 'CZK', 'MXN', 'ILS');
 	}
 
 	/**
@@ -165,7 +165,7 @@ class PaypalExpressCheckout extends ExpressPayment
 
 		$payerInfo = PayPalTypes::PayerInfoType($this->details->email->get(), $this->details->clientID->get(), 'verified', $personName, $this->details->country->get(), '', $address);
 
-		$paymentDetails = PayPalTypes::PaymentDetailsType($this->details->amount->get(), $this->details->amount->get(), 0, 0, 0, $this->details->description->get(), $this->details->clientID->get(), $this->details->invoiceID->get(), '', 'ipn_notify.php', '', array(), $this->details->currency->get());
+		$paymentDetails = PayPalTypes::PaymentDetailsType($this->details->amount->get(), $this->details->amount->get(), 0, 0, 0, $this->details->description->get(), $this->details->clientID->get(), $this->details->invoiceID->get(), '', '', '', array(), $this->details->currency->get());
 
 		$paypal->setParams($type, $this->data['token'], $this->data['PayerID'], $paymentDetails);
 

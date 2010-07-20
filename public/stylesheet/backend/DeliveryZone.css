@@ -35,7 +35,7 @@ fieldset.checkbox .progressIndicator
 #newZoneInput {
     width: 135px;
 }
-#deliveryZoneContent label.setting 
+#deliveryZoneContent label.setting
 {
 	display: block;
 	float: none;
@@ -43,17 +43,17 @@ fieldset.checkbox .progressIndicator
 	width: auto;
 }
 
-#deliveryZoneManagerContainer .activeList .errorText 
+#deliveryZoneManagerContainer .activeList .errorText
 {
     float: none;
 }
 
 .shippingService_rateFloatValue
 {
-    width: 60px;   
+    width: 60px;
 }
 
-.shippingService_servicesList .activeList_editContainer { 
+.shippingService_servicesList .activeList_editContainer {
     margin: 10px;
 }
 
@@ -61,22 +61,6 @@ fieldset.checkbox .progressIndicator
 {
     display: none !important;
     color: red;
-}
-
-.addNewTaxRate
-{
-    background-image: url(../../image/silk/add.png);
-}
-
-.taxRate_taxRatesList .activeList_editContainer 
-{
-     padding: 10px;
-}  
-
-.taxRate_taxIDFieldset 
-{
-    border: 0 none; 
-    padding: 10px 0;
 }
 
 .countriesAndStates_regionsAndUnions
@@ -106,13 +90,13 @@ ul.menu li.addNewRate
 .shippingService_weightRange
 {
    position: relative !important;
-   display: block; 
+   display: block;
    height: 8em;
 }
 
 .weightRange
 {
-    position: absolute; 
+    position: absolute;
 	top: 0px;
 }
 
@@ -156,6 +140,11 @@ ul.menu li.addNewRate
     padding: 5px 0pt 12px 0pt ! important;
 }
 
+.shippingClassRates label
+{
+	width: 100px;
+}
+
 .tabDeliveryZoneCountryContent ul.activeList
 {
 	min-height: 0;
@@ -164,7 +153,62 @@ ul.menu li.addNewRate
 
 .countriesAndStates_exampleMask
 {
-    font-weight: bold; 
-	color: #777; 
+    font-weight: bold;
+	color: #777;
 	font-size: 0.8em;
+}
+
+li.testAdress a
+{
+    background-image: url(../../image/silk/find.png);
+}
+
+#testAddressForm label
+{
+	width: 80px;
+}
+
+#testAddressForm legend,
+#testAddressForm label
+{
+	font-size: smaller;
+}
+
+#testAddressForm legend
+{
+	font-weight: bold;
+}
+
+#testAddressForm input,
+#testAddressForm select
+{
+	font-size: smaller;
+	width: 130px;
+}
+
+#zoneLookupResult span
+{
+	font-weight: bold;
+}
+
+.taxName
+{
+	padding-right: 20px;
+	font-weight: bold;
+}
+
+.taxes input
+{
+	width: 4em;
+}
+
+.taxClassName,
+.classes input
+{
+	font-size: smaller;
+}
+
+.classes.last td
+{
+	border-bottom: 1px solid #ccc;
 }

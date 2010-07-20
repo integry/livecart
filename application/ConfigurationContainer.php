@@ -17,6 +17,7 @@ class ConfigurationContainer
 	protected $configDirectory;
 	protected $languageDirectory;
 	protected $controllerDirectory;
+	protected $routeDirectory;
 	protected $viewDirectories = array();
 	protected $blockConfiguration = array();
 	protected $modules;
@@ -34,6 +35,7 @@ class ConfigurationContainer
 		$this->directory = preg_replace('/\\' . DIRECTORY_SEPARATOR . '{2,}/', DIRECTORY_SEPARATOR, $this->directory);
 
 		foreach (array( 'configDirectory' => 'application.configuration.registry',
+		 				'routeDirectory' => 'application.configuration.route',
 						'languageDirectory' => 'application.configuration.language',
 						'controllerDirectory' => 'application.controller',
 						'pluginDirectory' => 'plugin') as $var => $path)
@@ -59,14 +61,32 @@ class ConfigurationContainer
 		$this->loadInfo();
 	}
 
+	public function setApplication(LiveCart $application)
+	{
+		$this->application = $application;
+		foreach ($this->getModules() as $module)
+		{
+			$module->setApplication($application);
+		}
+	}
+
 	public function disableModules()
 	{
 		$this->modules = array();
 	}
 
-	public function saveToCache()
+	public function clearCache()
 	{
-		$this->application->getCache()->set('modules', serialize($this));
+		$path = ClassLoader::getRealPath('cache.configurationContainer') . '.php';
+		if (file_exists($path))
+		{
+			unlink($path);
+		}
+
+		$tplDir = ClassLoader::getRealPath('cache.templates_c');
+		$this->application->rmdir_recurse($tplDir);
+		mkdir($tplDir, 0777);
+		chmod($tplDir, 0777);
 	}
 
 	public function getMountPath()
@@ -82,6 +102,11 @@ class ConfigurationContainer
 	public function getConfigDirectories()
 	{
 		return $this->findDirectories('configDirectory');
+	}
+
+	public function getRouteDirectories()
+	{
+		return $this->findDirectories('routeDirectory');
 	}
 
 	public function getControllerDirectories()
@@ -109,6 +134,55 @@ class ConfigurationContainer
 		return $this->findDirectories('directory');
 	}
 
+	public function getDirectoriesByMountPath($mountPath)
+	{
+		$directories = array();
+
+		$dir = ClassLoader::getRealPath($this->mountPath . '.' . $mountPath);
+		if (file_exists($dir))
+		{
+			$directories[] = $dir;
+		}
+
+		foreach ($this->getModules() as $module)
+		{
+			$directories = array_merge($directories, $module->getDirectoriesByMountPath($mountPath));
+		}
+
+		return $directories;
+	}
+
+	public function getFilesByRelativePath($path, $publicDir = false)
+	{
+		$files = array();
+
+		if ($publicDir)
+		{
+			if (substr($path, 0, 6) == 'public')
+			{
+				$path = substr($path, 7);
+			}
+
+			$file = $this->getPublicDirectoryLink() . DIRECTORY_SEPARATOR . $path;
+		}
+		else
+		{
+			$file = $this->directory . DIRECTORY_SEPARATOR . $path;
+		}
+
+		if (file_exists($file))
+		{
+			$files[] = $file;
+		}
+
+		foreach ($this->getModules() as $module)
+		{
+			$files = array_merge($files, $module->getFilesByRelativePath($path, $publicDir));
+		}
+
+		return $files;
+	}
+
 	private function findDirectories($variable)
 	{
 		$directories = $this->$variable ? array($this->$variable) : array();
@@ -134,8 +208,9 @@ class ConfigurationContainer
 	public function getAvailableModules()
 	{
 		$modulePath = $this->mountPath . '.module';
-		$moduleDir = ClassLoader::getRealPath($modulePath);
+		$modulePath = preg_replace('/^\.+/', '', $modulePath);
 
+		$moduleDir = ClassLoader::getRealPath($modulePath);
 		$modules = array();
 		if (is_dir($moduleDir))
 		{
@@ -163,7 +238,7 @@ class ConfigurationContainer
 		if (is_null($this->enabledModules))
 		{
 			$modules = $this->modules;
-			$conf = $this->application->getConfig();
+			$conf = $this->getApplication()->getConfig();
 			foreach (array('enabledModules', 'installedModules') as $var)
 			{
 				$confModules = $conf->isValueSet($var) ? $conf->get($var) : array();
@@ -211,10 +286,13 @@ class ConfigurationContainer
 	public function setStatus($isActive)
 	{
 		$this->setConfig('enabledModules', $isActive);
+		$this->clearCache();
 	}
 
-	public function install()
+	public function install(LiveCart $application)
 	{
+		$this->application = $application;
+
 		$this->installDatabase();
 		$this->setConfig('installedModules', true);
 
@@ -240,10 +318,14 @@ class ConfigurationContainer
 				full_copy($publicDir, $this->getPublicDirectoryLink());
 			}
 		}
+
+		$this->clearCache();
 	}
 
-	public function deinstall()
+	public function deinstall(LiveCart $application)
 	{
+		$this->application = $application;
+
 		$this->deinstallDatabase();
 		$this->setConfig('installedModules', false);
 
@@ -255,6 +337,8 @@ class ConfigurationContainer
 		{
 			unlink($symLink);
 		}
+
+		$this->clearCache();
 	}
 
 	private function customInstall($file)
@@ -298,7 +382,7 @@ class ConfigurationContainer
 
 	private function getConfig($var)
 	{
-		$config = $this->application->getConfig();
+		$config = $this->getApplication()->getConfig();
 
 		$modules = $config->isValueSet($var) ? $config->get($var) : array();
 
@@ -314,7 +398,7 @@ class ConfigurationContainer
 
 	private function setConfig($var, $status)
 	{
-		$config = $this->application->getConfig();
+		$config = $this->getApplication()->getConfig();
 
 		$activeModules = $config->isValueSet($var) ? $config->get($var) : array();
 
@@ -334,10 +418,9 @@ class ConfigurationContainer
 	public function getRouteFiles()
 	{
 		$files = array();
-		foreach ($this->getConfigDirectories() as $dir)
+		foreach ($this->getRouteDirectories() as $dir)
 		{
-			$dir = dirname($dir) . '/route';
-			$files = array_merge($files, glob($dir . '/*.php'));
+			$files = array_merge($files, (array)glob($dir . '/*.php'));
 		}
 
 		return $files;
@@ -357,6 +440,11 @@ class ConfigurationContainer
 		}
 
 		$this->info['path'] = $this->mountPath;
+	}
+
+	public function getApplication()
+	{
+		return $this->application ? $this->application : ActiveRecordModel::getApplication();
 	}
 }
 

@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2009-04-20 23:19                                #
-# Model version:         Version 2009-04-20                              #
+# Created on:            2009-10-09 08:45                                #
+# Model version:         Version 2009-10-09                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -24,6 +24,8 @@ CREATE TABLE Product (
     manufacturerID INTEGER UNSIGNED COMMENT 'ID of the assigned manufacturer',
     defaultImageID INTEGER UNSIGNED COMMENT 'ID of ProductImage, which has been designated as the default image for the particular product',
     parentID INTEGER UNSIGNED,
+    shippingClassID INTEGER UNSIGNED,
+    taxClassID INTEGER UNSIGNED,
     isEnabled BOOL NOT NULL DEFAULT 0 COMMENT 'Determines if the Product is enabled (visible and available in the store frontend) 0- not available 1- available 2- disabled (not visble)',
     isRecurring BOOL,
     isFeatured BOOL NOT NULL DEFAULT 0 COMMENT 'Determines if the product has been marked as featured product',
@@ -31,6 +33,7 @@ CREATE TABLE Product (
     isFreeShipping BOOL NOT NULL COMMENT 'Determines if free shipping is available for this product',
     isBackOrderable BOOL NOT NULL COMMENT 'Determines if this product is available for backordering. If backordering is enabled, customers can order the product even if it is out of stock',
     isFractionalUnit BOOL NOT NULL,
+    isUnlimitedStock BOOL NOT NULL,
     sku VARCHAR(20) NOT NULL COMMENT 'Product stock keeping unit code',
     name MEDIUMTEXT COMMENT 'Product name (translatable)',
     shortDescription MEDIUMTEXT COMMENT 'A shorter description of the product (translatable). The short description is usually displayed in the category product list',
@@ -55,6 +58,7 @@ CREATE TABLE Product (
     position INTEGER UNSIGNED DEFAULT 0,
     childSettings TEXT COMMENT 'Determines price and shipping weight calculation for child products - whether to add/substract from parent or override completely',
     fractionalStep FLOAT,
+    categoryIntervalCache TEXT,
     CONSTRAINT PK_Product PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -147,10 +151,11 @@ CREATE TABLE SpecField (
     dataType SMALLINT DEFAULT 0 COMMENT '1. text 2. numeric',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Order number (position relative to other fields)',
     handle VARCHAR(40),
-    isMultiValue BOOL COMMENT 'Determines if multiple values can be selected for selector attributes',
-    isRequired BOOL COMMENT 'Determines if a value has to be provided/entered for this attribute when creating or updating product information',
-    isDisplayed BOOL COMMENT 'Determines if the attribute value is displayed in product page',
-    isDisplayedInList BOOL COMMENT 'Determines if the attribute value is displayed in a category/search page (attribute summary)',
+    isMultiValue BOOL NOT NULL COMMENT 'Determines if multiple values can be selected for selector attributes',
+    isRequired BOOL NOT NULL COMMENT 'Determines if a value has to be provided/entered for this attribute when creating or updating product information',
+    isDisplayed BOOL NOT NULL COMMENT 'Determines if the attribute value is displayed in product page',
+    isDisplayedInList BOOL NOT NULL COMMENT 'Determines if the attribute value is displayed in a category/search page (attribute summary)',
+    isSortable BOOL NOT NULL,
     valuePrefix MEDIUMTEXT COMMENT 'Fixed prefix for all numeric values',
     valueSuffix MEDIUMTEXT COMMENT 'Fixed suffix for all numeric values (for example, sec, kg, px, etc.)',
     CONSTRAINT PK_SpecField PRIMARY KEY (ID)
@@ -185,6 +190,7 @@ CREATE TABLE CustomerOrder (
     shippingAddressID INTEGER UNSIGNED COMMENT 'ID of order shipping address',
     eavObjectID INTEGER UNSIGNED,
     currencyID CHAR(3) COMMENT 'ID of currency used to finalize the order',
+    invoiceNumber VARCHAR(40),
     checkoutStep TINYINT UNSIGNED NOT NULL COMMENT '0 - cart 1 - registered 2 - selected address 3 - selected shipping method 4 - attempted payment',
     dateCreated TIMESTAMP NOT NULL COMMENT 'Initial order creation date',
     dateCompleted TIMESTAMP COMMENT 'The date the order was finalized (completed checkout)',
@@ -196,7 +202,8 @@ CREATE TABLE CustomerOrder (
     isCancelled BOOL NOT NULL COMMENT 'Determines if the order is cancelled',
     status TINYINT COMMENT '1 - backordered 2 - awaiting shipment 3 - shipped 4 - returned',
     shipping TEXT COMMENT 'serialized PHP shipping rate data',
-    CONSTRAINT PK_CustomerOrder PRIMARY KEY (ID)
+    CONSTRAINT PK_CustomerOrder PRIMARY KEY (ID),
+    CONSTRAINT TUC_CustomerOrder_1 UNIQUE (invoiceNumber)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -210,7 +217,7 @@ CREATE INDEX IDX_CustomerOrder_2 ON CustomerOrder (isFinalized);
 
 CREATE TABLE OrderedItem (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    productID INTEGER UNSIGNED NOT NULL COMMENT 'ID of ordered Product',
+    productID INTEGER UNSIGNED COMMENT 'ID of ordered Product',
     customerOrderID INTEGER UNSIGNED NOT NULL COMMENT 'ID of order the item is assigned to',
     shipmentID INTEGER UNSIGNED COMMENT 'ID of the shipment the item is assigned to (when the order has been finalized)',
     parentID INTEGER UNSIGNED,
@@ -219,6 +226,7 @@ CREATE TABLE OrderedItem (
     dateAdded TIMESTAMP COMMENT 'Date when the product was added to shopping cart',
     price FLOAT COMMENT 'Product item price at the time the product was added to shopping cart',
     isSavedForLater TINYINT COMMENT 'Determines if the product has been added to shopping cart or to a wish list',
+    name MEDIUMTEXT,
     CONSTRAINT PK_OrderedItem PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -241,7 +249,7 @@ CREATE TABLE User (
     eavObjectID INTEGER UNSIGNED,
     locale CHAR(4),
     email VARCHAR(60) COMMENT 'Users e-mail address. E-mail address must be unique and it is used for authorization (instead of a login name).',
-    password CHAR(32) NOT NULL COMMENT 'Users password, encoded with MD5',
+    password VARCHAR(100) NOT NULL COMMENT 'Users password, encoded with MD5',
     firstName VARCHAR(60) COMMENT 'First name',
     lastName VARCHAR(60) COMMENT 'Last name',
     companyName VARCHAR(60) COMMENT 'Users company name',
@@ -307,6 +315,8 @@ CREATE TABLE FilterGroup (
     name MEDIUMTEXT COMMENT 'FilterGroup name (translatable)',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other FilterGroups',
     isEnabled BOOL COMMENT 'Determine if the FilterGroup is active',
+    displayStyle INTEGER UNSIGNED NOT NULL,
+    displayLocation INTEGER UNSIGNED NOT NULL,
     CONSTRAINT PK_FilterGroup PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -807,10 +817,11 @@ ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 CREATE TABLE TaxRate (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     taxID INTEGER UNSIGNED COMMENT 'ID of the referenced Tax',
+    taxClassID INTEGER UNSIGNED,
     deliveryZoneID INTEGER UNSIGNED COMMENT 'ID of the referenced DeliveryZone',
     rate FLOAT COMMENT 'Tax rate. For example, 20, to set a 20% rate.',
     CONSTRAINT PK_TaxRate PRIMARY KEY (ID),
-    CONSTRAINT TUC_TaxRate_DeliveryZone_Tax UNIQUE (deliveryZoneID, taxID)
+    CONSTRAINT TUC_TaxRate_DeliveryZone_Tax UNIQUE (deliveryZoneID, taxID, taxClassID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -829,6 +840,7 @@ CREATE TABLE ShippingRate (
     perItemCharge FLOAT COMMENT 'Fixed charge per each item (in base Currency)',
     subtotalPercentCharge FLOAT COMMENT 'Fee calculation as a percentage of a subtotal',
     perKgCharge FLOAT COMMENT 'Charge per each kg of weight',
+    perItemChargeClass TEXT,
     CONSTRAINT PK_ShippingRate PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -870,6 +882,7 @@ CREATE TABLE StaticPage (
     handle VARCHAR(40) COMMENT 'URL slug. For example, for Terms Of Service page it could be "terms.of.service"',
     title MEDIUMTEXT COMMENT 'Page title (translatable)',
     text MEDIUMTEXT COMMENT 'Page text (translatable)',
+    metaDescription MEDIUMTEXT,
     isInformationBox BOOL NOT NULL COMMENT 'Determines if a link to the page is being displayed in the "Information Box" menu',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other StaticPages',
     CONSTRAINT PK_StaticPage PRIMARY KEY (ID)
@@ -971,6 +984,9 @@ CREATE TABLE ProductOption (
     isPriceIncluded BOOL COMMENT 'Include product price when displaying option price (base product price + option choice price = option display price)',
     displayType INTEGER COMMENT '0 - select box, 1 - radio buttons',
     position INTEGER UNSIGNED DEFAULT 0,
+    settings TEXT,
+    maxFileSize INTEGER,
+    fileExtensions VARCHAR(100),
     CONSTRAINT PK_ProductOption PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -1045,20 +1061,10 @@ CREATE TABLE CategoryPresentation (
     productID INTEGER UNSIGNED,
     isSubcategories BOOL,
     isAllVariations BOOL,
+    isVariationImages BOOL,
     theme VARCHAR(70),
+    listStyle VARCHAR(20),
     CONSTRAINT PK_CategoryPresentation PRIMARY KEY (ID)
-)
-ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
-
-# ---------------------------------------------------------------------- #
-# Add table "ProductPresentation"                                        #
-# ---------------------------------------------------------------------- #
-
-CREATE TABLE ProductPresentation (
-    ID INTEGER UNSIGNED NOT NULL,
-    isAllVariations BOOL,
-    theme VARCHAR(70),
-    CONSTRAINT PK_ProductPresentation PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -1361,6 +1367,7 @@ CREATE TABLE DiscountCondition (
     couponLimitType TINYINT COMMENT '0 - overall 1 - by user',
     serializedCondition TEXT,
     position INTEGER UNSIGNED DEFAULT 0,
+    conditionClass VARCHAR(80),
     CONSTRAINT PK_DiscountCondition PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -1380,12 +1387,15 @@ CREATE TABLE DiscountAction (
     conditionID INTEGER UNSIGNED,
     actionConditionID INTEGER UNSIGNED,
     isEnabled BOOL NOT NULL,
+    isOrderLevel BOOL NOT NULL,
     type TINYINT NOT NULL,
     actionType TINYINT NOT NULL,
     amount FLOAT,
     discountStep INTEGER,
     discountLimit INTEGER,
     position INTEGER UNSIGNED DEFAULT 0,
+    actionClass VARCHAR(80),
+    serializedData TEXT,
     CONSTRAINT PK_DiscountAction PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -1435,6 +1445,8 @@ CREATE TABLE DiscountConditionRecord (
     userID INTEGER UNSIGNED,
     userGroupID INTEGER UNSIGNED,
     deliveryZoneID INTEGER UNSIGNED,
+    categoryLft INTEGER,
+    categoryRgt INTEGER,
     CONSTRAINT PK_DiscountConditionRecord PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -1447,6 +1459,7 @@ CREATE TABLE ProductBundle (
     productID INTEGER UNSIGNED NOT NULL,
     relatedProductID INTEGER UNSIGNED NOT NULL COMMENT 'The Product the related Product is assigned to',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'ID of the ProductRelationshipGroup - if the related product is assigned to one (grouped together with similar products)',
+    count FLOAT,
     CONSTRAINT PK_ProductBundle PRIMARY KEY (productID, relatedProductID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -1513,6 +1526,44 @@ CREATE TABLE ProductVariationValue (
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
+# Add table "SessionData"                                                #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE SessionData (
+    ID CHAR(32) NOT NULL,
+    userID INTEGER UNSIGNED,
+    lastUpdated INTEGER,
+    cacheUpdated INTEGER,
+    data BLOB,
+    CONSTRAINT PK_SessionData PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "ShippingClass"                                              #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ShippingClass (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    name MEDIUMTEXT,
+    position INTEGER UNSIGNED DEFAULT 0,
+    CONSTRAINT PK_ShippingClass PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "TaxClass"                                                   #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE TaxClass (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    name MEDIUMTEXT,
+    position INTEGER UNSIGNED DEFAULT 0,
+    CONSTRAINT PK_TaxClass PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
 # Foreign key constraints                                                #
 # ---------------------------------------------------------------------- #
 
@@ -1527,6 +1578,12 @@ ALTER TABLE Product ADD CONSTRAINT ProductImage_Product
 
 ALTER TABLE Product ADD CONSTRAINT Product_Product 
     FOREIGN KEY (parentID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE Product ADD CONSTRAINT ShippingClass_Product 
+    FOREIGN KEY (shippingClassID) REFERENCES ShippingClass (ID) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE Product ADD CONSTRAINT TaxClass_Product 
+    FOREIGN KEY (taxClassID) REFERENCES TaxClass (ID) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE Category ADD CONSTRAINT Category_Category 
     FOREIGN KEY (parentNodeID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1568,7 +1625,7 @@ ALTER TABLE CustomerOrder ADD CONSTRAINT EavObject_CustomerOrder
     FOREIGN KEY (eavObjectID) REFERENCES EavObject (ID) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE OrderedItem ADD CONSTRAINT Product_OrderedItem 
-    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE OrderedItem ADD CONSTRAINT CustomerOrder_OrderedItem 
     FOREIGN KEY (customerOrderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1750,6 +1807,9 @@ ALTER TABLE TaxRate ADD CONSTRAINT Tax_TaxRate
 ALTER TABLE TaxRate ADD CONSTRAINT DeliveryZone_TaxRate 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
+ALTER TABLE TaxRate ADD CONSTRAINT TaxClass_TaxRate 
+    FOREIGN KEY (taxClassID) REFERENCES TaxClass (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
 ALTER TABLE ShippingRate ADD CONSTRAINT ShippingService_ShippingRate 
     FOREIGN KEY (shippingServiceID) REFERENCES ShippingService (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -1818,9 +1878,6 @@ ALTER TABLE CategoryPresentation ADD CONSTRAINT Category_CategoryPresentation
 
 ALTER TABLE CategoryPresentation ADD CONSTRAINT Product_CategoryPresentation 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE ProductPresentation ADD CONSTRAINT Product_ProductPresentation 
-    FOREIGN KEY (ID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE NewsletterSubscriber ADD CONSTRAINT User_NewsletterSubscriber 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1971,3 +2028,6 @@ ALTER TABLE ProductVariationValue ADD CONSTRAINT Product_ProductVariationValue
 
 ALTER TABLE ProductVariationValue ADD CONSTRAINT ProductVariation_ProductVariationValue 
     FOREIGN KEY (variationID) REFERENCES ProductVariation (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE SessionData ADD CONSTRAINT User_SessionData 
+    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;

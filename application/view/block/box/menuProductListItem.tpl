@@ -3,12 +3,15 @@
 	{if $product.DefaultImage.paths.1}
 		{img src=$product.DefaultImage.paths.1 alt=$product.name_lang|escape}
 	{else}
-		{img src=image/missing_mini.jpg alt=$product.name_lang|escape}
+		{img src='MISSING_IMG_THUMB'|config alt=$product.name_lang|escape}
 	{/if}
 	</a>
 </div>
 
 <div class="productInfo">
+	{if $productInfoTemplate}
+		{include file=$productInfoTemplate}
+	{/if}
 	<a href="{productUrl product=$product}" class="productName">{$product.name_lang}</a>
 </div>
 

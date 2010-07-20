@@ -57,7 +57,11 @@ class SearchFilter implements FilterInterface
 			$conditions[] = $searchCond;
 		}
 
-		return new AndChainCondition($conditions);
+		$condition = new AndChainCondition($conditions);
+
+		ActiveRecordModel::getApplication()->processInstancePlugins('searchFilter', $condition);
+
+		return $condition;
 	}
 
 	public function getCleanedQuery($query)

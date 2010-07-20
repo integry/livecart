@@ -11,7 +11,7 @@ class USPSHandler {
 	var $orig_zip;
 	var $pounds;
 	var $ounces;
-	var $container = "None";
+	var $container = "";
 	var $size = "REGULAR";
 	var $machinable;
 	var $country = "USA";

@@ -75,7 +75,7 @@ class ImageDriverGD extends ImageDriver
 		$imageInfo = getimagesize($filename);
 		$MB = 1048576;
 		$K64 = 65536;
-		$TWEAKFACTOR = 1.8;
+		$TWEAKFACTOR = 4;
 		$memoryLimitMB = 32;
 		if (!isset($imageInfo['channels']))
 		{

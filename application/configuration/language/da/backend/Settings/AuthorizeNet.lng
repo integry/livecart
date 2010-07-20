@@ -1,0 +1,4 @@
+AuthorizeNet_login=Login ID
+AuthorizeNet=Authorize.net 
+AuthorizeNet_transactionKey=Transaktionsnøgle
+AuthorizeNet_gateway=Gateway URL

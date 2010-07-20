@@ -49,7 +49,7 @@ class CsvFile implements Iterator
 		$count = 0;
 		while (!feof($f))
 		{
-			$s = trim(fgets($f));
+			$s = fgetcsv($f);
 			if (!empty($s))
 			{
 				$count++;
@@ -69,6 +69,7 @@ class CsvFile implements Iterator
 
 	public function rewind()
 	{
+		$this->isValid = true;
 		rewind($this->getFileHandle());
 		$this->iteratorKey = 0;
 		$this->iteratorValue = $this->getRecord();

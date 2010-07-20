@@ -1,0 +1,10 @@
+_select_file=Vælg en fil
+_listing_files=Viser filer $from - $to af $count
+_no_files_found=Ingen filer fundet
+fileName=Navn
+fileType=Udvidelse
+fileSize=Størrelse
+fileDate=Modifikationsdato
+filePermissions=Tilladelser
+fileOwner=Ejer
+fileGroup=Gruppe

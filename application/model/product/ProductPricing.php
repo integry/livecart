@@ -24,6 +24,8 @@ class ProductPricing
 
 	private $removedPrices = array();
 
+	private $listPrices = array();
+
 	private $application;
 
 	public function __construct(Product $product, $prices = null, LiveCart $application)
@@ -160,10 +162,30 @@ class ProductPricing
 
 		$field = $listPrice ? 'listPrice' : 'price';
 
+		$ruleController = $this->application->getBusinessRuleController();
+
 		$defined = array();
 		foreach ($this->prices as $inst)
 		{
-			$defined[$inst->currency->get()->getID()] = $inst->$field->get();
+			$defPrice = $inst->$field->get();
+			$curr = $inst->currency->get()->getID();
+			if ('price' == $field)
+			{
+				$defined[$curr] = $inst->getPriceByGroup($ruleController->getContext()->getUserGroupID());
+				if ($defined[$curr] != $defPrice)
+				{
+					$this->setListPrice($curr, $defPrice);
+				}
+			}
+			else
+			{
+				$defined[$curr] = $defPrice;
+			}
+		}
+
+		if ($listPrice)
+		{
+			$defined = array_merge($defined, $this->listPrices);
 		}
 
 		$baseCurrency = $this->application->getDefaultCurrencyCode();
@@ -196,6 +218,17 @@ class ProductPricing
 				$calculated[$id] += $parentPrice * (($setting != Product::CHILD_ADD) ? 1 : -1);
 			}
 
+			if (!$listPrice)
+			{
+				$calculated[$id] = $this->application->getDisplayTaxPrice($calculated[$id], $this->product);
+				$discountedPrice = $ruleController->getProductPrice($this->product, $calculated[$id], $currency->getID());
+				if ($discountedPrice != $calculated[$id])
+				{
+					$this->setListPrice($currency->getID(), $calculated[$id]);
+					$calculated[$id] = $discountedPrice;
+				}
+			}
+
 			if ((float)$calculated[$id] || !$listPrice)
 			{
 				$formattedPrice[$id] = $currency->getFormattedPrice($calculated[$id]);
@@ -204,6 +237,11 @@ class ProductPricing
 
 		$return = array('defined' => $defined, 'calculated' => $calculated, 'formattedPrice' => $formattedPrice);
 		return ('both' == $part) ? $return : $return[$part];
+	}
+
+	private function setListPrice($currencyID, $price)
+	{
+		$this->listPrices[$currencyID] = $price;
 	}
 
 	public function getDiscountPrices(User $user, $currency)
@@ -223,6 +261,7 @@ class ProductPricing
 		foreach ($price->getUserPrices($user) as $quant => $pr)
 		{
 			$pr = $currency->convertAmount($price->currency->get(), $pr);
+			$pr = $this->application->getDisplayTaxPrice($pr, $this->product);
 			$prices[$quant] = array(
 								'price' => $pr,
 								'formattedPrice' => $currency->getFormattedPrice($pr),

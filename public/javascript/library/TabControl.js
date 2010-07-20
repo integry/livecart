@@ -25,8 +25,8 @@ TabControl.prototype = {
 	initialize: function(tabContainerName, urlParserCallback, idParserCallback, callbacks)
 	{
 		this.tabContainerName = tabContainerName;
-		this.urlParserCallback = urlParserCallback;
-		this.idParserCallback = idParserCallback;
+		this.urlParserCallback = urlParserCallback || this.getTabUrl;
+		this.idParserCallback = idParserCallback || this.getContentTabId;
 		this.callbacks = callbacks ? callbacks : {};
 		this.loadedContents = {};
 
@@ -324,6 +324,11 @@ TabControl.prototype = {
 		}
 		else
 		{
+			if (null == value)
+			{
+				value = 0;
+			}
+
 			counter.update("(" + value + ")");
 			this.countersCache[hashId][tab.id] = value;
 		}
@@ -372,5 +377,15 @@ TabControl.prototype = {
 		var counter = tab.down('.tabCounter');
 		var match = counter.innerHTML.match(/\((\d+)\)/);
 		return match ? parseInt(match[1]) : 0;
+	},
+
+	getTabUrl: function(url)
+	{
+		return url;
+	},
+
+	getContentTabId: function(id)
+	{
+		return id + 'Content';
 	}
 }

@@ -16,6 +16,7 @@ _review_was_successfully_saved=Product review was successfully saved
 _cancel_editing_review=Cancel editing review
 
 # columns
+ProductReview.ID=ID
 ProductReview.title=Summary
 ProductReview.nickname=Author name
 ProductReview.dateCreated=Creation date

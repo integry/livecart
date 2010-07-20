@@ -161,47 +161,64 @@ Backend.Discount.Condition.prototype =
 
 	controller: 'backend.discount',
 
-	TYPE_TOTAL: 0,
-	TYPE_COUNT: 1,
-	TYPE_ITEMS: 2,
-	TYPE_USERGROUP: 3,
-	TYPE_USER: 4,
-	TYPE_DELIVERYZONE: 5,
-
 	findUsedNodes: function()
 	{
-		this.typeSel = this.node.down('.conditionType');
+		this.typeSel = this.node.down('.conditionClass');
 		this.compSel = this.node.down('.comparisonType');
 		this.valueField = this.node.down('.comparisonValue');
 		this.subCondition = this.node.down('.subCondition');
 		this.subConditionContainer = this.node.down('.conditionContainer');
 		this.isAllSubconditions = this.node.down('.isAllSubconditions');
 		this.isAnyRecord = this.node.down('.isAnyRecord');
+		this.isReverse = this.node.down('.isReverse');
 		this.deleteIcon = this.node.down('.conditionDelete');
 		this.recordContainer = this.node.down('.recordContainer');
 		this.valueContainer = this.node.down('.valueContainer');
 		this.selectRecordContainer = this.node.down('.selectRecordContainer');
 		this.productFieldSel = this.node.down('.comparisonField');
+		this.timeRangeSelector = this.node.down('.conditionTime');
+
+ 		this.conditionTime = this.timeRangeSelector.down('select');
+		this.conditionTimeBefore = this.timeRangeSelector.down('.conditionTimeBefore');
+		this.conditionTimeRange = this.timeRangeSelector.down('.conditionTimeRange');
 	},
 
 	bindEvents: function()
 	{
-		[this.compSel, this.valueField, this.isAllSubconditions, this.isAnyRecord, this.productFieldSel].each(function(field)
+		[this.compSel, this.valueField, this.isAllSubconditions, this.isAnyRecord, this.isReverse, this.productFieldSel].each(function(field)
 		{
 			field.name += '_' + this.condition.ID;
 			Event.observe(field, 'change', this.saveFieldChange.bind(this));
 		}.bind(this));
 
-		this.isAllSubconditions.id += '_' + this.condition.ID;
-		$(this.isAllSubconditions.parentNode).down('label').setAttribute('for', 'isAllSubconditions_' + this.condition.ID);
+		['isAllSubconditions', 'isAnyRecord', 'isReverse'].each(function(name)
+		{
+			this[name].id += '_' + this.condition.ID;
+			$(this[name].parentNode).down('label').setAttribute('for', name + '_' + this.condition.ID);
+		}.bind(this));
 
+/*
 		this.isAnyRecord.id += '_' + this.condition.ID;
 		$(this.isAnyRecord.parentNode).down('label').setAttribute('for', 'isAnyRecord_' + this.condition.ID);
+*/
 
 		Event.observe(this.subCondition, 'click', this.createSubCondition.bind(this));
 		Event.observe(this.deleteIcon, 'click', this.remove.bind(this));
 
 		Event.observe(this.typeSel, 'change', this.changeType.bind(this));
+		Event.observe(this.conditionTime, 'change', this.changeDateRangeType.bind(this));
+
+		this.timeRangeSelector.getElementsBySelector('.value', 'input[type=hidden]').each(function(field)
+		{
+			var c = this.condition.serializedCondition;
+			if (c && c.time && c.time[field.name])
+			{
+				field.value = c.time[field.name];
+			}
+
+			field.name = 'time_' + field.name;
+			field.onchange = this.saveParamChange.bind(this);
+		}.bind(this));
 
 		// add records
 		Event.observe(this.recordContainer.down('.addConditionCategory'), 'click', this.addCategory.bind(this));
@@ -215,6 +232,7 @@ Backend.Discount.Condition.prototype =
 		this.compSel.value = this.condition.comparisonType;
 		this.valueField.value = this.condition.count != null ? this.condition.count : this.condition.subTotal;
 		this.isAllSubconditions.checked = this.condition.isAllSubconditions == 1;
+		this.isReverse.checked = this.condition.isReverse == 1;
 
 		// value is reversed in user interface
 		this.isAnyRecord.checked = this.condition.isAnyRecord == 0;
@@ -228,30 +246,14 @@ Backend.Discount.Condition.prototype =
 
 		this.findUsedNodes();
 
-		var recordClassName = '';
+		this.typeSel.value = this.condition.conditionClass;
 
-		// determine condition type
-		if (this.condition.serializedCondition)
-		{
-			this.typeSel.value = this.condition.serializedCondition.type;
-		}
-		else if (this.condition.count != null && this.condition.recordCount < 1)
-		{
-			this.typeSel.value = this.TYPE_COUNT;
-		}
-		else if (this.condition.subTotal != null && this.condition.recordCount < 1)
-		{
-			this.typeSel.value = this.TYPE_TOTAL;
-		}
-		else if (this.condition.recordCount > 0)
+		if (this.condition.recordCount > 0)
 		{
 			this.condition.records.each(function(record)
 			{
 				var rec = this.createRecord(record);
-				recordClassName = rec.data.className;
 			}.bind(this));
-
-			this.typeSel.value = {Category: this.TYPE_ITEMS, Product: this.TYPE_ITEMS, Manufacturer: this.TYPE_ITEMS, User: this.TYPE_USER, UserGroup: this.TYPE_USERGROUP, DeliveryZone: this.TYPE_DELIVERYZONE}[recordClassName];
 		}
 
 		this.setValues();
@@ -286,17 +288,31 @@ Backend.Discount.Condition.prototype =
 		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'updateConditionField', {type: this.typeSel.value, field: field.name, productField: this.productFieldSel.value, value: value, comparisonType: this.compSel.value}), null, this.completeUpdateField.bind(this));
 	},
 
+	saveParamChange: function(e)
+	{
+		var field = e instanceof Event ? Event.element(e) : e;
+
+		$(field.parentNode).addClassName('fieldUpdating');
+
+		var value = field.value;
+		if ('checkbox' == field.type)
+		{
+			value = field.checked ? 1 : 0;
+		}
+
+		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'setSerializedValue', {type: this.typeSel.value, field: field.name, value: value, id: this.condition.ID}), null, function()
+		{
+			$(field.parentNode).removeClassName('fieldUpdating');
+		});
+	},
+
 	completeUpdateField: function(originalRequest)
 	{
 		var updated = originalRequest.responseData;
 		var field = updated == 'comparisonValue' ? this.valueField : this.compSel;
-		if ('isAllSubconditions' == updated)
+		if (this[updated] && this[updated].getAttribute && (this[updated].getAttribute('type') == 'checkbox'))
 		{
-			field = this.isAllSubconditions;
-		}
-		if ('isAnyRecord' == updated)
-		{
-			field = this.isAnyRecord;
+			field = this[updated];
 		}
 
 		$(field.parentNode).removeClassName('fieldUpdating');
@@ -354,11 +370,11 @@ Backend.Discount.Condition.prototype =
 
 		var type = this.typeSel.value;
 
-		if (type == this.TYPE_COUNT)
+		if (type == 'RuleConditionOrderItemCount')
 		{
 			this.valueField.value = this.condition.count;
 		}
-		else if (type == this.TYPE_TOTAL)
+		else if (type == 'RuleConditionOrderItemCount')
 		{
 			this.valueField.value = this.condition.subTotal;
 		}
@@ -371,7 +387,7 @@ Backend.Discount.Condition.prototype =
 			this.recordContainer.hide();
 			this.valueContainer.show();
 		}
-		else if (type > this.TYPE_ITEMS)
+		else if (['RuleConditionCustomerIs'].indexOf(type) > -1)
 		{
 			this.compSel.hide();
 			this.valueField.hide();
@@ -386,18 +402,29 @@ Backend.Discount.Condition.prototype =
 			this.recordContainer.show();
 		}
 
-		if (type == this.TYPE_ITEMS)
+		if ('RuleConditionPastOrderContainsProduct' == type)
 		{
-			this.recordContainer.show();
+			this.timeRangeSelector.show();
+			this.changeDateRangeType();
+		}
+		else
+		{
+			this.timeRangeSelector.hide();
+		}
+
+		if (['RuleConditionDeliveryZoneIs', 'RuleConditionUserGroupIs'].indexOf(type) > -1)
+		{
+			this.compSel.hide();
+			this.valueField.hide();
 		}
 
 		// add selectable records to list
 		var recordClass = '';
-		if (type == this.TYPE_DELIVERYZONE)
+		if (type == 'RuleConditionDeliveryZoneIs')
 		{
 			recordClass = 'DeliveryZone';
 		}
-		else if (type == this.TYPE_USERGROUP)
+		else if (type == 'RuleConditionUserGroupIs')
 		{
 			recordClass = 'UserGroup';
 		}
@@ -423,6 +450,56 @@ Backend.Discount.Condition.prototype =
 		}
 
 		this.node.className = 'type_' + type;
+
+		if ('RuleConditionPastOrderContainsProduct' == type)
+		{
+			this.node.className += ' type_RuleConditionContainsProduct';
+		}
+	},
+
+	changeDateRangeType: function()
+	{
+		if ('before' == this.conditionTime.value)
+		{
+			this.conditionTimeBefore.show();
+			this.conditionTimeRange.hide();
+		}
+		else
+		{
+			this.conditionTimeBefore.hide();
+			this.conditionTimeRange.show();
+			this.setupCalendar('from');
+			this.setupCalendar('to');
+		}
+	},
+
+	setupCalendar: function(id)
+	{
+		// set up calendar field
+		var time = this.conditionTimeRange.down('#' + id);
+		var time_real = this.conditionTimeRange.down('#' + id + '_real');
+		var time_button = this.conditionTimeRange.down('#' + id + '_button');
+
+		time.onchange = function() { time_real.onchange(time_real); }
+
+		time_button.realInput = time_real;
+		time_button.showInput = time;
+
+		time.realInput = time_real;
+		time.showInput = time;
+
+		Event.observe(time,		"keyup",	 Calendar.updateDate );
+		Event.observe(time,		"blur",	  Calendar.updateDate );
+		Event.observe(time_button, "mousedown", Calendar.updateDate );
+
+		Calendar.setup({
+			inputField:	 time,
+			inputFieldReal: time_real,
+			ifFormat:	   "%d-%b-%Y",
+			button:		 time_button,
+			align:		  "BR",
+			singleClick:	true
+		});
 	},
 
 	createSelectValue: function(type, value, name)
@@ -501,7 +578,7 @@ Backend.Discount.Condition.prototype =
 	{
 		var inp = Event.element(e);
 
-		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'saveSelectRecord', {id: this.condition.ID, class: inp.data.className, recordID: inp.data.ID, state: inp.checked}), null, function (originalRequest) { this.completeSaveSelectRecord(originalRequest, inp); }.bind(this));
+		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'saveSelectRecord', {id: this.condition.ID, class: inp.data.className, recordID: inp.data.ID, state: inp.checked, type: this.typeSel.value}), null, function (originalRequest) { this.completeSaveSelectRecord(originalRequest, inp); }.bind(this));
 
 		inp.parentNode.addClassName('selectRecordUpdating');
 	},
@@ -513,7 +590,7 @@ Backend.Discount.Condition.prototype =
 
 	addRecord: function(className, id, onComplete)
 	{
-		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'addRecord', {id: this.condition.ID, class: className, recordID: id}), null, function (originalRequest) { this.completeAddRecord(originalRequest, onComplete); }.bind(this));
+		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'addRecord', {id: this.condition.ID, class: className, recordID: id, type: this.typeSel ? this.typeSel.value : null}), null, function (originalRequest) { this.completeAddRecord(originalRequest, onComplete); }.bind(this));
 	},
 
 	completeAddRecord: function(originalRequest, onComplete)
@@ -531,7 +608,7 @@ Backend.Discount.Condition.prototype =
 		var className = '';
 		Object.keys(data).each(function(key)
 		{
-			if (key != 'ID' && key != 'Condition')
+			if ((key != 'ID') && (key != 'Condition') && (key != '__class__'))
 			{
 				className = key;
 			}
@@ -693,11 +770,6 @@ Backend.Discount.Action.prototype =
 	TYPE_ITEM_DISCOUNT: 1,
 	TYPE_CUSTOM_DISCOUNT: 5,
 
-	ACTION_PERCENT: 0,
-	ACTION_AMOUNT: 1,
-	ACTION_PERCENT_SURCHARGE: 3,
-	ACTION_AMOUNT_SURCHARGE: 4,
-
 	controller: 'backend.discount',
 
 	createAction: function(action)
@@ -710,13 +782,13 @@ Backend.Discount.Action.prototype =
 		return ActiveList.prototype.getInstance($('actionContainer_' + this.action.Condition.ID), {
 			 beforeSort:	 function(li, order)
 			 {
-				return Backend.Router.createUrl(this.controller, 'sortActions', {draggedId: this.getRecordId(li), conditionId: this.getRecordId(li.parentNode) }) + '&' + order;
+				return Backend.Router.createUrl('backend.discount', 'sortActions', {draggedId: this.getRecordId(li), conditionId: this.getRecordId(li.parentNode) }) + '&' + order;
 			   },
 			 beforeDelete:   function(li)
 			 {
 				if(confirm(Backend.getTranslation('_confirm_action_delete')))
 				{
-					return Backend.Router.createUrl(this.controller, 'deleteAction', {id:  this.getRecordId(li) });
+					return Backend.Router.createUrl('backend.discount', 'deleteAction', {id:  this.getRecordId(li) });
 				}
 			 },
 			 afterSort:	  function(li, response) {  },
@@ -726,22 +798,25 @@ Backend.Discount.Action.prototype =
 
 	findUsedNodes: function()
 	{
-		this.actionType = this.node.down('.actionType');
+		this.actionClass = this.node.down('.actionClass');
 		this.amount = this.node.down('.comparisonValue');
 		this.discountStep = this.node.down('.discountStep');
 		this.discountLimit = this.node.down('.discountLimit');
-		this.type = this.node.down('.applyTo');
+		this.type = this.node.down('select.applyTo');
 		this.isEnabled = this.node.down('.isEnabled');
+		this.isOrderLevel = this.node.down('.isOrderLevel');
 		this.subConditionContainer = this.node.down('.conditionContainer');
 
 		this.percentSign = this.node.down('.percent');
 		this.currencySign = this.node.down('.currency');
 		this.amountFields = this.node.down('.amountFields');
+		this.classFields = $A(this.node.getElementsByClassName('classContainer'));
+		this.applyTo = this.node.down('.applyTo');
 	},
 
 	bindEvents: function()
 	{
-		[this.actionType, this.amount, this.discountStep, this.discountLimit, this.type, this.isEnabled].each(function(field)
+		[this.actionClass, this.amount, this.discountStep, this.discountLimit, this.type, this.isEnabled, this.isOrderLevel].each(function(field)
 		{
 			field.name += '_' + this.action.ID;
 			Event.observe(field, 'change', this.saveFieldChange.bind(this));
@@ -749,16 +824,33 @@ Backend.Discount.Action.prototype =
 
 		Event.observe(this.addAction, 'click', this.addAction.bind(this));
 
-		this.isEnabled.id = 'isEnabled_' + this.action.ID;
-		$(this.isEnabled.parentNode).down('label').setAttribute('for', 'isEnabled_' + this.action.ID);
+		['isOrderLevel', 'isEnabled'].each(function(field)
+		{
+			this[field].id = field + '_' + this.action.ID;
+			$(this[field].parentNode).down('label').setAttribute('for', field + '_' + this.action.ID);
+		}.bind(this));
+
+		// custom fields
+		$A(this.node.down('.actionFields').getElementsByClassName('actionField')).each(function(field)
+		{
+			var serialized = this.action.serializedData;
+			if (serialized && (undefined != serialized[field.name]))
+			{
+				field.value = serialized[field.name];
+			}
+
+			field.name += '_' + this.action.ID;
+			field.id = field.name;
+			Event.observe(field, 'change', this.saveFieldChange.bind(this));
+		}.bind(this));
 
 		Event.observe(this.type, 'change', this.changeType.bind(this));
-		Event.observe(this.actionType, 'change', this.changediscountType.bind(this));
+		Event.observe(this.actionClass, 'change', this.changediscountType.bind(this));
 	},
 
 	setValues: function()
 	{
-		this.actionType.value = this.action.actionType;
+		this.actionClass.value = this.action.actionClass;
 		this.amount.value = this.action.amount;
 
 		if (this.action.ActionCondition)
@@ -776,6 +868,7 @@ Backend.Discount.Action.prototype =
 		}
 
 		this.isEnabled.checked = this.action.isEnabled == 1;
+		this.isOrderLevel.checked = this.action.isOrderLevel == 1;
 	},
 
 	changeType: function()
@@ -793,8 +886,10 @@ Backend.Discount.Action.prototype =
 
 	changediscountType: function()
 	{
+		this.classFields.invoke('hide');
 		this.percentSign.hide();
 		this.currencySign.hide();
+		this.applyTo.hide();
 
 		if (this.isPercent() || this.isAmount())
 		{
@@ -813,16 +908,29 @@ Backend.Discount.Action.prototype =
 		{
 			this.currencySign.show();
 		}
+
+		this.classFields.each(function(container)
+		{
+			if (container.hasClassName(this.actionClass.value))
+			{
+				container.show();
+			}
+		}.bind(this));
+
+		if (Backend.Discount.Action.prototype.itemActions[this.actionClass.value])
+		{
+			this.applyTo.show();
+		}
 	},
 
 	isPercent: function()
 	{
-		return (this.actionType.value == this.ACTION_PERCENT) || (this.actionType.value == this.ACTION_PERCENT_SURCHARGE);
+		return ['RuleActionPercentageDiscount', 'RuleActionPercentageSurcharge'].indexOf(this.actionClass.value) > -1;
 	},
 
 	isAmount: function()
 	{
-		return (this.actionType.value == this.ACTION_AMOUNT) || (this.actionType.value == this.ACTION_AMOUNT_SURCHARGE);
+		return ['RuleActionFixedDiscount', 'RuleActionFixedSurcharge'].indexOf(this.actionClass.value) > -1;
 	},
 
 	addAction: function(e, id)
@@ -874,7 +982,7 @@ Backend.Discount.Action.prototype =
 			value = field.checked ? 1 : 0;
 		}
 
-		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'updateActionField', {type: this.actionType.value, field: field.name, value: value}), null, this.completeUpdateField.bind(this));
+		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'updateActionField', {type: this.actionClass.value, field: field.name, value: value, isParam: field.hasClassName('actionField')}), null, this.completeUpdateField.bind(this));
 	},
 
 	addCondition: function(condition)
@@ -900,6 +1008,8 @@ Backend.Discount.Action.prototype =
 			var field = originalRequest.responseData;
 		}
 
-		$(this[field]).parentNode.removeClassName('fieldUpdating');
+		field = this[field] ? this[field] : field;
+
+		$(field).parentNode.removeClassName('fieldUpdating');
 	}
 }

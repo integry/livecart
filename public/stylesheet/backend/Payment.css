@@ -35,13 +35,13 @@ ul.transactions li
     padding: 5px;
     margin-top: 10px;
     border: 2px solid #DDDDDD;
-    list-style-type: none;  
-	position: relative;  
+    list-style-type: none;
+	position: relative;
 }
 
 .transactionAmount.isVoided
 {
-    text-decoration: line-through;    
+    text-decoration: line-through;
 }
 
 /* Sale */
@@ -110,6 +110,12 @@ ul.transactions li
     font-size: smaller;
 }
 
+.transactionMethod .extraData
+{
+	font-size: smaller;
+	margin-top: 0.5em;
+}
+
 .ccDetails
 {
     margin-bottom: 10px;
@@ -133,8 +139,8 @@ ul.transactions li
 
 ul.transactionMenu li
 {
-    border: 0;      
-    margin: 0; 
+    border: 0;
+    margin: 0;
     width: auto;
     float: right;
 }
@@ -170,7 +176,7 @@ ul.transactionMenu li
 .addOfflinePayment textarea
 {
     width: 300px;
-    height: 100px;      
+    height: 100px;
 }
 
 /*********************
@@ -178,7 +184,7 @@ ul.transactionMenu li
 *********************/
 #ccForm
 {
-    padding: 15px;   
+    padding: 15px;
 }
 
 #ccForm textarea

@@ -1,5 +1,5 @@
 Új rendelés a {'STORE_NAME'|config}
-Rendelés ID: {$order.ID}
+Rendelés ID: {$order.invoiceNumber}
 
 Redenlés adminisztrlásáa:
 {backendOrderUrl order=$order url=true}

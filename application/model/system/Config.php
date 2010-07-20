@@ -13,7 +13,7 @@ class Config
 	 */
 	private $values = array();
 
-	private $autoSave = true;
+	private $autoSave = false;
 
 	private $isUpdated = false;
 

@@ -1,4 +1,4 @@
-_pricing_rules=Pricing Rules
+_pricing_rules=Business Rules
 
 # grid
 DiscountCondition.name=Name
@@ -9,10 +9,10 @@ DiscountCondition.validFrom=Date valid from
 DiscountCondition.validTo=Date valid to
 DiscountCondition.couponLimitType=Limit coupon usage
 DiscountCondition.couponLimitCount=Max number of coupon uses
-_listing_rules=Listing pricing rules $from - $to of $count
-_no_rules=No pricing rules found
-_are_you_sure_you_want_to_delete_rule=Really delete selected pricing rules?
-_nothing_selected=Please select at least one pricing rule first
+_listing_rules=Listing rules $from - $to of $count
+_no_rules=No business rules found
+_are_you_sure_you_want_to_delete_rule=Really delete selected business rules?
+_nothing_selected=Please select at least one rule first
 _coupon_limit_none=No limit
 _coupon_limit_all=Among all customers
 _coupon_limit_user=By customer
@@ -20,8 +20,8 @@ _coupon_limit_user=By customer
 _create_rule=Add new rule
 
 # editor
-_cancel_editing_discount=Cancel editing pricing rule
-_cancel_adding_rule=Cancel adding pricing rule
+_cancel_editing_discount=Cancel editing business rule
+_cancel_adding_rule=Cancel adding business rule
 _save_and_continue=Save and continue
 
 _main_info=Main Information
@@ -38,6 +38,8 @@ _add_manufacturer=Add manufacturer
 _add_usergroup=Add user group
 _add_user=Add customer
 _add_deliveryzone=Add delivery zone
+_isReverse=Reverse condition
+_isReverse_help=Mark the checkbox to make this a negative condition. It will work the opposite way and only validate if the condition requirements are NOT satisfied.
 
 Category=Category
 Product=Product
@@ -46,13 +48,14 @@ User=Customer
 UserGroup=User group
 DeliveryZone=Delivery Zone
 
-_type_order_total=Order subtotal is
-_type_order_count=Total number of items in cart is
-_type_items_in_cart=Selected products are present in cart
-_type_user_group=Customer belongs to selected user group
-_type_user=Customer is
-_type_delivery_zone=Order delivery zone is
-_type_payment_method=Payment method is
+RuleConditionOrderTotal=Order subtotal is
+RuleConditionOrderItemCount=Total number of items in cart is
+RuleConditionContainsProduct=Selected products are present in cart
+RuleConditionUserGroupIs=Customer belongs to selected user group
+RuleConditionCustomerIs=Customer is
+RuleConditionDeliveryZoneIs=Order delivery zone is
+RuleConditionPaymentMethodIs=Payment method is
+RuleConditionPastOrderContainsProduct=Past orders contain selected products
 
 _compare_eq=equal to
 _compare_lteq=less than or equal to
@@ -65,22 +68,36 @@ _with_count=with count
 _with_subTotal=with subtotal
 _all_items_must_be_present=All items must be present in cart
 
+_include_orders_time=Include orders
+_condition_time_before=within the last
+_condition_time_range=between the selected dates
+_minutes=minutes
+_hours=hours
+_days=days
+_years=years
+
 _add_new_action=Add new action
 
 _action=Action type
 _amount=Discount amount
 _discount_step=Discount step
-_discount_step_descr=Apply discount to every X-th item. For example: buy X and get 1 free.  The limit only applies to items of the same line item, not the whole order.
+_discount_step_descr=Apply discount to every X-th item. For example: buy X and get 1 free.
 _discount_limit=Discount limit
-_discount_limit_descr=Max number of items to apply discount to. The limit only applies to items of the same line item, not the whole order.
-_apply_to=Apply discount to
+_discount_limit_descr=Max number of items to apply discount to.
+_is_order_level=Apply limit and step order-wide
+_discount_isOrderLevel_descr=The limits and steps by default only apply to products within the same line item. Mark this checkbox to apply limits and steps order-wide (in order from the lowest to highest priced products). This allows to create promotions like "Buy 3 different CD's and get the cheapest one free".
+_apply_to=Apply to
 
-_percentage_discount=Apply percentage discount
-_fixed_amount_discount=Apply fixed amount discount
-_percentage_surcharge=Add percentage surcharge
-_fixed_amount_surcharge=Add fixed amount surcharge
-_type_disable_checkout=Disable checkout
-_type_sum_variations=Sum product variations towards quantity discounts
+RuleActionPercentageDiscount=Apply percentage discount
+RuleActionFixedDiscount=Apply fixed amount discount
+RuleActionPercentageSurcharge=Add percentage surcharge
+RuleActionFixedSurcharge=Add fixed amount surcharge
+RuleActionDisableCheckout=Disable checkout
+RuleActionSumVariations=Sum product variations towards quantity discounts
+RuleActionIncludePastOrdersInQuantityPrices=Count past orders towards quantity prices
+RuleActionRemoveFromCart=Remove item from shopping cart
+RuleActionSetQuantity=Set item quantity
+RuleActionShowMessage=Display a message
 
 _apply_order=Whole order
 _apply_matched_items=Matched items only
@@ -89,5 +106,9 @@ _confirm_action_delete=Really delete this action?
 _is_enabled=Enabled
 _stop_processing=Stop discount calculation after processing this rule
 
-_rule_was_successfully_saved=The pricing rule was successfully saved
-_rule_name_empty=Please enter the pricing rule name
+_orders_from_past_x_days=Orders from the past .. days
+_quantity=Quantity
+_message=Message
+
+_rule_was_successfully_saved=The business rule was successfully saved
+_rule_name_empty=Please enter the business rule name

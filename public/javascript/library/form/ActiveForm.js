@@ -63,7 +63,13 @@ ActiveForm.prototype = {
 	resetErrorMessage: function(formElement)
 	{
 		formElement.removeClassName('hasError');
-		var errorText = formElement.up().down(".errorText");
+		var parent = $(formElement).up();
+		if (!parent)
+		{
+			return;
+		}
+
+		var errorText = parent.down(".errorText");
 
 		if (errorText)
 		{
@@ -194,7 +200,13 @@ ActiveForm.prototype = {
 		}
 	},
 
-	destroyTinyMceFields: function(container) {
+	destroyTinyMceFields: function(container)
+	{
+		if (!window.tinyMCE)
+		{
+			return false;
+		}
+
 		var textareas = container.getElementsBySelector('textarea.tinyMCE');
 		for (k = 0; k < textareas.length; k++)
 		{
@@ -222,6 +234,11 @@ ActiveForm.prototype = {
 
 	resetTinyMceFields: function(container)
 	{
+		if (!window.tinyMCE)
+		{
+			return false;
+		}
+
 		var textareas = container.getElementsBySelector('textarea.tinyMCE');
 		for(k = 0; k < textareas.length; k++)
 		{
@@ -408,6 +425,11 @@ Element.focus = function(element)
  */
 Element.isTinyMce = function(element)
 {
+	if (!window.tinyMCE)
+	{
+		return false;
+	}
+
 	return element.nextSibling && element.nextSibling.nodeType != 3 && Element.hasClassName(element.nextSibling, "mceEditorContainer");
 }
 

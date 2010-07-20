@@ -76,12 +76,12 @@ class OrderHistory
 				'count' => (int)$item->count->get(),
 				'price' => $item->price->get(),
 				'Product' => array(
-					'ID' => (int)$item->product->get()->getID(),
-					'sku' => $item->product->get()->sku->get(),
-					'name' => $item->product->get()->getName($order->getApplication()->getDefaultLanguageCode()),
-					'isDownloadable' => (int)$item->product->get()->isDownloadable(),
+					'ID' => (int)$item->getProduct()->getID(),
+					'sku' => $item->getProduct()->sku->get(),
+					'name' => $item->getProduct()->getName($order->getApplication()->getDefaultLanguageCode()),
+					'isDownloadable' => (int)$item->getProduct()->isDownloadable(),
 				),
-				'Shipment' => $item->shipment->get() ? $array['shipments'][$item->shipment->get()->getID()] : array('ID' => 0)
+				'Shipment' => ($item->shipment->get() && isset($array['shipments'][$item->shipment->get()->getID()])) ? $array['shipments'][$item->shipment->get()->getID()] : array('ID' => 0)
 			);
 		}
 

@@ -1,0 +1,7 @@
+_save_css=Gem CSS
+_edit_css=Ret CSS stylesheet filer
+_common_css=Almindelige (alle temaer)
+_css_file_has_been_successfully_updated=CSS fil er succesfuldt blevet gemt
+_could_not_update_css_file=CSS fil kunne ikke gemmes
+_css_warn=Bemærk: Undgå altid at rette LiveCart CSS filer direkte - da eventuelle ændringer bliver overskrevet af fremtidige opdateringer. Lav i stedet ændringerne i stylesheet, du ønsker at rette, ved hjælp af 'kopier og indsæt'.
+_please_select=Venligst vælg et CSS stylesheet at rette. Der er et seperat stylesheet for hvert tema. Du kan også rette den grundlæggende fil, der er gældende for alle temaer.

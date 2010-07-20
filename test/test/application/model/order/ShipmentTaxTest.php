@@ -56,7 +56,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->setRateId($rates->get(0)->getServiceID());
 		$shipment->save();
 
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 		$this->assertEquals($this->order->getTotal(), (100 * 1.2) + (100 * 1.5));
 	}
 
@@ -98,7 +98,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->setRateId($rates->get(0)->getServiceID());
 		$shipment->save();
 
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 		$this->assertEquals($this->order->getTotal(), 200 * 1.10 * 1.15);
 	}
 
@@ -150,7 +150,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->recalculateAmounts();
 		$shipment->save();
 		$order->save();
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 
 		$this->assertEqual($shipment->getRelatedRecordSet('ShipmentTax')->size(), 1);
 		$this->assertEqual($shipment->getRelatedRecordSet('ShipmentTax')->get(0)->amount->get(), 40);
@@ -204,12 +204,12 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->setRateId($rates->get(0)->getServiceID());
 		$shipment->save();
 
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 
 		$this->assertEquals($this->order->shipments->get(0)->shippingAmount->get(), 16.95);
 
-		$expectedTotal = round(round(50 * 1.05, 2) * 1.075, 2) + round(round(16.95 * 1.05, 2) * 1.075, 2);
-		$this->assertEquals($this->order->getTotal(), $expectedTotal);
+		$expectedTotal = round(50 * 1.05 * 1.075, 2) + round(16.95 * 1.05 * 1.075, 2);
+		$this->assertEquals($this->order->getTotal(true), $expectedTotal);
 
 		// sum taxes with base prices
 		$orderArray = $this->order->toArray();
@@ -273,9 +273,9 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->setRateId($rates->get(0)->getServiceID());
 		$shipment->save();
 
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 		$this->assertSame($this->order->getDeliveryZone(), $zone);
-		$this->assertEquals($this->order->getTotal(), 71.64);
+		$this->assertEquals($this->order->getTotal(), 71.63);
 	}
 
 	public function testQuebecToUSATaxes()
@@ -326,9 +326,9 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->setRateId($rates->get(0)->getServiceID());
 		$shipment->save();
 
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 		$this->assertSame($this->order->getDeliveryZone(), $zone);
-		$this->assertEquals($this->order->getTotal(), 69.14);
+		$this->assertEquals($this->order->getTotal(), 69.13);
 	}
 
 	public function testDefaultZoneShipping()
@@ -360,8 +360,8 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->setRateId($rates->get(0)->getServiceID());
 		$shipment->save();
 
-		$this->order->finalize($this->usd);
-		$this->assertEquals($this->order->getSubTotal(), round(100 / 1.19, 2));
+		$this->order->finalize();
+		$this->assertEquals(round($this->order->getSubTotal(), 2), round(100 / 1.19, 2));
 		$this->assertEquals($this->order->getShipments()->get(0)->getTotal(), 100 + 100);
 		$this->assertEquals($this->order->getTotal(), 100 + 100);
 	}
@@ -399,7 +399,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->setRateId($rates->get(0)->getServiceID());
 		$shipment->save();
 
-		$this->order->finalize($this->usd);
+		$this->order->finalize();
 		$this->assertEquals($this->order->getTotal(), 104.80);
 	}
 
@@ -410,16 +410,26 @@ class ShipmentTaxTest extends OrderTestCommon
 
 		TaxRate::getNewInstance(DeliveryZone::getDefaultZoneInstance(), $tax, 19)->save();
 
-		foreach (array(635.99, 228.69, 61.59) as $key => $price)
+		foreach (array(2 => true, 1 => false) as $shipments => $isSeparate)
 		{
-			$this->products[$key]->setPrice('USD', $price);
-			$this->order->addProduct($this->products[$key], 1, false);
+			$this->initOrder();
+			foreach (array(635.99, 228.69, 61.59) as $key => $price)
+			{
+				$this->products[$key]->setPrice('USD', $price);
+
+				if (!$isSeparate)
+				{
+					$this->products[$key]->isSeparateShipment->set(false);
+				}
+
+				$this->order->addProduct($this->products[$key], 1, false);
+			}
+
+			$this->order->save();
+
+			$this->assertEquals(count($this->order->getShipments()), $shipments);
+			$this->assertEquals($this->order->getTotal(), 926.27);
 		}
-
-		$this->order->save();
-
-		// @todo: one extra penny appears after rounding
-		$this->assertEquals($this->order->getTotal(), 926.27 + 0.01);
 	}
 }
 

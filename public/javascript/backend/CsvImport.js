@@ -11,6 +11,8 @@ Backend.CsvImport =
 {
 	isCompleted: false,
 
+	uid: null,
+
 	showCategorySelector: function(current)
 	{
 		new Backend.Category.PopupSelector(
@@ -88,7 +90,7 @@ Backend.CsvImport =
 
 	getImportRequest: function()
 	{
-		return new LiveCart.AjaxRequest($('delimitersForm'), $('previewIndicator'), this.onComplete.bind(this),  {onInteractive: this.dataResponse.bind(this), onSuccess: this.onComplete.bind(this) });
+		return new LiveCart.AjaxRequest($('delimitersForm'), $('previewIndicator'), this.onComplete.bind(this),  {onInteractive: this.dataResponse.bind(this), onSuccess: this.onComplete.bind(this)});
 	},
 
 	loadFields: function()
@@ -96,9 +98,19 @@ Backend.CsvImport =
 		$('delimiters').hide();
 		$('columns').show();
 		$('preview').addClassName('delimiterSelected');
+		$('importControls').addClassName('delimiterSelected');
 
 		$('wizardProgress').removeClassName('stepDelimiters');
 		$('wizardProgress').addClassName('stepArrange');
+
+		$('profile').onchange = this.loadProfile.bind(this);
+		$('saveProfile').onchange = function(e)
+		{
+			$('profileName').disabled = !this.checked;
+			$('profileName').focus();
+		}
+
+		$('deleteProfile').onclick = this.deleteProfile.bind(this);
 
 		var selectChange = function(e)
 		{
@@ -145,23 +157,13 @@ Backend.CsvImport =
 						select.configContainer.appendChild(clonedConfig);
 						$A(clonedConfig.getElementsByTagName('select')).each(function(sel)
 						{
-							sel.name = sel.name + '[' + columnIndex + ']';
+							sel.className = 'param-' + sel.name;
+							sel.name = 'params[' + columnIndex + '][' + sel.name + ']';
 						});
 					}
 				}.bind(inst)
 			}
 		}
-
-		var allSelects = $A($('columns').getElementsByTagName('select'));
-		allSelects.each
-		(
-			function(select)
-			{
-				Event.observe(select, 'change', selectChange);
-				Event.observe(select, 'change', showConfigFields(select, this));
-				select.allSelects = allSelects;
-			}.bind(this)
-		);
 
 		/* get field configurator containers */
 		this.fieldConfig = {};
@@ -176,6 +178,111 @@ Backend.CsvImport =
 			{
 				this.fieldConfig[className] = container;
 			}.bind(this));
+		}.bind(this));
+
+		var allSelects = $A($('columns').down('#fieldsContainer').getElementsByTagName('select'));
+		allSelects.each
+		(
+			function(select)
+			{
+				select.allSelects = allSelects;
+
+				var colName = select.parentNode.down('label').down('a').innerHTML.toLowerCase();
+				$A(select.options).each(function(opt)
+				{
+					if (colName == opt.innerHTML.toLowerCase())
+					{
+						select.value = opt.value;
+						selectChange.bind(select)();
+						showConfigFields(select, this)();
+						throw $break;
+					}
+				}.bind(this));
+
+				Event.observe(select, 'change', selectChange);
+				Event.observe(select, 'change', showConfigFields(select, this));
+			}.bind(this)
+		);
+	},
+
+	deleteProfile: function()
+	{
+		var el = $('profile');
+		var profile = el.value;
+
+		if (profile && confirm(Backend.getTranslation('_confirm_profile_delete')))
+		{
+			new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.csvImport', 'deleteProfile', { profile: profile, type: $('delimitersForm').elements.namedItem('type').value }), el.parentNode.down('span'), this.completeProfileDelete.bind(this));
+		}
+	},
+
+	completeProfileDelete: function(oReq)
+	{
+		$A($('profile').options).each(function(opt)
+		{
+			if (opt.value == oReq.responseData.profile)
+			{
+				opt.parentNode.removeChild(opt);
+				return;
+			}
+		});
+	},
+
+	loadProfile: function()
+	{
+		var el = $('profile');
+		var profile = el.value;
+		$('profileName').value = profile;
+		if (!profile)
+		{
+			this.resetFields();
+			return;
+		}
+
+		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.csvImport', 'loadProfile', { profile: profile, type: $('delimitersForm').elements.namedItem('type').value }), el.parentNode.down('span'), this.applyProfile.bind(this));
+	},
+
+	resetFields: function()
+	{
+		var k = 0;
+		do
+		{
+			this.setField(k, '');
+		} while ($('column_select_' + ++k));
+	},
+
+	applyProfile: function(oReq)
+	{
+		var profileData = oReq.responseData;
+		var params = profileData.params;
+		delete profileData.params;
+
+		$H(profileData).each(function(entry)
+		{
+			var key = entry[0];
+			var entry = entry[1];
+			var name = entry.name;
+			delete entry.name;
+			this.setField(key, name, entry);
+		}.bind(this));
+
+		$('firstHeader').checked = params.isHead;
+	},
+
+	setField: function(index, value, params)
+	{
+		var parent = $('column_select_' + index);
+		var select = parent.down('select');
+		select.value = value;
+		fireEvent(select, 'change');
+
+		$H(params).each(function(param)
+		{
+			var el = parent.down('.param-' + param[0]);
+			if (el)
+			{
+				el.value = param[1];
+			}
 		}.bind(this));
 	},
 
@@ -267,6 +374,12 @@ Backend.CsvImport =
 			{
 				this.setProgress(response);
 			}
+
+			if (response.uid != undefined)
+			{
+				this.uid = response.uid;
+				console.log(this.uid);
+			}
 		}
 	},
 
@@ -294,6 +407,7 @@ Backend.CsvImport =
 			}
 
 			$('delimitersForm').elements.namedItem('continue').value = true;
+			$('delimitersForm').elements.namedItem('uid').value = this.uid;
 			this.isCancelled = false;
 			this.request = this.getImportRequest();
 			this.nonTransactional = true;

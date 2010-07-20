@@ -5,7 +5,7 @@ ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.product.Product');
 
 /**
- * Assigns a related (recommended) product to a particular product
+ * Assigns a product to additional category
  *
  * @package application.model.product
  * @author Integry Systems <http://integry.com>
@@ -52,7 +52,9 @@ class ProductCategory extends ActiveRecordModel
 	{
 		$this->product->get()->updateCategoryCounters($this->product->get()->getCountUpdateFilter(), $this->category->get());
 		$this->product->get()->registerAdditionalCategory($this->category->get());
-		return parent::insert();
+		$insertResult = parent::insert();
+		Category::updateCategoryIntervals($this->product->get());
+		return $insertResult;
 	}
 
 }

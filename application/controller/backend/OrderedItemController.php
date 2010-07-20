@@ -16,6 +16,12 @@ ClassLoader::import("library.*");
  */
 class OrderedItemController extends StoreManagementController
 {
+	public function init()
+	{
+		parent::init();
+		CustomerOrder::allowEmpty();
+	}
+
 	public function create()
 	{
 		$product = Product::getInstanceById((int)$this->request->get('productID'), true);
@@ -35,7 +41,7 @@ class OrderedItemController extends StoreManagementController
 		$existingItem = false;
 		foreach($shipment->getItems() as $item)
 		{
-			if($item->product->get() === $product)
+			if($item->getProduct() === $product)
 			{
 				if (!$product->getOptions(true))
 				{
@@ -117,7 +123,7 @@ class OrderedItemController extends StoreManagementController
 			return new JSONResponse(array(
 				'item' => array(
 					'ID'			  => $item->getID(),
-					'Product'		 => $item->product->get()->toArray(),
+					'Product'		 => $item->getProduct()->toArray(),
 					'Shipment'		=> array(
 											'ID' => $shipment->getID(),
 											'amount' => (float)$shipment->amount->get(),
@@ -131,7 +137,7 @@ class OrderedItemController extends StoreManagementController
 					'price'		   => $item->price->get(),
 					'priceCurrencyID' => $item->getCurrency()->getID(),
 					'isExisting'	  => $existingItem,
-					'variations' => $item->product->get()->getParent()->getVariationData($this->application),
+					'variations' => $item->getProduct()->getParent()->getVariationData($this->application),
 				)
 			), 'success', $this->translate('_item_has_been_successfuly_saved')
 			);
@@ -159,22 +165,35 @@ class OrderedItemController extends StoreManagementController
 		$response->set("categoryList", $categoryList->toArray($this->application->getDefaultLanguageCode()));
 
 		$order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);
-		$downloadable = $order->getDownloadShipment(false);
+
+		$response->set("order", $order->toFlatArray());
+		$response->set("shipments", $this->getOrderShipments($order));
+
+		return $response;
+	}
+
+	public function shipments()
+	{
+		$order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);
+		return new ActionResponse("shipments", $this->getOrderShipments($order));
+	}
+
+	private function getOrderShipments(CustomerOrder $order)
+	{
 		$order->loadItems();
 		$shipments = $order->getShipments();
+		$downloadable = $order->getDownloadShipment(false);
 
-		// has downloadable group?
-		$downloadableGroup = null;
-		foreach($shipments as $key => $shipment)
+		if ($downloadable && count($shipments) == 1 && !count($downloadable->getItems()))
 		{
-			if(!$shipment->isShippable()) $downloadableGroup = $shipment;
+			$downloadable = null;
 		}
 
 		$shipmentsArray = array();
 		foreach($shipments as $key => $shipment)
 		{
 			// one shipment is reserved for downloadable items
-			if($shipment === $downloadable || $shipment->isShipped())
+			if ($shipment === $downloadable || $shipment->isShipped())
 			{
 				continue;
 			}
@@ -194,10 +213,7 @@ class OrderedItemController extends StoreManagementController
 			}
 		}
 
-		$response->set("order", $order->toFlatArray());
-		$response->set("shipments", $shipmentsArray);
-
-		return $response;
+		return $shipmentsArray;
 	}
 
 	/**
@@ -262,7 +278,7 @@ class OrderedItemController extends StoreManagementController
 						'count'		   => $item->count->get(),
 						'price'		   => $item->price->get(),
 						'priceCurrencyID' => $item->getCurrency()->getID(),
-						'downloadable' => $item->product->get()->isDownloadable()
+						'downloadable' => $item->getProduct()->isDownloadable()
 					)
 				),
 				'success'
@@ -398,7 +414,7 @@ class OrderedItemController extends StoreManagementController
 
 			$shipment->recalculateAmounts();
 
-			$item->customerOrder->get()->save();
+			$item->customerOrder->get()->save(true);
 			$item->save();
 			$shipment->save();
 
@@ -441,6 +457,7 @@ class OrderedItemController extends StoreManagementController
 
 	public function variationForm()
 	{
+		$this->loadLanguageFile('Frontend');
 		$this->loadLanguageFile('Product');
 		$this->loadLanguageFile('backend/Shipment');
 		$item = ActiveRecordModel::getInstanceById('OrderedItem', $this->request->get('id'), true, true);
@@ -450,7 +467,7 @@ class OrderedItemController extends StoreManagementController
 
 		$response = $c->variationForm($item->customerOrder->get(), '');
 		$response->set('currency', $item->customerOrder->get()->currency->get()->getID());
-		$response->set('variations', $item->product->get()->getVariationData($this->application));
+		$response->set('variations', $item->getProduct()->getVariationData($this->application));
 		return $response;
 	}
 
@@ -458,7 +475,7 @@ class OrderedItemController extends StoreManagementController
 	{
 		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id'), OrderedItem::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
 		$item->customerOrder->get()->loadAll();
-		foreach ($item->product->get()->getOptions(true) as $option)
+		foreach ($item->getProduct()->getOptions(true) as $option)
 		{
 			OrderController::modifyItemOption($item, $option, $this->request, OrderController::getFormFieldName($item, $option));
 		}
@@ -472,7 +489,7 @@ class OrderedItemController extends StoreManagementController
 	public function saveVariations()
 	{
 		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id'), OrderedItem::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
-		$variations = $item->product->get()->getVariationData($this->application);
+		$variations = $item->getProduct()->getVariationData($this->application);
 
 		$c = new OrderController($this->application);
 		if (!$c->buildVariationsValidator($item, $variations)->isValid())
@@ -495,12 +512,26 @@ class OrderedItemController extends StoreManagementController
 		return $this->getItemResponse($item);
 	}
 
+	public function downloadOptionFile()
+	{
+		ClassLoader::import('application.model.product.ProductOptionChoice');
+
+		$f = select(eq('OrderedItem.ID', $this->request->get('id')),
+					eq('ProductOptionChoice.optionID', $this->request->get('option')));
+
+		$set = ActiveRecordModel::getRecordSet('OrderedItemOption', $f, array('CustomerOrder', 'OrderedItem', 'ProductOptionChoice'));
+		if ($set->size())
+		{
+			return new ObjectFileResponse($set->get(0)->getFile());
+		}
+	}
+
 	private function getItemResponse(OrderedItem $item)
 	{
 		$item->customerOrder->get()->load();
 		$item->customerOrder->get()->loadItems();
 
-		if ($image = $item->product->get()->defaultImage->get())
+		if ($image = $item->getProduct()->defaultImage->get())
 		{
 			$image->load();
 		}
@@ -510,8 +541,8 @@ class OrderedItemController extends StoreManagementController
 		$response = new ActionResponse('item', $item->toArray());
 
 		// load product options and variations
-		$response->set('allOptions', ProductOption::loadOptionsForProductSet($item->product->get()->getParent()->initSet()));
-		$response->set('variations', $item->product->get()->getParent()->initSet()->getVariationData($this->application));
+		$response->set('allOptions', ProductOption::loadOptionsForProductSet($item->getProduct()->getParent()->initSet()));
+		$response->set('variations', $item->getProduct()->getParent()->initSet()->getVariationData($this->application));
 
 		return $response;
 	}

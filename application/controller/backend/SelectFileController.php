@@ -351,6 +351,7 @@ class SelectFileController extends ActiveGridController
 
 		try
 		{
+			$dir = urldecode($dir);
 			$iterator = new DirectoryIterator($dir);
 		}
 		catch (RuntimeException $e)

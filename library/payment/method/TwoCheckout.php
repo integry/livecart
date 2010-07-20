@@ -33,6 +33,7 @@ class TwoCheckout extends ExternalPayment
 
 		$params['return_url'] = $this->siteUrl;
 		$params['complete_url'] = $this->returnUrl;
+		//$params['lang'] = 'es_la';
 
 		// customer information
 		$params['card_holder_name'] = $this->details->getName();

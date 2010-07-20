@@ -28,13 +28,23 @@
  */
 function smarty_block_sect($params, $content, LiveCartSmarty $smarty, &$repeat)
 {
+	$counter = $smarty->get_template_vars('sectCounter');
 	if ($repeat)
 	{
-		$smarty->assign('sect', array('header' => '', 'content' => '', 'footer' => ''));
+		$counter++;
+		$smarty->assign('sectCounter', $counter);
+
+		$sections = $smarty->get_template_vars('sect');
+		$sections[$counter] = array('header' => '', 'content' => '', 'footer' => '');
+		$smarty->assign('sect', $sections);
 	}
 	else
 	{
 		$blocks = $smarty->get_template_vars('sect');
+		$blocks = $blocks[$counter];
+
+		$counter--;
+		$smarty->assign('sectCounter', $counter);
 
 		if (trim($blocks['content']))
 		{

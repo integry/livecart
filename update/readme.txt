@@ -12,12 +12,10 @@ II.  Applying the update
 
 2) Upload the unpacked files to your LiveCart installation directory. Allow to overwrite files when prompted.
 
-3) Go to your backend area and log in otherwise the update won't take effect
+3) Open the following URL: http://yourstore.com/update/update.php
 
-4) From your web browser open the following URL: http://yourstore.com/backend.update/update
-
-If the update was successful, you should receive a confirmation message.
+If the update was successful, you should receive a confirmation message. If you receive any database errors, you may try running http://yourstore.com/update/update.php?force=true to force the update.
 
 If you encounter any problems when updating your LiveCart installation please contact the support team (http://support.livecart.com).
 
-For an updated version of these instructions, please visit http://doc.livecart.com/install/update
+For an updated version of these instructions, please visit http://doc.livecart.com/install

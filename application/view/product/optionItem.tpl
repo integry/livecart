@@ -61,8 +61,12 @@
 						<div class="clear"></div>
 					</div>
 				{/if}
-			{else}
+			{elseif 2 == $option.type}
 				{textfield class="text"}
+			{elseif 3 == $option.type}
+				{filefield name="upload_`$fieldName`"}
+				{hidden name=$fieldName}
+				{error for="upload_`$fieldName`"}<div class="errorText">{$msg}</div>{/error}
 			{/if}
 
 			{if $option.description_lang}

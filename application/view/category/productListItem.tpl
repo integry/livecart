@@ -3,6 +3,7 @@
 	{include file="product/block/smallImage.tpl"}
 
 	<div class="descr">
+		<div class="descrWrapper1"><div class="descrWrapper2"><div class="descrWrapper3"><div class="descrWrapper4">
 
 		<div class="pricingInfo"><div><div>
 			{include file="product/block/cartButton.tpl"}
@@ -24,7 +25,9 @@
 		{/if}
 
 		<div class="shortDescr">
+			{block PRODUCT-LIST-DESCR-BEFORE}
 			{$product.shortDescription_lang}
+			{block PRODUCT-LIST-DESCR-AFTER}
 		</div>
 
 		<div class="order">
@@ -49,6 +52,7 @@
 			</div>
 		</div>
 
+		</div></div></div></div>
 	</div>
 
 </fieldset>

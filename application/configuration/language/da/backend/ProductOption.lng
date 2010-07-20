@@ -1,0 +1,7 @@
+_ProductOption_remove_question=Ønsker du virkeligt at fjerne denne produktvalgmulighed?
+_add_new_field=Tilføj ny valgmulighed
+_cancel_adding_new_field=Annuller tilføjelse af ny valgmulighed
+_error_name_empty=Venligst indtast produktvalgmulighedsnavnet
+_error_record_id_is_not_valid=Produktvalgmuligheden eksisterer ikke
+_could_not_remove_option=Kunne ikke fjerne valgmuligheden
+_could_not_remove_option_choice=Kunne ikke fjerne den valgte valgmulighed

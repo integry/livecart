@@ -11,7 +11,11 @@
 		{foreach from=$shipment.items item="item" name="shipment"}
 			<tr class="{zebra loop="shipment"}">
 				<td class="productName">
-					<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
+					{if $item.Product.ID}
+						<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
+					{else}
+						<span>{$item.Product.name_lang}</span>
+					{/if}
 					{if $item.Product.variations}
 						<span class="variations">
 							({include file="order/itemVariationsList.tpl"})
@@ -24,21 +28,23 @@
 			</tr>
 		{/foreach}
 
-		{if $shipment.taxes}
-			<tr>
-				<td colspan="3" class="subTotalCaption beforeTax">{t _subtotal_before_tax}:</td>
-				<td>{$shipment.formattedSubTotalBeforeTax.$currency}</td>
-			</tr>
-		{/if}
-
-		{foreach from=$shipment.taxes item="tax"}
-			{if $tax.amount}
+		{if !'HIDE_TAXES'|config}
+			{if $shipment.taxes}
 				<tr>
-					<td colspan="3" class="tax">{$tax.TaxRate.Tax.name_lang} ({$tax.TaxRate.rate}%):</td>
-					<td>{$tax.formattedAmount.$currency}</td>
+					<td colspan="3" class="subTotalCaption beforeTax">{t _subtotal_before_tax}:</td>
+					<td>{$shipment.formattedSubTotalBeforeTax.$currency}</td>
 				</tr>
 			{/if}
-		{/foreach}
+
+			{foreach from=$shipment.taxes item="tax"}
+				{if $tax.amount}
+					<tr>
+						<td colspan="3" class="tax">{$tax.TaxRate.Tax.name_lang} ({$tax.TaxRate.rate}%):</td>
+						<td>{$tax.formattedAmount.$currency}</td>
+					</tr>
+				{/if}
+			{/foreach}
+		{/if}
 
 		<tr>
 			<td colspan="3" class="subTotalCaption">{t _subtotal}:</td>

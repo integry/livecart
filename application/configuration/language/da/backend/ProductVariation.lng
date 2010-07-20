@@ -1,0 +1,14 @@
+_image=Billede
+_add=Tilføj
+_no_change=Ingen ændringer
+_sku=Varenummer
+_price=Pris
+_weight=Vægt
+_err_type_name=Venligst indtast variant type navn (f.eks. 'Størrelse')
+_err_variation_name=Venligst indtast variant navn (f.eks. 'Large')
+_variations_save_conf=Produktvarianter blev gemt succesfuldt
+_add_variation=Tilføj variant
+_add_variation_type=Tilføj variant type
+_inventory=Varelager
+_fixed=Fast
+_substract=Sammendrage

@@ -1,0 +1,11 @@
+# Confirmations
+_class_entry_was_successfully_saved=Shipping class was successfully saved
+
+_add_new_class=Add new shipping class
+_cancel_adding_new_class=Cancel adding new shipping class
+_name=Name
+_manage=Manage
+_classes=Shipping Classes
+
+_error_the_name_should_not_be_empty=Please enter the name
+_are_you_sure_you_want_to_remove_ths_class=Are you sure you want to remove this shipping class?

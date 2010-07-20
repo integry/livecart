@@ -991,7 +991,7 @@ Backend.DeliveryZone.ShippingService.prototype =
 			if(!this.service.ID)
 			{
 				ratesCount = this.nodes.root.down(".activeList").getElementsByTagName("li").length;
-				rangeTypeString = response.service.rangeType == 0 ? Backend.DeliveryZone.TaxRate.prototype.Messages.weightBasedRates : Backend.DeliveryZone.TaxRate.prototype.Messages.subtotalBasedRates;
+				rangeTypeString = response.service.rangeType == 0 ? Backend.DeliveryZone.prototype.Messages.weightBasedRates : Backend.DeliveryZone.prototype.Messages.subtotalBasedRates;
 
 				var li = this.servicesActiveList.addRecord(response.service.ID, '<span class="' + this.prefix + 'servicesList_title">' + this.nodes.name.value + ' ( <b class="ratesCount">' + ratesCount + '</b>' + rangeTypeString  + ' )</span>');
 				this.hideNewForm();
@@ -1125,6 +1125,12 @@ Backend.DeliveryZone.ShippingRate.prototype =
 			this.nodes.perItemCharge.name = 'rate_' + this.rate.ID + '_perItemCharge';
 			this.nodes.subtotalPercentCharge.name = 'rate_' + this.rate.ID + '_subtotalPercentCharge';
 			this.nodes.perKgCharge.name = 'rate_' + this.rate.ID + '_perKgCharge';
+
+			this.nodes.perItemChargeClass.each(function(node)
+			{
+				var classID = node.name.match(/\[([0-9]+)\]/).pop();
+				node.name = 'rate_' + this.rate.ID + '_perItemChargeClass[' + classID + ']';
+			}.bind(this));
 		}
 	},
 
@@ -1168,6 +1174,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
 		this.nodes.subtotalRangeEnd = this.nodes.root.down('.' + this.prefix + 'subtotalRangeEnd');
 		this.nodes.flatCharge = this.nodes.root.down('.' + this.prefix + 'flatCharge');
 		this.nodes.perItemCharge = this.nodes.root.down('.' + this.prefix + 'perItemCharge');
+		this.nodes.perItemChargeClass = $A(this.nodes.root.getElementsBySelector('.' + this.prefix + 'perItemChargeClass'));
 		this.nodes.subtotalPercentCharge = this.nodes.root.down('.' + this.prefix + 'subtotalPercentCharge');
 		this.nodes.perKgCharge = this.nodes.root.down('.' + this.prefix + 'perKgCharge');
 	},
@@ -1229,10 +1236,10 @@ Backend.DeliveryZone.ShippingRate.prototype =
 
 			var idStart = this.prefix + this.deliveryZoneId + '_' + this.rate.ShippingService.ID + "_";
 			var idStartRegexp = new RegExp(idStart);
-			document.getElementsByClassName(this.prefix + 'rateFloatValue', li).each(function(input) {
+			$A(document.getElementsByClassName(this.prefix + 'rateFloatValue', li)).each(function(input) {
 				Event.observe(input, "keyup", function(e){ NumericFilter(this) });
 				input.id = input.id.replace(idStartRegexp, idStart + 'new' + newId);
-				Event.observe(input.up().down('label'), 'click', function(e) { Event.stop(e); input.focus(); });
+				Event.observe(input.up('fieldset.error').down('label'), 'click', function(e) { Event.stop(e); input.focus(); });
 			}.bind(this));
 
 			document.getElementsByClassName('UnitConventer_Root', li).each(function(el) {
@@ -1267,6 +1274,11 @@ Backend.DeliveryZone.ShippingRate.prototype =
 			this.nodes.perItemCharge.value = '0';
 			this.nodes.subtotalPercentCharge.value = '0';
 			this.nodes.perKgCharge.value = '0';
+
+			this.nodes.perItemChargeClass.each(function(node)
+			{
+				node.value = '';
+			}.bind(this));
 
 			Backend.DeliveryZone.ShippingRate.prototype.newRateLastId++;
 
@@ -1311,262 +1323,23 @@ Backend.DeliveryZone.ShippingRate.prototype =
 	}
 }
 
-
-
-
-Backend.DeliveryZone.TaxRate = Class.create();
-Backend.DeliveryZone.TaxRate.prototype =
+Backend.DeliveryZone.lookupAddress = function(form, e)
 {
-	Links: {},
-	Messages: {},
-
-	Callbacks: {
-		'beforeDelete': function(li)
-		{
-			if(confirm(Backend.DeliveryZone.TaxRate.prototype.Messages.confirmDelete))
-			{
-				return Backend.DeliveryZone.TaxRate.prototype.Links.remove + "/" + this.getRecordId(li);
-			}
-		},
-		'afterDelete': function(li, response)
-		{
-			 try
-			 {
-				 response = eval('(' + response + ')');
-			 }
-			 catch(e)
-			 {
-				 return false;
-			 }
-
-			if('success' == response.status) {
-				var formId = $(Backend.DeliveryZone.TaxRate.prototype.prefix + "new_taxRate_" + this.getRecordId(li, 2) + "_form").down('form').id
-				if(Backend.DeliveryZone.TaxRate.prototype.instances[formId])
-				{
-					var taxForm = Backend.DeliveryZone.TaxRate.prototype.getInstance(formId);
-					taxForm.addTaxOption(response.tax.ID, response.tax.name);
-				}
-
-				return true;
-			}
-
-			return false;
-		},
-
-		beforeEdit:	 function(li)
-		{
-			if(this.isContainerEmpty(li, 'edit'))
-			{
-				return Backend.DeliveryZone.TaxRate.prototype.Links.edit + '/' + this.getRecordId(li)
-			}
-			else
-			{
-				var newRateForm = $("taxRate_" + this.getRecordId(li, 2) + '_');
-				if(newRateForm.up().style.display == 'block')
-				{
-					Backend.DeliveryZone.TaxRate.prototype.getInstance(newRateForm).hideNewForm();
-				}
-
-				this.toggleContainer(li, 'edit');
-			}
-		},
-
-		afterEdit:	  function(li, response)
-		{
-			var newRateForm = $("taxRate_" + this.getRecordId(li, 2) + '_');
-			if(newRateForm.up().style.display == 'block')
-			{
-				Backend.DeliveryZone.TaxRate.prototype.getInstance(newRateForm).hideNewForm();
-			}
-			this.getContainer(li, 'edit').update(response);
-			this.toggleContainer(li, 'edit');
-		}
-	},
-
-	instances: {},
-
-	prefix: 'taxRate_',
-
-	initialize: function(root, rate)
+	Event.stop(e);
+	new LiveCart.AjaxRequest(form, null, function(req)
 	{
-		this.rate = rate;
-		this.deliveryZoneId = this.rate.DeliveryZone ? this.rate.DeliveryZone.ID : '';
-		this.findUsedNodes(root);
-		this.bindEvents();
-		this.ratesActiveList = ActiveList.prototype.getInstance(this.nodes.ratesList);
-
-		Form.State.backup(this.nodes.form);
-	},
-
-	getInstance: function(rootNode, rate)
-	{
-		var rootId = $(rootNode).id;
-		if(!Backend.DeliveryZone.TaxRate.prototype.instances[rootId])
+		var zone = req.responseData;
+		var cont = $('zoneLookupResult').down('span');
+		if (zone.ID)
 		{
-			Backend.DeliveryZone.TaxRate.prototype.instances[rootId] = new Backend.DeliveryZone.TaxRate(rootId, rate);
-		}
-
-		return Backend.DeliveryZone.TaxRate.prototype.instances[rootId];
-	},
-
-	addTaxOption: function(id, name)
-	{
-		var formBackupId = this.nodes.form.backupId;
-		Form.State.backups[formBackupId]['taxID'][0]['options'][id] = name;
-		this.nodes.taxID.options[this.nodes.taxID.options.length] = new Option(name, id);
-
-		if(this.nodes.taxID.options.length > 0)
-		{
-			this.nodes.noAwailableTaxes.hide();
+			cont.update(zone.name);
 		}
 		else
 		{
-			this.nodes.noAwailableTaxes.show();
+			cont.update(Backend.getTranslation('_default_zone'));
 		}
-	},
 
-	removeTaxOption: function(id)
-	{
-		$A(this.nodes.taxID.options).each(function(option)
-		{
-			if(option.value == id)
-			{
-				var formBackupId = this.nodes.form.backupId;
-				delete Form.State.backups[formBackupId]['taxID'][0]['options'][id];
-				Element.remove(option);
-				throw $break;
-			}
-		}.bind(this));
-
-		if(this.nodes.taxID.options.length > 0)
-		{
-			this.nodes.noAwailableTaxes.hide();
-		}
-		else
-		{
-			this.nodes.noAwailableTaxes.show();
-		}
-	},
-
-	findUsedNodes: function(root)
-	{
-		this.nodes = {};
-
-		this.nodes.root = $(root);
-		this.nodes.form = this.nodes.root;
-
-		this.nodes.controls = this.nodes.root.down('.' + this.prefix + 'controls');
-		this.nodes.save = this.nodes.controls.down('.' + this.prefix + 'save');
-		this.nodes.cancel = this.nodes.controls.down('.' + this.prefix + 'cancel');
-
-		this.nodes.rate = this.nodes.root.down('.' + this.prefix  + 'rate');
-		this.nodes.taxID = this.nodes.root.down('.' + this.prefix + 'taxID');
-		this.nodes.deliveryZoneID = this.nodes.root.down('.' + this.prefix + 'deliveryZoneID');
-		this.nodes.taxRateID = this.nodes.root.down('.' + this.prefix + 'taxRateID');
-		this.nodes.noAwailableTaxes = this.nodes.root.down(".noAwailableTaxes");
-
-		this.nodes.ratesList = $(this.prefix + "taxRatesList_" + this.deliveryZoneId)
-
-		if(0 == this.rate.ID)
-		{
-			this.nodes.menu = $(this.prefix + "menu_" + this.deliveryZoneId);
-			this.nodes.menuCancelLink = $(this.prefix + "new_" + this.deliveryZoneId + "_cancel");
-			this.nodes.menuShowLink = $(this.prefix + "new_" + this.deliveryZoneId + "_show");
-			this.nodes.menuForm = $(this.prefix + "new_taxRate_" + this.deliveryZoneId + "_form");
-		}
-	},
-
-	bindEvents: function()
-	{
-	   Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
-
-	   Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
-	   if(0 == this.rate.ID)
-	   {
-		   Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
-	   }
-
-	   $A(this.nodes.rangeTypes).each(function(radio)
-	   {
-		   Event.observe(radio, 'click', function(e) { this.rangeTypeChanged(); }.bind(this));
-	   }.bind(this));
-	},
-
-	showNewForm: function()
-	{
-		var menu = new ActiveForm.Slide(this.nodes.menu);
-		menu.show("addNewTaxRate", this.nodes.menuForm);
-	},
-
-	hideNewForm: function()
-	{
-		var menu = new ActiveForm.Slide(this.nodes.menu);
-
-		this.nodes.menuForm.addClassName('hiding');
-		menu.hide("addNewTaxRate", this.nodes.menuForm, null,
-					function()
-					{
-						this.nodes.menuForm.removeClassName('hiding');
-					}.bind(this)
-				 );
-
-		Form.State.restore(this.nodes.form);
-	},
-
-	save: function(event)
-	{
-		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-		var action = this.rate.ID > 0
-			? Backend.DeliveryZone.TaxRate.prototype.Links.update
-			: Backend.DeliveryZone.TaxRate.prototype.Links.create;
-
-		new LiveCart.AjaxRequest(
-			action + '?' + Form.serialize(this.nodes.form),
-			this.nodes.form.down('.controls').down('.progressIndicator'),
-			function(response)
-			{
-				var response = eval("(" + response.responseText + ")");
-				this.afterSave(response);
-			}.bind(this)
-		);
-	},
-
-	afterSave: function(response)
-	{
-		if(response.status == 'success')
-		{
-			if(0 == this.rate.ID)
-			{
-				var li = this.ratesActiveList.addRecord(response.rate.ID, '<span class="' + this.prefix + 'taxRatesList_title">' + response.rate.Tax.name + '</span> <span class="taxRate_taxRatesList_rate">(<span>' + response.rate.rate + '</span>%)</span>');
-				this.removeTaxOption(this.nodes.taxID.value);
-				this.hideNewForm();
-			}
-			else
-			{
-				Form.State.backup(this.nodes.form);
-				var container = this.nodes.root.up('li');
-				container.down('.taxRate_taxRatesList_rate').down('span').update(response.rate.rate);
-				this.ratesActiveList.toggleContainer(container, 'edit', 'yellow');
-			}
-		}
-		else
-		{
-			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors);
-		}
-	},
-
-	cancel: function()
-	{
-		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-		if(0 == this.rate.ID)
-		{
-			this.hideNewForm();
-		}
-		else
-		{
-			this.ratesActiveList.toggleContainerOff(this.nodes.root.up('.activeList_editContainer'));
-			Form.State.restore(this.nodes.form);
-		}
-	}
+		cont.parentNode.show();
+		new Effect.Highlight(cont);
+	});
 }
-

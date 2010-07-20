@@ -17,6 +17,12 @@
 		</div>
 	</div>
 
+	{if $error}
+		<div class="errorMessage">
+			<div>{$error}</div>
+		</div>
+	{/if}
+
 	{include file="checkout/completeOverview.tpl" productsInSeparateLine=true}
 
 	<div class="paymentMethods">

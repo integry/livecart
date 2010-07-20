@@ -1,5 +1,7 @@
 {form action="controller=user action=doRegister" method="POST" handle=$regForm}
 
+	{* field required=true name="firstName" label=_your_first_name type=textfield *}
+
 	<p class="required">
 		{err for="firstName"}
 			{{label {t _your_first_name}:}}
@@ -28,19 +30,7 @@
 		{/err}
 	</p>
 
-	<p class="required">
-		{err for="password"}
-			{{label {t _password}:}}
-			{textfield type="password" class="text"}
-		{/err}
-	</p>
-
-	<p class="required">
-		{err for="confpassword"}
-			{{label {t _conf_password}:}}
-			{textfield type="password" class="text"}
-		{/err}
-	</p>
+	{include file="user/block/passwordFields.tpl" required=true}
 
 	{include file="block/eav/fields.tpl" item=$user filter="isDisplayed"}
 

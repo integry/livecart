@@ -37,6 +37,12 @@
 
 	$app = new LiveCart();
 
+	if (isset($stat))
+	{
+		$app->setStatHandler($stat);
+		$stat->logStep('Initialization');
+	}
+
 	// Custom initialization tasks
 	$custom = ClassLoader::getRealPath('storage.configuration.CustomInitialize') . '.php';
 	if (file_exists($custom))
@@ -131,6 +137,13 @@
 			exit;
 		}
 
+		catch (SQLException $e)
+		{
+			$_REQUEST['exception'] = $e;
+			$app->getRouter()->setRequestedRoute('err/database');
+			runApp($app);
+		}
+
 		catch (Exception $e)
 		{
 			$route = 'err/redirect/500';
@@ -153,5 +166,7 @@
 		echo ApplicationException::getFileTrace($e->getTrace());
 		exit;
 	}
+
+	session_write_close();
 
 ?>

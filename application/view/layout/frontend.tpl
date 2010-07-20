@@ -8,6 +8,7 @@
 	<meta name="Keywords" content="{$metaKeywords|escape}" />
 	{assign var="defaultMeta" value='DEFAULT_META_DESCR'|config}
 	<meta name="Description" content="{$metaDescription|@or:$defaultMeta|escape}" />
+	<meta http-equiv="X-UA-Compatible" content="IE=100" />
 
 	<title>
 		{if !$PAGE_TITLE}
@@ -30,6 +31,12 @@
 		<link href="{'FAVICON'|config}" rel="shortcut icon" />
 	{/if}
 
+	{if !$CANONICAL}
+		{canonical}{self}{/canonical}
+	{/if}
+
+	<link rel="canonical" href="{$CANONICAL}" />
+
 	<!-- Css includes -->
 	{includeCss file="frontend/Frontend.css"}
 	{includeCss file="backend/stat.css"}
@@ -48,6 +55,7 @@
 
 	<!-- JavaScript includes -->
 	{* <script type="text/javascript" src="firebug/firebug.js"></script> *}
+	{loadJs}
 	{compiledJs glue=true nameMethod=hash}
 
 	{*
@@ -59,17 +67,33 @@
 		<script src="javascript/library/ie7/IE8.js" type="text/javascript"></script>
 	<![endif]-->
 	*}
+	<script type="text/javascript">
+		Router.setUrlTemplate('{link controller=controller action=action}');
+	</script>
 </head>
 
 <body class="{$request.controller}Con {$request.controller}-{$request.action}{if ($request.requestLanguage == 'he') || ($request.requestLanguage == 'ar')} rtl{/if}{if $bodyClass} {$bodyClass}{/if}">
 	{liveCustomization action="menu"}
 	<div id="container" class="lang_{localeCode}">
-		{block PAGE-TOP}
-		{$ACTION_VIEW}
-		{block PAGE-BOTTOM}
+		<div id="containerWrapper1">
+		<div id="containerWrapper2">
+		<div id="containerWrapper3">
+			{block PAGE-TOP}
+			{$ACTION_VIEW}
+			{block PAGE-BOTTOM}
+		</div>
+		</div>
+		</div>
 	</div>
 	{block TRACKING}
 	{liveCustomization action="lang"}
+
+	{if !'DISABLE_AJAX'|config}
+		<script type="text/javascript">
+			new Frontend.AjaxInit(document.body);
+			{loadJs}
+		</script>
+	{/if}
 </body>
 
 </html>

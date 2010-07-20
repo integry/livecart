@@ -35,6 +35,11 @@ class CategoryImageController extends ObjectImageController
 		return parent::save();
 	}
 
+	public function resizeImages()
+	{
+		return parent::resizeImages();
+	}
+
 	/**
 	 * @role update
 	 */
@@ -56,25 +61,25 @@ class CategoryImageController extends ObjectImageController
 	public function saveOrder()
 	{
 		parent::saveOrder();
-		
+
 		return new JSONResponse(true);
-	}	
+	}
 
 	protected function getModelClass()
 	{
 		return 'CategoryImage';
 	}
-	
+
 	protected function getOwnerClass()
 	{
 		return 'Category';
 	}
-	
+
 	protected function getForeignKeyName()
 	{
 		return 'categoryID';
-	}   
-		
-}	
-	  
+	}
+
+}
+
 ?>

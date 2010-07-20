@@ -1,0 +1,16 @@
+_product_relationship_group_title=Titel
+_are_you_sure_you_want_to_delete_this_relation=Er du sikker på, at du ønsker at slette denne sammenhæng?
+_are_you_sure_you_want_to_delete_this_group=Er du sikker på, at du ønsker at slette denne sammenhængsgruppe?
+_cancel_adding_new_group=Annuller tilføjelse af ny gruppe
+_cancel_adding_new_related_product=Annuller tilføjelse af ny sammenhæng
+_add_new_group=Tilføj ny gruppe
+_err_relationship_name_is_empty=Venligst indtast gruppenavn
+_err_circular=Kunne ikke tilføje et beslægtet produkt til det samme produkt
+_msg_added=Det beslægtede produkt er blevet tilføjet succesfuldt
+_done_adding=Afslut tilføjelse af beslægtede produkter
+_add_group_title=Tilføj ny beslægtet produktgruppe
+_could_not_create_product_relationship=Dette produkt er allerede blevet udpeget som beslægtet
+_err_multiple=Dette produkt er allerede blevet udpeget som beslægtet
+_a_relationship_between_products_was_successfully_created=En sammenhæng mellem produkter blev oprettet succesfuldt
+_relationship_was_successfully_removed=Sammenhæng blev fjernet succesfuldt
+_select_product=Tilføj beslægtet produkt

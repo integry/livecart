@@ -33,6 +33,9 @@ _accept_order=Accept order
 _cancel_order=Cancel order
 _this_order_is=This order is
 
+_finalize=Finalize order
+_order_is_finalized=The order has been finalized
+
 # Tree
 _all_orders=All Orders
 _current_orders=Current
@@ -63,16 +66,18 @@ _order_report=Report
 
 # Grid columns
 CustomerOrder.ID=ID
-CustomerOrder.ID2=Order ID
+CustomerOrder.invoiceNumber=Invoice number
 CustomerOrder.status=Status
 CustomerOrder.totalAmount=Order total
 CustomerOrder.capturedAmount=Captured amount
 CustomerOrder.isFinalized=Finalized
 CustomerOrder.isPaid=Paid
+CustomerOrder.isMultiAddress=Shipped to multiple addresses
 CustomerOrder.isCanceled=Cancelled
 CustomerOrder.dateCreated=Created
 CustomerOrder.dateCompleted=Completed
 CustomerOrder.isCancelled=Is cancelled
+CustomerOrder.taxAmount=Tax amount
 ShippingAddress.firstName=Recipient first name
 ShippingAddress.lastName=Recipient last name
 ShippingAddress.countryID=Country
@@ -94,6 +99,9 @@ OrderedItem.count=Count
 OrderedItem.price=Unit price
 OrderedItem.priceCurrencyID=Currency
 OrderedItem.itemSubtotal=Item subtotal
+OrderedItem=Ordered product
+OrderedItem.shipment=Shipment number
+OrderedItem.products=List of ordered products
 
 _listing_orders=Listing orders $from - $to of $count
 _no_orders=No orders found
@@ -109,6 +117,8 @@ _set_processing=Processing
 _set_awaiting_shipment=Awaiting shipment
 _set_shipped=Shipped
 _set_returned=Returned
+_mark_completed=Mark as completed order
+_print_shipping_labels=Print shipping labels
 _process=Save
 
 # Order summary

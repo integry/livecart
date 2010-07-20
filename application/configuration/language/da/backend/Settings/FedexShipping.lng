@@ -1,0 +1,7 @@
+FedexShipping_accountNumber=Kontonummer
+FedexShipping_meterNumber=Meternummer
+FedexShipping_apiUrl=API URL
+FedexShipping=FedEx 
+_FEDEX_API_ACCESS=API adgang
+_FEDEX_SERVICE_OPTS=Servicemuligheder
+FedexShipping_enabledServices=Tilkoble services

@@ -30,7 +30,7 @@
 {foreach item="relationship" from=$items}
 	{if $relationship.RelatedProduct.ID}
 		<li id="{$relationship.RelatedProduct.ID}">
-			{include file="backend/productRelationship/addRelated.tpl" product=$relationship.RelatedProduct}
+			{include file="backend/productRelationship/addRelated.tpl" product=$relationship.RelatedProduct template="backend/productBundle/bundleCount.tpl"}
 		</li>
 	{/if}
 {/foreach}

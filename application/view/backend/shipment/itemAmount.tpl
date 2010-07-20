@@ -11,7 +11,11 @@
 		</td>
 		<td class="orderShipmentsItem_info_name_td">
 			<div class="orderShipmentsItem_info_name">
-				<a href="{backendProductUrl product=$item.Product}">{$item.Product.name_lang}</a>
+				{if $item.Product.ID}
+					<a href="{backendProductUrl product=$item.Product}">{$item.Product.name_lang}</a>
+				{else}
+					<span>{$item.Product.name_lang}</span>
+				{/if}
 				{if $allOptions[$item.Product.ID] || $item.options}
 					({$item.formattedBasePrice})
 					<div class="productOptions">
@@ -23,6 +27,13 @@
 									{t _option_yes}
 								{elseif 1 == $option.Choice.Option.type}
 									{$option.Choice.name_lang}
+								{elseif 3 == $option.Choice.Option.type}
+									<a href="{link controller=backend.orderedItem action=downloadOptionFile id=$item.ID query="option=`$option.Choice.Option.ID`"}">{$option.fileName}</a>
+									{if $option.small_url}
+										<div class="optionImage">
+											<a href="{$option.large_url}" rel="lightbox"><img src="{$option.small_url}" /></a>
+										</div>
+									{/if}
 								{else}
 									{$option.optionText|@htmlspecialchars}
 								{/if}
@@ -57,6 +68,12 @@
 					</div>
 				{/if}
 
+				{if $downloadCount[$item.ID]}
+					<div class="itemDownloadStats">
+						{t _times_downloaded}: {$downloadCount[$item.ID]}
+					</div>
+				{/if}
+
 			</div>
 		</td>
 		<td class="orderShipmentsItem_info_price_td">
@@ -76,7 +93,7 @@
 		<td class="orderShipmentsItem_info_total_td ">
 			<div class="orderShipmentsItem_info_total item_subtotal">
 				<span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
-				<span class="price">{$item.itemSubTotal|string_format:"%.2f"}</span>
+				<span class="price">{$item.displaySubTotal|string_format:"%.2f"}</span>
 				<span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
 			</div>
 		</td>

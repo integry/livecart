@@ -9,8 +9,8 @@
 
 		{foreach from=$feed item=product}
 			<item>
-				<title><![CDATA[{$product.name_lang|@trim|@htmlentities}]]></title>
-				<description><![CDATA[{$product.shortDescription_lang|@trim|@strip_tags|@htmlentities}]]></description>
+				<title><![CDATA[{$product.name_lang_utf8}]]></title>
+				<description><![CDATA[{$product.shortDescription_lang_utf8}]]></description>
 
 				<link><![CDATA[{productUrl product=$product full=true}]]></link>
 
@@ -29,6 +29,7 @@
 				{/if}
 				<g:condition>new</g:condition>
 				<g:product_type><![CDATA[{$product.Category.name_lang|@htmlentities}]]></g:product_type>
+
 			</item>
 		{/foreach}
 

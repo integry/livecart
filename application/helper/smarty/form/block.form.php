@@ -79,7 +79,7 @@ function smarty_block_form(&$params, $content, $smarty, &$repeat)
 		}
 		else if ('self' == $formAction || !$formAction)
 		{
-			$actionURL = $_SERVER['REQUEST_URI'];
+			$actionURL = urldecode($_SERVER['REQUEST_URI']);
 		}
 
 		if (!empty($params['onsubmit']))

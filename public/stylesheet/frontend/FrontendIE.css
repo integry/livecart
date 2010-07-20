@@ -52,3 +52,35 @@ table.productGrid
 {
     line-height: 40px;
 }
+
+* html .rootCategories,
+* html .rootCategories *
+{
+	z-index: 50000 !important;
+}
+
+* html .rootCategories li
+{
+	position: relative;
+}
+
+* html .rootCategories .wrapper
+{
+	left: 0;
+	top: 20px;
+}
+
+* html .categoryLayoutSwitch
+{
+	display: none;
+}
+
+/*
+.rootCategories li *
+{
+	border: 1px solid red;
+	padding: 0 !important;
+	margin: 0 !important;
+	height: auto !important;
+}
+*/

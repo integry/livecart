@@ -193,6 +193,28 @@ Backend.ProductBundle.addProductToList = function(ownerID, relatedownerID, popup
 	);
 }
 
+Backend.ProductBundle.quantityField = function(ownerID, relatedownerID)
+{
+	var input = $('productBundle_' + ownerID).down('#' + relatedownerID).down('input.number');
+
+	input.onchange = function()
+	{
+		var relatedList = ActiveList.prototype.getInstance($('productBundle_' + ownerID));
+		var record = relatedList.getRecordById(relatedownerID);
+		input.addClassName('progressIndicator');
+		new LiveCart.AjaxRequest(
+			Backend.Router.createUrl('backend.productBundleItem', 'setCount', {id: ownerID, relatedownerID: relatedownerID, count: input.value}),
+			false,
+			function(response)
+			{
+				Backend.ProductBundle.activeListCallbacks.methods.updateTotal(record, response.responseData.total);
+				input.value = response.responseData.count;
+				input.removeClassName('progressIndicator');
+				relatedList.highlight(record);
+			});
+	}
+}
+
 Backend.ProductBundle.Group.Controller.methods =
 {
 	namespace: Backend.ProductBundle,

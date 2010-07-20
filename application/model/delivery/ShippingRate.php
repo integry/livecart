@@ -18,20 +18,20 @@ ClassLoader::import("application.model.delivery.*");
  *	 rate = flatCharge + (itemCount * perItemCharge) + (shipmentSubtotal * subtotalPercentCharge)
  *
  * @package application.model.delivery
- * @author Integry Systems <http://integry.com> 
+ * @author Integry Systems <http://integry.com>
  */
-class ShippingRate extends MultilingualObject 
+class ShippingRate extends MultilingualObject
 {
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("ShippingRate");
-		
+
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("shippingServiceID", "ShippingService", "ID", "ShippingService", ARInteger::instance()));
-		
+
 		$schema->registerField(new ARField("weightRangeStart", ARFloat::instance()));
-		
+
 		$schema->registerField(new ARField("weightRangeEnd", ARFloat::instance()));
 		$schema->registerField(new ARField("subtotalRangeStart", ARFloat::instance()));
 		$schema->registerField(new ARField("subtotalRangeEnd", ARFloat::instance()));
@@ -39,6 +39,7 @@ class ShippingRate extends MultilingualObject
 		$schema->registerField(new ARField("perItemCharge", ARFloat::instance()));
 		$schema->registerField(new ARField("subtotalPercentCharge", ARFloat::instance()));
 		$schema->registerField(new ARField("perKgCharge", ARFloat::instance()));
+		$schema->registerField(new ArField("perItemChargeClass", ARArray::instance()));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -53,13 +54,13 @@ class ShippingRate extends MultilingualObject
 	 * @return ShippingRate
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
-	{			
+	{
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
-	
+
 	/**
 	 * Create new shipping rate instance
-	 * 
+	 *
 	 * @param ShippingService $shippingService Shipping service instance
 	 * @param float $rangeStart Lower range limit
 	 * @param float $rangeEnd Higher range limit
@@ -69,10 +70,10 @@ class ShippingRate extends MultilingualObject
 	{
 	  	$instance = ActiveRecord::getNewInstance(__CLASS__);
 	  	$instance->shippingService->set($shippingService);
-	  	
+
 	  	$instance->setRangeStart($rangeStart);
 	  	$instance->setRangeEnd($rangeEnd);
-	  	
+
 	  	return $instance;
 	}
 
@@ -88,9 +89,9 @@ class ShippingRate extends MultilingualObject
 	{
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
-	
-	/*####################  Instance retrieval ####################*/			
-		
+
+	/*####################  Instance retrieval ####################*/
+
 	/**
 	 * Load service rates from known service
 	 *
@@ -104,47 +105,79 @@ class ShippingRate extends MultilingualObject
  		$filter = new ARSelectFilter();
 
 		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "shippingServiceID"), $service->getID()));
-		
+
 		return self::getRecordSet($filter, $loadReferencedRecords);
 	}
-		
-	/*####################  Value retrieval and manipulation ####################*/		
-	
+
+	/*####################  Value retrieval and manipulation ####################*/
+
 	public function setRangeStart($rangeStart)
 	{
 		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeStart->set($rangeStart) : $this->subtotalRangeStart->set($rangeStart);
 	}
-	
+
 	public function setRangeEnd($rangeEnd)
 	{
 		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeEnd->set($rangeEnd) : $this->subtotalRangeEnd->set($rangeEnd);
 	}
-	
+
 	public function getRangeStart()
 	{
 		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeStart->get() : $this->subtotalRangeStart->get();
 	}
-	
+
 	public function getRangeEnd()
 	{
 		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeEnd->get() : $this->subtotalRangeEnd->get();
 	}
-	
+
 	public function getRangeType()
 	{
 		if(!$this->isLoaded() && $this->isExistingRecord())
 		{
 			$this->load();
 		}
-		
+
 		$service = $this->shippingService->get();
-		if(!$service->isLoaded()) 
+		if(!$service->isLoaded())
 		{
 			$service->load();
 		}
-		
+
 		return $service->rangeType->get();
-	}	
+	}
+
+	public function setClassItemCharge(ShippingClass $class, $charge)
+	{
+		$this->setValueByLang('perItemChargeClass', $class->getID(), $charge);
+	}
+
+	/**
+	 *  Get per item charge for particular item depending on its shipping class
+	 */
+	public function getItemCharge(OrderedItem $item)
+	{
+		$product = $item->getProduct()->getParent();
+
+		if (!$product->isLoaded())
+		{
+			$product->load();
+		}
+
+		$class = $product->shippingClass->get();
+		if (!$class)
+		{
+			return $this->perItemCharge->get();
+		}
+
+		$charge = $this->getValueByLang('perItemChargeClass', $class->getID());
+		if (is_null($charge) || !strlen($charge))
+		{
+			return $this->perItemCharge->get();
+		}
+
+		return $charge;
+	}
 }
 
 ?>

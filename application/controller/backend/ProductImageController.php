@@ -18,7 +18,7 @@ class ProductImageController extends ObjectImageController
 	{
 		return parent::index();
 	}
-	
+
 	/**
 	 * @role update
 	 */
@@ -34,7 +34,12 @@ class ProductImageController extends ObjectImageController
 	{
 		return parent::save();
 	}
-	
+
+	public function resizeImages()
+	{
+		return parent::resizeImages();
+	}
+
 	/**
 	 * @role update
 	 */
@@ -56,22 +61,22 @@ class ProductImageController extends ObjectImageController
 	public function saveOrder()
 	{
 		return parent::saveOrder();
-	}	
+	}
 
 	protected function getModelClass()
 	{
 		return 'ProductImage';
 	}
-	
+
 	protected function getOwnerClass()
 	{
 		return 'Product';
 	}
-	
+
 	protected function getForeignKeyName()
 	{
 		return 'productID';
 	}
-	
-}	
+
+}
 ?>

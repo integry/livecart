@@ -12,7 +12,7 @@
 				<span class="moduleInactive">({t _inactive})</span>
 			{/if}
 
-			<div class="moduleInstallationStatus">{t _installed}: {if $module.isInstalled}<span class="installed_yes">{t _yes}</span> (<a class="installAction" href="">{t _deinstall}</a>){else}<span class="installed_no">{t _no}</span> (<a class="installAction" href="">{t _install}</a>){/if}</div>
+			<div class="moduleInstallationStatus">{t _installed}: {if $module.isInstalled}<span class="installed_yes">{t _yes}</span> (<a class="installAction" href="#deinstall">{t _deinstall}</a>){else}<span class="installed_no">{t _no}</span> (<a class="installAction" href="#install">{t _install}</a>){/if}</div>
 		</div>
 
 	</div>

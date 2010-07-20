@@ -19,6 +19,7 @@ _with_selected=With selected
 _new_product=New Product
 
 _move_to_category=Move to other category
+_add_to_category=Add to additional category
 _copy_to_category=Copy to other category
 _set_manufacter=Set manufacturer
 _set_keywords=Set keywords
@@ -30,9 +31,12 @@ _set_minimum_quantity=Set minimum order quantity
 _set_shipping_surcharge=Set shipping surcharge
 _set_as_featured_product=Set as featured product
 _set_attribute_value=Set Attribute Value
+_set_tax_class=Set tax class
+_set_shipping_class=Set shipping class
 _clear_attribute_value=Clear Attribute Value
 _add_related_product=Add related product
 _increase_price=Increase price (percent)
+_inc_quant_prices=Increase quantity/group prices
 _increase_stock=Increase stock (count)
 _unset_featured_product=Unset featured product
 _inventory_and_pricing=Inventory &amp; Pricing
@@ -88,6 +92,9 @@ ProductPrice.price=Price
 ProductPrice.listPrice=List price
 ProductImage.url=Image URL
 
+Product.shippingClass=Shipping class
+Product.taxClass=Tax class
+
 # Main form
 
 _product=Product
@@ -108,6 +115,8 @@ _sku_code=SKU (code)
 _generate_sku=Generate SKU automatically
 _short_description=Short description
 _long_description=Long description
+_shippingClass=Shipping class
+_taxClass=Tax class
 _product_type=Product type
 _website_address=Website address
 _manufacturer=Manufacturer

@@ -101,7 +101,9 @@ class Tax extends MultilingualObject
 	 */
 	public static function getAllTaxes($loadReferencedRecords = false)
 	{
-		return self::getRecordSet(new ARSelectFilter(), $loadReferencedRecords);
+		$f = select();
+		$f->setOrder(f('Tax.position'));
+		return self::getRecordSet($f, $loadReferencedRecords);
 	}
 
 	public function includesTax(Tax $tax)

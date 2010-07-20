@@ -1,7 +1,7 @@
 <?php
 
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.delivery.DeliveryZone");
+ClassLoader::importNow("application.model.delivery.DeliveryZone");
 ClassLoader::import("application.model.delivery.State");
 
 /**
@@ -28,6 +28,8 @@ class DeliveryZoneController extends StoreManagementController
 		$response = new ActionResponse();
 		$response->set('zones', json_encode($zones));
 		$response->set('countryGroups', json_encode($this->locale->info()->getCountryGroups()));
+		$response->set('testAddress', new Form(new RequestValidator('testAddress', $this->request)));
+		$response->set('countries', array_merge(array('' => ''), $this->application->getEnabledCountries()));
 		return $response;
 	}
 
@@ -303,6 +305,15 @@ class DeliveryZoneController extends StoreManagementController
 		DeliveryZoneAddressMask::getInstanceByID((int)$this->request->get('id'))->delete();
 
 		return new JSONResponse(false, 'success');
+	}
+
+	public function testAddress()
+	{
+		$address = UserAddress::getNewInstance();
+		$address->loadRequestData($this->request);
+		$zone = DeliveryZone::getZoneByAddress($address);
+
+		return new JSONResponse($zone->toArray());
 	}
 
 	private function createCountriesAndStatesForm(DeliveryZone $zone)

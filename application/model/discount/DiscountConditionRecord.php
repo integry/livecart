@@ -8,6 +8,7 @@ ClassLoader::import('application.model.product.Manufacturer');
 ClassLoader::import('application.model.user.User');
 ClassLoader::import('application.model.user.UserGroup');
 ClassLoader::import('application.model.delivery.DeliveryZone');
+ClassLoader::import('application.model.businessrule.BusinessRuleController');
 
 class DiscountConditionRecord extends ActiveRecordModel
 {
@@ -53,6 +54,12 @@ class DiscountConditionRecord extends ActiveRecordModel
 		return ActiveRecordModel::getInstanceByID($className, $id, ActiveRecordModel::LOAD_DATA);
 	}
 
+	public function save()
+	{
+		BusinessRuleController::clearCache();
+		return parent::save();
+	}
+
 	protected function insert()
 	{
 		parent::insert();
@@ -67,6 +74,7 @@ class DiscountConditionRecord extends ActiveRecordModel
 
 	private function updateConditionRecordCount($increase = true)
 	{
+		BusinessRuleController::clearCache();
 		$update = new ARUpdateFilter();
 		$update->addModifier('recordCount', new ARExpressionHandle('recordCount' . ($increase ? '+' : '-') . '1'));
 		$this->condition->get()->updateRecord($update);

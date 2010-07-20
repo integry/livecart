@@ -51,7 +51,11 @@
 
 		{t _with_selected}:
 		<select name="act" class="select">
-			{if $orderGroupID != 9}
+			{if $orderGroupID == 8}
+				<option value="setFinalized">{t _mark_completed}</option>
+			{/if}
+			{if $orderGroupID < 8}
+				<option value="printLabels" rel="blank">{t _print_shipping_labels}</option>
 				<optgroup label="{t _order_status}" class="massStatus">
 					<option value="setNew">{t _set_new}</option>
 					<option value="setProcessing">{t _set_processing}</option>
@@ -61,7 +65,7 @@
 				</optgroup>
 				<option value="setCancel" class="massCancel">{t _cancel}</option>
 			{/if}
-			<option value="delete" class="delete" {if $orderGroupID == 8}selected="selected"{/if}>{t _delete}</option>
+			<option value="delete" class="delete">{t _delete}</option>
 		</select>
 
 		<span class="bulkValues" style="display: none;">
@@ -96,6 +100,10 @@
 	{assign var=dataFormatter value="Backend.CustomerOrder.GridFormatter"};
 {/if}
 
+{if $request.userOrderID}
+	Backend.User.OrderGridFormatter = Backend.CustomerOrder.GridFormatter;
+{/if}
+
 </script>
 
 
@@ -115,7 +123,7 @@
 }
 
 <li class="detailedExport" id="detailedExportContainer_{$orderGroupID}">
-	<a href="#" onclick="window.location.href='{link controller=backend.customerOrder action=exportDetailed}?' + window.activeGrids['orders_{$orderGroupID}'].ricoGrid.getQueryString(); return false;">{t _detailed_export}</a>
+	<a href="#" onclick="var grid = window.activeGrids['{$prefix}_{$id}']; window.location.href='{link controller=backend.customerOrder action=exportDetailed}?' + grid.ricoGrid.getQueryString()+ '&selectedIDs=' + grid.getSelectedIDs().toJSON() + '&isInverse=' + (grid.isInverseSelection() ? 1 : 0); return false;">{t _detailed_export}</a>
 </li>
 
 {literal}

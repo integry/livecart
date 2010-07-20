@@ -65,6 +65,12 @@ class UspsShipping extends ShippingRateCalculator
 	{
 		include_once(dirname(__file__) . '/../library/usps/usps.php');
 
+		// Priority mail only supports flat-rate or unspecified containers
+		if (('Priority' == $this->service) && strpos(strtolower($this->container), 'flat') === false)
+		{
+			$this->container = '';
+		}
+
 		$usps = new USPSHandler();
 
 		$usps->setServer($this->getConfigValue('server', 'http://production.shippingapis.com/ShippingAPI.dll'));
@@ -86,7 +92,7 @@ class UspsShipping extends ShippingRateCalculator
 		$usps->setService($this->service);
 		$usps->setSize($this->getConfigValue('size', 'Regular'));
 
-		if ($this->container)
+		if (!empty($this->container))
 		{
 			$usps->setContainer($this->container);
 		}
@@ -128,9 +134,16 @@ class UspsShipping extends ShippingRateCalculator
 	{
 		$this->service = $service;
 
-		if ('Express' == $service || 'Priority' == $service)
+		if ('Express' == $service)
 		{
 			$this->setContainer('Flat Rate Envelope');
+		}
+		else if ('Priority' == $service)
+		{
+			$size = $this->getConfigValue('size');
+			$package = $this->getConfigValue('priorityPackageType');
+
+			$this->setContainer($package);
 		}
 	}
 
@@ -142,6 +155,11 @@ class UspsShipping extends ShippingRateCalculator
 	public function setContainer($container)
 	{
 		$this->container = $container;
+
+		if (!$container)
+		{
+			$this->container = null;
+		}
 	}
 
 	public function setSize($size)
@@ -231,7 +249,7 @@ class UspsShipping extends ShippingRateCalculator
 		'FR' => 'France',
 		'FX' => 'Metropolitan France',
 		'GA' => 'Gabon',
-		'GB' => 'United Kingdom',
+		'GB' => 'Great Britain and Northern Ireland',
 		'GD' => 'Grenada',
 		'GE' => 'Georgia',
 		'GF' => 'French Guiana',

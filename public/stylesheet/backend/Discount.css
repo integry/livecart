@@ -35,6 +35,33 @@ a.subCondition
 	white-space: nowrap;
 }
 
+.subConditionMenu label,
+.subConditionMenu input
+{
+	float: none;
+	font-size: smaller;
+	vertical-align: middle;
+}
+
+.subConditionMenu input
+{
+	margin-right: 2px;
+}
+
+.isReverseContainer
+{
+	border: 1px solid #888;
+	background-color: white;
+	padding: 2px;
+	margin-right: 1em;
+	vertical-align: middle;
+}
+
+.isReverseContainer .acronym div
+{
+	width: 250px !important;
+}
+
 .conditionContainer.root
 {
 	float: left;
@@ -97,7 +124,7 @@ a.subCondition
 	display: none;
 }
 
-.type_2 > .conditionInfo .comparisonField
+.type_RuleConditionContainsProduct > .conditionInfo .comparisonField
 {
 	display: inline;
 }
@@ -148,10 +175,10 @@ a.subCondition
 	display: none;
 }
 
-.type_2 > .recordContainer ul.menu,
-.type_4 > .recordContainer ul.menu,
-.type_2 > .recordContainer ul.menu div.conditionItems,
-.type_4 > .recordContainer ul.menu li.addConditionUser
+.type_RuleConditionContainsProduct > .recordContainer ul.menu,
+.type_RuleConditionCustomerIs > .recordContainer ul.menu,
+.type_RuleConditionContainsProduct > .recordContainer ul.menu div.conditionItems,
+.type_RuleConditionCustomerIs > .recordContainer ul.menu li.addConditionUser
 {
 	display: block;
 }
@@ -162,16 +189,16 @@ a.subCondition
 	padding-left: 7px;
 }
 
-.type_0 > .recordContainer,
-.type_1 > .recordContainer,
-.type_3 > .recordContainer,
-.type_5 > .recordContainer
+.type_RuleConditionOrderTotal > .recordContainer,
+.type_RuleConditionOrderItemCount > .recordContainer,
+.type_RuleConditionUserGroupIs > .recordContainer,
+.type_RuleConditionDeliveryZoneIs > .recordContainer
 {
 	display: none;
 }
 
-.type_3 > .selectRecordContainer,
-.type_5 > .selectRecordContainer
+.type_RuleConditionUserGroupIs > .selectRecordContainer,
+.type_RuleConditionDeliveryZoneIs > .selectRecordContainer
 {
 	display: block;
 }
@@ -183,7 +210,7 @@ a.subCondition
 	margin-top: 4px;
 }
 
-.type_2 > .recordContainer .allItemsMenu
+.type_RuleConditionContainsProduct > .recordContainer .allItemsMenu
 {
 	display: block;
 }
@@ -199,7 +226,8 @@ a.subCondition
 	display: none;
 }
 
-.type_2 > .recordContainer .recordTypeSep, .type_2 > .recordContainer .recordClass
+.type_RuleConditionContainsProduct > .recordContainer .recordTypeSep,
+.type_RuleConditionContainsProduct > .recordContainer .recordClass
 {
 	display: inline;
 }
@@ -227,6 +255,23 @@ a.subCondition
 .addConditionUser
 {
 	background-image: url(../../image/silk/user_add.png);
+}
+
+.conditionTime
+{
+	display: block;
+	margin-left: 35px;
+}
+
+.conditionTime .number
+{
+	width: 3em;
+	margin-left: 5px;
+}
+
+.type_RuleConditionPastOrderContainsProduct > .conditionInfo > .subConditionMenu
+{
+	float: right;
 }
 
 .addAction

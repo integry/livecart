@@ -3,6 +3,8 @@
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.category.Category");
 
+ClassLoader::import("application.model.product.Product");
+
 /**
  * Product Category controller
  *
@@ -138,7 +140,68 @@ class CategoryController extends StoreManagementController
 	{
 		try
 		{
-			Category::getInstanceByID($this->request->get("id"), true)->delete();
+			$categoryID = $this->request->get("id");
+			$confirmed = $this->request->get("confirmed");
+			$category = Category::getInstanceByID($categoryID, true);
+
+			if($category->getActiveProductCount())
+			{
+				if(!$confirmed)
+				{
+					return new JSONResponse(
+						array(
+							'confirmMessage' => $this->translate('_confirm_remove_category_with_products'),
+							'url' => $this->application->getRouter()->createUrl(array('controller' => 'backend.category', 'action' => 'remove', 'id' => $categoryID,'query' => array('confirmed'=>1)))
+						),
+						'confirm'
+					);
+				}
+				// merge categoryID with child category IDs
+				$categoryIDs = array_merge(
+					Category::getRecordSet($category->getBranchFilter())->getRecordIDs(),
+					array($categoryID)
+				);			
+				// all products under category that has additional categories
+				$products = ActiveRecord::getRecordSet('Product', 
+					select(new AndChainCondition(array(
+						IN(f('Product.categoryID'), $categoryIDs),
+						new RegexpCond(f('Product.categoryIntervalCache'), '[0-9]+\-[0-9]+\,[0-9]+\-[0-9]+')) // categoryIntervalCache can end with ,
+					))
+				);
+				// move to aditional category, that is not in categoryIDs
+				foreach($products as $product)
+				{
+					$chunks = explode(',',$product->categoryIntervalCache->get());
+					while($pair = array_shift($chunks))
+					{
+						$sequence = explode('-',$pair);
+						if(!is_array($sequence) || count($sequence) != 2  || !is_numeric($sequence[0]) || !is_numeric($sequence[1]))
+						{
+							continue;
+						}
+						$categorySet = Category::getRecordSet(select(
+							new AndChainCondition(array(
+								eq(f('Category.lft'), $sequence[0]),
+								eq(f('Category.rgt'), $sequence[1])))));
+						if($categorySet->size() != 1)
+						{
+							continue;
+						}
+						$categoryToMove = $categorySet->shift();
+						if(in_array($categoryToMove->getID(), $categoryIDs))
+						{
+							// child category also will be removed. cant move here
+							continue;
+						}
+						$product->categoryID->set($categoryToMove);
+						$product->save();
+						break; // product moved, don't care about other aditional categories.
+					}
+				}
+			}
+			// and delete category.
+			$category->delete();
+
 			return new JSONResponse(false, 'success', $this->translate('_category_was_successfully_removed'));
 		}
 		catch (Exception $e)

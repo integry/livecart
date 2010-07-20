@@ -12,13 +12,18 @@ chdir('..');
 // initialize LiveCart
 include_once('application/Initialize.php');
 ClassLoader::import('application.LiveCart');
+session_start();
 $livecart = new LiveCart;
 
 // process update
 ClassLoader::import('application.controller.backend.UpdateController');
 
-$controller = new UpdateController($livecart);
+$user = SessionUser::getUser();
+$user->allowBackendAccess();
+$user->setID(1);
+SessionUser::setUser($user);
 
+$controller = new UpdateController($livecart);
 $response = $controller->update();
 
 if ($response instanceof RawResponse)
@@ -31,11 +36,11 @@ elseif ($response instanceof ActionResponse)
 	{
 		echo $key . ': OK' . "\n";
 	}
-	
+
 	if ($response->get('errors'))
 	{
 		echo "\n" . 'Errors:' . "\n\n";
-		
+
 		foreach ($response->get('errors') as $key => $value)
 		{
 			echo $key . ': ' . $value . "\n";

@@ -39,7 +39,8 @@ class ProductMassActionProcessor extends MassActionProcessor
 				if ($pricing->isPriceSet($currency))
 				{
 					$p = $pricing->getPrice($currency);
-					$p->increasePriceByPercent($this->params['price']);
+					$p->increasePriceByPercent($this->params['inc_price_value'], $this->params['inc_quant_price']);
+					$p->save();
 				}
 			}
 		}
@@ -57,11 +58,28 @@ class ProductMassActionProcessor extends MassActionProcessor
 			$cloned->category->set($this->params['category']);
 			$cloned->save();
 		}
+		else if ('addCat' == $act)
+		{
+			// check if the product is not assigned to this category already
+			$relation = ActiveRecordModel::getInstanceByIdIfExists('ProductCategory', array('productID' => $product->getID(), 'categoryID' => $this->params['category']->getID()));
+			if (!$relation->isExistingRecord() && ($product->category->get() !== $category))
+			{
+				$relation->save();
+			}
+		}
 		else if ('theme' == $act)
 		{
 			$instance = CategoryPresentation::getInstance($product);
 			$instance->theme->set($this->params['theme']);
 			$instance->save();
+		}
+		else if ('shippingClass' == $act)
+		{
+			$product->shippingClass->set(ActiveRecordModel::getInstanceByIDIfExists('ShippingClass', $this->params['shippingClass'], false));
+		}
+		else if ('taxClass' == $act)
+		{
+			$product->taxClass->set(ActiveRecordModel::getInstanceByIDIfExists('TaxClass', $this->params['taxClass'], false));
 		}
 		else
 		{

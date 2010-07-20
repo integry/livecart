@@ -1,0 +1,17 @@
+_err_too_large=Filen er for stor
+_save=Gem
+_upload=Tilføj billede
+_image_file=Vælg billedfil
+_image_title=Indtast billedtitel
+_cancel_new=Annuller tilføjelse af nyt billede
+_err_not_uploaded=Venligst vælg en fil
+_main_image=Hovedbillede
+_edit_image=Rediger billedeoplysninger
+_add_new=Tilføj nyt billede
+_add_new_title=Tilføj nyt billede
+_delete_confirm=Ønsker du virkeligt at slette dette billede?
+_no_images=Intet billede er endnu blevet tilføjet dette produkt
+_max_file_size=Kun JPEG, GIF og PNG filer. Maks filstørrelse: [_1]
+_err_not_image=Dette er ikke et gyldigt billede
+_err_resize=Fejl i justering af billede
+_supplemental_images=Supplerende billeder

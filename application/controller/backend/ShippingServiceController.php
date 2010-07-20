@@ -1,9 +1,10 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.delivery.DeliveryZone");
-ClassLoader::import("application.model.delivery.ShippingService");
-ClassLoader::import("application.model.delivery.ShippingRate");
+ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
+ClassLoader::import('application.model.delivery.DeliveryZone');
+ClassLoader::import('application.model.delivery.ShippingService');
+ClassLoader::import('application.model.delivery.ShippingRate');
+ClassLoader::import('application.model.delivery.ShippingClass');
 
 /**
  * Application settings management
@@ -49,6 +50,19 @@ class ShippingServiceController extends StoreManagementController
 		return $response;
 	}
 
+	private function getSelectOptionsFromSet(ARSet $set)
+	{
+		$options = array();
+
+		foreach ($set as $record)
+		{
+			$arr = $record->toArray();
+			$options[$record->getID()] = $arr['name_lang'];
+		}
+
+		return $options;
+	}
+
 	/**
 	 * @role update
 	 */
@@ -72,6 +86,7 @@ class ShippingServiceController extends StoreManagementController
 		$response->set('newRate', array('ShippingService' => $shippingService->toArray()));
 		$response->set('defaultCurrencyCode', $this->application->getDefaultCurrency()->getID());
 		$response->set('form', $form);
+		$response->set('shippingClasses', $this->getSelectOptionsFromSet(ShippingClass::getAllClasses()));
 
 		return $response;
 	}
@@ -158,7 +173,7 @@ class ShippingServiceController extends StoreManagementController
 		foreach($this->request->toArray() as $variable => $value)
 		{
 			$matches = array();
-			if(preg_match('/^rate_([^_]*)_(perKgCharge|subtotalPercentCharge|perItemCharge|flatCharge|weightRangeEnd|weightRangeStart|subtotalRangeEnd|subtotalRangeStart)$/', $variable, $matches))
+			if(preg_match('/^rate_([^_]*)_(perKgCharge|subtotalPercentCharge|perItemCharge|perItemChargeClass|flatCharge|weightRangeEnd|weightRangeStart|subtotalRangeEnd|subtotalRangeStart)$/', $variable, $matches))
 			{
 				$id = $matches[1];
 				$name = $matches[2];

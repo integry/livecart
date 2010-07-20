@@ -1,4 +1,12 @@
-<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
+{if $item.Product.ID}
+	{if $item.Product.isDownloadable && $downloadLinks}
+		<a href="{link controller=user action=item id=$item.ID}">{$item.Product.name_lang}</a>
+	{else}
+		<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
+	{/if}
+{else}
+	<span>{$item.Product.name_lang}</span>
+{/if}
 
 {if $item.Product.variations}
 	<span class="variations">

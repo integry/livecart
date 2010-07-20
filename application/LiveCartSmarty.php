@@ -71,8 +71,23 @@ class LiveCartSmarty extends Smarty
 		$path = str_replace('\\', '/', $path);
 
 		$path = $this->translatePath($path);
+		$path = preg_replace('/^\/*/', '', $path);
+		$path = preg_replace('/\/{2,}/', '/', $path);
+		
+		if (substr($path, 0, 6) == 'theme/')
+		{
+			$themePath = $path;
+			preg_match('/^theme\/.*\/(.*)$/U', $path, $res);
+			$path = preg_replace('/^\/*/', '', array_pop($res));
+		}
 
-		foreach ($this->getPlugins($path) as $plugin)
+		$plugins = $this->getPlugins($path);
+		if (isset($themePath))
+		{
+			$plugins = array_merge($plugins, $this->getPlugins($themePath));
+		}
+		
+		foreach ($plugins as $plugin)
 		{
 			$output = $plugin->process($output);
 		}
@@ -131,6 +146,25 @@ class LiveCartSmarty extends Smarty
 		ob_end_clean();
 
 		return $_contents;
+	}
+
+	public function disableTemplateLocator()
+	{
+		if (!empty($this->_plugins['prefilter']['templateLocator']))
+		{
+			$this->isTemplateLocator = true;
+			$this->unregister_prefilter('templateLocator');
+			unset($this->_plugins['prefilter']['templateLocator']);
+		}
+	}
+
+	public function enableTemplateLocator()
+	{
+		if (!empty($this->templateLocator))
+		{
+			$this->_plugins['prefilter']['templateLocator'] = $this->templateLocator;
+			unset($this->templateLocator);
+		}
 	}
 
 	private function translatePath($path)

@@ -2,6 +2,15 @@
 	<legend>{t _overview}</legend>
 
 	<ul class="menu">
+		{if !$order.isFinalized}
+		<li {denied role='order.update'}style="display: none"{/denied} class="order_unfinalized">
+			<span style="display: none;" id="order_{$order.ID}_isFinalizedIndicator" class="progressIndicator"></span>
+			<a id="order_{$order.ID}_isFinalized" href="{link controller="backend.customerOrder" action="finalize" id=$order.ID}">
+				{t _finalize}
+			</a>
+		</li>
+		{/if}
+
 		<li class="order_printInvoice">
 			<a href="{link controller=backend.customerOrder action=printInvoice id=$order.ID}" target="_blank">{t _print_invoice}</a>
 		</li>
@@ -10,7 +19,7 @@
 
 	<p>
 		<label>{t _order_id}</label>
-		<label>{$order.ID}</label>
+		<label>{$order.invoiceNumber|default:$order.ID}</label>
 	</p>
 
 	{if $order.User}
@@ -38,15 +47,41 @@
 	</p>
 
 	{if $order.dateCompleted}
-	<p>
-		<label for="order_{$order.ID}_dateCreated">{t _date_created}</label>
-		<label>{$order.dateCompleted}</label>
-	</p>
+		<p>
+			<label for="order_{$order.ID}_dateCreated">{t _date_created}</label>
+			<label id="dateCreatedLabel">
+				<span id="dateCreatedVisible">{$order.dateCompleted}</span>
+				<span class="menu order_editFields orderDate">
+					<a href="#edit" id="editDateCompleted">{t _edit}</a>
+				</span>
+			</label>
+		</p>
+
+	
+
+		{form id="calendarForm" handle=$dateForm class="hidden" action="controller=backend.customerOrder action=updateDate" method="POST"}
+			{calendar name="dateCompleted" id="dateCompleted"}
+			
+			<span class="progressIndicator" id="indicatorDateCompleted" style="display: none;"></span>
+			
+			<span class="menu">
+				<a href="#save" id="saveDateCompleted">{t _save}</a>
+				<a href="#cancel" id="cancelDateCompleted">{t _cancel}</a>
+			</span>
+		{/form}
+
 	{/if}
 
 	<p>
 		<label for="order_{$order.ID})_isPaid">{t _is_paid}</label>
 		<select style="width: auto; float: left;" onchange="Backend.CustomerOrder.prototype.changePaidStatus(this, '{link controller=backend.payment action=changeOrderPaidStatus id=$order.ID query='status=_stat_'}');"><option value=0>{t _no}</option><option value=1{if $order.isPaid} selected="selected"{/if}>{t _yes}</option></select>
+		<span class="progressIndicator" style="display: none; float: left; padding-top: 0; padding-left: 0;"></span>
+	</p>
+
+	<div class="clear"></div>
+	<p>
+		<label for="order_{$order.ID})_isMultiAddress">{t CustomerOrder.isMultiAddress}</label>
+		<select style="width: auto; float: left;" onchange="Backend.CustomerOrder.prototype.setMultiAddress(this, '{link controller=backend.customerOrder action=setMultiAddress id=$order.ID query='status=_stat_'}', {$order.ID});"><option value=0>{t _no}</option><option value=1{if $order.isMultiAddress} selected="selected"{/if}>{t _yes}</option></select>
 		<span class="progressIndicator" style="display: none; float: left; padding-top: 0; padding-left: 0;"></span>
 	</p>
 </fieldset>
@@ -119,7 +154,7 @@
 
 	Backend.CustomerOrder.Editor.prototype.existingUserAddresses = {json array=$existingUserAddresses}
 	{literal}
-	var status = Backend.CustomerOrder.Editor.prototype.getInstance({/literal}{$order.ID}, true, {json array=$hideShipped}, {$order.isCancelled}, {$order.isFinalized}{literal});
+	var status = Backend.CustomerOrder.Editor.prototype.getInstance({/literal}{$order.ID}, true, {json array=$hideShipped}, {$order.isCancelled}, {$order.isFinalized}, {json array=$order.invoiceNumber}{literal});
 
 	{/literal}{if $formShippingAddress}{literal}
 		var shippingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_{$order.ID}_shippingAddress_form{literal}'), 'shippingAddress');
@@ -129,4 +164,7 @@
 		var billingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_{$order.ID}_billingAddress_form{literal}'), 'billingAddress');
 	{/literal}{/if}
 
+	{if $order.dateCompleted}
+		var dateComplededEditor = new Backend.CustomerOrder.DateCompletedEditor();
+	{/if}
 </script>

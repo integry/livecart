@@ -3,6 +3,7 @@
 ClassLoader::import('application.model.order.CustomerOrder');
 ClassLoader::import('application.model.order.OrderedItem');
 ClassLoader::import('application.model.order.OrderNote');
+ClassLoader::import('application.model.order.OrderedFile');
 ClassLoader::import('application.model.Currency');
 ClassLoader::import('application.model.delivery.State');
 ClassLoader::import('application.model.user.*');
@@ -25,7 +26,7 @@ class UserController extends FrontendController
 
  		if ($this->user->getID())
  		{
- 			$this->user->load();
+			$this->user->load();
 		}
 	}
 
@@ -214,46 +215,8 @@ class UserController extends FrontendController
 
 	private function loadDownloadableItems(ARSelectFilter $f)
 	{
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), 0));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isPaid'), true));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'type'), Product::TYPE_DOWNLOADABLE));
-		$f->setOrder(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
-
-		$downloadable = ActiveRecordModel::getRecordSet('OrderedItem', $f, array('Product', 'CustomerOrder'));
-		$fileArray = array();
-		foreach ($downloadable as &$item)
-		{
-			$files = $item->product->get()->getFiles();
-			$itemFiles = array();
-			foreach ($files as $file)
-			{
-				if ($item->isDownloadable($file))
-				{
-					$itemFiles[] = $file->toArray();
-				}
-			}
-
-			if (!$itemFiles)
-			{
-				continue;
-			}
-
-			$array = $item->toArray();
-			$array['Product']['Files'] = ProductFileGroup::mergeGroupsWithFields($item->product->get()->getFileGroups()->toArray(), $itemFiles);
-
-			foreach ($array['Product']['Files'] as $key => $file)
-			{
-				if (!isset($file['ID']))
-				{
-					unset($array['Product']['Files'][$key]);
-				}
-			}
-
-			$fileArray[] = $array;
-		}
-
-		return $fileArray;
+		ClassLoader::import('application.model.product.ProductFile');
+		return ProductFile::getOrderFiles($f);
 	}
 
 	/**
@@ -378,7 +341,7 @@ class UserController extends FrontendController
 		{
 			$this->addAccountBreadcrumb();
 			$this->addBreadCrumb($this->translate('_your_orders'), $this->router->createUrl(array('controller' => 'user', 'action' => 'orders'), true));
-			$this->addBreadCrumb($order->getID(), '');
+			$this->addBreadCrumb($order->invoiceNumber->get(), '');
 
 			// mark all notes as read
 			$notes = $order->getNotes();
@@ -483,11 +446,24 @@ class UserController extends FrontendController
 
 	public function register()
 	{
+		if ($this->config->get('REQUIRE_REG_ADDRESS'))
+		{
+			return new ActionRedirectResponse('user', 'registerAddress');
+		}
+
 		$form = $this->buildRegForm();
 		$response = new ActionResponse('regForm', $form);
 
 		SessionUser::getAnonymousUser()->getSpecification()->setFormResponse($response, $form);
 
+		return $response;
+	}
+
+	public function registerAddress()
+	{
+		$this->request->set('return', 'user/index');
+		$response = $this->checkout();
+		$response->get('form')->set('regType', 'register');
 		return $response;
 	}
 
@@ -542,6 +518,8 @@ class UserController extends FrontendController
 				SessionUser::setUser($user);
 
 				$success = true;
+
+				$this->sendWelcomeEmail($user);
 			}
 		}
 
@@ -553,6 +531,11 @@ class UserController extends FrontendController
 	 */
 	public function login()
 	{
+		if ($this->config->get('REQUIRE_REG_ADDRESS'))
+		{
+			return new ActionRedirectResponse('user', 'registerAddress');
+		}
+
 		$this->addBreadCrumb($this->translate('_login'), $this->router->createUrl(array('controller' => 'user', 'action' => 'login'), true));
 
 		$form = $this->buildRegForm();
@@ -586,6 +569,11 @@ class UserController extends FrontendController
 
 		if ($return = $this->request->get('return'))
 		{
+			if ((substr($return, 0, 1) != '/') && (!strpos($return, ':')))
+			{
+				$return = $this->router->createUrlFromRoute($return);
+			}
+
 			return new RedirectResponse($return);
 		}
 		else
@@ -673,7 +661,7 @@ class UserController extends FrontendController
 
 	public function checkout()
 	{
-		if ($this->config->get('DISABLE_GUEST_CHECKOUT'))
+		if ($this->config->get('DISABLE_GUEST_CHECKOUT') && !$this->config->get('REQUIRE_REG_ADDRESS'))
 		{
 			return new ActionRedirectResponse('user', 'login', array('query' => array('return' => $this->router->createUrl(array('controller' => 'checkout', 'action' => 'pay')))));
 		}
@@ -682,6 +670,7 @@ class UserController extends FrontendController
 
 		$form->set('billing_country', $this->config->get('DEF_COUNTRY'));
 		$form->set('shipping_country', $this->config->get('DEF_COUNTRY'));
+		$form->set('return', $this->request->get('return'));
 
 		$response = new ActionResponse();
 		$response->set('form', $form);
@@ -704,11 +693,12 @@ class UserController extends FrontendController
 		$validator = $this->buildValidator();
 		if (!$validator->isValid())
 		{
-			return new ActionRedirectResponse('user', 'checkout');
+			$action = $this->request->get('regType') == 'register' ? 'registerAddress' : 'checkout';
+			return new ActionRedirectResponse('user', $action, array('query' => array('return' => $this->request->get('return'))));
 		}
 
 		// create user account
-		$user = $this->createUser(null, 'billing_');
+		$user = $this->createUser($this->request->get('password'), 'billing_');
 
 		// create billing and shipping address
 		$address = $this->createAddress('billing_');
@@ -724,13 +714,25 @@ class UserController extends FrontendController
 
 		// set order addresses
 		$this->order->billingAddress->set($billingAddress->userAddress->get());
-		$this->order->shippingAddress->set($shippingAddress->userAddress->get());
+
+		if ($this->order->isShippingRequired())
+		{
+			$this->order->shippingAddress->set($shippingAddress->userAddress->get());
+		}
+
 		$this->order->setUser($user);
 		SessionOrder::save($this->order);
 
 		ActiveRecordModel::commit();
 
-		return new ActionRedirectResponse('checkout', 'shipping');
+		if ($return = $this->request->get('return'))
+		{
+			return new RedirectResponse($this->router->createUrlFromRoute($return));
+		}
+		else
+		{
+			return new ActionRedirectResponse('checkout', 'shipping');
+		}
 	}
 
 	private function createAddress($prefix)
@@ -955,6 +957,9 @@ class UserController extends FrontendController
 		$response->set('return', $this->request->get('return'));
 		$response->set('countries', $this->getCountryList($form));
 		$response->set('states', $this->getStateList($form->get('country')));
+
+		UserAddress::getNewInstance()->getSpecification()->setFormResponse($response, $form, '');
+
 		return $response;
 	}
 
@@ -1024,10 +1029,13 @@ class UserController extends FrontendController
 			return new ActionRedirectResponse('user', 'index');
 		}
 
+		OrderedFile::getInstance($item, $file)->registerDownload();
+
 		// download expired
 		if (!$item->isDownloadable($file))
 		{
-			return new ActionRedirectResponse('user', 'downloadExpired', array('id' => $item->getID(), 'query' => array('fileID' => $file->getID())));
+			$this->setMessage($this->translate('_download_limit_reached'));
+			return new ActionRedirectResponse('user', 'index');
 		}
 
 		return new ObjectFileResponse($file);
@@ -1077,6 +1085,7 @@ class UserController extends FrontendController
 
 		if ($password)
 		{
+			$this->session->set('password', $password);
 			$user->setPassword($password);
 		}
 
@@ -1085,15 +1094,7 @@ class UserController extends FrontendController
 		if (!$this->config->get('REG_EMAIL_CONFIRM'))
 		{
 			SessionUser::setUser($user);
-
-			// send welcome email with user account details
-			if ($this->config->get('EMAIL_NEW_USER'))
-			{
-				$email = new Email($this->application);
-				$email->setUser($user);
-				$email->setTemplate('user.new');
-				$email->send();
-			}
+			$this->sendWelcomeEmail($user);
 		}
 		else
 		{
@@ -1109,6 +1110,23 @@ class UserController extends FrontendController
 		}
 
 		return $user;
+	}
+
+	public function sendWelcomeEmail(User $user)
+	{
+		// send welcome email with user account details
+		if ($this->config->get('EMAIL_NEW_USER'))
+		{
+			if ($this->session->get('password'))
+			{
+				$user->setPassword($this->session->get('password'));
+			}
+
+			$email = new Email($this->application);
+			$email->setUser($user);
+			$email->setTemplate('user.new');
+			$email->send();
+		}
 	}
 
 	private function doAddAddress($addressClass, Response $failureResponse)
@@ -1236,6 +1254,11 @@ class UserController extends FrontendController
 		$this->validateAddress($validator, 'billing_');
 		$this->validateEmail($validator);
 
+		if (($this->config->get('PASSWORD_GENERATION') == 'PASSWORD_REQUIRE') || $this->request->get('password'))
+		{
+			$this->validatePassword($validator);
+		}
+
 		if ($this->order->isShippingRequired())
 		{
 			$this->validateAddress($validator, 'shipping_', true);
@@ -1248,8 +1271,21 @@ class UserController extends FrontendController
 
 	private function validateName(RequestValidator $validator, $fieldPrefix = '', $orCheck = false)
 	{
-		foreach (array('firstName' => '_err_enter_first_name',
-						'lastName' => '_err_enter_last_name') as $field => $error)
+		$validation = array('firstName' => '_err_enter_first_name',
+						'lastName' => '_err_enter_last_name');
+
+		$displayedFields = $this->config->get('USER_FIELDS');
+
+		if (empty($displayedFields['FIRSTNAME']))
+		{
+			unset($validation['firstName']);
+		}
+		if (empty($displayedFields['LASTNAME']))
+		{
+			unset($validation['lastName']);
+		}
+
+		foreach ($validation as $field => $error)
 		{
 			$field = $fieldPrefix . $field;
 			$check = new IsNotEmptyCheck($this->translate($error));
@@ -1276,23 +1312,37 @@ class UserController extends FrontendController
 
 		$fields = $checks = array();
 
-		if ($this->config->get('REQUIRE_PHONE'))
+		$displayedFields = $this->config->get('USER_FIELDS');
+
+		if ($this->config->get('REQUIRE_PHONE') && !empty($displayedFields['PHONE']))
 		{
 			$fields[] = $fieldPrefix . 'phone';
 			$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_phone'));
 		}
 
-		$fields[] = $fieldPrefix . 'address1';
-		$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_address'));
+		if (!empty($displayedFields['ADDRESS1']))
+		{
+			$fields[] = $fieldPrefix . 'address1';
+			$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_address'));
+		}
 
-		$fields[] = $fieldPrefix . 'city';
-		$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_city'));
+		if (!empty($displayedFields['CITY']))
+		{
+			$fields[] = $fieldPrefix . 'city';
+			$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_city'));
+		}
 
-		$fields[] = $fieldPrefix . 'country';
-		$checks[] = new IsNotEmptyCheck($this->translate('_err_select_country'));
+		if (!empty($displayedFields['COUNTRY']))
+		{
+			$fields[] = $fieldPrefix . 'country';
+			$checks[] = new IsNotEmptyCheck($this->translate('_err_select_country'));
+		}
 
-		$fields[] = $fieldPrefix . 'postalCode';
-		$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_zip'));
+		if (!empty($displayedFields['POSTALCODE']))
+		{
+			$fields[] = $fieldPrefix . 'postalCode';
+			$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_zip'));
+		}
 
 		// custom field validation
 		$tempVal = $this->getValidator('tempVal', $this->request);
@@ -1317,7 +1367,7 @@ class UserController extends FrontendController
 			$validator->addCheck($field, $check);
 		}
 
-		if (!$this->config->get('DISABLE_STATE'))
+		if (!empty($displayedFields['STATE']))
 		{
 			$fieldList = array($fieldPrefix . 'state_select', $fieldPrefix . 'state_text');
 			$checkList = array(new IsNotEmptyCheck($this->translate('_err_select_state')), new IsNotEmptyCheck(''));

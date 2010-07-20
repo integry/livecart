@@ -127,6 +127,11 @@ class Email
 
 	public function setFrom($email, $name)
 	{
+		if ($name)
+		{
+			$name = '"' . $name . '"';
+		}
+
 		$this->from = new Swift_Address($email, $name);
 	}
 
@@ -134,6 +139,11 @@ class Email
 	{
 		foreach(explode(',', $emailAddresses) as $email)
 		{
+			if ($name)
+			{
+				$name = '"' . $name . '"';
+			}
+
 			$this->recipients->addTo($email, $name);
 		}
 	}
@@ -188,7 +198,7 @@ class Email
 
 			foreach ($paths as $path)
 			{
-				$templateFile = ClassLoader::getRealPath($path) . '.tpl';
+				$templateFile = array_shift(ClassLoader::mapToMountPoint($path)) . '.tpl';
 
 				if (file_exists($templateFile))
 				{
@@ -243,7 +253,10 @@ class Email
 			$router = $this->application->getRouter();
 
 			$smarty->assign('html', false);
+
+			$smarty->disableTemplateLocator();
 			$text = $smarty->fetch($this->template);
+			$smarty->enableTemplateLocator();
 
 			$parts = explode("\n", $text, 2);
 			$this->subject = array_shift($parts);

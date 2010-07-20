@@ -257,15 +257,7 @@ Backend.CustomerOrder.prototype =
 
 	updateLog: function(orderID)
 	{
-		var url = $("tabOrderLog").down('a').href.replace(/_id_/, orderID);
-		var container = "tabOrderLog_" + orderID + "Content";
-		var identificator = url + container;
-
-		if($(container))
-		{
-			$(container).remove();
-			TabControl.prototype.getInstance("orderManagerContainer").loadedContents[identificator] = false;
-		}
+		this.resetTab("tabOrderLog", orderID);
 	},
 
 	changePaidStatus: function(select, url)
@@ -278,6 +270,28 @@ Backend.CustomerOrder.prototype =
 
 		url = url.replace(/_stat_/, select.value);
 		new LiveCart.AjaxRequest(url, select.parentNode.down('.progressIndicator'));
+	},
+
+	setMultiAddress: function(select, url, orderID)
+	{
+		url = url.replace(/_stat_/, select.value);
+		new LiveCart.AjaxRequest(url, select.parentNode.down('.progressIndicator'), function()
+		{
+			this.resetTab('tabOrderProducts', orderID);
+		}.bind(this));
+	},
+
+	resetTab: function(tab, orderID)
+	{
+		var url = $(tab).down('a').href.replace(/_id_/, orderID);
+		var container = tab + "_" + orderID + "Content";
+		var identificator = url + container;
+
+		if($(container))
+		{
+			$(container).remove();
+			TabControl.prototype.getInstance("orderManagerContainer").loadedContents[identificator] = false;
+		}
 	}
 }
 
@@ -292,26 +306,21 @@ Backend.CustomerOrder.GridFormatter =
 
 	formatValue: function(field, value, id)
 	{
-		if ('CustomerOrder.ID2' == field && Backend.CustomerOrder.prototype.ordersMiscPermission)
+		if ('CustomerOrder.invoiceNumber' == field && Backend.CustomerOrder.prototype.ordersMiscPermission)
 		{
-			var displayedID = id;
-
-			while (displayedID.length < 4)
-			{
-				displayedID = '0' + displayedID;
-			}
+			var displayedID = value ? value : id;
 
 			value =
 			'<span>' +
 			'	<span class="progressIndicator" id="orderIndicator_' + id + '" style="visibility: hidden;"></span>' +
 			'</span>' +
-			'<a href="' + this.orderUrl + id + '#tabOrderInfo__" id="order_' + id + '" onclick="Backend.CustomerOrder.prototype.openOrder(' + id + ', event); return false;">' +
-				 displayedID +
+			'<a href="' + this.orderUrl + id + '#tabOrderInfo__" id="order_' + id + '" onclick="Backend.CustomerOrder.prototype.openOrder(' + id + ', event);">' +
+				 displayedID
 			'</a>'
 		}
-		else if ('CustomerOrder.ID2' == field && Backend.CustomerOrder.prototype.ordersMiscPermission)
+		else if ('CustomerOrder.invoiceNumber' == field && Backend.CustomerOrder.prototype.ordersMiscPermission)
 		{
-			value = id;
+			value = value ? value : id;
 		}
 		else if('User.ID' == field)
 		{
@@ -337,14 +346,9 @@ Backend.User.OrderGridFormatter.parentFormatValue = Backend.User.OrderGridFormat
 Backend.User.OrderGridFormatter.formatValue =
 	function(field, value, id)
 	{
-		if ('CustomerOrder.ID2' == field)
+		if ('CustomerOrder.invoiceNumber' == field)
 		{
-			var displayedID = id;
-
-			while (displayedID.length < 4)
-			{
-				displayedID = '0' + displayedID;
-			}
+			var displayedID = value;
 
 			return '<a href="' + this.orderUrl + id + '#tabOrderInfo__">' + displayedID + '</a>';
 		}
@@ -409,11 +413,11 @@ Backend.CustomerOrder.Editor.prototype =
 		return tabId + '_' +  Backend.CustomerOrder.Editor.prototype.getCurrentId() + 'Content'
 	},
 
-	getInstance: function(id, doInit, hideShipped, isCancelled, isFinalized)
+	getInstance: function(id, doInit, hideShipped, isCancelled, isFinalized, invoiceNumber)
 	{
 		if(!Backend.CustomerOrder.Editor.prototype.Instances[id])
 		{
-			Backend.CustomerOrder.Editor.prototype.Instances[id] = new Backend.CustomerOrder.Editor(id, hideShipped, isCancelled, isFinalized);
+			Backend.CustomerOrder.Editor.prototype.Instances[id] = new Backend.CustomerOrder.Editor(id, hideShipped, isCancelled, isFinalized, invoiceNumber);
 		}
 
 		if (Backend.CustomerOrder.Editor.prototype.Instances[id].isCancelled)
@@ -444,12 +448,13 @@ Backend.CustomerOrder.Editor.prototype =
 		return this.Instances[id] ? true : false;
 	},
 
-	initialize: function(id, hideShipped, isCancelled, isFinalized)
+	initialize: function(id, hideShipped, isCancelled, isFinalized, invoiceNumber)
   	{
 		this.id = id ? id : '';
 		this.hideShipped = hideShipped;
 		this.isCancelled = isCancelled;
 		this.isFinalized = isFinalized;
+		this.invoiceNumber = invoiceNumber ? invoiceNumber : '(' + id + ')';
 
 		this.findUsedNodes();
 		this.bindEvents();
@@ -521,19 +526,24 @@ Backend.CustomerOrder.Editor.prototype =
 	{
 		this.nodes = {};
 		this.nodes.parent = $("tabOrderInfo_" + this.id + "Content");
-		this.nodes.form = this.nodes.parent.down("form");
+		// this.nodes.form = this.nodes.parent.down("form");
+		this.nodes.form = $A(this.nodes.parent.getElementsByTagName("form")).find(function(f){return f.id != "calendarForm";});
 		this.nodes.isCanceled = $("order_" + this.id + "_isCanceled");
 		this.nodes.isCanceledIndicator = $("order_" + this.id + "_isCanceledIndicator");
 		this.nodes.acceptanceStatusValue = $("order_acceptanceStatusValue_" + this.id);
 		this.nodes.status = this.nodes.form.down('select.status');
 		this.nodes.orderStatus = this.nodes.parent.down('.order_status');
+		this.nodes.finalize = this.nodes.parent.down('.order_unfinalized');
 	},
 
 	bindEvents: function(args)
 	{
 		Event.observe(this.nodes.isCanceled, 'click', function(e) { Event.stop(e); this.switchCancelled(); }.bind(this));
 		Event.observe(this.nodes.status, 'change', function(e) { Event.stop(e); this.submitForm(); }.bind(this));
+		
 	},
+
+	
 
 	switchCancelled: function()
 	{
@@ -615,7 +625,7 @@ Backend.CustomerOrder.Editor.prototype =
 					   }.bind(this), 20);
 
 					}.bind(currentUser)],
-					Backend.CustomerOrder.Editor.prototype.Messages.orderNum + this.id
+					Backend.CustomerOrder.Editor.prototype.Messages.orderNum + this.invoiceNumber
 				]
 
 			);
@@ -624,7 +634,7 @@ Backend.CustomerOrder.Editor.prototype =
 		{
 			Backend.Breadcrumb.display(
 				Backend.Breadcrumb.treeBrowser.getSelectedItemId(),
-				Backend.CustomerOrder.Editor.prototype.Messages.orderNum + this.id
+				Backend.CustomerOrder.Editor.prototype.Messages.orderNum + this.invoiceNumber
 			);
 		}
 	},
@@ -1067,5 +1077,82 @@ Backend.CustomerOrder.CustomFields.prototype =
 	submitComplete: function()
 	{
 		this.container.removeClassName('editing');
+	}
+}
+
+Backend.CustomerOrder.DateCompletedEditor = Class.create();
+Backend.CustomerOrder.DateCompletedEditor.prototype =
+{
+	VIEW : 0,
+	EDIT: 1,
+
+	initialize: function()
+	{
+		this.viewContainer = $("dateCreatedLabel");
+		this.editContainer = $("calendarForm");
+
+		Event.observe($('editDateCompleted'), "click", function(e) {
+			Event.stop(e);
+			this.toggle(this.EDIT);
+		}.bind(this));
+
+		Event.observe($('cancelDateCompleted'), "click", function(e) {
+			Event.stop(e);
+			this.toggle(this.VIEW);
+		}.bind(this));
+
+		Event.observe($('saveDateCompleted'), "click", function(e) {
+			Event.stop(e);
+			new LiveCart.AjaxRequest(
+				this.editContainer.action,
+				$("indicatorDateCompleted"),
+				this.ajaxResponse.bind(this),
+				this.collectParameters()
+			);
+		}.bind(this));
+	},
+
+	ajaxResponse: function(transport)
+	{
+		try {
+			if(transport.responseData.status == "saved")
+			{
+				var dateField = $("dateCreatedVisible");
+				dateField.innerHTML = transport.responseData.date;
+				this.toggle(this.VIEW);
+				new Effect.Highlight($(dateField.parentNode) );
+				return;
+			}
+			throw "err";
+		}
+		catch(e)
+		{
+			// status not saved or response is corrupted.
+		}
+	},
+
+	collectParameters: function()
+	{
+		return {
+			parameters:$H({
+				dateCompleted:$('dateCompleted_real').value,
+				orderID: $A(document.getElementsByName("orderID")).shift().value
+				}).toQueryString()
+			};
+	},
+
+	toggle: function(type)
+	{
+		switch(type)
+		{
+			case this.EDIT:
+				this.viewContainer.addClassName("hidden");
+				this.editContainer.removeClassName("hidden");
+				break;
+			case this.VIEW:
+				this.viewContainer.removeClassName("hidden");
+				this.editContainer.addClassName("hidden");
+				break;
+		}
 	}
 }

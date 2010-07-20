@@ -1,5 +1,4 @@
 {form handle=$form action="controller=backend.shipment action=saveAddress id=`$shipmentID`" method="POST"}
-
 	<p>
 		<label for="{$type}_existingAddress_select">{t _use_existing_address}</label>
 		{selectfield options=$existingUserAddressOptions id="shipmentAddress_`$shipmentID`_existingAddress_select" name="existingUserAddress" class="existingUserAddress"}

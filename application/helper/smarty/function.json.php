@@ -16,7 +16,7 @@ function smarty_function_json($params, LiveCartSmarty $smarty)
 	$assign = isset($params['assign']) ? $params['assign'] : false;
 
 	ClassLoader::import('library.json.json');
-	$javaObject = json_encode($array);
+	$javaObject = @json_encode($array);
 
 	if(!$assign)
 	{

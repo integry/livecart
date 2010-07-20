@@ -2,6 +2,8 @@
 
 ClassLoader::import('application.model.user.SessionUser');
 ClassLoader::import('application.model.order.CustomerOrder');
+ClassLoader::import('application.model.user.UserAddress');
+ClassLoader::import('application.model.businessrule.RuleProductContainer');
 
 /**
  *
@@ -88,7 +90,9 @@ class SessionOrder
 
 		$currency = $order->getCurrency();
 		$currID = $currency->getID();
-		$orderArray = array('total' => array($currID => $order->getTotal()));
+
+		$total = $order->getTotal();
+		$orderArray = array('total' => array($currID => $total));
 		$orderArray['formattedTotal'] = array($currID => $currency->getFormattedPrice($orderArray['total'][$currID]));
 		$orderArray['basketCount'] = $order->getShoppingCartItemCount();
 		$orderArray['currencyID'] = $currID;
@@ -96,7 +100,27 @@ class SessionOrder
 		$isOrderable = $order->isOrderable();
 		$orderArray['isOrderable'] = is_bool($isOrderable) ? $isOrderable : false;
 
+		$items = array();
+		foreach ($order->getPurchasedItems() as $item)
+		{
+			$items[] = $item->toArray();
+		}
+
+		$orderArray['items'] = new RuleOrderContainer($items);
+		$orderArray['items']->setCoupons($order->getCoupons());
+		$orderArray['items']->setTotal($total);
+
 		$session->set('orderData', $orderArray);
+	}
+
+	public static function getOrderItems()
+	{
+		$session = new Session();
+		$data = $session->get('orderData');
+		if (isset($data['items']))
+		{
+			return $data['items'];
+		}
 	}
 
 	public static function getOrderData()
@@ -104,6 +128,59 @@ class SessionOrder
 		self::setOrder(self::getOrder());
 		$session = new Session();
 		return $session->get('orderData');
+	}
+
+	public static function getEstimateAddress()
+	{
+		$session = new Session();
+
+		if ($address = $session->get('shippingEstimateAddress'))
+		{
+			return unserialize($address);
+		}
+		else
+		{
+			$order = self::getOrder();
+			if ($order->shippingAddress->get())
+			{
+				return $order->shippingAddress->get();
+			}
+
+			$user = $order->user->get();
+			if ($user && !$user->isAnonymous())
+			{
+				$user->load(true);
+				foreach (array('defaultShippingAddress', 'defaultBillingAddress') as $key)
+				{
+					if ($address = $user->$key->get())
+					{
+						$address->load(array('UserAddress'));
+						$address->userAddress->get()->load();
+						return $address->userAddress->get();
+					}
+				}
+			}
+		}
+
+		return self::getDefaultEstimateAddress();
+	}
+
+	public static function getDefaultEstimateAddress()
+	{
+		$config = ActiveRecordModel::getApplication()->getConfig();
+		$address = UserAddress::getNewInstance();
+		$address->countryID->set($config->get('DEF_COUNTRY'));
+
+		return $address;
+	}
+
+	public static function setEstimateAddress(UserAddress $address)
+	{
+		$order = self::getOrder();
+		$estimateAddress = clone $address;
+		$estimateAddress->removeSpecification();
+		$session = new Session();
+		$session->set('shippingEstimateAddress', $estimateAddress);
 	}
 
 	public static function save(CustomerOrder $order)
@@ -119,6 +196,7 @@ class SessionOrder
 	{
 		$session = new Session();
 		$session->unsetValue('CustomerOrder');
+		$session->unsetValue('orderData');
 	}
 }
 

@@ -37,7 +37,7 @@ class FileCache extends ValueCache
 
 	protected function retrieveValue($key, $defaultValue = null, $namespace = null)
 	{
-		$value = array_shift($this->getValueFromFile($this->getCacheFile($key, $namespace), $namespace));
+		$value = array_shift($this->getValueFromFile($this->getCacheFile($key, $namespace), $namespace, $defaultValue));
 		if (!$value)
 		{
 			$value = $defaultValue;
@@ -58,7 +58,7 @@ class FileCache extends ValueCache
 		return $values;
 	}
 
-	private function getValueFromFile($file, $namespace)
+	private function getValueFromFile($file, $namespace, $defaultValue = null)
 	{
 		if (!file_exists($file))
 		{
@@ -90,7 +90,7 @@ class FileCache extends ValueCache
 
 	public function clearNamespace($namespace)
 	{
-		$this->rmdir_recurse($this->getNamespaceDir($namespace));
+		$this->application->rmdir_recurse($this->getNamespaceDir($namespace));
 	}
 
 	/* do nothing for now */
@@ -125,29 +125,6 @@ class FileCache extends ValueCache
 
 		return $this->root;
 	}
-
-	private function rmdir_recurse($path)
-	{
-		$path= rtrim($path, '/').'/';
-
-		if (!file_exists($path))
-		{
-			return;
-		}
-
-		$handle = opendir($path);
-		for (;false !== ($file = readdir($handle));)
-			if($file != "." and $file != ".." ) {
-				$fullpath= $path.$file;
-				if( is_dir($fullpath) ) {
-					$this->rmdir_recurse($fullpath);
-				} else {
-					unlink($fullpath);
-				}
-		}
-		closedir($handle);
-		rmdir($path);
-}
 }
 
 ?>

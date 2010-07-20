@@ -60,6 +60,7 @@
 	{literal}
 	<script type="text/javascript">
 		Backend.Discount.Editor.prototype.Links.add = Backend.Router.createUrl('backend.discount', 'add');
+		Backend.Discount.Action.prototype.itemActions = {/literal}{json array=$itemActions}{literal};
 		Event.observe($("cancel_user_edit"), "click", function(e) {
 			Event.stop(e);
 			var editor = Backend.Discount.Editor.prototype.getInstance(Backend.Discount.Editor.prototype.getCurrentId(), false);
@@ -79,12 +80,42 @@
 					<span class="progressIndicator" style="display: none;"></span>
 				</span>
 
-				<span>{selectfield name="type" class="conditionType" options=$conditionTypes}</span>
+				<span>{selectfield name="conditionClass" class="conditionClass" options=$conditionTypes}</span>
 				<span>{selectfield name="productComparisonField" class="comparisonField" options=$comparisonFields}</span>
 				<span>{selectfield name="comparisonType" class="comparisonType" options=$comparisonTypes}</span>
 				<span>{textfield name="comparisonValue" class="number comparisonValue"}</span>
 
+				{block BUSINESS-RULE-CONDITION-PARAMS}
+
+				<span class="conditionTime">
+					{t _include_orders_time}
+					<select name="conditionTime" class="value">
+						<option value="before">{t _condition_time_before}</option>
+						<option value="range">{t _condition_time_range}</option>
+					</select>
+
+					<span class="conditionTimeBefore">
+						<input name="min" type="text" class="minutes text number value" /> {t _minutes}
+						<input name="hr" type="text" class="hours text number value" /> {t _hours}
+						<input name="day" type="text" class="days text number value" /> {t _days}
+						<input name="year" type="text" class="years text number value" /> {t _years}
+					</span>
+
+					<span class="conditionTimeRange">
+						{calendar name="from" id="from"}
+						{calendar name="to" id="to"}
+					</span>
+
+					<span class="progressIndicator" style="display: none;"></span>
+				</span>
+
 				<span class="subConditionMenu">
+
+					<span class="isReverseContainer">
+						<input type="checkbox" class="checkbox isReverse" name="isReverse" id="isReverse">
+						<label class="checkbox acronym"><a>{t _isReverse}<div>{t _isReverse_help}</div></a></label>
+					</span>
+
 					<a href="#" class="subCondition">{t _add_subcondition}</a>
 					<span class="progressIndicator" style="display: none;"></span>
 				</span>
@@ -157,7 +188,6 @@
 <div id="actionTemplate">
 	{form handle=$conditionForm}
 		<li>
-
 			<label style="width: 80px;"></label>
 			<span>
 				<input type="checkbox" class="checkbox isEnabled" name="isEnabled" />
@@ -167,7 +197,7 @@
 
 			<p>
 				<label>{t _action}</label>
-				<span>{selectfield name="actionType" class="actionType" options=$actionTypes}</span>
+				<span>{selectfield name="actionClass" class="actionClass" options=$actionTypes}</span>
 			</p>
 
 			<div class="amountFields">
@@ -185,6 +215,42 @@
 					<label class="acronym"><a>{t _discount_limit}<div>{t _discount_limit_descr}</div></a></label>
 					<span>{textfield name="discountLimit" class="number discountLimit"}</span>
 				</p>
+
+				<label></label>
+				<span>
+					<input type="checkbox" class="checkbox isOrderLevel" name="isOrderLevel" />
+					<label class="checkbox acronym"><a>{t _is_order_level}<div>{t _discount_isOrderLevel_descr}</div></a></label>
+				</span>
+				<div class="clear"></div>
+			</div>
+
+			<div class="actionFields">
+				{foreach from=$actionFields key=actionClass item=fields}
+					{if $fields}
+						<div class="classContainer {$actionClass}">
+							{foreach from=$fields item=field}
+								<p>
+									<label>{translate text=$field.label}</label>
+									<span>
+										{if $field.type == 'number'}
+											{textfield class="text number actionField `$field.name`" name=$field.name}
+										{elseif $field.type == 'text'}
+											{textfield class="text wide actionField `$field.name`" name=$field.name}
+										{elseif $field.type == 'select'}
+											{selectfield class="actionField `$field.name`" name=$field.name options=$field.options}
+										{/if}
+										<span class="progressIndicator" style="display: none;"></span>
+									</span>
+								</p>
+							{/foreach}
+						</div>
+					{/if}
+				{/foreach}
+			</div>
+
+			<div class="clear"></div>
+
+			<div class="applyTo">
 				<p>
 					<label>{t _apply_to}</label>
 					<span>{selectfield name="type" class="applyTo" options=$applyToChoices}</span>

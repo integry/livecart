@@ -561,6 +561,7 @@ ul.productList .pricingInfo span.price,
 	position: absolute;
 	top: 0;
 	left: 0;
+	white-space: nowrap;
 }
 
 .price
@@ -571,6 +572,14 @@ ul.productList .pricingInfo span.price,
 .pricingInfo span
 {
 	display: none;
+}
+
+.pricingInfo .progressIndicator
+{
+	position: absolute;
+	display: block;
+	top: 0;
+	left: 0;
 }
 
 .pricingInfo span.listPrice
@@ -592,6 +601,14 @@ ul.productList .pricingInfo span.price,
 	text-align: center;
 }
 
+.addToCart .progressIndicator
+{
+	position: absolute;
+	left: 5px;
+	top: 5px;
+	z-index: 5000;
+}
+
 ul.productList .image
 {
 	border-right: 1px solid #eee;
@@ -603,6 +620,12 @@ ul.productList .addToWishList, #productToWishList td.value a, .productGrid .addT
 	font-size: smaller;
 	padding-top: 3px;
 	padding-bottom: 3px;
+}
+
+a.addToCompare
+{
+	background-image: none !important;
+	font-size: smaller;
 }
 
 .productListRating
@@ -753,7 +776,10 @@ a.proceedToCheckout span span span span
 {
 	display: block;
 	padding: 10px 27px 10px 10px;
+	 /* IE8 */
 }
+
+a.proceedToCheckout span span span span { margin-top:-20px\0/ }
 
 /*
 	Checkout
@@ -953,6 +979,18 @@ li.moreSubCats, li.moreSubCats a
 	padding: 0 10px 0 15px;
 }
 
+.rootCategories
+{
+	background-color: transparent;
+	height: auto;
+	width: auto !important;
+}
+
+.rootCategories .clear
+{
+	display: none;
+}
+
 .rootCategories li
 {
 	margin-right: 2px;
@@ -963,7 +1001,7 @@ li.moreSubCats, li.moreSubCats a
 	height: 27px;
 }
 
-.rootCategories li span
+.rootCategories li span.name
 {
 	display: block;
 	background-image: url(../image/tab_btn_08.gif);
@@ -978,6 +1016,7 @@ li.moreSubCats, li.moreSubCats a
 	background-image: url(../image/tab_btn_11.gif);
 	background-position: right bottom;
 	font-size: 11px;
+	padding: 0;
 	padding-right: 8px;
 }
 
@@ -999,7 +1038,7 @@ li.moreSubCats, li.moreSubCats a
 	font-size: 11px;
 }
 
-.rootCategories li.current span
+.rootCategories li.current span.name
 {
 	background-image: url(../image/tab_btn_03.gif);
 	background-position: left bottom;
@@ -1016,7 +1055,7 @@ li.moreSubCats, li.moreSubCats a
 	padding-right: 8px;
 }
 
-.rootCategories li div.wrapper
+.rootCategories li .wrapper
 {
 	border: 1px solid #6e99ae;
 	border-top: 0;
@@ -1039,6 +1078,16 @@ li.moreSubCats, li.moreSubCats a
 .rootCategories li.hover li a
 {
 	width: 220px;
+}
+
+.rootCategories li ul li a,
+.rootCategories li ul li span,
+.rootCategories li:hover ul li a,
+.rootCategories li:hover ul li span,
+.rootCategories li.hover ul li a,
+.rootCategories li.hover ul li span
+{
+	background: none;
 }
 
 /*************************
@@ -1242,6 +1291,13 @@ table.productGrid
 	margin: 1em;
 }
 
+.onePageCheckout-index #checkout-shipping h2,
+.onePageCheckout-index #checkout-billing h2,
+.onePageCheckout-index #checkout-payment h2
+{
+	text-indent: 0;
+	margin-bottom: 0\0/
+}
 
 .rtl .newsReadMore a
 .rtl .current ul li,

@@ -1,0 +1,88 @@
+_themes=Themes
+_settings=Settings
+_colors=Colors & Style
+_files=Files
+_css=CSS Stylesheet
+
+_add_new=Add new theme
+_remove=Delete selected theme
+_export=Export
+_import=Import
+
+_parent_themes=Parent Theme(s)
+_parent_theme_x=Parent theme [_1]
+_theme_name=Theme name
+_err_theme_name_empty=Please enter the theme name
+_err_theme_exists=This theme already exists
+_theme_created=Theme created successfully
+_theme_saved=The theme was saved successfully
+_colors_not_editable=Colors & style are not editable for this theme yet
+
+_confirm_theme_del=Really delete the selected theme?
+_err_cannot_delete_core_theme=This is a core theme which cannot be deleted
+_theme_deleted=Theme [_1] has been deleted
+_colors_saved=Theme style has been updated successfully
+
+_repeat=Repeat image
+no-repeat=None
+repeat=Horizontally and vertically
+repeat-x=Horizontally
+repeat-y=Vertically
+
+_position=Background position
+
+COLOR_SCHEME=Color scheme
+BACKGROUND_COLOR_1=Background color 1
+BACKGROUND_COLOR_2=Background color 2
+HEADING_COLOR=Table heading color
+BACKGROUND=Page background
+BG_IMAGE=Background image
+BG_COLOR=Page background color
+BORDER_COLOR=Border color
+
+LAYOUT=Page layout
+CONTAINER_WIDTH=Page container width
+CONTAINER_BG_IMAGE=Container background image
+CONTAINER_BG_COLOR=Container background color
+
+TEXT=Text
+TEXT_COLOR=Text color
+LINK_COLOR=Link color
+LINK_HOVER_COLOR=Link hover color
+LINK_STYLE=Link decoration
+LINK_HOVER_STYLE=Link hover decoration
+TEXT_FONT=Font face
+
+CONTENT=Content area
+CONTENT_BG_IMAGE=Content background image
+CONTENT_BG_COLOR=Content background color
+
+HEADER=Header
+HEADER_IMAGE=Background image
+HEADER_COLOR=Background color
+HEADER_TEXT_COLOR=Text color
+HEADER_HEIGHT=Height
+
+FOOTER=Footer
+FOOTER_IMAGE=Background image
+FOOTER_COLOR=Background color
+FOOTER_TEXT_COLOR=Text color
+FOOTER_HEIGHT=Height
+
+BOXES=Menu boxes
+BOX_BG_IMAGE=Box content background image
+BOX_BG_COLOR=Box content background color
+BOX_BORDER=Box outer border
+BOX_TITLE_COLOR=Box title color
+BOX_TITLE_IMAGE=Box title background image
+BOX_TITLE_BGCOLOR=Box title background color
+BOX_TITLE_BORDER=Box title bottom border
+
+TOP_MENU=Top Category Menu
+TOP_MENU_COLOR=Text color
+TOP_MENU_HOVER-COLOR=Hover text color
+TOP_MENU_BGCOLOR=Background color
+TOP_MENU_BGIMAGE=Background image
+TOP_MENU_ACTIVE_COLOR=Active item color
+TOP_MENU_ACTIVE_BGCOLOR=Active item background color
+TOP_MENU_ACTIVE_BGIMAGE=Active item background image

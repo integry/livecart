@@ -15,6 +15,10 @@ class FedexTest extends TestShipping
 		$fedex = new FedexShipping();
 		$fedex->setConfigValue('accountNumber', '510087941');
 		$fedex->setConfigValue('meterNumber', '1250347');
+
+//		$fedex->setConfigValue('accountNumber', '236800164');
+//		$fedex->setConfigValue('meterNumber', '101180614');
+
 		$fedex->setSourceCountry('US');
 		$fedex->setSourceState('OH');
 		$fedex->setSourceZip('44333');
@@ -31,6 +35,19 @@ class FedexTest extends TestShipping
 		$fedex->setWeight(15);
 
 		$rates = $fedex->getRates();
+		$this->assertTrue($rates instanceof ShippingRateSet);
+	}
+
+	function testCanadaRates()
+	{
+		$fedex = $this->getHandler();
+		$fedex->setDestCountry('CA');
+		$fedex->setDestState('Quebec');
+		$fedex->setDestZip('h9b1z8');
+		$fedex->setWeight(1);
+
+		$rates = $fedex->getRates();
+		var_dump($rates);
 		$this->assertTrue($rates instanceof ShippingRateSet);
 	}
 

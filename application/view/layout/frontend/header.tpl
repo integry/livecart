@@ -23,3 +23,4 @@
 <div class="clear"></div>
 
 {block SEARCH}
+{block ROOT_CATEGORIES}

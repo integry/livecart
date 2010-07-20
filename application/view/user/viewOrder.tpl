@@ -1,4 +1,4 @@
-{pageTitle}{t _view_order} #{$order.ID}{/pageTitle}
+{pageTitle}{t _view_order} #{$order.invoiceNumber}{/pageTitle}
 {loadJs form=true}
 <div class="userViewOrder">
 
@@ -7,12 +7,12 @@
 
 <div id="content">
 
-	<h1>{t _view_order} #{$order.ID} ({$order.formatted_dateCompleted.date_long})</h1>
+	<h1>{t _view_order} {$order.invoiceNumber} ({$order.formatted_dateCompleted.date_long})</h1>
 
 		<fieldset class="container">
 
 		<label class="title">{t _order_id}:</label>
-		<label class="text">{$order.ID}</label>
+		<label class="text">{$order.invoiceNumber}</label>
 		<div class="clear"></div>
 
 		<label class="title">{t _placed}:</label>
@@ -28,7 +28,7 @@
 		<div class="clear"></div>
 
 		<p>
-			{if !$order.isCancelled}
+			{if !$order.isCancelled && !'DISABLE_INVOICES'|config}
 				<a href="{link controller=user action=orderInvoice id=`$order.ID`}" target="_blank" class="invoice">{t _order_invoice}</a>
 			{/if}
 			<a href="{link controller=user action=reorder id=`$order.ID`}" class="reorder">{t _reorder}</a>
@@ -49,7 +49,7 @@
 					<h2>{t _ordered_products}</h2>
 				{/if}
 
-				{include file="user/shipmentEntry.tpl"}
+				{include file="user/shipmentEntry.tpl" downloadLinks=true}
 
 			{/if}
 
@@ -77,6 +77,9 @@
 				</p>
 				<p>
 					{$address.countryName}
+				</p>
+				<p>
+					{include file="order/addressFieldValues.tpl" showLabels=false}
 				</p>
 			{/if}
 		{/defun}

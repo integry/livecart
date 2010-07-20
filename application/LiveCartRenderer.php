@@ -56,6 +56,7 @@ class LiveCartRenderer extends SmartyRenderer
 
 			$this->paths[] = ClassLoader::getRealPath('storage.customize.view.');
 			$this->paths[] = ClassLoader::getRealPath('application.view.');
+			$this->paths[] = dirname(ClassLoader::getRealPath('module'));
 		}
 
 		if (!$template)
@@ -80,13 +81,24 @@ class LiveCartRenderer extends SmartyRenderer
 
 	public function getTemplatePath($template)
 	{
-		foreach ($this->getTemplatePaths($template) as $path)
+		if (!isset($this->cachedTemplatePath[$template]))
 		{
-			if (is_readable($path))
+			foreach ($this->getTemplatePaths($template) as $path)
 			{
-				return $path;
+				if (is_readable($path))
+				{
+					$this->cachedTemplatePath[$template] = $path;
+					break;
+				}
+			}
+
+			if (!isset($this->cachedTemplatePath[$template]))
+			{
+				$this->cachedTemplatePath[$template] = null;
 			}
 		}
+
+		return $this->cachedTemplatePath[$template];
 	}
 
 	public function getBaseTemplatePath($tplName)
@@ -121,14 +133,19 @@ class LiveCartRenderer extends SmartyRenderer
 			}
 		}
 
-		ksort($otherThemes);
-		return array_merge($themes, $otherThemes);
+		$themes = array_merge($themes, $otherThemes);
+		ksort($themes);
 
 		return $themes;
 	}
 
 	public function render($view)
 	{
+		if (file_exists($view))
+		{
+			$view = $this->getRelativeTemplatePath($view);
+		}
+
 		if (!file_exists($view))
 		{
 			$original = $view;
@@ -198,7 +215,7 @@ class LiveCartRenderer extends SmartyRenderer
 			$config = array();
 			foreach ($files as $pluginFiles)
 			{
-				foreach ($pluginFiles as $file)
+				foreach ((array)$pluginFiles as $file)
 				{
 					$config = array_merge_recursive($config, $this->parseConfigFile($file));
 				}
@@ -267,7 +284,7 @@ class LiveCartRenderer extends SmartyRenderer
 		return '.tpl' != strtolower(substr($objectName, -4));
 	}
 
-	private function getThemePaths($theme)
+	private function getThemePaths($theme, $includedThemes = array())
 	{
 		$paths = $inheritConf = array();
 		$paths[] = ClassLoader::getRealPath('storage.customize.view.theme.' . $theme . '.');
@@ -294,7 +311,11 @@ class LiveCartRenderer extends SmartyRenderer
 
 			foreach ($inherited as $parent)
 			{
-				$paths = array_merge($paths, $this->getThemePaths($parent));
+				if (empty($includedThemes[$parent]))
+				{
+					$includedThemes[$parent] = true;
+					$paths = array_merge($paths, $this->getThemePaths($parent, $includedThemes));
+				}
 			}
 		}
 
@@ -377,12 +398,12 @@ class LiveCartRenderer extends SmartyRenderer
 		{
 			if (is_numeric($pair))
 			{
-				$res['id'] = $pair;
+				$res['variables']['id'] = $pair;
 			}
-			else if (strpos($pair, '='))
+			else if (strpos($pair, '_'))
 			{
-				list($key, $value) = explode('=', $pair, 2);
-				$res[$key] = $value;
+				list($key, $value) = explode('_', $pair, 2);
+				$res['variables'][$key] = $value;
 			}
 		}
 
@@ -431,7 +452,7 @@ class LiveCartRenderer extends SmartyRenderer
 	public function getRelativeTemplatePath($template)
 	{
 		$template = str_replace('\\', '/', $template);
-		if (strpos($template, '/module/'))
+		if (preg_match('/\/(module\/.*\/.*)/', $template, $match))
 		{
 			preg_match('/\/(module\/.*)/', $template, $match);
 			return str_replace('application/view/', '', $match[1]);
@@ -455,7 +476,7 @@ class LiveCartRenderer extends SmartyRenderer
 		{
 			if ($this->paths[count($this->paths) - 1] == $root)
 			{
-				$root = ClassLoader::getRealPath('.');
+				$root = dirname(ClassLoader::getRealPath('module'));
 				$template = preg_replace('/module\/([-a-zA-Z0-9_]+)\/(.*)/', 'module/\\1/application/view/\\2', $template);
 			}
 		}

@@ -204,7 +204,7 @@ Backend.SelectFile.prototype =
 
 	loadDirectory: function(dir)
 	{
-		this.treeBrowser.loadXML(this.links.categoryRecursiveAutoloading + "?id=" + dir);
+		this.treeBrowser.loadXML(Backend.Router.setUrlQueryParam(this.links.categoryRecursiveAutoloading, "id", dir));
 	}
 }
 

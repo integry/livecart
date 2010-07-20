@@ -14,7 +14,6 @@ abstract class ActiveGridController extends StoreManagementController
 	public function export()
 	{
 		@set_time_limit(0);
-
 		$count = ActiveRecordModel::getRecordCount($this->getClassName(), $this->getListFilter(), $this->getReferencedData());
 		$bufferCnt = ceil($count / self::EXPORT_BUFFER_ROW_COUNT);
 
@@ -26,11 +25,7 @@ abstract class ActiveGridController extends StoreManagementController
 		// header row
 		$columns = $this->getExportColumns();
 		unset($columns['hiddenType']);
-		foreach ($columns as $column => $type)
-		{
-			$header[] = $type['name'];
-		}
-		fputcsv($out, $header);
+		fputcsv($out, $columns);
 
 		// data
 		for ($bufferIndex = 1; $bufferIndex <= $bufferCnt; $bufferIndex++)
@@ -63,14 +58,12 @@ abstract class ActiveGridController extends StoreManagementController
 		}
 
 		$productArray = ActiveRecordModel::getRecordSetArray($this->getClassName(), $filter, $this->getReferencedData(), $recordCount);
-
 		$productArray = $this->processDataArray($productArray, $displayedColumns);
 
 		$data = array();
 
 		foreach ($productArray as &$row)
 		{
-			//print_r($row); exit;
 			$data = array_merge($data, $this->getPreparedRecord($row, $displayedColumns));
 
 			// avoid possible memory leaks due to circular references (http://bugs.php.net/bug.php?id=33595)
@@ -135,6 +128,11 @@ abstract class ActiveGridController extends StoreManagementController
 		{
 			foreach ($displayedColumns as $column => $type)
 			{
+				if (!strpos($column, '.'))
+				{
+					continue;
+				}
+
 				list($class, $field) = explode('.', $column, 2);
 				if ('eavField' == $class)
 				{
@@ -195,34 +193,34 @@ abstract class ActiveGridController extends StoreManagementController
 		return $displayedColumns;
 	}
 
-	public function getAvailableColumns()
+	public static function getSchemaColumns($schemaName, LiveCart $application, $customColumns = array())
 	{
-		$productSchema = ActiveRecordModel::getSchemaInstance($this->getClassName());
+		$productSchema = ActiveRecordModel::getSchemaInstance($schemaName);
 
 		$availableColumns = array();
 		foreach ($productSchema->getFieldList() as $field)
 		{
 			$type = ActiveGrid::getFieldType($field);
 
-			if (!$type)
+			if (!$type && ('ID' != $field->getName()))
 			{
 				continue;
 			}
 
-			$availableColumns[$this->getClassName() . '.' . $field->getName()] = $type;
+			$availableColumns[$schemaName . '.' . $field->getName()] = $type;
 		}
 
-		$availableColumns = array_merge($availableColumns, $this->getCustomColumns());
+		$availableColumns = array_merge($availableColumns, $customColumns);
 
 		foreach ($availableColumns as $column => $type)
 		{
-			$availableColumns[$column] = array('name' => $this->translate($column), 'type' => $type);
+			$availableColumns[$column] = array('name' => $application->translate($column), 'type' => $type);
 		}
 
 		// specField columns
-		if ($this->isEav())
+		if (self::isEav($schemaName))
 		{
-			$fields = EavFieldManager::getClassFieldSet($this->getClassName());
+			$fields = EavFieldManager::getClassFieldSet($schemaName);
 			foreach ($fields as $field)
 			{
 				$fieldArray = $field->toArray();
@@ -247,6 +245,28 @@ abstract class ActiveGridController extends StoreManagementController
 		return $availableColumns;
 	}
 
+	public function getAvailableColumns($schemaName = null)
+	{
+		$schemaName = $schemaName ? $schemaName : $this->getClassName();
+
+		$availableColumns = self::getSchemaColumns($schemaName, $this->application, $this->getCustomColumns());
+
+		// sort available columns by placing the default columns first
+		$default = array();
+		foreach ($this->getDefaultColumns() as $column)
+		{
+			if (isset($availableColumns[$column]))
+			{
+				$default[$column] = $availableColumns[$column];
+				unset($availableColumns[$column]);
+			}
+		}
+
+		$availableColumns = array_merge($default, $availableColumns);
+
+		return $availableColumns;
+	}
+
 	protected function getAvailableRequestColumns()
 	{
 		return $this->getAvailableColumns();
@@ -254,7 +274,21 @@ abstract class ActiveGridController extends StoreManagementController
 
 	protected function getExportColumns()
 	{
-		return $this->getDisplayedColumns();
+		$available = $this->getAvailableRequestColumns();
+		$columns = array();
+		foreach ($this->getDisplayedColumns() as $column => $type)
+		{
+			if (isset($available[$column]))
+			{
+				$columns[$column] = $available[$column]['name'];
+			}
+			else
+			{
+				$columns[$column] = $this->translate($column);
+			}
+		}
+
+		return $columns;
 	}
 
 	protected function setGridResponse(ActionResponse $response)
@@ -361,7 +395,7 @@ abstract class ActiveGridController extends StoreManagementController
 				{
 					if ($needsJoin)
 					{
-						$f->joinTable('EavObject', $this->getClassName(), EavObject::getClassField($this->getClassName()), 'ID');
+						$f->joinTable('EavObject', $this->getClassName(), 'ID', 'eavObjectID');
 						$needsJoin = false;
 					}
 
@@ -426,9 +460,10 @@ abstract class ActiveGridController extends StoreManagementController
 		return true;
 	}
 
-	protected function isEav()
+	protected function isEav($className = null)
 	{
-		return ActiveRecordModel::isEav($this->getClassName());
+		$className = $className ? $className : $this->getClassName();
+		return ActiveRecordModel::isEav($className);
 	}
 }
 

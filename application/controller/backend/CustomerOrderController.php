@@ -23,6 +23,12 @@ class CustomerOrderController extends ActiveGridController
 	const TYPE_CARTS = 8;
 	const TYPE_CANCELLED = 9;
 
+	public function init()
+	{
+		parent::init();
+		CustomerOrder::allowEmpty();
+	}
+
 	/**
 	 * Action shows filters and datagrid.
 	 * @return ActionResponse
@@ -40,7 +46,6 @@ class CustomerOrderController extends ActiveGridController
 				array('ID' => self::TYPE_CANCELLED, 'name' => $this->translate('_cancelled_orders'), 'rootID' => 1),
 			array('ID' => self::TYPE_CARTS, 'name' => $this->translate('_shopping_carts'), 'rootID' => 0),
 		);
-
 		return new ActionResponse('orderGroups', $orderGroups);
 	}
 
@@ -56,14 +61,15 @@ class CustomerOrderController extends ActiveGridController
 
 	protected function getDefaultColumns()
 	{
-		return array('CustomerOrder.ID2', 'User.fullName', 'User.email', 'CustomerOrder.dateCompleted', 'CustomerOrder.totalAmount', 'CustomerOrder.status', 'User.ID');
+		return array('CustomerOrder.ID', 'CustomerOrder.invoiceNumber', 'User.fullName', 'User.email', 'CustomerOrder.dateCompleted', 'CustomerOrder.totalAmount', 'CustomerOrder.status', 'User.ID');
 	}
 
 	public function info()
 	{
-		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('ShippingAddress' => 'UserAddress', 'BillingAddress' => 'UserAddress', 'State', 'User', 'Currency'));
+		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('User', 'Currency'));
 		$order->getSpecification();
-
+		$order->loadAddresses();
+		
 		$response = new ActionResponse();
 		$response->set('statuses', array(
 										CustomerOrder::STATUS_NEW => $this->translate('_status_new'),
@@ -109,15 +115,15 @@ class CustomerOrderController extends ActiveGridController
 		{
 			$order->user->get()->loadAddresses();
 
-			if ($order->user->get()->defaultShippingAddress->get())
+			if (!$order->shippingAddress->get() && $order->user->get()->defaultShippingAddress->get())
 			{
 				$shippingStates = State::getStatesByCountry($order->user->get()->defaultShippingAddress->get()->userAddress->get()->countryID->get());
-			   $orderArray['ShippingAddress'] = $order->user->get()->defaultShippingAddress->get()->userAddress->get()->toArray();
+				$orderArray['ShippingAddress'] = $order->user->get()->defaultShippingAddress->get()->userAddress->get()->toArray();
 			}
 
 			$shippingStates[''] = '';
 
-			if ($order->user->get()->defaultBillingAddress->get())
+			if (!$order->billingAddress->get() && $order->user->get()->defaultBillingAddress->get())
 			{
 				$billingStates = State::getStatesByCountry($order->user->get()->defaultBillingAddress->get()->userAddress->get()->countryID->get());
 				$orderArray['BillingAddress'] = $order->user->get()->defaultBillingAddress->get()->userAddress->get()->toArray();
@@ -134,29 +140,29 @@ class CustomerOrderController extends ActiveGridController
 
 		$user = $order->user->get();
 
-		if (!$user)
-		{
-			return $response;
-		}
+		$response->setStatusCode(200);
 
-		$addressOptions = array('' => '');
-		$addressOptions['optgroup_0'] = $this->translate('_billing_addresses');
-		$addresses = array();
-		foreach($user->getBillingAddressArray() as $address)
+		if ($user)
 		{
-			$addressOptions[$address['ID']] = $this->createAddressString($address);
-			$addresses[$address['ID']] = $address;
-		}
+			$addressOptions = array('' => '');
+			$addressOptions['optgroup_0'] = $this->translate('_billing_addresses');
+			$addresses = array();
+			foreach($user->getBillingAddressArray() as $address)
+			{
+				$addressOptions[$address['ID']] = $this->createAddressString($address);
+				$addresses[$address['ID']] = $address;
+			}
 
-		$addressOptions['optgroup_1'] = $this->translate('_shipping_addresses');
-		foreach($user->getShippingAddressArray() as $address)
-		{
-			$addressOptions[$address['ID']] = $this->createAddressString($address);
-			$addresses[$address['ID']] = $address;
-		}
+			$addressOptions['optgroup_1'] = $this->translate('_shipping_addresses');
+			foreach($user->getShippingAddressArray() as $address)
+			{
+				$addressOptions[$address['ID']] = $this->createAddressString($address);
+				$addresses[$address['ID']] = $address;
+			}
 
-		$response->set('existingUserAddressOptions', $addressOptions);
-		$response->set('existingUserAddresses', $addresses);
+			$response->set('existingUserAddressOptions', $addressOptions);
+			$response->set('existingUserAddresses', $addresses);
+		}
 
 		foreach (array('ShippingAddress', 'BillingAddress') as $type)
 		{
@@ -193,9 +199,58 @@ class CustomerOrderController extends ActiveGridController
 		$form = $this->createFieldsForm($order);
 		$order->getSpecification()->setFormResponse($response, $form);
 		$response->set('fieldsForm', $form);
-
+		$this->appendCalendarForm($response);
 		return $response;
 	}
+
+	public function updateDate()
+	{
+		$request = $this->getRequest();
+		
+		$validator = $this->getDateCompletedValidator($request);
+		if($validator->isValid() == false)
+		{
+			$errors = $validator->getErrorList();
+			return new JSONResponse(array('errors'=>$errors), 'validationError');
+		}
+		
+		$order = CustomerOrder::getInstanceById($request->get('orderID'));
+		$newDate =  $request->get('dateCompleted');
+		if(strpos($newDate, ':') === false)
+		{
+			list($oldDate, $oldTime) = explode(' ',(string)$order->dateCompleted->get());
+			$newDate .= ' '.$oldTime; 
+		}
+		$order->dateCompleted->set($newDate);
+		$order->save();
+		$order->reload();
+		return new JSONResponse(array('date'=>(string)$order->dateCompleted->get()), 'saved');
+	}
+
+	private function appendCalendarForm($response)
+	{
+		$dateForm = new Form($this->getDateCompletedValidator($this->getRequest()));
+		$order = $response->get('order');
+		foreach(array('dateCompleted', 'dateCreated') as $key)
+		{
+			if(isset($order[$key]))
+			{
+				$dateForm->set($key, $order[$key]);	
+			}
+		}
+		$response->set('dateForm', $dateForm);
+	}
+
+	private function getDateCompletedValidator(Request $request)
+	{
+		$validator = $this->getValidator('dateCreatedValidator', $request);
+		$validator->addCheck('dateCompleted', new IsNotEmptyCheck($this->translate('_err_date_cannot_be_empty')));
+		$validator->addCheck('dateCompleted', new RegExpCheck($this->translate('_err_unknown_date_format'), '/^\d{4}\-\d{1,2}\-\d{1,2}$/'));
+
+		return $validator;
+	}
+
+
 
 	private function getOrderType(CustomerOrder $order)
 	{
@@ -294,6 +349,20 @@ class CustomerOrderController extends ActiveGridController
 		);
 	}
 
+	/**
+	 * @role update
+	 */
+	public function finalize()
+	{
+		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, true);
+		$order->loadAll();
+
+		$order->finalize();
+
+		$url = $this->router->createUrl(array('controller' => 'backend.customerOrder', 'action' => 'index')) . '#order_' . $order->getID();
+		return new RedirectResponse($url);
+	}
+
 	public function sendCancelNotifyEmail(CustomerOrder $order)
 	{
 		if ($order->isCancelled->get() && $this->config->get('EMAIL_ORDER_CANCELLATION'))
@@ -309,7 +378,25 @@ class CustomerOrderController extends ActiveGridController
 
 	public function sendStatusNotifyEmail(CustomerOrder $order)
 	{
-		if ($this->config->get('EMAIL_STATUS_UPDATE'))
+		$status = $order->status->get();
+		$enabledStatuses = $this->config->get('EMAIL_STATUS_UPDATE_STATUSES');
+		$m = array(	
+			'EMAIL_STATUS_UPDATE_NEW'=>CustomerOrder::STATUS_NEW,
+			'EMAIL_STATUS_UPDATE_PROCESSING'=>CustomerOrder::STATUS_PROCESSING,
+			'EMAIL_STATUS_UPDATE_AWAITING_SHIPMENT'=>CustomerOrder::STATUS_AWAITING,
+			'EMAIL_STATUS_UPDATE_SHIPPED'=> CustomerOrder::STATUS_SHIPPED
+		);
+
+		$sendEmail = false;
+		foreach($m as $configKey => $constValue)
+		{
+			if($status == $constValue && array_key_exists($configKey, $enabledStatuses))
+			{
+				$sendEmail = true;
+			}
+		}
+
+		if ($this->config->get('EMAIL_STATUS_UPDATE') || $sendEmail)
 		{
 			$this->loadLanguageFile('Frontend');
 			$this->application->loadLanguageFiles();
@@ -329,6 +416,7 @@ class CustomerOrderController extends ActiveGridController
 	public function processMass()
 	{
 		ClassLoader::import('application.helper.massAction.OrderMassActionProcessor');
+		ClassLoader::import('application.model.feed.ShipmentFeed');
 
 		$filter = new ARSelectFilter();
 		$grid = new ActiveGrid($this->application, $filter, 'CustomerOrder');
@@ -337,9 +425,27 @@ class CustomerOrderController extends ActiveGridController
 		$this->applyStateFilter($typeCond);
 		$filter->mergeCondition($typeCond);
 
-		$mass = new OrderMassActionProcessor($grid, array('controller' => $this));
-		$mass->setCompletionMessage($this->translate('_mass_action_succeed'));
-		return $mass->process(CustomerOrder::LOAD_REFERENCES);
+		if ('printLabels' == $this->request->get('act'))
+		{
+			$GLOBALS['filter'] = $filter;
+			return new InternalRedirectResponse('backend.customerOrder', 'printLabels');
+		}
+		else
+		{
+			$mass = new OrderMassActionProcessor($grid, array('controller' => $this));
+			$mass->setCompletionMessage($this->translate('_mass_action_succeed'));
+			return $mass->process(CustomerOrder::LOAD_REFERENCES);
+		}
+	}
+
+	public function printLabels()
+	{
+		$filter = $GLOBALS['filter'];
+
+		// HAVING User.fullName >> causes problems
+		$filter->setHavingCondition(eq(new ARExpressionHandle('1'), 1));
+
+		return new ActionResponse('feed', new ShipmentFeed($filter, array('User')));
 	}
 
 	public function isMassCancelled()
@@ -369,6 +475,7 @@ class CustomerOrderController extends ActiveGridController
 
 		// header row
 		$columns = array_intersect_key($this->getAvailableColumns(), array_flip($this->getDefaultColumns()));
+		$columns = array_merge(array('CustomerOrder.ID' => 'numeric'), $columns);
 		$detailColumns = array(array('Product', 'sku'), array('Product', 'name_lang'), array('Product', 'Manufacturer', 'name'), array('OrderedItem', 'count'), array('OrderedItem', 'price'), array('OrderedItem', 'priceCurrencyID'), array('OrderedItem', 'itemSubtotal'), array('ShippingAddress', 'phone'), array('ShippingAddress', 'companyName'), array('ShippingAddress', 'address1'), array('ShippingAddress', 'address2'), array('ShippingAddress', 'city'), array('ShippingAddress', 'stateName'), array('ShippingAddress', 'postalCode'), array('ShippingAddress', 'countryName'));
 		unset($columns['hiddenType']);
 
@@ -395,7 +502,7 @@ class CustomerOrderController extends ActiveGridController
 		foreach ($columns as $col => $type)
 		{
 			$index++;
-			if ('CustomerOrder.ID2' == $col)
+			if ('CustomerOrder.ID' == $col)
 			{
 				break;
 			}
@@ -403,9 +510,9 @@ class CustomerOrderController extends ActiveGridController
 
 		// collect order ID's
 		$ids = array();
-		foreach ($this->lists(true, $columns) as $row)
+		foreach ($this->lists(true, array('CustomerOrder.ID' => 'numeric')) as $row)
 		{
-			$ids[] = $row[$index];
+			$ids[] = $row[0];
 		}
 
 		// fetch detailed data
@@ -417,9 +524,10 @@ class CustomerOrderController extends ActiveGridController
 		}
 
 		// columns
+		$index = 0;
 		foreach ($this->lists(true, $columns) as $row)
 		{
-			foreach ($data[$row[$index]] as $item)
+			foreach ((array)$data[$row[$index]] as $item)
 			{
 				$itemData = $row;
 				$item['OrderedItem'] =& $item;
@@ -452,22 +560,6 @@ class CustomerOrderController extends ActiveGridController
 	{
 		$filter = parent::getSelectFilter();
 
-		if($this->request->get('sort_col') == 'CustomerOrder.ID2')
-		{
-			$this->request->set('sort_col', 'CustomerOrder.ID');
-		}
-
-		if($filters = $this->request->get('filters'))
-		{
-			if (isset($filters['CustomerOrder.ID2']))
-			{
-				$filters['CustomerOrder.ID'] = $filters['CustomerOrder.ID2'];
-				unset($filters['CustomerOrder.ID2']);
-			}
-
-			$this->request->set('filters', $filters);
-		}
-
 		$id = $this->request->get('id');
 		if (!is_numeric($id))
 		{
@@ -498,13 +590,20 @@ class CustomerOrderController extends ActiveGridController
 		return $filter;
 	}
 
+	protected function setDefaultSortOrder(ARSelectFilter $filter)
+	{
+		$filter->setOrder(new ARFieldHandle($this->getClassName(), 'dateCompleted'), 'DESC');
+		$filter->setOrder(new ARFieldHandle($this->getClassName(), 'ID'), 'DESC');
+	}
+
 	public function processDataArray($orders, $displayedColumns)
 	{
 		$orders = parent::processDataArray($orders, $displayedColumns);
+		$ids = array();
 
 		foreach ($orders as &$order)
 		{
-			$order['ID2'] = $order['ID'];
+			$ids[$order['ID']] =& $order;
 
 			foreach ($order as $field => &$value)
 			{
@@ -550,19 +649,21 @@ class CustomerOrderController extends ActiveGridController
 			}
 		}
 
+		if ($orders && (isset($displayedColumns['CustomerOrder.taxAmount']) || 1))
+		{
+			$sql = 'SELECT SUM(ShipmentTax.amount) AS taxAmount, Shipment.orderID AS orderID FROM ShipmentTax LEFT JOIN Shipment ON ShipmentTax.shipmentID=Shipment.ID WHERE Shipment.orderID IN(' . implode(', ', array_keys($ids)) .') GROUP BY Shipment.orderID';
+			foreach (ActiveRecord::getDataBySQL($sql) as $row)
+			{
+				$ids[$row['orderID']]['taxAmount'] = round($row['taxAmount'], 2);
+			}
+		}
+
 		return $orders;
 	}
 
 	protected function getCSVFileName()
 	{
 		return 'orders.csv';
-	}
-
-	protected function getExportColumns()
-	{
-		$displayedColumns = $this->getDisplayedColumns();
-		unset($displayedColumns['CustomerOrder.ID2']);
-		return $displayedColumns;
 	}
 
 	protected function getColumnValue($record, $class, $field)
@@ -707,7 +808,7 @@ class CustomerOrderController extends ActiveGridController
 		if ($this->createFieldsFormValidator($order)->isValid())
 		{
 			$order->loadRequestData($this->request);
-			$order->save();
+			$order->save(true);
 
 			$response = new ActionResponse('order', $order->toArray());
 			$form = $this->createFieldsForm($order);
@@ -743,15 +844,28 @@ class CustomerOrderController extends ActiveGridController
 	}
 
 	/**
+	 * @role update
+	 */
+	public function setMultiAddress()
+	{
+		$order = CustomerOrder::getInstanceByID((int)$this->request->get('id'), true);
+		$order->isMultiAddress->set($this->request->get('status'));
+		$order->save(true);
+	}
+
+	/**
 	 * @role create
 	 */
 	public function create()
 	{
+		ActiveRecord::beginTransaction();
 		$user = User::getInstanceByID((int)$this->request->get('customerID'), true, true);
+		$user->loadAddresses();
+
 		$order = CustomerOrder::getNewInstance($user);
 		$status = CustomerOrder::STATUS_NEW;
 		$order->status->set($status);
-		$order->isFinalized->set(1);
+		$order->isFinalized->set(0);
 		$order->capturedAmount->set(0);
 		$order->totalAmount->set(0);
 		$order->dateCompleted->set(new ARSerializableDateTime());
@@ -761,14 +875,17 @@ class CustomerOrderController extends ActiveGridController
 		{
 			if($user->$userField->get())
 			{
-				$user->$userField->get()->load(array('UserAddress'));
+				$user->$userField->get()->userAddress->get()->load();
 				$address = clone $user->$userField->get()->userAddress->get();
 				$address->save();
 				$order->$orderField->set($address);
 			}
 		}
 
-		return $this->save($order);
+		$response = $this->save($order);
+
+		ActiveRecord::commit();
+		return $response;
 	}
 
 	/**
@@ -787,6 +904,21 @@ class CustomerOrderController extends ActiveGridController
 			$address->loadRequestData($this->request);
 			$address->save();
 			$history->saveLog();
+
+			if (!$this->request->get('ID'))
+			{
+				if (!$order->billingAddress->get())
+				{
+					$order->billingAddress->set($address);
+				}
+
+				if (!$order->shippingAddress->get())
+				{
+					$order->shippingAddress->set($address);
+				}
+
+				$order->save();
+			}
 
 			return new JSONResponse(array('address' => $address->toArray()), 'success', $this->translate('_order_address_was_successfully_updated'));
 		}
@@ -810,7 +942,7 @@ class CustomerOrderController extends ActiveGridController
 		}
 
 		$order->updateStatusFromShipments();
-		$order->save();
+		$order->save(true);
 
 		return new RawResponse();
 	}
@@ -839,7 +971,7 @@ class CustomerOrderController extends ActiveGridController
 		if ($validator->isValid())
 		{
 			$existingRecord = $order->isExistingRecord();
-			$order->save();
+			$order->save(true);
 
 			return new JSONResponse(
 			   array('order' => array( 'ID' => $order->getID())),
@@ -895,6 +1027,7 @@ class CustomerOrderController extends ActiveGridController
 
 		unset($availableColumns['CustomerOrder.shipping']);
 		unset($availableColumns['CustomerOrder.isFinalized']);
+		unset($availableColumns['CustomerOrder.checkoutStep']);
 
 		return $availableColumns;
 	}
@@ -903,10 +1036,10 @@ class CustomerOrderController extends ActiveGridController
 	{
 		$availableColumns['User.email'] = 'text';
 		$availableColumns['User.ID'] = 'text';
-		$availableColumns['CustomerOrder.ID2'] = 'numeric';
 		$availableColumns['User.fullName'] = 'text';
 
 		$availableColumns['CustomerOrder.status'] = 'text';
+		$availableColumns['CustomerOrder.taxAmount'] = 'number';
 
 		// Shipping address
 		$availableColumns['ShippingAddress.firstName'] = 'text';
@@ -968,7 +1101,7 @@ class CustomerOrderController extends ActiveGridController
 			$form->setData($addressArray);
 		}
 
-		$address = !empty($addressArray['ID']) ? ActiveRecordModel::getInstanceByID('UserAddress', $addressArray['ID']) : UserAddress::getNewInstance();
+		$address = !empty($addressArray['ID']) ? ActiveRecordModel::getInstanceByID('UserAddress', $addressArray['ID'], true) : UserAddress::getNewInstance();
 		$address->getSpecification()->setFormResponse($response, $form);
 
 		return $form;

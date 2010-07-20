@@ -87,7 +87,7 @@ class FedexShipping extends ShippingRateCalculator
 			}
 		}
 
-		return isset($results) ? $results : array_shift($result);
+		return isset($results) ? $results : $result;
 	}
 
 	private function getRatesByType(Fedex $fedex, $type)
@@ -132,7 +132,7 @@ class FedexShipping extends ShippingRateCalculator
 		else
 		{
 			$price = $price['FDXRATEAVAILABLESERVICESREPLY'][0];
-			$msg = isset($price['ERROR']) ? $price['ERROR'] : $price['SOFTERROR'][0]['MESSAGE'];
+			$msg = isset($price['ERROR']) ? $price['ERROR'] : (isset($price['SOFTERROR']) ? $price['SOFTERROR'][0]['MESSAGE'] : '');
 			$result = new ShippingRateError($msg);
 		}
 

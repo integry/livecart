@@ -10,7 +10,11 @@
 {if $address.address2}
 {$address.address2}
 {/if}
+{if $address.city}
 {$address.city}
-{if $address.stateName}{$address.stateName}, {/if}{$address.postalCode}
+{/if}
+{if $address.stateName}{$address.stateName}{if $address.postalCode}, {/if}{/if}{$address.postalCode}
+{if $address.countryName}
 {$address.countryName}
+{/if}{include file="order/addressFieldValues.tpl" showLabels=false}
 {/if}
