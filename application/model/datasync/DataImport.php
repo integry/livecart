@@ -71,7 +71,7 @@ abstract class DataImport
 			$value = $record[$csvIndex];
 
 			list($className, $field) = explode('.', $column, 2);
-			
+
 			if (method_exists($this, 'set_' . $className . '_' . $field))
 			{
 				$method = 'set_' . $className . '_' . $field;
@@ -115,7 +115,7 @@ abstract class DataImport
 		}
 
 		$this->afterSave($instance, $record);
-	
+
 		$id = $instance->getID();
 
 		if ($this->callback)
@@ -135,9 +135,9 @@ abstract class DataImport
 	{
 		$class = $type . 'Import';
 		$this->application->loadPluginClass('application.model.datasync.import', $class);
-		return new $class($this->application);		
+		return new $class($this->application);
 	}
-	
+
 	public function importRelatedRecord($type, ActiveRecordModel $instance, $record, CsvImportProfile $profile)
 	{
 		return $this->getImporterInstance($type)->importInstance($record, $profile, $instance);
@@ -372,8 +372,6 @@ abstract class DataImport
 							);
 						$f->setLimit(1);
 
-						var_dump($f->createString()); exit;
-
 						if (!($value = $attr->getRelatedRecordSet($valueClass, $f)->shift()))
 						{
 							$value = call_user_func_array(array($valueClass, 'getNewInstance'), array($attr));
@@ -442,7 +440,7 @@ abstract class DataImport
 		preg_match('/(.*)Import/', get_class($this), $match);
 		return array_pop($match);
 	}
-	
+
 	public function getColumnValue($record, CsvImportProfile $profile, $fieldName)
 	{
 		if ($profile->isColumnSet($fieldName))
@@ -455,7 +453,7 @@ abstract class DataImport
 	{
 		$this->flushMessage = $msg;
 	}
-	
+
 	public function setCallback($function)
 	{
 		$this->callback = $function;
