@@ -1,0 +1,90 @@
+customer
+	list
+		/api/xml?xml=<customer><list/></customer>
+		/api/xml?xml=<customer><list><email>%.com</email></list></customer>
+		/api/xml?xml=<customer><filter><email>%.com</email></filter></customer>
+    
+    create
+		/api/xml?xml=<customer><create><email>just.created@customer.kom</email><name>Just created Customer</name></create></customer>
+    
+    update
+		/api/xml?xml=<customer><update><email>just.created@customer.kom</email><ShippingAddress_companyName>Shipping address company name</ShippingAddress_companyName></update></customer>
+		/api/xml?xml=<customer><update><ID>579<ID><email>new@email.kom</email></update></customer> | change email
+
+	delete
+		/api/xml?xml=<customer><delete>579</delete></customer>
+
+category
+	list
+		/api/xml?xml=<category><filter/></category>
+
+	get
+		/api/xml?xml=<category><get>1</get></category> | error if not found
+		/api/xml?xml=<category><filter><ID>1</ID></filter></category> | empty list if not found
+
+	create
+		/api/xml?xml=<category><create><name>Just created category</name></create></category>
+
+	update
+		/api/xml?xml=<category><update><activeProductCount>123</activeProductCount><ID>136</ID></update></category>
+		/api/xml?xml=<category><update><ID>136</ID><parentNodeID>8</parentNodeID></update></category>
+
+	delete
+		/api/xml?xml=<category><delete><ID>127</ID></delete></category>
+
+product
+	list
+		/api/xml?xml=<product><list/></product>
+		/api/xml?xml=<product><list><isFeatured>1</isFeatured></list></product>
+
+	get
+		/api/xml?xml=<product><get>ESKU44912</get></product>
+
+	create
+		/api/xml?xml=<product><create><sku>FOOBAR1</sku><name>D</name></create></product>
+
+	update
+		/api/xml?xml=<product><update><sku>FOOBAR1</sku><name>renamed from D</name></update></product>
+		/api/xml?xml=<product><update><sku>FOOBAR1</sku><name>renamed from D</name></update><update><sku>FOOBAR2</sku><name>renamed</name><name lang="de">umbenannt</name></update></product> | Update multiple products. You can pass a "lang" attribute to language specific fields to import a value in particular language.
+
+	delete
+		/api/xml?xml=<product><delete><sku>FOOBAR1</sku></delete></product>
+
+order
+	list
+		/api/xml/?xml=<order><list><userID>1</userID></list></order>
+
+	get
+		/api/xml/?xml=<order><get>123</get></order>
+
+	invoice
+		/api/xml/?xml=<order><invoice>INT-40046/2009</invoice></order>
+
+	delete
+		/api/xml/?xml=<order><delete>123</delete></order>
+		
+	create
+		/api/xml/?xml=<order><create><invoiceNumber>test</invoiceNumber><email>info@livecart.com</email><ShippingAddress_firstName>John</ShippingAddress_firstName><ShippingAddress_lastName>Doe</ShippingAddress_lastName><ShippingAddress_countryID>US</ShippingAddress_countryID><ShippingAddress_stateName>CA</ShippingAddress_stateName><ShippingAddress_city>Beverly Hills</ShippingAddress_city><ShippingAddress_address1>Test Street 1800</ShippingAddress_address1><ShippingAddress_postalCode>90210</ShippingAddress_postalCode><ShippingAddress_phone>555-5555</ShippingAddress_phone><items><item><OrderedItem_sku>SKU3551</OrderedItem_sku></item><item><OrderedItem_sku>SKU3549</OrderedItem_sku><OrderedItem_count>2</OrderedItem_count></item></items></create></order>
+
+	update
+		/api/xml/?xml=<order><update><invoiceNumber>test</invoiceNumber><status>new</status></update></order> | Valid status values: new, processing, awaiting shipment, shipped, returned
+
+stock
+	get
+		/api/xml/?xml=<stock><get>SKU44939</get></stock>
+    
+	set
+		/api/xml/?xml=<stock><set><sku>SKU44939</sku><quantity>98</quantity></set></stock>
+
+price
+	get
+		/api/xml/?xml=<price><get>SKU123</get></price>
+
+	set
+		/api/xml/?xml=<price><set><sku>SKU44939</sku><currency>USD</currency><definedPrice>555</definedPrice></set></price>
+		/api/xml/?xml=<price><set><sku>SKU44940</sku><currency>EUR</currency><definedListPrice>555</definedListPrice></set></price>
+		/api/xml/?xml=<price><set><sku>SKU44939</sku><currency>USD</currency><quantityPrices><quantityPrice><quantity>5</quantity><price>55.98</price><group>1</group></quantityPrice><quantityPrice><quantity>5</quantity><price>22.98</price><currency>EUR</currency><group>1</group></quantityPrice></quantityPrices></set></price>
+
+	replace
+		/api/xml/?xml=<price><replace><sku>SKU44939</sku><quantityPrices><quantityPrice><quantity>5</quantity><price>55.98</price></quantityPrice></quantityPrices></replace></price>
+		/api/xml/?xml=<price><replace><sku>SKU44939</sku></replace></price> | removes all quantity prices

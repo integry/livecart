@@ -1,7 +1,8 @@
 <?php
 
-ClassLoader::import("application.controller.BaseController");
-ClassLoader::import("application.model.Currency");
+ClassLoader::import('application.controller.BaseController');
+ClassLoader::import('application.model.Currency');
+ClassLoader::import('application.model.category.Category');
 
 /**
  * Base class for all front-end related controllers
@@ -72,6 +73,9 @@ abstract class FrontendController extends BaseController
 		$this->addBlock('QUICKNAV', 'blockQuickNav', 'block/box/quickNav');
 		$this->addBlock('COMPARE', array('compare', 'compareMenu'));
 		$this->addBlock('MINI_CART', array('order', 'miniCart'), 'order/miniCartBlock');
+		$this->addBlock('QUICK_LOGIN', 'quickLogin', 'user/block/quickLoginBlock');
+
+		$this->application->logStat('Init FrontendController');
 	}
 
 	public function getRequestCurrency()
@@ -96,7 +100,7 @@ abstract class FrontendController extends BaseController
 		$this->order = $order;
 	}
 
-	protected function addBreadCrumb($title, $url)
+	public function addBreadCrumb($title, $url)
 	{
 		$this->breadCrumb[] = array('title' => $title, 'url' => $url);
 	}
@@ -158,6 +162,17 @@ abstract class FrontendController extends BaseController
 			$address->state->set(null);
 		}
 		$address->save();
+	}
+
+	public function quickLoginBlock()
+	{
+		if (!$this->user->isAnonymous())
+		{
+			return;
+		}
+
+		$this->loadLanguageFile('User');
+		return new BlockResponse('return', $_SERVER['REQUEST_URI']);
 	}
 
 	protected function boxInformationMenuBlock()
@@ -347,6 +362,17 @@ abstract class FrontendController extends BaseController
 		$form->enableClientSideValidation(false);
 		$form->set('id', $this->getCategory()->getID());
 		$form->set('q', $this->request->get('q'));
+
+		if ($this->filters && is_array($this->filters))
+		{
+			foreach ($this->filters as $filter)
+			{
+				if ($filter instanceof SearchFilter)
+				{
+					$form->set('q', $filter->getKeywords());
+				}
+			}
+		}
 
 		$response = new BlockResponse();
 		$response->set('categories', $options);
@@ -659,14 +685,22 @@ abstract class FrontendController extends BaseController
 
 	public function latestNewsBlock()
 	{
+		$this->application->logStat('Starting latestNewsBlock');
 		ClassLoader::import('application.model.sitenews.NewsPost');
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
 		$f->setOrder(new ARFieldHandle('NewsPost', 'position'), 'DESC');
 		$f->setLimit($this->config->get('NUM_NEWS_INDEX') + 1);
+
+		$this->application->logStat('Before fetching news from DB');
+		$news = array();
 		$news = ActiveRecordModel::getRecordSetArray('NewsPost', $f);
+
+		$this->application->logStat('Fetched news from DB');
 
 		$response = new BlockResponse('news', $news);
 		$response->set('isNewsArchive', count($news) > $this->config->get('NUM_NEWS_INDEX'));
+
+		$this->application->logStat('Finished latestNewsBlock');
 		return $response;
 	}
 
@@ -741,7 +775,7 @@ abstract class FrontendController extends BaseController
 		return $cat;
 	}
 
-	protected function __get($name)
+	public function __get($name)
 	{
 		if ($inst = parent::__get($name))
 		{
@@ -772,7 +806,7 @@ abstract class FrontendController extends BaseController
 	{
 		if (isset($this->order))
 		{
-			$this->order->__destruct();
+			//$this->order->__destruct();
 			unset($this->order);
 		}
 	}

@@ -1,11 +1,13 @@
 {if !$html}
 {include file="email/blockOrderItems.tpl"}
 
+{if $order.taxes[$order.Currency.ID] && !'HIDE_TAXES'|config}
 {t _subtotal|@str_pad_left:49}: {$order.formatted_itemSubtotalWithoutTax}
+{/if}
 {if $order.formatted_shippingSubtotal}
 {t _shipping|@str_pad_left:49}: {$order.formatted_shippingSubtotal}
 {/if}
-{if $order.taxes[$order.Currency.ID]}
+{if $order.taxes[$order.Currency.ID] && !'HIDE_TAXES'|config}
 {''|@str_pad_left:27}---------------------------------
 {t _subtotal_before_tax|@str_pad_left:49}: {$order.formatted_subtotalBeforeTaxes}
 {foreach from=$order.taxes[$order.Currency.ID] item=tax}
@@ -23,7 +25,9 @@
 <table border="1">
 {include file="email/blockOrderItems.tpl" noTable=true}
 
+{if $order.taxes[$order.Currency.ID] && !'HIDE_TAXES'|config}
 <tr><td colspan="3">{t _subtotal}</td><td align="right">{$order.formatted_itemSubtotalWithoutTax}</td></tr>
+{/if}
 {if $order.formatted_shippingSubtotal}
 	{if $order.shipments|@count == 1}
 		{include file="email/blockShippingCost.tpl" shipment=$order.shipments.0}
@@ -31,7 +35,7 @@
 		<tr><td colspan="3">{t _shipping}</td><td align="right">{$order.formatted_shippingSubtotal}</td></tr>
 	{/if}
 {/if}
-{if $order.taxes[$order.Currency.ID]}
+{if $order.taxes[$order.Currency.ID] && !'HIDE_TAXES'|config}
 <tr><td colspan="3">{t _subtotal_before_tax}</td><td align="right">{$order.formatted_subtotalBeforeTaxes}</td></tr>
 {foreach from=$order.taxes[$order.Currency.ID] item=tax}
 <tr><td colspan="3">{$tax.name_lang}</td><td align="right">{$tax.formattedAmount}</td></tr>

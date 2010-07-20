@@ -6,6 +6,7 @@
  * @package application.model
  * @author Integry Systems <http://integry.com>
  */
+
 class ExportProfile
 {
 	protected $name;
@@ -34,7 +35,6 @@ class ExportProfile
 	{
 		return $this->fields;
 	}
-
 }
 
 ?>

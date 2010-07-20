@@ -2,18 +2,6 @@
  *	@author Integry Systems
  */
 
-Event.observe(window, 'load',
-	function()
-	{
-		window.loadingImage = 'image/loading.gif';
-		window.closeButton = 'image/silk/gif/cross.gif';
-		if (window.initLightbox)
-		{
-			initLightbox();
-		}
-	}
-);
-
 if (Backend == undefined)
 {
 	var Backend = {}
@@ -331,7 +319,7 @@ Backend.Category = {
 		}
 		else
 		{
-			 this.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, null, 0, 0, 0, '', 1);
+			 this.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name_lang, null, 0, 0, 0, '', 1);
 			 this.treeBrowser.showItemSign(newCategory.ID, 0);
 			 this.treeBrowser.selectItem(newCategory.ID, true);
 			 this.tabControl.activateTab("tabMainDetails", newCategory.ID);
@@ -359,7 +347,7 @@ Backend.Category = {
 	{
 		var categoryData = eval('(' + response.responseText + ')');
 
-		Backend.Category.treeBrowser.setItemText(categoryData.ID, categoryData.name);
+		Backend.Category.treeBrowser.setItemText(categoryData.ID, categoryData.name_lang);
 		Backend.Category.treeBrowser.setCategoryStyle(categoryData);
 	},
 
@@ -403,8 +391,39 @@ Backend.Category = {
 		var nodeIdToRemove = this.treeBrowser.getSelectedItemId();
 		var parentNodeId = this.treeBrowser.getParentId(nodeIdToRemove);
 
-		new LiveCart.AjaxRequest(this.getUrlForNodeRemoval(nodeIdToRemove));
+		new LiveCart.AjaxRequest(this.getUrlForNodeRemoval(nodeIdToRemove), null,
+			function(transport)
+			{
+				if(transport.responseData.status == "confirm" && confirm(transport.responseData.confirmMessage))
+				{
+					new LiveCart.AjaxRequest(transport.responseData.url, null,
+						function(transport)
+						{
+							if(transport.responseData.status == "success")
+							{
+								this.successCallback();
+							}
+						}.bind(this)
+					);
+				}
+				else if(transport.responseData.status == "success")
+				{
+					this.successCallback();
+				}
+			}.bind({
+				successCallback:function(nodeIdToRemove, parentNodeId)
+				{
+					return function()
+					{
+						this.removeBranchSuccess(nodeIdToRemove, parentNodeId)
+					}.bind(this);
+				}.bind(this)(nodeIdToRemove, parentNodeId)
+			})
+		);
+	},
 
+	removeBranchSuccess: function(nodeIdToRemove, parentNodeId)
+	{
 		this.activateCategory(parentNodeId);
 		this.tabControl.activateTab($('tabProducts'), parentNodeId);
 		this.treeBrowser.deleteItem(nodeIdToRemove, true);
@@ -446,7 +465,7 @@ Backend.Category = {
 			}
 
 			// strip HTML
-			category.name = '<b>' + category.name + '</b>';
+			category.name = '<b>' + category.name_lang + '</b>';
 			category.name = category.name.replace(/<(?:.|\s)*?>/g, "");
 
 			Backend.Category.treeBrowser.insertNewItem(category.parent,category.ID,category.name, null, 0, 0, 0, category.options, !category.childrenCount ? 0 : category.childrenCount);

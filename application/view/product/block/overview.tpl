@@ -1,4 +1,7 @@
 <table id="productMainDetails">
+
+	{block PRODUCT-OVERVIEW-BEFORE}
+
 	{if $product.Manufacturer.name}
 	<tr>
 		<td class="param">{t _manufacturer}:</td>
@@ -40,7 +43,7 @@
 		</tr>
 		{/if}
 
-		{if $product.stockCount && 'PRODUCT_DISPLAY_LOW_STOCK'|config}
+		{if ($product.stockCount <= 'LOW_STOCK'|config) && 'PRODUCT_DISPLAY_LOW_STOCK'|config}
 		<tr>
 			<td colspan="2" class="lowStock"><span>{t _low_stock}</span></td>
 		</tr>
@@ -52,5 +55,7 @@
 		<td colspan="2" class="websiteUrl"><a href="{$product.URL}" target="_blank">{t _product_website}</a></td>
 	</tr>
 	{/if}
+
+	{block PRODUCT-OVERVIEW-AFTER}
 
 </table>

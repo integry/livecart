@@ -83,6 +83,11 @@ class ProductImage extends ObjectImage
 
 	/*####################  Get related objects ####################*/
 
+	public function setOwner(Product $product)
+	{
+		$this->product->set($product);
+	}
+
 	public function getOwner()
 	{
 		return $this->product->get();

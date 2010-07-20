@@ -152,6 +152,16 @@ class ShipmentTax extends ActiveRecordModel
 
 		return $array;
 	}
+
+	protected function insert()
+	{
+		if (!$this->shipment->get()->isExistingRecord())
+		{
+			return false;
+		}
+
+		return parent::insert();
+	}
 }
 
 ?>

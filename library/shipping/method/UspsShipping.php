@@ -65,6 +65,12 @@ class UspsShipping extends ShippingRateCalculator
 	{
 		include_once(dirname(__file__) . '/../library/usps/usps.php');
 
+		// Priority mail only supports flat-rate or unspecified containers
+		if (('Priority' == $this->service) && strpos(strtolower($this->container), 'flat') === false)
+		{
+			$this->container = '';
+		}
+
 		$usps = new USPSHandler();
 
 		$usps->setServer($this->getConfigValue('server', 'http://production.shippingapis.com/ShippingAPI.dll'));
@@ -243,7 +249,7 @@ class UspsShipping extends ShippingRateCalculator
 		'FR' => 'France',
 		'FX' => 'Metropolitan France',
 		'GA' => 'Gabon',
-		'GB' => 'United Kingdom',
+		'GB' => 'Great Britain and Northern Ireland',
 		'GD' => 'Grenada',
 		'GE' => 'Georgia',
 		'GF' => 'French Guiana',

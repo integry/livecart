@@ -15,6 +15,12 @@ ClassLoader::import("application.model.product.ProductSet");
  */
 class ShipmentController extends StoreManagementController
 {
+	public function init()
+	{
+		parent::init();
+		CustomerOrder::allowEmpty();
+	}
+
 	public function index()
 	{
 		$order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);
@@ -40,7 +46,7 @@ class ShipmentController extends StoreManagementController
 		$subtotalAmount = 0;
 		$shippingAmount = 0;
 		$taxAmount = 0;
-		$shipmentsArray = array();
+		$itemIDs = $shipmentsArray = array();
 
 		$shipableShipmentsCount = 0;
 		foreach($shipments as $shipment)
@@ -74,6 +80,11 @@ class ShipmentController extends StoreManagementController
 			{
 				$shipableShipmentsCount++;
 			}
+
+			foreach ($shipment->getItems() as $item)
+			{
+				$itemIDs[] = $item->getID();
+			}
 		}
 
 		$totalAmount = $subtotalAmount + $shippingAmount + $taxAmount;
@@ -89,10 +100,8 @@ class ShipmentController extends StoreManagementController
 
 		if ($downloadable = $order->getDownloadShipment(false))
 		{
-//			if (!isset($shipmentsArray[$downloadable->getID()]))
-//			{
-				$response->set('downloadableShipment', $downloadable->toArray());
-//			}
+
+			$response->set('downloadableShipment', $downloadable->toArray());
 		}
 
 		$response->set('taxAmount', $taxAmount);
@@ -103,6 +112,7 @@ class ShipmentController extends StoreManagementController
 		unset($statuses[3]);
 		$response->set('statusesWithoutShipped', $statuses);
 		$response->set('newShipmentForm', $form);
+		$response->set('downloadCount', $this->getDownloadCounts($itemIDs));
 
 		// load product options
 		$response->set('allOptions', ProductOption::loadOptionsForProductSet($products));
@@ -190,7 +200,24 @@ class ShipmentController extends StoreManagementController
 
 		$history->saveLog();
 
-		if ($this->config->get('EMAIL_STATUS_UPDATE'))
+		$status = $shipment->status->get();
+		$enabledStatuses = $this->config->get('EMAIL_STATUS_UPDATE_STATUSES');
+		$m = array(	
+			'EMAIL_STATUS_UPDATE_NEW'=>Shipment::STATUS_NEW,
+			'EMAIL_STATUS_UPDATE_PROCESSING'=>Shipment::STATUS_PROCESSING,
+			'EMAIL_STATUS_UPDATE_AWAITING_SHIPMENT'=>Shipment::STATUS_AWAITING,
+			'EMAIL_STATUS_UPDATE_SHIPPED'=> Shipment::STATUS_SHIPPED
+		);
+		$sendEmail = false;
+		foreach($m as $configKey => $constValue)
+		{
+			if($status == $constValue && array_key_exists($configKey, $enabledStatuses))
+			{
+				$sendEmail = true;
+			}
+		}
+
+		if ($sendEmail || $this->config->get('EMAIL_STATUS_UPDATE'))
 		{
 			$user = $shipment->order->get()->user->get();
 			$user->load();
@@ -435,6 +462,23 @@ class ShipmentController extends StoreManagementController
 		$history->saveLog();
 
 		return new JSONResponse(array('deleted' => true), 'success');
+	}
+
+	protected function getDownloadCounts($itemIDs)
+	{
+		if (!$itemIDs)
+		{
+			return array();
+		}
+
+		$sql = 'SELECT orderedItemID, SUM(timesDownloaded) AS cnt FROM OrderedFile WHERE orderedItemID IN (' . implode(',', $itemIDs) . ') GROUP BY orderedItemID';
+		$out = array();
+		foreach (ActiveRecordModel::getDataBySQL($sql) as $item)
+		{
+			$out[$item['orderedItemID']] = $item['cnt'];
+		}
+
+		return $out;
 	}
 }
 

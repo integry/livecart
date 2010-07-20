@@ -1068,12 +1068,12 @@ Backend.ProductVariationItem.prototype =
 
 		if (this.data.childSettings)
 		{
-			if (this.data.childSettings.price != '')
+			if ((this.data.childSettings.price != '') || (this.data.childSettings.price == 0))
 			{
 				priceSelect.value = this.data.childSettings.price;
 			}
 
-			if (this.data.childSettings.weight != '')
+			if ((this.data.childSettings.weight != '') || (this.data.childSettings.weight == 0))
 			{
 				weightSelect.value = this.data.childSettings.weight;
 			}
@@ -1313,7 +1313,11 @@ Backend.ProductVariationItem.prototype =
 
 			anchor = img.parentNode;
 			anchor.href = imgData['paths'][4] + '?' + (Math.random() * 10000);
-			anchor.onclick = function () {showLightbox(this); return false;}
+			anchor.onclick = function ()
+			{
+				anchor.rel = 'lightbox';
+				Lightbox.prototype.getInstance().start(anchor.href);
+			};
 		}
 	}
 }

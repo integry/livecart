@@ -1,3 +1,8 @@
+{assign var="extraColspanSize" value=0}
+{if 'SHOW_SKU_CART'|config}
+	{assign var="extraColspanSize" value=1+$extraColspanSize}
+{/if}
+
 {capture assign="cartUpdate"}
 	<td id="cartUpdate"><input type="submit" class="submit" value="{tn _update}" /></td>
 {/capture}
@@ -9,7 +14,7 @@
 <table id="cart">
 	<thead>
 		<tr>
-			<th colspan="3" class="cartListTitle"></th>
+			<th colspan="{math equation="$extraColspanSize + 3"}" class="cartListTitle"></th>
 			<th class="cartPrice">{t _price}</th>
 			<th class="cartQuant">{t _quantity}</th>
 		</tr>
@@ -19,7 +24,11 @@
 		{include file="order/block/items.tpl"}
 		{include file="order/block/discounts.tpl"}
 		{include file="order/block/shipping.tpl"}
-		{include file="order/block/taxes.tpl"}
+
+		{if !'HIDE_TAXES'|config}
+			{include file="order/block/taxes.tpl"}
+		{/if}
+
 		{include file="order/block/total.tpl"}
 		{include file="order/block/customFields.tpl"}
 		{include file="order/block/shippingEstimation.tpl"}

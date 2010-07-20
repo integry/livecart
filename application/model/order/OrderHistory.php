@@ -81,7 +81,7 @@ class OrderHistory
 					'name' => $item->getProduct()->getName($order->getApplication()->getDefaultLanguageCode()),
 					'isDownloadable' => (int)$item->getProduct()->isDownloadable(),
 				),
-				'Shipment' => $item->shipment->get() ? $array['shipments'][$item->shipment->get()->getID()] : array('ID' => 0)
+				'Shipment' => ($item->shipment->get() && isset($array['shipments'][$item->shipment->get()->getID()])) ? $array['shipments'][$item->shipment->get()->getID()] : array('ID' => 0)
 			);
 		}
 

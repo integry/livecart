@@ -82,7 +82,7 @@
 			<div class="orderShipmentsItem_info_total orderShipment_totalSum">
 				<span class="orderShipment_info_total shipment_total">
 					<span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
-					<span class="price">{math assign="price" equation="x + y + z" x=$shipment.shippingAmount|default:0 y=$shipment.amount|default:0 z=$shipment.taxAmount|default:0}{$price|string_format:"%.2f"}</span>
+					<span class="price">{assign var="price" value=$shipment.totalAmount}{$price|string_format:"%.2f"}</span>
 					<span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
 				</span>
 			</div>

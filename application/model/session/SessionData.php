@@ -51,7 +51,7 @@ class SessionData extends ActiveRecordModel
 	public static function deleteSessions($max)
 	{
 		$sql = 'DELETE FROM SessionData WHERE lastUpdated < ' . (time() - $max);
-		self::executeQuery($db, $sql);
+		self::executeQuery(null, $sql);
 	}
 
 	public static function transformArray($array)

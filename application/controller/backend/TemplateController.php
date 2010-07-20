@@ -14,6 +14,12 @@ ClassLoader::import('application.model.template.EmailTemplate');
  */
 class TemplateController extends StoreManagementController
 {
+	public function init()
+	{
+		parent::init();
+		$this->application->setTheme('');
+	}
+
 	public function index()
 	{
 		$files = $this->getFiles();

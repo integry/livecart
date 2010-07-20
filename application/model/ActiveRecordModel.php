@@ -20,7 +20,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 
  	private static $isEav = array();
 
- 	private $specificationInstance;
+ 	protected $specificationInstance;
 
 	public static function setApplicationInstance(LiveCart $application)
 	{
@@ -195,7 +195,14 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 		if ($this instanceof EavAble && $this->specificationInstance && $this->eavObject->get())
 		{
-			$this->specificationInstance->save();
+			if ($this->specificationInstance->hasValues())
+			{
+				$this->specificationInstance->save();
+			}
+			else
+			{
+				$this->eavObject->get()->delete();
+			}
 		}
 
 		$this->executePlugins($this, 'after-save');
@@ -255,8 +262,8 @@ abstract class ActiveRecordModel extends ActiveRecord
 		$array = parent::toArray($force);
 
 		self::executePlugins($array, 'array', get_class($this));
+	        if ($this->specificationInstance && ($this->specificationInstance instanceof EavSpecificationManager) && (empty($array['attributes']) || $force))
 
-		if ($this->specificationInstance && (!isset($array['attributes']) || $force))
 		{
 			$array['attributes'] = $this->specificationInstance->toArray();
 			EavSpecificationManager::sortAttributesByHandle('EavSpecificationManager', $array);
@@ -386,10 +393,24 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 		if (($this instanceof EavAble) && $this->specificationInstance)
 		{
-			$this->eavObject->set(null);
-			$this->specificationInstance = clone $this->specificationInstance;
-			$this->specificationInstance->setOwner(EavObject::getInstance($this));
+			$this->setSpecification(clone $this->specificationInstance);
 		}
+	}
+
+	/**
+	 *	Assign an entirely new specification (custom field) container. Usually necessary after cloning, etc.
+	 */
+	public function setSpecification(EavSpecificationManager $specificationInstance)
+	{
+		$this->eavObject->set(null);
+		$this->specificationInstance = $specificationInstance;
+		$this->specificationInstance->setOwner(EavObject::getInstance($this));
+	}
+
+	public function unserialize($serialized)
+	{
+		ClassLoader::import('application.model.eav.EavSpecificationManager');
+		return parent::unserialize($serialized);
 	}
 }
 

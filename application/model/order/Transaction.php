@@ -70,6 +70,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 		$schema->registerField(new ARField("ccLastDigits", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("ccType", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("ccName", ARVarchar::instance(100)));
+		$schema->registerField(new ARField("ccCVV", ARVarchar::instance(80)));
 		$schema->registerField(new ARField("comment", ARText::instance()));
 		$schema->registerField(new ARField("serializedData", ARText::instance()));
 	}
@@ -100,6 +101,17 @@ class Transaction extends ActiveRecordModel implements EavAble
 		{
 			$instance->amount->set($order->currency->get()->convertAmount($instance->realCurrency->get(), $instance->realAmount->get()));
 			$instance->currency->set($order->currency->get());
+
+			// test if some amount is not missing due to currency conversion rounding (a difference of 0.01, etc)
+			$total = $order->totalAmount->get();
+			if ($instance->amount->get() < $total)
+			{
+				$largerAmount = $order->currency->get()->convertAmount($instance->realCurrency->get(), 0.01 + $instance->realAmount->get());
+				if ($largerAmount >= $total)
+				{
+					$instance->amount->set($total);
+				}
+			}
 		}
 
 		// transaction type
@@ -379,6 +391,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 
 	protected function insert()
 	{
+
 		if (self::TYPE_CAPTURE == $this->type->get() || self::TYPE_SALE == $this->type->get())
 		{
 			$this->order->get()->addCapturedAmount($this->amount->get());
@@ -409,6 +422,10 @@ class Transaction extends ActiveRecordModel implements EavAble
 			{
 				$this->truncateCcNumber();
 			}
+			else
+			{
+				$this->ccCVV->set(self::encrypt($this->handler->getCardCode()));
+			}
 
 			$this->ccLastDigits->set(self::encrypt($this->ccLastDigits->get()));
 		}
@@ -423,6 +440,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 
 	public function truncateCcNumber()
 	{
+		$this->ccCVV->set(null);
 		$this->ccLastDigits->set(self::decrypt($this->ccLastDigits->get()));
 		$this->ccLastDigits->set(substr($this->ccLastDigits->get(), -1 * self::LAST_DIGIT_COUNT));
 	}
@@ -458,7 +476,10 @@ class Transaction extends ActiveRecordModel implements EavAble
 		$array['methodName'] = self::getApplication()->getLocale()->translator()->translate($array['method']);
 		$array['serializedData'] = unserialize($array['serializedData']);
 		$array['ccLastDigits'] = self::decrypt($array['ccLastDigits']);
-
+		if(strlen($array['ccCVV']) > 0)
+		{
+			$array['ccCVV'] = self::decrypt($array['ccCVV']);
+		}
 		return $array;
 	}
 

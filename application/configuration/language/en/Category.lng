@@ -6,6 +6,7 @@ PRICE_ASC=Price: Low to High
 PRICE_DESC=Price: High to Low
 NEWEST_ARRIVALS=Newest Arrivals
 RATING=Customer Rating
+SKU_ASC=SKU
 _sort_num_asc=[_1]: Low to High
 _sort_num_desc=[_1]: High to Low
 _sort_text_asc=[_1]: A-Z
@@ -19,6 +20,7 @@ _featured_products=Featured Products
 _found_x=Found [_1]
 _all_results=View all [_1] results
 NewsPost=news entries
+Manufacturer=manufacturers
 StaticPage=pages
 
 _showing_products=Showing [_1] to [_2] of [_3] found products
@@ -30,6 +32,8 @@ _more_subcats=more...
 _view_as_list=View as list
 _view_as_grid=View as grid
 
+_related_categories=Related categories
+
 _all_categories=All Categories
 _compare_selected=Compare selected products
 
@@ -37,3 +41,7 @@ _compare_selected=Compare selected products
 _name=Name
 _image=Image
 _view_details=View Details
+
+#price filters
+_to [_1]=to
+_more_than [_1]=more than

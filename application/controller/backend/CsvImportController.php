@@ -78,7 +78,7 @@ class CsvImportController extends StoreManagementController
 			return new ActionRedirectResponse('backend.csvImport', 'index');
 		}
 
-		return new ActionRedirectResponse('backend.csvImport', 'delimiters', array('query' => 'file=' . $filePath . '&category=' . $this->request->get('category') . '&type=' . $this->request->get('type')));
+		return new ActionRedirectResponse('backend.csvImport', 'delimiters', array('query' => array('file' => $filePath, 'category' => $this->request->get('category'), 'type' => $this->request->get('type'), 'options' => base64_encode(serialize($this->request->get('options'))))));
 	}
 
 	public function delimiters()
@@ -124,6 +124,7 @@ class CsvImportController extends StoreManagementController
 		}
 
 		$form = $this->getDelimiterForm();
+		$form->set('options', $this->request->get('options'));
 		$form->set('delimiter', $delimiter);
 		$form->set('file', $file);
 		$form->set('type', $this->request->get('type'));
@@ -153,7 +154,7 @@ class CsvImportController extends StoreManagementController
 		$response->set('catPath', Category::getInstanceByID($this->request->get('category'), Category::LOAD_DATA)->getPathNodeArray(true));
 
 		$profiles = array('' => '');
-		foreach (glob($this->getProfileDirectory($this->getImportInstance()) . '*.ini') as $path)
+		foreach ((array)glob($this->getProfileDirectory($this->getImportInstance()) . '*.ini') as $path)
 		{
 			$profile = basename($path, '.ini');
 			$profiles[$profile] = $profile;
@@ -178,6 +179,7 @@ class CsvImportController extends StoreManagementController
 		$response->set('fields', $import->getFields());
 		$response->set('form', $this->getFieldsForm());
 		$response->set('type', $this->request->get('type'));
+		$response->set('options', $this->request->get('options'));
 		return $response;
 	}
 
@@ -193,13 +195,15 @@ class CsvImportController extends StoreManagementController
 	{
 		$import = $this->getImportInstance();
 		$file = $this->getProfileDirectory($import) . $this->request->get('profile') . '.ini';
-		//unlink($file);
+		unlink($file);
 
 		return new JSONResponse(array('profile' => $this->request->get('profile')), 'success', $this->translate('_profile_deleted'));
 	}
 
 	public function import()
 	{
+		$options = unserialize(base64_decode($this->request->get('options')));
+
 		$response = new JSONResponse(null);
 
 		if (file_exists($this->getCancelFile()))
@@ -254,21 +258,37 @@ class CsvImportController extends StoreManagementController
 			$total -= 1;
 		}
 
-		$progress = 0;
+		if ($this->request->get('firstHeader'))
+		{
+			$import->skipHeader($csv);
+			$import->skipHeader($csv);
+		}
 
+		$progress = 0;
 		$processed = 0;
+
 		if ($this->request->get('continue'))
 		{
 			$import->setImportPosition($csv, $this->getCacheProgress() + 1);
 		}
 		else
 		{
-			ActiveRecord::beginTransaction();
+			if (!empty($options['transaction']))
+			{
+				ActiveRecord::beginTransaction();
+			}
 		}
 
-		if ($this->request->get('firstHeader'))
+		if (empty($options['transaction']))
 		{
-			$import->skipHeader($csv);
+			$this->request->set('continue', true);
+		}
+
+		$import->setOptions($options);
+
+		if ($uid = $this->request->get('uid'))
+		{
+			$import->setUID($uid);
 		}
 
 		do
@@ -285,7 +305,7 @@ class CsvImportController extends StoreManagementController
 
 			if ($progress % self::PROGRESS_FLUSH_INTERVAL == 0 || ($total == $progress))
 			{
-				$response->flush($this->getResponse(array('progress' => $progress, 'total' => $total, 'lastName' => $import->getLastImportedRecordName())));
+				$response->flush($this->getResponse(array('progress' => $progress, 'total' => $total, 'uid' => $import->getUID(), 'lastName' => $import->getLastImportedRecordName())));
 				//echo '|' . round(memory_get_usage() / (1024*1024), 1) . '|' . count($categories) . "\n";
 			}
 
@@ -305,6 +325,20 @@ class CsvImportController extends StoreManagementController
 			}
 		}
 		while (!$import->isCompleted($csv));
+
+		if (!empty($options['missing']) && ('keep' != $options['missing']))
+		{
+			$filter = $import->getMissingRecordFilter($profile);
+
+			if ('disable' == $options['missing'])
+			{
+				$import->disableRecords($filter);
+			}
+			else if ('delete' == $options['missing'])
+			{
+				$import->deleteRecords($filter);
+			}
+		}
 
 		$import->afterImport();
 

@@ -40,6 +40,7 @@ class ProductImport extends DataImport
 
 		$groupedFields['Product']['Product.shippingClass'] = $this->translate('Product.shippingClass');
 		$groupedFields['Product']['Product.taxClass'] = $this->translate('Product.taxClass');
+		$groupedFields['ProductOption']['ProductOption.options'] = $this->translate('ProductOption.options');
 
 		// do not show manufacturer field in a separate group
 		$groupedFields['Product'] = array_merge($groupedFields['Product'], $groupedFields['Manufacturer']);
@@ -77,7 +78,6 @@ class ProductImport extends DataImport
 		{
 			$groupedFields['ProductPrice']['ProductPrice.' . $k] = $this->maketext('_quantity_level_x', $k);
 		}
-
 		return $groupedFields;
 	}
 
@@ -123,6 +123,8 @@ class ProductImport extends DataImport
 
 	public function importInstance($record, CsvImportProfile $profile)
 	{
+		$this->className = 'Product';
+
 		$impReq = new Request();
 		$defLang = $this->application->getDefaultLanguageCode();
 		$references = array('DefaultImage' => 'ProductImage', 'Manufacturer', 'ShippingClass', 'TaxClass');
@@ -142,7 +144,7 @@ class ProductImport extends DataImport
 		{
 			$product = null;
 
-			if (isset($fields['Product']['ID']))
+			if (isset($fields['Product']['ID']) && !empty($record[$fields['Product']['ID']]))
 			{
 				$id = $record[$fields['Product']['ID']];
 				if (ActiveRecord::objectExists('Product', $id))
@@ -153,6 +155,17 @@ class ProductImport extends DataImport
 			else if (isset($fields['Product']['sku']) && !empty($record[$fields['Product']['sku']]))
 			{
 				$product = Product::getInstanceBySku($record[$fields['Product']['sku']], $references);
+			}
+
+			if ($product && $product->getID())
+			{
+				$this->registerImportedID($product->getID());
+			}
+
+			if ((!$product && ('update' == $this->options['action']))
+				|| ($product && ('add' == $this->options['action'])))
+			{
+				return false;
 			}
 
 			if ($product)
@@ -312,6 +325,8 @@ class ProductImport extends DataImport
 					$image = ProductImage::getNewInstance($product);
 				}
 
+				$image->setOwner($product); // this is needed when ProductApi imports default ProductImage.
+
 				$this->importImage($image, $record[$fields['ProductImage']['mainurl']]);
 
 				unset($image);
@@ -341,6 +356,37 @@ class ProductImport extends DataImport
 				}
 			}
 
+			if (isset($fields['ProductOption']['options']))
+			{
+				$options = explode('; ', $record[$fields['ProductOption']['options']]);
+
+				if ($options)
+				{
+					$product->deleteRelatedRecordSet('ProductOption');
+					foreach ($options as $option)
+					{
+						$parts = explode(':', $option, 2);
+						if (count($parts) < 2)
+						{
+							continue;
+						}
+
+						$optionInstance = ProductOption::getNewInstance($product);
+						$optionInstance->setValueByLang('name', null, trim($parts[0]));
+						$optionInstance->type->set(ProductOption::TYPE_SELECT);
+						$optionInstance->isDisplayed->set(true);
+						$optionInstance->save();
+
+						foreach (explode(',', $parts[1]) as $choice)
+						{
+							$choiceInstance = ProductOptionChoice::getNewInstance($optionInstance);
+							$choiceInstance->setValueByLang('name', null, trim($choice));
+							$choiceInstance->save();
+						}
+					}
+				}
+			}
+
 			// create variation by name
 			if ((isset($fields['Product']['parentID']) || isset($fields['Parent']['parentSKU'])) && !isset($fields['ProductVariation']) && $product->parent->get())
 			{
@@ -353,6 +399,11 @@ class ProductImport extends DataImport
 				$this->importAdditionalCategories($profile, $product, $extraCategories);
 			}
 
+			if ($this->callback)
+			{
+				call_user_func($this->callback, $product);
+			}
+
 			$product->__destruct();
 			$product->destruct(true);
 
@@ -360,6 +411,13 @@ class ProductImport extends DataImport
 
 			return true;
 		}
+	}
+
+	public function getMissingRecordFilter(CsvImportProfile $profile)
+	{
+		$filter = parent::getMissingRecordFilter($profile);
+		$filter->mergeCondition($this->getRoot($profile)->getProductCondition(true));
+		return $filter;
 	}
 
 	private function getCategory(CsvImportProfile $profile, $record)
@@ -433,6 +491,8 @@ class ProductImport extends DataImport
 
 		$hash = '';
 		$hashRoot = $this->getRoot($profile)->getID();
+
+		$cat = null;
 
 		foreach ($names as $name)
 		{
@@ -635,6 +695,16 @@ class ProductImport extends DataImport
 	public function afterImport()
 	{
 		Category::recalculateProductsCount();
+	}
+
+	protected function getReferencedData()
+	{
+		return array('Category');
+	}
+
+	protected function getDisableFieldHandle()
+	{
+		return f('Product.isEnabled');
 	}
 }
 

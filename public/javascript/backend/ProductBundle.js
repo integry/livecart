@@ -195,12 +195,12 @@ Backend.ProductBundle.addProductToList = function(ownerID, relatedownerID, popup
 
 Backend.ProductBundle.quantityField = function(ownerID, relatedownerID)
 {
-	var relatedList = ActiveList.prototype.getInstance($('productBundle_' + ownerID));
-	var record = relatedList.getRecordById(relatedownerID);
-	var input = record.down('input.number');
+	var input = $('productBundle_' + ownerID).down('#' + relatedownerID).down('input.number');
 
 	input.onchange = function()
 	{
+		var relatedList = ActiveList.prototype.getInstance($('productBundle_' + ownerID));
+		var record = relatedList.getRecordById(relatedownerID);
 		input.addClassName('progressIndicator');
 		new LiveCart.AjaxRequest(
 			Backend.Router.createUrl('backend.productBundleItem', 'setCount', {id: ownerID, relatedownerID: relatedownerID, count: input.value}),

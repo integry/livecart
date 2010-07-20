@@ -453,7 +453,7 @@ abstract class EavSpecificationManagerCommon
 				$specFieldArray[$key]['values'] = array('' => '');
 				foreach ($values as $value)
 				{
-					$specFieldArray[$key]['values'][$value['ID']] = $value['value_lang'];
+					$specFieldArray[$key]['values'][$value['ID']] = isset($value['value_lang']) ? $value['value_lang'] : $value['value'];
 				}
 			}
 		}

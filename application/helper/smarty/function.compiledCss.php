@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.system.CssFile');
+ClassLoader::import('application.model.template.Theme');
 
 /**
  * ...
@@ -24,7 +25,15 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 		}
 
 		$last = 1000;
-		$files = array('common.css', CssFile::getTheme($smarty->getApplication()->getTheme()) . '.css');
+		$files = array('common.css');
+		$theme = new Theme($smarty->getApplication()->getTheme(), $app);
+		foreach ($theme->getAllParentThemes() as $parentTheme)
+		{
+			$files[] = CssFile::getTheme($parentTheme) . '.css';
+		}
+
+		$files[] = CssFile::getTheme($smarty->getApplication()->getTheme()) . '.css';
+
 		foreach ($files as $file)
 		{
 			smarty_function_includeCss(array('file' => '/upload/css/' . $file, 'last' => ++$last), $smarty);
@@ -79,7 +88,7 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 				$content = file_get_contents($cssFile);
 				$content = str_replace('url(..', 'url(' . dirname($relPath) . '/..', $content);
 				$content = str_replace('url(\'..', 'url(\'' . dirname($relPath) . '/..', $content);
-				$content = str_replace('url(\"..', 'url(\'' . dirname($relPath) . '/..', $content);
+				$content = str_replace('url("..', 'url("' . dirname($relPath) . '/..', $content);
 
 				$compiledFileContent .= $content;
 			}

@@ -38,6 +38,8 @@ _add_manufacturer=Add manufacturer
 _add_usergroup=Add user group
 _add_user=Add customer
 _add_deliveryzone=Add delivery zone
+_isReverse=Reverse condition
+_isReverse_help=Mark the checkbox to make this a negative condition. It will work the opposite way and only validate if the condition requirements are NOT satisfied.
 
 Category=Category
 Product=Product
@@ -93,6 +95,9 @@ RuleActionFixedSurcharge=Add fixed amount surcharge
 RuleActionDisableCheckout=Disable checkout
 RuleActionSumVariations=Sum product variations towards quantity discounts
 RuleActionIncludePastOrdersInQuantityPrices=Count past orders towards quantity prices
+RuleActionRemoveFromCart=Remove item from shopping cart
+RuleActionSetQuantity=Set item quantity
+RuleActionShowMessage=Display a message
 
 _apply_order=Whole order
 _apply_matched_items=Matched items only
@@ -102,6 +107,8 @@ _is_enabled=Enabled
 _stop_processing=Stop discount calculation after processing this rule
 
 _orders_from_past_x_days=Orders from the past .. days
+_quantity=Quantity
+_message=Message
 
 _rule_was_successfully_saved=The business rule was successfully saved
 _rule_name_empty=Please enter the business rule name

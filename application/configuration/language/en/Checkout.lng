@@ -73,3 +73,4 @@ _cvv_description=Card Verification Value (CVV) provides an additional level of o
 _order_completed=Order Completed
 _completed_paid=Your payment has been received. You can track the status of your order from <a href="%url">your account</a>.
 _completed_offline=Your order has been completed. Please remit payment according to the instructions below.
+_download=Download

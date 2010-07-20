@@ -31,10 +31,9 @@ class OrderController extends FrontendController
 
 		if (!$this->user->isAnonymous())
 		{
-			$this->order->setUser($this->user);
-
-			if ($this->order->isModified())
+			if (!$this->order->user->get() || ($this->order->user->get()->getID() != $this->user->getID()))
 			{
+				$this->order->setUser($this->user);
 				$this->order->save();
 			}
 		}
@@ -46,6 +45,7 @@ class OrderController extends FrontendController
 		$this->order->getTotal(true);
 
 		$response = $this->getCartPageResponse();
+
 		$this->addBreadCrumb($this->translate('_my_basket'), '');
 		return $response;
 	}
@@ -126,9 +126,9 @@ class OrderController extends FrontendController
 			$response->set('states', $this->getStateList($form->get('estimate_country')));
 
 			$hideConf = (array)$this->config->get('SHIP_ESTIMATE_HIDE_ENTRY');
-			$hideForm = !empty($hideConf['UNREGISTERED']) && $this->user->isAnonymous() ||
-						!empty($hideConf['ALL_REGISTERED']) && !$this->user->isAnonymous() ||
-						!empty($hideConf['REGISTERED_WITH_ADDRESS']) && !$this->user->defaultBillingAddress->get() ||
+			$hideForm = (!empty($hideConf['UNREGISTERED']) && $this->user->isAnonymous()) ||
+						(!empty($hideConf['ALL_REGISTERED']) && !$this->user->isAnonymous()) ||
+						(!empty($hideConf['REGISTERED_WITH_ADDRESS']) && !$this->user->isAnonymous() && !$this->user->defaultBillingAddress->get()) ||
 						!$this->order->isShippingRequired() ||
 						$this->order->isMultiAddress->get();
 
@@ -159,8 +159,11 @@ class OrderController extends FrontendController
 		$response->set('orderTotal', $currency->getFormattedPrice($this->order->getTotal()));
 		$response->set('expressMethods', $this->application->getExpressPaymentHandlerList(true));
 		$response->set('isCouponCodes', DiscountCondition::isCouponCodes());
+		$response->set('isOnePageCheckout', ($this->config->get('CHECKOUT_METHOD') == 'CHECKOUT_ONEPAGE') && !$this->order->isMultiAddress->get() && !$this->session->get('noJS'));
 
 		$this->order->getSpecification()->setFormResponse($response, $form);
+
+		SessionOrder::getOrder()->getShoppingCartItems();
 
 		return $response;
 	}
@@ -449,15 +452,13 @@ class OrderController extends FrontendController
 				$this->request->set('estimate_stateName', $this->request->get('estimate_state_text'));
 			}
 
-			$address = SessionOrder::getEstimateAddress();
+			$address = SessionOrder::getDefaultEstimateAddress();
 			$address->loadRequestData($this->request, 'estimate_');
 
 			if ($country = $this->request->get('estimate_country'))
 			{
 				$address->countryID->set($country);
 			}
-
-			$address->save();
 
 			SessionOrder::setEstimateAddress($address);
 		}
@@ -566,6 +567,7 @@ class OrderController extends FrontendController
 
 	public function miniCartBlock()
 	{
+		$this->loadLanguageFile('Order');
 		$this->order->loadAll();
 		$this->order->getTotal(true);
 		return new BlockResponse('order', $this->order->toArray());

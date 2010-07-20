@@ -23,6 +23,8 @@ class User extends ActiveRecordModel implements EavAble
 
 	private $newPassword;
 
+	public $grantedRoles = array();
+
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -239,6 +241,11 @@ class User extends ActiveRecordModel implements EavAble
 	 */
 	public function hasAccess($roleName)
 	{
+		if ($this->hasBackendAccess || !empty($this->grantedRoles[$roleName]))
+		{
+			return true;
+		}
+
 		// no role provided
 		if (!$roleName)
 		{
@@ -253,6 +260,10 @@ class User extends ActiveRecordModel implements EavAble
 		if ('login' == $roleName)
 		{
 			return $this->getID() > 0;
+		}
+		else if ('backend' == $roleName)
+		{
+			return $this->hasBackendAccess();
 		}
 
 		if ($this->isAnonymous())
@@ -275,6 +286,14 @@ class User extends ActiveRecordModel implements EavAble
 	public function allowBackendAccess()
 	{
 		$this->hasBackendAccess = true;
+	}
+
+	/**
+	 *	Dynamically grant access to a role
+	 */
+	public function grantAccess($roleName)
+	{
+		$this->grantedRoles[$roleName] = true;
 	}
 
 	/**
@@ -445,7 +464,14 @@ class User extends ActiveRecordModel implements EavAble
 
 	public function getBillingAddressArray($defaultFirst = true)
 	{
-		return ActiveRecordModel::getRecordSetArray('BillingAddress', $this->getBillingAddressFilter($defaultFirst), array('UserAddress'));
+		if (!$this->isAnonymous())
+		{
+			return ActiveRecordModel::getRecordSetArray('BillingAddress', $this->getBillingAddressFilter($defaultFirst), array('UserAddress'));
+		}
+		else if ($this->defaultBillingAddress->get())
+		{
+			return array($this->defaultBillingAddress->get()->toArray());
+		}
 	}
 
 	public function getBillingAddressSet($defaultFirst = true)
@@ -455,7 +481,14 @@ class User extends ActiveRecordModel implements EavAble
 
 	public function getShippingAddressArray($defaultFirst = true)
 	{
-		return ActiveRecordModel::getRecordSetArray('ShippingAddress', $this->getShippingAddressFilter($defaultFirst), array('UserAddress'));
+		if (!$this->isAnonymous())
+		{
+			return ActiveRecordModel::getRecordSetArray('ShippingAddress', $this->getShippingAddressFilter($defaultFirst), array('UserAddress'));
+		}
+		else if ($this->defaultShippingAddress->get())
+		{
+			return array($this->defaultShippingAddress->get()->toArray());
+		}
 	}
 
 	public function getShippingAddressSet($defaultFirst = true)
@@ -485,6 +518,12 @@ class User extends ActiveRecordModel implements EavAble
 		}
 
 		return $f;
+	}
+
+	public function serialize($skippedRelations = array(), $properties = array())
+	{
+		$properties[] = 'specificationInstance';
+		return parent::serialize($skippedRelations, $properties);
 	}
 
 	public function __destruct()

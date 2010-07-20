@@ -561,6 +561,7 @@ ul.productList .pricingInfo span.price,
 	position: absolute;
 	top: 0;
 	left: 0;
+	white-space: nowrap;
 }
 
 .price
@@ -775,7 +776,10 @@ a.proceedToCheckout span span span span
 {
 	display: block;
 	padding: 10px 27px 10px 10px;
+	 /* IE8 */
 }
+
+a.proceedToCheckout span span span span { margin-top:-20px\0/ }
 
 /*
 	Checkout
@@ -1287,6 +1291,13 @@ table.productGrid
 	margin: 1em;
 }
 
+.onePageCheckout-index #checkout-shipping h2,
+.onePageCheckout-index #checkout-billing h2,
+.onePageCheckout-index #checkout-payment h2
+{
+	text-indent: 0;
+	margin-bottom: 0\0/
+}
 
 .rtl .newsReadMore a
 .rtl .current ul li,

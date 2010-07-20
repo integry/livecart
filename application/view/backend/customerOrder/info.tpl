@@ -2,6 +2,15 @@
 	<legend>{t _overview}</legend>
 
 	<ul class="menu">
+		{if !$order.isFinalized}
+		<li {denied role='order.update'}style="display: none"{/denied} class="order_unfinalized">
+			<span style="display: none;" id="order_{$order.ID}_isFinalizedIndicator" class="progressIndicator"></span>
+			<a id="order_{$order.ID}_isFinalized" href="{link controller="backend.customerOrder" action="finalize" id=$order.ID}">
+				{t _finalize}
+			</a>
+		</li>
+		{/if}
+
 		<li class="order_printInvoice">
 			<a href="{link controller=backend.customerOrder action=printInvoice id=$order.ID}" target="_blank">{t _print_invoice}</a>
 		</li>
@@ -38,10 +47,29 @@
 	</p>
 
 	{if $order.dateCompleted}
-	<p>
-		<label for="order_{$order.ID}_dateCreated">{t _date_created}</label>
-		<label>{$order.dateCompleted}</label>
-	</p>
+		<p>
+			<label for="order_{$order.ID}_dateCreated">{t _date_created}</label>
+			<label id="dateCreatedLabel">
+				<span id="dateCreatedVisible">{$order.dateCompleted}</span>
+				<span class="menu order_editFields orderDate">
+					<a href="#edit" id="editDateCompleted">{t _edit}</a>
+				</span>
+			</label>
+		</p>
+
+	
+
+		{form id="calendarForm" handle=$dateForm class="hidden" action="controller=backend.customerOrder action=updateDate" method="POST"}
+			{calendar name="dateCompleted" id="dateCompleted"}
+			
+			<span class="progressIndicator" id="indicatorDateCompleted" style="display: none;"></span>
+			
+			<span class="menu">
+				<a href="#save" id="saveDateCompleted">{t _save}</a>
+				<a href="#cancel" id="cancelDateCompleted">{t _cancel}</a>
+			</span>
+		{/form}
+
 	{/if}
 
 	<p>
@@ -136,4 +164,7 @@
 		var billingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_{$order.ID}_billingAddress_form{literal}'), 'billingAddress');
 	{/literal}{/if}
 
+	{if $order.dateCompleted}
+		var dateComplededEditor = new Backend.CustomerOrder.DateCompletedEditor();
+	{/if}
 </script>

@@ -18,7 +18,7 @@ class GoogleAnalytics extends TrackingMethod
 				$order->loadAll();
 				$orderArray = $order->toArray();
 
-				$data = array($order->getID(), '' /* affiliation? */, $orderArray['total'][$orderArray['Currency']['ID']], 0 /* tax */, $orderArray['ShippingAddress']['city'],  $orderArray['ShippingAddress']['stateName'],  $orderArray['ShippingAddress']['countryID']);
+				$data = array($order->getID(), '' /* affiliation? */, $orderArray['total'][$orderArray['Currency']['ID']], $order->getTaxAmount() /* tax */, $orderArray['ShippingAddress']['city'],  $orderArray['ShippingAddress']['stateName'],  $orderArray['ShippingAddress']['countryID']);
 				$transHtml[] = 'pageTracker._addTrans' . $this->getJSParams($data);
 
 				foreach ($orderArray['cartItems'] as $item)

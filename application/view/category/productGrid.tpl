@@ -5,9 +5,9 @@
 	{/if}
 
 	<td class="{if $product.isFeatured}featured{/if}{if 1 == ($smarty.foreach.productList.index + 1) % 'LAYOUT_GRID_COLUMNS'|@config} first{/if}{if 0 == ($smarty.foreach.productList.index + 1) % 'LAYOUT_GRID_COLUMNS'|@config} last{/if}">
-
-		{include file="category/productGridItem.tpl"}
-
+		<div class="gridItemWrap1"><div class="gridItemWrap2"><div class="gridItemWrap3"><div class="gridItemWrap4">
+			{include file="category/productGridItem.tpl"}
+		</div></div></div></div>
 	</td>
 
 	{if 0 == (($smarty.foreach.productList.index + 1) % 'LAYOUT_GRID_COLUMNS'|@config)}

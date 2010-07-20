@@ -1,30 +1,31 @@
 <div class="rootCategoriesWrapper1">
 	<div class="rootCategoriesWrapper2">
-		<ul class="rootCategories{if $currentId == $categories.0.ID} firstActive{/if}" id="rootCategories">
+		<div class="ul rootCategories{if $currentId == $categories.0.ID} firstActive{/if}" id="rootCategories">
 			{foreach $categories as $category}
-				<li class="top {if $category.ID == $currentId}current{/if}"><a href="{categoryUrl data=$category}"><span class="name">{$category.name_lang}</span>
+				<div class="li top {if $category.ID == $currentId}current{/if}{if !$subCategories[$category.ID]}noSubs{/if}"><a href="{categoryUrl data=$category}"><span class="name">{$category.name_lang}</span></a>
 				{if $subCategories[$category.ID]}
 					<div class="wrapper">
 						<div class="block"><div class="block">
-							<ul>
+							<div class="ul">
 								{foreach $subCategories[$category.ID] as $category}
-									<li><a href="{categoryUrl data=$category}"><span>{$category.name_lang}</span></a></li>
+									<div class="li"><a href="{categoryUrl data=$category}"><span>{$category.name_lang}</span></a></div>
 								{/foreach}
-							</ul>
+							</div>
 						</div></div>
 					</div>
 				{/if}
-				</a></li>
+				</div>
 			{/foreach}
+			<div class="li" style="width: 1px;">&nbsp;</div>
 			<div class="clear"></div>
-		</ul>
+		</div>
 	</div>
 </div>
 
 {literal}
 <!--[if lte IE 6]>
 <script type="text/javascript">
-	$A($('rootCategories').getElementsBySelector('li.top')).each(function(li)
+	$A($('rootCategories').getElementsBySelector('.top')).each(function(li)
 	{
 		Event.observe(li, 'mouseover', function()
 		{

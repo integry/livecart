@@ -13,7 +13,7 @@
 		<input type="checkbox" name="afterAdding" value="new" style="display: none;" />
 
 		<span class="progressIndicator" style="display: none;"></span>
-		<input type="submit" name="save" class="submit" value="{t _save_message}" />
+		<input type="submit" name="save" class="submit" value="{t _save_message}" onclick="this.form.elements.namedItem('sendFlag').value = '';" />
 		{t _or} <a class="cancel" href="#" onclick="Backend.Newsletter.cancelAdd(); return false;">{t _cancel}</a>
 
 	</fieldset>
@@ -35,6 +35,13 @@
 		<p>
 			<label class="sendLabel">{t _send_to}:</label>
 			<div style="float: left;">
+				{foreach from=$groupsArray item=groupItem}
+					<p>
+						{checkbox class="checkbox userGroupCheckbox" name="group" name="group_{$groupItem.ID}" onchange="Backend.Newsletter.updateRecipientCount(this)"}
+						<label class="checkbox" for="group_{$groupItem.ID}">{$groupItem.name|escape}</label>
+					</p>
+				{/foreach}
+				<input type="hidden" value="" name="userGroupIDs" id="userGroupIDs" />
 				<p>
 					{checkbox class="checkbox" name="users" onchange="Backend.Newsletter.updateRecipientCount(this)"}
 					<label class="checkbox" for="users">{t _all_users}</label>
@@ -43,14 +50,13 @@
 					{checkbox class="checkbox" name="subscribers" onchange="Backend.Newsletter.updateRecipientCount(this)"}
 					<label class="checkbox" for="subscribers">{t _all_subscribers}</label>
 				<p>
-
 				<fieldset class="container">
 					<p class="recipientCount">
 						{include file="backend/newsletter/recipientCount.tpl" count=$recipientCount}
 					</p>
 				</fieldset>
 
-				<input type="submit" name="send" class="submit" value="{t _send_message}" />
+				<input type="submit" name="send" class="submit" value="{t _send_message}"  onclick="this.form.elements.namedItem('sendFlag').value = 'send';" />
 			</div>
 		</p>
 	</fieldset>
@@ -82,6 +88,8 @@
 		<a class="cancel" href="#" onclick="Backend.Newsletter.cancel(this); return false;">{t _cancel}</a>
 	</fieldset>
 </div>
+
+<input type="hidden" name="sendFlag" value="" />
 
 {/form}
 

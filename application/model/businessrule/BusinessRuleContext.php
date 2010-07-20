@@ -21,6 +21,8 @@ class BusinessRuleContext
 
 	private $pastOrders = null;
 
+	private $messages = array();
+
 	public function setOrder(BusinessRuleOrderInterface $order)
 	{
 		$this->order = $order;
@@ -182,6 +184,11 @@ class BusinessRuleContext
 		}
 
 		return is_null($this->user->userGroup->get()) ? 0 : $this->user->userGroup->get()->getID();
+	}
+
+	public function addMessage($type, $text)
+	{
+		$this->messages[$type][] = $text;
 	}
 
 	private function isSessionCacheUsable()

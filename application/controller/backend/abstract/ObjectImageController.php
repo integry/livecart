@@ -208,6 +208,10 @@ abstract class ObjectImageController extends StoreManagementController
 		$count = ActiveRecord::getRecordCount($class, $f);
 		$offset = 0;
 		$chunk = 100;
+
+		ob_flush();
+		ob_end_clean();
+
 		do
 		{
 			$f->setLimit($chunk, $offset);

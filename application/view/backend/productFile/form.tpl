@@ -67,6 +67,15 @@
 			</p>
 
 			<p>
+				<label class="productFile_allowDownloadCount_label">{t _productFile_allow_download_times}</label>
+				<fieldset class="error">
+					<input type="text" name="allowDownloadCount" class="text number productFile_allowDownloadCount" {denied role="product.update"}readonly="readonly"{/denied} />
+					{t _times}
+					<span class="errorText hidden"> </span>
+				</fieldset>
+			</p>
+
+			<p>
 				<label></label>
 				<input type="checkbox" name="isPublic" class="checkbox productFile_isPublic" {denied role="product.update"}readonly="readonly"{/denied} />
 				<label class="checkbox">{t _productFile_isPublic}</label>

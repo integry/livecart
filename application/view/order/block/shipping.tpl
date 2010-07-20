@@ -1,6 +1,6 @@
 {if $cart.shippingSubtotal|@strlen}
 	<tr>
-		<td colspan="3" class="subTotalCaption">
+		<td colspan="{math equation="$extraColspanSize + 3"}" class="subTotalCaption">
 			{if $isShippingEstimated}
 				{t _estimated_shipping}:
 			{else}

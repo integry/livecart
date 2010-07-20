@@ -197,12 +197,13 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 
 	/**
    	 *	Creates an ARExpressionHandle for performing searches over language fields (finding a value in particular language)
+   	 *	Parses the PHP serialized string value. Performance is usually not a problem, because the rows should first be filtered by a simple LIKE condition
 	 *
 	 *	@return ARExpressionHandle
    	 */
 	public static function getLangSearchHandle(ARFieldHandleInterface $field, $language)
 	{
-		$expression = "
+		$substr = "
 			SUBSTRING(
 				SUBSTRING_INDEX(" . $field->toString() . ",'\"" . $language . "\";s:',-1),
 				CEIL(LOG10(
@@ -216,6 +217,11 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 					':',
 					1)
 				)";
+
+		// UTF-8 strings
+		// PHP serialized strings include the field length in bytes, however the MySQL string functions are UTF-8 aware
+		// and the resulting strings are too long when they include multi-byte characters, so they need to be shortened accordingly
+		$expression = "SUBSTRING(" . $substr . ", 1, CHAR_LENGTH(" . $substr . ") - (LENGTH(" . $substr . ") - CHAR_LENGTH(" . $substr . ")))";
 
 	  	return new ARExpressionHandle($expression);
 	}

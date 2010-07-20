@@ -11,8 +11,19 @@ class RuleConditionDeliveryZoneIs extends RuleCondition
 {
 	public function isApplicable()
 	{
-		die(__CLASS__ . ' not implemented');
-		return new EqualsCond(new ARFieldHandle('DiscountConditionRecord', 'deliveryZoneID'), $order->getDeliveryZone()->getID());
+		if (!($this->getOrder() instanceof CustomerOrder))
+		{
+			return false;
+		}
+		
+		$zoneID = $this->getOrder()->getDeliveryZone()->getID();
+		foreach ($this->records as $record)
+		{
+			if ($record['ID'] == $zoneID)
+			{
+				return true;
+			}
+		}
 	}
 }
 

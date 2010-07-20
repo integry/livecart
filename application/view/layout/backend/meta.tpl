@@ -34,8 +34,8 @@
 	*}
 
 	{includeJs file=library/KeyboardEvent.js front=true}
-	{includeJs file=library/livecart.js front=true}
 	{includeJs file="backend/Backend.js" front=true}
+	{includeJs file=library/livecart.js front=true}
 	{includeJs file=library/dhtmlHistory/dhtmlHistory.js}
 	{includeJs file="library/scriptaculous/dragdrop.js" front=true}
 	{includeJs file="library/scriptaculous/slider.js" front=true}
@@ -83,8 +83,10 @@
 			content_css: "{/literal}{baseUrl}{literal}stylesheet/library/TinyMCE.css",
 			forced_root_block : '',
 			relative_urls : true,
+			remove_linebreaks : false,
 			extended_valid_elements : 'iframe[src|width|height|name|align|frameborder|scrolling|marginheight|marginwidth]',
-			entities: ''
+			entities: '',
+			file_browser_callback : "ajaxfilemanager"
 		});
 	}
 
@@ -94,11 +96,42 @@
 		Backend.onLoad();
 	}
 
+	function ajaxfilemanager(field_name, url, type, win)
+	{
+		var
+			
+			ajaxfilemanagerurl = tinyMCE.baseURI.getURI()+"/../ajaxfilemanager/ajaxfilemanager.php?editor=tinymce";
+
+		switch (type)
+		{
+			case "image":
+			case "media":
+			case "flash": 
+			case "file":
+				break;
+			default:
+				return false;
+		}
+		tinyMCE.activeEditor.windowManager.open(
+			{
+                url: ajaxfilemanagerurl,
+                width: 782,
+                height: 440,
+                inline : "yes",
+                close_previous : "yes"
+            }
+            ,
+            {
+				window : win,
+				input : field_name
+			}
+		);
+	}
 	{/literal}
 
 	window.onload = onLoad;
 
-	Backend.Router.setUrlTemplate('{link controller=controller action=action}');
+	Router.setUrlTemplate('{link controller=controller action=action}');
 	</script>
 
 	{block TRANSLATIONS}

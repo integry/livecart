@@ -282,11 +282,12 @@ html, body{
 ****************************/
 #navContainer
 {
-	padding-top: 35px;
 	border-bottom: 3px solid #15367f;
 }
 #nav {
-	position: relative;
+	position: absolute;
+	bottom: 3px;
+	left: 210px;
 	z-index: 1;
 }
 
@@ -733,7 +734,7 @@ fieldset.error, div.error, fieldset.container
 .errorText
 {
 	background-color: red;
-	float: left;
+/*	float: left; */
 	width: auto;
 	margin-bottom: 4px;
 	margin-top: -3px;

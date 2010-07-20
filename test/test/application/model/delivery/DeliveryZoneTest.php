@@ -10,6 +10,7 @@ ClassLoader::import("application.model.delivery.DeliveryZoneAddressMask");
 ClassLoader::import("application.model.delivery.State");
 ClassLoader::import("application.model.tax.Tax");
 ClassLoader::import("application.model.tax.TaxRate");
+ClassLoader::import("application.model.user.UserAddress");
 
 /**
  *
@@ -191,6 +192,31 @@ class DeliveryZoneTest extends LiveCartTest
 		$taxRates = $zone->getTaxRates();
 		$this->assertEqual($taxRates->getTotalRecordCount(), 1);
 		$this->assertTrue($taxRates->get(0) === $taxRate);
+	}
+
+	public function testFindZoneWithMasks()
+	{
+		$zone1 = DeliveryZone::getNewInstance();
+		$zone1->setValueByLang('name', 'en', 'With ZIP');
+		$zone1->isEnabled->set(true);
+		$zone1->save();
+
+		DeliveryZoneZipMask::getNewInstance($zone1, 'asd')->save();
+		DeliveryZoneCountry::getNewInstance($zone1, 'LT')->save();
+
+		$zone2 = DeliveryZone::getNewInstance();
+		$zone2->setValueByLang('name', 'en', 'Without ZIP');
+		$zone2->isEnabled->set(true);
+		$zone2->save();
+		DeliveryZoneCountry::getNewInstance($zone2, 'LT')->save();
+
+		$address = UserAddress::getNewInstance();
+		$address->countryID->set('LT');
+
+		$this->assertSame(DeliveryZone::getZoneByAddress($address), $zone2);
+
+		$address->postalCode->set('asd');
+		$this->assertSame(DeliveryZone::getZoneByAddress($address), $zone1);
 	}
 }
 ?>

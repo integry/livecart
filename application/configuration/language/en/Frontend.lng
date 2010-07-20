@@ -101,3 +101,8 @@ _previous=Previous
 _add_compare=Add to Compare
 _compared_products=Compared Products
 _view_comparison=View Comparison
+
+# RSS feeds
+_news_posts_feed=News feed
+_category_products_feed=Category products feed
+_all_products_feed=All products feed

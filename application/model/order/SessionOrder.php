@@ -162,6 +162,11 @@ class SessionOrder
 			}
 		}
 
+		return self::getDefaultEstimateAddress();
+	}
+
+	public static function getDefaultEstimateAddress()
+	{
 		$config = ActiveRecordModel::getApplication()->getConfig();
 		$address = UserAddress::getNewInstance();
 		$address->countryID->set($config->get('DEF_COUNTRY'));
@@ -172,8 +177,10 @@ class SessionOrder
 	public static function setEstimateAddress(UserAddress $address)
 	{
 		$order = self::getOrder();
+		$estimateAddress = clone $address;
+		$estimateAddress->removeSpecification();
 		$session = new Session();
-		$session->set('shippingEstimateAddress', $address);
+		$session->set('shippingEstimateAddress', $estimateAddress);
 	}
 
 	public static function save(CustomerOrder $order)
@@ -189,6 +196,7 @@ class SessionOrder
 	{
 		$session = new Session();
 		$session->unsetValue('CustomerOrder');
+		$session->unsetValue('orderData');
 	}
 }
 

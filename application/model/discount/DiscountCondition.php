@@ -57,6 +57,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		$schema->registerField(new ARField("isAllSubconditions", ARBool::instance()));
 		$schema->registerField(new ARField("isActionCondition", ARBool::instance()));
 		$schema->registerField(new ARField("isFinal", ARBool::instance()));
+		$schema->registerField(new ARField("isReverse", ARBool::instance()));
 
 		$schema->registerField(new ARField("conditionClass", ARVarchar::instance(80)));
 

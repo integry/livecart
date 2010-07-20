@@ -120,14 +120,36 @@ LiveCart.AjaxRequest.prototype = {
 		{
 			this.adjustIndicatorVisibility = ($(indicatorId).style.visibility == 'hidden');
 
-			if (('INPUT' == indicatorId.tagName) && ('checkbox' == indicatorId.type))
+			if ('SELECT' == indicatorId.tagName)
+			{
+				var selectIndicator = document.createElement('span');
+				selectIndicator.className = 'progressIndicator';
+				var nextSibling = indicatorId.nextSibling;
+				if (nextSibling)
+				{
+					nextSibling.parentNode.insertBefore(selectIndicator, nextSibling);
+				}
+				else
+				{
+					indicatorId.parentNode.appendChild(selectIndicator);
+				}
+
+				indicatorId = selectIndicator;
+
+				this.adjustIndicatorVisibility = true;
+			}
+			else if (('INPUT' == indicatorId.tagName) && (('checkbox' == indicatorId.type) || ('radio' == indicatorId.type)))
 			{
 				this.replacedIndicator = indicatorId;
-				indicatorId = document.createElement('span');
+				indicatorId = $(document.createElement('span'));
 				indicatorId.className = this.replacedIndicator.className;
 				indicatorId.id = this.replacedIndicator.id;
 				indicatorId.addClassName('checkbox');
-				this.replacedIndicator.parentNode.replaceChild(indicatorId, this.replacedIndicator);
+
+				if (this.replacedIndicator.parentNode)
+				{
+					this.replacedIndicator.parentNode.replaceChild(indicatorId, this.replacedIndicator);
+				}
 			}
 
 			this.indicatorContainerId = indicatorId;
@@ -219,7 +241,7 @@ LiveCart.AjaxRequest.prototype = {
 			return;
 		}
 
-		if (this.replacedIndicator)
+		if (this.replacedIndicator && this.indicatorContainerId.parentNode)
 		{
 			this.indicatorContainerId.parentNode.replaceChild(this.replacedIndicator, this.indicatorContainerId);
 			Element.show(this.replacedIndicator);
@@ -543,6 +565,42 @@ LiveCart.AjaxUpdater.prototype = {
 	}
 }
 
+/********************************************************************
+ * Router / Url manipulator
+ ********************************************************************/
+Router =
+{
+	urlTemplate: '',
+
+	setUrlTemplate: function(url)
+	{
+		url = url.replace(/controller/, '__c__');
+		this.urlTemplate = url.replace(/action/, '__a__');
+	},
+
+	createUrl: function(controller, action, params)
+	{
+		var url = this.urlTemplate.replace(/__c__/, controller);
+		url = url.replace(/__a__/, action);
+
+		if (params)
+		{
+			$H(params).each(function(param)
+			{
+				url = this.setUrlQueryParam(url, param[0], param[1])
+			}.bind(this));
+		}
+
+		return url;
+	},
+
+	setUrlQueryParam: function(url, key, value)
+	{
+		return url + (url.match(/\?/) ? '&' : '?') + key + '=' + value;
+	}
+}
+
+
 Observer =
 {
 	observers: {},
@@ -682,3 +740,7 @@ function fireEvent(element,event)
         return !element.dispatchEvent(evt);
     }
 }
+
+Prototype.Browser.IE6 = Prototype.Browser.IE && parseInt(navigator.userAgent.substring(navigator.userAgent.indexOf("MSIE")+5)) == 6;
+Prototype.Browser.IE7 = Prototype.Browser.IE && parseInt(navigator.userAgent.substring(navigator.userAgent.indexOf("MSIE")+5)) == 7;
+Prototype.Browser.IE8 = Prototype.Browser.IE && !Prototype.Browser.IE6 && !Prototype.Browser.IE7;
