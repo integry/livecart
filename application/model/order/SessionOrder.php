@@ -171,6 +171,11 @@ class SessionOrder
 		$address = UserAddress::getNewInstance();
 		$address->countryID->set($config->get('DEF_COUNTRY'));
 
+		if ($state = $config->get('DEF_STATE'))
+		{
+			$address->state->set(State::getInstanceByID($config->get('DEF_STATE')));
+		}
+
 		return $address;
 	}
 

@@ -590,6 +590,18 @@ Backend.Settings.Editor.prototype =
 				input.parentNode.insertBefore(span, input);
 			},
 
+		'DEF_COUNTRY':
+			function()
+			{
+				console.log('here');
+				var switcher = new Backend.User.StateSwitcher($('DEF_COUNTRY'), $('DEF_STATE'), document.createElement('input'), Router.createUrl('backend.user', 'states'));
+				switcher.updateStates(null,
+					function()
+					{
+						$('DEF_STATE').value = $('DEF_STATE').getAttribute('initialValue');
+					});
+			},
+
 		'OFFLINE_HANDLERS':
 			function()
 			{
