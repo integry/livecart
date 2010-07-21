@@ -926,6 +926,8 @@ Frontend.OnePageCheckout.prototype =
 		this.nodes.paymentDetailsForm = this.nodes.payment.down('#paymentForm');
 		this.nodes.noMethodSelectedMsg = this.nodes.payment.down('#no-payment-method-selected');
 
+		this.formOnChange(form, this.setPaymentMethod.bind(this));
+
 		var paymentMethods = form.getElementsBySelector('input.radio');
 		$A(paymentMethods).each(function(el)
 		{
@@ -946,28 +948,25 @@ Frontend.OnePageCheckout.prototype =
 						this.showPaymentDetailsForm(el, noHighlight);
 					}.bind(this)
 
-				el.onclick = function(e) { Event.stop(e); el.onchange() };
-
-				var tr = $(el).up('tr');
-				if (tr)
-				{
-					var logoImg = tr.down('.paymentLogo');
-					if (logoImg)
-					{
-						logoImg.onclick = function() { el.onclick(); }
-					}
-				}
-
 				if (1 == paymentMethods.length)
 				{
 					el.onchange(true);
 					this.nodes.payment.addClassName('singleMethod');
 				}
+			}
 
+			el.onclick = function(e) { Event.stop(e); el.onchange() };
+
+			var tr = $(el).up('tr');
+			if (tr)
+			{
+				var logoImg = tr.down('.paymentLogo');
+				if (logoImg)
+				{
+					logoImg.onclick = function() { el.onclick(); }
+				}
 			}
 		}.bind(this));
-
-		this.formOnChange(form, this.setPaymentMethod.bind(this));
 
 		Event.observe(this.nodes.payment.down('#submitOrder'), 'click', this.submitOrder.bind(this));
 	},

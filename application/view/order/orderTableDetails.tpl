@@ -11,7 +11,7 @@
 			</td>
 		{/if}
 
-		<td class="itemPrice {if $item.itemBasePrice != $item.itemPrice}discount{/if}">
+		<td class="itemPrice {if (string)$item.itemBasePrice > (string)$item.itemPrice}discount{/if}">
 			<span class="basePrice">{$item.formattedBasePrice}</span><span class="actualPrice">{$item.formattedPrice}</span>
 		</td>
 		<td class="itemCount">{$item.count}</td>
