@@ -2825,13 +2825,13 @@ img.calendar_button
 #checkout-payment
 {
 	float: left;
-	width: 55%;
+	width: 49%;
 }
 
 #checkout-right
 {
 	float: right;
-	width: 43%;
+	width: 49%;
 	padding-left: 2%;
 }
 

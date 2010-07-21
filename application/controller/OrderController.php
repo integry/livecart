@@ -24,6 +24,11 @@ class OrderController extends FrontendController
 	 */
 	public function index()
 	{
+		if ($this->config->get('SKIP_CART') && ('order' == $this->request->get('controller')))
+		{
+			return new ActionRedirectResponse('checkout', 'index');
+		}
+
 		if ($this->order->isMultiAddress->get())
 		{
 			return new ActionRedirectResponse('order', 'multi');
