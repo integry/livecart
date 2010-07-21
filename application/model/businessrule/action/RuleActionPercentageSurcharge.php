@@ -1,5 +1,6 @@
 <?php
 
+ClassLoader::import('application.model.businessrule.action.RuleActionFixedDiscount');
 ClassLoader::import('application.model.businessrule.action.RuleActionPercentageDiscount');
 
 /**
@@ -7,11 +8,11 @@ ClassLoader::import('application.model.businessrule.action.RuleActionPercentageD
  * @author Integry Systems
  * @package application.model.businessrule.action
  */
-class RuleActionPercentageSurcharge extends RuleActionPercentageDiscount
+class RuleActionPercentageSurcharge extends RuleActionFixedDiscount
 {
 	protected function getDiscountAmount($price)
 	{
-		return parent::getDiscountAmount($price) * -1;
+		return RuleActionPercentageDiscount::getDiscountAmount($price) * -1;
 	}
 
 	public static function getSortOrder()

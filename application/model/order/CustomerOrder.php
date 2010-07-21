@@ -1703,7 +1703,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		if (!$array['isFinalized'])
 		{
-			$this->isRulesProcessed = false;
+			//$this->isRulesProcessed = false;
 			$isOrderable = $this->isOrderable();
 			if ($isOrderable instanceof OrderException)
 			{
