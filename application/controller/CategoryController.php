@@ -191,7 +191,7 @@ class CategoryController extends FrontendController
 		}
 
 		// if all the results come from one category, redirect to this category
-		if ((count($categoryNarrow) == 1) && (count($this->filters) == 1))
+		if ((count($categoryNarrow) == 1) && (count($this->filters) == 1) && empty($foundCategories))
 		{
 			$canNarrow = true;
 
