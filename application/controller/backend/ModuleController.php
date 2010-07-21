@@ -83,7 +83,7 @@ class ModuleController extends StoreManagementController
 
 		foreach (array('name', 'description', 'description_full') as $field)
 		{
-			$info['Module'][$field] = $this->translate($info['Module'][$field]);
+			$info['Module'][$field] = !empty($info['Module']) && is_array($info['Module']) && array_key_exists($field, $info['Module']) ? $this->translate($info['Module'][$field]) : '';
 		}
 
 		$info['isEnabled'] = $module->isEnabled($this->application);

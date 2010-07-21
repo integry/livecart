@@ -28,6 +28,8 @@ class Product extends MultilingualObject
 
 	private $pricingHandlerInstance = null;
 
+	private $temporaryTaxClass = null;
+	
 	const DO_NOT_RECALCULATE_PRICE = false;
 
 	const TYPE_TANGIBLE = 0;
@@ -432,6 +434,11 @@ class Product extends MultilingualObject
 		$this->getSpecification()->setAttributeValueByLang($field, $langCode, $value);
 	}
 
+	public function setTemporaryTaxClass($class)
+	{
+		$this->temporaryTaxClass = $class;
+	}
+	
 	/**
 	 * Removes persisted product specification property
 	 *
@@ -995,7 +1002,8 @@ class Product extends MultilingualObject
 
 	public function getTaxClass()
 	{
-		return $this->getParentValue('taxClass');
+		// ff('getTaxClass() => '.($this->temporaryTaxClass ? 'temporaryTaxClass' : 'taxClass'));
+		return $this->temporaryTaxClass ? $this->temporaryTaxClass : $this->getParentValue('taxClass');
 	}
 
 	public function getParentValue($field)

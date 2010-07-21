@@ -124,7 +124,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->save();
 		$this->order->addShipment($shipment);
 
-		$item = $this->order->addProduct($this->products[0], 1, false, $shipment);
+		$item = $this->order->addProduct($this->products[0], 1, false, $shipment); // $100
 		$shipment->recalculateAmounts();
 		$this->order->save();
 		$this->assertEqual($shipment->taxAmount->get(), 10);
@@ -135,6 +135,7 @@ class ShipmentTaxTest extends OrderTestCommon
 
 		$this->order->save();
 		$shipment->save();
+	
 
 		// there should only be one ShipmentTax instance for this shipment
 		$this->assertEqual($shipment->getRelatedRecordSet('ShipmentTax')->size(), 1);
@@ -143,16 +144,38 @@ class ShipmentTaxTest extends OrderTestCommon
 		ActiveRecord::clearPool();
 		$order = CustomerOrder::getInstanceByID($this->order->getID(), true);
 		$order->loadAll();
-
 		$shipment = $order->getShipments()->get(0);
-		$order->addProduct($this->products[1], 1, false, $shipment);
+		$order->addProduct($this->products[1], 1, false, $shipment); // $200
 
-		$shipment->recalculateAmounts();
+		$shipment->recalculateAmounts(false);
 		$shipment->save();
+
+		// @todo: fix failing assertion
+		$this->assertEquals(1, $shipment->getRelatedRecordSet('ShipmentTax')->size(), 'expecting one ShipmentTax');
+
 		$order->save();
 		$this->order->finalize();
 
-		$this->assertEqual($shipment->getRelatedRecordSet('ShipmentTax')->size(), 1);
+		/* debug
+		echo "\n Order is finalized!\n";
+		foreach($shipment->getRelatedRecordSet('ShipmentTax') as $item)
+		{
+			echo
+				'shipment tax id:', $item->getID(),
+				', type:', $item->type->get(),
+				', amount:', $item->getAmount(), ' ('. 	$item->shipmentID->get()->getTaxAmount() .')',
+				', shipment id:', $item->shipmentID->get()->getID(), 
+				', taxRate id:', $item->taxRateID->get()->getID(),
+				', taxClass:', implode(';', $item->taxRateID->get()->taxID->get()->name->get()).'('. $item->taxRateID->get()->taxID->get()->getID() .')',
+				', zone:',  $item->taxRateID->get()->deliveryZoneID->get()->name->get(),'(', $item->taxRateID->get()->deliveryZoneID->get()->getID() ,')', // blame canada!!
+				"\n";
+		}
+		*/
+		$this->assertEquals(1, $order->getShipments()->size(), 'expecting one shipment');
+		$this->assertEqual(40 , $shipment->getRelatedRecordSet('ShipmentTax')->get(0)->shipmentID->get()->getTaxAmount(), 40);
+		
+		// @todo: fix failing assertion
+		$this->assertEquals(1, $shipment->getRelatedRecordSet('ShipmentTax')->size(), 'expecting one ShipmentTax');
 		$this->assertEqual($shipment->getRelatedRecordSet('ShipmentTax')->get(0)->amount->get(), 40);
 	}
 

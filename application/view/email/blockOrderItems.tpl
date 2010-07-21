@@ -3,7 +3,7 @@
 {foreach from=$order.shipments item=shipment}
 {include file="email/blockShipment.tpl"}
 {/foreach}
-------------------------------------------------------------
+------------------------------------------------------------{if 'SHOW_SKU_EMAIL'|config}----------{/if}
 {/if}{*html*}
 {if $html}
 {if !$noTable}<table>{/if}
