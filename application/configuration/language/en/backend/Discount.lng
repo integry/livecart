@@ -112,3 +112,6 @@ _message=Message
 
 _rule_was_successfully_saved=The business rule was successfully saved
 _rule_name_empty=Please enter the business rule name
+
+_tax_class=Tax Class
+RuleActionChangeTaxClass=Change tax class

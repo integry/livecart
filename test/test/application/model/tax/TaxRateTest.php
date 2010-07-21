@@ -130,9 +130,10 @@ class TaxRateTest extends LiveCartTest
 
 	public function testDefaultZoneVAT()
 	{
+	
 		$taxRate = TaxRate::getNewInstance(DeliveryZone::getDefaultZoneInstance(), $this->tax, 10);
 		$taxRate->save();
-
+	
 		$order = CustomerOrder::getNewInstance($this->user);
 		$order->addProduct($this->product, 1, true);
 		$order->currency->set($this->currency);
@@ -142,24 +143,39 @@ class TaxRateTest extends LiveCartTest
 		$order->finalize();
 
 		$this->assertDefaultZoneOrder($order, $this->currency);
-
+		
 		ActiveRecord::clearPool();
+		ActiveRecord::clearArrayData();
 		$reloaded = CustomerOrder::getInstanceById($order->getID(), true);
-
+		/* debug
+	    $reloaded->getShipments();
+	    $arr = $reloaded->toArray();
+		foreach($arr['cartItems'][0] as $k=>$v)
+			if(!is_array($v))
+				echo $k.' : '.$v."\n";
+		*/
 		$this->assertDefaultZoneOrder($reloaded, $this->currency);
 	}
 
 	private function assertDefaultZoneOrder(CustomerOrder $order, Currency $currency)
 	{
-		$this->assertEqual($order->getTotal(), 100);
-
+		$this->assertEquals(100, $order->getTotal());
 		$shipment = $order->getShipments()->get(0);
-		$this->assertEqual(round($shipment->getSubTotal(true), 2), 100);
-		$this->assertEqual(round($shipment->getSubTotal(false), 2), 90.91);
+		
+		$shipmentArray = $shipment->toArray();
+
+		$this->assertEquals(9.09, round($shipmentArray['taxAmount'],2), 'shipment array, taxAmount');
+		$this->assertEquals(90.91, round($shipmentArray['amount'],2), 'shipment array, amount');
+		$this->assertEquals(100.0, round($shipmentArray['amount'] + $shipmentArray['taxAmount'],2), 'shipment array, amount + taxAmount');
+//if($t);
+//print_r($shipmentArray);
+
+		$this->assertEquals(100, round($shipment->getSubTotal(true), 2), '$shipment->getSubTotal(<with taxes>)');
+		$this->assertEquals(90.91, round($shipment->getSubTotal(false), 2), '$shipment->getSubTotal(<without taxes>)');
 
 		$arr = $order->toArray();
-		$this->assertEqual($arr['cartItems'][0]['displayPrice'], 100);
-		$this->assertEqual($arr['cartItems'][0]['displaySubTotal'], 100);
+		$this->assertEquals(100, $arr['cartItems'][0]['displayPrice']);
+		$this->assertEquals(100, $arr['cartItems'][0]['displaySubTotal']);
 //		$this->assertEqual(round($arr['cartItems'][0]['itemSubTotal'], 2), 90.91);
 	}
 

@@ -902,9 +902,16 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 
 		if ($productID)
 		{
-			$sql .= ' WHERE Product.ID=' . $productID;
-		}
+			if (is_object($productID))
+			{
+				$productID = $productID->getID();
+			}
 
+			if (is_numeric($productID)) // strings would require escaping anyway..
+			{
+				$sql .= ' WHERE Product.ID=' . $productID;
+			}
+		}
 		self::getDBConnection()->executeUpdate($sql);
 	}
 
