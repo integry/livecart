@@ -3,6 +3,7 @@
 {includeJs file="library/form/Validator.js"}
 {includeJs file="library/form/ActiveForm.js"}
 {includeJs file="backend/Settings.js"}
+{includeJs file="backend/User.js"}
 {includeJs file="library/lightbox/lightbox.js"}
 
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}

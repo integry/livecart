@@ -466,7 +466,8 @@ class CheckoutController extends FrontendController
 	 */
 	public function shipping()
 	{
-		//var_dump($this->order->shippingAddress->get()->toArray());
+		// get previously selected shipping methods
+		$rateCache = (array)$this->session->get('SelectedShippingRates_' . $this->order->getID());
 
 		if ($redirect = $this->validateOrder($this->order, self::STEP_SHIPPING))
 		{
@@ -508,6 +509,11 @@ class CheckoutController extends FrontendController
 			if ($shipmentRates->size() > 1)
 			{
 				$needSelecting = true;
+
+				if (!empty($rateCache[$key]))
+				{
+					$shipment->setRateId($rateCache[$key]);
+				}
 			}
 			else if (!$shipmentRates->size())
 			{
@@ -583,6 +589,7 @@ class CheckoutController extends FrontendController
 			return new ActionRedirectResponse('checkout', 'shipping');
 		}
 
+		$selectedRateCache = array();
 		foreach ($shipments as $key => $shipment)
 		{
 			if ($shipment->isShippable())
@@ -603,6 +610,8 @@ class CheckoutController extends FrontendController
 				{
 					$shipment->save();
 				}
+
+				$selectedRateCache[$key] = $selectedRateId;
 			}
 		}
 
@@ -612,6 +621,8 @@ class CheckoutController extends FrontendController
 		}
 
 		$this->order->loadRequestData($this->request);
+
+		$this->session->set('SelectedShippingRates_' . $this->order->getID(), $selectedRateCache);
 
 		SessionOrder::save($this->order);
 

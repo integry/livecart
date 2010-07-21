@@ -2825,13 +2825,13 @@ img.calendar_button
 #checkout-payment
 {
 	float: left;
-	width: 49%;
+	width: 51%;
 }
 
 #checkout-right
 {
 	float: right;
-	width: 49%;
+	width: 47%;
 	padding-left: 2%;
 }
 
@@ -2925,4 +2925,12 @@ img.calendar_button
 	border-top-width: 1px;
 	margin: 1em 0;
 	padding-top: 1em;
+}
+
+.onePageCheckout-index .showCart #checkout-overview h2,
+.onePageCheckout-index .showCart .orderOverviewControls,
+.onePageCheckout-index .showCart #checkout-return-to-overview,
+.onePageCheckout-index .showCart #payItems
+{
+	display: none;
 }

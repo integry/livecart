@@ -117,6 +117,8 @@ class OnePageCheckoutController extends CheckoutController
 			return new ActionRedirectResponse('index', 'index');
 		}
 
+		$this->session->set('OrderPaymentMethod_' . $this->order->getID(), '');
+
 		$response = new CompositeActionResponse();
 
 		$blocks = array('login', 'shippingAddress', 'billingAddress', 'payment', 'cart', 'shippingMethods', 'overview');
@@ -237,8 +239,33 @@ class OnePageCheckoutController extends CheckoutController
 		// shipping methods won't be displayed if custom fields are not filled
 		$this->config->set('CHECKOUT_CUSTOM_FIELDS', 'SHIPPING_METHOD_STEP');
 
+		$tempShipping = false;
+		if (!$this->order->shippingAddress->get())
+		{
+			$this->order->shippingAddress->set(SessionOrder::getEstimateAddress());
+			$tempShipping = true;
+		}
+
+		$tempBilling = false;
+		if (!$this->order->billingAddress->get())
+		{
+			$this->order->billingAddress->set($this->order->shippingAddress->get());
+			$tempBilling = true;
+		}
+
 		$response = $this->shipping();
 		$this->order->serializeShipments();
+
+		if ($tempShipping)
+		{
+			$this->order->shippingAddress->setNull();
+		}
+
+		if ($tempBilling)
+		{
+			$this->order->billingAddress->setNull();
+		}
+
 		$this->order->save();
 
 		$this->config->set('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
@@ -352,7 +379,7 @@ class OnePageCheckoutController extends CheckoutController
 			$this->separateBillingAndShippingAddresses();
 			$parentResponse = parent::doSelectAddress();
 
-			if ($this->request->get('sameAsShipping') && ($this->order->billingAddress->get()->toString() != $this->order->shippingAddress->get()->toString()))
+			if ($this->request->get('sameAsShipping') && $this->order->billingAddress->get() && $this->order->shippingAddress->get() && ($this->order->billingAddress->get()->toString() != $this->order->shippingAddress->get()->toString()))
 			{
 				$this->order->billingAddress->set(clone $this->order->shippingAddress->get());
 				$this->order->billingAddress->get()->save();
@@ -495,7 +522,11 @@ class OnePageCheckoutController extends CheckoutController
 		{
 			$method = $this->config->get('CC_HANDLER');
 		}
+
+		$this->session->set('OrderPaymentMethod_' . $this->order->getID(), $method);
 		$this->order->setPaymentMethod($method);
+
+		$this->order->getTotal(true);
 
 		return $this->getUpdateResponse();
 	}
@@ -581,6 +612,11 @@ class OnePageCheckoutController extends CheckoutController
 			$res['payment'] = false;
 		}
 
+		if (!$isCompleted)
+		{
+			$res['shippingMethod'] = true;
+		}
+
 		return $res;
 	}
 
@@ -614,8 +650,14 @@ class OnePageCheckoutController extends CheckoutController
 		$this->order->loadAll();
 		ActiveRecordModel::clearArrayData();
 
+		if ($paymentMethod = $this->session->get('OrderPaymentMethod_' . $this->order->getID()))
+		{
+			$this->order->setPaymentMethod($paymentMethod);
+			$this->order->getTotal(true);
+		}
+
 		// @todo: sometimes the shipping address disappears (for registered users that might already have the shipping address entered before)
-		if (!$this->order->shippingAddress->get() && $this->order->isShippingRequired())
+		if (!$this->order->shippingAddress->get() && $this->order->isShippingRequired() && $this->user->defaultShippingAddress->get())
 		{
 			$this->user->defaultShippingAddress->get()->load();
 			$this->order->shippingAddress->set($this->user->defaultShippingAddress->get()->userAddress->get());

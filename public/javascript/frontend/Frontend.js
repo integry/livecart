@@ -772,13 +772,19 @@ User.ShippingFormToggler.prototype =
 
 Frontend = {}
 
-Frontend.OnePageCheckout = function()
+Frontend.OnePageCheckout = function(options)
 {
 	this.nodes = {}
 	this.findUsedNodes();
 	this.bindEvents();
+	this.options = options;
 
 	this.showOverview();
+
+	if (this.options['OPC_SHOW_CART'])
+	{
+		this.nodes.root.addClassName('showCart');
+	}
 }
 
 Frontend.OnePageCheckout.prototype =
@@ -991,7 +997,11 @@ Frontend.OnePageCheckout.prototype =
 		}
 
 		this.nodes.cart.show();
-		this.nodes.overview.hide();
+
+		if (!this.options['OPC_SHOW_CART'])
+		{
+			this.nodes.overview.hide();
+		}
 	},
 
 	showOverview: function(e)
@@ -1001,7 +1011,11 @@ Frontend.OnePageCheckout.prototype =
 			Event.stop(e);
 		}
 
-		this.nodes.cart.hide();
+		if (!this.options['OPC_SHOW_CART'])
+		{
+			this.nodes.cart.hide();
+		}
+
 		this.nodes.overview.show();
 	},
 
