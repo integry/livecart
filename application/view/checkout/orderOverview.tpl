@@ -36,7 +36,7 @@
 
 	{foreach from=$order.discounts item=discount}
 		<tr>
-			<td colspan="{$colspan}" class="subTotalCaption">{if $discount.amount > 0}{t _discount}{else}{t _surcharge}{/if}: <span class="discountDesc">{$discount.description}</span></td>
+			<td colspan="{$colspan}" class="subTotalCaption"><span class="discountLabel">{if $discount.amount > 0}{t _discount}{else}{t _surcharge}{/if}:</span> <span class="discountDesc">{$discount.description}</span></td>
 			<td class="amount discountAmount">{$discount.formatted_amount}</td>
 		</tr>
 	{/foreach}
