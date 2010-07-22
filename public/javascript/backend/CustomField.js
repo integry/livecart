@@ -18,6 +18,8 @@ Backend.SpecField.prototype.loadSpecFieldAction = function()
 		var toggleFunc = function() { this.toggleCheckboxes(this.nodes.isRequired, [this.nodes.isDisplayed]); }.bind(this);
 		toggleFunc();
 		this.nodes.isRequired.onchange = toggleFunc;
+
+		this.nodes.labels['isDisplayed'].innerHTML = Backend.getTranslation('_show_in_regform');
 		this.nodes.labels['isDisplayedInList'].innerHTML = Backend.getTranslation('_show_in_invoice');
 	}
 	// orders
@@ -30,6 +32,8 @@ Backend.SpecField.prototype.loadSpecFieldAction = function()
 		var editableFunc = function() { this.toggleCheckboxes(this.nodes.isDisplayed, [this.nodes.isDisplayedInList]); }.bind(this);
 		editableFunc();
 		this.nodes.isDisplayed.onchange = editableFunc;
+		this.nodes.labels['isDisplayed'].innerHTML = Backend.getTranslation('_SpecField_displayed_on_front_page');
+		this.nodes.labels['isDisplayedInList'].innerHTML = Backend.getTranslation('_SpecField_displayed_in_product_list');
 	}
 
 	return res;
