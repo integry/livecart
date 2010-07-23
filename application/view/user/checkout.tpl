@@ -33,11 +33,13 @@
 
 		{form handle=$form action="controller=user action=processCheckoutRegistration" method="POST"}
 
-			<h3>{t _contact_info}</h3>
+			{if !'REQUIRE_SAME_ADDRESS'|config}
+				<h3>{t _contact_info}</h3>
+			{/if}
 
-			{include file="user/block/registerAddress.tpl" prefix="billing" showHeading=true}
+			{include file="user/block/registerAddress.tpl" prefix="billing_" showHeading=true}
 
-			{if $order.isShippingRequired}
+			{if $order.isShippingRequired && !'REQUIRE_SAME_ADDRESS'|config}
 			<h3>{t _shipping_address}</h3>
 
 				<p>

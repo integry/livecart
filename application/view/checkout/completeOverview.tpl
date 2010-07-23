@@ -33,7 +33,7 @@
 {/defun}
 
 <div id="overviewAddresses">
-	{if $order.ShippingAddress && !$order.isMultiAddress}
+	{if $order.ShippingAddress && !$order.isMultiAddress && !'REQUIRE_SAME_ADDRESS'|config}
 		<div class="addressContainer">
 			<h3>{t _will_ship_to}:</h3>
 			{fun name="address" address=$order.ShippingAddress}

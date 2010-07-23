@@ -303,6 +303,8 @@ CART_PAGE=Shopping basket page
 BILLING_ADDRESS_STEP=Billing address entry step
 SHIPPING_ADDRESS_STEP=Shipping address entry step
 SHIPPING_METHOD_STEP=Shipping method selection step
+_checkout_address_handling=Checkout Address Handling
+REQUIRE_SAME_ADDRESS=Shipping and billing addresses are always the same
 
 _one_page_checkout=One Page Checkout
 OPC_SHOW_CART=Always display editable shopping basket

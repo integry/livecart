@@ -684,7 +684,10 @@ User.StateSwitcher.prototype =
 			Element.hide(this.stateTextInput);
 		}
 
-		Event.observe(countrySelector, 'change', this.updateStates.bind(this));
+		if (countrySelector)
+		{
+			Event.observe(countrySelector, 'change', this.updateStates.bind(this));
+		}
 	},
 
 	updateStates: function(e)
@@ -831,7 +834,13 @@ Frontend.OnePageCheckout.prototype =
 	{
 		var el = e ? Event.element(e) : null;
 		var form = this.nodes.shippingAddress.down('form');
-		form.elements.namedItem('sameAsShipping').value = (this.nodes.billingAddress.down('form').elements.namedItem('sameAsShipping').checked ? 'on' : '');
+		var billingForm = this.nodes.billingAddress.down('form');
+
+		if (billingForm)
+		{
+			form.elements.namedItem('sameAsShipping').value = (billingForm.elements.namedItem('sameAsShipping').checked ? 'on' : '');
+		}
+
 		new LiveCart.AjaxRequest(form, el, this.handleFormRequest(form));
 	},
 

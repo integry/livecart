@@ -24,11 +24,6 @@ class OrderController extends FrontendController
 	 */
 	public function index()
 	{
-		if ($this->config->get('SKIP_CART') && ('order' == $this->request->get('controller')))
-		{
-			return new ActionRedirectResponse('checkout', 'index');
-		}
-
 		if ($this->order->isMultiAddress->get())
 		{
 			return new ActionRedirectResponse('order', 'multi');
@@ -555,7 +550,14 @@ class OrderController extends FrontendController
 
 		if (!$this->isAjax())
 		{
-			return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
+			if ($this->config->get('SKIP_CART'))
+			{
+				return new ActionRedirectResponse('checkout', 'index');
+			}
+			else
+			{
+				return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
+			}
 		}
 		else
 		{

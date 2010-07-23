@@ -54,7 +54,7 @@ class OnePageCheckoutController extends CheckoutController
 
 			$this->user->grantAccess('login');
 
-			if ($this->user->defaultShippingAddress->get() && $this->order->isShippingRequired())
+			if ($this->user->defaultShippingAddress->get() && ($this->isShippingRequired($this->order) || $this->config->get('REQUIRE_SAME_ADDRESS')))
 			{
 				$address = $this->user->defaultShippingAddress->get()->userAddress->get();
 				$this->order->shippingAddress->set($address);
@@ -68,7 +68,7 @@ class OnePageCheckoutController extends CheckoutController
 				if ($address)
 				{
 					$this->order->billingAddress->set($address);
-					if (!$this->order->shippingAddress->get() && $this->order->isShippingRequired())
+					if (!$this->order->shippingAddress->get() && $this->isShippingRequired($this->order))
 					{
 						$this->order->shippingAddress->set($address);
 					}
@@ -91,7 +91,7 @@ class OnePageCheckoutController extends CheckoutController
 				$address = $this->user->defaultBillingAddress->get();
 			}
 
-			if (!$this->order->shippingAddress->get() && $address && $this->order->isShippingRequired())
+			if (!$this->order->shippingAddress->get() && $address && $this->isShippingRequired($this->order))
 			{
 				$userAddress = $address->userAddress->get();
 				$this->order->shippingAddress->set($userAddress);
@@ -122,9 +122,18 @@ class OnePageCheckoutController extends CheckoutController
 		$response = new CompositeActionResponse();
 
 		$blocks = array('login', 'shippingAddress', 'billingAddress', 'payment', 'cart', 'shippingMethods', 'overview');
-		foreach ($blocks as $block)
+		$blocks = array_flip($blocks);
+
+		if ($this->config->get('REQUIRE_SAME_ADDRESS'))
 		{
+			unset($blocks['billingAddress']);
+		}
+
+		foreach ($blocks as $block => $key)
+		{
+				//if ('payment' == $block) { var_dump($this->order->shippingAddress->get()->toArray()); exit; }
 			$blockResponse = $this->$block();
+
 			if ($blockResponse instanceof ActionResponse)
 			{
 				$blockResponse->set('user', $this->user->toArray());
@@ -154,6 +163,9 @@ class OnePageCheckoutController extends CheckoutController
 
 	public function shippingAddress()
 	{
+		$sameAddress = $this->config->get('REQUIRE_SAME_ADDRESS');
+		$this->config->set('REQUIRE_SAME_ADDRESS', false);
+
 		if ($this->user->isAnonymous())
 		{
 			$response = $this->getUserController()->checkout();
@@ -200,6 +212,12 @@ class OnePageCheckoutController extends CheckoutController
 
 			$this->request->set('step', 'shipping');
 			$response = parent::selectAddress();
+
+			if (!$response instanceof ActionResponse)
+			{
+				return null;
+			}
+
 			$response->set('step', 'shipping');
 
 			//if (!$this->order->isShippingRequired())
@@ -210,12 +228,14 @@ class OnePageCheckoutController extends CheckoutController
 			//}
 		}
 
+		$this->config->set('REQUIRE_SAME_ADDRESS', $sameAddress);
+
 		return $this->postProcessResponse($response);
 	}
 
 	public function billingAddress()
 	{
-		if (!$this->order->isShippingRequired())
+		if (!$this->isShippingRequired($this->order))
 		{
 			return null;
 		}
@@ -266,6 +286,7 @@ class OnePageCheckoutController extends CheckoutController
 			$this->order->billingAddress->setNull();
 		}
 
+
 		$this->order->save();
 
 		$this->config->set('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
@@ -286,14 +307,28 @@ class OnePageCheckoutController extends CheckoutController
 		}
 
 		$this->order->resetArrayData();
-		return $this->postProcessResponse(new ActionResponse('order', $this->order->toArray()));
+		$array = $this->order->toArray();
+
+		if ($this->config->get('REQUIRE_SAME_ADDRESS'))
+		{
+			$array['BillingAddress'] = $array['ShippingAddress'];
+		}
+
+		return $this->postProcessResponse(new ActionResponse('order', $array));
 	}
 
 	public function payment()
 	{
+		if ($this->config->get('REQUIRE_SAME_ADDRESS'))
+		{
+			$this->order->billingAddress->set($this->order->shippingAddress->get());
+			$this->order->billingAddress->resetModifiedStatus();
+		}
+
 		$this->ignoreValidation = true;
 		$response = $this->postProcessResponse($this->pay());
 		$this->ignoreValidation = false;
+		$response->set('form', new Form($this->getValidator('setPaymentMethod')));
 		return $response;
 	}
 
@@ -322,6 +357,9 @@ class OnePageCheckoutController extends CheckoutController
 
 	public function doSelectShippingAddress()
 	{
+		$sameAddress = $this->config->get('REQUIRE_SAME_ADDRESS');
+		$this->config->set('REQUIRE_SAME_ADDRESS', false);
+
 		$this->order->loadAll();
 
 		$this->request->set('step', 'shipping');
@@ -385,10 +423,17 @@ class OnePageCheckoutController extends CheckoutController
 				$this->order->billingAddress->get()->save();
 				$this->order->save();
 			}
+
+			if ($sameAddress)
+			{
+				$this->order->billingAddress->set($this->order->shippingAddress->get());
+			}
 		}
 
 		// attempt to pre-select a shipping method
 		$this->shippingMethods();
+
+		$this->config->set('REQUIRE_SAME_ADDRESS', $sameAddress);
 
 		return $this->getUpdateResponse('shippingMethods', 'billingAddress');
 	}
@@ -657,7 +702,7 @@ class OnePageCheckoutController extends CheckoutController
 		}
 
 		// @todo: sometimes the shipping address disappears (for registered users that might already have the shipping address entered before)
-		if (!$this->order->shippingAddress->get() && $this->order->isShippingRequired() && $this->user->defaultShippingAddress->get())
+		if (!$this->order->shippingAddress->get() && $this->isShippingRequired($this->order) && $this->user->defaultShippingAddress->get())
 		{
 			$this->user->defaultShippingAddress->get()->load();
 			$this->order->shippingAddress->set($this->user->defaultShippingAddress->get()->userAddress->get());
@@ -685,8 +730,13 @@ class OnePageCheckoutController extends CheckoutController
 		if ($order->isShippingRequired())
 		{
 			$steps[] = 'shippingMethod';
+		}
+
+		if ($this->isShippingRequired($order))
+		{
 			$steps[] = 'billingAddress';
 		}
+
 		$steps[] = 'payment';
 
 		return array_flip($steps);

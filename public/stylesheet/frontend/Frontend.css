@@ -2831,13 +2831,14 @@ img.calendar_button
 #checkout-right
 {
 	float: right;
-	width: 47%;
-	padding-left: 2%;
+	width: 46%;
+	padding-left: 1%;
+	padding-right: 1%;
 }
 
 #checkout-cart #cart
 {
-	width: auto;
+	width: 100%;
 }
 
 #checkout-cart .cartControl *,

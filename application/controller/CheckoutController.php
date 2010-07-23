@@ -208,6 +208,11 @@ class CheckoutController extends FrontendController
 
 		$step = $this->config->get('ENABLE_CHECKOUTDELIVERYSTEP') ? $this->request->get('step', 'billing') : null;
 
+		if ($this->config->get('REQUIRE_SAME_ADDRESS') && ('shipping' == $step))
+		{
+			return new ActionRedirectResponse('checkout', 'shipping');
+		}
+
 		// address step disabled?
 		if ($this->config->get('DISABLE_CHECKOUT_ADDRESS_STEP'))
 		{
@@ -223,7 +228,7 @@ class CheckoutController extends FrontendController
 
 			$this->order->save();
 
-			if (!$this->order->shippingAddress->get() && $this->order->isShippingRequired())
+			if (!$this->order->shippingAddress->get() && $this->isShippingRequired($this->order))
 			{
 				$step = 'shipping';
 			}
@@ -403,7 +408,7 @@ class CheckoutController extends FrontendController
 			}
 
 			// shipping address
-			if ($this->order->isShippingRequired() && !$this->order->isMultiAddress->get() && (!$step || ('shipping' == $step)))
+			if ($this->isShippingRequired($this->order) && !$this->order->isMultiAddress->get() && (!$step || ('shipping' == $step)))
 			{
 				if ($this->request->get('sameAsBilling'))
 				{
@@ -435,6 +440,12 @@ class CheckoutController extends FrontendController
 				SessionOrder::setEstimateAddress($shipping);
 			}
 
+			if ($this->config->get('REQUIRE_SAME_ADDRESS') && $this->order->isShippingRequired())
+			{
+				$this->order->shippingAddress->set($this->order->billingAddress->get());
+				$step = 'shipping';
+			}
+
 			if ('billing' != $step)
 			{
 				$this->order->resetShipments();
@@ -450,7 +461,7 @@ class CheckoutController extends FrontendController
 
 		SessionOrder::save($this->order);
 
-		if (('billing' == $step) && ($this->order->isShippingRequired() && !$this->order->isMultiAddress->get()))
+		if (('billing' == $step) && ($this->isShippingRequired($this->order) && !$this->order->isMultiAddress->get()))
 		{
 			return new ActionRedirectResponse('checkout', 'selectAddress', array('query' => array('step' => 'shipping')));
 		}
@@ -638,6 +649,20 @@ class CheckoutController extends FrontendController
 		$this->order->loadAll();
 		$this->order->getSpecification();
 		$this->order->getTotal(true);
+
+		if ($this->config->get('REQUIRE_SAME_ADDRESS'))
+		{
+			$this->order->shippingAddress->set($this->order->billingAddress->get());
+
+			if (!$this->user->isAnonymous())
+			{
+				$this->order->save();
+			}
+			else
+			{
+				$this->order->shippingAddress->resetModifiedStatus();
+			}
+		}
 
 		// @todo: variation prices appear as 0.00 without the extra toArray() call :/
 		$this->order->toArray();
@@ -1280,7 +1305,6 @@ class CheckoutController extends FrontendController
 		{
 			if ((!$order->shippingAddress->get() && $order->isShippingRequired() && !$order->isMultiAddress->get()) || !$order->billingAddress->get() || !$isOrderable)
 			{
-
 				return new ActionRedirectResponse('checkout', 'selectAddress', $this->request->get('step') ? array('step' => $this->request->get('step')) : null);
 			}
 		}
@@ -1378,7 +1402,7 @@ class CheckoutController extends FrontendController
 
 		if (!$step || ('shipping' == $step))
 		{
-			if ($order->isShippingRequired() && !$order->isMultiAddress->get())
+			if ($this->isShippingRequired($order) && !$order->isMultiAddress->get())
 			{
 				$validator->addCheck('shippingAddress', new OrCheck(array('shippingAddress', 'sameAsBilling', 'shipping_address1'), array(new IsNotEmptyCheck($this->translate('_select_shipping_address')), new IsNotEmptyCheck(''), new IsNotEmptyCheck('')), $this->request));
 				$this->validateAddress($validator, 'shipping_');
@@ -1386,13 +1410,18 @@ class CheckoutController extends FrontendController
 		}
 
 		$fieldStep = $this->config->get('CHECKOUT_CUSTOM_FIELDS');
-		if ((($fieldStep == 'BILLING_ADDRESS_STEP') && (('billing' == $step) || !$step || !$order->isShippingRequired())) ||
+		if ((($fieldStep == 'BILLING_ADDRESS_STEP') && (('billing' == $step) || !$step || !$this->isShippingRequired($order))) ||
 		   (($fieldStep == 'SHIPPING_ADDRESS_STEP') && (('shipping' == $step))))
 		{
 			$order->getSpecification()->setValidation($validator);
 		}
 
 		return $validator;
+	}
+
+	protected function isShippingRequired(CustomerOrder $order)
+	{
+		return !$this->config->get('REQUIRE_SAME_ADDRESS') && $this->order->isShippingRequired();
 	}
 
 	protected function validateAddress(RequestValidator $validator, $prefix)

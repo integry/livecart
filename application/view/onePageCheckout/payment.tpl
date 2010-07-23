@@ -62,10 +62,15 @@
 	{foreach from=$offlineMethods key="key" item="method"}
 		<div id="payForm_{$method}">
 			{form action="controller=onePageCheckout action=payOffline query=id=$method" handle=$offlineForms[$method] method="POST"}
-				<h2>{"OFFLINE_NAME_`$key`"|config}</h2>
-				{include file="checkout/offlineMethodInfo.tpl" method=$key}
-
-				{include file="block/eav/fields.tpl" fieldList=$offlineVars[$method].specFieldList}
+				{sect}
+					{header}
+						<h2>{"OFFLINE_NAME_`$key`"|config}</h2>
+					{/header}
+					{content}
+						{include file="checkout/offlineMethodInfo.tpl" method=$key}
+						{include file="block/eav/fields.tpl" fieldList=$offlineVars[$method].specFieldList}
+					{/content}
+				{/sect}
 			{/form}
 		</div>
 	{/foreach}
