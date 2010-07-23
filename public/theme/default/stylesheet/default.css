@@ -775,7 +775,7 @@ tr.odd
 a.proceedToCheckout span span span span
 {
 	display: block;
-	padding: 10px 27px 10px 10px;
+	padding: 6px 27px 10px 10px;
 	 /* IE8 */
 }
 
@@ -797,6 +797,12 @@ a.proceedToCheckout span span span span { margin-top:-20px\0/ }
 #checkoutProgress a span span span span, #checkoutProgress span.progressOrder
 {
 	line-height: 40px;
+}
+
+.completeOrderButton .progressIndicator
+{
+	margin-top: 10px;
+	margin-left: 2px;
 }
 
 /*

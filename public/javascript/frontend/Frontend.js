@@ -893,14 +893,21 @@ Frontend.OnePageCheckout.prototype =
 	{
 		Event.stop(e);
 
-		if (this.nodes.paymentMethodForm.redirect)
+		var button = Event.element(e);
+
+		if (!validateForm(this.nodes.paymentMethodForm))
 		{
-			window.location.href = this.nodes.paymentMethodForm.redirect;
 			return;
 		}
 
-		//var form = this.nodes.paymentDetailsForm;
-		var form = $('paymentForm').down('form');
+		if (this.nodes.paymentMethodForm.redirect)
+		{
+			window.location.href = this.nodes.paymentMethodForm.redirect;
+			this.submitButtonProgress(button);
+			return;
+		}
+
+		var form = this.nodes.paymentDetailsForm || $('paymentForm').down('form');
 		if ('form' != form.tagName.toLowerCase())
 		{
 			var form = this.nodes.paymentDetailsForm.down('form');
@@ -913,7 +920,22 @@ Frontend.OnePageCheckout.prototype =
 		else if (validateForm(form))
 		{
 			form.submit();
+			this.submitButtonProgress(button);
 		}
+	},
+
+	submitButtonProgress: function(button)
+	{
+		var tag = button.tagName.toLowerCase();
+
+		if ((tag != 'a') && (tag != 'input'))
+		{
+			button = button.up('a');
+		}
+
+		var indicator = button.parentNode.down('.progressIndicator') || button.parentNode;
+		indicator.addClassName('progressIndicator');
+		indicator.show();
 	},
 
 	initShippingOptions: function()

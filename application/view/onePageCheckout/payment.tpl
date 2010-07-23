@@ -48,7 +48,10 @@
 			{t _no_payment_method_selected}
 		</div>
 
-		<a href="#" class="proceedToCheckout" id="submitOrder" onclick="return validateForm($('checkout-select-payment-method'));"><span><span><span><span>{t _place_order}</span></span></span></span></a>
+		<div class="completeOrderButton">
+			{include file="onePageCheckout/block/submitButton.tpl"}
+		</div>
+
 		<div class="grandTotal">
 			{t _total}:
 			<span class="orderTotal">{$order.formattedTotal.$currency}</span>
