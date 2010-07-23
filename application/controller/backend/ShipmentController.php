@@ -202,7 +202,7 @@ class ShipmentController extends StoreManagementController
 
 		$status = $shipment->status->get();
 		$enabledStatuses = $this->config->get('EMAIL_STATUS_UPDATE_STATUSES');
-		$m = array(	
+		$m = array(
 			'EMAIL_STATUS_UPDATE_NEW'=>Shipment::STATUS_NEW,
 			'EMAIL_STATUS_UPDATE_PROCESSING'=>Shipment::STATUS_PROCESSING,
 			'EMAIL_STATUS_UPDATE_AWAITING_SHIPMENT'=>Shipment::STATUS_AWAITING,
@@ -380,6 +380,32 @@ class ShipmentController extends StoreManagementController
 	{
 		$order = CustomerOrder::getInstanceByID((int)$this->request->get('ID'));
 		return $this->save($order);
+	}
+
+	/**
+	 * @role update
+	 */
+	public function updateShippingAmount()
+	{
+		$shipment = Shipment::getInstanceByID('Shipment', $this->request->get('id'), true, array('CustomerOrder', 'User'));
+		$order = $shipment->order->get();
+
+		$order->loadItems();
+
+		$shipment->shippingAmount->set($shipment->reduceTaxesFromShippingAmount($this->request->get('amount')));
+		$shipment->recalculateAmounts(true);
+		$shipment->save();
+
+		$order->getTotal(true);
+		$order->save();
+
+		$array = $shipment->toArray();
+		$array['total'] = $order->getTotal();
+		unset($array['Order']);
+		unset($array['items']);
+		unset($array['taxes']);
+
+		return new JSONResponse(array('Shipment' => $array));
 	}
 
 	private function save(Shipment $shipment)
