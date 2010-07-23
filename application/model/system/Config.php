@@ -12,6 +12,7 @@ class Config
 	 *  Configuration value array (key => value)
 	 */
 	private $values = array();
+	private $runTimeValues = array();
 
 	private $autoSave = false;
 
@@ -115,6 +116,7 @@ class Config
 		}
 
 		$this->values[$key] = $value;
+		$this->runTimeValues[$key] = $value;
 
 		if ($this->autoSave)
 		{

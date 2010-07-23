@@ -135,7 +135,6 @@ class OnePageCheckoutController extends CheckoutController
 
 		foreach ($blocks as $block => $key)
 		{
-				//if ('payment' == $block) { var_dump($this->order->shippingAddress->get()->toArray()); exit; }
 			$blockResponse = $this->$block();
 
 			if ($blockResponse instanceof ActionResponse)
@@ -168,7 +167,7 @@ class OnePageCheckoutController extends CheckoutController
 	public function shippingAddress()
 	{
 		$sameAddress = $this->config->get('REQUIRE_SAME_ADDRESS');
-		$this->config->set('REQUIRE_SAME_ADDRESS', false);
+		$this->config->setRuntime('REQUIRE_SAME_ADDRESS', false);
 
 		if ($this->user->isAnonymous())
 		{
@@ -232,7 +231,7 @@ class OnePageCheckoutController extends CheckoutController
 			//}
 		}
 
-		$this->config->set('REQUIRE_SAME_ADDRESS', $sameAddress);
+		$this->config->setRuntime('REQUIRE_SAME_ADDRESS', $sameAddress);
 
 		return $this->postProcessResponse($response);
 	}
@@ -261,7 +260,7 @@ class OnePageCheckoutController extends CheckoutController
 	public function shippingMethods()
 	{
 		// shipping methods won't be displayed if custom fields are not filled
-		$this->config->set('CHECKOUT_CUSTOM_FIELDS', 'SHIPPING_METHOD_STEP');
+		$this->config->setRuntime('CHECKOUT_CUSTOM_FIELDS', 'SHIPPING_METHOD_STEP');
 
 		$tempShipping = false;
 		if (!$this->order->shippingAddress->get())
@@ -290,10 +289,9 @@ class OnePageCheckoutController extends CheckoutController
 			$this->order->billingAddress->setNull();
 		}
 
-
 		$this->order->save();
 
-		$this->config->set('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
+		$this->config->setRuntime('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
 
 		return $this->postProcessResponse($response);
 	}
@@ -381,7 +379,7 @@ class OnePageCheckoutController extends CheckoutController
 	public function doSelectShippingAddress()
 	{
 		$sameAddress = $this->config->get('REQUIRE_SAME_ADDRESS');
-		$this->config->set('REQUIRE_SAME_ADDRESS', false);
+		$this->config->setRuntime('REQUIRE_SAME_ADDRESS', false);
 
 		$this->order->loadAll();
 
@@ -456,7 +454,7 @@ class OnePageCheckoutController extends CheckoutController
 		// attempt to pre-select a shipping method
 		$this->shippingMethods();
 
-		$this->config->set('REQUIRE_SAME_ADDRESS', $sameAddress);
+		$this->config->setRuntime('REQUIRE_SAME_ADDRESS', $sameAddress);
 
 		return $this->getUpdateResponse('shippingMethods', 'billingAddress');
 	}
@@ -646,14 +644,14 @@ class OnePageCheckoutController extends CheckoutController
 		$isStepEditable = $isCompleted;
 
 		// validation will return false for all steps if custom fields are not filled
-		$this->config->set('CHECKOUT_CUSTOM_FIELDS', 'SHIPPING_METHOD_STEP');
+		$this->config->setRuntime('CHECKOUT_CUSTOM_FIELDS', 'SHIPPING_METHOD_STEP');
 
 		$res = array('shippingAddress' => !$this->validateOrder($order, self::STEP_ADDRESS + $isStepEditable),
 					 'shippingMethod' => !$this->validateOrder($order, self::STEP_SHIPPING + $isStepEditable),
 					 'billingAddress' => !$this->validateOrder($order, self::STEP_ADDRESS + $isStepEditable),
 					 'payment' => !$this->validateOrder($order, self::STEP_PAYMENT));
 
-		$this->config->set('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
+		$this->config->setRuntime('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
 
 		if (!$order->shippingAddress->get() && $this->order->isShippingRequired())
 		{
