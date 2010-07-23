@@ -295,7 +295,7 @@ ENABLE_CHECKOUTDELIVERYSTEP=Enter billing and shipping addresses at separate che
 CHECKOUT_METHOD=Checkout method
 CHECKOUT_ONEPAGE=One page checkout (interactive)
 CHECKOUT_MULTISTEP=Multiple page checkout (classic)
-SKIP_CART=Disable shopping basket page (go directly to checkout)
+SKIP_CART=Skip shopping basket page (go directly to checkout after adding to cart)
 SKIP_SHIPPING=Skip shipping method selection step if only one shipping method is available (select it automatically)
 SKIP_PAYMENT=Skip payment method selection step if only one payment method is available (redirect automatically)
 CHECKOUT_CUSTOM_FIELDS=Display custom fields at
@@ -308,6 +308,12 @@ REQUIRE_SAME_ADDRESS=Shipping and billing addresses are always the same
 
 _one_page_checkout=One Page Checkout
 OPC_SHOW_CART=Always display editable shopping basket
+
+_tos_agreement=Terms of Service Agreement
+REQUIRE_TOS=Require customers to agree to the Terms of Service in order to complete a purchase
+TOS_MESSAGE=Terms of Service agreement message
+PAYMENT_PAGE=Payment page
+TOS_OPC_ONLY=Display the checkbox in One Page Checkout only
 
 _taxes=Taxes
 HIDE_TAXES=Hide taxes to customers

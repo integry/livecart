@@ -1579,6 +1579,14 @@ div.review .ratingBreakdown
 .checkoutButtons
 {
     width: 300px;
+    text-align: right;
+}
+
+#tosContainer input,
+#tosContainer label
+{
+	float: none;
+	display: inline;
 }
 
 .multiAddressCheckout

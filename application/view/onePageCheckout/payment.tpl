@@ -34,6 +34,10 @@
 			{/foreach}
 		</table>
 	{/if}
+
+	{if $requireTos}
+		{include file="order/block/tos.tpl"}
+	{/if}
 {/form}
 
 <div class="form">
@@ -44,7 +48,7 @@
 			{t _no_payment_method_selected}
 		</div>
 
-		<a href="#" class="proceedToCheckout" id="submitOrder"><span><span><span><span>{t _place_order}</span></span></span></span></a>
+		<a href="#" class="proceedToCheckout" id="submitOrder" onclick="return validateForm($('checkout-select-payment-method'));"><span><span><span><span>{t _place_order}</span></span></span></span></a>
 		<div class="grandTotal">
 			{t _total}:
 			<span class="orderTotal">{$order.formattedTotal.$currency}</span>

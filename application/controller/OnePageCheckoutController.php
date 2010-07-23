@@ -12,6 +12,7 @@ ClassLoader::import('application.controller.UserController');
 class OnePageCheckoutController extends CheckoutController
 {
 	protected $ignoreValidation = false;
+	protected $isTosRequired = false;
 
 	const CUSTOM_FIELDS_STEP = 'SHIPPING_ADDRESS_STEP';
 
@@ -22,15 +23,18 @@ class OnePageCheckoutController extends CheckoutController
 			return new ActionRedirectResponse('checkout', 'index');
 		}
 
+		$this->isTosRequired = $this->config->get('REQUIRE_TOS');
+
 		parent::init();
-		$this->config->set('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
-		$this->config->set('ENABLE_CHECKOUTDELIVERYSTEP', true);
-		$this->config->set('DISABLE_CHECKOUT_ADDRESS_STEP', false);
-		$this->config->set('ENABLE_SHIPPING_ESTIMATE', false);
-		$this->config->set('SKIP_SHIPPING', false);
-		$this->config->set('SKIP_PAYMENT', false);
-		$this->config->set('REG_EMAIL_CONFIRM', false);
-		$this->config->set('EMAIL_NEW_USER', false);
+		$this->config->setRuntime('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
+		$this->config->setRuntime('ENABLE_CHECKOUTDELIVERYSTEP', true);
+		$this->config->setRuntime('DISABLE_CHECKOUT_ADDRESS_STEP', false);
+		$this->config->setRuntime('ENABLE_SHIPPING_ESTIMATE', false);
+		$this->config->setRuntime('SKIP_SHIPPING', false);
+		$this->config->setRuntime('SKIP_PAYMENT', false);
+		$this->config->setRuntime('REG_EMAIL_CONFIRM', false);
+		$this->config->setRuntime('EMAIL_NEW_USER', false);
+		$this->config->setRuntime('REQUIRE_TOS', false);
 
 		$this->loadLanguageFile('Order');
 		$this->loadLanguageFile('User');
@@ -328,8 +332,27 @@ class OnePageCheckoutController extends CheckoutController
 		$this->ignoreValidation = true;
 		$response = $this->postProcessResponse($this->pay());
 		$this->ignoreValidation = false;
-		$response->set('form', new Form($this->getValidator('setPaymentMethod')));
+
+		$paymentMethodForm = new Form($this->getPaymentMethodValidator());
+		if ($this->isTosRequired)
+		{
+			$paymentMethodForm->set('tos', $this->session->get('tos'));
+		}
+
+		$response->set('form', $paymentMethodForm);
+		$response->set('requireTos', $this->isTosRequired);
 		return $response;
+	}
+
+	protected function getPaymentMethodValidator()
+	{
+		$validator = $this->getValidator('setPaymentMethod');
+		if ($this->isTosRequired)
+		{
+			$validator->addCheck('tos', new IsNotEmptyCheck($this->translate('_err_agree_to_tos')));
+		}
+
+		return $validator;
 	}
 
 	public function doLogin()

@@ -49,6 +49,11 @@ class Config
 
 	public function get($key)
 	{
+		if (isset($this->runTimeValues[$key]))
+		{
+			return $this->runTimeValues[$key];
+		}
+
 		if (!isset($this->values[$key]) && !$this->isUpdated)
 		{
 		  	$this->updateSettings();
@@ -115,6 +120,11 @@ class Config
 		{
 			$this->save();
 		}
+	}
+
+	public function setRuntime($key, $value)
+	{
+		$this->runTimeValues[$key] = $value;
 	}
 
 	public function setValueByLang($key, $lang, $value)

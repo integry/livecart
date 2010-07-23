@@ -893,7 +893,13 @@ Frontend.OnePageCheckout.prototype =
 	{
 		Event.stop(e);
 
-		var form = this.nodes.paymentDetailsForm;
+		if (this.nodes.paymentMethodForm.redirect)
+		{
+			window.location.href = this.nodes.paymentMethodForm.redirect;
+			return;
+		}
+
+		//var form = this.nodes.paymentDetailsForm;
 		var form = $('paymentForm').down('form');
 		if ('form' != form.tagName.toLowerCase())
 		{
@@ -938,10 +944,11 @@ Frontend.OnePageCheckout.prototype =
 		var form = this.nodes.payment.down('form');
 		Event.observe(form, 'submit', Event.stop);
 
+		this.nodes.paymentMethodForm = form;
 		this.nodes.paymentDetailsForm = this.nodes.payment.down('#paymentForm');
 		this.nodes.noMethodSelectedMsg = this.nodes.payment.down('#no-payment-method-selected');
 
-		this.formOnChange(form, this.setPaymentMethod.bind(this));
+		this.formOnChange(form, this.setPaymentMethod.bind(this), [$('tos')]);
 
 		var paymentMethods = form.getElementsBySelector('input.radio');
 		$A(paymentMethods).each(function(el)
@@ -951,14 +958,15 @@ Frontend.OnePageCheckout.prototype =
 				el.onchange =
 					function()
 					{
-						window.location.href = el.value;
-					}
+						this.nodes.paymentMethodForm.redirect = el.value;
+					}.bind(this)
 			}
 			else
 			{
 				el.onchange =
 					function(noHighlight)
 					{
+						this.nodes.paymentMethodForm.redirect = '';
 						el.blur();
 						this.showPaymentDetailsForm(el, noHighlight);
 					}.bind(this)
@@ -1089,12 +1097,14 @@ Frontend.OnePageCheckout.prototype =
 		this.nodes.root[['removeClassName', 'addClassName'][1 - order.isShippingRequired]]('downloadable');
 	},
 
-	formOnChange: function(form, func)
+	formOnChange: function(form, func, skippedFields)
 	{
 		if (!form)
 		{
 			return;
 		}
+
+		var skippedFields = skippedFields || [];
 
 		ActiveForm.prototype.resetErrorMessages(form);
 
@@ -1102,6 +1112,11 @@ Frontend.OnePageCheckout.prototype =
 		{
 			$A(form.getElementsByTagName(tag)).each(function(el)
 			{
+				if (skippedFields.indexOf(el) > -1)
+				{
+					return;
+				}
+
 				Event.observe(el, 'focus', function() { window.focusedInput = el; });
 				Event.observe(el, 'change', this.fieldOnChangeCommon(form, func.bindAsEventListener(this)));
 				Event.observe(el, 'blur', this.fieldBlurCommon(form, el));

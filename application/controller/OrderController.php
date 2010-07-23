@@ -101,6 +101,11 @@ class OrderController extends FrontendController
 		$currency = Currency::getValidInstanceByID($this->request->get('currency', $this->application->getDefaultCurrencyCode()), Currency::LOAD_DATA);
 		$form = $this->buildCartForm($this->order, $options);
 
+		if ($this->isTosInCartPage())
+		{
+			$form->set('tos', $this->session->get('tos'));
+		}
+
 		if ($this->config->get('ENABLE_SHIPPING_ESTIMATE'))
 		{
 			$this->loadLanguageFile('User');
@@ -309,6 +314,12 @@ class OrderController extends FrontendController
 	 */
 	public function update()
 	{
+		// TOS
+		if ($this->isTosInCartPage())
+		{
+			$this->session->set('tos', $this->request->get('tos'));
+		}
+
 		// coupon code
 		if ($this->request->get('coupon'))
 		{
@@ -906,6 +917,11 @@ class OrderController extends FrontendController
 			$order->getSpecification()->setValidation($validator, true);
 		}
 
+		if ($this->isTosInCartPage())
+		{
+			$validator->addCheck('tos', new IsNotEmptyCheck($this->translate('_err_agree_to_tos')));
+		}
+
 		return $validator;
 	}
 
@@ -993,6 +1009,11 @@ class OrderController extends FrontendController
 		{
 			$validator->addCheck($fieldName, new IsNotEmptyCheck($app->translate('_err_option_' . $option['type'])));
 		}
+	}
+
+	protected function isTosInCartPage()
+	{
+		return $this->config->get('REQUIRE_TOS') && !$this->config->get('TOS_OPC_ONLY');
 	}
 }
 
