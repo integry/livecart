@@ -407,10 +407,14 @@ class Shipment extends ActiveRecordModel
 			$tax->amount->set($tax->amount->get() * $discountMultiplier);
 		}
 
+		$origShippingAmount = $this->shippingAmount->get();
 		foreach (array('amount', 'shippingAmount', 'taxAmount') as $amount)
 		{
 			$this->$amount->set($this->$amount->get() * $discountMultiplier);
 		}
+
+		$this->amount->set($this->amount->get() + ($this->shippingAmount->get() - $origShippingAmount));
+		$this->shippingAmount->set($origShippingAmount);
 	}
 
 	public function applyTaxesToShippingAmount($amount)
