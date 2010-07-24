@@ -200,7 +200,6 @@ Backend.OrderedItem = {
 		shipment.setTaxAmount(responseShipment.taxAmount);
 		shipment.setShippingAmount(responseShipment.shippingAmount);
 		shipment.setTotal(responseShipment.total);
-		console.log(responseShipment.total);
 	},
 
 	getCountSaveUrl: function(itemID, count)

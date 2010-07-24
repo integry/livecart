@@ -1312,6 +1312,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			return false;
 		}
 
+
 		// check product quantity
 		$maxQuant = $c->get('MAX_QUANT');
 		$minQuant = $c->get('MIN_QUANT');

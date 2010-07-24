@@ -390,7 +390,7 @@ class ShipmentController extends StoreManagementController
 		$shipment = Shipment::getInstanceByID('Shipment', $this->request->get('id'), true, array('CustomerOrder', 'User'));
 		$order = $shipment->order->get();
 
-		$order->loadItems();
+		$order->loadAll();
 
 		$shipment->shippingAmount->set($shipment->reduceTaxesFromShippingAmount($this->request->get('amount')));
 		$shipment->recalculateAmounts(true);

@@ -56,10 +56,12 @@ class DiscountConditionTest extends LiveCartTest
 		$this->order->save(true);
 
 		$this->product1 = Product::getNewInstance(Category::getRootNode());
+		$this->product1->isEnabled->set(true);
 		$this->product1->setPrice('USD', 10);
 		$this->product1->save();
 
 		$this->product2 = Product::getNewInstance(Category::getRootNode());
+		$this->product2->isEnabled->set(true);
 		$this->product2->setPrice('USD', 20);
 		$this->product2->save();
 
@@ -519,8 +521,10 @@ class DiscountConditionTest extends LiveCartTest
 
 	public function testDisableCheckout()
 	{
+		$this->product1->isEnabled->set(true);
 		$this->order->addProduct($this->product1, 1, true);
 		$this->order->save();
+
 		$this->assertTrue($this->order->isOrderable());
 
 		$condition = DiscountCondition::getNewInstance();

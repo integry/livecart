@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2009-10-09 08:45                                #
-# Model version:         Version 2009-10-09                              #
+# Created on:            2010-07-24 01:16                                #
+# Model version:         Version 2010-07-24                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -428,6 +428,7 @@ CREATE TABLE ProductFile (
     description MEDIUMTEXT COMMENT 'File description (translatable)',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other ProductFiles that are assigned to the same product',
     allowDownloadDays INTEGER COMMENT 'Allow customer to download the product only for a certain number of days after placing the order',
+    allowDownloadCount INTEGER,
     filePath TEXT COMMENT 'Local file path or URL',
     CONSTRAINT PK_ProductFile PRIMARY KEY (ID)
 )
@@ -669,6 +670,7 @@ CREATE TABLE Transaction (
     ccLastDigits CHAR(80) COMMENT 'Last 4 digits of credit card number',
     ccType VARCHAR(40),
     ccName VARCHAR(100),
+    ccCVV VARCHAR(40),
     comment TEXT,
     serializedData TEXT,
     CONSTRAINT PK_Transaction PRIMARY KEY (ID)
@@ -879,6 +881,7 @@ ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE StaticPage (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    parentID INTEGER UNSIGNED,
     handle VARCHAR(40) COMMENT 'URL slug. For example, for Terms Of Service page it could be "terms.of.service"',
     title MEDIUMTEXT COMMENT 'Page title (translatable)',
     text MEDIUMTEXT COMMENT 'Page text (translatable)',
@@ -1564,6 +1567,20 @@ CREATE TABLE TaxClass (
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
+# Add table "OrderedFile"                                                #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE OrderedFile (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    orderedItemID INTEGER UNSIGNED,
+    productFileID INTEGER,
+    timesDownloaded INTEGER,
+    lastDownloadTime DATETIME,
+    CONSTRAINT PK_OrderedFile PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
 # Foreign key constraints                                                #
 # ---------------------------------------------------------------------- #
 
@@ -1819,6 +1836,9 @@ ALTER TABLE ProductFileGroup ADD CONSTRAINT Product_ProductFileGroup
 ALTER TABLE ShippingService ADD CONSTRAINT DeliveryZone_ShippingService 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
+ALTER TABLE StaticPage ADD CONSTRAINT StaticPage_StaticPage 
+    FOREIGN KEY (parentID) REFERENCES StaticPage (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
 ALTER TABLE ShipmentTax ADD CONSTRAINT TaxRate_ShipmentTax 
     FOREIGN KEY (taxRateID) REFERENCES TaxRate (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -2031,3 +2051,9 @@ ALTER TABLE ProductVariationValue ADD CONSTRAINT ProductVariation_ProductVariati
 
 ALTER TABLE SessionData ADD CONSTRAINT User_SessionData 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE OrderedFile ADD CONSTRAINT OrderedItem_OrderedFile 
+    FOREIGN KEY (orderedItemID) REFERENCES OrderedItem (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE OrderedFile ADD CONSTRAINT ProductFile_OrderedFile 
+    FOREIGN KEY (productFileID) REFERENCES ProductFile (ID) ON DELETE CASCADE ON UPDATE CASCADE;
