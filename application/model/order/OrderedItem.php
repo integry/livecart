@@ -86,8 +86,6 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 
 	public function getSubTotal($includeTaxes = true, $applyDiscounts = true)
 	{
-		$currency = $this->getCurrency();
-
 		// bundle items do not affect order total - only the parent item has a set price
 		if ($this->parent->get())
 		{
@@ -170,7 +168,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 			$this->itemPrice = $price;
 		}
 	}
-	
+
 	/**
 	 *  Avoid CustomerOrder::finalize function overriding the item price
 	 *  Usually necessary for creating/updating orders via API, etc.
@@ -180,7 +178,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		$this->isCustomPrice = true;
 		$this->price->set($price);
 	}
-	
+
 	public function isCustomPrice()
 	{
 		return $this->isCustomPrice;

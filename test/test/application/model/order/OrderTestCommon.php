@@ -46,7 +46,7 @@ abstract class OrderTestCommon extends LiveCartTest
 
 		$this->initOrder();
 
-		$this->config->set('DELIVERY_TAX', '');
+		$this->config->setRuntime('DELIVERY_TAX', '');
 	}
 
 	public function getUsedSchemas()

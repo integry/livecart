@@ -1450,6 +1450,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		foreach ($this->getOrderedItems() as $item)
 		{
 			$item->price->set($item->getProduct()->getItemPrice($item, $currency));
+			$item->setItemPrice($item->price->get());
 			$item->save();
 		}
 

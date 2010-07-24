@@ -413,7 +413,7 @@ class OrderTest extends OrderTestCommon
 
 	public function testInventory()
 	{
-		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+		$this->config->setRuntime('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
 
 		$product = $this->products[0];
 		$product->stockCount->set(2);
@@ -441,7 +441,7 @@ class OrderTest extends OrderTestCommon
 
 	public function testInventoryForCancelledOrder()
 	{
-		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+		$this->config->setRuntime('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
 
 		$product = $this->products[0];
 		$product->stockCount->set(2);
@@ -462,7 +462,7 @@ class OrderTest extends OrderTestCommon
 
 	public function testInventoryForRestoredOrder()
 	{
-		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+		$this->config->setRuntime('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
 
 		$product = $this->products[0];
 		$product->stockCount->set(2);
@@ -493,7 +493,7 @@ class OrderTest extends OrderTestCommon
 
 	public function testInventoryForReturnedOrder()
 	{
-		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+		$this->config->setRuntime('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
 
 		$product = $this->products[0];
 		$product->stockCount->set(2);
@@ -521,7 +521,7 @@ class OrderTest extends OrderTestCommon
 
 	public function testInventoryForChangedOrder()
 	{
-		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+		$this->config->setRuntime('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
 
 		$product = $this->products[0];
 		$product->stockCount->set(2);
@@ -571,7 +571,7 @@ class OrderTest extends OrderTestCommon
 
 	public function testInventoryForChangedProduct()
 	{
-		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+		$this->config->setRuntime('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
 
 		$product = $this->products[0];
 		$product->stockCount->set(2);
@@ -601,8 +601,8 @@ class OrderTest extends OrderTestCommon
 
 	public function testInventoryForDownloadableProducts()
 	{
-		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
-		$this->config->set('INVENTORY_TRACKING_DOWNLOADABLE', false);
+		$this->config->setRuntime('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+		$this->config->setRuntime('INVENTORY_TRACKING_DOWNLOADABLE', false);
 
 		$product = $this->products[0];
 		$product->stockCount->set(2);
@@ -630,8 +630,8 @@ class OrderTest extends OrderTestCommon
 
 	public function testEnabledInventoryTrackingForDownloadableProducts()
 	{
-		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
-		$this->config->set('INVENTORY_TRACKING_DOWNLOADABLE', true);
+		$this->config->setRuntime('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+		$this->config->setRuntime('INVENTORY_TRACKING_DOWNLOADABLE', true);
 
 		$product = $this->products[0];
 		$product->stockCount->set(2);
@@ -662,7 +662,7 @@ class OrderTest extends OrderTestCommon
 
 	public function testUpdatingToStock()
 	{
-		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+		$this->config->setRuntime('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
 
 		$product = $this->products[0];
 		$product->stockCount->set(2);
@@ -724,7 +724,7 @@ class OrderTest extends OrderTestCommon
 			$product->save();
 		}
 
-		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+		$this->config->setRuntime('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
 
 		$this->assertTrue($container->isAvailable());
 
@@ -781,7 +781,7 @@ class OrderTest extends OrderTestCommon
 			$this->assertEqual($product->stockCount->get(), 1);
 		}
 
-		$this->config->set('INVENTORY_TRACKING', 'DISABLE');
+		$this->config->setRuntime('INVENTORY_TRACKING', 'DISABLE');
 	}
 
 	public function testDownloadableBundle()
@@ -1677,10 +1677,14 @@ class OrderTest extends OrderTestCommon
 		$order->loadAll();
 		$order->currency->get()->load();
 
+		$this->assertTrue(is_object($this->user->defaultShippingAddress->get()));
+
 		$this->user->reload();
 		$this->user->loadAddresses();
 
 		$this->assertFalse((bool)$order->isFinalized->get());
+
+		$this->assertTrue(is_object($this->user->defaultShippingAddress->get()));
 
 		$this->assertEquals($this->user->getID(), $order->user->get()->getID());
 		$this->assertEquals($order->billingAddress->get()->getID(), $this->user->defaultBillingAddress->get()->userAddress->get()->getID());
@@ -1754,12 +1758,12 @@ class OrderTest extends OrderTestCommon
 	public function testInvoiceNumbers()
 	{
 		$config = self::getApplication()->getConfig();
-		$config->set('INVOICE_NUMBER_GENERATOR', 'SequentialInvoiceNumber');
-		$config->set('SequentialInvoiceNumber_START_AT', '0');
-		$config->set('SequentialInvoiceNumber_STEP', '1');
-		$config->set('SequentialInvoiceNumber_MIN_LENGTH', '5');
-		$config->set('SequentialInvoiceNumber_PREFIX', '');
-		$config->set('SequentialInvoiceNumber_SUFFIX', '');
+		$config->setRuntime('INVOICE_NUMBER_GENERATOR', 'SequentialInvoiceNumber');
+		$config->setRuntime('SequentialInvoiceNumber_START_AT', '0');
+		$config->setRuntime('SequentialInvoiceNumber_STEP', '1');
+		$config->setRuntime('SequentialInvoiceNumber_MIN_LENGTH', '5');
+		$config->setRuntime('SequentialInvoiceNumber_PREFIX', '');
+		$config->setRuntime('SequentialInvoiceNumber_SUFFIX', '');
 
 		$cart = clone $this->order;
 		$second = clone $this->order;
@@ -1786,12 +1790,12 @@ class OrderTest extends OrderTestCommon
 	public function testInvoiceNumbersWithPrefixes()
 	{
 		$config = self::getApplication()->getConfig();
-		$config->set('INVOICE_NUMBER_GENERATOR', 'SequentialInvoiceNumber');
-		$config->set('SequentialInvoiceNumber_START_AT', '40000');
-		$config->set('SequentialInvoiceNumber_STEP', '5');
-		$config->set('SequentialInvoiceNumber_MIN_LENGTH', '7');
-		$config->set('SequentialInvoiceNumber_PREFIX', 'INT');
-		$config->set('SequentialInvoiceNumber_SUFFIX', '/2009');
+		$config->setRuntime('INVOICE_NUMBER_GENERATOR', 'SequentialInvoiceNumber');
+		$config->setRuntime('SequentialInvoiceNumber_START_AT', '50000');
+		$config->setRuntime('SequentialInvoiceNumber_STEP', '5');
+		$config->setRuntime('SequentialInvoiceNumber_MIN_LENGTH', '7');
+		$config->setRuntime('SequentialInvoiceNumber_PREFIX', 'TEST');
+		$config->setRuntime('SequentialInvoiceNumber_SUFFIX', '/2010');
 
 		$cart = clone $this->order;
 		$second = clone $this->order;
@@ -1801,7 +1805,7 @@ class OrderTest extends OrderTestCommon
 		$this->order->finalize();
 
 		$firstID = $this->order->invoiceNumber->get();
-		$this->assertEquals($firstID, 'INT0040005/2009');
+		$this->assertEquals($firstID, 'TEST0050005/2010');
 
 		// create an unfinished order between two finished orders
 		$cart->addProduct($this->products[0], 1);
@@ -1813,7 +1817,7 @@ class OrderTest extends OrderTestCommon
 		$second->finalize();
 		$this->assertEquals($this->order->getID() + 2, $second->getID());
 		$this->assertNotEquals($second->invoiceNumber->get(), $firstID);
-		$this->assertEquals($second->invoiceNumber->get(), 'INT0040010/2009');
+		$this->assertEquals($second->invoiceNumber->get(), 'TEST0050010/2010');
 	}
 
 	public function testDeletedProductsInLiveOrders()
@@ -1859,7 +1863,7 @@ class OrderTest extends OrderTestCommon
 		$this->assertEqual($deleted['Product']['sku'], $sku);
 
 		// change quantities
-		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+		$this->config->setRuntime('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
 		$deletedItem->count->set(2);
 		$order->save();
 
