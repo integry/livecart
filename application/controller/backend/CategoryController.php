@@ -160,9 +160,9 @@ class CategoryController extends StoreManagementController
 				$categoryIDs = array_merge(
 					Category::getRecordSet($category->getBranchFilter())->getRecordIDs(),
 					array($categoryID)
-				);			
+				);
 				// all products under category that has additional categories
-				$products = ActiveRecord::getRecordSet('Product', 
+				$products = ActiveRecord::getRecordSet('Product',
 					select(new AndChainCondition(array(
 						IN(f('Product.categoryID'), $categoryIDs),
 						new RegexpCond(f('Product.categoryIntervalCache'), '[0-9]+\-[0-9]+\,[0-9]+\-[0-9]+')) // categoryIntervalCache can end with ,
@@ -232,6 +232,8 @@ class CategoryController extends StoreManagementController
 			{
 				$targetNode->moveTo($parentNode);
 			}
+
+			Category::reindex();
 
 			return new JSONResponse(false, 'success', $this->translate('_categories_tree_was_reordered'));
 		}
