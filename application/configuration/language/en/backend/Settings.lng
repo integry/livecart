@@ -353,6 +353,11 @@ _sitemaps=XML Sitemaps
 ENABLE_SITEMAPS=Enable sitemaps
 SITEMAPS_GZ=Apply gzip compression to sitemap files (saves bandwidth)
 _sitemap_ping=Submit sitemap to search engines
+_view_sitemap=View sitemap start page
+_data_feeds=Data Feeds
+_export_feeds=XML Product Export Feeds
+FEED_KEY=Feed access security key (to avoid unauthorized feed access)
+_open_feed=open
 
 _email=Email
 

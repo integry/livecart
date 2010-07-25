@@ -258,7 +258,7 @@ Backend.Settings.prototype =
 		{
 			$A(container.getElementsByTagName('input')).each(function(cb)
 			{
-				var subKey = cb.name.match(/\[([a-zA-Z0-9_]*)\]/)[1];
+				var subKey = cb.name.match(/\[([-a-zA-Z0-9_]*)\]/)[1];
 				cb.onchange = function()
 				{
 					this.updateSetting(id, subKey, cb.checked ? 1 : 0);
@@ -477,6 +477,26 @@ Backend.Settings.Editor.prototype =
 			function()
 			{
 				new Backend.ThemePreview($('setting_THEME'), $('THEME'));
+			},
+
+		'ENABLED_FEEDS':
+			function()
+			{
+				var cont = $('setting_ENABLED_FEEDS').down('.multi');
+				var tpl = $('handler_ENABLED_FEEDS').down('a');
+				var accessKey = $('FEED_KEY').value;
+				$H(cont.getElementsByTagName('p')).each(function(feed)
+				{
+					var link = tpl.cloneNode(true);
+
+					if (feed[1].parentNode)
+					{
+						var module = feed[1].down('input').name.match(/ENABLED_FEEDS\[([-_a-zA-Z0-9]+)\]/)[1];
+						link.href = link.href.replace('module', module);
+						link.href = link.href.replace('accessKey', accessKey);
+						feed[1].appendChild(link);
+					}
+				});
 			},
 
 		'ENABLE_SITEMAPS':

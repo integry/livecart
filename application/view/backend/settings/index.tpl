@@ -43,9 +43,14 @@
 	</div>
 
 	<div id="handler_ENABLE_SITEMAPS">
-		<a href="{link controller=sitemap action=ping}" id="siteMapPing" class="menu">{t _sitemap_ping}</a>
+		<a href="{link controller=sitemap action=ping}" id="siteMapPing" class="menu">{t _sitemap_ping}</a> |
+		<a href="{link controller=sitemap}" class="menu" target="_blank">{t _view_sitemap}</a>
 		<span class="progressIndicator" id="siteMapFeedback" style="display: none;"></span>
 		<div id="siteMapSubmissionResult"></div>
+	</div>
+
+	<div id="handler_ENABLED_FEEDS">
+		<a href="{link controller=xml action=export module=module query="key=accessKey"}" target="_blank" style="margin-left: 0.5em;"><span style="font-size: smaller;">[{t _open_feed}]</a></a>
 	</div>
 
 	<div id="handler_SOFT_NAME">

@@ -719,7 +719,7 @@ class LiveCart extends Application implements Serializable
 		return $plugins;
 	}
 
-	public function getPluginClasses($mountPath)
+	public function getPluginClasses($mountPath, $extension = 'php')
 	{
 		if (substr($mountPath, -1) != '.')
 		{
@@ -729,9 +729,9 @@ class LiveCart extends Application implements Serializable
 		$classes = array();
 		foreach ($this->configContainer->getDirectoriesByMountPath($mountPath) as $dir)
 		{
-			foreach (glob($dir . '*.php') as $file)
+			foreach (glob($dir . '*.' . $extension) as $file)
 			{
-				$file = basename($file, '.php');
+				$file = basename($file, '.' . $extension);
 				$classes[] = $file;
 			}
 		}
@@ -739,7 +739,7 @@ class LiveCart extends Application implements Serializable
 		return $classes;
 	}
 
-	public function loadPluginClass($mountPath, $class)
+	public function getPluginClassPath($mountPath, $class, $extension = 'php')
 	{
 		if (substr($mountPath, -1) != '.')
 		{
@@ -748,12 +748,20 @@ class LiveCart extends Application implements Serializable
 
 		foreach ($this->configContainer->getDirectoriesByMountPath($mountPath) as $dir)
 		{
-			$path = $dir . $class . '.php';
+			$path = $dir . $class . '.' . $extension;
 			if (file_exists($path))
 			{
-				include_once($path);
-				return;
+				return $path;
 			}
+		}
+	}
+
+	public function loadPluginClass($mountPath, $class)
+	{
+		if ($path = $this->getPluginClassPath($mountPath, $class))
+		{
+			include_once($path);
+			return;
 		}
 	}
 

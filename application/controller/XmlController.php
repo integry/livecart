@@ -34,6 +34,14 @@ class XmlController extends FrontendController
 
 	public function export()
 	{
+		$module = $this->request->get('module');
+		$enabledFeeds = $this->config->get('ENABLED_FEEDS');
+
+		if (!isset($enabledFeeds[$module]) || ($this->request->get('key') != $this->config->get('FEED_KEY')))
+		{
+			return;
+		}
+
 		$this->setLayout('empty');
 		set_time_limit(0);
 
@@ -46,7 +54,7 @@ class XmlController extends FrontendController
 
 		$response = new XMLResponse();
 		$response->set('feed', $feed);
-		$response->set('tpl', 'xml/feed/' . $this->request->get('module') . '.tpl');
+		$response->set('tpl', 'xml/feed/' . $module . '.tpl');
 
 		return $response;
 	}
