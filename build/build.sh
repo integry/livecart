@@ -154,7 +154,7 @@ DIR=`pwd`
 git stash save build
 
 build /home/mercurial/repo/build /var/db/livecart stable makeProfessional
-build /home/mercurial/repo/build-community /var/db/livecart/community community makeCommunity
+#build /home/mercurial/repo/build-community /var/db/livecart/community community makeCommunity
 
 cd $DIR
 

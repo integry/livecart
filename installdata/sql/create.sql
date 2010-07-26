@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2010-07-24 01:16                                #
-# Model version:         Version 2010-07-24                              #
+# Created on:            2010-07-26 03:02                                #
+# Model version:         Version 2010-07-26                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -1581,6 +1581,19 @@ CREATE TABLE OrderedFile (
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 # ---------------------------------------------------------------------- #
+# Add table "CategoryRelationship"                                       #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE CategoryRelationship (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    categoryID INTEGER UNSIGNED,
+    relatedCategoryID INTEGER UNSIGNED,
+    position INTEGER,
+    CONSTRAINT PK_CategoryRelationship PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
 # Foreign key constraints                                                #
 # ---------------------------------------------------------------------- #
 
@@ -2057,3 +2070,9 @@ ALTER TABLE OrderedFile ADD CONSTRAINT OrderedItem_OrderedFile
 
 ALTER TABLE OrderedFile ADD CONSTRAINT ProductFile_OrderedFile 
     FOREIGN KEY (productFileID) REFERENCES ProductFile (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE CategoryRelationship ADD CONSTRAINT Category_CategoryRelationship 
+    FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE CategoryRelationship ADD CONSTRAINT Category_CategoryRelationship2 
+    FOREIGN KEY (relatedCategoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
