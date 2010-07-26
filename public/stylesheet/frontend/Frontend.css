@@ -1793,6 +1793,11 @@ table.addressSelector
     clear: both;
 }
 
+#cartItems h2
+{
+	clear: left;
+}
+
 /* Payments */
 #ccForm
 {
