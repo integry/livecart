@@ -9,8 +9,6 @@
 
 		{if $cart.cartItems && !$isOnePageCheckout}
 			{include file="checkout/checkoutProgress.tpl" progress="progressCart" order=cart}
-		{else}
-			<div class="clear"></div>
 		{/if}
 	</div>
 
