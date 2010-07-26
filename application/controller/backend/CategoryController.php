@@ -236,7 +236,7 @@ class CategoryController extends StoreManagementController
 			}
 
 			Category::reindex();
-			Category::recalculateProductsCount
+			Category::recalculateProductsCount();
 
 			return new JSONResponse(false, 'success', $this->translate('_categories_tree_was_reordered'));
 		}
