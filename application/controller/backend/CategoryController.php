@@ -202,6 +202,8 @@ class CategoryController extends StoreManagementController
 			// and delete category.
 			$category->delete();
 
+			Category::recalculateProductsCount();
+
 			return new JSONResponse(false, 'success', $this->translate('_category_was_successfully_removed'));
 		}
 		catch (Exception $e)
@@ -234,6 +236,7 @@ class CategoryController extends StoreManagementController
 			}
 
 			Category::reindex();
+			Category::recalculateProductsCount
 
 			return new JSONResponse(false, 'success', $this->translate('_categories_tree_was_reordered'));
 		}

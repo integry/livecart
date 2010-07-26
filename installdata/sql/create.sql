@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2010-07-26 03:45                                #
-# Model version:         Version 2010-07-26 2                            #
+# Created on:            2010-07-26 04:02                                #
+# Model version:         Version 2010-07-26 4                            #
 # ---------------------------------------------------------------------- #
 
 
@@ -1356,6 +1356,7 @@ CREATE TABLE DiscountCondition (
     isAnyRecord BOOL NOT NULL,
     isAllSubconditions BOOL NOT NULL,
     isActionCondition BOOL NOT NULL,
+    isReverse BOOL,
     isFinal BOOL NOT NULL,
     recordCount INTEGER NOT NULL,
     validFrom TIMESTAMP DEFAULT '0000-00-00',
