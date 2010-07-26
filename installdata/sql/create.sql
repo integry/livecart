@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2010-07-26 03:02                                #
-# Model version:         Version 2010-07-26                              #
+# Created on:            2010-07-26 03:45                                #
+# Model version:         Version 2010-07-26 2                            #
 # ---------------------------------------------------------------------- #
 
 
@@ -1573,7 +1573,7 @@ ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 CREATE TABLE OrderedFile (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     orderedItemID INTEGER UNSIGNED,
-    productFileID INTEGER,
+    productFileID INTEGER UNSIGNED,
     timesDownloaded INTEGER,
     lastDownloadTime DATETIME,
     CONSTRAINT PK_OrderedFile PRIMARY KEY (ID)
