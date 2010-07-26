@@ -840,6 +840,10 @@ Frontend.OnePageCheckout.prototype =
 		{
 			form.elements.namedItem('sameAsShipping').value = (billingForm.elements.namedItem('sameAsShipping').checked ? 'on' : '');
 		}
+		else
+		{
+			form.elements.namedItem('sameAsShipping').value = 'on';
+		}
 
 		new LiveCart.AjaxRequest(form, el, this.handleFormRequest(form));
 	},
