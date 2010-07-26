@@ -413,12 +413,15 @@ class OnePageCheckoutController extends CheckoutController
 			$this->order->getSpecification()->loadRequestData($this->request, 'order_');
 			$this->order->getSpecification()->save();
 
-			if (!$this->order->eavObject->get()->getID())
+			if ($this->order->getSpecification()->hasValues())
 			{
-				$this->order->eavObject->get()->save();
-			}
+				if (!$this->order->eavObject->get()->getID())
+				{
+					$this->order->eavObject->get()->save();
+				}
 
-			$this->order->eavObject->setAsModified(true);
+				$this->order->eavObject->setAsModified(true);
+			}
 
 			$this->order->save();
 

@@ -63,7 +63,7 @@ div#footer
 
 .categories ul,
 .subSubCats li a,
-.rootCategories li li,
+.rootCategories .li .li,
 #productSummaryContainer,
 ul.subSubCats
 {
@@ -198,7 +198,7 @@ ul.productList .orderingControls,
 #checkoutProgress span.progressOrder,
 .informationMenu,
 #headerSearchBar,
-.rootCategories li
+.rootCategories .li
 {
 	float: left;
 }
@@ -225,7 +225,7 @@ div.box .title,
 #breadCrumb,
 .currentName,
 .filterGroup h4,
-.rootCategories li a,
+.rootCategories .li a,
 .rootCategories li.current,
 #smallCart, #smallCart a
 {
@@ -997,7 +997,7 @@ li.moreSubCats, li.moreSubCats a
 	display: none;
 }
 
-.rootCategories li
+.rootCategories .li
 {
 	margin-right: 2px;
 	background-image: url(../image/tab_btn_09.gif);
@@ -1007,16 +1007,17 @@ li.moreSubCats, li.moreSubCats a
 	height: 27px;
 }
 
-.rootCategories li span.name
+.rootCategories .li span.name
 {
 	display: block;
 	background-image: url(../image/tab_btn_08.gif);
 	background-position: left bottom;
 	padding-left: 8px;
 	white-space: nowrap;
+	height: 27px;
 }
 
-.rootCategories li a
+.rootCategories .li a
 {
 	display: block;
 	background-image: url(../image/tab_btn_11.gif);
@@ -1024,16 +1025,17 @@ li.moreSubCats, li.moreSubCats a
 	font-size: 11px;
 	padding: 0;
 	padding-right: 8px;
+	height: 27px;
 }
 
-.rootCategories li a,
-.rootCategories li:hover li a,
-.rootCategories li.hover li a
+.rootCategories .li a,
+.rootCategories .li:hover .li a,
+.rootCategories .li.hover .li a
 {
 	color: #0C3D65;
 }
 
-.rootCategories li.current
+.rootCategories .li.current
 {
 	display: block;
 	background-image: url(../image/tab_btn_04.gif);
@@ -1044,14 +1046,14 @@ li.moreSubCats, li.moreSubCats a
 	font-size: 11px;
 }
 
-.rootCategories li.current span.name
+.rootCategories .li.current span.name
 {
 	background-image: url(../image/tab_btn_03.gif);
 	background-position: left bottom;
 	width: auto;
 }
 
-.rootCategories li.current a
+.rootCategories .li.current a
 {
 	background-image: url(../image/tab_btn_06.gif);
 	background-position: right bottom;
@@ -1061,37 +1063,43 @@ li.moreSubCats, li.moreSubCats a
 	padding-right: 8px;
 }
 
-.rootCategories li .wrapper
+.rootCategories .li .wrapper
 {
 	border: 1px solid #6e99ae;
 	border-top: 0;
 	background: #cddddf;
+	padding: 5px;
 }
 
-.rootCategories li li
+.rootCategories .li .li
 {
 	padding-left: 0;
 }
 
-.rootCategories li li a:hover,
-.rootCategories li:hover li a:hover
+.rootCategories .li .li a
+{
+	display: block;
+}
+
+.rootCategories .li .li a:hover,
+.rootCategories .li:hover .li a:hover
 {
 	background-color: #0d3f64;
 	color: white;
 }
 
-.rootCategories li.hover li,
-.rootCategories li.hover li a
+.rootCategories .li.hover .li,
+.rootCategories .li.hover .li a
 {
 	width: 220px;
 }
 
-.rootCategories li ul li a,
-.rootCategories li ul li span,
-.rootCategories li:hover ul li a,
-.rootCategories li:hover ul li span,
-.rootCategories li.hover ul li a,
-.rootCategories li.hover ul li span
+.rootCategories .li .ul .li a,
+.rootCategories .li .ul .li span,
+.rootCategories .li:hover .ul .li a,
+.rootCategories .li:hover .ul .li span,
+.rootCategories .li.hover .ul .li a,
+.rootCategories .li.hover .ul .li span
 {
 	background: none;
 }
