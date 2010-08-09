@@ -465,6 +465,8 @@ CACHE_METHOD=Caching method
 _proxy=Use proxy server for outgoing connections
 PROXY_HOST=Proxy server host name
 PROXY_PORT=Proxy server port
+_php_session=PHP Session
+USE_DEFAULT_SESSION_HANDLER=Use default session handler
 
 # Private labels
 _private_label=Private Label

@@ -136,7 +136,10 @@ class LiveCart extends Application implements Serializable
 			if (!session_id())
 			{
 				$session = new DatabaseSessionHandler();
-				$session->setHandlerInstance();
+				if ($this->getConfig()->get('USE_DEFAULT_SESSION_HANDLER') == false)
+				{
+					$session->setHandlerInstance();
+				}
 				$this->sessionHandler = $session;
 			}
 		}
