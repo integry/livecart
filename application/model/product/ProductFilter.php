@@ -72,7 +72,8 @@ class ProductFilter
 			}
 			$selectFilter->setCondition(new AndChainCondition($list)); // all merged with and
 		}
-	  	return $selectFilter;
+		ActiveRecordModel::getApplication()->processInstancePlugins('finalProductFilter', $selectFilter);
+		return $selectFilter;
 	}
 
 	public function orderByPrice(Currency $currency, $direction = 'ASC')
