@@ -129,6 +129,7 @@ class ProductCount
 		$query->addField('name', 'Manufacturer');
 		$query->setFilter($selectFilter);
 
+		ActiveRecordModel::getApplication()->processInstancePlugins('manufacturerCountQuery', $query);
 		$data = ActiveRecordModel::getDataBySQL($query->getPreparedStatement(ActiveRecord::getDBConnection()));
 
 		return $data;
