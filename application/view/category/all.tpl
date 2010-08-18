@@ -8,9 +8,11 @@
 
 	<h1>{t _all_categories}</h1>
 
-	{foreach from=$categories item=category key=index}
-		{if $lastLetter != $category.name.0|@capitalize}
-			{if !$index || (($categories|@count/2) <= $index && $columns < 2)}
+	{foreach from=$sorted item=categories key=letter}
+		<h2>{$letter|@capitalize}</h2>
+
+		{foreach from=$categories item=category}
+			{if !$index || (($totalCount/2) <= $index && $columns < 2)}
 				{if $columns}
 					</div>
 				{/if}
@@ -18,12 +20,11 @@
 				{assign var=columns value=$columns+1}
 			{/if}
 
-			<h2>{$category.name.0}</h2>
-		{/if}
-		<ul>
-			<li><a href="{categoryUrl data=$category}">{$category.name}</a> <span class="count">(&rlm;{$category.count})</span></li>
-		</ul>
-		{assign var=lastLetter value=$category.name.0|@capitalize}
+			<ul>
+				<li><a href="{categoryUrl data=$category}">{$category.name}</a> <span class="count">(&rlm;{$category.count})</span></li>
+			</ul>
+			{assign var=index value=$index+1}
+		{/foreach}
 	{/foreach}
 
 </div>
