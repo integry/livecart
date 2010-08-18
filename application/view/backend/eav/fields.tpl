@@ -11,7 +11,7 @@
 			{sect}
 				{header}
 					{if $groupID}
-						<fieldset>
+						<fieldset class="eavGroup">
 							<legend>{$fieldList.0.$groupClass.name_lang}</legend>
 					{/if}
 				{/header}

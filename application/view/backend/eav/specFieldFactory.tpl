@@ -38,7 +38,7 @@
 		{if !$disableNewOptionValues}
 			{php}$field = $this->get_template_vars('field'); $field['values']['other'] = $this->getApplication()->translate('_enter_other'); $this->assign('field', $field);{/php}
 		{/if}
-		{selectfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" options=$field.values class="select"}
+		{$field.valuePrefix_lang}{selectfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" options=$field.values class="select"}{$field.valueSuffix_lang}
 		{if !$disableNewOptionValues}
 			{textfield name="`$prefix`other[`$field.ID`]" id="product_`$cat`_`$item.ID`_specItem_other_`$field.ID`" style="display: none" class="text {$textFieldClass}"}
 		{/if}
