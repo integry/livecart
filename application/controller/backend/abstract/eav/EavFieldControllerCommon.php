@@ -333,7 +333,7 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 				{
 					continue;
 				}
-				else if(empty($v[$languageCodes[0]]))
+				else if(!strlen($v[$languageCodes[0]]))
 				{
 					$errors["values[$key][{$languageCodes[0]}]"] = '_error_value_empty';
 				}
