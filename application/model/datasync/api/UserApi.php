@@ -4,13 +4,13 @@ ClassLoader::import('application.model.datasync.ModelApi');
 ClassLoader::import('application.model.datasync.api.reader.XmlUserApiReader');
 ClassLoader::import('application/model.datasync.CsvImportProfile');
 ClassLoader::import('application.helper.LiveCartSimpleXMLElement');
-	
+
 /**
  * Web service access layer for User model
  *
  * @package application.model.datasync
  * @author Integry Systems <http://integry.com>
- * 
+ *
  */
 
 class UserApi extends ModelApi
@@ -33,8 +33,8 @@ class UserApi extends ModelApi
 		$this->addSupportedApiActionName('import');
 	}
 
-	// ------ 
-	
+	// ------
+
 	public function import()
 	{
 		$updater = new ApiUserImport($this->application);
@@ -45,7 +45,7 @@ class UserApi extends ModelApi
 
 		return $this->statusResponse($this->importedIDs, 'imported');
 	}
-	
+
 
 	public function create()
 	{
@@ -58,17 +58,17 @@ class UserApi extends ModelApi
 
 		return $this->statusResponse($this->importedIDs, 'created');
 	}
-	
+
 	public function update()
 	{
 		//
 		// DataImport will find user by id, if not found by email, if not found then create new
 		// if requesting to change user email (provaiding ID and new email),
-		// 
+		//
 		// threrefore check if user exists here.
 		//
 		$request = $this->application->getRequest();
-		$id = $this->getRequestID();
+		$id = $this->getRequestID(true);
 		if($id != '' && $request->get('email') != '')
 		{
 			$users = ActiveRecordModel::getRecordSetArray('User',
@@ -124,9 +124,9 @@ class UserApi extends ModelApi
 					$responseCustomer->addChild($k, $v);
 				}
 			}
-					
+
 			// todo: join? how?? m?!
-			$u = User::getInstanceByID($user['ID']);	
+			$u = User::getInstanceByID($user['ID']);
 			$u->loadAddresses();
 			// default billing and shipping addreses
 			foreach(array('defaultShippingAddress', 'defaultBillingAddress') as $addressType)
@@ -184,7 +184,7 @@ class UserApi extends ModelApi
 		}
 		return new SimpleXMLResponse($response);
 	}
-	
+
 	private function mergeUserEavFields($customerNode, $u)
 	{
 		$eavFieldsNode = $customerNode->addChild('EavFields');
@@ -247,7 +247,7 @@ class ApiUserImport extends UserImport
 {
 	const CREATE = 1;
 	const UPDATE = 2;
-	
+
 	private $allowOnly = null;
 	public function allowOnlyUpdate()
 	{
@@ -272,11 +272,11 @@ class ApiUserImport extends UserImport
 		$instance = parent::getInstance($record, $profile);
 
 		$e = $instance->isExistingRecord();
-		if($this->allowOnly == self::CREATE && $e == true) 
+		if($this->allowOnly == self::CREATE && $e == true)
 		{
 			throw new Exception('Record exists');
 		}
-		if($this->allowOnly == self::UPDATE && $e == false) 
+		if($this->allowOnly == self::UPDATE && $e == false)
 		{
 			throw new Exception('Record not found');
 		}

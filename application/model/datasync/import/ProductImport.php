@@ -437,7 +437,7 @@ class ProductImport extends DataImport
 		{
 			try
 			{
-				$cat = Category::getInstanceById($fields['Category']['ID'], Category::LOAD_DATA);
+				$cat = Category::getInstanceById($record[$fields['Category']['ID']], Category::LOAD_DATA);
 			}
 			catch (ARNotFoundException $e)
 			{

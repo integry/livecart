@@ -332,7 +332,7 @@ abstract class DataImport
 		{
 			$impReq = new Request();
 			$fieldClass = ucfirst($attrIdentifier);
-			$valueClass = $fieldClass . 'Value';
+			$valueClass = 'eavField' == $attrIdentifier ? 'EavValue' : $fieldClass . 'Value';
 
 			foreach ($fields[$attrIdentifier] as $specFieldID => $csvIndex)
 			{

@@ -8,14 +8,14 @@ ClassLoader::import('application.model.datasync.api.reader.ApiReader');
  *
  * @package application.model.datasync
  * @author Integry Systems <http://integry.com>
- * 
+ *
  */
 
 abstract class ModelApi
 {
 	public $className;
 	public $parserClassName;
-	public $parser;	
+	public $parser;
 	public $importedIDs = array(); // used in models that are using csv 'importers'
 	protected $supportedApiActionNames = array();
 
@@ -42,7 +42,7 @@ abstract class ModelApi
 		foreach($parserClassNames as $parserClassName)
 		{
 			ClassLoader::import('application.model.datasync.api.reader.'.$parserClassName);
-			
+
 			if(call_user_func_array(array($parserClassName, "canParse"), array($request, $parserClassName)))
 			{
 				return true;
@@ -62,7 +62,7 @@ abstract class ModelApi
 		$this->addSupportedApiActionName('create', 'filter', 'update', 'delete', 'get');
 		$this->ignoreFieldNames = $ignoreFieldNames;
 	}
-	
+
 	public function getImportHandler()
 	{
 		$class = 'Api' . $this->getClassName() . 'Import';
@@ -70,13 +70,13 @@ abstract class ModelApi
 		{
 			$this->application->loadPluginClass('application.model.datasync.api.import', $class);
 		}
-		
+
 		if (class_exists($class, false))
 		{
 			return new $class($this->application);
 		}
 	}
-	
+
 	public function loadRequest($loadData = true)
 	{
 		$request = $this->getApplication()->getRequest();
@@ -103,30 +103,30 @@ abstract class ModelApi
 			$this->getParser()->loadDataInRequest($this->getApplication()->getRequest());
 		}
 	}
-	
+
 	public function isAuthorized()
 	{
 		$auth = $this->getParser()->getAuthCredentials($this->getApplication()->getRequest());
 		$allowedAuthMethods = $this->getApplication()->getConfig()->get('API_AUTH_METHODS');
 		$method = key((array)$auth);
-		
+
 		if (!$method)
 		{
 			$method = 'test';
 		}
-		
+
 		$authClass = 'ApiAuth' . ucfirst($method);
 		if (!isset($allowedAuthMethods[$authClass]))
 		{
 			throw new Exception('Unknown authorization method "' . $method . '"');
 		}
-		
+
 		$this->getApplication()->loadPluginClass('application.model.datasync.api.auth', $authClass);
 		$inst = new $authClass($this->getApplication(), $auth);
-		
+
 		return $inst->isAuthorized();
 	}
-	
+
 	public static function getAuthMethods(LiveCart $application)
 	{
 		return $application->getPluginClasses('application.model.datasync.api.auth');
@@ -136,17 +136,17 @@ abstract class ModelApi
 	{
 		$this->application = $application;
 	}
-	
+
 	public function getApplication()
 	{
 		return $this->application;
 	}
-	
+
 	public function setClassName($className)
 	{
 		$this->className = $className;
 	}
-	
+
 	public function getClassName()
 	{
 		return $this->className;
@@ -171,32 +171,32 @@ abstract class ModelApi
 	{
 		throw new Exception('Action not implement');
 	}
-	
+
 	public function delete()
 	{
 		throw new Exception('Action not implement');
 	}
-	
+
 	public function get()
 	{
 		throw new Exception('Action not implement');
 	}
-	
+
 	public function filter() // because list() is keyword.
 	{
 		throw new Exception('Action not implement');
 	}
-	
+
 	protected function setParserClassName($className)
 	{
 		$this->parserClassName = $className;
 	}
-	
+
 	public function getParserClassName()
 	{
 		return $this->parserClassName;
 	}
-	
+
 	protected function setParser($parser)
 	{
 		$this->parser = $parser;
@@ -206,12 +206,12 @@ abstract class ModelApi
 	{
 		return $this->parser;
 	}
-	
+
 	public function getApiActionName()
 	{
 		return $this->getParser()->getApiActionName();
 	}
-	
+
 	protected function statusResponse($ids, $status)
 	{
 		$response = new SimpleXMLElement('<response datetime="'.date('c').'"></response>');
@@ -226,7 +226,7 @@ abstract class ModelApi
 		return new SimpleXMLResponse($response);
 	}
 
-	protected function getRequestID()
+	protected function getRequestID($allowNonNumeric = false)
 	{
 		$request = $this->getApplication()->getRequest();
 		$id = $request->get('ID');
@@ -234,14 +234,13 @@ abstract class ModelApi
 		{
 			$id = $request->get('id');
 		}
-		if(false == is_numeric($id))
+		if(!$allowNonNumeric && !is_numeric($id))
 		{
 			throw new Exception('Bad ID field value.');
 		}
 		return $id;
 	}
-	
-	
+
 	protected function fillSimpleXmlResponseItem($simpleXmlElement, $item)
 	{
 		$parser = $this->getParser();
@@ -254,7 +253,7 @@ abstract class ModelApi
 			}
 		}
 	}
-	
+
 	public function importCallback($record)
 	{
 		if(is_object($record) && method_exists($record, 'getID'))
@@ -262,7 +261,7 @@ abstract class ModelApi
 			$this->importedIDs[] = $record->getID();
 		}
 	}
-	
+
 	protected function getDataImportIterator($updater, $profile)
 	{
 		// parser can act as DataImport::importFile() iterator
@@ -333,7 +332,7 @@ abstract class ModelApi
 		if(method_exists($instance, 'destruct'))
 		{
 			$instance->destruct(true);
-		}	
+		}
 		ActiveRecord::clearPool();
 	}
 }
