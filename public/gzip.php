@@ -27,7 +27,7 @@ if (!file_exists($file))
 	exit;
 }
 
-if (!empty($_SERVER['HTTP_ACCEPT_ENCODING']) && (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false) && file_exists($file . '.gz'))
+if (!empty($_SERVER['HTTP_ACCEPT_ENCODING']) && (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false) && file_exists($file . '.gz') && !ini_get('zlib.output_compression'))
 {
 	$file = $file . '.gz';
 	header('Content-Encoding: gzip');
