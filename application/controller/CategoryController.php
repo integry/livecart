@@ -333,7 +333,20 @@ class CategoryController extends FrontendController
 		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('Category', 'ID'), $root->getID()));
 		$f->setOrder(MultiLingualObject::getLangOrderHandle(new ARFieldHandle('Category', 'name')));
 
-		return new ActionResponse('categories', ActiveRecordModel::getRecordSetArray('Category', $f, array('CategoryImage')));
+		$allCategories = ActiveRecordModel::getRecordSetArray('Category', $f, array('CategoryImage'));
+
+		$func = function_exists('mb_substr') ? 'mb_substr' : 'substr';
+		$sorted = array();
+		foreach ($allCategories as $category)
+		{
+			$letter = $func($category['name_lang'], 0, 1, 'UTF-8');
+			$sorted[$letter][] = $category;
+		}
+
+		$response = new ActionResponse('sorted', $sorted);
+		$response->set('totalCount', count($allCategories));
+		$response->set('categories', $allCategories);
+		return $response;
 	}
 
 	/**
@@ -593,6 +606,16 @@ class CategoryController extends FrontendController
 
 	private function getSubCatFeaturedProducts()
 	{
+		$cache = $this->application->getCache();
+		$namespace = 'subcategory_featured';
+		$id = $this->getCategory()->getID();
+		$key = array($namespace, $id);
+
+		if ($products = $cache->get($key))
+		{
+			return $products;
+		}
+
 		$count = $this->config->get('FEATURED_COUNT');
 		if ('GRID' == $this->getListLayout())
 		{
@@ -626,7 +649,9 @@ class CategoryController extends FrontendController
 		$featuredFilter = new ProductFilter(Category::getRootNode(), select(in('Product.ID', $rand)));
 		$featuredFilter->includeSubcategories();
 
-		return $this->getProductsArray($featuredFilter);
+		$cache->set($key, $this->getProductsArray($featuredFilter), time() + 1800);
+
+		return $cache->get($key);
 	}
 
 	/**
