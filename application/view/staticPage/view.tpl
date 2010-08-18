@@ -11,8 +11,8 @@
 		<div class="staticSubpages">
 			<h2>{t _subpages}</h2>
 			<ul>
-				{foreach from=$subPages item=page}
-					<li id="static_{$page.ID}"><a href="{pageUrl data=$page}">{$page.title_lang}</a></li>
+				{foreach from=$subPages item=subPage}
+					<li id="static_{$subPage.ID}"><a href="{pageUrl data=$subPage}">{$subPage.title_lang}</a></li>
 				{/foreach}
 			</ul>
 		</div>
