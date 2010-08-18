@@ -93,7 +93,8 @@ class OrderHistory
 				$order->shippingAddress->get()->state->get()->load();
 			}
 
-			$array['ShippingAddress'] = $order->shippingAddress->get()->toArray(true);
+			$array['ShippingAddress'] = $order->shippingAddress->get()->toArray();
+
 		}
 		else
 		{
@@ -107,7 +108,7 @@ class OrderHistory
 				$order->billingAddress->get()->state->get()->load();
 			}
 
-			$array['BillingAddress'] = $order->billingAddress->get()->toArray(true);
+			$array['BillingAddress'] = $order->billingAddress->get()->toArray();
 		}
 		else
 		{
@@ -123,7 +124,7 @@ class OrderHistory
 		$logEntry = false;
 
 		// Billing address
-		if($currentOrder['BillingAddress'] != $this->oldOrder['BillingAddress'])
+		if($currentOrder['BillingAddress']['compact'] != $this->oldOrder['BillingAddress']['compact'])
 		{
 			OrderLog::getNewInstance(
 				OrderLog::TYPE_BILLINGADDRESS,
@@ -138,7 +139,7 @@ class OrderHistory
 		}
 
 		// Shipping address
-		if($currentOrder['ShippingAddress'] != $this->oldOrder['ShippingAddress'])
+		if($currentOrder['ShippingAddress']['compact'] != $this->oldOrder['ShippingAddress']['compact'])
 		{
 			OrderLog::getNewInstance(
 				OrderLog::TYPE_SHIPPINGADDRESS,
