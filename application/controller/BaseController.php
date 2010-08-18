@@ -7,7 +7,7 @@ ClassLoader::import("application.model.system.Language");
 ClassLoader::import("library.locale.*");
 ClassLoader::import("library.locale.LCiTranslator");
 ClassLoader::import("framework.request.validator.Form");
-ClassLoader::import("framework.request.validator.RequestValidator");
+ClassLoader::import("application.helper.LiveCartValidator");
 
 /**
  * Base controller for the whole application
@@ -269,19 +269,8 @@ abstract class BaseController extends Controller implements LCiTranslator
 
 	protected function getValidator($validatorName, Request $request = null)
 	{
-		$validator = new RequestValidator($validatorName, $request ? $request : $this->request);
-
-		foreach ($this->application->getPlugins('validator/' . $validatorName) as $plugin)
-		{
-			if (!class_exists('ValidatorPlugin', false))
-			{
-				ClassLoader::import('application.ValidatorPlugin');
-			}
-
-			include_once $plugin['path'];
-			$inst = new $plugin['class']($validator, $this->application);
-			$inst->process();
-		}
+		$validator = new LiveCartValidator($validatorName, $request ? $request : $this->request);
+		$validator->setApplication($this->application);
 
 		return $validator;
 	}
