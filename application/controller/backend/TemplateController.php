@@ -42,7 +42,7 @@ class TemplateController extends StoreManagementController
 
 	public function edit()
 	{
-		$template = new Template($this->request->get('file'));
+		$template = new Template($this->getFileName());
 
 		$response = new ActionResponse();
 	  	$response->set('fileName', $template->getFileName());
@@ -63,7 +63,7 @@ class TemplateController extends StoreManagementController
 
 	public function editEmail()
 	{
-		$template = new EmailTemplate($this->request->get('file'));
+		$template = new EmailTemplate($this->getFileName());
 
 		// base language other than English?
 		$langTemplate = $template->getLangTemplate($this->application->getDefaultLanguageCode());
@@ -132,8 +132,7 @@ class TemplateController extends StoreManagementController
 		{
 			$files['module'] = array('id' => 'module', 'subs' => $modules);
 		}
-//var_Dump($files['contactForm']);
-//var_Dump($files['module']['subs']);
+
 		$response = new ActionResponse();
 		$response->set('categories', json_encode($files));
 		return $response;
@@ -157,10 +156,10 @@ class TemplateController extends StoreManagementController
 		}
 		else
 		{
-			$template = new Template($this->request->get('file'), $this->request->get('theme'));
+			$template = new Template($this->getFileName(), $this->request->get('theme'));
 		}
 
-		$origPath = $this->request->get('file');
+		$origPath = $this->getFileName();
 		if ($template->isCustomFile() && !$this->request->get('new') && ($template->getFileName() != $origPath) && !$this->request->get('theme'))
 		{
 			$origPath = Template::getCustomizedFilePath($origPath);
@@ -185,7 +184,7 @@ class TemplateController extends StoreManagementController
 
 	public function delete()
 	{
-		$custPath = Template::getCustomizedFilePath($this->request->get('file'));
+		$custPath = Template::getCustomizedFilePath($this->getFileName());
 		if (file_exists($custPath))
 		{
 			unlink($custPath);
@@ -199,7 +198,7 @@ class TemplateController extends StoreManagementController
 	 */
 	public function saveEmail()
 	{
-		$file = str_replace('\\', '/', $this->request->get('file'));
+		$file = str_replace('\\', '/', $this->getFileName());
 		$template = new EmailTemplate($file);
 		$template = $template->getLangTemplate($this->application->getDefaultLanguageCode());
 		$template->setSubject($this->request->get('subject'));
@@ -245,6 +244,11 @@ class TemplateController extends StoreManagementController
 	public function emptyPage()
 	{
 		return new ActionResponse();
+	}
+
+	private function getFileName()
+	{
+		return array_shift(explode(',', $this->request->get('file')));
 	}
 
 	private function getFiles()

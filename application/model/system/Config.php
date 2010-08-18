@@ -129,6 +129,11 @@ class Config
 		$this->runTimeValues[$key] = $value;
 	}
 
+	public function resetRuntime($key)
+	{
+		unset($this->runTimeValues[$key]);
+	}
+
 	public function setValueByLang($key, $lang, $value)
 	{
 		if (!is_array($this->values[$key]))
