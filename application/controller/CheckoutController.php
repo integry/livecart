@@ -296,12 +296,21 @@ class CheckoutController extends FrontendController
 			{
 				$address = $addresses[0]['UserAddress'];
 				$address['country'] = $address['countryID'];
-				$address['state_select'] = $address['stateID'];
+
+				if (isset($address['stateID']))
+				{
+					$address['state_select'] = $address['stateID'];
+				}
+
 				if (!empty($address['State']['name']))
 				{
 					$address['stateName'] = $address['State']['name'];
 				}
-				$address['state_text'] = $address['stateName'];
+
+				if (isset($address['stateName']))
+				{
+					$address['state_text'] = $address['stateName'];
+				}
 
 				foreach ($address as $key => $value)
 				{
@@ -1055,7 +1064,7 @@ class CheckoutController extends FrontendController
 
 		// determine if the notification URL is called by payment gateway or the customer himself
 		// this shouldn't usually happen though as the payment notifications should be sent by gateway
-		if (($order->user->get() == $this->user) && 0)
+		if (($order->user->get() == $this->user))
 		{
 			$this->request->set('id', $this->order->getID());
 			return $this->completeExternal();

@@ -375,7 +375,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			if ($item === $orderedItem)
 			{
 				$this->removedItems[] = $item;
-				$item->markAsDeleted();
+				//$item->markAsDeleted();
 				unset($this->orderedItems[$key]);
 				$this->resetShipments();
 				break;
@@ -1086,6 +1086,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function reset()
 	{
+		$this->deliveryZone = null;
 		$this->orderTotal = null;
 		$this->orderDiscounts = array();
 
@@ -1383,6 +1384,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			$product = $item->getProduct();
 			if (!$product || (!$product->isEnabled->get() || !$product->getParent()->isEnabled->get()))
 			{
+				$item->delete();
 				$this->removeItem($item);
 				$result['delete'][] = $item->toArray();
 			}
@@ -2041,11 +2043,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		}
 	}
 
-	public function getDeliveryZone()
+	public function getDeliveryZone($forceReset = false)
 	{
 		ClassLoader::import("application.model.delivery.DeliveryZone");
 
-		if (!$this->deliveryZone)
+		if (!$this->deliveryZone || $forceReset)
 		{
 			if ($this->isShippingRequired() && $this->shippingAddress->get())
 			{

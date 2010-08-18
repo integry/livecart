@@ -36,7 +36,8 @@ caption, th, td
 .descr li,
 .newsEntry li,
 #productDescription li,
-.message li
+.message li,
+.staticPageText li
 {
 	list-style-type: disc;
 	margin-left: 1.5em;
@@ -45,7 +46,8 @@ caption, th, td
 .descr ol li,
 .newsEntry ol li,
 #productDescription ol li,
-.message ol li
+.message ol li,
+.staticPageText ol li
 {
 	list-style-type: decimal;
 }
@@ -2287,7 +2289,7 @@ ul.notes li.responder_1 .noteText
 }
 
 /*************************
-	Contact form
+	Static pages
 *************************/
 .staticSubpages
 {
@@ -2561,6 +2563,11 @@ img.calendar_button
 .eavContainer .wide
 {
 	width: 15em;
+}
+
+fieldset.eavGroup
+{
+	clear: left;
 }
 
 /*************************

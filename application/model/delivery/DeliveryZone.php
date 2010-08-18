@@ -357,6 +357,7 @@ class DeliveryZone extends MultilingualObject
 			$zone = $shipment->getShippingTaxZone();
 			$amount = !$zone->isDefault() ? $shipment->applyTaxesToShippingAmount($rate->getCostAmount()) : $rate->getCostAmount();
 			$rate->setAmountWithTax($amount);
+			$rate->setAmountWithoutTax($shipment->reduceTaxesFromShippingAmount($amount));
 		}
 
 		// look for "override" rates

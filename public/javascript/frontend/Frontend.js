@@ -528,14 +528,17 @@ Order.AddressSelector = function(form)
 
 		onchange = function()
 		{
-			if (radioButton.checked)
+			window.setTimeout(function()
 			{
-				addressForm.show();
-			}
-			else
-			{
-				addressForm.hide();
-			}
+				if (radioButton.checked)
+				{
+					addressForm.show();
+				}
+				else
+				{
+					addressForm.hide();
+				}
+			}, 100);
 		};
 
 		Event.observe(radioButton.form, 'change', onchange);
@@ -545,8 +548,8 @@ Order.AddressSelector = function(form)
 	}
 
 	form = $(form);
-	newAddressToggle(form.down('#billing_new'));
-	newAddressToggle(form.down('#shipping_new'));
+	newAddressToggle($('billing_new'));
+	newAddressToggle($('shipping_new'));
 }
 
 /*****************************
@@ -762,6 +765,11 @@ User.ShippingFormToggler.prototype =
 
 	handleChange: function(e)
 	{
+		if (!this.container)
+		{
+			return;
+		}
+
 		if (this.checkbox.checked)
 		{
 			Element.hide(this.container);
@@ -813,6 +821,7 @@ Frontend.OnePageCheckout.prototype =
 		Observer.add('shippingMethods', this.updateShippingMethodsHTML.bind(this));
 		Observer.add('user', this.updateShippingOptions.bind(this));
 		Observer.add('overview', this.updateOverviewHTML.bind(this));
+		Observer.add('payment', this.updatePaymentHTML.bind(this));
 		Observer.add('completedSteps', this.updateCompletedSteps.bind(this));
 		Observer.add('editableSteps', this.updateEditableSteps.bind(this));
 
@@ -949,12 +958,16 @@ Frontend.OnePageCheckout.prototype =
 
 	initShippingAddressForm: function()
 	{
-		this.formOnChange(this.nodes.shippingAddress.down('form'), this.updateShippingAddress.bind(this));
+		var form = this.nodes.shippingAddress.down('form');
+		this.formOnChange(form, this.updateShippingAddress.bind(this));
+		new Order.AddressSelector(form);
 	},
 
 	initBillingAddressForm: function()
 	{
-		this.formOnChange(this.nodes.billingAddress.down('form'), this.updateBillingAddress.bind(this));
+		var form = this.nodes.billingAddress.down('form');
+		this.formOnChange(form, this.updateBillingAddress.bind(this));
+		new Order.AddressSelector(form);
 	},
 
 	initCartForm: function()
@@ -1004,7 +1017,7 @@ Frontend.OnePageCheckout.prototype =
 				}
 			}
 
-			el.onclick = function(e) { Event.stop(e); el.onchange() };
+			el.onclick = function(e) { if (e) { Event.stop(e); } el.onchange() };
 
 			var tr = $(el).up('tr');
 			if (tr)
@@ -1024,7 +1037,12 @@ Frontend.OnePageCheckout.prototype =
 	{
 		var form = this.nodes.paymentDetailsForm;
 		this.updateElement(form, this.nodes.payment.down('#payForm_' + el.value).innerHTML, noHighlight);
-		(form.down('input.text') || form.down('textarea') || form.down('select') || form).focus();
+		try
+		{
+			(form.down('input.text') || form.down('textarea') || form.down('select') || form).focus();
+		}
+		catch (e)
+		{ }
 	},
 
 	initOverview: function()
@@ -1066,6 +1084,60 @@ Frontend.OnePageCheckout.prototype =
 	{
 		this.updateElement(this.nodes.cart, params);
 		this.initCartForm();
+	},
+
+	updatePaymentHTML: function(params)
+	{
+		var backupIds = {}
+		var selectedMethod = null;
+		$A(['paymentMethodForm', 'paymentDetailsForm']).each(function(cont)
+		{
+			var form = this.nodes[cont];
+			if (form)
+			{
+				Form.State.backup(form);
+				backupIds[cont] = form.backupId;
+
+				// get selected payment method
+				if ('paymentMethodForm' == cont)
+				{
+					$A($(form).getElementsBySelector('input.radio')).each(function(radio)
+					{
+						if (radio.checked)
+						{
+							selectedMethod = radio.id;
+						}
+					}.bind(this));
+				}
+			}
+		}.bind(this));
+
+		this.updateElement(this.nodes.payment, params);
+		this.initPaymentForm();
+
+		// restore payment method selection
+		var form = this.nodes['paymentMethodForm'];
+		if (form)
+		{
+			form.backupId = backupIds['paymentMethodForm'];
+			Form.State.restore(form, ['payMethod']);
+
+			$A($(form).getElementsBySelector('input.radio')).each(function(radio)
+			{
+				if (radio.id == selectedMethod)
+				{
+					radio.checked = true;
+					radio.onclick();
+				}
+			}.bind(this));
+		}
+
+		var form = this.nodes['paymentDetailsForm'];
+		if (form)
+		{
+			form.backupId = backupIds['paymentDetailsForm'];
+			Form.State.restore(form);
+		}
 	},
 
 	updateShippingMethodsHTML: function(params)
@@ -1169,7 +1241,10 @@ Frontend.OnePageCheckout.prototype =
 
 			if ('radio' == el.getAttribute('type'))
 			{
-				el.blur();
+				try
+				{
+					el.blur();
+				} catch (e) { }
 			}
 
 			if (form.errorList)
@@ -1311,8 +1386,8 @@ Frontend.Ajax.AddToCart = function(container)
 	var handleClick = function(e)
 	{
 		Event.stop(e);
-		var button = Event.element(e);
-		new LiveCart.AjaxRequest(button.href, button.parentNode.down('.price'), function () { new Effect.DropOut(button); });
+		var button = $(Event.element(e));
+		new LiveCart.AjaxRequest(button.href, $(button.parentNode).down('.price'), function () { new Effect.DropOut(button); });
 	}
 
 	$A($(container).getElementsBySelector('a.addToCart')).each(function(button)
