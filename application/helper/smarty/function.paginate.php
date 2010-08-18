@@ -14,6 +14,11 @@ function smarty_function_paginate($params, LiveCartSmarty $smarty)
 {
 	$interval = 2;
 
+	if (isset($params['interval']))
+	{
+		$interval = $params['interval'];
+	}
+
 	// determine which page numbers will be displayed
 	$count = ceil($params['count'] / $params['perPage']);
 
