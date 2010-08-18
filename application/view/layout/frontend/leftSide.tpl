@@ -9,7 +9,6 @@
 	{block INFORMATION}
 	{block NEWSLETTER}
 	{block QUICKNAV}
-	{block QUICK_LOGIN}
 
 	<div class="clear"></div>
 </div>

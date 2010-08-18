@@ -69,7 +69,7 @@ class CategoryRelationshipController extends StoreManagementController
 
 	public function delete()
 	{
-		$relation = ActiveRecordModel::getInstanceById('CategoryRelationship', $this->request->get('id'));
+		$relation = ActiveRecordModel::getInstanceById('CategoryRelationship', $this->request->get('categoryId'));
 		$relation->delete();
 
 		return new JSONResponse(array('data' => $relation->toFlatArray()));
