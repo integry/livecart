@@ -693,7 +693,6 @@ class UserController extends FrontendController
 		$validator = $this->buildValidator();
 		if (!$validator->isValid())
 		{
-			var_dump($validator->getErrorList()); exit;
 			$action = $this->request->get('regType') == 'register' ? 'registerAddress' : 'checkout';
 			return new ActionRedirectResponse('user', $action, array('query' => array('return' => $this->request->get('return'))));
 		}
