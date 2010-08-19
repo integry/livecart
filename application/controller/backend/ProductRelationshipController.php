@@ -109,6 +109,11 @@ class ProductRelationshipController extends StoreManagementController
 		preg_match('/_(\d+)$/', $target, $match); // Get group.
 		preg_match('/_(\d+)_/', $this->request->get('draggedID'), $type); // Get type
 
+		if (substr($target, 0, 8) == 'noGroup_')
+		{
+			$match = array();
+		}
+
 		foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
 		{
 			if(empty($key)) continue;

@@ -296,12 +296,21 @@ class CheckoutController extends FrontendController
 			{
 				$address = $addresses[0]['UserAddress'];
 				$address['country'] = $address['countryID'];
-				$address['state_select'] = $address['stateID'];
+
+				if (isset($address['stateID']))
+				{
+					$address['state_select'] = $address['stateID'];
+				}
+
 				if (!empty($address['State']['name']))
 				{
 					$address['stateName'] = $address['State']['name'];
 				}
-				$address['state_text'] = $address['stateName'];
+
+				if (isset($address['stateName']))
+				{
+					$address['state_text'] = $address['stateName'];
+				}
 
 				foreach ($address as $key => $value)
 				{
@@ -471,14 +480,34 @@ class CheckoutController extends FrontendController
 		}
 	}
 
+	protected function restoreShippingMethodSelection()
+	{
+		$shipments = $this->order->getShipments();
+
+		// get previously selected shipping methods
+		$rateCache = (array)$this->session->get('SelectedShippingRates_' . $this->order->getID());
+
+		if ($rateCache)
+		{
+			foreach ($shipments as $key => $shipment)
+			{
+				if (!empty($rateCache[$key]))
+				{
+					$shipment->setRateId($rateCache[$key]);
+				}
+			}
+		}
+	}
+
 	/**
 	 *  4. Select shipping methods
 	 *	@role login
 	 */
 	public function shipping()
 	{
-		// get previously selected shipping methods
-		$rateCache = (array)$this->session->get('SelectedShippingRates_' . $this->order->getID());
+		$shipments = $this->order->getShipments();
+
+		$this->restoreShippingMethodSelection();
 
 		if ($redirect = $this->validateOrder($this->order, self::STEP_SHIPPING))
 		{
@@ -489,8 +518,6 @@ class CheckoutController extends FrontendController
 		{
 			return new ActionRedirectResponse('checkout', 'pay');
 		}
-
-		$shipments = $this->order->getShipments();
 
 		foreach($shipments as $shipment)
 		{
@@ -520,11 +547,6 @@ class CheckoutController extends FrontendController
 			if ($shipmentRates->size() > 1)
 			{
 				$needSelecting = true;
-
-				if (!empty($rateCache[$key]))
-				{
-					$shipment->setRateId($rateCache[$key]);
-				}
 			}
 			else if (!$shipmentRates->size())
 			{
@@ -1055,7 +1077,7 @@ class CheckoutController extends FrontendController
 
 		// determine if the notification URL is called by payment gateway or the customer himself
 		// this shouldn't usually happen though as the payment notifications should be sent by gateway
-		if (($order->user->get() == $this->user) && 0)
+		if (($order->user->get() == $this->user))
 		{
 			$this->request->set('id', $this->order->getID());
 			return $this->completeExternal();

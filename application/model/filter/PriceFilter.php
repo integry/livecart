@@ -16,7 +16,7 @@ class PriceFilter implements FilterInterface
 	private $name = '';
 	private $priceFrom = 0;
 	private $priceTo = 0;
-
+	private $lastInSetName = '';
 
 	function __construct($filterID, LiveCart $application)
 	{
@@ -38,7 +38,7 @@ class PriceFilter implements FilterInterface
 
 		$this->priceFrom = $c->get('PRICE_FILTER_FROM_' . $filterID);
 		$this->priceTo = $c->get('PRICE_FILTER_TO_' . $filterID);
-		
+
 		$requestCurrencyID = $this->application->controllerInstance->getRequestCurrency();
 		$defaultCurrency = $this->application->getDefaultCurrency();
 		if($defaultCurrency->getID() != $requestCurrencyID)
@@ -54,24 +54,24 @@ class PriceFilter implements FilterInterface
 				}
 			}
 		}
-		
+
 		if($setCustomName)
 		{
 			if($this->priceFrom == 0)
-			{ 
+			{
 				$this->name = $this->application->maketext('_to [_1]', $this->priceTo);
 			}
 			else if($definedFilterCount == $filterID && $this->priceFrom * 2 < $this->priceTo)
 			{
 				 $this->name = $this->application->maketext('_more_than [_1]', $this->priceFrom);
 			}
-			else 
+			else
 			{
 				$this->name = $this->application->maketext('[_1] - [_2]', array($this->priceFrom, $this->priceTo));
 			}
 		}
 	}
-	
+
 	public function getCondition()
 	{
 		$from = new EqualsOrMoreCond(new ARFieldHandle('ProductPrice', 'price'), $this->priceFrom);

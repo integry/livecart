@@ -15,6 +15,7 @@ ClassLoader::import('application.model.delivery.ShippingService');
 class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 {
 	protected $amountWithTax;
+	protected $amountWithoutTax;
 
 	/**
 	 * @var LiveCart
@@ -103,6 +104,11 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 		$this->amountWithTax = (string)round($amount, 3);
 	}
 
+	public function setAmountWithoutTax($amount)
+	{
+		$this->amountWithoutTax = (string)round($amount, 3);
+	}
+
 	public function setService(ShippingService $service)
 	{
 		$this->service = $service;
@@ -139,12 +145,16 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 			$formattedPrices[$id] = $currency->getFormattedPrice($prices[$id]);
 			$unformattedTaxPrices[$id] = $currency->convertAmount($amountCurrency, $this->amountWithTax);
 			$taxPrices[$id] = $currency->getFormattedPrice($unformattedTaxPrices[$id]);
+			$withoutTaxPrices[$id] = $currency->convertAmount($amountCurrency, $this->amountWithoutTax);
+			$formattedWithoutTaxPrices[$id] = $currency->getFormattedPrice($withoutTaxPrices[$id]);
 		}
 
 		$array['price'] = $prices;
 		$array['priceWithTax'] = $unformattedTaxPrices;
 		$array['formattedPrice'] = $formattedPrices;
 		$array['taxPrice'] = $taxPrices;
+		$array['priceWithoutTax'] = $withoutTaxPrices;
+		$array['formattedPriceWithoutTax'] = $formattedWithoutTaxPrices;
 
 		// shipping service name
 		$id = $this->getServiceID();

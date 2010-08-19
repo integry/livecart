@@ -13,6 +13,7 @@
 			<div class="orderShipmentsItem_info_name">
 				{if $item.Product.ID}
 					<a href="{backendProductUrl product=$item.Product}">{$item.Product.name_lang}</a>
+					<a class="external" href="{productUrl product=$item.Product}" target="_blank"></a>
 				{else}
 					<span>{$item.Product.name_lang}</span>
 				{/if}

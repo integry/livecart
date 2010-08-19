@@ -26,9 +26,11 @@
 		</div>
 	</div>
 
+	{if !$user.ID}
 	<div id="checkout-login">
 		{$login}
 	</div>
+	{/if}
 
 	<div id="checkout-shipping">
 		<div id="checkout-shipping-address">
@@ -55,6 +57,7 @@
 		Observer.process('order', {json array=$orderValues});
 {literal}
 		new User.ShippingFormToggler($('sameAsShipping'), $('billingAddressForm'));
+		new User.ShippingFormToggler($('sameAsShipping'), $('checkout-billing').down('.addressSelector'));
 	</script>
 {/literal}
 
