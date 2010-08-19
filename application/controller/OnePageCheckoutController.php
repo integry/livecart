@@ -658,6 +658,11 @@ class OnePageCheckoutController extends CheckoutController
 	 */
 	protected function getStepStatus(CustomerOrder $order, $isCompleted = 0)
 	{
+		if (!$order->shippingAddress->get() || $order->billingAddress->get())
+		{
+			$this->setAnonAddresses();
+		}
+
 		$isStepEditable = $isCompleted;
 
 		// validation will return false for all steps if custom fields are not filled
@@ -700,6 +705,12 @@ class OnePageCheckoutController extends CheckoutController
 			$res['shippingMethod'] = true;
 		}
 
+if (!$res['shippingMethod'])
+{
+//var_dump($order->toArray());
+//		var_dump($this->validateOrder($order, self::STEP_SHIPPING + $isStepEditable));
+}
+
 		return $res;
 	}
 
@@ -737,6 +748,7 @@ class OnePageCheckoutController extends CheckoutController
 		///////
 
 		$this->order->loadAll();
+		$this->restoreShippingMethodSelection();
 		ActiveRecordModel::clearArrayData();
 
 		if ($paymentMethod = $this->session->get('OrderPaymentMethod_' . $this->order->getID()))
@@ -907,6 +919,9 @@ class OnePageCheckoutController extends CheckoutController
 					}
 				}
 			}
+
+			$this->order->shippingAddress->resetModifiedStatus();
+			$this->order->billingAddress->resetModifiedStatus();
 		}
 	}
 }
