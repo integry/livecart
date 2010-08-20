@@ -87,3 +87,6 @@ _loading=Loading data...
 
 # Backend error message
 _internal_error_have_accurred=Internal error has occurred
+
+_weight=Weight
+_subtotal=Subtotal

@@ -115,3 +115,7 @@ _rule_name_empty=Please enter the business rule name
 
 _tax_class=Tax Class
 RuleActionChangeTaxClass=Change tax class
+
+_count=Count
+_discount_percentage=Discount percentage
+RuleActionAddProductWithPercentageDiscount=Add product with percentage discount

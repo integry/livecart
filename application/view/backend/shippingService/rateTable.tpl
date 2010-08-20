@@ -11,17 +11,53 @@
 	}
 {/php}
 
+
+<table style="width:100%;">
+<tr>
+<td valign="top" width="150">
 <table
-	id="ratesTableContainer_{$service.DeliveryZone.ID}_{$service.ID}"
-	onkeyup = ""
+	id="ratesTableLabels_{$service.DeliveryZone.ID}_{$service.ID}"
 >
 	<tbody>
 		<tr class="weight weightRow">
-			<td>{t _weight}
+			<td class="fixedHeader">{t _weight}
 				(<span class="UnitConventer_UnitsName"></span>)
 				<a class="UnitConventer_SwitchToUnits" href="javascript:void(0);"></a>
 				<input class="UnitConventer_UnitsType" value="METRIC" type="hidden">
 			</td>
+		</tr>
+		<tr class="subtotal">
+			<td class="fixedHeader">{t _subtotal}
+			</td>
+		</tr>
+		<tr>
+			<td class="fixedHeader">{t _flat_charge} ({$defaultCurrencyCode})</td>
+		</tr>
+		<tr>
+			<td class="fixedHeader">{t _per_item_charge} ({$defaultCurrencyCode})</td>
+		</tr>
+		<tr class="weight">
+			<td class="fixedHeader">{t _per_kg_charge} ({$defaultCurrencyCode})</td>
+		</tr>
+		<tr class="subtotal">
+			<td class="fixedHeader">{t _subtotal_percent_charge} (%)</td>
+		</tr>
+	</tbody>
+</table>
+
+</td><td valign="top" style="text-align:left;">
+
+<div class="ratesTableContainerScroll" style="float:left;">
+<table
+	id="ratesTableContainer_{$service.DeliveryZone.ID}_{$service.ID}"
+>
+	<tbody>
+		<tr class="weight weightRow">
+			{* <td class="fixedHeader">{t _weight}
+				(<span class="UnitConventer_UnitsName"></span>)
+				<a class="UnitConventer_SwitchToUnits" href="javascript:void(0);"></a>
+				<input class="UnitConventer_UnitsType" value="METRIC" type="hidden">
+			</td> *}
 			{foreach from=$shippingRates item=rate}
 				<td>
 					{if $rangeTypeName == 'weight'}
@@ -50,8 +86,7 @@
 		</tr>
 
 		<tr class="subtotal">
-			<td>{t _subtotal}
-			</td>
+			{* <td class="fixedHeader">{t _subtotal}</td> *}
 			{foreach from=$shippingRates item=rate}
 				<td>
 					{if $rangeTypeName == 'subtotal'}
@@ -65,7 +100,7 @@
 		</tr>
 
 		<tr>
-			<td>{t _flat_charge} ({$defaultCurrencyCode})</td>
+			{* <td class="fixedHeader">{t _flat_charge} ({$defaultCurrencyCode})</td> *}
 			{foreach from=$shippingRates item=rate}
 				<td>{textfield value=$rate.flatCharge class="number" name="rate_`$rate.ID`_flatCharge"}</td>
 			{/foreach}
@@ -73,7 +108,7 @@
 		</tr>
 
 		<tr>
-			<td>{t _per_item_charge} ({$defaultCurrencyCode})</td>
+			{* <td class="fixedHeader">{t _per_item_charge} ({$defaultCurrencyCode})</td> *}
 			{foreach from=$shippingRates item=rate}
 				<td>{textfield value=$rate.perItemCharge class="number" name="rate_`$rate.ID`_perItemCharge"}</td>
 			{/foreach}
@@ -81,7 +116,7 @@
 		</tr>
 
 		<tr class="weight">
-			<td>{t _per_kg_charge} ({$defaultCurrencyCode})</td>
+			{* <td class="fixedHeader">{t _per_kg_charge} ({$defaultCurrencyCode})</td> *}
 			{foreach from=$shippingRates item=rate}
 				<td>
 					{if $rangeTypeName == 'weight'}
@@ -95,7 +130,7 @@
 		</tr>
 
 		<tr class="subtotal">
-			<td>{t _subtotal_percent_charge} (%)</td>
+			{* <td class="fixedHeader">{t _subtotal_percent_charge} (%)</td> *}
 			{foreach from=$shippingRates item=rate}
 				<td>
 					{if $rangeTypeName == 'subtotal'}
@@ -109,7 +144,9 @@
 		</tr>
 	</tbody>
 </table>
+</div>
 
+</td></tr></table>
 <script type="text/javacript">
 	new Backend.DeliveryZone.WeightTable(
 		$("ratesTableContainer_{$service.DeliveryZone.ID}_{$service.ID}"),

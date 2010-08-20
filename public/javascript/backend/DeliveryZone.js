@@ -910,6 +910,12 @@ Backend.DeliveryZone.ShippingService.prototype =
 		}
 		$A(this.nodes.root.getElementsByClassName(radio.value == 0 ? "weight" : "subtotal")).each(Element.show);
 		$A(this.nodes.root.getElementsByClassName(radio.value == 0 ? "subtotal" : "weight")).each(Element.hide);
+		
+		//if(radio.value == 0)
+		//{
+			//console.log('observe weight');
+		//}
+		
 
 //		if(radio.value == 0)
 //		{
@@ -996,7 +1002,7 @@ Backend.DeliveryZone.ShippingService.prototype =
 			ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 			if(!this.service.ID)
 			{
-				ratesCount = this.nodes.root.down("table").down("tbody").rows[0].cells.length - 2;
+				ratesCount = this.nodes.root.down("table").down("tr").down("td").next().down("tbody").rows[0].cells.length - 1;
 				rangeTypeString = response.service.rangeType == 0 ? Backend.DeliveryZone.prototype.Messages.weightBasedRates : Backend.DeliveryZone.prototype.Messages.subtotalBasedRates;
 				var li = this.servicesActiveList.addRecord(response.service.ID, '<span class="' + this.prefix + 'servicesList_title">' + this.nodes.name.value + ' ( <b class="ratesCount">' + ratesCount + '</b>' + rangeTypeString  + ' )</span>');
 				this.hideNewForm();
@@ -1004,7 +1010,7 @@ Backend.DeliveryZone.ShippingService.prototype =
 			else
 			{
 				Form.State.backup(this.nodes.form);
-				this.nodes.root.up('li').down('.ratesCount').innerHTML = this.nodes.root.down("table").down("tbody").rows[0].cells.length - 2;
+				this.nodes.root.up('li').down('.ratesCount').innerHTML = this.nodes.root.down("table").down("tr").down("td").next().down("tbody").rows[0].cells.length - 1;
 				this.servicesActiveList.toggleContainer(this.nodes.root.up('li'), 'edit', 'yellow');
 
 				if($H(response.service.newRates).size() > 0)
@@ -1043,6 +1049,30 @@ Backend.DeliveryZone.ShippingService.prototype =
 		else
 		{
 			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors);
+			$H(response.errors).each(function(item) {
+				try {
+					var
+						element,
+						node;
+						
+					item[0] = item[0].replace("weightRangeStart", "weightRangeEnd");
+					element = $(document.getElementsByName(item[0])[0]);
+					if(element == null)
+					{
+						return;
+					}
+					
+					node = document.createElement("p");
+					node.className = "errorText";
+					node.style.position="absolute";
+					element.parentNode.appendChild(node);
+					Event.observe(node, "click", function(e) {
+						Event.element(e).hide();
+					});
+					node.innerHTML = item[1];
+				} catch(e) {}
+			});
+			
 		}
 	},
 
@@ -1359,19 +1389,36 @@ Backend.DeliveryZone.WeightUnitConventer.prototype = {
 
 Backend.DeliveryZone.WeightTable = Class.create();
 Backend.DeliveryZone.WeightTable.prototype = {
-
 	newColumnCount : 0,
-
 	initialize : function(root, typeName)
 	{
 		var
-			m, cn;
+			m, cn, w;
 		this.nodes = {};
 		this.nodes.root = $(root);
 		this.nodes.tbody = this.nodes.root.down("tbody");
-		this.nodes.unitsTypeField = $A(this.nodes.root.getElementsByClassName("UnitConventer_UnitsType")).shift();
-		this.nodes.unitsName = $A(this.nodes.root.getElementsByClassName("UnitConventer_UnitsName")).shift();
-		this.nodes.switchUnits = $A(this.nodes.root.getElementsByClassName("UnitConventer_SwitchToUnits")).shift();
+		this.nodes.unitsTypeField = $A(this.nodes.root.up("table").down("table").getElementsByClassName("UnitConventer_UnitsType")).shift();
+		this.nodes.unitsName = $A(this.nodes.root.up("table").down("table").getElementsByClassName("UnitConventer_UnitsName")).shift();
+		this.nodes.switchUnits = $A(this.nodes.root.up("table").down("table").getElementsByClassName("UnitConventer_SwitchToUnits")).shift();
+		this.nodes.ratesTableContainerScroll = this.nodes.root.up("div");
+		window.setTimeout(function() {
+			w = $$(".sectionContainer").inject(0,
+				function(m, node)
+				{
+					var w = node.getWidth()
+					if(w > m)
+					{
+						m = w;
+					}
+					return m;
+				}
+			);
+			if(w > 0)
+			{
+				this.scroll.style.width = (w-230) + "px";
+			}
+		}.bind({scroll:this.nodes.ratesTableContainerScroll}), 1000);
+		
 		m = [
 			"UnitConventer_SwitchToEnglishTitle",
 			"UnitConventer_SwitchToMetricTitle",
@@ -1389,9 +1436,13 @@ Backend.DeliveryZone.WeightTable.prototype = {
 		Event.observe(this.nodes.root, "keyup", this.addColumnOnKeyUp.bindAsEventListener(this));
 		Event.observe(this.nodes.switchUnits, "click", this.switchUnitTypes.bindAsEventListener(this));
 		this.setType(typeName);
-		
 		this.observeAndInitWeightRow();
-		this.showInWeightUnits();
+		this.attachNumericFilters();
+
+		if(this.nodes.tbody.getElementsByClassName("weightRow")[0].style.display != "none")
+		{
+			this.showInWeightUnits();
+		}
 	},
 
 	setType: function(typeName)
@@ -1494,9 +1545,16 @@ Backend.DeliveryZone.WeightTable.prototype = {
 		}
 		// split to 2 inputs
 		inputs = this._getWeightCellInputs(node);
+		
+		
 		inputs.hi.show();
 		inputs.hi.focus();
 		inputs.lo.show();
+		
+		// hints
+		var unitName = this.nodes.unitsTypeField.value=="METRIC" ? "Metric" : "English";
+		inputs.hi.title=this.labels["UnitConventer_"+unitName+"HiUnit"];
+		inputs.lo.title=this.labels["UnitConventer_"+unitName+"LoUnit"];
 		inputs.merged.hide();
 	},
 
@@ -1531,7 +1589,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 			this.updateNormalizedWeightFieldValue(node.up("td"));
 			this.updateMergedWeightFieldValue(node.up("td"));
 		}
-		for(j=1; j < this.nodes.tbody.rows[0].cells.length - 1; j++) 
+		for(j=0; j < this.nodes.tbody.rows[0].cells.length - 1; j++) 
 		{
 			ec = [];
 			for(i=0; i < this.nodes.tbody.rows.length; i++)
@@ -1596,6 +1654,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 			node2.name = chunks.join("_");
 		}
 		this.observeAndInitWeightRow();
+		this.attachNumericFilters();
 	},
 
 	observeAndInitWeightRow : function()
@@ -1637,6 +1696,20 @@ Backend.DeliveryZone.WeightTable.prototype = {
 			}.bind(this)
 		);
 	},
+	
+	attachNumericFilters : function()
+	{
+		$A(this.nodes.root.getElementsByClassName("number")).each(
+			function(node)
+			{
+				node = $(node);
+				if(node.hasClassName("hasNumericFilter") == false)
+				{
+					Event.observe(node, "keyup", function(e){ NumericFilter(this) });
+					node.addClassName("hasNumericFilter");
+				}
+			});
+	},
 
 	_convertToHiAndLoWeightUnits : function(normalizedValue)
 	{
@@ -1661,9 +1734,17 @@ Backend.DeliveryZone.WeightTable.prototype = {
 	{
 		var
 			inputs = this._getWeightCellInputs(node),
-			values;
-		values = this._convertToHiAndLoWeightUnits(inputs.normalized.value);
-		inputs.merged.value =  values[0] + '.' + values[1];
+			values,
+			multipliers = this.getWeightMultipliers(this.nodes.unitsTypeField.value);
+		value = Math.round((inputs.normalized.value / multipliers[0]) * 1000) / 1000;
+		if(this.nodes.unitsTypeField.value == "METRIC")
+		{
+			inputs.merged.value = value.toFixed(3);	
+		}
+		else
+		{
+			inputs.merged.value = value;
+		}
 	},
 
 	updateNormalizedWeightFieldValue : function(td)
@@ -1671,6 +1752,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 		var
 			inputs = this._getWeightCellInputs(td),
 			multipliers = this.getWeightMultipliers(this.nodes.unitsTypeField.value);
+
 		inputs.normalized.value = (inputs.hi.value * multipliers[0]) + (inputs.lo.value * multipliers[1]);; 
 	},
 
@@ -1695,7 +1777,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 		var multipliers = this.getWeightMultipliers(this.nodes.unitsTypeField.value);
 		
 		var i, input;
-		for(i = 1; i<this.nodes.tbody.rows[0].cells.length - 1; i++)
+		for(i = 0; i<this.nodes.tbody.rows[0].cells.length - 1; i++)
 		{
 			input = $(this.nodes.tbody.rows[0].cells[i]).down("input");
 
