@@ -5,7 +5,7 @@
 Backend.DeliveryZone = Class.create();
 Backend.DeliveryZone.prototype =
 {
-  	Links: {},
+	Links: {},
 	Messages: {},
 
 	treeBrowser: null,
@@ -904,21 +904,27 @@ Backend.DeliveryZone.ShippingService.prototype =
 	{
 		var radio = null;
 		$A(this.nodes.rangeTypes).each(function(r){ if(r.checked) radio = r; });
+		if(radio == 0)
+		{
+			return;
+		}
+		$A(this.nodes.root.getElementsByClassName(radio.value == 0 ? "weight" : "subtotal")).each(Element.show);
+		$A(this.nodes.root.getElementsByClassName(radio.value == 0 ? "subtotal" : "weight")).each(Element.hide);
 
-		if(radio.value == 0)
-		{
-			document.getElementsByClassName(this.prefix + "subtotalRange", this.nodes.root).each(function(fieldset) { fieldset.style.display = 'none'; });
-			document.getElementsByClassName(this.prefix + "subtotalPercentCharge", this.nodes.root).each(function(fieldset) { fieldset.up('fieldset').style.display = 'none'; });
-			document.getElementsByClassName(this.prefix + "perKgCharge", this.nodes.root).each(function(fieldset) { fieldset.up('fieldset').style.display = 'block'; });
-			document.getElementsByClassName(this.prefix + "weightRange", this.nodes.root).each(function(fieldset) { fieldset.style.display = 'block'; });
-		}
-		else
-		{
-			document.getElementsByClassName(this.prefix + "subtotalRange", this.nodes.root).each(function(fieldset) { fieldset.style.display = 'block'; });
-			document.getElementsByClassName(this.prefix + "subtotalPercentCharge", this.nodes.root).each(function(fieldset) { fieldset.up('fieldset').style.display = 'block'; });
-			document.getElementsByClassName(this.prefix + "perKgCharge", this.nodes.root).each(function(fieldset) { fieldset.up('fieldset').style.display = 'none'; });
-			document.getElementsByClassName(this.prefix + "weightRange", this.nodes.root).each(function(fieldset) { fieldset.style.display = 'none'; });
-		}
+//		if(radio.value == 0)
+//		{
+//			document.getElementsByClassName(this.prefix + "subtotalRange", this.nodes.root).each(function(fieldset) { fieldset.style.display = 'none'; });
+//			document.getElementsByClassName(this.prefix + "subtotalPercentCharge", this.nodes.root).each(function(fieldset) { fieldset.up('fieldset').style.display = 'none'; });
+//			document.getElementsByClassName(this.prefix + "perKgCharge", this.nodes.root).each(function(fieldset) { fieldset.up('fieldset').style.display = 'block'; });
+//			document.getElementsByClassName(this.prefix + "weightRange", this.nodes.root).each(function(fieldset) { fieldset.style.display = 'block'; });
+//		}
+//		else
+//		{
+//			document.getElementsByClassName(this.prefix + "subtotalRange", this.nodes.root).each(function(fieldset) { fieldset.style.display = 'block'; });
+//			document.getElementsByClassName(this.prefix + "subtotalPercentCharge", this.nodes.root).each(function(fieldset) { fieldset.up('fieldset').style.display = 'block'; });
+//			document.getElementsByClassName(this.prefix + "perKgCharge", this.nodes.root).each(function(fieldset) { fieldset.up('fieldset').style.display = 'none'; });
+//			document.getElementsByClassName(this.prefix + "weightRange", this.nodes.root).each(function(fieldset) { fieldset.style.display = 'none'; });
+//		}
 	},
 
 	showNewForm: function()
@@ -990,17 +996,15 @@ Backend.DeliveryZone.ShippingService.prototype =
 			ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 			if(!this.service.ID)
 			{
-				ratesCount = this.nodes.root.down(".activeList").getElementsByTagName("li").length;
+				ratesCount = this.nodes.root.down("table").down("tbody").rows[0].cells.length - 2;
 				rangeTypeString = response.service.rangeType == 0 ? Backend.DeliveryZone.prototype.Messages.weightBasedRates : Backend.DeliveryZone.prototype.Messages.subtotalBasedRates;
-
 				var li = this.servicesActiveList.addRecord(response.service.ID, '<span class="' + this.prefix + 'servicesList_title">' + this.nodes.name.value + ' ( <b class="ratesCount">' + ratesCount + '</b>' + rangeTypeString  + ' )</span>');
 				this.hideNewForm();
 			}
 			else
 			{
 				Form.State.backup(this.nodes.form);
-
-				this.nodes.root.up('li').down('.ratesCount').innerHTML = this.nodes.root.down(".activeList").getElementsByTagName("li").length;
+				this.nodes.root.up('li').down('.ratesCount').innerHTML = this.nodes.root.down("table").down("tbody").rows[0].cells.length - 2;
 				this.servicesActiveList.toggleContainer(this.nodes.root.up('li'), 'edit', 'yellow');
 
 				if($H(response.service.newRates).size() > 0)
@@ -1342,4 +1346,398 @@ Backend.DeliveryZone.lookupAddress = function(form, e)
 		cont.parentNode.show();
 		new Effect.Highlight(cont);
 	});
+}
+
+Backend.DeliveryZone.WeightUnitConventer = Class.create();
+Backend.DeliveryZone.WeightUnitConventer.prototype = {
+	initialize : function(root)
+	{
+		this.nodes = {};
+		this.nodes.root = $(root);
+	}
+}
+
+Backend.DeliveryZone.WeightTable = Class.create();
+Backend.DeliveryZone.WeightTable.prototype = {
+
+	newColumnCount : 0,
+
+	initialize : function(root, typeName)
+	{
+		var
+			m, cn;
+		this.nodes = {};
+		this.nodes.root = $(root);
+		this.nodes.tbody = this.nodes.root.down("tbody");
+		this.nodes.unitsTypeField = $A(this.nodes.root.getElementsByClassName("UnitConventer_UnitsType")).shift();
+		this.nodes.unitsName = $A(this.nodes.root.getElementsByClassName("UnitConventer_UnitsName")).shift();
+		this.nodes.switchUnits = $A(this.nodes.root.getElementsByClassName("UnitConventer_SwitchToUnits")).shift();
+		m = [
+			"UnitConventer_SwitchToEnglishTitle",
+			"UnitConventer_SwitchToMetricTitle",
+			"UnitConventer_MetricHiUnit",
+			"UnitConventer_MetricLoUnit",
+			"UnitConventer_EnglishHiUnit",
+			"UnitConventer_EnglishLoUnit"
+		];
+		this.labels = {}
+		while(cn = m.shift())
+		{
+			this.labels[cn] = $A($(document).getElementsByClassName(cn)).shift().innerHTML;
+		}
+		Event.observe(this.nodes.root, "change", this.onChange.bindAsEventListener(this));
+		Event.observe(this.nodes.root, "keyup", this.addColumnOnKeyUp.bindAsEventListener(this));
+		Event.observe(this.nodes.switchUnits, "click", this.switchUnitTypes.bindAsEventListener(this));
+		this.setType(typeName);
+		
+		this.observeAndInitWeightRow();
+		this.showInWeightUnits();
+	},
+
+	setType: function(typeName)
+	{
+		$A(this.nodes.root.getElementsByClassName(typeName == "weight" ? "weight" : "subtotal")).each(Element.show);
+		$A(this.nodes.root.getElementsByClassName(typeName == "weight" ? "subtotal" : "weight")).each(Element.hide);
+		this.typeName = typeName;
+	},
+
+	addColumnOnKeyUp : function(event) // add new column
+	{
+		var
+			node,
+			lastRowIndex,
+			i,
+			input, inputs;
+		node = Event.element(event);
+		if(null == node || node.tagName.toLowerCase() != "input")
+		{
+			return;
+		}
+		lastRowIndex = this.nodes.tbody.rows[0].cells.length - 1;
+		for(i=0; i < this.nodes.tbody.rows.length; i++)
+		{
+			inputs = $A($(this.nodes.tbody.rows[i].cells[lastRowIndex]).getElementsByTagName("input"));
+			while(input = inputs.shift())
+			{
+				if(input == null)
+				{
+					continue;
+				}
+				if(
+					input.value != ""
+					&& 
+					(
+						// it is focused hi or lo value field
+						input.hasClassName("focusOnHiOrLo")
+							||
+						// or it is not hi or lo field (hidden hi or lo value fields can have value '0', forcing to add new column.
+						(false == input.hasClassName("UnitConventer_LoValue") && false == input.hasClassName("UnitConventer_HiValue"))
+					)
+				)
+				{
+					// console.log(input, input.value, input.up("td"));
+					this.addColumn();
+					return;
+				}
+			}
+		}
+	},
+
+	onBlurHiOrLo: function(event)
+	{
+		var
+			node;
+		node = Event.element(event);
+		if (null == node || node.tagName.toLowerCase() != "input")
+		{
+			return;
+		}
+		node.removeClassName("focusOnHiOrLo");
+		// cant be sure about order for fireing blur and focus events, therefore use timer.
+		window.setTimeout(function() {
+			if($A($(this.node).up("td").getElementsByClassName("focusOnHiOrLo")).length == 0)
+			{
+				var
+					inputs = this.instance._getWeightCellInputs(this.node);
+				inputs.hi.hide();
+				inputs.lo.hide();
+				inputs.merged.show();
+			}
+		}.bind({node:node, instance:this}), 250);
+	},
+
+	_getWeightCellInputs: function(node)
+	{
+		node = $(node);
+		if(node.tagName.toLowerCase() != "td")
+		{
+			node = node.up("td");
+		}
+		node = $(node.down("input"));
+		return {
+			normalized: node,
+			hi: $(node.next(0)),
+			lo: $(node.next(1)),
+			merged: $(node.next(2))
+		};
+	},
+
+	onMergedWeightFocus : function(event)
+	{
+		var
+			node,
+			inputs;
+		node = Event.element(event);
+		if (null == node || node.tagName.toLowerCase() != "input")
+		{
+			return;
+		}
+		// split to 2 inputs
+		inputs = this._getWeightCellInputs(node);
+		inputs.hi.show();
+		inputs.hi.focus();
+		inputs.lo.show();
+		inputs.merged.hide();
+	},
+
+	registerFocusOnHiOrLo : function(event)
+	{
+		var
+			node;
+		node = Event.element(event);
+		if (null == node || node.tagName.toLowerCase() != "input")
+		{
+			return;
+		}
+		$(node).addClassName("focusOnHiOrLo");
+	},
+
+	onChange : function(event) // remove empty columns
+	{
+		var
+			node,
+			i,j,
+			input,
+			ec;
+		node = Event.element(event);
+		
+		if(null == node || node.tagName.toLowerCase() != "input")
+		{
+			return;
+		}
+		// weight related
+		if(node.hasClassName("UnitConventer_HiValue") || node.hasClassName("UnitConventer_LoValue"))
+		{
+			this.updateNormalizedWeightFieldValue(node.up("td"));
+			this.updateMergedWeightFieldValue(node.up("td"));
+		}
+		for(j=1; j < this.nodes.tbody.rows[0].cells.length - 1; j++) 
+		{
+			ec = [];
+			for(i=0; i < this.nodes.tbody.rows.length; i++)
+			{
+				input = $(this.nodes.tbody.rows[i].cells[j]).down("input");
+				if(input.value=="")
+				{
+					ec.push(input);
+				}
+			}
+			if(ec.length == this.nodes.tbody.rows.length)
+			{
+				while(input = ec.shift())
+				{
+					z = input.up("td");
+					z.parentNode.removeChild(z);
+				}
+			}
+		}
+	},
+
+	addColumn: function()
+	{
+		var
+			rowCount = this.nodes.tbody.rows.length,
+			i,
+			node, node2, node3,
+			name,
+			m;
+
+		this.newColumnCount++;
+		for(i=0; i<rowCount; i++)
+		{
+			node = document.createElement('td');
+			node2 = document.createElement('input');
+			this.nodes.tbody.rows[i].appendChild(node);
+			node.appendChild(node2);
+			node2 = $(node2);
+			node2.addClassName("number");
+			if(node2.up("tr").hasClassName("weightRow"))
+			{
+				node2.hide();
+				// weight input needs 4  input fields - one for sending to server, and 3 for input
+				node2.addClassName("UnitConventer_NormalizedWeight");
+				m = [
+					"UnitConventer_HiValue",
+					"UnitConventer_LoValue",
+					"UnitConventer_MergedValue"
+				];
+				while(name = m.shift())
+				{
+					node3 = document.createElement('input');
+					node.appendChild(node3);
+					node3.hide();
+					node3.addClassName("number");
+					node3.addClassName(name);
+				}
+			}
+			name = $(node).previous().down("input").name;
+			chunks = name.split("_");
+			chunks[1] = "new"+this.newColumnCount;
+			node2.name = chunks.join("_");
+		}
+		this.observeAndInitWeightRow();
+	},
+
+	observeAndInitWeightRow : function()
+	{
+		$A(this.nodes.root.getElementsByClassName("UnitConventer_NormalizedWeight")).each(
+			function(node)
+			{
+				node = $(node);
+				if(false == node.hasClassName("observed"))
+				{
+					var
+						lo,
+						hi,
+						merged,
+						value;
+
+					hi = node.next();
+					if(hi == null)
+					{
+						return;
+					}
+					lo = $(hi.next());
+					if(lo == null)
+					{
+						return;
+					}
+					merged = $(lo.next());
+					Event.observe(merged, "focus", this.onMergedWeightFocus.bindAsEventListener(this));
+					Event.observe(hi, "blur", this.onBlurHiOrLo.bindAsEventListener(this));
+					Event.observe(lo, "blur", this.onBlurHiOrLo.bindAsEventListener(this));
+					Event.observe(hi, "focus", this.registerFocusOnHiOrLo.bindAsEventListener(this));
+					Event.observe(lo, "focus", this.registerFocusOnHiOrLo.bindAsEventListener(this));
+					node.addClassName("observed");
+					node.hide();
+					lo.hide();
+					hi.hide();
+					merged.show();
+				}
+			}.bind(this)
+		);
+	},
+
+	_convertToHiAndLoWeightUnits : function(normalizedValue)
+	{
+		var
+			multipliers = this.getWeightMultipliers(this.nodes.unitsTypeField.value),
+			hiValue,
+			loValue,
+			precision = 'ENGLISH' == this.nodes.unitsTypeField.value ? 10 : 1;
+		
+		hiValue = Math.floor(normalizedValue / multipliers[0]);
+		loValue = (normalizedValue - (hiValue * multipliers[0])) / multipliers[1];
+		// allow to enter one decimal number for ounces
+		loValue = Math.round(loValue * precision) / precision;
+		if ('ENGLISH' == this.nodes.unitsTypeField.value)
+		{
+			loValue = loValue.toFixed(0);
+		}
+		return [hiValue, loValue];
+	},
+
+	updateMergedWeightFieldValue: function(node)
+	{
+		var
+			inputs = this._getWeightCellInputs(node),
+			values;
+		values = this._convertToHiAndLoWeightUnits(inputs.normalized.value);
+		inputs.merged.value =  values[0] + '.' + values[1];
+	},
+
+	updateNormalizedWeightFieldValue : function(td)
+	{
+		var
+			inputs = this._getWeightCellInputs(td),
+			multipliers = this.getWeightMultipliers(this.nodes.unitsTypeField.value);
+		inputs.normalized.value = (inputs.hi.value * multipliers[0]) + (inputs.lo.value * multipliers[1]);; 
+	},
+
+	switchUnitTypes : function()
+	{
+		this.nodes.unitsTypeField.value = this.nodes.unitsTypeField.value == "METRIC" ? "ENGLISH" : "METRIC";
+		this.showInWeightUnits();
+	},
+	
+	showInWeightUnits : function()
+	{
+		if(this.nodes.unitsTypeField.value == "METRIC")
+		{
+			this.nodes.unitsName.innerHTML = this.labels.UnitConventer_MetricHiUnit;
+			this.nodes.switchUnits.innerHTML = this.labels.UnitConventer_SwitchToEnglishTitle;
+		}
+		else if(this.nodes.unitsTypeField.value == "ENGLISH")
+		{
+			this.nodes.unitsName.innerHTML = this.labels.UnitConventer_EnglishHiUnit;
+			this.nodes.switchUnits.innerHTML = this.labels.UnitConventer_SwitchToMetricTitle;
+		}
+		var multipliers = this.getWeightMultipliers(this.nodes.unitsTypeField.value);
+		
+		var i, input;
+		for(i = 1; i<this.nodes.tbody.rows[0].cells.length - 1; i++)
+		{
+			input = $(this.nodes.tbody.rows[0].cells[i]).down("input");
+
+			if(input && isNaN(input.value) == false)
+			{
+				normalizedValue = input.value;
+				var inputs = this._getWeightCellInputs(input);
+				values = this._convertToHiAndLoWeightUnits(inputs.normalized.value);
+				inputs.hi.value = values[0];
+				inputs.lo.value = values[1];
+
+				this.updateMergedWeightFieldValue($(input).up("td"));
+			}
+		}
+	},
+
+	getWeightMultipliers: function(type)
+	{
+		switch(type)
+		{
+			case 'ENGLISH':
+				return [0.45359237, 0.0283495231];
+
+			case 'METRIC':
+			default:
+				return [1, 0.001];
+		}
+	},
+
+	dumpField: function(element)
+	{
+		if(element.tagName.toLowerCase() != "td")
+		{
+			element = $(element).up("td");
+		}
+		element = element.down("input");
+		
+		console.log(
+			"Normalized value:" + element.value + "\n"+
+			"hiValue:" +          element.next().value + "\n"+
+			"liValue:" +          element.next().next().value + "\n"+
+			"merged value:" +     element.next().next().next().value
+		)
+	},
 }

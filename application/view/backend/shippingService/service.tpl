@@ -32,9 +32,15 @@
 	</fieldset>
 
 	<fieldset class="shippingService_rates ">
-		<label>{t _shipping_service_rates}</label>
+		{include file="backend/shippingService/rateTable.tpl"}
+	
+		
 		<fieldset class="error">
+
 			<ul class="activeList {allowed role='delivery.update'}activeList_add_delete{/allowed} shippingService_ratesList" id="shippingService_ratesList_{$service.DeliveryZone.ID}_{$service.ID}">
+
+			
+		{*
 				{foreach from=$shippingRates item="rate"}
 					<li id="shippingService_ratesList_{$service.DeliveryZone.ID}_{$service.ID}_{$rate.ID}">
 						{include file="backend/shippingService/rate.tpl" rate=$rate}
@@ -49,18 +55,22 @@
 						</script>
 					</li>
 				{/foreach}
-			</ul>
+		*}
 
+			</ul>
+		
 			<fieldset class="container" {denied role='delivery.update'}style="display: none"{/denied}>
 				<ul class="menu" id="shippingService_rate_menu_{$service.DeliveryZone.ID}_{$service.ID}">
-					<li class="addNewRate"><a href="#new_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_show">{t _add_new_rate}</a></li>
-					<li class="addNewRateCancel" style="display: none"><a href="#cancel_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_cancel">{t _cancel_adding_new_rate}</a></li>
+					<li style="display:none;" class="addNewRate"><a href="#new_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_show">{t _add_new_rate}</a></li>
+					<li style="display:none;" class="addNewRateCancel" style="display: none"><a href="#cancel_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_cancel">{t _cancel_adding_new_rate}</a></li>
+
 				</ul>
 			</fieldset>
+			
 			<fieldset class="shippingService_new_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_form" style="display: none">
 				{include file="backend/shippingService/rate.tpl" rate=$newRate}
 			</fieldset>
-
+		
 			<script type="text/jscript">
 				{literal}
 				Backend.DeliveryZone.ShippingRate.prototype.newRate = {/literal}{json array=$newRate}{literal}
@@ -80,11 +90,8 @@
 						$("shippingService_new_rate_{/literal}{$service.DeliveryZone.ID}{literal}_{/literal}{$service.ID}{literal}_form"),
 						Backend.DeliveryZone.ShippingRate.prototype.newRate
 					);
-
 				ActiveList.prototype.getInstance("shippingService_ratesList_{/literal}{$service.DeliveryZone.ID}{literal}_{/literal}{$service.ID}{literal}", Backend.DeliveryZone.ShippingRate.prototype.Callbacks, function() {});
-
 				{/literal}
-
 			</script>
 		</fieldset>
 	</fieldset>
@@ -104,3 +111,13 @@
 		<a href="#cancel" class="shippingService_cancel cancel">{t _cancel}</a>
 	</fieldset>
 {/form}
+
+{* labels for Backend.DeliveryZone.WeightUnitConventer *}
+<span style="display: none">
+	<span class="UnitConventer_SwitchToEnglishTitle">{t _switch_to_english_units}</span>
+	<span class="UnitConventer_SwitchToMetricTitle">{t _switch_to_metric_units}</span>
+	<span class="UnitConventer_MetricHiUnit">{t _units_kg}</span>
+	<span class="UnitConventer_MetricLoUnit">{t _units_g}</span>
+	<span class="UnitConventer_EnglishHiUnit">{t _units_pounds}</span>
+	<span class="UnitConventer_EnglishLoUnit">{t _units_ounces}</span>
+</span>

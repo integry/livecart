@@ -53,3 +53,6 @@ European Union=European Union
 
 #errors
 _error_mask_is_empty=Please enter mask
+
+
+_weight=Weight
