@@ -22,6 +22,8 @@ class ConfigurationContainer
 	protected $blockConfiguration = array();
 	protected $modules;
 	protected $enabledModules;
+	protected $plugins;
+	protected $childPlugins;
 	protected $info = array();
 	protected $enabled = false;
 	protected $application;
@@ -445,6 +447,73 @@ class ConfigurationContainer
 	public function getApplication()
 	{
 		return $this->application ? $this->application : ActiveRecordModel::getApplication();
+	}
+
+	public function getPlugins($path)
+	{
+		if (is_null($this->childPlugins))
+		{
+			$this->childPlugins = $this->getChildPlugins();
+		}
+
+		$path = strtolower($path);
+
+		return isset($this->childPlugins[$path]) ? $this->childPlugins[$path] : array();
+	}
+
+	protected function getChildPlugins()
+	{
+		$plugins = $this->plugins;
+		foreach ($this->getModules() as $module)
+		{
+			$plugins = array_merge_recursive($module->getChildPlugins());
+		}
+
+		return $plugins;
+	}
+
+	public function loadPlugins()
+	{
+		if (!$this->pluginDirectory)
+		{
+			$this->plugins = array();
+			return false;
+		}
+
+		$plugins = $this->findPlugins($this->pluginDirectory);
+
+		$dynFile = $this->pluginDirectory . '/dynamic.php';
+		if (file_exists($dynFile))
+		{
+			$plugins = array_merge_recursive($plugins, include $dynFile);
+		}
+
+		$this->plugins = $plugins;
+	}
+
+	private function findPlugins($dir, $root = '')
+	{
+		$plugins = array();
+
+		if (is_dir($dir))
+		{
+			foreach (new DirectoryIterator($dir) as $file)
+			{
+				if (!$file->isDot())
+				{
+					if ($file->isDir())
+					{
+						$plugins = array_merge($plugins, $this->findPlugins($file->getPathname(), $root . ($root ? '/' : '') . $file->getFileName()));
+					}
+					else if (substr($file->getFileName(), -4) == '.php')
+					{
+						$plugins[strtolower($root)][] = array('path' => $file->getPathname(), 'class' => substr($file->getFileName(), 0, -4));
+					}
+				}
+			}
+		}
+
+		return $plugins;
 	}
 }
 

@@ -665,58 +665,7 @@ class LiveCart extends Application implements Serializable
 
 	public function getPlugins($path)
 	{
-		if (is_null($this->plugins))
-		{
-			$this->loadPlugins();
-		}
-
-		$path = strtolower($path);
-
-		return isset($this->plugins[$path]) ? $this->plugins[$path] : array();
-	}
-
-	public function loadPlugins()
-	{
-		$dirs = $this->getConfigContainer()->getPluginDirectories();
-
-		$plugins = array();
-		foreach ($dirs as $pluginRoot)
-		{
-			$plugins = array_merge_recursive($plugins, $this->findPlugins($pluginRoot));
-
-			$dynFile = $pluginRoot . '/dynamic.php';
-			if (file_exists($dynFile))
-			{
-				$plugins = array_merge_recursive($plugins, include $dynFile);
-			}
-		}
-
-		$this->plugins = $plugins;
-	}
-
-	private function findPlugins($dir, $root = '')
-	{
-		$plugins = array();
-
-		if (is_dir($dir))
-		{
-			foreach (new DirectoryIterator($dir) as $file)
-			{
-				if (!$file->isDot())
-				{
-					if ($file->isDir())
-					{
-						$plugins = array_merge($plugins, $this->findPlugins($file->getPathname(), $root . ($root ? '/' : '') . $file->getFileName()));
-					}
-					else if (substr($file->getFileName(), -4) == '.php')
-					{
-						$plugins[strtolower($root)][] = array('path' => $file->getPathname(), 'class' => substr($file->getFileName(), 0, -4));
-					}
-				}
-			}
-		}
-
-		return $plugins;
+		return $this->configContainer->getPlugins($path);
 	}
 
 	public function getPluginClasses($mountPath, $extension = 'php')
@@ -1532,6 +1481,7 @@ class LiveCart extends Application implements Serializable
 			{
 				$this->configContainer = new ConfigurationContainer('.', $this);
 				$this->configContainer->getModules();
+				$this->configContainer->getChildPlugins();
 				$serialized = serialize($this->configContainer);
 
 				file_put_contents($path, '<?php return unserialize("' . addslashes($serialized) . '"); ?>');
