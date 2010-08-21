@@ -14,6 +14,9 @@ ClassLoader::import('application.model.session.DatabaseSessionHandler');
 ClassLoader::import('application.model.system.Cron');
 ClassLoader::import('application.model.businessrule.RuleOrderContainer');
 
+// experimental feature
+define('ROUTE_CACHE', 1);
+
 /**
  *  Implements LiveCart-specific application flow logic
  *
@@ -186,6 +189,8 @@ class LiveCart extends Application implements Serializable
 
 	private function initRouter()
 	{
+		$routeCache = $this->getRouterCacheFile();
+
 		if ($this->isInstalled)
 		{
 			// SSL
@@ -226,16 +231,11 @@ class LiveCart extends Application implements Serializable
 			}
 		}
 
-		$routeCache = ClassLoader::getRealPath('cache.') . 'routes.php';
-
-/*
-		if (file_exists($routeCache))
+		if (ROUTE_CACHE && file_exists($routeCache))
 		{
-			$this->router->loadRoutes(include $routeCache);
+			return;
 		}
-		else
-		{
-*/
+
 		foreach ($this->getConfigContainer()->getRouteFiles() as $file)
 		{
 			$routes = array();
@@ -254,7 +254,10 @@ class LiveCart extends Application implements Serializable
 			}
 		}
 
-		//include ClassLoader::getRealPath('application.configuration.route.backend') . '.php';
+		if (ROUTE_CACHE)
+		{
+			file_put_contents($routeCache, '<?php return unserialize(' . var_export(serialize($this->router), true) . '); ?>');
+		}
 	}
 
 	public function setDevMode($devMode = true)
@@ -665,7 +668,7 @@ class LiveCart extends Application implements Serializable
 
 	public function getPlugins($path)
 	{
-		return $this->configContainer->getPlugins($path);
+		return $this->getConfigContainer()->getPlugins($path);
 	}
 
 	public function getPluginClasses($mountPath, $extension = 'php')
@@ -855,10 +858,37 @@ class LiveCart extends Application implements Serializable
 		return $this->localeName;
 	}
 
+	private function getRouterCacheFile()
+	{
+		static $cacheFile;
+
+		if (!$cacheFile)
+		{
+			$cacheFile = ClassLoader::getRealPath('cache.') . 'router.php';
+		}
+
+		return $cacheFile;
+	}
+
 	public function __get($name)
 	{
 		switch ($name)
 	  	{
+			case 'router':
+				$cache = $this->getRouterCacheFile();
+				if (ROUTE_CACHE && file_exists($cache))
+				{
+					$this->router = include $cache;
+					$this->router->setRequest($this->request);
+				}
+				else
+				{
+					$this->router = new $this->routerClass($this->request);
+				}
+
+				return $this->router;
+			break;
+
 			case 'locale':
 				return $this->loadLocale();
 			break;

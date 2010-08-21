@@ -461,12 +461,12 @@ class ConfigurationContainer
 		return isset($this->childPlugins[$path]) ? $this->childPlugins[$path] : array();
 	}
 
-	protected function getChildPlugins()
+	public function getChildPlugins()
 	{
-		$plugins = $this->plugins;
+		$plugins = (array)$this->plugins;
 		foreach ($this->getModules() as $module)
 		{
-			$plugins = array_merge_recursive($module->getChildPlugins());
+			$plugins = array_merge_recursive($plugins, $module->getChildPlugins());
 		}
 
 		return $plugins;
