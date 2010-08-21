@@ -5,6 +5,7 @@ ClassLoader::import("application.model.order.OrderedItem");
 ClassLoader::import("application.model.order.ShipmentTax");
 ClassLoader::import("application.model.delivery.DeliveryZone");
 ClassLoader::import("application.model.delivery.ShippingService");
+ClassLoader::import("library.shipping.ShippingRateSet");
 
 /**
  * Represents a collection of ordered items that are shipped in the same package

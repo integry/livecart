@@ -463,11 +463,14 @@ class ConfigurationContainer
 
 	public function getChildPlugins()
 	{
+		$this->loadPlugins();
 		$plugins = (array)$this->plugins;
 		foreach ($this->getModules() as $module)
 		{
 			$plugins = array_merge_recursive($plugins, $module->getChildPlugins());
 		}
+
+		$this->childPlugins = $plugins;
 
 		return $plugins;
 	}

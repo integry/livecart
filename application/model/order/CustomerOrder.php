@@ -4,6 +4,7 @@ ClassLoader::import('application.model.Currency');
 ClassLoader::import('application.model.user.User');
 ClassLoader::import('application.model.user.UserAddress');
 ClassLoader::import('application.model.product.Product');
+ClassLoader::import('application.model.product.ProductPrice');
 ClassLoader::import('application.model.order.OrderCoupon');
 ClassLoader::import('application.model.order.OrderedItem');
 ClassLoader::import('application.model.order.Shipment');

@@ -14,6 +14,7 @@ ClassLoader::import('application.model.product.ProductPrice');
 ClassLoader::import('application.model.product.ProductCompare');
 ClassLoader::import('application.model.category.SpecFieldValue');
 ClassLoader::import('application.model.category.SearchLog');
+ClassLoader::import('application.model.product.ProductSpecification');
 ClassLoader::importNow('application.helper.CreateHandleString');
 
 /**

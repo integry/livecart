@@ -13,6 +13,7 @@ ClassLoader::import('application.model.user.SessionUser');
 ClassLoader::import('application.model.session.DatabaseSessionHandler');
 ClassLoader::import('application.model.system.Cron');
 ClassLoader::import('application.model.businessrule.RuleOrderContainer');
+ClassLoader::import('application.ControllerPlugin');
 
 // experimental feature
 define('ROUTE_CACHE', 1);
@@ -598,27 +599,37 @@ class LiveCart extends Application implements Serializable
 		return $this->processPlugins($controllerInstance, $response, $actionName);
 	}
 
+	private function getControllerHierarchy(Controller $controllerInstance)
+	{
+		static $cache;
+
+		$top = $parent = get_class($controllerInstance);
+
+		if (!isset($cache[$top]))
+		{
+			do
+			{
+				$hierarchy[strtolower(substr($parent, 0, -10))] = true;
+				$parent = get_parent_class($parent);
+			}
+			while ($parent);
+
+			// remove the last controller (identified by it's path instead)
+			array_shift($hierarchy);
+
+			$hierarchy[str_replace('.', '/', $controllerInstance->getControllerName())] = true;
+			$hierarchy = array_keys($hierarchy);
+
+			$cache[$top] = $hierarchy;
+		}
+
+		return $cache[$top];
+	}
+
 	private function processPlugins(Controller $controllerInstance, Response $response, $action)
 	{
-		ClassLoader::import('application.ControllerPlugin');
-
-		$parent = get_class($controllerInstance);
-		do
+		foreach ($this->getControllerHierarchy($controllerInstance) as $name)
 		{
-			$hierarchy[strtolower(substr($parent, 0, -10))] = true;
-			$parent = get_parent_class($parent);
-		}
-		while ($parent);
-
-		// remove the last controller (identified by it's path instead)
-		array_shift($hierarchy);
-
-		$hierarchy[str_replace('.', '/', $controllerInstance->getControllerName())] = true;
-		$hierarchy = array_keys($hierarchy);
-
-		foreach ($hierarchy as $name)
-		{
-			//var_dump($this->getPlugins('controller/' . $name . '/' . $action), $name, $action);
 			foreach ($this->getPlugins('controller/' . $name . '/' . $action) as $plugin)
 			{
 				include_once($plugin['path']);
@@ -1512,6 +1523,7 @@ class LiveCart extends Application implements Serializable
 				$this->configContainer = new ConfigurationContainer('.', $this);
 				$this->configContainer->getModules();
 				$this->configContainer->getChildPlugins();
+				var_dump($this->configContainer);
 				$serialized = serialize($this->configContainer);
 
 				file_put_contents($path, '<?php return unserialize("' . addslashes($serialized) . '"); ?>');

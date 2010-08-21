@@ -167,6 +167,12 @@
 		exit;
 	}
 
+	if (!isset($classLoaderCache) || ClassLoader::isCacheChanged())
+	{
+		$classLoaderCache = array('realPath' => ClassLoader::getRealPathCache(), 'mountPoint' => ClassLoader::getMountPointCache());
+		file_put_contents($classLoaderCacheFile, '<?php return ' . var_export($classLoaderCache, true) . '; ?>');
+	}
+
 	session_write_close();
 
 ?>

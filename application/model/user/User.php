@@ -416,6 +416,9 @@ class User extends ActiveRecordModel implements EavAble
 	{
 		$array = parent::toArray();
 		$array['newPassword'] = $this->newPassword;
+
+		$this->setArrayData($array);
+
 		return $array;
 	}
 

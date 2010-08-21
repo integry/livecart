@@ -34,6 +34,14 @@ require_once(dirname(dirname(__file__)) . DIRECTORY_SEPARATOR . 'framework' . DI
 
 ClassLoader::mountPath('.', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
 
+$classLoaderCacheFile = ClassLoader::getRealPath('cache.') . 'classloader.php';
+if (file_exists($classLoaderCacheFile))
+{
+	$classLoaderCache = include $classLoaderCacheFile;
+	ClassLoader::setRealPathCache($classLoaderCache['realPath']);
+	ClassLoader::setMountPointCache($classLoaderCache['mountPoint']);
+}
+
 if (isset($_REQUEST['stat']))
 {
 	ClassLoader::import('library.stat.Stat');

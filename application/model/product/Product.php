@@ -29,7 +29,7 @@ class Product extends MultilingualObject
 	private $pricingHandlerInstance = null;
 
 	private $temporaryTaxClass = null;
-	
+
 	const DO_NOT_RECALCULATE_PRICE = false;
 
 	const TYPE_TANGIBLE = 0;
@@ -108,6 +108,11 @@ class Product extends MultilingualObject
 		$schema->registerField(new ArField("fractionalStep", ARFloat::instance(8)));
 		$schema->registerField(new ArField("position", ARInteger::instance()));
 		$schema->registerField(new ArField("categoryIntervalCache", ARText::instance()));
+
+		$serialized = serialize($schema);
+		$t = microtime(true);
+		$unserialized = unserialize($serialized);
+		var_dump(microtime(true) - $t);
 	}
 
 	/**
@@ -438,7 +443,7 @@ class Product extends MultilingualObject
 	{
 		$this->temporaryTaxClass = $class;
 	}
-	
+
 	/**
 	 * Removes persisted product specification property
 	 *
@@ -1194,7 +1199,7 @@ class Product extends MultilingualObject
 			$map[$additional->product->get()->getID()]->registerAdditionalCategory($additional->category->get());
 		}
 	}
-	
+
 	public static function loadCategoryPathsForArray(&$productArray)
 	{
 		foreach ($productArray as $product)
@@ -1213,14 +1218,14 @@ class Product extends MultilingualObject
 			$names = array();
 			foreach ($categories as &$category)
 			{
-				if (($category['lft'] <= $product['Category']['lft']) && 
+				if (($category['lft'] <= $product['Category']['lft']) &&
 					($category['rgt'] >= $product['Category']['rgt']))
 				{
 					$product['Categories'][] =& $category;
 					$names[] = $category['name_lang'];
 				}
 			}
-			
+
 			array_shift($names);
 			$product['category_path'] = implode(' > ', $names);
 			$product['category_path_slash'] = implode(' / ', $names);
