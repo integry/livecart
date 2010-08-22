@@ -1,5 +1,4 @@
 <?php
-
 ClassLoader::import('framework.Application');
 ClassLoader::import('framework.response.ActionResponse');
 ClassLoader::import('application.ConfigurationContainer');
@@ -157,7 +156,14 @@ class LiveCart extends Application implements Serializable
 		if ($this->isDevMode())
 		{
 			ActiveRecordModel::getLogger()->setLogFileName(ClassLoader::getRealPath("cache") . DIRECTORY_SEPARATOR . "activerecord.log");
-			error_reporting(E_ALL);
+			if(phpversion() >= '5.3')
+			{
+				error_reporting(E_ALL & ~E_DEPRECATED);
+			}
+			else
+			{
+				error_reporting(E_ALL);
+			}
 			ini_set('display_errors', 'On');
 		}
 
@@ -662,6 +668,7 @@ class LiveCart extends Application implements Serializable
 
 			include_once $plugin['path'];
 			$inst = new $plugin['class']($this, $instance, $params);
+			
 			$inst->process();
 		}
 	}
