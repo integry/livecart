@@ -118,16 +118,13 @@ _rule_was_successfully_saved=The business rule was successfully saved
 _rule_name_empty=Please enter the business rule name
 
 _tax_class=Tax Class
-<<<<<<< HEAD
 RuleActionChangeTaxClass=Change tax class
 
 _count=Count
 _discount_percentage=Discount percentage
 RuleActionAddProductWithPercentageDiscount=Add product with percentage discount
-=======
 RuleActionChangeShippingTaxClass=Change tax class for shipping rates
 RuleActionChangeTaxClass=Change tax class
 
 _currency=Currency
 _payment_method=Payment method
->>>>>>> d8605c60c454e06ebeecbd2ce93e3e9692f9ceb4
