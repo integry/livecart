@@ -41,8 +41,25 @@ class UserAddressImport extends DataImport
 		return false;
 	}
 
+	//
+	// todo: fix updating, importing customer billing/shipping addresses without this
+	//       
+	public function getClassName($classNameToCompare=null, $instanceClassName=null)
+	{
+		if($instanceClassName == 'UserAddress')
+		{
+			// pretend that 'ShippingAddress' or 'BillingAddress' are equal to 'UserAddress'
+			return in_array($classNameToCompare, array('ShippingAddress', 'BillingAddress')) ? $classNameToCompare : $instanceClassName;
+		}
+		return parent::getClassName();
+	}
+
 	protected function getInstance($record, CsvImportProfile $profile)
 	{
+		
+		pp('User address import get instance');
+		
+		
 		$fields = $profile->getSortedFields();
 		if (isset($fields['UserAddress']['ID']))
 		{
@@ -106,6 +123,7 @@ class UserAddressImport extends DataImport
 
 	protected function afterSave(UserAddress $instance, $record)
 	{
+				
 		if ($instance->addressType)
 		{
 			$instance->addressType->save();

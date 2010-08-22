@@ -182,11 +182,11 @@ class CurrencyTest extends LiveCartTest
 
 		$this->assertEquals($product->getPrice($currency), 1.29);
 
-		$this->assertEquals($item->getSubTotal($currency), 1.29);
+		$this->assertEquals($item->getSubTotal(), 1.29);
 		$item->count->set(2);
-		$this->assertEquals($item->getSubTotal($currency), 2.58);
+		$this->assertEquals($item->getSubTotal(), 2.58);
 
-		$this->assertEquals($order->getTotal($currency), 2.58);
+		$this->assertEquals($order->getTotal(true), 2.58);
 
 		// add another currency to mix - no rounding rules
 		$bgn = Currency::getNewInstance('BGN');
@@ -196,15 +196,18 @@ class CurrencyTest extends LiveCartTest
 		$item->count->set(2);
 		$order->changeCurrency($bgn);
 		$this->assertEquals($product->getPrice($bgn), 0.63);
+		$this->assertEquals($item->getPrice(), 0.63);
+		$this->assertSame($item->getCurrency(), $bgn);
 		$this->assertEquals($item->getSubTotal(), 1.26);
-		$this->assertEquals($order->getTotal(), 1.26);
+		$this->assertEquals($order->getTotal(true), 1.26);
 
 		// add rounding rules
 		$bgn->clearRoundingRules();
 		$bgn->setRoundingRule(0, Currency::TRIM, 0.07);
+		$order->changeCurrency($bgn);
 		$this->assertEquals($product->getPrice($bgn), 0.67);
 		$this->assertEquals($item->getSubTotal(), 1.34);
-		$this->assertEquals($order->getTotal(), 1.34);
+		$this->assertEquals($order->getTotal(true), 1.34);
 
 	}
 

@@ -540,10 +540,10 @@ Backend.CustomerOrder.Editor.prototype =
 	{
 		Event.observe(this.nodes.isCanceled, 'click', function(e) { Event.stop(e); this.switchCancelled(); }.bind(this));
 		Event.observe(this.nodes.status, 'change', function(e) { Event.stop(e); this.submitForm(); }.bind(this));
-		
+
 	},
 
-	
+
 
 	switchCancelled: function()
 	{
@@ -688,7 +688,7 @@ Backend.CustomerOrder.Editor.prototype =
 
 		new LiveCart.AjaxRequest(
 			this.nodes.form,
-			$("order_" + this.id + "_status_feedback"),
+			this.nodes.form.down('select'),
 			function(responseJSON)
 			{
 				try

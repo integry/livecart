@@ -179,9 +179,10 @@ li.orderShipment:hover, .orderShippedShipments ul.activeList > li:hover, .downlo
     margin: 0px;
 }
 
-.orderShipmentsItem_count
+.orderShipmentsItem_count,
+input.shippingAmount
 {
-    width: 50px;
+    width: 55px;
     text-align: right;
 }
 

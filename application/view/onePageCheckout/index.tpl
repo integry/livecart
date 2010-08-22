@@ -13,7 +13,7 @@
 
 {include file="checkout/layout.tpl"}
 
-<div id="content" class="left orderIndex">
+<div id="content" class="left right orderIndex">
 	<h1>{t _checkout}</h1>
 
 	<div id="checkout-right">
@@ -26,9 +26,11 @@
 		</div>
 	</div>
 
+	{if !$user.ID}
 	<div id="checkout-login">
 		{$login}
 	</div>
+	{/if}
 
 	<div id="checkout-shipping">
 		<div id="checkout-shipping-address">
@@ -49,13 +51,13 @@
 
 </div>
 	<script type="text/javascript">
-		var checkout = new Frontend.OnePageCheckout();
-		checkout.updateCompletedSteps({json array=$completedSteps});
+		var checkout = new Frontend.OnePageCheckout({ldelim}OPC_SHOW_CART: {'OPC_SHOW_CART'|config}{rdelim});
 		checkout.updateCompletedSteps({json array=$completedSteps});
 		checkout.updateEditableSteps({json array=$editableSteps});
 		Observer.process('order', {json array=$orderValues});
 {literal}
 		new User.ShippingFormToggler($('sameAsShipping'), $('billingAddressForm'));
+		new User.ShippingFormToggler($('sameAsShipping'), $('checkout-billing').down('.addressSelector'));
 	</script>
 {/literal}
 

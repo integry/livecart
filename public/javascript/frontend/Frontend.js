@@ -528,14 +528,17 @@ Order.AddressSelector = function(form)
 
 		onchange = function()
 		{
-			if (radioButton.checked)
+			window.setTimeout(function()
 			{
-				addressForm.show();
-			}
-			else
-			{
-				addressForm.hide();
-			}
+				if (radioButton.checked)
+				{
+					addressForm.show();
+				}
+				else
+				{
+					addressForm.hide();
+				}
+			}, 100);
 		};
 
 		Event.observe(radioButton.form, 'change', onchange);
@@ -545,8 +548,8 @@ Order.AddressSelector = function(form)
 	}
 
 	form = $(form);
-	newAddressToggle(form.down('#billing_new'));
-	newAddressToggle(form.down('#shipping_new'));
+	newAddressToggle($('billing_new'));
+	newAddressToggle($('shipping_new'));
 }
 
 /*****************************
@@ -684,7 +687,10 @@ User.StateSwitcher.prototype =
 			Element.hide(this.stateTextInput);
 		}
 
-		Event.observe(countrySelector, 'change', this.updateStates.bind(this));
+		if (countrySelector)
+		{
+			Event.observe(countrySelector, 'change', this.updateStates.bind(this));
+		}
 	},
 
 	updateStates: function(e)
@@ -759,6 +765,11 @@ User.ShippingFormToggler.prototype =
 
 	handleChange: function(e)
 	{
+		if (!this.container)
+		{
+			return;
+		}
+
 		if (this.checkbox.checked)
 		{
 			Element.hide(this.container);
@@ -772,13 +783,19 @@ User.ShippingFormToggler.prototype =
 
 Frontend = {}
 
-Frontend.OnePageCheckout = function()
+Frontend.OnePageCheckout = function(options)
 {
 	this.nodes = {}
 	this.findUsedNodes();
 	this.bindEvents();
+	this.options = options;
 
 	this.showOverview();
+
+	if (this.options['OPC_SHOW_CART'])
+	{
+		this.nodes.root.addClassName('showCart');
+	}
 }
 
 Frontend.OnePageCheckout.prototype =
@@ -804,6 +821,7 @@ Frontend.OnePageCheckout.prototype =
 		Observer.add('shippingMethods', this.updateShippingMethodsHTML.bind(this));
 		Observer.add('user', this.updateShippingOptions.bind(this));
 		Observer.add('overview', this.updateOverviewHTML.bind(this));
+		Observer.add('payment', this.updatePaymentHTML.bind(this));
 		Observer.add('completedSteps', this.updateCompletedSteps.bind(this));
 		Observer.add('editableSteps', this.updateEditableSteps.bind(this));
 
@@ -825,7 +843,17 @@ Frontend.OnePageCheckout.prototype =
 	{
 		var el = e ? Event.element(e) : null;
 		var form = this.nodes.shippingAddress.down('form');
-		form.elements.namedItem('sameAsShipping').value = (this.nodes.billingAddress.down('form').elements.namedItem('sameAsShipping').checked ? 'on' : '');
+		var billingForm = this.nodes.billingAddress.down('form');
+
+		if (billingForm)
+		{
+			form.elements.namedItem('sameAsShipping').value = (billingForm.elements.namedItem('sameAsShipping').checked ? 'on' : '');
+		}
+		else
+		{
+			form.elements.namedItem('sameAsShipping').value = 'on';
+		}
+
 		new LiveCart.AjaxRequest(form, el, this.handleFormRequest(form));
 	},
 
@@ -878,8 +906,21 @@ Frontend.OnePageCheckout.prototype =
 	{
 		Event.stop(e);
 
-		var form = this.nodes.paymentDetailsForm;
-		var form = $('paymentForm').down('form');
+		var button = Event.element(e);
+
+		if (!validateForm(this.nodes.paymentMethodForm))
+		{
+			return;
+		}
+
+		if (this.nodes.paymentMethodForm.redirect)
+		{
+			window.location.href = this.nodes.paymentMethodForm.redirect;
+			this.submitButtonProgress(button);
+			return;
+		}
+
+		var form = this.nodes.paymentDetailsForm || $('paymentForm').down('form');
 		if ('form' != form.tagName.toLowerCase())
 		{
 			var form = this.nodes.paymentDetailsForm.down('form');
@@ -892,7 +933,22 @@ Frontend.OnePageCheckout.prototype =
 		else if (validateForm(form))
 		{
 			form.submit();
+			this.submitButtonProgress(button);
 		}
+	},
+
+	submitButtonProgress: function(button)
+	{
+		var tag = button.tagName.toLowerCase();
+
+		if ((tag != 'a') && (tag != 'input'))
+		{
+			button = button.up('a');
+		}
+
+		var indicator = button.parentNode.down('.progressIndicator') || button.parentNode;
+		indicator.addClassName('progressIndicator');
+		indicator.show();
 	},
 
 	initShippingOptions: function()
@@ -902,12 +958,16 @@ Frontend.OnePageCheckout.prototype =
 
 	initShippingAddressForm: function()
 	{
-		this.formOnChange(this.nodes.shippingAddress.down('form'), this.updateShippingAddress.bind(this));
+		var form = this.nodes.shippingAddress.down('form');
+		this.formOnChange(form, this.updateShippingAddress.bind(this));
+		new Order.AddressSelector(form);
 	},
 
 	initBillingAddressForm: function()
 	{
-		this.formOnChange(this.nodes.billingAddress.down('form'), this.updateBillingAddress.bind(this));
+		var form = this.nodes.billingAddress.down('form');
+		this.formOnChange(form, this.updateBillingAddress.bind(this));
+		new Order.AddressSelector(form);
 	},
 
 	initCartForm: function()
@@ -923,10 +983,11 @@ Frontend.OnePageCheckout.prototype =
 		var form = this.nodes.payment.down('form');
 		Event.observe(form, 'submit', Event.stop);
 
+		this.nodes.paymentMethodForm = form;
 		this.nodes.paymentDetailsForm = this.nodes.payment.down('#paymentForm');
 		this.nodes.noMethodSelectedMsg = this.nodes.payment.down('#no-payment-method-selected');
 
-		this.formOnChange(form, this.setPaymentMethod.bind(this));
+		this.formOnChange(form, this.setPaymentMethod.bind(this), [$('tos')]);
 
 		var paymentMethods = form.getElementsBySelector('input.radio');
 		$A(paymentMethods).each(function(el)
@@ -936,14 +997,15 @@ Frontend.OnePageCheckout.prototype =
 				el.onchange =
 					function()
 					{
-						window.location.href = el.value;
-					}
+						this.nodes.paymentMethodForm.redirect = el.value;
+					}.bind(this)
 			}
 			else
 			{
 				el.onchange =
 					function(noHighlight)
 					{
+						this.nodes.paymentMethodForm.redirect = '';
 						el.blur();
 						this.showPaymentDetailsForm(el, noHighlight);
 					}.bind(this)
@@ -955,7 +1017,7 @@ Frontend.OnePageCheckout.prototype =
 				}
 			}
 
-			el.onclick = function(e) { Event.stop(e); el.onchange() };
+			el.onclick = function(e) { if (e) { Event.stop(e); } el.onchange() };
 
 			var tr = $(el).up('tr');
 			if (tr)
@@ -975,7 +1037,12 @@ Frontend.OnePageCheckout.prototype =
 	{
 		var form = this.nodes.paymentDetailsForm;
 		this.updateElement(form, this.nodes.payment.down('#payForm_' + el.value).innerHTML, noHighlight);
-		(form.down('input.text') || form.down('textarea') || form.down('select') || form).focus();
+		try
+		{
+			(form.down('input.text') || form.down('textarea') || form.down('select') || form).focus();
+		}
+		catch (e)
+		{ }
 	},
 
 	initOverview: function()
@@ -991,7 +1058,11 @@ Frontend.OnePageCheckout.prototype =
 		}
 
 		this.nodes.cart.show();
-		this.nodes.overview.hide();
+
+		if (!this.options['OPC_SHOW_CART'])
+		{
+			this.nodes.overview.hide();
+		}
 	},
 
 	showOverview: function(e)
@@ -1001,7 +1072,11 @@ Frontend.OnePageCheckout.prototype =
 			Event.stop(e);
 		}
 
-		this.nodes.cart.hide();
+		if (!this.options['OPC_SHOW_CART'])
+		{
+			this.nodes.cart.hide();
+		}
+
 		this.nodes.overview.show();
 	},
 
@@ -1009,6 +1084,60 @@ Frontend.OnePageCheckout.prototype =
 	{
 		this.updateElement(this.nodes.cart, params);
 		this.initCartForm();
+	},
+
+	updatePaymentHTML: function(params)
+	{
+		var backupIds = {}
+		var selectedMethod = null;
+		$A(['paymentMethodForm', 'paymentDetailsForm']).each(function(cont)
+		{
+			var form = this.nodes[cont];
+			if (form)
+			{
+				Form.State.backup(form);
+				backupIds[cont] = form.backupId;
+
+				// get selected payment method
+				if ('paymentMethodForm' == cont)
+				{
+					$A($(form).getElementsBySelector('input.radio')).each(function(radio)
+					{
+						if (radio.checked)
+						{
+							selectedMethod = radio.id;
+						}
+					}.bind(this));
+				}
+			}
+		}.bind(this));
+
+		this.updateElement(this.nodes.payment, params);
+		this.initPaymentForm();
+
+		// restore payment method selection
+		var form = this.nodes['paymentMethodForm'];
+		if (form)
+		{
+			form.backupId = backupIds['paymentMethodForm'];
+			Form.State.restore(form, ['payMethod']);
+
+			$A($(form).getElementsBySelector('input.radio')).each(function(radio)
+			{
+				if (radio.id == selectedMethod)
+				{
+					radio.checked = true;
+					radio.onclick();
+				}
+			}.bind(this));
+		}
+
+		var form = this.nodes['paymentDetailsForm'];
+		if (form)
+		{
+			form.backupId = backupIds['paymentDetailsForm'];
+			Form.State.restore(form);
+		}
 	},
 
 	updateShippingMethodsHTML: function(params)
@@ -1066,12 +1195,14 @@ Frontend.OnePageCheckout.prototype =
 		this.nodes.root[['removeClassName', 'addClassName'][1 - order.isShippingRequired]]('downloadable');
 	},
 
-	formOnChange: function(form, func)
+	formOnChange: function(form, func, skippedFields)
 	{
 		if (!form)
 		{
 			return;
 		}
+
+		var skippedFields = skippedFields || [];
 
 		ActiveForm.prototype.resetErrorMessages(form);
 
@@ -1079,6 +1210,11 @@ Frontend.OnePageCheckout.prototype =
 		{
 			$A(form.getElementsByTagName(tag)).each(function(el)
 			{
+				if (skippedFields.indexOf(el) > -1)
+				{
+					return;
+				}
+
 				Event.observe(el, 'focus', function() { window.focusedInput = el; });
 				Event.observe(el, 'change', this.fieldOnChangeCommon(form, func.bindAsEventListener(this)));
 				Event.observe(el, 'blur', this.fieldBlurCommon(form, el));
@@ -1105,7 +1241,10 @@ Frontend.OnePageCheckout.prototype =
 
 			if ('radio' == el.getAttribute('type'))
 			{
-				el.blur();
+				try
+				{
+					el.blur();
+				} catch (e) { }
 			}
 
 			if (form.errorList)
@@ -1247,10 +1386,8 @@ Frontend.Ajax.AddToCart = function(container)
 	var handleClick = function(e)
 	{
 		Event.stop(e);
-		var button = Event.element(e);
-		var a = document.createElement('a');
-		button.parentNode.appendChild(a);
-		new LiveCart.AjaxRequest(button.href, a, function () { a.parentNode.removeChild(a); new Effect.Highlight(button); });
+		var button = $(Event.element(e));
+		new LiveCart.AjaxRequest(button.href, $(button.parentNode).down('.price'), function () { new Effect.DropOut(button); });
 	}
 
 	$A($(container).getElementsBySelector('a.addToCart')).each(function(button)

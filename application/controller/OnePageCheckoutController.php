@@ -12,6 +12,7 @@ ClassLoader::import('application.controller.UserController');
 class OnePageCheckoutController extends CheckoutController
 {
 	protected $ignoreValidation = false;
+	protected $isTosRequired = false;
 
 	const CUSTOM_FIELDS_STEP = 'SHIPPING_ADDRESS_STEP';
 
@@ -22,15 +23,19 @@ class OnePageCheckoutController extends CheckoutController
 			return new ActionRedirectResponse('checkout', 'index');
 		}
 
+		$this->isTosRequired = $this->config->get('REQUIRE_TOS');
+
 		parent::init();
-		$this->config->set('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
-		$this->config->set('ENABLE_CHECKOUTDELIVERYSTEP', true);
-		$this->config->set('DISABLE_CHECKOUT_ADDRESS_STEP', false);
-		$this->config->set('ENABLE_SHIPPING_ESTIMATE', false);
-		$this->config->set('SKIP_SHIPPING', false);
-		$this->config->set('SKIP_PAYMENT', false);
-		$this->config->set('REG_EMAIL_CONFIRM', false);
-		$this->config->set('EMAIL_NEW_USER', false);
+		$this->config->setRuntime('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
+		$this->config->setRuntime('ENABLE_CHECKOUTDELIVERYSTEP', true);
+		$this->config->setRuntime('DISABLE_CHECKOUT_ADDRESS_STEP', false);
+		$this->config->setRuntime('DISABLE_GUEST_CHECKOUT', false);
+		$this->config->setRuntime('ENABLE_SHIPPING_ESTIMATE', false);
+		$this->config->setRuntime('SKIP_SHIPPING', false);
+		$this->config->setRuntime('SKIP_PAYMENT', false);
+		$this->config->setRuntime('REG_EMAIL_CONFIRM', false);
+		$this->config->setRuntime('EMAIL_NEW_USER', false);
+		$this->config->setRuntime('REQUIRE_TOS', false);
 
 		$this->loadLanguageFile('Order');
 		$this->loadLanguageFile('User');
@@ -54,26 +59,7 @@ class OnePageCheckoutController extends CheckoutController
 
 			$this->user->grantAccess('login');
 
-			if ($this->user->defaultShippingAddress->get() && $this->order->isShippingRequired())
-			{
-				$address = $this->user->defaultShippingAddress->get()->userAddress->get();
-				$this->order->shippingAddress->set($address);
-				$this->order->billingAddress->set($address);
-			}
-
-			if ($this->user->defaultBillingAddress->get())
-			{
-				$address = $this->user->defaultBillingAddress->get()->userAddress->get();
-
-				if ($address)
-				{
-					$this->order->billingAddress->set($address);
-					if (!$this->order->shippingAddress->get() && $this->order->isShippingRequired())
-					{
-						$this->order->shippingAddress->set($address);
-					}
-				}
-			}
+			$this->setAnonAddresses();
 
 			$this->order->user->set($this->user);
 			$this->order->shippingAddress->resetModifiedStatus();
@@ -91,7 +77,7 @@ class OnePageCheckoutController extends CheckoutController
 				$address = $this->user->defaultBillingAddress->get();
 			}
 
-			if (!$this->order->shippingAddress->get() && $address && $this->order->isShippingRequired())
+			if (!$this->order->shippingAddress->get() && $address && $this->isShippingRequired($this->order))
 			{
 				$userAddress = $address->userAddress->get();
 				$this->order->shippingAddress->set($userAddress);
@@ -117,12 +103,22 @@ class OnePageCheckoutController extends CheckoutController
 			return new ActionRedirectResponse('index', 'index');
 		}
 
+		$this->session->set('OrderPaymentMethod_' . $this->order->getID(), '');
+
 		$response = new CompositeActionResponse();
 
 		$blocks = array('login', 'shippingAddress', 'billingAddress', 'payment', 'cart', 'shippingMethods', 'overview');
-		foreach ($blocks as $block)
+		$blocks = array_flip($blocks);
+
+		if ($this->config->get('REQUIRE_SAME_ADDRESS'))
+		{
+			unset($blocks['billingAddress']);
+		}
+
+		foreach ($blocks as $block => $key)
 		{
 			$blockResponse = $this->$block();
+
 			if ($blockResponse instanceof ActionResponse)
 			{
 				$blockResponse->set('user', $this->user->toArray());
@@ -152,6 +148,9 @@ class OnePageCheckoutController extends CheckoutController
 
 	public function shippingAddress()
 	{
+		$sameAddress = $this->config->get('REQUIRE_SAME_ADDRESS');
+		$this->config->setRuntime('REQUIRE_SAME_ADDRESS', false);
+
 		if ($this->user->isAnonymous())
 		{
 			$response = $this->getUserController()->checkout();
@@ -167,7 +166,11 @@ class OnePageCheckoutController extends CheckoutController
 					$form->set('shipping_' . $key, $value);
 				}
 
-				$form->set('shipping_state_select', $shippingAddress['State']);
+				if (isset($shippingAddress['State']))
+				{
+					$form->set('shipping_state_select', $shippingAddress['State']);
+				}
+
 				$form->set('shipping_country', $shippingAddress['countryID']);
 
 				if ($spec = $addressInstance->getSpecification())
@@ -198,22 +201,36 @@ class OnePageCheckoutController extends CheckoutController
 
 			$this->request->set('step', 'shipping');
 			$response = parent::selectAddress();
+
+			if (!$response instanceof ActionResponse)
+			{
+				return null;
+			}
+
 			$response->set('step', 'shipping');
 
 			//if (!$this->order->isShippingRequired())
 			//{
 				$form = $response->get('form');
 				$formData = $this->switchArrayPrefixes($form->getData(), 'billing_', 'shipping_');
+
+				if (isset($formData['shipping_countryID']))
+				{
+					$formData['shipping_country'] = $formData['shipping_countryID'];
+				}
+
 				$form->setData($formData);
 			//}
 		}
+
+		$this->config->setRuntime('REQUIRE_SAME_ADDRESS', $sameAddress);
 
 		return $this->postProcessResponse($response);
 	}
 
 	public function billingAddress()
 	{
-		if (!$this->order->isShippingRequired())
+		if (!$this->isShippingRequired($this->order))
 		{
 			return null;
 		}
@@ -226,7 +243,10 @@ class OnePageCheckoutController extends CheckoutController
 		$ship = $this->order->shippingAddress->get();
 		if (!$bill || ($bill && $ship && (($bill->getID() == $ship->getID()) || ($bill->toString() == $ship->toString()))))
 		{
-			$response->get('form')->set('sameAsShipping', true);
+			if ($response->get('form'))
+			{
+				$response->get('form')->set('sameAsShipping', true);
+			}
 		}
 
 		return $response;
@@ -235,13 +255,46 @@ class OnePageCheckoutController extends CheckoutController
 	public function shippingMethods()
 	{
 		// shipping methods won't be displayed if custom fields are not filled
-		$this->config->set('CHECKOUT_CUSTOM_FIELDS', 'SHIPPING_METHOD_STEP');
+		$this->config->setRuntime('CHECKOUT_CUSTOM_FIELDS', 'SHIPPING_METHOD_STEP');
+
+		$tempShipping = false;
+		if (!$this->order->shippingAddress->get())
+		{
+			$this->order->shippingAddress->set(SessionOrder::getEstimateAddress());
+			$tempShipping = true;
+		}
+
+		$tempBilling = false;
+		if (!$this->order->billingAddress->get())
+		{
+			$this->order->billingAddress->set($this->order->shippingAddress->get());
+			$tempBilling = true;
+		}
+
+		/*
+		foreach ($this->order->getShipments() as $shipment)
+		{
+			unset($shipment->taxes);
+			$shipment->getTaxes();
+		}
+		*/
 
 		$response = $this->shipping();
 		$this->order->serializeShipments();
+
+		if ($tempShipping)
+		{
+			$this->order->shippingAddress->setNull();
+		}
+
+		if ($tempBilling)
+		{
+			$this->order->billingAddress->setNull();
+		}
+
 		$this->order->save();
 
-		$this->config->set('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
+		$this->config->setRuntime('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
 
 		return $this->postProcessResponse($response);
 	}
@@ -259,15 +312,48 @@ class OnePageCheckoutController extends CheckoutController
 		}
 
 		$this->order->resetArrayData();
-		return $this->postProcessResponse(new ActionResponse('order', $this->order->toArray()));
+		$array = $this->order->toArray();
+
+		if ($this->config->get('REQUIRE_SAME_ADDRESS') && isset($array['ShippingAddress']))
+		{
+			$array['BillingAddress'] = $array['ShippingAddress'];
+		}
+
+		return $this->postProcessResponse(new ActionResponse('order', $array));
 	}
 
 	public function payment()
 	{
+		if ($this->config->get('REQUIRE_SAME_ADDRESS'))
+		{
+			$this->order->billingAddress->set($this->order->shippingAddress->get());
+			$this->order->billingAddress->resetModifiedStatus();
+		}
+
 		$this->ignoreValidation = true;
 		$response = $this->postProcessResponse($this->pay());
 		$this->ignoreValidation = false;
+
+		$paymentMethodForm = new Form($this->getPaymentMethodValidator());
+		if ($this->isTosRequired)
+		{
+			$paymentMethodForm->set('tos', $this->session->get('tos'));
+		}
+
+		$response->set('form', $paymentMethodForm);
+		$response->set('requireTos', $this->isTosRequired);
 		return $response;
+	}
+
+	protected function getPaymentMethodValidator()
+	{
+		$validator = $this->getValidator('setPaymentMethod');
+		if ($this->isTosRequired)
+		{
+			$validator->addCheck('tos', new IsNotEmptyCheck($this->translate('_err_agree_to_tos')));
+		}
+
+		return $validator;
 	}
 
 	public function doLogin()
@@ -295,6 +381,9 @@ class OnePageCheckoutController extends CheckoutController
 
 	public function doSelectShippingAddress()
 	{
+		$sameAddress = $this->config->get('REQUIRE_SAME_ADDRESS');
+		$this->config->setRuntime('REQUIRE_SAME_ADDRESS', false);
+
 		$this->order->loadAll();
 
 		$this->request->set('step', 'shipping');
@@ -327,12 +416,15 @@ class OnePageCheckoutController extends CheckoutController
 			$this->order->getSpecification()->loadRequestData($this->request, 'order_');
 			$this->order->getSpecification()->save();
 
-			if (!$this->order->eavObject->get()->getID())
+			if ($this->order->getSpecification()->hasValues())
 			{
-				$this->order->eavObject->get()->save();
-			}
+				if (!$this->order->eavObject->get()->getID())
+				{
+					$this->order->eavObject->get()->save();
+				}
 
-			$this->order->eavObject->setAsModified(true);
+				$this->order->eavObject->setAsModified(true);
+			}
 
 			$this->order->save();
 
@@ -351,10 +443,35 @@ class OnePageCheckoutController extends CheckoutController
 		{
 			$this->separateBillingAndShippingAddresses();
 			$parentResponse = parent::doSelectAddress();
+
+			// UserAddress::toString() uses old data otherwise
+			if ($this->order->shippingAddress->get())
+			{
+				$this->order->shippingAddress->get()->resetArrayData();
+
+				if ($sameAddress)
+				{
+					$this->order->billingAddress->set($this->order->shippingAddress->get());
+					$this->order->save();
+				}
+				else if ($this->request->get('sameAsShipping') &&
+						((!$this->order->billingAddress->get() && $this->order->shippingAddress->get() && $this->order->isShippingRequired()) ||
+						($this->order->billingAddress->get() && $this->order->shippingAddress->get() && ($this->order->billingAddress->get()->toString() != $this->order->shippingAddress->get()->toString()))))
+				{
+					$this->order->billingAddress->set(clone $this->order->shippingAddress->get());
+					$this->order->billingAddress->get()->save();
+					$this->order->save();
+				}
+			}
 		}
 
 		// attempt to pre-select a shipping method
+		ActiveRecord::clearPool();
+		$this->config->resetRuntime('DELIVERY_TAX_CLASS');
+		$this->order = CustomerOrder::getInstanceById($this->order->getID(), true);
 		$this->shippingMethods();
+
+		$this->config->setRuntime('REQUIRE_SAME_ADDRESS', $sameAddress);
 
 		return $this->getUpdateResponse('shippingMethods', 'billingAddress');
 	}
@@ -488,7 +605,11 @@ class OnePageCheckoutController extends CheckoutController
 		{
 			$method = $this->config->get('CC_HANDLER');
 		}
+
+		$this->session->set('OrderPaymentMethod_' . $this->order->getID(), $method);
 		$this->order->setPaymentMethod($method);
+
+		$this->order->getTotal(true);
 
 		return $this->getUpdateResponse();
 	}
@@ -537,19 +658,24 @@ class OnePageCheckoutController extends CheckoutController
 	 */
 	protected function getStepStatus(CustomerOrder $order, $isCompleted = 0)
 	{
+		if (!$order->shippingAddress->get() || $order->billingAddress->get())
+		{
+			$this->setAnonAddresses();
+		}
+
 		$isStepEditable = $isCompleted;
 
 		// validation will return false for all steps if custom fields are not filled
-		$this->config->set('CHECKOUT_CUSTOM_FIELDS', 'SHIPPING_METHOD_STEP');
+		$this->config->setRuntime('CHECKOUT_CUSTOM_FIELDS', 'SHIPPING_METHOD_STEP');
 
 		$res = array('shippingAddress' => !$this->validateOrder($order, self::STEP_ADDRESS + $isStepEditable),
 					 'shippingMethod' => !$this->validateOrder($order, self::STEP_SHIPPING + $isStepEditable),
 					 'billingAddress' => !$this->validateOrder($order, self::STEP_ADDRESS + $isStepEditable),
 					 'payment' => !$this->validateOrder($order, self::STEP_PAYMENT));
 
-		$this->config->set('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
+		$this->config->setRuntime('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
 
-		if (!$order->shippingAddress->get() && $this->order->isShippingRequired())
+		if (!$order->shippingAddress->get() && !$this->user->defaultShippingAddress->get() && $this->order->isShippingRequired())
 		{
 			if ($isCompleted)
 			{
@@ -559,7 +685,7 @@ class OnePageCheckoutController extends CheckoutController
 			$res['billingAddress'] = false;
 		}
 
-		if (!$order->billingAddress->get())
+		if (!$order->billingAddress->get() && !$this->user->defaultBillingAddress->get())
 		{
 			if ($isCompleted)
 			{
@@ -573,6 +699,17 @@ class OnePageCheckoutController extends CheckoutController
 		{
 			$res['payment'] = false;
 		}
+
+		if (!$isCompleted)
+		{
+			$res['shippingMethod'] = true;
+		}
+
+if (!$res['shippingMethod'])
+{
+//var_dump($order->toArray());
+//		var_dump($this->validateOrder($order, self::STEP_SHIPPING + $isStepEditable));
+}
 
 		return $res;
 	}
@@ -604,11 +741,26 @@ class OnePageCheckoutController extends CheckoutController
 
 	protected function getUpdateResponse()
 	{
+		/////// @todo - should be a better way for recalculating taxes...
+		ActiveRecord::clearPool();
+		$this->config->resetRuntime('DELIVERY_TAX_CLASS');
+		$this->order = CustomerOrder::getInstanceById($this->order->getID(), true);
+		///////
+
 		$this->order->loadAll();
+		$this->restoreShippingMethodSelection();
 		ActiveRecordModel::clearArrayData();
 
+		if ($paymentMethod = $this->session->get('OrderPaymentMethod_' . $this->order->getID()))
+		{
+			$this->order->setPaymentMethod($paymentMethod);
+			$this->order->getTotal(true);
+		}
+
+		$this->setAnonAddresses();
+
 		// @todo: sometimes the shipping address disappears (for registered users that might already have the shipping address entered before)
-		if (!$this->order->shippingAddress->get() && $this->order->isShippingRequired())
+		if (!$this->order->shippingAddress->get() && $this->isShippingRequired($this->order) && $this->user->defaultShippingAddress->get())
 		{
 			$this->user->defaultShippingAddress->get()->load();
 			$this->order->shippingAddress->set($this->user->defaultShippingAddress->get()->userAddress->get());
@@ -618,6 +770,12 @@ class OnePageCheckoutController extends CheckoutController
 		$response = new CompositeJSONResponse();
 		$response->addAction('overview', 'onePageCheckout', 'overview');
 		$response->addAction('cart', 'onePageCheckout', 'cart');
+
+		if ($this->request->getActionName() != 'setPaymentMethod')
+		{
+			$response->addAction('payment', 'onePageCheckout', 'payment');
+		}
+
 		$response->set('order', $this->getOrderValues($this->order));
 
 		foreach (func_get_args() as $arg)
@@ -636,8 +794,13 @@ class OnePageCheckoutController extends CheckoutController
 		if ($order->isShippingRequired())
 		{
 			$steps[] = 'shippingMethod';
+		}
+
+		if ($this->isShippingRequired($order))
+		{
 			$steps[] = 'billingAddress';
 		}
+
 		$steps[] = 'payment';
 
 		return array_flip($steps);
@@ -729,6 +892,36 @@ class OnePageCheckoutController extends CheckoutController
 			ActiveRecord::commit();
 
 			$this->getUserController()->sendWelcomeEmail($this->user);
+		}
+	}
+
+	private function setAnonAddresses()
+	{
+		if ($this->user->isAnonymous())
+		{
+			if ($this->user->defaultShippingAddress->get() && ($this->isShippingRequired($this->order) || $this->config->get('REQUIRE_SAME_ADDRESS')))
+			{
+				$address = $this->user->defaultShippingAddress->get()->userAddress->get();
+				$this->order->shippingAddress->set($address);
+				$this->order->billingAddress->set($address);
+			}
+
+			if ($this->user->defaultBillingAddress->get())
+			{
+				$address = $this->user->defaultBillingAddress->get()->userAddress->get();
+
+				if ($address)
+				{
+					$this->order->billingAddress->set($address);
+					if (!$this->order->shippingAddress->get() && $this->isShippingRequired($this->order))
+					{
+						$this->order->shippingAddress->set($address);
+					}
+				}
+			}
+
+			$this->order->shippingAddress->resetModifiedStatus();
+			$this->order->billingAddress->resetModifiedStatus();
 		}
 	}
 }

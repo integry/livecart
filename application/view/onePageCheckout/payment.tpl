@@ -34,6 +34,10 @@
 			{/foreach}
 		</table>
 	{/if}
+
+	{if $requireTos}
+		{include file="order/block/tos.tpl"}
+	{/if}
 {/form}
 
 <div class="form">
@@ -44,7 +48,10 @@
 			{t _no_payment_method_selected}
 		</div>
 
-		<a href="#" class="proceedToCheckout" id="submitOrder"><span><span><span><span>{t _place_order}</span></span></span></span></a>
+		<div class="completeOrderButton">
+			{include file="onePageCheckout/block/submitButton.tpl"}
+		</div>
+
 		<div class="grandTotal">
 			{t _total}:
 			<span class="orderTotal">{$order.formattedTotal.$currency}</span>
@@ -62,10 +69,15 @@
 	{foreach from=$offlineMethods key="key" item="method"}
 		<div id="payForm_{$method}">
 			{form action="controller=onePageCheckout action=payOffline query=id=$method" handle=$offlineForms[$method] method="POST"}
-				<h2>{"OFFLINE_NAME_`$key`"|config}</h2>
-				{include file="checkout/offlineMethodInfo.tpl" method=$key}
-
-				{include file="block/eav/fields.tpl" fieldList=$offlineVars[$method].specFieldList}
+				{sect}
+					{header}
+						<h2>{"OFFLINE_NAME_`$key`"|config}</h2>
+					{/header}
+					{content}
+						{include file="checkout/offlineMethodInfo.tpl" method=$key}
+						{include file="block/eav/fields.tpl" fieldList=$offlineVars[$method].specFieldList}
+					{/content}
+				{/sect}
 			{/form}
 		</div>
 	{/foreach}

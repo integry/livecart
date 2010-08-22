@@ -78,7 +78,6 @@ class ProductImport extends DataImport
 		{
 			$groupedFields['ProductPrice']['ProductPrice.' . $k] = $this->maketext('_quantity_level_x', $k);
 		}
-
 		return $groupedFields;
 	}
 
@@ -326,6 +325,8 @@ class ProductImport extends DataImport
 					$image = ProductImage::getNewInstance($product);
 				}
 
+				$image->setOwner($product); // this is needed when ProductApi imports default ProductImage.
+
 				$this->importImage($image, $record[$fields['ProductImage']['mainurl']]);
 
 				unset($image);
@@ -398,6 +399,11 @@ class ProductImport extends DataImport
 				$this->importAdditionalCategories($profile, $product, $extraCategories);
 			}
 
+			if ($this->callback)
+			{
+				call_user_func($this->callback, $product);
+			}
+
 			$product->__destruct();
 			$product->destruct(true);
 
@@ -431,7 +437,7 @@ class ProductImport extends DataImport
 		{
 			try
 			{
-				$cat = Category::getInstanceById($fields['Category']['ID'], Category::LOAD_DATA);
+				$cat = Category::getInstanceById($record[$fields['Category']['ID']], Category::LOAD_DATA);
 			}
 			catch (ARNotFoundException $e)
 			{

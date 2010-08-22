@@ -55,7 +55,7 @@
 {include file="block/eav/fields.tpl" item=$user filter="isDisplayed"}
 {include file="block/eav/fields.tpl" eavPrefix=$prefix}
 
-{if $showHeading}
+{if $showHeading && $order.isShippingRequired && !'REQUIRE_SAME_ADDRESS'|config}
 	<h3>{t _billing_address}</h3>
 {/if}
 

@@ -1313,7 +1313,11 @@ Backend.ProductVariationItem.prototype =
 
 			anchor = img.parentNode;
 			anchor.href = imgData['paths'][4] + '?' + (Math.random() * 10000);
-			anchor.onclick = function () {showLightbox(this); return false;}
+			anchor.onclick = function ()
+			{
+				anchor.rel = 'lightbox';
+				Lightbox.prototype.getInstance().start(anchor.href);
+			};
 		}
 	}
 }

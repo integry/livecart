@@ -295,6 +295,7 @@ ENABLE_CHECKOUTDELIVERYSTEP=Enter billing and shipping addresses at separate che
 CHECKOUT_METHOD=Checkout method
 CHECKOUT_ONEPAGE=One page checkout (interactive)
 CHECKOUT_MULTISTEP=Multiple page checkout (classic)
+SKIP_CART=Skip shopping basket page (go directly to checkout after adding to cart)
 SKIP_SHIPPING=Skip shipping method selection step if only one shipping method is available (select it automatically)
 SKIP_PAYMENT=Skip payment method selection step if only one payment method is available (redirect automatically)
 CHECKOUT_CUSTOM_FIELDS=Display custom fields at
@@ -302,6 +303,17 @@ CART_PAGE=Shopping basket page
 BILLING_ADDRESS_STEP=Billing address entry step
 SHIPPING_ADDRESS_STEP=Shipping address entry step
 SHIPPING_METHOD_STEP=Shipping method selection step
+_checkout_address_handling=Checkout Address Handling
+REQUIRE_SAME_ADDRESS=Shipping and billing addresses are always the same
+
+_one_page_checkout=One Page Checkout
+OPC_SHOW_CART=Always display editable shopping basket
+
+_tos_agreement=Terms of Service Agreement
+REQUIRE_TOS=Require customers to agree to the Terms of Service in order to complete a purchase
+TOS_MESSAGE=Terms of Service agreement message
+PAYMENT_PAGE=Payment page
+TOS_OPC_ONLY=Display the checkbox in One Page Checkout only
 
 _taxes=Taxes
 HIDE_TAXES=Hide taxes to customers
@@ -341,6 +353,11 @@ _sitemaps=XML Sitemaps
 ENABLE_SITEMAPS=Enable sitemaps
 SITEMAPS_GZ=Apply gzip compression to sitemap files (saves bandwidth)
 _sitemap_ping=Submit sitemap to search engines
+_view_sitemap=View sitemap start page
+_data_feeds=Data Feeds
+_export_feeds=XML Product Export Feeds
+FEED_KEY=Feed access security key (to avoid unauthorized feed access)
+_open_feed=open
 
 _email=Email
 
@@ -411,6 +428,7 @@ SequentialInvoiceNumber_STEP=Number increase step
 SequentialInvoiceNumber_MIN_LENGTH=Minimum number length (padded with zeros if shorter)
 SequentialInvoiceNumber_PREFIX=Number prefix
 SequentialInvoiceNumber_SUFFIX=Number suffix
+LegacyInvoiceNumber=Legacy (pre-1.3.0) invoice numbers - database ID value
 
 _shipping_estimation=Shipping Cost Estimation
 ENABLE_SHIPPING_ESTIMATE=Enable shipping cost estimation in shopping cart page

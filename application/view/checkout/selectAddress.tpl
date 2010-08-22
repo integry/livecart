@@ -21,11 +21,14 @@
 
 	{if !$step || ('billing' == $step)}
 		<fieldset class="container" id="billingAddressColumn">
-			<h2 id="billingAddress">{t _billing_address}</h2>
+
+			{if !'REQUIRE_SAME_ADDRESS'|config}
+				<h2 id="billingAddress">{t _billing_address}</h2>
+			{/if}
 
 			{include file="checkout/block/selectAddress.tpl" addresses=$billingAddresses prefix="billing" states=$billing_states}
 
-			{if $order.isShippingRequired && !$order.isMultiAddress && !$step}
+			{if !'REQUIRE_SAME_ADDRESS'|config && $order.isShippingRequired && !$order.isMultiAddress && !$step}
 				<p>
 					{checkbox name="sameAsBilling" class="checkbox"}
 					<label for="sameAsBilling" class="checkbox">{t _the_same_as_shipping_address}</label>
@@ -35,7 +38,7 @@
 		</fieldset>
 	{/if}
 
-	{if ($order.isShippingRequired && !$order.isMultiAddress) && (!$step || ('shipping' == $step))}
+	{if (!'REQUIRE_SAME_ADDRESS'|config && $order.isShippingRequired && !$order.isMultiAddress) && (!$step || ('shipping' == $step))}
 
 		{if 'shipping' == $step}
 			<div class="clear"></div>
@@ -57,7 +60,7 @@
 
 	{/if}
 
-	{if (('BILLING_ADDRESS_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config) && !$step) || (('SHIPPING_ADDRESS_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config) && (('shipping' == $step) || !'ENABLE_CHECKOUTDELIVERYSTEP'|config || !$order.isShippingRequired))}
+	{if (('BILLING_ADDRESS_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config) && !$step) || (('SHIPPING_ADDRESS_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config) && (('shipping' == $step) || !'ENABLE_CHECKOUTDELIVERYSTEP'|config || !$order.isShippingRequired)) || 'REQUIRE_SAME_ADDRESS'|config}
 		<div class="clear"></div>
 		{include file="checkout/orderFields.tpl"}
 	{/if}

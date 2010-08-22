@@ -63,6 +63,7 @@ _shipping=Shipping
 _payment=Payment
 _billing_address=Billing Address
 _shipping_address=Shipping Address
+_err_agree_to_tos=Please mark the checkbox above to complete your purchase
 
 # Users
 _your_account=Your Account

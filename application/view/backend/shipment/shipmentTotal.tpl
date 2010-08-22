@@ -48,7 +48,9 @@
 			<div class="orderShipmentsItem_info_total">
 				<span class="orderShipment_info_shippingAmount shipment_shippingAmount">
 					<span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
-					<span class="price">{$shipment.shippingAmount|default:0|string_format:"%.2f"}</span>
+					<span class="price">
+						<input type="text" class="text number shippingAmount" name="shippingAmount[{$shipment.ID}]" value="{$shipment.shippingAmount|default:0|string_format:"%.2f"}" />
+					</span>
 					<span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
 				</span>
 			</div>

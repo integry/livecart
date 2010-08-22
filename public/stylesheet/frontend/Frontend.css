@@ -36,7 +36,8 @@ caption, th, td
 .descr li,
 .newsEntry li,
 #productDescription li,
-.message li
+.message li,
+.staticPageText li
 {
 	list-style-type: disc;
 	margin-left: 1.5em;
@@ -45,7 +46,8 @@ caption, th, td
 .descr ol li,
 .newsEntry ol li,
 #productDescription ol li,
-.message ol li
+.message ol li,
+.staticPageText ol li
 {
 	list-style-type: decimal;
 }
@@ -373,6 +375,7 @@ ul.productList .orderingControls,
 div.review .ratingBreakdown,
 .checkoutButtons,
 .proceedToCheckout,
+.completeOrderButton,
 #checkoutProgress,
 .returningCustomer,
 .noteDate,
@@ -958,7 +961,7 @@ a.layoutSetTable
 {
 	position: absolute;
 	right: 0;
-	top: -1.5em;
+	top: -3em;
 }
 
 .category-allProducts .categoryLayoutSwitch
@@ -1267,6 +1270,12 @@ a.progressIndicator
 	color: #a52a2a;
 }
 
+.price.progressIndicator
+{
+	padding: 0 0 0 16px;
+	background-position: center left;
+}
+
 #mainInfo .price
 {
 	font-size: larger;
@@ -1573,6 +1582,14 @@ div.review .ratingBreakdown
 .checkoutButtons
 {
     width: 300px;
+    text-align: right;
+}
+
+#tosContainer input,
+#tosContainer label
+{
+	float: none;
+	display: inline;
 }
 
 .multiAddressCheckout
@@ -1776,6 +1793,11 @@ table.addressSelector
     padding-left: 30px;
     padding-bottom: 20px;
     clear: both;
+}
+
+#cartItems h2
+{
+	clear: left;
 }
 
 /* Payments */
@@ -2266,6 +2288,14 @@ ul.notes li.responder_1 .noteText
 	min-width: 500px;
 }
 
+/*************************
+	Static pages
+*************************/
+.staticSubpages
+{
+	margin-bottom: 1em;
+}
+
 /***************************
 	Customization
 ***************************/
@@ -2533,6 +2563,11 @@ img.calendar_button
 .eavContainer .wide
 {
 	width: 15em;
+}
+
+fieldset.eavGroup
+{
+	clear: left;
 }
 
 /*************************
@@ -2811,19 +2846,20 @@ img.calendar_button
 #checkout-payment
 {
 	float: left;
-	width: 55%;
+	width: 51%;
 }
 
 #checkout-right
 {
 	float: right;
-	width: 43%;
-	padding-left: 2%;
+	width: 46%;
+	padding-left: 1%;
+	padding-right: 1%;
 }
 
 #checkout-cart #cart
 {
-	width: auto;
+	width: 100%;
 }
 
 #checkout-cart .cartControl *,
@@ -2911,4 +2947,12 @@ img.calendar_button
 	border-top-width: 1px;
 	margin: 1em 0;
 	padding-top: 1em;
+}
+
+.onePageCheckout-index .showCart #checkout-overview h2,
+.onePageCheckout-index .showCart .orderOverviewControls,
+.onePageCheckout-index .showCart #checkout-return-to-overview,
+.onePageCheckout-index .showCart #payItems
+{
+	display: none;
 }

@@ -259,6 +259,16 @@ abstract class EavSpecificationManagerCommon
 
 		if (($a[$field][$fieldGroup]['position'] == $b[$field][$fieldGroup]['position']))
 		{
+			if (!isset($a[$field]['position']))
+			{
+				$a[$field]['position'] = 0;
+			}
+
+			if (!isset($b[$field]['position']))
+			{
+				$b[$field]['position'] = 0;
+			}
+
 			return ($a[$field]['position'] < $b[$field]['position']) ? -1 : 1;
 		}
 
@@ -419,7 +429,7 @@ abstract class EavSpecificationManagerCommon
 			}
 			else
 			{
-				$formData[$fieldName] = $attr['value'];
+				$formData[$fieldName] = isset($attr['value']) ? $attr['value'] : 0;
 			}
 		}
 
@@ -677,6 +687,11 @@ abstract class EavSpecificationManagerCommon
 		{
 			foreach ($array['attributes'] as $attr)
 			{
+				if (empty($attr['handle']) && empty($attr[$fieldClass]['handle']))
+				{
+					continue;
+				}
+
 				if (isset($attr[$fieldClass]))
 				{
 					$array['byHandle'][$attr[$fieldClass]['handle']] = $attr;

@@ -1,3 +1,4 @@
+{assign var=actionPrefix value=$prefix|@ucfirst}
 {if !$addresses}
 	<div id="{$prefix}AddressForm">
 		{include file="user/addressForm.tpl" prefix="`$prefix`_" states=$states}
@@ -11,7 +12,7 @@
 				</td>
 				<td class="address" onclick="var el = $('{$prefix}_{$item.UserAddress.ID}'); el.checked = true; el.form.onchange(); fireEvent(el, 'change'); ">
 						{include file="user/address.tpl"}
-						<a href="{link controller=user action=edit`$prefix|@ucfirst`Address id=$item.ID returnPath=true}">{t _edit_address}</a>
+						<a href="{link controller=user action="edit`$actionPrefix`Address" id=$item.ID returnPath=true}">{t _edit_address}</a>
 				</td>
 			</tr>
 		{/foreach}

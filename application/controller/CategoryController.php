@@ -40,6 +40,7 @@ class CategoryController extends FrontendController
 	  	$this->addBlock('FILTER_BOX', 'boxFilter', 'block/box/filter');
 	  	$this->addBlock('FILTER_TOP', 'boxFilterTop', 'category/boxFilterTopBlock');
 	  	$this->addBlock('PRODUCT_LISTS', 'productList', 'block/productList');
+	  	$this->addBlock('RELATED_CATEGORIES', 'relatedCategories', 'category/block/relatedCategories');
 	}
 
 	public function index()
@@ -47,7 +48,7 @@ class CategoryController extends FrontendController
 		ClassLoader::import('application.model.presentation.CategoryPresentation');
 
 		$this->getAppliedFilters();
-		
+
 
 		// presentation
 		if ($theme = CategoryPresentation::getThemeByCategory($this->getCategory()))
@@ -190,7 +191,7 @@ class CategoryController extends FrontendController
 		}
 
 		// if all the results come from one category, redirect to this category
-		if ((count($categoryNarrow) == 1) && (count($this->filters) == 1))
+		if ((count($categoryNarrow) == 1) && (count($this->filters) == 1) && empty($foundCategories))
 		{
 			$canNarrow = true;
 
@@ -244,30 +245,6 @@ class CategoryController extends FrontendController
 			$selectFilter->removeCondition(new EqualsCond(new ARFieldHandle('Product', 'categoryID'), $this->getCategory()->getID()));
 			$this->productFilter->includeSubcategories();
 		}
-
-/*
-		// load filter data
-		$this->getFilterCounts();
-
-		$filters = array();
-		if ($showAll = $this->request->get('showAll'))
-		{
-			if ('brand' == $showAll)
-			{
-				$filters = array('filters' => $this->manFilters);
-			}
-			else
-			{
-				foreach ($this->filterGroups as $filterGroup)
-				{
-					if ($filterGroup['ID'] == $showAll)
-					{
-						$filters = $filterGroup;
-					}
-				}
-			}
-		}
-*/
 
 		// search redirects
 		// no products found, but found one category name - redirect to this category
@@ -342,6 +319,7 @@ class CategoryController extends FrontendController
 			$searchCon = new SearchController($this->application);
 			$response->set('modelSearch', $searchCon->searchAll($cleanedQuery));
 		}
+
 		return $response;
 	}
 
@@ -355,7 +333,20 @@ class CategoryController extends FrontendController
 		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('Category', 'ID'), $root->getID()));
 		$f->setOrder(MultiLingualObject::getLangOrderHandle(new ARFieldHandle('Category', 'name')));
 
-		return new ActionResponse('categories', ActiveRecordModel::getRecordSetArray('Category', $f, array('CategoryImage')));
+		$allCategories = ActiveRecordModel::getRecordSetArray('Category', $f, array('CategoryImage'));
+
+		$func = function_exists('mb_substr') ? 'mb_substr' : 'substr';
+		$sorted = array();
+		foreach ($allCategories as $category)
+		{
+			$letter = $func($category['name_lang'], 0, 1, 'UTF-8');
+			$sorted[$letter][] = $category;
+		}
+
+		$response = new ActionResponse('sorted', $sorted);
+		$response->set('totalCount', count($allCategories));
+		$response->set('categories', $allCategories);
+		return $response;
 	}
 
 	/**
@@ -615,6 +606,16 @@ class CategoryController extends FrontendController
 
 	private function getSubCatFeaturedProducts()
 	{
+		$cache = $this->application->getCache();
+		$namespace = 'subcategory_featured';
+		$id = $this->getCategory()->getID();
+		$key = array($namespace, $id);
+
+		if ($products = $cache->get($key))
+		{
+			return $products;
+		}
+
 		$count = $this->config->get('FEATURED_COUNT');
 		if ('GRID' == $this->getListLayout())
 		{
@@ -648,7 +649,9 @@ class CategoryController extends FrontendController
 		$featuredFilter = new ProductFilter(Category::getRootNode(), select(in('Product.ID', $rand)));
 		$featuredFilter->includeSubcategories();
 
-		return $this->getProductsArray($featuredFilter);
+		$cache->set($key, $this->getProductsArray($featuredFilter), time() + 1800);
+
+		return $cache->get($key);
 	}
 
 	/**
@@ -660,6 +663,24 @@ class CategoryController extends FrontendController
 		$form->enableClientSideValidation(false);
 		$form->set('sort', $order);
 		return $form;
+	}
+
+	protected function relatedCategoriesBlock()
+	{
+		$f = select(eq('CategoryRelationship.categoryID', $this->getCategory()->getID()));
+		$f->setOrder(f('CategoryRelationship.position'));
+		$categories = array();
+		foreach (ActiveRecordModel::getRecordSet('CategoryRelationship', $f, array('Category')) as $rel)
+		{
+			$category = $rel->relatedCategory->get();
+			$category->getPathNodeSet();
+			$categories[] = $category->toArray();
+		}
+
+		if ($categories)
+		{
+			return new BlockResponse('categories', $categories);
+		}
 	}
 
 	protected function productListBlock()
@@ -692,7 +713,7 @@ class CategoryController extends FrontendController
 		$response->set('lists', $lists);
 		return $response;
 	}
-	
+
 	protected function boxFilterBlock($includeAppliedFilters = true)
 	{
 		$filterStyle = $this->config->get('FILTER_STYLE');
@@ -1028,7 +1049,7 @@ class CategoryController extends FrontendController
 		{
 			$filterStyle = $this->config->get('FILTER_STYLE');
 			$filters = $this->getCategory()->getFilterSet();
-			
+
 			// sort filters by group
 			$sorted = array();
 			foreach ($filters as $filter)
@@ -1065,7 +1086,7 @@ class CategoryController extends FrontendController
 				}
 			}
 		}
-		
+
 		return $filterGroups;
 	}
 

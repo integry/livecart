@@ -39,7 +39,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		$taxRate = TaxRate::getNewInstance($zone, $tax, 50);
 		$taxRate->save();
 
-		$this->config->set('DELIVERY_TAX', $zone->getID());
+		$this->config->setRuntime('DELIVERY_TAX', $zone->getID());
 
 		$shippingRate = ShippingRate::getNewInstance($service, 0, 10000000);
 		$shippingRate->flatCharge->set(100);
@@ -135,7 +135,7 @@ class ShipmentTaxTest extends OrderTestCommon
 
 		$this->order->save();
 		$shipment->save();
-	
+
 
 		// there should only be one ShipmentTax instance for this shipment
 		$this->assertEqual($shipment->getRelatedRecordSet('ShipmentTax')->size(), 1);
@@ -164,7 +164,7 @@ class ShipmentTaxTest extends OrderTestCommon
 				'shipment tax id:', $item->getID(),
 				', type:', $item->type->get(),
 				', amount:', $item->getAmount(), ' ('. 	$item->shipmentID->get()->getTaxAmount() .')',
-				', shipment id:', $item->shipmentID->get()->getID(), 
+				', shipment id:', $item->shipmentID->get()->getID(),
 				', taxRate id:', $item->taxRateID->get()->getID(),
 				', taxClass:', implode(';', $item->taxRateID->get()->taxID->get()->name->get()).'('. $item->taxRateID->get()->taxID->get()->getID() .')',
 				', zone:',  $item->taxRateID->get()->deliveryZoneID->get()->name->get(),'(', $item->taxRateID->get()->deliveryZoneID->get()->getID() ,')', // blame canada!!
@@ -173,7 +173,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		*/
 		$this->assertEquals(1, $order->getShipments()->size(), 'expecting one shipment');
 		$this->assertEqual(40 , $shipment->getRelatedRecordSet('ShipmentTax')->get(0)->shipmentID->get()->getTaxAmount(), 40);
-		
+
 		// @todo: fix failing assertion
 		$this->assertEquals(1, $shipment->getRelatedRecordSet('ShipmentTax')->size(), 'expecting one ShipmentTax');
 		$this->assertEqual($shipment->getRelatedRecordSet('ShipmentTax')->get(0)->amount->get(), 40);
@@ -264,7 +264,7 @@ class ShipmentTaxTest extends OrderTestCommon
 
 		$delZone = $zone;
 
-		$this->config->set('DELIVERY_TAX', $zone->getID());
+		$this->config->setRuntime('DELIVERY_TAX', $zone->getID());
 
 		// shipping amount zone
 		$zone = DeliveryZone::getNewInstance();
@@ -320,7 +320,7 @@ class ShipmentTaxTest extends OrderTestCommon
 
 		$delZone = $zone;
 
-		$this->config->set('DELIVERY_TAX', $zone->getID());
+		$this->config->setRuntime('DELIVERY_TAX', $zone->getID());
 
 		// shipping amount zone
 		$zone = DeliveryZone::getNewInstance();

@@ -364,23 +364,26 @@ Backend.UserGroup.GridFormatter =
 }
 
 
-Backend.UserGroup.massActionHandler = Class.create();
-Object.extend(Object.extend(Backend.UserGroup.massActionHandler.prototype, ActiveGrid.MassActionHandler.prototype),
-	{
-		customComplete:
-			function()
-			{
-				Backend.User.Editor.prototype.resetEditors();
-
-				if(window.activeGrids['users_-2'])
+if (window.ActiveGrid)
+{
+	Backend.UserGroup.massActionHandler = Class.create();
+	Object.extend(Object.extend(Backend.UserGroup.massActionHandler.prototype, ActiveGrid.MassActionHandler.prototype),
+		{
+			customComplete:
+				function()
 				{
-					window.activeGrids['users_-2'].reloadGrid();
-				}
+					Backend.User.Editor.prototype.resetEditors();
 
-				this.blurButton();
-			}
-	}
-);
+					if(window.activeGrids['users_-2'])
+					{
+						window.activeGrids['users_-2'].reloadGrid();
+					}
+
+					this.blurButton();
+				}
+		}
+	);
+}
 
 Backend.User.Group = Class.create();
 Backend.User.Group.prototype =

@@ -151,28 +151,15 @@ Backend.OrderedItem = {
 			   input.up('.orderShipmentsItem_info_count').down('.progressIndicator'),
 			   function(response)
 			   {
-					var response = eval("(" + response.responseText + ")");
-					var shipment = null;
-
-					if(response.Shipment.downloadable)
-					{
-						var parent = $$("#tabOrderProducts_" + response.Shipment.Order.ID + "Content .downloadableShipment li").first();
-						shipment = Backend.Shipment.prototype.getInstance(parent);
-					}
-					else
-					{
-						shipment = Backend.Shipment.prototype.getInstance('orderShipments_list_' + response.Shipment.Order.ID + '_' + response.Shipment.ID);
-					}
+					var response = response.responseData;
+					var shipment = this.getShipmentFromUpdateResponse(response.responseData);
 
 					var li = $('orderShipmentsItems_list_' + response.Shipment.Order.ID + '_' + response.Shipment.ID + '_' + response.ID);
 					if(!response.Shipment.isDeleted)
 					{
 						shipment.itemsActiveList.highlight(li);
 
-						shipment.setAmount(response.Shipment.amount);
-						shipment.setTaxAmount(response.Shipment.taxAmount);
-						shipment.setShippingAmount(response.Shipment.shippingAmount);
-						shipment.setTotal(response.Shipment.total);
+						this.updateShipmentAmounts(shipment, response.Shipment);
 
 						input.lastValue = input.value;
 					}
@@ -190,6 +177,29 @@ Backend.OrderedItem = {
 		   input.value = input.lastValue;
 		   Backend.OrderedItem.updateProductCount(input, orderID);
 	   }
+	},
+
+	getShipmentFromUpdateResponse: function(response)
+	{
+		if(response.Shipment.downloadable)
+		{
+			var parent = $$("#tabOrderProducts_" + response.Shipment.Order.ID + "Content .downloadableShipment li").first();
+			shipment = Backend.Shipment.prototype.getInstance(parent);
+		}
+		else
+		{
+			shipment = Backend.Shipment.prototype.getInstance('orderShipments_list_' + response.Shipment.orderID + '_' + response.Shipment.ID);
+		}
+
+		return shipment;
+	},
+
+	updateShipmentAmounts: function(shipment, responseShipment)
+	{
+		shipment.setAmount(responseShipment.amount);
+		shipment.setTaxAmount(responseShipment.taxAmount);
+		shipment.setShippingAmount(responseShipment.shippingAmount);
+		shipment.setTotal(responseShipment.total);
 	},
 
 	getCountSaveUrl: function(itemID, count)
@@ -260,10 +270,6 @@ Backend.Shipment.prototype =
 			this.toggleStatuses();
 			Form.State.backup(this.nodes.form);
 		}
-
-		window.loadingImage = 'image/loading.gif';
-		window.closeButton = 'image/silk/gif/cross.gif';
-		initLightbox();
 	},
 
 	toggleStatuses: function()
@@ -347,6 +353,12 @@ Backend.Shipment.prototype =
 				Event.observe("orderShipment_USPS_" + this.ID + "_submit", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).toggleUSPS(); }.bind(this));
 				Event.observe("orderShipment_USPS_" + this.ID + "_cancel", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).toggleUSPS(true); }.bind(this));
 				Event.observe("orderShipment_USPS_" + this.ID + "_select", 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).USPSChanged(); }.bind(this));
+
+				var shippingAmount = this.nodes.form.down('input.shippingAmount');
+				if (shippingAmount)
+				{
+					Event.observe(shippingAmount, 'change', this.updateShippingAmount.bindAsEventListener(this));
+				}
 
 				// Bind status changes
 				Event.observe("orderShipment_status_" + this.ID, 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).changeStatus(); }.bind(this));
@@ -481,6 +493,22 @@ Backend.Shipment.prototype =
 
 			Backend.Shipment.prototype.getInstance(li);
 		}
+	},
+
+	updateShippingAmount: function(e)
+	{
+		var input = Event.element(e);
+
+		new LiveCart.AjaxRequest(
+			Router.createUrl('backend.shipment', 'updateShippingAmount', {id: this.ID, amount: input.value}),
+			input,
+			function(response)
+			{
+				var response = response.responseData;
+				var shipment = Backend.OrderedItem.getShipmentFromUpdateResponse(response);
+				Backend.OrderedItem.updateShipmentAmounts(shipment, response.Shipment);
+				Backend.OrderedItem.updateReport($("orderShipment_report_" + response.Shipment.orderID));
+			}.bind(this));
 	},
 
 	cancel: function()
@@ -918,7 +946,11 @@ Backend.Shipment.prototype =
 
 	setShippingAmount: function(shippingAmount)
 	{
-		this.nodes.root.down(".shipment_shippingAmount").down('.price').innerHTML = this.formatAmount(shippingAmount);
+		var inp = this.nodes.root.down(".shipment_shippingAmount").down('.price').down('input');
+		if (inp)
+		{
+			inp.value = this.formatAmount(shippingAmount);
+		}
 	},
 
 	formatAmount: function(amount)

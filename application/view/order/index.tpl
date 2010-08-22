@@ -7,7 +7,7 @@
 	<div class="checkoutHeader">
 		<h1>{t _your_basket}</h1>
 
-		{if $cart.cartItems}
+		{if $cart.cartItems && !$isOnePageCheckout}
 			{include file="checkout/checkoutProgress.tpl" progress="progressCart" order=cart}
 		{/if}
 	</div>

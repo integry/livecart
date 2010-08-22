@@ -25,3 +25,5 @@
 		{$category.description_lang}
 	</div>
 {/if}
+
+{block RELATED_CATEGORIES}

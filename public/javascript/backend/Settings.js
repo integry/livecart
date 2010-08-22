@@ -258,7 +258,7 @@ Backend.Settings.prototype =
 		{
 			$A(container.getElementsByTagName('input')).each(function(cb)
 			{
-				var subKey = cb.name.match(/\[([a-zA-Z0-9_]*)\]/)[1];
+				var subKey = cb.name.match(/\[([-a-zA-Z0-9_]*)\]/)[1];
 				cb.onchange = function()
 				{
 					this.updateSetting(id, subKey, cb.checked ? 1 : 0);
@@ -452,7 +452,7 @@ Backend.Settings.Editor.prototype =
 							}
 						);
 					}
-					return change; // !					
+					return change; // !
 				};
 				Event.observe($('EMAIL_STATUS_UPDATE'), 'change', change());
 			},
@@ -477,6 +477,26 @@ Backend.Settings.Editor.prototype =
 			function()
 			{
 				new Backend.ThemePreview($('setting_THEME'), $('THEME'));
+			},
+
+		'ENABLED_FEEDS':
+			function()
+			{
+				var cont = $('setting_ENABLED_FEEDS').down('.multi');
+				var tpl = $('handler_ENABLED_FEEDS').down('a');
+				var accessKey = $('FEED_KEY').value;
+				$H(cont.getElementsByTagName('p')).each(function(feed)
+				{
+					var link = tpl.cloneNode(true);
+
+					if (feed[1].parentNode)
+					{
+						var module = feed[1].down('input').name.match(/ENABLED_FEEDS\[([-_a-zA-Z0-9]+)\]/)[1];
+						link.href = link.href.replace('module', module);
+						link.href = link.href.replace('accessKey', accessKey);
+						feed[1].appendChild(link);
+					}
+				});
 			},
 
 		'ENABLE_SITEMAPS':
@@ -590,6 +610,18 @@ Backend.Settings.Editor.prototype =
 				input.parentNode.insertBefore(span, input);
 			},
 
+		'DEF_COUNTRY':
+			function()
+			{
+				console.log('here');
+				var switcher = new Backend.User.StateSwitcher($('DEF_COUNTRY'), $('DEF_STATE'), document.createElement('input'), Router.createUrl('backend.user', 'states'));
+				switcher.updateStates(null,
+					function()
+					{
+						$('DEF_STATE').value = $('DEF_STATE').getAttribute('initialValue');
+					});
+			},
+
 		'OFFLINE_HANDLERS':
 			function()
 			{
@@ -653,12 +685,3 @@ Backend.Settings.Editor.prototype =
 		Backend.SaveConfirmationMessage.prototype.showMessage(Backend.getTranslation('_image_resize_success'));
 	}
 }
-
-Event.observe(window, 'load',
-	function()
-	{
-		window.loadingImage = 'image/loading.gif';
-		window.closeButton = 'image/silk/gif/cross.gif';
-		initLightbox();
-	}
-);

@@ -97,7 +97,7 @@ class ProductBundleTest extends LiveCartTest
 
 	public function testAvailability()
 	{
-		$this->config->set('INVENTORY_TRACKING', 'DISABLE');
+		$this->config->setRuntime('INVENTORY_TRACKING', 'DISABLE');
 		$product1 = Product::getNewInstance($this->root);
 		$product1->save();
 
@@ -114,7 +114,7 @@ class ProductBundleTest extends LiveCartTest
 		$this->assertTrue($this->container->isAvailable());
 
 		// turn on inventory tracking
-		$this->config->set('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
+		$this->config->setRuntime('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
 		$product1->stockCount->set(2);
 		$product1->save();
 

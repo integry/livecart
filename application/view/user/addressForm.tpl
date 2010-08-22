@@ -73,6 +73,8 @@
 		<span class="progressIndicator" style="display: none;"></span>
 	{/err}
 </p>
+{else}
+	{hidden name="`$prefix`country" id="{uniqid assign=id_country}"}
 {/if}
 
 {if $fields.STATE}

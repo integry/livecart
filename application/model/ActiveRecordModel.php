@@ -262,8 +262,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 		$array = parent::toArray($force);
 
 		self::executePlugins($array, 'array', get_class($this));
-	        if ($this->specificationInstance && ($this->specificationInstance instanceof EavSpecificationManager) && (empty($array['attributes']) || $force))
-
+		if ($this->specificationInstance && ($this->specificationInstance instanceof EavSpecificationManager) && (empty($array['attributes']) || $force))
 		{
 			$array['attributes'] = $this->specificationInstance->toArray();
 			EavSpecificationManager::sortAttributesByHandle('EavSpecificationManager', $array);

@@ -52,6 +52,7 @@ abstract class DataImport
 			return false;
 		}
 
+
 		foreach ($profile->getFields() as $csvIndex => $field)
 		{
 			$column = $field['name'];
@@ -67,10 +68,10 @@ abstract class DataImport
 			{
 				continue;
 			}
-
 			$value = $record[$csvIndex];
 
 			list($className, $field) = explode('.', $column, 2);
+
 			if (method_exists($this, 'set_' . $className . '_' . $field))
 			{
 				$method = 'set_' . $className . '_' . $field;
@@ -81,7 +82,7 @@ abstract class DataImport
 				$method = 'set_' . $field;
 				$this->$method($instance, $value, $record, $profile);
 			}
-			else if (isset($instance->$field) && ($instance->$field instanceof ARValueMapper) && ($className == $this->getClassName()))
+			else if (isset($instance->$field) && ($instance->$field instanceof ARValueMapper) && ($className == $this->getClassName($className, $this->className)))
 			{
 				if (!$lang)
 				{
@@ -93,6 +94,7 @@ abstract class DataImport
 				}
 			}
 		}
+
 		$idBeforeSave = $instance->getID();
 		$instance->save();
 
@@ -113,12 +115,12 @@ abstract class DataImport
 		}
 
 		$this->afterSave($instance, $record);
-	
+
 		$id = $instance->getID();
 
 		if ($this->callback)
 		{
-			call_user_func($this->callback, $instance, $idBeforeSave == $id);
+			call_user_func($this->callback, $instance);
 		}
 
 		$instance->__destruct();
@@ -133,9 +135,9 @@ abstract class DataImport
 	{
 		$class = $type . 'Import';
 		$this->application->loadPluginClass('application.model.datasync.import', $class);
-		return new $class($this->application);		
+		return new $class($this->application);
 	}
-	
+
 	public function importRelatedRecord($type, ActiveRecordModel $instance, $record, CsvImportProfile $profile)
 	{
 		return $this->getImporterInstance($type)->importInstance($record, $profile, $instance);
@@ -330,7 +332,7 @@ abstract class DataImport
 		{
 			$impReq = new Request();
 			$fieldClass = ucfirst($attrIdentifier);
-			$valueClass = $fieldClass . 'Value';
+			$valueClass = 'eavField' == $attrIdentifier ? 'EavValue' : $fieldClass . 'Value';
 
 			foreach ($fields[$attrIdentifier] as $specFieldID => $csvIndex)
 			{
@@ -369,8 +371,6 @@ abstract class DataImport
 								)
 							);
 						$f->setLimit(1);
-
-						var_dump($f->createString()); exit;
 
 						if (!($value = $attr->getRelatedRecordSet($valueClass, $f)->shift()))
 						{
@@ -440,7 +440,7 @@ abstract class DataImport
 		preg_match('/(.*)Import/', get_class($this), $match);
 		return array_pop($match);
 	}
-	
+
 	public function getColumnValue($record, CsvImportProfile $profile, $fieldName)
 	{
 		if ($profile->isColumnSet($fieldName))
@@ -453,7 +453,7 @@ abstract class DataImport
 	{
 		$this->flushMessage = $msg;
 	}
-	
+
 	public function setCallback($function)
 	{
 		$this->callback = $function;

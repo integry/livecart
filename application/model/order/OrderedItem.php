@@ -29,6 +29,8 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 
 	protected $originalPrice = null;
 
+	protected $itemPrice = null;
+
 	/*
 	 *  Possible values for isSavedForLater field
 	 */
@@ -86,8 +88,6 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 
 	public function getSubTotal($includeTaxes = true, $applyDiscounts = true)
 	{
-		$currency = $this->getCurrency();
-
 		// bundle items do not affect order total - only the parent item has a set price
 		if ($this->parent->get())
 		{
@@ -167,10 +167,11 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 	{
 		if (!$this->customerOrder->get()->isFinalized->get() || !$this->itemPrice)
 		{
+			$price = $this->reduceBaseTaxes($price);
 			$this->itemPrice = $price;
 		}
 	}
-	
+
 	/**
 	 *  Avoid CustomerOrder::finalize function overriding the item price
 	 *  Usually necessary for creating/updating orders via API, etc.
@@ -180,7 +181,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		$this->isCustomPrice = true;
 		$this->price->set($price);
 	}
-	
+
 	public function isCustomPrice()
 	{
 		return $this->isCustomPrice;
@@ -701,6 +702,8 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 
 			$array['itemBasePrice'] = (float)self::getApplication()->getDisplayTaxPrice($array['price'], isset($array['Product']) ? $array['Product'] : array());;
 			$array['displayPrice'] = (float)$this->getDisplayPrice($currency, $isTaxIncludedInPrice);
+			$array['displayPriceWithoutTax'] = (float)$this->getItemPrice();
+			$array['displaySubTotalWithoutTax'] = (float)$this->getSubTotalBeforeTax();
 			$array['displaySubTotal'] = (float)$this->getSubTotal($isTaxIncludedInPrice);
 			$array['itemPrice'] = $array['displaySubTotal'] / $array['count'];
 
@@ -731,6 +734,8 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 			$array['formattedPrice'] = $currency->getFormattedPrice($array['itemPrice']);
 			$array['formattedDisplayPrice'] = $currency->getFormattedPrice($array['displayPrice']);
 			$array['formattedDisplaySubTotal'] = $currency->getFormattedPrice($array['displaySubTotal']);
+			$array['formattedPriceWithoutTax'] = $currency->getFormattedPrice($array['displayPriceWithoutTax']);
+			$array['formattedSubTotalWithoutTax'] = $currency->getFormattedPrice($array['displaySubTotalWithoutTax']);
 		}
 
 		$array['options'] = array();

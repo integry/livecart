@@ -22,6 +22,7 @@
 {includeJs file="backend/abstract/ProductListCommon.js"}
 {includeJs file="backend/RelatedProduct.js"}
 {includeJs file="backend/ProductCategory.js"}
+{includeJs file="backend/CategoryRelationship.js"}
 {includeJs file="backend/ProductList.js"}
 {includeJs file="backend/ProductFile.js"}
 {includeJs file="backend/ProductOption.js"}
@@ -159,6 +160,7 @@
 				{tab id="tabRatingCategories" role="ratingcategory" help="categories" hidden=true}<a href="{link controller=backend.ratingType action=index id=_id_}">{t _rating_categories}</a>{/tab}
 				{tab id="tabReviews" role="ratingcategory" help="categories" hidden=true}<a href="{link controller=backend.review action=index id=_id_ query="category=true"}">{t _reviews}</a>{/tab}
 				{tab id="tabProductLists" role="ratingcategory" help="categories" hidden=true}<a href="{link controller=backend.productList action=index id=_id_}">{t _product_lists}</a>{/tab}
+				{tab id="tabRelatedCategory" role="category" help="categories" hidden=true}<a href="{link controller=backend.categoryRelationship action=index id=_id_}">{t _related_categories}</a>{/tab}
 			{/tabControl}
 		</div>
 		<div id="sectionContainer" class="sectionContainer maxHeight  h--50">

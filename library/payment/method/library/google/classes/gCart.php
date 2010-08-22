@@ -329,7 +329,7 @@
 			foreach ($carrier_options as $options) {
 				$str_xml .= " <carrier-calculated-shipping-option> ";
 				if(!empty($options['price'])){
-					$str_xml	.= " <price currency=\"USD\">".number_format($options['price'], 2)."</price>";
+					$str_xml	.= " <price currency=\"" . $GLOBALS['GCheckout_currency'] . "\">".number_format($options['price'], 2)."</price>";
 				}
 
 				if(!empty($options['company'])) {

@@ -22,14 +22,13 @@ class GoogleCheckout extends ExpressPayment
 						  'https://checkout.google.com/api/checkout/v2/merchantCheckout/Merchant/';
 		$parsed = new XML_Unserializer();
 		$cart = $handler->getCart();
-		//echo $cart;
+
 		if (($response = $handler->_getCurlResponse($cart, $url . $this->getConfigValue('merchant_id'))) && ($parsed->unserialize($response)))
 		{
 			$array = $parsed->getUnserializedData();
 
 			if (empty($array['redirect-url']))
 			{
-				var_dump($array);
 				return false;
 			}
 
@@ -138,6 +137,11 @@ class GoogleCheckout extends ExpressPayment
 
 		include_once dirname(dirname(__file__)) . '/library/google/config.php';
 
+		if ($this->order)
+		{
+			$GLOBALS['GCheckout_currency'] = $this->getValidCurrency($this->order->getCurrency()->getID());
+		}
+
 		$handler = new gCart($this->getConfigValue('merchant_id'), $this->getConfigValue('merchant_key'));
 		$handler->setMerchantCheckoutFlowSupport($returnUrl, $cancelUrl, $this->application->getConfig()->get('REQUIRE_PHONE'));
 
@@ -185,7 +189,7 @@ class GoogleCheckout extends ExpressPayment
 						}
 					}
 
-					$countries = array_unique($countries);
+					$countries = array_intersect(array_unique($countries), $this->getSupportedCountries());
 
 					$zipMasks = $zone->getZipMasks()->extractField('mask');
 
@@ -193,6 +197,9 @@ class GoogleCheckout extends ExpressPayment
 					{
 						$name = $rate['serviceName'] ? $rate['serviceName'] : $rate['ShippingService']['name_lang'];
 						$gRate = new gShipping($name, round($rate['costAmount'], 2), 'merchant-calculated-shipping');
+						// @todo: remove this. chokes up on non-US postal codes
+						$zipMasks = array();
+
 						$gRate->addAllowedAreas($countries, $states, $zipMasks);
 						$shipping[$name] = $gRate;
 					}
@@ -204,7 +211,7 @@ class GoogleCheckout extends ExpressPayment
 
 				// default zone
 				$enabledCountries = array_keys($application->getConfig()->get('ENABLED_COUNTRIES'));
-				$defCountries = array_intersect($enabledCountries, $zoneCountries);
+				$defCountries = array_intersect($enabledCountries, $zoneCountries, $this->getSupportedCountries());
 
 				foreach (DeliveryZone::getDefaultZoneInstance()->getShippingRates($shipment)->toArray() as $rate)
 				{
@@ -216,7 +223,7 @@ class GoogleCheckout extends ExpressPayment
 				$handler->_setShipping($shipping);
 			}
 		}
-var_dump($shipping);
+
 		// set merchant calculations
 		$router = CustomerOrder::getApplication()->getRouter();
 		$calcUrl = $router->createFullUrl($router->createUrl(array('controller' => 'googleCheckout', 'action' => 'index')), !$this->getConfigValue('sandbox'));
@@ -224,6 +231,157 @@ var_dump($shipping);
 		$handler->setDefaultTaxTable(new gTaxTable('Tax', array(new gTaxRule(0))));
 
 		return $handler;
+	}
+
+	private function getSupportedCountries()
+	{
+		return array('AL',
+					'DZ',
+					'AO',
+					'AG',
+					'AR',
+					'AM',
+					'AW',
+					'AU',
+					'AT',
+					'AZ',
+					'BS',
+					'BH',
+					'BD',
+					'BB',
+					'BY',
+					'BE',
+					'BZ',
+					'BJ',
+					'BM',
+					'BO',
+					'BA',
+					'BW',
+					'IO',
+					'BN',
+					'BG',
+					'BF',
+					'KH',
+					'CM',
+					'CA',
+					'CV',
+					'CL',
+					'CO',
+					'CR',
+					'CI',
+					'HR',
+					'CY',
+					'CZ',
+					'DK',
+					'DO',
+					'EC',
+					'SV',
+					'GQ',
+					'EE',
+					'FK',
+					'FO',
+					'FJ',
+					'FI',
+					'FR',
+					'GA',
+					'GE',
+					'DE',
+					'GH',
+					'GI',
+					'GR',
+					'GL',
+					'GU',
+					'GT',
+					'HT',
+					'HN',
+					'HK',
+					'HU',
+					'IS',
+					'IN',
+					'ID',
+					'IE',
+					'IL',
+					'IT',
+					'JM',
+					'JP',
+					'JO',
+					'KZ',
+					'KE',
+					'KW',
+					'LA',
+					'LV',
+					'LB',
+					'LI',
+					'LT',
+					'LU',
+					'MK',
+					'MY',
+					'MV',
+					'ML',
+					'MT',
+					'MU',
+					'MX',
+					'MD',
+					'MC',
+					'MA',
+					'MZ',
+					'NA',
+					'NP',
+					'AN',
+					'NL',
+					'NZ',
+					'NI',
+					'NG',
+					'NO',
+					'OM',
+					'PK',
+					'PA',
+					'PY',
+					'PE',
+					'PH',
+					'PL',
+					'PT',
+					'PR',
+					'QA',
+					'RO',
+					'RU',
+					'RW',
+					'SM',
+					'SA',
+					'SN',
+					'CS',
+					'SC',
+					'SG',
+					'SK',
+					'SI',
+					'ZA',
+					'ES',
+					'LK',
+					'SE',
+					'CH',
+					'TW',
+					'TJ',
+					'TZ',
+					'TH',
+					'TG',
+					'TT',
+					'TN',
+					'TR',
+					'TM',
+					'UG',
+					'UA',
+					'AE',
+					'GB',
+					'US',
+					'UY',
+					'UZ',
+					'VA',
+					'VE',
+					'VN',
+					'VG',
+					'YE',
+					'ZM',
+					'ZW');
 	}
 }
 

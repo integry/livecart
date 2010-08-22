@@ -55,7 +55,7 @@ function build
 
 	# get last log message
 	cd $MAIN
-	git checkout $BRANCH
+	#git checkout $BRANCH
 
 	# copy to a temporary directory and remove .hg directories
 	rm -rf $TMP
@@ -153,13 +153,13 @@ DIR=`pwd`
 
 git stash save build
 
-build /home/mercurial/repo/build /var/db/livecart stable makeProfessional
-build /home/mercurial/repo/build-community /var/db/livecart/community community makeCommunity
+build /home/mercurial/repo/build /var/db/livecart master makeProfessional
+#build /home/mercurial/repo/build-community /var/db/livecart/community community makeCommunity
 
 cd $DIR
 
 git reset --hard
-git checkout master
+#git checkout master
 git stash pop build
 
 echo 'Build process completed successfuly'

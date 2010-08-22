@@ -55,12 +55,12 @@ class UserImport extends DataImport
 	protected function getInstance($record, CsvImportProfile $profile)
 	{
 		$fields = $profile->getSortedFields();
-		
-		if (!empty($fields['User']['ID']))
+
+		if (isset($fields['User']['ID']))
 		{
 			$instance = User::getInstanceByID($record[$fields['User']['ID']], true);
 		}
-		else if (!empty($fields['User']['email']))
+		else if (isset($fields['User']['email']))
 		{
 			$instance = User::getInstanceByEmail($record[$fields['User']['email']]);
 		}
@@ -70,7 +70,6 @@ class UserImport extends DataImport
 			$instance = User::getNewInstance('');
 			$instance->isEnabled->set(true);
 		}
-
 		$this->setLastImportedRecordName($instance->email->get());
 		return $instance;
 	}
@@ -117,7 +116,6 @@ class UserImport extends DataImport
 		{
 			$address = $instance->$field->get()->userAddress->get();
 		}
-
 		$id = $this->importRelatedRecord('UserAddress', $address, $record, $profile);
 		$related = ActiveRecordModel::getInstanceByID('UserAddress', $id, true);
 		foreach (array('firstName', 'lastName', 'companyName') as $field)

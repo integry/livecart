@@ -1,0 +1,20 @@
+application/model/presentation/AbstractPresentation.php
+application/model/presentation/ProductPresentation.php
+application/view/backend/taxRate/edit.tpl
+application/view/backend/taxRate/rate.tpl
+public/javascript/library/editarea/edit_area_full_with_plugins.gz
+public/javascript/library/editarea/edit_area_full_with_plugins.js
+public/javascript/library/editarea/license.txt
+public/javascript/library/editarea/plugins/charmap/langs/Copie de ja.js
+public/javascript/library/tinymce/gz_end.js
+public/javascript/library/tinymce/gz_start.js
+public/javascript/library/tinymce/plugins/compat2x/editor_plugin.js
+public/javascript/library/tinymce/plugins/compat2x/editor_plugin_src.js
+public/javascript/library/tinymce/plugins/paste/blank.htm
+public/javascript/library/tinymce/plugins/paste/css/blank.css
+public/javascript/library/tinymce/plugins/paste/css/pasteword.css
+public/javascript/library/tinymce/plugins/safari/blank.htm
+public/javascript/library/tinymce/plugins/safari/editor_plugin.js
+public/javascript/library/tinymce/plugins/safari/editor_plugin_src.js
+public/javascript/library/tinymce/plugins/xhtmlxtras/css/xhtmlxtras.css
+public/javascript/library/tinymce/tiny_mce_gzip.js

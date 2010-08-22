@@ -1,6 +1,15 @@
 <?php
 require_once(dirname(dirname(__file__)) . "/usps/xmlparser.php");
 
+if( !function_exists( "bcdiv" ) )
+{
+    function bcdiv( $first, $second, $scale = 0 )
+    {
+        $res = $first / $second;
+        return round( $res, $scale );
+    }
+}
+
 class Fedex {
 
     // Variables

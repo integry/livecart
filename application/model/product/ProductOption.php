@@ -37,6 +37,7 @@ class ProductOption extends MultilingualObject
 
 		$schema->registerField(new ARField("name", ARArray::instance()));
 		$schema->registerField(new ARField("description", ARArray::instance()));
+		$schema->registerField(new ARField("selectMessage", ARArray::instance()));
 		$schema->registerField(new ARField("type", ARInteger::instance(4)));
 		$schema->registerField(new ARField("displayType", ARInteger::instance(4)));
 		$schema->registerField(new ARField("isRequired", ARBool::instance()));

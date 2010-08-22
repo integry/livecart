@@ -77,10 +77,6 @@ class LiveCartTest extends PHPUnit_Framework_TestCase
 		$shipping = ShippingAddress::getNewInstance($user, $address);
 		$shipping->save();
 
-		$user->defaultBillingAddress->set($billing);
-		$user->defaultShippingAddress->set($shipping);
-		$user->save();
-
 		$this->order = CustomerOrder::getNewInstance($user);
 		$this->order->shippingAddress->set($shipping->userAddress->get());
 		$this->order->billingAddress->set($billing->userAddress->get());

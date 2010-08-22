@@ -375,7 +375,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			if ($item === $orderedItem)
 			{
 				$this->removedItems[] = $item;
-				$item->markAsDeleted();
+				//$item->markAsDeleted();
 				unset($this->orderedItems[$key]);
 				$this->resetShipments();
 				break;
@@ -1086,6 +1086,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function reset()
 	{
+		$this->deliveryZone = null;
 		$this->orderTotal = null;
 		$this->orderDiscounts = array();
 
@@ -1312,6 +1313,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			return false;
 		}
 
+
 		// check product quantity
 		$maxQuant = $c->get('MAX_QUANT');
 		$minQuant = $c->get('MIN_QUANT');
@@ -1382,6 +1384,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			$product = $item->getProduct();
 			if (!$product || (!$product->isEnabled->get() || !$product->getParent()->isEnabled->get()))
 			{
+				$item->delete();
 				$this->removeItem($item);
 				$result['delete'][] = $item->toArray();
 			}
@@ -1449,6 +1452,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		foreach ($this->getOrderedItems() as $item)
 		{
 			$item->price->set($item->getProduct()->getItemPrice($item, $currency));
+			$item->setItemPrice($item->price->get());
 			$item->save();
 		}
 
@@ -1703,7 +1707,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		if (!$array['isFinalized'])
 		{
-			$this->isRulesProcessed = false;
+			//$this->isRulesProcessed = false;
 			$isOrderable = $this->isOrderable();
 			if ($isOrderable instanceof OrderException)
 			{
@@ -2039,11 +2043,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		}
 	}
 
-	public function getDeliveryZone()
+	public function getDeliveryZone($forceReset = false)
 	{
 		ClassLoader::import("application.model.delivery.DeliveryZone");
 
-		if (!$this->deliveryZone)
+		if (!$this->deliveryZone || $forceReset)
 		{
 			if ($this->isShippingRequired() && $this->shippingAddress->get())
 			{

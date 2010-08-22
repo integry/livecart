@@ -13,10 +13,29 @@ class StaticPageController extends FrontendController
 {
 	public function view()
 	{
-		$page = StaticPage::getInstanceByHandle($this->request->get('handle'))->toArray();
-		$this->addBreadCrumb($page['title_lang'], '');
+		$page = StaticPage::getInstanceByHandle($this->request->get('handle'));
 
-		return new ActionResponse('page', $page);
+		if ($parent = $page->parent->get())
+		{
+			while ($parent)
+			{
+				$parent->load();
+				$urlParams = array('controller' => 'staticPage',
+								   'action' => 'view',
+								   'handle' => $parent->handle->get(),
+								   );
+
+				$this->addBreadCrumb($parent->getValueByLang('title'), $this->router->createUrl($urlParams, true));
+				$parent = $parent->parent->get();
+			}
+		}
+
+		$pageArray = $page->toArray();
+		$this->addBreadCrumb($pageArray['title_lang'], '');
+
+		$response = new ActionResponse('page', $pageArray);
+		$response->set('subPages', $page->getSubPageArray());
+		return $response;
 	}
 }
 

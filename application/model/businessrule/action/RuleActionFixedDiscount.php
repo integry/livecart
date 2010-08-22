@@ -13,7 +13,7 @@ class RuleActionFixedDiscount extends RuleActionPercentageDiscount implements Ru
 {
 	public function applyToOrder(CustomerOrder $order)
 	{
-		$amount = $order->getCurrency()->convertAmount(CustomerOrder::getApplication()->getDefaultCurrency(), $this->getDiscountAmount(0));
+		$amount = $order->getCurrency()->convertAmount(CustomerOrder::getApplication()->getDefaultCurrency(), $this->getDiscountAmount($order->totalAmount->get()));
 		$orderDiscount = OrderDiscount::getNewInstance($order);
 		$orderDiscount->amount->set($amount);
 		$orderDiscount->description->set($this->parentCondition->getParam('name_lang'));

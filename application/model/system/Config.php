@@ -12,6 +12,7 @@ class Config
 	 *  Configuration value array (key => value)
 	 */
 	private $values = array();
+	private $runTimeValues = array();
 
 	private $autoSave = false;
 
@@ -49,6 +50,11 @@ class Config
 
 	public function get($key)
 	{
+		if (isset($this->runTimeValues[$key]))
+		{
+			return $this->runTimeValues[$key];
+		}
+
 		if (!isset($this->values[$key]) && !$this->isUpdated)
 		{
 		  	$this->updateSettings();
@@ -110,11 +116,22 @@ class Config
 		}
 
 		$this->values[$key] = $value;
+		$this->runTimeValues[$key] = $value;
 
 		if ($this->autoSave)
 		{
 			$this->save();
 		}
+	}
+
+	public function setRuntime($key, $value)
+	{
+		$this->runTimeValues[$key] = $value;
+	}
+
+	public function resetRuntime($key)
+	{
+		unset($this->runTimeValues[$key]);
 	}
 
 	public function setValueByLang($key, $lang, $value)

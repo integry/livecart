@@ -70,9 +70,22 @@ abstract class EavItemCommon extends EavSpecificationCommon
 		return $this->getValue($this->getFieldIDColumnName);
 	}
 
+	public function save($params = null)
+	{
+		if ($this->value && !$this->value->get())
+		{
+			return;
+		}
+
+		return parent::save($params);
+	}
+
 	public function toArray()
 	{
-		return $this->getValue()->get()->toArray();
+		if ($value = $this->getValue()->get())
+		{
+			return $this->getValue()->get()->toArray();
+		}
 	}
 
 	public function __destruct()

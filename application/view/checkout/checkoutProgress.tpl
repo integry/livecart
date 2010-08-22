@@ -8,7 +8,7 @@
 			<span class="progressOrder">{assign var="stepOrder" value="`$stepOrder+1`"}{$stepOrder}</span><a href="{link controller=checkout action=selectAddress}" class="{if $order.isAddressSelected}completed{/if} {if $progress == 'progressAddress'}active{/if}" id="progressAddress"><span><span><span><span>{t _address}</span></span></span></span></a>
 			{/if}
 
-			{if 'ENABLE_CHECKOUTDELIVERYSTEP'|config}
+			{if 'ENABLE_CHECKOUTDELIVERYSTEP'|config && !'REQUIRE_SAME_ADDRESS'|config}
 				<span class="progressOrder">{assign var="stepOrder" value="`$stepOrder+1`"}{$stepOrder}</span><a href="{link controller=checkout action=selectAddress query="step=shipping"}" class="{if $order.isAddressSelected}completed{/if} {if $progress == 'progressShippingAddress'}active{/if}" id="progressShippingAddress"><span><span><span><span>{t _shipping_address}</span></span></span></span></a>
 			{/if}
 

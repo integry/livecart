@@ -38,7 +38,7 @@ class UserTest extends LiveCartTest
 		$this->group->save();
 	}
 
-	public function testCreateNewTaxRate()
+	public function testCreateNewUser()
 	{
 		$dateCreated = new ARSerializableDateTime();
 		$user = User::getNewInstance('_tester@tester.com', 'tester', $this->group);
@@ -54,7 +54,7 @@ class UserTest extends LiveCartTest
 
 		$this->assertEqual($user->firstName->get(), 'Yuri');
 		$this->assertEqual($user->lastName->get(), 'Gagarin');
-		$this->assertEqual($user->password->get(), md5('tester'));
+		$this->assertEqual(array_shift(explode(':', $user->password->get())), md5('tester' . array_pop(explode(':', $user->password->get()))));
 		$this->assertEqual($user->companyName->get(), 'Integry Systams');
 		$this->assertTrue((bool)$user->isEnabled->get());
 		$this->assertSame($user->userGroup->get(), $this->group);

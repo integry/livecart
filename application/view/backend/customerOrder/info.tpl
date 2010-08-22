@@ -57,13 +57,13 @@
 			</label>
 		</p>
 
-	
+
 
 		{form id="calendarForm" handle=$dateForm class="hidden" action="controller=backend.customerOrder action=updateDate" method="POST"}
 			{calendar name="dateCompleted" id="dateCompleted"}
-			
+
 			<span class="progressIndicator" id="indicatorDateCompleted" style="display: none;"></span>
-			
+
 			<span class="menu">
 				<a href="#save" id="saveDateCompleted">{t _save}</a>
 				<a href="#cancel" id="cancelDateCompleted">{t _cancel}</a>
@@ -106,7 +106,6 @@
 		<fieldset class="error" style="text-align: center;">
 			<label for="order_{$order.ID}_status" style="width: auto; float: none;">{t _status}: </label>
 			{selectfield options=$statuses id="order_`$order.ID`_status" name="status" class="status"}
-			{img src="image/indicator.gif" id="order_`$order.ID`_status_feedback" style="display: none;"}
 			<div class="errorText hidden"></div>
 		</fieldset>
 	{/form}

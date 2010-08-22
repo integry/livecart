@@ -188,7 +188,6 @@ class CustomerOrderImport extends DataImport
 		{
 			return;
 		}
-					var_dump($value);
 		$product = Product::getInstanceBySKU($value);
 		if (!$product)
 		{

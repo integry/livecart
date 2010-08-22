@@ -43,7 +43,7 @@
 		</div>
 	{/if}
 
-	{if $order.BillingAddress}
+	{if $order.BillingAddress && !'REQUIRE_SAME_ADDRESS'|config && ($order.ShippingAddress.compact != $order.BillingAddress.compact)}
 	<div class="addressContainer">
 		<h3>{t _will_bill_to}:</h3>
 		{fun name="address" address=$order.BillingAddress}

@@ -56,14 +56,16 @@ class DiscountConditionTest extends LiveCartTest
 		$this->order->save(true);
 
 		$this->product1 = Product::getNewInstance(Category::getRootNode());
+		$this->product1->isEnabled->set(true);
 		$this->product1->setPrice('USD', 10);
 		$this->product1->save();
 
 		$this->product2 = Product::getNewInstance(Category::getRootNode());
+		$this->product2->isEnabled->set(true);
 		$this->product2->setPrice('USD', 20);
 		$this->product2->save();
 
-		ActiveRecordModel::getApplication()->getConfig()->set('INVENTORY_TRACKING', 'DISABLE');
+		ActiveRecordModel::getApplication()->getConfig()->setRuntime('INVENTORY_TRACKING', 'DISABLE');
 	}
 
 	public function testGetRootConditions()
@@ -519,8 +521,10 @@ class DiscountConditionTest extends LiveCartTest
 
 	public function testDisableCheckout()
 	{
+		$this->product1->isEnabled->set(true);
 		$this->order->addProduct($this->product1, 1, true);
 		$this->order->save();
+
 		$this->assertTrue($this->order->isOrderable());
 
 		$condition = DiscountCondition::getNewInstance();
@@ -638,7 +642,7 @@ class DiscountConditionTest extends LiveCartTest
 
 	public function testPaymentMethod()
 	{
-		ActiveRecordModel::getApplication()->getConfig()->set('INVENTORY_TRACKING', 'DISABLE');
+		ActiveRecordModel::getApplication()->getConfig()->setRuntime('INVENTORY_TRACKING', 'DISABLE');
 
 		$this->product1->isEnabled->set(true);
 		$this->product1->save();
@@ -736,7 +740,7 @@ class DiscountConditionTest extends LiveCartTest
 
 	public function testPastOrdersInQuantityPrices()
 	{
-		ActiveRecordModel::getApplication()->getConfig()->set('INVENTORY_TRACKING', 'DISABLE');
+		ActiveRecordModel::getApplication()->getConfig()->setRuntime('INVENTORY_TRACKING', 'DISABLE');
 
 		$condition = DiscountCondition::getNewInstance();
 		$condition->isEnabled->set(true);

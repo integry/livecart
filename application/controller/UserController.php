@@ -1259,7 +1259,7 @@ class UserController extends FrontendController
 			$this->validatePassword($validator);
 		}
 
-		if ($this->order->isShippingRequired())
+		if (!$this->config->get('REQUIRE_SAME_ADDRESS') && $this->order->isShippingRequired())
 		{
 			$this->validateAddress($validator, 'shipping_', true);
 		}

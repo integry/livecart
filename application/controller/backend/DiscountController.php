@@ -69,6 +69,27 @@ class DiscountController extends ActiveGridController
 		return $response;
 	}
 
+	private function getCurrencies()
+	{
+		$currencies = ActiveRecordModel::getApplication()->getCurrencyArray();
+		return array_combine($currencies, $currencies);
+	}
+
+	private function getShippingMethods()
+	{
+		ClassLoader::import('application.model.delivery.ShippingService');
+		$methods = array();
+		$f = select();
+		$f->setOrder(f('DeliveryZone.ID'));
+		$f->setOrder(f('ShippingService.position'));
+		foreach (ActiveRecord::getRecordSetArray('ShippingService', $f, array('DeliveryZone')) as $service)
+		{
+			$methods[$service['ID']] = $service['name_lang'] . ' (' . $service['DeliveryZone']['name'] . ')';
+		}
+
+		return $methods;
+	}
+
 	private function getPaymentMethods()
 	{
 		$this->loadLanguageFile('backend/Settings');
@@ -114,6 +135,8 @@ class DiscountController extends ActiveGridController
 
 		$response->set('serializedValues', array(
 						'RuleConditionPaymentMethodIs' => $this->getPaymentMethods(),
+						'RuleConditionCurrencyIs' => $this->getCurrencies(),
+						'RuleConditionShippingMethodIs' => $this->getShippingMethods(),
 						));
 
 		$form = $this->buildForm();
