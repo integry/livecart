@@ -1,8 +1,9 @@
 <?php
 
 ClassLoader::import('application.model.user.User');
+ClassLoader::import('application.model.user.UserAddress');
 
-class LiveCartTest extends UnitTest
+class LiveCartTest extends PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{
@@ -23,9 +24,19 @@ class LiveCartTest extends UnitTest
 		@unlink(ClassLoader::getRealPath('cache.') . 'currencies.php');
 	}
 
-	protected function initOrder()
+	/**
+	 * !Running tests not involving initOrder() method will not recreate Currency,
+	 * but setUp() method is wiping all Currecy records,
+	 *
+	 * Store frontend is not working without Currency object
+	 * 
+	 * As workround this method can be called from test suite to recreate Currency
+	 * 
+	 * @todo: reorganize tests to call DELETE FROM Currency only when setUpCurrency() method is called.
+	 * 
+	 */
+	protected function setUpCurrency() 
 	{
-		// set up currency
 		if (ActiveRecord::objectExists('Currency', 'USD'))
 		{
 			$this->usd = Currency::getInstanceByID('USD', Currency::LOAD_DATA);
@@ -36,7 +47,12 @@ class LiveCartTest extends UnitTest
 			$this->usd->setAsDefault();
 			$this->usd->save();
 		}
+	}
 
+	protected function initOrder()
+	{
+		// set up currency
+		$this->setUpCurrency();
 		$this->usd->decimalCount->set(2);
 		$this->usd->clearRoundingRules();
 		$this->usd->save();
