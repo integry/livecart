@@ -212,3 +212,26 @@ li.testAdress a
 {
 	border-bottom: 1px solid #ccc;
 }
+
+.UnitConventer_SwitchToUnits
+{
+	font-weight:smaller;
+	display:block;
+}
+
+/* TODO: fix all references in js and get rid of this workround */
+#shippingService_ratesList__
+{
+	display:none !important;
+}
+.ratesTableContainerScroll
+{
+	overflow:auto;
+	overflow-x:auto;
+	// width:600px;
+}
+
+.fixedHeader
+{
+	height:39px;
+}

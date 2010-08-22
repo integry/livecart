@@ -124,11 +124,12 @@ class ProductCount
 		$query->includeTable('Product');
 		$query->joinTable('Manufacturer', 'Product', 'ID', 'manufacturerID');
 		$query->joinTable('Category', 'Product', 'ID', 'categoryID');
-		$query->addField('COUNT(manufacturerID)', null, 'cnt');
+		$query->addField('COUNT(Product.manufacturerID)', null, 'cnt');
 		$query->addField('ID', 'Manufacturer');
 		$query->addField('name', 'Manufacturer');
 		$query->setFilter($selectFilter);
 
+		ActiveRecordModel::getApplication()->processInstancePlugins('manufacturerCountQuery', $query);
 		$data = ActiveRecordModel::getDataBySQL($query->getPreparedStatement(ActiveRecord::getDBConnection()));
 
 		return $data;

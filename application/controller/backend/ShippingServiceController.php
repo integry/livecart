@@ -181,8 +181,69 @@ class ShippingServiceController extends StoreManagementController
 				$rates[$id][$name] = $value;
 			}
 		}
+		// pp($rates);
+		$rangeType = $this->request->get('rangeType');
+
+		// unset rate without id (or it will mess up sorting)
+		if(isset($rates['']))
+		{
+			unset($rates['']); 
+		}
+		// unset empty rates (last column)
+		$unsetKeys = array();
+		foreach($rates as $key=>$rate)
+		{
+			if(!count(array_filter($rate)))
+			{
+				$unsetKeys[] = $key; // should not unset in forech()
+			}
+		}
+		while($key = array_shift($unsetKeys))
+		{
+			unset($rates[$key]);
+		}
+		//--
+		$previousEnd = 0;
+		if ($rangeType == ShippingService::SUBTOTAL_BASED)
+		{
+			uasort($rates, array($this, 'sortRangesBySubtotalRangeEnd'));
+			foreach($rates as &$rate)
+			{
+				$rate = array_merge($rate, array(
+					'subtotalRangeStart' => $previousEnd,
+					'weightRangeStart' => 0,
+					'weightRangeEnd' => 0,
+					'perKgCharge' => 0)
+				);
+				$previousEnd = $rate['subtotalRangeEnd'] + 0.01; // smallest Currency amount
+			}
+		}
+		else if ($rangeType == ShippingService::WEIGHT_BASED)
+		{
+			uasort($rates, array($this, 'sortRangesByWeightRangeEnd'));
+			foreach($rates as &$rate)
+			{
+				$rate = array_merge($rate, array(
+					'weightRangeStart' => $previousEnd,
+					'subtotalRangeStart' => 0,
+					'subtotalRangeEnd' => 0,
+					'subtotalPercentCharge' => 0)
+				);
+				$previousEnd = $rate['weightRangeEnd'] + 0.001; // smallest weight amount
+			}
+		}
 
 		return $rates;
+	}
+
+	private function sortRangesByWeightRangeEnd($a, $b)
+	{
+		return $a['weightRangeEnd'] - $b['weightRangeEnd'];
+	}
+
+	private function sortRangesBySubtotalRangeEnd($a, $b)
+	{
+		return $a['subtotalRangeEnd'] - $b['subtotalRangeEnd'];
 	}
 
 	private function save(ShippingService $shippingService)
@@ -194,47 +255,35 @@ class ShippingServiceController extends StoreManagementController
 			$shippingService->setValueArrayByLang(array('name'), $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true, false), $this->request);
 			$shippingService->isFinal->set($this->request->get('isFinal'));
 			$shippingService->save();
+			$shippingService->deleteShippingRates();
 
 			$shippingServiceArray = $shippingService->toArray();
-
 			$shippingServiceArray['newRates'] = array();
+			
 			foreach($ratesData as $id => $data)
 			{
-				if(!$id) continue;
-
-				if(preg_match('/^new/', $id))
+				if (!$id)
 				{
-					if($shippingService->rangeType->get() == ShippingService::WEIGHT_BASED)
-					{
-						$rangeStart = $data['weightRangeStart'];
-						$rangeEnd = $data['weightRangeEnd'];
-					}
-					else if($shippingService->rangeType->get() == ShippingService::SUBTOTAL_BASED)
-					{
-						$rangeStart = $data['subtotalRangeStart'];
-						$rangeEnd = $data['subtotalRangeEnd'];
-					}
-
-					$rate = ShippingRate::getNewInstance($shippingService, $rangeStart, $rangeEnd);
+					continue;
 				}
-				else
+				if($shippingService->rangeType->get() == ShippingService::WEIGHT_BASED)
 				{
-					$rate = ShippingRate::getInstanceByID($id);
+					$rangeStart = $data['weightRangeStart'];
+					$rangeEnd = $data['weightRangeEnd'];
 				}
-
+				else if($shippingService->rangeType->get() == ShippingService::SUBTOTAL_BASED)
+				{
+					$rangeStart = $data['subtotalRangeStart'];
+					$rangeEnd = $data['subtotalRangeEnd'];
+				}
+				$rate = ShippingRate::getNewInstance($shippingService, $rangeStart, $rangeEnd);
 				foreach($data as $var => $value)
 				{
 					$rate->$var->set($value);
 				}
-
 				$rate->save();
-
-				if(preg_match('/^new/', $id))
-				{
-					$shippingServiceArray['newRates'][$id] = $rate->getID();
-				}
+				$shippingServiceArray['newRates'][$id] = $rate->getID();
 			}
-
 			return new JSONResponse(array('service' => $shippingServiceArray), 'success');
 		}
 		else

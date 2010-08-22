@@ -212,5 +212,14 @@ class ShippingService extends MultilingualObject
 
 		return parent::save($forceOperation);
 	}
+	
+	public function deleteShippingRates()
+	{
+		foreach($this->getRates() as $rate)
+		{
+			$rate->delete();
+		}
+	}
+
 }
 ?>
