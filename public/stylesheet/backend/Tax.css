@@ -1,23 +1,59 @@
 .addTax
 {
-    background-image: url(../../image/silk/coins.png);
+	background-image: url(../../image/silk/coins.png);
 }
 
 #tax_new_form
 {
-    width: 500px;
+	width: 500px;
 }
 
 #tax_taxesList li.activeList_odd,
 #tax_taxesList li.activeList_even
 {
-    margin: 5px;
-  	width: 30em;
+	margin: 5px;
+	width: 30em;
 }
 
 #confirmations
 {
-    position: absolute;
-    right: 0px;
-    width: 600px;
+	position: absolute;
+	right: 0px;
+	width: 600px;
+}
+
+fieldset.taxZonesContainer
+{
+	margin:4px 0 -10px 0;
+}
+
+.taxZones .zoneName
+{
+	
+	vertical-align: top;
+	padding:8px;
+}
+
+.taxZones .zoneName p
+{
+	font-weight:normal;
+	font-size:smaller;
+	width:170px;
+	white-space:normal;
+}
+
+.taxZones .taxClass td,
+.taxZones .taxClass input
+{
+	font-size:smaller;
+}
+
+.taxZones .taxClass td
+{
+	padding:0 4px;
+}
+
+table.taxClass
+{
+	margin-bottom:8px;
 }
