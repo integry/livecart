@@ -915,8 +915,6 @@ Backend.DeliveryZone.ShippingService.prototype =
 		//{
 			//console.log('observe weight');
 		//}
-		
-
 //		if(radio.value == 0)
 //		{
 //			document.getElementsByClassName(this.prefix + "subtotalRange", this.nodes.root).each(function(fieldset) { fieldset.style.display = 'none'; });
@@ -1035,7 +1033,6 @@ Backend.DeliveryZone.ShippingService.prototype =
 								}
 							}.bind(this));
 						}
-
 						if(elem.name)
 						{
 							$H(regexps).each(function(id) {
@@ -1061,7 +1058,6 @@ Backend.DeliveryZone.ShippingService.prototype =
 					{
 						return;
 					}
-					
 					node = document.createElement("p");
 					node.className = "errorText";
 					node.style.position="absolute";
@@ -1418,20 +1414,14 @@ Backend.DeliveryZone.WeightTable.prototype = {
 				this.scroll.style.width = (w-230) + "px";
 			}
 		}.bind({scroll:this.nodes.ratesTableContainerScroll}), 1000);
-		
-		m = [
-			"UnitConventer_SwitchToEnglishTitle",
-			"UnitConventer_SwitchToMetricTitle",
-			"UnitConventer_MetricHiUnit",
-			"UnitConventer_MetricLoUnit",
-			"UnitConventer_EnglishHiUnit",
-			"UnitConventer_EnglishLoUnit"
-		];
-		this.labels = {}
-		while(cn = m.shift())
-		{
-			this.labels[cn] = $A($(document).getElementsByClassName(cn)).shift().innerHTML;
-		}
+		this.labels = {};
+		$A($("RateInputTableLabels").getElementsByTagName("span")).each(
+			function(node)
+			{
+				this.labels[node.className] = node.innerHTML;
+			}.bind(this)
+		);
+
 		Event.observe(this.nodes.root, "change", this.onChange.bindAsEventListener(this));
 		Event.observe(this.nodes.root, "keyup", this.addColumnOnKeyUp.bindAsEventListener(this));
 		Event.observe(this.nodes.switchUnits, "click", this.switchUnitTypes.bindAsEventListener(this));
@@ -1511,7 +1501,9 @@ Backend.DeliveryZone.WeightTable.prototype = {
 				var
 					inputs = this.instance._getWeightCellInputs(this.node);
 				inputs.hi.hide();
+				inputs.hiAbbr.hide();
 				inputs.lo.hide();
+				inputs.loAbbr.hide();
 				inputs.merged.show();
 			}
 		}.bind({node:node, instance:this}), 250);
@@ -1519,18 +1511,28 @@ Backend.DeliveryZone.WeightTable.prototype = {
 
 	_getWeightCellInputs: function(node)
 	{
+		var m;
 		node = $(node);
 		if(node.tagName.toLowerCase() != "td")
 		{
 			node = node.up("td");
 		}
-		node = $(node.down("input"));
-		return {
-			normalized: node,
-			hi: $(node.next(0)),
-			lo: $(node.next(1)),
-			merged: $(node.next(2))
-		};
+		return $A([
+			// [<name>, <class name>]
+			["normalized", "UnitConventer_NormalizedWeight"],
+			["hi", "UnitConventer_HiValue"],
+			["hiAbbr", "UnitConventer_HiValueAbbr"],
+			["lo", "UnitConventer_LoValue"],
+			["loAbbr", "UnitConventer_LoValueAbbr"],
+			["merged", "UnitConventer_MergedValue"]
+		]).inject({},
+			function(result, pair)
+			{
+				var nodes = this.node.getElementsByClassName(pair[1]);
+				result[pair[0]] = nodes.length != 1 ? null : nodes[0];
+				return result;
+			}.bind({node:node})
+		);
 	},
 
 	onMergedWeightFocus : function(event)
@@ -1545,16 +1547,20 @@ Backend.DeliveryZone.WeightTable.prototype = {
 		}
 		// split to 2 inputs
 		inputs = this._getWeightCellInputs(node);
-		
-		
+
 		inputs.hi.show();
+		inputs.hiAbbr.show();
 		inputs.hi.focus();
 		inputs.lo.show();
-		
+		inputs.loAbbr.show();
+
 		// hints
 		var unitName = this.nodes.unitsTypeField.value=="METRIC" ? "Metric" : "English";
 		inputs.hi.title=this.labels["UnitConventer_"+unitName+"HiUnit"];
 		inputs.lo.title=this.labels["UnitConventer_"+unitName+"LoUnit"];
+		inputs.hiAbbr.innerHTML=this.labels["UnitConventer_"+unitName+"HiUnitAbbr"];
+		inputs.loAbbr.innerHTML=this.labels["UnitConventer_"+unitName+"LoUnitAbbr"];
+
 		inputs.merged.hide();
 	},
 
@@ -1618,7 +1624,8 @@ Backend.DeliveryZone.WeightTable.prototype = {
 			i,
 			node, node2, node3,
 			name,
-			m;
+			m,
+			pair;
 
 		this.newColumnCount++;
 		for(i=0; i<rowCount; i++)
@@ -1635,17 +1642,19 @@ Backend.DeliveryZone.WeightTable.prototype = {
 				// weight input needs 4  input fields - one for sending to server, and 3 for input
 				node2.addClassName("UnitConventer_NormalizedWeight");
 				m = [
-					"UnitConventer_HiValue",
-					"UnitConventer_LoValue",
-					"UnitConventer_MergedValue"
-				];
-				while(name = m.shift())
+						// [<tag name>, <class name>]
+						["input", "number UnitConventer_HiValue"],
+						["span", "UnitConventer_HiValueAbbr"],
+						["input", "number UnitConventer_LoValue"],
+						["span", "UnitConventer_LoValueAbbr"],
+						["input", "number UnitConventer_MergedValue"]
+					];
+				while(pair = m.shift())
 				{
-					node3 = document.createElement('input');
+					node3 = document.createElement(pair[0]);
 					node.appendChild(node3);
 					node3.hide();
-					node3.addClassName("number");
-					node3.addClassName(name);
+					node3.addClassName(pair[1]);
 				}
 			}
 			name = $(node).previous().down("input").name;
@@ -1665,38 +1674,39 @@ Backend.DeliveryZone.WeightTable.prototype = {
 				node = $(node);
 				if(false == node.hasClassName("observed"))
 				{
-					var
-						lo,
-						hi,
-						merged,
-						value;
-
-					hi = node.next();
-					if(hi == null)
+					var inputs;
+					if(node.up("tr").hasClassName("weightRow") == false)
+					{
+						return; // continue
+					}
+					inputs = this._getWeightCellInputs(node);
+					if(inputs.hi == null || inputs.lo == null || inputs.merged == null)
 					{
 						return;
 					}
-					lo = $(hi.next());
-					if(lo == null)
-					{
-						return;
-					}
-					merged = $(lo.next());
-					Event.observe(merged, "focus", this.onMergedWeightFocus.bindAsEventListener(this));
-					Event.observe(hi, "blur", this.onBlurHiOrLo.bindAsEventListener(this));
-					Event.observe(lo, "blur", this.onBlurHiOrLo.bindAsEventListener(this));
-					Event.observe(hi, "focus", this.registerFocusOnHiOrLo.bindAsEventListener(this));
-					Event.observe(lo, "focus", this.registerFocusOnHiOrLo.bindAsEventListener(this));
+					Event.observe(inputs.merged, "focus", this.onMergedWeightFocus.bindAsEventListener(this));
+					Event.observe(inputs.hi, "blur", this.onBlurHiOrLo.bindAsEventListener(this));
+					Event.observe(inputs.lo, "blur", this.onBlurHiOrLo.bindAsEventListener(this));
+					Event.observe(inputs.hi, "focus", this.registerFocusOnHiOrLo.bindAsEventListener(this));
+					Event.observe(inputs.lo, "focus", this.registerFocusOnHiOrLo.bindAsEventListener(this));
 					node.addClassName("observed");
 					node.hide();
-					lo.hide();
-					hi.hide();
-					merged.show();
+					inputs.lo.hide();
+					if (inputs.loAbbr)
+					{
+						inputs.loAbbr.hide();
+					}
+					inputs.hi.hide();
+					if (inputs.hiAbbr)
+					{
+						inputs.hiAbbr.hide();
+					}
+					inputs.merged.show();
 				}
 			}.bind(this)
 		);
 	},
-	
+
 	attachNumericFilters : function()
 	{
 		$A(this.nodes.root.getElementsByClassName("number")).each(
