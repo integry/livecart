@@ -41,7 +41,7 @@ class SearchController extends FrontendController
 	{
 		$res = array();
 
-		foreach (SearchableModel::getInstances() as $searchable)
+		foreach (SearchableModel::getInstances(SearchableModel::FRONTEND_SEARCH_MODEL) as $searchable)
 		{
 			$f = $searchable->getSelectFilter($searchTerm);
 			$f->setLimit($this->config->get('SEARCH_MODEL_PREVIEW'));

@@ -25,6 +25,17 @@
 			<div id="nav"></div>
 			{backendMenu}
 			<div class="clear"></div>
+
+			{* QuickSearch template *}
+			<div style="right:0; position:absolute; width:320px;">
+				<form id="QuickSearchForm" method="post" action="{link controller=backend.quickSearch action=search}" onsubmit="return false;">
+					<input autocomplete="off" name="q" type="text" value="" onkeyup="Backend.QuickSearch.onKeyUp(this);" style="float:right;"/>
+					<span class="progressIndicator hidden" id="QuickSearchProgressIndicator" style="float:right;"></span>
+					<div id="QuickSearchResult" style="position:absolute; right:0; background-color:white; top:38px; z-index:2;"></div>
+				</form>
+			</div>
+			{* --------------------- *}
+			
 		</div>
 
 	</div>

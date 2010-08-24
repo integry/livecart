@@ -35,6 +35,7 @@
 
 	{includeJs file=library/KeyboardEvent.js front=true}
 	{includeJs file="backend/Backend.js" front=true}
+	{includeJs file="backend/QuickSearch.js"}
 	{includeJs file=library/livecart.js front=true}
 	{includeJs file=library/dhtmlHistory/dhtmlHistory.js}
 	{includeJs file="library/scriptaculous/dragdrop.js" front=true}

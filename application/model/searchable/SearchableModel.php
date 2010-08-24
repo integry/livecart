@@ -8,13 +8,16 @@
  */
 abstract class SearchableModel
 {
+	const FRONTEND_SEARCH_MODEL = 1;
+	const BACKEND_SEARCH_MODEL = 2;
+
 	protected $application;
 
 	public abstract function getClassName();
 	public abstract function loadClass();
 	public abstract function getSelectFilter($searchTerm);
 
-	public static function getInstances()
+	public static function getInstances($modelType=1)
 	{
 		$ret = array();
 		foreach (self::getSearchableModels() as $file)
@@ -23,15 +26,17 @@ abstract class SearchableModel
 			$class = basename($file, '.php');
 			$inst = new $class();
 			$inst->loadClass();
-			$ret[$inst->getClassName()] = $inst;
+			if ((self::BACKEND_SEARCH_MODEL & $modelType && $inst->isBackend()) || (self::FRONTEND_SEARCH_MODEL & $modelType && $inst->isFrontend()))
+			{
+				$ret[$inst->getClassName()] = $inst;
+			}
 		}
-
 		return $ret;
 	}
 
-	public static function getInstanceByModelClass($class)
+	public static function getInstanceByModelClass($class, $modelType=1)
 	{
-		$instances = self::getInstances();
+		$instances = self::getInstances($modelType);
 
 		if (isset($instances[$class]))
 		{
@@ -63,10 +68,10 @@ abstract class SearchableModel
 		return $ret;
 	}
 
-	public static function getSearchableModelClasses()
+	public static function getSearchableModelClasses($modelType=1)
 	{
 		$ret = array();
-		foreach (self::getInstances() as $inst)
+		foreach (self::getInstances($modelType) as $inst)
 		{
 			$ret[] = $inst->getClassName();
 		}
@@ -93,6 +98,16 @@ abstract class SearchableModel
 		$arr['template'] = 'custom:search/block/result_' . $arr['class'] .'.tpl';
 		$arr['name'] = ActiveRecordModel::getApplication()->translate($arr['class']);
 		return $arr;
+	}
+
+	public function isFrontend()
+	{
+		return true;
+	}
+
+	public function isBackend()
+	{
+		return true;
 	}
 }
 
