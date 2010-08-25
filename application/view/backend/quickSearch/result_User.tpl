@@ -1,0 +1,2 @@
+<a href="{link controller=backend.userGroup query="rt=`$randomToken`"}#user_{$record.ID}__">{$record.firstName|escape|mark_substring:$query} {$record.lastName|escape|mark_substring:$query}</a>
+<span>({$record.email|escape|mark_substring:$query})</span>

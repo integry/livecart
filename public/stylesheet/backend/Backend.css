@@ -983,9 +983,9 @@ a.cancel, a.menu
 	padding: 15px;
 	width: 30px;
 	height: 20px;
-	background-image: url(../../image/indicator.gif);
+	background-image: url(../../image/indicator.gif) !important;
 	background-position: center center;
-	background-repeat: no-repeat;
+	background-repeat: no-repeat !important;
 	clear: none;
 }
 

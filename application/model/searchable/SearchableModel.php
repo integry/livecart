@@ -12,7 +12,8 @@ abstract class SearchableModel
 	const BACKEND_SEARCH_MODEL = 2;
 
 	protected $application;
-
+	protected $weightSearchConditionFields = array();
+	
 	public abstract function getClassName();
 	public abstract function loadClass();
 	public abstract function getSelectFilter($searchTerm);
@@ -108,6 +109,14 @@ abstract class SearchableModel
 	public function isBackend()
 	{
 		return true;
+	}
+	
+	// some searchable models should be searchable by different fields
+	// in different context. eg. SearchableStaticPage in frontend (by title, content) and backend quick search (only by title)
+	// this allows to override used names
+	public function setWeightedSearchConditionFields($fieldNames)
+	{
+		$this->weightSearchConditionFields = $fieldNames;
 	}
 }
 

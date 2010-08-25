@@ -11,6 +11,32 @@ Backend.QuickSearch = {
 	query : "",
 	previousQuery: null,
 	timer : {typing: null, waiting:null},
+	popupHideObserved: false,
+	nodes : null,
+	hasResponse : false,
+
+	initNodes : function()
+	{
+		if(this.nodes == null)
+		{
+			this.nodes = {};
+			$A([
+				"QuickSearchClass",
+				"QuickSearchFrom",
+				"QuickSearchTo",
+				"QuickSearchDirection",
+				"QuickSearchForm",
+				"QuickSearchQuery",
+				"QuickSearchResult",
+				"QuickSearchContainer"
+			]).each(
+				function(id)
+				{
+					this.nodes[id]=$(id);
+				}.bind(this)
+			);
+		}
+	},
 
 	onKeyUp:function(obj)
 	{
@@ -56,21 +82,92 @@ Backend.QuickSearch = {
 		{
 			return;
 		}
+		
+		this.initNodes(); // move to 'constructor'
+		
 		if(this.query != this.previousQuery)
 		{
-			// console.log("[AJAX REQUEST] find: " + this.query );
+			this._setFormOptions({});
 			new LiveCart.AjaxRequest(
-				$("QuickSearchForm"),
-				null,
+				this.nodes.QuickSearchForm,
+				this.nodes.QuickSearchQuery,
 				this.onResponse.bind(this)
 			);
 			this.previousQuery = this.query;
 		}
 	},
-	
+
 	onResponse: function(transport)
 	{
-		$("QuickSearchResult").innerHTML = transport.responseText;
-		$("QuickSearchResult").show();
+		this.initNodes(); // move to 'constructor'
+		this.nodes.QuickSearchResult.innerHTML = transport.responseText;
+		this.hasResponse = true; // flag needed to allow reopen closed result popup when clicking on search query input field.
+		this.showResultContainer();
+	},
+
+	showResultContainer: function()
+	{
+		if(this.hasResponse == false)
+		{
+			console.log('sorry');
+			return;
+		}
+		this.initNodes();
+		this.nodes.QuickSearchResult.show();
+		if(this.popupHideObserved == false)
+		{
+			Event.observe(document, 'click', this.hideResultContainer.bindAsEventListener(this));
+			Event.observe(this.nodes.QuickSearchContainer, 'click', function(event){ Event.stop(event);});
+			Event.observe(this.nodes.QuickSearchQuery, 'focus', this.showResultContainer.bindAsEventListener(this));
+			this.popupHideObserved = true;
+		}
+	},
+
+	hideResultContainer: function()
+	{
+		this.initNodes();
+		this.nodes.QuickSearchResult.hide();
+	},
+
+	next: function(obj, cn)
+	{
+		this.changePage(obj, cn, 'next');
+	},
+
+	previous: function(obj, cn)
+	{
+		this.changePage(obj, cn, 'previous');
+	},
+
+	changePage: function(obj, cn, direction)
+	{
+		var
+			container = $(obj).up("div")
+			from = parseInt($A(container.getElementsByClassName("qsFromCount"))[0].innerHTML, 10);
+			to = parseInt($A(container.getElementsByClassName("qsToCount"))[0].innerHTML, 10);
+
+		this.initNodes();
+		this._setFormOptions({
+			cn:cn,
+			from:from,
+			to:to,
+			direction:direction
+		});
+		new LiveCart.AjaxRequest(
+			this.nodes.QuickSearchForm,
+			this.nodes.QuickSearchQuery,
+			function(transport)
+			{
+				this.classContainer.innerHTML=transport.responseText;
+			}.bind({instance:this, classContainer:container.up("div")})
+		);
+	},
+
+	_setFormOptions: function(options)
+	{
+		this.nodes.QuickSearchClass.value=options.cn ? options.cn : "";
+		this.nodes.QuickSearchFrom.value=options.from ? options.from : "";
+		this.nodes.QuickSearchTo.value=options.to ? options.to: "";
+		this.nodes.QuickSearchDirection.value=options.direction ? options.direction : "";
 	}
 }
