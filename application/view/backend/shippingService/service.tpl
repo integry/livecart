@@ -33,13 +33,9 @@
 
 	<fieldset class="shippingService_rates ">
 		{include file="backend/shippingService/rateTable.tpl"}
-	
-		
+
 		<fieldset class="error">
-
 			<ul class="activeList {allowed role='delivery.update'}activeList_add_delete{/allowed} shippingService_ratesList" id="shippingService_ratesList_{$service.DeliveryZone.ID}_{$service.ID}">
-
-			
 		{*
 				{foreach from=$shippingRates item="rate"}
 					<li id="shippingService_ratesList_{$service.DeliveryZone.ID}_{$service.ID}_{$rate.ID}">
@@ -56,14 +52,12 @@
 					</li>
 				{/foreach}
 		*}
-
 			</ul>
-		
+
 			<fieldset class="container" {denied role='delivery.update'}style="display: none"{/denied}>
 				<ul class="menu" id="shippingService_rate_menu_{$service.DeliveryZone.ID}_{$service.ID}">
 					<li style="display:none;" class="addNewRate"><a href="#new_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_show">{t _add_new_rate}</a></li>
 					<li style="display:none;" class="addNewRateCancel" style="display: none"><a href="#cancel_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_cancel">{t _cancel_adding_new_rate}</a></li>
-
 				</ul>
 			</fieldset>
 			
@@ -113,11 +107,16 @@
 {/form}
 
 {* labels for Backend.DeliveryZone.WeightUnitConventer *}
-<span style="display: none">
+<span style="display: none" id="RateInputTableLabels">
 	<span class="UnitConventer_SwitchToEnglishTitle">{t _switch_to_english_units}</span>
 	<span class="UnitConventer_SwitchToMetricTitle">{t _switch_to_metric_units}</span>
-	<span class="UnitConventer_MetricHiUnit">{t _units_kg}</span>
-	<span class="UnitConventer_MetricLoUnit">{t _units_g}</span>
+	<span class="UnitConventer_MetricHiUnit">{t _units_kilograms}</span>
+	<span class="UnitConventer_MetricLoUnit">{t _units_grams}</span>
 	<span class="UnitConventer_EnglishHiUnit">{t _units_pounds}</span>
 	<span class="UnitConventer_EnglishLoUnit">{t _units_ounces}</span>
+	<span class="UnitConventer_MetricHiUnitAbbr">{t _units_kg}</span>
+	<span class="UnitConventer_MetricLoUnitAbbr">{t _units_g}</span>
+	<span class="UnitConventer_EnglishHiUnitAbbr">{t _units_lbs}</span>
+	<span class="UnitConventer_EnglishLoUnitAbbr">{t _units_oz}</span>
 </span>
+

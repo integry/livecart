@@ -1,0 +1,18 @@
+_products=Products
+_categories=Categories
+_users=Users
+_orders=Orders
+_manufacturers=Manufacturers
+_news_posts=News posts
+_static_pages=Static pages
+#
+#
+#
+_product_not_found=Product not found
+_category_not_found=Category not found
+_user_not_found=User not found
+_order_not_found=Order not found
+_manufacturer_not_found=Manufacturer not found
+_news_post_not_found=News post not found
+_static_page_not_found=Static page not found
+_business_rule_not_found=Business rule not found

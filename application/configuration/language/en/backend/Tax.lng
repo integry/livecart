@@ -12,3 +12,5 @@ _tax_classes=Tax Classes
 
 _error_the_name_should_not_be_empty=Please enter name
 _are_you_sure_you_want_to_remove_ths_tax=Are you sure you want to remove this tax? It may be in use in some delivery zones.
+_base_tax_rate=Base tax rate
+_base_tax_rates_description=Base tax rates are included in all store prices automatically

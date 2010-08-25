@@ -228,10 +228,14 @@ li.testAdress a
 {
 	overflow:auto;
 	overflow-x:auto;
-	// width:600px;
 }
 
 .fixedHeader
 {
 	height:39px;
+}
+
+.UnitConventer_LoValueAbbr
+{
+	padding-right:4px;
 }

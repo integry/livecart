@@ -53,10 +53,16 @@ _langform_translate=Translate
 
 _switch_to_english_units=Switch to English units
 _switch_to_metric_units=Switch to Metric units
+
 _units_kg=Kg
 _units_g=g
+_units_lbs=lbs
+_units_oz=oz
+_units_kilograms=kilograms
+_units_grams=grams
 _units_ounces=ounces
 _units_pounds=pounds
+
 
 _enable=Enable
 _disable=Disable
