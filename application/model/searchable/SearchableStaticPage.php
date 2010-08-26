@@ -10,7 +10,7 @@ ClassLoader::import('application.model.searchable.SearchableModel');
  */
 class SearchableStaticPage extends SearchableModel
 {
-	protected $weightSearchConditionFields=array('title' => 2, 'text' => 1);
+	
 
 	public function getClassName()
 	{
@@ -24,7 +24,14 @@ class SearchableStaticPage extends SearchableModel
 
 	public function getSelectFilter($searchTerm)
 	{
-		$c = new ARExpressionHandle($this->getWeighedSearchCondition($this->weightSearchConditionFields, $searchTerm));
+		$c = new ARExpressionHandle($this->getWeighedSearchCondition
+			(
+				$this->getOption('BACKEND_QUICK_SEARCH')
+					? array('title' => 1)
+					: array('title' => 2, 'text' => 1),
+				$searchTerm
+			));
+
 		$f = new ARSelectFilter(new MoreThanCond($c, 0));
 		$f->setOrder($c, 'DESC');
 		return $f;

@@ -39,16 +39,11 @@ class QuickSearchController extends StoreManagementController
 		$res = array();
 		foreach (SearchableModel::getInstances(SearchableModel::FRONTEND_SEARCH_MODEL|SearchableModel::BACKEND_SEARCH_MODEL) as $searchable)
 		{
-			$searchableClassName = $searchable->getClassName();
-			if($cn && $searchableClassName != $cn)
+			if($cn && $searchable->getClassName() != $cn)
 			{
 				continue;
 			}
-			if($searchableClassName == 'NewsPost' || $searchableClassName == 'StaticPage')
-			{
-				// in backend QuickSearch search only by title field!
-				$searchable->setWeightedSearchConditionFields(array('title'=>1));
-			}
+			$searchable->setOption('BACKEND_QUICK_SEARCH', true);
 			$f = $searchable->getSelectFilter($this->query);
 			$offset = 0;
 			if ($cn)

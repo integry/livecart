@@ -10,8 +10,6 @@ ClassLoader::import('application.model.searchable.SearchableModel');
  */
 class SearchableNewsPost extends SearchableModel
 {
-	protected $weightSearchConditionFields = array('title' => 4, 'text' => 2, 'moreText' => 1);
-	
 	public function getClassName()
 	{
 		return 'NewsPost';
@@ -24,8 +22,13 @@ class SearchableNewsPost extends SearchableModel
 
 	public function getSelectFilter($searchTerm)
 	{
-		$c = new ARExpressionHandle($this->getWeighedSearchCondition($this->weightSearchConditionFields , $searchTerm));
-		
+		$c = new ARExpressionHandle($this->getWeighedSearchCondition
+			(
+				$this->getOption('BACKEND_QUICK_SEARCH')
+					? array('title' => 1)
+					: array('title' => 4, 'text' => 2, 'moreText' => 1),
+				$searchTerm
+			));
 		$f = new ARSelectFilter(new MoreThanCond($c, 0));
 		$f->setOrder($c, 'DESC');
 		return $f;
