@@ -20,8 +20,9 @@
 
 <div class="activeGridContainer">
 
-<div class="activeGridCellContent" style="display: none;"></div>
+<div class="activeGridCellContent" style="display: none; position:absolute;"></div>
 
+<div class="quickEditContainer"></div>
 <table class="activeGrid {$prefix}List {denied role=$role}readonlyGrid{/denied}" id="{$prefix}_{$id}">
 
 <thead>
@@ -194,15 +195,14 @@
 <script type="text/javascript">
 	if(!window.activeGrids) window.activeGrids = {};
 {/literal};
-
- 	window.activeGrids['{$prefix}_{$id}'] = new ActiveGrid($('{$prefix}_{$id}'), '{$url}', {$totalCount}, $("{$prefix}LoadIndicator_{$id}"), {$rowCount}, {json array=$filters});
-
+	window.activeGrids['{$prefix}_{$id}'] = new ActiveGrid($('{$prefix}_{$id}'), '{$url}', {$totalCount}, $("{$prefix}LoadIndicator_{$id}"), {$rowCount}, {json array=$filters});
 	{if $dataFormatter}
 		window.activeGrids['{$prefix}_{$id}'].setDataFormatter({$dataFormatter});
 	{/if}
-
 	window.activeGrids['{$prefix}_{$id}'].setInitialData({json array=$data});
-
+	{if $isQuickEdit}
+		window.activeGrids['{$prefix}_{$id}'].initQuickEdit("{$quickEditUrl}", "{$quickEditUrlIdentificatorToken}");
+	{/if}
 	{foreach from=$displayedColumns item=index key=column name="columns"}
 		{if !$smarty.foreach.columns.first}
 			new ActiveGridFilter($('filter_{$column}_{$id}'), window.activeGrids['{$prefix}_{$id}']);
