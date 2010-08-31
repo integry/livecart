@@ -59,7 +59,7 @@ class UserController extends StoreManagementController
 	/**
 	 * @return RequestValidator
 	 */
-	public static function createUserFormValidator(StoreManagementController $controller, $user = false)
+	public static function createUserFormValidator(StoreManagementController $controller, $user = false, $quickEditValidation=false)
 	{
 		$inst = new UserController(ActiveRecordModel::getApplication());
 		$validator = $inst->getValidator("UserForm", $controller->getRequest());
@@ -86,7 +86,10 @@ class UserController extends StoreManagementController
 			$user = ActiveRecordModel::getNewInstance('User');
 		}
 
-		$user->getSpecification()->setValidation($validator);
+		if($quickEditValidation !== true)
+		{
+			$user->getSpecification()->setValidation($validator);
+		}
 
 		return $validator;
 	}

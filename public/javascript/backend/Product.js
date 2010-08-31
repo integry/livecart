@@ -324,6 +324,15 @@ Backend.Product =
 		return false;
 	},
 
+	_getGridInstaceFromControl: function(control)
+	{
+		try {
+			return $(control).up("div", 2).down("table").gridInstance;
+		} catch(e) {
+			return null;
+		}
+	},
+	
 	showQuickEditAddImageForm: function(control, productID, formUrl)
 	{
 		control = $(control);
@@ -359,15 +368,6 @@ Backend.Product =
 		for(i=0; i<visibility.length; i++)
 		{
 			$(menuNode.down("li",i))[visibility[i]]();
-		}
-	},
-
-	_getGridInstaceFromControl: function(control)
-	{
-		try {
-			return $(control).up("div", 2).down("table").gridInstance;
-		} catch(e) {
-			return null;
 		}
 	}
 }

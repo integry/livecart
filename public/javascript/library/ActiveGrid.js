@@ -6,7 +6,7 @@
  *	Requires rico.js
  *
  */
-var zz;
+
 ActiveGrid = Class.create();
 
 ActiveGrid.prototype =
@@ -172,7 +172,7 @@ ActiveGrid.prototype =
 		)
 	},
 	
-	onQuickEditCancel : function()
+	hideQuickEditContainer : function()
 	{
 		var container=this._getQuickEditContainer().hide();
 		container.innerHTML = "";
@@ -1007,6 +1007,47 @@ ActiveGrid.MassActionHandler.prototype =
 	{
 		this.button.disable();
 		this.button.enable();
+	}
+}
+
+ActiveGrid.QuickEdit =
+{
+	onSubmit: function(obj)
+	{
+		var form;
+		form = $(obj).up("form");
+		if(validateForm(form))
+		{
+			new LiveCart.AjaxRequest(form, null, function(transport) {
+				var response = eval( "("+transport.responseText + ")");
+				if(response.status == "success")
+				{
+					this.instance._getGridInstaceFromControl(this.obj).updateQuickEditGrid(transport.responseText);
+					this.instance.onCancel(this.obj);
+				}
+				else
+				{
+					ActiveForm.prototype.setErrorMessages(this.obj.up("form"), response.errors)	
+				}
+			}.bind({instance: this, obj:obj}));
+		}
+		return false;
+	},
+
+	onCancel: function(obj)
+	{
+		var gridInstance = this._getGridInstaceFromControl(obj);
+		gridInstance.hideQuickEditContainer();
+		return false;
+	},
+
+	_getGridInstaceFromControl: function(control)
+	{
+		try {
+			return $(control).up("div", 2).down("table").gridInstance;
+		} catch(e) {
+			return null;
+		}
 	}
 }
 

@@ -233,6 +233,102 @@ class UserGroupController extends ActiveGridController
 				'User.isEnabled'
 			);
 	}
+
+	public function isQuickEdit()
+	{
+		return true;
+	}
+
+	public function quickEdit()
+	{
+		$request = $this->getRequest();
+		$userID = $request->get('id');
+		$user = User::getInstanceByID($userID, ActiveRecordModel::LOAD_DATA, array('UserGroup'));
+		$lastOrder = $user->getLastOrder();
+		
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $user->getID()));
+		// $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+		$f->setOrder(new ARFieldHandle('CustomerOrder', 'dateCompleted'));
+		$customerOrders = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
+		
+		$response = new ActionResponse();
+		$response->set('someUser', $user->toArray());
+		if($lastOrder)
+		{
+			$response->set('lastOrder', $lastOrder->toArray());
+		}
+		if($customerOrders->size() > 0)
+		{
+			foreach($customerOrders as $order)
+			{
+				$order->loadAll();
+				$order->getCoupons();
+			}
+			$response->set('orders', $customerOrders->toArray());
+		}
+		$form = UserController::createUserForm($this, $user,$response);
+		$response->set('form',$form);
+		$availableUserGroups = array('' => $this->translate('_default_user_group'));
+		foreach(UserGroup::getRecordSet(new ARSelectFilter()) as $group)
+		{
+			$availableUserGroups[$group->getID()] = $group->name->get();
+		}
+		$response->set('availableUserGroups',$availableUserGroups);
+
+		return $response;
+	}
+
+	public function saveQuickEdit()
+	{
+		$user = User::getInstanceByID((int)$this->request->get('id'), true);
+		$validator = UserController::createUserFormValidator($this, $user, true);
+		if ($validator->isValid())
+		{
+			$email = $this->request->get('email');
+			$password = $this->request->get('password');
+			if(($user && $email != $user->email->get() && User::getInstanceByEmail($email)) ||
+			   (!$user && User::getInstanceByEmail($email)))
+			{
+				return new JSONResponse(false, 'failure', $this->translate('_err_this_email_is_already_being_used_by_other_user'));
+			}
+			if($groupID = (int)$this->request->get('UserGroup'))
+			{
+				$group = UserGroup::getInstanceByID((int)$groupID);
+			}
+			else
+			{
+				$group = null;
+			}
+			if (!$user)
+			{
+				$user = User::getNewInstance($email, $password, $group);
+			}
+			$user->loadRequestData($this->request);
+			$user->userGroup->set($group);
+			if(!empty($password))
+			{
+				$user->setPassword($password);
+			}
+			$user->save();
+			
+			
+			
+		$displayedColumns = $this->getRequestColumns();
+		$r = array(
+			'data'=> $this->recordSetArrayToListData(array($user->toArray()), $displayedColumns),
+			'columns'=>array_keys($displayedColumns)
+		);
+		return new JSONResponse($r, 'success');
+		
+		
+			
+			//return new JSONResponse(array('user' => $user->toFlatArray()), 'success', $this->translate('_user_details_were_successfully_saved'));
+		}
+		else
+		{
+			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_could_not_save_user_details'));
+		}
+	}
 }
 
 ?>

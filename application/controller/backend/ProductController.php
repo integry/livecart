@@ -886,7 +886,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			'data'=> $this->recordSetArrayToListData(array($product), $displayedColumns),
 			'columns'=>array_keys($displayedColumns)
 		);
-		return new JSONResponse($r, 'saved');
+		return new JSONResponse($r, 'success');
 	}
 
 	private function buildForm(Product $product)

@@ -99,3 +99,22 @@ _nothing_selected=Please select at least one user account first
 _are_you_sure_you_want_to_delete_this_user_group=Are you sure you want to delete this user group?
 _are_you_sure_you_want_to_delete_this_user=Are you sure you want to delete this user?
 _you_cannot_delete_this_group=This group can not be removed
+
+# quick edit form
+_user_has_not_made_any_orders_yet=User has not made any orders yet.
+_product_name=name
+_product_count=count
+_price=price
+_quick_edit_itemSubtotal=Item subtotal
+_quick_edit_shippingSubtotal=Shipping subtotal
+_quick_edit_subtotalBeforeTaxes=Subtotal before taxes
+_quick_edit_totalAmount=Total amount
+_quick_edit_itemDiscount=Discount
+_quick_edit_itemSubtotalWithoutTax=Subtotal without tax
+_billing_address=Billing address
+_shipping_address=Shipping address
+_invoice_number=Invoice number
+_date=Date
+_ammount=Amount
+_status=Status
+

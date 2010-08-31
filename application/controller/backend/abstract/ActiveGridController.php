@@ -250,9 +250,7 @@ abstract class ActiveGridController extends StoreManagementController
 	public function getAvailableColumns($schemaName = null)
 	{
 		$schemaName = $schemaName ? $schemaName : $this->getClassName();
-
 		$availableColumns = self::getSchemaColumns($schemaName, $this->application, $this->getCustomColumns());
-
 		// sort available columns by placing the default columns first
 		$default = array();
 		foreach ($this->getDefaultColumns() as $column)
@@ -263,9 +261,7 @@ abstract class ActiveGridController extends StoreManagementController
 				unset($availableColumns[$column]);
 			}
 		}
-
 		$availableColumns = array_merge($default, $availableColumns);
-
 		return $availableColumns;
 	}
 

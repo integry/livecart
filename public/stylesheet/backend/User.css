@@ -140,3 +140,36 @@ fieldset.showPassword
 	margin: 0;
 	padding: 0.6em 0;
 }
+
+
+
+.quickEditContainer1, .quickEditContainer2, .quickEditContainer3
+{
+	float:left;
+	width:33.33%;
+	height:240px;
+}
+
+.quickEditContainer1 label,
+.quickEditContainer1 input,
+.quickEditContainer1 select,
+.quickEditContainer2,
+.quickEditContainer3
+
+{
+	font-size:smaller;
+	font-weight:normal;
+}
+
+
+.quickEditContainer1 label
+{
+	width:70px;
+}
+
+
+.showPasswordLabel
+{
+width:200px !important;
+}
+
