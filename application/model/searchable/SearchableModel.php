@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Text searching functionality for models other than Product
+ * Text searching functionality for models (other than Products in frontend)
  *
  * @package application.model.searchable
  * @author Integry Systems
@@ -12,7 +12,7 @@ abstract class SearchableModel
 	const BACKEND_SEARCH_MODEL = 2;
 
 	protected $application;
-	protected $weightSearchConditionFields = array();
+	protected $options = array();
 	
 	public abstract function getClassName();
 	public abstract function loadClass();
@@ -110,13 +110,15 @@ abstract class SearchableModel
 	{
 		return true;
 	}
-	
-	// some searchable models should be searchable by different fields
-	// in different context. eg. SearchableStaticPage in frontend (by title, content) and backend quick search (only by title)
-	// this allows to override used names
-	public function setWeightedSearchConditionFields($fieldNames)
+
+	public function setOption($key, $value)
 	{
-		$this->weightSearchConditionFields = $fieldNames;
+		$this->options[$key] = $value;
+	}
+	
+	public function getOption($key, $default=false)
+	{
+		return array_key_exists($key, $this->options) ? $this->options[$key] : $default;
 	}
 }
 

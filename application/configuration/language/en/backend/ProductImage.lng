@@ -22,3 +22,6 @@ _err_not_uploaded=Please select a file
 _err_not_image=This is not a valid image
 _err_resize=Error resizing the image
 _err_too_large=File too large
+
+_image_set_as_main=Set as main image
+_add_new_image=Add new image

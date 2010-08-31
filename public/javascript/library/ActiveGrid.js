@@ -6,43 +6,44 @@
  *	Requires rico.js
  *
  */
+
 ActiveGrid = Class.create();
 
 ActiveGrid.prototype =
 {
-  	/**
-  	 *	Data table element instance
-  	 */
-  	tableInstance: null,
+	/**
+	 *	Data table element instance
+	 */
+	tableInstance: null,
 
-  	/**
-  	 *	Select All checkbox instance
-  	 */
-  	selectAllInstance: null,
+	/**
+	 *	Select All checkbox instance
+	 */
+	selectAllInstance: null,
 
-  	/**
-  	 *	Data feed URL
-  	 */
+	/**
+	 *	Data feed URL
+	 */
   	dataUrl: null,
 
-  	/**
-  	 *	Rico LiveGrid instance
-  	 */
+	/**
+	 *	Rico LiveGrid instance
+	 */
 	ricoGrid: null,
 
-  	/**
-  	 *	Array containing IDs of selected rows
-  	 */
+	/**
+	 *	Array containing IDs of selected rows
+	 */
 	selectedRows: {},
 
-  	/**
-  	 *	Set to true when Select All is used (so all records are selected by default)
-  	 */
+	/**
+	 *	Set to true when Select All is used (so all records are selected by default)
+	 */
 	inverseSelection: false,
 
-  	/**
-  	 *	Object that handles data transformation for presentation
-  	 */
+	/**
+	 *	Object that handles data transformation for presentation
+	 */
 	dataFormatter: null,
 
 	filters: {},
@@ -51,9 +52,16 @@ ActiveGrid.prototype =
 
 	rowCount: 15,
 
+	quickEditUrlTemplate: null,
+
+	quickEditIdToken : null,
+
+	activeGridInstanceID : null,
+
 	initialize: function(tableInstance, dataUrl, totalCount, loadIndicator, rowCount, filters)
-  	{
+	{
 		this.tableInstance = tableInstance;
+		this.activeGridInstanceID=this.tableInstance.id;
 		this.tableInstance.gridInstance = this;
 		this.dataUrl = dataUrl;
 		this.setLoadIndicator(loadIndicator);
@@ -108,6 +116,143 @@ ActiveGrid.prototype =
 
 			Event.observe(rows[k], 'mouseout', this.removeRowHighlight.bindAsEventListener(this));
 		}
+	},
+
+	initQuickEdit: function(urlTemplate, idToken)
+	{
+		this.quickEditUrlTemplate = urlTemplate;
+		this.quickEditIdToken = idToken;
+		Event.observe(this.tableInstance.down('tbody'), 'dblclick', this.quickEdit.bindAsEventListener(this) );		
+	},
+
+	quickEdit: function(event)
+	{
+		var
+			node = Event.element(event),
+			recordID = null,
+			m;
+
+		if (node.tagName.toLowerCase != "tr")
+		{
+			node=node.up("tr");
+		}
+
+		do {
+			m = node.down("input").name.match(/item\[(\d+)\]/);
+			if (m && m.length == 2)
+			{
+				recordID = m[1];
+			}
+			else
+			{
+				node=$(node.up("tr"));
+			}
+		} while(recordID == null && node);
+
+		if (recordID == null)
+		{
+			return;
+		}
+
+
+		this.node = node;
+		new LiveCart.AjaxRequest(
+			this.quickEditUrlTemplate.replace(this.quickEditIdToken, recordID),
+			null,
+			function(transport)
+			{
+				var container = this._getQuickEditContainer();
+				if(container)
+				{
+					container.innerHTML = transport.responseText;
+					container.show();
+				}
+				
+			}.bind(this)
+		)
+	},
+	
+	hideQuickEditContainer : function()
+	{
+		var container=this._getQuickEditContainer().hide();
+		container.innerHTML = "";
+		container.hide();
+	},
+
+	updateQuickEditGrid: function(jsonData)
+	{
+		var
+			buffer = this.ricoGrid.buffer,
+			i,
+			rows,
+			row,
+			done = false;
+
+		rows = this.getRows(jsonData);
+		row = rows.data[0];
+
+		for(i=0; i<buffer.rows.length; i++)
+		{
+			if(row.ID == buffer.rows[i].id)
+			{
+				buffer.rows[i] = row;
+				break;
+			}
+		}
+		for(page in buffer.rowCache)
+		{
+			if(done)
+			{
+				break;
+			}
+			for(rowNr in buffer.rowCache[page])
+			{
+				if("id" in buffer.rowCache[page][rowNr] == false)
+				{
+					continue;
+				}
+				if(done)
+				{
+					break;
+				}
+
+				if(buffer.rowCache[page][rowNr].id == row.id)
+				{
+					buffer.rowCache[page][rowNr] = row;
+					done=true;
+				}
+			}
+		}
+
+		// redraw grid
+		this.ricoGrid.viewPort.bufferChanged();
+		this.ricoGrid.viewPort.refreshContents(this.ricoGrid.viewPort.lastRowPos);
+
+		$A(document.getElementsByName("item["+row.id+"]")).each(function(input) {
+			new Effect.Highlight($(input).up("tr"));
+		});
+	},
+
+	_getQuickEditContainer: function()
+	{
+		var parent = $(this.tableInstance), node=null, i=0;
+		
+		while (i<25 && parent && parent.hasClassName("activeGridContainer") == false)
+		{
+			i++;
+			parent = $(parent.up("div"));
+		}
+		if (parent)
+		{
+			node = parent.getElementsByClassName("quickEditContainer");
+		}
+		
+		if(node == null || node.length!=1)
+		{
+			console.log('QW container not found');
+			return null;
+		}
+		return $(node[0]);
 	},
 
 	setInitialData: function(data)
@@ -862,6 +1007,47 @@ ActiveGrid.MassActionHandler.prototype =
 	{
 		this.button.disable();
 		this.button.enable();
+	}
+}
+
+ActiveGrid.QuickEdit =
+{
+	onSubmit: function(obj)
+	{
+		var form;
+		form = $(obj).up("form");
+		if(validateForm(form))
+		{
+			new LiveCart.AjaxRequest(form, null, function(transport) {
+				var response = eval( "("+transport.responseText + ")");
+				if(response.status == "success")
+				{
+					this.instance._getGridInstaceFromControl(this.obj).updateQuickEditGrid(transport.responseText);
+					this.instance.onCancel(this.obj);
+				}
+				else
+				{
+					ActiveForm.prototype.setErrorMessages(this.obj.up("form"), response.errors)	
+				}
+			}.bind({instance: this, obj:obj}));
+		}
+		return false;
+	},
+
+	onCancel: function(obj)
+	{
+		var gridInstance = this._getGridInstaceFromControl(obj);
+		gridInstance.hideQuickEditContainer();
+		return false;
+	},
+
+	_getGridInstaceFromControl: function(control)
+	{
+		try {
+			return $(control).up("div", 2).down("table").gridInstance;
+		} catch(e) {
+			return null;
+		}
 	}
 }
 

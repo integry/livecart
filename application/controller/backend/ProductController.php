@@ -21,6 +21,8 @@ ClassLoader::import('application.model.tax.TaxClass');
  */
 class ProductController extends ActiveGridController implements MassActionInterface
 {
+	private $quickEditValidation = false;
+	
 	public function index()
 	{
 		ClassLoader::import('application.LiveCartRenderer');
@@ -811,6 +813,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	}
 
 	/**
+	 * 
 	 * @return RequestValidator
 	 */
 	public function buildValidator(Product $product)
@@ -840,10 +843,50 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			ProductPriceController::addShippingValidator($validator);
 			ProductPriceController::addInventoryValidator($validator);
 		}
-
-		$product->getSpecification()->setValidation($validator);
-
+		
+		if($this->quickEditValidation)
+		{
+			ClassLoader::import('application.controller.backend.ProductPriceController');
+			ProductPriceController::addPricesValidator($validator);
+			ProductPriceController::addShippingValidator($validator);
+			ProductPriceController::addInventoryValidator($validator);
+		} else {
+			// quick edit forms does not have specification fields
+			$product->getSpecification()->setValidation($validator);
+		}
 		return $validator;
+	}
+
+	public function quickEdit()
+	{
+		$request = $this->getRequest();
+		$this->quickEditValidation = true;
+		$response = $this->basicData();
+
+		return $response;
+	}
+	
+	public function isQuickEdit()
+	{
+		return true;
+	}
+
+	public function saveQuickEdit()
+	{
+		$this->quickEditValidation = true;
+		
+		$response = $this->update(true);
+		if($response instanceof JSONResponse)
+		{
+			return $response;
+		}
+		$product = $response->get('product');
+		$displayedColumns = $this->getRequestColumns();
+		$r = array(
+			'data'=> $this->recordSetArrayToListData(array($product), $displayedColumns),
+			'columns'=>array_keys($displayedColumns)
+		);
+		return new JSONResponse($r, 'success');
 	}
 
 	private function buildForm(Product $product)

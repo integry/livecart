@@ -293,6 +293,82 @@ Backend.Product =
 		{
 			table.gridInstance.reloadGrid();
 		}
+	},
+
+	onQuickEditSubmit: function(obj)
+	{
+		var form;
+		form = $(obj).up("form");
+		if(validateForm(form))
+		{
+			new LiveCart.AjaxRequest(form, null, function(transport) {
+				var response = eval( "("+transport.responseText + ")");
+				if(response.status == "saved")
+				{
+					this.instance._getGridInstaceFromControl(this.obj).updateQuickEditGrid(transport.responseText);
+					this.instance.onQuickEditCancel(this.obj);
+				}
+				else
+				{
+					ActiveForm.prototype.setErrorMessages(this.obj.up("form"), response.errors)	
+				}
+			}.bind({instance: this, obj:obj}));
+		}
+		return false;
+	},
+
+	onQuickEditCancel: function(obj)
+	{
+		var gridInstance = this._getGridInstaceFromControl(obj);
+		gridInstance.onQuickEditCancel();
+		return false;
+	},
+
+	_getGridInstaceFromControl: function(control)
+	{
+		try {
+			return $(control).up("div", 2).down("table").gridInstance;
+		} catch(e) {
+			return null;
+		}
+	},
+	
+	showQuickEditAddImageForm: function(control, productID, formUrl)
+	{
+		control = $(control);
+		this._menuVisibility(control, ['hide', 'show']);
+		// todo: do we have container?
+		// if not- request and create
+		new LiveCart.AjaxRequest(
+			formUrl,
+			null,
+			function(transport)
+			{
+				var container = $("productImageUploadForm_"+this.productID);
+				container.innerHTML = transport.responseText;
+				container.style.position="absolute";
+				container.show();
+			}.bind({productID:productID})
+		);
+		return false;
+	},
+
+	hideQuickEditAddImageForm: function(control, productID)
+	{
+		control = $(control);
+		this._menuVisibility(control, ['show', 'hide']);
+		var container = $("productImageUploadForm_"+productID);
+		container.hide();
+		return false;
+	},
+
+	_menuVisibility: function(node, visibility)
+	{
+		menuNode=node.up("ul");
+		for(i=0; i<visibility.length; i++)
+		{
+			$(menuNode.down("li",i))[visibility[i]]();
+		}
 	}
 }
 

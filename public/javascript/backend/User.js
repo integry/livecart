@@ -995,3 +995,34 @@ Backend.User.StateSwitcher.prototype =
 		}
 	}
 }
+
+Backend.UserQuickEdit =
+{
+	showOrderDetails: function(node)
+	{
+		node = $(node);
+		// row last td contains full info html
+		node.up("div",1).previous().innerHTML=node.down("td").siblings().pop().innerHTML;
+	},
+
+	togglePassword: function(node)
+	{
+		$(node).up("div").getElementsByClassName("user_password")[0].type = node.checked ? "text" : "password";
+	},
+
+	generatePassword: function(node, uri)
+	{
+		new LiveCart.AjaxRequest(uri, null,
+			function(transport)
+			{
+				var
+					container = $(this.node).up("div"),
+					chekbox=container.getElementsByClassName("user_password_show")[0];
+					
+				container.getElementsByClassName("user_password")[0].value=transport.responseText;
+				chekbox.checked = true;
+				Backend.UserQuickEdit.togglePassword(chekbox);
+			}.bind({node:node})
+		);
+	}
+}

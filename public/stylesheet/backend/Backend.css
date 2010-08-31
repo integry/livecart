@@ -1792,3 +1792,11 @@ a.external
 	-moz-border-radius: 6px;
 	z-index: 10000;
 }
+
+.quickEditContainer
+{
+	position:absolute;
+	width:100%;
+	z-index:10;
+	background-color:whitesmoke;
+}

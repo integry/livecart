@@ -51,17 +51,30 @@ abstract class ActiveGridController extends StoreManagementController
 			$exportFrom = ($exportBufferIndex - 1) * self::EXPORT_BUFFER_ROW_COUNT;
 			$filter->setLimit(self::EXPORT_BUFFER_ROW_COUNT, $exportFrom);
 		}
-
+		$productArray = ActiveRecordModel::getRecordSetArray($this->getClassName(), $filter, $this->getReferencedData(), $recordCount);
+		
 		if (!$displayedColumns)
 		{
 			$displayedColumns = $this->getRequestColumns();
 		}
+		$data = $this->recordSetArrayToListData($productArray, $displayedColumns, $exportBufferIndex);
+		if ($dataOnly)
+		{
+			return $data;
+		}
 
-		$productArray = ActiveRecordModel::getRecordSetArray($this->getClassName(), $filter, $this->getReferencedData(), $recordCount);
-		$productArray = $this->processDataArray($productArray, $displayedColumns);
+		$return = array();
+		$return['columns'] = array_keys($displayedColumns);
+		$return['totalCount'] = $recordCount;
+		$return['data'] = $data;
 
+		return new JSONResponse($return);
+	}
+
+	protected function recordSetArrayToListData($productArray, $displayedColumns, $exportBufferIndex=true)
+	{
 		$data = array();
-
+		$productArray = $this->processDataArray($productArray, $displayedColumns);
 		foreach ($productArray as &$row)
 		{
 			$data = array_merge($data, $this->getPreparedRecord($row, $displayedColumns));
@@ -83,20 +96,9 @@ abstract class ActiveGridController extends StoreManagementController
 				}
 			}
 		}
-
-		if ($dataOnly)
-		{
-			return $data;
-		}
-
-		$return = array();
-		$return['columns'] = array_keys($displayedColumns);
-		$return['totalCount'] = $recordCount;
-		$return['data'] = $data;
-
-		return new JSONResponse($return);
+		return $data;
 	}
-
+	
 	protected function getPreparedRecord($row, $displayedColumns)
 	{
 		$record = array();
@@ -248,9 +250,7 @@ abstract class ActiveGridController extends StoreManagementController
 	public function getAvailableColumns($schemaName = null)
 	{
 		$schemaName = $schemaName ? $schemaName : $this->getClassName();
-
 		$availableColumns = self::getSchemaColumns($schemaName, $this->application, $this->getCustomColumns());
-
 		// sort available columns by placing the default columns first
 		$default = array();
 		foreach ($this->getDefaultColumns() as $column)
@@ -261,9 +261,7 @@ abstract class ActiveGridController extends StoreManagementController
 				unset($availableColumns[$column]);
 			}
 		}
-
 		$availableColumns = array_merge($default, $availableColumns);
-
 		return $availableColumns;
 	}
 
@@ -308,7 +306,22 @@ abstract class ActiveGridController extends StoreManagementController
 		$response->set('totalCount', '0');
 		$response->set('filters', $this->request->get('filters'));
 		$response->set('data', $this->lists(false, $displayedColumns)->getData());
-
+		$isQuickEdit = $this->isQuickEdit();
+		$response->set('isQuickEdit', $isQuickEdit);
+		if ($isQuickEdit)
+		{
+			$router = $this->getApplication()->getRouter();
+			$className = get_class($this);
+			$className = str_replace('Controller', '', $className);
+			$className[0] = strtolower($className[0]); //lcfirst() when php5.3
+			
+			$idToken = 'RECORD_IDENTIFICATOR';
+			$response->set('quickEditUrlIdentificatorToken',$idToken);
+			$response->set('saveQuickEditUrl', $router->createURL(
+				array('controller'=>'backend.'.$className, 'action'=>'saveQuickEdit', 'id'=>$idToken)));
+			$response->set('quickEditUrl', $router->createURL(
+				array('controller'=>'backend.'.$className, 'action'=>'quickEdit', 'id'=>$idToken)));
+		}
 		return $response;
 	}
 
@@ -465,6 +478,20 @@ abstract class ActiveGridController extends StoreManagementController
 		$className = $className ? $className : $this->getClassName();
 		return ActiveRecordModel::isEav($className);
 	}
-}
 
+	public function isQuickEdit()
+	{
+		return false;
+	}
+
+	public function quickEdit()
+	{
+		return false;
+	}
+
+	public function saveQuickEdit()
+	{
+		return false;
+	}
+}
 ?>

@@ -165,14 +165,15 @@ abstract class ObjectImageController extends StoreManagementController
 	 * Save image order
 	 * @return RawResponse
 	 */
-	public function saveOrder()
+	public function saveOrder($order=null)
 	{
-	  	$ownerId = $this->request->get('ownerId');
-
-		$varName = array_shift(explode('_', $this->request->get('draggedID')));
-		$order = array_filter($this->request->get($varName . '_' . $ownerId), array($this, 'filterOrder'));
-		$order = array_values($order);
-
+		$ownerId = $this->request->get('ownerId');
+		if($order === null)
+		{
+			$varName = array_shift(explode('_', $this->request->get('draggedID')));
+			$order = array_filter($this->request->get($varName . '_' . $ownerId), array($this, 'filterOrder'));
+			$order = array_values($order);
+		}
 		foreach ($order as $key => $value)
 		{
 			$update = new ARUpdateFilter();
