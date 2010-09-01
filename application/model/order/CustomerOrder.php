@@ -217,7 +217,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$this->loadItems();
 		$this->getShipments();
 		$this->getSpecification();
+		$this->loadDiscounts();
+	}
 
+	public function loadDiscounts()
+	{
 		if ($this->isExistingRecord())
 		{
 			$discounts = array_merge((array)$this->fixedDiscounts, $this->getRelatedRecordSet('OrderDiscount')->getData());

@@ -136,7 +136,8 @@ ActiveGrid.prototype =
 		{
 			node=node.up("tr");
 		}
-
+		var pos = Position.cumulativeOffset(node);
+		mh = new PopupMenuHandler(pos[0], pos[1], 200, 200);
 		do {
 			m = node.down("input").name.match(/item\[(\d+)\]/);
 			if (m && m.length == 2)
@@ -154,21 +155,23 @@ ActiveGrid.prototype =
 			return;
 		}
 
-
 		this.node = node;
+		
 		new LiveCart.AjaxRequest(
 			this.quickEditUrlTemplate.replace(this.quickEditIdToken, recordID),
 			null,
 			function(transport)
 			{
-				var container = this._getQuickEditContainer();
+				var container = this.instance._getQuickEditContainer();
 				if(container)
 				{
 					container.innerHTML = transport.responseText;
+					//console.log(this.mh.y);
+					container.style.top=(this.mh.y-330)+"px";
 					container.show();
 				}
 				
-			}.bind(this)
+			}.bind({instance:this, mh:mh})
 		)
 	},
 	
@@ -1044,7 +1047,16 @@ ActiveGrid.QuickEdit =
 	_getGridInstaceFromControl: function(control)
 	{
 		try {
-			return $(control).up("div", 2).down("table").gridInstance;
+			// up 3 div's, then get all elements with class name activeGrid,
+			// first table should be grid instance.
+			// This works for current uses, some future cases may require to rewrite this function.
+			return $A($(control).up("div",3).getElementsByClassName("activeGrid")).find(
+				function(node)
+				{
+					return node.tagName.toLowerCase() == "table";
+				}
+			).gridInstance;
+
 		} catch(e) {
 			return null;
 		}

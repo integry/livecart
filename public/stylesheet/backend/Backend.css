@@ -1800,3 +1800,34 @@ a.external
 	z-index:10;
 	background-color:whitesmoke;
 }
+
+.qePrice
+{
+	width:60px;
+}
+
+table.qeOrderPrices,
+table.qeProducts
+{
+	white-space:nowrap;
+	float:right;
+}
+
+table.qeOrderPrices
+{
+	margin-bottom:8px;
+}
+
+table.qeProducts{
+	width:100%;
+}
+
+.qeStrong
+{
+	font-weight:bold;
+}
+.qePrice,
+.qeRight
+{
+	text-align:right;
+}

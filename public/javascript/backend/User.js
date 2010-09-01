@@ -1007,12 +1007,15 @@ Backend.UserQuickEdit =
 
 	togglePassword: function(node)
 	{
-		$(node).up("div").getElementsByClassName("user_password")[0].type = node.checked ? "text" : "password";
+		var input = $(node).up("div").getElementsByClassName("user_password")[0];
+		input.type = node.checked ? "text" : "password";
+		input.focus();
 	},
 
 	generatePassword: function(node, uri)
 	{
-		new LiveCart.AjaxRequest(uri, null,
+		new LiveCart.AjaxRequest(uri,
+			$(node).up("div").getElementsByClassName("user_password")[0],
 			function(transport)
 			{
 				var

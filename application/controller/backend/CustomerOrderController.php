@@ -64,21 +64,27 @@ class CustomerOrderController extends ActiveGridController
 		return array('CustomerOrder.ID', 'CustomerOrder.invoiceNumber', 'User.fullName', 'User.email', 'CustomerOrder.dateCompleted', 'CustomerOrder.totalAmount', 'CustomerOrder.status', 'User.ID');
 	}
 
-	public function info()
+	public function assignStatuses(ActionResponse $response)
 	{
-		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('User', 'Currency'));
-		$order->getSpecification();
-		$order->loadAddresses();
-		
-		$response = new ActionResponse();
 		$response->set('statuses', array(
 										CustomerOrder::STATUS_NEW => $this->translate('_status_new'),
 										CustomerOrder::STATUS_PROCESSING  => $this->translate('_status_processing'),
 										CustomerOrder::STATUS_AWAITING  => $this->translate('_status_awaiting'),
 										CustomerOrder::STATUS_SHIPPED  => $this->translate('_status_shipped'),
 										CustomerOrder::STATUS_RETURNED  => $this->translate('_status_returned'),
-							));
+						));
+		return $response;
+	}
 
+	public function info()
+	{
+		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('User', 'Currency'));
+		$order->getSpecification();
+		$order->loadAddresses();
+
+		$response = new ActionResponse();
+
+		$this->assignStatuses($response);
 		$response->set('countries', $this->application->getEnabledCountries());
 
 		$orderArray = $order->toArray();
@@ -1147,6 +1153,52 @@ class CustomerOrderController extends ActiveGridController
 	private function createFieldsForm(CustomerOrder $order)
 	{
 		return new Form($this->createFieldsFormValidator($order));
+	}
+
+	public function quickEdit()
+	{
+		$this->loadQuickEditLanguageFile();
+		$response = new ActionResponse();
+		$request = $this->getRequest();
+		$order = CustomerOrder::getInstanceByID($request->get('id'));
+		$order->loadAddresses();
+		$order->getShipments();
+		$order->loadDiscounts();
+		$response->set('order', $order->toArray());
+		$response->set('statusEditor', true);
+		$response->set('form', $this->createOrderForm($order->toArray()));
+		$response->set('randomToken', md5(time().mt_rand(1,9999999999)));
+		$this->assignStatuses($response);
+
+		return $response;
+	}
+
+	public function isQuickEdit()
+	{
+		return true;
+	}
+
+	public function saveQuickEdit()
+	{
+		$order = CustomerOrder::getInstanceByID($this->getRequest()->get('id'));
+		$oldStatus = $order->status->get();
+		$status = (int)$this->request->get('status');
+		if($oldStatus != $status)
+		{
+			$order->status->set($status);
+			$order->updateShipmentStatuses();
+		}
+		$response = $this->save($order);
+		$value = $response->getValue();
+		if($value['status'] == 'success')
+		{
+			// quick edit response
+			return $this->quickEditSaveResponse($order);
+		}
+		else
+		{
+			return $response;
+		}
 	}
 }
 ?>

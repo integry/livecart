@@ -241,30 +241,31 @@ class UserGroupController extends ActiveGridController
 
 	public function quickEdit()
 	{
+		$this->loadQuickEditLanguageFile();
 		$request = $this->getRequest();
 		$userID = $request->get('id');
 		$user = User::getInstanceByID($userID, ActiveRecordModel::LOAD_DATA, array('UserGroup'));
-		$lastOrder = $user->getLastOrder();
-		
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $user->getID()));
-		// $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
-		$f->setOrder(new ARFieldHandle('CustomerOrder', 'dateCompleted'));
+		$f->setOrder(new ARFieldHandle('CustomerOrder', 'dateCompleted'), 'desc');
 		$customerOrders = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
-		
 		$response = new ActionResponse();
 		$response->set('someUser', $user->toArray());
-		if($lastOrder)
-		{
-			$response->set('lastOrder', $lastOrder->toArray());
-		}
+		$lastOrder = false;
+		$ordersArray = array();
 		if($customerOrders->size() > 0)
 		{
+			$i = 0;
 			foreach($customerOrders as $order)
 			{
-				$order->loadAll();
-				$order->getCoupons();
+				$order->loadAddresses();
+				$order->getShipments();
+				$order->loadDiscounts();
+				$ordersArray[$i] = $order->toArray();
+				$ordersArray[$i]['status_name'] = CustomerOrder::getStatusName($ordersArray[$i]['status'] ? $ordersArray[$i]['status'] : CustomerOrder::STATUS_NEW);
+				$i++;
 			}
-			$response->set('orders', $customerOrders->toArray());
+			$response->set('orders', $ordersArray);
+			$response->set('lastOrder', $ordersArray[0]);
 		}
 		$form = UserController::createUserForm($this, $user,$response);
 		$response->set('form',$form);
@@ -274,7 +275,6 @@ class UserGroupController extends ActiveGridController
 			$availableUserGroups[$group->getID()] = $group->name->get();
 		}
 		$response->set('availableUserGroups',$availableUserGroups);
-
 		return $response;
 	}
 
@@ -310,19 +310,7 @@ class UserGroupController extends ActiveGridController
 				$user->setPassword($password);
 			}
 			$user->save();
-			
-			
-			
-		$displayedColumns = $this->getRequestColumns();
-		$r = array(
-			'data'=> $this->recordSetArrayToListData(array($user->toArray()), $displayedColumns),
-			'columns'=>array_keys($displayedColumns)
-		);
-		return new JSONResponse($r, 'success');
-		
-		
-			
-			//return new JSONResponse(array('user' => $user->toFlatArray()), 'success', $this->translate('_user_details_were_successfully_saved'));
+			return $this->quickEditSaveResponse($user);
 		}
 		else
 		{

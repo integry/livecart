@@ -18,10 +18,16 @@
     position: relative;
 }
 
+
+.quickEditContainer input,
+.quickEditContainer label
+{
+	font-size:smaller;
+
+}
 .productQuickImageUploadContainer
 {
 	position:absolute;
 	width:100%;
-	margin-top:250px;
 	z-index:200;
 }

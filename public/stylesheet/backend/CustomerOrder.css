@@ -244,3 +244,15 @@ width:190px;
     list-style-type: none;
     margin-top: 7px;
 }
+
+
+.quickEditContainerOrder,
+.quickEditContainerOrder select
+{
+font-size:smaller;
+}
+
+.quickEditContainerOrder
+{
+width:500px;
+}
