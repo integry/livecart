@@ -22,12 +22,14 @@ class UserController extends FrontendController
 
  	public function init()
  	{
- 		parent::init();
+ 		$initRes = parent::init();
 
  		if ($this->user->getID())
  		{
 			$this->user->load();
 		}
+
+		return $initRes;
 	}
 
 	private function addAccountBreadcrumb()

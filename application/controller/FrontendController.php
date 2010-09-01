@@ -3,6 +3,7 @@
 ClassLoader::import('application.controller.BaseController');
 ClassLoader::import('application.model.Currency');
 ClassLoader::import('application.model.category.Category');
+ClassLoader::import('application.model.product.ProductPrice');
 
 /**
  * Base class for all front-end related controllers
@@ -50,7 +51,7 @@ abstract class FrontendController extends BaseController
 
 	public function init()
 	{
-		parent::init();
+		$initRes = parent::init();
 
 		$this->setLayout('frontend');
 		$this->addBlock('CATEGORY_BOX', 'boxCategory', 'block/box/category');
@@ -76,6 +77,8 @@ abstract class FrontendController extends BaseController
 		$this->addBlock('QUICK_LOGIN', 'quickLogin', 'user/block/quickLoginBlock');
 
 		$this->application->logStat('Init FrontendController');
+
+		return $initRes;
 	}
 
 	public function getRequestCurrency()
