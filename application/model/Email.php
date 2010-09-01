@@ -33,6 +33,8 @@ class Email
 
 	private $template;
 
+	private $relativeTemplatePath;
+
 	private $application;
 
 	private $locale;
@@ -135,6 +137,11 @@ class Email
 		$this->from = new Swift_Address($email, $name);
 	}
 
+	public function resetRecipients()
+	{
+		$this->recipients = new Swift_RecipientList();
+	}
+
 	public function setTo($emailAddresses, $name = null)
 	{
 		foreach(explode(',', $emailAddresses) as $email)
@@ -160,6 +167,8 @@ class Email
 
 	public function setTemplate($templateFile)
 	{
+		$this->relativeTemplatePath = $templateFile;
+
 		if ($templateFile = $this->getTemplatePath($templateFile))
 		{
 			$this->template = $templateFile;
@@ -226,6 +235,12 @@ class Email
 		$this->locale = $user->locale->get();
 		$this->set('user', $array);
 		$this->setTo($array['email'], $array['fullName']);
+		$this->user = $user;
+	}
+
+	public function getUser()
+	{
+		return $this->user;
 	}
 
 	public function getLocale()
@@ -235,6 +250,9 @@ class Email
 
 	public function send()
 	{
+		$this->application->processInstancePlugins('email-prepare-send', $this);
+		$this->application->processInstancePlugins('email-prepare-send/' . $this->relativeTemplatePath, $this);
+
 		if ($this->template)
 		{
 			$originalLocale = $this->application->getLocale();
@@ -282,6 +300,9 @@ class Email
 			$this->application->setLocale($originalLocale);
 		}
 
+		$this->application->processInstancePlugins('email-before-send', $this);
+		$this->application->processInstancePlugins('email-before-send/' . $this->relativeTemplatePath, $this);
+
 		$message = new Swift_Message($this->subject, $this->text);
 
 		if ($this->html)
@@ -302,8 +323,13 @@ class Email
 		catch (Exception $e)
 		{
 //			throw $e;
+			$this->application->processInstancePlugins('email-fail-send/' . $this->relativeTemplatePath, $this, array('exception' => $e));
+			$this->application->processInstancePlugins('email-fail-send', $this, array('exception' => $e));
 			return false;
 		}
+
+		$this->application->processInstancePlugins('email-after-send/' . $this->relativeTemplatePath, $this);
+		$this->application->processInstancePlugins('email-after-send', $this);
 
 		return $res;
 	}
