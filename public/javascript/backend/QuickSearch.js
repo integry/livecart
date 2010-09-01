@@ -28,7 +28,8 @@ Backend.QuickSearch = {
 				"QuickSearchForm",
 				"QuickSearchQuery",
 				"QuickSearchResult",
-				"QuickSearchContainer"
+				"QuickSearchContainer",
+				"QuickSearchResultOuterContainer"
 			]).each(
 				function(id)
 				{
@@ -82,9 +83,9 @@ Backend.QuickSearch = {
 		{
 			return;
 		}
-		
+
 		this.initNodes(); // move to 'constructor'
-		
+
 		if(this.query != this.previousQuery)
 		{
 			this._setFormOptions({});
@@ -113,20 +114,31 @@ Backend.QuickSearch = {
 			return;
 		}
 		this.initNodes();
-		this.nodes.QuickSearchResult.show();
+		this.nodes.QuickSearchResultOuterContainer.show();
 		if(this.popupHideObserved == false)
 		{
-			Event.observe(document, 'click', this.hideResultContainer.bindAsEventListener(this));
-			Event.observe(this.nodes.QuickSearchContainer, 'click', function(event){ Event.stop(event);});
+			Event.observe(document, 'click', this.handleOutsideMenuClick.bindAsEventListener(this));
+			//Event.observe(this.nodes.QuickSearchContainer, 'click', function(event){ Event.stop(event);});
 			Event.observe(this.nodes.QuickSearchQuery, 'focus', this.showResultContainer.bindAsEventListener(this));
 			this.popupHideObserved = true;
 		}
 	},
 
+	handleOutsideMenuClick: function(e)
+	{
+		if ($(Event.element(e)).up('#' + this.nodes.QuickSearchContainer.id))
+		{
+			return;
+		}
+
+		Event.stop(e);
+		this.hideResultContainer();
+	},
+
 	hideResultContainer: function()
 	{
 		this.initNodes();
-		this.nodes.QuickSearchResult.hide();
+		this.nodes.QuickSearchResultOuterContainer.hide();
 	},
 
 	next: function(obj, cn)

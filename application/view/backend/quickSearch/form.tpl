@@ -16,6 +16,8 @@
 		<input type="hidden" value="" name="to" id="QuickSearchTo" />
 		<input type="hidden" value="" name="direction" id="QuickSearchDirection" />
 
-		<div id="QuickSearchResult" style="position:absolute; right:0; background-color:white; top:38px; z-index:2;"></div>
+		<div id="QuickSearchResultOuterContainer" style="position:absolute; left:0; top:38px; z-index:2; display: none;">
+			<div id="QuickSearchResult"></div>
+		</div>
 	</form>
 </div>

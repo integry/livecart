@@ -52,7 +52,7 @@ abstract class ActiveGridController extends StoreManagementController
 			$filter->setLimit(self::EXPORT_BUFFER_ROW_COUNT, $exportFrom);
 		}
 		$productArray = ActiveRecordModel::getRecordSetArray($this->getClassName(), $filter, $this->getReferencedData(), $recordCount);
-		
+
 		if (!$displayedColumns)
 		{
 			$displayedColumns = $this->getRequestColumns();
@@ -98,7 +98,7 @@ abstract class ActiveGridController extends StoreManagementController
 		}
 		return $data;
 	}
-	
+
 	protected function getPreparedRecord($row, $displayedColumns)
 	{
 		$record = array();
@@ -314,8 +314,8 @@ abstract class ActiveGridController extends StoreManagementController
 			$className = get_class($this);
 			$className = str_replace('Controller', '', $className);
 			$className[0] = strtolower($className[0]); //lcfirst() when php5.3
-			
-			$idToken = 'RECORD_IDENTIFICATOR';
+
+			$idToken = '000';
 			$response->set('quickEditUrlIdentificatorToken',$idToken);
 			$response->set('saveQuickEditUrl', $router->createURL(
 				array('controller'=>'backend.'.$className, 'action'=>'saveQuickEdit', 'id'=>$idToken)));

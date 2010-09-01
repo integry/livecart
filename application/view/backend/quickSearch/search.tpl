@@ -1,8 +1,10 @@
-{foreach $classNames as $className}
+{foreach from=$classNames key=key item=className}
 	{if $result[$className].count > 0}
 		<div class="qsResultsContainer qs{$className}">
-			<h3 class="qsClassName">{t _title_`$className`}</h3>
-			<span class="qsCount">({$result[$className].count})</span>
+			<h3 class="qsClassName{if 0 == $key} first{/if}">
+				<span class="qsName">{t _title_`$className`}</span>
+				<span class="qsCount">({$result[$className].count})</span>
+			</h3>
 			<ul>
 				{foreach $result[$className].records as $record}
 				<li>
