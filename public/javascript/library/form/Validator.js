@@ -241,8 +241,6 @@ function OrCheck(element, constraints)
 *********************************************/
 function NumericFilter(elm, params)
 {
-	elm.focus();
-
 	var value = elm.value;
 
 	// Remove leading zeros
@@ -291,8 +289,6 @@ function NumericFilter(elm, params)
 
 function IntegerFilter(element, params)
 {
-	element.focus();
-
 	element.value = element.value.replace(/[^\d]/, '');
 	element.value = element.value.replace(/^0/, '');
 

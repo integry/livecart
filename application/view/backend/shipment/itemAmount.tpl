@@ -80,7 +80,7 @@
 		<td class="orderShipmentsItem_info_price_td">
 			<div class="orderShipmentsItem_info_price">
 				<span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
-				<span class="price">{$item.itemPrice|string_format:"%.2f"}</span>
+				<input name="price_{$item.ID}" id="orderShipmentsItem_price_{$item.ID}" class="price orderShipmentsItem_price" {if $item.Shipment.status == 3 || $shipment.status == 3}readonly="readonly"{/if} {denied role='order.update'}readonly="readonly"{/denied} value="{$item.itemPrice|string_format:"%.2f"}" />
 				<span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
 			</div>
 		</td>

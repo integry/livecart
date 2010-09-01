@@ -124,44 +124,62 @@ Backend.OrderedItem = {
 
 		$("tabOrderInfo_" + id + "Content").down('.order_totalAmount').innerHTML = totalAmount;
 		Backend.CustomerOrder.prototype.updateLog(id);
-   },
+	},
 
-   updateProductCount: function(input, orderID, itemID, shipmentID)
-   {
-	   IntegerFilter(input);
+	updateProductCount: function(input, orderID, itemID, shipmentID)
+	{
+		var price = input.up('tr').down('.orderShipmentsItem_info_price').down('.price');
+		this.updateItemTotal(input, price);
+	},
 
-	   var price = input.up('tr').down('.orderShipmentsItem_info_price').down('.price');
-	   var total = input.up('tr').down('.orderShipmentsItem_info_total').down('.price');
+	updateProductPrice: function(input)
+	{
+		var count = input.up('tr').down('.orderShipmentsItem_info_count').down('input');
+		this.updateItemTotal(count, input);
+	},
 
-	   // Recalculate item cost
-	   total.innerHTML = Backend.Shipment.prototype.formatAmount(parseFloat(input.value) * parseFloat(price.innerHTML));
-   },
+	updateItemTotal: function(countInput, priceInput)
+	{
+		IntegerFilter(countInput);
+		NumericFilter(priceInput);
+
+		var total = countInput.up('tr').down('.orderShipmentsItem_info_total').down('.price');
+
+		// Recalculate item cost
+		total.innerHTML = Backend.Shipment.prototype.formatAmount(parseFloat(countInput.value) * parseFloat(priceInput.value));
+	},
 
    changeProductCount: function(input, orderID, itemID, shipmentID, force)
    {
-	   if(input.value == input.lastValue) return;
+		var priceInput = input.up('tr').down('.orderShipmentsItem_info_price').down('.price');
 
-	   var price = input.up('tr').down('.orderShipmentsItem_info_price').down('.price');
-	   var total = input.up('tr').down('.orderShipmentsItem_info_total').down('.price');
+		if ((input.value == input.lastValue) && (priceInput.value == priceInput.lastValue))
+		{
+			return;
+		}
 
-	   if(force || confirm(Backend.OrderedItem.Messages.areYouRealyWantToUpdateItemsCount))
-	   {
+		var price = priceInput.value;
+		var total = input.up('tr').down('.orderShipmentsItem_info_total').down('.price');
+
+		if(force || /*confirm(Backend.OrderedItem.Messages.areYouRealyWantToUpdateItemsCount)*/ 1)
+		{
 		   new LiveCart.AjaxRequest(
-			   this.getCountSaveUrl(itemID, input.value),
+			   this.getCountSaveUrl(itemID, input.value, price),
 			   input.up('.orderShipmentsItem_info_count').down('.progressIndicator'),
 			   function(response)
 			   {
 					var response = response.responseData;
-					var shipment = this.getShipmentFromUpdateResponse(response.responseData);
+					var shipment = this.getShipmentFromUpdateResponse(response);
 
 					var li = $('orderShipmentsItems_list_' + response.Shipment.Order.ID + '_' + response.Shipment.ID + '_' + response.ID);
 					if(!response.Shipment.isDeleted)
 					{
+						input.lastValue = input.value;
+						priceInput.lastValue = priceInput.value;
+
 						shipment.itemsActiveList.highlight(li);
 
 						this.updateShipmentAmounts(shipment, response.Shipment);
-
-						input.lastValue = input.value;
 					}
 					else
 					{
@@ -171,12 +189,13 @@ Backend.OrderedItem = {
 					Backend.OrderedItem.updateReport($("orderShipment_report_" + response.Shipment.Order.ID));
 				}.bind(this)
 		   );
-	   }
-	   else
-	   {
+		}
+		else
+		{
 		   input.value = input.lastValue;
-		   Backend.OrderedItem.updateProductCount(input, orderID);
-	   }
+		   priceInput.value = priceInput.lastValue;
+		   Backend.OrderedItem.updateProductCount(input);
+		}
 	},
 
 	getShipmentFromUpdateResponse: function(response)
@@ -188,7 +207,7 @@ Backend.OrderedItem = {
 		}
 		else
 		{
-			shipment = Backend.Shipment.prototype.getInstance('orderShipments_list_' + response.Shipment.orderID + '_' + response.Shipment.ID);
+			shipment = Backend.Shipment.prototype.getInstance('orderShipments_list_' + response.Shipment.Order.ID + '_' + response.Shipment.ID);
 		}
 
 		return shipment;
@@ -202,9 +221,9 @@ Backend.OrderedItem = {
 		shipment.setTotal(responseShipment.total);
 	},
 
-	getCountSaveUrl: function(itemID, count)
+	getCountSaveUrl: function(itemID, count, price)
 	{
-		return Backend.OrderedItem.Links.changeItemCount + "/" + itemID + "?count=" + count;
+		return Backend.OrderedItem.Links.changeItemCount + "/" + itemID + "?count=" + count + "?price=" + price;
 	},
 
 	loadOptionsForm: function(e)
@@ -367,25 +386,41 @@ Backend.Shipment.prototype =
 			// Bind Items events
 			this.nodes.itemsList.childElements().each(function(itemLi)
 			{
-				var itemID = itemLi.id.match(/\d+$/)[0];
-
-				var countNode = $("orderShipmentsItem_count_" + itemID);
-				var itemTable = $("orderShipmentsItems_list_" + this.orderID + "_" + this.ID + "_" + itemID);
-
-				countNode.lastValue = countNode.value;
-				Event.observe(countNode, 'focus', function(e) { window.lastFocusedItemCount = this; });
-				Event.observe(countNode, 'keyup', function(e) {  Backend.OrderedItem.updateProductCount(this, this.orderID, itemID,  this.ID) });
-				Event.observe(countNode, 'blur', function(e) { Backend.OrderedItem.changeProductCount(this, this.orderID, itemID,  this.ID) }, false);
-				Event.observe(itemTable, 'click', function(e)
-				{
-					var input = window.lastFocusedItemCount;
-					if(input && input.value != input.lastValue)
-					{
-						input.blur();
-					}
-				}.bind(this));
+				this.bindItemEvents(itemLi);
 			}.bind(this));
 		}
+	},
+
+	bindItemEvents: function(itemLi)
+	{
+		var itemID = itemLi.id.match(/\d+$/)[0];
+
+		var countNode = $("orderShipmentsItem_count_" + itemID);
+		var itemTable = $("orderShipmentsItems_list_" + this.orderID + "_" + this.ID + "_" + itemID);
+
+		countNode.lastValue = countNode.value;
+		Event.observe(countNode, 'focus', function(e) { window.lastFocusedItemCount = this; });
+		Event.observe(countNode, 'keyup', function(e) {  Backend.OrderedItem.updateProductCount(this) });
+		Event.observe(countNode, 'blur', function(e) { Backend.OrderedItem.changeProductCount(this, this.orderID, itemID,  this.ID) }, false);
+		Event.observe(itemTable, 'click', function(e)
+		{
+			var input = window.lastFocusedItemCount;
+			if(input && input.value != input.lastValue)
+			{
+				input.blur();
+			}
+		}.bind(this));
+
+		var price = itemLi.down('.orderShipmentsItem_info_price');
+		var priceInput = price.down('input');
+		priceInput.lastValue = priceInput.value;
+		Event.observe(priceInput, 'focus', function(e) { window.lastFocusedItemCount = this; });
+		Event.observe(priceInput, 'keyup', function(e) { Backend.OrderedItem.updateProductPrice(priceInput) }.bind(this));
+		Event.observe(priceInput, 'blur', function(e) { Backend.OrderedItem.changeProductCount(countNode, this.orderID, itemID, this.ID) }.bind(this));
+		Event.observe(priceInput, 'click', function(e) {
+		   var input = window.lastFocusedItemCount;
+		   if(input.value != input.lastValue) { input.blur(); }
+		});
 	},
 
 	save: function(afterCallback, disableIndicator)
@@ -577,8 +612,9 @@ Backend.Shipment.prototype =
 				   li.down('.orderShipmentsItem_count').value = response.item.count;
 
 				   var price = li.down('.orderShipmentsItem_info_price');
+				   var priceInput = price.down('input');
 				   price.down('.pricePrefix').innerHTML = response.item.Shipment.prefix;
-				   price.down('.price').innerHTML = response.item.price
+				   priceInput.value = response.item.price;
 				   price.down('.priceSuffix').innerHTML = response.item.Shipment.suffix;
 
 				   var priceTotal = li.down('.item_subtotal');
@@ -587,15 +623,8 @@ Backend.Shipment.prototype =
 				   priceTotal.down('.priceSuffix').innerHTML = response.item.Shipment.suffix;
 
 				   var countInput = li.down('.orderShipmentsItem_count');
-				   countInput.lastValue = countInput.value;
 
-				   Event.observe(countInput, 'focus', function(e) { window.lastFocusedItemCount = this; });
-				   Event.observe(countInput, 'keyup', function(e) { Backend.OrderedItem.updateProductCount(countInput, this.nodes.form.elements.namedItem('orderID').value, response.item.ID, response.item.Shipment.ID) }.bind(this));
-				   Event.observe(countInput, 'blur', function(e) { Backend.OrderedItem.changeProductCount(countInput, this.orderID, response.item.ID, response.item.Shipment.ID) }.bind(this));
-				   Event.observe(countInput, 'click', function(e) {
-					   var input = window.lastFocusedItemCount;
-					   if(input.value != input.lastValue) { input.blur(); }
-				   });
+				   this.bindItemEvents(li);
 
 				   this.setAmount(response.item.Shipment.amount);
 				   this.setTaxAmount(response.item.Shipment.taxAmount);

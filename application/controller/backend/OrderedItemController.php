@@ -70,7 +70,7 @@ class OrderedItemController extends StoreManagementController
 
 			$item = OrderedItem::getNewInstance($order, $product);
 			$item->count->set(1);
-			$item->price->set($product->getPrice($currency->getID()));
+			$item->price->set($currency->round($item->reduceBaseTaxes($product->getPrice($currency->getID()))));
 
 			$order->addItem($item);
 			$shipment->addItem($item);
@@ -396,11 +396,13 @@ class OrderedItemController extends StoreManagementController
 		if(($id = (int)$this->request->get("id", false)) )
 		{
 			$count = (int)$this->request->get("count");
+			$price = (int)$this->request->get("price");
 			$item = OrderedItem::getInstanceByID('OrderedItem', $id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'Currency', 'ShippingAddress' => 'UserAddress', 'Product', 'Category'));
 			$item->customerOrder->get()->loadAll();
 			$history = new OrderHistory($item->customerOrder->get(), $this->user);
 
 			$item->count->set($count);
+			$item->price->set($price);
 
 			$shipment = $item->shipment->get();
 			$shipment->loadItems();
