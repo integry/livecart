@@ -19,6 +19,7 @@ ClassLoader::import('application.model.discount.DiscountActionSet');
 ClassLoader::import('application.model.businessrule.BusinessRuleController');
 ClassLoader::import('application.model.businessrule.BusinessRuleContext');
 ClassLoader::import('application.model.businessrule.interface.BusinessRuleOrderInterface');
+ClassLoader::import('library.shipping.ShippingRateSet');
 
 /**
  * Represents customers order - products placed in shopping basket or wish list
@@ -47,6 +48,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	private $coupons = null;
 
 	private $isOrderable = null;
+
+	private $isProcessingRules;
 
 	private $isRulesProcessed;
 
@@ -1041,6 +1044,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	 */
 	public function getTotal($recalculateAmount = false)
 	{
+		if (is_null($this->orderTotal) && $this->isFinalized->get())
+		{
+			$this->orderTotal = $this->totalAmount->get();
+		}
+
 		if (is_null($this->orderTotal) || $recalculateAmount)
 		{
 			if ($this->isFinalized->get() && !$recalculateAmount)
@@ -1120,7 +1128,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function registerOrderDiscount(OrderDiscount $discount)
 	{
-		$this->orderDiscounts[] = $discount;
+		$this->orderDiscounts[$discount->getID()] = $discount;
 	}
 
 	public function getOrderDiscounts()
@@ -2000,6 +2008,14 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			return;
 		}
 
+		// avoid loops
+		if ($this->isProcessingRules)
+		{
+			return;
+		}
+
+		$this->isProcessingRules = true;
+
 		foreach ($this->getShoppingCartItems() as $item)
 		{
 			$item->reset();
@@ -2023,6 +2039,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			}
 		}
 
+		$this->isProcessingRules = false;
 		$this->isRulesProcessed = true;
 	}
 

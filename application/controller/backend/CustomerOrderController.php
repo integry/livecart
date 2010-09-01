@@ -69,7 +69,7 @@ class CustomerOrderController extends ActiveGridController
 		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('User', 'Currency'));
 		$order->getSpecification();
 		$order->loadAddresses();
-		
+
 		$response = new ActionResponse();
 		$response->set('statuses', array(
 										CustomerOrder::STATUS_NEW => $this->translate('_status_new'),
@@ -206,20 +206,20 @@ class CustomerOrderController extends ActiveGridController
 	public function updateDate()
 	{
 		$request = $this->getRequest();
-		
+
 		$validator = $this->getDateCompletedValidator($request);
 		if($validator->isValid() == false)
 		{
 			$errors = $validator->getErrorList();
 			return new JSONResponse(array('errors'=>$errors), 'validationError');
 		}
-		
+
 		$order = CustomerOrder::getInstanceById($request->get('orderID'));
 		$newDate =  $request->get('dateCompleted');
 		if(strpos($newDate, ':') === false)
 		{
 			list($oldDate, $oldTime) = explode(' ',(string)$order->dateCompleted->get());
-			$newDate .= ' '.$oldTime; 
+			$newDate .= ' '.$oldTime;
 		}
 		$order->dateCompleted->set($newDate);
 		$order->save();
@@ -235,7 +235,7 @@ class CustomerOrderController extends ActiveGridController
 		{
 			if(isset($order[$key]))
 			{
-				$dateForm->set($key, $order[$key]);	
+				$dateForm->set($key, $order[$key]);
 			}
 		}
 		$response->set('dateForm', $dateForm);
@@ -380,7 +380,7 @@ class CustomerOrderController extends ActiveGridController
 	{
 		$status = $order->status->get();
 		$enabledStatuses = $this->config->get('EMAIL_STATUS_UPDATE_STATUSES');
-		$m = array(	
+		$m = array(
 			'EMAIL_STATUS_UPDATE_NEW'=>CustomerOrder::STATUS_NEW,
 			'EMAIL_STATUS_UPDATE_PROCESSING'=>CustomerOrder::STATUS_PROCESSING,
 			'EMAIL_STATUS_UPDATE_AWAITING_SHIPMENT'=>CustomerOrder::STATUS_AWAITING,
@@ -945,6 +945,22 @@ class CustomerOrderController extends ActiveGridController
 		$order->save(true);
 
 		return new RawResponse();
+	}
+
+	public function recalculateDiscounts()
+	{
+		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, true);
+		$order->deleteRelatedRecordSet('OrderDiscount');
+		$order->loadAll();
+
+		$order->isFinalized->set(false);
+		$order->finalize(array('allowRefinalize' => true));
+
+		$order->isFinalized->set(true);
+		$order->save();
+
+		$redirectUrl = $this->router->createUrl(array('controller' => 'backend.customerOrder', 'action' => 'index')) . '#order_' . $order->getID() . '__';
+		return new RedirectResponse($redirectUrl);
 	}
 
 	public function printInvoice()

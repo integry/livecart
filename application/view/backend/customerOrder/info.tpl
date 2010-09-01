@@ -3,17 +3,25 @@
 
 	<ul class="menu">
 		{if !$order.isFinalized}
-		<li {denied role='order.update'}style="display: none"{/denied} class="order_unfinalized">
-			<span style="display: none;" id="order_{$order.ID}_isFinalizedIndicator" class="progressIndicator"></span>
-			<a id="order_{$order.ID}_isFinalized" href="{link controller="backend.customerOrder" action="finalize" id=$order.ID}">
-				{t _finalize}
-			</a>
-		</li>
+			<li {denied role='order.update'}style="display: none"{/denied} class="order_unfinalized">
+				<span style="display: none;" id="order_{$order.ID}_isFinalizedIndicator" class="progressIndicator"></span>
+				<a id="order_{$order.ID}_isFinalized" href="{link controller="backend.customerOrder" action="finalize" id=$order.ID}">
+					{t _finalize}
+				</a>
+			</li>
 		{/if}
 
 		<li class="order_printInvoice">
 			<a href="{link controller=backend.customerOrder action=printInvoice id=$order.ID}" target="_blank">{t _print_invoice}</a>
 		</li>
+
+		{if $order.isFinalized}
+			<li {denied role='order.update'}style="display: none"{/denied} class="order_recalculateDiscounts">
+				<a id="order_{$order.ID}_recalculateDiscounts" href="{link controller="backend.customerOrder" action="recalculateDiscounts" id=$order.ID}">
+					{t _recalculate_discounts}
+				</a>
+			</li>
+		{/if}
 	</ul>
 	<div class="clear"></div>
 

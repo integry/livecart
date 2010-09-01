@@ -34,6 +34,7 @@ _cancel_order=Cancel order
 _this_order_is=This order is
 
 _finalize=Finalize order
+_recalculate_discounts=Recalculate discounts
 _order_is_finalized=The order has been finalized
 
 # Tree

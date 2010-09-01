@@ -122,6 +122,11 @@ width:190px;
 	font-weight: bold;
 }
 
+.order_recalculateDiscounts
+{
+	background-image: url(../../image/silk/basket_go.png);
+}
+
 .order_addShipment
 {
 	background-image: url(../../image/silk/package_add.png);

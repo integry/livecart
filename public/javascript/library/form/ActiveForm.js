@@ -47,6 +47,11 @@ ActiveForm.prototype = {
 			form = form.down('form');
 		}
 
+		if (!form.elements)
+		{
+			return;
+		}
+
 		var messages = document.getElementsByClassName('errorText', form);
 		for (var k = 0; k < messages.length; k++)
 		{
@@ -63,7 +68,7 @@ ActiveForm.prototype = {
 	resetErrorMessage: function(formElement)
 	{
 		formElement.removeClassName('hasError');
-		var parent = $(formElement).up();
+		var parent = $($(formElement).up());
 		if (!parent)
 		{
 			return;
