@@ -14,6 +14,7 @@ Backend.QuickSearch = {
 	popupHideObserved: false,
 	nodes : null,
 	hasResponse : false,
+	isDisplayed: false,
 
 	initNodes : function()
 	{
@@ -110,9 +111,9 @@ Backend.QuickSearch = {
 	{
 		if(this.hasResponse == false)
 		{
-			console.log('sorry');
 			return;
 		}
+
 		this.initNodes();
 		this.nodes.QuickSearchResultOuterContainer.show();
 		if(this.popupHideObserved == false)
@@ -122,11 +123,13 @@ Backend.QuickSearch = {
 			Event.observe(this.nodes.QuickSearchQuery, 'focus', this.showResultContainer.bindAsEventListener(this));
 			this.popupHideObserved = true;
 		}
+
+		this.isDisplayed = true;
 	},
 
 	handleOutsideMenuClick: function(e)
 	{
-		if ($(Event.element(e)).up('#' + this.nodes.QuickSearchContainer.id))
+		if (!this.isDisplayed || $(Event.element(e)).up('#' + this.nodes.QuickSearchContainer.id))
 		{
 			return;
 		}
@@ -137,6 +140,7 @@ Backend.QuickSearch = {
 
 	hideResultContainer: function()
 	{
+		this.isDisplayed = false;
 		this.initNodes();
 		this.nodes.QuickSearchResultOuterContainer.hide();
 	},
