@@ -1,7 +1,13 @@
 {foreach $classNames as $className}
 	{if $result[$className].count > 0}
 		<div class="qsResultsContainer qs{$className}">
-			<h3 class="qsClassName">{t _title_`$className`}</h3>
+			<h3 class="qsClassName">
+				{if $className == 'SearchableItem'}
+					{t _title_SearchableConfiguration}
+				{else}
+					{t _title_`$className`}
+				{/if}
+			</h3>
 			<span class="qsCount">({$result[$className].count})</span>
 			<ul>
 				{foreach $result[$className].records as $record}
@@ -26,5 +32,6 @@
 			{t _nothing_found_for_query}: <strong>{$query}</strong>
 		</div>
 	{/if}
-	<a class="cancel" href="javascript:void(0)" onclick="Backend.QuickSearch.hideResultContainer()">{t _cancel}</a>
+	<a class="cancel" href="javascript:void(0)"
+	onclick="Backend.QuickSearch.getInstance(this).hideResultContainer()">{t _cancel}</a>
 {/if}

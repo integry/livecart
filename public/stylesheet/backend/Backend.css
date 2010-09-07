@@ -1831,3 +1831,37 @@ table.qeProducts{
 {
 	text-align:right;
 }
+
+#SettingsSearchContainer,
+#QuickSearchContainer
+{
+	width:320px;
+}
+#QuickSearchContainer
+{
+	right:0;
+	position:absolute;
+}
+
+#QuickSearchResult
+{
+	position:absolute;
+	right:0;
+	background-color:white;
+	top:38px;
+	z-index:21;
+}
+
+#SettingsSearchResult
+{
+	position:absolute;
+	background-color:white;
+	top:38px;
+	z-index:21;
+}
+
+#SettingsSearchResult,
+#SettingsSearchQuery
+{
+width:250px !important;
+}

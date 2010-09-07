@@ -1,0 +1,2 @@
+<a href="javascript:void(0);" onclick="var s=window.settings, t=s.treeBrowser, i = '{$record.meta.section_id|escape}'; s.activateCategory(i); t.openItem(i); t.selectItem(i);">{$record.value|escape|mark_substring:$query}</a>
+<span>{if $record.locale}{img src="image/localeflag/`$record.locale`.png"}{/if}</span>

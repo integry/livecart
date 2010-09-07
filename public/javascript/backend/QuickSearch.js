@@ -1,8 +1,12 @@
 /**
+ * 
  * @author Integry Systems
  */
 
-Backend.QuickSearch = {
+window.quickSearchInstances = {};
+
+Backend.QuickSearch = Class.create();
+Backend.QuickSearch.prototype = {
 	// timeout values
 	TIMEOUT_WHEN_WAITING : 500,
 	TIMEOUT_WHEN_TYPING : 1000,
@@ -14,6 +18,19 @@ Backend.QuickSearch = {
 	popupHideObserved: false,
 	nodes : null,
 	hasResponse : false,
+	prefix: null,
+	defaultOptions:{},
+
+	initialize: function(prefix, options)
+	{
+		if(options)
+		{
+			this.defaultOptions = options;
+		}
+		this.prefix = prefix;
+		this.initNodes();
+		Event.observe(this.nodes["Query"], "keyup", this.onKeyUp.bindAsEventListener(this));
+	},
 
 	initNodes : function()
 	{
@@ -21,25 +38,26 @@ Backend.QuickSearch = {
 		{
 			this.nodes = {};
 			$A([
-				"QuickSearchClass",
-				"QuickSearchFrom",
-				"QuickSearchTo",
-				"QuickSearchDirection",
-				"QuickSearchForm",
-				"QuickSearchQuery",
-				"QuickSearchResult",
-				"QuickSearchContainer"
+				"Class",
+				"From",
+				"To",
+				"Direction",
+				"Form",
+				"Query",
+				"Result",
+				"Container"
 			]).each(
 				function(id)
 				{
-					this.nodes[id]=$(id);
+					this.nodes[id]=$(this.prefix + id);
 				}.bind(this)
 			);
 		}
 	},
 
-	onKeyUp:function(obj)
+	onKeyUp:function(event)
 	{
+		var obj = Event.element(event);
 		this.query=obj.value;
 
 		// instant requests
@@ -87,10 +105,10 @@ Backend.QuickSearch = {
 		
 		if(this.query != this.previousQuery)
 		{
-			this._setFormOptions({});
+			this._setFormOptions(this.defaultOptions);
 			new LiveCart.AjaxRequest(
-				this.nodes.QuickSearchForm,
-				this.nodes.QuickSearchQuery,
+				this.nodes.Form,
+				this.nodes.Query,
 				this.onResponse.bind(this)
 			);
 			this.previousQuery = this.query;
@@ -100,7 +118,7 @@ Backend.QuickSearch = {
 	onResponse: function(transport)
 	{
 		this.initNodes(); // move to 'constructor'
-		this.nodes.QuickSearchResult.innerHTML = transport.responseText;
+		this.nodes.Result.innerHTML = transport.responseText;
 		this.hasResponse = true; // flag needed to allow reopen closed result popup when clicking on search query input field.
 		this.showResultContainer();
 	},
@@ -109,16 +127,24 @@ Backend.QuickSearch = {
 	{
 		if(this.hasResponse == false)
 		{
-			console.log('sorry');
 			return;
 		}
 		this.initNodes();
-		this.nodes.QuickSearchResult.show();
+		this.nodes.Result.show();
 		if(this.popupHideObserved == false)
 		{
 			Event.observe(document, 'click', this.hideResultContainer.bindAsEventListener(this));
-			Event.observe(this.nodes.QuickSearchContainer, 'click', function(event){ Event.stop(event);});
-			Event.observe(this.nodes.QuickSearchQuery, 'focus', this.showResultContainer.bindAsEventListener(this));
+			Event.observe(this.nodes.Container, 'click',
+				function(event)
+				{
+					var element = Event.element(event);
+					if(element.tagName.toLowerCase() != "a" || element.hasClassName("qsNext") || element.hasClassName("qsPrevious"))
+					{
+						Event.stop(event);
+					}
+				}
+			);
+			Event.observe(this.nodes.Query, 'focus', this.showResultContainer.bindAsEventListener(this));
 			this.popupHideObserved = true;
 		}
 	},
@@ -126,7 +152,7 @@ Backend.QuickSearch = {
 	hideResultContainer: function()
 	{
 		this.initNodes();
-		this.nodes.QuickSearchResult.hide();
+		this.nodes.Result.hide();
 	},
 
 	next: function(obj, cn)
@@ -154,8 +180,8 @@ Backend.QuickSearch = {
 			direction:direction
 		});
 		new LiveCart.AjaxRequest(
-			this.nodes.QuickSearchForm,
-			this.nodes.QuickSearchQuery,
+			this.nodes.Form,
+			this.nodes.Query,
 			function(transport)
 			{
 				this.classContainer.innerHTML=transport.responseText;
@@ -165,9 +191,40 @@ Backend.QuickSearch = {
 
 	_setFormOptions: function(options)
 	{
-		this.nodes.QuickSearchClass.value=options.cn ? options.cn : "";
-		this.nodes.QuickSearchFrom.value=options.from ? options.from : "";
-		this.nodes.QuickSearchTo.value=options.to ? options.to: "";
-		this.nodes.QuickSearchDirection.value=options.direction ? options.direction : "";
+		this.nodes.Class.value=options.cn ? options.cn : "";
+		this.nodes.From.value=options.from ? options.from : "";
+		this.nodes.To.value=options.to ? options.to: "";
+		this.nodes.Direction.value=options.direction ? options.direction : "";
 	}
+}
+
+Backend.QuickSearch.createInstance = function(name, enabledClassNames)
+{
+	window.quickSearchInstances[name] = new Backend.QuickSearch(name, enabledClassNames);
+	return window.quickSearchInstances[name];
+}
+
+Backend.QuickSearch.getInstance = function(obj)
+{
+	var
+		i = 0,
+		id;
+	obj = $(obj);
+	
+	// quick search container div has id <instance name>Container
+	// emove Container and get instance name.
+	while(obj.id.match(/Container$/) == null)
+	{
+		if(i>10)
+		{
+			throw "Can't find QuickSearch instance from passed node";
+		}
+		obj = obj.up("div");
+	}
+	id = obj.id.replace(/Container$/, '');
+	if(typeof window.quickSearchInstances[id] == "undefined")
+	{
+		throw "Can't find QuickSearch instance, probably not initalized";
+	}
+	return window.quickSearchInstances[id];
 }

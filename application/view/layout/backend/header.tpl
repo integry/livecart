@@ -25,7 +25,7 @@
 			<div id="nav"></div>
 			{backendMenu}
 			<div class="clear"></div>
-			{include file="backend/quickSearch/form.tpl"}
+			{include file="backend/quickSearch/form.tpl" formid="QuickSearch"}
 		</div>
 
 	</div>
