@@ -221,6 +221,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$this->loadItems();
 		$this->getShipments();
 		$this->getSpecification();
+		$this->getPaymentMethod();
 
 		if ($this->isExistingRecord())
 		{
@@ -1508,6 +1509,17 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 				{
 					$this->paymentMethod = $transaction->method->get();
 					break;
+				}
+
+				// offline methods
+				else if ($transaction->serializedData->get())
+				{
+					$array = $transaction->toArray();
+					if (!empty($array['serializedData']['handlerID']))
+					{
+						$this->paymentMethod = $array['serializedData']['handlerID'];
+						break;
+					}
 				}
 			}
 		}
