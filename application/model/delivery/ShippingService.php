@@ -2,6 +2,8 @@
 ClassLoader::import("application.model.system.ActiveTreeNode");
 ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import("application.model.delivery.*");
+ClassLoader::import("application.model.eav.EavAble");
+ClassLoader::import("application.model.eav.EavObject");
 
 /**
  * Pre-defined shipping service plan, that is assigned to a particular DeliveryZone.
@@ -14,7 +16,7 @@ ClassLoader::import("application.model.delivery.*");
  * @package application.model.delivery
  * @author Integry Systems <http://integry.com>
  */
-class ShippingService extends MultilingualObject
+class ShippingService extends MultilingualObject implements EavAble
 {
 	const WEIGHT_BASED = 0;
 	const SUBTOTAL_BASED = 1;
@@ -30,6 +32,10 @@ class ShippingService extends MultilingualObject
 		$schema->registerField(new ARField("name", ARArray::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance(10)));
 		$schema->registerField(new ARField("rangeType", ARInteger::instance(1)));
+		$schema->registerField(new ARField("description", ARArray::instance()));
+		$schema->registerField(new ARField("deliveryTimeMinDays", ARInteger::instance(10)));
+		$schema->registerField(new ARField("deliveryTimeMaxDays", ARInteger::instance(10)));
+		$schema->registerField(new ARForeignKeyField("eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -221,5 +227,10 @@ class ShippingService extends MultilingualObject
 		}
 	}
 
+	public function toArray()
+	{
+		$this->getSpecification();
+		return parent::toArray();
+	}
 }
 ?>

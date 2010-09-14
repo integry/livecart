@@ -74,3 +74,8 @@ _order_completed=Order Completed
 _completed_paid=Your payment has been received. You can track the status of your order from <a href="%url">your account</a>.
 _completed_offline=Your order has been completed. Please remit payment according to the instructions below.
 _download=Download
+
+_and=and
+_deliveryDate_between=Expected delivery date between 
+_deliveryDate_before=Expected delivery before
+_deliveryDate_after=Expected delivery after
