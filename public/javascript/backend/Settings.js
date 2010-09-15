@@ -8,7 +8,8 @@ Backend.Settings.prototype =
 {
   	treeBrowser: null,
 
-  	urls: new Array(),
+	urls: new Array(),
+	// urls: {},
 
 	initialize: function(categories, settings)
 	{
@@ -116,8 +117,14 @@ Backend.Settings.prototype =
 
 	init: function()
 	{
-		this.activateCategory('00-store');
-
+		var match = Backend.getHash().match(/section_(.+?)__/), sectionId = '00-store';
+		if(match)
+		{
+			sectionId = match.pop();
+			this.treeBrowser.openItem(sectionId);
+			this.treeBrowser.selectItem(sectionId);
+		}
+		this.activateCategory(sectionId);
 		var firstPaymentMethod = this.treeBrowser.getChildItemIdByIndex('05-payment', 0);
 		for (k = 1; k <= 6; k++)
 		{
@@ -125,12 +132,17 @@ Backend.Settings.prototype =
 			this.treeBrowser.moveItem(item, 'item_sibling', firstPaymentMethod);
 			this.treeBrowser.setItemText(item, '<span id="tree_payment.OFFLINE' + k + '">' + this.getSetting('OFFLINE_NAME_' + k)) + '</span>';
 		}
-
 		this.updatePaymentProcessors();
 		this.updateShippingHandlers();
 
 		this.treeBrowser.closeAllItems('05-payment');
 		this.treeBrowser.closeAllItems('06-shipping');
+
+		if(match)
+		{
+			this.treeBrowser.openItem(sectionId);
+			this.treeBrowser.selectItem(sectionId);
+		}
 	},
 
 	activateCategory: function(id)
