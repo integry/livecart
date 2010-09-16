@@ -129,3 +129,15 @@ _last_month=Luna trecuta
 _this_year=Acest an
 _last_year=Anul trecut
 _overall=In general
+
+_product_prices_were_successfully_updated=Preturile produsului au fost actualizate cu succes
+_product_prices_could_not_be_updated=Preturile produsului nu pot fi actualizate
+_inventory=Inventar
+_items_in_stock=Articole in stoc
+_pricing=Cost
+_shipping_weight=Greutate expediere
+_minimum_order_quantity=Cantitate minima comanda
+_shipping_surcharge=Suprataxare expediere
+_requires_separate_shipment=Necesita livrare separata
+_qualifies_for_free_shipping=Conditii de livrare gratuita
+_allow_back_ordering=Retur admis

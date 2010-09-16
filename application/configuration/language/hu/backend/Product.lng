@@ -141,3 +141,15 @@ _last_month=Múlt hónap
 _this_year=Ez az év
 _last_year=Múlt év
 _overall=Összesen
+
+_product_prices_were_successfully_updated=A termékárak sikeresen frissítve
+_product_prices_could_not_be_updated=A termékárak frissítése sikertelen
+_inventory=Raktárkészlet
+_items_in_stock=Termékek raktáron
+_pricing=Árazás
+_shipping_weight=Szállítási súly
+_minimum_order_quantity=Minimális rendelési mennyiség
+_shipping_surcharge=Szállítási pótdíj
+_requires_separate_shipment=Külön szállítást igényel
+_qualifies_for_free_shipping=Inegyenes szállításra alkalmas
+_allow_back_ordering=Viszont-rendelés engedélyezése

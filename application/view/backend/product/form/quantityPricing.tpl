@@ -1,4 +1,4 @@
-<div class="quantityPricing" style="display: none;">
+<div class="quantityPricing" style="display: none;" id="quantityPricingViewPort_{$product.ID}">
 <table id="quantityPricing_{$currency}_{$product.ID}">
 	<thead>
 		<tr class="quantityRow"><td>

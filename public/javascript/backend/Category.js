@@ -705,23 +705,26 @@ CategoryTabControl.prototype = {
 			$(containerId).update('&nbsp;');
 
 			Backend.Category.treeBrowser.showFeedback(parseInt(categoryId));
-			new LiveCart.AjaxUpdater(this.getTabUrl(tabId, categoryId),
-									 this.getContainerId(tabId, categoryId),
-									 this.getIndicatorId(tabId),
-									 undefined,
-									 function(){
-									   Backend.Category.treeBrowser.hideFeedback(categoryId);
-									   if ('tabMainDetails' == tabId)
-									   {
-										  var nameField = $(containerId).down('form').elements.namedItem('name');
-										  if ('New Category ' == nameField.value.substr(0, 13))
-										  {
-											nameField.select();
-											nameField.focus();
-										  }
-									   }
-									 }
-									 );
+
+			new LiveCart.AjaxUpdater(
+				this.getTabUrl(tabId, categoryId),
+				this.getContainerId(tabId, categoryId),
+				this.getIndicatorId(tabId),
+				undefined,
+				function()
+				{
+					Backend.Category.treeBrowser.hideFeedback(categoryId);
+					if ('tabMainDetails' == tabId)
+					{
+						var nameField = $(containerId).down('form').elements.namedItem('name');
+						if ('New Category ' == nameField.value.substr(0, 13))
+						{
+							nameField.select();
+							nameField.focus();
+						}
+					}
+				}
+			);
 		}
 	},
 

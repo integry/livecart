@@ -31,3 +31,20 @@
 	width:100%;
 	z-index:200;
 }
+
+.panelGrid
+{
+width:100%;
+}
+.panelGrid td
+{
+vertical-align:top;
+}
+.productForm {
+	margin-left:4px;
+}
+
+.quantityPricing
+{
+	overflow:auto;
+}

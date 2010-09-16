@@ -142,3 +142,15 @@ _hint_shortdescr=Stručný opis súboru. Skrátený opis je zobrazený na strán
 Product.shippingSurchargeAmount=Výška prepravného príplatku
 _hint_sale=Produkty vo výpredaji sú zobrazené v osobitných blokoch po celom obchode, čo napomáha zviditeľneniu produktov, ktoré sú ponúkané v špeciálnom výpredaji.
 _hint_longdescr=Detailný opis, ktorý je zobrazený na stránke produktových detailov, kde sú poskytnuté bližšie informácie o produkte.
+
+_product_prices_were_successfully_updated=Ceny produktov boli úspešne aktualizované
+_product_prices_could_not_be_updated=Ceny produktov sa nepodarilo aktualizovať
+_inventory=Inventár
+_items_in_stock=Položky na sklade
+_pricing=Tvorba cien
+_shipping_weight=Váha poštovného
+_minimum_order_quantity=Minimálne objednávkové množstvo
+_shipping_surcharge=Poštovný doplatok
+_requires_separate_shipment=Osobitná zásielka požadovaná
+_qualifies_for_free_shipping=Zahŕňa poštovné zadarmo
+_allow_back_ordering=Povoliť nevybavené objednávky

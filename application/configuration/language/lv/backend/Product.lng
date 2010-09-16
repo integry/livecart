@@ -128,3 +128,15 @@ _last_year=Pagājušogad
 _overall=Kopā
 Product.handle=Adreses identifikators
 _handle=Adreses identifikators
+
+_product_prices_were_successfully_updated=Produkts veiksmīgi saglabāts
+_product_prices_could_not_be_updated=Nevar saglabāt produktu
+_inventory=Inventārs
+_items_in_stock=Inventāra skaits
+_pricing=Cenas
+_shipping_weight=Sūtīšanas svars
+_minimum_order_quantity=Minimālais pasūtījuma skaits
+_shipping_surcharge=Piegādes uzcenojums
+_requires_separate_shipment=Vajadzīgs atsevišķs sūtījums
+_qualifies_for_free_shipping=Atļaut bezmaksas piegādi
+_allow_back_ordering=Atļaut back-order
