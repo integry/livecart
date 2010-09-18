@@ -465,24 +465,6 @@ class User extends ActiveRecordModel implements EavAble
 		}
 	}
 
-	public function getLastOrder()
-	{
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->getID()));
-		// test.
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), 1234638));
-		$f->setOrder(new ARFieldHandle('CustomerOrder', 'dateCompleted'));
-		$f->setLimit(1);
-		$s = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
-		if ($s->size())
-		{
-			$order = $s->get(0);
-			$order->loadAll();
-			$order->getCoupons();
-			return $order;
-		}
-		return null;
-	}
-
 	public function getBillingAddressArray($defaultFirst = true)
 	{
 		if (!$this->isAnonymous())

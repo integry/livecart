@@ -83,6 +83,11 @@ abstract class CreditCardPayment extends OnlinePayment
 		return false;
 	}
 
+	public function isCvvRequired()
+	{
+		return true;
+	}
+
 	/**
 	 *	Reserve funds on customers credit card
 	 */

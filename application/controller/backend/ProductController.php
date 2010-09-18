@@ -859,10 +859,10 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	public function quickEdit()
 	{
+		$this->loadQuickEditLanguageFile();
 		$request = $this->getRequest();
 		$this->quickEditValidation = true;
 		$response = $this->basicData();
-
 		return $response;
 	}
 	

@@ -493,5 +493,20 @@ abstract class ActiveGridController extends StoreManagementController
 	{
 		return false;
 	}
+
+	protected function loadQuickEditLanguageFile()
+	{
+		$this->loadLanguageFile('backend/abstract/ActiveGridQuickEdit');
+	}
+
+	protected function quickEditSaveResponse($object)
+	{
+		$displayedColumns = $this->getRequestColumns();
+		$r = array(
+			'data'=> $this->recordSetArrayToListData(array($object->toArray()), $displayedColumns),
+			'columns'=>array_keys($displayedColumns)
+		);
+		return new JSONResponse($r, 'success');
+	}
 }
 ?>

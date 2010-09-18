@@ -482,6 +482,11 @@ class Config
 	  	return ClassLoader::getRealPath('storage.configuration.') . 'settings.php';
 	}
 
+	public function getValues()
+	{
+		return $this->values;
+	}
+
 }
 
 ?>

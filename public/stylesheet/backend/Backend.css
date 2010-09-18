@@ -1801,6 +1801,71 @@ a.external
 	background-color:whitesmoke;
 }
 
+.qePrice
+{
+	width:60px;
+}
+
+table.qeOrderPrices,
+table.qeProducts
+{
+	white-space:nowrap;
+	float:right;
+}
+
+table.qeOrderPrices
+{
+	margin-bottom:8px;
+}
+
+table.qeProducts{
+	width:100%;
+}
+
+.qeStrong
+{
+	font-weight:bold;
+}
+.qePrice,
+.qeRight
+{
+	text-align:right;
+}
+
+#SettingsSearchContainer,
+#QuickSearchContainer
+{
+	width:320px;
+}
+#QuickSearchContainer
+{
+	right:0;
+	position:absolute;
+}
+
+#QuickSearchResult
+{
+	position:absolute;
+	right:0;
+	background-color:white;
+	top:38px;
+	z-index:21;
+}
+
+#SettingsSearchResult
+{
+	position:absolute;
+	background-color:white;
+	top:38px;
+	z-index:21;
+}
+
+#SettingsSearchResult,
+#SettingsSearchQuery
+{
+width:250px !important;
+}
+
 /*************** quick search *************/
 #QuickSearchResultOuterContainer
 {

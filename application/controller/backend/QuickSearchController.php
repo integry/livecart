@@ -37,6 +37,7 @@ class QuickSearchController extends StoreManagementController
 			$cn = null;
 		}
 		$res = array();
+
 		foreach (SearchableModel::getInstances(SearchableModel::FRONTEND_SEARCH_MODEL|SearchableModel::BACKEND_SEARCH_MODEL) as $searchable)
 		{
 			if($cn && $searchable->getClassName() != $cn)
@@ -114,6 +115,15 @@ class QuickSearchController extends StoreManagementController
 			$order['formattedTotalAmount'] =  $currency->getFormattedPrice($order['totalAmount']);
 		}
 	}
+
+	private function toArray_SearchableItem($records)
+	{
+		foreach($records as &$item)
+		{
+			$item['meta'] = @unserialize($item['meta']);
+		}
+	}
+
 
 	private function orderResultBlockKeys($data)
 	{

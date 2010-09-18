@@ -3,6 +3,11 @@
 		<div class="qsResultsContainer qs{$className}">
 			<h3 class="qsClassName{if 0 == $key} first{/if}">
 				<span class="qsName">{t _title_`$className`}</span>
+					{t _title_SearchableConfiguration}
+				{else}
+					{t _title_`$className`}
+				{/if}
+			</h3>
 				<span class="qsCount">({$result[$className].count})</span>
 			</h3>
 			<ul>
@@ -28,5 +33,6 @@
 			{t _nothing_found_for_query}: <strong>{$query}</strong>
 		</div>
 	{/if}
-	<a class="cancel" href="javascript:void(0)" onclick="Backend.QuickSearch.hideResultContainer()">{t _cancel}</a>
+	<a class="cancel" href="javascript:void(0)"
+	onclick="Backend.QuickSearch.getInstance(this).hideResultContainer()">{t _cancel}</a>
 {/if}

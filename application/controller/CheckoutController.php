@@ -751,7 +751,7 @@ class CheckoutController extends FrontendController
 	public function setPaymentMethodResponse(ActionResponse $response, CustomerOrder $order)
 	{
 		$ccHandler = $this->application->getCreditCardHandler();
-		$ccForm = $this->buildCreditCardForm();
+		$ccForm = $this->buildCreditCardForm($ccHandler);
 
 		if ($order->billingAddress->get())
 		{
@@ -824,11 +824,6 @@ class CheckoutController extends FrontendController
 			return $redirect;
 		}
 
-		if (!$this->buildCreditCardValidator()->isValid())
-		{
-			return $this->getPaymentPageRedirect();
-		}
-
 		// already paid?
 		if ($order->isPaid->get())
 		{
@@ -855,6 +850,12 @@ class CheckoutController extends FrontendController
 
 		$handler->setCardData($this->request->get('ccNum'), $this->request->get('ccExpiryMonth'), $this->request->get('ccExpiryYear'), $this->request->get('ccCVV'));
 
+		if (!$this->buildCreditCardValidator($handler)->isValid())
+		{
+			ActiveRecordModel::rollback();
+			return $this->getPaymentPageRedirect();
+		}
+
 		if ($this->config->get('CC_AUTHONLY'))
 		{
 			$result = $handler->authorize();
@@ -871,7 +872,7 @@ class CheckoutController extends FrontendController
 		elseif ($result instanceof TransactionError)
 		{
 			// set error message for credit card form
-			$validator = $this->buildCreditCardValidator();
+			$validator = $this->buildCreditCardValidator($handler);
 			$validator->triggerError('creditCardError', $this->translate('_err_processing_cc'));
 			$validator->saveState();
 
@@ -1462,24 +1463,28 @@ class CheckoutController extends FrontendController
 		}
 	}
 
-	public function buildCreditCardForm()
+	public function buildCreditCardForm(CreditCardPayment $ccHandler)
 	{
-		$form = new Form($this->buildCreditCardValidator());
+		$form = new Form($this->buildCreditCardValidator($ccHandler));
 		$form->set('ccExpiryMonth', date('n'));
 		$form->set('ccExpiryYear', date('Y'));
 		return $form;
 	}
 
-	private function buildCreditCardValidator()
+	private function buildCreditCardValidator(CreditCardPayment $ccHandler)
 	{
 		$validator = $this->getValidator("creditCard", $this->request);
 		$validator->addCheck('ccName', new IsNotEmptyCheck($this->translate('_err_enter_cc_name')));
 		$validator->addCheck('ccNum', new IsNotEmptyCheck($this->translate('_err_enter_cc_num')));
-//		$validator->addCheck('ccType', new IsNotEmptyCheck($this->translate('_err_select_cc_type')));
 		$validator->addCheck('ccExpiryMonth', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_month')));
 		$validator->addCheck('ccExpiryYear', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_year')));
 
-		if ($this->config->get('REQUIRE_CVV'))
+		if ($ccHandler->isCardTypeNeeded())
+		{
+			$validator->addCheck('ccType', new IsNotEmptyCheck($this->translate('_err_select_cc_type')));
+		}
+
+		if ($this->config->get('REQUIRE_CVV') && $ccHandler->isCvvRequired())
 		{
 			$validator->addCheck('ccCVV', new IsNotEmptyCheck($this->translate('_err_enter_cc_cvv')));
 		}

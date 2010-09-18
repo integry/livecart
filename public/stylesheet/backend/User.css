@@ -141,8 +141,6 @@ fieldset.showPassword
 	padding: 0.6em 0;
 }
 
-
-
 .quickEditContainer1, .quickEditContainer2, .quickEditContainer3
 {
 	float:left;
@@ -150,6 +148,7 @@ fieldset.showPassword
 	height:240px;
 }
 
+.quickEditContainer1 a,
 .quickEditContainer1 label,
 .quickEditContainer1 input,
 .quickEditContainer1 select,
@@ -161,15 +160,36 @@ fieldset.showPassword
 	font-weight:normal;
 }
 
-
+.quickEditContainer1 .generatePassword
+{
+	position:absolute;
+	margin-left:-65px;
+	margin-top:20px;
+}
 .quickEditContainer1 label
 {
 	width:70px;
 }
 
-
 .showPasswordLabel
 {
-width:200px !important;
+	width:200px !important;
 }
 
+.quickEditScroller
+{
+	overflow:auto;
+	height:inherit;
+}
+
+table.qeOrders td
+{
+	padding: 0 2px;
+}
+
+.quickEditContainer2 div,
+.quickEditContainer2 table,
+.quickEditContainer2 p
+{
+	margin-right:10px;
+}
