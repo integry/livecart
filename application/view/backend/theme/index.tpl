@@ -13,6 +13,14 @@
 {includeCss file="library/TabControl.css"}
 {includeCss file="backend/Theme.css"}
 
+{includeJs file="library/ActiveList.js"}
+{includeCss file="library/ActiveList.css"}
+{includeJs file="backend/ThemeFile.js"}
+
+{includeJs file="library/lightbox/lightbox.js"}
+{includeCss file="library/lightbox/lightbox.css"}
+
+
 {pageTitle help="content.pages"}{t _themes}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
@@ -57,15 +65,15 @@
 						<a href="{link controller=backend.theme action=colors query='id=_id_'}">{t _colors}</a>
 					</li>
 
-<div style="display: none;">
+					<li id="tabFiles" class="tab">
+						<a href="{link controller=backend.themeFile action=index query='id=_id_'}">{t _files}</a>
+					</li>
+
+					<div style="display: none;">
 					<li id="tabCss" class="tab">
 						<a href="{link controller=backend.cssEditor action=edit query='file=_id_'}">{t _css}</a>
 					</li>
-
-					<li id="tabFiles" class="tab">
-						<a href="{link controller=backend.theme action=files query='id=_id_'}">{t _files}</a>
-					</li>
-</div>
+					</div>
 
 					{block THEME_TABS}
 				</ul>

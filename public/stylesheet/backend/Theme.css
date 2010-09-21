@@ -43,3 +43,42 @@ div.repeat
 	float: left;
 	margin-right: 2em;
 }
+
+.filesData .fileName
+{
+font-weight:bold;
+
+}
+
+.thumbnailContainer
+{
+	vertical-align:text-top;
+}
+
+.filesData .thumbnailContainer img
+{
+	vertical-align:text-top;
+}
+
+.filesData .thumbnailContainer
+{
+	margin-right:6px;
+}
+
+.activeList_icons,
+.filesData .fileInfoContainer,
+.filesData .thumbnailContainer,
+.filesData
+{
+	float:left;
+}
+
+.formContainer
+{
+	clear:both;
+}
+
+.activeList_icons
+{
+	width:50px !important; 
+}
