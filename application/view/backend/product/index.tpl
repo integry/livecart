@@ -119,6 +119,7 @@
 	</span>
 
 </fieldset>
+
 {activeGrid
 	prefix="products"
 	id=$categoryID
@@ -130,6 +131,7 @@
 	filters=$filters
 	container="tabProducts"
 	dataFormatter="Backend.Product.GridFormatter"
+	advancedSearch=true
 }
 
 </div>

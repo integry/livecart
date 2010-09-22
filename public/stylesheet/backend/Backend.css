@@ -1863,5 +1863,12 @@ table.qeProducts{
 #SettingsSearchResult,
 #SettingsSearchQuery
 {
-width:250px !important;
+	width:250px !important;
+}
+
+a.deleteCross
+{
+	font-weight: bold;
+	background: url(../../image/silk/cross.png) center left no-repeat;
+	padding-left: 22px;
 }

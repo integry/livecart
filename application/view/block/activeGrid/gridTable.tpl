@@ -18,6 +18,20 @@
 	</div>
 </div>
 
+{if $advancedSearch}
+	<div id="{$prefix}_{$id}_AdvancedSearch">
+		<a href="javascript:void(0);" class="cancel advancedSearchLink">
+			{t _advanced_search}
+		</a>
+		<div id="{$prefix}_{$id}_QueryContainer" class="advancedSearchQueryContainer">
+			<form class="advancedSearchForm" method="post" action=" ??? ">
+				<ul class="advancedQueryItems">
+				</ul>
+			</form>
+		</div>
+	</div>
+{/if}
+
 <div class="activeGridContainer">
 
 <div class="activeGridCellContent" style="display: none; position:absolute;"></div>
@@ -129,7 +143,6 @@
 				</th>
 			{/if}
 		{/foreach}
-
 	</tr>
 </thead>
 <tbody>
@@ -208,6 +221,31 @@
 			new ActiveGridFilter($('filter_{$column}_{$id}'), window.activeGrids['{$prefix}_{$id}']);
 		{/if}
 	{/foreach}
+	{if $advancedSearch}
+		window.activeGrids['{$prefix}_{$id}'].initAdvancedSearch(
+			"{$prefix}_{$id}",
+			{json array=$availableColumns}
+		);
+	{/if}
+
+	// register translations
+	$T("_yes","{t _yes}");
+	$T("_no","{t _no}");
+	$T("_grid_show_all","{t _grid_show_all}");
+	$T("_grid_equals","{t _grid_equals}");
+	$T("_grid_not_equal","{t _grid_not_equal}");
+	$T("_grid_greater","{t _grid_greater}");
+	$T("_grid_less","{t _grid_less}");
+	$T("_grid_greater_or_equal","{t _grid_greater_or_equal}");
+	$T("_grid_less_or_equal","{t _grid_less_or_equal}");
+	$T("_grid_range","{t _grid_range}");
+	$T("_today","{t _today}");
+	$T("_yesterday","{t _yesterday}");
+	$T("_last_7_days","{t _last_7_days}");
+	$T("_this_month","{t _this_month}");
+	$T("_last_month","{t _last_month}");
+	$T("_grid_date_range","{t _grid_date_range}");
+
 {literal}
 </script>
 {/literal}
