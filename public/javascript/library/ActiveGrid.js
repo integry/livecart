@@ -118,10 +118,10 @@ ActiveGrid.prototype =
 		}
 	},
 	
-	initAdvancedSearch: function(id, availableColumns)
+	initAdvancedSearch: function(id, availableColumns, properties)
 	{
 		this.advancedSearchHandler = new ActiveGridAdvancedSearch(id);
-		this.advancedSearchHandler.createAvailableColumnConditions(availableColumns);
+		this.advancedSearchHandler.createAvailableColumnConditions(availableColumns, properties);
 		this.advancedSearchHandler.findNodes();
 		this.advancedSearchHandler.bindEvents();
 	},
@@ -1069,10 +1069,6 @@ ActiveGrid.QuickEdit =
 	}
 }
 
-// todo: 
-//     - visi tipi (datumi, range)
-//     - filtrē pēc sku = 500, pēc tam pēc price mazāk par 300, gridā hilightots 500 sku kolonā.
-
 ActiveGridAdvancedSearch = Class.create();
 ActiveGridAdvancedSearch.prototype =
 {
@@ -1081,10 +1077,13 @@ ActiveGridAdvancedSearch.prototype =
 		this.id = id;
 		this.conditions = $H({});
 		this.filterString = "";
+		
 	},
 
-	createAvailableColumnConditions: function(availableColumns)
+	createAvailableColumnConditions: function(availableColumns, properties)
 	{
+		var
+			conditionProperties;
 		this.availableColumns = $H(availableColumns);
 		this.availableColumns.each(function(item)
 		{
@@ -1092,9 +1091,15 @@ ActiveGridAdvancedSearch.prototype =
 			{
 				return;
 			}
+			conditionProperties = {type: item[1].type};
+			if(conditionProperties.type == 'date')
+			{
+				// date type filter values (same as in ActiveGrid)
+				conditionProperties.dateFilterValues = properties.dateFilterValues;
+			}
 			this.addCondition
 			(
-				new ActiveGridAdvancedSearchCondition(item[0], item[1].name, {type:item[1].type})
+				new ActiveGridAdvancedSearchCondition(item[0], item[1].name, conditionProperties)
 			);
 		}.bind(this));
 	},
@@ -1144,11 +1149,19 @@ ActiveGridAdvancedSearch.prototype =
 
 	conditionItemChanged: function(event)
 	{
-		var element = Event.element(event);
+		var
+			element = Event.element(event),
+			condition = this.getCondition( element.up("li").down(".condition").value );
 		if(element.hasClassName('condition'))
 		{
-			this.getCondition(element.value).draw(element.up("li"));
+			condition.draw(element.up("li"));
 		}
+
+		if(element.hasClassName('comparision'))
+		{
+			condition.comparisionChanged(element.up("li"));
+		}
+
 		this.appendConditionIfLastFilled(element);
 		this.setActiveGridFilterValues();
 	},
@@ -1174,13 +1187,13 @@ ActiveGridAdvancedSearch.prototype =
 		}
 	},
 
-	setActiveGridFilterValues: function(gridInstance)
+	setActiveGridFilterValues: function()
 	{
 		var
 			gridInstance = window.activeGrids[this.id],
 			containers = $A(this.nodes.queryItems.getElementsByTagName("li")).findAll(function(itemContainer, item) { return itemContainer == item.parentNode; }.bind(this, this.nodes.queryItems)), // only 'top' level child nodes.
 			condition,
-			key, value,
+			key, value, comparision,
 			z = [];
 
 		gridInstance.filters = {};
@@ -1191,7 +1204,12 @@ ActiveGridAdvancedSearch.prototype =
 			if(condition && condition.isFilled(container))
 			{
 				key = 'filter_' + condition.getId();
-				value = condition.getComparision(container) + condition.getValue(container);
+				comparision = condition.getComparision(container);
+				if(comparision == '><')
+				{
+					comparision = '';
+				}
+				value = comparision + condition.getValue(container);
 				gridInstance.setFilterValue(key, value);
 				z.push(key+'__'+value);
 			}
@@ -1234,6 +1252,7 @@ ActiveGridAdvancedSearch.prototype =
 	removeConditionPlaceholder: function(element)
 	{
 		element.up("ul").removeChild(element.up("li"));
+		this.setActiveGridFilterValues();
 	}
 }
 
@@ -1275,6 +1294,7 @@ ActiveGridAdvancedSearchCondition.prototype =
 		var
 			comparision = container.down(".comparision"),
 			value = container.down(".value"),
+			value2 = container.down(".value2"),
 			type;
 
 		if (comparision /* not found */) { } else
@@ -1287,11 +1307,16 @@ ActiveGridAdvancedSearchCondition.prototype =
 			container.appendChild(value);
 			value = $(value);
 			value.addClassName('value');
+			value2 = document.createElement('input');
+			container.appendChild(value2);
+			value2 = $(value2);
+			value2.addClassName('value2');
 		}
 
 		// change comparision dropdown for this condition
 		comparision.innerHTML = '';
 		value.show();
+		value2.hide();
 
 		type = this.getProperty('type');
 		if (type == 'text')
@@ -1315,20 +1340,28 @@ ActiveGridAdvancedSearchCondition.prototype =
 			addOption(comparision, '0', $T("_no"));
 			value.hide();
 		}
-		else
+		else if(type == 'date')
 		{
-
+			$H(this.getProperty('dateFilterValues')).each(function(comparision, f) {
+				var key = 0, value=1
+				addOption(comparision, f[value], $T(f[key]));
+			}.bind(this, comparision));
+			value.hide();
 		}
 	},
 
 	isFilled: function(container)
 	{
 		type = this.getProperty('type');
-		if (type == 'text' || type == 'numeric')
+		if(this.getComparision(container) == '><')
+		{
+			return !!container.down(".value").value &&  !!container.down(".value2").value;
+		}
+		else if (type == 'text' || type == 'numeric')
 		{
 			return !!container.down(".value").value;
 		}
-		else if(type == 'bool')
+		else if(type == 'bool' || type == 'date')
 		{
 			return true;
 		}
@@ -1336,7 +1369,14 @@ ActiveGridAdvancedSearchCondition.prototype =
 
 	getValue: function(container)
 	{
-		return container.down(".value").value;
+		if(this.getComparision(container) == '><')
+		{
+			return '>=' + container.down(".value").value +' <=' +container.down(".value2").value;
+		}
+		else
+		{
+			return container.down(".value").value;
+		}
 	},
 
 	getComparision: function(container)
@@ -1347,9 +1387,21 @@ ActiveGridAdvancedSearchCondition.prototype =
 			v = '';
 		}
 		return v ? v : "";
+	},
+
+	
+	comparisionChanged: function(container)
+	{
+		if(this.getComparision(container) == '><')
+		{
+			container.down(".value2").show();
+		}
+		else
+		{
+			container.down(".value2").hide();
+		}
 	}
 }
-
 
 
 function $T()

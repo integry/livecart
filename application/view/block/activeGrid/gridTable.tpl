@@ -224,7 +224,23 @@
 	{if $advancedSearch}
 		window.activeGrids['{$prefix}_{$id}'].initAdvancedSearch(
 			"{$prefix}_{$id}",
-			{json array=$availableColumns}
+			{json array=$availableColumns},
+
+			/* misc properties */
+			{literal}
+			{
+				dateFilterValues:
+				{
+			{/literal}
+					_today:"today | now",
+					_yesterday:"yesterday | today",
+					_last_7_days:"-7 days | now",
+					_this_month:"{$thisMonth}/1 | now",
+					_last_month:"{$lastMonth}-1 | {$thisMonth}/1"
+			{literal}
+				}
+			}
+			{/literal}
 		);
 	{/if}
 

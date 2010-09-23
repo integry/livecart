@@ -1872,3 +1872,17 @@ a.deleteCross
 	background: url(../../image/silk/cross.png) center left no-repeat;
 	padding-left: 22px;
 }
+
+.advancedQueryItems li:last-child a.deleteCross
+{
+	visibility: hidden;
+}
+.advancedQueryItems li
+{
+	list-style-type: none;
+}
+
+.value, .value2
+{
+	width: 150px;
+}
