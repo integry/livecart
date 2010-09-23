@@ -43,6 +43,7 @@
 {literal}
 <script type="text/javascript">
 	var pageHandler = new Backend.StaticPage({/literal}{$pages}{literal});
+
 	pageHandler.urls['edit'] = '{/literal}{link controller=backend.staticPage action=edit}?id=_id_{literal}';
 	pageHandler.urls['add'] = '{/literal}{link controller=backend.staticPage action=add}{literal}';	
 	pageHandler.urls['delete'] = '{/literal}{link controller=backend.staticPage action=delete}?id=_id_{literal}';
@@ -51,7 +52,10 @@
 	pageHandler.urls['empty'] = '{/literal}{link controller=backend.staticPage action=emptyPage}{literal}';	
 	pageHandler.urls['create'] = '{/literal}{link controller=backend.staticPage action=create}{literal}';	
 	pageHandler.urls['update'] = '{/literal}{link controller=backend.staticPage action=update}{literal}';	
-		
+
+	// methods that need urls
+	pageHandler.afterInit();
+
 //	Event.observe(window, 'load', function() {pageHandler.activateCategory('00-store');})
 </script>
 {/literal}
