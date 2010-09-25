@@ -145,6 +145,7 @@ LiveCart.AjaxRequest.prototype = {
 				indicatorId.className = this.replacedIndicator.className;
 				indicatorId.id = this.replacedIndicator.id;
 				indicatorId.addClassName('checkbox');
+				indicatorId.checked = this.replacedIndicator.checked;
 
 				if (this.replacedIndicator.parentNode)
 				{
@@ -244,6 +245,7 @@ LiveCart.AjaxRequest.prototype = {
 		if (this.replacedIndicator && this.indicatorContainerId.parentNode)
 		{
 			this.indicatorContainerId.parentNode.replaceChild(this.replacedIndicator, this.indicatorContainerId);
+			this.replacedIndicator.checked = this.indicatorContainerId.checked;
 			Element.show(this.replacedIndicator);
 			this.adjustIndicatorVisibility = true;
 		}
