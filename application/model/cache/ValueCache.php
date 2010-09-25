@@ -58,9 +58,9 @@ abstract class ValueCache
 			{
 				$class = substr($method->getFileName(), 0, -4);
 
-				if (($class != __CLASS__) && (file_exists($method->getFileName())))
+				if (($class != __CLASS__) && (file_exists($method->getPathname())))
 				{
-					include_once $method->getFileName();
+					include_once $method->getPathname();
 					$tranlationHandler->setDefinition($class, call_user_func(array($class, 'getName')));
 					$ret[] = $class;
 				}

@@ -10,7 +10,7 @@ ClassLoader::import('application.model.cache.ValueCache');
  */
 class MemCachedCache extends ValueCache
 {
-	private static $connection = null;
+	private $connection = null;
 
 	public function getName()
 	{
@@ -105,7 +105,13 @@ class MemCachedCache extends ValueCache
 
 	public function getConnection()
 	{
-		return $this->getCacheRoot() . $namespace . '/';
+		if (!$this->connection)
+		{
+			$this->connection = new Memcache();
+			$this->connection->connect('localhost');
+		}
+
+		return $this->connection;
 	}
 }
 
