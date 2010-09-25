@@ -17,9 +17,29 @@ else
 	exit;
 }
 
+$realPath = $file;
+
 if (!file_exists($file) && file_exists('appdir.php'))
 {
-	$file = (include('appdir.php')) . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $file;
+	$realPath = (include('appdir.php')) . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $file;
+}
+
+// check relative path to this file
+if (!file_exists($realPath))
+{
+	$realPath = dirname(__file__) . DIRECTORY_SEPARATOR . $file;
+}
+
+// gzip.php is called from another directory via mod_rewrite
+if (!file_exists($realPath))
+{
+	$root = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['REDIRECT_URL'];
+	$realPath = dirname($root) . DIRECTORY_SEPARATOR . $file;
+}
+
+if (isset($realPath) && file_exists($realPath))
+{
+	$file = $realPath;
 }
 
 if (!file_exists($file))
@@ -32,7 +52,6 @@ if (!empty($_SERVER['HTTP_ACCEPT_ENCODING']) && (strpos($_SERVER['HTTP_ACCEPT_EN
 	$file = $file . '.gz';
 	header('Content-Encoding: gzip');
 }
-
 
 header('Cache-Control: public; max-age=' . (3600 * 24 * 366));
 header('Content-Length: ' . filesize($file));
