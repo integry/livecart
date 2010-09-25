@@ -24,7 +24,7 @@ function smarty_function_pageName($params, LiveCartSmarty $smarty)
 
 	$page = StaticPage::getInstanceById($params['id'], StaticPage::LOAD_DATA)->toArray();
 
-	return $page['title_lang'];
+	return $page[!empty($params['text']) ? 'text_lang' : 'title_lang'];
 }
 
 ?>
