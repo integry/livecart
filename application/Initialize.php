@@ -34,6 +34,11 @@ require_once(dirname(dirname(__file__)) . DIRECTORY_SEPARATOR . 'framework' . DI
 
 ClassLoader::mountPath('.', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
 
+if (defined('CACHE_DIR'))
+{
+	ClassLoader::mountPath('cache', CACHE_DIR);
+}
+
 $classLoaderCacheFile = ClassLoader::getRealPath('cache.') . 'classloader.php';
 if (file_exists($classLoaderCacheFile))
 {
