@@ -1,0 +1,15 @@
+ads
+chat
+fetch-product-images
+pdf-invoice
+rewardpoints
+ups-worldship
+adwords-export
+city-select
+footer-links
+purchase-points
+captcha
+classifieds
+multi-warehouse
+record-order-ip
+search-suggestions
