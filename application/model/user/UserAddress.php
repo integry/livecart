@@ -68,6 +68,7 @@ class UserAddress extends ActiveRecordModel implements EavAble
 		}
 
 		$array['compact'] = self::getAddressString($array, ', ');
+		$array['compactAddressOnly'] = self::getAddressString(array_diff_key($array, array_flip(array('fullName', 'firstName', 'lastName'))), ', ');
 
 		if (!isset($array['stateID']) && isset($array['State']) && is_array($array['State']) && array_key_exists('ID', $array['State']))
 		{
@@ -91,7 +92,11 @@ class UserAddress extends ActiveRecordModel implements EavAble
 	{
 		$address = array();
 
-		$address[] = implode(' ', array($addressArray['firstName'], $addressArray['lastName']));
+		if (isset($addressArray['firstName']))
+		{
+			$address[] = implode(' ', array($addressArray['firstName'], $addressArray['lastName']));
+		}
+
 		foreach (array('companyName', 'address1', 'address2') as $field)
 		{
 			$address[] = $addressArray[$field];
