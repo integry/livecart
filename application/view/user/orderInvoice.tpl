@@ -69,7 +69,8 @@
 		</div>
 		<div class="clear"></div>
 
-{include file="order/orderFieldValues.tpl"}
+		{include file="order/orderFieldValues.tpl"}
+		<div class="clear"></div>
 
 		{foreach from=$order.shipments item="shipment" name="shipments"}
 

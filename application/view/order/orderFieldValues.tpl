@@ -1,5 +1,5 @@
 {foreach $order.attributes as $attr}
-	{if $attr.EavField && ($attr.values || $attr.value || $attr.value_lang)}
+	{if $attr.EavField.isDisplayedInList && $attr.EavField && ($attr.values || $attr.value || $attr.value_lang)}
 		<label class="attrName">{$attr.EavField.name_lang}:</label>
 		<label class="attrValue">
 			{if $attr.values}
