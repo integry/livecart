@@ -132,6 +132,8 @@ class LiveCart extends Application implements Serializable
 		$dsnPath = ClassLoader::getRealPath("storage.configuration.database") . '.php';
 		$this->isInstalled = file_exists($dsnPath);
 
+		ActiveRecordModel::setApplicationInstance($this);
+
 		if ($this->isInstalled)
 		{
 			ActiveRecordModel::setDSN(include $dsnPath);
@@ -146,8 +148,6 @@ class LiveCart extends Application implements Serializable
 				$this->sessionHandler = $session;
 			}
 		}
-
-		ActiveRecordModel::setApplicationInstance($this);
 
 		// LiveCart request routing rules
 		$this->initRouter();
@@ -682,7 +682,7 @@ class LiveCart extends Application implements Serializable
 
 			include_once $plugin['path'];
 			$inst = new $plugin['class']($this, $instance, $params);
-			
+
 			$inst->process();
 		}
 	}
@@ -1315,8 +1315,23 @@ class LiveCart extends Application implements Serializable
 
 	public function getCardTypes(CreditCardPayment $handler)
 	{
+		$key = get_class($handler) . '_customCardTypes';
+		if ($this->config->isValueSet($key))
+		{
+			if ($types = trim($this->config->get($key)))
+			{
+				$types = explode(',', $types);
+				foreach ($types as $key => $type)
+				{
+					$types[$key] = trim($type);
+				}
+
+				return array_combine($types, $types);
+			}
+		}
+
 		$key = get_class($handler) . '_cardTypes';
-		if ($this->config->isValueSet($key, true))
+		if ($this->config->isValueSet($key))
 		{
 			$types = array_keys($this->config->get($key));
 			return array_combine($types, $types);
@@ -1533,7 +1548,6 @@ class LiveCart extends Application implements Serializable
 				$this->configContainer = new ConfigurationContainer('.', $this);
 				$this->configContainer->getModules();
 				$this->configContainer->getChildPlugins();
-				var_dump($this->configContainer);
 				$serialized = serialize($this->configContainer);
 
 				file_put_contents($path, '<?php return unserialize("' . addslashes($serialized) . '"); ?>');
