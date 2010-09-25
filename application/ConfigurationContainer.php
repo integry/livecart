@@ -289,6 +289,7 @@ class ConfigurationContainer
 	{
 		$this->setConfig('enabledModules', $isActive);
 		$this->clearCache();
+		$this->createSymLink();
 	}
 
 	public function install(LiveCart $application)
@@ -302,6 +303,13 @@ class ConfigurationContainer
 		$this->customInstall('install.php');
 
 		// set up symlink to public directory
+		$this->createSymLink();
+
+		$this->clearCache();
+	}
+
+	public function createSymLink()
+	{
 		$publicDir = $this->directory . DIRECTORY_SEPARATOR . 'public';
 
 		if (file_exists($publicDir))
@@ -320,8 +328,6 @@ class ConfigurationContainer
 				full_copy($publicDir, $this->getPublicDirectoryLink());
 			}
 		}
-
-		$this->clearCache();
 	}
 
 	public function deinstall(LiveCart $application)
