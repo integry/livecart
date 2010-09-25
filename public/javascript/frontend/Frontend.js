@@ -923,7 +923,7 @@ Frontend.OnePageCheckout.prototype =
 		var form = this.nodes.paymentDetailsForm || $('paymentForm').down('form');
 		if ('form' != form.tagName.toLowerCase())
 		{
-			var form = this.nodes.paymentDetailsForm.down('form');
+			form = this.nodes.paymentDetailsForm.down('form');
 		}
 
 		if (!form)
@@ -992,9 +992,9 @@ Frontend.OnePageCheckout.prototype =
 		var paymentMethods = form.getElementsBySelector('input.radio');
 		$A(paymentMethods).each(function(el)
 		{
-			if (el.value.substr(0, 1) == '/')
+			if ((el.value.substr(0, 1) == '/') || (el.value.substr(0, 4) == 'http'))
 			{
-				el.onchange =
+				el.onclick =
 					function()
 					{
 						this.nodes.paymentMethodForm.redirect = el.value;
@@ -1002,7 +1002,7 @@ Frontend.OnePageCheckout.prototype =
 			}
 			else
 			{
-				el.onchange =
+				el.onclick =
 					function(noHighlight)
 					{
 						this.nodes.paymentMethodForm.redirect = '';
@@ -1017,7 +1017,7 @@ Frontend.OnePageCheckout.prototype =
 				}
 			}
 
-			el.onclick = function(e) { if (e) { Event.stop(e); } el.onchange() };
+			//el.onclick = function(e) { if (e) { Event.stop(e); } el.onchange() };
 
 			var tr = $(el).up('tr');
 			if (tr)
@@ -1036,7 +1036,9 @@ Frontend.OnePageCheckout.prototype =
 	showPaymentDetailsForm: function(el, noHighlight)
 	{
 		var form = this.nodes.paymentDetailsForm;
+		form.innerHTML = '';
 		this.updateElement(form, this.nodes.payment.down('#payForm_' + el.value).innerHTML, noHighlight);
+
 		try
 		{
 			(form.down('input.text') || form.down('textarea') || form.down('select') || form).focus();
@@ -1112,6 +1114,7 @@ Frontend.OnePageCheckout.prototype =
 			}
 		}.bind(this));
 
+		this.nodes.payment.innerHTML = '';
 		this.updateElement(this.nodes.payment, params);
 		this.initPaymentForm();
 
@@ -1216,13 +1219,16 @@ Frontend.OnePageCheckout.prototype =
 				}
 
 				Event.observe(el, 'focus', function() { window.focusedInput = el; });
-				Event.observe(el, 'change', this.fieldOnChangeCommon(form, func.bindAsEventListener(this)));
 				Event.observe(el, 'blur', this.fieldBlurCommon(form, el));
 
 				// change event doesn't fire on radio buttons at IE until they're blurred
 				if ('radio' == el.getAttribute('type'))
 				{
 					Event.observe(el, 'click', function(e) { Event.stop(e); this.fieldOnChangeCommon(form, func.bindAsEventListener(this))(e);}.bind(this));
+				}
+				else
+				{
+					Event.observe(el, 'change', this.fieldOnChangeCommon(form, func.bindAsEventListener(this)));
 				}
 			}.bind(this));
 		}.bind(this));
