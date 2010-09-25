@@ -108,11 +108,6 @@ class Product extends MultilingualObject
 		$schema->registerField(new ArField("fractionalStep", ARFloat::instance(8)));
 		$schema->registerField(new ArField("position", ARInteger::instance()));
 		$schema->registerField(new ArField("categoryIntervalCache", ARText::instance()));
-
-		$serialized = serialize($schema);
-		$t = microtime(true);
-		$unserialized = unserialize($serialized);
-		var_dump(microtime(true) - $t);
 	}
 
 	/**
