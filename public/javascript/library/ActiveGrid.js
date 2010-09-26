@@ -122,7 +122,7 @@ ActiveGrid.prototype =
 	{
 		this.quickEditUrlTemplate = urlTemplate;
 		this.quickEditIdToken = idToken;
-		Event.observe(this.tableInstance.down('tbody'), 'dblclick', this.quickEdit.bindAsEventListener(this) );		
+		Event.observe(this.tableInstance.down('tbody'), 'mouseover', this.quickEdit.bindAsEventListener(this) );
 	},
 
 	quickEdit: function(event)
@@ -156,7 +156,7 @@ ActiveGrid.prototype =
 		}
 
 		this.node = node;
-		
+
 		new LiveCart.AjaxRequest(
 			this.quickEditUrlTemplate.replace(this.quickEditIdToken, recordID),
 			null,
@@ -167,14 +167,15 @@ ActiveGrid.prototype =
 				{
 					container.innerHTML = transport.responseText;
 					//console.log(this.mh.y);
-					container.style.top=(this.mh.y-330)+"px";
+					container.style.top=(this.mh.y-230)+"px";
+					container.style.left=(20)+"px";
 					container.show();
 				}
-				
+
 			}.bind({instance:this, mh:mh})
 		)
 	},
-	
+
 	hideQuickEditContainer : function()
 	{
 		var container=this._getQuickEditContainer().hide();
@@ -239,7 +240,7 @@ ActiveGrid.prototype =
 	_getQuickEditContainer: function()
 	{
 		var parent = $(this.tableInstance), node=null, i=0;
-		
+
 		while (i<25 && parent && parent.hasClassName("activeGridContainer") == false)
 		{
 			i++;
@@ -249,7 +250,7 @@ ActiveGrid.prototype =
 		{
 			node = parent.getElementsByClassName("quickEditContainer");
 		}
-		
+
 		if(node == null || node.length!=1)
 		{
 			console.log('QW container not found');
@@ -1030,7 +1031,7 @@ ActiveGrid.QuickEdit =
 				}
 				else
 				{
-					ActiveForm.prototype.setErrorMessages(this.obj.up("form"), response.errors)	
+					ActiveForm.prototype.setErrorMessages(this.obj.up("form"), response.errors)
 				}
 			}.bind({instance: this, obj:obj}));
 		}
