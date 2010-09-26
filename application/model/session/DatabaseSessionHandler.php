@@ -11,7 +11,7 @@ ClassLoader::import('application.model.session.SessionData');
  */
 class DatabaseSessionHandler extends SessionHandler
 {
-	const KEEPALIVE_INTERVAL = 600;
+	const KEEPALIVE_INTERVAL = 60;
 
 	protected $db;
 	protected $isExistingSession;
@@ -60,7 +60,7 @@ class DatabaseSessionHandler extends SessionHandler
 			$data = array_shift($data);
 			$this->originalData = $data['data'];
 
-			if (time() - $data['lastUpdated'] > self::KEEPALIVE_INTERVAL)
+			if ((time() - $data['lastUpdated'] > self::KEEPALIVE_INTERVAL) || (!$data['userID'] && !$data['cacheUpdated']))
 			{
 				$this->forceUpdate = true;
 			}
@@ -77,7 +77,6 @@ class DatabaseSessionHandler extends SessionHandler
 
 	public function write($id, $data)
 	{
-		//die($data);
 		try
 		{
 			if ($this->isExistingSession)

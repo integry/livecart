@@ -32,6 +32,11 @@ class SessionData extends ActiveRecordModel
 
 	public static function insertData($id, $data, $userID, $cacheUpdated, $db)
 	{
+		if (!$userID)
+		{
+			$cacheUpdated = time();
+		}
+
 		$sql = 'INSERT INTO SessionData SET ID="' . $id .'", ' . self::enumerateUpdateFields($data, $userID, $cacheUpdated);
 		try
 		{
