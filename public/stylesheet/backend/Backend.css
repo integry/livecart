@@ -1863,7 +1863,28 @@ table.qeProducts{
 #SettingsSearchResult,
 #SettingsSearchQuery
 {
-width:250px !important;
+	width:250px !important;
+}
+
+a.deleteCross
+{
+	font-weight: bold;
+	background: url(../../image/silk/cross.png) center left no-repeat;
+	padding-left: 22px;
+}
+
+.advancedQueryItems li:last-child a.deleteCross
+{
+	visibility: hidden;
+}
+.advancedQueryItems li
+{
+	list-style-type: none;
+}
+
+.value, .value2
+{
+	width: 150px;
 }
 
 /*************** quick search *************/

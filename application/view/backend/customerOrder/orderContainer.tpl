@@ -14,10 +14,6 @@
 				<a href="{link controller=backend.customerOrder action=info id=_id_}"}">{t _order_info}</a>
 				<span class="tabHelp">orders.edit</span>
 			</li>
-			<li id="tabOrderProducts" class="tab active">
-				<a href="{link controller=backend.shipment action=index id=_id_}"}">{t _order_shipments}</a>
-				<span class="tabHelp">orders.edit</span>
-			</li>
 			<li id="tabOrderPayments" class="tab active">
 				<a href="{link controller=backend.payment id=_id_}"}">{t _order_payments}</a>
 				<span class="tabHelp">orders.edit</span>

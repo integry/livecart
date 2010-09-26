@@ -77,15 +77,17 @@ class ShippingServiceController extends StoreManagementController
 	public function edit()
 	{
 		$shippingService = ShippingService::getInstanceByID($this->request->get('id'), true);
-
+		$spec = $shippingService->getSpecification();
 		$form = $this->createShippingServiceForm();
 		$form->setData($shippingService->toArray());
 		$response = new ActionResponse();
+		$spec->setFormResponse($response, $form);
+		$response->set('form', $form);
+
 		$response->set('service', $shippingService->toArray());
 		$response->set('shippingRates', $shippingService->getRates()->toArray());
 		$response->set('newRate', array('ShippingService' => $shippingService->toArray()));
 		$response->set('defaultCurrencyCode', $this->application->getDefaultCurrency()->getID());
-		$response->set('form', $form);
 		$response->set('shippingClasses', $this->getSelectOptionsFromSet(ShippingClass::getAllClasses()));
 
 		return $response;
@@ -115,7 +117,7 @@ class ShippingServiceController extends StoreManagementController
 	 */
 	public function update()
 	{
-		$shippingService = ShippingService::getInstanceByID((int)$this->request->get('serviceID'), ShippingService::LOAD_DATA);
+		$shippingService = ShippingService::getInstanceByID((int)$this->request->get('serviceID'), ShippingService::LOAD_DATA, ShippingService::LOAD_REFERENCES);
 		return $this->save($shippingService);
 	}
 
@@ -252,11 +254,14 @@ class ShippingServiceController extends StoreManagementController
 		$rates = array();
 		if(!($errors = $this->isNotValid($this->request->get('name'), $ratesData)))
 		{
+			$shippingService->loadRequestData($this->request);
 			$shippingService->setValueArrayByLang(array('name'), $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true, false), $this->request);
 			$shippingService->isFinal->set($this->request->get('isFinal'));
+			$shippingService->setValueArrayByLang(array('description'), $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true, false), $this->request);
+			$shippingService->deliveryTimeMinDays->set($this->request->get('deliveryTimeMinDays'));
+			$shippingService->deliveryTimeMaxDays->set($this->request->get('deliveryTimeMaxDays'));
 			$shippingService->save();
 			$shippingService->deleteShippingRates();
-
 			$shippingServiceArray = $shippingService->toArray();
 			$shippingServiceArray['newRates'] = array();
 			

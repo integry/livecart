@@ -139,3 +139,15 @@ _overall=Samtliga
 Product.isFractionalUnit=Är del av enhet
 _main_details=Grunduppgifter
 _handle=Handle
+
+_product_prices_were_successfully_updated=Priser har uppdaterats
+_product_prices_could_not_be_updated=Priserna kunde inte uppdateras
+_inventory=Lager
+_items_in_stock=Antal i lager
+_pricing=Pris
+_shipping_weight=Vikt
+_minimum_order_quantity=Minsta orderantal
+_shipping_surcharge=Frakttillägg
+_requires_separate_shipment=Kräver separat leverans
+_qualifies_for_free_shipping=Kan levereras fraktfritt
+_allow_back_ordering=Kan restnoteras

@@ -40,3 +40,7 @@ _error_range_start_should_be_less_end=Range start should be less than range end
 
 _from=From
 _to=to
+
+_deliveryTimeMinDays=Delivery time min days
+_deliveryTimeMaxDays=Delivery time max days
+_description=Description

@@ -130,3 +130,15 @@ _hint_longdescr=Description détaillée qui est affichée sur la page des détai
 _hint_keywords=Fournissez des mots ou des phrases qui pourraient aider les utilisateurs a trouver votre produit
 _hint_featured=Les produits 'vedette' sont affichés au dessus de tous les autres produits, alors classer un produit parmis les produits vedette...ajoutera une exposition supérieure a ce produit
 _hint_surcharge=Définir les charges additionnelles de livraison pour ce produit en particulier
+
+_product_prices_were_successfully_updated=Les prix de produits on été mis a jour avec succès
+_product_prices_could_not_be_updated=Les pris de produits ne peuvent ètre mis a jour
+_inventory=Inventaire
+_items_in_stock=Items en stock
+_pricing=Prix
+_shipping_weight=Poid d'expédition
+_minimum_order_quantity=Quantité minimum pour commander
+_shipping_surcharge=Surcharge d'expédition
+_requires_separate_shipment=Requiert des envois séparés
+_qualifies_for_free_shipping=Se qualifie pour livraison gratuite
+_allow_back_ordering=Permettre le retour de commande

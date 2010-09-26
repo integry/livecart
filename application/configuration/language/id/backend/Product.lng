@@ -129,3 +129,15 @@ _last_month=Bulan lalu
 _this_year=Tahun ini
 _last_year=Tahun lalu
 _overall=Keseluruhan
+
+_product_prices_were_successfully_updated=Harga produk telah diubah
+_product_prices_could_not_be_updated=Harga produk tidak dapat diubah
+_inventory=Inventaris
+_items_in_stock=Jumlah barang dalam persediaan
+_pricing=Harga
+_shipping_weight=Berat Pengiriman
+_minimum_order_quantity=Jumlah Order Minimum
+_shipping_surcharge=Tambahan Biaya Pengiriman
+_requires_separate_shipment=Memerlukan pengiriman terpisah
+_qualifies_for_free_shipping=Dapat dikirim secara gratis
+_allow_back_ordering=Pesan-dulu dibolehkan

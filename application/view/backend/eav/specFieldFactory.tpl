@@ -1,4 +1,4 @@
-{if !$language}
+{if !$language || !is_string($language)}
 	{assign var="fieldName" value=$field.fieldName}
 {else}
 	{assign var="fieldName" value="`$field.fieldName`_`$language`"}

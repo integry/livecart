@@ -1,10 +1,12 @@
 <?php
 
 ClassLoader::import('application.controller.backend.abstract.ActiveGridController');
-ClassLoader::import('application.controller.backend.*');
-ClassLoader::import('application.model.order.*');
 ClassLoader::import('application.model.Currency');
 ClassLoader::import('application.helper.massAction.MassActionInterface');
+ClassLoader::import('application.model.product.ProductSet');
+ClassLoader::import('application.controller.backend.*');
+ClassLoader::import('application.model.order.*');
+ClassLoader::import('application.model.delivery.*');
 
 /**
  * @package application.controller.backend
@@ -79,6 +81,7 @@ class CustomerOrderController extends ActiveGridController
 
 	public function info()
 	{
+		$this->loadLanguageFile('backend/Shipment');
 		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('User', 'Currency'));
 		$order->getSpecification();
 		$order->loadAddresses();
@@ -207,8 +210,139 @@ class CustomerOrderController extends ActiveGridController
 		$order->getSpecification()->setFormResponse($response, $form);
 		$response->set('fieldsForm', $form);
 		$this->appendCalendarForm($response);
+		
+		
+		return $this->shipmentInfo($response);
+	}
+
+	private function createShipmentForm()
+	{
+		return new Form($this->createShipmentFormValidator());
+	}
+
+	private function createShipmentFormValidator()
+	{
+		$validator = $this->getValidator('shippingService', $this->request);
+		return $validator;
+	}
+
+	protected function getDownloadCounts($itemIDs)
+	{
+		if (!$itemIDs)
+		{
+			return array();
+		}
+
+		$sql = 'SELECT orderedItemID, SUM(timesDownloaded) AS cnt FROM OrderedFile WHERE orderedItemID IN (' . implode(',', $itemIDs) . ') GROUP BY orderedItemID';
+		$out = array();
+		foreach (ActiveRecordModel::getDataBySQL($sql) as $item)
+		{
+			$out[$item['orderedItemID']] = $item['cnt'];
+		}
+
+		return $out;
+	}
+
+
+	private function shipmentInfo($response)
+	{
+		$order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);
+		$order->loadAll();
+		$order->getCoupons();
+
+		$products = ARSet::buildFromArray($order->getOrderedItems())->extractReferencedItemSet('product', 'ProductSet');
+		$variations = $products->getVariationMatrix();
+
+		$form = $this->createShipmentForm();
+		$form->setData(array('orderID' => $order->getID()));
+		$shipments = $order->getShipments();
+		$zone = $order->getDeliveryZone();
+
+		$statuses = array(
+			Shipment::STATUS_NEW => $this->translate('_shipping_status_new'),
+			Shipment::STATUS_PROCESSING => $this->translate('_shipping_status_pending'),
+			Shipment::STATUS_AWAITING => $this->translate('_shipping_status_awaiting'),
+			Shipment::STATUS_SHIPPED => $this->translate('_shipping_status_shipped'),
+			Shipment::STATUS_RETURNED => $this->translate('_shipping_status_returned')
+		);
+
+		$subtotalAmount = 0;
+		$shippingAmount = 0;
+		$taxAmount = 0;
+		$itemIDs = $shipmentsArray = array();
+
+		$shipableShipmentsCount = 0;
+		foreach($shipments as $shipment)
+		{
+			$subtotalAmount += $shipment->amount->get();
+			$shippingAmount += $shipment->shippingAmount->get();
+			$taxAmount += $shipment->taxAmount->get();
+
+			$shipmentsArray[$shipment->getID()] = $shipment->toArray();
+
+			$rate = unserialize($shipment->shippingServiceData->get());
+			if(is_object($rate))
+			{
+				$rate->setApplication($this->application);
+				$shipmentsArray[$shipment->getID()] = array_merge($shipmentsArray[$shipment->getID()], $rate->toArray());
+				if (isset($shipmentsArray[$shipment->getID()]['serviceID']))
+				{
+					$shipmentsArray[$shipment->getID()]['ShippingService']['ID'] = $shipmentsArray[$shipment->getID()]['serviceID'];
+				}
+			}
+			else if($shipment->shippingService->get())
+			{
+				$shipmentsArray[$shipment->getID()]['ShippingService']['name_lang'] = $shipmentsArray[$shipment->getID()]['ShippingService']['name'];
+			}
+			else
+			{
+				$shipmentsArray[$shipment->getID()]['ShippingService']['name_lang'] = $this->translate('_shipping_service_is_not_selected');
+			}
+
+			if($shipment->status->get() != Shipment::STATUS_SHIPPED && $shipment->isShippable())
+			{
+				$shipableShipmentsCount++;
+			}
+
+			foreach ($shipment->getItems() as $item)
+			{
+				$itemIDs[] = $item->getID();
+			}
+		}
+
+		$totalAmount = $subtotalAmount + $shippingAmount + $taxAmount;
+
+		// $response = new ActionResponse();
+		$response->set('orderID', $this->request->get('id'));
+		$response->set('order', $order->toArray());
+		$response->set('shippingServiceIsNotSelected', $this->translate('_shipping_service_is_not_selected'));
+		$response->set('shipments', $shipmentsArray);
+		$response->set('subtotalAmount', $subtotalAmount);
+		$response->set('shippingAmount', $shippingAmount);
+		$response->set('variations', $variations);
+
+		if ($downloadable = $order->getDownloadShipment(false))
+		{
+
+			$response->set('downloadableShipment', $downloadable->toArray());
+		}
+
+		$response->set('taxAmount', $taxAmount);
+		$response->set('totalAmount', $totalAmount);
+		$response->set('shipableShipmentsCount', $shipableShipmentsCount);
+		$response->set('statuses', $statuses + array(-1 => $this->translate('_delete')));
+
+		unset($statuses[3]);
+		$response->set('statusesWithoutShipped', $statuses);
+		$response->set('newShipmentForm', $form);
+		$response->set('downloadCount', $this->getDownloadCounts($itemIDs));
+
+		// load product options
+		$response->set('allOptions', ProductOption::loadOptionsForProductSet($products));
+
 		return $response;
 	}
+	
 
 	public function updateDate()
 	{

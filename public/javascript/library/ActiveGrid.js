@@ -117,6 +117,14 @@ ActiveGrid.prototype =
 			Event.observe(rows[k], 'mouseout', this.removeRowHighlight.bindAsEventListener(this));
 		}
 	},
+	
+	initAdvancedSearch: function(id, availableColumns, properties)
+	{
+		this.advancedSearchHandler = new ActiveGridAdvancedSearch(id);
+		this.advancedSearchHandler.createAvailableColumnConditions(availableColumns, properties);
+		this.advancedSearchHandler.findNodes();
+		this.advancedSearchHandler.bindEvents();
+	},
 
 	initQuickEdit: function(urlTemplate, idToken)
 	{
@@ -166,7 +174,6 @@ ActiveGrid.prototype =
 				if(container)
 				{
 					container.innerHTML = transport.responseText;
-					//console.log(this.mh.y);
 					container.style.top=(this.mh.y-230)+"px";
 					container.style.left=(20)+"px";
 					container.show();
@@ -253,7 +260,7 @@ ActiveGrid.prototype =
 
 		if(node == null || node.length!=1)
 		{
-			console.log('QW container not found');
+			// console.log('QW container not found');
 			return null;
 		}
 		return $(node[0]);
@@ -399,7 +406,6 @@ ActiveGrid.prototype =
 	reloadGrid: function()
 	{
 		this.setRequestParameters();
-
 		this.ricoGrid.buffer.clear();
 		this.ricoGrid.resetContents();
 		this.ricoGrid.requestContentRefresh(0, true);
@@ -1062,6 +1068,362 @@ ActiveGrid.QuickEdit =
 			return null;
 		}
 	}
+}
+
+ActiveGridAdvancedSearch = Class.create();
+ActiveGridAdvancedSearch.prototype =
+{
+	initialize: function(id)
+	{
+		this.id = id;
+		this.conditions = $H({});
+		this.filterString = "";
+		
+	},
+
+	createAvailableColumnConditions: function(availableColumns, properties)
+	{
+		var
+			conditionProperties;
+		this.availableColumns = $H(availableColumns);
+		this.availableColumns.each(function(item)
+		{
+			if (item[1].type == null || item[0] == 'hiddenType')
+			{
+				return;
+			}
+			conditionProperties = {type: item[1].type};
+			if(conditionProperties.type == 'date')
+			{
+				// date type filter values (same as in ActiveGrid)
+				conditionProperties.dateFilterValues = properties.dateFilterValues;
+			}
+			this.addCondition
+			(
+				new ActiveGridAdvancedSearchCondition(item[0], item[1].name, conditionProperties)
+			);
+		}.bind(this));
+	},
+
+	findNodes: function()
+	{
+		if (typeof this.nodes == "undefined")
+		{
+			this.nodes = {};
+		}
+		this.nodes.root = $(this.id + "_AdvancedSearch");
+		this.nodes.queryContainer = this.nodes.root.down(".advancedSearchQueryContainer");
+		this.nodes.searchLink = this.nodes.root.down(".advancedSearchLink");
+		this.nodes.form = this.nodes.root.down(".advancedSearchForm");
+		this.nodes.queryItems = this.nodes.root.down(".advancedQueryItems");
+	},
+
+	bindEvents: function()
+	{
+		Event.observe(this.nodes.searchLink, "click", this.linkClicked.bindAsEventListener(this));
+		Event.observe(this.nodes.queryItems, "change", this.conditionItemChanged.bindAsEventListener(this));
+		Event.observe(this.nodes.queryItems, "click", this.conditionItemClick.bindAsEventListener(this))
+	},
+
+	addCondition: function(condition)
+	{
+		this.conditions[condition.getId()] = condition;
+	},
+
+	getCondition: function(id)
+	{
+		return typeof this.conditions[id] == "undefined"
+			? null
+			: this.conditions[id];
+	},
+
+	linkClicked: function()
+	{
+		this.appendCondition();
+	},
+
+	appendCondition: function()
+	{
+		var li = this.appendConditionPlaceholder();
+		this.getCondition(li.down(".condition").value).draw(li);
+	},
+
+	conditionItemChanged: function(event)
+	{
+		var
+			element = Event.element(event),
+			condition = this.getCondition( element.up("li").down(".condition").value );
+		if(element.hasClassName('condition'))
+		{
+			condition.draw(element.up("li"));
+		}
+
+		if(element.hasClassName('comparision'))
+		{
+			condition.comparisionChanged(element.up("li"));
+		}
+
+		this.appendConditionIfLastFilled(element);
+		this.setActiveGridFilterValues();
+	},
+
+	conditionItemClick: function(event)
+	{
+		var element = Event.element(event);
+		if(element.hasClassName("deleteCross"))
+		{
+			this.removeConditionPlaceholder(element);
+		}
+	},
+
+	appendConditionIfLastFilled: function(element)
+	{
+		var
+			container = element.up('li'),
+			condition = this.getCondition(container.down('.condition').value);
+		
+		if(this.lastConditionContainer == condition.getContainer() && condition.isFilled(container))
+		{
+			this.appendCondition();
+		}
+	},
+
+	setActiveGridFilterValues: function()
+	{
+		var
+			gridInstance = window.activeGrids[this.id],
+			containers = $A(this.nodes.queryItems.getElementsByTagName("li")).findAll(function(itemContainer, item) { return itemContainer == item.parentNode; }.bind(this, this.nodes.queryItems)), // only 'top' level child nodes.
+			condition,
+			key, value, comparision,
+			z = [];
+
+		gridInstance.filters = {};
+
+		while(container = $(containers.shift()))
+		{
+			condition = this.getCondition(container.down(".condition").value );
+			if(condition && condition.isFilled(container))
+			{
+				key = 'filter_' + condition.getId();
+				comparision = condition.getComparision(container);
+				if(comparision == '><')
+				{
+					comparision = '';
+				}
+				value = comparision + condition.getValue(container);
+				gridInstance.setFilterValue(key, value);
+				z.push(key+'__'+value);
+			}
+		}
+
+		// if something changed in filter, reload
+		value = z.join('|');
+		if(value != this.filterString)
+		{
+			gridInstance.reloadGrid();
+			this.filterString = value
+		}
+	},
+
+	appendConditionPlaceholder: function()
+	{
+		var
+			li = document.createElement("li"),
+			select = document.createElement("select"),
+			a = document.createElement("a");
+		this.nodes.queryItems.appendChild(li);
+		li.appendChild(a);
+		a.addClassName("deleteCross");
+		a.href="javascript:void(0);";
+		li.appendChild(select);
+
+		this.conditions.each(
+			function(select, item)
+			{
+				var condition = item[1];
+				addOption(select, condition.getId(), condition.getName());
+			}.bind(this, select)
+		);
+		select.addClassName("condition");
+		
+		this.lastConditionContainer = $(li);
+		return this.lastConditionContainer;
+	},
+
+	removeConditionPlaceholder: function(element)
+	{
+		element.up("ul").removeChild(element.up("li"));
+		this.setActiveGridFilterValues();
+	}
+}
+
+ActiveGridAdvancedSearchCondition = Class.create();
+ActiveGridAdvancedSearchCondition.prototype =
+{
+	initialize: function(id, name, properties)
+	{
+		this.id = id;
+		this.name = name;
+		this.properties = properties
+	},
+
+	getContainer: function()
+	{
+		return this.container;
+	},
+
+	getName: function()
+	{
+		return this.name;
+	},
+	
+	getId: function()
+	{
+		return this.id;
+	},
+
+	getProperty: function(key)
+	{
+		return typeof this.properties[key] == "undefined"
+			? arguments.length <= 2 ? arguments[1] : null
+			: this.properties[key];
+	},
+
+	draw: function(container) // This drawing is for 'field value' conditions. Replace with custom draw.
+	{
+		this.container = container;
+		var
+			comparision = container.down(".comparision"),
+			value = container.down(".value"),
+			value2 = container.down(".value2"),
+			type;
+
+		if (comparision /* not found */) { } else
+		{
+			comparision = document.createElement('select');
+			container.appendChild(comparision);
+			comparision = $(comparision);
+			comparision.addClassName('comparision');
+			value = document.createElement('input');
+			container.appendChild(value);
+			value = $(value);
+			value.addClassName('value');
+			value2 = document.createElement('input');
+			container.appendChild(value2);
+			value2 = $(value2);
+			value2.addClassName('value2');
+		}
+
+		// change comparision dropdown for this condition
+		comparision.innerHTML = '';
+		value.show();
+		value2.hide();
+
+		type = this.getProperty('type');
+		if (type == 'text')
+		{
+			addOption(comparision, '=', $T("_grid_equals"));
+		}
+		else if(type == 'numeric')
+		{
+			value.show();
+			addOption(comparision, '=',  $T("_grid_equals"));
+			addOption(comparision, '<>', $T("_grid_not_equal"));
+			addOption(comparision, '>',  $T("_grid_greater"));
+			addOption(comparision, '<',  $T("_grid_less"));
+			addOption(comparision, '>=', $T("_grid_greater_or_equal"));
+			addOption(comparision, '<=', $T("_grid_less_or_equal"));
+			addOption(comparision, '><', $T("_grid_range"));
+		}
+		else if(type == 'bool')
+		{
+			addOption(comparision, '1', $T("_yes"));
+			addOption(comparision, '0', $T("_no"));
+			value.hide();
+		}
+		else if(type == 'date')
+		{
+			$H(this.getProperty('dateFilterValues')).each(function(comparision, f) {
+				var key = 0, value=1
+				addOption(comparision, f[value], $T(f[key]));
+			}.bind(this, comparision));
+			value.hide();
+		}
+	},
+
+	isFilled: function(container)
+	{
+		type = this.getProperty('type');
+		if(this.getComparision(container) == '><')
+		{
+			return !!container.down(".value").value &&  !!container.down(".value2").value;
+		}
+		else if (type == 'text' || type == 'numeric')
+		{
+			return !!container.down(".value").value;
+		}
+		else if(type == 'bool' || type == 'date')
+		{
+			return true;
+		}
+	},
+
+	getValue: function(container)
+	{
+		if(this.getComparision(container) == '><')
+		{
+			return '>=' + container.down(".value").value +' <=' +container.down(".value2").value;
+		}
+		else
+		{
+			return container.down(".value").value;
+		}
+	},
+
+	getComparision: function(container)
+	{
+		var v = container.down(".comparision").value;
+		if(v == '=')
+		{
+			v = '';
+		}
+		return v ? v : "";
+	},
+
+	
+	comparisionChanged: function(container)
+	{
+		if(this.getComparision(container) == '><')
+		{
+			container.down(".value2").show();
+		}
+		else
+		{
+			container.down(".value2").hide();
+		}
+	}
+}
+
+
+function $T()
+{
+	if(arguments.length == 2)
+	{
+		this[arguments[0]] = arguments[1];
+	}
+	else
+	{
+		return this[arguments[0]];
+	}
+}
+
+function addOption(dropdown, value, text)
+{
+	var option = document.createElement('option');
+	dropdown.appendChild(option);
+	option.value = value;
+	option.innerHTML = text;
+	return option;
 }
 
 function RegexFilter(element, params)

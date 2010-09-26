@@ -598,6 +598,22 @@ class CheckoutController extends FrontendController
 			unset($shipmentArray[$downloadIndex]);
 		}
 
+		$locale = self::getApplication()->getLocale();
+		foreach($rateArray as &$rates)
+		{
+			foreach($rates as $k => &$item)
+			{
+				if(!empty($item['ShippingService']['deliveryTimeMinDays']))
+				{
+					$item['ShippingService']['formatted_deliveryTimeMinDays'] = $locale->getFormattedTime(strtotime('+'.$item['ShippingService']['deliveryTimeMinDays']. ' days'));
+				}
+				if(!empty($item['ShippingService']['deliveryTimeMaxDays']))
+				{
+					$item['ShippingService']['formatted_deliveryTimeMaxDays'] = $locale->getFormattedTime(strtotime('+'.$item['ShippingService']['deliveryTimeMaxDays']. ' days'));
+				}
+			}
+		}
+
 		$response->set('shipments', $shipmentArray);
 		$response->set('rates', $rateArray);
 		$response->set('currency', $this->getRequestCurrency());
@@ -609,7 +625,34 @@ class CheckoutController extends FrontendController
 
 		return $response;
 	}
+	
+	/*
+	private function deliveryTime()
+	{
+		
+		
+		
+		{
+			if (isset($array[$name]))
+			{
+				$time = strtotime($array[$name]);
 
+				if (!$time)
+				{
+					continue;
+				}
+
+				if (!isset($locale))
+				{
+					$locale = self::getApplication()->getLocale();
+				}
+
+				$array['formatted_' . $name] = $locale->getFormattedTime($time);
+			}
+		}
+		
+	}
+*/
 	/**
 	 *	@role login
 	 */

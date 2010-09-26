@@ -101,7 +101,7 @@ width:190px;
 	float:right;
 }
 
-.order_editAddress, .order_editFields
+.order_editFields
 {
 	background-image: url(../../image/silk/pencil.png);
 }
@@ -176,15 +176,31 @@ width:190px;
     width: 10em;
 }
 
-.order_shippingAddress,
-.order_billingAddress,
 .order_info,
 .order_status
+
 {
     width: 45%;
 }
 
-.order_shippingAddress, .order_info
+.order_shippingAddress,
+.order_billingAddress
+{
+   width: 42%;
+}
+
+.addressContainer
+{
+	width: 50%;
+	float:right;
+}
+.order_info
+{
+	border:0;
+	background:inherit;
+}
+
+.order_shippingAddress
 {
     float: left;
     margin-right: 10px;
@@ -260,4 +276,23 @@ font-size:smaller;
 .quickEditContainerOrder
 {
 width:500px;
+}
+
+
+ul.orderAddress_showEdit
+{
+	border-bottom:0 !important;
+}
+
+.order_editAddress
+{
+	background:none;
+	font-size:small;
+	margin:0 !important;
+	padding:0 !important;
+}
+
+.order_cancelEditAddress
+{
+	display:none !important;
 }

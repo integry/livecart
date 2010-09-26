@@ -70,7 +70,8 @@ class EavField extends EavFieldCommon
 					'Manufacturer' => 3,
 					'Category' => 1,
 					'UserGroup' => 5,
-					'Transaction' => 0
+					'Transaction' => 0,
+					'ShippingService' => 6
 				);
 		}
 

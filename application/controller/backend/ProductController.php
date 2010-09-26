@@ -25,6 +25,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	
 	public function index()
 	{
+
 		ClassLoader::import('application.LiveCartRenderer');
 
 		$category = Category::getInstanceByID($this->request->get("id"), Category::LOAD_DATA);
@@ -601,8 +602,94 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$response->get('productForm')->setData($set->get(0)->toArray());
 		}
 
+		// pricing 
+
+		$f = new ARSelectFilter(new NotEqualsCond(new ARFieldHandle('Currency', 'isDefault'), true));
+		$f->setOrder(new ARFieldHandle('Currency', 'position'));
+		$otherCurrencies = array();
+		foreach (ActiveRecordModel::getRecordSetArray('Currency', $f) as $row)
+		{
+			$otherCurrencies[] = $row['ID'];
+		}
+
+		
+		$response->set("product", $product->toFlatArray());
+		$response->set("otherCurrencies", $otherCurrencies);
+		$response->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
+		$productForm = $response->get('productForm');
+		// $response->set("pricingForm", $pricingForm);
+
+		// get user groups
+		$f = new ARSelectFilter();
+		$f->setOrder(new ARFieldHandle('UserGroup', 'name'));
+		$groups[0] = $this->translate('_all_customers');
+		foreach (ActiveRecordModel::getRecordSetArray('UserGroup', $f) as $group)
+		{
+			$groups[$group['ID']] = $group['name'];
+		}
+		$groups[''] = '';
+		$response->set('userGroups', $groups);
+
+		// all product prices in a separate array
+		$prices = array();
+		foreach ($product->getRelatedRecordSetArray('ProductPrice', new ARSelectFilter()) as $price)
+		{
+			$prices[$price['currencyID']] = $price;
+			$productForm->/*$pricingForm->*/set('price_' . $price['currencyID'], $price['price']);
+			$productForm->/*$pricingForm->*/set('listPrice_' . $price['currencyID'], $price['listPrice']);
+		}
+		$response->set('prices', $prices);
+
 		return $response;
 	}
+
+	private function pricingInformation(Product $product)
+	{
+		// $this->locale->translationManager()->loadFile('backend/Product');
+		// $product = Product::getInstanceByID($this->request->get('id'), ActiveRecord::LOAD_DATA, ActiveRecord::LOAD_REFERENCES);
+
+		// $pricingForm = $this->buildPricingForm($product);
+
+		$f = new ARSelectFilter(new NotEqualsCond(new ARFieldHandle('Currency', 'isDefault'), true));
+		$f->setOrder(new ARFieldHandle('Currency', 'position'));
+		$otherCurrencies = array();
+		foreach (ActiveRecordModel::getRecordSetArray('Currency', $f) as $row)
+		{
+			$otherCurrencies[] = $row['ID'];
+		}
+
+		$response = new ActionResponse();
+		$response->set("product", $product->toFlatArray());
+		$response->set("otherCurrencies", $otherCurrencies);
+		$response->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
+		$response->set("pricingForm", $pricingForm);
+
+		// get user groups
+		$f = new ARSelectFilter();
+		$f->setOrder(new ARFieldHandle('UserGroup', 'name'));
+		$groups[0] = $this->translate('_all_customers');
+		foreach (ActiveRecordModel::getRecordSetArray('UserGroup', $f) as $group)
+		{
+			$groups[$group['ID']] = $group['name'];
+		}
+		$groups[''] = '';
+		$response->set('userGroups', $groups);
+
+		// all product prices in a separate array
+		$prices = array();
+		foreach ($product->getRelatedRecordSetArray('ProductPrice', new ARSelectFilter()) as $price)
+		{
+			$prices[$price['currencyID']] = $price;
+			$pricingForm->set('price_' . $price['currencyID'], $price['price']);
+			$pricingForm->set('listPrice_' . $price['currencyID'], $price['listPrice']);
+		}
+
+		$response->set('prices', $prices);
+
+		return $response;
+	}
+
+	
 
 	public function countTabsItems()
 	{
@@ -717,6 +804,48 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$instance->loadRequestData($this->request);
 			$instance->save();
 
+			// save pricing
+			$product->loadSpecification();
+			$product->loadPricing();
+			if ($quantities = $this->request->get('quantityPricing'))
+			{
+				foreach ($product->getRelatedRecordSet('ProductPrice', new ARSelectFilter()) as $price)
+				{
+					$id = $price->currency->get()->getID();
+					$prices = array();
+					if (!empty($quantities[$id]))
+					{
+						$values = json_decode($quantities[$id], true);
+						$prices = array();
+
+						// no group selected - set all customers
+						if ('' == $values['group'][0])
+						{
+							$values['group'][0] = 0;
+						}
+
+						$quantCount = count($values['quant']);
+						foreach ($values['group'] as $groupIndex => $group)
+						{
+							foreach ($values['quant'] as $quantIndex => $quant)
+							{
+								$pr = $values['price'][($groupIndex * $quantCount) + $quantIndex];
+								if (strlen($pr) != 0)
+								{
+									$prices[$quant][$group] = (float)$pr;
+								}
+							}
+						}
+					}
+
+					ksort($prices);
+					$price->serializedRules->set(serialize($prices));
+					$price->save();
+				}
+			}
+			// $product->loadRequestData($this->request);
+			// $product->save();
+
 			$response = $this->productForm($product);
 
 			$response->setHeader('Cache-Control', 'no-cache, must-revalidate');
@@ -736,8 +865,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	private function productForm(Product $product)
 	{
-		$form = $this->buildForm($product);
-
 		$productFormData = $product->toArray();
 
 		if($product->isLoaded())
@@ -749,6 +876,33 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			{
 				$productFormData['manufacturer'] = $productFormData['Manufacturer']['name'];
 			}
+		}
+		else
+		{
+			$product->load(ActiveRecord::LOAD_REFERENCES);
+		}
+
+		$product->loadPricing();
+		
+		$form = $this->buildForm($product);
+		$pricing = $product->getPricingHandler();
+
+		$pricesData = $product->toArray();
+		$listPrices = $pricing->toArray(ProductPricing::DEFINED, ProductPricing::LIST_PRICE);
+		$pricesData['shippingHiUnit'] = (int)$pricesData['shippingWeight'];
+		$pricesData['shippingLoUnit'] = ($pricesData['shippingWeight'] - $pricesData['shippingHiUnit']) * 1000;
+
+		if(array_key_exists('calculated', $pricesData))
+		{
+			foreach ($pricesData['calculated'] as $currency => $price)
+			{
+				$pricesData['price_' . $currency] = isset($pricesData['defined'][$currency]) ? $pricesData['defined'][$currency] : '';
+			}
+		}
+
+		foreach ($listPrices as $currency => $price)
+		{
+			$pricesData['listPrice_' . $currency] = $price;
 		}
 
 		$form->setData($productFormData);
@@ -838,21 +992,24 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		// validate price input in all currencies
 		if(!$product->isExistingRecord())
 		{
-			ClassLoader::import('application.controller.backend.ProductPriceController');
-			ProductPriceController::addPricesValidator($validator);
-			ProductPriceController::addShippingValidator($validator);
-			ProductPriceController::addInventoryValidator($validator);
+			self::addPricesValidator($validator);
+			self::addShippingValidator($validator);
+			self::addInventoryValidator($validator);
 		}
-		
+
 		if($this->quickEditValidation)
 		{
-			ClassLoader::import('application.controller.backend.ProductPriceController');
-			ProductPriceController::addPricesValidator($validator);
-			ProductPriceController::addShippingValidator($validator);
-			ProductPriceController::addInventoryValidator($validator);
+			// nothing now
 		} else {
 			// quick edit forms does not have specification fields
 			$product->getSpecification()->setValidation($validator);
+		}
+		self::addPricesValidator($validator);
+		self::addShippingValidator($validator);
+		self::addInventoryValidator($validator);
+		if ($this->config->get('INVENTORY_TRACKING') != 'DISABLE')
+		{
+			$validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required')));
 		}
 		return $validator;
 	}
@@ -911,6 +1068,60 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$path[] = $node->getValueByLang('name', $defaultLang);
 		}
 		return $path;
+	}
+
+	public function addShippingValidator(RequestValidator $validator)
+	{
+		// shipping related numeric field validations
+		$validator->addCheck('shippingSurchargeAmount', new IsNumericCheck($this->translate('_err_surcharge_not_numeric')));
+		$validator->addFilter('shippingSurchargeAmount', new NumericFilter());
+
+		$validator->addCheck('minimumQuantity', new IsNumericCheck($this->translate('_err_quantity_not_numeric')));
+		$validator->addCheck('minimumQuantity', new MinValueCheck($this->translate('_err_quantity_negative'), 0));
+		$validator->addFilter('minimumQuantity', new NumericFilter());
+
+		$validator->addFilter('shippingHiUnit', new NumericFilter());
+		$validator->addCheck('shippingHiUnit', new IsNumericCheck($this->translate('_err_weight_not_numeric')));
+		$validator->addCheck('shippingHiUnit', new MinValueCheck($this->translate('_err_weight_negative'), 0));
+
+		$validator->addFilter('shippingLoUnit', new NumericFilter());
+		$validator->addCheck('shippingLoUnit', new IsNumericCheck($this->translate('_err_weight_not_numeric')));
+		$validator->addCheck('shippingLoUnit', new MinValueCheck($this->translate('_err_weight_negative'), 0));
+
+		return $validator;
+	}
+
+	public function addPricesValidator(RequestValidator $validator)
+	{
+		// price in base currency
+		$baseCurrency = $this->getApplication()->getDefaultCurrency()->getID();
+		$validator->addCheck('price_' . $baseCurrency, new IsNotEmptyCheck($this->translate('_err_price_empty')));
+
+		$currencies = $this->getApplication()->getCurrencyArray();
+		foreach ($currencies as $currency)
+		{
+			$validator->addCheck('price_' . $currency, new IsNumericCheck($this->translate('_err_price_invalid')));
+			$validator->addCheck('price_' . $currency, new MinValueCheck($this->translate('_err_price_negative'), 0));
+			$validator->addCheck('listPrice_' . $currency, new MinValueCheck($this->translate('_err_price_negative'), 0));
+			$validator->addFilter('price_' . $currency, new NumericFilter());
+			$validator->addFilter('listPrice_' . $currency, new NumericFilter());
+		}
+
+		return $validator;
+	}
+
+	public function addInventoryValidator(RequestValidator $validator)
+	{
+		if ($this->config->get('INVENTORY_TRACKING') != 'DISABLE')
+		{
+			$validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required')));
+			$validator->addCheck('stockCount', new IsNumericCheck($this->translate('_err_stock_not_numeric')));
+			$validator->addCheck('stockCount', new MinValueCheck($this->translate('_err_stock_negative'), 0));
+		}
+
+		$validator->addFilter('stockCount', new NumericFilter());
+
+		return $validator;
 	}
 }
 
