@@ -111,7 +111,7 @@ ActiveForm.prototype = {
 
 		formElement.addClassName('hasError');
 
-		var errorContainer = formElement.up().down(".errorText");
+		var errorContainer = $(formElement.parentNode).down(".errorText");
 		if (errorContainer)
 		{
 			errorContainer.innerHTML = errorMessage;
