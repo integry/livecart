@@ -396,13 +396,17 @@ class OrderedItemController extends StoreManagementController
 		if(($id = (int)$this->request->get("id", false)) )
 		{
 			$count = (int)$this->request->get("count");
-			$price = (int)$this->request->get("price");
+			$price = (float)$this->request->get("price");
 			$item = OrderedItem::getInstanceByID('OrderedItem', $id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'Currency', 'ShippingAddress' => 'UserAddress', 'Product', 'Category'));
 			$item->customerOrder->get()->loadAll();
 			$history = new OrderHistory($item->customerOrder->get(), $this->user);
 
 			$item->count->set($count);
-			$item->price->set($price);
+
+			if ($item->price->get() != $price)
+			{
+				$item->price->set($item->getCurrency()->round($item->reduceBaseTaxes($price)));
+			}
 
 			$shipment = $item->shipment->get();
 			$shipment->loadItems();
