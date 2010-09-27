@@ -117,13 +117,22 @@ ActiveGrid.prototype =
 			Event.observe(rows[k], 'mouseout', this.removeRowHighlight.bindAsEventListener(this));
 		}
 	},
-	
-	initAdvancedSearch: function(id, availableColumns, properties)
+
+	initAdvancedSearch: function(id, availableColumns, advancedSearchColumns, properties)
 	{
 		this.advancedSearchHandler = new ActiveGridAdvancedSearch(id);
+
+		this.advancedSearchHandler.createAvailableColumnConditions(advancedSearchColumns);
 		this.advancedSearchHandler.createAvailableColumnConditions(availableColumns, properties);
+		
+
 		this.advancedSearchHandler.findNodes();
 		this.advancedSearchHandler.bindEvents();
+	},
+
+	getAdvancedSearchHandler: function()
+	{
+		return this.advancedSearchHandler;
 	},
 
 	initQuickEdit: function(urlTemplate, idToken)
@@ -1072,12 +1081,26 @@ ActiveGrid.QuickEdit =
 ActiveGridAdvancedSearch = Class.create();
 ActiveGridAdvancedSearch.prototype =
 {
+	addCondition: function(condition)
+	{
+		this.conditions[condition.getId()] = condition;
+	},
+	
 	initialize: function(id)
 	{
 		this.id = id;
 		this.conditions = $H({});
 		this.filterString = "";
-		
+		if(ActiveGridAdvancedSearch.prototype.initCallbacks)
+		{
+			$A(ActiveGridAdvancedSearch.prototype.initCallbacks).each(
+				function(callback)
+				{
+					// console.log('A', callback, this);
+					callback(this);
+				}.bind(this)
+			);
+		}
 	},
 
 	createAvailableColumnConditions: function(availableColumns, properties)
@@ -1113,7 +1136,7 @@ ActiveGridAdvancedSearch.prototype =
 		this.nodes.root = $(this.id + "_AdvancedSearch");
 		this.nodes.queryContainer = this.nodes.root.down(".advancedSearchQueryContainer");
 		this.nodes.searchLink = this.nodes.root.down(".advancedSearchLink");
-		this.nodes.form = this.nodes.root.down(".advancedSearchForm");
+
 		this.nodes.queryItems = this.nodes.root.down(".advancedQueryItems");
 	},
 
@@ -1122,11 +1145,6 @@ ActiveGridAdvancedSearch.prototype =
 		Event.observe(this.nodes.searchLink, "click", this.linkClicked.bindAsEventListener(this));
 		Event.observe(this.nodes.queryItems, "change", this.conditionItemChanged.bindAsEventListener(this));
 		Event.observe(this.nodes.queryItems, "click", this.conditionItemClick.bindAsEventListener(this))
-	},
-
-	addCondition: function(condition)
-	{
-		this.conditions[condition.getId()] = condition;
 	},
 
 	getCondition: function(id)
@@ -1156,12 +1174,10 @@ ActiveGridAdvancedSearch.prototype =
 		{
 			condition.draw(element.up("li"));
 		}
-
 		if(element.hasClassName('comparision'))
 		{
 			condition.comparisionChanged(element.up("li"));
 		}
-
 		this.appendConditionIfLastFilled(element);
 		this.setActiveGridFilterValues();
 	},
@@ -1181,7 +1197,7 @@ ActiveGridAdvancedSearch.prototype =
 			container = element.up('li'),
 			condition = this.getCondition(container.down('.condition').value);
 		
-		if(this.lastConditionContainer == condition.getContainer() && condition.isFilled(container))
+		if(this.lastConditionContainer == container && condition.isFilled(container))
 		{
 			this.appendCondition();
 		}
@@ -1253,22 +1269,31 @@ ActiveGridAdvancedSearch.prototype =
 	{
 		element.up("ul").removeChild(element.up("li"));
 		this.setActiveGridFilterValues();
+	},
+
+	registerInitCallback: function(callback)
+	{
+		if(!ActiveGridAdvancedSearch.prototype.initCallbacks)
+		{
+			ActiveGridAdvancedSearch.prototype.initCallbacks = [];
+		}
+		ActiveGridAdvancedSearch.prototype.initCallbacks.push(callback);
 	}
 }
 
 ActiveGridAdvancedSearchCondition = Class.create();
 ActiveGridAdvancedSearchCondition.prototype =
 {
+	TEXT: 'text',
+	NUMERIC: 'numeric',
+	BOOL: 'bool',
+	DATE: 'date',
+
 	initialize: function(id, name, properties)
 	{
 		this.id = id;
 		this.name = name;
-		this.properties = properties
-	},
-
-	getContainer: function()
-	{
-		return this.container;
+		this.properties = properties;
 	},
 
 	getName: function()
@@ -1283,9 +1308,29 @@ ActiveGridAdvancedSearchCondition.prototype =
 
 	getProperty: function(key)
 	{
+		if(typeof this.properties == "undefined")
+		{
+			this.properties = $H({});
+		}
+		if(key == 'type' && this.properties[key] == "number") // 'number' and 'numeric' means the same.
+		{
+			this.properties[key] = this.NUMERIC;
+		}
 		return typeof this.properties[key] == "undefined"
 			? arguments.length <= 2 ? arguments[1] : null
 			: this.properties[key];
+	},
+
+	setType: function(type)
+	{
+		if(this.getProperty('type') != type) // getProperty() also initializes this.properties to hashmap, if it is broken.
+		{
+			if(type == 'number')
+			{
+				type = this.NUMERIC;
+			}
+			this.properties['type'] = type;
+		}
 	},
 
 	draw: function(container) // This drawing is for 'field value' conditions. Replace with custom draw.
@@ -1296,7 +1341,6 @@ ActiveGridAdvancedSearchCondition.prototype =
 			value = container.down(".value"),
 			value2 = container.down(".value2"),
 			type;
-
 		if (comparision /* not found */) { } else
 		{
 			comparision = document.createElement('select');
@@ -1317,7 +1361,6 @@ ActiveGridAdvancedSearchCondition.prototype =
 		comparision.innerHTML = '';
 		value.show();
 		value2.hide();
-
 		type = this.getProperty('type');
 		if (type == 'text')
 		{
@@ -1350,18 +1393,34 @@ ActiveGridAdvancedSearchCondition.prototype =
 		}
 	},
 
+	comparisionChanged: function(container)
+	{
+		if(this.getComparision(container) == '><')
+		{
+			container.down(".value2").show();
+		}
+		else
+		{
+			container.down(".value2").hide();
+		}
+	},
+
 	isFilled: function(container)
 	{
 		type = this.getProperty('type');
+
+		// ???
 		if(this.getComparision(container) == '><')
 		{
 			return !!container.down(".value").value &&  !!container.down(".value2").value;
 		}
-		else if (type == 'text' || type == 'numeric')
+		// ???
+
+		else if (type == this.TEXT || type == this.NUMERIC)
 		{
 			return !!container.down(".value").value;
 		}
-		else if(type == 'bool' || type == 'date')
+		else if(type == this.BOOL || type == this.DATE)
 		{
 			return true;
 		}
@@ -1387,22 +1446,8 @@ ActiveGridAdvancedSearchCondition.prototype =
 			v = '';
 		}
 		return v ? v : "";
-	},
-
-	
-	comparisionChanged: function(container)
-	{
-		if(this.getComparision(container) == '><')
-		{
-			container.down(".value2").show();
-		}
-		else
-		{
-			container.down(".value2").hide();
-		}
 	}
 }
-
 
 function $T()
 {
@@ -1412,7 +1457,7 @@ function $T()
 	}
 	else
 	{
-		return this[arguments[0]];
+		return this[arguments[0]] ? this[arguments[0]] : arguments[0];
 	}
 }
 

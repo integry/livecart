@@ -120,6 +120,7 @@
 	container="tabPageContainer"
 	filters=$filters
 	dataFormatter=$dataFormatter
+	advancedSearch=true
 }
 
 <li class="detailedExport" id="detailedExportContainer_{$orderGroupID}">

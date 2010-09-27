@@ -14,6 +14,13 @@ Backend.CustomerOrder.prototype =
 
 	initialize: function(groups)
 	{
+		ActiveGridAdvancedSearch.prototype.registerInitCallback
+		(
+			function(instance)
+			{
+			}
+		);
+		
 		Backend.CustomerOrder.prototype.treeBrowser = new dhtmlXTreeObject("orderGroupsBrowser","","", 0);
 		Backend.Breadcrumb.setTree(Backend.CustomerOrder.prototype.treeBrowser);
 

@@ -24,10 +24,8 @@
 			{t _advanced_search}
 		</a>
 		<div id="{$prefix}_{$id}_QueryContainer" class="advancedSearchQueryContainer">
-			<form class="advancedSearchForm" method="post" action=" ??? ">
-				<ul class="advancedQueryItems">
-				</ul>
-			</form>
+			<ul class="advancedQueryItems">
+			</ul>
 		</div>
 	</div>
 {/if}
@@ -222,9 +220,13 @@
 		{/if}
 	{/foreach}
 	{if $advancedSearch}
+	
+	
+	
 		window.activeGrids['{$prefix}_{$id}'].initAdvancedSearch(
 			"{$prefix}_{$id}",
 			{json array=$availableColumns},
+			{json array=$advancedSearchColumns},
 
 			/* misc properties */
 			{literal}

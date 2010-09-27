@@ -231,7 +231,6 @@ class CustomerOrderController extends ActiveGridController
 		{
 			return array();
 		}
-
 		$sql = 'SELECT orderedItemID, SUM(timesDownloaded) AS cnt FROM OrderedFile WHERE orderedItemID IN (' . implode(',', $itemIDs) . ') GROUP BY orderedItemID';
 		$out = array();
 		foreach (ActiveRecordModel::getDataBySQL($sql) as $item)
@@ -241,7 +240,6 @@ class CustomerOrderController extends ActiveGridController
 
 		return $out;
 	}
-
 
 	private function shipmentInfo($response)
 	{
@@ -710,6 +708,73 @@ class CustomerOrderController extends ActiveGridController
 		$this->applyFullNameFilter($cond);
 		$this->applyStateFilter($cond);
 
+		$filters = $this->request->get('filters');
+		$displayedColumns = $this->getDisplayedColumns();
+		$columns = array_merge(array_keys(is_array($filters) ? $filters : array()), array_keys(is_array($displayedColumns) ? $displayedColumns : array()));
+
+		if(in_array('ProductCount',$columns))
+		{
+			$filter->addField('(SELECT sum(count) AS ProductCount FROM OrderedItem AS oi WHERE oi.customerOrderID = CustomerOrder.ID)', '', 'ProductCount');
+		}
+		if(in_array('UniqueProductCount', $columns))
+		{
+			$filter->addField('(SELECT count(*) AS UniqueProductCount FROM OrderedItem AS oi WHERE oi.customerOrderID = CustomerOrder.ID)', '', 'UniqueProductCount');
+		}
+
+		if(in_array('HasUsedCoupon', $columns))
+		{
+			$filter->addField('(
+				SELECT
+					count(*) > 1 AS HasUsedCoupon
+				FROM
+					OrderCoupon AS oc
+				WHERE
+					oc.orderID = CustomerOrder.ID
+			
+			)', '', 'HasUsedCoupon');
+		}
+
+		if(in_array('UsedCouponCount', $columns))
+		{
+			$filter->addField('(SELECT count(*) AS UsedCoupon FROM OrderCoupon AS oc WHERE oc.orderID = CustomerOrder.ID)', '', 'UsedCouponCount');
+		}
+
+		if(in_array('ProductSKU', $columns) && !empty($filters['ProductSKU']))
+		{
+			$filter->addField('(SELECT 0x'.bin2hex($filters['ProductSKU']).' AS ProductSKU FROM OrderedItem AS oi INNER JOIN Product pr on pr.ID=oi.productID AND pr.sku=0x'.bin2hex($filters['ProductSKU']).' WHERE oi.customerOrderID = CustomerOrder.ID Limit 1)', '', 'ProductSKU');
+		}
+
+		if(in_array('ProductName', $columns) && !empty($filters['ProductName']))
+		{
+			$filter->addField('(SELECT 0x'.bin2hex($filters['ProductName']).' AS ProductSKU FROM OrderedItem AS oi INNER JOIN Product pr on pr.ID=oi.productID AND pr.name=0x'.bin2hex($filters['ProductName']).' WHERE oi.customerOrderID = CustomerOrder.ID Limit 1)', '', 'ProductName');
+		}
+
+		if(in_array('Manufacturer', $columns) && !empty($filters['Manufacturer']))
+		{
+			$filter->addField('(
+				SELECT
+					0x'.bin2hex($filters['Manufacturer']).' AS Manufacturer
+				FROM
+					OrderedItem AS oi
+					INNER JOIN Product pr on pr.ID=oi.productID
+					INNER JOIN Manufacturer mf on mf.ID=pr.manufacturerID AND mf.name=0x'.bin2hex($filters['Manufacturer']).'
+				WHERE
+					oi.customerOrderID = CustomerOrder.ID Limit 1
+			)', '', 'Manufacturer');
+		}
+		if(in_array('UsedCouponCode', $columns) && !empty($filters['UsedCouponCode']))
+		{
+			$filter->addField('(
+				SELECT
+					0x'.bin2hex($filters['UsedCouponCode']).' AS UsedCoupon
+				FROM
+					OrderCoupon AS oc
+				WHERE
+					oc.couponCode = 0x'.bin2hex($filters['UsedCouponCode']).'
+					AND oc.orderID = CustomerOrder.ID
+				)', '', 'UsedCouponCode');
+		}
+
 		if($this->request->get('sort_col') == 'User.fullName')
 		{
 			$this->request->remove('sort_col');
@@ -1164,16 +1229,36 @@ class CustomerOrderController extends ActiveGridController
 	{
 		// get available columns
 		$availableColumns = parent::getAvailableColumns();
-
 		unset($availableColumns['CustomerOrder.shipping']);
 		unset($availableColumns['CustomerOrder.isFinalized']);
 		unset($availableColumns['CustomerOrder.checkoutStep']);
 
+		$availableColumns['HasUsedCoupon'] = array('type' => 'bool', 'name' => $this->translate('HasUsedCoupon'));
+		$availableColumns['UsedCouponCount'] = array('type' => 'numeric', 'name' => $this->translate('UsedCouponCount'));
+		$availableColumns['ProductCount'] = array('type' => 'numeric', 'name' => $this->translate('ProductCount'));
+		$availableColumns['UniqueProductCount'] = array('type' => 'numeric', 'name' => $this->translate('UniqueProductCount'));
+
 		return $availableColumns;
+	}
+
+	public function getAdvancedSearchFields()
+	{
+		return $this->translateFieldArray(
+			array
+			(
+				'ProductSKU' => array('name'=>'', 'type'=>'text'),
+				'ProductName'=> array('name'=>'', 'type'=>'text'),
+				'Manufacturer'=> array('name'=>'', 'type'=>'text'),
+				'UsedCouponCode'=> array('name'=>'', 'type'=>'text')
+			)
+		);
 	}
 
 	protected function getCustomColumns()
 	{
+		
+		$availableColumns = array();
+		
 		$availableColumns['User.email'] = 'text';
 		$availableColumns['User.ID'] = 'text';
 		$availableColumns['User.fullName'] = 'text';
@@ -1195,6 +1280,9 @@ class CustomerOrderController extends ActiveGridController
 		$availableColumns['User.firstName'] = 'text';
 		$availableColumns['User.lastName'] = 'text';
 		$availableColumns['User.companyName'] = 'text';
+
+
+
 
 		return $availableColumns;
 	}

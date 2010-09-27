@@ -43,7 +43,6 @@ abstract class ActiveGridController extends StoreManagementController
 	{
 		$filter = $this->getListFilter();
 		$this->setDefaultSortOrder($filter);
-
 		$recordCount = true;
 
 		if ($exportBufferIndex)
@@ -52,7 +51,7 @@ abstract class ActiveGridController extends StoreManagementController
 			$filter->setLimit(self::EXPORT_BUFFER_ROW_COUNT, $exportFrom);
 		}
 		$productArray = ActiveRecordModel::getRecordSetArray($this->getClassName(), $filter, $this->getReferencedData(), $recordCount);
-		
+
 		if (!$displayedColumns)
 		{
 			$displayedColumns = $this->getRequestColumns();
@@ -65,6 +64,15 @@ abstract class ActiveGridController extends StoreManagementController
 
 		$return = array();
 		$return['columns'] = array_keys($displayedColumns);
+		
+		// !~~~~~~~~~~
+		$cnt = count($data);
+		if(!$recordCount && $cnt)
+		{
+			$recordCount = $cnt;
+		}
+		// ~~~~~~~~~~!
+
 		$return['totalCount'] = $recordCount;
 		$return['data'] = $data;
 
@@ -163,6 +171,24 @@ abstract class ActiveGridController extends StoreManagementController
 		return $this->translate('_mass_action_succeeded');
 	}
 
+	protected function getAdvancedSearchFields()
+	{
+		return array();
+	}
+	
+	protected function translateFieldArray($fields)
+	{
+		foreach($fields as $key=>&$value)
+		{
+			if(empty($value['name']))
+			{
+				$value['name'] = $this->translate($key);
+			}
+		}
+		return $fields;
+		
+	}
+
 	protected function getDisplayedColumns($params = null, $customColumns = array())
 	{
 		// get displayed columns
@@ -243,7 +269,6 @@ abstract class ActiveGridController extends StoreManagementController
 					);
 			}
 		}
-
 		return $availableColumns;
 	}
 
@@ -251,6 +276,9 @@ abstract class ActiveGridController extends StoreManagementController
 	{
 		$schemaName = $schemaName ? $schemaName : $this->getClassName();
 		$availableColumns = self::getSchemaColumns($schemaName, $this->application, $this->getCustomColumns());
+		
+		
+		
 		// sort available columns by placing the default columns first
 		$default = array();
 		foreach ($this->getDefaultColumns() as $column)
@@ -267,6 +295,7 @@ abstract class ActiveGridController extends StoreManagementController
 
 	protected function getAvailableRequestColumns()
 	{
+		// $this->getAdvancedSearchFields()
 		return $this->getAvailableColumns();
 	}
 
@@ -301,6 +330,8 @@ abstract class ActiveGridController extends StoreManagementController
 
 		$response->set('displayedColumns', $displayedColumns);
 		$response->set('availableColumns', $availableColumns);
+		$response->set('advancedSearchColumns', $this->getAdvancedSearchFields());
+		
 		$response->set('massForm', $this->getMassForm());
 		$response->set('offset', $this->request->get('offset'));
 		$response->set('totalCount', '0');
