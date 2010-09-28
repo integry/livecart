@@ -557,7 +557,7 @@ class CustomerOrderController extends ActiveGridController
 		ClassLoader::import('application.model.feed.ShipmentFeed');
 
 		$filter = new ARSelectFilter();
-		$grid = new ActiveGrid($this->application, $filter, 'CustomerOrder', array_merge($this->getAvailableColumns(), $this->getAdvancedSearchFields()));
+		$grid = new ActiveGrid($this->application, $filter, 'CustomerOrder', $this->getHavingClauseColumnTypes());
 		$typeCond = $this->getTypeCondition($this->request->get('id'));
 		$this->applyFullNameFilter($typeCond);
 		$this->applyStateFilter($typeCond);
@@ -574,6 +574,11 @@ class CustomerOrderController extends ActiveGridController
 			$mass->setCompletionMessage($this->translate('_mass_action_succeed'));
 			return $mass->process(CustomerOrder::LOAD_REFERENCES);
 		}
+	}
+
+	public function getHavingClauseColumnTypes()
+	{
+		return array_merge($this->getAvailableColumns(), $this->getAdvancedSearchFields());
 	}
 
 	public function printLabels()

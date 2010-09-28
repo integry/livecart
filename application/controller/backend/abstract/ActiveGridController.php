@@ -117,7 +117,7 @@ abstract class ActiveGridController extends StoreManagementController
 	protected function getListFilter()
 	{
 		$filter = $this->getSelectFilter();
-		new ActiveGrid($this->application, $filter, $this->getClassName(), array_merge($this->getAvailableColumns(), $this->getAdvancedSearchFields()));
+		new ActiveGrid($this->application, $filter, $this->getClassName(), $this->getHavingClauseColumnTypes() );
 		return $filter;
 	}
 
@@ -149,7 +149,7 @@ abstract class ActiveGridController extends StoreManagementController
 	public function processMass($params = array())
 	{
 		$processorClass = $this->getMassActionProcessor();
-		$grid = new ActiveGrid($this->application, $this->getSelectFilter(), $this->getClassName(), array_merge($this->getAvailableColumns(), $this->getAdvancedSearchFields()));
+		$grid = new ActiveGrid($this->application, $this->getSelectFilter(), $this->getClassName(), $this->getHavingClauseColumnTypes());
 		$mass = new $processorClass($grid, $params);
 		$mass->setCompletionMessage($this->getMassCompletionMessage());
 
@@ -262,13 +262,16 @@ abstract class ActiveGridController extends StoreManagementController
 		return $availableColumns;
 	}
 
+	public function getHavingClauseColumnTypes()
+	{
+		return array();
+	}
+
 	public function getAvailableColumns($schemaName = null)
 	{
 		$schemaName = $schemaName ? $schemaName : $this->getClassName();
 		$availableColumns = self::getSchemaColumns($schemaName, $this->application, $this->getCustomColumns());
-		
-		
-		
+
 		// sort available columns by placing the default columns first
 		$default = array();
 		foreach ($this->getDefaultColumns() as $column)
