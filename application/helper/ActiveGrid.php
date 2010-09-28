@@ -15,6 +15,7 @@ class ActiveGrid
 	private $filter;
 	private $application;
 	private $modelClass;
+	private $columnTypes;
 
 	public static function getFieldType(ARField $field)
 	{
@@ -45,11 +46,13 @@ class ActiveGrid
 		return $type;
 	}
 
-	public function __construct(LiveCart $application, ARSelectFilter $filter, $modelClass = false)
+	public function __construct(LiveCart $application, ARSelectFilter $filter, $modelClass = false, $columnTypes=array())
 	{
 		$this->application = $application;
 		$this->modelClass = $modelClass;
 		$this->filter = $filter;
+		$this->columnTypes = $columnTypes;
+
 		$request = $this->application->getRequest();
 
 		// set recordset boundaries (limits)
@@ -72,7 +75,6 @@ class ActiveGrid
 		{
 			$filters = (array)json_decode($request->get('filters'));
 		}
-
 		$conds = array();
 		if ($filter->getCondition())
 		{
@@ -87,7 +89,6 @@ class ActiveGrid
 			}
 
 			$value = urldecode($value);
-
 			$handle = $this->getFieldHandle($field, self::FILTER_HANDLE);
 
 			if (!is_array($handle) && !is_null($handle) && !($handle instanceof ARExpressionHandle))
@@ -102,22 +103,7 @@ class ActiveGrid
 
 					foreach ($constraints as $c)
 					{
-						if (in_array(substr($c, 0, 2), array('<>', '<=', '>=')))
-						{
-							$operator = substr($c, 0, 2);
-							$value = substr($c, 2);
-						}
-						else if (in_array(substr($c, 0, 1), array('>', '<', '=')))
-						{
-							$operator = substr($c, 0, 1);
-							$value = substr($c, 1);
-						}
-						else
-						{
-							$operator = '=';
-							$value = $c;
-						}
-
+						list($operator, $value) = $this->parseOperatorAndValue($c);
 						if (!is_numeric($value) && ($fieldInst->getDataType() instanceof ARNumeric))
 						{
 							continue;
@@ -161,13 +147,33 @@ class ActiveGrid
 						$cond->addOR($c);
 					}
 				}
-
 				$conds[] = $cond;
 			}
-
 			else
 			{
-				$having[] = eq(new ARExpressionHandle($field), $value);
+				if(array_key_exists($field, $this->columnTypes))
+				{
+					$type = $this->columnTypes[$field]['type'];
+				}
+
+				$value = preg_replace('/[ ]{2,}/', ' ', $value);
+				switch($type)
+				{
+					case 'numeric':
+						$constraints = explode(' ', $value);
+						foreach ($constraints as $c)
+						{
+							list($operator, $value) = $this->parseOperatorAndValue($c);
+							if (!is_numeric($value))
+							{
+								continue;
+							}
+							$having[] = new OperatorCond($handle, $value, $operator);
+						}
+						break;
+					default:
+						$having[] = eq(new ARExpressionHandle($field), $value);
+				}
 			}
 		}
 
@@ -209,6 +215,27 @@ class ActiveGrid
 		}
 	}
 
+	private function parseOperatorAndValue($c)
+	{
+		if (in_array(substr($c, 0, 2), array('<>', '<=', '>=')))
+		{
+			$operator = substr($c, 0, 2);
+			$value = substr($c, 2);
+		}
+		else if (in_array(substr($c, 0, 1), array('>', '<', '=')))
+		{
+			$operator = substr($c, 0, 1);
+			$value = substr($c, 1);
+		}
+		else
+		{
+			$operator = '=';
+			$value = $c;
+		}
+		return array($operator, $value);
+	}
+	
+	
 	public function getModelClass()
 	{
 		return $this->modelClass;

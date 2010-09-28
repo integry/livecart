@@ -61,18 +61,8 @@ abstract class ActiveGridController extends StoreManagementController
 		{
 			return $data;
 		}
-
 		$return = array();
 		$return['columns'] = array_keys($displayedColumns);
-		
-		// !~~~~~~~~~~
-		$cnt = count($data);
-		if(!$recordCount && $cnt)
-		{
-			$recordCount = $cnt;
-		}
-		// ~~~~~~~~~~!
-
 		$return['totalCount'] = $recordCount;
 		$return['data'] = $data;
 
@@ -127,7 +117,7 @@ abstract class ActiveGridController extends StoreManagementController
 	protected function getListFilter()
 	{
 		$filter = $this->getSelectFilter();
-		new ActiveGrid($this->application, $filter, $this->getClassName());
+		new ActiveGrid($this->application, $filter, $this->getClassName(), array_merge($this->getAvailableColumns(), $this->getAdvancedSearchFields()));
 		return $filter;
 	}
 
@@ -159,7 +149,7 @@ abstract class ActiveGridController extends StoreManagementController
 	public function processMass($params = array())
 	{
 		$processorClass = $this->getMassActionProcessor();
-		$grid = new ActiveGrid($this->application, $this->getSelectFilter(), $this->getClassName());
+		$grid = new ActiveGrid($this->application, $this->getSelectFilter(), $this->getClassName(), array_merge($this->getAvailableColumns(), $this->getAdvancedSearchFields()));
 		$mass = new $processorClass($grid, $params);
 		$mass->setCompletionMessage($this->getMassCompletionMessage());
 

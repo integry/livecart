@@ -180,3 +180,22 @@ _progress_1=Registered user
 _progress_2=Address entered
 _progress_3=Shipping method selected
 _progress_4=Payment attempted
+
+AdvancedSearchCondition.ProductSKU=Product SKU
+AdvancedSearchCondition.ProductName=Product name
+AdvancedSearchCondition.Manufacturer=Manufacturer
+AdvancedSearchCondition.HasUsedCoupon=Has used coupon
+AdvancedSearchCondition.UsedCouponCount=Used coupon count
+AdvancedSearchCondition.UsedCouponCode=Used coupon code
+AdvancedSearchCondition.ProductCount=Product count
+AdvancedSearchCondition.UniqueProductCount=Unique product count
+
+# Advanced grid filter fields
+HasUsedCoupon=Has used coupon
+UsedCouponCount=Used coupon count
+ProductCount=Product count
+UniqueProductCount=Unique product count
+ProductSKU=SKU
+ProductName=Product name
+Manufacturer=Manufacturer
+UsedCouponCode=Used coupon code

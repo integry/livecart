@@ -557,7 +557,7 @@ class CustomerOrderController extends ActiveGridController
 		ClassLoader::import('application.model.feed.ShipmentFeed');
 
 		$filter = new ARSelectFilter();
-		$grid = new ActiveGrid($this->application, $filter, 'CustomerOrder');
+		$grid = new ActiveGrid($this->application, $filter, 'CustomerOrder', array_merge($this->getAvailableColumns(), $this->getAdvancedSearchFields()));
 		$typeCond = $this->getTypeCondition($this->request->get('id'));
 		$this->applyFullNameFilter($typeCond);
 		$this->applyStateFilter($typeCond);
@@ -725,12 +725,11 @@ class CustomerOrderController extends ActiveGridController
 		{
 			$filter->addField('(
 				SELECT
-					count(*) > 1 AS HasUsedCoupon
+					IF(COUNT(*),1,0) AS HasUsedCoupon
 				FROM
 					OrderCoupon AS oc
 				WHERE
 					oc.orderID = CustomerOrder.ID
-			
 			)', '', 'HasUsedCoupon');
 		}
 
@@ -1280,10 +1279,7 @@ class CustomerOrderController extends ActiveGridController
 		$availableColumns['User.firstName'] = 'text';
 		$availableColumns['User.lastName'] = 'text';
 		$availableColumns['User.companyName'] = 'text';
-
-
-
-
+		
 		return $availableColumns;
 	}
 
