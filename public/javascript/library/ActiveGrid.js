@@ -268,7 +268,6 @@ ActiveGrid.prototype =
 		
 		if(node == null || node.length!=1)
 		{
-			// console.log('QW container not found');
 			return null;
 		}
 		return $(node[0]);
@@ -653,7 +652,8 @@ ActiveGridFilter.prototype =
 		this.element.onclick = Event.stop.bindAsEventListener(this);
 		this.element.onfocus = this.filterFocus.bindAsEventListener(this);
 		this.element.onblur = this.filterBlur.bindAsEventListener(this);
-		this.element.onchange = this.setFilterValue.bindAsEventListener(this);
+		// this.element.onchange = this.setFilterValue.bindAsEventListener(this);
+		this.element.onchange = this.filterOnChange.bindAsEventListener(this);
 		this.element.onkeyup = this.checkExit.bindAsEventListener(this);
 
 		this.element.filter = this;
@@ -661,6 +661,28 @@ ActiveGridFilter.prototype =
    		Element.addClassName(this.element, 'activeGrid_filter_blur');
 
 		this.element.columnName = this.element.value;
+	},
+
+	filterOnChange: function(e)
+	{
+		var
+			element = Event.element(e),
+			th = element.up("th"),
+			drd = th.down(".dateRange")
+		if (th.hasClassName("cellt_date"))
+		{
+			if("daterange" == element.value.substr(0, 9) && element.tagName.toLowerCase() == "select")
+			{
+				drd.show();
+				return;
+			}
+			else
+			{
+				drd.hide();
+			}
+			
+		}
+		this.setFilterValue();
 	},
 
 	filterFocus: function(e)
@@ -793,6 +815,25 @@ ActiveGridFilter.prototype =
 			Element.hide(element.up('div.filterMenu'));
 			window.setTimeout(function() { Element.show(this.up('div.filterMenu')); }.bind(element), 200);
 		}
+	},
+
+	updateDateRangeFilter: function(element) // calendar does not generate event, therefore passing node
+	{
+		var
+			element = $(element).up("div.dateRange"),
+			// format: "daterange [<datefrom>] | [<dateto>]"
+			queryValue = ["daterange", $(element.down(".min").id+"_real").value , "|", $(element.down(".max").id+"_real").value].join(" ").replace(/\s{2,}/, " "),
+			select = element.up("th").down("select");
+
+		// find option with value daterange.*, and set its value to queryValue
+		$A(select.getElementsByTagName("option")).find(
+			function(element)
+			{
+				return element.value.substr(0,9) == "daterange";
+			}
+		).value = queryValue;
+
+		select.filter.setFilterValue();
 	},
 
 	updateRangeFilter: function(e)
@@ -1096,7 +1137,6 @@ ActiveGridAdvancedSearch.prototype =
 			$A(ActiveGridAdvancedSearch.prototype.initCallbacks).each(
 				function(callback)
 				{
-					// console.log('A', callback, this);
 					callback(this);
 				}.bind(this)
 			);

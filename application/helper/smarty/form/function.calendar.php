@@ -1,11 +1,12 @@
 <?php
 /**
- * ...
+ *
  *
  * @param array $params
- * 			(string)id => Field id (This field is required)
- *		  (string)format => Date format (default: %d-%b-%Y)
- *		  (bool)noform => Sometimes calendar must be put not inside the form, or dinamically. You should pass noForm=true if you don't want to depend on form
+ *		(string)id => Field id (This field is required)
+ *		(string)format => Date format (default: %d-%b-%Y)
+ *		(bool)noform => Sometimes calendar must be put not inside the form, or dinamically. You should pass noForm=true if you don't want to depend on form
+ *		(bool)nobutton => Don't show button, use display input as trigger
  * @param Smarty $smarty
  * @return string
  *
@@ -14,6 +15,7 @@
  */
 function smarty_function_calendar($params, $smarty)
 {
+	$params['nobutton'] = array_key_exists('nobutton', $params) ?!!$params['nobutton'] : false;
 	if(!isset($params['noform']))
 	{
 		$formParams = $smarty->_tag_stack[0][1];
@@ -55,11 +57,18 @@ function smarty_function_calendar($params, $smarty)
 	$output .= "/>";
 
 	$output .= '<input type="hidden" class="hidden" class="calendar" name="'.$fieldName.'" value="'.$value.'" class="calendar-real" id="'.$params['id'].'_real" />';
-	$output .= '<img src="image/silk/calendar.png" id="'.$params['id'].'_button" class="calendar_button" title="Date selector" onmouseover="Element.addClassName(this, \'calendar_button_hover\');" onmouseout="Element.removeClassName(this, \'calendar_button_hover\');" />';
+	
+	$buttonID = $params['id'];
+	if ($params['nobutton'] == false)
+	{
+		$output .= '<img src="image/silk/calendar.png" id="'.$params['id'].'_button" class="calendar_button" title="Date selector" onmouseover="Element.addClassName(this, \'calendar_button_hover\');" onmouseout="Element.removeClassName(this, \'calendar_button_hover\');" />';
+		$buttonID .= "_button";
+	}
+	unset($params['nobutton']);
 	$output .= <<<JAVASCRIPT
 <script type="text/javascript">
 	var visible = $("{$params['id']}");
-	var button = $("{$params['id']}_button");
+	var button = $("{$buttonID}");
 	var realInput = $(button.parentNode).down('.hidden');
 	button.realInput = realInput;
 

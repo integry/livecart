@@ -598,3 +598,29 @@
 	color: #88c;
 	font-size: smaller;
 }
+
+
+th.cellt_date
+{
+	width:150px;
+}
+
+th.cellt_date div.dateRange input
+{
+	width:60px !important;
+	font-size: 9px !important;
+	font-weight:normal !important;
+}
+
+th.cellt_date div.dateRange
+{
+	clear: both;
+}
+
+th.cellt_date div.dateRange div
+{
+	padding:2px 2px 0 0;
+	font-weight:normal !important;
+	float:left;
+
+}

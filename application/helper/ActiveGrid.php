@@ -114,15 +114,44 @@ class ActiveGrid
 				}
 				else if ($fieldInst && ($fieldInst->getDataType() instanceof ARPeriod))
 				{
-					list($from, $to) = explode(' | ', $value);
+					if(substr($value, 0, 10) == 'daterange ')
+					{
+						$value = str_replace('daterange ', '', $value);
+						list($from, $to) = explode(' | ', $value);
+						$from = trim($from);
+						$to = trim($to);
+						// convert
+						// 2010-9-1 to 2010-09-01 ( +first or last minute of day)
+						// empty dates to 'now';
+						if ($from == '')
+						{
+							$from = 'now';
+						}
+						else
+						{
+							list($y, $m, $d) = explode('-', $from);
+							$from = $y.'-'.str_pad($m, 2 ,'0', STR_PAD_LEFT).'-'.str_pad($d, 2 ,'0', STR_PAD_LEFT).' 00:00:00';
+						}
 
+						if ($to == '')
+						{
+							$to  = 'now';
+						}
+						else
+						{
+							list($y, $m, $d) = explode('-', $to);
+							$to = $y.'-'.str_pad($m, 2 ,'0',STR_PAD_LEFT).'-'.str_pad($d, 2 ,'0',STR_PAD_LEFT). ' 23:59:59';
+						}
+					}
+					else
+					{
+						list($from, $to) = explode(' | ', $value);
+					}
 					$cond = new EqualsOrMoreCond($handle, getDateFromString($from));
-
 					if ('now' != $to)
 					{
 						$cond->addAnd(new EqualsOrLessCond($handle, getDateFromString($to)));
 					}
-
 					$conds[] = $cond;
 				}
 				else

@@ -110,10 +110,7 @@
 							<span class="rangeTo">-</span>
 							<input type="text" class="text numeric max" onclick="event.stopPropagation();" onchange="$('filter_{$column}_{$id}').filter.updateRangeFilter(event);" onkeyup="RegexFilter(this, {ldelim} regex : '[^.0-9]' {rdelim});" />
 						</div>
-
-
 					{elseif 'date' == $type}
-
 						<select id="filter_{$column}_{$id}">
 							<option value="">{$availableColumns.$column.name|escape}</option>
 							<option value="today | now">{tn _today}</option>
@@ -121,23 +118,24 @@
 							<option value="-7 days | now">{tn _last_7_days}</option>
 							<option value="{$thisMonth}/1 | now">{tn _this_month}</option>
 							<option value="{$lastMonth}-1 | {$thisMonth}/1">{tn _last_month}</option>
-							{* <option value="range">{tn _grid_date_range}</option> *}
+							<option value="daterange">{tn _grid_date_range}</option>
 						</select>
-
-						<div style="display: none;">
-							{calendar noform="true" class="text `$type`" id="filter_`$column`_`$id`" value=$availableColumns.$column.name|escape style="float: left;"}
+						<div style="display: none;" class="dateRange">
+							<div>
+								{calendar nobutton="true" noform="true" class="min text `$type`" id="filter_`$column`_`$id`_from" onchange="document.getElementById('filter_`$column`_`$id`').filter.updateDateRangeFilter(this);"}
+							</div>
+							<div>
+								{t _to}
+							</div>
+							<div>
+								{calendar nobutton="true" noform="true" class="max text `$type`" id="filter_`$column`_`$id`_to" onchange="document.getElementById('filter_`$column`_`$id`').filter.updateDateRangeFilter(this);"}
+							</div>
 						</div>
-
 					{else}
-
-					   <input type="text" class="text {$type}" id="filter_{$column}_{$id}" value="{$availableColumns.$column.name|escape}"  />
-
+						<input type="text" class="text {$type}" id="filter_{$column}_{$id}" value="{$availableColumns.$column.name|escape}"  />
 					{/if}
-
 					{img src="image/silk/bullet_arrow_up.png" class="sortPreview" }
-
 					</div>
-
 				</th>
 			{/if}
 		{/foreach}
