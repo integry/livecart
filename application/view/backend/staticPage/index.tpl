@@ -8,6 +8,8 @@
 {includeCss file="backend/StaticPage.css"}
 
 {pageTitle help="content.pages"}{t _static_pages}{/pageTitle}
+
+{include file="backend/eav/includes.tpl"}
 {include file="layout/backend/header.tpl"}
 
 <div id="staticPageContainer">

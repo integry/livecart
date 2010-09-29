@@ -1,6 +1,9 @@
 <?php
 
+ClassLoader::import('application.model.eav.EavAble');
+ClassLoader::import('application.model.eav.EavObject');
 ClassLoader::importNow('application.helper.CreateHandleString');
+
 
 /**
  * Static site pages (shipping information, contact information, terms of service, etc.)
@@ -8,7 +11,7 @@ ClassLoader::importNow('application.helper.CreateHandleString');
  * @package application.model.staticpage
  * @author Integry Systems <http://integry.com>
  */
-class StaticPage extends MultilingualObject
+class StaticPage extends MultilingualObject implements EavAble
 {
 	private $isFileLoaded = false;
 
@@ -25,6 +28,7 @@ class StaticPage extends MultilingualObject
 		$schema->registerField(new ARField("metaDescription", ARArray::instance()));
 		$schema->registerField(new ARField("isInformationBox", ARBool::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
 	}
 
 	/*####################  Static method implementations ####################*/
