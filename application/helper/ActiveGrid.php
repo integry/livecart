@@ -117,25 +117,24 @@ class ActiveGrid
 					if(substr($value, 0, 10) == 'daterange ')
 					{
 						$value = str_replace('daterange ', '', $value);
-						list($from, $to) = explode(' | ', $value);
+						list($from, $to) = explode('|', $value);
 						$from = trim($from);
 						$to = trim($to);
 						// convert
 						// 2010-9-1 to 2010-09-01 ( +first or last minute of day)
-						// empty dates to 'now';
+						// unset dates to 'inf' (meaning ingnore condition)
 						if ($from == '')
 						{
-							$from = 'now';
+							$from = 'inf';
 						}
 						else
 						{
 							list($y, $m, $d) = explode('-', $from);
 							$from = $y.'-'.str_pad($m, 2 ,'0', STR_PAD_LEFT).'-'.str_pad($d, 2 ,'0', STR_PAD_LEFT).' 00:00:00';
 						}
-
 						if ($to == '')
 						{
-							$to  = 'now';
+							$to  = 'inf';
 						}
 						else
 						{
@@ -147,12 +146,31 @@ class ActiveGrid
 					{
 						list($from, $to) = explode(' | ', $value);
 					}
-					$cond = new EqualsOrMoreCond($handle, getDateFromString($from));
-					if ('now' != $to)
+					$cond = null;
+					// from condition
+					if ('inf' != $from)
 					{
-						$cond->addAnd(new EqualsOrLessCond($handle, getDateFromString($to)));
+						$cond = new EqualsOrMoreCond($handle, getDateFromString($from));
 					}
-					$conds[] = $cond;
+
+					// to condition
+					if ('now' != $to && 'inf' != $to)
+					{
+						$condTo = new EqualsOrLessCond($handle, getDateFromString($to));
+						if ($cond)
+						{
+							$cond->addAnd($condTo);
+						}
+						else
+						{
+							$cond = $condTo;
+						}
+					}
+
+					if ($cond)
+					{
+						$conds[] = $cond;
+					}
 				}
 				else
 				{

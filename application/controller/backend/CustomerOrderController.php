@@ -745,12 +745,12 @@ class CustomerOrderController extends ActiveGridController
 
 		if(in_array('ProductSKU', $columns) && !empty($filters['ProductSKU']))
 		{
-			$filter->addField('(SELECT 0x'.bin2hex($filters['ProductSKU']).' AS ProductSKU FROM OrderedItem AS oi INNER JOIN Product pr on pr.ID=oi.productID AND pr.sku=0x'.bin2hex($filters['ProductSKU']).' WHERE oi.customerOrderID = CustomerOrder.ID Limit 1)', '', 'ProductSKU');
+			$filter->addField('(SELECT 0x'.bin2hex($filters['ProductSKU']).' AS ProductSKU FROM OrderedItem AS oi INNER JOIN Product pr on pr.ID=oi.productID AND pr.sku LIKE 0x'.bin2hex('%'.$filters['ProductSKU'].'%').' WHERE oi.customerOrderID = CustomerOrder.ID Limit 1)', '', 'ProductSKU');
 		}
 
 		if(in_array('ProductName', $columns) && !empty($filters['ProductName']))
 		{
-			$filter->addField('(SELECT 0x'.bin2hex($filters['ProductName']).' AS ProductSKU FROM OrderedItem AS oi INNER JOIN Product pr on pr.ID=oi.productID AND pr.name=0x'.bin2hex($filters['ProductName']).' WHERE oi.customerOrderID = CustomerOrder.ID Limit 1)', '', 'ProductName');
+			$filter->addField('(SELECT 0x'.bin2hex($filters['ProductName']).' AS ProductSKU FROM OrderedItem AS oi INNER JOIN Product pr on pr.ID=oi.productID AND pr.name LIKE 0x'.bin2hex('%'.$filters['ProductName'].'%').' WHERE oi.customerOrderID = CustomerOrder.ID Limit 1)', '', 'ProductName');
 		}
 
 		if(in_array('Manufacturer', $columns) && !empty($filters['Manufacturer']))
@@ -761,7 +761,7 @@ class CustomerOrderController extends ActiveGridController
 				FROM
 					OrderedItem AS oi
 					INNER JOIN Product pr on pr.ID=oi.productID
-					INNER JOIN Manufacturer mf on mf.ID=pr.manufacturerID AND mf.name=0x'.bin2hex($filters['Manufacturer']).'
+					INNER JOIN Manufacturer mf on mf.ID=pr.manufacturerID AND mf.name LIKE 0x'.bin2hex('%'.$filters['Manufacturer'].'%').'
 				WHERE
 					oi.customerOrderID = CustomerOrder.ID Limit 1
 			)', '', 'Manufacturer');
@@ -774,10 +774,31 @@ class CustomerOrderController extends ActiveGridController
 				FROM
 					OrderCoupon AS oc
 				WHERE
-					oc.couponCode = 0x'.bin2hex($filters['UsedCouponCode']).'
+					oc.couponCode LIKE 0x'.bin2hex('%'.$filters['UsedCouponCode'].'%').'
 					AND oc.orderID = CustomerOrder.ID
 				)', '', 'UsedCouponCode');
 		}
+
+		if(in_array('ProductOption', $columns) && !empty($filters['ProductOption']))
+		{
+			$filter->addField('(
+			SELECT
+				0x'.bin2hex($filters['ProductOption']).' AS ProductOption
+			FROM
+				OrderedItemOption
+				LEFT JOIN OrderedItem ON OrderedItem.ID=OrderedItemOption.orderedItemID
+				LEFT JOIN ProductOptionChoice ON OrderedItemOption.choiceID=ProductOptionChoice.ID
+			WHERE
+				OrderedItem.customerOrderID=CustomerOrder.ID
+				AND (
+					(OrderedItemOption.optionText LIKE 0x'.bin2hex('%'.$filters['ProductOption'].'%').')
+						OR
+					(ProductOptionChoice.name LIKE 0x'.bin2hex('%'.$filters['ProductOption'].'%').' )
+				)
+			)', '', 'ProductOption');
+		}
+
+
 
 		if($this->request->get('sort_col') == 'User.fullName')
 		{
@@ -1250,6 +1271,7 @@ class CustomerOrderController extends ActiveGridController
 		return $this->translateFieldArray(
 			array
 			(
+				'ProductOption' => array('name'=>'', 'type'=>'text'),
 				'ProductSKU' => array('name'=>'', 'type'=>'text'),
 				'ProductName'=> array('name'=>'', 'type'=>'text'),
 				'Manufacturer'=> array('name'=>'', 'type'=>'text'),
