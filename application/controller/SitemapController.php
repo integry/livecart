@@ -20,7 +20,7 @@ ClassLoader::import('application.model.system.OutputCache');
  */
 class SitemapController extends FrontendController
 {
-	const MAX_URLS = 50000;
+	const MAX_URLS = 5000;
 
 	public function init()
 	{
