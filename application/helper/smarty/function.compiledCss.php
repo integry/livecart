@@ -94,6 +94,7 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 			}
 
 			$compiledFileContent = preg_replace('/\.(jpg|png|gif|bmp)/', '.$1?' . time(), $compiledFileContent);
+			$compiledFileContent = preg_replace('/-moz-border-radius\:([ \.a-zA-Z0-9]+);/', '-moz-border-radius: $1; -khtml-border-radius: $1; border-radius: $1; ', $compiledFileContent);
 
 			file_put_contents($compiledFilePath, $compiledFileContent);
 
