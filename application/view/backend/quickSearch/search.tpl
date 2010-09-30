@@ -2,7 +2,8 @@
 	{if $result[$className].count > 0}
 		<div class="qsResultsContainer qs{$className}">
 			<h3 class="qsClassName{if 0 == $key} first{/if}">
-				<span class="qsName">{t _title_`$className`}</span>
+				{if $className == 'SearchableItem'}
+				{* <span class="qsName">{t _title_`$className`}</span> *}
 					{t _title_SearchableConfiguration}
 				{else}
 					{t _title_`$className`}

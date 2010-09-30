@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * @author Integry Systems
  */
 
@@ -52,6 +52,8 @@ Backend.QuickSearch.prototype = {
 					this.nodes[id]=$(this.prefix + id);
 				}.bind(this)
 			);
+
+			this.nodes.Result = this.nodes.Result.parentNode;
 		}
 	},
 
@@ -100,9 +102,9 @@ Backend.QuickSearch.prototype = {
 		{
 			return;
 		}
-		
+
 		this.initNodes(); // move to 'constructor'
-		
+
 		if(this.query != this.previousQuery)
 		{
 			this._setFormOptions(this.defaultOptions);
@@ -210,10 +212,10 @@ Backend.QuickSearch.getInstance = function(obj)
 		i = 0,
 		id;
 	obj = $(obj);
-	
+
 	// quick search container div has id <instance name>Container
 	// emove Container and get instance name.
-	while(obj.id.match(/Container$/) == null)
+	while(obj.id.match(/ResultOuterContainer$/) == null)
 	{
 		if(i>10)
 		{
@@ -221,7 +223,8 @@ Backend.QuickSearch.getInstance = function(obj)
 		}
 		obj = obj.up("div");
 	}
-	id = obj.id.replace(/Container$/, '');
+	id = obj.id.replace(/ResultOuterContainer$/, '');
+
 	if(typeof window.quickSearchInstances[id] == "undefined")
 	{
 		throw "Can't find QuickSearch instance, probably not initalized";
