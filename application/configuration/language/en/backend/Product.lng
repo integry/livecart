@@ -190,6 +190,29 @@ _hint_sale=On-sale products are displayed in separate blocks throughout the stor
 
 _hint_surcharge=Define additional shipping charges for this particular product
 
+_tip_theme=Use a different display theme for the detail page of this product
+_tip_show_variation_images=Display clickable thumbnail images of all product variations in the product detail page
+_tip_allow_all_variations=Display all variation combinations with order quantity selections in the product detail page. This allows customers to add different variations of the same base product to the shopping basket at the same time.
+_tip_taxClass=Different tax rates can be applied to different types of products
+_tip_shippingClass=Different per-item shipping charge can be applied to different types of products (for example, shipping a DVD would cost $2, while a book would cost $3)
+_tip_product_type=<ul><li>Tangible - a product that requires physical shipping</li><li>Intangible - downloadable product (software, e-books, music, etc.)</li><li>Bundle - a product container that consists of other products</li></ul>
+_tip_website_address=A clickable link in product detail page
+_tip_availability=Disabled products are not visible in store and their detail pages are not accessible
+_tip_unlimited_stock=When marked, the product is always considered to be in stock
+_tip_items_in_stock=The number of items currently in stock
+_tip_main_currency_price=The base product price
+_tip_list_price=<em>Regular</em> price (as opposed to the current <em>sale</em> price), which is displayed with a strikeout near the base product price
+_tip_secondary_currency_price=Product price in other currencies. In most cases this can be left blank as currency conversion is done automatically. However you can still manually specify the product prices at every currency by entering them here.
+_tip_quantity=The minimum order quantity for the particular discount level
+_tip_group=Limit the price for a particular user group only
+_tip_requires_separate_shipment=Automatically place the product in a separate shipment. This is usually necessary for bulky products or products that require special handling (fragile, non-standard dimensions, etc.)
+_tip_qualifies_for_free_shipping=If free shipping is enabled this product is not counted towards the order shipping price
+_tip_allow_back_ordering=Allow the customers to order this product even if it is out of stock
+_tip_allow_fractional_quantities=Useful for products that are sold by weight, length, etc. This allows customers to enter quantities with decimal points.
+_tip_shipping_weight=Weight that is used to calculate the total shipment weight and determining the shipping rates
+_tip_shipping_surcharge=Add extra surcharge for this product to all applicable shipping rates
+_tip_minimum_order_quantity=Set the minimum quantity this product can be purchased at
+
 # Info tab
 _date_created=Date created
 _purchase_stats=Number Of Items Purchased

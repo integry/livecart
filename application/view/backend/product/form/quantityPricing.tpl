@@ -2,8 +2,8 @@
 <table id="quantityPricing_{$currency}_{$product.ID}">
 	<thead>
 		<tr class="quantityRow"><td>
-				<div class="quantityLabel">{t _quantity} ▸</div>
-				<div class="groupLabel">▾ {t _group}</div>
+				<div class="quantityLabel">{tip _quantity} ▸</div>
+				<div class="groupLabel">▾ {tip _group}</div>
 			</td>
 			<td><input type="text" class="text quantity number" name="qQuantity[{$currency}][]" /></td></tr>
 	</thead>

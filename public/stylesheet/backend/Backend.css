@@ -810,6 +810,7 @@ label
     width: 170px;
     font-size: 14px;
     overflow: hidden;
+    padding-bottom: 1px;
 }
 
 label.cancel
@@ -1051,12 +1052,26 @@ select.narrow
 
 .UnitConventer_HiUnit
 {
-	margin-right: 1em;
+	margin-right: 8px;
 }
 
 .UnitConventer_SwitchUnits
 {
 	font-size: smaller;
+}
+
+.UnitConventer_Root input
+{
+	width: 2em;
+}
+
+a.UnitConventer_SwitchUnits
+{
+	font-size: 11px;
+	display: block;
+	color: red;
+	margin-top: -3px;
+	margin-bottom: 5px;
 }
 
 .fieldDescription
@@ -1582,32 +1597,30 @@ li.moreTabs .moreTabs
 /**************************
 	Glossary
 **************************/
-label.acronym
+.acronym
 {
     overflow: visible;
 }
 
-label.acronym a
+.acronym
 {
     border-bottom: 1px dotted black;
     cursor: help;
-    color: black !important;
-    position: relative;
 }
 
-label.acronym a div
+.acronym a div
 {
     display: none;
 	background-color: #EEEFFF;
 	font-weight: normal;
 }
 
-label.acronym a:hover
+.acronym a:hover
 {
     text-decoration: none;
 }
 
-label.acronym a:hover div
+.acronym a:hover div
 {
     display: block;
     position: absolute;
@@ -1926,4 +1939,41 @@ a.deleteCross
 .qsResults
 {
 	display: none;
+}
+
+/************** Tooltips **************/
+#tt {
+ position:absolute;
+ display:block;
+ z-index: 50000;
+ }
+ #tttop {
+ display:block;
+ height:5px;
+ margin-left:5px;
+ overflow:hidden;
+ }
+ #ttcont {
+ display:block;
+ padding: 7px;
+ margin-left:5px;
+ background:#666;
+ color:#fff;
+ -moz-border-radius: 10px;
+ }
+#ttbot {
+display:block;
+height:5px;
+margin-left:5px;
+overflow:hidden;
+}
+
+#tt ul
+{
+	margin-left: 1em;
+}
+
+#tt ul li
+{
+	list-style-type: disc;
 }

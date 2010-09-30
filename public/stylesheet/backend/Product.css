@@ -156,6 +156,18 @@ li.addProduct
 /********************
 	Pricing
 *********************/
+.productForm .pricing label
+{
+	width: 50px;
+}
+
+a.setQuantPrice
+{
+	display: block;
+	margin-bottom: 5px;
+	font-size: 11px;
+}
+
 div.quantityPricing
 {
 	margin-bottom: 1em;
@@ -177,12 +189,14 @@ div.quantityPricing .quantityLabel
 {
 	float: right;
 	margin-bottom: 10px;
+	padding-top: 10px;
 }
 
 div.quantityPricing .groupLabel
 {
-	margin-top: 10px;
+	margin-top: 24px;
 	float: left;
+	padding-left: 5px;
 }
 
 .quantityPricing select

@@ -74,6 +74,8 @@ function smarty_prefilter_config($source, $smarty)
 	$source = preg_replace('/{block (.+?)}/', '{renderBlock block=$1}', $source);
 
 	// help system
+	$source = preg_replace('/{tip (.+?) (.+?)}/', '{toolTip label=$1 hint=$2}', $source);
+	$source = preg_replace('/{tip (.+?)}/', '{toolTip label=$1}', $source);
 	$source = preg_replace('/{help (.+?)}/', '{helpLink id=$1}', $source);
 	$source = preg_replace('/{see (.+?)}/', '{helpSeeAlsoItem id=$1}', $source);
 

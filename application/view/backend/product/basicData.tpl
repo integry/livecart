@@ -14,7 +14,7 @@
 
 		<div style="float: left; width: 550px;">
 			<p>
-				<label for="productTheme_{$product.ID}">{t _theme}:</label>
+				<label for="productTheme_{$product.ID}">{tip _theme}:</label>
 				{selectfield name="theme" id="productTheme_`$product.ID`" options=$themes}
 			</p>
 		</div>
@@ -25,13 +25,13 @@
 		<p>
 			<label></label>
 			{checkbox name="isVariationImages" class="checkbox" id="product_`$cat`_`$product.ID`_isVariationImages"}
-			<label for="product_{$cat}_{$product.ID}_isVariationImages" class="checkbox">{t _show_variation_images}</label>
+			<label for="product_{$cat}_{$product.ID}_isVariationImages" class="checkbox">{tip _show_variation_images}</label>
 		</p>
 
 		<p>
 			<label></label>
 			{checkbox name="isAllVariations" class="checkbox" id="product_`$cat`_`$product.ID`_isAllVariations"}
-			<label for="product_{$cat}_{$product.ID}_isAllVariations" class="checkbox">{t _allow_all_variations}</label>
+			<label for="product_{$cat}_{$product.ID}_isAllVariations" class="checkbox">{tip _allow_all_variations}</label>
 		</p>
 	</fieldset>
 	</td><td>
@@ -41,9 +41,9 @@
 		{include file="backend/product/form/shipping.tpl" product=$product cat=$product.Category.ID baseCurrency=$baseCurrency }
 	</div>
 	</td></tr></table>
-	
+
 	{include file="backend/product/form/translations.tpl" product=$product cat=$cat multiLingualSpecFields=$multiLingualSpecFields}
-	
+
 	<fieldset class="controls">
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" name="save" class="submit" value="{t _save}">
