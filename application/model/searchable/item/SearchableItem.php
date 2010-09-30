@@ -59,6 +59,7 @@ class SearchableItem extends ActiveRecordModel
 				'0x'.bin2hex(serialize($item['meta']))
 			);
 		}
+
 		ActiveRecordModel::executeUpdate('INSERT INTO '.__CLASS__.'(value, locale, section, meta) VALUES '.implode(',',$chunks));
 	}
 }

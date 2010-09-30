@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.searchable.SearchableModel');
+ClassLoader::import('application.model.searchable.index.SearchableConfigurationIndexing');
 
 /**
  * Search static pages
@@ -10,7 +11,6 @@ ClassLoader::import('application.model.searchable.SearchableModel');
  */
 class SearchableConfiguration extends SearchableModel
 {
-
 	public function getClassName()
 	{
 		return 'SearchableItem';
@@ -23,6 +23,14 @@ class SearchableConfiguration extends SearchableModel
 
 	public function getSelectFilter($searchTerm)
 	{
+		// create initial index
+		if (0 && !SearchableItem::getRecordCount())
+		{
+			$app = ActiveRecordModel::getApplication();
+			$sc = new SearchableConfigurationIndexing($app->getConfig(), $app);
+			$sc->buildIndex(null);
+		}
+
 		$c = new ARExpressionHandle($this->getWeighedSearchCondition(array('value' => 1), $searchTerm));
 		$app = ActiveRecordModel::getApplication();
 		$f = new ARSelectFilter(new MoreThanCond($c, 0));
