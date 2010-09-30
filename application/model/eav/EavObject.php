@@ -27,6 +27,8 @@ class EavObject extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField("userGroupID", "UserGroup", "ID", null, ARInteger::instance()), false);
 		$schema->registerField(new ARForeignKeyField("transactionID", "Transaction", "ID", null, ARInteger::instance()), false);
 		$schema->registerField(new ARForeignKeyField("shippingServiceID", "ShippingService", "ID", null, ARInteger::instance()), false);
+		$schema->registerField(new ARForeignKeyField("staticPageID", "StaticPage", "ID", null, ARInteger::instance()), false);
+
 		$schema->registerField(new ARField("classID", ARInteger::instance(2)));
 	}
 

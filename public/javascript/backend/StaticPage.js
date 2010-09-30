@@ -49,8 +49,20 @@ Backend.StaticPage.prototype =
 			}
 
 		this.insertTreeBranch(pages, 0);
-
 		this.showControls();
+	},
+
+	afterInit: function()
+	{
+		// at this initialization point this.urls are set.
+		var
+			match = Backend.getHash().match(/page_(\d+?)$/),
+			id=null;
+		if(match)
+		{
+			id = match.pop();
+			this.activateCategory(id);
+		}
 	},
 
 	showAddForm: function()
@@ -66,7 +78,6 @@ Backend.StaticPage.prototype =
 		{
 			tinyMCE.idCounter = 0;
 		}
-
 		ActiveForm.prototype.initTinyMceFields($('editContainer'));
 	},
 

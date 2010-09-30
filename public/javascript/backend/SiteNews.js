@@ -30,7 +30,6 @@ Backend.SiteNews.prototype =
 					 li.handler.cancelEditForm();
 					 return;
 				 }
-
 				 li.handler.showEditForm();
 				 return false;
 			 },
@@ -42,26 +41,37 @@ Backend.SiteNews.prototype =
 			 {
 				 if (confirm($('confirmDelete').innerHTML)) return $('deleteUrl').innerHTML + this.getRecordId(li)
 			 },
-			 afterEdit:	  function(li, response) { li.handler.update(response);},
-			 afterSort:	  function(li, response) {  },
-			 afterDelete:	function(li, response)
+			 afterEdit: function(li, response) { li.handler.update(response);},
+			 afterSort: function(li, response) {  },
+			 afterDelete: function(li, response)
 			 {
 				 try
 				 {
-					 response = eval('(' + response + ')');
+					response = eval('(' + response + ')');
 				 }
 				 catch(e)
 				 {
-					 return false;
+					return false;
 				 }
 			 }
 		 }, []);
 
-		newsList.each(function(el)
+		var
+			match = Backend.getHash().match(/news_(\d+)/),
+			id=null;
+		if(match)
 		{
-			new Backend.SiteNews.PostEntry(container, template, el, false);
-		});
-
+			id = match.pop();
+		}
+		newsList.each(function(id, el)
+		{
+			var
+				entry = new Backend.SiteNews.PostEntry(container, template, el, false);
+			if(id && entry.data.ID == id)
+			{
+				entry.showEditForm();
+			}
+		}.bind(this, id));
 		ActiveList.prototype.getInstance('newsList').touch(true);
 	},
 

@@ -15,6 +15,7 @@ class ActiveGrid
 	private $filter;
 	private $application;
 	private $modelClass;
+	private $columnTypes;
 
 	public static function getFieldType(ARField $field)
 	{
@@ -45,11 +46,13 @@ class ActiveGrid
 		return $type;
 	}
 
-	public function __construct(LiveCart $application, ARSelectFilter $filter, $modelClass = false)
+	public function __construct(LiveCart $application, ARSelectFilter $filter, $modelClass = false, $columnTypes=array())
 	{
 		$this->application = $application;
 		$this->modelClass = $modelClass;
 		$this->filter = $filter;
+		$this->columnTypes = $columnTypes;
+
 		$request = $this->application->getRequest();
 
 		// set recordset boundaries (limits)
@@ -72,7 +75,6 @@ class ActiveGrid
 		{
 			$filters = (array)json_decode($request->get('filters'));
 		}
-
 		$conds = array();
 		if ($filter->getCondition())
 		{
@@ -87,7 +89,6 @@ class ActiveGrid
 			}
 
 			$value = urldecode($value);
-
 			$handle = $this->getFieldHandle($field, self::FILTER_HANDLE);
 
 			if (!is_array($handle) && !is_null($handle) && !($handle instanceof ARExpressionHandle))
@@ -102,22 +103,7 @@ class ActiveGrid
 
 					foreach ($constraints as $c)
 					{
-						if (in_array(substr($c, 0, 2), array('<>', '<=', '>=')))
-						{
-							$operator = substr($c, 0, 2);
-							$value = substr($c, 2);
-						}
-						else if (in_array(substr($c, 0, 1), array('>', '<', '=')))
-						{
-							$operator = substr($c, 0, 1);
-							$value = substr($c, 1);
-						}
-						else
-						{
-							$operator = '=';
-							$value = $c;
-						}
-
+						list($operator, $value) = $this->parseOperatorAndValue($c);
 						if (!is_numeric($value) && ($fieldInst->getDataType() instanceof ARNumeric))
 						{
 							continue;
@@ -128,16 +114,63 @@ class ActiveGrid
 				}
 				else if ($fieldInst && ($fieldInst->getDataType() instanceof ARPeriod))
 				{
-					list($from, $to) = explode(' | ', $value);
-
-					$cond = new EqualsOrMoreCond($handle, getDateFromString($from));
-
-					if ('now' != $to)
+					if(substr($value, 0, 10) == 'daterange ')
 					{
-						$cond->addAnd(new EqualsOrLessCond($handle, getDateFromString($to)));
+						$value = str_replace('daterange ', '', $value);
+						list($from, $to) = explode('|', $value);
+						$from = trim($from);
+						$to = trim($to);
+						// convert
+						// 2010-9-1 to 2010-09-01 ( +first or last minute of day)
+						// unset dates to 'inf' (meaning ingnore condition)
+						if ($from == '')
+						{
+							$from = 'inf';
+						}
+						else
+						{
+							list($y, $m, $d) = explode('-', $from);
+							$from = $y.'-'.str_pad($m, 2 ,'0', STR_PAD_LEFT).'-'.str_pad($d, 2 ,'0', STR_PAD_LEFT).' 00:00:00';
+						}
+						if ($to == '')
+						{
+							$to  = 'inf';
+						}
+						else
+						{
+							list($y, $m, $d) = explode('-', $to);
+							$to = $y.'-'.str_pad($m, 2 ,'0',STR_PAD_LEFT).'-'.str_pad($d, 2 ,'0',STR_PAD_LEFT). ' 23:59:59';
+						}
+					}
+					else
+					{
+						list($from, $to) = explode(' | ', $value);
+					}
+					$cond = null;
+					// from condition
+					if ('inf' != $from)
+					{
+						$cond = new EqualsOrMoreCond($handle, getDateFromString($from));
 					}
 
-					$conds[] = $cond;
+					// to condition
+					if ('now' != $to && 'inf' != $to)
+					{
+						$condTo = new EqualsOrLessCond($handle, getDateFromString($to));
+						if ($cond)
+						{
+							$cond->addAnd($condTo);
+						}
+						else
+						{
+							$cond = $condTo;
+						}
+					}
+
+					if ($cond)
+					{
+						$conds[] = $cond;
+					}
 				}
 				else
 				{
@@ -161,13 +194,33 @@ class ActiveGrid
 						$cond->addOR($c);
 					}
 				}
-
 				$conds[] = $cond;
 			}
-
 			else
 			{
-				$having[] = eq(new ARExpressionHandle($field), $value);
+				if(array_key_exists($field, $this->columnTypes))
+				{
+					$type = $this->columnTypes[$field]['type'];
+				}
+
+				$value = preg_replace('/[ ]{2,}/', ' ', $value);
+				switch($type)
+				{
+					case 'numeric':
+						$constraints = explode(' ', $value);
+						foreach ($constraints as $c)
+						{
+							list($operator, $value) = $this->parseOperatorAndValue($c);
+							if (!is_numeric($value))
+							{
+								continue;
+							}
+							$having[] = new OperatorCond($handle, $value, $operator);
+						}
+						break;
+					default:
+						$having[] = eq(new ARExpressionHandle($field), $value);
+				}
 			}
 		}
 
@@ -209,6 +262,27 @@ class ActiveGrid
 		}
 	}
 
+	private function parseOperatorAndValue($c)
+	{
+		if (in_array(substr($c, 0, 2), array('<>', '<=', '>=')))
+		{
+			$operator = substr($c, 0, 2);
+			$value = substr($c, 2);
+		}
+		else if (in_array(substr($c, 0, 1), array('>', '<', '=')))
+		{
+			$operator = substr($c, 0, 1);
+			$value = substr($c, 1);
+		}
+		else
+		{
+			$operator = '=';
+			$value = $c;
+		}
+		return array($operator, $value);
+	}
+	
+	
 	public function getModelClass()
 	{
 		return $this->modelClass;

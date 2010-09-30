@@ -44,15 +44,16 @@ class StaticPageController extends StoreManagementController
 
 	public function edit()
 	{
-		$page = StaticPage::getInstanceById($this->request->get('id'), StaticPage::LOAD_DATA)->toArray();
-
+		$page = StaticPage::getInstanceById($this->request->get('id'), StaticPage::LOAD_DATA);
+		$pageArray = $page->toArray();
+		$spec = $page->getSpecification();
 		$form = $this->getForm();
-
-		$form->setData($page);
-
+		$form->setData($pageArray);
 		$response = new ActionResponse();
+		$spec->setFormResponse($response, $form);
 		$response->set('form', $form);
-		$response->set('page', $page);
+		$response->set('page', $pageArray);
+
 		return $response;
 	}
 
@@ -165,11 +166,10 @@ class StaticPageController extends StoreManagementController
 
 	private function save(StaticPage $page)
 	{
+		$page->getSpecification();
 		$page->loadRequestData($this->request);
 		$page->save();
-
 		$arr = $page->toArray();
-
 		return new JSONResponse(array('id' => $page->getID(), 'title' => $arr['title_lang']), 'success', $this->translate('_page_has_been_successfully_saved'));
 	}
 
