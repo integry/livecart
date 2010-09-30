@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.product.ProductSet', true);
+ClassLoader::import('application.model.product.ProductVariationTypeSet', true);
 ClassLoader::import('application.model.product.ProductSpecification');
 ClassLoader::import('application.model.product.ProductPricing');
 ClassLoader::import('application.model.product.ProductImage');
@@ -1458,6 +1459,9 @@ class Product extends MultilingualObject
 
 	public function getVariationMatrix()
 	{
+		// @todo: remove. forces auto-load
+		class_exists('ProductSet');
+
 		$matrix = array();
 		$id = $this->getParent()->getID();
 		foreach ($this->getParent()->initSet()->getVariationMatrix() as $type => $values)

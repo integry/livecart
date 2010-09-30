@@ -2,7 +2,9 @@
 
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.product.Product");
+ClassLoader::import("application.model.product.ProductSet");
 ClassLoader::import("application.model.product.ProductVariationType");
+ClassLoader::importNow("application.model.product.ProductVariationTypeSet");
 
 /**
  * Product variations
