@@ -26,7 +26,7 @@ class ThemeFile
 	}
 
 	/**
-	 * 
+	 *
 	 * @param string $key in $_FILES array
 	 * @param string $filename user given filename
 	 * @param string $orginalFilename existing file name (only when editing file)
@@ -93,8 +93,8 @@ class ThemeFile
 			throw new Exception('Illegal theme name');
 		}
 		$this->theme = $theme;
-		$this->path = ClassLoader::getRealPath('public.upload.themes.'.$this->theme.'.');
-		$this->thumbnailPath = ClassLoader::getRealPath('public.upload.themes.'.$this->theme.'.thumbs.');
+		$this->path = ClassLoader::getRealPath('public.upload.theme.'.$this->theme.'.');
+		$this->thumbnailPath = ClassLoader::getRealPath('public.upload.theme.'.$this->theme.'.thumbs.');
 
 		if(file_exists($this->path) == false)
 		{
@@ -221,7 +221,7 @@ class ThemeFile
 		}
 		// find smaller
 		$smallest = array_shift($sizes);
-		
+
 		while($t = array_shift($sizes))
 		{
 			if($t['area'] < $smallest['area'])
