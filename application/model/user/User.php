@@ -6,6 +6,7 @@ ClassLoader::import("application.model.user.ShippingAddress");
 ClassLoader::import("application.model.user.UserGroup");
 ClassLoader::import("application.model.eav.EavAble");
 ClassLoader::import("application.model.eav.EavObject");
+ClassLoader::import("application.model.user.UserAddress");
 
 /**
  * Store user logic (including frontend and backend), including authorization and access control checking
