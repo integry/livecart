@@ -53,7 +53,7 @@ class HsbcPci extends ExternalPayment
 
 		$params['BillingCity'] = $this->details->city->get();
 		$country = ISO3166::getCountry($this->details->country->get());
-		$params['BillingCounty'] = $country['Name'];
+		//$params['BillingCounty'] = $country['Name'];
 		$params['BillingPostal'] = $this->details->postalCode->get();
 		$params['BillingCountry'] = $country['Numeric3'];
 		$params['ShippingFirstName'] = $this->details->shippingFirstName->get();
@@ -62,7 +62,7 @@ class HsbcPci extends ExternalPayment
 		$params['ShippingAddress2'] = '';
 		$params['ShippingCity'] = $this->details->shippingCity->get();
 		$country = ISO3166::getCountry($this->details->shippingCountry->get());
-		$params['ShippingCounty'] = $country['Name'];
+		//$params['ShippingCounty'] = $country['Name'];
 		$params['ShippingPostal'] = $this->details->shippingPostalCode->get();
 		$params['ShippingCountry'] = $country['Numeric3'];
 		$params['OrderHash'] = generateHash(array_values($params), $this->getConfigValue('key'));
@@ -116,7 +116,7 @@ class HsbcPci extends ExternalPayment
 	{
 		return $code;
 	}
-	
+
 	public static function currencyToNumeric3($alpha3)
 	{
 		$m = array('GBP'=> 826, 'EUR' => 978, 'USD' => 840);
