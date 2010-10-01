@@ -2293,8 +2293,21 @@ var tooltip=function(){
   pos:function(e){
    var u = ie ? event.clientY + document.documentElement.scrollTop : e.pageY;
    var l = ie ? event.clientX + document.documentElement.scrollLeft : e.pageX;
-   tt.style.top = (u - h) + 'px';
-   tt.style.left = (l + left) + 'px';
+   var y = u - h;
+   var x = l + left;
+   
+   if (y < 0)
+   {
+	   y = 0;
+   }
+
+   if (x < 0)
+   {
+	   x = 0;
+   }
+   
+   tt.style.top = y + 'px';
+   tt.style.left = x + 'px';
   },
   fade:function(d){
    var a = alpha;

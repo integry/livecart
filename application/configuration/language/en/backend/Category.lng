@@ -183,3 +183,23 @@ _theme=Design theme
 _theme_subcategories=Apply for sub-categories
 
 _hint_pageTitle=Display different page title than category name for SEO purposes
+_tip_show_variation_images=Display clickable thumbnail images of all product variations in the product detail page
+_tip_allow_all_variations=Display all variation combinations with order quantity selections in the product detail page. This allows customers to add different variations of the same base product to the shopping basket at the same time.
+_tip_theme=Use a different display theme for the detail page of this product
+_tip_theme_subcategories=Apply presentation settings to all sub-categories and products of this category
+_tip_list_style=Set a different layout of product list presentation
+_tip_keywords=Will be used in meta tags
+_tip_descr=Category description is displayed at the top of the category page and also included in the page meta tags
+_tip_active=Inactive categories are not visible in the category list, however they are not completely disabled and products from such category can still be purchased. You can insert links to inactive categories in templates, newsletter messages, etc. This is useful when some special/private categories need to be singled out from the category list. If this is not necessary and you wish to disable the products as well, simply mark all products of the inactive category and disable them separately.
+
+_tip_SpecField_type=Field type cannot be changed after the field is created. Type can be either text or number (custom input or selectable from pre-entered values) as well as date.
+_tip_SpecField_select_multiple=Allow selecting multiple pre-entered values (list with checkboxes instead of a drop-down menu)
+_tip_SpecField_formated_text=Multi-line text entry with a WYSIWYG editor
+_tip_SpecField_title=Attribute name
+_tip_SpecField_handle=Used for 2 main purposes: <ul><li>included in page URL's when a product list is filtered by an attribute</li><li>for customization purposes - to easily retrieve value of a particular field in page templates or custom plugins</li></ul>
+_tip_SpecField_valuePrefix=Automatically prepend entered number when displaying it (add text before number)
+_tip_SpecField_valueSuffix=Automatically append entered number when displaying it (add text after number), for example, for hard drive capacity attributes - <em>120<strong> GB</strong></em>
+_tip_SpecField_is_required=Attribute field value cannot be left blank
+_tip_SpecField_displayed_on_front_page=Display attribute value in the detailed specification section of the product page
+_tip_SpecField_displayed_in_product_list=Intended for a quick overview of the main attributes. Displayed without the field names (by default). For example for computers, the whole attribute display might look like this - <em>AMD Dual Core / 2.2 GHz / 2 GB / 250 GB</em>
+_tip_SpecField_sortable=Add the attribute to sorting choice menu

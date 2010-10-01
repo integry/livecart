@@ -193,6 +193,7 @@ _hint_surcharge=Define additional shipping charges for this particular product
 _tip_theme=Use a different display theme for the detail page of this product
 _tip_show_variation_images=Display clickable thumbnail images of all product variations in the product detail page
 _tip_allow_all_variations=Display all variation combinations with order quantity selections in the product detail page. This allows customers to add different variations of the same base product to the shopping basket at the same time.
+
 _tip_taxClass=Different tax rates can be applied to different types of products
 _tip_shippingClass=Different per-item shipping charge can be applied to different types of products (for example, shipping a DVD would cost $2, while a book would cost $3)
 _tip_product_type=<ul><li>Tangible - a product that requires physical shipping</li><li>Intangible - downloadable product (software, e-books, music, etc.)</li><li>Bundle - a product container that consists of other products</li></ul>

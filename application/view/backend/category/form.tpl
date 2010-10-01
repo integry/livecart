@@ -3,7 +3,7 @@
 	<fieldset class="container">
 
 		<p class="checkbox">
-			{checkbox name="isEnabled" id="isEnabled_$categoryId" class="checkbox"} <label class="checkbox" for="isEnabled_{$categoryId}">{t _active}</label>
+			{checkbox name="isEnabled" id="isEnabled_$categoryId" class="checkbox"} <label class="checkbox" for="isEnabled_{$categoryId}">{tip _active}</label>
 		</p>
 
 		<p class="required">
@@ -12,17 +12,17 @@
 		</p>
 
 		<p>
-			<label for="details_{$categoryId}">{t _descr}:</label>
+			<label for="details_{$categoryId}">{tip _descr}:</label>
 			{textarea name="description" id="details_$categoryId" class="tinyMCE"}
 		</p>
 
 		<p>
-			<label for="keywords_{$categoryId}">{t _keywords}:</label>
+			<label for="keywords_{$categoryId}">{tip _keywords}:</label>
 			{textarea name="keywords" id="keywords_$categoryId" class="categoryKeywords"}
 		</p>
 
 		<p>
-			<label for="pageTitle_{$categoryId}" class="acronym"><a>{t _pageTitle}<div>{t _hint_pageTitle}</div></a>:</label>
+			<label for="pageTitle_{$categoryId}">{tip _pageTitle _hint_pageTitle}:</label>
 			{textfield name="pageTitle" id="pageTitle_$categoryId" class="wide"}
 		</p>
 
@@ -34,29 +34,29 @@
 			<p>
 				<label></label>
 				{checkbox name="isSubcategories" class="checkbox" id="isSubcategories_`$categoryId`"}
-				<label class="checkbox" for="isSubcategories_{$categoryId}">{t _theme_subcategories}</label>
+				<label class="checkbox" for="isSubcategories_{$categoryId}">{tip _theme_subcategories}</label>
 			</p>
 
 			<p>
 				<label></label>
 				{checkbox name="isVariationImages" class="checkbox" id="isVariationImages_`$categoryId`"}
-				<label class="checkbox" for="isVariationImages_{$categoryId}">{t _show_variation_images}</label>
+				<label class="checkbox" for="isVariationImages_{$categoryId}">{tip _show_variation_images}</label>
 			</p>
 
 			<p>
 				<label></label>
 				{checkbox name="isAllVariations" class="checkbox" id="product_`$categoryId`_isAllVariations"}
-				<label for="product_{$categoryId}_isAllVariations" class="checkbox">{t _allow_all_variations}</label>
+				<label for="product_{$categoryId}_isAllVariations" class="checkbox">{tip _allow_all_variations}</label>
 			</p>
 
 			<p>
-				<label for="listStyle_{$categoryId}">{t _list_style}:</label>
+				<label for="listStyle_{$categoryId}">{tip _list_style}:</label>
 				{selectfield name="listStyle" id="listStyle_`$categoryId`" options=$listStyles}
 			</p>
 
 			<div style="float: left; width: 550px;">
 				<p>
-					<label for="theme_{$categoryId}">{t _theme}:</label>
+					<label for="theme_{$categoryId}">{tip _theme}:</label>
 					{selectfield name="theme" id="theme_`$categoryId`" options=$themes}
 				</p>
 			</div>
