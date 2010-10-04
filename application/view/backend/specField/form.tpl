@@ -12,7 +12,7 @@
 		<input type="hidden" name="categoryID" class="hidden specField_form_categoryID" />
 
 		<p>
-			<label class="specField_form_type_label">{t _SpecField_type}</label>
+			<label class="specField_form_type_label">{tip _SpecField_type}</label>
 			<fieldset class="error">
 				<select name="type" class="specField_form_type" {denied role="category.update"}disabled="disabled"{/denied}>
 					<optgroup label="{t _SpecField_text}">
@@ -32,17 +32,17 @@
 		<p class="checkbox">
 			<input type="checkbox" value="1" name="isMultiValue" class="checkbox specField_form_multipleSelector" {denied role="category.update"}disabled="disabled"{/denied} />
 			<input type="hidden" value="1" name="checkbox_isMultiValue" />
-			<label class="specField_form_multipleSelector_label">{t _SpecField_select_multiple}</label>
+			<label class="specField_form_multipleSelector_label">{tip _SpecField_select_multiple}</label>
 		</p>
 
 		<p class="checkbox specField_form_advancedText">
 			<input type="checkbox" value="1" name="advancedText" class="checkbox" {denied role="category.update"}disabled="disabled"{/denied} />
-			<label class="specField_form_advancedText_label">{t _SpecField_formated_text}</label>
+			<label class="specField_form_advancedText_label">{tip _SpecField_formated_text}</label>
 		</p>
 
 		<div>
 			<p class="required">
-				<label class="specField_form_name_label">{t _SpecField_title}</label>
+				<label class="specField_form_name_label">{tip _SpecField_title}</label>
 				<fieldset class="error">
 					<input type="text" name="name" class="specField_form_name" {denied role="category.update"}readonly="readonly"{/denied} />
 					<span class="errorText hidden"> </span>
@@ -50,7 +50,7 @@
 			</p>
 
 			<p class="specField_handle">
-				<label  class="specField_form_handle_label">{t _SpecField_handle}</label>
+				<label  class="specField_form_handle_label">{tip _SpecField_handle}</label>
 				<fieldset class="error">
 					<input type="text" name="handle" class="specField_form_handle" {denied role="category.update"}readonly="readonly"{/denied} />
 					<span class="errorText hidden"> </span>
@@ -58,7 +58,7 @@
 			</p>
 
 			<p>
-				<label  class="specField_form_valuePrefix_label sufixAndPrefix">{t _SpecField_valuePrefix}</label>
+				<label  class="specField_form_valuePrefix_label sufixAndPrefix">{tip _SpecField_valuePrefix}</label>
 				<fieldset class="error sufixAndPrefix">
 					<input type="text" name="valuePrefix" class="specField_form_valuePrefix" {denied role="category.update"}readonly="readonly"{/denied} />
 					<span class="errorText hidden"> </span>
@@ -66,7 +66,7 @@
 			</p>
 
 			<p>
-				<label  class="specField_form_valueSuffix_label sufixAndPrefix">{t _SpecField_valueSuffix}</label>
+				<label  class="specField_form_valueSuffix_label sufixAndPrefix">{tip _SpecField_valueSuffix}</label>
 				<fieldset class="error sufixAndPrefix">
 					<input type="text" name="valueSuffix" class="specField_form_valueSuffix" {denied role="category.update"}readonly="readonly"{/denied} />
 					<span class="errorText hidden"> </span>
@@ -86,22 +86,22 @@
 
 		<p class="checkbox">
 			<input type="checkbox" value="1" name="isRequired" class="checkbox specField_form_isRequired" {denied role="category.update"}disabled="disabled"{/denied} />
-			<label class="specField_form_isRequired_label">{t _SpecField_is_required}</label>
+			<label class="specField_form_isRequired_label">{tip _SpecField_is_required}</label>
 		</p>
 
 		<p class="checkbox isDisplayed">
 			<input type="checkbox" value="1" name="isDisplayed" class="checkbox specField_form_isDisplayed" {denied role="category.update"}disabled="disabled"{/denied} />
-			<label class="specField_form_isDisplayed_label">{t _SpecField_displayed_on_front_page}</label>
+			<label class="specField_form_isDisplayed_label">{tip _SpecField_displayed_on_front_page}</label>
 		</p>
 
 		<p class="checkbox isDisplayedInList">
 			<input type="checkbox" value="1" name="isDisplayedInList" class="checkbox specField_form_isDisplayedInList" {denied role="category.update"}disabled="disabled"{/denied} />
-			<label class="specField_form_isDisplayedInList_label">{t _SpecField_displayed_in_product_list}</label>
+			<label class="specField_form_isDisplayedInList_label">{tip _SpecField_displayed_in_product_list}</label>
 		</p>
 
 		<p class="checkbox isSortable">
 			<input type="checkbox" value="1" name="isSortable" class="checkbox specField_form_isSortable" {denied role="category.update"}disabled="disabled"{/denied} />
-			<label class="specField_form_isSortable_label">{t _SpecField_sortable}</label>
+			<label class="specField_form_isSortable_label">{tip _SpecField_sortable}</label>
 		</p>
 
 		<div class="clear"></div>
@@ -113,11 +113,11 @@
 				<input type="text" name="name_{$lang.ID}" {denied role="category.update"}readonly="readonly"{/denied} />
 			</p>
 			<p>
-				<label class="translation_valuePrefix_label sufixAndPrefix">{t _SpecField_valuePrefix}</label>
+				<label class="translation_valuePrefix_label sufixAndPrefix">{tip _SpecField_valuePrefix}</label>
 				<input type="text" class="sufixAndPrefix" name="valuePrefix_{$lang.ID}" {denied role="category.update"}readonly="readonly"{/denied} />
 			</p>
 			<p>
-				<label class="translation_valueSuffix_label sufixAndPrefix">{t _SpecField_valueSuffix}</label>
+				<label class="translation_valueSuffix_label sufixAndPrefix">{tip _SpecField_valueSuffix}</label>
 				<input type="text" class="sufixAndPrefix" name="valueSuffix_{$lang.ID}" {denied role="category.update"}readonly="readonly"{/denied} />
 			</p>
 			<p>
