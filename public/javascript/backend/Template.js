@@ -5,9 +5,11 @@
 Backend.Template = Class.create();
 Backend.Template.prototype =
 {
-  	treeBrowser: null,
-
-  	urls: new Array(),
+	treeBrowser: null,
+	tabControl: null,
+	urls: new Array(),
+	translations: new Array(),
+	openedFiles: $A([]), // contains list of pairs <data entry id> - <tab id>.
 
 	initialize: function(categories)
 	{
@@ -35,11 +37,16 @@ Backend.Template.prototype =
 		this.treeBrowser.hideFeedback =
 			function()
 			{
+				var id = arguments.length <= 1 ? arguments[0] : null;
 				for (var itemId in this.iconUrls)
 				{
-					this.setItemImage(itemId, this.iconUrls[itemId]);
+					if(id == null ||  id == itemId)
+					{
+						this.setItemImage(itemId, this.iconUrls[itemId]);
+					}
 				}
 			}
+
 
 		//this.treeBrowser.enableDragAndDrop(1);
 		this.insertTreeBranch(categories, 0);
@@ -54,42 +61,39 @@ Backend.Template.prototype =
 			Event.observe(createTemplate, 'click', function(e)
 				{
 					var el = Event.element(e);
-					var upd = new LiveCart.AjaxUpdater(el.editUrl, 'templateContent');
-					upd.onComplete = this.displayTemplate.bind(this);
-
-					if ($('code'))
-					{
-						editAreaLoader.delete_instance("code");
-					}
 					Event.stop(e);
+					this.openInTab('_new', this.translations['_tab_title_new'], el.editUrl);
 				}.bindAsEventListener(this));
-
 			var deleteTemplate = $('deleteTemplate').down('a');
 			deleteTemplate.url = deleteTemplate.href;
 			deleteTemplate.href = '#delete';
 			Event.observe(deleteTemplate, 'click', function(e)
 				{
 					Event.stop(e);
-
 					if (!confirm(Backend.getTranslation('_confirm_template_delete')))
 					{
 						return false;
 					}
-
 					var nodeIdToRemove = this.treeBrowser.getSelectedItemId();
+					var item = this.openedFiles.find(
+						function(item)
+						{
+							return item[0] == nodeIdToRemove;
+						}
+					);
 					var upd = new LiveCart.AjaxRequest(Event.element(e).url.replace('_id_', this.treeBrowser.getSelectedItemId()));
 					upd.onComplete =
-						function()
+						function(tabid)
 						{
-							new LiveCart.AjaxUpdater(this.urls['empty'], 'templateContent', 'settingsIndicator');
+							// new LiveCart.AjaxUpdater(this.urls['empty'], 'templateContent', 'settingsIndicator');
+							this._removeTab(tabid)
 							this.treeBrowser.deleteItem(nodeIdToRemove, true);
-						}.bind(this);
+						}.bind(this, item[1]);
 
-					if ($('code'))
+					if ($('code_'+item[1]))
 					{
-						editAreaLoader.delete_instance("code");
+						editAreaLoader.delete_instance("code_"+item[1]);
 					}
-
 				}.bindAsEventListener(this));
 		}
 	},
@@ -144,13 +148,7 @@ Backend.Template.prototype =
 		if (!this.treeBrowser.hasChildren(id))
 		{
 			this.treeBrowser.showFeedback(id);
-			var url = this.urls['edit'].replace('_id_', id);
-			var upd = new LiveCart.AjaxUpdater(url, 'templateContent');
-			upd.onComplete = this.displayTemplate.bind(this);
-			if ($('code'))
-			{
-				editAreaLoader.delete_instance("code");
-			}
+			this.openInTab(id,this.tabTitleFromTemplateId(id), this.urls['edit']);
 
 			if ($('body'))
 			{
@@ -171,18 +169,22 @@ Backend.Template.prototype =
 		}
 	},
 
-	displayTemplate: function(response)
+	tabTitleFromTemplateId: function(id)
+	{
+		return id.split("/").pop();
+	},
+
+	displayTemplate: function(tabid, response)
 	{
 		this.treeBrowser.hideFeedback();
-		Event.observe($('cancel'), 'click', this.cancel.bindAsEventListener(this));
-
-		if ($('code'))
+		Event.observe($('cancel_'+tabid), 'click', this.cancel.bindAsEventListener(this, tabid));
+		if ($('code_'+tabid))
 		{
-			new Backend.TemplateHandler($('templateForm'), this);
+			new Backend.TemplateHandler($("templateForm_"+tabid), this, tabid);
 		}
 		else
 		{
-			new Backend.EmailTemplateHandler($('templateForm'), this);
+			new Backend.EmailTemplateHandler($("templateForm_"+tabid), this, tabid);
 		}
 	},
 
@@ -192,15 +194,104 @@ Backend.Template.prototype =
 		{
 			return false;
 		}
-
 		new LiveCart.AjaxRequest(Backend.Category.getUrlForNodeReorder(targetId, parentId, Backend.Category.treeBrowser._reorderDirection));
-
 		return true;
 	},
 
-	cancel: function()
+	cancel: function(event, tabid)
 	{
-		new LiveCart.AjaxUpdater(this.urls['empty'], 'templateContent', 'settingsIndicator');
+		if (event)
+		{
+			Event.stop(event);
+		}
+		this._removeTab(tabid);
+	},
+
+	_removeTab: function(tabid)
+	{
+		var
+			activeTab = this.tabControl.removeTab(tabid),
+			removeIdx = null;
+
+		for (i=0; i<this.openedFiles.length; i++)
+		{
+			if (this.openedFiles[i][1] == tabid)
+			{
+				removeIdx = i;
+			}
+
+			if (activeTab && this.openedFiles[i][1] == activeTab.id)
+			{
+				this.treeBrowser.selectItem(this.openedFiles[i][0]);
+			}
+		}
+
+		if (removeIdx)
+		{
+			this.openedFiles.splice(removeIdx,1);
+		}
+
+		if (activeTab == null)
+		{
+			this.treeBrowser.clearSelection();
+		}
+	},
+
+	getTabUrl: function(url)
+	{
+		return url;
+	},
+
+	getContentTabId: function(id)
+	{
+		return id + 'Content';
+	},
+
+	setTabControlInstance:function(instance)
+	{
+		this.tabControl = instance
+	},
+
+	openInTab: function(contentDataId, title, url)
+	{
+		var isOpened = this.openedFiles.find(
+			function(item)
+			{
+				return item[0] == contentDataId;
+			}
+		);
+		if(isOpened)
+		{
+			this.treeBrowser.hideFeedback(isOpened[0]);
+			this.tabControl.activateTab(isOpened[1]);
+		}
+		else
+		{
+			var tabid = this.tabControl.addNewTab(title);
+			url = url.replace('_tabid_',tabid).replace('_id_', contentDataId);
+			this.openedFiles.push([contentDataId, tabid]);
+			var upd = new LiveCart.AjaxUpdater(url, this.tabControl.getContentTabId(tabid));
+			upd.onComplete = this.displayTemplate.bind(this, tabid);
+			if ($('code_'+tabid))
+			{
+				editAreaLoader.delete_instance("code_"+tabid);
+			}
+		}
+	},
+
+	tabAfterClickCallback: function()
+	{
+		var tabid = this.tabControl.getActiveTab().id;
+		var item = this.openedFiles.find(
+			function(item)
+			{
+				return item[1] == tabid;
+			}
+		);
+		if (item)
+		{
+			this.treeBrowser.selectItem(item[0]);
+		}
 	}
 }
 
@@ -211,27 +302,32 @@ Backend.TemplateHandler = Class.create();
 Backend.TemplateHandler.prototype =
 {
 	form: null,
-
-	initialize: function(form, owner)
+	tabid: null,
+	initialize: function(form, owner, tabid)
 	{
 		this.form = form;
 		this.owner = owner;
+		this.tabid = tabid;
 		Event.observe(this.form, 'submit', this.submit.bindAsEventListener(this));
 
+try {
 		editAreaLoader.init({
-			id : "code",		// textarea id
+			id : "code_"+this.tabid,		// textarea id
 			syntax: "html",			// syntax to be uses for highgliting
 			start_highlight: true,		// to display with highlight mode on start-up
 			allow_toggle: false,
 			allow_resize: true
 			}
 		);
+	} catch(e) {}
 	},
 
 	submit: function(e)
 	{
-		$('code').value = editAreaLoader.getValue('code');
+		$('code_'+this.tabid).value = editAreaLoader.getValue('code_'+this.tabid);
+
 		new LiveCart.AjaxRequest(this.form, null, this.saveComplete.bind(this));
+
 		Event.stop(e);
 		return false;
 	},
@@ -252,6 +348,9 @@ Backend.TemplateHandler.prototype =
 			branch[tpl.file] = tpl;
 			this.owner.insertTreeBranch(branch, '');
 			this.owner.treeBrowser.selectItem(tpl.file, false, false);
+
+			this.owner.cancel(null, this.tabid);
+			this.owner.openInTab(tpl.file, this.owner.tabTitleFromTemplateId(tpl.file), this.owner.urls['edit']);
 		}
 	}
 }
@@ -264,48 +363,61 @@ Backend.EmailTemplateHandler.prototype =
 {
 	form: null,
 
-	initialize: function(form)
+	initialize: function(form, owner, tabid)
 	{
+		this.owner = owner;
 		this.form = form;
+		this.tabid = tabid
 		this.form.onsubmit = this.submit.bindAsEventListener(this);
 
 		['body', 'html'].each(function(name)
 		{
-			editAreaLoader.init({
-				id : name,		// textarea id
-				syntax: "html",			// syntax to be uses for highgliting
-				start_highlight: true,		// to display with highlight mode on start-up
-				allow_toggle: false,
-				allow_resize: true
-				}
-			);
-		});
+			if ($(name+"_"+this.tabid))
+			{
+				editAreaLoader.init({
+					id : name+"_"+this.tabid,		// textarea id
+					syntax: "html",			// syntax to be uses for highgliting
+					start_highlight: true,		// to display with highlight mode on start-up
+					allow_toggle: false,
+					allow_resize: true
+					}
+				);
+			}
+		}.bind(this));
 
 		// set cursor at the first line
 		editAreaLoader.setSelectionRange('body', 0, 0);
 
 		// initialize editors for other languages
-		if ($('templateContent').down('.languageFormContent'))
+
+		if ($("templateForm_" + this.tabid).down('.languageFormContent'))
 		{
-			var langs = $('templateContent').down('.languageFormTabs').getElementsByTagName('li');
+			var langs = $("templateForm_" + this.tabid).down('.languageFormTabs').getElementsByTagName('li');
 			for (k = 0; k < langs.length; k++)
 			{
 				Event.observe(langs[k], 'click',
 					function(e)
 					{
-						var lang = this.className.match(/Tabs_([a-z]{2})/)[1];
-						var textarea = $('templateContent').down('.languageFormContent').down('.languageFormContainer_' + lang).down('textarea');
-
-						editAreaLoader.init({
-							id : textarea.id,		// textarea id
-							syntax: "html",			// syntax to be uses for highgliting
-							start_highlight: true,		// to display with highlight mode on start-up
-							allow_toggle: false,
-							allow_resize: true
+						var element = Event.element(e);
+						if(element.tagName.toLowerCase() != "li")
+						{
+							element = $(element).up("li");
+						}
+						var lang = element.className.match(/Tabs_([a-z]{2})/)[1];
+						var textareas = $("templateForm_" + this.tabid).down('.languageFormContent').down('.languageFormContainer_' + lang).getElementsByTagName('textarea');
+						$A(textareas).each(
+							function(textarea) {
+								editAreaLoader.init({
+									id : textarea.id,		// textarea id
+									syntax: "html",			// syntax to be uses for highgliting
+									start_highlight: true,		// to display with highlight mode on start-up
+									allow_toggle: false,
+									allow_resize: true
+									}
+								);
 							}
 						);
-
-					}
+					}.bindAsEventListener(this)
 				);
 			}
 		}
@@ -315,7 +427,6 @@ Backend.EmailTemplateHandler.prototype =
 	{
 		$('body').value = editAreaLoader.getValue('body');
 		$('html').value = editAreaLoader.getValue('html');
-
 		if ($('templateContent').down('.languageFormContent'))
 		{
 			var langs = $('templateContent').down('.languageFormContent').getElementsByTagName('textarea');
@@ -324,13 +435,13 @@ Backend.EmailTemplateHandler.prototype =
 				langs[k].value = editAreaLoader.getValue(langs[k].id);
 			}
 		}
-
 		new LiveCart.AjaxRequest(this.form, null, this.saveComplete.bind(this));
 		return false;
 	},
 
 	saveComplete: function(originalRequest)
 	{
+		
 	}
 }
 

@@ -33,11 +33,12 @@ class CssEditorController extends StoreManagementController
 		$css = new EditedCssFile($this->request->get('file'));
 
 		$response = new ActionResponse();
-	  	$response->set('id', $css->getFileName());
-	  	$response->set('file', $css->getFileName());
-	  	$response->set('form', $this->getForm($css));
-	  	$response->set('code', base64_encode($css->getCode()));
-	  	$response->set('template', $css->toArray());
+		$response->set('tabid', $this->getRequest()->get('tabid'));
+		$response->set('id', $css->getFileName());
+		$response->set('file', $css->getFileName());
+		$response->set('form', $this->getForm($css));
+		$response->set('code', base64_encode($css->getCode()));
+		$response->set('template', $css->toArray());
 		return $response;
 	}
 

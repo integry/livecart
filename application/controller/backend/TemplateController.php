@@ -45,11 +45,12 @@ class TemplateController extends StoreManagementController
 		$template = new Template($this->getFileName());
 
 		$response = new ActionResponse();
-	  	$response->set('fileName', $template->getFileName());
-	  	$response->set('form', $this->getTemplateForm($template));
-	  	$response->set('code', base64_encode($template->getCode()));
-	  	$response->set('template', $template->toArray());
-	  	$response->set('themes', $this->application->getRenderer()->getThemeList());
+		$response->set('tabid', $this->getRequest()->get('tabid'));
+		$response->set('fileName', $template->getFileName());
+		$response->set('form', $this->getTemplateForm($template));
+		$response->set('code', base64_encode($template->getCode()));
+		$response->set('template', $template->toArray());
+		$response->set('themes', $this->application->getRenderer()->getThemeList());
 		$response->set('theme', $this->request->get('theme'));
 		return $response;
 	}
@@ -58,6 +59,7 @@ class TemplateController extends StoreManagementController
 	{
 		$response = $this->edit();
 		$response->get('form')->getValidator()->addCheck('fileName', new IsNotEmptyCheck($this->translate('_file_name_empty')));
+		$response->set('tabid', $this->getRequest()->get('tabid'));
 		return $response;
 	}
 
@@ -76,6 +78,7 @@ class TemplateController extends StoreManagementController
 
 		$fileName = $template->getFileName();
 		$response = new ActionResponse();
+		$response->set('tabid', $this->getRequest()->get('tabid'));
 	  	$response->set('fileName', $fileName);
 	  	$response->set('form', $this->getEmailTemplateForm($template));
 	  	$response->set('template', $template->toArray());
@@ -143,7 +146,8 @@ class TemplateController extends StoreManagementController
 	 */
 	public function save()
 	{
-		$code = $this->request->get('code');
+		$request = $this->getRequest();
+		$code = $request->get('code');
 
 		if ($this->request->get('fileName'))
 		{
