@@ -109,6 +109,9 @@ class ThemeFile
 
 	public function getFiles()
 	{
+		
+		
+		
 		$files = array();
 		$handle = opendir($this->path);
 		if(!$handle)
@@ -121,6 +124,15 @@ class ThemeFile
 			if(is_file($this->path.$file))
 			{
 				$hasThumbnail = file_exists($this->thumbnailPath.$file);
+				if ($hasThumbnail == false)
+				{
+					$tr = $this->createThumbnail($file);
+					if($tr != false)
+					{
+						$hasThumbnail = true;
+					}
+				}
+				
 				$files[] = array(
 					'ID' => $file,
 					'fn' => $file,

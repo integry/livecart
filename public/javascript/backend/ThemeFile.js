@@ -190,10 +190,11 @@ Backend.ThemeFile.FileEntry.prototype =
 			cssHintContainer = this.node.down('.cssHintContainer');
 		if(this.data.hasThumbnail)
 		{
-			tnContainer.down("img").src="upload/themes/"+this.data.theme+"/thumbs/"+this.data.fn;
-			tnContainer.down("a").href="upload/themes/"+this.data.theme+"/"+this.data.fn;
+			tnContainer.down("img").src="upload/theme/"+this.data.theme+"/thumbs/"+this.data.fn;
+			tnContainer.down("a").href="upload/theme/"+this.data.theme+"/"+this.data.fn;
 			cssHintContainer.down('.cssTheme').innerHTML = this.data.theme;
 			cssHintContainer.down('.cssFile').innerHTML = this.data.fn;
+
 		}
 		else
 		{
