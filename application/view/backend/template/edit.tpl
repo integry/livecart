@@ -1,6 +1,11 @@
 <h1>{$fileName}</h1>
-
 {form handle=$form action="controller=backend.template action=save" method="POST" class="templateForm" id="templateForm_`$tabid`"}
+	<div class="minimenu" id="minimenu_{$tabid}">
+		<span class="progressIndicator" style="display:none;"></span>
+		{selectfield class="version" id="version_`$tabid`" options=$template.backups}
+		{selectfield class="othertheme" id="othertheme_`$tabid`" options=$template.otherThemes}
+	</div>
+
 	{if $new || $template.isCustomFile}
 		<p>
 			{{err for="fileName"}}
@@ -21,7 +26,7 @@
 
 	<fieldset class="controls" {denied role="template.save"}style="display: none;"{/denied}>
 		<div class="saveThemeSelector" style="float: right;">
-			{t _save_for_theme}: {selectfield name=theme options=$themes blank=true}
+			{t _save_for_theme}: {selectfield name=theme options=$themes blank=true id="theme_`$tabid`"}
 		</div>
 
 		<span class="progressIndicator" style="display: none;"></span>

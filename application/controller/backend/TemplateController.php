@@ -43,8 +43,10 @@ class TemplateController extends StoreManagementController
 	public function edit()
 	{
 		$template = new Template($this->getFileName());
-
 		$response = new ActionResponse();
+
+		
+		
 		$response->set('tabid', $this->getRequest()->get('tabid'));
 		$response->set('fileName', $template->getFileName());
 		$response->set('form', $this->getTemplateForm($template));
@@ -52,8 +54,20 @@ class TemplateController extends StoreManagementController
 		$response->set('template', $template->toArray());
 		$response->set('themes', $this->application->getRenderer()->getThemeList());
 		$response->set('theme', $this->request->get('theme'));
+
 		return $response;
 	}
+
+	public function templateData()
+	{
+		$request = $this->getRequest();
+		$theme = $request->get('theme');
+		$version = $request->get('version');
+
+		$template = new Template($this->getFileName(), strlen($theme) ? $theme : '', $version);
+		return new JSONResponse($template->toArray());
+	}
+	
 
 	public function add()
 	{
@@ -188,11 +202,9 @@ class TemplateController extends StoreManagementController
 
 	public function delete()
 	{
-		$custPath = Template::getCustomizedFilePath($this->getFileName());
-		if (file_exists($custPath))
-		{
-			unlink($custPath);
-		}
+		$template = new Template($this->getFileName());
+		$template->delete();
+		
 
 		return new JSONResponse(false, 'success', $this->translate('_template_has_been_successfully_deleted'));
 	}

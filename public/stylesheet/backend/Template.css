@@ -39,7 +39,7 @@ fieldset.controls
 
 .templateBrowser, .containerTableStyle
 {
-    height: 380px;
+	height: 380px;
 }
 
 /***************
@@ -48,4 +48,10 @@ fieldset.controls
 #EditAreaArroundInfos_code
 {
 	display: none !important;
+}
+
+.templateForm .minimenu
+{
+	float:right;
+	margin-top:-38px;
 }

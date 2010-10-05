@@ -21,13 +21,17 @@ class Template
 
 	protected $theme;
 
-	public function __construct($fileName, $theme = null)
+	protected $version;
+
+	const BACKUP_FILE_COUNT = 10;
+
+	public function __construct($fileName, $theme = null, $version = null)
 	{
 		$this->theme = $theme;
+		$this->version = is_numeric($version) && $version > 0 ? (int)$version : null;
 
 		// do not allow to leave view template directory by prefixing ../
 		$fileName = preg_replace('/^[\\\.\/]+/', '', $fileName);
-
 		if ($this->theme)
 		{
 			if (substr($fileName, 0, 6) == 'theme/')
@@ -38,15 +42,18 @@ class Template
 
 			$fileName = 'theme/' . $this->theme . '/' . $fileName;
 		}
-
 		$path = self::getRealFilePath($fileName);
-
-		if (file_exists($path))
+		if (file_exists($path) && $this->version == null /* working with current file version */)
 		{
 			$this->code = file_get_contents($path);
 		}
 
 		$this->file = str_replace('\\', '/', $fileName);
+
+		if ($this->version)
+		{
+			$this->code = $this->readBackup();
+		}
 	}
 
 	public static function getTree($dir = null, $root = null, $idPrefix = '')
@@ -191,8 +198,13 @@ class Template
 
 		$this->checkForChanges();
 
+		if ($res)
+		{
+			$this->backup();
+		}
 		return $res !== false;
 	}
+
 
 	public function restoreOriginal()
 	{
@@ -217,6 +229,48 @@ class Template
 		return unlink($path);
 	}
 
+	/**
+	 * deletes customized template
+	 *  removes:
+	 *   customized template file 
+	 *   customized template file for each theme (if exists)
+	 *   backups (for customized template file, and each theme)
+	 */
+	public function delete()
+	{
+		if ($this->isCustomFile() == false)
+		{
+			throw new Exception('Only custom files can be deleted');
+		}
+
+		$filesToRemove[] = Template::getCustomizedFilePath($this->file);
+		$filesToRemove = array_merge($filesToRemove, $this->getBackups(false));
+
+		$otherThemes = $this->getOtherThemes();
+		foreach($otherThemes as $key=>$themename)
+		{
+			if($key == '')
+			{
+				continue;
+			}
+			$template = new Template($this->file, $themename);
+			$filesToRemove[] = Template::getCustomizedFilePath($template->getFileName());
+			$filesToRemove = array_merge($filesToRemove, $template->getBackups(false));
+		}
+
+		$filesToRemove = array_values($filesToRemove);
+
+		while($fn = array_pop($filesToRemove))
+		{
+			if(is_readable($fn))
+			{
+				unlink($fn);
+			}
+		}
+
+		return true;
+	}
+
 	public function isCustomFile()
 	{
 		return !file_exists(self::getOriginalFilePath($this->file)) && (substr($this->file, 0, 7) != 'module/');
@@ -229,7 +283,96 @@ class Template
 		$array['file'] = $this->file;
 		$array['isCustomized'] = file_exists(self::getCustomizedFilePath($this->file));
 		$array['isCustomFile'] = $this->isCustomFile();
+		$array['backups'] = $this->getBackups();
+		$array['version'] = $this->version;
+		$array['otherThemes'] = $this->getOtherThemes();
+		$array['theme'] = $this->theme;
+
 		return $array;
+	}
+
+	private function getOtherThemes()
+	{
+		$fileName = $this->file;
+		if ($this->theme)
+		{
+			// chop off theme/<themename> from $fileName
+			$fileName = substr($fileName, strlen('theme'.DIRECTORY_SEPARATOR.$this->theme)+1);
+		}
+		$application = ActiveRecordModel::getApplication();
+		$result = array('' => $application->translate('_other_themes'));
+		foreach($application->getRenderer()->getThemeList() as $themename)
+		{
+			$fn = ClassLoader::getRealPath('storage.customize.view.theme.'.$themename.'.'). $fileName;
+			if(file_exists($fn))
+			{
+				$result[$themename] = $themename;
+			}
+		}
+		return $result;
+	}
+	
+	private function getBackups($prettyBackupNames=true)
+	{
+		$application = ActiveRecordModel::getApplication();
+		$locale = $application->getLocale();
+		$result = array();
+		$path = ClassLoader::getRealPath('storage.backup.template.').$this->file.DIRECTORY_SEPARATOR;
+		foreach(glob($path.'*') as $file)
+		{
+			if(preg_match('/(\d{4}\-\d{2}\-\d{2}\-\d{2}\-\d{2}\-\d{2})$/', $file, $z)) // is this a backup file?
+			{
+				if ($prettyBackupNames)
+				{
+					list($y, $m, $d, $h, $min, $s) = explode('-',$z[1]);
+					$ts = strtotime($y.'-'.$m.'-'.$d.' '.$h.':'.$min.':'.$s);
+					$formatted = $locale->getFormattedTime($ts);
+					$result[$ts] = $formatted['date_medium'].' '.$formatted['time_short'];
+				}
+				else
+				{
+					$result[$z[1]] = $file;
+				}
+			}
+		}
+		ksort($result);
+		if ($prettyBackupNames)
+		{
+			$result[-1] = $application->translate('_previous_file_versions');
+		}
+		return array_reverse($result, true);
+	}
+
+	private function readBackup()
+	{
+		$path = ClassLoader::getRealPath('storage.backup.template.').$this->file.DIRECTORY_SEPARATOR.date('Y-m-d-H-i-s', $this->version);
+		return file_exists($path) ? file_get_contents($path) : false;
+	}
+
+	private function backup()
+	{
+		$path = ClassLoader::getRealPath('storage.backup.template.').$this->file.DIRECTORY_SEPARATOR.date('Y-m-d-H-i-s');
+		$dir = dirname($path);
+		if(is_dir($dir) == false)
+		{
+			mkdir($dir, 0777, true);
+			chmod($dir, 0777);
+		}
+		$res = file_put_contents($path, $this->code);
+		$backups = $this->getBackups(false);
+		$c = count($backups);
+		if ($c > self::BACKUP_FILE_COUNT)
+		{
+			$backupBase = ClassLoader::getRealPath('storage.backup.template.').$this->file.DIRECTORY_SEPARATOR;
+			$keys = array_keys($backups);
+			for ($i= self::BACKUP_FILE_COUNT; $i<$c; $i++)
+			{
+				if (strpos($backups[$keys[$i]], $backupBase) === 0 && is_readable($backups[$keys[$i]]))
+				{
+					unlink($backups[$keys[$i]]);
+				}
+			}
+		}
 	}
 
 	private function array_merge_rec($array1, $array2)

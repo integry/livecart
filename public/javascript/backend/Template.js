@@ -178,6 +178,11 @@ Backend.Template.prototype =
 	{
 		this.treeBrowser.hideFeedback();
 		Event.observe($('cancel_'+tabid), 'click', this.cancel.bindAsEventListener(this, tabid));
+		if ($("minimenu_"+tabid))
+		{
+			Event.observe($("minimenu_"+tabid), 'change', this.miniMenuControlChanged.bindAsEventListener(this, tabid));
+			this.updateMiniMenuVisibility(tabid);
+		}
 		if ($('code_'+tabid))
 		{
 			new Backend.TemplateHandler($("templateForm_"+tabid), this, tabid);
@@ -207,6 +212,97 @@ Backend.Template.prototype =
 		this._removeTab(tabid);
 	},
 
+	updateMiniMenuVisibility: function(tabid)
+	{
+		$A($("minimenu_"+tabid).getElementsByTagName("select")).each(
+			function(item)
+			{
+				if (item.getElementsByTagName("option").length <= 1)
+				{
+					$(item).addClassName("hidden");
+				}
+				else
+				{
+					$(item).removeClassName("hidden");
+				}
+			}
+		);
+	},
+
+	miniMenuControlChanged: function(event, tabid)
+	{
+		if (event)
+		{
+			Event.stop(event);
+		}
+		var
+			element = Event.element(event),
+			info = this.openedFiles.find(function(item) {return item[1] == tabid;}),
+			indicator = element.up(".minimenu").down("span"),
+			url,
+			version;
+		indicator.addClassName("progressIndicator");
+		if (element.hasClassName("version"))
+		{
+			version = element.value;
+		}
+		else if (element.hasClassName("othertheme"))
+		{
+			$("theme_" + tabid).value = element.value;
+		}
+		url = this.templateDataUrl(tabid, info[0], $('othertheme_'+tabid).value, version);
+		new LiveCart.AjaxRequest(url, indicator, this.miniMenuControlChangedResponse.bind(this, tabid));
+	},
+
+	miniMenuControlChangedResponse: function(tabid, transport)
+	{
+		editAreaLoader.setValue('code_'+tabid, transport.responseData.code);
+		this.refillDropdown('othertheme',tabid, transport.responseData.otherThemes, transport.responseData.theme);
+		this.refillDropdown('version',tabid, transport.responseData.backups);
+		this.updateMiniMenuVisibility(tabid);
+	},
+
+	templateDataUrl: function(tabid, id, theme, version)
+	{
+		if (typeof version == "undefined")
+		{
+			version = "";
+		}
+		return this.urls['templateData'].replace('_tabid_', tabid).replace('_id_', id).replace('_theme_', theme).replace('_version_', version);
+	},
+
+	refillVersionDropdown: function(tabid, data)
+	{
+		var select = $('version_'+tabid);
+		select.innerHTML = "";
+		$H(data).each(
+			function(select, item)
+			{
+				var option = document.createElement("option");
+				select.appendChild(option);
+				option.value=item[0];
+				option.innerHTML = item[1];
+			}.bind(this, select)
+		);
+	},
+
+	refillDropdown: function(prefix, tabid, data, value)
+	{
+		var select = $(prefix+'_'+tabid);
+		value = typeof value == "undefined" || value === null ? select.value : value;
+		select.innerHTML = "";
+		$H(data).each(
+			function(select, item)
+			{
+				var option = document.createElement("option");
+				select.appendChild(option);
+				option.value=item[0];
+				option.innerHTML = item[1];
+			}.bind(this, select)
+		);
+		select.value = value;
+	},
+
 	_removeTab: function(tabid)
 	{
 		var
@@ -226,7 +322,7 @@ Backend.Template.prototype =
 			}
 		}
 
-		if (removeIdx)
+		if (removeIdx !== null)
 		{
 			this.openedFiles.splice(removeIdx,1);
 		}
@@ -338,6 +434,9 @@ try {
 		{
 			opener.location.reload();
 		}
+		this.owner.refillDropdown('othertheme',this.tabid, originalRequest.responseData.template.otherThemes, originalRequest.responseData.template.theme);
+		this.owner.refillDropdown('version',this.tabid, originalRequest.responseData.template.backups);
+		this.owner.updateMiniMenuVisibility(this.tabid);
 
 		var tpl = originalRequest.responseData.template;
 

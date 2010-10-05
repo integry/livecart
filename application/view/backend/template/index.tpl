@@ -35,7 +35,6 @@
 	</div>
 
 	<div class="treeManagerContainer">
-
 		<div class="templateContent">
 			<div id="templateTabContainer" class="tabContainer" style="height:100%">
 				<div id="loadingNewsletter" style="display: none; position: absolute; text-align: center; width: 100%; padding-top: 200px; z-index: 50000;">
@@ -50,9 +49,6 @@
 				</div>
 			</div>
 		</div>
-
-
-
 	</div>
 </div>
 
@@ -61,6 +57,7 @@
 	var settings = new Backend.Template({/literal}{$categories}{literal});
 	settings.urls['edit'] = '{/literal}{link controller=backend.template action=edit}?file=_id_&tabid=_tabid_{literal}';
 	settings.urls['empty'] = '{/literal}{link controller=backend.template action=emptyPage}{literal}';
+	settings.urls['templateData'] = '{/literal}{link controller=backend.template action=templateData}?file=_id_&tabid=_tabid_&theme=_theme_&version=_version_{literal}';
 	settings.translations['_tab_title_new'] = "{/literal}{t _tab_title_new}{literal}";
 	settings.setTabControlInstance(
 		TabControl.prototype.getInstance(
