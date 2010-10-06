@@ -27,20 +27,33 @@ class SearchableConfigurationIndexing
 		$this->initLocales();
 	}
 
-	public function buildIndex($id)
+	public static function buildIndexIfNeeded()
 	{
-		ActiveRecordModel::beginTransaction();
-		
-		ClassLoader::import('application.model.searchable.item.SearchableItem');
-		$this->_values = $this->config->getValues();
+		if(self::getSearchableItemCount() == 0)
+		{
+			$application = ActiveRecordModel::getApplication();
+			$sc = new SearchableConfigurationIndexing($application->getConfig(), $application);
+			$sc->buildIndex();
+		}
+	}
 
-		if(SearchableItem::getRecordCount() == 0)
+	public static function getSearchableItemCount()
+	{
+		ClassLoader::import('application.model.searchable.item.SearchableItem');
+		return SearchableItem::getRecordCount();
+	}
+
+	public function buildIndex($id=null)
+	{
+		if (self::getSearchableItemCount() == 0)
 		{
 			$id = null; // with id null will reindex all
 		}
+
+		ActiveRecordModel::beginTransaction();
+		$this->_values = $this->config->getValues();
 		SearchableItem::bulkClearIndex($id);
 		$this->buildList(null, $id);
-		
 		ActiveRecordModel::commit();
 	}
 
@@ -56,14 +69,11 @@ class SearchableConfigurationIndexing
 			{
 				$sectionTitle = $this->config->getSectionTitle($sectionID);
 				$sectionMeta = array('section_id' =>$sectionID /*, 'section_title' => $sectionTitle*/);
-
 				$this->addItem($sectionMeta, $this->translationArray($sectionTitle));
-
 				foreach($this->config->getSectionLayout($sectionID) as $layoutKey=>$data)
 				{
 					$this->addItem($sectionMeta, $this->translationArray($layoutKey));
 				}
-
 				foreach($this->config->getSettingsBySection($sectionID) as $configKey=>$meta)
 				{
 					$key = $meta['title'];
