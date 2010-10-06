@@ -211,7 +211,7 @@
 	width: 20px;
 }
 
-.activeGrid .cell_cb input
+.activeGrid .cell_cb > input
 {
     width: 13px;
     height: 13px;

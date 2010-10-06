@@ -1809,7 +1809,10 @@ a.external
 .quickEditContainer
 {
 	position:absolute;
-	width:100%;
+	top:0;
+	left:0;
+	width:90%;
+	margin:27px 5% 0 5%;
 	z-index:10;
 	background-color:whitesmoke;
 }
