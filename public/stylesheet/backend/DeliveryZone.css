@@ -239,3 +239,16 @@ li.testAdress a
 {
 	padding-right:4px;
 }
+
+.expectedDeliveryInterval > label,
+.expectedDeliveryInterval > fieldset
+{
+	height:40px;
+	float:left;
+}
+
+.expectedDeliveryInterval .labelIntervalTo
+{
+	width:18px;
+	margin: 10px 2px 0 7px;
+}

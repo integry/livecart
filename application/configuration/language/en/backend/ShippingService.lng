@@ -12,7 +12,6 @@ _range_type=Range type
 _weight_based_calculations=Weight based calculation
 _subtotal_based_calculations=Subtotal based calculation
 
-
 _shipping_service_rates=Rates
 _subtotal_range=Subtotal range
 _flat_charge=Flat charge
@@ -37,10 +36,10 @@ _error_subtotal_percent_charge_should_be_a_float_value=Subtotal percent charge s
 _error_name_should_not_be_empty=Please enter name
 _error_range_start_should_be_less_end=Range start should be less than range end
 
-
 _from=From
 _to=to
 
-_deliveryTimeMinDays=Delivery time min days
-_deliveryTimeMaxDays=Delivery time max days
 _description=Description
+
+_expected_delivery_time=Expected delivery time
+_days=days
