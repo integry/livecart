@@ -156,7 +156,15 @@ ActiveGrid.prototype =
 		}
 
 		do {
-			m = node.down("input").name.match(/item\[(\d+)\]/);
+			input = node.down("input");
+			if (input && input.name)
+			{
+				m = node.down("input").name.match(/item\[(\d+)\]/);
+			}
+			else
+			{
+				m = [];
+			}
 			if (m && m.length == 2)
 			{
 				recordID = m[1];
