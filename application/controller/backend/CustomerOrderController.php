@@ -1422,10 +1422,8 @@ class CustomerOrderController extends ActiveGridController
 		$this->loadQuickEditLanguageFile();
 		$response = new ActionResponse();
 		$request = $this->getRequest();
-		$order = CustomerOrder::getInstanceByID($request->get('id'));
-		$order->loadAddresses();
-		$order->getShipments();
-		$order->loadDiscounts();
+		$order = CustomerOrder::getInstanceByID($request->get('id'), CustomerOrder::LOAD_DATA);
+		$order->loadAll();
 		$response->set('order', $order->toArray());
 		$response->set('statusEditor', true);
 		$response->set('form', $this->createOrderForm($order->toArray()));

@@ -5,5 +5,5 @@
 			{include file="backend/customerOrder/block/orderInfo.tpl" order=$order}
 		</div>
 	</fieldset>
-	{include file="block/activeGrid/quickEditControls.tpl"}
+	{include file="block/activeGrid/quickEditControls.tpl" nosave=true}
 {/form}
