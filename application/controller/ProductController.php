@@ -335,7 +335,10 @@ class ProductController extends FrontendController
 				$spec[] =& $upsell[$key][$i];
 			}
 		}
-		ProductSpecification::loadSpecificationForRecordSetArray($spec);
+		if (count($upsell))
+		{
+			ProductSpecification::loadSpecificationForRecordSetArray($spec);
+		}
 		$response = new BlockResponse();
 		$response->set('upsell', $upsell);
 		return $response;
