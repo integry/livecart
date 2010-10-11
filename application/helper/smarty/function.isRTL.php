@@ -13,7 +13,7 @@
 function smarty_function_isRTL($params, LiveCartSmarty $smarty)
 {
 	$locale = $smarty->getApplication()->getLocale()->getLocaleCode();
-	return in_array($locale, array('he', 'ar'));
+	return in_array($locale, array('he', 'ar', 'fa'));
 }
 
 ?>
