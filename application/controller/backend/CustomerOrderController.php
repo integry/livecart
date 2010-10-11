@@ -4,6 +4,7 @@ ClassLoader::import('application.controller.backend.abstract.ActiveGridControlle
 ClassLoader::import('application.model.Currency');
 ClassLoader::import('application.helper.massAction.MassActionInterface');
 ClassLoader::import('application.model.product.ProductSet');
+ClassLoader::import('application.model.product.ProductOption');
 ClassLoader::import('application.controller.backend.*');
 ClassLoader::import('application.model.order.*');
 ClassLoader::import('application.model.delivery.*');
@@ -209,9 +210,8 @@ class CustomerOrderController extends ActiveGridController
 		$form = $this->createFieldsForm($order);
 		$order->getSpecification()->setFormResponse($response, $form);
 		$response->set('fieldsForm', $form);
+
 		$this->appendCalendarForm($response);
-		
-		
 		return $this->shipmentInfo($response);
 	}
 
@@ -1422,10 +1422,8 @@ class CustomerOrderController extends ActiveGridController
 		$this->loadQuickEditLanguageFile();
 		$response = new ActionResponse();
 		$request = $this->getRequest();
-		$order = CustomerOrder::getInstanceByID($request->get('id'));
-		$order->loadAddresses();
-		$order->getShipments();
-		$order->loadDiscounts();
+		$order = CustomerOrder::getInstanceByID($request->get('id'), CustomerOrder::LOAD_DATA);
+		$order->loadAll();
 		$response->set('order', $order->toArray());
 		$response->set('statusEditor', true);
 		$response->set('form', $this->createOrderForm($order->toArray()));
@@ -1461,6 +1459,52 @@ class CustomerOrderController extends ActiveGridController
 		{
 			return $response;
 		}
+	}
+
+	public function addCoupon()
+	{
+		ClassLoader::import('application.model.discount.DiscountCondition');
+		$response = $this->getRequest();
+		$code = $this->request->get('coupon');
+
+		$msg = '_coupon_not_found';
+		$error = true;
+		if (strlen($code))
+		{
+			$order = CustomerOrder::getInstanceByID($response->get('id'), CustomerOrder::LOAD_DATA);
+			$condition = DiscountCondition::getInstanceByCoupon($code);
+
+			if ($condition)
+			{
+				if (!$order->hasCoupon($code))
+				{
+					$coupon = OrderCoupon::getNewInstance($order, $code);
+					$coupon->save();
+					$order->getCoupons(true);
+
+					if ($order->hasCoupon($code))
+					{
+						$msg = '_coupon_added';
+						$this->recalculateDiscounts();
+						$error = false;
+					}
+					else
+					{
+						$msg = '_cant_add_coupon';
+					}
+				}
+				else
+				{
+					$msg = '_coupon_already_added';
+				}
+			}
+			$order->getCoupons(true);
+		}
+
+		$this->loadLanguageFile('Order');
+
+		return new JSONResponse(null, 
+			$error ? 'failure' : 'success', $this->makeText($msg, array($code)));
 	}
 }
 ?>

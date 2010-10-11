@@ -69,6 +69,7 @@ class QuickSearchController extends StoreManagementController
 
 		return new ActionResponse
 		(
+			'customResultTemplates', $this->getCustomResultTemplates(),
 			'query', $this->query,
 			'result', $res,
 			'randomToken', md5(time().mt_rand(1,9999999999)),
@@ -78,8 +79,24 @@ class QuickSearchController extends StoreManagementController
 			'fullSearch', $cn == ''
 		);
 	}
-	
-	
+
+	private function getCustomResultTemplates()
+	{
+		$result = array();
+		$resultTemplates = $this->getRequest()->get('resultTemplates');
+		$pairs = explode('|', $resultTemplates);
+		foreach($pairs as $pair)
+		{
+			if (strpos($pair, ':') == false)
+			{
+				continue;
+			}
+			list($class, $replace) = explode(':', $pair);
+			$result[$class] = $replace;
+		}
+		return $result;
+	}
+
 	private function fetchData(SearchableModel $searchable, ARSelectFilter $filter)
 	{
 		$class = $searchable->getClassName();

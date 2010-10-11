@@ -8,14 +8,6 @@
 		<span class="errorText hidden"> </span>
 	</fieldset>
 
-	{language}
-		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_name_{$lang.ID}">{t _name}</label>
-		<fieldset class="error">
-			{textfield name="name_`$lang.ID`" class="observed" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_name_`$lang.ID`"}
-			<span class="errorText hidden"> </span>
-		</fieldset>
-	{/language}
-
 	<fieldset class="error">
 		<label></label>
 		{checkbox name="isFinal" class="checkbox observed shippingService_isFinal" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_isFinal"}
@@ -37,6 +29,27 @@
 	<fieldset class="error rangeTypeStatic">
 		<label>{t _range_type}</label>
 		<label style="width: auto;">{if $service.rangeType == 0}{t _weight_based_calculations}{else}{t _subtotal_based_calculations}{/if}</label>
+	</fieldset>
+
+	<div class="expectedDeliveryInterval">
+		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_deliveryTimeMinDays">{t _expected_delivery_time}:</label>
+		<fieldset class="error">
+			{textfield name="deliveryTimeMinDays" class="number observed shippingService_deliveryTimeMinDays" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_deliveryTimeMinDays"}
+			<span class="errorText hidden"> </span>
+		</fieldset>
+		<label class="labelIntervalTo" for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_deliveryTimeMaxDays">{t _to}</label>
+		<fieldset class="error">
+			{textfield name="deliveryTimeMaxDays" class="number observed shippingService_deliveryTimeMaxDays" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_deliveryTimeMaxDays"}
+			<span class="errorText hidden"> </span>
+			{t _days}
+		</fieldset>
+	</div>
+	<div class="clear"></div>
+
+	<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_description">{t _description}</label>
+	<fieldset class="error">
+		{textarea name="description" class="observed shippingService_description" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_description"}
+		<span class="errorText hidden"></span>
 	</fieldset>
 
 	<fieldset class="shippingService_rates ">
@@ -80,32 +93,21 @@
 		</fieldset>
 	</fieldset>
 
-	<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_deliveryTimeMinDays">{t _deliveryTimeMinDays}</label>
-	<fieldset class="error">
-		{textfield name="deliveryTimeMinDays" class="observed shippingService_deliveryTimeMinDays" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_deliveryTimeMinDays"}
-		<span class="errorText hidden"> </span>
-	</fieldset>
-
-	<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_deliveryTimeMaxDays">{t _deliveryTimeMaxDays}</label>
-	<fieldset class="error">
-		{textfield name="deliveryTimeMaxDays" class="observed shippingService_deliveryTimeMaxDays" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_deliveryTimeMaxDays"}
-		<span class="errorText hidden"> </span>
-	</fieldset>
-
-	<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_description">{t _description}</label>
-	<fieldset class="error">
-		{textarea name="description" class="observed shippingService_description" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_description"}
-		<span class="errorText hidden"></span>
-	</fieldset>
+	{include file="backend/eav/fields.tpl" item=$service}
 
 	{language}
+		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_name_{$lang.ID}">{t _name}</label>
+		<fieldset class="error">
+			{textfield name="name_`$lang.ID`" class="observed" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_name_`$lang.ID`"}
+			<span class="errorText hidden"> </span>
+		</fieldset>
+		
 		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_description_{$lang.ID}">{t _description}</label>
 		<fieldset class="error">
 			{textarea name="description_`$lang.ID`" class="observed" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_description_`$lang.ID`"}
 			<span class="errorText hidden"></span>
 		</fieldset>
 	{/language}
-	{include file="backend/eav/fields.tpl" item=$service}
 
 	<fieldset class="shippingService_controls controls">
 		<span class="progressIndicator" style="display: none;"></span>

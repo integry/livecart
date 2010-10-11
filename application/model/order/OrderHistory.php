@@ -237,7 +237,7 @@ class OrderHistory
 					}
 
 					// Change shipping service
-					if($oldShipment['ShippingService'] != $shipment['ShippingService'])
+					if($oldShipment['ShippingService']['ID'] != $shipment['ShippingService']['ID'])
 					{
 						OrderLog::getNewInstance(
 							OrderLog::TYPE_SHIPMENT,

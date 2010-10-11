@@ -19,6 +19,8 @@ class SearchableConfiguration extends SearchableModel
 	public function loadClass()
 	{
 		ClassLoader::import('application.model.searchable.item.SearchableItem');
+		ClassLoader::import('application.model.searchable.index.SearchableConfigurationIndexing');
+		SearchableConfigurationIndexing::buildIndexIfNeeded();
 	}
 
 	public function getSelectFilter($searchTerm)

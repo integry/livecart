@@ -24,6 +24,7 @@ _moved_to_wishlist=[_1] has been moved to wish list
 _moved_to_cart=[_1] has been moved to shopping basket
 _coupon_added=Coupon "[_1]" has been added to your order
 _coupon_not_found=Coupon "[_1]" was not found
+_coupon_already_added=Coupon "[_1]" already added
 _order_auto_changes_out=The following items are currently out of stock and have been moved to wishlist
 _order_auto_changes_in=The following items are back in stock and have been moved to shopping basket
 _order_auto_changes_count=The following items are low on stock and the order quantities have been adjusted

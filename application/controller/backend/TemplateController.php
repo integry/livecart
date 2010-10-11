@@ -43,21 +43,37 @@ class TemplateController extends StoreManagementController
 	public function edit()
 	{
 		$template = new Template($this->getFileName());
-
 		$response = new ActionResponse();
-	  	$response->set('fileName', $template->getFileName());
-	  	$response->set('form', $this->getTemplateForm($template));
-	  	$response->set('code', base64_encode($template->getCode()));
-	  	$response->set('template', $template->toArray());
-	  	$response->set('themes', $this->application->getRenderer()->getThemeList());
+
+		
+		
+		$response->set('tabid', $this->getRequest()->get('tabid'));
+		$response->set('fileName', $template->getFileName());
+		$response->set('form', $this->getTemplateForm($template));
+		$response->set('code', base64_encode($template->getCode()));
+		$response->set('template', $template->toArray());
+		$response->set('themes', $this->application->getRenderer()->getThemeList());
 		$response->set('theme', $this->request->get('theme'));
+
 		return $response;
 	}
+
+	public function templateData()
+	{
+		$request = $this->getRequest();
+		$theme = $request->get('theme');
+		$version = $request->get('version');
+
+		$template = new Template($this->getFileName(), strlen($theme) ? $theme : '', $version);
+		return new JSONResponse($template->toArray());
+	}
+	
 
 	public function add()
 	{
 		$response = $this->edit();
 		$response->get('form')->getValidator()->addCheck('fileName', new IsNotEmptyCheck($this->translate('_file_name_empty')));
+		$response->set('tabid', $this->getRequest()->get('tabid'));
 		return $response;
 	}
 
@@ -76,6 +92,7 @@ class TemplateController extends StoreManagementController
 
 		$fileName = $template->getFileName();
 		$response = new ActionResponse();
+		$response->set('tabid', $this->getRequest()->get('tabid'));
 	  	$response->set('fileName', $fileName);
 	  	$response->set('form', $this->getEmailTemplateForm($template));
 	  	$response->set('template', $template->toArray());
@@ -143,7 +160,8 @@ class TemplateController extends StoreManagementController
 	 */
 	public function save()
 	{
-		$code = $this->request->get('code');
+		$request = $this->getRequest();
+		$code = $request->get('code');
 
 		if ($this->request->get('fileName'))
 		{
@@ -184,11 +202,9 @@ class TemplateController extends StoreManagementController
 
 	public function delete()
 	{
-		$custPath = Template::getCustomizedFilePath($this->getFileName());
-		if (file_exists($custPath))
-		{
-			unlink($custPath);
-		}
+		$template = new Template($this->getFileName());
+		$template->delete();
+		
 
 		return new JSONResponse(false, 'success', $this->translate('_template_has_been_successfully_deleted'));
 	}

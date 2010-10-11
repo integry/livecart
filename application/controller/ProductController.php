@@ -22,6 +22,7 @@ class ProductController extends FrontendController
 		$this->addBlock('PRODUCT-ATTRIBUTE-SUMMARY', 'attributeSummary', 'product/block/attributeSummary');
 		$this->addBlock('PRODUCT-PURCHASE', 'purchase', 'product/block/purchase');
 			$this->addBlock('PRODUCT-PRICE', 'price', 'product/block/price');
+			$this->addBlock('PRODUCT-UP-SELL', 'upSell', 'product/block/upsell');
 			$this->addBlock('PRODUCT-OPTIONS', 'options', 'product/block/options');
 			$this->addBlock('PRODUCT-VARIATIONS', 'variations', 'product/block/variations');
 			$this->addBlock('PRODUCT-TO-CART', 'addToCart', 'product/block/toCart');
@@ -321,6 +322,26 @@ class ProductController extends FrontendController
 	public function variationsBlock()
 	{
 		return new BlockResponse('variations', $this->getVariations());
+	}
+
+	public function upSellBlock()
+	{
+		// upsell products
+		$upsell = $this->getRelatedProducts($this->product, /*type:*/ 1);
+		foreach ($upsell as $key => $group)
+		{
+			foreach ($upsell[$key] as $i => &$prod)
+			{
+				$spec[] =& $upsell[$key][$i];
+			}
+		}
+		if (count($upsell))
+		{
+			ProductSpecification::loadSpecificationForRecordSetArray($spec);
+		}
+		$response = new BlockResponse();
+		$response->set('upsell', $upsell);
+		return $response;
 	}
 
 	public function overviewBlock()
@@ -762,10 +783,10 @@ class ProductController extends FrontendController
 		}
 	}
 
-	private function getRelatedProducts(Product $product)
+	private function getRelatedProducts(Product $product, $type=0)
 	{
 		// get related products
-		$related = $product->getRelatedProductsWithGroupsArray();
+		$related = $product->getRelatedProductsWithGroupsArray($type);
 
 		$rel = array();
 		foreach ($related as $r)

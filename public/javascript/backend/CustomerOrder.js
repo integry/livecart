@@ -5,12 +5,12 @@
 Backend.CustomerOrder = Class.create();
 Backend.CustomerOrder.prototype =
 {
-  	Links: {},
+	Links: {},
 	Messages: {},
 
 	treeBrowser: null,
 
-  	urls: new Array(),
+	urls: new Array(),
 
 	initialize: function(groups)
 	{
@@ -223,7 +223,7 @@ Backend.CustomerOrder.prototype =
 
 	openOrder: function(id, e, onComplete)
 	{
-		if(e)
+		if (e)
 		{
 			Event.stop(e);
 			$('orderIndicator_' + id).style.visibility = 'visible';
@@ -247,14 +247,13 @@ Backend.CustomerOrder.prototype =
 
 															Backend.CustomerOrder.prototype.orderLoaded = true;
 
-
 															if (!Backend.getHash().match(/order_(\d+)/))
 															{
 																Backend.ajaxNav.add("order_" + id);
 															}
 														}.bind(this) );
 
-		if(Backend.CustomerOrder.Editor.prototype.hasInstance(id))
+		if (Backend.CustomerOrder.Editor.prototype.hasInstance(id))
 		{
 			Backend.CustomerOrder.Editor.prototype.getInstance(id);
 		}
@@ -458,6 +457,7 @@ Backend.CustomerOrder.Editor.prototype =
 	initialize: function(id, hideShipped, isCancelled, isFinalized, invoiceNumber)
   	{
 		this.id = id ? id : '';
+
 		this.hideShipped = hideShipped;
 		this.isCancelled = isCancelled;
 		this.isFinalized = isFinalized;
@@ -533,6 +533,8 @@ Backend.CustomerOrder.Editor.prototype =
 	{
 		this.nodes = {};
 		this.nodes.parent = $("tabOrderInfo_" + this.id + "Content");
+		this.nodes.addCoupon = $("order_" + this.id + "_addCoupon");
+
 		// this.nodes.form = this.nodes.parent.down("form");
 		this.nodes.form = $A(this.nodes.parent.getElementsByTagName("form")).find(function(f){return f.id != "calendarForm";});
 		this.nodes.isCanceled = $("order_" + this.id + "_isCanceled");
@@ -547,10 +549,43 @@ Backend.CustomerOrder.Editor.prototype =
 	{
 		Event.observe(this.nodes.isCanceled, 'click', function(e) { Event.stop(e); this.switchCancelled(); }.bind(this));
 		Event.observe(this.nodes.status, 'change', function(e) { Event.stop(e); this.submitForm(); }.bind(this));
-
+		Event.observe(this.nodes.addCoupon, 'click', this.addCoupon.bindAsEventListener(this));
 	},
 
+	addCoupon: function(e)
+	{
+		Event.stop(e);
+		var
+			node = Event.element(e),
+			code = prompt(Backend.Shipment.Messages.addCouponCode),
+			indicator;
+		if (code === null)
+		{
+			return;
+		}
+		indicator = $("order_"+this.id+"_addCouponIndicator");
+		indicator.addClassName("progressIndicator");
 
+		new LiveCart.AjaxRequest
+		(
+			node.href.replace("_coupon_", code),
+			indicator,
+			function(orderID, responseJSON)
+			{
+				var responseObject = eval("(" + responseJSON.responseText + ")");
+				if (responseObject.status == 'success')
+				{
+					Backend.CustomerOrder.prototype.resetTab("tabOrderInfo", orderID);
+					// 'invalidate' objects that may contain references to DOM nodes destroyed by previous line.
+					Backend.CustomerOrder.Editor.prototype.Instances = {};
+					Backend.Shipment.prototype.instances = {};
+					ActiveList.prototype.activeListsUsers = {};
+
+					Backend.CustomerOrder.prototype.openOrder(orderID);
+				}
+			}.bind(this, this.id)
+		);
+	},
 
 	switchCancelled: function()
 	{

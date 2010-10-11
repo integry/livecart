@@ -104,6 +104,10 @@ Backend.OrderedItem = {
 
 	updateReport: function(report)
 	{
+		if (!report)
+		{
+			return;
+		}
 		var id = report.up('.tabPageContainer').id.match(/\w+_(\d+)\w+/)[1]
 
 		var reportValues = { 'subtotalAmount': 0, 'shippingAmount': 0, 'totalAmount': 0, 'taxAmount': 0 };
@@ -559,14 +563,29 @@ Backend.Shipment.prototype =
 		}
 	},
 
-	addNewProductToShipment: function(productID, orderID, popup)
+	addNewProductToShipment: function(productID, orderID, popup, progressIndicator, query)
 	{
+		if (arguments.length < 4)
+		{
+			progressIndicator = false
+		}
+		url = Backend.OrderedItem.Links.createNewItem + "/?productID=" + productID + "&shipmentID=" + this.ID + "&orderID=" + this.orderID + "&downloadable=" + this.nodes.form.elements.namedItem('downloadable').value;
+		if (query)
+		{
+			url += '&query=' + query;
+			this.hasQuery = true;
+		}
+		else
+		{
+			this.hasQuery = false;
+		}
+
 		new LiveCart.AjaxRequest(
-			Backend.OrderedItem.Links.createNewItem + "/?productID=" + productID + "&shipmentID=" + this.ID + "&orderID=" + this.orderID + "&downloadable=" + this.nodes.form.elements.namedItem('downloadable').value,
-			false,
+			url,
+			progressIndicator,
 			function(response)
 			{
-			   response = eval("(" + response.responseText + ")");
+				response = eval("(" + response.responseText + ")");
 
 			   try
 			   {
@@ -578,15 +597,27 @@ Backend.Shipment.prototype =
 			   }
 			   if (response.data.status == 'success')
 			   {
+					if (this.hasQuery)
+					{
+						try {
+							$("order"+this.orderID+"_productMiniform").down("form").down("input").value="";
+							$("ProductSearchResultOuterContainer").innerHTML = "";
+							$("ProductSearchResultOuterContainer").hide();
+							$("miniformControls"+this.orderID).hide();
+						} catch(e) { }
+					}
+
 					if (response.html)
 					{
 						var html = response.html;
+						$("order"+orderID+"_tmpContainer").innerHTML = html;
 						var response = response.data;
 					}
 
 					Backend.SaveConfirmationMessage.prototype.showMessage(response.message);
 
 					var listNode = $("orderShipments_list_" + this.orderID + "_" + this.ID).down('ul.orderShipmentsItem');
+					
 					var itemsList = ActiveList.prototype.getInstance(listNode);
 					itemsList.id = "orderShipmentsItems_list_" + this.orderID + "_" + this.ID;
 
@@ -597,43 +628,48 @@ Backend.Shipment.prototype =
 
 					this.nodes.root.up(".shipmentCategoty").show();
 
-				   if(!response.item.isExisting)
-				   {
-					   var li = itemsList.addRecord(response.item.ID, html);
-				   }
-				   else
-				   {
-					   var li = $("orderShipmentsItems_list_" + this.orderID + "_" + response.item.Shipment.ID + "_" + response.item.ID);
-				   }
+					var item, z;
+					for(z=0; z<response.items.length; z++)
+					{
+						item = response.items[z];
+						if(!item.isExisting)
+						{
+							var li = itemsList.addRecord(item.ID, $("html_" + item.ID).innerHTML);
+						}
+						else
+						{
+							var li = $("orderShipmentsItems_list_" + this.orderID + "_" + item.Shipment.ID + "_" + item.ID);
+						}
 
-				   li.down('.orderShipmentsItem_info_sku').innerHTML = response.item.Product.sku;
-				   li.down('.orderShipmentsItem_info_name').down('a').innerHTML = response.item.Product.name_lang;
-				   li.down('.orderShipmentsItem_info_name').down('a').href += response.item.Product.ID;
-				   li.down('.orderShipmentsItem_count').value = response.item.count;
+						li.down('.orderShipmentsItem_info_sku').innerHTML = item.Product.sku;
+						li.down('.orderShipmentsItem_info_name').down('a').innerHTML = item.Product.name_lang;
+						li.down('.orderShipmentsItem_info_name').down('a').href += item.Product.ID;
+						li.down('.orderShipmentsItem_count').value = item.count;
 
-				   var price = li.down('.orderShipmentsItem_info_price');
-				   var priceInput = price.down('input');
-				   price.down('.pricePrefix').innerHTML = response.item.Shipment.prefix;
-				   priceInput.value = response.item.price;
-				   price.down('.priceSuffix').innerHTML = response.item.Shipment.suffix;
+						var price = li.down('.orderShipmentsItem_info_price');
+						var priceInput = price.down('input');
+						price.down('.pricePrefix').innerHTML = item.Shipment.prefix;
+						priceInput.value = item.price;
+						price.down('.priceSuffix').innerHTML = item.Shipment.suffix;
 
-				   var priceTotal = li.down('.item_subtotal');
-				   priceTotal.down('.pricePrefix').innerHTML = response.item.Shipment.prefix;
-				   priceTotal.down('.price').innerHTML = Backend.Shipment.prototype.formatAmount(response.item.price * response.item.count);
-				   priceTotal.down('.priceSuffix').innerHTML = response.item.Shipment.suffix;
+						var priceTotal = li.down('.item_subtotal');
+						priceTotal.down('.pricePrefix').innerHTML = item.Shipment.prefix;
+						priceTotal.down('.price').innerHTML = Backend.Shipment.prototype.formatAmount(item.price * item.count);
+						priceTotal.down('.priceSuffix').innerHTML = item.Shipment.suffix;
 
-				   var countInput = li.down('.orderShipmentsItem_count');
+						var countInput = li.down('.orderShipmentsItem_count');
 
-				   this.bindItemEvents(li);
+						this.bindItemEvents(li);
 
-				   this.setAmount(response.item.Shipment.amount);
-				   this.setTaxAmount(response.item.Shipment.taxAmount);
-				   this.setShippingAmount(response.item.Shipment.shippingAmount);
-				   this.setTotal(response.item.Shipment.total);
+						this.setAmount(item.Shipment.amount);
+						this.setTaxAmount(item.Shipment.taxAmount);
+						this.setShippingAmount(item.Shipment.shippingAmount);
+						this.setTotal(item.Shipment.total);
 
-				   Backend.OrderedItem.updateReport($("orderShipment_report_" + this.orderID));
+						Backend.OrderedItem.updateReport($("orderShipment_report_" + this.orderID));
 
-				   this.toggleStatuses();
+						this.toggleStatuses();
+					}
 			   }
 			}.bind(this)
 		);
@@ -1145,6 +1181,86 @@ Backend.Shipment.prototype =
 			menu.hide(null, "orderShipments_new_" + orderID + "_controls");
 			Backend.Shipment.prototype.getInstance("orderShipments_new_" + orderID + "_form").save(); ;
 		}.bind(this));
+
+		Event.observe("order" + orderID + "_openProductMiniform", 'click', function(orderID, e)
+		{
+			Event.stop(e);
+			$("order"+ orderID + "_productMiniform").show();
+			$("orderShipments_menu_" + orderID).hide();
+		}.bind(this,orderID));
+
+		Event.observe($("ProductSearchQuery"), 'keyup', function(e,orderID)
+		{
+			var element = Event.element(e);
+			if(element.value.match(","))
+			{
+				$("miniformControls"+orderID).show();
+			}
+			else
+			{
+				$("miniformControls"+orderID).hide();
+			}
+		}.bindAsEventListener(this,orderID));
+
+		$A(["order" + orderID + "_cancelProductMiniform",
+		 "order" + orderID + "_cancelProductMiniform2"]).each(
+			function(orderID, nodeID)
+			{
+				Event.observe($(nodeID), 'click', function(orderID, e)
+				{
+					Event.stop(e);
+					$("order"+ orderID + "_productMiniform").hide();
+					$("orderShipments_menu_" + orderID).show();
+				}.bind(this,orderID));
+			}.bind(this, orderID)
+		);
+
+		Event.observe($("ProductSearchResultOuterContainer"), "click", function(event, orderID)
+		{
+			var element = Event.element(event);
+			var id = element.down(".id");
+			if (id)
+			{
+				Event.stop(event);
+				Backend.Shipment.Callbacks.addProduct(id.value, $("order" + orderID + "_addToShipment").value, orderID);
+			}
+		}.bindAsEventListener(this, orderID));
+
+		Event.observe($("order" + orderID + "_addSearchResultToOrder"), 'click', function(orderID, e)
+		{
+			Event.stop(e);
+
+			var
+				input = $("ProductSearchQuery"),
+				node,
+				productCount = 0;
+			if (input.value.length < 3)
+			{
+				$("ProductSearchResultOuterContainer").innerHTML = "";
+			}
+			node = $("ProductSearchForm").down(".qsCount");
+			if (node)
+			{
+				productCount = parseInt(node.innerHTML.replace(/[^\d+]/g,""), 10);
+				if (isNaN(productCount))
+				{
+					productCount = 0;
+				}
+			}
+
+			if (productCount == 0)
+			{
+				alert($("order"+orderID+"_cannotAddEmptyResult").innerHTML);
+				return;
+			}
+			// search result container must be visible!
+			Backend.QuickSearch.getInstance($("ProductSearchResultOuterContainer")).showResultContainer();
+
+			if (productCount == 1 || confirm($("order"+orderID+"_addAllFoundProducts").innerHTML.replace('[1]',productCount)))
+			{
+				Backend.Shipment.Callbacks.addProducts($("ProductSearchQuery").value, $("order" + orderID + "_addToShipment").value, orderID);
+			}
+		}.bind(this,orderID));
 	},
 
 	editShippingAddress: function()
@@ -1224,7 +1340,6 @@ Backend.Shipment.prototype =
 	}
 }
 
-
 Backend.Shipment.Callbacks =
 {
 	beforeDelete: function(li) {
@@ -1233,6 +1348,7 @@ Backend.Shipment.Callbacks =
 			return Backend.Shipment.Links.remove + "/" + this.getRecordId(li);
 		}
 	},
+
 	afterDelete: function(li, response) {
 		try
 		{
@@ -1251,5 +1367,19 @@ Backend.Shipment.Callbacks =
 		}
 
 		return false;
+	},
+
+	addProduct: function(productID, shipmentID, orderID)
+	{
+		var shipmentContainer = $('orderShipments_list_' + orderID + '_' + shipmentID);
+		Backend.Shipment.prototype.getInstance(shipmentContainer).addNewProductToShipment(productID, orderID, null, $("progressIndicator"+productID));
+	},
+
+	addProducts: function(query, shipmentID, orderID)
+	{
+		var progressIndicator = $("order" +  orderID + "_addSearchResultToOrder").up(".controls").down("span");
+		progressIndicator.addClassName("progressIndicator");
+		var shipmentContainer = $('orderShipments_list_' + orderID + '_' + shipmentID);
+		Backend.Shipment.prototype.getInstance(shipmentContainer).addNewProductToShipment(null, orderID, null, progressIndicator, query);
 	}
 }

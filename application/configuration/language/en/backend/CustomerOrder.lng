@@ -201,3 +201,16 @@ ProductName=Product name
 Manufacturer=Manufacturer
 UsedCouponCode=Used coupon code
 ProductOption=Ordered product option
+
+_advanced_product_search=Advanced product search
+_search_product=Search product
+_search_product_tip1=Enter product name, SKU or manufacturer to search for a product
+_search_product_tip2=You can also add multiple products at once by entering SKU's seperated by commas, for example, "SKU1, SKU4, SKU10"
+
+_add_to_order=Add to order
+_cannot_add_empty_result=Cannot add products, because product search result is empty
+_add_all_found_products=Are you sure want to add [1] products?
+
+_add_to_shipment=Add to shipment
+_add_coupon=Add coupon
+_add_coupon_code=Add coupon code

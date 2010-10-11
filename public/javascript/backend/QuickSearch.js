@@ -214,7 +214,7 @@ Backend.QuickSearch.getInstance = function(obj)
 	obj = $(obj);
 
 	// quick search container div has id <instance name>Container
-	// emove Container and get instance name.
+	// remove Container and get instance name.
 	while(obj.id.match(/ResultOuterContainer$/) == null)
 	{
 		if(i>10)

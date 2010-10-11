@@ -2956,3 +2956,25 @@ fieldset.eavGroup
 {
 	display: none;
 }
+
+
+#upsellProducts .checkProduct
+{
+	float:left;
+	width:20px
+}
+
+#upsellProducts .image
+{
+	width:45px;
+}
+
+#upsellProducts .pricingInfo
+{
+	position:absolute;
+	margin-left:65px; /* 20px + 45px */
+}
+#upsellProducts .pricingInfo .price
+{
+	font-size:small;
+}

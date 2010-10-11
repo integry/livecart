@@ -25,12 +25,18 @@
 	<li class="order_printInvoice">
 		<a href="{link controller=backend.customerOrder action=printInvoice id=$order.ID}" target="_blank">{t _print_invoice}</a>
 	</li>
+
 	<li {denied role='order.update'}style="display: none"{/denied}
 		class="{if $order.isCancelled}order_accept{else}order_cancel{/if}">
 		<span style="display: none;" id="order_{$order.ID}_isCanceledIndicator" class="progressIndicator"></span>
 		<a id="order_{$order.ID}_isCanceled" href="{link controller="backend.customerOrder" action="setIsCanceled" id=$order.ID}">
 			{if $order.isCancelled}{t _accept_order}{else}{t _cancel_order}{/if}
 		</a>
+	</li>
+
+	<li {denied role='order.update'}style="display: none"{/denied} class="">
+		<span style="display: none;" id="order_{$order.ID}_addCouponIndicator" class="progressIndicator"></span>
+		<a id="order_{$order.ID}_addCoupon" href="{link controller="backend.customerOrder" action="addCoupon" id=$order.ID}?coupon=_coupon_">{t _add_coupon}</a>
 	</li>
 </ul>
 <div class="clear"></div>
@@ -129,14 +135,23 @@
 </div>
 {/if}
 
+
+{* count how many unshipped shipments *}
+{assign var="shipmentCount" value=0}
+{foreach item="shipment" from=$shipments}
+	{if $shipment.status != 3 && $shipment.isShippable}
+		{assign var="shipmentCount" value=$shipmentCount+1}
+	{/if}
+{/foreach}
+
 <fieldset class="container" {denied role='order.update'}style="display: none"{/denied}>
 	<ul class="menu" id="orderShipments_menu_{$orderID}">
 		<li class="order_addProduct" id="order{$orderID}_addProduct_li">
-		   <span {denied role='order.update'}style="display: none"{/denied}>
-			   <a href="#newProduct" id="order{$orderID}_addProduct">{t _add_new_product}</a>
-		   </span>
+			<span {denied role='order.update'}style="display: none"{/denied}>
+				<a href="#newProduct" id="order{$orderID}_openProductMiniform">{t _add_new_product}</a>
+			</span>
 		</li>
-		<li class="order_addShipment"  id="order{$orderID}_addShipment_li">
+		<li class="order_addShipment" id="order{$orderID}_addShipment_li">
 			<span id="orderShipments_new_{$orderID}_indicator" class="progressIndicator" style="display: none"> </span>
 			<a href="#new" id="orderShipments_new_{$orderID}_show">{t _add_new_shipment}</a>
 		</li>
@@ -149,6 +164,48 @@
 		</li>
 	</ul>
 </fieldset>
+
+<fieldset class="addProductsContainer" style="display:none;" id="order{$orderID}_productMiniform">
+	<legend>{t _add_new_product} <a class="cancel" href="#" id="order{$orderID}_cancelProductMiniform">{t _cancel}</a></legend>
+	<ul class="menu" id="orderShipments_menu_{$orderID}">
+		<li>
+			<span {denied role='order.update'}style="display: none"{/denied}>
+				<a href="#newProduct" id="order{$orderID}_addProduct" class="cancel">{t _advanced_product_search}</a>
+			</span>
+		</li>
+	</ul>
+
+	<label for="ProductSearchQuery">{t _search_product}:</label>
+	{include
+		file="backend/quickSearch/form.tpl"
+		formid="ProductSearch"
+		classNames="Product"
+		resultTemplates="Product:ProductAddToShippment"
+	}
+	<div class="controls" id="miniformControls{$orderID}" style="display:none;">
+		<span class="progressIndicator" style="display: none;"></span>
+		<input type="submit" name="save" class="submit" value="{t _add_to_order}" id="order{$orderID}_addSearchResultToOrder" />
+		{t _or}
+		<a class="cancel" href="#cancel" id="order{$orderID}_cancelProductMiniform2">{t _cancel}</a>
+	</div>
+	<div class="clear" />
+	<div class="tip">{t _search_product_tip1}<br />{t _search_product_tip2}</div>
+
+	<div class="{if $shipmentCount <= 1}singleShipment{/if}">
+		<label>{t _add_to_shipment}:</label>
+		<select id="order{$orderID}_addToShipment" class="addToShipment">
+			{foreach item="shipment" from=$shipments}
+				{if $shipment.status != 3 && $shipment.isShippable}
+					<option value="{$shipment.ID}">{t _shipment} #{$shipment.ID}</option>
+				{/if}
+			{/foreach}
+		</select>
+	</div>
+	
+	<div class="hidden" id="order{$orderID}_cannotAddEmptyResult">{t _cannot_add_empty_result}</div>
+	<div class="hidden" id="order{$orderID}_addAllFoundProducts">{t _add_all_found_products}</div>
+</fieldset>
+
 
 <fieldset id="orderShipments_new_{$orderID}_form" style="display: none;"> </fieldset>
 <div id="orderShipment_{$orderID}_controls_empty" style="display: none">{include file="backend/shipment/shipmentControls.tpl"}</div>
@@ -180,10 +237,10 @@
 	</fieldset>
 {/if}
 
-<div id="order{$orderID}_downloadableShipments" class="downloadableShipments shipmentCategoty" style="display: none">
+<div id="order{$orderID}_downloadableShipments" class="downloadableShipments shipmentCategoty" style="display: none;">
 	<h2 class="notShippedShipmentsTitle">{t _downloadable}</h2>
 	<div id="orderShipments_list_{$orderID}_downloadable" class="downloadableShipment"  {denied role='order.update'}style="display: none"{/denied}>
-		<ul id="orderShipmentsItems_list_{$orderID}_downloadable" class="activeList_add_delete orderShipmentsItem activeList">
+		<ul id="orderShipmentsItems_list_{$orderID}_downloadable" class="activeList_add_delete orderShipmentsItem activeList singleShipment">
 			<li id="orderShipments_list_{$orderID}_{$downloadableShipment.ID}" class="orderShipment" >
 				{include file="backend/shipment/shipment.tpl" shipment=$downloadableShipment notShippable=true downloadable=1}
 
@@ -201,7 +258,7 @@
 {* Not Shipped Shipments *}
 <div id="order{$orderID}_shippableShipments" class="shippableShipments shipmentCategoty" style="display: none">
 	<h2 class="notShippedShipmentsTitle">{t _not_shipped}</h2>
-	<ul id="orderShipments_list_{$orderID}" class="orderShipments">
+	<ul id="orderShipments_list_{$orderID}" class="orderShipments {if $shipmentCount == 1}singleShipment{/if}">
 		{foreach item="shipment" from=$shipments}
 			{if $shipment.status != 3 && $shipment.isShippable}
 				<li id="orderShipments_list_{$orderID}_{$shipment.ID}" class="orderShipment downloadableOrder">
@@ -219,7 +276,13 @@
 {* Shipped Shipments *}
 <div id="order{$orderID}_shippedShipments" class="shippedShipments shipmentCategoty" style="display: none">
 	<h2 class="shippedShipmentsTitle">{t _shipped}</h2>
-	<ul id="orderShipments_list_{$orderID}_shipped" class="orderShippedShipments">
+	{assign var="shipmentCount" value=0}
+	{foreach item="shipment" from=$shipments}
+		{if $shipment.status == 3 && $shipment.isShippable}
+			{assign var="shipmentCount" value=$shipmentCount+1}
+		{/if}
+	{/foreach}
+	<ul id="orderShipments_list_{$orderID}_shipped" class="orderShippedShipments {if $shipmentCount == 1}singleShipment{/if}">
 		{foreach item="shipment" from=$shipments}
 			{if $shipment.status == 3 && $shipment.isShippable}
 				<li id="orderShipments_list_{$orderID}_shipped_{$shipment.ID}" class="orderShipment">
@@ -231,10 +294,7 @@
 	</ul>
 </div>
 
-
-
-
-
+<div class="hidden" style="display:none;" id="order{$orderID}_tmpContainer"></div>
 
 
 {literal}
@@ -244,6 +304,7 @@
 	Backend.OrderedItem.Links.changeShipment = '{/literal}{link controller=backend.orderedItem action=changeShipment}{literal}';
 	Backend.OrderedItem.Links.addProduct = '{/literal}{link controller=backend.orderedItem action=selectProduct}/{$orderID}{literal}';
 	Backend.OrderedItem.Links.createNewItem = '{/literal}{link controller=backend.orderedItem action=create}{literal}';
+	// Backend.OrderedItem.Links.createFromSearchQuery = '{/literal}{link controller=backend.orderedItem action=createFromSearchQuery}{literal}';
 	Backend.OrderedItem.Links.changeItemCount = '{/literal}{link controller=backend.orderedItem action=changeCount}{literal}';
 
 	Backend.Shipment.Links = {};
@@ -272,6 +333,7 @@
 	Backend.Shipment.Messages.areYouSureYouWantToDeleteThisShipment = '{/literal}{t _are_you_sure_you_want_to_delete_this_shipment|addslashes}{literal}';
 	Backend.Shipment.Messages.emptyShipmentsWillBeRemoved = '{/literal}{t _you_have_count_empty_shipments_do_you_want_to_proceed_to_the_next_page|addslashes}{literal}'
 	Backend.Shipment.Messages.shipment = '{/literal}{t _shipment}{literal}';
+	Backend.Shipment.Messages.addCouponCode = '{/literal}{t _add_coupon_code}{literal}';
 
 	Backend.OrderedItem.Messages = {};
 	Backend.OrderedItem.Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_item|addslashes}{literal}';
@@ -279,7 +341,6 @@
 	Backend.OrderedItem.Messages.areYouRealyWantToUpdateItemsCount = '{/literal}{t _are_you_realy_want_to_update_items_count|addslashes}{literal}';
 
 	Backend.Shipment.prototype.initializePage("{/literal}{$orderID}{literal}", "{/literal}{$downloadableShipment.ID}{literal}")
-
 	ActiveList.prototype.getInstance("{/literal}orderShipmentsItems_list_{$orderID}_{$downloadableShipment.ID}{literal}", Backend.OrderedItem.activeListCallbacks);
 	var groupList = ActiveList.prototype.getInstance('{/literal}orderShipments_list_{$orderID}{literal}', Backend.Shipment.Callbacks);
 
@@ -292,7 +353,6 @@
 	{/literal}{/foreach}{literal}
 
 	groupList.createSortable(true);
-
 	</script>
 {/literal}
 

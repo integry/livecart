@@ -24,68 +24,125 @@ class OrderedItemController extends StoreManagementController
 
 	public function create()
 	{
-		$product = Product::getInstanceById((int)$this->request->get('productID'), true);
-
-		if($product->isDownloadable())
+		$request = $this->getRequest();
+		$query = $request->get('query');
+		if (strlen($query))
 		{
-			$order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true, array('ShippingAddress' => 'UserAddress', 'Currency'));
-	 		$shipment = $order->getDownloadShipment();
+			$products = $this->getProductsFromSearchQuery($query);
 		}
 		else
 		{
-			$shipment = Shipment::getInstanceById('Shipment', (int)$this->request->get('shipmentID'), true, array('Order' => 'CustomerOrder', 'ShippingService', 'ShippingAddress' => 'UserAddress', 'Currency'));
+			$products = new ARSet();
+			$products->add(Product::getInstanceById((int)$this->request->get('productID'), true));
 		}
+		$saveResponse = array('errors'=>array(), 'items'=>array());
 
-		$history = new OrderHistory($shipment->order->get(), $this->user);
-
-		$existingItem = false;
-		foreach($shipment->getItems() as $item)
-		{
-			if($item->getProduct() === $product)
-			{
-				if (!$product->getOptions(true))
-				{
-					$existingItem = $item;
-				}
-				break;
-			}
-		}
-
-		if($existingItem)
-		{
-			$item = $existingItem;
+		$composite = new CompositeJSONResponse();
+		foreach ($products as $product){
 			if($product->isDownloadable())
 			{
-				return new JSONResponse(false, 'failure', $this->translate('_downloadable_item_already_exists_in_this_order'));
+				$order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true, array('ShippingAddress' => 'UserAddress', 'Currency'));
+				$shipment = $order->getDownloadShipment();
 			}
 			else
 			{
-				$item->count->set($item->count->get() + 1);
+				$shipment = Shipment::getInstanceById('Shipment', (int)$this->request->get('shipmentID'), true, array('Order' => 'CustomerOrder', 'ShippingService', 'ShippingAddress' => 'UserAddress', 'Currency'));
 			}
+
+			$history = new OrderHistory($shipment->order->get(), $this->user);
+
+			$existingItem = false;
+			foreach($shipment->getItems() as $item)
+			{
+				if($item->getProduct() === $product)
+				{
+					if (!$product->getOptions(true))
+					{
+						$existingItem = $item;
+					}
+					break;
+				}
+			}
+
+			if($existingItem)
+			{
+				$item = $existingItem;
+				if($product->isDownloadable())
+				{
+					return new JSONResponse(false, 'failure', $this->translate('_downloadable_item_already_exists_in_this_order'));
+				}
+				else
+				{
+					$item->count->set($item->count->get() + 1);
+				}
+			}
+			else
+			{
+				$order = $shipment->order->get();
+				$currency = $shipment->getCurrency();
+
+				$item = OrderedItem::getNewInstance($order, $product);
+				$item->count->set(1);
+				$item->price->set($currency->round($item->reduceBaseTaxes($product->getPrice($currency->getID()))));
+
+				$order->addItem($item);
+				$shipment->addItem($item);
+				$shipment->save();
+			}
+			$resp = $this->save($item, $shipment, $existingItem ? true : false );
+			
+			if (array_key_exists('errors', $resp))
+			{
+				$saveResponse['errors'] = array_merge($saveResponse['errors'], $resp['errors']);
+			}
+			else if(array_key_exists('item', $resp))
+			{
+				$saveResponse['items'][] = $resp['item'];
+			}
+		} // for each product
+
+		if (count($saveResponse['errors']) == 0)
+		{
+			unset($saveResponse['errors']);
+		}
+		
+		
+		if (isset($saveResponse['errors']))
+		{
+			$response =  new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_unable_to_update_items_quantity'));
 		}
 		else
 		{
-			$order = $shipment->order->get();
-			$currency = $shipment->getCurrency();
+			$response = new JSONResponse($saveResponse, 'success', $this->translate('_item_has_been_successfuly_saved'));
+		}
+		$composite->addResponse('data', $response, $this, 'create');
 
-			$item = OrderedItem::getNewInstance($order, $product);
-			$item->count->set(1);
-			$item->price->set($currency->round($item->reduceBaseTaxes($product->getPrice($currency->getID()))));
-
-			$order->addItem($item);
-			$shipment->addItem($item);
-			$shipment->save();
+		$ids = array();
+		foreach($saveResponse['items'] as $item)
+		{
+			$ids[] = $item['ID'];
 		}
 
-		$composite = new CompositeJSONResponse();
-		$response = $this->save($item, $shipment, $existingItem ? true : false );
-		$composite->addResponse('data', $response, $this, 'create');
-		$composite->addAction('html', 'backend.orderedItem', 'item');
-		$this->request->set('id', $item->getID());
+		// $composite->addAction('html', 'backend.orderedItem', 'item');
+		// $this->request->set('id', $item->getID());
+
+		$composite->addAction('html', 'backend.orderedItem', 'items');
+		$this->request->set('item_ids', implode(',',$ids));
+
 
 		$history->saveLog();
 
 		return $composite;
+	}
+
+	private function getProductsFromSearchQuery($query)
+	{
+		ClassLoader::import('application.model.searchable.SearchableModel');
+		$request = $this->getRequest();
+		$searchable  = SearchableModel::getInstanceByModelClass('Product',SearchableModel::BACKEND_SEARCH_MODEL);
+		$searchable->setOption('BACKEND_QUICK_SEARCH', true);
+
+		return ActiveRecordModel::getRecordSet('Product', $searchable->getSelectFilter($query));
 	}
 
 	public function update()
@@ -120,31 +177,34 @@ class OrderedItemController extends StoreManagementController
 			$shipment->recalculateAmounts();
 			$shipment->save();
 
-			return new JSONResponse(array(
+			return array(
 				'item' => array(
-					'ID'			  => $item->getID(),
-					'Product'		 => $item->getProduct()->toArray(),
-					'Shipment'		=> array(
-											'ID' => $shipment->getID(),
-											'amount' => (float)$shipment->amount->get(),
-											'shippingAmount' => (float)$shipment->shippingAmount->get(),
-											'taxAmount' => (float)$shipment->taxAmount->get(),
-											'total' => (float)$shipment->shippingAmount->get() + (float)$shipment->amount->get() + (float)$shipment->taxAmount->get(),
-											'prefix' => $shipment->getCurrency()->pricePrefix->get(),
-											'suffix' => $shipment->getCurrency()->priceSuffix->get()
-										 ),
-					'count'		   => $item->count->get(),
-					'price'		   => $item->price->get(),
+					'ID' => $item->getID(),
+					'Product' => $item->getProduct()->toArray(),
+					'Shipment' => array(
+						'ID' => $shipment->getID(),
+						'amount' => (float)$shipment->amount->get(),
+						'shippingAmount' => (float)$shipment->shippingAmount->get(),
+						'taxAmount' => (float)$shipment->taxAmount->get(),
+						'total' => (float)$shipment->shippingAmount->get() + (float)$shipment->amount->get() + (float)$shipment->taxAmount->get(),
+						'prefix' => $shipment->getCurrency()->pricePrefix->get(),
+						'suffix' => $shipment->getCurrency()->priceSuffix->get()
+					),
+					'count' => $item->count->get(),
+					'price' => $item->price->get(),
 					'priceCurrencyID' => $item->getCurrency()->getID(),
-					'isExisting'	  => $existingItem,
+					'isExisting' => $existingItem,
 					'variations' => $item->getProduct()->getParent()->getVariationData($this->application),
 				)
-			), 'success', $this->translate('_item_has_been_successfuly_saved')
 			);
 		}
 		else
 		{
-			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_unable_to_update_items_quantity'));
+			return array(
+				'errors' => $validator->getErrorList()
+			);
+			
+			//return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_unable_to_update_items_quantity'));
 		}
 	}
 
@@ -512,6 +572,35 @@ class OrderedItemController extends StoreManagementController
 		return $this->getItemResponse($item);
 	}
 
+	public function items()
+	{
+		$request = $this->getRequest();
+		$ids = explode(',', $request->get('item_ids'));
+		$items = array();
+		$this->application->getLocale()->translationManager()->loadFile('backend/Shipment');
+		$set = new ProductSet();
+		foreach($ids as $id)
+		{
+			$item = ActiveRecordModel::getInstanceByID('OrderedItem', $id, OrderedItem::LOAD_DATA);
+			$item->customerOrder->get()->load();
+			$item->customerOrder->get()->loadItems();
+			if ($image = $item->getProduct()->defaultImage->get())
+			{
+				$image->load();
+			}
+			$items[] = $item->toArray();
+			$set->add($item->getProduct()->getParent());
+		}
+		$response = new ActionResponse('items', $items);
+
+		// load product options and variations
+		//  pp(array_keys(ProductOption::loadOptionsForProductSet($set)));
+		$response->set('allOptions', ProductOption::loadOptionsForProductSet($set));
+		$response->set('variations', $set->getVariationData($this->application));
+
+		return $response;
+	}
+
 	public function item()
 	{
 		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id'), OrderedItem::LOAD_DATA);
@@ -521,7 +610,6 @@ class OrderedItemController extends StoreManagementController
 	public function downloadOptionFile()
 	{
 		ClassLoader::import('application.model.product.ProductOptionChoice');
-
 		$f = select(eq('OrderedItem.ID', $this->request->get('id')),
 					eq('ProductOptionChoice.optionID', $this->request->get('option')));
 

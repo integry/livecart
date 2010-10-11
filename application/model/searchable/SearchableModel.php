@@ -82,14 +82,22 @@ abstract class SearchableModel
 
 	public function getWeighedSearchCondition($fields, $searchTerm)
 	{
+		if (!is_array($searchTerm))
+		{
+			$searchTerm = array($searchTerm);
+		}
+
 		$if = array();
 		foreach ($fields as $field => $weight)
 		{
-			$cond = new LikeCond(new ARFieldHandle($this->getClassName(), $field), '%' . $searchTerm . '%');
-			$if[] = 'IF(' . $cond->toString() . ', ' . $weight . ', ';
+			foreach ($searchTerm as $term)
+			{
+				$cond = new LikeCond(new ARFieldHandle($this->getClassName(), $field), '%' . $term . '%');
+				$if[] = 'IF(' . $cond->toString() . ', ' . $weight . ', ';
+			}
 		}
 
-		return implode('', $if) . 0 . str_repeat(')', count($fields));
+		return implode('', $if) . 0 . str_repeat(')', count($if));
 	}
 
 	public function toArray()

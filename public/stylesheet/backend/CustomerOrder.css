@@ -296,3 +296,37 @@ ul.orderAddress_showEdit
 {
 	display:none !important;
 }
+
+.singleShipment .orderShipment_status,
+.singleShipment legend
+{
+	display:none;
+}
+
+.addProductsContainer a.cancel
+{
+	font-size:12px !important; /* smaller */
+}
+
+.addProductsContainer .tip
+{
+	font-size:small;
+	margin: 0 0 0 170px;
+	padding:0;
+}
+
+#ProductSearchContainer,
+.addProductsContainer .controls
+{
+	float:left;
+}
+
+.addProductsContainer .controls
+{
+	padding-left:8px;
+}
+
+.addProductsContainer .singleShipment
+{
+	display:none;
+}

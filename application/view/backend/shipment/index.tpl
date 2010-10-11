@@ -100,10 +100,9 @@
 <div id="order{$orderID}_downloadableShipments" class="downloadableShipments shipmentCategoty" style="display: none">
 	<h2 class="notShippedShipmentsTitle">{t _downloadable}</h2>
 	<div id="orderShipments_list_{$orderID}_downloadable" class="downloadableShipment"  {denied role='order.update'}style="display: none"{/denied}>
-		<ul id="orderShipmentsItems_list_{$orderID}_downloadable" class="activeList_add_delete orderShipmentsItem activeList">
+		<ul id="orderShipmentsItems_list_{$orderID}_downloadable" class="activeList_add_delete orderShipmentsItem activeList singleShipment">
 			<li id="orderShipments_list_{$orderID}_{$downloadableShipment.ID}" class="orderShipment" >
 				{include file="backend/shipment/shipment.tpl" shipment=$downloadableShipment notShippable=true downloadable=1}
-
 				{if $downloadableShipment.items|@count > 0}
 					<script type="text/javascript">
 						Element.show("order{$orderID}_downloadableShipments");
@@ -114,11 +113,16 @@
 	</div>
 </div>
 
-
 {* Not Shipped Shipments *}
 <div id="order{$orderID}_shippableShipments" class="shippableShipments shipmentCategoty" style="display: none">
 	<h2 class="notShippedShipmentsTitle">{t _not_shipped}</h2>
-	<ul id="orderShipments_list_{$orderID}" class="orderShipments">
+	{assign var="shippmentCount" value=0}
+	{foreach item="shipment" from=$shipments}
+		{if $shipment.status == 3 && $shipment.isShippable}
+			{assign var="shippmentCount" value=$shippmentCount+1}
+		{/if}
+	{/foreach}
+	<ul id="orderShipments_list_{$orderID}" class="orderShipments {if $shippmentCount == 1}singleShipment{/if}">
 		{foreach item="shipment" from=$shipments}
 			{if $shipment.status != 3 && $shipment.isShippable}
 				<li id="orderShipments_list_{$orderID}_{$shipment.ID}" class="orderShipment downloadableOrder">
@@ -136,7 +140,12 @@
 {* Shipped Shipments *}
 <div id="order{$orderID}_shippedShipments" class="shippedShipments shipmentCategoty" style="display: none">
 	<h2 class="shippedShipmentsTitle">{t _shipped}</h2>
-	<ul id="orderShipments_list_{$orderID}_shipped" class="orderShippedShipments">
+	{foreach item="shipment" from=$shipments}
+		{if $shipment.status == 3 && $shipment.isShippable}
+			{assign var="shippmentCount" value=$shippmentCount+1}
+		{/if}
+	{/foreach}
+	<ul id="orderShipments_list_{$orderID}_shipped" class="orderShippedShipments {if $shippmentCount == 1}singleShipment{/if}">
 		{foreach item="shipment" from=$shipments}
 			{if $shipment.status == 3 && $shipment.isShippable}
 				<li id="orderShipments_list_{$orderID}_shipped_{$shipment.ID}" class="orderShipment">

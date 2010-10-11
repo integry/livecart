@@ -18,7 +18,6 @@ Event.fire = function(element, event)
 var TabControl = Class.create();
 TabControl.prototype = {
 	__instances__: {},
-
 	activeTab: null,
 	indicatorImageName: "image/indicator.gif",
 
@@ -44,6 +43,7 @@ TabControl.prototype = {
 		this.nodes.tabList = this.nodes.tabContainer.down(".tabList");
 		this.nodes.tabListElements = document.getElementsByClassName("tab", this.nodes.tabList);
 		this.nodes.sectionContainer = this.nodes.tabContainer.down(".sectionContainer");
+		this.nodes.notabsContainer = this.nodes.tabContainer.down(".notabsContainer");
 	},
 
 	__bind__: function()
@@ -54,8 +54,17 @@ TabControl.prototype = {
 			var link = li.down('a');
 			var indicator = '<img src="' + self.indicatorImageName + '" class="tabIndicator" alt="Tab indicator" style="display: none" /> ';
 
-			Event.observe(link, 'click', function(e) { if(e) Event.stop(e); });
+			if(link.hasClassName("observed") == false)
+			{
+				Event.observe(link, 'click', function(e) { if(e) Event.stop(e); });
+				link.addClassName("observed");
+			}
 
+			if(li.hasClassName("observed"))
+			{
+				return;
+			}
+			link.addClassName("li");
 			li.onclick = function(e) {
 				if(!e) e = window.event;
 				if(e) Event.stop(e);
@@ -387,5 +396,59 @@ TabControl.prototype = {
 	getContentTabId: function(id)
 	{
 		return id + 'Content';
+	},
+
+	addNewTab: function(title)
+	{
+		var
+			id = ["tab",new Date().getTime(), Math.round(Math.random() * 100000000)].join(""),
+			li = document.createElement('li'),
+			div = document.createElement('div');
+
+		this.nodes.tabList.appendChild(li);
+		li.innerHTML = '<a href="#" class="li">'+title+'</a>';
+		li.addClassName("tab inactive");
+		this.nodes.sectionContainer.appendChild(div);
+		div.id=this.getContentTabId(id);
+		div.addClassName("tabPageContainer");
+		li.id = id;
+		this.__nodes__();
+		this.__bind__();
+		this.decorateTabs();
+		this.activateTab(id);
+		if(this.nodes.notabsContainer)
+		{
+			this.nodes.sectionContainer.show();
+			this.nodes.notabsContainer.hide();
+		}
+		return id;
+	},
+
+	setTitle: function(id, title)
+	{
+		$(id).down("a").innerHTML = title;
+	},
+
+	removeTab: function(id)
+	{
+		var
+			tab = $(id),
+			content = $(this.getContentTabId(id)),
+			newActiveTab = tab.previous();
+
+		tab.parentNode.removeChild(tab);
+		content.parentNode.removeChild(content);
+		this.__nodes__();
+		if(this.nodes.tabListElements.length == 0 && this.nodes.notabsContainer)
+		{
+			this.nodes.sectionContainer.hide();
+			this.nodes.notabsContainer.show();
+			return null;
+		}
+		else
+		{
+			this.activateTab(newActiveTab);
+			return this.getActiveTab();
+		}
 	}
 }

@@ -169,6 +169,10 @@ class ProductOption extends MultilingualObject
 
 		foreach ($categories as $category)
 		{
+			if($category->isLoaded() == false)
+			{
+				$category->load();
+			}
 			$c = new EqualsOrLessCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
 			$c->addAND(new EqualsOrMoreCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
 
@@ -200,6 +204,7 @@ class ProductOption extends MultilingualObject
 		$f->setOrder(new ARFieldHandle('Category', 'lft'), 'DESC');
 		$f->setOrder(new ARFieldHandle('ProductOption', 'position'), 'DESC');
 
+		
 		$options = ProductOption::getRecordSet($f, array('DefaultChoice' => 'ProductOptionChoice', 'Category'));
 
 		self::loadChoicesForRecordSet($options);
@@ -229,7 +234,6 @@ class ProductOption extends MultilingualObject
 				}
 			}
 		}
-
 		return $sorted;
 	}
 

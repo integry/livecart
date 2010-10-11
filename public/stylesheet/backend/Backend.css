@@ -1809,7 +1809,10 @@ a.external
 .quickEditContainer
 {
 	position:absolute;
-	width:100%;
+	top:0;
+	left:0;
+	width:90%;
+	margin:27px 5% 0 5%;
 	z-index:10;
 	background-color:whitesmoke;
 }
@@ -1856,22 +1859,6 @@ table.qeProducts{
 	position:absolute;
 }
 
-#QuickSearchResult
-{
-	position:absolute;
-	right:0;
-	background-color:white;
-	top:38px;
-	z-index:21;
-}
-
-#SettingsSearchResult
-{
-	position:absolute;
-	background-color:white;
-	top:38px;
-	z-index:21;
-}
 
 #SettingsSearchResult,
 #SettingsSearchQuery
@@ -1901,13 +1888,32 @@ a.deleteCross
 }
 
 /*************** quick search *************/
-#QuickSearchResultOuterContainer
+.QuickSearchResultOuterContainer
 {
+	position:absolute;
+	left:0;
+	top:38px;
 	background-color: white;
 	width: 100%;
 	border-width: 1px;
 	border: 1px solid #ccc;
 	-moz-border-radius: 10px;
+	z-index:200 !important;
+}
+
+
+#ProductSearchResultOuterContainer
+{
+position:static;
+}
+
+.QuickSearchResult
+{
+	position:absolute;
+	right:0;
+	background-color:white;
+	top:38px;
+	z-index:200 !important;
 }
 
 #QuickSearchResult

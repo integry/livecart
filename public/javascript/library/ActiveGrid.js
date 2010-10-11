@@ -56,6 +56,8 @@ ActiveGrid.prototype =
 
 	quickEditIdToken : null,
 
+	quickEditContainerState: "hidden",
+
 	activeGridInstanceID : null,
 
 	initialize: function(tableInstance, dataUrl, totalCount, loadIndicator, rowCount, filters)
@@ -121,11 +123,8 @@ ActiveGrid.prototype =
 	initAdvancedSearch: function(id, availableColumns, advancedSearchColumns, properties)
 	{
 		this.advancedSearchHandler = new ActiveGridAdvancedSearch(id);
-
 		this.advancedSearchHandler.createAvailableColumnConditions(advancedSearchColumns);
 		this.advancedSearchHandler.createAvailableColumnConditions(availableColumns, properties);
-		
-
 		this.advancedSearchHandler.findNodes();
 		this.advancedSearchHandler.bindEvents();
 	},
@@ -140,6 +139,8 @@ ActiveGrid.prototype =
 		this.quickEditUrlTemplate = urlTemplate;
 		this.quickEditIdToken = idToken;
 		Event.observe(this.tableInstance.down('tbody'), 'mouseover', this.quickEdit.bindAsEventListener(this) );
+		Event.observe(document.body, 'mouseover', this.quickEditMouseover.bindAsEventListener(this) );
+		Event.observe(this._getQuickEditContainer(), 'click', this.quickEditContainerClicked.bindAsEventListener(this) );
 	},
 
 	quickEdit: function(event)
@@ -151,12 +152,19 @@ ActiveGrid.prototype =
 
 		if (node.tagName.toLowerCase != "tr")
 		{
-			node=node.up("tr");
+			node = node.up("tr");
 		}
-		var pos = Position.cumulativeOffset(node);
-		mh = new PopupMenuHandler(pos[0], pos[1], 200, 200);
+
 		do {
-			m = node.down("input").name.match(/item\[(\d+)\]/);
+			input = node.down("input");
+			if (input && input.name)
+			{
+				m = node.down("input").name.match(/item\[(\d+)\]/);
+			}
+			else
+			{
+				m = [];
+			}
 			if (m && m.length == 2)
 			{
 				recordID = m[1];
@@ -179,17 +187,55 @@ ActiveGrid.prototype =
 			null,
 			function(transport)
 			{
-				var container = this.instance._getQuickEditContainer();
+				var container = this._getQuickEditContainer();
 				if(container)
 				{
 					container.innerHTML = transport.responseText;
-					container.style.top=(this.mh.y-230)+"px";
-					container.style.left=(20)+"px";
+					var pos = Position.cumulativeOffset(this.node);
+
+					// translate from grid upper/left corner to page upper/left corner
+					var offset = Position.cumulativeOffset(this.node.up(".activeGridContainer"));
+					offset[0] *= -1;
+					offset[1] *= -1;
+					pos = [pos[0] + offset[0], pos[1] + offset[1]];
+					container.style.left=(pos[0])+"px";
+					container.style.top=(pos[1])+"px";
 					container.show();
+
+					if (this.quickEditContainerState == "hidden") // ignore "changed" state!
+					{
+						this.quickEditContainerState = "shown";
+					}
 				}
 
-			}.bind({instance:this, mh:mh})
-		)
+			}.bind(this)
+		);
+	},
+
+	quickEditMouseover: function(event)
+	{
+		if (this.quickEditContainerState != "shown")
+		{
+			return;
+		}
+		element = Event.element(event);
+		if(element.up(".activeGridContainer") == null)
+		{
+			this.hideQuickEditContainer();
+		}
+	},
+
+	quickEditContainerClicked: function(event)
+	{
+		// any click (except on cancel link) in quick edit container set container to clicked state
+		if (Event.element(event).hasClassName("cancel") == false)
+		{
+			this.quickEditContainerState = "clicked";
+		}
+		else
+		{
+			this.quickEditContainerState = "shown";
+		}
 	},
 
 	hideQuickEditContainer : function()
@@ -197,6 +243,7 @@ ActiveGrid.prototype =
 		var container=this._getQuickEditContainer().hide();
 		container.innerHTML = "";
 		container.hide();
+		this.containerState = "hidden";
 	},
 
 	updateQuickEditGrid: function(jsonData)
@@ -1301,7 +1348,6 @@ ActiveGridAdvancedSearch.prototype =
 			}.bind(this, select)
 		);
 		select.addClassName("condition");
-		
 		this.lastConditionContainer = $(li);
 		return this.lastConditionContainer;
 	},
@@ -1400,12 +1446,15 @@ ActiveGridAdvancedSearchCondition.prototype =
 
 		// change comparision dropdown for this condition
 		comparision.innerHTML = '';
+		comparision.show();
 		value.show();
 		value2.hide();
 		type = this.getProperty('type');
 		if (type == 'text')
 		{
 			addOption(comparision, '=', $T("_grid_equals"));
+			comparision.hide();
+			value.focus();
 		}
 		else if(type == 'numeric')
 		{
@@ -1417,11 +1466,13 @@ ActiveGridAdvancedSearchCondition.prototype =
 			addOption(comparision, '>=', $T("_grid_greater_or_equal"));
 			addOption(comparision, '<=', $T("_grid_less_or_equal"));
 			addOption(comparision, '><', $T("_grid_range"));
+			value.focus();
 		}
 		else if(type == 'bool')
 		{
 			addOption(comparision, '1', $T("_yes"));
 			addOption(comparision, '0', $T("_no"));
+			comparision.focus();
 			value.hide();
 		}
 		else if(type == 'date')
@@ -1430,6 +1481,7 @@ ActiveGridAdvancedSearchCondition.prototype =
 				var key = 0, value=1
 				addOption(comparision, f[value], $T(f[key]));
 			}.bind(this, comparision));
+			comparision.focus();
 			value.hide();
 		}
 	},
