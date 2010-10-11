@@ -750,11 +750,11 @@ class Shipment extends ActiveRecordModel
 		if (!isset($array['selectedRate']) && isset($array['shippingAmount']))
 		{
 			$array['shippingAmount'] = $this->applyTaxesToShippingAmount($array['shippingAmount']);
-			$currency = $this->order->get()->currency->get();
+			$orderCurrency = $this->order->get()->currency->get();
 			$array['selectedRate']['formattedPrice'] = array();
 			foreach ($currencies as $id => $currency)
 			{
-				$rate = $currency->convertAmount($currency, $array['shippingAmount']);
+				$rate = $currency->convertAmount($orderCurrency, $array['shippingAmount']);
 				$array['selectedRate']['formattedPrice'][$id] = Currency::getInstanceById($id)->getFormattedPrice($rate);
 			}
 		}
