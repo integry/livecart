@@ -25,12 +25,18 @@
 	<li class="order_printInvoice">
 		<a href="{link controller=backend.customerOrder action=printInvoice id=$order.ID}" target="_blank">{t _print_invoice}</a>
 	</li>
+
 	<li {denied role='order.update'}style="display: none"{/denied}
 		class="{if $order.isCancelled}order_accept{else}order_cancel{/if}">
 		<span style="display: none;" id="order_{$order.ID}_isCanceledIndicator" class="progressIndicator"></span>
 		<a id="order_{$order.ID}_isCanceled" href="{link controller="backend.customerOrder" action="setIsCanceled" id=$order.ID}">
 			{if $order.isCancelled}{t _accept_order}{else}{t _cancel_order}{/if}
 		</a>
+	</li>
+
+	<li {denied role='order.update'}style="display: none"{/denied} class="">
+		<span style="display: none;" id="order_{$order.ID}_addCouponIndicator" class="progressIndicator"></span>
+		<a id="order_{$order.ID}_addCoupon" href="{link controller="backend.customerOrder" action="addCoupon" id=$order.ID}?coupon=_coupon_">{t _add_coupon}</a>
 	</li>
 </ul>
 <div class="clear"></div>
@@ -327,6 +333,7 @@
 	Backend.Shipment.Messages.areYouSureYouWantToDeleteThisShipment = '{/literal}{t _are_you_sure_you_want_to_delete_this_shipment|addslashes}{literal}';
 	Backend.Shipment.Messages.emptyShipmentsWillBeRemoved = '{/literal}{t _you_have_count_empty_shipments_do_you_want_to_proceed_to_the_next_page|addslashes}{literal}'
 	Backend.Shipment.Messages.shipment = '{/literal}{t _shipment}{literal}';
+	Backend.Shipment.Messages.addCouponCode = '{/literal}{t _add_coupon_code}{literal}';
 
 	Backend.OrderedItem.Messages = {};
 	Backend.OrderedItem.Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_item|addslashes}{literal}';
@@ -334,7 +341,6 @@
 	Backend.OrderedItem.Messages.areYouRealyWantToUpdateItemsCount = '{/literal}{t _are_you_realy_want_to_update_items_count|addslashes}{literal}';
 
 	Backend.Shipment.prototype.initializePage("{/literal}{$orderID}{literal}", "{/literal}{$downloadableShipment.ID}{literal}")
-
 	ActiveList.prototype.getInstance("{/literal}orderShipmentsItems_list_{$orderID}_{$downloadableShipment.ID}{literal}", Backend.OrderedItem.activeListCallbacks);
 	var groupList = ActiveList.prototype.getInstance('{/literal}orderShipments_list_{$orderID}{literal}', Backend.Shipment.Callbacks);
 
@@ -347,7 +353,6 @@
 	{/literal}{/foreach}{literal}
 
 	groupList.createSortable(true);
-
 	</script>
 {/literal}
 
