@@ -497,6 +497,34 @@ Order.OptionLoader.prototype =
 	}
 }
 
+Order.previewOptionImage = function(upload, res)
+{
+	if (res.error)
+	{
+
+	}
+	else
+	{
+		var root = upload.up('.productOption').down('.optionFileInfo');
+		var titleContainer = root.down('.optionFileName');
+		var image = root.down('.optionFileImage').down('img.optionThumb');
+
+		titleContainer.update(res.name);
+
+		if (res.thumb)
+		{
+			image.src = 'upload/optionImage/' + res.thumb;
+			image.show();
+		}
+		else
+		{
+			image.hide();
+		}
+
+		root.show();
+	}
+}
+
 Order.submitCartForm = function(anchor)
 {
 	var form = anchor.up('form');
@@ -946,7 +974,7 @@ Frontend.OnePageCheckout.prototype =
 			button = button.up('a');
 		}
 
-		var indicator = button.parentNode.down('.progressIndicator') || button.parentNode;
+		var indicator = button.up().down('.progressIndicator') || button.parentNode;
 		indicator.addClassName('progressIndicator');
 		indicator.show();
 	},

@@ -136,7 +136,7 @@ class OrderedItemOption extends ActiveRecordModel
 		return ObjectFile::getNewInstance('ObjectFile', self::getFilePath($this->optionText->get()), self::getFileName($this->optionText->get()));
 	}
 
-	protected function resizeImage($source, $target, $confSuffix)
+	public function resizeImage($source, $target, $confSuffix)
 	{
 		$dir = dirname($target);
 		if (!file_exists($dir))

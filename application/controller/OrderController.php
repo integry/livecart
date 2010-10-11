@@ -830,6 +830,46 @@ class OrderController extends FrontendController
 		}
 	}
 
+	public function uploadOptionFile()
+	{
+		ClassLoader::import('application.model.order.OrderedItemOption');
+
+		$field = 'upload_' . $this->request->get('field');
+		$option = ActiveRecordModel::getInstanceById('ProductOption', $this->request->get('id'), true);
+		$validator = $this->getValidator('optionFile');
+		$this->addOptionValidation($validator, $option->toArray(), $field);
+
+		if (!$validator->isValid())
+		{
+			return new JSONResponse(array('error' => $validator->getErrorList()));
+		}
+
+		// create tmp file
+		$file = $_FILES[$field];
+		$tmp = 'tmp_' . $field . md5($file['tmp_name']) .  '__' . $file['name'];
+		$dir = ClassLoader::getRealPath('public.upload.optionImage.');
+		$path = $dir . $tmp;
+
+		if (!file_exists($dir))
+		{
+			mkdir($dir);
+			chmod($dir, 0777);
+		}
+
+		move_uploaded_file($file['tmp_name'], $path);
+
+		// create thumbnail
+		$thumb = null;
+		if (@getimagesize($path))
+		{
+			$thumb = 'tmp_thumb_' . $tmp;
+			$thumbPath = $dir . $thumb;
+			OrderedItemOption::resizeImage($path, $thumbPath, 1);
+		}
+
+		return new JSONResponse(array('name' => $file['name'], 'file' => $tmp, 'thumb' => $thumb));
+	}
+
 	/**
 	 *	@todo Optimize loading of product options
 	 */

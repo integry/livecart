@@ -567,6 +567,81 @@ LiveCart.AjaxUpdater.prototype = {
 	}
 }
 
+LiveCart.FileUpload = Class.create();
+LiveCart.FileUpload.prototype =
+{
+	upload: null,
+	url: null,
+	onComplete: null,
+	cloned: null,
+
+	initialize: function(upload, url, onComplete)
+	{
+		this.upload = upload;
+		this.url = url;
+		this.onComplete = onComplete;
+
+		Event.observe(upload, 'change', this.submit.bindAsEventListener(this));
+	},
+
+	submit: function(el)
+	{
+		var upload = this.upload;
+
+		var target = document.createElement('iframe');
+		target.setAttribute('name', 'upload_iframe_' + Math.round(Math.random() * 1000000000000000));
+		target.setAttribute('style', 'width: 700px; height: 400px;');
+
+		document.body.appendChild(target);
+
+		target.onload =
+			function()
+			{
+				var oDoc = target.contentWindow || target.contentDocument;
+				if (oDoc.document)
+				{
+					oDoc = oDoc.document;
+    			}
+
+				var res = oDoc.body.innerHTML;
+				if (res.substr(0, 5) == '<pre>')
+				{
+					res = res.substr(5, res.length - 11);
+				}
+
+				res = res.length > 0 ? res.evalJSON() : {}
+
+				if (this.onComplete)
+				{
+					this.onComplete(this.cloned, res);
+				}
+			}.bind(this);
+
+		var uploadForm = document.createElement('form');
+		uploadForm.setAttribute('method', 'POST');
+		uploadForm.setAttribute('enctype', 'multipart/form-data');
+		uploadForm.setAttribute('action', this.url.replace(/\&amp\;/g, '&'));
+		uploadForm.setAttribute('target', target.getAttribute('name'));
+		$(uploadForm).hide();
+
+		document.body.appendChild(uploadForm);
+
+		var cloned = this.upload.cloneNode(true);
+		cloned.id += Math.round(Math.random() * 1000);
+
+		$(upload).hide();
+		upload.parentNode.insertBefore(cloned, upload);
+		$(cloned).show();
+
+		uploadForm.appendChild(upload);
+
+		uploadForm.submit();
+
+		new LiveCart.FileUpload(cloned, this.url, this.onComplete);
+		this.cloned = cloned;
+	}
+}
+
 /********************************************************************
  * Router / Url manipulator
  ********************************************************************/

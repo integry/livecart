@@ -64,9 +64,20 @@
 			{elseif 2 == $option.type}
 				{textfield class="text"}
 			{elseif 3 == $option.type}
-				{filefield name="upload_`$fieldName`"}
+				{uniqid assign=uniq}
+				{filefield name="upload_`$fieldName`" id=$uniq}
 				{hidden name=$fieldName}
 				{error for="upload_`$fieldName`"}<div class="errorText">{$msg}</div>{/error}
+				<div class="optionFileInfo" style="display: none;">
+					<div class="optionFileName"></div>
+					<div class="optionFileImage">
+						<img src="" class="optionThumb" alt="" />
+					</div>
+				</div>
+				<script type="text/javascript">
+					var upload = $('{$uniq}');
+					new LiveCart.FileUpload(upload, '{link controller=order action=uploadOptionFile id=$option.ID query="uniq=`$uniq`&field=`$fieldName`&productID=`$product.ID`"}', Order.previewOptionImage);
+				</script>
 			{/if}
 
 			{if $option.description_lang}
