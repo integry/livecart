@@ -10,6 +10,8 @@ ClassLoader::import('application.model.eavcommon.iEavSpecification');
  */
 abstract class EavSpecificationCommon extends ActiveRecordModel implements iEavSpecification
 {
+	abstract public function getValue();
+
 	public function getField()
 	{
 		return $this->specField;

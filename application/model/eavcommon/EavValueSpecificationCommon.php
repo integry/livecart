@@ -86,6 +86,11 @@ abstract class EavValueSpecificationCommon extends EavSpecificationCommon
 
 		return $arr;
 	}
+
+	public function getValue()
+	{
+		return $this->value->get();
+	}
 }
 
 ?>
