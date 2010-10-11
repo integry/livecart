@@ -14,7 +14,11 @@
 			<ul>
 				{foreach $result[$className].records as $record}
 				<li>
-					{include file="backend/quickSearch/result_`$className`.tpl"}
+					{if $customResultTemplates[$className]}
+						{include file="backend/quickSearch/result_`$customResultTemplates[$className]`.tpl"}
+					{else}
+						{include file="backend/quickSearch/result_`$className`.tpl"}
+					{/if}
 				</li>
 				{/foreach}
 			</ul>

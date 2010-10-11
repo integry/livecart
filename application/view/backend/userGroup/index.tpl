@@ -48,8 +48,6 @@
 		{include file="backend/userGroup/groupContainer.tpl"}
 		{include file="backend/userGroup/userContainer.tpl"}
 	</span>
-</div>
-
 
 {literal}
 <script type="text/javascript">

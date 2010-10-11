@@ -13,8 +13,10 @@
 		<input type="hidden" value="" name="from" id="{$formid}From" />
 		<input type="hidden" value="" name="to" id="{$formid}To" />
 		<input type="hidden" value="" name="direction" id="{$formid}Direction" />
-		<div id="QuickSearchResultOuterContainer" style="position:absolute; left:0; top:38px; z-index:2; display: none;">
-		        <div id="{$formid}Result"></div>
+		<input type="hidden" value='{$resultTemplates}' name="resultTemplates" id="{$formid}ResultTemplates" />
+
+		<div id="{$formid}ResultOuterContainer" class="QuickSearchResultOuterContainer" style="display: none;">
+			<div id="{$formid}Result" class="QuickSearchResult"></div>
 		</div>
 	</form>
 </div>
