@@ -190,7 +190,7 @@ class OfflineCreditCard extends CreditCardPayment
 	{
 		foreach ($range as $startingDigits)
 		{
-			if (substr($number, 0, strlen($startingDigits)) == $range)
+			if (substr($number, 0, strlen($startingDigits)) == $startingDigits)
 			{
 				return true;
 			}
