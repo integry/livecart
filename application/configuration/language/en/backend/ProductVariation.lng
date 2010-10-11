@@ -16,3 +16,9 @@ _err_type_name=Please enter the variation type name (for example, "Size")
 _err_variation_name=Please enter the variation name (for example, "Large")
 
 _variations_save_conf=Product variations successfully saved
+
+_tip_sku=Every variation is a separate product and therefore a unique SKU (stock keeping unit / product code) is assigned to every variation
+_tip_price=By default variations have the same price as the base product, however it is possible to change the price by either adding or substracting from the base product or completely overriding the base product price
+_tip_weight=Similarly to price configuration, individual variations may alter the base product shipping weight
+_tip_inventory=One of the main advantages of using product variations instead of product options is the ability to set individual inventory tracking for every product variation
+_tip_image=Uploading an image for variation allows to display the image in product detail page upon selecting the variation. All the variation images can be displayed in the product page also and customer may select the variation by clicking on its image thumbnail

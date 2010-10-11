@@ -9,11 +9,11 @@
 				</div>
 			</th>
 			<th class="isEnabled"><input type="checkbox" class="checkbox" /></th>
-			<th class="sku">{t _sku}</th>
-			<th class="price">{t _price} ({$params.currency})</th>
-			<th class="shippingWeight">{t _weight} (kg)</th>
-			<th class="stockCount">{t _inventory}</th>
-			<th class="image">{t _image}</th>
+			<th class="sku">{tip _sku}</th>
+			<th class="price">{tip _price} ({$params.currency})</th>
+			<th class="shippingWeight">{tip _weight} (kg)</th>
+			<th class="stockCount">{tip _inventory}</th>
+			<th class="image">{tip _image}</th>
 		</tr>
 	</thead>
 	<tbody>
