@@ -15,6 +15,8 @@ class LiveCartRenderer extends SmartyRenderer
 
 	private $blockConfiguration = null;
 
+	protected $application;
+
 	/**
 	 * Template renderer constructor
 	 *
@@ -23,6 +25,8 @@ class LiveCartRenderer extends SmartyRenderer
 	 */
 	public function __construct(LiveCart $application)
 	{
+		$this->application = $application;
+
 		self::registerHelperDirectory(ClassLoader::getRealPath('application.helper.smarty'));
 		self::registerHelperDirectory(ClassLoader::getRealPath('application.helper.smarty.form'));
 		parent::__construct($application);
@@ -177,7 +181,13 @@ class LiveCartRenderer extends SmartyRenderer
 		{
 			foreach ($conf as $command)
 			{
-				if (in_array($command['action']['command'], array('append', 'prepend', 'replace')))
+				if (!empty($command['action']['call']))
+				{
+					$call = $command['action']['call'];
+					$controllerInstance = $this->application->getControllerInstance($call[0]);
+					$newOutput = $this->application->renderBlock($command['action'], $controllerInstance);
+				}
+				else if (in_array($command['action']['command'], array('append', 'prepend', 'replace')))
 				{
 					$newOutput = $this->render($command['action']['view'] . '.tpl');
 				}
@@ -430,7 +440,8 @@ class LiveCartRenderer extends SmartyRenderer
 		{
 			list($controller, $action) = explode('->', $res['view'], 2);
 			$res['call'] = array($controller, $action);
-			$res['view'] = './block/' . $action;
+			$appDir = dirname($this->application->getControllerPath($controller));
+			$res['view'] = $appDir . '/view/' . $controller . '/block/' . $action . '.tpl';
 		}
 		else if ($this->isBlock($res['view']))
 		{

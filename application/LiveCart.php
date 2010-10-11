@@ -434,6 +434,19 @@ class LiveCart extends Application implements Serializable
 		return parent::getControllerInstance($controllerName);
 	}
 
+	public function getControllerPath($controllerName)
+	{
+		if (empty($this->controllerDirectories[$controllerName]))
+		{
+			$this->getControllerInstance($controllerName);
+		}
+
+		if (!empty($this->controllerDirectories[$controllerName]))
+		{
+			return $this->controllerDirectories[$controllerName];
+		}
+	}
+
 	protected function getControllerDirectories()
 	{
 		return $this->getConfigContainer()->getControllerDirectories();
@@ -760,7 +773,7 @@ class LiveCart extends Application implements Serializable
 		return $output;
 	}
 
-	protected function renderBlock($block, Controller $controllerInstance)
+	public function renderBlock($block, Controller $controllerInstance)
 	{
 		$this->processInstancePlugins('outputBlock', $block);
 
