@@ -240,7 +240,7 @@
 <div id="order{$orderID}_downloadableShipments" class="downloadableShipments shipmentCategoty" style="display: none;">
 	<h2 class="notShippedShipmentsTitle">{t _downloadable}</h2>
 	<div id="orderShipments_list_{$orderID}_downloadable" class="downloadableShipment"  {denied role='order.update'}style="display: none"{/denied}>
-		<ul id="orderShipmentsItems_list_{$orderID}_downloadable" class="activeList_add_delete orderShipmentsItem activeList singleShipment">
+		<ul id="orderShipmentsItems_list_{$orderID}_downloadable" class="activeList_add_delete orderShipmentsItem activeList">
 			<li id="orderShipments_list_{$orderID}_{$downloadableShipment.ID}" class="orderShipment" >
 				{include file="backend/shipment/shipment.tpl" shipment=$downloadableShipment notShippable=true downloadable=1}
 
@@ -258,7 +258,7 @@
 {* Not Shipped Shipments *}
 <div id="order{$orderID}_shippableShipments" class="shippableShipments shipmentCategoty" style="display: none">
 	<h2 class="notShippedShipmentsTitle">{t _not_shipped}</h2>
-	<ul id="orderShipments_list_{$orderID}" class="orderShipments {if $shipmentCount == 1}singleShipment{/if}">
+	<ul id="orderShipments_list_{$orderID}" class="orderShipments {if $shipmentCount <= 1}singleShipment{/if}">
 		{foreach item="shipment" from=$shipments}
 			{if $shipment.status != 3 && $shipment.isShippable}
 				<li id="orderShipments_list_{$orderID}_{$shipment.ID}" class="orderShipment downloadableOrder">
@@ -282,7 +282,7 @@
 			{assign var="shipmentCount" value=$shipmentCount+1}
 		{/if}
 	{/foreach}
-	<ul id="orderShipments_list_{$orderID}_shipped" class="orderShippedShipments {if $shipmentCount == 1}singleShipment{/if}">
+	<ul id="orderShipments_list_{$orderID}_shipped" class="orderShippedShipments {if $shipmentCount <= 1}singleShipment{/if}">
 		{foreach item="shipment" from=$shipments}
 			{if $shipment.status == 3 && $shipment.isShippable}
 				<li id="orderShipments_list_{$orderID}_shipped_{$shipment.ID}" class="orderShipment">

@@ -12,6 +12,7 @@
 			parent.pageHandler.treeBrowser.selectItem(z.id);
 		}
 	}
+	parent.pageHandler.activateCategory(id);
 	parent.pageHandler.showControls();
 	{/literal}
 {else}
