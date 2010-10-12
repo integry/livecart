@@ -1873,10 +1873,6 @@ a.deleteCross
 	padding-left: 22px;
 }
 
-.advancedQueryItems li:last-child a.deleteCross
-{
-	visibility: hidden;
-}
 .advancedQueryItems li
 {
 	list-style-type: none;
