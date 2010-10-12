@@ -15,12 +15,13 @@ class ThemeController extends StoreManagementController
 	public function index()
 	{
 		$themes = array_merge(array('barebone' => 'barebone'), array_diff($this->application->getRenderer()->getThemeList(), array('barebone')));
-
 		unset($themes['default'], $themes['default-3column'], $themes['light'], $themes['light-3column']);
-
 		$response = new ActionResponse();
 		$response->set('themes', json_encode($themes));
 		$response->set('addForm', $this->buildForm());
+		$response->set('maxSize', ini_get('upload_max_filesize'));
+		$response->set('importForm', $this->buildImportForm());
+
 		return $response;
 	}
 
@@ -211,6 +212,146 @@ class ThemeController extends StoreManagementController
 		return $conf;
 	}
 
+	public function import()
+	{
+		$this->setLayout('iframeJs');
+		$response = new ActionResponse();
+		$res = $this->doImport();
+		foreach($res as $key=>$value)
+		{
+			$response->set($key, $value);
+		}
+		return $response;
+	}
+
+	private function doImport()
+	{
+		require_once(ClassLoader::getRealPath('library.pclzip') . '/pclzip.lib.php');
+		$request = $this->getRequest();
+		$validator = $this->buildImportValidator($request);
+		if($validator->isValid() == false)
+		{
+			return array('status'=>'failure');
+		}
+		$file = $_FILES['theme'];
+
+		if (!$file['name'] || $file['error'] != 0)
+		{
+			return array('status'=>'failure');
+		}
+		do
+		{
+			$path = ClassLoader::getRealPath('cache.tmp.theme_import_' . rand(1, 10000000));
+		} while(is_dir($path));
+
+		mkdir($path, 0777, true);
+		$zipFilePath = $path.'_archive.zip';
+		move_uploaded_file($file['tmp_name'], $zipFilePath);
+
+		$archive = new PclZip($zipFilePath);
+		$archive->extract($path); 
+
+		if (file_exists($path.DIRECTORY_SEPARATOR.'theme.conf') == false)
+		{
+			$this->clearImportFiles($path);
+			return array('status'=>'failure');
+		}
+		$ini = parse_ini_file($path.DIRECTORY_SEPARATOR.'theme.conf', true);
+		$id = $ini['Theme']['name'];
+
+		$files = array_merge(
+			array(
+				$path . DIRECTORY_SEPARATOR. 'public'.DIRECTORY_SEPARATOR.'upload'.DIRECTORY_SEPARATOR.'theme'.DIRECTORY_SEPARATOR.$id,
+				$path . DIRECTORY_SEPARATOR. 'public'.DIRECTORY_SEPARATOR.'upload'.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.$id.'.css',
+				$path . DIRECTORY_SEPARATOR. 'storage'.DIRECTORY_SEPARATOR.'customize'.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR.'theme'.DIRECTORY_SEPARATOR.$id
+			),
+			glob($path . DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR.'upload'.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'delete'.DIRECTORY_SEPARATOR.$id.'-*.php')
+		);
+
+		$baseDir = ClassLoader::getBaseDir();
+		$len = strlen($path.DIRECTORY_SEPARATOR);
+		foreach ($files as $fn)
+		{
+			if(file_exists($fn))
+			{
+				$fn = substr($fn, $len);
+				$to = $baseDir.DIRECTORY_SEPARATOR.$fn;
+				if (is_dir($to))
+				{
+					$this->application->rmdir_recurse($to);
+				}
+				else if (file_exists($to))
+				{
+					unlink($to);
+				}
+				rename($path.DIRECTORY_SEPARATOR.$fn, $to);
+			}
+		}
+		$this->clearImportFiles($path);
+		return array('id'=>$id, 'status'=>'success');
+	}
+
+	private function clearImportFiles($path)
+	{
+		$this->application->rmdir_recurse($path);
+		unlink($path.'_archive.zip');
+	}
+	
+	public function export()
+	{
+		require_once(ClassLoader::getRealPath('library.pclzip') . '/pclzip.lib.php');
+		$id = $this->getRequest()->get('id');
+		$files =  array_merge(
+			array(
+				ClassLoader::getRealPath('public.upload.theme.'.$id),
+				ClassLoader::getRealPath('public.upload.css.'.$id).'.css',
+				ClassLoader::getRealPath('storage.customize.view.theme.'.$id)
+			),
+			glob(ClassLoader::getRealPath('public.upload.css.delete.').$id.'-*.php')
+		);
+
+		// PclZip  does not support more than one PCLZIP_OPT_REMOVE_PATH, therefore need to make paths relative
+		// ClassLoader::getRealPath(<p.a.t.h>) returns <base dir> + <path>
+		// $len is required to chop off <base dir> part
+		$len = strlen(ClassLoader::getBaseDir());
+		foreach ($files as &$fn)
+		{
+			$fn = file_exists($fn) ? substr($fn, $len) : null;
+		}
+		$files = array_filter($files);
+		if (count($files) == 0 || strlen($id) == 0)
+		{
+			return new ActionRedirectResponse('backend.theme', 'index');
+		}
+		do
+		{
+			$path = ClassLoader::getRealPath('cache.tmp.theme_export_' . rand(1, 10000000));
+		} while(file_exists($path));
+		$zipFilePath = $path.'_archive.zip';
+		$confFilePath = $path.DIRECTORY_SEPARATOR .'theme.conf';
+		foreach(array($zipFilePath, $confFilePath) as $fp)
+		{
+			if (!is_dir(dirname($fp)))
+			{
+				mkdir(dirname($fp), 0777, true);
+			}
+		}
+		file_put_contents($confFilePath, sprintf(
+			'[Theme]'."\n".
+			'name = %s', $id)
+		);
+		$archive = new PclZip($zipFilePath);
+		chdir(ClassLoader::getBaseDir());
+		$files[] = $confFilePath;
+
+		$archive->add($files, PCLZIP_OPT_REMOVE_PATH, $path); 
+		$this->application->rmdir_recurse($path);
+		$response = new ObjectFileResponse(ObjectFile::getNewInstance('ObjectFile', $zipFilePath, $id.'.zip'));
+		$response->deleteFileOnComplete();
+
+		return $response;
+	}
+
 	/**
 	 * @return RequestValidator
 	 */
@@ -253,6 +394,35 @@ class ThemeController extends StoreManagementController
 	{
 		return new Form($this->getValidator("foo", $this->request));
 	}
+	
+	
+	/**
+	 * Builds an theme import form validator
+	 *
+	 * @return RequestValidator
+	 */
+	protected function buildImportValidator()
+	{
+		$validator = $this->getValidator('themeImportValidator', $this->request);
+		
+		$uploadCheck = new IsFileUploadedCheck($this->translate(!empty($_FILES['theme']['name']) ? '_err_too_large' :'_err_not_uploaded'));
+		$uploadCheck->setFieldName('theme');
+
+		$validator->addCheck('theme', $uploadCheck);
+
+		return $validator;
+	}
+
+	/**
+	 * Builds a category image form instance
+	 *
+	 * @return Form
+	 */
+	protected function buildImportForm()
+	{
+		return new Form($this->buildImportValidator());
+	}
+	
 }
 
 ?>

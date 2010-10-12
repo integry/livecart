@@ -6,8 +6,8 @@ _css=CSS Stylesheet
 
 _add_new=Add new theme
 _remove=Delete selected theme
-_export=Export
-_import=Import
+_import_theme=Import theme
+_export_theme=Export selected theme
 
 _parent_themes=Parent Theme(s)
 _parent_theme_x=Parent theme [_1]
@@ -86,3 +86,10 @@ TOP_MENU_BGIMAGE=Background image
 TOP_MENU_ACTIVE_COLOR=Active item color
 TOP_MENU_ACTIVE_BGCOLOR=Active item background color
 TOP_MENU_ACTIVE_BGIMAGE=Active item background image
+
+_max_file_size=Exported ZIP file; Max file size: [_1]
+_select_file=Select theme file
+_import=Import
+_failed_to_import_theme=Failed to import theme
+_theme_imported=Theme [_1] imported
+_err_not_uploaded=Please select file

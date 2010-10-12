@@ -70,6 +70,19 @@ Backend.Theme.prototype =
 		ActiveForm.prototype.resetErrorMessages(form)
 		$('addForm').hide();
 	},
+	
+	showImportForm: function()
+	{
+		$('importForm').show();
+	},
+
+	hideImportForm: function()
+	{
+		var form = $('importForm').down('form');
+		form.reset();
+		ActiveForm.prototype.resetErrorMessages(form)
+		$('importForm').hide();
+	},
 
 	addTheme: function()
 	{
@@ -164,9 +177,35 @@ Backend.Theme.prototype =
 		}
 	},
 
+	importTheme: function()
+	{
+		this.showImportForm();
+	},
+
+	exportSelected: function()
+	{
+		var
+			id = this.treeBrowser.getSelectedItemId(),
+			url = this.urls['export'].replace('_id_', id);
+
+		window.location.href = url;
+
+		// this.treeBrowser.showFeedback(id);
+	},
+
 	showControls: function()
 	{
-		if ('barebone' != this.treeBrowser.getSelectedItemId())
+		var id = this.treeBrowser.getSelectedItemId();
+		if (id)
+		{
+			$("exportMenu").show();
+		}
+		else
+		{
+			$("exportMenu").hide();
+		}
+
+		if ('barebone' != id)
 		{
 			$("removeMenu").show();
 		}
@@ -174,7 +213,6 @@ Backend.Theme.prototype =
 		{
 			$("removeMenu").hide();
 		}
-
 	},
 
 	craftTabUrl: function(url)

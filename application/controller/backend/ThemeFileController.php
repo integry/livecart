@@ -48,8 +48,6 @@ class ThemeFileController extends StoreManagementController
 		$request = $this->getRequest();
 		$tfh = ThemeFile::getNewInstance($request->get('theme'));
 		$tfh->removeFile($request->get('file'));
-
-		pp('--deleted--');
 	}
 
 	/**
