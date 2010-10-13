@@ -36,6 +36,7 @@ class SearchableConfiguration extends SearchableModel
 		$c = new ARExpressionHandle($this->getWeighedSearchCondition(array('value' => 1), $searchTerm));
 		$app = ActiveRecordModel::getApplication();
 		$f = new ARSelectFilter(new MoreThanCond($c, 0));
+
 		$f->mergeCondition(
 			new OrChainCondition(
 				array
@@ -46,6 +47,7 @@ class SearchableConfiguration extends SearchableModel
 				)
 			)
 		);
+		$f->setOrder(f('SearchableItem.sort'), 'DESC');
 		$f->setOrder($c, 'DESC');
 		return $f;
 	}

@@ -20,35 +20,54 @@ class SearchableConfigurationIndexing
 	private $locales = array();
 	private $localeCodes = array();
 
-	public function __construct(Config $config, $application)
+	private $limitToLocales = array();
+	
+	public function __construct(Config $config, $application, $limitToLocales=array())
 	{
 		$this->config = $config;
 		$this->application = $application;
+		$this->limitToLocales = $limitToLocales;
 		$this->initLocales();
 	}
 
 	public static function buildIndexIfNeeded()
 	{
-		if(self::getSearchableItemCount() == 0)
+		$application = ActiveRecordModel::getApplication();
+		
+		$localesToTestForReindexAll = array();
+
+		$locCount = array();
+		foreach (array_unique(array(
+					$application->getLocaleCode(),
+					$application->getDefaultLanguageCode()
+		)) as $localeCode)
 		{
-			$application = ActiveRecordModel::getApplication();
-			$sc = new SearchableConfigurationIndexing($application->getConfig(), $application);
-			$sc->buildIndex();
+			$count = self::getSearchableItemCount($localeCode);
+			if ($count == 0)
+			{
+				$localesToTestForReindexAll[] = $localeCode;
+			}
+		}
+
+		if (count($localesToTestForReindexAll) > 0)
+		{
+			$sc = new SearchableConfigurationIndexing($application->getConfig(), $application, $localesToTestForReindexAll);
+			$sc->buildIndex(null);
 		}
 	}
 
-	public static function getSearchableItemCount()
+	public static function getSearchableItemCount($locale)
 	{
 		ClassLoader::import('application.model.searchable.item.SearchableItem');
-		return SearchableItem::getRecordCount();
+		return SearchableItem::getRecordCount($locale);
 	}
 
 	public function buildIndex($id=null)
 	{
-		if (self::getSearchableItemCount() == 0)
-		{
-			$id = null; // with id null will reindex all
-		}
+		// if (self::getSearchableItemCount($this->limitToLocales) == 0)
+		// {
+		// 	$id = null; // with id null will reindex all
+		// }
 
 		ActiveRecordModel::beginTransaction();
 		$this->_values = $this->config->getValues();
@@ -68,18 +87,21 @@ class SearchableConfigurationIndexing
 			if($id==null || $sectionID == $id)
 			{
 				$sectionTitle = $this->config->getSectionTitle($sectionID);
-				$sectionMeta = array('section_id' =>$sectionID /*, 'section_title' => $sectionTitle*/);
+				$sectionMeta = array('section_id' =>$sectionID);
 				$this->addItem($sectionMeta, $this->translationArray($sectionTitle));
+				
 				foreach($this->config->getSectionLayout($sectionID) as $layoutKey=>$data)
 				{
-					$this->addItem($sectionMeta, $this->translationArray($layoutKey));
+					$this->addItem(array_merge($sectionMeta, array('section_layout'=>true)), $this->translationArray($layoutKey));
 				}
+
 				foreach($this->config->getSettingsBySection($sectionID) as $configKey=>$meta)
 				{
 					$key = $meta['title'];
+					
 					// add field label.
-					$this->addItem(array_merge($sectionMeta, $meta), $this->translationArray($configKey));
-					// $this->addItem(array_merge($sectionMeta, $meta), $this->translationArray($key));
+					$this->addItem(array_merge($sectionMeta, $meta, array('field_label'=>true)), $this->translationArray($configKey));
+
 					if(array_key_exists('type', $meta))
 					{
 						if(is_array($meta['type']))
@@ -93,7 +115,7 @@ class SearchableConfigurationIndexing
 									{
 										if($checkboxValue == true)
 										{
-											$this->addItem(array_merge($sectionMeta, $meta), $this->translationArray($checkboxKey));
+											$this->addItem(array_merge($sectionMeta, $meta, array('checkbox_label'=>true)), $this->translationArray($checkboxKey));
 										}
 									}
 								}
@@ -101,13 +123,13 @@ class SearchableConfigurationIndexing
 							else
 							{
 								// dropdown, add only selected value (not every possible option)
-								$this->addItem(array_merge($sectionMeta, $meta), $this->translationArray($this->_values[$key]));
+								$this->addItem(array_merge($sectionMeta, $meta, array('field_value'=>true)), $this->translationArray($this->_values[$key]));
 							}
 						}
 						// types: string, image, num, float, longtext has input fields, add field value (everything except arrays and bool)
 						else if(in_array($meta['type'], array('string', 'image', 'num', 'float', 'longtext')))
 						{
-							$this->addItem(array_merge($sectionMeta, $meta), $this->_values[$key]);
+							$this->addItem(array_merge($sectionMeta, $meta, array('field_value'=>true)), $this->_values[$key]);
 						}
 					}
 				}
@@ -150,7 +172,7 @@ class SearchableConfigurationIndexing
 					$v = $value[$localeCode];
 					if(strlen($v) > 3)
 					{
-						$this->list[$meta['section_id']][]= array('section'=>$meta['section_id'], 'meta'=>$meta, 'value'=>$v);
+						$this->list[$meta['section_id']][] = array('section'=>$meta['section_id'], 'meta'=>$meta, 'value'=>$v, 'sort' => $this->getSortOrderFromMeta($meta));
 					}
 				}
 			}
@@ -159,7 +181,7 @@ class SearchableConfigurationIndexing
 		{
 			if(strlen($value) > 3)
 			{
-				$this->list[$meta['section_id']][]= array('section'=>$meta['section_id'], 'meta'=>$meta, 'value'=>$value);
+				$this->list[$meta['section_id']][]= array('section'=>$meta['section_id'], 'meta'=>$meta, 'value'=>$value, 'sort' => $this->getSortOrderFromMeta($meta));
 			}
 		}
 	}
@@ -182,9 +204,21 @@ class SearchableConfigurationIndexing
 	private function initLocales()
 	{
 		ClassLoader::import('library.locale.Locale');
+
 		$filter = new ARSelectFilter();
 		$filter->setOrder(new ARFieldHandle("Language", "position"), ARSelectFilter::ORDER_ASC);
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("Language", "isEnabled"), 1));
+		
+		if (count($this->limitToLocales) > 0)
+		{
+			$z = array();
+			foreach($this->limitToLocales as $localeCode)
+			{
+				$z[] = new EqualsCond(new ARFieldHandle("Language", "ID"), $localeCode);
+			}
+			$filter->mergeCondition(new OrChainCondition($z)); // new INCond()
+		}
+
 		$languages=ActiveRecord::getRecordSetArray("Language", $filter);
 		foreach($languages as $language)
 		{
@@ -199,6 +233,41 @@ class SearchableConfigurationIndexing
 			$this->locales[$language['ID']] = $locale;
 		}
 		$this->localeCodes = array_keys($this->locales);
+	}
+
+	private function getSortOrderFromMeta($meta)
+	{
+		$section_id = $meta['section_id'];
+		/**
+		 * 5, 4 - Vispirms galveno sekciju nosaukumi (Display, Inventory Tracking, utt.)
+		 * 3    - Apakšsekcijas nosaukums (lauku grupa, piem., Registration, Fields, Countries - Customers&Registration sekcijā)
+		 * 2    - Lauka nosaukums
+		 * 1    - Lauka vērtība
+		 */
+		if (array_key_exists('field_label', $meta))
+		{
+			return 2;
+		}
+		else if (array_key_exists('field_value', $meta))
+		{
+			return 1;
+		}
+		else if (array_key_exists('section_layout', $meta))
+		{
+			return 3;
+		}
+		else if (array_key_exists('checkbox_label', $meta))
+		{
+			return 2;
+		}
+		else if (count(array_keys($meta)) <= 2) // main or subsections has only section id and maybe locale
+		{
+			return strpos($section_id, '.') === false
+				? 5 // main sections don't have dot in id.
+				: 4;
+		}
+
+		return null; // something new?
 	}
 }
 
