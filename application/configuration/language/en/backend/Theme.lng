@@ -8,6 +8,7 @@ _add_new=Add new theme
 _remove=Delete selected theme
 _import_theme=Import theme
 _export_theme=Export selected theme
+_copy_theme=Copy selected theme
 
 _parent_themes=Parent Theme(s)
 _parent_theme_x=Parent theme [_1]
@@ -93,3 +94,6 @@ _import=Import
 _failed_to_import_theme=Failed to import theme
 _theme_imported=Theme [_1] imported
 _err_not_uploaded=Please select file
+_theme_copied=Theme [_1] copied to [_2]
+_failed_to_copy_theme=Failed to copy theme
+_copy=Copy

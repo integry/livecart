@@ -4,7 +4,8 @@ input.themeName
 	margin-left: -5px;
 }
 
-#addForm label
+#addForm label,
+#copyForm label
 {
 	float: none;
 }

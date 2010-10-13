@@ -45,9 +45,8 @@
 					</div>
 				{/form}
 			</fieldset>
+
 			<li id="importMenu" class="importTreeNode"><a href="" onclick="pageHandler.importTheme(); return false;">{t _import_theme}</a></li>
-
-
 			<fieldset id="importForm" style="display: none;">
 				{form handle=$importForm action="controller=backend.theme action=import"
 					target="themeImportTarget" method="POST" enctype="multipart/form-data"
@@ -72,7 +71,24 @@
 				{/form}
 				<iframe name="themeImportTarget" id="themeImportTarget" style="display:none"></iframe>
 			</fieldset>
-			
+
+			<li id="copyMenu" class="exportTreeNode"><a href="" onclick="pageHandler.showCopyForm(); return false;">{t _copy_theme}</a></li>
+			<fieldset id="copyForm" style="display: none;">
+				{form action="controller=backend.theme action=copyTheme" method="POST" handle=$copyForm onsubmit="pageHandler.copyTheme(); return false;"}
+					<input type="hidden" name="id" value="" id="copyFromID" />
+					{err for="name"}
+						{{label {t _theme_name} }}:
+						{textfield class="text themeName"}
+					{/err}
+
+					<div>
+						<span class="progressIndicator" id="copyFormProgressIndicator" style="display: none;"></span>
+						<input type="submit" value="{tn _copy}" class="submit" />
+						{t _or}
+						<a class="cancel" href="#" onclick="pageHandler.hideCopyForm(); return false;">{t _cancel}</a>
+					</div>
+				{/form}
+			</fieldset>
 
 			<li id="exportMenu" class="exportTreeNode"><a href="" onclick="pageHandler.exportSelected(); return false;">{t _export_theme}</a></li>
 			<li id="removeMenu" class="removeTreeNode"><a href="" onclick="pageHandler.deleteSelected(); return false;">{t _remove}</a></li>
