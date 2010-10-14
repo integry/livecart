@@ -178,6 +178,63 @@ TabControl.prototype = {
 		}.bind(this), dhtmlHistory.currentWaitTime * 2);
 	},
 
+	/**
+	 * Reloades tab content in background (does not activate tab)
+	 * 
+	 * When reloading:
+	 *              Existing tab content container is removed
+	 *              If not active tab, content container is set to absolute position and positioned
+	 *                                 outside page, because some controls can't initalize in invisible
+	 *                                 container (for example editArea)
+	 *              AjaxUpdater request is executed.
+	 * 
+	 * If tab content is not yet loaded, this will load tab content.
+	 * 
+	 */
+	reloadTabContent: function(targetTab, onComplete)
+	{
+		targetTab = $(targetTab);
+		if(!targetTab)
+		{
+			targetTab = this.nodes.tabListElements[0];
+		}
+		var contentId = this.idParserCallback(targetTab.id);
+		if(!contentId)
+		{
+			return;
+		}
+		this.resetContent(targetTab);
+		if ($(contentId))
+		{
+			$(contentId).remove();
+		}
+		new Insertion.Top(this.nodes.sectionContainer, '<div id="' + contentId + '" class="tabPageContainer ' + targetTab.id + 'Content loadedInBackgroundTab"></div>');
+		this.activeContent = $(contentId);
+		
+		if (this.activeTab.id == targetTab.id )
+		{
+			this.activeContent.removeClassName("loadedInBackgroundTab");
+		}
+		if(!onComplete && this.callbacks.onComplete)
+		{
+			onComplete = this.callbacks.onComplete;
+		}
+		this.loadedContents[this.urlParserCallback(targetTab.down('a').href) + contentId] = true;
+		new LiveCart.AjaxUpdater(
+			this.urlParserCallback(targetTab.down('a').href),
+			contentId, 
+			targetTab.down('.tabIndicator'),
+			'bottom',
+			function(activeContent, onComplete, response)
+			{
+				if (onComplete)
+				{
+					onComplete(response);
+				}
+			}.bind(this, this.activeContent, onComplete)
+		);
+	},
+
 	activateTab: function(targetTab, onComplete)
 	{
 		targetTab = $(targetTab);
@@ -219,6 +276,7 @@ TabControl.prototype = {
 
 		this.activeTab = targetTab;
 		this.activeContent = $(contentId);
+		this.activeContent.removeClassName("loadedInBackgroundTab");
 
 		Element.removeClassName(this.activeTab, 'hover');
 		Element.addClassName(this.activeTab, 'active');
@@ -245,6 +303,8 @@ TabControl.prototype = {
 				}
 
 			}.bind(this, this.activeContent, onComplete));
+			
+			
 		}
 		else if(onComplete)
 		{

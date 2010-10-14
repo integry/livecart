@@ -33,12 +33,18 @@ class CssEditorController extends StoreManagementController
 		$css = new EditedCssFile($this->request->get('file'));
 
 		$response = new ActionResponse();
+		$tabid = $this->getRequest()->get('tabid');
 		$response->set('tabid', $this->getRequest()->get('tabid'));
 		$response->set('id', $css->getFileName());
 		$response->set('file', $css->getFileName());
 		$response->set('form', $this->getForm($css));
 		$response->set('code', base64_encode($css->getCode()));
 		$response->set('template', $css->toArray());
+		if ($tabid == '')
+		{
+			// client side does not do tab handling by itself (eg. opened in theme editor tab)
+			$response->set('noTabHandling', true);
+		}
 		return $response;
 	}
 

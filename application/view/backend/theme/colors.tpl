@@ -2,6 +2,12 @@
 	<div class="warning">{t _colors_not_editable}</div>
 {/if}
 
+<div 
+	onclick="{literal}TabControl.prototype.getInstance('tabContainer').activateTab($('tabCss'));{/literal}"
+	id="notice_changes_in_css_tab" class="warning cssAndStyleTab" style="display:none;"
+>{t _notice_changes_in_css_tab}</div>
+
+
 {form action="controller=backend.theme action=saveColors" method="POST" enctype="multipart/form-data" handle=$form id="colors_`$theme`" target="iframe_`$theme`"}
 	{foreach from=$config item=section}
 		<fieldset>
@@ -59,3 +65,4 @@
 {/form}
 
 <iframe src="{link controller=backend.theme action=cssIframe query="theme=`$theme`"}" id="iframe_{$theme}" name="iframe_{$theme}" style="display: none;"></iframe>
+

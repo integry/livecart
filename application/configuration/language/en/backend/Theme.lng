@@ -97,3 +97,7 @@ _err_not_uploaded=Please select file
 _theme_copied=Theme [_1] copied to [_2]
 _failed_to_copy_theme=Failed to copy theme
 _copy=Copy
+
+
+_notice_changes_in_css_tab=There are unsaved changes in the CSS tab, which would be lost if the style is edited using the form below
+

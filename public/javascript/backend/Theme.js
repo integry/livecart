@@ -2,8 +2,13 @@
  *	@author Integry Systems
  */
 
-Backend.Theme = Class.create();
+// is css tab edited
+Backend.isCssEdited = false;
 
+// is style tab edited
+Backend.isStyleEdited = false;
+
+Backend.Theme = Class.create();
 Backend.Theme.prototype =
 {
 	treeBrowser: null,
@@ -270,6 +275,47 @@ Backend.Theme.prototype =
 	{
 		return tabId + '_' +  Backend.Theme.prototype.treeBrowser.getSelectedItemId() + 'Content';
 	},
+
+	// Backend.Theme.prototype.cssTabChanged
+	cssTabChanged: function()
+	{
+		Backend.isCssEdited = true;
+		var notice = $("notice_changes_in_css_tab");
+		if (notice)
+		{
+			notice.show();
+		}
+	},
+	cssTabNotChanged: function()
+	{
+		Backend.isCssEdited = false;
+		var notice = $("notice_changes_in_css_tab");
+		if (notice)
+		{
+			notice.hide();
+		}
+	},
+	
+	// Backend.Theme.prototype.styleTabChanged
+	styleTabChanged: function()
+	{
+		Backend.isStyleEdited = true;
+		var notice = $("notice_changes_colors_and_styles_tab");
+		if (notice)
+		{
+			notice.show();
+		}
+	},
+
+	styleTabNotChanged: function()
+	{
+		Backend.isStyleEdited = false;
+		var notice = $("notice_changes_colors_and_styles_tab");
+		if (notice)
+		{
+			notice.hide();
+		}
+	}
 }
 
 
@@ -287,6 +333,16 @@ Backend.ThemeColor = function(theme)
 	this.form.onsubmit = this.save.bind(this);
 
 	this.initProperties();
+	Event.observe(this.form, "change",
+		function()
+		{
+			Backend.Theme.prototype.styleTabChanged();
+		}
+	);
+	if (Backend.isCssEdited)
+	{
+		Backend.Theme.prototype.cssTabChanged();
+	}
 }
 
 Backend.ThemeColor.prototype =
