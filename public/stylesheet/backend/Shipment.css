@@ -17,9 +17,17 @@
 	background-color: #f6f6ff !important;
 }
 
-.orderShipmentsItem
+.orderShipmentsItem li.activeList
 {
 	border: 1px solid #eee;
+	-moz-border-radius: 0;
+	margin-top: -1px;
+	position: relative;
+}
+
+ul.orderShipmentsItem
+{
+	border: 0;
 }
 
 .tabOrderProductsContent h2
@@ -100,7 +108,13 @@ li.orderShipment:hover, .orderShippedShipments ul.activeList > li:hover, .downlo
 .orderShipment li
 {
     border: 0;
-    border-bottom: 1px solid #bbb;
+}
+
+.orderShipment li:hover
+{
+	border-color: black;
+	border-width: 1px;
+	z-index: 5 !important;
 }
 
 .orderShipment .activeList_icons
@@ -112,6 +126,13 @@ li.orderShipment:hover, .orderShippedShipments ul.activeList > li:hover, .downlo
 {
     padding-top: 0;
     margin-top: 10px;
+}
+
+.singleShipment .shipmentContainer
+{
+	border-width: 0;
+	padding: 0;
+	margin-top: 0;
 }
 
 .downloadableShipment .shipmentContainer
@@ -150,10 +171,11 @@ li.orderShipment:hover, .orderShippedShipments ul.activeList > li:hover, .downlo
 }
 
 .orderShipmentsItem_info_sku_td { min-width: 80px; padding-left: 40px !important; }
-.orderShipmentsItem_info_sku { min-width: 70px; font-size: smaller; text-align: center; }
+.orderShipmentsItem_info_sku { min-width: 70px; text-align: left; }
+.shipmentTableHeading .orderShipmentsItem_info_sku { text-align: left; }
 
 .orderShipmentsItem_info_sku img { margin-top: 0.5em; }
-.orderShipmentsItem_info_sku a { display: block; }
+.orderShipmentsItem_info_sku a { display: block; text-align: center; }
 
 .orderShipmentsItem_info_name_td { width: 100%;  }
 .orderShipmentsItem_info_name { width: 500px;  }
@@ -170,8 +192,20 @@ li.orderShipment:hover, .orderShippedShipments ul.activeList > li:hover, .downlo
 .orderShipmentsItem_info_tax { width: 80px; }
 
 .orderShipmentsItem_info_count_td { width: 70px; }
-.orderShipmentsItem_info_count { width: 60px; text-align: right; position: relative; }
+.orderShipmentsItem_info_count { width: 60px; text-align: center; position: relative; }
 .orderShipmentsItem_info_count .progressIndicator { position: absolute; left: -15px; top: -6px; }
+
+.orderShipmentsItem_info_name a.external
+{
+	padding-right: 15px;
+	margin-right: 10px;
+}
+
+.orderShipmentsItem_info_name .basePrice
+{
+	color: #888;
+	font-size: smaller;
+}
 
 .orderShipmentsItem li
 {
@@ -232,6 +266,12 @@ input.shippingAmount
 	padding: 2px 0;
 }
 
+.shipmentTableHeading
+{
+	background-color: #ddd;
+	color: #222;
+}
+
 /* Shipped */
 .orderShippedShipments
 {
@@ -262,14 +302,17 @@ input.shippingAmount
     vertical-align: top;
     padding-right: 0px;
     padding-left: 5px;
-    display: inline;
+    display: block;
     position: absolute;
+    height: 100%;
 }
 
 
 .orderShipmentsItem .activeList_icons img
 {
-    margin-bottom: -1em;
+    top: 50%;
+    margin-top: -9px;
+    position: relative;
 }
 
 .orderShipment_addProduct
@@ -320,9 +363,13 @@ input.shippingAmount
 
 .shipmentCategoty .activeList_odd, .shipmentCategoty .activeList_even
 {
-    background-color: transparent ! important;
     overflow: visible ! important;
     white-space: normal ! important;
+}
+
+.shipmentCategoty .activeList_odd
+{
+	background-color: #f4f4f4;
 }
 
 table.discounts td
@@ -344,4 +391,9 @@ fieldset.shipmentAddress
 .shipmentAddress .menu
 {
 	margin-bottom: 0.5em;
+}
+
+.addProductAdvanced
+{
+	background-image: url(../../image/silk/magnifier.png);
 }

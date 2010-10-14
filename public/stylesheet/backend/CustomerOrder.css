@@ -98,12 +98,13 @@ width:190px;
 	background-repeat:no-repeat;
 	padding-left:22px;
 	display:block;
-	float:right;
+	float:left;
 }
 
 .order_editFields
 {
 	background-image: url(../../image/silk/pencil.png);
+	height: 16px;
 }
 
 .order_accept
@@ -194,6 +195,22 @@ width:190px;
 	width: 50%;
 	float:right;
 }
+
+.addressContainer label.param
+{
+	margin-bottom: -5px;
+}
+
+.addressContainer label.param:after
+{
+	content: ":";
+}
+
+.orderAddress_edit
+{
+	width: 350px;
+}
+
 .order_info
 {
 	border:0;
@@ -330,3 +347,64 @@ ul.orderAddress_showEdit
 {
 	display:none;
 }
+
+.menu .orderStatus select
+{
+	width: auto;
+	font-weight: bold;
+}
+
+.menu .orderStatus label
+{
+	display:block;
+	float:none;
+	font-size:13px;
+	margin:-20px 0 -5px;
+	padding:0;
+	width:auto;
+}
+
+.addCoupon
+{
+	background-image: url(../../image/silk/cut.png);
+	padding-left: 19px !important;
+}
+
+.tabOrderInfoContent h2
+{
+	display: none;
+}
+
+.order_info .value
+{
+	width: auto;
+}
+
+.invoiceNumber .value
+{
+	font-weight: bold;
+}
+
+.order_info .orderAmount.unpaid .value
+{
+	color: red;
+}
+
+.order_info .orderAmount.unpaid .notPaid
+{
+	display: block;
+}
+
+.order_info .notPaid
+{
+	float: left;
+	margin-left: 15px;
+	color: black;
+	display: none;
+}
+
+.order_info .notPaid input
+{
+	margin-right: 4px;
+}
+

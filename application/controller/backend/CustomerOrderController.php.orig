@@ -86,7 +86,6 @@ class CustomerOrderController extends ActiveGridController
 		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('User', 'Currency'));
 		$order->getSpecification();
 		$order->loadAddresses();
-		$this->removeEmptyShipments($order);
 
 		$response = new ActionResponse();
 
@@ -213,6 +212,11 @@ class CustomerOrderController extends ActiveGridController
 		$response->set('fieldsForm', $form);
 
 		$this->appendCalendarForm($response);
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> 025c563636f821d807c913e5e4b182f5a7b6a2bd
 		return $this->shipmentInfo($response);
 	}
 
@@ -1160,8 +1164,11 @@ class CustomerOrderController extends ActiveGridController
 		}
 	}
 
-	protected function removeEmptyShipments(CustomerOrder $order)
+	public function removeEmptyShipments()
 	{
+		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, true);
+		$order->loadAll();
+
 		foreach($order->getShipments() as $shipment)
 		{
 			if(count($shipment->getItems()) == 0)
@@ -1169,6 +1176,11 @@ class CustomerOrderController extends ActiveGridController
 				$shipment->delete();
 			}
 		}
+
+		$order->updateStatusFromShipments();
+		$order->save(true);
+
+		return new RawResponse();
 	}
 
 	public function recalculateDiscounts()
@@ -1203,6 +1215,47 @@ class CustomerOrderController extends ActiveGridController
 		$this->loadLanguageFile('User');
 
 		return new ActionResponse('order', $order->toArray(array('payments' => true)));
+	}
+
+	public function changeCurrency()
+	{
+		ActiveRecordModel::beginTransaction();
+
+		$order = CustomerOrder::getInstanceById($this->request->get('id'), CustomerOrder::LOAD_DATA, CustomerOrder::LOAD_REFERENCES);
+		$order->loadAll();
+
+		$current = $order->getCurrency();
+		$new = Currency::getInstanceByID($this->request->get('currencyCode'));
+
+		foreach ($order->getOrderedItems() as $item)
+		{
+			$item->price->set($new->convertAmount($current, $item->price->get()));
+			$item->save();
+		}
+
+		foreach ($order->getShipments() as $shipment)
+		{
+			foreach (array('amount', 'taxAmount', 'shippingAmount') as $fld)
+			{
+				$shipment->$fld->set($new->convertAmount($current, $shipment->$fld->get()));
+			}
+
+			foreach ($shipment->getRelatedRecordSet('ShipmentTax') as $tax)
+			{
+				$tax->amount->set($new->convertAmount($current, $tax->amount->get()));
+			}
+		}
+
+		foreach ($order->getRelatedRecordSet('OrderDiscount') as $discount)
+		{
+			$discount->amount->set($new->convertAmount($current, $discount->amount->get()));
+		}
+
+		$order->currency->set($new);
+		$order->totalAmount->set($order->calculateTotal());
+		$order->save();
+
+		ActiveRecordModel::commit();
 	}
 
 	private function save(CustomerOrder $order)
@@ -1496,7 +1549,7 @@ class CustomerOrderController extends ActiveGridController
 
 		$this->loadLanguageFile('Order');
 
-		return new JSONResponse(null,
+		return new JSONResponse(null, 
 			$error ? 'failure' : 'success', $this->makeText($msg, array($code)));
 	}
 }

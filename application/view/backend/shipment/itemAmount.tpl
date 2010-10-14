@@ -18,7 +18,7 @@
 					<span>{$item.Product.name_lang}</span>
 				{/if}
 				{if $allOptions[$item.Product.ID] || $item.options}
-					({$item.formattedBasePrice})
+					<span class="basePrice">({$item.formattedBasePrice})</span>
 					<div class="productOptions">
 						<ul class="itemOptions">
 						{foreach from=$item.options item=option}

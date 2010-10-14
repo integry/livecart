@@ -12,24 +12,33 @@
  */
 function smarty_function_zebra($params, LiveCartSmarty $smarty)
 {
-	$loop = $params['loop'];
+	static $internalCounter = 0;
 
 	if (!isset($smarty->_foreach[$loop]))
 	{
-		return false;
+		$loop = 'internal';
+		$total = 0;
+		$iteration = isset($smarty->zebra[$loop]) ? $smarty->zebra[$loop] + 1 : 1;
+	}
+	else
+	{
+		$loop = $params['loop'];
+		$total = $smarty->_foreach[$loop]['total'];
+		$iteration = $smarty->_foreach[$loop]['iteration'];
 	}
 
-	if (0 == $smarty->_foreach[$loop]['iteration'] || !isset($smarty->zebra[$loop]))
+	if (empty($iteration) || !isset($smarty->zebra[$loop]))
 	{
 		$smarty->zebra[$loop] = 0;
+		$iteration = 1;
 	}
 
 	$firstOrLast = '';
-	if (1 == $smarty->_foreach[$loop]['iteration'])
+	if (1 == $iteration)
 	{
 		$firstOrLast = ' first';
 	}
-	if ($smarty->_foreach[$loop]['total'] == $smarty->_foreach[$loop]['iteration'])
+	if ($total == $iteration)
 	{
 		$firstOrLast = ' last';
 	}
@@ -39,7 +48,7 @@ function smarty_function_zebra($params, LiveCartSmarty $smarty)
 		++$smarty->zebra[$loop];
 	}
 
-	return ($smarty->zebra[$loop] % 2 ? 'even' : 'odd') . $firstOrLast;
+	return 'zebra ' . ($smarty->zebra[$loop] % 2 ? 'even' : 'odd') . $firstOrLast;
 }
 
 ?>

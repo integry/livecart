@@ -34,7 +34,7 @@
 		</a>
 	</li>
 
-	<li {denied role='order.update'}style="display: none"{/denied} class="">
+	<li {denied role='order.update'}style="display: none"{/denied} class="addCoupon">
 		<span style="display: none;" id="order_{$order.ID}_addCouponIndicator" class="progressIndicator"></span>
 		<a id="order_{$order.ID}_addCoupon" href="{link controller="backend.customerOrder" action="addCoupon" id=$order.ID}?coupon=_coupon_">{t _add_coupon}</a>
 	</li>
@@ -61,69 +61,59 @@
 	{/if}
 </div>
 <fieldset class="order_info">
-	<p>
-		<label>{t _order_id}</label>
-		<label>{$order.invoiceNumber|default:$order.ID}</label>
-	</p>
+	<div class="{zebra} clearfix invoiceNumber">
+		<label class="param">{t _order_id}</label>
+		<label class="value">{$order.invoiceNumber|default:$order.ID}</label>
+	</div>
 
 	{if $order.User}
-	<p>
-		<label>{t _user}</label>
-		<label>
+	<div class="{zebra} clearfix">
+		<label class="param">{t _user}</label>
+		<label class="value">
 			<a href="{backendUserUrl user=$order.User}">
 				{$order.User.fullName}
 			</a>
 		</label>
-	</p>
+	</div>
 	{/if}
 
-	<p>
-		<label>{t _amount}</label>
-		<label>
-			{*
-			{$order.Currency.pricePrefix}<span class="order_capturedAmount">{$order.capturedAmount|default:0}</span>{$order.Currency.priceSuffix}
-
-			/
-			*}
-
+	<div class="{zebra} clearfix orderAmount {if !$order.isPaid}unpaid{/if}">
+		<label class="param">{t _amount}</label>
+		<label class="value">
 			{$order.Currency.pricePrefix}<span class="order_totalAmount">{$order.totalAmount|default:0|string_format:"%.2f"}</span>{$order.Currency.priceSuffix}
 		</label>
-	</p>
+		<span class="notPaid">
+			<input type="checkbox" class="checkbox" id="{uniqid}" value="1" onchange="Backend.CustomerOrder.prototype.changePaidStatus(this, '{link controller=backend.payment action=changeOrderPaidStatus id=$order.ID query='status=_stat_'}');">
+			<label for="{uniqid last=true}" class="checkbox">{t _mark_as_paid}</label>
+		</span>
+	</div>
 
 	{if $order.dateCompleted}
-		<p>
-			<label for="order_{$order.ID}_dateCreated">{t _date_created}</label>
+		<div class="{zebra} clearfix">
+			<label class="param" for="order_{$order.ID}_dateCreated">{t _date_created}</label>
 			<label id="dateCreatedLabel">
+				<a class="menu order_editFields orderDate" href="#edit" id="editDateCompleted"></a>
 				<span id="dateCreatedVisible">{$order.dateCompleted}</span>
-				<span class="menu order_editFields orderDate">
-					<a href="#edit" id="editDateCompleted">{t _edit}</a>
-				</span>
 			</label>
-		</p>
-		{form id="calendarForm" handle=$dateForm class="hidden" action="controller=backend.customerOrder action=updateDate" method="POST"}
-			{calendar name="dateCompleted" id="dateCompleted"}
 
-			<span class="progressIndicator" id="indicatorDateCompleted" style="display: none;"></span>
+			{form id="calendarForm" handle=$dateForm class="hidden" action="controller=backend.customerOrder action=updateDate" method="POST"}
+				{calendar name="dateCompleted" id="dateCompleted"}
 
-			<span class="menu">
-				<a href="#save" id="saveDateCompleted">{t _save}</a>
-				<a href="#cancel" id="cancelDateCompleted">{t _cancel}</a>
-			</span>
-		{/form}
+				<span class="progressIndicator" id="indicatorDateCompleted" style="display: none;"></span>
+
+				<span class="menu">
+					<a href="#save" id="saveDateCompleted">{t _save}</a>
+					<a href="#cancel" id="cancelDateCompleted">{t _cancel}</a>
+				</span>
+			{/form}
+		</div>
 	{/if}
 
-	<p>
-		<label for="order_{$order.ID})_isPaid">{t _is_paid}</label>
-		<select style="width: auto; float: left;" onchange="Backend.CustomerOrder.prototype.changePaidStatus(this, '{link controller=backend.payment action=changeOrderPaidStatus id=$order.ID query='status=_stat_'}');"><option value=0>{t _no}</option><option value=1{if $order.isPaid} selected="selected"{/if}>{t _yes}</option></select>
-		<span class="progressIndicator" style="display: none; float: left; padding-top: 0; padding-left: 0;"></span>
-	</p>
-
-	<div class="clear"></div>
-	<p>
-		<label for="order_{$order.ID})_isMultiAddress">{t CustomerOrder.isMultiAddress}</label>
+	<div class="{zebra} clearfix">
+		<label class="param" for="order_{$order.ID})_isMultiAddress">{t CustomerOrder.isMultiAddress}</label>
 		<select style="width: auto; float: left;" onchange="Backend.CustomerOrder.prototype.setMultiAddress(this, '{link controller=backend.customerOrder action=setMultiAddress id=$order.ID query='status=_stat_'}', {$order.ID});"><option value=0>{t _no}</option><option value=1{if $order.isMultiAddress} selected="selected"{/if}>{t _yes}</option></select>
 		<span class="progressIndicator" style="display: none; float: left; padding-top: 0; padding-left: 0;"></span>
-	</p>
+	</div>
 </fieldset>
 
 
@@ -168,7 +158,7 @@
 <fieldset class="addProductsContainer" style="display:none;" id="order{$orderID}_productMiniform">
 	<legend>{t _add_new_product} <a class="cancel" href="#" id="order{$orderID}_cancelProductMiniform">{t _cancel}</a></legend>
 	<ul class="menu" id="orderShipments_menu_{$orderID}">
-		<li>
+		<li class="addProductAdvanced">
 			<span {denied role='order.update'}style="display: none"{/denied}>
 				<a href="#newProduct" id="order{$orderID}_addProduct" class="cancel">{t _advanced_product_search}</a>
 			</span>
@@ -201,7 +191,7 @@
 			{/foreach}
 		</select>
 	</div>
-	
+
 	<div class="hidden" id="order{$orderID}_cannotAddEmptyResult">{t _cannot_add_empty_result}</div>
 	<div class="hidden" id="order{$orderID}_addAllFoundProducts">{t _add_all_found_products}</div>
 </fieldset>

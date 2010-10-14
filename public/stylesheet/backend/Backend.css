@@ -820,6 +820,27 @@ label.cancel
     padding-left: 0px;
 }
 
+.clearfix:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+
+.clearfix {
+	display: inline-block;
+}
+
+html[xmlns] .clearfix {
+	display: block;
+}
+
+* html .clearfix {
+	height: 1%;
+}
+
 p.required label, fieldset.required label, label.required
 {
   	font-weight: bold;
@@ -1039,6 +1060,13 @@ label.wide
 select.narrow
 {
     width: 5em;
+}
+
+label.param
+{
+	color: #777;
+	width: 140px;
+	font-size: smaller;
 }
 
 .button.browse
