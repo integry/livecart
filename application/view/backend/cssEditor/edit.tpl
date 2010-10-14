@@ -2,7 +2,7 @@
 
 <div 
 	onclick="{literal}TabControl.prototype.getInstance('tabContainer').activateTab($('tabColors'));{/literal}"
-	class="warning cssAndStyleTab" id="notice_changes_colors_and_styles_tab" style="display:none;"
+	class="warning cssAndStyleTab" id="notice_changes_colors_and_styles_tab_{$tabid}" style="display:none;"
 >{t _notice_changes_colors_and_styles_tab}</div>
 
 {form handle=$form action="controller=backend.cssEditor action=save" method="POST" class="templateForm" id="templateForm_`$tabid`"}
@@ -35,10 +35,10 @@
 
 {literal}
 	<script type="text/javascript">
-		Backend.isCssEdited = false;
-		if (Backend.isStyleEdited)
+		Backend.isCssEdited["{/literal}{$tabid}{literal}"] = false;
+		if (Backend.Theme.prototype.isStyleTabChanged("{/literal}{$tabid}{literal}"))
 		{
-			Backend.Theme.prototype.styleTabChanged();
+			Backend.Theme.prototype.styleTabChanged("{/literal}{$tabid}{literal}");
 		}
 		$('code_{/literal}{$tabid}{literal}').value = {/literal}decode64("{$code}");{literal};
 		editAreaLoader.baseURL = "{/literal}{baseUrl}javascript/library/editarea/{literal}";
@@ -47,6 +47,6 @@
 
 {if $noTabHandling}
 	<script type="text/javascript">
-		new Backend.CssEditorHandler($('templateForm_'), null, '');
+		new Backend.CssEditorHandler($('templateForm_{$tabid}'), null, '{$tabid}');
 	</script>
 {/if}

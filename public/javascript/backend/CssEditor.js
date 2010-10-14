@@ -206,7 +206,7 @@ Backend.CssEditorHandler.prototype =
 			start_highlight: true,	 // to display with highlight mode on start-up
 			allow_toggle: false,
 			allow_resize: true,
-			change_callback: "Backend.Theme.prototype.cssTabChanged"
+			change_callback: "Backend.CssEditorHandler.prototype.editAreaChangeCallback"
 			}
 		);
 
@@ -224,12 +224,18 @@ Backend.CssEditorHandler.prototype =
 
 	saveComplete: function(originalRequest)
 	{
-		Backend.Theme.prototype.cssTabNotChanged();
+		Backend.Theme.prototype.cssTabNotChanged(this.tabid);
 		TabControl.prototype.getInstance("tabContainer").reloadTabContent($("tabColors"));
+		Backend.Theme.prototype.styleTabNotChanged(this.tabid);
 
 		if (opener)
 		{
 			opener.location.reload();
 		}
+	},
+
+	editAreaChangeCallback: function(id)
+	{
+		Backend.Theme.prototype.cssTabChanged(id.replace("code_",""));
 	}
 }

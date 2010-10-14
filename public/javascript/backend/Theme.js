@@ -3,10 +3,10 @@
  */
 
 // is css tab edited
-Backend.isCssEdited = false;
+Backend.isCssEdited = {};
 
 // is style tab edited
-Backend.isStyleEdited = false;
+Backend.isStyleEdited = {};
 
 Backend.Theme = Class.create();
 Backend.Theme.prototype =
@@ -277,44 +277,59 @@ Backend.Theme.prototype =
 	},
 
 	// Backend.Theme.prototype.cssTabChanged
-	cssTabChanged: function()
+	cssTabChanged: function(id)
 	{
-		Backend.isCssEdited = true;
-		var notice = $("notice_changes_in_css_tab");
+		// console.log(id);
+		Backend.isCssEdited[id] = true;
+		var notice = $("notice_changes_in_css_tab_"+id);
 		if (notice)
 		{
 			notice.show();
 		}
 	},
-	cssTabNotChanged: function()
+	cssTabNotChanged: function(id)
 	{
-		Backend.isCssEdited = false;
-		var notice = $("notice_changes_in_css_tab");
+		// console.log(id);
+		Backend.isCssEdited[id] = false;
+		var notice = $("notice_changes_in_css_tab_"+id);
 		if (notice)
 		{
 			notice.hide();
 		}
 	},
-	
-	// Backend.Theme.prototype.styleTabChanged
-	styleTabChanged: function()
+
+	isCssTabChanged: function(id)
 	{
-		Backend.isStyleEdited = true;
-		var notice = $("notice_changes_colors_and_styles_tab");
+		return Backend.isCssEdited[id] ? true : false;
+	},
+
+	// Backend.Theme.prototype.styleTabChanged
+	styleTabChanged: function(id)
+	{
+		// console.log(id);
+
+		Backend.isStyleEdited[id] = true;
+		var notice = $("notice_changes_colors_and_styles_tab_"+id);
 		if (notice)
 		{
 			notice.show();
 		}
 	},
 
-	styleTabNotChanged: function()
+	styleTabNotChanged: function(id)
 	{
-		Backend.isStyleEdited = false;
-		var notice = $("notice_changes_colors_and_styles_tab");
+		// console.log(id);
+
+		Backend.isStyleEdited[id] = false;
+		var notice = $("notice_changes_colors_and_styles_tab_"+id);
 		if (notice)
 		{
 			notice.hide();
 		}
+	},
+	isStyleTabChanged: function(id)
+	{
+		return Backend.isStyleEdited[id] ? true : false
 	}
 }
 
@@ -336,12 +351,12 @@ Backend.ThemeColor = function(theme)
 	Event.observe(this.form, "change",
 		function()
 		{
-			Backend.Theme.prototype.styleTabChanged();
+			Backend.Theme.prototype.styleTabChanged(theme);
 		}
 	);
-	if (Backend.isCssEdited)
+	if (Backend.Theme.prototype.isCssTabChanged(theme))
 	{
-		Backend.Theme.prototype.cssTabChanged();
+		Backend.Theme.prototype.cssTabChanged(theme);
 	}
 }
 

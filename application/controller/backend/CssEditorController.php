@@ -44,6 +44,9 @@ class CssEditorController extends StoreManagementController
 		{
 			// client side does not do tab handling by itself (eg. opened in theme editor tab)
 			$response->set('noTabHandling', true);
+
+			// give css file filename part as tabid, because client side can instantiate more than one editors.
+			$response->set('tabid', str_replace('.css','',$css->getFileName()));
 		}
 		return $response;
 	}

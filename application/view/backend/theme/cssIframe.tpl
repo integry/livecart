@@ -14,8 +14,9 @@
 	new this.parent.Backend.ThemeColor('{$theme}');
 	{if $request.saved}
 		this.parent.Backend.SaveConfirmationMessage.prototype.showMessage('{tn _colors_saved}');
-		this.parent.Backend.Theme.prototype.styleTabNotChanged();
+		this.parent.Backend.Theme.prototype.styleTabNotChanged('{$theme}');
 		this.parent.TabControl.prototype.getInstance("tabContainer").reloadTabContent(this.parent.$("tabCss"));
+		this.parent.Backend.Theme.prototype.cssTabNotChanged('{$theme}');
 	{/if}
 </script>
 </body>

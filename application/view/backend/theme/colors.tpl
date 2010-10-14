@@ -4,7 +4,7 @@
 
 <div 
 	onclick="{literal}TabControl.prototype.getInstance('tabContainer').activateTab($('tabCss'));{/literal}"
-	id="notice_changes_in_css_tab" class="warning cssAndStyleTab" style="display:none;"
+	id="notice_changes_in_css_tab_{$theme}" class="warning cssAndStyleTab" style="display:none;"
 >{t _notice_changes_in_css_tab}</div>
 
 
