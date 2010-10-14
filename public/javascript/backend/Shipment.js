@@ -446,6 +446,7 @@ Backend.Shipment.prototype =
 				Element.addClassName(firstShipment.ul, 'activeList_add_sort');
 				firstShipment.createSortable();
 			}
+			// !
 
 			var controls = $("orderShipment_" + this.orderID + "_controls_empty").innerHTML;
 			var stats = $("orderShipment_" + this.orderID + "_total_empty").innerHTML;
@@ -462,6 +463,19 @@ Backend.Shipment.prototype =
 			var newShipmentActiveList = ActiveList.prototype.getInstance($('orderShipmentsItems_list_' + this.orderID + '_' + response.shipment.ID), Backend.OrderedItem.activeListCallbacks);
 			Element.addClassName(li, this.prefix  + 'item');
 			ActiveList.prototype.recreateVisibleLists();
+
+			try {
+				// remove singleShipment class, if more than one shippable shipment
+				var containers = $$("#tabOrderInfo_" + this.orderID + "Content .shippableShipments .shipmentContainer");
+				if (containers.length > 1)
+				{
+					var i;
+					for(i = 0; i<containers.length; i++)
+					{
+						$(containers[i].getElementsByTagName("ul")[0]).up("ul").removeClassName("singleShipment");
+					}
+				}
+			} catch(e) {}
 
 			if(shipmentItems.length == 0)
 			{
@@ -517,9 +531,7 @@ Backend.Shipment.prototype =
 				}
 			}
 			catch(e) { }
-
 			Backend.Shipment.prototype.updateOrderStatus(this.orderID);
-
 			Backend.Shipment.prototype.getInstance(li);
 		}
 	},

@@ -18,14 +18,20 @@ class SearchableItem extends ActiveRecordModel
 		$schema->registerField(new ARField("value", ARText::instance() ));
 		$schema->registerField(new ARField("locale", ARVarchar::instance(2)));
 		$schema->registerField(new ARField("meta", ARText::instance()));
+		$schema->registerField(new ARField("sort", ARInteger::instance()));
+
 		// $schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		// $schema->registerField(new ARField("type", ARVarchar::instance(16)));
 	}
 
-
-	public static function getRecordCount($type=null)
+	public static function getRecordCount($locale=null)
 	{
-		return ActiveRecordModel::getRecordCount(__CLASS__, select()); // add type filter, when more than one searchable item type.
+		$filter = new ARSelectFilter();
+		if ($locale)
+		{
+			$filter->mergeCondition(eq(f(__CLASS__.'.locale'), $locale));
+		}
+		return ActiveRecordModel::getRecordCount(__CLASS__, $filter);
 	}
 
 	public static function bulkClearIndex($section)
@@ -52,15 +58,16 @@ class SearchableItem extends ActiveRecordModel
 			{
 				$locale = 'NULL';
 			}
-			$chunks[] = sprintf('(%s, %s, %s, %s)',
+			$chunks[] = sprintf('(%s, %s, %s, %s, %s)',
 				'0x'.bin2hex($item['value']),
 				$locale,
 				array_key_exists('section', $item) ? '0x'.bin2hex($item['section']) : 'NULL',
-				'0x'.bin2hex(serialize($item['meta']))
+				'0x'.bin2hex(serialize($item['meta'])),
+				array_key_exists('sort', $item) && is_numeric($item['sort']) ? intval($item['sort'], 10) : 'NULL'
 			);
 		}
 
-		ActiveRecordModel::executeUpdate('INSERT INTO '.__CLASS__.'(value, locale, section, meta) VALUES '.implode(',',$chunks));
+		ActiveRecordModel::executeUpdate('INSERT INTO '.__CLASS__.'(value, locale, section, meta, sort) VALUES '.implode(',',$chunks));
 	}
 }
 

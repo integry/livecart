@@ -6,9 +6,9 @@ Backend.Theme = Class.create();
 
 Backend.Theme.prototype =
 {
-  	treeBrowser: null,
+	treeBrowser: null,
 
-  	urls: new Array(),
+	urls: new Array(),
 
 	initialize: function(pages)
 	{
@@ -69,6 +69,33 @@ Backend.Theme.prototype =
 		form.reset();
 		ActiveForm.prototype.resetErrorMessages(form)
 		$('addForm').hide();
+	},
+	
+	showImportForm: function()
+	{
+		$('importForm').show();
+	},
+
+	hideImportForm: function()
+	{
+		var form = $('importForm').down('form');
+		form.reset();
+		ActiveForm.prototype.resetErrorMessages(form)
+		$('importForm').hide();
+	},
+
+	showCopyForm: function()
+	{
+		$('copyForm').show();
+		$('copyForm').down('input.text').focus();
+	},
+
+	hideCopyForm: function()
+	{
+		var form = $('copyForm').down('form');
+		form.reset();
+		ActiveForm.prototype.resetErrorMessages(form)
+		$('copyForm').hide();
 	},
 
 	addTheme: function()
@@ -164,9 +191,67 @@ Backend.Theme.prototype =
 		}
 	},
 
+	importTheme: function()
+	{
+		this.showImportForm();
+	},
+
+	exportSelected: function()
+	{
+		var
+			id = this.treeBrowser.getSelectedItemId(),
+			url = this.urls['export'].replace('_id_', id);
+
+		window.location.href = url;
+
+		// this.treeBrowser.showFeedback(id);
+	},
+
+	copyTheme: function()
+	{
+		var
+			form = $("copyForm").down("form"),
+			indicator = $("copyFormProgressIndicator");
+		$("copyFromID").value = this.treeBrowser.getSelectedItemId();
+		indicator.addClassName("progressIndicator");
+		new LiveCart.AjaxRequest(form, indicator, this.copyCompleted.bind(this));
+	},
+
+	copyCompleted: function(response)
+	{
+		this.hideCopyForm();
+		var responseData = eval('(' + response.responseText + ')');
+
+		if (responseData.status == "success")
+		{
+			if (this.treeBrowser.selectItem(responseData.id) == 0)
+			{
+				var z = this.treeBrowser.insertNewItem(0, responseData.id, responseData.id, null, 0, 0, 0, '', 1);
+				if(z != -1)
+				{
+					new Effect.Highlight($(z.tr));
+					this.treeBrowser.selectItem(z.id);
+				}
+			}
+			this.treeBrowser.selectItem(responseData.id);
+			// this.activateCategory(responseData.id);
+			this.showControls();
+		}
+	},
+
 	showControls: function()
 	{
-		if ('barebone' != this.treeBrowser.getSelectedItemId())
+		var id = this.treeBrowser.getSelectedItemId();
+		if (id)
+		{
+			$("exportMenu").show();
+		}
+		else
+		{
+			$("exportMenu").hide();
+		}
+
+		if ('barebone' != id)
 		{
 			$("removeMenu").show();
 		}
@@ -174,7 +259,6 @@ Backend.Theme.prototype =
 		{
 			$("removeMenu").hide();
 		}
-
 	},
 
 	craftTabUrl: function(url)

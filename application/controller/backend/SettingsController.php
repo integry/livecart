@@ -134,6 +134,7 @@ class SettingsController extends StoreManagementController
 			$this->config->setAutoSave(true);
 
 			ClassLoader::import('application.model.searchable.index.SearchableConfigurationIndexing');
+			SearchableConfigurationIndexing::buildIndexIfNeeded();
 			$sc = new SearchableConfigurationIndexing($this->config, $this->application);
 			$sc->buildIndex($this->request->get('id'));
 
