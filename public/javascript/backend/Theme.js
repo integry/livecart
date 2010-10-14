@@ -2,8 +2,13 @@
  *	@author Integry Systems
  */
 
-Backend.Theme = Class.create();
+// is css tab edited
+Backend.isCssEdited = {};
 
+// is style tab edited
+Backend.isStyleEdited = {};
+
+Backend.Theme = Class.create();
 Backend.Theme.prototype =
 {
 	treeBrowser: null,
@@ -270,6 +275,62 @@ Backend.Theme.prototype =
 	{
 		return tabId + '_' +  Backend.Theme.prototype.treeBrowser.getSelectedItemId() + 'Content';
 	},
+
+	// Backend.Theme.prototype.cssTabChanged
+	cssTabChanged: function(id)
+	{
+		// console.log(id);
+		Backend.isCssEdited[id] = true;
+		var notice = $("notice_changes_in_css_tab_"+id);
+		if (notice)
+		{
+			notice.show();
+		}
+	},
+	cssTabNotChanged: function(id)
+	{
+		// console.log(id);
+		Backend.isCssEdited[id] = false;
+		var notice = $("notice_changes_in_css_tab_"+id);
+		if (notice)
+		{
+			notice.hide();
+		}
+	},
+
+	isCssTabChanged: function(id)
+	{
+		return Backend.isCssEdited[id] ? true : false;
+	},
+
+	// Backend.Theme.prototype.styleTabChanged
+	styleTabChanged: function(id)
+	{
+		// console.log(id);
+
+		Backend.isStyleEdited[id] = true;
+		var notice = $("notice_changes_colors_and_styles_tab_"+id);
+		if (notice)
+		{
+			notice.show();
+		}
+	},
+
+	styleTabNotChanged: function(id)
+	{
+		// console.log(id);
+
+		Backend.isStyleEdited[id] = false;
+		var notice = $("notice_changes_colors_and_styles_tab_"+id);
+		if (notice)
+		{
+			notice.hide();
+		}
+	},
+	isStyleTabChanged: function(id)
+	{
+		return Backend.isStyleEdited[id] ? true : false
+	}
 }
 
 
@@ -287,6 +348,16 @@ Backend.ThemeColor = function(theme)
 	this.form.onsubmit = this.save.bind(this);
 
 	this.initProperties();
+	Event.observe(this.form, "change",
+		function()
+		{
+			Backend.Theme.prototype.styleTabChanged(theme);
+		}
+	);
+	if (Backend.Theme.prototype.isCssTabChanged(theme))
+	{
+		Backend.Theme.prototype.cssTabChanged(theme);
+	}
 }
 
 Backend.ThemeColor.prototype =

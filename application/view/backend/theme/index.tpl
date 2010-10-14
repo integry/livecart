@@ -12,6 +12,7 @@
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 {includeCss file="library/TabControl.css"}
 {includeCss file="backend/Theme.css"}
+{includeCss file="backend/CssEditor.css"}
 
 {includeJs file="library/ActiveList.js"}
 {includeCss file="library/ActiveList.css"}
@@ -106,16 +107,12 @@
 					<li id="tabColors" class="tab">
 						<a href="{link controller=backend.theme action=colors query='id=_id_'}">{t _colors}</a>
 					</li>
-
-					<li id="tabFiles" class="tab">
-						<a href="{link controller=backend.themeFile action=index query='id=_id_'}">{t _files}</a>
-					</li>
-
-					<div style="display: none;">
 					<li id="tabCss" class="tab">
 						<a href="{link controller=backend.cssEditor action=edit query='file=_id_'}">{t _css}</a>
 					</li>
-					</div>
+					<li id="tabFiles" class="tab">
+						<a href="{link controller=backend.themeFile action=index query='id=_id_'}">{t _files}</a>
+					</li>
 					{block THEME_TABS}
 				</ul>
 			</div>

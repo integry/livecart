@@ -1332,6 +1332,14 @@ fieldset.group p
     font-size: smaller;
 }
 
+.loadedInBackgroundTab
+{
+	position: absolute;
+	top:-10000px;
+	left:-10000px;
+
+}
+
 #discountManagerContainer .sectionContainer,
 #newsletterManagerContainer .sectionContainer
 {

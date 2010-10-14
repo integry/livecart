@@ -83,3 +83,12 @@ font-weight:bold;
 {
 	width:50px !important; 
 }
+
+
+.warning.cssAndStyleTab
+{
+	color:red;
+	font-weight:bold;
+	padding:10px;
+	cursor: pointer;
+}

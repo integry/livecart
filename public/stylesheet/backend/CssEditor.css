@@ -5,6 +5,7 @@
 	background-color: #ffeeee;
 }
 
+textarea.code,
 .templateContent textarea.code
 {
 	height: 500px;

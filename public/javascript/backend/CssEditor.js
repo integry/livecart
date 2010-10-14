@@ -70,7 +70,7 @@ Backend.CssEditor.prototype =
 		{
 			this.treeBrowser.showFeedback(id);
 			var url = this.urls['edit'].replace('_id_', id);
-			
+		
 			// var upd = new LiveCart.AjaxUpdater(url, 'templateContent');
 			// upd.onComplete = this.displayTemplate.bind(this);
 			this.openInTab(id, id.replace(/\.css$/,''), url);
@@ -201,11 +201,12 @@ Backend.CssEditorHandler.prototype =
 		Event.observe(this.form, 'submit', this.submit.bindAsEventListener(this));
 
 		editAreaLoader.init({
-			id : "code_"+this.tabid,		// textarea id
-			syntax: "css",			// syntax to be uses for highgliting
-			start_highlight: true,		// to display with highlight mode on start-up
+			id : "code_"+this.tabid, // textarea id
+			syntax: "css",			 // syntax to be uses for highgliting
+			start_highlight: true,	 // to display with highlight mode on start-up
 			allow_toggle: false,
-			allow_resize: true
+			allow_resize: true,
+			change_callback: "Backend.CssEditorHandler.prototype.editAreaChangeCallback"
 			}
 		);
 
@@ -223,9 +224,18 @@ Backend.CssEditorHandler.prototype =
 
 	saveComplete: function(originalRequest)
 	{
+		Backend.Theme.prototype.cssTabNotChanged(this.tabid);
+		TabControl.prototype.getInstance("tabContainer").reloadTabContent($("tabColors"));
+		Backend.Theme.prototype.styleTabNotChanged(this.tabid);
+
 		if (opener)
 		{
 			opener.location.reload();
 		}
+	},
+
+	editAreaChangeCallback: function(id)
+	{
+		Backend.Theme.prototype.cssTabChanged(id.replace("code_",""));
 	}
 }
