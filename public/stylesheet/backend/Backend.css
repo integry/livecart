@@ -1843,6 +1843,12 @@ a.external
 	z-index: 10000;
 }
 
+.quickEditOuterContainer
+{
+	background-color: #eeffff;
+	-moz-border-radius: 0 0 10px 10px;
+}
+
 .quickEditContainer
 {
 	position:absolute;

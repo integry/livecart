@@ -1,10 +1,9 @@
 {form handle=$form
-	action="controller=backend.userGroup action=saveQuickEdit id=`$someUser.ID`" id="userInfo_`$someUser.UserGroup.ID`_`$someUser.ID`_form" 
+	action="controller=backend.userGroup action=saveQuickEdit id=`$someUser.ID`" id="userInfo_`$someUser.UserGroup.ID`_`$someUser.ID`_form"
 	onsubmit="return false;" method="post"
 	role="user.create(backend.userGroup/index),user.update(backend.user/info)"
 }
-	<fieldset>
-		<legend>{t _quick_edit}</legend>
+	<fieldset class="quickEditOuterContainer">
 		<div class="quickEditContainer1">
 			<p class="required">
 				<label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_userGroup" class="user_userGroupLabel">{t _user_group}</label>
@@ -36,7 +35,7 @@
 			</p>
 			<p {if !$someUser.ID}class="required"{/if}>
 				<label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_password">{t _password}</label>
-				
+
 				<a class="generatePassword" href="javascript:void(0);" onclick="Backend.UserQuickEdit.generatePassword(this, '{link controller=backend.user action=generatePassword}');" class="user_password_generate">{t _generate_password}</a>
 				<fieldset class="error userPasswordBlock">
 					<span class="progressIndicator generatePasswordProgressIndicator" style="display: none;"></span>
@@ -81,6 +80,6 @@
 		</div>
 		{/if}
 	</div>
-		</fieldset>
 	{include file="block/activeGrid/quickEditControls.tpl"}
+	</fieldset>
 {/form}

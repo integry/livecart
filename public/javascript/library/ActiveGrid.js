@@ -138,7 +138,18 @@ ActiveGrid.prototype =
 	{
 		this.quickEditUrlTemplate = urlTemplate;
 		this.quickEditIdToken = idToken;
-		Event.observe(this.tableInstance.down('tbody'), 'mouseover', this.quickEdit.bindAsEventListener(this) );
+
+		$A(this.tableInstance.down('tbody').getElementsByTagName('tr')).each(function(row)
+		{
+			Event.observe(row, 'mouseover',
+				function(e)
+				{
+					window.lastQuickEditNode = Event.element(e);
+					window.setTimeout(function() { this.quickEdit(e); }.bind(this), 200);
+				}.bindAsEventListener(this) );
+		}.bind(this));
+
+		Event.observe(this.tableInstance.down('tbody'), 'mouseout', function() { window.lastQuickEditNode = null; } );
 		Event.observe(document.body, 'mouseover', this.quickEditMouseover.bindAsEventListener(this) );
 		Event.observe(this._getQuickEditContainer(), 'click', this.quickEditContainerClicked.bindAsEventListener(this) );
 	},
@@ -149,6 +160,11 @@ ActiveGrid.prototype =
 			node = Event.element(event),
 			recordID = null,
 			m;
+
+		if (window.lastQuickEditNode != node)
+		{
+			return;
+		}
 
 		if (node.tagName.toLowerCase != "tr")
 		{
@@ -240,7 +256,12 @@ ActiveGrid.prototype =
 
 	hideQuickEditContainer : function()
 	{
-		var container=this._getQuickEditContainer().hide();
+		var container = this._getQuickEditContainer();
+		if (!container)
+		{
+			return;
+		}
+
 		container.innerHTML = "";
 		container.hide();
 		this.containerState = "hidden";
@@ -728,7 +749,7 @@ ActiveGridFilter.prototype =
 			{
 				drd.hide();
 			}
-			
+
 		}
 		this.setFilterValue();
 	},
@@ -1174,7 +1195,7 @@ ActiveGridAdvancedSearch.prototype =
 	{
 		this.conditions[condition.getId()] = condition;
 	},
-	
+
 	initialize: function(id)
 	{
 		this.id = id;
@@ -1284,7 +1305,7 @@ ActiveGridAdvancedSearch.prototype =
 		var
 			container = element.up('li'),
 			condition = this.getCondition(container.down('.condition').value);
-		
+
 		if(this.lastConditionContainer == container && condition.isFilled(container))
 		{
 			this.appendCondition();
@@ -1387,7 +1408,7 @@ ActiveGridAdvancedSearchCondition.prototype =
 	{
 		return this.name;
 	},
-	
+
 	getId: function()
 	{
 		return this.id;

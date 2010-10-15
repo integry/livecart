@@ -2,8 +2,7 @@
 
 {form handle=$productForm action="controller=backend.product action=saveQuickEdit id=`$product.ID`" id="product_`$product.ID`_quick_form" onsubmit="return false;" method="post" role="product.update"}
 	<input type="hidden" name="categoryID" value="{$cat}" />
-	<fieldset>
-		<legend>{t _quick_edit}</legend>
+	<fieldset class="quickEditOuterContainer">
 
 		<fieldset class="container" {denied role="product.update"}style="display: none"{/denied}>
 			<ul class="menu" id="prodImgMenu_{$product.ID}">
@@ -26,12 +25,12 @@
 				<div class="errorText hidden"></div>
 			</fieldset>
 		</p>
-		
+
 		<p class="required">
 		<label for="product_price_{$cat}_{$product.ID}_{$baseCurrency}">{t _pricing}:</label>
 		<fieldset class="error">
 			{textfield name="price_$baseCurrency" class="money price" id="product_price_`$cat`_`$product.ID`_`$baseCurrency`"} {$baseCurrency}
-			 <div class="errorText hidden"></div> 
+			 <div class="errorText hidden"></div>
 
 			{*
 			<span class="listPrice">
