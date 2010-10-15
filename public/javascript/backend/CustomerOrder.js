@@ -289,7 +289,8 @@ Backend.CustomerOrder.prototype =
 		url = url.replace(/_stat_/, select.value);
 		new LiveCart.AjaxRequest(url, select.parentNode.down('.progressIndicator'), function()
 		{
-			this.resetTab('tabOrderInfo', orderID);
+			window.location.reload();
+			//this.resetTab('tabOrderInfo', orderID);
 		}.bind(this));
 	},
 
@@ -1043,21 +1044,26 @@ Backend.CustomerOrder.Address.prototype =
 			function(responseJSON)
 			{
 				ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-				var responseObject = eval("(" + responseJSON.responseText + ")");
-				this.afterSubmitForm(responseObject);
+				this.afterSubmitForm(responseJSON);
 			}.bind(this)
 		);
 	},
 
 	afterSubmitForm: function(response)
 	{
-		if(response.status == 'success')
+		if(response.responseData && response.responseData.errors)
+		{
+			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.responseData.errors)
+		}
+		else
 		{
 			this.stateID = this.nodes.form.elements.namedItem('stateID').value;
 			Form.State.backup(this.nodes.form);
 
-			this.nodes.form.down('.addressFullName').innerHTML = this.nodes.form.elements.namedItem('firstName').value + " " +this.nodes.form.elements.namedItem('lastName').value
-			this.nodes.form.down('.addressCountryName').innerHTML = this.nodes.form.elements.namedItem('countryID').options[this.nodes.form.elements.namedItem('countryID').selectedIndex].text
+			if (this.nodes.form.down('.addressCountryName'))
+			{
+				this.nodes.form.down('.addressCountryName').innerHTML = this.nodes.form.elements.namedItem('countryID').options[this.nodes.form.elements.namedItem('countryID').selectedIndex].text
+			}
 
 			if(this.nodes.form.elements.namedItem('stateID').options.length == 0)
 			{
@@ -1068,20 +1074,25 @@ Backend.CustomerOrder.Address.prototype =
 				this.nodes.form.down('.addressStateName').innerHTML = this.nodes.form.elements.namedItem('stateID').options[this.nodes.form.elements.namedItem('stateID').selectedIndex].text
 			}
 
-			this.nodes.form.down('.addressCompanyName').innerHTML = this.nodes.form.elements.namedItem('companyName').value
-			this.nodes.form.down('.addressCity').innerHTML = this.nodes.form.elements.namedItem('city').value
-			this.nodes.form.down('.addressAddress1').innerHTML = this.nodes.form.elements.namedItem('address1').value
-			this.nodes.form.down('.addressAddress2').innerHTML = this.nodes.form.elements.namedItem('address2').value
-			this.nodes.form.down('.addressPostalCode').innerHTML = this.nodes.form.elements.namedItem('postalCode').value
-			this.nodes.form.down('.addressPhone').innerHTML = this.nodes.form.elements.namedItem('phone').value
+			if (this.nodes.form.down('.addressFullName'))
+			{
+				this.nodes.form.down('.addressFullName').innerHTML = this.nodes.form.elements.namedItem('firstName').value + " " +this.nodes.form.elements.namedItem('lastName').value
+			}
+
+			$H({addressCompanyName: 'companyName', addressCity: 'city', addressAddress1: 'address1', addressAddress2: 'address2', addressPostalCode: 'postalCode', addressPhone: 'phone'}).each(function(field)
+			{
+				var el = this.nodes.form.down('.' + field[0]);
+				var input = this.nodes.form.elements.namedItem(field[1]);
+
+				if (el && input)
+				{
+					el.innerHTML = input.value;
+				}
+			}.bind(this));
 
 			this.hideForm();
 
 			Backend.CustomerOrder.prototype.updateLog(this.nodes.form.elements.namedItem('orderID').value);
-		}
-		else
-		{
-			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors)
 		}
 	}
 }

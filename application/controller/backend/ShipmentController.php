@@ -50,18 +50,6 @@ class ShipmentController extends StoreManagementController
 		$order->save();
 		$shipment->save(ActiveRecord::PERFORM_UPDATE);
 
-		/*
-		$shippingService = ShippingService::getInstanceByID($this->request->get('serviceID'), ShippingService::LOAD_DATA);
-
-		$shipment->setAvailableRates($shipment->order->get()->getDeliveryZone()->getShippingRates($shipment));
-		$shipment->setRateId($shippingService->getID());
-
-		$shipment->shippingService->set($shippingService);
-		$shipment->recalculateAmounts();
-
-		$shipment->save();
-		*/
-
 		$history->saveLog();
 
 		$shipmentArray = $shipment->toArray();

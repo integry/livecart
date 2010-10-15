@@ -585,10 +585,17 @@ class CustomerOrderController extends ActiveGridController
 
 	public function printLabels()
 	{
-		$filter = $GLOBALS['filter'];
+		ClassLoader::import('application.model.feed.ShipmentFeed');
 
-		// HAVING User.fullName >> causes problems
-		$filter->setHavingCondition(eq(new ARExpressionHandle('1'), 1));
+		if (isset($GLOBALS['filter']) && ($filter = $GLOBALS['filter']))
+		{
+			// HAVING User.fullName >> causes problems
+			$filter->setHavingCondition(eq(new ARExpressionHandle('1'), 1));
+		}
+		else
+		{
+			$filter = select(eq('CustomerOrder.ID', $this->request->get('id')));
+		}
 
 		return new ActionResponse('feed', new ShipmentFeed($filter, array('User')));
 	}

@@ -428,7 +428,7 @@ class OrderedItemController extends StoreManagementController
 								'total' => ((float)$newShipment->shippingAmount->get() + (float)$newShipment->amount->get() + (float)$newShipment->taxAmount->get()),
 								'prefix' => $newShipment->getCurrency()->pricePrefix->get(),
 								'suffix' => $newShipment->getCurrency()->priceSuffix->get(),
-								'Order' => $shipment->order->get()->toFlatArray()
+								'Order' => $newShipment->order->get()->toFlatArray()
 							)
 						),
 						'success',

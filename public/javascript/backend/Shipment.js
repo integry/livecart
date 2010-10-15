@@ -112,9 +112,6 @@ Backend.OrderedItem = {
 					(response.newShipment ? response.newShipment.Order : null) ||
 				    (response.item && response.item.Shipment ? response.item.Shipment.Order : null);
 
-		console.log(response);
-console.log(order);
-
 		report.down('.orderAmount').down('.order_totalAmount').update(order.totalAmount);
 
 		Backend.CustomerOrder.prototype.updateLog(id);
@@ -272,7 +269,7 @@ Backend.Shipment.prototype =
 		this.findUsedNodes(root);
 		this.bindEvents();
 		this.shipmentsActiveList = ActiveList.prototype.getInstance(this.nodes.shipmentsList);
-
+console.log('activelist');
 		if(this.nodes.form)
 		{
 			this.itemsActiveList = ActiveList.prototype.getInstance(this.nodes.itemsList, Backend.OrderedItem.activeListCallbacks);
@@ -360,12 +357,13 @@ Backend.Shipment.prototype =
 		if(this.nodes.form)
 		{
 			// Bind service changes
-			if ($("orderShipment_change_usps_" + this.ID))
+			var fld = this.nodes.form.down("#orderShipment_change_usps_" + this.ID)
+			if (fld)
 			{
-				Event.observe("orderShipment_change_usps_" + this.ID, 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).toggleUSPS(); }.bind(this));
-				Event.observe("orderShipment_USPS_" + this.ID + "_submit", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).toggleUSPS(); }.bind(this));
-				Event.observe("orderShipment_USPS_" + this.ID + "_cancel", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).toggleUSPS(true); }.bind(this));
-				Event.observe("orderShipment_USPS_" + this.ID + "_select", 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).USPSChanged(); }.bind(this));
+				Event.observe(fld, 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).toggleUSPS(); }.bind(this));
+				Event.observe(this.nodes.form.down("#orderShipment_USPS_" + this.ID + "_submit"), 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).toggleUSPS(); }.bind(this));
+				Event.observe(this.nodes.form.down("#orderShipment_USPS_" + this.ID + "_cancel"), 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).toggleUSPS(true); }.bind(this));
+				Event.observe(this.nodes.form.down("#orderShipment_USPS_" + this.ID + "_select"), 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).USPSChanged(); }.bind(this));
 
 				var shippingAmount = this.nodes.form.down('input.shippingAmount');
 				if (shippingAmount)
@@ -374,7 +372,11 @@ Backend.Shipment.prototype =
 				}
 
 				// Bind status changes
-				Event.observe("orderShipment_status_" + this.ID, 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).changeStatus(); }.bind(this));
+				var status = this.nodes.form.down("#orderShipment_status_" + this.ID);
+				if (status)
+				{
+					Event.observe(status, 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).changeStatus(); }.bind(this));
+				}
 			}
 
 			// Bind Items events
@@ -508,13 +510,14 @@ Backend.Shipment.prototype =
 				li.down("#orderShipment_status__" + z).id  = "orderShipment_status_" + response.shipment.ID + "_" + z;
 			}
 
-			li.down('form').elements.namedItem('ID').value = response.shipment.ID;
-			li.down('form').elements.namedItem('orderID').value = this.orderID;
-			li.down('form').elements.namedItem('shippingServiceID').value = "";
+			var form = li.down('form');
+			form.elements.namedItem('ID').value = response.shipment.ID;
+			form.elements.namedItem('orderID').value = this.orderID;
+			form.elements.namedItem('shippingServiceID').value = "";
 			$("orderShipment_status_" + response.shipment.ID + "_3").hide();
 
 			$("orderShipment_status_" + response.shipment.ID ).value = response.shipment.status;
-			$("orderShipment_change_usps_" + response.shipment.ID).innerHTML = Backend.Shipment.Messages.shippingServiceIsNotSelected;
+			li.down("#orderShipment_change_usps_" + response.shipment.ID).innerHTML = Backend.Shipment.Messages.shippingServiceIsNotSelected;
 
 			Element.addClassName(li, 'orderShipment');
 
@@ -679,9 +682,9 @@ Backend.Shipment.prototype =
 
 	toggleUSPS: function(cancel)
 	{
-	   var uspsLink = $("orderShipment_change_usps_" + this.nodes.form.elements.namedItem('ID').value);
-	   var usps = $("orderShipment_USPS_" + this.nodes.form.elements.namedItem('ID').value);
-	   var uspsSelect = $("orderShipment_USPS_" + this.nodes.form.elements.namedItem('ID').value + "_select");
+	   var uspsLink = this.nodes.form.down("#orderShipment_change_usps_" + this.nodes.form.elements.namedItem('ID').value);
+	   var usps = this.nodes.form.down("#orderShipment_USPS_" + this.nodes.form.elements.namedItem('ID').value);
+	   var uspsSelect = this.nodes.form.down("#orderShipment_USPS_" + this.nodes.form.elements.namedItem('ID').value + "_select");
 
 		if(usps.style.display == 'none')
 		{
@@ -724,7 +727,7 @@ Backend.Shipment.prototype =
 					   var response = eval("(" + response.responseText + ")");
 
 					   this.nodes.form.elements.namedItem('shippingServiceID').value = response.shipment.ShippingService.ID;
-					   $("orderShipment_change_usps_" + this.nodes.form.elements.namedItem('ID').value).innerHTML = response.shipment.ShippingService.name_lang;
+					   this.nodes.form.down("#orderShipment_change_usps_" + this.nodes.form.elements.namedItem('ID').value).innerHTML = response.shipment.ShippingService.name_lang;
 
 					   this.setAmount(response.shipment.amount);
 					   this.setShippingAmount(response.shipment.shippingAmount);
@@ -749,8 +752,6 @@ Backend.Shipment.prototype =
 			   {
 				   this.setShippingAmount(uspsSelect.services[this.nodes.form.elements.namedItem('shippingServiceID').value].shipment.shippingAmount);
 			   }
-
-			   Backend.OrderedItem.updateReport(this.nodes.form.elements.namedItem('orderID').value, response);
 		   }
 		}
 	},
@@ -761,8 +762,6 @@ Backend.Shipment.prototype =
 		this.setShippingAmount(select.services[select.value].shipment.shippingAmount);
 		this.setTaxAmount(select.services[select.value].shipment.taxAmount);
 		this.setTotal(select.services[select.value].shipment.total);
-
-		Backend.OrderedItem.updateReport(this.nodes.form.elements.namedItem('orderID').value, select.services[select.value]);
 	},
 
 	afterChangeStatus: function(response)

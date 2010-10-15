@@ -65,6 +65,11 @@
 	background-image: url(../../image/silk/printer.png);
 }
 
+.order_printLabel
+{
+	background-image: url(../../image/silk/lorry.png);
+}
+
 .order_acceptanceStatus
 {
     font-size: 120%;
@@ -332,6 +337,24 @@ ul.orderAddress_showEdit
 	padding:0;
 }
 
+.addProductsContainer
+{
+	z-index: 20;
+}
+
+#ProductSearchResultOuterContainer
+{
+	position: absolute;
+	left: auto;
+	top: auto;
+}
+
+.addProductsContainer .qsClassName,
+.addProductsContainer .qsCount
+{
+	display: none;
+}
+
 #ProductSearchContainer,
 .addProductsContainer .controls
 {
@@ -407,4 +430,3 @@ ul.orderAddress_showEdit
 {
 	margin-right: 4px;
 }
-

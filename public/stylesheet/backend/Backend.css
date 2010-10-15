@@ -1062,7 +1062,8 @@ select.narrow
     width: 5em;
 }
 
-label.param
+label.param,
+td.param
 {
 	color: #777;
 	width: 140px;
