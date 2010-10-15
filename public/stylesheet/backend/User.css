@@ -145,7 +145,35 @@ fieldset.showPassword
 {
 	float:left;
 	width:33.33%;
-	height:240px;
+	height:140px;
+}
+
+.quickEditContainer2, .quickEditContainer3
+{
+	width: 50%;
+	overflow: auto;
+}
+
+.quickEditContainer3
+{
+	float: right;
+}
+
+.quickEditContainer2 ul.menu
+{
+	display: none;
+}
+
+.quickEditContainer2 .qeOrderSideMenu
+{
+	margin-top: 0;
+}
+
+.quickEditContainer2 table.qeProducts td.qeProduct
+{
+	max-width: 140px;
+	font-size: 11px;
+	overflow: hidden;
 }
 
 .quickEditContainer1 a,

@@ -179,9 +179,16 @@
 	background: #ddffdd;
 }
 
-.activeGrid_highlight td
+.activeGrid_highlight td,
+.activeGrid_highlightQuickEdit td
 {
-  	background: #ddd !important;
+  	background: #eff !important;
+}
+
+.activeGrid_highlightQuickEdit
+{
+	border-style: solid;
+	border-width: 1px;
 }
 
 .activeGrid_highlight td.sortedColumn

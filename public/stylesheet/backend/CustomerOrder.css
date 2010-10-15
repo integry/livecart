@@ -292,14 +292,8 @@ width:190px;
 .quickEditContainerOrder,
 .quickEditContainerOrder select
 {
-font-size:smaller;
+	font-size:smaller;
 }
-
-.quickEditContainerOrder
-{
-width:500px;
-}
-
 
 ul.orderAddress_showEdit
 {
@@ -429,4 +423,46 @@ ul.orderAddress_showEdit
 .order_info .notPaid input
 {
 	margin-right: 4px;
+}
+
+.qeInvoiceNumber
+{
+	font-weight: bold;
+}
+
+.qeOrderSideMenu
+{
+	float: right;
+	margin-top: 4px;
+}
+
+.qeOrderSideMenu ul.menu
+{
+	font-size: 12px;
+	border-bottom-width: 0;
+}
+
+.qeOrderSideMenu ul.menu li
+{
+	display: block;
+}
+
+.qeOrderDate
+{
+	font-weight: bold;
+}
+
+.tabOrdersContent .quickEditOuterContainer .controls
+{
+	display: none;
+}
+
+.qeAddresses p
+{
+	clear: none;
+}
+
+.qeProducts
+{
+	margin-bottom: 0.5em;
 }

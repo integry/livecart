@@ -4,7 +4,7 @@
 	<input type="hidden" name="imageId" value="" />
 	<fieldset class="addForm">
 		<legend>{t _add_new_image}</legend>
-		
+
 		<p class="required">
 			<label for="image">{t _image_file}</label>
 			<fieldset class="error">
@@ -17,14 +17,15 @@
 
 		{if $images|@json_decode}
 			<p>
-				<label for="setAsMainImage{$ownerId}">{t _image_set_as_main}:</label>
+				<label></label>
 				{checkbox class="checkbox" name="setAsMainImage" id="setAsMainImage`$ownerId`"}
+				<label for="setAsMainImage{$ownerId}" class="checkbox">{t _image_set_as_main}</label>
 			</p>
 		{/if}
 {*
 		<p>
 			<label for="title">{t _image_title}:</label>
-			{textfield name="title" id="title"}	
+			{textfield name="title" id="title"}
 		</p>
 		{language}
 			<p>
@@ -35,11 +36,11 @@
 *}
 
 <p><label></label></p>
-		<fieldset class="controls">	
+		<fieldset class="container">
 			<span class="progressIndicator" style="display: none;"></span>
-			<input type="submit" name="upload" class="submit" value="{tn _upload}"> 
-			{t _or} 
-			<a href="javascript:void(0);" 
+			<input type="submit" name="upload" class="submit" value="{tn _upload}">
+			{t _or}
+			<a href="javascript:void(0);"
 			onclick="return Backend.Product.hideQuickEditAddImageForm($('product_{$ownerId}_quick_form').down('ul').down('li',1), {$ownerId});" class="cancel" >{t _cancel}</a>
 		</fieldset>
 	</fieldset>

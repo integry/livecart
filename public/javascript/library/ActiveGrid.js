@@ -166,6 +166,11 @@ ActiveGrid.prototype =
 			return;
 		}
 
+		if (this.activeRow)
+		{
+			this.activeRow.removeClassName('activeGrid_highlightQuickEdit');
+		}
+
 		if (node.tagName.toLowerCase != "tr")
 		{
 			node = node.up("tr");
@@ -217,6 +222,8 @@ ActiveGrid.prototype =
 					container.style.left=(pos[0])+"px";
 					container.style.top=(pos[1])+"px";
 					container.show();
+					node.addClassName('activeGrid_highlightQuickEdit');
+					this.activeRow = node;
 
 					if (this.quickEditContainerState == "hidden") // ignore "changed" state!
 					{
@@ -262,8 +269,14 @@ ActiveGrid.prototype =
 			return;
 		}
 
+		if (this.activeRow)
+		{
+			this.activeRow.removeClassName('activeGrid_highlightQuickEdit');
+		}
+
 		container.innerHTML = "";
 		container.hide();
+
 		this.containerState = "hidden";
 	},
 

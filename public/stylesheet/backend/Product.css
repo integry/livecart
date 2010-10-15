@@ -219,3 +219,8 @@ div.quantityPricing .groupLabel
 {
 	background-color: lightyellow;
 }
+
+.prodImageEditForm .addForm
+{
+	margin: 1.5em;
+}

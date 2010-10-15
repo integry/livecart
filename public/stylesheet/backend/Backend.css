@@ -1845,8 +1845,17 @@ a.external
 
 .quickEditOuterContainer
 {
-	background-color: #eeffff;
+	background-color: #eff;
 	-moz-border-radius: 0 0 10px 10px;
+	border-top-width: 0;
+	padding: 0.5em;
+}
+
+.quickEditOuterContainer,
+.activeGrid_highlightQuickEdit,
+.quickEditOuterContainer td
+{
+	border-color: #bcc !important;
 }
 
 .quickEditContainer
@@ -1857,7 +1866,6 @@ a.external
 	width:90%;
 	margin:27px 5% 0 5%;
 	z-index:10;
-	background-color:whitesmoke;
 }
 
 .qePrice
@@ -1869,7 +1877,6 @@ table.qeOrderPrices,
 table.qeProducts
 {
 	white-space:nowrap;
-	float:right;
 }
 
 table.qeOrderPrices
@@ -1877,8 +1884,8 @@ table.qeOrderPrices
 	margin-bottom:8px;
 }
 
-table.qeProducts{
-	width:100%;
+table.qeProducts td{
+	padding: 3px;
 }
 
 .qeStrong
@@ -1890,6 +1897,39 @@ table.qeProducts{
 {
 	text-align:right;
 }
+
+.quickEditOuterContainer td
+{
+	border-width: 1px;
+	border-style: solid;
+}
+
+.quickEditOuterContainer .even
+{
+	background-color: #eef;
+}
+
+.quickEditOuterContainer .odd
+{
+	background-color: #eff;
+}
+
+.quickEditOuterContainer a.cancel
+{
+	font-size: smaller;
+}
+
+.quickEditContainer input.text,
+.quickEditContainer input.password,
+.quickEditContainer select
+{
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+
+/*************************
+	Quick search
+*************************/
 
 #SettingsSearchContainer,
 #QuickSearchContainer
