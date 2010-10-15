@@ -82,7 +82,7 @@ class LiveCartTransaction extends TransactionDetails
 		$variations = new ProductSet();
 		foreach ($order->getShoppingCartItems() as $item)
 		{
-			if ($item->product->get()->parent->get())
+			if ($item->product->get() && $item->product->get()->parent->get())
 			{
 				$variations->unshift($item->product->get());
 			}
