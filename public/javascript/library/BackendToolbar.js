@@ -10,6 +10,10 @@ BackendToolbar.prototype = {
 		this.urls = urls;
 		this.nodes.root = $(rootNode);
 		this.nodes.mainpanel = this.nodes.root.down("ul");
+		this.nodes.lastviewed = this.nodes.root.down(".lastviewed");
+		this.nodes.templateOrderIcon = $("templateOrderIcon");
+		this.nodes.templateUserIcon = $("templateUserIcon");
+		this.nodes.templateProductIcon = $("templateProductIcon");
 
 		// remove button from toolbar, if it is droped outside any droppable area
 		Droppables.add($(document.body), {
@@ -78,11 +82,55 @@ BackendToolbar.prototype = {
 		);
 
 		// init unitialized drop buttons
-
 		dropButtons = $A(this.nodes.mainpanel.getElementsByClassName("uninitializedDropButton"));
 		dropButtons.each(this.fillDropButtonWithData.bind(this));
-
 		this.updateDroppables();
+		
+		// -- last viewed
+		this.adjustPanel(this.nodes.lastviewed);
+		Event.observe(window, "resize", function()
+			{
+				this.adjustPanel(this.nodes.lastviewed);
+			}.bind(this)
+		);
+
+		Event.observe(document.body, "click",function(event)
+			{
+				Event.stop(event);
+				this.hideLastViewedMenu();
+			}.bind(this)
+		);
+		Event.observe(this.nodes.lastviewed.down("a"), "click", function(event) {
+			Event.stop(event);
+			this[["hideLastViewedMenu", "openLastViewedMenu"][this.nodes.lastviewed.down("a").hasClassName("active")?0:1]]();
+		}.bindAsEventListener(this));
+	},
+
+	getSubPanels: function()
+	{
+		return $A(this.nodes.lastviewed.getElementsByClassName("subpanel"));
+	},
+
+	openLastViewedMenu: function()
+	{
+		var a = this.nodes.lastviewed.down("a");
+		a.addClassName("active");
+		this.getSubPanels().each(
+			function(subpanel) {
+				$(subpanel).addClassName("importantVisible");
+			}
+		);
+	},
+	
+	hideLastViewedMenu: function()
+	{
+		var a = this.nodes.lastviewed.down("a");
+		a.removeClassName("active");
+		this.getSubPanels().each(
+			function(subpanel) {
+				$(subpanel).removeClassName("importantVisible");
+			}
+		);
 	},
 
 	fillDropButtonWithData: function(node)
@@ -142,14 +190,10 @@ BackendToolbar.prototype = {
 		}.bind(this));
 	},
 
-	registerViewedItem: function(group, name, url)
+	// 
+	registerViewedItem: function(group, id, displayName, url)
 	{
-		
-	},
-
-	updateViewedItems: function()
-	{
-		
+		console.log("register :", group, displayName, url);
 	},
 
 	getButtonPosition: function(node)
@@ -249,8 +293,30 @@ BackendToolbar.prototype = {
 		new LiveCart.AjaxRequest(this.urls.sortIcons.replace('_order_', r.join(",")), null);
 	},
 
-	updateIconList: function()
+	adjustPanel: function (panel)
 	{
-		
+		panel = $(panel);
+		var
+			windowHeight = window.innerHeight || (window.document.documentElement.clientHeight || window.document.body.clientHeight),
+			subpanel = $(panel.getElementsBySelector(".subpanel")[0]),
+			ul = $(panel.getElementsBySelector("ul")[0]);
+
+		subpanel.style.height="auto";
+		ul.style.height="auto";
+
+		var
+			panelsub = subpanel.getHeight(),
+			panelAdjust = windowHeight - 170,
+			ulAdjust =  panelAdjust - 25;
+
+		if (panelsub > panelAdjust)
+		{
+			subpanel.style.height=panelAdjust+"px";
+			ul.style.height=panelAdjust+"px";
+		}
+		else
+		{
+			ul.style.height="auto";
+		}
 	}
 }
