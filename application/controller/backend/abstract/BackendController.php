@@ -81,6 +81,13 @@ abstract class BackendController extends BaseController
 			)
 		);
 
+		$response->set('lastViewed', 
+			BackendToolbarItem::sanitizeItemArray(
+				BackendToolbarItem::getUserToolbarItems(array(BackendToolbarItem::TYPE_PRODUCT, BackendToolbarItem::TYPE_USER, BackendToolbarItem::TYPE_ORDER))
+			)
+		);
+
+
 		return $response;
 	}
 }

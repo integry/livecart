@@ -31,6 +31,7 @@ _eav_filter=Filter
 _filter=Filter
 _clear=Clear
 
+# backend footer panel
 _store_frontend=Store frontend
 _admin_dashboard=Admin dashboard
 _remove_button_from_toolbar=Do you want to remove [_1] from toolbar?
@@ -40,3 +41,4 @@ _button_removed=Button removed
 _cant_remove_button=Can't remove button
 _button_order_changed=Button order changed
 _cant_change_button_order=Can't change button order
+_last_viewed=Last viewed

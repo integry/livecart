@@ -24,9 +24,11 @@ class BackendToolbarItem extends ActiveRecordModel
 		$schema->registerField(new ARField("ownerID", ARInteger::instance()));
 		$schema->registerField(new ARField("menuID", ARVarchar::instance(16)));
 		$schema->registerField(new ARField("productID", ARInteger::instance()));
-		$schema->registerField(new ARField("userID", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("userID", "User", "ID", "User", ARInteger::instance()));
+		// $schema->registerField(new ARField("userID", ARInteger::instance()));
 		$schema->registerField(new ARField("orderID", ARInteger::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance()));
+
 		/*
 		 * TODO: do i need to define product, user, order ids as ARForeignKeyField()?
 		 */
@@ -71,16 +73,35 @@ class BackendToolbarItem extends ActiveRecordModel
 		$conditions = array();
 		foreach ($types as $type)
 		{
+	/*
+			if($type == self::TYPE_USER)
+			{
+				$debug = true;
+			}
+			*/
 			if (array_key_exists($type, $m))
 			{
 				$conditions[] = isnotnull(f(__CLASS__.'.'.$m[$type]));
-				
 			}
 		}
 		if (count($conditions))
 		{
 			$filter->mergeCondition(new OrChainCondition($conditions) );
 		}
+/*
+		if($debug)
+		{
+			$t = array('User');
+			$rs = self::getRecordSet(__CLASS__, $filter, true,$t);
+			foreach($rs as $rr)
+			{
+
+
+				pp($rr->toArray());	
+			}
+			
+		}
+*/
 		return self::getRecordSetArray(__CLASS__, $filter);
 	}
 
@@ -125,7 +146,6 @@ class BackendToolbarItem extends ActiveRecordModel
 		}
 		return false;
 	}
-
 
 	//
 	public static function sanitizeItemArray($itemArray)
