@@ -6,6 +6,8 @@ _livecart_settings=LiveCart Settings
 _save_conf=Settings successfully saved
 _err_not_positive=The value must be positive
 
+_hint_settings_search=Search configuration settings
+
 ################ Individual settings #################
 
 _main=Main
@@ -360,6 +362,8 @@ FEED_KEY=Feed access security key (to avoid unauthorized feed access)
 _open_feed=open
 
 _email=Email
+_email_options=E-mail Options
+HTML_EMAIL=Send e-mails in HTML format
 
 _email_store=Notify Store Administrator by E-mail when:
 NOTIFY_NEW_ORDER=a new order is placed

@@ -216,6 +216,11 @@ width:190px;
 	width: 350px;
 }
 
+.orderAddress_view label:empty
+{
+	display: none;
+}
+
 .order_info
 {
 	border:0;
@@ -341,6 +346,7 @@ ul.orderAddress_showEdit
 	position: absolute;
 	left: auto;
 	top: auto;
+	right: auto;
 }
 
 .addProductsContainer .qsClassName,

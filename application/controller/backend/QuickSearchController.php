@@ -12,7 +12,7 @@ class QuickSearchController extends StoreManagementController
 {
 	const LIMIT = 5;
 	private $query;
-	
+
 	public function resultBlockPriority()
 	{
 		return array
@@ -56,14 +56,14 @@ class QuickSearchController extends StoreManagementController
 				}
 				else if ($direction == 'previous')
 				{
-					$offset = $from - self::LIMIT - 1;
+					$offset = $from - $this->getLimit() - 1;
 				}
 			}
 			if ($offset < 0)
 			{
 				$offset = 0;
 			}
-			$f->setLimit(self::LIMIT, $offset);
+			$f->setLimit($this->getLimit(), $offset);
 			$res[$searchable->getClassName()] = $this->fetchData($searchable, $f);
 		}
 
@@ -76,7 +76,7 @@ class QuickSearchController extends StoreManagementController
 			'to', $to,
 			'from', $from,
 			'classNames', $this->orderResultBlockKeys(array_keys($res)),
-			'fullSearch', $cn == ''
+			'fullSearch', ($cn == '') || $this->request->get('limit')
 		);
 	}
 
@@ -141,7 +141,6 @@ class QuickSearchController extends StoreManagementController
 		}
 	}
 
-
 	private function orderResultBlockKeys($data)
 	{
 		// Order by:
@@ -158,6 +157,11 @@ class QuickSearchController extends StoreManagementController
 		$data = array_merge($data, array_flip(array_reverse($priorityList)));
 		arsort($data);
 		return array_keys($data);
+	}
+
+	private function getLimit()
+	{
+		return $this->request->get('limit') ? $this->request->get('limit') : self::LIMIT;
 	}
 }
 

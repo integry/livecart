@@ -5,10 +5,10 @@
 			autocomplete="off"
 			name="q"
 			type="text"
-			value=""
-			style="width:300px;"
-			class="text"
+			value="{translate|escape:"html" text=$hint}"
+			class="text quickSearchInput hasHint"
 		/>
+		<input type="hidden" value="{$limit}" name="limit" />
 		<input type="hidden" value="" name="class" id="{$formid}Class" />
 		<input type="hidden" value="" name="from" id="{$formid}From" />
 		<input type="hidden" value="" name="to" id="{$formid}To" />

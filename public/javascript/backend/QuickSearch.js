@@ -29,7 +29,9 @@ Backend.QuickSearch.prototype = {
 		}
 		this.prefix = prefix;
 		this.initNodes();
-		Event.observe(this.nodes["Query"], "keyup", this.onKeyUp.bindAsEventListener(this));
+		Event.observe(this.nodes.Query, "keyup", this.onKeyUp.bindAsEventListener(this));
+		Event.observe(this.nodes.Query, 'focus', this.onFocus.bindAsEventListener(this));
+		Event.observe(this.nodes.Query, 'blur', this.onBlur.bindAsEventListener(this));
 	},
 
 	initNodes : function()
@@ -54,6 +56,32 @@ Backend.QuickSearch.prototype = {
 			);
 
 			this.nodes.Result = this.nodes.Result.parentNode;
+		}
+	},
+
+	onFocus: function(event)
+	{
+		var obj = Event.element(event);
+		if (obj.hint == undefined)
+		{
+			obj.hint = obj.value;
+		}
+
+		if (obj.value == obj.hint)
+		{
+			obj.value = '';
+			obj.removeClassName('hasHint');
+		}
+	},
+
+	onBlur: function(event)
+	{
+		var obj = Event.element(event);
+
+		if (!obj.value)
+		{
+			obj.value = obj.hint;
+			obj.addClassName('hasHint');
 		}
 	},
 

@@ -235,7 +235,6 @@ html, body{
 	z-index: 7000;
 	position: relative;
 	float: right;
-	margin-top: 7px;
 	margin-right: 10px;
 }
 
@@ -1934,14 +1933,34 @@ table.qeProducts td{
 #SettingsSearchContainer,
 #QuickSearchContainer
 {
-	width:320px;
-}
-#QuickSearchContainer
-{
-	right:0;
-	position:absolute;
+	width: 320px;
 }
 
+#QuickSearchQuery
+{
+	width: 230px;
+	font-size: 11px;
+}
+
+.quickSearchInput.hasHint
+{
+	color: #aaa;
+	background-image: url(../../image/silk/magnifier.png);
+	background-position: 4px center;
+	background-repeat: no-repeat;
+	text-indent: 20px;
+}
+
+#QuickSearchQuery.progressIndicator
+{
+	padding: 2px;
+	height: auto;
+}
+
+#QuickSearchContainer
+{
+	display: inline;
+}
 
 #SettingsSearchResult,
 #SettingsSearchQuery
@@ -1949,41 +1968,29 @@ table.qeProducts td{
 	width:250px !important;
 }
 
-a.deleteCross
+.qsPaginate
 {
-	font-weight: bold;
-	background: url(../../image/silk/cross.png) center left no-repeat;
-	padding-left: 22px;
+	margin-top: 4px;
 }
 
-.advancedQueryItems li
-{
-	list-style-type: none;
-}
-
-.value, .value2
-{
-	width: 150px;
-}
-
-/*************** quick search *************/
 .QuickSearchResultOuterContainer
 {
 	position:absolute;
-	left:0;
+	right:5px;
 	top:38px;
 	background-color: white;
-	width: 100%;
+	width: 224px;
 	border-width: 1px;
 	border: 1px solid #ccc;
 	-moz-border-radius: 10px;
 	z-index:200 !important;
+	text-align: left;
+	padding: 7px;
 }
-
 
 #ProductSearchResultOuterContainer
 {
-position:static;
+	position:static;
 }
 
 .QuickSearchResult
@@ -2024,6 +2031,27 @@ position:static;
 .qsResults
 {
 	display: none;
+}
+
+/************************
+	Advanced search
+*************************/
+
+a.deleteCross
+{
+	font-weight: bold;
+	background: url(../../image/silk/cross.png) center left no-repeat;
+	padding-left: 22px;
+}
+
+.advancedQueryItems li
+{
+	list-style-type: none;
+}
+
+.value, .value2
+{
+	width: 150px;
 }
 
 /************** Tooltips **************/
