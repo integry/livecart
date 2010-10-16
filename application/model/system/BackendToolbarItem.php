@@ -21,7 +21,7 @@ class BackendToolbarItem extends ActiveRecordModel
 
 		$schema->setName(__CLASS__);
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARField("ownerID", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("ownerID", "User", "ID", "User", ARInteger::instance()));
 		$schema->registerField(new ARField("menuID", ARVarchar::instance(16)));
 		$schema->registerField(new ARField("productID", ARInteger::instance()));
 		$schema->registerField(new ARField("userID", ARInteger::instance()));
@@ -74,7 +74,7 @@ class BackendToolbarItem extends ActiveRecordModel
 			if (array_key_exists($type, $m))
 			{
 				$conditions[] = isnotnull(f(__CLASS__.'.'.$m[$type]));
-				
+
 			}
 		}
 		if (count($conditions))
