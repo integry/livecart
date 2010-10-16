@@ -2,6 +2,7 @@
 
 ClassLoader::import("application.controller.BaseController");
 ClassLoader::import("library.json.json");
+ClassLoader::import('application.controller.backend.BackendToolbarController');
 
 /**
  * Generic backend controller for administrative tools (actions, modules etc.)
@@ -56,6 +57,8 @@ abstract class BackendController extends BaseController
 	  	$this->setLayout('empty');
 		$this->addBlock('USER_MENU', 'boxUserMenu', 'block/backend/userMenu');
 		$this->addBlock('TRANSLATIONS', 'translations', 'block/backend/translations');
+		
+		$this->addBlock('FOOTER_TOOLBAR', 'toolbar', 'block/backend/toolbar');
 		return parent::init();
 	}
 
@@ -69,6 +72,17 @@ abstract class BackendController extends BaseController
 		return new BlockResponse('languageData', json_encode($this->locale->translationManager()->getLoadedDefinitions()));
 	}
 
+	public function toolbarBlock()
+	{
+		$response = new BlockResponse();
+		$response->set('dropButtons', 
+			BackendToolbarItem::sanitizeItemArray(
+				BackendToolbarItem::getUserToolbarItems(BackendToolbarItem::TYPE_MENU)
+			)
+		);
+
+		return $response;
+	}
 }
 
 ?>

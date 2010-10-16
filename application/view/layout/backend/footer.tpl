@@ -24,9 +24,13 @@
 
 <script type="text/javascript">
 	Backend.internalErrorMessage = '{t _internal_error_have_accurred}';
-
 	new Backend.LayoutManager();
 </script>
 
+{block FOOTER_TOOLBAR}
+
+
 </body>
 </html>
+
+

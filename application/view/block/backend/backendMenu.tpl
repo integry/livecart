@@ -18,5 +18,9 @@
 </ul>
 
 <script type="text/javascript">
-	new Backend.NavMenu({$menuArray}, '{$controller}', '{$action}');
+	window.menuArray = {$menuArray};
+	new Backend.NavMenu(window.menuArray, '{$controller}', '{$action}');
 </script>
+
+
+

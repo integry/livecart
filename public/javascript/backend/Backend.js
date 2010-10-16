@@ -548,7 +548,7 @@ Backend.NavMenu.prototype =
 		// build menu
 		var topItem = $('navTopItem-template');
 		var subItem = $('navSubItem-template');
-
+		var nr = 0, subNr;
 		navCont = $('nav');
 
 		for (topIndex in menuArray)
@@ -562,6 +562,7 @@ Backend.NavMenu.prototype =
 				var a = menuItem.getElementsByTagName('a')[0];
 				a.href = mItem['url'];
 				a.descr = mItem['descr'];
+				a.id="menu_"+nr;
 				if(!mItem['url'])
 				{
 					a.onclick = function() { return false; }
@@ -589,6 +590,7 @@ Backend.NavMenu.prototype =
 
 				if ('object' == typeof mItem['items'])
 				{
+					subNr = 0;
 					for (subIndex in mItem['items'])
 					{
 						sub = mItem['items'][subIndex];
@@ -605,7 +607,8 @@ Backend.NavMenu.prototype =
 							a.href = sub['url'];
 							a.innerHTML = sub['title'];
 							a.descr = sub['descr'];
-
+							a.id="menu_"+nr+"_"+subNr;
+							subNr++;
 							if ((topIndex == index) && (subIndex == subItemIndex))
 							{
 								subNode.id = 'navSubSelected';
@@ -627,6 +630,7 @@ Backend.NavMenu.prototype =
 					navCont.appendChild(menuItem);
 				}
 			}
+			nr++;
 		}
 
 		Event.observe(navCont, 'mouseover', this.showDescription.bind(this));
