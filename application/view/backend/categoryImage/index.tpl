@@ -44,7 +44,7 @@
 		<legend>{t _add_new_title}</legend>
 		<p class="required">
 			{err for="image"}
-				{{label {t _image_file}: }}
+				{{label {tip _image_file}: }}
 				{filefield} 
 				<span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
 			{/err}			

@@ -6,7 +6,7 @@
 		<input type="hidden" name="ID" class="hidden filter_form_id" />
 
 		<p class="filter_specField">
-			<label class="filter_form_specFieldID_label">{t _Filter_associated_field}</label>
+			<label class="filter_form_specFieldID_label">{tip _Filter_associated_field}</label>
 			<fieldset class="error">
 	 			<select name="specFieldID" class="filter_form_specFieldID" {denied role="category.update"}disabled="disabled"{/denied}></select>
 				<div class="filter_form_specFieldText"></div>
@@ -15,7 +15,7 @@
 		</p>
 
 		<p class="required">
-			<label class="filter_form_name_label">{t _Filter_name}</label>
+			<label class="filter_form_name_label">{tip _Filter_name}</label>
 			<fieldset class="error">
 				<input type="text" name="name" class="filter_form_name" {denied role="category.update"}readonly="readonly"{/denied} />
 				<span class="errorText hidden"> </span>
@@ -23,7 +23,7 @@
 		</p>
 
 		<p class="required">
-			<label class="filter_form_displayLocation_label">{t _Filter_displayLocation}</label>
+			<label class="filter_form_displayLocation_label">{tip _Filter_displayLocation}</label>
 			<fieldset class="error">
 				<select name="displayLocation" class="filter_form_displayLocation" {denied role="category.update"}readonly="readonly"{/denied}>
 					<option value="0">{t _side_menu}</option>
@@ -38,7 +38,7 @@
 		<legend>{t _filters}</legend>
 			<p>
 			<fieldset class="group filter_form_filters_group">
-				<h2 class="filter_filters_title">{t _Filter_filters}</h2>
+				<h2 class="filter_filters_title">{tip _Filter_filters}</h2>
 				<div class="filter_filters">
 					<p>
 						<ul class="{allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed}">

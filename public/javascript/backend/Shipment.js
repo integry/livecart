@@ -269,7 +269,7 @@ Backend.Shipment.prototype =
 		this.findUsedNodes(root);
 		this.bindEvents();
 		this.shipmentsActiveList = ActiveList.prototype.getInstance(this.nodes.shipmentsList);
-console.log('activelist');
+
 		if(this.nodes.form)
 		{
 			this.itemsActiveList = ActiveList.prototype.getInstance(this.nodes.itemsList, Backend.OrderedItem.activeListCallbacks);

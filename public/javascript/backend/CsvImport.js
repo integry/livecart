@@ -378,7 +378,6 @@ Backend.CsvImport =
 			if (response.uid != undefined)
 			{
 				this.uid = response.uid;
-				console.log(this.uid);
 			}
 		}
 	},

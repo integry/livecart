@@ -45,36 +45,6 @@
 
 			<div class="clear"></div>
 
-			<fieldset class="container activeGridControls">
-
-				<span id="newslettersMass_0" class="activeGridMass">
-
-					{form action="controller=backend.newsletter action=processMass" method="POST" handle=$massForm onsubmit="return false;"}
-
-					<input type="hidden" name="filters" value="" />
-					<input type="hidden" name="selectedIDs" value="" />
-					<input type="hidden" name="isInverse" value="" />
-
-					{t _with_selected}:
-					<select name="act" class="select">
-						<option value="delete">{t _delete}</option>
-					</select>
-
-					<input type="submit" value="{tn _process}" class="submit" />
-					<span class="massIndicator progressIndicator" style="display: none;"></span>
-
-					{/form}
-
-				</span>
-
-				<span class="activeGridItemsCount">
-					<span id="newsletterCount_0">
-						<span class="rangeCount">{t _listing_messages}</span>
-						<span class="notFound">{t _no_messages_found}</span>
-					</span>
-				</span>
-
-			</fieldset>
 			{activeGrid
 				prefix="newsletters"
 				id=0
@@ -85,6 +55,8 @@
 				filters=$filters
 				container="tabMessages"
 				dataFormatter="Backend.Newsletter.GridFormatter"
+				count="backend/newsletter/count.tpl"
+				massAction="backend/newsletter/massAction.tpl"
 			}
 
 		</div>

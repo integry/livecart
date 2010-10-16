@@ -625,7 +625,6 @@ Backend.Settings.Editor.prototype =
 		'DEF_COUNTRY':
 			function()
 			{
-				console.log('here');
 				var switcher = new Backend.User.StateSwitcher($('DEF_COUNTRY'), $('DEF_STATE'), document.createElement('input'), Router.createUrl('backend.user', 'states'));
 				switcher.updateStates(null,
 					function()

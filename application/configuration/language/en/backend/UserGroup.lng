@@ -75,6 +75,7 @@ User.companyName=Company Name
 User.dateCreated=Date Created
 User.isEnabled=Enabled
 isOnline=Online
+User.isOnline=Online
 User.locale=Prefered language
 UserGroup.name=Group Name
 

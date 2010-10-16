@@ -346,7 +346,6 @@
 	{/literal}{/foreach}{literal}
 
 	groupList.createSortable(true);
-console.log(shipment);
 	</script>
 {/literal}
 

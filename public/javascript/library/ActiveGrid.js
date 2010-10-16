@@ -1383,11 +1383,23 @@ ActiveGridAdvancedSearch.prototype =
 		);
 		select.addClassName("condition");
 		this.lastConditionContainer = $(li);
+
+		this.nodes.root.addClassName('hasConditions');
+
 		return this.lastConditionContainer;
 	},
 
 	removeConditionPlaceholder: function(element)
 	{
+		if (element.up("ul").getElementsByTagName("li").length > 1)
+		{
+			this.nodes.root.addClassName('hasConditions');
+		}
+		else
+		{
+			this.nodes.root.removeClassName('hasConditions');
+		}
+
 		element.up("ul").removeChild(element.up("li"));
 		this.setActiveGridFilterValues();
 	},

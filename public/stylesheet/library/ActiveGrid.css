@@ -570,10 +570,7 @@
 
 .activeGridItemsCount
 {
-    position: absolute;
-    bottom: 4px;
-    right: 0;
-    text-align: right;
+    font-size: 12px;
 }
 
 .activeGridItemsCount .notFound
@@ -603,9 +600,7 @@
 .rangeCount
 {
 	color: #88c;
-	font-size: smaller;
 }
-
 
 th.cellt_date
 {
@@ -629,5 +624,44 @@ th.cellt_date div.dateRange div
 	padding:2px 2px 0 0;
 	font-weight:normal !important;
 	float:left;
+}
 
+.activeGridAdvancedSearch .advancedSearchLink
+{
+	background-image: url(../../image/silk/magnifier_zoom_in.png);
+	padding-left: 20px;
+	background-position: left center;
+	background-repeat: no-repeat;
+	font-size: 13px;
+}
+
+.activeGridAdvancedSearch
+{
+	float: right;
+	text-align: right;
+	padding-top: 15px;
+}
+
+.activeGridAdvancedSearch.hasConditions
+{
+	padding-top: 0;
+	margin-bottom: 2px;
+}
+
+.advancedSearchQueryContainer input,
+.advancedSearchQueryContainer select
+{
+	font-size: smaller;
+	padding: 0;
+	margin: 2px 0;
+}
+
+.advancedSearchQueryContainer select.comparision
+{
+	width: 150px;
+}
+
+.advancedQueryItems
+{
+	text-align: left;
 }

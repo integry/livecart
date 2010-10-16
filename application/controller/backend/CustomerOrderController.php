@@ -1288,11 +1288,11 @@ class CustomerOrderController extends ActiveGridController
 		return $this->translateFieldArray(
 			array
 			(
-				'ProductOption' => array('name'=>'', 'type'=>'text'),
 				'ProductSKU' => array('name'=>'', 'type'=>'text'),
 				'ProductName'=> array('name'=>'', 'type'=>'text'),
 				'Manufacturer'=> array('name'=>'', 'type'=>'text'),
-				'UsedCouponCode'=> array('name'=>'', 'type'=>'text')
+				'UsedCouponCode'=> array('name'=>'', 'type'=>'text'),
+				'ProductOption' => array('name'=>'', 'type'=>'text')
 			)
 		);
 	}

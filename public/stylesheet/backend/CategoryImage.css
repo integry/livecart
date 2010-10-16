@@ -1,6 +1,7 @@
 .maxFileSize
 {
     font-size: smaller;
+    display: block;
 }
 
 .catImageAdd, .prodImageAdd, .manImageAdd
