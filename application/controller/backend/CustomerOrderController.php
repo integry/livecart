@@ -799,14 +799,50 @@ class CustomerOrderController extends ActiveGridController
 			)', '', 'ProductOption');
 		}
 
+		if(in_array('OrderMessageText', $columns) && !empty($filters['OrderMessageText']))
+		{
+			$filter->addField('(
+				SELECT
+					0x'.bin2hex($filters['OrderMessageText']).' AS OrderMessageText
+				FROM
+					OrderNote AS o
+				WHERE
+					o.text LIKE 0x'.bin2hex('%'.$filters['OrderMessageText'].'%').'
+					AND o.orderID = CustomerOrder.ID
+				)', '', 'OrderMessageText');
+		}
 
+		if(in_array('HasUnreadCustomerMessage', $columns))
+		{
+			$filter->addField('(
+				SELECT
+					IF(COUNT(*),1,0) AS HasUnreadCustomerMessage
+				FROM
+					OrderNote AS o
+				WHERE
+					o.isRead=0 AND
+					o.orderID = CustomerOrder.ID
+			)', '', 'HasUnreadCustomerMessage');
+		}
+
+		if(in_array('HasUnrespondedCustomerMessage', $columns))
+		{
+			$filter->addField('(
+				SELECT
+					o.isAdmin AS HasUnrespondedCustomerMessage
+				FROM
+					OrderNote AS o
+				WHERE
+					o.orderID = CustomerOrder.ID
+				ORDER BY time DESC
+				LIMIT 1
+			)', '', 'HasUnrespondedCustomerMessage');
+		}
 
 		if($this->request->get('sort_col') == 'User.fullName')
 		{
 			$this->request->remove('sort_col');
-
 			$direction = ($this->request->get('sort_dir') == 'DESC') ? ARSelectFilter::ORDER_DESC : ARSelectFilter::ORDER_ASC;
-
 			$filter->setOrder(new ARFieldHandle("User", "lastName"), $direction);
 			$filter->setOrder(new ARFieldHandle("User", "firstName"), $direction);
 		}
@@ -1280,7 +1316,8 @@ class CustomerOrderController extends ActiveGridController
 		$availableColumns['UsedCouponCount'] = array('type' => 'numeric', 'name' => $this->translate('UsedCouponCount'));
 		$availableColumns['ProductCount'] = array('type' => 'numeric', 'name' => $this->translate('ProductCount'));
 		$availableColumns['UniqueProductCount'] = array('type' => 'numeric', 'name' => $this->translate('UniqueProductCount'));
-
+		$availableColumns['HasUnreadCustomerMessage'] = array('type' => 'bool', 'name' => $this->translate('HasUnreadCustomerMessage'));
+		$availableColumns['HasUnrespondedCustomerMessage'] = array('type' => 'bool', 'name' => $this->translate('HasUnrespondedCustomerMessage'));
 		return $availableColumns;
 	}
 
@@ -1293,7 +1330,8 @@ class CustomerOrderController extends ActiveGridController
 				'ProductSKU' => array('name'=>'', 'type'=>'text'),
 				'ProductName'=> array('name'=>'', 'type'=>'text'),
 				'Manufacturer'=> array('name'=>'', 'type'=>'text'),
-				'UsedCouponCode'=> array('name'=>'', 'type'=>'text')
+				'UsedCouponCode'=> array('name'=>'', 'type'=>'text'),
+				'OrderMessageText'=> array('name'=>'', 'type'=>'text')
 			)
 		);
 	}

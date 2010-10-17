@@ -201,6 +201,9 @@ ProductName=Product name
 Manufacturer=Manufacturer
 UsedCouponCode=Used coupon code
 ProductOption=Ordered product option
+HasUnreadCustomerMessage=Has unread customer messages
+HasUnrespondedCustomerMessage=Has unresponded customer messages
+OrderMessageText=Order message text
 
 _advanced_product_search=Advanced product search
 _search_product=Search product
