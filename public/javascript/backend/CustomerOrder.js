@@ -751,6 +751,7 @@ Backend.CustomerOrder.Editor.prototype =
 
 	afterSubmitForm: function(response)
 	{
+		try { footerToolbar.invalidateLastViewed(); } catch(e) {}
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 
 		if(response.status == 'success')

@@ -850,6 +850,10 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			// $product->loadRequestData($this->request);
 			// $product->save();
 
+			if ($this->isQuickEdit == false)
+			{
+				BackendToolbarItem::registerLastViewedProduct($product); 
+			}
 			$response = $this->productForm($product);
 
 			$response->setHeader('Cache-Control', 'no-cache, must-revalidate');

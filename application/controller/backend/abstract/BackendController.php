@@ -80,10 +80,6 @@ abstract class BackendController extends BaseController
 				BackendToolbarItem::getUserToolbarItems(BackendToolbarItem::TYPE_MENU)
 			)
 		);
-
-
-
-
 		return $response;
 	}
 }

@@ -12,7 +12,8 @@ BackendToolbar.prototype = {
 		this.nodes.mainpanel = this.nodes.root.down("ul");
 		this.nodes.lastviewed = this.nodes.root.down(".lastviewed");
 		this.nodes.lastViewedIndicator = $("lastViewedIndicator");
-		
+		this.nodes.quickSearchResult = $("QuickSearchResultOuterContainer");
+		this.nodes.quickSearchQuery = $("QuickSearchQuery");
 
 		// remove button from toolbar, if it is droped outside any droppable area
 		Droppables.add($(document.body), {
@@ -29,36 +30,27 @@ BackendToolbar.prototype = {
 		$A($("navContainer").getElementsByTagName("li")).each(
 			function(element)
 			{
-				Event.observe($(element).down("a"), "click",
-					function(event) {
-						
-						if (this.draggingItem == true)
-						{
-							// drag fires only one click event, setting flag to false will allow next clicks on menu to operate normally
-							this.draggingItem = false;
-							Event.stop(event);
-							return false;
-						}
-						return true;
-					}.bindAsEventListener(this)
-				);
-
-				new Draggable(
-					$(element),
+				element = $(element);
+				var
+					a = element.down("a"),
+					menuItem = this.getMenuItem(a.id);
+				if (!menuItem || typeof menuItem.url == "undefined" || menuItem.url == "")
+				{
+					return; // menu items without url are not draggable!
+				}
+				Event.observe(a, "click", this.cancelClickEventOnDrag.bindAsEventListener(this));
+				new Draggable(element,
 					{
 						onStart: function(inst)
 						{
 							var
 								element = $(inst.element),
 								ul = element.up("ul");
-
+							this.draggingItem = true;
 							if (ul)
 							{
-								// if parent node is hidden draggable item disapears,
-								// this force menu to stay open while dragging
-								ul.addClassName("importantVisible");
+								ul.addClassName("importantVisible"); // make sure draggable item stay visible while dragging.
 							}
-							this.draggingItem = true;
 						}.bind(this),
 
 						onEnd: function(inst, event)
@@ -70,10 +62,6 @@ BackendToolbar.prototype = {
 							{
 								ul.removeClassName("importantVisible");
 							}
-						},
-						change: function()
-						{
-							// console.log(arguments);
 						},
 						ghosting:true,
 						revert:true,
@@ -100,6 +88,11 @@ BackendToolbar.prototype = {
 			Event.stop(event);
 			this[["hideLastViewedMenu", "openLastViewedMenu"][this.nodes.lastviewed.down("a").hasClassName("active")?0:1]]();
 		}.bindAsEventListener(this));
+
+		// quick search result bottom relative to toolbar
+		Backend.QuickSearch.getInstance(this.nodes.quickSearchResult).onShowResultContainer(this.adjustQuickSearchResult.bind(this));
+
+		Event.observe(this.nodes.quickSearchQuery, "focus", this.hideLastViewedMenu.bind(this));
 	},
 
 	getSubPanels: function()
@@ -109,6 +102,7 @@ BackendToolbar.prototype = {
 
 	openLastViewedMenu: function()
 	{
+		this.nodes.quickSearchResult.hide();
 		if (this.nodes.lastviewed.hasClassName("invalid"))
 		{
 			$A(this.nodes.lastviewed.getElementsBySelector("ul li")).each(Element.remove);
@@ -160,13 +154,15 @@ BackendToolbar.prototype = {
 		a.style.background = "url(" +menuItem.icon+") no-repeat center center";
 		node.removeClassName("uninitializedDropButton");
 		node.addClassName("dropButton");
+
+		Event.observe(node.down("a"), "click", this.cancelClickEventOnDrag.bindAsEventListener(this));
 		new Draggable(node, {
 			ghosting:true,
 			revert:true,
-			onEnd:
-				function(from, to, event)
-				{
-				}.bind(this)
+			onStart: function(inst)
+			{
+				this.draggingItem = true;
+			}.bind(this)
 		});
 		node.show();
 	},
@@ -283,6 +279,11 @@ BackendToolbar.prototype = {
 
 	getMenuItem: function(id)
 	{
+		if (id.length == 0)
+		{
+			return null;
+		}
+
 		// window.menuArray;
 		chunks = id.split("_");
 		item = window.menuArray[chunks[1]];
@@ -337,9 +338,25 @@ BackendToolbar.prototype = {
 		}
 	},
 
+	adjustQuickSearchResult: function(quickSearch)
+	{
+		var height = quickSearch.nodes.Result.getHeight();
+		quickSearch.nodes.Result.style.marginTop = "-" + (height + 40) + "px";
+	},
+	
 	// footerToolbar.invalidateLastViewed();
 	invalidateLastViewed: function()
 	{
 		this.nodes.lastviewed.addClassName("invalid");
+	},
+
+	cancelClickEventOnDrag: function(event)
+	{
+		if (this.draggingItem == true)
+		{
+			// drag fires only one click event, setting flag to false will allow next clicks on menu to operate normally
+			this.draggingItem = false;
+			Event.stop(event);
+		}
 	}
 }

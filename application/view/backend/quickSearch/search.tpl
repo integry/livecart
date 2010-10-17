@@ -1,38 +1,44 @@
 {foreach from=$classNames key=key item=className}
 	{if $result[$className].count > 0}
-		<div class="qsResultsContainer qs{$className}">
-			<h3 class="qsClassName{if 0 == $key} first{/if}">
-				{if $className == 'SearchableItem'}
-				{* <span class="qsName">{t _title_`$className`}</span> *}
-					{t _title_SearchableConfiguration}
+		{if $fullSearch}
+			<div class="qsResultsContainer qs{$className}">
+		{/if}
+		<h3 class="qsClassName{if 0 == $key} first{/if}">
+			{if $className == 'SearchableItem'}
+			{* <span class="qsName">{t _title_`$className`}</span> *}
+				{t _title_SearchableConfiguration}
+			{else}
+				{t _title_`$className`}
+			{/if}
+		</h3>
+			<span class="qsCount">({$result[$className].count})</span>
+		</h3>
+		<ul>
+			{foreach $result[$className].records as $record}
+			<li>
+				{if $customResultTemplates[$className]}
+					{include file="backend/quickSearch/result_`$customResultTemplates[$className]`.tpl"}
 				{else}
-					{t _title_`$className`}
+					{include file="backend/quickSearch/result_`$className`.tpl"}
 				{/if}
-			</h3>
-				<span class="qsCount">({$result[$className].count})</span>
-			</h3>
-			<ul>
-				{foreach $result[$className].records as $record}
-				<li>
-					{if $customResultTemplates[$className]}
-						{include file="backend/quickSearch/result_`$customResultTemplates[$className]`.tpl"}
-					{else}
-						{include file="backend/quickSearch/result_`$className`.tpl"}
-					{/if}
-				</li>
-				{/foreach}
-			</ul>
-			{include file="backend/quickSearch/paginate.tpl"
-				from=$result[$className].from
-				to=$result[$className].to
-				count=$result[$className].count
-				class=$className}
-		</div>
-		<div class="qsSeperator"></div>
+			</li>
+			{/foreach}
+		</ul>
+		{include file="backend/quickSearch/paginate.tpl"
+			from=$result[$className].from
+			to=$result[$className].to
+			count=$result[$className].count
+			class=$className}
+
+		{if $fullSearch}
+			</div>
+			<div class="qsSeperator"></div>
+		{/if}
 		{assign var="hasResult" value=true}
 	{/if}
 {/foreach}
-{if $fullSearch}{*searching by all classes *}
+
+{if $fullSearch}
 	{if !$hasResult}
 		<div class="qsNothingFound">
 			{t _nothing_found_for_query}: <strong>{$query}</strong>

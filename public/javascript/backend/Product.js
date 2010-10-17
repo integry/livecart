@@ -418,10 +418,9 @@ Backend.Product.saveHandler.prototype =
 			// reset form and add more products
 			if (this.form.elements.namedItem('afterAdding').checked)
 			{
+				try { footerToolbar.invalidateLastViewed(); } catch(e) {}
 				this.form.reset();
-
 				document.getElementsByClassName('product_sku', this.form)[0].disabled = false;
-
 				Backend.Product.reInitAddForm();
 			}
 
@@ -619,6 +618,7 @@ Backend.Product.Editor.prototype =
 	{
 		if(!response.errors || 0 == response.errors.length)
 		{
+			try { footerToolbar.invalidateLastViewed(); } catch(e) {}
 			Form.State.backup(this.nodes.form);
 			if (response.specFieldHtml)
 			{

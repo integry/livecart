@@ -823,13 +823,11 @@ html #footpanel ul li a.active
 	padding-left: 40px;
 }
 
-#footpanel li#lastviewed {	float: right; }
-
-
-
-/* --- */
-
-
+#footpanel li#toolbarQS,
+#footpanel li#lastviewed
+{
+	float: right;
+}
 
 #footpanel ul li div a { /*--Reset link style for sub-panel links--*/
 	text-indent: 0;
@@ -840,11 +838,13 @@ html #footpanel ul li a.active
 	color: #00629a;
 	position: static;
 }
-#footpanel ul li div a:hover {	text-decoration: underline; } /*--Reset hover style for sub-panel links--*/
+#footpanel ul li div a:hover
+{
+	text-decoration: underline;
+}
 
-
-
-#footpanel .subpanel {
+#footpanel .subpanel
+{
 	position: absolute;
 	left: 0; bottom: 27px;
 	display: none;	/*--Hide by default--*/
@@ -853,8 +853,8 @@ html #footpanel ul li a.active
 	background: #fff;
 	overflow: hidden;
 	z-index:60000;
-
 }
+
 #footpanel h3 {
 	background: #4C5D97;
 	padding: 5px 10px;
@@ -886,18 +886,7 @@ html #footpanel ul li a.active
 	position: static;  /*--Reset relative positioning--*/
 }
 
-
-
-#lastviewed .subpanel li { background: url(dash.gif) repeat-x left center; }
-
-/*
-#lastviewed .subpanel li span {
-	padding: 5px;
-	background: #fff;
-	color: #777;
-	float: left;
-}
-*/
+/* #lastviewed .subpanel li { background: url(dash.gif) repeat-x left center; } */
 
 #lastviewed .subpanel li a img {
 	float: left;
@@ -920,13 +909,51 @@ html #footpanel ul li a.active
 	text-decoration: none;
 }
 
-
 #lastviewed .subpanel #lastViewedIndicator
 {
 	margin:10px 0 10px 60px;
 	padding:0;
-
 }
+
+#footpanel li#toolbarQS #QuickSearchQuery
+{
+	width:180px !important;
+	margin-top:1px;
+	height:13px;
+	font-size:12px;
+}
+
+#footpanel li#toolbarQS #QuickSearchResultOuterContainer
+{
+	font-size:12px;
+	position: absolute;
+}
+
+#footpanel li#toolbarQS #QuickSearchResultOuterContainer .qsClassName 
+{
+	clear:both;
+}
+#footpanel li#toolbarQS #QuickSearchResultOuterContainer .qsCount
+{
+	display: block;
+	position:absolute;
+	margin-top:-28px;
+	color:#fff;
+	font-size:12px;
+	width:310px;
+	text-align:right;
+	font-weight:bold;
+}
+
+#footpanel li#toolbarQS ul li
+{
+	clear: both;
+}
+
+#footpanel .cancel{
+	color:red;
+}
+
 
 /***************************
 	Form styling

@@ -201,9 +201,7 @@ class CustomerOrderController extends ActiveGridController
 				break;
 			}
 		}
-
 		BackendToolbarItem::registerLastViewedOrder($order);
-
 //		$response->set('hideShipped', $shipableShipmentsCount > 0 ? $hideShipped : 1);
 		$response->set('hideShipped', false);
 		$response->set('type', $this->getOrderType($order));
@@ -1216,11 +1214,12 @@ class CustomerOrderController extends ActiveGridController
 
 	private function save(CustomerOrder $order)
 	{
-   		$validator = self::createOrderFormValidator();
+		$validator = self::createOrderFormValidator();
 		if ($validator->isValid())
 		{
 			$existingRecord = $order->isExistingRecord();
 			$order->save(true);
+			BackendToolbarItem::registerLastViewedOrder($order);
 
 			return new JSONResponse(
 			   array('order' => array( 'ID' => $order->getID())),

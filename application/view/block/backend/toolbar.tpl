@@ -6,12 +6,16 @@
 
 		{foreach from=$dropButtons item=item}
 			<li class="uninitializedDropButton" style="" id="button{$item.menuID}">
-				<a onclick="return false;" href="">
+				<a href="">
 					<small></small>
 				</a>
 			</li>
 		{/foreach}
 
+		<li id="toolbarQS">
+			{include file="backend/quickSearch/form.tpl" formid="QuickSearch"}
+		</li>
+			
 		<li id="lastviewed" class="lastviewed invalid"><a href="#" class="lastviewed">{t _last_viewed}</a>
 			<div class="subpanel">
 				<h3><span> &ndash; </span>{t _last_viewed}</h3>
@@ -23,7 +27,7 @@
 	</ul>
 
 	<li style="display:none;" class="uninitializedDropButton" id="dropButtonTemplate">
-		<a onclick="return false;" href="">
+		<a href="">
 			<small></small>
 		</a>
 	</li>

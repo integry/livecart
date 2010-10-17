@@ -742,7 +742,7 @@ Backend.User.Add.prototype =
 	},
 
 	initialize: function(groupID, grid)
-  	{
+	{
 		this.groupID = groupID;
 
 		this.findUsedNodes();
@@ -895,6 +895,7 @@ Backend.User.Add.prototype =
 			window.usersActiveGrid[this.groupID].reloadGrid();
 			Form.State.restore(this.nodes.form, false, false);
 			this.hideAddForm();
+			try { footerToolbar.invalidateLastViewed(); } catch(e) {}
 		}
 		else
 		{
