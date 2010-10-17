@@ -459,6 +459,7 @@ AUTO_GENERATE_SKU=Generate SKU automatically
 DEFAULT_PRODUCT_TYPE=Default product type
 _prod_type_0=Tangible (shippable products)
 _prod_type_1=Intangible (downlodable files)
+DEFAULT_PRODUCT_ENABLED=Make newly created products enabled by default
 
 _language_management=Language Management
 SHOW_BACKEND_LANG_FILES=Allow to edit store back-end language files
@@ -468,6 +469,8 @@ SHOW_BACKEND_TEMPLATE_FILES=Allow to edit store back-end template files
 
 _admin_misc=Miscellaneous Options
 DISABLE_WYSIWYG=Disable WYSIWYG editors
+DISABLE_TOOLBAR=Disable footer toolbar
+DISABLE_QUICKEDIT=Disable "quick edit" pop-ups in data grids
 
 # SSL options
 _ssl_opts=Security

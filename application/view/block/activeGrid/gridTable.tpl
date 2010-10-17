@@ -222,7 +222,7 @@
 		window.activeGrids['{$prefix}_{$id}'].setDataFormatter({$dataFormatter});
 	{/if}
 	window.activeGrids['{$prefix}_{$id}'].setInitialData({json array=$data});
-	{if $isQuickEdit}
+	{if $isQuickEdit && !'DISABLE_QUICKEDIT'|config}
 		window.activeGrids['{$prefix}_{$id}'].initQuickEdit("{$quickEditUrl}", "{$quickEditUrlIdentificatorToken}");
 	{/if}
 	{foreach from=$displayedColumns item=index key=column name="columns"}

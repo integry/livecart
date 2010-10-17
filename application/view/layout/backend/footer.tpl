@@ -27,8 +27,9 @@
 	new Backend.LayoutManager();
 </script>
 
-{block FOOTER_TOOLBAR}
-
+{if !'DISABLE_TOOLBAR'|config}
+	{block FOOTER_TOOLBAR}
+{/if}
 
 </body>
 </html>
