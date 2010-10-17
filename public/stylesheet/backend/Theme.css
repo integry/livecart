@@ -64,6 +64,14 @@ font-weight:bold;
 .filesData .thumbnailContainer
 {
 	margin-right:6px;
+	width: 80px;
+}
+
+.cssHintContainer
+{
+	border: 1px solid #eee;
+	background-color: white;
+	padding: 5px;
 }
 
 .activeList_icons,
@@ -81,9 +89,13 @@ font-weight:bold;
 
 .activeList_icons
 {
-	width:50px !important; 
+	width:50px !important;
 }
 
+.fileUpload
+{
+	background-image: url(../../image/silk/image_add.png);
+}
 
 .warning.cssAndStyleTab
 {
