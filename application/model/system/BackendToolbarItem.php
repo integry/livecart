@@ -10,6 +10,7 @@ ClassLoader::import("application.model.ActiveRecordModel");
 
 class BackendToolbarItem extends ActiveRecordModel
 {
+	const LAST_VIEWED_COUNT = 28; //how many items keep for last viewed menu
 	const TYPE_MENU = 1;
 	const TYPE_PRODUCT = 2;
 	const TYPE_USER = 3;
@@ -18,20 +19,33 @@ class BackendToolbarItem extends ActiveRecordModel
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
-
 		$schema->setName(__CLASS__);
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARField("ownerID", ARInteger::instance()));
 		$schema->registerField(new ARField("menuID", ARVarchar::instance(16)));
-		$schema->registerField(new ARField("productID", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", "Product", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("userID", "User", "ID", "User", ARInteger::instance()));
-		// $schema->registerField(new ARField("userID", ARInteger::instance()));
-		$schema->registerField(new ARField("orderID", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("orderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance()));
 
-		/*
-		 * TODO: do i need to define product, user, order ids as ARForeignKeyField()?
-		 */
+	}
+
+	// BackendToolbarItem::registerLastViewedOrder($order);
+	public static function registerLastViewedOrder(CustomerOrder $order)
+	{
+		self::registerLastViewed(array('orderID' => $order->getID(), 'instance'=>$order));
+	}
+
+	// BackendToolbarItem::registerLastViewedUser($user);
+	public static function registerLastViewedUser(User $user)
+	{
+		self::registerLastViewed(array('userID' => $user->getID(), 'instance'=>$user));
+	}
+
+	// BackendToolbarItem::registerLastViewedProduct($product);
+	public static function registerLastViewedProduct(Product $product)
+	{
+		self::registerLastViewed(array('productID' => $product->getID(), 'instance'=>$product));
 	}
 
 	public static function getNewInstance($data)
@@ -39,24 +53,34 @@ class BackendToolbarItem extends ActiveRecordModel
 		$item = new BackendToolbarItem();
 
 		$item->ownerID->set(SessionUser::getUser()->getID());
-		foreach(array('menuID', 'productID', 'userID', 'orderID', 'position') as $fieldName)
+		foreach(array('productID', 'userID', 'orderID') as $fieldName)
+		{
+			if (array_key_exists($fieldName, $data))
+			{
+				$item->$fieldName->set($data['instance']);
+				break; // should have only one instance;
+			}
+		}
+
+		foreach(array('menuID', 'position') as $fieldName)
 		{
 			if (array_key_exists($fieldName, $data))
 			{
 				$item->$fieldName->set($data[$fieldName]);
 			}
 		}
+
 		return $item;
 	}
 
-	public static function getUserToolbarItems($types=null, $filter=null)
+	public static function getUserToolbarItems($types=null, $filter=null, $order='ASC')
 	{
 		if ($filter == null)
 		{
 			$filter = new ARSelectFilter();
 		}
 		$filter->mergeCondition(eq(f(__CLASS__.'.ownerID'), SessionUser::getUser()->getID()));
-		$filter->setOrder(f(__CLASS__.'.position'), 'ASC');
+		$filter->setOrder(f(__CLASS__.'.position'), $order);
 
 		$m = array(
 			BackendToolbarItem::TYPE_MENU =>'menuID',
@@ -69,16 +93,9 @@ class BackendToolbarItem extends ActiveRecordModel
 		{
 			$types = array($types);
 		}
-
 		$conditions = array();
 		foreach ($types as $type)
 		{
-	/*
-			if($type == self::TYPE_USER)
-			{
-				$debug = true;
-			}
-			*/
 			if (array_key_exists($type, $m))
 			{
 				$conditions[] = isnotnull(f(__CLASS__.'.'.$m[$type]));
@@ -88,21 +105,7 @@ class BackendToolbarItem extends ActiveRecordModel
 		{
 			$filter->mergeCondition(new OrChainCondition($conditions) );
 		}
-/*
-		if($debug)
-		{
-			$t = array('User');
-			$rs = self::getRecordSet(__CLASS__, $filter, true,$t);
-			foreach($rs as $rr)
-			{
-
-
-				pp($rr->toArray());	
-			}
-			
-		}
-*/
-		return self::getRecordSetArray(__CLASS__, $filter);
+		return self::getRecordSetArray(__CLASS__, $filter, true);
 	}
 
 	public static function saveItemArray($array)
@@ -124,7 +127,7 @@ class BackendToolbarItem extends ActiveRecordModel
 			}
 			else
 			{
-				BackendToolbarItem::getNewInstance($item)->save();
+				self::getNewInstance($item)->save();
 			}
 		}
 
@@ -147,7 +150,6 @@ class BackendToolbarItem extends ActiveRecordModel
 		return false;
 	}
 
-	//
 	public static function sanitizeItemArray($itemArray)
 	{
 		foreach ($itemArray as &$item)
@@ -164,8 +166,61 @@ class BackendToolbarItem extends ActiveRecordModel
 					unset($item[$fieldName]);
 				}
 			}
+			foreach(array('Product', 'User', 'CustomerOrder') as $fieldName)
+			{
+				if (array_key_exists($fieldName, $item) && $item[$fieldName]['ID'] === null)
+				{
+					unset($item[$fieldName]);
+				}
+			}
 		}
+
 		return $itemArray;
+	}
+
+	public static function registerLastViewed($item)
+	{
+		$item['position'] = time();
+		$filter = new ARSelectFilter();
+		foreach(array('menuID', 'productID', 'userID', 'orderID') as $fieldName)
+		{
+			if (array_key_exists($fieldName, $item))
+			{
+				$filter->setCondition(eq(f(__CLASS__.'.'.$fieldName), $item[$fieldName]));
+				break; // should have only one identificator.
+			}
+		}
+		$items = self::getUserToolbarItems(null, $filter);
+
+		if (count($items) > 0)
+		{
+			// update postion to $item['position'] for first found existing record
+			$update = new ARUpdateFilter();
+			$update->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'ID'), $items[0]['ID']));
+			$update->addModifier('position', $item['position']);
+			ActiveRecord::updateRecordSet(__CLASS__, $update);
+		}
+		else
+		{
+			// create new
+			self::getNewInstance($item)->save();
+		}
+
+		$filter = new ARSelectFilter();
+		$filter->setLimit(999, BackendToolbarItem::LAST_VIEWED_COUNT);
+		$items = self::getUserToolbarItems(
+			array(BackendToolbarItem::TYPE_PRODUCT, BackendToolbarItem::TYPE_USER, BackendToolbarItem::TYPE_ORDER),
+			$filter,
+			'DESC'
+		);
+		if (count($items) > 0)
+		{
+			foreach($items as $item)
+			{
+				ActiveRecord::deleteByID(__CLASS__, $item['ID']);
+			}
+		}
+		return true;
 	}
 }
 

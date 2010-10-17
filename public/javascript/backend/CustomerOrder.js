@@ -455,7 +455,9 @@ Backend.CustomerOrder.Editor.prototype =
 	},
 
 	initialize: function(id, hideShipped, isCancelled, isFinalized, invoiceNumber)
-  	{
+	{
+		try { footerToolbar.invalidateLastViewed(); } catch(e) {}
+
 		this.id = id ? id : '';
 
 		this.hideShipped = hideShipped;

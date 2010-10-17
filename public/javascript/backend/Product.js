@@ -450,7 +450,8 @@ Backend.Product.Editor.prototype =
 	__instances__: {},
 
 	initialize: function(id, path)
-  	{
+	{
+		try { footerToolbar.invalidateLastViewed(); } catch(e) {}
 		this.id = id;
 		this.path = path;
 

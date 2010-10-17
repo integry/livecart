@@ -21,7 +21,7 @@ ClassLoader::import('application.model.tax.TaxClass');
  */
 class ProductController extends ActiveGridController implements MassActionInterface
 {
-	private $quickEditValidation = false;
+	private $isQuickEdit = false;
 	
 	public function index()
 	{
@@ -612,7 +612,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$otherCurrencies[] = $row['ID'];
 		}
 
-		
 		$response->set("product", $product->toFlatArray());
 		$response->set("otherCurrencies", $otherCurrencies);
 		$response->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
@@ -639,6 +638,11 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$productForm->/*$pricingForm->*/set('listPrice_' . $price['currencyID'], $price['listPrice']);
 		}
 		$response->set('prices', $prices);
+
+		if ($this->isQuickEdit == false) // viewing in quick edit formd doe's not add to last viewed.
+		{
+			BackendToolbarItem::registerLastViewedProduct($product); 
+		}
 
 		return $response;
 	}
@@ -997,7 +1001,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			self::addInventoryValidator($validator);
 		}
 
-		if($this->quickEditValidation)
+		if($this->isQuickEdit)
 		{
 			// nothing now
 		} else {
@@ -1016,9 +1020,10 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	public function quickEdit()
 	{
+		$this->isQuickEdit = true;
+
 		$this->loadQuickEditLanguageFile();
 		$request = $this->getRequest();
-		$this->quickEditValidation = true;
 		$response = $this->basicData();
 		return $response;
 	}
@@ -1030,8 +1035,8 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	public function saveQuickEdit()
 	{
-		$this->quickEditValidation = true;
-		
+		$this->isQuickEdit = true;
+
 		$response = $this->update(true);
 		if($response instanceof JSONResponse)
 		{

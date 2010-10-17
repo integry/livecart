@@ -202,6 +202,8 @@ class CustomerOrderController extends ActiveGridController
 			}
 		}
 
+		BackendToolbarItem::registerLastViewedOrder($order);
+
 //		$response->set('hideShipped', $shipableShipmentsCount > 0 ? $hideShipped : 1);
 		$response->set('hideShipped', false);
 		$response->set('type', $this->getOrderType($order));

@@ -32,7 +32,7 @@ class UserController extends StoreManagementController
 		$user->loadAddresses();
 		$response->set('someUser', $user->toArray());
 		$response->set('availableUserGroups', $availableUserGroups);
-
+		BackendToolbarItem::registerLastViewedUser($user);
 		return $response;
 	}
 

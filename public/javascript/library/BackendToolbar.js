@@ -11,9 +11,8 @@ BackendToolbar.prototype = {
 		this.nodes.root = $(rootNode);
 		this.nodes.mainpanel = this.nodes.root.down("ul");
 		this.nodes.lastviewed = this.nodes.root.down(".lastviewed");
-		this.nodes.templateOrderIcon = $("templateOrderIcon");
-		this.nodes.templateUserIcon = $("templateUserIcon");
-		this.nodes.templateProductIcon = $("templateProductIcon");
+		this.nodes.lastViewedIndicator = $("lastViewedIndicator");
+		
 
 		// remove button from toolbar, if it is droped outside any droppable area
 		Droppables.add($(document.body), {
@@ -32,12 +31,15 @@ BackendToolbar.prototype = {
 			{
 				Event.observe($(element).down("a"), "click",
 					function(event) {
-						if (this.draggingItem)
+						
+						if (this.draggingItem == true)
 						{
 							// drag fires only one click event, setting flag to false will allow next clicks on menu to operate normally
 							this.draggingItem = false;
 							Event.stop(event);
+							return false;
 						}
+						return true;
 					}.bindAsEventListener(this)
 				);
 
@@ -93,13 +95,7 @@ BackendToolbar.prototype = {
 				this.adjustPanel(this.nodes.lastviewed);
 			}.bind(this)
 		);
-
-		Event.observe(document.body, "click",function(event)
-			{
-				Event.stop(event);
-				this.hideLastViewedMenu();
-			}.bind(this)
-		);
+		Event.observe(document.body, "click",this.hideLastViewedMenu.bind(this));
 		Event.observe(this.nodes.lastviewed.down("a"), "click", function(event) {
 			Event.stop(event);
 			this[["hideLastViewedMenu", "openLastViewedMenu"][this.nodes.lastviewed.down("a").hasClassName("active")?0:1]]();
@@ -113,6 +109,24 @@ BackendToolbar.prototype = {
 
 	openLastViewedMenu: function()
 	{
+		if (this.nodes.lastviewed.hasClassName("invalid"))
+		{
+			$A(this.nodes.lastviewed.getElementsBySelector("ul li")).each(Element.remove);
+			this.adjustPanel(this.nodes.lastviewed);
+			this.nodes.lastViewedIndicator.show();
+			this.nodes.lastViewedIndicator.addClassName("progressIndicator");
+			new LiveCart.AjaxUpdater(
+				this.urls.lastViewed,
+				this.nodes.lastviewed.down("ul"),
+				this.nodes.lastViewedIndicator,
+				false,
+				function() {
+					this.nodes.lastviewed.removeClassName("invalid");
+					this.adjustPanel(this.nodes.lastviewed);
+				}.bind(this)
+			);
+		}
+
 		var a = this.nodes.lastviewed.down("a");
 		a.addClassName("active");
 		this.getSubPanels().each(
@@ -190,15 +204,18 @@ BackendToolbar.prototype = {
 		}.bind(this));
 	},
 
-	// 
-	registerViewedItem: function(group, id, displayName, url)
-	{
-		console.log("register :", group, displayName, url);
-	},
-
 	getButtonPosition: function(node)
 	{
-		return $(node).previousSiblings().length - 2; // !! note: will be broken, if some 'no-dropButton' node added/removed before dropButton section.
+		var position;
+		
+		$A($(node).up("ul").getElementsByClassName("dropButton")).find(
+			function(item,i)
+			{ 
+				position = i;
+				return node == item;
+			}
+		);
+		return position;
 	},
 
 	addIcon: function(li, insertBeforeLi)
@@ -306,7 +323,7 @@ BackendToolbar.prototype = {
 
 		var
 			panelsub = subpanel.getHeight(),
-			panelAdjust = windowHeight - 170,
+			panelAdjust = windowHeight - 196,
 			ulAdjust =  panelAdjust - 25;
 
 		if (panelsub > panelAdjust)
@@ -318,5 +335,11 @@ BackendToolbar.prototype = {
 		{
 			ul.style.height="auto";
 		}
+	},
+
+	// footerToolbar.invalidateLastViewed();
+	invalidateLastViewed: function()
+	{
+		this.nodes.lastviewed.addClassName("invalid");
 	}
 }

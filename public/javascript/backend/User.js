@@ -10,7 +10,7 @@ if (!Backend.User)
 Backend.UserGroup = Class.create();
 Backend.UserGroup.prototype =
 {
-  	Links: {},
+	Links: {},
 	Messages: {},
 
 	treeBrowser: null,
@@ -519,7 +519,9 @@ Backend.User.Editor.prototype =
 	},
 
 	initialize: function(id)
-  	{
+	{
+		try { footerToolbar.invalidateLastViewed(); } catch(e) {}
+
 		this.id = id ? id : '';
 
 		this.findUsedNodes();
@@ -563,7 +565,6 @@ Backend.User.Editor.prototype =
 			Event.stop(e);
 			Backend.User.Add.prototype.generatePassword.apply(this)
 		}.bind(this));
-
 
 		Event.observe(this.nodes.form.elements.namedItem("shippingAddress_firstName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
 		Event.observe(this.nodes.form.elements.namedItem("shippingAddress_lastName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));

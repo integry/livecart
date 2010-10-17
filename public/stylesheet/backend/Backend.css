@@ -852,6 +852,7 @@ html #footpanel ul li a.active
 	border: 1px solid #555;
 	background: #fff;
 	overflow: hidden;
+	z-index:60000;
 
 }
 #footpanel h3 {
@@ -919,6 +920,13 @@ html #footpanel ul li a.active
 	text-decoration: none;
 }
 
+
+#lastviewed .subpanel #lastViewedIndicator
+{
+	margin:10px 0 10px 60px;
+	padding:0;
+
+}
 
 /***************************
 	Form styling
