@@ -53,3 +53,12 @@ European Union=European Union
 
 #errors
 _error_mask_is_empty=Please enter mask
+
+_tip_is_enabled=Determines if the zone is active
+_tip_is_free_shipping=Determines if free shipping is available for this delivery zone. To qualify for free shipping, the respective products have to be marked as such as well.
+_tip_is_real_time_disabled=Do not use real-time shipping rates for this zone
+_tip_country=Select countries which are covered by this zone. Please note that this will automatically make all states of the selected countries to be included in the zone (regardless of the state selection below). So if the zone only needs to cover certain parts (states) of a single country, do not select the country here (only the states below).
+_tip_state=Select which states are covered by this zone
+_tip_city_mask=Target zone by the entered city name
+_tip_zip_mask=Target zone by the entered postal code
+_tip_address_mask=Target zone by the entered street address

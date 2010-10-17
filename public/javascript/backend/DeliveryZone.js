@@ -884,7 +884,7 @@ Backend.DeliveryZone.ShippingService.prototype =
 
 	   $A(this.nodes.rangeTypes).each(function(radio)
 	   {
-		   Event.observe(radio, 'click', function(e) { this.rangeTypeChanged(); }.bind(this));
+		   Event.observe(radio, 'click', function(e) { this.rangeTypeChanged(e); }.bindAsEventListener(this));
 	   }.bind(this));
 
 	   $A(document.getElementsByClassName('shippingService_rateFloatValue', this.nodes.root)).each(function(input)
@@ -900,17 +900,18 @@ Backend.DeliveryZone.ShippingService.prototype =
 		}.bind(this), false);
 	},
 
-	rangeTypeChanged: function()
+	rangeTypeChanged: function(e)
 	{
 		var radio = null;
 		$A(this.nodes.rangeTypes).each(function(r){ if(r.checked) radio = r; });
+
 		if(radio == 0)
 		{
 			return;
 		}
 		$A(this.nodes.root.getElementsByClassName(radio.value == 0 ? "weight" : "subtotal")).each(Element.show);
 		$A(this.nodes.root.getElementsByClassName(radio.value == 0 ? "subtotal" : "weight")).each(Element.hide);
-		
+
 		//if(radio.value == 0)
 		//{
 			//console.log('observe weight');
@@ -1051,7 +1052,7 @@ Backend.DeliveryZone.ShippingService.prototype =
 					var
 						element,
 						node;
-						
+
 					item[0] = item[0].replace("weightRangeStart", "weightRangeEnd");
 					element = $(document.getElementsByName(item[0])[0]);
 					if(element == null)
@@ -1068,7 +1069,7 @@ Backend.DeliveryZone.ShippingService.prototype =
 					node.innerHTML = item[1];
 				} catch(e) {}
 			});
-			
+
 		}
 	},
 
@@ -1466,7 +1467,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 				}
 				if(
 					input.value != ""
-					&& 
+					&&
 					(
 						// it is focused hi or lo value field
 						input.hasClassName("focusOnHiOrLo")
@@ -1584,7 +1585,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 			input,
 			ec;
 		node = Event.element(event);
-		
+
 		if(null == node || node.tagName.toLowerCase() != "input")
 		{
 			return;
@@ -1595,7 +1596,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 			this.updateNormalizedWeightFieldValue(node.up("td"));
 			this.updateMergedWeightFieldValue(node.up("td"));
 		}
-		for(j=0; j < this.nodes.tbody.rows[0].cells.length - 1; j++) 
+		for(j=0; j < this.nodes.tbody.rows[0].cells.length - 1; j++)
 		{
 			ec = [];
 			for(i=0; i < this.nodes.tbody.rows.length; i++)
@@ -1728,7 +1729,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 			hiValue,
 			loValue,
 			precision = 'ENGLISH' == this.nodes.unitsTypeField.value ? 10 : 1;
-		
+
 		hiValue = Math.floor(normalizedValue / multipliers[0]);
 		loValue = (normalizedValue - (hiValue * multipliers[0])) / multipliers[1];
 		// allow to enter one decimal number for ounces
@@ -1749,7 +1750,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 		value = Math.round((inputs.normalized.value / multipliers[0]) * 1000) / 1000;
 		if(this.nodes.unitsTypeField.value == "METRIC")
 		{
-			inputs.merged.value = value.toFixed(3);	
+			inputs.merged.value = value.toFixed(3);
 		}
 		else
 		{
@@ -1763,7 +1764,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 			inputs = this._getWeightCellInputs(td),
 			multipliers = this.getWeightMultipliers(this.nodes.unitsTypeField.value);
 
-		inputs.normalized.value = (inputs.hi.value * multipliers[0]) + (inputs.lo.value * multipliers[1]);; 
+		inputs.normalized.value = (inputs.hi.value * multipliers[0]) + (inputs.lo.value * multipliers[1]);;
 	},
 
 	switchUnitTypes : function()
@@ -1771,7 +1772,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 		this.nodes.unitsTypeField.value = this.nodes.unitsTypeField.value == "METRIC" ? "ENGLISH" : "METRIC";
 		this.showInWeightUnits();
 	},
-	
+
 	showInWeightUnits : function()
 	{
 		if(this.nodes.unitsTypeField.value == "METRIC")
@@ -1785,7 +1786,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 			this.nodes.switchUnits.innerHTML = this.labels.UnitConventer_SwitchToMetricTitle;
 		}
 		var multipliers = this.getWeightMultipliers(this.nodes.unitsTypeField.value);
-		
+
 		var i, input;
 		for(i = 0; i<this.nodes.tbody.rows[0].cells.length - 1; i++)
 		{
@@ -1824,7 +1825,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 			element = $(element).up("td");
 		}
 		element = element.down("input");
-		
+
 		console.log(
 			"Normalized value:" + element.value + "\n"+
 			"hiValue:" +          element.next().value + "\n"+

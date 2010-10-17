@@ -19,27 +19,27 @@
 <table id="ratesTableLabels_{$service.DeliveryZone.ID}_{$service.ID}">
 	<tbody>
 		<tr class="weight weightRow">
-			<td class="fixedHeader">{t _weight}
+			<td class="fixedHeader">{tip _weight}
 				(<span class="UnitConventer_UnitsName"></span>)
 				<a class="UnitConventer_SwitchToUnits" href="javascript:void(0);"></a>
 				<input class="UnitConventer_UnitsType" value="METRIC" type="hidden">
 			</td>
 		</tr>
-		<tr class="subtotal">
-			<td class="fixedHeader">{t _subtotal}
+		<tr class="subtotal subtotalRow">
+			<td class="fixedHeader">{tip _subtotal}
 			</td>
 		</tr>
 		<tr>
-			<td class="fixedHeader">{t _flat_charge} ({$defaultCurrencyCode})</td>
+			<td class="fixedHeader">{tip _flat_charge} ({$defaultCurrencyCode})</td>
 		</tr>
 		<tr>
-			<td class="fixedHeader">{t _per_item_charge} ({$defaultCurrencyCode})</td>
+			<td class="fixedHeader">{tip _per_item_charge} ({$defaultCurrencyCode})</td>
 		</tr>
 		<tr class="weight">
-			<td class="fixedHeader">{t _per_kg_charge} ({$defaultCurrencyCode})</td>
+			<td class="fixedHeader">{tip _per_kg_charge} ({$defaultCurrencyCode})</td>
 		</tr>
 		<tr class="subtotal">
-			<td class="fixedHeader">{t _subtotal_percent_charge} (%)</td>
+			<td class="fixedHeader">{tip _subtotal_percent_charge} (%)</td>
 		</tr>
 	</tbody>
 </table>
@@ -78,7 +78,7 @@
 				</td>
 			</tr>
 
-			<tr class="subtotal">
+			<tr class="subtotal subtotalRow">
 				{foreach from=$shippingRates item=rate}
 					<td>
 						{if $rangeTypeName == 'subtotal'}

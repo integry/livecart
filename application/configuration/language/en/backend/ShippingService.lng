@@ -12,7 +12,7 @@ _range_type=Range type
 _weight_based_calculations=Weight based calculation
 _subtotal_based_calculations=Subtotal based calculation
 
-_shipping_service_rates=Rates
+_shipping_service_rates=Shipping Rates
 _subtotal_range=Subtotal range
 _flat_charge=Flat charge
 _per_item_charge=Per item charge
@@ -43,3 +43,16 @@ _description=Description
 
 _expected_delivery_time=Expected delivery time
 _days=days
+
+_tip_subtotal=Maximum order subtotal for this shipping rate to be applicable
+_tip_flat_charge=Base (minimum) charge
+_tip_per_item_charge=Amount to charge for every item in the shipment
+_tip_subtotal_percent_charge=Calculate shipping charge as a percentage of shipment subtotal
+_tip_weight=Maximum chargeable shipment weight for this shipping rate to be applicable
+_tip_per_kg_charge=Amount to charge for every kg/lb of the shipment weight
+_tip_disable_other_services=This option allows to make this shipment method exclusive and used by default, even if there are other shipping methods that could be applicable for the particular order (including real-time rates).
+_tip_weight_based_calculations=Base shipping rate calculation on shipment weight
+_tip_subtotal_based_calculations=Base shipping rate calculation on shipment subtotal
+_tip_range_type=Shipping rate calculation has to be based either on shipment weight or subtotal
+_tip_expected_delivery_time=Provide information about the expected delivery time for your customers. Expected delivery dates will be calculated automatically.
+_tip_description=Enter extra information about this shipping method
