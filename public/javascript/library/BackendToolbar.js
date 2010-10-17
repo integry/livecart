@@ -259,22 +259,19 @@ BackendToolbar.prototype = {
 			id = node.id.replace("button", ""),
 			menuItem = this.getMenuItem(id);
 
-		if (confirm(Backend.getTranslation("_remove_button_from_toolbar").replace("[_1]", menuItem.title)))
-		{
-			new LiveCart.AjaxRequest
-			(
-				this.urls.removeIcon.replace("_id_", id).replace("_position_",this.getButtonPosition(node)),
-				null,
-				function(node, transport)
+		new LiveCart.AjaxRequest
+		(
+			this.urls.removeIcon.replace("_id_", id).replace("_position_",this.getButtonPosition(node)),
+			null,
+			function(node, transport)
+			{
+				var responseData = eval("(" + transport.responseText + ")");
+				if (responseData.status == "success")
 				{
-					var responseData = eval("(" + transport.responseText + ")");
-					if (responseData.status == "success")
-					{
-						node.parentNode.removeChild(node);
-					}
-				}.bind(this, node)
-			);
-		}
+					node.parentNode.removeChild(node);
+				}
+			}.bind(this, node)
+		);
 	},
 
 	getMenuItem: function(id)
