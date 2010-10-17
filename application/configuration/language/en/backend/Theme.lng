@@ -40,6 +40,10 @@ BACKGROUND=Page background
 BG_IMAGE=Background image
 BG_COLOR=Page background color
 BORDER_COLOR=Border color
+H1_COLOR=Heading 1 color
+H2_COLOR=Heading 2 color
+PRICE_COLOR=Price color
+COUNTER_COLOR=Counter (product, filter, etc.) color
 
 LAYOUT=Page layout
 CONTAINER_WIDTH=Page container width
@@ -54,6 +58,33 @@ LINK_STYLE=Link decoration
 LINK_HOVER_STYLE=Link hover decoration
 TEXT_FONT=Font face
 
+H1=Heading 1
+H1_SIZE=Font size
+H1_FONT=Font face
+H1_TOP_BORDER=Top border
+H1_BOTTOM_BORDER=Bottom border
+H1_BG_IMAGE=Background image
+H1_BG_COLOR=Background color
+
+H2=Heading 2
+H2_SIZE=Font size
+H2_FONT=Font face
+H2_TOP_BORDER=Top border
+H2_BOTTOM_BORDER=Bottom border
+H2_BG_IMAGE=Background image
+H2_BG_COLOR=Background color
+
+INPUT=Input fields
+INPUT_BORDER=Field border
+INPUT_BG_IMAGE=Background image
+INPUT_BG_COLOR=Background color
+
+BUTTONS=Buttons
+BUTTON_BORDER=Button border
+BUTTON_BG_IMAGE=Background image
+BUTTON_BG_COLOR=Background color
+BUTTON_INDENT=Caption indent (spacing from side)
+
 CONTENT=Content area
 CONTENT_BG_IMAGE=Content background image
 CONTENT_BG_COLOR=Content background color
@@ -63,12 +94,14 @@ HEADER_IMAGE=Background image
 HEADER_COLOR=Background color
 HEADER_TEXT_COLOR=Text color
 HEADER_HEIGHT=Height
+HEADER_LINKCOLOR=Header link color
 
 FOOTER=Footer
 FOOTER_IMAGE=Background image
 FOOTER_COLOR=Background color
 FOOTER_TEXT_COLOR=Text color
 FOOTER_HEIGHT=Height
+FOOTER_LINKCOLOR=Footer link color
 
 BOXES=Menu boxes
 BOX_BG_IMAGE=Box content background image
@@ -88,6 +121,28 @@ TOP_MENU_ACTIVE_COLOR=Active item color
 TOP_MENU_ACTIVE_BGCOLOR=Active item background color
 TOP_MENU_ACTIVE_BGIMAGE=Active item background image
 
+ADDTOCART="Add to cart" button
+CARTBUTTON_BG_IMAGE=Button background image
+CARTBUTTON_BG_COLOR=Button background color
+CARTBUTTON_HIDE_TEXT=Hide button caption and browser formatting
+CARTBUTTON_WIDTH=Button width
+CARTBUTTON_HEIGHT=Button height
+CARTBUTTON_INDENT=Caption indent (spacing from side)
+
+BREADCRUMB=Breadcrumb navigation
+BC_HIDE=Hide breadcrumb
+BC_CAPTION_HIDE=Hide breadcrumb caption
+BC_CAPTION_COLOR=Caption color
+BC_BG_IMAGE=Background image
+BC_BG_COLOR=Background color
+BC_INDENT=Text indent
+BC_SEPARATOR_BG=Use image as item separator
+BC_LINK_COLOR=Link color
+BC_LINK_DECORATION=Link decoration
+
+FOOTER_HIDE_TRADEMARK=Hide trademark notice
+FOOTER_HIDE_POWEREDBY=Hide "powered by" notice
+
 _max_file_size=Exported ZIP file; Max file size: [_1]
 _select_file=Select theme file
 _import=Import
@@ -101,3 +156,5 @@ _copy=Copy
 
 _notice_changes_in_css_tab=There are unsaved changes in the CSS tab, which would be lost if the style is edited using the form below
 
+_tip_parent_1=You can base a new theme on an existing theme. Basing means that the new theme will use the CSS style, images and templates of the parent theme whenever possible. The changes can be applied by adding new CSS rules and creating theme-specific template files.
+_tip_parent_2=Themes can have multiple parent themes. Usually the 2nd and 3rd parent themes are "flavors" that define a particular characteristic only (layout, color scheme, etc.). For example, <i>barebone-3column</i> defines a 3-column layout.

@@ -104,3 +104,18 @@ font-weight:bold;
 	padding:10px;
 	cursor: pointer;
 }
+
+#importMenu a
+{
+	background-image: url(../../image/silk/image_add.png);
+}
+
+#copyMenu a
+{
+	background-image: url(../../image/silk/page_copy.png);
+}
+
+#exportMenu a
+{
+	background-image: url(../../image/silk/disk.png);
+}

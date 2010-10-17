@@ -75,7 +75,7 @@ Backend.Theme.prototype =
 		ActiveForm.prototype.resetErrorMessages(form)
 		$('addForm').hide();
 	},
-	
+
 	showImportForm: function()
 	{
 		$('importForm').show();
@@ -279,7 +279,6 @@ Backend.Theme.prototype =
 	// Backend.Theme.prototype.cssTabChanged
 	cssTabChanged: function(id)
 	{
-		// console.log(id);
 		Backend.isCssEdited[id] = true;
 		var notice = $("notice_changes_in_css_tab_"+id);
 		if (notice)
@@ -289,7 +288,6 @@ Backend.Theme.prototype =
 	},
 	cssTabNotChanged: function(id)
 	{
-		// console.log(id);
 		Backend.isCssEdited[id] = false;
 		var notice = $("notice_changes_in_css_tab_"+id);
 		if (notice)
@@ -306,8 +304,6 @@ Backend.Theme.prototype =
 	// Backend.Theme.prototype.styleTabChanged
 	styleTabChanged: function(id)
 	{
-		// console.log(id);
-
 		Backend.isStyleEdited[id] = true;
 		var notice = $("notice_changes_colors_and_styles_tab_"+id);
 		if (notice)
@@ -318,8 +314,6 @@ Backend.Theme.prototype =
 
 	styleTabNotChanged: function(id)
 	{
-		// console.log(id);
-
 		Backend.isStyleEdited[id] = false;
 		var notice = $("notice_changes_colors_and_styles_tab_"+id);
 		if (notice)
@@ -370,6 +364,14 @@ Backend.ThemeColor.prototype =
 			if (rel.length > 0)
 			{
 				var prop = rel.split(/\//);
+
+				// no property defined - checkboxes, etc.
+				if (!prop[2])
+				{
+					prop[2] = prop[1];
+					prop[1] = null;
+				}
+
 				new Backend.ThemeColorProperty(this, p, prop[0], prop[1], prop[2]);
 			}
 		}.bind(this));
@@ -424,6 +426,35 @@ Backend.ThemeColorProperty = function(manager, element, selector, property, type
 		this.repeat = new Backend.ThemeColorProperty(manager, this.nodes.repeat, selector, 'background-repeat', '');
 		this.position = new Backend.ThemeColorProperty(manager, this.nodes.position, selector, 'background-position', '');
 	}
+
+	// determine checkbox state
+	if ('checkbox' == this.type)
+	{
+		var properties = CssCustomize.prototype.getPropertiesFromText(this.getRule().cssText);
+		delete properties['richness'];
+		var cbProps = CssCustomize.prototype.getPropertiesFromText('t { ' + this.nodes.append.value + ' } ');
+		delete cbProps['richness'];
+
+		var match = false;
+
+		$H(cbProps).each(function(prop)
+		{
+			if (prop[1] != properties[prop[0]])
+			{
+				match = false;
+				throw $break;
+			}
+			else
+			{
+				match = true;
+			}
+		});
+
+		if (match)
+		{
+			this.nodes.input.checked = true;
+		}
+	}
 }
 
 Backend.ThemeColorProperty.prototype =
@@ -452,6 +483,8 @@ Backend.ThemeColorProperty.prototype =
 		{
 			this.nodes.input = this.element.down('input') || this.element.down('select');
 		}
+
+		this.nodes.append = this.element.down('input.append');
 	},
 
 	bindEvents: function()
@@ -477,7 +510,10 @@ Backend.ThemeColorProperty.prototype =
 
 		$H(this.nodes).each(function(node)
 		{
-			Event.observe(node[1], 'change', this.updateCSSValue.bind(this));
+			if (node[1])
+			{
+				Event.observe(node[1], 'change', this.updateCSSValue.bind(this));
+			}
 		}.bind(this));
 	},
 
@@ -493,6 +529,28 @@ Backend.ThemeColorProperty.prototype =
 		var properties = CssCustomize.prototype.getPropertiesFromText(rule.cssText);
 		properties[this.property] = this.getEnteredValue();
 
+		if ('checkbox' == this.type)
+		{
+			var cbProps = CssCustomize.prototype.getPropertiesFromText('t { ' + this.nodes.append.value + ' } ');
+			delete cbProps['richness'];
+			delete properties['null'];
+
+			$H(cbProps).each(function(prop)
+			{
+				if (this.nodes.input.checked)
+				{
+					properties[prop[0]] = prop[1];
+				}
+				else
+				{
+					if (properties[prop[0]] && (properties[prop[0]] == prop[1]))
+					{
+						delete properties[prop[0]];
+					}
+				}
+			}.bind(this));
+		}
+
 		var text = '';
 		$H(properties).each(function(prop)
 		{
@@ -500,6 +558,11 @@ Backend.ThemeColorProperty.prototype =
 		});
 
 		rule.style.cssText = text;
+
+		if (rule.style.cssText && this.nodes.append && !properties['richness'])
+		{
+			rule.style.cssText += ';' + this.nodes.append.value;
+		}
 
 		if (('upload' == this.type) && properties[this.property])
 		{
@@ -591,6 +654,10 @@ Backend.ThemeColorProperty.prototype =
 		else if ('border' == this.type)
 		{
 			return this.nodes.number.value + 'px ' + this.nodes.style.value + ' ' + this.getHexColor(this.nodes.color.value);
+		}
+		else if ('color' == this.type)
+		{
+			return this.getHexColor(this.nodes.input.value);
 		}
 		else
 		{

@@ -2,7 +2,7 @@
 	<div class="warning">{t _colors_not_editable}</div>
 {/if}
 
-<div 
+<div
 	onclick="{literal}TabControl.prototype.getInstance('tabContainer').activateTab($('tabCss'));{/literal}"
 	id="notice_changes_in_css_tab_{$theme}" class="warning cssAndStyleTab" style="display:none;"
 >{t _notice_changes_in_css_tab}</div>
@@ -15,7 +15,13 @@
 
 			{foreach from=$section.properties item=property}
 				<fieldset class="container entry" rel="{$property.selector}/{$property.type}">
-					<label>{$property.name}</label>
+
+					{if 'checkbox' != $property.type}
+						<label>{$property.name}</label>
+					{else}
+						<label></label>
+					{/if}
+
 					{if 'upload' == $property.type}
 						{filefield name=$property.var class="file"}
 						- {t _or} -
@@ -48,6 +54,14 @@
 						<div class="fontEntry">
 							{textfield name=$property.var id=$property.id class="text"}
 						</div>
+					{elseif 'checkbox' == $property.type}
+						{checkbox id="{uniqid}" name="option" class="option checkbox" value=$property.append}
+						{if 'checkbox' == $property.type}
+							<label class="checkbox" for="{uniqid last=true}">{$property.name}</label>
+						{/if}
+					{/if}
+					{if $property.append}
+						{hidden class="append" name="append" value=$property.append}
 					{/if}
 				</fieldset>
 			{/foreach}

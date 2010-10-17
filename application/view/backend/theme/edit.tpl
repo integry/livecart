@@ -3,7 +3,9 @@
 		<legend>{t _parent_themes}</legend>
 		{section name="parents" start=1 loop=4}
 			<p>
-				<label>{maketext text=_parent_theme_x params=$smarty.section.parents.index}:</label>
+				{capture assign="label"}{maketext text=_parent_theme_x params=$smarty.section.parents.index}{/capture}
+				{if $smarty.section.parents.index == 1}{assign var="tipIndex" value="1"}{else}{assign var="tipIndex" value="2"}{/if}
+				<label>{toolTip label=$label hint="_tip_parent_`$tipIndex`"}:</label>
 				{selectfield name="parent_`$smarty.section.parents.index`" options=$themes blank=true}
 			</p>
 		{/section}

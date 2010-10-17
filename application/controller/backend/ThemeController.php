@@ -160,6 +160,8 @@ class ThemeController extends StoreManagementController
 			$code = str_replace('url("' . $var . '")', 'url(\'../theme/' . $theme .'/' . $name . '\')', $code);
 		}
 
+		$code = preg_replace('/rgb\((\d+),\s*(\d+),\s*(\d+)\)/e', '"#" . dechex(\\1) . dechex(\\2) . dechex(\\3)', $code);
+
 		$css->setCode($code);
 		$res = $css->save();
 
@@ -206,7 +208,17 @@ class ThemeController extends StoreManagementController
 			foreach ($sectionData as $name => $value)
 			{
 				$property = array('var' => $name, 'name' => $this->translate($name), 'id' => $themeName . '_' . $name);
-				list($property['type'], $property['selector']) = explode(' _ ', $value, 2);
+				$parts = explode(' _ ', $value);
+				$property['type'] = array_shift($parts);
+				$property['selector'] = array_shift($parts);
+				$property['append'] = str_replace('__', ';', array_shift($parts));
+
+				if ($property['append'])
+				{
+					// determines whether the auto-append properties need to be set
+					$property['append'] .= '; richness: 100;';
+				}
+
 				$properties[] = $property;
 			}
 
@@ -314,7 +326,7 @@ class ThemeController extends StoreManagementController
 		move_uploaded_file($file['tmp_name'], $zipFilePath);
 
 		$archive = new PclZip($zipFilePath);
-		$archive->extract($path); 
+		$archive->extract($path);
 
 		if (file_exists($path.DIRECTORY_SEPARATOR.'theme.conf') == false)
 		{
@@ -439,7 +451,7 @@ class ThemeController extends StoreManagementController
 		chdir(ClassLoader::getBaseDir());
 		$files[] = $confFilePath;
 
-		$archive->add($files, PCLZIP_OPT_REMOVE_PATH, $path); 
+		$archive->add($files, PCLZIP_OPT_REMOVE_PATH, $path);
 		$this->application->rmdir_recurse($path);
 		$response = new ObjectFileResponse(ObjectFile::getNewInstance('ObjectFile', $zipFilePath, $id.'.zip'));
 		$response->deleteFileOnComplete();
@@ -458,7 +470,7 @@ class ThemeController extends StoreManagementController
 
 		return $validator;
 	}
-	
+
 	/**
 	 * @return Form
 	 */
@@ -498,7 +510,7 @@ class ThemeController extends StoreManagementController
 	protected function buildImportValidator()
 	{
 		$validator = $this->getValidator('themeImportValidator', $this->request);
-		
+
 		$uploadCheck = new IsFileUploadedCheck($this->translate(!empty($_FILES['theme']['name']) ? '_err_too_large' :'_err_not_uploaded'));
 		$uploadCheck->setFieldName('theme');
 
