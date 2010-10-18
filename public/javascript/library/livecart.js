@@ -491,7 +491,7 @@ LiveCart.AjaxUpdater.prototype = {
 
 		options.parameters += (options.parameters ? '&' : '') + 'ajax=true';
 
-		if (insertionPosition != undefined)
+		if (insertionPosition != undefined && insertionPosition != false)
 		{
 			switch(insertionPosition)
 			{
@@ -512,7 +512,7 @@ LiveCart.AjaxUpdater.prototype = {
 				break;
 
 				default:
-					alert('Invalid insertion position value in AjaxUpdater');
+					alert('Invalid insertion position value in AjaxUpdater'); // ?
 				break;
 			}
 		}

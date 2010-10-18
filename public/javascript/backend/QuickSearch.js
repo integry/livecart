@@ -177,6 +177,20 @@ Backend.QuickSearch.prototype = {
 			Event.observe(this.nodes.Query, 'focus', this.showResultContainer.bindAsEventListener(this));
 			this.popupHideObserved = true;
 		}
+
+		if (this.callbacks.showResultContainer && typeof this.callbacks.showResultContainer == "function")
+		{
+			this.callbacks.showResultContainer(this);
+		}
+	},
+
+	onShowResultContainer: function(callback)
+	{
+		if (typeof this.callbacks == "undefined")
+		{
+			this.callbacks = {};
+		}
+		this.callbacks.showResultContainer = callback;
 	},
 
 	hideResultContainer: function()
@@ -212,10 +226,15 @@ Backend.QuickSearch.prototype = {
 		new LiveCart.AjaxRequest(
 			this.nodes.Form,
 			this.nodes.Query,
-			function(transport)
+			function(classContainer, transport)
 			{
-				this.classContainer.innerHTML=transport.responseText;
-			}.bind({instance:this, classContainer:container.up("div")})
+				classContainer.innerHTML = transport.responseText;
+				// also trigger onShowResultContainer callback, because common use for this callback is position result and this can change result container size.
+				if (this.callbacks.showResultContainer && typeof this.callbacks.showResultContainer == "function")
+				{
+					this.callbacks.showResultContainer(this);
+				}
+			}.bind(this, container.up("div"))
 		);
 	},
 

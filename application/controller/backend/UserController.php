@@ -32,7 +32,7 @@ class UserController extends StoreManagementController
 		$user->loadAddresses();
 		$response->set('someUser', $user->toArray());
 		$response->set('availableUserGroups', $availableUserGroups);
-
+		BackendToolbarItem::registerLastViewedUser($user);
 		return $response;
 	}
 
@@ -251,7 +251,7 @@ class UserController extends StoreManagementController
 				$group = null;
 			}
 
-		  	if (!$user)
+			if (!$user)
 			{
 				$user = User::getNewInstance($email, $password, $group);
 			}
@@ -269,6 +269,7 @@ class UserController extends StoreManagementController
 
 			$this->saveAddresses($user);
 
+			BackendToolbarItem::registerLastViewedUser($user);
 			return new JSONResponse(array('user' => $user->toFlatArray()), 'success', $this->translate('_user_details_were_successfully_saved'));
 		}
 		else

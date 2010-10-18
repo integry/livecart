@@ -1,7 +1,10 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.system.BackendToolbarItem");
+ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
+ClassLoader::import('application.model.system.BackendToolbarItem');
+ClassLoader::import('application.model.user.User');
+ClassLoader::import('application.model.product.Product');
+ClassLoader::import('application.model.order.CustomerOrder');
 
 /**
  *
@@ -10,9 +13,16 @@ ClassLoader::import("application.model.system.BackendToolbarItem");
 
 class BackendToolbarController extends StoreManagementController
 {
-	public function registerViewedItem()
+	public function lastViewed()
 	{
-		
+		$response = new ActionResponse();
+		$response->set('randomToken', substr(md5(time().mt_rand(1,9999999999)),0,8));
+		$response->set('lastViewed', 
+			BackendToolbarItem::sanitizeItemArray(
+				BackendToolbarItem::getUserToolbarItems(array(BackendToolbarItem::TYPE_PRODUCT, BackendToolbarItem::TYPE_USER, BackendToolbarItem::TYPE_ORDER),null, 'DESC')
+			)
+		);
+		return $response;
 	}
 
 	public function addIcon()
@@ -97,11 +107,6 @@ class BackendToolbarController extends StoreManagementController
 	private function fixSortOrder()
 	{
 		BackendToolbarItem::saveItemArray(BackendToolbarItem::getUserToolbarItems(BackendToolbarItem::TYPE_MENU));
-	}
-
-	private function getIconUpdateResponse()
-	{
-		
 	}
 }
 

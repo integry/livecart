@@ -462,7 +462,9 @@ Backend.CustomerOrder.Editor.prototype =
 	},
 
 	initialize: function(id, hideShipped, isCancelled, isFinalized, invoiceNumber)
-  	{
+	{
+		try { footerToolbar.invalidateLastViewed(); } catch(e) {}
+
 		this.id = id ? id : '';
 
 		this.hideShipped = hideShipped;
@@ -759,6 +761,7 @@ Backend.CustomerOrder.Editor.prototype =
 
 	afterSubmitForm: function(response)
 	{
+		try { footerToolbar.invalidateLastViewed(); } catch(e) {}
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 
 		if(response.status == 'success')

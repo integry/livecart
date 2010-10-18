@@ -34,7 +34,6 @@ _clear=Clear
 # backend footer panel
 _store_frontend=Store frontend
 _admin_dashboard=Admin dashboard
-_remove_button_from_toolbar=Do you want to remove [_1] from toolbar?
 _button_added=Button added
 _cant_add_button=Can't add button
 _button_removed=Button removed

@@ -80,14 +80,6 @@ abstract class BackendController extends BaseController
 				BackendToolbarItem::getUserToolbarItems(BackendToolbarItem::TYPE_MENU)
 			)
 		);
-
-		$response->set('lastViewed', 
-			BackendToolbarItem::sanitizeItemArray(
-				BackendToolbarItem::getUserToolbarItems(array(BackendToolbarItem::TYPE_PRODUCT, BackendToolbarItem::TYPE_USER, BackendToolbarItem::TYPE_ORDER))
-			)
-		);
-
-
 		return $response;
 	}
 }
