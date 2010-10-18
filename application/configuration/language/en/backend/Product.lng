@@ -76,6 +76,7 @@ Product.isFreeShipping=Free shipping available
 Product.isBackOrderable=Available for backordering
 Product.shippingWeight=Shipping weight
 Product.isFractionalUnit=Is fractional unit
+Product.isUnlimitedStock=Is unlimited inventory
 Product.rating=Rating
 Product.ratingCount=Number of ratings
 Product.parentID=Parent product ID

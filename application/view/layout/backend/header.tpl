@@ -12,7 +12,8 @@
 				<a id="help" href="#" target="_blank" {if !'BACKEND_SHOW_HELP'|config}style="display:none;"{/if}>{t _base_help}</a>
 				{if 'BACKEND_SHOW_HELP'|config} | {/if}
 				{backendLangMenu}
-				<a href="{link}" target="_blank">{t _frontend}</a>
+				<a href="{link}" target="_blank">{t _frontend}</a> |
+				{include file="backend/quickSearch/form.tpl" formid="QuickSearch" hint=_hint_quick_search}
 		</div>
 
 		<div id="topLogoImageContainer">
@@ -25,7 +26,6 @@
 			<div id="nav"></div>
 			{backendMenu}
 			<div class="clear"></div>
-			
 		</div>
 
 	</div>

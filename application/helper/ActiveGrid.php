@@ -198,9 +198,13 @@ class ActiveGrid
 			}
 			else
 			{
-				if(array_key_exists($field, $this->columnTypes))
+				if (array_key_exists($field, $this->columnTypes))
 				{
 					$type = $this->columnTypes[$field]['type'];
+				}
+				else
+				{
+					$type = null;
 				}
 
 				$value = preg_replace('/[ ]{2,}/', ' ', $value);
@@ -281,8 +285,8 @@ class ActiveGrid
 		}
 		return array($operator, $value);
 	}
-	
-	
+
+
 	public function getModelClass()
 	{
 		return $this->modelClass;

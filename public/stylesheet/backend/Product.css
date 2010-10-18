@@ -211,10 +211,16 @@ div.quantityPricing .groupLabel
 
 .quantityPricing .number
 {
-	width: 50px;
+	width: 30px;
+	font-size: smaller;
 }
 
 .quantityRow, .groupColumn
 {
 	background-color: lightyellow;
+}
+
+.prodImageEditForm .addForm
+{
+	margin: 1.5em;
 }

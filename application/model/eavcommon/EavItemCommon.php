@@ -22,8 +22,6 @@ abstract class EavItemCommon extends EavSpecificationCommon
 
 	public abstract static function getValueIDColumnName();
 
-	public abstract function getValue();
-
 	public static function defineSchema($className)
 	{
 		$schema = self::getSchemaInstance($className);

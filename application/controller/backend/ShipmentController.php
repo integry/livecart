@@ -50,18 +50,6 @@ class ShipmentController extends StoreManagementController
 		$order->save();
 		$shipment->save(ActiveRecord::PERFORM_UPDATE);
 
-		/*
-		$shippingService = ShippingService::getInstanceByID($this->request->get('serviceID'), ShippingService::LOAD_DATA);
-
-		$shipment->setAvailableRates($shipment->order->get()->getDeliveryZone()->getShippingRates($shipment));
-		$shipment->setRateId($shippingService->getID());
-
-		$shipment->shippingService->set($shippingService);
-		$shipment->recalculateAmounts();
-
-		$shipment->save();
-		*/
-
 		$history->saveLog();
 
 		$shipmentArray = $shipment->toArray();
@@ -76,7 +64,8 @@ class ShipmentController extends StoreManagementController
 					   'total' => $shipment->shippingAmount->get() + $shipment->amount->get() + (float)$shipment->taxAmount->get(),
 					   'prefix' => $shipment->getCurrency()->pricePrefix->get(),
 					   'suffix' => $shipment->getCurrency()->priceSuffix->get(),
-					   'ShippingService' => $shipmentArray['ShippingService']
+					   'ShippingService' => $shipmentArray['ShippingService'],
+					   'Order' => $shipment->order->get()->toFlatArray(),
 				   )
 			),
 			'success'
@@ -220,7 +209,8 @@ class ShipmentController extends StoreManagementController
 		$response->set('shipmentID', $shipment->getID());
 
 		$addressOptions = array('' => '');
-		foreach($shipment->order->get()->user->get()->getShippingAddressArray() as $address)
+		$addresses = array();
+		foreach(array_merge($shipment->order->get()->user->get()->getShippingAddressArray(), $shipment->order->get()->user->get()->getBillingAddressArray()) as $address)
 		{
 			$addressOptions[$address['ID']] = $address['UserAddress']['compact'];
 			$addresses[$address['ID']] = $address;
@@ -233,6 +223,8 @@ class ShipmentController extends StoreManagementController
 
 	public function saveAddress()
 	{
+		$this->loadLanguageFile('backend/Shipment');
+
 		ClassLoader::import('application.controller.backend.CustomerOrderController');
 		$shipment = Shipment::getInstanceByID('Shipment', $this->request->get('id'), true, array('CustomerOrder', 'User'));
 		$address = $shipment->shippingAddress->get();
@@ -297,9 +289,11 @@ class ShipmentController extends StoreManagementController
 
 		$array = $shipment->toArray();
 		$array['total'] = $order->getTotal();
-		unset($array['Order']);
+
 		unset($array['items']);
 		unset($array['taxes']);
+
+		$array['Order'] = $order->toFlatArray();
 
 		return new JSONResponse(array('Shipment' => $array));
 	}

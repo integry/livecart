@@ -86,6 +86,7 @@ class CustomerOrderController extends ActiveGridController
 		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('User', 'Currency'));
 		$order->getSpecification();
 		$order->loadAddresses();
+		$this->removeEmptyShipments($order);
 
 		$response = new ActionResponse();
 
@@ -340,7 +341,7 @@ class CustomerOrderController extends ActiveGridController
 
 		return $response;
 	}
-	
+
 
 	public function updateDate()
 	{
@@ -584,10 +585,17 @@ class CustomerOrderController extends ActiveGridController
 
 	public function printLabels()
 	{
-		$filter = $GLOBALS['filter'];
+		ClassLoader::import('application.model.feed.ShipmentFeed');
 
-		// HAVING User.fullName >> causes problems
-		$filter->setHavingCondition(eq(new ARExpressionHandle('1'), 1));
+		if (isset($GLOBALS['filter']) && ($filter = $GLOBALS['filter']))
+		{
+			// HAVING User.fullName >> causes problems
+			$filter->setHavingCondition(eq(new ARExpressionHandle('1'), 1));
+		}
+		else
+		{
+			$filter = select(eq('CustomerOrder.ID', $this->request->get('id')));
+		}
 
 		return new ActionResponse('feed', new ShipmentFeed($filter, array('User')));
 	}
@@ -1195,11 +1203,8 @@ class CustomerOrderController extends ActiveGridController
 		}
 	}
 
-	public function removeEmptyShipments()
+	protected function removeEmptyShipments(CustomerOrder $order)
 	{
-		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, true);
-		$order->loadAll();
-
 		foreach($order->getShipments() as $shipment)
 		{
 			if(count($shipment->getItems()) == 0)
@@ -1207,11 +1212,6 @@ class CustomerOrderController extends ActiveGridController
 				$shipment->delete();
 			}
 		}
-
-		$order->updateStatusFromShipments();
-		$order->save(true);
-
-		return new RawResponse();
 	}
 
 	public function recalculateDiscounts()
@@ -1326,21 +1326,21 @@ class CustomerOrderController extends ActiveGridController
 		return $this->translateFieldArray(
 			array
 			(
-				'ProductOption' => array('name'=>'', 'type'=>'text'),
 				'ProductSKU' => array('name'=>'', 'type'=>'text'),
 				'ProductName'=> array('name'=>'', 'type'=>'text'),
 				'Manufacturer'=> array('name'=>'', 'type'=>'text'),
 				'UsedCouponCode'=> array('name'=>'', 'type'=>'text'),
 				'OrderMessageText'=> array('name'=>'', 'type'=>'text')
+				'ProductOption' => array('name'=>'', 'type'=>'text')
 			)
 		);
 	}
 
 	protected function getCustomColumns()
 	{
-		
+
 		$availableColumns = array();
-		
+
 		$availableColumns['User.email'] = 'text';
 		$availableColumns['User.ID'] = 'text';
 		$availableColumns['User.fullName'] = 'text';
@@ -1362,7 +1362,7 @@ class CustomerOrderController extends ActiveGridController
 		$availableColumns['User.firstName'] = 'text';
 		$availableColumns['User.lastName'] = 'text';
 		$availableColumns['User.companyName'] = 'text';
-		
+
 		return $availableColumns;
 	}
 
@@ -1542,7 +1542,7 @@ class CustomerOrderController extends ActiveGridController
 
 		$this->loadLanguageFile('Order');
 
-		return new JSONResponse(null, 
+		return new JSONResponse(null,
 			$error ? 'failure' : 'success', $this->makeText($msg, array($code)));
 	}
 }

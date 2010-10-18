@@ -20,7 +20,7 @@ Backend.CustomerOrder.prototype =
 			{
 			}
 		);
-		
+
 		Backend.CustomerOrder.prototype.treeBrowser = new dhtmlXTreeObject("orderGroupsBrowser","","", 0);
 		Backend.Breadcrumb.setTree(Backend.CustomerOrder.prototype.treeBrowser);
 
@@ -266,16 +266,22 @@ Backend.CustomerOrder.prototype =
 		this.resetTab("tabOrderLog", orderID);
 	},
 
-	changePaidStatus: function(select, url)
+	changePaidStatus: function(input, url)
 	{
 		if (!confirm(Backend.getTranslation('_confirm_change_paid_status')))
 		{
-			select.value = 1 - select.value;
+			input.checked = !input.checked;
 			return false;
 		}
 
-		url = url.replace(/_stat_/, select.value);
-		new LiveCart.AjaxRequest(url, select.parentNode.down('.progressIndicator'));
+		url = url.replace(/_stat_/, input.checked ? 1 : 0);
+
+		new LiveCart.AjaxRequest(url, input,
+			function(oReq)
+			{
+				input.up('.orderAmount').removeClassName('unpaid');
+			}
+		);
 	},
 
 	setMultiAddress: function(select, url, orderID)
@@ -283,7 +289,8 @@ Backend.CustomerOrder.prototype =
 		url = url.replace(/_stat_/, select.value);
 		new LiveCart.AjaxRequest(url, select.parentNode.down('.progressIndicator'), function()
 		{
-			this.resetTab('tabOrderProducts', orderID);
+			window.location.reload();
+			//this.resetTab('tabOrderInfo', orderID);
 		}.bind(this));
 	},
 
@@ -397,14 +404,14 @@ Backend.CustomerOrder.Editor.prototype =
 	craftContentId: function(tabId)
 	{
 		// Remove empty shippments
-		if(tabId != 'tabOrderProducts')
+		if(tabId != 'tabOrderInfo')
 		{
-			var productsContainer = $("tabOrderProducts_" + Backend.CustomerOrder.Editor.prototype.getCurrentId() + "Content");
+			var productsContainer = $("tabOrderInfo_" + Backend.CustomerOrder.Editor.prototype.getCurrentId() + "Content");
 			if(productsContainer && productsContainer.style.display != 'none')
 			{
 				if(!Backend.CustomerOrder.Editor.prototype.getInstance(Backend.CustomerOrder.Editor.prototype.getCurrentId()).removeEmptyShipmentsConfirmation())
 				{
-					TabControl.prototype.getInstance("orderManagerContainer", false).activateTab($("tabOrderProducts"));
+					TabControl.prototype.getInstance("orderManagerContainer", false).activateTab($("tabOrderInfo"));
 					return false;
 				}
 			}
@@ -489,7 +496,7 @@ Backend.CustomerOrder.Editor.prototype =
 			{
 				Element.show(option);
 
-				$$("#tabOrderProducts_" + this.id + "Content .shippableShipments select[name=status]").each(function(select)
+				$$("#tabOrderInfo_" + this.id + "Content .shippableShipments select[name=status]").each(function(select)
 				{
 					$A(select.options).each(function(shipmentOption)
 					{
@@ -676,10 +683,13 @@ Backend.CustomerOrder.Editor.prototype =
 		}
 		else
 		{
-			Backend.Breadcrumb.display(
-				Backend.Breadcrumb.treeBrowser.getSelectedItemId(),
-				Backend.CustomerOrder.Editor.prototype.Messages.orderNum + this.invoiceNumber
-			);
+			if (Backend.Breadcrumb.treeBrowser.getSelectedItemId)
+			{
+				Backend.Breadcrumb.display(
+					Backend.Breadcrumb.treeBrowser.getSelectedItemId(),
+					Backend.CustomerOrder.Editor.prototype.Messages.orderNum + this.invoiceNumber
+				);
+			}
 		}
 	},
 
@@ -758,8 +768,8 @@ Backend.CustomerOrder.Editor.prototype =
 		{
 			Backend.CustomerOrder.prototype.updateLog(this.id);
 
-			var shippableShipments = $$("#tabOrderProducts_" + this.id + "Content .shippableShipments .orderShipment");
-			var shippedShipments = $$("#tabOrderProducts_" + this.id + "Content .shippedShipments .orderShipment");
+			var shippableShipments = $$("#tabOrderInfo_" + this.id + "Content .shippableShipments .orderShipment");
+			var shippedShipments = $$("#tabOrderInfo_" + this.id + "Content .shippedShipments .orderShipment");
 			var updateStatuses = function(li)
 			{
 				var statusValue = this.nodes.status.value;
@@ -793,7 +803,7 @@ Backend.CustomerOrder.Editor.prototype =
 	{
 		new LiveCart.AjaxRequest(Backend.Shipment.Links.removeEmptyShipments + "/" + this.id);
 
-		$$("#tabOrderProducts_" + this.id + "Content .shippableShipments .orderShipment").each(function(shipemnt)
+		$$("#tabOrderInfo_" + this.id + "Content .shippableShipments .orderShipment").each(function(shipemnt)
 		{
 			 if(!shipemnt.down('li'))
 			 {
@@ -801,7 +811,7 @@ Backend.CustomerOrder.Editor.prototype =
 			 }
 		});
 
-		var shipments = $$("#tabOrderProducts_" + this.id + "Content .shippableShipments .orderShipment");
+		var shipments = $$("#tabOrderInfo_" + this.id + "Content .shippableShipments .orderShipment");
 		if(shipments.size() == 1)
 		{
 			var firstItemsList = ActiveList.prototype.getInstance(shipments.first().down('ul'));
@@ -823,7 +833,7 @@ Backend.CustomerOrder.Editor.prototype =
 		}
 
 		var hasEmptyShipments = false;
-		$$("#tabOrderProducts_" + this.id + "Content .shippableShipments .orderShipment").each(function(itemList)
+		$$("#tabOrderInfo_" + this.id + "Content .shippableShipments .orderShipment").each(function(itemList)
 		{
 			 if(!itemList.down('li'))
 			 {
@@ -839,7 +849,7 @@ Backend.CustomerOrder.Editor.prototype =
 	{
 		if(!Backend.Shipment.removeEmptyShipmentsConfirmationLastCallTime) Backend.Shipment.removeEmptyShipmentsConfirmationLastCallTime = 0;
 
-		var container = $$("#tabOrderProducts_" + this.id + "Content .orderShipments").first();
+		var container = $$("#tabOrderInfo_" + this.id + "Content .orderShipments").first();
 
 		if($("orderManagerContainer").style.display == 'none' || !container || (container.style.display == 'none'))
 		{
@@ -966,6 +976,9 @@ Backend.CustomerOrder.Address.prototype =
 		this.nodes.cancelEdit.show();
 		this.nodes.view.hide();
 		this.nodes.edit.show();
+
+		$A(this.nodes.parent.up('.addressContainer').getElementsByTagName('form')).invoke('hide');
+		this.nodes.parent.show();
 	},
 
 	hideForm: function()
@@ -974,6 +987,8 @@ Backend.CustomerOrder.Address.prototype =
 		this.nodes.cancelEdit.hide();
 		this.nodes.view.show();
 		this.nodes.edit.hide();
+
+		$A(this.nodes.parent.up('.addressContainer').getElementsByTagName('form')).invoke('show');
 	},
 
 	useExistingAddress: function()
@@ -1032,21 +1047,26 @@ Backend.CustomerOrder.Address.prototype =
 			function(responseJSON)
 			{
 				ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-				var responseObject = eval("(" + responseJSON.responseText + ")");
-				this.afterSubmitForm(responseObject);
+				this.afterSubmitForm(responseJSON);
 			}.bind(this)
 		);
 	},
 
 	afterSubmitForm: function(response)
 	{
-		if(response.status == 'success')
+		if(response.responseData && response.responseData.errors)
+		{
+			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.responseData.errors)
+		}
+		else
 		{
 			this.stateID = this.nodes.form.elements.namedItem('stateID').value;
 			Form.State.backup(this.nodes.form);
 
-			this.nodes.form.down('.addressFullName').innerHTML = this.nodes.form.elements.namedItem('firstName').value + " " +this.nodes.form.elements.namedItem('lastName').value
-			this.nodes.form.down('.addressCountryName').innerHTML = this.nodes.form.elements.namedItem('countryID').options[this.nodes.form.elements.namedItem('countryID').selectedIndex].text
+			if (this.nodes.form.down('.addressCountryName'))
+			{
+				this.nodes.form.down('.addressCountryName').innerHTML = this.nodes.form.elements.namedItem('countryID').options[this.nodes.form.elements.namedItem('countryID').selectedIndex].text
+			}
 
 			if(this.nodes.form.elements.namedItem('stateID').options.length == 0)
 			{
@@ -1057,20 +1077,25 @@ Backend.CustomerOrder.Address.prototype =
 				this.nodes.form.down('.addressStateName').innerHTML = this.nodes.form.elements.namedItem('stateID').options[this.nodes.form.elements.namedItem('stateID').selectedIndex].text
 			}
 
-			this.nodes.form.down('.addressCompanyName').innerHTML = this.nodes.form.elements.namedItem('companyName').value
-			this.nodes.form.down('.addressCity').innerHTML = this.nodes.form.elements.namedItem('city').value
-			this.nodes.form.down('.addressAddress1').innerHTML = this.nodes.form.elements.namedItem('address1').value
-			this.nodes.form.down('.addressAddress2').innerHTML = this.nodes.form.elements.namedItem('address2').value
-			this.nodes.form.down('.addressPostalCode').innerHTML = this.nodes.form.elements.namedItem('postalCode').value
-			this.nodes.form.down('.addressPhone').innerHTML = this.nodes.form.elements.namedItem('phone').value
+			if (this.nodes.form.down('.addressFullName'))
+			{
+				this.nodes.form.down('.addressFullName').innerHTML = this.nodes.form.elements.namedItem('firstName').value + " " +this.nodes.form.elements.namedItem('lastName').value
+			}
+
+			$H({addressCompanyName: 'companyName', addressCity: 'city', addressAddress1: 'address1', addressAddress2: 'address2', addressPostalCode: 'postalCode', addressPhone: 'phone'}).each(function(field)
+			{
+				var el = this.nodes.form.down('.' + field[0]);
+				var input = this.nodes.form.elements.namedItem(field[1]);
+
+				if (el && input)
+				{
+					el.innerHTML = input.value;
+				}
+			}.bind(this));
 
 			this.hideForm();
 
 			Backend.CustomerOrder.prototype.updateLog(this.nodes.form.elements.namedItem('orderID').value);
-		}
-		else
-		{
-			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors)
 		}
 	}
 }

@@ -5,6 +5,7 @@ ClassLoader::import('application.model.user.User');
 ClassLoader::import('application.model.user.UserAddress');
 ClassLoader::import('application.model.product.Product');
 ClassLoader::import('application.model.product.ProductPrice');
+ClassLoader::import('application.model.product.ProductSet');
 ClassLoader::import('application.model.order.OrderCoupon');
 ClassLoader::import('application.model.order.OrderedItem');
 ClassLoader::import('application.model.order.Shipment');
@@ -1465,7 +1466,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$this->currency->set($currency);
 		foreach ($this->getOrderedItems() as $item)
 		{
-			$item->price->set($item->getProduct()->getItemPrice($item, $currency));
+			$item->price->set($item->getProduct()->getItemPrice($item, true, $currency));
 			$item->setItemPrice($item->price->get());
 			$item->save();
 		}

@@ -115,7 +115,15 @@ class Currency extends ActiveRecordModel
 	{
 		if (!$this->isLoaded())
 		{
-			$this->load();
+			try
+			{
+				$this->load();
+			}
+			catch (ARNotFoundException $e)
+			{
+				// do nothing?
+				$this->markAsLoaded();
+			}
 		}
 
 		$number = number_format($price, !is_null($this->decimalCount->get()) ? $this->decimalCount->get() : 2, '.', '');

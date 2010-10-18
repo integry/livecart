@@ -141,6 +141,7 @@ _user_info=User info
 _is_canceled=Is cancelled
 _order_id=Order ID
 _is_finalized=Is finalized
+_mark_as_paid=Mark as paid
 
 _custom_info=Custom Information
 _no_info_entered_yet=No custom information has been entered yet

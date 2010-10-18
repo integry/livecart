@@ -24,6 +24,8 @@ NewsletterMessage.ID=ID
 NewsletterMessage.status=Status
 NewsletterMessage.time=Date
 NewsletterMessage.subject=Subject
+NewsletterMessage.text=Message text
+NewsletterMessage.html=Message HTML text
 
 _edit_message=Edit message
 _submission_info=Delivery information

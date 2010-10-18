@@ -1,3 +1,22 @@
+{assign var=advancedSearch value=true}
+
+<fieldset class="container activeGridControls">
+	{if $advancedSearch}
+		<div id="{$prefix}_{$id}_AdvancedSearch" class="activeGridAdvancedSearch">
+			<a href="javascript:void(0);" class="cancel advancedSearchLink">
+				{t _advanced_search}
+			</a>
+			<div id="{$prefix}_{$id}_QueryContainer" class="advancedSearchQueryContainer">
+				<ul class="advancedQueryItems">
+				</ul>
+			</div>
+		</div>
+	{/if}
+	{if $massAction}
+		{include file=$massAction}
+	{/if}
+</fieldset>
+
 <div style="position: relative;">
 	<div style="display: none;" class="activeGrid_loadIndicator" id="{$prefix}LoadIndicator_{$id}">
 		<div>
@@ -17,18 +36,6 @@
 		</fieldset>
 	</div>
 </div>
-
-{if $advancedSearch}
-	<div id="{$prefix}_{$id}_AdvancedSearch">
-		<a href="javascript:void(0);" class="cancel advancedSearchLink">
-			{t _advanced_search}
-		</a>
-		<div id="{$prefix}_{$id}_QueryContainer" class="advancedSearchQueryContainer">
-			<ul class="advancedQueryItems">
-			</ul>
-		</div>
-	</div>
-{/if}
 
 <div class="activeGridContainer">
 
@@ -159,6 +166,12 @@
 
 <div class="activeGridColumns" >
 	<ul class="menu" style="float: left;">
+		{if $count}
+			<li class="gridCount">
+				{include file=$count}
+			</li>
+		{/if}
+
 		<li class="reload">
 			<a href="#" onclick="window.activeGrids['{$prefix}_{$id}'].reloadGrid(); return false;">{t _grid_reload}</a>
 		</li>
@@ -218,9 +231,9 @@
 		{/if}
 	{/foreach}
 	{if $advancedSearch}
-	
-	
-	
+
+
+
 		window.activeGrids['{$prefix}_{$id}'].initAdvancedSearch(
 			"{$prefix}_{$id}",
 			{json array=$availableColumns},

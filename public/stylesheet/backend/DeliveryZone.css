@@ -215,8 +215,10 @@ li.testAdress a
 
 .UnitConventer_SwitchToUnits
 {
-	font-weight:smaller;
-	display:block;
+	font-size: smaller;
+	display: block;
+	color: red;
+	margin-top: 3px;
 }
 
 /* TODO: fix all references in js and get rid of this workround */
@@ -228,6 +230,12 @@ li.testAdress a
 {
 	overflow:auto;
 	overflow-x:auto;
+}
+
+.ratesTableContainerScroll input.number
+{
+	width: 4em;
+	margin-right: 3px;
 }
 
 .fixedHeader
@@ -251,4 +259,15 @@ li.testAdress a
 {
 	width:18px;
 	margin: 10px 2px 0 7px;
+}
+
+.tabDeliveryZoneShippingContent .addForm .rangeTypeStatic
+{
+	display: none;
+}
+
+.subtotalRow input,
+.weightRow input
+{
+	background-color: #eee;
 }

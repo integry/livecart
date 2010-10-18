@@ -22,8 +22,9 @@ ClassLoader::import('application.model.tax.TaxClass');
 class ProductController extends ActiveGridController implements MassActionInterface
 {
 	private $isQuickEdit = false;
-	
-	public function index()
+	private $quickEditValidation = false;
+    
+    public function index()
 	{
 
 		ClassLoader::import('application.LiveCartRenderer');
@@ -377,6 +378,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 				'type' => 'text'
 			);
 
+		unset($availableColumns['Product.categoryIntervalCache']);
 		unset($availableColumns['Product.childSettings']);
 		unset($availableColumns['Product.ratingSum']);
 		unset($availableColumns['Product.salesRank']);
@@ -602,7 +604,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$response->get('productForm')->setData($set->get(0)->toArray());
 		}
 
-		// pricing 
+		// pricing
 
 		$f = new ARSelectFilter(new NotEqualsCond(new ARFieldHandle('Currency', 'isDefault'), true));
 		$f->setOrder(new ARFieldHandle('Currency', 'position'));
@@ -693,7 +695,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $response;
 	}
 
-	
+
 
 	public function countTabsItems()
 	{
@@ -891,7 +893,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		}
 
 		$product->loadPricing();
-		
+
 		$form = $this->buildForm($product);
 		$pricing = $product->getPricingHandler();
 
@@ -975,7 +977,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	}
 
 	/**
-	 * 
+	 *
 	 * @return RequestValidator
 	 */
 	public function buildValidator(Product $product)
@@ -1031,7 +1033,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$response = $this->basicData();
 		return $response;
 	}
-	
+
 	public function isQuickEdit()
 	{
 		return true;
@@ -1040,6 +1042,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	public function saveQuickEdit()
 	{
 		$this->isQuickEdit = true;
+		$this->quickEditValidation = true;
 
 		$response = $this->update(true);
 		if($response instanceof JSONResponse)

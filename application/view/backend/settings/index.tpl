@@ -14,8 +14,8 @@
 {include file="layout/backend/header.tpl"}
 
 <div id="settingsContainer" class="maxHeight h--50">
-	{include file="backend/quickSearch/form.tpl" formid="SettingsSearch" classNames="SearchableItem"}
 	<div class="treeContainer">
+		{include file="backend/quickSearch/form.tpl" limit=10 hint=_hint_settings_search formid="SettingsSearch" classNames="SearchableItem"}
 		<div id="settingsBrowser" class="treeBrowser"></div>
 	</div>
 

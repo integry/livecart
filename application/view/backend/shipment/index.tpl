@@ -215,7 +215,6 @@
 	{/literal}{/foreach}{literal}
 
 	groupList.createSortable(true);
-
 	</script>
 	{/literal}
 

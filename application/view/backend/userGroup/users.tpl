@@ -38,43 +38,6 @@
 	{/literal}
 </fieldset>
 
-<fieldset class="container activeGridControls">
-
-	<span class="activeGridMass" {denied role="user.mass"}style="visibility: hidden;"{/denied} id="userMass_{$userGroupID}" >
-
-		{form action="controller=backend.user action=processMass id=$userGroupID" method="POST" handle=$massForm onsubmit="return false;"}
-
-		<input type="hidden" name="filters" value="" />
-		<input type="hidden" name="selectedIDs" value="" />
-		<input type="hidden" name="isInverse" value="" />
-
-		{t _with_selected}:
-		<select name="act" class="select">
-			<option value="enable_isEnabled">{t _enable}</option>
-			<option value="disable_isEnabled">{t _disable}</option>
-			<option value="delete">{t _delete}</option>
-		</select>
-
-		<span class="bulkValues" style="display: none;">
-
-		</span>
-
-		<input type="submit" value="{tn _process}" class="submit" />
-		<span class="progressIndicator" style="display: none;"></span>
-
-		{/form}
-
-	</span>
-
-	<span class="activeGridItemsCount">
-		<span id="userCount_{$userGroupID}">
-			<span class="rangeCount" style="display: none;">{t _listing_users}</span>
-			<span class="notFound" style="display: none;">{t _no_users}</span>
-		</span>
-	</span>
-
-</fieldset>
-
 {literal}
 <script type="text/javascript">
 	Backend.UserGroup.GridFormatter.userUrl = '{/literal}{backendUserUrl}{literal}';
@@ -91,6 +54,9 @@
 	totalCount=$totalCount
 	container="tabPageContainer"
 	dataFormatter="Backend.UserGroup.GridFormatter"
+	count="backend/userGroup/count.tpl"
+	massAction="backend/userGroup/massAction.tpl"
+	advancedSearch=true
 }
 
 </div>

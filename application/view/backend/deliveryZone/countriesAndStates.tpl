@@ -12,23 +12,23 @@
 	<fieldset class="checkbox error">
 		{checkbox name="isEnabled" id="countriesAndStates_isEnabled_`$zoneID`" class="checkbox observed"}
 		<span class="progressIndicator" style="display: none;"></span>
-		<label class="checkbox" for="countriesAndStates_isEnabled_{$zoneID}">{t _is_enabled}</label>
+		<label class="checkbox" for="countriesAndStates_isEnabled_{$zoneID}">{tip _is_enabled}</label>
 	</fieldset>
 
 	<fieldset class="checkbox error">
 		{checkbox name="isFreeShipping" id="countriesAndStates_isFreeShipping_`$zoneID`" class="checkbox observed"}
 		<span class="progressIndicator" style="display: none;"></span>
-		<label class="checkbox" for="countriesAndStates_isFreeShipping_{$zoneID}">{t _is_free_shipping}</label>
+		<label class="checkbox" for="countriesAndStates_isFreeShipping_{$zoneID}">{tip _is_free_shipping}</label>
 	</fieldset>
 
 	<fieldset class="checkbox error">
 		{checkbox name="isRealTimeDisabled" id="countriesAndStates_isRealTimeDisabled_`$zoneID`" class="checkbox observed"}
 		<span class="progressIndicator" style="display: none;"></span>
-		<label class="checkbox" for="countriesAndStates_isRealTimeDisabled_{$zoneID}">{t _is_real_time_disabled}</label>
+		<label class="checkbox" for="countriesAndStates_isRealTimeDisabled_{$zoneID}">{tip _is_real_time_disabled}</label>
 	</fieldset>
 
 
-	<label>{t _country}</label>
+	<label>{tip _country}</label>
 	<fieldset class="error">
 		{selectfield name="activeCountries" size="15" class="countriesAndStates_activeCountries" multiple="multiple" options=$selectedCountries}
 		<input type="button" value="&lt;&lt;" class="submit countriesAndStates_addCountry" {denied role='delivery.update'}style="display: none"{/denied} />
@@ -44,7 +44,7 @@
 		</div>
 	</fieldset>
 
-	<label>{t _state}</label>
+	<label>{tip _state}</label>
 	<fieldset class="error">
 		<div style="float: left;">
 			{selectfield name="activeStates" size="17" options=$selectedStates class="countriesAndStates_activeStates" multiple="multiple"}
@@ -62,7 +62,7 @@
 	</fieldset>
 
 	<fieldset class="countriesAndStates_cityMasks error">
-		<label>{t _city_mask}</label>
+		<label>{tip _city_mask}</label>
 		<fieldset>
 			<script type="text/jscript">
 				{literal}
@@ -94,7 +94,7 @@
 	</fieldset>
 
 	<fieldset class="countriesAndStates_zipMasks error">
-		<label>{t _zip_mask}</label>
+		<label>{tip _zip_mask}</label>
 		<fieldset>
 			<script type="text/jscript">
 				{literal}
@@ -126,7 +126,7 @@
 	</fieldset>
 
 	<fieldset class="countriesAndStates_addressMasks error">
-		<label>{t _address_mask}</label>
+		<label>{tip _address_mask}</label>
 		<fieldset>
 			<script type="text/jscript">
 				{literal}

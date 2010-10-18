@@ -123,3 +123,22 @@ div.multi
 {
 	margin: 1em;
 }
+
+#SettingsSearchResultOuterContainer
+{
+	left:-5px;
+	margin-top:-3px;
+	right:auto;
+	top:auto;
+	width:253px;
+}
+
+#SettingsSearchQuery
+{
+	font-size: 14px;
+}
+
+#SettingsSearchContainer h3
+{
+	display: none;
+}

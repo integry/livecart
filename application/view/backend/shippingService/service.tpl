@@ -11,28 +11,28 @@
 	<fieldset class="error">
 		<label></label>
 		{checkbox name="isFinal" class="checkbox observed shippingService_isFinal" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_isFinal"}
-		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_isFinal" class="checkbox wide">{t _disable_other_services}</label>
+		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_isFinal" class="checkbox wide">{tip _disable_other_services}</label>
 	</fieldset>
 
 	<fieldset class="error rangeType">
 		<label ></label>
 		{radio name="rangeType" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_weight" class="checkbox shippingService_rangeType" value="0"}
-		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_weight" class="checkbox">{t _weight_based_calculations}</label>
+		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_weight" class="checkbox">{tip _weight_based_calculations}</label>
 	</fieldset>
 
 	<fieldset class="error rangeType">
 		<label></label>
 		{radio name="rangeType" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_subtotal" class="checkbox shippingService_rangeType" value="1"}
-		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_subtotal" class="checkbox">{t _subtotal_based_calculations}</label>
+		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_subtotal" class="checkbox">{tip _subtotal_based_calculations}</label>
 	</fieldset>
 
 	<fieldset class="error rangeTypeStatic">
-		<label>{t _range_type}</label>
-		<label style="width: auto;">{if $service.rangeType == 0}{t _weight_based_calculations}{else}{t _subtotal_based_calculations}{/if}</label>
+		<label>{tip _range_type}</label>
+		<label style="width: auto;">{if $service.rangeType == 0}{tip _weight_based_calculations}{else}{tip _subtotal_based_calculations}{/if}</label>
 	</fieldset>
 
 	<div class="expectedDeliveryInterval">
-		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_deliveryTimeMinDays">{t _expected_delivery_time}:</label>
+		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_deliveryTimeMinDays">{tip _expected_delivery_time}</label>
 		<fieldset class="error">
 			{textfield name="deliveryTimeMinDays" class="number observed shippingService_deliveryTimeMinDays" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_deliveryTimeMinDays"}
 			<span class="errorText hidden"> </span>
@@ -46,16 +46,17 @@
 	</div>
 	<div class="clear"></div>
 
-	<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_description">{t _description}</label>
+	<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_description">{tip _description}</label>
 	<fieldset class="error">
 		{textarea name="description" class="observed shippingService_description" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_description"}
 		<span class="errorText hidden"></span>
 	</fieldset>
 
 	<fieldset class="shippingService_rates ">
+		<legend>{t _shipping_service_rates}</legend>
 		{include file="backend/shippingService/rateTable.tpl"}
 
-		<fieldset class="error">
+		<fieldset class="error" style="display: none;">
 			<ul class="activeList {allowed role='delivery.update'}activeList_add_delete{/allowed} shippingService_ratesList" id="shippingService_ratesList_{$service.DeliveryZone.ID}_{$service.ID}"></ul>
 			<fieldset class="container" {denied role='delivery.update'}style="display: none"{/denied}>
 				<ul class="menu" id="shippingService_rate_menu_{$service.DeliveryZone.ID}_{$service.ID}">
@@ -63,11 +64,11 @@
 					<li style="display:none;" class="addNewRateCancel" style="display: none"><a href="#cancel_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_cancel">{t _cancel_adding_new_rate}</a></li>
 				</ul>
 			</fieldset>
-			
+
 			<fieldset class="shippingService_new_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_form" style="display: none">
 				{include file="backend/shippingService/rate.tpl" rate=$newRate}
 			</fieldset>
-		
+
 			<script type="text/jscript">
 				{literal}
 				Backend.DeliveryZone.ShippingRate.prototype.newRate = {/literal}{json array=$newRate}{literal}
@@ -101,7 +102,7 @@
 			{textfield name="name_`$lang.ID`" class="observed" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_name_`$lang.ID`"}
 			<span class="errorText hidden"> </span>
 		</fieldset>
-		
+
 		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_description_{$lang.ID}">{t _description}</label>
 		<fieldset class="error">
 			{textarea name="description_`$lang.ID`" class="observed" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_description_`$lang.ID`"}

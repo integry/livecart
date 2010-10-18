@@ -21,7 +21,7 @@ class BackendToolbarItem extends ActiveRecordModel
 		$schema = self::getSchemaInstance($className);
 		$schema->setName(__CLASS__);
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARField("ownerID", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("ownerID", "User", "ID", "User", ARInteger::instance()));
 		$schema->registerField(new ARField("menuID", ARVarchar::instance(16)));
 		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", "Product", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("userID", "User", "ID", "User", ARInteger::instance()));
@@ -46,6 +46,13 @@ class BackendToolbarItem extends ActiveRecordModel
 	public static function registerLastViewedProduct(Product $product)
 	{
 		self::registerLastViewed(array('productID' => $product->getID(), 'instance'=>$product));
+		$schema->registerField(new ARField("productID", ARInteger::instance()));
+		$schema->registerField(new ARField("userID", ARInteger::instance()));
+		$schema->registerField(new ARField("orderID", ARInteger::instance()));
+		$schema->registerField(new ARField("position", ARInteger::instance()));
+		/*
+		 * TODO: do i need to define product, user, order ids as ARForeignKeyField()?
+		 */
 	}
 
 	public static function getNewInstance($data)
@@ -99,6 +106,7 @@ class BackendToolbarItem extends ActiveRecordModel
 			if (array_key_exists($type, $m))
 			{
 				$conditions[] = isnotnull(f(__CLASS__.'.'.$m[$type]));
+
 			}
 		}
 		if (count($conditions))

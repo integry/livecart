@@ -90,7 +90,7 @@ class OrderedItemController extends StoreManagementController
 				$shipment->save();
 			}
 			$resp = $this->save($item, $shipment, $existingItem ? true : false );
-			
+
 			if (array_key_exists('errors', $resp))
 			{
 				$saveResponse['errors'] = array_merge($saveResponse['errors'], $resp['errors']);
@@ -105,8 +105,8 @@ class OrderedItemController extends StoreManagementController
 		{
 			unset($saveResponse['errors']);
 		}
-		
-		
+
+
 		if (isset($saveResponse['errors']))
 		{
 			$response =  new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_unable_to_update_items_quantity'));
@@ -188,7 +188,8 @@ class OrderedItemController extends StoreManagementController
 						'taxAmount' => (float)$shipment->taxAmount->get(),
 						'total' => (float)$shipment->shippingAmount->get() + (float)$shipment->amount->get() + (float)$shipment->taxAmount->get(),
 						'prefix' => $shipment->getCurrency()->pricePrefix->get(),
-						'suffix' => $shipment->getCurrency()->priceSuffix->get()
+						'suffix' => $shipment->getCurrency()->priceSuffix->get(),
+						'Order' => $shipment->order->get()->toFlatArray(),
 					),
 					'count' => $item->count->get(),
 					'price' => $item->price->get(),
@@ -203,7 +204,7 @@ class OrderedItemController extends StoreManagementController
 			return array(
 				'errors' => $validator->getErrorList()
 			);
-			
+
 			//return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_unable_to_update_items_quantity'));
 		}
 	}
@@ -333,7 +334,8 @@ class OrderedItemController extends StoreManagementController
 												'taxAmount' => $shipment->taxAmount->get(),
 												'total' =>((float)$shipment->shippingAmount->get() + (float)$shipment->amount->get() + (float)$shipment->taxAmount->get()),
 												'prefix' => $shipment->getCurrency()->pricePrefix->get(),
-												'suffix' => $shipment->getCurrency()->priceSuffix->get()
+												'suffix' => $shipment->getCurrency()->priceSuffix->get(),
+												'Order' => $shipment->order->get()->toFlatArray()
 											 ),
 						'count'		   => $item->count->get(),
 						'price'		   => $item->price->get(),
@@ -425,7 +427,8 @@ class OrderedItemController extends StoreManagementController
 								'taxAmount' => $newShipment->taxAmount->get(),
 								'total' => ((float)$newShipment->shippingAmount->get() + (float)$newShipment->amount->get() + (float)$newShipment->taxAmount->get()),
 								'prefix' => $newShipment->getCurrency()->pricePrefix->get(),
-								'suffix' => $newShipment->getCurrency()->priceSuffix->get()
+								'suffix' => $newShipment->getCurrency()->priceSuffix->get(),
+								'Order' => $newShipment->order->get()->toFlatArray()
 							)
 						),
 						'success',
@@ -490,7 +493,7 @@ class OrderedItemController extends StoreManagementController
 				'ID' => $item->getID(),
 				'Shipment' => array(
 					'ID' => $shipment->getID(),
-					'Order' => array('ID' => $item->customerOrder->get()->getID()),
+					'Order' => $item->customerOrder->get()->toFlatArray(),
 					'isDeleted' => $item->isDeleted(),
 					'amount' => $shipment->amount->get(),
 					'downloadable' => !$shipment->isShippable(),

@@ -88,6 +88,11 @@ _Filter_displayLocation=Display location
 _side_menu=Side menu
 _top_menu=Top menu
 
+_tip_Filter_associated_field=All filters are based on a particular product attribute
+_tip_Filter_name=Filter name can be different than the product attribute the filter is based on
+_tip_Filter_displayLocation=Filters can be displayed in 2 ways: <ul><li>as links or checkboxes in the side menu</li><li>as drop-down boxes at the top of the product list. This option allows to create sequential and controlled product drill-down, which is useful, for example, for parts searching (select make first, then model, then year, etc.)</li></ul>
+_tip_Filter_filters=Create individual filters, which are based on ranges of the attribute values
+
 # Product
 _product_information_was_saved=Product information was saved successfully
 _notification_product_was_successfuly=Product was added successfully. You may now add another product.
@@ -202,4 +207,4 @@ _tip_SpecField_valueSuffix=Automatically append entered number when displaying i
 _tip_SpecField_is_required=Attribute field value cannot be left blank
 _tip_SpecField_displayed_on_front_page=Display attribute value in the detailed specification section of the product page
 _tip_SpecField_displayed_in_product_list=Intended for a quick overview of the main attributes. Displayed without the field names (by default). For example for computers, the whole attribute display might look like this - <em>AMD Dual Core / 2.2 GHz / 2 GB / 250 GB</em>
-_tip_SpecField_sortable=Add the attribute to sorting choice menu
+_tip_SpecField_sortable=Add the attribute to product sorting choice menu

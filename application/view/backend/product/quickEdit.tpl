@@ -2,8 +2,7 @@
 
 {form handle=$productForm action="controller=backend.product action=saveQuickEdit id=`$product.ID`" id="product_`$product.ID`_quick_form" onsubmit="return false;" method="post" role="product.update"}
 	<input type="hidden" name="categoryID" value="{$cat}" />
-	<fieldset>
-		<legend>{t _quick_edit}</legend>
+	<fieldset class="quickEditOuterContainer">
 
 		<fieldset class="container" {denied role="product.update"}style="display: none"{/denied}>
 			<ul class="menu" id="prodImgMenu_{$product.ID}">
@@ -12,26 +11,32 @@
 			</ul>
 		</fieldset>
 
+		<p>
+			<label></label>
+			{checkbox name="isEnabled" class="checkbox isEnabled" id="{uniqid}"}
+			<label class="checkbox" for="{uniqid last=true}">{t _enabled}</label>
+		</p>
+
 		<p class="required">
 			<label for="product_{$cat}_{$product.ID}_name">{t _product_name}:</label>
 			<fieldset class="error">
-				{textfield name="name" id="product_`$cat`_`$product.ID`_name" class="wide"}
+				{textfield name="name" id="product_`$cat`_`$product.ID`_name" class="wide text"}
 				<div class="errorText hidden"></div>
 			</fieldset>
 		</p>
 		<p class="required">
-			<label for="product_{$cat}_{$product.ID}_sku" class="acronym"><a>{t _sku_code}<div>{t _hint_sku}</div></a>:</label>
+			<label for="product_{$cat}_{$product.ID}_sku">{t _sku_code}:</label>
 			<fieldset class="error">
-				{textfield name="sku" id="product_`$cat`_`$product.ID`_sku" class="product_sku"}
+				{textfield name="sku" id="product_`$cat`_`$product.ID`_sku" class="product_sku text"}
 				<div class="errorText hidden"></div>
 			</fieldset>
 		</p>
-		
+
 		<p class="required">
 		<label for="product_price_{$cat}_{$product.ID}_{$baseCurrency}">{t _pricing}:</label>
 		<fieldset class="error">
-			{textfield name="price_$baseCurrency" class="money price" id="product_price_`$cat`_`$product.ID`_`$baseCurrency`"} {$baseCurrency}
-			 <div class="errorText hidden"></div> 
+			{textfield name="price_$baseCurrency" class="text money price" id="product_price_`$cat`_`$product.ID`_`$baseCurrency`"} {$baseCurrency}
+			 <div class="errorText hidden"></div>
 
 			{*
 			<span class="listPrice">
@@ -54,11 +59,11 @@
 			<p {if $productForm|isRequired:"stockCount"}class="required"{/if}>
 				<label for="product_stockCount_{$cat}_{$product.ID}">{t _items_in_stock}:</label>
 				<fieldset class="error">
-					{textfield name="stockCount" class="number" id="product_stockCount_`$cat`_`$product.ID`"}
+					{textfield name="stockCount" class="text number" id="product_stockCount_`$cat`_`$product.ID`"}
 					<div class="errorText hidden"></div>
 				</fieldset>
 			</p>
 		</div>
+		{include file="block/activeGrid/quickEditControls.tpl"}
 	</fieldset>
-	{include file="block/activeGrid/quickEditControls.tpl"}
 {/form}

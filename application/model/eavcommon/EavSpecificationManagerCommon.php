@@ -101,6 +101,25 @@ abstract class EavSpecificationManagerCommon
 		unset($this->removedAttributes[$specField->getID()]);
 	}
 
+	public function getAttributes()
+	{
+		return $this->attributes;
+	}
+
+	public function getAttributesByGroup(EavFieldGroupCommon $group)
+	{
+		$res = array();
+		foreach ($this->attributes as $attribute)
+		{
+			if ($attribute->getField()->get()->getGroup()->get() === $group)
+			{
+				$res[] = $attribute;
+			}
+		}
+
+		return $res;
+	}
+
 	/**
 	 * Removes persisted product specification property
 	 *

@@ -6,12 +6,18 @@
 	<div class="shipmentStatus_{$shipment.status}">
 		{include file="backend/shipment/shipmentControls.tpl" status=$shipment.status notShippable=$notShippable}
 
-		<table class="orderShipmentsItem_info shipmentTableHeading" style="font-size: smaller; color: #888;">
+		<table class="orderShipmentsItem_info shipmentTableHeading" style="font-size: smaller; display: table;">
 			<tbody>
 			  <tr>
 				<td class="orderShipmentsItem_info_sku_td">
+					<div class="orderShipmentsItem_info_sku">
+						{t _sku}
+					</div>
 				</td>
 				<td class="orderShipmentsItem_info_name_td">
+					<div class="orderShipmentsItem_info_name">
+						{t _name}
+					</div>
 				</td>
 				<td class="orderShipmentsItem_info_price_td">
 					<div class="orderShipmentsItem_info_price">

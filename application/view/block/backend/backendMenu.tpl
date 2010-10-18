@@ -1,4 +1,4 @@
-<div id="menuDescription"></div>
+<div id="menuDescription" style="display: none;"></div>
 
 <ul style="display: none;">
 	<li id="navTopItem-template">

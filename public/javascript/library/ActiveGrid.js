@@ -138,7 +138,18 @@ ActiveGrid.prototype =
 	{
 		this.quickEditUrlTemplate = urlTemplate;
 		this.quickEditIdToken = idToken;
-		Event.observe(this.tableInstance.down('tbody'), 'mouseover', this.quickEdit.bindAsEventListener(this) );
+
+		$A(this.tableInstance.down('tbody').getElementsByTagName('tr')).each(function(row)
+		{
+			Event.observe(row, 'mouseover',
+				function(e)
+				{
+					window.lastQuickEditNode = Event.element(e);
+					window.setTimeout(function() { this.quickEdit(e); }.bind(this), 200);
+				}.bindAsEventListener(this) );
+		}.bind(this));
+
+		Event.observe(this.tableInstance.down('tbody'), 'mouseout', function() { window.lastQuickEditNode = null; } );
 		Event.observe(document.body, 'mouseover', this.quickEditMouseover.bindAsEventListener(this) );
 		Event.observe(this._getQuickEditContainer(), 'click', this.quickEditContainerClicked.bindAsEventListener(this) );
 	},
@@ -149,6 +160,16 @@ ActiveGrid.prototype =
 			node = Event.element(event),
 			recordID = null,
 			m;
+
+		if (window.lastQuickEditNode != node)
+		{
+			return;
+		}
+
+		if (this.activeRow)
+		{
+			this.activeRow.removeClassName('activeGrid_highlightQuickEdit');
+		}
 
 		if (node.tagName.toLowerCase != "tr")
 		{
@@ -201,6 +222,8 @@ ActiveGrid.prototype =
 					container.style.left=(pos[0])+"px";
 					container.style.top=(pos[1])+"px";
 					container.show();
+					node.addClassName('activeGrid_highlightQuickEdit');
+					this.activeRow = node;
 
 					if (this.quickEditContainerState == "hidden") // ignore "changed" state!
 					{
@@ -240,9 +263,20 @@ ActiveGrid.prototype =
 
 	hideQuickEditContainer : function()
 	{
-		var container=this._getQuickEditContainer().hide();
+		var container = this._getQuickEditContainer();
+		if (!container)
+		{
+			return;
+		}
+
+		if (this.activeRow)
+		{
+			this.activeRow.removeClassName('activeGrid_highlightQuickEdit');
+		}
+
 		container.innerHTML = "";
 		container.hide();
+
 		this.containerState = "hidden";
 	},
 
@@ -728,7 +762,7 @@ ActiveGridFilter.prototype =
 			{
 				drd.hide();
 			}
-			
+
 		}
 		this.setFilterValue();
 	},
@@ -1174,7 +1208,7 @@ ActiveGridAdvancedSearch.prototype =
 	{
 		this.conditions[condition.getId()] = condition;
 	},
-	
+
 	initialize: function(id)
 	{
 		this.id = id;
@@ -1284,7 +1318,7 @@ ActiveGridAdvancedSearch.prototype =
 		var
 			container = element.up('li'),
 			condition = this.getCondition(container.down('.condition').value);
-		
+
 		if(this.lastConditionContainer == container && condition.isFilled(container))
 		{
 			this.appendCondition();
@@ -1349,11 +1383,23 @@ ActiveGridAdvancedSearch.prototype =
 		);
 		select.addClassName("condition");
 		this.lastConditionContainer = $(li);
+
+		this.nodes.root.addClassName('hasConditions');
+
 		return this.lastConditionContainer;
 	},
 
 	removeConditionPlaceholder: function(element)
 	{
+		if (element.up("ul").getElementsByTagName("li").length > 1)
+		{
+			this.nodes.root.addClassName('hasConditions');
+		}
+		else
+		{
+			this.nodes.root.removeClassName('hasConditions');
+		}
+
 		element.up("ul").removeChild(element.up("li"));
 		this.setActiveGridFilterValues();
 	},
@@ -1387,7 +1433,7 @@ ActiveGridAdvancedSearchCondition.prototype =
 	{
 		return this.name;
 	},
-	
+
 	getId: function()
 	{
 		return this.id;

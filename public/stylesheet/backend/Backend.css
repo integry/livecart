@@ -235,7 +235,6 @@ html, body{
 	z-index: 7000;
 	position: relative;
 	float: right;
-	margin-top: 7px;
 	margin-right: 10px;
 }
 
@@ -1073,6 +1072,27 @@ label.cancel
     padding-left: 0px;
 }
 
+.clearfix:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+
+.clearfix {
+	display: inline-block;
+}
+
+html[xmlns] .clearfix {
+	display: block;
+}
+
+* html .clearfix {
+	height: 1%;
+}
+
 p.required label, fieldset.required label, label.required
 {
   	font-weight: bold;
@@ -1292,6 +1312,14 @@ label.wide
 select.narrow
 {
     width: 5em;
+}
+
+label.param,
+td.param
+{
+	color: #777;
+	width: 140px;
+	font-size: smaller;
 }
 
 .button.browse
@@ -2067,6 +2095,21 @@ a.external
 	z-index: 10000;
 }
 
+.quickEditOuterContainer
+{
+	background-color: #eff;
+	-moz-border-radius: 0 0 10px 10px;
+	border-top-width: 0;
+	padding: 0.5em;
+}
+
+.quickEditOuterContainer,
+.activeGrid_highlightQuickEdit,
+.quickEditOuterContainer td
+{
+	border-color: #bcc !important;
+}
+
 .quickEditContainer
 {
 	position:absolute;
@@ -2075,7 +2118,6 @@ a.external
 	width:90%;
 	margin:27px 5% 0 5%;
 	z-index:10;
-	background-color:whitesmoke;
 }
 
 .qePrice
@@ -2087,7 +2129,6 @@ table.qeOrderPrices,
 table.qeProducts
 {
 	white-space:nowrap;
-	float:right;
 }
 
 table.qeOrderPrices
@@ -2095,8 +2136,8 @@ table.qeOrderPrices
 	margin-bottom:8px;
 }
 
-table.qeProducts{
-	width:100%;
+table.qeProducts td{
+	padding: 3px;
 }
 
 .qeStrong
@@ -2109,17 +2150,70 @@ table.qeProducts{
 	text-align:right;
 }
 
+.quickEditOuterContainer td
+{
+	border-width: 1px;
+	border-style: solid;
+}
+
+.quickEditOuterContainer .even
+{
+	background-color: #eef;
+}
+
+.quickEditOuterContainer .odd
+{
+	background-color: #eff;
+}
+
+.quickEditOuterContainer a.cancel
+{
+	font-size: smaller;
+}
+
+.quickEditContainer input.text,
+.quickEditContainer input.password,
+.quickEditContainer select
+{
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+
+/*************************
+	Quick search
+*************************/
+
 #SettingsSearchContainer,
 #QuickSearchContainer
 {
-	width:320px;
-}
-#QuickSearchContainer
-{
-	right:0;
-	position:absolute;
+	width: 320px;
 }
 
+#QuickSearchQuery
+{
+	width: 230px;
+	font-size: 11px;
+}
+
+.quickSearchInput.hasHint
+{
+	color: #aaa;
+	background-image: url(../../image/silk/magnifier.png);
+	background-position: 4px center;
+	background-repeat: no-repeat;
+	text-indent: 20px;
+}
+
+#QuickSearchQuery.progressIndicator
+{
+	padding: 2px;
+	height: auto;
+}
+
+#QuickSearchContainer
+{
+	display: inline;
+}
 
 #SettingsSearchResult,
 #SettingsSearchQuery
@@ -2127,41 +2221,29 @@ table.qeProducts{
 	width:250px !important;
 }
 
-a.deleteCross
+.qsPaginate
 {
-	font-weight: bold;
-	background: url(../../image/silk/cross.png) center left no-repeat;
-	padding-left: 22px;
+	margin-top: 4px;
 }
 
-.advancedQueryItems li
-{
-	list-style-type: none;
-}
-
-.value, .value2
-{
-	width: 150px;
-}
-
-/*************** quick search *************/
 .QuickSearchResultOuterContainer
 {
 	position:absolute;
-	left:0;
+	right:5px;
 	top:38px;
 	background-color: white;
-	width: 100%;
+	width: 224px;
 	border-width: 1px;
 	border: 1px solid #ccc;
 	-moz-border-radius: 10px;
 	z-index:200 !important;
+	text-align: left;
+	padding: 7px;
 }
-
 
 #ProductSearchResultOuterContainer
 {
-position:static;
+	position:static;
 }
 
 .QuickSearchResult
@@ -2202,6 +2284,27 @@ position:static;
 .qsResults
 {
 	display: none;
+}
+
+/************************
+	Advanced search
+*************************/
+
+a.deleteCross
+{
+	font-weight: bold;
+	background: url(../../image/silk/cross.png) center left no-repeat;
+	padding-left: 22px;
+}
+
+.advancedQueryItems li
+{
+	list-style-type: none;
+}
+
+.value, .value2
+{
+	width: 150px;
 }
 
 /************** Tooltips **************/
