@@ -590,7 +590,7 @@ LiveCart.FileUpload.prototype =
 
 		var target = document.createElement('iframe');
 		target.setAttribute('name', 'upload_iframe_' + Math.round(Math.random() * 1000000000000000));
-		target.setAttribute('style', 'width: 700px; height: 400px;');
+		target.setAttribute('style', 'display: none;');
 
 		document.body.appendChild(target);
 
