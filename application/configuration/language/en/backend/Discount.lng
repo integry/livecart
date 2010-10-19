@@ -128,3 +128,16 @@ RuleActionChangeTaxClass=Change tax class
 
 _currency=Currency
 _payment_method=Payment method
+
+_tip_stop_processing=Do not process any further rules if this rule is matched. Rules are processed in order of priority.
+_tipDiscountCondition.name=Can be displayed to customers in some cases, for example, when applying a fixed amount discount, which is added to order summary as a new line item
+_tipDiscountCondition.couponCode=Only process this rule if coupon code is entered. To create a simple coupon, there's no need to define additional discount conditions, only set the discount amount by adding an action to this rule.
+_tipDiscountCondition.couponLimitType=The number of times the coupon code is used can be limited either among all users (for example, create a limited offer of 100 coupons within the whole store) or by single user (for example, one customer can only use the same coupon code once).
+_tipDiscountCondition.couponLimitCount=Enter the number of times the coupon can be used according to the limit selection above
+_tipDiscountCondition.validFrom=Business rules can be automatically activated from a certain date
+_tipDiscountCondition.validTo=Business rules can automatically expire at a certain date
+_tipDiscountCondition.position=Rule processing order (the lower the number, the higher the priority).
+_tip_is_enabled_condition=Determines if the rule is active. Disabled rules are never used.
+_tip_all_items_must_be_present=If this checkbox is marked, the condition will only evaluate if all products, categories, manufacturers, etc. that have been added below must be matched by products added in the customer's shopping cart. Otherwise it will be enough for any item to match for the rule to evaluate.
+_tip_all_subconditions_must_match=Rule conditions can consist of multiple sub-conditions (and sub-sub-conditions, etc.). For the condition to evaluate, at least one of it's subconditions must evaluate as well, but by marking this checkbox, all sub-conditions will have to evaluate.
+_tip_action=Select an action to apply to order, if the rule condition(s) evaluate.

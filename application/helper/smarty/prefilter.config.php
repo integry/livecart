@@ -74,7 +74,7 @@ function smarty_prefilter_config($source, $smarty)
 	$source = preg_replace('/{block (.+?)}/', '{renderBlock block=$1}', $source);
 
 	// help system
-	$tipPattern = '([-_.a-zA-Z0-9@\/\$]+?)';
+	$tipPattern = '([\-_\.a-zA-Z0-9@\/\$]+?)';
 	$source = preg_replace('/{tip ' . $tipPattern . ' ' . $tipPattern . '}/', '{toolTip label=$1 hint=$2}', $source);
 	$source = preg_replace('/{tip ' . $tipPattern . '}/', '{toolTip label=$1}', $source);
 	$source = preg_replace('/{help (.+?)}/', '{helpLink id=$1}', $source);

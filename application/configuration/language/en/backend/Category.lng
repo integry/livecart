@@ -208,3 +208,14 @@ _tip_SpecField_is_required=Attribute field value cannot be left blank
 _tip_SpecField_displayed_on_front_page=Display attribute value in the detailed specification section of the product page
 _tip_SpecField_displayed_in_product_list=Intended for a quick overview of the main attributes. Displayed without the field names (by default). For example for computers, the whole attribute display might look like this - <em>AMD Dual Core / 2.2 GHz / 2 GB / 250 GB</em>
 _tip_SpecField_sortable=Add the attribute to product sorting choice menu
+
+_tip_ProductOption_is_required=Do not allow purchasing a product without choosing this option
+_tip_ProductOption_displayed_in_product_page=Display option selection in the product detail page
+_tip_ProductOption_displayed_in_cart=Display option selection in the shopping cart page
+_tip_ProductOption_price_included=Display option price with the base product price added to it (customers can instantly see what the total will be)
+_tip_ProductOption_type=There are several types of product options: <ul><li><strong>Checkbox</strong> - a true/false type of selection</li><li><strong>Selection</strong> - select one of multiple choices</li><li><strong>Text entry</strong> - customers can enter their own text (personalization, gift message, etc.)</li><li><strong>File upload</strong> - customers can upload their own files</li></ul>
+_tip_ProductOption_display_as=Available options can be presented either in a drop-down menu (requires a mouse click by customer to see the available choices, but takes less screen space) or radio buttons (all choices are always visible, but take more space)
+_tip_ProductOption_selectMessage=A text to display in the drop-down box before any option is selected
+_tip_option_price_diff=Amount to add to product base price if the option is selected. Leave blank if product price does not need to change. You can also enter negative price difference to reduce base product price (for example, for unselecting default options)
+_tip_ProductOption_description=Description of the product option, which will be displayed under the option selection in the product and cart pages
+_tip_option_name=The actual option selection type. For example, if this is an option for choosing product color, the values could be Red, Green, Blue, Black, etc.

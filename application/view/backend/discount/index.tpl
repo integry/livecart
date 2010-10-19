@@ -113,7 +113,7 @@
 
 					<span class="isReverseContainer">
 						<input type="checkbox" class="checkbox isReverse" name="isReverse" id="isReverse">
-						<label class="checkbox acronym"><a>{t _isReverse}<div>{t _isReverse_help}</div></a></label>
+						<label class="checkbox">{tip _isReverse _isReverse_help}</label>
 					</span>
 
 					<a href="#" class="subCondition">{t _add_subcondition}</a>
@@ -137,7 +137,7 @@
 				<div class="allItemsMenu">
 					<span>
 						<input type="checkbox" value="1" class="checkbox isAnyRecord" id="isAnyRecord" name="isAnyRecord" />
-						<label class="checkbox" for="isAnyRecord">{t _all_items_must_be_present}</label>
+						<label class="checkbox" for="isAnyRecord">{tip _all_items_must_be_present}</label>
 					</span>
 					<div class="clear"></div>
 				</div>
@@ -157,7 +157,7 @@
 				<div class="allSubsMenu">
 					<span>
 						<input type="checkbox" value="1" class="checkbox isAllSubconditions" id="isAllSubconditions" name="isAllSubconditions" />
-						<label class="checkbox" for="isAllSubconditions">{t _all_subconditions_must_match}</label>
+						<label class="checkbox" for="isAllSubconditions">{tip _all_subconditions_must_match}</label>
 					</span>
 					<div class="clear"></div>
 				</div>
@@ -196,7 +196,7 @@
 			<div class="clear"></div>
 
 			<p>
-				<label>{t _action}</label>
+				<label>{tip _action}</label>
 				<span>{selectfield name="actionClass" class="actionClass" options=$actionTypes}</span>
 			</p>
 
@@ -208,18 +208,18 @@
 					<span class="currency">{$currencyCode}</span>
 				</p>
 				<p>
-					<label class="acronym"><a>{t _discount_step}<div>{t _discount_step_descr}</div></a></label>
+					<label>{tip _discount_step _discount_step_descr}</label>
 					<span>{textfield name="discountStep" class="number discountStep"}</span>
 				</p>
 				<p>
-					<label class="acronym"><a>{t _discount_limit}<div>{t _discount_limit_descr}</div></a></label>
+					<label>{tip _discount_limit _discount_limit_descr}</label>
 					<span>{textfield name="discountLimit" class="number discountLimit"}</span>
 				</p>
 
 				<label></label>
 				<span>
 					<input type="checkbox" class="checkbox isOrderLevel" name="isOrderLevel" />
-					<label class="checkbox acronym"><a>{t _is_order_level}<div>{t _discount_isOrderLevel_descr}</div></a></label>
+					<label class="checkbox">{tip _is_order_level _discount_isOrderLevel_descr}</label>
 				</span>
 				<div class="clear"></div>
 			</div>

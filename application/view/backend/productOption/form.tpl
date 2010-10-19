@@ -14,16 +14,16 @@
 		<p class="checkbox">
 			<input type="checkbox" value="1" name="isRequired" class="checkbox productOption_form_isRequired" />
 			<input type="hidden" value="1" name="checkbox_isRequired" />
-			<label class="productOption_form_isRequired_label">{t _ProductOption_is_required}</label>
+			<label class="productOption_form_isRequired_label">{tip _ProductOption_is_required}</label>
 		</p>
 
 		<p class="checkbox">
 			<input type="checkbox" value="1" name="isDisplayed" class="checkbox productOption_form_isDisplayed" />
 			<input type="hidden" value="1" name="checkbox_isDisplayed" />
-			<label class="productOption_form_isDisplayed_label">{t _ProductOption_displayed_in_product_page}</label>
+			<label class="productOption_form_isDisplayed_label">{tip _ProductOption_displayed_in_product_page}</label>
 		</p>
 
-		<p class="checkbox">
+		<p class="checkbox" style="display: none;">
 			<input type="checkbox" value="1" name="isDisplayedInList" class="checkbox productOption_form_isDisplayedInList" />
 			<input type="hidden" value="1" name="checkbox_isDisplayedInList" />
 			<label class="productOption_form_isDisplayedInList_label">{t _ProductOption_displayed_in_list}</label>
@@ -32,17 +32,17 @@
 		<p class="checkbox">
 			<input type="checkbox" value="1" name="isDisplayedInCart" class="checkbox productOption_form_isDisplayedInCart" />
 			<input type="hidden" value="1" name="checkbox_isDisplayedInCart" />
-			<label class="productOption_form_isDisplayedInCart_label">{t _ProductOption_displayed_in_cart}</label>
+			<label class="productOption_form_isDisplayedInCart_label">{tip _ProductOption_displayed_in_cart}</label>
 		</p>
 
 		<p class="checkbox">
 			<input type="checkbox" value="1" name="isPriceIncluded" class="checkbox productOption_form_isPriceIncluded" />
 			<input type="hidden" value="1" name="checkbox_isPriceIncluded" />
-			<label class="productOption_form_isPriceIncluded_label">{t _ProductOption_price_included}</label>
+			<label class="productOption_form_isPriceIncluded_label">{tip _ProductOption_price_included}</label>
 		</p>
 
 		<p class="required">
-			<label class="productOption_form_type_label">{t _ProductOption_type}</label>
+			<label class="productOption_form_type_label">{tip _ProductOption_type}</label>
 			<fieldset class="error">
 				<select name="type" class="productOption_form_type">
 					<option value="0">{t _ProductOption_type_bool}</option>
@@ -66,7 +66,7 @@
 
 		<div class="optionSelectMessage">
 			<p>
-				<label class="productOption_form_displayType_label">{t _ProductOption_display_as}</label>
+				<label class="productOption_form_displayType_label">{tip _ProductOption_display_as}</label>
 				<fieldset class="error">
 					<select name="displayType" class="productOption_form_displayType">
 						<option value="0">{t _ProductOption_displayType_selectBox}</option>
@@ -77,7 +77,7 @@
 			</p>
 
 			<p>
-				<label class="productOption_form_selectMessage_label">{t _ProductOption_selectMessage}</label>
+				<label class="productOption_form_selectMessage_label">{tip _ProductOption_selectMessage}</label>
 				<fieldset class="error">
 					<input type="text" name="selectMessage" class="productOption_form_selectMessage"  />
 					<span class="errorText hidden"> </span>
@@ -87,11 +87,8 @@
 
 		<div class="optionFile">
 			<p>
-				<label class="productOption_form_fileExtensions_label acronym">
-					<a>
-						{t _ProductOption_fileExtensions}
-						<div>{t _ProductOption_fileExtensions_help}</div>
-					</a>
+				<label class="productOption_form_fileExtensions_label">
+						{tip _ProductOption_fileExtensions _ProductOption_fileExtensions_help}
 				</label>
 				<fieldset class="error">
 					<input type="text" name="fileExtensions" class="productOption_form_fileExtensions"  />
@@ -100,11 +97,9 @@
 			</p>
 
 			<p>
-				<label class="productOption_form_maxFileSize_label acronym">
-					<a>
-						{t _ProductOption_maxFileSize}
-						<div>{maketext text=_ProductOption_maxFileSize_help params=$maxUploadSize}</div>
-					</a>
+				<label class="productOption_form_maxFileSize_label">
+					{capture assign=maxTip}{maketext text=_ProductOption_maxFileSize_help params=$maxUploadSize}{/capture}
+					{tip _ProductOption_maxFileSize $maxTip}
 				</label>
 				<fieldset class="error">
 					<input type="text" name="maxFileSize" class="number productOption_form_maxFileSize"  /> {t _ProductOption_megabytes}
@@ -115,7 +110,7 @@
 
 		<div class="optionPriceContainer">
 			<p>
-				<label class="productOption_form_priceDiff_label">{t _option_price_diff}</label>
+				<label class="productOption_form_priceDiff_label">{tip _option_price_diff}</label>
 				<fieldset class="error">
 					<input type="text" name="priceDiff" class="number productOption_form_priceDiff"  />
 					{$defaultCurrencyCode}
@@ -126,7 +121,7 @@
 
 		<div>
 			<p>
-				<label class="productOption_form_description_label">{t _ProductOption_description}</label>
+				<label class="productOption_form_description_label">{tip _ProductOption_description}</label>
 				<fieldset class="error">
 					<textarea name="description" class="productOption_form_description" ></textarea>
 					<span class="errorText hidden"> </span>
@@ -143,12 +138,13 @@
 			</p>
 
 			<p class="optionSelectMessage">
-				<label class="translation_name_label">{t _ProductOption_selectMessage}</label>
+				<label class="translation_name_label">{toolTip label=_ProductOption_selectMessage hint=_tip_ProductOption_selectMessage}</label>
 				<input type="text" name="selectMessage_{$lang.ID}"  />
+
 			</p>
 
 			<p>
-				<label class="translation_description_label">{t _ProductOption_description}</label>
+				<label class="translation_description_label">{tip _ProductOption_description}</label>
 				<textarea name="description_{$lang.ID}" ></textarea>
 			</p>
 		{/language}
@@ -166,13 +162,13 @@
 					<ul class="activeList_add_sort activeList_add_delete">
 						<li class="dom_template productOption_form_values_value singleInput productOption_update" id="productOption_form_values_" style="display: block;">
 							<p>
-								<label>{t _option_name}</label>
+								<label>{tip _option_name}</label>
 								<fieldset class="container">
 									<input type="text" class="productOption_update productOption_valueName"  />
 									<span class="errorText hidden"> </span>
 								</fieldset>
 							<p>
-								<label>{t _option_price_diff}</label>
+								<label>{tip _option_price_diff}</label>
 								<input type="text" class="number productOption_valuePrice"  />
 								{$defaultCurrencyCode}
 							</p>
