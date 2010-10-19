@@ -5,8 +5,7 @@ ClassLoader::import('application.model.user.User');
 ClassLoader::import('application.model.discount.DiscountCondition');
 ClassLoader::import('application.model.discount.DiscountAction');
 ClassLoader::import('application.model.businessrule.RuleCondition');
-ClassLoader::import('application.model.businessrule.condition.*');
-ClassLoader::import('application.model.businessrule.action.*');
+ClassLoader::import('application.model.businessrule.condition.RuleConditionRoot');
 ClassLoader::import('application.model.businessrule.interface.*');
 
 /**
@@ -140,6 +139,17 @@ class BusinessRuleController
 
 	private function updateRuleCache()
 	{
+		$paths = array();
+		$app = ActiveRecordModel::getApplication();
+		foreach (array('condition', 'action') as $type)
+		{
+			$path = 'application.model.businessrule.' . $type;
+			foreach ($app->getPluginClasses($path) as $class)
+			{
+				$paths[$class] = $app->getPluginClassPath($path, $class);
+			}
+		}
+
 		$f = select(eq('DiscountCondition.isEnabled', true));
 		$f->setOrder(f('DiscountCondition.position'));
 		$conditions = ActiveRecord::getRecordSetArray('DiscountCondition', $f);
@@ -180,7 +190,7 @@ class BusinessRuleController
 		}
 
 		$rootCond = RuleCondition::createFromArray($idMap[DiscountCondition::ROOT_ID]);
-		file_put_contents(self::getRuleFile(), '<?php return "' . addslashes(serialize($rootCond->getConditions())) . '"; ?>');
+		file_put_contents(self::getRuleFile(), '<?php $paths = ' . var_export($paths, true) . '; foreach ($paths as $path) { include_once($path); } return "' . addslashes(serialize($rootCond->getConditions())) . '"; ?>');
 	}
 
 	private function getRuleFile()

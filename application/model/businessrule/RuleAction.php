@@ -36,6 +36,7 @@ abstract class RuleAction
 
 	public static function createFromArray(array $array)
 	{
+		ActiveRecordModel::getApplication()->loadPluginClass('application.model.businessrule.action', $array['actionClass']);
 		$inst = new $array['actionClass'];
 		if (!empty($array['condition']))
 		{

@@ -42,10 +42,10 @@ class DiscountController extends ActiveGridController
 						'subTotal' => $this->translate('_with_subTotal'),
 						));
 
-		$conditions = $this->getClasses(ClassLoader::getRealPath('application.model.businessrule.condition'));
+		$conditions = $this->getClasses('application.model.businessrule.condition');
 		unset($conditions['RuleConditionRoot']);
 		$response->set('conditionTypes', $conditions);
-		$response->set('actionTypes', $this->getClasses(ClassLoader::getRealPath('application.model.businessrule.action')));
+		$response->set('actionTypes', $this->getClasses('application.model.businessrule.action'));
 
 		$response->set('applyToChoices', array(
 						DiscountAction::TYPE_ORDER_DISCOUNT => $this->translate('_apply_order'),
@@ -546,18 +546,14 @@ class DiscountController extends ActiveGridController
 		return new Form($this->buildConditionValidator());
 	}
 
-	private function getClasses($dir)
+	private function getClasses($mountPath)
 	{
 		$classes = $order = array();
-		foreach(glob($dir . '/*') as $file)
+		foreach($this->application->getPluginClasses($mountPath) as $class)
 		{
-			include_once $file;
-			$class = basename($file, '.php');
-			if ($class)
-			{
-				$classes[$class] = $this->translate($class);
-				$order[$class] = call_user_func(array($class, 'getSortOrder'));
-			}
+			include_once $this->application->getPluginClassPath($mountPath, $class);
+			$classes[$class] = $this->translate($class);
+			$order[$class] = call_user_func(array($class, 'getSortOrder'));
 		}
 
 		asort($order);

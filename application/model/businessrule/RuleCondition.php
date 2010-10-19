@@ -174,6 +174,7 @@ abstract class RuleCondition
 			$array['conditionClass'] = 'RuleConditionRoot';
 		}
 
+		ActiveRecordModel::getApplication()->loadPluginClass('application.model.businessrule.condition', $array['conditionClass']);
 		$inst = new $array['conditionClass'];
 		$array['instance'] = $inst;
 

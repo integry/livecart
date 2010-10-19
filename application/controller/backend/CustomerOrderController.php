@@ -1330,7 +1330,7 @@ class CustomerOrderController extends ActiveGridController
 				'ProductName'=> array('name'=>'', 'type'=>'text'),
 				'Manufacturer'=> array('name'=>'', 'type'=>'text'),
 				'UsedCouponCode'=> array('name'=>'', 'type'=>'text'),
-				'OrderMessageText'=> array('name'=>'', 'type'=>'text')
+				'OrderMessageText'=> array('name'=>'', 'type'=>'text'),
 				'ProductOption' => array('name'=>'', 'type'=>'text')
 			)
 		);
