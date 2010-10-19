@@ -310,7 +310,7 @@ Backend.Product =
 				}
 				else
 				{
-					ActiveForm.prototype.setErrorMessages(this.obj.up("form"), response.errors)	
+					ActiveForm.prototype.setErrorMessages(this.obj.up("form"), response.errors)
 				}
 			}.bind({instance: this, obj:obj}));
 		}
@@ -332,7 +332,7 @@ Backend.Product =
 			return null;
 		}
 	},
-	
+
 	showQuickEditAddImageForm: function(control, productID, formUrl)
 	{
 		control = $(control);
@@ -817,7 +817,14 @@ Backend.Product.QuantityPrice = function(container, rules)
 	this.hiddenValue = container.parentNode.down('.hiddenValue');
 	this.headRow = container.down('thead').down('tr');
 
-	if (this.rules && this.rules.serializedRules && (this.rules.serializedRules != {}))
+	var hasSerialized = false;
+
+	if (this.rules && this.rules.serializedRules)
+	{
+		$H(this.rules.serializedRules).each(function(s) {hasSerialized = true;});
+	}
+
+	if (hasSerialized)
 	{
 		$H(this.rules.serializedRules).each(function(pair, index)
 		{

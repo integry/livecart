@@ -23,7 +23,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 {
 	private $isQuickEdit = false;
 	private $quickEditValidation = false;
-    
+
     public function index()
 	{
 
@@ -641,9 +641,9 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		}
 		$response->set('prices', $prices);
 
-		if ($this->isQuickEdit == false) // viewing in quick edit formd doe's not add to last viewed.
+		if ($this->isQuickEdit == false) // viewing in quick edit form does not add to last viewed.
 		{
-			BackendToolbarItem::registerLastViewedProduct($product); 
+			BackendToolbarItem::registerLastViewedProduct($product);
 		}
 
 		return $response;
@@ -854,7 +854,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 			if ($this->isQuickEdit == false)
 			{
-				BackendToolbarItem::registerLastViewedProduct($product); 
+				BackendToolbarItem::registerLastViewedProduct($product);
 			}
 			$response = $this->productForm($product);
 
@@ -902,11 +902,12 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$pricesData['shippingHiUnit'] = (int)$pricesData['shippingWeight'];
 		$pricesData['shippingLoUnit'] = ($pricesData['shippingWeight'] - $pricesData['shippingHiUnit']) * 1000;
 
-		if(array_key_exists('calculated', $pricesData))
+		if(array_key_exists('defined', $pricesData))
 		{
 			foreach ($pricesData['calculated'] as $currency => $price)
 			{
 				$pricesData['price_' . $currency] = isset($pricesData['defined'][$currency]) ? $pricesData['defined'][$currency] : '';
+				$productFormData['price_' . $currency] = $pricesData['price_' . $currency];
 			}
 		}
 

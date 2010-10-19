@@ -26,8 +26,8 @@
 		{foreach $order.cartItems as $cartIem}
 			<tr class="{zebra}">
 				<td class="qeProduct">
-					{if $cartIem.Product.name}
-						<a href="{link controller=backend.category query="rt=`$randomToken`"}#product_{$cartItems.productID}__">{$cartIem.Product.name|escape}</a>
+					{if $cartIem.Product.ID}
+						<a href="{link controller=backend.category query="rt=`$randomToken`"}#product_{$cartIem.Product.ID}__">{$cartIem.Product.name|escape}</a>
 					{else}
 						{$cartIem.name}
 					{/if}
