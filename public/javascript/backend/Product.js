@@ -638,8 +638,6 @@ Backend.Product.Editor.prototype =
 			}
 
 			this.resetPricingTab();
-
-  			Backend.SaveConfirmationMessage.prototype.showMessage(response.message);
 		}
 		else
 		{
