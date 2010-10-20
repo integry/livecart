@@ -255,7 +255,7 @@ html, body{
 {
 	position: relative;
 	background: url(../../image/backend/layout/footer_stretch.png) repeat-x left top;
-	padding: 10px;
+	padding: 5px 10px 15px 10px;
 	line-height: 19px;
 	margin-right: 1px;
 	border-top: 1px solid #D5E2FF;
@@ -710,15 +710,16 @@ br.clear, div.clear
 {
 	position: fixed;
 	bottom: 0; left: 0;
-	z-index: 100; /*--Keeps the panel on top of all other elements--*/
+	z-index: 1000; /*--Keeps the panel on top of all other elements--*/
 	background: #e3e2e2;
 	border: 1px solid #c3c3c3;
 	border-bottom: none;
 	width: 94%;
 	margin: 0 3%;
+	-moz-border-radius: 5px 5px 0 0;
 }
 
-#footpanel ul
+#mainpanel
 {
 	padding: 0; margin: 0;
 	float: left;
@@ -726,16 +727,17 @@ br.clear, div.clear
 	list-style: none;
 	border-top: 1px solid #fff; /*--Gives the bevel feel on the panel--*/
 	font-size: 1.1em;
+	-moz-border-radius: 5px 5px 0 0;
 }
 
-#footpanel ul li
+#footpanel ul li.dropButton
 {
 	padding: 0; margin: 0;
 	float: left;
 	position: relative;
 }
 
-#footpanel ul li a
+#mainpanel > li > a
 {
 	padding: 5px;
 	float: left;
@@ -746,12 +748,12 @@ br.clear, div.clear
 	position: relative;
 }
 
-html #footpanel ul li a:hover
+#mainpanel > li > a:hover
 {
 	background-color: #fff !important;
 }
 
-html #footpanel ul li a.active
+html #footpanel .subpanel ul li a.active
 { /*--Active state when sub-panel is open--*/
 	background-color: #fff;
 	height: 17px;
@@ -793,7 +795,7 @@ html #footpanel ul li a.active
 
 #footpanel a small {
 	text-align: center;
-	width: 70px;
+	width: 140px;
 	height: 16px;
 	background: url(../../image/pop_arrow.gif) no-repeat center bottom;
 	padding: 5px 5px 11px;
@@ -810,7 +812,7 @@ html #footpanel ul li a.active
 	position: absolute;
 	top: -35px; /*--Position tooltip 35px above the list item--*/
 	left: 50%;
-	margin-left: -40px; /*--Center the tooltip--*/
+	margin-left: -70px; /*--Center the tooltip--*/
 	z-index: 9999;
 }
 
@@ -826,9 +828,10 @@ html #footpanel ul li a.active
 #footpanel li#lastviewed
 {
 	float: right;
+	position: relative;
 }
 
-#footpanel ul li div a { /*--Reset link style for sub-panel links--*/
+#footpanel .subpanel ul li div a { /*--Reset link style for sub-panel links--*/
 	text-indent: 0;
 	width: auto;
 	height: auto;
@@ -837,7 +840,7 @@ html #footpanel ul li a.active
 	color: #00629a;
 	position: static;
 }
-#footpanel ul li div a:hover
+#footpanel .subpanel ul li div a:hover
 {
 	text-decoration: underline;
 }
@@ -854,14 +857,14 @@ html #footpanel ul li a.active
 	z-index:60000;
 }
 
-#footpanel h3 {
+#footpanel .subpanel h3 {
 	background: #4C5D97;
 	padding: 5px 10px;
 	color: #fff;
 	font-size: 14px;
 	cursor: pointer;
 }
-#footpanel h3 span { /*--Right aligned "-" icon--*/
+#footpanel .subpanel h3 span { /*--Right aligned "-" icon--*/
 	font-size: 1.5em;
 	float: right;
 	line-height: 0.6em;
@@ -914,25 +917,21 @@ html #footpanel ul li a.active
 	padding:0;
 }
 
-#footpanel li#toolbarQS #QuickSearchQuery
+#footpanel li#toolbarQS #TBQuickSearchQuery
 {
 	width:180px !important;
-	margin-top:1px;
+	margin: 2px;
 	height:13px;
 	font-size:12px;
 }
 
-#footpanel li#toolbarQS #QuickSearchResultOuterContainer
+#footpanel li#toolbarQS #TBQuickSearchResultOuterContainer
 {
 	font-size:12px;
 	position: absolute;
 }
 
-#footpanel li#toolbarQS #QuickSearchResultOuterContainer .qsClassName 
-{
-	clear:both;
-}
-#footpanel li#toolbarQS #QuickSearchResultOuterContainer .qsCount
+#footpanel li#toolbarQS #TBQuickSearchResultOuterContainer .qsCount
 {
 	display: block;
 	position:absolute;

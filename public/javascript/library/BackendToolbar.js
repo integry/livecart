@@ -12,8 +12,8 @@ BackendToolbar.prototype = {
 		this.nodes.mainpanel = this.nodes.root.down("ul");
 		this.nodes.lastviewed = this.nodes.root.down(".lastviewed");
 		this.nodes.lastViewedIndicator = $("lastViewedIndicator");
-		this.nodes.quickSearchResult = $("QuickSearchResultOuterContainer");
-		this.nodes.quickSearchQuery = $("QuickSearchQuery");
+		this.nodes.quickSearchResult = $("TBQuickSearchResultOuterContainer");
+		this.nodes.quickSearchQuery = $("TBQuickSearchQuery");
 
 		// remove button from toolbar, if it is droped outside any droppable area
 		Droppables.add($(document.body), {
@@ -75,7 +75,7 @@ BackendToolbar.prototype = {
 		dropButtons = $A(this.nodes.mainpanel.getElementsByClassName("uninitializedDropButton"));
 		dropButtons.each(this.fillDropButtonWithData.bind(this));
 		this.updateDroppables();
-		
+
 		// -- last viewed
 		this.adjustPanel(this.nodes.lastviewed);
 		Event.observe(window, "resize", function()
@@ -129,7 +129,7 @@ BackendToolbar.prototype = {
 			}
 		);
 	},
-	
+
 	hideLastViewedMenu: function()
 	{
 		var a = this.nodes.lastviewed.down("a");
@@ -186,7 +186,7 @@ BackendToolbar.prototype = {
 						from = $(from);
 						if (from.hasClassName("dropButton"))
 						{
-							// dragging button, 
+							// dragging button,
 							this.sortIcons(from, to);
 						}
 						else
@@ -203,10 +203,10 @@ BackendToolbar.prototype = {
 	getButtonPosition: function(node)
 	{
 		var position;
-		
+
 		$A($(node).up("ul").getElementsByClassName("dropButton")).find(
 			function(item,i)
-			{ 
+			{
 				position = i;
 				return node == item;
 			}
@@ -340,7 +340,7 @@ BackendToolbar.prototype = {
 		var height = quickSearch.nodes.Result.getHeight();
 		quickSearch.nodes.Result.style.marginTop = "-" + (height + 40) + "px";
 	},
-	
+
 	// footerToolbar.invalidateLastViewed();
 	invalidateLastViewed: function()
 	{

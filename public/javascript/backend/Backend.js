@@ -279,7 +279,7 @@ Backend.LayoutManager.prototype =
 		// calculate content area height
 		var ph = new PopupMenuHandler();
 		var w = ph.getWindowHeight();
-		var h = w - 160 - (document.all ? 1 : 0);
+		var h = w - 185 - (document.all ? 1 : 0);
 		var cont = $('pageContentContainer');
 
 		if (BrowserDetect.browser == 'Explorer')
@@ -2299,7 +2299,7 @@ var tooltip=function(){
    var l = ie ? event.clientX + document.documentElement.scrollLeft : e.pageX;
    var y = u - h;
    var x = l + left;
-   
+
    if (y < 0)
    {
 	   y = 0;
@@ -2309,7 +2309,7 @@ var tooltip=function(){
    {
 	   x = 0;
    }
-   
+
    tt.style.top = y + 'px';
    tt.style.left = x + 'px';
   },

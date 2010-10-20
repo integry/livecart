@@ -13,9 +13,9 @@
 		{/foreach}
 
 		<li id="toolbarQS">
-			{include file="backend/quickSearch/form.tpl" formid="QuickSearch"}
+			{include file="backend/quickSearch/form.tpl" formid="TBQuickSearch"}
 		</li>
-			
+
 		<li id="lastviewed" class="lastviewed invalid"><a href="#" class="lastviewed">{t _last_viewed}</a>
 			<div class="subpanel">
 				<h3><span> &ndash; </span>{t _last_viewed}</h3>
@@ -37,7 +37,7 @@
 {literal}
 <script type="text/javascript">
 // global variable footerToolbar
-	footerToolbar = new BackendToolbar("footpanel", 
+	footerToolbar = new BackendToolbar("footpanel",
 		{
 			addIcon :  "{/literal}{link controller=backend.backendToolbar action=addIcon}?id=_id_&position=_position_{literal}",
 			removeIcon: "{/literal}{link controller=backend.backendToolbar action=removeIcon}?id=_id_&position=_position_{literal}",

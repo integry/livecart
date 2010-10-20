@@ -7,62 +7,41 @@
 	{if $result[$className].count > 0}
 		{if $fullSearch}
 			<div class="qsResultsContainer qs{$className}">
+			<h3 class="qsClassName{if 0 == $key} first{/if}">
+				{if $className == 'SearchableItem'}
+				{* <span class="qsName">{t _title_`$className`}</span> *}
+					{t _title_SearchableConfiguration}
+				{else}
+					{t _title_`$className`}
+				{/if}
+				<span class="qsCount">({$result[$className].count})</span>
+			</h3>
 		{/if}
-		<h3 class="qsClassName{if 0 == $key} first{/if}">
-			{if $className == 'SearchableItem'}
-			{* <span class="qsName">{t _title_`$className`}</span> *}
-				{t _title_SearchableConfiguration}
-			{else}
-				{t _title_`$className`}
-			{/if}
-		</h3>
-			<span class="qsCount">({$result[$className].count})</span>
-		</h3>
+		<div class="qsResultsContainer">
 		<ul>
 			{foreach $result[$className].records as $record}
 			<li>
 				{if $customResultTemplates[$className]}
 					{include file="backend/quickSearch/result_`$customResultTemplates[$className]`.tpl"}
-			<h3 class="qsClassName{if !$hasResult} first{/if}">
-				{if $className == 'SearchableItem'}
-					{t _title_SearchableConfiguration}
 				{else}
 					{include file="backend/quickSearch/result_`$className`.tpl"}
 				{/if}
 			</li>
 			{/foreach}
 		</ul>
+
 		{include file="backend/quickSearch/paginate.tpl"
 			from=$result[$className].from
 			to=$result[$className].to
 			count=$result[$className].count
 			class=$className}
+		</div>
 
 		{if $fullSearch}
 			</div>
 			<div class="qsSeperator"></div>
 		{/if}
-				<span class="qsCount">({$result[$className].count})</span>
-			</h3>
 
-			<ul>
-				{foreach $result[$className].records as $record}
-				<li>
-					{if $customResultTemplates[$className]}
-						{include file="backend/quickSearch/result_`$customResultTemplates[$className]`.tpl"}
-					{else}
-						{include file="backend/quickSearch/result_`$className`.tpl"}
-					{/if}
-				</li>
-				{/foreach}
-			</ul>
-			{include file="backend/quickSearch/paginate.tpl"
-				from=$result[$className].from
-				to=$result[$className].to
-				count=$result[$className].count
-				class=$className}
-		</div>
-		<div class="qsSeperator"></div>
 		{assign var="hasResult" value=true}
 	{/if}
 {/foreach}

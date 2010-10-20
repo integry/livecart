@@ -46,20 +46,13 @@ class BackendToolbarItem extends ActiveRecordModel
 	public static function registerLastViewedProduct(Product $product)
 	{
 		self::registerLastViewed(array('productID' => $product->getID(), 'instance'=>$product));
-		$schema->registerField(new ARField("productID", ARInteger::instance()));
-		$schema->registerField(new ARField("userID", ARInteger::instance()));
-		$schema->registerField(new ARField("orderID", ARInteger::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance()));
-		/*
-		 * TODO: do i need to define product, user, order ids as ARForeignKeyField()?
-		 */
 	}
 
 	public static function getNewInstance($data)
 	{
 		$item = new BackendToolbarItem();
 
-		$item->ownerID->set(SessionUser::getUser()->getID());
+		$item->owner->set(SessionUser::getUser());
 		foreach(array('productID', 'userID', 'orderID') as $fieldName)
 		{
 			if (array_key_exists($fieldName, $data))
@@ -186,7 +179,7 @@ class BackendToolbarItem extends ActiveRecordModel
 		return $itemArray;
 	}
 
-	public static function registerLastViewed($item)
+	public static function registerLastViewed($item, $instance = null)
 	{
 		$item['position'] = time();
 		$filter = new ARSelectFilter();

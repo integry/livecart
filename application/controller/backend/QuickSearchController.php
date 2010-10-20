@@ -76,7 +76,7 @@ class QuickSearchController extends StoreManagementController
 			'to', $to,
 			'from', $from,
 			'classNames', $this->orderResultBlockKeys(array_keys($res)),
-			'fullSearch', ($cn == '') || $this->request->get('limit')
+			'fullSearch', ($cn == '') || ($this->request->get('limit') && !$this->request->get('to'))
 		);
 	}
 

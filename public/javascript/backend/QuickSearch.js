@@ -178,7 +178,7 @@ Backend.QuickSearch.prototype = {
 			this.popupHideObserved = true;
 		}
 
-		if (this.callbacks.showResultContainer && typeof this.callbacks.showResultContainer == "function")
+		if (this.callbacks && this.callbacks.showResultContainer && typeof this.callbacks.showResultContainer == "function")
 		{
 			this.callbacks.showResultContainer(this);
 		}
@@ -230,7 +230,7 @@ Backend.QuickSearch.prototype = {
 			{
 				classContainer.innerHTML = transport.responseText;
 				// also trigger onShowResultContainer callback, because common use for this callback is position result and this can change result container size.
-				if (this.callbacks.showResultContainer && typeof this.callbacks.showResultContainer == "function")
+				if (this.callbacks && this.callbacks.showResultContainer && typeof this.callbacks.showResultContainer == "function")
 				{
 					this.callbacks.showResultContainer(this);
 				}
