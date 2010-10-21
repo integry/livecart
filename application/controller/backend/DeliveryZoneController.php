@@ -18,11 +18,16 @@ class DeliveryZoneController extends StoreManagementController
 	 */
 	public function index()
 	{
-		$zones = array();
-		$zones[] = array('ID' => -1, 'name' => $this->translate('_default_zone'));
+		$zones = array(
+			0 => array('ID' => -1, 'name' => $this->translate('_default_zone')),
+			1 => array('ID' => -2, 'name' => $this->translate('_delivery_zones')),
+			2 => array('ID' => -3, 'name' => $this->translate('_tax_zones'))
+		);
+
 		foreach(DeliveryZone::getAll()->toArray() as $zone)
 		{
-			$zones[] = array('ID' => $zone['ID'], 'name' => $zone['name']);
+			$zones[1]['items'][] = array('ID' => $zone['ID'], 'name' => $zone['name'], 'type'=>$zone['type']);
+			$zones[2]['items'][] = array('ID' => $zone['ID'], 'name' => $zone['name'], 'type'=>$zone['type']);
 		}
 
 		$response = new ActionResponse();
@@ -30,12 +35,13 @@ class DeliveryZoneController extends StoreManagementController
 		$response->set('countryGroups', json_encode($this->locale->info()->getCountryGroups()));
 		$response->set('testAddress', new Form(new RequestValidator('testAddress', $this->request)));
 		$response->set('countries', array_merge(array('' => ''), $this->application->getEnabledCountries()));
+
 		return $response;
 	}
 
 	public function countriesAndStates()
 	{
-		if(($id = (int)$this->request->get('id')) <= 0)
+		if(($id = (int)$this->getId()) <= 0)
 		{
 			return;
 		}
@@ -83,13 +89,13 @@ class DeliveryZoneController extends StoreManagementController
 		$response->set('addressMasks', $deliveryZone->getAddressMasks()->toArray());
 		$response->set('defaultLanguageCode', $this->application->getDefaultLanguageCode());
 		$response->set('alternativeLanguagesCodes', $alternativeLanguagesCodes);
-
+		$this->assignAllTypes($response);
 		return $response;
 	}
 
 	public function loadStates()
 	{
-		$zone = DeliveryZone::getInstanceByID($this->request->get('id'), true);
+		$zone = DeliveryZone::getInstanceByID($this->getId(), true);
 		$states = $this->getStates($zone, $this->request->get('country'));
 
 		return new JSONResponse($states['all']);
@@ -121,7 +127,7 @@ class DeliveryZoneController extends StoreManagementController
 	 */
 	public function saveStates()
 	{
-		$zone = DeliveryZone::getInstanceByID((int)$this->request->get('id'));
+		$zone = DeliveryZone::getInstanceByID((int)$this->getId());
 		DeliveryZoneState::removeByZone($zone);
 
 		foreach((array)$this->request->get('active') as $activeStateID)
@@ -139,7 +145,7 @@ class DeliveryZoneController extends StoreManagementController
 	 */
 	public function saveCountries()
 	{
-		$zone = DeliveryZone::getInstanceByID((int)$this->request->get('id'));
+		$zone = DeliveryZone::getInstanceByID((int)$this->getId());
 		DeliveryZoneCountry::removeByZone($zone);
 
 		foreach((array)$this->request->get('active') as $countryCode)
@@ -168,8 +174,9 @@ class DeliveryZoneController extends StoreManagementController
 	 */
 	public function save()
 	{
-		$zone = DeliveryZone::getInstanceByID((int)$this->request->get('id'));
+		$zone = DeliveryZone::getInstanceByID((int)$this->getId());
 		$zone->name->set($this->request->get('name'));
+		$zone->type->set((int)$this->request->get('type'));
 
 		$zone->isEnabled->set((int)$this->request->get('isEnabled'));
 		$zone->isFreeShipping->set((int)$this->request->get('isFreeShipping'));
@@ -188,7 +195,7 @@ class DeliveryZoneController extends StoreManagementController
 		if(($errors = $this->isValidMask()) === true)
 		{
 			$maskValue = $this->request->get('mask');
-			if($id = (int)$this->request->get('id'))
+			if($id = (int)$this->getId())
 			{
 				$mask = DeliveryZoneCityMask::getInstanceByID($id);
 				$mask->mask->set($maskValue);
@@ -214,7 +221,7 @@ class DeliveryZoneController extends StoreManagementController
 	 */
 	public function delete()
 	{
-		DeliveryZone::getInstanceByID((int)$this->request->get('id'))->delete();
+		DeliveryZone::getInstanceByID((int)$this->getId())->delete();
 
 		return new JSONResponse(false, 'success');
 	}
@@ -224,7 +231,7 @@ class DeliveryZoneController extends StoreManagementController
 	 */
 	public function deleteCityMask()
 	{
-		DeliveryZoneCityMask::getInstanceByID((int)$this->request->get('id'))->delete();
+		DeliveryZoneCityMask::getInstanceByID((int)$this->getId())->delete();
 
 		return new JSONResponse(false, 'success');
 	}
@@ -237,7 +244,7 @@ class DeliveryZoneController extends StoreManagementController
    		if(($errors = $this->isValidMask()) === true)
 		{
 			$maskValue = $this->request->get('mask');
-			if($id = (int)$this->request->get('id'))
+			if($id = (int)$this->getId())
 			{
 				$mask = DeliveryZoneZipMask::getInstanceByID($id);
 				$mask->mask->set($maskValue);
@@ -263,7 +270,7 @@ class DeliveryZoneController extends StoreManagementController
 	 */
 	public function deleteZipMask()
 	{
-		DeliveryZoneZipMask::getInstanceByID((int)$this->request->get('id'))->delete();
+		DeliveryZoneZipMask::getInstanceByID((int)$this->getId())->delete();
 
 		return new JSONResponse(false, 'success');
 	}
@@ -276,7 +283,7 @@ class DeliveryZoneController extends StoreManagementController
    		if(($errors = $this->isValidMask()) === true)
 		{
 			$maskValue = $this->request->get('mask');
-			if($id = (int)$this->request->get('id'))
+			if($id = (int)$this->getId())
 			{
 				$mask = DeliveryZoneAddressMask::getInstanceByID($id);
 				$mask->mask->set($maskValue);
@@ -338,7 +345,27 @@ class DeliveryZoneController extends StoreManagementController
 			return array('mask' => $this->translate('_error_mask_is_empty'));
 		}
 	}
+	
+	private function assignAllTypes(Response $response)
+	{
+		$response->set('allTypes', array(
+			DeliveryZone::BOTH_RATES => $this->translate('_both_zones'),
+			DeliveryZone::SHIPPING_RATES  => $this->translate('_delivery_zones'),
+			DeliveryZone::TAX_RATES => $this->translate('_tax_zones')
+		));
+	}
 
+	private function getId()
+	{
+		$request = $this->getRequest();
+		$id = $request->get('id');
+		if(strpos($id, '_') !== false)
+		{
+			$chunks = explode('_', $id);
+			return $chunks[1];
+		}
+		return $id;
+	}
 }
 
 ?>

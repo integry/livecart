@@ -43,7 +43,7 @@ class ShippingRateTest extends LiveCartTest
 		parent::setUp();
 
 		$this->deliveryZone = DeliveryZone::getNewInstance();
-		$this->deliveryZone->setValueByLang('name', 'en', 'test zone');
+		$this->deliveryZone->name->set('test zone');
 		$this->deliveryZone->save();
 
 		$this->shippingService = ShippingService::getNewInstance($this->deliveryZone, 'test category', ShippingService::SUBTOTAL_BASED);
@@ -65,15 +65,15 @@ class ShippingRateTest extends LiveCartTest
 		$this->assertTrue($shippingRate->shippingService->get() === $this->shippingService);
 
 		// Range start and range end can be retrived using range start and range end shortcuts or using full name getSubtotalRange* or getWeightRange*
-		$this->assertEqual($shippingRate->getRangeStart(), 1.5);
-		$this->assertEqual($shippingRate->getRangeEnd(), 10.5);
-		$this->assertEqual($shippingRate->subtotalRangeStart->get(), $shippingRate->getRangeStart());
-		$this->assertEqual($shippingRate->subtotalRangeEnd->get(), $shippingRate->getRangeEnd());
+		$this->assertEquals($shippingRate->getRangeStart(), 1.5);
+		$this->assertEquals($shippingRate->getRangeEnd(), 10.5);
+		$this->assertEquals($shippingRate->subtotalRangeStart->get(), $shippingRate->getRangeStart());
+		$this->assertEquals($shippingRate->subtotalRangeEnd->get(), $shippingRate->getRangeEnd());
 
-		$this->assertEqual($shippingRate->flatCharge->get(), 1.1);
-		$this->assertEqual($shippingRate->perItemCharge->get(), 1.2);
-		$this->assertEqual($shippingRate->subtotalPercentCharge->get(), 1.3);
-		$this->assertEqual($shippingRate->perKgCharge->get(), 1.4);
+		$this->assertEquals($shippingRate->flatCharge->get(), 1.1);
+		$this->assertEquals($shippingRate->perItemCharge->get(), 1.2);
+		$this->assertEquals($shippingRate->subtotalPercentCharge->get(), 1.3);
+		$this->assertEquals($shippingRate->perKgCharge->get(), 1.4);
 	}
 
 	public function testGetRatesByService()

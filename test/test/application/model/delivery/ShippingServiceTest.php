@@ -38,7 +38,7 @@ class ShippingServiceTest extends LiveCartTest
 		parent::setUp();
 
 		$this->deliveryZone = DeliveryZone::getNewInstance();
-		$this->deliveryZone->setValueByLang('name', 'en', 'test zone');
+		$this->deliveryZone->name->set('test zone');
 		$this->deliveryZone->save();
 	}
 
@@ -50,10 +50,10 @@ class ShippingServiceTest extends LiveCartTest
 
 		$service->reload();
 
-		$this->assertEqual($service->getValueByLang('name', 'en'), 'Test service');
-		$this->assertEqual($service->position->get(), 1);
+		$this->assertEquals($service->getValueByLang('name', 'en'), 'Test service');
+		$this->assertEquals($service->position->get(), 1);
 		$this->assertTrue($service->deliveryZone->get() === $this->deliveryZone);
-		$this->assertEqual($service->rangeType->get(), ShippingService::SUBTOTAL_BASED);
+		$this->assertEquals($service->rangeType->get(), ShippingService::SUBTOTAL_BASED);
 	}
 
 	public function testGetServicesByDeliveryZone()

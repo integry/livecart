@@ -21,6 +21,10 @@ ClassLoader::import('library.shipping.ShippingRateSet');
  */
 class DeliveryZone extends MultilingualObject
 {
+	const BOTH_RATES = 0;
+	const TAX_RATES = 1;
+	const SHIPPING_RATES = 2;
+
 	const ENABLED_TAXES = false;
 
 	private $taxRates = null;
@@ -35,6 +39,7 @@ class DeliveryZone extends MultilingualObject
 		$schema->registerField(new ARField("isEnabled", ARInteger::instance(1)));
 		$schema->registerField(new ARField("isFreeShipping", ARInteger::instance(1)));
 		$schema->registerField(new ARField("isRealTimeDisabled", ARInteger::instance(1)));
+		$schema->registerField(new ARField("type", ARInteger::instance(1)));
 	}
 
 	/*####################  Static method implementations ####################*/

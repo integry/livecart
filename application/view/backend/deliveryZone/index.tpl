@@ -58,14 +58,13 @@
 		<div class="tabContainer">
 			<ul class="tabList tabs">
 				<li id="tabDeliveryZoneCountry" class="tab active">
+					<span class="progressIndicator" style="display: none;"></span>
 					<a href="{link controller=backend.deliveryZone action=countriesAndStates}?id=_id_">{t _countries_and_states}</a>
 				</li>
-
-				<li id="tabDeliveryZoneShipping" class="tab inactive">
+				<li id="tabDeliveryZoneShipping" class="tab inactive hidden">
 					<a href="{link controller=backend.shippingService action=index}?id=_id_">{t _shipping_rates}</a>
 				</li>
-
-				<li id="tabDeliveryZoneTaxes" class="tab inactive">
+				<li id="tabDeliveryZoneTaxes" class="tab inactive hidden">
 					<a href="{link controller=backend.taxRate action=index}?id=_id_">{t _tax_rates}</a>
 				</li>
 			</ul>
