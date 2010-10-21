@@ -42,7 +42,7 @@ class DeliveryZoneStateTest extends LiveCartTest
 		parent::setUp();
 
 		$this->zone = DeliveryZone::getNewInstance();
-		$this->zone->setValueByLang('name', 'en', ':TEST_ZONE');
+		$this->zone->name->set(':TEST_ZONE');
 		$this->zone->isEnabled->set(1);
 		$this->zone->isFreeShipping->set(1);
 		$this->zone->save();
@@ -57,7 +57,7 @@ class DeliveryZoneStateTest extends LiveCartTest
 
 		$deliveryState->reload();
 
-		$this->assertEqual($deliveryState->deliveryZone->get(), $this->zone);
+		$this->assertEquals($deliveryState->deliveryZone->get(), $this->zone);
 		$this->assertTrue($deliveryState->state->get() === $this->alaska);
 	}
 }

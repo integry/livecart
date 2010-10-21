@@ -10,11 +10,10 @@ Backend.DeliveryZone.prototype =
 
 	treeBrowser: null,
 
-  	urls: new Array(),
+	urls: new Array(),
 
 	initialize: function(zones)
 	{
-
 		Backend.DeliveryZone.prototype.treeBrowser = new dhtmlXTreeObject("deliveryZoneBrowser","","", 0);
 		Backend.Breadcrumb.setTree(Backend.DeliveryZone.prototype.treeBrowser);
 
@@ -47,7 +46,16 @@ Backend.DeliveryZone.prototype =
 				}
 			}
 
+		$(Backend.DeliveryZone.prototype.treeBrowser.allTree).addClassName("hidden");
 		this.insertTreeBranch(zones, 0);
+		var index, len = zones[1]['items'].length;
+		// zones[0] - default, zones[1] - delivery zones, zones[2] - tax zones
+		// items for delivery and tax zones should be equal, because any of them can be converted to type 'both zones'.
+		for(index=0; index < len; index++)
+		{
+			this.updateTreeBrowserNodeVisibility(index, zones[1]['items'][index].type, /*fix tree lines only when adding last item */ index+1 == len, true);
+		}
+		$(Backend.DeliveryZone.prototype.treeBrowser.allTree).removeClassName("hidden");
 
 		if(!Backend.ajaxNav.getHash().match(/zone_-?\d+#\w+/)) window.location.hash = 'zone_-1#tabDeliveryZoneShipping__';
 		this.tabControl = TabControl.prototype.getInstance('deliveryZoneManagerContainer', this.craftTabUrl, this.craftContainerId, {});
@@ -76,6 +84,11 @@ Backend.DeliveryZone.prototype =
 					response = eval("(" + response.responseText + ")");
 					if('success' == response.status)
 					{
+						var secondId = Backend.DeliveryZone.prototype.getTreeBrowserItemIdInSecondLeaf(Backend.DeliveryZone.prototype.activeZone);
+						if (secondId)
+						{
+							Backend.DeliveryZone.prototype.treeBrowser.deleteItem(secondId, true);
+						}
 						Backend.DeliveryZone.prototype.treeBrowser.deleteItem(Backend.DeliveryZone.prototype.activeZone, true);
 						var firstId = parseInt(Backend.DeliveryZone.prototype.treeBrowser._globalIdStorage[1]);
 						if(firstId)
@@ -102,13 +115,27 @@ Backend.DeliveryZone.prototype =
 
 	afterNewZoneAdded: function(response)
 	{
-		Backend.DeliveryZone.prototype.treeBrowser.insertNewItem(0, response.zone.ID, response.zone.name, 0, 0, 0, 0, 'SELECT');
-		this.activateZone(response.zone.ID);
+		var id = response.zone.ID;
+		var chunks = new String(id).split("_");
+		if (chunks.length == 2)
+		{
+			id = chunks[1];
+		}
+		Backend.DeliveryZone.prototype.treeBrowser.insertNewItem(-2, id, response.zone.name, 0, 0, 0, 0, 'SELECT');
+		Backend.DeliveryZone.prototype.treeBrowser.insertNewItem(-3, id, response.zone.name, 0, 0, 0, 0);
+
+		this.activateZone(id);
 	},
 
 	craftTabUrl: function(url)
 	{
-		return url.replace(/_id_/, Backend.DeliveryZone.prototype.treeBrowser.getSelectedItemId());
+		var id = Backend.DeliveryZone.prototype.treeBrowser.getSelectedItemId(),
+			chunks =  id.split('_');
+		if (chunks.length >= 2) 
+		{
+			id = chunks[1];
+		}
+		return url.replace(/_id_/, id);
 	},
 
 	craftContainerId: function(tabId)
@@ -128,11 +155,30 @@ Backend.DeliveryZone.prototype =
 			{
 				Backend.DeliveryZone.prototype.treeBrowser.selectItem(node.ID, true);
 			}
+			if (node.items && node.items.length)
+			{
+				this.insertTreeBranch(node.items, node.ID);
+			}
 		}.bind(this));
 	},
 
 	activateZone: function(id)
 	{
+		var chunks = new String(id).split("_");
+		if (chunks.length == 2)
+		{
+			id = chunks[1]; // if one zone id is added to tree more than once, id has prefix of random number seperated by _
+		}
+
+		// disable clicking on delivery, tax zone and any unknown node
+		if(id == -2 || id == -3 || isNaN(id))
+		{
+			Backend.DeliveryZone.prototype.treeBrowser.selectItem(Backend.DeliveryZone.prototype.selectedItemId);
+			return;
+		}
+		Backend.DeliveryZone.prototype.selectedItemId = chunks.join("_");
+		// --
+
 		Backend.Breadcrumb.display(id);
 		if(id == -1)
 		{
@@ -167,8 +213,13 @@ Backend.DeliveryZone.prototype =
 				Backend.DeliveryZone.prototype.treeBrowser.hideFeedback(id);
 			});
 		}
-
 		Backend.DeliveryZone.prototype.activeZone = id;
+		Backend.DeliveryZone.prototype.updateBreadCrumbText();
+
+		if($("countriesAndStates_"+id))
+		{
+			Backend.DeliveryZone.CountriesAndStates.prototype.getInstance($("countriesAndStates_"+id)).changeType();
+		}
 	},
 
 	displayCategory: function(response)
@@ -198,6 +249,98 @@ Backend.DeliveryZone.prototype =
 	displaySaveConfirmation: function()
 	{
 		new Backend.SaveConfirmationMessage(document.getElementsByClassName('yellowMessage')[0]);
+	},
+	
+
+	updateTreeBrowserNodeVisibility: function(index, type, fixTreeLines)
+	{
+		var i, z, taxRow, deliveryRow, visibleItems, lastVisible, img;
+
+		if (typeof fixTreeLines == "undefined")
+		{
+			fixTreeLines = true;
+		}
+
+		z = $(Backend.DeliveryZone.prototype.treeBrowser.allTree).down("tbody").childElements();
+		// z[1] == default zone
+		// z[2] == delivery zones
+		// z[3] == tax zones
+
+		deliveryRow = $($(z[2]).down("tbody").childElements()[index+1]);
+		taxRow = $($(z[3]).down("tbody").childElements()[index+1]);
+
+		if (type == 0)
+		{
+			deliveryRow.removeClassName("hidden");
+			$("tabDeliveryZoneShipping").removeClassName("hidden");
+			taxRow.removeClassName("hidden");
+			$("tabDeliveryZoneTaxes").removeClassName("hidden");
+		}
+		else if(type == 1)
+		{
+			deliveryRow.addClassName("hidden");
+			$("tabDeliveryZoneShipping").addClassName("hidden");
+			taxRow.removeClassName("hidden");
+			$("tabDeliveryZoneTaxes").removeClassName("hidden");
+		}
+		else if(type == 2)
+		{
+			deliveryRow.removeClassName("hidden");
+			$("tabDeliveryZoneShipping").removeClassName("hidden");
+			taxRow.addClassName("hidden");
+			$("tabDeliveryZoneTaxes").addClassName("hidden");
+		}
+
+		if (fixTreeLines == false)
+		{
+			return;
+		}
+		// change line images: line3.gif to line2.gif for last visible, and line2.gif to line3.gif for all other
+		for(i=2; i<=3; i++)
+		{
+			try {
+				visibleItems = $A($(z[i]).down("tbody").childElements()).inject([], function(r, item) {
+					if ($(item).hasClassName("hidden") == false)
+					{
+						r.push(item);
+					}
+					return r;
+				});
+				if (visibleItems.length > 0)
+				{
+					lastVisible = visibleItems.pop();
+					visibleItems.shift(); // ignore first row, it does not belong to any tree item.
+					$A(visibleItems).each(function(item){
+						img = $(item).down("table").down("td").down("img");
+						img.src = img.src.replace("line2.gif", "line3.gif");
+					});
+					img = $(lastVisible).down("table").down("td").down("img");
+					img.src = img.src.replace("line3.gif", "line2.gif");
+				}
+			} catch(e) {}
+		}
+	},
+
+	getTreeBrowserItemIdInSecondLeaf: function(id)
+	{
+		try {
+			return Backend.DeliveryZone.prototype.treeBrowser.getAllLeafs().match(new RegExp("[0-9]+_"+id)).shift();
+		} catch(e){
+			return false;
+		}
+	},
+
+	updateBreadCrumbText: function()
+	{
+		var parentId = Backend.DeliveryZone.prototype.treeBrowser.getParentId(Backend.DeliveryZone.prototype.selectedItemId);
+		if (parentId == -3)
+		{
+			$("pageTitle").down("a").innerHTML = Backend.getTranslation("_tax_zones");
+		}
+		else if(parentId == -2)
+		{
+			$("pageTitle").down("a").innerHTML = Backend.getTranslation("_delivery_zones");
+		}
 	}
 }
 
@@ -299,6 +442,9 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 //		this.sortSelect(this.nodes.activeCountries);
 //		this.sortSelect(this.nodes.inactiveStates);
 //		this.sortSelect(this.nodes.activeStates);
+
+		// trigger type change event to properly initialize things that depends from type (visible tabs, selection in tree browser).
+		this.changeType();
 	},
 
 	getInstance: function(root, zoneID)
@@ -307,7 +453,6 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 		{
 			Backend.DeliveryZone.CountriesAndStates.prototype.instances[$(root).id] = new Backend.DeliveryZone.CountriesAndStates(root, zoneID);
 		}
-
 		return Backend.DeliveryZone.CountriesAndStates.prototype.instances[$(root).id];
 	},
 
@@ -315,6 +460,8 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 	{
 		this.nodes = {};
 		this.nodes.root = $(root);
+
+		this.nodes.type = $("type_"+this.zoneID);
 
 		this.nodes.form = this.nodes.root.tagName == 'FORM' ? this.nodes.root : this.nodes.root.down('form');
 
@@ -444,6 +591,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 
 	bindEvents: function()
 	{
+		Event.observe(this.nodes.type, 'change', function(e) { Event.stop(e); this.changeType(); }.bind(this));
 		Event.observe(this.nodes.addCountryButton, 'click', function(e) { Event.stop(e); this.addCountry(); }.bind(this));
 		Event.observe(this.nodes.removeCountryButton, 'click', function(e) { Event.stop(e); this.removeCountry(); }.bind(this));
 		Event.observe(this.nodes.addStateButton, 'click', function(e) { Event.stop(e); this.addState(); }.bind(this));
@@ -470,12 +618,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 		$A(this.nodes.observedElements).each(function(element) {
 			Event.observe(element, 'change', function(e) { this.save(e) }.bind(this));
 		}.bind(this));
-
-
-
 		window.onunload = function(e) { this.save(); }.bind(this);
-
-
 		Event.observe(this.nodes.addressMaskNew, 'keyup', function(e)
 		{
 		   if(KeyboardEvent.prototype.init(e).isEnter())
@@ -543,9 +686,8 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 
 	save: function(e) {
 		this.saving = true;
-
-		var indicator = null;
-
+		var indicator = $("tabDeliveryZoneCountry").down("span");
+		indicator.addClassName("progressIndicator");
 		if (e)
 		{
 			var el = Event.element(e);
@@ -553,12 +695,15 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 			{
 				el.hide();
 			}
-			indicator = el.parentNode.down('.progressIndicator');
+			//indicator = el.parentNode.down('.progressIndicator');
 		}
-
 		Backend.DeliveryZone.prototype.treeBrowser.setItemText(Backend.DeliveryZone.prototype.activeZone, this.nodes.name.value)
+		var secodId = Backend.DeliveryZone.prototype.getTreeBrowserItemIdInSecondLeaf(Backend.DeliveryZone.prototype.activeZone)
+		if (secodId)
+		{
+			Backend.DeliveryZone.prototype.treeBrowser.setItemText(secodId, this.nodes.name.value)
+		}
 		var request = new LiveCart.AjaxRequest(this.nodes.form, indicator, function() { if (el) { el.show(); }});
-
 		this.saving = false;
 	},
 
@@ -740,9 +885,32 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 		{
 			list.innerHTML += '<option value="' + val[0] + '">' + val[1] + '</option>';
 		});
+	},
+
+	changeType: function()
+	{
+		// fix treeBrowser selection, if selected item is about to be become hidden
+		var parentId = Backend.DeliveryZone.prototype.treeBrowser.getParentId(Backend.DeliveryZone.prototype.selectedItemId);
+		
+		if (/* selected delivery zones child  && in type dropdown selected tax zone */
+			parentId == -2 && this.nodes.type.value == 1)
+		{
+			Backend.DeliveryZone.prototype.selectedItemId = Backend.DeliveryZone.prototype.getTreeBrowserItemIdInSecondLeaf(Backend.DeliveryZone.prototype.activeZone);
+			Backend.DeliveryZone.prototype.treeBrowser.selectItem(Backend.DeliveryZone.prototype.selectedItemId);
+		}
+		else if (/* selected tax zones child  && in type dropdown selected delivery zone */
+				parentId == -3 && this.nodes.type.value == 2)
+		{
+			Backend.DeliveryZone.prototype.selectedItemId = Backend.DeliveryZone.prototype.selectedItemId.split("_").pop();
+			Backend.DeliveryZone.prototype.treeBrowser.selectItem(Backend.DeliveryZone.prototype.selectedItemId);
+		}
+		Backend.DeliveryZone.prototype.updateTreeBrowserNodeVisibility(
+			Backend.DeliveryZone.prototype.treeBrowser.getIndexById(Backend.DeliveryZone.prototype.selectedItemId),
+			this.nodes.type.value
+		);
+		Backend.DeliveryZone.prototype.updateBreadCrumbText();
 	}
 }
-
 
 Backend.DeliveryZone.ShippingService = Class.create();
 Backend.DeliveryZone.ShippingService.prototype =

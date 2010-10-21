@@ -62,3 +62,7 @@ _tip_state=Select which states are covered by this zone
 _tip_city_mask=Target zone by the entered city name
 _tip_zip_mask=Target zone by the entered postal code
 _tip_address_mask=Target zone by the entered street address
+
+_delivery_zones=Delivery zones
+_tax_zones=Tax zones
+_both_zones=Both zones

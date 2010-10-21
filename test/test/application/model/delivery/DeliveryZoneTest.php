@@ -46,9 +46,9 @@ class DeliveryZoneTest extends LiveCartTest
 
 		$zone->reload();
 
-		$this->assertEqual($zone->name->get(), ':TEST_ZONE');
-		$this->assertEqual($zone->isEnabled->get(), 1);
-		$this->assertEqual($zone->isFreeShipping->get(), 1);
+		$this->assertEquals($zone->name->get(), ':TEST_ZONE');
+		$this->assertEquals($zone->isEnabled->get(), 1);
+		$this->assertEquals($zone->isFreeShipping->get(), 1);
 	}
 
 	public function testGetAllDeliveryZones()
@@ -56,16 +56,16 @@ class DeliveryZoneTest extends LiveCartTest
 		$zonesCount = DeliveryZone::getAll()->getTotalRecordCount();
 
 		$zone0 = DeliveryZone::getNewInstance();
-		$zone0->setValueByLang('name', 'en', ':TEST_ZONE_1');
+		$zone0->name->set(':TEST_ZONE_1');
 		$zone0->isEnabled->set(0);
 		$zone0->save();
 
 		$zone1 = DeliveryZone::getNewInstance();
-		$zone1->setValueByLang('name', 'en', ':TEST_ZONE_2');
+		$zone1->name->set(':TEST_ZONE_2');
 		$zone1->isEnabled->set(1);
 		$zone1->save();
 
-		$this->assertEqual(DeliveryZone::getAll()->getTotalRecordCount(), $zonesCount + 2);
+		$this->assertEquals(DeliveryZone::getAll()->getTotalRecordCount(), $zonesCount + 2);
 	}
 
 	public function testGetEnabledDeliveryZones()
@@ -73,22 +73,22 @@ class DeliveryZoneTest extends LiveCartTest
 		$zonesCount = DeliveryZone::getEnabled()->getTotalRecordCount();
 
 		$zone0 = DeliveryZone::getNewInstance();
-		$zone0->setValueByLang('name', 'en', ':TEST_ZONE_1');
+		$zone0->name->set(':TEST_ZONE_1');
 		$zone0->isEnabled->set(0);
 		$zone0->save();
 
 		$zone1 = DeliveryZone::getNewInstance();
-		$zone1->setValueByLang('name', 'en', ':TEST_ZONE_2');
+		$zone1->name->set(':TEST_ZONE_2');
 		$zone1->isEnabled->set(1);
 		$zone1->save();
 
-		$this->assertEqual(DeliveryZone::getEnabled()->getTotalRecordCount(), $zonesCount + 1);
+		$this->assertEquals(DeliveryZone::getEnabled()->getTotalRecordCount(), $zonesCount + 1);
 	}
 
 	public function testGetDeliveryZoneCountries()
 	{
 		$zone = DeliveryZone::getNewInstance();
-		$zone->setValueByLang('name', 'en', ':TEST_ZONE');
+		$zone->name->set(':TEST_ZONE');
 		$zone->save();
 
 		$deliveryCountry = DeliveryZoneCountry::getNewInstance($zone, 'LT');
@@ -96,14 +96,14 @@ class DeliveryZoneTest extends LiveCartTest
 
 		$countries = $zone->getCountries();
 
-		$this->assertEqual($countries->getTotalRecordCount(), 1);
+		$this->assertEquals($countries->getTotalRecordCount(), 1);
 		$this->assertTrue($countries->get(0) === $deliveryCountry);
 	}
 
 	public function testGetDeliveryZoneStates()
 	{
 		$zone = DeliveryZone::getNewInstance();
-		$zone->setValueByLang('name', 'en', ':TEST_ZONE');
+		$zone->name->set(':TEST_ZONE');
 		$zone->save();
 
 		$deliveryState = DeliveryZoneState::getNewInstance($zone, State::getInstanceByID(1));
@@ -111,14 +111,14 @@ class DeliveryZoneTest extends LiveCartTest
 
 		$states = $zone->getStates();
 
-		$this->assertEqual($states->getTotalRecordCount(), 1);
+		$this->assertEquals($states->getTotalRecordCount(), 1);
 		$this->assertTrue($states->get(0) === $deliveryState);
 	}
 
 	public function testGetDeliveryZoneCityMasks()
 	{
 		$zone = DeliveryZone::getNewInstance();
-		$zone->setValueByLang('name', 'en', ':TEST_ZONE');
+		$zone->name->set(':TEST_ZONE');
 		$zone->save();
 
 		$mask = DeliveryZoneCityMask::getNewInstance($zone, 'asd');
@@ -126,14 +126,14 @@ class DeliveryZoneTest extends LiveCartTest
 
 		$masks = $zone->getCityMasks();
 
-		$this->assertEqual($masks->getTotalRecordCount(), 1);
+		$this->assertEquals($masks->getTotalRecordCount(), 1);
 		$this->assertTrue($masks->get(0) === $mask);
 	}
 
 	public function testGetDeliveryZoneZipMasks()
 	{
 		$zone = DeliveryZone::getNewInstance();
-		$zone->setValueByLang('name', 'en', ':TEST_ZONE');
+		$zone->name->set(':TEST_ZONE');
 		$zone->save();
 
 		$mask = DeliveryZoneZipMask::getNewInstance($zone, 'asd');
@@ -141,14 +141,14 @@ class DeliveryZoneTest extends LiveCartTest
 
 		$masks = $zone->getZipMasks();
 
-		$this->assertEqual($masks->getTotalRecordCount(), 1);
+		$this->assertEquals($masks->getTotalRecordCount(), 1);
 		$this->assertTrue($masks->get(0) === $mask);
 	}
 
 	public function testGetDeliveryZoneAddressMasks()
 	{
 		$zone = DeliveryZone::getNewInstance();
-		$zone->setValueByLang('name', 'en', ':TEST_ZONE');
+		$zone->name->set(':TEST_ZONE');
 		$zone->save();
 
 		$mask = DeliveryZoneAddressMask::getNewInstance($zone, 'asd');
@@ -156,14 +156,14 @@ class DeliveryZoneTest extends LiveCartTest
 
 		$masks = $zone->getAddressMasks();
 
-		$this->assertEqual($masks->getTotalRecordCount(), 1);
+		$this->assertEquals($masks->getTotalRecordCount(), 1);
 		$this->assertTrue($masks->get(0) === $mask);
 	}
 
 	public function testGetZoneServices()
 	{
 		$zone = DeliveryZone::getNewInstance();
-		$zone->setValueByLang('name', 'en', ':TEST_ZONE');
+		$zone->name->set(':TEST_ZONE');
 		$zone->save();
 
 		$service1 = ShippingService::getNewInstance($zone, 'Test service 1', ShippingService::SUBTOTAL_BASED);
@@ -179,7 +179,7 @@ class DeliveryZoneTest extends LiveCartTest
 	public function testGetTaxRates()
 	{
 		$zone = DeliveryZone::getNewInstance();
-		$zone->setValueByLang('name', 'en', ':TEST_ZONE');
+		$zone->name->set(':TEST_ZONE');
 		$zone->save();
 
 		$tax = Tax::getNewInstance('VAT');
@@ -190,14 +190,14 @@ class DeliveryZoneTest extends LiveCartTest
 
 
 		$taxRates = $zone->getTaxRates();
-		$this->assertEqual($taxRates->getTotalRecordCount(), 1);
+		$this->assertEquals($taxRates->getTotalRecordCount(), 1);
 		$this->assertTrue($taxRates->get(0) === $taxRate);
 	}
 
 	public function testFindZoneWithMasks()
 	{
 		$zone1 = DeliveryZone::getNewInstance();
-		$zone1->setValueByLang('name', 'en', 'With ZIP');
+		$zone1->name->set('With ZIP');
 		$zone1->isEnabled->set(true);
 		$zone1->save();
 
@@ -205,7 +205,7 @@ class DeliveryZoneTest extends LiveCartTest
 		DeliveryZoneCountry::getNewInstance($zone1, 'LT')->save();
 
 		$zone2 = DeliveryZone::getNewInstance();
-		$zone2->setValueByLang('name', 'en', 'Without ZIP');
+		$zone2->name->set('Without ZIP');
 		$zone2->isEnabled->set(true);
 		$zone2->save();
 		DeliveryZoneCountry::getNewInstance($zone2, 'LT')->save();

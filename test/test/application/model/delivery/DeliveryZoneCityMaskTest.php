@@ -34,7 +34,7 @@ class DeliveryZoneCityMaskTest extends LiveCartTest
 		parent::setUp();
 
 		$this->zone = DeliveryZone::getNewInstance();
-		$this->zone->setValueByLang('name', 'en', ':TEST_ZONE');
+		$this->zone->name->set(':TEST_ZONE');
 		$this->zone->isEnabled->set(1);
 		$this->zone->isFreeShipping->set(1);
 		$this->zone->save();
@@ -47,8 +47,8 @@ class DeliveryZoneCityMaskTest extends LiveCartTest
 
 		$cityMask->reload();
 
-		$this->assertEqual($cityMask->deliveryZone->get(), $this->zone);
-		$this->assertEqual($cityMask->mask->get(), 'Viln%');
+		$this->assertEquals($cityMask->deliveryZone->get(), $this->zone);
+		$this->assertEquals($cityMask->mask->get(), 'Viln%');
 	}
 }
 ?>
