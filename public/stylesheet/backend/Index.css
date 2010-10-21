@@ -1,19 +1,114 @@
 .stats
 {
-    width: 400px;
-    margin-left: 30px;
+    width: 30%;
+    margin-left: 1em;
     margin-top: 20px;
+    float: left;
 }
 
 #period
 {
-    width: 130px; 
-    font-size: smaller; 
+    width: auto;
+    font-size: smaller;
     margin: 0;
+    margin-top: -2px;
 }
 
 #periodProgress
 {
     padding: 7px;
     padding-top: 3px;
+}
+
+.periodCount,
+.statCount
+{
+	font-size: larger;
+	color: green;
+	padding-left: 5px;
+}
+
+.statCount
+{
+	color: #15367F;
+}
+
+#count
+{
+	float: none;
+}
+
+.sep
+{
+	color: #aaa;
+	margin: 0 1em;
+}
+
+.tips
+{
+	background-color: lightyellow;
+	font-size: 13px;
+}
+
+.tips h2
+{
+	font-size: 16px;
+	margin-top: 0.5em;
+}
+
+.tips h3
+{
+	font-size: 14px;
+	display: inline;
+}
+
+.tips p
+{
+	margin: 0.5em 0;
+}
+
+.tips .column
+{
+	float: left;
+	width: 32%;
+	margin-right: 1%;
+}
+
+.tips .column.last
+{
+	margin-right: 0;
+}
+
+.tips ul,
+.tips ol
+{
+	margin-left: 1em;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	list-style-position: inside;
+}
+
+.dashboardOrders
+{
+	width: 400px;
+	margin-left: 0;
+}
+
+.dashboardOrders .quickEditContainer2,
+.dashboardOrders .quickEditContainer3
+{
+	float: none;
+	margin: 1em 0;
+	width: auto;
+}
+
+.dashboardOrders .quickEditContainer3
+{
+	overflow: visible;
+	height: auto;
+}
+
+.qeOrders td
+{
+	border: 1px solid #eee;
 }

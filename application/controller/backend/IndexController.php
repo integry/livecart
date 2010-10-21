@@ -16,6 +16,8 @@ class IndexController extends StoreManagementController
 {
 	public function index()
 	{
+		$this->loadLanguageFile('backend/abstract/ActiveGridQuickEdit');
+
 		$this->updateApplicationUri();
 
 		// order stats
@@ -67,6 +69,13 @@ class IndexController extends StoreManagementController
 		$response->set('rootCat', $rootCat->toArray());
 		$response->set('thisMonth', date('m'));
 		$response->set('lastMonth', date('Y-m', strtotime(date('m') . '/15 -1 month')));
+
+		$response->set('ordersLast24', $this->getOrderCount('-24 hours', 'now'));
+		$response->set('ordersThisWeek', $this->getOrderCount('w:Monday', 'now'));
+		$response->set('ordersThisMonth', $this->getOrderCount(date('m') . '/1', 'now'));
+		$response->set('ordersLastMonth', $this->getOrderCount($response->get('lastMonth') . '-1', date('m') . '/1'));
+
+		$response->set('lastOrders', $this->getLastOrders());
 		return $response;
 	}
 
@@ -77,6 +86,45 @@ class IndexController extends StoreManagementController
 		// "w:Monday ~ -1 week | w:Monday" - last week
 		list($from, $to) = explode(' | ', $this->request->get('period'));
 
+		$count = $this->getOrderCount($from, $to);
+		if (!$count)
+		{
+			$count = '&nbsp;0';
+		}
+
+		return new RawResponse($count);
+	}
+
+	protected function getLastOrders()
+	{
+		$f = select();
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), false));
+		$f->setOrder(new ARFieldHandle('CustomerOrder', 'dateCompleted'), 'desc');
+		$f->setLimit(10);
+
+		$customerOrders = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
+		$ordersArray = array();
+		if($customerOrders->size() > 0)
+		{
+			$i = 0;
+			foreach($customerOrders as $order)
+			{
+				$order->loadAll();
+				$order->getShipments();
+				$order->loadDiscounts();
+				$ordersArray[$i] = $order->toArray();
+				$ordersArray[$i]['status_name'] = CustomerOrder::getStatusName($ordersArray[$i]['status'] ? $ordersArray[$i]['status'] : CustomerOrder::STATUS_NEW);
+				$i++;
+			}
+			return $ordersArray;
+		}
+
+		return array();
+	}
+
+	protected function getOrderCount($from, $to)
+	{
 		$cond = new EqualsOrMoreCond(new ARFieldHandle('CustomerOrder', 'dateCompleted'), getDateFromString($from));
 
 		if ('now' != $to)
@@ -86,8 +134,9 @@ class IndexController extends StoreManagementController
 
 		$f = new ARSelectFilter($cond);
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), false));
 
-		return new RawResponse(ActiveRecordModel::getRecordCount('CustomerOrder', $f));
+		return ActiveRecordModel::getRecordCount('CustomerOrder', $f);
 	}
 
 	public function setUserPreference()

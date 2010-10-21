@@ -14,6 +14,8 @@ function smarty_function_zebra($params, LiveCartSmarty $smarty)
 {
 	static $internalCounter = 0;
 
+	$loop = $params['loop'];
+
 	if (!isset($smarty->_foreach[$loop]))
 	{
 		$loop = 'internal';
@@ -22,7 +24,6 @@ function smarty_function_zebra($params, LiveCartSmarty $smarty)
 	}
 	else
 	{
-		$loop = $params['loop'];
 		$total = $smarty->_foreach[$loop]['total'];
 		$iteration = $smarty->_foreach[$loop]['iteration'];
 	}
