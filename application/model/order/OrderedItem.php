@@ -224,7 +224,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 	{
 		$class = $this->getProduct()->getParent()->taxClass->get();
 		$rates = array();
-		foreach ($this->customerOrder->get()->getDeliveryZone()->getTaxRates() as $rate)
+		foreach ($this->customerOrder->get()->getTaxZone()->getTaxRates() as $rate)
 		{
 			if ($rate->taxClass->get() === $class)
 			{
@@ -694,7 +694,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 	{
 		$array = parent::toArray();
 		$array['priceCurrencyID'] = $this->getCurrency()->getID();
-		$isTaxIncludedInPrice = $this->customerOrder->get()->getDeliveryZone()->isTaxIncludedInPrice();
+		$isTaxIncludedInPrice = $this->customerOrder->get()->getTaxZone()->isTaxIncludedInPrice();
 
 		if (isset($array['price']))
 		{

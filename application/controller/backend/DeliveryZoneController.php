@@ -318,7 +318,7 @@ class DeliveryZoneController extends StoreManagementController
 	{
 		$address = UserAddress::getNewInstance();
 		$address->loadRequestData($this->request);
-		$zone = DeliveryZone::getZoneByAddress($address);
+		$zone = DeliveryZone::getZoneByAddress($address, DeliveryZone::SHIPPING_RATES);
 
 		return new JSONResponse($zone->toArray());
 	}

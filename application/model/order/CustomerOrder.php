@@ -16,7 +16,6 @@ ClassLoader::import('application.model.eav.EavObject');
 ClassLoader::import('application.model.order.Transaction');
 ClassLoader::import('application.model.order.InvoiceNumberGenerator');
 ClassLoader::import('application.model.discount.DiscountActionSet');
-
 ClassLoader::import('application.model.businessrule.BusinessRuleController');
 ClassLoader::import('application.model.businessrule.BusinessRuleContext');
 ClassLoader::import('application.model.businessrule.interface.BusinessRuleOrderInterface');
@@ -39,6 +38,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	private $taxes = array();
 
 	private $deliveryZone;
+
+	private $taxZone;
 
 	private $fixedDiscounts = array();
 
@@ -1102,6 +1103,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	public function reset()
 	{
 		$this->deliveryZone = null;
+		$this->taxZone = null;
 		$this->orderTotal = null;
 		$this->orderDiscounts = array();
 
@@ -1212,7 +1214,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	private function getTaxes()
 	{
 		$this->taxes = array();
-		$zone = $this->getDeliveryZone();
+		$zone = $this->getTaxZone();
 		if ($this->shipments)
 		{
 			foreach ($this->shipments as $shipment)
@@ -2078,22 +2080,37 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		}
 	}
 
+	public function getTaxZone($forceReset = false)
+	{
+		ClassLoader::import("application.model.delivery.DeliveryZone");
+		if (!$this->taxZone || $forceReset)
+		{
+			if ($this->isShippingRequired() && $this->shippingAddress->get())
+			{
+				$this->taxZone = DeliveryZone::getZoneByAddress($this->shippingAddress->get(), DeliveryZone::TAX_RATES);
+			}
+			else
+			{
+				$this->taxZone = DeliveryZone::getDefaultZoneInstance();
+			}
+		}
+		return $this->taxZone;
+	}
+
 	public function getDeliveryZone($forceReset = false)
 	{
 		ClassLoader::import("application.model.delivery.DeliveryZone");
-
 		if (!$this->deliveryZone || $forceReset)
 		{
 			if ($this->isShippingRequired() && $this->shippingAddress->get())
 			{
-				$this->deliveryZone = DeliveryZone::getZoneByAddress($this->shippingAddress->get());
+				$this->deliveryZone = DeliveryZone::getZoneByAddress($this->shippingAddress->get(), DeliveryZone::SHIPPING_RATES);
 			}
 			else
 			{
 				$this->deliveryZone = DeliveryZone::getDefaultZoneInstance();
 			}
 		}
-
 		return $this->deliveryZone;
 	}
 
