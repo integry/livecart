@@ -428,7 +428,7 @@ Backend.ThemeColorProperty = function(manager, element, selector, property, type
 	}
 
 	// determine checkbox state
-	if ('checkbox' == this.type)
+	if (('checkbox' == this.type) && (this.getRule()))
 	{
 		var properties = CssCustomize.prototype.getPropertiesFromText(this.getRule().cssText);
 		delete properties['richness'];

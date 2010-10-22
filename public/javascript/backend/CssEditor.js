@@ -70,7 +70,7 @@ Backend.CssEditor.prototype =
 		{
 			this.treeBrowser.showFeedback(id);
 			var url = this.urls['edit'].replace('_id_', id);
-		
+
 			// var upd = new LiveCart.AjaxUpdater(url, 'templateContent');
 			// upd.onComplete = this.displayTemplate.bind(this);
 			this.openInTab(id, id.replace(/\.css$/,''), url);
@@ -152,7 +152,7 @@ Backend.CssEditor.prototype =
 			this.treeBrowser.selectItem(item[0]);
 		}
 	},
-	
+
 	_removeTab: function(tabid)
 	{
 		var
@@ -211,7 +211,7 @@ Backend.CssEditorHandler.prototype =
 		);
 
 		// set cursor at the first line
-		editAreaLoader.setSelectionRange('code_'+this.tabid, 0, 0);
+		/* editAreaLoader.setSelectionRange('code_'+this.tabid, 0, 0); */
 	},
 
 	submit: function(e)

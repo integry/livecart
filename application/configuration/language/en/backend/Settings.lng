@@ -95,6 +95,7 @@ DISPLAY_CAT_PRICE_FILTERS=Display sub-category price filters for categories with
 DISPLAY_IMAGE_IN_LIST=Display product thumbnail image in product list
 
 _products=Products
+PRODUCT_TABS=Display product page content sections as tabs
 UNIT_SYSTEM=Unit measurement system (for weight, size, etc.)
 METRIC=Metric
 ENGLISH=English

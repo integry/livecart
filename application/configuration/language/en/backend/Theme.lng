@@ -143,6 +143,14 @@ BC_LINK_DECORATION=Link decoration
 FOOTER_HIDE_TRADEMARK=Hide trademark notice
 FOOTER_HIDE_POWEREDBY=Hide "powered by" notice
 
+PRODUCTTABS=Product tabs
+TABS_BG=Tab background color
+TABS_BG_HOVER=Tab hover background color
+TABS_BG_ACTIVE=Active tab background color
+TABS_COLOR=Tab text color
+TABS_COLOR_HOVER=Tab hover text color
+TABS_COLOR_ACTIVE=Active tab text color
+
 _max_file_size=Exported ZIP file; Max file size: [_1]
 _select_file=Select theme file
 _import=Import

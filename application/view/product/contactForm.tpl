@@ -1,4 +1,5 @@
-<h2>{t _inquire}</h2>
+<div id="contactFormSection" class="productSection contactFormSection">
+<h2>{t _inquire}<small>{t _inquire_title}</small></h2>
 
 <div>
 {form action="controller=product action=sendContactForm" method="POST" handle=$contactForm id="productContactForm" onsubmit="new Product.ContactForm(this); return false;"}
@@ -40,6 +41,6 @@
 	<input type="hidden" name="id" value="{$product.ID}" />
 
 {/form}
-</div>
-
 <div class="clear"></div>
+</div>
+</div>

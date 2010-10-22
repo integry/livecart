@@ -34,6 +34,7 @@ _err_already_rated=You have already rated this product
 _err_no_review_nickname=Please enter your name or nickname
 _err_no_review_summary=Please enter the review summary
 _err_no_review_text=Please enter the review text
+_rate=Rate
 
 # variations
 _choose=Choose...
@@ -51,6 +52,7 @@ _msg_review_purchase_required=Only customers who have purchased this product may
 
 # inquiry form
 _inquire=Inquire About This Product
+_inquire_title=Inquire
 _inquiry_name=Your name
 _inquiry_email=Your e-mail address
 _inquiry_msg=Your message

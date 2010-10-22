@@ -1,5 +1,5 @@
 {if $bundleData}
-<div id="bundle">
+<div id="bundle" class="productSection">
 	<h2>{t _bundle_includes}:</h2>
 	<div class="bundleList">
 		<ul class="compactProductList">
