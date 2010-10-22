@@ -88,12 +88,12 @@
                 },
                 "deliveryzones":
 				{
-                	"title": "_menu_delivery_zones",
+                	"title": "_menu_delivery_tax_zones",
                 	"controller": "backend.deliveryZone",
                 	"action": "index",
                 	"role": "delivery",
                 	"icon": "image/silk/lorry.png",
-                	"descr": "_menu_descr_delivery_zones"
+                	"descr": "_menu_descr_delivery_tax_zones"
                 },
                 "fields":
 				{

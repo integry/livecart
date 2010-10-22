@@ -1,7 +1,7 @@
 <div id="countriesAndStatesMsg_{$categoryId}"></div>
 
 {form id="countriesAndStates_$zoneID" handle=$form action="controller=backend.deliveryZone action=save id=$zoneID" method="post" role="delivery.update"}
-	<label></label>
+	<label>{tip _zone_type}</label>
 	<fieldset class="error">
 		{selectfield name="type" options=$allTypes id="type_`$zoneID`" class="observed"}
 	</fieldset>

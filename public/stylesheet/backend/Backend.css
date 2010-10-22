@@ -1176,13 +1176,17 @@ input.submit, input.reset
 	font-size: 10px;
 	padding: 3px;
 	font-weight: bold;
+	-moz-border-radius: 5px;
+	border-width: 0;
 }
+
 input.submit {
 	background-color: #008cff;
 	color: #fff;
 	padding-left: 15px;
 	padding-right: 15px;
 }
+
 input.reset {
 	background-color: #ddd;
 	color: #666;

@@ -1,6 +1,9 @@
 _countries_and_states=Countries and States
 _shipping_rates=Shipping Rates
 _tax_rates=Tax Rates
+_tax_and_shipping_rates=Tax and Shipping Rates
+
+_zone_type=Zone type
 
 # Confirmations
 _delivery_zone_was_successfully_saved=Delivery zone was successfully saved
@@ -62,6 +65,7 @@ _tip_state=Select which states are covered by this zone
 _tip_city_mask=Target zone by the entered city name
 _tip_zip_mask=Target zone by the entered postal code
 _tip_address_mask=Target zone by the entered street address
+_tip_zone_type=Zones define geographical areas for determining, which shipping and tax rates are applicable for the particular delivery address. The same zone can define both shipping and tax rates, however if the shipping and tax areas are not the same, you can set up separate zones for each purpose.
 
 _delivery_zones=Delivery zones
 _tax_zones=Tax zones

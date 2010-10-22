@@ -131,7 +131,7 @@ Backend.DeliveryZone.prototype =
 	{
 		var id = Backend.DeliveryZone.prototype.treeBrowser.getSelectedItemId(),
 			chunks =  id.split('_');
-		if (chunks.length >= 2) 
+		if (chunks.length >= 2)
 		{
 			id = chunks[1];
 		}
@@ -191,8 +191,12 @@ Backend.DeliveryZone.prototype =
 
 			var activateTab = $('tabDeliveryZoneShipping');
 			$("tabDeliveryZoneCountry").hide();
-			//$("tabDeliveryZoneTaxes").hide();
+			$("tabDeliveryZoneTaxes").show();
+			$("tabDeliveryZoneShipping").show();
 			$("deliveryZone_delete").parentNode.hide();
+
+			$("tabDeliveryZoneShipping").removeClassName("hidden");
+			$("tabDeliveryZoneTaxes").removeClassName("hidden");
 		}
 		else
 		{
@@ -250,7 +254,7 @@ Backend.DeliveryZone.prototype =
 	{
 		new Backend.SaveConfirmationMessage(document.getElementsByClassName('yellowMessage')[0]);
 	},
-	
+
 
 	updateTreeBrowserNodeVisibility: function(index, type, fixTreeLines)
 	{
@@ -314,8 +318,16 @@ Backend.DeliveryZone.prototype =
 						img = $(item).down("table").down("td").down("img");
 						img.src = img.src.replace("line2.gif", "line3.gif");
 					});
-					img = $(lastVisible).down("table").down("td").down("img");
-					img.src = img.src.replace("line3.gif", "line2.gif");
+
+					if ($(lastVisible).down("table"))
+					{
+						img = $(lastVisible).down("table").down("td").down("img");
+					}
+
+					if (img)
+					{
+						img.src = img.src.replace("line3.gif", "line2.gif");
+					}
 				}
 			} catch(e) {}
 		}
@@ -891,7 +903,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 	{
 		// fix treeBrowser selection, if selected item is about to be become hidden
 		var parentId = Backend.DeliveryZone.prototype.treeBrowser.getParentId(Backend.DeliveryZone.prototype.selectedItemId);
-		
+
 		if (/* selected delivery zones child  && in type dropdown selected tax zone */
 			parentId == -2 && this.nodes.type.value == 1)
 		{
