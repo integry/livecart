@@ -181,9 +181,8 @@ abstract class FrontendController extends BaseController
 	protected function boxInformationMenuBlock()
 	{
 		ClassLoader::import('application.model.staticpage.StaticPage');
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('StaticPage', 'isInformationBox'), true));
+		$f = new ARSelectFilter(StaticPage::getIsInformationMenuCondition());
 		$f->setOrder(new ARFieldHandle('StaticPage', 'position'));
-
 		$response = new BlockResponse();
 		$response->set('pages', StaticPage::createTree(ActiveRecordModel::getRecordSetArray('StaticPage', $f)));
 		unset($f);
@@ -523,6 +522,8 @@ abstract class FrontendController extends BaseController
 
 	protected function boxRootCategoryBlock()
 	{
+		ClassLoader::import('application.model.staticpage.StaticPage');
+
 		$topCategories = $this->getTopCategories();
 		$ids = array();
 		foreach ($topCategories as $cat)
@@ -532,11 +533,9 @@ abstract class FrontendController extends BaseController
 				$ids[] = $cat['ID'];
 			}
 		}
-
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('Category', 'parentNodeID'), $ids));
 		$f->setOrder(new ARFieldHandle('Category', 'parentNodeID'));
 		$f->setOrder(new ARFieldHandle('Category', 'lft'));
-
 		$subCategories = array();
 		foreach (ActiveRecordModel::getRecordSetArray('Category', $f) as $cat)
 		{
@@ -545,10 +544,27 @@ abstract class FrontendController extends BaseController
 				$subCategories[$cat['parentNodeID']][] = $cat;
 			}
 		}
-
+		$f = new ARSelectFilter(new IsNullCond(new ARFieldHandle('StaticPage', 'parentID')));
+		$f->mergeCondition(StaticPage::getIsRootCategoriesMenuCondition());
+		$f->setOrder(new ARFieldHandle('StaticPage', 'position'));
+		$pages = ActiveRecordModel::getRecordSetArray('StaticPage', $f);
+		$ids = array();
+		$subPages = array();
+		foreach($pages as $page)
+		{
+			$ids[] = $page['ID'];
+		}
+		$f = new ARSelectFilter(new INCond(new ARFieldHandle('StaticPage', 'parentID'), $ids));
+		$f->setOrder(new ARFieldHandle('StaticPage', 'position'));
+		foreach (ActiveRecordModel::getRecordSetArray('StaticPage', $f) as $page)
+		{
+			$subPages[$page['parentID']][] = $page;
+		}
 		$response = new BlockResponse();
 		$response->set('categories', $topCategories);
 		$response->set('subCategories', $subCategories);
+		$response->set('pages', $pages);
+		$response->set('subPages', $subPages);
 		$response->set('currentId', $this->getTopCategoryId());
 		return $response;
 	}

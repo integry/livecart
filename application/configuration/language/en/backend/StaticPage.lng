@@ -27,9 +27,11 @@ _handle=URL handle (slug)
 _text=Page text
 _meta_description=Meta description
 
-_inf_menu=Display in <em>Information</em> menu
-
 _del_conf=Are you sure you wish to delete this page?
 _err_text_empty=Please enter page content
 _save_conf=Page was saved successfully
 _err_title_empty=Please enter page title
+
+_add_page_to_menu=Add page to menu(s)
+_information_menu=Information menu
+_main_header_menu=Main header menu

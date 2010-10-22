@@ -16,6 +16,21 @@
 				{/if}
 				</div>
 			{/foreach}
+			{foreach $pages as $page}
+				<div class="li top {if $page.ID == $currentId}current{/if}{if !$subPages[$page.ID]}noSubs{/if}"><a href="{pageUrl data=$page}"><span class="name">{$page.title_lang}</span></a>
+				{if $subPages[$page.ID]}
+					<div class="wrapper">
+						<div class="block"><div class="block">
+							<div class="ul">
+								{foreach $subPages[$page.ID] as $page}
+									<div class="li"><a href="{pageUrl data=$page}"><span>{$page.title_lang}</span></a></div>
+								{/foreach}
+							</div>
+						</div></div>
+					</div>
+				{/if}
+				</div>
+			{/foreach}
 			<div class="li" style="width: 1px;">&nbsp;</div>
 			<div class="clear"></div>
 		</div>

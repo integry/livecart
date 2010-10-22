@@ -419,7 +419,7 @@ class ShopScriptImport extends LiveCartImportDriver
 		$page = StaticPage::getNewInstance();
 		$page->setValueByLang('title', $this->defLang, $data['aux_page_name']);
 		$page->setValueByLang('text', $this->defLang, $data['aux_page_text']);
-		$page->isInformationBox->set(true);
+		$page->menu->set(array('INFORMATION' => true));
 
 		return $page;
 	}
