@@ -345,13 +345,13 @@ class DeliveryZoneController extends StoreManagementController
 			return array('mask' => $this->translate('_error_mask_is_empty'));
 		}
 	}
-	
+
 	private function assignAllTypes(Response $response)
 	{
 		$response->set('allTypes', array(
-			DeliveryZone::BOTH_RATES => $this->translate('_both_zones'),
-			DeliveryZone::SHIPPING_RATES  => $this->translate('_delivery_zones'),
-			DeliveryZone::TAX_RATES => $this->translate('_tax_zones')
+			DeliveryZone::BOTH_RATES => $this->translate('_tax_and_shipping_rates'),
+			DeliveryZone::SHIPPING_RATES  => $this->translate('_shipping_rates'),
+			DeliveryZone::TAX_RATES => $this->translate('_tax_rates')
 		));
 	}
 

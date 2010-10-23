@@ -110,9 +110,6 @@ class IndexController extends StoreManagementController
 			$i = 0;
 			foreach($customerOrders as $order)
 			{
-				$order->loadAll();
-				$order->getShipments();
-				$order->loadDiscounts();
 				$ordersArray[$i] = $order->toArray();
 				$ordersArray[$i]['status_name'] = CustomerOrder::getStatusName($ordersArray[$i]['status'] ? $ordersArray[$i]['status'] : CustomerOrder::STATUS_NEW);
 				$i++;
