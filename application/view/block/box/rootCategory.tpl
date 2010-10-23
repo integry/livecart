@@ -16,7 +16,7 @@
 				{/if}
 				</div>
 			{/foreach}
-			<div class="li" style="width: 1px;">&nbsp;</div>
+			<div class="li" style="width: 1px; background: none;">&nbsp;</div>
 			<div class="clear"></div>
 		</div>
 	</div>
