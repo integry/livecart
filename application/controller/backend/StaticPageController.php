@@ -105,7 +105,6 @@ class StaticPageController extends StoreManagementController
 	public function update()
 	{
 		$page = StaticPage::getInstanceById((int)$this->request->get('id'), StaticPage::LOAD_DATA);
-
 		return $this->save($page);
 	}
 
@@ -127,7 +126,7 @@ class StaticPageController extends StoreManagementController
 
 		$page->parent->set($parent);
 
-		return $this->save($page);
+		return $this->save($page, /*do not update menu*/false);
 	}
 
 	/**
@@ -148,9 +147,7 @@ class StaticPageController extends StoreManagementController
 		try
 		{
 			$inst = StaticPage::getInstanceById($this->request->get('id'), StaticPage::LOAD_DATA);
-
 			$inst->delete();
-
 			return new JSONResponse(array('id' => $inst->getID()), 'success');
 		}
 		catch (Exception $e)
@@ -164,10 +161,25 @@ class StaticPageController extends StoreManagementController
 		return new ActionResponse();
 	}
 
-	private function save(StaticPage $page)
+	private function save(StaticPage $page, $updateMenu = true)
 	{
+		$request = $this->getRequest();
 		$page->getSpecification();
-		$page->loadRequestData($this->request);
+		$page->loadRequestData($request);
+
+		if($updateMenu)
+		{
+			$menu = array (
+				'INFORMATION' => !!$request->get('menuInformation'),
+				'ROOT_CATEGORIES' => !!$request->get('menuRootCategories')
+			);
+			if($menu['INFORMATION'] == false && $menu['ROOT_CATEGORIES'] == false)
+			{
+				$menu = null;
+			}
+			$page->menu->set($menu);
+		}
+		
 		$page->save();
 		$arr = $page->toArray();
 		return new JSONResponse(array('id' => $page->getID(), 'title' => $arr['title_lang']), 'success', $this->translate('_page_has_been_successfully_saved'));

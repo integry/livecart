@@ -146,28 +146,26 @@ class DeliveryZone extends MultilingualObject
 	 * @return DeliveryZone
 	 * @todo implement
 	 */
-	public static function getZoneByAddress(UserAddress $address)
+	public static function getZoneByAddress(UserAddress $address, $type = 0)
 	{
-		$zones = self::getAllZonesByAddress($address);
+		$zones = self::getAllZonesByAddress($address, $type);
 		return $zones ? array_shift($zones) : DeliveryZone::getDefaultZoneInstance();
 	}
 
-	public static function getAllZonesByAddress(UserAddress $address)
+	public static function getAllZonesByAddress(UserAddress $address, $type = 0)
 	{
 		if (!$address->isLoaded())
 		{
 			$address->load();
 		}
-
 		$zones = array();
-
 		// get zones by state
 		if ($address->state->get())
 		{
 			$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('DeliveryZone', 'isEnabled'), true));
 			$f->mergeCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneState', 'stateID'), $address->state->get()->getID()));
+			$f->mergeCondition(new InCond(new ARFieldHandle('DeliveryZone','type'), array(DeliveryZone::BOTH_RATES, $type)));
 			$s = ActiveRecordModel::getRecordSet('DeliveryZoneState', $f, ActiveRecordModel::LOAD_REFERENCES);
-
 			foreach ($s as $zoneState)
 			{
 				$zones[] = $zoneState->deliveryZone->get();
@@ -179,8 +177,8 @@ class DeliveryZone extends MultilingualObject
 		{
 			$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('DeliveryZone', 'isEnabled'), true));
 			$f->mergeCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneCountry', 'countryCode'), $address->countryID->get()));
+			$f->mergeCondition(new InCond(new ARFieldHandle('DeliveryZone','type'), array(DeliveryZone::BOTH_RATES, $type)));
 			$s = ActiveRecordModel::getRecordSet('DeliveryZoneCountry', $f, array('DeliveryZone'));
-
 			foreach ($s as $zone)
 			{
 				$zones[] = $zone->deliveryZone->get();

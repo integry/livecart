@@ -26,7 +26,7 @@ class StaticPage extends MultilingualObject implements EavAble
 		$schema->registerField(new ARField("title", ARArray::instance()));
 		$schema->registerField(new ARField("text", ARArray::instance()));
 		$schema->registerField(new ARField("metaDescription", ARArray::instance()));
-		$schema->registerField(new ARField("isInformationBox", ARBool::instance()));
+		$schema->registerField(new ARField("menu", ARArray::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
 	}
@@ -65,6 +65,17 @@ class StaticPage extends MultilingualObject implements EavAble
 		return $s->get(0);
 	}
 
+	public static function getIsInformationMenuCondition()
+	{
+		return new LikeCond(new ARFieldHandle('StaticPage', 'menu'), '%"INFORMATION";b:1%');
+	}
+
+	public static function getIsRootCategoriesMenuCondition()
+	{
+		return new LikeCond(new ARFieldHandle('StaticPage', 'menu'), '%"ROOT_CATEGORIES";b:1%');
+	}
+
+
 	public function getFileName()
 	{
 		return ClassLoader::getRealPath('cache.staticpage') . '/' . $this->getID() . '.php';
@@ -93,12 +104,10 @@ class StaticPage extends MultilingualObject implements EavAble
 	public function toArray()
 	{
 		$array = parent::toArray();
-
 		if (!$this->isLoaded())
 		{
 			$this->loadFile();
 			$lang = self::getApplication()->getLocaleCode();
-
 			$array['title_lang'] = $this->getValueByLang('title', $lang);
 			$array['text_lang'] = $this->getValueByLang('text', $lang);
 		}
@@ -109,6 +118,20 @@ class StaticPage extends MultilingualObject implements EavAble
 			$array['handle'] = $this->handle->get();
 		}
 
+		$array['menuInformation'] = false;
+		$array['menuRootCategories'] = false;
+
+		if (array_key_exists('menuData', $array))
+		{
+			if (array_key_exists('INFORMATION', $array['menuData']))
+			{
+				$array['menuInformation'] = (bool)$array['menuData']['INFORMATION'];
+			}
+			if (array_key_exists('ROOT_CATEGORIES', $array['menuData']))
+			{
+				$array['menuRootCategories'] = (bool)$array['menuData']['ROOT_CATEGORIES'];
+			}
+		}
 		return $array;
 	}
 

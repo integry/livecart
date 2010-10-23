@@ -317,13 +317,13 @@ class InstallController extends FrontendController
 		$page = StaticPage::getNewInstance();
 		$page->setValueByLang('title', $language->getID(), 'Contact Info');
 		$page->setValueByLang('text', $language->getID(), 'Enter your contact information here');
-		$page->isInformationBox->set(true);
+		$page->menu->set(array('INFORMATION' => true));
 		$page->save();
 
 		$page = StaticPage::getNewInstance();
 		$page->setValueByLang('title', $language->getID(), 'Shipping Policy');
 		$page->setValueByLang('text', $language->getID(), 'Enter your shipping rate & policy information here');
-		$page->isInformationBox->set(true);
+		$page->menu->set(array('INFORMATION' => true));
 		$page->save();
 
 		// create an example site news post

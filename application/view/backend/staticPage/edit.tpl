@@ -34,9 +34,16 @@
 		</fieldset>
 	</p>
 
-	<fieldset class="isInformationBox error">
-		{checkbox name="isInformationBox" class="checkbox" id="isInformationBox_`$page.ID`"}
-		<label for="isInformationBox_{$page.ID}" class="checkbox">{t _inf_menu}</label>
+	<fieldset class="error">
+		<label>{t _add_page_to_menu}:</label>
+		{checkbox name="menuInformation" class="checkbox" id="menuInformation_`$page.ID`"}
+		<label for="menuInformation_{$page.ID}" class="checkbox">{t _information_menu}</label>
+	</fieldset>
+
+	<fieldset class="error">
+		<label></label>
+		{checkbox name="menuRootCategories" class="checkbox" id="menuRootCategories_`$page.ID`"}
+		<label for="menuRootCategories_{$page.ID}" class="checkbox">{t _main_header_menu}</label>
 	</fieldset>
 
 	<p>

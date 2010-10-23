@@ -7,6 +7,8 @@ ClassLoader::import('application.model.discount.DiscountAction');
 ClassLoader::import('application.model.businessrule.RuleCondition');
 ClassLoader::import('application.model.businessrule.condition.RuleConditionRoot');
 ClassLoader::import('application.model.businessrule.interface.*');
+ClassLoader::import('application.model.discount.DiscountConditionRecord');
+
 
 /**
  * Determines which rules and actions are applicable

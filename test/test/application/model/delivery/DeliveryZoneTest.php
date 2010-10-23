@@ -40,6 +40,7 @@ class DeliveryZoneTest extends LiveCartTest
 	{
 		$zone = DeliveryZone::getNewInstance();
 		$zone->name->set(':TEST_ZONE');
+		$zone->type->set(DeliveryZone::TAX_RATES);
 		$zone->isEnabled->set(1);
 		$zone->isFreeShipping->set(1);
 		$zone->save();
@@ -49,6 +50,7 @@ class DeliveryZoneTest extends LiveCartTest
 		$this->assertEquals($zone->name->get(), ':TEST_ZONE');
 		$this->assertEquals($zone->isEnabled->get(), 1);
 		$this->assertEquals($zone->isFreeShipping->get(), 1);
+		$this->assertEquals(DeliveryZone::TAX_RATES, $zone->type->get());
 	}
 
 	public function testGetAllDeliveryZones()

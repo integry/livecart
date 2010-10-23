@@ -255,7 +255,9 @@ class CustomerOrderController extends ActiveGridController
 		$form = $this->createShipmentForm();
 		$form->setData(array('orderID' => $order->getID()));
 		$shipments = $order->getShipments();
+
 		$zone = $order->getDeliveryZone();
+		$taxZone = $order->getTaxZone();
 
 		$statuses = array(
 			Shipment::STATUS_NEW => $this->translate('_shipping_status_new'),

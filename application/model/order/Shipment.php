@@ -29,6 +29,7 @@ class Shipment extends ActiveRecordModel
 	protected $fixedTaxes = array();
 
 	private $deliveryZones = array();
+	private $taxZones = array();
 
 	const STATUS_NEW = 0;
 	const STATUS_PROCESSING = 1;
@@ -159,6 +160,27 @@ class Shipment extends ActiveRecordModel
 		}
 	}
 
+	public function getTaxZone()
+	{
+		$address = $this->getShippingAddress();
+		$addressID = $address ? $address->getID() : 0;
+
+		if (!isset($this->taxZones[$addressID]))
+		{
+			if ($address)
+			{
+				$this->taxZones[$addressID] = DeliveryZone::getZoneByAddress($address, DeliveryZone::TAX_RATES);
+			}
+			else
+			{
+				$this->taxZones[$addressID] = DeliveryZone::getDefaultZoneInstance();
+			}
+			$this->event('getTaxZone'); // ? getDeliveryZone
+		}
+
+		return $this->taxZones[$addressID];
+	}
+
 	public function getDeliveryZone()
 	{
 		$address = $this->getShippingAddress();
@@ -168,7 +190,7 @@ class Shipment extends ActiveRecordModel
 		{
 			if ($address)
 			{
-				$this->deliveryZones[$addressID] = DeliveryZone::getZoneByAddress($address);
+				$this->deliveryZones[$addressID] = DeliveryZone::getZoneByAddress($address, DeliveryZone::SHIPPING_RATES);
 			}
 			else
 			{
@@ -828,7 +850,7 @@ class Shipment extends ActiveRecordModel
 	public function getShippingTaxZone()
 	{
 		$shippingTaxZoneId = self::getApplication()->getConfig()->get('DELIVERY_TAX');
-		return !is_numeric($shippingTaxZoneId) ? $this->getDeliveryZone() : DeliveryZone::getInstanceById($shippingTaxZoneId, DeliveryZone::LOAD_DATA);
+		return !is_numeric($shippingTaxZoneId) ? $this->getTaxZone() : DeliveryZone::getInstanceById($shippingTaxZoneId, DeliveryZone::LOAD_DATA);
 	}
 
 	public function getShippingTaxClass()
@@ -858,7 +880,7 @@ class Shipment extends ActiveRecordModel
 				$taxes = array();
 
 				// subtotal tax rates
-				$zone = $this->getDeliveryZone();
+				$zone = $this->getTaxZone();
 				foreach ($zone->getTaxRates(DeliveryZone::ENABLED_TAXES) as $rate)
 				{
 					$taxes[$rate->getPosition()][ShipmentTax::TYPE_SUBTOTAL] = $rate;
