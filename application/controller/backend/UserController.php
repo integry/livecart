@@ -4,6 +4,7 @@ ClassLoader::import('application.controller.backend.abstract.StoreManagementCont
 ClassLoader::import('application.controller.backend.*');
 ClassLoader::import('application.model.user.*');
 ClassLoader::import('application.helper.massAction.MassActionInterface');
+ClassLoader::import('application.model.delivery.State');
 
 /**
  *

@@ -1,6 +1,9 @@
 <?php
 
 ClassLoader::import('library.activerecord.ARSet');
+ClassLoader::import('application.model.product.ProductVariationValue');
+ClassLoader::import('application.model.product.ProductVariation');
+ClassLoader::import('application.model.product.ProductVariationType');
 
 /**
  *
