@@ -19,7 +19,7 @@
 	</tr>
 	{if $productsInSeparateLine}
 		<tr class="{zebra loop="shipment" stop=true}">
-			<td class="productName" colspan="{$colspan}">
+			<td class="productName" colspan="{$colspan+1}">
 				{include file="order/itemProductInfo.tpl"}
 			</td>
 		</tr>
