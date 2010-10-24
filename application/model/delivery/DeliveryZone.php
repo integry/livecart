@@ -123,9 +123,15 @@ class DeliveryZone extends MultilingualObject
 	/**
 	 * @return ARSet
 	 */
-	public static function getAll()
+	public static function getAll($type = null)
 	{
 		$filter = new ARSelectFilter();
+
+		if ($type)
+		{
+			$filter = new ARSelectFilter(new InCond(new ARFieldHandle('DeliveryZone','type'), array(DeliveryZone::BOTH_RATES, $type)));
+		}
+
 		return self::getRecordSet(__CLASS__, $filter);
 	}
 
@@ -150,6 +156,11 @@ class DeliveryZone extends MultilingualObject
 	{
 		$zones = self::getAllZonesByAddress($address, $type);
 		return $zones ? array_shift($zones) : DeliveryZone::getDefaultZoneInstance();
+	}
+
+	public static function getTaxZones()
+	{
+		return self::getAll(self::TAX_RATES);
 	}
 
 	public static function getAllZonesByAddress(UserAddress $address, $type = 0)

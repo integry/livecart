@@ -10,3 +10,5 @@ _tax_rates_have_been_successfully_saved=Tax rates have been saved successfully
 
 _more_taxes_can_be_added=More taxes can be added
 _here=here
+
+_tip_default_zone_taxes=Tax rates that are configured for the default zone have a special meaning - they're considered as base tax rates that are included in all prices automatically. For example, if the default zone has a tax with 20&#37; rate and a product price is entered as $120, it is automatically broken down as follows - $100 (the product price) + $20 (tax). This feature is useful for countries that use VAT (for example, all EU countries). This also allows to provide tax exemptions under various circumstances.

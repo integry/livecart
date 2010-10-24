@@ -898,7 +898,8 @@ class LiveCart extends Application implements Serializable
 
 		if (!$cacheFile)
 		{
-			$cacheFile = ClassLoader::getRealPath('cache.') . 'router.php';
+			$host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+			$cacheFile = ClassLoader::getRealPath('cache.') . 'router-' . $host . '.php';
 		}
 
 		return $cacheFile;

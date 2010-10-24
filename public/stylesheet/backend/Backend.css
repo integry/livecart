@@ -1925,6 +1925,13 @@ li.moreTabs .moreTabs
 	z-index: 10000;
 }
 
+.inlineWarning
+{
+	margin: 1em;
+	padding: 0.5em;
+	background-color: #ffeeee;
+}
+
 /**************************
  * Debuging
  *************************/

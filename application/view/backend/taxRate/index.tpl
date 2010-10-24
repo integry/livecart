@@ -1,3 +1,9 @@
+{if $deliveryZone.ID == -1}
+	<p class="inlineWarning">
+		{t _tip_default_zone_taxes}
+	</p>
+{/if}
+
 {if !$taxes}
 	<div class="noRecords"><div>{t _no_taxes} <a href="{link controller=backend.tax}" class="menu">{t _add_tax}</a></div></div>
 {else}
