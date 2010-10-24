@@ -44,7 +44,10 @@ class TaxRateTest extends LiveCartTest
 	{
 		parent::setUp();
 
+		ActiveRecord::clearPool();
+
 		ActiveRecord::executeUpdate('DELETE FROM Tax');
+		ActiveRecord::executeUpdate('DELETE FROM TaxRate');
 		ActiveRecord::executeUpdate('DELETE FROM DeliveryZone');
 		ActiveRecord::executeUpdate('DELETE FROM Currency');
 		ActiveRecord::executeUpdate('DELETE FROM ShippingService');
@@ -137,7 +140,6 @@ class TaxRateTest extends LiveCartTest
 
 	public function testDefaultZoneVAT()
 	{
-
 		$taxRate = TaxRate::getNewInstance(DeliveryZone::getDefaultZoneInstance(), $this->tax, 10);
 		$taxRate->save();
 
@@ -174,8 +176,6 @@ class TaxRateTest extends LiveCartTest
 		$this->assertEquals(9.09, round($shipmentArray['taxAmount'],2), 'shipment array, taxAmount');
 		$this->assertEquals(90.91, round($shipmentArray['amount'],2), 'shipment array, amount');
 		$this->assertEquals(100.0, round($shipmentArray['amount'] + $shipmentArray['taxAmount'],2), 'shipment array, amount + taxAmount');
-//if($t);
-//print_r($shipmentArray);
 
 		$this->assertEquals(100, round($shipment->getSubTotal(true), 2), '$shipment->getSubTotal(<with taxes>)');
 		$this->assertEquals(90.91, round($shipment->getSubTotal(false), 2), '$shipment->getSubTotal(<without taxes>)');

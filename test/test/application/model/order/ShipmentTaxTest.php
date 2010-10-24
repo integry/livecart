@@ -10,6 +10,12 @@ require_once dirname(__FILE__) . '/OrderTestCommon.php';
  */
 class ShipmentTaxTest extends OrderTestCommon
 {
+	public function setUp()
+	{
+		parent::setUp();
+		ActiveRecord::clearPool();
+	}
+
 	public function testTaxWithDifferentZone()
 	{
 		$tax = Tax::getNewInstance('VAT');
@@ -151,6 +157,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		$shipment->save();
 
 		// @todo: fix failing assertion
+		// 2 ShipmentTax records are created for the same tax type (1st is not deleted, before the 2nd is created)
 		$this->assertEquals(1, $shipment->getRelatedRecordSet('ShipmentTax')->size(), 'expecting one ShipmentTax');
 
 		$order->save();
