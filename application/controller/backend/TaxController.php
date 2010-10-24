@@ -96,8 +96,8 @@ class TaxController extends StoreManagementController
 			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_could_not_save_tax_entry'));
 		}
 	}
-	
-	
+
+
 	/**
 	 * @return Form
 	 */
@@ -162,7 +162,7 @@ class TaxController extends StoreManagementController
 		);
 
 		// custom
-		foreach(DeliveryZone::getAll() as $deliveryZone)
+		foreach(DeliveryZone::getTaxZones() as $deliveryZone)
 		{
 			$zone = $deliveryZone->toArray();
 			$taxRates = $deliveryZone->getTaxRates();
