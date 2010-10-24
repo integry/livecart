@@ -48,13 +48,18 @@ Backend.DeliveryZone.prototype =
 
 		$(Backend.DeliveryZone.prototype.treeBrowser.allTree).addClassName("hidden");
 		this.insertTreeBranch(zones, 0);
-		var index, len = zones[1]['items'].length;
-		// zones[0] - default, zones[1] - delivery zones, zones[2] - tax zones
-		// items for delivery and tax zones should be equal, because any of them can be converted to type 'both zones'.
-		for(index=0; index < len; index++)
+
+		if (zones[1]['items'])
 		{
-			this.updateTreeBrowserNodeVisibility(index, zones[1]['items'][index].type, /*fix tree lines only when adding last item */ index+1 == len, true);
+			var index, len = zones[1]['items'].length;
+			// zones[0] - default, zones[1] - delivery zones, zones[2] - tax zones
+			// items for delivery and tax zones should be equal, because any of them can be converted to type 'both zones'.
+			for(index=0; index < len; index++)
+			{
+				this.updateTreeBrowserNodeVisibility(index, zones[1]['items'][index].type, /*fix tree lines only when adding last item */ index+1 == len, true);
+			}
 		}
+
 		$(Backend.DeliveryZone.prototype.treeBrowser.allTree).removeClassName("hidden");
 
 		if(!Backend.ajaxNav.getHash().match(/zone_-?\d+#\w+/)) window.location.hash = 'zone_-1#tabDeliveryZoneShipping__';
@@ -1226,7 +1231,7 @@ Backend.DeliveryZone.ShippingService.prototype =
 		}
 		else
 		{
-			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors);
+			//ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors);
 			$H(response.errors).each(function(item) {
 				try {
 					var

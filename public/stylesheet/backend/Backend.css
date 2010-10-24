@@ -1185,6 +1185,7 @@ input.submit {
 	color: #fff;
 	padding-left: 15px;
 	padding-right: 15px;
+	border: 1px solid #008CFF;
 }
 
 input.reset {
