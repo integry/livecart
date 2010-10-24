@@ -50,7 +50,7 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 
 	$out = '';
 
-	if(isset($params['glue']) && ($params['glue'] == true) && !$smarty->getApplication()->isDevMode() && !$smarty->getApplication()->isCustomizationMode())
+	if(isset($params['glue']) && ($params['glue'] == true) && !$smarty->getApplication()->isDevMode() && (!$smarty->getApplication()->isCustomizationMode() || $app->isBackend()))
 	{
 		$request = $smarty->getApplication()->getRequest();
 

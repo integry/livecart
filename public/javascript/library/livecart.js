@@ -807,7 +807,7 @@ function sendEvent(element,event)
     {
         // dispatch for IE
         var evt = document.createEventObject();
-        return element.fireEvent('on'+event, /* evt */)
+        return element.fireEvent('on'+event/*,  evt */)
     }
     else
     {
