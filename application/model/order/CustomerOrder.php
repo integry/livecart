@@ -597,7 +597,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			$discount->save();
 		}
 
-		if (round($this->totalAmount->get(), 2) <= round($this->getPaidAmount(), 2))
+		// @todo: remove the 0.99 multiplicator for currency conversion "tolerance" (a cent going missing when converting amounts between currencies back and forth)
+		if ((round($this->totalAmount->get(), 2)  * 0.99) <= round($this->getPaidAmount(), 2))
 		{
 			$this->isPaid->set(true);
 		}
@@ -2117,6 +2118,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	public function setDeliveryZone(DeliveryZone $zone)
 	{
 		$this->deliveryZone = $zone;
+	}
+
+	public function setTaxZone(DeliveryZone $zone)
+	{
+		$this->taxZone = $zone;
 	}
 
 	/**
