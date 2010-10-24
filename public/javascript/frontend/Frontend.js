@@ -558,7 +558,7 @@ Order.AddressSelector = function(form)
 		{
 			window.setTimeout(function()
 			{
-				if (radioButton.checked)
+				if ($(radioButton.id).checked)
 				{
 					addressForm.show();
 				}
@@ -709,7 +709,7 @@ User.StateSwitcher.prototype =
 		this.stateTextInput = stateTextInput;
 		this.url = url;
 
-		if (this.stateSelector.length > 0)
+		if (this.stateSelector && (this.stateSelector.length > 0))
 		{
 			Element.show(this.stateSelector);
 			Element.hide(this.stateTextInput);
@@ -1250,7 +1250,7 @@ Frontend.OnePageCheckout.prototype =
 				Event.observe(el, 'blur', this.fieldBlurCommon(form, el));
 
 				// change event doesn't fire on radio buttons at IE until they're blurred
-				if ('radio' == el.getAttribute('type'))
+				if (('radio' == el.getAttribute('type')) || ('checkbox' == el.getAttribute('type')))
 				{
 					Event.observe(el, 'click', function(e) { Event.stop(e); this.fieldOnChangeCommon(form, func.bindAsEventListener(this))(e);}.bind(this));
 				}

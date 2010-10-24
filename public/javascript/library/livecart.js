@@ -801,13 +801,13 @@ function _utf8_decode(utftext) {
 	 return string;
 }
 
-function fireEvent(element,event)
+function sendEvent(element,event)
 {
     if (document.createEventObject)
     {
         // dispatch for IE
         var evt = document.createEventObject();
-        return element.fireEvent('on'+event,evt)
+        return element.fireEvent('on'+event, /* evt */)
     }
     else
     {
