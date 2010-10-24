@@ -238,7 +238,10 @@ abstract class ObjectImage extends MultilingualObject
 
 		foreach ($this->getImageSizes() as $key => $value)
 	  	{
-			copy($this->getPath($key), $cloned->getPath($key));
+			if (!@copy($this->getPath($key), $cloned->getPath($key)))
+			{
+				return false;
+			}
 		}
 
 		return $cloned;

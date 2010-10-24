@@ -24,13 +24,13 @@ class ProductImportTest extends LiveCartTest
 	public function testSimpleImport()
 	{
 		$lv = ActiveRecordModel::getNewInstance('Language');
-		$lv->setID('lv');
+		$lv->setID('xx');
 		$lv->save();
 
 		$profile = new CsvImportProfile('Product');
 		$profile->setField(0, 'Product.sku');
 		$profile->setField(1, 'Product.name', array('language' => 'en'));
-		$profile->setField(2, 'Product.name', array('language' => 'lv'));
+		$profile->setField(2, 'Product.name', array('language' => 'xx'));
 		$profile->setField(3, 'Product.shippingWeight');
 		$profile->setParam('delimiter', ';');
 
@@ -50,7 +50,7 @@ class ProductImportTest extends LiveCartTest
 		$this->assertEquals($test->getValueByLang('name', 'en'), 'Test Product');
 
 		$another = Product::getInstanceBySKU('another');
-		$this->assertEquals($another->getValueByLang('name', 'lv'), 'Vel Viens');
+		$this->assertEquals($another->getValueByLang('name', 'xx'), 'Vel Viens');
 
 		unlink($csvFile);
 	}

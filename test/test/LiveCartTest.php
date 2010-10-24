@@ -3,11 +3,17 @@
 ClassLoader::import('application.model.user.User');
 ClassLoader::import('application.model.user.UserAddress');
 
-class LiveCartTest extends PHPUnit_Framework_TestCase
+abstract class LiveCartTest extends PHPUnit_Framework_TestCase
 {
+	protected $config;
+
 	public function setUp()
 	{
 		parent::setUp();
+
+		$this->config = ActiveRecordModel::getApplication()->getConfig();
+
+		ActiveRecordModel::beginTransaction();
 
 		ActiveRecordModel::executeUpdate('DELETE FROM Tax');
 		ActiveRecordModel::executeUpdate('DELETE FROM TaxRate');
@@ -15,6 +21,8 @@ class LiveCartTest extends PHPUnit_Framework_TestCase
 		ActiveRecordModel::executeUpdate('DELETE FROM DiscountCondition');
 		ActiveRecordModel::executeUpdate('DELETE FROM DiscountAction');
 		ActiveRecordModel::executeUpdate('DELETE FROM DeliveryZone');
+
+		$this->getApplication()->clearCachedVars();
 	}
 
 	public function tearDown()
@@ -23,6 +31,8 @@ class LiveCartTest extends PHPUnit_Framework_TestCase
 
 		@unlink(ClassLoader::getRealPath('cache.') . 'currencies.php');
 		$this->setUpCurrency();
+
+		ActiveRecordModel::rollback();
 	}
 
 	/**
@@ -30,13 +40,13 @@ class LiveCartTest extends PHPUnit_Framework_TestCase
 	 * but setUp() method is wiping all Currecy records,
 	 *
 	 * Store frontend is not working without Currency object
-	 * 
+	 *
 	 * As workround this method can be called from test suite to recreate Currency
-	 * 
+	 *
 	 * @todo: reorganize tests to call DELETE FROM Currency only when setUpCurrency() method is called.
-	 * 
+	 *
 	 */
-	protected function setUpCurrency() 
+	protected function setUpCurrency()
 	{
 		if (ActiveRecord::objectExists('Currency', 'USD'))
 		{
@@ -107,6 +117,31 @@ class LiveCartTest extends PHPUnit_Framework_TestCase
 		$product->isEnabled->set(1);
 		$product->save();
 		$this->products[] = $product;
+	}
+
+	public function assertEqual($a, $b)
+	{
+		return $this->assertEquals($a, $b);
+	}
+
+	public function assertIsA($object, $className)
+	{
+		return $this->assertTrue(get_class($object) == $className);
+	}
+
+	protected function pass()
+	{
+		$this->assertTrue(true);
+	}
+
+	protected function xfail()
+	{
+		$this->assertTrue(false);
+	}
+
+	protected function getApplication()
+	{
+		return ActiveRecordModel::getApplication();
 	}
 }
 

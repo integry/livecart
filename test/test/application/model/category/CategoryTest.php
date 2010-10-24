@@ -87,6 +87,8 @@ class CategoryTest extends LiveCartTest
 
 	public function testDeleteCategory()
 	{
+		ActiveRecord::clearPool();
+
 		$startingPositions = array();
 		$nodes = $this->root->getChildNodes(false, true);
 		$nodes->add($this->root);
@@ -103,12 +105,12 @@ class CategoryTest extends LiveCartTest
 
 		// new node
 		$newCategory = Category::getNewInstance($this->root);
-		$newCategory->setValueByLang("name", 'en', 'TEST ' . rand(1, 1000));
+		$newCategory->setValueByLang("name", 'en', 'NEWNODE');
 		$newCategory->save();
 
 		// nested nodes
 		$nestedNodes = array();
-		$lastNode = $this->root;
+		$lastNode = $newCategory;
 		foreach(array() as $i)
 		{
 			$nestedNodes[$i] = Category::getNewInstance($lastNode);
@@ -127,8 +129,19 @@ class CategoryTest extends LiveCartTest
 		$activeTreeNodes = ActiveRecord::retrieveFromPool(get_class($newCategory));
   		foreach($activeTreeNodes as $category)
 		{
-			$category->reload();
-			if(!$category->getID()) continue;
+			try
+			{
+				$category->reload();
+			}
+			catch (ARNotFoundException $e)
+			{
+				continue;
+			}
+
+			if (!$category->getID())
+			{
+				continue;
+			}
 
 			$this->assertEqual($category->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $startingPositions[$category->getID()]['lft']);
 			$this->assertEqual($category->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $startingPositions[$category->getID()]['rgt']);
@@ -164,6 +177,8 @@ class CategoryTest extends LiveCartTest
 
 	public function testMoveCategoryBetweenSiblings()
 	{
+		$this->root->reload();
+
 		$newCategories = array(0 => null);
 		foreach(range(1, 4) as $i)
 		{

@@ -1679,8 +1679,8 @@ class OrderTest extends OrderTestCommon
 
 		$this->assertTrue(is_object($this->user->defaultShippingAddress->get()));
 
-		$this->user->reload();
-		$this->user->loadAddresses();
+		//$this->user->reload();
+		//$this->user->loadAddresses();
 
 		$this->assertFalse((bool)$order->isFinalized->get());
 

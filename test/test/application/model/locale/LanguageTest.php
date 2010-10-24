@@ -23,9 +23,10 @@ class LanguageTest extends LiveCartTest
 		);
 	}
 
-	public function testNothing()
+	// obsolete test package?
+	public function testFoo()
 	{
-		$this->pass();
+		$this->assertTrue(true);
 	}
 
 	/*

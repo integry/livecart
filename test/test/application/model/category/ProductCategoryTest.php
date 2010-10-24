@@ -3,6 +3,7 @@
 require_once dirname(__FILE__) . '/../../Initialize.php';
 
 ClassLoader::import('application.model.category.ProductCategory');
+ClassLoader::import('application.model.category.Category');
 
 /**
  *  @author Integry Systems
@@ -27,6 +28,8 @@ class ProductCategoryTest extends LiveCartTest
 	public function setUp()
 	{
 		parent::setUp();
+
+		Category::recalculateProductsCount();
 
 		$this->root = Category::getNewInstance(Category::getRootNode());
 		$this->root->save();
@@ -67,7 +70,7 @@ class ProductCategoryTest extends LiveCartTest
 
 		$this->assertEquals(1, $this->categories[1]->totalProductCount->get());
 		$this->assertEquals(1, $this->categories[2]->totalProductCount->get());
-		$this->assertEquals(2, $this->root->totalProductCount->get());
+		$this->assertEquals(1, $this->root->totalProductCount->get());
 	}
 
 	public function testDeleteProduct()
