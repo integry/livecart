@@ -11,7 +11,7 @@
 							{if in_array($filter.ID, $filtersIDs)}checked="checked"{/if}
 						/>
 						<label class="checkbox" for="{$filter.ID}">
-							<a href="javascript:void(0);">{$filter.name_lang}</a>
+							{$filter.name_lang}
 							{if 'DISPLAY_NUM_FILTER'|config}
 								<span class="count">(&rlm;{$filter.count})</span>
 							{/if}

@@ -695,7 +695,8 @@ fieldset.container
 
 .filterGroup.filterTypeCheckbox li div
 {
-	padding: 4px 0 0 0;
+	padding: 0;
+	margin-bottom: 1px;
 }
 
 .filterTop
@@ -712,6 +713,14 @@ fieldset.container
 .topMenuFilterCaption
 {
 	white-space: nowrap;
+}
+
+.filterGroup ul li label
+{
+	display: inline-block;
+	margin-top: 0;
+	padding-top: 0;
+	margin-left: -15px;
 }
 
 /*****************************
