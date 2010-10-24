@@ -274,7 +274,7 @@ Backend.CsvImport =
 		var parent = $('column_select_' + index);
 		var select = parent.down('select');
 		select.value = value;
-		fireEvent(select, 'change');
+		sendEvent(select, 'change');
 
 		$H(params).each(function(param)
 		{

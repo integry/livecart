@@ -31,7 +31,7 @@ if (!file_exists($realPath))
 }
 
 // gzip.php is called from another directory via mod_rewrite
-if (!file_exists($realPath))
+if (!file_exists($realPath) && !empty($_SERVER['REDIRECT_URL']))
 {
 	$root = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['REDIRECT_URL'];
 	$realPath = dirname($root) . DIRECTORY_SEPARATOR . $file;
