@@ -282,7 +282,7 @@ Backend.Product =
 
 	reloadGrid: function(categoryID)
 	{
-		var table = $('products_' + categoryID);
+		var table = $('products_' + categoryID + '_header');
 
 		if (!table && Backend.Product.productTabCopies[categoryID])
 		{
@@ -631,7 +631,7 @@ Backend.Product.Editor.prototype =
 				}
 			}
 
-			for (var k = 0; k <= this.path.length; k++)
+			for (var k = 0; k < this.path.length; k++)
 			{
 				var category = this.path[k] ? this.path[k].ID : 1;
 				Backend.Product.reloadGrid(category);
