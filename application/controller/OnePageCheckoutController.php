@@ -705,12 +705,6 @@ class OnePageCheckoutController extends CheckoutController
 			$res['shippingMethod'] = true;
 		}
 
-if (!$res['shippingMethod'])
-{
-//var_dump($order->toArray());
-//		var_dump($this->validateOrder($order, self::STEP_SHIPPING + $isStepEditable));
-}
-
 		return $res;
 	}
 

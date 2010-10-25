@@ -59,7 +59,6 @@ class CustomizeController extends StoreManagementController
 
 	public function saveCss()
 	{
-		//var_dump($this->request->toArray());
 		$params = json_decode($this->request->get('result'), true);
 
 		$theme = $params['theme'];

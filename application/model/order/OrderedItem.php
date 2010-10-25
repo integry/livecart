@@ -707,7 +707,6 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 			$array['displaySubTotal'] = (float)$this->getSubTotal($isTaxIncludedInPrice);
 			$array['itemPrice'] = $array['displaySubTotal'] / $array['count'];
 
-			//var_dump($isTaxIncludedInPrice, $array['displayPrice'], $array['itemPrice'], $array['itemBasePrice'], '----');
 			$isTaxIncludedInPrice = $isTaxIncludedInPrice || (($array['itemPrice'] != $array['itemBasePrice']) && ($array['itemPrice'] == $this->getSubTotal(false)) && ($array['itemBasePrice'] == $this->getSubTotal(true)));
 
 			// display price changed by tax exclusion

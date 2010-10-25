@@ -397,7 +397,7 @@ class CategoryController extends FrontendController
 	private function getProductsArray(ProductFilter $filter)
 	{
 		$products = $this->getCategory()->getProductArray($filter, array('Manufacturer', 'DefaultImage' => 'ProductImage', 'Category'));
-//var_dump($filter->getSelectFilter()->createString());
+
 		// get product specification and price data
 		ProductSpecification::loadSpecificationForRecordSetArray($products);
 		ProductPrice::loadPricesForRecordSetArray($products);
