@@ -7,6 +7,8 @@ Manufacturer=Manufacturers
 User=Users
 UserGroup=User groups
 UserAddress=Addresses
+ShippingService=Shipping methods
+StaticPage=Pages
 
 _SpecField_displayed_on_front_page=Editable by customer
 _SpecField_displayed_in_product_list=Visible to customer

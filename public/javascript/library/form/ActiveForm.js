@@ -18,24 +18,25 @@ ActiveForm.prototype = {
 	 */
 	generateHandle: function(title)
 	{
-		handle = title.toLowerCase();
+		var handle = title.toLowerCase();
+		var sep = '_';
 
 		handle = handle.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,""); // trim
 		handle = handle.replace(/[^a-z_\d \.]/g, ""); // remove all illegal simbols
 		// handle = handle.replace(/^[\d\_]+/g, "."); // replace first digits with "."
-		handle = handle.replace(/ /g, "."); // replace spaces with "."
+		handle = handle.replace(/ /g, sep); // replace spaces with "."
 
 		// replace repeating dots with one
 		var oldHandle = '';
 		while (oldHandle != handle)
 		{
 		  	oldHandle = handle;
-		  	handle = handle.replace(/\.\./g, ".");
+		  	handle = handle.replace(/\_+/g, "_");
 		}
 
 		// replace leading and ending dots
-		handle = handle.replace(/^\./g, "");
-		handle = handle.replace(/\.$/g, "");
+		handle = handle.replace(/^\_/g, "");
+		handle = handle.replace(/\_$/g, "");
 
 		return handle;
 	},

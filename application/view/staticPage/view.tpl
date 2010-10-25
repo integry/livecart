@@ -23,6 +23,7 @@
 	</div>
 
 	{foreach $page.attributes as $attr}
+		<div class="eavAttr eav-{$attr.EavField.handle}">
 		<h3 class="attributeTitle">{$attr.EavField.name_lang}</h3>
 		<p class="attributeValue">
 			{if $attr.values}
@@ -37,6 +38,7 @@
 					{$attr.EavField.valuePrefix_lang}{$attr.value}{$attr.EavField.valueSuffix_lang}
 				{/if}
 		</p>
+		</div>
 	{/foreach}
 
 </div>
