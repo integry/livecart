@@ -99,3 +99,15 @@ _subtotal=Subtotal
 
 _hint_quick_search=Search products, orders, users, etc.
 _advanced_search=Advanced search
+
+# backend footer panel
+_store_frontend=Store frontend
+_admin_dashboard=Admin dashboard
+_button_added=Button added
+_cant_add_button=Can't add button
+_button_removed=Button removed
+_cant_remove_button=Can't remove button
+_button_order_changed=Button order changed
+_cant_change_button_order=Can't change button order
+_last_viewed=Last viewed
+_tip_toolbar_drag=Drag & drop most used commands from the top menu here for easy short-cut access

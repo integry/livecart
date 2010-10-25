@@ -825,6 +825,14 @@ html #footpanel .subpanel ul li a.active
 	padding-left: 40px;
 }
 
+#noToolbarButtons
+{
+	float: left;
+	font-size: 11px;
+	line-height: 26px;
+	margin-left: 20px;
+}
+
 #footpanel li#toolbarQS,
 #footpanel li#lastviewed
 {

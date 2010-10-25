@@ -220,6 +220,11 @@ BackendToolbar.prototype = {
 		// 2. send ajax update
 		// 3. if adding icon failed -remove
 
+		if ($('noToolbarButtons'))
+		{
+			$('noToolbarButtons').hide();
+		}
+
 		node = $("dropButtonTemplate").cloneNode(true);
 		node.id="button"+$(li).down("a").id;
 		if ($(insertBeforeLi).hasClassName("dropButton"))

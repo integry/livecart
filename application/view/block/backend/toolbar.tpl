@@ -14,6 +14,8 @@
 					<small></small>
 				</a>
 			</li>
+		{foreachelse}
+			<li id="noToolbarButtons">{t _tip_toolbar_drag}</li>
 		{/foreach}
 
 		{block BACKEND-TOOLBAR-AFTER-BUTTONS}
