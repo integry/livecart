@@ -42,6 +42,15 @@
 		<span style="display: none;" id="order_{$order.ID}_addCouponIndicator" class="progressIndicator"></span>
 		<a id="order_{$order.ID}_addCoupon" href="{link controller="backend.customerOrder" action="addCoupon" id=$order.ID}?coupon=_coupon_">{t _add_coupon}</a>
 	</li>
+	
+	{if $order.isFinalized}
+		<li {denied role='order.update'}style="display: none"{/denied} class="order_recalculateDiscounts">
+			<a id="order_{$order.ID}_recalculateDiscounts" href="{link controller="backend.customerOrder" action="recalculateDiscounts" id=$order.ID}">
+				{t _recalculate_discounts}
+			</a>
+		</li>
+	{/if}
+
 </ul>
 <div class="clear"></div>
 
