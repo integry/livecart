@@ -160,7 +160,7 @@ class ThemeController extends StoreManagementController
 			$code = str_replace('url("' . $var . '")', 'url(\'../theme/' . $theme .'/' . $name . '\')', $code);
 		}
 
-		$code = preg_replace('/rgb\((\d+),\s*(\d+),\s*(\d+)\)/e', '"#" . dechex(\\1) . dechex(\\2) . dechex(\\3)', $code);
+		$code = preg_replace('/rgb\((\d+),\s*(\d+),\s*(\d+)\)/e', '"#" . str_pad(dechex(\\1), 2, "0", STR_PAD_LEFT) . str_pad(dechex(\\2), 2, "0", STR_PAD_LEFT) . str_pad(dechex(\\3), 2, "0", STR_PAD_LEFT)', $code);
 
 		$css->setCode($code);
 		$res = $css->save();

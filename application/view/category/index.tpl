@@ -24,7 +24,7 @@
 
 	{if $categoryNarrow}
 		{include file="category/narrowByCategory.tpl"}
-	{elseif !$searchQuery && $subCategories}
+	{elseif !$searchQuery && $subCategories && !'HIDE_SUBCATS'|config}
 		{include file="category/subcategoriesColumns.tpl"}
 	{/if}
 
@@ -47,7 +47,7 @@
 	{if $subCatFeatured}
 		<h2>{t _featured_products}</h2>
 
-		{include file="category/productListLayout.tpl" products=$subCatFeatured}
+		{include file="category/productListLayout.tpl" layout='FEATURED_LAYOUT'|config|default:$layout products=$subCatFeatured}
 	{/if}
 
 	{block FILTER_TOP}

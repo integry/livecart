@@ -3,7 +3,12 @@
 
 	{block LEFT_SIDE}
 
-	{block CATEGORY_BOX}
+	{if 'CATEGORY_MENU_TYPE'|config == 'CAT_MENU_FLYOUT'}
+		{block DYNAMIC_CATEGORIES}
+	{else}
+		{block CATEGORY_BOX}
+	{/if}
+
 	{block COMPARE}
 	{block FILTER_BOX}
 	{block INFORMATION}

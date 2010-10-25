@@ -36,12 +36,12 @@ class ProductController extends FrontendController
 			$this->addBlock('PRODUCT-RATING-SUMMARY', 'ratingSummary', 'product/ratingSummary');
 
 		$this->addBlock('PRODUCT-PURCHASE-VARIATIONS', 'purchaseVariations', 'product/block/purchaseVariations');
-
-
 	}
 
 	public function index()
 	{
+		$this->loadLanguageFile('Category');
+
 		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA, array('ProductImage', 'Manufacturer', 'Category'));
 		$this->product = $product;
 
@@ -295,7 +295,7 @@ class ProductController extends FrontendController
 
 			$response->set('additionalCategories', $categories);
 		}
-		$response->set('enlargeProductThumbnailOnMouseOver', 
+		$response->set('enlargeProductThumbnailOnMouseOver',
 			$this->config->get('_ENLARGE_PRODUCT_THUMBNAILS_ON') == 'P_THUMB_ENLARGE_MOUSEOVER');
 
 		return $response;

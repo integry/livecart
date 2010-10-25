@@ -10,7 +10,9 @@
 
 	{block HOME-PAGE-TOP}
 
-	{include file="category/subcategoriesColumns.tpl"}
+	{if 'HOME_PAGE_SUBCATS'|config}
+		{include file="category/subcategoriesColumns.tpl"}
+	{/if}
 
 	{if $news}
 		<h2>{t _latest_news}</h2>
@@ -31,12 +33,7 @@
 
 	{if $subCatFeatured}
 		<h2>{t _featured_products}</h2>
-
-		{if 'GRID' == $layout}
-			{include file="category/productGrid.tpl" products=$subCatFeatured}
-		{else}
-			{include file="category/productList.tpl" products=$subCatFeatured}
-		{/if}
+		{include file="category/productListLayout.tpl" layout='FEATURED_LAYOUT'|config|default:$layout products=$subCatFeatured}
 	{/if}
 
 	{include file="category/categoryProductList.tpl"}

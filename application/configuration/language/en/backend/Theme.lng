@@ -151,6 +151,17 @@ TABS_COLOR=Tab text color
 TABS_COLOR_HOVER=Tab hover text color
 TABS_COLOR_ACTIVE=Active tab text color
 
+FLYOUTMENU=Fly-out category menu
+FLY_BG_COLOR=Background color
+FLY_BG_HOVER=Hover background color
+FLY_BG_IMAGE=Sub-menu indicator image
+FLY_BORDER=Menu element border
+FLY_COLOR=Text color
+FLY_COLOR_HOVER=Hover text color
+
+SUBCATS=Sub-category menu
+SUBCAT_BORDER=Separator border
+
 _max_file_size=Exported ZIP file; Max file size: [_1]
 _select_file=Select theme file
 _import=Import

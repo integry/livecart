@@ -228,7 +228,7 @@ class CategoryController extends FrontendController
 		}
 
 		// get subcategory-subcategories
-		if ($subCategories)
+		if ($subCategories && $this->config->get('CAT_MENU_SUBS'))
 		{
 			$this->getSubSubCategories($subCategories);
 		}

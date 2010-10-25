@@ -80,6 +80,11 @@ function smarty_prefilter_config($source, $smarty)
 	$source = preg_replace('/{help (.+?)}/', '{helpLink id=$1}', $source);
 	$source = preg_replace('/{see (.+?)}/', '{helpSeeAlsoItem id=$1}', $source);
 
+	// sections
+	$source = str_replace('{head}', '{header}', $source);
+	$source = str_replace('{cont}', '{/header}{content}', $source);
+	$source = preg_replace('/{foot}(.*){\/sect}/msU', '{/content}{footer}$1{/footer}{/sect}', $source);
+
 	// remove {fetch} tags
 	$source = preg_replace('/{fetch (.+?)}/', '', $source);
 

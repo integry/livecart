@@ -1,8 +1,12 @@
 
 <div id="footpanel">
 	<ul id="mainpanel">
+		{block BACKEND-TOOLBAR-BEFORE-ALL}
+
 		<li><a href="{link controller=index}" class="storeFrontend" target="_blank">{t _store_frontend}{*<small>{t _store_frontend}</small>*}</a></li>
 		<li><a href="{link controller=backend.index}" class="storeBackend">{t _admin_dashboard}{*<small>{t _admin_dashboard}</small>*}</a></li>
+
+		{block BACKEND-TOOLBAR-BEFORE-BUTTONS}
 
 		{foreach from=$dropButtons item=item}
 			<li class="uninitializedDropButton" style="" id="button{$item.menuID}">
@@ -12,9 +16,13 @@
 			</li>
 		{/foreach}
 
+		{block BACKEND-TOOLBAR-AFTER-BUTTONS}
+
 		<li id="toolbarQS">
 			{include file="backend/quickSearch/form.tpl" formid="TBQuickSearch"}
 		</li>
+
+		{block BACKEND-TOOLBAR-BEFORE-LASTVIEWED}
 
 		<li id="lastviewed" class="lastviewed invalid"><a href="#" class="lastviewed">{t _last_viewed}</a>
 			<div class="subpanel">
@@ -24,6 +32,9 @@
 				</ul>
 			</div>
 		</li>
+
+		{block BACKEND-TOOLBAR-AFTER-LASTVIEWED}
+
 	</ul>
 
 	<li style="display:none;" class="uninitializedDropButton" id="dropButtonTemplate">

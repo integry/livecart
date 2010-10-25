@@ -30,7 +30,7 @@
 	   {if $group.0.ProductRelationshipGroup.name_lang}
 		   <h3>{$group.0.ProductRelationshipGroup.name_lang}</h3>
 	   {/if}
-	   {include file="category/productList.tpl" products=$group}
+	   {include file="category/productListLayout.tpl" layout='PRODUCT_PAGE_LIST_LAYOUT'|config products=$group}
 	{/foreach}
 </div>
 </div>
@@ -44,7 +44,7 @@
 <div id="purchasedTogetherSection" class="productSection purchasedTogether">
 <h2>{t _purchased_together}</h2>
 <div id="purchasedTogether">
-	{include file="category/productList.tpl" products=$together}
+	{include file="category/productListLayout.tpl" layout='PRODUCT_PAGE_LIST_LAYOUT'|config products=$together}
 </div>
 </div>
 {/if}

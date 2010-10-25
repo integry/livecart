@@ -21,13 +21,8 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 	{if $node}
 		<ul id="dynamicNav">
 		{foreach from=$node item=category}
-			{if $category.ID == $currentId}
-				<li class="current{if $category.ID == $topCategoryId} topCategory{/if}">
-					<a class="currentName" href="{categoryUrl data=$category filters=$category.filters}">{$category.name_lang}</a>
-			{else}
-				<li class="{if $category.ID == $topCategoryId}topCategory{/if} {if $category.lft < $currentCategory.lft && $category.rgt > $currentCategory.rgt} current{/if}">
+				<li class="{if $category.parentNodeID == 1}topCategory{/if} {if $category.lft <= $currentCategory.lft && $category.rgt >= $currentCategory.rgt} dynCurrent{/if}{if $category.subCategories} hasSubs{else} noSubs{/if}">
 					<a href="{categoryUrl data=$category filters=$category.filters}">{$category.name_lang}</a>
-			{/if}
 					{if 'DISPLAY_NUM_CAT'|config}
 						<span class="count">(&rlm;{$category.count})</span>
 					{/if}

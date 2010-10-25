@@ -120,11 +120,7 @@ div.addressBlock,
 .noteText,
 #checkoutProgress a,
 tr.even td,
-.dynamicMenu, .dynamicMenu ul,
-.dynamicMenu li:hover li a,
-.dynamicMenu li.sfhover li a,
-.dynamicMenu li:hover li:hover li a,
-.dynamicMenu li.sfhover li:hover li a
+.dynamicMenu ul
 {
 	background-color: #F3FCFF;
 }
@@ -1311,6 +1307,78 @@ table.productGrid
 {
 	text-indent: 0;
 	margin-bottom: 0\0/
+}
+
+.dynamicMenu li.topCategory
+{
+	border-top-width: 0;
+	padding-left: 0;
+}
+
+.categories.dynamicMenu ul li
+{
+	background-image: none;
+}
+
+.categories.dynamicMenu ul
+{
+	width: 175px;
+}
+
+.categories.dynamicMenu ul li.topCategory.hasSubs a
+{
+	background-position: 163px 1px;
+}
+
+.categories.dynamicMenu ul li.hasSubs a
+{
+	background-image: url("../image/leftmenu4.gif");
+	background-position: 180px 1px;
+}
+
+.categories.dynamicMenu ul li.hasSubs a:hover
+{
+	background-image: url("../image/leftmenu4_hover.gif");
+}
+
+.categories.dynamicMenu ul li li.noSubs a
+{
+	background-image: none !important;
+}
+
+.categories.dynamicMenu ul li ul li
+{
+	padding-left: 0;
+}
+
+.categories.dynamicMenu a
+{
+	padding-left: 12px;
+	padding-right: 12px;
+}
+
+.dynamicMenu li ul
+{
+	margin-top: 0;
+	top: -1px;
+	margin-left: 173px;
+}
+
+.dynamicMenu li li ul
+{
+	margin-left: 175px;
+}
+
+.dynamicMenu li a
+{
+	width: 151px;
+	padding: 0;
+}
+
+.dynamicMenu li:hover > a,
+.dynamicMenu li.sfhover > a
+{
+	background-color: #CEF1FF;
 }
 
 .rtl .newsReadMore a

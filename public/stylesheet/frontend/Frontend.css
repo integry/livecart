@@ -260,7 +260,6 @@ a.cvv,
 /* centered text */
 div.box .title,
 .subCategories td.subCatImage,
-.noSubCats .subCatContainer,
 .productGrid td,
 ul.productList .image,
 .overallRating,
@@ -328,7 +327,6 @@ img.calendar_button
 #leftSide,
 #logoContainer,
 .quickSearch,
-.subCategories,
 .allFilters .filterGroup,
 .resultStats .pagingInfo, .categoryLayoutSwitch,
 ul.productList .image,
@@ -419,11 +417,7 @@ div.addressBlock,
 #productSummaryContainer,
 .noteText,
 #checkoutProgress a,
-.dynamicMenu, .dynamicMenu ul,
-.dynamicMenu li:hover li a,
-.dynamicMenu li.sfhover li a,
-.dynamicMenu li:hover li:hover li a,
-.dynamicMenu li.sfhover li:hover li a,
+.dynamicMenu ul,
 .rootCategories,
 .rootCategories .wrapper,
 #background-color1-var
@@ -665,6 +659,9 @@ fieldset.container
 {
 	text-indent: 22px;
 	font-size: 90%;
+	overflow-y: auto;
+	max-height: 400px;
+	padding-left: 3px;
 }
 
 .filterGroup ul li a
@@ -688,9 +685,9 @@ fieldset.container
 }
 .filterGroup.filterTypeCheckbox li div input.checkbox
 {
-	margin-top: 1px;
-	margin-right: -1px;
 	vertical-align: middle;
+	float: none;
+	margin-left: -1em;
 }
 
 .filterGroup.filterTypeCheckbox li div
@@ -717,10 +714,8 @@ fieldset.container
 
 .filterGroup ul li label
 {
-	display: inline-block;
-	margin-top: 0;
-	padding-top: 0;
-	margin-left: -15px;
+	display: inline;
+	vertical-align: middle;
 }
 
 /*****************************
@@ -805,41 +800,73 @@ ul.news li.newsEntry
     font-size: larger;
 }
 
-tr.separator td
+/* obsolete */ ztable.subCategories
 {
-    height: 10px;
-    padding: 15px;
-}
-
-tr.separator div
-{
-	border-bottom-width: 1px;
-	height: 5px;
+    width: 49%;
+    float: left;
 }
 
 .subCategories
 {
+    display: table;
     margin-top: 10px;
-    width: 49%;
+    border-collapse: collapse;
+    margin: 0 auto;
 }
 
-.subCategories td.subCatImage
+.subCategoryRow
+{
+	display: table-row;
+}
+
+.subCategoryItem
+{
+	display: table-cell;
+	border-width: 1px;
+	border-style: dotted;
+	vertical-align: middle;
+	padding: 5px;
+}
+
+.subCategoryItem.first
+{
+	border-left-width: 0;
+}
+
+.subCategoryItem.last
+{
+	border-right-width: 0;
+}
+
+.subCategoryRow.first td
+{
+	border-top-width: 0;
+}
+
+.subCategoryRow.last td
+{
+	border-bottom-width: 0;
+}
+
+.subCategories .subCatImage
 {
 	width: 85px;
 	padding: 5px;
 	padding-right: 10px;
+	display: table-cell;
+	vertical-align: middle;
+	*float: left;
 }
 
-.subCategories td.details
+.subCategories .details
 {
     padding-left: 20px;
     padding-right: 10px;
-    height: 140px;
-}
-
-.subCategories td.details.verticalSep
-{
-	border-right-width: 1px;
+    display: table-cell;
+    vertical-align: middle;
+	*margin-left: 85px;
+	*padding-top: 2em;
+	*padding-bottom: 1em;
 }
 
 .subCategories td.details .count
@@ -2758,6 +2785,11 @@ html[xmlns] .rootCategories .ul .li {
 /*************************
 	Dynamic menu
 *************************/
+.dynamicMenu li
+{
+	border-collapse: collapse;
+}
+
 .dynamicMenu .content
 {
 	padding: 0 !important;
@@ -2779,8 +2811,9 @@ html[xmlns] .rootCategories .ul .li {
 .dynamicMenu li ul { /* second-level lists */
 	position : absolute;
 	left: -999em;
-	margin-left : 142px;
-	margin-top : -30px;
+	margin-left : 188px;
+	margin-top : 0;
+	top: -1px;
 	z-index: 10000;
 }
 
@@ -2788,14 +2821,11 @@ html[xmlns] .rootCategories .ul .li {
 {
 	border-width: 1px;
 	border-top: 0;
+	padding-left: 0;
 }
 
-.dynamicMenu li:hover a,
-.dynamicMenu li.sfhover a,
-.dynamicMenu li:hover li:hover a,
-.dynamicMenu li.sfhover li.sfhover a,
-.dynamicMenu li:hover li:hover li:hover a,
-.dynamicMenu li.sfhover li.sfhover li.sfhover a
+.dynamicMenu li:hover > a
+.dynamicMenu li.sfhover > a
 {
 	background-color: lightyellow;
 }
@@ -2804,17 +2834,23 @@ html[xmlns] .rootCategories .ul .li {
 	left: -999em;
 }
 
-.dynamicMenu li a, .dynamicMenu li .currentName
+.dynamicMenu li a
 {
-	width: 140px;
+	width: 174px;
 	display : block;
-	font-weight : bold;
 	text-decoration : none;
-	padding : 7px;
 	padding-right: 0;
 	margin-left: 0;
+	padding: 4px;
+	padding-left: 12px;
 }
 
+.dynamicMenu ul li.noSubs a
+{
+	background-image: none !important
+}
+
+/*
 .dynamicMenu li.current a
 {
 	background-color: transparent;
@@ -2840,6 +2876,7 @@ html[xmlns] .rootCategories .ul .li {
 {
 	padding: 3px;
 }
+*/
 
 .dynamicMenu li:hover ul ul, .dynamicMenu li:hover ul ul ul, .dynamicMenu li.sfhover ul ul, .dynamicMenu li.sfhover ul ul ul {
 	left: -999em;

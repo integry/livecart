@@ -34,6 +34,7 @@ DISABLE_AJAX=Disable AJAX features in store frontend
 _homepage=Home Page
 _homepage_display=Display Configuration
 NUM_NEWS_INDEX=Number of news entries to display
+HOME_PAGE_SUBCATS=Display category list
 INDEX_MAN_FILTERS=Display manufacturer filters
 INDEX_PRICE_FILTERS=Display price filters
 _homepage_meta_tags=Home Page Meta Tags
@@ -42,6 +43,17 @@ INDEX_META_KEYWORDS=Meta keywords tag value
 
 _general=Categories
 _category_pages=Category Pages
+
+_subcategory_list=Sub-category List
+HIDE_SUBCATS=Hide sub-categories in the content area
+CATEGORY_COLUMNS=Number of columns
+CATEGORY_COL_DIRECTION=Category order direction
+CAT_VER=Vertical (displayed from top to bottom, ordered by columns)
+CAT_HOR=Horizontal (displayed from left to right, ordered by rows)
+CAT_MENU_IMAGE=Display category image
+CAT_MENU_DESCR=Display category description
+CAT_MENU_SUBS=Number of sub-sub categories to display
+
 NUM_PRODUCTS_PER_CAT=Number of products per category page (list layout)
 SORT_ORDER=Default product sort order
 ALLOWED_SORT_ORDER=Allowed sort parameters
@@ -51,6 +63,7 @@ PRODUCT_NAME_ASC=Product Name: A-Z
 PRODUCT_NAME_DESC=Product Name: Z-A
 PRICE_ASC=Price: Low to High
 PRICE_DESC=Price: High to Low
+SKU_ASC=SKU
 NEWEST_ARRIVALS=Newest Arrivals
 RATING=Customer Rating
 DISPLAY_NUM_CAT=Display the number of products per category
@@ -61,6 +74,7 @@ DISPLAY_CATEGORY_DESC=Display category description
 DISPLAY_CATEGORY_FEATURED=Display a featured product instead of category image
 
 _featured_products=Featured Products
+FEATURED_LAYOUT=Featured product list display layout
 FEATURED_COUNT=Number of featured products to display
 FEATURED_RANDOM=Include random products in featured product list if there are not enough featured products to display
 
@@ -134,7 +148,7 @@ _option_image=Customer File Upload Preview
 _o_small=Thumbnail images
 _o_large=Enlarged preview
 
-_content_blocks=Content blocks
+_menus_and_blocks=Menus & Blocks
 _sale_items=On-sale Products
 SALE_ITEMS_COUNT=Number of on-sale products to display per block
 _newest_items=Newest Products
@@ -142,6 +156,16 @@ NEWEST_ITEMS_COUNT=Number of newest products to display
 _bestselling_items=Bestselling Product
 BESTSELLING_ITEMS_COUNT=Number of bestselling products to display
 BESTSELLING_ITEMS_DAYS=Number of last days to include sales data from
+
+_category_menu=Category Menu
+CATEGORY_MENU_TYPE=Category menu type
+CAT_MENU_FLYOUT=Fly-out (not suited for large category count)
+CAT_MENU_STANDARD=Standard
+
+_lang_menu=Language Selection Menu
+
+_search_box=Search Box
+HIDE_SEARCH_CATS=Hide category selection menu (search all categories by default)
 
 _product_page=Products
 
@@ -153,6 +177,7 @@ SHOW_SKU_EMAIL=Display product SKU in order e-mail messages
 QUANT_FIELD_TYPE=Purchase quantity selection field type
 QUANT_SELECT=Select box
 QUANT_INPUT=Input field
+PRODUCT_PAGE_LIST_LAYOUT=Section product list layout (related, purchased-together products, etc.)
 
 _inventory_status=Inventory Status
 PRODUCT_DISPLAY_STOCK=Display the amount of products in stock

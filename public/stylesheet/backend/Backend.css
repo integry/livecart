@@ -459,6 +459,7 @@ html, body{
 	background: lightyellow;
 	padding: 0.5em;
 	font-size: smaller;
+	z-index: 8000;
 }
 
 /***************************
