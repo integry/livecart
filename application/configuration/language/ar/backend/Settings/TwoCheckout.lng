@@ -1,0 +1,6 @@
+TwoCheckout_help=<h2>تعليمات إعداد إضافية</h2><ol><li>الدخول للحساب الخاص 2Checkout</li><li>انتقل إلى <em>Account -> الإدارة الموقع </em> مقطع </li><li>غير <em> العودة المباشرة</em> الى <em><strong>عد فورا إلى موقع الويب الخاص بي</strong></em></li><li>غير <em>Approved URL </em> الى <em><strong>{link controller=checkout action=notify id=TwoCheckout url=true}</strong></em></li><li>Change <em> رابط الارسال </em> الى <em><strong>{link controller=checkout action=completed url=true}</strong></em></li><li>يفضل: دخل.. <em>Secret Word</em> لمزيد من الامن. نفس الكلمة يجب أن يكون دخل في خيارات LiveCart أدناه</li></ul>  
+TwoCheckout=2Checkout
+TwoCheckout_account=اى دى الحساب
+TwoCheckout_currency=عملة الحساب
+TwoCheckout_secretWord=كلمة السر<a href="https://www.2checkout.com/2co/admin/look_and_feel" target="_blank">(?)</a>  
+TwoCheckout_test=وضع الاختبار

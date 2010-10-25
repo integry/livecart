@@ -1,0 +1,11 @@
+_err_innodb_not_available=<a href="http://dev.mysql.com/doc/refman/5.0/en/innodb-overview.html" target="_blank">في أي محرك قاعدة بيانات تخزين الجدول</a>لم يتم تمكين لماي. يرجى التحقق من خادم قاعدة بيانات الخلية ضبط وحاول مرة أخرى.
+checkWritePermissions=الدليل أذونات الكتابة
+_writePermissionsFix=وأوصى <strong>العمل : </ قوي باستخدام عميل بروتوكول نقل الملفات ، وتغيير أذونات الوصول (شمود) لهذه الدلائل إلى 777 (الكتابة الوصول الكامل). إذا كان الدليل لا يتم إنهاء بعد ، الرجاء إنشائه.
+checkPHPVersion=بي إتش بي الإصدار
+checkPHPVersion_error=href="http://php.net" <atarget="_blank"> بي </ يجب على إصدار> ما لا يقل عن 5.2
+checkMySQL=قاعدة بيانات دعم
+checkMySQL_error=<ahref="http://php.net/mysqli" target="_blank"> mysqli </ أ> أو <ahref="http://php.net/mysqli" target="_blank"> <ماي / يجب تثبيت ملحق> لفب
+checkGD=صورة التلاعب دعم
+checkGD_error=href="http://php.net/gd" <atarget="_blank"> كلمة المدير العام </ يجب تثبيت ملحق> لفب
+checkSession=PHP دورة التكوين
+checkSession_error=href="http://php.net/gd" <atarget="_blank"> كلمة المدير العام </ يجب تثبيت ملحق> لفب

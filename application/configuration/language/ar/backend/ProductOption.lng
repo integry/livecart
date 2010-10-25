@@ -1,0 +1,7 @@
+_ProductOption_remove_question=حقا إزالة هذا الخيار المنتج؟
+_add_new_field=إضافة خيار جديد
+_cancel_adding_new_field=إلغاء إضافة خيار جديد
+_error_name_empty=الرجاء إدخال خيار اسم المنتج
+_error_record_id_is_not_valid=خيار المنتج غير موجود
+_could_not_remove_option=لا يمكن إزالة الخيار
+_could_not_remove_option_choice=لا يمكن إزالة اختيار الخيار

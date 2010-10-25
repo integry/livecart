@@ -1,0 +1,4 @@
+PaypalWebsitePaymentsStandard=موقع ال باي بال الدفعات الاساسية
+PaypalWebsitePaymentsStandard_EMAIL=عنوان البريد الإلكتروني التجارى
+PaypalWebsitePaymentsStandard_SANDBOX=استخدام باي بال الصندوق الرمل (بيئة اختبار)
+PaypalWebsitePaymentsStandard_ITEM_NAME=عربة التسوق وصف البند لعرضها في Paypal 

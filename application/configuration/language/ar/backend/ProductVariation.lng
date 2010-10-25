@@ -1,0 +1,14 @@
+_add_variation_type=إضافة نوع الاختلاف
+_add_variation=أضف الاختلاف
+_sku=SKU
+_price=السعر
+_weight=الوزن
+_inventory=المخزون
+_image=صورة
+_add=أضف
+_substract=طرح
+_fixed=ثابت
+_no_change=لم يطرأ أي تغيير
+_err_type_name=الرجاء إدخال اسم نوع الاختلاف (على سبيل المثال ، "الحجم")
+_err_variation_name=الرجاء إدخال اسم التباين (على سبيل المثال ، "كبير")
+_variations_save_conf=الاختلافات حفظ المنتج بنجاح

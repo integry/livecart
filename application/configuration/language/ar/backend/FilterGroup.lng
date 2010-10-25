@@ -1,0 +1,16 @@
+_filter_group_was_successfully_saved=وكان مرشح حفظ بنجاح
+_could_not_save_filter_group=لا يمكن حفظ فلتر
+_filter_group_was_successfully_removed=قد نجحت في إزالة تصفية
+_could_not_remove_filter_group=لا يمكن إزالة فلتر
+_add_new_filter=إضافة فلتر جديد
+_category_has_no_attr=لم تنشأ أي سمات للترشيح لهذه الفئة حتى الآن
+_delete_field=حذف حقل
+_remove_filter_question=هل أنت متأكد أنك تريد إزالة هذا المرشح؟
+_FilterGroup_remove_question=هل أنت متأكد أنك تريد إزالة هذا المرشح؟
+_cancel_adding_new_filter=إلغاء إضافة فلتر جديد
+_error_name_empty=الرجاء إدخال اسم مرشح
+_error_filter_value_is_not_a_number=وينبغي أن تكون القيمة تصفية عدد
+_error_spec_field_is_not_selected=مواصفات الحقل لم يتم تحديد
+_error_illegal_date=غير المشروعة الميلاد
+_error_filter_name_empty=الرجاء إدخال اسم مرشح
+_error_filter_handle_invalid=المؤشر غير صالح

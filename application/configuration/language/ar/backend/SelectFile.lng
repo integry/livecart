@@ -1,0 +1,10 @@
+_select_file=حدد ملف
+_listing_files=قائمة الملفات دولار من -- دولار لحساب دولار
+_no_files_found=لم يتم العثور على ملفات
+fileName=اسم
+fileType=تمديد
+fileSize=حجم
+fileDate=تعديل تاريخ
+filePermissions=أذونات
+fileOwner=الأذونات
+fileGroup=مالك

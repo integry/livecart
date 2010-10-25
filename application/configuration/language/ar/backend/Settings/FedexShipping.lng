@@ -1,0 +1,8 @@
+FedexShipping_help=لاسترداد معدلات اصحيحة ، الرجاء ادخال بريدك في طرق الشحن قسم مخزن> عنوان الموقع. ان الدولة لديها من فضلك لاحظ أن تدخل في شكل مختصر (على سبيل المثال ، كاليفورنيا بدلا من ولاية كاليفورنيا).
+FedexShipping=FedEx
+_FEDEX_API_ACCESS=دخول API 
+FedexShipping_apiUrl=رابط API 
+FedexShipping_accountNumber=رقم الحساب
+FedexShipping_meterNumber=عدد متر
+_FEDEX_SERVICE_OPTS=خيارات الخدمة
+FedexShipping_enabledServices=تمكين الخدمات

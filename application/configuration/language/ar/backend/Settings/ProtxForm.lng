@@ -1,0 +1,8 @@
+ProtxForm=Protx VPS شكل
+ProtxForm_vendor=اسم الدخول البائع 
+ProtxForm_description=وصف السلع
+ProtxForm_key=تشفير كلمة المرور
+ProtxForm_mode=وضع
+PROTX_LIVE=حي
+PROTX_TEST=اختبار
+PROTX_SIMULATOR=محاكي

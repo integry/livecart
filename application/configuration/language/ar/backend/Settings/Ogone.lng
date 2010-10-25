@@ -1,0 +1,4 @@
+Ogone_help= <h2>تعليمات إعداد إضافية</h2><ol><li>الدخول للحساب الخاص Ogone</li><li>اذهب الى <em>تقنية المعلومات</em> section</li><li>دخول <em><strong>{link controller=checkout action=notify id=Ogone url=true}</strong></em> في إطار الباب 4.1(رابط مرجعية الدفع)</li><li>في إطار الباب حدد 4.2<em>جعل هذا الطلب مباشرة بعد دفع...</em></li><li>اختياريا ، ولكنها مفضلة : دخول <em>SHA-1 التوقيع </em> تحت 4.4. إعادة إدخال نفس التوقيع في <em>عبارة سرية</em> في مجال ضبط LiveCart أدناه</li></ul> 
+Ogone_pspid=اسم التاجر المشاركة
+Ogone_secretWord=عبارة سرية (دخلت في الأقسام 3.2 و 4.4 في Ogone)
+Ogone_test=نمط الاختبار

@@ -1,0 +1,11 @@
+_modules=وحدات
+_inactive=غير فعال
+_install=تثبيت
+_deinstall=الغاء التثبيت
+_installed=تثبيت
+_confirm_deinstall=هل أنت متأكد أنك تريد الغاء التثبيتهذه الوحدة؟ سيتم حذف كافة جداول قاعدة البيانات وحدة نمطية والبيانات!
+_confirm_install=حقا تثبيت هذه الوحدة؟
+_install_confirm=[تم _1 حدة] تثبيت
+_deinstall_confirm=[تم _1 حدة] الغاء التثبيت
+_enable_confirm=[تم _1 حدة] تمكين
+_disable_confirm=[تم _1 حدة تعطيل]

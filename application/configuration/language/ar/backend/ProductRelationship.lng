@@ -1,0 +1,16 @@
+_a_relationship_between_products_was_successfully_created=وهناك علاقة بين المنتجات إنشاء بنجاح
+_could_not_create_product_relationship= تم بالفعل تعيين هذا المنتج كذو علاقة علاقتها
+_relationship_was_successfully_removed=نجحت في إزالة العلاقة
+_select_product=إضافة المنتجات ذات الصلة
+_add_new_group=إضافة مجموعة جديدة
+_add_group_title=إضافة مجموعة جديدة منتجات ذات صلة
+_done_adding=يتم إضافة منتجات ذات الصلة
+_cancel_adding_new_related_product=إلغاء إضافة علاقة جديدة
+_cancel_adding_new_group=إلغاء إضافة مجموعة جديدة
+_are_you_sure_you_want_to_delete_this_group=هل أنت متأكد أنك تريد حذف هذه المجموعة العلاقة؟
+_are_you_sure_you_want_to_delete_this_relation=هل أنت متأكد أنك تريد حذف هذه العلاقة؟
+_product_relationship_group_title=لقب
+_err_relationship_name_is_empty=الرجاء إدخال اسم المجموعة
+_err_circular=لا يمكن إضافة منتج المتصلة نفس المنتج
+_err_multiple= تم بالفعل تعيين هذا المنتج من حيث علاقتها
+_msg_added=المنتجات ذات الصلة واضاف بنجاح

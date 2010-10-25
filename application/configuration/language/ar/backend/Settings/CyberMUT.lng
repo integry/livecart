@@ -1,0 +1,10 @@
+CyberMUT_help=<h2>Additional إعداد التعليمات</h2>الرجاء إدخال التالية لتأكيد عنوان الدفع في CyberMUT : الوضع<em><strong>{link controller=checkout action=notify id=CyberMUT url=true}</strong></em>  
+CyberMUT_TPE=عدد EPT التاجر الظاهري
+CyberMUT_societe=موقع رمز idenfitication (سوسيتيه)
+CyberMUT_key1=HMAC مفتاح 1 (20 حرفا)
+CyberMUT_key2=HMAC مفتاح 2 (40 حرفا)
+CyberMUT_bank=الحصول على البنك
+CyberMUT_CM=المصارف واتحادات Mutuel كريدي
+CyberMUT_CIC=بنوك من مجموعة CIC 
+CyberMUT_OBC=بنك OBC  
+CyberMUT_test=وضع اختبار

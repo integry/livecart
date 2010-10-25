@@ -1,0 +1,6 @@
+PaypalExpressCheckout=باي بال الخروج السريع
+PaypalExpressCheckout_sandbox=استخدام رمل (بيئة اختبار) 
+PaypalExpressCheckout_username=اسم المستخدم
+PaypalExpressCheckout_password=كلمة السر
+PaypalExpressCheckout_signature=توقيع
+PaypalExpressCheckout_AUTHONLY=تأذن فقط المدفوعات دون القبض عليهم تلقائيا

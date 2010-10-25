@@ -1,0 +1,7 @@
+UpsShipping=UPS
+_UPS_API_ACCESS=USPS الدخول الى API
+UpsShipping_accessKey=مفتاح الوصول لـ API  
+UpsShipping_user=اسم المستخدم
+_UPS_SERVICES=الخدمات
+UpsShipping_enabledServices=تمكين الخدمات
+UpsShipping_password=كلمة السر

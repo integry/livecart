@@ -1,0 +1,13 @@
+_add_new_file=إضافة ملف جديد
+_add_new_group=إضافة مجموعة جديدة
+_cancel_adding_new_file=إلغاء إضافة ملف جديد
+_cancel_adding_file_group=إلغاء إضافة مجموعة جديدة
+_are_you_sure_you_want_to_delete=هل أنت متأكد أنك تريد حذف هذا الملف
+_are_you_sure_you_want_to_delete_group=هل أنت متأكد أنك تريد حذف هذه المجموعة
+_product_file_group_title=عنوان
+_add_new_file_group=تحرير ملف المجموعة
+_err_file_title_is_empty=الرجاء إدخال عنوان الملف
+_err_allow_download_days_should_be_a_number=وينبغي أن يكون عدد أيام من نوع الرقمية
+_err_allow_download_days_is_empty=الرجاء عنتر عدد من الأيام لتحميل
+_err_file_could_not_be_uploaded_to_the_server=لا يمكن أن يكون الملف تم الرفع إلى ملقم
+_err_fileName_should_not_be_empty=الرجاء إدخال اسم الملف

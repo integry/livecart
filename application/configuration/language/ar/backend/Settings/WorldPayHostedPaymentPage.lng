@@ -1,0 +1,4 @@
+WorldPayHostedPaymentPage_help=<h2>تعليمات إعداد إضافية</h2><ol><li>الدخول للحساب الخاص WorldPay</li><li>انتقل إلى <em>التنصيب</em> مقطع</li><li>أدخل إعداد الصفحة من أجل التثبيت المناسبة (اختبار أو الإنتاج)</li><li>تغيير <em>استجابة الدفع رابط</em> to <em><strong>{link controller=checkout action=notify id=WorldPayHostedPaymentPage url=true}</strong></em></li><li>Change <em>تم مكين الاستجابة الدفع?</em> to <em><strong>صحيح</strong></em></li></ul>
+WorldPayHostedPaymentPage=استضافت WorldPay صفحة الدفع
+WorldPayHostedPaymentPage_account=اى دى الحساب
+WorldPayHostedPaymentPage_test=وضع اختبار

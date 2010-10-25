@@ -1,0 +1,11 @@
+_tax_entry_was_successfully_saved=وضريبة الدخول حفظ بنجاح
+_could_not_save_tax_entry=لا يمكن انقاذ دخول الضرائب
+_add_new_tax=إضافة ضريبة جديدة
+_cancel_adding_new_tax=واضاف إلغاء ضريبة جديدة
+_cancel_adding_new_tax_rate=إلغاء إضافة جديدة معدل الضريبة
+_name=اسم
+_manage=إدارة
+_taxes=الضرائب
+_tax_classes=فئات الضريبة
+_error_the_name_should_not_be_empty=الرجاء إدخال اسم
+_are_you_sure_you_want_to_remove_ths_tax=هل أنت متأكد أنك تريد إزالة هذه الضريبة؟ قد يكون قيد الاستخدام في بعض المناطق التسليم.

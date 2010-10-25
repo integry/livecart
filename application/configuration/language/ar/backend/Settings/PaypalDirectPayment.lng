@@ -1,0 +1,6 @@
+PaypalDirectPayment=باي بال الدفع المباشر
+PaypalDirectPayment_sandbox=استخدام رمل (بيئة اختبار) 
+PaypalDirectPayment_username=اسم المستخدم
+PaypalDirectPayment_password=كلمة السر
+PaypalDirectPayment_signature=توقيع
+PaypalDirectPayment_cardTypes=تمكين أنواع بطاقات الائتمان

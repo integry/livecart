@@ -1,0 +1,17 @@
+_edit_templates=تحرير القوالب
+_edit_template=تحرير قالب ملف
+_please_select=الرجاء تحديد ملف قالب لتحرير
+_save_template=حفظ قالب
+_template_file_name=اسم الملف
+_save_for_theme=حفظ لموضوع محدد فقط
+_create_template=إنشاء ملف قالب
+_delete_template=حذف ملف القالب
+_file_name_empty=الرجاء إدخال اسم الملف
+_edit_email_templates=تحرير قوالب البريد الإلكتروني
+_subject=موضوع الرسالة
+_body=نص الرسالة
+_html_version=أتش تي أم أل الإصدار
+_confirm_template_delete=حقا حذف ملف القالب المحدد؟
+_template_has_been_successfully_updated=حفظ قالب بنجاح
+_could_not_update_template=قد لا يتم حفظ قالب
+_template_has_been_successfully_deleted=ملف القالب تم حذف بنجاح

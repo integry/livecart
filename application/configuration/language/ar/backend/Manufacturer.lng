@@ -1,0 +1,13 @@
+_manufacturers=مصنعين
+Manufacturer.name=اسم المصنعين
+_listing_manufacturers=قائمة المصنعين دولار من -- دولار لحساب دولار
+_no_manufacturers=لم يتم العثور على مصنعين
+_are_you_sure_you_want_to_delete_manufacturer=مصنعين حقا اختيار حذف؟
+_nothing_selected=الرجاء اختيار واحد على الأقل أول مصنع
+_cancel_editing_manufacturer=إلغاء تحرير الصانع
+_manufacturer_info=معلومات عامة
+_manufacturer_images=الصور
+_manufacturer_was_successfully_saved=وكان مورد المعلومات المحفوظة بنجاح
+_could_not_save_manufacturer=لا يمكن حفظ معلومات الصانع
+_select_manufacturer=حدد الشركة المصنعة
+_done_adding=يتم إضافة مصنعين
