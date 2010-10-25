@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2010-07-26 04:02                                #
-# Model version:         Version 2010-07-26 4                            #
+# Created on:            2010-10-25 08:33                                #
+# Model version:         Version 2010-10-25 1                            #
 # ---------------------------------------------------------------------- #
 
 
@@ -735,6 +735,7 @@ CREATE TABLE DeliveryZone (
     isFreeShipping BOOL COMMENT 'Determines if free shipping is available for this delivery zone',
     isRealTimeDisabled BOOL COMMENT 'Determines if the real-time shipping rates are disabled for this delivery zone',
     position INTEGER UNSIGNED DEFAULT 0,
+    type INTEGER UNSIGNED NOT NULL,
     name VARCHAR(100) COMMENT 'Delivery zone name',
     CONSTRAINT PK_DeliveryZone PRIMARY KEY (ID)
 )
@@ -867,10 +868,14 @@ ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 CREATE TABLE ShippingService (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     deliveryZoneID INTEGER UNSIGNED COMMENT 'ID of the referenced DeliveryZone',
+    eavObjectID INTEGER UNSIGNED,
     isFinal BOOL,
     name MEDIUMTEXT COMMENT 'Service name (translatable). For example, "Next Day Delivery"',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other ShippingServices',
     rangeType TINYINT COMMENT '0 - weight based range 1 - subtotal based range',
+    description MEDIUMTEXT,
+    deliveryTimeMinDays INTEGER,
+    deliveryTimeMaxDays INTEGER,
     CONSTRAINT PK_ShippingService PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -882,11 +887,13 @@ ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 CREATE TABLE StaticPage (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     parentID INTEGER UNSIGNED,
+    eavObjectID INTEGER UNSIGNED,
     handle VARCHAR(40) COMMENT 'URL slug. For example, for Terms Of Service page it could be "terms.of.service"',
     title MEDIUMTEXT COMMENT 'Page title (translatable)',
     text MEDIUMTEXT COMMENT 'Page text (translatable)',
     metaDescription MEDIUMTEXT,
     isInformationBox BOOL NOT NULL COMMENT 'Determines if a link to the page is being displayed in the "Information Box" menu',
+    menu TEXT,
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Sort order in relation to other StaticPages',
     CONSTRAINT PK_StaticPage PRIMARY KEY (ID)
 )
@@ -1280,6 +1287,8 @@ CREATE TABLE EavObject (
     userGroupID INTEGER UNSIGNED,
     userAddressID INTEGER UNSIGNED,
     transactionID INTEGER UNSIGNED,
+    shippingServiceID INTEGER UNSIGNED,
+    staticPageID INTEGER UNSIGNED,
     classID TINYINT UNSIGNED,
     CONSTRAINT PK_EavObject PRIMARY KEY (ID)
 )
@@ -1356,7 +1365,6 @@ CREATE TABLE DiscountCondition (
     isAnyRecord BOOL NOT NULL,
     isAllSubconditions BOOL NOT NULL,
     isActionCondition BOOL NOT NULL,
-    isReverse BOOL,
     isFinal BOOL NOT NULL,
     recordCount INTEGER NOT NULL,
     validFrom TIMESTAMP DEFAULT '0000-00-00',
@@ -1591,6 +1599,35 @@ CREATE TABLE CategoryRelationship (
     relatedCategoryID INTEGER UNSIGNED,
     position INTEGER,
     CONSTRAINT PK_CategoryRelationship PRIMARY KEY (ID)
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "SearchableItem"                                             #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE SearchableItem (
+    section VARCHAR(64),
+    locale VARCHAR(40),
+    value TEXT,
+    meta TEXT,
+    sort INTEGER UNSIGNED
+)
+ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+# ---------------------------------------------------------------------- #
+# Add table "BackendToolbarItem"                                         #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE BackendToolbarItem (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    ownerID INTEGER UNSIGNED,
+    menuID VARCHAR(40),
+    productID INTEGER,
+    userID INTEGER,
+    orderID INTEGER,
+    position INTEGER,
+    CONSTRAINT PK_BackendToolbarItem PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -1850,8 +1887,14 @@ ALTER TABLE ProductFileGroup ADD CONSTRAINT Product_ProductFileGroup
 ALTER TABLE ShippingService ADD CONSTRAINT DeliveryZone_ShippingService 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
+ALTER TABLE ShippingService ADD CONSTRAINT EavObject_ShippingService 
+    FOREIGN KEY (eavObjectID) REFERENCES EavObject (ID) ON DELETE SET NULL ON UPDATE CASCADE;
+
 ALTER TABLE StaticPage ADD CONSTRAINT StaticPage_StaticPage 
     FOREIGN KEY (parentID) REFERENCES StaticPage (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE StaticPage ADD CONSTRAINT EavObject_StaticPage 
+    FOREIGN KEY (eavObjectID) REFERENCES EavObject (ID) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE ShipmentTax ADD CONSTRAINT TaxRate_ShipmentTax 
     FOREIGN KEY (taxRateID) REFERENCES TaxRate (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1979,6 +2022,12 @@ ALTER TABLE EavObject ADD CONSTRAINT Transaction_EavObject
 ALTER TABLE EavObject ADD CONSTRAINT Category_EavObject 
     FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
+ALTER TABLE EavObject ADD CONSTRAINT ShippingService_EavObject 
+    FOREIGN KEY (shippingServiceID) REFERENCES ShippingService (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE EavObject ADD CONSTRAINT StaticPage_EavObject 
+    FOREIGN KEY (staticPageID) REFERENCES StaticPage (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
 ALTER TABLE ManufacturerImage ADD CONSTRAINT Manufacturer_ManufacturerImage 
     FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -2077,3 +2126,6 @@ ALTER TABLE CategoryRelationship ADD CONSTRAINT Category_CategoryRelationship
 
 ALTER TABLE CategoryRelationship ADD CONSTRAINT Category_CategoryRelationship2 
     FOREIGN KEY (relatedCategoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE BackendToolbarItem ADD CONSTRAINT User_BackendToolbarItem 
+    FOREIGN KEY (ownerID) REFERENCES User (ID) ON DELETE CASCADE ON UPDATE CASCADE;

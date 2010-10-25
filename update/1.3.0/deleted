@@ -2,10 +2,3 @@ application/model/presentation/AbstractPresentation.php
 application/model/presentation/ProductPresentation.php
 application/view/backend/taxRate/edit.tpl
 application/view/backend/taxRate/rate.tpl
-public/javascript/library/tinymce/gz_end.js
-public/javascript/library/tinymce/gz_start.js
-public/javascript/library/tinymce/plugins/paste/blank.htm
-public/javascript/library/tinymce/plugins/paste/css/blank.css
-public/javascript/library/tinymce/plugins/paste/css/pasteword.css
-public/javascript/library/tinymce/plugins/xhtmlxtras/css/xhtmlxtras.css
-public/javascript/library/tinymce/tiny_mce_gzip.js
