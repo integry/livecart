@@ -151,15 +151,15 @@ function build
 
 DIR=`pwd`
 
-git stash save build
+# git stash save build
 
 build /home/mercurial/repo/build /var/db/livecart master makeProfessional
 #build /home/mercurial/repo/build-community /var/db/livecart/community community makeCommunity
 
 cd $DIR
 
-git reset --hard
+#git reset --hard
 #git checkout master
-git stash pop build
+#git stash pop build
 
 echo 'Build process completed successfuly'
