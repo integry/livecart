@@ -157,10 +157,15 @@ _bestselling_items=Bestselling Product
 BESTSELLING_ITEMS_COUNT=Number of bestselling products to display
 BESTSELLING_ITEMS_DAYS=Number of last days to include sales data from
 
-_category_menu=Category Menu
+_category_menu=Side Category Menu
 CATEGORY_MENU_TYPE=Category menu type
 CAT_MENU_FLYOUT=Fly-out (not suited for large category count)
 CAT_MENU_STANDARD=Standard
+CAT_MENU_NONE=No menu displayed
+
+_top_category_menu=Top Drop-down Menu
+TOP_MENU_HIDE=Hide top menu
+TOP_MENU_HIDE_CATS=Do not include categories
 
 _lang_menu=Language Selection Menu
 

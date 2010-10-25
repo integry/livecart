@@ -524,26 +524,35 @@ abstract class FrontendController extends BaseController
 	{
 		ClassLoader::import('application.model.staticpage.StaticPage');
 
-		$topCategories = $this->getTopCategories();
-		$ids = array();
-		foreach ($topCategories as $cat)
+		if ($this->config->get('TOP_MENU_HIDE'))
 		{
-			if ($cat['isEnabled'])
+			return;
+		}
+
+		if (!$this->config->get('TOP_MENU_HIDE_CATS'))
+		{
+			$topCategories = $this->getTopCategories();
+			$ids = array();
+			foreach ($topCategories as $cat)
 			{
-				$ids[] = $cat['ID'];
+				if ($cat['isEnabled'])
+				{
+					$ids[] = $cat['ID'];
+				}
+			}
+			$f = new ARSelectFilter(new INCond(new ARFieldHandle('Category', 'parentNodeID'), $ids));
+			$f->setOrder(new ARFieldHandle('Category', 'parentNodeID'));
+			$f->setOrder(new ARFieldHandle('Category', 'lft'));
+			$subCategories = array();
+			foreach (ActiveRecordModel::getRecordSetArray('Category', $f) as $cat)
+			{
+				if ($cat['isEnabled'])
+				{
+					$subCategories[$cat['parentNodeID']][] = $cat;
+				}
 			}
 		}
-		$f = new ARSelectFilter(new INCond(new ARFieldHandle('Category', 'parentNodeID'), $ids));
-		$f->setOrder(new ARFieldHandle('Category', 'parentNodeID'));
-		$f->setOrder(new ARFieldHandle('Category', 'lft'));
-		$subCategories = array();
-		foreach (ActiveRecordModel::getRecordSetArray('Category', $f) as $cat)
-		{
-			if ($cat['isEnabled'])
-			{
-				$subCategories[$cat['parentNodeID']][] = $cat;
-			}
-		}
+
 		$f = new ARSelectFilter(new IsNullCond(new ARFieldHandle('StaticPage', 'parentID')));
 		$f->mergeCondition(StaticPage::getIsRootCategoriesMenuCondition());
 		$f->setOrder(new ARFieldHandle('StaticPage', 'position'));
@@ -560,6 +569,12 @@ abstract class FrontendController extends BaseController
 		{
 			$subPages[$page['parentID']][] = $page;
 		}
+
+		if (empty($topCategories) && empty($pages))
+		{
+			return;
+		}
+
 		$response = new BlockResponse();
 		$response->set('categories', $topCategories);
 		$response->set('subCategories', $subCategories);
