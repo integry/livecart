@@ -44,10 +44,11 @@
 	{includeJs file="library/scriptaculous/builder.js" front=true}
 	{includeJs file="library/scriptaculous/effects.js" front=true}
 	{includeJs file="library/prototype/prototype.js" front=true}
-	{includeJs file="library/BackendToolbar.js"}
-	
-	{compiledJs glue=true nameMethod=hash}
 
+	{includeJs file="library/FooterToolbar.js"}
+	{includeJs file="backend/BackendToolbar.js"}
+
+	{compiledJs glue=true nameMethod=hash}
 
 	{literal}
 	<script language="javascript" type="text/javascript">

@@ -1,20 +1,18 @@
 var BackendToolbar = Class.create();
 BackendToolbar.prototype = {
-	nodes : {},
-	// draggable menu items contains <a> tags, clicking on them reloads page
-	// this flag is used for workround
-	draggingItem: false,
 
-	initialize: function(rootNode, urls)
+	isBackend: true,
+
+	nodes: function()
 	{
-		this.urls = urls;
-		this.nodes.root = $(rootNode);
-		this.nodes.mainpanel = this.nodes.root.down("ul");
 		this.nodes.lastviewed = this.nodes.root.down(".lastviewed");
 		this.nodes.lastViewedIndicator = $("lastViewedIndicator");
 		this.nodes.quickSearchResult = $("TBQuickSearchResultOuterContainer");
 		this.nodes.quickSearchQuery = $("TBQuickSearchQuery");
+	},
 
+	afterInit: function()
+	{
 		// remove button from toolbar, if it is droped outside any droppable area
 		Droppables.add($(document.body), {
 			onDrop: function(from, to, event) {
@@ -95,11 +93,6 @@ BackendToolbar.prototype = {
 		Event.observe(this.nodes.quickSearchQuery, "focus", this.hideLastViewedMenu.bind(this));
 	},
 
-	getSubPanels: function()
-	{
-		return $A(this.nodes.lastviewed.getElementsByClassName("subpanel"));
-	},
-
 	openLastViewedMenu: function()
 	{
 		this.nodes.quickSearchResult.hide();
@@ -110,7 +103,7 @@ BackendToolbar.prototype = {
 			this.nodes.lastViewedIndicator.show();
 			this.nodes.lastViewedIndicator.addClassName("progressIndicator");
 			new LiveCart.AjaxUpdater(
-				this.urls.lastViewed,
+				this.getPorperty("lastViewed"),
 				this.nodes.lastviewed.down("ul"),
 				this.nodes.lastViewedIndicator,
 				false,
@@ -123,18 +116,23 @@ BackendToolbar.prototype = {
 
 		var a = this.nodes.lastviewed.down("a");
 		a.addClassName("active");
-		this.getSubPanels().each(
+		this.getSubPanels(this.nodes.lastviewed).each(
 			function(subpanel) {
 				$(subpanel).addClassName("importantVisible");
 			}
 		);
 	},
-
+	
+	
 	hideLastViewedMenu: function()
 	{
+		if(this.isBackend == false)
+		{
+			return;
+		}
 		var a = this.nodes.lastviewed.down("a");
 		a.removeClassName("active");
-		this.getSubPanels().each(
+		this.getSubPanels(this.nodes.lastviewed).each(
 			function(subpanel) {
 				$(subpanel).removeClassName("importantVisible");
 			}
@@ -238,7 +236,7 @@ BackendToolbar.prototype = {
 		this.fillDropButtonWithData(node);
 		this.updateDroppables();
 		new LiveCart.AjaxRequest(
-			this.urls.addIcon.replace("_id_", node.id.replace("button", "")).replace("_position_",this.getButtonPosition(node)),
+			this.getPorperty("addIcon").replace("_id_", node.id.replace("button", "")).replace("_position_",this.getButtonPosition(node)),
 			null,
 			function(node, transport)
 			{
@@ -266,7 +264,7 @@ BackendToolbar.prototype = {
 
 		new LiveCart.AjaxRequest
 		(
-			this.urls.removeIcon.replace("_id_", id).replace("_position_",this.getButtonPosition(node)),
+			this.getPorperty("removeIcon").replace("_id_", id).replace("_position_",this.getButtonPosition(node)),
 			null,
 			function(node, transport)
 			{
@@ -310,34 +308,7 @@ BackendToolbar.prototype = {
 			r.push(item.id.replace("button", ""));
 			return r;
 		});
-		new LiveCart.AjaxRequest(this.urls.sortIcons.replace('_order_', r.join(",")), null);
-	},
-
-	adjustPanel: function (panel)
-	{
-		panel = $(panel);
-		var
-			windowHeight = window.innerHeight || (window.document.documentElement.clientHeight || window.document.body.clientHeight),
-			subpanel = $(panel.getElementsBySelector(".subpanel")[0]),
-			ul = $(panel.getElementsBySelector("ul")[0]);
-
-		subpanel.style.height="auto";
-		ul.style.height="auto";
-
-		var
-			panelsub = subpanel.getHeight(),
-			panelAdjust = windowHeight - 196,
-			ulAdjust =  panelAdjust - 25;
-
-		if (panelsub > panelAdjust)
-		{
-			subpanel.style.height=panelAdjust+"px";
-			ul.style.height=panelAdjust+"px";
-		}
-		else
-		{
-			ul.style.height="auto";
-		}
+		new LiveCart.AjaxRequest(this.getPorperty("sortIcons").replace('_order_', r.join(",")), null);
 	},
 
 	adjustQuickSearchResult: function(quickSearch)
@@ -350,15 +321,7 @@ BackendToolbar.prototype = {
 	invalidateLastViewed: function()
 	{
 		this.nodes.lastviewed.addClassName("invalid");
-	},
-
-	cancelClickEventOnDrag: function(event)
-	{
-		if (this.draggingItem == true)
-		{
-			// drag fires only one click event, setting flag to false will allow next clicks on menu to operate normally
-			this.draggingItem = false;
-			Event.stop(event);
-		}
 	}
 }
+
+BackendToolbar.prototype = Object.extend(FooterToolbar.prototype, BackendToolbar.prototype);

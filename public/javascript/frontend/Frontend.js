@@ -1465,3 +1465,9 @@ Frontend.AjaxInit = function(container)
 		new Frontend.Ajax[v[0]](container);
 	});
 }
+
+var FrontendToolbar = Class.create();
+FrontendToolbar.prototype = {
+	isBackend: false
+}
+FrontendToolbar.prototype = Object.extend(FooterToolbar.prototype, FrontendToolbar.prototype);
