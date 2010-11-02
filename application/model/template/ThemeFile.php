@@ -33,6 +33,11 @@ class ThemeFile
 	 */
 	public function processFileUpload($key, $filename=null, $orginalFilename=null)
 	{
+		if ((strtolower(substr($filename, -3)) == 'php') || (strtolower(substr($orginalFilename, -3)) == 'php'))
+		{
+			return;
+		}
+
 		$result = array();
 		if(array_key_exists($key, $_FILES) == false)
 		{
@@ -109,9 +114,9 @@ class ThemeFile
 
 	public function getFiles()
 	{
-		
-		
-		
+
+
+
 		$files = array();
 		$handle = opendir($this->path);
 		if(!$handle)
@@ -132,7 +137,7 @@ class ThemeFile
 						$hasThumbnail = true;
 					}
 				}
-				
+
 				$files[] = array(
 					'ID' => $file,
 					'fn' => $file,

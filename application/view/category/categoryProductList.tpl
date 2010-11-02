@@ -5,6 +5,8 @@
 			{maketext text=_showing_products params=$offsetStart,$offsetEnd,$count}
 		</div>
 
+		{include file="category/block/switchListLayout.tpl"}
+
 		<div class="sortOptions">
 			{if $sortOptions && ($sortOptions|@count > 1)}
 				{t _sort_by}
@@ -15,7 +17,6 @@
 			&nbsp;
 		</div>
 
-		{include file="category/block/switchListLayout.tpl"}
 		</fieldset>
 	</div>
 

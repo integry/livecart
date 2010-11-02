@@ -13,7 +13,7 @@
 
 {if $product.attributes}
 <div id="specificationSection" class="productSection specification">
-<h2>{t _spec}</h2>
+<h2>{t _spec}<small>{t _tab_specification}</small></h2>
 <div id="productSpecification">
 	<table class="productDetailsTable">
 		{include file="product/specificationTableBody.tpl" attributes=$product.attributes field=SpecField group=SpecFieldGroup}
@@ -24,7 +24,7 @@
 
 {if $related}
 <div id="relatedSection" class="productSection related">
-<h2>{t _recommended}</h2>
+<h2>{t _recommended}<small>{t _tab_recommended}</small></h2>
 <div id="relatedProducts">
 	{foreach from=$related item=group}
 	   {if $group.0.ProductRelationshipGroup.name_lang}
@@ -42,7 +42,7 @@
 
 {if $together}
 <div id="purchasedTogetherSection" class="productSection purchasedTogether">
-<h2>{t _purchased_together}</h2>
+<h2>{t _purchased_together}<small>{t _tab_purchased}</small></h2>
 <div id="purchasedTogether">
 	{include file="category/productListLayout.tpl" layout='PRODUCT_PAGE_LIST_LAYOUT'|config products=$together}
 </div>

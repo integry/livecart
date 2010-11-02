@@ -181,6 +181,8 @@ LiveCart.AjaxRequest.prototype = {
 
 	fixUrl: function(url)
 	{
+		if (!url) { return; }
+
 		// fix repeting ? in URLs
 		var urlParts = url.split(/\?/);
 		var url = urlParts.shift();

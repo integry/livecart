@@ -964,15 +964,21 @@ ul.subSubCats
     margin-bottom: 15px;
     padding-bottom: 4px;
     border-bottom-width: 1px;
-    font-size: 120%;
+    font-size: 110%;
     position: relative;
+}
+
+#productSort
+{
+	font-size: 12px;
+	width: 130px;
 }
 
 .categoryLayoutSwitch a
 {
 	width: 16px;
 	height: 16px;
-	padding: 5px;
+	padding: 2px;
 	border-width: 2px;
 	background-position: center center;
 	display: block;

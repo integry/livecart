@@ -15,7 +15,7 @@ ClassLoader::import('application.model.businessrule.RuleOrderContainer');
 ClassLoader::import('application.ControllerPlugin');
 
 // experimental feature
-define('ROUTE_CACHE', 1);
+define('ROUTE_CACHE', 0);
 
 /**
  *  Implements LiveCart-specific application flow logic
@@ -1564,7 +1564,10 @@ class LiveCart extends Application implements Serializable
 				$this->configContainer->getChildPlugins();
 				$serialized = serialize($this->configContainer);
 
-				file_put_contents($path, '<?php return unserialize("' . addslashes($serialized) . '"); ?>');
+				if (!@file_put_contents($path, '<?php return unserialize("' . addslashes($serialized) . '"); ?>'))
+				{
+					ini_set('display_errors', 'Off');
+				}
 			}
 		}
 

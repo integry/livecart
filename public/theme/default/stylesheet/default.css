@@ -524,7 +524,7 @@ div.box .content
 .resultStats
 {
 	font-size: 100%;
-	width: 98% !important;
+	width: auto;
 }
 
 ul.productList .pricingInfo, .productGrid .pricingInfo
@@ -1323,6 +1323,7 @@ table.productGrid
 .categories.dynamicMenu ul
 {
 	width: 175px;
+	background-color: white;
 }
 
 .categories.dynamicMenu ul li.topCategory.hasSubs a

@@ -72,6 +72,7 @@ class UpdateController extends StoreManagementController
 		// clear cache
 		$this->delTree(ClassLoader::getRealPath('cache'));
 		$this->delTree(ClassLoader::getRealPath('public.cache'));
+		$this->delTree(ClassLoader::getRealPath('public.upload.css.patched'));
 
 		foreach (array('cache', 'storage') as $secured)
 		{

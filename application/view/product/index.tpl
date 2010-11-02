@@ -39,7 +39,7 @@
 
 			{if $reviews}
 				<div id="reviewSection" class="productSection reviewSection">
-					<h2>{t _reviews}</h2>
+					<h2>{t _reviews}<small>{t _tab_reviews}</small></h2>
 					{include file="product/reviewList.tpl"}
 
 					{if $product.reviewCount  > $reviews|@count}
