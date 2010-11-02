@@ -54,6 +54,7 @@ abstract class FrontendController extends BaseController
 		$initRes = parent::init();
 
 		$this->setLayout('frontend');
+		$this->addBlock('FOOTER_TOOLBAR', 'toolbar', 'block/toolbar');
 		$this->addBlock('CATEGORY_BOX', 'boxCategory', 'block/box/category');
 		$this->addBlock('ROOT_CATEGORIES', 'boxRootCategory', 'block/box/rootCategory');
 		$this->addBlock('DYNAMIC_CATEGORIES', 'dynamicCategoryMenu', 'block/box/dynamicCategory');
@@ -843,6 +844,20 @@ abstract class FrontendController extends BaseController
 			//$this->order->__destruct();
 			unset($this->order);
 		}
+	}
+
+	public function toolbarBlock()
+	{
+		static $called = false;
+		if ( $called)
+		{
+			// pp('<script>alert("called");</script>');
+			return; // TODO: fix why from module controllers this block is called 2 times.
+		}
+		$called = true;
+		$response = new BlockResponse();
+
+		return $response;
 	}
 }
 

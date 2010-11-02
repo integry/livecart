@@ -94,6 +94,10 @@
 			{loadJs}
 		</script>
 	{/if}
-</body>
 
+
+		{if !'DISABLE_TOOLBAR'|config}
+			{block FOOTER_TOOLBAR}
+		{/if}
+	</body>
 </html>
