@@ -849,6 +849,29 @@ class ProductController extends ActiveGridController implements MassActionInterf
 					$price->save();
 				}
 			}
+
+			// save product images
+			$inputImages = $this->request->get('productImage');
+			$tmpImages = array();
+			if (is_array($inputImages))
+			{
+				$dir = ClassLoader::getRealPath('public.upload.tmpimage.');
+				foreach($inputImages as $tmpImage)
+				{
+					if (strlen(trim($tmpImage)) == 0 || strpos($tmpImage, '/'))
+					{
+						continue;
+					}
+					if(file_exists($dir.$tmpImage))
+					{
+						$tmpImages[] = $dir.$tmpImage;
+						$productImage = ProductImage::getNewInstance($product);
+						$productImage->save();
+						$productImage->setFile($dir.$tmpImage);
+					}
+				}
+			}
+
 			// $product->loadRequestData($this->request);
 			// $product->save();
 
@@ -1135,6 +1158,66 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$validator->addFilter('stockCount', new NumericFilter());
 
 		return $validator;
+	}
+
+	public function uploadProductImage()
+	{
+		ClassLoader::import('application.model.product.ProductImage');
+		ClassLoader::import('library.image.ImageManipulator');
+		$field = 'upload_' . $this->request->get('field');
+		
+		$dir = ClassLoader::getRealPath('public.upload.tmpimage.');
+		
+		// delete old tmp files
+		chdir($dir);
+		$dh = opendir($dir);
+		$threshold = strtotime("-1 day");
+		while (($dirent = readdir($dh)) != false)
+		{
+			if (is_file($dirent))
+			{
+				if (filemtime($dirent) < $threshold)
+				{
+					unlink($dirent);
+				}
+			}
+		}
+		closedir($dh);
+
+		// create tmp file
+		$file = $_FILES[$field];
+		$tmp = 'tmp_' . $field . md5($file['tmp_name']) .  '__' . $file['name'];
+		
+		if (!file_exists($dir))
+		{
+			mkdir($dir, 0777, true);
+			chmod($dir, 0777);
+		}
+		$path = $dir . $tmp;
+		move_uploaded_file($file['tmp_name'], $path);
+		if (@getimagesize($path))
+		{
+			$thumb = 'tmp_thumb_' . $tmp;
+			$thumbPath = $dir . $thumb;
+			$thumbDir = dirname($thumbPath);
+			if (!file_exists($thumbDir))
+			{
+				mkdir($thumbDir, 0777, true);
+				chmod($thumbDir, 0777);
+			}
+			$conf = self::getApplication()->getConfig();
+			$img = new ImageManipulator($path);
+			$thumbSize = ProductImage::getImageSizes();
+
+			$thumbSize = $thumbSize[2]; // 1 is too small, cant see a thing.
+			$img->resize($thumbSize[0], $thumbSize[1], $thumbPath);
+			$thumb = 'upload/tmpimage/'. $thumb;
+		}
+		else
+		{
+			return new JSONResponse(null, 'failure', $this->translate('_error_uploading_image'));
+		}
+		return new JSONResponse(array('name' => $file['name'], 'file' => $tmp, 'thumb' => $thumb), 'success');
 	}
 }
 

@@ -10,7 +10,6 @@
 		<input type="hidden" name="categoryID" value="{$product.Category.ID}" />
 
 		{include file="backend/product/form/main.tpl" product=$product cat=$cat productTypes=$productTypes}
-
 		{if $specFieldList}
 			<div class="specFieldContainer">
 			{include file="backend/product/form/specFieldList.tpl" product=$product cat=$cat specFieldList=$specFieldList}
@@ -20,7 +19,40 @@
 		{include file="backend/product/form/inventory.tpl" product=$product cat=$cat baseCurrency=$baseCurrency form=$productForm}
 		{include file="backend/product/form/pricing.tpl" product=$product cat=$cat baseCurrency=$baseCurrency}
 		{include file="backend/product/form/shipping.tpl" product=$product cat=$cat baseCurrency=$baseCurrency}
+
+		<fieldset class="productImages">
+			<legend>{t _image}</legend>
+			<div class="thumbsContainer">
+			</div>
+
+			<div class="thumbTemplate" style="display: none; clear:both;">
+				<a href="#" class="deleteCross" onclick="{literal}try {$(this).up('div').remove();} catch(e){} return false;{/literal}"></a>
+				<div class="fileName" style="float:left;"></div>
+				<div class="fileImage">
+					<img src="" class="thumb" alt="" />
+				</div>
+				{hidden name="productImage[]" class="productImageFileName"}
+			</div>
+
+			<p class="error">
+				<label>{tip _product_image_file}:</label>
+				<fieldset class="error uploadContainer">
+					{filefield name="upload_productImage" id="product_image_`$cat`_`$product.ID`"}
+					<div class="errorText hidden"></div>
+				</fieldset>
+			</p>
+
+			{filefield name="upload_productImage" class="upload_productImageEmpty" style="display:none;"}
+			<input type="hidden" id="fileUploadOptions_{$cat}_{$product.ID}" class="fileUploadOptions" value="{link controller=backend.product action=uploadProductImage id=$product.ID query="uniq=`$uniq`&field=productImage&productID=`$product.ID`"}" />
+
+			<script type="text/javascript">
+				var upload = $('product_image_{$cat}_{$product.ID}');
+				new LiveCart.FileUpload(upload, $("fileUploadOptions_{$cat}_{$product.ID}").value , Backend.Product.previewUploadedImage);
+			</script>
+		</fieldset>
+
 		{include file="backend/product/form/translations.tpl" product=$product cat=$cat multiLingualSpecFields=$languageList}
+
 
 		<fieldset class="controls">
 

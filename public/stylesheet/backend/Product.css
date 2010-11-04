@@ -224,3 +224,15 @@ div.quantityPricing .groupLabel
 {
 	margin: 1.5em;
 }
+
+.productImages .thumbsContainer .fileName
+{
+	margin-right:10px;
+	float:left;
+}
+
+.productImages .thumbsContainer,
+.productImages .thumbsContainer .fileImage img
+{
+	margin-bottom:6px;
+}
