@@ -31,7 +31,7 @@ class UpdateController extends StoreManagementController
 
 		$res = str_replace("\r", '', $res);
 		list($headers, $version) = explode("\n\n", $res);
-	$current = $this->getCurrentVersion();
+		$current = $this->getCurrentVersion();
 
 		// get current version
 		$response = new ActionResponse('current', $current);
@@ -121,7 +121,7 @@ class UpdateController extends StoreManagementController
 				rmdir($path);
 			}
 		}
-		else
+		else if (file_exists($path))
 		{
 			unlink($path);
 		}

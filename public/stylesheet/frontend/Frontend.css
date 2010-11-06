@@ -3176,6 +3176,7 @@ ul.tabbernav li.tabberactive a
 	width: 50%;
 	margin: 0 25%;
 	-moz-border-radius: 5px 5px 0 0;
+	display: none;
 }
 
 #mainpanel

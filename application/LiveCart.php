@@ -825,7 +825,14 @@ class LiveCart extends Application implements Serializable
 	private function loadSession()
 	{
 	  	ClassLoader::import("framework.request.Session");
+
+		// avoid unserialize failures (3rd party application instances, etc.)
+		ClassLoader::ignoreMissingClasses(true);
+
 		$this->session = new Session();
+
+		ClassLoader::ignoreMissingClasses(false);
+
 		return $this->session;
 	}
 

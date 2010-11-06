@@ -223,7 +223,11 @@ class CategoryController extends FrontendController
 				}
 
 				include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
-				return new RedirectResponse(createCategoryUrl(array('data' => $this->getCategory()->toArray(), 'filters' => $this->filters), $this->application));
+
+				if (!$this->getCategory()->isRoot())
+				{
+					return new RedirectResponse(createCategoryUrl(array('data' => $this->getCategory()->toArray(), 'filters' => $this->filters), $this->application));
+				}
 			}
 		}
 

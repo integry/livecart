@@ -189,6 +189,7 @@
 {
 	border-style: solid;
 	border-width: 1px;
+	color: green;
 }
 
 .activeGrid_highlight td.sortedColumn

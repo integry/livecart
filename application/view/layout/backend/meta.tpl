@@ -21,21 +21,10 @@
 		{includeJs file=library/tinymce/tiny_mce.js inline=true}
 	{/if}
 
-	{*
-	{includeJs file=library/tinymce/tiny_mce_gzip.js}
-	{includeJs file=library/tinymce/tiny_gz_start.js}
-	{includeJs file=library/tinymce/tiny_mce_src.js}
-	{includeJs file=library/tinymce/langs/en.js}
-	{includeJs file=library/tinymce/plugins/contextmenu/editor_plugin.js}
-	{includeJs file=library/tinymce/plugins/table/editor_plugin.js}
-	{includeJs file=library/tinymce/themes/advanced/editor_template.js}
-	{includeJs file=library/tinymce/themes/advanced/langs/en.js}
-	{includeJs file=library/tinymce/tiny_gz_end.js}
-	*}
-
 	{includeJs file=library/KeyboardEvent.js front=true}
 	{includeJs file="backend/Backend.js" front=true}
 	{includeJs file="backend/QuickSearch.js"}
+	{includeJs file="library/FooterToolbar.js" front=true}
 	{includeJs file=library/livecart.js front=true}
 	{includeJs file=library/dhtmlHistory/dhtmlHistory.js}
 	{includeJs file="library/scriptaculous/dragdrop.js" front=true}
@@ -45,7 +34,6 @@
 	{includeJs file="library/scriptaculous/effects.js" front=true}
 	{includeJs file="library/prototype/prototype.js" front=true}
 
-	{includeJs file="library/FooterToolbar.js"}
 	{includeJs file="backend/BackendToolbar.js"}
 
 	{compiledJs glue=true nameMethod=hash}
@@ -103,14 +91,14 @@
 	function ajaxfilemanager(field_name, url, type, win)
 	{
 		var
-			
+
 			ajaxfilemanagerurl = tinyMCE.baseURI.getURI()+"/../ajaxfilemanager/ajaxfilemanager.php?editor=tinymce";
 
 		switch (type)
 		{
 			case "image":
 			case "media":
-			case "flash": 
+			case "flash":
 			case "file":
 				break;
 			default:
