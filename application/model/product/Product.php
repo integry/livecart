@@ -36,6 +36,7 @@ class Product extends MultilingualObject
 	const TYPE_TANGIBLE = 0;
 	const TYPE_DOWNLOADABLE = 1;
 	const TYPE_BUNDLE = 2;
+	const TYPE_RECURRING = 3;
 
 	const CHILD_OVERRIDE = 0;
 	const CHILD_ADD = 1;

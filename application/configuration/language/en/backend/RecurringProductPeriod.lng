@@ -1,0 +1,15 @@
+_add_new_recurring_product_period=Add new recurring product period
+_cancel_adding_new_recurring_product_period=Cancel adding recurring product period
+_name=Name
+_period_length=Period length
+_rebill_count=Rebill count
+_setup_price=Setup price
+_period_price=Period price
+_description=Description
+_type_period_day=days
+_type_period_week=weeks
+_type_period_month=months
+_type_period_year=years
+_confirm_removing_rpp=Do you want to remove [_1]?
+_could_not_save_recurring_product_period_entry=Could not save recurring product period
+_error_the_name_should_not_be_empty=Please enter the name

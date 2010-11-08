@@ -947,10 +947,12 @@ class ProductController extends ActiveGridController implements MassActionInterf
 					  );
 
 		// product types
-		$types = array(Product::TYPE_TANGIBLE => $this->translate('_tangible'),
-					   Product::TYPE_DOWNLOADABLE => $this->translate('_intangible'),
-					   Product::TYPE_BUNDLE => $this->translate('_bundle'),
-					  );
+		$types = array(
+			Product::TYPE_TANGIBLE => $this->translate('_tangible'),
+			Product::TYPE_DOWNLOADABLE => $this->translate('_intangible'),
+			Product::TYPE_BUNDLE => $this->translate('_bundle'),
+			Product::TYPE_RECURRING => $this->translate('_recurring')
+		);
 
 		// default product type
 		if (!$product->isLoaded())
@@ -1127,20 +1129,20 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $validator;
 	}
 
-	public function addPricesValidator(RequestValidator $validator)
+	public function addPricesValidator(RequestValidator $validator, $prefix = '')
 	{
 		// price in base currency
 		$baseCurrency = $this->getApplication()->getDefaultCurrency()->getID();
-		$validator->addCheck('price_' . $baseCurrency, new IsNotEmptyCheck($this->translate('_err_price_empty')));
+		$validator->addCheck($prefix.'price_' . $baseCurrency, new IsNotEmptyCheck($this->translate('_err_price_empty')));
 
 		$currencies = $this->getApplication()->getCurrencyArray();
 		foreach ($currencies as $currency)
 		{
-			$validator->addCheck('price_' . $currency, new IsNumericCheck($this->translate('_err_price_invalid')));
-			$validator->addCheck('price_' . $currency, new MinValueCheck($this->translate('_err_price_negative'), 0));
-			$validator->addCheck('listPrice_' . $currency, new MinValueCheck($this->translate('_err_price_negative'), 0));
-			$validator->addFilter('price_' . $currency, new NumericFilter());
-			$validator->addFilter('listPrice_' . $currency, new NumericFilter());
+			$validator->addCheck($prefix.'price_' . $currency, new IsNumericCheck($this->translate('_err_price_invalid')));
+			$validator->addCheck($prefix.'price_' . $currency, new MinValueCheck($this->translate('_err_price_negative'), 0));
+			$validator->addCheck($prefix.'listPrice_' . $currency, new MinValueCheck($this->translate('_err_price_negative'), 0));
+			$validator->addFilter($prefix.'price_' . $currency, new NumericFilter());
+			$validator->addFilter($prefix.'listPrice_' . $currency, new NumericFilter());
 		}
 
 		return $validator;

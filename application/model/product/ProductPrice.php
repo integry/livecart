@@ -12,44 +12,60 @@ ClassLoader::import("application.model.Currency");
  */
 class ProductPrice extends ActiveRecordModel
 {
+	const TYPE_GENERAL_PRICE = 0;
+	const TYPE_SETUP_PRICE = 1;
+	const TYPE_PERIOD_PRICE = 2;
+
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("ProductPrice");
-
-		$schema->registerField(new ARPrimaryForeignKeyField("productID", "Product", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARPrimaryForeignKeyField("currencyID", "Currency", "ID", null, ARChar::instance(3)));
+		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", null, ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("currencyID", "Currency", "ID", null, ARChar::instance(3)));
+		$schema->registerField(new ARForeignKeyField("recurringID", "RecurringProductPeriod", "ID", "RecurringProductPeriod", ARInteger::instance()));
 		$schema->registerField(new ARField("price", ARFloat::instance(16)));
 		$schema->registerField(new ARField("listPrice", ARFloat::instance(16)));
-		$schema->registerField(new ARField("serializedRules", ARText::instance(16)));
+		$schema->registerField(new ARField("type", ARInteger::instance()));
+		$schema->registerField(new ARField("serializedRules", ARArray::instance()));
 	}
 
 	/*####################  Static method implementations ####################*/
 
-	public static function getNewInstance(Product $product, Currency $currency)
+	public static function getNewInstance(Product $product, Currency $currency, $recurring = null, $type = 0)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
 		$instance->product->set($product);
 		$instance->currency->set($currency);
+		$instance->type->set($type);
+		if ($recurring != null)
+		{
+			$instance->recurring->set($recurring);
+		}
 		return $instance;
 	}
 
-	public static function getInstance(Product $product, Currency $currency)
+	public static function getInstance(Product $product, Currency $currency, $recurring = null, $type = 0)
 	{
 		$filter = new ARSelectFilter();
 		$cond = new EqualsCond(new ARFieldHandle('ProductPrice', 'productID'), $product->getID());
+
 		$cond->addAND(new EqualsCond(new ARFieldHandle('ProductPrice', 'currencyID'), $currency->getID()));
+		$cond->addAND(new EqualsCond(new ARFieldHandle('ProductPrice', 'type'), $type));
+		if ($recurring)
+		{
+			$cond->addAND(new EqualsCond(new ARFieldHandle('ProductPrice', 'recurringID'), $recurring->getID()));
+		}
 		$filter->setCondition($cond);
 
 		$set = parent::getRecordSet('ProductPrice', $filter);
-
 		if ($set->size() > 0)
 		{
-		  	$instance = $set->get(0);
+			$instance = $set->get(0);
 		}
 		else
 		{
-		  	$instance = self::getNewInstance($product, $currency);
+			$instance = self::getNewInstance($product, $currency, $recurring, $type);
 		}
 
 		return $instance;
@@ -226,7 +242,7 @@ class ProductPrice extends ActiveRecordModel
 
 	public function getPriceByGroup($groupID, $itemCnt = 1)
 	{
-		$rules = unserialize($this->serializedRules->get());
+		$rules = @unserialize($this->serializedRules->get());
 		if (!$rules)
 		{
 			return $this->price->get();
@@ -605,7 +621,7 @@ class ProductPrice extends ActiveRecordModel
 	{
 		$array = parent::transformArray($array, $schema);
 		$currency = Currency::getInstanceByID($array['currencyID']);
-		$array['serializedRules'] = unserialize($array['serializedRules']);
+		$array['serializedRules'] = @unserialize($array['serializedRules']);
 
 		if ($array['serializedRules'])
 		{
@@ -638,6 +654,13 @@ class ProductPrice extends ActiveRecordModel
 		}
 
 		return $array;
+	}
+
+	public static function getRecurringProductPeriodPrices(RecurringProductPeriod $rpp)
+	{
+		$filter = new ARSelectFilter();
+		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'recurringID'), $rpp->getID()));
+		return parent::getRecordSet(__CLASS__, $filter);
 	}
 }
 

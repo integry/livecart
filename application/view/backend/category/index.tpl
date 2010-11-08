@@ -26,6 +26,7 @@
 {includeJs file="backend/ProductList.js"}
 {includeJs file="backend/ProductFile.js"}
 {includeJs file="backend/ProductOption.js"}
+{includeJs file="backend/RecurringProductPeriod.js"}
 {includeJs file="backend/ProductBundle.js"}
 {includeJs file="backend/ProductVariation.js"}
 {includeJs file="backend/RatingType.js"}
@@ -39,6 +40,7 @@
 {includeCss file="backend/Product.css"}
 {includeCss file="backend/SpecField.css"}
 {includeCss file="backend/ProductRelationship.css"}
+{includeCss file="backend/RecurringProductPeriod.css"}
 {includeCss file="backend/ProductBundle.css"}
 {includeCss file="backend/ProductCategory.css"}
 {includeCss file="backend/ProductFile.css"}
