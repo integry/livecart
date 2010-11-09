@@ -3,6 +3,7 @@
 	<table id="productPurchaseLinks">
 	{blocks id="PRODUCT-PURCHASE-CONTAINER" blocks="
 		PRODUCT-PRICE
+		PRODUCT-RECURRING
 		PRODUCT-UP-SELL
 		PRODUCT-TO-CART
 		PRODUCT-ACTIONS"}

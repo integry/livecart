@@ -41,36 +41,56 @@ class RecurringProductPeriod extends MultilingualObject
 		return parent::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
-	// 
-	public static function getAssignedToArray( Product $product)
+	public static function getRecordSetArrayByProduct($productOrID)
 	{
-		$f = new ARSelectFilter();
-		$f->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), $product->getID()));
-		return self::getRecordSetArray($f);
+		return self::getRecordSetArray(self::getAsignedToFilter($productOrID));
 	}
-	
+
+	public static function getRecordSetByProduct($productOrID)
+	{
+		return self::getRecordSet(self::getAsignedToFilter($productOrID));
+	}
+
+	private static function getAsignedToFilter($productOrID)
+	{
+		if (!is_numeric($productOrID) && $productOrID instanceof Product == false)
+		{
+			throw new Exception('getAsignedToFilter() excpects argument to be instance of Product');
+		}
+		$f = new ARSelectFilter();
+		$f->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), is_numeric($productOrID) ? $productOrID : $productOrID->getID()));
+		return $f;
+	}
+
 	public static function getInstanceByID($recordID, $loadRecordData = false)
 	{
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData);
 	}
-	
-	public function toArray()
+
+	public function toArray($currencyID=null)
 	{
 		$array = parent::toArray();
-		$rs = ProductPrice::getRecurringProductPeriodPrices($this);
+		$rs = ProductPrice::getRecurringProductPeriodPrices($this, $currencyID);
+		$currencies = array();
 		if ($rs && $rs->size())
 		{
+			$mapping = array(
+				ProductPrice::TYPE_PERIOD_PRICE => 'ProductPrice_period',
+				ProductPrice::TYPE_SETUP_PRICE => 'ProductPrice_setup'
+			);
+
 			while(false != ($item = $rs->shift()))
 			{
 				$itemArray = $item->toArray();
-				switch($item->type->get())
+				$type = $item->type->get();
+				if (array_key_exists($type, $mapping))
 				{
-					case ProductPrice::TYPE_SETUP_PRICE:
-						$array['ProductPrice_setup'][$itemArray['currencyID']] = $itemArray;
-						break;
-					case ProductPrice::TYPE_PERIOD_PRICE:
-						$array['ProductPrice_period'][$itemArray['currencyID']] = $itemArray;
-						break;
+					$array[$mapping[$type]][$itemArray['currencyID']] = $itemArray;
+					if (array_key_exists($itemArray['currencyID'], $currencies) == false)
+					{
+						$currencies[$itemArray['currencyID']] = Currency::getInstanceByID($itemArray['currencyID']);
+					}
+					$array[$mapping[$type]]['formated_price'][$itemArray['currencyID']] = $currencies[$itemArray['currencyID']]->getFormattedPrice($itemArray['price']);
 				}
 			}
 		}
@@ -85,6 +105,34 @@ class RecurringProductPeriod extends MultilingualObject
 		return $instance;
 	}
 
+	const PERIOD_TYPE_NAME_SINGLE = 0;
+	const PERIOD_TYPE_NAME_PLURAL = 1;
+
+	public static function getAllPeriodTypes($type)
+	{
+		if ($type == RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL)
+		{
+			return array(
+				RecurringProductPeriod::TYPE_PERIOD_DAY => '_type_period_days',
+				RecurringProductPeriod::TYPE_PERIOD_WEEK => '_type_period_weeks',
+				RecurringProductPeriod::TYPE_PERIOD_MONTH => '_type_period_months',
+				RecurringProductPeriod::TYPE_PERIOD_YEAR => '_type_period_years'
+			);
+		}
+		else if($type == RecurringProductPeriod::PERIOD_TYPE_NAME_SINGLE)
+		{
+			return array(
+				RecurringProductPeriod::TYPE_PERIOD_DAY => '_type_period_day',
+				RecurringProductPeriod::TYPE_PERIOD_WEEK => '_type_period_week',
+				RecurringProductPeriod::TYPE_PERIOD_MONTH => '_type_period_month',
+				RecurringProductPeriod::TYPE_PERIOD_YEAR => '_type_period_year'
+			);
+		}
+		else
+		{
+			// throw ..
+		}
+	}
 }
 
 ?>

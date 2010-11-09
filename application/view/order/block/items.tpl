@@ -31,6 +31,8 @@
 
 			{include file="order/itemVariations.tpl"}
 			{include file="order/block/itemOptions.tpl"}
+			
+			{include file="order/block/recurringItem.tpl"}
 
 			{if $multi}
 				{include file="order/selectItemAddress.tpl" item=$item}

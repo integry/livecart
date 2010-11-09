@@ -25,17 +25,17 @@ class RecurringProductPeriodController extends StoreManagementController
 		$this->loadLanguageFile('backend/Product');
 		$productID = (int)$this->request->get('id');
 		$product = Product::getInstanceByID($productID, ActiveRecord::LOAD_DATA);
-		$rppa = RecurringProductPeriod::getAssignedToArray($product);
+		$rppa = RecurringProductPeriod::getRecordSetByProduct($product)->toArray();
 		$response = new ActionResponse();
 		$response->set('recurringProductPeriods', $rppa);
-		$response->set("product", $product->toArray());
+		$response->set('product', $product->toArray());
 
 		$newRpp = RecurringProductPeriod::getNewInstance($product);
-		$response->set("newRecurringProductPeriod", $newRpp->toArray());
-		$response->set("newForm", $this->createForm($newRpp->toArray()));
-		$response->set("currencies", $this->application->getCurrencyArray(true));
+		$response->set('newRecurringProductPeriod', $newRpp->toArray());
+		$response->set('newForm', $this->createForm($newRpp->toArray()));
+		$response->set('currencies', $this->application->getCurrencyArray(true));
+		$response->set('periodTypes', array_map(array($this,'translate'), RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL)));
 
-		$this->assignPeriodTypes($response);
 		return $response;
 	}
 
@@ -49,8 +49,8 @@ class RecurringProductPeriodController extends StoreManagementController
 		$response = new ActionResponse();
 		$response->set('recurringProductPeriod', $rpp);
 		$response->set('form', $form);
-		$this->assignPeriodTypes($response);
-		$response->set("currencies", $this->application->getCurrencyArray(true));
+		$response->set('periodTypes', array_map(array($this,'translate'), RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL)));
+		$response->set('currencies', $this->application->getCurrencyArray(true));
 
 		return $response;
 	}
@@ -153,16 +153,6 @@ class RecurringProductPeriodController extends StoreManagementController
 		ProductController::addPricesValidator($validator, 'ProductPrice_setup_');
 
 		return $validator;
-	}
-
-	private function assignPeriodTypes($response)
-	{
-		$response->set('periodTypes', array(
-			RecurringProductPeriod::TYPE_PERIOD_DAY => $this->translate('_type_period_day'),
-			RecurringProductPeriod::TYPE_PERIOD_WEEK =>$this->translate('_type_period_week'),
-			RecurringProductPeriod::TYPE_PERIOD_MONTH =>$this->translate('_type_period_month'),
-			RecurringProductPeriod::TYPE_PERIOD_YEAR =>$this->translate('_type_period_year')
-		));
 	}
 }
 

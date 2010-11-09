@@ -40,3 +40,15 @@ _add_coupon=Add coupon
 
 _estimate_shipping=Estimate Shipping Cost
 _update_address=Update Address
+
+# Recurring periods dropdown in shopping cart
+_type_period_days=days
+_type_period_day=day
+_type_period_weeks=weeks
+_type_period_week=week
+_type_period_months=months
+_type_period_month=month
+_type_period_years=years
+_type_period_year=year
+_for=for
+_every=every

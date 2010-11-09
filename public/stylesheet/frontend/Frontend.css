@@ -3269,3 +3269,20 @@ html #footpanel .subpanel ul li a.active
 	background: #fff;
 	position: static;  /*--Reset relative positioning--*/
 }
+
+.productRecurring td.withRadio
+{
+	text-align:center;
+	vertical-align:text-top;
+}
+
+.productRecurring .name {
+	display:block;
+	clear:both;
+	font-size:14px;
+	font-weight:bold;
+}
+.productRecurring label
+{
+	clear:both;
+}

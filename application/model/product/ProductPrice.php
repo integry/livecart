@@ -656,10 +656,14 @@ class ProductPrice extends ActiveRecordModel
 		return $array;
 	}
 
-	public static function getRecurringProductPeriodPrices(RecurringProductPeriod $rpp)
+	public static function getRecurringProductPeriodPrices(RecurringProductPeriod $rpp, $currencyID = null)
 	{
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'recurringID'), $rpp->getID()));
+		if ($currencyID !== null)
+		{
+			$filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'currencyID'), $currencyID ));
+		}
 		return parent::getRecordSet(__CLASS__, $filter);
 	}
 }

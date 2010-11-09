@@ -751,6 +751,14 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 				$array['subItems'][] = $subItem->toArray();
 			}
 		}
+		if ($array['Product']['type'] == Product::TYPE_RECURRING)
+		{
+			$ritemArray = RecurringItem::getRecordSetArrayByOrderedItem($this);
+			if (count($ritemArray)) // should be 1 or 0
+			{
+				$array['recurringID'] = $ritemArray[0]['recurringID'];
+			}
+		}
 
 		$this->setArrayData($array);
 

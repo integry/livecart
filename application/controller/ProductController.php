@@ -22,6 +22,7 @@ class ProductController extends FrontendController
 		$this->addBlock('PRODUCT-ATTRIBUTE-SUMMARY', 'attributeSummary', 'product/block/attributeSummary');
 		$this->addBlock('PRODUCT-PURCHASE', 'purchase', 'product/block/purchase');
 			$this->addBlock('PRODUCT-PRICE', 'price', 'product/block/price');
+			$this->addBlock('PRODUCT-RECURRING', 'recurring', 'product/block/recurring');
 			$this->addBlock('PRODUCT-UP-SELL', 'upSell', 'product/block/upsell');
 			$this->addBlock('PRODUCT-OPTIONS', 'options', 'product/block/options');
 			$this->addBlock('PRODUCT-VARIATIONS', 'variations', 'product/block/variations');
@@ -304,6 +305,21 @@ class ProductController extends FrontendController
 	public function priceBlock()
 	{
 		return new BlockResponse();
+	}
+
+	public function recurringBlock()
+	{
+		$response = new BlockResponse();
+		if ($this->product->type->get() == Product::TYPE_RECURRING)
+		{
+			ClassLoader::import('application.model.product.RecurringProductPeriod');
+			ClassLoader::import('application.model.product.RecurringItem');
+			$response->set('isRecurring', true);
+			$response->set('periodTypesPlural', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL));
+			$response->set('periodTypesSingle', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_SINGLE));
+			$response->set('recurringProductPeriods', RecurringProductPeriod::getRecordSetByProduct($this->product)->toArray());
+		}
+		return $response;
 	}
 
 	public function addToCartBlock()
