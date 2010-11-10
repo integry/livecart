@@ -22,9 +22,9 @@
 	<div id="pageTitle">{$PAGE_TITLE}</div>
 </div>
 
-{form handle=$form action="controller=backend.template action=save" method="POST" id="templateForm"}
+{form handle=$form action="controller=backend.template action=save" method="POST" id="templateForm" class="templateForm"}
 
-	{textarea name="code" id="code"}
+	{textarea name="code" class="code" id="code_undefined"}
 
 	<fieldset class="controls">
 		{hidden name="file" id="file"}
@@ -57,7 +57,7 @@
 {literal}
 	<script type="text/javascript">
 		editAreaLoader.baseURL = "{/literal}{baseUrl}javascript/library/editarea/{literal}";
-		$('code').value = {/literal}decode64("{$code}");{literal};
+		$('code_undefined').value = {/literal}decode64("{$code}");{literal};
 		new Backend.TemplateHandler($('templateForm'));
 	</script>
 {/literal}

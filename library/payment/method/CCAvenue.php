@@ -42,8 +42,9 @@ class CCAvenue extends ExternalPayment
 
 	public function notify($requestArray)
 	{
+		file_put_contents(ClassLoader::getRealPath('cache.') . get_class($this) . '.php', var_export($array, true));
 		$Checksum = $this->verifyChecksum($requestArray['Merchant_Id'], $requestArray['Order_Id'], $requestArray['Amount'], $requestArray['AuthDesc'], $requestArray['Checksum'], $this->getConfigValue('WorkingKey'));
-		if($Checksum == "true" && in_array($AuthDesc, array('Y', 'B')))
+		if($Checksum == "true" && in_array($requestArray['AuthDesc'], array('Y', 'B')))
 		{
 			$result = new TransactionResult();
 			$result->gatewayTransactionID->set($requestArray['-']);

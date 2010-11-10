@@ -540,7 +540,7 @@ Backend.EmailTemplateHandler.prototype =
 
 	saveComplete: function(originalRequest)
 	{
-		
+
 	}
 }
 

@@ -188,7 +188,7 @@ abstract class EavSpecificationManagerCommon
 	{
 		foreach ($this->attributes as $attribute)
 		{
-			if ($attribute->getField()->get()->handle->get() == $handle)
+			if ($attribute->getField() && ($attribute->getField()->get()->handle->get() == $handle))
 			{
 				return $attribute;
 			}
