@@ -64,10 +64,11 @@
 		{/form}
 	{/if}
 </div>
+
 <fieldset class="order_info">
 	<div class="{zebra} clearfix invoiceNumber">
 		<label class="param">{t _order_id}</label>
-		<label class="value">{$order.invoiceNumber|default:$order.ID}</label>
+		<label class="value" id="invoiceNumber{$order.ID}">{$order.invoiceNumber|default:$order.ID}</label>
 	</div>
 
 	{if $order.User}
@@ -118,8 +119,37 @@
 		<select style="width: auto; float: left;" onchange="Backend.CustomerOrder.prototype.setMultiAddress(this, '{link controller=backend.customerOrder action=setMultiAddress id=$order.ID query='status=_stat_'}', {$order.ID});"><option value=0>{t _no}</option><option value=1{if $order.isMultiAddress} selected="selected"{/if}>{t _yes}</option></select>
 		<span class="progressIndicator" style="display: none; float: left; padding-top: 0; padding-left: 0;"></span>
 	</div>
-</fieldset>
 
+	{if $order.isRecurring}
+		<div class="{zebra} clearfix">
+			<label class="param">{t _recurring_status}:</label>
+			<label class="value" id="recurringStatus{$order.ID}">
+				{if $order.rebillsLeft > 0}
+					{t _recurring_status_active}
+				{else}
+					{t _recurring_status_expired}
+				{/if}
+			</label>
+		</div>
+
+		<div class="{zebra} clearfix">
+			<label class="param">{t _remaining_rebills}:</label>
+			<label class="value" id="remainingRebillsValue{$order.ID}">
+				{if is_numeric($order.rebillsLeft)}
+					{$order.rebillsLeft}
+				{else}
+					0
+				{/if}
+			</label>
+			
+			<span class="stopRebillsLinkContainer" style="{if $order.rebillsLeft == 0}display:none;{/if}">
+				<span class="progressIndicator" style="display:none;"></span>
+				<a href="#" id="stopRebills{$order.ID}">{t _stop_futher_rebills}</a>
+				<input type="hidden" id="stopRebillsURL{$order.ID}" value="{link controller=backend.CustomerOrder action=stopRebills id=$order.ID}" />
+			</span>
+		</div>
+	{/if}
+</fieldset>
 
 <br class="clear" />
 
@@ -367,5 +397,5 @@
 	{if $order.dateCompleted}
 		var dateComplededEditor = new Backend.CustomerOrder.DateCompletedEditor();
 	{/if}
-
+	status.toggleInvoicesTab({if $order.isRecurring}1{else}0{/if});
 </script>

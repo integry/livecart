@@ -525,14 +525,26 @@ Backend.Product.Editor.prototype =
 
 	changeType: function()
 	{
+		var
+			bundle = $('tabProductBundle'),
+			recurring = $('tabRecurring');
+
 		if (2 == this.value)
 		{
-			$('tabProductBundle').show();
-			$('tabProductBundle').removeClassName('hidden');
+			bundle.show();
+			bundle.removeClassName('hidden');
+			recurring.hide();
+		}
+		else if (3 == this.value)
+		{
+			recurring.show();
+			recurring.removeClassName('hidden');
+			bundle.hide();
 		}
 		else
 		{
-			$('tabProductBundle').hide();
+			bundle.hide();
+			recurring.hide();
 		}
 	},
 

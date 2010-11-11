@@ -80,6 +80,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$schema->setName($className);
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("parentID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("userID", "User", "ID", "User", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("shippingAddressID", "shippingAddress", "ID", 'UserAddress', ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("billingAddressID", "billingAddress", "ID", 'UserAddress', ARInteger::instance()));
@@ -96,8 +97,10 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$schema->registerField(new ARField("isFinalized", ARBool::instance()));
 		$schema->registerField(new ARField("isPaid", ARBool::instance()));
 		$schema->registerField(new ARField("isCancelled", ARBool::instance()));
+		$schema->registerField(new ARField("isRecurring", ARBool::instance()));
 		$schema->registerField(new ARField("status", ARInteger::instance()));
 		$schema->registerField(new ARField("shipping", ARText::instance()));
+		$schema->registerField(new ARField("rebillsLeft", ARInteger::instance()));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -2416,6 +2419,16 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 						);
 
 		return isset($statuses[$status]) ? $statuses[$status] : '_status_processing';
+	}
+
+	public static function hasRecurringOrder()
+	{
+		ClassLoader::import('application.model.product.RecurringItem');
+		ClassLoader::import('application.model.product.RecurringProductPeriod');
+
+		$filter = new ARSelectFilter();
+		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'isRecurring'), 1));
+		return (bool)ActiveRecordModel::getRecordCount(__CLASS__, $filter);
 	}
 }
 

@@ -5,6 +5,10 @@ ClassLoader::import('application.model.Currency');
 ClassLoader::import('application.helper.massAction.MassActionInterface');
 ClassLoader::import('application.model.product.ProductSet');
 ClassLoader::import('application.model.product.ProductOption');
+
+ClassLoader::import('application.model.product.RecurringItem');
+ClassLoader::import('application.model.product.RecurringProductPeriod');
+
 ClassLoader::import('application.controller.backend.*');
 ClassLoader::import('application.model.order.*');
 ClassLoader::import('application.model.delivery.*');
@@ -16,6 +20,8 @@ ClassLoader::import('application.model.delivery.*');
  */
 class CustomerOrderController extends ActiveGridController
 {
+	const TYPE_ROOT = 0;
+
 	const TYPE_ALL = 1;
 	const TYPE_CURRENT = 2;
 	const TYPE_NEW = 3;
@@ -25,6 +31,14 @@ class CustomerOrderController extends ActiveGridController
 	const TYPE_RETURNED = 7;
 	const TYPE_CARTS = 8;
 	const TYPE_CANCELLED = 9;
+
+	const TYPE_RECURRING = 10;
+	const TYPE_RECURRING_ALL = 11;
+	const TYPE_RECURRING_EXPIRED = 12;
+	const TYPE_RECURRING_CANCELLED = 13;
+	const TYPE_RECURRING_WITH_PARENT = 14; // isRecurring = 1 and parentID is not null
+
+	private $extraDisplayedColumns = array();
 
 	public function init()
 	{
@@ -39,16 +53,29 @@ class CustomerOrderController extends ActiveGridController
 	public function index()
 	{
 		$orderGroups = array(
-			array('ID' => self::TYPE_ALL, 'name' => $this->translate('_all_orders'), 'rootID' => 0),
-				array('ID' => self::TYPE_CURRENT, 'name' => $this->translate('_current_orders'), 'rootID' => 1),
-					array('ID' => self::TYPE_NEW, 'name' => $this->translate('_new_orders'), 'rootID' => 2),
-					array('ID' => self::TYPE_PROCESSING, 'name' => $this->translate('_processing_orders'), 'rootID' => 2),
-					array('ID' => self::TYPE_AWAITING, 'name' => $this->translate('_awaiting_shipment_orders'), 'rootID' => 2),
-				array('ID' => self::TYPE_SHIPPED, 'name' => $this->translate('_shipped_orders'), 'rootID' => 1),
-				array('ID' => self::TYPE_RETURNED, 'name' => $this->translate('_returned_orders'), 'rootID' => 1),
-				array('ID' => self::TYPE_CANCELLED, 'name' => $this->translate('_cancelled_orders'), 'rootID' => 1),
-			array('ID' => self::TYPE_CARTS, 'name' => $this->translate('_shopping_carts'), 'rootID' => 0),
-		);
+			array('ID' => self::TYPE_ALL, 'rootID' => self::TYPE_ROOT, 'name' => $this->translate('_all_orders')),
+				array('ID' => self::TYPE_CURRENT, 'name' => $this->translate('_current_orders'), 'rootID' => self::TYPE_ALL),
+					array('ID' => self::TYPE_NEW, 'name' => $this->translate('_new_orders'), 'rootID' => self::TYPE_CURRENT),
+					array('ID' => self::TYPE_PROCESSING, 'name' => $this->translate('_processing_orders'), 'rootID' => self::TYPE_CURRENT),
+					array('ID' => self::TYPE_AWAITING, 'name' => $this->translate('_awaiting_shipment_orders'), 'rootID' => self::TYPE_CURRENT));
+
+		if (CustomerOrder::hasRecurringOrder())
+		{
+			$orderGroups = array_merge($orderGroups, array(
+				array('ID' => self::TYPE_RECURRING, 'rootID' => self::TYPE_ALL, 'name' => $this->translate('_recurring')),
+				array('ID' => self::TYPE_RECURRING_ALL, 'rootID' => self::TYPE_RECURRING, 'name' => $this->translate('_recurring_all')),
+				array('ID' => self::TYPE_RECURRING_EXPIRED, 'rootID' => self::TYPE_RECURRING, 'name' => $this->translate('_recurring_expired')),
+				array('ID' => self::TYPE_RECURRING_CANCELLED, 'rootID' => self::TYPE_RECURRING, 'name' => $this->translate('_recurring_canceled')),
+			));
+		}
+
+		$orderGroups = array_merge($orderGroups, array(
+				array('ID' => self::TYPE_SHIPPED, 'name' => $this->translate('_shipped_orders'), 'rootID' => self::TYPE_ALL),
+				array('ID' => self::TYPE_RETURNED, 'name' => $this->translate('_returned_orders'), 'rootID' => self::TYPE_ALL),
+				array('ID' => self::TYPE_CANCELLED, 'name' => $this->translate('_cancelled_orders'), 'rootID' => self::TYPE_ALL),
+			array('ID' => self::TYPE_CARTS, 'name' => $this->translate('_shopping_carts'), 'rootID' => self::TYPE_ROOT),
+		));
+
 		return new ActionResponse('orderGroups', $orderGroups);
 	}
 
@@ -64,7 +91,16 @@ class CustomerOrderController extends ActiveGridController
 
 	protected function getDefaultColumns()
 	{
-		return array('CustomerOrder.ID', 'CustomerOrder.invoiceNumber', 'User.fullName', 'User.email', 'CustomerOrder.dateCompleted', 'CustomerOrder.totalAmount', 'CustomerOrder.status', 'User.ID');
+		return array(
+			'CustomerOrder.ID',
+			'CustomerOrder.invoiceNumber',
+			'User.fullName',
+			'User.email',
+			'CustomerOrder.dateCompleted',
+			'CustomerOrder.totalAmount',
+			'CustomerOrder.status',
+			'User.ID'
+		);
 	}
 
 	public function assignStatuses(ActionResponse $response)
@@ -1062,16 +1098,67 @@ class CustomerOrderController extends ActiveGridController
 			case self::TYPE_CARTS:
 				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 0);
 				break;
+
+			case self::TYPE_RECURRING:
+				$cond = new AndChainCondition(array(
+					new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1),
+					new EqualsCond(new ARFieldHandle('CustomerOrder', 'isRecurring'), 1),
+						new OrChainCondition(array(
+							new MoreThanCond(new ARFieldHandle('CustomerOrder', 'rebillsLeft'), 0),
+							new IsNullCond(new ARFieldHandle('CustomerOrder', 'isRecurring'))
+						))
+					)
+				);
+				
+				break;
+
+			case self::TYPE_RECURRING_ALL:
+				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', 'isRecurring'), 1);
+				$cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
+				$cond->addAND(new IsNullCond(new ARFieldHandle('CustomerOrder', 'parentID')));
+				break;
+
+			case self::TYPE_RECURRING_EXPIRED:
+				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', 'isRecurring'), 1);
+				$cond->addAnd(new EqualsOrLessCond(new ARFieldHandle('CustomerOrder', 'rebillsLeft'), 0));
+				$cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
+				$cond->addAND(new IsNullCond(new ARFieldHandle('CustomerOrder', 'parentID')));
+				break;
+
+			case self::TYPE_RECURRING_CANCELLED:
+				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', 'isRecurring'), 1);
+				$cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), 1));
+				$cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
+				$cond->addAND(new IsNullCond(new ARFieldHandle('CustomerOrder', 'parentID')));
+				break;
+				
+			case self::TYPE_RECURRING_WITH_PARENT:
+				$parentID = $this->getRequest()->get('parentID');
+				if (!$parentID)
+				{
+					$parentID = -1;
+				}
+				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', 'isRecurring'), 1);
+				$cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', 'parentID'), $parentID));
+				break;
+
 			default:
 				return;
 		}
 
 		$filters = $this->request->get('filters');
-		if (!in_array($type, array(self::TYPE_CANCELLED, self::TYPE_ALL, self::TYPE_SHIPPED, self::TYPE_RETURNED)))
+		if (!in_array($type, array(
+			self::TYPE_CANCELLED,
+			self::TYPE_ALL,
+			self::TYPE_SHIPPED,
+			self::TYPE_RETURNED,
+			self::TYPE_RECURRING_CANCELLED)))
 		{
 			$cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isCancelled"), 0));
 		}
-
+// $f  = new ARSelectFilter();
+// $f->setCondition($cond);
+// pp($f->createString());
 		return $cond;
 	}
 
@@ -1546,6 +1633,64 @@ class CustomerOrderController extends ActiveGridController
 
 		return new JSONResponse(null,
 			$error ? 'failure' : 'success', $this->makeText($msg, array($code)));
+	}
+
+	public function invoices()
+	{
+		$this->invoiceRequestPreFilter();
+		$response = new ActionResponse();
+		$response->set('parentID', $this->getRequest()->get('parentID'));
+		$this->setGridResponse($response);
+		return $response;
+	}
+
+	public function listInvoices()
+	{
+		$this->invoiceRequestPreFilter();
+		return $this->lists();
+	}
+
+	private function invoiceRequestPreFilter() // or putting it simple - witchcraft
+	{
+		$request = $this->getRequest();
+		$parentID = $request->get('id'); // for invoice tab active grid parentID is passed as id
+		$parentID = str_replace('recurringOrdersWithParent_', '',$parentID); // and when listing (reload, advanced search) id can has some prefix, removing.
+		$request->set('id', self::TYPE_RECURRING_WITH_PARENT); // but for orders active grid id is used as type, setting type then, because reusing as much as possible from orders grid.
+		$request->set('parentID', $parentID); // and also parent id.
+	}
+
+	public function stopRebills()
+	{
+		try {
+			$request = $this->getRequest();
+			$id = $request->get('id');
+			$order = CustomerOrder::getInstanceById($id);
+			
+			if($order->isCancelled->get() == false &&  $order->isRecurring->get() == true && $order->rebillsLeft->get() > 0)
+			{
+				$rebillCount = 0;
+				$order->rebillsLeft->set($rebillCount);
+				$order->save();
+				return new JSONResponse(array(
+					'recurringStatus' => $this->translate('_recurring_status_expired'),
+					'rebillCount' => $rebillCount),
+					'success'
+				);
+			}
+		} catch(Exception $e) { }
+		return new JSONResponse(null, 'failure', $this->translate('_cannot_stop_futher_rebills'));
+	}
+
+	private function getAlwaysDisplayedColumns()
+	{
+		return in_array($this->getRequest()->getActionName(), array('listInvoices', 'invoices'))
+			? array('CustomerOrder.isPaid'=>'bool')
+			: array();
+	}
+
+	protected function getDisplayedColumns($params = null, $customColumns = array())
+	{
+		return parent::getDisplayedColumns($params, array_merge($customColumns, $this->getAlwaysDisplayedColumns()));
 	}
 }
 ?>

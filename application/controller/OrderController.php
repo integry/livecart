@@ -663,8 +663,7 @@ class OrderController extends FrontendController
 					$item->save(); // or save in SessionOrder::save()
 				}
 				$recurringProductPeriod = RecurringProductPeriod::getInstanceByID($this->getRequest()->get('recurringID'), true);
-				$instance = RecurringItem::getNewInstance($recurringProductPeriod, $item,
-					0, 0, $recurringProductPeriod->rebillCount->get());
+				$instance = RecurringItem::getNewInstance($recurringProductPeriod, $item);
 				$instance->save();
 			}
 		}
