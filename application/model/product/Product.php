@@ -1335,7 +1335,26 @@ class Product extends MultilingualObject
 
 			foreach ($parent->getAdditionalCategories() as $cat)
 			{
-				$options->merge($cat->getOptions(true));
+				// do not include options with repeating names from secondary categories
+				foreach ($cat->getOptions(true) as $option)
+				{
+					$name = $option->getValueByLang('name');
+					$nameExists = false;
+					foreach ($options as $opt)
+					{
+						if ($opt->getValueByLang('name') == $name)
+						{
+							$nameExists = true;
+							break;
+						}
+					}
+
+					if (!$nameExists)
+					{
+						$options->add($option);
+					}
+				}
+				//$options->merge($cat->getOptions(true));
 			}
 
 			ProductOption::loadChoicesForRecordSet($options);

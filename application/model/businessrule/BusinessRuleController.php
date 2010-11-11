@@ -192,7 +192,7 @@ class BusinessRuleController
 		}
 
 		$rootCond = RuleCondition::createFromArray($idMap[DiscountCondition::ROOT_ID]);
-		file_put_contents(self::getRuleFile(), '<?php $paths = ' . var_export($paths, true) . '; foreach ($paths as $path) { include_once($path); } return "' . addslashes(serialize($rootCond->getConditions())) . '"; ?>');
+		file_put_contents(self::getRuleFile(), '<?php $paths = ' . var_export($paths, true) . '; foreach ($paths as $path) { include_once($path); } return ' . var_export(serialize($rootCond->getConditions()), true) . '; ?>');
 	}
 
 	private function getRuleFile()
