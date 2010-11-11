@@ -8,7 +8,7 @@ ClassLoader::import("application.model.Currency");
  * Each instance of ProductPrice determines product price in a particular currency.
  *
  * @package application.model.product
- * @author Integry Systems <http://integry.com>
+ * @author Integry Systems <http://integry.com>getRecurringProductPeriodPrices
  */
 class ProductPrice extends ActiveRecordModel
 {
@@ -660,7 +660,7 @@ class ProductPrice extends ActiveRecordModel
 	{
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'recurringID'), $rpp->getID()));
-		if ($currencyID !== null)
+		if ($currencyID != null && strlen($currencyID))
 		{
 			$filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'currencyID'), $currencyID ));
 		}

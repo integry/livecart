@@ -82,15 +82,14 @@ class RecurringProductPeriod extends MultilingualObject
 			while(false != ($item = $rs->shift()))
 			{
 				$itemArray = $item->toArray();
-				$type = $item->type->get();
-				if (array_key_exists($type, $mapping))
+				if ($itemArray['type'] == ProductPrice::TYPE_SETUP_PRICE || $itemArray['type'] == ProductPrice::TYPE_PERIOD_PRICE)
 				{
-					$array[$mapping[$type]][$itemArray['currencyID']] = $itemArray;
+					$array[$mapping[$itemArray['type']]][$itemArray['currencyID']] = $itemArray;
 					if (array_key_exists($itemArray['currencyID'], $currencies) == false)
 					{
 						$currencies[$itemArray['currencyID']] = Currency::getInstanceByID($itemArray['currencyID']);
 					}
-					$array[$mapping[$type]]['formated_price'][$itemArray['currencyID']] = $currencies[$itemArray['currencyID']]->getFormattedPrice($itemArray['price']);
+					$array[$mapping[$itemArray['type']]]['formated_price'][$itemArray['currencyID']] = $currencies[$itemArray['currencyID']]->getFormattedPrice($itemArray['price']);
 				}
 			}
 		}

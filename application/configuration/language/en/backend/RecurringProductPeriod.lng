@@ -17,3 +17,8 @@ _type_period_year=year
 _confirm_removing_rpp=Do you want to remove [_1]?
 _could_not_save_recurring_product_period_entry=Could not save recurring product period
 _error_the_name_should_not_be_empty=Please enter the name
+
+_error_period_length_should_not_be_empty=Please enter period length
+_error_rebill_count_should_not_be_empty=Please enter rebill count
+_error_period_length_expected_positive_numeric=Period lenght should be positive number bigger than 0
+_error_rebill_count_expected_positive_numeric=Rebill count should be positive number bigger than 0

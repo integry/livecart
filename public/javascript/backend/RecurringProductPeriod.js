@@ -11,7 +11,7 @@ Backend.RecurringProductPeriod.prototype =
 				li = $(li);
 				if(confirm(Backend.RecurringProductPeriod.prototype.properties.message_confirm_remove.replace("[_1]", li.down("span",1).innerHTML)))
 				{
-					return Backend.RecurringProductPeriod.prototype.properties.link_remove.replace('1111111111', this.getRecordId(li));
+					return Backend.RecurringProductPeriod.prototype.properties.link_remove.replace('_id_', this.getRecordId(li));
 				}
 			},
 
@@ -34,7 +34,7 @@ Backend.RecurringProductPeriod.prototype =
 				});
 				if(this.isContainerEmpty(li, 'edit'))
 				{
-					return Backend.RecurringProductPeriod.prototype.properties.link_edit.replace('1111111111', this.getRecordId(li));
+					return Backend.RecurringProductPeriod.prototype.properties.link_edit.replace('_id_', this.getRecordId(li));
 				}
 				else
 				{
