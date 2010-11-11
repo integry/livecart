@@ -68,3 +68,15 @@ _preview_files=Preview Files
 _find_similar_by_category=Find Similar Products By Category
 
 _you_may_also_like=You may also like
+
+_type_period_days=days
+_type_period_day=day
+_type_period_weeks=weeks
+_type_period_week=week
+_type_period_months=months
+_type_period_month=month
+_type_period_years=years
+_type_period_year=year
+_every=every
+_for=for
+_setup_fee=setup fee

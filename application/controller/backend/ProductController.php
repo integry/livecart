@@ -849,6 +849,29 @@ class ProductController extends ActiveGridController implements MassActionInterf
 					$price->save();
 				}
 			}
+
+			// save product images
+			$inputImages = $this->request->get('productImage');
+			$tmpImages = array();
+			if (is_array($inputImages))
+			{
+				$dir = ClassLoader::getRealPath('public.upload.tmpimage.');
+				foreach($inputImages as $tmpImage)
+				{
+					if (strlen(trim($tmpImage)) == 0 || strpos($tmpImage, '/'))
+					{
+						continue;
+					}
+					if(file_exists($dir.$tmpImage))
+					{
+						$tmpImages[] = $dir.$tmpImage;
+						$productImage = ProductImage::getNewInstance($product);
+						$productImage->save();
+						$productImage->setFile($dir.$tmpImage);
+					}
+				}
+			}
+
 			// $product->loadRequestData($this->request);
 			// $product->save();
 
@@ -924,10 +947,12 @@ class ProductController extends ActiveGridController implements MassActionInterf
 					  );
 
 		// product types
-		$types = array(Product::TYPE_TANGIBLE => $this->translate('_tangible'),
-					   Product::TYPE_DOWNLOADABLE => $this->translate('_intangible'),
-					   Product::TYPE_BUNDLE => $this->translate('_bundle'),
-					  );
+		$types = array(
+			Product::TYPE_TANGIBLE => $this->translate('_tangible'),
+			Product::TYPE_DOWNLOADABLE => $this->translate('_intangible'),
+			Product::TYPE_BUNDLE => $this->translate('_bundle'),
+			Product::TYPE_RECURRING => $this->translate('_recurring')
+		);
 
 		// default product type
 		if (!$product->isLoaded())
@@ -1104,20 +1129,20 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $validator;
 	}
 
-	public function addPricesValidator(RequestValidator $validator)
+	public function addPricesValidator(RequestValidator $validator, $prefix = '')
 	{
 		// price in base currency
 		$baseCurrency = $this->getApplication()->getDefaultCurrency()->getID();
-		$validator->addCheck('price_' . $baseCurrency, new IsNotEmptyCheck($this->translate('_err_price_empty')));
+		$validator->addCheck($prefix.'price_' . $baseCurrency, new IsNotEmptyCheck($this->translate('_err_price_empty')));
 
 		$currencies = $this->getApplication()->getCurrencyArray();
 		foreach ($currencies as $currency)
 		{
-			$validator->addCheck('price_' . $currency, new IsNumericCheck($this->translate('_err_price_invalid')));
-			$validator->addCheck('price_' . $currency, new MinValueCheck($this->translate('_err_price_negative'), 0));
-			$validator->addCheck('listPrice_' . $currency, new MinValueCheck($this->translate('_err_price_negative'), 0));
-			$validator->addFilter('price_' . $currency, new NumericFilter());
-			$validator->addFilter('listPrice_' . $currency, new NumericFilter());
+			$validator->addCheck($prefix.'price_' . $currency, new IsNumericCheck($this->translate('_err_price_invalid')));
+			$validator->addCheck($prefix.'price_' . $currency, new MinValueCheck($this->translate('_err_price_negative'), 0));
+			$validator->addCheck($prefix.'listPrice_' . $currency, new MinValueCheck($this->translate('_err_price_negative'), 0));
+			$validator->addFilter($prefix.'price_' . $currency, new NumericFilter());
+			$validator->addFilter($prefix.'listPrice_' . $currency, new NumericFilter());
 		}
 
 		return $validator;
@@ -1135,6 +1160,66 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$validator->addFilter('stockCount', new NumericFilter());
 
 		return $validator;
+	}
+
+	public function uploadProductImage()
+	{
+		ClassLoader::import('application.model.product.ProductImage');
+		ClassLoader::import('library.image.ImageManipulator');
+		$field = 'upload_' . $this->request->get('field');
+		
+		$dir = ClassLoader::getRealPath('public.upload.tmpimage.');
+		
+		// delete old tmp files
+		chdir($dir);
+		$dh = opendir($dir);
+		$threshold = strtotime("-1 day");
+		while (($dirent = readdir($dh)) != false)
+		{
+			if (is_file($dirent))
+			{
+				if (filemtime($dirent) < $threshold)
+				{
+					unlink($dirent);
+				}
+			}
+		}
+		closedir($dh);
+
+		// create tmp file
+		$file = $_FILES[$field];
+		$tmp = 'tmp_' . $field . md5($file['tmp_name']) .  '__' . $file['name'];
+		
+		if (!file_exists($dir))
+		{
+			mkdir($dir, 0777, true);
+			chmod($dir, 0777);
+		}
+		$path = $dir . $tmp;
+		move_uploaded_file($file['tmp_name'], $path);
+		if (@getimagesize($path))
+		{
+			$thumb = 'tmp_thumb_' . $tmp;
+			$thumbPath = $dir . $thumb;
+			$thumbDir = dirname($thumbPath);
+			if (!file_exists($thumbDir))
+			{
+				mkdir($thumbDir, 0777, true);
+				chmod($thumbDir, 0777);
+			}
+			$conf = self::getApplication()->getConfig();
+			$img = new ImageManipulator($path);
+			$thumbSize = ProductImage::getImageSizes();
+
+			$thumbSize = $thumbSize[2]; // 1 is too small, cant see a thing.
+			$img->resize($thumbSize[0], $thumbSize[1], $thumbPath);
+			$thumb = 'upload/tmpimage/'. $thumb;
+		}
+		else
+		{
+			return new JSONResponse(null, 'failure', $this->translate('_error_uploading_image'));
+		}
+		return new JSONResponse(array('name' => $file['name'], 'file' => $tmp, 'thumb' => $thumb), 'success');
 	}
 }
 

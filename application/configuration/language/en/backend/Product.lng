@@ -106,6 +106,7 @@ _enabled=Enabled (visible)
 _tangible=Tangible (shippable)
 _intangible=Intangible (downloadable)
 _bundle=Bundle (container)
+_recurring=Recurring
 
 _inventory=Inventory
 _items_in_stock=Items in stock
@@ -253,3 +254,8 @@ _shipping_surcharge=Shipping surcharge
 _requires_separate_shipment=Requires separate shipment
 _qualifies_for_free_shipping=Qualifies for free shipping
 _allow_back_ordering=Allow back-ordering
+
+_image=Image
+_product_image_file=Image file
+_tip_product_image_file=Select product image file
+_error_uploading_image=Error while uploading image

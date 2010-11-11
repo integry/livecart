@@ -190,6 +190,25 @@ Product.ContactForm.prototype =
 	}
 }
 
+Product.ChangeRecurringPlanAction = Class.create();
+Product.ChangeRecurringPlanAction.prototype =
+{
+	initialize: function(url, node)
+	{
+		node = $(node);
+		var progressIndicator = node.up("div").down("span");
+		progressIndicator.addClassName("progressIndicator");
+		new LiveCart.AjaxRequest(url, progressIndicator, function(node, transport) {
+			if(transport.responseData && transport.responseData.status == "success")
+			{
+				new Effect.Highlight($(node).up("td"));
+			}
+		}.bind(this,node), {
+		parameters:$H({recurringID:node.value}).toQueryString()
+		})
+	}
+}
+
 // lightbox changes
 window.setTimeout(function()
 {

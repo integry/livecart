@@ -7,6 +7,8 @@ ClassLoader::import('application.model.discount.DiscountCondition');
 ClassLoader::import('application.model.Currency');
 ClassLoader::import('application.model.product.Product');
 ClassLoader::import('application.model.product.ProductOption');
+ClassLoader::import('application.model.product.RecurringItem');
+ClassLoader::import('application.model.product.RecurringProductPeriod');
 
 /**
  * @author Integry Systems
@@ -145,6 +147,8 @@ $this->session->set('test', new Whatever());
 		$orderArray = $this->order->toArray();
 
 		$itemsById = array();
+		$recurringItemsByItem = array();
+		$hasRecurringItem = false;
 		foreach (array('cartItems', 'wishListItems') as $type)
 		{
 			if (!empty($orderArray[$type]))
@@ -152,10 +156,21 @@ $this->session->set('test', new Whatever());
 				foreach ($orderArray[$type] as &$item)
 				{
 					$itemsById[$item['ID']] =& $item;
+					if ($item['Product']['type'] == Product::TYPE_RECURRING)
+					{
+						$hasRecurringItem = true;
+						$recurringProductPeriods = RecurringProductPeriod::getRecordSetByProduct($item['Product']['ID'])->toArray();
+						$recurringItemsByItem[$item['ID']] = $recurringProductPeriods;
+					}
 				}
 			}
 		}
-
+		if ($hasRecurringItem)
+		{
+			$response->set('periodTypesPlural', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL));
+			$response->set('periodTypesSingle', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_SINGLE));
+			$response->set('recurringItemsByItem', $recurringItemsByItem);
+		}
 		$response->set('cart', $orderArray);
 		$response->set('itemsById', $itemsById);
 		$response->set('form', $form);
@@ -500,7 +515,6 @@ $this->session->set('test', new Whatever());
 		{
 			return new RawResponse();
 		}
-
 		ActiveRecordModel::beginTransaction();
 
 		if (!$this->request->get('count'))
@@ -601,7 +615,6 @@ $this->session->set('test', new Whatever());
 		}
 
 		$product = Product::getInstanceByID($id, true, array('Category'));
-
 		$productRedirect = new ActionRedirectResponse('product', 'index', array('id' => $product->getID(), 'query' => 'return=' . $this->request->get('return')));
 		if (!$product->isAvailable())
 		{
@@ -643,6 +656,18 @@ $this->session->set('test', new Whatever());
 			if ($this->order->isMultiAddress->get())
 			{
 				$item->save();
+			}
+
+			if ($product->type->get() == Product::TYPE_RECURRING)
+			{
+				if ($item->isExistingRecord() == false)
+				{
+					$item->save(); // or save in SessionOrder::save()
+				}
+				$recurringProductPeriod = RecurringProductPeriod::getInstanceByID($this->getRequest()->get('recurringID'), true);
+				$instance = RecurringItem::getNewInstance($recurringProductPeriod, $item,
+					0, 0, $recurringProductPeriod->rebillCount->get());
+				$instance->save();
 			}
 		}
 	}
@@ -965,6 +990,26 @@ $this->session->set('test', new Whatever());
 		}
 
 		return $validator;
+	}
+
+	public function changeRecurringProductPeriod()
+	{
+		$request = $this->getRequest();
+		$orderedItemID = $request->get('id');
+		$recurringID = $request->get('recurringID');
+		$orderedItem = ActiveRecordModel::getInstanceByID('OrderedItem', $orderedItemID, true);
+		$recurringItems = RecurringItem::getRecordSetByOrderedItem($orderedItem);
+		if ($recurringItems->size() > 0)
+		{
+			$recurringItem = $recurringItems->shift();
+			$recurringItem->setRecurringProductPeriod(RecurringProductPeriod::getInstanceByID($recurringID));
+			$recurringItem->save();
+			if ($recurringItems->size() > 0) 
+			{
+				// if more than 1, remove others?
+			}
+		}
+		return new JSONResponse(null, 'success');
 	}
 
 	private function buildOptionsValidator(OrderedItem $item, $options)

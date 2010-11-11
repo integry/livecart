@@ -28,6 +28,7 @@ Backend.Product =
 			var url = Backend.Category.links.addProduct.replace('_id_', categoryID);
 			new LiveCart.AjaxUpdater(url, container, caller.up('.menu').down('.progressIndicator'));
 		}
+
 	},
 
 	hideAddForm: function()
@@ -100,6 +101,7 @@ Backend.Product =
 		this.reInitAddForm();
 
 		ActiveForm.prototype.resetErrorMessages(container.down('form'));
+		
 	},
 
 	reInitAddForm: function()
@@ -110,6 +112,11 @@ Backend.Product =
 
 		// focus Product Name field
 		container.down('form').elements.namedItem('name').focus();
+
+		// clear product image container
+		$A(container.getElementsByClassName("thumbsContainer")).each(function(container) {
+			container.innerHTML = "";
+		});
 	},
 
 	initSpecFieldControls: function(categoryID)
@@ -1095,4 +1102,46 @@ Backend.Product.GridFormatter =
 
 		return value;
 	}
+}
+
+Backend.Product.previewUploadedImage = function(upload, res)
+{
+	var
+		root,
+		template,
+		image,
+		emptyUpload,
+		uploadContainer;
+
+	LiveCart.AjaxRequest.prototype.showConfirmation(res);
+	if (res.status == "success")
+	{
+		upload = $(upload);
+		root = upload.up(".productImages");
+		template = root.down(".thumbTemplate").cloneNode(true);
+		root.down(".thumbsContainer").appendChild(template);
+		template = $(template);
+		template.down(".fileName").update(res.name);
+		image = template.down(".fileImage img");
+		template.down(".productImageFileName").value=res.file;
+		if(res.thumb)
+		{
+			image.src = res.thumb;
+		}
+		else
+		{
+			image.hide();
+		}
+		template.show();
+
+		// empty (replace with new) input="type" control
+		emptyUpload = root.down(".upload_productImageEmpty").cloneNode(true);
+		uploadContainer = root.down(".uploadContainer");
+		$(uploadContainer.down("input")).remove();
+		uploadContainer.insertBefore(emptyUpload, uploadContainer.down("div"));
+		emptyUpload.removeClassName("upload_productImageEmpty");
+		new LiveCart.FileUpload(emptyUpload, root.down(".fileUploadOptions").value , Backend.Product.previewUploadedImage);
+		emptyUpload.show();
+	}
+
 }
