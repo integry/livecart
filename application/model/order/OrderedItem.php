@@ -1,13 +1,14 @@
 <?php
 
-ClassLoader::import("application.model.product.Product");
-ClassLoader::import("application.model.order.CustomerOrder");
-ClassLoader::import("application.model.order.Shipment");
-ClassLoader::import("application.model.order.OrderedFile");
+ClassLoader::import('application.model.product.Product');
+ClassLoader::import('application.model.order.CustomerOrder');
+ClassLoader::import('application.model.order.Shipment');
+ClassLoader::import('application.model.order.OrderedFile');
+ClassLoader::import('application.model.product.RecurringItem');
 ClassLoader::import('application.model.order.OrderedItemOption');
 ClassLoader::import('application.model.delivery.DeliveryZone');
 ClassLoader::import('application.model.businessrule.interface.BusinessRuleProductInterface');
-ClassLoader::import("application.model.system.MultilingualObject");
+ClassLoader::import('application.model.system.MultilingualObject');
 
 /**
  * Represents a shopping basket item (one or more instances of the same product)
@@ -246,7 +247,29 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 	public function getItemPrice()
 	{
 		$isFinalized = $this->customerOrder->get()->isFinalized->get();
-		$price = $isFinalized ? $this->price->get() : $this->getProduct()->getItemPrice($this);
+		$product = $this->getProduct();
+		$price = 0;
+		if ($product->type->get() == Product::TYPE_RECURRING)
+		{
+			$recurringBillingType = ActiveRecordModel::getApplication()->getConfig()->get('RECURRING_BILLING_TYPE');
+			$recurringItem = RecurringItem::getInstanceByOrderedItem($this);
+			if ($recurringItem)
+			{
+				$price = $recurringItem->setupPrice->get();
+				if ($recurringBillingType == 'RECURRING_BILLING_TYPE_POST_PAY')
+				{
+					//..
+				}
+				else // RECURRING_BILLING_TYPE_PRE_PAY
+				{
+					$price +=  $recurringItem->periodPrice->get(); // pre pay, add price from first period
+				}
+			}
+		}
+		else
+		{
+			$price = $isFinalized ? $this->price->get() : $this->getProduct()->getItemPrice($this);
+		}
 
 		if (!$isFinalized)
 		{

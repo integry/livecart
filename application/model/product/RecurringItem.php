@@ -32,6 +32,19 @@ class RecurringItem extends ActiveRecordModel
 		return parent::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
+	public static function getInstanceByOrderedItem(OrderedItem $item)
+	{
+		$recurringItems = self::getRecordSetByOrderedItem($item);
+		if ($recurringItems->size() >= 1)
+		{
+			return $recurringItems->shift();
+		}
+		else
+		{
+			return null;
+		}
+	}
+
 	public static function getNewInstance(RecurringProductPeriod $recurringProductPeriod,
 		OrderedItem $item, $setupPrice = null, $periodPrice = null, $rebillCount = null)
 	{

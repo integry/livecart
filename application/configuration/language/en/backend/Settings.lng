@@ -553,3 +553,8 @@ ENABLED_FEEDS=Enabled feeds
 ALL_PRODUCTS=All products
 CATEGORY_PRODUCTS=Category products
 NEWS_POSTS=News posts
+
+_recurring_billing=Recurring billing
+RECURRING_BILLING_TYPE=Recurring billing type
+RECURRING_BILLING_TYPE_PRE_PAY=Pre-pay
+RECURRING_BILLING_TYPE_POST_PAY=Post-pay

@@ -95,6 +95,9 @@ Backend.RecurringProductPeriod.prototype =
 
 	cancel: function()
 	{
+		$A($(this.nodes.menuForm.up(".tabRecurringContent")).getElementsByClassName("hiddenActiveListTitle")).each(function(li) {
+			$(li).removeClassName("hiddenActiveListTitle");
+		});
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 		if(!this.nodes.form.elements.namedItem('ID').value)
 		{
