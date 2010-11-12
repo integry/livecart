@@ -744,14 +744,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 					$choiceHash[] = md5($choice->choice->get()->getID() . '_' . $choice->optionText->get());
 				}
 
-				// do not merge items that has same prodcut, but different recurring  plans
+				// do not merge items that has same product, but different recurring plans
 				if ($product->type->get() == Product::TYPE_RECURRING)
 				{
-					$recrurringItems = RecurringItem::getRecordSetByOrderedItem($item, true);
-					foreach($recrurringItems as $ritem)
-					{
-						$choiceHash[] = $ritem->recurringID->get()->getID().'|';
-					}
+					$recrurringItem = RecurringItem::getInstanceByOrderedItem($item, true);
+					$choiceHash[] = $recrurringItem->recurringID->get()->getID().'|';
 				}
 				$hash = $choiceHash ? '_' . md5(implode('', $choiceHash)) : '';
 				$byProduct[$product->getID() . $hash][(int)$item->isSavedForLater->get()][] = $item;
@@ -759,19 +756,19 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 			foreach ($byProduct as $productID => $itemsByStatus)
 			{
+
 				foreach ($itemsByStatus as $status => $items)
 				{
 					if (count($items) > 1)
 					{
+						
 						$mainItem = array_shift($items);
 						$count = $mainItem->count->get();
-
 						foreach ($items as $item)
 						{
 							$count += $item->count->get();
 							$this->removeItem($item);
 						}
-
 						$mainItem->count->set($count);
 					}
 				}

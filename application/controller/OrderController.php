@@ -665,6 +665,8 @@ class OrderController extends FrontendController
 				$recurringProductPeriod = RecurringProductPeriod::getInstanceByID($this->getRequest()->get('recurringID'), true);
 				$instance = RecurringItem::getNewInstance($recurringProductPeriod, $item);
 				$instance->save();
+
+				$item->updateBasePriceToCalculatedPrice();
 			}
 		}
 	}
@@ -993,20 +995,21 @@ class OrderController extends FrontendController
 	{
 		$request = $this->getRequest();
 		$orderedItemID = $request->get('id');
-		$recurringID = $request->get('recurringID');
+		$billingPlandropdownName = $request->get('recurringBillingPlan');
+		$recurringID = $request->get($billingPlandropdownName);
 		$orderedItem = ActiveRecordModel::getInstanceByID('OrderedItem', $orderedItemID, true);
-		$recurringItems = RecurringItem::getRecordSetByOrderedItem($orderedItem);
-		if ($recurringItems->size() > 0)
+		$recurringItem = RecurringItem::getInstanceByOrderedItem($orderedItem);
+		if ($recurringItem)
 		{
-			$recurringItem = $recurringItems->shift();
 			$recurringItem->setRecurringProductPeriod(RecurringProductPeriod::getInstanceByID($recurringID));
 			$recurringItem->save();
-			if ($recurringItems->size() > 0) 
-			{
-				// if more than 1, remove others?
-			}
+			$orderedItem->updateBasePriceToCalculatedPrice();
 		}
-		return new JSONResponse(null, 'success');
+		$this->order->loadItemData();
+		$this->order->mergeItems();
+		$this->order->save();
+
+		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
 
 	private function buildOptionsValidator(OrderedItem $item, $options)

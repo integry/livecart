@@ -195,17 +195,16 @@ Product.ChangeRecurringPlanAction.prototype =
 {
 	initialize: function(url, node)
 	{
-		node = $(node);
-		var progressIndicator = node.up("div").down("span");
+		var 
+			changedDropdownName = $("recurringBillingPlan"),
+			form = changedDropdownName.up("form");
+			progressIndicator = $(node).up("div").down("span");
+
 		progressIndicator.addClassName("progressIndicator");
-		new LiveCart.AjaxRequest(url, progressIndicator, function(node, transport) {
-			if(transport.responseData && transport.responseData.status == "success")
-			{
-				new Effect.Highlight($(node).up("td"));
-			}
-		}.bind(this,node), {
-		parameters:$H({recurringID:node.value}).toQueryString()
-		})
+		progressIndicator.show();
+		changedDropdownName.value = node.id;
+		form.action = url;
+		form.submit();
 	}
 }
 

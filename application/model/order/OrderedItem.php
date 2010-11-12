@@ -241,6 +241,15 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		return $this->getPrice($includeTaxes);
 	}
 
+	// OrderedItem::getItemPrice() for recurring product return something ..different (setup [+first preriod price]) than value stored price field.
+	// OrderedItem.price is used as base value for showing discounts.
+	// Changed billing plan or adding item with recurring billing plan has nothing to do with discount, therefore there is need to update base price.
+	public function updateBasePriceToCalculatedPrice()
+	{
+		$this->price->set($this->getPrice(true)); 
+		$this->save();
+	}
+
 	/**
 	 *	Get price without taxes
 	 */
@@ -249,6 +258,10 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		$isFinalized = $this->customerOrder->get()->isFinalized->get();
 		$product = $this->getProduct();
 		$price = 0;
+		if ($product->isLoaded() == false)
+		{
+			$product->load();
+		}
 		if ($product->type->get() == Product::TYPE_RECURRING)
 		{
 			$recurringBillingType = ActiveRecordModel::getApplication()->getConfig()->get('RECURRING_BILLING_TYPE');
@@ -256,11 +269,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 			if ($recurringItem)
 			{
 				$price = $recurringItem->setupPrice->get();
-				if ($recurringBillingType == 'RECURRING_BILLING_TYPE_POST_PAY')
-				{
-					//..
-				}
-				else // RECURRING_BILLING_TYPE_PRE_PAY
+				if ($recurringBillingType == 'RECURRING_BILLING_TYPE_PRE_PAY')
 				{
 					$price +=  $recurringItem->periodPrice->get(); // pre pay, add price from first period
 				}

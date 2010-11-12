@@ -41,4 +41,6 @@
 
 {include file="order/block/expressCheckout.tpl"}
 
+<input type="hidden" value="" name="recurringBillingPlan" id="recurringBillingPlan">
+
 {/form}
