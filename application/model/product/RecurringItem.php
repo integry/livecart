@@ -20,6 +20,9 @@ class RecurringItem extends ActiveRecordModel
 		$schema->registerField(new ARField('periodPrice', ARInteger::instance()));
 		$schema->registerField(new ARField('rebillCount', ARInteger::instance()));
 		$schema->registerField(new ARField('processedRebillCount', ARInteger::instance()));
+		$schema->registerField(new ARField('periodType', ARInteger::instance()));
+		$schema->registerField(new ARField('periodLength', ARInteger::instance()));
+
 	}
 
 	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
@@ -51,7 +54,8 @@ class RecurringItem extends ActiveRecordModel
 		$instance = ActiveRecord::getNewInstance(__CLASS__);
 		$instance->orderedItem->set($item);
 		$instance->setRecurringProductPeriod($recurringProductPeriod); // call after orderedItem is added!
-
+		$instance->periodLength->set($recurringProductPeriod->periodLength->get());
+		$instance->periodType->set($recurringProductPeriod->periodType->get());
 		if ($setupPrice !== null)
 		{
 			$instance->setupPrice->set($setupPrice);
@@ -109,6 +113,16 @@ class RecurringItem extends ActiveRecordModel
 		{
 			$this->periodPrice->set($rppa['ProductPrice_period'][$currencyID]['price']);
 		}
+	}
+
+	public static function batchIncreaseProcessedRebillCount($ids)
+	{
+		if (count($ids) == 0)
+		{
+			return false;
+		}
+		ActiveRecord::executeUpdate('UPDATE '.__CLASS__. ' SET processedRebillCount=IF(processedRebillCount IS NULL, 1, processedRebillCount+1) WHERE ID IN('.implode(',', $ids).')');
+		return true;
 	}
 }
 

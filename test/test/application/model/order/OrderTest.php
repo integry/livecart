@@ -1825,10 +1825,8 @@ class OrderTest extends OrderTestCommon
 		$this->order->addProduct($this->products[0], 1);
 		$this->order->addProduct($this->products[1], 1);
 		$this->order->save();
-
 		$this->products[0]->delete();
 		ActiveRecord::clearPool();
-
 		$order = CustomerOrder::getInstanceByID($this->order->getID());
 		$order->loadAll();
 
@@ -1890,7 +1888,145 @@ class OrderTest extends OrderTestCommon
 		$this->assertEqual($shipment->getChargeableWeight(), 0);
 		$rates = $shipment->getShippingRates();
 		$this->assertEqual($rates->size(), 1);
+	}
 
+	public function testFindOrdersWithRecurringPeriodEndingToday_basic()
+	{
+		// one order, one invoice order (invoiceOrder.parentID = order.id)
+		// + one order without type recurring
+		// + one order with type recurring, but other generation date
+
+		// config
+		$config = ActiveRecordModel::getApplication()->getConfig();
+		$config->set('RECURRING_BILLING_GENERATE_INVOICE', 3);
+		$config->save();
+
+		$order = CustomerOrder::getNewInstance($this->user);
+		$order->save(true);
+		$product = $this->products[0];
+		$product->save();
+
+		$rpp = $this->createRecurringProductPeriod($product, 5 /* 8 - 3(config days) == 5*/, RecurringProductPeriod::TYPE_PERIOD_DAY, 100);
+		list($item, $recurringItem) = $this->addRecurringProduct($order, $product, 1, $rpp, 100, 200);
+		$invoiceOrder1 = CustomerOrder::getNewInstance($this->user);
+		$invoiceOrder1->parentID->set($order);
+		$invoiceOrder1->dateCreated->set(date('Y-m-d 00:00:01', strtotime('-8 days')));
+		$invoiceOrder1->save(true);
+
+		$order2 = CustomerOrder::getNewInstance($this->user);
+		$order2->addProduct($product, 1);
+		$order2->save();
+
+		$order3 = CustomerOrder::getNewInstance($this->user);
+		$order3->save(true);
+		list($item, $recurringItem) = $this->addRecurringProduct($order3, $product, 1, $rpp, 100, 200);
+		$order3->dateCompleted->set(date('Y-m-d 00:00:02', strtotime('-7 days')));
+		$order3->save();
+
+		$orders = CustomerOrder::findOrdersWithRecurringPeriodEndingToday();
+
+		$this->assertEquals(1, $orders->size());
+	}
+
+	public function testFindOrdersWithRecurringPeriodEndingToday_withoutInvoiceOrders()
+	{
+		// one order, no invoice orders
+
+		// config
+		$config = ActiveRecordModel::getApplication()->getConfig();
+		$config->set('RECURRING_BILLING_GENERATE_INVOICE', 3);
+		$config->save();
+
+		$order = CustomerOrder::getNewInstance($this->user);
+		$order->save(true);
+		$product = $this->products[0];
+		$product->save();
+		$rpp = $this->createRecurringProductPeriod($product, 5 /* 8 - 3(config days) == 5*/, RecurringProductPeriod::TYPE_PERIOD_DAY, 100);
+		list($item, $recurringItem) = $this->addRecurringProduct($order, $product, 1, $rpp, 100, 200);
+		$order->dateCompleted->set(date('Y-m-d 00:00:02', strtotime('-8 days')));
+		$order->save();
+		$orders = CustomerOrder::findOrdersWithRecurringPeriodEndingToday();
+		$this->assertEquals(1, $orders->size());
+	}
+
+	public function testGenerateInvoiceNumber()
+	{
+		$order = CustomerOrder::getNewInstance($this->user);
+		$order->invoiceNumber->set('AD/S3[2-2]-25');
+		$order->save(true);
+		$this->assertEquals('AD/S3[2-2]-25', $order->getCalculatedRecurringInvoiceNumber(), 'Main order has no suffixes for invoiceNumber - should return the same');
+
+		$invoiceOrder1 = CustomerOrder::getNewInstance($this->user);
+		$invoiceOrder1->parentID->set($order);
+		$invoiceOrder1->save(true);
+
+		$this->assertEquals('AD/S3[2-2]-25-1', $invoiceOrder1->getCalculatedRecurringInvoiceNumber());
+
+		$invoiceOrder2 = CustomerOrder::getNewInstance($this->user);
+		$invoiceOrder2->parentID->set($order);
+		$invoiceOrder2->save(true);
+
+		$this->assertEquals('AD/S3[2-2]-25-2', $invoiceOrder2->getCalculatedRecurringInvoiceNumber());
+	}
+
+	public function testGenerateRecurringInvoices()
+	{
+		$config = ActiveRecordModel::getApplication()->getConfig();
+		$config->set('RECURRING_BILLING_GENERATE_INVOICE', 3);
+		$config->save();
+
+		$order = CustomerOrder::getNewInstance($this->user);
+		$order->save(true);
+		$product = $this->products[0];
+		$product->save();
+		$rpp = $this->createRecurringProductPeriod($product, 5 /* 8 - 3(config days) == 5*/, RecurringProductPeriod::TYPE_PERIOD_DAY, 100);
+		list($item, $recurringItem) = $this->addRecurringProduct($order, $product, 1, $rpp, 100, 200);
+		$order->dateCompleted->set(date('Y-m-d 00:00:02', strtotime('-8 days')));
+		$order->invoiceNumber->set('Recurring Order #1');
+		$order->save();
+		$orderID = $order->getID();
+
+		CustomerOrder::generateRecurringInvoices();
+
+		$filter = new ARSelectFilter();
+		$filter->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder','parentID'), $orderID));
+		$rs = ActiveRecordModel::getRecordSet('CustomerOrder', $filter);
+		$this->assertEquals(1, $rs->size(), 'Should generate one invoice order');
+		$invoice = $rs->shift();
+		$this->assertEquals('Recurring Order #1-1', $invoice->invoiceNumber->get());
+		$items = $invoice->getOrderedItems();
+		$this->assertEquals(1, count($items), 'Invoice should have one OrderedItem');
+		$item = array_shift($items);
+		$this->assertEquals(200, $item->price->get(), 'OrderedItem price should be set to period price');
+	}
+
+	private function addRecurringProduct($order, $product, $count, $recurringProductPeriod, $setupPrice=0, $periodPrice=0)
+	{
+		$item = $order->addProduct($product, $count);
+		$item->save();
+		$recurringItem = RecurringItem::getNewInstance($recurringProductPeriod, $item);
+		$recurringItem->setupPrice->set((float)$setupPrice);
+		$recurringItem->periodPrice->set((float)$periodPrice);
+		$recurringItem->save();
+		$product->type->set(Product::TYPE_RECURRING);
+
+		return array($item, $recurringItem);
+	}
+
+	private function createRecurringProductPeriod($product, $periodLength=28, $periodType=1, $rebillCount=100)
+	{
+		$rpp = RecurringProductPeriod::getNewInstance($product);
+		$request = new Request();
+		$request->set('name', 'Test recurring #'.floor(mt_rand()*100000));
+		$request->set('periodLength', $periodLength);
+		$request->set('periodType ', $periodType);
+		$request->set('rebillCount', $rebillCount);
+		$request->set('description', '');
+		$rpp->loadRequestData($request);
+		$rpp->periodType->set($periodType);
+		$rpp->save();
+
+		return $rpp;
 	}
 
 	private function createOrderWithZone(DeliveryZone $zone = null)

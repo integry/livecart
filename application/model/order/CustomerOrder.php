@@ -101,6 +101,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$schema->registerField(new ARField("status", ARInteger::instance()));
 		$schema->registerField(new ARField("shipping", ARText::instance()));
 		$schema->registerField(new ARField("rebillsLeft", ARInteger::instance()));
+		$schema->registerField(new ARField("dateDue", ARDateTime::instance()));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -2427,6 +2428,205 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'isRecurring'), 1));
 		return (bool)ActiveRecordModel::getRecordCount(__CLASS__, $filter);
 	}
+
+	public static function findOrdersWithRecurringPeriodEndingToday()
+	{
+		$data = ActiveRecordModel::getDataBySql(
+		'
+			SELECT
+				COALESCE(lastInvoiceOrder.ID, co.ID) as CustomerOrderID,
+				lastInvoiceOrder.parentID,
+				co.ID AS firstCustomerOrderID,
+				co.dateCompleted,
+				lastInvoiceOrder.ID AS invoiceCustomerOrderID,
+				lastInvoiceOrder.dateCreated,
+				IF(
+					lastInvoiceOrder.ID IS NOT NULL,'.
+					self::sqlForAddedDate('lastInvoiceOrder.dateCreated').' ,'.
+					self::sqlForAddedDate('co.dateCompleted').'
+				) AS addedDate,
+
+				rpp.periodType,
+				rpp.periodLength
+			FROM
+				RecurringItem ri
+				INNER JOIN OrderedItem oi ON ri.orderedItemId=oi.ID
+				INNER JOIN CustomerOrder co ON oi.customerOrderID=co.ID
+				INNER JOIN RecurringProductPeriod rpp ON ri.recurringID = rpp.ID
+				LEFT JOIN 
+				(
+					SELECT
+						*
+					FROM
+						CustomerOrder ico
+					ORDER BY
+						ico.dateCreated DESC, ico.ID DESC
+				) AS lastInvoiceOrder
+				ON lastInvoiceOrder.parentID = co.ID
+			WHERE 
+				(
+					ri.rebillCount IS NULL
+						OR
+					ri.rebillCount > IF(ri.processedRebillCount IS NULL , 0, ri.processedRebillCount)
+				)
+				/* AND co.ID = CustomerOrder.ID */
+				
+			GROUP BY co.ID, ri.periodType, ri.periodLength
+			HAVING
+			(
+				TO_DAYS(addedDate) = TO_DAYS(CURRENT_DATE)
+			)
+		');
+
+		$customerOrderIDs = array();
+		foreach($data as $row)
+		{
+			$customerOrderIDs[] = $row['CustomerOrderID'];
+		}
+		$filter = new ARSelectFilter();
+		$filter->mergeCondition(new InCond(new ARFieldHandle(__CLASS__, 'ID'), $customerOrderIDs));
+
+		return ActiveRecordModel::getRecordSet('CustomerOrder', $filter);
+	}
+
+
+	public static function generateRecurringInvoices()
+	{
+		$orders = self::findOrdersWithRecurringPeriodEndingToday();
+		if ($orders->size() == 0)
+		{
+			return;
+		}
+		$config = self::getApplication()->getConfig();
+		$daysDue = $config->get('RECURRING_BILLING_PAYMENT_DUE_DATE_DAYS');
+		$daysBefore = $config->get('RECURRING_BILLING_GENERATE_INVOICE');
+
+		$recurringItemIDs = array();
+		foreach($orders as $order)
+		{
+			$mainOrder = $order;
+			$parent = $order->parentID->get();
+			if ($parent)
+			{
+				$mainOrder = $parent;
+			}
+			$newOrder = clone $mainOrder;
+			$newOrder->parentID->set($mainOrder);
+			$newOrder->invoiceNumber->set($newOrder->getCalculatedRecurringInvoiceNumber());
+			$newOrder->save(true);
+
+			// remove cloned items.
+			// then clone from mainOrder, find recurringItem,
+			// set price from recurringItem,
+			// and add to order.
+			foreach($newOrder->getOrderedItems() as $item)
+			{
+				$newOrder->removeItem($item);
+			}
+			// $newOrder->save();
+			foreach ($mainOrder->getOrderedItems() as $item)
+			{
+				$clone = clone $item;
+				$recurringItem = RecurringItem::getInstanceByOrderedItem($item);
+				$recurringItemIDs[] = $recurringItem->getID();
+				$clone->price->set( $recurringItem->periodPrice->get() );
+				//$clone->save();
+				$newOrder->addItem($clone);
+			}
+			$newOrder->dateDue->set(date('Y-m-d H:i:s', strtotime('+'. ($daysBefore + $daysDue) .' day', time())));
+			$newOrder->save(true);
+		}
+		
+		if (count($recurringItemIDs))
+		{
+			RecurringItem::batchIncreaseProcessedRebillCount($recurringItemIDs);
+		}
+		return true;
+	}
+
+	public function getCalculatedRecurringInvoiceNumber()
+	{
+		$parent = $this->parentID->get();
+		if (!$parent)
+		{
+			return $this->invoiceNumber->get();
+		}
+		$filter = new ARSelectFilter();
+		$filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__,'parentID'), $parent->getID()));
+		$filter->setOrder(new ARFieldHandle(__CLASS__, 'dateCreated'), 'ASC');
+		$filter->setOrder(new ARFieldHandle(__CLASS__, 'ID'), 'ASC');
+
+		$rs = ActiveRecordModel::getRecordSet(__CLASS__, $filter);
+		$count = 1;
+		foreach ($rs as $invoiceOrder)
+		{
+			$invoiceOrderID = $invoiceOrder->getID();
+			if ($invoiceOrderID == $this->getID())
+			{
+				return $parent->invoiceNumber->get().'-'.$count;
+			}
+			$count++;
+		}
+		return $parent->invoiceNumber->get().'-'.$count; // for last unsaved order
+	}
+
+	private static function sqlForAddedDate($field)
+	{
+		$generateInvoiceDays = (int)ActiveRecordModel::getApplication()->getConfig()->get('RECURRING_BILLING_GENERATE_INVOICE');
+		if (!is_numeric($generateInvoiceDays) || $generateInvoiceDays < 0)
+		{
+			$generateInvoiceDays = 3;
+		}
+		$mapping = array(
+			RecurringProductPeriod::TYPE_PERIOD_DAY => 'DAY',
+			RecurringProductPeriod::TYPE_PERIOD_WEEK => 'WEEK',
+			RecurringProductPeriod::TYPE_PERIOD_MONTH => 'MONTH',
+			RecurringProductPeriod::TYPE_PERIOD_YEAR => 'YEAR'
+		);
+
+		$chunks = array('CASE');
+		foreach ($mapping as $value => $intervalConst)
+		{
+			$chunks[] = 'WHEN ri.periodType = '.$value .' THEN 
+				ADDDATE(ADDDATE('.$field.', INTERVAL ri.periodLength '.$intervalConst.'), INTERVAL '.$generateInvoiceDays.' DAY)';
+		}
+		$chunks[] = 'END';
+
+		return implode("\n", $chunks);
+	}
 }
 
+/*
+		$filter = new ARSelectFilter();
+		$or = new OrChainCondition(array(
+			new IsNullCond(new ARFieldHandle('RecurringItem','rebillCount')),
+			new MoreThanCond(new ARFieldHandle('RecurringItem', 'rebillCount'), new ARExpressionHandle('IF(RecurringItem.processedRebillCount IS NULL, 0, RecurringItem.processedRebillCount)'))
+		));
+		$filter->mergeCondition($or);
+$filter->addField('(
+		SELECT
+			ico.ID
+		FROM
+			CustomerOrder ico
+		WHERE
+			ico.parentID=CustomerOrder.ID
+		ORDER BY
+			ico.dateCreated DESC, ico.ID DESC
+		LIMIT 1
+)', null, 'invoiceCustomerOrderID');
+
+		$rs = ActiveRecordModel::getRecordSetArray('RecurringItem', $filter, array('OrderedItem', 'CustomerOrder'));
+		if (count($rs))
+		{
+			
+			echo count($rs);
+			foreach($rs as $item)
+			{
+				echo $item['OrderedItem']['customerOrderID'], " - ",
+				 $item['invoiceCustomerOrderID'], "\n";
+			}
+			
+		}
+
+*/
 ?>

@@ -783,7 +783,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 				$array['subItems'][] = $subItem->toArray();
 			}
 		}
-		if ($array['Product']['type'] == Product::TYPE_RECURRING)
+		if ($array && is_array($array) && array_key_exists('Product',$array) && array_key_exists('type', $array['Product']) && $array['Product']['type'] == Product::TYPE_RECURRING)
 		{
 			$ritemArray = RecurringItem::getRecordSetArrayByOrderedItem($this);
 			if (count($ritemArray)) // should be 1 or 0
