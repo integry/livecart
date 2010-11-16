@@ -16,6 +16,8 @@ class RecurringItem extends ActiveRecordModel
 		$schema->registerField(new ARPrimaryKeyField('ID', ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField('recurringID', 'RecurringProductPeriod', 'ID', null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField('orderedItemID', 'OrderedItem', 'ID', 'OrderedItem', ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField('lastInvoiceID', 'CustomerOrder', 'ID', 'CustomerOrder', ARInteger::instance()));
+
 		$schema->registerField(new ARField('setupPrice', ARInteger::instance()));
 		$schema->registerField(new ARField('periodPrice', ARInteger::instance()));
 		$schema->registerField(new ARField('rebillCount', ARInteger::instance()));
@@ -123,6 +125,12 @@ class RecurringItem extends ActiveRecordModel
 		}
 		ActiveRecord::executeUpdate('UPDATE '.__CLASS__. ' SET processedRebillCount=IF(processedRebillCount IS NULL, 1, processedRebillCount+1) WHERE ID IN('.implode(',', $ids).')');
 		return true;
+	}
+
+	public function saveLastInvoice(CustomerOrder $order)
+	{
+		$this->lastInvoiceID->set($order);
+		$this->save();
 	}
 }
 

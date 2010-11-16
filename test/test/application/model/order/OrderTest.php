@@ -1906,12 +1906,13 @@ class OrderTest extends OrderTestCommon
 		$product = $this->products[0];
 		$product->save();
 
-		$rpp = $this->createRecurringProductPeriod($product, 5 /* 8 - 3(config days) == 5*/, RecurringProductPeriod::TYPE_PERIOD_DAY, 100);
+		$rpp = $this->createRecurringProductPeriod($product, 50, RecurringProductPeriod::TYPE_PERIOD_DAY, 100);
 		list($item, $recurringItem) = $this->addRecurringProduct($order, $product, 1, $rpp, 100, 200);
 		$invoiceOrder1 = CustomerOrder::getNewInstance($this->user);
 		$invoiceOrder1->parentID->set($order);
-		$invoiceOrder1->dateCreated->set(date('Y-m-d 00:00:01', strtotime('-8 days')));
+		$invoiceOrder1->dateCreated->set(date('Y-m-d 00:00:01', strtotime('+3 days', strtotime('-50 days'))));
 		$invoiceOrder1->save(true);
+		$recurringItem->saveLastInvoice($invoiceOrder1);
 
 		$order2 = CustomerOrder::getNewInstance($this->user);
 		$order2->addProduct($product, 1);
@@ -1941,9 +1942,9 @@ class OrderTest extends OrderTestCommon
 		$order->save(true);
 		$product = $this->products[0];
 		$product->save();
-		$rpp = $this->createRecurringProductPeriod($product, 5 /* 8 - 3(config days) == 5*/, RecurringProductPeriod::TYPE_PERIOD_DAY, 100);
+		$rpp = $this->createRecurringProductPeriod($product, 16, RecurringProductPeriod::TYPE_PERIOD_DAY, 100);
 		list($item, $recurringItem) = $this->addRecurringProduct($order, $product, 1, $rpp, 100, 200);
-		$order->dateCompleted->set(date('Y-m-d 00:00:02', strtotime('-8 days')));
+		$order->dateCompleted->set(date('Y-m-d 00:00:02', strtotime('+3 days', strtotime('-16 days'))));
 		$order->save();
 		$orders = CustomerOrder::findOrdersWithRecurringPeriodEndingToday();
 		$this->assertEquals(1, $orders->size());
@@ -1979,9 +1980,21 @@ class OrderTest extends OrderTestCommon
 		$order->save(true);
 		$product = $this->products[0];
 		$product->save();
-		$rpp = $this->createRecurringProductPeriod($product, 5 /* 8 - 3(config days) == 5*/, RecurringProductPeriod::TYPE_PERIOD_DAY, 100);
+		$rpp = $this->createRecurringProductPeriod($product, 1, RecurringProductPeriod::TYPE_PERIOD_YEAR, 100);
+
 		list($item, $recurringItem) = $this->addRecurringProduct($order, $product, 1, $rpp, 100, 200);
-		$order->dateCompleted->set(date('Y-m-d 00:00:02', strtotime('-8 days')));
+
+		// what order dateCompleted to set for invoice generation to occur today?
+		/*
+                     [ORDER]                                              [TODAY]
+                        |                                                    |
+                    <---+----------------- -1 year---------------------------+
+            +3 days --->|                                                    |
+                                                                                 
+                        +-----------------  1 year ------------------------------+
+                                                                             |<--- -3 days (need to generate 3 days before period start)
+		*/
+		$order->dateCompleted->set(date('Y-m-d 00:00:02', strtotime('+3 days',strtotime('-1 year'))));
 		$order->invoiceNumber->set('Recurring Order #1');
 		$order->save();
 		$orderID = $order->getID();
@@ -2000,11 +2013,120 @@ class OrderTest extends OrderTestCommon
 		$this->assertEquals(200, $item->price->get(), 'OrderedItem price should be set to period price');
 	}
 
-	private function addRecurringProduct($order, $product, $count, $recurringProductPeriod, $setupPrice=0, $periodPrice=0)
+	public function testGenerateInvoices_longScenario()
 	{
-		$item = $order->addProduct($product, $count);
+		// configruation
+		$config = ActiveRecordModel::getApplication()->getConfig();
+		$config->set('RECURRING_BILLING_GENERATE_INVOICE', 3);
+		$config->set('RECURRING_BILLING_PAYMENT_DUE_DATE_DAYS', 7);
+		$config->save();
+
+		// other orders (as some information noise).
+		for($i=0; $i<3; $i++)
+		{
+			$order = CustomerOrder::getNewInstance($this->user);
+			$product = $this->products[$i];
+			$product->save();
+			$order->addProduct($product, $i+2);
+			$order->save();
+			$order->finalize();
+		}
+
+		//..
+
+		// order with multiple shipments, multiple recurring periods (everyting multiple)
+
+		$period1 = $this->createRecurringProductPeriod($this->products[0], 15, RecurringProductPeriod::TYPE_PERIOD_DAY, 100); // TODO: 14 x TYPE_PERIOD_DAY ==  2 x TYPE_PERIOD_WEEK
+		$period2 = $this->createRecurringProductPeriod($this->products[1], 15, RecurringProductPeriod::TYPE_PERIOD_DAY, 101);
+		$period3 = $this->createRecurringProductPeriod($this->products[2], 1, RecurringProductPeriod::TYPE_PERIOD_WEEK, 7); // every week 
+
+		$order = CustomerOrder::getNewInstance($this->user);
+		$order->isMultiAddress->set(true);
+		$order->save(true);
+
+		$shipment1 = Shipment::getNewInstance($order);
+		$shipment1->save();
+		$shipment2 = Shipment::getNewInstance($order);
+		$shipment2->save();
+		$shipment3 = Shipment::getNewInstance($order);
+		$shipment3->save();
+
+		$order->addShipment($shipment1);
+		$order->addShipment($shipment2);
+		$order->addShipment($shipment3);
+
+		list($orderedItem1, $recurringItem1) = $this->addRecurringProduct($order, $this->products[0], 1, $period1, 32.98, 50.01, $shipment1);
+		list($orderedItem2, $recurringItem2) = $this->addRecurringProduct($order, $this->products[1], 3, $period2, 41.98, 100.02, $shipment2);
+		list($orderedItem3, $recurringItem3) = $this->addRecurringProduct($order, $this->products[2], 2, $period3, 0, 60.03, $shipment3);
+		$order->save();
+
+
+		$startDate = strtotime('2010-01-01 00:00:00');
+		$order->finalize();
+		$date = $startDate;
+		$order->dateCompleted->set(date('Y-m-d 00:00:01', $startDate));
+		$order->save();
+
+		$this->assertEquals(3, $order->getShipments()->size());
+
+		// ** TIMELINE **
+
+		// 2010-01-01 order created; period1 starts; period2 starts; period3 starts
+		// 2010-01-02
+		// 2010-01-03
+		// 2010-01-04
+		// 2010-01-05 3 days before period3 start
+		// 2010-01-06 
+		// 2010-01-07 
+		// 2010-01-08 period3 starts
+		// 2010-01-09
+		// 2010-01-10
+		// 2010-01-11
+		// 2010-01-12 3 days before period3 start
+		// 2010-01-13 3 days before period1 starts; 3 days before period2 starts
+		// 2010-01-14
+		// 2010-01-15 period3 starts
+		// 2010-01-16 period 1 starts; period2 starts
+		// 2010-01-17
+		// 2010-01-18
+		// 2010-01-19 3 days before period3 start
+		// 2010-01-20
+		// 2010-01-21
+		// 2010-01-22 period3 starts
+
+		// from 2009-12-01 to 2010-01-04 there should be nothing to generate (see timeline above)
+		$this->assertIntervalHasNoInvoicesToGenerate('2009-12-01', '2010-01-04');
+
+		$generatedOrdersCount = CustomerOrder::generateRecurringInvoices('2010-01-05');
+		$this->assertEquals(1, $generatedOrdersCount, 'should generate ivnvoice for period3 (3 days before period start)');
+		$generatedOrdersCount = CustomerOrder::generateRecurringInvoices('2010-01-05');
+		$this->assertEquals(0, $generatedOrdersCount, 'when called second time for same date should not generate more invoices');
+		$this->assertIntervalHasNoInvoicesToGenerate('2010-01-06', '2010-01-11');
+		$generatedOrdersCount = CustomerOrder::generateRecurringInvoices('2010-01-12');
+		$this->assertEquals(1, $generatedOrdersCount);
+		$generatedOrdersCount = CustomerOrder::generateRecurringInvoices('2010-01-13');
+		$this->assertEquals(1, $generatedOrdersCount, 'should generate ivnvoice for period1 and period2 (merged into one)');
+		$generatedOrdersCount = CustomerOrder::generateRecurringInvoices('2010-01-13');
+		$this->assertEquals(0, $generatedOrdersCount, 'when called second time for same date should not generate more invoices');
+		$generatedOrdersCount = CustomerOrder::generateRecurringInvoices('2010-01-14');
+		$this->assertEquals(0, $generatedOrdersCount, 'nothing should happen at this date');
+	}
+
+	private function assertIntervalHasNoInvoicesToGenerate($start, $end)
+	{
+		for($ts = strtotime($start); $ts <= strtotime($end); $ts = $ts + (60 * 60 * 24))
+		{
+			$generatedOrdersCount = CustomerOrder::generateRecurringInvoices($ts);
+			$this->assertEquals(0, $generatedOrdersCount, 'At date '.date('Y-m-d', $ts).' should not generate invoice, but generated: '.$generatedOrdersCount.' invoice(s)');
+		}
+	}
+
+	private function addRecurringProduct($order, $product, $count, $recurringProductPeriod, $setupPrice=0, $periodPrice=0, $shipment=null)
+	{
+		$item = $order->addProduct($product, $count, true, $shipment);
 		$item->save();
 		$recurringItem = RecurringItem::getNewInstance($recurringProductPeriod, $item);
+		// pass setup and period prices here because createRecurringProductPeriod() does not create prices in ProductPrice table.
 		$recurringItem->setupPrice->set((float)$setupPrice);
 		$recurringItem->periodPrice->set((float)$periodPrice);
 		$recurringItem->save();
