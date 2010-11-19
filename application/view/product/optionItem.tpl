@@ -64,7 +64,7 @@
 			{elseif 2 == $option.type}
 				{textfield class="text"}
 			{elseif 3 == $option.type}
-				{uniqid assign=uniq}
+				{uniqid assign=uniq noecho=true}
 				{filefield name="upload_`$fieldName`" id=$uniq}
 				{hidden name=$fieldName}
 				{error for="upload_`$fieldName`"}<div class="errorText">{$msg}</div>{/error}

@@ -142,7 +142,7 @@ class OfflineCreditCard extends CreditCardPayment
 		}
 
 		// no validation
-		if (in_array($this->cardType, array('Laser', 'China UnionPay')))
+		if (in_array($this->cardType, array('China UnionPay')))
 		{
 			return true;
 		}

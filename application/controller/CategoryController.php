@@ -612,7 +612,7 @@ class CategoryController extends FrontendController
 	private function getSubCatFeaturedProducts()
 	{
 		$cache = $this->application->getCache();
-		$namespace = 'subcategory_featured';
+		$namespace = 'subcategory_featured_' . $this->application->getLocaleCode();
 		$id = $this->getCategory()->getID();
 		$key = array($namespace, $id);
 

@@ -194,7 +194,7 @@ abstract class FrontendController extends BaseController
 	{
 		if (!$this->user->isAnonymous())
 		{
-			return false;
+			//return false;
 		}
 
 		ClassLoader::import('application.controller.NewsletterController');

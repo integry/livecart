@@ -25,7 +25,11 @@ function smarty_function_uniqid($params, LiveCartSmarty $smarty)
 		if (isset($params['assign']))
 		{
 			$smarty->assign($params['assign'], $id);
-			return '';
+
+			if (!empty($params['noecho']))
+			{
+				return '';
+			}
 		}
 
 		return $id;
