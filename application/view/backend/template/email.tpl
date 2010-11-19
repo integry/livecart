@@ -42,7 +42,7 @@
 {literal}
 <script type="text/javascript">
 	var settings = new Backend.Template({/literal}{$categories}{literal});
-	settings.urls['edit'] = '{/literal}{link controller=backend.template action=editEmail}?file=_id_&tabid=_tabid_{literal}';
+	settings.urls['edit'] = '{/literal}{link controller=backend.template action=editEmail query="file=_id_&tabid=_tabid_"}{literal}';
 	settings.urls['empty'] = '{/literal}{link controller=backend.template action=emptyPage}{literal}';
 	settings.translations['_tab_title_new'] = "{/literal}{t _tab_title_new}{literal}";
 	settings.setTabControlInstance(

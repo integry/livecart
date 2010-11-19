@@ -21,7 +21,7 @@
 
 		<ul id="categoryBrowserActions" class="verticalMenu">
 			<li class="addTreeNode" id="createTemplate">
-				<a href="{link controller=backend.template action=add}&tabid=_tabid_">
+				<a href="{link controller=backend.template action=add query="tabid=_tabid_"}">
 					{t _create_template}
 				</a>
 			</li>
@@ -55,9 +55,9 @@
 {literal}
 <script type="text/javascript">
 	var settings = new Backend.Template({/literal}{$categories}{literal});
-	settings.urls['edit'] = '{/literal}{link controller=backend.template action=edit}?file=_id_&tabid=_tabid_{literal}';
+	settings.urls['edit'] = '{/literal}{link controller=backend.template action=edit query="file=_id_&tabid=_tabid_"}{literal}';
 	settings.urls['empty'] = '{/literal}{link controller=backend.template action=emptyPage}{literal}';
-	settings.urls['templateData'] = '{/literal}{link controller=backend.template action=templateData}?file=_id_&tabid=_tabid_&theme=_theme_&version=_version_{literal}';
+	settings.urls['templateData'] = '{/literal}{link controller=backend.template action=templateData query="file=_id_&tabid=_tabid_&theme=_theme_&version=_version_"}{literal}';
 	settings.translations['_tab_title_new'] = "{/literal}{t _tab_title_new}{literal}";
 	settings.setTabControlInstance(
 		TabControl.prototype.getInstance(
