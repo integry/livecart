@@ -10,7 +10,7 @@
 {/defun}
 
 {if $manufacturers || $categories}
-<div class="box">
+<div class="box quickNav">
 	<div class="title">
 		<div>{t _quick_nav}</div>
 	</div>

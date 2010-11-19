@@ -1,7 +1,7 @@
 <div id="miniCart">
 	{if $order.basketCount}
 	<div class="box miniCart">
-		<div class="title"><div>{t _shopping_cart}</div></div>
+		<div class="title"><div><a href="{link controller=order}">{t _shopping_cart}</a></div></div>
 		<div class="content">
 			<ul id="miniCartContents">
 			{foreach from=$order.cartItems item="item" name="cart"}
