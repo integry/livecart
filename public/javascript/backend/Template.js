@@ -524,11 +524,12 @@ Backend.EmailTemplateHandler.prototype =
 
 	submit: function()
 	{
-		$('body').value = editAreaLoader.getValue('body');
-		$('html').value = editAreaLoader.getValue('html');
-		if ($('templateContent').down('.languageFormContent'))
+		$('body_' + this.tabid).value = editAreaLoader.getValue('body_' + this.tabid);
+		$('html_' + this.tabid).value = editAreaLoader.getValue('html_' + this.tabid);
+		var langContent = $('templateForm_' + this.tabid).down('.languageFormContent');
+		if (langContent)
 		{
-			var langs = $('templateContent').down('.languageFormContent').getElementsByTagName('textarea');
+			var langs = langContent.getElementsByTagName('textarea');
 			for (k = 0; k < langs.length; k++)
 			{
 				langs[k].value = editAreaLoader.getValue(langs[k].id);
