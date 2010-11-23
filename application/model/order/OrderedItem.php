@@ -54,7 +54,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		$schema->registerField(new ARForeignKeyField("customerOrderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("shipmentID", "Shipment", "ID", "Shipment", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("parentID", "OrderedItem", "ID", "OrderedItem", ARInteger::instance()));
-
+		$schema->registerField(new ARForeignKeyField("recurringParentID", "OrderedItem", "ID", "OrderedItem", ARInteger::instance()));
 		$schema->registerField(new ARField("price", ARFloat::instance()));
 		$schema->registerField(new ARField("count", ARFloat::instance()));
 		$schema->registerField(new ARField("reservedProductCount", ARFloat::instance()));
@@ -84,6 +84,10 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 
 	public function getCurrency()
 	{
+		if ($this->isLoaded() == false)
+		{
+			$this->load();
+		}
 		return $this->customerOrder->get()->getCurrency();
 	}
 
@@ -150,7 +154,6 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 
 			$this->itemPrice = $price;
 		}
-
 		return $this->itemPrice;
 	}
 
@@ -255,7 +258,8 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 	 */
 	public function getItemPrice()
 	{
-		$isFinalized = $this->customerOrder->get()->isFinalized->get();
+		$order = $this->customerOrder->get();
+		$isFinalized = $order->isFinalized->get();
 		$product = $this->getProduct();
 		$price = 0;
 		if ($product->isLoaded() == false)
@@ -264,14 +268,29 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		}
 		if ($product->type->get() == Product::TYPE_RECURRING)
 		{
-			$recurringBillingType = ActiveRecordModel::getApplication()->getConfig()->get('RECURRING_BILLING_TYPE');
-			$recurringItem = RecurringItem::getInstanceByOrderedItem($this);
-			if ($recurringItem)
+			if ($order->parentID->get() == null)
 			{
-				$price = $recurringItem->setupPrice->get();
-				if ($recurringBillingType == 'RECURRING_BILLING_TYPE_PRE_PAY')
+				$recurringItem = RecurringItem::getInstanceByOrderedItem($this);
+				$recurringBillingType = ActiveRecordModel::getApplication()->getConfig()->get('RECURRING_BILLING_TYPE');
+				if ($recurringItem)
 				{
-					$price +=  $recurringItem->periodPrice->get(); // pre pay, add price from first period
+					$price = $recurringItem->setupPrice->get();
+					if ($recurringBillingType == 'RECURRING_BILLING_TYPE_PRE_PAY')
+					{
+						$price += $recurringItem->periodPrice->get(); // pre pay, add price from first period
+					}
+				}
+			}
+			else // order is invoice for some other order
+			{
+				$recurringParent = $this->recurringParentID->get();
+				if ($recurringParent)
+				{
+					$recurringItem = RecurringItem::getInstanceByOrderedItem($recurringParent);
+					if ($recurringItem)
+					{
+						$price += $recurringItem->periodPrice->get();
+					}
 				}
 			}
 		}
