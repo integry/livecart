@@ -36,7 +36,7 @@
 {literal}
 <script type="text/javascript">
 	var settings = new Backend.CssEditor({/literal}{$categories}{literal});
-	settings.urls['edit'] = '{/literal}{link controller=backend.cssEditor action=edit}?file=_id_&tabid=_tabid_{literal}';
+	settings.urls['edit'] = '{/literal}{link controller=backend.cssEditor action=edit query="file=_id_&tabid=_tabid_"}{literal}';
 	settings.urls['empty'] = '{/literal}{link controller=backend.cssEditor action=emptyPage}{literal}';
 	settings.tabControl =  TabControl.prototype.getInstance(
 		'templateTabContainer',

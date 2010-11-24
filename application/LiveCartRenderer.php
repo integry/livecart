@@ -454,7 +454,8 @@ class LiveCartRenderer extends SmartyRenderer
 
 		if (empty($res['call']))
 		{
-			//$res['call'] = array('index', 'getGenericBlock');
+			ClassLoader::import('application.controller.IndexController');
+			$res['call'] = array('index', 'getGenericBlock');
 		}
 
 		return $res;

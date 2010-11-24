@@ -254,12 +254,13 @@ class ProductPrice extends ActiveRecordModel
 
 	public static function getProductGroupPrice($groupID, $rules, $itemCnt)
 	{
-		if (!$rules)
+		if (!is_array($rules))
 		{
 			return null;
 		}
 
 		$found = array();
+
 		foreach ($rules as $quant => $prices)
 		{
 			if (isset($prices[$groupID]))
@@ -483,10 +484,10 @@ class ProductPrice extends ActiveRecordModel
 					$maxPrice = $price;
 					$groupPrice = self::getProductGroupPrice($ruleController->getContext()->getUserGroupID(), $rules[$currency], 1);
 					$price = is_null($groupPrice) ? $price : $groupPrice;
-					
+
 					$price = self::getApplication()->getDisplayTaxPrice($price, $product);
 					$maxPrice = self::getApplication()->getDisplayTaxPrice($maxPrice, $product);
-					
+
 					$prices[$currency] = $price;
 					$discountedPrice = $ruleController->getProductPrice($product, $price, $currency);
 					if ($discountedPrice != $maxPrice)
@@ -623,7 +624,7 @@ class ProductPrice extends ActiveRecordModel
 		$currency = Currency::getInstanceByID($array['currencyID']);
 		$array['serializedRules'] = @unserialize($array['serializedRules']);
 
-		if ($array['serializedRules'])
+		if ($array['serializedRules'] && is_array($array['serializedRules']))
 		{
 			$ruleController = self::getApplication()->getBusinessRuleController();
 			$quantities = array_keys($array['serializedRules']);

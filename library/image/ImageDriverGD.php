@@ -92,7 +92,9 @@ class ImageDriverGD extends ImageDriver
 		//Default memory limit is 8MB so well stick with that.
 		//To find out what yours is, view your php.ini file.
 		$memoryLimit = $memoryLimitMB * $MB;
-		if (function_exists('memory_get_usage') && (memory_get_usage() + $memoryNeeded > $memoryLimit))
+		$newLimit = memory_get_usage() + $memoryNeeded;
+		$currentLimit = substr(ini_get('memory_limit'), 0, -1);
+		if (function_exists('memory_get_usage') && ($newLimit > $memoryLimit) && ($newLimit > $currentLimit) )
 		{
 			$newLimit = $memoryLimitMB + ceil( ( memory_get_usage()
 												+ $memoryNeeded

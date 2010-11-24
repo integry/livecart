@@ -20,7 +20,7 @@ class AuthorizeNet extends CreditCardPayment
 
 	public function isCardTypeNeeded()
 	{
-		return true;
+		return false;
 	}
 
 	public function isVoidable()

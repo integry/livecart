@@ -133,18 +133,21 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 			$price = $this->getItemPrice();
 			$this->originalPrice = $price;
 
-			foreach ($this->optionChoices as $choice)
+			if (!$isFinalized)
 			{
-				if ($isFinalized)
+				foreach ($this->optionChoices as $choice)
 				{
-					$optionPrice = $choice->priceDiff->get();
-				}
-				else
-				{
-					$optionPrice = $choice->choice->get()->getPriceDiff($currency->getID());
-				}
+					if ($isFinalized)
+					{
+						$optionPrice = $choice->priceDiff->get();
+					}
+					else
+					{
+						$optionPrice = $choice->choice->get()->getPriceDiff($currency->getID());
+					}
 
-				$price += $this->reduceBaseTaxes($optionPrice);
+					$price += $this->reduceBaseTaxes($optionPrice);
+				}
 			}
 
 			$this->itemPrice = $price;
@@ -721,7 +724,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 				$array['itemBasePrice'] = $array['itemPrice'];
 			}
 
-			if ($this->optionChoices)
+			if ($this->optionChoices && !$this->customerOrder->get()->isFinalized->get())
 			{
 				foreach ($this->optionChoices as $choice)
 				{

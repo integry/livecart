@@ -348,6 +348,8 @@ class ThemeController extends StoreManagementController
 			glob($path . DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR.'upload'.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'delete'.DIRECTORY_SEPARATOR.$id.'-*.php')
 		);
 
+		//print_r($files);
+
 		$baseDir = ClassLoader::getBaseDir();
 		$len = strlen($path.DIRECTORY_SEPARATOR);
 		foreach ($files as $fn)
@@ -364,6 +366,12 @@ class ThemeController extends StoreManagementController
 				{
 					unlink($to);
 				}
+
+				if (!file_exists(dirname($to)))
+				{
+					mkdir(dirname($to), 0777, true);
+				}
+
 				rename($path.DIRECTORY_SEPARATOR.$fn, $to);
 			}
 		}
