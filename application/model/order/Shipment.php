@@ -444,10 +444,14 @@ class Shipment extends ActiveRecordModel
 	{
 		$taxAmount = 0;
 
+		$originalAmount = $amount;
+
 		foreach ($this->getTaxes() as $tax)
 		{
 			if ($tax->type->get() == ShipmentTax::TYPE_SHIPPING)
 			{
+				$amount = $originalAmount + $taxAmount;
+
 				if ($tax->taxRate->get())
 				{
 					$taxAmount += $tax->taxRate->get()->applyTax($amount) - $amount;
@@ -456,10 +460,11 @@ class Shipment extends ActiveRecordModel
 				{
 					$taxAmount += $tax->amount->get();
 				}
+
 			}
 		}
 
-		return $amount + $taxAmount;
+		return $originalAmount + $taxAmount;
 	}
 
 	public function reduceTaxesFromShippingAmount($amount)
@@ -771,6 +776,7 @@ class Shipment extends ActiveRecordModel
 		// shipping rate for a saved shipment
 		if (!isset($array['selectedRate']) && isset($array['shippingAmount']))
 		{
+			$array['shippingAmountWithoutTax'] = $array['shippingAmount'];
 			$array['shippingAmount'] = $this->applyTaxesToShippingAmount($array['shippingAmount']);
 			$orderCurrency = $this->order->get()->currency->get();
 			$array['selectedRate']['formattedPrice'] = array();
@@ -778,6 +784,7 @@ class Shipment extends ActiveRecordModel
 			{
 				$rate = $currency->convertAmount($orderCurrency, $array['shippingAmount']);
 				$array['selectedRate']['formattedPrice'][$id] = Currency::getInstanceById($id)->getFormattedPrice($rate);
+				$array['selectedRate']['formattedPriceWithoutTax'][$id] = Currency::getInstanceById($id)->getFormattedPrice($array['shippingAmountWithoutTax']);
 			}
 		}
 
