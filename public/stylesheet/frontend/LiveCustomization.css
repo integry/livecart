@@ -1,12 +1,7 @@
-body
-{
-	margin-top: 30px !important;
-}
-
 #customizeMenu
 {
 	position: fixed;
-	top: 0;
+	bottom: 0;
 	z-index: 65000;
 	background-color: #000;
 	color: #fff;
@@ -16,8 +11,15 @@ body
 
 #customizeMenuInner
 {
-	height: 22px;
-	padding: 4px;
+    border-top: 2px solid #999999;
+    height: 22px;
+    padding: 0 4px 4px;
+}
+
+#customizeMenu input
+{
+	font-size: smaller;
+	padding: 0;
 }
 
 #customizeMsg
@@ -59,10 +61,11 @@ body
 #customizeMenu ul li
 {
 	display: inline;
-	padding: 1px 3px;
+	padding: 3px;
 	background-color: #444;
-	border: 1px solid #999;
-	margin-left: 1em;
+	border: 2px solid #999;
+    -moz-border-radius: 0 0 5px 5px;
+    margin-left: 5px;
 }
 
 #customizeMenu ul li a
@@ -70,13 +73,14 @@ body
 	text-decoration: none;
 	color: #fff;
 	font-weight: bold;
-	font-size: 13px;
+	font-size: 15px;
 }
 
 #customizeMenu li.active
 {
 	background-color: #999;
-	border: 1px solid #ddd;
+    border-top-width: 0;
+	/* border-color: #ddd; */
 }
 
 #modeTitle
@@ -125,13 +129,15 @@ body
 
 #newRuleMenu
 {
-	position: absolute;
-	background-color: black;
-	z-index: 65000;
-	padding: 10px;
-	left: 340px;
-	-moz-border-radius-bottomleft: 8px;
-	-moz-border-radius-bottomright: 8px;
+    -moz-border-radius-topleft: 8px;
+    -moz-border-radius-topright: 8px;
+    background-color: black;
+    height: 315px;
+    left: 310px;
+    padding: 10px;
+    position: absolute;
+    top: -335px;
+    z-index: 65000;
 }
 
 #newRuleMenu label
@@ -149,4 +155,10 @@ body
 #cssSaveIndicator
 {
 	background-image: url(../../image/indicator_black.gif);
+}
+
+#modeExit
+{
+	left: 25px;
+    position: relative;
 }
