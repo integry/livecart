@@ -1491,6 +1491,31 @@ class Product extends MultilingualObject
 		return $matrix;
 	}
 
+	public function getRecurringProductPeriodById($recurringID, $returnDefaultIfNotFound = false)
+	{
+		$filter = new ARSelectFilter();
+		$filter->setCondition(
+			new EqualsCond(new ARFieldHandle('RecurringProductPeriod', 'ID'), $recurringID));
+		$rs = RecurringProductPeriod::getRecordSetByProduct($this, $filter);
+		if ($rs->size() == 0)
+		{
+			return $returnDefaultIfNotFound ? $this->getDefaultRecurringProductPeriod() :  null;
+		}
+		return $rs->shift();
+	}
+
+	public function getDefaultRecurringProductPeriod()
+	{
+		$filter = new ARSelectFilter();
+		$filter->setLimit(1);
+		$rs = RecurringProductPeriod::getRecordSetByProduct($this, $filter);
+		if ($rs->size() == 0)
+		{
+			return null;
+		}
+		return $rs->shift();
+	}
+
 	public function serialize()
 	{
 		return parent::serialize(array('categoryID', 'Category', 'manufacturerID', 'defaultImageID'));

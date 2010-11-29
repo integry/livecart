@@ -57,9 +57,23 @@ class UserController extends FrontendController
 		// get recent orders
 		$f = new ARSelectFilter();
 		$f->setLimit($this->config->get('USER_COUNT_RECENT_ORDERS'));
+		$f->setCondition(new IsNullCond(new ARFieldHandle('CustomerOrder', 'parentID')));
 		$orders = $this->loadOrders($f);
-
 		$orderArray = $this->getOrderArray($orders);
+
+		// get last invoice & unpaid count
+		$pendingInvoiceCount = $this->user->countPendingInvoices();
+
+		$lastInvoiceArray = array();
+		if ($pendingInvoiceCount)
+		{
+			$f = new ARSelectFilter();
+			$f->setLimit(1);
+			$f->setCondition(new AndChainCondition(array(
+				new IsNotNullCond(new ARFieldHandle('CustomerOrder', 'parentID')))
+			));
+			$lastInvoiceArray = $this->getOrderArray($this->loadOrders($f));
+		}
 
 		// get downloadable items
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
@@ -80,6 +94,8 @@ class UserController extends FrontendController
 
 		// feedback/confirmation message that was stored in session by some other action
 		$response->set('userConfirm', $this->session->pullValue('userConfirm'));
+		$response->set('pendingInvoiceCount', $pendingInvoiceCount);
+		$response->set('lastInvoiceArray', $lastInvoiceArray);
 
 		return $response;
 	}
@@ -92,19 +108,61 @@ class UserController extends FrontendController
 		$this->addAccountBreadcrumb();
 		$this->addBreadCrumb($this->translate('_your_orders'), '');
 
-		$perPage = $this->config->get('USER_ORDERS_PER_PAGE');
-		if (!$perPage)
-		{
-			$perPage = 100000;
-		}
 		$page = $this->request->get('id', 1);
+		$perPage = $this->getOrdersPerPage();
+		$f = $this->getOrderListPaginateFilter($page, $perPage);
+		$f->setCondition(new IsNullCond(new ARFieldHandle('CustomerOrder','parentID')));
+		return $this->getOrdersListResponse($this->loadOrders($f), $page, $perPage);
+	}
 
-		$f = new ARSelectFilter();
-		$f->setLimit($perPage, ($page - 1) * $perPage);
-		$orders = $this->loadOrders($f);
+	/**
+	 *	@role login
+	 */
+	public function invoices()
+	{
+		$page = $this->request->get('id', 1);
+		$perPage = $this->getOrdersPerPage();
+		$f = $this->getOrderListPaginateFilter($page, $perPage);
+		$f->mergeCondition(
+			new AndChainCondition(array(
+				new IsNotNullCond(new ARFieldHandle('CustomerOrder','parentID')),
+				new EqualsCond(new ARFieldHandle('CustomerOrder','isRecurring'), 1)
+			))
+		);
+		$f->setOrder(new ARFieldHandle('CustomerOrder','dateDue'));
+		return $this->getOrdersListResponse($this->loadOrders($f), $page, $perPage);
+	}
 
+	/**
+	 *	@role login
+	 */
+	public function pendingInvoices()
+	{
+		$page = $this->request->get('id', 1);
+		$perPage = $this->getOrdersPerPage();
+		$f = $this->getOrderListPaginateFilter($page, $perPage);
+		$f->mergeCondition(
+			new AndChainCondition(array(
+				new IsNotNullCond(new ARFieldHandle('CustomerOrder','parentID')),
+				new EqualsCond(new ARFieldHandle('CustomerOrder','isRecurring'), 1),
+				new EqualsCond(new ARFieldHandle('CustomerOrder','isPaid'), 0)
+			))
+		);
+		$f->setOrder(new ARFieldHandle('CustomerOrder','dateDue'));
+		return $this->getOrdersListResponse($this->loadOrders($f), $page, $perPage);
+	}
+
+	private function getOrdersListResponse($orders, $page, $perPage)
+	{
 		$orderArray = $this->getOrderArray($orders);
-
+		$today = strtotime(date('Y-m-d', time()));
+		foreach ($orderArray as $k=>$order)
+		{
+			if ($orderArray[$k]['isRecurring'])
+			{
+				$orderArray[$k]['overdue'] = $today > strtotime(date('Y-m-d',strtotime($order['dateDue'])));
+			}
+		}
 		$response = new ActionResponse();
 		$response->set('from', ($perPage * ($page - 1)) + 1);
 		$response->set('to', min($perPage * $page, $orders->getTotalRecordCount()));
@@ -113,7 +171,29 @@ class UserController extends FrontendController
 		$response->set('perPage', $perPage);
 		$response->set('user', $this->user->toArray());
 		$response->set('orders', $orderArray);
+		
 		return $response;
+	}
+
+	private function getOrdersPerPage()
+	{
+		$perPage = $this->config->get('USER_ORDERS_PER_PAGE');
+		if (!$perPage)
+		{
+			$perPage = 100000;
+		}
+		return $perPage;
+	}
+
+	private function getOrderListPaginateFilter($page, $perPage, $filter = null)
+	{
+		if ($filter == null)
+		{
+			$filter = new ARSelectFilter();
+		}
+		$filter->setLimit($perPage, ($page - 1) * $perPage);
+
+		return $filter;
 	}
 
 	private function loadOrders(ARSelectFilter $f)
@@ -339,7 +419,8 @@ class UserController extends FrontendController
 	 */
 	public function viewOrder()
 	{
-		if ($order = $this->user->getOrder($this->request->get('id')))
+		$id = $this->request->get('id');
+		if ($order = $this->user->getOrder($id))
 		{
 			$this->addAccountBreadcrumb();
 			$this->addBreadCrumb($this->translate('_your_orders'), $this->router->createUrl(array('controller' => 'user', 'action' => 'orders'), true));
@@ -356,11 +437,34 @@ class UserController extends FrontendController
 				}
 			}
 
-			$response = new ActionResponse();
+			$response = null;
+			if ($order->isRecurring->get() == true)
+			{
+				// find invoices
+				$page = $this->request->get('page', 1);
+				$perPage = $this->getOrdersPerPage();
+				$f = $this->getOrderListPaginateFilter($page, $perPage);
+				$f->mergeCondition(
+					new AndChainCondition(array(
+						new EqualsCond(new ARFieldHandle('CustomerOrder','parentID'), $order->getID()),
+						new EqualsCond(new ARFieldHandle('CustomerOrder','isRecurring'), 1)
+					))
+				);
+				$f->setOrder(new ARFieldHandle('CustomerOrder','dateDue'));
+				$response = $this->getOrdersListResponse($this->loadOrders($f), $page, $perPage);
+			}
+
+			if (!$response)
+			{
+				$response = new ActionResponse();
+			}
+
+			$response->set('canCancelRebills', $order->canUserCancelRebills());
 			$response->set('order', $order->toArray());
 			$response->set('notes', $notes->toArray());
 			$response->set('user', $this->user->toArray());
 			$response->set('noteForm', $this->buildNoteForm());
+
 			return $response;
 		}
 		else
@@ -1425,6 +1529,92 @@ class UserController extends FrontendController
 
 			return $order;
 		}
+	}
+
+	public function invoicesMenuBlock()
+	{
+		if ($this->user->isAnonymous())
+		{
+			return;
+		}
+		$response = new BlockResponse();
+		$hasPendingInvoices = $this->user->hasPendingInvoices();
+		$response->set('hasPendingInvoices', $hasPendingInvoices);
+		$response->set('hasInvoices', $hasPendingInvoices ? true : $this->user->hasInvoices()); // if user has pending invoice, he invoices (at least one pending invoice)
+
+		return $response;
+	}
+
+	public function cancelFurtherRebills()
+	{
+		$request = $this->getRequest();
+		$id = $request->get('id');
+		$page = $request->get('page');
+		$params = array('id'=>$id);
+		if ($page > 1)
+		{
+			$params['query'] = array('page'=>$page);
+		}
+
+		try {
+			$order = CustomerOrder::getInstanceById($id, true);
+			$userID = $this->user->getID();
+			if(
+				$order->userID->get()->getID()
+				&& $order->userID->get()->getID() == $userID
+				&& true == $order->canUserCancelRebills()
+			) {
+				$order->cancelFurtherRebills();
+			}
+		} catch(Exception $e) {}
+
+		return new ActionRedirectResponse('user', 'viewOrder', $params);
+	}
+
+	public function generateTestInvoices()
+	{
+		return ; 
+
+		ClassLoader::import('application.model.category.*');
+		ClassLoader::import('application.model.product.*');
+
+		$config = ActiveRecordModel::getApplication()->getConfig();
+		$config->set('RECURRING_BILLING_PAYMENT_DUE_DATE_DAYS', 7);
+		$config->save();
+
+		// data
+		$userID = 110; 
+		$product1ID = 339;
+		$recurringProductPeriodID = 19;
+		// ~
+
+		// create first order
+		$user = User::getInstanceByID($userID, true);
+		$product1 = Product::getInstanceByID($product1ID, true);
+		$order = CustomerOrder::getNewInstance($user);
+		$order->save(true);
+		$rpp = RecurringProductPeriod::getInstanceByID($recurringProductPeriodID);
+
+		$item = $order->addProduct($product1, 1, true);
+		$item->save();
+		$recurringItem = RecurringItem::getNewInstance($rpp, $item);
+		$recurringItem->setupPrice->set(100);
+		$recurringItem->periodPrice->set(25);
+		$recurringItem->save();
+		$order->finalize();
+
+		// generate invoices
+		echo '<pre>Invoices for {CustomerOrder ID:'.$order->getID().'}:',"\n";
+		$now = time();
+		for ($ts = $now; $ts < strtotime('+20 months', $now); $ts = $ts + 60 * 60 * 24)
+		{
+			$z = CustomerOrder::generateRecurringInvoices(date('Y-m-d', $ts));
+			foreach ($z as $id)
+			{
+				echo '{CustomerOrder ID:'.$id.'}',"\n";
+			}
+		}
+		die('-done-</pre>');
 	}
 }
 

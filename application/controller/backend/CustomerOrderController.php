@@ -1665,15 +1665,12 @@ class CustomerOrderController extends ActiveGridController
 			$request = $this->getRequest();
 			$id = $request->get('id');
 			$order = CustomerOrder::getInstanceById($id);
-			
-			if($order->isCancelled->get() == false &&  $order->isRecurring->get() == true && $order->rebillsLeft->get() > 0)
+			if ($order->isCancelled->get() == false && $order->isRecurring->get() == true && $order->rebillsLeft->get() > 0)
 			{
-				$rebillCount = 0;
-				$order->rebillsLeft->set($rebillCount);
-				$order->save();
+				$order->cancelFurtherRebills();
 				return new JSONResponse(array(
 					'recurringStatus' => $this->translate('_recurring_status_expired'),
-					'rebillCount' => $rebillCount),
+					'rebillCount' => 0),
 					'success'
 				);
 			}

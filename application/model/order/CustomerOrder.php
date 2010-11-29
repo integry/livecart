@@ -481,6 +481,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	 */
 	public function finalize($options = array())
 	{
+		$rebillsLeft = 0;
+
 		if ($this->isFinalized->get() && empty($options['allowRefinalize']))
 		{
 			return;
@@ -546,6 +548,22 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			{
 				$item->reserve();
 				$item->save();
+			}
+
+			$ri = RecurringItem::getInstanceByOrderedItem($item);
+			if ($ri && $ri->isExistingRecord()) 
+			{
+				$rebillCount = $ri->rebillCount->get();
+				if ($rebillCount && $rebillCount > 0) // -1 means infinite rebill count
+				{
+					$rebillsLeft += $rebillCount;
+				}
+				else
+				{
+					$rebillsLeft = -1;
+				}
+				// orders with at least one recurring billing plan must have isRecurring flag.
+				$this->isRecurring->set(true);
 			}
 		}
 
@@ -636,6 +654,27 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 				catch (SQLException $e)
 				{
 				}
+			}
+		}
+
+		if ($this->isRecurring->get())
+		{
+			$changed = false;
+			if (!strlen($this->startDate->get()))
+			{
+				$this->startDate->set(date('Y-m-d H:i:s', time()));
+				$changed = true;
+			}
+
+			if ($rebillsLeft != $this->rebillsLeft->get())
+			{
+				$this->rebillsLeft->set($rebillsLeft);
+				$changed = true;
+			}
+
+			if ($changed)
+			{
+				$this->save();
 			}
 		}
 
@@ -2746,6 +2785,64 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			RecurringProductPeriod::TYPE_PERIOD_MONTH => 'MONTH',
 			RecurringProductPeriod::TYPE_PERIOD_YEAR => 'YEAR'
 		);
+	}
+
+	public function cancelFurtherRebills()
+	{
+		$id = $this->getID();
+		$userID = $this->userID->get()->getID();
+		$update = new ARUpdateFilter();
+		$update->setCondition(
+			new OrChainCondition(array(
+				new AndChainCondition(array(
+					new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $id),
+					new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $userID)
+				)),
+				new AndChainCondition(array(
+					new EqualsCond(new ARFieldHandle('CustomerOrder', 'parentID'), $id),
+					new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $userID)
+				))
+			))
+		);
+		$update->addModifier('rebillsLeft', '0');
+		ActiveRecord::updateRecordSet('CustomerOrder', $update);
+	}
+
+	public function canUserCancelRebills()
+	{
+		if ($this->isRecurring->get() == false)
+		{
+			return false; // not even a recurring order.
+		}
+
+		if (false == ActiveRecordModel::getApplication()->getConfig()->get('ALLOW_USER_TO_CANCEL_RECURRING_REBILLS', false))
+		{
+			return false; // forbidden in configuration.
+		}
+
+		$rebillsLeft = $this->rebillsLeft->get();
+
+		if ($rebillsLeft == -1 || $rebillsLeft > 0)
+		{
+			return true;
+		}
+		$filter = new ARSelectFilter();
+		$filter->setCondition(
+			new EqualsCond(
+				new ARFieldHandle(__CLASS__, 'parentID'), $this->getID()
+			)
+		);
+		$filter->addField('(SELECT SUM(IF(CustomerOrder.rebillsLeft >= 0, CustomerOrder.rebillsLeft, 0 )))','','rebillsLeft');
+		$filter->addField('(SELECT SUM(IF(CustomerOrder.rebillsLeft = -1, 1, 0 )))','','isInfinite');
+		$filter->setGrouping(new ARFieldHandle(__CLASS__, 'parentID'));
+		$data = ActiveRecordModel::getRecordSetArray(__CLASS__, $filter);
+		
+		if (count($data) == 1 && $data[0]['isInfinite'] > 0 || $data[0]['rebillsLeft'] > 0)
+		{
+			return true;
+		}
+
+		return false;
 	}
 }
 

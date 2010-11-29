@@ -41,25 +41,29 @@ class RecurringProductPeriod extends MultilingualObject
 		return parent::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
-	public static function getRecordSetArrayByProduct($productOrID)
+	public static function getRecordSetArrayByProduct($productOrID, $filter = null)
 	{
-		return self::getRecordSetArray(self::getAsignedToFilter($productOrID));
+		return self::getRecordSetArray(self::getAsignedToFilter($productOrID, $filter));
 	}
 
-	public static function getRecordSetByProduct($productOrID)
+	public static function getRecordSetByProduct($productOrID, $filter = null)
 	{
-		return self::getRecordSet(self::getAsignedToFilter($productOrID));
+		return self::getRecordSet(self::getAsignedToFilter($productOrID, $filter));
 	}
 
-	private static function getAsignedToFilter($productOrID)
+	private static function getAsignedToFilter($productOrID, $filter=null)
 	{
+		if (!$filter)
+		{
+			$filter = new ARSelectFilter();
+		}
 		if (!is_numeric($productOrID) && $productOrID instanceof Product == false)
 		{
 			throw new Exception('getAsignedToFilter() excpects argument to be instance of Product');
 		}
-		$f = new ARSelectFilter();
-		$f->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), is_numeric($productOrID) ? $productOrID : $productOrID->getID()));
-		return $f;
+		$filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), is_numeric($productOrID) ? $productOrID : $productOrID->getID()));
+
+		return $filter;
 	}
 
 	public static function getInstanceByID($recordID, $loadRecordData = false)

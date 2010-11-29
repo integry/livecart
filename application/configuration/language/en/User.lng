@@ -131,7 +131,7 @@ _postal_code=Postal Code
 _order=Order
 _your_orders=Your Orders
 _no_orders_found=No orders were found
-
+_no_invoices_found=No invoices found
 _view_order=View Order
 _order_invoice=Print Invoice
 _invoice=Invoice
@@ -149,7 +149,10 @@ _order_id=Order ID
 _recipient=Recipient
 
 _displaying_orders=Displaying [_1] to [_2] of [_3] found orders
+_displaying_invoices=Displaying [_1] to [_2] of [_3] found invoices
 _orders_found=[quant,_1,order,orders] found
+_invoices_found=[quant,_1,invoice,invoices] found
+
 _unread_messages=[quant,_1,unread message,unread messages]
 
 ########################
@@ -203,3 +206,18 @@ _cancelled=Cancelled
 _awaiting_payment=Awaiting payment
 _make_payment=Make payment for this order
 _order_processing=The order is being processed
+
+_pending_invoices=Pending invoices
+_invoices=Invoices
+
+_invoice_number=number
+_invoice_amount=amount
+_invoice_date=date
+_invoice_status=status
+_invoice_status_paid=paid
+_invoice_status_unpaid=unpaid
+_overdue=Overdue
+
+_x_pending_invoices=[quant,_1, pending invoice, pending invoices]
+_cancel_further_rebills=Cancel further rebills
+_are_you_sure_want_to_cancel_further_rebills=Are you sure want to cancel further rebills

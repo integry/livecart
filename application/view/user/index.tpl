@@ -55,6 +55,18 @@
 
 		<div class="clear"></div>
 
+		{if $pendingInvoiceCount > 0}
+			<h2>{t _invoices}</h2>
+			{include file="user/invoicesTable.tpl"
+				itemList=$lastInvoiceArray
+				paginateAction="pendingInvoice"
+				textDisplaying=_displaying_invoices
+				textFound=_invoices_found
+				id=0
+				query=''
+				pendingInvoiceCount=$pendingInvoiceCount
+			}
+		{/if}
 	</fieldset>
 
 </div>

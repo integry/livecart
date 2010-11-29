@@ -861,6 +861,16 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		return parent::serialize(array('customerOrderID', 'shipmentID', 'productID'));
 	}
 
+	public function delete()
+	{
+		$ri = RecurringItem::getInstanceByOrderedItem($this);
+		if ($ri)
+		{
+			$ri->delete();
+		}
+		parent::delete();
+	}
+
 	public function __destruct()
 	{
 		parent::destruct(array('productID', 'shipmentID'));

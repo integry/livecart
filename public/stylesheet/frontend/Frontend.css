@@ -2021,6 +2021,16 @@ tr.topLine td
     background-image: url(../../image/silk/gif/package.gif);
 }
 
+#userMenu li#pendingInvoicesMenu
+{
+	background-image: url(../../image/silk/gif/money.gif);
+}
+
+#userMenu li#invoicesMenu
+{
+	background-image: url(../../image/silk/gif/money.gif);
+}
+
 #userMenu li#addressMenu
 {
     background-image: url(../../image/silk/gif/book_addresses.gif);
@@ -3282,7 +3292,61 @@ html #footpanel .subpanel ul li a.active
 	font-size:14px;
 	font-weight:bold;
 }
+
 .productRecurring label
 {
 	clear:both;
+}
+
+.invoiceTable
+{
+	width: 90%;
+	border-width: 1px;
+	margin-bottom: 14px;
+}
+
+.invoiceTable th,
+.invoiceTable td
+{
+	text-align:center;
+	padding:4px;
+}
+
+.invoiceTable .number
+{
+	text-align:left;
+	width:140px;
+}
+
+.invoiceTable .amount
+{
+	width:80px;
+	font-weight:bold;
+}
+
+.invoiceTable .date
+{
+	text-align:left;
+	width:100px;
+}
+
+.invoiceTable .status
+{
+	text-align:right;
+}
+
+.invoiceTable .paid
+{
+	color: green;
+}
+
+.cancelFurtherRebills a,
+.invoiceTable .unpaid
+{
+	color: red;
+}
+
+.cancelFurtherRebills
+{
+	margin-top:14px;
 }

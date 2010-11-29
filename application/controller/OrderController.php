@@ -662,11 +662,22 @@ class OrderController extends FrontendController
 				{
 					$item->save(); // or save in SessionOrder::save()
 				}
-				$recurringProductPeriod = RecurringProductPeriod::getInstanceByID($this->getRequest()->get('recurringID'), true);
-				$instance = RecurringItem::getNewInstance($recurringProductPeriod, $item);
-				$instance->save();
+				$recurringID = $this->getRequest()->get('recurringID');
 
-				$item->updateBasePriceToCalculatedPrice();
+				$recurringProductPeriod = $product->getRecurringProductPeriodById($recurringID);
+				if ($recurringProductPeriod == null)
+				{
+					$recurringProductPeriod = $product->getDefaultRecurringProductPeriod();
+				}
+
+				if ($recurringProductPeriod)
+				{
+					$instance = RecurringItem::getNewInstance($recurringProductPeriod, $item);
+					$instance->save();
+
+					$item->updateBasePriceToCalculatedPrice();
+				}
+				// what if product with type recurring but no plan? just ignore?
 			}
 		}
 	}
