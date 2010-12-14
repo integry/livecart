@@ -123,7 +123,13 @@ class RecurringItem extends ActiveRecordModel
 		{
 			return false;
 		}
-		ActiveRecord::executeUpdate('UPDATE '.__CLASS__. ' SET processedRebillCount=IF(processedRebillCount IS NULL, 1, processedRebillCount+1) WHERE ID IN('.implode(',', $ids).')');
+		ActiveRecord::executeUpdate('UPDATE '.__CLASS__. ' SET 
+			processedRebillCount = IF(processedRebillCount IS NULL, 1, processedRebillCount+1)
+		WHERE
+			ID IN('.implode(',', $ids).')');
+			
+		//ActiveRecordModel::ClearPool();
+		
 		return true;
 	}
 

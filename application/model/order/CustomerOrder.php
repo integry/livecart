@@ -471,6 +471,40 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		}
 	}
 
+	public function isFirstInvoice($recurringItem)
+	{
+		if (($recurringItem instanceof RecurringItem) == false)
+		{
+			// echo 'not recurring item!';
+			return false;
+		}
+		$parentID = $this->parentID->get()->getID();
+		if (!$parentID)
+		{
+			return false;
+		}
+
+		$d = ActiveRecordModel::getDataBySql('SELECT
+			 ri.*
+		FROM
+			CustomerOrder cu
+			INNER JOIN CustomerOrder pcu ON cu.parentID = pcu.id
+			INNER JOIN OrderedItem oi ON pcu.ID = oi.customerOrderID
+			INNER JOIN RecurringItem ri ON ri.orderedItemID = oi.ID
+		WHERE
+			cu.parentID='.$parentID.'
+	');
+
+	// ??
+
+	// AND ri.ID='.$recurringItem->getID().'
+	echo 'recurring id: '.$recurringItem->getID();
+	print_r($d);
+
+	// print_r($d);
+
+	}
+
 	/**
 	 *  "Close" the order for modifications and fix its state
 	 *
@@ -516,18 +550,20 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		$reserveProducts = self::getApplication()->isInventoryTracking();
 
+		$rebillsLeft = 0;
+		
+		$groupedRebillsLeft=array();
+		
+		$isFirstOrder = !$this->parentID->get();
+
 		foreach ($this->getShoppingCartItems() as $item)
 		{
 			// workround for failing tests.
 			//if (!empty($options['customPrice']))
 			//{
-			//echo '
-			//[OrderedItem.price: before:'.$item->price->get().',';
 			 $item->price->set($item->getSubTotalBeforeTax() / $item->getCount());
 			//}
-			//echo ' after:'.$item->price->get().']
-			//';
-			
+
 			$item->name->set($item->getProduct()->getParent()->name->get());
 			$item->setValueByLang('name', 'sku', $item->getProduct()->sku->get());
 			$item->save();
@@ -550,20 +586,60 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 				$item->save();
 			}
 
-			$ri = RecurringItem::getInstanceByOrderedItem($item);
-			if ($ri && $ri->isExistingRecord()) 
+			if ($isFirstOrder)
 			{
-				$rebillCount = $ri->rebillCount->get();
-				if ($rebillCount && $rebillCount > 0) // -1 means infinite rebill count
+				$ri = RecurringItem::getInstanceByOrderedItem($item);
+				if ($ri && $ri->isExistingRecord()) 
 				{
-					$rebillsLeft += $rebillCount;
+					$rebillCount = $ri->rebillCount->get();
+					// also here recurring item grouping
+					$key = sprintf('%s_%s_%s',
+						$ri->periodType->get(), $ri->periodLength->get(),
+						$rebillCount === null
+							? 'NULL'
+							: $rebillCount
+					);
+					if ($rebillCount !== null) 
+					{
+						$groupedRebillsLeft[$key] = $rebillCount;
+					}
+					else
+					{
+						$groupedRebillsLeft[$key] = -1; // -1 means infinite rebill count
+					}
+					$this->isRecurring->set(true); // orders with at least one recurring billing plan must have isRecurring flag, if already not set.
+				}
+			}
+			else
+			{
+				$rparentItem = $item->recurringParentID->get();
+				if ($rparentItem)
+				{
+					$ri = RecurringItem::getInstanceByOrderedItem($rparentItem, true);
+					$ri->reload(); // if was bulk update, then cached data are outdated.
+					if ($ri && $ri->isExistingRecord())
+					{
+						// are RecurringItems grouped?
+						// probably yes..
+						$rebillsLeft = $ri->rebillCount->get() - $ri->processedRebillCount->get();
+					}
+				}
+			}
+		}
+
+		if ($isFirstOrder)
+		{
+			foreach($groupedRebillsLeft as $value)
+			{
+				if ($value == -1)
+				{
+					$rebillsLeft = -1;
+					break;
 				}
 				else
 				{
-					$rebillsLeft = -1;
+					$rebillsLeft += $value;
 				}
-				// orders with at least one recurring billing plan must have isRecurring flag.
-				$this->isRecurring->set(true);
 			}
 		}
 
@@ -2586,6 +2662,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		{
 			return $generatedInvoiceIDs;
 		}
+
 		/*
 		echo "date: ", date('Y-m-d', $ts), "\n";
 		print_r($orderIDrecurringItemIDMapping);
@@ -2595,7 +2672,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$config = self::getApplication()->getConfig();
 		$daysDue = $config->get('RECURRING_BILLING_PAYMENT_DUE_DATE_DAYS');
 		$daysBefore = $config->get('RECURRING_BILLING_GENERATE_INVOICE');
-		$recurringItemIDs = array();
+		
 		foreach($orders as $order)
 		{
 			$mainOrder = $order;
@@ -2605,80 +2682,113 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			{
 				$mainOrder = $parent;
 			}
+			else
+			{
+				// echo 'generating from first invoice (could contain multiple plans merged!)';
+			}
+
 			$mainOrderID = $mainOrder->getID();
 			$mainOrder->isRecurring->set(true);
 			$mainOrder->save();
 
+			// group by recurring period type, length, (rebill count?)
+			$groupedRecurringItems = array();
 			foreach ($mainOrder->getOrderedItems() as $item)
 			{
 				$recurringItem = RecurringItem::getInstanceByOrderedItem($item);
 				$recurringItemID = $recurringItem->getID();
-
 				if (isset($orderIDrecurringItemIDMapping[$foundOrderID]) &&
 					in_array($recurringItemID, $orderIDrecurringItemIDMapping[$foundOrderID])
 				) {
+					$rpp = $recurringItem->recurringID->get();
+					$groupedRecurringItems[
+						sprintf('%s_%s_%s',$rpp->periodType->get(), $rpp->periodLength->get(), $rpp->rebillCount->get() === null ? 'NULL' : $rpp->rebillCount->get() )
+					][] = array('item'=>$item, 'recurringItem'=>$recurringItem);
+				}
+			}
 
-					$newOrder = clone $mainOrder;
-					$newOrder->parentID->set($mainOrder);
-					$newOrder->isFinalized->set(false);
-					$newOrder->invoiceNumber->set($newOrder->getCalculatedRecurringInvoiceNumber());
-					$newOrder->dateDue->set(date('Y-m-d H:i:s', strtotime('+'. ($daysBefore + $daysDue) .' day', $ts)));
-					
-					$newOrder->isRecurring->set(true);
-					$newOrder->save(true); // order must be saved for setting recurringItem lastInvoiceID.
-					// !! don't save order while it dont have any item or order will be deleted.
-					
-					foreach($newOrder->getOrderedItems() as $itemToRemove)
-					{
-						$newOrder->removeItem($itemToRemove);
-					}
-					foreach($newOrder->getShipments() as $shipment)
-					{
-						// echo '{Shipment ID:'.$shipment->getID().'}';
-						$newOrder->removeShipment($shipment);
-					}
+			foreach ($groupedRecurringItems as $itemGroups)
+			{
+
+				$recurringItemIDs = array();
+
+				$newOrder = clone $mainOrder;
+				$newOrder->parentID->set($mainOrder);
+				$newOrder->isFinalized->set(false);
+				$newOrder->invoiceNumber->set($newOrder->getCalculatedRecurringInvoiceNumber());
+				$newOrder->dateDue->set(date('Y-m-d H:i:s', strtotime('+'. ($daysBefore + $daysDue) .' day', $ts)));
+
+				$newOrder->isRecurring->set(true);
+				$newOrder->save(true); // order must be saved for setting recurringItem lastInvoiceID.
+
+				// !! don't save order while it dont have any item or order will be deleted.
+				foreach($newOrder->getOrderedItems() as $itemToRemove)
+				{
+					$newOrder->removeItem($itemToRemove);
+				}
+				foreach($newOrder->getShipments() as $shipment)
+				{
+					//echo '{Shipment ID:'.$shipment->getID().'}';
+					$newOrder->removeShipment($shipment);
+				}
+
+				foreach ($itemGroups as $itemGroup)
+				{
+					$item = $itemGroup['item'];
+					$recurringItem = $itemGroup['recurringItem'];
 					$newOrderShipment = Shipment::getNewInstance($newOrder); // ~ should have multiple shipments?
 					$recurringItem->saveLastInvoice($newOrder);
 					$periodLength = $recurringItem->periodLength->get();
 					$periodType = $recurringItem->periodType->get();
-
-					$recurringItemIDs[] = $recurringItemID; // collect IDs for batch processedRebillCount update.
+					$recurringItemIDs[] = $recurringItem->getID(); // collect IDs for batch processedRebillCount update.
 					$clone = clone $item;
 					$clone->recurringParentID->set($item);
 					$clone->shipmentID->set(null);
-					// $clone->price->set( $recurringItem->periodPrice->get() );
-					// echo 'period price:'.$clone->price->get() .' : '. $recurringItem->periodPrice->get(), "\n";
 					$clone->save();
-
-					//$newOrder->addItem($clone);
 					$newOrderShipment->addItem($clone);
 					$newOrder->addShipment($newOrderShipment);
-
-					$newOrder->save();
-					$newOrder->finalize();
-					$newOrder->updateStartAndEndDates($order, $recurringItem);
-					$newOrder->save();
-
-					if ($newOrder->isExistingRecord())
-					{
-						$generatedInvoiceIDs[] = $newOrder->getID();
-					}
 				}
+
+				if (count($itemGroups) > 0 )
+				{
+					$newOrder->updateStartAndEndDates($order,
+						array_map(array(__CLASS__, '_filterRecurringItems'), $itemGroups)
+					);
+				}
+
+				if ($newOrder->isExistingRecord())
+				{
+					$generatedInvoiceIDs[] = $newOrder->getID();
+				}
+
+				if (count($recurringItemIDs))
+				{
+					// nedd to be done before CustomerOrder::finalize() because finalize() also updates CustomerOrder.rebillsLeft field.
+					// therefore can't really do batch for all, need to do for every order. still, can reuse batch method.
+					RecurringItem::batchIncreaseProcessedRebillCount($recurringItemIDs);
+				}
+
+				$newOrder->save();
+				$newOrder->finalize();
 			}
 		}
 
-		if (count($recurringItemIDs))
-		{
-			RecurringItem::batchIncreaseProcessedRebillCount($recurringItemIDs);
-		}
+
 		return $generatedInvoiceIDs;
 	}
 
-	public function updateStartAndEndDates(CustomerOrder $previousOrder, RecurringItem $recurringItem)
+	public function updateStartAndEndDates(CustomerOrder $previousOrder, $recurringItems)
 	{
-		
+		// calling this more than once for same record will end with catastrophe.
+		// echo "\n--------------------------\n";
+		foreach ($recurringItems as $recurringItem)
+		{
+			
+			$recurringItemID = $recurringItem->getID(); // anyone should work, because $recurringItems should be grouped by type and length. ID is required for getting period length in calendar days (done with sql).
 
-		// calling this more than once for once for same record will end with catastrophe.
+			break;
+			// echo $recurringItem->getID(), "\n";
+		}
 
 		// find end date (first order does not have endDate)
 		//    add one day = start date,
@@ -2698,10 +2808,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			'.self::sqlForEndDate('co.startDate', 2).' as endDate
 			FROM
 				CustomerOrder co
-				INNER JOIN RecurringItem ri ON ri.ID='.$recurringItem->getID().'
+				INNER JOIN RecurringItem ri ON ri.ID='.$recurringItemID.'
 			WHERE
 				co.ID = '.$previousOrder->getID()
 		);
+
+		// 
 
 		if ($data && count($data) == 1)
 		{
@@ -2712,6 +2824,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			return true;
 		}
 		return false;
+	}
+
+	public function _filterRecurringItems($item) // used as array_map callback
+	{
+		return $item['recurringItem'];
 	}
 
 	public function getCalculatedRecurringInvoiceNumber()
