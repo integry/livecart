@@ -150,6 +150,8 @@ class ProductController extends FrontendController
 			$response->set('isRated', $this->isRated($product));
 			$response->set('isLoginRequiredToRate', $this->isLoginRequiredToRate());
 			$response->set('isPurchaseRequiredToRate', $this->isPurchaseRequiredToRate($product));
+
+			$response->set('sharingForm', $this->buildSharingForm($product));
 		}
 
 		// add to cart form
@@ -479,6 +481,49 @@ class ProductController extends FrontendController
 
 	}
 
+	public function sendToFriend()
+	{
+		$request = $this->getRequest();
+		$product = Product::getInstanceByID($request->get('id'), Product::LOAD_DATA);
+		$friendemail = $request->get('friendemail');
+		$validator = $this->buildSharingValidator($product);
+
+		if ($validator->isValid())
+		{
+			$productArray = $product->toArray();
+			$email = new Email($this->application);
+			$email->setTo($request->get('friendemail'));
+			$email->setTemplate('notify.sendProductToFriend');
+			$email->set('product', $productArray);
+			$user = SessionUser::getUser();
+			$email->set('user', $user->toArray());
+
+			if ($user->isAnonymous())
+			{
+				$friendName = $request->get('nickname');
+			}
+			else
+			{
+				$user->load();
+				$friendName = $user->firstName->get().' '.$user->lastName->get();
+			}
+			$email->set('friendName', trim($friendName));
+			$email->set('notes', $request->get('notes'));
+			$email->send();
+
+			$response = new JSONResponse(
+				array('message'=>$this->makeText('_info_about_product_message_sent_to', array($productArray['name_lang'], $friendemail))),
+				'success'
+			);
+		}
+		else
+		{
+			$response = new JSONResponse(array('message'=>$this->translate('_error_cannot_send_to_friend')), 'failure');
+		}
+
+		return $response;
+	}
+
 	public function rate()
 	{
 		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA);
@@ -704,6 +749,11 @@ class ProductController extends FrontendController
 		return new Form($this->buildRatingValidator($ratingTypes, $product));
 	}
 
+	private function buildSharingForm(Product $product)
+	{
+		return new Form($this->buildSharingValidator($product));
+	}
+
 	private function buildRatingValidator($ratingTypes, Product $product, $isRating = false)
 	{
 		$validator = $this->getValidator("productRating", $this->getRequest());
@@ -727,6 +777,30 @@ class ProductController extends FrontendController
 			$validator->addCheck('nickname', new IsNotEmptyCheck($this->translate('_err_no_review_nickname')));
 			$validator->addCheck('title', new IsNotEmptyCheck($this->translate('_err_no_review_summary')));
 			$validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_no_review_text')));
+		}
+
+		return $validator;
+	}
+
+	private function buildSharingValidator(Product $product)
+	{
+		ClassLoader::import('application.helper.check.IsUniqueEmailCheck');
+		$validator = $this->getValidator('productSharingValidator', $this->getRequest());
+		if (!$this->config->get('ENABLE_PRODUCT_SHARING'))
+		{
+			$validator->addCheck(md5(time().mt_rand()), new IsNotEmptyCheck($this->translate('_feature_disabled')));
+		}
+
+		$validator->addCheck('friendemail', new IsNotEmptyCheck($this->translate('_err_enter_email')));
+		$validator->addCheck('friendemail', new IsValidEmailCheck($this->translate('_err_invalid_email')));
+
+		if (SessionUser::getUser()->isAnonymous())
+		{
+			if (!$this->config->get('ENABLE_ANONYMOUS_PRODUCT_SHARING'))
+			{
+				$validator->addCheck(md5(time().mt_rand()), new IsNotEmptyCheck($this->translate('_feature_disabled_for_anonymous')));
+			}
+			$validator->addCheck('nickname', new IsNotEmptyCheck($this->translate('_err_enter_nickname')));
 		}
 
 		return $validator;

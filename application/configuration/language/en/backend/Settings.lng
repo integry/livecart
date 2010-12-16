@@ -561,3 +561,9 @@ RECURRING_BILLING_TYPE_POST_PAY=Post-pay
 RECURRING_BILLING_GENERATE_INVOICE=Generate invoice days in advance
 RECURRING_BILLING_PAYMENT_DUE_DATE_DAYS=Payment due date is days after billing period start
 ALLOW_USER_TO_CANCEL_RECURRING_REBILLS=Allow user to cancel recurring rebills
+
+_product_sharing=Product sharing
+ENABLE_PRODUCT_SHARING=Show send to friend form in product page
+ENABLE_ANONYMOUS_PRODUCT_SHARING=Show send to friend form in product page for unregistered customers
+
+_send_to_friend=send to friend
