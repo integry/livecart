@@ -37,6 +37,7 @@ class CustomizeController extends StoreManagementController
 
 	public function mode()
 	{
+
 	  	if (($this->application->isCustomizationMode() && !$this->request->isValueSet('mode')) || ('exit' == $this->request->get('mode')))
 	  	{
 			$this->session->unsetValue('customizationMode');
@@ -101,7 +102,15 @@ class CustomizeController extends StoreManagementController
 		}
 	}
 
+	public function changeTheme()
+	{
+		$conf = $this->getApplication()->getConfig();
 
+		$theme = $this->getRequest()->get('theme');
+		$conf->set('THEME',$theme);
+		$conf->save();
+		return new JSONResponse(null, "success");
+	}
 }
 
 ?>

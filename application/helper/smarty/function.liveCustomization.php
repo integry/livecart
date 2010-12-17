@@ -15,6 +15,11 @@ function smarty_function_liveCustomization($params, LiveCartSmarty $smarty)
 	$app = $smarty->getApplication();
 	if ($app->isCustomizationMode())
 	{
+		// theme dropdown
+		$themes = array_merge(array('barebone' => 'barebone'), array_diff($app->getRenderer()->getThemeList(), array('barebone')));
+		$smarty->assign('themes', $themes);
+		$smarty->assign('currentTheme', $app->getTheme());
+
 		if (!isset($params['action']))
 		{
 			include_once('function.includeJs.php');

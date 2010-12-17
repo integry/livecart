@@ -3,6 +3,17 @@
 	<div id="customizeMenuInner">
 		<span id="modeTitle">{t _cust_mode}</span>
 		<ul>
+			<li class="modeTheme">
+				<form action="{link controller=backend.Customize action=changeTheme}">
+					{t _theme}
+					<select id="themeMenu" name="theme">
+						{foreach $themes as $theme}
+							<option {if $currentTheme == $theme}selected="selected" {/if}value="{$theme|escape}">{$theme|escape}</option>
+						{/foreach}
+					</select>
+				</form>
+			</li>
+
 			<li id="modeTemplate" {if 'template' == $mode}class="active"{/if}><a href="{link controller=backend.customize action=mode query="mode=template" returnPath=true}">{t _templates}</a></li>
 			<li id="modeCss" {if 'css' == $mode}class="active"{/if}><a  href="{link controller=backend.customize action=mode query="mode=css" returnPath=true}">{t _css}</a></li>
 			{if 'css' == $mode}
@@ -32,7 +43,10 @@
 				</div>
 			{/if}
 			<li id="modeTranslation" {if 'translate' == $mode}class="active"{/if}><a href="{link controller=backend.customize action=mode query="mode=translate" returnPath=true}">{t _translations}</a></li>
+			
 			<li id="modeExit"><a href="{link controller=backend.customize action=mode query="mode=exit" returnPath=true}">{t _exit}</a></li>
+			
+			
 		</ul>
 		<div id="customizeMsg"><div style="display: none;"></div></div>
 	</div>
@@ -51,3 +65,7 @@
 		cust.showMessage(cust.firebugMsg, true);
 	</script>
 {/if}
+
+<script type="text/javascript">
+	new Customize.ThemesMenu({literal}${/literal}("themeMenu"));
+</script>
