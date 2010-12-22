@@ -15,6 +15,7 @@ ClassLoader::import('application.model.eav.EavAble');
 ClassLoader::import('application.model.eav.EavObject');
 ClassLoader::import('application.model.order.Transaction');
 ClassLoader::import('application.model.order.InvoiceNumberGenerator');
+ClassLoader::import('application.model.order.OfflineTransactionHandler');
 ClassLoader::import('application.model.discount.DiscountActionSet');
 ClassLoader::import('application.model.businessrule.BusinessRuleController');
 ClassLoader::import('application.model.businessrule.BusinessRuleContext');
@@ -793,7 +794,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		{
 			$userAd = array_shift(array_keys($pair));
 			$orderAd = reset($pair);
-			if ($user->$userAd->get())
+			if ($user->$userAd->get() && !$this->$orderAd->get())
 			{
 				$user->$userAd->get()->load();
 				$this->$orderAd->set($user->$userAd->get()->userAddress->get());
@@ -1763,6 +1764,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		if ($this->billingAddress->get())
 		{
 			$array['BillingAddress'] = $this->billingAddress->get()->toArray();
+		}
+
+		$array['paymentMethod'] = $this->paymentMethod;
+		if ($array['paymentMethod'])
+		{
+			$array['paymentMethodName'] = (substr($array['paymentMethod'], 0, 7) == 'OFFLINE') ? OfflineTransactionHandler::getMethodName($array['paymentMethod']) : ActiveRecordModel::getApplication()->translate($array['paymentMethod']);
 		}
 
 		$this->setArrayData($array);
