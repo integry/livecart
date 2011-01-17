@@ -76,6 +76,7 @@ _type_period_year=year
 _every=every
 _for=for
 _setup_fee=setup fee
+_rebill_times=times
 
 _share_product_name=Send to friend [_1]
 _send_to_friend=Send to friend

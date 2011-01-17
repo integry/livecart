@@ -98,9 +98,7 @@ class RecurringItem extends ActiveRecordModel
 		$order = $this->orderedItem->get()->customerOrder->get();
 		$order->load();
 		$currencyID = $order->currencyID->get()->getID();
-
 		$this->recurring->set($recurringProductPeriod);
-		
 		if ($recurringProductPeriod->isLoaded() == false)
 		{
 			$recurringProductPeriod->load();
@@ -114,6 +112,18 @@ class RecurringItem extends ActiveRecordModel
 		if (array_key_exists('ProductPrice_period', $rppa) && @isset($rppa['ProductPrice_period'][$currencyID]['price']))
 		{
 			$this->periodPrice->set($rppa['ProductPrice_period'][$currencyID]['price']);
+		}
+		if (array_key_exists('periodType', $rppa) )
+		{
+			$this->periodType->set($rppa['periodType']);
+		}
+		if (array_key_exists('periodLength', $rppa) )
+		{
+			$this->periodLength->set($rppa['periodLength']);
+		}
+		if (array_key_exists('rebillCount', $rppa) )
+		{
+			$this->rebillCount->set($rppa['rebillCount']);
 		}
 	}
 

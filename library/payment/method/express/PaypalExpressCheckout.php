@@ -15,14 +15,13 @@ class PaypalExpressCheckout extends ExpressPayment
 	public function getInitUrl($returnUrl, $cancelUrl, $sale = true)
 	{
 		$sandbox = $this->getConfigValue('sandbox') ? 'sandbox.' : '';
-
 		$paypal = $this->getHandler('SetExpressCheckout');
+		$paypal->setRecurringItems($this->details->getRecurringItems());
 		$paypal->setParams($this->details->amount->get(), $returnUrl, $cancelUrl, $sale ? 'Sale' : 'Order', $this->details->currency->get());
 		$paypal->execute();
-
 		$this->checkErrors($paypal);
-
 		$response = $paypal->getAPIResponse();
+
 		return 'https://www.' . $sandbox . 'paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $response->Token;
 	}
 
@@ -53,9 +52,7 @@ class PaypalExpressCheckout extends ExpressPayment
 				'state' => $info->Address->StateOrProvince,
 				'country' => $info->Address->Country,
 				'postalCode' => $info->Address->PostalCode,
-
 				'email' => $info->Payer,
-
 				// customer data
 				'clientID' => $info->PayerID,
 			);
@@ -226,6 +223,30 @@ class PaypalExpressCheckout extends ExpressPayment
 		PayPalBase::$isLive = !$this->getConfigValue('sandbox');
 
 		return PaypalCommon::getHandler($this, $api);
+	}
+
+	public function createRecurringPaymentProfile()
+	{
+		// ini_set("soap.wsdl_cache_enabled", 0);
+		$paypal = $this->getHandler('DoCreateRecurringPaymentsProfile');
+		$paypal->setParams( $this->data['token']);
+
+		$paypal->setRecurringItems($this->details->getRecurringItems());
+		$executionResponse = $paypal->execute();
+
+		if (is_array($executionResponse) && count($executionResponse) > 0 )
+		{
+			$express = ExpressCheckout::getInstanceByOrder($this->details->getOrder());
+			$paymentData = @unserialize($express->paymentData->get());
+			if (!is_array($paymentData))
+			{
+				$paymentData = array();
+			}
+			$paymentData['PayPalRecurringProfiles'] = $executionResponse;
+			$express->paymentData->set(serialize($paymentData));
+			$express->save();
+		}
+		return true;
 	}
 }
 

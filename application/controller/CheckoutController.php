@@ -131,15 +131,12 @@ class CheckoutController extends FrontendController
 		// redirect to external site
 		$class = $this->request->get('id');
 		$this->order->setPaymentMethod($class);
-
 		$handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
 		$handler->setOrder($this->order);
 
 		$returnUrl = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'expressReturn', 'id' => $class), true));
 		$cancelUrl = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'order'), true));
-
 		$url = $handler->getInitUrl($returnUrl, $cancelUrl, !$handler->getConfigValue('AUTHONLY'));
-
 		$this->order->setCheckoutStep(CustomerOrder::CHECKOUT_PAY);
 
 		return new RedirectResponse($url);
@@ -589,7 +586,6 @@ class CheckoutController extends FrontendController
 		}
 
 		$response = new ActionResponse();
-
 		$shipmentArray = $shipments->toArray();
 
 		if (isset($download))
@@ -614,8 +610,27 @@ class CheckoutController extends FrontendController
 			}
 		}
 
+		$recurringIDs = array();
+		$recurringPlans = array();
+		foreach ($shipmentArray as $item)
+		{
+			foreach($item['Order']['cartItems'] as $orderedItem)
+			{
+				$recurringIDs[] = $orderedItem['recurringID'];
+			}
+		}
+		if (count($recurringIDs))
+		{
+			$this->loadLanguageFile('Product'); // contains translations for recurring product pricing.
+			ClassLoader::import('application.model.product.RecurringProductPeriod');
+			$recurringPlans = RecurringProductPeriod::getRecordSetArrayByIDs($recurringIDs);
+			$response->set('periodTypesPlural', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL));
+			$response->set('periodTypesSingle', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_SINGLE));
+		}
+
 		$response->set('shipments', $shipmentArray);
 		$response->set('rates', $rateArray);
+		$response->set('recurringPlans', $recurringPlans);
 		$response->set('currency', $this->getRequestCurrency());
 		$response->set('form', $form);
 		$response->set('order', $this->order->toArray());
@@ -1007,7 +1022,9 @@ class CheckoutController extends FrontendController
 			return $res;
 		}
 
-		$handler = $res->getHandler($this->getTransaction());
+		$transaction = $this->getTransaction();
+		$handler = $res->getHandler($transaction);
+
 		if ($handler->getConfigValue('AUTHONLY'))
 		{
 			$result = $handler->authorize();
@@ -1017,6 +1034,11 @@ class CheckoutController extends FrontendController
 			$result = $handler->authorizeAndCapture();
 		}
 
+		if ($transaction->recurringItemCount->get())
+		{
+			$handler->createRecurringPaymentProfile();
+		}
+
 		if ($result instanceof TransactionResult)
 		{
 			return $this->registerPayment($result, $handler);
@@ -1024,8 +1046,12 @@ class CheckoutController extends FrontendController
 		elseif ($result instanceof TransactionError)
 		{
 			ExpressCheckout::deleteInstancesByOrder($this->order);
+			return $this->getPaymentPageRedirect();
 
 			// set error message for credit card form
+			
+			// buildCreditCardValidator() need argument now
+			// Do payExpressComplete() have credit card data?
 			$validator = $this->buildCreditCardValidator();
 			$validator->triggerError('creditCardError', $result->getMessage());
 			$validator->saveState();

@@ -3350,3 +3350,8 @@ html #footpanel .subpanel ul li a.active
 {
 	margin-top:14px;
 }
+
+.recurringPlan
+{
+	font-size:x-small;
+}

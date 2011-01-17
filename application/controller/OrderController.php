@@ -646,6 +646,7 @@ class OrderController extends FrontendController
 		$item = $this->order->addProduct($product, $count);
 		if ($item instanceof OrderedItem)
 		{
+			$item->name->set($product->name->get());
 			foreach ($product->getOptions(true) as $option)
 			{
 				$this->modifyItemOption($item, $option, $this->request, $prefix . 'option_' . $option->getID());

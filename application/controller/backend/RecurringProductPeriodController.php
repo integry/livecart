@@ -96,6 +96,10 @@ class RecurringProductPeriodController extends StoreManagementController
 		if($validator->isValid())
 		{
 			$rpp->loadRequestData($this->request);
+			// null value is not set by loadRequestData()..
+			$rebillCount = $this->request->get('rebillCount');
+			$rebillCount=floor($rebillCount);
+			$rpp->rebillCount->set(is_numeric($rebillCount) && $rebillCount <= 0 ? $rebillCount : NULL);
 			$rpp->save();
 			$product = $rpp->product->get();
 			$currencies = array();
@@ -148,15 +152,14 @@ class RecurringProductPeriodController extends StoreManagementController
 		$validator = $this->getValidator(
 			'RecurringProductPeriodForm_'.( $rpp['ID'] ? $rpp['ID'] : ''), $this->request);
 		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_error_the_name_should_not_be_empty')));
-
 		$validator->addCheck('periodLength', new IsNotEmptyCheck($this->translate('_error_period_length_should_not_be_empty')));
-		$validator->addCheck('rebillCount', new IsNotEmptyCheck($this->translate('_error_rebill_count_should_not_be_empty')));
+		// $validator->addCheck('rebillCount', new IsNotEmptyCheck($this->translate('_error_rebill_count_should_not_be_empty')));
 		$validator->addCheck('periodLength', new IsNumericCheck($this->translate('_error_period_length_expected_positive_numeric')));
-		$validator->addCheck('rebillCount', new IsNumericCheck($this->translate('_error_rebill_count_expected_positive_numeric')));
+		// $validator->addCheck('rebillCount', new IsNumericCheck($this->translate('_error_rebill_count_expected_positive_numeric')));
 		$validator->addCheck('periodLength', new MinValueCheck($this->translate('_error_period_length_expected_positive_numeric'), 1));
-		$validator->addCheck('rebillCount', new MinValueCheck($this->translate('_error_rebill_count_expected_positive_numeric'), 1));
+		// $validator->addCheck('rebillCount', new MinValueCheck($this->translate('_error_rebill_count_expected_positive_numeric'), 1));
 		$validator->addFilter('periodLength', new NumericFilter());
-		$validator->addFilter('rebillCount', new NumericFilter());
+		// $validator->addFilter('rebillCount', new NumericFilter());
 
 		ProductController::addPricesValidator($validator, 'ProductPrice_period_');
 

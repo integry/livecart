@@ -71,6 +71,25 @@ class RecurringProductPeriod extends MultilingualObject
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData);
 	}
 
+	public static function getRecordSetArrayByIDs($recordIDs, $loadRecordData = false)
+	{
+		if (!is_array($recordIDs))
+		{
+			$recordIDs = array($recordIDs);
+		}
+		$filter = new ARSelectFilter();
+		$filter->setCondition(new InCond(new ARFieldHandle(__CLASS__, 'ID'), $recordIDs));
+		// ActiveRecordModel::getRecordSetArray() will not get required setup and period prices!
+		$rs = ActiveRecordModel::getRecordSet(__CLASS__, $filter);
+		$result = array();
+		foreach($rs->toArray() as $item)
+		{
+			$result[$item['ID']] = $item;
+		}
+		return $result;
+	}
+
+
 	public function toArray($currencyID=null)
 	{
 		$array = parent::toArray();
