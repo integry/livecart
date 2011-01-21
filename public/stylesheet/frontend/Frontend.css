@@ -2319,7 +2319,6 @@ ul.notes li.responder_1 .noteText
 ***************************/
 .manufacturerColumn
 {
-	width: 47%;
 	margin-left: 2.5%;
 }
 
@@ -2333,6 +2332,23 @@ ul.notes li.responder_1 .noteText
 .manufacturerAttributes
 {
 	margin-left: 1em;
+}
+
+
+.manufacturerLetterFilter
+{
+	background-color:#eee;
+	margin-bottom: 1em;
+}
+
+.manufacturerLetterFilter li
+{
+	display:inline;
+}
+
+.manufacturerLetterFilter .selectedLetter
+{
+	color: green;
 }
 
 /*************************
