@@ -1096,7 +1096,19 @@ Backend.DeliveryZone.ShippingService.prototype =
 			return;
 		}
 		$A(this.nodes.root.getElementsByClassName(radio.value == 0 ? "weight" : "subtotal")).each(Element.show);
-		$A(this.nodes.root.getElementsByClassName(radio.value == 0 ? "subtotal" : "weight")).each(Element.hide);
+		// hide and clear hiden input values.
+		$A(this.nodes.root.getElementsByClassName(radio.value == 0 ? "subtotal" : "weight")).each(
+			function(tr)
+			{
+				$A($(tr).getElementsByTagName("input")).each(
+					function(element)
+					{
+						element.value = "";
+					}
+				);
+				tr.hide();
+			}
+		);
 
 		//if(radio.value == 0)
 		//{
@@ -1573,10 +1585,11 @@ Backend.DeliveryZone.WeightUnitConventer.prototype = {
 Backend.DeliveryZone.WeightTable = Class.create();
 Backend.DeliveryZone.WeightTable.prototype = {
 	newColumnCount : 0,
-	initialize : function(root, typeName)
+	initialize : function(root, typeName, canChangeTypeName)
 	{
 		var
 			m, cn, w;
+		this.canChangeTypeName = canChangeTypeName;
 		this.nodes = {};
 		this.nodes.root = $(root);
 		this.nodes.tbody = this.nodes.root.down("tbody");
@@ -1614,7 +1627,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 		Event.observe(this.nodes.switchUnits, "click", this.switchUnitTypes.bindAsEventListener(this));
 		this.setType(typeName);
 		this.observeAndInitWeightRow();
-		
+
 		this.attachNumericFilters();
 		if(this.nodes.tbody.getElementsByClassName("weightRow")[0].style.display != "none")
 		{
@@ -1689,9 +1702,27 @@ Backend.DeliveryZone.WeightTable.prototype = {
 	{
 		$A(this.nodes.root.getElementsByClassName(typeName == "weight" ? "weight" : "subtotal")).each(Element.show);
 		$A(this.nodes.root.getElementsByClassName(typeName == "weight" ? "subtotal" : "weight")).each(Element.hide);
+
 		this.typeName = typeName;
 	},
 
+	getType: function()
+	{
+		if (this.canChangeTypeName) // only for new form
+		{
+			if ($("shippingService___weight").checked)
+			{
+				this.typeName = 'weight';
+			}
+			if ($("shippingService___subtotal").checked)
+			{
+				this.typeName = 'subtotal';
+			}
+		}
+
+		return this.typeName;
+	},
+		
 	addColumnOnKeyUp : function(event) // add new column
 	{
 		var
@@ -1897,10 +1928,12 @@ Backend.DeliveryZone.WeightTable.prototype = {
 			ec = [];
 			for(i=0; i < this.nodes.tbody.rows.length; i++)
 			{
-				input = $(this.nodes.tbody.rows[i].cells[j]).down("input");
-				if(input.value=="")
+				input = $(this.nodes.tbody.rows[i].cells[j]).getElementsByTagName("input");
+
+				// has no input with value.
+				if(!$A(input).find(function(n) { return n.value != ""; }))
 				{
-					ec.push(input);
+					ec.push(input[0]);
 				}
 			}
 
@@ -1927,7 +1960,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 				value = null;
 				inputsValues = null;
 				cell = $(this.nodes.tbody.rows[r].cells[c]);
-				if (r == 0 && this.typeName == 'weight')
+				if (r == 0 && this.getType() == 'weight')
 				{
 					inputs = this._getWeightCellInputs(cell);
 					inputsValues = {
@@ -1939,7 +1972,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 					value = inputs.normalized.value;
 					sortRow = 0;
 				}
-				else if (r == 1 && this.typeName == 'subtotal')
+				else if (r == 1 && this.getType() == 'subtotal')
 				{ 
 					nodes = $A(cell.getElementsByTagName("input"));
 					value = nodes.pop().value; // last one, because can contain also rangeStart input.
@@ -1971,7 +2004,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 			{
 				cell = this.nodes.tbody.rows[r].cells[c];
 				cellInputs = this._getWeightCellInputs(cell);
-				if (r == 0 && this.typeName == 'weight')
+				if (r == 0 && this.getType() == 'weight')
 				{
 					mapping = ["normalized", "merged", "lo", "hi"];
 					for (q = 0; q < mapping.length; q++)
@@ -1979,7 +2012,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 						cellInputs[mapping[q]].value=item.inputsValues[mapping[q]];
 					}
 				}
-				else if (r == 1 && this.typeName == 'subtotal')
+				else if (r == 1 && this.getType() == 'subtotal')
 				{
 					// ??
 					nodes = $A(cell.getElementsByTagName("input"));
