@@ -141,6 +141,12 @@ class OfflineCreditCard extends CreditCardPayment
 			return false;
 		}
 
+		if (($this->getExpirationYear() < date('Y')) ||
+			(($this->getExpirationYear() == date('Y')) && ($this->getExpirationMonth() < date('M'))))
+		{
+			return false;
+		}
+
 		// no validation
 		if (in_array($this->cardType, array('China UnionPay')))
 		{
