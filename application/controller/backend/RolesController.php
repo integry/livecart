@@ -16,6 +16,8 @@ class RolesController extends StoreManagementController
 		Role::cleanUp();
 
 		$userGroupID = (int)$this->request->get('id');
+
+
 		$userGroup = UserGroup::getInstanceByID($userGroupID);
 		$activeRoles = $userGroup->getRolesRecordSet();
 
@@ -108,9 +110,14 @@ class RolesController extends StoreManagementController
 
 		$response = new ActionResponse();
 		$response->set('form', $form);
+
 		$response->set('roles', $roles);
 		$response->set('userGroup', $userGroup->toArray());
+		
+		
 		$response->set('activeRolesIDs', $activeRolesIDs);
+		$disabledRolesIDs = $this->getRolesWithDisabledCheckboxes($roles, $userGroupID);
+		$response->set('disabledRolesIDs', $disabledRolesIDs); // show, but with disabled checkboxes
 
 		return $response;
 	}
@@ -169,7 +176,12 @@ class RolesController extends StoreManagementController
 					continue;
 				}
 
-				$userGroup->applyRole(Role::getInstanceByID((int)$roleID));
+				$role = Role::getInstanceByID((int)$roleID);
+				if (count( $this->getRolesWithDisabledCheckboxes(array($role->toArray()), $userGroupID) ) != 0)
+				{
+					continue; // role with disabled checkbox.
+				}
+				$userGroup->applyRole($role);
 			}
 
 			foreach(explode(',', $this->request->get('unchecked')) as $roleID)
@@ -178,8 +190,12 @@ class RolesController extends StoreManagementController
 				{
 					continue;
 				}
-
-				$userGroup->cancelRole(Role::getInstanceByID((int)$roleID));
+				$role = Role::getInstanceByID((int)$roleID);
+				if (count( $this->getRolesWithDisabledCheckboxes(array($role->toArray()), $userGroupID) ) != 0)
+				{
+					continue; // role with disabled checkbox.
+				}
+				$userGroup->cancelRole($role);
 			}
 
 			$userGroup->save();
@@ -213,5 +229,23 @@ class RolesController extends StoreManagementController
 		return $this->getValidator('roles_' . $userGroup->getID(), $this->request);
 	}
 
+	private function getRolesWithDisabledCheckboxes($roles, $groupId)
+	{
+		$adminGroupId = 1; // ~
+
+		$disabledRolesIDs = array();
+		if ($adminGroupId == $groupId) // for Administrators
+		{
+			foreach ($roles as $role)
+			{
+				// diasable User Groups checkboxes
+				if (substr($role['name'], 0, 10) == 'userGroup.' || $role['name'] == 'userGroup')
+				{
+					$disabledRolesIDs[] = $role['ID'];
+				}
+			}
+		}
+		return $disabledRolesIDs;
+	}
 }
 ?>

@@ -6,27 +6,26 @@ Backend.Roles = Class.create();
 Backend.Roles.prototype = 
 {
 	Messages: {},
-	
+
 	Links: {},
-	
+
 	Instances: {},
 
-	initialize: function(root, roles, activeRoles)
+	initialize: function(root, roles, activeRoles, disabledRoles)
 	{
 		this.findUsedNodes(root);
 		this.bindEvents();
-		this.initTree(roles, activeRoles);
-		
+		this.initTree(roles, activeRoles, disabledRoles);
 	},
-	
-	initTree: function(roles, activeRoles)
+
+	initTree: function(roles, activeRoles, disabledRoles)
 	{
 		var self = this;
 		
 		this.rolesTree = new dhtmlXTreeObject(this.nodes.rolesTree.id, "", "", 0);
 		this.rolesTree.setOnClickHandler(function(id) { this.enableRole(id); }.bind(this));
 		this.rolesTree.def_img_x = 'auto';
-		this.rolesTree.def_img_y = 'auto';	
+		this.rolesTree.def_img_y = 'auto';
 		this.rolesTree.setImagePath("image/backend/dhtmlxtree/");
 		this.rolesTree.enableCheckBoxes(true);
 		this.rolesTree.enableSmartCheckboxes(true);
@@ -35,7 +34,7 @@ Backend.Roles.prototype =
 		{
 			 self.nodes.setAllPermissions.checked = (self.rolesTree.getAllUnchecked() == '');
 		});
-		
+
 		this.roles = {};
 		$A(roles).each(function(node)
 		{
@@ -47,8 +46,15 @@ Backend.Roles.prototype =
 		
 		this.backedUpRoles = this.roles;
 		this.restoreTree();
+
+		$A(disabledRoles).each(
+			function(nodeId)
+			{
+				this.rolesTree.disableCheckbox(nodeId, 1);
+			}.bind(this)
+		);
 	},
-	
+
 	enableRole: function(id)
 	{
 		this.rolesTree.setCheck(id, !this.rolesTree.isItemChecked(id));
@@ -111,11 +117,11 @@ Backend.Roles.prototype =
 		}
 	},
 	
-	getInstance: function(root, roles, activeRoles)
+	getInstance: function(root, roles, activeRoles, disabledRoles)
 	{
 		if(!Backend.Roles.prototype.Instances[$(root).id])
 		{
-			Backend.Roles.prototype.Instances[$(root).id] = new Backend.Roles(root, roles, activeRoles);
+			Backend.Roles.prototype.Instances[$(root).id] = new Backend.Roles(root, roles, activeRoles, disabledRoles);
 		}
 		
 		return Backend.Roles.prototype.Instances[$(root).id];
