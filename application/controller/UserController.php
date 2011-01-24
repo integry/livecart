@@ -717,11 +717,13 @@ class UserController extends FrontendController
 		// set order addresses
 		$this->order->billingAddress->set($billingAddress->userAddress->get());
 
+		$this->order->loadItems();
 		if ($this->order->isShippingRequired())
 		{
 			$this->order->shippingAddress->set($shippingAddress->userAddress->get());
 		}
 
+		$this->order->save();
 		$this->order->setUser($user);
 		SessionOrder::save($this->order);
 
