@@ -95,6 +95,7 @@ class LiveCartTransaction extends TransactionDetails
 
 		foreach ($order->getShoppingCartItems() as $item)
 		{
+
 			$product = $item->getProduct();
 			$variations = array();
 			foreach ($product->getRegisteredVariations() as $variation)
@@ -102,7 +103,23 @@ class LiveCartTransaction extends TransactionDetails
 				$variations[] = $variation->getValueByLang('name');
 			}
 
-			$this->addLineItem($product->getName() . ($variations ? ' (' . implode(' / ', $variations) . ')' : ''), $item->getPrice(false), $item->count->get(), $product->sku->get());
+			$ri = RecurringItem::getInstanceByOrderedItem($item);
+			if ($ri && $ri->isExistingRecord())
+			{
+				$ri->load();
+			}
+			else
+			{
+				$ri = null;
+			}
+
+			$this->addLineItem(
+				$product->getName() . ($variations ? ' (' . implode(' / ', $variations) . ')' : ''),
+				$item->getPrice(false),
+				$item->count->get(),
+				$product->sku->get(),
+				$ri
+			);
 		}
 
 		if ($discount = $order->getFixedDiscountAmount())

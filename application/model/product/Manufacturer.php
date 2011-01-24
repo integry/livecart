@@ -54,6 +54,78 @@ class Manufacturer extends ActiveRecordModel implements EavAble
 			return self::getNewInstance($name);
 		}
 	}
+
+	/**
+	 * 
+	 * @return array('manufacturers'=> array of manufacturers, 'counts'=> manufacturer product count, 'count'=> count of manufacturers)
+	 */
+	public static function getActiveProductManufacturers($context)
+	{
+		$context = $context + array('startingWith' => null, 'currentPage'=>1);
+		extract($context); // creates $startingWith and $currentPage
+
+		$config = ActiveRecordModel::getApplication()->getConfig();
+		$listStyle = $config->get('MANUFACTURER_PAGE_LIST_STYLE');
+		$perPage = $config->get('MANUFACTURER_PAGE_PER_PAGE');
+
+		// get filter to select manufacturers of active products only
+		$f = new ARSelectFilter();
+		// $productFilter = new ProductFilter(Category::getRootNode(), $f);
+		$ids = $counts = $letters = array();
+		foreach (ActiveRecordModel::getDataBySQL('SELECT DISTINCT(manufacturerID), COUNT(*) AS cnt FROM Product ' . $f->createString() . ' GROUP BY manufacturerID') as $row)
+		// foreach (ActiveRecordModel::getDataBySQL('SELECT DISTINCT(ID) as manufacturerID, (BIT_LENGTH(name) * 3) + (ID * 2) AS cnt FROM Manufacturer ' . $f->createString() . ' GROUP BY manufacturerID LIMIT 100000') as $row)
+		{
+			$ids[] = $row['manufacturerID'];
+			$counts[$row['manufacturerID']] = $row['cnt'];
+		}
+
+		$f = new ARSelectFilter(new InCond(new ARFieldHandle('Manufacturer', 'ID'), $ids));
+		$f->addField('UPPER(LEFT(TRIM(Manufacturer.name),1))', '', 'FirstLetter');
+		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('Manufacturer', 'name'), ''));
+
+		if ($startingWith)
+		{
+			$f->mergeCondition(new LikeCond(new ARFieldHandle('Manufacturer', 'name'), $startingWith.'%'));
+		}
+		$f->setOrder(new ARFieldHandle('Manufacturer', 'name'));
+
+		if ($perPage > 0)
+		{
+			$offsetStart = (($currentPage - 1) * $perPage) + 1;
+			$offsetEnd = $currentPage * $perPage;
+			$f->setLimit($perPage, $offsetStart - 1);
+		}
+		$manufacturers = ActiveRecordModel::getRecordSetArray(__CLASS__, $f);
+		foreach($manufacturers as $item)
+		{
+			$letters[$item['FirstLetter']] = $item['FirstLetter'];
+		}
+		return array('manufacturers' => $manufacturers,'counts' => $counts, 'count' => ActiveRecordModel::getRecordCount(__CLASS__, $f));
+	}
+
+	public static function getActiveProductManufacturerFirstLetters()
+	{
+		$letters = $ids = array();
+		$f = new ARSelectFilter();
+		//$productFilter = new ProductFilter(Category::getRootNode(), $f);
+		foreach (ActiveRecordModel::getDataBySQL('SELECT DISTINCT(manufacturerID) FROM Product ' . $f->createString() . ' GROUP BY manufacturerID') as $row)
+		// foreach (ActiveRecordModel::getDataBySQL('SELECT DISTINCT(ID) as manufacturerID FROM Manufacturer ' . $f->createString() . ' GROUP BY manufacturerID LIMIT 21') as $row)
+		{
+			$ids[] = $row['manufacturerID'];
+		}
+
+		$f = new ARSelectFilter(new InCond(new ARFieldHandle('Manufacturer', 'ID'), $ids));
+		$f->addField('UPPER(LEFT(TRIM(Manufacturer.name),1))', '', 'FirstLetter');
+		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('Manufacturer', 'name'), ''));
+		$f->setOrder(new ARFieldHandle('Manufacturer', 'name'));
+
+		$manufacturers = ActiveRecordModel::getRecordSetArray('Manufacturer', $f);
+		foreach($manufacturers as $item)
+		{
+			$letters[$item['FirstLetter']] = $item['FirstLetter'];
+		}
+		return $letters;
+	}
 }
 
 ?>

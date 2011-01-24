@@ -104,8 +104,30 @@
 
 		<div class="clear"></div>
 
-		<h2 id="m_s_g">{t _support}</h2>
+		{if $order.isRecurring && $orders}
+			<h2>{t _invoices}</h2>
+			{include file="user/invoicesTable.tpl"
+				itemList=$orders
+				paginateAction="viewOrder"
+				textDisplaying=_displaying_invoices
+				textFound=_invoices_found
+				id=$order.ID
+				query='page=_000_'
+			}
+		{/if}
 
+		{if $canCancelRebills}
+			<div class="cancelFurtherRebills">
+				{if $currentPage > 1}
+					{assign var='rebillQuery' value="page=`$currentPage`"}
+				{else}
+					{assign var='rebillQuery' value=''}
+				{/if}
+				<a href="{link controller=user action=cancelFurtherRebills id=$order.ID query=$rebillQuery}" onclick="return confirm('{t _are_you_sure_want_to_cancel_further_rebills}');" />{t _cancel_further_rebills}</a>
+			</div>
+		{/if}
+
+		<h2 id="m_s_g">{t _support}</h2>
 		<p class="noteAbout">{t _have_questions}</p>
 
 		{if $notes}
@@ -115,7 +137,6 @@
 			   {/foreach}
 		   </ul>
 		{/if}
-
 		{form action="controller=user action=addNote id=`$order.ID`" method=POST id="noteForm" handle=$noteForm}
 			{err for="text"}
 				{{label {t _enter_question}:}}
@@ -126,7 +147,6 @@
 				<input type="submit" class="submit" value="{tn _submit_response}" />
 			</p>
 		{/form}
-
 		</fieldset>
 
 	</div>

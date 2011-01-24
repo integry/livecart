@@ -11,7 +11,11 @@
 					{$period.name|escape}
 				</label>
 				<label for="recurringPeriod_{$period.ID}" class="period">
-					<span class="price">{$period.ProductPrice_period.formated_price.$currency}</span> {t _every} {t `$periodTypesSingle[$period.periodType]`} {t _for} <span class="price">{$period.rebillCount}</span> {t `$periodTypesPlural[$period.periodType]`}
+					<span class="price">{$period.ProductPrice_period.formated_price.$currency}</span>
+					{t _every}
+					<span class="price">{if $period.periodLength == 1}{t `$periodTypesSingle[$period.periodType]`}{else}{$period.periodLength} {t `$periodTypesPlural[$period.periodType]`}{/if}</span>
+					{math equation="a * b" a=$period.periodLength|default:0 b=$period.rebillCount|default:0 assign="x"}
+					{if $x > 0}{t _for} <span class="price">{$x}</span> {t `$periodTypesPlural[$period.periodType]`}, {$period.rebillCount} {t _rebill_times}{/if}
 				</label>
 				{if $period.ProductPrice_setup[$currency].price > 0} 
 					<label for="recurringPeriod_{$period.ID}" class="setup">

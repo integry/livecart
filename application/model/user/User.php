@@ -500,6 +500,46 @@ class User extends ActiveRecordModel implements EavAble
 		return ActiveRecordModel::getRecordSet('ShippingAddress', $this->getShippingAddressFilter($defaultFirst), array('UserAddress'));
 	}
 
+	public function countInvoices($filter = null)
+	{
+		$filter = $filter ? $filter : new ARSelectFilter();
+		$filter->mergeCondition(
+			new AndChainCondition(array(
+				new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->getID()),
+				new EqualsCond(new ARFieldHandle('CustomerOrder', 'isRecurring'), 1),
+				new IsNotNullCond(new ARFieldHandle('CustomerOrder', 'parentID'))
+				)
+			)
+		);
+		return ActiveRecordModel::getRecordCount('CustomerOrder', $filter);
+	}
+
+	public function countPendingInvoices()
+	{
+		$filter = new ARSelectFilter();
+		$filter->setCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isPaid'), 0));
+
+		return $this->countInvoices($filter);
+	}
+
+	public function hasInvoices($filter = null)
+	{
+		if ($filter)
+		{
+			$filter->setLimit(1);
+		}
+		return (bool)$this->countInvoices($filter);
+	}
+
+	public function hasPendingInvoices()
+	{
+		$filter = new ARSelectFilter();
+		$filter->setCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isPaid'), 0));
+		$filter->setLimit(1);
+
+		return (bool)$this->countInvoices($filter);
+	}
+
 	private function getShippingAddressFilter($defaultFirst = true)
 	{
 		$f = new ARSelectFilter();

@@ -4,6 +4,7 @@ ClassLoader::import('application.controller.backend.abstract.ActiveGridControlle
 ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.filter.FilterGroup');
 ClassLoader::import('application.model.product.Product');
+ClassLoader::import('application.model.product.ProductPrice');
 ClassLoader::import('application.model.category.ProductCategory');
 ClassLoader::import('application.model.product.ProductSpecification');
 ClassLoader::import('application.helper.ActiveGrid');
@@ -26,7 +27,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
     public function index()
 	{
-
 		ClassLoader::import('application.LiveCartRenderer');
 
 		$category = Category::getInstanceByID($this->request->get("id"), Category::LOAD_DATA);
@@ -185,6 +185,9 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 		$filter = new ARSelectFilter($category->getProductCondition(true));
 		$filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
+		
+		$filter->mergeCondition(
+			new EqualsCond(new ARFieldHandle('ProductPrice', 'type'), ProductPrice::TYPE_GENERAL_PRICE));
 
 		return $filter;
 	}

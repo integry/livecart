@@ -76,6 +76,7 @@ abstract class FrontendController extends BaseController
 		$this->addBlock('COMPARE', array('compare', 'compareMenu'));
 		$this->addBlock('MINI_CART', array('order', 'miniCart'), 'order/miniCartBlock');
 		$this->addBlock('QUICK_LOGIN', 'quickLogin', 'user/block/quickLoginBlock');
+		$this->addBlock('INVOICES_MENU', array('user', 'invoicesMenu'), 'user/block/invoicesMenu');
 
 		$this->application->logStat('Init FrontendController');
 

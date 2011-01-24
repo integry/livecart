@@ -1,13 +1,14 @@
 <?php
 
-ClassLoader::import("application.model.product.Product");
-ClassLoader::import("application.model.order.CustomerOrder");
-ClassLoader::import("application.model.order.Shipment");
-ClassLoader::import("application.model.order.OrderedFile");
+ClassLoader::import('application.model.product.Product');
+ClassLoader::import('application.model.order.CustomerOrder');
+ClassLoader::import('application.model.order.Shipment');
+ClassLoader::import('application.model.order.OrderedFile');
+ClassLoader::import('application.model.product.RecurringItem');
 ClassLoader::import('application.model.order.OrderedItemOption');
 ClassLoader::import('application.model.delivery.DeliveryZone');
 ClassLoader::import('application.model.businessrule.interface.BusinessRuleProductInterface');
-ClassLoader::import("application.model.system.MultilingualObject");
+ClassLoader::import('application.model.system.MultilingualObject');
 
 /**
  * Represents a shopping basket item (one or more instances of the same product)
@@ -53,7 +54,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		$schema->registerField(new ARForeignKeyField("customerOrderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("shipmentID", "Shipment", "ID", "Shipment", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("parentID", "OrderedItem", "ID", "OrderedItem", ARInteger::instance()));
-
+		$schema->registerField(new ARForeignKeyField("recurringParentID", "OrderedItem", "ID", "OrderedItem", ARInteger::instance()));
 		$schema->registerField(new ARField("price", ARFloat::instance()));
 		$schema->registerField(new ARField("count", ARFloat::instance()));
 		$schema->registerField(new ARField("reservedProductCount", ARFloat::instance()));
@@ -83,6 +84,10 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 
 	public function getCurrency()
 	{
+		if ($this->isLoaded() == false)
+		{
+			$this->load();
+		}
 		return $this->customerOrder->get()->getCurrency();
 	}
 
@@ -152,7 +157,6 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 
 			$this->itemPrice = $price;
 		}
-
 		return $this->itemPrice;
 	}
 
@@ -243,13 +247,60 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		return $this->getPrice($includeTaxes);
 	}
 
+	// OrderedItem::getItemPrice() for recurring product return something ..different (setup [+first preriod price]) than value stored price field.
+	// OrderedItem.price is used as base value for showing discounts.
+	// Changed billing plan or adding item with recurring billing plan has nothing to do with discount, therefore there is need to update base price.
+	public function updateBasePriceToCalculatedPrice()
+	{
+		$this->price->set($this->getPrice(true)); 
+		$this->save();
+	}
+
 	/**
 	 *	Get price without taxes
 	 */
 	public function getItemPrice()
 	{
-		$isFinalized = $this->customerOrder->get()->isFinalized->get();
-		$price = $isFinalized ? $this->price->get() : $this->getProduct()->getItemPrice($this);
+		$order = $this->customerOrder->get();
+		$isFinalized = $order->isFinalized->get();
+		$product = $this->getProduct();
+		$price = 0;
+		if ($product->isLoaded() == false)
+		{
+			$product->load();
+		}
+		if ($product->type->get() == Product::TYPE_RECURRING)
+		{
+			if ($order->parentID->get() == null)
+			{
+				$recurringItem = RecurringItem::getInstanceByOrderedItem($this);
+				$recurringBillingType = ActiveRecordModel::getApplication()->getConfig()->get('RECURRING_BILLING_TYPE');
+				if ($recurringItem)
+				{
+					$price = $recurringItem->setupPrice->get();
+					if ($recurringBillingType == 'RECURRING_BILLING_TYPE_PRE_PAY')
+					{
+						$price += $recurringItem->periodPrice->get(); // pre pay, add price from first period
+					}
+				}
+			}
+			else // order is invoice for some other order
+			{
+				$recurringParent = $this->recurringParentID->get();
+				if ($recurringParent)
+				{
+					$recurringItem = RecurringItem::getInstanceByOrderedItem($recurringParent);
+					if ($recurringItem)
+					{
+						$price += $recurringItem->periodPrice->get();
+					}
+				}
+			}
+		}
+		else
+		{
+			$price = $isFinalized ? $this->price->get() : $this->getProduct()->getItemPrice($this);
+		}
 
 		if (!$isFinalized)
 		{
@@ -754,7 +805,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 				$array['subItems'][] = $subItem->toArray();
 			}
 		}
-		if ($array['Product']['type'] == Product::TYPE_RECURRING)
+		if ($array && is_array($array) && array_key_exists('Product',$array) && array_key_exists('type', $array['Product']) && $array['Product']['type'] == Product::TYPE_RECURRING)
 		{
 			$ritemArray = RecurringItem::getRecordSetArrayByOrderedItem($this);
 			if (count($ritemArray)) // should be 1 or 0
@@ -811,6 +862,16 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 	{
 		$this->markAsLoaded();
 		return parent::serialize(array('customerOrderID', 'shipmentID', 'productID'));
+	}
+
+	public function delete()
+	{
+		$ri = RecurringItem::getInstanceByOrderedItem($this);
+		if ($ri)
+		{
+			$ri->delete();
+		}
+		parent::delete();
 	}
 
 	public function __destruct()

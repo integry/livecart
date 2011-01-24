@@ -1,5 +1,6 @@
 <?php
 
+
 ClassLoader::import('application.controller.FrontendController');
 ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.category.SpecField');
@@ -15,6 +16,7 @@ ClassLoader::import('application.model.product.ProductCompare');
 ClassLoader::import('application.model.category.SpecFieldValue');
 ClassLoader::import('application.model.category.SearchLog');
 ClassLoader::import('application.model.product.ProductSpecification');
+ClassLoader::import('application.model.category.CategoryRelationship');
 ClassLoader::importNow('application.helper.CreateHandleString');
 
 /**

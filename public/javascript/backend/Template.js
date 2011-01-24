@@ -524,18 +524,26 @@ Backend.EmailTemplateHandler.prototype =
 
 	submit: function()
 	{
-		$('body_' + this.tabid).value = editAreaLoader.getValue('body_' + this.tabid);
-		$('html_' + this.tabid).value = editAreaLoader.getValue('html_' + this.tabid);
-		var langContent = $('templateForm_' + this.tabid).down('.languageFormContent');
-		if (langContent)
-		{
-			var langs = langContent.getElementsByTagName('textarea');
-			for (k = 0; k < langs.length; k++)
+		try {
+			var
+				body = $("body_"+this.tabid),
+				html = $("html_"+this.tabid);
+
+			body.value = editAreaLoader.getValue('body_'+this.tabid);
+			html.value = editAreaLoader.getValue('html_'+this.tabid);
+			
+
+		
+			var langs = $$('#'+this.tabid+'Content .languageFormContent textarea');
+			if (langs)
 			{
-				langs[k].value = editAreaLoader.getValue(langs[k].id);
+				for (k = 0; k < langs.length; k++)
+				{
+					langs[k].value = editAreaLoader.getValue(langs[k].id);
+				}
 			}
-		}
-		new LiveCart.AjaxRequest(this.form, null, this.saveComplete.bind(this));
+			new LiveCart.AjaxRequest(this.form, null, this.saveComplete.bind(this));
+		} catch(e) {alert(e);}
 		return false;
 	},
 

@@ -78,8 +78,13 @@ class SessionOrder
 			return self::getOrder();
 		}
 
+		// fixes issue when trying to add OrderedItem to unsaved(without ID) CustomerOrder.
+		// ~ but i don't know if returning unsaved CustomerOrder is expected behaviour.
+		if ($instance->isExistingRecord() == false)
+		{
+			$instance->save(true);
+		}
 		self::setOrder($instance);
-
 		return $instance;
 	}
 

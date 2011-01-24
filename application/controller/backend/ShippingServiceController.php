@@ -175,6 +175,8 @@ class ShippingServiceController extends StoreManagementController
 		foreach($this->request->toArray() as $variable => $value)
 		{
 			$matches = array();
+			
+			
 			if(preg_match('/^rate_([^_]*)_(perKgCharge|subtotalPercentCharge|perItemCharge|perItemChargeClass|flatCharge|weightRangeEnd|weightRangeStart|subtotalRangeEnd|subtotalRangeStart)$/', $variable, $matches))
 			{
 				$id = $matches[1];
@@ -183,7 +185,9 @@ class ShippingServiceController extends StoreManagementController
 				$rates[$id][$name] = $value;
 			}
 		}
-		// pp($rates);
+		//pp($rates['']);
+		
+		
 		$rangeType = $this->request->get('rangeType');
 
 		// unset rate without id (or it will mess up sorting)
@@ -204,7 +208,7 @@ class ShippingServiceController extends StoreManagementController
 		{
 			unset($rates[$key]);
 		}
-		//--
+
 		$previousEnd = 0;
 		if ($rangeType == ShippingService::SUBTOTAL_BASED)
 		{
@@ -212,7 +216,7 @@ class ShippingServiceController extends StoreManagementController
 			foreach($rates as &$rate)
 			{
 				$rate = array_merge($rate, array(
-					'subtotalRangeStart' => $previousEnd,
+					'subtotalRangeStart' => array_key_exists('subtotalRangeStart', $rate) && is_numeric($rate['subtotalRangeStart']) ? $rate['subtotalRangeStart'] : $previousEnd,
 					'weightRangeStart' => 0,
 					'weightRangeEnd' => 0,
 					'perKgCharge' => 0)
@@ -226,7 +230,7 @@ class ShippingServiceController extends StoreManagementController
 			foreach($rates as &$rate)
 			{
 				$rate = array_merge($rate, array(
-					'weightRangeStart' => $previousEnd,
+					'weightRangeStart' => array_key_exists('weightRangeStart', $rate) && is_numeric($rate['weightRangeStart']) ? $rate['weightRangeStart'] : $previousEnd,
 					'subtotalRangeStart' => 0,
 					'subtotalRangeEnd' => 0,
 					'subtotalPercentCharge' => 0)
@@ -234,7 +238,6 @@ class ShippingServiceController extends StoreManagementController
 				$previousEnd = $rate['weightRangeEnd'] + 0.001; // smallest weight amount
 			}
 		}
-
 		return $rates;
 	}
 

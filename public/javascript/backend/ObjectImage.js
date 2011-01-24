@@ -133,21 +133,29 @@ Backend.ObjectImage.prototype =
 					}
 				 }
 
-				 form.getElementsByTagName('a')[0].onclick =
-					function()
+				// can has more than one a tag
+				var cancel = $A(form.getElementsByTagName('a')).find(
+					function(node)
 					{
-						var formNode = this.parentNode;
-						while (formNode.tagName != 'FORM')
-						{
-							formNode = formNode.parentNode;
-						}
-
-						formNode.reset();
-						Effect.SlideUp(formNode, {duration: 0.1});
-
-						return false;
+						return $(node).hasClassName("cancel");
 					}
+				);
 
+				if (cancel)
+				{
+					cancel.onclick = 
+						function()
+						{
+							var formNode = this.parentNode;
+							while (formNode.tagName != 'FORM')
+							{
+								formNode = formNode.parentNode;
+							}
+							formNode.reset();
+							Effect.SlideUp($(formNode).up("div"), {duration: 0.1}); // hide container not form (when trying open will remove display:none only form container, not form)
+							return false;
+						}
+				}
 				 var editCont = document.getElementsByClassName('activeList_editContainer', li)[0];
 
 				 while (editCont.firstChild)
@@ -164,6 +172,7 @@ Backend.ObjectImage.prototype =
 
 				 Backend.LanguageForm.prototype.closeTabs(form);
 				 new Backend.LanguageForm(form);
+
 			 },
 
 			 beforeSort:	 function(li, order)

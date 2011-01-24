@@ -16,6 +16,31 @@
 					{else}
 						<span>{$item.Product.name_lang}</span>
 					{/if}
+
+					{if $item.recurringID && $recurringPlans[$item.recurringID]}
+						{assign var="period" value=$recurringPlans[$item.recurringID]}
+						{$period.name_lang|escape}
+						
+						<span class="recurringPlan">
+						({$period.ProductPrice_period.formated_price.$currency}
+							{t _every}
+							{if $period.periodLength == 1}
+								{t `$periodTypesSingle[$period.periodType]`}
+							{else}
+								{$period.periodLength} {t `$periodTypesPlural[$period.periodType]`}
+							{/if}
+							{math equation="a * b" a=$period.periodLength|default:0 b=$period.rebillCount|default:0 assign="x"}
+							{if $x > 0}
+								{t _for} 
+								{$x}
+								{t `$periodTypesPlural[$period.periodType]`}, {$period.rebillCount} {t _rebill_times}{*
+									{if $period.ProductPrice_setup}
+										{t _setup_fee} {$period.ProductPrice_period.formated_price.$currency}
+									{/if}
+								*}{/if})
+						</span>
+					{/if}
+
 					{if $item.Product.variations}
 						<span class="variations">
 							({include file="order/itemVariationsList.tpl"})

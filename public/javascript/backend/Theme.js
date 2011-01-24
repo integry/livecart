@@ -337,21 +337,26 @@ Backend.ThemeColor = function(theme)
 
 	this.iframe = $('iframe_' + theme);
 	this.form = $('colors_' + theme);
-	this.styleSheet = this.iframe.contentDocument.styleSheets[0];
 
-	this.form.onsubmit = this.save.bind(this);
+	Event.observe(this.iframe, "load", function(theme)  // iframe is loaded _after_, must wait!
+	{
+		this.styleSheet = this.iframe.contentDocument.styleSheets[0];
+		this.form.onsubmit = this.save.bind(this);
+		this.initProperties();
 
-	this.initProperties();
+		if (Backend.Theme.prototype.isCssTabChanged(theme))
+		{
+			Backend.Theme.prototype.cssTabChanged(theme);
+		}
+
+	}.bind(this, theme));
+
 	Event.observe(this.form, "change",
 		function()
 		{
 			Backend.Theme.prototype.styleTabChanged(theme);
 		}
 	);
-	if (Backend.Theme.prototype.isCssTabChanged(theme))
-	{
-		Backend.Theme.prototype.cssTabChanged(theme);
-	}
 }
 
 Backend.ThemeColor.prototype =

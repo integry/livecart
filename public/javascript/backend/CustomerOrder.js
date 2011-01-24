@@ -238,20 +238,25 @@ Backend.CustomerOrder.prototype =
 		);
 
 		modifiedOnComplete = tabControl.activateTab(null,
-														function(response)
-														{
-															if (onComplete)
-															{
-																onComplete(response);
-															}
+			function(response)
+			{
+				if (onComplete)
+				{
+					onComplete(response);
+				}
 
-															Backend.CustomerOrder.prototype.orderLoaded = true;
-
-															if (!Backend.getHash().match(/order_(\d+)/))
-															{
-																Backend.ajaxNav.add("order_" + id);
-															}
-														}.bind(this) );
+				Backend.CustomerOrder.prototype.orderLoaded = true;
+				if (!Backend.getHash().match(/order_(\d+)/))
+				{
+					Backend.ajaxNav.add("order_" + id);
+				}
+				var stopRebillsLink = $("stopRebills"+id);
+				if (stopRebillsLink.hasClassName("observed") == false)
+				{
+					Event.observe(stopRebillsLink, "click", this.stopRebills.bindAsEventListener(this, id));
+					stopRebillsLink.addClassName("observed");
+				}
+		}.bind(this));
 
 		if (Backend.CustomerOrder.Editor.prototype.hasInstance(id))
 		{
@@ -261,6 +266,36 @@ Backend.CustomerOrder.prototype =
 		Backend.showContainer("orderManagerContainer");
 	},
 
+	stopRebills: function(event, orderID)
+	{
+		Event.stop(event);
+		if (confirm(Backend.getTranslation("_stop_futher_rebills_question").replace("[_1]", $("invoiceNumber"+orderID).innerHTML)))
+		{
+			new LiveCart.AjaxRequest($('stopRebillsURL'+orderID).value, $('stopRebillsURL'+orderID).up(".stopRebillsLinkContainer").down("span"),
+				function(transport) {
+					var node = $("stopRebills"+orderID), rsNode, rrNode;
+					if (transport.responseData && transport.responseData.status == "success")
+					{
+						rsNode = $("recurringStatus"+orderID);
+						rsNode.innerHTML = transport.responseData.recurringStatus;
+						rrNode = $("remainingRebillsValue" + orderID);
+						rrNode.innerHTML = transport.responseData.rebillCount;
+						new Effect.Highlight(rrNode.up("div"));
+						new Effect.Highlight(rsNode.up("div"));
+						// Event.stopObserving(node, "click"); // ~ will work in 1.6
+						node.hide();
+					}
+					else
+					{
+						var pi = node.up(".stopRebillsLinkContainer").down("span");
+						pi.addClassName("progressIndicator"); // resotre progress indicator on failure.
+						pi.hide();
+					}
+				}
+			);
+		}
+	},
+	
 	updateLog: function(orderID)
 	{
 		this.resetTab("tabOrderLog", orderID);
@@ -894,10 +929,13 @@ Backend.CustomerOrder.Editor.prototype =
 	{
 		Backend.CustomerOrder.Editor.prototype.Instances = {};
 		Backend.CustomerOrder.Editor.prototype.CurrentId = null;
-
 		$('orderManagerContainer').down('.sectionContainer').innerHTML = '';
-
 		TabControl.prototype.__instances__ = {};
+	},
+
+	toggleInvoicesTab: function()
+	{
+		$('tabOrderInvoices')[arguments[0] == true ? "show" : "hide"]();
 	}
 }
 

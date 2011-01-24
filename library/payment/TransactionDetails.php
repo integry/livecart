@@ -9,6 +9,8 @@ include_once('TransactionValueMapper.php');
  */
 class TransactionDetails
 {
+	protected $recurringItems = array();
+
 	protected $lineItems = array();
 
 	protected $data = array(
@@ -55,6 +57,8 @@ class TransactionDetails
 		'description' => null,
 
 		'gatewayTransactionID' => null,
+
+		'recurringItemCount' => 0
 	);
 
 	public function __construct()
@@ -84,11 +88,23 @@ class TransactionDetails
 		return $this->firstName->get() . ' ' . $this->lastName->get();
 	}
 
-	public function addLineItem($name, $itemPrice, $quantity, $sku)
+	public function addLineItem($name, $itemPrice, $quantity, $sku, $recurringItem = null)
 	{
-		$this->lineItems[] = array('name' => $name, 'price' => $itemPrice, 'quantity' => $quantity, 'sku' => $sku);
+		$a = array('name' => $name, 'price' => $itemPrice, 'quantity' => $quantity, 'sku' => $sku);
+		if ($recurringItem)
+		{
+			$this->recurringItems[] = $recurringItem;
+			$this->recurringItemCount->set(count($this->recurringItems));
+		}
+		$this->lineItems[] = $a;
 	}
 
+
+	public function getRecurringItems()
+	{
+		return $this->recurringItems;
+	}
+	
 	public function getLineItems()
 	{
 		return $this->lineItems;

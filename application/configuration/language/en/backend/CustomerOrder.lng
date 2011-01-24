@@ -22,6 +22,7 @@ _order_number=Order #
 # Errors
 _err_user_has_no_billing_or_shipping_address=User has no default billing or shipping address
 _invalid_status=Invalid status
+_cannot_stop_futher_rebills=Cannot stop futher rebills
 
 _all_users=All users
 _default_user_group=Default user group
@@ -218,3 +219,19 @@ _add_all_found_products=Are you sure want to add [1] products?
 _add_to_shipment=Add to shipment
 _add_coupon=Add coupon
 _add_coupon_code=Add coupon code
+
+_invoices=Invoices
+
+# in tree
+_recurring=Recurring
+_recurring_all=All
+_recurring_expired=Expired
+_recurring_canceled=Canceled
+
+# in order basic info form
+_recurring_status=Recurring status
+_recurring_status_active=active
+_recurring_status_expired=expired
+_remaining_rebills=Remaining rebills
+_stop_futher_rebills=Stop further rebills
+_stop_futher_rebills_question=Stop further rebills for order [_1]?

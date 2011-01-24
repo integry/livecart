@@ -7,14 +7,35 @@ ConfirmationMessage.prototype =
 {
 	initialize: function(parent, message)
 	{
+		new DomMessage(parent, message, 'confirmationMessage');
+	}
+}
+
+ErrorMessage = Class.create();
+ErrorMessage.prototype =
+{
+	initialize: function(parent, message)
+	{
+		new DomMessage(parent, message, 'errorMessage');
+	}
+}
+
+DomMessage = Class.create();
+DomMessage.prototype =
+{
+	initialize: function(parent, message, className)
+	{
 		var div = document.createElement('div');
-		div.className = 'confirmationMessage';
+		div.className = className;
 		div.innerHTML = message;
 
 		parent.appendChild(div);
 		new Effect.Highlight(div, { duration: 0.4 });
+
+		return div;
 	}
 }
+
 
 /*****************************
 	Product related JS
@@ -169,6 +190,46 @@ Product.Rating.prototype =
 	}
 }
 
+Product.Share = Class.create();
+Product.Share.prototype =
+{
+	form: null,
+
+	initialize: function(form)
+	{
+		this.form = $(form);
+		var progressIndicator = this.form.down(".pi");
+		progressIndicator.addClassName("progressIndicator");
+		new LiveCart.AjaxRequest(form, progressIndicator, this.complete.bind(this));
+	},
+
+	complete: function(req)
+	{
+		try {
+			var response = req.responseData;
+			if (typeof response.message == "undefined")
+			{
+				new ErrorMessage($("sendToFriendRepsonse"), _error_cannot_send_to_friend);
+				return;
+			}
+			if(response.status == 'success')
+			{
+				new ConfirmationMessage($("sendToFriendRepsonse"), response.message);
+				this.form.reset();
+			}
+			else
+			{
+				new ErrorMessage($("sendToFriendRepsonse"), response.message);
+			}
+		} catch(e)
+		{
+			new ErrorMessage($("sendToFriendRepsonse"), _error_cannot_send_to_friend);
+		}
+	}
+}
+
+
+
 Product.ContactForm = Class.create();
 Product.ContactForm.prototype =
 {
@@ -201,17 +262,16 @@ Product.ChangeRecurringPlanAction.prototype =
 {
 	initialize: function(url, node)
 	{
-		node = $(node);
-		var progressIndicator = node.up("div").down("span");
+		var 
+			changedDropdownName = $("recurringBillingPlan"),
+			form = changedDropdownName.up("form");
+			progressIndicator = $(node).up("div").down("span");
+
 		progressIndicator.addClassName("progressIndicator");
-		new LiveCart.AjaxRequest(url, progressIndicator, function(node, transport) {
-			if(transport.responseData && transport.responseData.status == "success")
-			{
-				new Effect.Highlight($(node).up("td"));
-			}
-		}.bind(this,node), {
-		parameters:$H({recurringID:node.value}).toQueryString()
-		})
+		progressIndicator.show();
+		changedDropdownName.value = node.id;
+		form.action = url;
+		form.submit();
 	}
 }
 

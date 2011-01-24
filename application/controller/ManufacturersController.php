@@ -16,34 +16,51 @@ class ManufacturersController extends FrontendController
 {
 	public function index()
 	{
-		// get filter to select manufacturers of active products only
-		$rootCat = Category::getRootNode();
-		$f = new ARSelectFilter();
-		$productFilter = new ProductFilter($rootCat, $f);
+/*
+MANUFACTURER_PAGE_LIST_STYLE
+	MANPAGE_STYLE_ALL_IN_ONE_PAGE
+	MANPAGE_STYLE_GROUP_BY_FIRST_LETTER
+MANUFACTURER_PAGE_NUMBER_OF_COLUMNS
+MANUFACTURER_PAGE_PER_PAGE
+*/
+		$config = $this->getApplication()->getConfig();
+		$request = $this->getRequest();
+		$listStyle = $config->get('MANUFACTURER_PAGE_LIST_STYLE');
+		$currentLetter = $listStyle == 'MANPAGE_STYLE_GROUP_BY_FIRST_LETTER' ? $request->get('letter') : null;
 
-		$ids = $counts = array();
-		foreach (ActiveRecordModel::getDataBySQL('SELECT DISTINCT(manufacturerID), COUNT(*) AS cnt FROM Product ' . $f->createString() . ' GROUP BY manufacturerID') as $row)
-		{
-			$ids[] = $row['manufacturerID'];
-			$counts[$row['manufacturerID']] = $row['cnt'];
-		}
+		// pagination
+		$page = $request->get('page', 1);
 
-		$f = new ARSelectFilter(new InCond(new ARFieldHandle('Manufacturer', 'ID'), $ids));
-		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('Manufacturer', 'name'), ''));
-		$f->setOrder(new ARFieldHandle('Manufacturer', 'name'));
-		$manufacturers = ActiveRecordModel::getRecordSetArray('Manufacturer', $f);
+		extract(Manufacturer::getActiveProductManufacturers(array(
+			'currentPage' => $page,
+			'startingWith' => $currentLetter))
+		); // creates $manufacturers, $count, $counts
 
 		foreach ($manufacturers as &$manufacturer)
 		{
 			$manufacturer['url'] = $this->getManufacturerFilterUrl($manufacturer);
 		}
-
 		$this->addBreadCrumb($this->translate('_manufacturers'), '');
-
 		$response = new ActionResponse();
 		$response->setReference('manufacturers', $manufacturers);
-		$response->set('counts', $counts);
-		$response->set('rootCat', $rootCat->toArray());
+		$response->set('counts', $counts); // product count
+		$response->set('count', $count); // manufacturers count
+		$response->set('rootCat', Category::getRootNode()->toArray());
+		$response->set('currentPage', $page);
+		$response->set('perPage', $config->get('MANUFACTURER_PAGE_PER_PAGE'));
+
+		$paginateUrlParams = array('controller' => 'manufacturers', 'action' => 'index', 'query'=>array('page' => '_000_'));
+		if ($listStyle == 'MANPAGE_STYLE_GROUP_BY_FIRST_LETTER')
+		{
+			$paginateUrlParams['query']['letter'] = $currentLetter;
+		}
+		$response->set('url', $this->router->createURL($paginateUrlParams, true));
+		if ($listStyle == 'MANPAGE_STYLE_GROUP_BY_FIRST_LETTER')
+		{
+			$letters = Manufacturer::getActiveProductManufacturerFirstLetters();
+			$response->set('currentLetter',$currentLetter);
+			$response->set('letters',$letters);
+		}
 		return $response;
 	}
 

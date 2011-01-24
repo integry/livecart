@@ -648,6 +648,7 @@ $this->session->set('test', new Whatever());
 		$item = $this->order->addProduct($product, $count);
 		if ($item instanceof OrderedItem)
 		{
+			$item->name->set($product->name->get());
 			foreach ($product->getOptions(true) as $option)
 			{
 				$this->modifyItemOption($item, $option, $this->request, $prefix . 'option_' . $option->getID());
@@ -664,10 +665,22 @@ $this->session->set('test', new Whatever());
 				{
 					$item->save(); // or save in SessionOrder::save()
 				}
-				$recurringProductPeriod = RecurringProductPeriod::getInstanceByID($this->getRequest()->get('recurringID'), true);
-				$instance = RecurringItem::getNewInstance($recurringProductPeriod, $item,
-					0, 0, $recurringProductPeriod->rebillCount->get());
-				$instance->save();
+				$recurringID = $this->getRequest()->get('recurringID');
+
+				$recurringProductPeriod = $product->getRecurringProductPeriodById($recurringID);
+				if ($recurringProductPeriod == null)
+				{
+					$recurringProductPeriod = $product->getDefaultRecurringProductPeriod();
+				}
+
+				if ($recurringProductPeriod)
+				{
+					$instance = RecurringItem::getNewInstance($recurringProductPeriod, $item);
+					$instance->save();
+
+					$item->updateBasePriceToCalculatedPrice();
+				}
+				// what if product with type recurring but no plan? just ignore?
 			}
 		}
 	}
@@ -996,20 +1009,21 @@ $this->session->set('test', new Whatever());
 	{
 		$request = $this->getRequest();
 		$orderedItemID = $request->get('id');
-		$recurringID = $request->get('recurringID');
+		$billingPlandropdownName = $request->get('recurringBillingPlan');
+		$recurringID = $request->get($billingPlandropdownName);
 		$orderedItem = ActiveRecordModel::getInstanceByID('OrderedItem', $orderedItemID, true);
-		$recurringItems = RecurringItem::getRecordSetByOrderedItem($orderedItem);
-		if ($recurringItems->size() > 0)
+		$recurringItem = RecurringItem::getInstanceByOrderedItem($orderedItem);
+		if ($recurringItem)
 		{
-			$recurringItem = $recurringItems->shift();
 			$recurringItem->setRecurringProductPeriod(RecurringProductPeriod::getInstanceByID($recurringID));
 			$recurringItem->save();
-			if ($recurringItems->size() > 0) 
-			{
-				// if more than 1, remove others?
-			}
+			$orderedItem->updateBasePriceToCalculatedPrice();
 		}
-		return new JSONResponse(null, 'success');
+		$this->order->loadItemData();
+		$this->order->mergeItems();
+		$this->order->save();
+
+		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
 
 	private function buildOptionsValidator(OrderedItem $item, $options)

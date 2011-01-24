@@ -16,10 +16,15 @@ class RecurringItem extends ActiveRecordModel
 		$schema->registerField(new ARPrimaryKeyField('ID', ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField('recurringID', 'RecurringProductPeriod', 'ID', null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField('orderedItemID', 'OrderedItem', 'ID', 'OrderedItem', ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField('lastInvoiceID', 'CustomerOrder', 'ID', 'CustomerOrder', ARInteger::instance()));
+
 		$schema->registerField(new ARField('setupPrice', ARInteger::instance()));
 		$schema->registerField(new ARField('periodPrice', ARInteger::instance()));
 		$schema->registerField(new ARField('rebillCount', ARInteger::instance()));
 		$schema->registerField(new ARField('processedRebillCount', ARInteger::instance()));
+		$schema->registerField(new ARField('periodType', ARInteger::instance()));
+		$schema->registerField(new ARField('periodLength', ARInteger::instance()));
+
 	}
 
 	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
@@ -32,13 +37,27 @@ class RecurringItem extends ActiveRecordModel
 		return parent::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
+	public static function getInstanceByOrderedItem(OrderedItem $item, $load=false)
+	{
+		$recurringItems = self::getRecordSetByOrderedItem($item, $load);
+		if ($recurringItems->size() >= 1)
+		{
+			return $recurringItems->shift();
+		}
+		else
+		{
+			return null;
+		}
+	}
+
 	public static function getNewInstance(RecurringProductPeriod $recurringProductPeriod,
 		OrderedItem $item, $setupPrice = null, $periodPrice = null, $rebillCount = null)
 	{
 		$instance = ActiveRecord::getNewInstance(__CLASS__);
 		$instance->orderedItem->set($item);
 		$instance->setRecurringProductPeriod($recurringProductPeriod); // call after orderedItem is added!
-
+		$instance->periodLength->set($recurringProductPeriod->periodLength->get());
+		$instance->periodType->set($recurringProductPeriod->periodType->get());
 		if ($setupPrice !== null)
 		{
 			$instance->setupPrice->set($setupPrice);
@@ -79,9 +98,7 @@ class RecurringItem extends ActiveRecordModel
 		$order = $this->orderedItem->get()->customerOrder->get();
 		$order->load();
 		$currencyID = $order->currencyID->get()->getID();
-
 		$this->recurring->set($recurringProductPeriod);
-		
 		if ($recurringProductPeriod->isLoaded() == false)
 		{
 			$recurringProductPeriod->load();
@@ -96,6 +113,40 @@ class RecurringItem extends ActiveRecordModel
 		{
 			$this->periodPrice->set($rppa['ProductPrice_period'][$currencyID]['price']);
 		}
+		if (array_key_exists('periodType', $rppa) )
+		{
+			$this->periodType->set($rppa['periodType']);
+		}
+		if (array_key_exists('periodLength', $rppa) )
+		{
+			$this->periodLength->set($rppa['periodLength']);
+		}
+		if (array_key_exists('rebillCount', $rppa) )
+		{
+			$this->rebillCount->set($rppa['rebillCount']);
+		}
+	}
+
+	public static function batchIncreaseProcessedRebillCount($ids)
+	{
+		if (count($ids) == 0)
+		{
+			return false;
+		}
+		ActiveRecord::executeUpdate('UPDATE '.__CLASS__. ' SET 
+			processedRebillCount = IF(processedRebillCount IS NULL, 1, processedRebillCount+1)
+		WHERE
+			ID IN('.implode(',', $ids).')');
+			
+		//ActiveRecordModel::ClearPool();
+		
+		return true;
+	}
+
+	public function saveLastInvoice(CustomerOrder $order)
+	{
+		$this->lastInvoiceID->set($order);
+		$this->save();
 	}
 }
 

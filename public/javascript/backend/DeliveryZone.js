@@ -984,6 +984,7 @@ Backend.DeliveryZone.ShippingService.prototype =
 			}
 			this.getContainer(li, 'edit').update(response);
 			this.toggleContainer(li, 'edit');
+
 		},
 
 		beforeSort:	 function(li, order)
@@ -1095,7 +1096,19 @@ Backend.DeliveryZone.ShippingService.prototype =
 			return;
 		}
 		$A(this.nodes.root.getElementsByClassName(radio.value == 0 ? "weight" : "subtotal")).each(Element.show);
-		$A(this.nodes.root.getElementsByClassName(radio.value == 0 ? "subtotal" : "weight")).each(Element.hide);
+		// hide and clear hiden input values.
+		$A(this.nodes.root.getElementsByClassName(radio.value == 0 ? "subtotal" : "weight")).each(
+			function(tr)
+			{
+				$A($(tr).getElementsByTagName("input")).each(
+					function(element)
+					{
+						element.value = "";
+					}
+				);
+				tr.hide();
+			}
+		);
 
 		//if(radio.value == 0)
 		//{
@@ -1572,10 +1585,11 @@ Backend.DeliveryZone.WeightUnitConventer.prototype = {
 Backend.DeliveryZone.WeightTable = Class.create();
 Backend.DeliveryZone.WeightTable.prototype = {
 	newColumnCount : 0,
-	initialize : function(root, typeName)
+	initialize : function(root, typeName, canChangeTypeName)
 	{
 		var
 			m, cn, w;
+		this.canChangeTypeName = canChangeTypeName;
 		this.nodes = {};
 		this.nodes.root = $(root);
 		this.nodes.tbody = this.nodes.root.down("tbody");
@@ -1613,21 +1627,102 @@ Backend.DeliveryZone.WeightTable.prototype = {
 		Event.observe(this.nodes.switchUnits, "click", this.switchUnitTypes.bindAsEventListener(this));
 		this.setType(typeName);
 		this.observeAndInitWeightRow();
-		this.attachNumericFilters();
 
+		this.attachNumericFilters();
 		if(this.nodes.tbody.getElementsByClassName("weightRow")[0].style.display != "none")
 		{
 			this.showInWeightUnits();
 		}
+		this.updateAllRangeStartValues();
+	},
+
+	updateAllRangeStartValues: function()
+	{
+		$A(this.nodes.root.getElementsBySelector("tr." + this.typeName + "Row div.rangeStart")).each(
+			function(node)
+			{
+				this.updateRangeStartValue(node);
+			}.bind(this)
+		);
+	},
+
+	updateRangeStartValue: function(node /* parent of cell where to update start value (!not from where) */)
+	{
+		node = $(node);
+		if (node.hasClassName("rangeStart") == false)
+		{
+			node = node.getElementsByClassName("rangeStart");
+			if (node.length == 0)
+			{
+				return false; // unsuported node.
+			}
+			node = node[0];
+		}
+
+		var
+			inputs, merged, previousTd,
+			valueNode,
+			nodes = node.getElementsBySelector(".rangeStartValue");
+		if (nodes.length != 1)
+		{
+			return false; // can't process this cell
+		}
+		valueNode = nodes[0];
+
+		switch (valueNode.tagName.toLowerCase())
+		{
+			case "input":
+				return true; // first range, cant copy anything from previous range
+				break;
+
+			case "span":
+			try {
+				// up to td, previous td, down to merged value
+				previousTd = node.up("td").previous();
+				if (this.typeName == "weight")
+				{
+					inputs = this._getWeightCellInputs(previousTd);
+					merged = inputs.merged;
+				}
+				else
+				{
+					merged = $A(previousTd.getElementsByTagName("input")).find(function(n) {
+						// first cell has 2 input tags, get that one who contain (merged) value, unfortunately that input has no special className, but first cells extra input has.
+						return !$(n).hasClassName("rangeStartValue");
+					});
+				}
+				valueNode.innerHTML = new String(merged.value);
+				break;
+			} catch(e) {}
+		}
+
 	},
 
 	setType: function(typeName)
 	{
 		$A(this.nodes.root.getElementsByClassName(typeName == "weight" ? "weight" : "subtotal")).each(Element.show);
 		$A(this.nodes.root.getElementsByClassName(typeName == "weight" ? "subtotal" : "weight")).each(Element.hide);
+
 		this.typeName = typeName;
 	},
 
+	getType: function()
+	{
+		if (this.canChangeTypeName) // only for new form
+		{
+			if ($("shippingService___weight").checked)
+			{
+				this.typeName = 'weight';
+			}
+			if ($("shippingService___subtotal").checked)
+			{
+				this.typeName = 'subtotal';
+			}
+		}
+
+		return this.typeName;
+	},
+		
 	addColumnOnKeyUp : function(event) // add new column
 	{
 		var
@@ -1650,19 +1745,27 @@ Backend.DeliveryZone.WeightTable.prototype = {
 				{
 					continue;
 				}
+
+				if ($(input.parentNode).hasClassName("rangeStart"))
+				{
+					prefix = "rangeStart_";
+				}
+				else
+				{
+					prefix = "";
+				}
 				if(
 					input.value != ""
 					&&
 					(
 						// it is focused hi or lo value field
-						input.hasClassName("focusOnHiOrLo")
+						input.hasClassName(prefix + "focusOnHiOrLo")
 							||
 						// or it is not hi or lo field (hidden hi or lo value fields can have value '0', forcing to add new column.
 						(false == input.hasClassName("UnitConventer_LoValue") && false == input.hasClassName("UnitConventer_HiValue"))
 					)
 				)
 				{
-					// console.log(input, input.value, input.up("td"));
 					this.addColumn();
 					return;
 				}
@@ -1673,98 +1776,134 @@ Backend.DeliveryZone.WeightTable.prototype = {
 	onBlurHiOrLo: function(event)
 	{
 		var
+			prefix = "",
 			node;
 		node = Event.element(event);
 		if (null == node || node.tagName.toLowerCase() != "input")
 		{
 			return;
 		}
-		node.removeClassName("focusOnHiOrLo");
+		if ($(node.parentNode).hasClassName("rangeStart"))
+		{
+			prefix = "rangeStart_";
+		}
+		node.removeClassName(prefix+"focusOnHiOrLo");
+
 		// cant be sure about order for fireing blur and focus events, therefore use timer.
 		window.setTimeout(function() {
-			if($A($(this.node).up("td").getElementsByClassName("focusOnHiOrLo")).length == 0)
+			if($A($(this.node).up("td").getElementsByClassName(this.prefix +"focusOnHiOrLo")).length == 0)
 			{
 				var
 					inputs = this.instance._getWeightCellInputs(this.node);
-				inputs.hi.hide();
-				inputs.hiAbbr.hide();
-				inputs.lo.hide();
-				inputs.loAbbr.hide();
-				inputs.merged.show();
+				inputs[prefix + "hi"].hide();
+				inputs[prefix + "hiAbbr"].hide();
+				inputs[prefix + "lo"].hide();
+				inputs[prefix + "loAbbr"].hide();
+				inputs[prefix + "merged"].show();
 			}
-		}.bind({node:node, instance:this}), 250);
+		}.bind({node:node, instance:this, prefix: prefix}), 250);
 	},
 
 	_getWeightCellInputs: function(node)
 	{
-		var m;
 		node = $(node);
+		if (!node)
+		{
+			return null;
+		}
 		if(node.tagName.toLowerCase() != "td")
 		{
 			node = node.up("td");
 		}
-		return $A([
-			// [<name>, <class name>]
-			["normalized", "UnitConventer_NormalizedWeight"],
-			["hi", "UnitConventer_HiValue"],
-			["hiAbbr", "UnitConventer_HiValueAbbr"],
-			["lo", "UnitConventer_LoValue"],
-			["loAbbr", "UnitConventer_LoValueAbbr"],
-			["merged", "UnitConventer_MergedValue"]
-		]).inject({},
-			function(result, pair)
+		r = $A(node.getElementsByTagName("input")).concat($A(node.getElementsByTagName("span"))).inject({},
+			function(result, node)
 			{
-				var nodes = this.node.getElementsByClassName(pair[1]);
-				result[pair[0]] = nodes.length != 1 ? null : nodes[0];
+				var prefix = "";
+				node = $(node);
+				if ($(node.parentNode).hasClassName("rangeStart"))
+				{
+					prefix = "rangeStart_";
+				}
+				if (node.hasClassName('rangeStartValue'))
+				{
+					result['rangeStartValue'] = node;
+					if (node.tagName.toLowerCase() == "input") // can be span, if not editable range start.
+					{
+						result['rangeStart_normalized'] = node;
+					}
+				} else if (node.hasClassName('UnitConventer_NormalizedWeight')) {
+					result[prefix + 'normalized'] = node;
+				} else if (node.hasClassName('UnitConventer_HiValue')) {
+					result[prefix + 'hi'] = node;
+				} else if (node.hasClassName('UnitConventer_HiValueAbbr')) {
+					result[prefix + 'hiAbbr'] = node;
+				} else if (node.hasClassName('UnitConventer_LoValue')) {
+					result[prefix + 'lo'] = node;
+				} else if (node.hasClassName('UnitConventer_LoValueAbbr')) {
+					result[prefix + 'loAbbr'] = node;
+				} else if (node.hasClassName('UnitConventer_MergedValue')) {
+					result[prefix + 'merged'] = node;
+				}
 				return result;
-			}.bind({node:node})
+			}
 		);
+		return r;
 	},
 
 	onMergedWeightFocus : function(event)
 	{
 		var
 			node,
-			inputs;
+			inputs,
+			prefix="";
 		node = Event.element(event);
 		if (null == node || node.tagName.toLowerCase() != "input")
 		{
 			return;
 		}
+		if ($(node.parentNode).hasClassName("rangeStart"))
+		{
+			prefix = "rangeStart_";
+		}
 		// split to 2 inputs
 		inputs = this._getWeightCellInputs(node);
 
-		inputs.hi.show();
-		inputs.hiAbbr.show();
-		inputs.hi.focus();
-		inputs.lo.show();
-		inputs.loAbbr.show();
+		inputs[prefix + "hi"].show();
+		inputs[prefix + "hiAbbr"].show();
+		inputs[prefix + "hi"].focus();
+		inputs[prefix + "lo"].show();
+		inputs[prefix + "loAbbr"].show();
 
 		// hints
 		var unitName = this.nodes.unitsTypeField.value=="METRIC" ? "Metric" : "English";
-		inputs.hi.title=this.labels["UnitConventer_"+unitName+"HiUnit"];
-		inputs.lo.title=this.labels["UnitConventer_"+unitName+"LoUnit"];
-		inputs.hiAbbr.innerHTML=this.labels["UnitConventer_"+unitName+"HiUnitAbbr"];
-		inputs.loAbbr.innerHTML=this.labels["UnitConventer_"+unitName+"LoUnitAbbr"];
+		inputs[prefix + "hi"].title=this.labels["UnitConventer_"+unitName+"HiUnit"];
+		inputs[prefix + "lo"].title=this.labels["UnitConventer_"+unitName+"LoUnit"];
+		inputs[prefix + "hiAbbr"].innerHTML=this.labels["UnitConventer_"+unitName+"HiUnitAbbr"];
+		inputs[prefix + "loAbbr"].innerHTML=this.labels["UnitConventer_"+unitName+"LoUnitAbbr"];
 
-		inputs.merged.hide();
+		inputs[prefix + "merged"].hide();
 	},
 
 	registerFocusOnHiOrLo : function(event)
 	{
 		var
-			node;
+			node, prefix="";
 		node = Event.element(event);
 		if (null == node || node.tagName.toLowerCase() != "input")
 		{
 			return;
 		}
-		$(node).addClassName("focusOnHiOrLo");
+		if ($(node.parentNode).hasClassName("rangeStart"))
+		{
+			prefix = "rangeStart_";
+		}
+		$(node).addClassName(prefix + "focusOnHiOrLo");
 	},
 
-	onChange : function(event) // remove empty columns
+	onChange : function(event)
 	{
 		var
+			c, r,
 			node,
 			i,j,
 			input,
@@ -1775,24 +1914,30 @@ Backend.DeliveryZone.WeightTable.prototype = {
 		{
 			return;
 		}
+
 		// weight related
 		if(node.hasClassName("UnitConventer_HiValue") || node.hasClassName("UnitConventer_LoValue"))
 		{
 			this.updateNormalizedWeightFieldValue(node.up("td"));
 			this.updateMergedWeightFieldValue(node.up("td"));
 		}
-		for(j=0; j < this.nodes.tbody.rows[0].cells.length - 1; j++)
+
+		// remove empty columns
+		for (j=0; j < this.nodes.tbody.rows[0].cells.length - 1; j++)
 		{
 			ec = [];
 			for(i=0; i < this.nodes.tbody.rows.length; i++)
 			{
-				input = $(this.nodes.tbody.rows[i].cells[j]).down("input");
-				if(input.value=="")
+				input = $(this.nodes.tbody.rows[i].cells[j]).getElementsByTagName("input");
+
+				// has no input with value.
+				if(!$A(input).find(function(n) { return n.value != ""; }))
 				{
-					ec.push(input);
+					ec.push(input[0]);
 				}
 			}
-			if(ec.length == this.nodes.tbody.rows.length)
+
+			if (ec.length == this.nodes.tbody.rows.length)
 			{
 				while(input = ec.shift())
 				{
@@ -1801,10 +1946,93 @@ Backend.DeliveryZone.WeightTable.prototype = {
 				}
 			}
 		}
+
+		// sort columns
+		data = $A();
+		sortRow = null;
+
+		// read
+		for (c = 0; c < this.nodes.tbody.rows[0].cells.length - 1; c++)
+		{
+			data[c] = [];
+			for (r = 0; r < this.nodes.tbody.rows.length; r++)
+			{
+				value = null;
+				inputsValues = null;
+				cell = $(this.nodes.tbody.rows[r].cells[c]);
+				if (r == 0 && this.getType() == 'weight')
+				{
+					inputs = this._getWeightCellInputs(cell);
+					inputsValues = {
+						normalized:inputs.normalized.value,
+						merged:inputs.merged.value,
+						hi:inputs.hi.value,
+						lo:inputs.lo.value
+					}
+					value = inputs.normalized.value;
+					sortRow = 0;
+				}
+				else if (r == 1 && this.getType() == 'subtotal')
+				{ 
+					nodes = $A(cell.getElementsByTagName("input"));
+					value = nodes.pop().value; // last one, because can contain also rangeStart input.
+					sortRow = 1;
+				}
+				else // price
+				{
+					value = cell.down("input").value;
+				}
+				// data[c][r] = value;
+				data[c][r] = {value:value, inputsValues:inputsValues};
+			}
+		}
+		// sort
+		data.sort(function(sortRow, a, b) {
+			try {
+				return a[sortRow].value - b[sortRow].value;
+			} catch(e)
+			{
+				return 0;
+			}
+		}.bind(this, sortRow));
+
+		// write back
+		data.each(function(col, c) {
+			var mapping, q, cell, nodes, cellInputs;
+
+			$A(col).each(function(c, item, r)
+			{
+				cell = this.nodes.tbody.rows[r].cells[c];
+				cellInputs = this._getWeightCellInputs(cell);
+				if (r == 0 && this.getType() == 'weight')
+				{
+					mapping = ["normalized", "merged", "lo", "hi"];
+					for (q = 0; q < mapping.length; q++)
+					{
+						cellInputs[mapping[q]].value=item.inputsValues[mapping[q]];
+					}
+				}
+				else if (r == 1 && this.getType() == 'subtotal')
+				{
+					// ??
+					nodes = $A(cell.getElementsByTagName("input"));
+					nodes.pop().value = item.value;
+				}
+				else
+				{
+					cell.down("input").value = item.value;
+				}
+			}.bind(this, c))
+		}.bind(this));
+
+
+		this.updateAllRangeStartValues(); // can't know if after sorting current node was moved forward or backward.
 	},
 
 	addColumn: function()
 	{
+		// todo: use templates.
+
 		var
 			rowCount = this.nodes.tbody.rows.length,
 			i,
@@ -1819,9 +2047,18 @@ Backend.DeliveryZone.WeightTable.prototype = {
 			node = document.createElement('td');
 			node2 = document.createElement('input');
 			this.nodes.tbody.rows[i].appendChild(node);
+			node = $(node);
+			if (node.up("tr").hasClassName("weightRow") || node.up("tr").hasClassName("subtotalRow")) // header rows
+			{
+				// ~ structure for range start value
+				node.innerHTML='<div class="rangeStart"><span class="rangeStartValue"></span> -</div>';
+				// ~
+			}
+
 			node.appendChild(node2);
 			node2 = $(node2);
 			node2.addClassName("number");
+
 			if(node2.up("tr").hasClassName("weightRow"))
 			{
 				node2.hide();
@@ -1857,6 +2094,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 		$A(this.nodes.root.getElementsByClassName("UnitConventer_NormalizedWeight")).each(
 			function(node)
 			{
+				var prefix = "";
 				node = $(node);
 				if(false == node.hasClassName("observed"))
 				{
@@ -1866,28 +2104,33 @@ Backend.DeliveryZone.WeightTable.prototype = {
 						return; // continue
 					}
 					inputs = this._getWeightCellInputs(node);
-					if(inputs.hi == null || inputs.lo == null || inputs.merged == null)
+					if (node.hasClassName("rangeStartValue"))
+					{
+						prefix = "rangeStart_";
+					}
+					if (inputs[prefix+"hi"] == null || inputs[prefix+"lo"] == null || inputs[prefix+"merged"] == null)
 					{
 						return;
 					}
-					Event.observe(inputs.merged, "focus", this.onMergedWeightFocus.bindAsEventListener(this));
-					Event.observe(inputs.hi, "blur", this.onBlurHiOrLo.bindAsEventListener(this));
-					Event.observe(inputs.lo, "blur", this.onBlurHiOrLo.bindAsEventListener(this));
-					Event.observe(inputs.hi, "focus", this.registerFocusOnHiOrLo.bindAsEventListener(this));
-					Event.observe(inputs.lo, "focus", this.registerFocusOnHiOrLo.bindAsEventListener(this));
+
+					Event.observe(inputs[prefix + "merged"], "focus", this.onMergedWeightFocus.bindAsEventListener(this));
+					Event.observe(inputs[prefix + "hi"], "blur", this.onBlurHiOrLo.bindAsEventListener(this));
+					Event.observe(inputs[prefix + "lo"], "blur", this.onBlurHiOrLo.bindAsEventListener(this));
+					Event.observe(inputs[prefix + "hi"], "focus", this.registerFocusOnHiOrLo.bindAsEventListener(this));
+					Event.observe(inputs[prefix + "lo"], "focus", this.registerFocusOnHiOrLo.bindAsEventListener(this));
 					node.addClassName("observed");
 					node.hide();
-					inputs.lo.hide();
-					if (inputs.loAbbr)
+					inputs[prefix + "lo"].hide();
+					if (inputs[prefix + "loAbbr"])
 					{
-						inputs.loAbbr.hide();
+						inputs[prefix + "loAbbr"].hide();
 					}
-					inputs.hi.hide();
-					if (inputs.hiAbbr)
+					inputs[prefix + "hi"].hide();
+					if (inputs[prefix + "hiAbbr"])
 					{
-						inputs.hiAbbr.hide();
+						inputs[prefix + "hiAbbr"].hide();
 					}
-					inputs.merged.show();
+					inputs[prefix + "merged"].show();
 				}
 			}.bind(this)
 		);
@@ -1926,12 +2169,13 @@ Backend.DeliveryZone.WeightTable.prototype = {
 		return [hiValue, loValue];
 	},
 
-	updateMergedWeightFieldValue: function(node)
+	updateMergedWeightFieldValue: function(cell)
 	{
 		var
-			inputs = this._getWeightCellInputs(node),
+			inputs = this._getWeightCellInputs(cell),
 			values,
 			multipliers = this.getWeightMultipliers(this.nodes.unitsTypeField.value);
+
 		value = Math.round((inputs.normalized.value / multipliers[0]) * 1000) / 1000;
 		if(this.nodes.unitsTypeField.value == "METRIC")
 		{
@@ -1941,21 +2185,39 @@ Backend.DeliveryZone.WeightTable.prototype = {
 		{
 			inputs.merged.value = value;
 		}
+		
+		if (inputs.rangeStart_normalized)
+		{
+			value = Math.round((inputs.rangeStart_normalized.value / multipliers[0]) * 1000) / 1000;
+			if(this.nodes.unitsTypeField.value == "METRIC")
+			{
+				inputs.rangeStart_merged.value = value.toFixed(3);
+			}
+			else
+			{
+				inputs.rangeStart_merged.value = value;
+			}
+		}
 	},
 
-	updateNormalizedWeightFieldValue : function(td)
+	updateNormalizedWeightFieldValue : function(cell)
 	{
 		var
-			inputs = this._getWeightCellInputs(td),
+			inputs = this._getWeightCellInputs(cell),
 			multipliers = this.getWeightMultipliers(this.nodes.unitsTypeField.value);
+		inputs.normalized.value = (inputs.hi.value * multipliers[0]) + (inputs.lo.value * multipliers[1]);
 
-		inputs.normalized.value = (inputs.hi.value * multipliers[0]) + (inputs.lo.value * multipliers[1]);;
+		if (inputs.rangeStart_normalized)
+		{
+			inputs.rangeStart_normalized.value = (inputs.rangeStart_hi.value * multipliers[0]) + (inputs.rangeStart_lo.value * multipliers[1]);
+		}
 	},
 
 	switchUnitTypes : function()
 	{
 		this.nodes.unitsTypeField.value = this.nodes.unitsTypeField.value == "METRIC" ? "ENGLISH" : "METRIC";
 		this.showInWeightUnits();
+		this.updateAllRangeStartValues();
 	},
 
 	showInWeightUnits : function()
@@ -1972,21 +2234,27 @@ Backend.DeliveryZone.WeightTable.prototype = {
 		}
 		var multipliers = this.getWeightMultipliers(this.nodes.unitsTypeField.value);
 
-		var i, input;
+		var i, input, cell;
 		for(i = 0; i<this.nodes.tbody.rows[0].cells.length - 1; i++)
 		{
-			input = $(this.nodes.tbody.rows[0].cells[i]).down("input");
+			cell = $(this.nodes.tbody.rows[0].cells[i]);
 
-			if(input && isNaN(input.value) == false)
-			{
-				normalizedValue = input.value;
-				var inputs = this._getWeightCellInputs(input);
+			try {
+				var inputs = this._getWeightCellInputs(cell);
 				values = this._convertToHiAndLoWeightUnits(inputs.normalized.value);
 				inputs.hi.value = values[0];
 				inputs.lo.value = values[1];
 
-				this.updateMergedWeightFieldValue($(input).up("td"));
-			}
+				if (inputs.rangeStart_normalized)
+				{
+					values = this._convertToHiAndLoWeightUnits(inputs.rangeStart_normalized.value);
+					inputs.rangeStart_hi.value = values[0];
+					inputs.rangeStart_lo.value = values[1];
+				}
+				this.updateMergedWeightFieldValue(cell);
+
+			} catch(e) { }
+			
 		}
 	},
 

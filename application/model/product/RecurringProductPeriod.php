@@ -41,31 +41,54 @@ class RecurringProductPeriod extends MultilingualObject
 		return parent::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
-	public static function getRecordSetArrayByProduct($productOrID)
+	public static function getRecordSetArrayByProduct($productOrID, $filter = null)
 	{
-		return self::getRecordSetArray(self::getAsignedToFilter($productOrID));
+		return self::getRecordSetArray(self::getAsignedToFilter($productOrID, $filter));
 	}
 
-	public static function getRecordSetByProduct($productOrID)
+	public static function getRecordSetByProduct($productOrID, $filter = null)
 	{
-		return self::getRecordSet(self::getAsignedToFilter($productOrID));
+		return self::getRecordSet(self::getAsignedToFilter($productOrID, $filter));
 	}
 
-	private static function getAsignedToFilter($productOrID)
+	private static function getAsignedToFilter($productOrID, $filter=null)
 	{
+		if (!$filter)
+		{
+			$filter = new ARSelectFilter();
+		}
 		if (!is_numeric($productOrID) && $productOrID instanceof Product == false)
 		{
 			throw new Exception('getAsignedToFilter() excpects argument to be instance of Product');
 		}
-		$f = new ARSelectFilter();
-		$f->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), is_numeric($productOrID) ? $productOrID : $productOrID->getID()));
-		return $f;
+		$filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), is_numeric($productOrID) ? $productOrID : $productOrID->getID()));
+
+		return $filter;
 	}
 
 	public static function getInstanceByID($recordID, $loadRecordData = false)
 	{
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData);
 	}
+
+	public static function getRecordSetArrayByIDs($recordIDs, $loadRecordData = false)
+	{
+		if (!is_array($recordIDs))
+		{
+			$recordIDs = array($recordIDs);
+		}
+		$filter = new ARSelectFilter();
+		$filter->setCondition(new InCond(new ARFieldHandle(__CLASS__, 'ID'), $recordIDs));
+		// ActiveRecordModel::getRecordSetArray() will not get required setup and period prices!
+		$rs = ActiveRecordModel::getRecordSet(__CLASS__, $filter);
+		$result = array();
+		foreach($rs->toArray() as $item)
+		{
+			$result[$item['ID']] = $item;
+		}
+		return $result;
+	}
+
 
 	public function toArray($currencyID=null)
 	{
@@ -82,15 +105,14 @@ class RecurringProductPeriod extends MultilingualObject
 			while(false != ($item = $rs->shift()))
 			{
 				$itemArray = $item->toArray();
-				$type = $item->type->get();
-				if (array_key_exists($type, $mapping))
+				if ($itemArray['type'] == ProductPrice::TYPE_SETUP_PRICE || $itemArray['type'] == ProductPrice::TYPE_PERIOD_PRICE)
 				{
-					$array[$mapping[$type]][$itemArray['currencyID']] = $itemArray;
+					$array[$mapping[$itemArray['type']]][$itemArray['currencyID']] = $itemArray;
 					if (array_key_exists($itemArray['currencyID'], $currencies) == false)
 					{
 						$currencies[$itemArray['currencyID']] = Currency::getInstanceByID($itemArray['currencyID']);
 					}
-					$array[$mapping[$type]]['formated_price'][$itemArray['currencyID']] = $currencies[$itemArray['currencyID']]->getFormattedPrice($itemArray['price']);
+					$array[$mapping[$itemArray['type']]]['formated_price'][$itemArray['currencyID']] = $currencies[$itemArray['currencyID']]->getFormattedPrice($itemArray['price']);
 				}
 			}
 		}

@@ -6,6 +6,7 @@
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
 {includeJs file="backend/CssEditor.js"}
 {includeJs file="backend/Theme.js"}
+
 {includeJs file="library/TabControl.js"}
 {includeCss file="library/TabControl.css"}
 {includeJs file="library/editarea/edit_area_full.js"}

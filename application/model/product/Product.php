@@ -110,6 +110,8 @@ class Product extends MultilingualObject
 		$schema->registerField(new ArField("fractionalStep", ARFloat::instance(8)));
 		$schema->registerField(new ArField("position", ARInteger::instance()));
 		$schema->registerField(new ArField("categoryIntervalCache", ARText::instance()));
+		
+		$schema->registerField(new ArField("isRecurring", ARBool::instance()));
 	}
 
 	/**
@@ -1508,6 +1510,31 @@ class Product extends MultilingualObject
 		}
 
 		return $matrix;
+	}
+
+	public function getRecurringProductPeriodById($recurringID, $returnDefaultIfNotFound = false)
+	{
+		$filter = new ARSelectFilter();
+		$filter->setCondition(
+			new EqualsCond(new ARFieldHandle('RecurringProductPeriod', 'ID'), $recurringID));
+		$rs = RecurringProductPeriod::getRecordSetByProduct($this, $filter);
+		if ($rs->size() == 0)
+		{
+			return $returnDefaultIfNotFound ? $this->getDefaultRecurringProductPeriod() :  null;
+		}
+		return $rs->shift();
+	}
+
+	public function getDefaultRecurringProductPeriod()
+	{
+		$filter = new ARSelectFilter();
+		$filter->setLimit(1);
+		$rs = RecurringProductPeriod::getRecordSetByProduct($this, $filter);
+		if ($rs->size() == 0)
+		{
+			return null;
+		}
+		return $rs->shift();
 	}
 
 	public function serialize()
