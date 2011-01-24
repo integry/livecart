@@ -348,7 +348,7 @@ class ProductPrice extends ActiveRecordModel
 	public function getUserPrices(User $user = null)
 	{
 		$id = $this->getGroupId($user);
-		$rules = unserialize($this->serializedRules->get());
+		$rules = is_array($this->serializedRules->get()) ? $this->serializedRules->get() : unserialize($this->serializedRules->get());
 		$found = array();
 
 		if (is_array($rules))
