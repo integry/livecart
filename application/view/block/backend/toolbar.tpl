@@ -54,7 +54,7 @@
 			addIcon: "{/literal}{link controller=backend.backendToolbar action=addIcon}?id=_id_&position=_position_{literal}",
 			removeIcon: "{/literal}{link controller=backend.backendToolbar action=removeIcon}?id=_id_&position=_position_{literal}",
 			sortIcons: "{/literal}{link controller=backend.backendToolbar action=sortIcons}?order=_order_{literal}",
-			lastViewed: "{/literal}{link controller=backend.backendToolbar action=lastViewed}{literal}"
+			lastViewed: "{/literal}{link controller=backend.backendToolbar action=lastViewed query='where=__where__'}{literal}"
 		}
 	);
 

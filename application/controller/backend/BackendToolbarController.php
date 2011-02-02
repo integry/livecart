@@ -15,13 +15,20 @@ class BackendToolbarController extends StoreManagementController
 {
 	public function lastViewed()
 	{
+		$request = $this->getRequest();
+		$where = $request->get('where');
 		$response = new ActionResponse();
 		$response->set('randomToken', substr(md5(time().mt_rand(1,9999999999)),0,8));
-		$response->set('lastViewed', 
-			BackendToolbarItem::sanitizeItemArray(
-				BackendToolbarItem::getUserToolbarItems(array(BackendToolbarItem::TYPE_PRODUCT, BackendToolbarItem::TYPE_USER, BackendToolbarItem::TYPE_ORDER),null, 'DESC')
-			)
+		$response->set('where', $where);
+		$lastViewed = BackendToolbarItem::sanitizeItemArray(
+			BackendToolbarItem::getUserToolbarItems(array(BackendToolbarItem::TYPE_PRODUCT, BackendToolbarItem::TYPE_USER, BackendToolbarItem::TYPE_ORDER),null, 'DESC')
 		);
+		$itemsByType = array();
+		foreach($lastViewed as $item)
+		{
+			$itemsByType[$item['type']][] = $item;
+		}
+		$response->set('itemsByType', $itemsByType);
 		return $response;
 	}
 
