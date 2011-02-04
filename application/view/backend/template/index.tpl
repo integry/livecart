@@ -16,6 +16,9 @@
 {include file="layout/backend/header.tpl"}
 
 <div id="templatePageContainer">
+
+	{include file="backend/quickSearch/form.tpl" limit=10 hint=_hint_template_search formid="TemplateSearch" classNames="SearchableTemplate"}
+	
 	<div class="treeContainer">
 		<div id="templateBrowser" class="treeBrowser"></div>
 
@@ -54,18 +57,19 @@
 
 {literal}
 <script type="text/javascript">
-	var settings = new Backend.Template({/literal}{$categories}{literal});
-	settings.urls['edit'] = '{/literal}{link controller=backend.template action=edit}?file=_id_&tabid=_tabid_{literal}';
-	settings.urls['empty'] = '{/literal}{link controller=backend.template action=emptyPage}{literal}';
-	settings.urls['templateData'] = '{/literal}{link controller=backend.template action=templateData}?file=_id_&tabid=_tabid_&theme=_theme_&version=_version_{literal}';
-	settings.translations['_tab_title_new'] = "{/literal}{t _tab_title_new}{literal}";
-	settings.setTabControlInstance(
+	// creates global variable backendTemplateInstance
+	backendTemplateInstance = new Backend.Template({/literal}{$categories}{literal});
+	backendTemplateInstance.urls['edit'] = '{/literal}{link controller=backend.template action=edit}?file=_id_&tabid=_tabid_{literal}';
+	backendTemplateInstance.urls['empty'] = '{/literal}{link controller=backend.template action=emptyPage}{literal}';
+	backendTemplateInstance.urls['templateData'] = '{/literal}{link controller=backend.template action=templateData}?file=_id_&tabid=_tabid_&theme=_theme_&version=_version_{literal}';
+	backendTemplateInstance.translations['_tab_title_new'] = "{/literal}{t _tab_title_new}{literal}";
+	backendTemplateInstance.setTabControlInstance(
 		TabControl.prototype.getInstance(
 			'templateTabContainer',
 			Backend.Template.prototype.getTabUrl,
 			Backend.Template.prototype.getContentTabId,
 			{
-				afterClick:settings.tabAfterClickCallback.bind(settings)
+				afterClick:backendTemplateInstance.tabAfterClickCallback.bind(backendTemplateInstance)
 			}
 		)
 	);

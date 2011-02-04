@@ -21,7 +21,7 @@
 		{block BACKEND-TOOLBAR-AFTER-BUTTONS}
 
 		<li id="toolbarQS">
-			{include file="backend/quickSearch/form.tpl" formid="TBQuickSearch"}
+			{include file="backend/quickSearch/form.tpl" formid="TBQuickSearch" classNames="-SearchableTemplate"}
 		</li>
 
 		{block BACKEND-TOOLBAR-BEFORE-LASTVIEWED}

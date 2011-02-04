@@ -15,7 +15,7 @@
 
 <div id="settingsContainer" class="maxHeight h--50">
 	<div class="treeContainer">
-		{include file="backend/quickSearch/form.tpl" limit=10 hint=_hint_settings_search formid="SettingsSearch" classNames="SearchableItem"}
+		{include file="backend/quickSearch/form.tpl" limit=10 hint=_hint_settings_search formid="SettingsSearch" classNames="SearchableItem,-SearchableTemplate"}
 		<div id="settingsBrowser" class="treeBrowser"></div>
 	</div>
 
@@ -28,7 +28,6 @@
 </div>
 
 <div id="activeSettingsPath" ></div>
-
 {literal}
 <script type="text/javascript">
 	var settings = new Backend.Settings({/literal}{$categories}, {$settings}{literal});

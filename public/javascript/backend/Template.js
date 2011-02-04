@@ -531,9 +531,6 @@ Backend.EmailTemplateHandler.prototype =
 
 			body.value = editAreaLoader.getValue('body_'+this.tabid);
 			html.value = editAreaLoader.getValue('html_'+this.tabid);
-			
-
-		
 			var langs = $$('#'+this.tabid+'Content .languageFormContent textarea');
 			if (langs)
 			{
@@ -543,7 +540,7 @@ Backend.EmailTemplateHandler.prototype =
 				}
 			}
 			new LiveCart.AjaxRequest(this.form, null, this.saveComplete.bind(this));
-		} catch(e) {alert(e);}
+		} catch(e) {}
 		return false;
 	},
 

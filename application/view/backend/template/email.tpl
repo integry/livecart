@@ -41,17 +41,19 @@
 
 {literal}
 <script type="text/javascript">
-	var settings = new Backend.Template({/literal}{$categories}{literal});
-	settings.urls['edit'] = '{/literal}{link controller=backend.template action=editEmail}?file=_id_&tabid=_tabid_{literal}';
-	settings.urls['empty'] = '{/literal}{link controller=backend.template action=emptyPage}{literal}';
-	settings.translations['_tab_title_new'] = "{/literal}{t _tab_title_new}{literal}";
-	settings.setTabControlInstance(
+
+	// creates global variable backendTemplateInstance
+	backendTemplateInstance = new Backend.Template({/literal}{$categories}{literal});
+	backendTemplateInstance .urls['edit'] = '{/literal}{link controller=backend.template action=editEmail}?file=_id_&tabid=_tabid_{literal}';
+	backendTemplateInstance .urls['empty'] = '{/literal}{link controller=backend.template action=emptyPage}{literal}';
+	backendTemplateInstance .translations['_tab_title_new'] = "{/literal}{t _tab_title_new}{literal}";
+	backendTemplateInstance .setTabControlInstance(
 		TabControl.prototype.getInstance(
 			'templateTabContainer',
 			Backend.Template.prototype.getTabUrl,
 			Backend.Template.prototype.getContentTabId,
 			{
-				afterClick:settings.tabAfterClickCallback.bind(settings)
+				afterClick:backendTemplateInstance .tabAfterClickCallback.bind(backendTemplateInstance )
 			}
 		)
 	);

@@ -107,6 +107,7 @@ class Template
 				{
 					$res[$file->getFileName()]['id'] = $idPrefix . $id;
 					$res[$file->getFileName()]['isCustom'] = !file_exists(self::getOriginalFilePath($id));
+					$res[$file->getFileName()]['path'] = $file->getPathName(); // for search
 
 					if (substr($id, 0, 7) == 'module/')
 					{
@@ -413,7 +414,41 @@ class Template
 		}
 
 		return $ret;
-}
+	}
+
+	public static function getFiles()
+	{
+		$application=ActiveRecordModel::getApplication();
+		$files = Template::getTree();
+		$dirs = $application->getConfigContainer()->getViewDirectories();
+
+		array_shift($dirs);
+		foreach ($dirs as $d)
+		{
+			$d = $d[1];
+			$rel = $application->getRenderer()->getRelativeTemplatePath($d);
+			$rel = str_replace('application/view', '', $rel);
+
+			$root = array();
+			$f =& $root;
+			$ids = array();
+			foreach (explode('/', $rel) as $part)
+			{
+				if ($part)
+				{
+					$ids[] = $part;
+					$root[$part] = array('id' => implode('/', $ids), 'subs' => array());
+					$root =& $root[$part]['subs'];
+				}
+			}
+
+			$root = Template::getTree($d, null, $rel);
+			$files = array_merge_recursive($files, $f);
+
+			unset($root, $f);
+		}
+		return $files;
+	}
 }
 
 ?>

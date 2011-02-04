@@ -55,3 +55,26 @@ fieldset.controls
 	float:right;
 	margin-top:-38px;
 }
+
+#TemplateSearchResultOuterContainer
+{
+	left:7px !important;
+	top:44px !important;
+	width:244px;
+}
+
+#TemplateSearchResultOuterContainer li a
+
+{
+	color: gray
+}
+
+#TemplateSearchResultOuterContainer li a strong
+{
+	color: #00008B;
+}
+
+#TemplateSearchQuery
+{
+	width:240px !important;
+}
