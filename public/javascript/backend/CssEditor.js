@@ -89,6 +89,9 @@ Backend.CssEditor.prototype =
 		this.treeBrowser.hideFeedback();
 		Event.observe($('cancel_'+tabid), 'click', this.cancel.bindAsEventListener(this, tabid));
 		new Backend.CssEditorHandler($('templateForm_'+tabid), this, tabid);
+
+		Event.observe($("minimenu_"+tabid), 'change', this.miniMenuControlChanged.bindAsEventListener(this, tabid));
+		this.updateMiniMenuVisibility(tabid);
 	},
 
 	cancel: function(event, tabid)
@@ -181,6 +184,81 @@ Backend.CssEditor.prototype =
 		{
 			this.treeBrowser.clearSelection();
 		}
+	},
+
+	refillDropdown: function(prefix, tabid, data, value)
+	{
+		var select = $(prefix+'_'+tabid);
+		value = typeof value == "undefined" || value === null ? select.value : value;
+		select.innerHTML = "";
+		$H(data).each(
+			function(select, item)
+			{
+				var option = document.createElement("option");
+				select.appendChild(option);
+				option.value=item[0];
+				option.innerHTML = item[1];
+			}.bind(this, select)
+		);
+		select.value = value;
+	},
+
+	updateMiniMenuVisibility: function(tabid)
+	{
+		$A($("minimenu_"+tabid).getElementsByTagName("select")).each(
+			function(item)
+			{
+				if (item.getElementsByTagName("option").length <= 1)
+				{
+					$(item).addClassName("hidden");
+				}
+				else
+				{
+					$(item).removeClassName("hidden");
+				}
+			}
+		);
+	},
+
+	miniMenuControlChanged: function(event, tabid)
+	{
+		if (event)
+		{
+			Event.stop(event);
+		}
+		var
+			element = Event.element(event),
+			info = this.openedFiles.find(function(item) {return item[1] == tabid;}),
+			indicator = element.up(".minimenu").down("span"),
+			url,
+			version;
+		indicator.addClassName("progressIndicator");
+		if (element.hasClassName("version"))
+		{
+			version = element.value;
+		}
+		else if (element.hasClassName("othertheme"))
+		{
+			$("theme_" + tabid).value = element.value;
+		}
+		url = this.templateDataUrl(tabid, info[0], version);
+		new LiveCart.AjaxRequest(url, indicator, this.miniMenuControlChangedResponse.bind(this, tabid));
+	},
+
+	miniMenuControlChangedResponse: function(tabid, transport)
+	{
+		editAreaLoader.setValue('code_'+tabid, transport.responseData.code);
+		this.refillDropdown('version',tabid, transport.responseData.backups);
+		this.updateMiniMenuVisibility(tabid);
+	},
+
+	templateDataUrl: function(tabid, id, version)
+	{
+		if (typeof version == "undefined")
+		{
+			version = "";
+		}
+		return this.urls['templateData'].replace('_tabid_', tabid).replace('_id_', id).replace('_version_', version);
 	}
 }
 
@@ -207,8 +285,7 @@ Backend.CssEditorHandler.prototype =
 			allow_toggle: false,
 			allow_resize: true,
 			change_callback: "Backend.CssEditorHandler.prototype.editAreaChangeCallback"
-			}
-		);
+		});
 
 		// set cursor at the first line
 		/* editAreaLoader.setSelectionRange('code_'+this.tabid, 0, 0); */
@@ -224,14 +301,19 @@ Backend.CssEditorHandler.prototype =
 
 	saveComplete: function(originalRequest)
 	{
-		Backend.Theme.prototype.cssTabNotChanged(this.tabid);
-		TabControl.prototype.getInstance("tabContainer").reloadTabContent($("tabColors"));
-		Backend.Theme.prototype.styleTabNotChanged(this.tabid);
+		try {
+			Backend.Theme.prototype.cssTabNotChanged(this.tabid);
+			TabControl.prototype.getInstance("tabContainer").reloadTabContent($("tabColors"));
+			Backend.Theme.prototype.styleTabNotChanged(this.tabid);
 
-		if (opener)
-		{
-			opener.location.reload();
-		}
+			if (opener)
+			{
+				opener.location.reload();
+			}
+		} catch(e) {}
+
+		this.owner.refillDropdown('version',this.tabid, originalRequest.responseData.css.backups);
+		this.owner.updateMiniMenuVisibility(this.tabid);
 	},
 
 	editAreaChangeCallback: function(id)

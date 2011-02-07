@@ -405,17 +405,16 @@ Backend.TemplateHandler.prototype =
 		this.owner = owner;
 		this.tabid = tabid;
 		Event.observe(this.form, 'submit', this.submit.bindAsEventListener(this));
-
-try {
-		editAreaLoader.init({
-			id : "code_"+this.tabid,		// textarea id
-			syntax: "html",			// syntax to be uses for highgliting
-			start_highlight: true,		// to display with highlight mode on start-up
-			allow_toggle: false,
-			allow_resize: true
-			}
-		);
-	} catch(e) {}
+		try {
+			editAreaLoader.init({
+				id : "code_"+this.tabid,		// textarea id
+				syntax: "html",			// syntax to be uses for highgliting
+				start_highlight: true,		// to display with highlight mode on start-up
+				allow_toggle: false,
+				allow_resize: true
+				}
+			);
+		} catch(e) {}
 	},
 
 	submit: function(e)

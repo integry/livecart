@@ -87,6 +87,15 @@ class CssEditorController extends StoreManagementController
 		$form->set('file', $css->getTheme());
 		return $form;
 	}
+
+	public function templateData()
+	{
+		$request = $this->getRequest();
+		$version = $request->get('version');
+		$css = new EditedCssFile($request->get('file'),$version);
+		return new JSONResponse($css->toArray());
+	}
+
 }
 
 ?>

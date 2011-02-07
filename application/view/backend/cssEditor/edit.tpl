@@ -15,7 +15,10 @@
 		</p>
 		<div class="clear" style="margin-bottom: 1em;"></div>
 	{/if}
-
+	<div class="minimenu" id="minimenu_{$tabid}">
+		<span class="progressIndicator" style="display:none;"></span>
+		{selectfield class="version" id="version_`$tabid`" options=$template.backups}
+	</div>
 	{textarea name="code" id="code_{$tabid}" class="code"}
 	{hidden name="file" id="file_{$tabid}"}
 
