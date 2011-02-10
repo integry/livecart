@@ -14,6 +14,7 @@ abstract class ShippingRateCalculator
 	protected $destCountry;
 	protected $destZip;
 	protected $destState;
+	protected $destCity;
 	protected $sourceCountry;
 	protected $sourceZip;
 	protected $weight;
@@ -33,6 +34,11 @@ abstract class ShippingRateCalculator
 	public function setDestState($state)
 	{
 		$this->destState = $state;
+	}
+
+	public function setDestCity($city)
+	{
+		$this->destCity = $city;
 	}
 
 	public function setSourceCountry($country)

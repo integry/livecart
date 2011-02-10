@@ -616,7 +616,10 @@ class CheckoutController extends FrontendController
 		{
 			foreach($item['Order']['cartItems'] as $orderedItem)
 			{
-				$recurringIDs[] = $orderedItem['recurringID'];
+				if (array_key_exists('recurringID', $orderedItem))
+				{
+					$recurringIDs[] = $orderedItem['recurringID'];
+				}
 			}
 		}
 		if (count($recurringIDs))
