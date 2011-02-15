@@ -7,7 +7,6 @@
  
 class ExpresspastsParser
 {
-
 	public function fetch()
 	{
 		$urls = array();

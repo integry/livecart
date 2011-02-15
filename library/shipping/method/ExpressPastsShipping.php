@@ -9,7 +9,7 @@ include_once(dirname(__file__) . '/../library/expresspasts/ExpresspastsZone.php'
  * @package library.shipping.method
  * @author Integry Systems
  */
-class ExpressPasts extends ShippingRateCalculator
+class ExpressPastsShipping extends ShippingRateCalculator
 {
 
 	public function getProviderName()
@@ -55,6 +55,7 @@ class ExpressPasts extends ShippingRateCalculator
 		foreach($data as $type => $typeData)
 		{
 			$foundPrice = null;
+			$hasFoundPrice = false;
 			foreach($typeData as $weight=>$prices)
 			{
 				if ($weight < $this->weight)
@@ -63,18 +64,22 @@ class ExpressPasts extends ShippingRateCalculator
 				}
 				else
 				{
+					$hasFoundPrice = true;
 					break; // are sorted by weight.
 				}
 			}
-
-			if ($foundPrice)
+			if ($hasFoundPrice)
 			{
-				$r = new ShippingRateResult();
-				$r->setServiceName(self::$names[$type]);
-				$r->setCost($foundPrice['zone'.(string)$zone], 'LVL');
-				$r->setClassName(get_class($this));
-				$r->setProviderName($this->getProviderName());
-				$return->add($r);
+				$zoneName = 'zone'.(string)$zone;
+				if (array_key_exists($zoneName, $foundPrice) && $foundPrice[$zoneName] !== null)
+				{
+					$r = new ShippingRateResult();
+					$r->setServiceName(self::$names[$type]);
+					$r->setCost($foundPrice[$zoneName], 'LVL');
+					$r->setClassName(get_class($this));
+					$r->setProviderName($this->getProviderName());
+					$return->add($r);
+				}
 			}
 		}
 		return $return;
@@ -101,5 +106,4 @@ class ExpressPasts extends ShippingRateCalculator
 		));
 	}
 }
-
 ?>
