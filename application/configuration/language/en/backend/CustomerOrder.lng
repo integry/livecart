@@ -22,7 +22,9 @@ _order_number=Order #
 # Errors
 _err_user_has_no_billing_or_shipping_address=User has no default billing or shipping address
 _invalid_status=Invalid status
-_cannot_stop_futher_rebills=Cannot stop futher rebills
+_cannot_cancel_subscription=Cannot cancel subscription
+_cancel_subscription_payment_processor_error=Payment processor returned an error while attempting to cancel further rebills. It would be necessary to cancel the rebills manually from the payment processor merchant panel to stop further payments. Mark this order as expired anyway?
+
 
 _all_users=All users
 _default_user_group=Default user group
@@ -233,5 +235,5 @@ _recurring_status=Recurring status
 _recurring_status_active=active
 _recurring_status_expired=expired
 _remaining_rebills=Remaining rebills
-_stop_futher_rebills=Stop further rebills
-_stop_futher_rebills_question=Stop further rebills for order [_1]?
+_cancel_subscription=Cancel subscription
+_cancel_subscription_question=Cancel subscription for order [_1]?

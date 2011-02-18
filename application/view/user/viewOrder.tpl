@@ -8,9 +8,8 @@
 <div id="content">
 
 	<h1>{t _view_order} {$order.invoiceNumber} ({$order.formatted_dateCompleted.date_long})</h1>
-
 		<fieldset class="container">
-
+		{include file="block/message.tpl"}
 		<label class="title">{t _order_id}:</label>
 		<label class="text">{$order.invoiceNumber}</label>
 		<div class="clear"></div>
@@ -27,6 +26,53 @@
 		<label class="text">{include file="user/orderStatus.tpl" order=$order}</label>
 		<div class="clear"></div>
 
+		{if $order.isRecurring}
+			<label class="title"></label>
+			<label class="text">
+				{if $subscriptionStatus > 0}
+					{t _active_subscription}
+				{else}
+					{t _inactive_subscription}
+				{/if}
+			</label>
+			<div class="clear"></div>
+
+			{* Rebills every x months *}
+			{foreach from=$recurringProductPeriodsByItemId item="period"}
+				<label class="title"></label>
+				{if $period.periodLength == 1}
+					{assign var="length" value=''}
+					{capture name="a" assign="period"}{t `$periodTypesSingle[$period.periodType]`}{/capture}
+				{else}
+					{assign var="length" value=$period.periodLength}
+					{capture name="a" assign="period"}{t `$periodTypesPlural[$period.periodType]`}{/capture}
+				{/if}
+				<label class="text">{maketext text=_rebills_every params=$length,$period}</label>
+				<div class="clear"></div>
+			{/foreach}
+
+			{if $nextRebillDate}
+				<label class="title">{t _next_rebill}:</label>
+				<label class="text">{$nextRebillDate.date_medium}</label>
+				<div class="clear"></div>
+			{/if}
+
+			<label class="title">{t _remaining_rebills}:</label>
+			<label class="text">{if $order.rebillsLeft != -1}{$order.rebillsLeft}{else}{t _remaining_rebills_till_canceled}{/if}
+				{if $canCancelRebills}
+					<span class="cancelFurtherRebills">
+						{if $currentPage > 1}
+							{assign var='rebillQuery' value="page=`$currentPage`"}
+						{else}
+							{assign var='rebillQuery' value=''}
+						{/if}
+						<a href="{link controller=user action=cancelFurtherRebills id=$order.ID query=$rebillQuery}" onclick="return confirm('{t _are_you_sure_want_to_cancel_subscription}');" />{t _cancel_this_subscription}</a>
+					</span>
+				{/if}
+			</label>
+			<div class="clear"></div>
+		{/if}
+
 		<p>
 			{if !$order.isCancelled && !'DISABLE_INVOICES'|config}
 				<a href="{link controller=user action=orderInvoice id=`$order.ID`}" target="_blank" class="invoice">{t _order_invoice}</a>
@@ -35,7 +81,6 @@
 		</p>
 
 		{foreach from=$order.shipments item="shipment" name="shipments"}
-
 			{if $shipment.items}
 
 				{if !$shipment.isShippable}
@@ -48,11 +93,9 @@
 				{else}
 					<h2>{t _ordered_products}</h2>
 				{/if}
-
 				{include file="user/shipmentEntry.tpl" downloadLinks=true}
 
 			{/if}
-
 		{/foreach}
 
 		{defun name="address"}
@@ -114,17 +157,6 @@
 				id=$order.ID
 				query='page=_000_'
 			}
-		{/if}
-
-		{if $canCancelRebills}
-			<div class="cancelFurtherRebills">
-				{if $currentPage > 1}
-					{assign var='rebillQuery' value="page=`$currentPage`"}
-				{else}
-					{assign var='rebillQuery' value=''}
-				{/if}
-				<a href="{link controller=user action=cancelFurtherRebills id=$order.ID query=$rebillQuery}" onclick="return confirm('{t _are_you_sure_want_to_cancel_further_rebills}');" />{t _cancel_further_rebills}</a>
-			</div>
 		{/if}
 
 		<h2 id="m_s_g">{t _support}</h2>

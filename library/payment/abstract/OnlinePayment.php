@@ -19,6 +19,11 @@ abstract class OnlinePayment extends TransactionPayment
 	 */
 	abstract public function isCapturedVoidable();
 
+	public function cancelRecurring()
+	{
+		return false;
+	}
+
 	protected function get3LetterCountryCode($twoLetterCode)
 	{
 		$countries = array(

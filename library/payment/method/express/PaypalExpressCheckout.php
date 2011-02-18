@@ -248,6 +248,44 @@ class PaypalExpressCheckout extends ExpressPayment
 		}
 		return true;
 	}
+
+	public function cancelRecurring($recurringItemID = null)
+	{
+		$paypal = $this->getHandler('ManageRecurringPaymentsProfileStatus');
+
+		$recurringItemIDs = array();
+		if ($recurringItemID !== null)
+		{
+			$recurringItemIDs[] = $recurringItemID;
+		}
+		else
+		{
+			$recurringItemIDs = array_keys($this->data['PayPalRecurringProfiles']);
+		}
+		$executionResponse = array();
+		foreach($recurringItemIDs as $recurringItemID)
+		{
+			if (
+				array_key_exists($recurringItemID, $this->data['PayPalRecurringProfiles'])
+				&& array_key_exists('CreateRecurringPaymentsProfileResponseDetails', $this->data['PayPalRecurringProfiles'][$recurringItemID])
+				&& array_key_exists('ProfileID', $this->data['PayPalRecurringProfiles'][$recurringItemID]['CreateRecurringPaymentsProfileResponseDetails'])
+			) {
+				$profileID = $this->data['PayPalRecurringProfiles'][$recurringItemID]['CreateRecurringPaymentsProfileResponseDetails']['ProfileID'];
+				$paypal->setRecurringProfileID($profileID);
+				$paypal->setAction('Cancel');
+				$executionResponse[$profileID] = $paypal->execute();
+			}
+		}
+		$success = true;
+		foreach($executionResponse as $ProfileID => $response)
+		{
+			if ($response->Ack != 'Success')
+			{
+				$success = false;
+			}
+		}
+		return $success;
+	}
 }
 
 ?>

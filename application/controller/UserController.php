@@ -438,6 +438,8 @@ class UserController extends FrontendController
 			}
 
 			$response = null;
+			$orderArray = $order->toArray();
+
 			if ($order->isRecurring->get() == true)
 			{
 				// find invoices
@@ -452,6 +454,22 @@ class UserController extends FrontendController
 				);
 				$f->setOrder(new ARFieldHandle('CustomerOrder','dateDue'));
 				$response = $this->getOrdersListResponse($this->loadOrders($f), $page, $perPage);
+
+				$recurringProductPeriods = array();
+				foreach ($order->getShipments() as $shipment)
+				{
+					foreach ($shipment->getItems() as $orderedItem)
+					{
+						$recurringProductPeriods[$orderedItem->getID()] =  RecurringItem::getInstanceByOrderedItem($orderedItem) -> toArray();
+					}
+				}
+				ClassLoader::import('application.model.product.RecurringProductPeriod');
+				ClassLoader::import('application.model.product.RecurringItem');
+				$response->set('nextRebillDate', $order->getNextRebillDate());
+				$response->set('periodTypesPlural', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL));
+				$response->set('periodTypesSingle', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_SINGLE));
+				$response->set('recurringProductPeriodsByItemId', $recurringProductPeriods);
+				$this->loadLanguageFile('Product');
 			}
 
 			if (!$response)
@@ -459,8 +477,9 @@ class UserController extends FrontendController
 				$response = new ActionResponse();
 			}
 
+			$response->set('subscriptionStatus', $order->getSubscriptionStatus());
 			$response->set('canCancelRebills', $order->canUserCancelRebills());
-			$response->set('order', $order->toArray());
+			$response->set('order', $orderArray);
 			$response->set('notes', $notes->toArray());
 			$response->set('user', $this->user->toArray());
 			$response->set('noteForm', $this->buildNoteForm());
@@ -1547,8 +1566,14 @@ class UserController extends FrontendController
 
 	public function cancelFurtherRebills()
 	{
+		ClassLoader::import('application.model.Currency');
+		ClassLoader::import('application.model.order.CustomerOrder');
+		ClassLoader::import('application.model.order.ExpressCheckout');
+		ClassLoader::import('application.model.order.Transaction');
+		ClassLoader::import('application.model.order.LiveCartTransaction');
 		$request = $this->getRequest();
 		$id = $request->get('id');
+
 		$page = $request->get('page');
 		$params = array('id'=>$id);
 		if ($page > 1)
@@ -1556,18 +1581,25 @@ class UserController extends FrontendController
 			$params['query'] = array('page'=>$page);
 		}
 
-		try {
-			$order = CustomerOrder::getInstanceById($id, true);
-			$userID = $this->user->getID();
-			if(
-				$order->userID->get()->getID()
-				&& $order->userID->get()->getID() == $userID
-				&& true == $order->canUserCancelRebills()
-			) {
+		$status = false;
+		$order = CustomerOrder::getInstanceById($id, true);
+		$userID = $this->user->getID();
+		if(
+			$order->userID->get()->getID()
+			&& $order->userID->get()->getID() == $userID
+			&& true == $order->canUserCancelRebills()
+		) {
+			$status = $order->cancelRecurring($this->getRequestCurrency());
+			if ($status != false)
+			{
 				$order->cancelFurtherRebills();
 			}
-		} catch(Exception $e) {}
-
+		} 
+		if ($status == false)
+		{
+			
+			$this->setErrorMessage($this->translate('_cannot_cancel_subscription_contantc_store_administrator'));
+		}
 		return new ActionRedirectResponse('user', 'viewOrder', $params);
 	}
 

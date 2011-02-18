@@ -219,5 +219,15 @@ _invoice_status_unpaid=unpaid
 _overdue=Overdue
 
 _x_pending_invoices=[quant,_1, pending invoice, pending invoices]
-_cancel_further_rebills=Cancel further rebills
-_are_you_sure_want_to_cancel_further_rebills=Are you sure want to cancel further rebills
+_cancel_this_subscription=Cancel this subscription
+_are_you_sure_want_to_cancel_subscription=Are you sure want to cancel subscription
+
+
+_active_subscription=Active subscription
+_inactive_subscription=Inactive/expired subscription
+_rebills_every=Rebills every [_1] [_2]
+_next_rebill=Next rebill
+_remaining_rebills=Remaining rebills
+_remaining_rebills_till_canceled=Till canceled
+
+_cannot_cancel_subscription_contantc_store_administrator=This subscription could not be cancelled right now. Please try again in a few minutes or contact store administrator

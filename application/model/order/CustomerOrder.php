@@ -2558,6 +2558,77 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		);
 	}
 
+	public function getNextRebillDate($today = null)
+	{
+		$ts = null;
+		if($today == null)
+		{
+			$today = 'CURRENT_DATE';
+		}
+		else if(is_numeric($today))
+		{
+			$ts = $today;
+		}
+		else
+		{
+			$ts = strtotime($today);
+		}
+		if ($ts)
+		{
+			$today = '0x'.bin2hex(date('Y-m-d', $ts));
+		}
+
+		$data = ActiveRecordModel::getDataBySql('
+			SELECT
+				ri.*,
+				COALESCE(lastInvoiceOrder.ID, co.ID) as CustomerOrderID,
+				COALESCE(lastInvoiceOrder.startDate, co.startDate) as startDate,
+				IF(
+					lastInvoiceOrder.ID IS NULL,'.
+					/* main order does not have endDate, because with different recurring periods it has more than one ending date. calculate end date from period start + recurringlan period length - 1 day (end date is 'including') */ 
+					self::sqlForEndDate() .',
+					lastInvoiceOrder.endDate
+				) as endDate,
+				IF(
+					lastInvoiceOrder.ID IS NOT NULL,'.
+					self::sqlForAddedDate('lastInvoiceOrder.startDate').' ,'.
+					self::sqlForAddedDate('co.startDate').'
+				) AS addedDate,
+				ri.ID as recurringItemID,
+				ri.periodType,
+				ri.periodLength,
+				ri.lastInvoiceID,
+				lastInvoiceOrder.parentID
+			FROM
+				RecurringItem ri
+				INNER JOIN OrderedItem oi ON ri.orderedItemId = oi.ID
+				INNER JOIN CustomerOrder co ON oi.customerOrderID = co.ID
+				INNER JOIN RecurringProductPeriod rpp ON ri.recurringID = rpp.ID
+				LEFT JOIN CustomerOrder lastInvoiceOrder ON lastInvoiceOrder.ID = ri.lastInvoiceID
+			WHERE 
+				(
+					co.ID = '.$this->getID().' 
+						OR
+					co.parentID = '.$this->getID().' 
+				)
+				AND
+				(
+					ri.rebillCount IS NULL
+						OR
+					ri.rebillCount > IF(ri.processedRebillCount IS NULL , 0, ri.processedRebillCount)
+				)
+		');
+
+		$date = null;
+		$locale = self::getApplication()->getLocale();
+		if (count($data) > 0)
+		{
+			$row = $data[0]; // if more??
+			$date = $locale->getFormattedTime(strtotime(date('Y-m-d',strtotime('+1 day', strtotime($row['endDate'])))));
+		}
+		return $date;
+	}
+
 	public static function getRecurringPeriodsEndingTodayArray($today=null)
 	{
 		$ts = null;
@@ -2906,6 +2977,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function cancelFurtherRebills()
 	{
+		
+		return ;
 		$id = $this->getID();
 		$userID = $this->userID->get()->getID();
 		$update = new ARUpdateFilter();
@@ -2925,24 +2998,68 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		ActiveRecord::updateRecordSet('CustomerOrder', $update);
 	}
 
-	public function canUserCancelRebills()
+	public function cancelRecurring($currencyID = 'USD')
+	{
+		// ~
+		// getTransaction()
+		$this->loadAll();
+		$transaction = new LiveCartTransaction($this, Currency::getValidInstanceById($currencyID));
+		// ~
+		$expressInstance = ExpressCheckout::getInstanceByOrder($this);
+		$handler = $expressInstance->getHandler($transaction);
+		$status = $handler->cancelRecurring();
+
+		return $status;
+	}
+
+	private $canUserCancelRebillsResult = null;
+
+	private $getSubscriptionStatusResult = null;
+
+	public function canUserCancelRebills($forceRecheck = false)
+	{
+		if ($forceRecheck || $this->canUserCancelRebillsResult === null)
+		{
+			$this->canUserCancelRebillsResult = $this->canUserCancelRebillsImpl($forceRecheck);
+		}
+		return $this->canUserCancelRebillsResult;
+	}
+
+	private function canUserCancelRebillsImpl($forceRecheck)
+	{
+		if (false == ActiveRecordModel::getApplication()->getConfig()->get('ALLOW_USER_TO_CANCEL_RECURRING_REBILLS', false))
+		{
+			return false; // forbidden in configuration.
+		}
+		return (boolean) $this->getSubscriptionStatus();
+	}
+
+	public function getSubscriptionStatus($forceRecheck = false) // 0 - inactive, 1 - active, 2 - ..
+	{
+		if ($forceRecheck || $this->getSubscriptionStatusResult === null)
+		{
+			$this->getSubscriptionStatusResult = $this->getSubscriptionStatusImpl($forceRecheck);
+		}
+		return $this->getSubscriptionStatusResult;
+	}
+
+	const INACTIVE_SUBSCRIPTION = 0;
+	const ACTIVE_SUBSCRIPTION = 1;
+
+	private function getSubscriptionStatusImpl($forceRecheck)
 	{
 		if ($this->isRecurring->get() == false)
 		{
 			return false; // not even a recurring order.
 		}
 
-		if (false == ActiveRecordModel::getApplication()->getConfig()->get('ALLOW_USER_TO_CANCEL_RECURRING_REBILLS', false))
-		{
-			return false; // forbidden in configuration.
-		}
-
 		$rebillsLeft = $this->rebillsLeft->get();
-
-		if ($rebillsLeft == -1 || $rebillsLeft > 0)
+		if ($rebillsLeft == -1 || $rebillsLeft > 0) // rebill forever or at least one more rebill
 		{
-			return true;
+			return self::ACTIVE_SUBSCRIPTION;
 		}
+
+		// if order is invoice
 		$filter = new ARSelectFilter();
 		$filter->setCondition(
 			new EqualsCond(
@@ -2953,10 +3070,10 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$filter->addField('(SELECT SUM(IF(CustomerOrder.rebillsLeft = -1, 1, 0 )))','','isInfinite');
 		$filter->setGrouping(new ARFieldHandle(__CLASS__, 'parentID'));
 		$data = ActiveRecordModel::getRecordSetArray(__CLASS__, $filter);
-		
-		if (count($data) == 1 && $data[0]['isInfinite'] > 0 || $data[0]['rebillsLeft'] > 0)
+
+		if (count($data) == 1 && ($data[0]['isInfinite'] > 0 || $data[0]['rebillsLeft'] > 0))
 		{
-			return true;
+			return self::ACTIVE_SUBSCRIPTION;
 		}
 
 		return false;

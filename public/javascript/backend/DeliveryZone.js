@@ -2080,7 +2080,14 @@ Backend.DeliveryZone.WeightTable.prototype = {
 					node3.addClassName(pair[1]);
 				}
 			}
-			name = $(node).previous().down("input").name;
+
+			name = $A($(node).previous().getElementsByTagName("input")).find( // don't use inputs from "rangeStart" container for copying input name.
+				function(input)
+				{
+					return $(input.parentNode).hasClassName("rangeStart") == false;
+				}
+			).name;
+
 			chunks = name.split("_");
 			chunks[1] = "new"+this.newColumnCount;
 			node2.name = chunks.join("_");

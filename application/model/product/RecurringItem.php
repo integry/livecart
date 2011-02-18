@@ -148,6 +148,17 @@ class RecurringItem extends ActiveRecordModel
 		$this->lastInvoiceID->set($order);
 		$this->save();
 	}
+
+	public function toArray()
+	{
+		$array = parent::toArray();
+		$currencyID = $array['OrderedItem']['CustomerOrder']['currencyID'];
+		$currency = Currency::getInstanceByID($currencyID);
+		$array['ProductPrice_setup']['formated_price'][$currencyID] = $currency->getFormattedPrice($array['setupPrice']);
+		$array['ProductPrice_period']['formated_price'][$currencyID] = $currency->getFormattedPrice($array['periodPrice']);
+		
+		return $array;
+	}
 }
 
 ?>

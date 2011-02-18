@@ -2093,6 +2093,7 @@ class OrderTest extends OrderTestCommon
 		$this->assertIntervalHasNoInvoicesToGenerate('2010-03-15', '2011-03-15');
 	}
 
+
 	public function testGenerateInvoices_longScenario()
 	{
 		// configruation
@@ -2214,9 +2215,6 @@ class OrderTest extends OrderTestCommon
 		// 2010-02-28
 		// 2010-03-01
 
-		
-		
-
 		$this->assertEquals(3, $order->getShipments()->size());
 		$this->assertEquals(-1, $order->rebillsLeft->get());
 
@@ -2286,6 +2284,75 @@ class OrderTest extends OrderTestCommon
 		$this->assertInvoices($generatedOrdersIDs, array(
 			'count' => array(0, 'period 3 expired'),
 		));
+
+	}
+
+
+	public function testGetNextRebillDate()
+	{
+		// config
+		$config = ActiveRecordModel::getApplication()->getConfig();
+		$config->set('RECURRING_BILLING_GENERATE_INVOICE', 0); // generate when period starts!
+		$config->save();
+
+		// two products
+		$product1 = $this->products[0];
+		$price1 = 10.01;
+		$period1 = $this->createRecurringProductPeriod($product1, 1, RecurringProductPeriod::TYPE_PERIOD_MONTH, 6); // each month, 6 times
+
+		// one empty order
+		$order = CustomerOrder::getNewInstance($this->user);
+		$order->save(true);
+
+		// added products
+		list($orderedItem1, $recurringItem1) = $this->addRecurringProduct($order, $product1, 1, $period1, 0, $price1);
+		$order->save();
+		$order->startDate->set('2011-01-01 00:00:00');
+		$order->finalize();
+		$order->save();
+
+		$date = $order->getNextRebillDate();
+		$this->assertEquals('2011-02-01', $date['date_short']);
+
+		$ids = CustomerOrder::generateRecurringInvoices('2011-02-01'); // 1
+
+		$date = $order->getNextRebillDate();
+		$this->assertEquals(1, count($ids));
+		$this->assertEquals('2011-03-01', $date['date_short']);
+
+		$ids = CustomerOrder::generateRecurringInvoices('2011-03-01'); // 2
+
+		$date = $order->getNextRebillDate();
+		$this->assertEquals(1, count($ids));
+		$this->assertEquals('2011-04-01', $date['date_short']);
+
+		$ids = CustomerOrder::generateRecurringInvoices('2011-04-01'); // 3
+
+		$date = $order->getNextRebillDate();
+		$this->assertEquals(1, count($ids));
+		$this->assertEquals('2011-05-01', $date['date_short']);
+
+		$ids = CustomerOrder::generateRecurringInvoices('2011-05-01'); // 4
+
+		$date = $order->getNextRebillDate();
+		$this->assertEquals(1, count($ids));
+		$this->assertEquals('2011-06-01', $date['date_short']);
+
+		$ids = CustomerOrder::generateRecurringInvoices('2011-06-01'); // 5
+
+		$date = $order->getNextRebillDate();
+		$this->assertEquals(1, count($ids));
+		$this->assertEquals('2011-07-01', $date['date_short']);
+
+		$ids = CustomerOrder::generateRecurringInvoices('2011-07-01'); // 6
+		$date = $order->getNextRebillDate();
+		$this->assertEquals(1, count($ids));
+		$this->assertEquals(null, $date);
+
+		$ids = CustomerOrder::generateRecurringInvoices('2011-08-01'); // 7
+		$date = $order->getNextRebillDate();
+		$this->assertEquals(0, count($ids));
+		$this->assertEquals(null, $date);
 
 	}
 
@@ -2391,23 +2458,18 @@ class OrderTest extends OrderTestCommon
 						}
 					}
 
-
-
 					foreach ($rule as $rebillsLeft)
 					{
 						$rebillsLeft = '_'.$rebillsLeft;
 						$this->assertTrue(array_key_exists($rebillsLeft, $rebillsLeftInDb), 'rebillsLeft: '.str_replace('_','', $rebillsLeft).' not found. RebillsLeft in database('.count(array_keys($rebillsLeftInDb)).'): '.str_replace('_', '', implode(',', array_keys($rebillsLeftInDb))) );
 						
 						$rebillsLeftInDb[$rebillsLeft]--;
-						
-						
-
 						if ($rebillsLeftInDb[$rebillsLeft] == 0)
 						{
 							unset($rebillsLeftInDb[$rebillsLeft]);
 						}
 					}
-					
+
 					$this->assertFalse((bool)count($rebillsLeftInDb),
 						'Required rebillLeft counts: '.$this->_periodsToString($rebillsLeftInDb). ' was not found');
 					break;

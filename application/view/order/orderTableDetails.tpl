@@ -13,6 +13,16 @@
 
 		<td class="itemPrice {if (string)$item.itemBasePrice > (string)$item.itemPrice}discount{/if}">
 			<span class="basePrice">{$item.formattedBasePrice}</span><span class="actualPrice">{$item.formattedPrice}</span>
+			
+			{if $item.recurringID}
+				{if $recurringProductPeriodsByItemId[$item.ID]}
+					{assign var=period value=$recurringProductPeriodsByItemId[$item.ID]}
+					({$period.ProductPrice_period.formated_price.$currency} 
+					{t _every} 
+					{if $period.periodLength == 1}{t `$periodTypesSingle[$period.periodType]`}{else}{$period.periodLength} {t `$periodTypesPlural[$period.periodType]`}{/if}{math equation="a * b" a=$period.periodLength|default:0 b=$period.rebillCount|default:0 assign="x"}{if $x > 0} {t _for}  {$x} {t `$periodTypesPlural[$period.periodType]`}, {$period.rebillCount} {t _rebill_times}{/if})
+				{/if}
+			{/if}
+
 		</td>
 		<td class="itemCount">{$item.count}</td>
 		<td class="amount">{$item.formattedDisplaySubTotal}</td>

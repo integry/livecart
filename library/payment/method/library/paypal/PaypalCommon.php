@@ -187,7 +187,7 @@ class PaypalCommon
 	{
 		set_time_limit(0);
 		
-		$username = $handler->getConfigValue('username');		
+		$username = $handler->getConfigValue('username');
 		$password = $handler->getConfigValue('password');
 		$signature = $handler->getConfigValue('signature');
 		

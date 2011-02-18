@@ -55,3 +55,8 @@ _every=every
 _rebill_times=times
 
 
+_active_subscription=Active subscription
+_inactive_subscription=Inactive/expired subscription
+_rebills_every=Rebills every [_1] [_2]
+_next_rebill=Next rebill
+_remaining_rebills=Remaining rebills
