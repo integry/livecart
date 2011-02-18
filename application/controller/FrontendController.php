@@ -45,6 +45,11 @@ abstract class FrontendController extends BaseController
 
 		if ($this->application->isCustomizationMode())
 		{
+			$theme = $this->session->get('customizationTheme');
+			if ($theme)
+			{
+				$this->application->setTheme($theme);
+			}
 			$this->loadLanguageFile('Customize');
 		}
 	}
