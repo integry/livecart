@@ -424,6 +424,14 @@ SMTP_PORT=SMTP port
 SMTP_USERNAME=SMTP username
 SMTP_PASSWORD=SMTP password
 
+_currency_rates=Currency rates
+CURRENCY_RATE_UPDATE=Enable automated currency rate updates
+CURRENCY_RATE_UPDATE_INTERVAL=Update currency rates every .. hours
+CURRENCY_DATA_SOURCE=Currency rate data source
+
+YahooCurrencyRateSource=Yahoo!
+BankOfLatviaCurrencyRateSource=Bank of Latvia
+
 _payment=Payment Methods
 _cc_opts=Credit Card Options
 _express_payment=Express Checkout Methods
