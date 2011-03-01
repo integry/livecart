@@ -3,36 +3,39 @@
 /**
  * @author Integry Systems
  */
+ClassLoader::import('application.model.currencyrate.CurrencyRateSource');
+
 class CurrencyRates extends CronPlugin
 {
-
-	public function isExecutable()
+	public function isExecutable($interval)
 	{
-		return true;
+		if (parent::isExecutable($interval))
+		{
+			$config = $this->application->getConfig();
+			if (!$config->get('CURRENCY_RATE_UPDATE'))
+			{
+				return false;
+			}
+			$currencyRateUpdateTs = $this->application->getCache()->get('currencyRateUpdateTs', 0);
+			$interval= $config->get('CURRENCY_RATE_UPDATE_INTERVAL');
+			if (time() - (3600 * $interval) < $currencyRateUpdateTs)
+			{
+				return false;
+			}
+			// only true if:
+			//      isExecutable() now
+			//  + is CURRENCY_RATE_UPDATE enabled
+			//  + has passed CURRENCY_RATE_UPDATE_INTERVAL hours till last update
+			return true;
+		}
+
+		return false;
 	}
 
 	public function process()
 	{
-		$config = $this->application->getConfig();
-		if (!$config->get('CURRENCY_RATE_UPDATE'))
-		{
-			return;
-		}
-
-		$cache = $this->application->getCache();
-		$currencyRateUpdateTs = $cache->get('currencyRateUpdateTs', 0);
-		$interval= $config->get('CURRENCY_RATE_UPDATE_INTERVAL');
-		if (time() - (3600 * $interval) < $currencyRateUpdateTs)
-		{
-			return;
-		}
-
-		$dataSourceName = $config->get('CURRENCY_DATA_SOURCE');
-		$defaultCurrencyCode = $this->application->getDefaultCurrencyCode();
-		$currencyArray = $this->application->getCurrencyArray(true);
-		ClassLoader::import('application.model.currencyrate.'.$dataSourceName);
-		$source = new $dataSourceName($defaultCurrencyCode, $currencyArray);
-		foreach($currencyArray as $currencyCode)
+		$source = CurrencyRateSource::getInstance($this->application);
+		foreach($source->getAllCurrencyCodes() as $currencyCode)
 		{
 			$rate = $source->getRate($currencyCode);
 			if ($rate != null)
@@ -43,8 +46,7 @@ class CurrencyRates extends CronPlugin
 				$currency->save();
 			}
 		}
-
-		$cache->set('currencyRateUpdateTs', time());
+		$this->application->getCache()->set('currencyRateUpdateTs', time());
 	}
 }
 

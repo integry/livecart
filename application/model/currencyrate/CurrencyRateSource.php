@@ -32,6 +32,11 @@ abstract class CurrencyRateSource
 		return array_key_exists($currencyCode, $this->rates) ? $this->rates[$currencyCode] : null;
 	}
 
+	public function getAllCurrencyCodes()
+	{
+		return $this->allCurrencyCodes;
+	}
+
 	public static function getCurrencyRateSourceList()
 	{
 		$list = array();
@@ -53,6 +58,26 @@ abstract class CurrencyRateSource
 		}
 		ksort($list);
 		return $list ;
+	}
+
+	public static function getInstance($application, $defaultCurrencyCode=null, $currencyArray=null, $dataSourceName=null)
+	{
+		if ($defaultCurrencyCode === null)
+		{
+			$defaultCurrencyCode = $application->getDefaultCurrencyCode();
+		}
+		if ($currencyArray === null)
+		{
+			$currencyArray = $application->getCurrencyArray(true);
+		}
+		if ($dataSourceName === null)
+		{
+			$dataSourceName = $application->getConfig()->get('CURRENCY_DATA_SOURCE');
+		}
+		ClassLoader::import('application.model.currencyrate.'.$dataSourceName);
+		$source = new $dataSourceName($defaultCurrencyCode, $currencyArray);
+
+		return $source;
 	}
 }
 ?>

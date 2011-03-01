@@ -3,6 +3,7 @@
 ClassLoader::import("library.*");
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.Currency");
+ClassLoader::import('application.model.currencyrate.CurrencyRateSource');
 
 /**
  *
@@ -73,10 +74,7 @@ class CurrencyController extends StoreManagementController
 			if ($config->get('CURRENCY_RATE_UPDATE'))
 			{
 				// get exchange rate from external currency rate source
-				$dataSourceName = $config->get('CURRENCY_DATA_SOURCE');
-				$defaultCurrencyCode = $this->application->getDefaultCurrencyCode();
-				ClassLoader::import('application.model.currencyrate.'.$dataSourceName);
-				$source = new $dataSourceName($defaultCurrencyCode, array($newCurrency->getID()));
+				$source = CurrencyRateSource::getInstance($this->application,null,array($newCurrency->getID()));
 				$rate = $source->getRate($newCurrency->getID());
 				if ($rate != null)
 				{
@@ -121,12 +119,9 @@ class CurrencyController extends StoreManagementController
 		$config = $this->getApplication()->getConfig();
 		if ($config->get('CURRENCY_RATE_UPDATE'))
 		{
-			$dataSourceName = $config->get('CURRENCY_DATA_SOURCE');
-			$defaultCurrencyCode = $r->getID();
-			$currencyArray = $this->application->getCurrencyArray(true);
-			ClassLoader::import('application.model.currencyrate.'.$dataSourceName);
-			$source = new $dataSourceName($defaultCurrencyCode, $currencyArray);
-			foreach($currencyArray as $currencyCode)
+			$source = CurrencyRateSource::getInstance($this->application, $r->getID());
+
+			foreach($source->getAllCurrencyCodes() as $currencyCode)
 			{
 				$rate = $source->getRate($currencyCode);
 				if ($rate != null)
