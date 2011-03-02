@@ -14,6 +14,7 @@ Backend.DeliveryZone.prototype =
 
 	initialize: function(zones)
 	{
+		
 		Backend.DeliveryZone.prototype.treeBrowser = new dhtmlXTreeObject("deliveryZoneBrowser","","", 0);
 		Backend.Breadcrumb.setTree(Backend.DeliveryZone.prototype.treeBrowser);
 
@@ -23,7 +24,7 @@ Backend.DeliveryZone.prototype =
 		Backend.DeliveryZone.prototype.treeBrowser.setImagePath("image/backend/dhtmlxtree/");
 		Backend.DeliveryZone.prototype.treeBrowser.setOnClickHandler(this.activateZone.bind(this));
 
-		Event.observe($("newZoneInputButton"), 'click', function(e){ Event.stop(e); this.addNewZone(); }.bind(this))
+		Event.observe($("newZoneInputButton"), 'click', function(e){ Event.stop(e); this.addNewZone(); }.bind(this));
 
 		Backend.DeliveryZone.prototype.treeBrowser.showFeedback =
 			function(itemId)
@@ -35,7 +36,7 @@ Backend.DeliveryZone.prototype =
 
 				this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
 				this.setItemImage(itemId, '../../../image/indicator.gif');
-			}
+			};
 
 		Backend.DeliveryZone.prototype.treeBrowser.hideFeedback =
 			function()
@@ -44,7 +45,7 @@ Backend.DeliveryZone.prototype =
 				{
 					this.setItemImage(itemId, this.iconUrls[itemId]);
 				}
-			}
+			};
 
 		$(Backend.DeliveryZone.prototype.treeBrowser.allTree).addClassName("hidden");
 		this.insertTreeBranch(zones, 0);
@@ -159,7 +160,7 @@ Backend.DeliveryZone.prototype =
 			zone.onclick = function()
 			{
 				Backend.DeliveryZone.prototype.treeBrowser.selectItem(node.ID, true);
-			}
+			};
 			if (node.items && node.items.length)
 			{
 				this.insertTreeBranch(node.items, node.ID);
@@ -359,7 +360,7 @@ Backend.DeliveryZone.prototype =
 			$("pageTitle").down("a").innerHTML = Backend.getTranslation("_delivery_zones");
 		}
 	}
-}
+};
 
 Backend.DeliveryZone.CountriesAndStates = Class.create();
 Backend.DeliveryZone.CountriesAndStates.prototype =
@@ -681,7 +682,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 
 	cancelNewMaskForm: function(maskRoot)
 	{
-		var input = maskRoot.down("input")
+		var input = maskRoot.down("input");
 		var form  = maskRoot.down('.' + this.prefix + 'maskForm');
 		var show  = maskRoot.down('.' + this.prefix + 'showNewMaskForm');
 
@@ -692,7 +693,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 
 	showNewMaskForm: function(maskRoot)
 	{
-		var input = maskRoot.down("input")
+		var input = maskRoot.down("input");
 		var form  = maskRoot.down('.' + this.prefix + 'maskForm');
 		var show  = maskRoot.down('.' + this.prefix + 'showNewMaskForm');
 
@@ -714,8 +715,8 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 			}
 			//indicator = el.parentNode.down('.progressIndicator');
 		}
-		Backend.DeliveryZone.prototype.treeBrowser.setItemText(Backend.DeliveryZone.prototype.activeZone, this.nodes.name.value)
-		var secodId = Backend.DeliveryZone.prototype.getTreeBrowserItemIdInSecondLeaf(Backend.DeliveryZone.prototype.activeZone)
+		Backend.DeliveryZone.prototype.treeBrowser.setItemText(Backend.DeliveryZone.prototype.activeZone, this.nodes.name.value);
+		var secodId = Backend.DeliveryZone.prototype.getTreeBrowserItemIdInSecondLeaf(Backend.DeliveryZone.prototype.activeZone);
 		if (secodId)
 		{
 			Backend.DeliveryZone.prototype.treeBrowser.setItemText(secodId, this.nodes.name.value)
@@ -927,7 +928,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 		);
 		Backend.DeliveryZone.prototype.updateBreadCrumbText();
 	}
-}
+};
 
 Backend.DeliveryZone.ShippingService = Class.create();
 Backend.DeliveryZone.ShippingService.prototype =
@@ -984,7 +985,6 @@ Backend.DeliveryZone.ShippingService.prototype =
 			}
 			this.getContainer(li, 'edit').update(response);
 			this.toggleContainer(li, 'edit');
-
 		},
 
 		beforeSort:	 function(li, order)
@@ -1056,6 +1056,7 @@ Backend.DeliveryZone.ShippingService.prototype =
 			this.nodes.menuForm = $(this.prefix + "new_service_" + this.deliveryZoneId + "_form");
 		}
 
+		this.nodes.isLocalPickup = $(this.prefix + (this.deliveryZoneId ? this.deliveryZoneId : '') + "_" + (this.service.ID ? this.service.ID : '') + "_isLocalPickup");
 		this.nodes.name = this.nodes.root.down('.' + this.prefix + 'name');
 	},
 
@@ -1084,50 +1085,68 @@ Backend.DeliveryZone.ShippingService.prototype =
 			Event.stop(e);
 			this.save();
 		}.bind(this), false);
+
+
+		Event.observe(this.nodes.isLocalPickup, "change", this.localPickupChanged.bind(this));
+	},
+
+	localPickupChanged: function()
+	{
+		if (this.nodes.isLocalPickup.checked  == false || !confirm(Backend.getTranslation('_create_catch_all_rate')))
+		{
+			return;
+		}
+
+		try {
+			// WeightTable works also with subtotal rates and need to kno type.
+			// hack:
+			// get dzwt instance for type weight.
+			var dzwt  = Backend.DeliveryZone.WeightTable.prototype.getInstance(
+					$("ratesTableContainer_" + (this.deliveryZoneId ? this.deliveryZoneId : '') + "_" + (this.service.ID ? this.service.ID : '')), "weight");
+			// check if  subtotal row is visible?
+			if ($(dzwt.nodes.tbody).getElementsByClassName("subtotalRow")[0].visible())
+			{
+				// if so, can't use WeightTable instance for weight type
+				dzwt  = Backend.DeliveryZone.WeightTable.prototype.getInstance(
+					$("ratesTableContainer_" + (this.deliveryZoneId ? this.deliveryZoneId : '') + "_" + (this.service.ID ? this.service.ID : '')), "subtotal");
+			}
+			dzwt.addCatchAllRate();
+			// todo:
+			//     split WeightTable in 3 classes - 'AbstractBase', SubtotalTable, WeightTable
+			//    remove type from WeightTable constructor (encapsulate type detection in class)
+		} catch(e) {}
 	},
 
 	rangeTypeChanged: function(e)
 	{
-		var radio = null;
+		var radio = null, dzwt;
 		$A(this.nodes.rangeTypes).each(function(r){ if(r.checked) radio = r; });
 
 		if(radio == 0)
 		{
 			return;
 		}
-		$A(this.nodes.root.getElementsByClassName(radio.value == 0 ? "weight" : "subtotal")).each(Element.show);
-		// hide and clear hiden input values.
-		$A(this.nodes.root.getElementsByClassName(radio.value == 0 ? "subtotal" : "weight")).each(
+
+		$A(this.nodes.root.getElementsByClassName(radio.value == 0 ?"weight" : "subtotal")).each(Element.show);
+		// hide and clear hidden input values.
+		$A(this.nodes.root.getElementsByClassName(radio.value == 0 ?"subtotal" : "weight")).each(
 			function(tr)
 			{
 				$A($(tr).getElementsByTagName("input")).each(
 					function(element)
 					{
-						element.value = "";
+						// maybe don't clear, because it breaks added catch-all rate!
+
+						//  element.value = "";
 					}
 				);
 				tr.hide();
 			}
 		);
 
-		//if(radio.value == 0)
-		//{
-			//console.log('observe weight');
-		//}
-//		if(radio.value == 0)
-//		{
-//			document.getElementsByClassName(this.prefix + "subtotalRange", this.nodes.root).each(function(fieldset) { fieldset.style.display = 'none'; });
-//			document.getElementsByClassName(this.prefix + "subtotalPercentCharge", this.nodes.root).each(function(fieldset) { fieldset.up('fieldset').style.display = 'none'; });
-//			document.getElementsByClassName(this.prefix + "perKgCharge", this.nodes.root).each(function(fieldset) { fieldset.up('fieldset').style.display = 'block'; });
-//			document.getElementsByClassName(this.prefix + "weightRange", this.nodes.root).each(function(fieldset) { fieldset.style.display = 'block'; });
-//		}
-//		else
-//		{
-//			document.getElementsByClassName(this.prefix + "subtotalRange", this.nodes.root).each(function(fieldset) { fieldset.style.display = 'block'; });
-//			document.getElementsByClassName(this.prefix + "subtotalPercentCharge", this.nodes.root).each(function(fieldset) { fieldset.up('fieldset').style.display = 'block'; });
-//			document.getElementsByClassName(this.prefix + "perKgCharge", this.nodes.root).each(function(fieldset) { fieldset.up('fieldset').style.display = 'none'; });
-//			document.getElementsByClassName(this.prefix + "weightRange", this.nodes.root).each(function(fieldset) { fieldset.style.display = 'none'; });
-//		}
+		dzwt  = Backend.DeliveryZone.WeightTable.prototype.getInstance(
+			$("ratesTableContainer_" + (this.deliveryZoneId ? this.deliveryZoneId : '') + "_" + (this.service.ID ? this.service.ID : '')), radio.value == 0 ?"weight" : "subtotal");
+		dzwt.updateAllRangeStartValues();
 	},
 
 	showNewForm: function()
@@ -1283,7 +1302,7 @@ Backend.DeliveryZone.ShippingService.prototype =
 			Form.State.restore(this.nodes.form);
 		}
 	}
-}
+};
 
 
 Backend.DeliveryZone.ShippingRate = Class.create();
@@ -1387,7 +1406,6 @@ Backend.DeliveryZone.ShippingRate.prototype =
 			this.nodes.menu =$(this.prefix + "rate_menu_" + this.deliveryZoneId + '_' + this.rate.ShippingService.ID);
 			this.nodes.menuForm = $(this.prefix + "new_rate_" + this.deliveryZoneId + '_' + this.rate.ShippingService.ID + "_form");
 		}
-
 		this.nodes.ratesActiveList = $(this.prefix + 'ratesList_' + this.deliveryZoneId + '_' + this.rate.ShippingService.ID);
 
 		this.nodes.weightRangeStart = this.nodes.root.down('.weightRangeStart').down('.UnitConventer_NormalizedWeight');
@@ -1480,12 +1498,12 @@ Backend.DeliveryZone.ShippingRate.prototype =
 			var endHi = li.down('.weightRangeEnd').down('.UnitConventer_HiValue');
 			var endLo = li.down('.weightRangeEnd').down('.UnitConventer_LoValue');
 
-			startHi.id = startHi.id.replace(idStartRegexp, idStart + 'new' + newId)
+			startHi.id = startHi.id.replace(idStartRegexp, idStart + 'new' + newId);
 			Event.observe(startHi.up('.shippingService_weightRange').down('label'), 'click', function(e) { Event.stop(e); startHi.focus(); });
-			startLo.id = startLo.id.replace(idStartRegexp, idStart + 'new' + newId)
+			startLo.id = startLo.id.replace(idStartRegexp, idStart + 'new' + newId);
 
-			endHi.id = endHi.id.replace(idStartRegexp, idStart + 'new' + newId)
-			endLo.id = endLo.id.replace(idStartRegexp, idStart + 'new' + newId)
+			endHi.id = endHi.id.replace(idStartRegexp, idStart + 'new' + newId);
+			endLo.id = endLo.id.replace(idStartRegexp, idStart + 'new' + newId);
 
 			var newForm = Backend.DeliveryZone.ShippingRate.prototype.getInstance(li, rate);
 
@@ -1539,7 +1557,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
 				new LiveCart.AjaxRequest(Backend.DeliveryZone.ShippingService.prototype.Links.deleteRate + '/' + this.rate.ID);
 			}
 
-			var rates = this.nodes.root.up(".activeList")
+			var rates = this.nodes.root.up(".activeList");
 			var service = this.nodes.root.up('li');
 
 			Element.remove(this.nodes.root);
@@ -1550,7 +1568,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
 			}
 		}
 	}
-}
+};
 
 Backend.DeliveryZone.lookupAddress = function(form, e)
 {
@@ -1571,7 +1589,7 @@ Backend.DeliveryZone.lookupAddress = function(form, e)
 		cont.parentNode.show();
 		new Effect.Highlight(cont);
 	});
-}
+};
 
 Backend.DeliveryZone.WeightUnitConventer = Class.create();
 Backend.DeliveryZone.WeightUnitConventer.prototype = {
@@ -1580,11 +1598,26 @@ Backend.DeliveryZone.WeightUnitConventer.prototype = {
 		this.nodes = {};
 		this.nodes.root = $(root);
 	}
-}
+};
 
 Backend.DeliveryZone.WeightTable = Class.create();
 Backend.DeliveryZone.WeightTable.prototype = {
 	newColumnCount : 0,
+
+	getInstance: function(root, typeName, canChangeTypeName)
+	{
+		var id = root.id + "_"+typeName;
+		if (!Backend.deliveryZoneWeightTableInstances)
+		{
+			Backend.deliveryZoneWeightTableInstances = [];
+		}
+		if (!Backend.deliveryZoneWeightTableInstances[id])
+		{
+			Backend.deliveryZoneWeightTableInstances[id] = new Backend.DeliveryZone.WeightTable(root, typeName, canChangeTypeName);
+		}
+		return Backend.deliveryZoneWeightTableInstances[id];
+	},
+
 	initialize : function(root, typeName, canChangeTypeName)
 	{
 		var
@@ -1601,7 +1634,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 			w = $$(".sectionContainer").inject(0,
 				function(m, node)
 				{
-					var w = node.getWidth()
+					var w = node.getWidth();
 					if(w > m)
 					{
 						m = w;
@@ -1624,14 +1657,15 @@ Backend.DeliveryZone.WeightTable.prototype = {
 
 		Event.observe(this.nodes.root, "change", this.onChange.bindAsEventListener(this));
 		Event.observe(this.nodes.root, "keyup", this.addColumnOnKeyUp.bindAsEventListener(this));
-		Event.observe(this.nodes.switchUnits, "click", this.switchUnitTypes.bindAsEventListener(this));
+
 		this.setType(typeName);
 		this.observeAndInitWeightRow();
 
 		this.attachNumericFilters();
-		if(this.nodes.tbody.getElementsByClassName("weightRow")[0].style.display != "none")
+		if (false == $(this.nodes.tbody.getElementsByClassName("weightRow")[0]).visible())
 		{
 			this.showInWeightUnits();
+			Event.observe(this.nodes.switchUnits, "click", this.switchUnitTypes.bindAsEventListener(this));
 		}
 		this.updateAllRangeStartValues();
 	},
@@ -1654,7 +1688,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 			node = node.getElementsByClassName("rangeStart");
 			if (node.length == 0)
 			{
-				return false; // unsuported node.
+				return false; // unsupported node.
 			}
 			node = node[0];
 		}
@@ -1968,7 +2002,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 						merged:inputs.merged.value,
 						hi:inputs.hi.value,
 						lo:inputs.lo.value
-					}
+					};
 					value = inputs.normalized.value;
 					sortRow = 0;
 				}
@@ -2024,15 +2058,12 @@ Backend.DeliveryZone.WeightTable.prototype = {
 				}
 			}.bind(this, c))
 		}.bind(this));
-
-
 		this.updateAllRangeStartValues(); // can't know if after sorting current node was moved forward or backward.
 	},
 
 	addColumn: function()
 	{
 		// todo: use templates.
-
 		var
 			rowCount = this.nodes.tbody.rows.length,
 			i,
@@ -2054,11 +2085,9 @@ Backend.DeliveryZone.WeightTable.prototype = {
 				node.innerHTML='<div class="rangeStart"><span class="rangeStartValue"></span> -</div>';
 				// ~
 			}
-
 			node.appendChild(node2);
 			node2 = $(node2);
 			node2.addClassName("number");
-
 			if(node2.up("tr").hasClassName("weightRow"))
 			{
 				node2.hide();
@@ -2278,6 +2307,51 @@ Backend.DeliveryZone.WeightTable.prototype = {
 		}
 	},
 
+	addCatchAllRate: function()
+	{
+		// clear?;
+		$A(this.nodes.tbody.rows).each(
+			function(row)
+			{
+				var
+					node,
+					cell,
+					inputs;
+				row = $(row);
+				while (row.cells.length > 1)
+				{
+					$(row.cells[1]).remove();
+				}
+				cell = $(row.cells[0]);
+				if (row.hasClassName("weightRow"))
+				{
+					inputs = this._getWeightCellInputs(cell);
+					inputs.rangeStart_normalized.value = 0;
+					inputs.normalized.value = 999999;
+					this.updateMergedWeightFieldValue(cell);
+				}
+				else if(row.hasClassName("subtotalRow"))
+				{
+					node = cell.down(".rangeStartValue");
+					node.value = 0;
+					document.getElementsByName(node.name.replace("RangeStart", "RangeEnd"))[0].value = 999999;
+				}
+				else
+				{
+					row.cells[0].down("input").value = 0;
+				}
+			}.bind(this)
+		);
+		this.addColumn();
+		this.updateAllRangeStartValues();
+		if (this.getType() == "weight")
+		{
+
+			this.showInWeightUnits();
+		}
+	},
+
+
 	dumpField: function(element)
 	{
 		if(element.tagName.toLowerCase() != "td")
@@ -2292,5 +2366,5 @@ Backend.DeliveryZone.WeightTable.prototype = {
 			"liValue:" +          element.next().next().value + "\n"+
 			"merged value:" +     element.next().next().next().value
 		)
-	},
-}
+	}
+};

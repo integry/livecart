@@ -14,6 +14,13 @@
 		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_isFinal" class="checkbox wide">{tip _disable_other_services}</label>
 	</fieldset>
 
+    <fieldset class="error">
+		<label></label>
+		{checkbox name="isLocalPickup" class="checkbox observed shippingService_isLocalPickup" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_isLocalPickup"}
+		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_isLocalPickup" class="checkbox wide">{tip _is_local_pickup}</label>
+	</fieldset>
+
+
 	<fieldset class="error rangeType">
 		<label ></label>
 		{radio name="rangeType" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_weight" class="checkbox shippingService_rangeType" value="0"}
@@ -131,4 +138,3 @@
 	<span class="UnitConventer_EnglishHiUnitAbbr">{t _units_lbs}</span>
 	<span class="UnitConventer_EnglishLoUnitAbbr">{t _units_oz}</span>
 </span>
-

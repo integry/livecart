@@ -129,12 +129,21 @@
 
 		{include file="order/fieldValues.tpl"}
 
-		<div id="overviewAddresses">
+		<div id="overviewAddresses">$order.shipments
 
 			{if $order.ShippingAddress && !$order.isMultiAddress}
 			<div class="addressContainer">
 				<h3>{t _is_shipped_to}:</h3>
-				{fun name="address" address=$order.ShippingAddress}
+                {if $order.isLocalPickup}
+                    {foreach $order.shipments as $shipment}
+                        <div class="ShippingServiceDescription">
+                            {$shipment.ShippingService.description_lang|escape}
+                        </div>
+                    {/foreach}
+               
+                {else}
+                    {fun name="address" address=$order.ShippingAddress}
+                {/if}
 			</div>
 			{/if}
 

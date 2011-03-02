@@ -1887,8 +1887,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		{
 			$array['BillingAddress'] = $this->billingAddress->get()->toArray();
 		}
-
-		$this->setArrayData($array);
+        $array['isLocalPickup'] = $this->isLocalPickup();
+        $this->setArrayData($array);
 
 		return $array;
 	}
@@ -3078,6 +3078,29 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		return false;
 	}
+
+    public function isLocalPickup()
+    {
+        $this->loadAll();
+        $shipments = $this->getShipments();
+        // what if no shipments? false? (default value for ShippingService.isLocalPickup)
+        if (0 == count($shipments))
+        {
+            return false;
+        }
+        foreach ($shipments as $shipment)
+        {
+            // $shipment->getShippingService(); does not work when customer is repeating order ($shipment is not saved yet)
+            // but with toArray() works for unsaved.
+            $shipmentArray = $shipment->toArray();
+            if (!isset($shipmentArray, $shipmentArray['ShippingService'], $shipmentArray['ShippingService']['isLocalPickup'])
+                    || $shipmentArray['ShippingService']['isLocalPickup'] == false)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 }
 
 ?>
