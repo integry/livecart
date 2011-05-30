@@ -28,6 +28,12 @@ MANUFACTURER_PAGE_PER_PAGE
 		$listStyle = $config->get('MANUFACTURER_PAGE_LIST_STYLE');
 		$currentLetter = $listStyle == 'MANPAGE_STYLE_GROUP_BY_FIRST_LETTER' ? $request->get('letter') : null;
 
+		$letters = Manufacturer::getActiveProductManufacturerFirstLetters();
+		if (!$currentLetter)
+		{
+			$currentLetter = reset($letters);
+		}
+
 		// pagination
 		$page = $request->get('page', 1);
 
@@ -57,7 +63,6 @@ MANUFACTURER_PAGE_PER_PAGE
 		$response->set('url', $this->router->createURL($paginateUrlParams, true));
 		if ($listStyle == 'MANPAGE_STYLE_GROUP_BY_FIRST_LETTER')
 		{
-			$letters = Manufacturer::getActiveProductManufacturerFirstLetters();
 			$response->set('currentLetter',$currentLetter);
 			$response->set('letters',$letters);
 		}

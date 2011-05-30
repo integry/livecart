@@ -56,7 +56,7 @@ class Manufacturer extends ActiveRecordModel implements EavAble
 	}
 
 	/**
-	 * 
+	 *
 	 * @return array('manufacturers'=> array of manufacturers, 'counts'=> manufacturer product count, 'count'=> count of manufacturers)
 	 */
 	public static function getActiveProductManufacturers($context)
@@ -70,10 +70,10 @@ class Manufacturer extends ActiveRecordModel implements EavAble
 
 		// get filter to select manufacturers of active products only
 		$f = new ARSelectFilter();
-		// $productFilter = new ProductFilter(Category::getRootNode(), $f);
+
 		$ids = $counts = $letters = array();
-		foreach (ActiveRecordModel::getDataBySQL('SELECT DISTINCT(manufacturerID), COUNT(*) AS cnt FROM Product ' . $f->createString() . ' GROUP BY manufacturerID') as $row)
-		// foreach (ActiveRecordModel::getDataBySQL('SELECT DISTINCT(ID) as manufacturerID, (BIT_LENGTH(name) * 3) + (ID * 2) AS cnt FROM Manufacturer ' . $f->createString() . ' GROUP BY manufacturerID LIMIT 100000') as $row)
+		$sql = !self::getApplication()->getConfig()->get('MANUFACTURER_PAGE_DISPLAY_ACTIVE') ? 'SELECT DISTINCT(ID) as manufacturerID, 1 AS cnt FROM Manufacturer ' . $f->createString() . ' GROUP BY manufacturerID' : 'SELECT DISTINCT(manufacturerID), COUNT(*) AS cnt FROM Product ' . $f->createString() . ' GROUP BY manufacturerID';
+		foreach (ActiveRecordModel::getDataBySQL($sql) as $row)
 		{
 			$ids[] = $row['manufacturerID'];
 			$counts[$row['manufacturerID']] = $row['cnt'];
@@ -107,9 +107,8 @@ class Manufacturer extends ActiveRecordModel implements EavAble
 	{
 		$letters = $ids = array();
 		$f = new ARSelectFilter();
-		//$productFilter = new ProductFilter(Category::getRootNode(), $f);
-		foreach (ActiveRecordModel::getDataBySQL('SELECT DISTINCT(manufacturerID) FROM Product ' . $f->createString() . ' GROUP BY manufacturerID') as $row)
-		// foreach (ActiveRecordModel::getDataBySQL('SELECT DISTINCT(ID) as manufacturerID FROM Manufacturer ' . $f->createString() . ' GROUP BY manufacturerID LIMIT 21') as $row)
+		$sql = !self::getApplication()->getConfig()->get('MANUFACTURER_PAGE_DISPLAY_ACTIVE') ? 'SELECT DISTINCT(ID) as manufacturerID FROM Manufacturer ' . $f->createString() . ' GROUP BY manufacturerID' : 'SELECT DISTINCT(manufacturerID) FROM Product ' . $f->createString() . ' GROUP BY manufacturerID';
+		foreach (ActiveRecordModel::getDataBySQL($sql) as $row)
 		{
 			$ids[] = $row['manufacturerID'];
 		}
