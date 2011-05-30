@@ -7,3 +7,6 @@ _newer_available=A newer version of LiveCart is available. <a href="http://livec
 _up_to_date=Your LiveCart installation is using the latest version and is up to date.
 
 _update_successful=LiveCart update completed successfully
+
+_test_copy_success=File copying tested successfully, so the automated updates should work!
+_test_copy_failure=Could not copy a test file. If you're using direct file copying, please make sure that all application files have write permissions for web server user. If you're using FTP, please recheck the details, perhaps the directory path is not entered correctly (you can copy this from your FTP client). Finally, please do not forget to save the settings before testing them.

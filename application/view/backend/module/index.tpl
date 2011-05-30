@@ -1,4 +1,5 @@
 {includeJs file="library/form/ActiveForm.js"}
+{includeJs file="library/form/Validator.js"}
 {includeJs file="library/form/State.js"}
 {includeJs file="backend/Module.js"}
 {includeCss file="backend/Module.css"}
@@ -7,11 +8,16 @@
 
 {include file="layout/backend/header.tpl"}
 
+{include file="block/message.tpl"}
+
 <ul id="moduleList" class="activeList">
-	{foreach $modules as $module}
-		{include file="backend/module/node.tpl"}
-	{/foreach}
+	{include file="backend/module/list.tpl" type="needUpdate"}
+	{include file="backend/module/list.tpl" type="enabled"}
+	{include file="backend/module/list.tpl" type="notEnabled"}
+	{include file="backend/module/list.tpl" type="notInstalled"}
+	<div class="clear"></div>
 </ul>
+<div class="clear"></div>
 
 {literal}
 	<script type="text/javascript">

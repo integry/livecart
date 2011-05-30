@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
+ClassLoader::import('application.helper.UpdateHelper');
 
 /**
  * @package application.controller.backend
@@ -100,6 +101,31 @@ class UpdateController extends StoreManagementController
 		$response = new ActionResponse();
 		$response->set('progress', $progress);
 		$response->set('errors', $errors);
+		return $response;
+	}
+
+	public function testCopy()
+	{
+		$handler = new UpdateHelper($this->application);
+		$tmpName = 'test-update-copy' . rand(1, 5000000);
+		$tmp = ClassLoader::getRealPath('cache.') . $tmpName;
+		file_put_contents($tmp, 'test');
+
+		$res = $handler->copyFile($tmp, 'module/' . $tmpName);
+		$expected = ClassLoader::getRealPath('module.') . $tmpName;
+
+		if (file_exists($expected))
+		{
+			$response = new JSONResponse(array(), 'success', $this->translate('_test_copy_success'));
+		}
+		else
+		{
+			$response = new JSONResponse(array(), 'failure', $this->translate('_test_copy_failure'));
+		}
+
+		$handler->deleteFile('module/' . $tmp);
+		unlink($tmp);
+
 		return $response;
 	}
 

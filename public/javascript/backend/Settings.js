@@ -622,6 +622,21 @@ Backend.Settings.Editor.prototype =
 				input.parentNode.insertBefore(span, input);
 			},
 
+		'UPDATE_COPY_METHOD':
+			function()
+			{
+				var cont = $('setting_UPDATE_COPY_METHOD');
+				var menu = cont.appendChild($('handler_UPDATE_COPY_METHOD').cloneNode(true));
+				var a = menu.down('a');
+				Event.observe(a, 'click', function(e)
+				{
+					Event.stop(e);
+					new LiveCart.AjaxRequest(a.href, a.parentNode.down('.progressIndicator'), function(oR)
+					{
+					});
+				});
+			},
+
 		'DEF_COUNTRY':
 			function()
 			{

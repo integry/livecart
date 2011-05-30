@@ -5,8 +5,17 @@
 
 #moduleList li.module
 {
-	width: 400px;
+	float: left;
+	margin-left: 0;
+	margin-right: 1%;
 	overflow: hidden;
+	width: 31%;
+	height: 75px;
+}
+
+#moduleList li.module.updateMenuLoaded
+{
+	height: 273px;
 }
 
 .moduleStatus
@@ -44,7 +53,76 @@
 	color: #f77;
 }
 
-a.installAction
+a.installAction,
+a.updateAction
 {
 	color: red;
+}
+
+.channel
+{
+
+}
+
+.channel-stable
+{
+	color: green;
+}
+
+.channel-beta
+{
+	color: red;
+}
+
+.moduleError
+{
+	margin-bottom: 1em;
+	background-color: lightCoral;
+	color: white !important;
+}
+
+.updateMenu
+{
+	background-color: #eee;
+	border: 1px solid grey;
+	padding: 1em;
+	margin-top: 1em;
+	margin-right: 1em;
+	-moz-border-radius: 5px;
+}
+
+fieldset.type_needUpdate
+{
+	border-color: red;
+}
+
+.updateInfo
+{
+	float: right;
+	margin: 0.5em;
+	border: 1px solid #ddd;
+	background-color: white;
+	font-size: 12px;
+	padding: 5px;
+}
+
+.newestVersionNumber
+{
+	font-weight: bold;
+}
+
+.updateTime
+{
+	display: block;
+	font-size: 10px;
+}
+
+.updateMenu label
+{
+	width: 100px;
+}
+
+.updateMenu select
+{
+	width: 190px;
 }

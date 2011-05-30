@@ -574,3 +574,18 @@ MANPAGE_STYLE_ALL_IN_ONE_PAGE=All manufacturers in one page
 MANPAGE_STYLE_GROUP_BY_FIRST_LETTER=Group into multiple pages by the first letter
 MANUFACTURER_PAGE_NUMBER_OF_COLUMNS=Number of columns
 MANUFACTURER_PAGE_PER_PAGE=Number of manufacturers per page (0 - unlimited)
+MANUFACTURER_PAGE_DISPLAY_ACTIVE=Display only manufacturers with products
+
+# Updates
+_updates=Updates
+_update_options=Update options
+UPDATE_COPY_METHOD=File copying method
+UPDATE_FTP=Via FTP
+UPDATE_COPY=Direct copy (all LiveCart files need to be writable by web server)
+_test_update_copy=Test selected method (please save settings first)
+
+_update_ftp_opts=FTP options
+UPDATE_FTP_SERVER=FTP server
+UPDATE_FTP_USER=FTP username
+UPDATE_FTP_PASSWORD=FTP password
+UPDATE_FTP_DIRECTORY=FTP directory

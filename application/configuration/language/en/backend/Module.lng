@@ -3,6 +3,10 @@ _inactive=inactive
 _install=Install
 _deinstall=Deinstall
 _installed=Installed
+_not_installed=Not installed
+
+_version=Version
+_channel=Channel
 
 _confirm_deinstall=Are you sure you want to deinstall this module? ALL MODULE DATABASE TABLES AND DATA WILL BE DELETED!
 _confirm_install=Really install this module?
@@ -11,3 +15,22 @@ _install_confirm=[_1] module has been installed
 _deinstall_confirm=[_1] module has been deinstalled
 _enable_confirm=[_1] module has been enabled
 _disable_confirm=[_1] module has been disabled
+
+_err_no_repos=No package repositories are currently available
+_no_repositories=No repositories found
+_tip_custom_module=This module is not available from any repository, so updates cannot be downloaded automatically. There can be multiple reasons: <ul><li>it's a custom developed module</li><li>invalid module license</li><li>invalid LiveCart license (for example, domain name mismatch)</li></ul>
+
+_no_versions=No other versions available
+_tip_no_versions=Most likely this module is still at the first version
+
+_newest_version=Newest
+
+_module_type_needUpdate=Updates available
+_module_type_enabled=Installed packages
+_module_type_notEnabled=Disabled modules
+_module_type_notInstalled=Available modules (not installed)
+
+_proceed_update=Proceed with update
+
+_status_fetch=Downloading update packages
+_status_nothing_to_fetch=No update packages to download

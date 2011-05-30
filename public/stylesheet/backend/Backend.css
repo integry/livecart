@@ -150,6 +150,32 @@ div.yellowMessage .closeMessage
     display: none;
 }
 
+.confirmationMessage, .errorMessage, .infoMessage
+{
+	border: 1px solid #0c0;
+	background-color: #efe;
+	padding: 7px;
+	padding-left: 30px;
+	background-image: url(../../image/silk/gif/tick.gif);
+	background-position: 5px center;
+	margin: 0.5em;
+	background-repeat: no-repeat;
+}
+
+.errorMessage
+{
+	border: 1px solid #c00;
+	background-color: #fee;
+	background-image: url(../../image/silk/gif/cancel.gif);
+}
+
+.infoMessage
+{
+	border: 1px solid #FFF000;
+	background-color: #FFFCCC;
+	background-image: url(../../image/silk/gif/information.gif);
+}
+
 /***************************
 	Layout
 ***************************/
