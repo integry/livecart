@@ -5,9 +5,9 @@
 
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-	<meta name="Keywords" content="{$metaKeywords|escape}" />
+	<meta name="Keywords" content="{$metaKeywords|@meta}" />
 	{assign var="defaultMeta" value='DEFAULT_META_DESCR'|config}
-	<meta name="Description" content="{$metaDescription|@or:$defaultMeta|escape}" />
+	<meta name="Description" content="{$metaDescription|@meta:$defaultMeta}" />
 	<meta http-equiv="X-UA-Compatible" content="IE=100" />
 
 	<title>
