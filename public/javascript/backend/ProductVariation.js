@@ -816,6 +816,11 @@ Backend.ProductVariationVar.prototype =
 			this.type.getEditor().getTypeByIndex(this.type.getIndex() - 1).updateRowSpan();
 		}
 
+		// initTranslations
+	},
+
+	initTranslations: function()
+	{
 		var editor = this.type.getEditor();
 		if (editor.languages.length)
 		{
@@ -897,6 +902,8 @@ Backend.ProductVariationVar.prototype =
 			this.mainCell.nameInput.onchange = this.changeName.bind(this);
 			this.mainCell.nameInput.onkeyup = this.changeName.bind(this);
 			this.mainCell.getElementsBySelector('.deleteVariation')[0].onclick = this.remove.bind(this);
+
+			this.initTranslations();
 		}
 		else
 		{
