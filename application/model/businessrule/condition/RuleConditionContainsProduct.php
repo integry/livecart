@@ -136,7 +136,8 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 
 			$parent = isset($product['Parent']) ? $product['Parent'] : $product;
 			$categoryIntervals = $parent['categoryIntervalCache'];
-		} else
+		}
+		else
 		{
 			return false;
 		}
