@@ -609,6 +609,7 @@ class CheckoutController extends FrontendController
 				}
 			}
 		}
+		unset($item);
 
 		$recurringIDs = array();
 		$recurringPlans = array();
@@ -616,7 +617,10 @@ class CheckoutController extends FrontendController
 		{
 			foreach($item['Order']['cartItems'] as $orderedItem)
 			{
-				$recurringIDs[] = $orderedItem['recurringID'];
+				if (isset($orderedItem['recurringID']))
+				{
+					$recurringIDs[] = $orderedItem['recurringID'];
+				}
 			}
 		}
 		if (count($recurringIDs))
@@ -1049,7 +1053,7 @@ class CheckoutController extends FrontendController
 			return $this->getPaymentPageRedirect();
 
 			// set error message for credit card form
-			
+
 			// buildCreditCardValidator() need argument now
 			// Do payExpressComplete() have credit card data?
 			$validator = $this->buildCreditCardValidator();
