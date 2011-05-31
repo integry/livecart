@@ -106,7 +106,12 @@ class UspsShipping extends ShippingRateCalculator
 			foreach ($price->list as $rate)
 			{
 				$r = new ShippingRateResult();
-				$r->setServiceName(isset($rate->mailservice) ? $rate->mailservice : $rate->svcdescription . ' ('. $rate->svccommitments .')');
+
+				$type = $rate->svcdescription;
+				$type = str_replace(array('&lt', ';sup', '&gt;', '&amp;', 'amp;', 'reg;', ';/sup', 'trade;'), '', $type);
+				$type = str_replace('**', '', $type);
+
+				$r->setServiceName(isset($rate->mailservice) ? $rate->mailservice : $type . ' ('. $rate->svccommitments .')');
 				$r->setCost($rate->rate, 'USD');
 				$r->setClassName(get_class($this));
 				$r->setProviderName($this->getProviderName());
