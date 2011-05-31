@@ -442,6 +442,7 @@ class CategoryController extends FrontendController
 		}
 		else if ('sales_rank' == $order)
 		{
+			Product::updateSalesRank();
 			$selectFilter->setOrder(new ARFieldHandle('Product', 'salesRank'), 'DESC');
 		}
 		else if (is_numeric($fieldID = array_shift(explode('-', $order))) && !SpecField::getInstanceByID($fieldID, true)->isMultiValue->get())
