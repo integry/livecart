@@ -182,6 +182,7 @@ class LiveCartRenderer extends SmartyRenderer
 			foreach ($conf as $command)
 			{
 				if (!empty($command['action']['call']))
+				//if (!empty($command['action']['call']) && ('getGenericBlock' != $command['action']['call'][1]))
 				{
 					$call = $command['action']['call'];
 					$controllerInstance = $this->application->getControllerInstance($call[0]);

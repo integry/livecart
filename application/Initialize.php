@@ -13,7 +13,7 @@ if (isset($_REQUEST['stat']))
 		static $stat;
 		if (!$stat)
 		{
-			$stat = $GLOBALS['stat'];
+			$stat = $_REQUEST['stat'];
 		}
 
 		$start = microtime(true);
@@ -32,7 +32,7 @@ if (isset($_REQUEST['stat']))
 
 require_once(dirname(dirname(__file__)) . DIRECTORY_SEPARATOR . 'framework' . DIRECTORY_SEPARATOR . 'ClassLoader.php');
 
-ClassLoader::mountPath('.', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
+ClassLoader::mountPath('.', dirname(dirname($_SERVER["SCRIPT_FILENAME"])) . DIRECTORY_SEPARATOR);
 
 if (defined('CACHE_DIR'))
 {

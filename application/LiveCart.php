@@ -109,6 +109,8 @@ class LiveCart extends Application implements Serializable
 
 	private $sessionHandler;
 
+	private $businessRuleController;
+
 	const EXCLUDE_DEFAULT_CURRENCY = false;
 
 	const INCLUDE_DEFAULT = true;
@@ -180,6 +182,7 @@ class LiveCart extends Application implements Serializable
 			$this->router->setBaseDir($_SERVER['baseDir'], $_SERVER['virtualBaseDir']);
 			//$this->router->enableURLRewrite(false);
 		}
+
 	}
 
 	public function run($redirect = false)
@@ -213,6 +216,7 @@ class LiveCart extends Application implements Serializable
 			if ($this->config->get('SSL_CHECKOUT'))
 			{
 				$this->router->setSslAction('checkout');
+				$this->router->setSslAction('onePageCheckout');
 				$this->router->setSslAction('order', 'index');
 				$this->router->setSslAction('order', 'multi');
 			}
@@ -406,7 +410,7 @@ class LiveCart extends Application implements Serializable
 		// @todo: temp fix. for some reason /public/ was added seemingly randomly for some templates at one store
 		$editUrl = str_replace('/public/', '/', $editUrl);
 
-		if (strpos($tplSource, '{*nolive*}') === false)
+		if ((strpos($tplSource, '{*nolive*}') === false) && (!strpos($file, 'frontend.tpl')))
 		{
 			return '<span class="templateLocator" ondblclick="window.open(\'' . $editUrl . '\', \'template\', \'width=800,height=600,scrollbars=yes,resizable=yes\'); Event.stop(event); return false;" onmouseover="this.addClassName(\'activeTpl\'); Event.stop(event);" onmouseout="this.removeClassName(\'activeTpl\'); Event.stop(event);"><span class="templateName"><a onclick="window.open(\'' .
 		$editUrl . '\', \'template\', \'width=800,height=600,scrollbars=yes,resizable=yes\'); return false;" href="#">' . $file  . '</a></span>' . $tplSource . '</span>';

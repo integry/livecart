@@ -96,6 +96,8 @@ class WebToPay extends ExternalPayment
 
 	public function notify($requestArray)
 	{
+		$this->cleanRequestData($requestArray);
+
 		if (!$this->goodRequest($requestArray))
 		{
 			return new TransactionError('Bad _ss2 signature!', $requestArray);
@@ -103,7 +105,7 @@ class WebToPay extends ExternalPayment
 
 		if ($this->getConfigValue('merchantid') != $requestArray['merchantid'])
 		{
-			return new TransactionError('Incorrect MerchantID!', $requestArray);
+//			return new TransactionError('Incorrect MerchantID!', $requestArray);
 		}
 
 		if ($this->getConfigValue('projectid') != $requestArray['projectid'])
@@ -131,6 +133,7 @@ class WebToPay extends ExternalPayment
 
 	public function getOrderIdFromRequest($requestArray)
 	{
+		$this->cleanRequestData($requestArray);
 		return $requestArray['orderid'];
 	}
 
@@ -199,6 +202,8 @@ class WebToPay extends ExternalPayment
 
 	function checkCert($cert = null, $request)
 	{
+		$this->cleanRequestData($request);
+
 		$pKeyP = $this->getCert($cert);
 
 		if (!$pKeyP) return false;
@@ -224,6 +229,8 @@ class WebToPay extends ExternalPayment
 
 	function goodRequest($request)
 	{
+		$this->cleanRequestData($request);
+
 		unset(
 			$request['route'], $request['__utma'], $request['__utmz'],
 			$request['PHPSESSID'], $request['__server'], $request['ip'],
@@ -233,6 +240,18 @@ class WebToPay extends ExternalPayment
 		if ($this->checkCert(null, $request)) return true;
 
 		return $this->checkCert('public_old.key', $request);
+	}
+
+	private function cleanRequestData(&$request)
+	{
+		foreach ($request as $key => $value)
+		{
+			if (substr($key, 0, 3) == 'wp_')
+			{
+				unset($request[$key]);
+				$request[substr($key, 3)] = $value;
+			}
+		}
 	}
 }
 

@@ -42,7 +42,7 @@ class CCAvenue extends ExternalPayment
 
 	public function notify($requestArray)
 	{
-		file_put_contents(ClassLoader::getRealPath('cache.') . get_class($this) . '.php', var_export($array, true));
+		//file_put_contents(ClassLoader::getRealPath('cache.') . get_class($this) . '.php', var_export($requestArray, true));
 		$Checksum = $this->verifyChecksum($requestArray['Merchant_Id'], $requestArray['Order_Id'], $requestArray['Amount'], $requestArray['AuthDesc'], $requestArray['Checksum'], $this->getConfigValue('WorkingKey'));
 		if($Checksum == "true" && in_array($requestArray['AuthDesc'], array('Y', 'B')))
 		{
@@ -140,6 +140,8 @@ class CCAvenue extends ExternalPayment
 
 	private function cdec($num)
 	{
+		$dec = 0;
+
 		for ($n = 0 ; $n < strlen($num) ; $n++)
 		{
 		   $temp = $num[$n] ;

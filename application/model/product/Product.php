@@ -110,7 +110,7 @@ class Product extends MultilingualObject
 		$schema->registerField(new ArField("fractionalStep", ARFloat::instance(8)));
 		$schema->registerField(new ArField("position", ARInteger::instance()));
 		$schema->registerField(new ArField("categoryIntervalCache", ARText::instance()));
-		
+
 		$schema->registerField(new ArField("isRecurring", ARBool::instance()));
 	}
 
@@ -1535,6 +1535,16 @@ class Product extends MultilingualObject
 			return null;
 		}
 		return $rs->shift();
+	}
+
+	public function updateSalesRank()
+	{
+		$cacheFile = ClassLoader::getRealPath('cache.salesrank');
+		if (!file_exists($cacheFile) || (filemtime($cacheFile) < time() - 3600))
+		{
+			touch($cacheFile);
+			ActiveRecord::executeUpdate('UPDATE Product SET salesRank=(SELECT SUM(count) FROM OrderedItem LEFT JOIN CustomerOrder ON OrderedItem.customerOrderID=CustomerOrder.ID WHERE productID=Product.ID AND CustomerOrder.isPaid=1 AND CustomerOrder.dateCompleted > "' . ARSerializableDateTime::createFromTimeStamp(strtotime('-' . $this->config->get('BESTSELLING_ITEMS_DAYS') . ' days')) . '")');
+		}
 	}
 
 	public function serialize()

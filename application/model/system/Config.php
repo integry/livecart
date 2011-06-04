@@ -25,8 +25,12 @@ class Config
 	public function __construct(LiveCart $application)
 	{
 		$filePath = $this->getFilePath();
-		if (file_exists($filePath))
+		if (file_exists($filePath) || file_exists($this->getControlFilePath()))
 		{
+			// avoid race conditions when reading a config file that is being written at the same time
+			$time = time() + 1;
+			while (!is_readable($filePath) || (time() > $time)) { sleep(1); }
+
 			if (!include $filePath)
 			{
 				die('Cannot read configuration file');
@@ -228,6 +232,11 @@ class Config
 		if ($directoryExists)
 		{
 			file_put_contents($fullPath, $content);
+
+			if (!file_exists($this->getControlFilePath()))
+			{
+				file_put_contents($this->getControlFilePath(), '');
+			}
 		}
 	}
 
@@ -480,6 +489,11 @@ class Config
 	private function getFilePath()
 	{
 	  	return ClassLoader::getRealPath('storage.configuration.') . 'settings.php';
+	}
+
+	private function getControlFilePath()
+	{
+		return ClassLoader::getRealPath('cache.') . 'configExists.php';
 	}
 
 	public function getValues()

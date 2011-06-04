@@ -7,8 +7,8 @@
 				<form action="{link controller=backend.Customize action=changeTheme}">
 					{t _theme}
 					<select id="themeMenu" name="theme">
-						{foreach $themes as $theme}
-							<option {if $currentTheme == $theme}selected="selected" {/if}value="{$theme|escape}">{$theme|escape}</option>
+						{foreach $themes as $thm}
+							<option {if $currentTheme == $thm}selected="selected" {/if}value="{$thm|escape}">{$thm|escape}</option>
 						{/foreach}
 					</select>
 				</form>
@@ -43,10 +43,10 @@
 				</div>
 			{/if}
 			<li id="modeTranslation" {if 'translate' == $mode}class="active"{/if}><a href="{link controller=backend.customize action=mode query="mode=translate" returnPath=true}">{t _translations}</a></li>
-			
+
 			<li id="modeExit"><a href="{link controller=backend.customize action=mode query="mode=exit" returnPath=true}">{t _exit}</a></li>
-			
-			
+
+
 		</ul>
 		<div id="customizeMsg"><div style="display: none;"></div></div>
 	</div>

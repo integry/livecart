@@ -207,7 +207,47 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 		$this->executePlugins($this, 'after-save');
 
+		$cache = self::getApplication()->getCache();
+		if ($cache instanceof MemCachedCache)
+		{
+			$cache->set($this->getRecordIdentifier($this), $this);
+		}
+
 		return $res;
+	}
+
+	protected function storeToPool()
+	{
+		$cache = self::getApplication()->getCache();
+		if ($cache instanceof MemCachedCache)
+		{
+			$cache->set($this->getRecordIdentifier($this), $this);
+		}
+
+		parent::storeToPool();
+	}
+
+	public static function retrieveFromPool($className, $recordID = null)
+	{
+		if (is_object($recordID))
+		{
+			$recordID = $recordID->getID();
+		}
+
+		if (($memPool = parent::retrieveFromPool($className, $recordID)) || is_null($recordID))
+		{
+			return $memPool;
+		}
+
+		$cache = self::getApplication()->getCache();
+		if ($cache instanceof MemCachedCache)
+		{
+			if ($instance = $cache->get($className . '-' . self::getRecordHash($recordID)))
+			{
+				$instance->storeToPool();
+				return $instance;
+			}
+		}
 	}
 
 	protected static function transformArray($array, ARSchema $schema)
