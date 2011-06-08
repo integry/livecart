@@ -411,6 +411,32 @@ LiveCart.AjaxRequest.prototype = {
 		}
 	},
 
+	getResponseChunks: function(originalRequest)
+	{
+		if (!originalRequest.formerLength)
+		{
+			originalRequest.formerLength = 0;
+		}
+
+		var response = originalRequest.responseText.substr(originalRequest.formerLength);
+		originalRequest.formerLength = originalRequest.responseText.length;
+
+		var ret = [];
+		var portions = response.split('|');
+
+		for (var k = 0; k < portions.length; k++)
+		{
+			if (0 == portions[k].length)
+			{
+				continue;
+			}
+
+			ret.push(eval('(' + decode64(portions[k]) + ')'));
+		}
+
+		return ret;
+	},
+
 	reportError: function(response)
 	{
 		alert('Error!\n\n' + response.responseText);

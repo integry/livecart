@@ -21,7 +21,7 @@ class UpdateHelper
 			case 'UPDATE_FTP':
 				if ($conn = $this->getFTPConnection())
 				{
-					ftp_put($conn, $target, $source, FTP_BINARY);
+					return @ftp_put($conn, $target, $source, FTP_BINARY);
 				}
 				else
 				{
@@ -43,7 +43,10 @@ class UpdateHelper
 			case 'UPDATE_FTP':
 				if ($conn = $this->getFTPConnection())
 				{
-					return $this->ftp_uploaddirectory($conn, $source, $target);
+					$root = ClassLoader::getRealPath('.');
+					$ftpRoot = '/' . $settings->get('UPDATE_FTP_DIRECTORY') . '/' . substr($target, strlen($root) - 1);
+
+					return $this->ftp_uploaddirectory($conn, $source, $ftpRoot);
 				}
 				else
 				{
@@ -66,64 +69,87 @@ class UpdateHelper
 
 			break;
 		}
-
 	}
 
 	private function getFTPConnection()
 	{
 		$settings = $this->application->getConfig();
 
-		$conn = ftp_connect($settings->get('UPDATE_FTP_SERVER'));
-
-		if (!ftp_login($conn, $settings->get('UPDATE_FTP_USER'), $settings->get('UPDATE_FTP_PASSWORD')))
+		if (!function_exists('ftp_connect') ||
+			!($conn = @ftp_connect($settings->get('UPDATE_FTP_SERVER'))) ||
+			!ftp_login($conn, $settings->get('UPDATE_FTP_USER'), $settings->get('UPDATE_FTP_PASSWORD')))
 		{
 			return false;
 		}
 
-		ftp_chdir($conn, $settings->get('UPDATE_FTP_DIRECTORY'));
-
 		return $conn;
 	}
 
-	private function recurse_copy($src, $dst)
+	private function recurse_copy( $source, $target )
 	{
-		$failed = array();
-
-		$dir = opendir($src);
-		@mkdir($dst);
-		while(false !== ( $file = readdir($dir)) )
+		if ( is_dir( $source ) )
 		{
-			if (( $file != '.' ) && ( $file != '..' ))
+			@mkdir( $target );
+
+			$d = dir( $source );
+
+			while ( FALSE !== ( $entry = $d->read() ) )
 			{
-				if (is_dir($src . '/' . $file))
+				if ( $entry == '.' || $entry == '..' )
 				{
-					$res = $this->recurse_copy($src . '/' . $file,$dst . '/' . $file);
+					continue;
+				}
+
+				$Entry = $source . '/' . $entry;
+				if ( is_dir( $Entry ) )
+				{
+					$res = $this->recurse_copy( $Entry, $target . '/' . $entry );
 					if ($res !== true)
 					{
 						return $res;
 					}
+					continue;
 				}
-				else
+
+				if (!@copy( $Entry, $target . '/' . $entry ))
 				{
-					copy($src . '/' . $file,$dst . '/' . $file);
+					return $Entry;
 				}
+			}
+
+			$d->close();
+		}
+		else
+		{
+			if (!@copy( $source, $target ))
+			{
+				return $source;
 			}
 		}
 
-		closedir($dir);
+		return true;
 	}
 
 	private function ftp_uploaddirectory($conn_id, $local_dir, $remote_dir)
 	{
 		@ftp_mkdir($conn_id, $remote_dir);
+
 		$handle = opendir($local_dir);
+		$local_dir .= '/';
+		$remote_dir .= '/';
+
+		$f = array();
 		while (($file = readdir($handle)) !== false)
 		{
 			if (($file != '.') && ($file != '..'))
 			{
 				if (is_dir($local_dir.$file))
 				{
-					$this->ftp_uploaddirectory($conn_id, $local_dir.$file.'/', $remote_dir.$file.'/');
+					$res = $this->ftp_uploaddirectory($conn_id, $local_dir.$file.'/', $remote_dir.$file.'/');
+					if ($res !== true)
+					{
+						return $res;
+					}
 				}
 				else
 				{
@@ -139,10 +165,15 @@ class UpdateHelper
 			@ftp_chdir($conn_id, $remote_dir);
 			foreach ($f as $files)
 			{
-				$from = @fopen("$local_dir$files", 'r');
-				@ftp_fput($conn_id, $files, $from, FTP_BINARY);
+				$from = @fopen("$local_dir/$files", 'r');
+				if (!@ftp_fput($conn_id, $files, $from, FTP_BINARY))
+				{
+					return $files;
+				}
 			}
 		}
+
+		return true;
 	}
 }
 

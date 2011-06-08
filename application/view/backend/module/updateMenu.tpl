@@ -18,7 +18,10 @@
 		{if $versions}
 			<p>
 				<label>{t _version}:</label>
-				{selectfield name="version" options=$versions}
+				<fieldset class="error">
+					{selectfield name="version" options=$versions}
+					<div class="errorText hidden"></div>
+				</fieldset>
 			</p>
 		{/if}
 

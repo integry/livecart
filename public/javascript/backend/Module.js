@@ -44,7 +44,6 @@ Backend.Module.prototype =
 				var channel = form.elements.namedItem('channel');
 				Event.observe(channel, 'change', function(e)
 				{
-					console.log('changing');
 					this.updateVersionList(node, channel, form.elements.namedItem('version'));
 				}.bind(this));
 
@@ -84,10 +83,32 @@ Backend.Module.prototype =
 		var from = node.version;
 		var to = form.elements.namedItem('version').value;
 
-		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.module', 'update', {id: node.id, repo: node.repo.repo, handshake: node.repo.handshake, from: from, to: to}), node.down('input.submit'),
-		function (oR)
-		{
-			console.log(oR.responseData);
+		ActiveForm.prototype.resetErrorMessages(form);
+
+		var req = new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.module', 'update', {id: node.id, repo: node.repo.repo, handshake: node.repo.handshake, from: from, to: to}), node.down('input.submit'),
+			function (oR)
+			{ },
+		{onInteractive:
+			function(oR)
+			{
+				req.getResponseChunks(oR).each(function(chunk)
+				{
+					if (chunk.final)
+					{
+						Backend.SaveConfirmationMessage.prototype.showMessage(chunk.final);
+						this.reloadNode(node);
+					}
+					else if ('err' == chunk.status)
+					{
+						Backend.SaveConfirmationMessage.prototype.showMessage(chunk.msg, 'red');
+						this.reloadNode(node);
+					}
+					else if (chunk.path && !chunk.path.length)
+					{
+						ActiveForm.prototype.setErrorMessage(form.version, chunk.status);
+					}
+				}.bind(this));
+			}.bind(this)
 		});
 	},
 
@@ -113,17 +134,31 @@ Backend.Module.prototype =
 
 	saveComplete: function(node, oR)
 	{
-		var resp = oR.responseData;
+		var resp = oR.responseData || {node: oR.responseText};
 
 		// recreate node
 		var d = document.createElement('div');
-		d.innerHTML = resp.node;
+		d.update(resp.node);
+		//d.innerHTML = resp.node;
 
 		var newNode = d.firstChild;
 		node.parentNode.replaceChild(newNode, node);
+
+		newNode.repo = node.repo;
+		newNode.version = node.version;
 		this.initNode(newNode);
 
 		// status message
-		Backend.SaveConfirmationMessage.prototype.showMessage(resp.status.status);
+		if (resp.status)
+		{
+			Backend.SaveConfirmationMessage.prototype.showMessage(resp.status.status);
+		}
+
+		new Effect.Highlight(newNode);
+	},
+
+	reloadNode: function(node)
+	{
+		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.module', 'node', {id: node.id, repo: node.repo.repo, handshake: node.repo.handshake}), null, function (oR) { this.saveComplete(node, oR); }.bind(this));
 	}
 }

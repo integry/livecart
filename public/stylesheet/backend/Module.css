@@ -122,7 +122,13 @@ fieldset.type_needUpdate
 	width: 100px;
 }
 
-.updateMenu select
+.updateMenu select,
+.updateMenu .errorText
 {
-	width: 190px;
+	width: 185px;
+}
+
+.updateMenu .errorText
+{
+	white-space: normal;
 }

@@ -33,4 +33,7 @@ _module_type_notInstalled=Available modules (not installed)
 _proceed_update=Proceed with update
 
 _status_fetch=Downloading update packages
-_status_nothing_to_fetch=No update packages to download
+_status_nothing_to_fetch=No update packages available. Are you already using the selected version?
+_update_complete=[_1] has been updated
+
+_err_update_copy_msg=Error copying files. Please make sure that the update settings are correct. For example, if updates are handled over FTP, check if the configured FTP login details are correct. If the files are copied directly, the most likely cause would be insufficient write permissions. The following file could not be copied: [_1]

@@ -178,11 +178,16 @@ class ModuleController extends StoreManagementController
 
 	public function updateMenu()
 	{
+		$moduleInfo = $this->getModule()->getInfo();
+		$moduleLine = isset($moduleInfo['Module']['line']) ? $moduleInfo['Module']['line'] : 'current';
 		$lines = $this->getRepoResponse('package/channels');
 
+		$form = new Form($this->getValidator('moduleUpdateMenu'));
+		$form->set('channel', $moduleLine);
+
 		$response = new ActionResponse('lines', array_combine($lines, $lines));
-		$response->set('versions', $this->getVersionList($this->getRepoResponse('package/versions', array('channel' => 'current'))));
-		$response->set('form', new Form($this->getValidator('moduleUpdateMenu')));
+		$response->set('versions', $this->getVersionList($this->getRepoResponse('package/versions', array('channel' => $moduleLine))));
+		$response->set('form', $form);
 		return $response;
 	}
 
@@ -193,7 +198,9 @@ class ModuleController extends StoreManagementController
 
 	public function node()
 	{
-		return new ActionResponse('module', $this->toArray($this->getModule()));
+		$module = $this->toArray($this->getModule());
+		$module['repo'] = array('repo' => $this->request->get('repo'), 'handshake' => $this->request->get('handshake'));
+		return new ActionResponse('module', $module);
 	}
 
 	public function update()
@@ -203,7 +210,7 @@ class ModuleController extends StoreManagementController
 
 		$flush = array('path' => $updatePath);
 		$flush['status'] = $this->translate($updatePath ? '_status_fetch' : '_status_nothing_to_fetch');
-		$response->flush(base64_encode(json_encode($flush)) . '|');
+		$response->flushChunk($flush);
 
 		if (!$updatePath)
 		{
@@ -213,19 +220,43 @@ class ModuleController extends StoreManagementController
 		require_once(ClassLoader::getRealPath('library.pclzip') . '/pclzip.lib.php');
 
 		// process update
-		$tmpFile = ClassLoader::getRealPath('cache.') . 'update' . rand(1, 5000000) . '.zip';
-		$tmpDir = substr($tmpFile, 0, -4);
+		$module = $this->application->getConfigContainer()->getModule($this->request->get('id'));
 
 		foreach ($updatePath as $key => $package)
 		{
+			$tmpFile = ClassLoader::getRealPath('cache.') . 'update' . rand(1, 5000000) . '.zip';
+			$tmpDir = substr($tmpFile, 0, -4);
+
+			$response->flushChunk(array('package' => $package, 'status' => $this->translate('_status_fetch')));
+
 			file_put_contents($tmpFile, $this->getRepoResponse('package/download', $package, true));
 			$archive = new PclZip($tmpFile);
 			mkdir($tmpDir);
 			$archive->extract($tmpDir);
 			unlink($tmpFile);
 
+			$res = $module->applyUpdate($tmpDir);
+			if ($res === true)
+			{
+				$response->flushChunk(array('status' => 'ok'));
+			}
+			else
+			{
+				$errs = array('_err_update_copy_msg', '_err_update_db', '_err_update_custom');
+				$response->flushChunk(array('status' => 'err', 'msg' => $this->maketext($errs[$res[0]], array($res[1]))));
 
+				$res = false;
+			}
+
+			$this->application->rmdir_recurse($tmpDir);
+
+			if (!$res)
+			{
+				return;
+			}
 		}
+
+		$response->flushChunk(array('final' => $this->makeText('_update_complete', array($this->translate($module->getName())))));
 	}
 
 	private function getVersionList($repoResponse)
