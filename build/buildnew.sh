@@ -8,6 +8,11 @@ set -e
 REPO_ROOT=/var/db/repo
 PKG_DEF_ROOT=/var/db/livecart
 
+if [ ! $PKG_ROOT ]
+then
+	PKG_ROOT=$PKG_DEF_ROOT
+fi
+
 SCRIPTDIR="`dirname $0`"
 LINE=$2
 ROOT=$1
@@ -112,7 +117,10 @@ function markCopyright
 	cd $SCRIPTDIR/..
 	if [ $ISMODULE ]
 	then
-		cp license-module.txt /tmp/update
+		if [ -f /tmp/update/license.txt ]
+		then
+			cp license-module.txt /tmp/update
+		fi
 	else
 		cp license.txt /tmp/update
 	fi
@@ -166,11 +174,6 @@ function makeProfessional
 
 function createArchive
 {
-	if [ ! $PKG_ROOT ]
-	then
-		PKG_ROOT=$PKG_DEF_ROOT
-	fi
-
 	amkdir $PKG_ROOT
 
 	TAR=$PKG_ROOT/$1.tar
@@ -238,11 +241,12 @@ function buildUpdatePackages
 	markCopyright
 
 	# prepare update package
+	UPDATEDIR=/tmp/update/update/$VERSION
 	mkdir /tmp/update/update
-	cp -r $MAIN/update/$VERSION /tmp/update/update/$VERSION
+	cp -r $MAIN/update/$VERSION $UPDATEDIR
 
 	cd $SCRIPTDIR/../update
-	cp readme.txt /tmp/update/update/$VERSION
+	cp readme.txt $UPDATEDIR
 	cp readme.txt /tmp/update/update
 	cp update.php /tmp/update/update
 
@@ -250,6 +254,14 @@ function buildUpdatePackages
 	if [ ! $ISMODULE ]
 	then
 		cp --parents application/controller/backend/SettingsController.php /tmp/update
+	fi
+
+	# update/downgrade SQL files
+	if [ $ISDOWNGRADE ]
+	then
+		rm -f $UPDATEDIR/update.sql
+	else
+		rm -f $UPDATEDIR/downgrade.sql
 	fi
 
 	# create update package files

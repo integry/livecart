@@ -541,11 +541,22 @@ class ConfigurationContainer
 			return array(self::ERR_COPY, $copy);
 		}
 
-		$this->application->getConfigContainer()->clearCache();
-
 		// import SQL
+		foreach (glob($dir . '/update/*/*.sql') as $file)
+		{
+			try
+			{
+				$this->loadSQL($file);
+			}
+			catch (Exception $e)
+			{
+				return array(self::ERR_DB, $e->getMessage());
+			}
+		}
 
 		// custom scripts
+
+		$this->application->getConfigContainer()->clearCache();
 
 		return true;
 	}
