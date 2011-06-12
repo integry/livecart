@@ -94,19 +94,6 @@ LiveCart.AjaxRequest.prototype = {
 			url = form.action;
 			method = form.method;
 			params = Form.serialize(form);
-
-			if (!indicatorId)
-			{
-				var controls = form.down('fieldset.controls');
-				if (controls)
-				{
-					indicatorId = controls.down('.progressIndicator');
-				}
-				else
-				{
-					indicatorId = form.down('.progressIndicator');
-				}
-			}
 		}
 		else
 		{
@@ -116,11 +103,55 @@ LiveCart.AjaxRequest.prototype = {
 
 		url = this.fixUrl(url);
 
+		indicatorId = this.getIndicator(indicatorId, form);
+
+		if (indicatorId && $(indicatorId))
+		{
+			this.showIndicator();
+		}
+
+		if (!options)
+		{
+			options = {};
+		}
+
+		options.method = method;
+
+		if (!options.parameters)
+		{
+			options.parameters = params;
+		}
+
+		options.parameters += (escape(options.parameters) ? '&' : '') + 'ajax=true';
+
+		options.onComplete = this.postProcessResponse.bind(this, this.parseURI(url));
+		options.onFailure = this.reportError;
+
+		document.body.style.cursor = 'progress';
+
+		this.request = new Ajax.Request(url, options);
+	},
+
+	getIndicator: function(indicatorId, form)
+	{
+		if (!indicatorId && form)
+		{
+			var controls = form.down('fieldset.controls');
+			if (controls)
+			{
+				indicatorId = controls.down('.progressIndicator');
+			}
+			else
+			{
+				indicatorId = form.down('.progressIndicator');
+			}
+		}
+
 		if (indicatorId && $(indicatorId))
 		{
 			this.adjustIndicatorVisibility = ($(indicatorId).style.visibility == 'hidden');
 
-			if ('SELECT' == indicatorId.tagName)
+			if (('SELECT' == indicatorId.tagName) || (('INPUT' == indicatorId.tagName) && (('submit' == indicatorId.type))))
 			{
 				var selectIndicator = document.createElement('span');
 				selectIndicator.className = 'progressIndicator';
@@ -154,29 +185,9 @@ LiveCart.AjaxRequest.prototype = {
 			}
 
 			this.indicatorContainerId = indicatorId;
-			this.showIndicator();
 		}
 
-		if (!options)
-		{
-			options = {};
-		}
-
-		options.method = method;
-
-		if (!options.parameters)
-		{
-			options.parameters = params;
-		}
-
-		options.parameters += (escape(options.parameters) ? '&' : '') + 'ajax=true';
-
-		options.onComplete = this.postProcessResponse.bind(this, this.parseURI(url));
-		options.onFailure = this.reportError;
-
-		document.body.style.cursor = 'progress';
-
-		this.request = new Ajax.Request(url, options);
+		return indicatorId;
 	},
 
 	fixUrl: function(url)
@@ -469,19 +480,6 @@ LiveCart.AjaxUpdater.prototype = {
 			url = form.action;
 			method = form.method;
 			params = Form.serialize(form);
-
-			if (!indicatorId)
-			{
-				var controls = form.down('fieldset.controls');
-				if (controls)
-				{
-					indicatorId = controls.down('.progressIndicator');
-					if(indicatorId.style.visibility == 'hidden')
-					{
-						this.adjustIndicatorVisibility = true;
-					}
-				}
-			}
 		}
 		else
 		{
@@ -493,11 +491,11 @@ LiveCart.AjaxUpdater.prototype = {
 
 		LiveCart.ajaxUpdaterInstance = this;
 
+		indicatorId = LiveCart.AjaxRequest.prototype.getIndicator.bind(this)(indicatorId, form);
+
 		if (indicatorId)
 		{
-			this.indicatorContainerId = indicatorId;
-			Element.show(this.indicatorContainerId);
-			this.adjustIndicatorVisibility = true;
+			this.showIndicator();
 		}
 
 		if (!options)
@@ -555,26 +553,12 @@ LiveCart.AjaxUpdater.prototype = {
 
 	hideIndicator: function()
 	{
-		if (!this.indicatorContainerId)
-		{
-			return;
-		}
-
-		if (this.adjustIndicatorVisibility)
-		{
-			Element.hide(this.indicatorContainerId);
-		}
-
-		$(this.indicatorContainerId).removeClassName('progressIndicator');
+		LiveCart.AjaxRequest.prototype.hideIndicator.bind(this)();
 	},
 
 	showIndicator: function()
 	{
-		if (this.indicatorContainerId)
-		{
-			$(this.indicatorContainerId).addClassName('progressIndicator');
-			Element.show(this.indicatorContainerId);
-		}
+		LiveCart.AjaxRequest.prototype.showIndicator.bind(this)();
 	},
 
 	postProcessResponse: function(response)
