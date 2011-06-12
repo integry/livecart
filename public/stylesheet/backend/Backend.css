@@ -648,6 +648,11 @@ ul.menu li {
     padding: 2px 0 2px 22px;
 }
 
+ul.menu li.cancel
+{
+	padding-left: 0;
+}
+
 .menu a {
   	color: red;
 }

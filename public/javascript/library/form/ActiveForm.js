@@ -296,7 +296,13 @@ ActiveForm.Slide.prototype = {
 			this.ul.childElements().invoke("hide");
 			if(cancel)
 			{
-				Element.show(this.ul.down("." + className + 'Cancel'));
+				Element.show(cancel);
+
+				Event.observe(cancel.down('a'), 'click', function(e)
+				{
+					Event.stop(e);
+					this.hide(className, form);
+				}.bind(this));
 			}
 
 			$A(form.getElementsByTagName("input")).each(function(input)
