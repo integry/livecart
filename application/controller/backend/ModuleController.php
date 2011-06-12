@@ -11,7 +11,7 @@ ClassLoader::import("application.controller.backend.abstract.StoreManagementCont
  */
 class ModuleController extends StoreManagementController
 {
-	private $repos = array('http://localhost:8002');
+	private $repos = array();
 
 	public function init()
 	{
@@ -93,6 +93,7 @@ class ModuleController extends StoreManagementController
 
 		$response = new ActionResponse();
 		$response->set('sortedModules', $sorted);
+		$response->set('repos', $repos);
 		return $response;
 	}
 
@@ -281,6 +282,78 @@ class ModuleController extends StoreManagementController
 		$fetch = new NetworkFetch($repo . '/ping');
 		$fetch->fetch();
 		return new RawResponse(file_get_contents($fetch->getTmpFile()) == 'OK' ? 'OK' : 'fail');
+	}
+
+	public function packageList()
+	{
+		$resp = array();
+		$conf = $this->application->getConfigContainer();
+		foreach (json_decode($this->request->get('repos'), true) as $repo)
+		{
+			$this->request->set('repo', $repo['repo']);
+			$this->request->set('handshake', $repo['handshake']);
+
+			$p = parse_url($repo['repo']);
+			foreach ($this->getRepoResponse('package/list') as $package)
+			{
+				if ($conf->getModule('module.' . $package['pkg']))
+				{
+					continue;
+				}
+
+				$id = base64_encode(serialize(array($repo['repo'], $package['pkg'])));
+				$resp[$p['host']][$id] = $package;
+			}
+		}
+
+		$response = new ActionResponse();
+		$response->set('repos', base64_encode($this->request->get('repos')));
+		$response->set('packages', $resp);
+		return $response;
+	}
+
+	public function fetch()
+	{
+		require_once(ClassLoader::getRealPath('library.pclzip') . '/pclzip.lib.php');
+
+		$id = unserialize(base64_decode($this->request->get('module')));
+		$repos = json_decode(base64_decode($this->request->get('repos')), true);
+
+		$repo = $repos[$id[0]];
+		$this->request->set('repo', $repo['repo']);
+		$this->request->set('handshake', $repo['handshake']);
+		$this->request->set('id', $id[1]);
+
+		$tmpFile = ClassLoader::getRealPath('cache.') . 'install' . rand(1, 5000000) . '.zip';
+		file_put_contents($tmpFile, $this->getRepoResponse('package/downloadInstall', array(), true));
+
+		if (!filesize($tmpFile))
+		{
+			return new JSONResponse(array('error' => $this->translate('_err_download_package')));
+		}
+
+		$tmpDir = substr($tmpFile, 0, -4);
+		mkdir($tmpDir);
+		$archive = new PclZip($tmpFile);
+		$archive->extract($tmpDir);
+		unlink($tmpFile);
+
+		$update = new UpdateHelper($this->application);
+		$moduleDir = ClassLoader::getRealPath('module.' . $id[1]);
+		$copy = $update->copyDirectory($tmpDir, $moduleDir);
+
+		if ($copy !== true)
+		{
+			return new JSONResponse(array('error' => $this->maketext('_err_update_copy_msg', array($copy))));
+		}
+
+		$this->application->getConfigContainer()->addModule('module.' . $id[1]);
+		$module = $this->application->getConfigContainer()->getModule('module.' . $id[1]);
+		$module->install($this->application);
+		$module->setStatus(true);
+
+		$this->request->set('id', 'module.' . $id[1]);
+		return $this->node();
 	}
 
 	private function getVersionList($repoResponse)

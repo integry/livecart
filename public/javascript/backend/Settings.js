@@ -625,6 +625,7 @@ Backend.Settings.Editor.prototype =
 		'UPDATE_COPY_METHOD':
 			function()
 			{
+				// method testing
 				var cont = $('setting_UPDATE_COPY_METHOD');
 				var menu = cont.appendChild($('handler_UPDATE_COPY_METHOD').cloneNode(true));
 				var a = menu.down('a');
@@ -635,6 +636,24 @@ Backend.Settings.Editor.prototype =
 					{
 					});
 				});
+
+				// ftp container toggle
+				var field = $('UPDATE_COPY_METHOD');
+				var change = function()
+				{
+					var ftpContainer = $('setting_UPDATE_FTP_SERVER').up('.settings');
+					if (field.value == 'UPDATE_FTP')
+					{
+						ftpContainer.show();
+					}
+					else
+					{
+						ftpContainer.hide();
+					}
+				}
+
+				Event.observe(field, 'change', change);
+				change();
 			},
 
 		'DEF_COUNTRY':
@@ -670,27 +689,6 @@ Backend.Settings.Editor.prototype =
 					var key = key.substr(0, key.length - 2);
 					label.innerHTML = Backend.getTranslation(key) + ':';
 				});
-			},
-
-		'UPDATE_COPY_METHOD':
-			function()
-			{
-				var field = $('UPDATE_COPY_METHOD');
-				var change = function()
-				{
-					var ftpContainer = $('setting_UPDATE_FTP_SERVER').up('.settings');
-					if (field.value == 'UPDATE_FTP')
-					{
-						ftpContainer.show();
-					}
-					else
-					{
-						ftpContainer.hide();
-					}
-				}
-
-				Event.observe(field, 'change', change);
-				change();
 			},
 
 		'UPDATE_REPO_1':

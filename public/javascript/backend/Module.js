@@ -139,7 +139,6 @@ Backend.Module.prototype =
 		// recreate node
 		var d = document.createElement('div');
 		d.update(resp.node);
-		//d.innerHTML = resp.node;
 
 		var newNode = d.firstChild;
 		node.parentNode.replaceChild(newNode, node);
@@ -161,4 +160,46 @@ Backend.Module.prototype =
 	{
 		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.module', 'node', {id: node.id, repo: node.repo.repo, handshake: node.repo.handshake}), null, function (oR) { this.saveComplete(node, oR); }.bind(this));
 	}
+}
+
+Backend.Module.downloadManager = function(repos)
+{
+	var a = $('download-modules').down('a');
+	Event.observe(a, 'click', function(e)
+	{
+		Event.stop(e);
+		new LiveCart.AjaxUpdater(Router.createUrl('backend.module', 'packageList'), $('download-modules-container'), ('download-modules'), null, function(oR)
+		{
+			var menu = new ActiveForm.Slide($('module-menu'));
+			menu.show("download-modules", $('download-modules-container'));
+
+			var form = $('download-modules-container').down('form');
+			if (form)
+			{
+				Event.observe(form, 'submit', function(e)
+				{
+					Event.stop(e);
+					new LiveCart.AjaxRequest(form, form.down('.submit'), function(oR)
+					{
+						menu.hide("download-modules", $('download-modules-container'));
+						if (oR.responseData)
+						{
+							Backend.SaveConfirmationMessage.prototype.showMessage(oR.responseData.error, 'red');
+						}
+						else
+						{
+							var cont = $('just-installed');
+							var nodeCont = document.createElement('div');
+							cont.appendChild(nodeCont);
+							nodeCont.update(oR.responseText);
+							var node = nodeCont.down('li');
+							window.moduleManager.initNode(node);
+							cont.show();
+							new Effect.Highlight(node);
+						}
+					});
+				});
+			}
+		}, {parameters: 'repos=' + repos});
+	});
 }
