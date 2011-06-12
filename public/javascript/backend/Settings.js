@@ -672,6 +672,136 @@ Backend.Settings.Editor.prototype =
 				});
 			},
 
+		'UPDATE_COPY_METHOD':
+			function()
+			{
+				var field = $('UPDATE_COPY_METHOD');
+				var change = function()
+				{
+					var ftpContainer = $('setting_UPDATE_FTP_SERVER').up('.settings');
+					if (field.value == 'UPDATE_FTP')
+					{
+						ftpContainer.show();
+					}
+					else
+					{
+						ftpContainer.hide();
+					}
+				}
+
+				Event.observe(field, 'change', change);
+				change();
+			},
+
+		'UPDATE_REPO_1':
+			function()
+			{
+				var previousContainer = null;
+				$A($('setting_UPDATE_REPO_1').up('.settings').getElementsByTagName('label')).each(function(label)
+				{
+					label.innerHTML = Backend.getTranslation('UPDATE_REPO_1') + ':';
+
+					var settingContainer = label.up('.setting');
+					settingContainer.field = settingContainer.down('input.text');
+					settingContainer.label = label;
+
+					if (previousContainer)
+					{
+						settingContainer.previousContainer = previousContainer;
+						settingContainer.previousContainer.nextContainer = settingContainer;
+					}
+
+					var field = settingContainer.field;
+					var change = function(e)
+					{
+						// check if repo url is unique
+						container = $('setting_UPDATE_REPO_1');
+						while (container.nextContainer)
+						{
+							if ((container.field.value == field.value) && (container != settingContainer))
+							{
+								field.value = '';
+							}
+
+							container = container.nextContainer;
+						}
+
+						if (!field.value.length)
+						{
+							settingContainer.hide();
+
+							if (settingContainer.nextContainer && settingContainer.nextContainer.field.value.length)
+							{
+								var value = settingContainer.nextContainer.field.value;
+								settingContainer.field.value = value;
+								settingContainer.nextContainer.field.value = '';
+								settingContainer.change();
+								settingContainer.nextContainer.change();
+							}
+						}
+						else
+						{
+							settingContainer.show();
+							label.innerHTML = Backend.getTranslation('UPDATE_REPO_1') + ':';
+							label.removeClassName('newRepo');
+
+							// sort fields, so that entered values are always in the first fields
+							var lastContainer = settingContainer;
+							while (lastContainer.previousContainer && !lastContainer.previousContainer.field.value.length)
+							{
+								lastContainer = lastContainer.previousContainer;
+							}
+
+							var value = settingContainer.field.value;
+							settingContainer.field.value = '';
+							lastContainer.field.value = value;
+
+							var className = settingContainer.label.className;
+							settingContainer.label.className = '';
+							lastContainer.label.className = className;
+
+							if (settingContainer != lastContainer)
+							{
+								settingContainer.change();
+								lastContainer.change();
+							}
+
+							if (e)
+							{
+								new LiveCart.AjaxRequest(Router.createUrl('backend.module', 'repoStatus', {repo: lastContainer.field.value}), lastContainer.label, function(oR)
+								{
+									label.removeClassName('repoUp');
+									label.removeClassName('repoDown');
+									label.addClassName((oR.responseText == 'OK') ? 'repoUp' : 'repoDown');
+								});
+							}
+						}
+
+						lastContainer = $('setting_UPDATE_REPO_20');
+						while (lastContainer.previousContainer && !lastContainer.previousContainer.field.value.length)
+						{
+							lastContainer = lastContainer.previousContainer;
+							lastContainer.hide();
+						}
+
+						if (lastContainer.label)
+						{
+							lastContainer.label.innerHTML = Backend.getTranslation('UPDATE_REPO_2') + ':';
+							lastContainer.show();
+							lastContainer.label.removeClassName('repoUp');
+							lastContainer.label.removeClassName('repoDown');
+							lastContainer.label.addClassName('newRepo');
+						}
+					}
+
+					settingContainer.change = change;
+					Event.observe(field, 'change', change);
+					change(true);
+
+					previousContainer = settingContainer;
+				});
+			},
+
 		'OFFLINE_NAME_2': function() { this.handlers.OFFLINE_NAME_1(); },
 		'OFFLINE_NAME_3': function() { this.handlers.OFFLINE_NAME_1(); },
 		'OFFLINE_NAME_4': function() { this.handlers.OFFLINE_NAME_1(); },

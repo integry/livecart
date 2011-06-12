@@ -1292,14 +1292,25 @@ a.cancel, a.menu
 	display: block;
 }
 
-.progressIndicator {
+.progressIndicator
+{
+	background-image: url(../../image/indicator.gif) !important;
+	background-repeat: no-repeat !important;
+	clear: none;
+}
+
+label.progressIndicator
+{
+	padding-left: 20px;
+	background-position: left center;
+}
+
+span.progressIndicator
+{
 	padding: 15px;
 	width: 30px;
 	height: 20px;
-	background-image: url(../../image/indicator.gif) !important;
 	background-position: center center;
-	background-repeat: no-repeat !important;
-	clear: none;
 }
 
 a.progressIndicator

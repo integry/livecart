@@ -589,3 +589,7 @@ UPDATE_FTP_SERVER=FTP server
 UPDATE_FTP_USER=FTP username
 UPDATE_FTP_PASSWORD=FTP password
 UPDATE_FTP_DIRECTORY=FTP directory
+
+_update_repositories=Module/update repositories
+UPDATE_REPO_1=Repository URL
+UPDATE_REPO_2=Add new repository

@@ -8,6 +8,11 @@
 
 {include file="layout/backend/header.tpl"}
 
+<ul class="menu">
+	<li id="download-modules"><a href="#">{t _add_modules}</a></li>
+	<li id="manage-repos"><a href="{link controller=backend.settings}#section_095-updates__">{t _manage_module_repositories}</a></li>
+</ul>
+
 {include file="block/message.tpl"}
 
 <ul id="moduleList" class="activeList">

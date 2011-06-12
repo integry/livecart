@@ -5,6 +5,9 @@ _deinstall=Deinstall
 _installed=Installed
 _not_installed=Not installed
 
+_add_modules=Add new modules
+_manage_module_repositories=Manage module repositories
+
 _version=Version
 _channel=Channel
 

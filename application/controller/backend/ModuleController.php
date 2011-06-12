@@ -24,6 +24,17 @@ class ModuleController extends StoreManagementController
 
 		$this->locale->translationManager()->reloadFile('Base');
 
+		$k = 0;
+		$config = $this->application->getConfig();
+		while ($config->isValueSet('UPDATE_REPO_' . ++$k))
+		{
+			$repo = $config->get('UPDATE_REPO_' . $k);
+			if ($repo)
+			{
+				$this->repos[] = $repo;
+			}
+		}
+
 		parent::init();
 	}
 
@@ -257,6 +268,19 @@ class ModuleController extends StoreManagementController
 		}
 
 		$response->flushChunk(array('final' => $this->makeText('_update_complete', array($this->translate($module->getName())))));
+	}
+
+	public function repoStatus()
+	{
+		$repo = $this->request->get('repo');
+		if (!preg_match('/^http[s]{0,1}\:\/\//', $repo))
+		{
+			return new RawResponse('Invalid URL');
+		}
+
+		$fetch = new NetworkFetch($repo . '/ping');
+		$fetch->fetch();
+		return new RawResponse(file_get_contents($fetch->getTmpFile()) == 'OK' ? 'OK' : 'fail');
 	}
 
 	private function getVersionList($repoResponse)

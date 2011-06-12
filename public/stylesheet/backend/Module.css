@@ -132,3 +132,13 @@ fieldset.type_needUpdate
 {
 	white-space: normal;
 }
+
+#download-modules
+{
+	background-image: url(../../image/silk/plugin_add.png);
+}
+
+#manage-repos
+{
+	background-image: url(../../image/silk/plugin_go.png);
+}
