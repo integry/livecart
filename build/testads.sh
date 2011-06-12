@@ -1,6 +1,8 @@
 #!/bin/bash
 set -x
 
+export PKG_ROOT=/tmp/packages
+
 cd /l/module/ads
 git reset --hard && rm -rf update && git checkout master
 
