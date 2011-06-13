@@ -15,6 +15,13 @@ class ModuleController extends StoreManagementController
 
 	public function init()
 	{
+		$this->initRepos();
+
+		parent::init();
+	}
+
+	protected function initRepos()
+	{
 		$conf = $this->application->getConfigContainer();
 		$conf->clearCache();
 		foreach ($conf->getAvailableModules() as $module)
@@ -34,8 +41,6 @@ class ModuleController extends StoreManagementController
 				$this->repos[] = $repo;
 			}
 		}
-
-		parent::init();
 	}
 
 	/**
@@ -65,9 +70,17 @@ class ModuleController extends StoreManagementController
 			$modules[$module->getMountPath()] = $this->toArray($module);
 		}
 
+		$modules['.'] = $this->toArray($conf->getModule('.'));
+
 		$this->getNewestVersions($modules, $repos);
 
 		usort($modules, array($this, 'sortModulesByName'));
+
+		$livecart = array_pop($modules);
+		$livecart['isInstalled'] = true;
+		$livecart['isEnabled'] = true;
+		array_unshift($modules, $livecart);
+
 		$sorted = array();
 
 		foreach ($modules as $module)
@@ -99,7 +112,9 @@ class ModuleController extends StoreManagementController
 
 	private function sortModulesByName($a, $b)
 	{
-		return strtolower($a['Module']['name']) > strtolower($b['Module']['name']) ? 1 : -1;
+		return (strtolower($a['Module']['name']) > strtolower($b['Module']['name'])) ||
+				('LiveCart' == $a['Module']['name'])
+				 ? 1 : -1;
 	}
 
 	private function getRepoHandshake($repo)
@@ -217,6 +232,9 @@ class ModuleController extends StoreManagementController
 
 	public function update()
 	{
+		$this->config->set('MODULE_STATS_UPDATED', null);
+		$this->config->save();
+
 		$response = new JSONResponse('');
 		$updatePath = $this->getRepoResponse('package/updatePath', array('from' => $this->request->get('from'), 'to' => $this->request->get('to')));
 

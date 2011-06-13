@@ -86,6 +86,15 @@
                 	"icon": "image/silk/wrench_orange.png",
                 	"descr": "_menu_descr_configuration"
                 },
+                "modules":
+				{
+                	"title": "_menu_modules_updates",
+                	"controller": "backend.module",
+                	"action": "index",
+                	"role": "settings",
+                	"icon": "image/silk/plugin.png",
+                	"descr": "_menu_descr_modules_updates"
+                },
                 "deliveryzones":
 				{
                 	"title": "_menu_delivery_tax_zones",
@@ -101,15 +110,6 @@
                 	"controller": "backend.customField",
                 	"icon": "image/silk/textfield.png",
                 	"descr": "_menu_descr_custom_fields"
-                },
-                "modules":
-				{
-                	"title": "_menu_modules",
-                	"controller": "backend.module",
-                	"action": "index",
-                	"role": "settings",
-                	"icon": "image/silk/plugin.png",
-                	"descr": "_menu_descr_modules"
                 },
                 "taxes":
 				{
@@ -146,15 +146,6 @@
                 	"role": "language",
                 	"icon": "image/silk/world.png",
                 	"descr": "_menu_descr_languages"
-                },
-                "update":
-				{
-                	"title": "_menu_update",
-                	"controller": "backend.update",
-                	"action": "index",
-                	"role": "update",
-                	"icon": "image/silk/drive_web.png",
-                	"descr": "_menu_descr_update"
                 }
             }
         },

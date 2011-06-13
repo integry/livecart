@@ -9,6 +9,13 @@
 	<div id="pageHeader">
 
 		<div id="systemMenu">
+				{if 'BACKEND_SHOW_HELP'|config}
+					<a id="updates-link" {if 'MODULE_STATS_NEED_UPDATING'|config}class="updateAvailable"{/if} href="{link controller=backend.module}">{t _modules_updates}</a>
+					{if 'MODULE_STATS_NEED_UPDATING'|config}
+						<span id="moduleUpdateAvailable">({'MODULE_STATS_NEED_UPDATING'|config})</span>
+					{/if}
+					|
+				{/if}
 				<a id="help" href="#" target="_blank" {if !'BACKEND_SHOW_HELP'|config}style="display:none;"{/if}>{t _base_help}</a>
 				{if 'BACKEND_SHOW_HELP'|config} | {/if}
 				{backendLangMenu}

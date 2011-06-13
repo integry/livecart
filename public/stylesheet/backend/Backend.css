@@ -269,6 +269,13 @@ html, body{
 	margin: 0 6px;
 }
 
+#moduleUpdateAvailable
+{
+	margin-left: -6px;
+	margin-right: 6px;
+	color: red;
+}
+
 /***************************
 	Page footer
 ***************************/
@@ -308,7 +315,9 @@ html, body{
 #navContainer
 {
 	border-bottom: 3px solid #15367f;
+	height: 82px;
 }
+
 #nav {
 	position: absolute;
 	bottom: 3px;

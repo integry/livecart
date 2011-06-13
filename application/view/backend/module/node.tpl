@@ -1,4 +1,4 @@
-<li id="{$module.path}" class="module activeList_odd {if $module.newest && ($module.newest.version != $module.Module.version)}needUpdate{/if} {if !$module.isEnabled}disabled{/if} {if $module.isInstalled}installed{/if}">
+<li id="{$module.path}" class="module module_{$module.path|replace:'.':'_'} activeList_odd {if $module.newest && ($module.newest.version != $module.Module.version)}needUpdate{/if} {if !$module.isEnabled}disabled{/if} {if $module.isInstalled}installed{/if}">
 	<div>
 		<span class="moduleStatus">
 			<input type="checkbox" class="checkbox" {if $module.isEnabled}checked="checked"{/if} {if !$module.isInstalled}disabled="disabled"{/if} />

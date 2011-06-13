@@ -16,7 +16,7 @@ _menu_custom_fields=Custom Fields
 _menu_delivery_tax_zones=Delivery and Tax Zones
 _menu_tax=Taxes
 _menu_languages=Languages
-_menu_modules=Modules
+_menu_modules_updates=Modules and Updates
 _menu_update=Update LiveCart
 _menu_currencies=Currencies
 _menu_shipping_class=Shipping Classes
@@ -50,7 +50,7 @@ _menu_descr_tax=Define what taxes will be used
 _menu_descr_languages=Enable additional languages and edit translations
 _menu_descr_update=Check for LiveCart version updates
 _menu_descr_currencies=Enable additional currencies and update exchange rates
-_menu_descr_modules=Install additional functions
+_menu_descr_modules_updates=Install additional functions and software updates
 _menu_descr_shipping_class=Shipping classes allow to differentiate shipping rates for different types of products
 
 _menu_descr_customize=Customize the look and feel of your store

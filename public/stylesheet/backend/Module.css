@@ -91,9 +91,12 @@ a.updateAction
 	-moz-border-radius: 5px;
 }
 
-fieldset.type_needUpdate
+fieldset.type_needUpdate legend
 {
-	border-color: red;
+	background-color: #FF8888;
+    border-color: red;
+    color: white;
+    font-weight: bold;
 }
 
 .updateInfo
@@ -141,4 +144,26 @@ fieldset.type_needUpdate
 #manage-repos
 {
 	background-image: url(../../image/silk/plugin_go.png);
+}
+
+.module__
+{
+	background-image: url(../../image/promo/logo_large_install.png);
+}
+
+.module__ .moduleName
+{
+	display: block;
+	font-size: 20px;
+	margin-top: 7px;
+}
+
+.module__ .moduleStatus
+{
+	visibility: hidden;
+}
+
+.module__ .installAction
+{
+	display: none;
 }

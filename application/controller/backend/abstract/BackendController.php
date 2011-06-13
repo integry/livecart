@@ -3,6 +3,7 @@
 ClassLoader::import("application.controller.BaseController");
 ClassLoader::import("library.json.json");
 ClassLoader::import('application.controller.backend.BackendToolbarController');
+ClassLoader::import('application.controller.backend.ModuleController');
 
 /**
  * Generic backend controller for administrative tools (actions, modules etc.)
@@ -57,9 +58,35 @@ abstract class BackendController extends BaseController
 	  	$this->setLayout('empty');
 		$this->addBlock('USER_MENU', 'boxUserMenu', 'block/backend/userMenu');
 		$this->addBlock('TRANSLATIONS', 'translations', 'block/backend/translations');
-		
+
 		$this->addBlock('FOOTER_TOOLBAR', 'toolbar', 'block/backend/toolbar');
+
+		$this->getPendingModuleUpdateStats($this->application);
+
 		return parent::init();
+	}
+
+	protected function getPendingModuleUpdateStats(LiveCart $application)
+	{
+		$config = $application->getConfig();
+
+		// modules needing update
+		if (!$config->isValueSet('MODULE_STATS_UPDATED') || (time() - $config->get('MODULE_STATS_UPDATED') > 3600))
+		{
+			$config->set('MODULE_STATS_UPDATED', time());
+			$config->save();
+			$controller = new ModuleController($this->application);
+			$controller->initRepos();
+			$updateResponse = $controller->index();
+			$modules = $updateResponse->get('sortedModules');
+			$config->set('MODULE_STATS_NEED_UPDATING', isset($modules['needUpdate']) ? count($modules['needUpdate']) : 0);
+			$config->save();
+
+			foreach ($this->getConfigFiles() as $file)
+			{
+				$this->loadLanguageFile($file);
+			}
+		}
 	}
 
 	public function boxUserMenuBlock()
@@ -75,7 +102,7 @@ abstract class BackendController extends BaseController
 	public function toolbarBlock()
 	{
 		$response = new BlockResponse();
-		$response->set('dropButtons', 
+		$response->set('dropButtons',
 			BackendToolbarItem::sanitizeItemArray(
 				BackendToolbarItem::getUserToolbarItems(BackendToolbarItem::TYPE_MENU)
 			)
