@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import('library.smarty.libs.Smarty');
+require_once ClassLoader::getRealPath('library.smarty.libs.') . 'Smarty.class.php';
 
 /**
  *  Extends Smarty with LiveCart-specific logic

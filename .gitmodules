@@ -1,66 +1,42 @@
 [submodule "framework"]
 	path = framework
-	url = git@dev.integry.net:framework
+	url = git@github.com:integry/integry-framework.git
 [submodule "library/activerecord"]
 	path = library/activerecord
-	url = git@dev.integry.net:activerecord
+	url = git@github.com:integry/integry-activerecord.git
 [submodule "library/smarty"]
 	path = library/smarty
-	url = git@dev.integry.net:vendor/smarty
-[submodule "library/stat"]
-	path = library/stat
-	url = git@dev.integry.net:library/stat
-[submodule "library/json"]
-	path = library/json
-	url = git@dev.integry.net:vendor/json
+	url = git://github.com/bitweaver/smarty.git
 [submodule "library/locale"]
 	path = library/locale
-	url = git@dev.integry.net:library/locale
-[submodule "library/creole"]
-	path = library/creole
-	url = git@dev.integry.net:vendor/creole
+	url = git@github.com:integry/integry-framework-locale.git
 [submodule "library/swiftmailer"]
 	path = library/swiftmailer
-	url = git@dev.integry.net:vendor/swiftmailer
-[submodule "library/I18Nv2"]
-	path = library/I18Nv2
-	url = git@dev.integry.net:vendor/I18Nv2
-[submodule "library/payment/method/library/paypal/phppaypalpro"]
-	path = library/payment/method/library/paypal/phppaypalpro
-	url = git@dev.integry.net:vendor/phppaypalpro
-[submodule "library/pclzip"]
-	path = library/pclzip
-	url = git@dev.integry.net:vendor/pclzip
-[submodule "test/_library/simpletest"]
-	path = test/_library/simpletest
-	url = git@dev.integry.net:vendor/simpletest
-[submodule "test/_library/phpunit"]
-	path = test/_library/phpunit
-	url = git@dev.integry.net:vendor/phpunit
-[submodule "test/_library/unittest"]
-	path = test/_library/unittest
-	url = git@dev.integry.net:library/unittest
+	url = git@github.com:integry/swiftmailer.git
 [submodule "public/javascript/library/editarea"]
 	path = public/javascript/library/editarea
-	url = git@dev.integry.net:vendor/editarea
+	url = git@github.com:integry/editarea-mirror.git
 [submodule "public/javascript/library/prototype"]
 	path = public/javascript/library/prototype
-	url = git@dev.integry.net:vendor/prototype
+	url = git@github.com:integry/scriptaculous.git
 [submodule "public/javascript/library/tinymce"]
 	path = public/javascript/library/tinymce
-	url = git@dev.integry.net:vendor/tinymce
-[submodule "public/javascript/library/dhtmlxtree"]
-	path = public/javascript/library/dhtmlxtree
-	url = git@dev.integry.net:vendor/dhtmlxtree
-[submodule "public/javascript/library/rico"]
-	path = public/javascript/library/rico
-	url = git@dev.integry.net:vendor/rico
-[submodule "public/javascript/library/lightbox"]
-	path = public/javascript/library/lightbox
-	url = git@dev.integry.net:vendor/lightbox
+	url = git@github.com:integry/tinymce-build-mirror.git
 [submodule "public/javascript/library/scriptaculous"]
 	path = public/javascript/library/scriptaculous
-	url = git@dev.integry.net:vendor/scriptaculous
+	url = git@github.com:integry/scriptaculous.git
 [submodule "public/javascript/library/ajaxfilemanager"]
 	path = public/javascript/library/ajaxfilemanager
-	url = git@dev.integry.net:vendor/ajaxfilemanager
+	url = git@github.com:integry/mirror-ajaxfilemanager.git
+[submodule "public/javascript/library/jscolor"]
+	path = public/javascript/library/jscolor
+	url = git://github.com/odvarko/JSColor.git
+[submodule "library/payment"]
+	path = library/payment
+	url = git@github.com:integry/integry-payments.git
+[submodule "library/image"]
+	path = library/image
+	url = git@github.com:integry/integry-image.git
+[submodule "library/shipping"]
+	path = library/shipping
+	url = git@github.com:integry/integry-shipping.git
