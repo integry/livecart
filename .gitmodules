@@ -49,9 +49,6 @@
 [submodule "public/javascript/library/dhtmlxtree"]
 	path = public/javascript/library/dhtmlxtree
 	url = git@dev.integry.net:vendor/dhtmlxtree
-[submodule "public/javascript/library/rico"]
-	path = public/javascript/library/rico
-	url = git@dev.integry.net:vendor/rico
 [submodule "public/javascript/library/lightbox"]
 	path = public/javascript/library/lightbox
 	url = git@dev.integry.net:vendor/lightbox
