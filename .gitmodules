@@ -1,6 +1,6 @@
 [submodule "framework"]
 	path = framework
-	url = git@dev.integry.net:framework
+	url = git@github.com:integry/integry-framework.git
 [submodule "library/activerecord"]
 	path = library/activerecord
 	url = git@dev.integry.net:activerecord
@@ -12,16 +12,13 @@
 	url = git@dev.integry.net:library/stat
 [submodule "library/locale"]
 	path = library/locale
-	url = git@dev.integry.net:library/locale
+	url = git@github.com:integry/integry-framework-locale.git
 [submodule "library/creole"]
 	path = library/creole
 	url = git@dev.integry.net:vendor/creole
 [submodule "library/swiftmailer"]
 	path = library/swiftmailer
 	url = git@dev.integry.net:vendor/swiftmailer
-[submodule "library/I18Nv2"]
-	path = library/I18Nv2
-	url = git@dev.integry.net:vendor/I18Nv2
 [submodule "library/payment/method/library/paypal/phppaypalpro"]
 	path = library/payment/method/library/paypal/phppaypalpro
 	url = git@dev.integry.net:vendor/phppaypalpro
