@@ -3,8 +3,6 @@
 ClassLoader::import("library.activerecord.ActiveRecord");
 ClassLoader::import("application.model.*");
 
-ActiveRecord::$creolePath = ClassLoader::getRealPath("library");
-
 /**
  * Base class for all ActiveRecord based models of application (single entry point in
  * application specific model class hierarchy)
