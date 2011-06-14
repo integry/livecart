@@ -28,9 +28,6 @@
 [submodule "library/pclzip"]
 	path = library/pclzip
 	url = git@dev.integry.net:vendor/pclzip
-[submodule "test/_library/phpunit"]
-	path = test/_library/phpunit
-	url = git@dev.integry.net:vendor/phpunit
 [submodule "test/_library/unittest"]
 	path = test/_library/unittest
 	url = git@dev.integry.net:library/unittest
