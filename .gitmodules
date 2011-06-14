@@ -45,7 +45,7 @@
 	url = git@dev.integry.net:vendor/scriptaculous
 [submodule "public/javascript/library/ajaxfilemanager"]
 	path = public/javascript/library/ajaxfilemanager
-	url = git@dev.integry.net:vendor/ajaxfilemanager
+	url = git@github.com:integry/mirror-ajaxfilemanager.git
 [submodule "public/javascript/library/jscolor"]
 	path = public/javascript/library/jscolor
 	url = git://github.com/odvarko/JSColor.git
