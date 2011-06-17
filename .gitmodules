@@ -49,3 +49,6 @@
 [submodule "library/payment"]
 	path = library/payment
 	url = git@github.com:integry/integry-payments.git
+[submodule "library/image"]
+	path = library/image
+	url = git@github.com:integry/integry-image.git
