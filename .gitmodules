@@ -46,3 +46,6 @@
 [submodule "public/javascript/library/jscolor"]
 	path = public/javascript/library/jscolor
 	url = git://github.com/odvarko/JSColor.git
+[submodule "library/payment"]
+	path = library/payment
+	url = git@github.com:integry/integry-payments.git
