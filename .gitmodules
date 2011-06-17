@@ -16,9 +16,6 @@
 [submodule "library/swiftmailer"]
 	path = library/swiftmailer
 	url = git@dev.integry.net:vendor/swiftmailer
-[submodule "library/payment/method/library/paypal/phppaypalpro"]
-	path = library/payment/method/library/paypal/phppaypalpro
-	url = git@dev.integry.net:vendor/phppaypalpro
 [submodule "library/pclzip"]
 	path = library/pclzip
 	url = git@dev.integry.net:vendor/pclzip
