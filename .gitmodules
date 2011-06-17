@@ -52,3 +52,6 @@
 [submodule "library/image"]
 	path = library/image
 	url = git@github.com:integry/integry-image.git
+[submodule "library/shipping"]
+	path = library/shipping
+	url = git@github.com:integry/integry-shipping.git
