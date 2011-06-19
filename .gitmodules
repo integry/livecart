@@ -13,9 +13,6 @@
 [submodule "library/swiftmailer"]
 	path = library/swiftmailer
 	url = git@github.com:integry/swiftmailer.git
-[submodule "library/pclzip"]
-	path = library/pclzip
-	url = git@dev.integry.net:vendor/pclzip
 [submodule "public/javascript/library/editarea"]
 	path = public/javascript/library/editarea
 	url = git@github.com:integry/editarea-mirror.git
