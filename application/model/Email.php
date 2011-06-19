@@ -1,10 +1,11 @@
 <?php
 
 ClassLoader::import('library.smarty.libs.Smarty', true);
-ClassLoader::import('library.swiftmailer.Swift', true);
-ClassLoader::import('library.swiftmailer.Swift.Connection.NativeMail', true);
-ClassLoader::import('library.swiftmailer.Swift.Connection.SMTP', true);
-ClassLoader::import('library.swiftmailer.Swift.Message', true);
+
+ClassLoader::ignoreMissingClasses();
+ClassLoader::import('library.swiftmailer.lib.swift_required', true);
+ClassLoader::ignoreMissingClasses(false);
+
 ClassLoader::import('application.model.template.EditedCssFile');
 
 /**
@@ -39,12 +40,16 @@ class Email
 
 	private $locale;
 
+	private $message;
+
 	public function __construct(LiveCart $application)
 	{
 		$this->application = $application;
 		$this->set('request', $application->getRequest()->toArray());
 
 		$config = $this->application->getConfig();
+
+		ClassLoader::ignoreMissingClasses();
 
 		if ('SMTP' == $config->get('EMAIL_METHOD'))
 		{
@@ -54,7 +59,7 @@ class Email
 				$server = ini_get('SMTP');
 			}
 
-			$this->connection = new Swift_Connection_SMTP($server, $config->get('SMTP_PORT'));
+			$this->connection = Swift_SmtpTransport::newInstance($server, $config->get('SMTP_PORT'));
 
 			if ($config->get('SMTP_USERNAME'))
 			{
@@ -64,17 +69,25 @@ class Email
 		}
 		else if ('FAKE' == $config->get('EMAIL_METHOD'))
 		{
-			$this->connection = new Swift_Connection_Fake();
+			$this->connection = null;
 		}
 		else
 		{
-			$this->connection = new Swift_Connection_NativeMail();
+			$this->connection = Swift_MailTransport::newInstance();
 		}
 
-		$this->swiftInstance = new Swift($this->connection);
-		$this->recipients = new Swift_RecipientList();
+		$this->swiftInstance = Swift_Mailer::newInstance($this->connection);
+
+		$this->message = Swift_Message::newInstance();
 
 		$this->setFrom($config->get('MAIN_EMAIL'), $config->get('STORE_NAME'));
+
+		ClassLoader::ignoreMissingClasses(false);
+	}
+
+	public function getMessage()
+	{
+		return $this->message;
 	}
 
 	public function setSubject($subject)
@@ -134,12 +147,15 @@ class Email
 			$name = '"' . $name . '"';
 		}
 
-		$this->from = new Swift_Address($email, $name);
+		$this->message->setFrom(array($email => $name));
 	}
 
 	public function resetRecipients()
 	{
-		$this->recipients = new Swift_RecipientList();
+		$headers = $this->message->getHeaders();
+		$headers->remove('To');
+		$headers->remove('Cc');
+		$headers->remove('Bcc');
 	}
 
 	public function setTo($emailAddresses, $name = null)
@@ -151,18 +167,18 @@ class Email
 				$name = '"' . $name . '"';
 			}
 
-			$this->recipients->addTo($email, $name);
+			$this->message->addTo($email, $name);
 		}
 	}
 
 	public function setCc($email, $name)
 	{
-		$this->recipients->addCc($email, $name);
+		$this->message->addCc($email, $name);
 	}
 
 	public function setBcc($email, $name)
 	{
-		$this->recipients->addBcc($email, $name);
+		$this->message->addBcc($email, $name);
 	}
 
 	public function setTemplate($templateFile)
@@ -257,6 +273,8 @@ class Email
 
 	public function send()
 	{
+		ClassLoader::ignoreMissingClasses();
+
 		$this->application->processInstancePlugins('email-prepare-send', $this);
 		$this->application->processInstancePlugins('email-prepare-send/' . $this->relativeTemplatePath, $this);
 
@@ -310,12 +328,23 @@ class Email
 		$this->application->processInstancePlugins('email-before-send', $this);
 		$this->application->processInstancePlugins('email-before-send/' . $this->relativeTemplatePath, $this);
 
-		$message = new Swift_Message($this->subject, $this->text);
+		$this->message->setSubject($this->subject);
 
 		if ($this->html)
 		{
-			$message->attach(new Swift_Message_Part($this->text));
-			$message->attach(new Swift_Message_Part($this->html, 'text/html'));
+			$this->message->setBody($this->html, 'text/html');
+		}
+
+		if ($this->text)
+		{
+			if (!$this->html)
+			{
+				$this->message->setBody($this->text, 'text/plain');
+			}
+			else
+			{
+				$this->message->addPart($this->text, 'text/plain');
+			}
 		}
 
 		if (!$this->text && !$this->html)
@@ -325,13 +354,14 @@ class Email
 
 		try
 		{
-			$res = $this->swiftInstance->send($message, $this->recipients, $this->from);
+			$res = $this->swiftInstance->send($this->message);
+			ClassLoader::ignoreMissingClasses(false);
 		}
 		catch (Exception $e)
 		{
-//			throw $e;
 			$this->application->processInstancePlugins('email-fail-send/' . $this->relativeTemplatePath, $this, array('exception' => $e));
 			$this->application->processInstancePlugins('email-fail-send', $this, array('exception' => $e));
+			ClassLoader::ignoreMissingClasses(false);
 			return false;
 		}
 
