@@ -6,7 +6,6 @@
 	url = git@github.com:integry/integry-activerecord.git
 [submodule "library/smarty"]
 	path = library/smarty
-	path = library/smarty
 	url = git@dev.integry.net:vendor/smarty
 [submodule "library/stat"]
 	path = library/stat
@@ -25,10 +24,10 @@
 	url = git@dev.integry.net:library/unittest
 [submodule "public/javascript/library/editarea"]
 	path = public/javascript/library/editarea
-	url = git@dev.integry.net:vendor/editarea
+	url = git@github.com:integry/editarea-mirror.git
 [submodule "public/javascript/library/prototype"]
 	path = public/javascript/library/prototype
-	url = git@dev.integry.net:vendor/prototype
+	url = git@github.com:integry/scriptaculous.git
 [submodule "public/javascript/library/tinymce"]
 	path = public/javascript/library/tinymce
 	url = git@dev.integry.net:vendor/tinymce
@@ -37,7 +36,7 @@
 	url = git@dev.integry.net:vendor/lightbox
 [submodule "public/javascript/library/scriptaculous"]
 	path = public/javascript/library/scriptaculous
-	url = git@dev.integry.net:vendor/scriptaculous
+	url = git@github.com:integry/scriptaculous.git
 [submodule "public/javascript/library/ajaxfilemanager"]
 	path = public/javascript/library/ajaxfilemanager
 	url = git@github.com:integry/mirror-ajaxfilemanager.git
