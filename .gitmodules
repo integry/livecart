@@ -6,7 +6,7 @@
 	url = git@github.com:integry/integry-activerecord.git
 [submodule "library/smarty"]
 	path = library/smarty
-	url = git@dev.integry.net:vendor/smarty
+	url = git://github.com/bitweaver/smarty.git
 [submodule "library/locale"]
 	path = library/locale
 	url = git@github.com:integry/integry-framework-locale.git
