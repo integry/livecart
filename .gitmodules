@@ -7,9 +7,6 @@
 [submodule "library/smarty"]
 	path = library/smarty
 	url = git@dev.integry.net:vendor/smarty
-[submodule "library/stat"]
-	path = library/stat
-	url = git@dev.integry.net:library/stat
 [submodule "library/locale"]
 	path = library/locale
 	url = git@github.com:integry/integry-framework-locale.git
