@@ -22,7 +22,6 @@ class StaticPage extends MultilingualObject implements EavAble
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("parentID", "StaticPage", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARField("handle", ARVarchar::instance(255)));
-		$schema->registerField(new ARField("handle", ARVarchar::instance(255)));
 		$schema->registerField(new ARField("title", ARArray::instance()));
 		$schema->registerField(new ARField("text", ARArray::instance()));
 		$schema->registerField(new ARField("metaDescription", ARArray::instance()));
