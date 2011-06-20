@@ -21,7 +21,7 @@
 	url = git@github.com:integry/scriptaculous.git
 [submodule "public/javascript/library/tinymce"]
 	path = public/javascript/library/tinymce
-	url = git@dev.integry.net:vendor/tinymce
+	url = git@github.com:integry/tinymce-build-mirror.git
 [submodule "public/javascript/library/lightbox"]
 	path = public/javascript/library/lightbox
 	url = git@dev.integry.net:vendor/lightbox
