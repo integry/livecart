@@ -82,6 +82,11 @@
 		});
 	}
 
+	if (window.jscolor)
+	{
+		window.jscolor.dir = 'javascript/library/jscolor/';
+	}
+
 	function onLoad()
 	{
 		Backend.locale = '{/literal}{localeCode}{literal}';
