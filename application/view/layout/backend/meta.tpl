@@ -76,7 +76,7 @@
 			forced_root_block : '',
 			relative_urls : true,
 			remove_linebreaks : false,
-			extended_valid_elements : 'iframe[src|width|height|name|align|frameborder|scrolling|marginheight|marginwidth]',
+			extended_valid_elements : 'iframe[src|width|height|name|align|frameborder|scrolling|marginheight|marginwidth],embed[width|height|name|flashvars|src|bgcolor|align|play|loop|quality|allowscriptaccess|type|pluginspage]',
 			entities: '',
 			file_browser_callback : "ajaxfilemanager"
 		});
