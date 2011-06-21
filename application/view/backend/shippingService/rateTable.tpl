@@ -138,10 +138,16 @@
 				{/foreach}
 				<td>
 					<div class="rangeStart">
-						<span class="rangeStartValue">{$shippingRates[$key].subtotalRangeEnd}</span> -
+						{if count($shippingRates) == 0}
+							{* there is no first range start field, threfore add here! *}
+							{textfield class="number rangeStartValue"
+								value="0"
+								name="rate_new0_subtotalRangeStart"}
+						{else}
+							<span class="rangeStartValue">{$shippingRates[$key].subtotalRangeEnd}</span>
+						{/if}
+						-
 					</div>
-					
-				
 				{textfield class="number" name="rate_new0_subtotalRangeEnd"}</td>
 			</tr>
 
@@ -196,6 +202,7 @@
 <script type="text/javacript">
 	new Backend.DeliveryZone.WeightTable(
 		$("ratesTableContainer_{$service.DeliveryZone.ID}_{$service.ID}"),
-		"{$rangeTypeName}"
+		"{$rangeTypeName}",
+		{if !$service.ID}true{else}false{/if}
 	);
 </script>
