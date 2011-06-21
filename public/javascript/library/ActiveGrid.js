@@ -1023,7 +1023,6 @@ ActiveGrid.MassActionHandler.prototype =
 				return false;
 			}
 		}
-
 		var filters = this.grid.getFilters();
 		this.form.elements.namedItem('filters').value = filters ? Object.toJSON(filters) : '';
 		this.form.elements.namedItem('selectedIDs').value = Object.toJSON(this.grid.getSelectedIDs());
@@ -1051,7 +1050,7 @@ ActiveGrid.MassActionHandler.prototype =
 			return;
 		}
 
-		this.request = new LiveCart.AjaxRequest(this.form, indicator , this.dataResponse.bind(this),  {onInteractive: this.dataResponse.bind(this) });
+		this.request = new LiveCart.AjaxRequest(this.form, indicator , this.dataResponse.bind(this),  {onInteractive: function(func, arg) {window.setTimeout(func.bind(this, arg), 1000); }.bind(this, this.dataResponse.bind(this)) });
 
 		this.progressBarContainer = this.handlerMenu.up('div').down('.activeGrid_massActionProgress');
 		this.cancelLink = this.progressBarContainer.down('a.cancel');
@@ -1068,7 +1067,6 @@ ActiveGrid.MassActionHandler.prototype =
 	{
 		var response = originalRequest.responseText.substr(this.formerLength + 1);
 		this.formerLength = originalRequest.responseText.length;
-
 		var portions = response.split('|');
 
 		for (var k = 0; k < portions.length; k++)
@@ -1077,7 +1075,6 @@ ActiveGrid.MassActionHandler.prototype =
 			{
 				continue;
 			}
-
 			if ('}' == portions[k].substr(-1))
 			{
 				if ('{' != portions[k].substr(0, 1))

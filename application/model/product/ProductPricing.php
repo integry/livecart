@@ -49,7 +49,14 @@ class ProductPricing
 		{
 			foreach ($prices as $id => $price)
 			{
-				$this->prices[$id] = ProductPrice::getNewInstance($product, Currency::getInstanceById($id));
+				if (array_key_exists('ID', $price))
+				{
+					$this->prices[$id] = ProductPrice::getInstance($product, Currency::getInstanceById($id));
+				}
+				else
+				{
+					$this->prices[$id] = ProductPrice::getNewInstance($product, Currency::getInstanceById($id));
+				}
 				$this->prices[$id]->price->set($price['price']);
 				$this->prices[$id]->listPrice->set($price['listPrice']);
 				$this->prices[$id]->serializedRules->set(serialize($price['serializedRules']));
