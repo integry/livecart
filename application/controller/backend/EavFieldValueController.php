@@ -2,6 +2,8 @@
 
 ClassLoader::import('application.controller.backend.abstract.eav.EavFieldValueControllerCommon');
 ClassLoader::import('application.model.eav.EavValue');
+ClassLoader::import('application.model.eav.EavStringValue');
+ClassLoader::import('application.model.system.MultilingualObject');
 
 /**
  * Category specification field value controller
@@ -62,7 +64,7 @@ class EavFieldValueController extends EavFieldValueControllerCommon
 
 			$handle = new ARFieldHandle('EavStringValue', 'value');
 			$locale = $this->locale->getLocaleCode();
-			$searchHandle = MultiLingualObject::getLangSearchHandle($handle, $locale);
+			$searchHandle = MultilingualObject::getLangSearchHandle($handle, $locale);
 
 		  	$f->setCondition(new EqualsCond(new ARFieldHandle('EavStringValue', 'fieldID'), $id));
 			$f->mergeCondition(new LikeCond($handle, '%:"' . $this->request->get($field) . '%'));
@@ -74,7 +76,7 @@ class EavFieldValueController extends EavFieldValueControllerCommon
 
 		  	foreach ($results as $value)
 		  	{
-				$resp[$value->getValueByLang('value', $locale, MultiLingualObject::NO_DEFAULT_VALUE)] = true;
+				$resp[$value->getValueByLang('value', $locale, MultilingualObject::NO_DEFAULT_VALUE)] = true;
 			}
 
 			$resp = array_keys($resp);
