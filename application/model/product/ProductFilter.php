@@ -58,7 +58,8 @@ class ProductFilter
 			// group filters by class
 			foreach ($this->filters as $filter)
 			{
-				$list[get_class($filter)][] = $filter->getCondition();
+				$id = ($filter instanceof SpecificationFilterInterface) ? $filter->getFilterGroup()->getID() : '';
+				$list[get_class($filter) . '_' . $id][] = $filter->getCondition();
 				$filter->defineJoin($selectFilter);
 			}
 			// convert filter group to OrChainCondition
