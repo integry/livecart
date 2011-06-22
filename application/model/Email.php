@@ -247,6 +247,13 @@ class Email
 
 	public function setUser(User $user)
 	{
+		if (!$user->isLoaded())
+		{
+			$user->load();
+		}
+
+		$user->resetArrayData();
+
 		$array = $user->toArray();
 		$this->locale = $user->locale->get();
 		$this->set('user', $array);
