@@ -1509,6 +1509,16 @@ class Product extends MultilingualObject
 		return $matrix;
 	}
 
+	public function updateSalesRank()
+	{
+		$cacheFile = ClassLoader::getRealPath('cache.salesrank');
+		if (!file_exists($cacheFile) || (filemtime($cacheFile) < time() - 3600))
+		{
+			touch($cacheFile);
+			ActiveRecord::executeUpdate('UPDATE Product SET salesRank=(SELECT SUM(count) FROM OrderedItem LEFT JOIN CustomerOrder ON OrderedItem.customerOrderID=CustomerOrder.ID WHERE productID=Product.ID AND CustomerOrder.isPaid=1 AND CustomerOrder.dateCompleted > "' . ARSerializableDateTime::createFromTimeStamp(strtotime('-' . $this->config->get('BESTSELLING_ITEMS_DAYS') . ' days')) . '")');
+		}
+	}
+
 	public function serialize()
 	{
 		return parent::serialize(array('categoryID', 'Category', 'manufacturerID', 'defaultImageID'));
