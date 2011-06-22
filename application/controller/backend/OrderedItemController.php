@@ -26,6 +26,7 @@ class OrderedItemController extends StoreManagementController
 	{
 		$request = $this->getRequest();
 		$query = $request->get('query');
+
 		if (strlen($query))
 		{
 			$products = $this->getProductsFromSearchQuery($query);
@@ -35,21 +36,42 @@ class OrderedItemController extends StoreManagementController
 			$products = new ARSet();
 			$products->add(Product::getInstanceById((int)$this->request->get('productID'), true));
 		}
+
 		$saveResponse = array('errors'=>array(), 'items'=>array());
 
 		$composite = new CompositeJSONResponse();
-		foreach ($products as $product){
+
+
+		$order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true);
+		$order->loadAll();
+
+		foreach ($products as $product)
+		{
 			if($product->isDownloadable())
 			{
-				$order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true, array('ShippingAddress' => 'UserAddress', 'Currency'));
 				$shipment = $order->getDownloadShipment();
 			}
-			else
+			else if ((int)$this->request->get('shipmentID'))
 			{
 				$shipment = Shipment::getInstanceById('Shipment', (int)$this->request->get('shipmentID'), true, array('Order' => 'CustomerOrder', 'ShippingService', 'ShippingAddress' => 'UserAddress', 'Currency'));
 			}
 
-			$history = new OrderHistory($shipment->order->get(), $this->user);
+			if (empty($shipment))
+			{
+				$shipment = $order->getShipments()->get(0);
+			}
+
+			if (!$shipment)
+			{
+				$shipment = Shipment::getNewInstance($order);
+			}
+
+			if (!$shipment->order->get())
+			{
+				$shipment->order->set($order);
+			}
+
+			$history = new OrderHistory($order, $this->user);
 
 			$existingItem = false;
 			foreach($shipment->getItems() as $item)
@@ -78,17 +100,15 @@ class OrderedItemController extends StoreManagementController
 			}
 			else
 			{
-				$order = $shipment->order->get();
 				$currency = $shipment->getCurrency();
-
 				$item = OrderedItem::getNewInstance($order, $product);
 				$item->count->set(1);
 				$item->price->set($currency->round($item->reduceBaseTaxes($product->getPrice($currency->getID()))));
-
 				$order->addItem($item);
 				$shipment->addItem($item);
 				$shipment->save();
 			}
+
 			$resp = $this->save($item, $shipment, $existingItem ? true : false );
 
 			if (array_key_exists('errors', $resp))
@@ -106,7 +126,6 @@ class OrderedItemController extends StoreManagementController
 			unset($saveResponse['errors']);
 		}
 
-
 		if (isset($saveResponse['errors']))
 		{
 			$response =  new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_unable_to_update_items_quantity'));
@@ -123,12 +142,8 @@ class OrderedItemController extends StoreManagementController
 			$ids[] = $item['ID'];
 		}
 
-		// $composite->addAction('html', 'backend.orderedItem', 'item');
-		// $this->request->set('id', $item->getID());
-
 		$composite->addAction('html', 'backend.orderedItem', 'items');
 		$this->request->set('item_ids', implode(',',$ids));
-
 
 		$history->saveLog();
 
