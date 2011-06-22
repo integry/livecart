@@ -14,6 +14,10 @@
 {if $SHOW_SKU}{''|@str_pad_left:10}{/if}{$tax.name_lang|@str_pad_left:49}: {$tax.formattedAmount}
 {/foreach}
 {/if}
+{foreach from=$order.discounts item=discount}
+{if $discount.amount != 0}
+{if $SHOW_SKU}{''|@str_pad_left:10}{/if}{$discount.description|@str_pad_left:49}: {$discount.formatted_amount}{/if}
+{/foreach}
 {if $SHOW_SKU}{''|@str_pad_left:10}{/if}{''|@str_pad_left:27}---------------------------------
 {if $SHOW_SKU}{''|@str_pad_left:10}{/if}{t _grand_total|@str_pad_left:49}: {$order.formattedTotal[$order.Currency.ID]}
 {if $SHOW_SKU}{''|@str_pad_left:10}{/if}{t _amount_paid|@str_pad_left:49}: {$order.formatted_amountPaid}
@@ -41,6 +45,11 @@
 <tr><td colspan="{if $SHOW_SKU}4{else}3{/if}">{$tax.name_lang}</td><td align="right">{$tax.formattedAmount}</td></tr>
 {/foreach}
 {/if}
+{foreach from=$order.discounts item=discount}
+{if $discount.amount != 0}
+<tr><td colspan="{if $SHOW_SKU}4{else}3{/if}">{$discount.description}</td><td align="right">{$discount.formatted_amount}</td></tr>
+{/if}
+{/foreach}
 <tr><td colspan="{if $SHOW_SKU}4{else}3{/if}">{t _grand_total}</td><td align="right"><b>{$order.formattedTotal[$order.Currency.ID]}</b></td></tr>
 <tr><td colspan="{if $SHOW_SKU}4{else}3{/if}">{t _amount_paid}</td><td align="right">{$order.formatted_amountPaid}</td></tr>
 {if $order.amountDue}
