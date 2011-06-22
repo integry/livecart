@@ -150,6 +150,32 @@ div.yellowMessage .closeMessage
     display: none;
 }
 
+.confirmationMessage, .errorMessage, .infoMessage
+{
+	border: 1px solid #0c0;
+	background-color: #efe;
+	padding: 7px;
+	padding-left: 30px;
+	background-image: url(../../image/silk/gif/tick.gif);
+	background-position: 5px center;
+	margin: 0.5em;
+	background-repeat: no-repeat;
+}
+
+.errorMessage
+{
+	border: 1px solid #c00;
+	background-color: #fee;
+	background-image: url(../../image/silk/gif/cancel.gif);
+}
+
+.infoMessage
+{
+	border: 1px solid #FFF000;
+	background-color: #FFFCCC;
+	background-image: url(../../image/silk/gif/information.gif);
+}
+
 /***************************
 	Layout
 ***************************/
@@ -243,6 +269,13 @@ html, body{
 	margin: 0 6px;
 }
 
+#moduleUpdateAvailable
+{
+	margin-left: -6px;
+	margin-right: 6px;
+	color: red;
+}
+
 /***************************
 	Page footer
 ***************************/
@@ -282,7 +315,9 @@ html, body{
 #navContainer
 {
 	border-bottom: 3px solid #15367f;
+	height: 82px;
 }
+
 #nav {
 	position: absolute;
 	bottom: 3px;
@@ -1266,14 +1301,25 @@ a.cancel, a.menu
 	display: block;
 }
 
-.progressIndicator {
+.progressIndicator
+{
+	background-image: url(../../image/indicator.gif) !important;
+	background-repeat: no-repeat !important;
+	clear: none;
+}
+
+label.progressIndicator
+{
+	padding-left: 20px;
+	background-position: left center;
+}
+
+span.progressIndicator
+{
 	padding: 15px;
 	width: 30px;
 	height: 20px;
-	background-image: url(../../image/indicator.gif) !important;
 	background-position: center center;
-	background-repeat: no-repeat !important;
-	clear: none;
 }
 
 a.progressIndicator

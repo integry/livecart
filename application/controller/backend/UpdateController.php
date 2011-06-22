@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
+ClassLoader::import('application.helper.UpdateHelper');
 
 /**
  * @package application.controller.backend
@@ -69,16 +70,7 @@ class UpdateController extends StoreManagementController
 			}
 		}
 
-		// clear cache
-		$this->delTree(ClassLoader::getRealPath('cache'));
-		$this->delTree(ClassLoader::getRealPath('public.cache'));
-		$this->delTree(ClassLoader::getRealPath('public.upload.css.patched'));
-
-		foreach (array('cache', 'storage') as $secured)
-		{
-			$dir = ClassLoader::getRealPath($secured);
-			file_put_contents($dir . '/.htaccess', 'Deny from all');
-		}
+		$this->application->getConfigContainer()->clearCache();
 
 		// execute custom update code
 		$code = $dir . '/custom.php';
@@ -103,28 +95,29 @@ class UpdateController extends StoreManagementController
 		return $response;
 	}
 
-	private function delTree($path)
+	public function testCopy()
 	{
-		if (is_dir($path))
-		{
-			$entries = scandir($path);
-			foreach ($entries as $entry)
-			{
-				if ($entry != '.' && $entry != '..')
-				{
-					$this->delTree($path . DIRECTORY_SEPARATOR . $entry);
-				}
-			}
+		$handler = new UpdateHelper($this->application);
+		$tmpName = 'test-update-copy' . rand(1, 5000000);
+		$tmp = ClassLoader::getRealPath('cache.') . $tmpName;
+		file_put_contents($tmp, 'test');
 
-			if (substr($path, -6) != '/cache')
-			{
-				rmdir($path);
-			}
-		}
-		else if (file_exists($path))
+		$res = $handler->copyFile($tmp, 'module/' . $tmpName);
+		$expected = ClassLoader::getRealPath('module.') . $tmpName;
+
+		if (file_exists($expected))
 		{
-			unlink($path);
+			$response = new JSONResponse(array(), 'success', $this->translate('_test_copy_success'));
 		}
+		else
+		{
+			$response = new JSONResponse(array(), 'failure', $this->translate('_test_copy_failure'));
+		}
+
+		$handler->deleteFile('module/' . $tmp);
+		unlink($tmp);
+
+		return $response;
 	}
 
 	private function getCurrentVersion()

@@ -3,6 +3,13 @@ _inactive=inactive
 _install=Install
 _deinstall=Deinstall
 _installed=Installed
+_not_installed=Not installed
+
+_add_modules=Add new modules
+_manage_module_repositories=Manage module repositories
+
+_version=Version
+_channel=Channel
 
 _confirm_deinstall=Are you sure you want to deinstall this module? ALL MODULE DATABASE TABLES AND DATA WILL BE DELETED!
 _confirm_install=Really install this module?
@@ -11,3 +18,34 @@ _install_confirm=[_1] module has been installed
 _deinstall_confirm=[_1] module has been deinstalled
 _enable_confirm=[_1] module has been enabled
 _disable_confirm=[_1] module has been disabled
+
+_err_no_repos=No package repositories are currently available
+_no_repositories=No repositories found
+_tip_custom_module=This module is not available from any repository, so updates cannot be downloaded automatically. There can be multiple reasons: <ul><li>it's a custom developed module</li><li>invalid module license</li><li>invalid LiveCart license (for example, domain name mismatch)</li></ul>
+
+_no_versions=No other versions available
+_tip_no_versions=Most likely this module is still at the first version
+
+_newest_version=Newest
+
+_module_type_needUpdate=Updates available
+_module_type_enabled=Installed packages
+_module_type_notEnabled=Disabled modules
+_module_type_notInstalled=Available modules (not installed)
+_module_type_justInstalled=Just installed
+
+_proceed_update=Proceed with update
+
+_status_fetch=Downloading update packages
+_status_nothing_to_fetch=No update packages available. Are you already using the selected version?
+_update_complete=[_1] has been updated
+
+_err_update_copy_msg=Error copying files. Please make sure that the update settings are correct. For example, if updates are handled over FTP, check if the configured FTP login details are correct. If the files are copied directly, the most likely cause would be insufficient write permissions. The following file could not be copied: [_1]
+_err_update_db=Error updating database: [_1]
+
+_select_module=Select a module
+_no_modules_add=No new modules are available
+_install_module=Install module
+_cancel_adding_modules=Cancel adding new modules
+
+_err_download_package=Could not download the installation package from repository

@@ -10,6 +10,7 @@ h1
 	float: none;
 	margin-bottom: 0px;
 	width: auto;
+	background-repeat: no-repeat;
 }
 
 #settingsContent select
@@ -63,7 +64,7 @@ div.multi
 
 .siteMapSubmission li.submitFail
 {
-	background-image: url(../../image/silk/cancel.png)
+	background-image: url(../../image/silk/cancel.png);
 }
 
 .imageSettings fieldset.settings fieldset.settings
@@ -141,4 +142,21 @@ div.multi
 #SettingsSearchContainer h3
 {
 	display: none;
+}
+
+label.newRepo
+{
+	font-weight: bold;
+}
+
+label.repoUp
+{
+	background-image: url(../../image/silk/tick.png);
+	padding-left: 20px;
+}
+
+label.repoDown
+{
+	background-image: url(../../image/silk/cancel.png);
+	padding-left: 20px;
 }

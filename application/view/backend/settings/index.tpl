@@ -57,6 +57,12 @@
 		<a href="{link controller=backend.settings action=disablePrivateLabel}" id="disablePrivateLabel" class="menu">{t _disable_private_label_change}</a>
 		<span class="progressIndicator" style="display: none;"></span>
 	</div>
+
+	<div id="handler_UPDATE_COPY_METHOD">
+		<a href="{link controller=backend.update action=testCopy}" id="testUpdateCopy" class="menu">{t _test_update_copy}</a>
+		<span class="progressIndicator" style="display: none;"></span>
+		<div id="testUpdateCopyResult"></div>
+	</div>
 </div>
 
 <iframe id="upload" name="upload"></iframe>

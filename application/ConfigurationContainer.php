@@ -28,6 +28,10 @@ class ConfigurationContainer
 	protected $enabled = false;
 	protected $application;
 
+	const ERR_COPY = 0;
+	const ERR_DB = 1;
+	const ERR_CUSTOM = 2;
+
 	public function __construct($mountPath, LiveCart $application)
 	{
 		$this->mountPath = $mountPath;
@@ -79,16 +83,44 @@ class ConfigurationContainer
 
 	public function clearCache()
 	{
-		$path = ClassLoader::getRealPath('cache.configurationContainer') . '.php';
-		if (file_exists($path))
+		// clear cache
+		$this->delTree(ClassLoader::getRealPath('cache'));
+		$this->delTree(ClassLoader::getRealPath('public.cache'));
+		$this->delTree(ClassLoader::getRealPath('public.upload.css.patched'));
+
+		foreach (array('cache', 'storage') as $secured)
 		{
-			unlink($path);
+			$dir = ClassLoader::getRealPath($secured);
+			file_put_contents($dir . '/.htaccess', 'Deny from all');
 		}
 
 		$tplDir = ClassLoader::getRealPath('cache.templates_c');
-		$this->application->rmdir_recurse($tplDir);
 		mkdir($tplDir, 0777);
 		chmod($tplDir, 0777);
+	}
+
+	private function delTree($path)
+	{
+		if (is_dir($path))
+		{
+			$entries = scandir($path);
+			foreach ($entries as $entry)
+			{
+				if ($entry != '.' && $entry != '..')
+				{
+					$this->delTree($path . DIRECTORY_SEPARATOR . $entry);
+				}
+			}
+
+			if (substr($path, -6) != '/cache')
+			{
+				rmdir($path);
+			}
+		}
+		else if (file_exists($path))
+		{
+			unlink($path);
+		}
 	}
 
 	public function getMountPath()
@@ -325,7 +357,7 @@ class ConfigurationContainer
 			// Windows
 			else
 			{
-				full_copy($publicDir, $this->getPublicDirectoryLink());
+				$this->full_copy($publicDir, $this->getPublicDirectoryLink());
 			}
 		}
 	}
@@ -500,6 +532,35 @@ class ConfigurationContainer
 		$this->plugins = $plugins;
 	}
 
+	public function applyUpdate($dir)
+	{
+		$update = new UpdateHelper($this->application);
+		$copy = $update->copyDirectory($dir, $this->directory);
+		if ($copy !== true)
+		{
+			return array(self::ERR_COPY, $copy);
+		}
+
+		// import SQL
+		foreach (glob($dir . '/update/*/*.sql') as $file)
+		{
+			try
+			{
+				$this->loadSQL($file);
+			}
+			catch (Exception $e)
+			{
+				return array(self::ERR_DB, $e->getMessage());
+			}
+		}
+
+		// custom scripts
+
+		$this->application->getConfigContainer()->clearCache();
+
+		return true;
+	}
+
 	private function findPlugins($dir, $root = '')
 	{
 		$plugins = array();
@@ -524,36 +585,50 @@ class ConfigurationContainer
 
 		return $plugins;
 	}
-}
 
-function full_copy( $source, $target )
-{
-	if ( is_dir( $source ) )
+	private function full_copy( $source, $target )
 	{
-		@mkdir( $target );
-
-		$d = dir( $source );
-
-		while ( FALSE !== ( $entry = $d->read() ) )
+		if ( is_dir( $source ) )
 		{
-			if ( $entry == '.' || $entry == '..' )
+			@mkdir( $target );
+
+			$d = dir( $source );
+
+			while ( FALSE !== ( $entry = $d->read() ) )
 			{
-				continue;
+				if ( $entry == '.' || $entry == '..' )
+				{
+					continue;
+				}
+
+				$Entry = $source . '/' . $entry;
+				if ( is_dir( $Entry ) )
+				{
+					$res = $this->full_copy( $Entry, $target . '/' . $entry );
+					if ($res !== true)
+					{
+						return $res;
+					}
+					continue;
+				}
+
+				if (!@copy( $Entry, $target . '/' . $entry ))
+				{
+					return $Entry;
+				}
 			}
 
-			$Entry = $source . '/' . $entry;
-			if ( is_dir( $Entry ) )
+			$d->close();
+		}
+		else
+		{
+			if (!@copy( $source, $target ))
 			{
-				full_copy( $Entry, $target . '/' . $entry );
-				continue;
+				return $source;
 			}
-			copy( $Entry, $target . '/' . $entry );
 		}
 
-		$d->close();
-	}else
-	{
-		copy( $source, $target );
+		return true;
 	}
 }
 

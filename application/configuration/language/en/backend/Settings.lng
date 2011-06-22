@@ -553,3 +553,43 @@ ENABLED_FEEDS=Enabled feeds
 ALL_PRODUCTS=All products
 CATEGORY_PRODUCTS=Category products
 NEWS_POSTS=News posts
+
+_recurring_billing=Recurring billing
+RECURRING_BILLING_TYPE=Recurring billing type
+RECURRING_BILLING_TYPE_PRE_PAY=Pre-pay
+RECURRING_BILLING_TYPE_POST_PAY=Post-pay
+RECURRING_BILLING_GENERATE_INVOICE=Generate invoice days in advance
+RECURRING_BILLING_PAYMENT_DUE_DATE_DAYS=Payment due date is days after billing period start
+ALLOW_USER_TO_CANCEL_RECURRING_REBILLS=Allow user to cancel recurring rebills
+
+_product_sharing=Product sharing
+ENABLE_PRODUCT_SHARING=Show send to friend form in product page
+ENABLE_ANONYMOUS_PRODUCT_SHARING=Show send to friend form in product page for unregistered customers
+
+_send_to_friend=send to friend
+
+_manufacturer=Manufacturers
+MANUFACTURER_PAGE_LIST_STYLE=Manufacturers list page style
+MANPAGE_STYLE_ALL_IN_ONE_PAGE=All manufacturers in one page
+MANPAGE_STYLE_GROUP_BY_FIRST_LETTER=Group into multiple pages by the first letter
+MANUFACTURER_PAGE_NUMBER_OF_COLUMNS=Number of columns
+MANUFACTURER_PAGE_PER_PAGE=Number of manufacturers per page (0 - unlimited)
+MANUFACTURER_PAGE_DISPLAY_ACTIVE=Display only manufacturers with products
+
+# Updates
+_updates=Updates
+_update_options=Update options
+UPDATE_COPY_METHOD=File copying method
+UPDATE_FTP=Via FTP
+UPDATE_COPY=Direct copy (all LiveCart files need to be writable by web server)
+_test_update_copy=Test selected method (please save settings first)
+
+_update_ftp_opts=FTP options
+UPDATE_FTP_SERVER=FTP server
+UPDATE_FTP_USER=FTP username
+UPDATE_FTP_PASSWORD=FTP password
+UPDATE_FTP_DIRECTORY=FTP directory
+
+_update_repositories=Module/update repositories
+UPDATE_REPO_1=Repository URL
+UPDATE_REPO_2=Add new repository
