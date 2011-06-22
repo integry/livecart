@@ -38,6 +38,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	private $taxes = array();
 
+	private $taxDetails = array();
+
 	private $deliveryZone;
 
 	private $taxZone;
@@ -1238,6 +1240,15 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 					}
 
 					$this->taxes[$taxId] += $tax->getAmount();
+
+					// in case the tax has different rates (tax classes)
+					$rateId = $tax->taxRate->get()->getID();
+					if (!isset($this->taxDetails[$rateId]))
+					{
+						$this->taxDetails[$rateId] = array('amount' => 0, 'rate' => $tax->taxRate->get()->toArray());
+					}
+
+					$this->taxDetails[$rateId]['amount'] += $tax->getAmount();
 				}
 			}
 		}
@@ -1637,6 +1648,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 				$array['taxes'][$id][] = $tax;
 			}
 		}
+
+		foreach ($this->taxDetails as &$taxRate)
+		{
+			$taxRate['formattedAmount'] = $currency->getFormattedPrice($taxRate['amount']);
+		}
+		$array['taxDetails'] = $this->taxDetails;
 
 		$array['total'] = $total;
 
