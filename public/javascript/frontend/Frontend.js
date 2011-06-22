@@ -63,6 +63,12 @@ Product.ImageSwitcher.prototype =
 			if(enlargeOnMouseOver)
 			{
 				thumbnail.onmouseover = this.switchImage.bindAsEventListener(this);
+				thumbnail.onclick =
+					function(e)
+					{
+						this.switchImage(e);
+						sendEvent($('mainImage'), 'click');
+					}.bindAsEventListener(this);
 			}
 			else
 			{
@@ -833,8 +839,8 @@ Frontend.OnePageCheckout.prototype =
 		this.nodes.root = $('content');
 		this.nodes.login = $('checkout-login');
 		this.nodes.shipping = $('checkout-shipping');
-		this.nodes.shippingAddress = this.nodes.shipping.down('#checkout-shipping-address');
-		this.nodes.shippingMethod = this.nodes.shipping.down('#checkout-shipping-method');
+		this.nodes.shippingAddress = $('checkout-shipping-address');
+		this.nodes.shippingMethod = $('checkout-shipping-method');
 		this.nodes.billingAddress = $('checkout-billing');
 		this.nodes.payment = $('checkout-payment');
 		this.nodes.cart = $('checkout-cart');
@@ -1000,10 +1006,15 @@ Frontend.OnePageCheckout.prototype =
 
 	initCartForm: function()
 	{
+		if (!this.nodes.cart)
+		{
+			return;
+		}
+
 		var form = this.nodes.cart.down('form');
 		this.formOnChange(form, this.updateCart.bind(this));
 		Event.observe(form, 'submit', this.updateCart.bindAsEventListener(this));
-		Event.observe(this.nodes.cart.down('#checkout-return-to-overview'), 'click', this.showOverview.bindAsEventListener(this));
+		Event.observe($('checkout-return-to-overview'), 'click', this.showOverview.bindAsEventListener(this));
 	},
 
 	initPaymentForm: function()
@@ -1012,8 +1023,8 @@ Frontend.OnePageCheckout.prototype =
 		Event.observe(form, 'submit', Event.stop);
 
 		this.nodes.paymentMethodForm = form;
-		this.nodes.paymentDetailsForm = this.nodes.payment.down('#paymentForm');
-		this.nodes.noMethodSelectedMsg = this.nodes.payment.down('#no-payment-method-selected');
+		this.nodes.paymentDetailsForm = $('paymentForm');
+		this.nodes.noMethodSelectedMsg = $('no-payment-method-selected');
 
 		this.formOnChange(form, this.setPaymentMethod.bind(this), [$('tos')]);
 
@@ -1040,7 +1051,7 @@ Frontend.OnePageCheckout.prototype =
 
 				if (1 == paymentMethods.length)
 				{
-					el.onchange(true);
+					el.onclick(true);
 					this.nodes.payment.addClassName('singleMethod');
 				}
 			}
@@ -1058,14 +1069,14 @@ Frontend.OnePageCheckout.prototype =
 			}
 		}.bind(this));
 
-		Event.observe(this.nodes.payment.down('#submitOrder'), 'click', this.submitOrder.bind(this));
+		Event.observe($('submitOrder'), 'click', this.submitOrder.bind(this));
 	},
 
 	showPaymentDetailsForm: function(el, noHighlight)
 	{
 		var form = this.nodes.paymentDetailsForm;
 		form.innerHTML = '';
-		this.updateElement(form, this.nodes.payment.down('#payForm_' + el.value).innerHTML, noHighlight);
+		this.updateElement(form, $('payForm_' + el.value).innerHTML, noHighlight);
 
 		try
 		{
@@ -1077,7 +1088,13 @@ Frontend.OnePageCheckout.prototype =
 
 	initOverview: function()
 	{
-		Event.observe(this.nodes.overview.down('.orderOverviewControls').down('a'), 'click', this.showCart.bindAsEventListener(this));
+		var controls = this.nodes.overview.down('.orderOverviewControls');
+		if (!controls)
+		{
+			return;
+		}
+
+		Event.observe(controls.down('a'), 'click', this.showCart.bindAsEventListener(this));
 	},
 
 	showCart: function(e)
@@ -1087,7 +1104,10 @@ Frontend.OnePageCheckout.prototype =
 			Event.stop(e);
 		}
 
-		this.nodes.cart.show();
+		if (this.nodes.cart)
+		{
+			this.nodes.cart.show();
+		}
 
 		if (!this.options['OPC_SHOW_CART'])
 		{
@@ -1102,7 +1122,7 @@ Frontend.OnePageCheckout.prototype =
 			Event.stop(e);
 		}
 
-		if (!this.options['OPC_SHOW_CART'])
+		if (!this.options['OPC_SHOW_CART'] && this.nodes.cart)
 		{
 			this.nodes.cart.hide();
 		}
@@ -1335,6 +1355,11 @@ Frontend.OnePageCheckout.prototype =
 
 	updateElement: function(element, html, noHighlight)
 	{
+		if (!element)
+		{
+			return;
+		}
+
 		if (element.innerHTML == html)
 		{
 			noHighlight = true;
@@ -1470,4 +1495,8 @@ var FrontendToolbar = Class.create();
 FrontendToolbar.prototype = {
 	isBackend: false
 }
-FrontendToolbar.prototype = Object.extend(FooterToolbar.prototype, FrontendToolbar.prototype);
+
+if (window.FooterToolbar)
+{
+	FrontendToolbar.prototype = Object.extend(FooterToolbar.prototype, FrontendToolbar.prototype);
+}
