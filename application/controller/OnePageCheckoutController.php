@@ -469,6 +469,9 @@ class OnePageCheckoutController extends CheckoutController
 		ActiveRecord::clearPool();
 		$this->config->resetRuntime('DELIVERY_TAX_CLASS');
 		$this->order = CustomerOrder::getInstanceById($this->order->getID(), true);
+
+		// @todo: needs to be called twice for the auto-selection to get saved
+		$this->shippingMethods();
 		$this->shippingMethods();
 
 		$this->config->setRuntime('REQUIRE_SAME_ADDRESS', $sameAddress);
