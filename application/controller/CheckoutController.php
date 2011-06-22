@@ -625,13 +625,13 @@ class CheckoutController extends FrontendController
 
 		return $response;
 	}
-	
+
 	/*
 	private function deliveryTime()
 	{
-		
-		
-		
+
+
+
 		{
 			if (isset($array[$name]))
 			{
@@ -650,7 +650,7 @@ class CheckoutController extends FrontendController
 				$array['formatted_' . $name] = $locale->getFormattedTime($time);
 			}
 		}
-		
+
 	}
 */
 	/**
@@ -1514,7 +1514,7 @@ class CheckoutController extends FrontendController
 		return $form;
 	}
 
-	private function buildCreditCardValidator(CreditCardPayment $ccHandler)
+	private function buildCreditCardValidator(CreditCardPayment $ccHandler = null)
 	{
 		$validator = $this->getValidator("creditCard", $this->request);
 		$validator->addCheck('ccName', new IsNotEmptyCheck($this->translate('_err_enter_cc_name')));
@@ -1522,14 +1522,17 @@ class CheckoutController extends FrontendController
 		$validator->addCheck('ccExpiryMonth', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_month')));
 		$validator->addCheck('ccExpiryYear', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_year')));
 
-		if ($ccHandler->isCardTypeNeeded())
+		if ($ccHandler)
 		{
-			$validator->addCheck('ccType', new IsNotEmptyCheck($this->translate('_err_select_cc_type')));
-		}
+			if ($ccHandler->isCardTypeNeeded())
+			{
+				$validator->addCheck('ccType', new IsNotEmptyCheck($this->translate('_err_select_cc_type')));
+			}
 
-		if ($this->config->get('REQUIRE_CVV') && $ccHandler->isCvvRequired())
-		{
-			$validator->addCheck('ccCVV', new IsNotEmptyCheck($this->translate('_err_enter_cc_cvv')));
+			if ($this->config->get('REQUIRE_CVV') && $ccHandler->isCvvRequired())
+			{
+				$validator->addCheck('ccCVV', new IsNotEmptyCheck($this->translate('_err_enter_cc_cvv')));
+			}
 		}
 
 		$validator->addFilter('ccCVV', new RegexFilter('[^0-9]'));
