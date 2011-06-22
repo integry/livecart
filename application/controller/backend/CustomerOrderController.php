@@ -85,7 +85,7 @@ class CustomerOrderController extends ActiveGridController
 		$this->loadLanguageFile('backend/Shipment');
 		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('User', 'Currency'));
 		$order->getSpecification();
-		$order->loadAddresses();
+		$order->loadAll();
 		$this->removeEmptyShipments($order);
 
 		$response = new ActionResponse();
