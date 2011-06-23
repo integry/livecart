@@ -1,4 +1,4 @@
-<?php
++<?php
 
 /**
  *
@@ -12,6 +12,8 @@ if (!defined('TEST_INITIALIZED'))
 {
 	// load classes and mount paths
 	$cd = getcwd();
+
+	$_SERVER["SCRIPT_FILENAME"] = dirname(__FILE__);
 
 	chdir(dirname(dirname(__FILE__)));
 	chdir('..');
@@ -31,10 +33,6 @@ if (!defined('TEST_INITIALIZED'))
 	ClassLoader::import("unittest.*");
 	ClassLoader::import("testdir.*");
 
-	//ClassLoader::load('unit_tester');
-	//ClassLoader::load('mock_objects');
-	//ClassLoader::load('reporter');
-
 	ClassLoader::import('unittest.UnitTest');
 	chdir($cd);
 
@@ -50,7 +48,6 @@ ClassLoader::import('application.system.*');
 ClassLoader::import('library.locale.Locale');
 ClassLoader::import('test.mock.Swift_Connection_Fake');
 
-require_once('UTStandalone.php');
 require_once('LiveCartTest.php');
 
 ?>
