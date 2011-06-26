@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import('library.swiftmailer.Swift', true);
+ClassLoader::import('library.swiftmailer.lib.classes.Swift.Transport', true);
 
 /**
  *  Simulates email transport connection
@@ -10,11 +10,40 @@ ClassLoader::import('library.swiftmailer.Swift', true);
  * @author Integry Systems
  * @package test.mock
  */
-class Swift_Connection_Fake extends Swift_ConnectionBase
+class Swift_Connection_Fake extends Swift_Transport_MailTransport
 {
 	private $response = 250;
 
 	private static $buffer = array();
+
+	/** Addtional parameters to pass to mail() */
+	private $_extraParams = '-f%s';
+
+	/** The event dispatcher from the plugin API */
+	private $_eventDispatcher;
+
+	/** An invoker that calls the mail() function */
+	private $_invoker;
+
+	/**
+	* Create a new MailTransport, optionally specifying $extraParams.
+	* @param string $extraParams
+	*/
+	public function __construct($extraParams = '-f%s')
+	{
+		call_user_func_array(
+		  array($this, 'Swift_Transport_MailTransport::__construct'),
+		  Swift_DependencyContainer::getInstance()
+			->createDependenciesFor('transport.mail')
+		  );
+
+		$this->setExtraParams($extraParams);
+	}
+
+	public static function newInstance($extraParams = '-f%s')
+	{
+		return new self($extraParams);
+	}
 
 	public function start()
 	{
@@ -64,35 +93,6 @@ class Swift_Connection_Fake extends Swift_ConnectionBase
 	public static function getBuffer()
 	{
 		return self::$buffer;
-	}
-
-	public static function getHeaderValue($headerEntry)
-	{
-		reset(self::$buffer);
-		while ($value = next(self::$buffer))
-		{
-			if ('DATA' == $value)
-			{
-				$header = next(self::$buffer);
-				reset(self::$buffer);
-				break;
-			}
-		}
-
-		if (!isset($header))
-		{
-			return false;
-		}
-
-		$header = str_replace("\r", '', $header);
-
-		$headers = preg_match_all('/([A-Za-z0-9\-]+)\: (.*)/', $header, $matches);
-		$headers = array_combine($matches[1], $matches[2]);
-
-		if (isset($headers[$headerEntry]))
-		{
-			return $headers[$headerEntry];
-		}
 	}
 }
 
