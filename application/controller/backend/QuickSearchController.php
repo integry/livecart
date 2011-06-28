@@ -36,35 +36,86 @@ class QuickSearchController extends StoreManagementController
 		{
 			$cn = null;
 		}
+		else
+		{
+			$cn = explode(',', $cn);
+			if(!is_array($cn))
+			{
+				$cn = null;
+			}
+		}
+		$cnOn = array();  // include class names. empty for all
+		$cnOff = array(); // exclude class names.
+		if ($cn)
+		{
+			foreach($cn as $token)
+			{
+				if(substr($token,0,1) == '-')
+				{
+					$cnOff[] = substr($token,1);
+				}
+				else
+				{
+					$cnOn[] = $token;
+				}
+			}
+		}
+
 		$res = array();
 
-		foreach (SearchableModel::getInstances(SearchableModel::FRONTEND_SEARCH_MODEL|SearchableModel::BACKEND_SEARCH_MODEL) as $searchable)
+		$offset = 0;
+		if ($cn)
 		{
-			if($cn && $searchable->getClassName() != $cn)
+			$direction = $request->get('direction');
+			if ($direction == 'next')
+			{
+				$offset = $to;
+			}
+			else if ($direction == 'previous')
+			{
+				$offset = $from - $this->getLimit() - 1;
+			}
+		}
+		if ($offset < 0)
+		{
+			$offset = 0;
+		}
+
+		// deal wirth ARSearchable models
+		foreach (SearchableModel::getInstances(SearchableModel::FRONTEND_SEARCH_MODEL|SearchableModel::BACKEND_SEARCH_MODEL, true) as $searchable)
+		{
+			$searchableClassName = $searchable->getClassName();
+			if (in_array($searchableClassName, $cnOff) //  turned off
+				||
+			(count($cnOn) && !in_array($searchableClassName, $cnOn))) // or "on" classes is not empty and class names does not match
 			{
 				continue;
 			}
 			$searchable->setOption('BACKEND_QUICK_SEARCH', true);
 			$f = $searchable->getSelectFilter($this->query);
-			$offset = 0;
-			if ($cn)
-			{
-				$direction = $request->get('direction');
-				if ($direction == 'next')
-				{
-					$offset = $to;
-				}
-				else if ($direction == 'previous')
-				{
-					$offset = $from - $this->getLimit() - 1;
-				}
-			}
-			if ($offset < 0)
-			{
-				$offset = 0;
-			}
 			$f->setLimit($this->getLimit(), $offset);
 			$res[$searchable->getClassName()] = $this->fetchData($searchable, $f);
+		}
+        // deal with non-ar-searchable models
+ 		foreach (SearchableModel::getInstances(SearchableModel::FRONTEND_SEARCH_MODEL|SearchableModel::BACKEND_SEARCH_MODEL, false) as $searchable)
+		{
+			$searchableClassName = $searchable->getClassName();
+			if (in_array($searchableClassName, $cnOff) //  turned off
+				||
+			(count($cnOn) && !in_array($searchableClassName, $cnOn))) // or "on" classes is not empty and class names does not match
+			{
+				continue;
+			}
+
+			// pass everything
+			$searchable->setOption('query', $this->query);
+			$searchable->setOption('from', $from);
+			$searchable->setOption('to', $to);
+			$searchable->setOption('limit', $this->getLimit());
+			$searchable->setOption('offset', $offset);
+
+			// let non-ar-searchable do its magick
+			$res[$searchable->getClassName()] = $searchable->fetchData();
 		}
 
 		return new ActionResponse
@@ -118,8 +169,7 @@ class QuickSearchController extends StoreManagementController
 		$ret['meta'] = $searchable->toArray();
 		if(method_exists($this, 'toArray_'.$searchable->getClassName()))
 		{
-			call_user_func_array(
-				array($this, 'toArray_'.$searchable->getClassName()), array(&$ret['records']));
+			call_user_func_array(array($this, 'toArray_'.$searchable->getClassName()), array(&$ret['records']));
 		}
 		return $ret;
 	}

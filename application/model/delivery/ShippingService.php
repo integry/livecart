@@ -36,6 +36,7 @@ class ShippingService extends MultilingualObject implements EavAble
 		$schema->registerField(new ARField("deliveryTimeMinDays", ARInteger::instance(10)));
 		$schema->registerField(new ARField("deliveryTimeMaxDays", ARInteger::instance(10)));
 		$schema->registerField(new ARForeignKeyField("eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
+        $schema->registerField(new ARField("isLocalPickup", ARBool::instance()));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -227,6 +228,11 @@ class ShippingService extends MultilingualObject implements EavAble
 		}
 	}
 
+    public function isLocalPickup()
+    {
+        return (boolean)$this->isLocalPickup->get();
+    }
+    
 	public function toArray()
 	{
 		$this->getSpecification();

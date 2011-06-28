@@ -1228,6 +1228,8 @@ class Product extends MultilingualObject
 			array_shift($names);
 			$product['category_path'] = implode(' > ', $names);
 			$product['category_path_slash'] = implode(' / ', $names);
+
+			$product['category_name'] = count($names) > 0 ? array_pop($names) : '';
 		}
 	}
 

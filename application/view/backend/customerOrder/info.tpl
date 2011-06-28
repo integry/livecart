@@ -153,7 +153,8 @@
 			
 			<span class="stopRebillsLinkContainer" style="{if $order.rebillsLeft == 0}display:none;{/if}">
 				<span class="progressIndicator" style="display:none;"></span>
-				<a href="#" id="stopRebills{$order.ID}">{t _stop_futher_rebills}</a>
+				<a href="#" id="stopRebills{$order.ID}">{t _cancel_subscription}</a>
+				<input type="hidden" id="cancelSubscriptionURL{$order.ID}" value="{link controller=backend.CustomerOrder action=cancelSubscription id=$order.ID}" />
 				<input type="hidden" id="stopRebillsURL{$order.ID}" value="{link controller=backend.CustomerOrder action=stopRebills id=$order.ID}" />
 			</span>
 		</div>

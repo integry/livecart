@@ -966,6 +966,17 @@ html #footpanel .subpanel ul li a.active
 	padding:0;
 }
 
+#lastviewed .subpanel li span
+{
+	text-align:center;
+	display: block;
+	font-size:12px;
+	height:14px;
+	margin:4px 0 0 0;
+	color:#666;
+}
+
+
 #footpanel li#toolbarQS #TBQuickSearchQuery
 {
 	width:180px !important;

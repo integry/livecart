@@ -1,12 +1,14 @@
 <?php
 
-class EditedCssFile
+ClassLoader::import('application.model.template.CommonFile');
+
+class EditedCssFile extends CommonFile
 {
 	private $theme;
 
 	private $code;
 
-	public function __construct($theme = null)
+	public function __construct($theme = null, $version=null)
 	{
 		$theme = basename($theme, '.css');
 
@@ -16,6 +18,12 @@ class EditedCssFile
 		if (file_exists($file))
 		{
 			$this->code = file_get_contents($file);
+		}
+
+		$this->setVersion($version);
+		if ($this->version)
+		{
+			$this->code = $this->readBackup();
 		}
 	}
 
@@ -54,7 +62,9 @@ class EditedCssFile
 
 		if ($this->code)
 		{
-			return @file_put_contents($file, $this->code) !== false;
+			$this->backup();
+			$res = @file_put_contents($file, $this->code) !== false;
+			return $res;
 		}
 		else
 		{
@@ -70,11 +80,19 @@ class EditedCssFile
 	public function toArray()
 	{
 		return array(
-					'id' => $this->getFileName(),
-					'code' => $this->code,
-					'title' => $this->theme
-					);
+			'id' => $this->getFileName(),
+			'code' => $this->code,
+			'title' => $this->theme,
+			'backups' => $this->getBackups(),
+			'version' => $this->version
+		);
 	}
+
+	protected function getBackupPath()
+	{
+		return ClassLoader::getRealPath('storage.backup.cssfile.');
+	}
+
 }
 
 ?>

@@ -104,11 +104,7 @@ class CustomizeController extends StoreManagementController
 
 	public function changeTheme()
 	{
-		$conf = $this->getApplication()->getConfig();
-
-		$theme = $this->getRequest()->get('theme');
-		$conf->set('THEME',$theme);
-		$conf->save();
+		$this->session->set('customizationTheme', $this->getRequest()->get('theme'));
 		return new JSONResponse(null, "success");
 	}
 }

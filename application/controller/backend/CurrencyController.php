@@ -3,6 +3,7 @@
 ClassLoader::import("library.*");
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.Currency");
+ClassLoader::import('application.model.currencyrate.CurrencyRateSource');
 
 /**
  *
@@ -67,7 +68,19 @@ class CurrencyController extends StoreManagementController
 		try
 		{
 			$newCurrency = ActiveRecord::getNewInstance('Currency');
-		  	$newCurrency->setId($this->request->get('id'));
+			$newCurrency->setId($this->request->get('id'));
+			$config = $this->getApplication()->getConfig();
+			// if can use external currency rate source
+			if ($config->get('CURRENCY_RATE_UPDATE'))
+			{
+				// get exchange rate from external currency rate source
+				$source = CurrencyRateSource::getInstance($this->application,null,array($newCurrency->getID()));
+				$rate = $source->getRate($newCurrency->getID());
+				if ($rate != null)
+				{
+					$newCurrency->rate->set($rate);
+				}
+			}
 			$newCurrency->save(ActiveRecord::PERFORM_INSERT);
 
 			return new JSONResponse($newCurrency->toArray());
@@ -102,6 +115,24 @@ class CurrencyController extends StoreManagementController
 
 		$r->setAsDefault(true);
 		$r->save();
+
+		$config = $this->getApplication()->getConfig();
+		if ($config->get('CURRENCY_RATE_UPDATE'))
+		{
+			$source = CurrencyRateSource::getInstance($this->application, $r->getID());
+
+			foreach($source->getAllCurrencyCodes() as $currencyCode)
+			{
+				$rate = $source->getRate($currencyCode);
+				if ($rate != null)
+				{
+					$currency = Currency::getInstanceById($currencyCode);
+					$currency->rate->set($rate);
+					$currency->lastUpdated->set(date('Y-m-d H:i:s', time()));
+					$currency->save();
+				}
+			}
+		}
 
 		ActiveRecord::commit();
 

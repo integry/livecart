@@ -266,36 +266,73 @@ Backend.CustomerOrder.prototype =
 		Backend.showContainer("orderManagerContainer");
 	},
 
+	onStopRebillsSuccess: function(transport, orderID)
+	{
+		var node = $("stopRebills"+orderID), rsNode, rrNode, hasError=true;
+		rsNode = $("recurringStatus"+orderID);
+		rsNode.innerHTML = transport.responseData.recurringStatus;
+		rrNode = $("remainingRebillsValue" + orderID);
+		rrNode.innerHTML = transport.responseData.rebillCount;
+		new Effect.Highlight(rrNode.up("div"));
+		new Effect.Highlight(rsNode.up("div"));
+		// Event.stopObserving(node, "click"); // ~ will work in 1.6
+		node.hide();
+	},
+
+	onStopRebillsError: function(orderID)
+	{
+		var
+			node = $("stopRebills"+orderID),
+			pi = node.up(".stopRebillsLinkContainer").down("span");
+		pi.addClassName("progressIndicator"); // resotre progress indicator on failure.
+		pi.hide();
+	},
+
 	stopRebills: function(event, orderID)
 	{
 		Event.stop(event);
-		if (confirm(Backend.getTranslation("_stop_futher_rebills_question").replace("[_1]", $("invoiceNumber"+orderID).innerHTML)))
+		if (confirm(Backend.getTranslation("_cancel_subscription_question").replace("[_1]", $("invoiceNumber"+orderID).innerHTML)))
 		{
-			new LiveCart.AjaxRequest($('stopRebillsURL'+orderID).value, $('stopRebillsURL'+orderID).up(".stopRebillsLinkContainer").down("span"),
-				function(transport) {
-					var node = $("stopRebills"+orderID), rsNode, rrNode;
-					if (transport.responseData && transport.responseData.status == "success")
+			new LiveCart.AjaxRequest($('cancelSubscriptionURL'+orderID).value, $('stopRebillsURL'+orderID).up(".stopRebillsLinkContainer").down("span"),
+				function(orderID, transport) {
+					var hasError = true;
+					if (transport.responseData && transport.responseData.status)
 					{
-						rsNode = $("recurringStatus"+orderID);
-						rsNode.innerHTML = transport.responseData.recurringStatus;
-						rrNode = $("remainingRebillsValue" + orderID);
-						rrNode.innerHTML = transport.responseData.rebillCount;
-						new Effect.Highlight(rrNode.up("div"));
-						new Effect.Highlight(rsNode.up("div"));
-						// Event.stopObserving(node, "click"); // ~ will work in 1.6
-						node.hide();
+						if (transport.responseData.status == "success")
+						{
+							this.onStopRebillsSuccess(transport, orderID);
+							hasError = false;
+						}
+						else if (transport.responseData.status == "confirmation_required")
+						{
+							if (confirm(transport.responseData.confirm))
+							{
+								new LiveCart.AjaxRequest($('stopRebillsURL'+orderID).value, $('stopRebillsURL'+orderID).up(".stopRebillsLinkContainer").down("span"),
+									function(orderID, transport)
+									{
+										if (transport.responseData.status == "success")
+										{
+											this.onStopRebillsSuccess(transport, orderID);
+										}
+										else
+										{
+											this.onStopRebillsError(orderID);
+										}
+									}.bind(this, orderID)
+								);
+								hasError = false;
+							}
+						}
 					}
-					else
+					if (hasError)
 					{
-						var pi = node.up(".stopRebillsLinkContainer").down("span");
-						pi.addClassName("progressIndicator"); // resotre progress indicator on failure.
-						pi.hide();
+						this.onStopRebillsError(orderID);
 					}
-				}
+				}.bind(this, orderID)
 			);
 		}
 	},
-	
+
 	updateLog: function(orderID)
 	{
 		this.resetTab("tabOrderLog", orderID);

@@ -18,7 +18,7 @@ abstract class SearchableModel
 	public abstract function loadClass();
 	public abstract function getSelectFilter($searchTerm);
 
-	public static function getInstances($modelType=1)
+	public static function getInstances($modelType=1, $arSearch=true)
 	{
 		$ret = array();
 		foreach (self::getSearchableModels() as $file)
@@ -27,7 +27,15 @@ abstract class SearchableModel
 			$class = basename($file, '.php');
 			$inst = new $class();
 			$inst->loadClass();
-			if ((self::BACKEND_SEARCH_MODEL & $modelType && $inst->isBackend()) || (self::FRONTEND_SEARCH_MODEL & $modelType && $inst->isFrontend()))
+			if (
+                $arSearch == $inst->isARsearch()
+                    &&
+                (
+                        (self::BACKEND_SEARCH_MODEL & $modelType && $inst->isBackend())
+                            ||
+                        (self::FRONTEND_SEARCH_MODEL & $modelType && $inst->isFrontend())
+                )
+            )
 			{
 				$ret[$inst->getClassName()] = $inst;
 			}
@@ -101,7 +109,7 @@ abstract class SearchableModel
 	}
 
 	public function toArray()
-	{
+    {
 		$arr = array();
 		$arr['class'] = $this->getClassName();
 		$arr['template'] = 'custom:search/block/result_' . $arr['class'] .'.tpl';
@@ -117,6 +125,21 @@ abstract class SearchableModel
 	public function isBackend()
 	{
 		return true;
+	}
+ 
+	/**
+	* search by active record model?
+	* @return bool
+	*/
+	public function isARsearch()
+	{
+		return true;
+	}
+
+	// used only for non-AR-searchable models
+	public function fetchData()
+	{
+		return null;
 	}
 
 	public function setOption($key, $value)

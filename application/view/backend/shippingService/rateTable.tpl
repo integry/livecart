@@ -200,7 +200,7 @@
 </table>
 
 <script type="text/javacript">
-	new Backend.DeliveryZone.WeightTable(
+	Backend.DeliveryZone.WeightTable.prototype.getInstance(
 		$("ratesTableContainer_{$service.DeliveryZone.ID}_{$service.ID}"),
 		"{$rangeTypeName}",
 		{if !$service.ID}true{else}false{/if}

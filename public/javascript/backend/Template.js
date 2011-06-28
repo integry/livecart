@@ -405,17 +405,16 @@ Backend.TemplateHandler.prototype =
 		this.owner = owner;
 		this.tabid = tabid;
 		Event.observe(this.form, 'submit', this.submit.bindAsEventListener(this));
-
-try {
-		editAreaLoader.init({
-			id : "code_"+this.tabid,		// textarea id
-			syntax: "html",			// syntax to be uses for highgliting
-			start_highlight: true,		// to display with highlight mode on start-up
-			allow_toggle: false,
-			allow_resize: true
-			}
-		);
-	} catch(e) {}
+		try {
+			editAreaLoader.init({
+				id : "code_"+this.tabid,		// textarea id
+				syntax: "html",			// syntax to be uses for highgliting
+				start_highlight: true,		// to display with highlight mode on start-up
+				allow_toggle: false,
+				allow_resize: true
+				}
+			);
+		} catch(e) {}
 	},
 
 	submit: function(e)
@@ -531,9 +530,6 @@ Backend.EmailTemplateHandler.prototype =
 
 			body.value = editAreaLoader.getValue('body_'+this.tabid);
 			html.value = editAreaLoader.getValue('html_'+this.tabid);
-			
-
-		
 			var langs = $$('#'+this.tabid+'Content .languageFormContent textarea');
 			if (langs)
 			{
@@ -543,7 +539,7 @@ Backend.EmailTemplateHandler.prototype =
 				}
 			}
 			new LiveCart.AjaxRequest(this.form, null, this.saveComplete.bind(this));
-		} catch(e) {alert(e);}
+		} catch(e) {}
 		return false;
 	},
 

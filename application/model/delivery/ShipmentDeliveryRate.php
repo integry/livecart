@@ -43,17 +43,25 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 	public static function getRealTimeRates(ShippingRateCalculator $handler, Shipment $shipment)
 	{
 		$rates = new ShippingRateSet();
-
 		$handler->setWeight($shipment->getChargeableWeight());
-
 		$order = $shipment->order->get();
+
+		// TODO: fix issue when address has zip and country data, but are missing city, user and record id!
+		//             (now workround - get address id, if $address has no id, load address by id)
 		if ($order->isMultiAddress->get())
 		{
 			$address = $shipment->shippingAddress->get();
+			$arr = $shipment->toArray();
 		}
 		else
 		{
 			$address = $order->shippingAddress->get();
+			$arr = $order->toArray();
+		}
+
+		if (!$address->getID() && array_key_exists('shippingAddressID', $arr))
+		{
+			$address = ActiveRecordModel::getInstanceByID('UserAddress', $arr['shippingAddressID'], true);
 		}
 
 		if (!$address)
@@ -64,12 +72,11 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 		$handler->setDestCountry($address->countryID->get());
 		$handler->setDestState($address->state->get() ? $address->state->get()->code->get() : $address->stateName->get());
 		$handler->setDestZip($address->postalCode->get());
+		$handler->setDestCity($address->city->get());
 		$config = $shipment->getApplication()->getConfig();
 		$handler->setSourceCountry($config->get('STORE_COUNTRY'));
 		$handler->setSourceZip($config->get('STORE_ZIP'));
 		$handler->setSourceState($config->get('STORE_STATE'));
-
-
 		foreach ($handler->getAllRates() as $k => $rate)
 		{
 			$newRate = new ShipmentDeliveryRate();

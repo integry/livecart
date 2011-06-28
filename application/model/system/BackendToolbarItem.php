@@ -24,13 +24,15 @@ class BackendToolbarItem extends ActiveRecordModel
 		$schema = self::getSchemaInstance($className);
 		$schema->setName(__CLASS__);
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("ownerID", "User", "ID", "User", ARInteger::instance()));
+		
 		$schema->registerField(new ARField("menuID", ARVarchar::instance(16)));
 		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", "Product", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("userID", "User", "ID", "User", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("orderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance()));
 
+		//  must be declared after userID, otherwise ActiveRecord will select owner as User!
+		$schema->registerField(new ARForeignKeyField("ownerID", "User", "ID", "User", ARInteger::instance()));
 	}
 
 	// BackendToolbarItem::registerLastViewedOrder($order);
@@ -86,10 +88,10 @@ class BackendToolbarItem extends ActiveRecordModel
 		$filter->setOrder(f(__CLASS__.'.position'), $order);
 
 		$m = array(
-			BackendToolbarItem::TYPE_MENU =>'menuID',
-			BackendToolbarItem::TYPE_PRODUCT =>'productID',
-			BackendToolbarItem::TYPE_USER => 'userID',
-			BackendToolbarItem::TYPE_ORDER => 'orderID'
+			BackendToolbarItem::TYPE_MENU =>'',
+			BackendToolbarItem::TYPE_PRODUCT =>'',
+			BackendToolbarItem::TYPE_USER => '',
+			BackendToolbarItem::TYPE_ORDER => ''
 		);
 
 		if (is_array($types) == false)
@@ -97,18 +99,31 @@ class BackendToolbarItem extends ActiveRecordModel
 			$types = array($types);
 		}
 		$conditions = array();
+
 		foreach ($types as $type)
 		{
-			if (array_key_exists($type, $m))
+			switch($type)
 			{
-				$conditions[] = isnotnull(f(__CLASS__.'.'.$m[$type]));
-
+				case BackendToolbarItem::TYPE_MENU:
+					$conditions[] = isnotnull(f(__CLASS__.'.menuID'));
+					break;
+				case BackendToolbarItem::TYPE_PRODUCT:
+					$conditions[] = new AndChainCondition(array(isnotnull(f(__CLASS__.'.productID')), isnotnull(f('Product.ID')))); // fake inner join
+					break;
+				case BackendToolbarItem::TYPE_USER:
+					$conditions[] = new AndChainCondition(array(isnotnull(f(__CLASS__.'.userID')), isnotnull(f('User.ID'))));
+					break;
+				case BackendToolbarItem::TYPE_ORDER:
+					$conditions[] = new AndChainCondition(array(isnotnull(f(__CLASS__.'.orderID')), isnotnull(f('CustomerOrder.ID'))));
+					break;
 			}
 		}
+
 		if (count($conditions))
 		{
 			$filter->mergeCondition(new OrChainCondition($conditions) );
 		}
+
 		return self::getRecordSetArray(__CLASS__, $filter, true);
 	}
 

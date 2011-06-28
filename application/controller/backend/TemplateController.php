@@ -22,7 +22,7 @@ class TemplateController extends StoreManagementController
 
 	public function index()
 	{
-		$files = $this->getFiles();
+		$files = Template::getFiles();
 
 		unset($files['install'], $files['email']);
 
@@ -44,9 +44,6 @@ class TemplateController extends StoreManagementController
 	{
 		$template = new Template($this->getFileName());
 		$response = new ActionResponse();
-
-		
-		
 		$response->set('tabid', $this->getRequest()->get('tabid'));
 		$response->set('fileName', $template->getFileName());
 		$response->set('form', $this->getTemplateForm($template));
@@ -63,7 +60,6 @@ class TemplateController extends StoreManagementController
 		$request = $this->getRequest();
 		$theme = $request->get('theme');
 		$version = $request->get('version');
-
 		$template = new Template($this->getFileName(), strlen($theme) ? $theme : '', $version);
 		return new JSONResponse($template->toArray());
 	}
@@ -117,7 +113,7 @@ class TemplateController extends StoreManagementController
 
 	public function email()
 	{
-		$files = $this->getFiles();
+		$files = Template::getFiles();
 
 		$blocks = $files['email']['subs'];
 		foreach ($blocks as $key => $data)
@@ -265,40 +261,6 @@ class TemplateController extends StoreManagementController
 	private function getFileName()
 	{
 		return array_shift(explode(',', $this->request->get('file')));
-	}
-
-	private function getFiles()
-	{
-		$files = Template::getTree();
-
-		$dirs = $this->application->getConfigContainer()->getViewDirectories();
-		array_shift($dirs);
-		foreach ($dirs as $d)
-		{
-			$d = $d[1];
-			$rel = $this->application->getRenderer()->getRelativeTemplatePath($d);
-			$rel = str_replace('application/view', '', $rel);
-
-			$root = array();
-			$f =& $root;
-			$ids = array();
-			foreach (explode('/', $rel) as $part)
-			{
-				if ($part)
-				{
-					$ids[] = $part;
-					$root[$part] = array('id' => implode('/', $ids), 'subs' => array());
-					$root =& $root[$part]['subs'];
-				}
-			}
-
-			$root = Template::getTree($d, null, $rel);
-			$files = array_merge_recursive($files, $f);
-
-			unset($root, $f);
-		}
-
-		return $files;
 	}
 
 	private function getTemplateForm(Template $template)

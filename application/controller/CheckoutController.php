@@ -621,6 +621,7 @@ class CheckoutController extends FrontendController
 				{
 					$recurringIDs[] = $orderedItem['recurringID'];
 				}
+				}
 			}
 		}
 		if (count($recurringIDs))
@@ -648,9 +649,9 @@ class CheckoutController extends FrontendController
 	/*
 	private function deliveryTime()
 	{
-
-
-
+		
+		
+		
 		{
 			if (isset($array[$name]))
 			{

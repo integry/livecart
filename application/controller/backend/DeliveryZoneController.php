@@ -35,7 +35,7 @@ class DeliveryZoneController extends StoreManagementController
 		$response->set('countryGroups', json_encode($this->locale->info()->getCountryGroups()));
 		$response->set('testAddress', new Form(new RequestValidator('testAddress', $this->request)));
 		$response->set('countries', array_merge(array('' => ''), $this->application->getEnabledCountries()));
-
+		$this->loadLanguageFile('backend/ShippingService');
 		return $response;
 	}
 

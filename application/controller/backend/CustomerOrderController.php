@@ -1659,23 +1659,58 @@ class CustomerOrderController extends ActiveGridController
 		$request->set('parentID', $parentID); // and also parent id.
 	}
 
-	public function stopRebills()
+	public function cancelSubscription()
 	{
 		try {
 			$request = $this->getRequest();
 			$id = $request->get('id');
 			$order = CustomerOrder::getInstanceById($id);
-			if ($order->isCancelled->get() == false && $order->isRecurring->get() == true && $order->rebillsLeft->get() > 0)
+			if ($this->canCancelRecurring($order))
 			{
-				$order->cancelFurtherRebills();
-				return new JSONResponse(array(
-					'recurringStatus' => $this->translate('_recurring_status_expired'),
-					'rebillCount' => 0),
-					'success'
-				);
+				$status = $order->cancelRecurring(); // in payment processor.
+				if ($status == true)
+				{
+					return $this->stopRebills($order); // chain next action without user confirmation.
+				}
+				else
+				{
+					return new JSONResponse(array(
+						'confirm' => $this->translate('_cancel_subscription_payment_processor_error'),
+						'code' => 0),
+						'confirmation_required'
+					);
+				}
 			}
 		} catch(Exception $e) { }
-		return new JSONResponse(null, 'failure', $this->translate('_cannot_stop_futher_rebills'));
+
+		return new JSONResponse(null, 'failure', $this->translate('_cannot_cancel_subscription'));
+	}
+
+	public function stopRebills($order=null)
+	{
+		if ($order === null)
+		{
+			$request = $this->getRequest();
+			$id = $request->get('id');
+			$order = CustomerOrder::getInstanceById($id);
+		}
+
+		if ($this->canCancelRecurring($order))
+		{
+			$order->cancelFurtherRebills(); // localy in store database.
+			return new JSONResponse(array(
+				'recurringStatus' => $this->translate('_recurring_status_expired'),
+				'rebillCount' => 0),
+				'success'
+			);
+		}
+
+		return new JSONResponse(null, 'failure', $this->translate('_cannot_cancel_subscription'));
+	}
+
+	private function canCancelRecurring(CustomerOrder $order)
+	{
+		return $order->isCancelled->get() == false && $order->isRecurring->get() == true && $order->rebillsLeft->get() > 0;
 	}
 
 	private function getAlwaysDisplayedColumns()

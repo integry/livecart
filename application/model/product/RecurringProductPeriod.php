@@ -57,12 +57,24 @@ class RecurringProductPeriod extends MultilingualObject
 		{
 			$filter = new ARSelectFilter();
 		}
-		if (!is_numeric($productOrID) && $productOrID instanceof Product == false)
+
+		if (is_numeric($productOrID))
+		{
+			$productIDs = array((int)$productOrID);
+		}
+		else if(is_array($productOrID))
+		{
+			$productIDs = $productOrID;
+		}
+		else if(is_object($productOrID) && $productOrID instanceof Product) // is_callable(array($productOrID, 'getID'))
+		{
+			$productIDs = array($productOrID->getID());
+		}
+		else
 		{
 			throw new Exception('getAsignedToFilter() excpects argument to be instance of Product');
 		}
-		$filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), is_numeric($productOrID) ? $productOrID : $productOrID->getID()));
-
+		$filter->mergeCondition(new InCond(new ARFieldHandle(__CLASS__, 'productID'), $productIDs));
 		return $filter;
 	}
 
@@ -88,7 +100,6 @@ class RecurringProductPeriod extends MultilingualObject
 		}
 		return $result;
 	}
-
 
 	public function toArray($currencyID=null)
 	{

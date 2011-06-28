@@ -7,5 +7,5 @@ _css_warn=NOTE: always avoid editing LiveCart CSS files directly - as the change
 
 _css_file_has_been_successfully_updated=CSS file has been successfully saved
 _could_not_update_css_file=Could not save CSS file
-
+_previous_file_versions=Previous file versions
 _notice_changes_colors_and_styles_tab=There are unsaved changes in the Colors & Style tab, which would be lost if the CSS file is edited

@@ -91,10 +91,12 @@ BackendToolbar.prototype = {
 		Backend.QuickSearch.getInstance(this.nodes.quickSearchResult).onShowResultContainer(this.adjustQuickSearchResult.bind(this));
 
 		Event.observe(this.nodes.quickSearchQuery, "focus", this.hideLastViewedMenu.bind(this));
+
 	},
 
 	openLastViewedMenu: function()
 	{
+		
 		this.nodes.quickSearchResult.hide();
 		if (this.nodes.lastviewed.hasClassName("invalid"))
 		{
@@ -102,8 +104,10 @@ BackendToolbar.prototype = {
 			this.adjustPanel(this.nodes.lastviewed);
 			this.nodes.lastViewedIndicator.show();
 			this.nodes.lastViewedIndicator.addClassName("progressIndicator");
+			
+			
 			new LiveCart.AjaxUpdater(
-				this.getPorperty("lastViewed"),
+				this.getPorperty("lastViewed").replace("__where__", this.whereAmI()),
 				this.nodes.lastviewed.down("ul"),
 				this.nodes.lastViewedIndicator,
 				false,
@@ -122,8 +126,7 @@ BackendToolbar.prototype = {
 			}
 		);
 	},
-	
-	
+
 	hideLastViewedMenu: function()
 	{
 		if(this.isBackend == false)
@@ -321,7 +324,66 @@ BackendToolbar.prototype = {
 	invalidateLastViewed: function()
 	{
 		this.nodes.lastviewed.addClassName("invalid");
+	},
+
+	whereAmI: function()
+	{
+		var href = $("navSelected").down("a").href;
+
+		if (href.match(/backend\.userGroup/))
+		{
+			return 'user';
+		}
+		else if (href.match(/backend\.customerOrder/))
+		{
+			return 'order';
+		}
+		else if (href.match(/backend\.category/))
+		{
+			return 'product';
+		}
+		return null;
+	},
+
+	tryToOpenItemWithoutReload: function(id, type)
+	{
+		var sectionName = this.whereAmI();
+		
+		if (type != sectionName)
+		{
+			return true; // can't open without reload.
+		}
+
+		if (sectionName == "product")
+		{
+			Element.show($('loadingProduct'));
+			Backend.Product.openProduct(id, null, function() {
+				Element.hide($('loadingProduct'));
+			});
+		}
+		else if (sectionName == "order")
+		{
+			Element.show($('loadingOrder'));
+			Backend.CustomerOrder.prototype.openOrder(id, null, function() {
+				Element.hide($('loadingOrder'));
+			});
+		}
+		else if (sectionName == "user")
+		{
+			Element.show($('loadingUser'));
+			Backend.UserGroup.prototype.openUser(id, null, function() {
+				Element.hide($('loadingUser'));
+			});
+		}
+		else 
+		{
+			return true;
+		}
+
+		return false; // block page reload
 	}
 }
+
+
 
 BackendToolbar.prototype = Object.extend(FooterToolbar.prototype, BackendToolbar.prototype);
