@@ -59,9 +59,9 @@ a.updateAction
 	color: red;
 }
 
-.channel
+.channel-current
 {
-
+	color: blue;
 }
 
 .channel-stable
@@ -72,6 +72,12 @@ a.updateAction
 .channel-beta
 {
 	color: red;
+}
+
+.channel-alpha
+{
+	color: red;
+	font-weight: bold;
 }
 
 .moduleError
@@ -149,6 +155,7 @@ fieldset.type_needUpdate legend
 .module__
 {
 	background-image: url(../../image/promo/logo_large_install.png);
+	background-size: 101%;
 }
 
 .module__ .moduleName

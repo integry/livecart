@@ -770,7 +770,18 @@ Backend.Settings.Editor.prototype =
 								{
 									label.removeClassName('repoUp');
 									label.removeClassName('repoDown');
-									label.addClassName((oR.responseText == 'OK') ? 'repoUp' : 'repoDown');
+									label.addClassName(('OK' == oR.responseText) ? 'repoUp' : 'repoDown');
+
+									if ('OK' == oR.responseText)
+									{
+										new LiveCart.AjaxRequest(Router.createUrl('backend.module', 'repoDescription', {repo: value}), label, function(descrReq)
+										{
+											var descr = document.createElement('div');
+											descr.className = 'repoDescription';
+											field.parentNode.appendChild(descr);
+											descr.innerHTML = descrReq.responseText;
+										});
+									}
 								});
 							}
 						}
