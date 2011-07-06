@@ -302,6 +302,19 @@ class ModuleController extends StoreManagementController
 		return new RawResponse(file_get_contents($fetch->getTmpFile()) == 'OK' ? 'OK' : 'fail');
 	}
 
+	public function repoDescription()
+	{
+		$repo = $this->request->get('repo');
+		if (!preg_match('/^http[s]{0,1}\:\/\//', $repo))
+		{
+			return new RawResponse('Invalid URL');
+		}
+
+		$fetch = new NetworkFetch($repo);
+		$fetch->fetch();
+		return new RawResponse(file_get_contents($fetch->getTmpFile()));
+	}
+
 	public function packageList()
 	{
 		$resp = array();

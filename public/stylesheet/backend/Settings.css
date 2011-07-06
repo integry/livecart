@@ -160,3 +160,10 @@ label.repoDown
 	background-image: url(../../image/silk/cancel.png);
 	padding-left: 20px;
 }
+
+.repoDescription
+{
+	font-size: 0.85em;
+	margin-bottom: 0.5em;
+	margin-top: -0.2em;
+}
