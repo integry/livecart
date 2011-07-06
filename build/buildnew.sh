@@ -5,7 +5,7 @@
 set -x
 set -e
 
-REPO_ROOT=/var/db/repo
+REPO_DEF_ROOT=/var/db/repo
 PKG_DEF_ROOT=/var/db/livecart
 
 if [ ! $PKG_ROOT ]
@@ -13,7 +13,13 @@ then
 	PKG_ROOT=$PKG_DEF_ROOT
 fi
 
-SCRIPTDIR="`dirname $0`"
+if [ ! $REPO_ROOT ]
+then
+	REPO_ROOT=$REPO_DEF_ROOT
+fi
+
+cd "`dirname $0`"
+SCRIPTDIR="`pwd`"
 LINE=$2
 ROOT=$1
 
@@ -57,7 +63,7 @@ function initBuildRepository
 	REPO=$REPO_ROOT/$pkg
 	if [ ! -d $REPO ]
 	then
-		mkdir $REPO
+		amkdir $REPO
 		cd $REPO
 		git init
 
@@ -114,15 +120,14 @@ function markCopyright
 	setFileCopyright php copyrightPhp
 	setFileCopyright js copyrightJs
 
-	cd $SCRIPTDIR/..
 	if [ $ISMODULE ]
 	then
-		if [ -f /tmp/update/license.txt ]
+		if [ ! -f /tmp/update/license.txt ]
 		then
-			cp license-module.txt /tmp/update
+			cp $SCRIPTDIR/../license-module.txt license.txt
 		fi
 	else
-		cp license.txt /tmp/update
+		cp $SCRIPTDIR/../license.txt .
 	fi
 }
 
@@ -345,3 +350,5 @@ PACKAGE="$pkg-$LINE-$version"
 initBuildRepository
 
 build $ROOT $REPO $PACKAGE
+
+echo "$PACKAGE built successfully"
