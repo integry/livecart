@@ -1,42 +1,42 @@
 [submodule "framework"]
 	path = framework
-	url = git@github.com:integry/integry-framework.git
+	url = git://github.com/integry/integry-framework.git
 [submodule "library/activerecord"]
 	path = library/activerecord
-	url = git@github.com:integry/integry-activerecord.git
+	url = git://github.com/integry/integry-activerecord.git
 [submodule "library/smarty"]
 	path = library/smarty
 	url = git://github.com/bitweaver/smarty.git
 [submodule "library/locale"]
 	path = library/locale
-	url = git@github.com:integry/integry-framework-locale.git
+	url = git://github.com/integry/integry-framework-locale.git
 [submodule "library/swiftmailer"]
 	path = library/swiftmailer
-	url = git@github.com:integry/swiftmailer.git
+	url = git://github.com/integry/swiftmailer.git
 [submodule "public/javascript/library/editarea"]
 	path = public/javascript/library/editarea
-	url = git@github.com:integry/editarea-mirror.git
+	url = git://github.com/integry/editarea-mirror.git
 [submodule "public/javascript/library/prototype"]
 	path = public/javascript/library/prototype
-	url = git@github.com:integry/scriptaculous.git
+	url = git://github.com/integry/scriptaculous.git
 [submodule "public/javascript/library/tinymce"]
 	path = public/javascript/library/tinymce
-	url = git@github.com:integry/tinymce-build-mirror.git
+	url = git://github.com/integry/tinymce-build-mirror.git
 [submodule "public/javascript/library/scriptaculous"]
 	path = public/javascript/library/scriptaculous
-	url = git@github.com:integry/scriptaculous.git
+	url = git://github.com/integry/scriptaculous.git
 [submodule "public/javascript/library/ajaxfilemanager"]
 	path = public/javascript/library/ajaxfilemanager
-	url = git@github.com:integry/mirror-ajaxfilemanager.git
+	url = git://github.com/integry/mirror-ajaxfilemanager.git
 [submodule "public/javascript/library/jscolor"]
 	path = public/javascript/library/jscolor
 	url = git://github.com/odvarko/JSColor.git
 [submodule "library/payment"]
 	path = library/payment
-	url = git@github.com:integry/integry-payments.git
+	url = git://github.com/integry/integry-payments.git
 [submodule "library/image"]
 	path = library/image
-	url = git@github.com:integry/integry-image.git
+	url = git://github.com/integry/integry-image.git
 [submodule "library/shipping"]
 	path = library/shipping
-	url = git@github.com:integry/integry-shipping.git
+	url = git://github.com/integry/integry-shipping.git
