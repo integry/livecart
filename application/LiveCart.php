@@ -571,8 +571,10 @@ class LiveCart extends Application implements Serializable
 
 		$renderer = $this->getRenderer();
 
-		if (get_class($response) == 'ActionResponse')
+		if ($response instanceof ActionResponse && !$controllerInstance->isBlocksProcessed)
 		{
+			$controllerInstance->isBlocksProcessed = true;
+
 			foreach ($renderer->getBlockConfiguration() as $object => $commands)
 			{
 				foreach ($commands as $command)
@@ -592,6 +594,7 @@ class LiveCart extends Application implements Serializable
 								{
 									$action = array_merge($action, (array)array_shift($controllerInstance->getBlocks($action['view'])));
 								}
+
 								$controllerInstance->addBlock($object, $action['call'], $action['view'], $action['command'] == 'prepend');
 								break;
 
