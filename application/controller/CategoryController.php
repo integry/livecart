@@ -429,8 +429,7 @@ class CategoryController extends FrontendController
 		}
 		else if (substr($order, 0, 3) == 'sku')
 		{
-			$selectFilter->setOrder(new ARFieldHandle('ProductPrice', 'price'), $dir);
-			$selectFilter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
+                        $selectFilter->setOrder(new ARFieldHandle('Product', 'sku'), $dir); 
 		}
 		else if ('newest_arrivals' == $order)
 		{
