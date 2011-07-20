@@ -2,7 +2,7 @@
 
 cd `dirname $0`
 
-SUBDOMAIN=extra
+SUBDOMAIN=repo
 
 export REPO_ROOT=/var/db/$SUBDOMAIN.livecart.com/repo
 export PKG_ROOT=/var/db/$SUBDOMAIN.livecart.com/packages
