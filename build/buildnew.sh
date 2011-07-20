@@ -111,7 +111,7 @@ function saveChangedTemplateFiles
 # @param sign script base name
 function setFileCopyright
 {
-	find -name '*.$1' | xargs --no-run-if-empty grep -l Integry | xargs --no-run-if-empty --max-args=1 $SCRIPTDIR/$2.sh $SCRIPTDIR
+	find -name "*.$1" | xargs --no-run-if-empty grep -l Integry | xargs --no-run-if-empty --max-args=1 $SCRIPTDIR/$2.sh $SCRIPTDIR
 }
 
 # prepend copyright messages to source files
@@ -134,9 +134,8 @@ function markCopyright
 function removeNonDistributedFiles
 {
 	# remove non-distributed files
-	rm -rf build cache doc update .git* .snap test push status
+	rm -rf build cache storage doc update .git* .hg* .snap test push status
 	rm -rf public/cache public/upload
-	rm -rf storage/configuration/*.php
 	rm -rf library/payment/test/simpletest
 	rm -rf library/payment/test/unittest
 	rm -rf public/module
@@ -144,12 +143,8 @@ function removeNonDistributedFiles
 
 	if [ -d module ]
 	then
-		cd module
-		ls | grep -v ads | grep -v captcha | xargs rm -rf
+		rm -rf module/*
 	fi
-
-	# @todo: headset-no module still not deleted (he*ads*et)
-	rm -rf customization*
 }
 
 function prepareBuildDirectory
@@ -299,10 +294,10 @@ function build
 	UPDATEDIR=$MAIN/update/$VERSION
 	MAKEFUNC=makeProfessional
 
-	# copy to a temporary directory and remove .hg directories
+	# copy to a temporary directory and remove .git directories
 	rm -rf $TMP
 	cp -rf $MAIN $TMP
-	find $TMP -name '.git' | xargs rm -rf
+	find $TMP -name '.git*' | xargs rm -rf test
 
 	#removeDeletedFiles
 

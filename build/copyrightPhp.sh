@@ -1,4 +1,5 @@
 #!/bin/bash
+
 cat $1/copyright.phps $2 > $2.copy
 rm -f $2
 mv $2.copy $2

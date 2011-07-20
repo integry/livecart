@@ -14,12 +14,13 @@ set -e
 
 DIR=/tmp/module/test
 export PKG_ROOT=/tmp/packages
+export REPO_ROOT=/tmp/repo
 
 rm -rf $DIR
 mkdir -p $DIR
 cd $DIR
 
-rm -rf /var/db/repo/test
+rm -rf $REPO_ROOT/test
 
 # FIRST VERSION
 
@@ -120,8 +121,12 @@ cd /tmp/buildtest
 tar xfz /tmp/packages/updates/test/test-stable-update-1.0.0-to-1.0.0.1.tar.gz
 assertEqual "`cat Module.ini | grep version`" "version = 1.0.0.1" $LINENO
 
+# copyright
+ls
+assertEqual "`cat index.php | grep Copyright | wc -l`" "1"
+
 # should be 4 changed and 1 deleted files
-assertEqual "`cat update/1.0.0.1/changed | wc -l`" "4" $LINENO
+assertEqual "`cat update/1.0.0.1/changed | wc -l`" "3" $LINENO
 assertEqual "`cat update/1.0.0.1/deleted | wc -l`" "1" $LINENO
 
 # dot files should still be present
