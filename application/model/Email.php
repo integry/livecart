@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import('library.smarty.libs.Smarty', true);
+ClassLoader::import('library.smarty.libs.Smarty#class', true);
 
 ClassLoader::ignoreMissingClasses();
 ClassLoader::import('library.swiftmailer.lib.swift_required', true);
@@ -69,7 +69,7 @@ class Email
 		}
 		else if ('FAKE' == $config->get('EMAIL_METHOD'))
 		{
-			$this->connection = null;
+			$this->connection = Swift_Connection_Fake::newInstance();
 		}
 		else
 		{
@@ -88,6 +88,11 @@ class Email
 	public function getMessage()
 	{
 		return $this->message;
+	}
+
+	public function getConnection()
+	{
+		return $this->connection;
 	}
 
 	public function setSubject($subject)
@@ -120,9 +125,9 @@ class Email
 		$lines = explode("\n", $html);
 		foreach ($lines as &$line)
 		{
-			if (ereg("[\"|'][[:alpha:]]+://", $line) === false)
+			if (preg_match("#[\"|'][[:alpha:]]+://#", $line) === false)
 			{
-				$line = ereg_replace('([[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/])', '<a href="\\1">\\1</a>', $line);
+				$line = preg_replace('#([[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/])#', '<a href="\\1">\\1</a>', $line);
 			}
 		}
 

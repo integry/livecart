@@ -24,6 +24,12 @@ class EmailTest extends LiveCartTest
 		);
 	}
 
+	function testMockInstance()
+	{
+		$email = new Email(self::getApplication());
+		$this->assertTrue($email->getConnection() instanceof Swift_Connection_Fake);
+	}
+
 	function testSendingAnEmail()
 	{
 		$email = new Email(self::getApplication());
@@ -55,7 +61,7 @@ class EmailTest extends LiveCartTest
 
 		$res = $email->send();
 
-		$this->assertTrue(strpos(Swift_Connection_Fake::getHeaderValue('To'), $user->email->get()) !== false);
+		$this->assertTrue(strpos($email->getMessage()->getHeaders()->get('To'), $user->email->get()) !== false);
 
 		$this->assertEqual($res, 1);
 	}
