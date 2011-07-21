@@ -177,6 +177,8 @@ class OnePageCheckoutController extends CheckoutController
 				{
 					$form->setData($spec->getFormData('shipping_'));
 				}
+
+				$response->set('states', $this->getStateList($form->get('shipping_country')));
 			}
 
 			$form->setData($this->user->toFlatArray());
@@ -609,7 +611,7 @@ class OnePageCheckoutController extends CheckoutController
 			$method = $this->config->get('CC_HANDLER');
 		}
 
-		$this->session->set('OrderPaymentMethod_' . $this->order->getID(), $method);
+		//$this->session->set('OrderPaymentMethod_' . $this->order->getID(), $method);
 		$this->order->setPaymentMethod($method);
 
 		$this->order->getTotal(true);
