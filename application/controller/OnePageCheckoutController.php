@@ -259,10 +259,12 @@ class OnePageCheckoutController extends CheckoutController
 		// shipping methods won't be displayed if custom fields are not filled
 		$this->config->setRuntime('CHECKOUT_CUSTOM_FIELDS', 'SHIPPING_METHOD_STEP');
 
+		$this->setAnonAddresses();
+
 		$tempShipping = false;
 		if (!$this->order->shippingAddress->get())
 		{
-			$this->order->shippingAddress->set(SessionOrder::getEstimateAddress());
+			$this->order->shippingAddress->set($this->order->billingAddress->get() ? $this->order->billingAddress->get() : SessionOrder::getEstimateAddress());
 			$tempShipping = true;
 		}
 
@@ -473,6 +475,7 @@ class OnePageCheckoutController extends CheckoutController
 		$this->order = CustomerOrder::getInstanceById($this->order->getID(), true);
 
 		// @todo: needs to be called twice for the auto-selection to get saved
+		$this->init();
 		$this->shippingMethods();
 		$this->shippingMethods();
 
@@ -645,6 +648,15 @@ class OnePageCheckoutController extends CheckoutController
 		{
 			$this->order->shippingAddress->setNull();
 		}
+
+		// reload order data
+		$this->order->save();
+
+		ActiveRecord::clearPool();
+
+		$this->order = CustomerOrder::getInstanceById($this->order->getID(), true);
+		$this->order->loadAll();
+		$this->order->getTotal(true);
 	}
 
 	protected function getUserController()
