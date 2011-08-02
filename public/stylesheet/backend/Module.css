@@ -170,7 +170,9 @@ fieldset.type_needUpdate legend
 	visibility: hidden;
 }
 
-.module__ .installAction
+.module__ .installAction,
+.module__ .sep
 {
 	display: none;
 }
+

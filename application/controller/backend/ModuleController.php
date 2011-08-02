@@ -135,9 +135,14 @@ class ModuleController extends StoreManagementController
 		unset($params['package']);
 
 		$module = $this->request->get('id');
+
 		if (substr($module, 0, 7) == 'module.')
 		{
 			$module = substr($module, 7);
+		}
+		else if ('.' == $module)
+		{
+			$module = 'livecart';
 		}
 
 		$url = $this->request->get('repo') . '/' . $query . '?domain=localhost&handshake=' . $this->request->get('handshake') . '&package=' . $module;
@@ -159,6 +164,10 @@ class ModuleController extends StoreManagementController
 			if (substr($identifier, 0, 7) == 'module.')
 			{
 				$identifier = substr($identifier, 7);
+			}
+			else if ('.' == $identifier)
+			{
+				$identifier = 'livecart';
 			}
 
 			foreach ($repos as $repo)

@@ -28,7 +28,7 @@
 			{else}
 				<div class="moduleUpdate">
 						{if $module.repo}
-							<a class="updateAction" href="#update">Update or downgrade</a> |
+							<a class="updateAction" href="#update">Update or downgrade</a> <span class="sep">|</span>
 						{/if}
 
 						<a class="installAction" href="#deinstall">{t _deinstall}</a>
