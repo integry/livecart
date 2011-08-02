@@ -80,7 +80,7 @@ function initBuildRepository
 
 	if [ $parent ]
 	then
-		git branch $LINE $parent
+		git branch -f $LINE $parent
 	elif [ `git branch | grep $LINE | wc -l` == "0" ]
 	then
 		git branch $LINE
