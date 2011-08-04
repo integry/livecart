@@ -215,27 +215,33 @@ function getPreviousVersion
 	fi
 }
 
+function exportfiles
+{
+	git diff --diff-filter=ACMRT --name-only $1 | while read files; do mkdir -p "$2/$(dirname $files)"; cp -vf $files $2/$(dirname $files); done
+}
+
 function buildUpdatePackages
 {
 	cd $REPO
+	git checkout $LINE
 
 	ISDOWNGRADE=$1
 	if [ $ISDOWNGRADE ]
 	then
-		EXPORTRANGE="HEAD~1..HEAD"
+		git checkout HEAD~1
+		EXPORTRANGE="$LINE..HEAD"
 		ARCHIVE=$pkg-$LINE-downgrade-$VERSION-to-$FROMVERSION
 		ARCHIVEFROMVERSION=$VERSION
-		git checkout HEAD~1
 	else
-		EXPORTRANGE="HEAD..HEAD~1"
+		EXPORTRANGE="HEAD~1..HEAD"
 		ARCHIVE=$pkg-$LINE-update-$FROMVERSION-to-$VERSION
 		ARCHIVEFROMVERSION=$FROMVERSION
 	fi
 
 	# copy changed files for update
 	rm -rf /tmp/update && mkdir /tmp/update
-	git exportfiles $EXPORTRANGE /tmp/update
-	git checkout HEAD
+	exportfiles $EXPORTRANGE /tmp/update
+	git checkout $LINE
 
 	cd /tmp/update
 	markCopyright
@@ -315,7 +321,7 @@ function build
 	cd $BUILD
 
 	# commit changes
-	git add .
+	git add -A .
 
 	getPreviousVersion
 	listChangedFiles
