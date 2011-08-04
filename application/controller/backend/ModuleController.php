@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
+ClassLoader::import("application.model.system.ModuleRepo");
 
 /**
  * Manage application modules
@@ -31,16 +32,16 @@ class ModuleController extends StoreManagementController
 
 		$this->locale->translationManager()->reloadFile('Base');
 
-		$k = 0;
-		$config = $this->application->getConfig();
-		while ($config->isValueSet('UPDATE_REPO_' . ++$k))
-		{
-			$repo = $config->get('UPDATE_REPO_' . $k);
-			if ($repo)
-			{
-				$this->repos[] = $repo;
-			}
-		}
+		$this->repos = ModuleRepo::getConfiguredRepos($this->application, $this->getDomain());
+	}
+
+	private function getDomain()
+	{
+		$baseUrl = $this->application->getRouter()->getBaseUrl();
+		$parts = parse_url($baseUrl);
+		$domain = $parts['host'];
+
+		return $domain;
 	}
 
 	/**
@@ -51,9 +52,9 @@ class ModuleController extends StoreManagementController
 		$repos = array();
 		foreach ($this->repos as $repo)
 		{
-			if ($key = $this->getRepoHandshake($repo))
+			if ($handshake = $repo->getHandshake())
 			{
-				$repos[$repo] = $key;
+				$repos[$handshake['repo']] = $handshake;
 			}
 		}
 
@@ -117,39 +118,13 @@ class ModuleController extends StoreManagementController
 				 ? 1 : -1;
 	}
 
-	private function getRepoHandshake($repo)
-	{
-		$fetch = new NetworkFetch($repo . '/handshake?domain=localhost');
-		$fetch->fetch();
-		$res = json_decode(file_get_contents($fetch->getTmpFile()), true);
-
-		if ('ok' == $res['status'])
-		{
-			$res['repo'] = $repo;
-			return $res;
-		}
-	}
-
 	private function getRepoResponse($query, $params = array(), $raw = false)
 	{
-		unset($params['package']);
+		$repo = $this->repos[$this->request->get('repo')];
+		$repo->setHandshake($this->request->get('handshake'));
+		$params['package'] = $this->request->get('id');
 
-		$module = $this->request->get('id');
-		if (substr($module, 0, 7) == 'module.')
-		{
-			$module = substr($module, 7);
-		}
-
-		$url = $this->request->get('repo') . '/' . $query . '?domain=localhost&handshake=' . $this->request->get('handshake') . '&package=' . $module;
-		foreach ($params as $key => $value)
-		{
-			$url .= '&' . $key . '=' . $value;
-		}
-
-		$fetch = new NetworkFetch($url);
-		$fetch->fetch();
-
-		return $raw ? file_get_contents($fetch->getTmpFile()) : json_decode(file_get_contents($fetch->getTmpFile()), true);
+		return $repo->getResponse($query, $params, $raw);
 	}
 
 	private function getNewestVersions(&$modules, $repos)
