@@ -53,7 +53,11 @@ class LiveCartSmarty extends Smarty
 	 */
 	public function config($key)
 	{
-		return self::getApplication()->getConfig()->get($key);
+		$config = self::getApplication()->getConfig();
+		if ($config->isValueSet($key))
+		{
+			return $config->get($key);
+		}
 	}
 
 	/**
@@ -73,7 +77,7 @@ class LiveCartSmarty extends Smarty
 		$path = $this->translatePath($path);
 		$path = preg_replace('/^\/*/', '', $path);
 		$path = preg_replace('/\/{2,}/', '/', $path);
-		
+
 		if (substr($path, 0, 6) == 'theme/')
 		{
 			$themePath = $path;
@@ -86,7 +90,7 @@ class LiveCartSmarty extends Smarty
 		{
 			$plugins = array_merge($plugins, $this->getPlugins($themePath));
 		}
-		
+
 		foreach ($plugins as $plugin)
 		{
 			$output = $plugin->process($output);
