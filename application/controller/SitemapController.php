@@ -34,7 +34,7 @@ class SitemapController extends FrontendController
 
 	public function index()
 	{
-		$languages = $this->application->getLanguageArray(true);
+		$languages = $this->application->getLanguageArray(true, false);   // only enabled languages
 		$defaultLanguage = $this->application->getDefaultLanguageCode();
 
 		$maps = array();
