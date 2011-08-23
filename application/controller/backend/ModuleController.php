@@ -24,7 +24,7 @@ class ModuleController extends StoreManagementController
 	protected function initRepos()
 	{
 		$conf = $this->application->getConfigContainer();
-		$conf->clearCache();
+		$conf->clearConfigurationCache();
 		foreach ($conf->getAvailableModules() as $module)
 		{
 			$this->locale->translationManager()->setDefinitionFileDir(array_shift($module->getLanguageDirectories()));
@@ -298,12 +298,14 @@ class ModuleController extends StoreManagementController
 	{
 		$resp = array();
 		$conf = $this->application->getConfigContainer();
+
 		foreach (json_decode($this->request->get('repos'), true) as $repo)
 		{
 			$this->request->set('repo', $repo['repo']);
 			$this->request->set('handshake', $repo['handshake']);
 
 			$p = parse_url($repo['repo']);
+
 			foreach ($this->getRepoResponse('package/list') as $package)
 			{
 				if ($conf->getModule('module.' . $package['pkg']))

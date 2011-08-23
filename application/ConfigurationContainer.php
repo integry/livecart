@@ -81,6 +81,18 @@ class ConfigurationContainer
 		$this->modules = array();
 	}
 
+	public function clearConfigurationCache()
+	{
+		$dir = ClassLoader::getRealPath('cache.');
+		foreach (array('configurationContainer.php', 'classloader.php') as $file)
+		{
+			if (file_exists($dir . $file))
+			{
+				unlink($dir . $file);
+			}
+		}
+	}
+
 	public function clearCache()
 	{
 		// clear cache
@@ -94,9 +106,12 @@ class ConfigurationContainer
 			file_put_contents($dir . '/.htaccess', 'Deny from all');
 		}
 
-		$tplDir = ClassLoader::getRealPath('cache.templates_c');
-		mkdir($tplDir, 0777);
-		chmod($tplDir, 0777);
+		foreach (array('cache.templates_c', 'cache.templates_c.customize') as $path)
+		{
+			$tplDir = ClassLoader::getRealPath($path);
+			mkdir($tplDir, 0777);
+			chmod($tplDir, 0777);
+		}
 	}
 
 	private function delTree($path)
