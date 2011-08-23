@@ -13,11 +13,19 @@ class OnePageCheckoutController extends CheckoutController
 {
 	protected $ignoreValidation = false;
 	protected $isTosRequired = false;
+	protected $isInitialized = false;
 
 	const CUSTOM_FIELDS_STEP = 'SHIPPING_ADDRESS_STEP';
 
 	public function init()
 	{
+		if ($this->isInitialized)
+		{
+			return;
+		}
+
+		$this->isInitialized = true;
+
 		if ($this->config->get('CHECKOUT_METHOD') == 'CHECKOUT_MULTISTEP')
 		{
 			return new ActionRedirectResponse('checkout', 'index');
@@ -41,6 +49,7 @@ class OnePageCheckoutController extends CheckoutController
 		$this->loadLanguageFile('User');
 
 		$this->order->loadSpecification();
+
 		ActiveRecordModel::loadEav();
 
 		if ($this->user->isAnonymous())
@@ -81,6 +90,7 @@ class OnePageCheckoutController extends CheckoutController
 			{
 				$userAddress = $address->userAddress->get();
 				$this->order->shippingAddress->set($userAddress);
+				$this->order->save();
 			}
 
 			$address = $this->user->defaultBillingAddress->get();
@@ -88,9 +98,8 @@ class OnePageCheckoutController extends CheckoutController
 			{
 				$userAddress = $address->userAddress->get();
 				$this->order->billingAddress->set($userAddress);
+				$this->order->save();
 			}
-
-			$this->order->save();
 		}
 	}
 
