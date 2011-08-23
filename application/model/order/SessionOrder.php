@@ -12,6 +12,8 @@ ClassLoader::import('application.model.businessrule.RuleProductContainer');
  */
 class SessionOrder
 {
+	private static $instance = null;
+
 	/**
 	 * Get CustomerOrder instance from session
 	 *
@@ -19,6 +21,11 @@ class SessionOrder
 	 */
 	public static function getOrder()
 	{
+		if (self::$instance)
+		{
+			return self::$instance;
+		}
+
 		$session = new Session();
 
 		$id = $session->get('CustomerOrder');
@@ -116,6 +123,8 @@ class SessionOrder
 		$orderArray['items']->setTotal($total);
 
 		$session->set('orderData', $orderArray);
+
+		self::$instance = $order;
 	}
 
 	public static function getOrderItems()
