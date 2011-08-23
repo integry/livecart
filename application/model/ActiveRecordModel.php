@@ -121,6 +121,11 @@ abstract class ActiveRecordModel extends ActiveRecord
 	{
 		ClassLoader::import("application.model.eav.EavObject");
 
+		if ($this->isSpecificationLoaded() && !$specificationData)
+		{
+			return;
+		}
+
 		if (!$this instanceof EavAble && !$this instanceof EavObject)
 		{
 			throw new ApplicationException(get_class($this) . ' does not support EAV');
