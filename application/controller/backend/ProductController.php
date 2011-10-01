@@ -185,7 +185,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 		$filter = new ARSelectFilter($category->getProductCondition(true));
 		$filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
-		
+
 		$filter->mergeCondition(
 			new EqualsCond(new ARFieldHandle('ProductPrice', 'type'), ProductPrice::TYPE_GENERAL_PRICE));
 
@@ -1046,10 +1046,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		self::addPricesValidator($validator);
 		self::addShippingValidator($validator);
 		self::addInventoryValidator($validator);
-		if ($this->config->get('INVENTORY_TRACKING') != 'DISABLE')
-		{
-			$validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required')));
-		}
+
 		return $validator;
 	}
 
@@ -1155,7 +1152,16 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	{
 		if ($this->config->get('INVENTORY_TRACKING') != 'DISABLE')
 		{
-			$validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required')));
+			$validator->addCheck('stockCount',
+				new OrCheck(
+					array('stockCount', 'isUnlimitedStock'),
+					array(
+						new IsNotEmptyCheck($this->translate('_err_stock_required')),
+						new IsNotEmptyCheck($this->translate('_err_stock_required'))
+					),
+					$this->request
+				));
+
 			$validator->addCheck('stockCount', new IsNumericCheck($this->translate('_err_stock_not_numeric')));
 			$validator->addCheck('stockCount', new MinValueCheck($this->translate('_err_stock_negative'), 0));
 		}
@@ -1170,9 +1176,9 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		ClassLoader::import('application.model.product.ProductImage');
 		ClassLoader::import('library.image.ImageManipulator');
 		$field = 'upload_' . $this->request->get('field');
-		
+
 		$dir = ClassLoader::getRealPath('public.upload.tmpimage.');
-		
+
 		// delete old tmp files
 		chdir($dir);
 		$dh = opendir($dir);
@@ -1192,7 +1198,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		// create tmp file
 		$file = $_FILES[$field];
 		$tmp = 'tmp_' . $field . md5($file['tmp_name']) .  '__' . $file['name'];
-		
+
 		if (!file_exists($dir))
 		{
 			mkdir($dir, 0777, true);
