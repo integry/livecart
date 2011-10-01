@@ -251,7 +251,7 @@ Backend.CustomerOrder.prototype =
 					Backend.ajaxNav.add("order_" + id);
 				}
 				var stopRebillsLink = $("stopRebills"+id);
-				if (stopRebillsLink.hasClassName("observed") == false)
+				if (stopRebillsLink && stopRebillsLink.hasClassName("observed") == false)
 				{
 					Event.observe(stopRebillsLink, "click", this.stopRebills.bindAsEventListener(this, id));
 					stopRebillsLink.addClassName("observed");
