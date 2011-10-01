@@ -252,7 +252,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 	// Changed billing plan or adding item with recurring billing plan has nothing to do with discount, therefore there is need to update base price.
 	public function updateBasePriceToCalculatedPrice()
 	{
-		$this->price->set($this->getPrice(true)); 
+		$this->price->set($this->getPrice(true));
 		$this->save();
 	}
 
@@ -652,6 +652,11 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 				// unreserve original item
 				if ($orig = $this->product->getInitialValue())
 				{
+					if (is_string($orig))
+					{
+						$orig = Product::getInstanceById($orig, true);
+					}
+
 					$this->reserve(true, $orig);
 					$orig->save();
 				}
