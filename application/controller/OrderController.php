@@ -1,5 +1,5 @@
 <?php
-class Whatever { }
+
 ClassLoader::import('application.model.order.CustomerOrder');
 ClassLoader::import('application.model.order.OrderedItem');
 ClassLoader::import('application.model.order.SessionOrder');
@@ -43,7 +43,7 @@ class OrderController extends FrontendController
 		{
 			return new ActionRedirectResponse('user', 'login', array('returnPath' => true));
 		}
-$this->session->set('test', new Whatever());
+
 		$this->order->getTotal(true);
 
 		$response = $this->getCartPageResponse();
