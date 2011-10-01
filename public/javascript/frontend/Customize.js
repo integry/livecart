@@ -239,7 +239,15 @@ CssCustomize.prototype =
 		this.styleSheets = $A(document.styleSheets);
 		this.styleSheets.each(function(stylesheet)
 		{
-			stylesheet.originalRules = $A(stylesheet.cssRules);
+			try
+			{
+				stylesheet.originalRules = $A(stylesheet.cssRules);
+			}
+			catch (e)
+			{
+				return;
+			}
+
 			$A(stylesheet.cssRules).each(function(rule)
 			{
 				rule.originalText = rule.cssText;
@@ -462,13 +470,20 @@ CssCustomize.prototype =
 				}
 			});
 
-			$A(currentSheet.cssRules).each(function(rule)
+			try
 			{
-				if (!rule.originalRule && !rule.originalText)
+				$A(currentSheet.cssRules).each(function(rule)
 				{
-					newRules.push(rule);
-				}
-			});
+					if (!rule.originalRule && !rule.originalText)
+					{
+						newRules.push(rule);
+					}
+				});
+			}
+			catch (e)
+			{
+				return;
+			}
 
 		}.bind(this));
 
@@ -629,7 +644,7 @@ CSSStyleSheet.prototype.getRule = StyleSheet.prototype.getRule;
 Customize.ThemesMenu = Class.create();
 Customize.ThemesMenu.prototype = {
 	dropdown : null,
-	initialize : function(dropdown) 
+	initialize : function(dropdown)
 	{
 		this.dropdown = $(dropdown);
 		this.form = this.dropdown.up("form");
