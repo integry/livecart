@@ -35,7 +35,14 @@ foreach ($queries as $query)
 	$query = trim($query);
 	if (!empty($query))
 	{
-		ActiveRecord::executeUpdate($query);
+		try
+		{
+			ActiveRecord::executeUpdate($query);
+		}
+		catch (Exception $e)
+		{
+			var_dump($e->getMessage());
+		}
 	}
 }
 
