@@ -572,6 +572,8 @@
 .activeGridItemsCount
 {
     font-size: 12px;
+    display: block;
+    clear: both;
 }
 
 .activeGridItemsCount .notFound

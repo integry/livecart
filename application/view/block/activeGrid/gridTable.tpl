@@ -168,7 +168,7 @@
 	<ul class="menu" style="float: left;">
 		{if $count}
 			<li class="gridCount">
-				{include file=$count}
+				{include file="custom:`$count`"}
 			</li>
 		{/if}
 
