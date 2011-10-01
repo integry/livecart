@@ -1106,13 +1106,18 @@ Backend.Shipment.prototype =
 						{
 							var shipmentContainer = $('orderShipments_list_' + orderID + '_' + shipmentID);
 
-							var shipmentID = null;
+							if (!shipmentContainer)
+							{
+								shipmentContainer = $('orderShipments_list_' + orderID).down('.orderShipment');
+							}
+
 							if(shipmentContainer)
 							{
 								Backend.Shipment.prototype.getInstance(shipmentContainer).addNewProductToShipment(this.objectID, orderID, this.popup.document);
 							}
 							else
 							{
+								var shipmentID = null;
 								var newForm = Backend.Shipment.prototype.getInstance("orderShipments_new_" + orderID + "_form");
 								newForm.save(function(a, b, c)
 								{
@@ -1370,10 +1375,36 @@ Backend.Shipment.Callbacks =
 		return false;
 	},
 
+	addProductToContainer: function(shipmentContainer, productID, orderID)
+	{
+		var shipment = Backend.Shipment.prototype.getInstance(shipmentContainer)
+		shipment.addNewProductToShipment(productID, orderID, null, $("progressIndicator"+productID));
+	},
+
 	addProduct: function(productID, shipmentID, orderID)
 	{
-		var shipmentContainer = $('orderShipments_list_' + orderID + '_' + shipmentID);
-		Backend.Shipment.prototype.getInstance(shipmentContainer).addNewProductToShipment(productID, orderID, null, $("progressIndicator"+productID));
+		if (!shipmentID)
+		{
+			var shipmentContainer = $('orderShipments_list_' + orderID).down('li.orderShipment');
+
+			if (!shipmentContainer)
+			{
+				var newForm = Backend.Shipment.prototype.getInstance("orderShipments_new_" + orderID + "_form");
+				newForm.save(function(a, b, c)
+				{
+					var shipmentContainer = $('orderShipments_list_' + orderID + '_' + a.shipment.ID);
+					this.addProductToContainer(shipmentContainer, productID, orderID);
+				}.bind(this), true);
+
+				return;
+			}
+		}
+		else
+		{
+			var shipmentContainer = $('orderShipments_list_' + orderID + '_' + shipmentID);
+		}
+
+		this.addProductToContainer(shipmentContainer, productID, orderID);
 	},
 
 	addProducts: function(query, shipmentID, orderID)
