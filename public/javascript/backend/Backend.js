@@ -1141,6 +1141,13 @@ Backend.SaveConfirmationMessage.prototype =
 		close.src = 'image/silk/cancel.png';
 
 		var confirmations = $('confirmations');
+		if (!confirmations)
+		{
+			confirmations = document.createElement('div');
+			confirmations.id = 'confirmations';
+			document.body.appendChild(confirmations);
+		}
+
 		confirmations.appendChild(el);
 		el.appendChild(close);
 		new Backend.SaveConfirmationMessage(el, {del: true, message: message});
