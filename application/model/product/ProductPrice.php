@@ -117,7 +117,7 @@ class ProductPrice extends ActiveRecordModel
 	public function getItemPrice(OrderedItem $item, $applyRounding = true)
 	{
 		$price = $this->getPrice($applyRounding);
-		$rules = unserialize($this->serializedRules->get());
+		$rules = is_array($this->serializedRules->get()) ? $this->serializedRules->get() : unserialize($this->serializedRules->get());
 
 		if ($parent = $this->product->get()->parent->get())
 		{
