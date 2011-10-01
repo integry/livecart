@@ -421,9 +421,8 @@ class Shipment extends ActiveRecordModel
 	public function applyFixedDiscount($orderTotal, $discountAmount)
 	{
 		// calculate discount amount that applies to this shipment
-		$shipmentTotal = $this->getTotal();
 		$shipmentDiscount = ($this->getTotal() / $orderTotal) * $discountAmount;
-		$discountMultiplier = 1 - ($shipmentDiscount / $shipmentTotal);
+		$discountMultiplier = 1 - ($this->getTotal() ? ($shipmentDiscount / $this->getTotal()) : 0);
 
 		foreach ($this->getTaxes() as $tax)
 		{
