@@ -49,6 +49,8 @@
 		{$payment}
 	</div>
 
+	<div class="clear"></div>
+
 </div>
 	<script type="text/javascript">
 		var checkout = new Frontend.OnePageCheckout({ldelim}OPC_SHOW_CART: {'OPC_SHOW_CART'|config}{rdelim});
