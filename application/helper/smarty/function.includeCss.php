@@ -30,6 +30,8 @@ function smarty_function_includeCss($params, LiveCartSmarty $smarty)
 
 	$css = CssFile::getInstanceFromPath($filePath, $smarty->getApplication()->getTheme());
 
+	$origFileName = $fileName;
+
 	if ($css->isPatched())
 	{
 		$filePath = $css->getPatchedFilePath();
@@ -87,7 +89,7 @@ function smarty_function_includeCss($params, LiveCartSmarty $smarty)
 		$smarty->_smarty_vars['INCLUDED_STYLESHEET_FILES'] = $includedStylesheetFiles;
 	}
 
-	foreach ($smarty->getApplication()->getConfigContainer()->getFilesByRelativePath('public/stylesheet/' . $fileName, true) as $file)
+	foreach ($smarty->getApplication()->getConfigContainer()->getFilesByRelativePath('public/stylesheet/' . $origFileName, true) as $file)
 	{
 		if (realpath($file) == realpath($filePath))
 		{
