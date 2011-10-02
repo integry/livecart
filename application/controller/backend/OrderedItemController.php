@@ -565,7 +565,10 @@ class OrderedItemController extends StoreManagementController
 		}
 
 		$item->save();
+		$item->price->set($item->getPrice(true));
 		$item->shipment->get()->save();
+		$item->customerOrder->get()->getTotal(true);
+		$item->customerOrder->get()->save();
 
 		return $this->getItemResponse($item);
 	}
