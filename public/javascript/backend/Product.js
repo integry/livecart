@@ -504,6 +504,8 @@ Backend.Product.Editor.prototype =
 
 		this.initSpecFieldControls();
 
+		Backend.Product.initInventoryControls(this.nodes.form.down('.inventory'));
+
 		var typeSel = this.nodes.form.elements.namedItem("type");
 		typeSel.onchange = this.changeType;
 		typeSel.onchange();
