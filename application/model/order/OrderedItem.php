@@ -243,6 +243,15 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		return $this->getPrice($includeTaxes);
 	}
 
+	// OrderedItem::getItemPrice() for recurring product return something ..different (setup [+first preriod price]) than value stored price field.
+	// OrderedItem.price is used as base value for showing discounts.
+	// Changed billing plan or adding item with recurring billing plan has nothing to do with discount, therefore there is need to update base price.
+	public function updateBasePriceToCalculatedPrice()
+	{
+		$this->price->set($this->getPrice(true)); 
+		$this->save();
+	}
+
 	/**
 	 *	Get price without taxes
 	 */
@@ -601,6 +610,11 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 				// unreserve original item
 				if ($orig = $this->product->getInitialValue())
 				{
+					if (is_string($orig))
+					{
+						$orig = Product::getInstanceById($orig, true);
+					}
+
 					$this->reserve(true, $orig);
 					$orig->save();
 				}

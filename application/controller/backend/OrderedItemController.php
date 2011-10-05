@@ -573,6 +573,8 @@ class OrderedItemController extends StoreManagementController
 	public function saveVariations()
 	{
 		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id'), OrderedItem::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
+		$item->customerOrder->get()->loadAll();
+
 		$variations = $item->getProduct()->getVariationData($this->application);
 
 		$c = new OrderController($this->application);
@@ -583,9 +585,11 @@ class OrderedItemController extends StoreManagementController
 
 		$product = $c->getVariationFromRequest($variations);
 		$item->product->set($product);
+		$item->setCustomPrice($product->getItemPrice($item));
 
 		$item->save();
 		$item->shipment->get()->save();
+		$item->customerOrder->get()->save();
 
 		return $this->getItemResponse($item);
 	}

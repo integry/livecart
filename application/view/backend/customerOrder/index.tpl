@@ -39,7 +39,7 @@
 {includeJs file="backend/CustomerOrder.js"}
 {includeCss file="backend/CustomerOrder.css"}
 
-{includeJs file="frontend/Frontend.js"}
+{includeJs file="frontend/Frontend.js"} {*variations*}
 
 {include file="backend/eav/includes.tpl"}
 
