@@ -5,12 +5,12 @@
 var TranslationMenuEvent = Class.create();
 TranslationMenuEvent.prototype =
 {
-  	element: false,
+	element: false,
 
-  	translationHandler: false,
+	translationHandler: false,
 
 	initialize: function(element, translationHandler)
-  	{
+	{
 		this.element = element;
 		this.translationHandler = translationHandler;
 		this.eventMouseMove = this.move.bindAsEventListener(this);
@@ -239,7 +239,15 @@ CssCustomize.prototype =
 		this.styleSheets = $A(document.styleSheets);
 		this.styleSheets.each(function(stylesheet)
 		{
-			stylesheet.originalRules = $A(stylesheet.cssRules);
+			try
+			{
+				stylesheet.originalRules = $A(stylesheet.cssRules);
+			}
+			catch (e)
+			{
+				return;
+			}
+
 			$A(stylesheet.cssRules).each(function(rule)
 			{
 				rule.originalText = rule.cssText;
@@ -462,13 +470,20 @@ CssCustomize.prototype =
 				}
 			});
 
-			$A(currentSheet.cssRules).each(function(rule)
+			try
 			{
-				if (!rule.originalRule && !rule.originalText)
+				$A(currentSheet.cssRules).each(function(rule)
 				{
-					newRules.push(rule);
-				}
-			});
+					if (!rule.originalRule && !rule.originalText)
+					{
+						newRules.push(rule);
+					}
+				});
+			}
+			catch (e)
+			{
+				return;
+			}
 
 		}.bind(this));
 
@@ -625,3 +640,27 @@ StyleSheet.prototype.getRule = function(selector, debug)
 }
 
 CSSStyleSheet.prototype.getRule = StyleSheet.prototype.getRule;
+
+Customize.ThemesMenu = Class.create();
+Customize.ThemesMenu.prototype = {
+	dropdown : null,
+	initialize : function(dropdown)
+	{
+		this.dropdown = $(dropdown);
+		this.form = this.dropdown.up("form");
+		Event.observe(this.dropdown, "change", this.changeTheme.bind(this))
+	},
+
+	changeTheme: function()
+	{
+		new LiveCart.AjaxRequest(this.form, null, function(resp) {
+			if (resp.responseData)
+			{
+				if (resp.responseData.status == "success")
+				{
+					window.location.reload(true);
+				}
+			}
+		}.bind(this));
+	}
+}
