@@ -133,21 +133,19 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 			$price = $this->getItemPrice();
 			$this->originalPrice = $price;
 
-			if (!$isFinalized)
+			foreach ($this->optionChoices as $choice)
 			{
-				foreach ($this->optionChoices as $choice)
+				if ($isFinalized)
 				{
-					if ($isFinalized)
-					{
-						$optionPrice = $choice->priceDiff->get();
-					}
-					else
-					{
-						$optionPrice = $choice->choice->get()->getPriceDiff($currency->getID());
-					}
-
-					$price += $this->reduceBaseTaxes($optionPrice);
+					//$optionPrice = $choice->priceDiff->get();
+					$optionPrice = 0;
 				}
+				else
+				{
+					$optionPrice = $choice->choice->get()->getPriceDiff($currency->getID());
+				}
+
+				$price += $this->reduceBaseTaxes($optionPrice);
 			}
 
 			$this->itemPrice = $price;
@@ -386,14 +384,18 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		return $allow;
 	}
 
+	private function isFinalized()
+	{
+		return $this->customerOrder->get()->isFinalized->get();
+	}
+
 	public function removeOption(ProductOption $option)
 	{
 		foreach ($this->optionChoices as $key => $ch)
 		{
 			if ($ch->choice->get()->option->get()->getID() == $option->getID())
 			{
-				$this->removedChoices[] = $ch;
-				unset($this->optionChoices[$key]);
+				$this->removeOptionChoice($ch);
 			}
 		}
 	}
@@ -406,6 +408,11 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 			{
 				$this->removedChoices[] = $ch;
 				unset($this->optionChoices[$key]);
+
+				if ($this->isFinalized())
+				{
+					$this->price->set($this->price->get() - $this->reduceBaseTaxes($choice->priceDiff->get()));
+				}
 			}
 		}
 	}
@@ -433,14 +440,19 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 			// other choice from the same option - needs removal
 			if ($ch->choice->get()->option->get()->getID() == $choice->option->get()->getID())
 			{
-				$this->removedChoices[] = $ch;
-				unset($this->optionChoices[$key]);
+				$this->removeOptionChoice($ch->choice->get());
 			}
 		}
 
 		$choice = OrderedItemOption::getNewInstance($this, $choice);
 
 		$this->optionChoices[$choice->choice->get()->option->get()->getID()] = $choice;
+
+		if ($this->isFinalized())
+		{
+			$choice->updatePriceDiff();
+			$this->price->set($this->price->get() + $this->reduceBaseTaxes($choice->priceDiff->get()));
+		}
 
 		return $choice;
 	}

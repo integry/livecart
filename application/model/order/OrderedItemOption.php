@@ -98,7 +98,7 @@ class OrderedItemOption extends ActiveRecordModel
 		}
 	}
 
-	private function updatePriceDiff()
+	public function updatePriceDiff()
 	{
 		$currency = $this->orderedItem->get()->customerOrder->get()->currencyID->get()->getID();
 		$this->priceDiff->set($this->choice->get()->getPriceDiff($currency));
