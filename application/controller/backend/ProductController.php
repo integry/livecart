@@ -1018,10 +1018,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		self::addPricesValidator($validator);
 		self::addShippingValidator($validator);
 		self::addInventoryValidator($validator);
-		if ($this->config->get('INVENTORY_TRACKING') != 'DISABLE')
-		{
-			$validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required')));
-		}
+
 		return $validator;
 	}
 

@@ -1438,7 +1438,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 			if (!$product->isBackOrderable->get() && !$item->isSavedForLater->get() && !$product->isBundle())
 			{
-				if (!$product->isDownloadable() || $product->isInventoryTracked())
+				if ($product->isInventoryTracked())
 				{
 					if (($product->stockCount->get() <= 0))
 					{
