@@ -529,8 +529,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		$this->event('before-finalize');
 
-		$currency = $this->getCurrency();
 		$this->loadAll();
+		$currency = $this->getCurrency();
 
 		foreach ($this->getShipments() as $shipment)
 		{
@@ -561,11 +561,10 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		foreach ($this->getShoppingCartItems() as $item)
 		{
-			// workround for failing tests.
-			//if (!empty($options['customPrice']))
-			//{
-			 $item->price->set($item->getSubTotalBeforeTax() / $item->getCount());
-			//}
+			if (empty($options['customPrice']))
+			{
+				$item->price->set($item->getSubTotalBeforeTax() / $item->getCount());
+			}
 
 			$item->name->set($item->getProduct()->getParent()->name->get());
 			$item->setValueByLang('name', 'sku', $item->getProduct()->sku->get());
@@ -1905,14 +1904,15 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		{
 			$array['BillingAddress'] = $this->billingAddress->get()->toArray();
 		}
-        $array['isLocalPickup'] = $this->isLocalPickup();
+		
+		$array['isLocalPickup'] = $this->isLocalPickup();
 		$array['paymentMethod'] = $this->paymentMethod;
 		if ($array['paymentMethod'])
 		{
 			$array['paymentMethodName'] = (substr($array['paymentMethod'], 0, 7) == 'OFFLINE') ? OfflineTransactionHandler::getMethodName($array['paymentMethod']) : ActiveRecordModel::getApplication()->translate($array['paymentMethod']);
 		}
 
-        $this->setArrayData($array);
+		$this->setArrayData($array);
 
 		return $array;
 	}
