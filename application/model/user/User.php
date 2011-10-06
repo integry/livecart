@@ -221,6 +221,7 @@ class User extends ActiveRecordModel implements EavAble
 
 	public function isPasswordValid($password)
 	{
+		$password = trim($password);
 		$parts = explode(':', $this->password->get());
 		$hash = array_shift($parts);
 		$salt = array_shift($parts);
