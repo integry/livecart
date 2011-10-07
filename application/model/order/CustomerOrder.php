@@ -1350,7 +1350,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	private function getTaxes()
 	{
 		$this->taxes = array();
-		$zone = $this->getTaxZone();
+
 		if ($this->shipments)
 		{
 			foreach ($this->shipments as $shipment)
@@ -2280,6 +2280,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	public function setTaxZone(DeliveryZone $zone)
 	{
 		$this->taxZone = $zone;
+
+		foreach ($this->shipments as $shipment)
+		{
+			$shipment->setTaxZone($zone);
+		}
 	}
 
 	/**
