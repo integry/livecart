@@ -20,9 +20,13 @@ function smarty_modifier_meta($value, $default = '')
 	$value = preg_replace('/[ ]+/', ' ', $value);
 	$value = trim($value);
 
-	if (strlen($value) > 163)
+	$funcPrefix = function_exists('mb_strlen') ? 'mb_' : '';
+	$strlen = $funcPrefix . 'strlen';
+	$substr = $funcPrefix . 'substr';
+
+	if ($strlen($value, 'UTF-8') > 163)
 	{
-		$value = substr($value, 0, 160) . '...';
+		$value = $substr($value, 0, 160, 'UTF-8') . '...';
 	}
 
 	return htmlspecialchars($value);
