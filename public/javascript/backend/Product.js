@@ -398,6 +398,7 @@ Backend.Product.saveHandler.prototype =
 				var specFieldContainer = this.form.down('div.specFieldContainer');
 				if (specFieldContainer)
 				{
+					ActiveForm.prototype.destroyTinyMceFields(container);
 					specFieldContainer.innerHTML = response.specFieldHtml;
 					Backend.Product.initSpecFieldControls(categoryID);
 					response.specFieldHtml.evalScripts();
@@ -627,6 +628,7 @@ Backend.Product.Editor.prototype =
 				var specFieldContainer = this.nodes.form.down('div.specFieldContainer');
 				if (specFieldContainer)
 				{
+					ActiveForm.prototype.destroyTinyMceFields(specFieldContainer);
 					specFieldContainer.innerHTML = response.specFieldHtml;
 					this.initSpecFieldControls();
 					response.specFieldHtml.evalScripts();
