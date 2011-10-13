@@ -6,14 +6,14 @@
 
 	{if 'CC_ENABLE'|config}
 		<p>
-			<input type="radio" class="radio" name="payMethod" value="cc" id="pay_cc" />
+			<input type="radio" class="radio" name="payMethod" value="cc" id="pay_cc" {if $selectedMethod == 'cc'}checked="checked"{/if} />
 			<label class="radio" for="pay_cc">{t _credit_card}</label>
 		</p>
 	{/if}
 
 	{foreach from=$offlineMethods key="key" item="method"}
 		<p>
-			<input type="radio" class="radio" name="payMethod" value="{$method}" id="{$method}" />
+			<input type="radio" class="radio" name="payMethod" value="{$method}" id="{$method}"  {if $selectedMethod == $method}checked="checked"{/if} />
 			<label class="radio" for="{$method}">{"OFFLINE_NAME_`$key`"|config}</label>
 		</p>
 	{/foreach}
@@ -23,7 +23,7 @@
 			{foreach from=$otherMethods item=method}
 				<tr>
 					<td style="vertical-align: middle;">
-						<input type="radio" class="radio" name="payMethod" value="{link controller=onePageCheckout action=redirect query="id=`$method`"}" id="{$method}" />
+						<input type="radio" class="radio" name="payMethod" value="{link controller=onePageCheckout action=redirect query="id=`$method`"}" id="{$method}" {if $selectedMethod == $method}checked="checked"{/if} />
 					</td>
 					<td>
 						<label class="radio" for="{$method}">

@@ -909,6 +909,12 @@ Frontend.OnePageCheckout = function(options)
 	{
 		this.nodes.root.addClassName('showCart');
 	}
+
+	var errorMsg = this.nodes.root.down('.errorMsg');
+	if (errorMsg)
+	{
+		errorMsg.scrollTo();
+	}
 }
 
 Frontend.OnePageCheckout.prototype =
@@ -1145,6 +1151,11 @@ Frontend.OnePageCheckout.prototype =
 				{
 					logoImg.onclick = function() { el.onclick(); }
 				}
+			}
+
+			if (el.checked)
+			{
+				this.showPaymentDetailsForm(el, true);
 			}
 		}.bind(this));
 
