@@ -55,7 +55,7 @@ function createHandleString($str)
 	}
 
 	// optimized for performance
-	return $cache[$str] = urlencode(preg_replace('/ {1,}/', '-', trim(strtr($str, '$&+\/:;=?@."\'#*><-,', '                        '))));
+	return $cache[$str] = preg_replace('/ {1,}/', '-', trim(strtr($str, '$&+\/:;=?@."\'#*><-,', '                        ')));
 }
 
 ?>
