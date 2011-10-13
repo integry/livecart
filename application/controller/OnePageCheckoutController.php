@@ -353,7 +353,10 @@ class OnePageCheckoutController extends CheckoutController
 			$paymentMethodForm->set('tos', $this->session->get('tos'));
 		}
 
+		$paymentMethodForm->set('payMethod', $this->session->get('paymentMethod'));
+
 		$response->set('form', $paymentMethodForm);
+		$response->set('selectedMethod', $this->session->get('paymentMethod'));
 		$response->set('requireTos', $this->isTosRequired);
 		return $response;
 	}
@@ -633,18 +636,21 @@ class OnePageCheckoutController extends CheckoutController
 
 	public function payCreditCard()
 	{
+		$this->session->set('paymentMethod', 'cc');
 		$this->beforePayment();
 		return parent::payCreditCard();
 	}
 
 	public function redirect()
 	{
+		$this->session->set('paymentMethod', $this->request->get('id'));
 		$this->beforePayment();
 		return parent::redirect();
 	}
 
 	public function payOffline()
 	{
+		$this->session->set('paymentMethod', $this->request->get('id'));
 		$this->beforePayment();
 		return parent::payOffline();
 	}
