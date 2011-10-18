@@ -496,8 +496,8 @@ LiveCart.AjaxUpdater.prototype = {
 		if (indicatorId)
 		{
 			this.indicatorContainerId = indicatorId;
-			Element.show(this.indicatorContainerId);
-			this.adjustIndicatorVisibility = true;
+			this.adjustIndicatorVisibility = !Element.visible(this.indicatorContainerId);
+			this.showIndicator();
 		}
 
 		if (!options)
@@ -560,12 +560,12 @@ LiveCart.AjaxUpdater.prototype = {
 			return;
 		}
 
+		$(this.indicatorContainerId).removeClassName('progressIndicator');
+
 		if (this.adjustIndicatorVisibility)
 		{
 			Element.hide(this.indicatorContainerId);
 		}
-
-		$(this.indicatorContainerId).removeClassName('progressIndicator');
 	},
 
 	showIndicator: function()
