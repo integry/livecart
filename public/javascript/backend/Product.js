@@ -194,7 +194,7 @@ Backend.Product =
 			}
 		}
 
-		if (window.opener)
+		if (window.opener && window.opener.selectProductPopup)
 		{
 			var downloadable = parseInt(e.target.up('tr').down(".cell_hiddenType").innerHTML) == 1;
 
