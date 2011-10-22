@@ -3159,6 +3159,29 @@ ul.tabbernav li.tabberactive a
  overflow:auto;
 }
 
+/***************************
+	Admin edit links
+***************************/
+h1.edit span
+{
+	vertical-align: middle;
+}
+
+h1 a.edit
+{
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	background-image: url(../../image/silk/pencil.png);
+	opacity: 0.5;
+	margin: 0 10px;
+	vertical-align: middle;
+}
+
+h1 a.edit:hover
+{
+	opacity: 1;
+}
 
 
 /***************************

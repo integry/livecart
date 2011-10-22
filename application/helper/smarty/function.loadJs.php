@@ -38,6 +38,12 @@ function smarty_function_loadJs($params, LiveCartSmarty $smarty)
 		$files[] = "library/form/ActiveForm.js";
 	}
 
+	$user = SessionUser::getUser();
+	if ($user->userGroup->get() && $user->hasBackendAccess())
+	{
+		$files[] = "frontend/Admin.js";
+	}
+
 	foreach ($files as $file)
 	{
 		smarty_function_includeJs(array('file' => $file), $smarty);
