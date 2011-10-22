@@ -26,7 +26,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
     public function index()
 	{
-
 		ClassLoader::import('application.LiveCartRenderer');
 
 		$category = Category::getInstanceByID($this->request->get("id"), Category::LOAD_DATA);
@@ -167,6 +166,13 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			if (!empty($product['DefaultImage']['urls']))
 			{
 				$value = $product['DefaultImage']['urls'][1];
+			}
+		}
+		else if ('Category' == $class)
+		{
+			if (isset($this->categories))
+			{
+				$value = implode(' / ', $this->getCategoryPath($product['categoryID']));
 			}
 		}
 		else
@@ -395,22 +401,35 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $availableColumns;
 	}
 
+	public function export()
+	{
+		$category = Category::getInstanceByID(substr($this->request->get('id'), 9));
+		$category->load();
+
+		$filter = select(gte(f('Category.lft'), $category->lft->get()), lte(f('Category.rgt'), $category->rgt->get()));
+		$categories = ActiveRecordModel::getRecordsetArray('Category', $filter);
+
+		$this->categories = array();
+		foreach (array_merge($category->getPathNodeArray(), $this->categories) as $cat)
+		{
+			$this->categories[$cat['ID']] = $cat;
+		}
+
+		return parent::export();
+	}
+
 	protected function getExportColumns()
 	{
 		$category = Category::getInstanceByID($this->request->get('id'), Category::LOAD_DATA);
 		$columns = array();
 		$available = $this->getAvailableColumns($category);
-		foreach ($this->getDisplayedColumns($category) as $column => $data)
+
+		foreach ($this->getAvailableColumns($category) as $column => $data)
 		{
-			if (isset($available[$column]))
-			{
-				$columns[$column] = $available[$column]['name'];
-			}
-			else
-			{
-				$columns[$column] = $this->translate($column);
-			}
+			$columns[$column] = $available[$column]['name'];
 		}
+
+		$columns['Category.path'] = $this->translate('Category');
 
 		// prices
 		foreach ($this->application->getCurrencyArray(false) as $currency)
@@ -1078,6 +1097,18 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$path[] = $node->getValueByLang('name', $defaultLang);
 		}
 		return $path;
+	}
+
+	private function getCategoryPath($id)
+	{
+		$ret = array();
+		while (!empty($this->categories[$id]))
+		{
+			$ret[] = $this->categories[$id]['name_lang'];
+			$id = $this->categories[$id]['parentNodeID'];
+		}
+
+		return array_reverse($ret);
 	}
 
 	public function addShippingValidator(RequestValidator $validator)
