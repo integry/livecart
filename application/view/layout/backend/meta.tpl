@@ -17,8 +17,9 @@
 	{includeCss file="backend/Backend.css" front=true}
 	{compiledCss glue=true nameMethod=hash}
 
-	{if !'DISABLE_WYSIWYG'|config}
-		{includeJs file=library/tinymce/tiny_mce.js inline=true}
+	{includeJs file=library/tinymce/tiny_mce.js inline=true}
+	{if 'DISABLE_WYSIWYG'|config}
+		<script type="text/javascript">window.disableTinymce = true;</script>
 	{/if}
 
 	{includeJs file=library/KeyboardEvent.js front=true}
@@ -70,7 +71,7 @@
 			document_base_url : "{/literal}{baseUrl}{literal}",
 			remove_script_host : "true",
 			theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,fontselect,fontsizeselect,formatselect,separator,forecolor,backcolor",
-			theme_advanced_buttons2 : "bullist,numlist,separator,outdent,indent,separator,undo,redo,separator,link,unlink,anchor,image,cleanup,separator,code,separator,table,separator,sub,sup,separator,charmap",
+			theme_advanced_buttons2 : "bullist,numlist,separator,outdent,indent,separator,undo,redo,separator,link,unlink,anchor,image,cleanup,separator,code,separator,table,separator,sub,sup,separator,charmap,hr,pasteword",
 			theme_advanced_buttons3 : "",
 			content_css: "{/literal}{baseUrl}{literal}stylesheet/library/TinyMCE.css",
 			forced_root_block : '',

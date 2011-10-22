@@ -1044,6 +1044,18 @@ fieldset.error, div.error, fieldset.container
     overflow: auto;
 }
 
+.toggleTinyMce
+{
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	background-image: url(../../image/silk/html.png);
+	margin-left: 10px;
+	margin-top: 5px;
+	cursor: pointer;
+}
+
 .feedback, .feedback_textarea
 {
     position: absolute ! important;

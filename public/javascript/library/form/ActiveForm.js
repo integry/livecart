@@ -206,7 +206,28 @@ ActiveForm.prototype = {
 					{
 						if(!tinyMCEField || 0 >= tinyMCEField.offsetHeight) return;
 						window.clearInterval(ActiveForm.prototype.idleTinyMCEFields[tinyMCEField.id]);
-						tinyMCE.execCommand('mceAddControl', true, tinyMCEField.id);
+
+						if (!window.disableTinymce)
+						{
+							tinyMCE.execCommand('mceAddControl', true, tinyMCEField.id);
+						}
+						else
+						{
+							var cont = document.createElement('fieldset');
+							cont.className = 'container tinyMceContainer';
+							tinyMCEField.parentNode.appendChild(cont);
+							cont.appendChild(tinyMCEField);
+
+							var button = document.createElement('span');
+							button.className = 'toggleTinyMce';
+							cont.appendChild(button);
+
+							Event.observe(button, 'click', function(e)
+							{
+								tinyMCE.execCommand('mceToggleEditor', true, tinyMCEField.id);
+							});
+						}
+
 						ActiveForm.prototype.idleTinyMCEFields[tinyMCEField.id] = null;
 					}.bind(this, textareas[k]), 100);
 				}
