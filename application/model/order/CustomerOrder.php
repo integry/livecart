@@ -1216,7 +1216,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	private function getTaxes()
 	{
-		$this->taxes = array();
+		$this->taxes = $this->taxDetails = array();
 
 		if ($this->shipments)
 		{
@@ -1648,6 +1648,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			}
 		}
 
+		$array['taxAmount'] = $taxAmount[$id];
+
 		foreach ($this->taxDetails as &$taxRate)
 		{
 			$taxRate['formattedAmount'] = $currency->getFormattedPrice($taxRate['amount']);
@@ -1679,21 +1681,6 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$array['isShipped'] = (int)$this->isShipped();
 		$array['isAwaitingShipment'] = (int)$this->isAwaitingShipment();
 		$array['isProcessing'] = (int)$this->isProcessing();
-
-		// discounts
-		$array['discountAmount'] = 0;
-		foreach (array_merge($this->fixedDiscounts, $this->orderDiscounts) as $key => $discount)
-		{
-			$array['discounts'][$discount->getID() ? $discount->getID() : $key] = $discount->toArray();
-			$array['discountAmount'] -= $discount->amount->get();
-		}
-		$array['formatted_discountAmount'] = $this->getCurrency()->getFormattedPrice($array['discountAmount']);
-
-		// coupons
-		if (!is_null($this->coupons))
-		{
-			$array['coupons'] = $this->coupons->toArray();
-		}
 
 		// payments
 		if (isset($options['payments']))
@@ -1749,6 +1736,28 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			{
 				$array['formatted_' . $key] = $currency->getFormattedPrice($array[$key]);
 			}
+		}
+
+		// discounts
+		$array['discountAmount'] = 0;
+		foreach (array_merge($this->fixedDiscounts, $this->orderDiscounts) as $key => $discount)
+		{
+			$array['discounts'][$discount->getID() ? $discount->getID() : $key] = $discount->toArray();
+			$array['discountAmount'] -= $discount->amount->get();
+		}
+
+		// percentage discount applied to finalized order
+		if (!$array['discountAmount'] && $array['isFinalized'] && ($array['subtotalBeforeTaxes'] > $array['totalAmount']))
+		{
+			$array['discountAmount'] = $array['totalAmount'] - $array['subtotalBeforeTaxes'] - $array['taxAmount'];
+		}
+
+		$array['formatted_discountAmount'] = $this->getCurrency()->getFormattedPrice($array['discountAmount']);
+
+		// coupons
+		if (!is_null($this->coupons))
+		{
+			$array['coupons'] = $this->coupons->toArray();
 		}
 
 		if (!$array['isFinalized'])
