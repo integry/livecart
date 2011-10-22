@@ -414,7 +414,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$categories = ActiveRecordModel::getRecordsetArray('Category', $filter);
 
 		$this->categories = array();
-		foreach (array_merge($category->getPathNodeArray(), $this->categories) as $cat)
+		foreach (array_merge($category->getPathNodeArray(), $categories) as $cat)
 		{
 			$this->categories[$cat['ID']] = $cat;
 		}
