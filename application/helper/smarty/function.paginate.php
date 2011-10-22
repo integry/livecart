@@ -74,6 +74,8 @@ function smarty_function_paginate($params, LiveCartSmarty $smarty)
 	$smarty->assign('urls', $urls);
 	$smarty->assign('pages', $pages);
 	$smarty->assign('current', $params['current']);
+	$smarty->assign('urlTemplate', $params['url']);
+	$smarty->assign('all', str_replace($replace, '0', $params['url']));
 	return $smarty->fetch($smarty->getApplication()->getRenderer()->getTemplatePath('block/box/paginate.tpl'));
 
 	return implode(' ', $out);

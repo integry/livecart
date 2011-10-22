@@ -76,7 +76,11 @@ class CategoryController extends FrontendController
 		$offsetEnd = $currentPage * $perPage;
 
 		$selectFilter = new ARSelectFilter();
-		$selectFilter->setLimit($perPage, $offsetStart - 1);
+
+		if ($currentPage)
+		{
+			$selectFilter->setLimit($perPage, $offsetStart - 1);
+		}
 
 		$this->application->processInstancePlugins('productFilter', $selectFilter);
 
@@ -106,7 +110,7 @@ class CategoryController extends FrontendController
 		}
 
 		// root category?
-		if ($this->getCategory()->isRoot() && !$this->filters && !($this instanceof IndexController) && !$this->request->get('includeSub') && ($currentPage > 1))
+		if ($this->getCategory()->isRoot() && !$this->filters && !($this instanceof IndexController) && !$this->request->get('includeSub') && ($currentPage == 1))
 		{
 			return new ActionRedirectResponse('index', 'index');
 		}
@@ -269,6 +273,12 @@ class CategoryController extends FrontendController
 		{
 			$this->getFeaturedMainCategoryProducts($subCategories);
 			$this->getFeaturedMainCategoryProducts($categoryNarrow);
+		}
+
+		if ($offsetStart < 0)
+		{
+			$offsetStart = 1;
+			$offsetEnd = $totalCount;
 		}
 
 		$response = new ActionResponse();
