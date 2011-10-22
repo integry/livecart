@@ -165,7 +165,7 @@ abstract class ActiveGridController extends StoreManagementController
 	{
 		return array();
 	}
-	
+
 	protected function translateFieldArray($fields)
 	{
 		foreach($fields as $key=>&$value)
@@ -176,7 +176,7 @@ abstract class ActiveGridController extends StoreManagementController
 			}
 		}
 		return $fields;
-		
+
 	}
 
 	protected function getDisplayedColumns($params = null, $customColumns = array())
@@ -324,7 +324,7 @@ abstract class ActiveGridController extends StoreManagementController
 		$response->set('displayedColumns', $displayedColumns);
 		$response->set('availableColumns', $availableColumns);
 		$response->set('advancedSearchColumns', $this->getAdvancedSearchFields());
-		
+
 		$response->set('massForm', $this->getMassForm());
 		$response->set('offset', $this->request->get('offset'));
 		$response->set('totalCount', '0');
