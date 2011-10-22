@@ -104,25 +104,45 @@ class ProductRelationshipController extends StoreManagementController
 	 */
 	public function sort()
 	{
-		$product = Product::getInstanceByID((int)$this->request->get('id'));
 		$target = $this->request->get('target');
-		preg_match('/_(\d+)$/', $target, $match); // Get group.
-		preg_match('/_(\d+)_/', $this->request->get('draggedID'), $type); // Get type
 
+		if (!$target)
+		{
+			foreach ($this->request->toArray() as $key => $value)
+			{
+				if (is_array($value))
+				{
+					$target = $key;
+					break;
+				}
+			}
+		}
+
+		$product = Product::getInstanceByID($this->request->get('id'));
+
+		$type = $this->request->get('type');
+
+		preg_match('/_(\d+)$/', $target, $match); // Get group.
 		if (substr($target, 0, 8) == 'noGroup_')
 		{
 			$match = array();
 		}
 
-		foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
+		foreach($this->request->get($target, array()) as $position => $key)
 		{
 			if(empty($key)) continue;
 
-			$relationship = ProductRelationship::getInstance($product, Product::getInstanceByID((int)$key), $type[1]);
+			$relationship = ProductRelationship::getInstance($product, Product::getInstanceByID((int)$key), $type);
 			$relationship->position->set((int)$position);
 
-			if(isset($match[1])) $relationship->productRelationshipGroup->set(ProductRelationshipGroup::getInstanceByID((int)$match[1]));
-			else $relationship->productRelationshipGroup->setNull();
+			if(isset($match[1]))
+			{
+				$relationship->productRelationshipGroup->set(ProductRelationshipGroup::getInstanceByID((int)$match[1]));
+			}
+			else
+			{
+				$relationship->productRelationshipGroup->setNull();
+			}
 
 			$relationship->save();
 		}

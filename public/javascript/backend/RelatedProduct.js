@@ -68,6 +68,11 @@ Backend.RelatedProduct.activeListCallbacks.methods =
 		}
 
 		return false;
+	},
+
+	beforeSort:	 function(li, order)
+	{
+		return Backend.Router.createUrl(this.callbacks.controller, 'sort', {type: this.callbacks.namespace.getType(this.callbacks.tab), id: this.callbacks.ownerID}) + '&' + order;
 	}
 }
 
