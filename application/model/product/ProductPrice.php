@@ -608,6 +608,11 @@ class ProductPrice extends ActiveRecordModel
 		$currency = Currency::getInstanceByID($array['currencyID']);
 		$array['serializedRules'] = unserialize($array['serializedRules']);
 
+		if ($array['serializedRules'] && !is_array($array['serializedRules']))
+		{
+			$array['serializedRules'] = array();
+		}
+
 		if ($array['serializedRules'] && is_array($array['serializedRules']))
 		{
 			$ruleController = self::getApplication()->getBusinessRuleController();
