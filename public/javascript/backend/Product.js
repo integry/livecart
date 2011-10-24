@@ -180,25 +180,28 @@ Backend.Product =
 	{
 		if ($('productIndicator_' + id))
 		{
-			Element.show($('productIndicator_' + id));
+			var indicator = $('productIndicator_' + id);
 		}
 		else if (e)
 		{
 			var indicator = Event.element(e).parentNode.down('.progressIndicator');
 			if (indicator)
 			{
-				indicator.show();
-
 				// ugly hack
 				setTimeout(function() { indicator.hide() }, 5000);
 			}
+		}
+
+		if (indicator)
+		{
+			Element.show(indicator);
 		}
 
 		if (window.opener && window.opener.selectProductPopup)
 		{
 			var downloadable = parseInt(e.target.up('tr').down(".cell_hiddenType").innerHTML) == 1;
 
-			window.opener.selectProductPopup.getSelectedObject(id, downloadable);
+			window.opener.selectProductPopup.getSelectedObject(id, downloadable, indicator);
 		}
 		else
 		{
