@@ -172,6 +172,11 @@ class ProductImport extends DataImport
 			{
 				$product->loadSpecification();
 				$product->loadPricing();
+
+				if ($cat instanceof Category)
+				{
+					$product->category->set($cat);
+				}
 			}
 			else
 			{
@@ -441,8 +446,7 @@ class ProductImport extends DataImport
 			}
 			catch (ARNotFoundException $e)
 			{
-				$failed++;
-				continue;
+				return null;
 			}
 		}
 		else if (isset($fields['Categories']['Categories']))
