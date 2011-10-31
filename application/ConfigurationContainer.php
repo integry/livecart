@@ -511,7 +511,25 @@ class ConfigurationContainer
 
 		$path = strtolower($path);
 
-		return isset($this->childPlugins[$path]) ? $this->childPlugins[$path] : array();
+		// directory selection
+		if (substr($path, -1) == '*')
+		{
+			$path = substr($path, 0, -1);
+			$ret = array();
+			foreach ($this->childPlugins as $key => $plugin)
+			{
+				if (substr($path, 0, strlen($key)) == $key)
+				{
+					$ret = array_merge($ret, $plugin);
+				}
+			}
+
+			return $ret;
+		}
+		else
+		{
+			return isset($this->childPlugins[$path]) ? $this->childPlugins[$path] : array();
+		}
 	}
 
 	public function getChildPlugins()
