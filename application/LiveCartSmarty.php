@@ -204,7 +204,7 @@ class LiveCartSmarty extends Smarty
 		}
 
 		$plugins = array();
-		foreach ($this->getApplication()->getPlugins('view/' . $path) as $plugin)
+		foreach ($this->getApplication()->getPlugins('view/' . $path . '*') as $plugin)
 		{
 			include_once $plugin['path'];
 			$plugins[] = new $plugin['class']($this, $this->application);
