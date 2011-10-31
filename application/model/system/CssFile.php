@@ -175,6 +175,10 @@ class CssFile
 			mkdir(dirname($file), 0777, true);
 		}
 
+		// IE7 fixes
+		$contents = str_replace('display: inline-block;', 'display: inline-block; zoom: 1; *display: inline;', $contents);
+		$contents = str_replace('display: table-cell;', 'display: table-cell; zoom: 1;', $contents);
+
 		file_put_contents($file, $contents);
 	}
 
