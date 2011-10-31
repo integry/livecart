@@ -34,6 +34,7 @@
 	{includeJs file="library/scriptaculous/builder.js" front=true}
 	{includeJs file="library/scriptaculous/effects.js" front=true}
 	{includeJs file="library/prototype/prototype.js" front=true}
+	{includeJs file=library/jquery/jquery-min.js}
 
 	{includeJs file="backend/BackendToolbar.js"}
 
