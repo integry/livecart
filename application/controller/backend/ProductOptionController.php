@@ -197,6 +197,7 @@ class ProductOptionController extends StoreManagementController
 					$productOptionValues->setLanguageField('name', $value, $this->productOptionConfig['languageCodes']);
 					$productOptionValues->priceDiff->set($prices[$key]);
 					$productOptionValues->position->set($position++);
+					$productOptionValues->setColor($this->request->get(array('color', $key)));
 					$productOptionValues->save();
 
 	   				if(preg_match('/^new/', $key))

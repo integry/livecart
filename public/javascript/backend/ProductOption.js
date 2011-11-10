@@ -16,6 +16,8 @@ Backend.ProductOption.prototype =
 	TYPE_TEXT: 2,
 	TYPE_FILE: 3,
 
+	DISPLAYTYPE_COLOR: 2,
+
 	cssPrefix: "productOption_",
 
 	countNewValues: 0,
@@ -301,6 +303,11 @@ Backend.ProductOption.prototype =
 			this.nodes.type.up('fieldset').style.display = 'none';
 		}
 
+		jQuery(this.nodes.displayType).change(function(e)
+		{
+			jQuery(self.nodes.stepValues).toggleClass('colorPicker', this.value == self.DISPLAYTYPE_COLOR);
+		}).change();
+
 		new Form.EventObserver(this.nodes.form, function() { self.formChanged = true; } );
 		Form.backup(this.nodes.form);
 	},
@@ -379,6 +386,9 @@ Backend.ProductOption.prototype =
 				if(!this.up('li').next() && this.value != '') self.addValueFieldAction();
 			});
 		}
+
+		var input = jQuery(li).find('.selectColor input')[0];
+		input.color = new jscolor.color(input, {adjust: false, required: false, hash: true, caps: false});
 	},
 
 	/**
@@ -758,6 +768,11 @@ Backend.ProductOption.prototype =
 		priceField.value = value.priceDiff ? value.priceDiff : '';
 		priceField.id = this.cssPrefix + "field_" + id + "_price";
 		Event.observe(priceField, "input", function(e) { new NumericFilter(this); }, false);
+
+		// color field
+		var colorField = li.down("input." + this.cssPrefix + "color");
+		colorField.name = "color[" + id + "]";
+		colorField.value = value.config ? value.config.color : '';
 
 		// now insert all translation fields
 		var nodeValues = this.nodes.parent.down('.productOption_step_values');

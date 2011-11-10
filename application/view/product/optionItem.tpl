@@ -1,14 +1,16 @@
 {defun name="optionPrice" choice=null}
 	{if $choice && $choice.priceDiff != 0}
+		<span class="optionPrice">
 		{if $choice.Option.isPriceIncluded && $choice.formattedTotalPrice.$currency}
 			- <span class="optionFullPrice">{$choice.formattedTotalPrice.$currency}</span>
 		{else}
 			({if $choice && $choice.priceDiff > 0}+{/if}{$choice.formattedPrice.$currency})
 		{/if}
+		</span>
 	{/if}
 {/defun}
 
-<div{if $option.isRequired} class="required"{/if} class="productOption">
+<div{if $option.isRequired} class="required"{/if} class="productOption" id="{uniqid assign="optionContainer"}">
 	{if $option.fieldName}{assign var=fieldName value=$option.fieldName}{else}{assign var=fieldName value="option_`$option.ID`"}{/if}
 	{assign var=fieldName value="`$optionPrefix``$fieldName`"}
 	{if 0 == $option.type}
@@ -41,7 +43,7 @@
 						{/foreach}
 					</select>
 				{else}
-					<div class="radioOptions">
+					<div class="radioOptions {if 2 == $option.displayType}colorOptions{/if}">
 						{if $option.selectMessage_lang}
 							<p>
 								<input name="{$fieldName}" type="radio" class="radio" id="{uniqid}" value=""{if !$selectedChoice.Choice.ID} checked="checked"{/if} />
@@ -53,7 +55,7 @@
 							<p>
 								<input name="{$fieldName}" type="radio" class="radio" id="{uniqid}" value="{$choice.ID}"{if $selectedChoice.Choice.ID == $choice.ID} checked="checked"{/if} />
 								<label class="radio" for="{uniqid last=true}">
-									{$choice.name_lang}
+									<span class="optionName"  {if 2 == $option.displayType}style="background-color: {$choice.config.color};"{/if}>{$choice.name_lang}</span>
 									{fun name="optionPrice" choice=$choice}
 								</label>
 							</p>
@@ -90,3 +92,7 @@
 	{/if}
 </div>
 <div class="clear"></div>
+
+<script type="text/javascript">
+	Frontend.initColorOptions("{$optionContainer}");
+</script>
