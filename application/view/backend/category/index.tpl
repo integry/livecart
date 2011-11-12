@@ -7,6 +7,7 @@
 {includeJs file="library/form/Validator.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
+{includeJs file="library/jscolor/jscolor.js"}
 {includeJs file="library/TabControl.js"}
 {includeJs file="library/lightbox/lightbox.js"}
 
