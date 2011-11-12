@@ -24,8 +24,6 @@ class OrderController extends FrontendController
 	 */
 	public function index()
 	{
-		//$_SESSION['blah'] = new Whatever;
-
 		if ($this->order->isMultiAddress->get())
 		{
 			return new ActionRedirectResponse('order', 'multi');
@@ -50,6 +48,29 @@ class OrderController extends FrontendController
 
 		$this->addBreadCrumb($this->translate('_my_basket'), '');
 		return $response;
+	}
+
+	/**
+	 *  View shopping cart contents
+	 */
+	public function cartPopup()
+	{
+		if (!$this->user->isAnonymous())
+		{
+			if (!$this->order->user->get() || ($this->order->user->get()->getID() != $this->user->getID()))
+			{
+				$this->order->setUser($this->user);
+				$this->order->save();
+			}
+		}
+		else if ($this->config->get('DISABLE_GUEST_CART'))
+		{
+			return new ActionRedirectResponse('user', 'login', array('returnPath' => true));
+		}
+
+		$this->order->getTotal(true);
+
+		return $this->getCartPageResponse();
 	}
 
 	/**
@@ -580,9 +601,17 @@ class OrderController extends FrontendController
 
 	public function cartUpdate()
 	{
-		$response = new CompositeJSONResponse();
-		$response->addAction('miniCart', 'order', 'miniCartBlock');
-		return $this->ajaxResponse($response);
+		if ($this->order->isMultiAddress->get())
+		{
+			return new ActionRedirectResponse('order', 'multi');
+		}
+		else
+		{
+			$response = new CompositeJSONResponse();
+			$response->addAction('miniCart', 'order', 'miniCartBlock');
+			$response->addAction('popupCart', 'order', 'cartPopup');
+			return $this->ajaxResponse($response);
+		}
 	}
 
 	public function miniCartBlock()

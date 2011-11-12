@@ -14,13 +14,17 @@
 <table id="cart">
 	<thead>
 		<tr>
-			<th colspan="{math equation="$extraColspanSize + 3"}" class="cartListTitle"></th>
+			{section name="colspan" start=0 loop=$extraColspanSize+3}
+				<th class="cartListTitle"></th>
+			{/section}
 			<th class="cartPrice">{t _price}</th>
 			<th class="cartQuant">{t _quantity}</th>
 		</tr>
 	</thead>
+	<tfoot>
+		{include file="order/block/navigation.tpl"}
+	</tfoot>
 	<tbody>
-
 		{include file="order/block/items.tpl"}
 		{include file="order/block/discounts.tpl"}
 		{include file="order/block/shipping.tpl"}
@@ -33,8 +37,6 @@
 		{include file="order/block/customFields.tpl"}
 		{include file="order/block/shippingEstimation.tpl"}
 		{include file="order/block/coupons.tpl"}
-		{include file="order/block/navigation.tpl"}
-
 	</tbody>
 </table>
 <input type="hidden" name="return" value="{$return}" />
