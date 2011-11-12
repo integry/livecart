@@ -54,6 +54,10 @@
 
 	{include file="category/categoryProductList.tpl"}
 
+	<script type="text/javascript">
+		jQuery(document).ready(Frontend.initCategory);
+	</script>
+
 </div>
 {include file="layout/frontend/footer.tpl"}
 
