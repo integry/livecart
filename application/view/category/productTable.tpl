@@ -45,7 +45,7 @@
 
 				{if $columns.IMAGE}
 					<td class="productImage">
-						<a href="{productUrl product=$product}">
+						<a href="{productUrl product=$product category=$category}">
 						{if $product.DefaultImage.ID}
 							{img src=$product.DefaultImage.paths.1 alt=$product.name_lang|escape}
 						{else}
@@ -56,11 +56,11 @@
 				{/if}
 
 				{if $columns.SKU}
-					<td class="productSku text"><a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">{$product.sku}</a></td>
+					<td class="productSku text"><a href="{productUrl product=$product filterChainHandle=$filterChainHandle category=$category}">{$product.sku}</a></td>
 				{/if}
 
 				{if $columns.NAME}
-					<td class="productName text"><a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">{$product.name_lang}</a></td>
+					<td class="productName text"><a href="{productUrl product=$product filterChainHandle=$filterChainHandle category=$category}">{$product.name_lang}</a></td>
 				{/if}
 
 				{foreach from=$listAttributes item=attribute}
@@ -72,7 +72,7 @@
 				{/if}
 
 				{if $columns.DETAILS}
-					<td class="productDetails"><a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">{t _view_details}</a></td>
+					<td class="productDetails"><a href="{productUrl product=$product filterChainHandle=$filterChainHandle category=$category}">{t _view_details}</a></td>
 				{/if}
 			</tr>
 		{/foreach}
