@@ -1,7 +1,7 @@
 {include file="product/block/smallImage.tpl"}
 
 <div class="title">
-	<a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">{$product.name_lang}</a>
+	<a href="{productUrl product=$product filterChainHandle=$filterChainHandle category=$category}">{$product.name_lang}</a>
 </div>
 
 <div class="pricingInfo"><div><div><div>

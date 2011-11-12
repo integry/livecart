@@ -15,6 +15,15 @@ function smarty_function_blocks($params, LiveCartSmarty $smarty)
 	$app = $smarty->getApplication();
 
 	$blocks = explode(' ', trim(preg_replace('/\s+/', ' ', $params['blocks'])));
+
+	foreach ($blocks as $key => $value)
+	{
+		if (substr($value, 0, 2) == '//')
+		{
+			unset($blocks[$key]);
+		}
+	}
+
 	$blocks = $app->getRenderer()->sortBlocks($blocks);
 
 	$out = array();

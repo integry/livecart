@@ -17,7 +17,7 @@
 		</div></div></div>
 
 		<div class="title">
-			<a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">{$product.name_lang}</a>
+			<a href="{productUrl product=$product filterChainHandle=$filterChainHandle category=$category}">{$product.name_lang}</a>
 		</div>
 
 		{if $product.attributes}
