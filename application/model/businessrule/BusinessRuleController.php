@@ -66,7 +66,6 @@ class BusinessRuleController
 			}
 
 			$this->conditions = unserialize(include $file);
-
 			foreach ($this->conditions as $condition)
 			{
 				$condition->setController($this);

@@ -153,6 +153,30 @@
 				<div class="clear"></div>
 			</div>
 
+			<div class="ruleFields">
+				{foreach from=$ruleFields key=ruleClass item=fields}
+					{if $fields}
+					<div class="classContainer {$ruleClass}">
+						{foreach from=$fields item=field}
+							<p>
+								<label>{translate text=$field.label}</label>
+								<span>
+									{if $field.type == 'number'}
+										{textfield class="text number ruleField `$field.name`" name=$field.name}
+									{elseif $field.type == 'text'}
+										{textfield class="text wide ruleField `$field.name`" name=$field.name}
+									{elseif $field.type == 'select'}
+										{selectfield class="ruleField `$field.name`" name=$field.name options=$field.options}
+									{/if}
+									<span class="progressIndicator" style="display: none;"></span>
+								</span>
+							</p>
+						{/foreach}
+					</div>
+					{/if}
+				{/foreach}
+			</div>
+
 			<ul class="conditionContainer" style="display: none;">
 				<div class="allSubsMenu">
 					<span>
