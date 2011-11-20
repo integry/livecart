@@ -288,7 +288,11 @@ class ProductPrice extends ActiveRecordModel
 
 	public function increasePriceByPercent($percentIncrease, $increaseQuantPrices = false)
 	{
-		$multiply = (100 + $percentIncrease) / 100;
+		return $this->multiplyPrice((100 + $percentIncrease) / 100, $increaseQuantPrices);
+	}
+
+	public function multiplyPrice($multiply, $increaseQuantPrices = false)
+	{
 		$this->price->set($this->price->get() * $multiply);
 
 		if ($increaseQuantPrices)
@@ -309,6 +313,11 @@ class ProductPrice extends ActiveRecordModel
 
 			$this->setRules($rules);
 		}
+	}
+
+	public function dividePrice($divide, $increaseQuantPrices = false)
+	{
+		return $this->multiplyPrice(1 / $divide, $increaseQuantPrices);
 	}
 
 	public function setPriceRule($quantity, UserGroup $group = null, $price)
@@ -474,6 +483,7 @@ class ProductPrice extends ActiveRecordModel
 
 					$prices[$currency] = $price;
 					$discountedPrice = $ruleController->getProductPrice($product, $price, $currency);
+
 					if ($discountedPrice != $maxPrice)
 					{
 						$product['definedListPrices'][$currency] = $maxPrice;

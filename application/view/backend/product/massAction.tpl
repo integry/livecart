@@ -25,9 +25,11 @@
 
 		<optgroup label="{t _inventory_and_pricing}">
 			<option value="inc_price">{t _increase_price}</option>
-			<option value="inc_stock">{t _increase_stock}</option>
-
 			<option value="price">{t _set_price} ({$currency})</option>
+			<option value="multi_price">{t _multiply_price}</option>
+			<option value="div_price">{t _divide_price}</option>
+
+			<option value="inc_stock">{t _increase_stock}</option>
 			<option value="set_stockCount">{t _set_stock}</option>
 		</optgroup>
 
@@ -63,6 +65,18 @@
 			{textfield id="inc_price_`$categoryID`" class="text number" name="inc_price_value"}%
 			{checkbox id="inc_quant_price_`$categoryID`" name="inc_quant_price"}
 			<label for="inc_quant_price_{$categoryID}" style="float: none;">{t _inc_quant_prices}</label>
+		</span>
+
+		<span class="multi_price">
+			* {textfield id="multi_price_`$categoryID`" class="text number" name="multi_price_value"}
+			{checkbox id="multi_quant_price_`$categoryID`" name="multi_quant_price"}
+			<label for="multi_quant_price_{$categoryID}" style="float: none;">{t _inc_quant_prices}</label>
+		</span>
+
+		<span class="div_price">
+			/ {textfield id="multi_price_`$categoryID`" class="text number" name="div_price_value"}
+			{checkbox id="multi_quant_price_`$categoryID`" name="div_quant_price"}
+			<label for="multi_quant_price_{$categoryID}" style="float: none;">{t _inc_quant_prices}</label>
 		</span>
 
 		{textfield id="massForm_inc_stock_`$categoryID`" class="text number" name="inc_stock"}

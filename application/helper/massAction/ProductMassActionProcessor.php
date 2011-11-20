@@ -31,15 +31,18 @@ class ProductMassActionProcessor extends MassActionProcessor
 		{
 			$product->setPrice($this->params['baseCurrency'], $this->params['price']);
 		}
-		else if ('inc_price' == $act)
+		else if (in_array($act, array('inc_price', 'multi_price', 'div_price')))
 		{
+			$actions = array('inc_price' => 'increasePriceByPercent', 'multi_price' => 'multiplyPrice', 'div_price' => 'dividePrice');
+			$action = $actions[$act];
 			$pricing = $product->getPricingHandler();
 			foreach ($this->params['currencies'] as $currency)
 			{
 				if ($pricing->isPriceSet($currency))
 				{
 					$p = $pricing->getPrice($currency);
-					$p->increasePriceByPercent($this->params['inc_price_value'], $this->params['inc_quant_price']);
+					var_dump($action, $this->params['inc_price_value'], $this->params['inc_quant_price']);
+					$p->$action($this->params['inc_price_value'], $this->params['inc_quant_price']);
 					$p->save();
 				}
 			}

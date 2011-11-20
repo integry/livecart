@@ -278,13 +278,13 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		{
 			$params['manufacturer'] = Manufacturer::getInstanceByName($this->request->get('manufacturer'));
 		}
-		else if ('price' == $act || 'inc_price' == $act)
+		else if (in_array($act, array('price', 'inc_price', 'multi_price', 'div_price')))
 		{
 			$params['baseCurrency'] = $this->application->getDefaultCurrencyCode();
 			$params['price'] = $this->request->get($act);
 			$params['currencies'] = $this->application->getCurrencySet();
-			$params['inc_price_value'] = $this->request->get('inc_price_value');
-			$params['inc_quant_price'] = $this->request->get('inc_quant_price');
+			$params['inc_price_value'] = $this->request->get($act . '_value');
+			$params['inc_quant_price'] = $this->request->get($act . '_price');
 		}
 		else if ('addRelated' == $act)
 		{
