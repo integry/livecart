@@ -48,6 +48,8 @@ _enable_back_ordering=Enable back-ordering
 _requires_separate_shippment=Require separate shipment
 _do_not_require_separate_shippment=Do not require separate shipment
 _set_theme=Set design theme
+_multiply_price=Multiply price
+_divide_price=Divide price
 
 _enter_sku=Please enter product SKU
 
