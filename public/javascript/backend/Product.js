@@ -190,7 +190,7 @@ Backend.Product =
 			Element.show(indicator);
 		}
 
-		if (window.opener && window.opener.selectProductPopup)
+		if (window.opener && window.opener.selectProductPopup && e)
 		{
 			var downloadable = parseInt(e.target.up('tr').down(".cell_hiddenType").innerHTML) == 1;
 
