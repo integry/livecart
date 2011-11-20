@@ -175,6 +175,7 @@ Backend.Discount.Condition.prototype =
 		this.recordContainer = this.node.down('.recordContainer');
 		this.valueContainer = this.node.down('.valueContainer');
 		this.selectRecordContainer = this.node.down('.selectRecordContainer');
+		this.fieldsContainer = this.node.down('.ruleFields');
 		this.productFieldSel = this.node.down('.comparisonField');
 		this.timeRangeSelector = this.node.down('.conditionTime');
 
@@ -217,6 +218,18 @@ Backend.Discount.Condition.prototype =
 			}
 
 			field.name = 'time_' + field.name;
+			field.onchange = this.saveParamChange.bind(this);
+		}.bind(this));
+
+		this.fieldsContainer.getElementsBySelector('.ruleField').each(function(field)
+		{
+			var c = this.condition.serializedCondition;
+			if (c && c[field.name])
+			{
+				field.value = c[field.name];
+				console.log(c[field.name]);
+			}
+
 			field.onchange = this.saveParamChange.bind(this);
 		}.bind(this));
 
@@ -447,6 +460,16 @@ Backend.Discount.Condition.prototype =
 			{
 				this.createSelectValue(type, val[0], val[1]);
 			}.bind(this));
+		}
+
+		// custom fields
+		jQuery('.classContainer', this.fieldsContainer).hide();
+		var fieldContainer = jQuery('.classContainer.' + type, this.fieldsContainer);
+		if (fieldContainer.length)
+		{
+			fieldContainer.show();
+			this.compSel.hide();
+			this.valueField.hide();
 		}
 
 		this.node.className = 'type_' + type;

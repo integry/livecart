@@ -262,6 +262,11 @@ abstract class RuleCondition
 	{
 		return 999;
 	}
+
+	public function getFields()
+	{
+		return array();
+	}
 }
 
 ?>

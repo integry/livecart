@@ -144,7 +144,7 @@ a.subCondition
 	display: none;
 }
 
-.recordContainer, .selectRecordContainer, .valueContainer
+.recordContainer, .selectRecordContainer, .valueContainer, .ruleFields
 {
 	margin-left: 34px;
 	margin-bottom: 1em;

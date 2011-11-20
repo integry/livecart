@@ -56,6 +56,7 @@ RuleConditionCustomerIs=Customer is
 RuleConditionDeliveryZoneIs=Order delivery zone is
 RuleConditionPaymentMethodIs=Payment method is
 RuleConditionPastOrderContainsProduct=Past orders contain selected products
+RuleConditionTimeIs=Time of day is
 
 _compare_eq=equal to
 _compare_lteq=less than or equal to
@@ -141,3 +142,6 @@ _tip_is_enabled_condition=Determines if the rule is active. Disabled rules are n
 _tip_all_items_must_be_present=If this checkbox is marked, the condition will only evaluate if all products, categories, manufacturers, etc. that have been added below must be matched by products added in the customer's shopping cart. Otherwise it will be enough for any item to match for the rule to evaluate.
 _tip_all_subconditions_must_match=Rule conditions can consist of multiple sub-conditions (and sub-sub-conditions, etc.). For the condition to evaluate, at least one of it's subconditions must evaluate as well, but by marking this checkbox, all sub-conditions will have to evaluate.
 _tip_action=Select an action to apply to order, if the rule condition(s) evaluate.
+
+_time_from=Time from
+_time_to=Time to

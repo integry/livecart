@@ -273,10 +273,19 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		$this->setSerializedCond($ser);
 	}
 
-	public function setSerializedValue($type, $key, $value)
+	public function setSerializedValue($type, $key, $value = null)
 	{
 		$ser = $this->getSerializedCond();
-		$ser[$type][$key] = $value;
+
+		if (is_null($key))
+		{
+			$ser[$type] = $value;
+		}
+		else
+		{
+			$ser[$type][$key] = $value;
+		}
+
 		$this->setSerializedCond($ser);
 	}
 

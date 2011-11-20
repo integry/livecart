@@ -66,6 +66,14 @@ class DiscountController extends ActiveGridController
 		$response->set('actionFields', array_filter($actionFields));
 		$response->set('itemActions', $itemActions);
 
+		$ruleFields = array();
+		foreach ($conditions as $class => $name)
+		{
+			$ruleFields[$class] = call_user_func(array($class, 'getFields'));
+		}
+
+		$response->set('ruleFields', array_filter($ruleFields));
+
 		return $response;
 	}
 
@@ -331,7 +339,9 @@ class DiscountController extends ActiveGridController
 
 	public function setSerializedValue()
 	{
-		list($type, $key) = explode('_', $this->request->get('field'));
+		$parts = explode('_', $this->request->get('field'));
+		$type = array_shift($parts);
+		$key = array_shift($parts);
 		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA);
 		$condition->conditionClass->set($this->request->get('type'));
 		$condition->setSerializedValue($type, $key, $this->request->get('value'));
