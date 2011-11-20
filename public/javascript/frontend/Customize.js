@@ -308,6 +308,11 @@ CssCustomize.prototype =
 		var deleted = {};
 		changes.deleted.each(function(rule)
 		{
+			if (!rule.parentStyleSheet)
+			{
+				return;
+			}
+
 			var file = rule.parentStyleSheet.href;
 			deleted[file] = deleted[file] || [];
 			deleted[file].push(rule.selectorText);
@@ -446,6 +451,11 @@ CssCustomize.prototype =
 		this.styleSheets.each(function(stylesheet)
 		{
 			var currentSheet = this.getCurrentStyleSheet(stylesheet);
+
+			if (!currentSheet)
+			{
+				return;
+			}
 
 			$A(stylesheet.originalRules).each(function(rule)
 			{
