@@ -4,6 +4,8 @@ ClassLoader::import('application.controller.FrontendController');
 ClassLoader::import('application.model.Currency');
 ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.product.ProductPrice');
+ClassLoader::importNow('application.helper.CreateHandleString');
+include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
 
 /**
  * Base class for all front-end related controllers
@@ -16,6 +18,23 @@ abstract class CatalogController extends FrontendController
 	protected function getCategory()
 	{
 		return $this->category;
+	}
+
+	protected function getContext()
+	{
+		$contextFilters = array();
+		foreach ($this->filters as $filter)
+		{
+			$contextFilters[] = filterHandle($filter);
+		}
+		$context = array('filters' => implode(',', $contextFilters), 'originalAction' => $this->request->getActionName());
+
+		if ($this->request->get('category'))
+		{
+			$context['category'] = $this->request->get('category');
+		}
+
+		return $context;
 	}
 
 	public function getSelectFilter()

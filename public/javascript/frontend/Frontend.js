@@ -945,16 +945,34 @@ Frontend.initCategory = function()
 
 					Frontend.AjaxInit(el);
 
+					$('img', el).load(function()
+					{
+						$(el).center();
+					});
+
 					$(el).find('.productPrev, .productNext').click(loadQuickShop);
 
-					$('.jqmOverlay').click(function(e)
+					$('.jqmOverlay, #quickShopContainer .popupClose').click(function(e)
 					{
+						e.preventDefault();
 						$('#quickShopContainer').jqmHide();
 					});
 				});
 		}
 
 		loadQuickShop(e);
+	});
+
+	$(document).keydown(function(e)
+	{
+		if (e.keyCode == 37)
+		{
+			$('.productPrev').click();
+		}
+		else if (e.keyCode == 39)
+		{
+			$('.productNext').click();
+		}
 	});
 }
 
