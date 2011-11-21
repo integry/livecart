@@ -36,6 +36,7 @@
 			{/if}
 
 			{include file="product/ratingForm.tpl"}
+			{include file="product/sendToFriendForm.tpl"}
 
 			{if $reviews}
 				<div id="reviewSection" class="productSection reviewSection">

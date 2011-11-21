@@ -68,3 +68,15 @@ _preview_files=Preview Files
 _find_similar_by_category=Find Similar Products By Category
 
 _you_may_also_like=You may also like
+
+_share_product_name=Send to friend [_1]
+_send_to_friend=Send to friend
+_friend_email=Friend email
+_notes=notes
+
+_err_enter_email=Please enter your e-mail address
+_err_invalid_email=The e-mail address you entered is not valid
+_err_enter_nickname=Please enter your name or nickname
+
+_info_about_product_message_sent_to=Info about [_1] sent to [_2]
+_error_cannot_send_to_friend=Cannot send to friend.
