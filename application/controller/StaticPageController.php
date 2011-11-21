@@ -11,13 +11,11 @@ ClassLoader::import('application.model.staticpage.StaticPage');
  */
 class StaticPageController extends FrontendController
 {
-	public function foo()
-	{
-		return new RawResponse('Hello');
-	}
-
 	public function view()
 	{
+		// why not loaded automatically?
+		$this->loadLanguageFile('Frontend');
+
 		$page = StaticPage::getInstanceByHandle($this->request->get('handle'));
 
 		if ($parent = $page->parent->get())
