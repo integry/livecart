@@ -75,6 +75,31 @@ class OrderController extends FrontendController
 		return $this->getCartPageResponse();
 	}
 
+
+	/**
+	 *  View shopping cart contents
+	 */
+	public function addConfirmation()
+	{
+		if (!$this->user->isAnonymous())
+		{
+			if (!$this->order->user->get() || ($this->order->user->get()->getID() != $this->user->getID()))
+			{
+				$this->order->setUser($this->user);
+				$this->order->save();
+			}
+		}
+		else if ($this->config->get('DISABLE_GUEST_CART'))
+		{
+			return new ActionRedirectResponse('user', 'login', array('returnPath' => true));
+		}
+
+		$response = new BlockResponse();
+		$response->set('msg', $this->request->get('message'));
+		$response->set('cart', $this->order->toArray());
+		return $response;
+	}
+
 	/**
 	 *	@role login
 	 */
@@ -623,7 +648,16 @@ class OrderController extends FrontendController
 		{
 			$response = new CompositeJSONResponse();
 			$response->addAction('miniCart', 'order', 'miniCartBlock');
-			$response->addAction('popupCart', 'order', 'cartPopup');
+
+			if ($this->config->get('POPUP_CART_TYPE') == 'FULL_CART')
+			{
+				$response->addAction('popupCart', 'order', 'cartPopup');
+			}
+			else
+			{
+				$response->addAction('popupCart', 'order', 'addConfirmation', array('message' => $this->getMessage()));
+			}
+
 			return $this->ajaxResponse($response);
 		}
 	}
