@@ -56,3 +56,7 @@ _tip_subtotal_based_calculations=Base shipping rate calculation on shipment subt
 _tip_range_type=Shipping rate calculation has to be based either on shipment weight or subtotal
 _tip_expected_delivery_time=Provide information about the expected delivery time for your customers. Expected delivery dates will be calculated automatically.
 _tip_description=Enter extra information about this shipping method
+
+ShippingService.rangeType=Range type (weight = 0, subtotal = 1)
+ShippingService=Shipping service
+ShippingRate=Shipping rate

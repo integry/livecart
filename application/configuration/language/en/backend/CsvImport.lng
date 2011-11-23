@@ -20,6 +20,7 @@ ShippingClassImport=Shipping Classes
 TaxImport=Taxes
 DeliveryZoneImport=Delivery Zones
 UserAddressImport=User Addresses
+ShippingRateImport=Shipping rates
 
 # Start
 _upload_file=Upload file
