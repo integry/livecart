@@ -302,7 +302,8 @@ abstract class FrontendController extends BaseController
 			$home['requestLanguage'] = $this->locale->getLocaleCode();
 		}
 
-		$root = array('title' => $this->config->get('STORE_NAME'),
+		$title = $this->config->get('BREADCRUMB_TITLE') ? $this->config->get('BREADCRUMB_TITLE') : $this->config->get('STORE_NAME');
+		$root = array('title' => $title,
 					  'url' => $this->router->createUrl($home, true));
 
 		if (reset($this->breadCrumb) != $root)
