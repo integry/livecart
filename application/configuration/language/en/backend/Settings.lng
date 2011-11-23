@@ -149,6 +149,15 @@ _o_small=Thumbnail images
 _o_large=Enlarged preview
 
 _menus_and_blocks=Menus & Blocks
+
+_breadcrumb=Breadcrumb
+SHOW_BREADCRUMB=Show breadcrumb
+SHOW_BREADCRUMB_CAPTION=Show breadcrumb caption
+BREADCRUMB_TITLE=Custom first element title (store name is default if left blank)
+BREADCRUMB_DEPTH=Max number of categories to include in path (0 - unlimited)
+BREADCRUMB_FILTERS=Include filters in breadcrumb
+BREADCRUMB_SEPARATOR=Path separator
+
 _sale_items=On-sale Products
 SALE_ITEMS_COUNT=Number of on-sale products to display per block
 _newest_items=Newest Products

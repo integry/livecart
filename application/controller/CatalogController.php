@@ -265,6 +265,70 @@ abstract class CatalogController extends FrontendController
 			$selectFilter->setOrder(new ARFieldHandle('Product', 'position'), 'DESC');
 		}
 	}
+
+	protected function addCategoriesToBreadCrumb($path)
+	{
+		include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
+
+		$i = 0;
+		$max = $this->config->get('BREADCRUMB_DEPTH') ? $this->config->get('BREADCRUMB_DEPTH') : count($path);
+		foreach ($path as $nodeArray)
+		{
+			$url = createCategoryUrl(array('data' => $nodeArray), $this->application);
+
+			if (++$i <= $max)
+			{
+				$this->addBreadCrumb($nodeArray['name_lang'], $url);
+			}
+		}
+
+		// set return path
+		if (isset($url))
+		{
+			$this->router->setReturnPath($this->router->getRouteFromUrl($url));
+		}
+
+		return $nodeArray;
+	}
+
+	protected function addFiltersToBreadCrumb($category, $page = 1)
+	{
+		include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
+
+		// add filters to breadcrumb
+		if (!isset($category))
+		{
+			$category = $this->getCategory()->toArray();
+		}
+
+		$params = array('data' => $category, 'filters' => array());
+		foreach ($this->filters as $filter)
+		{
+			$filter = $filter->toArray();
+			$params['filters'][] = $filter;
+
+			// add current page number to the last item URL
+			if (count($params['filters']) == count($this->filters))
+			{
+				$params['page'] = $page;
+			}
+
+			$url = createCategoryUrl($params, $this->application);
+
+			if ($this->config->get('BREADCRUMB_FILTERS'))
+			{
+				$this->addBreadCrumb($filter['name_lang'], $url);
+			}
+		}
+
+		// set return path
+		if (isset($url))
+		{
+			$this->router->setReturnPath($this->router->getRouteFromUrl($url));
+		}
+
+		return $params;
+	}
 }
 
 ?>

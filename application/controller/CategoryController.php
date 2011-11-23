@@ -381,45 +381,8 @@ class CategoryController extends CatalogController
 	 */
 	private function setUpBreadCrumbAndReturnFilterChainHandle($page)
 	{
-		// get category path for breadcrumb
-		$path = $this->getCategory()->getPathNodeArray();
-
-		foreach ($path as $nodeArray)
-		{
-			$url = createCategoryUrl(array('data' => $nodeArray), $this->application);
-			if(array_key_exists('name_lang', $nodeArray))
-			{
-				$this->addBreadCrumb($nodeArray['name_lang'], $url);
-			}
-		}
-
-		// add filters to breadcrumb
-		if (!isset($nodeArray))
-		{
-			$nodeArray = $this->getCategory()->toArray();
-		}
-
-		$params = array('data' => $nodeArray, 'filters' => array());
-		foreach ($this->filters as $filter)
-		{
-			$filter = $filter->toArray();
-			$params['filters'][] = $filter;
-
-			// add current page number to the last item URL
-			if (count($params['filters']) == count($this->filters))
-			{
-				$params['page'] = $page;
-			}
-
-			$url = createCategoryUrl($params, $this->application);
-			$this->addBreadCrumb($filter['name_lang'], $url);
-		}
-
-		// set return path
-		if (isset($url))
-		{
-			$this->router->setReturnPath($this->router->getRouteFromUrl($url));
-		}
+		$last = $this->addCategoriesToBreadCrumb($this->getCategory()->getPathNodeArray());
+		$params = $this->addFiltersToBreadCrumb($last, $page);
 
 		// get filter chain handle
 		$filterChainHandle = array();

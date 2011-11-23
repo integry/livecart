@@ -52,39 +52,15 @@ class ProductController extends CatalogController
 		}
 
 		$product->loadPricing();
+		$productArray = $product->toArray();
 
 		$this->category = $product->getCategory();
 		$this->categoryID = $product->getCategory()->getID();
 
-		// get category path for breadcrumb
-		$path = $product->category->get()->getPathNodeArray();
-		include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
-		include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.productUrl.php');
-		foreach ($path as $nodeArray)
-		{
-			$url = createCategoryUrl(array('data' => $nodeArray), $this->application);
-			$this->addBreadCrumb($nodeArray['name_lang'], $url);
-		}
+		$this->getAppliedFilters();
 
-		// add filters to breadcrumb
-		CategoryController::getAppliedFilters();
+		$this->setupBreadcrumb($productArray);
 
-		// for root category products
-		if (!isset($nodeArray))
-		{
-			$nodeArray = array();
-		}
-
-		$params = array('data' => $nodeArray, 'filters' => array());
-		foreach ($this->filters as $filter)
-		{
-			$f = $filter->toArray();
-			$params['filters'][] = $f;
-			$url = createCategoryUrl($params, $this->application);
-			$this->addBreadCrumb($f['name_lang'], $url);
-		}
-
-		$productArray = $product->toArray();
 		$this->redirect301($this->request->get('producthandle'), createHandleString($productArray['name_lang']));
 		//ProductSpecification::loadSpecificationForProductArray($productArray);
 
@@ -111,9 +87,6 @@ class ProductController extends CatalogController
 				unset($productArray['attributes'][$key]);
 			}
 		}
-
-		// add product title to breacrumb
-		$this->addBreadCrumb($productArray['name_lang'], createProductUrl(array('product' => $productArray), $this->application));
 
 		// manufacturer filter
 		if ($product->manufacturer->get())
@@ -871,6 +844,16 @@ class ProductController extends CatalogController
 		}
 
 		return $validator;
+	}
+
+	private function setupBreadcrumb($productArray)
+	{
+		include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.productUrl.php');
+
+		$nodeArray = $this->addCategoriesToBreadCrumb($this->product->category->get()->getPathNodeArray());
+		$this->addFiltersToBreadCrumb($nodeArray);
+
+		$this->addBreadCrumb($productArray['name_lang'], createProductUrl(array('product' => $productArray), $this->application));
 	}
 
 	private function isAddingReview()
