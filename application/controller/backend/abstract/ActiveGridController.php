@@ -186,6 +186,11 @@ abstract class ActiveGridController extends StoreManagementController
 
 		if (!$displayedColumns)
 		{
+			$displayedColumns = $this->user->getPreference('columns_' . get_class($this));
+		}
+
+		if (!$displayedColumns)
+		{
 			$displayedColumns = $this->getDefaultColumns();
 		}
 
@@ -490,6 +495,8 @@ abstract class ActiveGridController extends StoreManagementController
 	{
 		$columns = array_keys($this->request->get('col', array()));
 		$this->setSessionData('columns', $columns);
+		$this->user->setPreference('columns_' . get_class($this), $columns);
+		$this->user->save();
 	}
 
 	public static function isCallable()
