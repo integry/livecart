@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 {assign var="priceCurrency" value=$priceCurrency|default:"price_USD"}
+{assign var="listPriceCurrency" value=$listPriceCurrency|default:"listPrice_USD"}
 <rss version ="2.0" xmlns:g="http://base.google.com/ns/1.0">
 
 	<channel>
@@ -14,21 +15,29 @@
 
 				<link><![CDATA[{productUrl product=$product full=true}]]></link>
 
+				<g:id><![CDATA[{$product.sku|@htmlentities}]]></g:id>
 				{if $product.Manufacturer.name}
 					<g:brand><![CDATA[{$product.Manufacturer.name|@htmlentities}]]></g:brand>
 				{/if}
 
 				{if $product.DefaultImage.ID}
-				<g:image_link><![CDATA[{$product.DefaultImage.urls.4}]]></g:image_link>
+					<g:image_link><![CDATA[{$product.DefaultImage.urls.4}]]></g:image_link>
 				{/if}
 
-				<g:price><![CDATA[{$product.$priceCurrency}]]></g:price>
+				{if $product.$listPriceCurrency}
+					<g:price><![CDATA[{$product.$listPriceCurrency} USD]]></g:price>
+					<g:sale_price><![CDATA[{$product.$priceCurrency} USD]]></g:price>
+				{else}
+					<g:price><![CDATA[{$product.$priceCurrency} USD]]></g:price>
+				{/if}
 
 				{if $product.shippingWeight}
-				<g:weight><![CDATA[{$product.shippingWeight} kg]]></g:weight>
+					<g:shipping_weight><![CDATA[{$product.shippingWeight} kg]]></g:weight>
 				{/if}
+
 				<g:condition>new</g:condition>
 				<g:product_type><![CDATA[{$product.Category.name_lang|@htmlentities}]]></g:product_type>
+				<g:availability><![CDATA[{if $product.isOrderable}in stock{else}out of stock{/if}]]></g:availability>
 
 			</item>
 		{/foreach}
