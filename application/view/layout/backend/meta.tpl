@@ -33,8 +33,8 @@
 	{includeJs file="library/scriptaculous/controls.js" front=true}
 	{includeJs file="library/scriptaculous/builder.js" front=true}
 	{includeJs file="library/scriptaculous/effects.js" front=true}
+	{includeJs file=library/jquery/jquery-min.js front=true}
 	{includeJs file="library/prototype/prototype.js" front=true}
-	{includeJs file=library/jquery/jquery-min.js}
 
 	{includeJs file="backend/BackendToolbar.js"}
 
@@ -81,6 +81,11 @@
 			extended_valid_elements : 'iframe[src|width|height|name|align|frameborder|scrolling|marginheight|marginwidth],embed[width|height|name|flashvars|src|bgcolor|align|play|loop|quality|allowscriptaccess|type|pluginspage]',
 			entities: '',
 			file_browser_callback : "ajaxfilemanager"
+			{/literal}
+			{if 'TINYMCE_PARAMS'|config}
+			, {'TINYMCE_PARAMS'|config}
+			{/if}
+			{literal}
 		});
 	}
 
