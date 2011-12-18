@@ -25,7 +25,7 @@ Rico.LiveGridMetaData.prototype = {
 	},
 
 	getTotalRows: function() {
-		return this.totalRows;
+		return this.totalRows ? this.totalRows : 15;
 	},
 
 	setTotalRows: function(n) {
@@ -49,10 +49,12 @@ Rico.LiveGridScroller.prototype = {
 
 	initialize: function(liveGrid, viewPort) {
 		this.isIE = navigator.userAgent.toLowerCase().indexOf("msie") >= 0;
+
 		this.liveGrid = liveGrid;
 		this.liveGrid.scroller = this;
 		this.metaData = liveGrid.metaData;
 		this.createScrollBar();
+
 		this.scrollTimeout = null;
 		this.lastScrollPos = 0;
 		this.viewPort = viewPort;
@@ -101,7 +103,7 @@ Rico.LiveGridScroller.prototype = {
 		this.scrollerDiv.appendChild(this.heightDiv);
 		this.scrollerDiv.onscroll = this.handleScroll.bindAsEventListener(this);
 
-	 var table = this.liveGrid.table;
+	 var table = $(this.liveGrid.table);
 	 table.parentNode.parentNode.insertBefore( this.scrollerDiv, table.parentNode.nextSibling );
 
 		// mouse scroll
@@ -118,7 +120,12 @@ Rico.LiveGridScroller.prototype = {
 
 		// keyboard scroll
 		table.tabIndex = 0;
-		Event.observe(table.down('tbody'), 'click', table.focus.bind(table));
+
+		if (!this.isIE)
+		{
+			Event.observe(table.down('tbody'), 'click', table.focus.bind(table));
+		}
+
 		Event.observe(table, 'keypress', this.handleKeyboardScroll.bind(this));
 	 },
 
@@ -614,9 +621,12 @@ Rico.GridViewPort.prototype = {
 
 		// there are some problems with cell content alignment in Firefox,
 		// which can be fixed by redrawing the table
-		this.rows[0].style.border = '3px solid grey;';
-		this.rows[0].style.border = '';
 
+		if (this.rows[0] && this.rows[0].style)
+		{
+			this.rows[0].style.border = '3px solid grey';
+			this.rows[0].style.border = '';
+		}
 	},
 
 	scrollTo: function(pixelOffset) {
@@ -685,6 +695,7 @@ Rico.LiveGrid.prototype = {
 											'30',
 											visibleRows,
 											this.buffer, this);
+
 		this.scroller	= new Rico.LiveGridScroller(this,this.viewPort);
 		this.options.sortHandler = this.sortHandler.bind(this);
 
@@ -942,6 +953,7 @@ Rico.LiveGridSort.prototype = {
 		this.headerTableId = headerTableId;
 		this.headerTable	= $(headerTableId);
 		this.options = options;
+
 		this.setOptions();
 		this.applySortBehavior();
 
@@ -978,19 +990,25 @@ Rico.LiveGridSort.prototype = {
 	applySortBehavior: function() {
 		var headerRow	= this.headerTable.rows[0];
 		var headerCells = headerRow.cells;
+
 		for ( var i = 0 ; i < headerCells.length ; i++ ) {
 		 this.addSortBehaviorToColumn( i, headerCells[i] );
 		}
 	},
 
 	addSortBehaviorToColumn: function( n, cell ) {
+		cell = $(cell);
 		if ( this.options.columns[n].isSortable() ) {
 		 cell.id			= this.headerTableId + '_' + n;
 		 cell.style.cursor  = 'pointer';
 		 cell.onclick		 = this.headerCellClicked.bindAsEventListener(this);
+
 		 var sortImg = document.createElement('div');
 		 sortImg.innerHTML = '<span class="sortImg" id="' + this.headerTableId + '_img_' + n + '"></span>';
-		 cell.firstDescendant().appendChild(sortImg.firstChild);
+
+		 cell.appendChild(sortImg.firstChild);
+		 //cell.firstDescendant().appendChild(sortImg.firstChild);
+
 		}
 	},
 

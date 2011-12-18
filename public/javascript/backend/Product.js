@@ -192,7 +192,7 @@ Backend.Product =
 
 		if (window.opener && window.opener.selectProductPopup && e)
 		{
-			var downloadable = parseInt(e.target.up('tr').down(".cell_hiddenType").innerHTML) == 1;
+			var downloadable = parseInt(Event.element(e).up('tr').down(".cell_hiddenType").innerHTML) == 1;
 
 			window.opener.selectProductPopup.getSelectedObject(id, downloadable, indicator);
 		}

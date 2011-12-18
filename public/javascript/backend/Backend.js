@@ -1771,8 +1771,7 @@ Backend.ProgressBar.prototype =
 				onComplete();
 			}
 		}
-	},
-
+	}
 }
 
 /*****************************************

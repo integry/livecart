@@ -56,7 +56,7 @@ Backend.Category = {
 				if (!this.iconUrls[itemId])
 				{
 					this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
-					var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
+					var img = $(this._globalIdStorageFind(itemId).htmlNode).down('img', 2);
 					img.originalSrc = img.src;
 					img.src = 'image/indicator.gif';
 				}
@@ -68,7 +68,7 @@ Backend.Category = {
 				if (null != this.iconUrls[itemId])
 				{
 					this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
-					var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
+					var img = $(this._globalIdStorageFind(itemId).htmlNode).down('img', 2);
 					img.src = img.originalSrc;
 					this.iconUrls[itemId] = null;
 				}
