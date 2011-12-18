@@ -519,6 +519,7 @@ _template_management=Template Management
 SHOW_BACKEND_TEMPLATE_FILES=Allow to edit store back-end template files
 
 _admin_misc=Miscellaneous Options
+TINYMCE_PARAMS=Custom TinyMCE parameters (for example: <em>param: "value", param: "value"</em>)
 DISABLE_WYSIWYG=Disable WYSIWYG editors
 DISABLE_TOOLBAR=Disable footer toolbar
 DISABLE_QUICKEDIT=Disable "quick edit" pop-ups in data grids
