@@ -92,7 +92,7 @@ ActiveGrid.prototype =
 		this.ricoGrid.activeGrid = this;
 
 		var headerRow = this._getHeaderRow();
-		this.selectAllInstance = headerRow.down('input');
+		this.selectAllInstance = $(headerRow).down('input');
 		this.selectAllInstance.onclick = this.selectAll.bindAsEventListener(this);
 		this.selectAllInstance.parentNode.onclick = function(e){Event.stop(e);}.bindAsEventListener(this);
 
@@ -105,7 +105,7 @@ ActiveGrid.prototype =
 		this.setRequestParameters();
 		this.ricoGrid.init();
 
-		var rows = this.tableInstance.down('tbody').getElementsByTagName('tr');
+		var rows = $(this.tableInstance).down('tbody').getElementsByTagName('tr');
 		for (k = 0; k < rows.length; k++)
 		{
 			Event.observe(rows[k], 'click', this.selectRow.bindAsEventListener(this));
@@ -139,7 +139,7 @@ ActiveGrid.prototype =
 		this.quickEditUrlTemplate = urlTemplate;
 		this.quickEditIdToken = idToken;
 
-		$A(this.tableInstance.down('tbody').getElementsByTagName('tr')).each(function(row)
+		$A($(this.tableInstance).down('tbody').getElementsByTagName('tr')).each(function(row)
 		{
 			Event.observe(row, 'mouseover',
 				function(e)
@@ -149,7 +149,7 @@ ActiveGrid.prototype =
 				}.bindAsEventListener(this) );
 		}.bind(this));
 
-		Event.observe(this.tableInstance.down('tbody'), 'mouseout', function() { window.lastQuickEditNode = null; } );
+		Event.observe($(this.tableInstance).down('tbody'), 'mouseout', function() { window.lastQuickEditNode = null; } );
 		Event.observe(document.body, 'mouseover', this.quickEditMouseover.bindAsEventListener(this) );
 		Event.observe(this._getQuickEditContainer(), 'click', this.quickEditContainerClicked.bindAsEventListener(this) );
 	},
@@ -177,10 +177,10 @@ ActiveGrid.prototype =
 		}
 
 		do {
-			input = node.down("input");
+			input = $(node).down("input");
 			if (input && input.name)
 			{
-				m = node.down("input").name.match(/item\[(\d+)\]/);
+				m = $(node).down("input").name.match(/item\[(\d+)\]/);
 			}
 			else
 			{
@@ -441,8 +441,8 @@ ActiveGrid.prototype =
 
 		if (!this.countElement)
 		{
-			this.countElement = this.loadIndicator.parentNode.up('div').down('.rangeCount');
-			this.notFound = this.loadIndicator.parentNode.up('div').down('.notFound');
+			this.countElement = $(this.loadIndicator.parentNode).up('div').down('.rangeCount');
+			this.notFound = $(this.loadIndicator.parentNode).up('div').down('.notFound');
 		}
 
 		if (!this.countElement)
@@ -580,13 +580,13 @@ ActiveGrid.prototype =
 
 		if (cell)
 		{
-			var value = cell.down('span');
+			var value = $(cell).down('span');
 			if (value && value.offsetWidth > cell.offsetWidth)
 			{
 				if (!this.cellContentContainer)
 				{
 					var cont = cell.up('.activeGridContainer');
-					this.cellContentContainer = cont.down('.activeGridCellContent');
+					this.cellContentContainer = $(cont).down('.activeGridCellContent');
 				}
 
 				var xPos = Event.pointerX(event) - 50 - window.scrollX;
@@ -594,7 +594,7 @@ ActiveGrid.prototype =
 				this.cellContentContainer.innerHTML = value.innerHTML;
 
 				// remove progress indicator
-				var pI = this.cellContentContainer.down('.progressIndicator');
+				var pI = $(this.cellContentContainer).down('.progressIndicator');
 				if (pI)
 				{
 					pI.parentNode.removeChild(pI);
@@ -637,7 +637,7 @@ ActiveGrid.prototype =
 	showFetchIndicator: function()
 	{
 		this.loadIndicator.style.display = '';
-		this.loadIndicator.parentNode.up('div').down('.notFound').hide();
+		$(this.loadIndicator.parentNode).up('div').down('.notFound').hide();
 	},
 
 	hideFetchIndicator: function()
@@ -666,7 +666,7 @@ ActiveGrid.prototype =
 
 		if (!rowInstance.checkBox)
 		{
-			rowInstance.checkBox = rowInstance.down('input');
+			rowInstance.checkBox = $(rowInstance).down('input');
 		}
 
 		if (rowInstance.checkBox)
@@ -713,7 +713,7 @@ ActiveGrid.prototype =
 
 	_getHeaderRow: function()
 	{
-		return this.tableInstance.down('tr');
+		return $(this.tableInstance).down('tr');
 	}
 }
 
@@ -747,6 +747,8 @@ ActiveGridFilter.prototype =
 
 	filterOnChange: function(e)
 	{
+		this.element.blur();
+
 		var
 			element = Event.element(e),
 			th = element.up("th"),
@@ -827,6 +829,8 @@ ActiveGridFilter.prototype =
 		{
 			this.filterBlur();
 			this.setFilterValue();
+
+			this.element.blur();
 		}
 	},
 
@@ -963,7 +967,7 @@ ActiveGrid.MassActionHandler.prototype =
 		this.valueEntryContainer = handlerMenu.down('.bulkValues');
 		this.form = this.actionSelector.form;
 		this.form.handler = this;
-		this.button = this.form.down('.submit');
+		this.button = $(this.form).down('.submit');
 
 		Event.observe(this.actionSelector, 'change', this.actionSelectorChange.bind(this));
 		Event.observe(this.actionSelector.form, 'submit', this.submit.bindAsEventListener(this));
@@ -1035,10 +1039,10 @@ ActiveGrid.MassActionHandler.prototype =
 			return false;
 		}
 
-		var indicator = this.handlerMenu.down('.massIndicator');
+		var indicator = $(this.handlerMenu).down('.massIndicator');
 		if (!indicator)
 		{
-			indicator = this.handlerMenu.down('.progressIndicator');
+			indicator = $(this.handlerMenu).down('.progressIndicator');
 		}
 
 		this.formerLength = 0;
@@ -1052,8 +1056,8 @@ ActiveGrid.MassActionHandler.prototype =
 
 		this.request = new LiveCart.AjaxRequest(this.form, indicator , this.dataResponse.bind(this),  {onInteractive: function(func, arg) {window.setTimeout(func.bind(this, arg), 1000); }.bind(this, this.dataResponse.bind(this)) });
 
-		this.progressBarContainer = this.handlerMenu.up('div').down('.activeGrid_massActionProgress');
-		this.cancelLink = this.progressBarContainer.down('a.cancel');
+		this.progressBarContainer = $(this.handlerMenu).up('div').down('.activeGrid_massActionProgress');
+		this.cancelLink = $(this.progressBarContainer).down('a.cancel');
 		this.cancelUrl = this.cancelLink.href;
 		this.cancelLink.onclick = this.cancel.bind(this);
 
@@ -1281,7 +1285,7 @@ ActiveGridAdvancedSearch.prototype =
 	appendCondition: function()
 	{
 		var li = this.appendConditionPlaceholder();
-		this.getCondition(li.down(".condition").value).draw(li);
+		this.getCondition($(li).down(".condition").value).draw(li);
 	},
 
 	conditionItemChanged: function(event)
@@ -1465,11 +1469,11 @@ ActiveGridAdvancedSearchCondition.prototype =
 
 	draw: function(container) // This drawing is for 'field value' conditions. Replace with custom draw.
 	{
-		this.container = container;
+		this.container = $(container);
 		var
-			comparision = container.down(".comparision"),
-			value = container.down(".value"),
-			value2 = container.down(".value2"),
+			comparision = $(container).down(".comparision"),
+			value = $(container).down(".value"),
+			value2 = $(container).down(".value2"),
 			type;
 		if (comparision /* not found */) { } else
 		{
@@ -1533,11 +1537,11 @@ ActiveGridAdvancedSearchCondition.prototype =
 	{
 		if(this.getComparision(container) == '><')
 		{
-			container.down(".value2").show();
+			$(container).down(".value2").show();
 		}
 		else
 		{
-			container.down(".value2").hide();
+			$(container).down(".value2").hide();
 		}
 	},
 
@@ -1548,13 +1552,13 @@ ActiveGridAdvancedSearchCondition.prototype =
 		// ???
 		if(this.getComparision(container) == '><')
 		{
-			return !!container.down(".value").value &&  !!container.down(".value2").value;
+			return !!$(container).down(".value").value &&  !!$(container).down(".value2").value;
 		}
 		// ???
 
 		else if (type == this.TEXT || type == this.NUMERIC)
 		{
-			return !!container.down(".value").value;
+			return !!$(container).down(".value").value;
 		}
 		else if(type == this.BOOL || type == this.DATE)
 		{
@@ -1566,17 +1570,17 @@ ActiveGridAdvancedSearchCondition.prototype =
 	{
 		if(this.getComparision(container) == '><')
 		{
-			return '>=' + container.down(".value").value +' <=' +container.down(".value2").value;
+			return '>=' + $(container).down(".value").value +' <=' +$(container).down(".value2").value;
 		}
 		else
 		{
-			return container.down(".value").value;
+			return $(container).down(".value").value;
 		}
 	},
 
 	getComparision: function(container)
 	{
-		var v = container.down(".comparision").value;
+		var v = $(container).down(".comparision").value;
 		if(v == '=')
 		{
 			v = '';
