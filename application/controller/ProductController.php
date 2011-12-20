@@ -54,8 +54,16 @@ class ProductController extends CatalogController
 		$product->loadPricing();
 		$productArray = $product->toArray();
 
-		$this->category = $product->getCategory();
-		$this->categoryID = $product->getCategory()->getID();
+		if ($this->request->get('category'))
+		{
+			$this->category = Category::getInstanceByID($this->request->get('category'), true);
+		}
+		else
+		{
+			$this->category = $product->getCategory();
+		}
+
+		$this->categoryID = $this->category->getID();
 
 		$this->getAppliedFilters();
 
@@ -206,7 +214,7 @@ class ProductController extends CatalogController
 		}
 
 		// display theme
-		if ($theme = CategoryPresentation::getThemeByProduct($product))
+		if ($theme = CategoryPresentation::getThemeByProduct($product, $this->category))
 		{
 			if ($theme->getTheme())
 			{
