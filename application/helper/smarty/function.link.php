@@ -66,12 +66,12 @@ function smarty_function_link($params, LiveCartSmarty $smarty)
 		{
 			if (!empty($params['route']))
 			{
-				$result = $router->createUrlFromRoute($params['route'], true);
+				$result = $router->createUrlFromRoute($params['route'], false);
 			}
 			else
 			{
 				unset($params['route']);
-				$result = $router->createURL($params, true);
+				$result = $router->createURL($params, false);
 			}
 		}
 		catch(RouterException $e)
