@@ -284,7 +284,7 @@ class ShipmentController extends StoreManagementController
 		$shipment->recalculateAmounts(true);
 		$shipment->save();
 
-		$order->getTotal(true);
+		$order->totalAmount->set($order->getTotal(true));
 		$order->save();
 
 		$array = $shipment->toArray();
@@ -294,7 +294,6 @@ class ShipmentController extends StoreManagementController
 		unset($array['taxes']);
 
 		$array['Order'] = $order->toFlatArray();
-
 		return new JSONResponse(array('Shipment' => $array));
 	}
 
