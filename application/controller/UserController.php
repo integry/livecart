@@ -24,6 +24,9 @@ class UserController extends FrontendController
  	{
  		$initRes = parent::init();
 
+ 		$this->loadLanguageFile('Frontend');
+ 		$this->loadLanguageFile('User');
+
  		if ($this->user->getID())
  		{
 			$this->user->load();
