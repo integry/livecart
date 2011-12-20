@@ -1139,9 +1139,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		if ($this->getCurrency()->getID() != $currency->getID())
 		{
 			$current = $this->getCurrency();
-			$this->changeCurrency($currency);
+			$this->changeCurrency($currency, false);
 			$subtotal = $this->getSubTotal(false);
-			$this->changeCurrency($current);
+			$this->changeCurrency($current, false);
 		}
 		else
 		{
@@ -1608,17 +1608,27 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$this->mergeItems();
 	}
 
-	public function changeCurrency(Currency $currency)
+	public function changeCurrency(Currency $currency, $save = true)
 	{
 		$this->currency->set($currency);
 		foreach ($this->getOrderedItems() as $item)
 		{
 			$item->price->set($item->getProduct()->getItemPrice($item, true, $currency));
 			$item->setItemPrice($item->price->get());
-			$item->save();
+
+			if ($save)
+			{
+				$item->save();
+			}
 		}
 
-		$this->save();
+		if ($save)
+		{
+			$this->save();
+		}
+
+		// otherwise old currency price "sticks" for this request
+		ActiveRecord::clearArrayData();
 	}
 
 	public function getPaidAmount()
