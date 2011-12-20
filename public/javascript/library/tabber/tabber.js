@@ -498,17 +498,26 @@ function tabberAutomaticOnLoad(tabberArgs)
 
   /* Taken from: http://simon.incutio.com/archive/2004/05/26/addLoadEvent */
 
-  oldOnLoad = window.onload;
-  if (typeof window.onload != 'function') {
-    window.onload = function() {
-      tabberAutomatic(tabberArgs);
-    };
-  } else {
-    window.onload = function() {
-      oldOnLoad();
-      tabberAutomatic(tabberArgs);
-    };
-  }
+	if (jQuery)
+	{
+		jQuery(function() {
+		  tabberAutomatic(tabberArgs);
+		});
+	}
+	else
+	{
+		oldOnLoad = window.onload;
+		if (typeof window.onload != 'function') {
+		window.onload = function() {
+		  tabberAutomatic(tabberArgs);
+		};
+		} else {
+		window.onload = function() {
+		  oldOnLoad();
+		  tabberAutomatic(tabberArgs);
+		};
+		}
+  	}
 }
 
 
