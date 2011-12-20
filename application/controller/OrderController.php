@@ -682,7 +682,18 @@ class OrderController extends FrontendController
 
 		ClassLoader::import('application.controller.ProductController');
 
-		$validator = ProductController::buildAddToCartValidator($product->getOptions(true)->toArray(), $variations, $prefix);
+		// add first variations by default?
+		$autoVariation = false;
+		if ($variations && $this->config->get('DEF_FIRST_VARIATION'))
+		{
+			$first = reset($variations['variations']);
+			if (!$this->request->get($prefix . 'variation_' . $first['ID']))
+			{
+				$autoVariation = true;
+			}
+		}
+
+		$validator = ProductController::buildAddToCartValidator($product->getOptions(true)->toArray(), $autoVariation ? array() : $variations, $prefix);
 		if (!$validator->isValid())
 		{
 			return $productRedirect;
@@ -691,7 +702,28 @@ class OrderController extends FrontendController
 		// check if a variation needs to be added to cart instead of a parent product
 		if ($variations)
 		{
-			$product = $this->getVariationFromRequest($variations);
+			if ($autoVariation)
+			{
+				$foundVariation = false;
+				foreach ($variations['products'] as $prod)
+				{
+					if (Product::isOrderable($prod))
+					{
+						$product = Product::getInstanceByID($prod['ID'], true);
+						$foundVariation = true;
+						break;
+					}
+				}
+
+				if (!$foundVariation)
+				{
+					return $productRedirect;
+				}
+			}
+			else
+			{
+				$product = $this->getVariationFromRequest($variations);
+			}
 		}
 
 		$count = $this->request->get($prefix . 'count', 1);
@@ -713,6 +745,10 @@ class OrderController extends FrontendController
 				$item->save();
 			}
 		}
+
+		$this->order->updateToStock(false);
+
+		return $item;
 	}
 
 	public function moveToCart()

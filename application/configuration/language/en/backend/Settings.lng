@@ -327,6 +327,8 @@ MIN_TOTAL=Minimum order total
 MAX_TOTAL=Maximum order total (0 - no limit)
 MIN_QUANT=Minimum quantity of products per order
 MAX_QUANT=Maximum quantity of products per order (0 - no limit)
+DEF_FIRST_VARIATION=When adding a product with variations to cart from product list, add the first variation to cart by default
+
 ENABLE_CART=Enable shopping cart
 ENABLE_WISHLISTS=Enable wishlists
 DISABLE_GUEST_CHECKOUT=Disable guest checkout
