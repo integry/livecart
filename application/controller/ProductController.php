@@ -927,6 +927,10 @@ class ProductController extends CatalogController
 			}
 
 			$p = $r['RelatedProduct'];
+			if (!$p['isEnabled'])
+			{
+				continue;
+			}
 
 			// @todo: make ActiveRecord automatically recognize the correct parent object
 			$p['DefaultImage'] = $r['DefaultImage'];
@@ -935,6 +939,7 @@ class ProductController extends CatalogController
 			{
 				$p['ProductRelationshipGroup'] = $r['ProductRelationshipGroup'];
 			}
+
 			$rel[] = $p;
 		}
 
