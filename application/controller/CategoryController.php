@@ -250,6 +250,7 @@ class CategoryController extends CatalogController
 		$response = new ActionResponse();
 		$response->set('id', $this->getCategoryId());
 
+		$response->set('context', $this->getContext());
 		$response->set('products', $products);
 		$response->set('count', $totalCount);
 		$response->set('offsetStart', $offsetStart);
@@ -386,7 +387,7 @@ class CategoryController extends CatalogController
 	 */
 	private function setUpBreadCrumbAndReturnFilterChainHandle($page)
 	{
-		$last = $this->addCategoriesToBreadCrumb($this->getCategory()->getPathNodeArray());
+		$last = $this->addCategoriesToBreadCrumb($this->getCategory()->getPathNodeArray(), true);
 		$params = $this->addFiltersToBreadCrumb($last, $page);
 
 		// get filter chain handle
