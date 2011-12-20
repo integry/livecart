@@ -686,8 +686,20 @@ class ProductController extends CatalogController
 		$this->getAppliedFilters();
 		$this->getSelectFilter();
 
-		$ids = ActiveRecordModel::getFieldValues('Product', $this->productFilter->getSelectFilter(), array('ID'));
-		$index = array_search(array('ID' => $product->getID()), $ids);
+		if ($this->request->get('quickShopSequence'))
+		{
+			$ids = json_decode($this->request->get('quickShopSequence'));
+		}
+		else
+		{
+			$ids = array();
+			foreach (ActiveRecordModel::getFieldValues('Product', $this->productFilter->getSelectFilter(), array('ID'), array('Category')) as $row)
+			{
+				$ids[] = $row['ID'];
+			}
+		}
+
+		$index = array_search($product->getID(), $ids);
 
 		$prevIndex = $index + $diff;
 		if ($prevIndex < 0)
@@ -703,11 +715,11 @@ class ProductController extends CatalogController
 
 		if ('quickShop' == $this->request->get('originalAction'))
 		{
-			return new ActionRedirectResponse('product', 'quickShop', array('id' => $ids[$prevIndex]['ID'], 'query' => $this->getContext()));
+			return new ActionRedirectResponse('product', 'quickShop', array('id' => $ids[$prevIndex], 'query' => $this->getContext()));
 		}
 		else
 		{
-			return new RedirectResponse(createProductUrl(array('product' => Product::getInstanceByID($ids[$prevIndex]['ID'], true)->toArray()), $this->application));
+			return new RedirectResponse(createProductUrl(array('product' => Product::getInstanceByID($ids[$prevIndex], true)->toArray(), 'query' => $this->getContext()), $this->application));
 		}
 	}
 
