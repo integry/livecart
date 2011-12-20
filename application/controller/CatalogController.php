@@ -29,9 +29,12 @@ abstract class CatalogController extends FrontendController
 		}
 		$context = array('filters' => implode(',', $contextFilters), 'originalAction' => $this->request->getActionName());
 
-		if ($this->request->get('category'))
+		foreach (array('category', 'quickShopSequence', 'includeSub') as $key)
 		{
-			$context['category'] = $this->request->get('category');
+			if ($this->request->get($key))
+			{
+				$context[$key] = $this->request->get($key);
+			}
 		}
 
 		return $context;
