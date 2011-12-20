@@ -94,6 +94,7 @@ class OrderController extends FrontendController
 
 		$response = new BlockResponse();
 		$response->set('msg', $this->request->get('message'));
+		$response->set('error', $this->request->get('err'));
 		$response->set('cart', $this->order->toArray());
 		return $response;
 	}
@@ -570,6 +571,11 @@ class OrderController extends FrontendController
 				}
 			}
 
+			if ($res->count->get() < $this->request->get('count'))
+			{
+				$this->setErrorMessage($this->makeText('_add_to_cart_quant_error', array(Product::getInstanceByID($id)->getName($this->getRequestLanguage()), $res->count->get(), $this->request->get('count'))));
+			}
+
 			$this->setMessage($this->makeText('_added_to_cart', array(Product::getInstanceByID($id)->getName($this->getRequestLanguage()))));
 		}
 
@@ -582,10 +588,9 @@ class OrderController extends FrontendController
 
 				if ($res instanceof ActionRedirectResponse)
 				{
-					return $res;
+					//return $res;
 				}
-
-				if ($res)
+				else if ($res)
 				{
 					$added = true;
 				}
@@ -641,7 +646,7 @@ class OrderController extends FrontendController
 			}
 			else
 			{
-				$response->addAction('popupCart', 'order', 'addConfirmation', array('message' => $this->getMessage()));
+				$response->addAction('popupCart', 'order', 'addConfirmation', array('message' => $this->getMessage(), 'err' => $this->getErrorMessage()));
 			}
 
 			return $this->ajaxResponse($response);
