@@ -73,13 +73,14 @@ class CategoryPresentation extends ActiveRecordModel
 		return self::getInheritedConfig($set);
 	}
 
-	public static function getThemeByProduct(Product $product)
+	public static function getThemeByProduct(Product $product, Category $category = null)
 	{
+		$category = $category ? $category : $product->getCategory();
 		$c = eq(__CLASS__ . '.productID', $product->getID());
-		$c->addOr(self::getCategoryCondition($product->getCategory()));
+		$c->addOr(self::getCategoryCondition($category));
 		$f = select($c);
 		$f->setOrder(new ARExpressionHandle('CategoryPresentation.productID=' . $product->getID()), 'DESC');
-		self::setCategoryOrder($product->getCategory(), $f);
+		self::setCategoryOrder($category, $f);
 
 		// check if a theme is defined for this product particularly
 		$set = ActiveRecordModel::getRecordSet(__CLASS__, $f, array('Category'));
