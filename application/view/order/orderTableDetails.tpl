@@ -43,10 +43,10 @@
 	</tr>
 {/if}
 
-{if $order.isShippingRequired && $shipment.isShippable && $shipment.ShippingService}
+{if $order.isShippingRequired && $shipment.isShippable && $shipment.selectedRate}
 	<tr class="overviewShippingInfo">
 		<td colspan="{$colspan}" class="subTotalCaption">
-			{t _shipping} ({$shipment.ShippingService.name_lang}):
+			{t _shipping}{if $shipment.ShippingService.name_lang} ({$shipment.ShippingService.name_lang}){/if}:
 		</td>
 		<td>
 			{$shipment.selectedRate.taxPrice[$order.Currency.ID]|default:$shipment.selectedRate.formattedPrice[$order.Currency.ID]}
