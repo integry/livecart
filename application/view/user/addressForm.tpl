@@ -93,3 +93,8 @@
 {if $return}
 	<input type="hidden" name="return" value="{$return}" />
 {/if}
+
+{if $confirmButton}
+	<label class="confirmAddressLabel"></label>
+	<input type="button" class="button confirmAddress" value="{tn _confirm_address}" />
+{/if}
