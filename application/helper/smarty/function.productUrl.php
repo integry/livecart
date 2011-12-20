@@ -20,6 +20,7 @@ function smarty_function_productUrl($params, LiveCartSmarty $smarty)
 function createProductUrl($params, LiveCart $application)
 {
 	$product = $params['product'];
+	$router = $application->getRouter();
 
 	// use parent product data for child variations
 	if (isset($product['Parent']))
@@ -34,24 +35,34 @@ function createProductUrl($params, LiveCart $application)
 					   'producthandle' => $handle,
 					   'id' => $product['ID']);
 
-	$url = $application->getRouter()->createUrl($urlParams, true);
+	if (isset($params['query']))
+	{
+		$urlParams['query'] = $params['query'];
+	}
+
+	if (isset($params['context']))
+	{
+		$urlParams['query'] = (!empty($urlParams['query']) ? '&' : '') . $router->createUrlParamString($params['context']);
+	}
+
+	$url = $router->createUrl($urlParams, true);
 
 	if (!empty($params['full']))
 	{
-		$url = $application->getRouter()->createFullUrl($url);
+		$url = $router->createFullUrl($url);
 	}
 
 	if (!empty($params['filterChainHandle']))
 	{
-		$url = $application->getRouter()->setUrlQueryParam($url, 'filters', $params['filterChainHandle']);
+		$url = $router->setUrlQueryParam($url, 'filters', $params['filterChainHandle']);
 	}
 
 	if (!empty($params['category']) && ($params['category']['ID'] != $product['categoryID']))
 	{
-		$url = $application->getRouter()->setUrlQueryParam($url, 'category', $params['category']['ID']);
+		$url = $router->setUrlQueryParam($url, 'category', $params['category']['ID']);
 	}
 
-	$application->getRouter()->setLangReplace($handle, 'name', $product);
+	$router->setLangReplace($handle, 'name', $product);
 
 	return $url;
 }
