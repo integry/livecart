@@ -33,19 +33,19 @@
 	{/if}
 
 	<div id="checkout-shipping">
-		<div id="checkout-shipping-address">
+		<div id="checkout-shipping-address" class="step">
 			{$shippingAddress}
 		</div>
-		<div id="checkout-shipping-method">
+		<div id="checkout-shipping-method" class="step">
 			{$shippingMethods}
 		</div>
 	</div>
 
-	<div id="checkout-billing">
+	<div id="checkout-billing" class="step">
 		{$billingAddress}
 	</div>
 
-	<div id="checkout-payment">
+	<div id="checkout-payment" class="step">
 		{$payment}
 	</div>
 
