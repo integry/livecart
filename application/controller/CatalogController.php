@@ -269,7 +269,7 @@ abstract class CatalogController extends FrontendController
 		}
 	}
 
-	protected function addCategoriesToBreadCrumb($path)
+	protected function addCategoriesToBreadCrumb($path, $addLast = false)
 	{
 		include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
 
@@ -279,7 +279,7 @@ abstract class CatalogController extends FrontendController
 		{
 			$url = createCategoryUrl(array('data' => $nodeArray), $this->application);
 
-			if (++$i <= $max)
+			if (++$i <= $max || ($addLast && ($i == count($path))))
 			{
 				$this->addBreadCrumb($nodeArray['name_lang'], $url);
 			}
@@ -291,7 +291,10 @@ abstract class CatalogController extends FrontendController
 			$this->router->setReturnPath($this->router->getRouteFromUrl($url));
 		}
 
-		return $nodeArray;
+		if (isset($nodeArray))
+		{
+			return $nodeArray;
+		}
 	}
 
 	protected function addFiltersToBreadCrumb($category, $page = 1)
