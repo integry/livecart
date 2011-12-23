@@ -155,6 +155,8 @@ class ProductController extends CatalogController
 			$response->set('sharingForm', $this->buildSharingForm($product));
 		}
 
+		$response->set('sharingForm', $this->buildSharingForm($product));
+
 		// add to cart form
 		$response->set('cartForm', $this->buildAddToCartForm($this->getOptions(), $this->getVariations()));
 
