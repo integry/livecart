@@ -3430,6 +3430,26 @@ html #footpanel .subpanel ul li a.active
 	font-size: 85%;
 }
 
+#shoppingCartContainer #cartItems h2
+{
+	display: none;
+}
+
+#shoppingCartContainer #shippingEstimation
+{
+	display: none;
+}
+
+#shoppingCartContainer .tablescroll_foot
+{
+	margin-top: 10px;
+}
+
+#shoppingCartContainer .tablescroll_head
+{
+	margin-right: 15px;
+}
+
 /**** modal dialogs ****/
 
 .modalTitle
@@ -3459,7 +3479,6 @@ html #footpanel .subpanel ul li a.active
     top: 17%;
     left: 50%;
 
-    margin-left: -300px;
     min-width: 450px;
 
     background-color: #EEE;
