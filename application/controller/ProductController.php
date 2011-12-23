@@ -1,7 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.controller.FrontendController');
+ClassLoader::import('application.controller.CatalogController');
 ClassLoader::import('application.controller.CategoryController');
 ClassLoader::import('application.model.presentation.CategoryPresentation', true);
 ClassLoader::importNow('application.helper.CreateHandleString');
@@ -11,7 +11,7 @@ ClassLoader::importNow('application.helper.CreateHandleString');
  * @author Integry Systems
  * @package application.controller
  */
-class ProductController extends FrontendController
+class ProductController extends CatalogController
 {
 	public $filters = array();
 
@@ -30,6 +30,7 @@ class ProductController extends FrontendController
 			$this->addBlock('PRODUCT-ACTIONS', 'actions', 'product/block/actions');
 
 		$this->addBlock('PRODUCT-IMAGES', 'images', 'product/block/images');
+		$this->addBlock('PRODUCT-NAVIGATION', 'navigation', 'product/block/navigation');
 
 		$this->addBlock('PRODUCT-SUMMARY', 'summary', 'product/block/summary');
 			$this->addBlock('PRODUCT-MAININFO', 'mainInfo', 'product/block/mainInfo');
@@ -132,6 +133,7 @@ class ProductController extends FrontendController
 		$response->set('quantity', $this->getQuantities($product));
 		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
 		$response->set('catRoute', $catRoute);
+		$response->set('context', $this->getContext());
 
 		// ratings
 		if ($this->config->get('ENABLE_RATINGS'))
@@ -304,6 +306,40 @@ class ProductController extends FrontendController
 		return $response;
 	}
 
+	private function getContext()
+	{
+		$contextFilters = array();
+		foreach ($this->filters as $filter)
+		{
+			$contextFilters[] = filterHandle($filter);
+		}
+		$context = array('filters' => implode(',', $contextFilters), 'originalAction' => $this->request->getActionName());
+
+		if ($this->request->get('category'))
+		{
+			$context['category'] = $this->request->get('category');
+		}
+
+		return $context;
+	}
+
+	public function quickShop()
+	{
+		$response = $this->index();
+		if (!($response instanceof ActionResponse))
+		{
+			return $response;
+		}
+
+		$bResponse = new BlockResponse();
+		foreach ($response->getData() as $key => $value)
+		{
+			$bResponse->set($key, $value);
+		}
+
+		return $bResponse;
+	}
+
 	public function priceBlock()
 	{
 		return new BlockResponse();
@@ -398,6 +434,11 @@ class ProductController extends FrontendController
 	}
 
 	public function attributeSummaryBlock()
+	{
+		return new BlockResponse();
+	}
+
+	public function navigationBlock()
 	{
 		return new BlockResponse();
 	}
@@ -660,6 +701,44 @@ class ProductController extends FrontendController
 			{
 				return $redirect;
 			}
+		}
+	}
+
+	public function next()
+	{
+		return $this->previous(1);
+	}
+
+	public function previous($diff = -1)
+	{
+		$product = Product::getInstanceByID($this->request->get('id'), true, array('Category'));
+		$this->category = (!$this->request->get('category') ? $product->category->get() : Category::getInstanceByID($this->request->get('category'), true));
+
+		$this->getAppliedFilters();
+		$this->getSelectFilter();
+
+		$ids = ActiveRecordModel::getFieldValues('Product', $this->productFilter->getSelectFilter(), array('ID'));
+		$index = array_search(array('ID' => $product->getID()), $ids);
+
+		$prevIndex = $index + $diff;
+		if ($prevIndex < 0)
+		{
+			$prevIndex = count($ids) - 1;
+		}
+		else if ($prevIndex == count($ids))
+		{
+			$prevIndex = 0;
+		}
+
+		include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.productUrl.php');
+
+		if ('quickShop' == $this->request->get('originalAction'))
+		{
+			return new ActionRedirectResponse('product', 'quickShop', array('id' => $ids[$prevIndex]['ID']));
+		}
+		else
+		{
+			return new RedirectResponse(createProductUrl(array('product' => Product::getInstanceByID($ids[$prevIndex]['ID'], true)->toArray()), $this->application));
 		}
 	}
 
@@ -938,11 +1017,6 @@ class ProductController extends FrontendController
 		$validator->addCheck('surname', new MaxLengthCheck('Please do not enter anything here', 0));
 
 		return $validator;
-	}
-
-	public function getCategory()
-	{
-		return $this->category;
 	}
 
 	public function getProduct()
