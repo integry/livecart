@@ -14,6 +14,7 @@ class StaticPageController extends FrontendController
 	public function view()
 	{
 		$this->loadLanguageFile('Frontend');
+
 		$page = StaticPage::getInstanceByHandle($this->request->get('handle'));
 
 		if ($parent = $page->parent->get())
