@@ -70,3 +70,6 @@ _tip_zone_type=Zones define geographical areas for determining, which shipping a
 _delivery_zones=Delivery zones
 _tax_zones=Tax zones
 _both_zones=Both zones
+
+_delivery_zone_ID=Database ID
+DeliveryZone=Delivery zone

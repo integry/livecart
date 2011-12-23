@@ -31,7 +31,6 @@ class ShippingRate extends MultilingualObject
 		$schema->registerField(new ARForeignKeyField("shippingServiceID", "ShippingService", "ID", "ShippingService", ARInteger::instance()));
 
 		$schema->registerField(new ARField("weightRangeStart", ARFloat::instance()));
-
 		$schema->registerField(new ARField("weightRangeEnd", ARFloat::instance()));
 		$schema->registerField(new ARField("subtotalRangeStart", ARFloat::instance()));
 		$schema->registerField(new ARField("subtotalRangeEnd", ARFloat::instance()));
