@@ -427,6 +427,12 @@ class OnePageCheckoutController extends CheckoutController
 				$user->defaultBillingAddress->get()->userAddress->set($billingAddress);
 			}
 
+			if ($sameAddress)
+			{
+				$this->order->shippingAddress->set($this->order->billingAddress->get());
+				$this->order->shippingAddress->resetModifiedStatus();
+			}
+
 			ActiveRecordModel::rollback();
 
 			$this->order->getSpecification()->loadRequestData($this->request, 'order_');
@@ -443,6 +449,7 @@ class OnePageCheckoutController extends CheckoutController
 			}
 
 			$this->order->save();
+			$anonOrder = $this->order;
 
 			ActiveRecordModel::commit();
 
@@ -458,7 +465,22 @@ class OnePageCheckoutController extends CheckoutController
 		else
 		{
 			$this->separateBillingAndShippingAddresses();
-			$parentResponse = parent::doSelectAddress();
+			$res = parent::doSelectAddress();
+
+			if ($res instanceof ActionRedirectResponse && ($res->getActionName() == 'selectAddress'))
+			{
+				$params = $res->getParamList();
+				if (empty($params['step']) || ('shipping' != $params['step']))
+				{
+					$errorResponse = parent::selectAddress();
+					$errorList = $errorResponse->get('form')->getValidator()->getErrorList();
+
+					if ($errorList)
+					{
+						return new JSONResponse(array('errorList' => $errorList));
+					}
+				}
+			}
 
 			// UserAddress::toString() uses old data otherwise
 			if ($this->order->shippingAddress->get())
@@ -485,6 +507,12 @@ class OnePageCheckoutController extends CheckoutController
 		ActiveRecord::clearPool();
 		$this->config->resetRuntime('DELIVERY_TAX_CLASS');
 		$this->order = CustomerOrder::getInstanceById($this->order->getID(), true);
+
+		if (isset($anonOrder))
+		{
+			$this->order->shippingAddress->set($anonOrder->shippingAddress->get());
+			$this->order->billingAddress->set($anonOrder->billingAddress->get());
+		}
 
 		// @todo: needs to be called twice for the auto-selection to get saved
 		$this->init();
@@ -734,7 +762,7 @@ class OnePageCheckoutController extends CheckoutController
 
 		if (!$isCompleted)
 		{
-			$res['shippingMethod'] = true;
+			//$res['shippingMethod'] = true;
 		}
 
 		return $res;
@@ -767,11 +795,22 @@ class OnePageCheckoutController extends CheckoutController
 
 	protected function getUpdateResponse()
 	{
+		if ($this->user->isAnonymous())
+		{
+			$anonOrder = $this->order;
+		}
+
 		/////// @todo - should be a better way for recalculating taxes...
 		ActiveRecord::clearPool();
 		$this->config->resetRuntime('DELIVERY_TAX_CLASS');
 		$this->order = CustomerOrder::getInstanceById($this->order->getID(), true);
 		///////
+
+		if (isset($anonOrder))
+		{
+			$this->order->shippingAddress->set($anonOrder->shippingAddress->get());
+			$this->order->billingAddress->set($anonOrder->billingAddress->get());
+		}
 
 		$this->order->loadAll();
 		$this->restoreShippingMethodSelection();

@@ -8,7 +8,7 @@
 		</p>
 	{/if}
 
-	{include file="checkout/block/selectAddress.tpl" addresses=$billingAddresses prefix="billing" states=$billing_states}
+	{include file="checkout/block/selectAddress.tpl" confirmButton=true addresses=$billingAddresses prefix="billing" states=$billing_states}
 {/form}
 
 <div class="notAvailable">
