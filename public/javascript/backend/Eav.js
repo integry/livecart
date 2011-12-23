@@ -22,6 +22,7 @@ Backend.Eav.prototype =
 		}
 
 		this.initFieldControls(container);
+
 		ActiveForm.prototype.initTinyMceFields(container);
 	},
 

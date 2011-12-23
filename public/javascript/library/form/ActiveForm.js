@@ -158,12 +158,16 @@ ActiveForm.prototype = {
 			return false;
 		}
 
+		if ($(container).down('.mceEditor'))
+		{
+			return;
+		}
+
 		var textareas = $(container).getElementsBySelector('textarea.tinyMCE');
 		for (k = 0; k < textareas.length; k++)
 		{
 			if (textareas[k].readOnly)
 			{
-				setInterval
 				textareas[k].style.display = 'none';
 				new Insertion.After(textareas[k], '<div class="disabledTextarea" id="disabledTextareas_' + (ActiveForm.prototype.lastDisabledTextareaId++) + '">' + textareas[k].value + '</div>');
 				var disabledTextarea = textareas[k].up().down('.disabledTextarea');
@@ -196,12 +200,16 @@ ActiveForm.prototype = {
 					textareas[k].id = 'tinyMceControll_' + textareas[k].tinyMCEId;
 				}
 
-				ActiveForm.prototype.idleTinyMCEFields[textareas[k].id] = window.setInterval(function(tinyMCEField)
+				if (!ActiveForm.prototype.idleTinyMCEFields[textareas[k].id])
 				{
-					if(!tinyMCEField || 0 >= tinyMCEField.offsetHeight) return;
-					window.clearInterval(ActiveForm.prototype.idleTinyMCEFields[tinyMCEField.id]);
-					tinyMCE.execCommand('mceAddControl', true, tinyMCEField.id);
-				}.bind(this, textareas[k]), 1000);
+					ActiveForm.prototype.idleTinyMCEFields[textareas[k].id] = window.setInterval(function(tinyMCEField)
+					{
+						if(!tinyMCEField || 0 >= tinyMCEField.offsetHeight) return;
+						window.clearInterval(ActiveForm.prototype.idleTinyMCEFields[tinyMCEField.id]);
+						tinyMCE.execCommand('mceAddControl', true, tinyMCEField.id);
+						ActiveForm.prototype.idleTinyMCEFields[tinyMCEField.id] = null;
+					}.bind(this, textareas[k]), 100);
+				}
 			}
 		}
 	},
@@ -466,11 +474,13 @@ Element.saveTinyMceFields = function(element)
 
 	tinyMCE.triggerSave();
 
-	document.getElementsByClassName("mceEditorIframe", element).each(function(mceControl)
+	document.getElementsByClassName("mceEditor", element).each(function(mceControl)
 	{
-		 if (tinyMCE.getInstanceById(mceControl.id))
+		 var id = mceControl.id.substr(0, mceControl.id.length - 7);
+		 var mce = tinyMCE.get(id);
+		 if (mce)
 		 {
-		 	tinyMCE.getInstanceById(mceControl.id).triggerSave();
+		 	mce.save();
 		 }
 	});
 }

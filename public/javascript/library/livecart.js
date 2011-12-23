@@ -87,7 +87,7 @@ LiveCart.AjaxRequest.prototype = {
 		{
 			if (window.tinyMCE)
 			{
-				tinyMCE.triggerSave();
+				Element.saveTinyMceFields();
 			}
 
 			var form = formOrUrl;
