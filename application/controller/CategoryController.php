@@ -384,7 +384,6 @@ class CategoryController extends CatalogController
 		// get category path for breadcrumb
 		$path = $this->getCategory()->getPathNodeArray();
 
-		include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
 		foreach ($path as $nodeArray)
 		{
 			$url = createCategoryUrl(array('data' => $nodeArray), $this->application);
@@ -582,7 +581,12 @@ class CategoryController extends CatalogController
 
 	protected function quickShopMenuBlock()
 	{
-		return new BlockResponse();
+		$context = $this->getContext();
+		$context['category'] = $this->getCategoryId();
+
+		$response = new BlockResponse();
+		$response->set('context', $context);
+		return $response;
 	}
 
 	protected function relatedCategoriesBlock()

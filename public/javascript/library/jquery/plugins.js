@@ -226,7 +226,24 @@ hs=function(w,t,c){return w.each(function(){var s=this._jqm;$(t).each(function()
 })(jQ);
 
 /* Center popup container */
-;(function(b,a){b.fn.center=function(c){var d,e;d=b(a);e=d.scrollTop();return this.each(function(){var h,g,f;h=b(this);g=b.extend({against:"window",top:false,topPercentage:0.5},c);f=function(){var k,j,i,l;k=g.against;if(k==="window"){j=d;}else{if(k==="parent"){j=h.parent();e=0;}else{j=h.parents(k);e=0;}}i=((j.width())-(h.outerWidth()))*0.5;l=((j.height())-(h.outerHeight()))*g.topPercentage+e;if(g.top){l=g.top+e;}h.css({left:i,top:l});};f();d.resize(f);});};})(jQ,window);
+;(function ($)
+{
+	$.fn.center = function ()
+	{
+		var windowWidth = document.documentElement.clientWidth;
+		var windowHeight = document.documentElement.clientHeight;
+		var popupHeight = $(this).height();
+		var popupWidth = $(this).width();
+
+		//centering
+		$(this).css({
+		"position": "fixed",
+		"top": windowHeight/2-popupHeight/2,
+		"left": windowWidth/2-popupWidth/2
+		});
+	}
+}
+)(jQ);
 
 /* AJAX post form via iframe (file upload) */
 ;(function ($)

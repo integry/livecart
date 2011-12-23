@@ -4,7 +4,6 @@ ClassLoader::import('application.model.product.Product');
 ClassLoader::import('application.controller.CatalogController');
 ClassLoader::import('application.controller.CategoryController');
 ClassLoader::import('application.model.presentation.CategoryPresentation', true);
-ClassLoader::importNow('application.helper.CreateHandleString');
 
 /**
  *
@@ -174,6 +173,8 @@ class ProductController extends CatalogController
 			}
 		}
 
+		unset($prod);
+
 		foreach ($together as &$prod)
 		{
 			$spec[] =& $prod;
@@ -306,23 +307,6 @@ class ProductController extends CatalogController
 		return $response;
 	}
 
-	private function getContext()
-	{
-		$contextFilters = array();
-		foreach ($this->filters as $filter)
-		{
-			$contextFilters[] = filterHandle($filter);
-		}
-		$context = array('filters' => implode(',', $contextFilters), 'originalAction' => $this->request->getActionName());
-
-		if ($this->request->get('category'))
-		{
-			$context['category'] = $this->request->get('category');
-		}
-
-		return $context;
-	}
-
 	public function quickShop()
 	{
 		$response = $this->index();
@@ -336,6 +320,8 @@ class ProductController extends CatalogController
 		{
 			$bResponse->set($key, $value);
 		}
+
+		$bResponse->set('context', $this->getContext());
 
 		return $bResponse;
 	}
@@ -734,7 +720,7 @@ class ProductController extends CatalogController
 
 		if ('quickShop' == $this->request->get('originalAction'))
 		{
-			return new ActionRedirectResponse('product', 'quickShop', array('id' => $ids[$prevIndex]['ID']));
+			return new ActionRedirectResponse('product', 'quickShop', array('id' => $ids[$prevIndex]['ID'], 'query' => $this->getContext()));
 		}
 		else
 		{
