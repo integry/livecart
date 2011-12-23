@@ -19,6 +19,7 @@ function smarty_function_loadJs($params, LiveCartSmarty $smarty)
 	$files = array();
 
 	$files[] = "library/prototype/prototype.js";
+	$files[] = "library/jquery/jquery-min.js";
 	$files[] = "library/livecart.js";
 	$files[] = "library/FooterToolbar.js"; // need to be before Frontend.js
 	$files[] = "frontend/Frontend.js";
