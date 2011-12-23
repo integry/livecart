@@ -144,6 +144,8 @@ _ProductOption_selectMessage=Default selection message
 _ProductOption_display_as=Display selection as
 _ProductOption_displayType_selectBox=Select box
 _ProductOption_displayType_radioButtons=Radio buttons
+_ProductOption_displayType_color=Color selector
+_ProductOption_color=Color
 _ProductOption_maxFileSize=Max file size
 _ProductOption_maxFileSize_help=File size cannot exceed [_1] as per PHP configuration
 _ProductOption_fileExtensions=Allowed file extensions
@@ -154,6 +156,7 @@ _ProductOption_price_included=Include product price in option display price
 _ProductOption_description=Description
 _option_name=Title
 _ProductOption_add_values=Add choice
+_select_color=Select color
 
 # index
 _products=Products

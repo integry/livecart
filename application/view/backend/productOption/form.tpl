@@ -71,6 +71,7 @@
 					<select name="displayType" class="productOption_form_displayType">
 						<option value="0">{t _ProductOption_displayType_selectBox}</option>
 						<option value="1">{t _ProductOption_displayType_radioButtons}</option>
+						<option value="2">{t _ProductOption_displayType_color}</option>
 					</select>
 					<span class="errorText hidden"> </span>
 				</fieldset>
@@ -167,11 +168,18 @@
 									<input type="text" class="productOption_update productOption_valueName"  />
 									<span class="errorText hidden"> </span>
 								</fieldset>
+							</p>
 							<p>
 								<label>{tip _option_price_diff}</label>
 								<input type="text" class="number productOption_valuePrice"  />
 								{$defaultCurrencyCode}
 							</p>
+
+							<p class="selectColor">
+								<label>{t _select_color}</label>
+								<input type="text" class="number productOption_color"  />
+							</p>
+
 							<br class="clear" />
 						</li>
 					</ul>

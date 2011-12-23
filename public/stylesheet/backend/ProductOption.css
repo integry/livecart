@@ -132,6 +132,17 @@ fieldset.group h2 {
     font-size: 1em;
     font-weight: normal;
 }
+
+.productOption_step_values .selectColor
+{
+	display: none;
+}
+
+.productOption_step_values.colorPicker .selectColor
+{
+	display: block;
+}
+
 /* END Values active list */
 
 .productOption ul {

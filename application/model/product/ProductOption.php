@@ -20,6 +20,7 @@ class ProductOption extends MultilingualObject
 
 	const DISPLAYTYPE_SELECTBOX = 0;
 	const DISPLAYTYPE_RADIO = 1;
+	const DISPLAYTYPE_COLOR = 2;
 
 	protected $choices = array();
 
@@ -27,8 +28,6 @@ class ProductOption extends MultilingualObject
 	{
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("ProductOption");
-
-		$schema->registerCircularReference('DefaultChoice', 'ProductOptionChoice');
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", null, ARInteger::instance()));
@@ -48,6 +47,8 @@ class ProductOption extends MultilingualObject
 		$schema->registerField(new ARField("position", ARInteger::instance(4)));
 		$schema->registerField(new ARField("maxFileSize", ARInteger::instance(4)));
 		$schema->registerField(new ARField("fileExtensions", ARVarchar::instance(100)));
+
+		$schema->registerCircularReference('DefaultChoice', 'ProductOptionChoice');
 	}
 
 	/**
@@ -204,7 +205,7 @@ class ProductOption extends MultilingualObject
 		$f->setOrder(new ARFieldHandle('Category', 'lft'), 'DESC');
 		$f->setOrder(new ARFieldHandle('ProductOption', 'position'), 'DESC');
 
-		
+
 		$options = ProductOption::getRecordSet($f, array('DefaultChoice' => 'ProductOptionChoice', 'Category'));
 
 		self::loadChoicesForRecordSet($options);

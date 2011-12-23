@@ -24,6 +24,7 @@ class ProductOptionChoice extends MultilingualObject
 		$schema->registerField(new ARField("hasImage", ARBool::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance(4)));
 		$schema->registerField(new ARField("name", ARArray::instance()));
+		$schema->registerField(new ARField("config", ARText::instance()));
 
 		$schema->registerCircularReference('Option', 'ProductOption');
 	}
@@ -65,6 +66,13 @@ class ProductOptionChoice extends MultilingualObject
 		return ProductPrice::convertPrice(Currency::getInstanceByID($currencyCode), $basePrice);
 	}
 
+	public function setColor($color)
+	{
+		$config = unserialize($this->config->get());
+		$config['color'] = $color;
+		$this->config->set(serialize($config));
+	}
+
 	/*####################  Saving ####################*/
 
 	/**
@@ -90,6 +98,8 @@ class ProductOptionChoice extends MultilingualObject
 		{
 			$array['formattedPrice'][$id] = $currency->getFormattedPrice(self::getPriceDiff($id, $array['priceDiff']));
 		}
+
+		$array['config'] = unserialize($array['config']);
 
 		return $array;
 	}
