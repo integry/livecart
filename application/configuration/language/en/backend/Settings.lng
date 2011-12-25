@@ -119,7 +119,10 @@ _resize_images=Resize existing images
 _image_resize_success=Images resized successfully
 
 _custom_image_domain=Custom (sub)domain for images
-IMAGE_DOMAIN=Image (sub)domain name (must use /public/upload directory as web root)
+IMAGE_DOMAIN=Image (sub)domain name (must use /public/upload directory as web root). Overrides the static content (sub)domain.
+
+_static_content_urls=Static content URLs
+STATIC_DOMAIN=Default static content (sub)domain name (must use /public directory as web root)
 
 _product_image=Product Image Sizes
 _p_small=Product Page Thumbnail

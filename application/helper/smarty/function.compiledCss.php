@@ -105,7 +105,7 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 		}
 		$compiledFileTimestamp = filemtime($compiledFilePath);
 
-		$out = '<link href="gzip.php?file=' . $compiledFileName . '&amp;time=' . $compiledFileTimestamp . '" rel="Stylesheet" type="text/css"/>';
+		$out = '<link href="' . $app->getPublicUrl('gzip.php') . '?file=' . $compiledFileName . '&amp;time=' . $compiledFileTimestamp . '" rel="Stylesheet" type="text/css"/>';
 	}
 	else if ($includedStylesheetFiles)
 	{
@@ -115,7 +115,7 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 		foreach($includedStylesheetFiles as $cssFile)
 		{
 			$urlPath = str_replace('\\', '/', str_replace($publicPath, '', $cssFile));
-			$includeString .= '<link href="' . $urlPath . '?' . filemtime($cssFile) . '" rel="Stylesheet" type="text/css"/>' . "\n";
+			$includeString .= '<link href="' . $app->getPublicUrl($urlPath) . '?' . filemtime($cssFile) . '" rel="Stylesheet" type="text/css"/>' . "\n";
 		}
 
 		$out = $includeString;

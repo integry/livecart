@@ -1,6 +1,6 @@
 {if "OFFLINE_LOGO_`$method`"|config}
 	<p class="offlineMethodLogo">
-		<img src="{"OFFLINE_LOGO_`$method`"|config}" />
+		<img src="{static url="OFFLINE_LOGO_`$method`"|config}" />
 	</p>
 {/if}
 

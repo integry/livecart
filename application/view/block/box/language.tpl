@@ -11,7 +11,7 @@
 			{if 'LANG_SELECTION'|config == 'LANG_NAMES' || !$language.image}
 				<a href="{$language.url}" class="lang-sel-{$language.ID}">{$language.originalName}</a>
 			{else}
-				<a href="{$language.url}" class="lang-sel-{$language.ID}"><img src="{$language.image}" alt="{$language.originalName}" title="{$language.originalName}" /></a>
+				<a href="{$language.url}" class="lang-sel-{$language.ID}"><img src="{static url=$language.image}" alt="{$language.originalName}" title="{$language.originalName}" /></a>
 			{/if}
 		{/foreach}
 	{/if}

@@ -11,7 +11,7 @@
 				<a href="{link controller=order action=downloadOptionFile id=$item.ID query="option=`$option.Choice.Option.ID`"}">{$option.fileName}</a>
 				{if $option.small_url}
 					<div class="optionImage">
-						<a href="{$option.large_url}" rel="lightbox"><img src="{$option.small_url}" /></a>
+						<a href="{static url=$option.large_url}" rel="lightbox"><img src="{static url=$option.small_url}" /></a>
 					</div>
 				{/if}
 			{else}
