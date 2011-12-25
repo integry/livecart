@@ -10,7 +10,7 @@
 	<div id="otherMethods">
 		{foreach from=$otherMethods item=method}
 			{if $id}{assign var="query" value="order=`$id`"}{/if}
-			<a href="{link controller=checkout action=redirect id=$method query=$query}"><img src="image/payment/{$method}.gif" /></a>
+			<a href="{link controller=checkout action=redirect id=$method query=$query}"><img src="{s image/payment/{$method}.gif}" /></a>
 		{/foreach}
 	</div>
 {/if}

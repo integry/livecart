@@ -14,9 +14,11 @@ function smarty_function_compiledJs($params, LiveCartSmarty $smarty)
 	$includedJavascriptTimestamp = $smarty->_smarty_vars["INCLUDED_JAVASCRIPT_TIMESTAMP"];
 	$includedJavascriptFiles = $smarty->_smarty_vars["INCLUDED_JAVASCRIPT_FILES"];
 
+	$app = $smarty->getApplication();
+
 	if($includedJavascriptFiles && isset($params['glue']) && ($params['glue'] == 'true') && !$smarty->getApplication()->isDevMode() && !$smarty->getApplication()->isTemplateCustomizationMode())
 	{
-		$request = $smarty->getApplication()->getRequest();
+		$request = $app->getRequest();
 
 		if (isset($params['nameMethod']) && 'hash' == $params['nameMethod'])
 		{
@@ -63,7 +65,7 @@ function smarty_function_compiledJs($params, LiveCartSmarty $smarty)
 
 		$compiledFileTimestamp = filemtime($compiledFilePath);
 
-		return '<script src="gzip.php?file=' . $compiledFileName . '&amp;time=' . $compiledFileTimestamp . '" type="text/javascript"></script>';
+		return '<script src="' . $app->getPublicUrl('gzip.php') . '?file=' . $compiledFileName . '&amp;time=' . $compiledFileTimestamp . '" type="text/javascript"></script>';
 	}
 	else if ($includedJavascriptFiles)
 	{
@@ -72,7 +74,7 @@ function smarty_function_compiledJs($params, LiveCartSmarty $smarty)
 		foreach($includedJavascriptFiles as $path => $jsFile)
 		{
 			$urlPath = str_replace('\\', '/', str_replace($publicPath, '', $jsFile));
-			$includeString .= '<script src="' .$urlPath . '?' . filemtime($path) . '" type="text/javascript"></script>' . "\n";
+			$includeString .= '<script src="' . $app->getPublicUrl($urlPath) . '?' . filemtime($path) . '" type="text/javascript"></script>' . "\n";
 		}
 
 		return $includeString;

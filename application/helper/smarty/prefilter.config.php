@@ -64,6 +64,9 @@ function smarty_prefilter_config($source, $smarty)
 	$source = preg_replace('/{t ([^\|]+?)}/', '{translate text="$1"}', $source);
 	$source = preg_replace('/{t ([^|]+)\|([^}]+)}/', '{capture assign="translation_$1"}{translate text=$1}{/capture}{\$translation_$1|$2}', $source);
 
+	// static content URLs
+	$source = preg_replace('/{s (.+?)}/', '{static url="$1"}', $source);
+
 	// roles
 	$source = preg_replace('/{role ([\w.]+)}/', '{role name="$1"}', $source);
 

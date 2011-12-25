@@ -27,7 +27,7 @@
 					</td>
 					<td>
 						<label class="radio" for="{$method}">
-							<img src="image/payment/{$method}.gif" class="paymentLogo" alt="{$method}" />
+							<img src="{s image/payment/{$method}.gif}" class="paymentLogo" alt="{$method}" />
 						</label>
 					</td>
 				</p>

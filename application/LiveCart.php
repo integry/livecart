@@ -1470,6 +1470,20 @@ class LiveCart extends Application implements Serializable
 		return $url;
 	}
 
+	public function getPublicUrl($relativePath)
+	{
+		if ($customDomain = $this->config->get('STATIC_DOMAIN'))
+		{
+			$url = 'http://' . $customDomain . '/' . str_replace('/public/', '', $relativePath);
+		}
+		else
+		{
+			$url = $this->router->createFullUrl($relativePath, null, true);
+		}
+
+		return $url;
+	}
+
 	public function clearCachedVars()
 	{
 		$this->defaultLanguageID = null;
