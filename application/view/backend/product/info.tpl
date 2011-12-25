@@ -6,7 +6,7 @@
 	<legend>{t _purchase_stats}</legend>
 
 	<form>
-		{foreach from=$purchaseStats key=key item=count}		
+		{foreach from=$purchaseStats key=key item=count}
 			<p>
 				<label>{translate text=$key}</label>
 				<label>{$count}</label>
@@ -29,7 +29,7 @@
 			<fieldset class="container">
 				<div class="productRelationship_image">
 					{if $product.DefaultImage}
-						{img src=$product.DefaultImage.paths[1] alt=$product.DefaultImage.title title=$product.DefaultImage[1].title }
+						{img src=$product.DefaultImage.urls[1] alt=$product.DefaultImage.title title=$product.DefaultImage[1].title }
 					{/if}
 				</div>
 				<span class="productRelationship_title">{$product.count} x {$product.name_lang}</span>

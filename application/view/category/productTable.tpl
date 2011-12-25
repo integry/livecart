@@ -47,7 +47,7 @@
 					<td class="productImage">
 						<a href="{productUrl product=$product category=$category}">
 						{if $product.DefaultImage.ID}
-							{img src=$product.DefaultImage.paths.1 alt=$product.name_lang|escape}
+							{img src=$product.DefaultImage.urls.1 alt=$product.name_lang|escape}
 						{else}
 							{img src='MISSING_IMG_THUMB'|config alt=$product.name_lang|escape}
 						{/if}

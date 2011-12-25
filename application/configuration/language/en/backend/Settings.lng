@@ -117,6 +117,10 @@ ENGLISH=English
 _images=Images
 _resize_images=Resize existing images
 _image_resize_success=Images resized successfully
+
+_custom_image_domain=Custom (sub)domain for images
+IMAGE_DOMAIN=Image (sub)domain name (must use /public/upload directory as web root)
+
 _product_image=Product Image Sizes
 _p_small=Product Page Thumbnail
 _p_thumb=Product List Thumbnail

@@ -207,7 +207,8 @@ abstract class ObjectImage extends MultilingualObject
 		}
 
 		$array['paths'] = $array['urls'] = array();
-		$router = self::getApplication()->getRouter();
+		$app = self::getApplication();
+		$router = $app->getRouter();
 
 		foreach (call_user_func(array($schema->getName(), 'getImageSizes')) as $key => $value)
 	  	{
@@ -221,8 +222,7 @@ abstract class ObjectImage extends MultilingualObject
 			$urlPrefix = null;
 			$array['paths'][$key] = self::getRelativePath(call_user_func_array(array($schema->getName(), 'getImagePath'), array($array['ID'], $productID, $key)), $urlPrefix);
 
-			$url = $router->createFullUrl($urlPrefix . $array['paths'][$key], null, true);
-			//$url = str_replace('//', '/', $url);
+			$url = $app->getFullUploadUrl($urlPrefix . $array['paths'][$key]);
 			$url = str_replace('/public//public/', '/public/', $url);
 			$array['urls'][$key] = $url;
 		}

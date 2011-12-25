@@ -4,8 +4,8 @@
 		   <div class="orderShipmentsItem_info_sku">
 			   {$item.Product.sku}
 
-				{if $item.Product.DefaultImage.paths.1}
-					<a href="{$item.Product.DefaultImage.paths.4}" rel="lightbox"><img src="{$item.Product.DefaultImage.paths.1}" /></a>
+				{if $item.Product.DefaultImage.urls.1}
+					<a href="{$item.Product.DefaultImage.urls.4}" rel="lightbox"><img src="{$item.Product.DefaultImage.urls.1}" /></a>
 				{/if}
 		   </div>
 		</td>

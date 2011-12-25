@@ -12,9 +12,9 @@
 					{include file="product/block/smallImage.tpl" product=$sub.featuredProduct}
 				{/if}
 			</div>
-		{elseif $sub.DefaultImage.paths.1 && 'CAT_MENU_IMAGE'|config}
+		{elseif $sub.DefaultImage.urls.1 && 'CAT_MENU_IMAGE'|config}
 			<a href="{categoryUrl data=$sub}">
-				{img src=$sub.DefaultImage.paths.1 alt=$sub.name_lang|escape}
+				{img src=$sub.DefaultImage.urls.1 alt=$sub.name_lang|escape}
 			</a>
 		{/if}
 	{foot}
