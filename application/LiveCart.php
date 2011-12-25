@@ -1456,6 +1456,20 @@ class LiveCart extends Application implements Serializable
 		return $this->businessRuleController;
 	}
 
+	public function getFullUploadUrl($relativePath)
+	{
+		if ($customDomain = $this->config->get('IMAGE_DOMAIN'))
+		{
+			$url = 'http://' . $customDomain . str_replace('/public/upload', '', $relativePath);
+		}
+		else
+		{
+			$url = $this->router->createFullUrl($relativePath, null, true);
+		}
+
+		return $url;
+	}
+
 	public function clearCachedVars()
 	{
 		$this->defaultLanguageID = null;
