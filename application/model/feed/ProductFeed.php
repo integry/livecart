@@ -19,7 +19,7 @@ class ProductFeed extends ARFeed
 
 		parent::__construct($filter->getSelectFilter(), 'Product', array('Category', 'ProductImage', 'Manufacturer'));
 	}
-	
+
 	public function setLimit($size)
 	{
 		$this->size = $size;
@@ -35,18 +35,21 @@ class ProductFeed extends ARFeed
 		{
 			$this->data[$key]['name_lang_utf8'] = $this->getFixedUtf8($product['name_lang']);
 			$this->data[$key]['shortDescription_lang_utf8'] = $this->getFixedUtf8($product['shortDescription_lang']);
+			$this->data[$key]['longDescription_lang_utf8'] = $this->getFixedUtf8($product['longDescription_lang']);
+
 			$this->data[$key]['name_lang_safe'] = $this->getSafeEncoding($product['name_lang']);
 			$this->data[$key]['shortDescription_lang_safe'] = $this->getSafeEncoding($product['shortDescription_lang']);
+			$this->data[$key]['longDescription_lang_safe'] = $this->getSafeEncoding($product['longDescription_lang']);
 		}
 	}
 
 	protected function getFixedUtf8($string)
 	{
 		static $trans_array = array();
-		
+
 		if (!$trans_array)
 		{
-			for ($i=127; $i<255; $i++) 
+			for ($i=127; $i<255; $i++)
 			{
 				$trans_array[chr($i)] = "&#" . $i . ";";
 				$trans_array[chr($i)] = '';

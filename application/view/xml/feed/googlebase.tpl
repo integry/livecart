@@ -11,7 +11,12 @@
 		{foreach from=$feed item=product}
 			<item>
 				<title><![CDATA[{$product.name_lang_utf8}]]></title>
-				<description><![CDATA[{$product.shortDescription_lang_utf8}]]></description>
+
+				{if $product.shortDescription_lang_utf8}
+					<description><![CDATA[{$product.shortDescription_lang_utf8}]]></description>
+				{elseif $product.longDescription_lang_utf8}
+					<description><![CDATA[{$product.longDescription_lang_utf8}]]></description>
+				{/if}
 
 				<link><![CDATA[{productUrl product=$product full=true}]]></link>
 
@@ -26,9 +31,9 @@
 
 				{if $product.$listPriceCurrency}
 					<g:price><![CDATA[{$product.$listPriceCurrency} USD]]></g:price>
-					<g:sale_price><![CDATA[{$product.$priceCurrency} USD]]></g:price>
+					<g:sale_price><![CDATA[{$product.$priceCurrency} USD]]></g:sale_price>
 				{else}
-					<g:price><![CDATA[{$product.$priceCurrency} USD]]></g:price>
+					<g:price><![CDATA[{$product.$priceCurrency|default:0} USD]]></g:price>
 				{/if}
 
 				{if $product.shippingWeight}
@@ -37,7 +42,7 @@
 
 				<g:condition>new</g:condition>
 				<g:product_type><![CDATA[{$product.Category.name_lang|@htmlentities}]]></g:product_type>
-				<g:availability><![CDATA[{if $product.isOrderable}in stock{else}out of stock{/if}]]></g:availability>
+				<g:availability><![CDATA[{if $product.isAvailable}in stock{else}out of stock{/if}]]></g:availability>
 
 			</item>
 		{/foreach}
