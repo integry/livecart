@@ -323,6 +323,11 @@ class Product extends MultilingualObject
 		return $this->type->get() == self::TYPE_BUNDLE;
 	}
 
+	public static function isOrderable($array)
+	{
+		return self::isAvailableForOrdering($array['isEnabled'], $array['stockCount'], $array['isBackOrderable'], $array['isUnlimitedStock'], $array['type']);
+	}
+
 	protected static function isAvailableForOrdering($isEnabled, $stockCount, $isBackOrderable, $isUnlimitedStock, $type)
 	{
 		if ($isEnabled)
@@ -947,7 +952,7 @@ class Product extends MultilingualObject
 			}
 			else
 			{
-				$array['isAvailable'] = self::isAvailableForOrdering($array['isEnabled'], $array['stockCount'], $array['isBackOrderable'], $array['isUnlimitedStock'], $array['type']);
+				$array['isAvailable'] = self::isOrderable($array);
 			}
 		}
 		else
@@ -1578,6 +1583,22 @@ class Product extends MultilingualObject
 	{
 		unset($this->specificationInstance);
 		unset($this->pricingHandlerInstance);
+
+		if ($this->removedRelationships)
+		{
+			$this->removedRelationships->__destruct();
+			unset($this->removedRelationships);
+		}
+
+		if ($this->relationships)
+		{
+			foreach ($this->relationships as $set)
+			{
+				$set->__destruct();
+			}
+
+			unset($this->relationships);
+		}
 
 		parent::destruct(array('defaultImageID', 'parentID'));
 	}
