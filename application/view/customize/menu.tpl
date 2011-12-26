@@ -40,7 +40,7 @@
 
 {if 'css' == $mode}
 	<script type="text/javascript">
-		Backend.Router.setUrlTemplate('{link controller=controller action=action}');
+		Router.setUrlTemplate('{link controller=controller action=action}');
 		var cust = new CssCustomize({json array=$theme});
 		cust.errSelectorMsg = '{t _css_err_selector|escape}';
 		cust.errTextMsg = '{t _css_err_text|escape}';
