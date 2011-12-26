@@ -305,7 +305,11 @@ LiveCart.AjaxRequest.prototype = {
 				window.location.href = responseData.__redirect;
 			}
 
-			Observer.processArray(responseData);
+			try
+			{
+				Observer.processArray(responseData);
+			}
+			catch (e) { }
 		}
 
 		if (contentType && contentType.match(/text\/javascript/) && $('confirmations'))
