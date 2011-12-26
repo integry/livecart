@@ -130,6 +130,18 @@ _p_thumb=Product List Thumbnail
 _p_medium=Product Page Image
 _p_large=Enlarged Product Page Image
 
+_watermark=Watermark Images
+ENABLE_WATERMARKS=Add watermarks on product images
+WATERMARK_IMAGE=Upload watermark image
+
+WATERMARK_POSITION=Watermark position
+TOP_LEFT=Top left corner
+TOP_RIGHT=Top right corner
+BOTTOM_LEFT=Bottom left corner
+BOTTOM_RIGHT=Bottom right corner
+WATERMARK_X=Horizontal margin from left or right side (px)
+WATERMARK_Y=Vertical margin from top or bottom (px)
+
 IMG_P_W_1=Width (pixels)
 IMG_P_H_1=Height (pixels)
 IMG_P_Q_1=Quality (0 - 100)

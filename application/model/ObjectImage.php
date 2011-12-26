@@ -92,6 +92,7 @@ abstract class ObjectImage extends MultilingualObject
 
 	public function resizeImage(ImageManipulator $resizer)
 	{
+		$ret = array();
 		foreach ($this->getImageSizes() as $key => $size)
 		{
 			$filePath = $this->getPath($key);
@@ -101,14 +102,14 @@ abstract class ObjectImage extends MultilingualObject
 				mkdir(dirname($filePath), 0777, true);
 			}
 
-			$res = $resizer->resize($size[0], $size[1], $filePath);
-			if (!$res)
+			$ret[$key] = $resizer->resize($size[0], $size[1], $filePath);
+			if (!$ret[$key])
 			{
 				break;
 			}
 		}
 
-		return $res;
+		return $ret;
 	}
 
 	protected function insert($foreignKeyName)

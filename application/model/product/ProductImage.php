@@ -63,6 +63,25 @@ class ProductImage extends ObjectImage
 		return self::getImageRoot(__CLASS__) . $productID. '-' . $imageID . '-' . $size . '.jpg';
 	}
 
+	public function resizeImage(ImageManipulator $resizer)
+	{
+		$res = parent::resizeImage($resizer);
+
+		$config = self::getApplication()->getConfig();
+		if ($config->get('ENABLE_WATERMARKS') && $res[3])
+		{
+			$isLeft = in_array($config->get('WATERMARK_POSITION'), array('BOTTOM_LEFT', 'TOP_LEFT'));
+			$isTop = in_array($config->get('WATERMARK_POSITION'), array('TOP_RIGHT', 'TOP_LEFT'));
+			$x = $config->get('WATERMARK_X');
+			$y = $config->get('WATERMARK_Y');
+
+			$res[3]->watermark($config->get('WATERMARK_IMAGE'), $isLeft, $isTop, $x, $y);
+			$res[4]->watermark($config->get('WATERMARK_IMAGE'), $isLeft, $isTop, $x, $y);
+		}
+
+		return $res;
+	}
+
 	/*####################  Saving ####################*/
 
 	public static function deleteByID($id)
