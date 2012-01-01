@@ -827,13 +827,13 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 			$sql .= $field . '=0' . ('availableProductCount' != $field ? ',' : '');
 		}
 
-		self::getDBConnection()->executeUpdate($sql);
+		self::executeUpdate($sql);
 
 		// category product counts
 		$sql = 'UPDATE Category SET totalProductCount = (SELECT COUNT(*) FROM Product WHERE categoryID = Category.ID),
 									activeProductCount = (SELECT COUNT(*) FROM Product WHERE categoryID = Category.ID AND Product.isEnabled = 1),
 									availableProductCount = (SELECT COUNT(*) FROM Product WHERE categoryID = Category.ID AND Product.isEnabled = 1 AND (stockCount > 0 OR type = ' . Product::TYPE_DOWNLOADABLE .  '))';
-		self::getDBConnection()->executeUpdate($sql);
+		self::executeUpdate($sql);
 
 		//self::updateProductCount(Category::getInstanceByID(Category::ROOT_ID, Category::LOAD_DATA));
 
@@ -852,7 +852,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 
 		$sql .= ' FROM Category';
 
-		self::getDBConnection()->executeUpdate($sql);
+		self::executeUpdate($sql);
 
 		// additional categories
 		$q = 'SELECT
@@ -873,7 +873,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		$sql = 'UPDATE CategoryCount LEFT JOIN Category ON CategoryCount.ID=Category.ID SET CategoryCount.totalProductCount = CategoryCount.totalProductCount + (' . $q . '),
 									CategoryCount.activeProductCount = CategoryCount.activeProductCount + (' . $q . ' AND Product.isEnabled = 1),
 									CategoryCount.availableProductCount = CategoryCount.availableProductCount + (' . $q . ' AND Product.isEnabled = 1 AND (stockCount > 0 OR type = ' . Product::TYPE_DOWNLOADABLE .  '))';
-		self::getDBConnection()->executeUpdate($sql);
+		self::executeUpdate($sql);
 
 		$sql = 'UPDATE Category LEFT JOIN CategoryCount ON Category.ID=CategoryCount.ID SET ';
 		foreach ($fields as $field)
@@ -881,8 +881,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 			$sql .= 'Category.' . $field . '=CategoryCount.' . $field . ('availableProductCount' != $field ? ',' : '');
 		}
 
-		self::getDBConnection()->executeUpdate($sql);
-		self::getDBConnection()->executeUpdate('DROP TEMPORARY TABLE CategoryCount');
+		self::executeUpdate($sql);
+		self::executeUpdate('DROP TEMPORARY TABLE CategoryCount');
 
 		self::updateCategoryIntervals();
 
@@ -912,7 +912,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 				$sql .= ' WHERE Product.ID=' . $productID;
 			}
 		}
-		self::getDBConnection()->executeUpdate($sql);
+		self::executeUpdate($sql);
 	}
 
 	// subcategory counts

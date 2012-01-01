@@ -74,13 +74,13 @@ class SessionData extends ActiveRecordModel
 			}
 			catch (SQLException $e)
 			{
-				$db = null;
+				throw $e;
 			}
 		}
 
 		if ($db)
 		{
-			$db->executeQuery($sql);
+			$db->query($sql);
 			ActiveRecord::commit();
 		}
 	}

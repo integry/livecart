@@ -194,7 +194,6 @@ abstract class EavValueCommon extends MultilingualObject
 		$itemClass = call_user_func(array($this->getFieldClass(), 'getSelectValueClass'));
 		$valueColumn = call_user_func(array($itemClass, 'getValueIDColumnName'));
 
-		$db = ActiveRecord::getDBConnection();
 		$specificationItemSchema = self::getSchemaInstance($itemClass);
 		$foreignKeys = $specificationItemSchema->getForeignKeyList();
 		$specFieldReferenceFieldName = '';
@@ -229,7 +228,7 @@ abstract class EavValueCommon extends MultilingualObject
 		// Then later I just delete these records and the merge is complete.
 		$sql = 'UPDATE IGNORE ' . $itemClass . ' SET ' . $valueColumn . ' = ' . $this->getID() . ' ' . $mergedSpecificationItemsFilter->createString();
 		self::getLogger()->logQuery($sql);
-		$db->executeUpdate($sql);
+		self::executeUpdate($sql);
 
 		$mergedSpecFieldValuesDeleteFilter = new ARDeleteFilter();
 		$mergedSpecFieldValuesDeleteFilter->setCondition($inAllItemsExceptThisCondition);

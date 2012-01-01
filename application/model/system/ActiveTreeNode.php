@@ -490,7 +490,7 @@ class ActiveTreeNode extends ActiveRecordModel
 			foreach($updates as $update)
 			{
 				self::getLogger()->logQuery($update);
-				$db->executeUpdate($update);
+				self::executeUpdate($update);
 			}
 
 			$activeTreeNodes = ActiveRecord::retrieveFromPool(get_class($this));
@@ -567,7 +567,7 @@ class ActiveTreeNode extends ActiveRecordModel
 			foreach($updates as $update)
 			{
 				self::getLogger()->logQuery($update);
-				$db->executeUpdate($update);
+				self::executeUpdate($update);
 			}
 
 			$this->getField(self::RIGHT_NODE_FIELD_NAME)->set($nodeRightValue);
@@ -619,7 +619,7 @@ class ActiveTreeNode extends ActiveRecordModel
 			foreach($updates as $update)
 			{
 				self::getLogger()->logQuery($update);
-				self::getDBConnection()->executeUpdate($update);
+				self::executeUpdate($update);
 			}
 
 			$result = parent::delete();
@@ -675,7 +675,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	   }
 
 
-	   self::getDBConnection()->executeUpdate("UPDATE $tableName SET `" . self::LEFT_NODE_FIELD_NAME . "`=$left, `" . self::RIGHT_NODE_FIELD_NAME . "`=$right WHERE `ID`=$parentNodeID");
+	   self::executeUpdate("UPDATE $tableName SET `" . self::LEFT_NODE_FIELD_NAME . "`=$left, `" . self::RIGHT_NODE_FIELD_NAME . "`=$right WHERE `ID`=$parentNodeID");
 
 	   return $right+1;
 	}
