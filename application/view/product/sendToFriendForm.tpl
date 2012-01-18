@@ -20,14 +20,14 @@
 						{/err}
 					</p>
 					{if !$user.ID}
-						<p class="required"> 
+						<p class="required">
 							{err for="nickname"}
 								<label class="wide" for="nickname">{t _nickname}:</label>
 								{textfield class="text wide"}
 							{/err}
 						</p>
 					{/if}
-					
+
 					<p>
 						{err for="notes"}
 							<label class="wide">{t _notes}:</label>
@@ -35,6 +35,8 @@
 						{/err}
 					</p>
 				</div>
+
+				{block SEND-TO-FRIEND-SUBMIT}
 
 				<p>
 					<input class="submit" type="submit" value="{tn _send_to_friend}" /> <span class="pi" style="display: none;"></span>
@@ -46,5 +48,5 @@
 	<script type="text/javascript">
 		_error_cannot_send_to_friend = "{t _error_cannot_send_to_friend}";
 	</script>
-	
+
 {/if}
