@@ -42,7 +42,7 @@ function createProductUrl($params, LiveCart $application)
 
 	if (isset($params['context']))
 	{
-		$urlParams['query'] = (!empty($urlParams['query']) ? '&' : '') . $router->createUrlParamString($params['context']);
+		$urlParams['query'] .= (!empty($urlParams['query']) ? '&' : '') . $router->createUrlParamString($params['context']);
 	}
 
 	$url = $router->createUrl($urlParams, true);

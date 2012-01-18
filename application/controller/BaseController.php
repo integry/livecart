@@ -289,7 +289,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 	 * 	Automatically preloads language files
 	 *
 	 */
-	protected function getConfigFiles()
+	public function getConfigFiles()
 	{
 		$controllerRoot = $this->application->getConfigContainer()->getControllerDirectories();
 

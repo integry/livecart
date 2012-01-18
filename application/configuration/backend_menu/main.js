@@ -109,7 +109,8 @@
                 	"title": "_menu_custom_fields",
                 	"controller": "backend.customField",
                 	"icon": "image/silk/textfield.png",
-                	"descr": "_menu_descr_custom_fields"
+                	"descr": "_menu_descr_custom_fields",
+                	"role": "settings"
                 },
                 "taxes":
 				{

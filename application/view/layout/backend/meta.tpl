@@ -140,7 +140,7 @@
 	{block TRANSLATIONS}
 
 </head>
-<body>
+<body class="{$request.controller|replace:'.':'-'}Con {$request.controller|replace:'.':'-'}-{$request.action}">
 <script type="text/javascript">
 {literal}
 	window.historyStorage.init();
