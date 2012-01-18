@@ -139,6 +139,7 @@ TOP_LEFT=Top left corner
 TOP_RIGHT=Top right corner
 BOTTOM_LEFT=Bottom left corner
 BOTTOM_RIGHT=Bottom right corner
+IMG_CENTER=Center of the image
 WATERMARK_X=Horizontal margin from left or right side (px)
 WATERMARK_Y=Vertical margin from top or bottom (px)
 

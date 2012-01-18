@@ -75,6 +75,11 @@ class ProductImage extends ObjectImage
 			$x = $config->get('WATERMARK_X');
 			$y = $config->get('WATERMARK_Y');
 
+			if ('IMG_CENTER' == $config->get('WATERMARK_POSITION'))
+			{
+				$x = $y = null;
+			}
+
 			$res[3]->watermark($config->get('WATERMARK_IMAGE'), $isLeft, $isTop, $x, $y);
 			$res[4]->watermark($config->get('WATERMARK_IMAGE'), $isLeft, $isTop, $x, $y);
 		}
