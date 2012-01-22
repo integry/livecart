@@ -350,7 +350,10 @@ class LiveCartRenderer extends SmartyRenderer
 				$act = $req['action'];
 				unset($req['controller'], $req['action']);
 
-				$parsed[$con][$act][$file][] = array('params' => $req, 'action' => $this->parseCommand($command));
+				foreach (explode(' ', $command) as $command)
+				{
+					$parsed[$con][$act][$file][] = array('params' => $req, 'action' => $this->parseCommand($command));
+				}
 			}
 		}
 
