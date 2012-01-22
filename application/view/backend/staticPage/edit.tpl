@@ -71,8 +71,8 @@
 			<div class="errorText hidden" style="margin-top: 5px;"></div>
 		</fieldset>
 	</p>
-	
-	
+
+
 	{include file="backend/eav/fields.tpl" item=$page}
 
 	{language}
@@ -101,6 +101,8 @@
 				<div class="errorText hidden" style="margin-top: 5px;"></div>
 			</fieldset>
 		</p>
+
+		{include file="backend/eav/fields.tpl" item=$page language=$lang.ID}
 
 	{/language}
 
