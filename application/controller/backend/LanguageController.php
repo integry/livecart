@@ -11,12 +11,15 @@ ClassLoader::import("library.*");
  *
  * @package application.controller.backend
  * @author Integry Systems
- * @role language
  */
 class LanguageController extends StoreManagementController
 {
 	const langFileExt = 'lng';
 
+	/**
+	 * @role language
+	 * @return ActionResponse
+	 */
 	public function export()
 	{
 		// preload current locale
@@ -90,7 +93,7 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Gets definitions from project files and updates them in database.
-	 * @role update
+	 * @role language.update
 	 * @return ActionResponse
 	 */
 	public function update()
@@ -104,6 +107,7 @@ class LanguageController extends StoreManagementController
 	/**
 	 * Displays definitions edit page.
 	 * @return ActionResponse
+	 * @role language
 	 */
 	public function edit()
 	{
@@ -210,7 +214,7 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Saves translations
-	 * @role update
+	 * @role language.update
 	 * @return ActionRedirectResponse
 	 */
 	public function save()
@@ -258,6 +262,7 @@ class LanguageController extends StoreManagementController
 	/**
 	 * Displays main admin page.
 	 * @return ActionResponse
+	 * @role language
 	 */
 	public function index()
 	{
@@ -271,7 +276,7 @@ class LanguageController extends StoreManagementController
 	}
 
 	/**
-	 * @role create
+	 * @role language.create
 	 */
 	public function addForm()
 	{
@@ -295,7 +300,7 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Remove a language
-	 * @role remove
+	 * @role language.remove
 	 * @return RawResponse
 	 */
 	public function delete()
@@ -315,7 +320,7 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Save language order
-	 * @role sort
+	 * @role language.sort
 	 * @return RawResponse
 	 */
 	public function saveOrder()
@@ -336,7 +341,7 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Sets default language.
-	 * @role status
+	 * @role language.status
 	 * @return ActionRedirectResponse
 	 */
 	public function setDefault()
@@ -366,7 +371,7 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Sets if language is enabled
-	 * @role status
+	 * @role language.status
 	 * @return JSONResponse
 	 */
 	public function setEnabled()
@@ -381,7 +386,7 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Add new language
-	 * @role create
+	 * @role language.create
 	 * @return JSONResponse
 	 */
 	public function add()
@@ -466,7 +471,7 @@ class LanguageController extends StoreManagementController
 	/**
 	 * Saves a single translation entry from Live Translations dialog menu
 	 *
-	 * @role update
+	 * @role language.update
 	 * @return ActionResponse
 	 */
 	public function saveTranslationDialog()
