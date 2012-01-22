@@ -89,11 +89,11 @@ class UserController extends FrontendController
 
 		// get unread messages
 		ClassLoader::import('application.model.order.OrderNote');
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('OrderNote', 'userID'), $this->user->getID()));
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isAdmin'), 1));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isRead'), 0));
 		$f->setOrder(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
-		$response->set('notes', ActiveRecordModel::getRecordSetArray('OrderNote', $f, array('User')));
+		$response->set('notes', ActiveRecordModel::getRecordSetArray('OrderNote', $f, array('User', 'CustomerOrder')));
 
 		// feedback/confirmation message that was stored in session by some other action
 		$response->set('userConfirm', $this->session->pullValue('userConfirm'));
