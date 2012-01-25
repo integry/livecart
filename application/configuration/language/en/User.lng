@@ -29,6 +29,8 @@ _password=Enter password
 _conf_password=Re-enter password
 _complete_reg=Complete Registration
 
+_newsletter_signup=Sign up to our newsletter
+
 # confirming
 _reg_complete_unconfirmed=Registration Completed - Awaiting E-mail Confirmation
 _confirm_info=Thank you! Your registration has been completed. To activate your account, please click the activation link in the e-mail we have just sent you.

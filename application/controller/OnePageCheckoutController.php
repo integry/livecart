@@ -408,6 +408,8 @@ class OnePageCheckoutController extends CheckoutController
 
 		if ($this->user->isAnonymous())
 		{
+			$this->session->set('newsletter', $this->request->get('newsletter'));
+
 			$billingAddress = $this->order->billingAddress->get();
 
 			$this->request->set('sameAsBilling', true);
@@ -452,6 +454,7 @@ class OnePageCheckoutController extends CheckoutController
 			$anonOrder = $this->order;
 
 			ActiveRecordModel::commit();
+			$this->anonTransactionInitiated = false;
 
 			if ($response->getActionName() == 'checkout')
 			{
@@ -954,7 +957,18 @@ class OnePageCheckoutController extends CheckoutController
 			SessionUser::setUser($this->user);
 			$this->session->set('checkoutUser', null);
 
+			if ($this->session->get('newsletter'))
+			{
+				$sub = $this->user->getRelatedRecordSet('NewsletterSubscriber')->shift();
+				if ($sub)
+				{
+					$sub->isEnabled->set(true);
+					$sub->save();
+				}
+			}
+
 			ActiveRecord::commit();
+			$this->anonTransactionInitiated = false;
 
 			$this->getUserController()->sendWelcomeEmail($this->user);
 		}

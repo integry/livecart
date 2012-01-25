@@ -34,6 +34,11 @@
 		{{label {t _your_email}:}}
 		{textfield class="text"}
 	{/err}
+
+	<label></label>
+	<input type="checkbox" class="checkbox" name="newsletter" checked="checked" id="newsletterSignup" />
+	<label class="checkbox" for="newsletterSignup">{t _newsletter_signup}</label>
+
 </p>
 
 {if $fields.PHONE}
