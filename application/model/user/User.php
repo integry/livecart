@@ -7,6 +7,7 @@ ClassLoader::import("application.model.user.UserGroup");
 ClassLoader::import("application.model.eav.EavAble");
 ClassLoader::import("application.model.eav.EavObject");
 ClassLoader::import("application.model.user.UserAddress");
+ClassLoader::import("application.model.newsletter.NewsletterSubscriber");
 
 /**
  * Store user logic (including frontend and backend), including authorization and access control checking
@@ -396,6 +397,27 @@ class User extends ActiveRecordModel implements EavAble
 		}
 
 		return parent::loadRequestData($request);
+	}
+
+	protected function insert()
+	{
+		$res = parent::insert();
+
+		if ($subscriber = NewsletterSubscriber::getInstanceByEmail($this->email->get()))
+		{
+			$subscriber->user->set($this);
+		}
+		else
+		{
+			$subscriber = NewsletterSubscriber::getNewInstanceByUser($this);
+			$subscriber->isEnabled->set(false);
+			$subscriber->save();
+		}
+
+		$subscriber->confirmationCode->set('');
+		$subscriber->save();
+
+		return $res;
 	}
 
 	/**
