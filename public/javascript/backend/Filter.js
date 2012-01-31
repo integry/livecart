@@ -289,7 +289,7 @@ Backend.Filter.prototype = {
 			var specField = this.getSpecField();
 
 			this.nodes.specFieldID.hide();
-			this.nodes.specFieldText.update(specField.name_lang);
+			this.nodes.specFieldText.update(specField.name);
 			this.nodes.specFieldText.show();
 		}
 		else
@@ -350,7 +350,7 @@ Backend.Filter.prototype = {
 		this.nodes.specFieldID.options.length = 0;
 		this.specFields.each(function(value)
 		{
-			self.nodes.specFieldID.options[self.nodes.specFieldID.options.length] = new Option(value.name_lang, value.ID);
+			self.nodes.specFieldID.options[self.nodes.specFieldID.options.length] = new Option(value.name, value.ID);
 		});
 
 	},
@@ -408,8 +408,8 @@ Backend.Filter.prototype = {
 		var changeTitle = false;
 
 		this.specFields.each(function(specField) {
-			if(self.nodes.name.value == specField.name_lang) changeTitle = true;
-			if(specField.ID == self.nodes.specFieldID.value) newTitle = specField.name_lang;
+			if(self.nodes.name.value == specField.name) changeTitle = true;
+			if(specField.ID == self.nodes.specFieldID.value) newTitle = specField.name;
 		});
 
 		if(changeTitle || self.nodes.name.value == '')
@@ -532,7 +532,7 @@ Backend.Filter.prototype = {
 		// Default language
 		if(this.id) this.nodes.id.value = this.id;
 
-		this.nodes.name.value = this.filter.name_lang ? this.filter.name_lang : '';
+		this.nodes.name.value = this.filter.name ? this.filter.name : '';
 
 		if (this.filter.displayLocation)
 		{
@@ -746,7 +746,7 @@ Backend.Filter.prototype = {
 		var li = this.filtersList.addRecord(id, this.nodes.filterTemplate, touch);
 		Element.removeClassName(li, 'dom_template');
 		Element.addClassName(li, this.cssPrefix + "default_filter_li");
-		var nameValue = value.name_lang ? value.name_lang : '';
+		var nameValue = value.name ? value.name : '';
 
 		// Filter name
 		var filter_name_paragraph = li.down('.filter_name');

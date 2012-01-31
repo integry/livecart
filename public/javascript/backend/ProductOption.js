@@ -103,8 +103,8 @@ Backend.ProductOption.prototype =
 
 		this.type				= this.productOption.type;
 		this.values				= this.productOption.values;
-		this.name				= this.productOption.name_lang;
-		this.description		= this.productOption.description_lang;
+		this.name				= this.productOption.name;
+		this.description		= this.productOption.description;
 		this.backupName			= this.name;
 
 		['isRequired', 'isDisplayed', 'isDisplayedInList', 'isDisplayedInCart', 'isPriceIncluded'].each(
@@ -470,8 +470,8 @@ Backend.ProductOption.prototype =
 		if(this.id) this.nodes.id.value = this.id;
 		if(this.parentID) this.nodes.parentID.value = this.parentID;
 
-		this.nodes.name.value = this.productOption.name_lang ? this.productOption.name_lang : '';
-		this.nodes.description.value = this.productOption.description_lang ? this.productOption.description_lang : '';
+		this.nodes.name.value = this.productOption.name ? this.productOption.name : '';
+		this.nodes.description.value = this.productOption.description ? this.productOption.description : '';
 		this.nodes.maxFileSize.value = this.productOption.maxFileSize ? this.productOption.maxFileSize : '';
 		this.nodes.fileExtensions.value = this.productOption.fileExtensions ? this.productOption.fileExtensions : '';
 		this.nodes.displayType.value = this.productOption.displayType;
@@ -753,7 +753,7 @@ Backend.ProductOption.prototype =
 		// Name field
 		var input = li.down("input." + this.cssPrefix + "valueName");
 		input.name = "values[" + id + "]["+this.languageCodes[0]+"]";
-		input.value = value.name_lang ? value.name_lang : '' ;
+		input.value = value.name ? value.name : '' ;
 		input.id = this.cssPrefix + "field_" + id + "_value_" + this.languageCodes[0];
 
 		Event.observe(input, "input", function(e) { self.mainValueFieldChangedAction(e) }, false);

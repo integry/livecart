@@ -136,7 +136,7 @@ Backend.SpecField.prototype = {
 
 		this.type				  = this.specField.type;
 		this.values				= this.specField.values;
-		this.name				  = this.specField.name_lang;
+		this.name				  = this.specField.name;
 		this.backupName			= this.name;
 
 		this.valuePrefix		   = this.specField.valuePrefix ? this.specField.valuePrefix : '';
@@ -531,9 +531,9 @@ Backend.SpecField.prototype = {
 		if(this.handle) this.nodes.handle.value = this.handle;
 		this.nodes.handle.id = this.cssPrefix + this.categoryID + "_" + this.id + "_handle";
 
-		this.nodes.name.value = this.specField.name_lang ? this.specField.name_lang : '';
-		this.nodes.valuePrefix.value = this.specField.valuePrefix_lang ? this.specField.valuePrefix_lang : '';
-		this.nodes.valueSuffix.value = this.specField.valueSuffix_lang ? this.specField.valueSuffix_lang : '';
+		this.nodes.name.value = this.specField.name ? this.specField.name : '';
+		this.nodes.valuePrefix.value = this.specField.valuePrefix ? this.specField.valuePrefix : '';
+		this.nodes.valueSuffix.value = this.specField.valueSuffix ? this.specField.valueSuffix : '';
 
 		this.nodes.name.id = this.cssPrefix + this.categoryID + "_" + this.id + "_name_" + this.languageCodes[0];
 		this.nodes.valuePrefix.id = this.cssPrefix + this.categoryID + "_" + this.id + "_valuePrefix_" + this.languageCodes[0];
@@ -594,7 +594,7 @@ Backend.SpecField.prototype = {
 		}
 		this.changeMainTitleAction(this.nodes.name.value);
 
-		if(this.specField.description_lang) this.nodes.description.value = this.specField.description_lang;
+		if(this.specField.description) this.nodes.description.value = this.specField.description;
 		this.nodes.description.name = "description";
 
 		this.nodes.description.id = this.cssPrefix + this.categoryID + "_" + this.id + "_description_" + this.languageCodes[0];
@@ -903,7 +903,7 @@ Backend.SpecField.prototype = {
 		// The field itself
 		var input = li.down("input." + this.cssPrefix + "valueName");
 		input.name = "values[" + id + "]["+this.languageCodes[0]+"]";
-		input.value = value.value_lang ? value.value_lang : '' ;
+		input.value = value.value ? value.value : '' ;
 
 		input.id = this.cssPrefix + "field_" + id + "_value_" + this.languageCodes[0];
 
@@ -1487,7 +1487,7 @@ Backend.SpecFieldGroup.prototype = {
 		}
 
 		this.nodes.name.name += "_" + Backend.SpecField.prototype.languageCodes[0];
-		if(this.group.name_lang) this.nodes.name.value = this.group.name_lang;
+		if(this.group.name) this.nodes.name.value = this.group.name;
 
 		this.nodes.labels.name.onclick = function() { self.nodes.name.focus() }
 
