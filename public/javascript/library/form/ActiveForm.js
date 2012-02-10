@@ -43,6 +43,11 @@ ActiveForm.prototype = {
 
 	resetErrorMessages: function(form)
 	{
+		if (!form)
+		{
+			return;
+		}
+		
 		if ('form' != form.tagName.toLowerCase())
 		{
 			form = form.down('form');

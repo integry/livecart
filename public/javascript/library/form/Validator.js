@@ -9,8 +9,13 @@ function validateForm(form)
 
 	var isFormValid = true;
 	var focusField = true;
+	
+	if (!form)
+	{
+		return isFormValid;
+	}
 
-	$H(form._validator.value.evalJSON()).each(function(checks)
+	$H(jQuery(form._validator).val().evalJSON()).each(function(checks)
 	{
 		var formElement = form[checks.key];
 		if (!formElement) return;
@@ -44,8 +49,7 @@ function applyFilters(form, ev)
 		ev.target = ev.srcElement;
 	}
 
-	var filterData = form.elements.namedItem('_filter').value;
-	var filter = filterData.evalJSON();
+	var filter = jQuery(form._filter).val().evalJSON();
 
 	var element = ev.target;
 	elementFilters = filter[element.name];
