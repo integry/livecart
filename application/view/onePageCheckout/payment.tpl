@@ -44,7 +44,7 @@
 	<div id="paymentForm"></div>
 
 	<div id="checkout-place-order">
-		<div class="errorText hidden" id="no-payment-method-selected">
+		<div class="erroMessage hidden" id="no-payment-method-selected">
 			{t _no_payment_method_selected}
 		</div>
 
