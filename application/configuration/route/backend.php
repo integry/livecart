@@ -72,6 +72,7 @@ foreach ((array)glob($routeDir . '/*.php') as $file)
 
 // language index page
 $this->router->connect(':requestLanguage', array('controller' => 'index', 'action' => 'index'), array('requestLanguage' => "[a-zA-Z]{2}"));
+$this->router->connect(':requestLanguage/backend', array('controller' => 'backend.index', 'action' => 'index'), array('requestLanguage' => "[a-zA-Z]{2}"));
 
 /*
 file_put_contents($routeCache, '<?php return unserialize(\'' . str_replace("'", "\'", serialize($this->router->getRoutes())) . '\'); ?>');
