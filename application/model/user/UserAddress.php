@@ -48,7 +48,7 @@ class UserAddress extends ActiveRecordModel implements EavAble
 		$instance->lastName->set($details->lastName->get());
 		$instance->companyName->set($details->companyName->get());
 		$instance->address1->set($details->address->get());
-		$instance->city->set($details->city->get());
+		$instance->setFieldValue('city', $details->city->get());
 		$instance->stateName->set($details->state->get());
 		$instance->postalCode->set($details->postalCode->get());
 		$instance->countryID->set($details->country->get());
