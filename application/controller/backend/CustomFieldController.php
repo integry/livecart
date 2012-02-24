@@ -36,6 +36,11 @@ class CustomFieldController extends StoreManagementController
 			$offlineMethods[] = array('ID' => $method, 'name' => $this->config->get('OFFLINE_NAME_' . $id));
 		}
 
+		if ($this->config->get('CC_ENABLE'))
+		{
+			$offlineMethods[] = array('ID' => 'creditcard', 'name' => $this->config->get('CC_HANDLER'));
+		}
+
 		if ($offlineMethods)
 		{
 			$nodes[] = array('ID' => 'offline methods', 'name' => $this->translate('_offline_methods'), 'sub' => $offlineMethods);
