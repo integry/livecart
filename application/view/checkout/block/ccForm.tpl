@@ -54,6 +54,10 @@
 			{/err}
 		</p>
 
+		{if $ccVars}
+			{include file="block/eav/fields.tpl" fieldList=$ccVars.specFieldList}
+		{/if}
+
 		<p class="submit">
 			<label></label>
 			<input type="submit" class="submit" value="{tn _complete_now}" />

@@ -815,6 +815,15 @@ class CheckoutController extends FrontendController
 			$response->set('months', $months);
 			$response->set('years', $years);
 			$response->set('ccTypes', $this->application->getCardTypes($ccHandler));
+
+			$eavManager = new EavSpecificationManager(EavObject::getInstanceByIdentifier('creditcard'));
+			$eavManager->setFormResponse($response, $ccForm);
+			foreach (array('groupClass', 'specFieldList') as $vars)
+			{
+				$ccVars[$vars] = $response->get($vars);
+			}
+
+			$response->set('ccVars', $ccVars);
 		}
 
 		// other payment methods
@@ -911,6 +920,15 @@ class CheckoutController extends FrontendController
 		if ($result instanceof TransactionResult)
 		{
 			$response = $this->registerPayment($result, $handler);
+
+			$trans = $this->order->getTransactions()->get(0);
+
+			$eavObject = EavObject::getInstance($trans);
+			$eavObject->setStringIdentifier('creditcard');
+			$eavObject->save();
+
+			$trans->getSpecification()->loadRequestData($this->request);
+			$trans->save();
 		}
 		elseif ($result instanceof TransactionError)
 		{
@@ -1537,6 +1555,9 @@ class CheckoutController extends FrontendController
 
 		$validator->addFilter('ccCVV', new RegexFilter('[^0-9]'));
 		$validator->addFilter('ccNum', new RegexFilter('[^ 0-9]'));
+
+		$eavManager = new EavSpecificationManager(EavObject::getInstanceByIdentifier('creditcard'));
+		$eavManager->setValidation($validator);
 
 		return $validator;
 	}
