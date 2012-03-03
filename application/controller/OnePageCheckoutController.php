@@ -126,13 +126,7 @@ class OnePageCheckoutController extends CheckoutController
 
 		foreach ($blocks as $block => $key)
 		{
-			$blockResponse = $this->$block();
-
-			if ($blockResponse instanceof ActionResponse)
-			{
-				$blockResponse->set('user', $this->user->toArray());
-				$response->addResponse($block, $blockResponse, $this, $block);
-			}
+			$response->addAction($block, 'onePageCheckout', $block);
 		}
 
 		$response->set('orderValues', $this->getOrderValues($this->order));
