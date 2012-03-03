@@ -57,27 +57,31 @@ class ProductFilter
 		$selectFilter = $this->category->getProductsFilter($this, false);
 		$selectFilter->merge($this->productFilter);
 		$cond = null;
-		if ($disableFilters == false)
+
+		$list = array();
+		// group filters by class
+		foreach ($this->filters as $filter)
 		{
-			$list = array();
-			// group filters by class
-			foreach ($this->filters as $filter)
+			if ($disableFilters && !($filter instanceof SearchFilter))
 			{
-				$id = ($filter instanceof SpecificationFilterInterface) ? $filter->getFilterGroup()->getID() : '';
-				$list[get_class($filter) . '_' . $id][] = $filter->getCondition();
-				$filter->defineJoin($selectFilter);
+				continue;
 			}
-			// convert filter group to OrChainCondition
-			foreach ($list as &$filterGroup)
-			{
-				$filterGroup = new OrChainCondition($filterGroup);
-			}
-			if ($fCond = $selectFilter->getCondition())
-			{
-				$list[] = $fCond;
-			}
-			$selectFilter->setCondition(new AndChainCondition($list)); // all merged with and
+
+			$id = ($filter instanceof SpecificationFilterInterface) ? $filter->getFilterGroup()->getID() : '';
+			$list[get_class($filter) . '_' . $id][] = $filter->getCondition();
+			$filter->defineJoin($selectFilter);
 		}
+
+		// convert filter group to OrChainCondition
+		foreach ($list as &$filterGroup)
+		{
+			$filterGroup = new OrChainCondition($filterGroup);
+		}
+		if ($fCond = $selectFilter->getCondition())
+		{
+			$list[] = $fCond;
+		}
+		$selectFilter->setCondition(new AndChainCondition($list)); // all merged with and
 
 		$selectFilter->setOrder(f('Product.ID'), 'DESC');
 

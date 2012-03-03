@@ -40,7 +40,7 @@
 			<input type="submit" value="{t _filter}" />
 			<a href="javascript:void(0);" onclick="Filter.reset();" class="cancel">{t _clear}</a>
 		</div>
-		
+
 	{/if}
 		{include file=$FILTER_STYLE_TEMPLATE sectionFilters=$manGroup title=_by_brand allLink=$allManufacturers allTitle=_show_all_brands}
 		{include file=$FILTER_STYLE_TEMPLATE sectionFilters=$priceGroup title=_by_price}
@@ -52,14 +52,15 @@
 		{/foreach}
 
 	{if 'FILTER_STYLE_CHECKBOXES' == $FILTER_STYLE}
-	
+
 		<div id="multipleChoiceFilter_bottom" class="hidden">
+			<input type="hidden" name="q" value="{$request.q}" />
 			<input type="submit" value="{t _filter}" />
 			<a href="javascript:void(0);" onclick="Filter.reset();" class="cancel">{t _clear}</a>
 		</div>
 		</form>
 	{/if}
-	
+
 {/content}{footer}
 	</div>
 </div>
