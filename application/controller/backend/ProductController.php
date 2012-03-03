@@ -37,6 +37,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$response->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
 		$response->set('shippingClasses', $this->getSelectOptionsFromSet(ShippingClass::getAllClasses()));
 		$response->set('taxClasses', $this->getSelectOptionsFromSet(TaxClass::getAllClasses()));
+		$response->set('attributes', $category->getSpecificationFieldArray());
 
 		$this->setGridResponse($response);
 
@@ -126,12 +127,12 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	protected function getRequestColumns()
 	{
-		return $this->getDisplayedColumns(Category::getInstanceByID(substr($this->request->get("id"), 9), Category::LOAD_DATA));
+		return $this->getDisplayedColumns(Category::getInstanceByID($this->getRequestCategory(), Category::LOAD_DATA));
 	}
 
 	protected function getAvailableRequestColumns()
 	{
-		return $this->getAvailableColumns(Category::getInstanceByID(substr($this->request->get("id"), 9), Category::LOAD_DATA));
+		return $this->getAvailableColumns(Category::getInstanceByID($this->getRequestCategory(), Category::LOAD_DATA));
 	}
 
 	protected function getReferencedData()
@@ -160,7 +161,35 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		}
 		else if ('specField' == $class)
 		{
-			$value = isset($product['attributes'][$field]['value_lang']) ? $product['attributes'][$field]['value_lang'] : '';
+			if (isset($product['attributes'][$field]))
+			{
+				$attr = $product['attributes'][$field];
+				if ($attr['SpecField']['isMultiValue'])
+				{
+					$vals = array();
+					foreach ($attr['values'] as $val)
+					{
+						$vals[] = $val['value_lang'];
+					}
+
+					$value = implode(' / ', $vals);
+				}
+				else
+				{
+					if (isset($attr['value_lang']))
+					{
+						$value = $attr['value_lang'];
+					}
+					else if (isset($attr['value']))
+					{
+						$value = $attr['value'];
+					}
+					else
+					{
+						$value = '';
+					}
+				}
+			}
 		}
 		else if ('ProductImage' == $class)
 		{
@@ -186,8 +215,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	protected function getSelectFilter()
 	{
-		$id = $this->request->get("id");
-		$id = is_numeric($id) ? $id : substr($this->request->get("id"), 9);
+		$id = $this->getRequestCategory();
 		$category = Category::getInstanceByID($id, Category::LOAD_DATA);
 
 		$filter = new ARSelectFilter($category->getProductCondition(true));
@@ -195,6 +223,35 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 		$filter->mergeCondition(
 			new EqualsCond(new ARFieldHandle('ProductPrice', 'type'), ProductPrice::TYPE_GENERAL_PRICE));
+
+		foreach ($this->getDisplayedColumns($category) as $column => $type)
+		{
+			$parts = explode('.', $column);
+			if (array_shift($parts) == 'specField')
+			{
+				$field = SpecField::getInstanceByID(array_shift($parts));
+
+				if (!$field->isMultiValue->get())
+				{
+					$field->defineJoin($filter);
+				}
+				else
+				{
+					$values = is_array($this->request->get('filters')) ? $this->request->get('filters') : json_decode($this->request->get('filters'), true);
+					$values = isset($values[$column]) ? $values[$column] : null; 
+					
+					if ($values)
+					{
+						foreach (ActiveRecordModel::getRecordSet('SpecFieldValue', select(in(f('SpecFieldValue.ID'), explode(',', urldecode($values))))) as $field)
+						{
+							$f = new SelectorFilter($field);
+							$f->defineJoin($filter);
+							$filter->mergeCondition($f->getCondition());
+						}
+					}
+				}
+			}
+		}
 
 		return $filter;
 	}
@@ -209,7 +266,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			list($class, $field) = explode('.', $column, 2);
 			if ('specField' == $class)
 			{
-				ProductSpecification::loadSpecificationForRecordSetArray($productArray);
+				ProductSpecification::loadSpecificationForRecordSetArray($productArray, true);
 				break;
 			}
 		}
@@ -298,6 +355,34 @@ class ProductController extends ActiveGridController implements MassActionInterf
 				return new JSONResponse(0);
 			}
 		}
+		else if ((substr($act, 0, 13) == 'set_specField') || (substr($act, 0, 16) == 'remove_specField'))
+		{
+			$id = array_pop(explode('_', $act));
+			$field = SpecField::getInstanceByID($id, true);
+			$a = substr($act, 0, 3);
+			
+			$request = clone $this->request;
+			foreach ($request->toArray() as $key => $value)
+			{
+				if (substr($key, 0, 18) == 'checkbox_specItem_')
+				{
+					$item = substr($key, 9);
+					
+					if (!$request->isValueSet($item))
+					{
+						$request->remove($key);
+						$request->remove($item);
+					}
+					else if ('rem' == $a)
+					{
+						$request->remove($item);
+					}
+				}
+			}
+			
+			$params['field'] = $field;
+			$params['request'] = $request;
+		}
 		else if ($this->request->get('categoryID'))
 		{
 			$params['category'] = Category::getInstanceById($this->request->get('categoryID'), Category::LOAD_DATA);
@@ -351,7 +436,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $validator;
 	}
 
-	public function getAvailableColumns(Category $category, $specField = false)
+	public function getAvailableColumns(Category $category, $specField = true)
 	{
 		$availableColumns = parent::getAvailableColumns();
 
@@ -407,7 +492,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	public function export()
 	{
-		$category = Category::getInstanceByID(substr($this->request->get('id'), 9));
+		$category = Category::getInstanceByID($this->getRequestCategory());
 		$category->load();
 
 		$filter = select(gte(f('Category.lft'), $category->lft->get()), lte(f('Category.rgt'), $category->rgt->get()));
@@ -1103,6 +1188,58 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		);
 		return new JSONResponse($r, 'success');
 	}
+	
+	public function massActionField()
+	{
+		$field = SpecField::getInstanceByID($this->request->get('id'), true);
+		$array = $field->toArray();
+		
+		if ($field->isSelector())
+		{
+			$array['values'] = array();
+			
+			foreach ($field->getValuesList() as $val)
+			{
+				$array['values'][$val['ID']] = $val['value_lang'];
+			}
+		}
+		
+		$response = new ActionResponse('field', $array);
+		$response->set('form', new Form($this->getValidator('massActionField')));
+		return $response;
+	}
+
+	protected function setGridResponse(ActionResponse $response)
+	{
+		parent::setGridResponse($response);
+
+		$displayedColumns = $response->get('displayedColumns');
+		$availableColumns = $response->get('availableColumns');
+
+		foreach ($displayedColumns as $column => $type)
+		{
+			$parts = explode('.', $column);
+			if ('specField' == array_shift($parts))
+			{
+				$field = SpecField::getInstanceByID(array_shift($parts));
+				if ($field->isSelector())
+				{
+					$displayedColumns[$column] = $field->isMultiValue->get() ? 'multi-select' : 'select';
+
+					$values = array();
+					foreach ($field->getValuesList() as $value)
+					{
+						$values[$value['ID']] = $value['value_lang'];
+					}
+
+					$availableColumns[$column]['values'] = $values;
+				}
+			}
+		}
+
+		$response->set('displayedColumns', $displayedColumns);
+		$response->set('availableColumns', $availableColumns);
+	}
 
 	private function buildForm(Product $product)
 	{
@@ -1261,6 +1398,12 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			return new JSONResponse(null, 'failure', $this->translate('_error_uploading_image'));
 		}
 		return new JSONResponse(array('name' => $file['name'], 'file' => $tmp, 'thumb' => $thumb), 'success');
+	}
+
+	protected function getRequestCategory()
+	{
+		$id = $this->request->get("id");
+		return is_numeric($id) ? $id : substr($id, 9);
 	}
 }
 

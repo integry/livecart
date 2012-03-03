@@ -2,6 +2,7 @@
 
 ClassLoader::importNow("application.helper.getDateFromString");
 ClassLoader::importNow("application.model.eav.EavField");
+ClassLoader::importNow("application.model.category.SpecField");
 
 /**
  * @package application.helper
@@ -91,11 +92,15 @@ class ActiveGrid
 			$value = urldecode($value);
 			$handle = $this->getFieldHandle($field, self::FILTER_HANDLE);
 
-			if (!is_array($handle) && !is_null($handle) && !($handle instanceof ARExpressionHandle))
+			if ($handle instanceof EavFieldCommon)
+			{
+				continue;
+			}
+			else if (!is_array($handle) && !is_null($handle) && !($handle instanceof ARExpressionHandle))
 			{
 				$fieldInst = $this->getFieldInstance($field);
 
-				if ($fieldInst && ($fieldInst->getDataType() instanceof ARNumeric))
+				if ($fieldInst && (($fieldInst->getDataType() instanceof ARNumeric) || $handle->getField()->getDataType() instanceof ARNumeric))
 				{
 					$value = preg_replace('/[ ]{2,}/', ' ', $value);
 
@@ -306,9 +311,9 @@ class ActiveGrid
 	{
 		list($schemaName, $fieldName) = explode('.', $fieldName);
 
-		if ('eavField' == $schemaName)
+		if ($this->getEavTableAlias() == $schemaName)
 		{
-			$eavField = EavField::getInstanceByID($fieldName, true);
+			$eavField = call_user_func_array(array($this->getEavFieldClass(), 'getInstanceByID'), array($fieldName, true));
 
 			if (!$eavField->isMultiValue->get())
 			{
@@ -317,7 +322,7 @@ class ActiveGrid
 			else
 			{
 				// intentionally return wrong schema for multi-select values as they cannot be sorted or searched
-				$schemaName = 'EavField';
+				$schemaName = $this->getEavFieldClass();
 			}
 		}
 
@@ -348,7 +353,10 @@ class ActiveGrid
 		{
 			$schema = ActiveRecordModel::getSchemaInstance('EavValue');
 		}
-
+		elseif ('SpecificationItem' == $schema->getName())
+		{
+			$schema = ActiveRecordModel::getSchemaInstance('SpecFieldValue');
+		}
 		return $schema;
 	}
 
@@ -362,7 +370,7 @@ class ActiveGrid
 
 		list($schemaName, $fieldName) = explode('.', $field);
 
-		if ('eavField' == $schemaName)
+		if ($this->getEavTableAlias() == $schemaName)
 		{
 			$fieldName = 'value';
 		}
@@ -383,10 +391,26 @@ class ActiveGrid
 
 		list($schemaName, $fieldName) = explode('.', $field);
 
-		if ('eavField' == $schemaName)
+		if ($this->getEavTableAlias() == $schemaName)
 		{
 			$fieldID = $fieldName;
 			$fieldName = 'value';
+
+			$specField = call_user_func(array($this->getEavFieldClass(), 'getInstanceByID'), $fieldID);
+			if ($specField->isSelector())
+			{
+				if ($specField->isMultiValue->get())
+				{
+					return $specField;
+				}
+				else
+				{
+					if (self::FILTER_HANDLE == $handleType)
+					{
+						$fieldName = 'ID';
+					}
+				}
+			}
 		}
 
 		$handle = null;
@@ -398,9 +422,9 @@ class ActiveGrid
 			{
 				$handle = $schema->getHandle($fieldName);
 
-				if ('eavField' == $schemaName)
+				if ($this->getEavTableAlias() == $schemaName)
 				{
-					$handle->setTable('specField_' . $fieldID . ($schema->getName() == 'EavValue' ? '_value' : ''));
+					$handle->setTable('specField_' . $fieldID . ($schema->getName() == $this->getEavValueClass() ? '_value' : ''));
 				}
 
 				// language fields
@@ -434,6 +458,21 @@ class ActiveGrid
 		}
 
 		return $handle;
+	}
+
+	private function getEavFieldClass()
+	{
+		return $this->modelClass == 'Product' ? 'SpecField' : 'EavField';
+	}
+
+	private function getEavValueClass()
+	{
+		return $this->modelClass == 'Product' ? 'SpecFieldValue' : 'EavValue';
+	}
+
+	private function getEavTableAlias()
+	{
+		return $this->modelClass == 'Product' ? 'specField' : 'eavField';
 	}
 }
 

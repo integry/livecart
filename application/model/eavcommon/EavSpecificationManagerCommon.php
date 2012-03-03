@@ -650,6 +650,7 @@ abstract class EavSpecificationManagerCommon
 					$sp['values'][] = $value;
 					continue;
 				}
+
 			}
 
 			foreach ($specFieldColumns as $key)
@@ -775,7 +776,7 @@ abstract class EavSpecificationManagerCommon
 		return ActiveRecordModel::getDataBySQL($query);
 	}
 
-	protected static function fetchSpecificationData($class, $objectIDs, $fullSpecification = false)
+	protected static function fetchSpecificationData($class, $objectIDs, $fullSpecification)
 	{
 		if (!$objectIDs)
 		{
@@ -783,7 +784,6 @@ abstract class EavSpecificationManagerCommon
 		}
 
 		$specificationArray = self::fetchRawSpecificationData($class, $objectIDs, $fullSpecification);
-
 		$multiLingualFields = array('name', 'description', 'valuePrefix', 'valueSuffix', 'SpecFieldGroupName');
 
 		foreach ($specificationArray as &$spec)

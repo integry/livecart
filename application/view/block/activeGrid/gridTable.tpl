@@ -62,7 +62,26 @@
 							<option value="1">{tn _yes}</option>
 							<option value="0">{tn _no}</option>
 						</select>
+						
+					{elseif 'select' == $type}
 
+						<select id="filter_{$column}_{$id}">
+							<option value="">{$availableColumns.$column.name|escape}</option>
+							{foreach from=$availableColumns.$column.values key=valueID item=valueName}
+								<option value="{$valueID}">{$valueName}</option>							
+							{/foreach}
+						</select>
+
+					{elseif 'multi-select' == $type}
+
+						<select id="filter_{$column}_{$id}" class="multiSelect" multiple="multiple">
+							<option value="">{$availableColumns.$column.name|escape}</option>
+							
+							{foreach from=$availableColumns.$column.values key=valueID item=valueName}
+								<option value="{$valueID}">{$valueName}</option>							
+							{/foreach}
+						</select>
+						
 					{elseif 'numeric' == $type}
 
 						<div class="filterMenuContainer">

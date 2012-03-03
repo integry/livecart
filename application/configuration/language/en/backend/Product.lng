@@ -261,3 +261,6 @@ _image=Image
 _product_image_file=Image file
 _tip_product_image_file=Select product image file
 _error_uploading_image=Error while uploading image
+
+_set_attributes=Set attribute
+_remove_attributes=Remove attribute value

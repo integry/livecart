@@ -743,6 +743,16 @@ ActiveGridFilter.prototype =
    		Element.addClassName(this.element, 'activeGrid_filter_blur');
 
 		this.element.columnName = this.element.value;
+		
+		if (jQuery(this.element).hasClass('multiSelect'))
+		{
+			console.log(jQuery('option[value=""]', this.element));
+			var title = jQuery('option[value=""]', this.element);
+			var titleText = title.html();
+
+			title[0].parentNode.removeChild(title[0]);
+			jQuery(this.element).multiselect({noneSelectedText: titleText, selectedList: 3});
+		}
 	},
 
 	filterOnChange: function(e)
@@ -836,7 +846,16 @@ ActiveGridFilter.prototype =
 
 	setFilterValue: function()
 	{
-		this.setFilterValueManualy(this.getFilterName(), this.element.value);
+		if (jQuery(this.element).hasClass('multiSelect'))
+		{
+			var value = jQuery(this.element).val();
+		}
+		else
+		{
+			var value = this.element.value;
+		}
+		
+		this.setFilterValueManualy(this.getFilterName(), value);
 	},
 
 	setFilterValueManualy: function(filterName, value)

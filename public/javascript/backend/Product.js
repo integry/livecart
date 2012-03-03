@@ -288,6 +288,23 @@ Backend.Product =
 				}
 			);
 		}
+		else if (('set_specField' == element.value.substr(0, 13)) || ('remove_specField' == element.value.substr(0, 16)))
+		{
+			var container = element.up('form').down('.' + element.value);
+			
+			if (!container)
+			{
+				return;
+			}
+			
+			var id = element.value.match(/_([0-9]+)/)[1];
+			var container = element.up('form').down('.specFieldValueContainer');
+			new LiveCart.AjaxUpdater(Backend.Router.createUrl('backend.product', 'massActionField', {id: id}), container, element.parentNode.down('#progressIndicator_specField'), false, function()
+			{
+				new Backend.Eav(container);
+				container.show();
+			});			
+		}
 	},
 
 	reloadGrid: function(categoryID)
