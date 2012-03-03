@@ -41,6 +41,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 	public function loadRequestData(Request $request, $prefix = '')
 	{
 		$enabledFields = is_array($prefix) ? array_flip($prefix) : null;
+		$languages = self::getApplication()->getLanguageArray(LiveCart::INCLUDE_DEFAULT);
 
 		$schema = ActiveRecordModel::getSchemaInstance(get_class($this));
 		foreach ($schema->getFieldList() as $field)
@@ -55,11 +56,27 @@ abstract class ActiveRecordModel extends ActiveRecord
 					continue;
 				}
 
-				if ($request->isValueSet($reqName) ||
+				$dataType = get_class($field->getDataType());
+
+				// lang field?
+				$hasLangValue = false;
+				if ('ARArray' == $dataType)
+				{
+					foreach ($languages as $lang)
+					{
+						if ($request->isValueSet($reqName . '_' . $lang))
+						{
+							$hasLangValue = true;
+							break;
+						}
+					}
+				}
+
+				if ($hasLangValue || $request->isValueSet($reqName) ||
 				   ($request->isValueSet('checkbox_' . $reqName) && ('ARBool' == get_class($field->getDataType())))
 					)
 				{
-					switch (get_class($field->getDataType()))
+					switch ($dataType)
 					{
 						case 'ARArray':
 							$this->setValueArrayByLang(array($name), self::getApplication()->getDefaultLanguageCode(), self::getApplication()->getLanguageArray(LiveCart::INCLUDE_DEFAULT), $request);
