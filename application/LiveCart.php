@@ -219,6 +219,7 @@ class LiveCart extends Application implements Serializable
 				$this->router->setSslAction('onePageCheckout');
 				$this->router->setSslAction('order', 'index');
 				$this->router->setSslAction('order', 'multi');
+				$this->router->setSslAction('order', 'update');
 			}
 
 			if ($this->config->get('SSL_CUSTOMER'))
