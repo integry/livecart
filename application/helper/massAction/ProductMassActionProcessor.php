@@ -41,7 +41,6 @@ class ProductMassActionProcessor extends MassActionProcessor
 				if ($pricing->isPriceSet($currency))
 				{
 					$p = $pricing->getPrice($currency);
-					var_dump($action, $this->params['inc_price_value'], $this->params['inc_quant_price']);
 					$p->$action($this->params['inc_price_value'], $this->params['inc_quant_price']);
 					$p->save();
 				}
@@ -83,6 +82,22 @@ class ProductMassActionProcessor extends MassActionProcessor
 		else if ('taxClass' == $act)
 		{
 			$product->taxClass->set(ActiveRecordModel::getInstanceByIDIfExists('TaxClass', $this->params['taxClass'], false));
+		}
+		else if (substr($act, 0, 13) == 'set_specField')
+		{
+			$product->loadRequestData($this->params['request']);
+		}
+		else if (substr($act, 0, 16) == 'remove_specField')
+		{
+			if ($this->params['field']->isMultiValue->get())
+			{
+				// remove only selected multi-select options
+				$product->loadRequestData($this->params['request']);
+			}
+			else
+			{
+				$product->removeAttribute($this->params['field']);
+			}
 		}
 		else
 		{

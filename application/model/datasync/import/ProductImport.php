@@ -173,7 +173,7 @@ class ProductImport extends DataImport
 				$product->loadSpecification();
 				$product->loadPricing();
 
-				if ($cat instanceof Category)
+				if (($cat instanceof Category) && (isset($fields['Category'])))
 				{
 					$product->category->set($cat);
 				}

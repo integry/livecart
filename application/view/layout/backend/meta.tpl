@@ -15,6 +15,7 @@
 	{includeCss file="../javascript/library/tinymce/themes/advanced/css/editor_ui.css" front=true}
 	{includeCss file="backend/stat.css" front=true}
 	{includeCss file="backend/Backend.css" front=true}
+	{includeCss file="library/jquery/jquery-ui.css" front=true}
 	{compiledCss glue=true nameMethod=hash}
 
 	{includeJs file=library/tinymce/tiny_mce.js inline=true}
@@ -34,6 +35,8 @@
 	{includeJs file="library/scriptaculous/builder.js" front=true}
 	{includeJs file="library/scriptaculous/effects.js" front=true}
 	{includeJs file=library/jquery/jquery-min.js front=true}
+	{includeJs file=library/jquery/jquery-ui.js}
+	{includeJs file=library/jquery/plugins.js}
 	{includeJs file="library/prototype/prototype.js" front=true}
 
 	{includeJs file="backend/BackendToolbar.js"}
