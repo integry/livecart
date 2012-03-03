@@ -137,6 +137,18 @@ abstract class EavValueCommon extends MultilingualObject
 			$this->mergedFields[] = $specFieldValue;
 		}
 	}
+	
+	protected static function getRelativeImagePath($className, $id)
+	{
+		return 'upload/attrImage/' . substr(lcfirst($className), 0, -5) . '/' . $id . '.jpg';
+	}
+	
+	public function getImagePath($isFullPath = false)
+	{
+		$path = self::getRelativeImagePath(get_class($this), $this->getID());
+		
+		return $isFullPath ? ClassLoader::getRealPath('public.') . $path : $path;
+	}
 
 	public function save($forceOperation = false)
 	{
@@ -233,6 +245,41 @@ abstract class EavValueCommon extends MultilingualObject
 		$mergedSpecFieldValuesDeleteFilter = new ARDeleteFilter();
 		$mergedSpecFieldValuesDeleteFilter->setCondition($inAllItemsExceptThisCondition);
 		ActiveRecord::deleteRecordSet(get_class($this), $mergedSpecFieldValuesDeleteFilter);
+	}
+	
+	/*####################  Data array transformation ####################*/
+
+	public static function transformArray($array, ARSchema $schema)
+	{
+		$array = parent::transformArray($array, $schema);
+		$path = self::getRelativeImagePath($schema->getName(), $array['ID']);
+
+		if (file_exists($path))
+		{
+			$array['imagePath'] = $path;
+		}
+
+		return $array;
+	}
+
+	/**
+	 *	Returns array representations
+	 *
+	 *	@return array
+	 */
+	public function toArray()
+	{
+	  	$array = parent::toArray();
+	  	
+	  	$imagePath = $this->getImagePath();
+	  	
+	  	if (file_exists($imagePath))
+	  	{
+			$array['imagePath'] = $imagePath;
+		}
+	  	
+	  	$this->setArrayData($array);
+	  	return $array;
 	}
 }
 

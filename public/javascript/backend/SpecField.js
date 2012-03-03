@@ -1,3 +1,8 @@
+if (ActiveList.prototype)
+{
+	ActiveList.prototype.icons.image = 'image/silk/image_add.png';
+}
+
 /**
  * Backend.SpecField
  *
@@ -467,6 +472,17 @@ Backend.SpecField.prototype = {
 			},
 			afterSort: function(li, response){	},
 
+			beforeImage:	 function(li) {
+				jQuery(this.getContainer(li, 'image')).toggle();
+			},
+			afterImage:	  function(li, response) {
+				/*var specField = eval("(" + response + ")" );
+				specField.rootId = li.id;
+				new Backend.SpecField(specField, true);
+				this.createSortable(true);*/
+				this.toggleContainerOff(this.getContainer(li, 'image'));
+			},
+
 			beforeDelete: function(li){
 				if(this.getRecordId(li).match(/^new/))
 				{
@@ -912,6 +928,29 @@ Backend.SpecField.prototype = {
 			if(!this.up('li').next() && this.value != '') self.addValueFieldAction();
 			this.focus();
 		});
+		
+		// image field
+		var input = li.down("input." + this.cssPrefix + "image");
+		input.name = "images[" + id + "]";
+		
+		if (value.imagePath)
+		{
+			jQuery(li.down('.valueImage')).html('<img src="' + value.imagePath + '" />').show();
+		}
+		
+		var uploadContainer = li.down('.uploadSpecFieldImage');
+		var deleteLabel = li.down('label.checkbox');
+		var deleteCb = li.down('input.checkbox.deleteImage');
+		
+		deleteCb.id = li.id + 'deleteImage';
+		deleteCb.name = "delete[" + id + "]";
+		deleteCb.checked = false;
+		jQuery(deleteLabel).attr('for', deleteCb.id);
+		
+		jQuery(deleteCb).click(function()
+		{
+			jQuery(uploadContainer).toggle(!deleteCb.checked);
+		});
 
 		// now insert all translation fields
 		var nodeValues = this.nodes.parent.down('.specField_step_values');
@@ -1015,14 +1054,16 @@ Backend.SpecField.prototype = {
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 
 		this.nodes.form.action = this.id.match(/new/) ? Backend.SpecField.prototype.links.create : Backend.SpecField.prototype.links.update;
-		new LiveCart.AjaxRequest(
-			this.nodes.form,
-			false,
-			function(param)
+		
+		jQuery(this.nodes.form).iframePostForm(
 			{
-				this.afterSaveAction(param.responseText)
-			}.bind(this)
-		);
+				post: function() {},
+				complete: function(param)
+				{
+					this.afterSaveAction(param)
+				}.bind(this)
+			}
+		).submit();
 	},
 
 	/**
@@ -1048,7 +1089,7 @@ Backend.SpecField.prototype = {
 				ActiveForm.prototype.updateNewFields('specField_update', $H(jsonResponse.newIDs), this.nodes.parent);
 				Form.backup(this.nodes.form);
 				this.backupName = this.nodes.name.value;
-
+				
 				var activeList = ActiveList.prototype.getInstance(this.nodes.parent.parentNode);
 
 				this.nodes.specFieldValuesUl.childElements().each(function(li)
@@ -1057,6 +1098,18 @@ Backend.SpecField.prototype = {
 					{
 						this.deleteValueFieldAction(li)
 					}
+					else
+					{					
+						var match = li.id.match(/_([0-9]+)$/); 
+						var id = match ? match[1] : 0;
+						
+						if (jsonResponse.newImages[id])
+						{
+							var img = jsonResponse.newImages[id] != '#' ? '<img src="' + jsonResponse.newImages[id] + '" />' : '';
+							jQuery(li.down('.valueImage')).html(img).show();
+						}
+					}
+					
 				}.bind(this))
 
 				activeList.toggleContainer(this.nodes.parent, 'edit', 'yellow');

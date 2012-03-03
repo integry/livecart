@@ -72,6 +72,9 @@ _SpecField_displayed_on_front_page=Display attribute in product page
 _SpecField_displayed_in_product_list=Display attribute in product list
 _SpecField_valuePrefix=Value prefix
 _SpecField_valueSuffix=Value suffix
+_SpecField_upload_image=Upload value image
+_SpecField_select_image=Select image file to upload
+_SpecField_delete_image=Delete uploaded image
 
 # Filter
 _Filter_main=Main

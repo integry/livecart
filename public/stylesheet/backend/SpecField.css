@@ -168,6 +168,33 @@ fieldset.group h2 {
     font-size: 1em;
     font-weight: normal;
 }
+
+.activeList_image
+{
+	background-image: url(../../image/silk/image_add.png);
+}
+
+.valueImage img
+{
+	vertical-align: top;
+	max-height: 100px;
+}
+
+.uploadSpecFieldImage label
+{
+	display: block;
+}
+
+.specFieldList .activeList_container.activeList_imageContainer
+{
+	padding-left: 50px;
+}
+
+.activeList_imageContainer fieldset legend
+{
+	display: block !important;
+}
+
 /* END Values active list */
 
 .specField ul {
