@@ -251,7 +251,7 @@ hs=function(w,t,c){return w.each(function(){var s=this._jqm;$(t).each(function()
 	$.fn.iframePostForm = function (options)
 	{
 		var response,
-			returnReponse,
+			returnResponse,
 			element,
 			status = true,
 			iframe;
@@ -290,15 +290,19 @@ hs=function(w,t,c){return w.each(function(){var s=this._jqm;$(t).each(function()
 
 					if (options.json)
 					{
-						returnReponse = $.parseJSON(response.html());
+						returnResponse = $.parseJSON(response.html());
 					}
 
 					else
 					{
-						returnReponse = response.html();
+						returnResponse = response.html();
+						if (returnResponse.substr(0, 5) == '<pre>')
+						{
+							returnResponse = returnResponse.substr(5, returnResponse.length - 11);
+						}
 					}
 
-					options.complete.apply(this, [returnReponse]);
+					options.complete.apply(this, [returnResponse]);
 
 					iframe.unbind('load');
 

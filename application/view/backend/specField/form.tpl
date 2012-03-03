@@ -3,7 +3,7 @@
 	<li class=""><a href="#step_values" class="specField_change_state" >{t _SpecField_values}</a></li>
 </ul>
 
-<form action="{link controller=backend.specField action=save}" method="post" class="specField {denied role="category.update"}formReadonly{/denied}">
+<form action="{link controller=backend.specField action=save}" method="post" class="specField {denied role="category.update"}formReadonly{/denied}" enctype="multipart/form-data">
 	<!-- STEP 1 -->
 	<fieldset class="specField_step_lev1 specField_step_main">
 	<legend>{t _SpecField_step_one}</legend>
@@ -139,11 +139,27 @@
 		<fieldset class="group specField_form_values_group">
 			<div class="specField_values">
 				<p>
-					<ul class="{allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed}">
+					<ul class="{allowed role="category.update"}activeList_add_sort activeList_add_delete activeList_add_image{/allowed}">
 						<li class="dom_template specField_form_values_value singleInput specField_update" id="specField_form_values_" style="display: block;">
 							<input type="checkbox" value="1" class="specField_mergeCheckbox checkbox" style="display: none;"  {denied role="category.update"}disabled="disabled"{/denied} />
 							<input type="text" class="specField_update specField_valueName" {denied role="category.update"}readonly="readonly"{/denied} />
+							<span class="valueImage" style="display: none;"></span>
 							<span class="errorText hidden"> </span>
+							
+							<div class="activeList_imageContainer activeList_container" style="display: none;">
+								<fieldset>
+									<legend>{t _SpecField_upload_image}</legend>
+									
+									<fieldset class="container uploadSpecFieldImage">
+										<label>{t _SpecField_select_image}:</label>
+										<input type="file" class="specField_update specField_image" />
+									</fieldset>
+									
+									<input type="checkbox" class="checkbox deleteImage specField_update" name="delete" id="specfield_delete_image_" />
+									<label for="specfield_delete_image_" class="checkbox">{t _SpecField_delete_image}</label>
+								</fieldset>
+							</div>
+							
 							<br class="clear" />
 						</li>
 					</ul>

@@ -215,6 +215,8 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 			$categoryID = $this->request->get('categoryID');
 
 			$values = $this->request->get('values');
+			$images = $_FILES['images'];
+			$delImg = $this->request->get('delete');
 
 			$specField->loadRequestData($this->request);
 
@@ -230,7 +232,7 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 			$specField->save();
 
 			// save specification field values in database
-			$newIDs = array();
+			$newIDs = $newImages = array();
 			$valueClass = call_user_func(array(call_user_func(array($this->getFieldClass(), 'getSelectValueClass')), 'getValueClass'));
 			if($specField->isSelector() && is_array($values))
 			{
@@ -272,10 +274,32 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 					{
 						$newIDs[$specFieldValues->getID()] = $key;
 					}
+					
+					if (isset($images['tmp_name'][$key]))
+					{
+						$path = $specFieldValues->getImagePath(true);
+						if (!file_exists(dirname($path)))
+						{
+							mkdir(dirname($path), 0777, true);
+						}
+						
+						move_uploaded_file($images['tmp_name'][$key], $path);
+						$newImages[$specFieldValues->getID()] = $specFieldValues->getImagePath();
+					}
+					
+					if (isset($delImg[$key]))
+					{
+						$path = $specFieldValues->getImagePath(true);
+						if (file_exists($path))
+						{
+							unlink($path);
+							$newImages[$specFieldValues->getID()] = '#';
+						}
+					}
 				}
 			}
 
-			return new JSONResponse(array('id' => $specField->getID(), 'newIDs' => $newIDs), 'success');
+			return new JSONResponse(array('id' => $specField->getID(), 'newIDs' => $newIDs, 'newImages' => $newImages), 'success');
 		}
 		else
 		{
