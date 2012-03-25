@@ -499,6 +499,14 @@ abstract class ActiveGridController extends StoreManagementController
 		$this->user->save();
 	}
 
+	public function sortColumns()
+	{
+		$columns = json_decode($this->request->get('columns'));
+		$this->setSessionData('columns', $columns);
+		$this->user->setPreference('columns_' . get_class($this), $columns);
+		$this->user->save();
+	}
+
 	public static function isCallable()
 	{
 		return true;
