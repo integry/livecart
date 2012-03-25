@@ -473,6 +473,12 @@ class ProductController extends ActiveGridController implements MassActionInterf
 				'type' => 'text'
 			);
 
+		$availableColumns['Product.categoryID'] = array
+			(
+				'name' => $this->translate('Product.categoryID'),
+				'type' => 'text'
+			);
+
 		unset($availableColumns['Product.categoryIntervalCache']);
 		unset($availableColumns['Product.childSettings']);
 		unset($availableColumns['Product.ratingSum']);
