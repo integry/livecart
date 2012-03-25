@@ -228,6 +228,8 @@ abstract class ObjectImage extends MultilingualObject
 			$array['urls'][$key] = $url;
 		}
 
+		$array['paths']['original'] = self::getRelativePath(call_user_func_array(array($schema->getName(), 'getImagePath'), array($array['ID'], $productID, 'original')), $urlPrefix);
+
 		return $array;
 	}
 
