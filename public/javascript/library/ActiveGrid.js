@@ -118,6 +118,27 @@ ActiveGrid.prototype =
 
 			Event.observe(rows[k], 'mouseout', this.removeRowHighlight.bindAsEventListener(this));
 		}
+
+		this.initColumnWidths();
+	},
+
+	initColumnWidths: function()
+	{
+		var totalWidth = jQuery(this.tableInstance).width();
+		jQuery('thead', this.tableInstance).find('.cellt_numeric, .cellt_bool').width(100);
+
+		/*
+		jQuery('thead th', this.tableInstance).each(function()
+		{
+			var th = jQuery(this);
+			if (th.is('.cellt_numeric, .cellt_bool'))
+			{
+				narrow[]
+				th.width(100);
+			}
+			console.log(this);
+		});
+		*/
 	},
 
 	initAdvancedSearch: function(id, availableColumns, advancedSearchColumns, properties)
@@ -743,7 +764,7 @@ ActiveGridFilter.prototype =
    		Element.addClassName(this.element, 'activeGrid_filter_blur');
 
 		this.element.columnName = this.element.value;
-		
+
 		if (jQuery(this.element).hasClass('multiSelect'))
 		{
 			console.log(jQuery('option[value=""]', this.element));
@@ -854,7 +875,7 @@ ActiveGridFilter.prototype =
 		{
 			var value = this.element.value;
 		}
-		
+
 		this.setFilterValueManualy(this.getFilterName(), value);
 	},
 

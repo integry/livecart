@@ -102,34 +102,34 @@ li.addProduct
 
 .cell_Product_sku
 {
-	width: 10% !important;
+	max-width: 10% !important;
 }
 
 .cell_Product_name
 {
-	width: 38% !important;
+	max-width: 38% !important;
 }
 
 .cell_Manufacturer_name
 {
-	width: 15% !important;
+	max-width: 15% !important;
 }
 
 .cell_ProductPrice_price
 {
-	width: 13% !important;
+	max-width: 13% !important;
 	text-align: center;
 }
 
 .cell_Product_stockCount
 {
-	width: 10% !important;
+	max-width: 10% !important;
 	text-align: center;
 }
 
 .cell_Product_isEnabled
 {
-	width: 10% !important;
+	max-width: 10% !important;
 	text-align: center;
 }
 
