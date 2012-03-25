@@ -9,7 +9,7 @@ function validateForm(form)
 
 	var isFormValid = true;
 	var focusField = true;
-	
+
 	if (!form)
 	{
 		return isFormValid;
@@ -37,6 +37,15 @@ function validateForm(form)
 			}
 		}.bind(this, formElement));
 	}.bind(this));
+
+	if (isFormValid)
+	{
+		var parentForm = jQuery(form.parentNode).closest('form')[0];
+		if (parentForm)
+		{
+			isFormValid = validateForm(parentForm);
+		}
+	}
 
 	return isFormValid;
 }
