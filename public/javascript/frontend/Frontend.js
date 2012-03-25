@@ -1042,17 +1042,20 @@ Frontend.initCategory = function()
 		loadQuickShop(e);
 	});
 
-	$(document).keydown(function(e)
+	document.onkeyup = function(e)
 	{
-		if (e.keyCode == 37)
+		if (!$('#jquery-lightbox').is(':visible'))
 		{
-			$('.productPrev').click();
+			if (e.keyCode == 37)
+			{
+				$('.productPrev').click();
+			}
+			else if (e.keyCode == 39)
+			{
+				$('.productNext').click();
+			}
 		}
-		else if (e.keyCode == 39)
-		{
-			$('.productNext').click();
-		}
-	});
+	}
 }
 
 Frontend.OnePageCheckout = function(options)
