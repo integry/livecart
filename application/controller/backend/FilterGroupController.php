@@ -268,15 +268,10 @@ class FilterGroupController extends StoreManagementController
 
 			$filterGroupIdsString = implode(',',  $filterGroupIds);
 
-			$filtersResultArray = array();
-			$filtersResultSet = $db->executeQuery("SELECT filterGroupID, COUNT(*) AS filtersCount FROM Filter WHERE filterGroupID IN ($filterGroupIdsString) GROUP BY filterGroupID");
-			while ($filtersResultSet->next()) $filtersResultArray[] = $filtersResultSet->getRow();
+			$filtersResultArray = ActiveRecord::getDataBySQL("SELECT filterGroupID, COUNT(*) AS filtersCount FROM Filter WHERE filterGroupID IN ($filterGroupIdsString) GROUP BY filterGroupID");
 			$filtersResultCount = count($filtersResultArray);
 
-			$specFieldValuesResultArray = array();
-
-			$specFieldValuesResultSet = $db->executeQuery("SELECT specFieldID, COUNT(specFieldID) AS filtersCount FROM SpecFieldValue WHERE specFieldID IN (SELECT specFieldID FROM FilterGroup WHERE ID in ($filterGroupIdsString)) GROUP BY specFieldID");
-			while ($specFieldValuesResultSet->next()) $specFieldValuesResultArray[] = $specFieldValuesResultSet->getRow();
+			$specFieldValuesResultArray = ActiveRecord::getDataBySQL("SELECT specFieldID, COUNT(specFieldID) AS filtersCount FROM SpecFieldValue WHERE specFieldID IN (SELECT specFieldID FROM FilterGroup WHERE ID in ($filterGroupIdsString)) GROUP BY specFieldID");
 			$specFieldValuesResultCount = count($specFieldValuesResultArray);
 
 			foreach($filtersGroupsSet as $filterGroup)

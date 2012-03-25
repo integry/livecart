@@ -192,7 +192,10 @@ class Filter extends MultilingualObject implements SpecificationFilterInterface
 	public static function transformArray($array, ARSchema $schema)
 	{
 		$array = parent::transformArray($array, $schema);
-		$array['handle'] = createHandleString($array['name_lang']);
+		if (!empty($array['name_lang']))
+		{
+			$array['handle'] = createHandleString($array['name_lang']);
+		}
 		return $array;
 	}
 }
