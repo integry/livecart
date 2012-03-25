@@ -380,11 +380,7 @@ class OnePageCheckoutController extends CheckoutController
 
 	public function doSelectShippingMethod()
 	{
-		//$this->order->loadAll();
-
 		parent::doSelectShippingMethod();
-
-		$this->order->getTotal(true);
 
 		return $this->getUpdateResponse();
 	}
@@ -742,7 +738,7 @@ class OnePageCheckoutController extends CheckoutController
 			$res['billingAddress'] = false;
 		}
 
-		if (!$order->billingAddress->get() && !$this->user->defaultBillingAddress->get())
+		if (!$order->billingAddress->get() && !$this->user->defaultBillingAddress->get() && !($this->config->get('REQUIRE_SAME_ADDRESS') && $order->shippingAddress->get()))
 		{
 			if ($isCompleted)
 			{
@@ -772,7 +768,20 @@ class OnePageCheckoutController extends CheckoutController
 
 	protected function validateOrder(CustomerOrder $order, $step = 0)
 	{
-		return !$this->ignoreValidation ? parent::validateOrder($order, $step) : false;
+		if ($this->config->get('REQUIRE_SAME_ADDRESS') && !$order->billingAddress->get())
+		{
+			$order->billingAddress->set($order->shippingAddress->get());
+			$tempBilling = true;
+		}
+
+		$res = !$this->ignoreValidation ? parent::validateOrder($order, $step) : false;
+
+		if (!empty($tempBilling))
+		{
+			$order->billingAddress->setNull();
+		}
+
+		return $res;
 	}
 
 	protected function getOrderValues(CustomerOrder $order)
