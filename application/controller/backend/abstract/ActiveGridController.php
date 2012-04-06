@@ -175,8 +175,8 @@ abstract class ActiveGridController extends StoreManagementController
 				$value['name'] = $this->translate($key);
 			}
 		}
-		return $fields;
 
+		return $fields;
 	}
 
 	protected function getDisplayedColumns($params = null, $customColumns = array())
@@ -329,6 +329,7 @@ abstract class ActiveGridController extends StoreManagementController
 		$response->set('displayedColumns', $displayedColumns);
 		$response->set('availableColumns', $availableColumns);
 		$response->set('advancedSearchColumns', $this->getAdvancedSearchFields());
+		$response->set('columnWidths', $this->user->getPreference('columnWidth_' . get_class($this)));
 
 		$response->set('massForm', $this->getMassForm());
 		$response->set('offset', $this->request->get('offset'));
@@ -504,6 +505,14 @@ abstract class ActiveGridController extends StoreManagementController
 		$columns = json_decode($this->request->get('columns'));
 		$this->setSessionData('columns', $columns);
 		$this->user->setPreference('columns_' . get_class($this), $columns);
+		$this->user->save();
+	}
+
+	public function saveColumnWidth()
+	{
+		$columns = json_decode($this->request->get('width'));
+		$this->setSessionData('columnWidth', $columns);
+		$this->user->setPreference('columnWidth_' . get_class($this), $columns);
 		$this->user->save();
 	}
 

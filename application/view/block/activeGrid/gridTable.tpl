@@ -238,6 +238,7 @@
 {/literal};
 	window.activeGrids['{$prefix}_{$id}'] = new ActiveGrid($('{$prefix}_{$id}'), '{$url}', {$totalCount}, $("{$prefix}LoadIndicator_{$id}"), {$rowCount}, {json array=$filters});
 	window.activeGrids['{$prefix}_{$id}'].setController('{$controller}');
+	window.activeGrids['{$prefix}_{$id}'].setColumnWidths({json array=$columnWidths});
 	{if $dataFormatter}
 		window.activeGrids['{$prefix}_{$id}'].setDataFormatter({$dataFormatter});
 	{/if}

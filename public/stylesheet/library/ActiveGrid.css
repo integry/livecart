@@ -663,3 +663,8 @@ th.cellt_date div.dateRange div
 {
 	text-align: left;
 }
+
+.CRZ td, .CRZ th
+{
+    overflow: auto;
+}
