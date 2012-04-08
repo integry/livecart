@@ -584,8 +584,9 @@ CategoryTabControl.prototype = {
 		//this.activeTab.onclick();
 	},
 
-	handleTabMouseOver: function(evt)
+	handleTabMouseOver: function(evt, out)
 	{
+		var out = out ? 1 : 0;
 		var target = "";
 		if (evt.target == undefined)
 		{
@@ -595,30 +596,20 @@ CategoryTabControl.prototype = {
 		{
 			target = evt.target;
 		}
+
+		target = jQuery(target).closest('li.tab')[0];
+
 		if (this.activeTab != target)
 		{
-			Element.removeClassName(target, 'inactive');
-			Element.addClassName(target, 'hover');
+			var classes = ['inactive', 'hover ui-state-hover'];
+			jQuery(target).removeClass(classes[out]);
+			jQuery(target).addClass(classes[1 - out]);
 		}
 	},
 
 	handleTabMouseOut: function(evt)
 	{
-		var target = "";
-		if (evt.target == undefined)
-		{
-			target = evt.srcElement;
-		}
-		else
-		{
-			target = evt.target;
-		}
-
-		if (this.activeTab != target)
-		{
-			Element.removeClassName(target, 'hover');
-			Element.addClassName(target, 'inactive');
-		}
+		this.handleTabMouseOver(evt, 1);
 	},
 
 	/**
@@ -670,8 +661,8 @@ CategoryTabControl.prototype = {
 
 		if (this.activeTab != null)
 		{
-			Element.removeClassName(this.activeTab, 'active');
-			Element.addClassName(this.activeTab, 'inactive');
+			jQuery(this.activeTab).removeClass('active ui-tabs-selected ui-state-active');
+			jQuery(this.activeTab).addClass('inactive');
 			var activeContainerId = this.getContainerId(this.activeTab.id, categoryId);
 			if ($(activeContainerId) != undefined)
 			{
@@ -680,8 +671,8 @@ CategoryTabControl.prototype = {
 		}
 
 		this.activeTab = targetTab;
-		Element.removeClassName(this.activeTab, 'hover');
-		Element.addClassName(this.activeTab, 'active');
+		jQuery(this.activeTab).removeClass('hover ui-state-hover');
+		jQuery(this.activeTab).addClass('active ui-tabs-selected ui-state-active');
 
 		this.loadTabContent(tabId, categoryId);
 
