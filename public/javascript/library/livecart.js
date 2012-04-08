@@ -267,6 +267,10 @@ LiveCart.AjaxRequest.prototype = {
 		{
 			Element.hide(this.indicatorContainerId);
 		}
+		else
+		{
+			Element.hide(this.indicatorContainerId);
+		}
 
 		$(this.indicatorContainerId).removeClassName('progressIndicator');
 	},
