@@ -23,9 +23,8 @@ function smarty_block_tab($params, $content, LiveCartSmarty $smarty, &$repeat)
 		$isHidden = is_null($userPref) ? !empty($params['hidden']) : $userPref == 'false';
 
 		$content = '
-<li id="' . $params['id'] . '" class="tab inactive' . ($isHidden ? ' hidden' : '') . '">' . $content . '
+<li id="' . $params['id'] . '" rel="' . $params['help'] . '" class="tab ui-state-default ui-corner-top inactive' . ($isHidden ? ' hidden' : '') . '">' . $content . '
 	<span> </span>
-	<span class="tabHelp">' . $params['help'] . '</span>
 </li>';
 
 		return $content;

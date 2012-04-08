@@ -127,6 +127,12 @@ ActiveGrid.prototype =
 		jQuery(this.tableInstance).addClass('draggable forget-ordering');
 		dragtable.init();
 
+		// dragtable messes up the input focus
+		jQuery('th input', this.tableInstance).click(function()
+		{
+			this.focus();
+		});
+
 		this.initColumnResize();
 	},
 
@@ -154,8 +160,6 @@ ActiveGrid.prototype =
 		var totalWidth = jQuery(this.tableInstance).closest('.activeGrid_viewport').width();
 		var usableWidth = totalWidth;
 		var usableWidth = usableWidth - jQuery('th.cell_cb', this.tableInstance).width();
-
-		console.log(usableWidth);
 
 		return usableWidth;
 	},
@@ -824,7 +828,6 @@ ActiveGridFilter.prototype =
 
 		if (jQuery(this.element).hasClass('multiSelect'))
 		{
-			console.log(jQuery('option[value=""]', this.element));
 			var title = jQuery('option[value=""]', this.element);
 			var titleText = title.html();
 

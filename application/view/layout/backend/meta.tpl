@@ -15,7 +15,7 @@
 	{includeCss file="../javascript/library/tinymce/themes/advanced/css/editor_ui.css" front=true}
 	{includeCss file="backend/stat.css" front=true}
 	{includeCss file="backend/Backend.css" front=true}
-	{includeCss file="library/jquery/jquery-ui.css" front=true}
+	{includeCss file="backend/theme/redmond/jquery-ui.css" front=true}
 	{compiledCss glue=true nameMethod=hash}
 
 	{if !'DISABLE_WYSIWYG'|config}
@@ -143,7 +143,7 @@
 	{block TRANSLATIONS}
 
 </head>
-<body class="{$request.controller|replace:'.':'-'}Con {$request.controller|replace:'.':'-'}-{$request.action}">
+<body class="{$request.controller|replace:'.':'-'}Con {$request.controller|replace:'.':'-'}-{$request.action} ui-widget">
 <script type="text/javascript">
 {literal}
 	window.historyStorage.init();

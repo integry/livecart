@@ -151,7 +151,7 @@
 		<span style="padding: 40px; background-color: white; border: 1px solid black;">{t _loading_product}<span class="progressIndicator"></span></span>
 	</div>
 
-	<div id="categoryTabs">
+	<div id="categoryTabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
 		<div id="tabContainer" class="tabContainer">
 			{tabControl id="tabList"}
 				{tab id="tabProducts" role="product" help="products"}<a href="{link controller=backend.product action=index id=_id_ }">{t _products}</a>{/tab}

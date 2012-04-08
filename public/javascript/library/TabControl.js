@@ -105,10 +105,14 @@ TabControl.prototype = {
 		{
 			if (!tab.down('.tabCounter'))
 			{
-				var firstLink = tab.down('a');
-				new Insertion.After(firstLink, '<span class="tabCounter"> </span>');
+				var firstLink = jQuery('a', tab);
+				firstLink.html('<span class="tabName">' + firstLink.html() + '</span><span class="tabCounter"> </span>');
 			}
 		});
+
+		jQuery(this.nodes.tabContainer).addClass('ui-tabs ui-widget ui-widget-content ui-corner-all');
+		jQuery(this.nodes.tabList).addClass('ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all');
+		jQuery('li.tab', this.nodes.tabList).addClass('ui-state-default ui-corner-top');
 	},
 
 	getInstance: function(tabContainerName, urlParserCallback, idParserCallback, callbacks)
@@ -126,7 +130,7 @@ TabControl.prototype = {
 		if (this.activeTab != args.target)
 		{
 			Element.removeClassName(args.target, 'inactive');
-			Element.addClassName(args.target, 'hover');
+			jQuery(args.target).addClass('hover ui-state-hover');
 		}
 	},
 
@@ -134,7 +138,7 @@ TabControl.prototype = {
 	{
 		if (this.activeTab != args.target)
 		{
-			Element.removeClassName(args.target, 'hover');
+			jQuery(args.target).removeClass('hover ui-state-hover');
 			Element.addClassName(args.target, 'inactive');
 		}
 	},
@@ -180,16 +184,16 @@ TabControl.prototype = {
 
 	/**
 	 * Reloades tab content in background (does not activate tab)
-	 * 
+	 *
 	 * When reloading:
 	 *              Existing tab content container is removed
 	 *              If not active tab, content container is set to absolute position and positioned
 	 *                                 outside page, because some controls can't initalize in invisible
 	 *                                 container (for example editArea)
 	 *              AjaxUpdater request is executed.
-	 * 
+	 *
 	 * If tab content is not yet loaded, this will load tab content.
-	 * 
+	 *
 	 */
 	reloadTabContent: function(targetTab, onComplete)
 	{
@@ -210,7 +214,7 @@ TabControl.prototype = {
 		}
 		new Insertion.Top(this.nodes.sectionContainer, '<div id="' + contentId + '" class="tabPageContainer ' + targetTab.id + 'Content loadedInBackgroundTab"></div>');
 		this.activeContent = $(contentId);
-		
+
 		if (this.activeTab.id == targetTab.id )
 		{
 			this.activeContent.removeClassName("loadedInBackgroundTab");
@@ -222,7 +226,7 @@ TabControl.prototype = {
 		this.loadedContents[this.urlParserCallback(targetTab.down('a').href) + contentId] = true;
 		new LiveCart.AjaxUpdater(
 			this.urlParserCallback(targetTab.down('a').href),
-			contentId, 
+			contentId,
 			targetTab.down('.tabIndicator'),
 			'bottom',
 			function(activeContent, onComplete, response)
@@ -265,8 +269,7 @@ TabControl.prototype = {
 		$A(this.nodes.tabListElements).each(function(tab) {
 			if (tab.hasClassName('tab'))
 			{
-				Element.removeClassName(tab, 'active');
-				Element.addClassName(tab, 'inactive');
+				jQuery(tab).removeClass('active ui-tabs-selected ui-state-active').addClass('inactive');
 			}
 		});
 
@@ -278,8 +281,7 @@ TabControl.prototype = {
 		this.activeContent = $(contentId);
 		this.activeContent.removeClassName("loadedInBackgroundTab");
 
-		Element.removeClassName(this.activeTab, 'hover');
-		Element.addClassName(this.activeTab, 'active');
+		jQuery(this.activeTab).addClass('active ui-tabs-selected ui-state-active').removeClass('hover');
 		Element.show(contentId);
 
 		if(!onComplete && this.callbacks.onComplete)
@@ -303,8 +305,8 @@ TabControl.prototype = {
 				}
 
 			}.bind(this, this.activeContent, onComplete));
-			
-			
+
+
 		}
 		else if(onComplete)
 		{

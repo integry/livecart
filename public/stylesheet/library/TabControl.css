@@ -2,66 +2,6 @@
 	position: relative;
 }
 
-/* Category manager styling */
-.tabContainer ul.tabList
-{
-	max-height: 18px;
-	list-style: none;
-	margin:0px;
-	padding: 0px;
-	height: 18px;
-	height: auto;
-	padding-top: 8px;
-	padding-bottom: 4px;
-	white-space: nowrap;
-}
-
-ul.tabList
-{
-	position: relative;
-	z-index: 200;
-}
-
-ul.tabList li.inactive, ul.tabList li.hover
-{
-	padding-bottom: 4px !important;
-}
-
-.tabContainer ul.tabList li
-{
-	margin-right: 2px;
-	display: inline;
-	line-height: 20px;
-}
-
-.tabContainer ul li.inactive, .tabContainer ul li.active, .tabContainer ul li.hover
-{
-	padding: 5px 15px 5px 15px;
-	border: 1px solid #ccc;
-	border-bottom: 0px;
-}
-
-.tabContainer ul li.active
-{
-	padding: 7px 17px 7px 17px;
-	background-color: #fff;
-	border-top: 2px solid red;
-	font-size: 14px !important;
-	padding-bottom: 5px !important;
-}
-
-.tabContainer ul li.hover
-{
-	border-top: 1px solid red;
-	cursor: hand;
-}
-
-.tabContainer ul li.hover, .tabContainer ul li.inactive
-{
-	background-color: #f5f5f5;
-	font-size: 13px;
-}
-
 .sectionContainer
 {
 	position: relative;
@@ -74,4 +14,9 @@ ul.tabList li.inactive, ul.tabList li.hover
 .tabContainer ul.tabList li.tab.hidden
 {
 	display: none;
+}
+
+.ui-tabs .sectionContainer
+{
+	border: 0;
 }

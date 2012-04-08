@@ -6,7 +6,7 @@
 
 html
 {
-    font-size: 67.5%;
+    font-size: 12px;
 }
 
 body {
@@ -1603,25 +1603,16 @@ fieldset.group p
 	z-index: 200;
 }
 
-.tabs
+.tabs li *
 {
-    list-style: none;
-    padding: 6px 0;
-    margin-top: 6px;
+	float: none !important;
+	display: inline-block;
+	vertical-align: middle;
 }
 
 .tabs li img
 {
 	vertical-align: middle;
-}
-
-.tabs li
-{
-    display: inline;
-    /* padding: 6px 15px 6px 15px ! important; */
-    padding: 6px 10px ! important;
-    border: 1px solid #ccc;
-    vertical-align: middle;
 }
 
 .tabs li a
@@ -1632,19 +1623,6 @@ fieldset.group p
     vertical-align: middle;
 }
 
-.tabs li.active a
-{
-    font-weight: bold;
-}
-
-.tabs li.active
-{
-    background: #fdfdfd !important;
-    padding: 6px 17px 4px 17px ! important;
-    border-top: 2px solid red;
-    font-weight: bold;
-}
-
 .tabHelp
 {
 	display: none;
@@ -1653,11 +1631,6 @@ fieldset.group p
 .tab
 {
   	cursor: pointer;
-}
-
-.tab span
-{
-    font-size: smaller;
 }
 
 .loadedInBackgroundTab
@@ -2429,6 +2402,12 @@ overflow:hidden;
 .importantVisible
 {
 	display: block !important;
+}
+
+/*** jQuery UI overrides ***/
+body.ui-widget, body .ui-widget
+{
+	font-size: 1em;
 }
 
 /*** jQuery multiselect ***/

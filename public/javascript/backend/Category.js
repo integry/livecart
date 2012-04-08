@@ -539,6 +539,9 @@ CategoryTabControl.prototype = {
 		}
 
 		var tabList = document.getElementsByClassName("tab");
+
+		jQuery('a', tabList).click(function(e) { e.preventDefault(); });
+
 		for (var i = 0; i < tabList.length; i++)
 		{
 			tabList[i].onclick = this.handleTabClick;
@@ -552,10 +555,9 @@ CategoryTabControl.prototype = {
 			{
 				// Getting an URL pattern that tab is pointing to by analysing "<A>" element
 				tabList[i].url = aElementList[0].href;
-				new Insertion.After(aElementList[0], aElementList[0].innerHTML);
+
 				// inserting indicator element which will be show on tab activation
-				new Insertion.Before(aElementList[0], '<img src="' + this.indicatorImageName + '" class="tabIndicator" id="' + tabList[i].id + 'Indicator" alt="Tab indicator" style="display:none"/> ');
-				Element.remove(aElementList[0]);
+				jQuery(aElementList[0]).html('<img src="' + this.indicatorImageName + '" class="tabIndicator" id="' + tabList[i].id + 'Indicator" alt="Tab indicator" style="display:none"/> <span class="tabName">' + jQuery(aElementList[0]).html() + '</span><span class="tabCounter"> </span>');
 			}
 
 			if (tabList[i].id == '')
@@ -809,7 +811,7 @@ CategoryTabControl.prototype = {
 		$H(CategoryTabControl.prototype.tabItemsCounts[categoryID]).each(function(tab) {
 			if ($(tab.key))
 			{
-				$(tab.key).getElementsByTagName('span')[0].firstChild.nodeValue = ' (' + tab.value + ')';
+				jQuery('span.tabCounter', $(tab.key)).html(' (' + tab.value + ')');
 			}
 		});
 	},
