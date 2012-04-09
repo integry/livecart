@@ -555,9 +555,6 @@ CategoryTabControl.prototype = {
 			{
 				// Getting an URL pattern that tab is pointing to by analysing "<A>" element
 				tabList[i].url = aElementList[0].href;
-
-				// inserting indicator element which will be show on tab activation
-				jQuery(aElementList[0]).html('<img src="' + this.indicatorImageName + '" class="tabIndicator" id="' + tabList[i].id + 'Indicator" alt="Tab indicator" style="display:none"/> <span class="tabName">' + jQuery(aElementList[0]).html() + '</span><span class="tabCounter"> </span>');
 			}
 
 			if (tabList[i].id == '')
@@ -577,6 +574,13 @@ CategoryTabControl.prototype = {
 			else
 			{
 				//Element.hide(this.getContainerId(tabList[i].id, treeBrowser.getSelectedItemId()));
+			}
+
+			var tab = tabList[i];
+			if (!tab.down('.tabCounter'))
+			{
+				var firstLink = jQuery('a', tab);
+				firstLink.html('<span class="tabName">' + firstLink.html() + '</span><span class="tabCounter"> </span>');
 			}
 		}
 
@@ -690,19 +694,17 @@ CategoryTabControl.prototype = {
 
 		if ($(containerId) == undefined)
 		{
-			new Insertion.Bottom(this.sectionContainerName, '<div class="' + tabId + ' tabPageContainer" id="' + containerId + '"></div>');
+			new Insertion.Bottom(this.sectionContainerName, '<div class="' + tabId + ' tabPageContainer" id="' + containerId + '"><div class="indicatorContainer"><img src="' + TabControl.prototype.indicatorImageName + '" /></div></div>');
 		}
-		if (categoryId != "" && Element.empty(containerId))
-		{
-			// temporary "content" to avoid the content to be loaded twice
-			$(containerId).update('&nbsp;');
 
+		if (categoryId != "" && (Element.empty(containerId) || jQuery('.indicatorContainer', jQuery(containerId))))
+		{
 			Backend.Category.treeBrowser.showFeedback(parseInt(categoryId));
 
 			new LiveCart.AjaxUpdater(
 				this.getTabUrl(tabId, categoryId),
 				this.getContainerId(tabId, categoryId),
-				this.getIndicatorId(tabId),
+				null,
 				undefined,
 				function()
 				{
@@ -719,11 +721,6 @@ CategoryTabControl.prototype = {
 				}
 			);
 		}
-	},
-
-	getIndicatorId: function(tabName)
-	{
-		return tabName + 'Indicator';
 	},
 
 	getContainerId: function(tabName, categoryId)
@@ -802,7 +799,7 @@ CategoryTabControl.prototype = {
 		$H(CategoryTabControl.prototype.tabItemsCounts[categoryID]).each(function(tab) {
 			if ($(tab.key))
 			{
-				jQuery('span.tabCounter', $(tab.key)).html(' (' + tab.value + ')');
+				jQuery('span.tabCounter', $(tab.key)).html(tab.value);
 			}
 		});
 	},

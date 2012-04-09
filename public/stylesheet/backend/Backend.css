@@ -1610,17 +1610,9 @@ fieldset.group p
 	vertical-align: middle;
 }
 
-.tabs li img
-{
-	vertical-align: middle;
-}
-
 .tabs li a
 {
-    text-decoration: none;
-    color: black;
-    -moz-outline: none;
-    vertical-align: middle;
+    outline: 0;
 }
 
 .tabHelp
@@ -1628,9 +1620,23 @@ fieldset.group p
 	display: none;
 }
 
-.tab
+.tabCounter
 {
-  	cursor: pointer;
+    font-size: 8px;
+    margin-left: 4px;
+    position: absolute;
+    right: 1px;
+    top: 1px;
+}
+
+.moreTabsMenu .tabCounter
+{
+	display: none;
+}
+
+.tabName
+{
+	padding-top: 3px;
 }
 
 .loadedInBackgroundTab
@@ -1647,6 +1653,12 @@ fieldset.group p
 	padding: 0;
 	background: none;
 	border: 0;
+}
+
+.indicatorContainer
+{
+	text-align: center;
+	padding: 5em;
 }
 
 /**************************
@@ -1866,11 +1878,6 @@ li.moreTabs .moreTabsMenu
 	max-height: 1000px !important;
 }
 
-li.moreTabs li.hidden, li.moreTabs li.hidden *, li.moreTabs li:hover
-{
-	color: #777;
-}
-
 li.moreTabs li:hover
 {
 	text-decoration: line-through;
@@ -1890,6 +1897,17 @@ li.moreTabs li:hover
 li.moreTabs .moreTabs
 {
 	display: none !important;
+}
+
+li.moreTabs li.hidden a,
+li.moreTabs li:hover a
+{
+	text-decoration: line-through;
+}
+
+li.moreTabs li.hidden:hover a
+{
+	text-decoration: none;
 }
 
 /***************************

@@ -19,7 +19,7 @@ var TabControl = Class.create();
 TabControl.prototype = {
 	__instances__: {},
 	activeTab: null,
-	indicatorImageName: "image/indicator.gif",
+	indicatorImageName: "image/indicator_large.gif",
 
 	initialize: function(tabContainerName, urlParserCallback, idParserCallback, callbacks)
 	{
@@ -52,22 +52,18 @@ TabControl.prototype = {
 		this.nodes.tabListElements.each(function(li)
 		{
 			var link = li.down('a');
-			var indicator = '<img src="' + self.indicatorImageName + '" class="tabIndicator" alt="Tab indicator" style="display: none" /> ';
 
-			if(link.hasClassName("observed") == false)
-			{
-				Event.observe(link, 'click', function(e) { if(e) Event.stop(e); });
-				link.addClassName("observed");
-			}
-
-			if(li.hasClassName("observed"))
+			if(li.hasClassName("li"))
 			{
 				return;
 			}
+
 			link.addClassName("li");
-			li.onclick = function(e) {
-				if(!e) e = window.event;
-				if(e) Event.stop(e);
+
+			jQuery(li).click(
+			function(e)
+			{
+				e.preventDefault();
 
 				if (e)
 				{
@@ -79,12 +75,7 @@ TabControl.prototype = {
 				}
 
 				self.handleTabClick({'target': li});
-
-				if(Backend.Produc)
-				{
-					Backend.Product.hideAddForm();
-				}
-			}
+			});
 
 			Event.observe(li, 'mouseover', function(e) {
 				if(e) Event.stop(e);
@@ -94,8 +85,6 @@ TabControl.prototype = {
 				if(e) Event.stop(e);
 				self.handleTabMouseOut({'target': li})
 			});
-
-			li.update(indicator + li.innerHTML);
 		});
 	},
 
@@ -212,7 +201,7 @@ TabControl.prototype = {
 		{
 			$(contentId).remove();
 		}
-		new Insertion.Top(this.nodes.sectionContainer, '<div id="' + contentId + '" class="tabPageContainer ' + targetTab.id + 'Content loadedInBackgroundTab"></div>');
+		new Insertion.Top(this.nodes.sectionContainer, '<div id="' + contentId + '" class="tabPageContainer ' + targetTab.id + 'Content loadedInBackgroundTab"><div class="indicatorContainer"><img src="' + this.indicatorImageName + '" /></div></div>');
 		this.activeContent = $(contentId);
 
 		if (this.activeTab.id == targetTab.id )
@@ -227,7 +216,7 @@ TabControl.prototype = {
 		new LiveCart.AjaxUpdater(
 			this.urlParserCallback(targetTab.down('a').href),
 			contentId,
-			targetTab.down('.tabIndicator'),
+			null,
 			'bottom',
 			function(activeContent, onComplete, response)
 			{
@@ -263,7 +252,7 @@ TabControl.prototype = {
 			return;
 		}
 
-		if(!$(contentId)) new Insertion.Top(this.nodes.sectionContainer, '<div id="' + contentId + '" class="tabPageContainer ' + targetTab.id + 'Content"></div>');
+		if(!$(contentId)) new Insertion.Top(this.nodes.sectionContainer, '<div id="' + contentId + '" class="tabPageContainer ' + targetTab.id + 'Content"><div class="indicatorContainer"><img src="' + this.indicatorImageName + '" /></div></div>');
 
 		var self = this;
 		$A(this.nodes.tabListElements).each(function(tab) {
@@ -289,10 +278,10 @@ TabControl.prototype = {
 			onComplete = this.callbacks.onComplete;
 		}
 
-		if (!this.loadedContents[this.urlParserCallback(targetTab.down('a').href) + contentId] && Element.empty($(contentId)))
+		if (!this.loadedContents[this.urlParserCallback(targetTab.down('a').href) + contentId] && (Element.empty(contentId) || jQuery('.indicatorContainer', jQuery(contentId))))
 		{
 			this.loadedContents[this.urlParserCallback(targetTab.down('a').href) + contentId] = true;
-			new LiveCart.AjaxUpdater(this.urlParserCallback(targetTab.down('a').href), contentId, targetTab.down('.tabIndicator'), 'bottom', function(activeContent, onComplete, response)
+			new LiveCart.AjaxUpdater(this.urlParserCallback(targetTab.down('a').href), contentId, null, null, function(activeContent, onComplete, response)
 			{
 				if (Form.focus)
 				{
@@ -305,8 +294,6 @@ TabControl.prototype = {
 				}
 
 			}.bind(this, this.activeContent, onComplete));
-
-
 		}
 		else if(onComplete)
 		{
@@ -400,7 +387,7 @@ TabControl.prototype = {
 				value = 0;
 			}
 
-			counter.update("(" + value + ")");
+			counter.update(value);
 			this.countersCache[hashId][tab.id] = value;
 		}
 	},

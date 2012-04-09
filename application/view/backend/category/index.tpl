@@ -166,7 +166,7 @@
 				{tab id="tabRelatedCategory" role="category" help="categories" hidden=true}<a href="{link controller=backend.categoryRelationship action=index id=_id_}">{t _related_categories}</a>{/tab}
 			{/tabControl}
 		</div>
-		<div id="sectionContainer" class="sectionContainer maxHeight  h--50">
+		<div id="sectionContainer" class="ui-tabs-panel ui-widget-content ui-corner-bottom sectionContainer maxHeight  h--50">
 		</div>
 	</div>
 

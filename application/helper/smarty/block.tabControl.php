@@ -20,7 +20,7 @@ function smarty_block_tabControl($params, $content, LiveCartSmarty $smarty, &$re
 					</li>';
 		}
 
-		$content = '<ul id="' . $params['id'] . '" class="tabList tabs ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">' . $more . $content . '</ul>';
+		$content = '<ul id="' . $params['id'] . '" class="tabList tabs ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">' .  $content . $more . '</ul>';
 
 		$content .= '<script type="text/javascript">var tabCust = new TabCustomize($("' . $params['id'] . '")); tabCust.setPrefsSaveUrl("' . $smarty->getApplication()->getRouter()->createUrl(array('controller' => 'backend.index', 'action' => 'setUserPreference')) . '")</script>';
 

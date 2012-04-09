@@ -2168,7 +2168,7 @@ TabCustomize.prototype =
 		this.moreTabsMenu.innerHTML = '';
 		var cloned = this.tabList.cloneNode(true);
 		this.moreTabsMenu.appendChild(cloned);
-		cloned.removeClassName('languageFormTabs');
+		cloned.className = 'tabList tabs';
 
 		$A(cloned.getElementsBySelector('li.hidden')).reverse().each(function(el)
 		{
@@ -2177,7 +2177,7 @@ TabCustomize.prototype =
 
 		$A(cloned.getElementsBySelector('li')).each(function(el)
 		{
-			var anchor = el.down('a');
+			var anchor = el.down('.tabName');
 			if (anchor)
 			{
 				anchor.parentNode.replaceChild(document.createTextNode(anchor.firstChild.data), anchor);
