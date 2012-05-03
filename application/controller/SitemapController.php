@@ -133,12 +133,10 @@ class SitemapController extends FrontendController
 		$url = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'sitemap')));
 		$ping = array(
 			'Google' => 'http://www.google.com/webmasters/tools/ping?sitemap=' . $url,
-			'Yahoo' => 'http://search.yahooapis.com/SiteExplorerService/V1/updateNotification?appid=YahooDemo&url=' . $url,
 			'MSN Live' => 'http://www.bing.com/webmaster/ping.aspx?siteMap=' . $url,
 			'Ask' => 'http://submissions.ask.com/ping?sitemap=' . $url,
-			'Moreover' => 'http://api.moreover.com/ping?u=' . $url,
 			);
-
+			
 		$result = array();
 		foreach ($ping as $site => $pingUrl)
 		{
