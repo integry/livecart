@@ -150,7 +150,7 @@ ActiveList.prototype = {
 			Backend.setUniqueID(this.ul);
 		}
 
-		Element.addClassName(this.ul, this.ul.id);
+		jQuery(this.ul).addClass(this.ul.id).addClass('ui-accordion ui-widget ui-helper-reset ui-accordion-icons');
 
 		// Check if all required callbacks are passed
 		var missedCallbacks = [];
@@ -344,7 +344,32 @@ ActiveList.prototype = {
 		container = $(container);
 		ActiveList.prototype.collapseAll();
 
+		var title = jQuery(container).closest('li.activeList').find('span:visible').not('.activeList_icons').html();
+
+		jQuery(container).dialog('close');
+		jQuery(container).data('originalParent', container.parentNode).dialog(
+			{
+				autoOpen: false,
+				modal: true,
+				title: title,
+				resizable: false,
+				width: 'auto',
+				autoResize: true,
+				beforeClose: function(event, ui){
+					jQuery(container).html('').data('originalParent').appendChild(container);
+					this.toggleContainerOff(container);
+//				 $(this).remove();
+			   }.bind(this),
+
+				/*beforeClose: function()
+				{
+					this.toggleContainerOff(container);
+				}.bind(this)
+				*/
+			}).dialog('open');
+
 		Sortable.destroy(this.ul);
+
 		// Destroy parent sortable as well
 		var parentList = this.ul.up(".activeList");
 		if(parentList && ActiveList.prototype.activeListsUsers[parentList.id])
@@ -354,12 +379,7 @@ ActiveList.prototype = {
 
 		if(BrowserDetect.browser != 'Explorer')
 		{
-			Effect.BlindDown(container, { duration: 0.5 });
-			Effect.Appear(container, { duration: 1.0 });
 			setTimeout(function() {
-				container.style.height = 'auto';
-				container.style.display = 'block';
-
 				if(highlight) this.highlight(container.up('li'), highlight);
 			}.bind(this), 300);
 		}
@@ -382,6 +402,9 @@ ActiveList.prototype = {
 		var container = $(container);
 		this.createSortable(true);
 
+		//jQuery(container).dialog('close');
+
+
 		// Create parent sortable as well
 		var parentList = this.ul.up(".activeList");
 		if(parentList && ActiveList.prototype.activeListsUsers[parentList.id])
@@ -391,7 +414,6 @@ ActiveList.prototype = {
 
 		if(BrowserDetect.browser != 'Explorer')
 		{
-			Effect.BlindUp(container, {duration: 0.2});
 			setTimeout(function() {
 				container.style.display = 'none';
 				if(highlight) this.highlight(container.up('li'), highlight);
@@ -636,6 +658,8 @@ ActiveList.prototype = {
 	decorateLi: function(li)
 	{
 		var self = this;
+
+		jQuery(li).addClass('ui-accordion-header ui-helper-reset ui-state-default ui-corner-all');
 
 		// fix li ID if it was set as numeric only
 		if (!isNaN(parseInt(li.id)))
