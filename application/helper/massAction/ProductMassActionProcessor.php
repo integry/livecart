@@ -85,10 +85,12 @@ class ProductMassActionProcessor extends MassActionProcessor
 		}
 		else if (substr($act, 0, 13) == 'set_specField')
 		{
+			$this->params['request']->remove('manufacturer');
 			$product->loadRequestData($this->params['request']);
 		}
 		else if (substr($act, 0, 16) == 'remove_specField')
 		{
+			$this->params['request']->remove('manufacturer');
 			if ($this->params['field']->isMultiValue->get())
 			{
 				// remove only selected multi-select options
