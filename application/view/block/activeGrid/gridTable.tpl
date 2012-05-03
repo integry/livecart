@@ -1,21 +1,61 @@
 {assign var=advancedSearch value=true}
 
-<fieldset class="container activeGridControls">
+<div class="activeGridOuterContainer">
+<div class="activeGridControls ui-widget-header ui-corner-top ui-helper-clearfix">
+
+	{if $addMenu}
+		<div class="menu fg-buttonset fg-buttonset-single ui-helper-clearfix">
+			{include file=$addMenu}
+		</div>
+	{/if}
+
+	{if $count}
+		<span class="gridCount">
+			{include file="custom:`$count`"}
+		</span>
+	{/if}
+
+	<a class="ui-icon ui-icon-refresh" href="#" onclick="window.activeGrids['{$prefix}_{$id}'].reloadGrid(); return false;">&nbsp;</a>
+
+	<a href="#" class="fg-button activeGridColumns ui-state-default fg-button-icon-left ui-corner-all" onclick="window.activeGrids['{$prefix}_{$id}'].showColumnMenu(); return false;">
+		<span class="ui-icon ui-icon-circle-triangle-s"></span>
+		{t _columns}
+	</a>
+
+	<div id="{$prefix}ColumnMenu_{$id}" class="activeGridColumnsRoot" style="display: none; position: relative;">
+	  <form action="{link controller=$controller action=changeColumns}" onsubmit="window.activeGrids['{$prefix}_{$id}'].changeColumns('{$container}', event); return false;" method="post">
+
+		<input type="hidden" name="id" value="{$id}" />
+
+		<div class="activeGridColumnsSelect">
+			<div class="activeGridColumnsList">
+				{foreach from=$availableColumns item=item key=column}
+				<p class="activeGridcolumn_{$column|replace:'.':'_'}">
+					<input type="checkbox" name="col[{$column}]" class="checkbox" id="column_{$id}_{$column}_{uniqid}"{if $displayedColumns.$column}checked="checked"{/if} />
+					<label for="column_{$id}_{$column}_{uniqid last=true}" class="checkbox" id="column_{$id}_{uniqid last=true}_{$column}_label">
+						{$item.name}
+					</label>
+				</p>
+				{/foreach}
+			</div>
+		</div>
+	  </form>
+	</div>
+
 	{if $advancedSearch}
-		<div id="{$prefix}_{$id}_AdvancedSearch" class="activeGridAdvancedSearch">
-			<a href="javascript:void(0);" class="cancel advancedSearchLink">
-				{t _advanced_search}
+		<span id="{$prefix}_{$id}_AdvancedSearch" class="activeGridAdvancedSearch">
+			<a href="javascript:void(0);" class="advancedSearchLink fg-button ui-state-default fg-button-icon-left ui-corner-all" href="#">
+				<span class="ui-icon ui-icon-search"></span>
+				{t _search}
 			</a>
-			<div id="{$prefix}_{$id}_QueryContainer" class="advancedSearchQueryContainer">
+			<div id="{$prefix}_{$id}_QueryContainer" class="advancedSearchQueryContainer" style="display: none;">
 				<ul class="advancedQueryItems">
 				</ul>
 			</div>
-		</div>
+		</span>
 	{/if}
-	{if $massAction}
-		{include file=$massAction}
-	{/if}
-</fieldset>
+
+</div>
 
 <div style="position: relative;">
 	<div style="display: none;" class="activeGrid_loadIndicator" id="{$prefix}LoadIndicator_{$id}">
@@ -47,11 +87,11 @@
 <thead>
 	<tr class="headRow">
 
-		<th class="cell_cb"><input type="checkbox" class="checkbox" /></th>
+		<th class="cell_cb ui-state-default ui-th-column ui-th-ltr"><input type="checkbox" class="checkbox" /></th>
 
 		{foreach from=$displayedColumns item=type key=column name="columns"}
 			{if !$smarty.foreach.columns.first}
-				<th class="first cellt_{$type} cell_{$column|replace:'.':'_'}">
+				<th class="first cellt_{$type} cell_{$column|replace:'.':'_'} ui-state-default ui-th-column ui-th-ltr">
 					<div style="position: relative;">
 					<span class="fieldName">{$column}</span>
 
@@ -169,7 +209,7 @@
 </thead>
 <tbody>
 	{section name="createRows" start=0 loop=$rowCount}
-		<tr class="{if $smarty.section.createRows.index is even}even{else}odd{/if}">
+		<tr class="{if $smarty.section.createRows.index is even}even{else}odd{/if} ui-widget-content ui-row-ltr">
 			<td class="cell_cb"></td>
 		{foreach from=$displayedColumns key=column item=type name="columns"}
 		 	{if !$smarty.foreach.columns.first}
@@ -180,56 +220,25 @@
 	{/section}
 </tbody>
 
-	</table>
+</table>
 </div>
 
-<div class="activeGridColumns" >
+<div class="ui-state-default ui-corner-bottom" >
 	<ul class="menu" style="float: left;">
-		{if $count}
-			<li class="gridCount">
-				{include file="custom:`$count`"}
-			</li>
+		{if $massAction}
+			{include file=$massAction}
 		{/if}
-
-		<li class="reload">
-			<a href="#" onclick="window.activeGrids['{$prefix}_{$id}'].reloadGrid(); return false;">{t _grid_reload}</a>
-		</li>
 	</ul>
 
-	<ul class="menu" style="float: right;">
-		<li class="export">
-			<a href="#" onclick="var grid = window.activeGrids['{$prefix}_{$id}']; window.location.href='{link controller=$controller action=export}?' + grid.ricoGrid.getQueryString() + '&selectedIDs=' + grid.getSelectedIDs().toJSON() + '&isInverse=' + (grid.isInverseSelection() ? 1 : 0); return false;">{t _grid_export}</a>
-		</li>
-		<li class="selectColumns">
-		   <a href="#" onclick="Element.show($('{$prefix}ColumnMenu_{$id}')); return false;">{t _columns}</a>
-		</li>
-	</ul>
+	<div class="menu" style="float: right;">
+		<a href="#" class="fg-button ui-state-default fg-button-icon-left ui-corner-all" onclick="var grid = window.activeGrids['{$prefix}_{$id}']; window.location.href='{link controller=$controller action=export}?' + grid.ricoGrid.getQueryString() + '&selectedIDs=' + grid.getSelectedIDs().toJSON() + '&isInverse=' + (grid.isInverseSelection() ? 1 : 0); return false;">
+			<span class="ui-icon ui-icon-disk"></span>
+			{t _grid_export}
+		</a>
+	</div>
 
 	<div class="clear"></div>
 </div>
-
-<div id="{$prefix}ColumnMenu_{$id}" class="activeGridColumnsRoot" style="display: none; position: relative;">
-  <form action="{link controller=$controller action=changeColumns}" onsubmit="new LiveCart.AjaxUpdater(this, this.up('.{$container}'), document.getElementsByClassName('progressIndicator', this)[0]); return false;" method="post">
-
-	<input type="hidden" name="id" value="{$id}" />
-
-	<div class="activeGridColumnsSelect">
-		<div class="activeGridColumnsSelectControls">
-			<span class="progressIndicator" style="display: none;"></span>
-			<input type="submit" class="submit" name="sm" value="{tn _change_columns}" /> {t _or} <a class="cancel" onclick="Element.hide($('{$prefix}ColumnMenu_{$id}')); return false;" href="#cancel">{t _cancel}</a>
-		</div>
-		<div class="activeGridColumnsList">
-			{foreach from=$availableColumns item=item key=column}
-			<p class="activeGridcolumn_{$column|replace:'.':'_'}">
-				<input type="checkbox" name="col[{$column}]" class="checkbox" id="column_{$id}_{$column}"{if $displayedColumns.$column}checked="checked"{/if} />
-				<label for="column_{$id}_{$column}" class="checkbox" id="column_{$id}_{$column}_label">
-					{$item.name}
-				</label>
-			</p>
-			{/foreach}
-		</div>
-	</div>
-  </form>
 </div>
 
 {literal}
@@ -252,8 +261,6 @@
 		{/if}
 	{/foreach}
 	{if $advancedSearch}
-
-
 
 		window.activeGrids['{$prefix}_{$id}'].initAdvancedSearch(
 			"{$prefix}_{$id}",

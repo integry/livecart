@@ -217,7 +217,7 @@ html, body{
 #pageHeader
 {
     position: relative;
-    z-index: 2000;
+    z-index: 200;
     background: url(../../image/backend/layout/header_shade.png) repeat-x left bottom;
     margin-right: 1px;
 }
@@ -633,18 +633,9 @@ html, body{
 	background-repeat: no-repeat;
 }
 
-ul.menu {
-    display: block;
-
-	border-bottom: 1px solid #ddd;
+ul.menu
+{
 	margin-bottom: 5px;
-
-	padding: 10px;
-    padding-top: 4px;
-	padding-bottom: 6px;
-	padding-left: 0px;
-
-	font-size: smaller;
 }
 
 ul.menu li {
@@ -664,11 +655,6 @@ ul.menu li.cancel
 
 .menu a {
   	color: red;
-}
-
-div.menu a
-{
-	font-size: smaller;
 }
 
 ul.verticalMenu
@@ -1647,6 +1633,12 @@ fieldset.group p
 
 }
 
+.ui-tabs-panel.sectionContainer
+{
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
 #discountManagerContainer .sectionContainer,
 #newsletterManagerContainer .sectionContainer
 {
@@ -2428,6 +2420,43 @@ body.ui-widget, body .ui-widget
 	font-size: 1em;
 }
 
+.ui-icon
+{
+	display: inline-block;
+	vertical-align: middle;
+}
+
+/*** http://www.filamentgroup.com/lab/styling_buttons_and_toolbars_with_the_jquery_ui_css_framework/ ***/
+
+.fg-button { outline: 0; margin:0 4px 0 0; padding: .4em 1em; text-decoration:none !important; cursor:pointer; position: relative; text-align: center; zoom: 1; }
+.fg-button .ui-icon { position: absolute; top: 50%; margin-top: -8px; left: 50%; margin-left: -8px; }
+
+a.fg-button { display: inline-block; vertical-align: middle; }
+
+/* remove extra button width in IE */
+button.fg-button { width:auto; overflow:visible; }
+
+.fg-button-icon-left { padding-left: 2.1em; }
+.fg-button-icon-right { padding-right: 2.1em; }
+.fg-button-icon-left .ui-icon { right: auto; left: .2em; margin-left: 0; }
+.fg-button-icon-right .ui-icon { left: auto; right: .2em; margin-left: 0; }
+
+.fg-button-icon-solo { display:block; width:8px; text-indent: -9999px; }	 /* solo icon buttons must have block properties for the text-indent to work */
+
+.fg-buttonset { display: inline-block; }
+.fg-buttonset .fg-button { display: inline-block; }
+.fg-buttonset-single .fg-button,
+.fg-buttonset-multi .fg-button { margin-right: -1px;}
+
+.fg-toolbar { padding: .5em; margin: 0;  }
+.fg-toolbar .fg-buttonset { margin-right:1.5em; padding-left: 1px; }
+.fg-toolbar .fg-button { font-size: 1em;  }
+
+.activeGridControls .menu .fg-button
+{
+	font-size: larger;
+}
+
 /*** jQuery multiselect ***/
 
 .ui-multiselect { padding:2px 0 2px 4px; text-align:left }
@@ -2450,3 +2479,57 @@ body.ui-widget, body .ui-widget
 .ui-multiselect-checkboxes li { clear:both; font-size:0.9em; padding-right:3px }
 .ui-multiselect-checkboxes li.ui-multiselect-optgroup-label { text-align:center; font-weight:bold; border-bottom:1px solid }
 .ui-multiselect-checkboxes li.ui-multiselect-optgroup-label a { display:block; padding:3px; margin:1px 0; text-decoration:none }
+
+/**** modal dialogs ****/
+
+.modalTitle
+{
+	font-size: 2em;
+	font-weight: bold;
+ 	border-bottom-width: 1px;
+    margin-bottom: 0.5em;
+    padding-bottom: 4px;
+}
+
+.modalClose
+{
+	width: 16px;
+	height: 16px;
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	background-image: url(../../../../image/silk/cancel.png);
+	cursor: pointer;
+}
+
+.jqmWindow {
+    display: none;
+
+    position: fixed;
+    top: 17%;
+    left: 50%;
+
+    margin-left: -300px;
+    min-width: 450px;
+
+    background-color: #EEE;
+    color: #333;
+    border: 1px solid black;
+    padding: 12px;
+}
+
+.jqmOverlay { background-color: #000; }
+
+/* Background iframe styling for IE6. Prevents ActiveX bleed-through (<select> form elements, etc.) */
+* iframe.jqm {position:absolute;top:0;left:0;z-index:-1;
+        width: expression(this.parentNode.offsetWidth+'px');
+        height: expression(this.parentNode.offsetHeight+'px');
+}
+
+/* Fixed posistioning emulation for IE6
+     Star selector used to hide definition from browsers other than IE6
+     For valid CSS, use a conditional include instead */
+* html .jqmWindow {
+     position: absolute;
+     top: expression((document.documentElement.scrollTop || document.body.scrollTop) + Math.round(17 * (document.documentElement.offsetHeight || document.body.clientHeight) / 100) + 'px');
+}

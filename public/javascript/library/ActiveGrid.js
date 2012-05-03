@@ -437,6 +437,57 @@ ActiveGrid.prototype =
 		return $(node[0]);
 	},
 
+	showColumnMenu: function()
+	{
+		var container = jQuery(this.tableInstance).data('columnContainer');
+		if (!container)
+		{
+			var container = jQuery(this.tableInstance).closest('.activeGridOuterContainer').find('.activeGridColumnsRoot');
+			jQuery(this.tableInstance).data('columnContainer', container);
+		}
+
+		jQuery(container).dialog('close');
+		jQuery(container).dialog(
+			{
+				autoOpen: false,
+				title: '',
+				resizable: false,
+				width: 'auto',
+				autoResize: true,
+			}).dialog('open');
+
+		jQuery('input.checkbox', container).click(function(e)
+		{
+			var event = jQuery.Event("submit");
+			event.checkbox = this;
+			jQuery(this).closest('form').trigger(event);
+		});
+
+		var title = jQuery(container).closest('.ui-dialog').find('.ui-dialog-title');
+		title.html('<input type="text" class="text filter" />');
+		var input = title.find('input');
+
+		jQuery(input).click(function(e)
+		{
+			e.stopPropagation();
+			this.focus();
+		}).keyup(function()
+		{
+			var filter = this.value.toLowerCase();
+			jQuery(container).find('label').each(function()
+			{
+				var lab = jQuery(this).html().toLowerCase();
+				jQuery(this).closest('p').toggle(lab.indexOf(filter) > -1);
+			});
+		});
+	},
+
+	changeColumns: function(containerClass, e)
+	{
+		var form = jQuery(e.target).closest('form')[0];
+		new LiveCart.AjaxUpdater(form, jQuery(this.tableInstance).closest('.' + containerClass)[0], e.checkbox);
+	},
+
 	setInitialData: function(data)
 	{
 		if (data)
@@ -658,7 +709,7 @@ ActiveGrid.prototype =
 	{
 		var cell = this._getTargetCell(event);
 		var row = cell ? cell.parentNode : this._getTargetRow(event);
-		Element.addClassName(row, 'activeGrid_highlight');
+		Element.addClassName(row, 'ui-state-hover');
 
 		if (cell)
 		{
@@ -703,7 +754,7 @@ ActiveGrid.prototype =
 			this.cellContentContainer.style.display = 'none';
 		}
 
-		Element.removeClassName(this._getTargetRow(event), 'activeGrid_highlight');
+		Element.removeClassName(this._getTargetRow(event), 'ui-state-hover');
 	},
 
 	setFilterValue: function(key, value)
@@ -720,11 +771,13 @@ ActiveGrid.prototype =
 	{
 		this.loadIndicator.style.display = '';
 		$(this.loadIndicator.parentNode).up('div').down('.notFound').hide();
+		jQuery(this.tableInstance).closest('.activeGrid_viewport').addClass('loading');
 	},
 
 	hideFetchIndicator: function()
 	{
 		this.loadIndicator.style.display = 'none';
+		jQuery(this.tableInstance).closest('.activeGrid_viewport').removeClass('loading');
 	},
 
 	resetSelection: function()
@@ -763,11 +816,11 @@ ActiveGrid.prototype =
 
 			if (checked)
 			{
-				rowInstance.addClassName('selected');
+				rowInstance.addClassName('ui-state-active');
 			}
 			else
 			{
-				rowInstance.removeClassName('selected');
+				rowInstance.removeClassName('ui-state-active');
 			}
 		}
 	},
@@ -1379,6 +1432,23 @@ ActiveGridAdvancedSearch.prototype =
 
 	linkClicked: function()
 	{
+		var container = this.nodes.queryContainer;
+		jQuery(container).dialog('close');
+		jQuery(container).data('originalParent', container.parentNode).dialog(
+			{
+				autoOpen: false,
+				title: Backend.getTranslation('_advanced_search'),
+				resizable: false,
+				width: 'auto',
+				height: 'auto',
+				minHeight: 20,
+				autoResize: true,
+				beforeClose: function(event, ui){
+					this.clearEmptyConditions();
+			   }.bind(this),
+			}).dialog('open');
+
+		this.clearEmptyConditions();
 		this.appendCondition();
 	},
 
@@ -1386,6 +1456,31 @@ ActiveGridAdvancedSearch.prototype =
 	{
 		var li = this.appendConditionPlaceholder();
 		this.getCondition($(li).down(".condition").value).draw(li);
+
+		jQuery(this.nodes.searchLink).addClass('ui-state-active');
+	},
+
+	clearEmptyConditions: function()
+	{
+		var self = this;
+
+		jQuery('input.value', this.nodes.queryContainer).each(function()
+		{
+			if (!this.value)
+			{
+				self.removeConditionPlaceholder(this);
+			}
+		});
+
+		if (!this.hasConditions())
+		{
+			jQuery(this.nodes.searchLink).removeClass('ui-state-active');
+		}
+	},
+
+	hasConditions: function()
+	{
+		return jQuery('li', this.nodes.queryContainer).length > 0;
 	},
 
 	conditionItemChanged: function(event)
@@ -1411,6 +1506,11 @@ ActiveGridAdvancedSearch.prototype =
 		if(element.hasClassName("deleteCross"))
 		{
 			this.removeConditionPlaceholder(element);
+
+			if (!this.hasConditions())
+			{
+				jQuery(this.nodes.queryContainer).dialog('close');
+			}
 		}
 	},
 
