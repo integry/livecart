@@ -205,16 +205,10 @@ ActiveForm.prototype = {
 					textareas[k].id = 'tinyMceControll_' + textareas[k].tinyMCEId;
 				}
 
-				if (!ActiveForm.prototype.idleTinyMCEFields[textareas[k].id])
+				jQuery(textareas[k]).onShow(function()
 				{
-					ActiveForm.prototype.idleTinyMCEFields[textareas[k].id] = window.setInterval(function(tinyMCEField)
-					{
-						if(!tinyMCEField || 0 >= tinyMCEField.offsetHeight) return;
-						window.clearInterval(ActiveForm.prototype.idleTinyMCEFields[tinyMCEField.id]);
-						tinyMCE.execCommand('mceAddControl', true, tinyMCEField.id);
-						ActiveForm.prototype.idleTinyMCEFields[tinyMCEField.id] = null;
-					}.bind(this, textareas[k]), 100);
-				}
+					tinyMCE.execCommand('mceAddControl', true, this.id);
+				});
 			}
 		}
 	},
@@ -509,3 +503,32 @@ Form.focus = function(form)
 		}
 	}
 }
+
+/******** jQuery onShow ********/
+
+;(function($){
+  $.fn.extend({ 
+    onShow: function(callback, unbind){
+      return this.each(function(){
+        var obj = this;
+        var bindopt = (unbind==undefined)?true:unbind; 
+        if($.isFunction(callback)){
+          if($(this).is(':hidden')){
+            var checkVis = function(){
+              if($(obj).is(':visible')){
+                callback.call(obj);
+                if(bindopt){
+                  $('body').unbind('click keyup keydown', checkVis);
+                }
+              }                         
+            }
+            $('body').bind('click keyup keydown', checkVis);
+          }
+          else{
+            callback.call(obj);
+          }
+        }
+      });
+    }
+  });
+})(jQuery);
