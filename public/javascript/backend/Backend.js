@@ -34,6 +34,8 @@ var Backend =
 
 	onLoad: function()
 	{
+		Backend.initWidgets();
+
 		// AJAX navigation
 		dhtmlHistory.initialize();
 		dhtmlHistory.addListener(Backend.ajaxNav.handle);
@@ -2251,6 +2253,19 @@ TabCustomize.prototype =
 		var url = Backend.Router.setUrlQueryParam(url, 'value', !li.hasClassName('hidden'));
 		new LiveCart.AjaxRequest(url);
 	}
+}
+
+Backend.initWidgets = function()
+{
+	jQuery('.fg-button').live('mouseover', function() { jQuery(this).data('isActive', jQuery(this).hasClass('ui-state-active')).addClass('ui-state-hover').removeClass('ui-state-active'); })
+	jQuery('.fg-button').live('mouseout', function()
+		{
+			jQuery(this).removeClass('ui-state-hover');
+			if (jQuery(this).data('isActive'))
+			{
+				jQuery(this).addClass('ui-state-active');
+			}
+		});
 }
 
 /************* Tooltips **************/
