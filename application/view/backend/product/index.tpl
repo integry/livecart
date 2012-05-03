@@ -10,17 +10,6 @@
 
 <div>
 
-<fieldset class="container" {denied role="product.create"}style="display: none"{/denied}>
-	<ul class="menu">
-		<li class="addProduct">
-			<a href="#" onclick="Backend.Product.showAddForm({$categoryID}, this); return false;">
-				{t _add_product}
-			</a>
-			<span class="progressIndicator" style="display: none;"></span>
-		</li>
-	</ul>
-</fieldset>
-
 {activeGrid
 	prefix="products"
 	id=$categoryID
@@ -35,6 +24,7 @@
 	count="backend/product/count.tpl"
 	massAction="backend/product/massAction.tpl"
 	advancedSearch=true
+	addMenu="backend/product/addButton.tpl"
 }
 
 </div>
