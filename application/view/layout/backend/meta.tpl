@@ -16,6 +16,7 @@
 	{includeCss file="backend/stat.css" front=true}
 	{includeCss file="backend/Backend.css" front=true}
 	{includeCss file="backend/theme/redmond/jquery-ui.css" front=true}
+	{includeCss file="library/jquery/jquery-plugins.css" front=true}
 	{compiledCss glue=true nameMethod=hash}
 
 	{if !'DISABLE_WYSIWYG'|config}
