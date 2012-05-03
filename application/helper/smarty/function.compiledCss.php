@@ -86,6 +86,23 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 				$compiledFileContent .= " ***************************************************/\n\n";
 
 				$content = file_get_contents($cssFile);
+
+				$pre = array('..', 'http', '/');
+				foreach (array("'", '"', '') as $quote)
+				{
+					foreach ($pre as $i)
+					{
+						$content = str_ireplace('url(' . $quote . $i, 'url__(' . $quote . $i , $content);
+					}
+
+					$content = str_replace('url(' . $quote , 'url(' . $quote . dirname($relPath) . '/', $content);
+
+					foreach ($pre as $i)
+					{
+						$content = str_replace('url__(' . $quote . $i, 'url(' . $quote . $i, $content);
+					}
+				}
+
 				$content = str_replace('url(..', 'url(' . dirname($relPath) . '/..', $content);
 				$content = str_replace('url(\'..', 'url(\'' . dirname($relPath) . '/..', $content);
 				$content = str_replace('url("..', 'url("' . dirname($relPath) . '/..', $content);
