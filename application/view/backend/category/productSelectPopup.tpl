@@ -1,7 +1,5 @@
 {includeJs file="library/livecart.js"}
 {includeJs file="library/ActiveGrid.js"}
-{includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
-{includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
 {includeJs file="library/TabControl.js"}
 {includeJs file="library/rico/ricobase.js"}
 {includeJs file="library/rico/ricoLiveGrid.js"}
@@ -10,10 +8,11 @@
 
 {includeCss file="library/ActiveGrid.css"}
 {includeCss file="library/TabControl.css"}
-{includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 {includeCss file="backend/Category.css"}
 {includeCss file="backend/Product.css"}
 {includeCss file="backend/ProductRelatedSelectProduct.css"}
+
+{include file="backend/category/loadJsTree.tpl"}
 
 {pageTitle}{t _select_product}{/pageTitle}
 
@@ -54,19 +53,9 @@
 {literal}
 <script type="text/javascript">
 	Backend.Category.links = {};
-	Backend.Category.links.categoryRecursiveAutoloading = '{/literal}{link controller=backend.category action=xmlRecursivePath}{literal}';
 	Backend.Category.links.countTabsItems = '{/literal}{link controller=backend.category action=countTabsItems id=_id_}{literal}';
-	Backend.Category.links.categoryAutoloading = '{/literal}{link controller=backend.category action=xmlBranch}{literal}';
 
-	Backend.Category.init();
-
-	Backend.Category.treeBrowser.setXMLAutoLoading(Backend.Category.links.categoryAutoloading);
-	Backend.Category.addCategories({/literal}{json array=$categoryList}{literal});
-
-	Backend.Category.activeCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
-	Backend.Category.initPage();
-
-	Backend.Category.loadBookmarkedCategory();
+	Backend.Category.init({/literal}{json array=$categoryList}{literal});
 
 	{/literal}
 		{allowed role="product"}

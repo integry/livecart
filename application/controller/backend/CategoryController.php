@@ -17,11 +17,8 @@ class CategoryController extends StoreManagementController
 {
 	public function index()
 	{
-		$categoryList = Category::getRootNode()->getDirectChildNodes();
-		$categoryList->unshift(Category::getRootNode());
-
 		$response = new ActionResponse();
-		$response->set('categoryList', $categoryList->toArray());
+		$response->set('categoryList', $this->getRootCategoryJson());
 		$response->set('allTabsCount', array(Category::ROOT_ID => $this->getTabCounts(Category::ROOT_ID)));
 		$response->set('maxUploadSize', ini_get('upload_max_filesize'));
 		$response->set('defaultCurrencyCode', $this->application->getDefaultCurrencyCode());
@@ -276,60 +273,83 @@ class CategoryController extends StoreManagementController
 		);
 	}
 
-	public function xmlBranch()
+	public function branch()
 	{
 		$xmlResponse = new XMLResponse();
 		$rootID = (int)$this->request->get("id", 1);
+		$category = Category::getInstanceByID($rootID, true);
 
-		if(!in_array($rootID, array(Category::ROOT_ID, 0)))
-		{
-		   $category = Category::getInstanceByID($rootID);
-		   $xmlResponse->set("rootID", $rootID);
-		   $xmlResponse->set("categoryList", $category->getChildNodes(false, true)->toArray($this->application->getDefaultLanguageCode()));
-		}
-
-		return $xmlResponse;
+		return new JSONResponse($this->getCategoryChildrenJson($category));
 	}
 
-	public function xmlRecursivePath()
+	protected function getRootCategoryJson()
 	{
-		$xmlResponse = new XMLResponse();
-		$targetID = (int)$this->request->get("id");
+		$root = Category::getRootNode();
+		$categories = array('data' => $root->getValueByLang('name'), 'id' => $root->getID(), 'attr' => array('id' => $root->getID()), 'children' => array());
+		$categories['children'] = $this->getCategoryChildrenJson($root);
 
-		try
+		return $categories;
+	}
+
+	protected function getCategoryChildrenJson(Category $category)
+	{
+		$children = array();
+		foreach ($category->getChildNodeArray(false, true) as $cat)
 		{
-			$categoriesList = Category::getInstanceByID($targetID)->getPathBranchesArray();
-			if(count($categoriesList) > 0 && isset($categoriesList['children'][0]['parent']))
+			$children[] = $this->getCategoryJson($cat);
+		}
+
+		return $children;
+	}
+
+	protected function getCategoryJson($cat)
+	{
+		$jscat = array('data' => $cat['name_lang'], 'id' => $cat['ID'], 'attr' => array('id' => $cat['ID']), 'state' => 'closed');
+		if ($cat['rgt'] - $cat['lft'] == 1)
+		{
+			$jscat['children'] = null;
+			$jscat['state'] = 'leaf';
+		}
+
+		if (!$cat['isEnabled'])
+		{
+			$jscat['attr']['class'] = 'ui-state-disabled';
+		}
+
+		return $jscat;
+	}
+
+	public function getRecursiveJson($root)
+	{
+		$jscat = $this->getCategoryJson($root);
+
+		if (!empty($root['children']) && is_array($root['children']))
+		{
+			foreach ($root['children'] as $cat)
 			{
-				$xmlResponse->set("rootID", $categoriesList['children'][0]['parent']);
-				$xmlResponse->set("categoryList", $categoriesList);
+				$jscat['children'][] = $this->getRecursiveJson($cat);
 			}
-
-			$xmlResponse->set("doNotTouch", $this->request->get("doNotTouch"));
-		}
-		catch(Exception $e)
-		{
 		}
 
-		$xmlResponse->set("targetID", $targetID);
+		return $jscat;
+	}
 
-		return $xmlResponse;
+	public function recursivePath()
+	{
+		$root = Category::getRootNode()->toArray();
+		$root['children'] = array(Category::getInstanceByID((int)$this->request->get("id"), true)->getPathBranchesArray());
+
+		return new JSONResponse($this->getRecursiveJson($root));
 	}
 
 	public function popup()
 	{
-		$categoryList = Category::getRootNode()->getDirectChildNodes();
-		$categoryList->unshift(Category::getRootNode());
-
-		return new ActionResponse('categoryList', $categoryList->toArray());
+		return new ActionResponse('categoryList', $this->getRootCategoryJson());
 	}
 
 	public function productSelectPopup()
 	{
-		$categoryList = Category::getRootNode()->getDirectChildNodes();
-		$categoryList->unshift(Category::getRootNode());
-
-		return new ActionResponse('categoryList', $categoryList->toArray());
+		return $this->popup();
 	}
 
 	public function reindex()

@@ -347,9 +347,13 @@ Backend.Breadcrumb =
 		Backend.Breadcrumb.createPath(id, additional);
 	},
 
+	getTreeInst: function()
+	{
+		return this.treeBrowser.jstree('get_parent', '');
+	},
+
 	createPath: function(id, additional)
 	{
-		if(!Backend.Breadcrumb.treeBrowser && Backend.Breadcrumb.treeBrowser.getSelectedItemId) return;
 		var parentId = id;
 
 		if (!Backend.Breadcrumb.treeBrowser)
@@ -357,7 +361,8 @@ Backend.Breadcrumb =
 			return false;
 		}
 
-		Backend.Breadcrumb.selectedItemId = Backend.Breadcrumb.treeBrowser.getSelectedItemId();
+		var selected = this.treeBrowser.jstree('get_selected');
+		Backend.Breadcrumb.selectedItemId = selected.attr('id');
 
 		if (!Backend.Breadcrumb.pageTitle)
 		{
@@ -368,12 +373,13 @@ Backend.Breadcrumb =
 
 		if(typeof(id) != 'object')
 		{
-			do
+			var names = this.getTreeInst().get_path(selected);
+			var ids = this.getTreeInst().get_path(selected, true);
+
+			for (var k = names.length - 1; k >= 0; k--)
 			{
-				Backend.Breadcrumb.addCrumb(Backend.Breadcrumb.treeBrowser.getItemText(parentId), parentId, true);
-				parentId = Backend.Breadcrumb.treeBrowser.getParentId(parentId);
+				Backend.Breadcrumb.addCrumb(names[k], ids[k], true);
 			}
-			while(parentId != 0);
 		}
 		else
 		{
@@ -405,16 +411,12 @@ Backend.Breadcrumb =
 			}
 		}
 
-		var lastSeparator = $$("#pageTitle .breadcrumb").last().down('.breadcrumb_separator');
-		if(lastSeparator)
-		{
-			lastSeparator.hide();
-		}
+		jQuery("#pageTitle .breadcrumb").last().find('.breadcrumb_separator').hide();
 
-		var lastLink = $$("#pageTitle .breadcrumb").last().down('a');
-		if(lastLink)
+		var lastLink = jQuery("#pageTitle .breadcrumb").last().find('a');
+		if(lastLink.length)
 		{
-			Backend.Breadcrumb.convertLinkToText(lastLink);
+			Backend.Breadcrumb.convertLinkToText(lastLink[0]);
 		}
 	},
 
@@ -448,13 +450,17 @@ Backend.Breadcrumb =
 				Event.stop(e);
 				Backend.hideContainer();
 
-				if(Backend.Breadcrumb.treeBrowser.getIndexById(this.catId) == null)
+				if(!Backend.Category.getNode(this.catId).length)
 				{
-					Backend.Category.treeBrowser.loadXML(Backend.Router.setUrlQueryParam(Backend.Category.links.categoryRecursiveAutoloading, "id", this.catId));
+					var catId = this.catId;
+					Backend.Category.loadBranch(this.catId, function()
+					{
+						Backend.Category.selectItem(catId);
+					});
 				}
 				else
 				{
-					Backend.Breadcrumb.treeBrowser.selectItem(this.catId, true);
+					Backend.Category.selectItem(this.catId);
 				}
 			});
 		}

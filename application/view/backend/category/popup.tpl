@@ -1,11 +1,8 @@
 {includeJs file="library/livecart.js"}
-{includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
-{includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
 {includeJs file="backend/Category.js"}
 {includeJs file="backend/Product.js"}
-
-{includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 {includeCss file="backend/Category.css"}
+{include file="backend/category/loadJsTree.tpl"}
 
 {pageTitle}{t _select_category}{/pageTitle}
 
@@ -40,22 +37,9 @@
 	{
 		window.onload = window.opener.popupOnload;
 	}
-
-	Backend.Category.links = {};
-	Backend.Category.links.categoryRecursiveAutoloading = '{/literal}{link controller=backend.category action=xmlRecursivePath}{literal}';
-	Backend.Category.links.categoryAutoloading = '{/literal}{link controller=backend.category action=xmlBranch}{literal}';
-
-	Backend.Category.init();
-
-	Backend.Category.treeBrowser.setXMLAutoLoading(Backend.Category.links.categoryAutoloading);
-	Backend.Category.addCategories({/literal}{json array=$categoryList}{literal});
-
-	Backend.Category.activeCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
-	Backend.Category.initPage();
-
-	Backend.Category.loadBookmarkedCategory();
-</script>
 {/literal}
+	Backend.Category.init({json array=$categoryList});
+</script>
 
 </body>
 </html>

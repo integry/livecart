@@ -1907,10 +1907,9 @@ li.moreTabs li.hidden:hover a
 ***************************/
 .treeBrowser
 {
-    border: 1px solid #ccc;
-    background: #f1f1f1;
     padding-bottom: 5px;
   	height: 360px;
+  	overflow: auto;
 }
 
 .treeContainer {
@@ -2425,6 +2424,17 @@ body.ui-widget, body .ui-widget
 	display: inline-block;
 	vertical-align: middle;
 }
+
+.treeBrowser li.ui-state-disabled
+{
+	opacity: 1;
+}
+
+.treeBrowser li.ui-state-disabled > a
+{
+	opacity: 0.35;
+}
+
 
 /*** http://www.filamentgroup.com/lab/styling_buttons_and_toolbars_with_the_jquery_ui_css_framework/ ***/
 

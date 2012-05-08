@@ -291,19 +291,19 @@ Backend.Product =
 		else if (('set_specField' == element.value.substr(0, 13)) || ('remove_specField' == element.value.substr(0, 16)))
 		{
 			var container = element.up('form').down('.' + element.value);
-			
+
 			if (!container)
 			{
 				return;
 			}
-			
+
 			var id = element.value.match(/_([0-9]+)/)[1];
 			var container = element.up('form').down('.specFieldValueContainer');
 			new LiveCart.AjaxUpdater(Backend.Router.createUrl('backend.product', 'massActionField', {id: id}), container, element.parentNode.down('#progressIndicator_specField'), false, function()
 			{
 				new Backend.Eav(container);
 				container.show();
-			});			
+			});
 		}
 	},
 
@@ -594,7 +594,7 @@ Backend.Product.Editor.prototype =
 
 	craftProductUrl: function(url)
 	{
-		return url.replace(/_categoryID_/, Backend.Category.treeBrowser.getSelectedItemId()).replace(/_id_/, Backend.Product.Editor.prototype.getCurrentProductId());
+		return url.replace(/_categoryID_/, Backend.Category.getSelectedId()).replace(/_id_/, Backend.Product.Editor.prototype.getCurrentProductId());
 	},
 
 	craftProductId: function(tabId)
@@ -714,9 +714,9 @@ Backend.Product.Editor.prototype =
 		if($("productManagerContainer")) Element.hide($("productManagerContainer"));
 		if($("managerContainer")) Element.show($("managerContainer"));
 
-		if (!Backend.Category.treeBrowser.getSelectedItemId())
+		if (!Backend.Category.getSelectedId())
 		{
-			Backend.Category.treeBrowser.selectItem(1, false);
+			//Backend.Category.treeBrowser.selectItem(1, false);
 			Backend.Category.activateCategory(1);
 		}
 

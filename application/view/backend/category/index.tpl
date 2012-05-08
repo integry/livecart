@@ -5,8 +5,6 @@
 {includeJs file="library/form/ActiveForm.js"}
 {includeJs file="library/form/State.js"}
 {includeJs file="library/form/Validator.js"}
-{includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
-{includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
 {includeJs file="library/jscolor/jscolor.js"}
 {includeJs file="library/TabControl.js"}
 {includeJs file="library/lightbox/lightbox.js"}
@@ -53,8 +51,9 @@
 {includeCss file="backend/Review.css"}
 {includeCss file="library/TabControl.css"}
 {includeCss file="backend/Eav.css"}
-{includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 {includeCss file="library/lightbox/lightbox.css"}
+
+{include file="backend/category/loadJsTree.tpl"}
 
 {pageTitle help="cat"}<span id="activeCategoryPath"></span><span id="activeProductPath" style="display: none;"><span id="productCategoryPath"></span><span id="activeProductName"></span></span><span style="display: none;">{t _products_and_categories}</span>{/pageTitle}
 {include file="layout/backend/header.tpl"}
@@ -193,28 +192,16 @@
 	Backend.Category.links.remove  = '{link controller=backend.category action=remove id=_id_}';
 	Backend.Category.links.countTabsItems = '{link controller=backend.category action=countTabsItems id=_id_}';
 	Backend.Category.links.reorder = '{link controller=backend.category action=reorder id=_id_ query="parentId=_pid_&direction=_direction_"}';
-	Backend.Category.links.categoryAutoloading = '{link controller=backend.category action=xmlBranch}';
-	Backend.Category.links.categoryRecursiveAutoloading = '{link controller=backend.category action=xmlRecursivePath}';
 	Backend.Category.links.addProduct  = '{link controller=backend.product action=add id=_id_}';
 
 	Backend.Category.messages = {literal}{}{/literal};
 	Backend.Category.messages._reorder_failed = '{t _reorder_failed|addslashes}';
 	Backend.Category.messages._confirm_category_remove = '{t _confirm_category_remove|addslashes}';
-	Backend.Category.messages._confirm_category_remove = '{t _confirm_category_remove|addslashes}';
 	Backend.Category.messages._confirm_move = '{t _confirm_move|escape}';
 
-	Backend.Category.init();
+	Backend.Category.init({json array=$categoryList});
 
-	Backend.Category.treeBrowser.setXMLAutoLoading(Backend.Category.links.categoryAutoloading);
-	Backend.Category.addCategories({json array=$categoryList});
 	CategoryTabControl.prototype.loadCategoryTabsCount({json array=$allTabsCount});
-
-	Backend.Category.activeCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
-	Backend.Category.initPage();
-
-	Backend.Category.loadBookmarkedCategory();
-
-	Backend.Category.showControls();
 </script>
 
 {include file="backend/product/tabs.tpl"}

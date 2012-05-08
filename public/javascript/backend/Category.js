@@ -29,11 +29,15 @@ Backend.Category = {
 	/**
 	 * Category module initialization
 	 */
-	init: function()
+	init: function(categories)
 	{
-		this.initCategoryBrowser();
+		this.initCategoryBrowser(categories);
 		this.initTabs();
 		this.initTreeControls();
+
+		this.loadBookmarkedCategory();
+		this.initPage();
+		this.showControls();
 	},
 
 	initPage: function()
@@ -45,123 +49,143 @@ Backend.Category = {
 			Backend.Breadcrumb.display(1);
 		}
 
-		Backend.Category.treeBrowser.showFeedback =
-			function(itemId)
-			{
-				if (!this.iconUrls)
-				{
-					this.iconUrls = new Object();
-				}
-
-				if (!this.iconUrls[itemId])
-				{
-					this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
-					var img = $(this._globalIdStorageFind(itemId).htmlNode).down('img', 2);
-					img.originalSrc = img.src;
-					img.src = 'image/indicator.gif';
-				}
-			}
-
-		Backend.Category.treeBrowser.hideFeedback =
-			function(itemId)
-			{
-				if (null != this.iconUrls[itemId])
-				{
-					this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
-					var img = $(this._globalIdStorageFind(itemId).htmlNode).down('img', 2);
-					img.src = img.originalSrc;
-					this.iconUrls[itemId] = null;
-				}
-			}
-
 		var elements = Backend.getHash().split('#');
 
 		if (elements[1].substr(0, 4) == 'cat_')
 		{
 			var parts = elements[1].split('_');
 			var categoryId = parts[1];
-
-			Backend.Category.activeCategoryId = categoryId;
-			Backend.Category.treeBrowser.selectItem(categoryId, false, false);
-
-			return true;
 		}
-
-		if($('categoryBrowser').getElementsByClassName('selectedTreeRow')[0])
+		else
 		{
-			var treeNode = $('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode;
-			Backend.ajaxNav.add('cat_' + treeNode.parentObject.id + '#tabProducts');
+			var categoryId = 1;
 		}
+
+		Backend.Category.activeCategoryId = categoryId;
+		Backend.Category.selectItem(categoryId);
+
+		return true;
 	},
 
 	initTreeControls: function()
 	{
-		if($("categoryBrowserActions"))
+		jQuery("#createNewCategoryLink").click(function(e)
 		{
-			if ($('createNewCategoryLink'))
-			{
-				Event.observe($("createNewCategoryLink"), "click", function(e) {
-					Event.stop(e);
-					Backend.Category.createNewBranch();
-				}.bind(this));
-			}
+			e.preventDefault();
+			Backend.Category.createNewBranch();
+		}.bind(this));
 
-			if ($("removeCategoryLink"))
+		jQuery("#removeCategoryLink").click(function(e)
+		{
+			e.preventDefault();
+			if (confirm(Backend.Category.messages._confirm_category_remove))
 			{
-				Event.observe($("removeCategoryLink"), "click", function(e) {
-					Event.stop(e);
-					if (confirm(Backend.Category.messages._confirm_category_remove))
-					{
-						Backend.Category.removeBranch();
-					}
-				}.bind(this));
+				Backend.Category.removeBranch();
 			}
+		}.bind(this));
 
-			if ($("moveCategoryUp"))
-			{
-				Event.observe($("moveCategoryUp"), "click", function(e) {
-					Event.stop(e);
-					this.moveCategory(Backend.Category.activeCategoryId, 'up_strict');
-				}.bind(this));
-			}
+		jQuery("#moveCategoryUp").click(function(e)
+		{
+			e.preventDefault();
+			this.moveCategory(Backend.Category.activeCategoryId, 'up_strict');
+		}.bind(this));
 
-			if ($("moveCategoryDown"))
-			{
-				Event.observe($("moveCategoryDown"), "click", function(e) {
-					Event.stop(e);
-					this.moveCategory(Backend.Category.activeCategoryId, 'down_strict');
-				}.bind(this));
-			}
-		}
+		jQuery("#moveCategoryDown").click(function(e)
+		{
+			e.preventDefault();
+			this.moveCategory(Backend.Category.activeCategoryId, 'down_strict');
+		}.bind(this));
 	},
 
 	/**
-	 * Builds category tree browser object (dhtmlxTree) and initializes its params
+	 * Builds category tree browser object and initializes its params
 	 */
-	initCategoryBrowser: function()
+	initCategoryBrowser: function(categories)
 	{
-		this.treeBrowser = new dhtmlXTreeObject("categoryBrowser","","", 0);
+		var self = this;
+		categories.state = 'open';
 
-		Backend.Category.treeBrowser.setCategoryStyle =
-			function(category)
+		this.treeBrowser = jQuery('#categoryBrowser').jstree(
 			{
-				this.setItemColor(category.ID, (category.isEnabled < 1 ? '#999' : '#000'), (category.isEnabled < 1 ? '#999' : '#fff'));
-			}
+				ui:
+				{
+					select_limit: 1,
+					selected_parent_open: true,
+					select_prev_on_delete: true
+				},
+				plugins: ['json_data', 'ui', 'themesz', 'dnd', 'crrm', 'themeroller'],
+				json_data:
+				{
+					data: [categories],
+					ajax:
+					{
+						url: function(node) { return Router.createUrl('backend.category', 'branch', {id: node.attr('id')}); }
+					}
+				},
+				themeroller:
+				{
+					item: ''
+				},
+				themes:
+				{
+					theme: 'classic'
+				}
+			}).bind("select_node.jstree", function (event, data)
+			{
+				self.activateCategory(data.rslt.obj.attr("id"), data);
+	        }).bind("load_node.jstree", function (event, data)
+			{
+				if (Backend.Category.afterLoad)
+				{
+					Backend.Category.afterLoad();
+					Backend.Category.afterLoad = null;
+				}
+	        }).bind("move_node.jstree", function (event, data)
+	        {
+				Backend.Category.reorderCategory(Backend.Category.getNodeId(data.rslt.o), Backend.Category.getNodeId(data.rslt.r));
+	        });
 
 		Backend.Breadcrumb.setTree(this.treeBrowser);
-
-		this.treeBrowser.setImagePath("image/backend/dhtmlxtree/");
-		this.treeBrowser.setOnClickHandler(this.activateCategory);
-		if(Backend.Category.allowSorting)
-		{
-			this.treeBrowser.setDragHandler(this.reorderCategory);
-			this.treeBrowser.enableDragAndDrop(1);
-		}
 	},
 
 	initTabs: function()
 	{
 		this.tabControl = new CategoryTabControl(this.treeBrowser, 'tabList', 'sectionContainer', 'image/indicator.gif');
+	},
+
+	getSelectedId: function()
+	{
+		return this.treeBrowser.jstree('get_selected').attr('id');
+	},
+
+	getParentId: function(id)
+	{
+		if (!id)
+		{
+			return null;
+		}
+
+		return this.getTreeInst()._get_parent(jQuery('#' + id)).attr('id');
+	},
+
+	getNodeId: function(node)
+	{
+		return jQuery(node).attr('id');
+	},
+
+	selectItem: function(id)
+	{
+		return this.treeBrowser.jstree('select_node', '#' + id);
+	},
+
+	getTreeInst: function()
+	{
+		return this.treeBrowser.jstree('get_parent', '');
+	},
+
+	getNode: function(categoryID)
+	{
+		return this.treeBrowser.find('#' + categoryID);
 	},
 
 	showControls: function()
@@ -172,7 +196,7 @@ Backend.Category = {
 			return false;
 		}
 
-		var categoryId = Backend.Category.treeBrowser.getSelectedItemId();
+		var categoryId = Backend.Category.getSelectedId();
 
 		if(categoryId == '1')
 		{
@@ -196,17 +220,11 @@ Backend.Category = {
 
 			if ($("moveCategoryUp"))
 			{
-				parentId = Backend.Category.treeBrowser.getParentId(categoryId)
-				categoryIndex = Backend.Category.treeBrowser.getIndexById(categoryId)
-				if(parentId)
+				if(Backend.Category.getParentId(categoryId))
 				{
-					nextCategoryId = Backend.Category.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) + 1)
-
-					if(nextCategoryId) $("moveCategoryDown").parentNode.show();
-					else $("moveCategoryDown").parentNode.hide();
-
-					if(categoryIndex > 0) $("moveCategoryUp").parentNode.show();
-					else $("moveCategoryUp").parentNode.hide();
+					var inst = this.getTreeInst();
+					jQuery("#moveCategoryDown").parent().toggle(inst._get_next(this.getNode(categoryId), true) != false);
+					jQuery("#moveCategoryUp").parent().toggle(inst._get_prev(this.getNode(categoryId), true) != false);
 				}
 			}
 		}
@@ -216,8 +234,6 @@ Backend.Category = {
 	 * Tree browser onClick handler. Activates selected category by realoading active
 	 * tab with category specific data
 	 *
-	 * @todo Find some better way to reference/retrieve the DOM nodes from tree by category ID's
-	 * (automatically assign ID's somehow?). Also necessary for bookmarking (the ID's have to be preassigned).
 	 */
 	activateCategory: function(categoryId)
 	{
@@ -236,11 +252,8 @@ Backend.Category = {
 		Backend.Category.tabControl.switchCategory(categoryId, Backend.Category.activeCategoryId);
 		Backend.Category.activeCategoryId = categoryId;
 
-		// set ID for the current tree node element
-		$('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode.id = 'cat_' + categoryId;
-
 		// and register browser history event to enable backwar/forward navigation
-		// Backend.ajaxNav.add('cat_' + categoryId);
+		Backend.ajaxNav.add('cat_' + categoryId);
 
 		if (!Backend.Category.tabControl.activeTab)
 		{
@@ -268,7 +281,7 @@ Backend.Category = {
 	createNewBranch: function()
 	{
 		new LiveCart.AjaxRequest(
-			this.getUrlForNewNode(this.treeBrowser.getSelectedItemId()),
+			this.getUrlForNewNode(Backend.Category.getSelectedId()),
 			false,
 			function(response) { this.afterNewBranchCreated(response) }.bind(this)
 		);
@@ -276,60 +289,59 @@ Backend.Category = {
 
 	moveCategory: function(categoryID, direction)
 	{
+		var node = this.getNode(categoryID);
 		if('up_strict' == direction)
 		{
+			var sibling = this.getTreeInst()._get_prev(node, true);
+			this.getTreeInst().move_node(node, sibling, 'before');
 			Backend.Category.treeBrowser._reorderDirection = 'left';
 		}
 		else
 		{
+			var sibling = this.getTreeInst()._get_next(node, true);
+			this.getTreeInst().move_node(node, sibling, 'after');
 			Backend.Category.treeBrowser._reorderDirection = 'right';
 		}
 
-		Backend.Category.treeBrowser.moveItem(categoryID, direction);
+		this.reorderCategory(categoryID, this.getParentId(categoryID));
 		Backend.Category.treeBrowser._reorderDirection = false;
+
 		Backend.Category.showControls();
-
-		return;
-
 	},
 
 	afterNewBranchCreated: function(response)
 	{
 		var newCategory = eval('(' + response.responseText + ')');
-		var parentCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
+		var parentCategoryId = Backend.Category.getSelectedId();
 
-		if(Backend.Category.treeBrowser.hasChildren(parentCategoryId) === true)
-		{
-			Backend.Category.treeBrowser.openItem(parentCategoryId);
-
-			this.createNewCatInterval = setInterval(function()
+		var parent = jQuery('#' + parentCategoryId);
+		this.getTreeInst().create_node(parent, 'last',
 			{
-				if(Backend.Category.treeBrowser.getIndexById(newCategory.ID) !== null)
-				{
-					Backend.Category.treeBrowser.selectItem(newCategory.ID, true);
-					this.tabControl.activateTab("tabMainDetails", newCategory.ID);
+				attr: {'class': 'ui-state-disabled', id: newCategory.ID},
+				state: 'leaf',
+				data: newCategory.name_lang
+			});
 
-					Backend.Breadcrumb.display(newCategory.ID);
-					Backend.Category.showControls();
+		var self = this;
+		var tree = this.getTreeInst();
 
-					clearInterval(this.createNewCatInterval);
-				}
-			}.bind(this)
-			, 200);
+		var open = function()
+		{
+			tree.open_node(parent);
+			self.treeBrowser.jstree('deselect_all');
+			self.selectItem(newCategory.ID);
+			self.tabControl.activateTab("tabMainDetails");
+		}
+
+		if (!tree._is_loaded(parent))
+		{
+			Backend.Category.afterLoad = open;
+			tree.load_node(parent);
 		}
 		else
 		{
-			 this.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name_lang, null, 0, 0, 0, '', 1);
-			 this.treeBrowser.showItemSign(newCategory.ID, 0);
-			 this.treeBrowser.selectItem(newCategory.ID, true);
-			 this.tabControl.activateTab("tabMainDetails", newCategory.ID);
-
-			Backend.Breadcrumb.display(newCategory.ID);
-			Backend.Category.showControls();
-
+			open();
 		}
-		Backend.Category.treeBrowser.setCategoryStyle(newCategory);
-
 	},
 
 	/**
@@ -347,8 +359,9 @@ Backend.Category = {
 	{
 		var categoryData = eval('(' + response.responseText + ')');
 
-		Backend.Category.treeBrowser.setItemText(categoryData.ID, categoryData.name_lang);
-		Backend.Category.treeBrowser.setCategoryStyle(categoryData);
+		var node = jQuery('#' + categoryData.ID);
+		node.toggleClass('ui-state-disabled', categoryData.isEnabled == 0);
+		this.getTreeInst().rename_node(node, categoryData.name_lang);
 	},
 
 	/**
@@ -388,8 +401,8 @@ Backend.Category = {
 	 */
 	removeBranch: function()
 	{
-		var nodeIdToRemove = this.treeBrowser.getSelectedItemId();
-		var parentNodeId = this.treeBrowser.getParentId(nodeIdToRemove);
+		var nodeIdToRemove = this.getSelectedId();
+		var parentNodeId = this.getParentId(nodeIdToRemove);
 
 		new LiveCart.AjaxRequest(this.getUrlForNodeRemoval(nodeIdToRemove), null,
 			function(transport)
@@ -424,79 +437,54 @@ Backend.Category = {
 
 	removeBranchSuccess: function(nodeIdToRemove, parentNodeId)
 	{
-		this.activateCategory(parentNodeId);
-		this.tabControl.activateTab($('tabProducts'), parentNodeId);
-		this.treeBrowser.deleteItem(nodeIdToRemove, true);
+		this.treeBrowser.jstree('deselect_all');
+		this.getTreeInst().delete_node(this.getNode(nodeIdToRemove));
+		this.selectItem(parentNodeId);
 	},
 
-	reorderCategory: function(targetId, parentId, siblingNodeId)
+	reorderCategory: function(targetId, parentId)
 	{
 		if (!parentId)
 		{
 			return false;
 		}
 
-		new LiveCart.AjaxRequest(Backend.Category.getUrlForNodeReorder(targetId, parentId, Backend.Category.treeBrowser._reorderDirection));
+		var node = this.getNode(targetId).find('a').first();
+		node.addClass('jstree-loading');
+		new LiveCart.AjaxRequest(Backend.Category.getUrlForNodeReorder(targetId, parentId, Backend.Category.treeBrowser._reorderDirection), null, function()
+		{
+			node.removeClass('jstree-loading');
+		});
 
 		return true;
 	},
 
-	/**
-	 * Insert array of categories into tree
-	 *
-	 * @param array categories Array of category objects. Every category object should contain these elements
-	 *	 parent - Id of parent category
-	 *	 ID - Id o category
-	 *	 name - Category name in current language
-	 *	 options - Advanced options
-	 *	 childrenCount - Indicates that this node has N childs
-	 */
-	addCategories: function(categories)
-	{
-		$A(categories).each(function(category) {
-			if(!category.parent || 0 == category.parent)
-			{
-				category.options = "";
-				category.parent = 0;
-			}
-			else if(!category.option)
-			{
-				category.options = "";
-			}
-
-			// strip HTML
-			category.name = '<b>' + category.name_lang + '</b>';
-			category.name = category.name.replace(/<(?:.|\s)*?>/g, "");
-
-			Backend.Category.treeBrowser.insertNewItem(category.parent,category.ID,category.name, null, 0, 0, 0, category.options, !category.childrenCount ? 0 : category.childrenCount);
-			Backend.Category.treeBrowser.setCategoryStyle(category);
-		});
-	},
-
-	loadBookmarkedCategory: function(categoryID)
+	loadBookmarkedCategory: function()
 	{
 		var match = Backend.getHash().match(/cat_(\d+)/);
 
 		if(match)
 		{
-			var alreadyLoaded = false;
-			try
-			{
-				$A(Backend.Category.treeBrowser._globalIdStorage).each(function(id)
-				{
-					if(id == match[1])
-					{
-					   alreadyLoaded = true;
-					   throw $break;
-					}
-				});
-			}
-			catch(e) { }
+			this.activeCategoryId = match[1];
 
-			if(!alreadyLoaded)
+			this.loadBranch(this.activeCategoryId);
+		}
+	},
+
+	loadBranch: function(id, onload)
+	{
+		if (!jQuery('#' + id).length)
+		{
+			new LiveCart.AjaxRequest(Router.createUrl('backend.category', 'recursivePath', {id: id}), null, function(oR)
 			{
-				Backend.Category.treeBrowser.loadXML(Backend.Router.setUrlQueryParam(Backend.Category.links.categoryRecursiveAutoloading, "id", match[1]), function() { this.activeCategoryId = null; this.activateCategory(match[1]);}.bind(this));
-			}
+				var node = Backend.Category.getNode(1);
+				node.append(Backend.Category.getTreeInst()._parse_json(oR.responseData));
+
+				if (onload)
+				{
+					onload();
+				}
+			});
 		}
 	},
 
@@ -565,7 +553,7 @@ CategoryTabControl.prototype = {
 			if (Element.hasClassName(tabList[i], 'active'))
 			{
 				this.activeTab = tabList[i];
-				var containerId = this.getContainerId(tabList[i].id, treeBrowser.getSelectedItemId());
+				var containerId = this.getContainerId(tabList[i].id, Backend.Category.getSelectedId());
 				if ($(containerId) != undefined)
 				{
 					Element.show(containerId);
@@ -621,6 +609,7 @@ CategoryTabControl.prototype = {
 	 */
 	handleTabClick: function()
 	{
+		Backend.Category.selectItem(Backend.Category.activeCategoryId);
 		this.tabControl.activateTab(this);
 
 		Backend.ajaxNav.add('cat_' + Backend.Category.activeCategoryId + '#' + this.id, this.id);
@@ -629,14 +618,18 @@ CategoryTabControl.prototype = {
 	/**
 	 * Activates a given tab of currenty selected category
 	 */
-	activateTab: function(targetTab, categoryIdToActivate)
+	activateTab: function(targetTab)
 	{
 		targetTab = $(targetTab);
 
 		var tab = targetTab;
-		var id = categoryIdToActivate;
 
-		var categoryId = (categoryIdToActivate == undefined ? this.treeBrowser.getSelectedItemId() : categoryIdToActivate);
+		var categoryId = Backend.Category.getSelectedId();
+		if (!categoryId)
+		{
+			categoryId = Backend.Category.activeCategoryId;
+		}
+
 		this.updateTabItemsCount(categoryId);
 
 		$(this.sectionContainerName).childElements().invoke("hide");
@@ -699,8 +692,6 @@ CategoryTabControl.prototype = {
 
 		if (categoryId != "" && (Element.empty(containerId) || jQuery('.indicatorContainer', jQuery(containerId))))
 		{
-			Backend.Category.treeBrowser.showFeedback(parseInt(categoryId));
-
 			new LiveCart.AjaxUpdater(
 				this.getTabUrl(tabId, categoryId),
 				this.getContainerId(tabId, categoryId),
@@ -708,7 +699,6 @@ CategoryTabControl.prototype = {
 				undefined,
 				function()
 				{
-					Backend.Category.treeBrowser.hideFeedback(categoryId);
 					if ('tabMainDetails' == tabId)
 					{
 						var nameField = $(containerId).down('form').elements.namedItem('name');
@@ -750,7 +740,7 @@ CategoryTabControl.prototype = {
 
 	reloadActiveTab: function()
 	{
-		categoryId = this.treeBrowser.getSelectedItemId();
+		categoryId = Backend.Category.getSelectedId();;
 		this.resetContent(this.activeTab, categoryId);
 		this.activateTab(this.activeTab, categoryId);
 	},
@@ -847,32 +837,14 @@ Backend.Category.PopupSelector.prototype =
 			{
 				Event.observe(w.document.getElementById('select'), 'click', function()
 					{
-						var tree = w.Backend.Category.treeBrowser;
-
-						var pathAsText = '';
-						var path = {};
-
-						var parentId = tree.getSelectedItemId();
-						do
-						{
-							var name = tree.getItemText(parentId)
-							pathAsText = name + pathAsText;
-							path[parentId] = name;
-
-							parentId = tree.getParentId(parentId);
-
-							if (parentId)
-							{
-								pathAsText = ' > ' + pathAsText;
-							}
-						}
-						while(parentId != 0);
+						var cat = w.Backend.Category;
+						var pathAsText = cat.getTreeInst().get_path(cat.getNode(cat.getSelectedId())).join(' > ');
 
 						var res = true;
 
 						if (this.onAccept)
 						{
-							res = this.onAccept(tree.getSelectedItemId(), pathAsText, path, w);
+							res = this.onAccept(cat.getSelectedId(), pathAsText, {}, w);
 						}
 
 						if (res)

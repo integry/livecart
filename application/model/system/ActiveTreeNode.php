@@ -174,6 +174,31 @@ class ActiveTreeNode extends ActiveRecordModel
 	 */
 	public function getChildNodes($loadReferencedRecords = false, $loadOnlyDirectChildren = false)
 	{
+		$className = get_class($this);
+
+		$filter = $this->getChildNodeFilter($loadOnlyDirectChildren);
+		return ActiveRecord::getRecordSet($className, $filter, $loadReferencedRecords);
+	}
+
+	/**
+	 * Loads a list of child records for this node
+	 *
+	 * @param bool $loadReferencedRecords
+	 * @param bool $loadOnlyDirectChildren
+	 * @return ARSet
+	 *
+	 * @see self::getDirectChildNodes()
+	 */
+	public function getChildNodeArray($loadReferencedRecords = false, $loadOnlyDirectChildren = false)
+	{
+		$className = get_class($this);
+
+		$filter = $this->getChildNodeFilter($loadOnlyDirectChildren);
+		return ActiveRecord::getRecordSetArray($className, $filter, $loadReferencedRecords);
+	}
+
+	public function getChildNodeFilter($loadOnlyDirectChildren = false)
+	{
 		$this->load();
 		$className = get_class($this);
 
@@ -188,9 +213,7 @@ class ActiveTreeNode extends ActiveRecordModel
 		$nodeFilter->setCondition($cond);
 		$nodeFilter->setOrder(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME));
 
-		$childList = ActiveRecord::getRecordSet($className, $nodeFilter, $loadReferencedRecords);
-
-		return $childList;
+		return $nodeFilter;
 	}
 
 	public function getChildNodeCondition()
@@ -731,6 +754,7 @@ class ActiveTreeNode extends ActiveRecordModel
 			return $branch;
 		}
 
+		$branch = $path[$level];
 		$branch['children'] = Category::getInstanceByID($path[$level]['ID'])->getChildNodes(false, true)->toArray();
 
 		$childrenCount = count($branch['children']);
