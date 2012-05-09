@@ -44,6 +44,16 @@ class LiveCartSmarty extends Smarty
 		return $this->get_template_vars($var);
 	}
 
+	public function setGlobal($var, $value)
+	{
+		$this->_smarty_vars[$var] = $value;
+	}
+
+	public function getGlobal($var)
+	{
+		return isset($this->_smarty_vars[$var]) ? $this->_smarty_vars[$var] : '';
+	}
+
 	/**
 	 *  Retrieve software configuration values from Smarty templates
 	 *
@@ -115,7 +125,11 @@ class LiveCartSmarty extends Smarty
 	public function _compile_source($resource_name, &$source_content, &$compiled_content, $cache_include_path=null)
 	{
 		$source_content = $this->processPlugins($source_content, $resource_name);
-		return parent::_compile_source($resource_name, $source_content, $compiled_content, $cache_include_path);
+		$res = parent::_compile_source($resource_name, $source_content, $compiled_content, $cache_include_path);
+
+		$compiled_content = '<?php $currentErrorLevel = error_reporting(); error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE); ?>' . $compiled_content;
+
+		return $res;
 	}
 
    /**

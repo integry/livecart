@@ -428,7 +428,7 @@ abstract class FrontendController extends BaseController
 			}
 
 			$this->topCategoryId = $topCategoryId;
-			$this->currentCategoryPath = $path;
+			$this->currentCategoryPath = isset($path) ? $path : array();
 		}
 
 		return $this->currentCategoryPath;

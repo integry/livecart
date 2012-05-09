@@ -23,7 +23,7 @@ class LiveCartRouter extends Router
 
 		foreach ($this->langReplaces as $needle => $replace)
 		{
-			$repl = !empty($replace['record'][$replace['field'] . $varSuffix]) ? $replace['record'][$replace['field'] . $varSuffix] : $replace['record'][$replace['field']];
+			$repl = !empty($replace['record'][$replace['field'] . $varSuffix]) ? $replace['record'][$replace['field'] . $varSuffix] : (isset($replace['record'][$replace['field']]) ? $replace['record'][$replace['field']] : '');
 			if ($repl)
 			{
 				$repl = createHandleString($repl);

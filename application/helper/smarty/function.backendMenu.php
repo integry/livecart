@@ -41,16 +41,16 @@ function smarty_function_backendMenu($params, LiveCartSmarty $smarty)
 			$filteredValue[$field] = $smarty->branding($locale->translator()->translate($topValue[$field]));
 		}
 
-		$filteredValue['controller'] = $topValue['controller'];
-		$filteredValue['action'] = $topValue['action'];
-		$filteredValue['icon'] = $topValue['icon'];
+		$filteredValue['controller'] = isset($topValue['controller']) ? $topValue['controller'] : '';
+		$filteredValue['action'] = isset($topValue['action']) ? $topValue['action'] : '';
+		$filteredValue['icon'] = isset($topValue['icon']) ? $topValue['icon'] : '';
 
 		if(!empty($topValue['controller']))
 		{
-			$filteredValue['url'] = $router->createUrl(array('controller' => $topValue['controller'], 'action' => $topValue['action']), true);
+			$filteredValue['url'] = $router->createUrl(array('controller' => $topValue['controller'], 'action' => (isset($topValue['action']) ? $topValue['action'] : null)), true);
 		}
 
-		if (is_array($topValue['items']))
+		if (isset($topValue['items']) && is_array($topValue['items']))
 		{
 			$subItems = array();
 			foreach ($topValue['items'] as &$subValue)
@@ -66,10 +66,10 @@ function smarty_function_backendMenu($params, LiveCartSmarty $smarty)
 					$filteredSubValue[$field] = $smarty->branding($locale->translator()->translate($subValue[$field]));
 				}
 
-				$filteredSubValue['url'] = $router->createUrl(array('controller' => $subValue['controller'], 'action' => $subValue['action']), true);
+				$filteredSubValue['url'] = $router->createUrl(array('controller' => $subValue['controller'], 'action' => (isset($subValue['action']) ? $subValue['action'] : null)), true);
 				$filteredSubValue['controller'] = $subValue['controller'];
-				$filteredSubValue['action'] = $subValue['action'];
-				$filteredSubValue['icon'] = $subValue['icon'];
+				$filteredSubValue['action'] = isset($subValue['action']) ? $subValue['action'] : '';
+				$filteredSubValue['icon'] = isset($subValue['icon']) ? $subValue['icon'] : '';
 
 				$subItems[] = $filteredSubValue;
 			}

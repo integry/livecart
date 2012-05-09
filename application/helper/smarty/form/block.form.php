@@ -87,6 +87,10 @@ function smarty_block_form(&$params, $content, $smarty, &$repeat)
 			$customOnSubmit = $params['onsubmit'];
 			unset($params['onsubmit']);
 		}
+		else
+		{
+			$customOnSubmit = '';
+		}
 
 		$onSubmit = "";
 		$validatorField = "";
@@ -171,7 +175,7 @@ function smarty_block_form(&$params, $content, $smarty, &$repeat)
 
 		$form = '<form action="'.$actionURL.'" '.$formAttributes.'>' . "\n";
 		$form .= $validatorField;
-		$form .= $filterField;
+		$form .= isset($filterField) ? $filterField : '';
 		$form .= $content;
 		$form .= "</form>";
 

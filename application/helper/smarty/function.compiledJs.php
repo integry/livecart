@@ -11,8 +11,8 @@
  */
 function smarty_function_compiledJs($params, LiveCartSmarty $smarty)
 {
-	$includedJavascriptTimestamp = $smarty->_smarty_vars["INCLUDED_JAVASCRIPT_TIMESTAMP"];
-	$includedJavascriptFiles = $smarty->_smarty_vars["INCLUDED_JAVASCRIPT_FILES"];
+	$includedJavascriptTimestamp = $smarty->getGlobal("INCLUDED_JAVASCRIPT_TIMESTAMP");
+	$includedJavascriptFiles = $smarty->getGlobal("INCLUDED_JAVASCRIPT_FILES");
 
 	$app = $smarty->getApplication();
 

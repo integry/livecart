@@ -36,9 +36,9 @@
 	</fieldset>
 	</td><td>
 	<div class="productForm {if 1 == $product.type}intangible{/if}">
-		{include file="backend/product/form/inventory.tpl" product=$product cat=$product.Category.ID baseCurrency=$baseCurrency form=$productForm}
-		{include file="backend/product/form/pricing.tpl" product=$product cat=$product.Category.ID baseCurrency=$baseCurrency }
-		{include file="backend/product/form/shipping.tpl" product=$product cat=$product.Category.ID baseCurrency=$baseCurrency }
+		{include file="backend/product/form/inventory.tpl" product=$product cat=$product.categoryID baseCurrency=$baseCurrency form=$productForm}
+		{include file="backend/product/form/pricing.tpl" product=$product cat=$product.categoryID baseCurrency=$baseCurrency}
+		{include file="backend/product/form/shipping.tpl" product=$product cat=$product.categoryID baseCurrency=$baseCurrency}
 	</div>
 	</td></tr></table>
 

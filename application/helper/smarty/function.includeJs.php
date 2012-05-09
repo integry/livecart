@@ -44,8 +44,8 @@ function smarty_function_includeJs($params, LiveCartSmarty $smarty)
 	}
 	else
 	{
-		$includedJavascriptTimestamp = $smarty->_smarty_vars["INCLUDED_JAVASCRIPT_TIMESTAMP"];
-		if(!($includedJavascriptFiles = $smarty->_smarty_vars['INCLUDED_JAVASCRIPT_FILES']))
+		$includedJavascriptTimestamp = $smarty->getGlobal("INCLUDED_JAVASCRIPT_TIMESTAMP");
+		if(!($includedJavascriptFiles = $smarty->getGlobal('INCLUDED_JAVASCRIPT_FILES')))
 		{
 		   $includedJavascriptFiles = array();
 		}
@@ -65,7 +65,7 @@ function smarty_function_includeJs($params, LiveCartSmarty $smarty)
 		$fileMTime = filemtime($filePath);
 		if($fileMTime > (int)$includedJavascriptTimestamp)
 		{
-			$smarty->_smarty_vars['INCLUDED_JAVASCRIPT_TIMESTAMP'] = $fileMTime;
+			$smarty->setGlobal('INCLUDED_JAVASCRIPT_TIMESTAMP', $fileMTime);
 		}
 
 		if(isset($params['front']))
@@ -77,16 +77,16 @@ function smarty_function_includeJs($params, LiveCartSmarty $smarty)
 			$includedJavascriptFiles[$filePath] = $fileName;
 		}
 
-		$smarty->_smarty_vars['INCLUDED_JAVASCRIPT_FILES'] = $includedJavascriptFiles;
+		$smarty->setGlobal('INCLUDED_JAVASCRIPT_FILES', $includedJavascriptFiles);
 	}
-	
+
 	foreach ($smarty->getApplication()->getConfigContainer()->getFilesByRelativePath('public/' . $fileName, true) as $file)
 	{
 		if (realpath($file) == realpath($filePath))
 		{
 			continue;
 		}
-		
+
 		$file = substr($file, strlen(ClassLoader::getRealPath('public')));
 		$params['file'] = $file;
 		smarty_function_includeJs($params, $smarty);

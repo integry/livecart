@@ -304,6 +304,11 @@ class CategoryController extends StoreManagementController
 
 	protected function getCategoryJson($cat)
 	{
+		if (!$cat)
+		{
+			return array();
+		}
+
 		$jscat = array('data' => $cat['name_lang'], 'id' => $cat['ID'], 'attr' => array('id' => $cat['ID']), 'state' => 'closed');
 		if ($cat['rgt'] - $cat['lft'] == 1)
 		{
@@ -337,6 +342,12 @@ class CategoryController extends StoreManagementController
 	public function recursivePath()
 	{
 		$root = Category::getRootNode()->toArray();
+
+		if ($this->request->get("id") == $root['ID'])
+		{
+			return;
+		}
+
 		$root['children'] = array(Category::getInstanceByID((int)$this->request->get("id"), true)->getPathBranchesArray());
 
 		return new JSONResponse($this->getRecursiveJson($root));

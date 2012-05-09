@@ -40,8 +40,8 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 		}
 	}
 
-	$includedStylesheetTimestamp = $smarty->_smarty_vars["INCLUDED_STYLESHEET_TIMESTAMP"];
-	$includedStylesheetFiles = $smarty->_smarty_vars["INCLUDED_STYLESHEET_FILES"];
+	$includedStylesheetTimestamp = $smarty->getGlobal("INCLUDED_STYLESHEET_TIMESTAMP");
+	$includedStylesheetFiles = $smarty->getGlobal("INCLUDED_STYLESHEET_FILES");
 
 	if ($includedStylesheetFiles)
 	{
@@ -56,7 +56,7 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 
 		if (isset($params['nameMethod']) && 'hash' == $params['nameMethod'])
 		{
-			$names = array_values($includedStylesheetFiles);
+			$names = array_values((array)$includedStylesheetFiles);
 			sort($names);
 			$compiledFileName = md5(implode("\n", $names)) . '.css';
 		}
@@ -88,6 +88,7 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 				$content = file_get_contents($cssFile);
 
 				$pre = array('..', 'http', '/');
+				$dirname = dirname($relPath) . '/';
 				foreach (array("'", '"', '') as $quote)
 				{
 					foreach ($pre as $i)
@@ -95,17 +96,23 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 						$content = str_ireplace('url(' . $quote . $i, 'url__(' . $quote . $i , $content);
 					}
 
-					$content = str_replace('url(' . $quote , 'url(' . $quote . dirname($relPath) . '/', $content);
+					$content = str_replace('url(' . $quote , 'url__(' . $quote . $dirname,  $content);
 
 					foreach ($pre as $i)
 					{
 						$content = str_replace('url__(' . $quote . $i, 'url(' . $quote . $i, $content);
 					}
+
+					if ($quote)
+					{
+						$content = str_replace('url(' . $dirname . $quote, 'url(' . $quote, $content);
+					}
 				}
 
-				$content = str_replace('url(..', 'url(' . dirname($relPath) . '/..', $content);
-				$content = str_replace('url(\'..', 'url(\'' . dirname($relPath) . '/..', $content);
-				$content = str_replace('url("..', 'url("' . dirname($relPath) . '/..', $content);
+				$content = str_replace('url__(', 'url(', $content);
+				$content = str_replace('url(..', 'url(' . $dirname . '..', $content);
+				$content = str_replace('url(\'..', 'url(\'' . $dirname . '..', $content);
+				$content = str_replace('url("..', 'url("' . $dirname . '..', $content);
 
 				$compiledFileContent .= $content;
 			}
@@ -138,7 +145,7 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
 		$out = $includeString;
 	}
 
-	if ($externalFiles = $smarty->_smarty_vars["INCLUDED_STYLESHEET_FILES_EXTERNAL"])
+	if ($externalFiles = $smarty->getGlobal("INCLUDED_STYLESHEET_FILES_EXTERNAL"))
 	{
 		foreach($externalFiles as $cssFile)
 		{

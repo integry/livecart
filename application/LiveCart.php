@@ -162,14 +162,7 @@ class LiveCart extends Application implements Serializable
 		if ($this->isDevMode())
 		{
 			ActiveRecordModel::getLogger()->setLogFileName(ClassLoader::getRealPath("cache") . DIRECTORY_SEPARATOR . "activerecord.log");
-			if(phpversion() >= '5.3')
-			{
-				error_reporting(E_ALL & ~E_DEPRECATED);
-			}
-			else
-			{
-				error_reporting(E_ALL);
-			}
+			error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 			ini_set('display_errors', 'On');
 		}
 

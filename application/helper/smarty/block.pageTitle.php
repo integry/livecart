@@ -19,7 +19,7 @@ function smarty_block_pageTitle($params, $content, LiveCartSmarty $smarty, &$rep
 		$GLOBALS['PAGE_TITLE'] = $content;
 
 		$smarty->assign('PAGE_TITLE', $content);
-		$smarty->_smarty_vars['PAGE_TITLE'] = $content;
+		$smarty->setGlobal('PAGE_TITLE', $content);
 	}
 }
 

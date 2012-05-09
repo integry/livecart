@@ -45,12 +45,14 @@ function smarty_function_includeCss($params, LiveCartSmarty $smarty)
 	}
 	else if (isset($params['external']))
 	{
-		$smarty->_smarty_vars['INCLUDED_STYLESHEET_FILES_EXTERNAL'][] = $fileName;
+		$external = (array)$smarty->getGlobal('INCLUDED_STYLESHEET_FILES_EXTERNAL');
+		$external[] = $fileName;
+		$smarty->setGlobal('INCLUDED_STYLESHEET_FILES_EXTERNAL', $external);
 	}
 	else
 	{
-		$includedStylesheetTimestamp = $smarty->_smarty_vars['INCLUDED_STYLESHEET_TIMESTAMP'];
-		if(!($includedStylesheetFiles = $smarty->_smarty_vars['INCLUDED_STYLESHEET_FILES']))
+		$includedStylesheetTimestamp = $smarty->getGlobal('INCLUDED_STYLESHEET_TIMESTAMP');
+		if(!($includedStylesheetFiles = $smarty->getGlobal('INCLUDED_STYLESHEET_FILES')))
 		{
 		   $includedStylesheetFiles = array();
 		}
@@ -86,7 +88,7 @@ function smarty_function_includeCss($params, LiveCartSmarty $smarty)
 			array_push($includedStylesheetFiles, $filePath);
 		}
 
-		$smarty->_smarty_vars['INCLUDED_STYLESHEET_FILES'] = $includedStylesheetFiles;
+		$smarty->setGlobal('INCLUDED_STYLESHEET_FILES', $includedStylesheetFiles);
 	}
 
 	foreach ($smarty->getApplication()->getConfigContainer()->getFilesByRelativePath('public/stylesheet/' . $origFileName, true) as $file)

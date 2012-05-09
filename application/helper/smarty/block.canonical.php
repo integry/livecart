@@ -34,7 +34,7 @@ function smarty_block_canonical($params, $content, LiveCartSmarty $smarty, &$rep
 
 		$GLOBALS['CANONICAL'] = $content;
 		$smarty->assign('CANONICAL', $content);
-		$smarty->_smarty_vars['CANONICAL'] = $content;
+		$smarty->setGlobal('CANONICAL', $content);
 	}
 }
 

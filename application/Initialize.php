@@ -63,4 +63,6 @@ ClassLoader::import('application.model.*');
 ClassLoader::import('application.model.system.*');
 ClassLoader::import('application.LiveCart');
 
+date_default_timezone_set('Europe/Riga');
+
 ?>

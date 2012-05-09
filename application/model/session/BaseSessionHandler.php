@@ -4,14 +4,14 @@
  * @package application.model.session
  * @author Integry Systems
  */
-abstract class BaseSessionHandler
+abstract class BaseSessionHandler implements SessionHandlerInterface
 {
 	protected $forceUpdate;
 	protected $userID;
 	protected $cacheUpdated;
 	protected $lastUpdated;
 
-	public abstract function open();
+	public abstract function open($savePath, $sessionName);
 	public abstract function close();
 	public abstract function read($id);
 	public abstract function write($id, $data);

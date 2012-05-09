@@ -39,7 +39,7 @@ function smarty_function_textfield($params, LiveCartSmarty $smarty)
 		$params['readonly'] = 'readonly';
 	}
 
-	$value = array_pop(array_filter(array($params['value'], $params['default'], $formHandler->get($fieldName))));
+	$value = array_pop(array_filter(array(isset($params['value']) ? $params['value'] : '', isset($params['default']) ? $params['default'] : '', $formHandler->get($fieldName))));
 
 	unset($params['value'], $params['default']);
 

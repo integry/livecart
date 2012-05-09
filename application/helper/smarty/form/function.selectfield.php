@@ -22,10 +22,10 @@ function smarty_function_selectfield($params, $smarty)
 	}
 	unset($params['options']);
 
-	$before = $params['before'];
-	$after = $params['after'];
+	$before = isset($params['before']) ? $params['before'] : '';
+	$after = isset($params['after']) ? $params['after'] : '';
 
-	$defaultValue = $params['value'];
+	$defaultValue = isset($params['value']) ? $params['value'] : '';
 	unset($params['value'], $params['before'], $params['after']);
 
 	// Check permissions
@@ -41,7 +41,7 @@ function smarty_function_selectfield($params, $smarty)
 		{
 			$fieldValue = $defaultValue;
 		}
-		
+
 		$params['initialValue'] = $fieldValue;
 	}
 
