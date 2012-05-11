@@ -1,4 +1,4 @@
-{defun name="optionPrice" choice=null}
+{function name="optionPrice" choice=null}
 	{if $choice && $choice.priceDiff != 0}
 		<span class="optionPrice">
 		{if $choice.Option.isPriceIncluded && $choice.formattedTotalPrice.$currency}
@@ -8,7 +8,7 @@
 		{/if}
 		</span>
 	{/if}
-{/defun}
+{/function}
 
 <div{if $option.isRequired} class="required"{/if} class="productOption" id="{uniqid assign="optionContainer"}">
 	{if $option.fieldName}{assign var=fieldName value=$option.fieldName}{else}{assign var=fieldName value="option_`$option.ID`"}{/if}
@@ -18,7 +18,7 @@
 			{checkbox class="checkbox"}
 			<label for={$fieldName} class="checkbox">
 				{$option.name_lang}
-				{fun name="optionPrice" choice=$option.DefaultChoice}
+				{optionPrice choice=$option.DefaultChoice}
 			</label>
 
 			{if $option.description_lang}
@@ -38,7 +38,7 @@
 						{foreach from=$option.choices item=choice}
 							<option value="{$choice.ID}"{if $selectedChoice.Choice.ID == $choice.ID} selected="selected"{/if}>
 								{$choice.name_lang}
-								{fun name="optionPrice" choice=$choice}
+								{optionPrice choice=$choice}
 							</option>
 						{/foreach}
 					</select>
@@ -56,7 +56,7 @@
 								<input name="{$fieldName}" type="radio" class="radio" id="{uniqid}" value="{$choice.ID}"{if $selectedChoice.Choice.ID == $choice.ID} checked="checked"{/if} />
 								<label class="radio" for="{uniqid last=true}">
 									<span class="optionName"  {if 2 == $option.displayType}style="background-color: {$choice.config.color};"{/if}>{$choice.name_lang}</span>
-									{fun name="optionPrice" choice=$choice}
+									{optionPrice choice=$choice}
 								</label>
 							</p>
 						{/foreach}

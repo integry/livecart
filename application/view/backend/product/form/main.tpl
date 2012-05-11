@@ -1,6 +1,18 @@
 <fieldset>
 	<legend>{t _main_details}</legend>
 
+{*
+	{input name="isEnabled"}
+		{label}{tip _availability}:{/label}
+		{selectfield name="isEnabled" options=$productStatuses}
+	{/input}
+
+	<div class="input">
+		{label
+		{selectfield name="isEnabled" options=$productStatuses}
+	</div>
+*}
+
 	<p class="required" style="border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-bottom: 4px;">
 		<label for="product_{$cat}_{$product.ID}_isEnabled">{tip _availability}:</label>
 		{selectfield name="isEnabled" options=$productStatuses}

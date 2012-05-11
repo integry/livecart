@@ -29,8 +29,8 @@
 	</div>
 
 	<ul class="tabList tabs">
-		<li id="tabMessages" class="tab active"><a href="{link controller=backend.newsletter action=list}">{t _messages}</a></li>
-		<li id="tabSubscribers" class="tab inactive"><a href="{link controller=backend.newsletterSubscriber}">{t _subscribers}</a></li>
+		<li id="tabMessages" class="tab active"><a href="{link controller="backend.newsletter" action=list}">{t _messages}</a></li>
+		<li id="tabSubscribers" class="tab inactive"><a href="{link controller="backend.newsletterSubscriber"}">{t _subscribers}</a></li>
 	</ul>
 	<div class="sectionContainer maxHeight h--95">
 		<div id="tabMessagesContent" class="maxHeight tabPageContainer">
@@ -79,12 +79,12 @@
 	<div class="tabContainer">
 		<ul class="tabList tabs">
 			<li id="tabMessageInfo" class="tab active">
-				<a href="{link controller=backend.newsletter action=edit id=_id_}">{t _edit_message}</a>
+				<a href="{link controller="backend.newsletter" action=edit id=_id_}">{t _edit_message}</a>
 				<span class="tabHelp">products.edit</span>
 			</li>
 
 			<li id="tabSubmissionStats" class="tab inactive">
-				<a href="{link controller=backend.productPrice action=index id=_id_}">{t _submission_info}</a>
+				<a href="{link controller="backend.productPrice" action=index id=_id_}">{t _submission_info}</a>
 				<span class="tabHelp">products.edit.pricing</span>
 			</li>
 		</ul>
@@ -106,14 +106,14 @@
 
 	Backend.Newsletter.links =
 	{
-		add: '{/literal}{link controller=backend.newsletter action=add}{literal}',
-		recipientCount: '{/literal}{link controller=backend.newsletter action=recipientCount}{literal}',
-		plaintext: '{/literal}{link controller=backend.newsletter action=plaintext}{literal}',
+		add: '{/literal}{link controller="backend.newsletter" action=add}{literal}',
+		recipientCount: '{/literal}{link controller="backend.newsletter" action=recipientCount}{literal}',
+		plaintext: '{/literal}{link controller="backend.newsletter" action=plaintext}{literal}',
 	}
 
 {/literal}
 
-	Backend.Newsletter.GridFormatter.url = '{link controller=backend.newsletter action=edit}?id=';
+	Backend.Newsletter.GridFormatter.url = '{link controller="backend.newsletter" action=edit}?id=';
 	window.activeGrids['newsletters_0'].setDataFormatter(Backend.Newsletter.GridFormatter);
 
 	var massHandler = new ActiveGrid.MassActionHandler(

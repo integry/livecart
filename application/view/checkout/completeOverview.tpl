@@ -3,7 +3,7 @@
 
 {include file="checkout/orderOverview.tpl"}
 
-{defun name="address"}
+{function name="address"}
 	{if $address}
 		<p>
 			{$address.fullName}
@@ -30,7 +30,7 @@
 			{include file="order/addressFieldValues.tpl" showLabels=true}
 		</p>
 	{/if}
-{/defun}
+{/function}
 
 <div id="overviewAddresses">
 	{if $order.ShippingAddress && !$order.isMultiAddress}
@@ -45,7 +45,7 @@
                     </div>
                 {/foreach}
             {else}
-                {fun name="address" address=$order.ShippingAddress}
+                {address address=$order.ShippingAddress}
             {/if}
 			{if !$nochanges}
 				<a href="{link controller=checkout action=selectAddress}">{t _change}</a>
@@ -56,7 +56,7 @@
 	{if $order.BillingAddress && !'REQUIRE_SAME_ADDRESS'|config && ($order.ShippingAddress.compact != $order.BillingAddress.compact)}
 	<div class="addressContainer">
 		<h3>{t _will_bill_to}:</h3>
-		{fun name="address" address=$order.BillingAddress}
+		{address address=$order.BillingAddress}
 		{if !$nochanges}
 			<a href="{link controller=checkout action=selectAddress}">{t _change}</a>
 		{/if}

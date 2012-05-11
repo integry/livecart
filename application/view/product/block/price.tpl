@@ -1,4 +1,4 @@
-{if 'DISPLAY_PRICES'|config && $product.type != 3} {* Product::TYPE_RECURRING = 3* }
+{if 'DISPLAY_PRICES'|config && $product.type != 3} {* Product::TYPE_RECURRING = 3 *}
 	<tr id="productPrice">
 		<td class="param">{t _price}:</td>
 		<td class="value price">

@@ -75,7 +75,7 @@
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" class="submit" value="{tn _import}" />
 		{t _or}
-		<a class="cancel" href="{link controller=backend.databaseImport}">{t _cancel}</a>
+		<a class="cancel" href="{link controller="backend.databaseImport}">{t _cancel}</a>
 	</fieldset>
 
 {/form}
@@ -92,7 +92,7 @@
 
 		<ul class="menu">
 			<li>
-				<a class="cancel" href="{link controller=backend.databaseImport}">{t _cancel}</a>
+				<a class="cancel" href="{link controller="backend.databaseImport"}">{t _cancel}</a>
 			</li>
 		</ul>
 

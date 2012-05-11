@@ -10,11 +10,11 @@
  * @package application.helper.smarty
  * @author Integry Systems
  */
-function smarty_function_uniqid($params, LiveCartSmarty $smarty)
+function smarty_function_uniqid($params, Smarty_Internal_Template $smarty)
 {
 	if (isset($params['last']))
 	{
-		return $smarty->get_template_vars('lastUniqId');
+		return $smarty->getTemplateVars('lastUniqId');
 	}
 	else
 	{

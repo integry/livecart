@@ -9,13 +9,13 @@
 						<li>
 							{$itemsById[$item.id].Product.name_lang}
 							{if 'count' == $type}
-								- {maketext text="_order_quantity_change" params=`$item.from`,`$item.to`}
+								- {maketext text="_order_quantity_change" params="`$item.from`,`$item.to`"}
 							{/if}
 						</li>
 					{/foreach}
 				</ul>
 			{else}
-				{maketext text="_order_auto_changes_single_`$type`" params=`$itemsById[$items.0.id].Product.name_lang`,`$items.0.from`,`$items.0.to`}
+				{maketext text="_order_auto_changes_single_`$type`" params="`$itemsById[$items.0.id].Product.name_lang`,`$items.0.from`,`$items.0.to`"}
 			{/if}
 		</div>
 	{/foreach}

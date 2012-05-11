@@ -17,9 +17,9 @@
 
 <div id="tabContainer" class="tabContainer maxHeight h--20">
 	<ul class="tabList tabs">
-		<li id="tabManage" class="tab active"><a href="{link controller=backend.currency action=list}">{t _manage}</a></li>
-		<li id="tabRates" class="tab inactive"><a href="{link controller=backend.currency action=rates}">{t _adjust}</a></li>
-{*		<li id="tabOptions" class="tab inactive"><a href="{link controller=backend.currency action=options}">{t _options}</a></li> *}
+		<li id="tabManage" class="tab active"><a href="{link controller="backend.currency" action=list}">{t _manage}</a></li>
+		<li id="tabRates" class="tab inactive"><a href="{link controller="backend.currency" action=rates}">{t _adjust}</a></li>
+{*		<li id="tabOptions" class="tab inactive"><a href="{link controller="backend.currency" action=options}">{t _options}</a></li> *}
 	</ul>
 	<div class="sectionContainer maxHeight h--95">
 		<div id="tabManageContent" class="maxHeight tabPageContainer">
@@ -52,7 +52,7 @@
 						</span>
 
 						<div class="currListMenu">
-							<a href="{link controller=backend.currency action=setDefault}?id=" class="setDefault listLink" {denied role="currency.status"}style="display: none;"{/denied} onclick="return confirm('{t _base_currency_warning|escape}')">{t _set_as_default}</a>
+							<a href="{link controller="backend.currency" action=setDefault}?id=" class="setDefault listLink" {denied role="currency.status"}style="display: none;"{/denied} onclick="return confirm('{t _base_currency_warning|escape}')">{t _set_as_default}</a>
 							<span class="currDefault">{t _default_currency}</span>
 						</div>
 						<div class="currEdit activeList_editContainer activeList_container"></div>
@@ -72,8 +72,8 @@
 {literal}
 <script type="text/javascript">
 	curr = new Backend.Currency();
-	curr.setFormUrl('{/literal}{link controller=backend.currency action=addForm}{literal}');
-	curr.setStatusUrl('{/literal}{link controller=backend.currency action=setEnabled}{literal}/');
+	curr.setFormUrl('{/literal}{link controller="backend.currency" action=addForm}{literal}');
+	curr.setStatusUrl('{/literal}{link controller="backend.currency" action=setEnabled}{literal}/');
 
 	var messages =
 	{
@@ -93,15 +93,15 @@
 					 return;
 				 }
 
-				 return '{/literal}{link controller=backend.currency action=edit}{literal}?id=' + this.getRecordId(li);
+				 return '{/literal}{link controller="backend.currency" action=edit}{literal}?id=' + this.getRecordId(li);
 			 },
 			 beforeSort:	 function(li, order)
 			 {
-				 return '{/literal}{link controller=backend.currency action=saveorder}{literal}?draggedId=' + this.getRecordId(li) + '&' + order
+				 return '{/literal}{link controller="backend.currency" action=saveorder}{literal}?draggedId=' + this.getRecordId(li) + '&' + order
 			   },
 			 beforeDelete:   function(li)
 			 {
-				 if(confirm('{/literal}{tn _confirm_delete}{literal}')) return '{/literal}{link controller=backend.currency action=delete}{literal}?id=' + this.getRecordId(li)
+				 if(confirm('{/literal}{tn _confirm_delete}{literal}')) return '{/literal}{link controller="backend.currency" action=delete}{literal}?id=' + this.getRecordId(li)
 			 },
 			 afterEdit:	  function(li, response) { document.getElementsByClassName('currEdit', li)[0].update(response); },
 			 afterSort:	  function(li, response) { curr.resetRatesContainer(); },

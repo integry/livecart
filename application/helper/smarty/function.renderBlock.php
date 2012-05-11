@@ -10,7 +10,7 @@
  * @package application.helper.smarty
  * @author Integry Systems
  */
-function smarty_function_renderBlock($params, LiveCartSmarty $smarty)
+function smarty_function_renderBlock($params, Smarty_Internal_Template $smarty)
 {
 	return $smarty->getApplication()->getBlockContent($params['block']);
 }

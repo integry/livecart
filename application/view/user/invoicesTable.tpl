@@ -2,7 +2,7 @@
 	<div class="resultStats">
 		{if $itemList}
 			{if $count > $perPage}
-				{maketext text=$textDisplaying params=$from,$to,$count}
+				{maketext text=$textDisplaying params="`$from`,`$to`,`$count`"}
 			{else}
 				{maketext text=$textFound params=$count}
 			{/if}

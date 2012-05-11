@@ -13,7 +13,7 @@ ClassLoader::import('application.model.template.Theme');
  * @package application.helper.smarty
  * @author Integry Systems
  */
-function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
+function smarty_function_compiledCss($params, Smarty_Internal_Template $smarty)
 {
 	$app = $smarty->getApplication();
 

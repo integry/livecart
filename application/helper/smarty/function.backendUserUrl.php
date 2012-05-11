@@ -10,7 +10,7 @@
  * @package application.helper.smarty
  * @author Integry Systems
  */
-function smarty_function_backendUserUrl($params, LiveCartSmarty $smarty)
+function smarty_function_backendUserUrl($params, Smarty_Internal_Template $smarty)
 {
 	if (!isset($params['user']) && isset($params['id']))
 	{

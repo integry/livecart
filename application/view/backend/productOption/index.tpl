@@ -6,13 +6,13 @@
 	 * so we define them in
 	 */
 	Backend.ProductOption.prototype.links = {};
-	Backend.ProductOption.prototype.links.create		  = {/literal}'{link controller=backend.productOption action=create}'{literal};
-	Backend.ProductOption.prototype.links.update		  = {/literal}'{link controller=backend.productOption action=update}'{literal};
-	Backend.ProductOption.prototype.links.deleteField	 = {/literal}'{link controller=backend.productOption action=delete}/'{literal};
-	Backend.ProductOption.prototype.links.editField	   = {/literal}'{link controller=backend.productOption action=item}/'{literal};
-	Backend.ProductOption.prototype.links.sortField	   = {/literal}'{link controller=backend.productOption action=sort}/'{literal};
-	Backend.ProductOption.prototype.links.deleteValue	 = {/literal}'{link controller=backend.productOption action=deleteChoice}/'{literal};
-	Backend.ProductOption.prototype.links.sortValues	  = {/literal}'{link controller=backend.productOption action=sortChoice}/'{literal};
+	Backend.ProductOption.prototype.links.create		  = {/literal}'{link controller="backend.productOption" action=create}'{literal};
+	Backend.ProductOption.prototype.links.update		  = {/literal}'{link controller="backend.productOption" action=update}'{literal};
+	Backend.ProductOption.prototype.links.deleteField	 = {/literal}'{link controller="backend.productOption" action=delete}/'{literal};
+	Backend.ProductOption.prototype.links.editField	   = {/literal}'{link controller="backend.productOption" action=item}/'{literal};
+	Backend.ProductOption.prototype.links.sortField	   = {/literal}'{link controller="backend.productOption" action=sort}/'{literal};
+	Backend.ProductOption.prototype.links.deleteValue	 = {/literal}'{link controller="backend.productOption" action=deleteChoice}/'{literal};
+	Backend.ProductOption.prototype.links.sortValues	  = {/literal}'{link controller="backend.productOption" action=sortChoice}/'{literal};
 
 	Backend.ProductOption.prototype.msg = {};
 	Backend.ProductOption.prototype.msg.removeFieldQuestion  = {/literal}'{t _ProductOption_remove_question|addslashes}'{literal};

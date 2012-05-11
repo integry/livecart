@@ -1,6 +1,6 @@
 <ul class="menu">
 	<li>
-		{form handle=$form class="orderStatus" action="controller=backend.customerOrder action=update" id="orderInfo_`$order.ID`_form" onsubmit="Backend.CustomerOrder.Editor.prototype.getInstance(`$order.ID`, false).submitForm(); return false;" method="post" role="order.update"}
+		{form handle=$form class="orderStatus" action="controller=backend.customerOrder action=update" id="orderInfo_`$order.ID`_form onsubmit="Backend.CustomerOrder.Editor.prototype.getInstance(`$order.ID`, false).submitForm(); return false;" method="post" role="order.update"}
 			{hidden name="ID"}
 			{hidden name="isCancelled"}
 				<label for="order_{$order.ID}_status" style="width: auto; float: none;">{t _status}: </label>
@@ -17,35 +17,35 @@
 	{if !$order.isFinalized}
 	<li {denied role='order.update'}style="display: none"{/denied} class="order_unfinalized">
 		<span style="display: none;" id="order_{$order.ID}_isFinalizedIndicator" class="progressIndicator"></span>
-		<a id="order_{$order.ID}_isFinalized" href="{link controller="backend.customerOrder" action="finalize" id=$order.ID}">
+		<a id="order_{$order.ID}_isFinalized" href="{link controller="backend.customerOrder"action="finalize" id=$order.ID}">
 			{t _finalize}
 		</a>
 	</li>
 	{/if}
 	<li class="order_printInvoice">
-		<a href="{link controller=backend.customerOrder action=printInvoice id=$order.ID}" target="_blank">{t _print_invoice}</a>
+		<a href="{link controller="backend.customerOrder" action=printInvoice id=$order.ID}" target="_blank">{t _print_invoice}</a>
 	</li>
 
 	<li class="order_printLabel">
-		<a href="{link controller=backend.customerOrder action=printLabels id=$order.ID"}" target="_blank">{t _print_shipping_labels}</a>
+		<a href="{link controller="backend.customerOrder" action=printLabels id=$order.ID"}" target="_blank">{t _print_shipping_labels}</a>
 	</li>
 
 	<li {denied role='order.update'}style="display: none"{/denied}
 		class="{if $order.isCancelled}order_accept{else}order_cancel{/if}">
 		<span style="display: none;" id="order_{$order.ID}_isCanceledIndicator" class="progressIndicator"></span>
-		<a id="order_{$order.ID}_isCanceled" href="{link controller="backend.customerOrder" action="setIsCanceled" id=$order.ID}">
+		<a id="order_{$order.ID}_isCanceled" href="{link controller="backend.customerOrder"action="setIsCanceled" id=$order.ID}">
 			{if $order.isCancelled}{t _accept_order}{else}{t _cancel_order}{/if}
 		</a>
 	</li>
 
 	<li {denied role='order.update'}style="display: none"{/denied} class="addCoupon">
 		<span style="display: none;" id="order_{$order.ID}_addCouponIndicator" class="progressIndicator"></span>
-		<a id="order_{$order.ID}_addCoupon" href="{link controller="backend.customerOrder" action="addCoupon" id=$order.ID}?coupon=_coupon_">{t _add_coupon}</a>
+		<a id="order_{$order.ID}_addCoupon" href="{link controller="backend.customerOrder"action="addCoupon" id=$order.ID}?coupon=_coupon_">{t _add_coupon}</a>
 	</li>
-	
+
 	{if $order.isFinalized}
 		<li {denied role='order.update'}style="display: none"{/denied} class="order_recalculateDiscounts">
-			<a id="order_{$order.ID}_recalculateDiscounts" href="{link controller="backend.customerOrder" action="recalculateDiscounts" id=$order.ID}">
+			<a id="order_{$order.ID}_recalculateDiscounts" href="{link controller="backend.customerOrder"action="recalculateDiscounts" id=$order.ID}">
 				{t _recalculate_discounts}
 			</a>
 		</li>
@@ -57,7 +57,7 @@
 
 <div class="addressContainer">
 	{if $formShippingAddress || !$formBillingAddress}
-		{form handle=$formShippingAddress action="controller=backend.customerOrder action=updateAddress" id="orderInfo_`$order.ID`_shippingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
+		{form handle=$formShippingAddress" action="controller=backend.customerOrder action=updateAddress" id="orderInfo_`$order.ID`_shippingAddress_form onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
 			<fieldset class="order_shippingAddress">
 				<legend>{t _shipping_address}</legend>
 				{include file=backend/customerOrder/address.tpl type="order_`$order.ID`_shippingAddress" address=$order.ShippingAddress states=$shippingStates order=$order}
@@ -65,7 +65,7 @@
 		{/form}
 	{/if}
 	{if $formBillingAddress || !$formShippingAddress}
-		{form handle=$formBillingAddress action="controller=backend.customerOrder action=updateAddress" id="orderInfo_`$order.ID`_billingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
+		{form handle=$formBillingAddress" action="controller=backend.customerOrder action=updateAddress" id="orderInfo_`$order.ID`_billingAddress_form onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
 			<fieldset class="order_billingAddress">
 				<legend>{t _billing_address}</legend>
 				{include file=backend/customerOrder/address.tpl type="order_`$order.ID`_billingAddress" address=$order.BillingAddress states=$billingStates order=$order}
@@ -97,7 +97,7 @@
 			{$order.Currency.pricePrefix}<span class="order_totalAmount">{$order.totalAmount|default:0|string_format:"%.2f"}</span>{$order.Currency.priceSuffix}
 		</label>
 		<span class="notPaid">
-			<input type="checkbox" class="checkbox" id="{uniqid}" value="1" onchange="Backend.CustomerOrder.prototype.changePaidStatus(this, '{link controller=backend.payment action=changeOrderPaidStatus id=$order.ID query='status=_stat_'}');">
+			<input type="checkbox" class="checkbox" id="{uniqid}" value="1" onchange="Backend.CustomerOrder.prototype.changePaidStatus(this, '{link controller="backend.payment" action=changeOrderPaidStatus id=$order.ID query='status=_stat_'}');">
 			<label for="{uniqid last=true}" class="checkbox">{t _mark_as_paid}</label>
 		</span>
 	</div>
@@ -110,7 +110,7 @@
 				<span id="dateCreatedVisible">{$order.dateCompleted}</span>
 			</label>
 
-			{form id="calendarForm" handle=$dateForm class="hidden" action="controller=backend.customerOrder action=updateDate" method="POST"}
+			{form id="calendarform handle=$dateForm class="hidden"action="controller=backend.customerOrder action=updateDate" method="POST"}
 				{calendar name="dateCompleted" id="dateCompleted"}
 
 				<span class="progressIndicator" id="indicatorDateCompleted" style="display: none;"></span>
@@ -125,7 +125,7 @@
 
 	<div class="{zebra} clearfix">
 		<label class="param" for="order_{$order.ID})_isMultiAddress">{t CustomerOrder.isMultiAddress}</label>
-		<select style="width: auto; float: left;" onchange="Backend.CustomerOrder.prototype.setMultiAddress(this, '{link controller=backend.customerOrder action=setMultiAddress id=$order.ID query='status=_stat_'}', {$order.ID});"><option value=0>{t _no}</option><option value=1{if $order.isMultiAddress} selected="selected"{/if}>{t _yes}</option></select>
+		<select style="width: auto; float: left;" onchange="Backend.CustomerOrder.prototype.setMultiAddress(this, '{link controller="backend.customerOrder" action=setMultiAddress id=$order.ID query='status=_stat_'}', {$order.ID});"><option value=0>{t _no}</option><option value=1{if $order.isMultiAddress} selected="selected"{/if}>{t _yes}</option></select>
 		<span class="progressIndicator" style="display: none; float: left; padding-top: 0; padding-left: 0;"></span>
 	</div>
 
@@ -150,12 +150,12 @@
 					0
 				{/if}
 			</label>
-			
+
 			<span class="stopRebillsLinkContainer" style="{if $order.rebillsLeft == 0}display:none;{/if}">
 				<span class="progressIndicator" style="display:none;"></span>
 				<a href="#" id="stopRebills{$order.ID}">{t _cancel_subscription}</a>
-				<input type="hidden" id="cancelSubscriptionURL{$order.ID}" value="{link controller=backend.CustomerOrder action=cancelSubscription id=$order.ID}" />
-				<input type="hidden" id="stopRebillsURL{$order.ID}" value="{link controller=backend.CustomerOrder action=stopRebills id=$order.ID}" />
+				<input type="hidden" id="cancelSubscriptionURL{$order.ID}" value="{link controller="backend.CustomerOrder" action=cancelSubscription id=$order.ID}" />
+				<input type="hidden" id="stopRebillsURL{$order.ID}" value="{link controller="backend.CustomerOrder" action=stopRebills id=$order.ID}" />
 			</span>
 		</div>
 	{/if}
@@ -182,7 +182,7 @@
 	<ul class="menu" id="orderShipments_menu_{$orderID}">
 		<li class="order_addProduct" id="order{$orderID}_addProduct_li">
 			<span {denied role='order.update'}style="display: none"{/denied}>
-				<a href="#newProduct" id="order{$orderID}_openProductMiniform">{t _add_new_product}</a>
+				<a href="#newProduct" id="order{$orderID}_openProductMiniform>{t _add_new_product}</a>
 			</span>
 		</li>
 		<li class="order_addShipment" id="order{$orderID}_addShipment_li">
@@ -199,8 +199,8 @@
 	</ul>
 </fieldset>
 
-<fieldset class="addProductsContainer" style="display:none;" id="order{$orderID}_productMiniform">
-	<legend>{t _add_new_product} <a class="cancel" href="#" id="order{$orderID}_cancelProductMiniform">{t _cancel}</a></legend>
+<fieldset class="addProductsContainer" style="display:none;" id="order{$orderID}_productMiniform>
+	<legend>{t _add_new_product} <a class="cancel" href="#" id="order{$orderID}_cancelProductMiniform>{t _cancel}</a></legend>
 	<ul class="menu" id="orderShipments_menu_{$orderID}">
 		<li class="addProductAdvanced">
 			<span {denied role='order.update'}style="display: none"{/denied}>
@@ -240,7 +240,7 @@
 	<div class="hidden" id="order{$orderID}_addAllFoundProducts">{t _add_all_found_products}</div>
 </fieldset>
 
-<fieldset id="orderShipments_new_{$orderID}_form" style="display: none;"> </fieldset>
+<fieldset id="orderShipments_new_{$orderID}_form style="display: none;"> </fieldset>
 <div id="orderShipment_{$orderID}_controls_empty" style="display: none">{include file="backend/shipment/shipmentControls.tpl" shipment=null}</div>
 <div id="orderShipment_{$orderID}_total_empty" style="display: none">{include file="backend/shipment/shipmentTotal.tpl" shipment=null}</div>
 <div id="orderShipmentItem_{$orderID}_empty" style="display: none">{include file="backend/shipment/itemAmount.tpl" shipment=null}</div>
@@ -333,22 +333,22 @@
 {literal}
 <script type="text/javascript">
 	Backend.OrderedItem.Links = {};
-	Backend.OrderedItem.Links.remove = '{/literal}{link controller=backend.orderedItem action=delete}{literal}';
-	Backend.OrderedItem.Links.changeShipment = '{/literal}{link controller=backend.orderedItem action=changeShipment}{literal}';
-	Backend.OrderedItem.Links.addProduct = '{/literal}{link controller=backend.orderedItem action=selectProduct}/{$orderID}{literal}';
-	Backend.OrderedItem.Links.createNewItem = '{/literal}{link controller=backend.orderedItem action=create}{literal}';
-	// Backend.OrderedItem.Links.createFromSearchQuery = '{/literal}{link controller=backend.orderedItem action=createFromSearchQuery}{literal}';
-	Backend.OrderedItem.Links.changeItemCount = '{/literal}{link controller=backend.orderedItem action=changeCount}{literal}';
+	Backend.OrderedItem.Links.remove = '{/literal}{link controller="backend.orderedItem" action=delete}{literal}';
+	Backend.OrderedItem.Links.changeShipment = '{/literal}{link controller="backend.orderedItem" action=changeShipment}{literal}';
+	Backend.OrderedItem.Links.addProduct = '{/literal}{link controller="backend.orderedItem" action=selectProduct}/{$orderID}{literal}';
+	Backend.OrderedItem.Links.createNewItem = '{/literal}{link controller="backend.orderedItem" action=create}{literal}';
+	// Backend.OrderedItem.Links.createFromSearchQuery = '{/literal}{link controller="backend.orderedItem" action=createFromSearchQuery}{literal}';
+	Backend.OrderedItem.Links.changeItemCount = '{/literal}{link controller="backend.orderedItem" action=changeCount}{literal}';
 
 	Backend.Shipment.Links = {};
-	Backend.Shipment.Links.update = '{/literal}{link controller=backend.shipment action=update}{literal}';
-	Backend.Shipment.Links.create = '{/literal}{link controller=backend.shipment action=create}{literal}';
-	Backend.Shipment.Links.remove = '{/literal}{link controller=backend.shipment action=delete}{literal}';
-	Backend.Shipment.Links.edit = '{/literal}{link controller=backend.shipment action=edit}{literal}';
-	Backend.Shipment.Links.getAvailableServices = '{/literal}{link controller=backend.shipment action=getAvailableServices}{literal}';
-	Backend.Shipment.Links.changeService = '{/literal}{link controller=backend.shipment action=changeService}{literal}';
-	Backend.Shipment.Links.changeStatus = '{/literal}{link controller=backend.shipment action=changeStatus}{literal}';
-	Backend.Shipment.Links.removeEmptyShipments = '{/literal}{link controller=backend.customerOrder action=removeEmptyShipments}{literal}';
+	Backend.Shipment.Links.update = '{/literal}{link controller="backend.shipment" action=update}{literal}';
+	Backend.Shipment.Links.create = '{/literal}{link controller="backend.shipment" action=create}{literal}';
+	Backend.Shipment.Links.remove = '{/literal}{link controller="backend.shipment" action=delete}{literal}';
+	Backend.Shipment.Links.edit = '{/literal}{link controller="backend.shipment" action=edit}{literal}';
+	Backend.Shipment.Links.getAvailableServices = '{/literal}{link controller="backend.shipment" action=getAvailableServices}{literal}';
+	Backend.Shipment.Links.changeService = '{/literal}{link controller="backend.shipment" action=changeService}{literal}';
+	Backend.Shipment.Links.changeStatus = '{/literal}{link controller="backend.shipment" action=changeStatus}{literal}';
+	Backend.Shipment.Links.removeEmptyShipments = '{/literal}{link controller="backend.customerOrder" action=removeEmptyShipments}{literal}';
 
 
 	Backend.Shipment.Statuses = {/literal}{json array=$statuses}{literal};

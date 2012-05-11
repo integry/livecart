@@ -36,7 +36,7 @@
 		<input class="fieldStatus" name="{$fieldName}" value="" style="display: none;" />
 	{else}
 		{if !$disableNewOptionValues}
-			{php}$field = $this->get_template_vars('field'); $field['values']['other'] = $this->getApplication()->translate('_enter_other'); $this->assign('field', $field);{/php}
+			{php}$field = $smarty->getTemplateVars('field'); $field['values']['other'] = $smarty->getApplication()->translate('_enter_other'); $smarty->assign('field', $field);{/php}
 		{/if}
 		{$field.valuePrefix_lang}{selectfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" options=$field.values class="select"}{$field.valueSuffix_lang}
 		{if !$disableNewOptionValues}

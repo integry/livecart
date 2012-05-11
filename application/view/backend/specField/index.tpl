@@ -82,7 +82,7 @@
 <ul id="specField_items_list_{$categoryID}_" class="specFieldList {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit activeList_accept_specFieldList">
 {assign var="lastSpecFieldGroup" value="-1"}
 {foreach name="specFieldForeach" item="field" from=$specFieldsWithGroups}
-	{if $field.SpecFieldGroup.ID}{php}break;{/php}{/if}
+	{if $field.SpecFieldGroup.ID}{break}{/if}
 
 	{if $field.ID}
 	<li id="specField_items_list_{$categoryID}_{$field.SpecFieldGroup.ID}_{$field.ID}">
@@ -96,7 +96,7 @@
 {assign var="lastSpecFieldGroup" value="-1"}
 <ul id="specField_groups_list_{$categoryID}" class="specFieldListGroup {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit activeListGroup">
 {foreach name="specFieldForeach" item="field" from=$specFieldsWithGroups}
-	{if !$field.SpecFieldGroup.ID}{php}continue;{/php}{/if}
+	{if !$field.SpecFieldGroup.ID}{continue}{/if}
 
 	{if $lastSpecFieldGroup != $field.SpecFieldGroup.ID }
 		{if $lastSpecFieldGroup > 0}</ul></li>{/if}

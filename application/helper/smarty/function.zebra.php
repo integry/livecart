@@ -10,11 +10,20 @@
  * @package application.helper.smarty
  * @author Integry Systems
  */
-function smarty_function_zebra($params, LiveCartSmarty $smarty)
+function smarty_function_zebra($params, Smarty_Internal_Template $smarty)
 {
 	static $internalCounter = 0;
 
+	return 'zebra';
+
 	$loop = $params['loop'];
+
+	//$smarty = $smarty->smarty;//->get('smarty');
+	$vars = $smarty->tpl_vars['smarty'];
+	//$foreach = $vars['foreach'];
+	var_dump(get_object_vars($vars));exit;
+
+	exit;
 
 	if (!isset($smarty->_foreach[$loop]))
 	{

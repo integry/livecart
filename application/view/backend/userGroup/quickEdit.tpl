@@ -1,5 +1,5 @@
 {form handle=$form
-	action="controller=backend.userGroup action=saveQuickEdit id=`$someUser.ID`" id="userInfo_`$someUser.UserGroup.ID`_`$someUser.ID`_form"
+	action="controller=backend.userGroup action=saveQuickEdit id=`$someUser.ID`" id="userInfo_`$someUser.UserGroup.ID`_`$someUser.ID`_form
 	onsubmit="return false;" method="post"
 	role="user.create(backend.userGroup/index),user.update(backend.user/info)"
 }

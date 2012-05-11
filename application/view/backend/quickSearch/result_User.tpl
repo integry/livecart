@@ -1,2 +1,2 @@
-<a href="{link controller=backend.userGroup query="rt=`$randomToken`"}#user_{$record.ID}__" onclick="try {literal}{{/literal} return footerToolbar.tryToOpenItemWithoutReload({$record.ID},'user');{literal}}catch(e){}{/literal}">{$record.firstName|escape|mark_substring:$query} {$record.lastName|escape|mark_substring:$query}</a>
+<a href="{link controller="backend.userGroup query="rt=`$randomToken`"}#user_{$record.ID}__" onclick="try {literal}{{/literal} return footerToolbar.tryToOpenItemWithoutReload({$record.ID},'user');{literal}}catch(e){}{/literal}">{$record.firstName|escape|mark_substring:$query} {$record.lastName|escape|mark_substring:$query}</a>
 <span>({$record.email|escape|mark_substring:$query})</span>

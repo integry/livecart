@@ -1,7 +1,7 @@
 {if $recurringProductPeriod.ID}
-	{assign var="action" value="controller=backend.recurringProductPeriod action=update id=`$recurringProductPeriod.ID`"}
+	{assign var="action" value="controller=backend.recurringProductPeriod" action=update id=`$recurringProductPeriod.ID`"}
 {else}
-	{assign var="action" value="controller=backend.recurringProductPeriod action=create"}
+	{assign var="action" value="controller=backend.recurringProductPeriod" action=create"}
 {/if}
 
 {form
@@ -45,11 +45,11 @@
 			{/if}
 			<fieldset class="error">
 				{textfield
-					name="ProductPrice_setup_price_`$currency`" 
+					name="ProductPrice_setup_price_`$currency`"
 					value=$recurringProductPeriod.ProductPrice_setup[$currency].price
 					class="number"
 				} {$currency}
-			
+
 				<div class="errorText" style="display: none"></div>
 			</fieldset>
 		{/foreach}
@@ -66,7 +66,7 @@
 			{/if}
 
 			<fieldset class="error">
-				{textfield name="ProductPrice_period_price_`$currency`" 
+				{textfield name="ProductPrice_period_price_`$currency`"
 				value=$recurringProductPeriod.ProductPrice_period[$currency].price class="number"} {$currency}
 				<div class="errorText" style="display: none"></div>
 			</fieldset>

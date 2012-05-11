@@ -1,7 +1,7 @@
 {pageTitle}{t _invoice} {$order.invoiceNumber}{/pageTitle}
 <div class="userOrderInvoice">
 
-{defun name="address"}
+{function name="address"}
 {if $address}
 	<p>
 		{$address.fullName}
@@ -28,7 +28,7 @@
 		{include file="order/addressFieldValues.tpl" showLabels=false}
 	</p>
 {/if}
-{/defun}
+{/function}
 
 <div id="content" class="left right">
 
@@ -48,7 +48,7 @@
 
 			<div class="addressContainer">
 				<h2>{t _buyer}</h2>
-				{fun name="address" address=$order.BillingAddress}
+				{address address=$order.BillingAddress}
 				{foreach $order.User.attributes as $attr}
 					{if $attr.EavField.isDisplayedInList && ($attr.value || $attr.values)}
 						<p>

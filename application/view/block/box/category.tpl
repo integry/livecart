@@ -1,4 +1,4 @@
-{defun name="categoryTree" node=false filters=false}
+{function name="categoryTree" node=false filters=false}
 	{if $node}
 		<ul>
 		{foreach from=$node item=category}
@@ -13,13 +13,13 @@
 						<span class="count">(&rlm;{$category.count})</span>
 					{/if}
 					{if $category.subCategories}
-		   				{fun name="categoryTree" node=$category.subCategories}
+		   				{categoryTree node=$category.subCategories}
 					{/if}
 				</li>
 		{/foreach}
 		</ul>
 	{/if}
-{/defun}
+{/function}
 
 <div class="box categories">
 	<div class="title">
@@ -27,6 +27,6 @@
 	</div>
 
 	<div class="content">
-		{fun name="categoryTree" node=$categories}
+		{categoryTree node=$categories}
 	</div>
 </div>

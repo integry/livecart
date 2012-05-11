@@ -41,31 +41,31 @@
 	<ul id="tabList" class="tabList tabs">
 
 		<li id="tabProducts" class="tab active">
-			<a href="{link controller=backend.product action=index id=_id_}?{$filters}">{t _products}</a>
+			<a href="{link controller="backend.product" action=index id=_id_}?{$filters}">{t _products}</a>
 			<span> </span>
 			<span class="tabHelp">products</span>
 		</li>
 
 		<li id="tabMainDetails" class="tab inactive">
-			<a href="{link controller=backend.category action=form id=_id_}">{t _category_details}</a>
+			<a href="{link controller="backend.category" action=form id=_id_}">{t _category_details}</a>
 			<span> </span>
 			<span class="tabHelp">cat.details</span>
 		</li>
 
 		<li id="tabFields" class="tab inactive">
-			<a href="{link controller=backend.specField action=index id=_id_}">{t _attributes}</a>
+			<a href="{link controller="backend.specField" action=index id=_id_}">{t _attributes}</a>
 			<span> </span>
 			<span class="tabHelp">cat.attr</span>
 		</li>
 
 		<li id="tabFilters" class="tab inactive">
-			<a href="{link controller=backend.filterGroup action=index id=_id_}">{t _filters}</a>
+			<a href="{link controller="backend.filterGroup" action=index id=_id_}">{t _filters}</a>
 			<span> </span>
 			<span class="tabHelp">cat.filters</span>
 		</li>
 
 		<li id="tabImages" class="tab inactive">
-			<a href="{link controller=backend.categoryImage action=index id=_id_}">{t _images}</a>
+			<a href="{link controller="backend.categoryImage" action=index id=_id_}">{t _images}</a>
 			<span> </span>
 			<span class="tabHelp">cat.images</span>
 		</li>
@@ -115,9 +115,9 @@
 	}
 
 	Backend.Category.links = {};
-	Backend.Category.links.categoryRecursiveAutoloading = '{/literal}{link controller=backend.category action=xmlRecursivePath}{literal}';
-	Backend.Category.links.countTabsItems = '{/literal}{link controller=backend.category action=countTabsItems id=_id_}{literal}';
-	Backend.Category.links.categoryAutoloading = '{/literal}{link controller=backend.category action=xmlBranch}{literal}';
+	Backend.Category.links.categoryRecursiveAutoloading = '{/literal}{link controller="backend.category" action=xmlRecursivePath}{literal}';
+	Backend.Category.links.countTabsItems = '{/literal}{link controller="backend.category" action=countTabsItems id=_id_}{literal}';
+	Backend.Category.links.categoryAutoloading = '{/literal}{link controller="backend.category" action=xmlBranch}{literal}';
 
 	Backend.Category.init();
 

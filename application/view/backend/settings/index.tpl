@@ -31,7 +31,7 @@
 {literal}
 <script type="text/javascript">
 	var settings = new Backend.Settings({/literal}{$categories}, {$settings}{literal});
-	settings.urls['edit'] = '{/literal}{link controller=backend.settings action=edit}?id=_id_{literal}';
+	settings.urls['edit'] = '{/literal}{link controller="backend.settings" action=edit}?id=_id_{literal}';
 	Event.observe(window, 'load', function() {settings.init();})
 </script>
 {/literal}
@@ -53,12 +53,12 @@
 	</div>
 
 	<div id="handler_SOFT_NAME">
-		<a href="{link controller=backend.settings action=disablePrivateLabel}" id="disablePrivateLabel" class="menu">{t _disable_private_label_change}</a>
+		<a href="{link controller="backend.settings" action=disablePrivateLabel}" id="disablePrivateLabel" class="menu">{t _disable_private_label_change}</a>
 		<span class="progressIndicator" style="display: none;"></span>
 	</div>
 
 	<div id="handler_UPDATE_COPY_METHOD">
-		<a href="{link controller=backend.update action=testCopy}" id="testUpdateCopy" class="menu">{t _test_update_copy}</a>
+		<a href="{link controller="backend.update" action=testCopy}" id="testUpdateCopy" class="menu">{t _test_update_copy}</a>
 		<span class="progressIndicator" style="display: none;"></span>
 		<div id="testUpdateCopyResult"></div>
 	</div>

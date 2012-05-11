@@ -7,7 +7,7 @@
  * @author Integry Systems
  * @see http://googlewebmastercentral.blogspot.com/2009/02/specify-your-canonical.html
  */
-function smarty_block_canonical($params, $content, LiveCartSmarty $smarty, &$repeat)
+function smarty_block_canonical($params, $content, Smarty_Internal_Template $smarty, &$repeat)
 {
 	if (!$repeat)
 	{

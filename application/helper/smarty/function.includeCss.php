@@ -12,7 +12,7 @@ ClassLoader::import('application.model.system.CssFile');
  * @package application.helper.smarty
  * @author Integry Systems
  */
-function smarty_function_includeCss($params, LiveCartSmarty $smarty)
+function smarty_function_includeCss($params, Smarty_Internal_Template $smarty)
 {
 	$fileName = $params['file'];
 	$filePath = substr($fileName, 0, 1) != '/' ?
@@ -72,7 +72,7 @@ function smarty_function_includeCss($params, LiveCartSmarty $smarty)
 		$fileMTime = filemtime($filePath);
 		if($fileMTime > (int)$includedStylesheetTimestamp)
 		{
-			$smarty->_smarty_vars['INCLUDED_STYLESHEET_TIMESTAMP'] = $fileMTime;
+			$smarty->setGlobal('INCLUDED_STYLESHEET_TIMESTAMP', $fileMTime);
 		}
 
 		if (isset($params['front']))

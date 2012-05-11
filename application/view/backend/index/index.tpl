@@ -8,7 +8,7 @@
 <fieldset>
 	<legend>{t _order_overview}</legend>
 	<span class="orderPeriod">
-	<select id="period" onchange="$('count').innerHTML = ''; new LiveCart.AjaxUpdater('{link controller=backend.index action=totalOrders}?period=' + this.value, $('count'), $('periodProgress'));">
+	<select id="period" onchange="jQuery('#count').html(''); new LiveCart.AjaxUpdater('{link controller="backend.index" action=totalOrders}?period=' + this.value, $('count'), $('periodProgress'));">
 				<option value="-1 hours | now" selected="selected">{maketext text=_last_hours params=1}</option>
 				<option value="-3 hours | now" selected="selected">{maketext text=_last_hours params=3}</option>
 				<option value="-6 hours | now" selected="selected">{maketext text=_last_hours params=6}</option>
@@ -26,11 +26,11 @@
 	<span class="orderPeriod">{translate|@strtolower text=_this_month}:</span> <span class="periodCount">{$ordersThisMonth}</span><span class="sep"> | </span>
 	<span class="orderPeriod">{translate|@strtolower text=_last_month}:</span> <span class="periodCount">{$ordersLastMonth}</span><span class="sep"> | </span>
 
-	<span class="orderStat"><a href="{link controller=backend.customerOrder}#group_3#tabOrders__">{t _status_new}</a>:</span>
+	<span class="orderStat"><a href="{link controller="backend.customerOrder"}#group_3#tabOrders__">{t _status_new}</a>:</span>
 	<span class="statCount">{$orderCount.new}</span>
 	<span class="sep"> | </span>
 
-	<span class="orderStat"><a href="{link controller=backend.customerOrder}#group_4#tabOrders__">{t _status_processing}</a>:</span>
+	<span class="orderStat"><a href="{link controller="backend.customerOrder"}#group_4#tabOrders__">{t _status_processing}</a>:</span>
 	<span class="statCount">{$orderCount.processing}</span>
 	<span class="sep"> | </span>
 

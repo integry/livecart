@@ -15,7 +15,7 @@
  * @package application.helper.smarty
  * @author Integry Systems
  */
-function smarty_function_maketext($params, LiveCartSmarty $smarty)
+function smarty_function_maketext($params, Smarty_Internal_Template $smarty)
 {
 	$application = $smarty->getApplication();
 	$translation = $application->makeText($params['text'], explode(',', $params['params']));

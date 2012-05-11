@@ -1,11 +1,11 @@
-{defun name="catPath" category=null}
+{function name="catPath" category=null}
 	{if $category}
 		{if $category.ParentNode}
-			{fun name="catPath" category=$category.ParentNode} &gt;
+			{catPath category=$category.ParentNode} &gt;
 		{/if}
 		{$category.name_lang}
 	{/if}
-{/defun}
+{/function}
 
 <ul class="menu">
 	<li class="addAdditionalCategory"><a href="#">{t _add_category}</a></li>

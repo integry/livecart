@@ -31,7 +31,7 @@
 {/literal}
 
 <div id="manImgAdd_{$ownerId}" class="manImageEditForm" style="display: none;">
-{form handle=$form action="controller=backend.manufacturerImage action=upload" method="post" onsubmit="$('manImageList_`$ownerId`').handler.upload(this);" target="manImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data" role="product.update"}
+{form handle=$form" action="controller=backend.manufacturerImage action=upload" method="post" onsubmit="$('manImageList_`$ownerId`').handler.upload(this);" target="manImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data" role="product.update"}
 
 	<input type="hidden" name="ownerId" value="{$ownerId}" />
 	<input type="hidden" name="imageId" value="" />
@@ -104,10 +104,10 @@
 	var handler = new Backend.ObjectImage($("{/literal}manImageList_{$ownerId}{literal}"), 'man');
 	handler.initList({/literal}{$images}{literal});
 
-	handler.setDeleteUrl('{/literal}{link controller=backend.manufacturerImage action=delete}{literal}');
-	handler.setSortUrl('{/literal}{link controller=backend.manufacturerImage action=saveOrder}{literal}');
-	handler.setEditUrl('{/literal}{link controller=backend.manufacturerImage action=edit}{literal}');
-	handler.setSaveUrl('{/literal}{link controller=backend.manufacturerImage action=save}{literal}');
+	handler.setDeleteUrl('{/literal}{link controller="backend.manufacturerImage" action=delete}{literal}');
+	handler.setSortUrl('{/literal}{link controller="backend.manufacturerImage" action=saveOrder}{literal}');
+	handler.setEditUrl('{/literal}{link controller="backend.manufacturerImage" action=edit}{literal}');
+	handler.setSaveUrl('{/literal}{link controller="backend.manufacturerImage" action=save}{literal}');
 
 	handler.setDeleteMessage('{/literal}{t _delete_confirm|addslashes}{literal}');
 	handler.setEditCaption('{/literal}{t _edit_image|addslashes}{literal}');

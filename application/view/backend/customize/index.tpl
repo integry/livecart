@@ -7,7 +7,7 @@
 
 	<li{if $isCustomizationModeEnabled} class="active"{/if}>
 
-		<a href="{link controller=backend.customize action=mode}" class="customizeControl {if $isCustomizationModeEnabled}on{/if}">
+		<a href="{link controller="backend.customize" action=mode}" class="customizeControl {if $isCustomizationModeEnabled}on{/if}">
 		{if $isCustomizationModeEnabled}
 			{tn _turn_off}
 		{else}

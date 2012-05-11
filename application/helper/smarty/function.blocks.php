@@ -10,7 +10,7 @@
  * @package application.helper.smarty
  * @author Integry Systems
  */
-function smarty_function_blocks($params, LiveCartSmarty $smarty)
+function smarty_function_blocks($params, Smarty_Internal_Template $smarty)
 {
 	$app = $smarty->getApplication();
 

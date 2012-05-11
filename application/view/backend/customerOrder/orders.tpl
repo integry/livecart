@@ -8,10 +8,10 @@
 	<script type="text/javascript">
 		if ({/literal}{json array=$userID}{literal} != null)
 		{
-			Backend.CustomerOrder.Links.createOrder = '{/literal}{link controller=backend.customerOrder action=create}{literal}';
+			Backend.CustomerOrder.Links.createOrder = '{/literal}{link controller="backend.customerOrder" action=create}{literal}';
 			Event.observe($("{/literal}createNewOrderLink_{$orderGroupID}{literal}"), "click", function(e)
 			{
-				Backend.CustomerOrder.prototype.createUserOrder('{/literal}{$userID}{literal}', $("{/literal}createNewOrderLink_{$orderGroupID}"), '{link controller=backend.customerOrder}');
+				Backend.CustomerOrder.prototype.createUserOrder('{/literal}{$userID}{literal}', $("{/literal}createNewOrderLink_{$orderGroupID}"), '{link controller="backend.customerOrder}');
 				{literal}
 				Event.stop(e);
 			});
@@ -61,7 +61,7 @@
 	prefix="orders"
 	id=$orderGroupID
 	role="order.mass"
-	controller="backend.customerOrder" action="lists"
+	controller="backend.customerOrder"action="lists"
 	displayedColumns=$displayedColumns
 	availableColumns=$availableColumns
 	totalCount=$totalCount
@@ -76,7 +76,7 @@
 }
 
 <li class="detailedExport" id="detailedExportContainer_{$orderGroupID}">
-	<a href="#" onclick="var grid = window.activeGrids['{$prefix}_{$id}']; window.location.href='{link controller=backend.customerOrder action=exportDetailed}?' + grid.ricoGrid.getQueryString()+ '&selectedIDs=' + grid.getSelectedIDs().toJSON() + '&isInverse=' + (grid.isInverseSelection() ? 1 : 0); return false;">{t _detailed_export}</a>
+	<a href="#" onclick="var grid = window.activeGrids['{$prefix}_{$id}']; window.location.href='{link controller="backend.customerOrder" action=exportDetailed}?' + grid.ricoGrid.getQueryString()+ '&selectedIDs=' + grid.getSelectedIDs().toJSON() + '&isInverse=' + (grid.isInverseSelection() ? 1 : 0); return false;">{t _detailed_export}</a>
 </li>
 
 {literal}

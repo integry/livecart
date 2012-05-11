@@ -12,7 +12,7 @@ include_once dirname(__file__) . '/function.categoryUrl.php';
  * @package application.helper.smarty
  * @author Integry Systems
  */
-function smarty_function_manufacturerUrl($params, LiveCartSmarty $smarty)
+function smarty_function_manufacturerUrl($params, Smarty_Internal_Template $smarty)
 {
 	$manufacturer = $params['data'];
 	$params['data'] =& Category::getRootNode()->toArray();

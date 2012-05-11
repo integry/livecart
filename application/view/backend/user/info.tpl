@@ -72,12 +72,12 @@
 
 	<fieldset id="user_{$someUser.UserGroup.ID}_{$someUser.ID}_billingAddress" class="user_billingAddress">
 		<legend>{t _billing_address}</legend>
-		{include file=backend/user/address_edit.tpl namePrefix="billingAddress_" eavPrefix="billingAddress_" idPrefix="user_`$someUser.UserGroup.ID`_`$someUser.ID`_billingAddress" address=$someUser.defaultBillingAddress states=$billingAddressStates}
+		{include file="backend/user/address_edit.tpl" namePrefix="billingAddress_" eavPrefix="billingAddress_" idPrefix="user_`$someUser.UserGroup.ID`_`$someUser.ID`_billingAddress" address=$someUser.defaultBillingAddress states=$billingAddressStates}
 	</fieldset>
 
 	<fieldset id="user_{$someUser.UserGroup.ID}_{$someUser.ID}_shippingAddress" class="user_shippingAddress">
 		<legend>{t _shipping_address}</legend>
-		{include file=backend/user/address_edit.tpl namePrefix="shippingAddress_" eavPrefix="shippingAddress_" idPrefix="user_`$someUser.UserGroup.ID`_`$someUser.ID`_shippingAddress" address=$someUser.defaultShippingAddress states=$shippingAddressStates}
+		{include file="backend/user/address_edit.tpl" namePrefix="shippingAddress_" eavPrefix="shippingAddress_" idPrefix="user_`$someUser.UserGroup.ID`_`$someUser.ID`_shippingAddress" address=$someUser.defaultShippingAddress states=$shippingAddressStates}
 	</fieldset>
 
 

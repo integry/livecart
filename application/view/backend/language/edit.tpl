@@ -1,5 +1,5 @@
 {pageTitle help="language.edit"}
-	<a href="{link controller=backend.language}">{t _languages}</a> &gt; {translate text=_language_definitons} ({img src="image/localeflag/`$id`.png"} {$edit_language})
+	<a href="{link controller="backend.language"}">{t _languages}</a> &gt; {translate text=_language_definitons} ({img src="image/localeflag/`$id`.png"} {$edit_language})
 {/pageTitle}
 
 {includeJs file="library/json.js"}
@@ -46,7 +46,7 @@
 </div>
 
 {tip}
-	{capture assign=tipUrl}{link controller=backend.customize action=index}{/capture}
+	{capture assign=tipUrl}{link controller="backend.customize" action=index}{/capture}
 	{maketext text="_tip_live_trans" params="$tipUrl"}
 {/tip}
 
@@ -57,7 +57,7 @@
 
 		<ul class="verticalMenu">
 			<li class="langExport">
-				<a href="{link controller=backend.language action=export id=$id}">
+				<a href="{link controller="backend.language" action=export id=$id}">
 					{t _export}
 				</a>
 			</li>
@@ -147,7 +147,7 @@
 
 			<div id="translations"></div>
 
-			<form id="editLang" method="post" action="{link controller=backend.language action=save id=$id}" onSubmit="langPassDisplaySettings(this); $('saveProgress').style.display = 'inline';">
+			<form id="editLang" method="post"action="{link controller="backend.language" action=save id=$id}" onSubmit="langPassDisplaySettings(this); $('saveProgress').style.display = 'inline';">
 
 				<fieldset class="controls" {denied role='language.update'}style="display: none"{/denied}>
 					<input type="hidden" name="translations" />

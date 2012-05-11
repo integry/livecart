@@ -9,7 +9,7 @@
  * @package application.helper.smarty
  * @author Integry Systems
  */
-function smarty_function_img($params, LiveCartSmarty $smarty)
+function smarty_function_img($params, Smarty_Internal_Template $smarty)
 {
 	if(isset($params['src']) && (substr($params['src'], 0, 6) == 'image/' || substr($params['src'], 0, 7) == 'upload/'))
 	{

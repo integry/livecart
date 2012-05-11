@@ -66,7 +66,7 @@
 
 {include file="backend/csvImport/wizardProgress.tpl" class="stepDelimiters"}
 
-{form action="controller=backend.csvImport action=preview" method="POST" id="delimitersForm" handle=$form onsubmit="Backend.CsvImport.cont(); return false;"}
+{form action="controller=backend.csvImport action=preview" method="POST" id="delimitersform handle=$form onsubmit="Backend.CsvImport.cont(); return false;"}
 
 	<div id="import">
 
@@ -78,9 +78,9 @@
 	{hidden name="options"}
 
 	<span style="display: none;">
-		<span id="fieldsUrl">{link controller=backend.csvImport action=fields}</span>
-		<span id="importUrl">{link controller=backend.csvImport action=import}</span>
-		<span id="cancelUrl">{link controller=backend.csvImport action=isCancelled}</span>
+		<span id="fieldsUrl">{link controller="backend.csvImport" action=fields}</span>
+		<span id="importUrl">{link controller="backend.csvImport" action=import}</span>
+		<span id="cancelUrl">{link controller="backend.csvImport" action=isCancelled}</span>
 	</span>
 
 	<fieldset id="info">
@@ -95,7 +95,7 @@
 				<label>{t _import_category}</label>
 				<label class="wide">
 					{foreach from=$catPath item=node name="catPath"}
-						<a href="{link controller=backend.csvImport action=index}?file={$file}&category={$node.ID}&selectCategory=true">{$node.name_lang}</a>
+						<a href="{link controller="backend.csvImport" action=index}?file={$file}&category={$node.ID}&selectCategory=true">{$node.name_lang}</a>
 						{if !$smarty.foreach.catPath.last}
 							&gt;
 						{/if}
@@ -162,7 +162,7 @@
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" class="submit" value="{tn _continue}" />
 		{t _or}
-		<a class="cancel" href="{link controller=backend.csvImport}">{t _cancel}</a>
+		<a class="cancel" href="{link controller="backend.csvImport}">{t _cancel}</a>
 	</fieldset>
 
 	<div class="clear"></div>
@@ -190,7 +190,7 @@
 	<div class="clear"></div>
 
 	<fieldset id="preview">
-		<legend>{maketext text=_preview_count params=$previewCount,$total}</legend>
+		<legend>{maketext text=_preview_count params="`$previewCount`,`$total`"}</legend>
 			<div id="previewContainer">
 				{include file="backend/csvImport/preview.tpl" preview=$preview}
 			</div>

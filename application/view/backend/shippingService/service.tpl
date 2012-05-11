@@ -1,4 +1,4 @@
-{form id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`" handle=$form action="controller=backend.deliveryZone action=update id=`$service.DeliveryZone.ID`" method="post" role="delivery.update"}
+{form id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`" handle=$form" action="controller=backend.deliveryZone action=update id=`$service.DeliveryZone.ID`" method="post" role="delivery.update"}
 	<input type="hidden" name="deliveryZoneID" value="{$service.DeliveryZone.ID}" />
 	<input type="hidden" name="serviceID" value="{$service.ID}" />
 

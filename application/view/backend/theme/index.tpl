@@ -31,7 +31,7 @@
 
 		<ul class="verticalMenu">
 			<li id="addMenu" class="addTreeNode"><a href="" onclick="pageHandler.showAddForm(); return false;">{t _add_new}</a></li>
-			<fieldset id="addForm" style="display: none;">
+			<fieldset id="addform style="display: none;">
 				{form action="controller=backend.theme action=add" method="POST" handle=$addForm onsubmit="pageHandler.addTheme(); return false;"}
 					{err for="name"}
 						{{label {t _theme_name} }}:
@@ -48,8 +48,8 @@
 			</fieldset>
 
 			<li id="importMenu" class="importTreeNode"><a href="" onclick="pageHandler.importTheme(); return false;">{t _import_theme}</a></li>
-			<fieldset id="importForm" style="display: none;">
-				{form handle=$importForm action="controller=backend.theme action=import"
+			<fieldset id="importform style="display: none;">
+				{form handle=$importform action="controller=backend.theme action=import"
 					target="themeImportTarget" method="POST" enctype="multipart/form-data"
 					autocomplete="off"
 				}
@@ -62,11 +62,11 @@
 							<span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
 						{/err}
 					</p>
-					
+
 					<fieldset class="controls">
 						<span class="progressIndicator" style="display: none;"></span>
-						<input type="submit" name="upload" class="submit" value="{tn _import}"> 
-						{t _or} 
+						<input type="submit" name="upload" class="submit" value="{tn _import}">
+						{t _or}
 						<a class="cancel" href="#" onclick="pageHandler.hideImportForm(); return false;">{t _cancel}</a>
 					</fieldset>
 				{/form}
@@ -74,7 +74,7 @@
 			</fieldset>
 
 			<li id="copyMenu" class="exportTreeNode"><a href="" onclick="pageHandler.showCopyForm(); return false;">{t _copy_theme}</a></li>
-			<fieldset id="copyForm" style="display: none;">
+			<fieldset id="copyform style="display: none;">
 				{form action="controller=backend.theme action=copyTheme" method="POST" handle=$copyForm onsubmit="pageHandler.copyTheme(); return false;"}
 					<input type="hidden" name="id" value="" id="copyFromID" />
 					{err for="name"}
@@ -102,16 +102,16 @@
 			<div class="tabContainer">
 				<ul class="tabList tabs">
 					<li id="tabSettings" class="tab active">
-						<a href="{link controller=backend.theme action=edit query='id=_id_'}"}">{t _settings}</a>
+						<a href="{link controller="backend.theme" action=edit query='id=_id_'}"}">{t _settings}</a>
 					</li>
 					<li id="tabColors" class="tab">
-						<a href="{link controller=backend.theme action=colors query='id=_id_'}">{t _colors}</a>
+						<a href="{link controller="backend.theme" action=colors query='id=_id_'}">{t _colors}</a>
 					</li>
 					<li id="tabCss" class="tab">
-						<a href="{link controller=backend.cssEditor action=edit query='file=_id_'}">{t _css}</a>
+						<a href="{link controller="backend.cssEditor" action=edit query='file=_id_'}">{t _css}</a>
 					</li>
 					<li id="tabFiles" class="tab">
-						<a href="{link controller=backend.themeFile action=index query='id=_id_'}">{t _files}</a>
+						<a href="{link controller="backend.themeFile" action=index query='id=_id_'}">{t _files}</a>
 					</li>
 					{block THEME_TABS}
 				</ul>
@@ -124,15 +124,15 @@
 {literal}
 <script type="text/javascript">
 	var pageHandler = new Backend.Theme({/literal}{$themes}{literal});
-	pageHandler.urls['edit'] = '{/literal}{link controller=backend.theme action=edit}?id=_id_{literal}';
-	pageHandler.urls['add'] = '{/literal}{link controller=backend.theme action=add}{literal}';
-	pageHandler.urls['delete'] = '{/literal}{link controller=backend.theme action=delete}?id=_id_{literal}';
-	pageHandler.urls['moveup'] = '{/literal}{link controller=backend.theme action=reorder}?order=up&id=_id_{literal}';
-	pageHandler.urls['movedown'] = '{/literal}{link controller=backend.theme action=reorder}?order=down&id=_id_{literal}';
-	pageHandler.urls['empty'] = '{/literal}{link controller=backend.theme action=emptyPage}{literal}';
-	pageHandler.urls['create'] = '{/literal}{link controller=backend.theme action=create}{literal}';
-	pageHandler.urls['update'] = '{/literal}{link controller=backend.theme action=update}{literal}';
-	pageHandler.urls['export'] = '{/literal}{link controller=backend.theme action=export}?id=_id_{literal}';
+	pageHandler.urls['edit'] = '{/literal}{link controller="backend.theme" action=edit}?id=_id_{literal}';
+	pageHandler.urls['add'] = '{/literal}{link controller="backend.theme" action=add}{literal}';
+	pageHandler.urls['delete'] = '{/literal}{link controller="backend.theme" action=delete}?id=_id_{literal}';
+	pageHandler.urls['moveup'] = '{/literal}{link controller="backend.theme" action=reorder}?order=up&id=_id_{literal}';
+	pageHandler.urls['movedown'] = '{/literal}{link controller="backend.theme" action=reorder}?order=down&id=_id_{literal}';
+	pageHandler.urls['empty'] = '{/literal}{link controller="backend.theme" action=emptyPage}{literal}';
+	pageHandler.urls['create'] = '{/literal}{link controller="backend.theme" action=create}{literal}';
+	pageHandler.urls['update'] = '{/literal}{link controller="backend.theme" action=update}{literal}';
+	pageHandler.urls['export'] = '{/literal}{link controller="backend.theme" action=export}?id=_id_{literal}';
 </script>
 {/literal}
 

@@ -11,7 +11,7 @@
  *	{pageMenu id="menu"}
  *		{menuItem}
  *			{menuCaption}Click Me{/menuCaption}
- *			{menuAction}http://click.me.com{/menuAction} 
+ *			{menuAction}http://click.me.com{/menuAction}
  *		{/menuItem}
  *		{menuItem}
  *			{menuCaption}Another menu item{/menuCaption}
@@ -24,24 +24,24 @@
  * @package application.helper.smarty
  * @author Integry Systems
  */
-function smarty_block_pageMenu($params, $content, LiveCartSmarty $smarty, &$repeat) 
-{	
-	if ($repeat) 
-	{		
+function smarty_block_pageMenu($params, $content, Smarty_Internal_Template $smarty, &$repeat)
+{
+	if ($repeat)
+	{
 		$smarty->clear_assign('pageMenuItems');
 	}
-	else 
+	else
 	{
-		$items = $smarty->get_template_vars('pageMenuItems');
+		$items = $smarty->getTemplateVars('pageMenuItems');
 
 		$menuDiv = new HtmlElement('div');
 		$menuDiv->setAttribute('id', $params['id']);
 		$menuDiv->setAttribute('tabIndex', 1);
 		$menuDiv->setContent(implode(' | ', $items));
-		
+
 		return $menuDiv->render();
 	}
-	
+
 }
 
 ?>

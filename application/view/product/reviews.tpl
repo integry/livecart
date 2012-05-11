@@ -23,7 +23,7 @@
 		<div class="resultStats">
 			{include file="product/ratingSummary.tpl"}
 			<div class="pagingInfo">
-				{maketext text=_showing_reviews params=$offsetStart,$offsetEnd,`$product.reviewCount`}
+				{maketext text=_showing_reviews params="`$offsetStart`,`$offsetEnd`,`$product.reviewCount`"}
 			</div>
 			<div class="clear"></div>
 		</div>

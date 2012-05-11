@@ -20,23 +20,23 @@
 	{compiledCss glue=true nameMethod=hash}
 
 	{if !'DISABLE_WYSIWYG'|config}
-		{includeJs file=library/tinymce/tiny_mce.js inline=true}
+		{includeJs file="library/tinymce/tiny_mce.js" inline=true}
 	{/if}
 
-	{includeJs file=library/KeyboardEvent.js front=true}
+	{includeJs file="library/KeyboardEvent.js" front=true}
 	{includeJs file="backend/Backend.js" front=true}
 	{includeJs file="backend/QuickSearch.js"}
 	{includeJs file="library/FooterToolbar.js" front=true}
-	{includeJs file=library/livecart.js front=true}
-	{includeJs file=library/dhtmlHistory/dhtmlHistory.js}
+	{includeJs file="library/livecart.js" front=true}
+	{includeJs file="library/dhtmlHistory/dhtmlHistory.js"}
 	{includeJs file="library/scriptaculous/dragdrop.js" front=true}
 	{includeJs file="library/scriptaculous/slider.js" front=true}
 	{includeJs file="library/scriptaculous/controls.js" front=true}
 	{includeJs file="library/scriptaculous/builder.js" front=true}
 	{includeJs file="library/scriptaculous/effects.js" front=true}
-	{includeJs file=library/jquery/jquery-min.js front=true}
-	{includeJs file=library/jquery/jquery-ui.js}
-	{includeJs file=library/jquery/plugins.js}
+	{includeJs file="library/jquery/jquery-min.js" front=true}
+	{includeJs file="library/jquery/jquery-ui.js"}
+	{includeJs file="library/jquery/plugins.js"}
 	{includeJs file="library/prototype/prototype.js" front=true}
 
 	{includeJs file="backend/BackendToolbar.js"}

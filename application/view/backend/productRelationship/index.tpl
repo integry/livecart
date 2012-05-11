@@ -2,7 +2,7 @@
 {literal}
 	with(Backend.RelatedProduct.Group)
 	{
-		Links.sort = '{/literal}{link controller=backend.productRelationshipGroup action=sort}?target=productRelationshipGroup_list_{$productID}{literal}';
+		Links.sort = '{/literal}{link controller="backend.productRelationshipGroup" action=sort}?target=productRelationshipGroup_list_{$productID}{literal}';
 		Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_group|addslashes}{literal}'
 	}
 
@@ -10,7 +10,7 @@
 	Backend.RelatedProduct.messages = {};
 	with(Backend.RelatedProduct)
 	{
-		links.selectProduct = '{/literal}{link controller=backend.productRelationship action=selectProduct}#cat_{$categoryID}#tabProducts__{literal}';
+		links.selectProduct = '{/literal}{link controller="backend.productRelationship" action=selectProduct}#cat_{$categoryID}#tabProducts__{literal}';
 		messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}';
 		messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_relation|addslashes}{literal}';
 	}
@@ -32,7 +32,7 @@
 {* No group *}
 <ul id="noGroup_{$type}_{$productID}" class="noGroup subList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_subList">
 {foreach item="relationship" from=$relationshipsWithGroups}
-	{if $relationship.ProductRelationshipGroup.ID}{php}break;{/php}{/if}
+	{if $relationship.ProductRelationshipGroup.ID}{break}{/if}
 	{if $relationship.RelatedProduct.ID}
 		<li id="{$relationship.RelatedProduct.ID}">
 			{include file="backend/productRelationship/addRelated.tpl" product=$relationship.RelatedProduct}
@@ -43,7 +43,7 @@
 
 <ul class="activeListGroup {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit groupList">
 {foreach item="relationship" from=$relationshipsWithGroups}
-	{if !$relationship.ProductRelationshipGroup.ID}{php}continue;{/php}{/if}
+	{if !$relationship.ProductRelationshipGroup.ID}{continue}{/if}
 
 	{if $lastProductRelationshipGroup != $relationship.ProductRelationshipGroup.ID }
 		{if $lastProductRelationshipGroup > 0}</ul></li>{/if}

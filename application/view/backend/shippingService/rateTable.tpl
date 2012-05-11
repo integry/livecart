@@ -1,13 +1,13 @@
 {* assign range type as name *}
 {php}
-	$service = $this->get_template_vars('service');
+	$service = $smarty->getTemplateVars('service');
 	if($service['rangeType'] == ShippingService::WEIGHT_BASED)
 	{
-		$this->assign('rangeTypeName', 'weight');
+		$smarty->assign('rangeTypeName', 'weight');
 	}
 	else if($service['rangeType'] == ShippingService::SUBTOTAL_BASED)
 	{
-		$this->assign('rangeTypeName', 'subtotal');
+		$smarty->assign('rangeTypeName', 'subtotal');
 	}
 {/php}
 
@@ -77,7 +77,7 @@
 								class="number UnitConventer_NormalizedWeight"
 								name="rate_`$rate.ID`_weightRangeEnd"
 							}
-							
+
 							{textfield class="number UnitConventer_HiValue"}<span class="UnitConventer_HiValueAbbr"></span>
 							{textfield class="number UnitConventer_LoValue"}<span class="UnitConventer_LoValueAbbr"></span>
 							{textfield class="number UnitConventer_MergedValue"}
@@ -109,7 +109,7 @@
 				</td>
 			</tr>
 
-			
+
 			<tr class="subtotal subtotalRow">
 				{foreach from=$shippingRates item=rate name=subtotalRowLoop key=key}
 					<td>
@@ -128,7 +128,7 @@
 							{/if}
 							-
 						</div>
-						
+
 						{if $rangeTypeName == 'subtotal'}
 							{textfield value=$rate.subtotalRangeEnd class="number" name="rate_`$rate.ID`_subtotalRangeEnd"}
 						{else}

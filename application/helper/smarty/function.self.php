@@ -8,7 +8,7 @@
  * @package application.helper.smarty
  * @author Integry Systems
  */
-function smarty_function_self($params, LiveCartSmarty $smarty)
+function smarty_function_self($params, Smarty_Internal_Template $smarty)
 {
 	return $_SERVER['REQUEST_URI'];
 }

@@ -50,22 +50,22 @@
 		<optgroup label="{t _presentation}">
 			<option value="theme">{t _set_theme}</option>
 		</optgroup>
-		
+
 		{if $attributes}
 			<optgroup label="{t _set_attributes}">
 				{foreach from=$attributes item=attr}
 					<option value="set_specField_{$attr.ID}">{$attr.name_lang}</option>
-				{/foreach}		
+				{/foreach}
 			</optgroup>
 
 			<optgroup label="{t _remove_attributes}">
 				{foreach from=$attributes item=attr}
 					<option value="remove_specField_{$attr.ID}">{$attr.name_lang}</option>
-				{/foreach}		
-			</optgroup>		
+				{/foreach}
+			</optgroup>
 		{/if}
 	</select>
-	
+
 	<span id="progressIndicator_specField" class="progressIndicator" style="display: none;"></span>
 
 	<span class="bulkValues" style="display: none;">
@@ -93,14 +93,14 @@
 			{checkbox id="multi_quant_price_`$categoryID`" name="div_quant_price"}
 			<label for="multi_quant_price_{$categoryID}" style="float: none;">{t _inc_quant_prices}</label>
 		</span>
-		
+
 		{foreach from=$attributes item=attr}
 			<span class="set_specField_{$attr.ID}"></span>
 			{if $attr.isMultiValue}
 				<span class="remove_specField_{$attr.ID}"></span>
 			{/if}
 		{/foreach}
-		
+
 		<span class="specFieldValueContainer"></span>
 
 		{textfield id="massForm_inc_stock_`$categoryID`" class="text number" name="inc_stock"}

@@ -94,7 +94,7 @@
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" class="submit" value="{tn _continue}" />
 		{t _or}
-		<a class="cancel" href="{link controller=backend.csvImport}">{t _cancel}</a>
+		<a class="cancel" href="{link controller="backend.csvImport"}">{t _cancel}</a>
 	</fieldset>
 
 {/form}
@@ -102,8 +102,8 @@
 
 {literal}
 	<script type="text/javascript">
-		Backend.SelectFile.url = {/literal}'{link controller=backend.selectFile}'{literal};
-		Backend.Category.links.popup = {/literal}'{link controller=backend.category action=popup}'{literal};
+		Backend.SelectFile.url = {/literal}'{link controller="backend.selectFile"}'{literal};
+		Backend.Category.links.popup = {/literal}'{link controller="backend.category" action=popup}'{literal};
 		Event.observe($('selectAtServer'), 'click', function() {new Backend.SelectFile($('atServer')); });
 	</script>
 {/literal}

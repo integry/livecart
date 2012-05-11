@@ -17,7 +17,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 //--><!]]></script>
 {/literal}
 
-{defun name="dynamicCategoryTree" node=false filters=false}
+{function name="dynamicCategoryTree" node=false filters=false}
 	{if $node}
 		<ul id="dynamicNav">
 		{foreach from=$node item=category}
@@ -27,13 +27,13 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 						<span class="count">(&rlm;{$category.count})</span>
 					{/if}
 					{if $category.subCategories}
-		   				{fun name="dynamicCategoryTree" node=$category.subCategories}
+		   				{dynamicCategoryTree node=$category.subCategories}
 					{/if}
 				</li>
 		{/foreach}
 		</ul>
 	{/if}
-{/defun}
+{/function}
 
 <div class="box categories dynamicMenu">
 	<div class="title">
@@ -42,7 +42,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 
 	<div class="content">
 		<fieldset class="container">
-		{fun name="dynamicCategoryTree" node=$categories}
+		{dynamicCategoryTree node=$categories}
 		</fieldset>
 	</div>
 

@@ -12,7 +12,7 @@ include_once dirname(__file__) . '/function.includeCss.php';
  * @package application.helper.smarty
  * @author Integry Systems
  */
-function smarty_function_loadJs($params, LiveCartSmarty $smarty)
+function smarty_function_loadJs($params, Smarty_Internal_Template $smarty)
 {
 	include_once('function.includeJs.php');
 

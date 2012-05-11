@@ -6,7 +6,7 @@
 		</li>
 		<li class="fileUploadCancel done" style="display: none">
 			<a href="#" id="uploadNewFile_{$theme}_cancel" class="pageMenu">{t _cancel}</a>
-		</li>  
+		</li>
 	</ul>
 </fieldset>
 
@@ -20,7 +20,7 @@
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="hidden" name="theme" value="{$theme}" />
 		<input type="hidden" name="orginalFileName" class="orginalFileName" value="" />
-		
+
 		<p class="required">
 			{err for="file"}
 				{{label {t _select_file}: }}
@@ -37,8 +37,8 @@
 
 		<fieldset class="controls">
 			<span class="progressIndicator" style="display: none;"></span>
-			<input type="submit" name="upload" class="submit" value="{tn _upload}"> 
-			{t _or} 
+			<input type="submit" name="upload" class="submit" value="{tn _upload}">
+			{t _or}
 			<a href="#" class="cancel">{t _cancel}</a>
 		</fieldset>
 
@@ -58,9 +58,9 @@
 </ul>
 
 <div style="display: none">
-	<span id="deleteUrl">{link controller=backend.themeFile action=delete}?file=__FILE__&theme=__THEME__</span>
+	<span id="deleteUrl">{link controller="backend.themeFile" action=delete}?file=__FILE__&theme=__THEME__</span>
 	<span id="confirmDelete">{t _del_conf}</span>
-	{* <span id="saveUrl">{link controller=backend.siteNews action=save}</span> *}
+	{* <span id="saveUrl">{link controller="backend.siteNews" action=save}</span> *}
 </div>
 
 <ul style="display: none;">
@@ -75,7 +75,7 @@
 					<img src="" alt="">
 				</a>
 			</div>
-			
+
 			<div class="fileInfoContainer">
 				<div class="fileName"></div>
 				<div class="cssHintContainer">

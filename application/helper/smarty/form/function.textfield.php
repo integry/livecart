@@ -18,7 +18,7 @@
  * @package application.helper.smarty.form
  * @author Integry Systems
  */
-function smarty_function_textfield($params, LiveCartSmarty $smarty)
+function smarty_function_textfield($params, Smarty_Internal_Template $smarty)
 {
 	$formParams = $smarty->_tag_stack[0][1];
 	$formHandler = $formParams['handle'];

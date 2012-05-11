@@ -43,7 +43,7 @@
 		<div id="tabContainer" class="tabContainer">
 			<ul id="tabList" class="tabList tabs">
 				<li id="tabFields" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
-					<a href="{link controller=backend.eavField action=index query="id=_id_"}">{t _attributes}</a>
+					<a href="{link controller="backend.eavField" action=index query="id=_id_"}">{t _attributes}</a>
 					<span> </span>
 					<span class="tabHelp">categories.attributes</span>
 				</li>

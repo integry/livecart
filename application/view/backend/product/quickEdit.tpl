@@ -1,12 +1,12 @@
 <div class="productQuickImageUploadContainer" id="productImageUploadForm_{$product.ID}" style="display:none;"></div>
 
-{form handle=$productForm action="controller=backend.product action=saveQuickEdit id=`$product.ID`" id="product_`$product.ID`_quick_form" onsubmit="return false;" method="post" role="product.update"}
+{form handle=$productform action="controller=backend.product action=saveQuickEdit id=`$product.ID`" id="product_`$product.ID`_quick_form onsubmit="return false;" method="post" role="product.update"}
 	<input type="hidden" name="categoryID" value="{$cat}" />
 	<fieldset class="quickEditOuterContainer">
 
 		<fieldset class="container" {denied role="product.update"}style="display: none"{/denied}>
 			<ul class="menu" id="prodImgMenu_{$product.ID}">
-				<li class="prodImageAdd"><a href="javascript:void(0);" id="prodImageAdd_{$product.ID}_add" class="pageMenu" onclick="return Backend.Product.showQuickEditAddImageForm(this,{$product.ID}, '{link controller=backend.productQuickImage id=$product.ID}');">{t _add_image}</a></li>
+				<li class="prodImageAdd"><a href="javascript:void(0);" id="prodImageAdd_{$product.ID}_add" class="pageMenu" onclick="return Backend.Product.showQuickEditAddImageForm(this,{$product.ID}, '{link controller="backend.productQuickImage id=$product.ID}');">{t _add_image}</a></li>
 				<li class="prodImageAddCancel done" style="display: none;"><a href="javascript:void(0);" id="prodImageAdd_{$product.ID}_cancel" onclick="return Backend.Product.hideQuickEditAddImageForm(this, {$product.ID});">{t _cancel_add_image}</a></li>
 			</ul>
 		</fieldset>

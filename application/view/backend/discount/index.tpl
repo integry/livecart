@@ -50,7 +50,7 @@
 	<div class="tabContainer">
 		<ul class="tabList tabs">
 			<li id="tabUserInfo" class="tab active">
-				<a href="{link controller=backend.discount action=edit id=_id_}"}"></a>
+				<a href="{link controller="backend.discount" action=edit id=_id_}"}"></a>
 				<span class="tabHelp">products</span>
 			</li>
 		</ul>

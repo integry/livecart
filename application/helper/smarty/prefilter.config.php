@@ -74,7 +74,7 @@ function smarty_prefilter_config($source, $smarty)
 	$source = preg_replace('/{include file="([-_.a-zA-Z0-9@\/]+)"(.*)}/msU', '{include file="custom:$1"\\2}', $source);
 
 	//$source = preg_replace('/{block (.+?)}/', '{foreach from=\$$1 item=includedBlock key=key}{$includedBlock}{/foreach}', $source);
-	$source = preg_replace('/{block (.+?)}/', '{renderBlock block=$1}', $source);
+	$source = preg_replace('/{block (.+?)}/', '{renderBlock block="$1"}', $source);
 
 	// help system
 	$tipPattern = '([\-_\.a-zA-Z0-9@\/\$]+?)';

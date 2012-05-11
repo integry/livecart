@@ -1,11 +1,11 @@
 <fieldset class="addForm productFileGroup_form"  style="display: none;">
 	<legend>{t _add_new_file_group_title}</legend>
-	<form action="{link controller=backend.productFileGroup action=save}" method="post" {denied role="product.update"}class="formReadonly"{/denied}>
+	<form" action="{link controller="backend.productFileGroup" action=save}" method="post" {denied role="product.update"}class="formReadonly"{/denied}>
 		<!-- STEP 1 -->
-		
+
 			<input type="hidden" name="ID" class="hidden productFileGroup_ID" />
 			<input type="hidden" name="productID" class="hidden productFileGroup_productID" />
-	
+
 			<fieldset class="productFileGroup_main">
 				<label class="productFileGroup_name_label">{t _product_file_group_title}</label>
 				<fieldset class="error">
@@ -13,13 +13,13 @@
 					<span class="errorText hidden"> </span>
 				</fieldset>
 			</fieldset>
-			
+
 			<!-- STEP 3 -->
 			{language}
 				<label>{t _product_file_group_title}:</label>
 				<input type="text" value="" id="name_{$lang.ID}" name="name_{$lang.ID}"/>
 			{/language}
-	
+
 		<fieldset class="productFileGroup_controls controls">
 			<span class="progressIndicator" style="display: none;"></span>
 			<input type="submit" class="productFileGroup_save button submit" value="{t _save}" />

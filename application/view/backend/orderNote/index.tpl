@@ -1,32 +1,32 @@
 <div>
 <div class="menuContainer" id="orderNoteMenu_{$order.ID}">
 
-	<ul class="menu orderNoteMenu" style="margin: 0; {denied role='order.update'}display: none;{/denied}">		
+	<ul class="menu orderNoteMenu" style="margin: 0; {denied role='order.update'}display: none;{/denied}">
 		<li class="addResponse"><a href="#addResponse" class="addResponse" >{t _add_response}</a></li>
 		<li class="addResponseCancel done" style="display: none"><a href="#cancelResponse" class="addResponseCancel" >{t _cancel_response}</a></li>
 	</ul>
-	
+
 	<div class="clear"></div>
-	
-	<div class="addResponseForm" style="display: none;">
-		<fieldset class="addForm">
-		
+
+	<div class="addResponseform style="display: none;">
+		<fieldset class="addform>
+
 			<legend>{t _add_response|capitalize}</legend>
-		
+
 			{form action="controller=backend.orderNote action=add id=`$order.ID`" method="POST" handle=$form onsubmit="Backend.OrderNote.submitForm(event);" role="order.update"}
-			
+
 				<p>
 					{textarea name="comment"}
-				</p>		
-		
+				</p>
+
 				<fieldset class="controls">
 					<span class="progressIndicator" style="display: none;"></span>
 					<input type="submit" class="submit" value="{tn _add_response}" />
 					{t _or} <a class="cancel responseCancel" href="#">{t _cancel}</a>
 				</fieldset>
-		
+
 			{/form}
-		
+
 		</fieldset>
 	</div>
 

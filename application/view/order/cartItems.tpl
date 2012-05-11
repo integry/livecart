@@ -7,7 +7,7 @@
 	<td id="cartUpdate"><input type="submit" class="submit" value="{tn _update}" /></td>
 {/capture}
 {assign var="cartUpdate" value=$cartUpdate|@str_split:10000}
-{php}$GLOBALS['cartUpdate'] = $this->get_template_vars('cartUpdate'); $this->assign_by_ref('GLOBALS', $GLOBALS);{/php}
+{php}$GLOBALS['cartUpdate'] = $smarty->getTemplateVars('cartUpdate'); $smarty->assignByRef('GLOBALS', $GLOBALS);{/php}
 
 {form action="controller=order action=update" method="POST" enctype="multipart/form-data" handle=$form id="cartItems"}
 <h2>{t _cart_items}</h2>

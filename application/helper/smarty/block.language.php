@@ -8,29 +8,32 @@
  *
  * @package application.helper.smarty
  */
-function smarty_block_language($params, $content, LiveCartSmarty $smarty, &$repeat)
+function smarty_block_language($params, $content, Smarty_Internal_Template $smarty, &$repeat)
 {
-	if (!$smarty->getApplication()->getLanguageSetArray())
+	$smarty = $smarty->smarty;
+	$app = $smarty->getApplication();
+
+	if (!$app->getLanguageSetArray())
 	{
 		return false;
 	}
 
 	if ($repeat)
 	{
-		$smarty->languageBlock = $smarty->getApplication()->getLanguageSetArray();
-		$smarty->assign('languageBlock', $smarty->languageBlock);
-		$smarty->assign('lang', array_shift($smarty->languageBlock));
-		$smarty->langHeadDisplayed = false;
+		$app->languageBlock = $app->getLanguageSetArray();
+		$smarty->assign('languageBlock', $app->languageBlock);
+		$smarty->assign('lang', array_shift($app->languageBlock));
+		$app->langHeadDisplayed = false;
 
 		$user = SessionUser::getUser();
-		foreach ($smarty->getApplication()->getLanguageSetArray() as $lang)
+		foreach ($app->getLanguageSetArray() as $lang)
 		{
 			$userPref = $user->getPreference('tab_lang_' . $lang['ID']);
 			$isHidden = is_null($userPref) ? !empty($params['hidden']) : $userPref == 'false';
 			$classNames[$lang['ID']] = $isHidden ? 'hidden' : '';
 		}
 
-		$smarty->langClassNames = $classNames;
+		$app->langClassNames = $classNames;
 	}
 	else
 	{
@@ -40,23 +43,23 @@ function smarty_block_language($params, $content, LiveCartSmarty $smarty, &$repe
 			return false;
 		}
 
-		if ($smarty->languageBlock)
+		if ($app->languageBlock)
 		{
 			$repeat = true;
 		}
 
-		$contentLang = $smarty->get_template_vars('lang');
-		$content = '<div class="languageFormContainer languageFormContainer_' . $contentLang['ID'] . ' ' . $smarty->langClassNames[$contentLang['ID']] . '">' . $content . '</div>';
+		$contentLang = $smarty->getTemplateVars('lang');
+		$content = '<div class="languageFormContainer languageFormContainer_' . $contentLang['ID'] . ' ' . $app->langClassNames[$contentLang['ID']] . '">' . $content . '</div>';
 
-		if (!$smarty->langHeadDisplayed)
+		if (!$app->langHeadDisplayed)
 		{
 			$smarty->assign('langFormId', 'langForm_' . uniqid());
-			$smarty->assign('classNames', $smarty->langClassNames);
+			$smarty->assign('classNames', $app->langClassNames);
 			$content = $smarty->fetch('block/backend/langFormHead.tpl') . $content;
-			$smarty->langHeadDisplayed = true;
+			$app->langHeadDisplayed = true;
 		}
 
-		$smarty->assign('lang', array_shift($smarty->languageBlock));
+		$smarty->assign('lang', array_shift($app->languageBlock));
 
 		// form footer
 		if (!$repeat)

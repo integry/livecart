@@ -2,7 +2,7 @@
 	<div class="resultStats">
 		<fieldset class="container">
 		<div class="pagingInfo">
-			{maketext text=_showing_products params=$offsetStart,$offsetEnd,$count}
+			{maketext text=_showing_products params="`$offsetStart`,`$offsetEnd`,`$count`"}
 		</div>
 
 		{include file="category/block/switchListLayout.tpl"}

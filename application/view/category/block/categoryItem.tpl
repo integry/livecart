@@ -36,7 +36,7 @@
 							<li class="moreSubCats">
 								<a href="{categoryUrl data=$sub filters=$filters}">{t _more_subcats}</a>
 							</li>
-							{php}break;{/php}
+							{break}
 						{/if}
 						<li>
 							<a href="{categoryUrl data=$subSub}">{$subSub.name_lang}</a>

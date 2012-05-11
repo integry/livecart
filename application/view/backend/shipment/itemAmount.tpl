@@ -29,7 +29,7 @@
 								{elseif 1 == $option.Choice.Option.type}
 									{$option.Choice.name_lang}
 								{elseif 3 == $option.Choice.Option.type}
-									<a href="{link controller=backend.orderedItem action=downloadOptionFile id=$item.ID query="option=`$option.Choice.Option.ID`"}">{$option.fileName}</a>
+									<a href="{link controller="backend.orderedItem" action=downloadOptionFile id=$item.ID query="option=`$option.Choice.Option.ID`"}">{$option.fileName}</a>
 									{if $option.small_url}
 										<div class="optionImage">
 											<a href="{$option.large_url}" rel="lightbox"><img src="{$option.small_url}" /></a>
@@ -47,7 +47,7 @@
 						</ul>
 
 						<div class="menu productOptionsMenu">
-							<a href="{link controller=backend.orderedItem action=optionForm id=$item.ID}" onclick="Backend.OrderedItem.loadOptionsForm(event);">{t _edit_options}</a>
+							<a href="{link controller="backend.orderedItem" action=optionForm id=$item.ID}" onclick="Backend.OrderedItem.loadOptionsForm(event);">{t _edit_options}</a>
 							<span class="progressIndicator" style="display: none;"></span>
 						</div>
 					</div>
@@ -57,7 +57,7 @@
 					<div class="productOptions">
 						{include file="order/itemVariations.tpl"}
 						<div class="menu productOptionsMenu">
-							<a href="{link controller=backend.orderedItem action=variationForm id=$item.ID}" id="variationsMenuLink_{$item.ID}" onclick="Backend.OrderedItem.loadOptionsForm(event);">{t _edit_variations}</a>
+							<a href="{link controller="backend.orderedItem" action=variationForm id=$item.ID}" id="variationsMenuLink_{$item.ID}" onclick="Backend.OrderedItem.loadOptionsForm(event);">{t _edit_variations}</a>
 							<span class="progressIndicator" style="display: none;"></span>
 						</div>
 

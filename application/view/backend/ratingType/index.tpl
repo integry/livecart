@@ -7,11 +7,11 @@
 
 {/allowed}
 
-<fieldset class="slideForm addForm addRatingTypeForm" style="display: none;">
+<fieldset class="slideForm addForm addRatingTypeform style="display: none;">
 
 	<legend>{t _add_rating_type|capitalize}</legend>
 
-	{form action="controller=backend.ratingType action=add" method="POST" onsubmit="new Backend.RatingType.Add(this); return false;" handle=$form class="enabled ratingTypeForm"}
+	{form action="controller=backend.ratingType action=add" method="POST" onsubmit="new Backend.RatingType.Add(this); return false;" handle=$form class="enabled ratingTypeform}
 		<input type="hidden" name="categoryId" value="{$id}" />
 		<input type="hidden" name="id" />
 
@@ -42,10 +42,10 @@
 <ul id="typeList_{$id}" class="activeList {allowed role="news.sort"}activeList_add_sort{/allowed} {allowed role="news.delete"}activeList_add_delete{/allowed} {allowed role="news.update"}activeList_add_edit{/allowed} typeList">
 </ul>
 <div style="display: none">
-	<span class="deleteUrl">{link controller=backend.ratingType action=delete}?id=</span>
+	<span class="deleteUrl">{link controller="backend.ratingType" action=delete}?id=</span>
 	<span class="confirmDelete">{t _del_conf}</span>
-	<span class="sortUrl">{link controller=backend.ratingType action=saveOrder id=$id}</span>
-	<span class="saveUrl">{link controller=backend.ratingType action=save}</span>
+	<span class="sortUrl">{link controller="backend.ratingType" action=saveOrder id=$id}</span>
+	<span class="saveUrl">{link controller="backend.ratingType" action=save}</span>
 </div>
 
 <ul style="display: none;">

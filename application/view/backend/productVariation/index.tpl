@@ -55,7 +55,7 @@
 	<li class="addType"><a href="#addType">{t _add_variation_type}</a></li>
 </ul>
 
-<form class="variationForm" action="{link controller=backend.productVariation action=save id=$parent.ID}" method="post" enctype="multipart/form-data" target="{uniqid}">
+<form class="variationForm"action="{link controller="backend.productVariation" action=save id=$parent.ID}" method="post" enctype="multipart/form-data" target="{uniqid}">
 	<input type="hidden" name="items" />
 	<input type="hidden" name="types" />
 	<input type="hidden" name="variations" />

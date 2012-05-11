@@ -5,7 +5,7 @@
 		</ul>
 	</fieldset>
 
-	{form handle=$productForm action="controller=backend.product action=create id=`$product.ID`" method="POST" onsubmit="Backend.Product.saveForm(this); return false;" onreset="Backend.Product.resetAddForm(this);"}
+	{form handle=$productform action="controller=backend.product action=create id=`$product.ID`" method="POST" onsubmit="Backend.Product.saveForm(this); return false;" onreset="Backend.Product.resetAddForm(this);"}
 
 		<input type="hidden" name="categoryID" value="{$product.Category.ID}" />
 
@@ -43,7 +43,7 @@
 			</p>
 
 			{filefield name="upload_productImage" class="upload_productImageEmpty" style="display:none;"}
-			<input type="hidden" id="fileUploadOptions_{$cat}_{$product.ID}" class="fileUploadOptions" value="{link controller=backend.product action=uploadProductImage query="field=productImage"}" />
+			<input type="hidden" id="fileUploadOptions_{$cat}_{$product.ID}" class="fileUploadOptions" value="{link controller="backend.product" action=uploadProductImage query="field=productImage"}" />
 
 			<script type="text/javascript">
 				var upload = $('product_image_{$cat}_{$product.ID}');

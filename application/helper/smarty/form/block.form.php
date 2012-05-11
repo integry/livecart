@@ -11,7 +11,7 @@
  *
  * @todo Include javascript validator source
  */
-function smarty_block_form(&$params, $content, $smarty, &$repeat)
+function smarty_block_form($params, $content, $smarty, &$repeat)
 {
 	if ($repeat)
 	{

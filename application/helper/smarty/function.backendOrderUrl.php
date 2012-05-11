@@ -8,20 +8,20 @@
  * @return string
  *
  * @package application.helper.smarty
- * @author Integry Systems 
+ * @author Integry Systems
  */
-function smarty_function_backendOrderUrl($params, LiveCartSmarty $smarty)
-{		
-	$urlParams = array('controller' => 'backend.customerOrder', 
+function smarty_function_backendOrderUrl($params, Smarty_Internal_Template $smarty)
+{
+	$urlParams = array('controller' => 'backend.customerOrder',
 					   'action' => 'index' );
-					   
+
 	$url = $smarty->getApplication()->getRouter()->createUrl($urlParams, true) . '#order_' . (isset($params['order']) ? $params['order']['ID'] . '#tabOrderInfo__' : '');
-	
+
 	if (isset($params['url']))
 	{
 		$url = $smarty->getApplication()->getRouter()->createFullUrl($url);
 	}
-	
+
 	return $url;
 }
 

@@ -22,7 +22,7 @@
 			<li id="moveDownMenu" class="moveDownTreeNode" {denied role="page.sort"}style="display: none;"{/denied}><a href="" onclick="pageHandler.moveDown(); return false;">{t _move_down}</a></li>
 			<li id="removeMenu" class="removeTreeNode" {denied role="page.remove"}style="display: none;"{/denied}><a href="" onclick="pageHandler.deleteSelected(); return false;">{t _remove}</a></li>
 		</ul>
-		
+
 		<div id="confirmations">
 			<div id="yellowZone">
 				<div id="staticPageAdded" class="yellowMessage" style="display: none;">
@@ -35,7 +35,7 @@
 
 	<div class="treeManagerContainer maxHeight h--100">
 		<span id="settingsIndicator" class="progressIndicator" style="display: none;"></span>
-				
+
 		<div id="pageContent" class="maxHeight">
 			{include file="backend/staticPage/emptyPage.tpl"}
 		</div>
@@ -46,14 +46,14 @@
 <script type="text/javascript">
 	var pageHandler = new Backend.StaticPage({/literal}{$pages}{literal});
 
-	pageHandler.urls['edit'] = '{/literal}{link controller=backend.staticPage action=edit}?id=_id_{literal}';
-	pageHandler.urls['add'] = '{/literal}{link controller=backend.staticPage action=add}{literal}';	
-	pageHandler.urls['delete'] = '{/literal}{link controller=backend.staticPage action=delete}?id=_id_{literal}';
-	pageHandler.urls['moveup'] = '{/literal}{link controller=backend.staticPage action=reorder}?order=up&id=_id_{literal}';
-	pageHandler.urls['movedown'] = '{/literal}{link controller=backend.staticPage action=reorder}?order=down&id=_id_{literal}';
-	pageHandler.urls['empty'] = '{/literal}{link controller=backend.staticPage action=emptyPage}{literal}';	
-	pageHandler.urls['create'] = '{/literal}{link controller=backend.staticPage action=create}{literal}';	
-	pageHandler.urls['update'] = '{/literal}{link controller=backend.staticPage action=update}{literal}';	
+	pageHandler.urls['edit'] = '{/literal}{link controller="backend.staticPage" action=edit}?id=_id_{literal}';
+	pageHandler.urls['add'] = '{/literal}{link controller="backend.staticPage" action=add}{literal}';
+	pageHandler.urls['delete'] = '{/literal}{link controller="backend.staticPage" action=delete}?id=_id_{literal}';
+	pageHandler.urls['moveup'] = '{/literal}{link controller="backend.staticPage" action=reorder}?order=up&id=_id_{literal}';
+	pageHandler.urls['movedown'] = '{/literal}{link controller="backend.staticPage" action=reorder}?order=down&id=_id_{literal}';
+	pageHandler.urls['empty'] = '{/literal}{link controller="backend.staticPage" action=emptyPage}{literal}';
+	pageHandler.urls['create'] = '{/literal}{link controller="backend.staticPage" action=create}{literal}';
+	pageHandler.urls['update'] = '{/literal}{link controller="backend.staticPage" action=update}{literal}';
 
 	// methods that need urls
 	pageHandler.afterInit();

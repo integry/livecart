@@ -65,20 +65,20 @@
 	Backend.UserGroup.prototype.Messages.youCanntoDeleteThisGroup = '{/literal}{t _you_cannot_delete_this_group}{literal}';
 	Backend.User.Group.prototype.Messages.savedMessage = '{/literal}{t _form_has_been_successfully_saved}{literal}';
 
-	Backend.CustomerOrder.Links.selectCustomer = '{/literal}{link controller=backend.customerOrder action=selectCustomer}{literal}';
+	Backend.CustomerOrder.Links.selectCustomer = '{/literal}{link controller="backend.customerOrder" action=selectCustomer}{literal}';
 	Backend.CustomerOrder.Editor.prototype.Messages.orderNum = '{/literal}{t _order_number|escape}{literal}';
 	Backend.CustomerOrder.Messages.selecCustomerTitle = '{/literal}{t _select_customer_title}{literal}';
-	Backend.CustomerOrder.Links.createOrder = '{/literal}{link controller=backend.customerOrder action=create}{literal}';
+	Backend.CustomerOrder.Links.createOrder = '{/literal}{link controller="backend.customerOrder" action=create}{literal}';
 
-	Backend.User.Group.prototype.Links.save = '{/literal}{link controller=backend.userGroup action=save}{literal}';
-	Backend.User.Group.prototype.Links.remove = '{/literal}{link controller=backend.userGroup action=delete}{literal}';
-	Backend.User.Group.prototype.Links.createNewUserGroup = '{/literal}{link controller=backend.userGroup action=create}{literal}';
-	Backend.User.Group.prototype.Links.removeNewGroup = '{/literal}{link controller=backend.userGroup action=remove}{literal}';
-	Backend.User.Group.prototype.Links.create = '{/literal}{link controller=backend.userGroup action=create}{literal}';
+	Backend.User.Group.prototype.Links.save = '{/literal}{link controller="backend.userGroup" action=save}{literal}';
+	Backend.User.Group.prototype.Links.remove = '{/literal}{link controller="backend.userGroup" action=delete}{literal}';
+	Backend.User.Group.prototype.Links.createNewUserGroup = '{/literal}{link controller="backend.userGroup" action=create}{literal}';
+	Backend.User.Group.prototype.Links.removeNewGroup = '{/literal}{link controller="backend.userGroup" action=remove}{literal}';
+	Backend.User.Group.prototype.Links.create = '{/literal}{link controller="backend.userGroup" action=create}{literal}';
 
-	Backend.User.Editor.prototype.Links.create = '{/literal}{link controller=backend.user action=create}{literal}';
-	Backend.User.Editor.prototype.Links.update = '{/literal}{link controller=backend.user action=update}{literal}';
-	Backend.User.Editor.prototype.Links.generatePassword = '{/literal}{link controller=backend.user action=generatePassword}{literal}';
+	Backend.User.Editor.prototype.Links.create = '{/literal}{link controller="backend.user" action=create}{literal}';
+	Backend.User.Editor.prototype.Links.update = '{/literal}{link controller="backend.user" action=update}{literal}';
+	Backend.User.Editor.prototype.Links.generatePassword = '{/literal}{link controller="backend.user" action=generatePassword}{literal}';
 
 	Backend.UserGroup.prototype.usersMiscPermision = {/literal}{allowed role="user"}true{/allowed}{denied role="user"}false{/denied}{literal};
 

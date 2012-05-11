@@ -26,9 +26,9 @@ class LiveCartRenderer extends SmartyRenderer
 	public function __construct(LiveCart $application)
 	{
 		$this->application = $application;
+		$this->registerHelperDirectory(ClassLoader::getRealPath('application.helper.smarty'));
+		$this->registerHelperDirectory(ClassLoader::getRealPath('application.helper.smarty.form'));
 
-		self::registerHelperDirectory(ClassLoader::getRealPath('application.helper.smarty'));
-		self::registerHelperDirectory(ClassLoader::getRealPath('application.helper.smarty.form'));
 		parent::__construct($application);
 	}
 

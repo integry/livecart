@@ -163,21 +163,21 @@
 {literal}
 <script type="text/javascript">
 	Backend.OrderedItem.Links = {};
-	Backend.OrderedItem.Links.remove = '{/literal}{link controller=backend.orderedItem action=delete}{literal}';
-	Backend.OrderedItem.Links.changeShipment = '{/literal}{link controller=backend.orderedItem action=changeShipment}{literal}';
-	Backend.OrderedItem.Links.addProduct = '{/literal}{link controller=backend.orderedItem action=selectProduct}/{$orderID}{literal}';
-	Backend.OrderedItem.Links.createNewItem = '{/literal}{link controller=backend.orderedItem action=create}{literal}';
-	Backend.OrderedItem.Links.changeItemCount = '{/literal}{link controller=backend.orderedItem action=changeCount}{literal}';
+	Backend.OrderedItem.Links.remove = '{/literal}{link controller="backend.orderedItem" action=delete}{literal}';
+	Backend.OrderedItem.Links.changeShipment = '{/literal}{link controller="backend.orderedItem" action=changeShipment}{literal}';
+	Backend.OrderedItem.Links.addProduct = '{/literal}{link controller="backend.orderedItem" action=selectProduct}/{$orderID}{literal}';
+	Backend.OrderedItem.Links.createNewItem = '{/literal}{link controller="backend.orderedItem" action=create}{literal}';
+	Backend.OrderedItem.Links.changeItemCount = '{/literal}{link controller="backend.orderedItem" action=changeCount}{literal}';
 
 	Backend.Shipment.Links = {};
-	Backend.Shipment.Links.update = '{/literal}{link controller=backend.shipment action=update}{literal}';
-	Backend.Shipment.Links.create = '{/literal}{link controller=backend.shipment action=create}{literal}';
-	Backend.Shipment.Links.remove = '{/literal}{link controller=backend.shipment action=delete}{literal}';
-	Backend.Shipment.Links.edit = '{/literal}{link controller=backend.shipment action=edit}{literal}';
-	Backend.Shipment.Links.getAvailableServices = '{/literal}{link controller=backend.shipment action=getAvailableServices}{literal}';
-	Backend.Shipment.Links.changeService = '{/literal}{link controller=backend.shipment action=changeService}{literal}';
-	Backend.Shipment.Links.changeStatus = '{/literal}{link controller=backend.shipment action=changeStatus}{literal}';
-	Backend.Shipment.Links.removeEmptyShipments = '{/literal}{link controller=backend.customerOrder action=removeEmptyShipments}{literal}';
+	Backend.Shipment.Links.update = '{/literal}{link controller="backend.shipment" action=update}{literal}';
+	Backend.Shipment.Links.create = '{/literal}{link controller="backend.shipment" action=create}{literal}';
+	Backend.Shipment.Links.remove = '{/literal}{link controller="backend.shipment" action=delete}{literal}';
+	Backend.Shipment.Links.edit = '{/literal}{link controller="backend.shipment" action=edit}{literal}';
+	Backend.Shipment.Links.getAvailableServices = '{/literal}{link controller="backend.shipment" action=getAvailableServices}{literal}';
+	Backend.Shipment.Links.changeService = '{/literal}{link controller="backend.shipment" action=changeService}{literal}';
+	Backend.Shipment.Links.changeStatus = '{/literal}{link controller="backend.shipment" action=changeStatus}{literal}';
+	Backend.Shipment.Links.removeEmptyShipments = '{/literal}{link controller="backend.customerOrder" action=removeEmptyShipments}{literal}';
 
 
 	Backend.Shipment.Statuses = {/literal}{json array=$statuses}{literal};

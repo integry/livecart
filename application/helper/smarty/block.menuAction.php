@@ -12,7 +12,7 @@
  *	{pageMenu id="menu"}
  *		{menuItem}
  *			{menuCaption}Click Me{/menuCaption}
- *			<strong>{menuAction}http://click.me.com{/menuAction}</strong> 
+ *			<strong>{menuAction}http://click.me.com{/menuAction}</strong>
  *		{/menuItem}
  *		{menuItem}
  *			{menuCaption}Another menu item{/menuCaption}
@@ -24,10 +24,10 @@
  * @package application.helper.smarty
  * @author Integry Systems
  */
-function smarty_block_menuAction($params, $content, LiveCartSmarty $smarty, &$repeat) 
-{	
-	if (!$repeat) 
-	{		
+function smarty_block_menuAction($params, $content, Smarty_Internal_Template $smarty, &$repeat)
+{
+	if (!$repeat)
+	{
 		$smarty->assign('menuAction', $content);
 	}
 }

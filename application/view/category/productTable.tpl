@@ -1,4 +1,4 @@
-{defun name="headLink" title="" sortVar=""}
+{function name="headLink" title="" sortVar=""}
 	{if $title}
 		{assign var="sortOrder" value='_'|@explode:$sortField|@array_pop|default:'asc'}
 		{if ($sortOrder != 'asc') && ($sortOrder != 'desc')}{assign var="sortOrder" value='asc'}{/if}
@@ -8,7 +8,7 @@
 		{/if}
 		<a href="{link self=true sort="`$sortVar`_`$sortOrder`"}" class="{if $currentOrder}direction_{$currentOrder}{/if}">{translate text=$title}</a>
 	{/if}
-{/defun}
+{/function}
 {assign var="columns" value='TABLE_VIEW_COLUMNS'|config}
 
 <table class="table productTable">
@@ -19,19 +19,19 @@
 			{/if}
 
 			{if $columns.SKU}
-				<th class="productSku">{fun name="headLink" title=_sku sortVar="sku"}</th>
+				<th class="productSku">{headLink title=_sku sortVar="sku"}</th>
 			{/if}
 
 			{if $columns.NAME}
-				<th class="productName">{fun name="headLink" title=_name sortVar="product_name"}</th>
+				<th class="productName">{headLink title=_name sortVar="product_name"}</th>
 			{/if}
 
 			{foreach from=$listAttributes item=attribute}
-				<th class="attr_{$attribute.ID}">{fun name="headLink" title=$attribute.name_lang sortVar="`$attribute.ID`-`$attribute.handle`"}</th>
+				<th class="attr_{$attribute.ID}">{headLink title=$attribute.name_lang sortVar="`$attribute.ID`-`$attribute.handle`"}</th>
 			{/foreach}
 
 			{if $columns.PRICE && 'DISPLAY_PRICES'|config}
-				<th class="productPrice">{fun name="headLink" title=_price sortVar="price"}</th>
+				<th class="productPrice">{headLink title=_price sortVar="price"}</th>
 			{/if}
 
 			{if $columns.DETAILS}

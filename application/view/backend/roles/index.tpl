@@ -12,12 +12,12 @@
 		<input type="submit" class="roles_save button submit" value="{t _save}" />
 		{t _or}
 		<a href="#cancel" class="roles_cancel cancel">{t _cancel}</a>
-	</fieldset>	
+	</fieldset>
 
 {/form}
 
 <script type="text/javascript">
-	Backend.Roles.prototype.Links.xmlBranch  = '{link controller=backend.roles action=xmlBranch}';
+	Backend.Roles.prototype.Links.xmlBranch  = '{link controller="backend.roles" action=xmlBranch}';
 	var roles = Backend.Roles.prototype.getInstance('roles_form_{$userGroup.ID}', {json array=$roles}, {json array=$activeRolesIDs}, {json array=$disabledRolesIDs});
 	{denied role="userGroup.permissions"}
 		{literal}

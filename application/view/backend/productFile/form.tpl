@@ -1,5 +1,5 @@
 <div class="productFile_form"  style="display: none;">
-	<form action="{link controller=backend.productFile action=update}" method="post" target="productFileUploadIFrame_" enctype="multipart/form-data" {denied role="product.update"}class="formReadonly"{/denied}>
+	<form" action="{link controller="backend.productFile" action=update}" method="post" target="productFileUploadIFrame_" enctype="multipart/form-data" {denied role="product.update"}class="formReadonly"{/denied}>
 		<fieldset>
 			<legend>{t _add_file_title}</legend>
 		<!-- STEP 1 -->

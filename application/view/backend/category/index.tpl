@@ -153,16 +153,16 @@
 	<div id="categoryTabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
 		<div id="tabContainer" class="tabContainer">
 			{tabControl id="tabList"}
-				{tab id="tabProducts" role="product" help="products"}<a href="{link controller=backend.product action=index id=_id_ }">{t _products}</a>{/tab}
-				{tab id="tabMainDetails" role="category" help="categories.details"}<a href="{link controller=backend.category action=form id=_id_}">{t _category_details}</a>{/tab}
-				{tab id="tabFields" role="category" help="categories.attributes"}<a href="{link controller=backend.specField action=index id=_id_}">{t _attributes}</a>{/tab}
-				{tab id="tabFilters" role="filter" help="categories.filters"}<a href="{link controller=backend.filterGroup action=index id=_id_}">{t _filters}</a>{/tab}
-				{tab id="tabImages" role="category" help="categories.images"}<a href="{link controller=backend.categoryImage action=index id=_id_}">{t _images}</a>{/tab}
-				{tab id="tabOptions" role="option" help="categories"}<a href="{link controller=backend.productOption action=index id=_id_ query="category=true"}">{t _options}</a>{/tab}
-				{tab id="tabRatingCategories" role="ratingcategory" help="categories" hidden=true}<a href="{link controller=backend.ratingType action=index id=_id_}">{t _rating_categories}</a>{/tab}
-				{tab id="tabReviews" role="ratingcategory" help="categories" hidden=true}<a href="{link controller=backend.review action=index id=_id_ query="category=true"}">{t _reviews}</a>{/tab}
-				{tab id="tabProductLists" role="ratingcategory" help="categories" hidden=true}<a href="{link controller=backend.productList action=index id=_id_}">{t _product_lists}</a>{/tab}
-				{tab id="tabRelatedCategory" role="category" help="categories" hidden=true}<a href="{link controller=backend.categoryRelationship action=index id=_id_}">{t _related_categories}</a>{/tab}
+				{tab id="tabProducts" role="product" help="products"}<a href="{link controller="backend.product" action=index id=_id_ }">{t _products}</a>{/tab}
+				{tab id="tabMainDetails" role="category" help="categories.details"}<a href="{link controller="backend.category" action=form id=_id_}">{t _category_details}</a>{/tab}
+				{tab id="tabFields" role="category" help="categories.attributes"}<a href="{link controller="backend.specField" action=index id=_id_}">{t _attributes}</a>{/tab}
+				{tab id="tabFilters" role="filter" help="categories.filters"}<a href="{link controller="backend.filterGroup" action=index id=_id_}">{t _filters}</a>{/tab}
+				{tab id="tabImages" role="category" help="categories.images"}<a href="{link controller="backend.categoryImage" action=index id=_id_}">{t _images}</a>{/tab}
+				{tab id="tabOptions" role="option" help="categories"}<a href="{link controller="backend.productOption" action=index id=_id_ query="category=true"}">{t _options}</a>{/tab}
+				{tab id="tabRatingCategories" role="ratingcategory" help="categories" hidden=true}<a href="{link controller="backend.ratingType" action=index id=_id_}">{t _rating_categories}</a>{/tab}
+				{tab id="tabReviews" role="ratingcategory" help="categories" hidden=true}<a href="{link controller="backend.review" action=index id=_id_ query="category=true"}">{t _reviews}</a>{/tab}
+				{tab id="tabProductLists" role="ratingcategory" help="categories" hidden=true}<a href="{link controller="backend.productList" action=index id=_id_}">{t _product_lists}</a>{/tab}
+				{tab id="tabRelatedCategory" role="category" help="categories" hidden=true}<a href="{link controller="backend.categoryRelationship" action=index id=_id_}">{t _related_categories}</a>{/tab}
 			{/tabControl}
 		</div>
 		<div id="sectionContainer" class="ui-tabs-panel ui-widget-content ui-corner-bottom sectionContainer maxHeight  h--50">
@@ -187,12 +187,12 @@
 	 * URL assigment for internal javascript requests
 	 */
 	Backend.Category.links = {literal}{}{/literal};
-	Backend.Category.links.popup  = '{link controller=backend.category action=popup}';
-	Backend.Category.links.create  = '{link controller=backend.category action=create id=_id_}';
-	Backend.Category.links.remove  = '{link controller=backend.category action=remove id=_id_}';
-	Backend.Category.links.countTabsItems = '{link controller=backend.category action=countTabsItems id=_id_}';
-	Backend.Category.links.reorder = '{link controller=backend.category action=reorder id=_id_ query="parentId=_pid_&direction=_direction_"}';
-	Backend.Category.links.addProduct  = '{link controller=backend.product action=add id=_id_}';
+	Backend.Category.links.popup  = '{link controller="backend.category" action=popup}';
+	Backend.Category.links.create  = '{link controller="backend.category" action=create id=_id_}';
+	Backend.Category.links.remove  = '{link controller="backend.category" action=remove id=_id_}';
+	Backend.Category.links.countTabsItems = '{link controller="backend.category" action=countTabsItems id=_id_}';
+	Backend.Category.links.reorder = '{link controller="backend.category" action=reorder id=_id_ query="parentId=_pid_&direction=_direction_"}';
+	Backend.Category.links.addProduct  = '{link controller="backend.product" action=add id=_id_}';
 
 	Backend.Category.messages = {literal}{}{/literal};
 	Backend.Category.messages._reorder_failed = '{t _reorder_failed|addslashes}';

@@ -26,12 +26,12 @@
  * @package application.helper.smarty
  * @author Integry Systems
  */
-function smarty_block_header($params, $content, LiveCartSmarty $smarty, &$repeat)
+function smarty_block_header($params, $content, Smarty_Internal_Template $smarty, &$repeat)
 {
 	if (!$repeat)
 	{
-		$counter = $smarty->get_template_vars('sectCounter');
-		$blocks = $smarty->get_template_vars('sect');
+		$counter = $smarty->getTemplateVars('sectCounter');
+		$blocks = $smarty->getTemplateVars('sect');
 		$blocks[$counter]['header'] = $content;
 		$smarty->assign('sect', $blocks);
 	}

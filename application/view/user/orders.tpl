@@ -10,7 +10,7 @@
 		<div class="resultStats">
 			{if $orders}
 				{if $count > $perPage}
-					{maketext text=_displaying_orders params=$from,$to,$count}
+					{maketext text=_displaying_orders params="`$from`,`$to`,`$count`"}
 				{else}
 					{maketext text=_orders_found params=$count}
 				{/if}

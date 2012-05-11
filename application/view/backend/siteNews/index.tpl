@@ -26,11 +26,11 @@
 
 {/allowed}
 
-<fieldset id="addNews" class="slideForm addForm" style="display: none;">
+<fieldset id="addNews" class="slideForm addform style="display: none;">
 
 	<legend>{t _add_news|capitalize}</legend>
 
-	{form action="controller=backend.siteNews action=add" method="POST" onsubmit="new Backend.SiteNews.Add(this); return false;" handle=$form id="newsForm" class="enabled"}
+	{form action="controller=backend.siteNews action=add" method="POST" onsubmit="new Backend.SiteNews.Add(this); return false;" handle=$form id="newsform" class="enabled"}
 		<input type="hidden" name="id" />
 
 		<p>
@@ -83,11 +83,11 @@
 </ul>
 
 <div style="display: none">
-	<span id="deleteUrl">{link controller=backend.siteNews action=delete}?id=</span>
+	<span id="deleteUrl">{link controller="backend.siteNews" action=delete}?id=</span>
 	<span id="confirmDelete">{t _del_conf}</span>
-	<span id="sortUrl">{link controller=backend.siteNews action=saveOrder}</span>
-	<span id="statusUrl">{link controller=backend.siteNews action=setEnabled}</span>
-	<span id="saveUrl">{link controller=backend.siteNews action=save}</span>
+	<span id="sortUrl">{link controller="backend.siteNews" action=saveOrder}</span>
+	<span id="statusUrl">{link controller="backend.siteNews" action=setEnabled}</span>
+	<span id="saveUrl">{link controller="backend.siteNews" action=save}</span>
 </div>
 
 <ul style="display: none;">
@@ -119,7 +119,7 @@
 </ul>
 
 <script type="text/javascript">
-	Form.State.backup($("newsForm"));
+	Form.State.backup($("newsform"));
 	new Backend.SiteNews({json array=$newsList}, $('newsList'), $('newsList_template'));
 </script>
 

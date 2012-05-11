@@ -10,7 +10,7 @@
 
 		<div id="systemMenu">
 				{if 'BACKEND_SHOW_HELP'|config}
-					<a id="updates-link" {if 'MODULE_STATS_NEED_UPDATING'|config}class="updateAvailable"{/if} href="{link controller=backend.module}">{t _modules_updates}</a>
+					<a id="updates-link" {if 'MODULE_STATS_NEED_UPDATING'|config}class="updateAvailable"{/if} href="{link controller="backend.module"}">{t _modules_updates}</a>
 					{if 'MODULE_STATS_NEED_UPDATING'|config}
 						<span id="moduleUpdateAvailable">({'MODULE_STATS_NEED_UPDATING'|config})</span>
 					{/if}
@@ -24,7 +24,7 @@
 		</div>
 
 		<div id="topLogoImageContainer">
-			<a href="{link controller=backend.index action=index}">
+			<a href="{link controller="backend.index" action=index}">
 				{img src='BACKEND_LOGO_SMALL'|config|@or:"image/promo/transparentlogo_small.png" id="topLogoImage"}
 			</a>
 		</div>

@@ -4,9 +4,6 @@
 [submodule "library/activerecord"]
 	path = library/activerecord
 	url = git://github.com/integry/integry-activerecord.git
-[submodule "library/smarty"]
-	path = library/smarty
-	url = git://github.com/bitweaver/smarty.git
 [submodule "library/locale"]
 	path = library/locale
 	url = git://github.com/integry/integry-framework-locale.git

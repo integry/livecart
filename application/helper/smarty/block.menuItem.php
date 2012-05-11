@@ -12,11 +12,11 @@
  *	{pageMenu id="menu"}
  *		{menuItem}
  *			{menuCaption}Click Me{/menuCaption}
- *			{menuAction}http://click.me.com{/menuAction} 
+ *			{menuAction}http://click.me.com{/menuAction}
  *		{/menuItem}
  *		{menuItem}
  *			{menuCaption}Another menu item{/menuCaption}
- *			{pageAction}alert('Somebody clicked on me too!'){/menuAction} 
+ *			{pageAction}alert('Somebody clicked on me too!'){/menuAction}
  *		{/menuItem}
  *  {/pageMenu}
  * </code>
@@ -24,24 +24,24 @@
  * @package application.helper.smarty
  * @author Integry Systems
  */
-function smarty_block_menuItem($params, $content, LiveCartSmarty $smarty, &$repeat) 
+function smarty_block_menuItem($params, $content, Smarty_Internal_Template $smarty, &$repeat)
 {
-	if ($repeat) 
-	{		
+	if ($repeat)
+	{
 		$smarty->clear_assign('menuCaption');
 		$smarty->clear_assign('menuAction');
 		$smarty->clear_assign('menuPageAction');
 	}
-	else 
+	else
 	{
 		$item = new HtmlElement('a');
-		if ($smarty->get_template_vars('menuAction'))
+		if ($smarty->getTemplateVars('menuAction'))
 		{
-		  	$href = $smarty->get_template_vars('menuAction');
+		  	$href = $smarty->getTemplateVars('menuAction');
 		}
-		else if ($smarty->get_template_vars('menuPageAction'))
+		else if ($smarty->getTemplateVars('menuPageAction'))
 		{
-		  	$onClick = $smarty->get_template_vars('menuPageAction');
+		  	$onClick = $smarty->getTemplateVars('menuPageAction');
 		  	$href = '#';
 			$item->setAttribute('onClick', $onClick  . '; return false;');
 		}
@@ -49,19 +49,19 @@ function smarty_block_menuItem($params, $content, LiveCartSmarty $smarty, &$repe
 		$item->setAttribute('href', $href);
 
 		// EXPERIMENTAL - set access key for menu item
-		$caption = $smarty->get_template_vars('menuCaption');
+		$caption = $smarty->getTemplateVars('menuCaption');
 		if (FALSE != strpos($caption, '&&'))
 		{
 		  	$p = strpos($caption, '&&');
 		  	$accessKey = substr($caption, $p + 2, 1);
 		  	$item->setAttribute('accessKey', $accessKey);
 		  	$caption = substr($caption, 0, $p + 3) . '</span>' . substr($caption, $p + 3);
-		  	$caption = substr($caption, 0, $p) . '<span class="accessKey">' . substr($caption, $p + 2);		  	
+		  	$caption = substr($caption, 0, $p) . '<span class="accessKey">' . substr($caption, $p + 2);
 		}
-		
+
 		$item->setContent($caption);
-		
-		$smarty->append('pageMenuItems', $item->render());				
+
+		$smarty->append('pageMenuItems', $item->render());
 	}
 }
 ?>

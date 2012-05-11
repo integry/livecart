@@ -9,7 +9,7 @@
  * @package application.helper.smarty
  * @author Integry Systems
  */
-function smarty_function_compiledJs($params, LiveCartSmarty $smarty)
+function smarty_function_compiledJs($params, Smarty_Internal_Template $smarty)
 {
 	$includedJavascriptTimestamp = $smarty->getGlobal("INCLUDED_JAVASCRIPT_TIMESTAMP");
 	$includedJavascriptFiles = $smarty->getGlobal("INCLUDED_JAVASCRIPT_FILES");

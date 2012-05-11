@@ -832,7 +832,7 @@ class LiveCart extends Application implements Serializable
 
 		$this->session = new Session();
 
-		ClassLoader::ignoreMissingClasses(false);
+		//ClassLoader::ignoreMissingClasses(false);
 
 		return $this->session;
 	}

@@ -8,9 +8,9 @@
  * @return string
  *
  * @package application.helper.smarty
- * @author Integry Systems 
+ * @author Integry Systems
  */
-function smarty_function_localeCode($params, LiveCartSmarty $smarty)
+function smarty_function_localeCode($params, Smarty_Internal_Template $smarty)
 {
 	return $smarty->getApplication()->getLocale()->getLocaleCode();
 }

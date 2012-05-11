@@ -4,7 +4,7 @@
 		<span id="modeTitle">{t _cust_mode}</span>
 		<ul>
 			<li class="modeTheme">
-				<form action="{link controller=backend.Customize action=changeTheme}">
+				<form" action="{link controller="backend.Customize" action=changeTheme}">
 					{t _theme}
 					<select id="themeMenu" name="theme">
 						{foreach $themes as $thm}
@@ -14,8 +14,8 @@
 				</form>
 			</li>
 
-			<li id="modeTemplate" {if 'template' == $mode}class="active"{/if}><a href="{link controller=backend.customize action=mode query="mode=template" returnPath=true}">{t _templates}</a></li>
-			<li id="modeCss" {if 'css' == $mode}class="active"{/if}><a  href="{link controller=backend.customize action=mode query="mode=css" returnPath=true}">{t _css}</a></li>
+			<li id="modeTemplate" {if 'template' == $mode}class="active"{/if}><a href="{link controller="backend.customize" action=mode query="mode=template" returnPath=true}">{t _templates}</a></li>
+			<li id="modeCss" {if 'css' == $mode}class="active"{/if}><a  href="{link controller="backend.customize" action=mode query="mode=css" returnPath=true}">{t _css}</a></li>
 			{if 'css' == $mode}
 				<input type="button" class="button" id="cssNewRule" value="{t _css_add}" />
 				<input type="button" class="button" id="cssSave" value="{t _css_save}" />
@@ -42,9 +42,9 @@
 					</form>
 				</div>
 			{/if}
-			<li id="modeTranslation" {if 'translate' == $mode}class="active"{/if}><a href="{link controller=backend.customize action=mode query="mode=translate" returnPath=true}">{t _translations}</a></li>
+			<li id="modeTranslation" {if 'translate' == $mode}class="active"{/if}><a href="{link controller="backend.customize" action=mode query="mode=translate" returnPath=true}">{t _translations}</a></li>
 
-			<li id="modeExit"><a href="{link controller=backend.customize action=mode query="mode=exit" returnPath=true}">{t _exit}</a></li>
+			<li id="modeExit"><a href="{link controller="backend.customize" action=mode query="mode=exit" returnPath=true}">{t _exit}</a></li>
 
 
 		</ul>
@@ -54,7 +54,7 @@
 
 {if 'css' == $mode}
 	<script type="text/javascript">
-		Router.setUrlTemplate('{link controller=controller action=action}');
+		Router.setUrlTemplate('{link controller=controller" action=action}');
 		var cust = new CssCustomize({json array=$theme});
 		cust.errSelectorMsg = '{t _css_err_selector|escape}';
 		cust.errTextMsg = '{t _css_err_text|escape}';

@@ -10,7 +10,7 @@
  * @package application.helper.smarty
  * @author Integry Systems
  */
-function smarty_function_backendLangMenu($params, LiveCartSmarty $smarty)
+function smarty_function_backendLangMenu($params, Smarty_Internal_Template $smarty)
 {
   	if (!$smarty->getApplication()->getLanguageArray())
   	{

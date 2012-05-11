@@ -10,5 +10,5 @@
 			<option value="{$method.ID}"{if $handlerID == $method.ID} selected="selected"{/if}>{$method.name}</option>
 		{/foreach}
 	</select>
-	<input type="hidden" name="url" value="{link controller=backend.payment action=changeOfflinePaymentMethod id=$ID}" />
+	<input type="hidden" name="url" value="{link controller="backend.payment" action=changeOfflinePaymentMethod id=$ID}" />
 </span>

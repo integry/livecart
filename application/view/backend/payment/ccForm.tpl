@@ -11,7 +11,7 @@
 		body
 		{
 			background-image: none;
-		}	
+		}
 	</style>
 {/literal}
 
@@ -28,19 +28,19 @@
 {/error}
 
 <p>
-	<label for="ccNum">{t _amount_charge}:</label>   
+	<label for="ccNum">{t _amount_charge}:</label>
 	<fieldset class="error">
 		{textfield name="amount" class="text number"} {$order.Currency.ID}
-		<div class="errorText hidden"></div> 
-	</fieldset>		
+		<div class="errorText hidden"></div>
+	</fieldset>
 </p>
 
 <p>
 	<label for="ccNum">{t _cc_name}:</label>
 	<fieldset class="error">
 		{textfield name="name" class="text"}
-		<div class="errorText hidden"></div> 
-	</fieldset>		
+		<div class="errorText hidden"></div>
+	</fieldset>
 </p>
 
 <p>
@@ -71,7 +71,7 @@
 <p>
 	<label for="ccCVV">{t _cc_cvv}:</label>
 	<fieldset class="error">
-		{textfield name="ccCVV" maxlength="4" class="text number"} 
+		{textfield name="ccCVV" maxlength="4" class="text number"}
 		<div class="errorText hidden{error for="ccCVV"} visible{/error}">{error for="ccCVV"}{$msg}{/error}</div>
 	</fieldset>
 </p>
@@ -79,7 +79,7 @@
 <p>
 	<label for="comment">{t _comment}:</label>
 	<fieldset class="error">
-		{textarea name="comment"} 
+		{textarea name="comment"}
 		<div class="errorText hidden{error for="comment"} visible{/error}">{error for="comment"}{$msg}{/error}</div>
 	</fieldset>
 </p>

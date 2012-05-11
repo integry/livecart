@@ -68,6 +68,6 @@ $('{$idPrefix}_stateID').stateSwitcher = new Backend.User.StateSwitcher(
 		$('{$idPrefix}_countryID'),
 		$('{$idPrefix}_stateID'),
 		$('{$idPrefix}_stateName'),
-		'{link controller=backend.user action=states}'
+		'{link controller="backend.user" action=states}'
 	);
 </script>

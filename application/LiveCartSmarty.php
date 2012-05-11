@@ -2,6 +2,17 @@
 
 require_once ClassLoader::getRealPath('library.smarty.libs.') . 'Smarty.class.php';
 
+/*
+class LiveCartSmarty_Security_Policy extends Smarty_Security
+{
+	public $allow_php_tag = true;
+
+	public $php_functions = array('is_string');
+
+	public $php_handling = Smarty::PHP_ALLOW;
+}
+*/
+
 /**
  *  Extends Smarty with LiveCart-specific logic
  *
@@ -14,14 +25,22 @@ class LiveCartSmarty extends Smarty
 
 	private $paths = array();
 
+	private $private_vars = array();
+
 	public function __construct(LiveCart $application)
 	{
 		$this->application = $application;
-		$this->register_modifier('config', array($this, 'config'));
-		$this->register_modifier('branding', array($this, 'branding'));
-		$this->load_filter('pre', 'config');
 
 		parent::__construct();
+
+		// missing variable notices in templates
+		$this->error_reporting = E_ALL & ~E_NOTICE & ~E_STRICT;
+
+		//$this->enableSecurity('LiveCartSmarty_Security_Policy');
+
+		$this->registerPlugin('modifier', 'config', array($this, 'config'));
+		$this->registerPlugin('modifier', 'branding', array($this, 'branding'));
+		$this->setAutoloadFilters(array('config'), 'pre');
 	}
 
 	/**
@@ -41,17 +60,17 @@ class LiveCartSmarty extends Smarty
 
 	public function get($var)
 	{
-		return $this->get_template_vars($var);
+		return $this->getTemplateVars($var);
 	}
 
 	public function setGlobal($var, $value)
 	{
-		$this->_smarty_vars[$var] = $value;
+		$this->private_vars[$var] = $value;
 	}
 
 	public function getGlobal($var)
 	{
-		return isset($this->_smarty_vars[$var]) ? $this->_smarty_vars[$var] : '';
+		return isset($this->private_vars[$var]) ? $this->private_vars[$var] : '';
 	}
 
 	/**

@@ -651,7 +651,7 @@ abstract class FrontendController extends BaseController
 		ClassLoader::import('application.model.product.ProductFilter');
 
 		$cache = $this->application->getCache();
-		$key = array('bestsellers', $this->getCategory()->getID() . '_' . $days);
+		$key = array('bestsellers', $this->getCategory()->getID() . '_'/* . $days*/);
 
 		if (!$cache->get($key))
 		{

@@ -47,7 +47,7 @@
 					{assign var="length" value=$period.periodLength}
 					{capture name="a" assign="period"}{t `$periodTypesPlural[$period.periodType]`}{/capture}
 				{/if}
-				<label class="text">{maketext text=_rebills_every params=$length,$period}</label>
+				<label class="text">{maketext text=_rebills_every params="`$length`,`$period`"}</label>
 				<div class="clear"></div>
 			{/foreach}
 
@@ -98,7 +98,7 @@
 			{/if}
 		{/foreach}
 
-		{defun name="address"}
+		{function name="address"}
 			{if $address}
 				<p>
 					{$address.fullName}
@@ -125,7 +125,7 @@
 					{include file="order/addressFieldValues.tpl" showLabels=false}
 				</p>
 			{/if}
-		{/defun}
+		{/function}
 
 		{include file="order/fieldValues.tpl"}
 
@@ -140,16 +140,16 @@
                             {$shipment.ShippingService.description_lang|escape}
                         </div>
                     {/foreach}
-               
+
                 {else}
-                    {fun name="address" address=$order.ShippingAddress}
+                    {address address=$order.ShippingAddress}
                 {/if}
 			</div>
 			{/if}
 
 			<div class="addressContainer">
 				<h3>{t _is_billed_to}:</h3>
-				{fun name="address" address=$order.BillingAddress}
+				{address address=$order.BillingAddress}
 			</div>
 
 		</div>

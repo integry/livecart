@@ -17,11 +17,11 @@
 		_activeList_delete:  {/literal}'{t _activeList_delete|addslashes}'{literal}
 	}
 	{/literal}
-	lng.setFormUrl('{link controller=backend.language action=addForm}');
-	lng.setStatusUrl("{link controller=backend.language action=setEnabled}/");
-	lng.setEditUrl("{link controller=backend.language action=edit}");
-	lng.setSortUrl("{link controller=backend.language action=saveorder}");
-	lng.setDeleteUrl("{link controller=backend.language action=delete}");
+	lng.setFormUrl('{link controller="backend.language" action=addForm}');
+	lng.setStatusUrl("{link controller="backend.language" action=setEnabled}/");
+	lng.setEditUrl("{link controller="backend.language" action=edit}");
+	lng.setSortUrl("{link controller="backend.language" action=saveorder}");
+	lng.setDeleteUrl("{link controller="backend.language" action=delete}");
 	lng.setDelConfirmMsg('{t _confirm_delete}');
 
 </script>
@@ -58,7 +58,7 @@
 			</span>
 
 			<div class="langListMenu">
-				<a href="{link controller=backend.language action=setDefault}/" class="listLink setDefault" {denied role="language.status"}style="display: none;"{/denied}>
+				<a href="{link controller="backend.language" action=setDefault}/" class="listLink setDefault" {denied role="language.status"}style="display: none;"{/denied}>
 					{t _set_as_default}
 				</a>
 				<span class="langDefault">{t _default_language}</span>

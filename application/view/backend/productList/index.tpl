@@ -2,7 +2,7 @@
 {literal}
 	with(Backend.ProductList.Group)
 	{
-		Links.sort = '{/literal}{link controller=backend.productList action=sort}?target=productRelationshipGroup_list_{$productID}{literal}';
+		Links.sort = '{/literal}{link controller="backend.productList" action=sort}?target=productRelationshipGroup_list_{$productID}{literal}';
 		Messages.areYouSureYouWantToDelete = '{/literal}{t _really_remove_product_list|addslashes}{literal}'
 	}
 
@@ -10,7 +10,7 @@
 	Backend.ProductList.messages = {};
 	with(Backend.ProductList)
 	{
-		links.selectProduct = '{/literal}{link controller=backend.productRelationship action=selectProduct}#cat_{$ownerID}#tabProducts__{literal}';
+		links.selectProduct = '{/literal}{link controller="backend.productRelationship" action=selectProduct}#cat_{$ownerID}#tabProducts__{literal}';
 		messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}';
 		messages.areYouSureYouWantToDelete = '{/literal}{t _really_remove_product_from_list|addslashes}{literal}';
 	}

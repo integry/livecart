@@ -45,7 +45,7 @@
 {activeGrid
 	prefix="files"
 	id=0
-	controller="backend.selectFile" action="lists"
+	controller="backend.selectFile"action="lists"
 	displayedColumns=$displayedColumns
 	availableColumns=$availableColumns
 	totalCount=0
@@ -64,8 +64,8 @@
 	inst.grid.ricoGrid.metaData.options.largeBufferSize = 100;
 
 	inst.links = {};
-	inst.links.categoryRecursiveAutoloading = '{/literal}{link controller=backend.selectFile action=xmlRecursivePath}{literal}';
-	inst.links.categoryAutoloading = '{/literal}{link controller=backend.selectFile action=xmlBranch}{literal}';
+	inst.links.categoryRecursiveAutoloading = '{/literal}{link controller="backend.selectFile" action=xmlRecursivePath}{literal}';
+	inst.links.categoryAutoloading = '{/literal}{link controller="backend.selectFile" action=xmlBranch}{literal}';
 
 	inst.init();
 	inst.addCategories({/literal}{json array=$root}{literal});

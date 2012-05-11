@@ -9,7 +9,7 @@
  * @package application.helper.smarty
  * @author Integry Systems
  */
-function smarty_function_includeJs($params, LiveCartSmarty $smarty)
+function smarty_function_includeJs($params, Smarty_Internal_Template $smarty)
 {
 	static $jsPath;
 	if (!$jsPath)

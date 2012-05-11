@@ -95,9 +95,10 @@
 		</script>
 	{/if}
 
-
+{*
 		{if !'DISABLE_TOOLBAR'|config}
 			{block FOOTER_TOOLBAR}
 		{/if}
+*}
 	</body>
 </html>

@@ -54,11 +54,11 @@
 	<div class="tabContainer">
 		<ul class="tabList tabs">
 			<li id="tabUserInfo" class="tab active">
-				<a href="{link controller=backend.manufacturer action=edit id=_id_}"}">{t _manufacturer_info}</a>
+				<a href="{link controller="backend.manufacturer" action=edit id=_id_}"}">{t _manufacturer_info}</a>
 				<span class="tabHelp">products</span>
 			</li>
 			<li id="tabImages" class="tab active">
-				<a href="{link controller=backend.manufacturerImage id=_id_}">{t _manufacturer_images}</a>
+				<a href="{link controller="backend.manufacturerImage id=_id_}">{t _manufacturer_images}</a>
 				<span class="tabHelp">products</span>
 			</li>
 		</ul>

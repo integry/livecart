@@ -18,18 +18,18 @@
 <div id="templatePageContainer">
 
 	{include file="backend/quickSearch/form.tpl" limit=10 hint=_hint_template_search formid="TemplateSearch" classNames="SearchableTemplate"}
-	
+
 	<div class="treeContainer">
 		<div id="templateBrowser" class="treeBrowser"></div>
 
 		<ul id="categoryBrowserActions" class="verticalMenu">
 			<li class="addTreeNode" id="createTemplate">
-				<a href="{link controller=backend.template action=add query="tabid=_tabid_"}">
+				<a href="{link controller="backend.template" action=add query="tabid=_tabid_"}">
 					{t _create_template}
 				</a>
 			</li>
 			<li class="removeTreeNode" id="deleteTemplate" style="display: none;">
-				<a href="{link controller=backend.template action=delete query="file=_id_"}">
+				<a href="{link controller="backend.template" action=delete query="file=_id_"}">
 					{t _delete_template}
 				</a>
 			</li>
@@ -59,9 +59,9 @@
 <script type="text/javascript">
 	// creates global variable backendTemplateInstance
 	backendTemplateInstance = new Backend.Template({/literal}{$categories}{literal});
-	backendTemplateInstance.urls['edit'] = '{/literal}{link controller=backend.template action=edit}?file=_id_&tabid=_tabid_{literal}';
-	backendTemplateInstance.urls['empty'] = '{/literal}{link controller=backend.template action=emptyPage}{literal}';
-	backendTemplateInstance.urls['templateData'] = '{/literal}{link controller=backend.template action=templateData}?file=_id_&tabid=_tabid_&theme=_theme_&version=_version_{literal}';
+	backendTemplateInstance.urls['edit'] = '{/literal}{link controller="backend.template" action=edit}?file=_id_&tabid=_tabid_{literal}';
+	backendTemplateInstance.urls['empty'] = '{/literal}{link controller="backend.template" action=emptyPage}{literal}';
+	backendTemplateInstance.urls['templateData'] = '{/literal}{link controller="backend.template" action=templateData}?file=_id_&tabid=_tabid_&theme=_theme_&version=_version_{literal}';
 	backendTemplateInstance.translations['_tab_title_new'] = "{/literal}{t _tab_title_new}{literal}";
 	backendTemplateInstance.setTabControlInstance(
 		TabControl.prototype.getInstance(
