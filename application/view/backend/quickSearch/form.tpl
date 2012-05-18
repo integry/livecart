@@ -1,5 +1,5 @@
 <div id="{$formid}Container">
-	<form id="{$formid}Form" method="post"action="{link controller="backend.quickSearch" action=search}" onsubmit="return false;">
+	<form id="{$formid}Form" method="post" action="{link controller="backend.quickSearch" action=search}" onsubmit="return false;">
 		<input
 			id="{$formid}Query"
 			autocomplete="off"

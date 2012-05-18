@@ -5,7 +5,7 @@
 		</ul>
 	</fieldset>
 
-	{form handle=$productform action="controller=backend.product action=create id=`$product.ID`" method="POST" onsubmit="Backend.Product.saveForm(this); return false;" onreset="Backend.Product.resetAddForm(this);"}
+	{form handle=$productForm action="controller=backend.product action=create id=`$product.ID`" method="POST" onsubmit="Backend.Product.saveForm(this); return false;" onreset="Backend.Product.resetAddForm(this);"}
 
 		<input type="hidden" name="categoryID" value="{$product.Category.ID}" />
 

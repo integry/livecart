@@ -1,6 +1,6 @@
 <div class="productQuickImageUploadContainer" id="productImageUploadForm_{$product.ID}" style="display:none;"></div>
 
-{form handle=$productform action="controller=backend.product action=saveQuickEdit id=`$product.ID`" id="product_`$product.ID`_quick_form onsubmit="return false;" method="post" role="product.update"}
+{form handle=$productForm action="controller=backend.product action=saveQuickEdit id=`$product.ID`" id="product_`$product.ID`_quick_form onsubmit="return false;" method="post" role="product.update"}
 	<input type="hidden" name="categoryID" value="{$cat}" />
 	<fieldset class="quickEditOuterContainer">
 

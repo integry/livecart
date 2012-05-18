@@ -1,72 +1,51 @@
 {form handle=$form action="controller=backend.user action=update" id="userInfo_`$someUser.UserGroup.ID`_`$someUser.ID`_form" onsubmit="Backend.User.Editor.prototype.getInstance(`$someUser.ID`, false).submitForm(); return false;" method="post" role="user.create(backend.userGroup/index),user.update(backend.user/info)"}
-	<p>
-		<fieldset class="error checkbox">
-			{checkbox name="isEnabled"  id="user_`$someUser.UserGroup.ID`_`$someUser.ID`_isEnabled" class="checkbox"}
-			<label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_isEnabled" class="checkbox">{t _is_enabled}</label>
-			<div class="errorText" style="display: none" ></span>
-		</fieldset>
-	</p>
+	{input name="isEnabled"}
+		{checkbox}
+		{label}{t _is_enabled}:{/label}
+	{/input}
 
-	<p class="required">
-		<label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_userGroup" class="user_userGroupLabel">{t _user_group}</label>
-		<fieldset class="error user_userGroup">
-			{selectfield name="UserGroup" options=$availableUserGroups id="user_`$someUser.UserGroup.ID`_`$someUser.ID`_userGroup"}
-			<div class="errorText hidden"> </div>
-		</fieldset>
-	</p>
+	{input name="UserGroup"}
+		{label}{t _user_group}:{/label}
+		{selectfield options=$availableUserGroups}
+	{/input}
 
-	<p class="required">
-		<label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_firstName">{t _first_name}</label>
-		<fieldset class="error">
-			{textfield name="firstName" id="user_`$someUser.UserGroup.ID`_`$someUser.ID`_firstName"}
-			<div class="errorText" style="display: none" ></span>
-		</fieldset>
-	</p>
+	{input name="firstName"}
+		{label}{t _first_name}:{/label}
+		{textfield}
+	{/input}
 
-	<p class="required">
-		<label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_lastName">{t _last_name}</label>
-		<fieldset class="error">
-			{textfield name="lastName" id="user_`$someUser.UserGroup.ID`_`$someUser.ID`_lastName"}
-			<div class="errorText" style="display: none" ></span>
-		</fieldset>
-	</p>
+	{input name="lastName"}
+		{label}{t _last_name}:{/label}
+		{textfield}
+	{/input}
 
-	<p>
-		<label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_companyName">{t _company_name}</label>
-		<fieldset class="error">
-			{textfield name="companyName" id="user_`$someUser.UserGroup.ID`_`$someUser.ID`_companyName"}
-			<div class="errorText" style="display: none" ></span>
-		</fieldset>
-	</p>
+	{input name="companyName"}
+		{label}{t _company_name}:{/label}
+		{textfield}
+	{/input}
 
-	<p class="required">
-		<label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_email">{t _email}</label>
-		<fieldset class="error">
-			{textfield name="email" id="user_`$someUser.UserGroup.ID`_`$someUser.ID`_email"}
-			<div class="errorText" style="display: none" ></span>
-		</fieldset>
-	</p>
+	{input name="email"}
+		{label}{t _email}:{/label}
+		{textfield}
+	{/input}
 
 	{include file="backend/eav/fields.tpl" item=$someUser}
 
-	<p {if !$someUser.ID}class="required"{/if}>
-		<label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_password">{t _password}</label>
-		<fieldset class="error userPasswordBlock">
-			<span class="progressIndicator generatePasswordProgressIndicator" style="display: none;"></span>
-			{password name="password" id="user_`$someUser.UserGroup.ID`_`$someUser.ID`_password" class="user_password"}
-			<a href="#generate" class="user_password_generate">{t _generate_password}</a>
-			<fieldset class="error showPassword">
-				<input type="checkbox" id="user_{$someUser.UserGroup.ID}_{$someUser.ID}_password_show" class="checkbox user_password_show"/>
-				<label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_password_show" class="checkbox">{t _show_password}</label>
-			</fieldset >
-			<div class="errorText" style="display: none" ></span>
+	{input name="password"}
+		{label}{t _password}:{/label}
+		<span class="progressIndicator generatePasswordProgressIndicator" style="display: none;"></span>
+		{password id="user_`$someUser.UserGroup.ID`_`$someUser.ID`_password" class="user_password"}
+		<a href="#generate" class="user_password_generate">{t _generate_password}</a>
+		<fieldset class="error showPassword">
+			<input type="checkbox" id="user_{$someUser.UserGroup.ID}_{$someUser.ID}_password_show" class="checkbox user_password_show"/>
+			<label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_password_show" class="checkbox">{t _show_password}</label>
 		</fieldset>
-	</p>
+	{/input}
 
-	<p class="sameAddress">
-		{checkbox name="sameAddresses" id="user_`$someUser.UserGroup.ID`_`$someUser.ID`_sameAddresses" class="checkbox"}
-		<label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_sameAddresses" class="checkbox">{t _same_billing_and_shipping_addresses?}</label>
-	</p>
+	{input name="sameAddress"}
+		{checkbox}
+		{label}{t _same_billing_and_shipping_addresses?}:{/label}
+	{/input}
 
 	<br class="clear" />
 
@@ -79,7 +58,6 @@
 		<legend>{t _shipping_address}</legend>
 		{include file="backend/user/address_edit.tpl" namePrefix="shippingAddress_" eavPrefix="shippingAddress_" idPrefix="user_`$someUser.UserGroup.ID`_`$someUser.ID`_shippingAddress" address=$someUser.defaultShippingAddress states=$shippingAddressStates}
 	</fieldset>
-
 
 	<fieldset class="controls">
 		<span class="progressIndicator" style="display: none;"></span>

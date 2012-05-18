@@ -2,63 +2,61 @@
 {form id="categoryForm_$categoryId" handle=$catalogForm action="controller=backend.category action=update id=$categoryId" method="post" onsubmit="Backend.Category.updateBranch(this); return false;" role="category.update"}
 	<fieldset class="container">
 
-		<p class="checkbox">
-			{checkbox name="isEnabled" id="isEnabled_$categoryId" class="checkbox"} <label class="checkbox" for="isEnabled_{$categoryId}">{tip _active}</label>
-		</p>
+		{input name="isEnabled"}
+			{checkbox}
+			{label}{tip _active}{/label}
+		{/input}
 
-		<p class="required">
-			<label for="name_{$categoryId}">{t _category_name}:</label>
-			{textfield name="name" id="name_$categoryId"}
-		</p>
+		{input name="name"}
+			{label}{t _category_name}:{/label}
+			{textfield}
+		{/input}
 
-		<p>
-			<label for="details_{$categoryId}">{tip _descr}:</label>
-			{textarea name="description" id="details_$categoryId" class="tinyMCE"}
-		</p>
+		{input name="description"}
+			{label}{tip _descr}:{/label}
+			{textarea class="tinyMCE"}
+		{/input}
 
-		<p>
-			<label for="keywords_{$categoryId}">{tip _keywords}:</label>
-			{textarea name="keywords" id="keywords_$categoryId" class="categoryKeywords"}
-		</p>
+		{input name="keywords"}
+			{label}{tip _keywords}:{/label}
+			{textarea class="categoryKeywords"}
+		{/input}
 
-		<p>
-			<label for="pageTitle_{$categoryId}">{tip _pageTitle _hint_pageTitle}:</label>
-			{textfield name="pageTitle" id="pageTitle_$categoryId" class="wide"}
-		</p>
+		{input name="pageTitle"}
+			{label}{tip _pageTitle _hint_pageTitle}:{/label}
+			{textfield class="wide"}
+		{/input}
 
 		{include file="backend/eav/fields.tpl" item=$category}
 
 		<fieldset>
 			<legend>{t _presentation}</legend>
 
-			<p>
-				<label></label>
-				{checkbox name="isSubcategories" class="checkbox" id="isSubcategories_`$categoryId`"}
-				<label class="checkbox" for="isSubcategories_{$categoryId}">{tip _theme_subcategories}</label>
-			</p>
+			{input name="isSubcategories"}
+				{checkbox}
+				{label}{tip _theme_subcategories}{/label}
+			{/input}
 
-			<p>
-				<label></label>
-				{checkbox name="isVariationImages" class="checkbox" id="isVariationImages_`$categoryId`"}
-				<label class="checkbox" for="isVariationImages_{$categoryId}">{tip _show_variation_images}</label>
-			</p>
+			{input name="isVariationImages"}
+				{checkbox}
+				{label}{tip _show_variation_images}{/label}
+			{/input}
 
-			<p>
-				<label></label>
-				{checkbox name="isAllVariations" class="checkbox" id="product_`$categoryId`_isAllVariations"}
-				<label for="product_{$categoryId}_isAllVariations" class="checkbox">{tip _allow_all_variations}</label>
-			</p>
+			{input name="isAllVariations"}
+				{checkbox}
+				{label}{tip _allow_all_variations}{/label}
+			{/input}
 
-			<p>
-				<label for="listStyle_{$categoryId}">{tip _list_style}:</label>
-				{selectfield name="listStyle" id="listStyle_`$categoryId`" options=$listStyles}
-			</p>
+			{input name="listStyle"}
+				{label}{tip _list_style}:{/label}
+				{selectfield id="listStyle_`$categoryId`" options=$listStyles}
+			{/input}
 
 			<div style="float: left; width: 550px;">
-				<p>
-					<label for="theme_{$categoryId}">{tip _theme}:</label>
-					{selectfield name="theme" id="theme_`$categoryId`" options=$themes}
-				</p>
+				{input name="theme"}
+					{label}{tip _theme}:{/label}
+					{selectfield id="theme_`$categoryId`" options=$themes}
+				{/input}
 			</div>
 
 			<div style="float: left;" id="categoryThemePreview_{$categoryId}"></div>
@@ -68,27 +66,28 @@
 		{block FORM-CATEGORY-BOTTOM}
 
 		{language}
-			<p>
-				<label>{t _category_name}:</label>
-				{textfield name="name_`$lang.ID`"}
-			</p>
-			<p>
-				<label>{t _descr}:</label>
-				{textarea name="description_`$lang.ID`" class="tinyMCE"}
-			</p>
-			<p>
-				<label>{t _keywords}:</label>
-				{textarea name="keywords_`$lang.ID`" class="categoryKeywords"}
-			</p>
-			<p>
-				<label>{t _pageTitle}:</label>
-				{textfield name="pageTitle_`$lang.ID`" class="wide"}
-			</p>
+			{input name="name_`$lang.ID`"}
+				{label}{t _category_name}:{/label}
+				{textfield}
+			{/input}
+
+			{input name="description_`$lang.ID`"}
+				{label}{t _descr}:{/label}
+				{textarea class="tinyMCE"}
+			{/input}
+
+			{input name="keywords_`$lang.ID`"}
+				{label}{t _keywords}:{/label}
+				{textarea class="categoryKeywords"}
+			{/input}
+
+			{input name="pageTitle_`$lang.ID`"}
+				{label}{t _pageTitle}:{/label}
+				{textfield class="wide"}
+			{/input}
 
 			{include file="backend/eav/language.tpl" item=$category language=$lang.ID}
-
 		{/language}
-
 	</fieldset>
 
 	<fieldset class="controls">

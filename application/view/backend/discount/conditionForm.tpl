@@ -1,65 +1,50 @@
-<div class="field">
-	<label></label>
-	{checkbox name="isFinal" class="checkbox" id="isFinal_`$condition.ID`"}
-	<label for="isFinal_{$condition.ID}" class="checkbox">{tip _stop_processing}</label>
-</div>
+{input name="isFinal"}
+	{checkbox}
+	{label}{tip _stop_processing}:{/label}
+{/input}
 
-<div class="required field">
-	{err for="name"}
-		{label {tip DiscountCondition.name}}
-		{textfield}
-	{/err}
-</div>
+{input name="name"}
+	{label}{tip DiscountCondition.name}:{/label}
+	{textfield}
+{/input}
 
-<div class="couponCode field">
-	{err for="couponCode"}
-		{label {tip DiscountCondition.couponCode}}
-		{textfield}
-	{/err}
-</div>
+{input name="couponCode"}
+	{label}{tip DiscountCondition.couponCode}:{/label}
+	{textfield}
+{/input}
 
-<div class="couponLimitType field">
-	{err for="couponLimitType"}
-		{label {tip DiscountCondition.couponLimitType}}
-		{selectfield options=$couponLimitTypes}
-	{/err}
-</div>
+{input name="couponLimitType"}
+	{label}{tip DiscountCondition.couponLimitType}:{/label}
+	{selectfield options=$couponLimitTypes}
+{/input}
 
-<div class="couponLimitCount field">
-	{err for="couponLimitCount"}
-		{label {tip DiscountCondition.couponLimitCount}}
-		{textfield class="number"}
-	{/err}
-</div>
+{input name="couponLimitCount"}
+	{label}{tip DiscountCondition.couponLimitCount}:{/label}
+	{selectfield options=$couponLimitTypes}
+{/input}
 
-<div class="field">
-	{err for="validFrom"}
-		{label {tip DiscountCondition.validFrom}}
-		{calendar id="validFrom"}
-	{/err}
-</div>
+{input name="validFrom"}
+	{label}{tip DiscountCondition.validFrom}:{/label}
+	{calendar}
+{/input}
 
-<div class="field">
-	{err for="validTo"}
-		{label {tip DiscountCondition.validTo}}
-		{calendar id="validTo"}
-	{/err}
-</div>
+{input name="validTo"}
+	{label}{tip DiscountCondition.validTo}:{/label}
+	{calendar}
+{/input}
 
-<div class="field">
-	{err for="position"}
-		{label {tip DiscountCondition.position}}
-		{textfield class="number"}
-	{/err}
-</div>
+{input name="position"}
+	{label}{tip DiscountCondition.position}:{/label}
+	{textfield class="number"}
+{/input}
 
 <script language="text/javascript">
 	Backend.Discount.Editor.prototype.initDiscountForm('{$id}');
 </script>
 
 {language}
-	<div class="field">
-		<label>{tip DiscountCondition.name}</label>
-		{textfield name="name_`$lang.ID`"}
-	</div>
+	{input name="name_`$lang.ID`"}
+		{label}{tip DiscountCondition.name}:{/label}
+		{textfield}
+	{/input}
 {/language}

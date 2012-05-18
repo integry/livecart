@@ -71,19 +71,16 @@
 		{form id="addPhraseForm" style="display: none;" handle=$addForm}
 			<fieldset>
 				<legend>{t _add_new|@ucwords}</legend>
-				<p>
-					{err for="key"}
-						{label _phrase_key}
-						{textfield class="text"}
-					{/err}
-				</p>
 
-				<p>
-					{err for="value"}
-						{label _phrase_value}
-						{textfield class="text"}
-					{/err}
-				</p>
+				{input name="key"}
+					{label}{t _phrase_key}:{/label}
+					{textfield}
+				{/input}
+
+				{input name="value"}
+					{label}{t _phrase_value}:{/label}
+					{textfield}
+				{/input}
 
 				<fieldset class="controls">
 					<input type="submit" class="submit" value="{tn _add}" />
@@ -147,7 +144,7 @@
 
 			<div id="translations"></div>
 
-			<form id="editLang" method="post"action="{link controller="backend.language" action=save id=$id}" onSubmit="langPassDisplaySettings(this); $('saveProgress').style.display = 'inline';">
+			<form id="editLang" method="post" action="{link controller="backend.language" action=save id=$id}" onSubmit="langPassDisplaySettings(this); $('saveProgress').style.display = 'inline';">
 
 				<fieldset class="controls" {denied role='language.update'}style="display: none"{/denied}>
 					<input type="hidden" name="translations" />

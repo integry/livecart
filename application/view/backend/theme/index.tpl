@@ -33,10 +33,11 @@
 			<li id="addMenu" class="addTreeNode"><a href="" onclick="pageHandler.showAddForm(); return false;">{t _add_new}</a></li>
 			<fieldset id="addform style="display: none;">
 				{form action="controller=backend.theme action=add" method="POST" handle=$addForm onsubmit="pageHandler.addTheme(); return false;"}
-					{err for="name"}
-						{{label {t _theme_name} }}:
+
+					{input name="name"}
+						{label}{t _theme_name}:{/label}
 						{textfield class="text themeName"}
-					{/err}
+					{/input}
 
 					<div>
 						<span class="progressIndicator" style="display: none;"></span>
@@ -49,19 +50,18 @@
 
 			<li id="importMenu" class="importTreeNode"><a href="" onclick="pageHandler.importTheme(); return false;">{t _import_theme}</a></li>
 			<fieldset id="importform style="display: none;">
-				{form handle=$importform action="controller=backend.theme action=import"
+				{form handle=$importForm action="controller=backend.theme action=import"
 					target="themeImportTarget" method="POST" enctype="multipart/form-data"
 					autocomplete="off"
 				}
 					<span class="progressIndicator" style="display: none;"></span>
-					<p class="required">
-						{err for="file"}
-							{{label {t _select_file}: }}
-							{filefield value="" name="theme"}
-							<br />
-							<span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
-						{/err}
-					</p>
+
+					{input name="theme"}
+						{label}{t _select_file}:{/label}
+						{filefield}
+						<br />
+						<span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
+					{/input}
 
 					<fieldset class="controls">
 						<span class="progressIndicator" style="display: none;"></span>
@@ -77,10 +77,10 @@
 			<fieldset id="copyform style="display: none;">
 				{form action="controller=backend.theme action=copyTheme" method="POST" handle=$copyForm onsubmit="pageHandler.copyTheme(); return false;"}
 					<input type="hidden" name="id" value="" id="copyFromID" />
-					{err for="name"}
-						{{label {t _theme_name} }}:
+					{input name="name"}
+						{label}{t _theme_name}:{/label}
 						{textfield class="text themeName"}
-					{/err}
+					{/input}
 
 					<div>
 						<span class="progressIndicator" id="copyFormProgressIndicator" style="display: none;"></span>

@@ -6,15 +6,14 @@
 >{t _notice_changes_colors_and_styles_tab}</div>
 
 {form handle=$form action="controller=backend.cssEditor action=save" method="POST" class="templateform" id="templateForm_`$tabid`"}
+
 	{if $new || $template.isCustomFile}
-		<p>
-			{{err for="fileName"}}
-				<label style="margin-top: 9px;">{t _template_file_name}:</label>
-				{textfield class="text"}
-			{/err}
-		</p>
-		<div class="clear" style="margin-bottom: 1em;"></div>
+		{input name="fileName"}
+			{label}{t _template_file_name}:{/label}
+			{textfield}
+		{/input}
 	{/if}
+
 	<div class="minimenu" id="minimenu_{$tabid}">
 		<span class="progressIndicator" style="display:none;"></span>
 		{selectfield class="version" id="version_`$tabid`" options=$template.backups}

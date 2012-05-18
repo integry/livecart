@@ -72,6 +72,7 @@ Backend.SiteNews.prototype =
 				entry.showEditForm();
 			}
 		}.bind(this, id));
+
 		ActiveList.prototype.getInstance('newsList').touch(true);
 	},
 
@@ -156,7 +157,7 @@ Backend.SiteNews.PostEntry.prototype =
 
 		// set up calendar field
 		var time = this.node.down('#time');
-		var time_real = this.node.down('#time_real');
+		var time_real = this.node.down('.time_real');
 		var time_button = this.node.down('#time_button');
 
 		time_button.realInput = time_real;

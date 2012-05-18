@@ -45,7 +45,8 @@
 {activeGrid
 	prefix="files"
 	id=0
-	controller="backend.selectFile"action="lists"
+	controller="backend.selectFile"
+	action="lists"
 	displayedColumns=$displayedColumns
 	availableColumns=$availableColumns
 	totalCount=0

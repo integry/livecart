@@ -65,7 +65,7 @@ Backend.Eav.specFieldEntrySingleSelect.prototype =
 			return false;
 		}
 
-		otherInput.style.display = ('other' == this.field.value) ? 'block' : 'none';
+		jQuery(otherInput).toggle('other' == this.field.value);
 
 		if ('none' != otherInput.style.display)
 		{

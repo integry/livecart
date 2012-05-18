@@ -12,6 +12,11 @@
  */
 function smarty_function_password($params, $smarty)
 {
+	if (empty($params['name']))
+	{
+		$params['name'] = $smarty->getTemplateVars('input_name');
+	}
+
 	$formParams = $smarty->_tag_stack[0][1];
 	$formHandler = $formParams['handle'];
 	if (!($formHandler instanceof Form))
@@ -21,18 +26,18 @@ function smarty_function_password($params, $smarty)
 	$fieldName = $params['name'];
 
 	$output = '<input type="password"';
-	
+
 	// Check permissions
 	if($formParams['readonly'])
-	{	
+	{
 		$params['disabled'] = 'disabled';
 	}
-	
+
 	if (isset($params['value']))
 	{
 		unset($params['value']);
 	}
-	
+
 	foreach ($params as $name => $value)
 	{
 		$output .= ' ' . $name . '="' . htmlspecialchars($value, ENT_QUOTES) . '"';

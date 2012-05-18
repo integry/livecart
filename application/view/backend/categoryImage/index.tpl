@@ -40,26 +40,25 @@
 	<input type="hidden" name="ownerId" value="{$ownerId}" />
 	<input type="hidden" name="imageId" value="" />
 
-	<fieldset class="addform>
+	<fieldset class="addform">
 		<legend>{t _add_new_title}</legend>
-		<p class="required">
-			{err for="image"}
-				{{label {tip _image_file}: }}
-				{filefield}
-				<span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
-			{/err}
-		</p>
 
-		<p>
-			<label for="title">{t _image_title}:</label>
-			{textfield name="title" id="title"}
-		</p>
+		{input name="image"}
+			{label}{tip _image_file}:{/label}
+			{filefield}
+			<span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
+		{/input}
+
+		{input name="title"}
+			{label}{t _image_title}:{/label}
+			{textfield}
+		{/input}
 
 		{language}
-			<p>
-				<label>{t _image_title}:</label>
-				{textfield name="title_`$lang.ID`"}
-			</p>
+			{input name="title_`$lang.ID`"}
+				{label}{t _image_title}:{/label}
+				{textfield}
+			{/input}
 		{/language}
 
 		<fieldset class="controls">

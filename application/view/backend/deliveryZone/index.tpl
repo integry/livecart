@@ -37,13 +37,14 @@
 			<fieldset>
 				<legend>{t _test_which_zone}</legend>
 				{form action="controller=backend.deliveryZone action=testAddress" method="post" handle=$testAddress onsubmit="Backend.DeliveryZone.lookupAddress(this, event);"}
-					<fieldset class="error">
-						<label>{t _zone_type}</label>
+
+					{input name="ccCVV"}
+						{label}{t _zone_type}:{/label}
 						<select name="type">
 							<option value="2">{t _shipping_rates}</option>
 							<option value="1">{t _tax_rates}</option>
 						</select>
-					</fieldset>
+					{/input}
 
 					{include file="backend/user/address_edit.tpl" hideName=true}
 

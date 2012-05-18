@@ -11,99 +11,51 @@
 	{hidden name="ID"}
 	{hidden name="productID"}
 
-	<p>
-		<label>{t _name}</label>
-		<fieldset class="error">
-			{textfield name="name"}
-			<div class="errorText" style="display: none"></div>
-		</fieldset>
-	</p>
+	{input name="name"}
+		{label}{t _name}:{/label}
+		{textfield}
+	{/input}
 
-	<p>
-		<label>{t _period_length}</label>
-		<fieldset class="error">
-			{textfield name="periodLength" class="number"} {selectfield name="periodType" options=$periodTypes}
-			<div class="errorText" style="display: none"></div>
-		</fieldset>
-	</p>
+	{input name="periodLength"}
+		{label}{t _period_length}:{/label}
+		{textfield name="periodLength" class="number"} {selectfield name="periodType" options=$periodTypes}
+	{/input}
 
-	<p>
-		<label>{t _rebill_count}</label>
-		<fieldset class="error">
-			{textfield name="rebillCount"}
-			<div class="errorText" style="display: none"></div>
-		</fieldset>
-	</p>
+	{input name="rebillCount"}
+		{label}{t _rebill_count}:{/label}
+		{textfield}
+	{/input}
 
-	<p>
-		{foreach $currencies as $currency}
-			{if !$shown}
-				<label>{t _setup_price}</label>
-				{assign var=shown value=true}
-			{else}
-				<label></label>
-			{/if}
-			<fieldset class="error">
-				{textfield
-					name="ProductPrice_setup_price_`$currency`"
-					value=$recurringProductPeriod.ProductPrice_setup[$currency].price
-					class="number"
-				} {$currency}
+	{foreach $currencies as $currency}
+		{input name="ProductPrice_setup_price_`$currency`"}
+			{label}{t _setup_price} ({$currency}):{/label}
+			{textfield value=$recurringProductPeriod.ProductPrice_setup[$currency].price class="number"}
+		{/input}
+	{/foreach}
 
-				<div class="errorText" style="display: none"></div>
-			</fieldset>
-		{/foreach}
-	</p>
+	{foreach $currencies as $currency}
+		{input name="ProductPrice_period_price_`$currency`"}
+			{label}{t _period_price} ({$currency}):{/label}
+			{textfield value=$recurringProductPeriod.ProductPrice_period[$currency].price class="number"}
+		{/input}
+	{/foreach}
 
-	<p>
-		{assign var=shown value=false}
-		{foreach $currencies as $currency}
-			{if !$shown}
-				<label>{t _period_price}</label>
-				{assign var=shown value=true}
-			{else}
-				<label></label>
-			{/if}
-
-			<fieldset class="error">
-				{textfield name="ProductPrice_period_price_`$currency`"
-				value=$recurringProductPeriod.ProductPrice_period[$currency].price class="number"} {$currency}
-				<div class="errorText" style="display: none"></div>
-			</fieldset>
-		{/foreach}
-	</p>
-
-
-	<p>
-		<label>{t _description}</label>
-		<fieldset class="error">
-			{textarea name="description"}
-			<div class="errorText" style="display: none"></div>
-		</fieldset>
-	</p>
-
+	{input name="description"}
+		{label}{t _description}:{/label}
+		{textarea}
+	{/input}
 
 	{language}
-		<p>
-			<label>{t _name}</label>
-			<fieldset class="error">
-				{textfield name="name_`$lang.ID`"}
-				<span class="errorText hidden"> </span>
-			</fieldset>
-		</p>
+		{input name="name_`$lang.ID`"}
+			{label}{t _name}:{/label}
+			{textfield}
+		{/input}
 
-		<p>
-			<label>{t _description}</label>
-			<fieldset class="error">
-				{textarea name="description_`$lang.ID`"}
-				<div class="errorText" style="display: none"></div>
-			</fieldset>
-		</p>
-
-
+		{input name="description_`$lang.ID`"}
+			{label}{t _description}:{/label}
+			{textarea name="description_`$lang.ID`"}
+		{/input}
 	{/language}
-
-
 
 	<fieldset class="rpp_controls controls">
 		<span class="progressIndicator" style="display: none;"></span>

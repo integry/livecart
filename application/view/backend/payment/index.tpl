@@ -15,18 +15,15 @@
 
 			{form action="controller=backend.payment action=addOffline id=`$order.ID`" method="POST" handle=$offlinePaymentForm onsubmit="Backend.Payment.submitOfflinePaymentForm(event);"}
 
-				<p>
-					<label>{t _amount}:</label>
-					<fieldset class="error">
-						{textfield name="amount" class="text number"} {$order.Currency.ID}
-						<div class="errorText hidden"></div>
-					</fieldset>
-				</p>
+				{input name="amount"}
+					{label}{t _amount}:{/label}
+					{textfield class="text number"} {$order.Currency.ID}
+				{/input}
 
-				<p>
-					<label>{t _comment}:</label>
-					{textarea name="comment" }
-				</p>
+				{input name="comment"}
+					{label}{t _comment}:{/label}
+					{textarea}
+				{/input}
 
 				<fieldset class="controls" style="margin-right: 40px;">
 					<span class="progressIndicator" style="display: none;"></span>

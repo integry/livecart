@@ -4,30 +4,30 @@
 
 	<legend>{t _pr_form}</legend>
 
-	<p>
-		<label>{t _pr_prefix}:</label>
-		{textfield name="pricePrefix" class="currencyPricePrefix"}
-	</p>
+	{input name="pricePrefix"}
+		{label}{t _pr_prefix}{/label}
+		{textfield class="currencyPricePrefix"}
+	{/input}
 
-	<p>
-		<label>{t _pr_suffix}:</label>
-		{textfield name="priceSuffix" class="currencyPriceSuffix"}
-	</p>
+	{input name="priceSuffix"}
+		{label}{t _pr_suffix}{/label}
+		{textfield class="currencyPriceSuffix"}
+	{/input}
 
-	<p>
-		<label>{t _pr_decimal_sep}:</label>
-		{textfield name="decimalSeparator" class="currencyPriceSuffix"}
-	</p>
+	{input name="decimalSeparator"}
+		{label}{t _pr_decimal_sep}{/label}
+		{textfield class="currencyPriceSuffix"}
+	{/input}
 
-	<p>
-		<label>{t _pr_thousand_sep}:</label>
-		{textfield name="thousandSeparator" class="currencyPriceSuffix"}
-	</p>
+	{input name="thousandSeparator"}
+		{label}{t _pr_thousand_sep}{/label}
+		{textfield class="currencyPriceSuffix"}
+	{/input}
 
-	<p>
-		<label>{t _pr_decimal_count}:</label>
-		{textfield name="decimalCount" class="currencyPriceSuffix"}
-	</p>
+	{input name="decimalCount"}
+		{label}{t _pr_decimal_count}{/label}
+		{textfield class="currencyPriceSuffix"}
+	{/input}
 
 </fieldset>
 

@@ -38,25 +38,23 @@
 
 	<fieldset class="addForm">
 		<legend>{t _add_new_title}</legend>
-		<p class="required">
-			<label for="image">{t _image_file}</label>
-			<fieldset class="error">
-				{filefield name="image" id="image"}
-				<span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
-				<div class="errorText" style="display: none;"></div>
-			</fieldset>
-		</p>
 
-		<p>
-			<label for="title">{t _image_title}:</label>
-			{textfield name="title" id="title"}
-		</p>
+		{input name="title"}
+			{label}{t _image_file}:{/label}
+			{filefield}
+			<span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
+		{/input}
+
+		{input name="title"}
+			{label}{t _image_title}:{/label}
+			{textfield}
+		{/input}
 
 		{language}
-			<p>
-				<label>{t _image_title}:</label>
-				{textfield name="title_`$lang.ID`"}
-			</p>
+			{input name="title_`$lang.ID`"}
+				{label}{t _image_title}:{/label}
+				{textfield}
+			{/input}
 		{/language}
 
 		<fieldset class="controls">

@@ -21,19 +21,17 @@
 		<input type="hidden" name="theme" value="{$theme}" />
 		<input type="hidden" name="orginalFileName" class="orginalFileName" value="" />
 
-		<p class="required">
-			{err for="file"}
-				{{label {t _select_file}: }}
-				{filefield value=""}
-				<br />
-				<span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
-			{/err}
-		</p>
+		{input name="file"}
+			{label}{t _select_file}:{/label}
+			{filefield value=""}
+			<br />
+			<span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
+		{/input}
 
-		<p>
-			<label for="title">{t _change_file_name}:</label>
-			{textfield name="filename" class="changeFileName"}
-		</p>
+		{input name="filename"}
+			{label}{t _change_file_name}:{/label}
+			{textfield class="changeFileName"}
+		{/input}
 
 		<fieldset class="controls">
 			<span class="progressIndicator" style="display: none;"></span>

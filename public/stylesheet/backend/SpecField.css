@@ -40,9 +40,7 @@
 }
 
 .specField_group_title {
-    font-size: 300%;
-    color: grey;
-    font-weight: bold;
+    font-size: 200%;
 }
 
 .specFieldGroup_translations {
@@ -50,7 +48,7 @@
 }
 
 .specField_title {
-    font-size: 200%;
+    font-size: 150%;
 }
 
 .specField_group_title input {

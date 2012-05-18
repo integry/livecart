@@ -9,7 +9,7 @@
 	<div class="clear"></div>
 
 	<div class="addResponseform style="display: none;">
-		<fieldset class="addform>
+		<fieldset class="addform">
 
 			<legend>{t _add_response|capitalize}</legend>
 

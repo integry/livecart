@@ -9,20 +9,17 @@
 		*}
 
 		{if $lines}
-			<p>
-				<label>{t _channel}:</label>
-				{selectfield name="channel" options=$lines}
-			</p>
+			{input name="channel"}
+				{label}{t _channel}:{/label}
+				{selectfield options=$lines}
+			{/input}
 		{/if}
 
 		{if $versions}
-			<p>
-				<label>{t _version}:</label>
-				<fieldset class="error">
-					{selectfield name="version" options=$versions}
-					<div class="errorText hidden"></div>
-				</fieldset>
-			</p>
+			{input name="version"}
+				{label}{t _version}:{/label}
+				{selectfield options=$versions}
+			{/input}
 		{/if}
 
 		{if !$versions}

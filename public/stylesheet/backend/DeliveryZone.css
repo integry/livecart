@@ -65,9 +65,9 @@ fieldset.checkbox .progressIndicator
 
 .countriesAndStates_regionsAndUnions
 {
-    width: 20em;
+    width: 15.5em;
     text-align: center;
-    margin: 0 6.8em 2em;
+    margin: 0.5em 0 1em 0;
     float: right;
 }
 
@@ -285,3 +285,8 @@ div.rangeStart input
 	font-size:10px !important;
 }
 
+fieldset.container.multiSelect
+{
+	display: inline-block;
+	vertical-align: top;
+}

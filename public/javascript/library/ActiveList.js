@@ -661,6 +661,9 @@ ActiveList.prototype = {
 
 		jQuery(li).addClass('ui-accordion-header ui-helper-reset ui-state-default ui-corner-all');
 
+		jQuery(li).mouseover(function() { jQuery(this).addClass('ui-state-hover') });
+		jQuery(li).mouseout(function() { jQuery(this).removeClass('ui-state-hover') });
+
 		// fix li ID if it was set as numeric only
 		if (!isNaN(parseInt(li.id)))
 		{

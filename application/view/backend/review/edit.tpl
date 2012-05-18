@@ -1,30 +1,27 @@
 {form handle=$form action="controller=backend.review action=update id=`$review.ID`" onsubmit="Backend.Review.Editor.prototype.getInstance(`$review.ID`, false).submitForm(); return false;" method="post" role="product.update"}
 
 	{foreach $ratingTypes as $type}
-		<p class="required">
-			{assign var=title value=`{$type.name_lang|@or:_rating}`}
-			{err for="rating_`$type.ID`"}
-				{label $title}
-				{selectfield options=$ratingOptions}
-			{/err}
-		</p>
+		{input name="rating_`$type.ID`"}
+			{label}{$type.name_lang|@or:_rating}:{/label}
+			{selectfield options=$ratingOptions}
+		{/input}
 	{/foreach}
 
 	<p class="required">
-		{err for="nickname"}
-			{label _nickname}
+		{input name="nickname"}
+			{label}{t _nickname}:{/label}
 			{textfield}
-		{/err}
+		{/input}
 
-		{err for="title"}
-			{label _title}
+		{input name="title"}
+			{label}{t _title}:{/label}
 			{textfield}
-		{/err}
+		{/input}
 
-		{err for="text"}
-			{label _text}
+		{input name="text"}
+			{label}{t _text}:{/label}
 			{textarea}
-		{/err}
+		{/input}
 	</p>
 
 	{include file="backend/eav/fields.tpl" item=$review}

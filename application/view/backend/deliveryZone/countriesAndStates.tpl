@@ -1,70 +1,69 @@
 <div id="countriesAndStatesMsg_{$categoryId}"></div>
 
 {form id="countriesAndStates_$zoneID" handle=$form action="controller=backend.deliveryZone action=save id=$zoneID" method="post" role="delivery.update"}
-	<label>{tip _zone_type}</label>
-	<fieldset class="error">
-		{selectfield name="type" options=$allTypes id="type_`$zoneID`" class="observed"}
-	</fieldset>
 
-	<label>{t _name}</label>
-	<fieldset class="error">
-		{textfield name="name" class="observed countriesAndStates_name"}
-		<span class="progressIndicator" style="display: none;"></span>
-		<span class="errorText hidden"> </span>
-	</fieldset>
+	{input name="type"}
+		{label}{tip _zone_type}:{/label}
+		{selectfield options=$allTypes class="observed"}
+	{/input}
 
+	{input name="name"}
+		{label}{t _name}:{/label}
+		{textfield class="observed countriesAndStates_name"}
+	{/input}
 
-	<fieldset class="checkbox error">
-		{checkbox name="isEnabled" id="countriesAndStates_isEnabled_`$zoneID`" class="checkbox observed"}
-		<span class="progressIndicator" style="display: none;"></span>
-		<label class="checkbox" for="countriesAndStates_isEnabled_{$zoneID}">{tip _is_enabled}</label>
-	</fieldset>
+	{input name="isEnabled"}
+		{checkbox class="checkbox observed"}
+		{label}{tip _is_enabled}{/label}
+	{/input}
 
-	<fieldset class="checkbox error">
-		{checkbox name="isFreeShipping" id="countriesAndStates_isFreeShipping_`$zoneID`" class="checkbox observed"}
-		<span class="progressIndicator" style="display: none;"></span>
-		<label class="checkbox" for="countriesAndStates_isFreeShipping_{$zoneID}">{tip _is_free_shipping}</label>
-	</fieldset>
+	{input name="isFreeShipping"}
+		{checkbox class="checkbox observed"}
+		{label}{tip _is_free_shipping}{/label}
+	{/input}
 
-	<fieldset class="checkbox error">
-		{checkbox name="isRealTimeDisabled" id="countriesAndStates_isRealTimeDisabled_`$zoneID`" class="checkbox observed"}
-		<span class="progressIndicator" style="display: none;"></span>
-		<label class="checkbox" for="countriesAndStates_isRealTimeDisabled_{$zoneID}">{tip _is_real_time_disabled}</label>
-	</fieldset>
+	{input name="isRealTimeDisabled"}
+		{checkbox class="checkbox observed"}
+		{label}{tip _is_real_time_disabled}{/label}
+	{/input}
 
+	{input}
+		{label}{tip _country}{/label}
+		<fieldset class="container multiSelect">
+			{selectfield name="activeCountries" size="15" class="countriesAndStates_activeCountries" multiple="multiple" options=$selectedCountries}
+			<input type="button" value="&lt;&lt;" class="submit countriesAndStates_addCountry" {denied role='delivery.update'}style="display: none"{/denied} />
+			<input type="button" value="&gt;&gt;" class="submit countriesAndStates_removeCountry" {denied role='delivery.update'}style="display: none"{/denied} />
+			{selectfield name="inactiveCountries" size="15" options=$countries class="countriesAndStates_inactiveCountries" multiple="multiple"}
 
-	<label>{tip _country}</label>
-	<fieldset class="error">
-		{selectfield name="activeCountries" size="15" class="countriesAndStates_activeCountries" multiple="multiple" options=$selectedCountries}
-		<input type="button" value="&lt;&lt;" class="submit countriesAndStates_addCountry" {denied role='delivery.update'}style="display: none"{/denied} />
-		<input type="button" value="&gt;&gt;" class="submit countriesAndStates_removeCountry" {denied role='delivery.update'}style="display: none"{/denied} />
-		{selectfield name="inactiveCountries" size="15" options=$countries class="countriesAndStates_inactiveCountries" multiple="multiple"}
-
-		<span class="errorText hidden"> </span>
-
-		<div class="countriesAndStates_regionsAndUnions" {denied role='delivery.update'}style="display: none"{/denied}>
-			{foreach key="groupName" item="group" from=$countryGroups}
-				<div><a href="#{$groupName}">{translate text=$groupName}</a>&nbsp;&nbsp;</div>
-			{/foreach}
-		</div>
-	</fieldset>
-
-	<label>{tip _state}</label>
-	<fieldset class="error">
-		<div style="float: left;">
-			{selectfield name="activeStates" size="17" options=$selectedStates class="countriesAndStates_activeStates" multiple="multiple"}
-			<input type="button" value="&lt;&lt;" class="submit countriesAndStates_addState" {denied role='delivery.update'}style="display: none"{/denied} />
-			<input type="button" value="&gt;&gt;" class="submit countriesAndStates_removeState" {denied role='delivery.update'}style="display: none"{/denied} />
-		</div>
-		<div style="float: left; padding-left: 5px;">
-			<p>
-				{selectfield name="stateListCountry" class="stateListCountry" options=$allCountries}
-				<span class="progressIndicator" style="display: none;"></span>
-			</p>
-			{selectfield name="inactiveStates" size="15" options=$states class="countriesAndStates_inactiveStates" multiple="multiple"}
 			<span class="errorText hidden"> </span>
-		</div>
-	</fieldset>
+
+			<div class="clear"></div>
+			<div class="countriesAndStates_regionsAndUnions" {denied role='delivery.update'}style="display: none"{/denied}>
+				{foreach key="groupName" item="group" from=$countryGroups}
+					<div><a href="#{$groupName}">{translate text=$groupName}</a>&nbsp;&nbsp;</div>
+				{/foreach}
+			</div>
+		</fieldset>
+	{/input}
+
+	{input}
+		{label}{tip _state}{/label}
+		<fieldset class="container multiSelect">
+			<div style="float: left;">
+				{selectfield name="activeStates" size="17" options=$selectedStates class="countriesAndStates_activeStates" multiple="multiple"}
+				<input type="button" value="&lt;&lt;" class="submit countriesAndStates_addState" {denied role='delivery.update'}style="display: none"{/denied} />
+				<input type="button" value="&gt;&gt;" class="submit countriesAndStates_removeState" {denied role='delivery.update'}style="display: none"{/denied} />
+			</div>
+			<div style="float: left; padding-left: 5px;">
+				<p>
+					{selectfield name="stateListCountry" class="stateListCountry" options=$allCountries}
+					<span class="progressIndicator" style="display: none;"></span>
+				</p>
+				{selectfield name="inactiveStates" size="15" options=$states class="countriesAndStates_inactiveStates" multiple="multiple"}
+				<span class="errorText hidden"> </span>
+			</div>
+		</fieldset>
+	{/input}
 
 	<fieldset class="countriesAndStates_cityMasks error">
 		<label>{tip _city_mask}</label>

@@ -1,7 +1,7 @@
 <div>
 	<fieldset class="addForm">
 		<legend>{t _add_language|capitalize}</legend>
-		<form onSubmit="lng.add(this); return false;"action="{link controller="backend.language" action=add}">
+		<form onSubmit="lng.add(this); return false;" action="{link controller="backend.language" action=add}">
 			<select name="id" class="select" id="addLang-sel">
 			   {html_options options=$languages_select}
 			</select>

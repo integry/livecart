@@ -20,62 +20,47 @@
 	<fieldset>
 		<legend>{t _begin_import}</legend>
 
-		<p class="required">
-			{err for="cart"}
-				{{label {t _shopping_cart} }}
-				{selectfield options=$carts}
-			{/err}
-		</p>
+		{input name="cart"}
+			{label}{t _shopping_cart}:{/label}
+			{selectfield options=$carts}
+		{/input}
 
-		<p class="required">
-			{err for="dbType"}
-				{{label {t _database_type} }}
-				{selectfield options=$dbTypes}
-			{/err}
-		</p>
+		{input name="dbType"}
+			{label}{t _database_type}:{/label}
+			{selectfield options=$dbTypes}
+		{/input}
 
-		<p class="required">
-			{err for="dbServer"}
-				{{label {t _database_server} }}
-				{textfield}
-			{/err}
-		</p>
+		{input name="dbServer"}
+			{label}{t _database_server}:{/label}
+			{textfield}
+		{/input}
 
-		<p class="required">
-			{err for="dbName"}
-				{{label {t _database_name} }}
-				{textfield}
-			{/err}
-		</p>
+		{input name="dbName"}
+			{label}{t _database_name}:{/label}
+			{textfield}
+		{/input}
 
-		<p class="required">
-			{err for="dbUser"}
-				{{label {t _database_user} }}
-				{textfield}
-			{/err}
-		</p>
+		{input name="dbUser"}
+			{label}{t _database_user}:{/label}
+			{textfield}
+		{/input}
 
-		<p>
-			{err for="dbPass"}
-				{{label {t _database_pass} }}
-				{textfield type="password"}
-			{/err}
-		</p>
+		{input name="dbPass"}
+			{label}{t _database_pass}:{/label}
+			{textfield type="password"}
+		{/input}
 
-		<p>
-			{err for="filePath"}
-				{{label {t _file_path} }}
-				{textfield}
-			{/err}
-		</p>
-
+		{input name="filePath"}
+			{label}{t _file_path}:{/label}
+			{textfield}
+		{/input}
 	</fieldset>
 
 	<fieldset class="controls">
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" class="submit" value="{tn _import}" />
 		{t _or}
-		<a class="cancel" href="{link controller="backend.databaseImport}">{t _cancel}</a>
+		<a class="cancel" href="{link controller="backend.databaseImport"}">{t _cancel}</a>
 	</fieldset>
 
 {/form}

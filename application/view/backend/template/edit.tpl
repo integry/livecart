@@ -7,13 +7,10 @@
 	</div>
 
 	{if $new || $template.isCustomFile}
-		<p>
-			{{err for="fileName"}}
-				<label style="margin-top: 9px;">{t _template_file_name}:</label>
-				{textfield class="text wide"}
-			{/err}
-		</p>
-		<div class="clear" style="margin-bottom: 1em;"></div>
+		{input name="fileName"}
+			{label}{t _template_file_name}:{/label}
+			{textfield}
+		{/input}
 	{/if}
 	<input type="hidden" value="{$tabid}" name="tabid" />
 

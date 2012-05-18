@@ -6,12 +6,17 @@
  * @param array $params
  * @param Smarty $smarty
  * @return string
- * 
+ *
  * @package application.helper.smarty.form
  * @author Integry Systems <http://integry.com>
  */
-function smarty_function_radio($params, $smarty) 
+function smarty_function_radio($params, $smarty)
 {
+	if (empty($params['name']))
+	{
+		$params['name'] = $smarty->getTemplateVars('input_name');
+	}
+
 	$formParams = $smarty->_tag_stack[0][1];
 	$formHandler = $formParams['handle'];
 	if (!($formHandler instanceof Form))
@@ -19,14 +24,14 @@ function smarty_function_radio($params, $smarty)
 		throw new HelperException('Element must be placed in {form} block');
 	}
 	$fieldName = $params['name'];
-		
-	
+
+
 	// Check permissions
 	if($formParams['readonly'])
 	{
 		$params['disabled'] = 'disabled';
 	}
-	
+
 	// get checked state
 	$formValue = $formHandler->get($fieldName);
 	if ($formValue == $params['value'] || (empty($formValue) && $params['checked']))
@@ -41,7 +46,7 @@ function smarty_function_radio($params, $smarty)
 	}
 
 	$output .= "/>";
-		
+
 	return $output;
 }
 

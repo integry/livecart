@@ -1,7 +1,7 @@
 {form handle=$form action="controller=backend.newsletter action=save" method="POST" onsubmit="Backend.Newsletter.saveForm(this); return false;" onreset="Backend.Newsletter.resetAddForm(this);"}
-<div class="newsletterform>
+<div class="newsletterform">
 
-	{hidden name="id value=$newsletter.ID}
+	{hidden name="id" value=$newsletter.ID}
 
 	<fieldset>
 		<legend>{t _edit_message|capitalize}</legend>

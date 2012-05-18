@@ -15,6 +15,11 @@
  */
 function smarty_function_calendar($params, $smarty)
 {
+	if (empty($params['name']))
+	{
+		$params['name'] = $smarty->getTemplateVars('input_name');
+	}
+
 	$params['nobutton'] = array_key_exists('nobutton', $params) ?!!$params['nobutton'] : false;
 	if(!isset($params['noform']))
 	{
@@ -29,7 +34,7 @@ function smarty_function_calendar($params, $smarty)
 
 	if(!isset($params['id']))
 	{
-		throw new HelperException('Calendar input field should have an ID. (Paramater name - "id")');
+		$params['id'] = uniqid();
 	}
 
 	$params['format'] = isset($params['format']) ? $params['format'] : "%d-%b-%Y";
@@ -57,7 +62,7 @@ function smarty_function_calendar($params, $smarty)
 	$output .= "/>";
 
 	$output .= '<input type="hidden" class="hidden" class="calendar" name="'.$fieldName.'" value="'.$value.'" class="calendar-real" id="'.$params['id'].'_real" />';
-	
+
 	$buttonID = $params['id'];
 	if ($params['nobutton'] == false)
 	{
@@ -81,6 +86,8 @@ function smarty_function_calendar($params, $smarty)
 		Calendar.updateDate.bind(this)();
 		Event.stop(e);
 	};
+
+	realInput.className = realInput.name + '_real';
 
 	Event.observe(visible, "dbclick", updateDate.bind(visible));
 	Event.observe(visible, "keyup",	 updateDate.bind(visible));

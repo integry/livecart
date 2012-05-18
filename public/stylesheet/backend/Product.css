@@ -151,9 +151,19 @@ li.addProduct
 /********************
 	Pricing
 *********************/
+.priceRow div.input
+{
+	display: inline;
+}
+
+.priceRow div.input.basePrice
+{
+	margin-right: 1em;
+}
+
 .productForm .pricing label
 {
-	width: 50px;
+	width: auto;
 }
 
 a.setQuantPrice

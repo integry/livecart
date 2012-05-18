@@ -5,7 +5,7 @@
 
 .filter_add
 {
-    background-image: url(../../image/silk/magnifier_zoom_in.png);    
+    background-image: url(../../image/silk/magnifier_zoom_in.png);
 }
 
 .filter_filters
@@ -21,7 +21,7 @@
 
 .filterList li.filtergroup_has_no_filters
 {
-  	background-color: #F7E0E0;  		
+  	background-color: #F7E0E0;
 }
 
 .filter_item_new {
@@ -51,7 +51,7 @@
    margin: 0px;
 }
 
-.filter legend, 
+.filter legend,
 .filter_date_range
 {
 	display: none;
@@ -74,7 +74,7 @@
 }
 
 .filter_step_filters li label
-{ 
+{
     cursor: default;
 }
 
@@ -86,7 +86,7 @@
 
 .filter_title, .filter_count
 {
-   font-size: 200%;
+   font-size: 150%;
 }
 
 .filter ul

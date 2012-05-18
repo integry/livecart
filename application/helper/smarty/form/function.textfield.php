@@ -20,6 +20,13 @@
  */
 function smarty_function_textfield($params, Smarty_Internal_Template $smarty)
 {
+	if (empty($params['name']))
+	{
+		$params['name'] = $smarty->getTemplateVars('input_name');
+	}
+
+	$smarty->assign('last_fieldType', 'textfield');
+
 	$formParams = $smarty->_tag_stack[0][1];
 	$formHandler = $formParams['handle'];
 	$fieldName = $params['name'];
@@ -42,6 +49,11 @@ function smarty_function_textfield($params, Smarty_Internal_Template $smarty)
 	$value = array_pop(array_filter(array(isset($params['value']) ? $params['value'] : '', isset($params['default']) ? $params['default'] : '', $formHandler->get($fieldName))));
 
 	unset($params['value'], $params['default']);
+
+	if (isset($params['autocomplete']) && ($params['autocomplete'] != 'off') && empty($params['id']))
+	{
+		$params['id'] = uniqid();
+	}
 
 	$content = '<input';
 	foreach ($params as $name => $param) {

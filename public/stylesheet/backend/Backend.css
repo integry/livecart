@@ -1110,6 +1110,25 @@ label
     padding-bottom: 1px;
 }
 
+div.input.checkbox input.checkbox
+{
+	margin-left: 170px;
+	float: none;
+}
+
+div.input label
+{
+	float: none;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+div.input input,
+div.input select
+{
+	vertical-align: middle;
+}
+
 label.cancel
 {
     float: none;

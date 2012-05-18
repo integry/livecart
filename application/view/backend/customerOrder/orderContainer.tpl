@@ -19,15 +19,15 @@
 				<span class="tabHelp">orders.edit</span>
 			</li>
 			<li id="tabOrderPayments" class="tab active">
-				<a href="{link controller="backend.payment id=_id_}"}">{t _order_payments}</a>
+				<a href="{link controller="backend.payment" id=_id_}"}">{t _order_payments}</a>
 				<span class="tabHelp">orders.edit</span>
 			</li>
 			<li id="tabOrderCommunication" class="tab active">
-				<a href="{link controller="backend.orderNote id=_id_}"}">{t _order_communication}</a>
+				<a href="{link controller="backend.orderNote" id=_id_}"}">{t _order_communication}</a>
 				<span class="tabHelp">orders.edit</span>
 			</li>
 			<li id="tabOrderLog" class="tab active">
-				<a href="{link controller="backend.orderLog id=_id_}"}">{t _order_log}</a>
+				<a href="{link controller="backend.orderLog" id=_id_}"}">{t _order_log}</a>
 				<span class="tabHelp">orders.edit</span>
 			</li>
 			<li id="tabPreviousOrders" class="tab active">

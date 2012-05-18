@@ -227,7 +227,6 @@ Backend.Discount.Condition.prototype =
 			if (c && c[field.name])
 			{
 				field.value = c[field.name];
-				console.log(c[field.name]);
 			}
 
 			field.onchange = this.saveParamChange.bind(this);

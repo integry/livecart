@@ -1,4 +1,4 @@
-<div class="newsletterform>
+<div class="newsletterform">
 	<fieldset class="container">
 		<ul class="menu">
 			<li class="done"><a class="cancel" href="#" onclick="Backend.Newsletter.cancelAdd(); return false;">{t _cancel_create_newsletter}</a></li>

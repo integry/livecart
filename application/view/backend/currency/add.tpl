@@ -1,1 +1,1 @@
-{include file=backend/currency/listItem.tpl showContainer=true}
+{include file="backend/currency/listItem.tpl" showContainer=true}

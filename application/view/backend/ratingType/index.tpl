@@ -15,18 +15,16 @@
 		<input type="hidden" name="categoryId" value="{$id}" />
 		<input type="hidden" name="id" />
 
-		<p>
-			{{err for="name"}}
-				<label>{t _name}:</label>
-				{textfield class="text"}
-			{/err}
-		</p>
+		{input name="name"}
+			{label}{t _name}:{/label}
+			{textfield}
+		{/input}
 
 		{language}
-			<p>
-				<label class="wide">{t _title}:</label>
-				{textfield class="text" name="name_`$lang.ID`"}
-			</p>
+			{input name="name_`$lang.ID`"}
+				{label}{t _name}:{/label}
+				{textfield}
+			{/input}
 		{/language}
 
 		<fieldset class="controls" {denied role="news"}style="display: none;"{/denied}>

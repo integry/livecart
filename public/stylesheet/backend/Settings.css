@@ -30,6 +30,11 @@ div.multi
     background: #EEE;
 }
 
+div.setting div.input input.checkbox
+{
+	margin-left: 0;
+}
+
 #settingsBrowser
 {
 	padding-left: 0px;

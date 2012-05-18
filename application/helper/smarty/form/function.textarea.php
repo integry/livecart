@@ -12,6 +12,16 @@
  */
 function smarty_function_textarea($params, $smarty)
 {
+	if (empty($params['name']))
+	{
+		$params['name'] = $smarty->getTemplateVars('input_name');
+	}
+
+	if (empty($params['id']))
+	{
+		$params['id'] = uniqid();
+	}
+
 	$formParams = $smarty->_tag_stack[0][1];
 	$formHandler = $formParams['handle'];
 	$fieldName = $params['name'];

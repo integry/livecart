@@ -14,7 +14,7 @@ Backend.DeliveryZone.prototype =
 
 	initialize: function(zones)
 	{
-		
+
 		Backend.DeliveryZone.prototype.treeBrowser = new dhtmlXTreeObject("deliveryZoneBrowser","","", 0);
 		Backend.Breadcrumb.setTree(Backend.DeliveryZone.prototype.treeBrowser);
 
@@ -353,11 +353,11 @@ Backend.DeliveryZone.prototype =
 		var parentId = Backend.DeliveryZone.prototype.treeBrowser.getParentId(Backend.DeliveryZone.prototype.selectedItemId);
 		if (parentId == -3)
 		{
-			$("pageTitle").down("a").innerHTML = Backend.getTranslation("_tax_zones");
+			jQuery("pageTitle a").html(Backend.getTranslation("_tax_zones"));
 		}
 		else if(parentId == -2)
 		{
-			$("pageTitle").down("a").innerHTML = Backend.getTranslation("_delivery_zones");
+			jQuery("pageTitle a").html(Backend.getTranslation("_delivery_zones"));
 		}
 	}
 };
@@ -1756,7 +1756,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 
 		return this.typeName;
 	},
-		
+
 	addColumnOnKeyUp : function(event) // add new column
 	{
 		var
@@ -2007,7 +2007,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 					sortRow = 0;
 				}
 				else if (r == 1 && this.getType() == 'subtotal')
-				{ 
+				{
 					nodes = $A(cell.getElementsByTagName("input"));
 					value = nodes.pop().value; // last one, because can contain also rangeStart input.
 					sortRow = 1;
@@ -2221,7 +2221,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 		{
 			inputs.merged.value = value;
 		}
-		
+
 		if (inputs.rangeStart_normalized)
 		{
 			value = Math.round((inputs.rangeStart_normalized.value / multipliers[0]) * 1000) / 1000;
@@ -2290,7 +2290,7 @@ Backend.DeliveryZone.WeightTable.prototype = {
 				this.updateMergedWeightFieldValue(cell);
 
 			} catch(e) { }
-			
+
 		}
 	},
 
@@ -2349,22 +2349,5 @@ Backend.DeliveryZone.WeightTable.prototype = {
 
 			this.showInWeightUnits();
 		}
-	},
-
-
-	dumpField: function(element)
-	{
-		if(element.tagName.toLowerCase() != "td")
-		{
-			element = $(element).up("td");
-		}
-		element = element.down("input");
-
-		console.log(
-			"Normalized value:" + element.value + "\n"+
-			"hiValue:" +          element.next().value + "\n"+
-			"liValue:" +          element.next().next().value + "\n"+
-			"merged value:" +     element.next().next().next().value
-		)
 	}
 };

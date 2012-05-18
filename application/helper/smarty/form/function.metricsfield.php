@@ -6,6 +6,11 @@
  */
 function smarty_function_metricsfield($params, Smarty_Internal_Template $smarty)
 {
+	if (empty($params['name']))
+	{
+		$params['name'] = $smarty->getTemplateVars('input_name');
+	}
+
 	$content = '';
 
 	$formParams = $smarty->_tag_stack[0][1];

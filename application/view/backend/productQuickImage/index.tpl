@@ -5,37 +5,21 @@
 	<fieldset class="addForm">
 		<legend>{t _add_new_image}</legend>
 
-		<p class="required">
-			<label for="image">{t _image_file}</label>
-			<fieldset class="error">
-				{filefield name="image" id="image"}
-				<div/>
-				<span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
-				<div class="errorText" style="display: none;"></div>
-			</fieldset>
-		</p>
+		{input name="image"}
+			{label}{t _image_file}:{/label}
+			{filefield id="image"}
+			<div/>
+			<span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
+			<div class="errorText" style="display: none;"></div>
+		{/input}
 
 		{if $images|@json_decode}
-			<p>
-				<label></label>
-				{checkbox class="checkbox" name="setAsMainImage" id="setAsMainImage`$ownerId`"}
-				<label for="setAsMainImage{$ownerId}" class="checkbox">{t _image_set_as_main}</label>
-			</p>
+			{input name="setAsMainImage"}
+				{checkbox}
+				{label}{t _image_set_as_main}:{/label}
+			{/input}
 		{/if}
-{*
-		<p>
-			<label for="title">{t _image_title}:</label>
-			{textfield name="title" id="title"}
-		</p>
-		{language}
-			<p>
-				<label>{t _image_title}:</label>
-				{textfield name="title_`$lang.ID`"}
-			</p>
-		{/language}
-*}
 
-<p><label></label></p>
 		<fieldset class="container">
 			<span class="progressIndicator" style="display: none;"></span>
 			<input type="submit" name="upload" class="submit" value="{tn _upload}">

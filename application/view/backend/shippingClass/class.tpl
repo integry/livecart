@@ -8,21 +8,16 @@
 
 	{hidden name="ID"}
 
-
-	<p>
-		<label>{t _name}</label>
-		<fieldset class="error">
-			{textfield name="name"}
-			<div class="errorText" style="display: none"></div>
-		</fieldset>
-	</p>
+	{input name="name"}
+		{label}{t _name}:{/label}
+		{textfield}
+	{/input}
 
 	{language}
-		<label>{t _name}</label>
-		<fieldset class="error">
-			{textfield name="name_`$lang.ID`" class="observed"}
-			<span class="errorText hidden"> </span>
-		</fieldset>
+		{input name="name_`$lang.ID`"}
+			{label}{t _name}:{/label}
+			{textfield}
+		{/input}
 	{/language}
 
 	<fieldset class="class_controls controls">

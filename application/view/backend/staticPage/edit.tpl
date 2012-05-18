@@ -22,85 +22,59 @@
 
 <fieldset class="container" id="editContainer">
 
-	<p>
-		<label for="title_{$page.ID}" class="wide">{t _title}:</label>
-		<fieldset class="error">
-			{if $page.ID}
-				{textfield name="title" class="wider" id="title_`$page.ID`"}
-			{else}
-				{textfield name="title" class="wider" id="title_`$page.ID`" onkeyup="$('handle').value = ActiveForm.prototype.generateHandle(this.value);"}
-			{/if}
-			<div class="errorText hidden"></div>
-		</fieldset>
-	</p>
+	{input name="title"}
+		{label}{t _title}:{/label}
+		{if $page.ID}
+			{textfield class="wider" id="title_`$page.ID`"}
+		{else}
+			{textfield class="wider" id="title_`$page.ID`" onkeyup="$('handle').value = ActiveForm.prototype.generateHandle(this.value);"}
+		{/if}
+	{/input}
 
-	<fieldset class="error">
-		<label>{t _add_page_to_menu}:</label>
-		{checkbox name="menuInformation" class="checkbox" id="menuInformation_`$page.ID`"}
-		<label for="menuInformation_{$page.ID}" class="checkbox">{t _information_menu}</label>
-	</fieldset>
+	{input name="menuInformation"}
+		{checkbox}
+		{label}{t _add_page_to_menu}{/label}
+	{/input}
 
-	<fieldset class="error">
-		<label></label>
-		{checkbox name="menuRootCategories" class="checkbox" id="menuRootCategories_`$page.ID`"}
-		<label for="menuRootCategories_{$page.ID}" class="checkbox">{t _main_header_menu}</label>
-	</fieldset>
+	{input name="menuRootCategories"}
+		{checkbox}
+		{label}{t _main_header_menu}{/label}
+	{/input}
 
-	<p>
-		<label for="handle" class="wide">{t _handle}:</label>
-		<fieldset class="error">
-			{textfield name="handle" id="handle"}
-			<div class="errorText hidden"></div>
-		</fieldset>
-	</p>
+	{input name="handle"}
+		{label}{t _handle}:{/label}
+		{textfield id="handle"}
+	{/input}
 
-	<p>
-		<label for="text_{$page.ID}" class="wide">{t _text}:</label>
-		<fieldset class="error">
-			<div class="textarea" id="textContainer">
-				{textarea class="tinyMCE longDescr" name="text" id="text_`$page.ID`" style="width: 100%;"}
-				<div class="errorText hidden" style="margin-top: 5px;"></div>
-			</div>
-		</fieldset>
-	</p>
+	{input name="text"}
+		{label class="wide"}{t _text}:{/label}
+		<div class="textarea" id="textContainer">
+			{textarea class="tinyMCE longDescr" style="width: 100%;"}
+		</div>
+	{/input}
 
-	<p>
-		<label for="metaDecription_{$page.ID}" class="wide">{t _meta_description}:</label>
-		<fieldset class="error">
-			{textarea class="longDescr" name="metaDescription" id="metaDecription_`$page.ID`" style="width: 100%; height: 4em;"}
-			<div class="errorText hidden" style="margin-top: 5px;"></div>
-		</fieldset>
-	</p>
-
+	{input name="metaDescription"}
+		{label class="wide"}{t _meta_description}:{/label}
+		{textarea style="width: 100%; height: 4em;"}
+	{/input}
 
 	{include file="backend/eav/fields.tpl" item=$page}
 
 	{language}
-		<p>
-			<label for="title_{$lang.ID}" class="wide">{t _title}:</label>
-			<fieldset class="error">
-				{textfield name="title_`$lang.ID`" class="wider"}
-				<div class="errorText hidden"></div>
-			</fieldset>
-		</p>
+		{input name="title_`$lang.ID`"}
+			{label}{t _title}:{/label}
+			{textfield class="wider"}
+		{/input}
 
-		<p>
-			<label for="text_{$lang.ID}" class="wide">{t _text}:</label>
-			<fieldset class="error">
-				<div class="textarea" id="textContainer">
-					{textarea class="tinyMCE longDescr" name="text_`$lang.ID`" style="width: 100%;"}
-					<div class="errorText hidden" style="margin-top: 5px;"></div>
-				</div>
-			</fieldset>
-		</p>
+		{input name="text_`$lang.ID`"}
+			{label class="wide"}{t _text}:{/label}
+			{textarea class="tinyMCE longDescr" style="width: 100%;"}
+		{/input}
 
-		<p>
-			<label for="metaDecription_{$page.ID}_{$lang.ID}" class="wide">{t _meta_description}:</label>
-			<fieldset class="error">
-				{textarea class="longDescr" name="metaDescription_`{$lang.ID}`" id="metaDecription_`$page.ID`_`$lang.ID`" style="width: 100%; height: 4em;"}
-				<div class="errorText hidden" style="margin-top: 5px;"></div>
-			</fieldset>
-		</p>
+		{input name="metaDescription_`{$lang.ID}`"}
+			{label class="wide"}{t _meta_description}:{/label}
+			{textarea style="width: 100%; height: 4em;"}
+		{/input}
 
 		{include file="backend/eav/fields.tpl" item=$page language=$lang.ID}
 

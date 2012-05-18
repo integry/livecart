@@ -44,11 +44,6 @@ li.activeList_even, li.activeList_odd
     border: 2px solid #EEEEEE;
 }
 
-li.activeList_even:hover, li.activeList_odd:hover
-{
-    border: 2px solid #ccc;
-}
-
 .activeList label
 {
     white-space: normal;

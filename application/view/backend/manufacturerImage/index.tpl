@@ -31,32 +31,30 @@
 {/literal}
 
 <div id="manImgAdd_{$ownerId}" class="manImageEditForm" style="display: none;">
-{form handle=$form" action="controller=backend.manufacturerImage action=upload" method="post" onsubmit="$('manImageList_`$ownerId`').handler.upload(this);" target="manImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data" role="product.update"}
+{form handle=$form action="controller=backend.manufacturerImage action=upload" method="post" onsubmit="$('manImageList_`$ownerId`').handler.upload(this);" target="manImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data" role="product.update"}
 
 	<input type="hidden" name="ownerId" value="{$ownerId}" />
 	<input type="hidden" name="imageId" value="" />
 
 	<fieldset class="addForm">
 		<legend>{t _add_new_title}</legend>
-		<p class="required">
-			<label for="image">{t _image_file}</label>
-			<fieldset class="error">
-				{filefield name="image" id="image"}
-				<span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
-				<div class="errorText" style="display: none;"></div>
-			</fieldset>
-		</p>
 
-		<p>
-			<label for="title">{t _image_title}:</label>
-			{textfield name="title" id="title"}
-		</p>
+		{input name="image"}
+			{label}{t _image_file}:{/label}
+			{filefield}
+			<div class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</div>
+		{/input}
+
+		{input name="title"}
+			{label}{t _image_title}:{/label}
+			{textfield}
+		{/input}
 
 		{language}
-			<p>
-				<label>{t _image_title}:</label>
-				{textfield name="title_`$lang.ID`"}
-			</p>
+			{input name="title_`$lang.ID`"}
+				{label}{t _image_title}:{/label}
+				{textfield}
+			{/input}
 		{/language}
 
 		<fieldset class="controls">

@@ -356,7 +356,7 @@ Backend.Breadcrumb =
 	{
 		var parentId = id;
 
-		if (!Backend.Breadcrumb.treeBrowser)
+		if (!Backend.Breadcrumb.treeBrowser || !this.treeBrowser.jstree)
 		{
 			return false;
 		}

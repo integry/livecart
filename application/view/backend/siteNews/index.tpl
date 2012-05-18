@@ -26,47 +26,53 @@
 
 {/allowed}
 
-<fieldset id="addNews" class="slideForm addform style="display: none;">
+<fieldset id="addNews" class="slideForm addForm" style="display: none;">
 
 	<legend>{t _add_news|capitalize}</legend>
 
-	{form action="controller=backend.siteNews action=add" method="POST" onsubmit="new Backend.SiteNews.Add(this); return false;" handle=$form id="newsform" class="enabled"}
+	{form action="controller=backend.siteNews action=add" method="POST" onsubmit="new Backend.SiteNews.Add(this); return false;" handle=$form id="newsForm" class="enabled"}
 		<input type="hidden" name="id" />
 
-		<p>
-			<label>{t _date}</label>
-			{calendar name="time" id="time"}
-		</p>
-		<p>
-			{{err for="title"}}
-				<label>{t _title}:</label>
-				{textfield class="text"}
-			{/err}
-		</p>
-		<p>
-			{{err for="text"}}
-				<label class="wide">{t _text}:</label>
-				{textarea class="tinyMCE"}
-			{/err}
-		</p>
-		<p>
-			<label class="wide" style="margin-top: 1em;">{t _more_text}:</label>
-			{textarea name="moreText" class="tinyMCE"}
-		</p>
+		{input name="time"}
+			{label}{t _date}:{/label}
+			{calendar id="time"}
+		{/input}
+
+		{input name="title"}
+			{label}{t _title}:{/label}
+			{textfield}
+		{/input}
+
+		{input name="text"}
+			{label}{t _text}:{/label}
+			{textarea class="tinyMCE"}
+		{/input}
+
+		{input name="text"}
+			{label class="wide"}{t _text}:{/label}
+			{textarea class="tinyMCE"}
+		{/input}
+
+		{input name="moreText"}
+			{label class="wide"}{t _more_text}:{/label}
+			{textarea class="tinyMCE"}
+		{/input}
 
 		{language}
-			<p>
-				<label class="wide">{t _title}:</label>
-				{textfield class="text" name="title_`$lang.ID`"}
-			</p>
-			<p>
-				<label class="wide">{t _text}:</label>
-				{textarea name="text_`$lang.ID`" class="tinyMCE"}
-			</p>
-			<p>
-				<label class="wide">{t _more_text}:</label>
-				{textarea name="moreText_`$lang.ID`" class="tinyMCE"}
-			</p>
+			{input name="title_`$lang.ID`"}
+				{label class="wide"}{t _title}:{/label}
+				{textfield}
+			{/input}
+
+			{input name="text_`$lang.ID`"}
+				{label class="wide"}{t _text}:{/label}
+				{textarea class="tinyMCE"}
+			{/input}
+
+			{input name="moreText_`$lang.ID`"}
+				{label class="wide"}{t _more_text}:{/label}
+				{textarea class="tinyMCE"}
+			{/input}
 		{/language}
 
 		<fieldset class="controls" {denied role="news"}style="display: none;"{/denied}>
@@ -119,7 +125,7 @@
 </ul>
 
 <script type="text/javascript">
-	Form.State.backup($("newsform"));
+	Form.State.backup($("newsForm"));
 	new Backend.SiteNews({json array=$newsList}, $('newsList'), $('newsList_template'));
 </script>
 

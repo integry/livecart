@@ -28,30 +28,26 @@
 	<fieldset>
 		<legend>{t _select_file}</legend>
 
-		<p class="required">
-			{err for="upload"}
-				{{label {t _upload_file} }}
-				{filefield}
-			{/err}
-		</p>
+		{input name="upload"}
+			{label}{t _upload_file}:{/label}
+			{filefield}
+		{/input}
 
-		<p>
+		<div class="input">
 			<label></label>
 			- {t _or} -
-		</p>
+		</div>
 
-		<p class="required">
-			{err for="atServer"}
-				{{label {t _select_at_server} }}
-				{textfield id="atServer" class="file"}<input type="button" class="button browse" id="selectAtServer" value="{tn _browse}" />
-			{/err}
-		</p>
+		{input name="atServer"}
+			{label}{t _select_at_server}:{/label}
+			{textfield id="atServer" class="file"}<input type="button" class="button browse" id="selectAtServer" value="{tn _browse}" />
+		{/input}
 	</fieldset>
 
 	<fieldset>
 		<legend>{t _options}</legend>
 
-		<p class="required">
+		<div class="input required">
 			<label>{t _target_category}</label>
 			<label id="targetCategory">
 				{foreach from=$catPath item=node name=catPath}
@@ -62,30 +58,33 @@
 				{/foreach}
 			</label>
 			{hidden id="categoryID" name="category"}
-		</p>
+		</div>
 
 		<div class="options">
-			<p>
-				<label>{t _import_action}</label>
+
+			{input name="options[action]"}
+				{label}{t _import_action}:{/label}
 				<select name="options[action]">
 					<option value="both">{t _add_and_update}</option>
 					<option value="add">{t _add_only}</option>
 					<option value="update">{t _update_only}</option>
 				</select>
-			</p>
-			<p>
-				<label>{t _import_missing_products}</label>
+			{/input}
+
+			{input name="options[missing]"}
+				{label}{t _import_missing_products}:{/label}
 				<select name="options[missing]">
 					<option value="keep">{t _keep_intact}</option>
 					<option value="disable">{t _disable}</option>
 					<option value="delete">{t _delete}</option>
 				</select>
-			</p>
-			<p>
-				<label></label>
-				{checkbox name="options[transaction]" id="options_transaction" class="checkbox"}
-				<label class="checkbox acronym" for="options_transaction"><a>{t _enclose_transaction}<div>{t _transaction_descr}</div></a></label>
-			</p>
+			{/input}
+
+			{input name="options[transaction]"}
+				{checkbox id="options_transaction"}
+				{label}{tip _enclose_transaction _transaction_descr}{/label}
+			{/input}
+
 		</div>
 
 	</fieldset>

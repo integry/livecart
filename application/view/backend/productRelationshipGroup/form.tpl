@@ -6,20 +6,17 @@
 			<input type="hidden" name="ID" class="hidden" />
 			<input type="hidden" name="ownerID" class="hidden" />
 
-			<fieldset>
-				<label>{t _product_relationship_group_title}</label>
-				<fieldset class="error">
-					<input type="text" name="name" class="text" {denied role="product.update"}readonly="readonly"{/denied} />
-					<span class="errorText hidden"> </span>
-				</fieldset>
-			</fieldset>
+			{input name="name"}
+				{label}{t _product_relationship_group_title}:{/label}
+				<input type="text" name="name" class="text" {denied role="product.update"}readonly="readonly"{/denied} />
+			{/input}
 
 			<!-- STEP 3 -->
 			{language}
-				<fieldset class="error">
-					<label>{t _product_relationship_group_title}</label>
+				{input name="name_`$lang.ID`"}
+					{label}{t _product_relationship_group_title}:{/label}
 					<input type="text" name="name_{$lang.ID}" class="text" {denied role="product.update"}readonly="readonly"{/denied} />
-				</fieldset>
+				{/input}
 			{/language}
 		</fieldset>
 

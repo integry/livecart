@@ -8,13 +8,10 @@
 
 {form handle=$form action="controller=backend.manufacturer `$urlAction`" id="userInfo_`$manufacturer.ID`_form" onsubmit="`$action`; return false;" method="post" role="product.update"}
 
-	<p class="required">
-		<label for="manufacturer_{$manufacturer.ID}_name">{t Manufacturer.name}</label>
-		<fieldset class="error">
-			{textfield name="name" id="manufacturer_`$manufacturer.ID`_name"}
-			<div class="errorText" style="display: none" ></span>
-		</fieldset>
-	</p>
+	{input name="name"}
+		{label}{t Manufacturer.name}:{/label}
+		{textfield}
+	{/input}
 
 	{include file="backend/eav/fields.tpl" item=$manufacturer}
 

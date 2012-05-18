@@ -85,10 +85,11 @@
 
 	<fieldset id="info">
 		<form>
-			<p>
-				<label>{t _import_file}</label>
+
+			{input name=""}
+				{label}{tip _import_file}:{/label}
 				<label class="wide">{$file}</label>
-			</p>
+			{/input}
 
 			{if 'ProductImport' == $type}
 			<p>
@@ -110,13 +111,11 @@
 	<fieldset id="delimiters">
 		<legend>{t _set_delimiter}</legend>
 
-		<p class="required">
-			{err for="delimiter"}
-				{{label {t _delimiter} }}
-				{selectfield options=$delimiters onchange="Backend.CsvImport.updatePreview()"}
-				<span id="previewIndicator" class="progressIndicator" style="display: none;"></span>
-			{/err}
-		</p>
+		{input name="delimiter"}
+			{label}{t _delimiter}:{/label}
+			{selectfield options=$delimiters onchange="Backend.CsvImport.updatePreview()"}
+			<span id="previewIndicator" class="progressIndicator" style="display: none;"></span>
+		{/input}
 	</fieldset>
 
 	<div class="clear"></div>
@@ -154,15 +153,16 @@
 	<div class="clear"></div>
 
 	<fieldset class="controls" id="importControls">
-		<p class="saveProfile" style="display: none;">
+		<div class="input saveProfile" style="display: none;">
 			<input type="checkbox" class="checkbox" name="saveProfile" id="saveProfile" />
 			<label for="saveProfile" class="checkbox" style="margin-right: 1em;">{t _save_profile}:</label>
 			<input type="text" class="text" name="profileName" id="profileName" disabled="disabled" />
-		</p>
+		</div>
+
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" class="submit" value="{tn _continue}" />
 		{t _or}
-		<a class="cancel" href="{link controller="backend.csvImport}">{t _cancel}</a>
+		<a class="cancel" href="{link controller="backend.csvImport"}">{t _cancel}</a>
 	</fieldset>
 
 	<div class="clear"></div>

@@ -4,37 +4,33 @@
 
 {form id="options" handle=$form action="controller=backend.currency action=saveOptions" method="post" onsubmit="curr.saveOptions(this); return false;" onchange="curr.checkDisabledFields()"}
 
-	<p>
-		{checkbox class="checkbox" id="updateCb" name="updateCb" value="1"} 
-		<label for="updateCb" id="updateLabel"> {t _update_auto}</label>
-	</p>
-
-	<br /><br />	
+	{input name="updateCb"}
+		{checkbox}
+		{label}{t _update_auto}{/label}
+	{/input}
 
 	<fieldset id="feedOptions" class="disabled">
-	
-		<label for="frequency" id="freqLabel">{t _update_freq}:</label> 
-		{selectfield options=$frequency id="frequency" name="frequency"}
-		<br /><br />	
-		
+
+		{input name="frequency"}
+			{label}{t _update_freq}:{/label}
+			{selectfield options=$frequency}
+		{/input}
+
 		<p>{t _to_update}: </p>
 		{foreach from=$currencies item=item}
-		<div>
-			{checkbox class="checkbox" id="curr_`$item.ID`" name="curr_`$item.ID`" value="1"} 
-			<span>
-				<label for="curr_{$item.ID}">{$item.ID}</label> {t _using}
-				{selectfield class="select" options=$feeds id="feed_`$item.ID`" name="feed_`$item.ID`"}
-			</span>
-		</div>
+			{input name="curr_`$item.ID`"}
+				{label}{$item.ID}:{/label}
+				{t _using} {selectfield options=$feeds}
+			{/input}
 		{foreachelse}
 			{t _no_currencies}
 		{/foreach}
 
 	</fieldset>
-	
+
 	<p>
 		<span id="optsSaveIndicator" class="progressIndicator" style="display: none;"></span>
-		<input type="submit" class="submit" value="{t _save}"> {t _or} 
+		<input type="submit" class="submit" value="{t _save}"> {t _or}
 		<a href="#" onclick="$('options').reset(); $('options').onchange(); return false;" class="cancel">{t _cancel}</a>
 	</p>
 

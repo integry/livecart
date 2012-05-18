@@ -12,6 +12,11 @@
  */
 function smarty_function_selectfield($params, $smarty)
 {
+	if (empty($params['name']))
+	{
+		$params['name'] = $smarty->getTemplateVars('input_name');
+	}
+
 	$formParams = $smarty->_tag_stack[0][1];
 	$formHandler = $formParams['handle'];
 

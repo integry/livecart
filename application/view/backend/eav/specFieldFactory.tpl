@@ -11,10 +11,10 @@
 			<div class="eavCheckboxes">
 				{foreach from=$field.values key="id" item="value"}
 					{if '' != $id}
-						<p>
+						<div class="input">
 							{checkbox name="`$prefix`specItem_`$id`" class="checkbox" value="on" id="product_`$cat`_`$item.ID`_specItem_`$id`"}
 							<label class="checkbox" for="product_{$cat}_{$item.ID}_specItem_{$id}"> {$value}</label>
-						</p>
+						</div>
 					{/if}
 				{/foreach}
 			</div>
@@ -40,7 +40,7 @@
 		{/if}
 		{$field.valuePrefix_lang}{selectfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" options=$field.values class="select"}{$field.valueSuffix_lang}
 		{if !$disableNewOptionValues}
-			{textfield name="`$prefix`other[`$field.ID`]" id="product_`$cat`_`$item.ID`_specItem_other_`$field.ID`" style="display: none" class="text {$textFieldClass}"}
+			{textfield name="`$prefix`other[`$field.ID`]" id="product_`$cat`_`$item.ID`_specItem_other_`$field.ID`" style="display: none" class="text"}
 		{/if}
 	{/if}
 

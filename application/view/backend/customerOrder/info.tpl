@@ -1,6 +1,6 @@
 <ul class="menu">
 	<li>
-		{form handle=$form class="orderStatus" action="controller=backend.customerOrder action=update" id="orderInfo_`$order.ID`_form onsubmit="Backend.CustomerOrder.Editor.prototype.getInstance(`$order.ID`, false).submitForm(); return false;" method="post" role="order.update"}
+		{form handle=$form class="orderStatus" action="controller=backend.customerOrder action=update" id="orderInfo_`$order.ID`_form" onsubmit="Backend.CustomerOrder.Editor.prototype.getInstance(`$order.ID`, false).submitForm(); return false;" method="post" role="order.update"}
 			{hidden name="ID"}
 			{hidden name="isCancelled"}
 				<label for="order_{$order.ID}_status" style="width: auto; float: none;">{t _status}: </label>
@@ -17,7 +17,7 @@
 	{if !$order.isFinalized}
 	<li {denied role='order.update'}style="display: none"{/denied} class="order_unfinalized">
 		<span style="display: none;" id="order_{$order.ID}_isFinalizedIndicator" class="progressIndicator"></span>
-		<a id="order_{$order.ID}_isFinalized" href="{link controller="backend.customerOrder"action="finalize" id=$order.ID}">
+		<a id="order_{$order.ID}_isFinalized" href="{link controller="backend.customerOrder" action="finalize" id=$order.ID}">
 			{t _finalize}
 		</a>
 	</li>
@@ -27,25 +27,25 @@
 	</li>
 
 	<li class="order_printLabel">
-		<a href="{link controller="backend.customerOrder" action=printLabels id=$order.ID"}" target="_blank">{t _print_shipping_labels}</a>
+		<a href="{link controller="backend.customerOrder" action=printLabels id=$order.ID}" target="_blank">{t _print_shipping_labels}</a>
 	</li>
 
 	<li {denied role='order.update'}style="display: none"{/denied}
 		class="{if $order.isCancelled}order_accept{else}order_cancel{/if}">
 		<span style="display: none;" id="order_{$order.ID}_isCanceledIndicator" class="progressIndicator"></span>
-		<a id="order_{$order.ID}_isCanceled" href="{link controller="backend.customerOrder"action="setIsCanceled" id=$order.ID}">
+		<a id="order_{$order.ID}_isCanceled" href="{link controller="backend.customerOrder" action="setIsCanceled" id=$order.ID}">
 			{if $order.isCancelled}{t _accept_order}{else}{t _cancel_order}{/if}
 		</a>
 	</li>
 
 	<li {denied role='order.update'}style="display: none"{/denied} class="addCoupon">
 		<span style="display: none;" id="order_{$order.ID}_addCouponIndicator" class="progressIndicator"></span>
-		<a id="order_{$order.ID}_addCoupon" href="{link controller="backend.customerOrder"action="addCoupon" id=$order.ID}?coupon=_coupon_">{t _add_coupon}</a>
+		<a id="order_{$order.ID}_addCoupon" href="{link controller="backend.customerOrder" action="addCoupon" id=$order.ID}?coupon=_coupon_">{t _add_coupon}</a>
 	</li>
 
 	{if $order.isFinalized}
 		<li {denied role='order.update'}style="display: none"{/denied} class="order_recalculateDiscounts">
-			<a id="order_{$order.ID}_recalculateDiscounts" href="{link controller="backend.customerOrder"action="recalculateDiscounts" id=$order.ID}">
+			<a id="order_{$order.ID}_recalculateDiscounts" href="{link controller="backend.customerOrder" action="recalculateDiscounts" id=$order.ID}">
 				{t _recalculate_discounts}
 			</a>
 		</li>
@@ -57,18 +57,18 @@
 
 <div class="addressContainer">
 	{if $formShippingAddress || !$formBillingAddress}
-		{form handle=$formShippingAddress" action="controller=backend.customerOrder action=updateAddress" id="orderInfo_`$order.ID`_shippingAddress_form onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
+		{form handle=$formShippingAddress action="controller=backend.customerOrder action=updateAddress" id="orderInfo_`$order.ID`_shippingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
 			<fieldset class="order_shippingAddress">
 				<legend>{t _shipping_address}</legend>
-				{include file=backend/customerOrder/address.tpl type="order_`$order.ID`_shippingAddress" address=$order.ShippingAddress states=$shippingStates order=$order}
+				{include file="backend/customerOrder/address.tpl" type="order_`$order.ID`_shippingAddress" address=$order.ShippingAddress states=$shippingStates order=$order}
 			</fieldset>
 		{/form}
 	{/if}
 	{if $formBillingAddress || !$formShippingAddress}
-		{form handle=$formBillingAddress" action="controller=backend.customerOrder action=updateAddress" id="orderInfo_`$order.ID`_billingAddress_form onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
+		{form handle=$formBillingAddress action="controller=backend.customerOrder action=updateAddress" id="orderInfo_`$order.ID`_billingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
 			<fieldset class="order_billingAddress">
 				<legend>{t _billing_address}</legend>
-				{include file=backend/customerOrder/address.tpl type="order_`$order.ID`_billingAddress" address=$order.BillingAddress states=$billingStates order=$order}
+				{include file="backend/customerOrder/address.tpl" type="order_`$order.ID`_billingAddress" address=$order.BillingAddress states=$billingStates order=$order}
 			</fieldset>
 		{/form}
 	{/if}
@@ -110,7 +110,7 @@
 				<span id="dateCreatedVisible">{$order.dateCompleted}</span>
 			</label>
 
-			{form id="calendarform handle=$dateForm class="hidden"action="controller=backend.customerOrder action=updateDate" method="POST"}
+			{form id="calendarform" handle=$dateForm class="hidden" action="controller=backend.customerOrder action=updateDate" method="POST"}
 				{calendar name="dateCompleted" id="dateCompleted"}
 
 				<span class="progressIndicator" id="indicatorDateCompleted" style="display: none;"></span>

@@ -10,8 +10,8 @@
  */
 function smarty_block_language($params, $content, Smarty_Internal_Template $smarty, &$repeat)
 {
-	$smarty = $smarty->smarty;
-	$app = $smarty->getApplication();
+	//$smarty = $smarty->smarty;
+	$app = $smarty->smarty->getApplication();
 
 	if (!$app->getLanguageSetArray())
 	{

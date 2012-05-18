@@ -905,7 +905,7 @@ Backend.Product.QuantityPrice = function(container, rules)
 	else
 	{
 		this.container.parentNode.hide();
-		this.menuLink = this.container.up('fieldset').down('a.menu');
+		this.menuLink = this.container.up('.priceRow').down('a.menu');
 		this.menuLink.onclick = this.showForm.bind(this);
 		this.menuLink.show();
 	}

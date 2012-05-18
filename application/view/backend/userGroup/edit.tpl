@@ -2,20 +2,15 @@
 {form handle=$userGroupform action="controller=backend.userGroup action=save" id="userGroupForm_`$userGroup.ID`" method="post" onsubmit="Backend.User.Group.prototype.getInstance(this).save(); return false;" role="userGroup.update"}
 	{hidden name="ID"}
 
-	<p class="required">
-		<label>{t _name}</label>
-		<fieldset class="error">
-			{textfield name="name"}
-			<span class="errorText" style="display: none" ></span>
-		</fieldset>
-	</p>
+	{input name="name"}
+		{label}{t _name}:{/label}
+		{textfield}
+	{/input}
 
-	<fieldset class="error">
-		<p>
-			<label>{t _description}</label>
-			{textarea name="description"}
-		</p>
-	</fieldset>
+	{input name="description"}
+		{label}{t _description}:{/label}
+		{textfield}
+	{/input}
 
 	{include file="backend/eav/fields.tpl" item=$userGroup}
 

@@ -143,6 +143,11 @@ ActiveGrid.prototype =
 
 	setColumnWidths: function(widths)
 	{
+		if (!widths)
+		{
+			return;
+		}
+
 		var usableWidth = this.getUsableWidth();
 
 		jQuery('th.cell_cb', this.tableInstance).width('20px');

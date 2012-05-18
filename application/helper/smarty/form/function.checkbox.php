@@ -12,6 +12,28 @@
  */
 function smarty_function_checkbox($params, $smarty)
 {
+	if (empty($params['name']))
+	{
+		$params['name'] = $smarty->getTemplateVars('input_name');
+	}
+
+	if (empty($params['id']))
+	{
+		$params['id'] = uniqid();
+	}
+
+	$smarty->assign('last_fieldType', 'checkbox');
+	$smarty->assign('last_fieldID', $params['id']);
+
+	if (empty($params['class']))
+	{
+		$params['class'] = 'checkbox';
+	}
+	else
+	{
+		$params['class'] .= ' checkbox';
+	}
+
 	$formParams = $smarty->_tag_stack[0][1];
 	$formHandler = $formParams['handle'];
 	if (!($formHandler instanceof Form))
