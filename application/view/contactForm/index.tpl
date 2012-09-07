@@ -8,34 +8,28 @@
 <h1>{t _contact_us}</h1>
 
 {form action="controller=contactForm action=send" method="POST" id="contactForm" handle=$form style="float: left;"}
-	<p>
-		{err for="name"}
-			{{label {t _your_name}:}}
-			{textfield class="text"}
-		{/err}
-	</p>
+	{input name="name"}
+		{label}{t _your_name}:{/label}
+		{textfield}
+	{/input}
 
 	{* anti-spam *}
 	<div style="display: none;">
-		{err for="surname"}
-			{{label Your surname:}}
-			{textfield class="text"}
-		{/err}
+		{input name="surname"}
+			{label}{t surname}:{/label}
+			{textfield}
+		{/input}
 	</div>
 
-	<p>
-		{err for="email"}
-			{{label {t _your_email}:}}
-			{textfield class="text"}
-		{/err}
-	</p>
+	{input name="email"}
+		{label}{t _your_email}:{/label}
+		{textfield}
+	{/input}
 
-	<p>
-		{err for="msg"}
-			{{label {t _your_message}:}}
-			{textarea}
-		{/err}
-	</p>
+	{input name="msg"}
+		{label}{t _your_message}:{/label}
+		{textarea}
+	{/input}
 
 	{block FORM-SUBMIT-CONTACT}
 

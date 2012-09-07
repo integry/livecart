@@ -12,28 +12,22 @@
 			{form action="controller=product action=sendToFriend id=`$product.ID`" handle=$sharingForm method="POST"
 				onsubmit="new Product.Share(this); return false;" }
 				<div class="producSharingForm">
+					{input name="friendemail"}
+						{label}{t _friend_email}:{/label}
+						{textfield}
+					{/input}
 
-					<p class="required">
-						{err for="friendemail"}
-							<label class="wide" for="friendemail">{t _friend_email}:</label>
-							{textfield class="text wide"}
-						{/err}
-					</p>
 					{if !$user.ID}
-						<p class="required">
-							{err for="nickname"}
-								<label class="wide" for="nickname">{t _nickname}:</label>
-								{textfield class="text wide"}
-							{/err}
-						</p>
+						{input name="nickname"}
+							{label}{t _nickname}:{/label}
+							{textfield}
+						{/input}
 					{/if}
 
-					<p>
-						{err for="notes"}
-							<label class="wide">{t _notes}:</label>
-							{textarea class="text"}
-						{/err}
-					</p>
+					{input name="friendemail"}
+						{label}{t _notes}:{/label}
+						{textarea}
+					{/input}
 				</div>
 
 				{block SEND-TO-FRIEND-SUBMIT}

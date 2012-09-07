@@ -4,7 +4,7 @@
 		<span id="modeTitle">{t _cust_mode}</span>
 		<ul>
 			<li class="modeTheme">
-				<form" action="{link controller="backend.Customize" action=changeTheme}">
+				<form action="{link controller="backend.Customize" action=changeTheme}">
 					{t _theme}
 					<select id="themeMenu" name="theme">
 						{foreach $themes as $thm}

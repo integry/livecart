@@ -14,22 +14,19 @@
 	{if $option.fieldName}{assign var=fieldName value=$option.fieldName}{else}{assign var=fieldName value="option_`$option.ID`"}{/if}
 	{assign var=fieldName value="`$optionPrefix``$fieldName`"}
 	{if 0 == $option.type}
-		{{err for="`$fieldName`"}}
+		{input name=$fieldName}
 			{checkbox class="checkbox"}
-			<label for={$fieldName} class="checkbox">
-				{$option.name_lang}
-				{optionPrice choice=$option.DefaultChoice}
-			</label>
+			{label}{$option.name_lang} {optionPrice choice=$option.DefaultChoice}{/label}
 
 			{if $option.description_lang}
 				<p class="description">
 					{$option.description_lang}
 				</p>
 			{/if}
-		{/err}
+		{/input}
 	{else}
-		<label class="field">{$option.name_lang}</label>
-			{{err for="`$fieldName`"}}
+		{label}{$option.name_lang}{/label}
+			{input}
 			{if 1 == $option.type}
 				{if 0 == $option.displayType}
 					<fieldset class="error">
@@ -88,7 +85,7 @@
 				</p>
 			{/if}
 
-		{/err}
+		{/input}
 	{/if}
 </div>
 <div class="clear"></div>

@@ -9,11 +9,11 @@
 	<p>{t _enter_your_email_to_subscribe}</p>
 
 	{form handle=$form action="controller=newsletter action=subscribe" method="POST"}
-		{{err for="email"}}
-			{textfield class="text" style="width: 130px;"}
-			<input type="submit" class="submit" value="OK" style="width: 20%;" />
-		{/err}
+		{input name="email"}
+			{textfield}
+		{/input}
 
+		<input type="submit" class="submit" value="OK" style="width: 20%;" />
 	{/form}
 
 	</div>

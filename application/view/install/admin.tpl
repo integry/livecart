@@ -4,43 +4,33 @@
 
 	{form action="controller=install action=setAdmin" method="POST" handle=$form}
 
-	<p>
-		{err for="firstName"}
-			{{label First name:}}
-			{textfield class="text" id="firstName"}
-		{/err}
-	</p>
+		{input name="firstName"}
+			{label}{t _first_name}:{/label}
+			{textfield}
+		{/input}
 
-	<p>
-		{err for="lastName"}
-			{{label Last name:}}
-			{textfield class="text"}
-		{/err}
-	</p>
+		{input name="lastName"}
+			{label}{t _last_name}:{/label}
+			{textfield}
+		{/input}
 
-	<p>
-		{err for="email"}
-			{{label E-mail address:}}
-			{textfield class="text"}
-		{/err}
-	</p>
+		{input name="email"}
+			{label}{t _email}:{/label}
+			{textfield}
+		{/input}
 
-	<p>
-		{err for="password"}
-			{{label Password:}}
-			{textfield type="password" class="text password"}
-		{/err}
-	</p>
+		{input name="password"}
+			{label}{t _password}:{/label}
+			{textfield class="password"}
+		{/input}
 
-	<p>
-		{err for="confirmPassword"}
-			{{label Confirm password:}}
-			{textfield type="password" class="text password"}
-		{/err}
-	</p>
+		{input name="confirmPassword"}
+			{label}{t _confirm_password}:{/label}
+			{textfield class="password"}
+		{/input}
 
-	<div class="clear"></div>
-	<input type="submit" value="Continue installation" />
+		<div class="clear"></div>
+		<input type="submit" value="Continue installation" />
 	{/form}
 </div>
 

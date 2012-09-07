@@ -1,4 +1,4 @@
-<form" action="{link controller="backend.filterGroup" action=update}" method="post" class="filter" {denied role="category.update"}class="formReadonly"{/denied}>
+<form action="{link controller="backend.filterGroup" action=update}" method="post" class="filter" {denied role="category.update"}class="formReadonly"{/denied}>
 	<!-- STEP 1 -->
 	<fieldset class="filter_step_lev1 filter_step_main">
 	<legend>{t _Filter_step_one}</legend>

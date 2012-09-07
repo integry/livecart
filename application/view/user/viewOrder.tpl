@@ -179,19 +179,18 @@
 		   </ul>
 		{/if}
 		{form action="controller=user action=addNote id=`$order.ID`" method=POST id="noteForm" handle=$noteForm}
-			{err for="text"}
-				{{label {t _enter_question}:}}
+			{input name="text"}
+				{label}{t _enter_question}:{/label}
 				{textarea}
-			{/err}
+			{/input}
+
 			<p class="submit">
 				<label></label>
 				<input type="submit" class="submit" value="{tn _submit_response}" />
 			</p>
 		{/form}
 		</fieldset>
-
 	</div>
-
 </div>
 
 {include file="layout/frontend/footer.tpl"}

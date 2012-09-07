@@ -12,26 +12,20 @@
 	<fieldset class="container">
 	{form action="controller=user action=doChangePassword" method="POST" handle=$form}
 
-		<p class="required">
-			{err for="currentpassword"}
-				{{label {t _current_pass}:}}
-				{textfield type="password" class="text"}
-			{/err}
-		</p>
+		{input name="currentpassword"}
+			{label}{t _current_pass}:{/label}
+			{textfield type="password"}
+		{/input}
 
-		<p class="required">
-			{err for="password"}
-				{{label {t _enter_new_pass}:}}
-				{textfield type="password" class="text"}
-			{/err}
-		</p>
+		{input name="password"}
+			{label}{t _enter_new_pass}:{/label}
+			{textfield type="password"}
+		{/input}
 
-		<p class="required">
-			{err for="confpassword"}
-				{{label {t _reenter_new_pass}:}}
-				{textfield type="password" class="text"}
-			{/err}
-		</p>
+		{input name="confpassword"}
+			{label}{t _reenter_new_pass}:{/label}
+			{textfield type="password"}
+		{/input}
 
 		<p>
 			<label></label>

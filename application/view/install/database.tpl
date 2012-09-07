@@ -11,33 +11,26 @@
 		<div class="clear"></div>
 	{/error}
 
-	<p>
-		{err for="server"}
-			{{label Database server:}}
-			{textfield class="text" id="server"} <div style="margin-top: -5px;"><small>Usually <em>localhost</em></small></div>
-		{/err}
-	</p>
+	{input name="server"}
+		{label}{t _db_server}:{/label}
+		{textfield}
+		<div style="margin-top: -5px;"><small>Usually <em>localhost</em></small></div>
+	{/input}
 
-	<p>
-		{err for="name"}
-			{{label Database name:}}
-			{textfield class="text"}
-		{/err}
-	</p>
+	{input name="name"}
+		{label}{t _db_name}:{/label}
+		{textfield}
+	{/input}
 
-	<p>
-		{err for="username"}
-			{{label Database user name:}}
-			{textfield class="text"}
-		{/err}
-	</p>
+	{input name="username"}
+		{label}{t _db_username}:{/label}
+		{textfield}
+	{/input}
 
-	<p>
-		{err for="password"}
-			{{label Password:}}
-			{textfield type="password" class="text password"}
-		{/err}
-	</p>
+	{input name="password"}
+		{label}{t _db_pass}:{/label}
+		{textfield type="password" class="password"}
+	{/input}
 
 	<div class="clear"></div>
 	<input type="submit" value="Continue installation" />

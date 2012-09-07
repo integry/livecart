@@ -39,24 +39,20 @@
 
 {if 'ENABLE_REVIEWS'|config}
 	<div class="reviewForm">
-		<p{if $ratingForm|@isRequired:'nickname'} class="required"{/if}>
-			{err for="nickname"}
-				<label class="wide">{t _nickname}:</label>
-				{textfield class="text wide"}
-			{/err}
-		</p>
-		<p{if $ratingForm|@isRequired:'title'} class="required"{/if}>
-			{err for="title"}
-				<label class="wide">{t _summary}:</label>
-				{textfield class="text wide"}
-			{/err}
-		</p>
-		<p{if $ratingForm|@isRequired:'text'} class="required"{/if}>
-			{err for="text"}
-				<label class="wide">{t _review_text}:</label>
-				{textarea}
-			{/err}
-		</p>
+		{input name="nickname"}
+			{label}{t _nickname}:{/label}
+			{textfield}
+		{/input}
+
+		{input name="title"}
+			{label}{t _summary}:{/label}
+			{textfield}
+		{/input}
+
+		{input name="text"}
+			{label}{t _review_text}:{/label}
+			{textarea}
+		{/input}
 	</div>
 	<p>
 		<input class="submit" type="submit" value="{tn _submit_review}" /> <span class="progressIndicator" style="display: none;"></span>

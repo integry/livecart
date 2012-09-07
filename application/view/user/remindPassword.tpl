@@ -10,12 +10,10 @@
 	<h1>{t _remind_pass}</h1>
 
 	{form action="controller=user action=doRemindPassword" method="post" style="float: left; width: 100%;" handle=$form}
-		<p>
-			{err for="email"}
-				{{label {t _your_email}: }}
-				{textfield class="text"}
-			{/err}
-		</p>
+		{input name="email"}
+			{label}{t _your_email}:{/label}
+			{textfield}
+		{/input}
 
 		<p>
 			<label></label>

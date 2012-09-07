@@ -5,30 +5,22 @@
 </p>
 
 {form action="controller=install action=setConfig" method="POST" handle=$form}
+	{input name="name"}
+		{label}{t _store_name}:{/label}
+		{textfield}
+	{/input}
 
-	<p>
-		{err for="name"}
-			{{label Store name:}}
-			{textfield class="text" id="name"}
-		{/err}
-	</p>
+	{input name="language"}
+		{label}{t _base_language}:{/label}
+		{selectfield options=$languages}
+	{/input}
 
-	<p>
-		{err for="language"}
-			{{label Base language:}}
-			{selectfield options=$languages}
-		{/err}
-	</p>
-
-	<p>
-		{err for="curr"}
-			{{label Base currency:}}
-			{selectfield options=$currencies}
-		{/err}
-	</p>
+	{input name="curr"}
+		{label}{t _base_currency}:{/label}
+		{selectfield options=$currencies}
+	{/input}
 
 	<input type="submit" class="submit" value="Complete installation" />
-
 {/form}
 
 {literal}

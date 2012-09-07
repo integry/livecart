@@ -12,17 +12,15 @@
 		<fieldset class="container">
 		{form action="controller=user action=doChangeEmail" method="POST" handle=$form}
 
-			<p>
-				<label>{t _current_email}:</label>
+			{input}
+				{label}{t _current_email}:{/label}
 				<label class="currentEmail">{$user.email}</label>
-			</p>
+			{/input}
 
-			<p class="required">
-				{err for="email"}
-					{{label {t _new_email}:}}
-					{textfield class="text"}
-				{/err}
-			</p>
+			{input name="email"}
+				{label}{t _new_email}:{/label}
+				{textfield}
+			{/input}
 
 			<p>
 				<label></label>

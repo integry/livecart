@@ -15,44 +15,35 @@
 			</div>
 		{/error}
 
-		<p>
-			{err for="ccName"}
-				{{label {t _cc_name}:}}
-				{textfield class="text" autoComplete="off"}
-			{/err}
-		</p>
+		{input name="ccName"}
+			{label}{t _cc_name}:{/label}
+			{textfield autoComplete="off"}
+		{/input}
 
-		<p>
-			{err for="ccNum"}
-				{{label {t _cc_number}:}}
-				{textfield class="text" autoComplete="off"}
-			{/err}
-		</p>
+		{input name="ccNum"}
+			{label}{t _cc_number}:{/label}
+			{textfield autoComplete="off"}
+		{/input}
 
 		{if $ccTypes}
-		<p>
-			<label for="ccType">{t _cc_type}:</label>
-			{selectfield name="ccType" id="ccType" options=$ccTypes}
-		</p>
+			{input name="ccType"}
+				{label}{t _cc_type}:{/label}
+				{selectfield id="ccType" options=$ccTypes}
+			{/input}
 		{/if}
 
-		<p>
-			<label for="ccExpiryMonth">{t _card_exp}:</label>
-			<fieldset class="error">
-				{selectfield name="ccExpiryMonth" id="ccExpiryMonth" options=$months}
-				/
-				{selectfield name="ccExpiryYear" id="ccExpiryYear" options=$years}
-				<div class="errorText hidden{error for="ccExpiryYear"} visible{/error}">{error for="ccExpiryYear"}{$msg}{/error}</div>
-			</fieldset>
-		</p>
+		{input name="ccExpiryYear"}
+			{label}{t _card_exp}:{/label}
+			{selectfield name="ccExpiryMonth" id="ccExpiryMonth" options=$months}
+			/
+			{selectfield name="ccExpiryYear" id="ccExpiryYear" options=$years}
+		{/input}
 
-		<p>
-			{err for="ccCVV"}
-				{{label {t _cvv_descr}:}}
-				{textfield maxlength="4" class="text" id="ccCVV"}
-				<a class="cvv" href="{link controller=checkout action=cvv}" onclick="Element.show($('cvvHelp')); return false;">{t _what_is_cvv}</a>
-			{/err}
-		</p>
+		{input name="ccCVV"}
+			{label}{t _cvv_descr}:{/label}
+			{textfield maxlength="4" id="ccCVV"}
+			<a class="cvv" href="{link controller=checkout action=cvv}" onclick="Element.show($('cvvHelp')); return false;">{t _what_is_cvv}</a>
+		{/input}
 
 		{if $ccVars}
 			{include file="block/eav/fields.tpl" fieldList=$ccVars.specFieldList}
@@ -64,8 +55,6 @@
 		</p>
 
 		</div>
-
-
 	{/form}
 
 	<div id="cvvHelp" style="display: none;">

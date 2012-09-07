@@ -2,59 +2,22 @@
 
 {block FORM-NEW-CUSTOMER-TOP}
 
-{if $fields.FIRSTNAME}
-<p class="required">
-	{err for="`$prefix`firstName"}
-		{{label {t _your_first_name}:}}
-		{textfield class="text"}
-	{/err}
-</p>
-{/if}
+{include file="user/block/nameFields.tpl"}
 
-{if $fields.LASTNAME}
-<p class="required">
-	{err for="`$prefix`lastName"}
-		{{label {t _your_last_name}:}}
-		{textfield class="text"}
-	{/err}
-</p>
-{/if}
+{input name="email"}
+	{label}{t _your_email}:{/label}
+	{textfield}
+{/input}
 
-{if $fields.COMPANYNAME}
-<p>
-	{err for="`$prefix`companyName"}
-		{{label {t _company_name}:}}
-		{textfield class="text"}
-	{/err}
-</p>
-{/if}
+{input name="newsletter"}
+	{checkbox}
+	{label}{t _newsletter_signup}{/label}
+{/input}
 
-<p class="required">
-	{err for="email"}
-		{{label {t _your_email}:}}
-		{textfield class="text"}
-	{/err}
-
-	<label></label>
-	<input type="checkbox" class="checkbox" name="newsletter" checked="checked" id="newsletterSignup" />
-	<label class="checkbox" for="newsletterSignup">{t _newsletter_signup}</label>
-
-</p>
-
-{if $fields.PHONE}
-<p{if 'REQUIRE_PHONE'|config} class="required"{/if}>
-	{err for="`$prefix`phone"}
-		{{label {t _your_phone}:}}
-		{textfield class="text"}
-	{/err}
-</p>
-{/if}
+{include file="user/block/phoneField.tpl"}
 
 {if 'PASSWORD_GENERATION'|config != 'PASSWORD_AUTO'}
-	{if 'PASSWORD_GENERATION'|config == 'PASSWORD_REQUIRE'}
-		{assign var="passRequired" value=true}
-	{/if}
-	{include file="user/block/passwordFields.tpl" required=$passRequired}
+	{include file="user/block/passwordFields.tpl"}
 {/if}
 
 {include file="block/eav/fields.tpl" item=$user filter="isDisplayed"}
@@ -64,65 +27,4 @@
 	<h3>{t _billing_address}</h3>
 {/if}
 
-{if $fields.ADDRESS1}
-<p class="required">
-	{err for="`$prefix`address1"}
-		{{label {t _address}:}}
-		{textfield class="text"}
-	{/err}
-</p>
-{/if}
-
-{if $fields.ADDRESS2}
-<p>
-	<label></label>
-	{textfield name="billing_address2" class="text"}
-</p>
-{/if}
-
-{if $fields.CITY}
-<p class="required">
-	{err for="`$prefix`city"}
-		{{label {t _city}:}}
-		{textfield class="text"}
-	{/err}
-</p>
-{/if}
-
-{if $fields.COUNTRY}
-<p class="required">
-	{err for="`$prefix`country"}
-		{{label {t _country}:}}
-		{selectfield options=$countries id="`$prefix`country"}
-		<span class="progressIndicator" style="display: none;"></span>
-	{/err}
-</p>
-{/if}
-
-{if $fields.STATE}
-{if !'DISABLE_STATE'|config}
-	<p class="required">
-		{err for="`$prefix`state_select"}
-			{{label {t _state}:}}
-			{selectfield style="display: none;" options=$states id="`$prefix`state_select"}
-			{textfield name="billing_state_text" class="text" id="`$prefix`state_text"}
-		{/err}
-
-		{literal}
-		<script type="text/javascript">
-		{/literal}
-			new User.StateSwitcher($('{$prefix}country'), $('{$prefix}state_select'), $('{$prefix}state_text'),
-					'{link controller=user action=states}');
-		</script>
-	</p>
-{/if}
-{/if}
-
-{if $fields.POSTALCODE}
-<p class="required">
-	{err for="`$prefix`postalCode"}
-		{{label {t _postal_code}:}}
-		{textfield class="text"}
-	{/err}
-</p>
-{/if}
+{include file="user/block/addressFields.tpl"}

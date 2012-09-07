@@ -11,26 +11,20 @@
 	<fieldset class="container">
 	{form action="controller=user action=savePersonal" method="POST" handle=$form}
 
-		<p class="required">
-			{err for="firstName"}
-				{{label {t _your_first_name}:}}
-				{textfield class="text"}
-			{/err}
-		</p>
+		{input name="firstName"}
+			{label}{t _your_first_name}:{/label}
+			{textfield}
+		{/input}
 
-		<p class="required">
-			{err for="lastName"}
-				{{label {t _your_last_name}:}}
-				{textfield class="text"}
-			{/err}
-		</p>
+		{input name="lastName"}
+			{label}{t _your_last_name}:{/label}
+			{textfield}
+		{/input}
 
-		<p>
-			{err for="companyName"}
-				{{label {t _company_name}:}}
-				{textfield class="text"}
-			{/err}
-		</p>
+		{input name="companyName"}
+			{label}{t _company_name}:{/label}
+			{textfield}
+		{/input}
 
 		{include file="block/eav/fields.tpl" item=$user filter="isDisplayed"}
 

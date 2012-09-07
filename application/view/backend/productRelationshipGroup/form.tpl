@@ -1,5 +1,5 @@
 <div class="groupForm"  style="display: none;">
-	<form" action="{link controller="backend.productRelationshipGroup" action=save}" method="post" {denied role="product.update"}class="formReadonly"{/denied}>
+	<form action="{link controller="backend.productRelationshipGroup" action=save}" method="post" {denied role="product.update"}class="formReadonly"{/denied}>
 		<!-- STEP 1 -->
 		<fieldset>
 			<legend>{t _add_group_title}</legend>

@@ -3,34 +3,28 @@
 
 <div>
 {form action="controller=product action=sendContactForm" method="POST" handle=$contactForm id="productContactForm" onsubmit="new Product.ContactForm(this); return false;"}
-	<p class="required">
-		{err for="name"}
-			{{label {t _inquiry_name}:}}
-			{textfield class="text"}
-		{/err}
-	</p>
+	{input name="name"}
+		{label}{t _inquiry_name}:{/label}
+		{textfield}
+	{/input}
 
 	{* anti-spam *}
 	<div style="display: none;">
-		{err for="surname"}
-			{{label Your surname:}}
-			{textfield class="text"}
-		{/err}
+		{input name="surname"}
+			{label}{t surname}:{/label}
+			{textfield}
+		{/input}
 	</div>
 
-	<p class="required">
-		{err for="email"}
-			{{label {t _inquiry_email}:}}
-			{textfield class="text"}
-		{/err}
-	</p>
+	{input name="email"}
+		{label}{t _inquiry_email}:{/label}
+		{textfield}
+	{/input}
 
-	<p class="required">
-		{err for="msg"}
-			{{label {t _inquiry_msg}:}}
-			{textarea}
-		{/err}
-	</p>
+	{input name="msg"}
+		{label}{t _inquiry_msg}:{/label}
+		{textarea}
+	{/input}
 
 	<p>
 		<label>&nbsp;</label>

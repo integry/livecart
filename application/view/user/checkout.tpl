@@ -42,10 +42,10 @@
 			{if $order.isShippingRequired && !'REQUIRE_SAME_ADDRESS'|config}
 			<h3>{t _shipping_address}</h3>
 
-				<p>
-					{checkbox name="sameAsBilling" checked="checked" class="checkbox"}
-					<label for="sameAsBilling" class="checkbox">{t _the_same_as_shipping_address}</label>
-				</p>
+				{input name="sameAsBilling"}
+					{checkbox checked="checked"}
+					{label}{t _the_same_as_shipping_address}{/label}
+				{/input}
 
 				<div id="shippingForm">
 					{include file="user/addressForm.tpl" prefix="shipping_" eavPrefix="shipping_" states=$shippingStates}

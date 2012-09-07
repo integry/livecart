@@ -1,6 +1,6 @@
 <fieldset class="addForm productFileGroup_form"  style="display: none;">
 	<legend>{t _add_new_file_group_title}</legend>
-	<form" action="{link controller="backend.productFileGroup" action=save}" method="post" {denied role="product.update"}class="formReadonly"{/denied}>
+	<form action="{link controller="backend.productFileGroup" action=save}" method="post" {denied role="product.update"}class="formReadonly"{/denied}>
 		<!-- STEP 1 -->
 
 			<input type="hidden" name="ID" class="hidden productFileGroup_ID" />
