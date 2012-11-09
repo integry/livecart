@@ -17,6 +17,8 @@ class LiveCartRenderer extends SmartyRenderer
 
 	protected $application;
 
+	protected $cache;
+
 	/**
 	 * Template renderer constructor
 	 *
@@ -160,9 +162,41 @@ class LiveCartRenderer extends SmartyRenderer
 			}
 		}
 
-		$output = parent::render($view);
+		/*$cache = $this->getCache($view);
+		if ($cache->isCached())
+		{
+			return $cache->getData();
+		}
+		*/
 
-		return $this->applyLayoutModifications($view, $output);
+		$output = parent::render($view);
+		$output = $this->applyLayoutModifications($view, $output);
+
+		//$cache->setData('<div style="border: 2px solid red;">' . $output . '</div>');
+		//$cache->save();
+
+		//$this->cache = $cache->getParent();
+
+		return $output;
+	}
+
+	public function getCacheInstance()
+	{
+		return $this->cache;
+	}
+
+	protected function getCache($view)
+	{
+		$cache = new OutputCache($view);
+
+		if ($this->cache)
+		{
+			$cache->setParent($this->cache);
+		}
+
+		$this->cache = $cache;
+
+		return $cache;
 	}
 
 	public function applyLayoutModifications($tplPath, $output)

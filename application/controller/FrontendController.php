@@ -436,6 +436,10 @@ abstract class FrontendController extends BaseController
 
 	protected function boxCategoryBlock()
 	{
+		$this->invalidateCacheOnUpdate('Category');
+		$this->setRequestVar('id');
+		$this->allowCache();
+
 		ClassLoader::import('application.model.category.Category');
 
 		// get top categories

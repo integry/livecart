@@ -151,7 +151,12 @@ abstract class BaseController extends Controller implements LCiTranslator
 		}
 	}
 
-	protected function setCache(OutputCache $cache)
+	public function allowCache()
+	{
+		$this->getCacheHandler()->enable();
+	}
+
+	public function setCache(OutputCache $cache)
 	{
 		$this->cacheHandler = $cache;
 	}
@@ -328,6 +333,21 @@ abstract class BaseController extends Controller implements LCiTranslator
 		$files[] = 'Custom';
 
 		return $files;
+	}
+
+	public function invalidateCacheOnUpdate($class)
+	{
+		//return $this->getCache()->invalidateCacheOnUpdate($class);
+	}
+
+	public function setCacheVar($param, $value)
+	{
+		//return $this->getCache()->setCacheVar($param, $value);
+	}
+	
+	public function setRequestVar($key)
+	{
+		
 	}
 
 	public function __get($name)

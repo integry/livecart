@@ -4,14 +4,38 @@ class OutputCache
 {
 	protected $type;
 
-	protected $params;
+	protected $params = array();
 
 	protected $data;
 
-	public function __construct($type, $params)
+	protected $parent;
+	
+	protected $isEnabled = true;
+
+	public function __construct($type)
 	{
 		$this->type = $type;
-		$this->params = $params;
+		//$this->params = $params;
+	}
+	
+	public function enable()
+	{
+		$this->isEnabled = true;
+	}
+	
+	public function disable()
+	{
+		$this->isEnabled = false;
+	}
+
+	public function setParent(OutputCache $cache)
+	{
+		$this->parent = $cache;
+	}
+
+	public function getParent()
+	{
+		return $this->parent;
 	}
 
 	public function setData($data)
@@ -21,6 +45,11 @@ class OutputCache
 
 	public function save()
 	{
+		if (!$this->isEnabled)
+		{
+			return;
+		}
+		
 		$path = $this->getFilePath();
 		if (!file_exists(dirname($path)))
 		{
@@ -67,6 +96,15 @@ class OutputCache
 		return ClassLoader::getRealPath('cache.output.' . $this->type . '.') . $hash;
 	}
 
+	public function setCacheVar($param, $value)
+	{
+		$this->params[$param] = $value;
+	}
+
+	public function invalidateCacheOnUpdate($class)
+	{
+		
+	}
 }
 
 ?>

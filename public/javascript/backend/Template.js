@@ -529,7 +529,12 @@ Backend.EmailTemplateHandler.prototype =
 				html = $("html_"+this.tabid);
 
 			body.value = editAreaLoader.getValue('body_'+this.tabid);
-			html.value = editAreaLoader.getValue('html_'+this.tabid);
+
+			if (html)
+			{
+				html.value = editAreaLoader.getValue('html_'+this.tabid);
+			}
+
 			var langs = $$('#'+this.tabid+'Content .languageFormContent textarea');
 			if (langs)
 			{
@@ -539,7 +544,7 @@ Backend.EmailTemplateHandler.prototype =
 				}
 			}
 			new LiveCart.AjaxRequest(this.form, null, this.saveComplete.bind(this));
-		} catch(e) {}
+		} catch(e) {console.log(e);}
 		return false;
 	},
 

@@ -776,6 +776,10 @@ class LiveCart extends Application implements Serializable
 
 	public function renderBlock($block, Controller $controllerInstance)
 	{
+		$id = $block['view'];
+		$cache = new OutputCache($id);
+		$controllerInstance->setCache($cache);	
+		
 		$this->processInstancePlugins('outputBlock', $block);
 
 		if (is_string($block))
