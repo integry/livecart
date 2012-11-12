@@ -1,3 +1,5 @@
+{cache var=url value=$request.route final=true}
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -45,6 +47,10 @@
 		{includeCss file="frontend/FrontendRTL.css"}
 	{/if}
 
+	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
+
+	<link href="http://bootswatch.com/united/bootstrap.min.css" rel="stylesheet">
+
 	{compiledCss glue=true nameMethod=hash}
 	<!--[if lt IE 8]>
 		<link href="stylesheet/frontend/FrontendIE.css" rel="Stylesheet" type="text/css"/>
@@ -57,6 +63,7 @@
 	{* <script type="text/javascript" src="firebug/firebug.js"></script> *}
 	{loadJs}
 	{compiledJs glue=true nameMethod=hash}
+	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
 
 	{*
 	<!--[if lt IE 7]>
@@ -78,9 +85,11 @@
 		<div id="containerWrapper1">
 		<div id="containerWrapper2">
 		<div id="containerWrapper3">
-			{block PAGE-TOP}
-			{$ACTION_VIEW}
-			{block PAGE-BOTTOM}
+			<div class="row">
+				{block PAGE-TOP}
+				{$ACTION_VIEW}
+				{block PAGE-BOTTOM}
+			</div>
 		</div>
 		</div>
 		</div>

@@ -10,31 +10,25 @@
 {/function}
 
 {if $manufacturers || $categories}
-<div class="box quickNav">
-	<div class="title">
-		<div>{t _quick_nav}</div>
-	</div>
+<div class="well sidebar-nav quickNav">
+	<div class="nav-header">{t _quick_nav}</div>
 
 	<div class="content">
 
 		{if $manufacturers}
-			<p>
-				<select onchange="window.location.href = this.value;" style="width: 100%;">
-					<option>{t _manufacturers}</option>
-					{foreach $manufacturers as $man}
-						<option value="{$man.url}">{$man.name}</option>
-					{/foreach}
-				</select>
-			</p>
+			<select onchange="window.location.href = this.value;" style="width: 100%;">
+				<option>{t _manufacturers}</option>
+				{foreach $manufacturers as $man}
+					<option value="{$man.url}">{$man.name}</option>
+				{/foreach}
+			</select>
 		{/if}
 
 		{if $categories}
-			<p>
-				<select onchange="window.location.href = this.value;" style="width: 100%;">
-					<option>{t _categories}</option>
-					{dynamicCategoryTree node=$categories}
-				</select>
-			</p>
+			<select onchange="window.location.href = this.value;" style="width: 100%;">
+				<option>{t _categories}</option>
+				{dynamicCategoryTree node=$categories}
+			</select>
 		{/if}
 
 	</div>

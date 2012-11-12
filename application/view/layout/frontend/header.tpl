@@ -1,26 +1,22 @@
-<div id="header">
+<div class="span12" id="header">
 
-	<fieldset class="container" style="position: relative;">
+	<div id="logoContainer">
+		<a href="{link}">{img src='LOGO'|config alt="LiveCart Logo"}</a>
+	</div>
 
-		<div id="logoContainer">
-			<a href="{link}">{img src='LOGO'|config alt="LiveCart Logo"}</a>
-		</div>
+	<div id="topMenuContainer">
+		{block CART}
+		{block CURRENCY}
+		{block LANGUAGE}
+	</div>
 
-		<div id="topMenuContainer">
-			{block CART}
-		</div>
+	<div class="clear"></div>
 
-		<div class="clear"></div>
-
-		{block HEADER}
-
-		{block BREADCRUMB}
-
-	</fieldset>
+	{block HEADER}
 
 </div>
 
 <div class="clear"></div>
 
-{block SEARCH}
 {block ROOT_CATEGORIES}
+{block BREADCRUMB}

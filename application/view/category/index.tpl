@@ -6,7 +6,7 @@
 
 {include file="layout/frontend/layout.tpl"}
 
-<div id="content">
+<div id="content" class="span9">
 
 	{include file="category/head.tpl"}
 

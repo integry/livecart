@@ -2,11 +2,9 @@
 {assign var="metaDescription" value='INDEX_META_DESCRIPTION'|config}
 {assign var="metaKeywords" value='INDEX_META_KEYWORDS'|config}
 
-<div class="index">
-
 {include file="layout/frontend/layout.tpl"}
 
-<div id="content">
+<div id="content" class="span9">
 
 	{block HOME-PAGE-TOP}
 
@@ -28,5 +26,3 @@
 </div>
 
 {include file="layout/frontend/footer.tpl"}
-
-</div>

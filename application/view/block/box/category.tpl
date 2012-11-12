@@ -1,9 +1,9 @@
 {function name="categoryTree" node=false filters=false}
 	{if $node}
-		<ul>
+		<ul class="nav nav-list">
 		{foreach from=$node item=category}
 			{if $category.ID == $currentId}
-				<li class="current">
+				<li class="active">
 					<span class="currentName">{$category.name_lang}</span>
 			{else}
 				<li>
@@ -21,10 +21,8 @@
 	{/if}
 {/function}
 
-<div class="box categories">
-	<div class="title">
-		<div>{t _categories}</div>
-	</div>
+<div class="well sidebar-nav categories">
+	<div class="nav-header">{t _categories}</div>
 
 	<div class="content">
 		{categoryTree node=$categories}

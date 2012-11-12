@@ -1,20 +1,15 @@
-<div id="searchContainer">
-	<div class="wrapper">
-		{capture assign="searchUrl"}{categoryUrl data=$category}{/capture}
-		{form action="controller=category" class="quickSearch" handle=$form}
-			{if 'HIDE_SEARCH_CATS'|config}
-				{hidden name="id" value="1"}
-			{else}
-				{selectfield name="id" options=$categories}
-			{/if}
-			{textfield class="text searchQuery" name="q"}
-			<input type="submit" class="submit" value="{tn _search}" />
-			<input type="hidden" name="cathandle" value="search" />
-		{/form}
+{capture assign="searchUrl"}{categoryUrl data=$category}{/capture}
+{form action="controller=category" class="form-search navbar-search pull-right" handle=$form}
+    <div class="input-append">
+		{textfield type="text" class="span2 search-query" name="q"}
+		<button type="submit" class="btn">{tn _search}</button>
+    </div>
 
-		{block CURRENCY}
-		{block LANGUAGE}
+	{if 'HIDE_SEARCH_CATS'|config}
+		{hidden name="id" value="1"}
+	{else}
+		{* selectfield name="id" options=$categories *}
+	{/if}
 
-		<div class="clear"></div>
-	</div>
-</div>
+	<input type="hidden" name="cathandle" value="search" />
+{/form}

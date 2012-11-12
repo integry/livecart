@@ -1,31 +1,41 @@
+#topMenu ul.nav li.dropdown:hover ul.dropdown-menu
+{
+    display: block;
+    margin: 0;
+}
+
+#topMenu a.menu:after, #topMenu .dropdown-toggle:after
+{
+    content: none;
+}
+
+.sidebar-nav
+{
+	padding: 9px 0;
+}
+
+.row-fluid .firstPanel
+{
+	margin-left: 0;
+}
+
+.row-fluid .thumbnail
+{
+	margin-bottom: 18px;
+}
+
+div.btn-group:hover ul.dropdown-menu{
+    display: block;
+}
+
+div.btn-group ul.dropdown-menu{
+    margin-top: 0px;
+}
+
 /* resets */
-html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, /*strong, */sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, #border-color-var
-{
-	margin: 0; padding: 0; border: 0 solid; font-weight: inherit; font-style: inherit; font-size: 100%; font-family: inherit; vertical-align: baseline; background-repeat: no-repeat; background-position: center left;
-	border-color: #ddd;
-}
-
-body
-{
-	line-height: 1.5;
-	color: black;
-	background: white;
-}
-
-ul, ul li
-{
-	list-style: none;
-}
-
 ol
 {
 	margin-left: 2em;
-}
-
-table
-{
-    border-spacing: 0;
-    border-collapse: collapse;
 }
 
 caption, th, td
@@ -52,70 +62,10 @@ caption, th, td
 	list-style-type: decimal;
 }
 
-/* 100% height layout start >> */
-html.height, html.height body
-{
-	height: 100%;
-}
-
-html.height div#container
-{
-	position: relative; /* needed for footer positioning*/
-	height: auto !important; /* real browsers */
-	height: 100%; /* IE6: treated as min-height*/
-	min-height: 100%; /* real browsers */
-}
-
-html.height div#footer
-{
-	position: absolute;
-	width: 100%;
-	bottom: 0; /* stick to bottom */
-}
-
-html.height div#content
-{
-    margin-bottom: 75px;
-}
-/* << 100% height layout end */
-
 body, h4
 {
     font-family: Verdana;
     font-size: small;
-}
-
-a
-{
-	color: #143788;
-}
-
-h1, h2, h3
-{
-	font-family: "Trebuchet MS";
-}
-
-h1
-{
-	font-size: 200%;
-	margin-bottom: 10px;
-}
-
-h2
-{
-	margin-top: 20px;
-	margin-bottom: 1em;
-	padding-top: 7px;
-	border-top-width: 1px;
-	border-style: dashed;
-    font-size: 150%;
-}
-
-h3
-{
-	margin-bottom: 10px;
-    margin-top: 7px;
-    font-size: 150%;
 }
 
 td
@@ -209,7 +159,6 @@ a.cancel,
 }
 
 /* auto-width select boxes */
-.quickSearch select,
 #language select,
 #productSort,
 .cartLinks select, select.quantity,
@@ -219,9 +168,6 @@ a.cancel,
 }
 
 /* smaller input fields */
-.quickSearch select,
-.quickSearch input.text,
-.quickSearch input.submit,
 #language select,
 .cartName small
 #productSort
@@ -326,7 +272,6 @@ img.calendar_button
 /* left floats */
 #leftSide,
 #logoContainer,
-.quickSearch,
 .allFilters .filterGroup,
 .resultStats .pagingInfo, .categoryLayoutSwitch,
 ul.productList .image,
@@ -408,7 +353,6 @@ ul.downloadFile li,
 
 /* background color 1: light grey */
 tr.odd,
-#searchContainer,
 div.box .content,
 #userMenuContainer,
 fieldset,
@@ -418,8 +362,6 @@ div.addressBlock,
 .noteText,
 #checkoutProgress a,
 .dynamicMenu ul,
-.rootCategories,
-.rootCategories .wrapper,
 #background-color1-var
 {
     background-color: #F9F9F9;
@@ -434,10 +376,6 @@ tr.heading td,
 
 tr.even td,
 div.box .title,
-.rootCategories .current,
-.rootCategories li:hover,
-.rootCategories .li:hover,
-.rootCategories .hover,
 #background-color2-var
 {
     background-color: #eee;
@@ -469,7 +407,6 @@ tr.odd td, tr.even td
 #container
 {
   	margin: 0 auto;
-  	width: 950px;
 }
 
 #footer
@@ -481,7 +418,6 @@ tr.odd td, tr.even td
 
 #leftSide
 {
-	width: 190px;
 	overflow: visible;
 	position: relative;
 	margin-bottom: 120px;
@@ -496,7 +432,6 @@ tr.odd td, tr.even td
 
 #content
 {
-	margin-left: 190px;
 	padding: 0 10px;
 	padding-bottom: 10px;
 }
@@ -596,60 +531,6 @@ fieldset.container
 .table td
 {
     padding: 4px;
-}
-
-/*****************************
-	Quick search
-*****************************/
-#searchContainer
-{
-    border-top-width: 1px;
-    border-bottom-width: 1px;
-    padding: 3px 1em;
-}
-
-.quickSearch .searchQuery
-{
-	width: 160px;
-}
-
-/*****************************
-	Category box
-*****************************/
-.categories .content
-{
-    padding: 5px 12px 12px 22px !important;
-  	border-bottom-width: 1px;
-}
-
-.categories .content a
-{
-    color: black;
-}
-
-.categories li
-{
-    margin-top: 5px;
-}
-
-.categories ul ul
-{
-    padding-left: 12px;
-}
-
-.current ul, .subSubCats
-{
-    padding-left: 0 !important;
-}
-
-.categories .current ul li
-{
-    padding-left: 20px;
-}
-
-.noSubCats .subCatContainer table
-{
-	margin: 0 auto;
 }
 
 /*****************************
@@ -798,12 +679,6 @@ ul.news li.newsEntry
 .subCatName
 {
     font-size: larger;
-}
-
-/* obsolete */ ztable.subCategories
-{
-    width: 49%;
-    float: left;
 }
 
 .subCategories
@@ -2702,119 +2577,6 @@ fieldset.eavGroup
 }
 
 /*************************
-	Top root category menu
-*************************/
-.rootCategories
-{
-	width: 100%;
-}
-
-.rootCategories li,
-.rootCategories .li
-{
-	float: left;
-	line-height: 25px;
-	position: relative;
-}
-
-.rootCategories .current
-{
-	font-weight: bold;
-}
-
-.rootCategories .current li,
-.rootCategories .current .li
-{
-	font-weight: normal;
-}
-
-.rootCategories a
-{
-	color: black;
-	text-decoration: none;
-	padding: 0 1em;
-	float: left;
-	clear: left;
-}
-
-.rootCategories .wrapper a
-{
-	padding: 0;
-	padding-left: 1em;
-}
-
-.rootCategories li li
-.rootCategories .li .li
-{
-	float: none;
-}
-
-.rootCategories .wrapper
-{
-	display: none;
-	position: absolute;
-	z-index: 10;
-	left: 0;
-	top: 100%;
-}
-
-.rootCategories li:hover .wrapper,
-.rootCategories .li:hover .wrapper,
-.rootCategories .hover .wrapper
-{
-	display: block !important;
-}
-
-.rootCategories ul,
-.rootCategories .ul
-{
-	display: table;
-}
-
-.rootCategories ul li,
-.rootCategories .ul .li
-{
-	float: none;
-	background: none;
-	border: 0;
-	white-space: nowrap;
-}
-
-.rootCategories ul a,
-.rootCategories .ul a
-{
-	display: block;
-	padding-right: 8px !important;
-}
-
-.rootCategories span.block
-{
-	display: block;
-}
-
-.rootCategories .ul .li:after {
-	content: ".";
-	display: block;
-	clear: both;
-	visibility: hidden;
-	line-height: 0;
-	height: 0;
-}
-
-.rootCategories .ul .li {
-	display: inline-block;
-}
-
-html[xmlns] .rootCategories .ul .li {
-	display: block;
-}
-
-* html .rootCategories .ul .li {
-	height: 1%;
-}
-
-
-/*************************
 	Dynamic menu
 *************************/
 .dynamicMenu li
@@ -2881,34 +2643,6 @@ html[xmlns] .rootCategories .ul .li {
 {
 	background-image: none !important
 }
-
-/*
-.dynamicMenu li.current a
-{
-	background-color: transparent;
-}
-
-.dynamicMenu li.current ul
-{
-	display: block;
-	margin-top: 0pt;
-	position: static;
-	border: 0;
-}
-
-.dynamicMenu li.current ul li
-{
-	margin-bottom: 0;
-	margin-left: 5px;
-	padding-left: 12px;
-	border: 0;
-}
-
-.dynamicMenu li.current ul li a
-{
-	padding: 3px;
-}
-*/
 
 .dynamicMenu li:hover ul ul, .dynamicMenu li:hover ul ul ul, .dynamicMenu li.sfhover ul ul, .dynamicMenu li.sfhover ul ul ul {
 	left: -999em;
